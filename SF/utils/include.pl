@@ -15,6 +15,7 @@ $gid_add	=	"1000";			# How much to add to the database gid to get the unix uid
 $homedir_prefix =	"/home/users/";		# What prefix to add to the user's homedir
 $grpdir_prefix  =	"/home/groups/";	# What prefix to add to the project's homedir
 $cvs_prefix     =       "/cvsroot";              # What prefix to add to the cvs root directory
+$svn_prefix     =       "/svnroot";              # What prefix to add to the subversion root directory
 $ftp_frs_dir_prefix  =	"/home/ftp/codex/";	# What prefix to add to the ftp project file release homedir
 $ftp_anon_dir_prefix  =	"/home/ftp/pub/";	# What prefix to add to the anon ftp project homedir
 $file_dir	=	"/home/dummy/dumps/";	# Where should we stick files we're working with

@@ -210,6 +210,7 @@ LoadModule cgi_module modules/mod_cgi.so
 #
 Include conf.d/ssl.conf
 Include conf.d/php.conf
+Include conf.d/subversion.conf
 
 
 #
@@ -1073,10 +1074,12 @@ NameVirtualHost %sys_ip_address%:80
 
 # Include support for Gnu/Mailman
 Include conf/mailman.conf
-                                                                                
+                                                      
 # Include per project virtual hosts (automatically generated)
 Include conf/codex_vhosts.conf
-                                                                                
+                                                                               # Include per project Subversion repository (automatically generated)
+Include conf/codex_svnhosts.conf
+                                             
 #
 # On the production server the local.inc file is in /etc/codex/conf
 # because it contains sensitive data

@@ -81,6 +81,8 @@ cp -f /etc/smbpasswd /etc/smbpasswd.backup 2>/dev/null
 # Unix Groups are used in Apache Virtual Hosts declaration
 cp -f /etc/httpd/conf/codex_vhosts.conf /etc/httpd/conf/codex_vhosts.conf.backup
 cp -f ~dummy/dumps/apache_dump /etc/httpd/conf/codex_vhosts.conf
+cp -f /etc/httpd/conf/codex_svnhosts.conf /etc/httpd/conf/codex_svnhosts.conf.backup
+cp -f ~dummy/dumps/subversion_dump /etc/httpd/conf/codex_svnhosts.conf
 /usr/sbin/apachectl graceful
 
 # update authorized SSH keys in home dir

@@ -69,8 +69,8 @@ while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow())
 # CodeX	push @dns_zone, sprintf("%-24s%-16s",$unix_group_name,"IN\tA\t" . "$ip\n");
 # CodeX	push @dns_zone, sprintf("%-24s%-28s","", "IN\tMX\t" . "mail1.codex.xerox.com.\n");
 	push @dns_zone, sprintf("%-24s%-16s",$unix_group_name,"IN\tCNAME\t" . "$sys_fullname."."\n");
-	push @dns_zone, sprintf("%-24s%-30s","cvs.".$unix_group_name,"IN\tCNAME\t" . "cvs1.$sys_default_domain."."\n\n");
-}
+	push @dns_zone, sprintf("%-24s%-30s","cvs.".$unix_group_name,"IN\tCNAME\t" . "cvs1.$sys_default_domain."."\n");
+	push @dns_zone, sprintf("%-24s%-30s","svn.".$unix_group_name,"IN\tCNAME\t" . "svn1.$sys_default_domain."."\n\n");}
 
 # Retrieve the dummy's home directory
 ($name,$passwd,$uid,$gid,$quota,$comment,$gcos,$dir,$shell,$expire) = getpwnam("dummy");

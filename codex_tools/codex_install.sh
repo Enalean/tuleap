@@ -260,14 +260,13 @@ build_dir /var/run/log_accum root root 1777
 build_dir /cvsroot sourceforge sourceforge 755
 build_dir /cvsroot/.mysql_backup mysql mysql 755
 build_dir /cvsroot/.mysql_backup/old root root 775
-
-
+build_dir /svnroot sourceforge sourceforge 755
 
 ######
 # Now install CodeX specific RPMS (and remove RedHat RPMs)
 #
 
-# wu-ftpd
+# -> wu-ftpd
 echo "Removing Redhat vsftp daemon.."
 $RPM -e --nodeps vsftpd 2>/dev/null
 echo "Installing wu-ftpd..."
@@ -311,6 +310,7 @@ echo "Installing Apache RPMs for CodeX...."
 cd ${RPMS_DIR}/apache
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh --force ${newest_rpm}/httpd-*.i386.rpm
+$RPM -Uvh --force ${newest_rpm}/mod_ssl-*.i386.rpm
 $CHKCONFIG httpd on
 # restart Apache after PHP installation - see below
 
@@ -333,8 +333,26 @@ cd ${RPMS_DIR}/cvs
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh --force ${newest_rpm}/cvs-*.i386.rpm
 
+# -> subversion
+echo "Removing RedHat subversion .."
+$RPM -e --nodeps `rpm -qa 'subversion*' 'apr*' 'neon*' 'rapidsvn*'` 2>/dev/null
+$RPM -e --nodeps db4-devel db4-utils 2>/dev/null
+echo "Installing Subversion RPMs for CodeX...."
+cd ${RPMS_DIR}/subversion
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh --force ${newest_rpm}/db42-4.*.i386.rpm ${newest_rpm}/db42-utils*.i386.rpm
+$RPM -Uvh --force ${newest_rpm}/neon.*.i386.rpm
+$RPM -Uvh --force ${newest_rpm}/apr-0.*.i386.rpm ${newest_rpm}/apr-util*.i386.rpm
+$RPM -Uvh --force ${newest_rpm}/subversion-1.*.i386.rpm \
+$RPM -Uvh --force ${newest_rpm}/subversion-server*.i386.rpm
+
 # Restart Apache after PHP is installed
 $SERVICE httpd restart
+
+# Create an http password file
+$TOUCH /etc/httpd/conf/codex_htpasswd
+$CHOWN sourceforge.sourceforge /etc/httpd/conf/codex_htpasswd
+$CHMOD 775 /etc/httpd/conf/codex_htpasswd
 
 ######
 # Now install the non RPMs stuff 
@@ -407,7 +425,8 @@ $FIND /home/httpd -type d -exec $CHMOD 775 {} \;
 make_backup /etc/httpd/conf/httpd.conf
 for f in /etc/httpd/conf/cvsweb.conf /etc/httpd/conf/httpd.conf \
 /etc/httpd/conf/mailman.conf /etc/httpd/conf.d/ssl.conf \
-/etc/httpd/conf.d/php.conf /etc/codex/conf/local.inc; do
+/etc/httpd/conf.d/php.conf /etc/httpd/conf.d/subversion.conf \
+/etc/codex/conf/local.inc; do
     yn="y"
     fn=`basename $f`
     [ -f "$f" ] && read -p "$f already exist. Overwrite? [y|n]:" yn

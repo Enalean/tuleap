@@ -67,8 +67,22 @@ while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow())
 	      "</VirtualHost>\n\n");
 	} else {
 	  # Apache 2.x syntax
+
+	  # Determine whether the virtual host can be accessed through
+	  # HTTP and/or HTTPS
+	  if ($sys_https_host eq "") {
+	    $vhost = "$ip:80";
+	  } else {
+	    if ($sys_force_ssl == 1) {
+	      $vhost = "$ip:443";
+	    } else {
+	      $vhost = "$ip:80 $ip:443";
+	    }
+	  }
+
+	  # Project Virtual Web site
 	  push @apache_zone,
-	    ( "<VirtualHost $ip:80>\n",
+	    ( "<VirtualHost $vhost>\n",
 	      "$server_name",
 	      "$server_alias",
 	      "  SuexecUserGroup dummy $unix_group_name\n",
@@ -79,6 +93,21 @@ while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow())
 	      "  CustomLog logs/vhosts-access_log combined\n",
 	      "  ScriptAlias /cgi-bin/ /home/groups/$unix_group_name/cgi-bin/\n",
 	      "</VirtualHost>\n\n");
+
+	  # Project Subversion repository
+	  push @subversion_zone,
+	    ( "<VirtualHost $vhost>\n",
+	      "  ServerName svn.$codex_domain\n",
+	      "  <Location /svnroot/$unix_group_name>\n",
+	      "    DAV svn\n",
+	      "    SVNPath /svnroot/$unix_group_name\n",
+	      "    AuthzSVNAccessFile /svnroot/$unix_group_name/.SVNAccessFile\n",
+	      "    Require valid-user\n",
+	      "    AuthType Basic\n",
+	      "    AuthName \"Subversion Authorization ($group_name)\n",
+	      "    AuthUserFile /etc/httpd/conf/htpasswd\n",
+	      "  </Location>\n",
+	      "</VirtualHost>\n\n");
 	}
 }
 
@@ -86,3 +115,4 @@ while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow())
 ($name,$passwd,$uid,$gid,$quota,$comment,$gcos,$dir,$shell,$expire) = getpwnam("dummy");
 
 write_array_file("$dir/dumps/apache_dump", @apache_zone);
+write_array_file("$dir/dumps/subversion_dump", @subversion_zone);

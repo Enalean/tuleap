@@ -48,6 +48,7 @@ my ($cxname) = get_codex_user();
 @shadow_array = open_array_file("/etc/shadow");
 @group_array = open_array_file("/etc/group");
 @smbpasswd_array = open_array_file("/etc/smbpasswd") if ($winaccount_on);
+@htpasswd_array = open_array_file($ENV{'SF_LOCAL_INC_PREFIX'}."/etc/httpd/conf/htpasswd");
 
 #LJ The file containing all allowed root for CVS server
 #
@@ -125,7 +126,11 @@ while ($ln = pop(@groupdump_array)) {
 	# otherwise Apache won't be able to access the document Root
 	# of the project web iste which is not world readable (see below)
 	$public_grp = $gis_public && ! -e "$grpdir_prefix/$gname/.CODEX_PRIVATE";
-	$userlist .= ",sourceforge" unless $public_grp;
+	if ($userlist eq "") {
+	  $userlist = "sourceforge" unless $public_grp;
+	} else {
+	  $userlist .= ",sourceforge" unless $public_grp;
+	}
 
 	# make all user names lower case.
 	$userlist =~ tr/A-Z/a-z/;
@@ -305,6 +310,39 @@ while ($ln = pop(@groupdump_array)) {
 	  chmod $new_grpmode,"$grpdir_prefix/$gname" if ($grpmode != $new_grpmode);
         }
 
+	# Create Subversion repository if needed
+	if ( $gstatus eq 'A' && !(-e "$svn_prefix/$gname")) {
+	  print("Creating a Subversion Repository for: $gname\n");
+
+	  # Let's create a subversion repository for this group
+	  $svn_dir = "$svn_prefix/$gname";
+
+	  mkdir $svn_dir, 0775;
+	  system("/usr/bin/svnadmin create $svn_dir");
+	  $group_modified = 1;
+
+	  # set group ownership, codex user
+	  system("chown -R $cxname:$gid $svn_dir");
+	  system("chmod g+rw $svn_dir");
+
+	}
+
+	# update Subversion DAV access control file if needed
+	my $svnaccess_file = "$svn_prefix/$gname/.SVNAccessFile";
+	if ($group_modified || 
+	    ($gstatus eq 'A' && !(-e "$svnaccess_file")) ) {
+	  my $public_svn = $gis_public && ! -e "$svn_prefix/$gname/.CODEX_PRIVATE";
+	  open(SVNACCESS,"+>$svnaccess_file")
+	    or croak "Can't open Subversion access file $svnaccess_file: $!";
+	  print SVNACCESS "[groups]\n";
+	  print SVNACCESS "members = ",$userlist,"\n\n";
+
+	  print SVNACCESS "[/]\n";
+	  if ($public_svn) { print SVNACCESS "* = r\n"; }
+	  print SVNACCESS "\@\members = rw\n";
+	  close(SVNACCESS);
+	}
+
       }
 
 #
@@ -314,8 +352,7 @@ write_array_file("/etc/passwd", @passwd_array);
 write_array_file("/etc/shadow", @shadow_array);
 write_array_file("/etc/group", @group_array);
 write_array_file("/etc/smbpasswd", @smbpasswd_array) if ($winaccount_on);
-
-# LJ and write the CVS root file
+write_array_file($ENV{'SF_LOCAL_INC_PREFIX'}."/etc/httpd/conf/htpasswd", @htpasswd_array);
 write_array_file($cvs_root_allow_file, @cvs_root_allow_array);
 
 
@@ -326,7 +363,7 @@ write_array_file($cvs_root_allow_file, @cvs_root_allow_array);
 #############################
 # User Add Function
 #############################
-sub add_user {  
+sub add_user {
 	my ($uid, $username, $realname, $shell, $passwd, $email) = @_;
 	my $skel_array = ();
 	
@@ -358,6 +395,11 @@ sub add_winuser {
 		
 	push @smbpasswd_array, "$username:$uid:$win_passwd:$winnt_passwd:[U          ]:LCT-$win_date:$realname\n";
 
+}
+
+sub add_httpuser {
+	my ($username, $passwd) = @_;
+	push @htpasswd_array, "$username:$passwd\n";
 }
 
 #############################
@@ -420,6 +462,25 @@ sub update_winuser {
 	
 }
 
+sub update_httpuser {
+  my ($username, $passwd) = @_;
+
+  my ($p_username, $p_passwd);
+
+  my $counter = 0;
+  foreach (@htpasswd_array) {
+    ($p_username, $p_passwd) = split(":", $_);
+
+    if ($username eq $p_username) {
+      if ($passwd ne $p_passwd) {
+	$htpasswd_array[$counter] = "$username:$p_passwd\n";
+      }
+      last;
+    }
+    $counter++;
+  }
+	
+}
 
 
 #############################
@@ -459,6 +520,20 @@ sub delete_winuser {
 	  $counter++;
 	}
 	
+}
+
+sub delete_httpuser {
+  my $this_user = shift(@_);
+  my ($username, $p_passwd);
+
+  foreach (@htpasswd_array) {
+    ($username,$p_passwd) = split(":", $_);
+
+    if ($this_user eq $username) {
+      $htpasswd_array[$counter] = '';
+    }
+    $counter++;
+  }
 }
 
 #############################
@@ -505,6 +580,20 @@ sub suspend_winuser {
 	  $counter++;
 	}
 
+}
+
+sub suspend_httpuser {
+  my $this_user = shift(@_);
+  my ($username, $p_passwd);
+
+  foreach (@htpasswd_array) {
+    ($username,$p_passwd) = split(":", $_);
+
+    if ($this_user eq $username) {
+      $htpasswd_array[$counter] = '$username:!!';
+    }
+    $counter++;
+  }
 }
 
 #############################

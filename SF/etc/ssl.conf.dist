@@ -98,6 +98,8 @@ SSLCryptoDevice builtin
 ## SSL Virtual Host Context
 ##
 
+NameVirtualHost %sys_ip_address%:443
+
 <VirtualHost %sys_ip_address%:443>
 
 #  General setup for the virtual host; inherited from global configuration.
