@@ -134,12 +134,8 @@
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Bug Tracking, Task Manager, Patch
-          Manager, Support Manager </emphasis>: are listed in the upper right
-          corner of the page. A click on a name will direct you to the user
-          page where you can learn more about the CodeX user and send him/her
-          an e-mail. Project members can be viewed via the [View members]
-          pointer.</para>
+          <para><emphasis role="bold">Trackers, Patch Manager</emphasis>: 
+          </para>
 
           <itemizedlist spacing="compact">
             <listitem>
@@ -149,7 +145,7 @@
 
             <listitem>
               <para><emphasis role="underline">Technician Only</emphasis>:
-              tool technicians can be assigned bugs/tasks/patches/support
+              tool technicians can be assigned artifacts/bugs/tasks/patches/support
               requests and has the ability to update these items from
               assignment to closure.</para>
             </listitem>
@@ -157,45 +153,21 @@
             <listitem>
               <para><emphasis role="underline">Administrator Only</emphasis>:
               tool administrators have full access to the administration part
-              of the tools. As an example, they can define new tasks
-              categories, new predefined values for bug fields, etc.</para>
+              of the tools. As an example, they can define new artifact
+              categories, new predefined values for artifact fields, etc.</para>
             </listitem>
 
             <listitem>
               <para><emphasis role="underline">Technician &#38; Administrator</emphasis>:
               the one-man-can-do-it-all on that tool</para>
-
-              <para></para>
-
-              <para></para>
-
-              <para></para>
-
-              <para></para>
-
-              <para></para>
-
-              <para></para>
-
-              <para></para>
-
-              <para></para>
-
-              <para></para>
-
-              <para></para>
-
-              <para></para>
-
-              <para></para>
             </listitem>
           </itemizedlist>
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Forums, Documentation Manager</emphasis>:
-          These 2 services have much less sophisticated permission schema.
-          Only 3 permission levels are available:</para>
+          <para><emphasis role="bold">Forums, Documentation Manager, File Manager</emphasis>:
+          These three services have less sophisticated permission schema.
+          4 permission levels are available:</para>
 
           <itemizedlist spacing="compact">
             <listitem>
@@ -217,8 +189,22 @@
               document prior to its publication. S/he can also update and
               delete a document.</para>
             </listitem>
+
+            <listitem>
+              <para><emphasis role="underline">Administrator</emphasis>: (File Mgr
+              only): A file manager administrator has the ability to upload and 
+              manage file packages and releases. S/he can also set access permissions
+              to user groups on packages and releases, even though s/he cannot 
+              define or update user groups (only a project administrator can).</para>
+            </listitem>
           </itemizedlist>
         </listitem>
+        <listitem>
+          <para><emphasis role="bold">Member of user groups</emphasis>:
+          For each individual members, the column lists all the project user groups s/he belongs to. 
+          See <xref linkend="UserGroups" /> for more information on user groups.</para>
+        </listitem>
+
       </itemizedlist>
 
       <important>
@@ -460,7 +446,7 @@
 	<title>Generating Your Project Database</title>
 
 	<para>Before you attempt to access your project data with
-	MS-Access or anyother ODBC/JDBC capable application you must
+	MS-Access or any other ODBC/JDBC capable application you must
 	first generate your project database. Go to the
 	<literal>Project Admin -> Project Data Export</literal> and
 	click on the 'Generate Full Project Database' link at the
@@ -503,7 +489,7 @@
 
 	    <itemizedlist mark="bullet" spacing="compact">
 	      <listitem>
-		<para>Use your normal user account to logon.</para>
+		<para>Use your normal user account to login.</para>
 	      </listitem>
 	      <listitem>
 		<para>Go to <literal>Start menu -> Settings -> Control
@@ -577,7 +563,7 @@
 	<title>Using Your Project Database From MS-Access</title>
 
 	<para>Before you use MS-Access to connect to your project
-	database make sure that the MySQL OBDC driver has been
+	database make sure that the MySQL ODBC driver has been
 	installed on your PC (see <xref
 	linkend="InstallingandConfiguringtheMySQLODBCDriver" />) and
 	that you have generated your project database (see <xref
@@ -749,19 +735,160 @@
     </section>
 
 
-    <section id="Edit-ReleaseFiles">
-      <title>Edit/Release Files</title>
 
-      <para><emphasis>Location: Project Administration Menu and Page Admin
-      Content</emphasis></para>
 
-      <para>This service allows project members to post packaged versions (zip
-      or tar gzipped ) of their software on CodeX for public consumption. All
-      posted file releases can be accessed from the Project Summary page.</para>
+  <section id="UserGroups">
+    <title>User Groups</title>
+    
+    <para><emphasis>Location: Project Administration Menu</emphasis></para>
+    
+    <para>A user group, sometimes called a  &#34;ugroup &#34;, is simply a group of CodeX users.
+      User groups are used to set specific permissions to some project data (releases, packages, 
+      see  <xref linkend="FileAccessPermissions" />).
+      A user group is always attached to a project, but the users composing the group do not 
+      necessarily belong to that project.
+      </para>
+    
+    <section id="UGroupList">
+      <title>User Groups Management</title>
+      <para>The &#34;User Groups Admin&#34; item of the Project Administration
+      menu lists all available user groups, and provides a way to create new ones.</para>
+      <figure id="FigureUserGroupManagementPage">
+        <title>User Group Management Page</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+                       fileref="../../screenshots/en_US/sc_usergrouplist.png"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+      <para>In the list, (see for example <xref linkend="FigureUserGroupManagementPage" />) there are two different kinds of user groups: </para>
+     <procedure>
+        <step>
+          <para><emphasis role="bold">Pre-defined User Groups</emphasis>: 
+            These groups are defined for every project. Examples of pre-defined groups are:
+            <emphasis role="bold">project_members, project_admins, registered_users, nobody,
+            file_manager_admin</emphasis>, etc. These groups are dynamic: if you assign some
+            permission to 'project_admins', and a new project administrator is defined, then 
+            this new user will automatically be granted the corresponding permission.</para>
+        </step>
 
-      <para><xref linkend="FileRelease" /> is entirely dedicated to
-      the description of the File Release Service.</para>
+        <step>
+          <para><emphasis role="bold">Custom User Groups</emphasis> are defined by project
+            administrators. They are composed of a static list of users. The only requirement
+            is that any member must be a registered CodeX user. This list can be modified at
+            any time, but will not automatically be updated, except if a member is removed from
+            the project or deleted from the system.
+          </para>
+        </step>
+      </procedure>
     </section>
+
+    <section id="UGroupCreation">
+      <title>Creating a User Group </title>
+      <para>When creating a user group, one has to fill the following fields:</para>
+     <procedure>
+        <step>
+          <para><emphasis role="bold">Name</emphasis>:
+          This is the label that will be displayed when selecting user groups in a permission
+          screen. The group name may not contain space and punctuation.</para>
+        </step>
+
+        <step>
+          <para><emphasis role="bold">Description</emphasis>:
+          Short description of the user group. It is only displayed in the User Group Admin page.</para>
+        </step>
+
+        <step>
+          <para><emphasis role="bold">Create From</emphasis>:
+          This is a quick way of pre-selecting group members: you may create a user group from
+          scratch (Empty Group), from all Project Members or Project Admins, or from an existing
+          user group attached to this project. The members of the selected group will automatically
+          be added to the new group. You will be able to add or remove members on the next screen.
+          </para>
+        </step>
+      </procedure>
+
+      <figure id="FigureUserGroupEdit">
+        <title>User Group Edit</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+                       fileref="../../screenshots/en_US/sc_usergroupedit.png"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+      <para>In the next page (see <xref linkend="FigureUserGroupEdit" />), the project administrator
+      may select individually the members of the new group.</para>
+      <para>Two columns are displayed: the one on the left contains the list of all CodeX
+      registered users, while the one on the right contains the list of users pre-selected
+      on the previous screen, e.g. project members, users copied from another group, or an empty
+      list. Use the two arrows between the columns to move users from one column to the other. </para>
+      <para>The interface also provides convenient ways of selecting users when the registered
+      list is very large: you can choose to display only those users whose login starts with a
+      specific letter, or you may also filter the list by typing letters in the 'Filter' text box.
+      For instance, if you type 'john', only users whose name or login contains 'john' will be displayed.</para>
+      <para>Once you are done, you may click on the Submit button. The user group is created.
+        </para>
+    </section>
+
+      <tip>
+        <title>Tip: Combining pre-defined groups with additional members?</title>
+
+        <para>Sometimes, you might want to grant some permissions to all project members and some 
+        other CodeX users.
+        In this case, you might be tempted to build a user group from the list of project members and
+        to add the other users to the group.
+        The issue with this solution is that if new members join the project, they will have to be
+        manually added to the group. So it is more convenient to create a group containing only the
+        users that are not member of the project. And then, permissions should be granted to this group
+        and to the pre-defined "project members" group. 
+        </para>
+      </tip>
+
+    <section id="UGroupUpdate">
+      <title>Updating a User Group</title>
+      <para>In order to update an existing user group, simply select it in the user group list. 
+      You will be presented with the same screen as with Group Creation, where you can update the
+      name, description and composition of the user group.
+      </para>
+    </section>
+
+
+    <section id="UGroupDeletion">
+      <title>Deleting a User Group</title>
+      <para>User groups can be deleted. Just click on the trash icon next to the group name in the
+      group management page (<xref linkend="FigureUserGroupManagementPage" />) to 
+      suppress the user group from the database. Only custom user groups can be deleted.
+      </para>
+      <important>
+        <title>Warning</title>
+      <para>Please note that if a user group was specifically granted some permission, deleting the
+      user group might be dangerous. Indeed, if a group is the only one allowed to access a package
+      and this group is deleted, the permission is also deleted and reset to default, so any registered
+      user can access the package. 
+      </para>
+      </important>
+    </section>
+
+
+    <section>
+      <title>Additional Information on User Groups</title>
+      <para>It is possible to know all user groups one individual project member belongs to. 
+      Simply display the User Permissions page (<xref linkend="UserPermissions" />). However,
+      please note that only user groups belonging to the current project are displayed. The
+      user might also be a member of additional user groups in other projects.
+      </para>
+      <para>The bottom of the User Group Edit page (<xref linkend="FigureUserGroupEdit" />) also lists all
+      the permissions granted to this group, e.g. packages and releases this user group is granted access to.</para>
+      <para>When a project member is removed from a project, or quits a project, s/he is also automatically
+      removed from all project's user groups.</para>
+      <para>Similarly, when a user is deleted (not just suspended) by the site administrator, s/he is
+      removed from all user groups.</para>
+    </section>
+
+    </section>
+
 
     <section id="SourceCodeAccessLogs">
       <title>Source Code &amp; Document Access Logs</title>

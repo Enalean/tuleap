@@ -46,7 +46,8 @@
           binary version of your software to make developers life even easier.
           The File Release service is well suited for people who want to start
           playing with your software and see how it can help them in their own
-          work. This type of user probably doesn&#39;t want to bother with all
+         xv
+ work. This type of user probably doesn&#39;t want to bother with all
           the intricacies of your source code to start with. As time goes or
           if need be they may be tempted to look into it but this is
           definitely not their first objective. Hence the importance of
@@ -113,11 +114,11 @@
           entities that one can find in a release. Again building on the
           database engine example, we can imagine that the release 1.0 of
           package DB-engine contains the file db-engine-src-1.0.zip for the
-          source file and db-engine-win32-1.0.zip for the precompiled Windows
+          source file and db-engine-win32-1.0.zip for the pre-compiled Windows
           version. When release 1.2 of the DB-engine package pops up, we could
           have files db-engine-src- 1.2.zip for the source file and
-          db-engine-win32-1.2.zip for the precompiled Windows version and a
-          new file called db-engine-linux-intel-1.2.zip for the precompiled
+          db-engine-win32-1.2.zip for the pre-compiled Windows version and a
+          new file called db-engine-linux-intel-1.2.zip for the pre-compiled
           Linux version running on Intel hardware. We haven&#39;t said a word
           about the DB-docs package. May be it is still empty for the moment
           ;-)</para>
@@ -160,7 +161,7 @@
       project only has one package called &#34;Xerox DataGlyph Toolkit&#34;
       with 5 releases in it from 3.0.5 to 3.1.0beta2 listed in chronological
       order. Each release contains an archive for the source code and another
-      one with precompiled binaries (Java byte code here). Starting at release
+      one with pre-compiled binaries (Java byte code here). Starting at release
       3.0.6 new files handling license key issues have been added.</para>
 
       <para>The second example comes from the Global Solutions Architecture
@@ -211,14 +212,17 @@
           etc.</para>
         </step>
       </procedure>
+      <para>Additionally, you may also set specific access permissions to a package or an individual release.
+      </para>
 
       <section id="PackageCreation">
         <title>Package Creation</title>
 
         <para>To create a package first go to the File Release delivery
-        screen. To this end visit your Project Administration page and select
+        screen. To this end To this end , either visit your Project Administration page and select
         the [Edit/Add File Release...] link in the lower right corner of the
-        screen.</para>
+        screen, or visit the Admin section of your Project 'Files' page, and select
+        the [Edit/Release Files] link in the menu.</para>
 
         <para>The first time you enter this page no package is available.
         Adding new packages is as easy as typing the package name in the blank
@@ -339,7 +343,7 @@
             page to see the new uploaded files with the &#34;Refresh&#34;
             button. Alternatively, if you are a MS Windows user, you can also
             see the FTP Incoming space directly from Windows Explorer and drag
-            and drog your files in there (see <xref
+            and drop your files in there (see <xref
             linkend="MSWindowsSharedResources" />). Then refresh the CodeX Web
             page to see your files.</para>
 
@@ -360,7 +364,7 @@
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Step 3 - Gives additional information
+            <para><emphasis role="bold">Step 3 - Give additional information
             on each attached file</emphasis></para>
 
             <para>After all your files have been attached to the release, you
@@ -397,16 +401,96 @@
             team (via CodeX of course)</para></tip></para>
           </listitem>
         </itemizedlist>
-      </section>
     </section>
 
-    <section id="QuickFileRelease">
-      <title>Quick File Release</title>
+    <section id="FileAccessPermissions">
+      <title>Setting Access Permissions</title>
+      
+      <para>By default, packages and releases have no specific access permissions: access
+        to all files is granted to any CodeX registered user (anonymous access is not
+        authorized since we want to keep track of all software downloads).
+        However, in some cases, you might want to limit the users allowed to download your
+        software, e.g. when it contains external source code for which you have no corporate
+        license, or when it contains confidential data.
+        In these specific cases, you can restrict access permissions to your packages and
+        releases to specific user groups. See <xref linkend="UserGroups" /> for more
+        information on user groups.
+      </para>
+      <para>Package and release permissions are enforced at two different levels:</para>
+      <itemizedlist mark="bullet">
+        <listitem><para><emphasis role="bold">File List:</emphasis> When a user is not granted
+          access to a package or release, then the package or release is not listed in the 'File'
+          main page, so s/he does not know that the file exists.</para></listitem>
+        <listitem><para><emphasis role="bold">Download:</emphasis> If a user finds or forges a download 
+          link for an unauthorized file, the download will still fail. The system systematically re-checks
+          for permissions when files are requested for download.</para></listitem>
+      </itemizedlist>
+
+      <para>Access permissions can be defined at two different levels: packages and releases:</para>
+      <figure id="FigurePackagePermissions">
+        <title>Edit Package Permissions</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+                       fileref="../../screenshots/en_US/sc_packagepermissions.png"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <itemizedlist mark="bullet">
+
+        <listitem>
+          <para><emphasis role="bold">Package permissions</emphasis></para>
+          <para>By clicking on 'Define Permissions' on the package administration screen 
+            (see <xref linkend="FigureAPartOfThePackageAdministrationScreenGSAProject" />),
+            a project member with the 'File Manager Admin' right (see <xref linkend="UserPermissions" />)
+            can attach access permissions to any existing package.</para>
+          <para>The package permissions edition page (<xref linkend="FigurePackagePermissions" />) 
+            lists all the project user groups. Simply select the user groups that will be allowed 
+            to download files from the package and press submit. You may select several groups at
+            the same time if needed. If you press 'Reset To Defaults', the access permissions to this
+            package will be reset, so any registered user will be able to download it.
+          </para>
+          <para>Note that each time you edit permissions associated to a package, the previous values are
+            reset. So, for instance, if you grant permissions to 'project members', submit, then want to
+            grant permissions to another group, do not forget to select also 'project members' the second
+            time, or they will not have access to your package.</para>
+          <para>Permissions attached to a package apply to all releases and files that belong to this package.
+            But you may also set different permissions to specific releases (see below).</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Release permissions</emphasis></para>
+          <para>If you need finer grained access control to your software, you can also define permissions
+            at the release level.</para>
+          <para>The procedure is similar to the package permissions definition. Simply click on 'Define Permissions'
+            on the release page (see <xref linkend="FigureAPartOfTheGSAProjectReleaseScreen" />) to attach 
+            access permissions to a release. Then select allowed user groups and submit.</para>
+          <para>If you do not specify any access permissions for a release (or reset them to default), it inherits 
+            the access permissions from the package it belongs to. However, when you define a permission for a release,
+            then it overrides the permissions defined for the package.</para>
+          <para>The permissions set for the release can be either stricter or less strict than the package permissions.
+          </para>
+        </listitem>
+
+      </itemizedlist>
+      <para><tip><title>Tip: Updating existing permissions</title>
+        <para>There is a shortcut to update package and release permissions. For project
+        administrators or file manager administrators, the main 'Files' page displays small lock icons
+        next to protected packages and releases. Simply click on the lock to update permissions
+        for the corresponding object.
+      </para></tip></para>
+    </section>
+    
+  </section>
+
+  <section id="QuickFileRelease">
+    <title>Quick File Release</title>
 
       <para>CodeX also provides you with a quick File Release mechanism. To
       access the short version of the Release Process click on the [Quick Add
       File Release...] link in the lower right corner of your Project
-      Administration page. The Quick File Release page is a one step process
+      Administration page, or in the Files Admin page. The Quick File Release page is a one step process
       where you can specify all the necessary information at the same time.
       The counterpart is that you can only attach one single file to a given
       release and not several as in the full File Release process</para>
@@ -426,6 +510,7 @@
       <para>If some CodeX users were monitoring the package, they will 
       automatically receive an email notification, unless you set the release
       status to 'Hidden'.</para>
+
     </section>
   </chapter>
 <!--

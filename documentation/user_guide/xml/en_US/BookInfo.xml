@@ -351,6 +351,16 @@
 	Import section. Corrected typos in chapter Project Administration,
 	section Data Export</revremark>
       </revision>
+      <revision>
+        <revnumber>2.6.11</revnumber>
+
+        <date>28-Sep-2004</date>
+
+        <authorinitials>Nicolas Guerin</authorinitials>
+
+        <revremark>Added User Group section in the Project Administration chapter.
+        Added Permissions section in the File Release chapter.</revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--
