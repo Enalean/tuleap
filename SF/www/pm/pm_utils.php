@@ -69,17 +69,17 @@ function pm_tech_select_box($name='assigned_to',$group_id=false,$checked='xzxz')
 	}
 }
 
-function pm_multiple_task_depend_box ($name='dependent_on[]',$group_project_id=false,$project_task_id=false) {
-	if (!$group_project_id) {
-		return 'ERROR - no group_project_id';
+function pm_multiple_task_depend_box ($name='dependent_on[]',$group_id=false,$group_project_id=false,$project_task_id=false) {
+	if (!$group_id) {
+		return 'ERROR - no group_id specified';
 	} else {
-		$result=pm_data_get_tasks ($group_project_id);
 		if ($project_task_id) {
-			$result=pm_data_get_other_tasks ($group_project_id,$project_task_id);
+			$result=pm_data_get_other_tasks ($group_id,$group_project_id,$project_task_id);
 			//get the data so we can mark items as SELECTED
 			$result2=pm_data_get_dependent_tasks ($project_task_id);
 			return html_build_multiple_select_box ($result,$name,util_result_column_to_array($result2));
 		} else {
+		    $result=pm_data_get_tasks ($group_id,$group_project_id);
 			return html_build_multiple_select_box ($result,$name,array());
 		}
 	}

@@ -119,7 +119,8 @@ $result=db_query($sql);
 			List of possible tasks that this one could depend on
 		*/
 
-		echo pm_multiple_task_depend_box ('dependent_on[]',$group_project_id,$project_task_id);
+		//Now Show all tasks
+		echo pm_multiple_task_depend_box ('dependent_on[]',$group_id,false,$project_task_id);
 		?>
 		</TD>
 	</TR>

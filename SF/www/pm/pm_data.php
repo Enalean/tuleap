@@ -6,12 +6,21 @@
 //
 // $Id$
 
-function pm_data_get_tasks ($group_project_id) {
+function pm_data_get_tasks ($group_id,$group_project_id) {
+    if ($group_project_id) {
 	$sql="SELECT project_task_id,summary ".
-		"FROM project_task ".
-		"WHERE group_project_id='$group_project_id' ".
-		"AND status_id <> '3' ORDER BY project_task_id DESC LIMIT 100";
-	return db_query($sql);
+	    "FROM project_task ".
+	    "WHERE group_project_id='$group_project_id' ".
+	    "AND status_id <> '3' ORDER BY project_task_id DESC LIMIT 200";
+    } else {
+	// If subproject id is null then get all the task for this project (group_id)
+	$sql="SELECT project_task.project_task_id,project_task.summary ".
+	    "FROM project_task,project_group_list ".
+	    "WHERE project_task.group_project_id=project_group_list.group_project_id ".
+	    "AND project_task.status_id <> '3' ".
+	    "AND project_group_list.group_id='$group_id' ORDER BY project_task_id DESC LIMIT 200";
+    }
+    return db_query($sql);
 }
 
 function pm_data_get_subprojects ($group_id) {
@@ -20,12 +29,22 @@ function pm_data_get_subprojects ($group_id) {
 	return db_query($sql);
 }
 
-function pm_data_get_other_tasks ($group_project_id,$project_task_id) {
+function pm_data_get_other_tasks ($group_id,$group_project_id,$project_task_id) {
+    if ($group_project_id) {
 	$sql="SELECT project_task_id,summary ".
-		"FROM project_task ".
-		"WHERE group_project_id='$group_project_id' ".
-		"AND status_id <> '3' ".
-		"AND project_task_id <> '$project_task_id' ORDER BY project_task_id DESC LIMIT 100";
+	    "FROM project_task ".
+	    "WHERE group_project_id='$group_project_id' ".
+	    "AND status_id <> '3' ".
+	    "AND project_task_id <> '$project_task_id' ORDER BY project_task_id DESC LIMIT 200";
+    } else {
+	// If subproject id is null then get all the task for this project (group_id)
+	$sql="SELECT project_task.project_task_id,project_task.summary ".
+	    "FROM project_task,project_group_list ".
+	    "WHERE project_task.group_project_id=project_group_list.group_project_id ".
+	    "AND project_task.status_id <> '3' ".
+	    "AND project_task_id <> '$project_task_id' ".
+	    "AND project_group_list.group_id='$group_id' ORDER BY project_task_id DESC LIMIT 200";
+    }
 	return db_query($sql);
 }
 

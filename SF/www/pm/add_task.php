@@ -76,7 +76,8 @@ pm_header(array('title'=>'Add a New Task'));
 		<B>Dependent On Task:</B>
 		<BR>
 		<?php
-		echo pm_multiple_task_depend_box ('dependent_on[]',$group_project_id);
+		// Now show all tasks
+		echo pm_multiple_task_depend_box ('dependent_on[]',$group_id,false);
 		?>
 		</TD>
 	</TR>
