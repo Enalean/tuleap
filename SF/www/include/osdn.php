@@ -4,7 +4,7 @@ $osdn_sites[1] = array('PARC' => 'http://parcweb.parc.xerox.com/');
 $osdn_sites[2] = array('XR&amp;T' => 'http://www.research.xerox.com/');
 $osdn_sites[3] = array('Open Source at Xerox' => 'http://bazaar.adoc.xerox.com/');
 $osdn_sites[4] = array('Linux at Xerox' => 'http://xww.linux.world.xerox.com/');
-$osdn_sites[5] = array('WRC' => 'http://www.wrc.xerox.com/');
+$osdn_sites[5] = array('Wilson Center' => 'http://techweb.wrc.xerox.com/');
 $osdn_sites[6] = array('Slashdot.Org' => 'http://www.slashdot.com/');
 $osdn_sites[7] = array('SourceForge' => 'http://www.sourceforge.net/');
 $osdn_sites[8] = array('Freshmeat' => 'http://www.freshmeat.net/');
