@@ -944,15 +944,6 @@ BrowserMatch "JDK/1\.0" force-response-1.0
 #    Allow from .your_domain.com
 #</Location>
 
-# Allow access to local system documentation from localhost
-Alias /doc/ /usr/doc/
-<Location /doc>
-  order deny,allow
-  deny from all
-  allow from localhost
-  Options Indexes FollowSymLinks
-</Location>
-
 #
 # There have been reports of people trying to abuse an old bug from pre-1.1
 # days.  This bug involved a CGI script distributed as a part of Apache.
