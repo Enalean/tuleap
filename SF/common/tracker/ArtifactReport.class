@@ -365,7 +365,7 @@ class ArtifactReport extends Error {
 		
 		// Final query
 		$sql = "select count(*) ".$from." ".$where." group by a.artifact_id";
-		//echo "<DBG> query count=".$sql."<br>";
+		echo "<DBG> query count=".$sql."<br>";
 		
 		$result_count = db_query($sql  );
 		$totalrows = db_numrows($result_count);
@@ -387,7 +387,7 @@ class ArtifactReport extends Error {
 		$limit = " LIMIT $offset,$chunksz";
 		$sql = $select." ".$from." ".$where." group by a.artifact_id ".$order_by.$limit;
 
-		//echo "<DBG> query=".$sql."<br>";
+		echo "<DBG> query=".$sql."<br>";
 		
 		return $sql;
 	
@@ -456,8 +456,14 @@ class ArtifactReport extends Error {
 					list($year,$month,$day) = util_date_explode($prefs[$field->getName()][0]);
 					$time_end = mktime(23, 59, 59, $month, $day, $year);
 					$where = " AND ".$field_name." >= ".$time." AND ".$field_name." <= ".$time_end;
-			    } else {
-					$where = " AND ".$field_name." ".$operator."=".$time;
+			    } else if ($operator == '>') { 
+					list($year,$month,$day) = util_date_explode($prefs[$field->getName()][0]);
+					$time_after = mktime(0, 0, 0, $month, $day+1, $year);
+					$where = " AND ".$field_name." ".$operator."=".$time_after;
+			    } else if ($operator == '<') { 
+					list($year,$month,$day) = util_date_explode($prefs[$field->getName()][0]);
+					$time_before = mktime(23, 59, 59, $month, $day-1, $year);
+					$where = " AND ".$field_name." ".$operator."=".$time_before;
 			    }
 			}
 		

@@ -22,10 +22,12 @@ function format_date($format,$value,$default_value = '-') {
 // went well (true) or bad (false)
 function util_date_to_unixtime($date) {
     $time = 0;
-    if ($date) {
+    if (!$date||$date=="") {
+    	return array($time,false);
+    }
+    
 	list($year,$month,$day) = util_date_explode($date);
 	$time = mktime(0, 0, 0, $month, $day, $year);
-    }
     return array($time,true);
 }
 
