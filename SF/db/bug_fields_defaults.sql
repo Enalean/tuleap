@@ -354,7 +354,7 @@ DROP TABLE IF EXISTS bug_group, bug_category, bug_resolution, bug_status;
 
 
 # ==============================
-# Bug_profile table
+# Bug_report table
 # ==============================
 # Create the site default bug search report which correspond
 # to what the initial SourceForge BTS was

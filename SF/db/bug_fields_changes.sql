@@ -234,7 +234,7 @@ CREATE TABLE bug_report_field (
 );
 
 #
-# Table structure for table 'bug_attachment'
+# Table structure for table 'bug_file' for bug attachments
 #
 
 CREATE TABLE bug_file (
