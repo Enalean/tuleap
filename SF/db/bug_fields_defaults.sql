@@ -81,6 +81,8 @@ INSERT INTO bug_field \
   VALUES (210,'plan_release','TF','10/40','Planned Release','The release in which you initially planned the bug to be fixed. Same as the other Planned Release field <u>except</u> this one is free text.','S',0,0,1,0);
 INSERT INTO bug_field \
   VALUES (211,'priority','SB','','Priority','How quickly the bug must be fixed (Immediate, Normal, Low, Later,...)','S',0,0,1,0);
+INSERT INTO bug_field \
+  VALUES (212,'keywords','TF','60/120','Keywords','A list of comma separated keywords associated with a bug','S',0,0,1,0);
 
 
 # ==============================
@@ -303,6 +305,10 @@ INSERT INTO bug_field_usage VALUES (210,100,0,0,0,2000);
 # priority (bug_field_id = 211)
 #
 INSERT INTO bug_field_usage VALUES (211,100,0,0,0,250);
+
+# Keywords (bug_field_id = 212)
+#
+INSERT INTO bug_field_usage VALUES (212,100,0,0,0,3000);
 
 #**********************************
 # TRANSFER LEGACY FIELD VALUES

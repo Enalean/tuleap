@@ -10,6 +10,7 @@ bug_header(array ('title'=>'Bug Detail: '.$bug_id));
 
 $sql="SELECT * FROM bug WHERE bug_id='$bug_id' AND group_id='$group_id'";
 $fields_per_line=2;
+$max_size=40;
 
 $result=db_query($sql);
 
@@ -39,11 +40,23 @@ if (db_numrows($result) > 0) {
 	       bug_data_is_used($field_name) ) {
 				   
 	      // display the bug field
+	      // if field size is greatest than max_size chars then force it to
+	      // appear alone on a new line or it won't fit in the page
 	      $field_value = db_result($result,0,$field_name);
-	      echo ($i % $fields_per_line ? '':"\n<TR>");
-	      echo '<TD>'.bug_field_display($field_name,$group_id,$field_value,false,true,true).'</TD>';
-	      $i++;
-	      echo ($i % $fields_per_line ? '':"\n</TR>");
+	      list($sz,) = bug_data_get_display_size($field_name);
+	      if ($sz > $max_size) {
+		  echo "\n<TR>".
+		      '<TD valign="top" colspan="'.$fields_per_line.'">'.
+		      bug_field_display($field_name,$group_id,$field_value,false,true,true).
+		      '</TD>'.
+		      "\n</TR>";
+		  $i=0;
+	      } else {
+		  echo ($i % $fields_per_line ? '':"\n<TR>");
+		  echo '<TD valign="top">'.bug_field_display($field_name,$group_id,$field_value,false,true,true).'</TD>';
+		  $i++;
+		  echo ($i % $fields_per_line ? '':"\n</TR>");
+	      }
 	  }
       }
       

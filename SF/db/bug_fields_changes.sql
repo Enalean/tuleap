@@ -37,6 +37,7 @@ ALTER TABLE bug ADD hours  float(10,2) DEFAULT '0.00' NOT NULL;
 ALTER TABLE bug ADD component_version VARCHAR(255) DEFAULT '' NOT NULL;
 ALTER TABLE bug ADD fix_release VARCHAR(255) DEFAULT '' NOT NULL;
 ALTER TABLE bug ADD plan_release VARCHAR(255) DEFAULT '' NOT NULL;
+ALTER TABLE bug ADD keywords VARCHAR(255) DEFAULT '' NOT NULL;
 
 # Make sure default value for historical fields is now '100'
 # that is to say None (where "None" means something of course).
@@ -80,8 +81,8 @@ ALTER TABLE bug_history ADD type int;
 #               For SB Not applicable
 # label       : short name (used on the HTML form)
 # description : longer description of this field
-# scope       : P if predefined values are for the entire Codex,
-#               S if values can be re-defined at the project level
+# scope       : S if predefined values are for the entire Codex,
+#               P if values can be re-defined at the project level
 # required    : 0 a project can decide not to use this bug field
 #               1 all projects have to use this bug field
 # empty_ok    : 0 this field must always be assigned a value

@@ -8,6 +8,7 @@
 
 bug_header(array ('title'=>'Submit a Bug'));
 $fields_per_line=2;
+$max_size = 40;
 
 // First display the message preamble
 $res_preamble  = db_query("SELECT bug_preamble FROM groups WHERE group_id=$group_id");
@@ -40,12 +41,24 @@ while ( $field_name = bug_list_all_fields() ) {
 	     (!$is_bugadmin && bug_data_is_showed_on_add($field_name)) ) {
 	    
 	    // display the bug field with its default value
+	    // if field size is greatest than max_size chars then force it to
+	    // appear alone on a new line or it won't fit in the page
 	    $field_value = bug_data_get_default_value($field_name);
 
-	    echo ($i % $fields_per_line ? '':"\n<TR>");
-	    echo '<TD valign="top">'.bug_field_display($field_name,$group_id,$field_value).'</TD>';
-	    $i++;
-	    echo ($i % $fields_per_line ? '':"\n</TR>");
+	    list($sz,) = bug_data_get_display_size($field_name);
+	    if ($sz > $max_size) {
+		echo "\n<TR>".
+		    '<TD valign="top" colspan="'.$fields_per_line.'">'.
+		    bug_field_display($field_name,$group_id,$field_value).
+		    '</TD>'.
+		    "\n</TR>";
+		$i=0;
+	    } else {
+		echo ($i % $fields_per_line ? '':"\n<TR>");
+		echo '<TD valign="top">'.bug_field_display($field_name,$group_id,$field_value).'</TD>';
+		$i++;
+		echo ($i % $fields_per_line ? '':"\n</TR>");
+	    }
 	}
     }
 }
