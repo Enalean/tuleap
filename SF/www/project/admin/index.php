@@ -71,8 +71,10 @@ print '&nbsp;
 Short Description: '. db_result($res_grp,0,'short_description') .'
 <P>
 Homepage Link: <B>'. db_result($res_grp,0,'homepage') .'</B>
+<!-- Not implemented on CodeX
 <P align=center>
 <A HREF="http://'.$GLOBALS['sys_cvs_host'].'/cvstarballs/'. db_result($res_grp,0,'unix_group_name') .'-cvsroot.tar.gz">[ Download Your Nightly CVS Tree Tarball ]</A>
+-->
 <P>
 <B>Trove Categorization Info</B> - This group is in the following Trove categories:
 
