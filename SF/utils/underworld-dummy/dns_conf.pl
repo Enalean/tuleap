@@ -64,7 +64,7 @@ $c->execute();
 
 while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow()) {
 
-	($name, $aliases, $addrtype, $length, @addrs) = gethostbyname("$unix_box.codex.xerox.com");
+	($name, $aliases, $addrtype, $length, @addrs) = gethostbyname("$unix_box.$sys_default_domain");
 	@blah = unpack('C4', $addrs[0]);
 	$ip = join(".", @blah);
 
@@ -74,8 +74,11 @@ while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow())
 
 # LJ	push @dns_zone, sprintf("%-24s%-16s",$unix_group_name,"IN\tA\t" . "$ip\n");
 # LJ	push @dns_zone, sprintf("%-24s%-28s","", "IN\tMX\t" . "mail1.codex.xerox.com.\n");
-	push @dns_zone, sprintf("%-24s%-16s",$unix_group_name,"IN\tCNAME\t" . "atlas.codex.xerox.com."."\n");
-	push @dns_zone, sprintf("%-24s%-30s","cvs.".$unix_group_name,"IN\tCNAME\t" . "cvs1.codex.xerox.com."."\n\n");
+	push @dns_zone, sprintf("%-24s%-16s",$unix_group_name,"IN\tCNAME\t" . "$sys_fullname."."\n");
+	push @dns_zone, sprintf("%-24s%-30s","cvs.".$unix_group_name,"IN\tCNAME\t" . "cvs1.$sys_default_domain."."\n\n");
 }
 
-write_array_file("/home/dummy/dumps/dns.codex.xerox.com", @dns_zone);
+# Retrieve the dummy's home directory
+($name,$passwd,$uid,$gid,$quota,$comment,$gcos,$dir,$shell,$expire) = getpwnam("dummy");
+
+write_array_file("$dir/dumps/dns_dump", @dns_zone);

@@ -470,7 +470,16 @@ sub add_group {
                 chmod 02775, ($group_dir, $log_dir, $cgi_dir, $ht_dir);
 
 		# Added by LJ - Copy the default empty page for Web site
-		system("cp default_page.php $ht_dir/index.php");
+		# Check if exists a custom file
+        ($dev,$ino) = stat("custom/default_page.php");  
+        if ( $ino ) {
+            # A custom file exists
+    		system("cp custom/default_page.php $ht_dir/index.php");
+        } else {
+            # Use the standard file
+    		system("cp default_page.php $ht_dir/index.php");
+        }
+		
 		chown $dummy_uid, $gid, "$ht_dir/index.php";
 		chmod 0664, "$ht_dir/index.php";       
 

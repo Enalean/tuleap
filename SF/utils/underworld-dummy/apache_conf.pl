@@ -21,7 +21,7 @@ $c->execute();
 
 while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow()) {
 
-	($name, $aliases, $addrtype, $length, @addrs) = gethostbyname("$unix_box.codex.xerox.com");
+	($name, $aliases, $addrtype, $length, @addrs) = gethostbyname("$unix_box.$sys_default_domain");
 	@blah = unpack('C4', $addrs[0]);
 	$ip = join(".", @blah);
 
@@ -34,7 +34,7 @@ while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow())
 	# Note: the DNS entry for the customized HTTP domain must exist somewhere
 	# in some DNS server in the Corp.
 	$http_domain =~ tr/A-Z/a-z/;
-	$codex_domain = "$unix_group_name.codex.xerox.com";
+	$codex_domain = "$unix_group_name.$sys_default_domain";
 	if ($http_domain ne $codex_domain)
 	  {
 	    $server_name = "  ServerName $http_domain\n";
@@ -62,4 +62,7 @@ while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow())
 
 }
 
-write_array_file("/home/dummy/dumps/apache_dump", @apache_zone);
+# Retrieve the dummy's home directory
+($name,$passwd,$uid,$gid,$quota,$comment,$gcos,$dir,$shell,$expire) = getpwnam("dummy");
+
+write_array_file("$dir/dumps/apache_dump", @apache_zone);

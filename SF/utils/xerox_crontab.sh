@@ -38,14 +38,14 @@ cd $UTILSHOME/underworld-dummy
 ./mail_aliases.pl
 
 # we also need to copy the CodeX aliases file in /etc
-# because the /home/dummy dir has perm 700 which is not
+# because the ~dummy dir has perm 700 which is not
 # enough for newaliases to operate correctly
 # and run the newaliases command to update sendmail
 #
 # NOTE: the newaliases command is not necessary because
 # sendmail automagically detects the change of the aliases
 # file. But just in case...
-cp /home/dummy/dumps/aliases /etc/aliases.codex
+cp ~dummy/dumps/aliases /etc/aliases.codex
 /usr/bin/newaliases
 
 # and restart sendmail to be sure the new aliases DB
@@ -60,7 +60,7 @@ cp /home/dummy/dumps/aliases /etc/aliases.codex
 ./dns_conf.pl
 DNS_DIR=/usr/local/domain/data/primary
 cp -f $DNS_DIR/codex_full.zone $DNS_DIR/codex_full.zone.backup
-cp -f ~dummy/dumps/dns.codex.xerox.com $DNS_DIR/codex_full.zone
+cp -f ~dummy/dumps/dns_dump $DNS_DIR/codex_full.zone
 killall -HUP named
 
 # generate the list of CodeX virtual hosts

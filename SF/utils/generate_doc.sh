@@ -17,6 +17,7 @@
 FORCE=0
 HELP=0
 VERBOSE=0
+LOCAL_CVSROOT=":pserver:sbouhet@cvs.codex.codex.xerox.com:/cvsroot/codex";
 
 # Check arguments
 while	((1))	# look for options
@@ -24,6 +25,8 @@ do	case	"$1" in
 	\-v*)	VERBOSE=1;;
 	\-f*)	FORCE=1;;
 	\-h*)	HELP=1;;
+	\-d*)   shift;
+	        LOCAL_CVSROOT=$1;;
 	*)	if [ ! -z "$1" ];
 	    then
 	        echo "Invalid option $1";
@@ -37,7 +40,8 @@ done
 
 if [ $HELP == 1 ]
 then
-    echo "Usage: generate_doc.sh [-f] [-v] [-h]";
+    echo "Usage: generate_doc.sh [-d CVSROOT] [-f] [-v] [-h]";
+    echo "  -d CVSROOT : specify the CVSROOT";
     echo "  -f : force to generate the documentation witout checking CVS";
     echo "  -v : verbose";
     echo "  -h : help";
@@ -55,7 +59,7 @@ cd $BASEDIR/user_guide/xml/en_US
 if [ $FORCE != 1 ]
 then
     # check if some need some update
-    COUNT=`cvs -q -d:pserver:sbouhet@cvs.codex.codex.xerox.com:/cvsroot/codex update | wc -l`
+    COUNT=`cvs -q -d$LOCAL_CVSROOT update | wc -l`
     if [ $COUNT == 0 ]
     then
         # No changes in the documentation
