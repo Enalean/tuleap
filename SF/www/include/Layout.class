@@ -485,6 +485,7 @@ echo html_blankimage(5,100);
                 	case 'downloads': print 'Downloads'; break;
         	        case 'news': print 'News'; break;
 	                case 'patch': print 'Patches'; break;
+	                case 'admin': print 'Administration'; break;
                 	default: print 'Summary'; break;
         	}
         print '</H2>
