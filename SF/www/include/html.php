@@ -65,6 +65,11 @@ function html_image($src,$args,$display=1) {
 	}
 }
 
+function html_get_timezone_popup ($title='timezone',$selected='xzxzxzx') {
+    global $TZs;
+    return html_build_select_box_from_arrays ($TZs,$TZs,$title,$selected,false);
+}
+
 function html_build_list_table_top ($title_arr,$links_arr=false) {
 	/*
 		Takes an array of titles and builds
