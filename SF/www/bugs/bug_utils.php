@@ -880,7 +880,9 @@ function bug_mail_followup($bug_id,$more_addresses=false,$changes=false) {
     if ($result && db_numrows($result) > 0) {
 			
 	$group_id = db_result($result,0,'group_id');
-	$fmt = "%-40s";
+	$fmt_len = 40;
+	$fmt_left = sprintf("%%-%ds ", $fmt_len-1);
+	$fmt_right = "%s";
 
 	// bug fields
 	// Generate the message preamble with all required
@@ -896,13 +898,13 @@ function bug_mail_followup($bug_id,$more_addresses=false,$changes=false) {
 	    ($changes ? '':$bug_href)."\n\n";
     
 	// Some special field first (group, submitted by/on)
-	$body .= sprintf($fmt.$fmt."\n", 
+	$body .= sprintf($fmt_left.$fmt_right."\n", 
 			 'Submitted by: '.user_getname(db_result($result,0,'submitted_by')),
 			 'Project: '.group_getname($group_id) );
 	$body .= 'Submitted on: '.format_date($sys_datefmt,db_result($result,0,'date'))."\n";
 
 	// All other regular fields now		 
-	$i=0;
+	$left = 1;
 	while ( $field_name = bug_list_all_fields() ) {
 
 	    // if the field is a special field or if not used by his project 
@@ -911,13 +913,29 @@ function bug_mail_followup($bug_id,$more_addresses=false,$changes=false) {
 		 bug_data_is_used($field_name) ) {
 
 		$field_value = db_result($result,0,$field_name);
-		$body .= sprintf($fmt,bug_field_display($field_name, $group_id,
-					  $field_value,false,true,true,true));
-		$i++;
-		$body .= ($i % 2 ? '':"\n");
+		$display = bug_field_display($field_name, $group_id,
+				      $field_value,false,true,true,true);
+		$item = sprintf(($left? $fmt_left : $fmt_right), $display);
+		if (strlen($item) > $fmt_len) {
+		    if (! $left) {
+		    	$body .= "\n";
+		    }
+		    $body .= sprintf($fmt_right, $display);
+		    $body .= "\n";
+		    $left = 1;
+		}
+		else {
+		    $body .= $item;
+		    $left = ! $left;
+		    if ($left) {
+		    	$body .= "\n";
+		    }
+		}
 	    }
 	}
-	$body .= ($i % 2 ? "\n":'');
+	if (! $left) {
+	    $body .= "\n";
+	}
 
 	// Now display other special fields
 	
