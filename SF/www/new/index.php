@@ -153,7 +153,7 @@ if (!$res_new || db_numrows($res_new) < 1) {
 $HTML->header(array("title"=>"New Projects"));
 
 function build_new_project_query ($start_time,$offset) {
-	$query	= "SELECT group_id,unix_group_name,group_name,homepage,short_description, xrx_export_ettm,register_time FROM groups " .
+	$query	= "SELECT group_id,unix_group_name,group_name,short_description,register_time FROM groups " .
 		"WHERE is_public=1 AND status='A' AND type=1 " .
 		"AND register_time < $start_time " . 
 		"ORDER BY register_time DESC LIMIT $offset,21";
