@@ -371,6 +371,15 @@
         <revremark>Added documentation on patch from ST (bind tracker fields to 
         user groups) in the Tracker chapter.</revremark>
       </revision>
+      <revision>
+        <revnumber>2.6.13</revnumber>
+
+        <date>24-Nov-2004</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Minor correction on summary of Tracker Access Permissions for Mass Update and Import</revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--

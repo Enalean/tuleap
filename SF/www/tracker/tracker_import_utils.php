@@ -54,17 +54,8 @@ function parse_field_names($data,$used_fields,$ath,
 
       //special case for submitted by
       if ($field_name == "submitted_by") {
-	if ($ath->allowsAnon()) {
-	  //$predefined_values[$c] = array();
-	} else {
-	  $techs = $ath->getTechnicians();
-	  $count = db_numrows($techs);
-	  unset($values);
-	  for ($i=0;$i<$count;$i++) {
-	    $values[db_result($techs,$i,1)] = db_result($techs,$i,0);
-	  }
-	  $predefined_values[$c] = $values;
-	}
+	// simply put nothing in predefined values for submitted_by
+	// as we accept all logged users, even None for allow-anon trackers
       
 	//for all other fields not submitted by
       } else {
@@ -139,8 +130,11 @@ function check_values($row,&$data,$used_fields,$parsed_labels,$predefined_values
 	      (strcasecmp($val,'1') == 0 || strcasecmp($val,'5') == 0 || strcasecmp($val,9) == 0)) {
 	    //accept simple ints for Severity fields instead of 1 - Ordinary,5 - Major,9 - Critical
 	    //accept simple ints for Priority fields instead of 1 - Lowest,5 - Medium,9 - Highest
-	  } else if ($field_name == 'submitted_by' && ($val == '' || $ath->allowsAnon())) {
-	    //accept anonymous user or use importing user as 'submitted by'
+	  } else if ($field_name == 'submitted_by' && 
+		     (($val == 'None' && $ath->allowsAnon()) ||
+		     $val == "" ||
+		     user_getemail_from_unix($val) != "Error - Not Found")) {
+	    //accept anonymous user, use importing user as 'submitted by', or simply make sure that user is a known user
 	  } else {
 	    $errors .= "<b>Line ".($row+1)." [</b>".implode(",",$data)."<b>]</b>:<br>value \"$val\" is not one of the predefined values of field \"$label\" (".implode(",",array_keys($predef_vals)).")";
 	    return false;
@@ -165,7 +159,7 @@ function check_values($row,&$data,$used_fields,$parsed_labels,$predefined_values
 	}
 
 	if ($is_empty) {
-	  $errors .= "<b>Line ".($row+1)." [</b>".implode(",",$data)."<b>]</b>:<br>\"$label\" is a mandatory field in tracker ".$ath->getName().". Please specify it in your csv file. ";
+	  $errors .= "<b>Line ".($row+1)." [</b>".implode(",",$data)."<b>]</b>:<br>\"$label\" is a mandatory field in tracker ".$ath->getName().". Please specify it in your csv file (Current val is \"$val\"). ";
 	  return false;
 	}
       }
@@ -233,9 +227,8 @@ function check_insert_artifact($row,&$data,$used_fields,$parsed_labels,$predefin
   $submitted_by_field = $art_field_fact->getFieldFromName('submitted_by');
   $submitted_by_label = $submitted_by_field->getLabel();
   $submitted_by_col = array_search($submitted_by_label,$parsed_labels);
-
   $summary = $data[$summary_col];
-  if ($submitted_by_col) {
+  if ($submitted_by_col !== false) {
     $sub_user_name = $data[$submitted_by_col];
     //$sub_user_ids = $predefined_values[$submitted_by_col];
      $res = user_get_result_set_from_unix($sub_user_name);
@@ -246,9 +239,10 @@ function check_insert_artifact($row,&$data,$used_fields,$parsed_labels,$predefin
   
   
   if ( $summary_field && $summary_field->isUsed() ) {
-    $res=db_query("SELECT * FROM artifact WHERE submitted_by=$sub_user_id AND summary=\"$summary\"");
+    $res=db_query("SELECT * FROM artifact WHERE group_artifact_id = ".$ath->getID().
+		  "AND submitted_by=$sub_user_id AND summary=\"$summary\"");
     if ($res && db_numrows($res) > 0) {
-      $errors .= "<b>Line ".($row+1)." [</b>".implode(",",$data)."<b>]</b>:<br>User $sub_user_name has already submitted a artifact with the same summary. Please don't try to import it again.";
+      $errors .= "<b>Line ".($row+1)." [</b>".implode(",",$data)."<b>]</b>:<br>User $sub_user_name has already submitted a artifact with the same summary (\"$summary\"). Please don't try to import it again.";
       return false;           
     }
   }
@@ -294,7 +288,7 @@ function show_parse_results($used_fields,$parsed_labels,$artifacts_data,$aid_col
   //artifact_id is not given otherwise the artifacts should
   //only be updated and we don't need to touch sub_on and sub_by
   if ($aid_column == -1 && $submitted_by_column == -1) {
-    $new_sub_by_col = count($parsed_labels);
+      $new_sub_by_col = count($parsed_labels);
     $submitted_by_field = $art_field_fact->getFieldFromName('submitted_by');
     $parsed_labels[] = $submitted_by_field->getLabel();
   }
@@ -325,7 +319,6 @@ function show_parse_results($used_fields,$parsed_labels,$artifacts_data,$aid_col
       $value = $data[$c];
       $width = ' class="small"';
 
-
       if ($value != "") {
 	//FOLLOW_UP COMMENTS
 	if ($parsed_labels[$c] == "Follow-up Comments") {
@@ -333,7 +326,7 @@ function show_parse_results($used_fields,$parsed_labels,$artifacts_data,$aid_col
 	  unset($parse_error);
 	  if (parse_details($data[$c],$parsed_details,$parse_error,true)) {
 	    if (count($parsed_details) > 0) {
-	      echo '<TD $width><TABLE>';
+	      echo '<TD $width valign="top"><TABLE>';
 	      echo '<TR class ="boxtable"><TD class="boxtitle">Date</TD><TD class="boxtitle">By</TD><TD class="boxtitle">type</TD><TD class="boxtitle">comment</TD></TR>';
 	      for ($d=0; $d < count($parsed_details); $d++) {
 		$arr = $parsed_details[$d];
@@ -364,12 +357,12 @@ function show_parse_results($used_fields,$parsed_labels,$artifacts_data,$aid_col
 	//SUBMITTED_ON
 	if ($parsed_labels[$c] == $open_date_field->getLabel()) {
 	  //if insert show default value
-	  if ($aid_column == -1 || $aid == "") echo "<TD $width><I>$sub_on</I></TD>\n";
+	  if ($aid_column == -1 || $aid == "") echo "<TD $width valign=\"top\"><I>$sub_on</I></TD>\n";
 	  else echo "<TD $width valign=\"top\"><I>Unchanged</I></TD>\n";
 
 	  //SUBMITTED_BY
 	} else if ($parsed_labels[$c] == $submitted_by_field->getLabel()) {
-	  if ($aid_column == -1 || $aid == "") echo "<TD $width><I>$sub_user_name</I></TD>\n";
+	  if ($aid_column == -1 || $aid == "") echo "<TD $width valign=\"top\"><I>$sub_user_name</I></TD>\n";
 	  else echo "<TD $width valign=\"top\"><I>Unchanged</I></TD>\n";
 
 	  //ARTIFACT_ID
@@ -405,7 +398,7 @@ function show_parse_results($used_fields,$parsed_labels,$artifacts_data,$aid_col
     $data = $artifacts_data[$i];
     for ($c=0; $c < count($data); $c++) {
       echo '
-        <INPUT TYPE="HIDDEN" NAME="artifacts_data_'.$i.'_'.$c.'" VALUE="'.$data[$c].'">';
+        <INPUT TYPE="HIDDEN" NAME="artifacts_data_'.$i.'_'.$c.'" VALUE="'.htmlspecialchars($data[$c]).'">';
     }
   }
   
@@ -563,16 +556,10 @@ function get_import_user(&$sub_user_id,&$sub_user_name) {
 
   $sub_user_id = $user_id;
 
-  $techs = $ath->getTechnicians();
-  $count = db_numrows($techs);
-  
-  for ($i=0;$i<$count;$i++) {
-    if ($user_id == db_result($techs,$i,0)) $sub_user_name = db_result($techs,$i,1);
-  }
-
-  //this should not happen as we verify in tracker/index that the current user has tech perms
-  if (!$sub_user_name) {
+  if (!$ath->userIsAdmin() && !$ath->userIsTech()) {
     exit_permission_denied();
+  } else {
+    $sub_user_name = user_getname();
   }
 }
 
@@ -593,17 +580,8 @@ function getPredefinedValues($used_fields,$parsed_labels) {
 
       //special case for submitted by
       if ($curr_field->getName() == "submitted_by") {
-	if ($ath->allowsAnon()) {
-	  //$predefined_values[$c] = array();
-	} else {
-	  $techs = $ath->getTechnicians();
-	  $count = db_numrows($techs);
-	  unset($values);
-	  for ($i=0;$i<$count;$i++) {
-	    $values[db_result($techs,$i,1)] = db_result($techs,$i,0);
-	  }
-	  $predefined_values[$c] = $values;
-	}
+	// simply put nothing in predefined values for submitted_by
+	// as we accept all logged users, even None for allow-anon trackers
 	
 	//for all other fields not submitted by
       } else {
@@ -639,7 +617,9 @@ function parse_details($details,&$parsed_details,&$errors,$for_parse_report=fals
   $i = 0;
   while (list(,$comment) = each($comments)) {
     $i++;
-    if ($i == 1) {
+    if (($i == 1) && 
+	( (count($comments) > 1) || 
+	  (trim($comment) == "No Followups Have Been Posted") ) ) {
       //skip first line
       continue;
     }
@@ -648,21 +628,29 @@ function parse_details($details,&$parsed_details,&$errors,$for_parse_report=fals
     //skip the "Date: "
     if (strpos($comment, "Date:") === false) {
       //if no date given, consider this whole string as the comment
-      if ($for_parse_report) {
-	$date= format_date($sys_datefmt,time());
-	get_import_user($sub_user_id,$sub_user_name);
-	$arr["date"] = "<I>$date</I>";
-	$arr["by"] = "<I>$sub_user_name</I>";
-	$arr["type"] = "<I>None</I>";
+
+      //try nevertheless if we can apply legacy Bug and Task export format
+      if (parse_legacy_details($details,&$parsed_details,&$errors,$for_parse_report)) {
+	return true;
       } else {
-	$arr["date"] = time();
-	$arr["by"] = $user_id;
-	$arr["type"] = 100;
+	if ($for_parse_report) {
+	  $date= format_date($sys_datefmt,time());
+	  get_import_user($sub_user_id,$sub_user_name);
+	  $arr["date"] = "<I>$date</I>";
+	  $arr["by"] = "<I>$sub_user_name</I>";
+	  $arr["type"] = "<I>None</I>";
+	} else {
+	  $arr["date"] = time();
+	  $arr["by"] = $user_id;
+	  $arr["type"] = 100;
+	}
+	$arr["comment"] = $comment;
+	$parsed_details[] = $arr;
+	continue;
       }
-      $arr["comment"] = $comment;
-      $parsed_details[] = $arr;
-      continue;
     }
+
+    // heres starts reel parsing
     $comment = substr($comment, 6);
     $by_position = strpos($comment,"By: ");
     if ($by_position === false) {
@@ -680,6 +668,10 @@ function parse_details($details,&$parsed_details,&$errors,$for_parse_report=fals
     $by = strtok($comment," \n\t\r\0\x0B");
     $comment = trim(substr($comment,strlen($by)));
 
+    if ($by == "None") {
+      $errors .= "\"None\" is not a valid originator of a follow-up comment. Please specify a user name or a valid email address for comment #".($i-1)." .";
+      return false;
+    }
     if (!$for_parse_report) {
       $res = user_get_result_set_from_unix($by);
       if (db_numrows($res) > 0) {
@@ -693,26 +685,16 @@ function parse_details($details,&$parsed_details,&$errors,$for_parse_report=fals
     }
 
     //see if there is comment-type or none
+    $comment_type_id = false;
     $type_end_pos = strpos($comment,"]");
     if (strpos($comment,"[") == 0 &&  $type_end_pos!= false) {
       $comment_type = substr($comment, 1, ($type_end_pos-1));
+      $comment = trim(substr($comment,($type_end_pos+1)));
       
-      //check whether this is really a valid comment_type
-      $c_type_field = $art_field_fact->getFieldFromName('comment_type_id');
-      if ($c_type_field) {
-	$predef_val = $c_type_field->getFieldPredefinedValues($ath->getID());
-	$count = db_numrows($predef_val);
-	for ($p=0;$p<$count;$p++) {
-	  if ($comment_type == db_result($predef_val,$p,1)) {
-	    $comment_type_id = db_result($predef_val,$p,0);
-	    $comment = trim(substr($comment,($type_end_pos+1)));
-	    break;
-	  }
-	}
-      }
+      $comment_type_id = check_comment_type($comment_type);
     }
 
-    if (!$comment_type_id) {
+    if ($comment_type_id === false) {
       if ($for_parse_report) $comment_type_id = 'None';
       else $comment_type_id = 100;
     } else if ($for_parse_report) {
@@ -731,6 +713,118 @@ function parse_details($details,&$parsed_details,&$errors,$for_parse_report=fals
 }
 
 
+/** check whether this is really a valid comment_type
+ * and if it is the case return its id else return false 
+ */
+function check_comment_type($type) {
+  global $ath, $art_field_fact;
+
+  $comment_type_id = false;
+
+  $c_type_field = $art_field_fact->getFieldFromName('comment_type_id');
+  if ($c_type_field) {
+    $predef_val = $c_type_field->getFieldPredefinedValues($ath->getID());
+    $count = db_numrows($predef_val);
+    for ($p=0;$p<$count;$p++) {
+      if ($comment_type == db_result($predef_val,$p,1)) {
+	$comment_type_id = db_result($predef_val,$p,0);
+	break;
+      }
+    }
+  }
+  return $comment_type_id;
+}
+
+
+/** assume that the details input format is
+ * ==================================================
+ * [Type:<type>] By:<by> On:<date>
+ *
+ * <comment>
+ *
+ * @param details (IN): see above
+ * @param parsed_details (OUT): an array (#detail => array2), where array2 is of the form
+ *                              ("date" => date, "by" => user, "type" => comment-type, "comment" => comment-string)
+ * @param for_parse_report (IN): if we parse the details to show them in the parse report then we keep the labels
+ *                               for users and comment-types
+ */
+function parse_legacy_details($details,&$parsed_details,&$errors,$for_parse_report=false) {
+  global $sys_lf, $art_field_fact, $ath, $sys_datefmt,$user_id;
+
+  $comments = split("==================================================",$details);
+
+  $i = 0;
+  while (list(,$comment) = each($comments)) {
+
+    $i++;
+    if ($i==1) continue;
+
+    $comment = trim($comment);
+    //skip the "Type: "
+    if (strpos($comment, "Type: ") === false) {
+      //if no type given, consider this whole string as the comment
+      if ($for_parse_report) $comment_type = "None";
+      else $comment_type = 100;
+    } else {
+      $comment = substr($comment, 6);
+      $by_position = strpos($comment,"By: ");
+      if ($by_position === false) {
+	$errors .= "You must specify an originator for follow-up comment #".($i-1)." ($comment).";
+	return false;
+      }
+      $type = trim(substr($comment,0,$by_position));
+      $comment_type_id = check_comment_type($type);
+      if ($comment_type_id === false) {
+	if ($for_parse_report) $comment_type = "None";
+	else $comment_type = 100;
+      } else {
+	if ($for_parse_report) $comment_type = $type;
+	else $comment_type = $comment_type_id;
+      }
+    }
+
+    // By:
+    $by_position = strpos($comment,"By: ");
+    if ($by_position === false) {
+      $errors .= "You must specify an originator for follow-up comment #".($i-1)." ($comment).";
+      return false;
+    }
+    
+    $comment = substr($comment, ($by_position + 4));
+    $on_position = strpos($comment, "On: ");
+    $by = trim(substr($comment, 0, $on_position));
+
+
+    if (!$for_parse_report) {
+      $res = user_get_result_set_from_unix($by);
+      if (db_numrows($res) > 0) {
+	$by = db_result($res,0,'user_id');
+      } else if (validate_email($by)) {
+	//ok, $by remains what it is
+      } else {
+	$errors .= "\"$by\" specified as originator of follow-up comment #".($i-1)." is neither a user name nor a valid email address.";
+	return false;
+      }
+    }
+
+    // On:
+    $comment = substr($comment, ($on_position+4));
+    $on = strtok($comment,"\n\t\r\0\x0B");
+    $comment = trim(substr($comment,strlen($on)));
+    if (!$for_parse_report) list($on,$ok) = util_sysdatefmt_to_unixtime($on);
+    
+    
+    $arr["date"] = $on;
+    $arr["by"] = $by;
+    $arr["type"] = $comment_type;
+    $arr["comment"] = trim($comment);
+    $parsed_details[] = $arr;
+  }
+  
+  return true;
+}
+
+
 
 /**
  * prepare our $data record so that we can use standard artifact methods to create, update, ...
@@ -739,14 +833,19 @@ function parse_details($details,&$parsed_details,&$errors,$for_parse_report=fals
 function prepare_vfl($data,$used_fields,$parsed_labels,$predefined_values,&$artifact_depend_id,&$add_cc,&$cc_comment,&$details) {
   for ($c=0; $c < count($data); $c++) {
     $label = $parsed_labels[$c];
+    $field = $used_fields[$label];
+    if ($field) $field_name = $field->getName();
+    $imported_value = $data[$label];
+
+    // FOLLOW-UP COMMENTS
     if ($label == "Follow-up Comments") {
       $field_name = "details";
       if ($data[$label] != "" && trim($data[$label]) != "No Followups Have Been Posted") {
 	$details = $data[$label];
       }
       continue;
-      //} else if ($label == "Original Submission") {
-      //$field_name = "original_submission";
+      
+    // DEPEND ON
     } else if ($label == "Depend on") {
       $depends = $data[$label];
       if ($depends != "None" && $depends != "") {
@@ -756,22 +855,45 @@ function prepare_vfl($data,$used_fields,$parsed_labels,$predefined_values,&$arti
 	$artifact_depend_id = "None";
       }
       continue;
+    
+    // CC LIST
     } else if ($label == "CC List") {
       if ($data[$label] != "" && $data[$label] != "None")
       $add_cc = $data[$label];
       else $add_cc = "";
       continue;
+
+    // CC COMMENT
     } else if ($label == "CC Comment") {
       $cc_comment = $data[$label];
       continue;
-    } else {
-      $field = $used_fields[$label];
-      $field_name = $field->getName();
-    }
-    $imported_value = $data[$label];
+
+    // ORIGINAL SUBMISSION
+      //special treatment for "Original Submission" alias "details"
+      //in the import. The follow-up comments are also named "details"
+      //and in an import (in contrast to a normal create) we can
+      //have both information "original submission" AND "follow-up comments"
+    } else if ($field_name == "details") {
+      $vfl["original_submission"] = $data[$label];
+      continue;
+    
+    // SUBMITTED BY
+    } else if ($field_name == "submitted_by") {
+      $sub_user_name = $data[$label];
+      if ($sub_user_name && $sub_user_name != "") {
+	$res = user_get_result_set_from_unix($sub_user_name);
+	$imported_value = db_result($res,0,'user_id');
+      }
+      $vfl[$field_name] = $imported_value;
+      continue;
+    } 
+
+  
+    
     
     // transform imported_value into format that can be inserted into db
     unset($value);
+    unset($predef_vals);
     $predef_vals = $predefined_values[$c];
     if ($predef_vals) {
       if ($field && $field->getDisplayType() == "MB") {
@@ -798,16 +920,9 @@ function prepare_vfl($data,$used_fields,$parsed_labels,$predefined_values,&$arti
       }
       $vfl[$field_name] = $value; 
 
-    } else {
 
-      if ($field_name == "submitted_by") {
-	$sub_user_name = $data[$label];
-	if ($sub_user_name && $sub_user_name != "") {
-	  $res = user_get_result_set_from_unix($sub_user_name);
-	  $imported_value = db_result($res,0,'user_id');
-	}
-      }
-      
+    // IT COULD BE SO SIMPLE !!!
+    } else {
       $vfl[$field_name] = $imported_value;
     }
   }
@@ -835,7 +950,7 @@ function insert_artifact($row,$data,$used_fields,$parsed_labels,$predefined_valu
     //
     //  make sure this person has permission to add artifacts
     //
-    if (!$ath->userIsTech() && !$ath->isPublic() ) {
+    if (!$ath->userIsAdmin() && !$ath->isPublic() ) {
       exit_permission_denied();
     }
     
@@ -891,7 +1006,7 @@ function update_artifact($row,$data,$aid,$used_fields,$parsed_labels,$predefined
       exit_not_logged_in();
     }
     
-    if ( !$ah->ArtifactType->userIsTech() ) {
+    if ( !$ah->ArtifactType->userIsAdmin() ) {
       exit_permission_denied();
       return;
     }

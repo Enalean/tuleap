@@ -361,7 +361,7 @@ class Artifact extends Error {
 	// first make sure this wasn't double-submitted
 	$field = $art_field_fact->getFieldFromName('summary');
 	if ( $field && $field->isUsed()) {
-	  $res=db_query("SELECT * FROM artifact WHERE submitted_by=$user AND summary=\"".$vfl['summary']."\"");
+	  $res=db_query("SELECT * FROM artifact WHERE group_artifact_id = ".$ath->getID()." AND submitted_by=$user AND summary=\"".$vfl['summary']."\"");
 	  if ($res && db_numrows($res) > 0) {
 	    $this->setError(' ERROR - DOUBLE SUBMISSION. You have already submitted an artifact (id='.db_result($res,0,'artifact_id').') with the same summary. Please don\'t do that. ');
 	    return false;           
@@ -545,7 +545,12 @@ class Artifact extends Error {
 
         while (list(,$arr) = each($parsed_details)) {        
 	    $by = $arr['by'];
-	    if (user_getname($by)) {
+	    if ($by == "100") {
+	      //this case should not exist in new trackers but
+	      //can appear if we parse legacy bugs or tasks
+	      $email = "None";
+	      $user_id = 100;
+	    } else if (user_getname($by)) {
 		$user_id = $by;
 		$email = "";
 	    } else {
@@ -554,7 +559,7 @@ class Artifact extends Error {
 	    }	
 
 	    $sql="insert into artifact_history(artifact_id,field_name,old_value,new_value,mod_by,email,date,type) ".
-            		"VALUES (".$this->getID().",'details','".$arr['comment']."','$email','$user_id','','".$arr['date']."','".$arr['type']."')";
+            		"VALUES (".$this->getID().",'details','".$arr['comment']."','','$user_id','$email','".$arr['date']."','".$arr['type']."')";
 	    //echo $sql."<br>\n";
 
             db_query($sql);

@@ -553,7 +553,7 @@ if ( $func == 'gotoid' ) {
 	   //
 	   //  make sure this person has permission to import artifacts
 	   //
-	   if (!$ath->userIsTech()) {
+	   if (!$ath->userIsAdmin()) {
 	     exit_permission_denied();
 	   }
 	   $user_id = user_getid();
