@@ -45,7 +45,7 @@ Remark: local redefinition must be first because once defined
 an entity cannot be redefined. Hence this particular order  -->
 
 <!ENTITY % ParametersDefault SYSTEM "ParametersDefault.dtd">
-<!ENTITY % ParametersLocal SYSTEM "ParametersLocal.dtd">
+<!ENTITY % ParametersLocal SYSTEM "/etc/codex/documentation/user_guide/xml/en_US/ParametersLocal.dtd">
 %ParametersLocal;
 %ParametersDefault;
 ]>
