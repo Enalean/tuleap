@@ -34,81 +34,19 @@ function send_new_project_email($group_id) {
 
 	// send one email per admin
 	while ($row_admins = db_fetch_array($res_admins)) {
-	$message = 
-'Your project registration has been approved. 
-
-Project Full Name:    '.$row_grp['group_name'].'
-Project Unix Name:    '.$row_grp['unix_group_name'].'
-Project Summary Page: '.$server.'/projects/'.$row_grp['unix_group_name'].'
-Project Web Server:   http://'.$row_grp['unix_group_name'].'.'.$GLOBALS['sys_default_domain'].'
-CVS Server:           cvs.'.$row_grp['unix_group_name'].'.'.$GLOBALS['sys_default_domain'].'
-Shell Server:         '.$row_grp['unix_group_name'].'.'.$GLOBALS['sys_default_domain'];
 
 	if ( $sys_show_project_type ) {
 		$res_type = db_query("SELECT * FROM project_type WHERE project_type_id = ". $row_grp[project_type]);
 		$row_type = db_fetch_array($res_type);
-		$message = $message .'
-Project Type:         '.$row_type[description];
+		$message_project_type = "\nProject Type:         ".$row_type[description];
 	}
-	$message = $message .'
 
-Please take some time to read the site documentation about the tools
-and services offered by '.$GLOBALS['sys_name'].' to project
-administrators. Most of the documentation (including a detailed User
-Guide) is available under the "Site documentation" link on the left
-hand side menu of the '.$GLOBALS['sys_name'].' Home page.
+	// $message is defined in the content file
+	include(util_get_content('include/new_project_email'));
 
-We now invite you to visit the Public Summary page of your project at
-http://'.$GLOBALS['sys_default_domain'].'/projects/'.$row_grp['unix_group_name'].',
-create a short public description for your project and categorize it
-in the Software Map. This will be immensely helpful to the '.$GLOBALS['sys_name'].' visitors.
-
-Once on your Project Summary Page you will see a "Project Admin" link
-on the left hand side. This Admin. page allows you to fully
-administrate your project environment you can create create mailing
-lists, forums, manage your tasks, bugs,etc.  and why not publish your
-first project news to advertise its creation (we\'ll put it on the
-front page !).
-
-Other miscellaneous points:
-
-- Your Shell account will become active at the next
-'.$GLOBALS['sys_crondelay'].'-hour cron update.  If after
-'.$GLOBALS['sys_crondelay'].' hours your shell account or your CVS
-access still does not work, please open a support ticket so that we
-may take a look at the problem.
-
-- Also note that it might take up to a day for the '. $GLOBALS['sys_org_name']. ' name servers
-to be aware of your project specific server names (see above). If you
-are in a hurry, you may try shelling into
-'. $GLOBALS['sys_shell_host']. ' and pointing your CVS client to
-'. $GLOBALS['sys_cvs_host'].'.
-
-- Your web site hosting area (Project Web Server) is accessible
-through your shell account, ftp or as Windows shared resource.(See the
-'.$GLOBALS['sys_name'].' User Guide for more details).
-
-- A side comment on CVS: if you already have a CVS repository of your
-own and want to transfer it as is on '.$GLOBALS['sys_name'].' then
-contact us. We\'ll need a tar/gzip or zipped file of your entire
-document root, including the top CVSROOT directory.  This will
-preserve your revision history. If you do not care about preserving
-the existing CVS history then just do a "cvs import" yourself.
-
-Enjoy the system, and please tell other '.$GLOBALS['sys_org_name'].' employees about
-'.$GLOBALS['sys_name'].'.  The '.$GLOBALS['sys_name'].' Team believes
-in the value of code sharing inside '.$GLOBALS['sys_org_name'].' and we rely on all of you to
-preach the word. Let\'s grow the '.$GLOBALS['sys_org_name'].' Source Code Sharing community !
-
-Let us know if there is anything we can do to help you.
-
- -- The '.$GLOBALS['sys_name'].' Team';
-
-// LJ Uncomment to test
-//echo $message;
+	// LJ Uncomment to test
+	//echo $message; return
 	
-// LJ Comment below to test (avoid sending real e-mail)
-
 	mail($row_admins['email'],$GLOBALS['sys_name'].' Project '.$row_grp['unix_group_name'].' Approved',$message,"From: noreply@$GLOBALS[sys_default_domain]");
 
 }
@@ -127,11 +65,8 @@ function send_new_user_email($to,$confirm_hash)
 	$base_url = "http://".$GLOBALS['sys_default_domain'];
     }
 
-    $message = "Thank you for registering on the ".$GLOBALS['sys_name']." web site. In order\n"
-	. "to confirm your registration you must visit the following url: \n\n"
-	. "<". $base_url ."/account/verify.php?confirm_hash=$confirm_hash>\n\n"
-	. "Enjoy the site.\n\n"
-	. " -- The ".$GLOBALS['sys_name']." Team\n";
+    // $message is defined in the content file
+    include(util_get_content('include/new_user_email'));
     
     mail($to, $GLOBALS['sys_name']." Account Registration",$message,"From: noreply@".$GLOBALS['sys_default_domain']);
 
