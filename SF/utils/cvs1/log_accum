@@ -58,6 +58,14 @@ $STATE_ADDED   = 2;
 $STATE_REMOVED = 3;
 $STATE_LOG     = 4;
 
+# arrays to store all the bug, task and sr ref.
+my @bugs;
+my @tasks;
+my @srs;
+
+# group_id
+my $group_id;
+
 #
 #	Subroutines
 #
@@ -273,10 +281,26 @@ sub read_logfile {
     open(FILE, "<$filename");
     while (<FILE>) {
 	chop;
-	push(@text, $leader.$_);
+	$line = $leader.$_;
+    
+    # store the bug ref
+    while ($line =~ /bug[ ]?#([0-9]+)/gi) {
+        push (@bugs, $1);
+    }
+    # store the task ref
+    while ($line =~ /task[ ]?#([0-9]+)/gi) {
+        push (@tasks, $1);
+    }
+    # store the sr ref
+    while ($line =~ /sr[ ]?#([0-9]+)/gi) {
+        push (@srs, $1);
+    }
+
+	push(@text, $line);
     }
     close(FILE);
     @text;
+
 }
 
 sub build_header {
@@ -517,6 +541,18 @@ if ($debug) {
     print STDERR "id     - ", $id, "\n";
 }
 
+# DB connection
+use DBI;
+
+$root_path = $ENV{'SF_LOCAL_INC_PREFIX'} || "/home/";
+require $root_path."httpd/SF/utils/include.pl";
+require $root_path."httpd/SF/utils/group.pl";
+
+&db_connect;
+
+# retrieve the group_id
+$group_id = &set_group_info_from_name($modulename);
+
 # Check for a new directory first.  This appears with files set as follows:
 #
 #    files[0] - "path/name/newdir"
@@ -718,6 +754,29 @@ for ($i = 0; ; $i++) {
 	push (@text, grep (! /\/$/, @url_txt));
 	push (@text, "");
     }
+    
+    if ( $#bugs >= 0 ) {
+    	push (@text, "");
+        push (@text, "Bugs references:");
+        foreach $bug (@bugs) {
+            push (@text, "Bug #$bug: http://$sys_default_domain/bugs/?func=detailbug&bug_id=$bug&group_id=$group_id");
+        }
+    }
+    if ( $#tasks >= 0 ) {
+    	push (@text, "");
+        push (@text, "Tasks references:");
+        foreach $task (@tasks) {
+            push (@text, "Task #$task: http://$sys_default_domain/pm/task.php?func=detailtask&project_task_id=$task&group_id=$group_id");
+        }
+    }
+    if ( $#srs >= 0 ) {
+    	push (@text, "");
+        push (@text, "Support Requests references:");
+        foreach $sr (@srs) {
+            push (@text, "Sr #$sr: http://$sys_default_domain/support/index.php?func=detailsupport&support_id=$sr&group_id=$group_id");
+        }
+    }
+    
     if ($do_status || $do_diffs) {
 	local(@changed_files);
 
