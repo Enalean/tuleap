@@ -522,7 +522,7 @@ class ArtifactFieldFactory extends Error {
 
 			// Insert artifact_field_value record
 			$sql = "INSERT INTO artifact_field_value (field_id,artifact_id,";
-			$values = $field_id.",".$id.",".$default_value;
+			$values = $field_id.",".$id.",'".$default_value."'";
 			
 			switch ( $data_type ) {
 			case $af->DATATYPE_TEXT:
