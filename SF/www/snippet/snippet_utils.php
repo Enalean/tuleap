@@ -26,6 +26,7 @@ $SCRIPT_CATEGORY[10]='Office Utilities';
 $SCRIPT_CATEGORY[11]='User Interface';
 $SCRIPT_CATEGORY[12]='Other';
 $SCRIPT_CATEGORY[13]='Data Acquisition and Control';
+$SCRIPT_CATEGORY[13]='Network';
 
 $SCRIPT_TYPE[0]='Choose One';
 $SCRIPT_TYPE[1]='Function';
@@ -34,6 +35,7 @@ $SCRIPT_TYPE[3]='Sample Code (HOWTO)';
 $SCRIPT_TYPE[4]='README';
 $SCRIPT_TYPE[5]='Class';
 $SCRIPT_TYPE[6]='Macros';
+$SCRIPT_TYPE[6]='Full Program';
 
 $SCRIPT_LICENSE = array();
 $SCRIPT_LICENSE[0] = 'Xerox Code eXchange Policy';
@@ -72,7 +74,7 @@ $SCRIPT_LANGUAGE[17] = 'Other Language';
 $SCRIPT_LANGUAGE[18] = 'LabView';
 
 function snippet_header($params) {
-	global $is_snippet_page,$DOCUMENT_ROOT,$HTML;
+	global $is_snippet_page,$DOCUMENT_ROOT,$HTML,$feedback;
 
 	// LJ used so the search box will add the necessary element to the pop-up box
 	// CodeX Specific
@@ -90,6 +92,7 @@ function snippet_header($params) {
 		 | <A HREF="/snippet/submit.php">Create a New Snippet</A>
 		 | <A HREF="/snippet/package.php">Create A New Package</A></B>';
 	echo '<P>';
+	html_feedback_top($feedback);
 }
 
 function snippet_footer($params) {

@@ -23,29 +23,47 @@ if (user_isloggedin()) {
 			handle inserting a new version of a snippet
 		*/
 		if ($post_changes) {
-			/*
-				Create a new snippet entry, then create a new snippet version entry
-			*/
-			if ($changes && $version && $code) {
 
-				/*
-					create the snippet version
-				*/
-				$sql="INSERT INTO snippet_version (snippet_id,changes,version,submitted_by,date,code) ".
-					"VALUES ('$snippet_id','".htmlspecialchars($changes)."','".
-						htmlspecialchars($version)."','".user_getid()."','".
-						time()."','".htmlspecialchars($code)."')";
-				$result=db_query($sql);
-				if (!$result) {
-					$feedback .= ' ERROR DOING SNIPPET VERSION INSERT! ';
-					echo db_error();
-				} else {
-					$feedback .= ' Snippet Version Added Successfully. ';
-				}
+		    // check if the code snippet is uploaded
+		    if ($uploaded_data) {
+			$code = addslashes(fread( fopen($uploaded_data, 'r'), filesize($uploaded_data)));
+			if ((strlen($code) > 20) && (strlen($code) < 512000)) {
+			    //size is fine
+			    $feedback .= ' Code Snippet Uploaded ';
 			} else {
-				exit_error('Error','Error - Go back and fill in all the information');
+			    //too big or small
+			    $feedback .= ' ERROR - patch must be > 20 bytes and < 512000 bytrs in length ';
+			    $code='';
 			}
+		    }
 
+		    /*
+		      Create a new snippet entry, then create a new snippet version entry
+		    */
+		    if ($changes && $version && $code) {
+			
+			/*
+			  create the snippet version
+			*/
+			$sql="INSERT INTO snippet_version (snippet_id,changes,version,submitted_by,date,code,filename,filesize,filetype) ".
+			    "VALUES ('$snippet_id','".htmlspecialchars($changes)."','".
+			    htmlspecialchars($version)."','".user_getid()."','".
+			    time()."','".
+			    ($uploaded_data ? $code : htmlspecialchars($code))."',".
+			    "'$uploaded_data_name','$uploaded_data_size','$uploaded_data_type')";
+
+			$result=db_query($sql);
+
+			if (!$result) {
+			    $feedback .= ' ERROR DOING SNIPPET VERSION INSERT! ';
+			    echo db_error();
+			} else {
+			    $feedback .= ' Snippet Version Added Successfully. ';
+			}
+		    } else {
+			exit_error('Error','Error - Go back and fill in all the information');
+		    }
+		    
 		}
 		snippet_header(array('title'=>'Submit A New Snippet Version'));
 
@@ -54,15 +72,19 @@ if (user_isloggedin()) {
 		<P>
 		If you have modified a version of a snippet and you feel it 
 		is significant enough to share with others, please do so.
+                Preferably copy-paste the
+                source code of the snippet so that it is directly visible in the
+                Code Snippet Library. Upload it only if it is big or it is made of
+                several files or the format is not human readable.
 		<P>
-		<FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">
+		<FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST" enctype="multipart/form-data">
 		<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 		<INPUT TYPE="HIDDEN" NAME="type" VALUE="snippet">
 		<INPUT TYPE="HIDDEN" NAME="snippet_id" VALUE="<?php echo $id; ?>">
 		<INPUT TYPE="HIDDEN" NAME="id" VALUE="<?php echo $id; ?>">
 
 		<TABLE>
-		<TR><TD COLSPAN="2"><B>Version:</B><BR>
+		<TR><TD COLSPAN="2"><B>Version:</B>&nbsp;
 			<INPUT TYPE="TEXT" NAME="version" SIZE="10" MAXLENGTH="15">
 		</TD></TR>
 
@@ -70,7 +92,12 @@ if (user_isloggedin()) {
 			<TEXTAREA NAME="changes" ROWS="5" COLS="45"></TEXTAREA>
 		</TD></TR>
   
-		<TR><TD COLSPAN="2"><B>Paste the Code Here:</B><BR>
+		<TR><TD COLSPAN="2">
+	         <br><B>Upload the Snippet (binary or source code)</B>
+		<P>
+		<input type="file" name="uploaded_data"  size="40">
+		<P>
+		 <B>Or paste snippet source code here:</B><BR>
 			<TEXTAREA NAME="code" ROWS="30" COLS="85" WRAP="SOFT"></TEXTAREA>
 		</TD></TR>
  

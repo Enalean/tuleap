@@ -80,3 +80,11 @@ ALTER TABLE patch ADD filename VARCHAR(255) NOT NULL;
 ALTER TABLE patch ADD filesize VARCHAR(50) NOT NULL;
 ALTER TABLE patch ADD filetype VARCHAR(50) NOT NULL;
 
+#
+# Modify snippet_version table to hold uploaded file information
+#
+
+ALTER TABLE snippet_version CHANGE code code LONGBLOB;
+ALTER TABLE snippet_version ADD filename VARCHAR(255) NOT NULL;
+ALTER TABLE snippet_version ADD filesize VARCHAR(50) NOT NULL;
+ALTER TABLE snippet_version ADD filetype VARCHAR(50) NOT NULL;
