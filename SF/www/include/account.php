@@ -88,8 +88,8 @@ function account_namevalid($name) {
 		$GLOBALS['register_error'] = "Name is too short. It must be at least 3 characters.";
 		return 0;
 	}
-	if (strlen($name) > 15) {
-		$GLOBALS['register_error'] = "Name is too long. It must be less than 15 characters.";
+	if (strlen($name) > 32) {
+		$GLOBALS['register_error'] = "Name is too long. It must be less than 32 characters.";
 		return 0;
 	}
 
