@@ -11,8 +11,8 @@
 //
 
 
-require('pre.php');
-require ($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
+require($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
 require($DOCUMENT_ROOT.'/../common/tracker/Artifact.class');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactFile.class');
 require('./include/ArtifactFileHtml.class');
@@ -38,7 +38,7 @@ if ( $func == 'gotoid' ) {
     if (!$aid) {
         exit_error('ERROR','Artifact ID is necessary');
     } else {
-        include './gotoid.php';
+        require('./gotoid.php');
     }
 } else if ($group_id && $atid) {
 
@@ -77,7 +77,7 @@ if ( $func == 'gotoid' ) {
                 if (!$ah || !is_object($ah)) {
                         exit_error('ERROR','Artifact Could Not Be Created');
                 } else {
-                        include './add.php';
+                        require('./add.php');
                 }
                 break;
         }
@@ -145,7 +145,7 @@ if ( $func == 'gotoid' ) {
                                 // send an email to notify the user of the artifact update
                                 $ah->mailFollowup($ath->getEmailAddress(),$null);
                                 $feedback .= ' Item Successfully Created ';
-                            include './browse.php';
+                            require('./browse.php');
                         }
                 }
                 break;
@@ -190,7 +190,7 @@ if ( $func == 'gotoid' ) {
                                 // impact the next artifact query.
                                 unset($aid);
                                 unset($HTTP_GET_VARS['aid']);
-                                include './browse.php';
+                                require('./browse.php');
                         
                         } else {
                                 // Invalid permission
@@ -240,7 +240,7 @@ if ( $func == 'gotoid' ) {
                         // impact the next artifact query.
                         unset($aid);
                         unset($HTTP_GET_VARS['aid']);
-                        include './browse.php';
+                        require('./browse.php');
                 }
                 break;
         }
@@ -273,7 +273,7 @@ if ( $func == 'gotoid' ) {
                         // impact the next artifact query.
                         unset($aid);
                         unset($HTTP_GET_VARS['aid']);
-                        include './browse.php';
+                        require('./browse.php');
 
                 } else {
                         // Invalid permission
@@ -320,7 +320,7 @@ if ( $func == 'gotoid' ) {
                         //data control layer
                         $changed = $ah->handleUpdate($artifact_id_dependent,$canned_response,$changes);
                         if (!$changed) {
-                                include './browse.php';
+                                require('./browse.php');
                         }
                 
                         //
@@ -370,7 +370,7 @@ if ( $func == 'gotoid' ) {
                         if (!$was_error) {
                                 $feedback = 'Successfully Updated';
                         }
-                        include './browse.php';
+                        require('./browse.php');
                 }
                 break;
         }
@@ -493,7 +493,7 @@ if ( $func == 'gotoid' ) {
 		if (!$was_error) {
 		  $feedback .= ' - Successfully Updated';
 		}
-		include './masschange.php';
+		require('./masschange.php');
                 break;
         }
         
@@ -540,7 +540,7 @@ if ( $func == 'gotoid' ) {
             
             // send an email to notify the user of the bug update
             $ah->mailFollowup($ath->getEmailAddress(),$changes);
-            include './browse.php';
+            require('./browse.php');
             break;
         }
         
@@ -557,17 +557,17 @@ if ( $func == 'gotoid' ) {
 	     exit_permission_denied();
 	   }
 	   $user_id = user_getid();
-	   include './import.php';
+	   require('./import.php');
 	   break;
         }
         
         case 'browse' : {
-                include './browse.php';
+                require('./browse.php');
                 break;
         }
         
         case 'masschange' : {
-                include './masschange.php';
+                require('./masschange.php');
                 break;
         }
         
@@ -576,7 +576,7 @@ if ( $func == 'gotoid' ) {
                 if (!$ah || !is_object($ah)) {
                         exit_error('ERROR','Artifact Could Not Be Created');
                 } else {
-		        include './masschange_detail.php';
+		        require('./masschange_detail.php');
 		}
                 break;
         }
@@ -603,9 +603,9 @@ if ( $func == 'gotoid' ) {
                             $feedback .= 'Warning: your browser (Netscape 4.x) is not supported. In order to edit or create an artifact, please use a different browser';
                         }
                         if ( $ah->ArtifactType->userIsTech() ) {
-                                include './mod.php';
+                                require('./mod.php');
                         } else {
-                                include './detail.php';
+                                require('./detail.php');
                         }
                 }
                 break;
@@ -638,7 +638,7 @@ if ( $func == 'gotoid' ) {
         }
         
         default : {
-                include './browse.php';
+                require('./browse.php');
                 break;
         }
         

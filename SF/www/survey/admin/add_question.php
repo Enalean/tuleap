@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require('pre.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
 require('../survey_data.php');
 require('../survey_utils.php');
 

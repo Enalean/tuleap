@@ -6,9 +6,9 @@
 //
 // $Id$
 
-require ('pre.php');
-require ('account.php');
-require ('timezones.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
+require($DOCUMENT_ROOT.'/include/account.php');
+require($DOCUMENT_ROOT.'/include/timezones.php');
 
 if (!user_isloggedin()) {
 	exit_not_logged_in();

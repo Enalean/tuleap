@@ -6,8 +6,8 @@
 //
 // $Id$
 
-require "pre.php";    
-require "account.php";
+require($DOCUMENT_ROOT.'/include/pre.php');    
+require($DOCUMENT_ROOT.'/include/account.php');
 
 // ###### function register_valid()
 // ###### checks for valid register from form post

@@ -9,7 +9,7 @@
 // Originally written by Laurent Julliard 2004, CodeX Team, Xerox
 //
 
-require('pre.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
 
 $HTML->header(array('title'=>'CodeX License Terms and Conditions'));
 

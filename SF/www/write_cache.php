@@ -11,10 +11,10 @@ if ($SERVER_NAME != 'localhost') {
 	exit;
 }
 
-require ('pre.php');
-require ($DOCUMENT_ROOT.'/include/features_boxes.php');
-require ($DOCUMENT_ROOT.'/include/stats_function.php');
-require ($DOCUMENT_ROOT.'/include/snippet_caching.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
+require($DOCUMENT_ROOT.'/include/features_boxes.php');
+require($DOCUMENT_ROOT.'/include/stats_function.php');
+require($DOCUMENT_ROOT.'/include/snippet_caching.php');
 
 /*
 	list of valid cacheable functions to

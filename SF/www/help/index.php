@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require "pre.php";    
+require($DOCUMENT_ROOT.'/include/pre.php');    
 $HTML->header(array(title=>"Welcome to ".$GLOBALS['sys_name']));
 
 print "<p>Page Information";

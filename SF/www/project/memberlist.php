@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require "pre.php";    
+require($DOCUMENT_ROOT.'/include/pre.php');    
 
 if ((!$group_id) && $form_grp) 
 	$group_id=$form_grp;

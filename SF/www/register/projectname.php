@@ -6,9 +6,9 @@
 //
 // $Id$
 
-require "pre.php";    // Initial db and session library, opens session
+require($DOCUMENT_ROOT.'/include/pre.php');    // Initial db and session library, opens session
 session_require(array('isloggedin'=>'1'));
-require "account.php";
+require($DOCUMENT_ROOT.'/include/account.php');
 
 // push received vars
 if ($insert_purpose && $form_purpose && $form_short_description) { 

@@ -6,8 +6,8 @@
 //
 // $Id$
 
-require ('pre.php');
-require ('Foundry.class');
+require($DOCUMENT_ROOT.'/include/pre.php');
+require($DOCUMENT_ROOT.'/include/Foundry.class');
 
 $expl_pathinfo = explode('/',$REQUEST_URI);
 
@@ -47,20 +47,20 @@ if (db_numrows($res_grp) < 1) {
 		//third subdirectory - must be admin page
 		if ($expl_pathinfo[4] == 'news') {
 			//foundry news admin
-			include ('foundry_news.php');
+			require('./foundry_news.php');
 		} else if ($expl_pathinfo[4] == 'html') {
 			//freeform HTML editor
-			include('foundry_html_admin.php');
+			require('./foundry_html_admin.php');
 		} else {
 			//foundry admin
-			include ('foundry_admin.php');
+			require('./foundry_admin.php');
 		}
 	} else if ($expl_pathinfo[3]) {
 		//root admin page
-		include ('foundry_admin.php');
+		require('./foundry_admin.php');
 	} else {
 		//show the portal summary page
-		include ('foundry_home.php');
+		require('./foundry_home.php');
 	}
 }
 

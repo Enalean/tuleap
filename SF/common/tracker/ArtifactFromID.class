@@ -8,7 +8,7 @@
  * @version   $Id$
  */
 
-//require ($DOCUMENT_ROOT.'/../common/include/Error.class');
+//require($DOCUMENT_ROOT.'/../common/include/Error.class');
 
 class ArtifactFromID extends Error {
 

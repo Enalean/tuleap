@@ -9,7 +9,7 @@
 //  Written for CodeX by Stephane Bouhet
 //
 
-require('pre.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
 require($DOCUMENT_ROOT.'/../common/include/GroupFactory.class');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactTypeFactory.class');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');
@@ -88,11 +88,11 @@ if ($group_id && !$atid) {
 		} else {
 			$feedback = "Tracker created - Click on the new tracker ID to complete the tracker configuration";
 		}
-		include './admin_trackers.php';
+		require('./admin_trackers.php');
 		break;
 
 	default:
-		include './admin_trackers.php';
+		require('./admin_trackers.php');
 
 	}
 				
@@ -353,7 +353,7 @@ if ($group_id && !$atid) {
 		
 
 	case 'field_values':
-		include './field_values.php';
+		require('./field_values.php');
 		break;
 		
 	case 'update_binding':
@@ -375,7 +375,7 @@ if ($group_id && !$atid) {
 				$feedback = "Field values updated";
 			}
 		}
-		include './field_values.php';
+		require('./field_values.php');
 		break;
 				
 	case 'update_default_value':
@@ -397,7 +397,7 @@ if ($group_id && !$atid) {
 				$feedback = "Field values updated";
 			}
 		}
-		include './field_values.php';
+		require('./field_values.php');
 		break;
 
 	case 'display_field_values':
@@ -413,7 +413,7 @@ if ($group_id && !$atid) {
 		
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
-		    include './field_values_details.php';
+		    require('./field_values_details.php');
 		}
 		break;
 		
@@ -457,7 +457,7 @@ if ($group_id && !$atid) {
 			} else {
 				$feedback = "Field value created";
 			}
-			include './field_values_details.php';
+			require('./field_values_details.php');
 		}
 		break;
 			
@@ -479,7 +479,7 @@ if ($group_id && !$atid) {
 			} else {
 				$feedback = "Field value updated";
 			}
-			include './field_values_details.php';
+			require('./field_values_details.php');
 		}
 		break;
 
@@ -501,12 +501,12 @@ if ($group_id && !$atid) {
 			} else {
 				$feedback = "Field value deleted";
 			}
-			include './field_values_details.php';
+			require('./field_values_details.php');
 		}
 		break;
 
 	case 'field_usage':
-		include './field_usage.php';
+		require('./field_usage.php');
 		break;
 		
 	case 'field_create':
@@ -527,7 +527,7 @@ if ($group_id && !$atid) {
 		} else {
 			$feedback = "Field created";
 		}
-		include './field_usage.php';
+		require('./field_usage.php');
 		break;
 
 	case 'field_update':
@@ -554,7 +554,7 @@ if ($group_id && !$atid) {
 				$feedback = "Field updated";
 			}
 		}
-		include './field_usage.php';
+		require('./field_usage.php');
 		break;
 
 	case 'field_delete':
@@ -579,7 +579,7 @@ if ($group_id && !$atid) {
 				$feedback = "Field deleted";
 			}
 		}
-		include './field_usage.php';
+		require('./field_usage.php');
 		break;
 
 	case 'display_field_update':

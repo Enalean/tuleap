@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require ('squal_pre.php');
+require($DOCUMENT_ROOT.'/include/squal_pre.php');
 
 /*
 	Determine group

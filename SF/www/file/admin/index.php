@@ -11,8 +11,8 @@
 
 
 
-require ('pre.php');    
-require ($DOCUMENT_ROOT.'/file/file_utils.php');
+require($DOCUMENT_ROOT.'/include/pre.php');    
+require($DOCUMENT_ROOT.'/file/file_utils.php');
 
 
 if (!user_ismember($group_id,'R2')) {

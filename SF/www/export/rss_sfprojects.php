@@ -1,7 +1,7 @@
 <?php
 // ## export sf front page news in RSS
-include "pre.php";
-include "rss_utils.inc";
+require($DOCUMENT_ROOT.'/include/pre.php');
+require('./rss_utils.inc');
 
 if ($option == "newest") {
   $res = db_query('SELECT group_id,unix_group_name,group_name,short_description, xrx_export_ettm FROM groups '

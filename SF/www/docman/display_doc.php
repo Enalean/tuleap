@@ -12,8 +12,8 @@
         by Quentin Cregan, SourceForge 06/2000
 */
 
-require('pre.php');
-require('doc_utils.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
+require('./doc_utils.php');
 
 $usermem = user_ismember($group_id);
 

@@ -6,9 +6,9 @@
 //
 // $Id$
 
-require ('vars.php');
-require ($DOCUMENT_ROOT.'/news/news_utils.php');
-require ('trove.php');
+require($DOCUMENT_ROOT.'/include/vars.php');
+require($DOCUMENT_ROOT.'/news/news_utils.php');
+require($DOCUMENT_ROOT.'/include/trove.php');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactTypeFactory.class');
 require($DOCUMENT_ROOT.'/include/permissions.php');

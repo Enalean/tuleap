@@ -5,9 +5,9 @@
 // http://sourceforge.net
 //
 // $Id$ 
-require('pre.php');
-require("graph_lib.php");
-require("project_stats_utils.php");
+require($DOCUMENT_ROOT.'/include/pre.php');
+require($DOCUMENT_ROOT.'/include/graph_lib.php');
+require('./project_stats_utils.php');
 
 
 //

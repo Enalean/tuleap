@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require('HTML_Graphs.php');
+require($DOCUMENT_ROOT.'/include/HTML_Graphs.php');
 
 function stats_sf_stats() {
 	global $sys_datefmt;

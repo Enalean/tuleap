@@ -5,8 +5,8 @@
 // http://sourceforge.net
 //
 // $Id$
-require('pre.php');
-require("graph_lib.php");
+require($DOCUMENT_ROOT.'/include/pre.php');
+require($DOCUMENT_ROOT.'/include/graph_lib.php');
 
    // require you to be a member of the super-admin group
 session_require(array('group'=>'1','admin_flags'=>'A'));

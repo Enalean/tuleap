@@ -79,7 +79,7 @@ if (user_isloggedin()) {
 
 	echo "<H2>Create a personal filter for ".user_getname()."</H2>";
 	echo "<B>Creating or modifying a filter makes it your active filter</B><P>";
-	echo "Be sure include 'bug.' before each field name, as in the example, as multiple tables are being joined in the query";
+        echo "Be sure include 'bug.' before each field name, as in the example, as multiple tables are being joined in the query";
 
 	show_filters($group_id);
 

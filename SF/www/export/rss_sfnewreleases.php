@@ -6,8 +6,8 @@
 //
 // $Id$
 // ## export sf front page news in RSS
-include "pre.php";
-include "rss_utils.inc";
+require($DOCUMENT_ROOT.'/include/pre.php');
+require('./rss_utils.inc');
 header("Content-Type: text/plain");
 print '<?xml version="1.0"?>
 <!DOCTYPE rss SYSTEM "http://my.netscape.com/publish/formats/rss-0.91.dtd">

@@ -5,8 +5,8 @@
 // http://sourceforge.net
 //
 // $Id$ 
-require('pre.php');
-require('site_stats_utils.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
+require('./site_stats_utils.php');
 
 $HTML->header(array(title=> $GLOBALS['sys_name'].' Site Statistics'));
 

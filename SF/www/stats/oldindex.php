@@ -6,8 +6,8 @@
 //
 // $Id$ 
 
-require('pre.php');
-require('cache.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
+require($DOCUMENT_ROOT.'/include/cache.php');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 

@@ -6,8 +6,8 @@
 //
 // $Id$
 
-require "pre.php";
-require "account.php";
+require($DOCUMENT_ROOT.'/include/pre.php');
+require($DOCUMENT_ROOT.'/include/account.php');
 require($DOCUMENT_ROOT.'/admin/admin_utils.php');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));

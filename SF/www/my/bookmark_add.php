@@ -5,8 +5,8 @@
 // http://sourceforge.net
 //
 
-require ('pre.php');
-require ('bookmarks.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
+require($DOCUMENT_ROOT.'/include/bookmarks.php');
 
 $HTML->header(array("title"=>"Add New Bookmark"));
 

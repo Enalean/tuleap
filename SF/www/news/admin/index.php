@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require('pre.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
 
 //common forum tools which are used during the creation/editing of news items
 require($DOCUMENT_ROOT.'/forum/forum_utils.php');

@@ -12,7 +12,7 @@
         by Quentin Cregan, SourceForge 06/2000
 */
 // GLOBAL $HTML
-require('pre.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
 
 $group_id = 1;
 

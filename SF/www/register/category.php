@@ -6,10 +6,10 @@
 //
 // $Id$
 
-require "pre.php";    // Initial db and session library, opens session
-require "vars.php";
+require($DOCUMENT_ROOT.'/include/pre.php');    // Initial db and session library, opens session
+require($DOCUMENT_ROOT.'/include/vars.php');
 session_require(array('isloggedin'=>'1'));
-require "account.php";
+require($DOCUMENT_ROOT.'/include/account.php');
 
 if ($group_id && $insert_license && $rand_hash && $form_license) {
 	/*

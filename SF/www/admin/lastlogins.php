@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require "pre.php";    
+require($DOCUMENT_ROOT.'/include/pre.php');    
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
 $res_logins = db_query("SELECT session.user_id AS user_id,"

@@ -12,7 +12,7 @@
 //              Help depends upon the field type.
 //
 
-require "pre.php";
+require($DOCUMENT_ROOT.'/include/pre.php');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactFieldFactory.class');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactField.class');

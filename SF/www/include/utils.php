@@ -380,7 +380,7 @@ Function GraphResult($result,$title) {
 	and the second column should be the values
 
 	####
-	####   Be sure to include (HTML_Graphs.php) before hitting these graphing functions
+	####   Be sure to require(HTML_Graphs.php) before hitting these graphing functions
 	####
 */
 

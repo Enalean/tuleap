@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require('pre.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
 require('../bug_data.php');
 require('../bug_utils.php');
 $is_admin_page='y';

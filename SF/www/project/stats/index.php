@@ -5,8 +5,8 @@
 // http://sourceforge.net
 //
 // $Id$ 
-require('pre.php');
-require('project_stats_utils.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
+require('./project_stats_utils.php');
 
 site_project_header(array('title'=>"Project statistics ".$groupname,'group'=>$group_id,'toptab'=>'summary'));
 

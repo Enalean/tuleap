@@ -6,11 +6,11 @@
 //
 // $Id$
 
-require ('pre.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
 require($DOCUMENT_ROOT.'/bugs/bug_data.php'); // needed by pm_data
 require('../pm_data.php');
 require('../pm_utils.php');
-require ($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
+require($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
 
 $is_admin_page='y';
 

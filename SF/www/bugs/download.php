@@ -9,7 +9,7 @@
 //	Originally written by Laurent Julliard 2001, 2002, CodeX Team, Xerox
 //
 
-require ('pre.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
 
 $sql="SELECT description,file,filename,filesize,filetype FROM bug_file WHERE bug_file_id='$bug_file_id' AND bug_id ='$bug_id'";
 $result=db_query($sql);

@@ -9,7 +9,7 @@
 //	Originally written by Laurent Julliard 2001, 2002, CodeX Team, Xerox
 //
 
-require ('pre.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
 require('../bug_data.php');
 require('../bug_utils.php');
 $is_admin_page='y';

@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require('pre.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
 require('../bug_data.php');
 require('../bug_utils.php');
 
@@ -15,7 +15,7 @@ if ($group_id && user_ismember($group_id,"B2")) {
     // Initialize the global data structure before anything else
     bug_init($group_id);
 
-    include ($DOCUMENT_ROOT.'/include/HTML_Graphs.php');
+    require($DOCUMENT_ROOT.'/include/HTML_Graphs.php');
 
     if ($field) {
 	if ($field == 'aging') {

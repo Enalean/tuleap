@@ -6,9 +6,9 @@
 //
 // $Id$
 
-require ('pre.php');    
-require ('../svn/svn_data.php');    
-require ('../svn/svn_utils.php');    
+require($DOCUMENT_ROOT.'/include/pre.php');    
+require('../svn/svn_data.php');    
+require('../svn/svn_utils.php');    
 
 // ######################## table for summary info
 
@@ -16,12 +16,12 @@ require ('../svn/svn_utils.php');
 switch ($func) {
 
  case 'browse' : {
-   include '../svn/browse_revision.php';
+   require('../svn/browse_revision.php');
    break;
  }
 
  case 'detailrevision' : {
-   include '../svn/detail_revision.php';
+   require('../svn/detail_revision.php');
    break;
  }
 
@@ -30,9 +30,9 @@ switch ($func) {
    // ############################ developer access
    if ($rev_id) {
        $_rev_id = $rev_id;
-       include './browse_revision.php';
+       require('./browse_revision.php');
    } else {
-       include './svn_intro.php';
+       require('./svn_intro.php');
    }
 
    break;

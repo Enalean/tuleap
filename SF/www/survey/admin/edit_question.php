@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require('pre.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
 require('../survey_data.php');
 require('../survey_utils.php');
 
@@ -21,12 +21,12 @@ if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 switch ($func) {
 
  case 'browse' :
-     include 'browse_question.php';
+     require('./browse_question.php');
      break;
 
  case 'delete_question':
      survey_data_question_delete($group_id,$question_id);
-     include 'browse_question.php';
+     require('./browse_question.php');
      break;
 
  case 'update_question':
@@ -35,15 +35,15 @@ switch ($func) {
 	 survey_data_question_update($group_id, $question_id, 
 		 htmlspecialchars($question), $question_type);
 	 // Display the list after the update
-	 include 'browse_question.php';
+	 require('./browse_question.php');
      } else {
 	 // Show the form to update the question
-	 include 'update_question.php';
+	 require('./update_question.php');
      }
     break;
     
  default :
-     include 'browse_question.php';
+     require('./browse_question.php');
      break;
 }
 

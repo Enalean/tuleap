@@ -13,7 +13,7 @@
 
 */
 
-require('pre.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
 require('../forum/forum_utils.php');
 
 function forum_show_a_nested_message ($result,$row=0) {

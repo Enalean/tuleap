@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require ('pre.php');    
+require($DOCUMENT_ROOT.'/include/pre.php');    
 
 $expl_pathinfo = explode('/',$REQUEST_URI);
 
@@ -32,7 +32,7 @@ if (db_numrows($res_user) < 1) {
 	$user_id=db_result($res_user,0,'user_id');
 
 	//now show the project page
-	include ('user_home.php');
+	require($DOCUMENT_ROOT.'/include/user_home.php');
 
 }
 

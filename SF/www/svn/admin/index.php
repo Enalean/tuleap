@@ -9,9 +9,9 @@
 //	Originally written by Laurent Julliard 2004, CodeX Team, Xerox
 //
 
-require ('pre.php');    
-require ('../svn_data.php');    
-require ('../svn_utils.php');    
+require($DOCUMENT_ROOT.'/include/pre.php');    
+require('../svn_data.php');    
+require('../svn_utils.php');    
 
 // need a group_id !!!
 if (!$group_id) {
@@ -27,17 +27,17 @@ if (!user_ismember($group_id,'A')) {
 switch ($func) {
 
  case 'general_settings' : {
-   include './general_settings.php';
+   require('./general_settings.php');
    break;
  }
 
  case 'access_control' : {
-   include './access_control.php';
+   require('./access_control.php');
    break;
  }
 
  case 'notification' : {
-   include './notification.php';
+   require('./notification.php');
    break;
  }
 

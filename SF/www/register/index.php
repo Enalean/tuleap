@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require "pre.php";    // Initial db and session library, opens session
+require($DOCUMENT_ROOT.'/include/pre.php');    // Initial db and session library, opens session
 session_require(array(isloggedin=>1));
 $HTML->header(array(title=>"Project Registration"));
 

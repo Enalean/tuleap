@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require('pre.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
 require('../bugs/bug_utils.php');
 require('../bugs/bug_data.php');
 
@@ -22,7 +22,7 @@ if ($group_id) {
     switch ($func) {
 
     case 'addbug' : {
-	include '../bugs/add_bug.php';
+	require('../bugs/add_bug.php');
 	break;
     }
 
@@ -50,7 +50,7 @@ if ($group_id) {
 	// send an email to notify the user of the bug update
 	if ($bug_id) {
 	    bug_mail_followup($bug_id,$project->getNewBugAddress());
-	    include '../bugs/browse_bug.php';
+	    require('../bugs/browse_bug.php');
 	} else {
 	    //some error occurred
 	    exit_error('ERROR',$feedback);
@@ -97,7 +97,7 @@ if ($group_id) {
 	    bug_mail_followup($bug_id,$address,$changes);
 	}
 
-	include '../bugs/browse_bug.php';
+	require('../bugs/browse_bug.php');
 	break;
     }
 
@@ -110,7 +110,7 @@ if ($group_id) {
 	    // impact the next bug query.
 	    unset($bug_id);
 	    unset($HTTP_GET_VARS['bug_id']);
-	    include '../bugs/browse_bug.php';
+	    require('../bugs/browse_bug.php');
 	} else {
 	    exit_permission_denied();
 	}	
@@ -126,7 +126,7 @@ if ($group_id) {
 	    // impact the next bug query.
 	    unset($bug_id);
 	    unset($HTTP_GET_VARS['bug_id']);
-	    include '../bugs/browse_bug.php';
+	    require('../bugs/browse_bug.php');
 	} else {
 	    exit_permission_denied();
 	}	
@@ -142,7 +142,7 @@ if ($group_id) {
 	    // impact the next bug query.
 	    unset($bug_id);
 	    unset($HTTP_GET_VARS['bug_id']);
-	    include '../bugs/browse_bug.php';
+	    require('../bugs/browse_bug.php');
 	} else {
 	    exit_permission_denied();
 	}	
@@ -171,13 +171,13 @@ if ($group_id) {
 	// impact the next bug query.
 	unset($bug_id);
 	unset($HTTP_GET_VARS['bug_id']);
-	include '../bugs/browse_bug.php';
+	require('../bugs/browse_bug.php');
 	
 	break;	    
     }
 
     case 'postaddcomment' : {
-	include '../bugs/postadd_comment.php';
+	require('../bugs/postadd_comment.php');
 	if ($project->sendAllBugUpdates()) {
 	    $address=$project->getNewBugAddress();
 	}
@@ -185,12 +185,12 @@ if ($group_id) {
 	if ($changed) {
 	    bug_mail_followup($bug_id,$address,$changes);
 	}
-	include '../bugs/browse_bug.php';
+	require('../bugs/browse_bug.php');
 	break;
     }
 
     case 'browse' : {
-	include '../bugs/browse_bug.php';
+	require('../bugs/browse_bug.php');
 	break;
     }
 
@@ -198,16 +198,16 @@ if ($group_id) {
 	// If a printer version is requested force the detail_bug script
 	// even if user logged in.
 	if (user_ismember($group_id,'B1') && !$pv) {
-	    include '../bugs/mod_bug.php';
+	    require('../bugs/mod_bug.php');
 	} else {
-	    include '../bugs/detail_bug.php';
+	    require('../bugs/detail_bug.php');
 	}
 	break;
     }
 
     case 'modfilters' : {
 	if (user_isloggedin()) {
-	    include '../bugs/mod_filters.php';
+	    require('../bugs/mod_filters.php');
 	    break;
 	} else {
 	    exit_not_logged_in();
@@ -216,8 +216,8 @@ if ($group_id) {
 
     case 'postmodfilters' : {
 	if (user_isloggedin()) {
-	    include '../bugs/postmod_filters.php';
-	    include '../bugs/mod_filters.php';
+	    require('../bugs/postmod_filters.php');
+	    require('../bugs/mod_filters.php');
 	    break;
 	} else {
 	    exit_not_logged_in();
@@ -225,7 +225,7 @@ if ($group_id) {
     }
 
     default : {
-	include '../bugs/browse_bug.php';
+	require('../bugs/browse_bug.php');
 	break;
     }
 

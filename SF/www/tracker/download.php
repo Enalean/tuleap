@@ -9,7 +9,7 @@
 //	Originally written by Laurent Julliard 2001, 2002, CodeX Team, Xerox
 //
 
-require ('pre.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
 
 $sql="SELECT description,bin_data,filename,filesize,filetype FROM artifact_file WHERE id='$id' AND artifact_id ='$artifact_id'";
 //echo $sql;

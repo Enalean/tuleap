@@ -6,8 +6,8 @@
 //
 // $Id$
 
-require ('pre.php');    
-require ('../cvs/commit_utils.php');    
+require($DOCUMENT_ROOT.'/include/pre.php');    
+require('../cvs/commit_utils.php');    
 
 // ######################## table for summary info
 
@@ -15,18 +15,18 @@ require ('../cvs/commit_utils.php');
 switch ($func) {
 
  case 'browse' : {
-   include '../cvs/browse_commit.php';
+   require('../cvs/browse_commit.php');
    break;
  }
 
  case 'detailcommit' : {
-   include '../cvs/detail_commit.php';
+   require('../cvs/detail_commit.php');
    break;
  }
 
 
  case 'admin' : {
-   include '../cvs/admin_commit.php';
+   require('../cvs/admin_commit.php');
    break;
  }
 
@@ -50,7 +50,7 @@ switch ($func) {
    $feedback = $feedback.$status;
    $query = 'update groups set cvs_tracker="'.$tracked.'", cvs_events_mailing_list="'.$mailing_list.'", cvs_events_mailing_header="'.$mailing_header.'", cvs_preamble="'.htmlspecialchars($form_preamble).'" where group_id='.$group_id;
    $result=db_query($query);
-   include '../cvs/admin_commit.php';
+   require('../cvs/admin_commit.php');
    break;
  }
 
@@ -60,9 +60,9 @@ switch ($func) {
    // ############################ developer access
    if ($commit_id) {
        $_commit_id = $commit_id;
-       include '../cvs/browse_commit.php';
+       require('../cvs/browse_commit.php');
    } else {
-       include '../cvs/cvs_intro.php';
+       require('../cvs/cvs_intro.php');
    }
 
    break;

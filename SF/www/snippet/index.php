@@ -6,10 +6,10 @@
 //
 // $Id$
 
-require ('vars.php');
-require ('pre.php');
-require ('../snippet/snippet_utils.php');
-require ('cache.php');
+require($DOCUMENT_ROOT.'/include/vars.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
+require('../snippet/snippet_utils.php');
+require($DOCUMENT_ROOT.'/include/cache.php');
 
 snippet_header(array('title'=>'Snippet Library', 
 		     'header'=>'Snippet Library',

@@ -12,28 +12,28 @@
 // and sets the time zone.
 
 // Defines all of the CodeX settings first (hosts, databases, etc.)
-require (getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/conf/local.inc');
+require(getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/conf/local.inc');
 
 //library to determine browser settings
-require('browser.php');
+require($DOCUMENT_ROOT.'/include/browser.php');
 
 //base error library for new objects
-require('Error.class');
+require($DOCUMENT_ROOT.'/../common/include/Error.class');
 
 //database abstraction
-require('database.php');
+require($DOCUMENT_ROOT.'/include/database.php');
 
 //security library
-require('session.php');
+require($DOCUMENT_ROOT.'/include/session.php');
 
 //user functions like get_name, logged_in, etc
-require('user.php');
+require($DOCUMENT_ROOT.'/include/user.php');
 
 //group functions like get_name, etc
-require('Group.class');
+require($DOCUMENT_ROOT.'/include/Group.class');
 
 //Project extends Group and includes preference accessors
-require('Project.class');
+require($DOCUMENT_ROOT.'/include/Project.class');
 
 // #### Connect to db
 

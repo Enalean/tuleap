@@ -6,10 +6,10 @@
 //
 // $Id$
 
-require ('pre.php');    
-require ('vars.php');
-require ('account.php');
-require ('proj_email.php');
+require($DOCUMENT_ROOT.'/include/pre.php');    
+require($DOCUMENT_ROOT.'/include/vars.php');
+require($DOCUMENT_ROOT.'/include/account.php');
+require($DOCUMENT_ROOT.'/include/proj_email.php');
 require($DOCUMENT_ROOT.'/admin/admin_utils.php');
 require($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
 

@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require "pre.php";    
+require($DOCUMENT_ROOT.'/include/pre.php');    
 $HTML->header(array(title=>"Deleted Account"));
 list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
 ?>

@@ -13,8 +13,6 @@
 //
 
 
-//require($DOCUMENT_ROOT.'/../common/tracker/Artifact.class');
-//require('include/ArtifactFieldHtml.class');
 
 class ArtifactHtml extends Artifact {
 

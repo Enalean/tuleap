@@ -5,7 +5,7 @@
 // http://codex.xerox.com
 //
 // $Id$
-require ('pre.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
 
 // Check if group_id is valid
 if (!$group_id) {

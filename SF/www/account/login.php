@@ -10,7 +10,7 @@ Header( "Expires: Wed, 11 Nov 1998 11:11:11 GMT");
 Header( "Cache-Control: no-cache"); 
 Header( "Cache-Control: must-revalidate"); 
 
-require ('../include/pre.php');
+require('../include/pre.php');
 
 if (!session_issecure() && ($GLOBALS['sys_https_host'] != "")) {
     //force use of SSL for login

@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require "pre.php";    // Initial db and session library, opens session
+require($DOCUMENT_ROOT.'/include/pre.php');    // Initial db and session library, opens session
 $HTML->header(array(title=>"New Project Registration"));
 ?>
 

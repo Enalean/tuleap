@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require "pre.php";    
+require($DOCUMENT_ROOT.'/include/pre.php');    
 
 session_require(array('isloggedin'=>1));
 

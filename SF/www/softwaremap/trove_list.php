@@ -6,9 +6,9 @@
 //
 // $Id$
 
-require "pre.php";    
-require "vars.php";
-require "trove.php";
+require($DOCUMENT_ROOT.'/include/pre.php');    
+require($DOCUMENT_ROOT.'/include/vars.php');
+require($DOCUMENT_ROOT.'/include/trove.php');
 
 $HTML->header(array('title'=>'Software Map'));
 echo'

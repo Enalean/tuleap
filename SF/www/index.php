@@ -6,8 +6,8 @@
 //
 // $Id$
 
-require ('pre.php');    // Initial db and session library, opens session
-require ('cache.php');
+require($DOCUMENT_ROOT.'/include/pre.php');    // Initial db and session library, opens session
+require($DOCUMENT_ROOT.'/include/cache.php');
 require($DOCUMENT_ROOT.'/forum/forum_utils.php');
 
 $HTML->header(array('title'=>'Welcome'));

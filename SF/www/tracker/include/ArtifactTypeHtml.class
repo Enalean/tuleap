@@ -11,7 +11,7 @@
 //
 
 //require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');
-include ($DOCUMENT_ROOT.'/include/HTML_Graphs.php');
+require($DOCUMENT_ROOT.'/include/HTML_Graphs.php');
 
 class ArtifactTypeHtml extends ArtifactType {
 

@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require ('pre.php');    
+require($DOCUMENT_ROOT.'/include/pre.php');    
 
 if (!$toaddress && !$touser) {
 	exit_error('Error','Error - some variables were not provided');

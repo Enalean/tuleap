@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require "pre.php";    
+require($DOCUMENT_ROOT.'/include/pre.php');    
 $HTML->header(array(title=>"My Project Listing"));
 
 $res_proj = db_query("SELECT groups.group_name AS group_name,"

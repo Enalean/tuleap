@@ -8,9 +8,9 @@
 //  Written for CodeX by Nicolas Guérin
 //
 
-require ('pre.php');
-require ('vars.php');
-require ($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
+require($DOCUMENT_ROOT.'/include/vars.php');
+require($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
 
 
 function display_service_row($group_id, $service_id, $label, $short_name, $description, $is_active, $is_used, $scope, $rank, &$row_num, $su) {

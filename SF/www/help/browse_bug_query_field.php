@@ -9,9 +9,9 @@
 //	Originally written by Laurent Julliard 2001, 2002, CodeX Team, Xerox
 //
 
-require "pre.php";
-require "$DOCUMENT_ROOT/bugs/bug_utils.php";
-require "$DOCUMENT_ROOT/bugs/bug_data.php";
+require($DOCUMENT_ROOT.'/include/pre.php');
+require($DOCUMENT_ROOT.'/bugs/bug_utils.php');
+require($DOCUMENT_ROOT.'/bugs/bug_data.php');
 
 
 // Initialize the global data structure before anyhting else

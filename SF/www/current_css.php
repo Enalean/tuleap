@@ -8,7 +8,7 @@
 //
 //
 
-    require ('pre.php');
+    require($DOCUMENT_ROOT.'/include/pre.php');
     
     session_redirect(util_get_css_theme());
 ?>

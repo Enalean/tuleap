@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require('pre.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
 require('../survey/survey_utils.php');
 
 survey_header(array('title'=>'Survey Complete'));

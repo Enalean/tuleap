@@ -9,10 +9,10 @@
 // Originally written by Nicolas Guerin 2004, CodeX Team, Xerox
 //
 
-require('pre.php');
-require ($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
-require ($DOCUMENT_ROOT.'/project/admin/ugroup_utils.php');
-require ($DOCUMENT_ROOT.'/file/file_utils.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
+require($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
+require($DOCUMENT_ROOT.'/project/admin/ugroup_utils.php');
+require($DOCUMENT_ROOT.'/file/file_utils.php');
 
 
 function display_name_and_desc_form($ugroup_name,$ugroup_description) {

@@ -9,7 +9,7 @@
 //  Written for CodeX by Marie-Luise Schneider
 //
 
-require('tracker_import_utils.php');
+require('./tracker_import_utils.php');
 require($DOCUMENT_ROOT.'/project/export/project_export_utils.php');
 
 if($group_id && $atid && $user_id) {
@@ -77,7 +77,7 @@ if($group_id && $atid && $user_id) {
     //update group history
     group_add_history("Import",$ath->getName(),$group_id);
 
-    include './browse.php';
+    require('./browse.php');
     
 
     //   screen showing the allowed input format of the CSV files *************************************************

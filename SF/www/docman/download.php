@@ -9,7 +9,7 @@
 //	Originally written by Stephane Bouhet 2002, CodeX Team, Xerox
 //
 
-require ('pre.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
 
 $sql="SELECT description,data,filename,filesize,filetype FROM doc_data WHERE docid='$docid'";
 $result=db_query($sql);

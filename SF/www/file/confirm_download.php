@@ -5,7 +5,7 @@
 // http://codex.xerox.com
 //
 // $Id$
-require ('pre.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
 
 
 if (user_isloggedin()) {

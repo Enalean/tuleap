@@ -6,12 +6,12 @@
 //
 // $Id$
 
-require ('pre.php');    
-require ($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
-require ('account.php');
+require($DOCUMENT_ROOT.'/include/pre.php');    
+require($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
+require($DOCUMENT_ROOT.'/include/account.php');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactTypeFactory.class');
-require ($DOCUMENT_ROOT.'/project/admin/ugroup_utils.php');
+require($DOCUMENT_ROOT.'/project/admin/ugroup_utils.php');
 
 // get current information
 $res_grp = group_get_result($group_id);
@@ -22,7 +22,7 @@ if (db_numrows($res_grp) < 1) {
 
 //if the project isn't active, require you to be a member of the super-admin group
 if (!(db_result($res_grp,0,'status') == 'A')) {
-    session_require (array('group'=>1));
+    session_require(array('group'=>1));
 }
 
 //must be a project admin
@@ -98,7 +98,7 @@ if ($func) {
  	exit_error('Error','Could Not Get ArtifactTypeFactory');
        }
        $mode = "admin";
-       include '../../tracker/import.php';
+       require('../../tracker/import.php');
     } */
 }
 

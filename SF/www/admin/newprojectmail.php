@@ -6,8 +6,8 @@
 //
 // $Id$
 
-require ('pre.php');
-require('proj_email.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
+require($DOCUMENT_ROOT.'/include/proj_email.php');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 

@@ -7,8 +7,8 @@
 // $Id$
 
 
-require('pre.php');
-require('HTML_Graphs.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
+require($DOCUMENT_ROOT.'/include/HTML_Graphs.php');
 require($DOCUMENT_ROOT.'/survey/survey_utils.php');
 
 if (!user_isloggedin() || !user_ismember($group_id,'A')) {

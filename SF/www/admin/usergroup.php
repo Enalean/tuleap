@@ -6,8 +6,8 @@
 //
 // $Id$
 
-require "pre.php";    
-require "account.php";
+require($DOCUMENT_ROOT.'/include/pre.php');    
+require($DOCUMENT_ROOT.'/include/account.php');
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
 $HTML->header(array('title'=>'Admin - User Info'));

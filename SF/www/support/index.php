@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require('pre.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
 require('../support/support_utils.php');
 require('../support/support_data.php');
 
@@ -16,7 +16,7 @@ if ($group_id) {
 	switch ($func) {
 
 		case 'addsupport' : {
-			include '../support/add_support.php';
+			require('../support/add_support.php');
 			break;
 		}
 		case 'postaddsupport' : {
@@ -25,7 +25,7 @@ if ($group_id) {
 			if ($support_id) {
 				//send an email to the submittor and default address for the project
 				sr_utils_mail_followup($support_id, $project->getNewSupportAddress());
-				include '../support/browse_support.php';
+				require('../support/browse_support.php');
 			} else {
 				//some kind of error in creation
 				exit_error('ERROR',$feedback);
@@ -54,33 +54,33 @@ if ($group_id) {
 			sr_utils_mail_followup($support_id,$address,$changes);
 		    }
 
-			include '../support/browse_support.php';
+			require('../support/browse_support.php');
 			break;
 		}
 
 		case 'postaddcomment' : {
-			include '../support/postadd_comment.php';
+			require('../support/postadd_comment.php');
 			if ($project->sendAllSupportUpdates()) {
 				$address=$project->getNewSupportAddress();
 			}
 			sr_utils_mail_followup($support_id,$address,$changes);
-			include '../support/browse_support.php';
+			require('../support/browse_support.php');
 			break;
 		}
 		case 'browse' : {
-			include '../support/browse_support.php';
+			require('../support/browse_support.php');
 			break;
 		}
 		case 'detailsupport' : {
 			if (user_ismember($group_id,'S1')) {
-				include '../support/mod_support.php';
+				require('../support/mod_support.php');
 			} else {
-				include '../support/detail_support.php';
+				require('../support/detail_support.php');
 			}
 			break;
 		}
 		default : {
-			include '../support/browse_support.php';
+			require('../support/browse_support.php');
 			break;
 		}
 	}

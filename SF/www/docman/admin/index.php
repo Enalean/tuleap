@@ -15,7 +15,7 @@
 //	Modified by Laurent Julliard 2001-2004, CodeX Team, Xerox
 
 require('../doc_utils.php');
-require('pre.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
 
 if (!($group_id)) {
 	exit_no_group();

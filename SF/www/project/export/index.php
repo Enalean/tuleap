@@ -5,9 +5,9 @@
 // http://codex.xerox.com
 //
 // $Id$
-require('pre.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
 require('../admin/project_admin_utils.php');
-require('project_export_utils.php');
+require('./project_export_utils.php');
 require($DOCUMENT_ROOT.'/../common/tracker/Artifact.class');
 require($DOCUMENT_ROOT.'/tracker/include/ArtifactHtml.class');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');
@@ -18,16 +18,16 @@ require($DOCUMENT_ROOT.'/../common/tracker/ArtifactFieldFactory.class');
 
 // Conditionally include the appropriate modules
 if (ereg('^bug',$export) || ($export == 'project_db') ) {
-    include($DOCUMENT_ROOT.'/bugs/bug_data.php');
-    include($DOCUMENT_ROOT.'/bugs/bug_utils.php');
+    require($DOCUMENT_ROOT.'/bugs/bug_data.php');
+    require($DOCUMENT_ROOT.'/bugs/bug_utils.php');
 }
 if (ereg('^task',$export) || ($export == 'project_db')){
-    include($DOCUMENT_ROOT.'/pm/pm_data.php');
-    include($DOCUMENT_ROOT.'/pm/pm_utils.php');
+    require($DOCUMENT_ROOT.'/pm/pm_data.php');
+    require($DOCUMENT_ROOT.'/pm/pm_utils.php');
 }
 if (ereg('^support',$export) || ($export == 'project_db') ) {
-    include($DOCUMENT_ROOT.'/support/support_data.php');
-    include($DOCUMENT_ROOT.'/support/support_utils.php');
+    require($DOCUMENT_ROOT.'/support/support_data.php');
+    require($DOCUMENT_ROOT.'/support/support_utils.php');
 }
 
 // Group ID must be defined and must be a project admin
@@ -55,150 +55,150 @@ $pg_title = 'Project Data Export '.$groupname;
 switch ($export) {
 
  case 'artifact':
-     include('./artifact_export.php');
+     require('./artifact_export.php');
      break;
 
  case 'artifact_format':
      project_admin_header(array('title'=>$pg_title));
-     include('./artifact_export.php');
+     require('./artifact_export.php');
      site_project_footer( array() );
      break;
 
  case 'artifact_history':
-     include('./artifact_history_export.php');
+     require('./artifact_history_export.php');
      break;
 
  case 'artifact_history_format':
      project_admin_header(array('title'=>$pg_title));
-     include('./artifact_history_export.php');
+     require('./artifact_history_export.php');
      site_project_footer( array() );
      break;
 
  case 'artifact_deps':
-     include('./artifact_deps_export.php');
+     require('./artifact_deps_export.php');
      break;
 
  case 'artifact_deps_format':
      project_admin_header(array('title'=>$pg_title));
-     include('./artifact_deps_export.php');
+     require('./artifact_deps_export.php');
      site_project_footer( array() );
      break;
 
  case 'bug':
-     include('./bug_export.php');
+     require('./bug_export.php');
      break;
 
  case 'bug_format':
      project_admin_header(array('title'=>$pg_title));
-     include('./bug_export.php');
+     require('./bug_export.php');
      site_project_footer( array() );
      break;
 
  case 'bug_history':
-     include('./bug_history_export.php');
+     require('./bug_history_export.php');
      break;
 
  case 'bug_history_format':
      project_admin_header(array('title'=>$pg_title));
-     include('./bug_history_export.php');
+     require('./bug_history_export.php');
      site_project_footer( array() );
      break;
 
  case 'bug_bug_deps':
-     include('./bug_bug_deps_export.php');
+     require('./bug_bug_deps_export.php');
      break;
 
  case 'bug_bug_deps_format':
      project_admin_header(array('title'=>$pg_title));
-     include('./bug_bug_deps_export.php');
+     require('./bug_bug_deps_export.php');
      site_project_footer( array() );
      break;
 
  case 'bug_task_deps':
-     include('./bug_task_deps_export.php');
+     require('./bug_task_deps_export.php');
      break;
 
  case 'bug_task_deps_format':
      project_admin_header(array('title'=>$pg_title));
-     include('./bug_task_deps_export.php');
+     require('./bug_task_deps_export.php');
      site_project_footer( array() );
      break;
 
  case 'task':
-     include('./task_export.php');
+     require('./task_export.php');
      break;
 
  case 'task_format':
      project_admin_header(array('title'=>$pg_title));
-     include('./task_export.php');
+     require('./task_export.php');
      site_project_footer( array() );
      break;
 
  case 'task_history':
-     include('./task_history_export.php');
+     require('./task_history_export.php');
      break;
 
  case 'task_history_format':
      project_admin_header(array('title'=>$pg_title));
-     include('./task_history_export.php');
+     require('./task_history_export.php');
      site_project_footer( array() );
      break;
 
  case 'task_task_deps':
-     include('./task_task_deps_export.php');
+     require('./task_task_deps_export.php');
      break;
 
  case 'task_task_deps_format':
      project_admin_header(array('title'=>$pg_title));
-     include('./task_task_deps_export.php');
+     require('./task_task_deps_export.php');
      site_project_footer( array() );
      break;
 
  case 'task_assigned_to':
-     include('./task_assigned_to_export.php');
+     require('./task_assigned_to_export.php');
      break;
 
  case 'task_assigned_to_format':
      project_admin_header(array('title'=>$pg_title));
-     include('./task_assigned_to_export.php');
+     require('./task_assigned_to_export.php');
      site_project_footer( array() );
      break;
 
  case 'survey_responses':
-     include('./survey_responses_export.php');
+     require('./survey_responses_export.php');
      break;
 
  case 'survey_responses_format':
      project_admin_header(array('title'=>$pg_title));
-     include('./survey_responses_export.php');
+     require('./survey_responses_export.php');
      site_project_footer( array() );
      break;
 
  case 'support_request':
-     include('./support_request_export.php');
+     require('./support_request_export.php');
      break;
 
  case 'support_request_format':
      project_admin_header(array('title'=>$pg_title));
-     include('./support_request_export.php');
+     require('./support_request_export.php');
      site_project_footer( array() );
      break;
 
  case 'project_db':
      project_admin_header(array('title'=>$pg_title));
-     include('./bug_export.php');
-     include('./bug_history_export.php');
-     include('./bug_bug_deps_export.php');
-     include('./bug_task_deps_export.php');
-     include('./task_export.php');
-     include('./task_history_export.php');
-     include('./task_task_deps_export.php');
-     include('./task_assigned_to_export.php');
-     include('./survey_responses_export.php');
-     include('./support_request_export.php');
-     include('./artifact_export.php');
-     include('./artifact_history_export.php');
-     include('./artifact_deps_export.php');
+     require('./bug_export.php');
+     require('./bug_history_export.php');
+     require('./bug_bug_deps_export.php');
+     require('./bug_task_deps_export.php');
+     require('./task_export.php');
+     require('./task_history_export.php');
+     require('./task_task_deps_export.php');
+     require('./task_assigned_to_export.php');
+     require('./survey_responses_export.php');
+     require('./support_request_export.php');
+     require('./artifact_export.php');
+     require('./artifact_history_export.php');
+     require('./artifact_deps_export.php');
 
 ?>
    <P>Your project database has been succesfully generated. You can now use 

@@ -6,9 +6,9 @@
 //
 // $Id$
 
-require ('pre.php');
-require ('../survey/survey_utils.php');
-require ('./my_utils.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
+require('../survey/survey_utils.php');
+require('./my_utils.php');
 require($DOCUMENT_ROOT.'/../common/tracker/Artifact.class');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactFile.class');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');

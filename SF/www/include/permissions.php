@@ -15,7 +15,7 @@
 // type='RELEASE_READ' id='release_id' table='frs_release'
 // type='DOCUMENT_READ'
 
-require ($DOCUMENT_ROOT.'/project/admin/ugroup_utils.php');
+require($DOCUMENT_ROOT.'/project/admin/ugroup_utils.php');
 
 
 /**

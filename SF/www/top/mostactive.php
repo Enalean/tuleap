@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require ('pre.php');    
+require($DOCUMENT_ROOT.'/include/pre.php');    
 
 if (!$offset || $offset < 0) {
 	$offset=0;

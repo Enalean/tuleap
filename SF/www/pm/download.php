@@ -9,7 +9,7 @@
 //	Originally written by Stéphane Bouhet, 2002, CodeX Team, Xerox
 //
 
-require ('pre.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
 
 $sql="SELECT description,file,filename,filesize,filetype FROM project_file WHERE project_file_id='$project_file_id' AND project_task_id ='$project_task_id'";
 $result=db_query($sql);

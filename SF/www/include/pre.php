@@ -11,7 +11,7 @@
 */
 
 // Defines all of the CodeX settings first (hosts, databases, etc.)
-require (getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/conf/local.inc');
+require(getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/conf/local.inc');
 
 // Check URL for valid hostname and valid protocol
 if (($HTTP_HOST != $GLOBALS['sys_default_domain']) && ($SERVER_NAME != 'localhost') && ($HTTP_HOST != $GLOBALS['sys_https_host'])) {
@@ -35,52 +35,49 @@ if ($location) {
 
 
 //library to determine browser settings
-require('browser.php');
-
-//base error library for new objects
-//require('Error.class');
+require($DOCUMENT_ROOT.'/include/browser.php');
 
 //various html utilities
-require('utils.php');
+require($DOCUMENT_ROOT.'/include/utils.php');
 
 include(util_get_content('layout/osdn_sites'));
 
 // HTML layout class, may be overriden by the Theme class
-require('Layout.class');
+require($DOCUMENT_ROOT.'/include/Layout.class');
 
 $HTML = new Layout();
 
 //PHP4-like functions - only if running php3
 if (substr(phpversion(),0,1) == "3") {
-    require('utils_php4.php');
+    require($DOCUMENT_ROOT.'/include/utils_php4.php');
 }
 
 //database abstraction
-require('database.php');
+require($DOCUMENT_ROOT.'/include/database.php');
 
 //security library
-require('session.php');
+require($DOCUMENT_ROOT.'/include/session.php');
 
 //user functions like get_name, logged_in, etc
-require('user.php');
+require($DOCUMENT_ROOT.'/include/user.php');
 
 //group functions like get_name, etc
-require('Group.class');
+require($DOCUMENT_ROOT.'/include/Group.class');
 
 //Project extends Group and includes preference accessors
-require('Project.class');
+require($DOCUMENT_ROOT.'/include/Project.class');
 
 //library to set up context help
-require('help.php');
+require($DOCUMENT_ROOT.'/include/help.php');
 
 //exit_error library
-require('exit.php');
+require($DOCUMENT_ROOT.'/include/exit.php');
 
 //various html libs like button bar, themable
-require('html.php');
+require($DOCUMENT_ROOT.'/include/html.php');
 
 //left-hand nav library, themable
-require('menu.php');
+require($DOCUMENT_ROOT.'/include/menu.php');
 
 $sys_datefmt = "Y-M-d H:i";
 
@@ -97,10 +94,10 @@ if (!$conn) {
 session_set();
 
 // OSDN functions and defs
-require('osdn.php');
+require($DOCUMENT_ROOT.'/include/osdn.php');
 
 //insert this page view into the database
-require('logger.php');
+require($DOCUMENT_ROOT.'/include/logger.php');
 
 /*
 
@@ -116,7 +113,7 @@ if (user_isloggedin()) {
 }
 
 //Set up the vars and theme functions 
-require('theme.php');
+require($DOCUMENT_ROOT.'/include/theme.php');
 
 // If the CodeX Software license was declined by the site admin
 // so stop all accesses to the site

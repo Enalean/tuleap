@@ -9,7 +9,7 @@
 //  Written for CodeX by Stephane Bouhet
 //
 
-require('pre.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
 require($DOCUMENT_ROOT.'/../common/include/GroupFactory.class');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactTypeFactory.class');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');

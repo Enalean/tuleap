@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require('pre.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
 require('../mail_utils.php');
 
 if ($group_id && user_ismember($group_id,'A')) {

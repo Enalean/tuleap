@@ -12,8 +12,8 @@
 
 */
 
-require ('pre.php');
-require ($DOCUMENT_ROOT.'/project/admin/ugroup_utils.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
+require($DOCUMENT_ROOT.'/project/admin/ugroup_utils.php');
 
 if (user_isloggedin()) {
 	$user_id = user_getid();

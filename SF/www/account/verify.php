@@ -6,8 +6,8 @@
 //
 // $Id$
 
-require "pre.php";
-require "account.php";  // LJ needed to create unix account
+require($DOCUMENT_ROOT.'/include/pre.php');
+require($DOCUMENT_ROOT.'/include/account.php');  // LJ needed to create unix account
 
 // ###### function login_valid()
 // ###### checks for valid login from form post

@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require "pre.php";    
+require($DOCUMENT_ROOT.'/include/pre.php');    
 
 $confirm_hash = substr(md5($session_hash . time()),0,16);
 

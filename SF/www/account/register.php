@@ -6,10 +6,10 @@
 //
 // $Id$
 
-require "pre.php";
-require "proj_email.php";
-require "account.php";
-require "timezones.php";
+require($DOCUMENT_ROOT.'/include/pre.php');
+require($DOCUMENT_ROOT.'/include/proj_email.php');
+require($DOCUMENT_ROOT.'/include/account.php');
+require($DOCUMENT_ROOT.'/include/timezones.php');
 
 // ###### function register_valid()
 // ###### checks for valid register from form post

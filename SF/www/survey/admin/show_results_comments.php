@@ -6,8 +6,8 @@
 //
 // $Id$
 
-require('pre.php');
-require('HTML_Graphs.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
+require($DOCUMENT_ROOT.'/include/HTML_Graphs.php');
 require($DOCUMENT_ROOT.'/survey/survey_utils.php');
 $is_admin_page='y';
 survey_header(array('title'=>'Survey Aggregate Results',

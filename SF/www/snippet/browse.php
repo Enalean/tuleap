@@ -6,8 +6,8 @@
 //
 // $Id$
 
-require ('pre.php');
-require ('../snippet/snippet_utils.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
+require('../snippet/snippet_utils.php');
 
 snippet_header(array('title'=>'Snippet Library', 
 		     'header'=>'Snippet Browsing',

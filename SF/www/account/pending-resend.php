@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require "pre.php";    
+require($DOCUMENT_ROOT.'/include/pre.php');    
 
 $res_user = db_query("SELECT * FROM user WHERE user_name='$form_user'");
 $row_user = db_fetch_array($res_user);

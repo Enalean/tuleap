@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require ($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
+require($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
 
 //we know $foundry is already set up from the root /foundry/ page
 

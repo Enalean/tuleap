@@ -6,9 +6,9 @@
 //
 // $Id$
 
-require "pre.php";    // Initial db and session library, opens session
-require "vars.php";
-require('account.php');
+require($DOCUMENT_ROOT.'/include/pre.php');    // Initial db and session library, opens session
+require($DOCUMENT_ROOT.'/include/vars.php');
+require($DOCUMENT_ROOT.'/include/account.php');
 session_require(array('isloggedin'=>'1'));
 
 if ($insert_group_name && $group_id && $rand_hash && $form_full_name && $form_unix_name) {

@@ -5,9 +5,9 @@
 // http://codex.xerox.com
 //
 // $Id$ 
-require('pre.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
 require('../admin/project_admin_utils.php');
-require('source_code_access_utils.php');
+require('./source_code_access_utils.php');
 
 // Only for project administrators
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));

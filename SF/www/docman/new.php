@@ -12,8 +12,8 @@
 	by Quentin Cregan, SourceForge 06/2000
 */
 
-require('doc_utils.php');
-require('pre.php');
+require('./doc_utils.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
 
 if($group_id) {
 

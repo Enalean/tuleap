@@ -6,8 +6,8 @@
 //
 // $Id$
 
-require ('pre.php');
-require ('../forum/forum_utils.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
+require('../forum/forum_utils.php');
 
 if ($thread_id) {
 

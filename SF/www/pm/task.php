@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require('pre.php');
+require($DOCUMENT_ROOT.'/include/pre.php');
 require('../pm/pm_utils.php');
 require($DOCUMENT_ROOT.'/bugs/bug_data.php'); // needed by pm_data
 require('../pm/pm_data.php');
@@ -69,7 +69,7 @@ if ($group_id ) {
 
 	       case 'addtask' : {
 			if (user_ismember($group_id,'P2')) {
-				include '../pm/add_task.php';
+				require('../pm/add_task.php');
 			} else {
 				exit_permission_denied();
 			}
@@ -100,7 +100,7 @@ if ($group_id ) {
             	    pm_mail_followup($project_task_id,$project->getNewTaskAddress());
             	}
 
-				include '../pm/browse_task.php';
+				require('../pm/browse_task.php');
 			} else {
 				exit_permission_denied();
 			}
@@ -146,7 +146,7 @@ if ($group_id ) {
 				// reset subproject id to avoid interference with browsing
 				// selection criteria
 				unset($group_project_id);
-				include '../pm/browse_task.php';
+				require('../pm/browse_task.php');
 				break;;
 			} else {
 				exit_permission_denied();
@@ -154,15 +154,15 @@ if ($group_id ) {
 		}
 
 		case 'browse' : {
-			include '../pm/browse_task.php';
+			require('../pm/browse_task.php');
 			break;;
 		}
 
 		case 'detailtask' : {
 			if (user_ismember($group_id,'P2')) {
-				include '../pm/mod_task.php';
+				require('../pm/mod_task.php');
 			} else {
-				include '../pm/detail_task.php';
+				require('../pm/detail_task.php');
 			}
 			break;;
 		}
@@ -188,7 +188,7 @@ if ($group_id ) {
             // unsent project_task_id var to make sure that it doesn;t
             // impact the next task query.
     		unset($group_project_id);
-    		include '../pm/browse_task.php';
+    		require('../pm/browse_task.php');
         
         break;	    
         } // case
@@ -202,7 +202,7 @@ if ($group_id ) {
         	    // impact the next task query.
         	    unset($project_task_id);
         	    unset($HTTP_GET_VARS['project_task_id']);
-        	    include '../pm/browse_task.php';
+        	    require('../pm/browse_task.php');
         	} else {
         	    exit_permission_denied();
         	}	
