@@ -70,6 +70,18 @@ if ($group_id && $atid) {
 		if (!$ah || !is_object($ah)) {
 			exit_error('ERROR','Artifact Could Not Be Created');
 		} else {
+			// First check parameters
+			
+			// CC
+		    if (! $ah->validateCCList(util_split_emails($add_cc), $message)) {
+		        exit_error("Error - The CC list is invalid", $message);
+		    }
+		    // Files
+			if (!util_check_fileupload($input_file)) {
+				exit_error("Error","Invalid filename");
+			}
+
+			// Artifact creation		    
 			if (!$ah->create()) {
 				exit_error('ERROR',$ah->getErrorMessage());
 			} else {
@@ -206,6 +218,17 @@ if ($group_id && $atid) {
 		} else if ($ah->isError()) {
 			exit_error('ERROR',$ah->getErrorMessage());
 		} else {
+			// First check parameters
+			
+			// CC
+		    if (! $ah->validateCCList(util_split_emails($add_cc), $message)) {
+		        exit_error("Error - The CC list is invalid", $message);
+		    }
+		    // Files
+			if (!util_check_fileupload($input_file)) {
+				exit_error("Error","Invalid filename");
+			}
+
 			//data control layer
 			$changed = $ah->handleUpdate($artifact_id_dependent,$canned_response,$changes);
 		
@@ -219,9 +242,6 @@ if ($group_id && $atid) {
 					} elseif ($afh->isError()) {
 						$feedback .= $afh->getErrorMessage();
 				} else {
-					if (!util_check_fileupload($input_file)) {
-						exit_error("Error","Invalid filename");
-					}
 					if (!$afh->upload($input_file,$input_file_name,$input_file_type,$file_description,$changes)) {
 						$feedback .= ' <br>File Upload: '.$afh->getErrorMessage();
 						$was_error=true;

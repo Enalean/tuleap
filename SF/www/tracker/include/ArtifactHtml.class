@@ -1122,7 +1122,7 @@ class ArtifactHtml extends Artifact {
 			unset($changes['details']);
 	    }
 	
-	    //Process special cases first: bug file attachment
+	    //Process special cases first: file attachment
 	    if ($changes['attach']) {
 			$out_att = "$sys_lf$sys_lf---------------    Additional Artifact Attachment     -----------------$sys_lf";
 			$out_att .= sprintf("File name: %-30s Size:%d KB$sys_lf",$changes['attach']['name'],
