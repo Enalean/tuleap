@@ -5,7 +5,7 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id: 
+// $Id:
 //
 //	Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
 //
@@ -39,7 +39,7 @@ href="file:/C:/Program Files/XMLmind_XML_Editor/css/docbook.css"
 <book>
   <title>CodeX User Guide</title>
 
-  <subtitle>&#34;Breaking the Barries to Source Code Sharing inside Xerox&#34;</subtitle>
+  <subtitle>&#34;Breaking the Barriers to Source Code Sharing inside Xerox&#34;</subtitle>
 
   &book-info;
 
