@@ -122,7 +122,16 @@ require('theme.php');
 
 
 // Check if anonymous user is allowed to browse the site
-if ($GLOBALS['sys_allow_anon'] == 0 && !user_isloggedin() && $REQUEST_URI != '/account/login.php') {
+// Bypass the test for:
+// a) all scripts where you are not logged in by definition
+// b) if it is a local access from localhost 
+if ($SERVER_NAME != 'localhost' && 
+    $GLOBALS['sys_allow_anon'] == 0 && !user_isloggedin() &&
+    $SCRIPT_NAME != '/account/login.php'  && 
+    $SCRIPT_NAME != '/account/register.php'&& 
+    $SCRIPT_NAME != '/account/lostpw.php' &&
+    $SCRIPT_NAME != '/account/lostpw-confirm.php' &&
+    $SCRIPT_NAME != '/account/verify.php' ) {
     if ($GLOBALS['sys_force_ssl'] == 1 || $HTTPS == 'on')
 	header("Location: https://".$GLOBALS['sys_https_host']."/account/login.php");
     else
