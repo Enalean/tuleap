@@ -182,7 +182,6 @@ function  survey_utils_cleanup_questions($question_list) {
     $question_list = preg_replace("/^,+/","",$question_list);
     $question_list = preg_replace("/,+$/","",$question_list);
     
-    echo "<p>sq = $question_list";
     return $question_list;
 }
 
