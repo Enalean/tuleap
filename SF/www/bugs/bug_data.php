@@ -1110,18 +1110,13 @@ function bug_data_get_value($field,$group_id,$value_id,$by_field_id=false) {
 	return date($sys_datefmt,$value_id);
     }
 
-    // If the field is a CodeX wide field (scope=CodeX) then look for 
-    // values assigned to group None anyway not to any specific group
-    if (!bug_data_is_project_scope($field, $by_field_id)) {
-	$group_id = 100;
-    }
-
     if ($by_field_id) {
 	$field_id = $field;
     } else {
 	$field_id = bug_data_get_field_id($field);
     }
 
+    // Look for project specific values first...
     $sql="SELECT * FROM bug_field_value ".
 	"WHERE  bug_field_id='$field_id' AND group_id='$group_id' ".
 	"AND value_id='$value_id'";
@@ -1130,16 +1125,14 @@ function bug_data_get_value($field,$group_id,$value_id,$by_field_id=false) {
 	return db_result($result,0,'value');
     } 
 
-    // else try and see if we can find a value for group None
-    if ($group_id != 100) {
-	$sql="SELECT * FROM bug_field_value ".
-	    "WHERE  bug_field_id='$field_id' AND group_id='100' ".
-	    "AND value_id='$value_id'";
-	$result=db_query($sql);
-	if ($result && db_numrows($result) > 0) {
-	    return db_result($result,0,'value');
-	} 
-    }
+    // ... if it fails, look for system wide default values (group_id=100)...
+    $sql="SELECT * FROM bug_field_value ".
+	"WHERE  bug_field_id='$field_id' AND group_id='100' ".
+	"AND value_id='$value_id'";
+    $result=db_query($sql);
+    if ($result && db_numrows($result) > 0) {
+	return db_result($result,0,'value');
+    } 
     
     // No value found for this value id !!!
     return $value_id.'(Error - Not Found)';
