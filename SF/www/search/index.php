@@ -187,12 +187,19 @@ if ($type_of_search == "soft") {
 	$array=explode(" ",$words);
 	$words1=implode($array,"%' $crit bug.details LIKE '%");
 	$words2=implode($array,"%' $crit bug.summary LIKE '%");
+	$words3=implode($array,"%' $crit bug_history.old_value LIKE '%");
 
 	$sql =	"SELECT bug.bug_id,bug.summary,bug.date,user.user_name "
-		. "FROM bug,user "
-		. "WHERE user.user_id=bug.submitted_by AND ((bug.details LIKE '%$words1%') "
-		. "OR (bug.summary LIKE '%$words2%')) AND bug.group_id='$group_id' "
-		.  "GROUP BY bug_id,summary,date,user_name LIMIT $offset,26";
+		. "FROM bug "
+		. "    INNER JOIN user ON user.user_id=bug.submitted_by "
+		. "    LEFT JOIN bug_history ON bug_history.bug_id=bug.bug_id "
+		. "WHERE "
+		. "    bug.group_id='$group_id' "
+		. "    AND ((bug.details LIKE '%$words1%') "
+		. "      OR (bug.summary LIKE '%$words2%') "
+		. "      OR (bug_history.field_name='details' "
+		. "          AND (bug_history.old_value LIKE '%$words3%'))) "
+		. "GROUP BY bug_id,summary,date,user_name LIMIT $offset,26";
 
 	//	echo "DBG: $sql<br>";
 	$result = db_query($sql);
