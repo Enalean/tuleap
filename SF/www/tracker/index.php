@@ -406,7 +406,7 @@ if ( $func == 'gotoid' ) {
 		  // Create the HTML report object
 		  $art_report_html = $report_fact->getArtifactReportHtml($report_id,$atid);
 		  $query = $art_field_fact->extractFieldList(true,'query_');
-		  $art_report_html->getQueryElements($query,$morder,$advsrch,$select,$from,$where,$order_by);
+		  $art_report_html->getQueryElements($query,$morder,$advsrch,true,$select,$from,$where,$order_by);
 		  $sql = "select distinct a.artifact_id ".$from." ".$where;
 
 		  $result = db_query($sql);

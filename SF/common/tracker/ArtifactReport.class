@@ -361,13 +361,13 @@ class ArtifactReport extends Error {
 	 */
 	function getReportItemsCount($prefs,$morder,$advsrch) {
 
-		$this->getQueryElements($prefs,$morder,$advsrch,$select,$from,$where,$order_by);
+		$this->getQueryElements($prefs,$morder,$advsrch,true,$select,$from,$where,$order_by);
 		
 		// Final query
 		$sql = "select count(*) ".$from." ".$where." group by a.artifact_id";
 		//echo "<DBG> query count=".$sql."<br>";
 		
-		$result_count = db_query($sql  );
+		$result_count = db_query($sql);
 		$totalrows = db_numrows($result_count);
 			   
 		return $totalrows;
@@ -381,7 +381,7 @@ class ArtifactReport extends Error {
 	 */
 	function createQueryReport($prefs,$morder,$advsrch,$offset,$chunksz) {
 
-		$this->getQueryElements($prefs,$morder,$advsrch,$select,$from,$where,$order_by);
+		$this->getQueryElements($prefs,$morder,$advsrch,false,$select,$from,$where,$order_by);
 		
 		// Final query
 		$limit = " LIMIT $offset,$chunksz";
@@ -424,11 +424,14 @@ class ArtifactReport extends Error {
 	 * @param prefs: field values array (HTTP GET variable)
 	 * @param field_value: the field name
 	 * @param advsrch: advance search or simple search
+         * @param notany: is true if the value of the field is not "Any"
 	 *
 	 * @return string
 	 */
-	function getValuesWhereClause($field,$prefs,$field_name,$advsrch) {
-		
+	function getValuesWhereClause($field,$prefs,$field_name,$advsrch,&$notany) {
+	  $notany=true;
+
+
 		//echo $field_name."->prefs[".$field->getName()."]=".$prefs[$field->getName()][0]."<br>";
 	    if (($field->isSelectBox()||$field->isMultiSelectBox()) && !$this->isvarany($prefs[$field->getName()]) ) {
 	
@@ -484,7 +487,7 @@ class ArtifactReport extends Error {
 			// It's a text field accept. Process INT or TEXT,VARCHAR fields differently
 			return " AND ".$field->buildMatchExpression($field_name,$prefs[$field->getName()][0]);
 	    }
-	    
+	    $notany = false;
 	}
 	
 	/**
@@ -520,6 +523,10 @@ class ArtifactReport extends Error {
 	/**
 	 * Return the different elements for building the current query
 	 *
+	 * @param countonly: specifies whether the query is only used to count the number of 
+	 *                   queried artifacts. If we only want to count, we don't need to
+	 *                   build a huge join for fields that are not determining the serach 
+	 *                   result
 	 * @param select: the select value
 	 * @param from: the from value
 	 * @param where: the where value
@@ -527,7 +534,7 @@ class ArtifactReport extends Error {
 	 *
 	 * @return void
 	 */
-	function getQueryElements($prefs,$morder,$advsrch,&$select,&$from,&$where,&$order_by) {
+	function getQueryElements($prefs,$morder,$advsrch,$countonly,&$select,&$from,&$where,&$order_by) {
 		
 	  //
 	  // NOTICE
@@ -583,6 +590,12 @@ class ArtifactReport extends Error {
 			
 			// If the field is a standard field ie the value is stored directly into the artifact table (severity, artifact_id, ...)
 			if ( $field->isStandardField() ) {
+
+			        // Build the where
+			        if ( $field->isShowOnQuery() ) {
+			          $where .= $this->getValuesWhereClause($field,$prefs,"a.".$field->getName(),$advsrch,$notany);
+			        }
+
 				if ( ($field->isShowOnResult()) || ($field->getName() == "severity") ) {
 					if ( $select_count != 0 ) {
 						$select .= ",";
@@ -594,16 +607,17 @@ class ArtifactReport extends Error {
 					// Special case for fields which are user name
 					if ( ($field->isUsername())&&(!$field->isSelectBox())&&(!$field->isMultiSelectBox()) ) {
 						$select .= " u.user_name as ".$field->getName();
-						$from .= " LEFT JOIN user u ON (u.user_id=a.".$field->getName().")";
+						
+						if (!$countonly) {
+						  $from .= " LEFT JOIN user u ON (u.user_id=a.".$field->getName().")";
+						}
+
 					} else {
 						$select .= " a.".$field->getName();
 					}
 				}
 				
-				// Build the where
-				if ( $field->isShowOnQuery() ) {
-					$where .= $this->getValuesWhereClause($field,$prefs,"a.".$field->getName(),$advsrch);
-				}
+				
 
 				// Set the fields_order_result array to	build the order_by			
 				if ( $fields_order[$field->getName()] ) {
@@ -620,8 +634,18 @@ class ArtifactReport extends Error {
 				
 				// The field value is stored into the artifact_field_value table
 				// So we need to add a new join
-			        $from .= " LEFT JOIN artifact_field_value v".$count." ON (v".$count.".artifact_id=a.artifact_id)";
-				$where .= " and v".$count.".field_id=".$field->getID();
+
+			        // Build the where
+				if ( $field->isShowOnQuery() ) {
+					$where .= $this->getValuesWhereClause($field,$prefs,"v".$count.".".$field->getValueFieldName(),$advsrch,$notany);
+				}
+
+				if ((!$countonly && ($field->isShowOnResult() || ($field->isShowOnQuery() && $notany))) ||
+			      	    ($countonly && $field->isShowOnQuery() && $notany)) {
+				  $from .= " LEFT JOIN artifact_field_value v".$count." ON (v".$count.".artifact_id=a.artifact_id)";
+				  $where .= " and v".$count.".field_id=".$field->getID();
+				}
+
 				if ( $field->isShowOnResult() ) {
 					if ( $select_count != 0 ) {
 						$select .= ",";
@@ -633,17 +657,17 @@ class ArtifactReport extends Error {
 					// Special case for fields which are user name
 					if ( ($field->isUsername())&&(!$field->isSelectBox())&&(!$field->isMultiSelectBox()) ) {
 						$select .= " u".$count.".user_name as ".$field->getName();
-						$from .= " LEFT JOIN user u".$count." ON (v".$count.".".$field->getValueFieldName()." = u".$count.".user_id)";
+
+						if (!$countonly) {
+						  $from .= " LEFT JOIN user u".$count." ON (v".$count.".".$field->getValueFieldName()." = u".$count.".user_id)";
+						}
 					} else {
 						$select .= " v".$count.".".$field->getValueFieldName()." as ".$field->getName();
 					}
 				}
 				
 					
-				// Build the where
-				if ( $field->isShowOnQuery() ) {
-					$where .= $this->getValuesWhereClause($field,$prefs,"v".$count.".".$field->getValueFieldName(),$advsrch);
-				}
+				
 
 				// Set the fields_order_result array to	build the order_by			
 				if ( $fields_order[$field->getName()] ) {
