@@ -557,36 +557,6 @@ function util_is_valid_filename ($file) {
 	}
 }
 
-// this function permit including site specific content with ease
-/* function util_get_content($file, $args=false){ */
-/*     // Default language */
-/*     $lang = $GLOBALS['sys_lang']; */
-    
-/*     // Retrieve the user language if not guest */
-/*     // TODO */
-
-/*     // Test first the custom directory */
-/*     $fn = $GLOBALS['sys_incdir']."custom/".$lang."/".$file.".txt"; */
-/*     $fp = @fopen ($fn, "r"); */
-    
-/*     if ( $fp ) { */
-/*         // The custom file exists.  */
-/*         fclose($fp); */
-/*         include($fn); */
-/*         return; */
-/*     } else { */
-/*         // Use the default file */
-/*         // Check first if exist */
-/*         $fn = $GLOBALS['sys_incdir'].$lang."/".$file.".txt"; */
-/*         $fp = @fopen ($fn, "r"); */
-/*         if ( $fp ) { */
-/*             // The file exists.  */
-/*             fclose($fp); */
-/*             include($fn); */
-/*         } */
-/*     } */
-/* } */
-
 function util_get_content($file){
     // Default language
     $lang = $GLOBALS['sys_lang'];
@@ -595,7 +565,7 @@ function util_get_content($file){
     // TODO
 
     // Test first the custom directory
-    $custom_fn = $GLOBALS['sys_incdir']."custom/".$lang."/".$file.".txt";   
+    $custom_fn = getenv('SF_LOCAL_INC_PREFIX')."/etc/codex/site-content/".$lang."/".$file.".txt";   
     if ( file_exists($custom_fn) ) {
         // The custom file exists. 
         return $custom_fn;
