@@ -1,0 +1,1637 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=iso-8859-1">
+  <meta http-equiv="content-type"
+ content="text/html; charset=ISO-8859-1">
+  <meta name="author" content="Laurent Julliard">
+  <meta name="GENERATOR"
+ content="Mozilla/4.77 [en] (X11; U; Linux 2.2.17-21mdk i686) [Netscape]">
+  <title>CodeX Installation Guide</title>
+</head>
+<body>
+&nbsp;
+<center>
+<p><b><font size="+3">CodeX Installation Guide</font></b> <br>
+&nbsp; </p>
+<p>Version $Id$ - May 27<sup>th</sup>, 2003<br>
+L. Julliard</p>
+</center>
+<br>
+&nbsp;
+<h1>Preamble</h1>
+Before or while you read the CodeX Installation Guide westrongly
+recommend that you also have a llok at the CodeX Administration Guide at <a
+ href="http://codex.codex.xerox.com/documents/CodeX_Administration_Guide.html">http://codex.codex.xerox.com/documents/CodeX_Administration_Guide.html</a>.
+The CodeX Adminstration Guide give a lot more explanation about the
+services and files role on a typical CodeX server. It is an excellent
+companion document to the CodeX Installation Guide.<br>
+<br>
+People interested in knowing more about the installation of the
+original SourceForge software can also refer to the 'SourceForge
+Installation Guide' by Guillaume Morin at <a
+ href="http://zoy.org/%7Eguillaum/SF/">http://zoy.org/~guillaum/SF/</a>
+<h1>Linux OS Installation</h1>
+On a PC of your choice install Linux RedHat 7.3 choosing an
+installation of type 'server'. We recommend using the ext3 file system
+(Journalized File System).<br>
+<br>
+In terms of hardware it is up to you to size your server according to
+your needs. As an example the Xerox Internal CodeX serveris a midrange
+Compaq DL 380 with 512 MB RAM, 100 GBytes disk (RAID 5) and a 1Ghz
+Pentium III CPU<br>
+<br>
+<hr width="100%" size="2">
+<h1>User Accounts and Group Settings</h1>
+Specific user accounts and groups that must be created prior to any
+software installation<br>
+<br>
+<table cellpadding="2" cellspacing="2" border="1" width="80%"
+ align="center">
+  <tbody>
+    <tr>
+      <td valign="top" bgcolor="#eeeeee"><b>User name<br>
+      </b></td>
+      <td valign="top" bgcolor="#eeeeee"><b>user id<br>
+      </b></td>
+      <td valign="top" bgcolor="#eeeeee"><b>group id<br>
+      </b></td>
+      <td valign="top" bgcolor="#eeeeee"><b>Full Name<br>
+      </b></td>
+      <td valign="top" bgcolor="#eeeeee"><b>home dir<br>
+      </b></td>
+      <td valign="top" bgcolor="#eeeeee"><b>shell<br>
+      </b></td>
+      <td valign="top" bgcolor="#eeeeee"><b>Remarks<br>
+      </b></td>
+    </tr>
+    <tr>
+      <td valign="top">sourceforge</td>
+      <td valign="top">104<br>
+      </td>
+      <td valign="top">104<br>
+      </td>
+      <td valign="top">SourceForge/CodeX user</td>
+      <td valign="top">/home/httpd</td>
+      <td valign="top">/bin/bash</td>
+      <td valign="top">Set a password<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">dummy</td>
+      <td valign="top">103<br>
+      </td>
+      <td valign="top">103<br>
+      </td>
+      <td valign="top">Dummy CodeX user<br>
+      </td>
+      <td valign="top">/home/dummy</td>
+      <td valign="top">/bin/bash</td>
+      <td valign="top">Set same password as sourceforge<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">mailman</td>
+      <td valign="top">105<br>
+      </td>
+      <td valign="top">105<br>
+      </td>
+      <td valign="top">Owner of Mailman directories</td>
+      <td valign="top">/home/mailman</td>
+      <td valign="top">/bin/bash</td>
+      <td valign="top">- shell login not allowed<br>
+- Set same password as sourceforge<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">ftpadmin</td>
+      <td valign="top">96<br>
+      </td>
+      <td valign="top">96<br>
+      </td>
+      <td valign="top">FTP Administrator</td>
+      <td valign="top">/home/ftp</td>
+      <td valign="top">&nbsp;-<br>
+      </td>
+      <td valign="top">shell login not allowed</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">ftp<br>
+      </td>
+      <td style="vertical-align: top;">14<br>
+      </td>
+      <td style="vertical-align: top;">50<br>
+      </td>
+      <td style="vertical-align: top;">FTP User<br>
+      </td>
+      <td style="vertical-align: top;">/home/ftp</td>
+      <td style="vertical-align: top;">-<br>
+      </td>
+      <td style="vertical-align: top;">shell login not allowed<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div align="center"><br>
+<br>
+<br>
+</div>
+<table cellpadding="2" cellspacing="2" border="1" width="80%"
+ align="center">
+  <tbody>
+    <tr>
+      <td valign="top" bgcolor="#eeeeee"><b>Group name<br>
+      </b></td>
+      <td valign="top" bgcolor="#eeeeee"><b>group id<br>
+      </b></td>
+      <td valign="top" bgcolor="#eeeeee"><b>Group members<br>
+      </b></td>
+      <td valign="top" bgcolor="#eeeeee"><b>Remarks<br>
+      </b></td>
+    </tr>
+    <tr>
+      <td valign="top">sourceforge</td>
+      <td valign="top">104<br>
+      </td>
+      <td valign="top">-<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">dummy</td>
+      <td valign="top">103<br>
+      </td>
+      <td valign="top">-<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">mailman</td>
+      <td valign="top">105<br>
+      </td>
+      <td valign="top">-<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">ftpadmin</td>
+      <td valign="top">96<br>
+      </td>
+      <td valign="top">ftpadmin, sourceforge</td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div align="center"><br>
+</div>
+<hr width="100%" size="2">
+<h1>File System Settings</h1>
+Directory that must be created on the filesystem prior to software
+installation. For a description of the content of each directory see the
+CodeX Administration Guide at <a
+ href="http://codex.codex.xerox.com/documents/CodeX_Administration_Guide.html">http://codex.codex.xerox.com/documents/CodeX_Administration_Guide.html</a><br>
+<br>
+When you setup your filesystem make sure that the followind top
+directories are located on file system with enough storage space:<br>
+<ul>
+  <li>/cvsroot: where the CVS repositories reside (if you want to place
+it elsewhere make sure /cvsroot is a link pointing to the real location)</li>
+  <li>/home : this one holds the user personal directories, project
+directories (project web site), ftp spaces (file release and anonymous
+storage space).&nbsp; </li>
+</ul>
+<br>
+<table cellpadding="2" cellspacing="2" border="1" width="80%"
+ align="center">
+  <tbody>
+    <tr>
+      <td valign="top" bgcolor="#eeeeee"><b>Directory path<br>
+      </b></td>
+      <td valign="top" bgcolor="#eeeeee"><b>Ownership<br>
+      </b></td>
+      <td valign="top" bgcolor="#eeeeee"><b>permission<br>
+      </b></td>
+      <td valign="top" bgcolor="#eeeeee"><b>Remarks<br>
+      </b></td>
+    </tr>
+    <tr>
+      <td valign="top" rowspan="1" colspan="4"><b>CodeX Users and
+Projects Directories</b><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">/home/users</td>
+      <td valign="top">sourceforge.sourceforge<br>
+      </td>
+      <td valign="top">drwxrwxr-x<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">/home/groups</td>
+      <td valign="top">sourceforge.sourceforge </td>
+      <td valign="top">drwxrwxr-x </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top" rowspan="1" colspan="4"><b>Temporay CodeX
+database dumps</b><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">/home/dummy</td>
+      <td valign="top">dummy.dummy<br>
+      </td>
+      <td valign="top">drwx------<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">/home/dummy/dumps</td>
+      <td valign="top">dummy.dummy </td>
+      <td valign="top">drwxr-xr-x</td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top" rowspan="1" colspan="4"><b>FTP storage spaces
+(incoming, anonymous and file release space)</b><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">/home/ftp<br>
+      </td>
+      <td valign="top">root.ftp<br>
+      </td>
+      <td valign="top">drwxr-xr-x<br>
+      </td>
+      <td valign="top">Create a welcome.msg file in this directory with
+instructions for people uploading/downloading code (see example on CodeX
+central server<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">/home/ftp/bin<br>
+/home/ftp/etc<br>
+      </td>
+      <td valign="top">ftpadmin.ftpadmin<br>
+      </td>
+      <td valign="top">d--x--x--x<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">/home/frp/lib<br>
+      </td>
+      <td valign="top">ftpadmin.ftpadmin</td>
+      <td valign="top">drwxr-xr-x<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">/home/ftp/codex<br>
+      </td>
+      <td valign="top">root.root<br>
+      </td>
+      <td valign="top">drwxr-xr-x<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">/home/ftp/pub<br>
+      </td>
+      <td valign="top">ftpadmin.ftpadmin<br>
+      </td>
+      <td valign="top">drwxr-xr-x<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">/home/ftp/incoming<br>
+      </td>
+      <td valign="top">ftpadmin.ftpadmin<br>
+      </td>
+      <td valign="top">drwxrwsrwt<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top" rowspan="1" colspan="4"><b>CVS directories</b><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">/home/large_tmp<br>
+      </td>
+      <td valign="top">&nbsp;root.root<br>
+      </td>
+      <td valign="top">drwxrwxrwt<br>
+      </td>
+      <td valign="top">Temporary storage space for cvs commit (needs a
+lot of space so we can not keep the default /tmp location)<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top" rowspan="1" colspan="4"><b>Log files
+(http/cvs/ftp traffic archive)</b><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">/cvsroot<br>
+      </td>
+      <td valign="top">sourceforge.sourceforge</td>
+      <td valign="top">drwxr-xr-x<br>
+      </td>
+      <td valign="top">Where all CVS repo reside.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">/home/log/<br>
+      </td>
+      <td valign="top">sourceforge.sourceforge</td>
+      <td valign="top">drwxr-xr-x<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">/home/mailman<br>
+      </td>
+      <td valign="top">mailman .mailman<br>
+      </td>
+      <td valign="top">drwxrwsr-x<br>
+      </td>
+      <td valign="top">/usr/local/mailman/private directory point
+(symbolic link) to this directory in case there is not enough space on
+the / file system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top" rowspan="1" colspan="4"><b>Cache for generated
+HTML</b><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">/home/sfcache<br>
+      </td>
+      <td valign="top">sourceforge.sourceforge</td>
+      <td valign="top">drwxr-xr-x<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top" rowspan="1" colspan="4"><b>MySQL directories</b><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">/home/var<br>
+/home/var/lib<br>
+/home/var/lib/mysql<br>
+      </td>
+      <td valign="top">root.root<br>
+root.root<br>
+mysql.bin<br>
+      </td>
+      <td valign="top">drwxr-xr-x<br>
+drwxr-xr-x<br>
+drwxr-xr-x<br>
+      </td>
+      <td valign="top">In case you have not enough space in /var you
+can move the /var/lib/mysql directory to /home/var/lib/mysql and create
+a symbolic link in /var/lib:<br>
+      <span style="font-family: monospace;">$ cd /var/lib/ ; mv
+/var/lib/mysql /home/var/lib; ln -s /home/var/lib/mysql<br>
+      </span><span style="font-weight: bold;">NOTE: the mysql user will
+only be available once the MySQL packages are installed (see section </span><a
+ href="#RPM_Packages">RPM Packages</a>)<span
+ style="font-family: monospace;"><br>
+      </span> </td>
+    </tr>
+    <tr>
+      <td valign="top" rowspan="1" colspan="4"><b>User Directory
+Startup files</b></td>
+    </tr>
+    <tr>
+      <td valign="top">/etc/skel_codex<br>
+      </td>
+      <td valign="top">root.root<br>
+      </td>
+      <td valign="top">drwxr-xr-x&nbsp; <br>
+      </td>
+      <td valign="top">All the files that you place in this directory
+will be copied in the user's home directory when created. This would
+typically contain startup files (e.g. hidden files like .bash_profile,
+.bash_logout...) that you want to run when a user logs in with its
+telnet/shell account.<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div align="center"><br>
+<br>
+</div>
+<br>
+<hr width="100%" size="2">
+<h1><a name="Specific_Software_Packages"></a>Specific Software Packages</h1>
+<h2><a name="RPM_Packages"></a>RPM Packages</h2>
+CodeX requires a number of specific packages to operate properly.
+Theses packages are available on the CodeX server at <a
+ href="http://codex.codex.xerox.com/packages/RPMS_CodeX">http://codex.codex.xerox.com/packages/RPMS_CodeX</a>.
+Always make sure that for each of the software component below you grab
+the latest version.<br>
+<br>
+<table cellpadding="2" cellspacing="2" border="1" width="80%">
+  <tbody>
+    <tr>
+      <td valign="top">Software Component<br>
+      </td>
+      <td valign="top">Items to Install<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">apache<br>
+      </td>
+      <td valign="top">Install only the apache rpm itself.
+apache-devel, apache-manual can be installed as well byt they are
+optional<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">cvs<br>
+      </td>
+      <td valign="top">Install the cvs package<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">jre<br>
+      </td>
+      <td valign="top">The Java Runtime environment is required to
+generate the HTML and PDF version of the CodeX User Guide. Install the
+jre rpm. Ignore the file with the .bin extension that may be visible as
+well in this directory<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">mysql<br>
+      </td>
+      <td valign="top">These are the official packages from MySQL. Do
+not use those provided by RedHat.<br>
+To check whether Redhat mysql packages are already installed type: 'rpm
+-qa | grep -i mysql'. If redhat packages are installed make sure you
+first remove them with an 'rpm -e' command<br>
+      <br>
+Install the following packages: MySQL, MySQL-client and MySQL-shared<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">php<br>
+      </td>
+      <td valign="top">Right now CodeX runs PHP3 not PHP4. So all the
+PHP4 packages installed by RedHat must be removed and the codex supplied
+packages must be used instead.<br>
+      <br>
+Packages to install: php, php-mysql, php-gd, php-ldap<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">others<br>
+      </td>
+      <td valign="top">From the 'Others' directory install the
+following packages:<br>
+      <ul>
+        <li>gd-1.3.x (any newer version 1.8.x and above installed by
+Redhat must be first removed)<br>
+        </li>
+      </ul>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">Stock RedHat<br>
+      </td>
+      <td valign="top">These are packages that are provided on the
+RedHat CDROM. Please make sure they have been installed by the RedHat
+installation process. If not then install them directly from the CDROM
+with an 'rpm -Uvh' command.<br>
+      <br>
+Packages to install:<br>
+      <ul>
+        <li>mm, mm-devel</li>
+        <li>openssh-server,&nbsp;openssh, openssh-clients,
+openssh-askpass</li>
+        <li>openssl (if you intend to allow secure HTTP access)</li>
+        <li>openldap</li>
+        <li>perl, perl-DBI, perl-DBD-MySQL, perl-Digest-MD5,
+perl-suidperl, perl-CGI</li>
+        <li>sendmail (8.9.x)</li>
+        <li>wu-ftpd, telnet, named, bind, ntp</li>
+        <li>samba (if you want to activate windows connectivity to the
+project Web site storage space and software release space)</li>
+        <li>compat-glibc-x.y.z and compat-libstdc++-x.y.z (needed by
+the SUN JRE)<br>
+          <br>
+          <br>
+        </li>
+      </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<br>
+<h2>Non RPM packages</h2>
+CodeX alsorequires a number of specific packages that are not delivered
+in the form of RPM files. Theses packages are available on the CodeX
+server at <a href="http://codex.codex.xerox.com/packages/nonRPMS_CodeX">http://codex.codex.xerox.com/packages/nonRPMS_CodeX</a>.
+Always make sure that for each of the software component below you grab
+the latest version.<br>
+<br>
+<table cellpadding="2" cellspacing="2" border="1" width="80%">
+  <tbody>
+    <tr>
+      <td valign="top">Software Component<br>
+      </td>
+      <td valign="top">Items to Install<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">docbook<br>
+      </td>
+      <td valign="top">In this directory you'll find all the programs
+required to generate the PDF and HTMl version of the CodeX Documentation
+(CodeX User Guide). All the packages (delivered in tar gzip'ed format
+must be installed in /usr/local:<br>
+      <ul>
+        <li>docbook-dtd-x.y.z.tgz: the DocBook Schema itself.&nbsp;</li>
+        <li>docbook-xsl-x.y.z.tgz: DocBook XSL stylesheets.&nbsp;</li>
+        <li>fop-x.y.z.tgz: the Apche FOP PDF generator.&nbsp;</li>
+        <li>Jimi-x.y.tgz: a java image processing software needed by FOP</li>
+        <li>saxon-x.y.z.tgz: XSLT engine to process the DocBook XML
+documents</li>
+      </ul>
+      <br>
+Each of these packages must be dearchived in /usr/local and for each
+directory make sure your create a generic symbolic link (with no version
+number in it) to the top level directory. Like this:<br>
+      <blockquote>docbook-dtd &nbsp;-&gt; docbook-dtd-x.y.z<br>
+docbook-xsl &nbsp;-&gt; docbook-xsl-x.y.z<br>
+fop -&gt; fop-x.y.z<br>
+etc...<br>
+      </blockquote>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">utilities<br>
+      </td>
+      <td valign="top">A series of small utilities that are needed by
+the PHP scripts and the CodeX backend to operate properly. &nbsp;See the <a
+ href="#Miscellaneous_Utilities">Miscellaneous Utilities</a> section
+below for more information<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<br>
+<br>
+<hr>
+<h1>DNS Configuration</h1>
+CodeX has its domain name and the name server for the codex.xerox.com
+domain is hosted on the central CodeX server. If you are about install a
+CodeX satellite and are on the xerox.com Intranet then we highly
+recommend to contact us and we assign a machine name in codex.xerox.com
+domain for your own server.<br>
+<br>
+For the benefit of code re-use and sharing inside Xerox the central
+site must absolutely be aware of the all the existing satellites so that
+we can keep a single view on all the on-going projects.So please contact
+the CodeX prior to implementing any new CodeX satellite.<br>
+<br>
+If you are not on the main xerox.com Intranet but on isolated
+subnetworks like Xerox GSN or XPS-Pro then we advise you to create a
+subdomain for the codex machine like codex.xps-pro.com like we did for
+codex.xerox.com. <br>
+<br>
+<h2>DNS Zones file</h2>
+Your DNS zone (called codex.zone) definition file must be place in <tt>/usr/local/domain/data/primary/</tt>
+because this path is hardcoded in the <tt>/home/httpd/SF/utils/underworld-dummy/dns_conf.pl</tt>
+script that is used to automatically generate the DNS aliases for
+project sites and per project CVS server. If you want to place the
+codex.zone file in another place don't forget to create a symbolic link
+from this directory.<br>
+<br>
+<br>
+Here is how the codex.zone file looks like on the CodeX central site:<br>
+<br>
+<blockquote><tt>$TTL 3600</tt><br>
+  <tt>@&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SOA&nbsp;&nbsp;&nbsp;&nbsp;
+atlas.codex.xerox.com. dns_support\.cinops.xerox</tt><br>
+  <tt>.com. (</tt><br>
+  <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+2002101805&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; Serial</tt><br>
+  <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+3600&nbsp;&nbsp;&nbsp; ; Refresh 1 hour</tt><br>
+  <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+900&nbsp;&nbsp;&nbsp;&nbsp; ; Retry 15 minutes</tt><br>
+  <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+604800&nbsp; ; Expire in 7 days</tt><br>
+  <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+3600 )&nbsp; ; Minimum TTL 1 hours</tt><br>
+  <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+atlas.codex.xerox.com.</tt><br>
+  <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+athena.xerox.com.</tt><br>
+  <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+beta.xerox.com.</tt><br>
+  <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+carme.xerox.com.</tt><br>
+  <tt>localhost&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+127.0.0.1</tt><br>
+  <tt>;----------------------------------------------------------------------</tt><br>
+  <br>
+  <tt>codex.xerox.com.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+13.0.33.116</tt><br>
+  <tt>atlas&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+13.0.33.116</tt><br>
+  <tt>atlas2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+13.0.33.45</tt><br>
+  <br>
+  <tt>codex.xerox.com.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MX&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; atlas.codex.xerox.com.</tt><br>
+  <tt>codex.xerox.com.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MX&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mailer-east.xerox.com.</tt><br>
+  <tt>;</tt><br>
+  <tt>www&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CNAME&nbsp;&nbsp; atlas</tt><br>
+  <tt>xww&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CNAME&nbsp;&nbsp; atlas</tt><br>
+  <tt>cvs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CNAME&nbsp;&nbsp; atlas</tt><br>
+  <tt>cvs1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CNAME&nbsp;&nbsp; atlas</tt><br>
+  <tt>download&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CNAME&nbsp;&nbsp; atlas</tt><br>
+  <tt>shell&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CNAME&nbsp;&nbsp; atlas</tt><br>
+  <tt>shell1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CNAME&nbsp;&nbsp; atlas</tt><br>
+  <tt>users&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CNAME&nbsp;&nbsp; atlas</tt><br>
+  <tt>cxdocs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CNAME&nbsp;&nbsp; atlas</tt><br>
+  <tt>lists&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; A&nbsp;&nbsp; 13.0.33.116</tt><br>
+  <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MX&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lists.codex.xerox.com.</tt><br>
+  <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MX&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mailer-east.xerox.com.</tt><br>
+  <br>
+;<br>
+; *** From here out is auto-generated ***<br>
+:<br>
+</blockquote>
+<br>
+<br>
+As you can see the CodeX central host all the services on one single
+server, hence the alias to the atlas machine name for all other logical
+servers (CVS, download, shell account,etc...)<br>
+<br>
+Also note that CodeX cron job will generate another file called
+codex_full.zone in the same directory as the codex.zone file. This file
+is obtained by taking the codex.zone file (which you can edit by hand)
+and appending auto-generated aliases for the each project Web site (
+http://projectname.codex.xerox.com) and each CVS server
+(cvs.projectname.codex.xerox.com)<br>
+<br>
+<h2>Named.conf file</h2>
+This is the master DNS configuration file. It is located in /etc and
+here is how it looks like on the CodeX central site:<br>
+<br>
+<tt>options {</tt><br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; directory
+"/usr/local/domain/data/primary";</tt><br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; forwarders {</tt><br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+13.252.44.4;</tt> &nbsp;// Put your own DNS forwarders list here!!!<br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+13.252.44.5;</tt><br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+13.142.120.31;</tt><br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+13.1.64.94;</tt><br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; };</tt><br>
+<tt>};</tt><br>
+<br>
+<tt>zone "." {</tt><br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; type hint;</tt><br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; file "root.cache.save";</tt><br>
+<tt>};</tt><br>
+<br>
+<tt>zone "0.0.127.in-addr.arpa" {</tt><br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; type master;</tt><br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; file "localhost.rev";</tt><br>
+<tt>};</tt><br>
+<br>
+<tt>zone "codex.xerox.com" {</tt><br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; type master;</tt><br>
+<tt>// LJ CAUTION !! Do not modify the file codex_full.zone by hand</tt><br>
+<tt>// LJ Only codex.zone can be manually edited</tt><br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; file "codex_full.zone";</tt><br>
+<tt>}</tt><br>
+<br>
+<hr width="100%" size="2">
+<h1>Apache Configuration</h1>
+<ul>
+  <li>A sample Apache configuration file is available in the CodeX code
+in <tt>/home/httpd/SF/etc/http.conf.dist</tt>. Edit this file to
+reflect your site settings and place it in <tt>/etc/httpd/conf/httpd.conf</tt>.</li>
+  <li>Start or restart the Apache web server (from the root account
+type the command: 'service httpd restart')<br>
+  </li>
+</ul>
+<h2>Secure Apache (https)</h2>
+Before you activate SSL in Apache make sure the standard RedHat openssl
+package is installed. Then you must either generate your own test
+certificate or you must get one from a certified company and install it
+in the right place. The RedHat Manual has excellent instructions on how
+to do that. See the section called 'Apache Secure Server Configuration'.
+In RedHat 7.3 manual it is at <a
+ href="http://www.redhat.com/docs/manuals/linux/RHL-7.3-Manual/custom-guide/ch-apache-secure-server.html">http://www.redhat.com/docs/manuals/linux/RHL-7.3-Manual/custom-guide/ch-apache-secure-server.html</a>.<br>
+<br>
+The sample http.conf.dist contains all the necessary Apache directives
+to enable secured HTTP. There are 3 places that you need to activate:
+<ul>
+  <li>The 'Listen' section must listen to port 80 (http) and 443 (https)</li>
+  <li>You must load the mod_ssl module in the module section&nbsp;</li>
+  <li>Uncomment the virtual host declaration at the end of the file
+which actually activates the secure HTTP server on port 443</li>
+</ul>
+<br>
+<hr width="100%" size="2">
+<h1>Installing the CodeX Software</h1>
+The prefered way to install the CodeX software is to check it out from
+the CodeX CVS repository. This will make it easy for you to keep up to
+date with &nbsp;subsequent new features or bug fix. <br>
+<ul>
+  <li>Before you install the CodeX software make sure you have a user
+account on the central CodeX server. You'll need this user account to
+check out the source code from the CodeX CVS repository.</li>
+  <li>Ask us (<a href="mailto:codex-contact@codex.xerox.com">codex-contact@codex.xerox.com</a>)
+to add you to the codex-cvsevents mailing list to automatically receive
+all the commit made to the Central CVS repository of CodeX so you know
+what modifications are being made and what to do to upgrade.&nbsp;</li>
+  <li><font color="#ff0000">If you want to develop a new feature, <b>PLEASE</b>
+get in touch with the CodeX Team to talk about it first. By doing so we
+can mutualize our development resources and make your effort beneficial
+to the entire Xerox community. Plus we can provide you with useful
+guidelines and tips. In addition remember that the CodeX code is subject
+to the GNU GPL license.&nbsp;</font></li>
+</ul>
+<h2></h2>
+To check out the CodeX source code: login as Unix user 'sourceforge'
+and go to /home/httpd/. From there checkout the CodeX code,
+documentation and site content modules:<br>
+<pre>	cvs -d:pserver:your_codex_login@cvs.codex.codex.xerox.com:/cvsroot/codex co SF site-content documentation cgi-bin<br></pre>
+where <span style="font-family: monospace;">your_codex_login</span> is
+the CodeX user name of the user who is going to checkout the CodeX
+source code.<br>
+<pre><br></pre>
+<hr width="100%" size="2">
+<h1>Configuring the CodeX Software</h1>
+As user root:<br>
+<ul>
+  <li>copy /home/httpd/SF/etc/local.inc.dist in /etc/local.inc&nbsp;</li>
+  <li>change /etc/local.inc ownership (chown sourceforge.sourceforge
+/etc/local.inc)</li>
+  <li>change permission (chmod 640 /etc/local.inc) <b><font
+ color="#ff0000">**HIGHLY CRITICAL**</font></b></li>
+</ul>
+A couple of remarks on the some the variables in local.inc:<br>
+<ul>
+  <li><b>Machine names</b>: The local.inc file is included by all CodeX
+PHP scripts and contains global variables that are used throughout the
+site. This file is also by the backend Perl scripts (see below).
+&nbsp;You'll see that CodeX allows you to give distinct machine names
+that will be in charge of the various CodeX services (Web front end,
+CVS, Shell account, list manager,etc.). Even if you run all those
+services on the same machine we strongly encourage you to give different
+names for the various services and setup your DNS server so that all
+these are actually aliases to the same physical server. The reason is
+that it gives you the freedom, later in the life of the site, to
+delocalize a given service on a distinct machine without having to mess
+up with the CodeX database. The simple fact of assigining a new IP
+adress to what used to be a simple alias will automagically redirect all
+the traffic for this service to the right machine.</li>
+  <li><b>Database parameters</b> ($sys_dbxxx) : you'll have to provide
+the password for the MySQL sourceforge user here so make sure you have
+set the file permission of local.inc correctly (see above)</li>
+  <li><b>CodeX News group</b> ($sys_news_group): this is a reserved
+CodeX group_id. Leave this value unchanged.</li>
+  <li><b>Site language</b> ($sys_lang): right now only the US English is
+supported so leave this variable as is</li>
+  <li><span style="font-weight: bold;">HTTPS host </span>($sys_https_host):
+if your Apache server is SSL enabled (HTTPS protocol) set this variable
+with name/port number of the host to talk to. In general it is the same
+name as $sys_default_domain. Set it to an empty string ($sys_https_host
+= "") if your site is not SSL enabled.</li>
+</ul>
+<h2>PHP configuration</h2>
+<ul>
+  <li>Change the include_path variable in /etc/httpd/php3.ini to the
+following value:<br>
+    <pre>&nbsp; &nbsp; &nbsp; include_path&nbsp;&nbsp;&nbsp; = .:/home/httpd/SF/www/include:/home/httpd/SF/www/phpMyAdmin<br></pre>
+  </li>
+</ul>
+<h2><a name="Permission_Settings"></a>Permission Settings</h2>
+<ul>
+  <li>The log_accum script in /home/httpd/SF/utils/cvs1 requires the
+sourceforge group ownership to execute properly. <br>
+  </li>
+</ul>
+<pre>	# cd /home/httpd/SF/utils/cvs1<br>	# chown sourceforge.sourceforge log_accum<br>	# chmod 2775 fileforge   # sets the gid bit (-rwxrwsr-x)<br></pre>
+Be careful that you must set the gid bit again whenever the log_accum
+script is updated from CVS.<b><font color="#ff0000"> **HIGHLY CRITICAL**</font></b>
+<pre></pre>
+<hr width="100%" size="2">
+<h1>Installing the CodeX Database</h1>
+As user root go through the following steps:<br>
+<br>
+<h2>Move the mysql data directoy</h2>
+<ul>
+  <li>Make sure the official MySQL RPMs are installed (see above)</li>
+  <li>If your root file system where /var/lib/mysql resides has not
+enough space move this directory (and only this one) to another place
+with plenty of space (e.g. /home/var/lib/mysql). Stop the mysql engine
+before doing this (command is 'service mysql stop')</li>
+  <li>Make sure the mysql engine is started (command is 'service mysql
+start')</li>
+</ul>
+<h2>Create CodeX database</h2>
+<p>As root, run in a shell 		</p>
+<pre>		mysql -e "create database sourceforge"<br><br></pre>
+<h2>Define access permission</h2>
+<ul>
+  <li>Choose distinct&nbsp; passwords for the MySQL 'sourceforge'
+account &nbsp;<b>and</b> 'root' account. We recommend that you use the
+same passwords as those you chose for the sourceforge Unix account and
+root Unix account created earlier.&nbsp;</li>
+  <li>Then run mysql on the mysql database: 		</li>
+</ul>
+<pre>		# mysql mysql<br><br>		mysql&gt; GRANT ALL PRIVILEGES<br>      on sourceforge.* <br>      to sourceforge@localhost <br>      identified by 'password';<br><br>		mysql&gt; GRANT ALL PRIVILEGES<br>      on *.* <br>      to root@localhost <br>      identified by 'password';<br>				  <br>		mysql&gt; Flush Privileges;<br>		mysql&gt; quit<br><br></pre>
+From now onwards if you want to use the mysql shell to interact with
+the CodeX database (think twice before doing any change by hand in the
+database !!!) you'll have to run the following command and type the
+sourceforge password when prompted:<br>
+<br>
+<pre>		# mysql -u sourceforge sourceforge -p<br></pre>
+<br>
+<h2>Populate the database</h2>
+To create the tables in the CodeX database and populate the database
+with the initial values run the script in <span
+ style="font-family: monospace;">SF/utils/mksql.sh</span>. You can also
+decide to run the 2 operations separately using the following commands:
+<pre>cd /home/httpd/SF/db/mysql/<br>mysql -u sourceforge sourceforge -p &lt; database_structure.sql   # create the DB<br>mysql -u sourceforge sourceforge -p &lt; database_initvalues.sql  # populate with init values.<br><br>If you make a mistake in the creation process and want to restart from scratch run the following command:<br></pre>
+<pre>mysql -e "drop database sourceforge"<br><br></pre>
+<h2>MySQL configuration file</h2>
+The /etc/my.cnf configuration file is here to specify a number of
+configuration items that are going to be used by the MySQL engine at run
+time.&nbsp; Right now the configuration file looks like this<br>
+<br>
+<span style="font-family: monospace;"># The MySQL server</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">[mysqld]</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">log-bin=/cvsroot/.mysql_backup/atlas-bin</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">skip-innodb</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;"># file attachment can be 2M in
+size so take a bit of slack</span><br style="font-family: monospace;">
+<span style="font-family: monospace;"># on the mysql packet size</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">set-variable =
+max_allowed_packet=3M</span><br style="font-family: monospace;">
+<br style="font-family: monospace;">
+<span style="font-family: monospace;">[safe_mysqld]</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">err-log=/var/log/mysqld.log<br>
+<br>
+</span>
+<p>The max_allowed_packet parameter is really important because the
+file attachment size for bug tracker and task manager has been increased
+to 2 Mbytes and we must have a bit of slack when issuing an SQL insert
+statement with a large blob. Hence the 3M argument (3 Mbytes).</p>
+<hr>
+<h1>Mail Configuration</h1>
+CodeX uses sendmail as Mail transfer agent but it is possible to use
+any other MTA like Postfix, Exim or other. You need to setup <br>
+<br>
+<h2>Sendmail settings</h2>
+<br>
+<u>In /etc/sendmail.cf:</u><br>
+<ul>
+  <li>Set Cw to codex.xerox.com (or change the domain name to your own)</li>
+  <li>Set DM to codex.xerox.com (this is what we masquerade as)</li>
+  <li>Aliases files are:<br>
+    <pre>O AliasFile=/etc/aliases,/etc/aliases.codex</pre>
+  </li>
+</ul>
+<u>In /etc/sendmail.cw:</u><br>
+<ul>
+  <li>Say that you are serving the domains codex.xerox.com and
+lists.codex.xerox.com as follows:<br>
+    <pre># sendmail.cw - include all aliases for your machine here.<br>codex.xerox.com<br>lists.codex.xerox.com</pre>
+    <pre><br></pre>
+  </li>
+</ul>
+<h2>Aliases</h2>
+<u>/etc/aliases</u><br>
+<br>
+This is where you must insert system level aliases by hand (e.g.
+aliases for postmaster, root, etc.). <br>
+<br>
+/<u>etc/aliases.codex</u><br>
+<br>
+aliases.codex is generated automatically bo the CodeX cron job (see
+below) and contains the aliases for all the mailing lists in the
+@lists.codex.xerox.com domain and the email aliases for users. **Never
+edit this file by hand**<br>
+<br>
+<u>/home/httpd/SF/utils/underworld-dummy/aliases.zone</u><br>
+<br>
+This is where you can define CodeX level aliases like codex-contact,
+codex-admin, etc. This file is currently under cvs control so if you are
+managing your own site it might be a better idea to add these aliases in
+/etc/aliases to avoid conflict when merging new code from CodeX CVS
+repository<br>
+<br>
+<br>
+<hr>
+<h1>Mailman Installation and Configuration</h1>
+For historical reasons CodeX do not use the RedHat mailman RPMs but the
+stock archive directly from the Mailman Web site. You can get mailman at <a
+ href="http://www.gnu.org/software/mailman/">http://www.gnu.org/software/mailman/</a>
+(CodeX uses the 2.0.x version). Unarchive the tar file in
+/usr/local/mailman and make sure your read the README, INSTALL and
+UPGRADING files (in case of an upgrade).<br>
+<br>
+Also setup a mailman admin password once the installation is done (we
+recommend that you se the same password as the sourceforge account). To
+this end use the 'mmsitepass' script in /usr/local/mailman/bin.<br>
+<br>
+You must also configure the Apache configuration <tt>httpd.conf</tt> to
+instruct Apache on how to access the Web based mailing manager and
+archiver. A sample configuration file is provided in the CodeX source
+code at <tt>SF/etc/mailman.conf.dist</tt> . Place this file in the same
+directory as your <tt>httpd.conf</tt> file and include it at the end of <tt>httpd.conf</tt>.<br>
+<hr width="100%" size="2">
+<h1><a name="Miscellaneous_Utilities"></a>Miscellaneous Utilities</h1>
+There are a few utilities that must be either compiled and/or installed
+in /usr/local/bin. A precompiled version of all these scripts is
+provided at <a
+ href="http://codex.codex.xerox.com/packages/nonRPMS_CodeX/utilities">http://codex.codex.xerox.com/packages/nonRPMS_CodeX/utilities</a> <br>
+<br>
+<h2>fileforge</h2>
+<p>This is a small utility which is called by the Apache server to move
+files 	from the incoming ftp directory to the project file release space</p>
+<p>Go to /home/httpd/SF/utils. In fileforge.c, modify the following
+lines if need be  	</p>
+<pre>  char * src_dir   = "/home/ftp/incoming/"; /* the ftp incoming directory */<br>  char * dest_dir  = "/home/ftp/codex/"; /* the file release space for CodeX projects */<br></pre>
+	The trailing slashes are mandatory.   Compile it with gcc -O2 -o
+fileforge fileforge.c. 	Then copy fileforge to /usr/local/bin and run: 	
+<pre>	# cd /usr/local/bin<br>	# chown root.sourceforge fileforge<br>	# chmod 4750 fileforge   # sets the uid bit<br><br></pre>
+<h2>tmpfilemove</h2>
+<p>This is a small utility which is called by the Apache server to move
+files from the HTTP upload area to the ftp incoming space.</p>
+<p>Go to /home/httpd/SF/utils. In tmpfilemove.c, modify the following
+lines if need be  	</p>
+<pre>  char * src_dir   = "/tmp/"; /* HTTP upload area */<br>  char * dest_dir  = "/home/ftp/incoming/"; /* the FTP Incoming space */<br></pre>
+	The trailing slashes are mandatory.   Compile it with gcc -O2 -o
+tmpfile tmpfilemove.c. 	Then copy&nbsp;tmpfilemove to /usr/local/bin and
+run: 	
+<pre>	# cd /usr/local/bin<br>	# chown root.sourceforge tmpfilemove<br>	# chmod 4750 tmpfilemove   # sets the uid bit<br><br></pre>
+<h2>gensmbpasswd</h2>
+This is a small utility called by CodeX login creation or change
+password script to generate the MD4 encoding of the user password that
+will be given to the Samba server to configure password protected access
+to Windows shared resources like the ftp Incoming directory, the user
+personal directory and the project directory the user belong to.<br>
+<br>
+This file is quite difficult to compile so get it from the location
+mentioned at the beginning of this section. Ownership and permission
+must be:<br>
+<pre>&nbsp;&nbsp;&nbsp; 	-rwxr-xr-x&nbsp;&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp; root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 892963 Oct&nbsp; 7 21:37 /usr/local/bin/gensmbpasswd</pre>
+<h2>gotohell</h2>
+A simple shell script to discard all the messages sent to the
+noreply@codex.xerox.com messages. The file must contain:<br>
+<br>
+<blockquote>
+  <pre>#!/bin/sh</pre>
+  <pre>cat - &gt;/dev/null</pre>
+</blockquote>
+Ownership and permission must be:<br>
+<pre>	-rwxr-xr-x&nbsp;&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp; root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 27 Dec 11&nbsp; 2001 /usr/local/bin/gotohell</pre>
+<br>
+<br>
+<hr>
+<h1>Samba Configuration</h1>
+CodeX allows Window users to access their user directory, project
+directory and FTP Incoming space through Windows network drives. To
+enable this feature you just need to:<br>
+<ul>
+  <li>&nbsp;Install the Samba rpms</li>
+  <li>Make sure the gensmbpasswd program is installed in /usr/local/bin</li>
+  <li>Create a symbolic link from /etc/smbpasswd to
+/etc/samba/smbpasswd (the password file will be automatically generated
+by the CodeX cron job)</li>
+  <li>Edit /etc/samba/smb.conf to accomodate your site configuration.
+here are the parameters you must change<br>
+&nbsp; workgroup = <i>The Windows domain name you belong to</i><br>
+&nbsp; server string = <i>Description of the server</i><br>
+&nbsp; security = user<br>
+&nbsp; encrypt passwords = yes<br>
+&nbsp; smb passwd file = /etc/samba/smbpasswd<br>
+&nbsp; socket options = TCP_NODELAY SO_RCVBUF=8192 SO_SNDBUF=8192<br>
+&nbsp; local master = no<br>
+&nbsp; wins server = <i>The IP address of your closest wins server</i><br>
+&nbsp; dns proxy = no <br>
+&nbsp; netbios name = <i>Set your Windows machine name here (Don't use
+CODEX because it is the name of the central site)<br>
+    <br>
+    </i></li>
+  <li>Define the following shared resources:<br>
+    <pre>[homes]<br>   comment = User Home Directories<br>   browseable = no<br>   writable = yes<br><br>[Projects]<br>   comment = CodeX Project Directories<br>   path = /home/groups<br>   browseable = yes<br>   writable = yes<br>   printable = no<br>   force create mode = 0775<br>   force directory mode = 2775<br>   map archive = no<br><br>[Ftp_Incoming]<br>   comment = Anonymous FTP Incoming Space for File Releases<br>   path = /home/ftp/incoming<br>   browseable = yes<br>   writable = yes<br>   printable = no<br>   force create mode = 0644<br>   map archive = no<br></pre>
+  </li>
+</ul>
+<hr>
+<h1>CVS Configuration</h1>
+<ul>
+  <li>First make sure the CodeX specific RPMs for CVS are installed on
+your CodeX server (see the section on <a href="#RPM_Packages">RPM
+Packages</a>)</li>
+  <li>Create the <tt>/etc/cvs_root_allow</tt> file as follows:<br>
+    <br>
+    <tt># touch /etc/cvs_root_allow<br>
+# chown sourceforge.sourceforge /etc/cvs</tt><tt>_root</tt><tt>_allow<br>
+# chmod 644 /etc/cvs</tt><tt>_root</tt><tt>_allow</tt></li>
+</ul>
+Then you have to decide what type of CVS access you want to offer to
+your users.: either through the standard pserver protocol or through SSH
+(secure shell). If your site is inside your corporate network the
+pserver method is a good choice. If your site is on the Internet we
+recommend that you use the SSH approach to make sure that
+confidential&nbsp; information like passwords or source code travels
+encrypted.
+<h2>The pserver approach</h2>
+<ul>
+  <li>Configure xinetd to start the cvs server when needed. The
+/etc/xinetd.d/cvs file must look like this: <br>
+    <tt>service cvspserver<br>
+{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+disable&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+= no<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+socket_type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = stream<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+protocol&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+= tcp<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+wait&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+= no<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+user&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+= root<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+server&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+= /usr/bin/cvs<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+server_args&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = -f -z3
+-T/home/large_tmp --allow-root-file=/etc/cvs_root_allow pserver<br>
+}</tt></li>
+</ul>
+The benefit of using the pserver approach is that you can define who
+has read and write permission on the CVS repository through the
+CVSROOT/readers and CVSROOT/writers file of your CVS repository. In the
+current implementation all project members are granted read and write
+access to the CVS repository of the projects they belong to. &nbsp;You
+can always add users' name in the CVSROOT/readers file to give them
+read-only access.<br>
+<ul>
+</ul>
+<h2>The SSH approach</h2>
+The idea behind the SSH approach is that a client ssh to the remote
+server and the cvs command is actually executed on the remote server.
+Note that this is different from another approach which consist of using
+the port forwarding capability of SSH to encrypt all trafic on the TCP
+port 2401 used by the pserver.<br>
+<br>
+There is no much to do to allow this method. The simple fact of having
+the sshd daemon running will allow users to use this method. Things to
+pay attention to:<br>
+<ul>
+  <li>If you want to disable the pserver access, make sure you edit
+/etc/xinetd.d/cvs, change the 'disable' parameter to 'yesy' and restart
+xinetd (service xinetd restart)</li>
+  <li>On the client side, &nbsp;users must set the environment variable
+CVS_RSH to 'ssh'</li>
+  <li>You must also copy the site-content/en_US/cvs/intro.txt in
+site-content/custom/en_US/cvs/intro.txt and edit it to reflect the new
+CVS access method.<br>
+    <br>
+  </li>
+</ul>
+<h2>The CVS Tracking Database</h2>
+CodeX offers the ability for each project to build a database of all
+CVS events (commit, add, delete) happening on their CVS repository.
+THis feature is activated in the CVS Web interface of the CodeX Web
+frontend under CVS -&gt; Admin. For this feature to work properly
+symbolic links must be created from the /usr/local/bin directory as
+follows:<br>
+<pre><tt>&nbsp;&nbsp;&nbsp; cd /usr/local/bin<br>&nbsp;&nbsp;&nbsp; ln -sf /home/httpd/SF/utils/cvs1/log_accum<br>&nbsp;&nbsp;&nbsp; ln -sf /home/httpd/SF/utils/cvs1/commit_prep</tt></pre>
+<tt>Also make sure that the log_accum script has the proper permission
+set up. (See <a href="#Permission_Settings">here</a>)</tt><br>
+<tt><br>
+</tt><br>
+<br>
+<hr>
+<h1>FTP Configuration</h1>
+<ul>
+  <li>Make sure the ftp access is enabled in xinetd. The
+/etc/xinetd.d/wu-ftpd should look like this:<br>
+    <tt>service ftp<br>
+{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; disable = no<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+socket_type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+= stream<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+wait&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+= no<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+user&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+= root<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+server&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+= /usr/sbin/in.ftpd<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+server_args&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+= -l -a<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+log_on_success&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +=
+DURATION<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+nice&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+= 10<br>
+}</tt><br>
+    <br>
+  </li>
+  <li>The /etc/ftpaccess on the CodeX site looks like this:<br>
+    <br>
+    <tt>class&nbsp;&nbsp; all&nbsp;&nbsp; real,guest,anonymous&nbsp; *<br>
+class anonftp anonymous *<br>
+    <br>
+upload /home/ftp * no<br>
+upload /home/ftp /bin no<br>
+upload /home/ftp /etc no<br>
+upload /home/ftp /lib no<br>
+noretrieve .notar<br>
+upload /home/ftp /incoming yes ftpadmin ftpadmin 0644 nodirs<br>
+noretrieve /home/ftp/incoming<br>
+noretrieve /home/ftp/codex<br>
+    <br>
+email root@localhost<br>
+    <br>
+loginfails 5<br>
+    <br>
+readme&nbsp; README*&nbsp;&nbsp;&nbsp; login<br>
+readme&nbsp; README*&nbsp;&nbsp;&nbsp; cwd=*<br>
+    <br>
+message
+/welcome.msg&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+login<br>
+message
+.message&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+cwd=*<br>
+    <br>
+compress&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+all<br>
+tar&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+all<br>
+chmod&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; no&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; guest,anonymous<br>
+delete&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; no&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; guest,anonymous<br>
+overwrite&nbsp;&nbsp;&nbsp; no&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+guest,anonymous<br>
+rename&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; no&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; guest,anonymous<br>
+    <br>
+log transfers anonymous,real inbound,outbound<br>
+    <br>
+shutdown /etc/shutmsg<br>
+    <br>
+passwd-check rfc822 warn<br>
+    <br>
+    </tt></li>
+  <li>Under /home/ftp, create the exact same hierarchy and files as on
+the CodeX production server.<tt><br>
+    </tt></li>
+</ul>
+<hr>
+<h1>Shell Account</h1>
+Unless otherwise instructed the CodeX system will create a shell
+account for all users who have a Web account. The login and password are
+the same. Users can access their shell account either through SSH or
+telnet. We will see how to restrict the use of a shell account below. It
+is also possible to suspend or delete a user account (both Web and
+Unix) but be aware that disabling the Linux account will prevent users
+from using all the peripheral services like CVS, FTP,... <br>
+<h2>SSH Configuration</h2>
+Simply check that the ssh daemon is started (command is 'service ssh
+start'). Also make sure that it is started at boot time (command is
+'chkconfig sshd on').
+<h2>Telnet Configuration</h2>
+Telnet access shuld only be enabled when your CodeX site is on a safe
+network. If you are on the Internet we *strongly* recommend that you
+disable it. To enable/disable the telnet access on your CodeX server,
+edit the /etc/xinetd.d/telnet file and change the 'disable' parameter
+accordingly. Then restart xinetd.<br>
+<h2>Restricted Shell Capabilities</h2>
+It is sometimes desirable to allow the creation of a Shell Account for
+CodeX users while limiting the thing they can do with it. For instance
+you may want to limit the capabilities of certain users to use only CVS
+and may be sftp if you decide to use the secure ftp server but you don't
+want them the log into the system with a real shell like bash. Doing so
+is just a matter of changing the shell account associated with a given
+user.<br>
+<br>
+By default the user table of the CodeX database has '/bin/bash'
+configured as the default shell. When the user account is created by the
+cron job s/he will have /bin/bash as a shell and therefore s/he will be
+given full shell capabilities. You can later decide to change the shell
+of a given user through the user admin interface of the CodeX Web site
+and use a restricted shell like the one CodeX provide in
+SF/utils/cvs1/cvssh. This is a little script that simply check the
+command that are remotely executed through ssh by the user (it can be
+cvs, sftp, rsync,...) and decide to accept or reject the command.<br>
+<br>
+To activate this pseudo shell, copy the file cvssh in /usr/local/bin,
+make sure it is executable and also add the file to the list of
+authorized shells in /etc/shells. Adding cvssh to /etc/shells will make
+it appear in the list of possible shells in the CodeX user admin
+interface. <br>
+<br>
+If you want the retricted shell to be the default for all users then
+change the default value of the shell column in the user table with the
+following mysql command:<br>
+<br>
+$ mysql -u sourceforge sourceforge -p<br>
+mysql&gt;&nbsp; ALTER TABLE user ALTER COLUMN shell SET DEFAULT
+'/usr/local/bin/cvssh' ;<br>
+<br>
+<br>
+<hr>
+<h1>CodeX Site Customization</h1>
+<h2>CodeX admin user</h2>
+<font color="#ff0000" style="font-weight: bold;">**HIGHLY CRITICAL**</font><b><font
+ color="#ff0000"><br>
+</font></b>When you'll be initializing the CodeX database (see next
+step below), the user table of the CodeX database is initialized with a
+CodeX user called 'admin' who has full admin rights on all the CodeX
+hosted projects and also has access to Web based administration modules
+like user and project settings, project approval, software map
+configuration,etc.<br>
+<br>
+The default password for the admin user is 'siteadmin' , we strongly
+encourage you to change this password as soon as the site is up and
+running. Here is how to do it:<br>
+<ul>
+  <li>login on the Web front end with user 'admin', password 'siteadmin'</li>
+  <li>click on the 'Account Maintenance' &nbsp;link in the left hand
+side menu pane</li>
+  <li>click on change email address and update it either with your own
+email address if you are the only administrator or first create a
+distribution list with all the codex admin email adresses and use this
+mailing list address</li>
+  <li>go back and change the password&nbsp;</li>
+  <li>logout and login again to make sure that the new password was
+taken into account</li>
+</ul>
+<br>
+<h2>UI Themes</h2>
+The CodeX Web pages look and feel are defined through Cascading Style
+Sheets (CSS). &nbsp;Therefore CodeX UI is customizable to large extent.
+The Graphical user interface elements of CodeX come in the following
+directories:<br>
+<br>
+<ul>
+  <li><tt>SF/www/css</tt> : each sub-directory in this place contains a
+given theme which name is the sub-directory name. By default CodeX comes
+with the 'default' and 'savannah' style sheets. Each style directory
+contains 3 CSS files named '<i>themename_fontsize</i>.css' where
+fontsize is one of 'large', 'normal' or 'small'. Files differ only by
+the size of the default font used in the Web pages. All 3 must be
+present because CodeX users can choose a prefered font size in her
+Account Maintenance page</li>
+</ul>
+<ul>
+  <li><tt>SF/www/images</tt> : each sub-directory in this place contains
+all the logos and images needed by the CodeX Web pages. There is a
+different set of images per theme and each set of images is stored in
+sub-directories which name follows the pattern&nbsp;'<i>themename.</i>theme'
+where themename must match the theme name defined in the cascadig style
+sheet directories above.</li>
+</ul>
+Defining your own Look&amp;Feel is very easy:<br>
+<ol>
+  <li>Choose a theme name</li>
+  <li>Create directory &nbsp;<tt>SF/www/css/<i>themename</i>/ </tt>and
+the 3 CCS files in it. Make sure to define the exact same CSS classes as
+those appearing in one of the style that comes standard with the CodeX
+source code.</li>
+  <li>Create directory &nbsp;<tt>SF/www/images/<i>themename</i>.theme/ </tt>by
+copying one of the directory that come standard with CodeX. Then
+replace all the images you want to customize with your own but make sure
+to keep the exact same file names.</li>
+</ol>
+Finally edit the look /etc/local.inc file and set the <tt>$sys_themedefault</tt>
+variable to the value of the default theme name for your site.<br>
+<h2>Site content</h2>
+Several PHP scripts in the CodeX source code contain pieces of text
+that are generally here to give instructions to the CodeX users. Typical
+examples are: the introductory text at the top of the CodeX Home Page,
+instructions on how to connect to the CVS repository, instructions and
+guidelines in the project registration process,etc.<br>
+<br>
+These pieces of text are isolated from the PHP scripts themselves and
+they are all placed under the top directory <tt>'site-content'</tt>.
+&nbsp;The file path to the content of a given script (or part of a
+script) follows the following pattern:<br>
+<br>
+<tt>site-content/<i>LANG_COUNTRY</i>/<i>SF_path</i>/<i>whattext</i>.txt</tt><br>
+<br>
+where:<br>
+<ul>
+  <li>LANG_COUNTRY is the standard ISO naming for language and
+countries: Currently there is only en_US for CodeX is not yet localized.</li>
+  <li>SF_path is the name of the directory under SF which contains the
+script the text belong to.</li>
+  <li>whattext.txt is a file name that contains the piece of text itself<br>
+  </li>
+</ul>
+By default the site-content directory should be stored in the same
+place as the SF directory (PHP scripts). &nbsp;Make sure you update the <tt>$sys_inc</tt>
+variable in <tt>/etc/local.inc</tt> to reflect the path to the <tt>site-content</tt>
+directory (default is <tt>/home/httpd/site-content</tt>).<br>
+<br>
+To customize the content of a given script for your site go through the
+following steps:<br>
+<ol>
+  <li>Under site-content create a directory called '<tt>custom</tt>'
+and under this directory create the LANG_COUNTRY sub-directory (<tt>en_US</tt>only
+for now).&nbsp;</li>
+  <li>For each piece of text that you want to customize copy the
+original <tt><i>whattext</i>.txt</tt> file under the <tt>site-content/custom/<i>LANG_COUNTRY</i>/<i>SF_path</i></tt><tt>/<i>whattext</i>.txt</tt>and
+edit it as you like.<br>
+    <br>
+B<u>e careful that some of these files contain PHP scripting that you
+probably want to preserve in your customized version. Deleting the PHP
+scripting could break the entire PHP scripts. Ask the CodeX Team if you
+are unsure of what you are doing.</u><br>
+    <br>
+  </li>
+</ol>
+<h2>Site Documentation</h2>
+CodeX has an entry called 'Site Documentation' &nbsp;in the left hand
+side menu. This menu entry actually points to the Document Manager of
+the CodeX project called 'Admin Project'. &nbsp;This project is
+automatically defined when the CodeX database is initialized. It comes
+with group_id 1 (ONE) and you can acces it at
+http://your.codex_site.url/projects/adminproj.<br>
+<br>
+All documents stored in the document manager of the 'Admin Project'
+will automatically appear under 'Site Documentation' (except those
+documents marked 'private' or hidden'. See the <a
+ href="http://codex.xerox.com/documentation/user_guide/html/en_US/DocumentManager.html">CodeX
+User Guide</a> for more details on the Document Manager service. This is
+also why you will not find the Site Documentation of the CodeX central
+site in the CodeX CVS repository.<br>
+<br>
+<h2>On-line Help</h2>
+'On-line Help' is also a menu entry appearing in the left hand side
+menu of CodeX. It actually points to the HTML version of the CodeX User
+Guide (CUG). The CUG has been written in XML with the DocBook DTD and is
+stored under the top level '<tt>documentation</tt>' directory in the
+CodeX CVS repository. To activate the on-line help simply check out the <tt>documentation</tt>directory
+at the same place as the <tt>SF</tt> and <tt>site-content</tt>directories.<br>
+<br>
+Also notice that the HTML and PDF versions of the CUG are <b>not</b>
+stored in the CVS repository. They are generated from the XML files
+using the script&nbsp; SF/utils/generate_doc.sh. You can run this script
+by hand from the sourceforge Linux account and our advice is also to
+include it in the sourceforge crontab so that it runs once a day and
+automatiacally regenerate the documentation when needed.<br>
+<br>
+For the script to work properly you must have the JRE (Java Runtime
+Environment) and the DocBook processing chain installed properly. See
+the section about <a href="#Specific_Software_Packages">specific
+software packages to install</a>.<br>
+<br>
+<br>
+<hr>
+<h1>Scripts Backend</h1>
+Most of the backend scripts used by the CodeX system are writen in Perl
+and are located in <tt>/home/httpd/SF/utils</tt>. Many of these script
+use the<tt> include.pl</tt> file and, in case you did not follow the
+standard installation process explained in this document, you may have
+to customize the content of this include file to match your site
+configuration.<br>
+<br>
+<hr>
+<h1>Cron jobs</h1>
+CodeX runs a number of cron job in the background. The most important
+one is run once every 2hours on the CodeX site to map the CodeX
+user/project permission to the Linux user/group permission mechanism. it
+also create all the user and project related directories automatically.<br>
+<br>
+Other cron jobs runs dialy and weekly statistics.<br>
+<br>
+<h2>Root crontab</h2>
+Find below a copy of the root crontab file. we highly recommend that
+you keep the same time and frequency to run the jobs. You can however
+increase the frequency of the xerox_crontab.sh job which runs normally
+once every 2 hours to create new user and project directory on the Linux
+server (including the CVS repo). <br>
+<br>
+<blockquote><tt># run the Codex crontab script once every 2 hours</tt><br>
+  <tt># this script synchronizes user, groups, cvs repo, </tt><br>
+  <tt># directories, mailing lists, etc...</tt><br>
+  <tt>0 0-23/2 * * * /home/httpd/SF/utils/xerox_crontab.sh </tt><br>
+  <tt>#</tt><br>
+  <tt># run the daily statistics script just a little bit after</tt><br>
+  <tt># midnight so that it computes stats for the day before</tt><br>
+  <tt># Run at 0:30 am</tt><br>
+  <tt>30 0 * * * /home/httpd/SF/utils/xerox_all_daily_stats.sh</tt><br>
+  <tt>#</tt><br>
+  <tt># run the weekly stats for projects. Run it on Monday morning so
+that</tt><br>
+  <tt># it computes the stats for the week before</tt><br>
+  <tt># Run on Monday at 1am</tt><br>
+  <tt>0 1 * * Mon (cd /home/httpd/SF/utils/underworld-root;
+./db_project_weekly_metric</tt><tt>.pl)</tt><br>
+  <tt>#</tt><br>
+  <tt># Delete all files in FTP incoming that are older than 2 weeks
+(336 hours)</tt><br>
+  <tt>#</tt><br>
+  <tt>0 3 * * * /usr/sbin/tmpwatch -m -f 336 /home/ftp/incoming</tt><br>
+  <tt>#</tt><br>
+  <br>
+</blockquote>
+Please note that your own root crontab shoudl probably contain some
+additional jobs like may be stopping the mysql engine before starting
+your backup procedure or something similar.<br>
+<h2>SourceForge crontab</h2>
+<blockquote><tt># Re-generate the CodeX User Guide on a daily basis</tt><br>
+  <tt>00 03 * * * /home/httpd/SF/utils/generate_doc.sh</tt><br>
+  <br>
+</blockquote>
+<br>
+<hr>
+<h1>Installing phpMyAdmin</h1>
+phpMyAdmin is a Web based GUI to manage MySQL database. Although
+installing phpMyAdmin is not mandatory it is a very convenient for a
+CodeX site adminstrator. Installation is really easy:<br>
+<br>
+<ul>
+  <li>Get phpMyAdmin from <a
+ href="http://www.phpwizard.net/projects/phpMyAdmin/">http://www.phpwizard.net/projects/phpMyAdmin/</a>
+. Make sure you get the version for PHP 3!!</li>
+  <li>Uncompressed the file in /home/httpd/. You should see a new
+directory called phpMyAdmin-X.Y.Z (where X.Y.Z is the version number)</li>
+  <li>In /home/httpd, create a symbolic link called phpMyAdmin to the
+phpMyAdmin-X.Y.Z directory</li>
+  <li>Edit config.inc.php and change the following lines to reflect
+your own site configuration:<br>
+    <br>
+    <tt>$cfgPmaAbsoluteUri = 'http://codex.xerox.com/phpMyAdmin';<br>
+$cfgServers[$i]['host']&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+= 'localhost'; // MySQL hostname<br>
+$cfgServers[$i]['port']&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+= '';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // MySQL
+port - leave blank for <br>
+default port<br>
+$cfgServers[$i]['socket']&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
+'';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Path to the
+socket - leave bl<br>
+ank for default socket<br>
+$cfgServers[$i]['connect_type']&nbsp; =
+'tcp';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // How to connect to MySQL
+serve<br>
+r ('tcp' or 'socket')<br>
+$cfgServers[$i]['controluser']&nbsp;&nbsp; =
+'';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // MySQL
+control user settings<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// (this user must have read-only<br>
+$cfgServers[$i]['controlpass']&nbsp;&nbsp; =
+'';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // access to
+the "mysql/user"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// and "mysql/db" tables)<br>
+$cfgServers[$i]['auth_type']&nbsp;&nbsp;&nbsp;&nbsp; =
+'http';&nbsp;&nbsp;&nbsp; // Authentication method (config, <br>
+http or cookie based)?<br>
+$cfgServers[$i]['user']&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+= 'sourceforge';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // MySQL user<br>
+$cfgServers[$i]['password']&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
+'';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // MySQL
+password (only needed<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// with 'config' auth_type)<br>
+$cfgServers[$i]['only_db']&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
+'sourceforge';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
+$cfgServers[$i]['verbose']&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
+'';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Verbose
+name for this host -<br>
+leave blank to show the hostname<br>
+$cfgServers[$i]['bookmarkdb']&nbsp;&nbsp;&nbsp; =
+'';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Bookmark db
+- leave blank for<br>
+&nbsp;no bookmark support<br>
+$cfgServers[$i]['bookmarktable'] =
+'';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Bookmark
+table - leave blank <br>
+for no bookmark support<br>
+$cfgServers[$i]['relation']&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
+'';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // table to
+describe the relation between links (see doc)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+//&nbsp;&nbsp; - leave blank for no relation-links support</tt><br>
+    <br>
+  </li>
+  <li><tt>When you access the phpMyAdmin GUI at
+http://your_codex_server_name_here/phpMyAdmin you'll be prompted for a
+user name and password. Use the MySQL 'sourceforge' login and password.<br>
+    </tt></li>
+</ul>
+<br>
+<p> </p>
+<hr width="100%" size="2"><br>
+<u><font size="-2">History:</font></u>
+<p><font size="-2">0.1 - Oct 18th, 2002 - Initial revision<br>
+0.2 - Nov 8th, 2002 - Configuration of secure HTTP in Apache added.<br>
+0.3 - Nov 12th, 2002 - Mailman configuration and installation added.<br>
+0.4 - Nov 12th, 2002 - /etc/skel_codex added in the File System
+structure.<br>
+0.5 - Nov 14th, 2002 - Added asection about the non RMP packages to
+intall (docbook and utilities), Decribe how to customize the site look
+and feel, content,etc.<br>
+0.6 - Nov 26th, 2002 - CVS pserver versus ssh access method. Restricted
+shell account added.<br>
+0.7 - Nov 28th, 2002 - Sections order modified to follow the flow of
+installation and sevral corections based on XRCE feedback.<br>
+</font><font size="-2"> 0.8 - Mar 25th, 2003 - Added max_allowed_packet
+in my sql configuration<br>
+1.1 - May 27th, 2003 - Change permission/owner for some PHP and CGI
+scripts - Also import it in CVS - History now in CVS<br>
+</font> <font size="-2"> <br>
+<br>
+</font></p>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+</body>
+</html>
