@@ -34,6 +34,7 @@ function util_prep_string_for_sendmail($body) {
 	$body=str_replace("\\","\\\\",$body);
 	$body=str_replace("\"","\\\"",$body);
 	$body=str_replace("\$","\\\$",$body);
+        $body=str_replace("`","\\`",$body);
 	return $body;
 }
 
