@@ -97,7 +97,7 @@ class ArtifactCannedHtml extends ArtifactCanned {
 	$group_id = $this->ArtifactType->Group->getID();
 	$atid = $this->ArtifactType->getID();
 
-	  echo '<H2>Create/Modify Tracker Canned Responses - <a href="/tracker?group_id='.$group_id.'&atid='.$atid.'">'.$this->ArtifactType->getName().'</a></H2>';
+	  echo '<H2>Tracker \'<a href="/tracker?group_id='.$group_id.'&atid='.$atid.'">'.$this->ArtifactType->getName().'</a>\' - Create/Modify Canned Responses</a></H2>';
 	  $result = $this->ArtifactType->getCannedResponses();
 	  $rows=db_numrows($result);
 	  echo "<P>";

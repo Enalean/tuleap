@@ -373,7 +373,7 @@ if ($group_id && $atid) {
 	
 	echo site_project_header($params);
 	echo '<strong>'
-		 .'<a href="/tracker/admin/?group_id='.$group_id.'">Admin Trackers</a>';
+		 .'<a href="/tracker/admin/?group_id='.$group_id.'">Admin All Trackers</a>';
 	echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&func=create">Create a New Tracker</a>';
 	if ($params['help']) {
 	    echo ' | '.help_button($params['help'],false,'Help');

@@ -255,7 +255,7 @@ class ArtifactReport extends Error {
 	    
 	    // If user is unknown then get only project-wide and system wide reports
 	    // else get personal reports in addition  project-wide and system wide.
-	    $sql = 'SELECT report_id,name,description FROM artifact_report WHERE ';
+	    $sql = 'SELECT report_id,name,description,scope FROM artifact_report WHERE ';
 	    if (!$user_id || ($user_id == 100)) {
 			$sql .= "(group_artifact_id=$group_artifact_id AND scope='P') OR scope='S' ".
 			    'ORDER BY report_id';

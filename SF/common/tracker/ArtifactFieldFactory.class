@@ -422,14 +422,8 @@ class ArtifactFieldFactory extends Error {
 						 $empty_ok,$keep_history,$special,$use_it) {
 						 	
 		// Check arguments
-		if ( $field_id=="" || $field_name=="" || $data_type=="" || $display_type=="" ) {
-			$this->setError("Field id, field name, data type or display type are required.");
-			return false;
-		}
-		
-		// Check if a field id already exists
-		if ( $this->existFieldId($field_id) ) {
-			$this->setError("This field id already exists.");
+		if ( $field_id=="" || $field_name=="" || $data_type=="" || $display_type=="" || $label=="" ) {
+			$this->setError("Field id, field name, field label, data type or display type are required.");
 			return false;
 		}
 		

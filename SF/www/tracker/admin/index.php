@@ -59,7 +59,7 @@ if ($group_id && !$atid) {
 			return;
 		}
 		
-	    if ( !$ath->userIsAdmin() ) {
+	    if ( !user_ismember($group_id,'A') ) {
 			exit_permission_denied();
 			return;
 		}
@@ -70,10 +70,10 @@ if ($group_id && !$atid) {
 		break;
 		
 	case 'docreate':
-		if ( !$ath->create($group_id,$atid_chosen,$name,$description,$itemname) ) {
+		if ( !$ath->create($group_id,$group_id_chosen,$atid_chosen,$name,$description,$itemname) ) {
 			exit_error('Error',$ath->getErrorMessage());
 		} else {
-			$feedback = "Tracker created - Go to Admin/General Settings and Users Permissions to finish the creation";
+			$feedback = "Tracker created - Go to Admin to finish the creation";
 		}
 		include './admin_trackers.php';
 		break;
@@ -84,12 +84,12 @@ if ($group_id && !$atid) {
 			return;
 		}
 		
-		if ( !$ath->userIsAdmin() ) {
+		if ( !user_ismember($group_id,'A') ) {
 			exit_permission_denied();
 			return;
 		}
 	
-		$ath->adminTrackersHeader(array('title'=>'All Trackers Administration'));
+		$ath->adminTrackersHeader(array('title'=>'All Trackers Administration','help' => 'HELP_FIXME.html'));
 		echo $ath->displayAdminTrackers();
 		$ath->footer(array());
 	}
@@ -148,7 +148,7 @@ if ($group_id && !$atid) {
 						exit_error('Error','ArtifactReport could not be updated: '.$arh->getErrorMessage());
 					exit_error('Error','ArtifactReport could not be updated');
 				}
-				$feedback = "report definition updated";
+				$feedback = "Report definition updated";
 			} else {
 				$report_id = $arh->create(user_getid(), $rep_name, $rep_desc, $rep_scope);
 				if (!$report_id) {
@@ -156,7 +156,7 @@ if ($group_id && !$atid) {
 						exit_error('Error','ArtifactReport could not be created:'.$arh->getErrorMessage());
 					exit_error('Error','ArtifactReport could not be created');
 				};
-				$feedback = "new report created";
+				$feedback = "New report created";
 			}
 		
 			// now insert all the field entries in the artifact_report_field table
@@ -233,13 +233,13 @@ if ($group_id && !$atid) {
 			
 			}
 		} else if ($delete_canned) {
-		  if (!$ach->delete($artifact_canned_id)) {
-		    exit_error('Error','ArtifactCanned Item # '.$artifact_canned_id.' could not be deleted');
-		  }
-		  if ($ach->isError()) {
-		    exit_error('Error', $ach->getErrorMessage());
-				}
-		  $feedback .= ' Canned response deleted';
+		    if (!$ach->delete($artifact_canned_id)) {
+		       exit_error('Error','ArtifactCanned Item # '.$artifact_canned_id.' could not be deleted');
+		    }
+		    if ($ach->isError()) {
+		       exit_error('Error', $ach->getErrorMessage());
+		    }
+		    $feedback .= ' Canned response deleted';
 
 		} // End of post_changes
 		// Display the UI Form
@@ -490,7 +490,7 @@ if ($group_id && !$atid) {
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
 			$ath->adminHeader(array('title'=>'Tracker Administration - Field Usage Administration','help' => 'HELP_FIXME.html'));
-			echo "<H2>Tracker '".$ath->getName()."' - Field '".$field->getLabel()."'<br>Field Values Administration</H2>";
+			echo "<H2>Tracker '<a href=\"/tracker?group_id=".$group_id."&atid=".$atid."\">".$ath->getName()."</a>' - Field '<a href=\"/tracker/admin/?group_id=".$group_id."&atid=".$atid."&func=display_field_update&field_id=".$field->getID()."\">".$field->getLabel()."</a>'<br>Field Usage Administration</H2>";
 			$ath->displayFieldUsageForm("field_update",$field->getID(),$field->getName(),$field->getDescription(),$field->getLabel(),$field->getDataType(),$field->getDefaultValue(),$field->getDisplayType(),
 									   $field->getDisplaySize(),$field->getPlace(),$field->getShowOnAdd(),$field->getShowOnAddMembers(),
 									   $field->getEmptyOk(),$field->getKeepHistory(),$field->isSpecial(),$field->getUseIt(),true);

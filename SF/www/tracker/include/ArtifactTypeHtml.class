@@ -44,9 +44,9 @@ class ArtifactTypeHtml extends ArtifactType {
 		site_project_header($params);
 		echo '<h3>Tracker: <a href="/tracker/?group_id='.$group_id.'&atid='.$this->getID().'">'.$this->getName().'</a></h3><p>';
 
-		echo '<strong><a href="/tracker/?func=add&group_id='.$group_id.'&atid='. $this->getID() .'">Submit New</a>';
-		echo ' | <a href="/tracker/?func=browse&set=my&group_id='.$group_id.'&atid='. $this->getID() .'">My '.$this->getItemName().'s </a>';
-		echo ' | <a href="/tracker/?func=browse&set=open&group_id='.$group_id.'&atid='. $this->getID() .'">Open '.$this->getItemName().'s </a>';
+		echo '<strong><a href="/tracker/?func=add&group_id='.$group_id.'&atid='. $this->getID() .'">Submit A New '.$this->getCapsItemName().'</a>';
+		echo ' | <a href="/tracker/?func=browse&set=my&group_id='.$group_id.'&atid='. $this->getID() .'">My '.$this->getCapsItemName().'s </a>';
+		echo ' | <a href="/tracker/?func=browse&set=open&group_id='.$group_id.'&atid='. $this->getID() .'">Open '.$this->getCapsItemName().'s </a>';
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='.$this->getID().'">Admin</a>';
 		if ($params['help']) {
 		    echo ' | '.help_button($params['help'],false,'Help');
@@ -84,17 +84,15 @@ class ArtifactTypeHtml extends ArtifactType {
 
 		site_project_header($params);
 
-		echo '<strong><a href="/tracker/admin/?group_id='.$group_id.'">All Trackers Admin</a>';
+		echo '<strong><a href="/tracker/admin/?group_id='.$group_id.'">Admin All Trackers</a>';
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'">Admin</a>';
-		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=editoptions">Edit Options</a>';
-		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=permissions">Users Permissions</a>';
+		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=editoptions">General Settings</a>';
+		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=canned">Manage Canned Responses</a>';
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=field_usage">Manage Field Usage</a>';
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=field_values">Manage Field Values</a>';
 		echo ' | <a href="/tracker/admin/?func=report&group_id='.$group_id.'&atid='. $this->getID() .'">Manage Reports</a>';
 		echo ' | <a href="/tracker/admin/?func=notification&group_id='.$group_id.'&atid='. $this->getID() .'&func=notification">Email Notification Settings</a>';
-		if ($params['help']) {
-		    echo ' | '.help_button($params['help'],false,'Help');
-		}
+	    echo ' | '.help_button($params['help'],false,'Help');
 		echo '</strong><hr>';
 	}
 
@@ -115,7 +113,7 @@ class ArtifactTypeHtml extends ArtifactType {
 
 		site_project_header($params);
 
-		echo '<strong><a href="/tracker/admin/?group_id='.$group_id.'">All Trackers Admin</a>';
+		echo '<strong><a href="/tracker/admin/?group_id='.$group_id.'">Admin All Trackers</a>';
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&func=create">Create a New Tracker</a>';
 		if ($params['help']) {
 		    echo ' | '.help_button($params['help'],false,'Help');
@@ -154,10 +152,10 @@ class ArtifactTypeHtml extends ArtifactType {
 				<strong>No trackers have been set up, or you cannot view them.<p><FONT COLOR=RED>The Admin for this project ".
 				"will have to set up data types using the <a href=\"/tracker/admin/?group_id=$group_id\">admin page</a></FONT></strong>";
 		} else {
-		    echo '<H2>Trackers Administration</H2>';
+		    echo '<H2>All Trackers Administration</H2>';
 			echo '<H3><a href="/tracker/admin/?group_id='.$this->Group->getID().'&func=create">Create A New Tracker</a></H3>';
 			echo 'Create a new tracker from scratch or from an existing tracker.';
-			echo '<H3>Manage the trackers</H3>';
+			echo '<H3>Manage Trackers</H3>';
 			echo 'Administrate or delete a tracker.<p>';
 
 			$title_arr=array();
@@ -189,13 +187,11 @@ class ArtifactTypeHtml extends ArtifactType {
 	 */
 	function displayAdminTracker($group_id,$atid) {
 		
-	    echo '<H2>Tracker Administration - <a href="/tracker?group_id='.$group_id.'&atid='.$atid.'&func=editoptions">'.$this->getName().'</a></H2>';
+	    echo '<H2>Tracker \'<a href="/tracker?group_id='.$group_id.'&atid='.$atid.'">'.$this->getName().'</a>\' - Administration</H2>';
 	
 	    if ( $this->userIsAdmin() ) {
 			echo '<H3><a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=editoptions">General Settings</a></H3>';
 			echo 'Define the title, the description, etc of this tracker.<P>';
-			echo '<H3><a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=permissions">Users Permissions</a></H3>';
-			echo 'Add a user, change a permission or delete a user from the authorized users list.<P>';
 			echo '<H3><a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=canned">Manage Canned Responses</a></H3>';
 			echo 'Add, update or delete the canned responses.';
 			echo '<H3><a href="/tracker/admin/?func=field_usage&group_id='.$group_id.'&atid='.$atid.'">Manage Field Usage</a></H3>';
@@ -289,7 +285,7 @@ class ArtifactTypeHtml extends ArtifactType {
 	 */
 	function displayOptions($group_id,$atid) {
 		
-		echo '<p>Edit these differents informations concerning this tracker:</p>';
+		echo '<H2>Tracker \'<a href="/tracker?group_id='.$group_id.'&atid='.$atid.'">'.$this->getName().'</a>\' - General Settings</H2>';
 		echo '<form name="form1" >
 		  <input type="hidden" name="update" value="1">
 		  <input type="hidden" name="group_id" value="'.$group_id.'">
@@ -297,19 +293,19 @@ class ArtifactTypeHtml extends ArtifactType {
 		  <input type="hidden" name="func" value="editoptions">
 		  <table width="100%" border="0" cellpadding="5">
 		    <tr> 
-		      <td width="21%"><b>Name</b>:</td>
+		      <td width="21%"><b>Name</b> <font color="red">*</font>:</td>
 		      <td width="79%"> 
 		        <input type="text" name="name" value="'.$this->getName().'">
 		      </td>
 		    </tr>
 		    <tr> 
-		      <td width="21%"><b>Description</b>:</td>
+		      <td width="21%"><b>Description</b>: <font color="red">*</font></td>
 		      <td width="79%"> 
 		        <textarea name="description" rows="3" cols="50">'.$this->getDescription().'</textarea>
 		      </td>
 		    </tr>
 		    <tr> 
-		      <td width="21%"><b>Short name</b>:</td>
+		      <td width="21%"><b>Short name</b>: <font color="red">*</font></td>
 		      <td width="79%"> 
 		        <input type="text" name="itemname" value="'.$this->getItemName().'">
 		      </td>
@@ -337,19 +333,19 @@ class ArtifactTypeHtml extends ArtifactType {
 		      </td>
 		    </tr>
 		    <tr> 
-		      <td width="21%"><b>Submit instructions</b>:<br><i>(Displayed before the submission form)</i></td>
+		      <td width="21%"><b>Submit instructions</b>:<br><i>(HTML tags allowed)</i></td>
 		      <td width="79%"> 
 		        <textarea name="submit_instructions" rows="3" cols="50">'.$this->getSubmitInstructions().'</textarea>
 		      </td>
 		    </tr>
 		    <tr> 
-		      <td width="21%"><b>Browse instructions</b>:<br><i>(Displayed before the Report form)</i></td>
+		      <td width="21%"><b>Browse instructions</b>:<br><i>(HTML tags allowed)</i></td>
 		      <td width="79%"> 
 		        <textarea name="browse_instructions" rows="3" cols="50">'.$this->getBrowseInstructions().'</textarea>
 		      </td>
 		    </tr>
 		  </table>
-		  <p align="center"><input type="submit" value="Update"></p>
+		  <p align="center"><input type="submit" value="Submit"></p>
 		</form>';
 	}
 
@@ -385,21 +381,31 @@ class ArtifactTypeHtml extends ArtifactType {
 	 */
 	function displayCreateTracker($group_id,$codex_template,$group_id_template,$atid_template,$name,$description,$itemname,$feedback) {
 		echo '<script language="JavaScript">
+		      function trimStr(value) {
+		      	trimValue = "";
+		      	for(i=0;i<value.length;i++) {
+		      		if ( value.charAt(i) != " " ) {
+		      			trimValue = trimValue + value.charAt(i);
+		      		}
+		      	}
+		      	return trimValue;
+		      }
+		    
 			  function onChangeGroup() {
 			  	form_create.func.value = "create";
 			  	form_create.submit();
 			  }
 			  
 			  function checkValues() {
-			  	if ( form_create.name.value == "" ) {
+			  	if ( trimStr(form_create.name.value) == "" ) {
 		  			form_create.feedback.value = "Please, fill the tracker name.";
 		  			return false;
 				}
-			  	if ( form_create.description.value == "" ) {
+			  	if ( trimStr(form_create.description.value) == "" ) {
 		  			form_create.feedback.value = "Please, fill the tracker description.";
 		  			return false;
 				}
-			  	if ( form_create.itemname.value == "" ) {
+			  	if ( trimStr(form_create.itemname.value) == "" ) {
 		  			form_create.feedback.value = "Please, fill the tracker short name.";
 		  			return false;
 				}
@@ -414,6 +420,7 @@ class ArtifactTypeHtml extends ArtifactType {
 					  	form_create.func.value = "create";
 			  		}
 			  		form_create.atid_chosen.value = form_create.atid_template.value;
+			  		form_create.group_id_chosen.value = form_create.group_id_template.value;
 				} else {
 				  	form_create.func.value = "create";
 				}
@@ -427,6 +434,7 @@ class ArtifactTypeHtml extends ArtifactType {
 					  	form_create.func.value = "create";
 			  		}
 			  		form_create.atid_chosen.value = form_create.codex_template.value;
+			  		form_create.group_id_chosen.value = 100;
 				} else {
 				  	form_create.func.value = "create";
 				}
@@ -434,8 +442,8 @@ class ArtifactTypeHtml extends ArtifactType {
 			  }
 
 			  function showGroupSelection() {
-			  	win=window.open("","group_id_selection","height=45,width=200,toolbar=no,location=no,resizable=yes,left=200,top=200");
-				win.location = "/tracker/group_selection.php?opener_form=form_create&opener_field=group_id_template";
+			  	win=window.open("","group_id_selection","height=145,width=270,toolbar=no,location=no,resizable=yes,left=200,top=200");
+				win.location = "/tracker/group_selection.php?opener_form=form_create&opener_field=group_id_template&filter=member";
 			  }
 
 			  function showTrackerSelection() {
@@ -455,22 +463,23 @@ class ArtifactTypeHtml extends ArtifactType {
 		  <input type="hidden" name="group_id" value="'.$group_id.'">
 		  <input type="hidden" name="func" value="docreate">
 		  <input type="hidden" name="atid_chosen" value="">
+		  <input type="hidden" name="group_id_chosen" value="">
 		  <input type="hidden" name="feedback" value="">
 		  <table width="100%" border="0" cellpadding="5">
 		    <tr> 
-		      <td width="21%"><b>Name</b>:</td>
+		      <td width="21%"><b>Name</b>: <font color="red">*</font></td>
 		      <td width="79%"> 
 		        <input type="text" name="name" value="'.$name.'">
 		      </td>
 		    </tr>
 		    <tr> 
-		      <td width="21%"><b>Description</b>:</td>
+		      <td width="21%"><b>Description</b>: <font color="red">*</font></td>
 		      <td width="79%"> 
 		        <textarea name="description" rows="3" cols="50">'.$description.'</textarea>
 		      </td>
 		    </tr>
 		    <tr> 
-		      <td width="21%"><b>Short name</b>:</td>
+		      <td width="21%"><b>Short name</b>: <font color="red">*</font></td>
 		      <td width="79%"> 
 		        <input type="text" name="itemname" value="'.$itemname.'">
 		      </td>
@@ -479,7 +488,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		echo '<p>Choose a creation method:</p>';
 		echo '<table>
 			  <tr valign="top">
-			     <td width="300"><li><b>From a CodeX template:</b></li></td>
+			     <td width="300"><li><b>From a predefined CodeX template:</b></li></td>
 			     <td colspan="2">';
 		echo $this->trackersSelectBox(100,"codex_template");
 		echo '	 &nbsp;<input type="button" name="CreateCodeXTemplate" value="Create" onClick="onSubmitCreateCodeXTemplate()"><br><br></td>
@@ -547,7 +556,7 @@ class ArtifactTypeHtml extends ArtifactType {
 			"\n<td>".$field->getLabelDisplayType().'</td>'.
 			"\n<td>".$field->getDescription().'</td>'.
 			"\n<td align =\"center\">".$rank.'</td>'.
-		    "\n<td align =\"center\"><a href=\"/tracker/admin/?func=field_delete&group_id=".$this->Group->getID()."&atid=".$this->getID()."&field_id=".$field->getID()."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('Delete this field and all its dependencies?')\"></a>";
+		    "\n<td align =\"center\"><a href=\"/tracker/admin/?func=field_delete&group_id=".$this->Group->getID()."&atid=".$this->getID()."&field_id=".$field->getID()."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('** CAUTION!! ** If you delete this field, you will lost ALL the associated data. Continue?')\"></a>";
 		
 			$html .= "<TR>";
 					    			
@@ -579,7 +588,7 @@ class ArtifactTypeHtml extends ArtifactType {
 			"\n<td>".$field->getLabelDisplayType().'</td>'.
 			"\n<td>".$field->getDescription().'</td>'.
 			"\n<td align =\"center\">".$rank.'</td>'.
-		    "\n<td align =\"center\"><a href=\"/tracker/admin/?func=field_delete&group_id=".$this->Group->getID()."&atid=".$this->getID()."&field_id=".$field->getID()."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('Delete this field and all its dependencies?')\"></a>";
+		    "\n<td align =\"center\"><a href=\"/tracker/admin/?func=field_delete&group_id=".$this->Group->getID()."&atid=".$this->getID()."&field_id=".$field->getID()."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('** CAUTION!! ** If you delete this field, you will lost ALL the associated data. Continue?')\"></a>";
 		
 			$html .= "<TR>";
 					    			
@@ -588,7 +597,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		
 		// Now print the HTML table
 		if ($iu == 0) {
-		    echo '<tr><td colspan="4"><center><b>---- No unsed field ----</b></center></tr>'.$html;  
+		    echo '<tr><td colspan="4"><center><b>---- NO UNUSED FIELD ----</b></center></tr>'.$html;  
 		} else {
 		    echo '<tr><td colspan="4"><center><b>---- UNUSED FIELDS ----</b></center></tr>'.$html;  
 		}
@@ -627,46 +636,42 @@ class ArtifactTypeHtml extends ArtifactType {
 
 		if ( $func == "field_create" ) {
 			echo '<h3>Create a new field</h3>';
+			echo '
+			  <form name="form_create" method="/tracker/admin/index.php">
+			  <input type="hidden" name="func" value="'.$func.'">
+			  <input type="hidden" name="group_id" value="'.$this->Group->getID().'">
+			  <input type="hidden" name="atid" value="'.$this->getID().'">
+			  <input type="hidden" name="field_id" value="'.$this->getNextFieldID().'">
+			  <input type="hidden" name="field_name" value="'.$this->buildFieldName($this->getNextFieldID()).'">';
 		} else {
 			echo '<h3>Update a field</h3>';
+			echo '
+			  <form name="form_create" method="/tracker/admin/index.php">
+			  <input type="hidden" name="func" value="'.$func.'">
+			  <input type="hidden" name="group_id" value="'.$this->Group->getID().'">
+			  <input type="hidden" name="atid" value="'.$this->getID().'">
+			  <input type="hidden" name="field_id" value="'.$field_id.'">
+			  <input type="hidden" name="field_name" value="'.$field_name.'">';
 		}
 		
 		echo '
-		  <form name="form_create" method="/tracker/admin/index.php">
-		  <input type="hidden" name="func" value="'.$func.'">
-		  <input type="hidden" name="group_id" value="'.$this->Group->getID().'">
-		  <input type="hidden" name="atid" value="'.$this->getID().'">
 		  <b>Field identification and description:</b><br>
 		  <table width="100%" border="0" cellpadding="5">
 		    <tr> 
-		      <td>Field ID: <font color="red">*</font><br>';
+		      <td>Field Label: <font color="red">*</font> ';
 		      
-		if ( $field_id ) {
-			if ( $func == "field_create" ) {
-				echo '<input type="text" name="field_id" size="3" maxlength="3" value="'.$field_id.'">';
-			} else {
-				echo '<input type="hidden" name="field_id" value="'.$field_id.'">'.$field_id;
-			}
+		if ( $label ) {
+			echo '<input type="text" name="label" size="30" maxlength="40" value="'.$label.'">';
 		} else {
-			echo '<input type="text" name="field_id" size="3" maxlength="3">';
+			echo '<input type="text" name="label" size="30" maxlength="40">';
 		}
 		
-		echo '		
+		echo '			
 		      </td>
-		      <td>Field Name: <font color="red">*</font><br>';
-		
-		if ( $field_name ) {
-			echo '<input type="text" name="field_name" value="'.$field_name.'">';
-		} else {
-			echo '<input type="text" name="field_name">';
-		}
-		
-		echo '
-		      </td>
-		      <td colspan="2" rowspan="2" valign="top"> 
+		      <td> 
 		        <table width="100%" border="0">
 		          <tr> 
-		            <td valign="top">Description: </td>
+		            <td valign="middle">Description: </td>
 		            <td>';
 		            
 		if ( $description ) {
@@ -681,24 +686,11 @@ class ArtifactTypeHtml extends ArtifactType {
 		        </table>
 		      </td>
 		    </tr>
-		    <tr> 
-		      <td colspan="2"> Label: <font color="red">*</font><br>';
-		      
-		if ( $label ) {
-			echo '<input type="text" name="label" size="30" maxlength="40" value="'.$label.'">';
-		} else {
-			echo '<input type="text" name="label" size="30" maxlength="40">';
-		}
-		
-		echo '			
-		        <br>
-		         </td>
-		    </tr>
 		  </table>
 		  <b>Field type:</b><br>
 		  <table width="100%" border="0" cellpadding="5">
 		    <tr> 
-		      <td width="30%">Data Type: <font color="red">*</font><br>
+		      <td width="30%">Data Type: <font color="red">*</font>&nbsp;
 		        <select name="data_type">';
 		
 		if ( $data_type ) {
@@ -733,7 +725,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		echo '			
 		        </select>
 		      </td>
-		      <td width="70%">Default Value: <br>';
+		      <td width="70%">Default Value:&nbsp;';
 		      
 		if ( $default_value ) {
 			echo '<input type="text" name="default_value" value="'.$default_value.'">';
@@ -741,14 +733,14 @@ class ArtifactTypeHtml extends ArtifactType {
 			echo '<input type="text" name="default_value">';
 		}
 		
-		echo '	
+		echo '<br><br>
 		      </td>
 		    </tr>
 		  </table>
 		  <b>Display informations:</b><br>
 		  <table width="100%" border="0" cellpadding="5" cellspacing="0">
 		    <tr> 
-		      <td width="30%">Display Type: <font color="red">*</font><br>
+		      <td width="30%">Display Type: <font color="red">*</font>&nbsp;
 		        <select name="display_type">';
 		        
 		if ( $display_type ) {
@@ -789,7 +781,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		echo '
 		        </select>
 		      </td>
-		      <td width="70%">Display Size: <br>';
+		      <td width="70%">Display Size:&nbsp;';
 		      
 		if ( $display_size ) {
 			echo '<input type="text" name="display_size" size="5" maxlength="5" value="'.$display_size.'">';
@@ -801,7 +793,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		      </td>
 		    </tr>
 		    <tr> 
-		      <td width="30%">Rank on screen:<br>';
+		      <td width="30%">Rank on screen:&nbsp;';
 		      
 		if ( $rank_on_screen ) {
 	        echo '<input type="text" name="rank_on_screen" size="5" maxlength="5" value="'.$rank_on_screen.'">';
@@ -859,17 +851,9 @@ class ArtifactTypeHtml extends ArtifactType {
 		
 		echo '
 		      </td>
-		      <td>Special: ';
+		      <td>';
 		      
-		if ( $special ) {
-			echo '<input type="checkbox" name="special" value="1" checked>';
-		} else {
-			echo '<input type="checkbox" name="special" value="1">';
-		}
-		
-
 		if ( $show_use ) {
-			echo '<br>';
 			if ( $use_it == 1 ) {
 				echo 'Use this field: <input type="checkbox" name="use_it" value="1" checked>';
 			} else {
@@ -877,6 +861,12 @@ class ArtifactTypeHtml extends ArtifactType {
 			}
 		} else {
 			echo '<input type="hidden" name="use_it" value="1">';
+		}
+
+		if ( $special ) {
+			echo '<input type="hidden" name="special" value="1">';
+		} else {
+			echo '<input type="hidden" name="special" value="0">';
 		}
 		
 		echo '
@@ -925,6 +915,11 @@ class ArtifactTypeHtml extends ArtifactType {
 		while (list($field_name,$field) = each($fields)) {
 		
 			if ( !$field->isSelectBox() && !$field->isMultiSelectBox() ) {
+				continue;
+			}
+			
+			// Special case for submitted_by field
+			if ( $field->getName() == "submitted_by" ) {
 				continue;
 			}
 			
@@ -1039,24 +1034,22 @@ class ArtifactTypeHtml extends ArtifactType {
 	      <INPUT TYPE="HIDDEN" NAME="func" VALUE="'.$func.'">
 	      <INPUT TYPE="HIDDEN" NAME="field_id" VALUE="'.$field_id.'">
 	      <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$this->Group->getID().'">
-	      <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$this->getID().'">
-		  <table width="100%" border="0" cellpadding="5" cellspacing="0">
-		    <tr> 
-		      <td width="10%">Value ID: <font color="red">*</font><br>';
-	      
+	      <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$this->getID().'">';
+
 		if ( $func == "value_create" ) {
 		    if ( $value_id ) {
-		      	echo '<INPUT TYPE="TEXT" NAME="value_id" VALUE="'.$value_id.'" SIZE="5" MAXLENGTH="10">';
+		      	echo '<INPUT TYPE="hidden" NAME="value_id" VALUE="'.$value_id.'">';
 		    } else {
-		      	echo '<INPUT TYPE="TEXT" NAME="value_id" VALUE="" SIZE="5" MAXLENGTH="10">';
+		      	echo '<INPUT TYPE="hidden" NAME="value_id" VALUE="'.$this->getNextValueID($field_id).'">';
 		    }
 		} else {
-	      	echo '<INPUT TYPE="hidden" NAME="value_id" VALUE="'.$value_id.'">'.$value_id;
+	      	echo '<INPUT TYPE="hidden" NAME="value_id" VALUE="'.$value_id.'">';
 		}
-		
-	    echo '
-	    	  </td>
-		      <td width="35%">Value: <font color="red">*</font><br>';
+
+	    echo '  
+		  <table width="100%" border="0" cellpadding="5" cellspacing="0">
+		    <tr> 
+		      <td width="45%">Value: <font color="red">*</font>&nbsp;';
 
 	    if ( $value ) {
 	      	echo '<INPUT TYPE="TEXT" NAME="value" VALUE="'.$value.'" SIZE="30" MAXLENGTH="60">';
@@ -1066,7 +1059,7 @@ class ArtifactTypeHtml extends ArtifactType {
 	    
 	    echo '
 	    	  </td>
-		      <td width="25%">Rank:<br>';
+		      <td width="25%">Rank:&nbsp;';
 	      
 	    if ( $order_id ) {
 	    	echo '<INPUT TYPE="TEXT" NAME="order_id" VALUE="'.$order_id.'" SIZE="6" MAXLENGTH="6">';
@@ -1078,7 +1071,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		      <td width="30%">';
 	       
 		if ( $func == "value_update" ) {
-			echo 'Status:<br>
+			echo 'Status:&nbsp;
 			<select name="status">';
 			if ( $status ) {
 				$selected = "";
@@ -1218,7 +1211,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		
 		// Now print the HTML table
 		if ($iu == 0) {
-		    echo '<tr><td colspan="4"><center><b>---- No hidden values ----</b></center></tr>'.$html;  
+		    echo '<tr><td colspan="4"><center><b>---- NO HIDDEN VALUES ----</b></center></tr>'.$html;  
 		} else {
 		    echo '<tr><td colspan="4"><center><b>---- HIDDEN VALUES ----</b></center></tr>'.$html;  
 		}
@@ -1256,11 +1249,11 @@ class ArtifactTypeHtml extends ArtifactType {
 		    $arr_notif[$arr['role_label']][$arr['event_label']] = $arr['notify'];
 		}
 		
-		
-		echo '<H2>Email Notification Settings</h2>';
 		$group = $this->getGroup();
 		$group_artifact_id = $this->getID();
 		$group_id = $group->getGroupId();
+
+		echo '<H2>Tracker \'<a href="/tracker?group_id='.$group_id.'&atid='.$group_artifact_id.'">'.$this->getName().'</a>\' - Email Notification Settings</h2>';
 		// Build Wachees UI
 		$res = $this->getWatchees($user_id);
 		$arr_watchees = array();
@@ -1276,7 +1269,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		<INPUT type="hidden" name="group_id" value="'.$group_id.'">';
 		
 		echo '<h3><a name="GlobalEmailNotification"></a>Global Email Notification '.
-		help_button('BTSAdministration.html#ArtifactGlobalEmailNotification').'</h3>';
+		help_button('HELP_FIXME.html#HELP_FIXME').'</h3>';
 		
 		if ($this->userIsAdmin()) {
 		    echo '
@@ -1303,7 +1296,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		    // To watch other users you must have at least tech rights on the tracker
 		    echo'
 		<h4>Users To Watch '.
-		help_button('BTSAdministration.html#ArtifactWatchers').'</h4>
+		help_button('HELP_FIXME.html#HELP_FIXME').'</h4>
 		<P>If you want to be the backup of someone when they\'re away from the office, or if you need to do the QA to all their artifacts. '.$GLOBALS['sys_name'].' can send their email notification to you also. List the login name of any user you wish to watch, separated by commas.</b>
 		<p><INPUT TYPE="TEXT" NAME="watchees" VALUE="'.$watchees.'" SIZE="55" MAXLENGTH="255"><br></p>
 		';
@@ -1327,7 +1320,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		// Build Role/Event table 
 		// Rk: Can't use html_build_list_table_top because of the specific layout
 		echo '<h4>Event/Role Specific Settings '.
-		help_button('BTSAdministration.html#ArtifactEventRoleBasedEmailNotification').'</h4>
+		help_button('HELP_FIXME.html#HELP_FIXME').'</h4>
 		              <P>You can tune your notification settings and decide what artifact changes you
 		want to be aware of depending on your role. <p>
 		<b><u>Note</u></b>: Notification of *new* artifact submission to people other than the assignee

@@ -421,7 +421,7 @@ class ArtifactReportHtml extends ArtifactReport {
 		          <INPUT TYPE="HIDDEN" NAME="advsrch" VALUE="'.$advsrch.'">
 		          <INPUT TYPE="HIDDEN" NAME="msort" VALUE="'.$msort.'">
 		          <TR><TD colspan="'.$fields_per_line.'" nowrap>'.
-		     ($pv ? '<h3>Selected '.$ath->getItemName().'</h3>':'<h3>Browse '.$ath->getItemName());
+		     ($pv ? '<h3>Selected '.$ath->getCapsItemName().'</h3>':'<h3>Browse '.$ath->getCapsItemName());
 		
 		//Show the list of available artifact reports
 		if (!$pv) {
@@ -522,7 +522,7 @@ class ArtifactReportHtml extends ArtifactReport {
 		
 		} else {
 		
-		    $html_result .= "<H2>No Matching ".$ath->getItemName()." Found for ".group_getname($group_id)." or filters too restrictive</H2>";
+		    $html_result .= "<H2>No Matching ".$ath->getCapsItemName()." Found for ".group_getname($group_id)." or filters too restrictive</H2>";
 		    $html_result .= db_error();
 		
 		}
@@ -532,6 +532,23 @@ class ArtifactReportHtml extends ArtifactReport {
 		//return $html_result;
 	}
 
+   	/**
+	 * Return a label for the scope code
+	 *
+	 * param scope: the scope code
+	 *
+	 * @return string
+	 */
+	function getScopeLabel($scope) {
+	    switch ( $scope ) {
+	    case 'P':
+	    	return 'Project';
+	    case 'I':
+	    	return 'Personal';
+	    case 'S':
+	    	return 'System';
+	    }
+	}		    
 
    	/**
 	 * Display the report list
@@ -543,11 +560,15 @@ class ArtifactReportHtml extends ArtifactReport {
 	function showAvailableReports($reports) {
 		global $ath;
 		
+		$g = $ath->getGroup();
+		$group_id = $g->getID();
+		$atid = $ath->getID();
+
 		$ath->adminHeader(array ('title'=>'Artifact Administration - Tracker Report Management',
 				    'help' => 'HELP_FIXME.html#HELP_FIXME'));
 		$trackerName = $ath->getName();
 	
-		 echo '<H2>Reports administration for '.$trackerName.' tracker</H2>';
+		echo '<H2>Tracker \'<a href="/tracker?group_id='.$group_id.'&atid='.$atid.'">'.$ath->getName().'</a>\'  - Reports Administration</H2>';
 		
 	   	 if ($reports) {
 		// Loop through the list of all artifact report
@@ -561,8 +582,6 @@ class ArtifactReportHtml extends ArtifactReport {
 		echo '<p>(Click to modify)';
 		echo html_build_list_table_top ($title_arr);
 		$i=0;
-		$g = $ath->getGroup();
-		$group_id = $g->getID();
 		while ($arr = db_fetch_array($reports)) {
 		    
 		    echo '<TR class="'. util_get_alt_row_color($i) .'"><TD>';
@@ -573,10 +592,9 @@ class ArtifactReportHtml extends ArtifactReport {
 		    
 		    echo "</td>\n<td>".$arr['name'].'</td>'.
 			"\n<td>".$arr['description'].'</td>'.
-			"\n<td align=\"center\">".(($arr['scope']=='P') ? 'Project':'Personal').'</td>'.
+			"\n<td align=\"center\">".$this->getScopeLabel($arr['scope']).'</td>'.
 			"\n<td align=\"center\">";
 		    
-			$atid = $ath->getID();
 			$name = $arr['name'];
 	
 			echo '<A HREF="/tracker/admin/?func=report&group_id='.$group_id.

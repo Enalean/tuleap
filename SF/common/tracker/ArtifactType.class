@@ -141,27 +141,34 @@ class ArtifactType extends Error {
 	/**
 	 *	create - use this to create a new ArtifactType in the database.
 	 *
+	 *	@param	group_id_template
 	 *	@param	atid_template
 	 *	@param	name
 	 *	@param	description
 	 *	@param	itemname
 	 *	@return id on success, false on failure.
 	 */
-	function create($group_id,$atid_template,$name,$description,$itemname) {
-		global $feedback,$atf,$group;
+	function create($group_id,$group_id_template,$atid_template,$name,$description,$itemname) {
+		global $feedback,$atf;
 
 		if (!$this->userIsAdmin()) {
 			$this->setError('ArtifactType: Permission Denied');
 			return false;
 		}
 
-		if (!$name || !$description || !$itemname) {
-			$this->setError('ArtifactType: Name, Description, and Short Name are required');
+		if (!$name || !$description || !$itemname || trim($name) == "" || trim($description) == "" || trim($itemname) == ""  ) {
+			$this->setError('ArtifactType: Name, Description, and Short Name are required and not empty.');
 			return false;
 		}
 
+		//	get the template Group object
+		$group = group_get_object($group_id_template);
+		if (!$group || !is_object($group) || $group->isError()) {
+			$this->setError('ArtifactType: Invalid group_id_template');
+		}
+
 		// We retrieve public and anonymous submission from the template
-		$at_template = new ArtifactTypeHtml($group,$atid_template);
+		$at_template = new ArtifactType($group,$atid_template);
 		
 		// First, we create a new ArtifactType into artifact_group_list
 		
@@ -179,7 +186,7 @@ class ArtifactType extends Error {
 			'". addslashes($description) ."',
 			'". addslashes($itemname) ."',
 			".$at_template->isPublic().",".$at_template->allowsAnon().")";
-		echo $sql;
+		//echo $sql;
 		$res = db_query($sql);
 		if (!$res || db_affected_rows($res) <= 0) {
 			$this->setError('ArtifactType: '.db_error());
@@ -374,6 +381,15 @@ class ArtifactType extends Error {
 	 */
 	function getItemName() {
 		return $this->data_array['item_name'];
+	}
+
+	/**
+	 *	  getCapsItemName - the item name of this ArtifactType with the first letter in caps.
+	 *
+	 *	  @return	string	name.
+	 */
+	function getCapsItemName() {
+		return strtoupper(substr($this->data_array['item_name'],0,1)).substr($this->data_array['item_name'],1);
 	}
 
 	/**
@@ -661,8 +677,8 @@ class ArtifactType extends Error {
 			return false;
 		}
 		
-		if (!$name || !$description || !$itemname ) {
-			$this->setError('ArtifactType: Name, Description, and Short Name are required');
+		if (!$name || !$description || !$itemname || trim($name) == "" || trim($description) == "" || trim($itemname) == ""  ) {
+			$this->setError('ArtifactType: Name, Description, and Short Name are required and not empty');
 			return false;
 		}
 		
@@ -1101,7 +1117,52 @@ class ArtifactType extends Error {
 	    
 	}
 
+	/**
+	 * Retrieve the next free field id (computed by max(id)+1)
+	 *
+	 * @return int
+	 */
+	function getNextFieldID() {
+		$sql = "SELECT max(field_id)+1 FROM artifact_field WHERE group_artifact_id=".$this->getID();
+			   
+		$result = db_query($sql);
+	    if ($result && db_numrows($result) > 0) {
+	    	return db_result($result, 0, 0);
+	    } else {
+	    	return -1;
+	    }
+	}
 
+	/**
+	 * Return a field name built using an id
+	 *
+	 * @param id: the id used to build the field name
+	 *
+	 * @return array
+	 */
+	function buildFieldName($id) {
+		return "field_".$id;
+	}
+
+	/**
+	 * Retrieve the next free value id (computed by max(id)+1)
+	 *
+	 * @param field_id: the field id
+	 *
+	 * @return int
+	 */
+	function getNextValueID($field_id) {
+		$sql = "SELECT max(value_id)+1 FROM artifact_field_value_list WHERE ".
+			   "field_id=".$field_id." AND group_artifact_id=".$this->getID()." ".
+			   "GROUP BY field_id,group_artifact_id";
+			   
+		$result = db_query($sql);
+	    if ($result && db_numrows($result) > 0) {
+	    	return db_result($result, 0, 0);
+	    } else {
+	    	return -1;
+	    }
+	}
 }
 
 ?>
