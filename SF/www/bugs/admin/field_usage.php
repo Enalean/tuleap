@@ -104,7 +104,12 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 	     echo '<li>Number of columns: ';
 	     echo '<INPUT TYPE="TEXT" NAME="n2" VALUE="'.$cols.
 		 '" SIZE="3" MAXLENGTH="3"></ul>';
-         }
+         }else if ($display_type == 'DF') {
+	     // Date fields have a fixed size that cannot be changed
+	     list($size,$maxlength) = bug_data_get_display_size($field);
+	     echo '<INPUT TYPE="hidden" NAME="n1" VALUE="'.$size.">\n";
+	     echo '<INPUT TYPE="hidden" NAME="n2" VALUE="'.$maxlength.">\n";
+	 }
 	 
 	 if (bug_data_is_text_field($field) || bug_data_is_text_area($field) ||
 	     bug_data_is_date_field($field)) {
