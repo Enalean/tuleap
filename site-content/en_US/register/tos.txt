@@ -51,15 +51,17 @@ described above, or immediately in the event of technical difficulties.
 such modification, suspension or discontinuance except as expressly provided
 herein.
 </p>
-
+<p>
+<?php print $GLOBALS['sys_name']; ?> is a website owned and operated by Xerox for
+the purpose of fostering the cross-organizational software development as well as content and source code sharing under
+ the terms of the <b><u><a href="/docman/display_doc.php?docid=16&group_id=1" target="_blank">Xerox Code eXchange Policy</a></b></u>.  Registering your project on CodeX implies that you fully understand this corporate policy and take the commitment to comply with it.
 <p>
 <B>2. DESCRIPTION OF SERVICE</B> 
 </p>
 
 <p>
-<?php print $GLOBALS['sys_name']; ?> is a website owned and operated by Xerox for
-the purpose of fostering the cross-organizational software development as well as content and source code sharing under
- the terms of the Xerox Code eXchange Policy.  <?php print $GLOBALS['sys_name']; ?> currently offers users access to a
+<P>
+<?php print $GLOBALS['sys_name']; ?> currently offers users access to a
 rich collection of on-line resources for Xerox internal software  development
 and content creation, including various  communications tools, source code
 control and project management tools, online forums, shopping services,
@@ -87,7 +89,7 @@ provided herein.
 Each user will receive a password and account designation upon completing
 the Service's registration process and is wholly responsible for maintaining
 the confidentiality thereof and wholly liable for all activities occurring
-thereunder.    <?php print $GLOBALS['sys_default_domain']; ?> cannot and will not be liable for any loss or
+thereunder.    <?php print $GLOBALS['sys_name']; ?> cannot and will not be liable for any loss or
 damage arising from a user's failure to comply with this Section, including
 any loss or damage arising from any user's failure to (a) immediately notify
 <?php print $GLOBALS['sys_name']; ?> of any unauthorized use of his or her password or account or any
@@ -106,8 +108,8 @@ video, messages or any other materials whatsoever (collectively, "Content"),
 whether publicly posted or privately transmitted, are the sole
 responsibility of the person from which such Content originated. This means
 that the user, and not the <?php print $GLOBALS['sys_name']; ?> team, is entirely responsible for all Content
-that he or she uploads, posts, emails or otherwise transmits via <?php print $GLOBALS['sys_default_domain']; ?>
-or any Service. No user shall transmit Content or otherwise conduct or
+that he or she uploads, posts, emails or otherwise transmits via <?php print $GLOBALS['sys_name']; ?>
+ or any Service. No user shall transmit Content or otherwise conduct or
 participate in any activities on <?php print $GLOBALS['sys_name']; ?> and/or any Service which, in
 the opinion of <?php print $GLOBALS['sys_name']; ?> counsel, are in contradiction with Xerox internal policies.
 </p>
@@ -118,11 +120,7 @@ the right to refuse or delete any Content of which it becomes aware which it
 reasonably deems not to fulfill the Purpose. In addition, <?php print $GLOBALS['sys_name']; ?> shall
 have the right (but not the obligation) in its sole discretion to refuse or
 delete any Content which it reasonably considers to violate the TOS or be
-otherwise illegal.  <!-- LJ <?php print $GLOBALS['sys_name']; ?>, in its sole and absolute discretion, may
-preserve Content and may also disclose Content if required to do so by law
-or judicial or governmental mandate or as reasonably determined necessary by
-us to protect the rights, property or personal safety of <?php print $GLOBALS['sys_name']; ?>, its
-users and the public -->. <?php print $GLOBALS['sys_name']; ?> does not control the Content posted via
+otherwise illegal. <?php print $GLOBALS['sys_name']; ?> does not control the Content posted via
 the Service and, as such, does not guarantee the accuracy, integrity or
 quality of such Content. Under no circumstances will <?php print $GLOBALS['sys_name']; ?> be liable
 in any way for any Content, including, but not limited to, liability for any
@@ -139,7 +137,7 @@ transmitted via <?php print $GLOBALS['sys_name']; ?> or any Service thereon.
 <p>
 <?php print $GLOBALS['sys_name']; ?> may establish general practices and limits concerning use of the
 Services, as defined by posted Service-specific Rules.  While <?php print $GLOBALS['sys_name']; ?>
-will use reasonable efforts to <a href="/docman/display_doc.php?docid=17&group_id=1#whyhost-backup" target="side_window">backup</a> site data and make such data
+ will use reasonable efforts to <a href="/docman/display_doc.php?docid=17&group_id=1#whyhost-backup" target="side_window">backup</a> site data and make such data
 available in the event of loss or deletion, <?php print $GLOBALS['sys_name']; ?> has no
 responsibility or liability for the deletion or failure to store any
 messages and other communications or other Content maintained or transmitted
@@ -160,7 +158,7 @@ limited to, the following:  1.) violation of these TOS;  2.) abuse of site
 resources or attempt to gain unauthorized entry to the site or site
 resources; 3.) use of Service in a manner inconsistent with the Purpose; 4.)
 a user's request for such termination; and 5.) requirement of applicable
-Xerox policy.
+ Xerox policy (e.g. employee leaving the company).
 </p>
 
 <p>
@@ -168,7 +166,7 @@ Termination of any user's access to <?php print $GLOBALS['sys_name']; ?> or any 
 hereunder may be effected without notice and, on such termination,
 <?php print $GLOBALS['sys_name']; ?> may immediately deactivate or delete user's account and/or bar
 any further access to such files, that Service or <?php print $GLOBALS['sys_name']; ?>.  <?php print $GLOBALS['sys_name']; ?>
-shall not be liable to any user or other third party for any termination of
+ shall not be liable to any user or other third party for any termination of
 that user's access or account hereunder.
 </p>
 
