@@ -181,7 +181,7 @@ function show_newest_releases() {
 	. "AND frs_package.group_id = groups.group_id "
 	. "AND frs_release.status_id=1 ) "
 	. "GROUP BY frs_release.release_id "
-	. "ORDER BY frs_release.release_date";
+	. "ORDER BY frs_release.release_date DESC";
 
     $res_newrel = db_query($query);
 
