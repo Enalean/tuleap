@@ -81,6 +81,12 @@ function group_get_object_by_name($groupname) {
 	return group_get_object(db_result($res,0,'group_id'),$res);
 }
 
+function group_getid_by_name($groupname) {
+	$res = db_query("SELECT group_id FROM groups WHERE unix_group_name='$groupname'");
+	if (db_numrows($res) == 0) return false;
+	else return db_result($res,0,'group_id');
+}
+
 class Group extends Error {
 
 	//associative array of data from db

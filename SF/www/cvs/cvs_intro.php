@@ -50,13 +50,12 @@ if (db_numrows($res_cvshist) < 1) {
 }
 
 // CVS Browsing Box
-$uri = session_make_url('/cgi-bin/viewcvs.cgi/?root='.$row_grp['unix_group_name'].'&roottype=cvs');
 print '<HR><B>Browse the CVS Tree</B>
 <P>Browsing the CVS tree gives you a great view into the current status
 of this project\'s code. You may also view the complete histories of any
 file in the repository.
 <UL>
-<LI><A href="'.$uri.'"><B>Browse CVS Tree</B></A></LI>';
+<LI><A href="/cvs/viewcvs.php/?root='.$row_grp['unix_group_name'].'&roottype=cvs"><B>Browse CVS Tree</B></A></LI>';
 
 print $HTML->box1_bottom();
 

@@ -46,8 +46,7 @@ function commits_header($params) {
 	$sys_cvs_host = $GLOBALS['sys_cvs_host'];
 
 	if ($project->isPublic() || user_isloggedin()) {
-	    $uri = session_make_url('/cgi-bin/viewcvs.cgi/?root='.$project->getUnixName().'&roottype=cvs');
-	  echo ' | <A HREF="'.$uri.'">Browse CVS Tree</A>';
+	  echo ' | <A HREF="/cvs/viewcvs.php/?root='.$project->getUnixName().'&roottype=cvs">Browse CVS Tree</A>';
 	}
 	if (user_isloggedin()) {
 	  echo ' | <A HREF="/cvs/?func=browse&group_id='.$group_id.'&set=my">My CVS Commits</A>';
@@ -315,20 +314,19 @@ function makeCvsLink($group_id, $filename='', $text, $rev='', $displayfunc='') {
 
   $view_str=$displayfunc;
   if ($rev) {
-    $view_str=$view_str.'&rev='.$rev;
+    $view_str.='&rev='.$rev;
   }
 
   $row_grp = db_fetch_array($res_grp);
   $group_name = $row_grp['unix_group_name'];
-  return '<A href="'.session_make_url('/cgi-bin/viewcvs.cgi/'.$filename.'?root='.$group_name.'&roottype=cvs'.$view_str).'"<B>'.$text."</B></A>";
+  return '<A HREF="/cvs/viewcvs.php/'.$filename.'?root='.$group_name.'&roottype=cvs'.$view_str.'"><B>'.$text."</B></A>";
 }
 
 function makeCvsDirLink($group_id, $filename='', $text, $dir='') {
   $res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
   $row_grp = db_fetch_array($res_grp);
   $group_name = $row_grp['unix_group_name'];
-
-  return '<A href="'.session_make_url('/cgi-bin/viewcvs.cgi/'.$dir.'?root='.$group_name.'&roottype=cvs').'"<B>'.$text.'</B></A>';
+  return '<A HREF="/cvs/viewcvs.php/'.$dir.'?root='.$group_name.'&roottype=cvs"><B>'.$text.'</B></A>';
 
 }
 
@@ -558,5 +556,24 @@ function show_commit_details ($result) {
 	echo '</TD></TR></TABLE>';
 }
 
+function check_cvs_access($username, $group_name, $cvspath) {
+ 
+  $group_id = group_getid_by_name($group_name);
 
+  // if the file path exists as such then it's a directory
+  // else add the ,v extension because it's a file
+  $path = "/cvsroot/".$group_name.'/'.$cvspath;
+  if (!is_dir($path)) {
+    $path = $path.',v';
+  }
+  $mode = fileperms($path);
+
+  // A directory that is not world readable can only be viewed
+  // through viewcvs if the user is a project member
+  if ($group_id && ($mode & 0x0004) == 0 && !user_is_member($group_id, '0')) {
+    return false;
+  } else {
+    return true;
+  }
+}
 ?>

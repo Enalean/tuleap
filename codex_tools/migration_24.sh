@@ -1504,4 +1504,9 @@ When migrating a 2.2 site to 2.4 here are the things that must be done:
   * homepage/staff.txt, homepage/thanks.txt, homepage/welcome_intro.txt: see homepage/homepage.tab
   * my/intro.txt: see my/my.tab
 
+- copy new viewcvs RPM viewcvs-1.0-0.20040628.2codex.noarch.rpm 
+  (on http://codex.codex.xerox.com/packages-rhel3/RPMS_CodeX/viewcvs/viewcvs-1.0-dev/ )
+  * remove old rpm (rpm -ev viewcvs)
+  * install new rpm (rpm -ivh viewcvs-1.0-0.20040628.2codex.noarch.rpm)
+  * change httpd.conf (add lines from SF/etc/httpd.conf.dist related to rewrite rules)
 EOF

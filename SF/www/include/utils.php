@@ -889,5 +889,50 @@ function util_get_group_from_commit_id($cid) {
   return db_result($res, 0, 'group_id');
 }    
 
+/**
+ * getStringFromServer - get a string from Server environment
+ *
+ * @param string $key key of the wanted value
+ * @param string $defaultValue if we can't find the wanted value, it returns the default value
+ * @return string the value
+ */
+function getStringFromServer($key) {
+        $serverArray = & _getServerArray();
+        if(isset($serverArray[$key])) {
+                return $serverArray[$key];
+        }
+        else {
+                return '';
+        }
+}
+
+/**
+ * _getServerArray - wrapper to get the SERVER array
+ *
+ * @return array the SERVER array
+ */
+function & _getServerArray() {
+        return _getPredefinedArray('_SERVER', 'HTTP_SERVER_VARS');
+}
+
+/**
+ * _getPredefinedArray - get one of the predefined array (GET, POST, COOKIE...)
+ *
+ * @param string $superGlobalName name of the super global array (_POST, _GET)
+ * @param string $oldName name of the old array (HTTP_POST_VARS, HTTP_GET_VARS) for older php versions
+ * @return array a predefined array
+ */
+function & _getPredefinedArray($superGlobalName, $oldName) {
+        if(isset($$superGlobalName)) {
+                $array = & $$superGlobalName;
+        }
+        elseif(isset($GLOBALS[$oldName])) {
+                $array = & $GLOBALS[$oldName];
+        }
+        else {
+                $array = array();
+        }
+        return $array;
+}
 
 ?>

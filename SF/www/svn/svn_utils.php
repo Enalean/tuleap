@@ -30,7 +30,7 @@ function svn_header($params) {
 	echo '<P><B><A HREF="/svn/?func=info&group_id='.$group_id.'">Subversion Info</A>';
 
 	if ($project->isPublic() || user_isloggedin()) {
-	  echo ' | <A HREF="/cgi-bin/viewcvs.cgi/?roottype=svn&root='.$project->getUnixName().'">Browse SVN Tree</A>';
+	  echo ' | <A HREF="/svn/viewcvs.php/?roottype=svn&root='.$project->getUnixName().'">Browse SVN Tree</A>';
 	}
 	if (user_isloggedin()) {
 	  echo ' | <A HREF="/svn/?func=browse&group_id='.$group_id.'&set=my">My SVN Commits</A>';
@@ -229,7 +229,7 @@ function svn_utils_show_revision_list ($result,$offset,$total_rows,$set='any', $
 }
 
 function svn_utils_make_viewlink($group_name, $filename, $text, $view_params) {
-    return '<A href="/cgi-bin/viewcvs.cgi/'.$filename.'?root='.$group_name.'&roottype=svn'.$view_params.'"><B>'.$text.'</B></A>';
+    return '<A href="/svn/viewcvs.php/'.$filename.'?root='.$group_name.'&roottype=svn'.$view_params.'"><B>'.$text.'</B></A>';
 }
 
 
@@ -490,5 +490,125 @@ function svn_utils_write_svn_access_file($gname, $contents) {
 function svn_utils_svn_repo_exists($gname) {
     return is_dir("/svnroot/$gname");
 }
+
+
+$SVNACCESS = "None";
+$SVNGROUPS = "None";
+
+function svn_utils_parse_access_file($gname) {
+  global $SVNACCESS, $SVNGROUPS;
+  $filename = "/svnroot/$gname/.SVNAccessFile";
+  $SVNACCESS = array();
+  $SVNGROUPS = array();
+
+
+  $f = fopen($filename, "rb");
+  if ($f === false) {
+    exit_error("Can't open $filename: I/O error");
+  } else {
+    $path_pat    = '/^\s*\[(.*)\]/'; // assume no repo name 'repo:'
+    $perm_pat    = '/^\s*([^ ]*)\s*=\s*(.*)$/';
+    $group_pat   = '/^\s*([^ ]*)\s*=\s*(.*)$/';
+    $empty_pat   = '/^\s*$/';
+    $comment_pat = '/^\s*#/';
+
+    $ST_START = 0;
+    $ST_GROUP = 1;
+    $ST_PATH = 2;
+
+    $state = $ST_START;
+
+    $content = fread($f,filesize($filename));
+    $separator = "\n\t\r\0\x0B";
+    $line = strtok($content,$separator);
+    while ($line) {
+      //echo $line."<br>\n";
+      if (preg_match($comment_pat, $line) || preg_match($empty_pat,$line)) {
+        $line = strtok($separator);
+        continue;
+      }
+      $m = preg_match($path_pat,$line,$matches);
+      if ($m) {
+        $path = $matches[1];
+        if ($path == "groups") {
+          $state = $ST_GROUP;
+        } else {
+          $state = $ST_PATH;
+        }
+      }
+
+      if ($state == $ST_GROUP) {
+        $m = preg_match($group_pat,$line,$matches);
+        if ($m) {
+          $group = $matches[1];
+          $users = $matches[2];
+          $SVNGROUPS[$group] = split(",", str_replace(' ','',$users));
+        }
+      } else if ($state == $ST_PATH) {
+        $m = preg_match($perm_pat, $line, $matches);
+        if ($m) {
+          $who = $matches[1];
+          $perm = $matches[2];
+
+
+          if (strpos($who,'@') === 0) {
+            if (array_key_exists(substr($who,1),$SVNGROUPS)) {
+              reset($SVNGROUPS[substr($who,1)]); 
+	      while (list(,$user) = each($SVNGROUPS[substr($who,1)])) {
+		if (array_key_exists($user,$SVNACCESS) === false) $SVNACCESS[$user] = array();
+                $SVNACCESS[$user][$path] = $perm;
+                //echo "SVNACCESS[$user][$path] = $perm <br>\n";
+              }
+            }
+          } else {
+            if (array_key_exists($who,$SVNACCESS) === false) $SVNACCESS[$who] = array();
+            $SVNACCESS[$who][$path] = $perm;
+            //echo "SVNACCESS[$who][$path] = $perm <br>\n";
+          }
+        }
+      }
+
+      $line = strtok($separator);
+    }
+    fclose($f);
+  }
+}
+
+function svn_utils_check_access($username, $gname, $svnpath) {
+  global $SVNACCESS, $SVNGROUPS;
+
+  if ($SVNACCESS == "None") {
+    svn_utils_parse_access_file($gname);
+  }
+
+  $perm = '';
+  $path = '/'.$svnpath;
+  while (true) {
+    if (array_key_exists($username,$SVNACCESS) && array_key_exists($path, $SVNACCESS[$username])) {
+      $perm = $SVNACCESS[$username][$path];
+      //echo "match: SVNACCESS[$username][$path] $perm";
+      break;
+    } else if (array_key_exists('*',$SVNACCESS) && array_key_exists($path,$SVNACCESS['*'])) {
+      $perm = $SVNACCESS['*'][$path];
+      //echo "match: SVNACCESS[*][$path] $perm";
+      break;
+    } else {
+      // see if it maches higher in the path
+      if ($path == '/') break;
+      $idx = strrpos($path,'/');
+        if ($idx == 0) {
+          $path = '/';
+        } else {
+          $path = substr($path,0,$idx);
+        }
+    }
+  }
+  if ($perm == 'r' || $perm == 'rw') {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 
 ?>

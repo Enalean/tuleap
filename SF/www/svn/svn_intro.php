@@ -36,13 +36,12 @@ print $HTML->box1_top("Repository History");
 echo svn_utils_format_svn_history($group_id);
 
 // SVN Browsing Box
-$uri = session_make_url('/cgi-bin/viewcvs.cgi/?root='.$row_grp['unix_group_name'].'&roottype=svn');
 print '<HR><B>Browse the Subversion Tree</B>
 <P>Browsing the Subversion tree gives you a great view into the current status
 of this project\'s code. You may also view the complete histories of any
 file in the repository.
 <UL>
-<LI><A href="'.$uri.'"><B>Browse Subversion Tree</B></A></LI>';
+<LI><A HREF="/svn/viewcvs.php/?roottype=svn&root='.$row_grp['unix_group_name'].'"><B>Browse Subversion Tree</B></A></LI>';
 
 print $HTML->box1_bottom();
 
