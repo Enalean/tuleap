@@ -148,7 +148,12 @@
         the page. These documents have been submitted and are awaiting the
         project member review and blessing to become public.</para>
         
-        <para>To validate a document, click on the document title. Go at the bottom of the next screen and change the Document status from Pending to Active. Click on the "Submit Edit" button to validate the changes.</para>
+        <para>To validate a document, click on the document title. Go at the bottom of the next screen and
+        change the Document status from Pending to Active. Additionally you can also specify that
+        anonymous users are not granted access to this document by checking the checkbox "Access
+        to register user only". Checking this box will also have the effect of tracking who downloaded
+        this document. Project Adminstrators have access to this audit trail (see <xref linkend="SourceCodeAccessLogs"/>).</para>
+        <para>Finally click on the "Submit Edit" button to validate the changes.</para>
       </section>
 
     <para></para>

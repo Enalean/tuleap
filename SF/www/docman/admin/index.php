@@ -105,6 +105,16 @@ if (strstr($mode,"docedit")) {
     
     echo '</td>
 	    </tr>
+
+	    <tr>
+	    <th>Access to register user only:</th>
+		<td><input type="checkbox" name="restricted_access" value="1"';
+		if ( $row['restricted_access'] == 1 ) {
+		    print " checked";
+		}
+    echo '></td>
+	    </tr>
+
                       </table>
 
 	   <input type="hidden" name="docid" value="'.$row['docid'].'">
@@ -212,13 +222,18 @@ if (strstr($mode,"docedit")) {
 	    }
 	}
 
+	if ( !isset($restricted_access) ) {
+	    $restricted_access = 0;
+	}
+
 	$query = "update doc_data "
 	    ."set title = '".htmlspecialchars($title)."', "
 	    ."data = '".htmlspecialchars($data)."', "
 	    ."updatedate = '".time()."', "
 	    ."doc_group = '".$doc_group."', "
 	    ."stateid = '".$stateid."', " 
-	    ."description = '".htmlspecialchars($description)."' "
+	    ."description = '".htmlspecialchars($description)."', "
+	    ."restricted_access = '".$restricted_access."' "
 	    ."where docid = '".$docid."'"; 
 		
 	db_query($query);

@@ -41,25 +41,29 @@ if ( $view == 'daily' ) {
 	print '<P>';
 	filedownload_logs_daily( $group_id, $span );
 	cvsaccess_logs_daily( $group_id, $span );
+	doc_logs_daily( $group_id, $span );
 
 } elseif ( $view == 'weekly' ) {
 
 	print '<P>';
 	filedownload_logs_daily( $group_id, $span*7 );
 	cvsaccess_logs_daily( $group_id, $span*7 );
+	doc_logs_daily( $group_id, $span*7 );
 
 } elseif ( $view == 'monthly' ) {
 
 	print '<P>';
 	filedownload_logs_daily( $group_id, $span*30.5 );
 	cvsaccess_logs_daily( $group_id, $span*30.5 );
+	doc_logs_daily( $group_id, $span*30.5 );
 
 } else {
 
-	   // default stats display, DAILY
+	// default stats display, DAILY
 	print '<P>';
 	filedownload_logs_daily( $group_id, $span );
 	cvsaccess_logs_daily( $group_id, $span );
+	doc_logs_daily( $group_id, $span );
 
 }
 

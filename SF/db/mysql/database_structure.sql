@@ -523,6 +523,7 @@ CREATE TABLE doc_data (
   created_by int(11) NOT NULL default '0',
   doc_group int(11) NOT NULL default '0',
   description text,
+  restricted_access INT UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY  (docid),
   KEY idx_doc_group_doc_group (doc_group)
 ) TYPE=MyISAM;
@@ -2179,6 +2180,19 @@ CREATE TABLE user_trust_metric (
   percentile float(10,8) NOT NULL default '0.00000000',
   importance_factor float(10,8) NOT NULL default '0.00000000',
   PRIMARY KEY  (ranking)
+) TYPE=MyISAM;
+
+#
+# Table structure for table 'doc_log'
+#
+
+CREATE TABLE doc_log (
+  user_id int(11) NOT NULL default '0',
+  docid int(11) NOT NULL default '0',
+  time int(11) NOT NULL default '0',
+  KEY all_idx (user_id,docid),
+  KEY time_idx (time),
+  KEY docid_idx (docid)
 ) TYPE=MyISAM;
 
 #

@@ -34,15 +34,34 @@ if ($docid) {
 	} else {
 		$row = db_fetch_array($result);
 	}
-	
-	docman_header($row['title'],$row['title']);
 
-	//print '<pre>'.$row['data'].'</pre>';
-	// LJ Document data can now contain HTML tags and php code
-	// so unescape HTML chars and evaluate the text.
-	eval('?>'.util_unconvert_htmlspecialchars($row['data']));
-	docman_footer($params);
+    // Only registered users on CodeX can access to restricted documents
+    if ( (user_isloggedin())||($row['restricted_access']==0) ) {
+
+    	docman_header($row['title'],$row['title']);
+    
+    	//print '<pre>'.$row['data'].'</pre>';
+    	// LJ Document data can now contain HTML tags and php code
+    	// so unescape HTML chars and evaluate the text.
+    	eval('?>'.util_unconvert_htmlspecialchars($row['data']));
+    	docman_footer($params);
+
+        if ( $row['restricted_access'] == 1 ) {
+            //Insert a new entry in the doc_log table only for restricted documents
+            $sql = "INSERT INTO doc_log(user_id,docid,time) "
+            ."VALUES ('".user_getid()."','".$docid."','".time()."')";
+            $res_insert = db_query( $sql );
+        }
+        
+    } else {
+    
+     /*
+        Not logged in
+      */
+      exit_not_logged_in();
+    }
 
 } else {
 	exit_error("No document data.","No document to display - invalid or inactive document number.");
 }
+

@@ -726,6 +726,11 @@
           <para>The second list is about CodeX users who used CVS to checkout
           or update the sources on their local desktop machine.</para>
         </listitem>
+        <listitem>
+          <para>The third list (not shown on the figure) inform the project administrators
+          about the CodeX users who downloaded documents marked as being accessible to registered
+          users only in your Document Manager (see <xref linkend="DocumentAdministration"/>).</para>
+        </listitem>
       </itemizedlist>
 
       <figure id="FigureSourceCodeAccessLogsForACodeXProject">

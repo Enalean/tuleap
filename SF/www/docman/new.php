@@ -50,12 +50,14 @@ if($group_id) {
         		}
 		}
 
-		
+		if ( !isset($restricted_access) ) {
+		    $restricted_access = 0;
+		}
 
 		docman_header(array('title'=>'New Document Submitted',
 				    'help'=>'DocumentSubmission.html'));
 		
-		$query = "insert into doc_data(stateid,title,data,createdate,updatedate,created_by,doc_group,description) "
+		$query = "insert into doc_data(stateid,title,data,createdate,updatedate,created_by,doc_group,description,restricted_access) "
 		."values('3',"
 		// state = 3 == pending
 		."'".htmlspecialchars($title)."',"
@@ -64,12 +66,16 @@ if($group_id) {
 		."'".time()."',"
 		."'".$user."',"
 		."'".$doc_group."',"			
-		."'".htmlspecialchars($description)."')";
+		."'".htmlspecialchars($description)."',"		
+		."'0')";
 	
 		db_query($query); 
-		//PROBLEM check the query
-
-		print "<p><b>Thank You!  Your submission has been placed in the database for review before posting.</b> \n\n<p>\n <a href=\"/docman/index.php?group_id=".$group_id."\">Back</a>"; 
+	    if (db_affected_rows($res_insert) < 1) {
+           echo '<p>An error occurs:</p><h3><span class="feedback">'. db_error() .'</span></h3>';
+	    } else {
+    	   print "<p><b>Thank You!  Your submission has been placed in the database for review before posting.</b> \n\n<p>\n <a href=\"/docman/index.php?group_id=".$group_id."\">Back</a>"; 
+        }
+        
 		docman_footer($params);
 	} else {
 		docman_header(array('title'=>'Add document',
@@ -113,7 +119,9 @@ if($group_id) {
 
 		display_groups_option($group_id);
 
-		echo '	</td> </tr> </table>
+		echo '	</td> </tr>
+		
+    	    </table>
 
 			<input type="submit" value="Submit Information">
 
