@@ -817,7 +817,9 @@ class Artifact extends Error {
 	 * @return boolean
 	 */
 	function validArtifact($id) {
-	    $sql = "SELECT * FROM artifact WHERE artifact_id=".$id;
+	    $sql = "SELECT * FROM artifact a, artifact_group_list agl WHERE ".
+	    	   "a.group_artifact_id = agl.group_artifact_id AND a.artifact_id=".$id." AND ".
+	    	   "agl.status = 'A'";
 	    $res = db_query($sql);
 	    if ( db_numrows($res) >= 1 )
 	    	return true;

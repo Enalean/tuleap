@@ -256,27 +256,27 @@ class ArtifactReportHtml extends ArtifactReport {
         function showResult ($group_id,$prefs,$offset,$total_rows,$url,$nolink,$chunksz,$morder,$advsrch,$offset,$chunksz) {
             global $PHP_SELF;
         
-                $html_result = "";
+            $html_result = "";
         
             // Build the list of links to use for column headings
             // Used to trigger sort on that column
-                $result_fields = $this->getResultFields();      
-                
-                $links_arr = array();
-                $title_arr = array();
-                $width_arr = array();
+            $result_fields = $this->getResultFields();      
+            
+            $links_arr = array();
+            $title_arr = array();
+            $width_arr = array();
 
-                if ( count($result_fields) == 0 ) return;
+            if ( count($result_fields) == 0 ) return;
 
-                reset($result_fields);
-                while (list(,$field) = each($result_fields)) {
-                    $links_arr[] = $url.'&order='.$field->getName().'#results';
-                    $title_arr[] = $field->getLabel();
-                    $width_arr[$field->getName()] = $field->getColWidth();
-                }
+            reset($result_fields);
+            while (list(,$field) = each($result_fields)) {
+                $links_arr[] = $url.'&order='.$field->getName().'#results';
+                $title_arr[] = $field->getLabel();
+                $width_arr[$field->getName()] = $field->getColWidth();
+            }
 
-                $query = $this->createQueryReport($prefs,$morder,$advsrch,$offset,$chunksz);
-                $result = $this->getResultQueryReport($query);
+            $query = $this->createQueryReport($prefs,$morder,$advsrch,$offset,$chunksz);
+            $result = $this->getResultQueryReport($query);
             $rows = count($result);
                     
            /*
@@ -287,16 +287,16 @@ class ArtifactReportHtml extends ArtifactReport {
         
             // If all artifacts on screen so no prev/begin pointer at all
             if ($total_rows > $chunksz) {
-                        if ($offset > 0) {
-                            $nav_bar .=
-                            '<A HREF="'.$url.'&offset=0#results"><B><< Begin</B></A>'.
-                            '&nbsp;&nbsp;&nbsp;&nbsp;'.
-                            '<A HREF="'.$url.'&offset='.($offset-$chunksz).
-                            '#results"><B>< Previous '.$chunksz.'</B></A></td>';
-                        } else {
-                            $nav_bar .=
-                                '<span class="disable">&lt;&lt; Begin&nbsp;&nbsp;&lt; Previous '.$chunksz.'</span>';
-                        }
+                if ($offset > 0) {
+                    $nav_bar .=
+                    '<A HREF="'.$url.'&offset=0#results"><B><< Begin</B></A>'.
+                    '&nbsp;&nbsp;&nbsp;&nbsp;'.
+                    '<A HREF="'.$url.'&offset='.($offset-$chunksz).
+                    '#results"><B>< Previous '.$chunksz.'</B></A></td>';
+                } else {
+                    $nav_bar .=
+                        '<span class="disable">&lt;&lt; Begin&nbsp;&nbsp;&lt; Previous '.$chunksz.'</span>';
+                }
             }
         
             $nav_bar .= '</td>';
@@ -310,22 +310,22 @@ class ArtifactReportHtml extends ArtifactReport {
         
             // If all artifacts on screen, no next/end pointer at all
             if ($total_rows > $chunksz) {
-                        if ( ($offset+$chunksz) < $total_rows ) {
-                
-                            $offset_end = ($total_rows - ($total_rows % $chunksz));
-                            if ($offset_end == $total_rows) { $offset_end -= $chunksz; }
-                
-                            $nav_bar .= 
-                                '<A HREF="'.$url.'&offset='.($offset+$chunksz).
-                                '#results" class="small"><B>Next '.$chunksz.' &gt;</B></A>'.
-                                '&nbsp;&nbsp;&nbsp;&nbsp;'.
-                                '<A HREF="'.$url.'&offset='.($offset_end).
-                                '#results" class="small"><B>End &gt;&gt;</B></A></td>';
-                        } else {
-                            $nav_bar .= 
-                                '<span class="disable">Next '.$chunksz.
-                                ' &gt;&nbsp;&nbsp;End &gt;&gt;</span>';
-                        }
+                if ( ($offset+$chunksz) < $total_rows ) {
+        
+                    $offset_end = ($total_rows - ($total_rows % $chunksz));
+                    if ($offset_end == $total_rows) { $offset_end -= $chunksz; }
+        
+                    $nav_bar .= 
+                        '<A HREF="'.$url.'&offset='.($offset+$chunksz).
+                        '#results" class="small"><B>Next '.$chunksz.' &gt;</B></A>'.
+                        '&nbsp;&nbsp;&nbsp;&nbsp;'.
+                        '<A HREF="'.$url.'&offset='.($offset_end).
+                        '#results" class="small"><B>End &gt;&gt;</B></A></td>';
+                } else {
+                    $nav_bar .= 
+                        '<span class="disable">Next '.$chunksz.
+                        ' &gt;&nbsp;&nbsp;End &gt;&gt;</span>';
+                }
             }
             $nav_bar .= '</td>';
             $nav_bar .="</tr></table>\n";
@@ -337,51 +337,53 @@ class ArtifactReportHtml extends ArtifactReport {
                 
             for ($i=0; $i < $rows ; $i++) {
         
-                        $html_result .= '<TR class="'.get_priority_color($result[$i]['severity_id']) .'">'."\n";
+                $html_result .= '<TR class="'.get_priority_color($result[$i]['severity_id']) .'">'."\n";
 
-                        reset($result_fields);  
-                        while (list($key,$field) = each($result_fields) ) {
-                                //echo "$key=".$result[$i][$key]."<br>";
-                                        
-			    $value = $result[$i][$key];
-			    if ($width_arr[$key]) {
-				$width = 'WIDTH="'.$width_arr[$key].'%"';
-			    } else {
-				$width = '';
-			    }
-			    $width .= ' class="small"';
-			    
-			    if ( $field->isDateField() ) {
-				if ($value)
-				    $html_result .= "<TD $width>".format_date("Y-m-d",$value).'</TD>'."\n";
-				else
-				    $html_result .= "<TD align=\"center\">-</TD>\n";
-
-			    } else if ($field->getName() == 'artifact_id') {
-				if ($nolink) 
-				    $html_result .= "<TD $width>$value</TD>\n";
-				else
-				    $html_result .= "<TD $width>".'<A HREF="/tracker/?func=detail&aid='.
-					$value.'&atid='.$this->group_artifact_id.'&group_id='.$group_id.'">'. 
-					$value .'</A></TD>'."\n";
-                        
-			    } else if ( $field->isUsername() ) {        
-				if ($nolink)
-				    $html_result .= "<TD $width>$value</TD>\n";
-				else
-				    $html_result .= "<TD $width>".util_multi_user_link($value)."</TD>\n";
-				
-			    } else if ( $field->isSelectBox() ) {
-				//                                      Usefull? - TODO
-        //                                      $html_result .= "<TD $width>". bug_data_get_cached_field_value($field_arr[$j], $group_id, $value) .'</TD>'."\n";
-				$html_result .= "<TD $width>".$value.'</TD>'."\n";
-				
-			    } else {
-				$html_result .= "<TD $width>". $value .'&nbsp;</TD>'."\n";
-			    }                            
+                reset($result_fields);  
+                while (list($key,$field) = each($result_fields) ) {
+                    //echo "$key=".$result[$i][$key]."<br>";
+                                    
+				    $value = $result[$i][$key];
+				    if ($width_arr[$key]) {
+						$width = 'WIDTH="'.$width_arr[$key].'%"';
+				    } else {
+						$width = '';
+				    }
+				    $width .= ' class="small"';
+				    
+				    if ( $field->isDateField() ) {
+						if ($value)
+						    $html_result .= "<TD $width>".format_date("Y-m-d",$value).'</TD>'."\n";
+						else
+						    $html_result .= "<TD align=\"center\">-</TD>\n";
+	
+				    } else if ($field->getName() == 'artifact_id') {
+						if ($nolink) 
+						    $html_result .= "<TD $width>$value</TD>\n";
+						else
+						    $html_result .= "<TD $width>".'<A HREF="/tracker/?func=detail&aid='.
+						$value.'&atid='.$this->group_artifact_id.'&group_id='.$group_id.'">'. 
+						$value .'</A></TD>'."\n";
+	                        
+				    } else if ( $field->isUsername() ) {        
+						if ($nolink)
+						    $html_result .= "<TD $width>$value</TD>\n";
+						else
+						    $html_result .= "<TD $width>".util_multi_user_link($value)."</TD>\n";
+					
+				    } else if ( $field->isSelectBox() ) {
+						// Usefull? - TODO
+				        // $html_result .= "<TD $width>". bug_data_get_cached_field_value($field_arr[$j], $group_id, $value) .'</TD>'."\n";
+						$html_result .= "<TD $width>".$value.'</TD>'."\n";
+					
+					} else if ( $field->isFloat() ) {
+						$html_result .= "<TD $width>". number_format($value,2) .'&nbsp;</TD>'."\n";
+					} else {
+						$html_result .= "<TD $width>". $value .'&nbsp;</TD>'."\n";
+				    }                            
                                 
-                        } // while 
-                        $html_result .= "</tr>\n";
+                } // while 
+                $html_result .= "</tr>\n";
             }
         
             $html_result .= '</TABLE>';

@@ -418,6 +418,15 @@ class ArtifactField extends Error {
 	}
 
 	/**
+	 *  Return true if the field is a float 
+	 *
+	 * @return boolean
+	 */
+	function isFloat() {
+		return ( $this->getDataType() == $this->DATATYPE_FLOAT );
+	}
+
+	/**
 	 *  Return true if the field is allowed to be empty
 	 *
 	 * @return boolean
@@ -1266,9 +1275,15 @@ class ArtifactField extends Error {
 	 */
 	function updateDefaultValue($group_artifact_id,$default_value) {
 						 	
+		if ( $this->isDateField() ) {
+			list($value,$ok) = util_date_to_unixtime($default_value);
+		} else {
+			$value = $default_value;
+		}
+		
 		// Update the artifact_field
 		$sql = "UPDATE artifact_field SET ".
-			   "default_value='".$default_value."' ".
+			   "default_value='".$value."' ".
 			   "WHERE group_artifact_id=".$group_artifact_id." AND field_id=".$this->field_id;
 				
 		//echo $sql;

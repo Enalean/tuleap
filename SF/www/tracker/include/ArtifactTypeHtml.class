@@ -1556,7 +1556,7 @@ class ArtifactTypeHtml extends ArtifactType {
 	 *  @return void
 	 */
 	function displayDefaultValueForm($field_id,$default_value) {
-		global $ath,$art_field_fact,$PHP_SELF;
+		global $ath,$art_field_fact,$PHP_SELF,$theme,$font_size;
 		
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( !$field ) {
@@ -1566,15 +1566,21 @@ class ArtifactTypeHtml extends ArtifactType {
 		echo '<h3>Define Default Value '.help_button('TrackerAdministration.html#TrackerDefiningaDefaultFieldValue').'</h3>';
 					
 		echo '
-	      <FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
+	      <FORM ACTION="'.$PHP_SELF.'" METHOD="POST" name="artifact_form">
 	      <INPUT TYPE="HIDDEN" NAME="func" VALUE="update_default_value">
 	      <INPUT TYPE="HIDDEN" NAME="field_id" VALUE="'.$field_id.'">
 	      <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$this->Group->getID().'">
-	      <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$this->getID().'">';
+	      <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$this->getID().'">
+		  <script language="JavaScript" src="/include/calendar.js"></script>';
 
 		if ( $field->isSelectBox() || $field->isMultiSelectBox() ) {
 			echo 'Value: ';
 			echo html_build_select_box ($field->getFieldValues($this->getID(),"'A','P'"),"default_value",$default_value);
+		} else if ( $field->isDateField() ) {
+			echo 'Value: <INPUT TYPE="text" name="default_value"'.
+			' size="10" MAXLENGTH="10" VALUE="'.($default_value?format_date("Y-m-j",$default_value,''):'').'">'.
+			'<a href="javascript:show_calendar(\'document.artifact_form.default_value\', document.artifact_form.default_value.value,\''.$theme.'\',\''.getFontsizeName($font_size).'\');">'.
+			'<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="Click Here to Pick up a date"></a>';
 		} else {
 	      	echo 'Value: <INPUT TYPE="text" NAME="default_value" VALUE="'.$default_value.'">';
 		}
