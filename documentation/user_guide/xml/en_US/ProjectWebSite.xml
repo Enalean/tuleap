@@ -365,14 +365,17 @@ http://projectname.&SYS_DEFAULT_DOMAIN;
             <title>PHP Code Sample: greeting your visitors</title>
 
             <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-&#60;?php require(&#39;pre_vhosts.php&#39;)
+&#60;?php
 
-if (user_isloggedin() ) {
+require(&#39;pre_vhosts.php&#39;);
+
+if ( user_isloggedin() ) {
    $user_id = user_getid();
    $user_fullname = user_getrealname($user_id);
-   echo &#34;&#60;b&#62;Welcome to $user_fullname!&#60;/b&#62;
-...
-...
+   echo &#34;&#60;b&#62;Welcome to $user_fullname!&#60;/b&#62;;
+
+   // Your HTML/PHP code here
+
 }
 ?&#62;
             </programlisting>
@@ -382,7 +385,7 @@ if (user_isloggedin() ) {
             <title>PHP Code Sample: displaying project information</title>
 
             <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-&#60;?php require (&#39;pre_vhosts.php&#39;) ?&#62;
+&#60;?php require (&#39;pre_vhosts.php&#39;); ?&#62;
 &#60;HTML&#62;
 &#60;BODY&#62;
 &#60;H1&#62;&#60;?php echo $project-&#62;getPublicName(); ?&#62; Web site&#60;/H1&#62;
