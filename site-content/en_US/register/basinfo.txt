@@ -29,7 +29,7 @@ Shall the purpose and goals change in the future, you'll have to modify the stat
 
 <P>
 <B><u>Full Project Description<font color="red">*</font>:</u></B>
-<BR><b>*** IMPORTANT NOTE ***</b> Make sure you provide a detailed decscription that contains all the keywords that will help others to find and reuse your software component. Failing to provide an accurate description may also delay the approval of your project.
+<BR><b>*** IMPORTANT NOTE ***</b> Make sure you provide a detailed description that contains all the keywords that will help others to find and reuse your software component. Failing to provide an accurate description may also delay the approval of your project.
 <br><TEXTAREA name="form_purpose" wrap="virtual" cols="70" rows="12">
 </TEXTAREA>
 

@@ -7,6 +7,7 @@
 // $Id$
 
 require "pre.php";    
+require "account.php";
 session_require(array('group'=>'1','admin_flags'=>'A'));
 $HTML->header(array('title'=>'Admin - User List'));
 
@@ -69,7 +70,16 @@ if ($action=='suspend') {
 	Add a user to this group
 */
 if ($action=='add_to_group') {
-	db_query("INSERT INTO user_group (user_id,group_id) VALUES ($user_id,$group_id)");
+    // Get user unix name
+    $res_newuser = db_query("SELECT user_name FROM user WHERE user_id=$user_id");
+    if (db_numrows($res_newuser) > 0) {
+        $user_name = db_result($res_newuser,0,'user_name');
+        if (!account_add_user_to_group($group_id,$user_name)) {
+            print "<H3><span class='feedback'>Error - Can't add user to group: ".$feedback."</span></H3>";
+        }
+    } else {
+            print "<H3><span class='feedback'>Error - Can't find user with id=".$user_id."</span></H3>";
+    }
 }
 
 /*
@@ -108,13 +118,12 @@ if (!$group_id) {
 	<P>
 	<form action="<?php echo $PHP_SELF; ?>" method="post">
 	<input type="HIDDEN" name="action" VALUE="add_to_group">
+        <p>Please enter a user ID:<br>
 	<input name="user_id" type="TEXT" value="">
-	<p>
-	Add User to Group (<?php print group_getname($group_id); ?>):
 	<br>
 	<input type="HIDDEN" name="group_id" VALUE="<?php print $group_id; ?>">
 	<p>
-	<input type="submit" name="Submit" value="Submit">
+	<input type="submit" name="Submit" value="Add User to Group <?php print group_getname($group_id); ?>">
 	</form>
 
 	<?php	

@@ -20,6 +20,8 @@ function account_pwvalid($pw) {
 	return 1;
 }
 
+
+// Add user to an existing project
 function account_add_user_to_group ($group_id,$user_unix_name) {
 	global $feedback;
 	
@@ -49,6 +51,7 @@ function account_add_user_to_group ($group_id,$user_unix_name) {
 				db_query("UPDATE user SET unix_status='A',unix_uid=" . account_nextuid() . " WHERE user_id=$form_newuid");
 			}
 			$feedback .= " User added ";
+                        account_send_add_user_to_group_email($group_id,$form_newuid);
 			$ret = true;
 		} else {
 			//user was a member
@@ -61,6 +64,33 @@ function account_add_user_to_group ($group_id,$user_unix_name) {
 
 	return $ret;
 }
+
+// Warn user she has been added to a project
+function account_send_add_user_to_group_email($group_id,$user_id) {
+    // if the HTTP server has SSL enabled then favor confirmation through SSL
+    if ($GLOBALS['sys_https_host'] != "") {
+	$base_url = "https://".$GLOBALS['sys_https_host'];
+    } else {
+	$base_url = "http://".$GLOBALS['sys_default_domain'];
+    }
+
+    // Get email address
+    $res = db_query("SELECT email FROM user WHERE user_id=$user_id");
+    if (db_numrows($res) > 0) {
+        $email_address = db_result($res,0,'email');
+        $res2 = db_query("SELECT group_name,unix_group_name FROM groups WHERE group_id=$group_id");
+        if (db_numrows($res2) > 0) {
+            $group_name = db_result($res2,0,'group_name');
+            $unix_group_name = db_result($res2,0,'unix_group_name');
+            // $message is defined in the content file
+            include(util_get_content('include/add_user_to_group_email'));
+            
+            list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
+            mail($email_address, $GLOBALS['sys_name']." - Welcome to Project ".$group_name,$message,"From: noreply@".$host);
+        }
+    }
+}
+
 
 function account_namevalid($name) {
 	// no spaces
