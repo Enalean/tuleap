@@ -108,6 +108,10 @@ class Project extends Group {
         return $this->active_service['task'];
     }
 
+    function activateOldPatch() {
+        return $this->active_service['patch'];
+    }
+
     function activateOldSR() {
         return $this->active_service['support'];
     }

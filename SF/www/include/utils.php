@@ -935,6 +935,8 @@ function util_get_group_from_legacy_id($atn,$aid) {
         $sql="select group_id from bug where bug_id=$aid";
     } else if ($atn=='sr') {
         $sql="select group_id from support where support_id=$aid";
+    } else if ($atn=='patch') {
+        $sql="select group_id from patch where patch_id=$aid";
     } else if ($atn=='task') {
         // A bit more complicated since the group_id and project_task_id are not in the same table...
         $sql="SELECT project_group_list.group_id FROM project_task,project_group_list".

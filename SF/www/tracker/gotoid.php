@@ -31,6 +31,12 @@ function legacy_redirect($location,$aid, $group_id, $atn) {
         header($location);
         exit;
     }
+    if ($atn == 'patch') {
+      $location .= "/patch/?func=detailpatch&patch_id=$aid&group_id=$group_id";
+      header($location);
+      exit;
+    }
+    
 }
 
 /**
@@ -101,11 +107,6 @@ if ($atn == 'commit') {
     exit;
 }
 
-if ($atn == 'patch') {
-    $location .= "/patch/?func=detailpatch&patch_id=$aid&group_id=$group_id";
-    header($location);
-    exit;
-}
 
 if ((!$sys_activate_tracker)) {
     // If generic trackers are not available, then use only legacy!
@@ -124,7 +125,7 @@ if (!$group_id) {
 
 
 // Now check ambiguous cases...
-if (($atn == 'bug')||($atn == 'task')||($atn == 'sr')) {
+if (($atn == 'bug')||($atn == 'task')||($atn == 'sr')||($atn == 'patch')) {
     // Ambiguous: legacy or generic tracker?
     // Get artifact group_id and tracker id (atid)
     if (!util_get_ids_from_aid($aid,$art_group_id,$atid,$art_name)) {
@@ -136,7 +137,8 @@ if (($atn == 'bug')||($atn == 'task')||($atn == 'sr')) {
     $grp=project_get_object($group_id);
     if ((($atn == 'bug')&&(!$grp->activateOldBug()))
         ||(($atn == 'sr')&&(!$grp->activateOldSR()))
-        ||(($atn == 'task')&&(!$grp->activateOldTask()))) {
+        ||(($atn == 'task')&&(!$grp->activateOldTask()))
+||(($atn == 'patch')&&(!$grp->activateOldPatch()))) {
         // Legacy tracker is not activated -> this is a generic one
         generic_redirect($location,$aid,$group_id,$art_group_id,$atid,$atn,$art_name);
     }

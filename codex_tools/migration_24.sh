@@ -850,7 +850,52 @@ UPDATE service SET link='/file/showfiles.php?group_id=$group_id' where short_nam
 
 
 
+--- !!!!!!!!!!!!! This is really to do for upgrade to 2_4 !!!!!!!!!!!!!!!!!!!!!!!!
+--- add a new tracker template to replace legacy patch tracker
+---
+UPDATE service SET is_active=0, is_used=0
 
+INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, is_public, allow_anon, email_all_updates, email_address, submit_instructions, browse_instructions, instantiate_for_new_projects) VALUES (5, 100, 'Patches', 'Patch Tracker', 'patch', 1, 0, 0, '', NULL, NULL, 1);
+
+INSERT INTO artifact_field VALUES (1,5,'submitted_by',5,'SB','','Submitted by','User who originally submitted the artifact','',0,1,0,1,'artifact_submitters','');
+INSERT INTO artifact_field VALUES (2,5,'open_date',4,'DF','','Submitted on','Date and time for the initial artifact submission','',0,0,0,1,'','');
+INSERT INTO artifact_field VALUES (3,5,'summary',1,'TF','60/150','Summary','One line description of the artifact','',0,0,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (4,5,'artifact_id',2,'TF','6/10','Artifact ID','Unique artifact identifier','',0,0,0,1,NULL,'');
+INSERT INTO artifact_field VALUES (5,5,'plain_text',1,'TA','60/7','Paste the patch here (text only),<br> OR attach it as a file <br> in the \'Attachments\' section','Plain-text version of the patch','',0,1,0,0,NULL,'');
+INSERT INTO artifact_field VALUES (6,5,'assigned_to',5,'SB','','Assigned to','Who is in charge of solving the artifact','',0,1,1,0,'artifact_technicians','100');
+INSERT INTO artifact_field VALUES (7,5,'category_id',2,'SB','','Category','Patch categories (e.g. mail module,gant chart module,interface, etc)','',0,1,1,0,NULL,'100');
+INSERT INTO artifact_field VALUES (8,5,'details',1,'TA','60/7','Description','Description of functionality and application of the patch','',0,1,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (9,5,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'1');
+INSERT INTO artifact_field VALUES (10,5,'severity',2,'SB','','Severity','Impact of the artifact on the system (Critical, Major,...)','',0,0,1,0,NULL,'5');
+INSERT INTO artifact_field VALUES (11,5,'release_id',2,'SB','','Release','The release (global version number) impacted by the artifact','P',0,1,1,0,NULL,'100');
+INSERT INTO artifact_field VALUES (12,5,'response_id',2,'SB','','Response','The project team\'s response to the artifact (typically Accepted, Declined, etc.)','P',0,1,1,0,NULL,'100');
+
+INSERT INTO artifact_field_usage VALUES (1,5,1,0,0,0);
+INSERT INTO artifact_field_usage VALUES (2,5,1,0,0,0);
+INSERT INTO artifact_field_usage VALUES (3,5,1,1,1,30);
+INSERT INTO artifact_field_usage VALUES (4,5,1,0,0,0);
+INSERT INTO artifact_field_usage VALUES (5,5,1,1,1,50);
+INSERT INTO artifact_field_usage VALUES (6,5,1,0,0,0);
+INSERT INTO artifact_field_usage VALUES (7,5,1,1,1,10);
+INSERT INTO artifact_field_usage VALUES (8,5,1,1,1,50);
+INSERT INTO artifact_field_usage VALUES (9,5,1,0,0,0);
+INSERT INTO artifact_field_usage VALUES (10,5,1,1,1,0);
+INSERT INTO artifact_field_usage VALUES (11,5,0,0,0,0);
+INSERT INTO artifact_field_usage VALUES (12,5,1,0,0,0);
+
+INSERT INTO artifact_field_value_list VALUES (7,5,100,'None','',10,'P');
+INSERT INTO artifact_field_value_list VALUES (9,5,1,'Open','The artifact has been submitted',20,'P');
+INSERT INTO artifact_field_value_list VALUES (9,5,3,'Closed','The artifact is no longer active. See the Resolution field for details on how it was resolved.',400,'P');
+INSERT INTO artifact_field_value_list VALUES (9,5,4,'Analyzed','The cause of the artifact has been identified and documented',30,'H');
+INSERT INTO artifact_field_value_list VALUES (9,5,5,'Accepted','The artifact will be worked on. If it won\'t be worked on, indicate why in the Resolution field and close it',50,'H');
+INSERT INTO artifact_field_value_list VALUES (9,5,6,'Ready for Review','Updated/Created non-software work product (e.g. documentation) is ready for review and approval.',70,'H');
+INSERT INTO artifact_field_value_list VALUES (9,5,7,'Ready for Test','Updated/Created software is ready to be included in the next build',90,'H');
+INSERT INTO artifact_field_value_list VALUES (9,5,8,'In Test','Updated/Created software is in the build and is ready to enter the test phase',110,'H');
+INSERT INTO artifact_field_value_list VALUES (9,5,9,'Approved','The artifact fix has been succesfully tested. It is approved and awaiting release.',130,'H');
+INSERT INTO artifact_field_value_list VALUES (9,5,10,'Declined','The artifact was not accepted. Alternatively, you can also Set the status to \"Closed\" and use the Resolution field to explain why it was declined',150,'H');
+
+INSERT INTO artifact_field_value_list VALUES (12,5,1,'Accepted','The artifact will be worked on. If it won\'t be worked on, indicate why and close it',10,'A');
+INSERT INTO artifact_field_value_list VALUES (12,5,2,'Declined','The artifact was not accepted. Alternatively, you can also set the status to \"Closed\" and explain why it was declined',50,'A');
 
 EOF
 

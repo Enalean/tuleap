@@ -695,8 +695,8 @@
 	    they are not allowed to commit any changes they have made
 	    to the source code. Source code contributions (bug fix,
 	    enhancements&hellip;) from this class of user must return
-	    to the project team via the Patch Manager (see <xref
-	    linkend="PatchManager" /> ).</para>
+	    to the project team via the Patch Tracker (see <xref
+	    linkend="PatchTemplate" /> ).</para>
 
 	    <note><para><emphasis role="bold">Note</emphasis>: all
 	    source code accesses are recorded by CodeX. Project
@@ -1196,8 +1196,8 @@ svn diff -r 9398
 
       <para>In both cases, you should redirect the output of the diff
       or svn diff command in a text file. Compress the output file if
-      it&#39;s a large one and use the CodeX Patch Manager (see <xref
-      linkend="PatchManager" />) to submit your patch to the project
+      it&#39;s a large one and use the CodeX Patch Tracker (see <xref
+      linkend="PatchTemplate" />) to submit your patch to the project
       team.</para>
 
       <para>And thanks for contributing some code!</para>

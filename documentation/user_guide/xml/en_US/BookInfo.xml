@@ -440,6 +440,20 @@
 	(related to SR 163 on Partners)
         </revremark>
       </revision>
+      <revision>
+        <revnumber>2.6.20</revnumber>
+
+        <date>3-Mar-2005</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Patch Manager chapter is now deprecated.
+	Add a whole section about CodeX tracker templates in the Tracker chapter.
+	This section is a copy paste of main processes from the deprecated Bug, SR, Patch 
+	and Task Manager chapters. In CVS and Subversion chapters refer to the new
+	tracker template section instead of the Patch Manager chapter.
+        </revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--

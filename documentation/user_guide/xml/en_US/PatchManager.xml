@@ -12,7 +12,15 @@
 -->
 
   <chapter id="PatchManager">
-    <title>Patch Manager</title>
+    <title>Patch Manager (deprecated)</title>
+
+    <para><tip><title>** The Patch Manager is DEPRECATED
+      **</title> <para>In CodeX version 2.4 and above, the Patch Manager
+      has been discontinued. It is now replaced by the CodeX
+      Tracker Service (see <xref linkend="TrackerService"/>). This chapter
+      is included in the CodeX User Guide for projects that originally
+      used the legacy Patch Manager.</para></tip></para>
+
 
     <section id="HowToSubmitSourceCodeContribution">
       <title>How To Submit Source Code Contribution</title>

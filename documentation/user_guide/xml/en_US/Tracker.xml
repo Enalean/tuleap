@@ -1505,7 +1505,9 @@ width="14.5cm" />
 	  will typically find templates for Bugs, Tasks, etc. A
 	  specific tracker called &#34;Empty&#34; allows you to create a
 	  virgin tracker with no predefined fields other than the
-	  minimal set of required fields.</para>
+	  minimal set of required fields. See <xref
+          linkend="CodeXTrackerTemplates" /> for more explanations
+          on the semantic of those templates.</para>
       </listitem>
 
       <listitem id="TrackerCreationFromProjectTemplate">
@@ -1525,6 +1527,298 @@ width="14.5cm" />
 
   </section>
 
+
+  <section id="CodeXTrackerTemplates">
+    <title>CodeX-wide Tracker Templates</title>
+
+	<para>The standard trackers provided for each new CodeX project are:
+	<itemizedlist mark="bullet" spacing="compact">
+	<listitem><para>Bugs</para></listitem>
+	<listitem><para>Patch</para></listitem>
+	<listitem><para>Support Requests</para></listitem>
+	<listitem><para>Tasks</para></listitem>
+	</itemizedlist>
+	Each of those templates have predefined fields that correspond to the specific 
+	work processes around bugs, patches etc. In the following, we give a short overview
+	of these different work processes. For each of those templates, the CodeX Team also 
+	tried to maintain a
+    	fair balance between sophistication and ease of use. As a consequence,
+    	fairly simple and straightforward templates are configured by default for all new
+    	hosted projects. Then it is up to the project members to decide how much
+    	information they want to see attached to an artifact and customize their tracker
+    	configuration accordingly. 
+	</para>
+
+	<section id="BugTemplate">
+	  <title>The Bug Tracker Template</title>
+		<para>One of the golden rules in a source code-sharing environment is to
+      		display your code to make your community of users grow and have as large
+      		as possible a beta-tester community. In order for this community to work
+      		efficiently they must be free to submit bugs to any project. And this is
+      		the CodeX philosophy: bug submission is open to all users and it is up
+      		to the project team (also known as the Core Team) to decide what to do
+      		with this bug.</para>
+
+    		<para>This is a pervasive principle throughout CodeX. Patches and
+      		documentation contribution follows exactly the same principle: the
+      		community has the freedom to contribute, the Core Team then decide what
+      		to do with the contributions.</para>
+
+    		<para>The term bug typically refers to a problem, or something that
+      		doesn&#39;t work as expected. The Bug template was developed 
+      		with this in mind.
+      		</para>
+
+		<para>The template Bug Tracker
+      		comes pre-configured with a set of bug fields
+      		that are probably enough for the majority of projects hosted on
+      		CodeX. However CodeX has a much longer list of bug fields
+      		available for use in your own project Bug Trackers. Conversely you can
+      		also decide that the default Bug Tracker comes with too many fields and
+      		you can remove fields from your project Bug Tracker and make it even
+      		simpler.</para>
+
+      		<para>The CodeX Bug Tracker offers a list of about 30 fields
+      		that you can choose from to customize your project Bug Tracker. They are
+      		called 'Standard Fields'. Although the list of standard fields
+      		is quite rich, there might still be cases when one would like to
+      		use other fields in their own bug tracker. Should this happen,
+      		there are two ways to solve the problem:</para>
+
+      		<procedure>
+		<step>
+	  	<para><emphasis role="bold">Ask the Site
+		Administrator</emphasis>: if you think that the missing field
+		is not specific to your project and should be part of a good
+		bug tracking system, then we urge you to contact the CodeX
+		Site Administrators and ask them to create the new field. By
+		doing so CodeX will over time offer a richer and more
+		pertinent set of standard fields.</para>
+		</step>
+	
+		<step>
+	  	<para><emphasis role="bold">Use the Custom
+		Fields</emphasis>: in addition to the list of standard fields,
+		CodeX offers 'Custom fields'. These are generic fields
+		(either text, date, numeric or select box fields) that can be entirely
+		customized by the project team. If the fields you are thinking
+		of adding are really specific to your project then you should
+		definitely use the custom fields.</para>
+		</step>
+      		</procedure>
+
+
+	</section>
+
+
+	<section id="PatchTemplate">
+	  <title>The Patch Tracker Template</title>
+
+		<para>CodeX gives you an unparalleled ability to learn from the source
+      		code of others by making source code sharing a common practice at &SYS_ORG_NAME;.
+      		When you re-use a piece of code from CodeX, the Code eXchange Policy
+      		specifies that any modification you&#39;ve made to the original source
+      		code must be returned to the original team.</para>
+
+      		<para>This is the role of the Patch Manager to facilitate this process.
+      		The Patch Manager allows for:</para>
+
+      		<procedure>
+        	<step>
+          	<para>The submission of source code modifications by CodeX users</para>
+        	</step>
+
+        	<step>
+          	<para>The management of these submissions by the project team</para>
+        	</step>
+      		</procedure>
+
+      		<para>On how to generate source code patches see the CVS chapter (<xref
+      		linkend="ContributingyourChanges" />) or the Subversion chapter 
+		(<xref linkend="SubversionContributingyourChanges" />).</para>
+
+      		<note><para><emphasis role="underline">A note to the project team</emphasis></para>
+      		<para>Receiving
+      		source code modifications or other contributions from other CodeX users
+      		does not imply that you have to accept the new code and insert it in
+      		your main source tree. It is up to the project team to decide what to do
+      		with it. One of the interesting features of the Patch Manager is that
+      		submitted patches are available to anybody at all time regardless of the
+      		final decision of the project team. Therefore any CodeX visitor is free
+      		to download any submitted patch and apply it onto its own version of the
+      		software even if the project team has decided not to apply the patch on
+      		the main source tree.</para></note>
+
+		<para>Typically, the <emphasis role="bold">status</emphasis> of a patch
+          	is one of:</para>
+
+          	<itemizedlist spacing="compact">
+            	<listitem>
+              	<para><emphasis role="underline">Open</emphasis>: the patch has
+              	been submitted and is being processed by the project team</para>
+            	</listitem>
+
+            	<listitem>
+              	<para><emphasis role="underline">Closed</emphasis>: If the Response
+		field tells that the project team "Accepted" the bug than the patch
+              	was integrated in the main source tree. If the path was "Declined"
+		than it has not been integrated in the main tree but the patch is still
+		visible to the CodeX users and can be downloaded.</para>
+            	</listitem>
+            	</itemizedlist>
+
+		
+	</section>
+
+	<section id="SRTemplate">
+	  <title>The Support Request Tracker Template</title>
+
+		<para>One of the CodeX goals is to help project teams to grow a community
+    		of users and developers around their project. The Support Request (SR)
+    		service is one of the communication mechanisms offered by CodeX between
+    		the community of users and the project team. The SR service allows any
+    		CodeX user to post a question to the project team. SRs are primarily
+    		intended for technical question about the software itself or its usage.</para>
+
+		<para>Since the SR service is entirely Web based any CodeX user can follow
+		the thread of discussions between the other users and the project team. It
+		is also possible to review all the SRs that were posted in the past and
+    		the answer given by the project team. With the Support Request service, a
+    		project team can easily and efficiently coordinate technical support
+    		activities.</para>
+
+		<para>Once a SR has been submitted, the first thing to do for the
+      		project team is to assign the SR to a project member and a priority on a
+      		scale from 1 to 9 like bugs.</para>
+
+      		<para>From there the project member can post follow-up comments to the
+      		request either to provide an answer or to ask for more details. The
+      		interesting point is that the SR Tracker allows any CodeX User to post
+      		follow-up comments to a given request. Therefore anybody can potentially
+      		bring additional information or answer the question.</para>
+
+	</section>
+
+	<section id="TaskTemplate">
+	  <title>The Task Tracker Template</title>
+
+		<para>The CodeX Task Tracking can be seen as a light weight project
+  		manager. By light weight we mean that it is nowhere near a project
+  		management software like CA-SuperProject, MS-Project or other
+  		powerful and complex desktop products available on the market. The
+  		CodeX Task Tracker cannot build a Gantt or Pert chart, it
+  		doesn&#39;t have any planning capabilities. It is rather a time
+  		sheet tool which allows project members to track their time and
+  		manage other things like weekly TODO list for instance.</para>
+
+    		<para>However the CodeX Task Tracker offer a number of features that makes
+    		it very complementary with the above mentioned project planning tools:</para>
+
+    		<itemizedlist mark="bullet"
+                  spacing="compact">
+      		<listitem>
+        	<para>Like all CodeX tools, the Task Tracker is entirely web based.
+        	Therefore any project member can update his/her time sheet regardless
+        	of its physical location.</para>
+      		</listitem>
+
+      		<listitem>
+        	<para>Tasks can be managed by authorized project members.</para>
+      		</listitem>
+
+      		<listitem>
+        	<para>Each project member has its own time sheet showing all open
+        	tasks assigned to her, their priority, description, start and end
+        	dates, percentage completion, related tasks, follow-up comments and a
+        	full audit trail of the past changes.</para>
+      		</listitem>
+
+      		<listitem>
+        	<para>Task data can be collected by the project leader(s) at any point
+        	in time and exported out of the CodeX project thanks to the Project
+        	Data Export facility (see <xref linkend="ProjectDataExport" />). This
+        	allows for easy generation of progress reports or project re-planning.</para>
+      		</listitem>
+    		</itemizedlist>
+
+    		<section id="TaskTrackerPrinciples">
+      		<title>Task Tracker Principles</title>
+
+      		<para>A task can be assigned to one or
+      		several project members and each of the project members will see the
+      		tasks in their own time sheet as soon as assignees are designated.</para>
+
+      		<para>Tasks are grouped into subprojects. The experience shows that
+      		subprojects generally correspond to high level tasks or modules in the
+      		project. You may define as much subprojects as needed (see 
+		<xref linkend="TrackerCreatingaTrackerFieldValue" />).</para>
+
+      		<para>As you already know the general rule in CodeX is that, by default,
+      		all information is visible to the CodeX community. This principle also
+      		applies to the CodeX Task Tracker and by default all your project tasks
+      		are visible to the entire CodeX community. If you want your
+      		tasks to be visible only to the project members you can define the Tracker
+		as private (see <xref linkend="TrackerGeneralSettings" />).</para>
+
+      		<para><tip><title>The CodeX Task Tracker is not a project planning tool</title>
+		<para>This
+      		is best illustrated by the fact that CodeX does not maintain any kind of
+      		dependency between the task fields that are time related. Starts date,
+     	 	end date, percentage complete and total efforts are not inter-dependent.
+      		In other words changing any of these values will not cause CodeX to
+      		compute new values for the other ones. It is entirely up to the project
+      		members to keep the time related fields in sync.</para></tip></para>
+
+		<para>The Task Tracker Template provides the following fields among others:</para>
+		
+		<itemizedlist mark="bullet"
+                    spacing="compact">
+        	<listitem>
+          	<para><emphasis role="bold">Percent complete</emphasis>: goes from
+          	&#34;Not Started&#34; to &#34;100%&#34; by step of 5%. This field
+          	indicates how much of the task has been completed so far.</para>
+        	</listitem>
+
+        	<listitem>
+          	<para><emphasis role="bold">Priority</emphasis>: task priority on a
+          	scale from 1 (lowest) to 9 (highest)</para>
+        	</listitem>
+
+        	<listitem>
+          	<para><emphasis role="bold">Summary</emphasis>: A one line
+          	description of the task</para>
+        	</listitem>
+
+        	<listitem>
+          	<para><emphasis role="bold">Original Submission</emphasis>: a comprehensive
+          	description of the task. This field accept formatted text with break
+          	lines. Web locations (http://...) typed in the task summary will be
+          	automatically transformed into hyperlink when they are later
+          	displayed.</para>
+        	</listitem>
+
+        	<listitem>
+          	<para><emphasis role="bold">Start Date and End Date</emphasis>:
+          	calendar days at which the task is expected to start and finish</para>
+       		</listitem>
+
+        	<listitem>
+          	<para><emphasis role="bold">Assigned To</emphasis>: project members
+          	in charge of the task (multiple selection is possible)</para>
+        	</listitem>
+
+        	<listitem>
+          	<para><emphasis role="bold">Effort (Hours)</emphasis>: Initial
+          	estimation of the number of working hours required to perform the
+          	new task.</para>
+        	</listitem>
+      		</itemizedlist>
+
+		</section>
+	</section>
+
+	
+  </section>
 
   <section id="TrackerAdministration">
     <title>Tracker Administration</title>

@@ -325,8 +325,8 @@
 	  are not allowed to commit any changes they have made to the
 	  source code. Source code contributions (bug fix,
 	  enhancements&hellip;) from this class of user must return to
-	  the project team via the Patch Manager (see <xref
-	      linkend="PatchManager" /> ).</para>
+	  the project team via the Patch Tracker (see <xref
+	      linkend="PatchTemplate" /> ).</para>
 
 	  <note><para><emphasis role="bold">Note</emphasis>: all source code
 	  accesses are recorded by CodeX. Project administrators
@@ -990,7 +990,7 @@ cvs diff -c -r V1
 
       <para>In both cases, store the output of the diff or cvs diff command
         in a text file. Compress the output file if it&#39;s a large one and
-        use the CodeX Patch Manager (see <xref linkend="PatchManager" /> on
+        use the CodeX Patch Tracker (see <xref linkend="PatchTemplate" /> on
         how to submit your patch to the project team).</para>
 
       <para>And thanks for contributing some code!</para>
