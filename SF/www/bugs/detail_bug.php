@@ -9,6 +9,20 @@
 bug_header(array ('title'=>'Bug Detail: '.$bug_id,
 		  'help' => 'BugUpdate.html'));
 
+// First check access control for updates
+$res_access = db_query("SELECT bug_allow_anon FROM groups WHERE group_id=$group_id");
+if (!user_isloggedin() && db_result($res_access,0,'bug_allow_anon') == 0) {
+    echo '
+	   <B><h2><span class="highlight">You are NOT logged in.</h2>
+                 <P>This project has requested that users be logged in before submitting a bug
+	   <P> Please <u><A HREF="/account/login.php?return_to='.
+	  urlencode($REQUEST_URI). 
+	'">log in</A></u> first.</span></B>';
+
+    bug_footer(array());
+    exit;
+}
+
 $sql="SELECT * FROM bug WHERE bug_id='$bug_id' AND group_id='$group_id'";
 $fields_per_line=2;
 $max_size=40;

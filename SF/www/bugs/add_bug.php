@@ -11,8 +11,20 @@ bug_header(array ('title'=>'Submit a Bug',
 $fields_per_line=2;
 $max_size = 40;
 
-// First display the message preamble
-$res_preamble  = db_query("SELECT bug_preamble FROM groups WHERE group_id=$group_id");
+// First check access control and display the message preamble if ok
+$res = db_query("SELECT bug_preamble,bug_allow_anon FROM groups WHERE group_id=$group_id");
+
+if (!user_isloggedin() && db_result($res,0,'bug_allow_anon') == 0) {
+    echo '
+	   <B><h2><span class="highlight">You are NOT logged in.</h2>
+                 <P>This project has requested that users be logged in before submitting a bug
+	   <P> Please <u><A HREF="/account/login.php?return_to='.
+	  urlencode($REQUEST_URI). 
+	'">log in</A></u> first.</span></B>';
+
+    bug_footer(array());
+    exit;
+}
 
 echo util_unconvert_htmlspecialchars(db_result($res_preamble,0,'bug_preamble'));
 

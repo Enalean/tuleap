@@ -1009,6 +1009,7 @@ CREATE TABLE groups (
   pm_preamble text NOT NULL,
   xrx_export_ettm int(11) NOT NULL default '0',
   project_type int(11) NOT NULL default '0',
+  bug_allow_anon int(11) NOT NULL default '1'
   PRIMARY KEY  (group_id),
   KEY idx_groups_status (status),
   KEY idx_groups_public (is_public),

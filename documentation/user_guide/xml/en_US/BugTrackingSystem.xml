@@ -1942,16 +1942,24 @@
 
       <itemizedlist mark="bullet" spacing="compact">
 	<listitem>
-	  <para>An introductory message that displays at the top of
-            the Bug submission form. This is a convenient way to give
-            directions and recommendations to the bug submitter. The text must
-            use HTML tags for formatting which gives a great flexibility to
-            shape the content of this preamble (you can use bold, italic,
-            embedded URL, ...)</para>
+	  <para><emphasis role="bold">Bug submission
+	  preamble</emphasis>: an introductory message that displays
+	  at the top of the Bug submission form. This is a convenient
+	  way to give directions and recommendations to the bug
+	  submitter. The text must use HTML tags for formatting which
+	  gives a great flexibility to shape the content of this
+	  preamble (you can use bold, italic, embedded
+	  URL&hellip;)</para>
 	</listitem>
 
 	<listitem>
-	  <para>Other items may be added in the future.</para>
+	  <para><emphasis role="bold">Bug submission access
+	  control</emphasis>: by default users who are not logged in
+	  (also know as anonymous users) are allowed to submit a new
+	  bug and post additional followup comments to an existing
+	  bug. By unchecking this box you can explicitely request that
+	  the user be logged in before submitting or updating a
+	  bug.</para>
 	</listitem>
       </itemizedlist>
     </section>
