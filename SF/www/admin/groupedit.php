@@ -97,11 +97,17 @@ echo show_group_type_box('group_type',$row_grp['type']);
 <OPTION <?php if ($row_grp['is_public'] == 0) print "selected "; ?> value="0">No
 </SELECT>
 
+<?
+if ( $sys_show_project_type ) {
+?>
 <p><B>Project Type:</B><br>
 <?php
 
 echo show_project_type_box($row_grp['project_type']);
 
+?>
+<?
+}
 ?>
 
 <P><B>License</B>
