@@ -44,14 +44,14 @@ function show_questions() {
 
 <B>Name of Survey:</B>
 <BR>
-<INPUT TYPE="TEXT" NAME="survey_title" VALUE="" LENGTH="60" MAXLENGTH="150"><P>
+<INPUT TYPE="TEXT" NAME="survey_title" VALUE="" SIZE="60" MAXLENGTH="150"><P>
 <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">
 <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 List question numbers, in desired order, separated by commas. <B>Refer to your list of questions</B> so you can view
 the question id's. Do <B>not</B> include spaces or end your list with a comma.
 <BR>
 Ex: 1,2,3,4,5,6,7
-<BR><INPUT TYPE="TEXT" NAME="survey_questions" VALUE="" LENGTH="90" MAXLENGTH="1500">
+<BR><INPUT TYPE="TEXT" NAME="survey_questions" VALUE="" SIZE="60" MAXLENGTH="1500">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <INPUT TYPE="BUTTON" NAME="none" VALUE="Show Existing Questions" ONCLICK="show_questions()">
 <p>

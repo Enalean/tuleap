@@ -173,4 +173,17 @@ function  survey_utils_show_comments($result) {
     echo "</table>";
 }
 
+// Take a list of question numbers as input and make sure there
+// isn't any space in the list or commas at the beginning or at the
+// end
+function  survey_utils_cleanup_questions($question_list) {
+
+    $question_list = preg_replace("/\s/","",$question_list);
+    $question_list = preg_replace("/^,+/","",$question_list);
+    $question_list = preg_replace("/,+$/","",$question_list);
+    
+    echo "<p>sq = $question_list";
+    return $question_list;
+}
+
 ?>

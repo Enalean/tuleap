@@ -12,6 +12,8 @@ function survey_data_survey_create($group_id,$survey_title,$survey_questions,
 {
     global $feedback;
 
+    $survey_questions = survey_utils_cleanup_questions($survey_questions);
+    
     $sql='INSERT INTO surveys (group_id,survey_title,survey_questions,is_active,is_anonymous) '.
 	"VALUES ('$group_id','$survey_title','$survey_questions','$is_active','$is_anonymous')";
     $result=db_query($sql);
@@ -26,7 +28,7 @@ function survey_data_survey_delete($group_id,$survey_id) {
 
     global $feedback;
 
-    // Delete first the data associate to the survey if any
+    // Delete first the data associated with the survey if any
     $res = db_query("DELETE FROM survey_responses WHERE group_id=$group_id AND survey_id=$survey_id");
     // Then delete the survey itself
     $res = db_query("DELETE FROM surveys WHERE survey_id=$survey_id");
@@ -42,14 +44,16 @@ function survey_data_survey_update($group_id,$survey_id,$survey_title,$survey_qu
     global $feedback;
     
     $feedback = '';
-	$sql="UPDATE surveys SET survey_title='$survey_title', survey_questions='$survey_questions', is_active='$is_active', is_anonymous='$is_anonymous' ".
+    $survey_questions = survey_utils_cleanup_questions($survey_questions);
+
+    $sql="UPDATE surveys SET survey_title='$survey_title', survey_questions='$survey_questions', is_active='$is_active', is_anonymous='$is_anonymous' ".
 		"WHERE survey_id='$survey_id' AND group_id='$group_id'";
-	$result=db_query($sql);
-	if (db_affected_rows($result) < 1) {
-		$feedback .= ' UPDATE FAILED - '.db_error();
-	} else {
-		$feedback .= ' UPDATE SUCCESSFUL ';
-	}
+    $result=db_query($sql);
+    if (db_affected_rows($result) < 1) {
+	$feedback .= ' UPDATE FAILED - '.db_error();
+    } else {
+	$feedback .= ' UPDATE SUCCESSFUL ';
+    }
 }
 
 function survey_data_question_create($group_id,$question,$question_type)
