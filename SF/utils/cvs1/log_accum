@@ -394,6 +394,23 @@ sub read_logfile {
 sub build_header {
     local($header);
     local($sec,$min,$hour,$mday,$mon,$year) = localtime(time);
+    local($timezone);
+
+    # Compute timezone
+    local($sec,$min,$hourGM,$mday,$mon,$yearGM,$wday,$ydayGM) = gmtime(time);
+
+    # New Year's Eve..
+    if ($yearGM<$year) {$hourGM-=24;}
+    elsif ($yearGM>$year) {$hourGM+=24;}
+    elsif ($ydayGM>$yday) {$hourGM+=24;}
+    elsif ($ydayGM<$yday) {$hourGM-=24;}
+
+    if ($hourGM>$hour) {
+      $timezone="GMT-".($hourGM-$hour);
+    } else {
+      $timezone="GMT+".($hour-$hourGM);
+    }
+
     $header = sprintf("CVSROOT:\t%s\nModule name:\t%s\n",
 		      $cvsroot,
 		      $modulename);
@@ -401,10 +418,10 @@ sub build_header {
 	$header .= sprintf("Branch: \t%s\n",
 		      $branch);
     }
-    $header .= sprintf("Changes by:\t%s\t%02d/%02d/%02d %02d:%02d:%02d",
+    $header .= sprintf("Changes by:\t%s\t%02d/%02d/%02d %02d:%02d:%02d %s",
 		      "$fullname <$mailname>",
 		      $year%100, $mon+1, $mday,
-		      $hour, $min, $sec);
+		      $hour, $min, $sec, $timezone);
 }
 
 sub mail_notification {
