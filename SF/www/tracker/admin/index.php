@@ -73,7 +73,7 @@ if ($group_id && !$atid) {
 		if ( !$ath->create($group_id,$group_id_chosen,$atid_chosen,$name,$description,$itemname) ) {
 			exit_error('Error',$ath->getErrorMessage());
 		} else {
-			$feedback = "Tracker created - Go to Admin to finish the creation";
+			$feedback = "Tracker created - Click on the new tracker ID to complete the tracker configuration";
 		}
 		include './admin_trackers.php';
 		break;
@@ -256,6 +256,7 @@ if ($group_id && !$atid) {
 			
 			$ach->displayCreateForm();
 		}
+		$ath->footer(array());
 		break;
 
 	case 'notification':
