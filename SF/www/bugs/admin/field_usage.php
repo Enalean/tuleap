@@ -84,6 +84,15 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 	<li>On the form used by other CodeX users to submit a new bug&nbsp;
          <INPUT TYPE="CHECKBOX" NAME="show_on_add" VALUE="1"'.
         (bug_data_is_showed_on_add($field)?' CHECKED':'').'>';
+
+      } else {
+	  // Do not let the user change these field settings but put them in the
+	  // form to preserve the existing setting or use the default values
+	  // imposed at the system level
+	  echo '<INPUT TYPE="HIDDEN" NAME="show_on_add_members" VALUE="'.
+	      (bug_data_is_showed_on_add_members($field)? 1:0).'">';
+	  echo '<INPUT TYPE="HIDDEN" NAME="show_on_add" VALUE="'.
+	      (bug_data_is_showed_on_add($field)? 1:0).'">';
       }
 ?>
       </ul>
