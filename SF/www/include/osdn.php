@@ -10,7 +10,7 @@ $osdn_sites[7] = array('SourceForge' => 'http://www.sourceforge.net/');
 $osdn_sites[8] = array('Freshmeat' => 'http://www.freshmeat.net/');
 $osdn_sites[9] = array('SSTC' => 'http://xww.xac.world.xerox.com/');
 $osdn_sites[10] = array('Xerox eTTM' => 'http://ettm.wrc.xerox.com/');
-$osdn_sites[11] = array('Wilson TIC' => 'http://tic.wrc.xerox.com/');
+$osdn_sites[11] = array('Wilson TIC' => 'http://xww.xserv.world.xerox.com/xservhome/tic/');
 $osdn_sites[12] = array('alphaAvenue' => 'http://alphax.wrc.xerox.com/');
 
 function osdn_nav_dropdown() {
