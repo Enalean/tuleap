@@ -328,30 +328,35 @@ while ( $field = bug_list_all_fields(cmp_place_query)) {
 
     if (bug_data_is_select_box($field) ) {
 
-		// Special case for assigned to field: add all users who had a assignation to a bug (even they left the project)
-		if ( $field == "assigned_to" ) {
-			// Retrieve all the people who have an assignation for this group (even they left the project)
-			$res_all_id_tech = bug_data_get_all_id_tech($group_id);
-			$tech_all_id_array = util_result_column_to_array($res_all_id_tech);		
-			$res_all_tech = bug_data_get_all_tech($tech_all_id_array);
-			$tech_all_array = util_result_build_array($res_all_tech,0,1);
-			// Retrieve then the tech list
-			$res_tech = bug_data_get_technicians($group_id);
-			$tech_array = util_result_build_array($res_tech,0,1);
-			// Merge the arrays			
-			$result_array = merge_hashtable($tech_all_array,$tech_array);
-			uasort($result_array,cmp_username);
-			$boxes .= html_build_select_box_from_arrays (array_keys($result_array),array_values($result_array),$field,($advsrch ? $prefs[$field] : $prefs[$field][0]),true,'None', true,'Any');
-		} else {
-			$boxes .= 
-			    bug_field_display($field,$group_id,
-					      ($advsrch ? $prefs[$field] : $prefs[$field][0]),
-					      false,false,($pv?true:false),false,true,'None', true,'Any');
-		}
-
+        // Special case for assigned to field: add all users who had a assignation to a bug (even they left the project)
+        if ( $field == "assigned_to" ) {
+            if ($pv) {
+                $boxes .= bug_field_display($field,$group_id,
+                                            ($advsrch ? $prefs[$field] : $prefs[$field][0]),
+                                            false,false,true,false,true,'None', true,'Any');
+            } else {
+                // Retrieve all the people who have an assignation for this group (even they left the project)
+                $res_all_id_tech = bug_data_get_all_id_tech($group_id);
+                $tech_all_id_array = util_result_column_to_array($res_all_id_tech);		
+                $res_all_tech = bug_data_get_all_tech($tech_all_id_array);
+                $tech_all_array = util_result_build_array($res_all_tech,0,1);
+                // Retrieve then the tech list
+                $res_tech = bug_data_get_technicians($group_id);
+                $tech_array = util_result_build_array($res_tech,0,1);
+                // Merge the arrays			
+                $result_array = merge_hashtable($tech_all_array,$tech_array);
+                uasort($result_array,cmp_username);
+                $boxes .= html_build_select_box_from_arrays (array_keys($result_array),array_values($result_array),$field,($advsrch ? $prefs[$field] : $prefs[$field][0]),true,'None', true,'Any');
+            }
+        } else {
+            $boxes .= 
+                bug_field_display($field,$group_id,
+                                  ($advsrch ? $prefs[$field] : $prefs[$field][0]),
+                                  false,false,($pv?true:false),false,true,'None', true,'Any');
+        }
     } else if (bug_data_is_date_field($field) ){
-
-	$load_cal = true; // We need to load the Javascript Calendar
+        
+        $load_cal = true; // We need to load the Javascript Calendar
 	if ($advsrch) 
 	    $boxes .= bug_multiple_field_date($field,$prefs[$field][0],
 					      $prefs[$field.'_end'][0],0,0,$pv);
