@@ -65,38 +65,43 @@ if (db_numrows($result) > 0) {
 			<TEXTAREA NAME="details" ROWS="10" COLS="60"></TEXTAREA>
 		</TD></TR>
 
-		<TR><TD COLSPAN="2">';
+		<TR><TD COLSPAN="2">
+			<H3>DO NOT enter passwords in your message!</H3>';
 
 	if (!user_isloggedin()) {
-		echo '
-			<h3><FONT COLOR="RED">Please <A HREF="/account/login.php">log in!</A></FONT></h3><BR>
-			If you <B>cannot</B> login, then enter your email address here:<P>
-			<INPUT TYPE="TEXT" NAME="user_email" SIZE="30" MAXLENGTH="35">';
+		echo '<B><FONT COLOR="RED"><H2>You Are NOT Logged In</H2>
+                                               <P>Please <A HREF="/account/login.php?return_to='.
+		    urlencode($REQUEST_URI).
+		    '">log in,</A> so followups can be emailed to you.</FONT></B><P>';
 
+		echo '
+                                                 If you <B>cannot</B> login, then enter your email address here:<P>
+		       <INPUT TYPE="TEXT" NAME="user_email" SIZE="30" MAXLENGTH="35">';
 	}
 
 	echo '
-			<P>
-			<H3>DO NOT enter passwords in your message!</H3>
-			<P>
-			<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
-			</FORM>
 		</TD></TR>
 		<P>
 
-		<TR><TD COLSPAN="2">';
+		<TR><TD COLSPAN="2"><hr>';
 
 	echo show_support_details($support_id);
 
 	?>
 
-		<TR><TD COLSPAN="2">
+		<TR><TD COLSPAN="2"><hr>
 	<?php
 
 	show_supporthistory($support_id);
 
 	?>
 		</TD></TR>
+
+	<TR><TD COLSPAN="2" ALIGN="MIDDLE">
+	  <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit Changes">
+	  </FORM>
+	</TD></TR>
+
 	</TABLE>
 	<?php
 

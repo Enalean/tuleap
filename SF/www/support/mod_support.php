@@ -86,13 +86,13 @@ if (db_numrows($result) > 0) {
 		<P>
 		<B>OR Post a Follow-up Comment:</B><BR>
 		<TEXTAREA NAME="details" ROWS="7" COLS="60"></TEXTAREA>
-		<P>
+		<hr>
 		<?php
 			echo show_support_details($support_id); 
 		?>
 	</TD></TR>
 
-	<TR><TD COLSPAN="2">
+	<TR><TD COLSPAN="2"><hr>
 		<?php 
 			echo show_supporthistory($support_id); 
 		?>
