@@ -8,6 +8,7 @@
 
 require('pre.php');
 require('../support_utils.php');
+require ($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
 
 if ($group_id && user_ismember($group_id,'S2')) {
 
@@ -63,6 +64,29 @@ if ($group_id && user_ismember($group_id,'S2')) {
 				$feedback .= ' Support Category Name Modified ';
 			}
 
+		} else if ($other_settings_update) {
+
+		    group_add_history ('Changed Support Request Settings','',$group_id);
+		    //blank out any invalid email addresses
+		    if ($new_support_address && !validate_emails($new_support_address)) { 
+			$new_support_address='';
+			$feedback .= ' Email Address Appeared Invalid ';
+		    }	    
+
+		    // Update the Group  table now
+		    $result=db_query('UPDATE groups SET '
+		     ."send_all_support='$send_all_support', "
+	             .($new_support_address? "new_support_address='$new_support_address', " : "")
+	             ."support_preamble='".htmlspecialchars($form_preamble)."' "
+	             ."WHERE group_id=$group_id");
+
+		    if (!$result) {
+			$feedback .= ' UPDATE FAILED! '.db_error();
+		    } else if (db_affected_rows($result) < 1) {
+			$feedback .= ' NO DATA CHANGED! ';
+		    } else {
+			$feedback .= ' SUCCESSFUL UPDATE';
+		    }
 		}
 
 	} 
@@ -74,7 +98,7 @@ if ($group_id && user_ismember($group_id,'S2')) {
 		/*
 			Show categories and blank row
 		*/
-		support_header(array ('title'=>'Add/Change Categories'));
+		support_header_admin(array ('title'=>'Manage SR Categories'));
 
 		echo "<H1>Add Support Request Categories</H1>";
 
@@ -113,7 +137,7 @@ if ($group_id && user_ismember($group_id,'S2')) {
 		/*
 			Show categories and blank row
 		*/
-		support_header(array ('title'=>'Add/Change Canned Responses'));
+		support_header_admin(array ('title'=>'Manage Canned Responses'));
 
 		echo "<H1>Add Canned Responses</H1>";
 
@@ -173,7 +197,7 @@ if ($group_id && user_ismember($group_id,'S2')) {
 		/*
 			Show categories and blank row
 		*/
-		support_header(array ('title'=>'Update Canned Responses'));
+		support_header_admin(array ('title'=>'Update Canned Responses'));
 
 		echo "<H1>Update Canned Responses</H1>";
 
@@ -217,7 +241,7 @@ if ($group_id && user_ismember($group_id,'S2')) {
 		/*
 			Allow modification of a support category
 		*/
-		support_header(array('title'=>'Change a Support Manager Category'));
+		support_header_admin(array('title'=>'Change a Support Manager Category'));
 
 		echo '
 			<H1>Modify a Support Category</H1>';
@@ -253,22 +277,64 @@ if ($group_id && user_ismember($group_id,'S2')) {
 
 		support_footer(array());
 
+	} else if ($other_settings) {
+	    
+	    /*     Show existing values    */
+		support_header_admin(array ('title'=>'Support Request Admin - Other Settings'));
+		$res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
+		if (db_numrows($res_grp) < 1) {
+		    exit_no_group();
+		}
+		$row_grp = db_fetch_array($res_grp);
+
+		echo '<H2>Other Settings</h2>';
+
+		echo '<FORM action="'.$PHP_SELF.'" method="post">
+<INPUT type="hidden" name="group_id" value="'.$group_id.'">
+<INPUT type="hidden" name="other_settings" value="y">
+<INPUT type="hidden" name="other_settings_update" value="y">
+<INPUT type="hidden" name="post_changes" value="y">
+<h3>Submission Form Preamble</h3>
+<P><b>Introductory message showing at the top of  the Support Request submission form :</b>
+<br>(HTML tags allowed)<br>
+<BR><TEXTAREA cols="70" rows="8" wrap="virtual" name="form_preamble">'.
+$row_grp['support_preamble'].'</TEXTAREA>';
+
+
+echo '<h3>Email Notification Rules</h3>
+              <P><B>If you wish, you can provide email addresses (separated by a comma) to which new Support Request (SR) submissions will be sent .</B><BR>
+              (Remark: SR submission and updates are always sent to the SR submitter and assignee as well as all people who have posted a follow-up comment)<br>
+	<BR><INPUT TYPE="TEXT" NAME="new_support_address" VALUE="'.$row_grp['new_support_address'].'" SIZE="45" MAXLENGTH="80"> 
+	&nbsp;&nbsp;&nbsp;(send on all updates) <INPUT TYPE="CHECKBOX" NAME="send_all_support" VALUE="1" '. (($row_grp['send_all_support'])?'CHECKED':'') .'><BR>';
+
+echo '
+<HR>
+<P><INPUT type="submit" name="submit" value="Submit">
+</FORM>';
+
+		
+		support_footer(array());
+
+
 	} else {
 		/*
 			Show main page
 		*/
 
-		support_header(array ('title'=>'Support Manager Administration'));
+		support_header_admin(array ('title'=>'Support Manager Administration'));
 
 		echo '
-			<H1>Support Manager Administration</H1>';
+			<H2>Support Manager Administration</H1>';
 
-		echo '<P>
-			<A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&support_cat=1">Add Support Request Categories</A><BR>';
-		echo "\nAdd categories of support like, 'mail module','gant chart module','cvs', etc<P>";
-		echo '<P>
-			<A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&create_canned=1">Add Canned Responses</A><BR>';
-		echo "\nCreate/Change generic response messages for the support tool.<P>";
+		echo '<h3>
+			<A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&support_cat=1">Manage Support Request Categories</A></h3>';
+		echo "\nCreate/Modify categories of support like, 'mail module','gant chart module','cvs', etc";
+		echo '<h3>
+			<A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&create_canned=1">Manage Canned Responses</A></h3>';
+		echo "\nCreate/Update generic response messages for the support tool.";
+		echo '<h3>
+			<A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&other_settings=1">Other Configuration Settings</A></h3>';
+		echo "\nDefine introductory messages for submission forms, email notification,...";
 
 		support_footer(array());
 	}

@@ -8,16 +8,11 @@
 
 support_header(array ('title'=>'Submit a Support Request'));
 
-	echo '
-	<P>
-	<H2>Submit A Support Request</H2>
-	<P>
-	<B>Fill out the form below.</B> Fill in complete information and make sure 
-	you include enough info that someone will be able to help you.
-	<P>';
-	
-	// LJ NO need for this remark. Related to https protocol 
-        // LJ echo 'If you are requesting something that could affect security, <B>YOU MUST BE LOGGED IN</B>.';
+// First display the message preamble
+$res_preamble  = db_query("SELECT support_preamble FROM groups WHERE group_id=$group_id");
+
+echo "<H2>Submit A Support Request</H2>\n";
+echo util_unconvert_htmlspecialchars(db_result($res_preamble,0,'support_preamble'));
 
 	echo '
 	<P>
@@ -25,8 +20,8 @@ support_header(array ('title'=>'Submit a Support Request'));
 	<INPUT TYPE="HIDDEN" NAME="func" VALUE="postaddsupport">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 	<TABLE>
-	<TR><TD VALIGN="TOP" COLSPAN="2"><B>For Project:</B><BR>'.group_getname($group_id).'</TD></TR>
-	<TR><TD VALIGN="TOP" COLSPAN="2"><B>Category:</B><BR>';
+	<TR><TD VALIGN="TOP" COLSPAN="2"><B>For Project:</B>&nbsp;&nbsp;'.group_getname($group_id).'</TD></TR>
+	<TR><TD VALIGN="TOP" COLSPAN="2"><B>Category:</B>&nbsp;&nbsp;';
 
 	echo support_category_box ($group_id,'support_category_id');
 

@@ -64,7 +64,8 @@ ALTER TABLE user ADD windows_pw VARCHAR(80) DEFAULT '' NOT NULL;
 ALTER TABLE surveys ADD is_anonymous INTEGER DEFAULT '0' NOT NULL AFTER is_active;
 
 #
-# Add fields for customizable bug form preamble
+# Add fields for customizable bug,support form preamble
 #
 
 ALTER TABLE groups ADD bug_preamble TEXT NOT NULL;
+ALTER TABLE groups ADD support_preamble TEXT NOT NULL;

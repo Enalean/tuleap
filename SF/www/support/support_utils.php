@@ -28,10 +28,10 @@ function support_header($params) {
 	$project=project_get_object($group_id);
 
 	if (!$project->isProject()) {
-		exit_error('Error','Only Projects Can Use The Tech Support Manager');
+		exit_error('Error','Only Projects Can Use The Support Request Manager');
 	}
 	if (!$project->usesSupport()) {
-		exit_error('Error','This Project Has Turned Off The Tech Support Manager');
+		exit_error('Error','This Project Has Turned Off The Support Request Manager');
 	}
 
 
@@ -46,6 +46,33 @@ function support_header($params) {
 
 	echo '</B>';
 	echo '<HR NoShade SIZE="1" SIZE="300">';
+}
+
+function support_header_admin($params) {
+    global $group_id,$is_support_page,$DOCUMENT_ROOT;
+
+    //used so the search box will add the necessary element to the pop-up box
+    $is_support_page=1;
+    
+    //required params for site_project_header();
+    $params['group']=$group_id;
+    $params['toptab']='support';
+    
+    $project=project_get_object($group_id);
+    
+    //only projects can use the bug tracker, and only if they have it turned on
+    if (!$project->isProject()) {
+	exit_error('Error','Only Projects Can Use The Support Request Manager');
+    }
+    if (!$project->usesBugs()) {
+	exit_error('Error','This Project Has Turned Off The Support Request Manager');
+    }
+    echo site_project_header($params);
+    echo '<P><B><A HREF="/support/admin/?group_id='.$group_id.'">Admin</A></B>';
+    echo ' | <B><A HREF="/support/admin/index.php?support_cat=1&group_id='.$group_id.'">Manage Categories</A></B>';
+    echo ' | <b><A HREF="/support/admin/index.php?create_canned=1&group_id='.$group_id.'">Manage Canned Responses</A></b>';
+    echo ' | <b><A HREF="/support/admin/index.php?other_settings=1&group_id='.$group_id.'">Other Settings</A></b>';
+     echo ' <hr width="300" size="1" align="left" noshade>';
 }
 
 function support_footer($params) {
