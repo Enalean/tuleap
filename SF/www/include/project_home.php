@@ -107,10 +107,11 @@ print '
 
 // ############################# File Releases
 
-echo $HTML->box1_top('Latest File Releases'); 
-$unix_group_name = $project->getUnixName();
+if ($project->usesFile()) {
+    echo $HTML->box1_top('Latest File Releases'); 
+    $unix_group_name = $project->getUnixName();
 
-echo '
+    echo '
 	<TABLE cellspacing="1" cellpadding="5" width="100%" border="0">
 		<TR class="boxitem">
 		<TD align="left"">
@@ -190,7 +191,7 @@ if (!$res_files || $rows_files < 1) {
 </div>
 <?php
 	echo $HTML->box1_bottom();
-
+ }
 ?>
 <P>
 <TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0">
@@ -203,14 +204,16 @@ echo $HTML->box1_top("Public Areas");
 
 // ################# Homepage Link
 
-print "<A ";
-if (substr($project->getHomePage(), 0, 1)!="/") {
-    // Absolute link -> open new window on click
-    print "target=_blank ";
- }
-print "href=\"" . $project->getHomePage() . "\">";
-html_image("ic/home16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>'Homepage'));
-print '&nbsp;Project Homepage</A>';
+if ($project->usesHomePage()) {
+    print "<A ";
+    if (substr($project->getHomePage(), 0, 1)!="/") {
+        // Absolute link -> open new window on click
+        print "target=_blank ";
+    }
+    print "href=\"" . $project->getHomePage() . "\">";
+    html_image("ic/home16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>'Homepage'));
+    print '&nbsp;Project Homepage</A>';
+}
 
 // ################## forums
 

@@ -96,6 +96,18 @@ class Project extends Group {
     }
 
 
+    function usesHomePage() {
+        return $this->use_service['homepage'];
+    }
+    
+    function usesAdmin() {
+        return $this->use_service['admin'];
+    }
+    
+    function usesSummary() {
+        return $this->use_service['summary'];
+    }
+
     function usesTracker() {
         return $this->use_service['tracker'];
     }

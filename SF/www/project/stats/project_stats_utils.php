@@ -22,9 +22,85 @@ function week_to_dates( $week, $year = 0 ) {
 }
 
 
+function stats_get_sql_query($group_id) {
+    $grp=project_get_object($group_id);
+    $sql  = "SELECT month,week,day,COUNT(day),MAX(developers) as developers ,AVG(group_ranking),AVG(group_metric)";
+    if ($grp->usesFile())
+        $sql .= ", SUM(downloads)";
+    if ($grp->usesHomePage())
+        $sql .= ", SUM(site_views + subdomain_views)";
+    if ($grp->usesForum())
+        $sql .= ", SUM(msg_posted)";
+    if ($grp->usesBugs())
+        $sql .= ", SUM(bugs_opened),SUM(bugs_closed)";
+    if ($grp->usesSupport())
+        $sql .= ", SUM(support_opened),SUM(support_closed)";
+    if ($grp->usesPm())
+        $sql .= ", SUM(tasks_opened),SUM(tasks_closed)";
+    if ($grp->usesTracker())
+        $sql .= ", SUM(artifacts_opened),SUM(artifacts_closed)";
+    if ($grp->usesPatch())
+        $sql .= ", SUM(patches_opened),SUM(patches_closed)";
+    if ($grp->usesCVS())
+        $sql .= ", SUM(cvs_commits),SUM(cvs_adds)";
+    if ($grp->usesSVN())
+        $sql .= ", SUM(svn_access_count)";
+    $sql .= "FROM stats_project ";
+    return $sql;
+}  
+
+function stats_get_table_service_header($group_id) {
+    global $Language;
+    $grp=project_get_object($group_id);
+    $text ='';
+    if ($grp->usesHomePage())
+        $text .=  '<TD class="boxtitle">'.$Language->getText('project_stats_index','page_views').'</TD>';
+    if ($grp->usesFile())
+        $text .=  '<TD class="boxtitle">'.$Language->getText('project_stats_index','downloads').'</TD>';
+    if ($grp->usesBugs())
+        $text .=  '<TD class="boxtitle">'.$Language->getText('project_stats_index','bugs').'</TD>';
+    if ($grp->usesSupport())
+        $text .=  '<TD class="boxtitle">'.$Language->getText('project_stats_index','support').'</TD>';
+    if ($grp->usesPm())
+        $text .=  '<TD class="boxtitle">'.$Language->getText('project_stats_index','tasks').'</TD>';
+    if ($grp->usesTracker())
+        $text .=  '<TD class="boxtitle">'.$Language->getText('project_stats_index','artifacts').'</TD>';
+    if ($grp->usesPatch())
+        $text .=  '<TD class="boxtitle">'.$Language->getText('project_stats_index','patches').'</TD>';
+    if ($grp->usesCVS())
+        $text .=  '<TD class="boxtitle">'.$Language->getText('project_stats_index','cvs').'</TD>';
+    if ($grp->usesSVN())
+        $text .=  '<TD class="boxtitle">'.$Language->getText('project_stats_index','svn').'</TD>';
+    return $text; 
+}
+
+function stats_get_table_service_rows($group_id,$row) {
+    $grp=project_get_object($group_id);
+    $text ='';
+    if ($grp->usesHomePage())
+        $text .= '<TD align="center">' . number_format( $row["SUM(site_views + subdomain_views)"] ) . '</TD>';
+    if ($grp->usesFile())
+        $text .= '<TD align="center">' . number_format( $row["SUM(downloads)"] ) . '</TD>';
+    if ($grp->usesBugs())
+        $text .= '<TD align="center">' . $row["SUM(bugs_opened)"] . " ( " . $row["SUM(bugs_closed)"] . ' )</TD>';
+    if ($grp->usesSupport())
+        $text .= '<TD align="center">' . $row["SUM(support_opened)"] . " ( " . $row["SUM(support_closed)"] . ' )</TD>';
+    if ($grp->usesPm())
+        $text .= '<TD align="center">' . $row["SUM(tasks_opened)"] . " ( " . $row["SUM(tasks_closed)"] . ' )</TD>';
+    if ($grp->usesTracker())
+        $text .= '<TD align="center">' . $row["SUM(artifacts_opened)"] . " ( " . $row["SUM(artifacts_closed)"] . ' )</TD>';
+    if ($grp->usesPatch())
+        $text .= '<TD align="center">' . $row["SUM(patches_opened)"] . " ( " . $row["SUM(patches_closed)"] . ' )</TD>';
+    if ($grp->usesCVS())
+        $text .= '<TD align="center">' . $row["SUM(cvs_commits)"] . '</TD>';
+    if ($grp->usesSVN())
+        $text .= '<TD align="center">' . $row["SUM(svn_access_count)"] . '</TD>';
+    return $text;
+}  
+
 // stats_project_daily
 function stats_project_daily( $group_id, $span = 7 ) {
-    global $sys_activate_tracker,$Language;
+    global $Language;
 
     if (! $span ) { 
         $span = 7;
@@ -38,17 +114,7 @@ function stats_project_daily( $group_id, $span = 7 ) {
     $month = sprintf("%02d", $begin_date["tm_mon"] + 1);
     $day = $begin_date["tm_mday"];
     
-    $sql  = "SELECT month,day,AVG(group_ranking),AVG(group_metric),SUM(downloads),SUM(site_views + subdomain_views),SUM(msg_posted),";
-    if ($grp->activateOldBug())
-        $sql .= "SUM(bugs_opened),SUM(bugs_closed),";
-    if ($grp->activateOldSR())
-        $sql .= "SUM(support_opened),SUM(support_closed),";
-    if ($grp->activateOldTask())
-        $sql .= "SUM(tasks_opened),SUM(tasks_closed),";
-    if ($sys_activate_tracker)
-        $sql .= "SUM(artifacts_opened),SUM(artifacts_closed),";
-    $sql .= "SUM(patches_opened),SUM(patches_closed),SUM(cvs_commits),SUM(cvs_adds)";
-    $sql .= "FROM stats_project ";
+    $sql  = stats_get_sql_query($group_id);
     $sql .= "WHERE ( (( month = " . $year . $month . " AND day >= " . $day . " ) OR ";
     $sql .= "( month > " . $year . $month . " )) AND group_id = " . $group_id . " ) ";
     $sql .= "GROUP BY month,day ORDER BY month DESC, day DESC";
@@ -64,38 +130,16 @@ function stats_project_daily( $group_id, $span = 7 ) {
         print	'<P><TABLE width="100%" cellpadding=2 cellspacing=1 border=0>'
             . '<TR class="boxtable">'
             . '<TD class="boxtitle">'.$Language->getText('project_admin_utils','date').'</TD>'
-            . '<TD class="boxtitle">'.$Language->getText('project_stats_index','rank').'</TD>'
-            . '<TD class="boxtitle">'.$Language->getText('project_stats_index','page_views').'</TD>'
-            . '<TD class="boxtitle">'.$Language->getText('project_stats_index','downloads').'</TD>';
-        if ($grp->activateOldBug())
-            print '<TD class="boxtitle">'.$Language->getText('project_stats_index','bugs').'</TD>';
-        if ($grp->activateOldSR())
-            print '<TD class="boxtitle">'.$Language->getText('project_stats_index','support').'</TD>';
-        if ($grp->activateOldTask())
-            print '<TD class="boxtitle">'.$Language->getText('project_stats_index','tasks').'</TD>';
-        if ($sys_activate_tracker)
-            print '<TD class="boxtitle">'.$Language->getText('project_stats_index','artifacts').'</TD>';
-        print '<TD class="boxtitle">'.$Language->getText('project_stats_index','patches').'</TD>'
-            . '<TD class="boxtitle">'.$Language->getText('project_stats_index','cvs').'</TD>'
-            . '</TR>' . "\n";
+            . '<TD class="boxtitle">'.$Language->getText('project_stats_index','rank').'</TD>';
+        print stats_get_table_service_header($group_id);
+        print '</TR>' . "\n";
         while ( $row = db_fetch_array($res) ) {
             print	'<TR class="' . util_get_alt_row_color($i++) . '">'
                 . '<TD align="center">' . gmstrftime("%e %b %Y", gmmktime(0,0,0,substr($row["month"],4,2),$row["day"],substr($row["month"],0,4)) ) . '</TD>'
                 //. '<TD>' . $row["month"] . " " . $row["day"] . '</TD>'
-                . '<TD align="center">' . sprintf("%d", $row["AVG(group_ranking)"]) . " ( " . sprintf("%0.2f", $row["AVG(group_metric)"]) . ' ) </TD>'
-                . '<TD align="center">' . number_format( $row["SUM(site_views + subdomain_views)"] ) . '</TD>'
-                . '<TD align="center">' . number_format( $row["SUM(downloads)"] ) . '</TD>';
-            if ($grp->activateOldBug())
-                print '<TD align="center">' . $row["SUM(bugs_opened)"] . " ( " . $row["SUM(bugs_closed)"] . ' )</TD>';
-            if ($grp->activateOldSR())
-                print '<TD align="center">' . $row["SUM(support_opened)"] . " ( " . $row["SUM(support_closed)"] . ' )</TD>';
-            if ($grp->activateOldTask())
-                print '<TD align="center">' . $row["SUM(tasks_opened)"] . " ( " . $row["SUM(tasks_closed)"] . ' )</TD>';
-            if ($sys_activate_tracker)
-                print '<TD align="center">' . $row["SUM(artifacts_opened)"] . " ( " . $row["SUM(artifacts_closed)"] . ' )</TD>';
-            print '<TD align="center">' . $row["SUM(patches_opened)"] . " ( " . $row["SUM(patches_closed)"] . ' )</TD>'
-                . '<TD align="center">' . $row["SUM(cvs_commits)"] . '</TD>'
-                . '</TR>' . "\n";
+                . '<TD align="center">' . sprintf("%d", $row["AVG(group_ranking)"]) . " ( " . sprintf("%0.2f", $row["AVG(group_metric)"]) . ' ) </TD>';
+            print stats_get_table_service_rows($group_id,$row);
+            print '</TR>' . "\n";
         }
         
         print '</TABLE>';
@@ -124,17 +168,7 @@ function stats_project_weekly( $group_id, $span = 8 ) {
     $month = sprintf("%02d", $begin_date["tm_mon"] + 1);
     $day = $begin_date["tm_mday"];
 
-    $sql  = "SELECT month,week,AVG(group_ranking),AVG(group_metric),SUM(downloads),SUM(site_views + subdomain_views),SUM(msg_posted),";
-    if ($grp->activateOldBug())
-        $sql .= "SUM(bugs_opened),SUM(bugs_closed),";
-    if ($grp->activateOldSR())
-        $sql .= "SUM(support_opened),SUM(support_closed),";
-    if ($grp->activateOldTask())
-        $sql .= "SUM(tasks_opened),SUM(tasks_closed),";
-    if ($sys_activate_tracker)
-        $sql .= "SUM(artifacts_opened),SUM(artifacts_closed),";	
-    $sql .= "SUM(patches_opened),SUM(patches_closed),SUM(cvs_commits),SUM(cvs_adds)";
-    $sql .= "FROM stats_project ";
+    $sql  = stats_get_sql_query($group_id);
     $sql .= "WHERE ( (( month > " . $year . "00 AND week > " . $week . " ) OR ( month > " . $year . $month . "))";
     $sql .= "AND group_id = " . $group_id . " ) ";
     $sql .= "GROUP BY week ORDER BY month DESC, week DESC";
@@ -150,20 +184,9 @@ function stats_project_weekly( $group_id, $span = 8 ) {
         print	'<P><TABLE width="100%" cellpadding=2 cellspacing=1 border=0>'
             . '<TR class="boxtable">'
             . '<TD class="boxtitle">'.$Language->getText('project_stats_index','week').'</TD>'
-            . '<TD class="boxtitle">'.$Language->getText('project_stats_index','rank').'</TD>'
-            . '<TD class="boxtitle">'.$Language->getText('project_stats_index','page_views').'</TD>'
-            . '<TD class="boxtitle">'.$Language->getText('project_stats_index','downloads').'</TD>';
-        if ($grp->activateOldBug())
-            print '<TD class="boxtitle">'.$Language->getText('project_stats_index','bugs').'</TD>';
-        if ($grp->activateOldSR())
-            print '<TD class="boxtitle">'.$Language->getText('project_stats_index','support').'</TD>';
-        if ($grp->activateOldTask())
-            print '<TD class="boxtitle">'.$Language->getText('project_stats_index','tasks').'</TD>';
-        if ($sys_activate_tracker)
-            print '<TD class="boxtitle">'.$Language->getText('project_stats_index','artifacts').'</TD>';
-        print '<TD class="boxtitle">'.$Language->getText('project_stats_index','patches').'</TD>'
-            . '<TD class="boxtitle">'.$Language->getText('project_stats_index','cvs').'</TD>'
-            . '</TR>' . "\n";
+            . '<TD class="boxtitle">'.$Language->getText('project_stats_index','rank').'</TD>';
+        print stats_get_table_service_header($group_id);
+        print '</TR>' . "\n";
 
         $today = time();
 
@@ -176,20 +199,9 @@ function stats_project_weekly( $group_id, $span = 8 ) {
 
             print	'<TR class="' . util_get_alt_row_color($i++) . '">'
                 . '<TD align="center">' . $row["week"] . "&nbsp;(" . gmstrftime("%D", $w_begin) . " -> " . strftime("%D", $w_end) . ') </TD>'
-                . '<TD align="center">' . sprintf("%d", $row["AVG(group_ranking)"]) . " ( " . sprintf("%0.2f", $row["AVG(group_metric)"]) . ' ) </TD>'
-                . '<TD align="center">' . number_format( $row["SUM(site_views + subdomain_views)"] ) . '</TD>'
-                . '<TD align="center">' . number_format( $row["SUM(downloads)"] ) . '</TD>';
-            if ($grp->activateOldBug())
-                print '<TD align="center">' . $row["SUM(bugs_opened)"] . " ( " . $row["SUM(bugs_closed)"] . ' )</TD>';
-            if ($grp->activateOldSR())
-                print '<TD align="center">' . $row["SUM(support_opened)"] . " ( " . $row["SUM(support_closed)"] . ' )</TD>';
-            if ($grp->activateOldTask())
-                print '<TD align="center">' . $row["SUM(tasks_opened)"] . " ( " . $row["SUM(tasks_closed)"] . ' )</TD>';
-            if ($sys_activate_tracker)
-                print '<TD align="center">' . $row["SUM(artifacts_opened)"] . " ( " . $row["SUM(artifacts_closed)"] . ' )</TD>';
-            print '<TD align="center">' . $row["SUM(patches_opened)"] . " ( " . $row["SUM(patches_closed)"] . ' )</TD>'
-                . '<TD align="center">' . $row["SUM(cvs_commits)"] . '</TD>'
-                . '</TR>' . "\n";
+                . '<TD align="center">' . sprintf("%d", $row["AVG(group_ranking)"]) . " ( " . sprintf("%0.2f", $row["AVG(group_metric)"]) . ' ) </TD>';
+            print stats_get_table_service_rows($group_id,$row);
+            print '</TR>' . "\n";
         }
 
         print '</TABLE>';
@@ -220,17 +232,7 @@ function stats_project_monthly( $group_id, $span = 4 ) {
         $year -= 1;
     }
 
-    $sql  = "SELECT month,AVG(group_ranking),AVG(group_metric),SUM(downloads),SUM(site_views + subdomain_views),SUM(msg_posted),";
-    if ($grp->activateOldBug())
-        $sql .= "SUM(bugs_opened),SUM(bugs_closed),";
-    if ($grp->activateOldSR())
-        $sql .= "SUM(support_opened),SUM(support_closed),";
-    if ($grp->activateOldTask())
-        $sql .= "SUM(tasks_opened),SUM(tasks_closed),";
-    if ($sys_activate_tracker)
-        $sql .= "SUM(artifacts_opened),SUM(artifacts_closed),";	
-    $sql .= "SUM(patches_opened),SUM(patches_closed),SUM(cvs_commits),SUM(cvs_adds)";
-    $sql .= "FROM stats_project ";
+    $sql  = stats_get_sql_query($group_id);
     $sql .= "WHERE ( month > " . $year . sprintf("%02d", $month) . " AND group_id = " . $group_id . " ) ";
     $sql .= "GROUP BY month ORDER BY month DESC";
 
@@ -245,38 +247,16 @@ function stats_project_monthly( $group_id, $span = 4 ) {
         print	'<P><TABLE width="100%" cellpadding=0 cellspacing=0 border=0>'
             . '<TR class="boxtable">'
             . '<TD class="boxtitle">'.$Language->getText('project_stats_index','month').'</TD>'
-            . '<TD class="boxtitle">'.$Language->getText('project_stats_index','rank').'</TD>'
-            . '<TD class="boxtitle">'.$Language->getText('project_stats_index','page_views').'</TD>'
-            . '<TD class="boxtitle">'.$Language->getText('project_stats_index','downloads').'</TD>';
-        if ($grp->activateOldBug())
-            print '<TD class="boxtitle">'.$Language->getText('project_stats_index','bugs').'</TD>';
-        if ($grp->activateOldSR())
-            print '<TD class="boxtitle">'.$Language->getText('project_stats_index','support').'</TD>';
-        if ($grp->activateOldTask())
-            print '<TD class="boxtitle">'.$Language->getText('project_stats_index','tasks').'</TD>';
-        if ($sys_activate_tracker)
-            print '<TD class="boxtitle">'.$Language->getText('project_stats_index','artifacts').'</TD>';
-        print '<TD class="boxtitle">'.$Language->getText('project_stats_index','patches').'</TD>'
-            . '<TD class="boxtitle">'.$Language->getText('project_stats_index','cvs').'</TD>'
-            . '</TR>' . "\n";
+            . '<TD class="boxtitle">'.$Language->getText('project_stats_index','rank').'</TD>';
+        print stats_get_table_service_header($group_id);
+        print '</TR>' . "\n";
 
         while ( $row = db_fetch_array($res) ) {
             print	'<TR class="' . util_get_alt_row_color($i++) . '">'
                 . '<TD align="center">' . gmstrftime("%B %Y", mktime(0,0,1,substr($row["month"],4,2),1,substr($row["month"],0,4)) ) . '</TD>'
-                . '<TD align="center">' . sprintf("%d", $row["AVG(group_ranking)"]) . " ( " . sprintf("%0.2f", $row["AVG(group_metric)"]) . ' ) </TD>'
-                . '<TD align="center">' . number_format( $row["SUM(site_views + subdomain_views)"] ) . '</TD>'
-                . '<TD align="center">' . number_format( $row["SUM(downloads)"] ) . '</TD>';
-            if ($grp->activateOldBug())
-                print '<TD align="center">' . $row["SUM(bugs_opened)"] . " ( " . $row["SUM(bugs_closed)"] . ' )</TD>';
-            if ($grp->activateOldSR())
-                print '<TD align="center">' . $row["SUM(support_opened)"] . " ( " . $row["SUM(support_closed)"] . ' )</TD>';
-            if ($grp->activateOldTask())
-                print '<TD align="center">' . $row["SUM(tasks_opened)"] . " ( " . $row["SUM(tasks_closed)"] . ' )</TD>';
-            if ($sys_activate_tracker)
-                print '<TD align="center">' . $row["SUM(artifacts_opened)"] . " ( " . $row["SUM(artifacts_closed)"] . ' )</TD>';
-            print '<TD align="center">' . $row["SUM(patches_opened)"] . " ( " . $row["SUM(patches_closed)"] . ' )</TD>'
-                . '<TD align="center">' . $row["SUM(cvs_commits)"] . '</TD>'
-                . '</TR>' . "\n";
+                . '<TD align="center">' . sprintf("%d", $row["AVG(group_ranking)"]) . " ( " . sprintf("%0.2f", $row["AVG(group_metric)"]) . ' ) </TD>';
+            print stats_get_table_service_rows($group_id,$row);
+            print '</TR>' . "\n";
         }
 
         print '</TABLE>';
@@ -293,17 +273,7 @@ function stats_site_agregate( $group_id ) {
 
     $grp=project_get_object($group_id);
 
-    $sql  = "SELECT COUNT(day),AVG(group_ranking),AVG(group_metric),SUM(downloads),SUM(site_views + subdomain_views),MAX(developers) as developers ,SUM(msg_posted),";
-    if ($grp->activateOldBug())
-        $sql .= "SUM(bugs_opened),SUM(bugs_closed),";
-    if ($grp->activateOldSR())
-        $sql .= "SUM(support_opened),SUM(support_closed),";
-    if ($grp->activateOldTask())
-        $sql .= "SUM(tasks_opened),SUM(tasks_closed),";
-    if ($sys_activate_tracker)
-        $sql .= "SUM(artifacts_opened),SUM(artifacts_closed),";	
-    $sql .= "SUM(patches_opened),SUM(patches_closed),SUM(cvs_commits),SUM(cvs_adds)";
-    $sql .= "FROM stats_project ";
+    $sql  = stats_get_sql_query($group_id);
     $sql .= "WHERE group_id = " . $group_id . " ";
     $sql .= "GROUP BY group_id ";
     $sql .= "ORDER BY month DESC, day DESC";
@@ -318,38 +288,16 @@ function stats_site_agregate( $group_id ) {
         . '<TR class="boxtable">'
         . '<TD class="boxtitle">'.$Language->getText('project_stats_index','lifespan').'</TD>'
         . '<TD class="boxtitle">'.$Language->getText('project_stats_index','rank').'</TD>'
-        . '<TD class="boxtitle">'.$Language->getText('project_stats_index','page_views').'</TD>'
-        . '<TD class="boxtitle">'.$Language->getText('project_stats_index','downloads').'</TD>'
         . '<TD class="boxtitle">'.$Language->getText('project_stats_index','developers').'</TD>';
-    if ($grp->activateOldBug())
-        print '<TD class="boxtitle">'.$Language->getText('project_stats_index','bugs').'</TD>';
-    if ($grp->activateOldSR())
-        print '<TD class="boxtitle">'.$Language->getText('project_stats_index','support').'</TD>';
-    if ($grp->activateOldTask())
-        print '<TD class="boxtitle">'.$Language->getText('project_stats_index','tasks').'</TD>';
-    if ($sys_activate_tracker)
-        print '<TD class="boxtitle">'.$Language->getText('project_stats_index','artifacts').'</TD>';
-    print '<TD class="boxtitle">'.$Language->getText('project_stats_index','patches').'</TD>'
-        . '<TD class="boxtitle">'.$Language->getText('project_stats_index','cvs').'</TD>'
-        . '</TR>' . "\n";
+        print stats_get_table_service_header($group_id);
+        print '</TR>' . "\n";
 
     print	'<TR class="' . util_get_alt_row_color(0) . '">'
         . '<TD align="center">' . $row["COUNT(day)"] . ' '.$Language->getText('project_stats_index','ddays').' </TD>'
         . '<TD align="center">' . sprintf("%d", $row["AVG(group_ranking)"]) . " ( " . sprintf("%0.2f", $row["AVG(group_metric)"]) . ' ) </TD>'
-        . '<TD align="center">' . number_format( $row["SUM(site_views + subdomain_views)"] ) . '</TD>'
-        . '<TD align="center">' . number_format( $row["SUM(downloads)"] ) . '</TD>'
         . '<TD align="center">' . $row["developers"] . '</TD>';
-    if ($grp->activateOldBug())
-        print '<TD align="center">' . $row["SUM(bugs_opened)"] . " ( " . $row["SUM(bugs_closed)"] . ' )</TD>';
-    if ($grp->activateOldSR())
-        print '<TD align="center">' . $row["SUM(support_opened)"] . " ( " . $row["SUM(support_closed)"] . ' )</TD>';
-    if ($grp->activateOldTask())
-        print '<TD align="center">' . $row["SUM(tasks_opened)"] . " ( " . $row["SUM(tasks_closed)"] . ' )</TD>';
-    if ($sys_activate_tracker)
-        print '<TD align="center">' . $row["SUM(artifacts_opened)"] . " ( " . $row["SUM(artifacts_closed)"] . ' )</TD>';
-    print '<TD align="center">' . $row["SUM(patches_opened)"] . " ( " . $row["SUM(patches_closed)"] . ' )</TD>'
-        . '<TD align="center">' . $row["SUM(cvs_commits)"] . '</TD>'
-        . '</TR>' . "\n";
+    print stats_get_table_service_rows($group_id,$row);
+    print '</TR>' . "\n";
 
     print '</TABLE>';
 }

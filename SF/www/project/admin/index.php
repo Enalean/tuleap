@@ -121,9 +121,11 @@ $project=new Project($group_id);
 
 print '&nbsp;
 <BR>
-'.$Language->getText('project_admin_index','short_desc',db_result($res_grp,0,'short_description')) .'
-<P>'.$Language->getText('project_admin_index','home_page_link',$project->getHomePage()).'</B>
-<!-- Not implemented on CodeX
+'.$Language->getText('project_admin_index','short_desc',db_result($res_grp,0,'short_description'));
+if ($project->usesHomePage()) {
+    print '<P>'.$Language->getText('project_admin_index','home_page_link',$project->getHomePage()).'</B>';
+ }
+print '<!-- Not implemented on CodeX
 <P align=center>
 <A HREF="http://'.$GLOBALS['sys_cvs_host'].'/cvstarballs/'. db_result($res_grp,0,'unix_group_name') .'-cvsroot.tar.gz">[ Download Your Nightly CVS Tree Tarball ]</A>
 -->
@@ -297,10 +299,10 @@ echo '</TD>
 /*
 	Show filerelease info
 */
+if ($project->usesFile()) {
+    $HTML->box1_top($Language->getText('project_admin_index','file_rel')."&nbsp;".help_button('FileRelease.html'));
 
-$HTML->box1_top($Language->getText('project_admin_index','file_rel')."&nbsp;".help_button('FileRelease.html'));
-
-echo '
+    echo '
 	&nbsp;<BR>
 	<CENTER>
 	<A href="/file/admin/editpackages.php?group_id='.$group_id.'"><B>'.$Language->getText('project_admin_index','edit_add_rel').'</B></A><BR> '.$Language->getText('project_admin_index','or').'... <BR>
@@ -312,15 +314,17 @@ echo '
 
      <P>';
 
-	$res_module = db_query("SELECT * FROM frs_package WHERE group_id=$group_id");
-if (db_numrows($res_module) <= 0) {
-    echo $Language->getText('global','none').'<br>';
-} else {
-    while ($row_module = db_fetch_array($res_module)) {
-	print "$row_module[name]<BR>";
+    $res_module = db_query("SELECT * FROM frs_package WHERE group_id=$group_id");
+    if (db_numrows($res_module) <= 0) {
+        echo $Language->getText('global','none').'<br>';
+    } else {
+        while ($row_module = db_fetch_array($res_module)) {
+            print "$row_module[name]<BR>";
+        }
     }
+    echo $HTML->box1_bottom();
 }
-echo $HTML->box1_bottom(); ?>
+?>
 </TD>
 </TR>
 </TABLE>

@@ -57,6 +57,7 @@ tracker_import_admin	import_format	Import Format
 tracker_import_admin	import	Import
 tracker_import_admin	show_format	Show Format
 tracker_import_admin	tracker	Tracker
+tracker_import_admin	disabled	Trackers have been disabled for this project
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/import.php

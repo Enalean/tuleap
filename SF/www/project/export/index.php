@@ -237,9 +237,9 @@ echo '
     </td>
   </tr>';
   	$iu = 0;
-	$legacy = (($sys_activate_tracker == 1) ? $Language->getText('project_export_index','legacy'):"");
+	$legacy = ( ($project->usesTracker()) ? $Language->getText('project_export_index','legacy'):"");
 
-	if ($project->activateOldBug()) {
+	if ($project->usesBugs()) {
   	echo '
   <tr class="'.util_get_alt_row_color($iu).'"> 
     <td><b>'.$legacy.' '.$Language->getText('project_export_index','bug_tracker').'</b></td>
@@ -261,7 +261,7 @@ echo '
   	$iu ++;
 	}
 
-	if ($project->activateOldTask()) {
+	if ($project->usesPm()) {
   	echo '
   <tr class="'.util_get_alt_row_color($iu).'"> 
     <td><b>'.$legacy.' '.$Language->getText('project_admin_userperms','task_man').'</b></td>
@@ -281,7 +281,7 @@ echo '
   	$iu ++;
 	}
 
-	if ($project->activateOldSR()) {
+	if ($project->usesSupport()) {
   	echo '
   <tr class="'.util_get_alt_row_color($iu).'"> 
     <td><b>'.$legacy.' '.$Language->getText('project_export_index','support_request').'</b></td>
@@ -294,7 +294,7 @@ echo '
   </tr>';
   	$iu ++;
 	}
-
+        if ($project->usesSurvey()) {
   	echo '
   <tr class="'.util_get_alt_row_color($iu).'"> 
     <td><b>'.$Language->getText('project_export_index','survey_responses').'</b></td>
@@ -304,10 +304,13 @@ echo '
     </td>
     <td align="center">-<br>-</td>
     <td align="center">-<br>-</td>
-  </tr>';		
+  </tr>';
+  	$iu ++;
+        }		
   
-	// Get the artfact type list
-	$at_arr = $atf->getArtifactTypes();
+	if ($project->usesTracker()) {
+            // Get the artfact type list
+            $at_arr = $atf->getArtifactTypes();
 	
 	if ($at_arr && count($at_arr) >= 1) {
 		for ($j = 0; $j < count($at_arr); $j++) {
@@ -329,6 +332,7 @@ echo '
 		  </tr>';
 		}
 	}
+        }
 
 	echo '</TABLE>';
 echo '
