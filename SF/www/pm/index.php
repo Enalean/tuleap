@@ -24,7 +24,7 @@ if ($group_id) {
 		$public_flag='1';
 	}
 
-	$sql="SELECT * FROM project_group_list WHERE group_id='$group_id' AND is_public IN ($public_flag)";
+	$sql="SELECT * FROM project_group_list WHERE group_id='$group_id' AND is_public IN ($public_flag) order by order_id";
 
 	$result = db_query ($sql);
 	$rows = db_numrows($result); 

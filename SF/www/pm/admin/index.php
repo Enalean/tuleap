@@ -16,6 +16,31 @@ require('../pm_utils.php');
 
 */
 
+Function  ShowResultsSubProjects($result) {
+	global $group_id;
+	$rows  =  db_numrows($result);
+	$cols  =  db_numfields($result);
+
+	$title_arr=array();
+	$title_arr[]='SubProject ID';
+	$title_arr[]='Project name';
+	$title_arr[]='Rank on screen';
+
+	echo html_build_list_table_top ($title_arr);
+
+	for($j=0; $j<$rows; $j++)  {
+
+		echo "<tr BGCOLOR=\"". html_get_alt_row_color($j) ."\">\n";
+
+		for ($i=0; $i<$cols; $i++)  {
+			printf("<TD>%s</TD>\n",db_result($result,$j,$i));
+		}
+
+		echo "</tr>";
+	}
+	echo "</table>"; 
+}
+
 if ($group_id && user_ismember($group_id,'P2')) {
 
 	if ($post_changes) {
@@ -23,12 +48,17 @@ if ($group_id && user_ismember($group_id,'P2')) {
 			Update the database
 		*/
 
+        // Default value for $place
+        if ( ($place == '')||(!isset($place)) ) {
+            $place = 0;
+        }
+        
 		if ($projects) {
 			/*
 				Insert a new project
 			*/
-			$sql="INSERT INTO project_group_list (group_id,project_name,is_public,description) ".
-				"VALUES ('$group_id','". htmlspecialchars($project_name) ."','$is_public','". htmlspecialchars($description) ."')";
+			$sql="INSERT INTO project_group_list (group_id,project_name,is_public,description,order_id) ".
+				"VALUES ('$group_id','". htmlspecialchars($project_name) ."','$is_public','". htmlspecialchars($description) ."',$place)";
 			$result=db_query($sql);
 			if (!$result) {
 				$feedback .= " Error inserting value ";
@@ -42,7 +72,7 @@ if ($group_id && user_ismember($group_id,'P2')) {
 				Change a project to public/private
 			*/
 		       $sql="UPDATE project_group_list SET is_public='$is_public',project_name='". htmlspecialchars($project_name) ."', ".
-				"description='". htmlspecialchars($description) ."' ".
+				"description='". htmlspecialchars($description) ."', order_id = $place ".
 				"WHERE group_id='$group_id' AND group_project_id='$group_project_id'";
 			$result=db_query($sql);
 			if (!$result || db_affected_rows($result) < 1) {
@@ -69,11 +99,12 @@ if ($group_id && user_ismember($group_id,'P2')) {
 		/*
 			List of possible categories for this group
 		*/
-		$sql="SELECT group_project_id,project_name FROM project_group_list WHERE group_id='$group_id'";
+		$sql="SELECT group_project_id,project_name,order_id FROM project_group_list WHERE group_id='$group_id' order by order_id";
 		$result=db_query($sql);
 		echo "<P>";
 		if ($result && db_numrows($result) > 0) {
-			ShowResultSet($result,"Existing Subprojects");
+		    echo "<H3>Existing Subprojects</H3>";
+			ShowResultsSubProjects($result);
 		} else {
 			echo "\n<H2>No Subprojects in this group</H2>";
 		}
@@ -87,16 +118,26 @@ if ($group_id && user_ismember($group_id,'P2')) {
 		<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">
 		<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 		<P>
-		<H3>New Project Name:</H3>
-		<P>
+		<B>New Project Name:</B><BR>
 		<INPUT TYPE="TEXT" NAME="project_name" VALUE="" SIZE="30" MAXLENGTH="60">
 		<P>
 		<B>Description:</B><BR>
 		<INPUT TYPE="TEXT" NAME="description" VALUE="" SIZE="60" MAXLENGTH="100">
-		<P>
-		<B>Is Public?</B><BR>
-		     <INPUT TYPE="RADIO" NAME="is_public" VALUE="1" CHECKED> Yes&nbsp;&nbsp;&nbsp;
-		<INPUT TYPE="RADIO" NAME="is_public" VALUE="0"> No<P>
+		<BR><BR>
+		<TABLE cellpadding=0 cellspacing=0 border=0>
+		<TR>
+		  <TD valign=top>
+    	    <B>Is Public?</B><BR>
+	        <INPUT TYPE="RADIO" NAME="is_public" VALUE="1" CHECKED> Yes&nbsp;&nbsp;&nbsp;
+		    <INPUT TYPE="RADIO" NAME="is_public" VALUE="0"> No<P>
+		  </TD>
+		  <TD width=30>&nbsp;</TD>
+		  <TD valign=top>
+		    <B>Rank on screen:</B>
+            <INPUT TYPE="TEXT" NAME="place" VALUE="10" SIZE="6" MAXLENGTH="6">
+		  </TD>
+		</TR>
+		</TABLE> 
 		<P>
 		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
 		</FORM>
@@ -109,9 +150,9 @@ if ($group_id && user_ismember($group_id,'P2')) {
 		*/
 		pm_header_admin(array('title'=>'Change Project/Task Manager Status'));
 
-		$sql="SELECT project_name,group_project_id,is_public,description ".
+		$sql="SELECT project_name,group_project_id,is_public,description,order_id ".
 			"FROM project_group_list ".
-			"WHERE group_id='$group_id'";
+			"WHERE group_id='$group_id' order by order_id";
 		$result=db_query($sql);
 		$rows=db_numrows($result);
 
@@ -131,6 +172,7 @@ if ($group_id && user_ismember($group_id,'P2')) {
 			$title_arr=array();
 			$title_arr[]='Status';
 			$title_arr[]='Name';
+			$title_arr[]='Rank on screen';
 			$title_arr[]='Update';
 
 			echo html_build_list_table_top ($title_arr);
@@ -152,14 +194,18 @@ if ($group_id && user_ismember($group_id,'P2')) {
 					</TD><TD>
 						<INPUT TYPE="TEXT" NAME="project_name" VALUE="'. db_result($result, $i, 'project_name') .'"SIZE="30" MAXLENGTH="60">
 					</TD><TD>
+						<INPUT TYPE="TEXT" NAME="place" VALUE="10" SIZE="6" MAXLENGTH="6">
+					</TD><TD>
 						<FONT SIZE="-1">
 						<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Update">
 					</TD></TR>
-					<TR BGCOLOR="'.util_get_alt_row_color($i) .'"><TD COLSPAN="3">
-						<B>Description:</B><BR>
+					<TR BGCOLOR="'.util_get_alt_row_color($i) .'">
+					  <TD COLSPAN="4">
+						<B>Description:</B>&nbsp;
 						<INPUT TYPE="TEXT" NAME="description" VALUE="'.
 						db_result($result,$i,'description') .'" SIZE="60" MAXLENGTH="100"><BR>
-					</TD></TR>
+					  </TD>
+					</TR>
 					</FORM>';
 			}
 			echo '</TABLE>';
