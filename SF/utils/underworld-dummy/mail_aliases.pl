@@ -29,18 +29,18 @@ while(my ($list_name) = $c->fetchrow()) {
 
 
 
-#push @alias_array, "\n\n### Begin User Aliases ###\n\n";
+push @alias_array, "\n\n### Begin User Aliases ###\n\n";
 
-#$query = "SELECT user_name,email FROM user WHERE status = \"A\"";
+$query = "SELECT user_name,email FROM user WHERE status = \"A\"";
 
-#$c = $dbh->prepare($query);
-#$c->execute();
-#while(($username, $email) = $c->fetchrow()) {
-#	if ($email) {
-#		if (!($admin_list =~ /.*$username*./)) {
-#			push @alias_array, sprintf("%-50s%-10s","$username\@users.sourceforge.net:", "$email\n");
-#		}
-#	}
-#}
+$c = $dbh->prepare($query);
+$c->execute();
+while(($username, $email) = $c->fetchrow()) {
+	if ($email) {
+		if (!($admin_list =~ /.*$username*./)) {
+			push @alias_array, sprintf("%-50s%-10s","$username\@users.codex.xerox.com:", "$email\n");
+		}
+	}
+}
 
 write_array_file("/home/dummy/dumps/aliases", @alias_array);
