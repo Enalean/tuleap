@@ -10,12 +10,14 @@ require($DOCUMENT_ROOT.'/include/pre.php');
 require('../survey_data.php');
 require('../survey_utils.php');
 
+$LANG->loadLanguageMsg('survey/survey');
+
 $is_admin_page='y';
-survey_header(array('title'=>'Add A Survey',
+survey_header(array('title'=>$LANG->getText('survey_admin_add_survey','add_s'),
 		    'help'=>'AdministeringSurveys.html#CreatingorEditingaSurvey'));
 
 if (!user_isloggedin() || !user_ismember($group_id,'A')) {
-	echo "<H1>Permission Denied</H1>";
+	echo '<H1>'.$LANG->getText('survey_admin_add_question','perm_denied').'</H1>';
 	survey_footer(array());
 	exit;
 }
@@ -38,35 +40,32 @@ function show_questions() {
 // -->
 </script>
 
-<H2>Add a Survey</H2><P>
+<H2><?php echo $LANG->getText('survey_admin_add_survey','add_s'); ?></H2><P>
 
 <FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">
 
-<B>Name of Survey:</B>
+<B><?php echo $LANG->getText('survey_admin_add_survey','s_name'); ?></B>
 <BR>
 <INPUT TYPE="TEXT" NAME="survey_title" VALUE="" SIZE="60" MAXLENGTH="150"><P>
 <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">
 <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
-List question numbers, in desired order, separated by commas. <B>Refer to your list of questions</B> so you can view
-the question id's. Do <B>not</B> include spaces or end your list with a comma.
-<BR>
-Ex: 1,2,3,4,5,6,7
+<?php echo $LANG->getText('survey_admin_add_survey','comment'); ?>
 <BR><INPUT TYPE="TEXT" NAME="survey_questions" VALUE="" SIZE="60" MAXLENGTH="1500">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<INPUT TYPE="BUTTON" NAME="none" VALUE="Show Existing Questions" ONCLICK="show_questions()">
+<INPUT TYPE="BUTTON" NAME="none" VALUE="<?php echo $LANG->getText('survey_admin_add_question','show_q'); ?>" ONCLICK="show_questions()">
 <p>
 <table border="0">
-<tr><td><B>Is Active?</B></td>
-<td><INPUT TYPE="RADIO" NAME="is_active" VALUE="1" CHECKED> Yes</td>
-<td><INPUT TYPE="RADIO" NAME="is_active" VALUE="0"> No</td>
+<tr><td><B><?php echo $LANG->getText('survey_admin_add_survey','active'); ?></B></td>
+<td><INPUT TYPE="RADIO" NAME="is_active" VALUE="1" CHECKED> <?php echo $LANG->getText('global','yes'); ?></td>
+<td><INPUT TYPE="RADIO" NAME="is_active" VALUE="0"> <?php echo $LANG->getText('global','no'); ?></td>
 <tr>
 <tr><td><B>Anonymous answer ok?</B></td>
-<td><INPUT TYPE="RADIO" NAME="is_anonymous" VALUE="1"> Yes</td>
-<td><INPUT TYPE="RADIO" NAME="is_anonymous" VALUE="0" CHECKED> No</td>
+<td><INPUT TYPE="RADIO" NAME="is_anonymous" VALUE="1"> <?php echo $LANG->getText('global','yes'); ?></td>
+<td><INPUT TYPE="RADIO" NAME="is_anonymous" VALUE="0" CHECKED> <?php echo $LANG->getText('global','no'); ?></td>
 </tr>
 </table>
 <P>
-<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Add This Survey">
+<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="<?php echo $LANG->getText('survey_admin_add_survey','add_this_s'); ?>">
 </FORM>  
 
 <?php
@@ -82,7 +81,7 @@ $result=db_query($sql);
 ?>
 
 <P>
-<H3>Existing Surveys</H3>
+<H3><?php echo $LANG->getText('survey_admin_add_survey','existing_s'); ?></H3>
 <?php
 
 survey_utils_show_surveys($result);

@@ -12,8 +12,10 @@
 	Heavily refactored by Laurent Julliard, 2002
 */
 
+$LANG->loadLanguageMsg('survey/survey');
+
 function survey_header($params) {
-    global $group_id,$is_admin_page,$DOCUMENT_ROOT;
+    global $group_id,$is_admin_page,$DOCUMENT_ROOT,$LANG;
 
     $params['toptab']='survey';
     $params['group']=$group_id;
@@ -21,23 +23,23 @@ function survey_header($params) {
     $project=project_get_object($group_id);
 
     if (!$project->usesSurvey()) {
-	exit_error('Error','This Group Has Turned Off Surveys');
+	exit_error($LANG->getText('global','error'),$LANG->getText('survey_s_utils','s_off'));
     }
 
     site_project_header($params);
 
-    echo "<P><B><A HREF=\"/survey/admin/?group_id=$group_id\">Admin</A>";
+    echo "<P><B><A HREF=\"/survey/admin/?group_id=$group_id\">".$LANG->getText('survey_s_utils','admin')."</A>";
 
     if ($is_admin_page && $group_id) {
-	echo " | <A HREF=\"/survey/admin/add_survey.php?group_id=$group_id\">Add Surveys</A>";
-	echo " | <A HREF=\"/survey/admin/edit_survey.php?func=browse&group_id=$group_id\">Edit Surveys</A>";
-	echo " | <A HREF=\"/survey/admin/add_question.php?group_id=$group_id\">Add Questions</A>";
-	echo " | <A HREF=\"/survey/admin/edit_question.php?func=browse&group_id=$group_id\">Edit Questions</A>";
-	echo " | <A HREF=\"/survey/admin/show_results.php?group_id=$group_id\">Show Results</A>";
+	echo " | <A HREF=\"/survey/admin/add_survey.php?group_id=$group_id\">".$LANG->getText('survey_admin_index','add_s')."</A>";
+	echo " | <A HREF=\"/survey/admin/edit_survey.php?func=browse&group_id=$group_id\">".$LANG->getText('survey_admin_browse_question','edit_s')."</A>";
+	echo " | <A HREF=\"/survey/admin/add_question.php?group_id=$group_id\">".$LANG->getText('survey_admin_index','add_q')."</A>";
+	echo " | <A HREF=\"/survey/admin/edit_question.php?func=browse&group_id=$group_id\">".$LANG->getText('survey_s_utils','edit_q')."</A>";
+	echo " | <A HREF=\"/survey/admin/show_results.php?group_id=$group_id\">".$LANG->getText('survey_s_utils','show_r')."</A>";
     }
     
     if ($params['help']) {
-	echo ' | '.help_button($params['help'],false,'Help');
+	echo ' | '.help_button($params['help'],false,$LANG->getText('global','help'));
     }
 
     echo "</B><P>";
@@ -57,6 +59,7 @@ function survey_footer($params) {
 */
 
 function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
+  global $LANG;
 
     $return = '<FORM ACTION="/survey/survey_resp.php" METHOD="POST">
  <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
@@ -135,10 +138,10 @@ function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
 		  This is a Yes/No question.
 		*/
 		$return .= '
-				<b>Yes</b> <INPUT TYPE="RADIO" NAME="_'.$quest_array[$i].'" VALUE="1">';
+				<b>'.$LANG->getText('global','yes').'</b> <INPUT TYPE="RADIO" NAME="_'.$quest_array[$i].'" VALUE="1">';
 		$return .= '&nbsp;&nbsp;';
 		$return .= '
-				 <b>No</b><INPUT TYPE="RADIO" NAME="_'.$quest_array[$i].'" VALUE="5">';
+				 <b>'.$LANG->getText('global','no').'</b><INPUT TYPE="RADIO" NAME="_'.$quest_array[$i].'" VALUE="5">';
 
 	    } else if ($question_type == '4') {
 		/*
@@ -163,15 +166,15 @@ function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
 	$return .= '
 	<TR><TD ALIGN="center" COLSPAN="2">
 
-	<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
+	<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$LANG->getText('global','btn_submit').'">
 	<BR>
-	<A HREF="/survey/privacy.php?group_id='.$group_id.'&survey_id='.$survey_id.'">Survey Privacy</A>
+	<A HREF="/survey/privacy.php?group_id='.$group_id.'&survey_id='.$survey_id.'">'.$LANG->getText('survey_s_utils','privacy').'</A>
 	</TD></TR>
 	</FORM>
 	</TABLE>';
 
     } else {
-	$return .= "<H3>Survey Not Found</H3>";
+	$return .= "<H3>".$LANG->getText('survey_s_utils','not_found')."</H3>";
     }
 
     if ( $echoout ) {
@@ -183,16 +186,16 @@ function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
 }
 
 function  survey_utils_show_surveys($result, $show_delete=true) {
-    global $group_id;
+    global $group_id,$LANG;
     $rows  =  db_numrows($result);
     
     $title_arr=array();
-    $title_arr[]='Survey ID';
-    $title_arr[]='Title';
-    $title_arr[]='Questions';
-    $title_arr[]='Active';
-    $title_arr[]='Anonymous';
-    if ($show_delete) { $title_arr[]='Delete?'; }
+    $title_arr[]=$LANG->getText('survey_index','s_id');
+    $title_arr[]=$LANG->getText('survey_s_utils','title');
+    $title_arr[]=$LANG->getText('survey_admin_update_survey','q');
+    $title_arr[]=$LANG->getText('survey_s_utils','active');
+    $title_arr[]=$LANG->getText('survey_s_utils','anon');
+    if ($show_delete) { $title_arr[]=$LANG->getText('survey_s_utils','del'); }
     
     echo html_build_list_table_top ($title_arr);
     
@@ -205,14 +208,14 @@ function  survey_utils_show_surveys($result, $show_delete=true) {
 	    '<TD>'.db_result($result,$j,'survey_title')."</TD>\n".
 	    '<TD>'.str_replace(',',', ',db_result($result,$j,'survey_questions'))."</TD>\n";     
 
-	html_display_boolean(db_result($result,$j,'is_active'),"<TD align=center>Yes</TD>","<TD align=center>No</TD>");
-	html_display_boolean(db_result($result,$j,'is_anonymous'),"<TD align=center>Yes</TD>","<TD align=center>No</TD>");
+	html_display_boolean(db_result($result,$j,'is_active'),"<TD align=center>".$LANG->getText('global','yes')."</TD>","<TD align=center>".$LANG->getText('global','no')."</TD>");
+	html_display_boolean(db_result($result,$j,'is_anonymous'),"<TD align=center>".$LANG->getText('global','yes')."</TD>","<TD align=center>".$LANG->getText('global','no')."</TD>");
         
 	if ($show_delete) {
 	    echo '<TD align=center>'.
 		"<a href=\"/survey/admin/edit_survey.php?func=delete_survey&group_id=$group_id&survey_id=$survey_id\" ".
-		'" onClick="return confirm(\'Delete this survey?\n\n** Important **\nIf you delete a survey, all associated responses will be lost.\')">'.
-		'<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A></TD>';
+		'" onClick="return confirm(\''.$LANG->getText('survey_s_utils','del_s').'\')">'.
+		'<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="'.$LANG->getText('survey_s_utils','del_txt').'"></A></TD>';
 	}
 	echo "</tr>";
     }
@@ -221,12 +224,12 @@ function  survey_utils_show_surveys($result, $show_delete=true) {
 }
 
 function  survey_utils_show_surveys_for_results($result) {
-    global $group_id;
+    global $group_id,$LANG;
     $rows  =  db_numrows($result);
     
     $title_arr=array();
-    $title_arr[]='Survey ID';
-    $title_arr[]='Title';
+    $title_arr[]=$LANG->getText('survey_index','s_id');
+    $title_arr[]=$LANG->getText('survey_s_utils','title');
     
     echo html_build_list_table_top ($title_arr);
     
@@ -243,17 +246,17 @@ function  survey_utils_show_surveys_for_results($result) {
 
 
 function  survey_utils_show_questions($result, $show_delete=true) {
-    global $group_id;
+    global $group_id,$LANG;
 
     $rows  =  db_numrows($result);
 
-    echo "<h3>$rows Found</h3>";
+    echo "<h3>".$LANG->getText('survey_s_utils','found',$rows)."</h3>";
 
     $title_arr=array();
-    $title_arr[]='Question ID';
-    $title_arr[]='Question';
-    $title_arr[]='Type';
-    if ($show_delete) { $title_arr[]='Delete?'; }
+    $title_arr[]=$LANG->getText('survey_s_utils','q_id');
+    $title_arr[]=$LANG->getText('survey_admin_update_question','q');
+    $title_arr[]=$LANG->getText('survey_admin_show_r_aggregate','type');
+    if ($show_delete) { $title_arr[]=$LANG->getText('survey_s_utils','del'); }
 
     echo html_build_list_table_top ($title_arr);
 
@@ -269,8 +272,8 @@ function  survey_utils_show_questions($result, $show_delete=true) {
 	if  ($show_delete) {
 	    echo '<TD align=center>'.
 		"<a href=\"/survey/admin/edit_question.php?func=delete_question&group_id=$group_id&question_id=$question_id\" ".
-		'" onClick="return confirm(\'Delete this question?\n\n** Important **\nIf you delete a question, all associated responses in all surveys using this question will be lost.\')">'.
-		'<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A></TD>';
+		'" onClick="return confirm(\''.$LANG->getText('survey_s_utils','del_q').'\')">'.
+		'<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="'.$LANG->getText('survey_s_utils','del_txt').'"></A></TD>';
 	}
 
 	echo "</tr>";
@@ -279,12 +282,13 @@ function  survey_utils_show_questions($result, $show_delete=true) {
 }
 
 function  survey_utils_show_comments($result) {
+  global $LANG;
 
     $rows  =  db_numrows($result);
 
     $title_arr=array();
-    $title_arr[]='Response';
-    $title_arr[]='# of occurences';
+    $title_arr[]=$LANG->getText('survey_s_utils','resp');
+    $title_arr[]=$LANG->getText('survey_s_utils','occ');
     
     $sum = 0;
     for($j=0; $j<$rows; $j++)  {
@@ -292,7 +296,7 @@ function  survey_utils_show_comments($result) {
 	$count = db_result($result,$j,'count');
 	$resp = db_result($result,$j,'response');
 
-	if ($resp == '') { $resp = '- BLANK RESPONSES -'; }
+	if ($resp == '') { $resp = $LANG->getText('survey_s_utils','blank'); }
 	
 	$out .= '<tr class="'.html_get_alt_row_color($j).'">';
 	
@@ -301,7 +305,7 @@ function  survey_utils_show_comments($result) {
 	$sum += $count;
     }
     
-    echo "<h4>Total number of answers: $sum</h4>\n";
+    echo "<h4>".$LANG->getText('survey_s_utils','total_no',$sum)."</h4>\n";
     echo html_build_list_table_top ($title_arr);
     echo $out;
     echo "</table>";

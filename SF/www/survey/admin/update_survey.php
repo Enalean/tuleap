@@ -8,12 +8,13 @@
 //
 // $Id$
 
+$LANG->loadLanguageMsg('survey/survey');
 
 $is_admin_page='y';
-survey_header(array('title'=>'Edit A Survey'));
+survey_header(array('title'=>$LANG->getText('survey_admin_browse_question','edit_a_s')));
 
 if (!user_isloggedin() || !user_ismember($group_id,'A')) {
-	echo "<H1>Permission Denied</H1>";
+	echo '<H1>'.$LANG->getText('survey_admin_add_question','perm_denied').'</H1>';
 	survey_footer(array());
 	exit;
 }
@@ -45,42 +46,37 @@ function show_questions() {
 <?php
 if ($survey_id) {
 ?>
-<H2>Edit a Survey</H2><P>
+<H2><?php echo $LANG->getText('survey_admin_browse_question','edit_a_s'); ?></H2><P>
 
-<H3><span class="highlight">WARNING! It is a bad idea to edit a survey after responses have been posted</span></H3>
-<P>
-If you change a survey after you already have responses, your results pages could be misleading or messed up.
+<H3><span class="highlight"><?php echo $LANG->getText('survey_admin_update_survey','warn'); ?>
 <P>
 <FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">
 <INPUT TYPE="HIDDEN" NAME="func" VALUE="update_survey">
 <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">
 <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
-<B>Name of Survey:</B>
+<B><?php echo $LANG->getText('survey_admin_add_survey','s_name'); ?></B>
 <BR>
 <INPUT TYPE="HIDDEN" NAME="survey_id" VALUE="<?php echo $survey_id; ?>">
 <INPUT TYPE="TEXT" NAME="survey_title" VALUE="<?php echo $survey_title; ?>" SIZE="30" MAXLENGTH="150">
 <P>
-<B>Questions:</B>
+<B><?php echo $LANG->getText('survey_admin_update_survey','q'); ?></B>
 <BR>
-List question numbers, in desired order, separated by commas. <B>Refer to your list of questions</B> so you can view 
-the question id's. Do <B>not</B> include spaces or end your list with a comma.
-<BR>
-Ex: 1,2,3,4,5,6,7
+<?php echo $LANG->getText('survey_admin_add_survey','comment'); ?>
 <BR><INPUT TYPE="TEXT" NAME="survey_questions" VALUE="<?php echo $survey_questions; ?>" SIZE="30" MAXLENGTH="1500">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<INPUT TYPE="BUTTON" NAME="none" VALUE="Show Existing Questions" ONCLICK="show_questions()">
+<INPUT TYPE="BUTTON" NAME="none" VALUE="<?php echo $LANG->getText('survey_admin_add_question','show_q'); ?>" ONCLICK="show_questions()">
 <table border="0">
-<tr><td><B>Is Active?</B></td>
-<td><INPUT TYPE="RADIO" NAME="is_active" VALUE="1"<?php if ($is_active=='1') { echo ' CHECKED'; } ?>> Yes</td>
-<td><INPUT TYPE="RADIO" NAME="is_active" VALUE="0"<?php if ($is_active=='0') { echo ' CHECKED'; } ?>> No</td>
+<tr><td><B><?php echo $LANG->getText('survey_admin_add_survey','active'); ?></B></td>
+<td><INPUT TYPE="RADIO" NAME="is_active" VALUE="1"<?php if ($is_active=='1') { echo ' CHECKED'; } ?>> <?php echo $LANG->getText('global','yes'); ?></td>
+<td><INPUT TYPE="RADIO" NAME="is_active" VALUE="0"<?php if ($is_active=='0') { echo ' CHECKED'; } ?>> <?php echo $LANG->getText('global','no'); ?></td>
 <tr>
-<tr><td><B>Anonymous answer ok?</B></td>
-<td><INPUT TYPE="RADIO" NAME="is_anonymous" VALUE="1"<?php if ($is_anonymous=='1') { echo ' CHECKED'; } ?>> Yes</td>
-<td><INPUT TYPE="RADIO" NAME="is_anonymous" VALUE="0"<?php if ($is_anonymous=='0') { echo ' CHECKED'; } ?>> No</td>
+<tr><td><B><?php echo $LANG->getText('survey_admin_update_survey','anon_allow'); ?></B></td>
+<td><INPUT TYPE="RADIO" NAME="is_anonymous" VALUE="1"<?php if ($is_anonymous=='1') { echo ' CHECKED'; } ?>> <?php echo $LANG->getText('global','yes'); ?></td>
+<td><INPUT TYPE="RADIO" NAME="is_anonymous" VALUE="0"<?php if ($is_anonymous=='0') { echo ' CHECKED'; } ?>> <?php echo $LANG->getText('global','no'); ?></td>
 </tr>
 </table>
 <P>
-<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit Changes">
+<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="<?php echo $LANG->getText('survey_admin_update_question','subm_changes'); ?>">
 </FORM>  
 
 <?php
@@ -95,7 +91,7 @@ $result=db_query($sql);
 ?>
 
 <P>
-<H3>Existing Surveys</H3>
+<H3><?php echo $LANG->getText('survey_admin_add_survey','existing_s'); ?></H3>
 <?php
 
 survey_utils_show_surveys($result);

@@ -10,17 +10,20 @@ require($DOCUMENT_ROOT.'/include/pre.php');
 require('../survey_data.php');
 require('../survey_utils.php');
 
+$LANG->loadLanguageMsg('survey/survey');
+
+
 $is_admin_page='y';
-survey_header(array('title'=>'Survey Results',
+survey_header(array('title'=>$LANG->getText('survey_admin_show_r_comments','s_res'),
 		    'help'=>'AdministeringSurveys.html#ReviewingSurveyResults'));
 
 if (!user_isloggedin() || !user_ismember($group_id,'A')) {
-	echo "<H1>Permission Denied</H1>";
+	echo '<H1>'.$LANG->getText('survey_admin_add_question','perm_denied').'</H1>';
 	survey_footer(array());
 	exit;
 }
 
-echo "<H2>Survey Results</H2>";
+echo '<h2>'.$LANG->getText('survey_admin_show_r_comments','s_res').'</h2>';
 
 if (!$survey_id) {
 
@@ -32,7 +35,7 @@ if (!$survey_id) {
 
 	$result=db_query($sql);
 
-	echo "\n<p>Click  on a Survey ID to View Aggregate Responses\n";
+	echo "\n<p>".$LANG->getText('survey_admin_show_r','click_s_id')."\n";
 	survey_utils_show_surveys_for_results($result,false);
 
 }

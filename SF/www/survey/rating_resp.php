@@ -7,10 +7,13 @@
 // $Id$
 
 require($DOCUMENT_ROOT.'/include/pre.php');
-$HTML->header(array('title'=>'Voting'));
+
+$LANG->loadLanguageMsg('survey/survey');
+
+$HTML->header(array('title'=>$LANG->getText('survey_admin_rating_resp','voting')));
 
 if (!user_isloggedin()) {
-	echo "<H2>You must be logged in to vote</H2>";
+	echo "<H2>".$LANG->getText('survey_admin_rating_resp','log_in')."</H2>";
 } else {
 	if ($vote_on_id && $response && $flag) {
 		/*
@@ -26,17 +29,16 @@ if (!user_isloggedin()) {
 			"VALUES ('".user_getid()."','$flag','$vote_on_id','$response','".time()."')";
 		$result=db_query($sql);
 		if (!$result) {
-			$feedback .= " ERROR ";
-			echo "<H1>Error in insert</H1>";
+			$feedback .= " ".$LANG->getText('global','error')". ";
+			echo "<H1>".$LANG->getText('survey_admin_rating_resp','ins_err')."</H1>";
 			echo db_error();
 		} else {
-			$feedback .= " Vote registered ";
-			echo "<H2>Vote Registered</H2>";
-			echo "<A HREF=\"javascript:history.back()\"><B>Click to return to previous page</B></A>".
-				"<P>If you vote again, your old vote will be erased.";
+			$feedback .= " ".$LANG->getText('survey_admin_rating_resp','vote_reg')." ";
+			echo "<H2>".$LANG->getText('survey_admin_rating_resp','vote_reg')."</H2>";
+			echo "<A HREF=\"javascript:history.back()\"><B>".$LANG->getText('survey_admin_rating_resp','revote');
 		}
 	} else {
-		echo "<H1>ERROR!!! MISSING PARAMS</H1>";
+		echo "<H1>".$LANG->getText('survey_admin_rating_resp','missing_param')."</H1>";
 	}
 }
 $HTML->footer(array());

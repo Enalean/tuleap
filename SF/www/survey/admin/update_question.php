@@ -6,12 +6,13 @@
 //
 // $Id$
 
+$LANG->loadLanguageMsg('survey/survey');
 
 $is_admin_page='y';
-survey_header(array('title'=>'Edit A Question'));
+survey_header(array('title'=>$LANG->getText('survey_admin_update_question','edit_q')));
 
 if (!user_isloggedin() || !user_ismember($group_id,'A')) {
-	echo "<H1>Permission Denied</H1>";
+	echo '<H1>'.$LANG->getText('survey_admin_add_question','perm_denied').'</H1>';
 	survey_footer(array());
 	exit;
 }
@@ -40,11 +41,9 @@ function show_questions() {
 // -->
 </script>
 
-<H2>Edit a Question #<?php echo $question_id; ?></H2>
+<H2><?php echo $LANG->getText('survey_admin_update_question','edit_q'); ?></H2>
 
-<H3><span class="highlight">WARNING! It is a bad idea to change a question after responses to it have been submitted</span></H2> 
-<P>
-If you change a question after responses have been posted, your results pages may be misleading.
+<H3><?php echo $LANG->getText('survey_admin_update_question','warn'); ?>
 <P>
 
 <FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">
@@ -54,12 +53,12 @@ If you change a question after responses have been posted, your results pages ma
 <INPUT TYPE="HIDDEN" NAME="question_id" VALUE="<?php echo $question_id; ?>">
 <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 
-Question:
+<?php echo $LANG->getText('survey_admin_update_question','q'); ?>
 <BR>
 <TEXTAREA NAME="question" COLS="80" ROWS="8" WRAP="SOFT"><?php echo $question; ?></TEXTAREA>
 
 <P>
-Question Type:
+<?php echo $LANG->getText('survey_admin_add_question','q_type'); ?>
 <BR>
 <?php
 
@@ -70,12 +69,12 @@ echo html_build_select_box($result,'question_type',$question_type,false);
 ?>
 <P>
 
-<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit Changes">
+<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="<?php echo $LANG->getText('survey_admin_update_question','subm_changes'); ?>">
 
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-<INPUT TYPE="BUTTON" NAME="none" VALUE="Show Existing Questions" ONCLICK="show_questions()">
+<INPUT TYPE="BUTTON" NAME="none" VALUE="<?php echo $LANG->getText('survey_admin_add_question','show_q'); ?>" ONCLICK="show_questions()">
 </FORM>
 
 <?php

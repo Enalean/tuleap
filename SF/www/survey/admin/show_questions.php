@@ -8,23 +8,26 @@
 
 require($DOCUMENT_ROOT.'/include/pre.php');
 require($DOCUMENT_ROOT.'/survey/survey_utils.php');
+
+$LANG->loadLanguageMsg('survey/survey');
+
 $is_admin_page='y';
 
-$HTML->header(array('title'=>'Survey Questions'));
+$HTML->header(array('title'=>$LANG->getText('survey_admin_show_questions','s_quest')));
 
 if (!user_isloggedin() || !user_ismember($group_id,'A')) {
-	echo "<H1>Permission Denied</H1>";
+	echo '<H1>'.$LANG->getText('survey_admin_add_question','perm_denied').'</H1>';
 	survey_footer(array());
 	exit;
 }
 
 ?>
 
-<H2>Existing Questions</H2>
+<H2><?php echo $LANG->getText('survey_admin_show_questions','exist_q'); ?></H2>
 <P>
-You may use any of these questions on your surveys.
+<?php echo $LANG->getText('survey_admin_show_questions','exist_q_comm'); ?>
 <P>
-<B><span class="highlight">NOTE: use these question_id's when you create a new survey.</span></B>
+<B><span class="highlight"><?php echo $LANG->getText('survey_admin_show_questions','q_id'); ?></span></B>
 <P> 
 <?php
 

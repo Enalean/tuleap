@@ -11,8 +11,11 @@ require($DOCUMENT_ROOT.'/include/pre.php');
 require($DOCUMENT_ROOT.'/include/HTML_Graphs.php');
 require($DOCUMENT_ROOT.'/survey/survey_utils.php');
 
+$LANG->loadLanguageMsg('survey/survey');
+
+
 if (!user_isloggedin() || !user_ismember($group_id,'A')) {
-        echo "<H1>Permission Denied</H1>";
+        echo '<H1>'.$LANG->getText('survey_admin_add_question','perm_denied').'</H1>';
 	exit;
 }
 

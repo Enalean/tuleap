@@ -8,47 +8,42 @@
 
 require($DOCUMENT_ROOT.'/include/pre.php');
 require($DOCUMENT_ROOT.'/survey/survey_utils.php');
+
+$LANG->loadLanguageMsg('survey/survey');
+
 $is_admin_page='y';
 
-survey_header(array('title'=>'Survey Administration',
+survey_header(array('title'=>$LANG->getText('survey_admin_index','admin'),
 		    'help'=>'AdministeringSurveys.html'));
 
 if (!user_isloggedin() || !user_ismember($group_id,'A')) {
-	echo '<H1>Permission Denied</H1>';
+	echo '<H1>'.$LANG->getText('survey_admin_add_question','perm_denied').'</H1>';
 	survey_footer(array());
 	exit;
 }
 
 ?>
 
-<H2>Survey Administration</H2>
-<h3><A HREF="/survey/admin/add_survey.php?group_id=<?php echo $group_id; ?>">Add Surveys</A></h3>
-<p>Create a new survey. Before creating a survey it is recommended to create the associated questions first (see 'Add Question' below)
+<H2><?php echo $LANG->getText('survey_admin_index','admin'); ?></H2>
+<h3><A HREF="/survey/admin/add_survey.php?group_id=<?php echo $group_id; ?>"><?php echo $LANG->getText('survey_admin_index','add_s'); ?></A></h3>
+<p><?php echo $LANG->getText('survey_admin_index','add_comment'); ?>
 
-<h3><A HREF="/survey/admin/edit_survey.php?func=browse&group_id=<?php echo $group_id; ?>">Edit Existing Surveys</A></h3>
-<p>Modify an existing survey. You can modify the survey title, the associated question, make it active or inactive, etc.
+<h3><A HREF="/survey/admin/edit_survey.php?func=browse&group_id=<?php echo $group_id; ?>"><?php echo $LANG->getText('survey_admin_index','edit_existing'); ?></A></h3>
+<p><?php echo $LANG->getText('survey_admin_index','mod_s'); ?>
 
-<h3><A HREF="/survey/admin/add_question.php?group_id=<?php echo $group_id; ?>">Add Questions</A></h3>
-<p>Create a new question.
+<h3><A HREF="/survey/admin/add_question.php?group_id=<?php echo $group_id; ?>"><?php echo $LANG->getText('survey_admin_index','add_q'); ?></A></h3>
+<p><?php echo $LANG->getText('survey_admin_index','create_q'); ?>
 
-<h3><A HREF="/survey/admin/show_questions.php?group_id=<?php echo $group_id; ?>">Edit Existing Questions</A></h3>
-<p>Modify existing questions. You can change the question title and type.
+<h3><A HREF="/survey/admin/show_questions.php?group_id=<?php echo $group_id; ?>"><?php echo $LANG->getText('survey_admin_index','edit_existing_q'); ?></A></h3>
+<p><?php echo $LANG->getText('survey_admin_index','mod_q'); ?>
 
-<h3><A HREF="/survey/admin/show_results.php?group_id=<?php echo $group_id; ?>">Show Survey Results</A></h3>
-<p>Survey results are shown in an aggregated way. Bar charts are provided for mutliple choice type of questions.
+<h3><A HREF="/survey/admin/show_results.php?group_id=<?php echo $group_id; ?>"><?php echo $LANG->getText('survey_admin_index','show_res'); ?></A></h3>
+<p><?php echo $LANG->getText('survey_admin_index','res'); ?>
 
-<h3>Quick Instructions</h3>
+<h3><?php echo $LANG->getText('survey_admin_index','quick'); ?></h3>
 <P>
-It's simple to create a survey.
-<OL>
-<LI>Create questions and comments using the forms above.
-<LI>Create a survey, listing the questions in order (choose from <B>your</B> list of questions).
-<LI>Link to the survey using this format: <P>
-	<B>/survey/survey.php?group_id=<?php echo $group_id; ?>&survey_id=XX</B>, where XX is the survey number
-</OL>
-<P>
-You can now activate/deactivate surveys on the 
-<A HREF="/survey/admin/edit_survey.php?group_id=<?php echo $group_id; ?>">Edit Existing Surveys</A> page.
+<?php echo $LANG->getText('survey_admin_index','quick_instr',array("/survey/survey.php?group_id=$group_id&survey_id=XX","/survey/admin/edit_survey.php?group_id=$group_id",$LANG->getText('survey_admin_index','edit_existing'))); ?>
+
 <P>
 <?php
 

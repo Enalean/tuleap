@@ -8,8 +8,9 @@
 //
 // $Id$
 
+$LANG->loadLanguageMsg('survey/survey');
 
-survey_header(array('title'=>'Edit Surveys',
+survey_header(array('title'=>$LANG->getText('survey_admin_browse_question','edit_s'),
 		    'help'=>'AdministeringSurveys.html#CreatingorEditingaSurvey'));
 
 
@@ -24,8 +25,8 @@ $result=db_query($sql);
 ?>
 
 <P>
-<H2>Edit a Survey</H2>
-Click on the 'Survey ID' to edit a survey
+<H2><?php echo $LANG->getText('survey_admin_browse_question','edit_a_s'); ?></H2>
+<?php echo $LANG->getText('survey_admin_browse_survey','edit_s'); ?>
 <?php
 
 survey_utils_show_surveys($result);

@@ -8,11 +8,14 @@
 
 require($DOCUMENT_ROOT.'/include/pre.php');
 require('../survey/survey_utils.php');
-survey_header(array('title'=>'Survey',
+
+$LANG->loadLanguageMsg('survey/survey');
+
+survey_header(array('title'=>$LANG->getText('survey_s','s'),
 		    'help'=>'SurveyManager.html#PublishingaSurvey'));
 
 if (!$survey_id || !$group_id) {
-	echo "<H1>For some reason, the Group ID or Survey ID did not make it to this page</H1>";
+	echo "<H1>".$LANG->getText('survey_s','g_id_err')."</H1>";
 } else {
 
     // select this survey from the database
@@ -23,10 +26,7 @@ if (!$survey_id || !$group_id) {
 	/*
 		Tell them they need to be logged in
 	*/
-	echo '<h3><span class="highlight">You Are NOT logged in.</span></H3>
-                        <P>Unfortunately, you have to be logged in to participate in this survey.<BR>
-                        <P> Please <b><A HREF="/account/login.php?return_to='.
-	      urlencode($REQUEST_URI).'">log in </A> </b> first.</FONT></B>';
+	echo $LANG->getText('survey_s','log_in','/account/login.php?return_to='.urlencode($REQUEST_URI));
 	survey_footer(array());
 	exit;
     } else {
