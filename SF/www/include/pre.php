@@ -184,4 +184,11 @@ if ($SERVER_NAME != 'localhost' &&
 	header("Location: http://".$GLOBALS['sys_default_domain']."/account/login.php");
     exit;
 }
+
+if (user_isrestricted()) {
+    if (!util_check_restricted_access($REQUEST_URI,$SCRIPT_NAME)) {
+        exit_permission_denied();
+    }
+}
+
 ?>

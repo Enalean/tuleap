@@ -163,7 +163,7 @@ $HTML->box1_top("Project Members&nbsp;".help_button('UserPermissions.html'));
 
 */
 
-$res_memb = db_query("SELECT user.realname,user.user_id,user.user_name ".
+$res_memb = db_query("SELECT user.realname,user.user_id,user.user_name,user.status ".
 		     "FROM user,user_group ".
 		     "WHERE user.user_id=user_group.user_id ".
 		     "AND user_group.group_id=$group_id");
@@ -171,11 +171,12 @@ $res_memb = db_query("SELECT user.realname,user.user_id,user.user_name ".
 print '<TABLE WIDTH="100%" BORDER="0">';
 
 while ($row_memb=db_fetch_array($res_memb)) {
+    $showname=$row_memb['realname'];
     print '<FORM ACTION="'. $PHP_SELF .'" METHOD="POST"><INPUT TYPE="HIDDEN" NAME="func" VALUE="rmuser">'.
 	'<INPUT TYPE="HIDDEN" NAME="rm_id" VALUE="'.$row_memb['user_id'].'">'.
 	'<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'. $group_id .'">'.
 	'<TR><TD ALIGN="center"><INPUT TYPE="IMAGE" NAME="DELETE" SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0"></TD></FORM>'.
-	'<TD><A href="/users/'.$row_memb['user_name'].'/">'.$row_memb['realname'].'&nbsp;&nbsp;('.$row_memb['user_name'].') </A></TD></TR>';
+	'<TD><A href="/users/'.$row_memb['user_name'].'/">'.$showname.'&nbsp;&nbsp;('.$row_memb['user_name'].') </A></TD></TR>';
 }
 
 print '</TABLE> <HR NoShade SIZE="1">';
@@ -244,6 +245,9 @@ if ($project->usesNews()) {
 }
 if ($project->usesCVS()) {
     echo '	<A HREF="/cvs/?func=admin&group_id='.$group_id.'">CVS Admin</A><BR>';
+}
+if ($project->usesSVN()) {
+    echo '	<A HREF="/svn/admin/?group_id='.$group_id.'">Subversion Admin</A><BR>';
 }
 if ($project->usesFile()) {
     echo '	<A HREF="/file/admin/?group_id='.$group_id.'">File Manager Admin</A><BR>';

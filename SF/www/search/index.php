@@ -103,7 +103,7 @@ if ($type_of_search == "soft") {
 	*/
 	$sql =	"SELECT user_name,user_id,realname "
 		. "FROM user "
-		. "WHERE ((user_name LIKE '%$words1%') OR (realname LIKE '%$words2%')) AND (status='A') ORDER BY user_name LIMIT $offset,26";
+		. "WHERE ((user_name LIKE '%$words1%') OR (realname LIKE '%$words2%')) AND ((status='A') OR (status='R')) ORDER BY user_name LIMIT $offset,26";
 	$result = db_query($sql);
 	$rows = $rows_returned = db_numrows($result);
 

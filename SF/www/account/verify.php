@@ -41,21 +41,27 @@ function verify_login_valid()	{
 // ###### first check for valid login, if so, redirect
 
 if ($Login){
-	$success=verify_login_valid();
-	if ($success) {
-	  // LJ in CodeX we now activate the Unix account upfront to limit
-	  // LJ source code access control(CVS, File Release) to registered
-	  // LJ users only
-	  // LJ	$res = db_query("UPDATE user SET status='A' WHERE user_name='$GLOBALS[form_loginname]'");
+    $success=verify_login_valid();
+    if ($success) {
+        // Get user status: if already set to 'R' (restricted) don't change it!
+        $res_status=db_query("SELECT status FROM user WHERE user_name='$GLOBALS[form_loginname]'");
+        if (db_result($res_status,0,'status') == 'R') {
+            $newstatus='R';
+        } else $newstatus='A';
+
+        // LJ in CodeX we now activate the Unix account upfront to limit
+        // LJ source code access control(CVS, File Release) to registered
+        // LJ users only
+        // LJ	$res = db_query("UPDATE user SET status='A' WHERE user_name='$GLOBALS[form_loginname]'");
 
 	// LJ Since the URL in the e-mail notification can be used
 	// LJ several times we must make sure that we do not generate
 	// LJ a unix user_id a second time
 	  $res_user = db_query("SELECT unix_uid FROM user WHERE user_name='$GLOBALS[form_loginname]'");
 	  if (db_result($res_user,0,'unix_uid') == 0) {	
-	    $res = db_query("UPDATE user SET status='A',unix_status='A',unix_uid=". account_nextuid()."  WHERE user_name='$GLOBALS[form_loginname]'");
+	    $res = db_query("UPDATE user SET status='".$newstatus."',unix_status='A',unix_uid=". account_nextuid()."  WHERE user_name='$GLOBALS[form_loginname]'");
 	  } else {
-	    $res = db_query("UPDATE user SET status='A',unix_status='A'  WHERE user_name='$GLOBALS[form_loginname]'");
+	    $res = db_query("UPDATE user SET status='".$newstatus."',unix_status='A'  WHERE user_name='$GLOBALS[form_loginname]'");
 	  }
 		session_redirect("/account/first.php");
 	}

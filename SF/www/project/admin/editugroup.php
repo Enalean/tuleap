@@ -170,9 +170,24 @@ Quick Filters:
 <SELECT multiple size=16 name="SelectList" ID="SelectList"> ';
 
     // Display list of users
-    $sql="SELECT user_id, user_name, realname FROM user WHERE status='A' ORDER BY user_name";
+
+    // First make a quick hash of this project's restricted users
+    $current_group_restricted_users=array();
+    $sql="SELECT user.user_id from user, user_group WHERE user.status='R' AND user.user_id=user_group.user_id AND user_group.group_id=$group_id";
     $res = db_query($sql);
     while ($row = db_fetch_array($res)) {
+        $current_group_restricted_users[$row['user_id']] = true;
+    }
+
+    $sql="SELECT user_id, user_name, realname, status FROM user WHERE status='A' OR status='R' ORDER BY user_name";
+    $res = db_query($sql);
+    while ($row = db_fetch_array($res)) {
+        // Don't display restricted users that don't belong to the project
+        if ($row['status']=='R') { 
+            if (!$current_group_restricted_users[$row['user_id']]) {
+                continue;
+            }
+        }
         // Don't display users that already belong to the group
         if (!$user_in_group[$row['user_id']]) {
             echo '<option value='.$row['user_id'].'>'.$row['user_name'].' ('.addslashes($row['realname']).")\n";

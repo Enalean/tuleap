@@ -419,6 +419,15 @@
 
         <revremark>Added documentation about ranks in the package admin page.</revremark>
       </revision>
+      <revision>
+        <revnumber>2.6.18</revnumber>
+
+        <date>13-Jan-2005</date>
+
+        <authorinitials>Nicolas Guerin</authorinitials>
+
+        <revremark>Minor update, introducing 'Restricted' user status.</revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--

@@ -176,6 +176,73 @@ redirected to the project pages and they get a chance to read the other
 news.<br>
   </li>
 </ul>
+<h2>User Accounts Statuses</h2>
+<P>There are 2 different statuses associated with a CodeX user:
+
+<ol>
+<li> The "status" field in the user table contains the user status from
+the point of view of the Web interface.
+
+<ul>
+<li>Valid values are 'A' for active, 'D' for deleted and 'S' for
+suspended).
+<ul>
+<li>'A' for Active
+<li>'R' for Restricted
+<li>'S' for Suspended
+<li>'D' for Deleted
+</ul>
+<li>'Restricted' users are like active users with restricted access
+rights:they cannot access pages from projects they are not member of.
+This special role is only enabled on CodeX servers in heterogeneous 
+environments where corporate users and external consultants 
+share the same server.</para>
+<li>From the point of view of the Web interface there is not much
+difference between 'S' and 'D': in both cases the effect is that the
+user can non longer login and in both cases they are not counted in the
+number of active users (upper right corner of the front page). In any
+case a user will never disappear from the MySQL database. 
+
+<li>To modify this field one has to go either to the User Admin page (left
+menu pane) but it generates a huge page with all users. So a better
+choice is to choose "Admin Page" and then search for the use or select
+the first letter of the name. Then you can change the Web status.
+</ul>
+
+<li> The "unix_status" field in the user table governs the status of the
+Unix account.
+
+<ul>
+<li>It is completely independent from the Web 'status' field above
+<li>Valid values are
+<ul>
+<li>'N' for No Unix account: this one has an effect
+    only when a user is created with this unix status upfront.
+    In this case the Unix crontab daemon simply ignores it and
+    doesn't create a Unix account for this user
+<li>'A' for Active: A Unix account is created for this user (including
+     a home directory in /home/users/user_name)
+<li>'R' for Restricted: A Unix account is created for this user (including
+     a home directory in /home/users/user_name)
+<li>'S' for Suspended: the Unix password is replaced by "!!"
+     meaning the user account is preserved although no longer
+     usable (Can not login but home directory remains untouched
+     and assignment to Unix group is safe as well).Going back
+     to status 'A' will reactivate the account with the initial
+     password.
+<li>'D' for Deleted: the entry in /etc/passwd is deleted
+    for this user and the home directory is archived in /tmp
+    (and therefore automatically cleaned up after 7 days) for
+    the moment and then removed from /home/users. Assignment to
+    Unix groups is revoked as well of course.
+</ul>
+
+<li> To modify the Unix status do the same as for status but click on the
+user name. Then you are given access to the Unix status of the user.
+Change it to whatever value is appropriate.
+</ul>
+</ol>
+
 <h2> Account Management</h2>
 CodeX is a self managed system and there is normally no
 need
@@ -2410,66 +2477,7 @@ following:
 <P>The Unix account is deleted for real, the user home directory is
 deleted as well. 
 
-
-
-<h3>A bit of background</h3>
-
-<P>There are 2 different statuses associated with a CodeX user:
-
-<ol>
-<li> The "status" field in the user table contains the user status from
-the point of view of the Web interface.
-
-<ul>
-<li>Valid values are 'A' for active, 'D' for deleted and 'S' for
-suspended).
-
-<li>From the point of view of the Web interface there is not much
-difference between 'S' and 'D': in both cases the effect is that the
-user can non longer login and in both cases they are not counted in the
-number of active users (upper right corner of the front page). In any
-case a user will never disappear from the MySQL database. 
-
-<li>To modify this field one has to go either to the User Admin page (left
-menu pane) but it generates a huge page with all users. So a better
-choice is to choose "Admin Page" and then search for the use or select
-the first letter of the name. Then you can change the Web status.
-</ul>
-
-<li> The "unix_status" field in the user table governs the status of the
-Unix account.
-
-<ul>
-<li>It is completely independent from the Web 'status' field above
-<li>Valid values are
-<ul>
-<li>'N' for No Unix account: this one has an effect
-    only when a user is created with this unix status upfront.
-    In this case the Unix crontab daemon simply ignores it and
-    doesn't create a Unix account for this user
-<li>'A' for Active: A Unix account is created for this user (including
-     a home directory in /home/users/user_name)
-<li>'R' for Restricted: A Unix account is created for this user (including
-     a home directory in /home/users/user_name)
-<li>'S' for Suspended: the Unix password is replaced by "!!"
-     meaning the user account is preserved although no longer
-     usable (Can not login but home directory remains untouched
-     and assignment to Unix group is safe as well).Going back
-     to status 'A' will reactivate the account with the initial
-     password.
-<li>'D' for Deleted: the entry in /etc/passwd is deleted
-    for this user and the home directory is archived in /tmp
-    (and therefore automatically cleaned up after 7 days) for
-    the moment and then removed from /home/users. Assignment to
-    Unix groups is revoked as well of course.
-</ul>
-
-<li> To modify the Unix status do the same as for status but click on the
-user name. Then you are given access to the Unix status of the user.
-Change it to whatever value is appropriate.
-</ul>
-</ol>
-
+<h4>Note:</h4>
 <p>If there is only a couple of accounts to suspend/delete then going through the Web interface is the best way. If there are many users do the following:
 
 <ol>

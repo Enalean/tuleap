@@ -67,6 +67,16 @@
 	administrator can grant (or revoke) the status of project
 	administrator to any project member.</para>
       </listitem>
+
+      <listitem>
+	<para><emphasis role="bold">Restricted Users</emphasis>: users
+	who are project members, or even project administrators, but
+        with restricted access rights: they cannot access pages from 
+        projects they are not member of.
+        This special role is only enabled on CodeX servers in heterogeneous 
+        environments where corporate users and external consultants 
+        share the same server.</para>
+      </listitem>
     </itemizedlist>
 
   </section>

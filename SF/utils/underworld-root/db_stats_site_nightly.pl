@@ -74,7 +74,7 @@ $sql	= "SELECT COUNT(session_hash) FROM session WHERE (time < $day_end AND time 
 
 ## total_users
 ##
-$sql	= "SELECT COUNT(user_id) FROM user WHERE ( add_date < $day_end AND status='A' )";
+$sql	= "SELECT COUNT(user_id) FROM user WHERE add_date < $day_end AND ( status='A' OR status='R')";
 ($rel = $dbh->prepare($sql))->execute() || die "SQL error: $!";
 ($total_users) = ($rel->fetchrow_array)[0]; 
 

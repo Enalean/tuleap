@@ -210,7 +210,7 @@ function stats_getprojects_total() {
 }
 
 function stats_getusers() {
-	$res_count = db_query("SELECT count(*) AS count FROM user WHERE status='A'");
+	$res_count = db_query("SELECT count(*) AS count FROM user WHERE status='A' OR status='R'");
 	if (db_numrows($res_count) > 0) {
 		$row_count = db_fetch_array($res_count);
 		return $row_count['count'];

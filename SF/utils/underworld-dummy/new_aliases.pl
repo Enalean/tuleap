@@ -21,7 +21,7 @@ while(($username,$domainname,$userlist) = $c->fetchrow()) {
 	push @alias_array, "$username:$domainname:$userlist\n";
 }
 
-$query = "SELECT user_name,email FROM user WHERE status = \"A\"";
+$query = "SELECT user_name,email FROM user WHERE status = \"A\" OR status = \"R\"";
 
 push @alias_array, "*:eterm.org:mej\@valinux.com\n";
 push @alias_array, "log4j-announce:log4j.org:log4j-announce\@lists.sourceforge.net\n";

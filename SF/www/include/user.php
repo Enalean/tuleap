@@ -18,6 +18,19 @@ function user_isloggedin() {
 	}
 }
 
+function user_isrestricted() {
+	if (!user_isloggedin()) {
+		return false;
+	}
+	$user_id=user_getid();
+	$res = db_query("SELECT status FROM user WHERE user_id='$user_id' AND status='R'");
+	if (!$res || db_numrows($res) < 1) {
+		//matching row wasn't found
+		return false;
+	} else return true;
+}
+
+
 function user_is_super_user() {
 	global $USER_IS_SUPER_USER;
 	/*
@@ -52,7 +65,7 @@ function user_ismember($group_id,$type=0) {
 	$user_id=user_getid(); //optimization
 
 	/*
-		SF admins always return true
+		CodeX admins always return true
 	*/
 	if (user_is_super_user()) {
 		return true;

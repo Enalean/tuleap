@@ -25,17 +25,30 @@ function show_users_list ($result) {
 	while ($usr = db_fetch_array($result)) {
 		print "\n<TR><TD><a href=\"usergroup.php?user_id=$usr[user_id]\">";
 		if ($usr[status] == 'A') print "<B>";
+		if ($usr[status] == 'R') print "<u>";
 		if ($usr[status] == 'D') print "<I>";
 		if ($usr[status] == 'P') print "*";
 		print "$usr[user_name]</A>";
 		if ($usr[status] == 'A') print "</B></TD>";
+		if ($usr[status] == 'R') print "</u></TD>";
 		if ($usr[status] == 'D') print "</I></TD>";
 		if ($usr[status] == 'S') print "</TD>";
 		if ($usr[status] == 'P') print "</TD>";
 		print "\n<TD><A HREF=\"/users/$usr[user_name]/\">[DevProfile]</A></TD>";
-		print "\n<TD><A HREF=\"userlist.php?action=activate&user_id=$usr[user_id]\">[Activate]</A></TD>";
-		print "\n<TD><A HREF=\"userlist.php?action=delete&user_id=$usr[user_id]\">[Delete]</A></TD>";
-		print "\n<TD><A HREF=\"userlist.php?action=suspend&user_id=$usr[user_id]\">[Suspend]</A></TD>";
+                if ($usr[status] == 'A') {
+                    print "\n<TD>".$LANG->getText('admin_userlist','active')."</TD>";
+                } else { print "\n<TD><A HREF=\"userlist.php?action=activate&user_id=$usr[user_id]\">[".$LANG->getText('admin_userlist','activate')."]</A></TD>"; }
+                if ($GLOBALS['sys_allow_restricted_users']) {
+                    if ($usr[status] == 'R') {
+                        print "\n<TD>".$LANG->getText('admin_userlist','restricted')."</TD>";
+                    } else { print "\n<TD><A HREF=\"userlist.php?action=restrict&user_id=$usr[user_id]\">[".$LANG->getText('admin_userlist','restrict')."]</A></TD>"; }
+                }
+                if ($usr[status] == 'D') {
+                    print "\n<TD>".$LANG->getText('admin_userlist','deleted')."</TD>";
+                } else { print "\n<TD><A HREF=\"userlist.php?action=delete&user_id=$usr[user_id]\">[".$LANG->getText('admin_userlist','delete')."]</A></TD>";}
+                if ($usr[status] == 'S') {
+                    print "\n<TD>".$LANG->getText('admin_userlist','suspended')."</TD>";
+                } else { print "\n<TD><A HREF=\"userlist.php?action=suspend&user_id=$usr[user_id]\">[".$LANG->getText('admin_userlist','suspend')."]</A></TD>"; }
 		print "</TR>";
 	}
 	print "</TABLE>";
@@ -67,6 +80,14 @@ if ($action=='activate') {
 if ($action=='suspend') {
 	db_query("UPDATE user SET status='S' WHERE user_id='$user_id'");
 	echo '<H2>'.$LANG->getText('admin_userlist','user_suspended').'</H2>';
+}
+
+/*
+	Restrict their account
+*/
+if (($action=='restrict')&&($GLOBALS['sys_allow_restricted_users'])) {
+	db_query("UPDATE user SET status='R' WHERE user_id='$user_id'");
+	echo '<H2>'.$LANG->getText('admin_userlist','user_restricted').'</H2>';
 }
 
 /*

@@ -15,11 +15,14 @@ $LANG->loadLanguageMsg('admin/admin');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
-// group public choice
-if ($action=='activate') {
+if (($action=='activate') || ($action=='activate_restricted')) {
+
+    if ($action=='activate_restricted') {
+        $newstatus='R';
+    } else $newstatus='A';
 
     // update the user status flag to active
-    db_query("UPDATE user SET status='A'"
+    db_query("UPDATE user SET status='".$newstatus."'"
 	     . " WHERE user_id IN ($list_of_users)");
 
     // Now send the user verification emails
@@ -68,7 +71,18 @@ while ($row = db_fetch_array($res)) {
 	<INPUT type="submit" name="submit" value="<?php echo $LANG->getText('admin_approve_pending_users','approve'); ?>">
 	</FORM>
  	</TD>
-
+<?php
+if ($GLOBALS['sys_allow_restricted_users']) {
+    echo '
+        <TD>
+	<FORM action="'.$PHP_SELF.'" method="POST">
+	<INPUT TYPE="HIDDEN" NAME="action" VALUE="activate_restricted">
+        <INPUT TYPE="HIDDEN" NAME="list_of_users" VALUE="'.$row['user_id'].'">
+	<INPUT type="submit" name="submit" value="'.$LANG->getText('admin_approve_pending_users','approve_pending').'">
+	</FORM>
+ 	</TD>';
+}
+?>
         <TD> 
 	<FORM action="<?php echo $PHP_SELF; ?>" method="POST">
 	<INPUT TYPE="HIDDEN" NAME="action" VALUE="delete">
@@ -98,18 +112,37 @@ while ($row = db_fetch_array($res)) {
 
 }
 
-//list of user_id's of pending projects
+//list of user_id's of pending users
 $arr=result_column_to_array($res,0);
 $user_list=implode($arr,',');
 
-echo '
-	<CENTER>
+  echo '
+  	<CENTER>
+        <TABLE WIDTH="70%">
+        <TR>
+        <TD>
+  	<FORM action="'.$PHP_SELF.'" method="POST">
+  	<INPUT TYPE="HIDDEN" NAME="action" VALUE="activate">
+  	<INPUT TYPE="HIDDEN" NAME="list_of_users" VALUE="'.$user_list.'">
+ 	<INPUT type="submit" name="submit" value="'.$LANG->getText('admin_approve_pending_users','approve_all').'">
+  	</FORM>
+        </TD>';
+if ($GLOBALS['sys_allow_restricted_users']) {
+    echo '
+
+        <TD>
 	<FORM action="'.$PHP_SELF.'" method="POST">
-	<INPUT TYPE="HIDDEN" NAME="action" VALUE="activate">
+	<INPUT TYPE="HIDDEN" NAME="action" VALUE="activate_restricted">
 	<INPUT TYPE="HIDDEN" NAME="list_of_users" VALUE="'.$user_list.'">
-	<INPUT type="submit" name="submit" value="'.$LANG->getText('admin_approve_pending_users','approve_all').'">
+	<INPUT type="submit" name="submit" value="'.$LANG->getText('admin_approve_pending_users','approve_all_pending').'">
 	</FORM>
-	';
+        </TD>';
+}
+echo '
+        </TR>
+        </TABLE>
+	</CENTER>
+  	';
 	
 site_admin_footer(array());
 

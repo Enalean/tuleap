@@ -15,25 +15,25 @@ session_require(array('group'=>'1','admin_flags'=>'A'));
 $HTML->header(array('title'=>$LANG->getText('admin_massmail','title')));
 
 // get numbers of users for each mailing
-$res_count = db_query("SELECT count(*) AS count FROM user WHERE status='A' AND mail_va=1");
+$res_count = db_query("SELECT count(*) AS count FROM user WHERE ( status='A' or status='R' ) AND mail_va=1");
 $row_count = db_fetch_array($res_count);
 $count_comm = $row_count[count];
-$res_count = db_query("SELECT count(*) AS count FROM user WHERE status='A' AND mail_siteupdates=1");
+$res_count = db_query("SELECT count(*) AS count FROM user WHERE ( status='A' or status='R' ) AND mail_siteupdates=1");
 $row_count = db_fetch_array($res_count);
 $count_sf = $row_count[count];
-$res_count = db_query("SELECT count(*) AS count FROM user WHERE status='A'");
+$res_count = db_query("SELECT count(*) AS count FROM user WHERE ( status='A' or status='R' )");
 $row_count = db_fetch_array($res_count);
 $count_all = $row_count[count];
 $res_count = db_query("SELECT count(*) AS count FROM user,user_group WHERE "
-	."user.user_id=user_group.user_id AND user.status='A' AND user_group.admin_flags='A'");
+	."user.user_id=user_group.user_id AND ( user.status='A' OR user.status='R' ) AND user_group.admin_flags='A'");
 $row_count = db_fetch_array($res_count);
 $count_admin = $row_count[count];
 $res_count = db_query("SELECT count(*) AS count FROM user,user_group WHERE "
-	."user.user_id=user_group.user_id AND user.status='A'");
+	."user.user_id=user_group.user_id AND ( user.status='A' OR user.status='R' )");
 $row_count = db_fetch_array($res_count);
 $count_devel = $row_count[count];
 $res_count = db_query("SELECT count(*) AS count FROM user,user_group WHERE "
-	."user.user_id=user_group.user_id AND user.status='A' AND user_group.group_id=1");
+	."user.user_id=user_group.user_id AND( user.status='A' OR user.status='R' ) AND user_group.group_id=1");
 $row_count = db_fetch_array($res_count);
 $count_sfadmin = $row_count[count];
 

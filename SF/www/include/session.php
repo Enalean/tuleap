@@ -50,7 +50,7 @@ function session_login_valid($form_loginname,$form_pw,$allowpending=0)  {
 				$feedback = 'Account Deleted';
 				return array(false,$status);
 			}
-			if ($status != 'A') {
+			if (($usr['status'] != 'A')&&($usr['status'] != 'R')) {
 				//unacceptable account flag
 				$feedback = 'Account Not Active';
 				return array(false,$status);

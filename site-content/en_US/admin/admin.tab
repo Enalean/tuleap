@@ -40,7 +40,7 @@ admin_main	stat_spu	Generate Site/Projects/Users Statistics
 admin_main	header_utils	Site Utilities
 admin_main	mail_engine	Mass Mail Engine
 admin_main	header_sstat	Site Statistics
-admin_main	sstat_reg_u	Registered active site users
+admin_main	sstat_reg_u	Registered active ore restricted site users
 admin_main	sstat_reg_g	Registered projects
 admin_main	sstat_reg_act_g	Registered active projects
 admin_main	sstat_pend_g	Pending projects
@@ -80,6 +80,7 @@ admin_approve_pending_users	no_pending	No Pending User Registration to Approve
 admin_approve_pending_users	user_info	Show User Info / Send a mail note
 admin_approve_pending_users	user_edit	Edit User/Group Settings
 admin_approve_pending_users	approve	Approve User
+admin_approve_pending_users	approve_pending	Approve as Restricted
 admin_approve_pending_users	delete	Delete User
 admin_approve_pending_users	purpose	Purpose
 admin_approve_pending_users	other_info	Other Information
@@ -87,7 +88,8 @@ admin_approve_pending_users	name	User Name
 admin_approve_pending_users	id	User ID
 admin_approve_pending_users	email	User Email
 admin_approve_pending_users	reg_date	Registration Date
-admin_approve_pending_users	approve_all	Approve All On This Page
+admin_approve_pending_users	approve_all	Approve All
+admin_approve_pending_users	approve_all_pending	Approve All as Restricted
 #
 #-----------------------------------------------
 # Script: SF/www/admin/groupedit-add.php
@@ -247,16 +249,25 @@ admin_usergroup	change_passwd	Change User Password
 # Script: SF/www/admin/userlist.php
 #
 admin_userlist	title	Administration - User List
-admin_userlist	legend	Status Legend:&nbsp;&nbsp;<B>Active</B>&nbsp;&nbsp;<I>Deleted</I>&nbsp;&nbsp;Suspended&nbsp;&nbsp;(*)Pending
+admin_userlist	legend	Status Legend:&nbsp;&nbsp;<B>Active</B>&nbsp;&nbsp;<u>Restricted</u>>&nbsp;&nbsp;<I>Deleted</I>&nbsp;&nbsp;Suspended&nbsp;&nbsp;(*)Pending
 admin_userlist	user_deleted	User Updated to DELETE Status - UNIX account scheduled for deletion
 admin_userlist	user_active	User Updated to ACTIVE status
 admin_userlist	user_suspended	User Updated to SUSPEND Status
+admin_userlist	user_restricted	User Updated to RESTRICTED Status
 admin_userlist	error_uid	Error - Can't find user with ID $1
 admin_userlist	error_noadd	Error - Can't add user to group
 admin_userlist	user_list	User List for
 admin_userlist	all_groups	All Groups
 admin_userlist	group	Group $1
 admin_userlist	uid_toadd	User ID to add
+admin_userlist	active	Active
+admin_userlist	restricted	Restricted
+admin_userlist	deleted	Deleted
+admin_userlist	suspended	Suspended
+admin_userlist	activate	Activate
+admin_userlist	restrict	Restrict
+admin_userlist	delete	Delete
+admin_userlist	suspend	Suspend
 #
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_add.php

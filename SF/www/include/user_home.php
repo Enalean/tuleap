@@ -69,6 +69,33 @@ if (!$res_user || db_numrows($res_user) < 1) {
 	Site Member Since: 
 	</TD>
 	<TD><B><?php print date("M d, Y",db_result($res_user,0,'add_date')); ?></B></TD>
+
+<TR>
+	<TD>
+	User Status: 
+	</TD>
+	<TD><B><?php 
+        switch(db_result($res_user,0,'status')) {
+        case 'A':
+            echo "Active";
+            break;
+        case 'R':
+            echo "Restricted";
+            break;
+        case 'P':
+            echo "Pending";
+            break;
+        case 'D':
+            echo "Deleted";
+            break;
+        case 'S':
+            echo "Suspended";
+            break;
+        default:
+            echo "Unknown";
+        }
+?></B></TD>
+
 </TR>
 
 

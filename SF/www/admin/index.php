@@ -113,7 +113,7 @@ echo ")</b>";?>
 
 <h3><?php echo $LANG->getText('admin_main', 'header_sstat'); ?></h3>
 <?php
-        db_query("SELECT count(*) AS count FROM user WHERE status='A'");
+        db_query("SELECT count(*) AS count FROM user WHERE status='A' or status='R'");
         $row = db_fetch_array();
         print "<P>".$LANG->getText('admin_main', 'sstat_reg_u').": <B>$row[count]</B>";
 

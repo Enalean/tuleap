@@ -20,35 +20,35 @@ flush();
 // LJ in the sendmail command later in this script
 switch ($destination) {
 	case 'comm': 
-		$res_mail = db_query("SELECT email,user_name FROM user WHERE status='A' AND mail_va=1 GROUP BY lcase(email)");
+		$res_mail = db_query("SELECT email,user_name FROM user WHERE status='A' OR status='R' AND mail_va=1 GROUP BY lcase(email)");
 		$to_name = 'Additional Community Mailings Subcribers';
 		break;
 	case 'sf':
-		$res_mail = db_query("SELECT email,user_name FROM user WHERE status='A' AND mail_siteupdates=1 GROUP BY lcase(email)");
+		$res_mail = db_query("SELECT email,user_name FROM user WHERE status='A' OR status='R' AND mail_siteupdates=1 GROUP BY lcase(email)");
 		$to_name = 'Site Updates Subcribers';
 		break;
 	case 'all':
-		$res_mail = db_query("SELECT email,user_name FROM user WHERE status='A' GROUP BY lcase(email)");
+		$res_mail = db_query("SELECT email,user_name FROM user WHERE status='A' OR status='R' GROUP BY lcase(email)");
 		$to_name = 'All Users';
 		break;
 	case 'admin':
 		$res_mail = db_query("SELECT user.email AS email,user.user_name AS user_name "
 		."FROM user,user_group WHERE "	
-		."user.user_id=user_group.user_id AND user.status='A' AND user_group.admin_flags='A' "
+		."user.user_id=user_group.user_id AND ( user.status='A' OR user.status='R' ) AND user_group.admin_flags='A' "
 		."GROUP by lcase(email)");
 		$to_name = 'Project Administrators';
 		break;
 	case 'sfadmin':
 		$res_mail = db_query("SELECT user.email AS email,user.user_name AS user_name "
 		."FROM user,user_group WHERE "	
-		."user.user_id=user_group.user_id AND user.status='A' AND user_group.group_id=1 "
+		."user.user_id=user_group.user_id AND ( user.status='A' OR user.status='R' ) AND user_group.group_id=1 "
 		."GROUP by lcase(email)");
 		$to_name = $GLOBALS['sys_name'].' Administrators';
 		break;
 	case 'devel':
 		$res_mail = db_query("SELECT user.email AS email,user.user_name AS user_name "
 		."FROM user,user_group WHERE "
-		."user.user_id=user_group.user_id AND user.status='A' GROUP BY lcase(email)");
+		."user.user_id=user_group.user_id AND ( user.status='A' OR user.status='R' ) GROUP BY lcase(email)");
 		$to_name = 'Project Developers';
 		break;
 	default:

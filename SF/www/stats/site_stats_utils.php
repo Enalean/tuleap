@@ -460,7 +460,7 @@ function stats_site_agregate( $group_id ) {
 	$res = db_query( $sql );
 	$groups = db_fetch_array($res);
 
-	$sql	= "SELECT COUNT(*) AS count FROM user WHERE status='A'";
+	$sql	= "SELECT COUNT(*) AS count FROM user WHERE status='A' or status='R'";
 	$res = db_query( $sql );
 	$users = db_fetch_array($res);
 	

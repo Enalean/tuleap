@@ -33,7 +33,7 @@ function register_valid()	{
 		return 0;
 	}
 
-	if ($row_pw[status] != 'A') {
+	if (($row_pw[status] != 'A')&&($row_pw[status] != 'R')) {
 		$GLOBALS['register_error'] = "Account must be active to change password.";
 		return 0;
 	}

@@ -18,6 +18,7 @@ Project Unix Name:    '.$row_grp['unix_group_name'].'
 Project Summary Page: '.$server.'/projects/'.$row_grp['unix_group_name'].'
 Project Web Server:   http://'.$row_grp['unix_group_name'].'.'.$GLOBALS['sys_default_domain'].'
 CVS Server:           cvs.'.$row_grp['unix_group_name'].'.'.$host.'
+Subversion Server:    svn.'.$row_grp['unix_group_name'].'.'.$host.'
 Shell Server:         '.$row_grp['unix_group_name'].'.'.$host.
 $message_project_type; // defined at upper level
 

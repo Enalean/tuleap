@@ -225,5 +225,14 @@ $sys_activate_tracker = 1;
 // Project default privacy status (1 is public, 0 is private) 
 $sys_is_project_public = 1;
 
+//
+// Allow restricted users on this server
+// (restricted users only have access to the projects they belong to)
+// (0 no restricted users, 1 restricted users allowed)
+// if set to 1, $sys_user_approval should also be set to 1, 
+//          and $sys_is_project_public to 1
+//          and $sys_allow_anon to 0 (or it is useless!)
+$sys_allow_restricted_users = 0;
+
 // End of customizations -- place nothing after the closing PHP tag!
 ?>

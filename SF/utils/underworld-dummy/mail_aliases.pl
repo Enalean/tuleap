@@ -48,7 +48,7 @@ while(my ($list_name) = $c->fetchrow()) {
 
 push @alias_array, "\n\n### Begin User Aliases ###\n\n";
 
-$query = "SELECT user_name,email FROM user WHERE status = \"A\"";
+$query = "SELECT user_name,email FROM user WHERE status = \"A\" OR status = \"R\"";
 
 $c = $dbh->prepare($query);
 $c->execute();

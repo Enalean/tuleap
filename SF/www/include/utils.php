@@ -935,4 +935,178 @@ function & _getPredefinedArray($superGlobalName, $oldName) {
         return $array;
 }
 
+
+/**
+ * checkRestrictedAccess - check that a restricted user can access the current URL.
+ *
+ * @param string $request_uri is the original REQUEST_URI
+ * @param string $script_name is the original SCRIPT_NAME
+ * @return true is access is granted
+ * @return false is access is forbidden
+*/
+
+function util_check_restricted_access($request_uri, $script_name) {
+    // Note:
+    // Currently, we don't restrict access to 'shownotes.php' and to tracker file attachment downloads
+
+    if (user_isrestricted()) {
+        // Make sure the URI starts with a single slash
+        $req_uri='/'.trim($request_uri, "/");
+
+        /* Examples of input params:
+         Script: /projects, Uri=/projects/ljproj/
+         Script: /survey/index.php, Uri=/survey/?group_id=101
+         Script: /project/admin/index.php, Uri=/project/admin/?group_id=101
+         Script: /tracker/index.php, Uri=/tracker/index.php?group_id=101
+         Script: /tracker/index.php, Uri=/tracker/?func=detail&aid=14&atid=101&group_id=101
+        */
+
+        // Restricted users cannot access any page belonging to a project they are not a member of.
+        // In addition, the following URLs are forbidden (value overriden in site-content file)
+        $forbidden_url = array( 
+          '/snippet/',     // Code Snippet Library
+          '/softwaremap/', // browsable software map
+          '/new/',         // list of the newest releases made on the CodeX site
+          '/search/',      // search for people, projects, and artifacts in trackers!
+          '/people/',      // people skills and profile
+          '/stats/',       // CodeX site statistics
+          '/top/',         // projects rankings (active, downloads, etc)
+          '/register/',    // Register a new project
+          '/export/',      // CodeX XML feeds
+          '/info.php'      // PHP info
+          );
+        
+        // Default values are very restrictive, but they can be overriden in the site-content file
+        $allow_codex_welcome_page=false; // Allow access to CodeX welcome page (at e.g. http://codex.xerox.com/)
+        $allow_news_browsing=false;      // Allow restricted users to read/comment news, including for their project
+        $allow_user_browsing=false;      // Allow restricted users to access other user's page (Developer Profile)
+        $allow_access_to_codex_forums=false;   // CodeX help forums are accessible through the 'Discussion Forums' link
+        $allow_access_to_codex_trackers=false; // CodeX trackers are used for support requests on CodeX
+        $allow_access_to_codex_docs=false; // CodeX documents (Note that the User Guide is always accessible)
+        $allow_access_to_codex_mail=false; // CodeX mailing lists (Developers Channels)
+
+
+        // Customizable security settings for restricted users:
+        include(util_get_content('include/restricted_user_permissions'));
+        // End of customization
+        
+
+
+        foreach ($forbidden_url as $str) {
+            $pos = strpos($req_uri,$str);
+            if ($pos === false) {
+                // Not found
+            } else {
+                if ($pos == 0) {
+                    // beginning of string
+                    return false;
+                }
+            }
+        }
+
+        // Welcome page
+        if (!$allow_codex_welcome_page) {
+            $sc_name='/'.trim($script_name, "/");
+            if ($sc_name == '/index.php') {
+                return false;
+            }
+        }
+
+        
+        // Forbid access to other user's page (Developer Profile)
+        if ((strpos($req_uri,'/users/') !== false)&&(!$allow_user_browsing)) {
+            if ($req_uri != '/users/'.user_getname())
+                return false;
+        }
+
+
+        // Get group_id for project pages that don't have it
+        
+        // /projects/ and /viewcvs/
+        if ((strpos($req_uri,'/projects/') !== false)||(strpos($req_uri,'/viewcvs.php/') !== false)){
+            // Check that the user is a member of this project
+            if (strpos($req_uri,'/projects/') !== false){
+                $pieces = explode("/", $request_uri);
+                $this_proj_name=$pieces[2];
+            } else if (strpos($req_uri,'/viewcvs.php/') !== false) {
+                preg_match("/root=([a-zA-Z0-9_-]+)/",$req_uri, $matches);
+                $this_proj_name=$matches[1];
+            }
+            $res_proj=db_query("SELECT group_id FROM groups WHERE unix_group_name='$this_proj_name'");
+            if (db_numrows($res_proj) < 1) { # project does not exist
+                return false;
+            }
+            $group_id=db_result($res_proj,0,'group_id');
+        }
+        
+        
+        // File downloads. It might be a good idea to restrict access to shownotes.php too...
+        if (strpos($req_uri,'/file/download.php') !== false) {
+            list(,$group_id, $file_id) = explode('/', $PATH_INFO);
+        }
+        
+        // Now check special cases
+        $user_is_allowed=false;
+        
+        // Forum and news. Each published news is a special forum of project 'news'
+        if (strpos($req_uri,'/forum/') !== false) {
+            if ($forum_id) {
+                // Get corresponding project
+                $result=db_query("SELECT group_id FROM forum_group_list WHERE group_forum_id='$forum_id'");
+                $group_id=db_result($result,0,'group_id');
+                // News
+                if ($allow_news_browsing) {
+                    if ($group_id==$GLOBALS['sys_news_group']) {
+                        $user_is_allowed=true;
+                    }
+                }
+                // CodeX forums
+                if ($allow_access_to_codex_forums) {
+                    if ($group_id==1) {
+                        $user_is_allowed=true;
+                    }
+                }
+            }
+        }
+        
+        // CodeX trackers
+        if (strpos($req_uri,'/tracker/') !== false) {
+            if ($allow_access_to_codex_trackers) {
+                if ($group_id==1) {
+                    $user_is_allowed=true;
+                }
+            }
+        }
+
+        // CodeX documents
+        if (strpos($req_uri,'/docman/') !== false) {
+            if ($allow_access_to_codex_docs) {
+                if ($group_id==1) {
+                    $user_is_allowed=true;
+                }
+            }
+        }
+        
+        // CodeX mailing lists page
+        if (strpos($req_uri,'/mail/') !== false) {
+            if ($allow_access_to_codex_mail) {
+                if ($group_id==1) {
+                    $user_is_allowed=true;
+                }
+            }
+        }
+        
+        // Now check group_id
+        if ($group_id) { 
+            if (!$user_is_allowed) { 
+                if (!user_ismember($group_id)) {
+                    return false;
+                }
+            }
+        }
+    } 
+    return true;
+}
+
+
 ?>

@@ -116,6 +116,10 @@ class Project extends Group {
         return $this->use_service['cvs'];
     }
 
+    function usesSVN() {
+        return $this->use_service['svn'];
+    }
+
     function usesBugs() {
         return $this->use_service['bugs'];
     }
