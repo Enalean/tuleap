@@ -66,9 +66,10 @@ $STATE_REMOVED = 3;
 $STATE_LOG     = 4;
 
 # arrays to store all the bug, task and sr ref.
-my @bugs;
-my @tasks;
-my @srs;
+my %bugs;
+my %tasks;
+my %srs;
+my %patches;
 
 # group_id
 my $group_id;
@@ -292,15 +293,19 @@ sub read_logfile {
     
     # store the bug ref
     while ($line =~ /bug[ ]?#([0-9]+)/gi) {
-        push (@bugs, $1);
+        $bugs{$1} = $1;
     }
     # store the task ref
     while ($line =~ /task[ ]?#([0-9]+)/gi) {
-        push (@tasks, $1);
+        $tasks{$1} = $1;
     }
     # store the sr ref
     while ($line =~ /sr[ ]?#([0-9]+)/gi) {
-        push (@srs, $1);
+        $srs{$1} = $1;
+    }
+    # store the patch ref
+    while ($line =~ /patch[ ]?#([0-9]+)/gi) {
+        $patches{$1} = $1;
     }
 
 	push(@text, $line);
@@ -762,25 +767,36 @@ for ($i = 0; ; $i++) {
 	push (@text, "");
     }
     
-    if ( $#bugs >= 0 ) {
+    @keys = keys %bugs;
+    if ( $#keys >= 0 ) {
     	push (@text, "");
         push (@text, "Bugs references:");
-        foreach $bug (@bugs) {
+        foreach $bug (keys %bugs) {
             push (@text, "Bug #$bug: http://$sys_default_domain/bugs/?func=detailbug&bug_id=$bug&group_id=$group_id");
         }
     }
-    if ( $#tasks >= 0 ) {
+    @keys = keys %tasks;
+    if ( $#keys >= 0 ) {
     	push (@text, "");
         push (@text, "Tasks references:");
-        foreach $task (@tasks) {
+        foreach $task (keys %tasks) {
             push (@text, "Task #$task: http://$sys_default_domain/pm/task.php?func=detailtask&project_task_id=$task&group_id=$group_id");
         }
     }
-    if ( $#srs >= 0 ) {
+    @keys = keys %srs;
+    if ( $#keys >= 0 ) {
     	push (@text, "");
         push (@text, "Support Requests references:");
-        foreach $sr (@srs) {
+        foreach $sr (keys %srs) {
             push (@text, "Sr #$sr: http://$sys_default_domain/support/index.php?func=detailsupport&support_id=$sr&group_id=$group_id");
+        }
+    }
+    @keys = keys %patches;
+    if ( $#keys >= 0 ) {
+    	push (@text, "");
+        push (@text, "Patches references:");
+        foreach $patch (keys %patches) {
+            push (@text, "Patch #$patch: http://$sys_default_domain/patch/?func=detailpatch&patch_id=$patch&group_id=$group_id");
         }
     }
     
