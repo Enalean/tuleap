@@ -106,7 +106,7 @@ if (browser_is_ie() && browser_is_mac()) {
 <p>
 <font color="red"><B>Cookies must be enabled past this point.</B></font>
 <P>
-<form action="http://<?php echo $sys_default_domain; ?>/account/login.php" method="post">
+<form action="http://<?php echo $sys_default_domain; ?>/account/login.php" method="post" name="form_login">
 <INPUT TYPE="HIDDEN" NAME="return_to" VALUE="<?php echo $return_to; ?>">
 <p>
 Login Name:
@@ -133,6 +133,10 @@ If you have lost your password please do not create another account but follow u
 <P>
 <b><A HREF="register.php">[Create a new Account]</A></b><BR>
 If it's your first time on the <b>CodeX</b> site you can become a member right now ! The creation of a <a href="register.php">new account</a> takes a few seconds and you can take advantage of the services offered by the CodeX site to all Xerox developers.
+
+<SCRIPT language="JavaScript"> <!-- 
+    document.form_login.form_loginname.focus();
+// --></SCRIPT>
 
 <?php
 
