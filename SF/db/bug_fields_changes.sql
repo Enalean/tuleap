@@ -243,7 +243,7 @@ CREATE TABLE bug_file (
   submitted_by int(11) DEFAULT '0' NOT NULL,
   date int(11) DEFAULT '0' NOT NULL,
   description text DEFAULT '' NOT NULL,	
-  attachment longblob DEFAULT '' NOT NULL,
+  file longblob DEFAULT '' NOT NULL,
   filename text DEFAULT '' NOT NULL,
   filesize int(11) DEFAULT '0' NOT NULL,
   filetype text DEFAULT '' NOT NULL,
