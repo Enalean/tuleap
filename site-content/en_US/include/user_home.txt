@@ -8,7 +8,7 @@
 //
 
 
-// LDAP filter is normally set up in the local.inc file but if you need to
+// LDAP filter is normally set up in the CodeX config file but if you need to
 // some special processing to build the filter you can override the
 // LDAP filter here
 // $GLOBALS['sys_ldap_filter'] = "...."

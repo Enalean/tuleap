@@ -358,14 +358,9 @@ Probably very much outdated.</td>
      </tr>
      <tr>
        <td valign="top">SF/etc</td>
-       <td valign="top">This is the directory where the CodeX Web interface
-configuration file named <tt>local.inc </tt>is located. It is systematically
-included by all PHP scripts because it contains crucial information like
-the server names, the database name and password,... <br>
- This file is actually loaded from /etc/local.inc which is a symbolic link
-to the file in SF/etc. <br>
-       <b><font color="#ff0000">Remark:</font></b> the config file contains
-the sourceforge password in clear so it must be readable for sourceforge user/group
+       <td valign="top">This is the directory where a number of CodeX configuration files are located. These pattern files (hence the .dist extension) are used at customized on the fly at installation time and copied over to the target directories. <br>
+       <b><font color="#ff0000">Remark:</font></b> the local.inc configuration file stored in /etc/codex/conf/local.inc contains
+the sourceforge password in clear so it must be readable only for sourceforge user/group
 only (rw-r-----)</td>
      </tr>
      <tr>
@@ -879,7 +874,7 @@ or network domain, etc...</li>
 read/write access to the sourceforge database. Can only interact with the
 DB from the local host (atlas) and not from a remote machine. Same password
 as the sourceforge Unix account. The PHP scripts all use this user to connect
-to the database (see the file /etc/local.inc where DB user/password to be
+to the database (see the file /etc/codex/conf/local.inc where DB user/password to be
 used by CodeX PHP scripts is stored. THIS FILE MUST BELONG to sourceforge.sourceforge
 and must not be world readable because it contains the sourceforge password
 in clear)</li>

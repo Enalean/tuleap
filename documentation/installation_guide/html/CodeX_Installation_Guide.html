@@ -852,12 +852,12 @@ which actually activates the secure HTTP server on port 443. And make
 sure to replace the "IP_ADDRESS_HERE" pattern in the virtual host
 declaration with your real IP address</li>
   <li>For the changes to take effect you must restart the Apache server.</li>
-  <li>Then edit the /etc/local.inc file and edit the $sys_https_host
+  <li>Then edit the /etc/codex/conf/local.inc file and edit the $sys_https_host
 variable (in most cases this will be the same name as the
 $sys_default_domain variable. If the port number you use for https is
 not the regular one (443) then you must specify the port number
 explicitely in the host name.</li>
-  <li>In the same /etc/local.inc file, you can also tune the
+  <li>In the same /etc/codex/conf/local.inc file, you can also tune the
 $sys_stay_in_ssl and $sys_force_ssl variables to determine how HTTPS is
 going to be used/enforced on your site.<br>
   </li>
@@ -897,10 +897,10 @@ source code.<br>
 <h1>Configuring the CodeX Software</h1>
 As user root:<br>
 <ul>
-  <li>copy /home/httpd/SF/etc/local.inc.dist in /etc/local.inc&nbsp;</li>
-  <li>change /etc/local.inc ownership (chown sourceforge.sourceforge
-/etc/local.inc)</li>
-  <li>change permission (chmod 640 /etc/local.inc) <b><font
+  <li>copy /home/httpd/SF/etc/local.inc.dist in /etc/codex/conf/local.inc&nbsp;</li>
+  <li>change /etc/codex/conf/local.inc ownership (chown sourceforge.sourceforge
+/etc/codex/conf/local.inc)</li>
+  <li>change permission (chmod 640 /etc/codex/conf/local.inc) <b><font
  color="#ff0000">**HIGHLY CRITICAL**</font></b></li>
 </ul>
 A couple of remarks on the some the variables in local.inc:<br>
@@ -1517,7 +1517,7 @@ taken into account</li>
 <h2><a name="System_configuration_file_local.inc"></a>System
 configuration file (local.inc)</h2>
 The PHP scripts take many values from a configuration file located in <span
- style="font-family: monospace;">/etc/local.inc</span>. This file must
+ style="font-family: monospace;">/etc/codex/conf/local.inc</span>. This file must
 be initially copied from the <span style="font-family: monospace;">SF/etc/local.inc.dist</span>
 file and the values must be changed accordingly for your site. Make
 sure that you read this file where the role of each variable is well
@@ -1564,7 +1564,7 @@ replace all the images you want to customize with your own but make
 sure
 to keep the exact same file names.</li>
 </ol>
-Finally edit the /etc/local.inc file and set the <tt>$sys_themedefault</tt>
+Finally edit the /etc/codex/conf/local.inc file and set the <tt>$sys_themedefault</tt>
 variable to the value of the default theme name for your site.<br>
 <h2>Organization Logo</h2>
 At the top of the left hand side CodeX menu pane (just above the Logged
@@ -1602,7 +1602,7 @@ script the text belong to.</li>
 By default the site-content directory should be stored in the same
 place as the SF directory (PHP scripts). &nbsp;Make sure you update the
 <tt>$sys_inc</tt>
-variable in <tt>/etc/local.inc</tt> to reflect the path to the <tt>site-content</tt>
+variable in <tt>/etc/codex/conf/local.inc</tt> to reflect the path to the <tt>site-content</tt>
 directory (default is <tt>/home/httpd/site-content</tt>).<br>
 <br>
 To customize the content of a given script for your site go through the
