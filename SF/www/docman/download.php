@@ -26,7 +26,6 @@ if ($result && db_numrows($result) > 0) {
 	header('Content-Type: '.db_result($result,0,'filetype'));
 	header('Content-Length: '.db_result($result,0,'filesize'));
 	header('Content-Disposition: filename='.db_result($result,0,'filename'));
-	header('Content-Description: '. db_result($result,0,'description'));
 
 	echo db_result($result,0,'data');
 
