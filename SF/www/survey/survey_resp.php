@@ -38,7 +38,7 @@ Thank you for taking time to complete this survey.
 <P>
 Regards,
 <P>
-<B>The CodeX Team</B>
+<B>The Project Team</B>
 <P>
 <?php
 /*
