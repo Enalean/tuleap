@@ -123,7 +123,7 @@ class ArtifactField extends Error {
 	 * @return void
 	 */
 	function setFromArray($field_array) {
-		//echo "setFromArray<br>";
+		//echo "setFromArray";
 		$this->field_id = $field_array['field_id'];
 		$this->field_name = $field_array['field_name'];
 		$this->data_type = $field_array['data_type'];
@@ -143,6 +143,7 @@ class ArtifactField extends Error {
 		$this->place = $field_array['place'];
 		$this->default_value = $field_array['default_value'];
 		
+		//echo $this->field_name."-".$this->data_type."<br>";
 	}
 	
 	/**

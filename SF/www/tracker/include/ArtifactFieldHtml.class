@@ -20,6 +20,7 @@ class ArtifactFieldHtml extends ArtifactField {
 	function ArtifactFieldHtml($art_field) {
 		$this->field_id = $art_field->field_id;
 		$this->field_name = $art_field->field_name;
+		$this->data_type = $art_field->data_type;
 		$this->display_type = $art_field->display_type;
 		$this->display_size = $art_field->display_size;
 		$this->label = $art_field->label;
@@ -34,6 +35,7 @@ class ArtifactFieldHtml extends ArtifactField {
 		$this->show_on_add = $art_field->show_on_add;
 		$this->show_on_add_members = $art_field->show_on_add_members;
 		$this->place = $art_field->place;
+		
 	}
 	
 	/**
@@ -373,6 +375,9 @@ class ArtifactFieldHtml extends ArtifactField {
 		break;
 	
 	    case 'TF':
+	    if ( $this->getDataType() == $this->DATATYPE_FLOAT ) {
+	    	$value = number_format($value,2);
+	    }
 		if ($ascii) 
 		    $output .= util_unconvert_htmlspecialchars($value);
 		else

@@ -94,8 +94,8 @@ class ArtifactHtml extends Artifact {
 	    $result_fields = $art_field_fact->getAllUsedFields();
     	while ( list($key, $field) = each($result_fields) ) {
     		
-    		//echo $field->getName()."=".db_result($results,0,$field->getName())."<br>";
     		$field_html = new ArtifactFieldHtml($field);
+    		//echo $field_html->dumpStandard()."<br>";
     		
 			// if the field is a special field (except summary and details) 
 			// then skip it.
@@ -330,6 +330,8 @@ class ArtifactHtml extends Artifact {
 				    } else if ($field->isDateField()) {
 						// For date fields do some special processing
 						echo format_date($sys_datefmt,$value_id);
+				    } else if ($field->isFloat() ) {
+				    	echo number_format($value_id,2);
 				    } else {
 						// It's a text zone then display directly
 						echo $value_id;
