@@ -116,19 +116,19 @@ $star = '<span class="highlight"><big>*</big></span>';
 
 <form action="/account/register.php" method="post">
 <p>Login Name <strong>(Lower case only!)</strong> <? echo $star; ?>:<br>
-<input type="text" name="form_loginname" value="<?php print($form_loginname); ?>">
+<input type="text" name="form_loginname" value="<?php print stripslashes($form_loginname); ?>">
 
 <p>Password (min. 6 chars) <? echo $star; ?>:<br>
-<input type="password" name="form_pw" value="<?php print($form_pw); ?>">
+<input type="password" name="form_pw" value="<?php print stripslashes($form_pw); ?>">
 
 <p>Password (repeat) <? echo $star; ?>:<br>
-<input type="password" name="form_pw2" value="<?php print($form_pw2); ?>">
+<input type="password" name="form_pw2" value="<?php print stripslashes($form_pw2); ?>">
 
 <P>Full/Real Name <? echo $star; ?>:<br>
-<INPUT size=40 type="text" name="form_realname" value="<?php print($form_realname); ?>">
+<INPUT size=40 type="text" name="form_realname" value="<?php print stripslashes($form_realname); ?>">
 
 <P>Email Address <? echo $star; ?>:<BR>
-<INPUT size=40 type="text" name="form_email" value="<?php print($form_email); ?>"><BR>
+<INPUT size=40 type="text" name="form_email" value="<?php print stripslashes($form_email); ?>"><BR>
 <? util_get_content('account/register_email'); ?>
 <P>Timezone:<BR>
 <?php echo html_get_timezone_popup ('timezone','GMT'); ?>
