@@ -1,0 +1,957 @@
+<?php
+//
+// Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
+//
+// $Id$
+//
+//  Written for CodeX by Stephane Bouhet
+//
+
+//require($DOCUMENT_ROOT.'/../common/include/Error.class');
+
+//
+// The artifact field object
+//
+class ArtifactField extends Error {
+
+	// The field id
+	var $field_id;
+	
+	// The field name
+	var $field_name;
+	
+	// The data_type: 1: text, 2: int, 3: float, 4: date - See constants $DATATYPE_xx
+	var $data_type;
+	
+	// Display type: SB: selectbox, TF: text field, DF: date field, TA: text area
+	var $display_type;
+	
+	// The size associated with display_type
+	var $display_size;
+	
+	// The label
+	var $label;
+	
+	// The description
+	var $description;
+	
+	// The scope of the field: S: system or P:project
+	var $scope;
+	
+	// Is the field is required?
+	var $required;
+	
+	// Is the field allowed to be empty?
+	var $empty_ok;
+	
+	// Keep the history changes
+	var $keep_history;
+	
+	// Is the field special?
+	var $special;
+	
+	// Special value to specify the field values: artifact_submitters, artifact_technicians
+	var $value_function;
+	
+	// Is the field used?
+	var $use_it;
+	
+	// Is the field displayed on task add form
+	var $show_on_add;
+	
+	// Is the field displayed on task add form for project members with appropriate rigths
+	var $show_on_add_members;
+	
+	// Place on the form
+	var $place;
+	
+	// Default value
+	var $default_value;
+	
+	// Constants for data_type
+	var $DATATYPE_TEXT = 1;
+	var $DATATYPE_INT = 2;
+	var $DATATYPE_FLOAT = 3;
+	var $DATATYPE_DATE = 4;	
+	
+
+	/**
+	 *  Constructor.
+	 *
+	 */
+	function ArtifactField() {
+		// Error constructor
+		$this->Error();
+	}
+	
+	/**
+	 *  Retrieve and set the attributes values
+	 *
+	 * @param group_artifact_id: for this artifact type
+	 * @param field_name: and for this field name
+	 *
+	 * @return void
+	 */
+	function fetchData($group_artifact_id,$field_name) {
+	    global $display_debug;
+	    
+	    $sql="SELECT af.field_id, field_name, data_type, display_type, ".
+		"display_size,label, description,scope,required,empty_ok,keep_history,special, ".
+		"value_function, ".
+		"af.group_artifact_id, use_it, show_on_add, show_on_add_members, place, default_value ".
+		"FROM artifact_field af, artifact_field_usage afu ".
+		"WHERE af.field_name='".$field_name."' and af.field_id = afu.field_id".
+		" and afu.group_artifact_id=".$group_artifact_id.
+		" and af.group_artifact_id=".$group_artifact_id;
+		
+		if ( $display_debug ) echo "<DBG:ArtifactField.fetchData>sql=".$sql."<br>";
+	    $res = db_query($sql);
+	
+		$field_array = db_fetch_array($res);
+		
+		if ( $field_array ) {
+			$this->setFromArray($field_array);
+		}
+	
+	}	
+
+	/**
+	 *  Set the attributes values
+	 *
+	 * @param field_array: the values array
+	 *
+	 * @return void
+	 */
+	function setFromArray($field_array) {
+		//echo "setFromArray<br>";
+		$this->field_id = $field_array['field_id'];
+		$this->field_name = $field_array['field_name'];
+		$this->data_type = $field_array['data_type'];
+		$this->display_type = $field_array['display_type'];
+		$this->display_size = $field_array['display_size'];
+		$this->label = $field_array['label'];
+		$this->description = $field_array['description'];
+		$this->scope = $field_array['scope'];
+		$this->required = $field_array['required'];
+		$this->empty_ok = $field_array['empty_ok'];
+		$this->keep_history = $field_array['keep_history'];
+		$this->special = $field_array['special'];
+		$this->value_function = $field_array['value_function'];
+		$this->use_it = $field_array['use_it'];
+		$this->show_on_add = $field_array['show_on_add'];
+		$this->show_on_add_members = $field_array['show_on_add_members'];
+		$this->place = $field_array['place'];
+		$this->default_value = $field_array['default_value'];
+		
+	}
+	
+	/**
+	 *  Get the field_name attribute value
+	 *
+	 * @return string
+	 */
+	function getName() {
+		return $this->field_name;
+	}
+	
+	/**
+	 *  Get the field_id attribute value
+	 *
+	 * @return int
+	 */
+	function getID() {
+		return $this->field_id;
+	}
+	
+	/**
+	 *  Get the data_type attribute value
+	 *
+	 * @return int
+	 */
+	function getDataType() {
+		return $this->data_type;
+	}
+	
+	/**
+	 *  Get the display_type attribute value
+	 *
+	 * @return string
+	 */
+	function getDisplayType() {
+		return $this->display_type;
+	}
+	
+	/**
+	 *  Get the display_size attribute value
+	 *
+	 * @return string
+	 */
+	function getDisplaySize() {
+		return($this->display_size);
+	}
+	
+	/**
+	 *  Get the label attribute value
+	 *
+	 * @return string
+	 */
+	function getLabel() {
+		return $this->label;
+	}
+	
+	/**
+	 *  Get the description attribute value
+	 *
+	 * @return string
+	 */
+	function getDescription() {
+		return $this->description;
+	}
+	
+	/**
+	 *  Get the scope attribute value
+	 *
+	 * @return string
+	 */
+	function getScope() {
+		return $this->scope;
+	}
+	
+	/**
+	 *  Get the required attribute value
+	 *
+	 * @return boolean
+	 */
+	function getRequired() {
+		return $this->required;
+	}
+	
+	/**
+	 *  Get the empty_ok attribute value
+	 *
+	 * @return boolean
+	 */
+	function getEmptyOk() {
+		return $this->empty_ok;
+	}
+	
+	/**
+	 *  Get the keep_history attribute value
+	 *
+	 * @return boolean
+	 */
+	function getKeepHistory() {
+		return $this->keep_history;
+	}
+	
+	/**
+	 *  Get the special attribute value
+	 *
+	 * @return boolean
+	 */
+	function getSpecial() {
+		return $this->special;
+	}
+	
+	/**
+	 *  Get the value_function attribute value
+	 *
+	 * @return string
+	 */
+	function getValueFunction() {
+		return $this->value_function;
+	}
+	
+	/**
+	 *  Get the use_it attribute value
+	 *
+	 * @return boolean
+	 */
+	function getUseIt() {
+		return $this->use_it;
+	}
+	
+	/**
+	 *  Get the show_on_add attribute value
+	 *
+	 * @return boolean
+	 */
+	function getShowOnAdd() {
+		return $this->show_on_add;
+	}
+	
+	/**
+	 *  Get the show_on_add_members attribute value
+	 *
+	 * @return boolean
+	 */
+	function getShowOnAddMembers() {
+		return $this->show_on_add_members;
+	}
+	
+	/**
+	 *  Get the place attribute value
+	 *
+	 * @return int
+	 */
+	function getPlace() {
+		return $this->place;
+	}
+	
+	/**
+	 *  Get the default_value attribute value
+	 *
+	 * @return string
+	 */
+	function getDefaultValue() {
+		return $this->default_value;
+	}
+
+	/**
+	 *  Dump attribute values
+	 *
+	 * @return string
+	 */
+	function dumpStandard() {
+		return "field_id=".$this->field_id.
+			   " - field_name=".$this->field_name.
+			   " - data_type=".$this->data_type.
+			   " - display_type=".$this->display_type.
+			   " - display_size=".$this->display_size.
+		 	   " - label=".$this->label.
+		 	   " - description=".$this->description.
+		 	   " - scope=".$this->scope.
+		 	   " - required=".$this->required.
+		 	   " - empty_ok=".$this->empty_ok.
+		 	   " - keep_history=".$this->keep_history.
+		 	   " - special=".$this->special.
+		 	   " - value_function=".$this->value_function.
+		 	   " - use_it=".$this->use_it.
+		 	   " - show_on_add=".$this->show_on_add.
+		 	   " - show_on_add_members=".$this->show_on_add_members.
+		 	   " - place=".$this->place.
+		 	   " - default_value=".$this->default_value;
+	}	
+	
+	/**
+	 *  Return true if the field is a selectbox (display_type attribute value = SB)
+	 *
+	 * @return boolean
+	 */
+	function isSelectBox() {
+		return ( $this->getDisplayType() == "SB" );
+	}
+			
+	/**
+	 *  Return true if the field is a multi selectbox (display_type attribute value = MB)
+	 *
+	 * @return boolean
+	 */
+	function isMultiSelectBox() {
+		return ( $this->getDisplayType() == "MB" );
+	}
+			
+	/**
+	 *  Return true if the field is a date field (display_type attribute value = DF)
+	 *
+	 * @return boolean
+	 */
+	function isDateField() {
+		return ( $this->getDisplayType() == "DF" );
+	}
+
+	/**
+	 *  Return true if the field is a text field (display_type attribute value = TF)
+	 *
+	 * @return boolean
+	 */
+	function isTextField() {
+		return ( $this->getDisplayType() == "TF" );
+	}
+
+	/**
+	 *  Return true if the field is a text area (display_type attribute value = TA)
+	 *
+	 * @return boolean
+	 */
+	function isTextArea() {
+		return ( $this->getDisplayType() == "TA" );
+	}
+
+	/**
+	 *  Return true if the field is allowed to be empty
+	 *
+	 * @return boolean
+	 */
+	function isEmptyOk() {
+		$val = $this->getEmptyOk();
+	    return($val);
+	}
+	
+	/**
+	 *  Return true if the field is show on add
+	 *
+	 * @return boolean
+	 */
+	function isShowOnAdd() {
+	    return( $this->show_on_add == 1 );
+	}
+	
+	/**
+	 *  Return true if the field is show on add member
+	 *
+	 * @return boolean
+	 */
+	function isShowOnAddMember() {
+	    return( $this->show_on_add_members );
+	}
+	
+	/**
+	 *  Return true if the field is special
+	 *
+	 * @return boolean
+	 */
+	function isSpecial() {
+	    return( $this->special == 1 );
+	}
+	
+	/**
+	 *  Return true if the field is used
+	 *
+	 * @return boolean
+	 */
+	function isUsed() {
+	    return( $this->use_it );
+	}
+	
+	/**
+	 *  Return true if the field is standard (using if name - if this field value is stored into artifact table) 
+	 *
+	 * @return boolean
+	 */
+	function isStandardField() {
+		 switch ( $this->field_name ) {
+		 case "artifact_id":
+		 case "status_id":
+		 case "submitted_by":
+		 case "open_date":
+		 case "close_date":
+		 case "summary":
+		 case "details":
+		 case "severity" :
+		 	return true;
+		 default:
+		 	return false;
+		 }
+	}
+
+	/**
+	 *  Return value function field attribute value
+	 *
+	 * @return string
+	 */
+	function getGlobalValueFunction($by_field_id=false) {
+		global $art_field_fact;
+	    if ($by_field_id) {
+	    	$field = $art_field_fact->getFieldFromId($by_field_id);
+			$val = $field->getValueFunction();
+	    } else {
+			$val = $this->getValueFunction();
+	    }
+	    return($val);
+	}
+
+	/**
+	 *  Return keep history field attribute value
+	 *
+	 * @return string
+	 */
+	function getGlobalKeepHistory($by_field_id=false) {
+		global $art_field_fact;
+	    if ($by_field_id) {
+	    	$field = $art_field_fact->getFieldFromId($by_field_id);
+			$val = $field->getKeepHistory();
+	    } else {
+			$val = $this->getKeepHistory();
+	    }
+	    return($val);
+	}
+
+	/**
+	 *  Return display size field attribute value
+	 *
+	 * @return string
+	 */
+	function getGlobalDisplaySize( $by_field_id=false) {
+		global $art_field_fact;
+
+	    if ($by_field_id) {
+			$field = $art_field_fact->getFieldFromId($by_field_id);
+			$val = $field->getDisplaySize();
+	    } else {
+			$val = $this->getDisplaySize();
+	    }
+	    return(explode('/',$val));
+	}
+	
+	/**
+	 * Simply return the value associated with a given value_id
+	 * for a given field of a given group. If associated value not
+	 * found then return value_id itself.
+	 * By doing so if this function is called by mistake on a field with type
+	 * text area or text field then it returns the text itself.
+	 *
+	 * @return boolean
+	 */
+	function getValue($group_artifact_id,$value_id,$by_field_id=false) {
+
+	    // close_date and assigned_to fields are special select box fields
+	    if ( $value_func = $this->getGlobalValueFunction() ) {
+			// For now all of our value functions returns users so there is no need
+			// to make a test for the type of value function it is
+			// if ($value_func == '...')
+			return user_getname($value_id);
+	    } else if ( $this->isDateField() ) {
+			return format_date($sys_datefmt,$value_id);
+	    }
+
+	    // Look for project specific values first...
+	    $sql="SELECT * FROM artifact_field_value_list ".
+		"WHERE  field_id='$this->field_id' AND group_artifact_id='$group_artifact_id' ".
+		"AND value_id='$value_id'";
+		//echo "sql=$sql<br>";
+	    $result=db_query($sql);
+	    if ($result && db_numrows($result) > 0) {
+			return db_result($result,0,'value');
+	    } 
+	
+	    // No value found for this value id !!!
+	    return $value_id.'(Error - Not Found)';
+	
+	}
+
+	/**
+     * Return all possible values for a select box field
+     * Rk: if the checked value is given then it means that we want this value
+     *     in the list in any case (even if it is hidden and active_only is requested)
+	 *
+	 * @return array
+	 */
+	function getFieldPredefinedValues ($group_artifact_id=false, $checked=false,$by_field_id=false,$active_only=true) {
+	
+		// ArtifactTypeHtml object created in index.php
+		global $ath;
+
+	    // The "Assigned_to" box requires some special processing
+	    // because possible values  are project members) and they are
+	    // not stored in the artifact_field_value table but in the user_group table
+	    if ($value_func = $this->getGlobalValueFunction()) {
+			if ($value_func == 'group_members')
+			    $res_value = $ath->getGroupMembers();
+			else if ($value_func == 'group_admins')
+			    $res_value = $ath->getGroupAdmins();
+			else if ($value_func == 'artifact_technicians')
+			    $res_value = $ath->getTechnicians();
+			else if ($value_func == 'artifact_submitters')
+			    $res_value = $ath->getSubmitters();		
+	    } else {
+		
+			// If only active field
+			if ($active_only) {
+			    if ($checked) {
+					$status_cond = "AND  (status IN ('A','P') OR value_id='".$checked."') ";
+			    } else {
+					$status_cond = "AND  status IN ('A','P') ";
+			    }
+			}
+		
+			// CAUTION !! the fields value_id and value must be first in the
+			// select statement because the output is used in the html_build_select_box
+			// function
+		
+			// Look for project specific values first
+			$sql="SELECT value_id,value,field_id,group_artifact_id,description,order_id,status ".
+			    "FROM artifact_field_value_list ".
+			    "WHERE group_artifact_id=".$group_artifact_id." AND field_id= ".$this->field_id." ".
+			    $status_cond." ORDER BY order_id ASC";
+			$res_value = db_query($sql);
+			//echo $sql;
+			$rows=db_numrows($res_value);
+			
+			//echo "sql=".$sql." - rows=".$rows."<br>";
+	    }
+	
+	    return($res_value);
+	
+	}
+
+	/**
+	 *  Return true if the field is a user name
+	 *
+	 * @return boolean
+	 */
+	function isUsername() {
+		global $sys_user_fields;
+		
+	    return ( in_array($this->getName(),$sys_user_fields) );
+	
+	}
+
+	/**
+	 *  Return the field name according to the data_type attribute
+	 *
+	 * @return boolean
+	 */
+	function getValueFieldName() {
+	
+		//echo "DT=".$this->getDataType()."<br>";	
+		switch ( $this->getDataType() ) {
+		case $this->DATATYPE_TEXT:
+			return "valueText";
+			break;
+			
+		case $this->DATATYPE_INT:
+			return "valueInt";
+			break;
+			
+		case $this->DATATYPE_FLOAT:
+			return "valueFloat";
+			break;
+			
+		case $this->DATATYPE_DATE:
+			return "valueDate";
+			break;
+		} // switch
+	}
+
+	/**
+	 * Update the field value for a specific artifact_id
+	 * 
+	 * @param artifact_id: the artifact
+	 * @param value: the new value
+	 *
+	 * @return boolean
+	 */
+	function updateValue($artifact_id,$value) {
+	
+		$sql = "update artifact_field_value set ";
+		switch ( $this->getDataType() ) {
+		case $this->DATATYPE_TEXT:
+			$sql .= "valueText='$value'";
+			break;
+			
+		case $this->DATATYPE_INT:
+			$sql .= "valueInt=$value";
+			break;
+			
+		case $this->DATATYPE_FLOAT:
+			$sql .= "valueFloat=$value";
+			break;
+			
+		case $this->DATATYPE_DATE:
+			$sql .= "valueDate=$value";
+			break;
+		} // switch
+		
+		$sql .= " where artifact_id = $artifact_id and field_id = ".$this->getID();
+		
+		$result=db_query($sql);
+		//echo $sql;
+		
+		if ( !$result ) {
+			return false;
+		} else {
+			return true;
+		}
+		 		
+	}
+
+	/**
+	 * Update the field values for a specific artifact_id
+	 * 
+	 * @param artifact_id: the artifact
+	 * @param values: a single value or an array of values
+	 *
+	 * @return boolean
+	 */
+	function updateValues($artifact_id,$values) {
+	
+		// First delete the items
+		$sql = "DELETE FROM artifact_field_value WHERE artifact_id=".$artifact_id." AND field_id=".$this->getID();
+		//echo $sql;
+		$result=db_query($sql);
+		
+		if ( !$result ) {
+			return false;
+		}
+		
+		if ( is_array($values) ) {
+			$rc_update = true;
+			for($i=0;$i<count($values);$i++) {
+				if ((count($values) > 1) && ($values[$i]==100)) {
+					//don't insert the row if there's more 
+					//than 1 item selected and this item is the "none user"
+				} else {
+					if ( !$this->insertValue($artifact_id,$values[$i]) ) {
+						$rc_update = false;
+					}
+				}
+			}
+			
+			return $rc_update;
+		} else {
+			return $this->insertValue($artifact_id,$values);
+		}		 		
+	}
+
+	/**
+	 * Insert the field value for a specific artifact_id
+	 * 
+	 * @param artifact_id: the artifact
+	 * @param value: the value (array or single value)
+	 *
+	 * @return boolean
+	 */
+	function insertValue($artifact_id,$value) {
+	
+		if ( is_array($value) ) {
+			for ($i=0;$i<count($value);$i++) {
+				if ( !$this->insertSingleValue($artifact_id,$value[$i]) ) 
+					return false;
+			}
+			return true;
+		} else {
+			return $this->insertSingleValue($artifact_id,$value);
+		}		 		
+	}
+
+	/**
+	 * Insert the field value for a specific artifact_id for a single value
+	 * 
+	 * @param artifact_id: the artifact
+	 * @param value: the value (single value)
+	 *
+	 * @return boolean
+	 */
+	function insertSingleValue($artifact_id,$value) {
+	
+		$sql = "INSERT INTO artifact_field_value (field_id,artifact_id,";
+		$values = $this->getID().",$artifact_id,";
+		
+		switch ( $this->getDataType() ) {
+		case $this->DATATYPE_TEXT:
+			$name = "valueText";
+			$values .= "'$value'";
+			break;
+			
+		case $this->DATATYPE_INT:
+			$name = "valueInt";
+			$values .= ($value?"$value":"0");
+			break;
+			
+		case $this->DATATYPE_FLOAT:
+			$name = "valueFloat";
+			$values .= ($value?"$value":"0.0");
+			break;
+			
+		case $this->DATATYPE_DATE:
+			$name = "valueDate";
+			$values .= ($value?"$value":"0");
+			break;
+		} // switch
+		
+		$sql .= $name . ") VALUES (" . $values . ")";
+		
+		$result=db_query($sql);
+		//echo "insert=$sql<br>";
+		
+		if ( !$result ) {
+			return false;
+		} else {
+			return true;
+		}
+		 		
+	}
+
+	/**
+	 *  Return the value used for the where clause
+	 *
+	 * @param field_name: the field name
+	 * @param to_match:
+	 *
+	 * @return string
+	 */
+	function buildMatchExpression($field_name,&$to_match)
+	{
+	
+	    switch ( $this->getDataType() ) {
+	    case $this->DATATYPE_TEXT :
+	    case $this->DATATYPE_DATE :
+	
+			// If it is sourrounded by /.../ the assume a regexp
+			// else transform into a series of LIKE %word%
+			if (preg_match('/\/(.*)\//', $to_match, $matches))
+			    $expr = $field_name." RLIKE '".$matches[1]."' ";
+			else {
+			    $words = preg_split('/\s+/', $to_match);
+			    reset($words);
+			    while ( list($i,$w) = each($words)) {
+					//echo "<br>DBG $i, $w, $words[$i]";
+					$words[$i] = $field_name." LIKE '%$w%'";
+			    }
+			    $expr = join(' AND ', $words);
+			}
+			break;
+	
+	    case $this->DATATYPE_INT :
+	
+			// If it is sourrounded by /.../ the assume a regexp
+			// else assume an equality
+			if (preg_match('/\/(.*)\//', $to_match, $matches)) {
+			    $expr = $field_name." RLIKE '".$matches[1]."' ";
+			} else {
+			    $int_reg = '[+\-]*[0-9]+';
+			    if (preg_match("/\s*(<|>|>=|<=)\s*($int_reg)/", $to_match, $matches)) {
+					// It's < or >,  = and a number then use as is
+					$matches[2] = (string)((int)$matches[2]);
+					$expr = $field_name." ".$matches[1]." '".$matches[2]."' ";
+					$to_match = $matches[1].' '.$matches[2];
+		
+			    } else if (preg_match("/\s*($int_reg)\s*-\s*($int_reg)/", $to_match, $matches)) {
+					// it's a range number1-number2
+					$matches[1] = (string)((int)$matches[1]);
+					$matches[2] = (string)((int)$matches[2]);
+					$expr = $field_name." >= '".$matches[1]."' AND ".$field_name." <= '". $matches[2]."' ";
+					$to_match = $matches[1].'-'.$matches[2];
+		
+			    } else if (preg_match("/\s*($int_reg)/", $to_match, $matches)) {
+					// It's a number so use  equality
+					$matches[1] = (string)((int)$matches[1]);
+					$expr = $field_name." = '".$matches[1]."'";
+					$to_match = $matches[1];
+		
+			    } else {
+					// Invalid syntax - no condition
+					$expr = '1';
+					$to_match = '';
+			    }
+			}
+			break;
+			     
+	    case $this->DATATYPE_FLOAT :
+	
+			// If it is sourrounded by /.../ the assume a regexp
+			// else assume an equality
+			if (preg_match('/\/(.*)\//', $to_match, $matches)) {
+			    $expr = $field_name." RLIKE '".$matches[1]."' ";
+			} else {
+			    $flt_reg = '[+\-0-9.eE]+';
+		
+			    if (preg_match("/\s*(<|>|>=|<=)\s*($flt_reg)/", $to_match, $matches)) {
+					// It's < or >,  = and a number then use as is
+					$matches[2] = (string)((float)$matches[2]);
+					$expr = $field_name." ".$matches[1]." '".$matches[2]."' ";
+					$to_match = $matches[1].' '.$matches[2];
+		
+			    } else if (preg_match("/\s*($flt_reg)\s*-\s*($flt_reg)/", $to_match, $matches) ) {
+					// it's a range number1-number2
+					$matches[1] = (string)((float)$matches[1]);
+					$matches[2] = (string)((float)$matches[2]);
+					$expr = $field_name." >= '".$matches[1]."' AND ".$field_name." <= '". $matches[2]."' ";
+					$to_match = $matches[1].'-'.$matches[2];
+		
+			    } else if (preg_match("/\s*($flt_reg)/", $to_match, $matches)) {
+		
+					// It's a number so use  equality
+					$matches[1] = (string)((float)$matches[1]);
+					$expr = $field_name." = '".$matches[1]."'";
+					$to_match = $matches[1];
+			    } else {
+					// Invalid syntax - no condition
+					$expr = '1';
+					$to_match = '';
+			    }
+			}
+			break;
+		
+		default:
+			// All the rest (???) use =
+			$expr = $field_name." = '$to_match'";
+			break;
+	    }
+	
+	    //echo "<br>DBG expr to match for '".$field_name."' = $expr";
+	    return ' ('.$expr.') ';
+	
+	}
+
+	/**
+	 * Return the list of values for the field and a given artifact (for MB field type)
+	 * 
+	 * @param artifact_id: the artifact
+	 *
+	 * @return array
+	 */
+	function getValues($artifact_id) {
+	
+		switch ( $this->getDataType() ) {
+		case $this->DATATYPE_TEXT:
+			$name = "valueText";
+			break;
+			
+		case $this->DATATYPE_INT:
+			$name = "valueInt";
+			break;
+			
+		case $this->DATATYPE_FLOAT:
+			$name = "valueFloat";
+			break;
+			
+		case $this->DATATYPE_DATE:
+			$name = "valueDate";
+			break;
+		} // switch
+		
+		$sql = "SELECT ".$name." FROM artifact_field_value WHERE artifact_id=".$artifact_id." AND field_id=".$this->field_id;
+		//echo $sql;
+		$result=db_query($sql);
+		
+		return util_result_column_to_array($result);
+		 		
+	}
+	
+	/**
+	 * Return a list of label for a given id values
+	 * 
+	 * @param group_artifact_id: the artifact type id
+	 * @param values: array of values (id)
+	 *
+	 * @return array
+	 */
+	function getLabelValues($group_artifact_id,$values) {
+		
+		$label_values = array();
+		
+		$hash_values = array();
+		// Retrieve the full list (id+label)
+		$all_values = $this->getFieldPredefinedValues($group_artifact_id);		
+		// Create an hash table with the id as key
+		for($i=0;$i<db_numrows($all_values);$i++) {
+			$hash_values[db_result($all_values,$i,0)] = db_result($all_values,$i,1);
+		}
+		
+		// Build the label values using the id values
+		for($i=0;$i<count($values);$i++) {
+			if ( $values[$i] == 100 ) {
+				$label_values[] = "None";
+			} else {
+				$label_values[] = $hash_values[$values[$i]];
+			}
+		}
+		
+		return $label_values;
+	}
+
+}
+
+?>

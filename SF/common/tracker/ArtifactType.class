@@ -1,0 +1,696 @@
+<?php
+//
+// Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
+//
+// $Id$
+//
+//
+//	Originally by to the SourceForge Team,1999-2000
+//
+//  Written for CodeX by Stephane Bouhet
+//
+
+//require($DOCUMENT_ROOT.'/../common/include/Error.class');
+
+class ArtifactType extends Error {
+
+	/**
+	 * The Group object.
+	 *
+	 * @var		object	$Group.
+	 */
+	var $Group; 
+
+	/**
+	 * Current user permissions.
+	 *
+	 * @var		int		$current_user_perm.
+	 */
+	var $current_user_perm;
+
+	/**
+	 * Technicians db resource ID.
+	 *
+	 * @var		int		$technicians_res.
+	 */
+	var $technicians_res;
+
+	/**
+	 * Canned responses resource ID.
+	 *
+	 * @var		int		$cannecresponses_res.
+	 */
+	var $cannedresponses_res;
+
+	/**
+	 * Array of artifact data.
+	 *
+	 * @var		array	$data_array.
+	 */
+	var $data_array;
+
+	/**
+	 *	ArtifactType - constructor.
+	 *
+	 *	@param	object	The Group object.
+	 *	@param	int		The id # assigned to this artifact type in the db.
+	 *  @param	array	The associative array of data.
+	 *	@return boolean	success.
+	 */
+	function ArtifactType(&$Group,$artifact_type_id=false, $arr=false) {
+		$this->Error();
+		if (!$Group || !is_object($Group)) {
+			$this->setError('No Valid Group Object');
+			return false;
+		}
+		if ($Group->isError()) {
+			$this->setError('ArtifactType: '.$Group->getErrorMessage());
+			return false;
+		}
+		
+		$this->Group = $Group;
+		if ($artifact_type_id) {
+			if (!$arr || !is_array($arr)) {
+				if (!$this->fetchData($artifact_type_id)) {
+					return false;
+				}
+			} else {
+				$this->data_array = $arr;
+				if ($this->data_array['group_id'] != $this->Group->getID()) {
+					$this->setError('Group_id in db result does not match Group Object');
+					$this->data_array = null;
+					return false;
+				}
+			}
+			if (!$this->isPublic()) {
+	                $perm = $this->Group->getPermissionFromId( session_get_userid() );
+			        if (!$perm || !is_object($perm) || !$perm->isMember()) {
+	                		$this->setError('Permission Denied');
+					$this->data_array = null;
+	                		return false;
+				}
+			}
+		}
+		
+		unset($this->technicians_res);
+		unset($this->current_user_perm);
+		unset($this->cannedresponses_res);
+	}
+
+	/**
+	 *	create - use this to create a new ArtifactType in the database.
+	 *
+	 *	@param	string	The type name.
+	 *	@param	string	The type description.
+	 *	@param	bool	(1) true (0) false - viewable by general public.
+	 *	@param	bool	(1) true (0) false - whether non-logged-in users can submit.
+	 *	@param	bool	(1) true (0) false - whether to email on all updates.
+	 *	@param	string	The address to send new entries and updates to.
+	 *	@param	int		Days before this item is considered overdue.
+	 *	@param	bool	(1) trye (0) false - whether the resolution box should be shown.
+	 *	@param	string	Free-form string that project admins can place on the submit page.
+	 *	@param	string	Free-form string that project admins can place on the browse page.
+	 *	@param	int		(1) bug tracker, (2) Support Tracker, (3) Patch Tracker, (4) features (0) other.
+	 *	@return id on success, false on failure.
+	 */
+	function create($name,$description,$is_public,$allow_anon,$email_all,$email_address,
+		$due_period,$use_resolution,$submit_instructions,$browse_instructions,$datatype=0) {
+
+		$perm = $this->Group->getPermission( session_get_user() );
+
+		if (!$perm || !is_object($perm) || !$perm->isArtifactAdmin()) {
+			$this->setError('ArtifactType: Permission Denied');
+			return false;
+		}
+
+		if (!$name || !$description || !$due_period) {
+			$this->setError('ArtifactType: Name, Description, and Due Period are required');
+			return false;
+		}
+
+		if ($email_address && !validate_email($email_address)) {
+			$email_address='';
+		}
+		if ($email_all && !$email_address) {
+			$email_all=0;
+		}
+
+                $use_resolution = ((!$use_resolution) ? 0 : $use_resolution);
+                $is_public = ((!$is_public) ? 0 : $is_public);
+                $allow_anon = ((!$allow_anon) ? 0 : $allow_anon);
+                $email_all = ((!$email_all) ? 0 : $email_all);
+
+
+		$sql="INSERT INTO 
+			artifact_group_list 
+			(group_id,
+			name,
+			description,
+			is_public,
+			allow_anon,
+			email_all_updates,
+			email_address,
+			due_period,
+			status_timeout,
+			use_resolution,
+			submit_instructions,
+			browse_instructions,
+			datatype) 
+			VALUES 
+			('". $this->Group->getID() ."',
+			'". htmlspecialchars($name) ."',
+			'". htmlspecialchars($description) ."',
+			'$is_public',
+			'$allow_anon',
+			'$email_all',
+			'$email_address',
+			'". ($due_period*(60*60*24)) ."',
+			'1209600',
+			'$use_resolution',
+			'$submit_instructions',
+			'$browse_instructions',
+			'$datatype')";
+		//echo $sql;
+		$res = db_query($sql);
+
+		db_begin();
+		$id = db_insertid($res,'artifact_group_list','group_artifact_id');
+		
+		if (!$res || !$id) {
+			$this->setError('ArtifactType: '.db_error());
+			db_rollback();
+			return false;
+		} else {
+			if (!$this->fetchData($id)) {
+				db_rollback();
+				return false;
+			} else {
+				db_commit();
+				return $id;
+			}
+		}
+	}
+
+	/**
+	 *  fetchData - re-fetch the data for this ArtifactType from the database.
+	 *
+	 *  @param	int		The artifact type ID.
+	 *  @return boolean	success.
+	 */
+	function fetchData($artifact_type_id) {
+		$sql = "SELECT * FROM artifact_group_list
+			WHERE group_artifact_id='$artifact_type_id' 
+			AND group_id='". $this->Group->getID() ."'";
+		$res=db_query($sql);
+		if (!$res || db_numrows($res) < 1) {
+			$this->setError('ArtifactType: Invalid ArtifactTypeID');
+			return false;
+		}
+		$this->data_array = db_fetch_array($res);
+		db_free_result($res);
+		return true;
+	}
+
+	/**
+	 *	  getGroup - get the Group object this ArtifactType is associated with.
+	 *
+	 *	  @return	Object	The Group object.
+	 */
+	function getGroup() {
+		return $this->Group;
+	}
+
+	/**
+	 *	  getID - get this ArtifactTypeID.
+	 *
+	 *	  @return	int	The group_artifact_id #.
+	 */
+	function getID() {
+		return $this->data_array['group_artifact_id'];
+	}
+
+	/**
+	 *	  getOpenCount - get the count of open tracker items in this tracker type.
+	 *
+	 *	  @return	int	The count.
+	 */
+	function getOpenCount() {
+		return $this->data_array['open_count'];
+	}
+
+	/**
+	 *	  getTotalCount - get the total number of tracker items in this tracker type.
+	 *
+	 *	  @return	int	The total count.
+	 */
+	function getTotalCount() {
+		return $this->data_array['count'];
+	}
+
+	/**
+	 *	  allowsAnon - determine if non-logged-in users can post.
+	 *
+	 *	  @return	boolean	allow_anonymous_submissions.
+	 */
+	function allowsAnon() {
+		return $this->data_array['allow_anon'];
+	}
+
+	/**
+	 *	  emailAll - determine if we're supposed to email on every event.
+	 *
+	 *	  @return	boolean	email_all.
+	 */
+	function emailAll() {
+		return $this->data_array['email_all_updates'];
+	}
+
+	/**
+	 *	  emailAddress - defined email address to send events to.
+	 *
+	 *	  @return	string	email.
+	 */
+	function getEmailAddress() {
+		return $this->data_array['email_address'];
+	}
+
+	/**
+	 *	  getSubmitInstructions - get the free-form string strings.
+	 *
+	 *	  @return	string	instructions.
+	 */
+	function getSubmitInstructions() {
+		return $this->data_array['submit_instructions'];
+	}
+
+	/**
+	 *	  getBrowseInstructions - get the free-form string strings.
+	 *
+	 *	  @return string instructions.
+	 */
+	function getBrowseInstructions() {
+		return $this->data_array['browse_instructions'];
+	}
+
+	/**
+	 *	  isPublic - whether non-group-members can view.
+	 *
+	 *	  @return boolean	is_public.
+	 */
+	function isPublic() {
+		return $this->data_array['is_public'];
+	}
+
+	/**
+	 *	  getName - the name of this ArtifactType.
+	 *
+	 *	  @return	string	name.
+	 */
+	function getName() {
+		return $this->data_array['name'];
+	}
+
+	/**
+	 *	  getItemName - the item name of this ArtifactType.
+	 *
+	 *	  @return	string	name.
+	 */
+	function getItemName() {
+		return $this->data_array['item_name'];
+	}
+
+	/**
+	 *	  getDescription - the description of this ArtifactType.
+	 *
+	 *	  @return	string	description.
+	 */
+	function getDescription() {
+		return $this->data_array['description'];
+	}
+
+
+	/**
+	 *	getTechnicians - returns a result set of technicians.
+	 *
+	 *	@return database result set.
+	 */
+	function getTechnicians() {
+		global $display_debug;
+
+		if (!isset($this->technicians_res)) {
+			$sql="SELECT user.user_id, user.user_name ". 
+			     "FROM artifact_perm ap, user ".
+			     "WHERE (user.user_id = ap.user_id) and ".
+			     "group_artifact_id=". $this->getID()." ".
+			     "AND perm_level in (1,2)";
+			//echo "sql=$sql<br>";
+			$this->technicians_res = db_query($sql);
+			
+			if ( $display_debug ) {
+				$rows = db_numrows($this->technicians_res);
+				echo "<DBG:ArtifactType.getTechnicians>sql=".$sql."<br>";
+				for($i=0;$i<$rows;$i++) {
+					echo db_result($this->technicians_res, $i, 'user_name')."<br>";
+				}
+			}
+		}
+		return $this->technicians_res;
+	}
+
+	/**
+	 *	getCannedResponses - returns a result set of canned responses.
+	 *
+	 *	@return database result set.
+	 */
+	function getCannedResponses() {
+		if (!isset($this->cannedresponses_res)) {
+			$sql="SELECT artifact_canned_id,title,body
+				FROM artifact_canned_responses 
+				WHERE group_artifact_id='". $this->getID() ."'";
+			//echo $sql;
+			$this->cannedresponses_res = db_query($sql);
+		}
+		return $this->cannedresponses_res;
+	}
+
+	/**
+	 *	addUser - add a user to this ArtifactType - depends on UNIQUE INDEX preventing duplicates.
+	 *
+	 *	@param	int		user_id of the new user.
+	 *	@return boolean	success.
+	 */
+	function addUser($id) {
+		if (!$this->userIsAdmin()) {
+			$this->setError('Permission Denied');
+			return false;
+		}
+		if (!$id) {
+			$this->setError('Missing Params');
+			return false;
+		}
+		$sql="INSERT INTO artifact_perm (group_artifact_id,user_id,perm_level) 
+			VALUES ('".$this->getID()."','$id',0)";
+		$result=db_query($sql);
+		if ($result && db_affected_rows($result) > 0) {
+			return true;
+		} else {
+			$this->setError(db_error());
+			return false;
+		}
+	}
+
+	/**
+	 *	existUser - check if a user is already in the project permissions
+	 *
+	 *	@param	int		user_id of the new user.
+	 *	@return boolean	success.
+	 */
+	function existUser($id) {
+		if (!$id) {
+			$this->setError('Missing Params');
+			return false;
+		}
+		$sql="SELECT * FROM artifact_perm WHERE user_id=$id AND group_artifact_id=".$this->getID();
+		$result=db_query($sql);
+		if (db_numrows($result) > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 *	updateUser - update a user's permissions.
+	 *
+	 *	@param	int		user_id of the user to update.
+	 *	@param	int		(1) tech only, (2) admin & tech (3) admin only.
+	 *	@return boolean	success.
+	 */
+	function updateUser($id,$perm_level) {
+		if (!$this->userIsAdmin()) {
+			$this->setError('Permission Denied');
+			return false;
+		}
+		if (!$id) {
+			$this->setError('Missing Params: '.$id.'|'.$perm_level);
+			return false;
+		}
+		$sql="UPDATE artifact_perm SET perm_level='$perm_level'
+			WHERE user_id='$id' AND group_artifact_id='".$this->getID()."'";
+		$result=db_query($sql);
+		if ($result) {
+			return true;
+		} else {
+			$this->setError(db_error());
+			return false;
+		}
+	}
+
+	/**
+	 *	deleteUser - delete a user's permissions.
+	 *
+	 *	@param	int		user_id of the user who's permissions to delete.
+	 *	@return boolean	success.
+	 */
+	function deleteUser($id) {
+		if (!$this->userIsAdmin()) {
+			$this->setError('Permission Denied');
+			return false;
+		}
+		if (!$id) {
+			$this->setError('Missing Params');
+			return false;
+		}
+		$sql="DELETE FROM artifact_perm
+			WHERE user_id='$id' AND group_artifact_id='".$this->getID()."'";
+		$result=db_query($sql);
+		if ($result) {
+			return true;
+		} else {
+			$this->setError(db_error());
+			return false;
+		}
+	}
+
+	/**
+	 *	updateUsers - update the user's permissions.
+	 *
+	 *  @param atid: the group artifact id
+	 *	@param array: the array which contains the user permissions.
+	 *	@return boolean	success.
+	 */
+	function updateUsers($atid,$user_name) {
+
+	    $result=$this->getUsersPerm($this->getID());
+	    $rows=db_numrows($result);
+	
+	    if ( ($rows > 0)&&(is_array($user_name)) ) {
+
+			$update_error = "";
+				
+			for ($i=0; $i < $rows; $i++) {
+				$user_id = db_result($result, $i, 'user_id');
+				$sql = "update artifact_perm set perm_level = ".$user_name[$i]." where ";
+				$sql .= "group_artifact_id = ".$atid." and user_id = ".$user_id;
+				//echo $sql."<br>";
+				$result2=db_query($sql);
+				if (!$result2) {
+					$update_error .= " Error during updating user permission - user_id=".$user_id." - ".db_error();
+				}
+				
+			}
+			
+			if ($update_error) {
+				$this->setError($update_error);
+				return false;
+			} else {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	/*
+
+		USER PERMISSION FUNCTIONS
+
+	*/
+
+	/**
+	 *	  userCanView - determine if the user can view this artifact type.
+	 *
+	 *	  @return boolean	user_can_view.
+	 */
+	function userCanView() {
+		if ($this->isPublic()) {
+			return true;
+		} else {
+			if (!user_isloggedin()) {
+				return false;
+			} else {
+				return ( $this->getCurrentUserPerm() != 0 );
+			}
+		}
+	}
+
+	/**
+	 *	userIsAdmin - see if the logged-in user's perms are >= 2 or SU.
+	 *
+	 *	@return boolean
+	 */
+	function userIsAdmin() { 
+
+		if ( ($this->getCurrentUserPerm() >= 2) || (user_is_super_user()) ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 *	userIsTech - see if the logged-in user's perms are 1,2 or SU.
+	 *
+	 *	@return boolean
+	 */
+	function userIsTech() { 
+		if ( ($this->getCurrentUserPerm() == 1) || ($this->getCurrentUserPerm() == 2) || (user_is_super_user()) ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 *	getCurrentUserPerm - get the logged-in user's perms from artifact_perm.
+	 *
+	 *	@return int perm level for the logged-in user.
+	 */
+	function getCurrentUserPerm() {
+		if (!user_isloggedin()) {
+			return 0;
+		} else {
+			if (!isset($this->current_user_perm)) {
+				$sql="select perm_level
+				FROM artifact_perm
+				WHERE group_artifact_id='". $this->getID() ."'
+				AND user_id='".user_getid()."'";
+				//echo $sql;
+				$this->current_user_perm=db_result(db_query($sql),0,0);
+			}
+			return $this->current_user_perm;
+		}
+	}
+
+	/**
+	 *  update - use this to update this ArtifactType in the database.
+	 *
+	 *  @param	string	The item name.
+	 *  @param	string	The item description.
+	 *  @param	bool	(1) true (0) false - viewable by general public.
+	 *  @param	bool	(1) true (0) false - whether non-logged-in users can submit.
+	 *  @param	bool	(1) true (0) false - whether to email on all updates.
+	 *  @param	string	The address to send new entries and updates to.
+	 *  @param	int		Days before this item is considered overdue.
+	 *  @param	int		Days before stale items time out.
+	 *  @param	bool	(1) true (0) false - whether the resolution box should be shown.
+	 *  @param	string	Free-form string that project admins can place on the submit page.
+	 *  @param	string	Free-form string that project admins can place on the browse page.
+	 *  @return true on success, false on failure.
+	 */
+	function update($name,$description,$itemname,$is_public,$allow_anon,$email_all,$email_address,
+		            $submit_instructions,$browse_instructions) {
+
+		if ( !$this->userIsAdmin() || $this->userIsTech() ) {
+			$this->setError('ArtifactType: Permission Denied');
+			return false;
+		}
+		
+		if (!$name || !$description || !$itemname ) {
+			$this->setError('ArtifactType: Name, Description, and Short Name are required');
+			return false;
+		}
+		
+		if ($email_address && !validate_email($email_address)) {
+			$email_address='';
+		}
+		if ($email_all && !$email_address) {
+			$email_all=0;
+		}
+
+		$email_all = ((!$email_all) ? 0 : $email_all); 
+		$allow_anon = ((!$allow_anon) ? 0 : $allow_anon); 
+		$is_public = ((!$is_public) ? 0 : $is_public); 
+
+		$sql="UPDATE artifact_group_list SET 
+			name='$name',
+			description='". htmlspecialchars($description) ."',
+			item_name='$itemname',
+			is_public='$is_public',
+			allow_anon='$allow_anon',
+			email_all_updates='$email_all',
+			email_address='$email_address',
+			submit_instructions='$submit_instructions',
+			browse_instructions='$browse_instructions'
+			WHERE 
+			group_artifact_id='". $this->getID() ."' 
+			AND group_id='". $this->Group->getID() ."'";
+
+		$res=db_query($sql);
+		if (!$res || db_affected_rows($res) < 1) {
+			$this->setError('ArtifactType::Update(): '.db_error());
+			return false;
+		} else {
+			$this->fetchData($this->getID());
+			return true;
+		}
+	}
+	
+	//
+	// People who are project members
+	function getGroupMembers () {
+		$group_id = $this->Group->getID();
+		$sql="SELECT user.user_id,user.user_name ".
+			"FROM user,user_group ".
+			"WHERE (user.user_id=user_group.user_id ".
+			"AND user_group.group_id='$group_id') ".
+			"ORDER BY user.user_name";
+		return db_query($sql);
+	}
+	
+	// People who have once submitted a bug
+	function getSubmitters () {
+		$group_id = $this->Group->getID();
+		$sql="SELECT DISTINCT user.user_id,user.user_name ".
+			"FROM user,artifact ".
+			"WHERE (user.user_id=artifact.submitted_by ".
+			"AND artifact.group_id='$group_id') ".
+			"ORDER BY user.user_name";
+		return db_query($sql);
+	}
+		
+	//
+	// People who are project admins
+	function getGroupAdmins () {
+		$group_id = $this->Group->getID();
+		$sql="SELECT user.user_id,user.user_name ".
+			"FROM user,user_group ".
+			"WHERE (user.user_id=user_group.user_id ".
+			"AND user_group.group_id='$group_id') OR user.user_id=100 ".
+		        "AND user_group.admin_flags = 'A' ".
+			"ORDER BY user.user_name";
+		return db_query($sql);
+	}
+
+	function getUsersPerm($group_artifact_id) {
+		$sql="SELECT u.user_id,u.user_name,au.perm_level ".
+			"FROM user u,artifact_perm au ".
+			"WHERE u.user_id=au.user_id AND au.group_artifact_id=".$group_artifact_id." ".
+			"ORDER BY u.user_name";
+		//echo $sql;
+		return db_query($sql);
+	}
+
+}
+
+?>

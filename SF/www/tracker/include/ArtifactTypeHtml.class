@@ -1,0 +1,348 @@
+<?php
+//
+// Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
+//
+// $Id$
+//
+//
+//	Originally by to the SourceForge Team,1999-2000
+//
+//  Written for CodeX by Stephane Bouhet
+//
+
+//require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');
+
+class ArtifactTypeHtml extends ArtifactType {
+
+	/**
+	 *  ArtifactType() - constructor
+	 *
+	 *  @param $Group object
+	 *  @param $artifact_type_id - the id # assigned to this artifact type in the db
+	 */
+	function ArtifactTypeHtml(&$Group,$artifact_type_id=false, $arr=false) {
+		return $this->ArtifactType($Group,$artifact_type_id,$arr);
+	}
+
+	/**
+	 *  Display the header menu for this artifact type
+	 *
+	 *  @param params: array of parameters used to display the header
+	 * 
+	 *  @return void
+	 */
+	function header($params) {
+		global $DOCUMENT_ROOT;
+
+		$group_id= $this->Group->getID();
+
+		//required by new site_project_header
+		$params['group']=$group_id;
+		$params['toptab']='trackers';
+		$params['tabtext']=$this->getName();
+
+		site_project_header($params);
+		echo '<h3>Tracker: <a href="/tracker/?group_id='.$group_id.'&atid='.$this->getID().'">'.$this->getName().'</a></h3><p>';
+
+		echo '<strong><a href="/tracker/?func=add&group_id='.$group_id.'&atid='. $this->getID() .'">Submit New</a>';
+		echo ' | <a href="/tracker/?func=browse&set=my&group_id='.$group_id.'&atid='. $this->getID() .'">My '.$this->getItemName().'s </a>';
+		echo ' | <a href="/tracker/?func=browse&set=open&group_id='.$group_id.'&atid='. $this->getID() .'">Open '.$this->getItemName().'s </a>';
+		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='.$this->getID().'">Admin</a>';
+
+		echo '</strong><br>';
+		echo '<HR NoShade SIZE="1" SIZE="90%">';
+	}
+
+	/**
+	 *  Display the footer for this artifact type
+	 *
+	 *  @param params: array of parameters used to display the header
+	 * 
+	 *  @return void
+	 */
+	function footer($params) {
+		site_project_footer($params);
+	}
+
+	/**
+	 *  Display the admin header menu for this artifact type
+	 *
+	 *  @param params: array of parameters used to display the header
+	 * 
+	 *  @return void
+	 */
+	function adminHeader($params) {
+		$group_id= $this->Group->getID();
+
+		//required by new site_project_header
+		$params['group']=$group_id;
+		$params['toptab']='trackers';
+		$params['tabtext']=$this->getName();
+
+		site_project_header($params);
+
+		echo '<strong><a href="/tracker/admin/?group_id='.$group_id.'">Admin Trackers</a>';
+		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'">Admin</a>';
+		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=editoptions">Edit Options</a>';
+		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=permissions">Users Permissions</a>';
+		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=fieldusage">Manage Field Usage</a>';
+		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=fieldvalues">Manage Field Values</a>';
+		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=reports">Manage Reports</a>';
+		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=notification">Email Notification Settings</a>';
+		echo '</strong><hr>';
+	}
+
+	/**
+	 *  Display the admin header menu for artifact type
+	 *
+	 *  @param params: array of parameters used to display the header
+	 * 
+	 *  @return void
+	 */
+	function adminTrackersHeader($params) {
+		$group_id= $this->Group->getID();
+
+		//required by new site_project_header
+		$params['group']=$group_id;
+		$params['toptab']='trackers';
+		$params['tabtext']=$this->getName();
+
+		site_project_header($params);
+
+		echo '<strong><a href="/tracker/admin/?group_id='.$group_id.'">Admin Trackers</a>';
+		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&func=create">Create a New Tracker</a>';
+		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&func=canned">Manage Canned Responses</a>';
+		echo '</strong><hr>';
+	}
+
+	/**
+	 *  Display a select box for the canned responses
+	 *
+	 *  @param name: the select box name
+	 *  @param checked: the default value
+	 *  @param show_100: add the 100 value
+	 *  @param text_100: the 100 label
+	 * 
+	 *  @return void
+	 */
+	function cannedResponseBox ($name='canned_response',$checked='xzxz') {
+		return html_build_select_box ($this->getCannedResponses(),$name,$checked);
+	}
+	
+	/**
+	 *  Display the different options and the trackers lists
+	 *
+	 *  @return void
+	 */
+	function displayAdminTrackers() {
+		global $atf;
+				
+		// Get the artfact type list
+		$at_arr = $atf->getArtifactTypes();
+		
+		if (!$at_arr || count($at_arr) < 1) {
+			echo "<h1>No Accessible Trackers Found</h1>";
+			echo "<p>
+				<strong>No trackers have been set up, or you cannot view them.<p><FONT COLOR=RED>The Admin for this project ".
+				"will have to set up data types using the <a href=\"/tracker/admin/?group_id=$group_id\">admin page</a></FONT></strong>";
+		} else {
+		    echo '<H2>Trackers Administration</H2>';
+			echo '<H3><a href="/tracker/admin/?group_id='.$group_id.'&func=create">Create A New Tracker</a></H3>';
+			echo 'Create a new tracker from scratch or from an existing tracker.';
+			echo '<H3>Manage the trackers</H3>';
+			echo 'Administrate or delete a tracker.<p>';
+
+			$title_arr=array();
+			$title_arr[]='ID';
+			$title_arr[]='Tracker';
+			$title_arr[]='Admin?';
+			$title_arr[]='Delete?';
+			echo html_build_list_table_top ($title_arr);
+		
+			$fmt = "\n".'<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td>'.
+			    '<td align="center">%s</td></tr>';
+
+			for ($i = 0; $i < count($at_arr); $i++) {
+			    echo sprintf($fmt,
+					    util_get_alt_row_color($i),
+					    "<a href=\"/tracker/?group_id=".$this->Group->getID()."&atid=".$at_arr[$i]->getID()."\">".$at_arr[$i]->getID()."</a>",
+					    $at_arr[$i]->getName(),
+					    "<a href=\"/tracker/admin/?group_id=".$this->Group->getID()."&atid=".$at_arr[$i]->getID()."\"><img src=\"".util_get_image_theme("ic/admin.png")."\" border=\"0\"></a>",
+					    "<a href=\"/tracker/admin/?group_id=".$this->Group->getID()."&atid=".$at_arr[$i]->getID()."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('Delete this tracker?')\"></a>" );
+
+			}
+		    // final touch...
+		    echo "</TABLE>";
+		}
+	}
+	
+	/**
+	 *  Display the different options for administrate a tracker
+	 *
+	 *  @return void
+	 */
+	function displayAdminTracker($group_id,$atid) {
+		
+	    echo '<H2>Tracker Administration</H2>';
+	
+		echo '<H3><a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=editoptions">Edit Options</a></H3>';
+		echo 'Define the title, the description, etc of this tracker.<P>';
+		echo '<H3><a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=permissions">Users Permissions</a></H3>';
+		echo 'Add a user, change a permission or delete a user from the authorized users list.<P>';
+	    if (user_ismember($group_id,'B2') || user_ismember($group_id,'A')) {
+			echo '<H3><a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=canned">Manage the canned responses</a></H3>';
+			echo 'Add, update or delete the canned responses.';
+			echo '<H3><a href="/tracker/admin/field_usage.php?group_id='.$group_id.'&atid='.$atid.'">Manage Field Usage</a></H3>';
+			echo 'Define what tracker fields you want to use in this tracker (remark: some of the fields like status, assignee, severity&hellip; are mandatory and cannot be removed).<P>';
+			echo '<H3><a href="/tracker/admin/field_values.php?group_id='.$group_id.'&atid='.$atid.'">Manage Field Values</a></H3>';
+			echo 'Define the set of values for the tracker fields you have decided to use in your tracker. <P>';
+	    }
+	
+	    if (user_isloggedin()) {
+			echo '<H3><a href="/tracker/admin/reports.php?group_id='.$group_id.'&atid='.$atid.'">Manage Reports</a></H3>';
+			echo 'Define personal or project-wide tracker reports: what search criteria to use and what tracker fields to show in the tracker report table&hellip;';
+		
+			echo '<H3><a href="/tracker/admin/notification_settings.php?group_id='.$group_id.'&atid='.$atid.'">Email Notification Settings</a></H3>';
+			echo 'Users can define when they want to be notified of a tracker update via email. Project Administrators can also define global email notification rules.<P>';
+	    }
+	}
+
+	/**
+	 *  Display the select box with the permissions values
+	 *
+	 *  @return void
+	 */
+	function displayPermValues($i,$perm_level) {
+		$out = '<FONT size="-1"><SELECT name="user_name['.$i.']">';
+		$out .= '<OPTION value="0"'.(($perm_level==0)?" selected":"").'>None';
+		$out .= '<OPTION value="1"'.(($perm_level==1)?" selected":"").'>Tech Only';
+		$out .= '<OPTION value="2"'.(($perm_level==2)?" selected":"").'>Tech & Admin';
+		$out .= '<OPTION value="3"'.(($perm_level==3)?" selected":"").'>Admin Only';
+		$out .= '</SELECT></FONT>';
+		
+		return $out;
+	}
+
+	/**
+	 *  Display the users permissions for this tracker
+	 *
+	 *  @return void
+	 */
+	function displayUsersPerm() {
+		
+	    $result=$this->getUsersPerm($this->getID());
+	    $rows=db_numrows($result);
+	
+	    if ($rows > 0) {
+	
+			$title_arr=array();
+			$title_arr[]='User';
+			$title_arr[]='Permissions';
+			$title_arr[]='Delete?';
+					
+			echo html_build_list_table_top ($title_arr);
+		
+			for ($i=0; $i < $rows; $i++) {
+				$user_id = db_result($result, $i, 'user_id');
+			    $user_name = db_result($result, $i, 'user_name');
+			    $perm_level =  db_result($result, $i, 'perm_level');
+		
+			    echo '<TR class="'. util_get_alt_row_color($i).'">'.
+			    	 '<TD>'.util_user_link($user_name).'</TD>';
+				echo '<TD align="center">'.$this->displayPermValues($i,$perm_level).'</TD>';
+				echo '<TD align="center"><a href="/tracker/admin/?group_id='.$this->Group->getID().'&atid='.$this->getID().'&func=deleteuser&user_id='.$user_id.'"><img src="'.util_get_image_theme("ic/trash.png").'" border="0" onClick="return confirm(\'Delete this user?\')"></a></TD>';
+				echo '</TR>';
+			}
+			echo '</TABLE>';
+		} else {
+			echo '<H3>No users for this tracker.</H3>';
+		}
+		
+	}
+	
+	/**
+	 *  Display the differents options for this tracker
+	 *
+	 *  @return void
+	 */
+	function displayOptions($group_id,$atid) {
+		
+		echo '<p>Edit these differents informations concerning this tracker:</p>';
+		echo '<form name="form1" >
+		  <input type="hidden" name="update" value="1">
+		  <input type="hidden" name="group_id" value="'.$group_id.'">
+		  <input type="hidden" name="atid" value="'.$atid.'">
+		  <input type="hidden" name="func" value="editoptions">
+		  <table width="100%" border="0" cellpadding="5">
+		    <tr> 
+		      <td width="21%"><b>Name</b>:</td>
+		      <td width="79%"> 
+		        <input type="text" name="name" value="'.$this->getName().'">
+		      </td>
+		    </tr>
+		    <tr> 
+		      <td width="21%"><b>Description</b>:</td>
+		      <td width="79%"> 
+		        <textarea name="description" rows="3" cols="50">'.$this->getDescription().'</textarea>
+		      </td>
+		    </tr>
+		    <tr> 
+		      <td width="21%"><b>Short name</b>:</td>
+		      <td width="79%"> 
+		        <input type="text" name="itemname" value="'.$this->getItemName().'">
+		      </td>
+		    </tr>
+		    <tr> 
+		      <td width="21%"><b> Public tracker:</b></td>
+		      <td width="79%"> ';
+		if ( $this->isPublic() ) {
+			echo '<input type="checkbox" name="is_public" value="1" checked>';
+		} else {
+			echo '<input type="checkbox" name="is_public" value="0">';
+		}
+		echo '			
+		      </td>
+		    </tr>
+		    <tr> 
+		      <td width="21%"><b>Allow anonymous access:</b></td>
+		      <td width="79%">';
+		if ( $this->allowsAnon() ) {
+			echo '<input type="checkbox" name="allow_anon" value="1" checked>';
+		} else {
+			echo '<input type="checkbox" name="allow_anon" value="0">';
+		}
+		echo '	
+		      </td>
+		    </tr>
+		    <tr> 
+		      <td width="21%"><b>Email update:</b></td>
+		      <td width="79%">';
+		if ( $this->emailAll() ) {
+			echo '<input type="checkbox" name="email_all" value="1" checked>';
+		} else {
+			echo '<input type="checkbox" name="email_all" value="0">';
+		}
+		echo '
+		        <input type="text" name="email_address" value="'.$this->getEmailAddress().'" size="50">
+		      </td>
+		    </tr>
+		    <tr> 
+		      <td width="21%"><b>Submit instructions</b>:</td>
+		      <td width="79%"> 
+		        <textarea name="submit_instructions" rows="3" cols="50">'.$this->getSubmitInstructions().'</textarea>
+		      </td>
+		    </tr>
+		    <tr> 
+		      <td width="21%"><b>Browse instructions</b>:</td>
+		      <td width="79%"> 
+		        <textarea name="browse_instructions" rows="3" cols="50">'.$this->getBrowseInstructions().'</textarea>
+		      </td>
+		    </tr>
+		  </table>
+		  <p align="center"><input type="submit" value="Update"></p>
+		</form>';
+	}
+
+}
+
+?>

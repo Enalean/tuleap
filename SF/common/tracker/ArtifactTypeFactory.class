@@ -1,0 +1,144 @@
+<?php
+//
+// Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
+//
+// $Id$
+//
+//
+//	Originally by to the SourceForge Team,1999-2000
+//
+//  Written for CodeX by Stephane Bouhet
+//
+
+//require($DOCUMENT_ROOT.'/../common/include/Error.class');
+//require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');
+
+class ArtifactTypeFactory extends Error {
+
+	/**
+	 * The Group object.
+	 *
+	 * @var	 object  $Group.
+	 */
+	var $Group;
+
+	/**
+	 * The ArtifactTypes array.
+	 *
+	 * @var	 array	ArtifactTypes.
+	 */
+	var $ArtifactTypes;
+
+	/**
+	 *  Constructor.
+	 *
+	 *	@param	object	The Group object to which this ArtifactTypeFactory is associated
+	 *	@return	boolean	success.
+	 */
+	function ArtifactTypeFactory(&$Group) {
+		$this->Error();
+		if (!$Group || !is_object($Group)) {
+			$this->setError('Forum:: No Valid Group Object');
+			return false;
+		}
+		if ($Group->isError()) {
+			$this->setError('Forum:: '.$Group->getErrorMessage());
+			return false;
+		}
+		$this->Group = $Group;
+
+		return true;
+	}
+
+	/**
+	 *	getGroup - get the Group object this ArtifactType is associated with.
+	 *
+	 *	@return	object	The Group object.
+	 */
+	function getGroup() {
+		return $this->Group;
+	}
+
+	/**
+	 *	getStatusIdCount - return a array of each status_id count.
+	 *
+	 *	@param	group_artifact_id
+	 *
+	 *	@return	array of counts
+	 */
+	function getStatusIdCount($group_artifact_id) {
+		$count_array=array();
+		$sql="select status_id,count(*) from artifact where group_artifact_id = ".$group_artifact_id.
+			 " group by status_id";
+		//echo $sql;
+		$result = db_query ($sql);
+
+		$rows = db_numrows($result);
+
+		if (!$result || $rows < 1) {
+			$this->setError('None Found '.db_error());
+			return false;
+		} else {
+			$count_array['count'] = 0;
+			while ($arr = db_fetch_array($result)) {
+				if ( $arr['status_id'] == 1 ) {
+					$count_array['open_count'] = $arr[1];
+				} 
+				$count_array['count'] += $arr[1];
+			}
+			return $count_array;
+		}
+	}		
+
+	/**
+	 *	getArtifactTypes - return an array of ArtifactType objects.
+	 *
+	 *  @aparam group_id: the group id
+	 *
+	 *	@return	array	The array of ArtifactType objects.
+	 */
+	function getArtifactTypes() {
+		if ($this->ArtifactTypes) {
+			return $this->ArtifactTypes;
+		}
+		if (user_isloggedin()) {
+			// For project admin user (adn surperuser), we can see all the trackers (both public and non public)
+			if ( user_ismember($this->Group->getID(),'A') ) {
+				$public_flag='0,1';
+			} else {
+				$public_flag='1';
+			}
+		} else {
+			$public_flag='1';
+		}
+
+		$sql="SELECT *, 0 as open_count, 0 as count FROM artifact_group_list
+			WHERE group_id='". $this->Group->getID() ."'
+			AND is_public IN ($public_flag)
+			ORDER BY group_artifact_id ASC";
+
+		$result = db_query ($sql);
+
+		$rows = db_numrows($result);
+
+		if (!$result || $rows < 1) {
+			$this->setError('None Found '.db_error());
+			return false;
+		} else {
+			while ($arr = db_fetch_array($result)) {
+				// Retrieve status counts
+				$arr_count = $this->getStatusIdCount($arr['group_artifact_id']);
+				if ( $arr_count ) {
+					$arr['open_count'] = $arr_count['open_count'];
+					$arr['count'] = $arr_count['count'];
+				}
+				
+				$this->ArtifactTypes[] = new ArtifactType($this->Group, $arr['group_artifact_id'], $arr);
+			}
+		}
+		return $this->ArtifactTypes;
+	}
+
+}
+
+?>

@@ -1,0 +1,218 @@
+<?php
+//
+// Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
+//
+// $Id$
+//
+//
+//	Originally by to the SourceForge Team,1999-2000
+//
+//  Written for CodeX by Stephane Bouhet
+//
+
+//require($DOCUMENT_ROOT.'/../common/include/Error.class');
+//require($DOCUMENT_ROOT.'/../common/tracker/Artifact.class');
+
+class ArtifactFactory extends Error {
+
+	/**
+	 * The ArtifactType object.
+	 *
+	 * @var	 object  $ArtifactType.
+	 */
+	var $ArtifactType;
+
+	/**
+	 * The artifacts array.
+	 *
+	 * @var  array  artifacts.
+	 */
+	var $artifacts;
+	var $order_col;
+	var $sort;
+	var $status;
+	var $category;
+	var $group;
+	var $assigned_to;
+	var $offset;
+	var $max_rows;
+	var $fetched_rows;
+
+	/**
+	 *  Constructor.
+	 *
+	 *	@param	object	The ArtifactType object to which this ArtifactFactory is associated.
+	 *	@return	boolean	success.
+	 */
+	function ArtifactFactory(&$ArtifactType) {
+		$this->Error();
+		if (!$ArtifactType || !is_object($ArtifactType)) {
+			$this->setError('ArtifactFactory:: No Valid ArtifactType Object');
+			return false;
+		}
+		if ($ArtifactType->isError()) {
+			$this->setError('ArtifactFactory:: '.$ArtifactType->getErrorMessage());
+			return false;
+		}
+		$this->ArtifactType =& $ArtifactType;
+
+		return true;
+	}
+
+	/**
+	 *	setup - sets up limits and sorts before you call getTasks().
+	 *
+	 *	@param	int	The offset - number of rows to skip.
+	 *	@param	string	The column to sort on.
+	 *	@param	string	The way to order - ASC or DESC.
+	 *	@param	int	The max number of rows to return.
+	 *	@param	string	Whether to set these prefs into the user_prefs table - use "custom".
+	 *	@param	int	Include this param if you want to limit to a certain assignee.
+	 *	@param	int	Include this param if you want to limit to a certain category.
+	 *	@param	int	Include this param if you want to limit to a certain group.
+	 */
+	function setup($offset,$order_col,$sort,$max_rows,$set,$_assigned_to,$_status,$_category,$_group) {
+//echo "<BR>offset: $offset| order: $order|max_rows: $max_rows|_assigned_to: $_assigned_to|_status: $_status|_category_id: $_category_id +";
+		if ((!$offset) || ($offset < 0)) {
+			$this->offset=0;
+		} else {
+			$this->offset=$offset;
+		}
+
+		if (!$set) {
+			/*
+				if no set is passed in, see if a preference was set
+				if no preference or not logged in, use open set
+			*/
+			if (user_isloggedin()) {
+				$custom_pref=user_get_preference('art_cust'.$this->ArtifactType->getID());
+				if ($custom_pref) {
+					$pref_arr=explode('|',$custom_pref);
+					$_assigned_to=$pref_arr[0];
+					$_status=$pref_arr[1];
+					$_category=$pref_arr[2];
+					$_group=$pref_arr[3];
+					$order_col=$pref_arr[4];
+					$sort=$pref_arr[5];
+					$set='custom';
+				} else {
+					//default to open
+					$_assigned_to=0;
+					$_status=1;
+				}
+			} else {
+				//default to open
+				$_assigned_to=0;
+				$_status=1;
+			}
+		}
+
+		//
+		//  validate the column names and sort order passed in from user
+		//  before saving it to prefs
+		//
+		if ($order_col=='artifact_id' || $order_col=='summary' || $order_col=='open_date' ||
+			$order_col=='close_date' || $order_col=='assigned_to' || $order_col=='submitted_by' || $order_col=='priority') {
+			$_order_col=$order_col;
+			if (($sort == 'ASC') || ($sort == 'DESC')) {
+				$_sort_ord=$sort;
+			} else {
+				$_sort_ord='ASC';
+			}
+		} else {
+			$_order_col='artifact_id';
+			$_sort_ord='ASC';
+		}
+
+		if ($set=='custom') {
+			if (user_isloggedin()) {
+				/*
+					if this custom set is different than the stored one, reset preference
+				*/
+				$pref_=$_assigned_to.'|'.$_status.'|'.$_category.'|'.$_group.'|'.$_order_col.'|'.$_sort_ord;
+				if ($pref_ != user_get_preference('art_cust'.$this->ArtifactType->getID())) {
+					user_set_preference('art_cust'.$this->ArtifactType->getID(),$pref_);
+				}
+			}
+		}
+
+		$this->sort=$_sort_ord;
+		$this->order_col=$_order_col;
+		$this->status=$_status;
+		$this->assigned_to=$_assigned_to;
+		$this->category=$_category;
+		$this->group=$_group;
+
+		if (!$max_rows || $max_rows < 5) {
+			$max_rows=50;
+		}
+		$this->max_rows=$max_rows;
+	}
+
+	/**
+	 *	getArtifacts - get an array of Artifact objects.
+	 *
+	 *	@return	array	The array of Artifact objects.
+	 */
+	function &getArtifacts() {
+		if ($this->artifacts) {
+			return $this->artifacts;
+		}
+
+		//if status selected, and more to where clause
+		if ($this->status && ($this->status != 100)) {
+			//for open tasks, add status=100 to make sure we show all
+			$status_str="AND status_id='".$this->status."'";
+		} else {
+			//no status was chosen, so don't add it to where clause
+			$status_str='';
+		}
+
+		//if assigned to selected, and more to where clause
+		if ($this->assigned_to) {
+			$assigned_str="AND assigned_to='".$this->assigned_to."'";
+		} else {
+			//no assigned to was chosen, so don't add it to where clause
+			$assigned_str='';
+		}
+
+		if ($this->category && ($this->category != 100)) {
+			$category_str="AND category_id='". $this->category ."'";
+		}
+
+		//if artgroup selected, add to where clause
+		if ($this->group && ($this->group != 100)) {
+			$group_str="AND artifact_group_id='". $this->group ."'";
+		} else {
+			//no artgroup to was chosen, so don't add it to where clause
+			$group_str='';
+		}
+
+		//
+		//  now run the query using the criteria chosen above
+		//
+		$sql="SELECT * FROM artifact
+			WHERE 
+			group_artifact_id='". $this->ArtifactType->getID() ."'
+			 $status_str $assigned_str $category_str $group_str
+			ORDER BY group_artifact_id ".$this->sort.", ". $this->order_col ." ".$this->sort;
+
+
+//		$result=db_query($sql,($this->max_rows),$this->offset);
+		$result=db_query($sql);
+		$rows = db_numrows($result);
+		$this->fetched_rows=$rows;
+		if (db_error()) {
+			$this->setError('Database Error: '.db_error());
+			return false;
+		} else {
+			while ($arr =& db_fetch_array($result)) {
+				$this->artifacts[] = new Artifact($this->ArtifactType, $arr);
+			}
+		}
+		return $this->artifacts;
+	}
+
+}
+
+?>

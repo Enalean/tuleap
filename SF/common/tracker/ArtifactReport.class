@@ -1,0 +1,584 @@
+<?php
+//
+// Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
+//
+// $Id$
+//
+//  Written for CodeX by Stephane Bouhet
+//
+
+//require($DOCUMENT_ROOT.'/../common/include/Error.class');
+//require($DOCUMENT_ROOT.'/../common/tracker/ArtifactReportField.class');
+
+//
+// Sort functions - Must be outside the classes
+//
+
+// Sort by place query
+function cmp_place_query($field1, $field2) {
+    if ($field1->getPlaceQuery() < $field2->getPlaceQuery())
+		return -1;
+    else if ($field1->getPlaceQuery() > $field2->getPlaceQuery())
+		return 1;
+    return 0;
+}
+
+// Sort by place result
+function cmp_place_result($field1, $field2) {
+    if ($field1->getPlaceResult() < $field2->getPlaceResult())
+		return -1;
+    else if ($field1->getPlaceResult() > $field2->getPlaceResult())
+		return 1;
+    return 0;
+}
+
+//
+// Classe to manage the artifact report
+//
+class ArtifactReport extends Error {
+
+	// The report id
+	var $report_id;
+	
+	// The group artifact id (artifact type)
+	var $group_artifact_id;
+	
+	// The fields used by this report (array)
+	var $fields;
+	
+	// Name of this report
+	var $name;
+	
+	// Description of this report
+	var $description;
+	
+	// Scope of this report ('S': system, 'P': project)
+	var $scope;
+
+	/**
+	 *  Constructor.
+	 *
+	 *	@param	report_id	
+	 *  @param  atid: the artifact type id
+	 *
+	 *	@return	boolean	success.
+	 */
+	function ArtifactReport($report_id,$atid) {
+		// Error constructor
+		$this->Error();
+		$this->group_artifact_id = $atid;
+
+		if ( !$this->fetchData($report_id,$atid) ) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	/**
+	 *	fetchData - re-fetch the data for this ArtifactReport from the database.
+	 *
+	 *	@param	int		The report ID.
+	 *	@return	boolean	success.
+	 */
+	function fetchData($report_id) {
+		
+		// Read the report infos
+		$sql = "SELECT * FROM artifact_report ".
+			   "WHERE report_id=".$report_id;
+		$res=db_query($sql);
+		if (!$res || db_numrows($res) < 1) {
+			$this->setError('ArtifactReport:fetchData');
+			return false;
+		}
+		$data_array = db_fetch_array($res);
+		$this->name = $data_array['name'];
+		$this->description = $data_array['description'];
+		$this->scope = $data_array['scope'];
+		
+		// Read the fields infos
+		$res=db_query("SELECT * FROM artifact_report_field ".
+			"WHERE report_id=".$report_id);
+		if (!$res || db_numrows($res) < 1) {
+			$this->setError('ArtifactReport:fetchData');
+			return false;
+		}
+		
+		// Store the fields in $this->fields
+		$this->fields=array();
+		$i=0;
+	    while ($field_array = db_fetch_array($res)) {
+	    	// ArtifactReportField inherits from ArtifactField
+			// So we need to retreive ArtifactField values
+			$this->fields[$field_array['field_name']] = new ArtifactReportField();
+			$obj = $this->fields[$field_array['field_name']];
+			$obj->fetchData($this->group_artifact_id,$field_array['field_name']);
+			$obj->setReportFieldsFromArray($field_array);
+			$this->fields[$field_array['field_name']] = $obj;
+			$i++;
+	    }
+		return true;
+	}
+
+	/**
+	 *	Retrieve the artifact report list order by scope
+	 *
+	 *	@param	group_artifact_id: the artifact type
+	 *
+	 *	@return	array
+	 */
+	function getReports($group_artifact_id, $user_id) {
+	    
+	    // If user is unknown then get only project-wide and system wide reports
+	    // else get personal reports in addition  project-wide and system wide.
+	    $sql = 'SELECT report_id,name FROM artifact_report WHERE ';
+	    if (!$user_id || ($user_id == 100)) {
+			$sql .= "(group_artifact_id=$group_artifact_id AND scope='P') OR scope='S' ".
+			    'ORDER BY report_id';
+	    } else {
+			$sql .= "(group_artifact_id=$group_artifact_id AND (user_id=$user_id OR scope='P')) OR ".
+			    "scope='S' ORDER BY scope,report_id";
+	    }
+	    //echo "DBG sql report = $sql";
+	    return db_query($sql);
+	}
+
+	/**
+	 * Return the field list used for the query report
+	 *
+	 * @return array
+	 */
+	function getQueryFields() {
+		$query_fields = array();
+		
+		if ( count($this->fields) == 0 ) return $query_fields;
+		
+		reset($this->fields);
+
+		while (list($key,$field) = each($this->fields) ) {
+			if ( ($field->isShowOnQuery())&&($field->getUseIt() == 1) ) {
+				$query_fields[$key] = $field;
+			}
+		}
+		
+		uasort($query_fields,cmp_place_query);
+		return $query_fields;
+	}
+
+	/**
+	 * Return the field list used to display the report
+	 *
+	 * @return array
+	 */
+	function getResultFields() {
+		$result_fields = array();
+
+		if ( count($this->fields) == 0 ) return $query_fields;
+
+		reset($this->fields);
+	
+		while (list($key,$field) = each($this->fields) ) {
+			if ( ($field->isShowOnResult())&&($field->getUseIt() == 1) ) {
+				$result_fields[$key] = $field;
+			}
+		}
+		
+		uasort($result_fields,cmp_place_result);
+		return $result_fields;
+	}
+	
+	/**
+	 * Return all the fields list used for the report
+	 *
+	 * @return array
+	 */
+	function getSortedFields() {
+		$result_fields = array();
+
+		if ( count($this->fields) == 0 ) return $query_fields;
+
+		reset($this->fields);
+	
+		while (list($key,$field) = each($this->fields) ) {
+			if ( $field->getUseIt() == 1 ) {
+				$result_fields[$key] = $field;
+			}
+		}
+		
+		uasort($result_fields,cmp_place_result);
+		return $result_fields;
+	}
+
+	/**
+	 * Return the field list used to display the report (SelectBox or MultiBox type)
+	 *
+	 * @return array
+	 */
+	function getSingleMultiBoxFields() {
+		$result_fields = array();
+
+		if ( count($this->fields) == 0 ) return $query_fields;
+
+		reset($this->fields);
+	
+		while (list($key,$field) = each($this->fields) ) {
+			if ( ($field->isShowOnResult())&&($field->getUseIt() == 1)&&($field->isMultiSelectBox()||$field->isSelectBox()) ) {
+				$result_fields[$key] = $field;
+			}
+		}
+		
+		return $result_fields;
+	}
+
+	/**
+	 * Returns the number of rows for the current query
+	 *
+	 * @return int
+	 */
+	function getReportItemsCount($prefs,$morder,$advsrch) {
+
+		$this->getQueryElements($prefs,$morder,$advsrch,$select,$from,$where,$order_by);
+		
+		// Final query
+		$sql = "select count(*) ".$from." ".$where." group by a.artifact_id";
+		//echo "<DBG> query count=".$sql."<br>";
+		
+		$result_count = db_query($sql);
+		$totalrows = db_numrows($result_count);
+			   
+		return $totalrows;
+	
+	}
+
+	/**
+	 * Return all the fields list used for the report
+	 *
+	 * @return string
+	 */
+	function createQueryReport($prefs,$morder,$advsrch,$offset,$chunksz) {
+
+		$this->getQueryElements($prefs,$morder,$advsrch,$select,$from,$where,$order_by);
+		
+		// Final query
+		$limit = " LIMIT $offset,$chunksz";
+		$sql = $select." ".$from." ".$where." group by a.artifact_id ".$order_by.$limit;
+
+		//echo "<DBG> query=".$sql."<br>";
+		
+		return $sql;
+	
+	}
+
+	/**
+	 * Return if the value is ANY
+	 *
+	 * The ANY value is 0. The simple fact that
+	 * ANY (0) is one of the value means it is Any even if there are
+	 * other non zero values in the  array
+	 *
+	 * @return boolean
+	 */
+	function isvarany($var) {
+		
+	    if (is_array($var)) {
+			reset($var);
+			while (list(,$v) = each($var)) {
+			    if ($v == 0) { return true; }
+			}
+			return false;
+	    } else {
+			return ($var == 0);
+	    }
+	
+	}
+
+	
+	/**
+	 * Return the value to find for a field, for the current query
+	 *
+	 * @param field: the field object
+	 * @param prefs: field values array (HTTP GET variable)
+	 * @param field_value: the field name
+	 * @param advsrch: advance search or simple search
+	 *
+	 * @return string
+	 */
+	function getValuesWhereClause($field,$prefs,$field_name,$advsrch) {
+		
+		//echo $field_name."->prefs[".$field->getName()."]=".$prefs[$field->getName()][0]."<br>";
+	    if (($field->isSelectBox()||$field->isMultiSelectBox()) && !$this->isvarany($prefs[$field->getName()]) ) {
+	
+			// Only select box criteria to where clause if argument is not ANY
+			return " AND ".$field_name." IN (".implode(",",$prefs[$field->getName()]).") ";
+	
+	    } else if ( $field->isDateField() && $prefs[$field->getName()][0]) {
+			// transform a date field into a unix time and use <, > or =
+			list($time,$ok) = util_date_to_unixtime($prefs[$field->getName()][0]);
+		
+			if ($advsrch) {
+			    list($time_end,$ok_end) = util_date_to_unixtime($prefs[$field->getName().'_end'][0]);
+			    if ($ok)
+					$where .= " AND ".$field_name." >= ".$time;
+		
+			    if ($ok_end)
+					$where .= " AND ". $field_name." <= ".$time_end;
+		
+		
+			} else {
+		
+			    $operator = $prefs[$field->getName().'_op'][0];
+			    // '=' means that day between 00:00 and 23:59
+			    if ($operator == '=') {
+					list($year,$month,$day) = util_date_explode($prefs[$field->getName()][0]);
+					$time_end = mktime(23, 59, 59, $month, $day, $year);
+					$where = " AND ".$field_name." >= ".$time." AND ".$field_name." <= ".$time_end;
+			    } else {
+					$where = " AND ".$field_name." ".$operator." ".$time;
+			    }
+			}
+		
+			// Always exclude undefined dates (0)
+			$where .= " AND ".$field_name." <> 0 ";
+			
+			return $where;
+	
+	    } else if ( ($field->isTextField() || $field->isTextArea())
+			 && $prefs[$field->getName()][0]) {
+	
+			// It's a text field accept. Process INT or TEXT,VARCHAR fields differently
+			return " AND ".$field->buildMatchExpression($field_name,$prefs[$field->getName()][0]);
+	    }
+	    
+	}
+	
+	/**
+	 * Return the fields for the order by statement, for the current query
+	 *
+	 * @return array
+	 */
+	function getFieldsOrder($morder) {
+		
+		global $art_field_fact;
+		
+		$fields_order = array();
+		
+		$arr = explode(',',$morder);
+		while (list(,$attr) = each($arr)) {
+		    preg_match("/\s*([^<>]*)([<>]*)/", $attr,$match);
+		    list(,$mattr,$mdir) = $match;
+		    //echo "<br>DBG \$mattr=$mattr,\$mdir=$mdir";
+			if ( ($mdir == '>') || (!isset($mdir)) ) {
+			    $fields_order[$mattr] = "ASC";
+			} else {
+			    $fields_order[$mattr] = "DESC";
+			}
+		}
+
+		return $fields_order;
+	
+	}
+	
+	/**
+	 * Return the different elements for building the current query
+	 *
+	 * @param select: the select value
+	 * @param from: the from value
+	 * @param where: the where value
+	 * @param order_by: the order by value
+	 *
+	 * @return void
+	 */
+	function getQueryElements($prefs,$morder,$advsrch,&$select,&$from,&$where,&$order_by) {
+		
+		//
+		// NOTICE
+		//
+		// We can't use left join because the performs are very bad.
+		// So the restriction to this is: all fields used in the query must have a value.
+		// That involves artifact creation or artifact admin (add a field) must create
+		// empty records with default values for fields which haven't a value (from the user).
+		//
+		/* The query must be something like this :
+			SELECT a.artifact_id,u.user_name,v1.valueInt,v2.valueText,u3.user_name
+			FROM artifact a, artifact_field_value v1, artifact_field_value v2, artifact_field_value v3, user u3, user u
+			WHERE a.group_artifact_id = 100 and 
+			a.artifact_id = v1.artifact_id and v1.field_id=101 and
+			a.artifact_id = v2.artifact_id and v2.field_id=103 and
+			a.artifact_id = v3.artifact_id and v3.field_id=104 and v3.valueInt = u3.user_id and
+			a.submitted_by = u.user_id
+			group by a.artifact_id
+			order by v3.valueText,v1.valueInt
+		*/
+
+		// Get the fields sorted by the result order
+		$fields = $this->getSortedFields();
+		
+		$count = 1;
+		
+		$select = "SELECT ";
+		$from = "FROM artifact a";
+		$where = "WHERE a.group_artifact_id = ".$this->group_artifact_id; 
+		$order_by = "ORDER BY ";
+		
+		// Get the order fields
+		$fields_order = $this->getFieldsOrder($morder);
+		
+		$fields_order_result = array();
+		
+		$user_table = false;
+		$order_by_count = 0;
+		$select_count = 0;
+		
+		if ( count($fields) == 0 )
+			return;
+
+		while (list($key,$field) = each($fields) ) {
+			
+			//echo $field->getName()."-".$field->getID()."<br>";
+			
+			// If the field is a standard field ie the value is stored directly into the artifact table (severity, artifact_id, ...)
+			if ( $field->isStandardField() ) {
+				if ( ($field->isShowOnResult()) || ($field->getName() == "severity") ) {
+					if ( $select_count != 0 ) {
+						$select .= ",";
+						$select_count ++;
+					} else {
+						$select_count = 1;
+					}
+	
+					// Special case for fields which are user name
+					if ( ($field->isUsername())&&(!$field->isSelectBox())&&(!$field->isMultiSelectBox()) ) {
+						$select .= " u.user_name as ".$field->getName();
+						$where .= " and a.".$field->getName()." = u.user_id";
+						if ( !$user_table ) 
+							$from .= ", user u";
+					} else {
+						$select .= " a.".$field->getName();
+					}
+				}
+				
+				// Build the where
+				if ( $field->isShowOnQuery() ) {
+					$where .= $this->getValuesWhereClause($field,$prefs,"a.".$field->getName(),$advsrch);
+				}
+
+				// Set the fields_order_result array to	build the order_by			
+				if ( $fields_order[$field->getName()] ) {
+					if ( $order_by_count != 0 ) {
+						$order_by_count ++;
+					} else {
+						$order_by_count = 1;
+					}
+					if ( $field->isUsername() ) {
+						$fields_order_result[$field->getName()] = "u.user_name";
+					} else {
+						$fields_order_result[$field->getName()] = "a.".$field->getName();
+					}						
+				}
+			
+			} else {
+				
+				// The field value is stored into the artifact_field_value table
+				// So we need to add a new join
+				if ( $field->isShowOnResult() ) {
+					if ( $select_count != 0 ) {
+						$select .= ",";
+						$select_count ++;
+					} else {
+						$select_count = 1;
+					}
+
+					// Special case for fields which are user name
+					if ( ($field->isUsername())&&(!$field->isSelectBox())&&(!$field->isMultiSelectBox()) ) {
+						$select .= " u".$count.".user_name as ".$field->getName();
+						$where .= " and v".$count.".".$field->getValueFieldName()." = u".$count.".user_id";
+						$from .= ", user u".$count;
+					} else {
+						$select .= " v".$count.".".$field->getValueFieldName()." as ".$field->getName();
+					}
+				}
+				$from .= ", artifact_field_value v".$count;
+				$where .= " and a.artifact_id = v".$count.".artifact_id and v".$count.".field_id=".$field->getID();
+					
+				// Build the where
+				if ( $field->isShowOnQuery() ) {
+					$where .= $this->getValuesWhereClause($field,$prefs,"v".$count.".".$field->getValueFieldName(),$advsrch);
+				}
+
+				// Set the fields_order_result array to	build the order_by			
+				if ( $fields_order[$field->getName()] ) {
+					if ( $order_by_count != 0 ) {
+						$order_by_count ++;
+					} else {
+						$order_by_count = 1;
+					}
+
+					if ( $field->isUsername() ) {
+						$fields_order_result[$field->getName()] = "u".$count.".user_name";
+					} else {
+						$fields_order_result[$field->getName()] = "v".$count.".".$field->getValueFieldName();
+					}
+				}
+			
+				$count ++;
+			}
+
+		}
+		
+
+		// Build the order_by using the fields_order_result array
+		if ( $order_by_count > 0 ) {
+			$i = 1;
+			while (list($key,$field) = each($fields_order) ) {
+				if ( $i > 1 ) {
+					$order_by .= ", ";
+				}
+				$order_by .= $fields_order_result[$key]." ".$fields_order[$key];
+				
+				$i ++;
+			}
+		} else {
+			$order_by = "";
+		}
+	}
+
+
+	/**
+	 * Return the query result in a multi array
+	 * For SelectBox or MultiBox, w retreive the label value
+	 *
+	 * @param query: the SQL query
+	 *
+	 * @return array
+	 */
+	function getResultQueryReport($query) {
+
+		$fields_sb = $this->getSingleMultiBoxFields();
+
+		$result = db_query($query);
+		$res = array();
+		for($i=0;$i<db_numrows($result);$i++) {
+			$res[$i] = db_fetch_array($result);
+			reset($fields_sb);
+			while (list($field_name,$field) = each($fields_sb)) {
+				if ( $res[$i]['artifact_id'] ) {
+					$values = array();
+					if ( $field->isStandardField() ) {
+						$values[] = $res[$i][$field_name];
+					} else {
+						$values = $field->getValues($res[$i]['artifact_id']);
+					}
+					$label_values = $field->getLabelValues($this->group_artifact_id,$values);
+					$res[$i][$field_name] = join(",",$label_values);
+				}
+
+			}
+		}
+		
+		return $res;
+	}
+
+
+}
+
+?>

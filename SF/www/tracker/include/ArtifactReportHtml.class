@@ -1,0 +1,531 @@
+<?php
+//
+// Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
+//
+// $Id$
+//
+//  Parts of code come from bug_util.php (written by Laurent Julliard)
+//
+//  Written for CodeX by Stephane Bouhet
+//
+
+//require($DOCUMENT_ROOT.'/../common/include/Error.class');
+//require($DOCUMENT_ROOT.'/../common/tracker/ArtifactReport.class');
+//require($DOCUMENT_ROOT.'/../common/tracker/ArtifactField.class');
+//require($DOCUMENT_ROOT.'/../common/tracker/ArtifactReportField.class');
+//require('include/ArtifactFieldHtml.class');
+
+class ArtifactReportHtml extends ArtifactReport {
+	
+	/**
+	 *  Constructor.
+	 *
+	 *	@param	report_id	
+	 *  @param  atid: the artifact type id
+	 *
+	 *	@return	boolean	success.
+	 */
+	function ArtifactReportHtml($report_id,$atid) {
+		return $this->ArtifactReport($report_id,$atid);
+	}
+	
+	/**
+	 *	Return the HTML table which displays the priority colors
+	 *
+	 *	@param msg: the label of te table
+	 *
+	 *	@return	string
+	 */
+	function showPriorityColorsKey($msg) {
+		$html_result = "";
+		
+		$html_result .= '<P class="small"><B>'.($msg ? $msg : 'Priority Colors:').'</B><BR><TABLE BORDER=0><TR>';
+	
+		for ($i=1; $i<10; $i++) {
+			$html_result .=  '<TD class="'.get_priority_color($i).'">'.$i.'</TD>';
+		}
+		$html_result .=  '</tr></table>';
+		
+		return $html_result;
+	}
+	
+	/**
+	 *  Check is a sort criteria is already in the list of comma
+	 *  separated criterias. If so invert the sort order, if not then
+	 *  simply add it
+	 *
+	 *	@param criteria_list: the criteria list
+	 *  @param order: the order chosen by the UI
+	 *  @param msort: if multi sort is activate
+	 *
+	 *	@return	string
+	 */
+	function addSortCriteria($criteria_list, $order, $msort)
+	{
+	    //echo "<br>DBG \$criteria_list=$criteria_list,\$order=$order";
+	
+	    if ($criteria_list) {
+			$arr = explode(',',$criteria_list);
+			$i = 0;
+			while (list(,$attr) = each($arr)) {
+			    preg_match("/\s*([^<>]*)([<>]*)/", $attr,$match);
+			    list(,$mattr,$mdir) = $match;
+			    //echo "<br>DBG \$mattr=$mattr,\$mdir=$mdir";
+			    if ($mattr == $order) {
+					if ( ($mdir == '>') || (!isset($mdir)) ) {
+					    $arr[$i] = $order.'<';
+					} else {
+					    $arr[$i] = $order.'>';
+					}
+					$found = true;
+			    }
+			    $i++;
+			}
+	    }
+	
+	    if (!$found) {
+			if (!$msort) { unset($arr); }
+			$field_order = $this->USAGE_BY_NAME[$order];
+			if ( ($order == 'severity') || ($order == 'hours') || (($field_order)&&($field_order->isDateField())) ) {
+			    // severity, effort and dates sorted in descending order by default
+			    $arr[] = $order.'<';
+			} else {
+			    $arr[] = $order.'>';
+			}
+	    }
+	    
+	    //echo "<br>DBG \$arr[]=".join(',',$arr);
+	
+	    return(join(',', $arr));	
+	
+	}	
+
+	/**
+	 * Transform criteria list to readable text statement
+	 * $url must not contain the morder parameter
+	 *
+	 *	@param criteria_list: the criteria list
+	 *  @param url: HTTP Get variables to add
+	 *
+	 *	@return	string
+	 */
+	function criteriaListToText($criteria_list, $url) {
+		
+		global $art_field_fact;
+	
+	    if ($criteria_list) {
+	
+			$arr = explode(',',$criteria_list);
+		
+			while (list(,$crit) = each($arr)) {
+		
+			    $morder .= ($morder ? ",".$crit : $crit);
+			    $attr = str_replace('>','',$crit);
+			    $attr = str_replace('<','',$attr);
+		
+				$field = $art_field_fact->getFieldFromName($attr);
+				if ( !$field ) {
+					$label = "Unknow field";
+				} else {
+					$label = $field->getLabel();
+				}
+			    $arr_text[] = '<a href="'.$url.'&morder='.$morder.'#results">'.
+				$label.'</a><img src="'.util_get_dir_image_theme().
+				((substr($crit, -1) == '<') ? 'dn' : 'up').
+				'_arrow.png" border="0">';
+			}
+	    }
+	
+	    return join(' > ',$arr_text);
+	}
+	
+	/**
+	 *  Display the HTML code to display the query fields
+	 *
+	 *  @param prefs: array of parameters used for the current query
+	 *  @param advsrch,pv: HTTP get variables
+	 *
+	 *	@return string
+	 *
+	 */
+	function displayQueryFields($prefs,$advsrch,$pv) {
+		
+		//
+		// Loop through the list of used fields to define label and fields/boxes
+		// used as search criteria
+		//
+		
+		$html_select = "<table width='100%'>";
+		
+		// Number of search criteria (boxes) displayed in one row
+		$fields_per_line=5;
+
+		$ib=0;$is=0;
+		$load_cal=false;
+
+		$query_fields = $this->getQueryFields();
+		while (list($key,$field) = each($query_fields) ) {
+		
+			$field_html = new ArtifactFieldHtml($field);
+			
+			//echo $field->getName().$field->dump()."<br>";
+					
+		    // beginning of a new row
+		    if ($ib % $fields_per_line == 0) {
+				$align = "center";
+				$labels .= "\n".'<TR align="'.$align.'" valign="top">';
+				$boxes .= "\n".'<TR align="'.$align.'" valign="top">';
+		    }
+		
+		    $labels .= '<td class="small"><b>'.$field->getLabel().'&nbsp;'.
+			help_button('browse_bug_query_field',$field->getName()).
+			'</b></td>';
+		
+		    $boxes .= '<TD><FONT SIZE="-1">';
+		
+		    if ( $field->isSelectBox() ) {
+		
+				$boxes .= 
+				    $field_html->display($this->group_artifact_id,
+						      ($advsrch ? $prefs[$field->getName()] : $prefs[$field->getName()][0]),
+						      false,false,($pv?true:false),false,true,'None', true,'Any');
+		
+		    } else if ( $field->isMultiSelectBox() ) {
+		
+				$boxes .= 
+				    $field_html->display($this->group_artifact_id,
+						      $prefs[$field->getName()],
+						      false,false,($pv?true:false),false,true,'None', true,'Any');
+		
+		    } else if ($field->isDateField() ){
+		
+				$load_cal = true; // We need to load the Javascript Calendar
+				if ($advsrch) {
+				    $boxes .= $field_html->multipleFieldDate($prefs[$field->getName()][0],
+								      $prefs[$field->getName().'_end'][0],0,0,$pv);
+				} else {
+				    $boxes .= $field_html->fieldDateOperator($prefs[$field->getName().'_op'][0],$pv).
+					$field_html->fieldDate($prefs[$field->getName()][0],0,0,$pv);
+				}
+				
+		    } else if ( $field->isTextField() || 
+			       $field->isTextArea() ) {
+		
+				$boxes .= 
+				    ($pv ? $prefs[$field][0] : $field_html->fieldText($prefs[$field->getName()][0],15,80)) ;
+		
+		    }
+		    $boxes .= "</TD>\n";
+		
+		    $ib++;
+		
+		    // end of this row
+		    if ($ib % $fields_per_line == 0) {
+				$html_select .= $labels.'</TR>'.$boxes.'</TR>';
+				$labels = $boxes = '';
+		    }
+		
+		}
+		
+		// Make sure the last few cells are in the table
+		if ($labels) {
+		    $html_select .= $labels.'</TR>'.$boxes.'</TR>';
+		}
+		
+		$html_select .= "</table>";
+		
+		return $html_select;
+
+	}
+
+
+	/**
+	 *  Return the HTML code to display the results of the query fields
+	 *
+	 *  @param group_id: the group id
+	 *  @param prefs: array of parameters used for the current query
+	 *  @param total_rows: number of rows of the result
+	 *  @param url: HTTP Get variables to add
+	 *  @param nolink: link to detailartifact
+	 *  @param offset,chunksz,morder,advsrch,offset,chunksz: HTTP get variables
+	 *
+	 *	@return string
+	 *
+	 */
+	function showResult ($group_id,$prefs,$offset,$total_rows,$url,$nolink,$chunksz,$morder,$advsrch,$offset,$chunksz) {
+	    global $PHP_SELF;
+	
+		$html_result = "";
+	
+	    // Build the list of links to use for column headings
+	    // Used to trigger sort on that column
+		$result_fields = $this->getResultFields();	
+		
+		$links_arr = array();
+		$title_arr = array();
+		$width_arr = array();
+
+		if ( count($result_fields) == 0 ) return;
+
+		reset($result_fields);
+		while (list(,$field) = each($result_fields)) {
+		    $links_arr[] = $url.'&order='.$field->getName().'#results';
+		    $title_arr[] = $field->getLabel();
+		    $width_arr[$field->getName()] = $field->getColWidth();
+		}
+
+		$query = $this->createQueryReport($prefs,$morder,$advsrch,$offset,$chunksz);
+		$result = $this->getResultQueryReport($query);
+	    $rows = count($result);
+	    	    
+	   /*
+	      Show extra rows for <-- Prev / Next -->
+	    */	
+	    $nav_bar ='<table width= "100%"><tr>';
+	    $nav_bar .= '<td width="20%" align ="left">';
+	
+	    // If all artifacts on screen so no prev/begin pointer at all
+	    if ($total_rows > $chunksz) {
+			if ($offset > 0) {
+			    $nav_bar .=
+			    '<A HREF="'.$url.'&offset=0#results"><B><< Begin</B></A>'.
+			    '&nbsp;&nbsp;&nbsp;&nbsp;'.
+			    '<A HREF="'.$url.'&offset='.($offset-$chunksz).
+			    '#results"><B>< Previous '.$chunksz.'</B></A></td>';
+			} else {
+			    $nav_bar .=
+				'<span class="disable">&lt;&lt; Begin&nbsp;&nbsp;&lt; Previous '.$chunksz.'</span>';
+			}
+	    }
+	
+	    $nav_bar .= '</td>';
+	    
+	    $offset_last = min($offset+$chunksz-1, $total_rows-1);
+	
+	    $nav_bar .= '<td width= "60% " align = "center" class="small">Items '.($offset+1).' - '.
+		($offset_last+1)."</td>\n";
+	
+	    $nav_bar .= '<td width="20%" align ="right">';
+	
+	    // If all artifacts on screen, no next/end pointer at all
+	    if ($total_rows > $chunksz) {
+			if ( ($offset+$chunksz) < $total_rows ) {
+		
+			    $offset_end = ($total_rows - ($total_rows % $chunksz));
+			    if ($offset_end == $total_rows) { $offset_end -= $chunksz; }
+		
+			    $nav_bar .= 
+				'<A HREF="'.$url.'&offset='.($offset+$chunksz).
+				'#results" class="small"><B>Next '.$chunksz.' &gt;</B></A>'.
+				'&nbsp;&nbsp;&nbsp;&nbsp;'.
+				'<A HREF="'.$url.'&offset='.($offset_end).
+				'#results" class="small"><B>End &gt;&gt;</B></A></td>';
+			} else {
+			    $nav_bar .= 
+				'<span class="disable">Next '.$chunksz.
+				' &gt;&nbsp;&nbsp;End &gt;&gt;</span>';
+			}
+	    }
+	    $nav_bar .= '</td>';
+	    $nav_bar .="</tr></table>\n";
+	 
+	    $html_result .= $nav_bar;
+
+	    $html_result .= html_build_list_table_top ($title_arr,$links_arr);
+	
+		
+	    for ($i=0; $i < $rows ; $i++) {
+	
+			$html_result .= '<TR class="'.get_priority_color($result[$i]['severity']) .'">'."\n";
+
+			reset($result_fields);	
+			while (list($key,$field) = each($result_fields) ) {
+				//echo "$key=".$result[$i][$key]."<br>";
+				// Special case for severity: if this field is used, then it is used only for the priority color - No other display
+				if ( $key != "severity" ) {			    
+					
+				    $value = $result[$i][$key];
+				    if ($width_arr[$key]) {
+						$width = 'WIDTH="'.$width_arr[$key].'%"';
+				    } else {
+						$width = '';
+				    }
+				    $width .= ' class="small"';
+			
+				    if ( $field->isDateField() ) {
+						if ($value)
+						    $html_result .= "<TD $width>".format_date("Y-m-d",$value).'</TD>'."\n";
+						else
+						    $html_result .= "<TD align=\"center\">-</TD>\n";
+			
+				    } else if ($field->getName() == 'artifact_id') {
+						if ($nolink) 
+						    $html_result .= "<TD $width>$value</TD>\n";
+						else
+						    $html_result .= "<TD $width>".'<A HREF="/tracker/?func=detail&aid='.
+							$value.'&atid='.$this->group_artifact_id.'&group_id='.$group_id.'">'. 
+							$value .'</A></TD>'."\n";
+			
+				    } else if ( $field->isUsername() ) {	
+						if ($nolink)
+						    $html_result .= "<TD $width>$value</TD>\n";
+						else
+						    $html_result .= "<TD $width>".util_multi_user_link($value)."</TD>\n";
+					
+				    } else if ( $field->isSelectBox() ) {
+	//					Usefull? - TODO
+	//					$html_result .= "<TD $width>". bug_data_get_cached_field_value($field_arr[$j], $group_id, $value) .'</TD>'."\n";
+						$html_result .= "<TD $width>".$value.'</TD>'."\n";
+			
+				    } else {
+						$html_result .= "<TD $width>". $value .'&nbsp;</TD>'."\n";
+				    }
+				} // if severity				    
+				
+			} // while 
+			$html_result .= "</tr>\n";
+	    }
+	
+	    $html_result .= '</TABLE>';
+	    $html_result .= $nav_bar;
+	    
+	    return $html_result;
+	}
+
+	/**
+	 *  Display the report
+	 *
+	 *  @param prefs: array of parameters used for the current query
+	 *  @param group_id,report_id,set,advsrch,msort,morder,order,pref_stg,offset,chunksz,pv: HTTP get variables
+	 *
+	 *	@return string
+	 *
+	 */
+	function displayReport($prefs,$group_id,$report_id,$set,$advsrch,$msort,$morder,$order,$pref_stg,$offset,$chunksz,$pv) {
+		
+		global $ath,$art_field_fact;
+		
+    	$html_result = "<script language=\"JavaScript\" src=\"/include/calendar.js\"></script>\n";
+		$html_result .= '<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="5">
+		          <FORM ACTION="'.$PHP_SELF .'" METHOD="GET" NAME="artifact_form">
+		          <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$this->group_artifact_id.'">
+		          <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
+		          <INPUT TYPE="HIDDEN" NAME="set" VALUE="custom">
+		          <INPUT TYPE="HIDDEN" NAME="advsrch" VALUE="'.$advsrch.'">
+		          <INPUT TYPE="HIDDEN" NAME="msort" VALUE="'.$msort.'">
+		          <TR><TD colspan="'.$fields_per_line.'" nowrap>'.
+		     ($pv ? '<h3>Selected '.$ath->getItemName().'</h3>':'<h3>Browse '.$ath->getItemName());
+		
+		//Show the list of available artifact reports
+		if (!$pv) {
+		    $res_report = $this->getReports($this->group_artifact_id,user_getid());
+		    $box_name = 'report_id" onChange="document.artifact_form.go_report.click()';
+
+			$html_result .= ' using report '.
+				html_build_select_box($res_report,$box_name,$report_id,true,'Default').
+				'<input VALUE="Go" NAME="go_report" type="submit">';
+		}
+		
+		// Start building the URL that we use to for hyperlink in the form
+		$url = "/tracker/?atid=".$this->group_artifact_id."&group_id=$group_id&func=browse&set=$set&msort=$msort";
+		if ($set == 'custom')
+		     $url .= $pref_stg;
+		else
+		     $url .= '&advsrch='.$advsrch;
+		
+		$url_nomorder = $url;
+		$url .= "&morder=$morder";
+		
+		// Build the URL for alternate Search
+		if ($advsrch) { 
+		    $url_alternate_search = str_replace('advsrch=1','advsrch=0',$url);
+		    $text = 'Simple Search';
+		} else {    
+		    $url_alternate_search = str_replace('advsrch=0','advsrch=1',$url); 
+		    $text = 'Advanced Search';
+		}
+		
+		if (!$pv) {
+		     $html_result .= '<small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(or use <a href="'.
+			 $url_alternate_search.'">'.$text.'</a>)</small></h3><p>';
+		}
+		
+		$html_result .= $html_select;
+		
+		$html_result .= '</TABLE>';
+
+		// Display query fields
+		$html_result .= $this->displayQueryFields($prefs,$advsrch,$pv);
+		
+		if (!$pv) {
+		    $html_result .= '<p><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Browse"></FONT> '.
+			'<input TYPE="text" name="chunksz" size="3" MAXLENGTH="5" '.
+			'VALUE="'.$chunksz.'">'.$ath->getItemName().'s at once.</FORM>';
+		}
+		
+		//
+		// Finally display the result table
+		// 
+		
+		$totalrows = $this->getReportItemsCount($prefs,$morder,$advsrch);
+
+		if ($totalrows > 0) {
+		
+		    // Build the sorting header messages
+		    if ( $morder ) {
+				$order_statement = 'sorted by '.($pv ? '':help_button('BugBrowsing.html#BugListSorting',false)).
+				    ' : '.$this->criteriaListToText($morder, $url_nomorder);
+		    } else {
+				$order_statement ='';
+		    }
+		    
+		    $html_result .= '<A name="results"></A>';
+		    $html_result .= '<h3>'.$totalrows.' matching '.$ath->getItemName().($totalrows>1 ? 's':'').' '.
+			$order_statement.'</h3>';
+		
+		    if (!$pv) {
+				$html_result .= '<P>Click a column heading to sort results (up or down), ';
+				$field = $art_field_fact->getFieldFromName('severity');
+				if ( $field ) {
+					$html_result .= 'or <A HREF="'.$url.'&order=severity#results"><b>Sort by Severity</b></A> ';
+				}
+				$html_result .= 'or <A HREF="'.$url.'&order=#results"><b>Reset sort</b></a>. ';
+			}
+		    
+		    if ($msort) { 
+				$url_alternate_sort = str_replace('msort=1','msort=0',$url).
+				    '&order=#results';
+				$text = 'Deactivate';
+		    } else {    
+				$url_alternate_sort = str_replace('msort=0','msort=1',$url).
+			    '&order=#results';
+				$text = 'Activate';
+		    }
+		
+		    if (!$pv) {
+				$html_result .= 'You can also <a href="'.$url_alternate_sort.'"><b> '.$text.
+				    ' multicolumn sort</b></a>.&nbsp;&nbsp;&nbsp;&nbsp;'.
+				    '(<a href="'.$url.'&pv=1"> <img src="'.util_get_image_theme("msg.png").'" border="0">'.
+				    '&nbsp;Printer version</a>)'."\n";
+		    }
+		
+		    if ($pv) { $chunksz = 100000; }
+		    $html_result .= $this->showResult($group_id,$prefs,$offset,$totalrows,($pv ? '' : $url), ($pv ? true:false) ,$chunksz ,$morder,$advsrch,$offset,$chunksz );
+		    $html_result .= $this->showPriorityColorsKey('Severity colors:');
+		
+		} else {
+		
+		    $html_result .= "<H2>No Matching ".$ath->getItemName()." Found for ".group_getname($group_id)." or filters too restrictive</H2>";
+		    $html_result .= db_error();
+		
+		}
+	
+		echo $html_result;
+		
+		//return $html_result;
+	}
+
+}
+
+?>
+

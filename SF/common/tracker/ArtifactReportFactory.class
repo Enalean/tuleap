@@ -1,0 +1,40 @@
+<?php
+//
+// Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
+//
+// $Id$
+//
+//  Written for CodeX by Stephane Bouhet
+//
+
+//require($DOCUMENT_ROOT.'/../common/include/Error.class');
+//require($DOCUMENT_ROOT.'/../common/tracker/ArtifactReport.class');
+
+class ArtifactReportFactory extends Error {
+
+	/**
+	 *  Constructor.
+	 *
+	 *	@return	boolean	success.
+	 */
+	function ArtifactReportFactory() {
+		// Error constructor
+		$this->Error();
+		
+		return true;
+	}
+	
+	/**
+	 * Return a new ArtifactReportHtml object 
+	 *
+	 * @param report_id: the report id to create the new ArtifactReportHtml
+	 *
+	 * @return void
+	 */
+	function getArtifactReportHtml($report_id,$atid) {
+		return new ArtifactReportHtml($report_id,$atid);
+	}
+
+}
+
+?>

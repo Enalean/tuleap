@@ -1,0 +1,62 @@
+<?php
+/**
+ * GForge Tracker Facility
+ *
+ * Copyright 2002 GForge, LLC
+ * http://gforge.org/
+ *
+ * @version   $Id$
+ */
+
+//require ($DOCUMENT_ROOT.'/../common/include/Error.class');
+
+class ArtifactFromID extends Error {
+
+//artifact_vw
+
+	var $Group;
+	var $ArtifactType;
+	var $Artifact;
+
+	function ArtifactFromID($id) {
+		$res=db_query("SELECT * FROM artifact_vw WHERE artifact_id='$id'");
+		if (!$res || db_numrows($res) < 1) {
+			$this->setError("Invalid Artifact ID");
+			return false;
+		} else {
+			$art_arr =& db_fetch_array($res);
+
+			$res=db_query("SELECT * FROM artifact_group_list
+            WHERE group_artifact_id='$art_arr['group_artifact_id']'");
+
+			$typ_arr =& db_fetch_array($res);
+
+			$g =& group_get_object($typ_arr['group_id']);
+			$this->Group =& $g;
+
+			$at = new ArtifactType($g,$art_arr['group_artifact_id'],$typ_arr);
+			if (!$at || !is_object($at)) {
+				$this->setError("Could Not Create ArtifactType");
+				return false;
+			} elseif ($at->isError()) {
+				$this->setError($at->getErrorMessage());
+				return false;
+			}
+			$this->ArtifactType =& $at;
+
+			$a = new Artifact($at,$id,$art_arr);
+			if (!$a || !is_object($a)) {
+				$this->setError("Could Not Create Artifact");
+				return false;
+			} elseif ($a->isError()) {
+				$this->setError($a->getErrorMessage());
+				return false;
+			}
+			$this->Artifact =& $a;
+		}
+		return true;
+	}
+
+}
+
+?>

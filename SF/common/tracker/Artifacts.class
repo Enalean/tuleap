@@ -1,0 +1,110 @@
+<?php
+/**
+ * Artifacts.class - Class to handle multiple artifacts
+ *
+ * SourceForge: Breaking Down the Barriers to Open Source Development
+ * Copyright 1999-2001 (c) VA Linux Systems
+ * http://sourceforge.net
+ *
+ * @version   $Id$
+ *
+ */
+
+//require($DOCUMENT_ROOT.'/../common/include/Error.class');
+//require($DOCUMENT_ROOT.'/../common/tracker/Artifact.class');
+
+class Artifacts extends Error {
+
+	/**
+	 * Status db resource ID.
+	 *
+	 * @var		int		$status_res.
+	 */
+	var $status_res;
+
+	/**
+	 * Artifact Type object.
+	 *
+	 * @var		object	$ArtifactType.
+	 */
+	var $ArtifactType; 
+
+	/**
+	 * Array of Artifact objects.
+	 *
+	 * @var		array	$artifacts_array.
+	 */
+	var $artifacts_array; 
+
+	/**
+	 *  Artifacts - constructor.
+	 *
+	 *  Use this constructor if you are modifying an existing artifact.
+	 *
+	 *	@param	object	Artifact Type object.
+	 *  @param	int		(primary key from database).
+	 *  @return	boolean	success.
+	 */
+	function Artifacts(&$ArtifactType) {
+		$this->Error(); 
+
+		$this->ArtifactType =& $ArtifactType;
+
+		//was ArtifactType legit?
+		if (!$ArtifactType || !is_object($ArtifactType)) {
+			$this->setError('Artifact: No Valid ArtifactType');
+			return false;
+		}
+		//did ArtifactType have an error?
+		if ($ArtifactType->isError()) {
+			$this->setError('Artifact: '.$ArtifactType->getErrorMessage());
+			return false;
+		}
+
+	}
+
+	/**
+	 *  getArtifacts - get an array of artifacts.
+	 *
+	 *  Retrieves an array of artifact objects.
+	 *
+	 *  @param	boolean	Database query offset.
+	 *  @return an array of artifact objects on success / false on failure.
+	 */
+	function &getArtifacts($offset=false) {
+		if (!$offset) {
+			$offset = 0;
+		}
+
+		$sql = "SELECT 
+					* 
+				FROM 
+					artifact_vw 
+				WHERE 
+					group_artifact_id='". $this->ArtifactType->getID() ."'";
+	
+		$res = db_query($sql,500,$offset);
+
+		if (!$res) {
+			$this->setError('Could not get artifacts: ' . db_error());
+			return false;
+		} else {
+			while ($rows = db_fetch_array($res)) {
+				$this->artifacts_array[] = new Artifact($this->ArtifactType, $rows);
+			}
+
+			return $this->artifacts_array;
+		}
+	}
+
+	/**
+	 * getArtifactType - get the artifact type.
+	 *
+	 *	@return	object	The ArtifactType object.
+	 */
+	function &getArtifactType() {
+		return $this->ArtifactType;
+	}
+}
+
+?>

@@ -1,0 +1,1359 @@
+<?php
+//
+// Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
+//
+// $Id$
+//
+//
+//	Originally by to the SourceForge Team,1999-2000
+//
+//  Parts of code come from bug_util.php (written by Laurent Julliard)
+//
+//  Written for CodeX by Stephane Bouhet
+//
+
+
+//require($DOCUMENT_ROOT.'/../common/tracker/Artifact.class');
+//require('include/ArtifactFieldHtml.class');
+
+class ArtifactHtml extends Artifact {
+
+	/**
+	 *  ArtifactHtml() - constructor
+	 *
+	 *  Use this constructor if you are modifying an existing artifact
+	 *
+	 *  @param $ArtifactType object
+	 *  @param $artifact_id integer (primary key from database)
+	 *  @return true/false
+	 */
+	function ArtifactHtml(&$ArtifactType,$artifact_id=false) {
+		return $this->Artifact($ArtifactType,$artifact_id);
+	}
+
+	/**
+	 * Display the artifact
+	 *
+	 * @param results: field values
+	 * @param ro: read only parameter - Display mode or update mode
+	 *
+	 * @return void
+	 */
+	function display($results,$ro) {
+		global $art_field_fact,$sys_datefmt;
+		
+		$fields_per_line=2;
+		$max_size=40;
+
+		$group = $this->ArtifactType->getGroup();
+		$group_artifact_id = $this->ArtifactType->getID();
+		$group_id = $group->getGroupId();
+		
+	    // First display some  internal fields - Cannot be modified by the user
+		
+    	$summary = db_result($results,0,'summary');
+	    
+	    echo "<H2>[ ".$this->ArtifactType->getItemName()." #".$this->getID()." ] ".$summary."</H2>";
+	
+		echo '
+	    <FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data" NAME="artifact_form">
+	    <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="2000000">';
+	    if ( $ro ) {
+	    	echo '<INPUT TYPE="HIDDEN" NAME="func" VALUE="postaddcomment">';
+	    } else {
+	    	echo '<INPUT TYPE="HIDDEN" NAME="func" VALUE="postmod">';
+	    }
+	    echo '
+	    <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
+	    <INPUT TYPE="HIDDEN" NAME="group_artifact_id" VALUE="'.$group_artifact_id.'">
+	    <INPUT TYPE="HIDDEN" NAME="artifact_id" VALUE="'.$this->getID().'">';
+	    
+		echo '
+	    <TABLE cellpadding="0">
+	      <TR><TD><B>Submitted By:</B>&nbsp;</td><td>'.user_getname(db_result($results,0,'submitted_by')).'</TD>
+	          <TD><B>Group:</B>&nbsp;</td><td>'.group_getname($group_id).'</TD>
+	      </TR>
+	      <TR><TD><B>Submitted on:</B>&nbsp;</td><td>'.format_date($sys_datefmt,db_result($results,0,'open_date')).'</TD>
+	          <TD colspan="2"><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit Changes"></TD>
+	      </TR>
+	      <TR><TD COLSPAN="'.($fields_per_line*2).'">&nbsp</TD></TR>
+	      <script language="JavaScript" src="/include/calendar.js"></script>';
+	
+		// Now display the variable part of the field list (depend on the project)
+	
+	    $i = 0;
+	    $result_fields = $art_field_fact->getAllUsedFields();
+    	while ( list($key, $field) = each($result_fields) ) {
+    		
+    		//echo $field->getName()."=".db_result($results,0,$field->getName())."<br>";
+    		$field_html = new ArtifactFieldHtml($field);
+    		
+			// if the field is a special field (except summary and details) 
+			// then skip it.
+			if ( !$field->isSpecial() || $field->getName()=='summary' || $field->getName()=='details' ) {
+					   
+				// display the artifact field
+				// if field size is greatest than max_size chars then force it to
+				// appear alone on a new line or it won't fit in the page
+				
+				// For multi select box, we need to retrieve all the values
+				if ( $field->isMultiSelectBox() ) {
+					$field_value = $field->getValues($this->getID());
+				} else {
+					$field_value = db_result($results,0,$field->getName());
+				}
+				
+				list($sz,) = $field->getDisplaySize();
+				$label = $field_html->labelDisplay(false,false);
+				// original submission field must be displayed read-only
+				if ($field->getName()=='details') {
+					$value = util_make_links($field_html->display($this->ArtifactType->getID(),$field_value,false,false,true),$group_id,$group_artifact_id);
+				} else {
+					$value = $field_html->display($this->ArtifactType->getID(),$field_value,false,false,$ro);
+				}
+					
+				$star = ($field->isEmptyOk() ? '':'<span class="highlight"><big>*</big></b></span>');
+				
+				// Details field must be on one row
+				if ($sz > $max_size || $field->getName()=='details') {
+					echo "\n<TR>".
+					  '<TD valign="middle">'.$label.$star.'</td>'.
+					  '<TD valign="middle" colspan="'.(2*$fields_per_line-1).'">'.
+					  $value.'</TD>'.		      
+					  "\n</TR>";
+					$i=0;
+				} else {
+					echo ($i % $fields_per_line ? '':"\n<TR>");
+					echo '<TD valign="middle">'.$label.$star.'</td>'.
+					  '<TD valign="middle">'.$value.'</TD>';
+					$i++;
+					echo ($i % $fields_per_line ? '':"\n</TR>");
+				}
+			}
+		} // while
+	      
+		echo '</TABLE>';
+		
+		echo '<table cellspacing="0">';
+
+		//
+		// Followups comments
+		//
+		if ( !$ro ) {
+			echo '<TR><TD colspan="2" align="top"><HR></td></TR>';
+			echo '
+			<TR><TD>
+			<h3>Follow-up Comments '.help_button('BugUpdate.html#BugComments').'</h3></td>
+			<TD>
+			<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit Changes">
+			</td></tr>';
+
+			echo '
+			<tr><TD colspan="2" align="top">
+			<B>Use a Canned Response:</B>&nbsp;';
+			
+			echo $this->ArtifactType->cannedResponseBox ();
+			
+			echo '
+			&nbsp;&nbsp;&nbsp;<A HREF="/tracker/admin/field_values.php?group_id='.$group_id.'&create_canned=1">Or define a new Canned Response</A>
+			</TD></TR>';
+			
+			echo '
+			<TR><TD colspan="2">';
+			
+			$field = $art_field_fact->getFieldFromName('comment_type_id');
+			$field_html = new ArtifactFieldHtml( $field );
+			if ( $field ) {
+				echo '<P><B>Comment Type:</B>'.
+				     $field_html->fieldBox('',$group_artifact_id,'',true,'None').'<BR>';
+			}
+		} else {
+			echo '<br><TR><TD COLSPAN="2"><B>Add A Comment:</B><BR>';
+		}
+				
+		echo '
+	    <TEXTAREA NAME="details" ROWS="7" COLS="60" WRAP="SOFT"></TEXTAREA><p>';
+
+		if (!user_isloggedin()) {
+			echo '<B><span class="highlight"><H2>You Are NOT Logged In</H2><P>Please <A HREF="/account/login.php?return_to='.
+			urlencode($REQUEST_URI).
+			'">log in,</A> so followups can be emailed to you.</span></B><P>';
+			echo 'If you cannot login, then enter your email address here:';
+	    	echo '<br><input type="text" name="email" maxsize="100" size="50"/><p>';
+		}
+	
+		echo $this->showDetails($group_id);
+		echo '</td></tr>';
+		
+		//
+		// CC List
+		//
+		if ( !$ro ) {
+			echo '		
+			<TR><TD colspan="2"><hr></td></tr>
+			
+			<TR><TD colspan="2">
+			<h3>CC List '.help_button('BugUpdate.html#BugCCList').'</h3>
+			<b><u>Note:</b></u> for CodeX users use their login name rather than their email addresses.<p>
+			<B>Add CC:&nbsp;</b><input type="text" name="add_cc" size="30">&nbsp;&nbsp;&nbsp;
+			<B>Comment:&nbsp;</b><input type="text" name="cc_comment" size="40" maxlength="255"><p>';
+			
+			echo $this->showCCList($group_id,$group_artifact_id);
+			
+			echo '</TD></TR>';
+			
+		}
+	
+		//
+		// File attachments
+		//
+		echo '
+		<TR><TD colspan="2"><hr></td></tr>
+		<TR><TD colspan="2">
+		<h3>Attachments '.help_button('BugUpdate.html#BugAttachments').'</h3>
+		<B>Check to Upload&hellip;  <input type="checkbox" name="add_file" VALUE="1">
+		&nbsp;&hellip;&amp; Attach File:</B>
+		<input type="file" name="input_file" size="40">
+		<br><span class="small"><i>(The maximum upload file size is 2 Mb - <u>Please compress your files</u>)</i></span>
+		<P>
+		<B>File Description:</B>&nbsp;
+		<input type="text" name="file_description" size="60" maxlength="255">
+		<P>';
+		
+		echo $this->showAttachedFiles($group_id,$group_artifact_id);
+		
+		echo '</TD></TR>';
+
+		//
+		// Artifact dependencies
+		//
+		echo '
+		<TR><TD colspan="2"><hr></td></tr>
+		<TR ><TD colspan="2">';
+		
+		echo '<h3>Dependencies '.help_button('BugUpdate.html#BugDependencies').'</h3>
+		<B>Dependent on:</B><BR>
+		<P>';
+		if ( !$ro ) {
+			echo '
+			<B>Artifact IDs:</B>&nbsp;
+			<input type="text" name="artifact_id_dependent" size="20" maxlength="255">
+			&nbsp;<i>(Fill your list using the comma as separator)</i><p>';
+		}
+		echo $this->showDependencies($group_id,$group_artifact_id);
+		
+		echo '</TD></TR>';
+        echo '<TR><TD colspan="2"><hr></td></tr>';
+        
+        //
+        // History
+        //
+        echo '
+		<TR><TD colspan="2" >';
+		
+		echo '<H3>Change History '.help_button('BugUpdate.html#BugHistory').'</H3>';
+		echo $this->showHistory($group_id,$group_artifact_id);
+		
+		// 
+		// Final submit button
+		//
+		echo '</TD></TR>		
+		<TR><TD colspan="2" ALIGN="center">
+			<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit Changes">
+			</FORM>
+		</TD></TR>';
+
+		echo '</table>';
+	}
+	
+
+	/**
+	 * Display the history
+	 *
+	 * @param group_id: the group id
+	 * @param group_artifact_id: the artifact type ID
+	 *
+	 * @return void
+	 */
+	function showHistory ($group_id,$group_artifact_id) {
+	    //
+		//	show the artifact_history rows that are relevant to this artifact_id, excluding details
+		//
+	    global $sys_datefmt,$art_field_fact,$sys_lf;
+	    $result=$this->getHistory();
+	    $rows=db_numrows($result);
+	
+	    if ($rows > 0) {
+	
+			$title_arr=array();
+			$title_arr[]='Field';
+			$title_arr[]='Old Value';
+			$title_arr[]='Date';
+			$title_arr[]='By';
+		
+			echo html_build_list_table_top ($title_arr);
+		
+			for ($i=0; $i < $rows; $i++) {
+			    $field_name = db_result($result, $i, 'field_name');
+			    $value_id =  db_result($result, $i, 'old_value');
+		
+				$field = $art_field_fact->getFieldFromName($field_name);
+				if ( $field ) {
+				    echo "\n".'<TR class="'. util_get_alt_row_color($i) .
+					'"><TD>'.$field->getLabel().'</TD><TD>';
+			
+				    if ($field->isSelectBox()) {
+						// It's a select box look for value in clear
+						echo $field->getValue($group_artifact_id, $value_id);
+				    } else if ($field->isDateField()) {
+						// For date fields do some special processing
+						echo format_date($sys_datefmt,$value_id);
+				    } else {
+						// It's a text zone then display directly
+						echo $value_id;
+				    }
+			
+				    echo '</TD>'.
+					'<TD>'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
+					'<TD>'.db_result($result, $i, 'user_name').'</TD></TR>';
+				}
+
+			}
+	        echo '</TABLE>';
+	    
+	    } else {
+	        echo "\n".'<H4>No Changes Have Been Made to This '.$this->ArtifactType->getItemName().'</H4>';
+	    }
+	}
+
+
+	/**
+	 * Display the list of attached files
+	 *
+	 * @param group_id: the group id
+	 * @param group_artifact_id: the artifact type ID
+	 * @param ascii: ascii mode
+	 *
+	 * @return void
+	 */
+	function showAttachedFiles ($group_id,$group_artifact_id,$ascii=false) {
+	
+	    global $sys_datefmt,$sys_lf;
+	
+	    //
+	    //  show the files attached to this artifact
+	    //   
+	
+	    $result=$this->getAttachedFiles();
+	    $rows=db_numrows($result);
+	
+	    // No file attached -> return now
+	    if ($rows <= 0) {
+			if ($ascii)
+			    $out = "No files currently attached$sys_lf";
+			else
+			    $out = '<H4>No files currently attached</H4>';
+			return $out;
+		}
+		
+	    // Header first
+	    if ($ascii) {
+			$out .= "File Attachments$sys_lf****************";
+	    } else {	
+		
+		$title_arr=array();
+		$title_arr[]='Name';
+		$title_arr[]='Description';
+		$title_arr[]='Size';
+		$title_arr[]='By';
+		$title_arr[]='On';
+		
+		if ($this->ArtifactType->userIsAdmin()) {
+		    $title_arr[]='Delete?';
+		}
+	
+		$out .= html_build_list_table_top ($title_arr);
+	    }
+	
+	    // Determine what the print out format is based on output type (Ascii, HTML
+	    if ($ascii) {
+			$fmt = "$sys_lf$sys_lf------------------------------------------------------------------$sys_lf".
+			    "Date: %s  Name: %s  Size: %dKB   By: %s$sys_lf%s$sys_lf%s";
+	    } else {
+			$fmt = "$sys_lf".'<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td><td align="center">%s</td><td align="center">%s</td>'.
+		    ( $this->ArtifactType->userIsAdmin() ? '<td align="center">%s</td>':'').'</tr>';
+	    }
+	
+	    // Determine which protocl to use for embedded URL in ASCII format
+	    if (session_issecure()) {
+			$server = 'https://'.$GLOBALS['sys_https_host'];
+	    } else {
+			$server = 'http://'.$GLOBALS['sys_default_domain'];
+	    }
+	
+	    // Loop throuh the attached files and format them
+	    for ($i=0; $i < $rows; $i++) {
+	
+			$artifact_file_id = db_result($result, $i, 'id');
+			$href = "/tracker/download.php?artifact_id=".$this->getID()."&id=".$artifact_file_id;
+		
+			if ($ascii) {
+			    $out .= sprintf($fmt,
+					    format_date($sys_datefmt,db_result($result, $i, 'adddate')),
+					    db_result($result, $i, 'filename'),
+					    intval(db_result($result, $i, 'filesize')/1024),
+					    db_result($result, $i, 'user_name'),
+					    db_result($result, $i, 'description'),
+					    $server.$href);
+			} else {
+			    if ( $this->ArtifactType->userIsAdmin() ) {
+					$html_delete = "<a href=\"$PHP_SELF?func=delete_file&group_id=".$group_id."&atid=".$group_artifact_id."&aid=".$this->getID()."&id=".db_result($result, $i, 'id')."\" ".
+					    '" onClick="return confirm(\'Delete this attachment?\')">'.
+					    '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A>';
+			    } else {
+					$html_delete = '-';
+			    }
+			    $out .= sprintf($fmt,
+					    util_get_alt_row_color($i),
+					    "<a href=\"$href\">". db_result($result, $i, 'filename').'</a>',
+					    db_result($result, $i, 'description'),
+					    intval(db_result($result, $i, 'filesize')/1024),
+					    util_user_link(db_result($result, $i, 'user_name')),
+					    format_date($sys_datefmt,db_result($result, $i, 'adddate')),
+					    $html_delete);
+			}
+    	} // for
+	
+	    // final touch...
+	    $out .= ($ascii ? "$sys_lf" : "</TABLE>");
+	
+	    return($out);
+	
+	}
+
+	/**
+	 * Display the list of CC addresses
+	 *
+	 * @param group_id: the group id
+	 * @param group_artifact_id: the artifact type ID
+	 * @param ascii: ascii mode
+	 *
+	 * @return void
+	 */
+	function showCCList ($group_id, $group_artifact_id, $ascii=false) {
+	
+	    global $sys_datefmt,$sys_lf;
+	
+	    //
+	    //      format the CC list for this artifact
+	    //
+	
+	    $result=$this->getCCList();
+	    $rows=db_numrows($result);
+	
+	    // Nobody in the CC list -> return now
+	    if ($rows <= 0) {
+			if ($ascii)
+			    $out = "CC list is empty$sys_lf";
+			else
+			    $out = '<H4>CC list is empty</H4>';
+			return $out;
+	    }
+	
+	    // Header first an determine what the print out format is
+	    // based on output type (Ascii, HTML)
+	    if ($ascii) {
+			$out .= "CC List$sys_lf*******$sys_lf$sys_lf";
+			$fmt = "%-35s | %s$sys_lf";
+			$out .= sprintf($fmt, 'CC Address', 'Comment');
+			$out .= "------------------------------------------------------------------$sys_lf";
+	    } else {	
+	
+			$title_arr=array();
+			$title_arr[]='CC Address';
+			$title_arr[]='Comment';
+			$title_arr[]='Added by';
+			$title_arr[]='On';
+			$title_arr[]='Delete?';
+			$out .= html_build_list_table_top ($title_arr);
+		
+			$fmt = "\n".'<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td>'.
+			    '<td align="center">%s</td><td align="center">%s</td></tr>';
+		}
+		
+	    // Loop through the cc and format them
+	    for ($i=0; $i < $rows; $i++) {
+	
+			$email = db_result($result, $i, 'email');
+			$artifact_cc_id = db_result($result, $i, 'artifact_cc_id');
+		
+			// if the CC is a user point to its user page else build a mailto: URL
+			$res_username = user_get_result_set_from_unix($email);
+			if ($res_username && (db_numrows($res_username) == 1))
+			    $href_cc = util_user_link($email);
+			else
+			    $href_cc = '<a href="mailto:'.util_normalize_email($email).'">'.$email.'</a>';
+		
+			if ($ascii) {
+			    $out .= sprintf($fmt, $email, db_result($result, $i, 'comment'));
+			} else {
+		
+			    // show CC delete icon if one of the condition is met:
+			    // a) current user is a artifact admin
+			    // b) then CC name is the current user 
+			    // c) the CC email address matches the one of the current user
+			    // d) the current user is the person who added a gieven name in CC list
+			    if ( $this->ArtifactType->userIsAdmin() ||
+				(user_getname(user_getid()) == $email) ||  
+				(user_getemail(user_getid()) == $email) ||
+				(user_getname(user_getid()) == db_result($result, $i, 'user_name') )) {
+					$html_delete = "<a href=\"$PHP_SELF?func=delete_cc&group_id=$group_id&atid=".$this->getID()."&atid=".$group_artifact_id."&artifact_cc_id=$artifact_cc_id\" ".
+					'" onClick="return confirm(\'Delete this CC address?\')">'.
+					'<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A>';
+			    } else {
+					$html_delete = '-';
+			    }
+		
+			    $out .= sprintf($fmt,
+					    util_get_alt_row_color($i),
+					    $href_cc,
+					    db_result($result, $i, 'comment'),
+					    util_user_link(db_result($result, $i, 'user_name')),
+					    format_date($sys_datefmt,db_result($result, $i, 'date')),
+					    $html_delete);
+			
+			} // for
+	    }
+	
+	    // final touch...
+	    $out .= ($ascii ? "$sys_lf" : "</TABLE>");
+	
+	    return($out);
+	
+	}
+
+	/**
+	 * Display the artifact dependencies list
+	 *
+	 * @param group_id: the group id
+	 * @param group_artifact_id: the artifact type ID
+	 * @param ascii: ascii mode
+	 *
+	 * @return void
+	 */
+	function showDependencies ($group_id, $group_artifact_id, $ascii=false) {
+	
+	    global $sys_datefmt,$sys_lf;
+	
+	    //
+	    //      format the dependencies list for this artifact
+	    //
+	
+	    $result=$this->getDependencies();
+	    $rows=db_numrows($result);
+	
+	    // Nobody in the dependencies list -> return now
+	    if ($rows <= 0) {
+			if ($ascii)
+			    $out = "Dependencies list is empty$sys_lf";
+			else
+			    $out = '<H4>Dependencies list is empty</H4>';
+			return $out;
+	    }
+	
+	    // Header first an determine what the print out format is
+	    // based on output type (Ascii, HTML)
+	    if ($ascii) {
+			$out .= "Dependencies List$sys_lf*****************$sys_lf$sys_lf";
+			$fmt = "%-15s | %s$sys_lf";
+			$out .= sprintf($fmt, 'Artifact', 'Summary');
+			$out .= "------------------------------------------------------------------$sys_lf";
+	    } else {	
+	
+			$title_arr=array();
+			$title_arr[]='Artifact';
+			$title_arr[]='Summary';
+			$title_arr[]='Tracker';
+			$title_arr[]='Group';
+			$title_arr[]='Delete?';
+			$out .= html_build_list_table_top ($title_arr);
+		
+			$fmt = "\n".'<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td>'.
+			    '<td align="center">%s</td><td align="center">%s</td></tr>';
+		}
+		
+	    // Loop through the denpendencies and format them
+	    for ($i=0; $i < $rows; $i++) {
+	
+			$dependent_on_artifact_id = db_result($result, $i, 'is_dependent_on_artifact_id');
+			$summary = db_result($result, $i, 'summary');
+			$tracker_label = db_result($result, $i, 'name');
+			$group_label = db_result($result, $i, 'group_name');
+		
+			if ($ascii) {
+			    $out .= sprintf($fmt, $dependent_on_artifact_id, $summary);
+			} else {
+		
+			    if ( $this->ArtifactType->userIsAdmin() ) {
+					$html_delete = "<a href=\"$PHP_SELF?func=delete_dependent&group_id=$group_id&aid=".$this->getID()."&atid=".$group_artifact_id."&dependent_on_artifact_id=$dependent_on_artifact_id\" ".
+					'" onClick="return confirm(\'Delete this dependency?\')">'.
+					'<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A>';
+			    } else {
+					$html_delete = '-';
+			    }
+		
+			    $out .= sprintf($fmt,
+					    util_get_alt_row_color($i),
+					    "<a href=\"/tracker/?func=detail&aid=$dependent_on_artifact_id&atid=$group_artifact_id&group_id=$group_id\">$dependent_on_artifact_id</a>",
+					    $summary,
+					    $tracker_label,
+					    $group_label,
+					    $html_delete);
+			
+			} // for
+	    }
+	
+	    // final touch...
+	    $out .= ($ascii ? "$sys_lf" : "</TABLE>");
+	
+	    return($out);
+	
+	}
+
+	/**
+	 * Display the follow ups comments
+	 *
+	 * @param group_id: the group id
+	 * @param ascii: ascii mode
+	 *
+	 * @return void
+	 */
+	function showDetails($group_id, $ascii=false) {
+
+	    //
+	    //  Format the details rows from artifact_history
+	    //  
+	    global $sys_datefmt,$sys_lf;
+	    
+		$group = $this->ArtifactType->getGroup();
+		$group_artifact_id = $this->ArtifactType->getID();
+		$group_id = $group->getGroupId();
+
+	    $result=$this->getFollowups ();
+	    $rows=db_numrows($result);
+	
+	    // No followup comment -> return now
+	    if ($rows <= 0) {
+			if ($ascii)
+			    $out = "$sys_lf$sys_lfNo Followups Have Been Posted$sys_lf";
+			else
+			    $out = '<H4>No Followups Have Been Posted</H4>';
+			return $out;
+	    }
+	
+	
+	    // Header first
+	    if ($ascii) {
+			$out .= "Follow-up Comments$sys_lf*******************";
+	    } else {
+			$title_arr=array();
+			$title_arr[]='Comment';
+			$title_arr[]='Date';
+			$title_arr[]='By';
+			
+			$out .= html_build_list_table_top ($title_arr);
+	    }
+	    
+	    // Loop throuh the follow-up comments and format them
+	    for ($i=0; $i < $rows; $i++) {
+		
+			$comment_type = db_result($result, $i, 'comment_type');
+			if ( ($comment_type == 'None')||($comment_type == "") )
+			    $comment_type = '';
+			else
+			    $comment_type = '['.$comment_type.']';
+			if ($ascii) {
+			    $fmt = "$sys_lf$sys_lf------------------------------------------------------------------$sys_lf".
+				"Date: %-30sBy: %s$sys_lf".
+				($comment_type != ""? "%s$sys_lf%s" : '%s');
+			} else {
+			    $fmt = "\n".'<tr class="%s"><td>'.($comment_type != ""? "<b>%s</b><BR>" : "").'%s</td>'.
+				'<td valign="top">%s</td><td valign="top">%s</td></tr>';
+			}
+		
+			// I wish we had sprintf argument swapping in PHP3 but
+			// we don't so do it the ugly way...
+			if ($ascii) {
+				if ( $comment_type != "" ) {
+				    $out .= sprintf($fmt,
+						    format_date($sys_datefmt,db_result($result, $i, 'date')),
+						    (db_result($result, $i, 'mod_by')==100?db_result($result, $i, 'email'):db_result($result, $i, 'user_name')),
+						    $comment_type,
+						    util_unconvert_htmlspecialchars(db_result($result, $i, 'old_value'))
+						    );
+				} else {
+				    $out .= sprintf($fmt,
+						    format_date($sys_datefmt,db_result($result, $i, 'date')),
+						    (db_result($result, $i, 'mod_by')==100?db_result($result, $i, 'email'):db_result($result, $i, 'user_name')),
+						    util_unconvert_htmlspecialchars(db_result($result, $i, 'old_value'))
+						    );
+				}
+			} else {
+				if ( $comment_type != "" ) {
+				    $out .= sprintf($fmt,
+						    util_get_alt_row_color($i),
+						    $comment_type,
+						    util_make_links(nl2br(db_result($result, $i, 'old_value')),$group_id,$group_artifact_id),
+						    format_date($sys_datefmt,db_result($result, $i, 'date')),
+						    (db_result($result, $i, 'mod_by')==100?db_result($result, $i, 'email'):db_result($result, $i, 'user_name')));
+				} else {
+				    $out .= sprintf($fmt,
+						    util_get_alt_row_color($i),
+						    util_make_links(nl2br(db_result($result, $i, 'old_value')),$group_id,$group_artifact_id),
+						    format_date($sys_datefmt,db_result($result, $i, 'date')),
+						    (db_result($result, $i, 'mod_by')==100?db_result($result, $i, 'email'):db_result($result, $i, 'user_name')));
+				}
+			}
+	    }
+	
+	    // final touch...
+	    $out .= ($ascii ? "$sys_lf" : "</TABLE>");
+	
+	    return($out);
+		
+	}
+	
+	function displayAdd() {
+		global $art_field_fact,$sys_datefmt;
+	
+		$fields_per_line=2;
+		$max_size = 40;
+		
+		$group = $this->ArtifactType->getGroup();
+		$group_artifact_id = $this->ArtifactType->getID();
+		$group_id = $group->getGroupId();
+
+		// First display the message preamble
+		echo util_unconvert_htmlspecialchars($this->ArtifactType->getSubmitInstructions());
+		
+		// Beginning of the submission form with fixed fields
+		echo '<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data" NAME="artifact_form">
+		    <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="2000000">
+			<INPUT TYPE="HIDDEN" NAME="func" VALUE="postadd">
+			<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
+		    <INPUT TYPE="HIDDEN" NAME="group_artifact_id" VALUE="'.$group_artifact_id.'">
+			<TABLE cellpadding="0">
+			<TR><TD VALIGN="TOP" COLSPAN="'.(2*$fields_per_line).'">
+		                  <B>Group:</B>&nbsp;'.group_getname($group_id).'</TD></TR>
+		                 <script language="JavaScript" src="/include/calendar.js"></script>';
+		
+		
+		
+		// Now display the variable part of the field list (depend on the project)
+		
+		$i=0;
+		$is_member = user_ismember($group_id);
+
+	    $result_fields = $art_field_fact->getAllUsedFields();
+    	while ( list($key, $field) = each($result_fields) ) {
+    		
+    		$field_html = new ArtifactFieldHtml($field);
+    		//echo $field->getName()."<br>";
+		
+		    // if the field is a special field (except summary and original description)
+		    // or if not used by this project  then skip it. 
+		    // Plus only show fields allowed on the artifact submit_form 
+		    if ( (!$field->isSpecial() || $field->getName()=='summary' || $field->getName()=='details') ) {
+		
+				if  (($is_member && $field->isShowOnAddMember()) ||
+				     (!$is_member && $field->isShowOnAdd()) ) {
+				    
+				    // display the artifact field with its default value
+				    // if field size is greatest than max_size chars then force it to
+				    // appear alone on a new line or it won't fit in the page
+
+				    $field_value = $field->getDefaultValue();
+				    list($sz,) = $field->getGlobalDisplaySize();
+				    $label = $field_html->labelDisplay(false,false);
+				    $value = $field_html->display($group_artifact_id,$field_value,false,false);
+				    $star = ($field->isEmptyOk() ? '':'<span class="highlight"><big>*</big></b></span>');
+			
+				    if ( ($sz > $max_size) || ($field->getName()=='details') ) {
+						echo "\n<TR>".
+						    '<TD valign="middle">'.$label.$star.'</td>'.
+						    '<TD valign="middle" colspan="'.(2*$fields_per_line-1).'">'.
+						    $value.'</TD>'.		      
+						    "\n</TR>";
+						$i=0;
+				    } else {
+						echo ($i % $fields_per_line ? '':"\n<TR>");
+						  echo '<TD valign="middle">'.$label.$star.'</td>'.
+						      '<TD valign="middle">'.$value.'</TD>';
+						$i++;
+						echo ($i % $fields_per_line ? '':"\n</TR>");
+				    }
+				}
+		    }
+		} // while
+		
+			     
+		// Then display all mandatory fields 
+		
+		//
+		// CC List
+		//
+		echo '		
+		<TR><TD colspan="'.(2*$fields_per_line).'"><hr></td></tr>
+		
+		<TR><TD colspan="'.(2*$fields_per_line).'">
+		<h3>CC List '.help_button('BugUpdate.html#BugCCList').'</h3>
+		<b><u>Note:</b></u> for CodeX users use their login name rather than their email addresses.<p>
+		<B>Add CC:&nbsp;</b><input type="text" name="add_cc" size="30">&nbsp;&nbsp;&nbsp;
+		<B>Comment:&nbsp;</b><input type="text" name="cc_comment" size="40" maxlength="255"><p>';
+		
+		echo '</TD></TR>';
+			
+		//
+		// File attachments
+		//
+		echo '
+		<TR><TD colspan="'.(2*$fields_per_line).'"><hr></td></tr>
+		<TR><TD colspan="'.(2*$fields_per_line).'">
+		<h3>Attachments '.help_button('BugUpdate.html#BugAttachments').'</h3>
+		<B>Check to Upload&hellip;  <input type="checkbox" name="add_file" VALUE="1">
+		&nbsp;&hellip;&amp; Attach File:</B>
+		<input type="file" name="input_file" size="40">
+		<br><span class="small"><i>(The maximum upload file size is 2 Mb - <u>Please compress your files</u>)</i></span>
+		<P>
+		<B>File Description:</B>&nbsp;
+		<input type="text" name="file_description" size="60" maxlength="255">
+		<P>';
+		
+		echo '</TD></TR>';
+
+		//
+		// Final submit button
+		//
+		echo '
+		<TR><TD COLSPAN="'.(2*$fields_per_line).'">
+			<P>
+			<hr>
+			<B><span class="highlight">Did you check to see if this '.$this->ArtifactType->getItemName().' already been submitted?</span></b> (use the search box in the left menu pane)
+			<P><center>
+			<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
+			</center>
+			</FORM>
+		</TD></TR>
+		</TABLE>';
+	}
+
+	/**
+	 * Send a message to the person who opened this artifact and the person it is assigned to
+	 *
+	 * @param more_addresses: additional addresses
+	 * @param changes: array of changes
+	 *
+	 * @return void
+	 */
+	function mailFollowup($more_addresses=false,$changes=false) {
+	    global $sys_datefmt,$feedback,$art_field_fact,$sys_lf;
+
+	    if (session_issecure())
+			$artifact_href = "https://".$GLOBALS['sys_https_host'];
+	    else
+			$artifact_href = "http://".$GLOBALS['sys_default_domain'];
+	
+		$group = $this->ArtifactType->getGroup();
+		$group_artifact_id = $this->ArtifactType->getID();
+		$group_id = $group->getGroupId();
+
+	    $artifact_href .= "/tracker/?func=detail&aid=".$this->getID()."&atid=$group_artifact_id&group_id=$group_id";
+	
+		$fmt_len = 40;
+		$fmt_left = sprintf("%%-%ds ", $fmt_len-1);
+		$fmt_right = "%s";
+	
+		// artifact fields
+		// Generate the message preamble with all required
+		// artifact fields - Changes first if there are some.
+		if ($changes) {
+		    $body = "$sys_lf=============   ARTIFACT #".$this->getID().
+			": LATEST MODIFICATIONS   =============$sys_lf".$artifact_href."$sys_lf$sys_lf".
+			$this->formatChanges($changes)."$sys_lf$sys_lf$sys_lf$sys_lf";
+		}
+	
+		$body .= "=============   ARTIFACT #".$this->getID().
+		    ": FULL ARTIFACT SNAPSHOT   =============$sys_lf".
+		    ($changes ? '':$artifact_href)."$sys_lf$sys_lf";
+	    
+		// Some special field first (group, submitted by/on)
+		$body .= sprintf($fmt_left.$fmt_right."$sys_lf", 
+				 'Submitted by: '.user_getname($this->getSubmittedBy()),
+				 'Project: '.group_getname($group_id) );
+		$body .= 'Submitted on: '.format_date($sys_datefmt,$this->getOpenDate())."$sys_lf";
+	
+		// All other regular fields now		 
+		$left = 1;
+	    $result_fields = $art_field_fact->getAllUsedFields();
+		$result = $this->getFieldsValues();
+    	while ( list($key, $field) = each($result_fields) ) {
+	
+			$field_name = $field->getName();
+    		$field_html = new ArtifactFieldHtml($field);
+		    // if the field is a special field 
+		    // then skip it. Otherwise print it in ASCII format.
+		    if ( !$field->isSpecial() ) {
+	
+				// For multi select box, we need to retrieve all the values
+				if ( $field->isMultiSelectBox() ) {
+					$field_value = $field->getValues($this->getID());
+				} else {
+					$field_value = db_result($result,0,$field->getName());
+				}
+				$display = $field_html->display($group_artifact_id,
+						      $field_value,false,true,true,true);
+				$item = sprintf(($left? $fmt_left : $fmt_right), $display);
+				if (strlen($item) > $fmt_len) {
+				    if (! $left) {
+				    	$body .= "$sys_lf";
+				    }
+				    $body .= sprintf($fmt_right, $display);
+				    $body .= "$sys_lf";
+				    $left = 1;
+				} else {
+				    $body .= $item;
+				    $left = ! $left;
+				    if ($left) {
+				    	$body .= "$sys_lf";
+				    }
+				}
+		    }
+		} // while
+		if (! $left) {
+		    $body .= "$sys_lf";
+		}
+	
+		// Now display other special fields
+		
+		// Summary first. It is a special field because it is both displayed in the
+		// title of the artifact form and here as a text field
+	
+		$field = $art_field_fact->getFieldFromName('summary');
+		$field_html = new ArtifactFieldHtml( $field );
+		if ( $field_html ) {
+			$body .= "$sys_lf".$field_html->display($group_artifact_id,
+				      util_unconvert_htmlspecialchars(db_result($result,0,'summary')),false,true,true,true);
+		}
+		$field = $art_field_fact->getFieldFromName('details');
+		$field_html = new ArtifactFieldHtml( $field );
+		if ( $field_html ) {
+			$body .= "$sys_lf$sys_lf".$field_html->display($group_artifact_id,
+				      util_unconvert_htmlspecialchars(db_result($result,0,'details')),false,true,true,true);
+		}
+				
+		// Then output the history of bug details from newest to oldest
+		$body .= "$sys_lf$sys_lf".$this->showDetails($group_id, true);
+	
+		// Then output the CC list
+		$body .= "$sys_lf$sys_lf".$this->showCCList($group_id, $group_artifact_id, true);
+	
+		// Then output the dependencies
+		$body .= "$sys_lf$sys_lf".$this->showDependencies($group_id,$group_artifact_id,true);
+
+		// Then output the history of details from newest to oldest
+		$body .= "$sys_lf$sys_lf".$this->showAttachedFiles($group_id,$group_artifact_id,true);
+	
+		// Finally output the message trailer
+		$body .= "$sys_lf$sys_lfFor detailed info, follow this link:";
+		$body .= "$sys_lf".$artifact_href;
+	
+	
+		// See who is going to receive the notification. Plus append any other email 
+		// given at the end of the list.
+		$arr_addresses = $this->buildNotificationList($changes);
+		$to = join(',',$arr_addresses);
+//		$to = 'stephane.bouhet@xps-pro.com';
+	
+		if ($more_addresses) {
+		    $to .= ($to ? ',':'').$more_addresses;
+		}
+	
+		//echo "DBG Sending email to: $to<br>";
+	
+		$more='From: noreply@'.$GLOBALS['sys_default_domain'];
+	    $subject='[Artifact #'.$this->getID().'] '.util_unconvert_htmlspecialchars(db_result($result,0,'summary'));
+
+		//echo "DBG: body:".$body."<br>";
+		mail($to,$subject,$body,$more);
+	
+		$feedback .= ' Artifact Update Sent '; //to '.$to;
+	
+	}
+
+	/**
+	 * Format the changes
+	 *
+	 * @param changes: array of changes
+	 *
+	 * @return string
+	 */
+	function formatChanges($changes) {
+	
+	    global $sys_datefmt,$art_field_fact,$sys_lf;
+	
+	    reset($changes);
+	    $fmt = "%20s | %-25s | %s$sys_lf";
+	
+	    if (user_isloggedin()) {
+			$user_id = user_getid();
+			$out_hdr = 'Changes by: '.user_getrealname($user_id).' <'.user_getemail($user_id).">$sys_lf";
+			$out_hdr .= 'Date: '.format_date($sys_datefmt,time()).' ('.user_get_timezone().')';
+	    } else {
+			$out_hdr = 'Changes by: Anonymous user        Date: '.format_date($sys_datefmt,time());
+	    }
+	
+	    //Process special cases first: follow-up comment
+	    if ($changes['details']) {
+			$out_com = "$sys_lf$sys_lf---------------   Additional Follow-up Comments   ----------------$sys_lf";
+			if ($changes['details']['type'] != 'None') {
+			    $out_com .= '['.$changes['details']['type']."]$sys_lf";
+			}
+			$out_com .= util_unconvert_htmlspecialchars($changes['details']['add']);
+			unset($changes['details']);
+	    }
+	
+	    //Process special cases first: bug file attachment
+	    if ($changes['attach']) {
+			$out_att = "$sys_lf$sys_lf---------------    Additional Artifact Attachment     -----------------$sys_lf";
+			$out_att .= sprintf("File name: %-30s Size:%d KB$sys_lf",$changes['attach']['name'],
+					 intval($changes['attach']['size']/1024) );
+			$out_att .= $changes['attach']['description']."$sys_lf".$changes['attach']['href'];
+			unset($changes['attach']);
+	    }
+	
+	    // All the rest of the fields now
+	    reset($changes);
+	    while ( list($field_name,$h) = each($changes)) {
+	
+			// If both removed and added items are empty skip - Sanity check
+			if (!$h['del'] && !$h['add']) { continue; }
+		
+			$field = $art_field_fact->getFieldFromName($field_name);
+			if ( $field ) {
+				$label = $field->getLabel();
+			}
+			if (!$label) { 
+				$label = $field_name; 
+			}
+			$out .= sprintf($fmt, $label, $h['del'],$h['add']);
+		} // while
+
+	   	if ($out) {
+			$out = "$sys_lf$sys_lf".sprintf($fmt,'What    ','Removed','Added').
+			"------------------------------------------------------------------$sys_lf".$out;
+	    }
+	
+	    return($out_hdr.$out.$out_com.$out_att);
+	
+	}
+
+	/**
+	 * Build an array of email using the changes array
+	 *
+	 * @param changes: array of changes
+	 *
+	 * @return array
+	 */
+	function buildNotificationList($changes) {
+		
+		global $art_field_fact;
+	
+	    // Rk: we store email addresses in a hash to make sure they are only
+	    // stored once. Normally if an email is repeated several times sendmail
+	    // would take care of it but I prefer taking care of it now.
+	    // Same for user ids.
+	    // We also use the user_ids hash to check if a user has already been selected for 
+	    // notification. If so it is not necessary to check it again in another role.
+	    $addresses = array();
+	    $user_ids = array();
+
+		// Retrieve field values for the assigned_to value
+		$result = $this->getFieldsValues();
+	
+	    // check submitter notification preferences
+	    $user_id = $this->getSubmittedBy();
+	    if ($user_id != 100) {
+			if ($this->checkNotification($user_id, 'SUBMITTER', $changes)) {
+				//echo "DBG - SUBMITTER - user=$user_id<br>";
+			    $user_ids[$user_id] = true;
+			}
+	    }
+	
+	    // check assignee  notification preferences
+	    // Never notify user 'none' (id #100)
+	    // Check for field 'assigned_to' (SelectBox)
+	    $user_id = db_result($result,0,'assigned_to');
+		if ( ($user_id) && ($user_id != 100) ) {
+			if (!$user_ids[$user_id] && $this->checkNotification($user_id, 'ASSIGNEE', $changes)) {
+				//echo "DBG - ASSIGNEE - user=$user_id<br>";
+			    $user_ids[$user_id] = true;
+			}
+	    }
+	
+	    // check assignee  notification preferences
+	    // Never notify user 'none' (id #100)
+	    // Check for field 'multi_assigned_to' (MultiBox)
+	    $field = $art_field_fact->getFieldFromName("multi_assigned_to");
+		if ( $field ) {
+			$field_value = $field->getValues($this->getID());
+	    	if ($field_value && (db_numrows($field_value) > 0)) {
+				while ($row = db_fetch_array($field_value)) {
+				    $user_id = db_result($field_value,0,'assigned_to');
+					if ( ($user_id) && ($user_id != 100) ) {
+						if (!$user_ids[$user_id] && $this->checkNotification($user_id, 'ASSIGNEE', $changes)) {
+							//echo "DBG - ASSIGNEE - user=$user_id<br>";
+						    $user_ids[$user_id] = true;
+						}
+				    }
+				}
+	    	}
+	    }
+
+	    // check old assignee  notification preferences if assignee was just changed
+	    // Never notify user 'none' (id #100)
+	    $user_name = $changes['assigned_to']['del'];
+	    if ($user_name) {
+			$res_oa = user_get_result_set_from_unix($user_name);
+			$user_id = db_result($res_oa,0,'user_id');
+			if ($user_id != 100 && !$user_ids[$user_id] && $this->checkNotification($user_id, 'ASSIGNEE', $changes)) {
+				//echo "DBG - ASSIGNEE OLD - user=$user_id<br>";
+			    $user_ids[$user_id] = true;
+			}
+	    }
+	    
+	    // check all CC 
+	    // a) check all the people in the current CC list
+	    // b) check the CC that has just been removed if any and see if she
+	    // wants to be notified as well
+	    // if the CC indentifier is an email address then notify in any case
+	    // because this user has no personal setting
+	    $res_cc = $this->getCCList();
+	    $arr_cc = array();
+	    if ($res_cc && (db_numrows($res_cc) > 0)) {
+			while ($row = db_fetch_array($res_cc)) {
+			    $arr_cc[] = $row['email'];
+			}
+	    }
+	    if ( $changes['CC']['del'] ) {
+		    // Only one CC can be deleted at once so just append it to the list....
+		    $arr_cc[] = $changes['CC']['del'];
+		}
+			
+	    while (list(,$cc) = each($arr_cc)) {
+	    	//echo "DBG - CC=$cc<br>";
+			if (validate_email($cc)) {
+				//echo "DBG - CC email - email=".util_normalize_email($cc)."<br>";
+			    $addresses[util_normalize_email($cc)] = true;
+			} else {
+			    $res = user_get_result_set_from_unix($cc);
+			    $user_id = db_result($res,0,'user_id');
+			    if (!$user_ids[$user_id] && $this->checkNotification($user_id, 'CC', $changes)) {
+					//echo "DBG - CC - user=$user_id<br>";
+					$user_ids[$user_id] = true;
+			    }
+			}
+	    } // while
+	
+	
+	    // check all commenters
+	    $res_com = $this->getCommenters();
+	    if (db_numrows($res_com) > 0) {
+			while ($row = db_fetch_array($res_com)) {
+			    $user_id = $row['mod_by'];
+			    if (!$user_ids[$user_id] && $this->checkNotification($user_id, 'COMMENTER', $changes)) {
+					//echo "DBG - COMMENTERS - user=$user_id<br>";
+					$user_ids[$user_id] = true;
+			    }
+			}
+	    }
+	
+	    // build the final list of email addresses
+	    reset($user_ids);
+	    while (list($user_id,) = each($user_ids)) {
+			//echo "DBG - final list - user=$user_id<br>";
+			$addresses[user_getemail($user_id)] = true;
+	    }
+	
+	    // return an array with all the email addresses the notification must be sent to
+	    return (array_keys($addresses));
+	
+	}
+
+	/**
+	 * Check if for a user and for role, there is a changement
+	 *
+	 * @param user_id: the user id
+	 * @param role: the role
+	 * @param changes: array of changes
+	 *
+	 * @return boolean
+	 */
+	function checkNotification($user_id, $role, $changes=false) {
+	
+	    $send = false;
+	    $arr_notif = $this->buildNotificationMatrix($user_id);
+	    if (!$arr_notif) { return true; }
+	
+	    //echo "==== DBG Checking Notif. for $user_id (role=$role)<br>";
+	    $user_name = user_getname($user_id);
+	
+	    //----------------------------------------------------------
+	    // If it's a new bug only (changes is false) check the NEW_BUG event and
+	    // ignore all other events
+	    if ($changes==false) {
+			if ($arr_notif[$role]['NEW_ARTIFACT']) {
+			    //echo "DBG NEW_ARTIFACT notified<br>";
+			    return true;
+			} else {
+			    //echo "DBG No notification<br>";
+			    return false;
+			}
+	    }
+	
+	    //----------------------------------------------------------
+	    //Check: I_MADE_IT  (I am the author of the change )
+	    // Check this one first because if the user said no she doesn't want to be 
+	    // aware of any of her change in this role and we can return immediately.
+	    if (($user_id == user_getid()) && !$arr_notif[$role]['I_MADE_IT']) {
+			//echo "DBG Dont want to receive my own changes<br>";
+			return false;
+	    }
+	    
+	    //----------------------------------------------------------
+	    // Check :  NEW_COMMENT  A new followup comment is added 
+	    if ($arr_notif[$role]['NEW_COMMENT'] && isset($changes['details'])) {
+			//echo "DBG NEW_COMMENT notified<br>";
+			return true;
+	    }
+	
+	    //----------------------------------------------------------
+	    //Check: NEW_FILE  (A new file attachment is added)
+	    if ($arr_notif[$role]['NEW_FILE'] && isset($changes['attach'])) {
+			//echo "DBG NEW_FILE notified<br>";
+			return true;
+	    }
+	  
+	    //----------------------------------------------------------
+	    //Check: CLOSED  (The bug is closed)
+	    // Rk: this one has precedence over PSS_CHANGE. So notify even if PSS_CHANGE
+	    // says no.
+	    if ($arr_notif[$role]['CLOSED'] && ($changes['status_id']['add'] == 'Closed')) {
+			//echo "DBG CLOSED bug notified<br>";
+			return true;
+	    }
+	
+	    //----------------------------------------------------------
+	    //Check: PSS_CHANGE  (Priority,Status,Severity changes)
+	    if ($arr_notif[$role]['PSS_CHANGE'] && 
+		(isset($changes['priority']) || isset($changes['status_id']) || isset($changes['severity'])) ) {
+			//echo "DBG PSS_CHANGE notified<br>";
+			return true;
+	    }
+	
+	
+	    //----------------------------------------------------------
+	    // Check :  ROLE_CHANGE (I'm added to or removed from this role)
+	    // Rk: This event is meanningless for Commenters. It also is for submitter but may be
+	    // one day the submitter will be changeable by the project admin so test it.
+	    // Rk #2: check this one at the end because it is the most CPU intensive and this
+	    // event seldomly happens
+	    if ($arr_notif['SUBMITTER']['ROLE_CHANGE'] &&
+		(($changes['submitted_by']['add'] == $user_name) || ($changes['submitted_by']['del'] == $user_name)) &&
+		($role == 'SUBMITTER') ) {
+			//echo "DBG ROLE_CHANGE for submitter notified<br>";
+			return true;
+	    }
+	
+	    if ($arr_notif['ASSIGNEE']['ROLE_CHANGE'] &&
+		(($changes['assigned_to']['add'] == $user_name) || ($changes['assigned_to']['del'] == $user_name)) &&
+		($role == 'ASSIGNEE') ) {
+			//echo "DBG ROLE_CHANGE for role assignee notified<br>";
+			return true;
+	    }
+	
+	    $arr_cc_changes = array();
+	    if (isset($changes['CC']['add']))
+			$arr_cc_changes = split('[,;]',$changes['CC']['add']);
+	    $arr_cc_changes[] = $changes['CC']['del'];
+	    $is_user_in_cc_changes = in_array($user_name,$arr_cc_changes);    
+	    $are_anyother_user_in_cc_changes =
+		(!$is_user_in_cc_changes || count($arr_cc_changes)>1);    
+	
+	    if ($arr_notif['CC']['ROLE_CHANGE'] && ($role == 'CC')) {
+			if ($is_user_in_cc_changes) {
+			    //echo "DBG ROLE_CHANGE for cc notified<br>";
+			    return true;
+			}
+	    }
+	    
+	    //----------------------------------------------------------
+	    //Check: CC_CHANGE  (CC_CHANGE is added or removed)
+	    // check this right after because  role cahange for cc can contradict
+	    // thee cc_change notification. If the role change on cc says no notification
+	    // then it has precedence over a cc_change
+	    if ($arr_notif[$role]['CC_CHANGE'] && isset($changes['CC'])) {
+			// it's enough to test role against 'CC' because if we are at that point
+			// it means that the role_change for CC was false or that role is not CC
+			// So if role is 'CC' and we are here it means that the user asked to not be
+			// notified on role_change as CC, unless other users are listed in the cc changes
+			if (($role != 'CC') || (($role == 'CC') && $are_anyother_user_in_cc_changes)) {
+			    //echo "DBG CC_CHANGE notified<br>";
+			    return true; 
+			}
+	    }
+	
+	
+	    //----------------------------------------------------------
+	    //Check: CHANGE_OTHER  (Any changes not mentioned above)
+	    // *** THIS ONE MUST ALWAYS BE TESTED LAST
+	    
+	    // Delete all tested fields from the $changes array. If any remains then it
+	    // means a notification must be sent
+	    unset($changes['details']);
+	    unset($changes['attach']);
+	    unset($changes['priority']);
+	    unset($changes['severity']);
+	    unset($changes['status_id']);
+	    unset($changes['CC']);
+	    unset($changes['assigned_to']);
+	    unset($changes['submitted_by']);
+	    if ($arr_notif[$role]['ANY_OTHER_CHANGE'] && count($changes)) {
+			//echo "DBG ANY_OTHER_CHANGE notified<br>";
+			return true;
+	    }
+	
+	    // Sorry, no notification...
+	    //echo "DBG No notification!!<br>";
+	    return false;
+	}
+
+	/**
+	 * Build the matrix role/event=notify
+	 *
+	 * @param user_id: the user id
+	 *
+	 * @return array
+	 */
+	function buildNotificationMatrix($user_id) {
+	
+	    // Build the notif matrix indexed with roles and events labels (not id)
+	    $res_notif = $this->getNotificationWithLabels($user_id);
+	    while ($arr = db_fetch_array($res_notif)) {
+			$arr_notif[$arr['role_label']][$arr['event_label']] = $arr['notify'];
+	    }
+	    return $arr_notif;
+	}
+
+}
+
+?>
