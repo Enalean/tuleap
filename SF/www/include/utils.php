@@ -97,6 +97,20 @@ function util_result_column_to_array($result, $col=0) {
 	return $arr;
 }
 
+function util_result_build_array($result, $col_id=0, $col_value=1) {
+	$rows=db_numrows($result);
+
+	if ($rows > 0) {
+		$arr=array();
+		for ($i=0; $i<$rows; $i++) {
+			$arr[db_result($result,$i,$col_id)]=db_result($result,$i,$col_value);
+		}
+	} else {
+		$arr=array();
+	}
+	return $arr;
+}
+
 function result_column_to_array($result, $col=0) {
 	/*
 		backwards compatibility

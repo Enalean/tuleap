@@ -149,6 +149,16 @@ function bug_data_get_all_report_fields($group_id=false,$report_id=100) {
     }
 }
 
+function bug_data_get_all_id_tech($group_id) {
+	$sql="SELECT DISTINCT(bug.assigned_to) FROM user, bug WHERE user.user_id = bug.assigned_to AND bug.group_id = ".$group_id;
+	return db_query($sql);
+}
+
+function bug_data_get_all_tech($id_arr) {
+	$sql = "SELECT user_id,user_name FROM user WHERE user_id IN (".implode(",", $id_arr).")";
+	return db_query($sql);
+}
+
 function bug_data_get_field_predefined_values ($field, $group_id=false, $checked=false,$by_field_id=false,$active_only=true) {
 
     /*
