@@ -18,41 +18,744 @@
 # a site running CodeX 2.0 to CodeX 2.2
 #
 
-cat <<EOF
+progname=$0
+scriptdir=`dirname $progname`
+cd ${scriptdir};TOP_DIR=`pwd`;cd -
+RPMS_DIR=${TOP_DIR}/RPMS_CodeX
+nonRPMS_DIR=${TOP_DIR}/nonRPMS_CodeX
+CodeX_DIR=${TOP_DIR}/CodeX
+TODO_FILE=/tmp/todo_codex_migration.txt
+CODEX_TOPDIRS="SF site-content documentation cgi-bin codex_tools"
+INSTALL_DIR="/home/httpd/"
+
+# path to command line tools
+GROUPADD='/usr/sbin/groupadd'
+GROUPDEL='/usr/sbin/groupdel'
+USERADD='/usr/sbin/useradd'
+USERDEL='/usr/sbin/userdel'
+USERMOD='/usr/sbin/usermod'
+MV='/bin/mv'
+CP='/bin/cp'
+LN='/bin/ln'
+LS='/bin/ls'
+RM='/bin/rm'
+TAR='/bin/tar'
+MKDIR='/bin/mkdir'
+RPM='/bin/rpm'
+CHOWN='/bin/chown'
+CHMOD='/bin/chmod'
+FIND='/usr/bin/find'
+MYSQL='/usr/bin/mysql'
+TOUCH='/bin/touch'
+CAT='/bin/cat'
+MAKE='/usr/bin/make'
+TAIL='/usr/bin/tail'
+GREP='/bin/grep'
+CHKCONFIG='/sbin/chkconfig'
+SERVICE='/sbin/service'
+PERL='/usr/bin/perl'
+
+CMD_LIST="GROUPADD GROUDEL USERADD USERDEL USERMOD MV CP LN LS RM TAR \
+MKDIR RPM CHOWN CHMOD FIND TOUCH CAT MAKE TAIL GREP CHKCONFIG \
+SERVICE PERL"
+
+# Functions
+build_dir() {
+    # $1: dir path, $2: user, $3: group, $4: permission
+    $MKDIR -p "$1" 2>/dev/null; $CHOWN "$2.$3" "$1";$CHMOD "$4" "$1";
+}
+
+make_backup() {
+    # $1: file name, $2: extension for old file (optional)
+    file="$1"
+    ext="$2"
+    if [ -z $ext ]; then
+	ext="nocodex"
+    fi
+    backup_file="$1.$ext"
+    [ -e "$file" -a ! -e "$backup_file" ] && $CP "$file" "$backup_file"
+}
+
+todo() {
+    # $1: message to log in the todo file
+    echo -e "- $1" >> $TODO_FILE
+}
+
+die() {
+  # $1: message to prompt before exiting
+  echo -e "**ERROR** $1"; exit 1
+}
+
+substitute() {
+  # $1: filename, $2: string to match, $3: replacement string
+  $PERL -pi -e 's/$2/$3/g' $1
+}
+
+##############################################
+# CodeX 2.0 to 2.2 migration
+##############################################
+
+
+##############################################
+# Check the machine is running CodeX 2.0
+#
+OLD_CX_RELEASE='2.0'
+$GREP -q "$OLD_CX_RELEASE" $INSTALL_DIR/SF/www/VERSION
+if [ $? -eq 1 ]; then
+    cat <<EOF
+This machine doesn't have CodeX ${OLD_CX_RELEASE} installed. Executing this install
+script may cause data loss or corruption.
+EOF
+read -p "Continue? [yn]: " yn
+else
+    echo "Found CodeX ${OLD_CX_RELEASE} installed... good!"
+fi
+
+[ "$yn" != "y" ] && (echo "Bye now!"; exit 1;)
+
+
+##############################################
+# Check that all command line tools we need are available
+#
+for cmd in `echo ${CMD_LIST}`
+do
+    [ ! -x ${!cmd} ] && die "Command line tool '${!cmd}' not available. Stopping installation!"
+done
+
+##############################################
+# Check we are running on RHEL 3 ES
+#
+RH_RELEASE="3ES"
+yn="y"
+$RPM -q redhat-release-${RH_RELEASE} 2>/dev/null 1>&2
+if [ $? -eq 1 ]; then
+    cat <<EOF
+This machine is not running RedHat Enterprise Linux ${RH_RELEASE}. Executing this install
+script may cause data loss or corruption.
+EOF
+read -p "Continue? [yn]: " yn
+else
+    echo "Running on RedHat ${RH_RELEASE}... good!"
+fi
+
+[ "$yn" != "y" ] && (echo "Bye now!"; exit 1;)
+
+rm -f $TODO_FILE
+todo "WHAT TO DO TO FINISH THE CODEX MIGRATION (see $TODO_FILE)"
+
+##############################################
+# Stop some services before upgrading
+#
+echo "Stopping crond and apache..."
+$SERVICE crond stop
+$SERVICE apache stop
+$SERVICE httpd stop
+$SERVICE sendmail stop
+$SERVICE postfix stop
+
+##############################################
+# Check Required Stock RedHat RPMs are installed
+# (note: gcc is required to recompile mailman)
+#
+rpms_ok=1
+for rpm in openssh-server openssh openssh-clients openssh-askpass \
+   openssl openldap perl perl-DBI perl-CGI gd gcc \
+   sendmail telnet bind ntp samba python php php-mysql php-ldap enscript \
+   bind
+do
+    $RPM -q $rpm  2>/dev/null 1>&2
+    if [ $? -eq 1 ]; then
+	rpms_ok=0
+	missing_rpms="$missing_rpms $rpm"
+    fi
+done
+if [ $rpms_ok -eq 0 ]; then
+    msg="The following Redhat Linux RPMs must be installed first:\n"
+    msg="${msg}$missing_rpms\n"
+    msg="${msg}Get them from your Redhat CDROM or FTP site, install them and re-run the installation script"
+    die "$msg"
+fi
+echo "All requested RedHat RPMS installed... good!"
+
+##############################################
+# Ask for domain name and other installation parameters
+#
+read -p "CodeX Domain name: " sys_default_domain
+read -p "Codex Server IP address: " sys_ip_address
+
+##############################################
+# Change user id for mailman. Used to be 105 on 
+# CodeX 2.0/RH 7.3 but it collides with mysql user on 
+# CodeX 2.2/RHEL ES 3
+#
+mailman_id=`id mailman`
+if [ $mailman_id -eq 105 ]; then
+   
+
+##############################################
+# Create new directory structure for configuration and
+# customization items
+#
+echo "Creating new directories for CodeX 2.2..."
+
+build_dir /etc/codex sourceforge sourceforge 755
+build_dir /etc/codex/conf sourceforge sourceforge 755
+build_dir /etc/codex/documentation sourceforge sourceforge 755
+build_dir /etc/codex/documentation/user_guide sourceforge sourceforge 755
+build_dir /etc/codex/documentation/user_guide/xml sourceforge sourceforge 755
+build_dir /etc/codex/documentation/user_guide/xml/en_US sourceforge sourceforge 755
+build_dir /etc/codex/site-content sourceforge sourceforge 755
+build_dir /etc/codex/site-content/en_US sourceforge sourceforge 755
+build_dir /etc/codex/site-content/en_US/others sourceforge sourceforge 755
+build_dir /etc/codex/themes sourceforge sourceforge 755
+build_dir /etc/codex/themes/css sourceforge sourceforge 755
+build_dir /etc/codex/themes/images sourceforge sourceforge 755
+build_dir /svnroot sourceforge sourceforge 755
+
+# Move configuration file
+$MV /etc/local.inc /etc/codex/conf/local.inc
+
+# Add $sys_win_domain to configuration file
+$PERL -i'.orig' -p -e's:(// Part II.*paths$):// Windows Workgroup CodeX belog to (Samba)\n\$sys_win_domain = "YOURDOMAIN";\n\n\1:' /etc/codex/conf/local.inc
+todo "- Customize the sys_win_domain parameter in /etc/codex/conf/local.inc"
+
+######
+# Now install CodeX specific RPMS (and remove RedHat RPMs)
+#
+
+# -> wu-ftpd
+echo "Removing existing wu-ftp daemon.."
+$RPM -e --nodeps wu-ftpd 2>/dev/null
+echo "Installing wu-ftpd..."
+cd ${RPMS_DIR}/others
+$RPM -Uvh --force wu-ftpd*.i386.rpm
+
+# -> perlsuid
+echo "Removing Perl suid if any..."
+$RPM -e --nodeps perlsuid-perl 2>/dev/null
+echo "Installing Perl suid..."
+cd ${RPMS_DIR}/others
+$RPM -Uvh --force perl-suidperl*.i386.rpm
+
+# -> Perl DBD for MySQL
+echo "Removing Redhat Perl DBD MySQL if any..."
+$RPM -e --nodeps perl-DBD-MySQL 2>/dev/null
+echo "Installing Perl DBD MySQL..."
+cd ${RPMS_DIR}/perl-dbd-mysql
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh --force ${newest_rpm}/perl-DBD-MySQL-*.i386.rpm
+
+# -> mysql
+echo "Removing existing MySQL..."
+$SERVICE mysql stop 2>/dev/null
+sleep 2
+[ -e /usr/bin/mysqladmin ] && /usr/bin/mysqladmin shutdown 2>/dev/null
+sleep 2
+$RPM -e --nodeps MySQL MySQL-client MySQL-shared mysql-bench MySQL-bench MySQL-devel 2>/dev/null
+echo "Installing MySQL RPMs for CodeX...."
+cd ${RPMS_DIR}/mysql
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh --force ${newest_rpm}/MySQL-*.i386.rpm
+$SERVICE mysql start
+$CHKCONFIG mysql on
+
+# -> mysql module for Python
+echo "Removing existing MySQL module for Python..."
+$RPM -e --nodeps MySQL-python 2>/dev/null
+echo "Installing Python MySQL module RPM for CodeX...."
+cd ${RPMS_DIR}/mysql-python
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh --force ${newest_rpm}/MySQL-python-*.i386.rpm
+
+# -> apache
+echo "Removing existing Apache..."
+$SERVICE httpd stop
+$RPM -e --nodeps apache apache-devel apache-manual httpd httpd-devel httpd-manual 2>/dev/null
+echo "Installing Apache RPMs for CodeX...."
+cd ${RPMS_DIR}/apache
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh --force ${newest_rpm}/httpd-*.i386.rpm
+$RPM -Uvh --force ${newest_rpm}/mod_ssl-*.i386.rpm
+$CHKCONFIG httpd on
+# restart Apache after subversion installation - see below
+
+# -> jre
+echo "Removing RedHat Java JRE..."
+$RPM -e --nodeps jre j2re 2>/dev/null
+echo "Installing Java JRE RPMs for CodeX...."
+cd ${RPMS_DIR}/jre
+newest_rpm=`$LS -1 -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh --force ${newest_rpm}/j2re-*.i?86.rpm
+cd /usr/java
+newest_jre=`$LS -1d jre* | $TAIL -1`
+$LN -sf $newest_jre jre
+
+# -> cvs
+echo "Removing existing CVS .."
+$RPM -e --nodeps cvs 2>/dev/null
+echo "Installing CVS RPMs for CodeX...."
+cd ${RPMS_DIR}/cvs
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh --force ${newest_rpm}/cvs-*.i386.rpm
+
+# -> subversion
+echo "Removing existing subversion .."
+$RPM -e --nodeps `rpm -qa 'subversion*' 'apr*' 'neon*' 'rapidsvn*'` 2>/dev/null
+$RPM -e --nodeps db4-devel db4-utils 2>/dev/null
+echo "Installing Subversion RPMs for CodeX...."
+cd ${RPMS_DIR}/subversion
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh --force ${newest_rpm}/db42-4.*.i386.rpm ${newest_rpm}/db42-utils*.i386.rpm
+$RPM -Uvh --force ${newest_rpm}/neon.*.i386.rpm
+$RPM -Uvh --force ${newest_rpm}/apr-0.*.i386.rpm ${newest_rpm}/apr-util*.i386.rpm
+$RPM -Uvh --force ${newest_rpm}/subversion-1.*.i386.rpm \
+$RPM -Uvh --force ${newest_rpm}/subversion-server*.i386.rpm
+$RPM -Uvh --force ${newest_rpm}/subversion-python*.i386.rpm
+$RPM -Uvh --force ${newest_rpm}/subversion-tools*.i386.rpm
+
+# Restart Apache after subversion is installed
+# so that mod_dav_svn module is taken into account
+$SERVICE httpd restart
+
+# -> viewcvs 
+echo "Removing installed viewcvs if any .."
+$RPM -e --nodeps viewcvs 2>/dev/null
+echo "Installing viewcvs RPM for CodeX...."
+cd ${RPMS_DIR}/viewcvs
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh --force ${newest_rpm}/viewcvs-*.noarch.rpm
+
+# Create an http password file
+$TOUCH /etc/httpd/conf/codex_htpasswd
+$CHOWN sourceforge.sourceforge /etc/httpd/conf/codex_htpasswd
+$CHMOD 775 /etc/httpd/conf/codex_htpasswd
+
+######
+# Now install the non RPMs stuff 
+#
+
+# -> saxon
+echo "Installing Saxon...."
+cd /usr/local
+$RM -rf saxon*
+$TAR xfz ${nonRPMS_DIR}/docbook/saxon-*.tgz
+dir_entry=`$LS -1d saxon-*`
+$LN -sf ${dir_entry} saxon
+
+# -> fop
+echo "Installing FOP...."
+cd /usr/local
+$RM -rf fop*
+$TAR xfz ${nonRPMS_DIR}/docbook/fop-*.tgz
+dir_entry=`$LS -1d fop-*`
+$LN -sf ${dir_entry} fop
+
+# -> Jimi
+echo "Installing Jimi...."
+cd /usr/local
+$RM -rf [jJ]imi*
+$TAR xfz ${nonRPMS_DIR}/docbook/Jimi-*.tgz
+dir_entry=`$LS -1d [jJ]imi-*`
+$LN -sf ${dir_entry} jimi
+
+# -> Docbook DTD
+echo "Installing DocBook DTD...."
+cd /usr/local
+$RM -rf docbook-dtd*
+$TAR xfz ${nonRPMS_DIR}/docbook/docbook-dtd-*.tgz
+dir_entry=`$LS -1d docbook-dtd-*`
+$LN -sf ${dir_entry} docbook-dtd
+
+# -> Docbook XSL
+echo "Installing DocBook XSL...."
+cd /usr/local
+$RM -rf docbook-xsl*
+$TAR xfz ${nonRPMS_DIR}/docbook/docbook-xsl-*.tgz
+dir_entry=`$LS -1d docbook-xsl-*`
+$LN -sf ${dir_entry} docbook-xsl
+
+
+##############################################
+# Now install various precompiled utilities
+#
+cd ${nonRPMS_DIR}/utilities
+for f in *
+do
+  $CP -a $f /usr/local/bin
+  $CHOWN sourceforge.sourceforge /usr/local/bin/$f
+done
+$CHOWN root.root /usr/local/bin/fileforge
+$CHMOD u+s /usr/local/bin/fileforge
+$CHOWN root.root /usr/local/bin/tmpfilemove
+$CHMOD u+s /usr/local/bin/tmpfilemove
+
+
+##############################################
+# Move DNS config files
+#
+
+if [ -e /usr/local/domain/data/primary/codex.zone ]; then
+    $MV /usr/local/domain/data/primary/codex.zone /var/named
+    $MV /usr/local/domain/data/primary/codex_full.zone /var/named
+    $MV /usr/local/domain /tmp # for future manual deletion
+
+    # Add svn server aliases to DNS config file.
+    $PERL -i'.orig' -p -e's:(cvs1\s*IN\s*CNAME\s*)(.*)$:\1\2\nsvn                             IN      CNAME   \2\nsvn1                            IN      CNAME   \2:' /var/named/codex.zone
+
+else
+    todo "- Could not find codex.zone DNS file. Please move files by hand to /var/named"
+    todo "  Also insert svn and svn1 aliases in the codex.zone file"
+fi
+
+##############################################
+# Move custom and config files to new places
+#
+echo "Move custom and configuration files to /etc/codex/ directory..."
+
+$MV -f $INSTALL_DIR/site-content/custom /etc/codex/site-content
+$MV -f /etc/motd.inc /etc/codex/site-content/en_US/others/motd.txt
+$MV -f $INSTALL_DIR/SF/www/css/custom/* /etc/codex/themes/css
+$MV -f $INSTALL_DIR/SF/www/images/custom/* /etc/codex/themes/images
+$RM -rf $INSTALL_DIR/SF/www/css/custom $INSTALL_DIR/SF/www/images/custom
+
+$MV -f $INSTALL_DIR/documentation/user_guide/xml/en_US/ParametersLocal.dtd /etc/codex/documentation/user_guide/xml/en_US/
+
+$MV -f $INSTALL_DIR/SF/utils/custom/default_page.php /etc/codex/site-content/en_US/others
+$RM -rf $INSTALL_DIR/SF/utils/custom
+
+
+##############################################
+# Database Structure and initvalues upgrade
+#
+echo "Updating the CodeX database..."
+
+pass_opt=""
+# See if MySQL root account is password protected
+mysqlshow 2>&1 | grep password
+while [ $? -eq 0 ]; do
+    read -p "Existing CodeX DB is password protected. What is the Mysql root password?: " old_passwd
+    mysqlshow --password=$old_passwd 2>&1 | grep password
+done
+[ "X$old_passwd" != "X" ] && pass_opt="--password=$old_passwd"
+
+$CAT <<EOF | $MYSQL -u sourceforge sourceforge --password=$sf_passwd
+# delete foundry project type
+DELETE FROM group_type where type_id=2;
+
+# drop jobs related tables and fields
+DROP TABLE IF EXISTS people_job, people_job_category, people_job_inventory, people_job_status;
+ALTER TABLE stats_agr_project DROP COLUMN help_requests;
+ALTER TABLE stats_project DROP COLUMN help_requests;
+ALTER TABLE stats_project_tmp DROP COLUMN help_requests;
+
+# add Subversion tables and fields
+ALTER TABLE groups ADD COLUMN svn_box VARCHAR(20) NOT NULL DEFAULT 'svn1' AFTER cvs_box;
+ALTER TABLE groups ADD COLUMN use_svn int(11) NOT NULL DEFAULT '1' AFTER use_cvs;
+ALTER TABLE groups ADD COLUMN svn_tracker INT(11) NOT NULL DEFAULT '1';
+ALTER TABLE groups ADD COLUMN svn_events_mailing_list VARCHAR(64) binary DEFAULT NULL;
+ALTER TABLE groups ADD COLUMN svn_events_mailing_header VARCHAR(64) binary DEFAULT NULL;
+ALTER TABLE groups ADD COLUMN svn_preamble TEXT NOT NULL;
+ALTER TABLE stats_agr_project
+  ADD COLUMN svn_commits     smallint(6) DEFAULT '0' NOT NULL,
+  ADD COLUMN svn_adds        smallint(6) DEFAULT '0' NOT NULL,
+  ADD COLUMN svn_deletes   smallint(6) DEFAULT '0' NOT NULL,
+  ADD COLUMN svn_checkouts   smallint(6) DEFAULT '0' NOT NULL,
+  ADD COLUMN svn_access_count       smallint(6) DEFAULT '0' NOT NULL;
+
+ALTER TABLE stats_project
+  ADD COLUMN svn_commits     smallint(6) DEFAULT '0' NOT NULL AFTER cvs_adds,
+  ADD COLUMN svn_adds        smallint(6) DEFAULT '0' NOT NULL AFTER svn_commits,
+  ADD COLUMN svn_deletes   smallint(6) DEFAULT '0' NOT NULL AFTER svn_adds,
+  ADD COLUMN svn_checkouts   smallint(6) DEFAULT '0' NOT NULL AFTER svn_deletes,
+  ADD COLUMN svn_access_count       smallint(6) DEFAULT '0' NOT NULL AFTER svn_checkouts;
+
+CREATE TABLE group_svn_full_history (
+  group_id int(11) NOT NULL default '0',
+  user_id int(11) NOT NULL default '0',
+  day int(11) NOT NULL default '0',
+  svn_commits int(11) NOT NULL default '0',
+  svn_adds int(11) NOT NULL default '0',
+  svn_deletes int(11) NOT NULL default '0',
+  svn_checkouts int(11) NOT NULL default '0',
+  svn_access_count int(11) NOT NULL default '0',
+  UNIQUE accessid (group_id,user_id,day),
+  KEY group_id_idx (group_id),
+  KEY user_id_idx (user_id),
+  KEY day_idx (day)
+);
+
+CREATE TABLE svn_checkins (
+  id int(11) DEFAULT '0' NOT NULL auto_increment,
+  type enum('Change','Add','Delete'),
+  commitid int(11) DEFAULT '0' NOT NULL,
+  dirid int(11) DEFAULT '0' NOT NULL,
+  fileid int(11) DEFAULT '0' NOT NULL,
+  addedlines int(11) DEFAULT '999' NOT NULL,
+  removedlines int(11) DEFAULT '999' NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE uniq_checkins_idx (commitid,dirid,fileid),
+  KEY dirid (dirid),
+  KEY fileid (fileid)
+);
+
+CREATE TABLE svn_commits (
+  id int(11) DEFAULT '0' NOT NULL auto_increment,
+  group_id int(11) DEFAULT '0' NOT NULL,
+  repositoryid int(11) DEFAULT '0' NOT NULL,
+  revision int(11) DEFAULT '0' NOT NULL,
+  date int(11) NOT NULL default '0',
+  whoid int(11) DEFAULT '0' NOT NULL,
+  description text,
+  PRIMARY KEY (id),
+  UNIQUE uniq_commits_idx (repositoryid,revision),
+  KEY whoid (whoid),
+  FULLTEXT (description)
+);
+
+CREATE TABLE svn_dirs (
+  id int(11) DEFAULT '0' NOT NULL auto_increment,
+  dir varchar(255) binary DEFAULT '' NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE uniq_dir_idx (dir)
+);
+
+CREATE TABLE svn_files (
+  id int(11) DEFAULT '0' NOT NULL auto_increment,
+  file varchar(255) binary DEFAULT '' NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE uniq_file_idx (file)
+);
+
+CREATE TABLE svn_repositories (
+  id int(11) DEFAULT '0' NOT NULL auto_increment,
+  repository varchar(255) binary DEFAULT '' NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE uniq_repository_idx (repository)
+);
+
+CREATE TABLE svn_tracks ( 
+  group_artifact_id int(11),
+  tracker varchar(64) binary DEFAULT '' NOT NULL, 
+  artifact_id int(11) NOT NULL, 
+  commit_id int(11) NOT NULL
+); 
+EOF
+
+# Add svn service entry for each project
+$PERL <<'EOF'
+use DBI;
+require "/home/httpd/SF/utils/include.pl";
+
+## load local.inc variables
+&load_local_config();
+
+&db_connect;
+
+sub createService {
+  my ($group_id,$label,$description,$short_name,$link,$is_active,$is_used,$scope,$rank) = @_;
+  $sql = "INSERT INTO service (group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES ($group_id,'$label','$description','$short_name','$link',$is_active,$is_used,'$scope',$rank)";
+  $sth = $dbh->prepare($sql);
+  $res = $sth->execute();
+
+  ## get the service_id from inserted_row
+  if (!$res) {
+    print "Could not create service ".$label.", for group_id ". $group_id."\n";
+    print "Please contact your CodeX support representative\n";
+  }
+}
+
+## delete all svn_entries if there are some
+$query = "DELETE FROM service WHERE short_name='svn'";
+$c = $dbh->prepare($query);
+$c->execute();
+
+## get existing values from the group table
+$query = "select group_id FROM groups";
+$c = $dbh->prepare($query);
+$c->execute();
+
+while (my ($group_id) = $c->fetchrow()) {
+    if ($group_id == 100) {
+	$url = "/svn/?group_id=\$group_id";
+        $enabled = 1;
+    } else {
+        $url = "/svn/?group_id=$group_id";
+        $enabled = 0;
+    }
+    createService($group_id, 'Subversion', 'Subversion Access', 'svn', $url, 1, $enabled, 'system', 135);
+}
+
+exit;
+EOF
+
+##############################################
+# Update the CodeX software
+
+echo "Installing the CodeX software..."
+cd /home
+$MV httpd httpd_20
+$MKDIR httpd;
+cd httpd
+$TAR xfz ${CodeX_DIR}/codex*.tgz
+$CHOWN -R sourceforge.sourceforge /home/httpd
+
+# copy some configuration files 
+make_backup /etc/httpd/conf/httpd.conf codex20
+$CP $INSTALL_DIR/SF/etc/httpd.conf.dist /etc/httpd/conf/httpd.conf
+$CP $INSTALL_DIR/SF/etc/ssl.conf.dist /etc/httpd/conf.d/ssl.conf
+$CP $INSTALL_DIR/SF/etc/php.conf.dist /etc/httpd/conf.d/php.conf
+$CP $INSTALL_DIR/SF/etc/subversion.conf.dist /etc/httpd/conf.d/subversion.conf
+
+# replace string patterns in httpd.conf
+substitute '/etc/httpd/conf/httpd.conf' '%sys_default_domain%' "$sys_default_domain"
+substitute '/etc/httpd/conf/httpd.conf' '%sys_ip_address%' "$sys_ip_address"
+
+# replace string patterns in ssl.conf
+substitute '/etc/httpd/conf.d/ssl.conf' '%sys_default_domain%' "$sys_default_domain"
+substitute '/etc/httpd/conf.d/ssl.conf' '%sys_ip_address%' "$sys_ip_address"
+
+todo "Edit the new /etc/httpd/conf/httpd.conf file and update it"
+todo "Edit the new /etc/httpd/conf.d/ssl.conf file and update it if needed"
+todo "Edit the new /etc/httpd/conf.d/php.conf file and update it if needed"
+todo "Edit the new /etc/httpd/conf.d/subversion.conf file and update it if needed"
+
+##############################################
+# Installing phpMyAdmin
+#
+echo "Installing phpMyAdmin..."
+cd /home/httpd
+$RM -rf phpMyAdmin*
+$TAR xfj ${nonRPMS_DIR}/phpMyAdmin/phpMyAdmin-*
+dir_entry=`$LS -1d phpMyAdmin-*`
+$LN -sf ${dir_entry} phpMyAdmin
+$CHOWN -R sourceforge.sourceforge /home/httpd/phpMyAdmin*
+
+todo "Customize phpMyAdmin. Edit /home/httpd/phpMyAdmin/config.inc.php"
+todo "  - $cfg['PmaAbsoluteUri'] = 'http://$sys_default_domain/phpMyAdmin';"
+todo "  - $cfg['Servers'][$i]['auth_type']     = 'http'; "
+todo "  - $cfg['Servers'][$i]['user']          = 'sourceforge';"
+todo "  - $cfg['Servers'][$i]['only_db']       = 'sourceforge';";
+
+##############################################
+# Update Mailman from 2.0 to 2.1
+#
+echo "Updating mailman..."
+echo "Removing installed mailman RPM if any .."
+$RPM -e --nodeps mailman 2>/dev/null
+MAILMAN_DIR="/home/mailman"
+echo "Updating mailman in $MAILMAN_DIR..."
+if [ ! -d $MAILMAN_DIR"_20" ]; then
+    $CP -a /home/mailman $MV /home/mailman_20
+fi
+build_dir /home/mailman mailman mailman 2775
+
+# compile and install
+$RM -rf /tmp/mailman; $MKDIR -p /tmp/mailman; cd /tmp/mailman;
+$RM -rf $MAILMAN_DIR/*
+$TAR xvfz $nonRPMS_DIR/mailman/mailman-*.tgz
+newest_ver=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+cd $newest_ver
+mail_gid=`id -g mail`
+cgi_gid=`id -g sourceforge`
+./configure --prefix=$MAILMAN_DIR --with-mail-gid=$mail_gid --with-cgi-gid=$cgi_gid
+$MAKE update
+
+$CHOWN -R mailman.mailman $MAILMAN_DIR
+$CHMOD a+rx,g+ws $MAILMAN_DIR
+$LN -sf $MAILMAN_DIR /usr/local/mailman
+
+# migrating existing mailing lists
+
+# modify mailman crontab
+crontab -u mailman -l > /tmp/mailman_cronfile
+$PERL -i'.orig' -p -e's:(^.*mailman)/cron/qrunner\s*$:\1/bin/qrunner -o -r -All\n:' /tmp/mailman_cronfile
+crontab -u mailman /tmp/mailman_cronfile
+
+##############################################
+# Install and Configure Subversion
+#
+$CP $INSTALL_DIR/SF/utils/svn/commit-email.pl /usr/local/bin
+$CHOWN sourceforge.sourceforge /usr/local/bin/commit-email.pl
+$CHMOD 775 /usr/local/bin/commit-email.pl
+
+# Add sys_svn_host variable to local.inc
+# and Documentation parameter file (ParametersLocal.dtd)
+sys_svn_host="svn.$sys_default_domain"
+
+$PERL -i'.orig' -p -e"s:(^\\\$sys_cvs_host.*):\1\n\n// Machine that hosts Subversion\n// Note that while this machine need not be the same as the CodeX host,\n// the \"viewcvs\" interface currently must run on the CodeX host system.\n// If this host is different from the CodeX host, then the CodeX host\n// will need to be able to access the CVS file tree via NFS.\n\\\$sys_svn_host = \"$sys_svn_host\":" /etc/codex/conf/local.inc
+
+$PERL -i'.orig' -p -e"s:(^<\!ENTITY SYS_CVS_HOST.*):\1\n<\!ENTITY SYS_SVN_HOST \"$sys_svn_host\":" /etc/codex/documentation/user_guide/xml/en_US/ParametersLocal.dtd
+
+##############################################
+# Upgrading logrotate files
+#
+echo "Upgrading logrotate files..."
+$MV -f /etc/logrotate.d/apache /etc/logrotate.d/httpd
+
+grep -q suexec_log /etc/logrotate.d/httpd
+if [ $? -eq 1 ]; then
+cat <<EOF >/etc/logrotate.d/httpd
+
+/var/log/httpd/suexec_log {
+    missingok
+    # LJ
+    daily
+    rotate 4
+    postrotate
+	/usr/bin/killall -HUP httpd 2> /dev/null || true
+    endscript
+}
+
+EOF
+fi
+
+##############################################
+# Restarting some services before upgrading
+#
+echo "Starting crond and apache..."
+$SERVICE crond start
+$SERVICE httpd restart
+$SERVICE sendmail start
+
+exit 1;
+
+
+cat <<EOF >/dev/null
 When migrating a 2.0 site to 2.2 here are the things that must be done:
 
-- create /etc/codex/(conf|themes|themes/css|themes/images|documentation|site-content)
-- move /etc/local.inc /etc/codex/conf/local.inc
-- add $sys_win_domain in /etc/codex/conf/local.inc
+- DONE - update /etc/logrotate.d/httpd file with su_exec block
+- DONE - create /etc/codex/(conf|themes|themes/css|themes/images|documentation|site-content)
+- DONE - move /etc/local.inc /etc/codex/conf/local.inc
+- DONE - add $sys_win_domain in /etc/codex/conf/local.inc
 - upgrade mailman from 2.0 to 2.1
-- change mailman crontab cron/qrunner becomes bin/qrunner -o -r All
-- move codex.zone and codex_full.zone from /usr/local/domain/data/primary/ into /var/named
-- Add an svn and svn1 alias in the /var/named/codex.zone file
-- if /home/httpd/site-content/custom exists then move all files (and subdir) into /etc/codex/site-documentation
-- if /etc/motd.inc exists move it into /etc/codex/site-content/en_US/others/motd.txt
-- if /home/httpd/SF/www/css/custom exist then move all subdirs in /etc/codex/themes/css
-- if /home/httpd/SF/www/images/custom exist then move all subdirs in /etc/codex/themes/images
-- Copy SF/etc/httpd.conf.dist in /etc/httpd/conf/httpd.conf and make the necessary changes
-- Copy SF/etc/ssl.conf.dist in /etc/httpd/conf.d/ssl.conf and make the necessary changes
-- Copy SF/etc/php.conf.dist in /etc/httpd/conf.d/php.conf and make the necessary changes
-- Copy /home/httpd/documentation/user_guide/xml/en_US/ParametersLocal.dtd to /etc/codex/documentation/user_guide/xml/en_US/ParametersLocal.dtd (do a mkdir -p to create full path first)
-- if SF/utils/custom/default_page.php exist then copy it to /etc/codex/site-content/en_US/others
+- DONE - change mailman crontab cron/qrunner becomes bin/qrunner -o -r All
+- DONE - move codex.zone and codex_full.zone from /usr/local/domain/data/primary/ into /var/named
+- DONE - Add an svn and svn1 alias in the /var/named/codex.zone file
+- DONE - if /home/httpd/site-content/custom exists then move all files (and subdir) into /etc/codex/site-documentation
+- DONE - if /etc/motd.inc exists move it into /etc/codex/site-content/en_US/others/motd.txt
+- DONE - if /home/httpd/SF/www/css/custom exist then move all subdirs in /etc/codex/themes/css
+- DONE - if /home/httpd/SF/www/images/custom exist then move all subdirs in /etc/codex/themes/images
+- DONE - Copy SF/etc/httpd.conf.dist in /etc/httpd/conf/httpd.conf and make the necessary changes
+- DONE - Copy SF/etc/ssl.conf.dist in /etc/httpd/conf.d/ssl.conf and make the necessary changes
+- DONE - Copy SF/etc/php.conf.dist in /etc/httpd/conf.d/php.conf and make the necessary changes
+- DONE - Copy /home/httpd/documentation/user_guide/xml/en_US/ParametersLocal.dtd to /etc/codex/documentation/user_guide/xml/en_US/ParametersLocal.dtd (do a mkdir -p to create full path first)
+- DONE - if SF/utils/custom/default_page.php exist then copy it to /etc/codex/site-content/en_US/others
 - Faire un diff sur database_structure.sql and database_initvalues.sql avec la v 2.0 pour reverifier tous les chagement dans la base et les mettre dans le script d'upgrade.
-- delete Foundry (type=2) from the group_type table
-- delete tables people_job, people_job_category, people_job_inventory, people_job_status
-- delete field help_requests from table stats_agr_project, stats_project, stats_project_tmp
+- DONE - delete Foundry (type=2) from the group_type table
+- DONE - delete tables people_job, people_job_category, people_job_inventory, people_job_status
+- DONE - delete field help_requests from table stats_agr_project, stats_project, stats_project_tmp
 
 
 -> FOR Subversion
 =================
-- Copy SF/etc/subversion.conf.dist in /etc/httpd/conf.d/subversion.conf and make the necessary changes
-- Install all necessary RPMs for subversion:
+- DONE - Copy SF/etc/subversion.conf.dist in /etc/httpd/conf.d/subversion.conf and make the necessary changes
+- DONE - Install all necessary RPMs for subversion:
 Server: remove with nodeps db4-devel, db4-utils (db42-utils conflicts with native db4-utils-4.1.xx), install db42 , subversion-server, subversion, neon (use --nodeps because it requires apr-0.95 and httpd >=2.0.48 but those 2 conflict with the httpd packages)
 install in one go httpd, mod_ssl, apr, apr-util
-- create the /svnroot directory with perm and mod sourceforge.sourceforge 755
-- touch /etc/httpd/conf/codex_htpasswd
-- copy /home/httpd/SF/utils/svn/commit-email.pl to /usr/local/bin/ mod sourceforge.sourceforge 755
-- ALTER groups table and create new fields in the group database use_svn, svn_box, svn_tracker svn_events_mailing_list svn_events_mailing_header svn_preamble
+- DONE - create the /svnroot directory with perm and mod sourceforge.sourceforge 755
+- DONE - touch /etc/httpd/conf/codex_htpasswd
+- DONE - copy /home/httpd/SF/utils/svn/commit-email.pl to /usr/local/bin/ mod sourceforge.sourceforge 755
+- DONE - ALTER groups table and create new fields in the group database use_svn, svn_box, svn_tracker svn_events_mailing_list svn_events_mailing_header svn_preamble
   ALTER TABLE groups ADD COLUMN svn_box VARCHAR(20) NOT NULL DEFAULT 'svn1' AFTER cvs_box;
   ALTER TABLE groups ADD COLUMN use_svn int(11) NOT NULL DEFAULT '1' AFTER use_cvs;
   ALTER TABLE groups ADD COLUMN svn_tracker INT(11) NOT NULL DEFAULT '1';
@@ -60,21 +763,21 @@ install in one go httpd, mod_ssl, apr, apr-util
   ALTER TABLE groups ADD COLUMN svn_events_mailing_header VARCHAR(64) binary DEFAULT NULL;
   ALTER TABLE groups ADD COLUMN svn_preamble TEXT NOT NULL;
 
-- (Upgrade) CREATE table group_svn_history
-- DONE Modify Project.class and usesSvn
-- (Upgrade) Add sys_svn_host to local.inc
-- (Upgrade) Add SYS_SVN_HOST to /etc/codex/documentation/user_guide/xml/en_US/ParametersLocal.dtd
-- (Upgrade) Add a svn entry into the service table for each project. Set the svn service to disabled by default for all projects
-- (Upgrade) Create all svn_xxxxx tables for SVN commit tracking
+- DONE - (Upgrade) CREATE table group_svn_history
+- DONE - Modify Project.class and usesSvn
+- DONE - (Upgrade) Add sys_svn_host to local.inc
+- DONE - (Upgrade) Add SYS_SVN_HOST to /etc/codex/documentation/user_guide/xml/en_US/ParametersLocal.dtd
+- DONE - (Upgrade) Add a svn entry into the service table for each project. Set the svn service to disabled by default for all projects except project 100.
+- DONE - (Upgrade) Create all svn_xxxxx tables for SVN commit tracking
 - For mass update on trackers create table script_state
 
 TODO in install script:
 - DONE - Update httpd.conf with the version for Apache 2.0 from codex.xerox.com (and finish the cleanup in the file)
 - DONE - Put %..% patterns in all *.dist files and change them at installation time
-- Change AliasFile in /etc/mail/sendmail.cf at installation time
-- Create /etc/mail/local-host-names at installation time
+- DONE - Change AliasFile in /etc/mail/sendmail.cf at installation time
+- DONE - Create /etc/mail/local-host-names at installation time
 - DONE - change /home/httpd/SF/utils/underworld-dummy/mail_aliases.pl (wrapper is now called mailman - Installation file already updated)
-- DONE - Substitute _domain_name_ in the database init file with the domain name before creating the database
+- DONE - Substitute _DOMAIN_NAME_ in the database init file with the domain name before creating the database
 - DONE - Update installation script with subversion installation (see upgrade notes above for installation)
 - DONE touch /etc/httpd/conf/codex_htpasswd
 - DONE copy /home/httpd/SF/utils/svn/commit-email.pl to /usr/local/bin/ mod sourceforge.sourceforge 755
@@ -85,8 +788,8 @@ TODO
 - DONE - Change /etc/local.inc into /etc/codex/conf/local.inc in all source code
 - DONE - Move motd.inc in site-content
 - DONE - Move default_page.php in site-content and look for customized version in /etc/codex/site-content
-- Add Include conf.d/subversion.conf in httpd.conf
-- Add subversion.conf.dist in SF/etc
+- DONE - Add Include conf.d/subversion.conf in httpd.conf
+- DONE - Add subversion.conf.dist in SF/etc
 
 Notes:
 - DONE - to create a new SVN repo in new_parse use mkdir /svnroot/codex; chmod 775 /svnroot/xxxxx; svnadmin create /svnroot/xxxxx; chown -R sourceforge.xxxxx /svnroot/xxxxx; 
