@@ -8,19 +8,18 @@
 
 patch_header(array ('title'=>'Submit a Patch'));
 
-	echo '
-		<P>
-		<H2>Submit A Patch</H2>
-		<P>
-		<B>Fill out the form below.</B> You can either paste your patch into the window 
-		below or check the box and upload your patch.
-		<P>
-		<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data">
+// First display the message preamble
+$res_preamble  = db_query("SELECT patch_preamble FROM groups WHERE group_id=$group_id");
+
+echo '<H2>Submit A Patch</H2>';
+echo util_unconvert_htmlspecialchars(db_result($res_preamble,0,'patch_preamble'));
+
+echo'		<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data">
 		<INPUT TYPE="HIDDEN" NAME="func" VALUE="postaddpatch">
 		<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 		<TABLE>
-		<TR><TD VALIGN="TOP" COLSPAN="2"><B>Group:</B><BR>'.group_getname($group_id).'</TD></TR>
-		<TR><TD VALIGN="TOP" COLSPAN="2"><B>Category:</B><BR>';
+		<TR><TD VALIGN="TOP" COLSPAN="2"><B>Project:</B>&nbsp;&nbsp;'.group_getname($group_id).'</TD></TR>
+		<TR><TD VALIGN="TOP" COLSPAN="2"><B>Category:</B>&nbsp;&nbsp;';
 
 	echo patch_category_box($group_id,'patch_category_id');
 

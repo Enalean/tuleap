@@ -8,6 +8,7 @@
 
 require('pre.php');
 require('../patch_utils.php');
+require ($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
 
 if ($group_id && user_ismember($group_id,'C2')) {
 
@@ -38,6 +39,29 @@ if ($group_id && user_ismember($group_id,'C2')) {
 				echo db_error();
 			}
 
+		} else if ($other_settings_update) {
+
+		    group_add_history ('Changed Patch Mgr Settings','',$group_id);
+		    //blank out any invalid email addresses
+		    if ($new_patch_address && !validate_emails($new_patch_address)) { 
+			$new_patch_address='';
+			$feedback .= ' Email Address Appeared Invalid ';
+		    }	    
+
+		    // Update the Group  table now
+		    $result=db_query('UPDATE groups SET '
+		     ."send_all_patches='$send_all_patches', "
+	             .($new_patch_address? "new_patch_address='$new_patch_address', " : "")
+	             ."patch_preamble='".htmlspecialchars($form_preamble)."' "
+	             ."WHERE group_id=$group_id");
+
+		    if (!$result) {
+			$feedback .= ' UPDATE FAILED! '.db_error();
+		    } else if (db_affected_rows($result) < 1) {
+			$feedback .= ' NO DATA CHANGED! ';
+		    } else {
+			$feedback .= ' SUCCESSFUL UPDATE';
+		    }
 		}
 
 	} 
@@ -49,7 +73,7 @@ if ($group_id && user_ismember($group_id,'C2')) {
 		/*
 			Show categories and blank row
 		*/
-		patch_header(array ('title'=>'Add/Change Categories'));
+		patch_header_admin(array ('title'=>'Add/Change Categories'));
 
 		echo "<H1>Add Patch Categories</H1>";
 
@@ -89,7 +113,7 @@ if ($group_id && user_ismember($group_id,'C2')) {
 			Show an interface to modify the description to $patch_cat_id
 		*/
 
-		patch_header(array ('title'=>'Modify a Patch Category'));
+		patch_header_admin(array ('title'=>'Modify a Patch Category'));
 
 		echo '
 			<H1>Patch Category Modification</H1>';
@@ -122,19 +146,58 @@ if ($group_id && user_ismember($group_id,'C2')) {
 
 		patch_footer(array());
 
+
+	} else if ($other_settings) {
+	    
+	    /*     Show existing values    */
+		patch_header_admin(array ('title'=>'Patch Manager Admin - Other Settings'));
+		$res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
+		if (db_numrows($res_grp) < 1) {
+		    exit_no_group();
+		}
+		$row_grp = db_fetch_array($res_grp);
+
+		echo '<H2>Other Configuration Settings</h2>';
+
+		echo '<FORM action="'.$PHP_SELF.'" method="post">
+<INPUT type="hidden" name="group_id" value="'.$group_id.'">
+<INPUT type="hidden" name="other_settings" value="y">
+<INPUT type="hidden" name="other_settings_update" value="y">
+<INPUT type="hidden" name="post_changes" value="y">
+<h3>Submission Form Preamble</h3>
+<P><b>Introductory message showing at the top of  the Patch  submission form :</b>
+<br>(HTML tags allowed)<br>
+<BR><TEXTAREA cols="70" rows="8" wrap="virtual" name="form_preamble">'.
+$row_grp['patch_preamble'].'</TEXTAREA>';
+
+
+		echo '<h3>Email Notification Rules</h3>
+              <P><B>If you wish, you can provide email addresses (separated by a comma) to which new Patch submissions will be sent.</B><BR>
+              (Remark: Patch submission and updates are always sent to the patch submitter and assignee)<br>
+	<BR><INPUT TYPE="TEXT" NAME="new_patch_address" VALUE="'.$row_grp['new_patch_address'].'" SIZE="45" MAXLENGTH="80"> 
+	&nbsp;&nbsp;&nbsp;(send on all updates) <INPUT TYPE="CHECKBOX" NAME="send_all_patches" VALUE="1" '. (($row_grp['send_all_patches'])?'CHECKED':'') .'><BR>';
+
+		echo '<HR>
+<P><INPUT type="submit" name="submit" value="Submit">
+</FORM>';
+		
+		patch_footer(array());
+
+
 	} else {
 		/*
 			Show main page
 		*/
 
-		patch_header(array ('title'=>'Patch Administration'));
+		patch_header_admin(array ('title'=>'Patch Administration'));
 
 		echo '
-			<H1>Patch Administration</H1>';
+			<H2>Patch Administration</H2>';
 
-		echo '<P>
-			<A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&patch_cat=1">Add Patch Categories</A><BR>';
-		echo "\nAdd categories of patchs like, 'mail module','gant chart module','interface', etc<P>";
+		echo '<A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&patch_cat=1"><h3>Manage Patch Categories</h3></A>';
+		echo "\nAdd/Update categories of patchs like, 'mail module','gant chart module','interface', etc<P>";
+		echo '<A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&other_settings=1"><h3>Other Configuration Settings</h3></A>';
+		echo "\nDefine introductory messages for submission forms, email notification,...";
 
 		patch_footer(array());
 	}

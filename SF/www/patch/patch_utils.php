@@ -43,6 +43,30 @@ function patch_header($params) {
 	echo '</B>';
 }
 
+function patch_header_admin($params) {
+    global $group_id,$DOCUMENT_ROOT;
+    
+    //required params for site_project_header();
+    $params['group']=$group_id;
+    $params['toptab']='patch';
+    
+    $project=project_get_object($group_id);
+    
+    //only projects can use the patch manager, and only if they have it turned on
+    if (!$project->isProject()) {
+	exit_error('Error','Only Projects Can Use The Patch Manager');
+    }
+    if (!$project->usesBugs()) {
+	exit_error('Error','This Project Has Turned Off The Patch Manager');
+    }
+    echo site_project_header($params);
+    echo '<P><B><A HREF="/patch/admin/?group_id='.$group_id.'">Admin</A></B>';
+    echo ' | <B><A HREF="/patch/admin/index.php?patch_cat=1&group_id='.$group_id.'">Manage Categories</A></B>';
+    echo ' | <b><A HREF="/patch/admin/index.php?other_settings=1&group_id='.$group_id.'">Other Settings</A></b>';
+     echo ' <hr width="300" size="1" align="left" noshade>';
+}
+
+
 function patch_footer($params) {
 	site_project_footer($params);
 }
