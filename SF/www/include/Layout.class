@@ -205,6 +205,7 @@ echo html_blankimage(5,100);
 <!-- start main body cell -->
 
 
+        <div align="left">
         <table style=menus cellpadding="0" cellspacing="0" border="0" width="100%">
 
                 <tr>
@@ -240,6 +241,7 @@ echo html_blankimage(5,100);
 
 	function footer($params) {
         ?>
+        </div>
         <!-- end content -->
         </tr>
 <!-- New row added for the thin black line at the bottom of the array -->
