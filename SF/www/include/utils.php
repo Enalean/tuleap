@@ -142,6 +142,7 @@ function util_make_links ($data='',$group_id=-1) {
             $text = eregi_replace("bug[ ]?#([0-9]+)", "<a href=\"/bugs/?func=detailbug&bug_id=\\1&group_id=$group_id\">Bug #\\1</a>", $text);
             $text = eregi_replace("task[ ]?#([0-9]+)", "<a href=\"/pm/task.php?func=detailtask&project_task_id=\\1&group_id=$group_id\">Task #\\1</a>", $text);
             $text = eregi_replace("sr[ ]?#([0-9]+)", "<a href=\"/support/index.php?func=detailsupport&support_id=\\1&group_id=$group_id\">Sr #\\1</a>", $text);
+            $text = eregi_replace("patch[ ]?#([0-9]+)", "<a href=\"/patch/?func=detailpatch&patch_id=\\1&group_id=$group_id\">Patch #\\1</a>", $text);
 		}
 		$lines[$key] = $text;
 	}
