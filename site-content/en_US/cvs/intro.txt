@@ -8,7 +8,7 @@
 //
 
 if (user_isloggedin()) {
-   $username=user_getname();
+   $username=strtolower(user_getname());
 } else $username='username';
 print '<h2>CVS Access '.help_button('VersionControlWithCVS.html').'</h2>
 <P>CVS read-only  access is granted to all '.$GLOBALS['sys_name'].' registered users. Anonymous users do not have access to the CVS tree, because many '.$GLOBALS['sys_name'].' projects want to know who is in their community of users. Users desiring read access to project 
