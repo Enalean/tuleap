@@ -196,11 +196,11 @@ while ($field = bug_list_all_fields()) {
 	    } else {
 		// we need to "decode" the value_id and return the corresponding
 		// user readable value.
-		$bf_alias = 'bug_field'."$is";
 		$bfv_alias = 'bug_field_value'."$is";
 		$select .= ",$bfv_alias.value AS $field";
-		$from .= ",bug_field $bf_alias,bug_field_value $bfv_alias";
-		$where .= " AND ($bf_alias.field_name = '$field' AND $bf_alias.bug_field_id = $bfv_alias.bug_field_id AND $bfv_alias.value_id=bug.$field AND ($bfv_alias.group_id='$group_id' OR $bfv_alias.group_id='100')) ";
+		$from .= ",bug_field_value $bfv_alias";
+		$where .= " AND ($bfv_alias.bug_field_id=".bug_data_get_field_id($field).
+		    " AND $bfv_alias.value_id=bug.$field AND ($bfv_alias.group_id='$group_id' OR $bfv_alias.group_id='100')) ";
 		$is++;
 	    }
 	} else {
