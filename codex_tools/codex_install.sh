@@ -428,7 +428,7 @@ if [ ! -d "/var/lib/mysql/sourceforge" ]; then
     freshdb=1
     $MYSQL -u root $pass_opt -e "create database sourceforge"
     $CAT <<EOF | $MYSQL -u root mysql $pass_opt
-GRANT ALL PRIVILEGES on sourceforge.* to sourceforge@localhost identified by '$sf_passwd';
+GRANT ALL PRIVILEGES on *.* to sourceforge@localhost identified by '$sf_passwd';
 GRANT ALL PRIVILEGES on *.* to root@localhost identified by '$rt_passwd';
 FLUSH PRIVILEGES;
 EOF

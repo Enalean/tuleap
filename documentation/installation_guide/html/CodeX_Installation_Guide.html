@@ -978,7 +978,7 @@ same passwords as those you chose for the sourceforge Unix account and
 root Unix account created earlier.&nbsp;</li>
   <li>Then run mysql on the mysql database: </li>
 </ul>
-<pre>		# mysql mysql<br><br>		mysql&gt; GRANT ALL PRIVILEGES<br>      on sourceforge.* <br>      to sourceforge@localhost <br>      identified by 'password';<br><br>		mysql&gt; GRANT ALL PRIVILEGES<br>      on *.* <br>      to root@localhost <br>      identified by 'password';<br>				  <br>		mysql&gt; Flush Privileges;<br>		mysql&gt; quit<br><br></pre>
+<pre>		# mysql mysql<br><br>		mysql&gt; GRANT ALL PRIVILEGES<br>      on *.* <br>      to sourceforge@localhost <br>      identified by 'password';<br><br>		mysql&gt; GRANT ALL PRIVILEGES<br>      on *.* <br>      to root@localhost <br>      identified by 'password';<br>				  <br>		mysql&gt; Flush Privileges;<br>		mysql&gt; quit<br><br></pre>
 From now onwards if you want to use the mysql shell to interact with
 the CodeX database (think twice before doing any change by hand in the
 database !!!) you'll have to run the following command and type the
