@@ -20,7 +20,9 @@ $deleting_files_work = $ftp_incoming_dir .".delete_files.work";
 
 #move the list of files to delete to a temp work file
 print `/bin/mv -f $deleting_files $deleting_files_work`;
-
+print `/bin/touch $deleting_files`;
+my $codex_user = &get_codex_user();
+print `/bin/chown $codex_user $deleting_files`;
 
 
 #
@@ -36,16 +38,14 @@ while (<WAITING_FILES>) {
 		print "$ftp_frs_dir_prefix$project/$file doesn't exist\n";
 		next FILE
 	} else {
-	  print "handle file $ftp_frs_dir_prefix$project/$file\n";
+	  print "deleting file $project/$file\n";
 	  my (@subdirs, $endfile, $dirs);
 	  @subdirs = split("/", $file);
 	  $endfile = pop(@subdirs);
 	  $" = '/';
           $dirs = "@subdirs";
-	  print "creating $delete_dir/$project/$dirs\n";
           print `/bin/mkdir -p $delete_dir/$project/$dirs`;
 
-	  print "move the file to $delete_dir/$project/$file-$time\n";
 	  print `/bin/mv -f $ftp_frs_dir_prefix$project/$file $delete_dir/$project/$file-$time` ;
 	}
 }
