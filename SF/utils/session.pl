@@ -14,6 +14,7 @@
 #    This Perl include file mimics some of the fucntion in www/include/session.php
 #    to allow Perl scripts to handle user session stuff
 
+use CGI;
 use CGI::Cookie;
 
 use vars qw ( %G_SESSION %G_USER %cookies);
