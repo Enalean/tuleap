@@ -64,7 +64,6 @@ function parse_field_names($data,$used_fields,$ath,
 	//for all other fields not submitted by
       } else {
 
-
 	$predef_val = $field->getFieldPredefinedValues($ath->getID());
 	$count = db_numrows($predef_val);
 	unset($values);
@@ -231,7 +230,7 @@ function check_insert_artifact($row,&$data,$used_fields,$parsed_labels,$predefin
   $submitted_by_field = $art_field_fact->getFieldFromName('submitted_by');
   $submitted_by_label = $submitted_by_field->getLabel();
   $submitted_by_col = array_search($submitted_by_label,$parsed_labels);
-  $summary = $data[$summary_col];
+  $summary = htmlspecialchars($data[$summary_col]);
   if ($submitted_by_col !== false) {
     $sub_user_name = $data[$submitted_by_col];
     //$sub_user_ids = $predefined_values[$submitted_by_col];
@@ -244,7 +243,7 @@ function check_insert_artifact($row,&$data,$used_fields,$parsed_labels,$predefin
   
   if ( $summary_field && $summary_field->isUsed() ) {
     $res=db_query("SELECT * FROM artifact WHERE group_artifact_id = ".$ath->getID().
-		  "AND submitted_by=$sub_user_id AND summary=\"$summary\"");
+		  " AND submitted_by=$sub_user_id AND summary=\"$summary\"");
     if ($res && db_numrows($res) > 0) {
       $errors .= $LANG->getText('tracker_import_utils','already_submitted',array($row+1,implode(",",$data),$sub_user_name,$summary));
       return false;           
@@ -961,7 +960,7 @@ function insert_artifact($row,$data,$used_fields,$parsed_labels,$predefined_valu
     $vfl = prepare_vfl($data,$used_fields,$parsed_labels,$predefined_values,$artifact_depend_id,$add_cc,$cc_comment,$details);
    
 
-    // Artifact creation                
+    // Artifact creation        
     if (!$ah->create($vfl,true,$row)) {
       exit_error($LANG->getText('global','error'),$ah->getErrorMessage());
     }
@@ -1060,7 +1059,7 @@ function update_db($parsed_labels,$artifacts_data,$aid_column,&$errors) {
   for ($i=0; $i < count($artifacts_data); $i++) {
     $data = $artifacts_data[$i];
     if ($aid_column == -1) {
-      $ok = insert_artifact($row,$data,$used_fields,$parsed_labels,$predefined_values,$errors);
+      $ok = insert_artifact($i+2,$data,$used_fields,$parsed_labels,$predefined_values,$errors);
       
       // if artifact_id given, verify if it exists already 
       //else send error
@@ -1073,7 +1072,7 @@ function update_db($parsed_labels,$artifacts_data,$aid_column,&$errors) {
 	
       } else {
 	// have to create artifact from scratch
-	$ok = insert_artifact($row,$data,$used_fields,$parsed_labels,$predefined_values,$errors);
+	$ok = insert_artifact($i+2,$data,$used_fields,$parsed_labels,$predefined_values,$errors);
       }	  
     }
     if (!$ok) return false;

@@ -271,7 +271,6 @@ class Artifact extends Error {
      *  @return int : the artifact_history_id
      */
     function addHistory ($field,$old_value,$new_value,$type=false,$email=false) {
-        
 	//MLS: add case where we add CC and file_attachment into history for task #240
 	if ($field == 'cc' || $field == 'attachment' || $field == 'submitted_by') {
 	   $name = $field;
@@ -365,7 +364,7 @@ class Artifact extends Error {
 	// first make sure this wasn't double-submitted
 	$field = $art_field_fact->getFieldFromName('summary');
 	if ( $field && $field->isUsed()) {
-	  $res=db_query("SELECT * FROM artifact WHERE group_artifact_id = ".$ath->getID()." AND submitted_by=$user AND summary=\"".$vfl['summary']."\"");
+	  $res=db_query("SELECT * FROM artifact WHERE group_artifact_id = ".$ath->getID()." AND submitted_by=$user AND summary=\"".htmlspecialchars($vfl['summary'])."\"");
 	  if ($res && db_numrows($res) > 0) {
 	    $this->setError($LANG->getText('tracker_common_artifact','double_subm',db_result($res,0,'artifact_id')));
 	    return false;           
@@ -466,7 +465,7 @@ class Artifact extends Error {
         
                     // Insert the field value
                     if ( !$field->insertValue($artifact_id,$value) ) {
-                        $error_message .= $LANG->getText('tracker_common_artifact','field_err',array($field->getName(),$value));
+                        $error_message .= $LANG->getText('tracker_common_artifact','field_err',array($field->getLabel(),$value));
                         $was_error = true;
                         $this->setError($error_message);
                     }
@@ -478,7 +477,7 @@ class Artifact extends Error {
                     // empty record (we must use join and not left join for performance reasons).
                                         
                     if ( !$field->insertValue($artifact_id,$field->getDefaultValue()) ) {
-                        $error_message .= $LANG->getText('tracker_common_artifact','def_err',array($field->getName(),$field->getDefaultValue()));
+                        $error_message .= $LANG->getText('tracker_common_artifact','def_err',array($field->getLabel(),$field->getDefaultValue()));
                         $was_error = true;
                         $this->setError($error_message);
                     }
@@ -664,7 +663,7 @@ class Artifact extends Error {
                                 
                             // Update the field value
                             if ( !$field->updateValues($this->getID(),$values) ) {
-                                $feedback .= $LANG->getText('tracker_common_artifact','field_upd_fail',$field->getName());
+                                $feedback .= $LANG->getText('tracker_common_artifact','field_upd_fail',$field->getLabel());
                             }
                                     
                             // Keep track of the change
@@ -713,7 +712,7 @@ class Artifact extends Error {
                                     $update_value = htmlspecialchars($value);
                                 }
                                                 
-                                $this->addHistory($field,addslashes($old_value),addslashes($value));
+                                $this->addHistory($field,addslashes($old_value),$value);
                                 $value = stripslashes($value);
                             } else {
                                 if ( $field->isStandardField() ) {
@@ -727,7 +726,7 @@ class Artifact extends Error {
                             // Update the field value
                             if ( !$field->isStandardField() ) {
                                 if ( !$field->updateValue($this->getID(),$update_value) ) {
-                                    $feedback .= $LANG->getText('tracker_common_artifact','field_upd_fail',$field->getName());
+                                    $feedback .= $LANG->getText('tracker_common_artifact','field_upd_fail',$field->getLabel());
                                 }
                             }
                                     

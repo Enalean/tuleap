@@ -65,7 +65,7 @@ if ($export == 'artifact_deps') {
     // Send the result in CSV format
     if ($result && $rows > 0) {
 	
-	        $tbl_name = str_replace(' ','_','artifact_deps_'.$at->getName());
+	        $tbl_name = str_replace(' ','_','artifact_deps_'.$at->getItemName());
 		header ('Content-Type: text/csv');
 		header ('Content-Disposition: filename='.$tbl_name.'_'.$dbname.'.csv');
 		
@@ -110,7 +110,7 @@ if ($export == 'artifact_deps') {
 		if ($at_arr && count($at_arr) >= 1) {
 			for ($j = 0; $j < count($at_arr); $j++) {
 
-				$tbl_name = "artifact_deps_".$at_arr[$j]->getName();
+				$tbl_name = "artifact_deps_".$at_arr[$j]->getItemName();
 				$tbl_name = str_replace(' ','_',$tbl_name);
 
 				$atid = $at_arr[$j]->getID();

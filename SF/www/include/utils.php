@@ -126,14 +126,14 @@ function util_sysdatefmt_to_unixtime($date) {
 function util_sysdatefmt_explode($date) {
   $months = array("Jan"=>1, "Feb"=>2, "Mar"=>3, "Apr"=>4, "May"=>5, "Jun"=>6, "Jul"=>7, "Aug"=>8, "Sep"=>9, "Oct"=>10, "Nov"=>11, "Dec"=>12);
 
-  $res = preg_match("/\s*(\d+)-(\D+)-(\d+) (\d+):(\d+)/",$date,$match);
+  $res = preg_match("/\s*(\d+)-(.+)-(\d+) (\d+):(\d+)/",$date,$match);
   if ($res == 0) { 
     //if it doesn't work try (Y-M-d) only
-    $res = preg_match("/\s*(\d+)-(\D+)-(\d+)/",$date,$match);
+    $res = preg_match("/\s*(\d+)-(.+)-(\d+)/",$date,$match);
     if ($res == 0) { 
       
       // if it doesn't work try Y-M only
-      $res = preg_match("/\s*(\d+)-(\D+)/",$date,$match);
+      $res = preg_match("/\s*(\d+)-(.+)/",$date,$match);
       if ($res == 0) {
 	// if it doesn't work try YYYY only
 	$res = preg_match("/\s*(\d+)/",$date,$match);
@@ -155,7 +155,22 @@ function util_sysdatefmt_explode($date) {
     list(,$year,$month,$day,$hour,$minute) = $match;
   }
 
-  return array($year,$months[$month],$day,$hour,$minute);
+  return array($year,getMonth($month,$ok),$day,$hour,$minute);
+}
+
+//accept now month either in format Jan-Dec or 1-12
+function getMonth($month,&$ok) {
+  $months = array("Jan"=>1, "Feb"=>2, "Mar"=>3, "Apr"=>4, "May"=>5, "Jun"=>6, "Jul"=>7, "Aug"=>8, "Sep"=>9, "Oct"=>10, "Nov"=>11, "Dec"=>12);
+  if (array_key_exists($month,$months)) {
+    $ok = true;
+    return $months[$month];
+  } else if (in_array($month,$months)) {
+    $ok = true;
+    return $month;
+  } 
+  $ok = false; 
+  return 1;
+
 }
 
 function util_prep_string_for_sendmail($body) {
