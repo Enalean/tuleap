@@ -396,9 +396,19 @@ Function  ShowResultSet($result,$title="Untitled",$linkify=false)  {
 	}
 }
 
-// Email Verification
+// One Email Verification
 function validate_email ($address) {
 	return (ereg('^[-!#$%&\'*+\\./0-9=?A-Z^_`a-z{|}~]+'. '@'. '[-!#$%&\'*+\\/0-9=?A-Z^_`a-z{|}~]+\.' . '[-!#$%&\'*+\\./0-9=?A-Z^_`a-z{|}~]+$', $address));
+}
+
+// Verification of comma separated list of email addresses
+function validate_emails ($addresses) {
+    $addresses = str_replace(' ','',$addresses);
+    $arr = split(',',$addresses);
+    while (list(, $addr) = each ($arr)) {
+	if (!validate_email($addr)) { return false; echo "nV: $addr";}
+    }	    
+    return true;
 }
 
 function util_is_valid_filename ($file) {
