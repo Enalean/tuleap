@@ -111,17 +111,9 @@ if ($group_id && user_ismember($group_id,'A')) {
 			  'help'=>'CommunicationServices.html#MailingListsCreation'));
 
 		echo '
-			<H3>Add a Mailing List</H3>
-			<P>Lists are named in this manner: <em>projectname-listname@'. $GLOBALS['sys_lists_host'] .'</em>
-<P> In order to harmonize mailing lists names on '.$GLOBALS['sys_name'].' we advise you to create (at least) the following mailing lists for your project:<BR>
-<ul>
-<li><b>'.group_getunixname($group_id).'-interest</b>: for general purpose discussion especially at user level.
-<li><b>'.group_getunixname($group_id).'-devel</b>: for developement questions and debates.
-<li><b>'.group_getunixname($group_id).'-announce</b>: for annoucement of new releases or any new event in the life of the project.
-</ul>
-			<P>It will take <B><span class="highlight">'.$GLOBALS['sys_crondelay'].' Hours</span></B>  maximum for your list(s)
-			to be created.
-			<P>';
+			<H3>Add a Mailing List</H3>';
+		include(util_get_content('mail/addlist_intro'));
+
 		$result=db_query("SELECT list_name FROM mail_group_list WHERE group_id='$group_id'");
 		ShowResultSet($result,'Existing Mailing Lists');
 
@@ -145,9 +137,6 @@ if ($group_id && user_ismember($group_id,'A')) {
 			<INPUT TYPE="RADIO" NAME="is_public" VALUE="0"> No<P>
 			<B>Description:</B><BR>
 			<INPUT TYPE="TEXT" NAME="description" VALUE="" SIZE="60" MAXLENGTH="160"><BR>
-			<P>
-			<B><span class="highlight">Once created, this list will ALWAYS be attached to your project 
-			and cannot be deleted!</span></B>
 			<P>
 			<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Add This List">
 			</FORM>';

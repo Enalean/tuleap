@@ -1,0 +1,24 @@
+<?
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+
+
+echo '
+
+<P>Lists are named in this manner: <em>projectname-listname@'. $GLOBALS['sys_lists_host'] .'</em>
+<P> In order to harmonize mailing lists names on '.$GLOBALS['sys_name'].' we advise you to create (at least) the following mailing lists for your project:<BR>
+<ul>
+<li><b>'.group_getunixname($group_id).'-interest</b>: for general purpose discussion especially at user level.
+<li><b>'.group_getunixname($group_id).'-devel</b>: for developement questions and debates.
+<li><b>'.group_getunixname($group_id).'-announce</b>: for annoucement of new releases or any new event in the life of the project.
+</ul>
+
+<P>It will take <B><span class="highlight">'.$GLOBALS['sys_crondelay'].' Hours</span></B>  maximum for your list(s) to be created.
+<P>';
+
+?>
