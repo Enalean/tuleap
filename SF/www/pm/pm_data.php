@@ -227,7 +227,7 @@ function pm_data_create_task ($group_project_id,$start_month,$start_day,$start_y
 		$start_date."','".
 		$end_date."','".user_getid()."','1')";
 
-	$result=db_query($sql,1);
+	$result=db_query($sql);
 
 	if (!$result) {
 		$feedback .= ' ERROR INSERTING ROW '.db_error();
@@ -344,7 +344,7 @@ function pm_data_update_task ($group_project_id,$project_task_id,$start_month,$s
 		$set_oc_str.
 		"WHERE project_task_id='$project_task_id' AND group_project_id='$group_project_id'";
 
-	$result=db_query($sql,1);
+	$result=db_query($sql);
 
 	if (!$result) {
 		exit_error('ERROR','Database update failed '.db_error());
