@@ -21,9 +21,11 @@ $fields_per_line=5;
 // Default 50
 if (!$chunksz) { $chunksz = 50; }
 
-// Make sure offset is defined and has a correct value
+// Make sure offset values, search and multisort flags are defined
+// and have a correct value
 if (!$offset || $offset < 0) { $offset=0; }
-
+if (($advsrch != 0) && ($advsrch != 1)) { $advsrch = 0; }
+if (($msort != 0) && ($msort != 1)) { $msort = 0; }
 
 /*  ==================================================
     Get the list of bug fields used in the form (they are in the URL - GET method)
@@ -148,9 +150,9 @@ if (!$set) {
 		list($field,$value_id) = explode('=',$expr);
 		$field = str_replace('[]','',$field);
 		if ($field == 'advsrch') 
-		    $advsrch = $value_id;
+		    $advsrch = ($value_id ? 1 : 0);
 		else if ($field == 'msort')
-		    $msort = $value_id;
+		    $msort = ($value_id ? 1 : 0);
 		else if ($field == 'chunksz')
 		    $chunksz = $value_id;
 		else if ($field == 'report_id')
@@ -197,8 +199,8 @@ if ($set=='my') {
 		bug_data_get_value($field,$group_id,$value_id);
 	}
     }
-    $pref_stg .= '&advsrch='.$advsrch;
-    $pref_stg .= '&msort='.$msort;
+    $pref_stg .= '&advsrch='.($advsrch ? 1 : 0);
+    $pref_stg .= '&msort='.($msort ? 1 : 0);
     $pref_stg .= '&chunksz='.$chunksz;
     $pref_stg .= '&report_id='.$report_id;
     
@@ -217,8 +219,6 @@ if ($set=='my') {
    as well as all the arguments that serves as selection criteria
    If not defined then defaults to ANY (0)
   ================================================== */
-if (!isset($advsrch)) { $advsrch = 0; }
-if (!isset($msort)) { $msort = 0; }
 while ($field = bug_list_all_fields()) {
     // the select boxes for the bug DB search first
     if (bug_data_is_showed_on_query($field) &&
