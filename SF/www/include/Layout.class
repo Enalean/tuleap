@@ -372,14 +372,12 @@ echo html_blankimage(5,100);
 	        }
 
         	// Bug Tracking
-	        if ((!$sys_activate_tracker && $project->usesBugs()) || 
-    		    ($sys_activate_tracker && $project->activateOldBug())) {
+	        if ($project->usesBugs() && !($sys_activate_tracker && !$project->activateOldBug())) {
         	        $this->tab_entry('/bugs/?group_id='.$group, $this->icons['Bugs'], 'Bugs', $toptab == 'bugs');
 	        }
 
         	// Support Tracking
-	        if ((!$sys_activate_tracker && $project->usesSupport()) || 
-    		    ($sys_activate_tracker && $project->activateOldSR())) {
+	        if ($project->usesSupport() && !($sys_activate_tracker && !$project->activateOldSR())) {
         	        $this->tab_entry('/support/?group_id='.$group, $this->icons['Support'], 'Support', $toptab == 'support');
 	        }
 
@@ -394,8 +392,7 @@ echo html_blankimage(5,100);
 	        }
 
         	// Project Manager
-	        if ((!$sys_activate_tracker && $project->usesPm()) || 
-    		    ($sys_activate_tracker && $project->activateOldTask())) {
+	        if ($project->usesPm() && !($sys_activate_tracker && !$project->activateOldTask())) {
         	        $this->tab_entry('/pm/?group_id='.$group, $this->icons['Tasks'], 'Tasks', $toptab == 'pm');
 	        }
 

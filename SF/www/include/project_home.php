@@ -222,8 +222,7 @@ if ($project->usesForum()) {
 
 // ##################### Bug tracking (only for Active)
 
-if ((!$sys_activate_tracker && $project->usesBugs()) || 
-    ($sys_activate_tracker && $project->activateOldBug())) {
+if ($project->usesBugs() && !($sys_activate_tracker && !$project->activateOldBug())) {
 	print '<HR SIZE="1" NoShade><A href="/bugs/?group_id='.$group_id.'">';
 	html_image("ic/bug16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>'Bug Tracking')); 
 	print '&nbsp;Bug Tracking</A>';
@@ -237,8 +236,7 @@ if ((!$sys_activate_tracker && $project->usesBugs()) ||
 
 // ##################### Support Manager (only for Active)
  
-if ((!$sys_activate_tracker && $project->usesSupport()) || 
-    ($sys_activate_tracker && $project->activateOldSR())) {
+if ($project->usesSupport() && !($sys_activate_tracker && !$project->activateOldSR())) {
 	print '
 	<HR SIZE="1" NoShade>
 	<A href="/support/?group_id='.$group_id.'">';
@@ -299,8 +297,7 @@ if ($project->usesMail()) {
 
 // ##################### Task Manager (only for Active)
 
-if ((!$sys_activate_tracker && $project->usesPm()) || 
-    ($sys_activate_tracker && $project->activateOldTask())) {
+if ($project->usesPm() && !($sys_activate_tracker && !$project->activateOldTask())) {
 	print '<HR SIZE="1" NoShade><A href="/pm/?group_id='.$group_id.'">';
 	html_image("ic/taskman16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>'Task Manager'));
 	print '&nbsp;Project/Task Manager</A>';
