@@ -22,6 +22,8 @@ if (user_isloggedin()) {
     site_project_header(array('title'=>'Project Filelist','group'=>$group_id,'toptab'=>'downloads'));
 
     echo '<h3>Package Releases '. help_button('FileReleaseJargon.html').'</h3>';
+    echo '<p>Select Release to see Release Notes and Change Log, &nbsp;';
+    echo 'Select File to request file download.</p>';
     
     if (session_issecure()) {
 	$url = "https://".$GLOBALS['sys_https_host'];
