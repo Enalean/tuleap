@@ -362,7 +362,7 @@ sub read_logfile {
     while (<FILE>) {
 	chop;
 	$line = $leader.$_;
-    
+
     # store the bug ref
     while ($line =~ /bug[ ]?#([0-9]+)/gi) {
         $bugs{$1} = $1;
@@ -378,6 +378,10 @@ sub read_logfile {
     # store the patch ref
     while ($line =~ /patch[ ]?#([0-9]+)/gi) {
         $patches{$1} = $1;
+    }
+    # store the commit ref
+    while ($line =~ /commit[ ]?#([0-9]+)/gi) {
+        $commits{$1} = $1;
     }
 
 	push(@text, $line);
@@ -1066,7 +1070,7 @@ for ($i = 0; ; $i++) {
     @keys = keys %bugs;
     if ( $#keys >= 0 ) {
     	push (@text, "");
-        push (@text, "Bugs references:");
+        push (@text, "Bug references:");
         foreach $bug (keys %bugs) {
             push (@text, "Bug #$bug: http://$sys_default_domain/bugs/?func=detailbug&bug_id=$bug&group_id=$group_id");
 	    if ($db_track) {
@@ -1077,7 +1081,7 @@ for ($i = 0; ; $i++) {
     @keys = keys %tasks;
     if ( $#keys >= 0 ) {
     	push (@text, "");
-        push (@text, "Tasks references:");
+        push (@text, "Task references:");
         foreach $task (keys %tasks) {
             push (@text, "Task #$task: http://$sys_default_domain/pm/task.php?func=detailtask&project_task_id=$task&group_id=$group_id");
 	    if ($db_track) {
@@ -1088,7 +1092,7 @@ for ($i = 0; ; $i++) {
     @keys = keys %srs;
     if ( $#keys >= 0 ) {
     	push (@text, "");
-        push (@text, "Support Requests references:");
+        push (@text, "Support Request references:");
         foreach $sr (keys %srs) {
             push (@text, "Sr #$sr: http://$sys_default_domain/support/index.php?func=detailsupport&support_id=$sr&group_id=$group_id");
 	    if ($db_track) {
@@ -1099,7 +1103,7 @@ for ($i = 0; ; $i++) {
     @keys = keys %patches;
     if ( $#keys >= 0 ) {
     	push (@text, "");
-        push (@text, "Patches references:");
+        push (@text, "Patch references:");
         foreach $patch (keys %patches) {
             push (@text, "Patch #$patch: http://$sys_default_domain/patch/?func=detailpatch&patch_id=$patch&group_id=$group_id");
         }
@@ -1108,19 +1112,19 @@ for ($i = 0; ; $i++) {
 	    }
     }
 
-        @keys = keys %patches;
+        @keys = keys %commits;
     if ( $#keys >= 0 ) {
     	push (@text, "");
-        push (@text, "Commits references:");
-        foreach $comm (keys %commits) {
-            push (@text, "commit #$comm: http://$sys_default_domain/cvs/?func=detailcommit&commit_id=$commit&group_id=$group_id");
+        push (@text, "Commit references:");
+        foreach $commit (keys %commits) {
+            push (@text, "commit #$comm: http://$sys_cvs_host/cvs/?func=detailcommit&commit_id=$commit&group_id=$group_id");
         }
 	    if ($db_track) {
 	      &db_add_ref('commit', $commit_id, $comm);
 	    }
     }
 
-    
+
     if ($do_status || $do_diffs) {
 	local(@changed_files);
 
