@@ -32,7 +32,7 @@ switch ($destination) {
 		$res_mail = db_query("SELECT user.email AS email,user.user_name AS user_name "
 		."FROM user,user_group WHERE "	
 		."user.user_id=user_group.user_id AND user.status='A' AND user_group.admin_flags='A' "
-		."GROUP by user.user_id");
+		."GROUP by lcase(email)");
 		$to_name = 'Project Administrators';
 		break;
 	case 'sfadmin':
@@ -88,18 +88,5 @@ usleep(2000000);
 print "\nsending to $tolist";
 $tolist='';
 flush();
-
-
-/*
-while ($row_mail = db_fetch_array($res_mail)) {
-	print "sending to $row_mail[user_name] <$row_mail[email]>\n";
-	mail("$row_mail[user_name] <$row_mail[email]>",
-		stripslashes($GLOBALS['mail_subject']),
-		stripslashes($GLOBALS['mail_message']),
-		"From: ".$GLOBALS['sys_name']." <noreply@$GLOBALS[sys_default_domain]>");
-	usleep(250000);
-	flush();
-}
-*/
 
 ?>
