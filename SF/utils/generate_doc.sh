@@ -67,7 +67,7 @@ then
     fi
 fi
 
-$CMDDIR/xml2html.sh CodeX_User_Guide.xml ../../html/en_US/ 2>1 >/tmp/log_xml2html_$$
+$CMDDIR/xml2html.sh CodeX_User_Guide.xml ../../html/en_US/ >/tmp/log_xml2html_$$ 2>&1
 if [ $? != 0 ]
 then
     echo "CodeX documentation generation failed!"
@@ -85,7 +85,7 @@ fi
 OLD_PATH=${PATH}
 export PATH=${PATH}:${BASEDIR}/user_guide/cmd
 
-$CMDDIR/xml2pdf.sh CodeX_User_Guide.xml $BASEDIR/user_guide/pdf/en_US/CodeX_User_Guide_new.pdf 2>1 >/tmp/log_xml2pdf_$$
+$CMDDIR/xml2pdf.sh CodeX_User_Guide.xml $BASEDIR/user_guide/pdf/en_US/CodeX_User_Guide_new.pdf >/tmp/log_xml2pdf_$$ 2>&1 
 if [ $? != 0 ]
 then
     echo "CodeX documentation generation failed!"
