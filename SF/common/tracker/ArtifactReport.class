@@ -551,7 +551,7 @@ class ArtifactReport extends Error {
 		
 		$count = 1;
 		
-		$select = "SELECT a.severity as severity_id, ";
+		$select = "SELECT a.severity as severity_id, a.artifact_id as artifact_id, ";
 		$from = "FROM artifact a";
 		$where = "WHERE a.group_artifact_id = ".$this->group_artifact_id; 
 		$order_by = "ORDER BY ";
