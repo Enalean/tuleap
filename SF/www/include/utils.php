@@ -596,4 +596,12 @@ function formatByteToMb($size_byte) {
     return intval($size_byte/(1024*1024));
 }
 
+
+// Return a HTTP URL to a resource on the local host.
+function make_local_url($path) {
+    $info = parse_url("http://" . $GLOBALS['sys_default_domain']);
+    $port = isset($info['port'])? ":".$info['port'] : "";
+    return "http://localhost" . $port . "/" . $path;
+}
+
 ?>
