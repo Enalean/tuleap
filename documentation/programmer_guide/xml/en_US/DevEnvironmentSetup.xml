@@ -1,0 +1,178 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+//
+// $Id$
+//
+// Originally written by Nicolas Guerin 2004, CodeX Team, Xerox
+//
+-->
+
+<chapter id="DevEnvironmentSetup">
+    <title>Development Environment Setup</title>
+    <para>In order to start developing for the CodeX platform, one needs to setup a specific development environment, with source code as well as configuration files and utilities. In this chapter, we will describe how to create such an environment.</para>
+    <section id="EnvRequirements">
+      <title>Requirement: a Test Server</title>
+      <para>The CodeX source code has been modified so that multiple instances of the CodeX software can run on the same physical machine. the goal here is to allow each CodeX developer to have his/her own source tree available for modification and testing and avoid any interference with other developers.</para>
+      <para>When developing for CodeX, it is strongly advised to test your code on a different machine than the production server. Even if you use a different source tree and a different database, there are always risks that you might do something wrong that will impact your production server. So you should setup a dedicated machine for all your code development. Ideally, this machine should be identical to the production server, or at least it should have exactly the same operating system (same distribution, same version) and the same version of the tools (CVS, Apache, PHP, MySQL, etc.).</para>
+      <para>For simplification, we will describe the process of setting up development environments that all share the same database server, and where specific features like project web servers, documentation, user accounts, releases, cron jobs and CVS repositories are also common to all environments. Using separate resources is possible but requires a lot more efforts.</para>
+    </section>
+
+    <section id="CreateEnv">
+      <title>Creating a Development Environment</title>
+      <para>Initially, you need to create a 'test_server' directory in your home directory, where you will install all necessary resources to develop, configure, and run CodeX. You may setup files as you wish, but here, we provide a guideline that will simplify things. So first, you should create the following subdirectories:</para>
+
+      <programlisting width="40" format="linespecific" linenumbering="unnumbered">
+        bin
+        etc
+        etc/codex
+        etc/httpd
+        etc/httpd/conf
+        httpd
+        sfcache
+        var
+        var/log
+        var/log/httpd
+        var/run
+      </programlisting>
+      <para>Then make links for your apache server</para>
+      <programlisting width="40" format="linespecific" linenumbering="unnumbered">
+        cd etc/httpd
+        ln -s /usr/lib/apache modules
+        ln -s ../../var/log/httpd logs
+      </programlisting>
+      <para>After that, copy the CodeX configuration files to your environment:</para>
+      <programlisting width="40" format="linespecific" linenumbering="unnumbered">
+        cp /etc/local.inc etc
+        cp /etc/httpd/conf/httpd.conf etc/httpd/conf
+      </programlisting>
+      <para>Normally '/etc/local.inc' is not world-readable, so you either need to give temporary access to this file, or use local.inc.dist from the CVS tree that you will checkout later.</para>
+      <para>You can also create the 'bin/start_CodeX' script</para>
+      <programlisting width="40" format="linespecific" linenumbering="unnumbered">
+        #!/bin/sh
+        prefix=$(dirname $0)
+
+        echo -n "Starting Apache test server..."
+        /usr/sbin/httpd -d $prefix/../etc/httpd -f conf/httpd.conf
+      </programlisting>
+    </section>
+    <section id="EditConfEnv">
+      <title>Editing Configuration Files</title>
+      <para>Now, your directory contains the same configuration files as the test server. You need to customize them for your specific environment.</para>
+      <section id="EditConfEnvApache">
+        <title>Apache Configuration File</title>
+        <para>You need to edit etc/httpd/conf/httpd.conf for your test server. Again, here are some guidelines, but beware that some parameters may be different in your installation. For example, if you are using a secure server (https), you will need to duplicate the key directories. So you need to modify the following directives (and replace 'your_login' by... your login): </para>
+        <itemizedlist spacing="compact" mark="bullet">
+          <listitem><para>ServerRoot: point to your test_server/etc/httpd directory</para></listitem>
+          <listitem><para>LockFile: point to your var/run directory</para></listitem>
+          <listitem><para>PidFile: in var/run</para></listitem>
+          <listitem><para>ScoreBoardFile: in var/run</para></listitem>
+          <listitem><para>Port and Listen directives: use unique numbers. If your running a secure server (https) you need to specify two 'Listen' directives and change the appropriate settings.</para></listitem>
+          <listitem><para>PidFile: in var/run</para></listitem>
+          <listitem><para>DocumentRoot: point to test_server/httpd/SF/www. Also update the corresponding 'Directory' directive.</para></listitem>
+          <listitem><para>ScriptAlias: point to test_server/httpd/cgi-bin. Also update the corresponding 'Directory' directive.</para></listitem>
+          <listitem><para>All Log directives: point to var/log/httpd if they point to absolute paths</para></listitem>
+          <listitem><para>Remove 'include' directives (for mailman.conf, cvsweb.conf and codex_vhosts.conf)</para></listitem>
+          <listitem><para>And add the following lines at the end of the file:</para></listitem>
+        </itemizedlist>
+        <programlisting width="40" format="linespecific" linenumbering="unnumbered">
+
+php3_include_path  ".:/home/users/your_login/test_server/httpd/SF/www/include"
+SetEnv SF_LOCAL_INC_PREFIX /home/users/your_login/test_server
+        </programlisting>
+      </section>
+      <section id="EditConfLocalInc">
+        <title>local.inc Configuration File</title>
+        <para>Edit etc/local.inc and modify the following lines: </para>
+        <programlisting width="40" format="linespecific" linenumbering="unnumbered">
+// Customize with server name and port number set in httpd.conf 
+$sys_default_domain = "host.name.com:8xxx";
+$sys_urlroot="/home/users/your_login/test_server/httpd/SF/www/";
+$sf_cache_dir = "/home/users/your_login/test_server/sfcache";
+$sys_name='your_login-test'; // Convenient way of avoiding errors...
+$sys_incdir='/home/users/your_login/test_server/httpd/site-content/';
+        </programlisting>
+        <para>You may also need to modify additional lines if you are using a secure server.</para>
+
+
+      </section>
+    </section>
+
+    <section id="CreateRemoteEnv">
+      <title>Creating a Development Environment on Another Machine</title>
+      <para>Sometimes, it might not be convenient to develop on the test server itself, e.g. when you cannot directly edit source files (remote file system). In this case you can also setup a development environment on another machine (e.g. on your own desktop if it is a Linux Box). Please note, however, that you have to be careful with some aspects:</para>
+      <itemizedlist spacing="compact" mark="bullet">
+        <listitem>
+          <para>You might have to install and setup your own versions of PHP, Apache and MySQL (you can also use the MySQL server located on the test server). This is not described in this document.</para>
+        </listitem>
+        <listitem>
+          <para>If your setup is not exactly the same as the production server (Linux, PHP or Apache versions), you will probably need to re-test your code on the test server before committing your changes or updating the production server.</para>
+        </listitem>
+        <listitem>
+          <para>If you want to use the MySQL server located on the test server, you need to make sure that MySQL is configured to accept connections from your machine. This is an example of how MySQL could be configured. First connect to mysql as root, then:</para>
+          <programlisting width="40" format="linespecific" linenumbering="unnumbered">
+use mysql;
+insert into user values ('%','sourceforge',PASSWORD("sourceforge_passwd"),
+'Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y');
+insert into db values ('%','sourceforge','sourceforge',
+'Y','Y','Y','Y','Y','Y','Y','Y','Y','Y');
+flush privileges;
+          </programlisting>
+        </listitem>
+      </itemizedlist>
+
+    </section>
+
+    <section id="SourceCheckout">
+      <title>Installing the Source Code</title>
+      <para>All CodeX source files (PHP, Perl and shell scripts) are located in the '/home/httpd' directory, or '~user/testserver/httpd' on your development environment. In order to install the source code, you should 'cd' in this directory, and checkout the sources there. We assume that you have access to a CVS server containing the source code. Otherwise, you can also simply copy the source code located in /home/httpd. </para>
+      <para>In order to checkout the source code of the CX_2_0_SUP branch, you may use the following command:</para>
+      <programlisting width="40" format="linespecific" linenumbering="unnumbered">
+cvs -d:pserver:user_name@cvs.codex.servername.com:/cvsroot/codex checkout\
+    -r CX_2_0_SUP SF cgi-bin codex_tools documentation site-content
+      </programlisting>
+      <para>...where user_name is the login name, and servername.com is the name of the server hosting the CodeX CVS repository.</para>
+      <para>This will install the latest version of the given branch in your directory.</para>
+    </section>
+
+    <section id="UseOtherDB">
+      <title>Using a Separate Database</title>
+      <para>If your development requires an important modification of the database structure, you might want to use your own database.</para>
+      <para>The simplest solution is to use the same MySQL server running on the test server, and simply duplicate the 'sourceforge' DB. Here are the various steps to perform:</para>
+      <procedure>
+        <step>
+          <para>Connect to MySQL, create the new DB, e.g.:</para>
+          <para><literal>CREATE DATABASE sourceforge_myname</literal></para><para></para>
+        </step>
+        
+        <step>
+          <para>Stop the MySQL server:</para><para><literal>service mysql stop</literal></para><para></para>
+        </step>
+        <step>
+          <para>Copy the existing sourceforge DB: in <literal>/var/lib/mysql</literal>, do:</para>
+          <para><literal>cp sourceforge/* sourceforge_myname</literal></para><para></para>
+        </step>
+        <step>
+          <para>Restart the MySQL server:</para><para><literal>service mysql start</literal></para><para></para>
+        </step>
+        <step>
+          <para>And don't forget to update your <literal>local.inc</literal> file with the new DB name.</para><para></para>
+        </step>
+      </procedure>
+    </section>
+
+    <section id="RunCodeX">
+      <title>Running CodeX</title>
+      <para>Now you may run the server: since all code is written in interpreted languages, there is no compilation step.</para>
+      <para>Provided that the MySQL database server is running (it should be launched at startup time), you only need to run the HTTP server in order to start CodeX. So go back to 'test_server/bin' and run the 'start_CodeX' script.</para>
+      <para>Now, in a browser window, type the server URL (don't forget the port number)... et voila!</para>
+    </section>
+  </chapter>
+  <!--
+  Local Variables:
+  sgml-parent-document: ("CodeX_Programmer_Guide.xml" "book" "chapter")
+  End:
+  -->

@@ -1,0 +1,62 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+//
+// $Id$
+//
+// Originally written by Nicolas Guerin 2004, CodeX Team, Xerox
+//
+-->
+<chapter id="SubmittingYourCode">
+  <title>Submitting your Code</title>
+  <para></para>
+  
+  <section>
+    <title>Why submit your code?</title>
+    <para>If you develop on the CodeX software, there are good reasons for submitting your code to the CodeX team. In particular, if your code is merged into CodeX CVS tree, then:
+    </para>
+    <itemizedlist mark="bullet" spacing="compact">
+      <listitem>
+        <para>Your code will be supported by the CodeX team... but of course, you can still help!</para>
+      </listitem>
+    
+      <listitem>
+        <para>There is no need to merge your changes or resolve conflicts when updating from CVS. Since your code is already in there, updating should be straightforward.</para>
+      </listitem>
+    
+      <listitem>
+        <para>Many people will benefit from your work!</para>
+      </listitem>
+    </itemizedlist>
+    <para>However, if your code is very specific to your needs, or it does not interfere with the rest of the source, then you might prefer to keep it for yourself. Nevertheless, remember that CodeX code is subject to the GNU GPL license.</para>
+  </section>
+  
+  <section>
+    <title>Before you submit new code</title>
+    <para>If you want to develop a new feature, please get in touch with the CodeX Team to talk about it first. By doing so, we can mutualize our development resources and make your effort beneficial to the entire community of users.
+    </para>
+    <para>Also, don't forget that CodeX is deployed in many different places in different organizations. So make sure that your specifications are generalized enough to fit the needs of many.</para>
+    <para>Please test your code. Today, there is no code validation tool or regression tests on CodeX, so please make sure your code is consistent and fully tested before you submit it.</para>
+    <para>Last, the CodeX Team is here to help! We can provide you with useful guidelines and tips, so don't hesitate to talk to us.</para>
+
+
+  </section>
+  
+  <section>
+    <title>Code Submission</title>
+    <para>The simpler way to submit your code to the CodeX team is to provide a patch, via the CodeX patch manager!</para>
+    <para>To create a patch, you can do the following: go in the 'httpd' directory, and type: <literal>cvs diff -c * > my_cvs_patch</literal>. You may also only select the files that concern the patch. Then make a 'tar' including the cvs diff and potentially new files you added, then compress it.</para>
+    <para>Once it is created, you can submit the patch with the Patch manager of the CodeX project.
+    </para>
+  </section>
+  
+</chapter>
+
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_Programmer_Guide.xml" "book" "chapter")
+End:
+-->

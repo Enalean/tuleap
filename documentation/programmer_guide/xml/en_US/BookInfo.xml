@@ -1,0 +1,69 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+//
+// $Id$
+//
+// Originally written by Nicolas Guerin 2004, CodeX Team, Xerox
+//
+-->
+  <bookinfo>
+    <authorgroup>
+      <author>
+        <firstname>Nicolas</firstname>
+
+        <surname>Guerin</surname>
+
+        <affiliation>
+          <orgname>Xerox/XGS/XDD-G</orgname>
+        </affiliation>
+      </author>
+    </authorgroup>
+
+    <copyright>
+      <year>2004</year>
+
+      <holder>The Document Company - Xerox. All rights reserved.</holder>
+    </copyright>
+
+    <legalnotice>
+      <para>This document is licensed under the Codex Component Software License</para>
+
+      <para>Copyright protection claimed includes all forms and matters of
+      copyrightable material and information now allowed by statutory or
+      judicial law or hereinafter granted, including without limitation,
+      material generated from the software programs which are displayed on the
+      screen such as icons, screen displays, looks, etc.</para>
+
+      <para>Printed in United States of America</para>
+
+      <para>Xerox ®, The Document Company ®, and all Xerox products mentioned
+      in this publication are trademarks of Xerox Corporation.</para>
+
+      <para>This document was formatted with the DocBook XML DTD. HTML
+      version rendered with DocBook HTML native renderer. PDF version
+      rendered with Apache FOP.</para>
+    </legalnotice>
+
+    <revhistory>
+      <revision>
+        <revnumber>0.1</revnumber>
+
+        <date>30-Jun-2004</date>
+
+        <authorinitials>Nicolas Guerin</authorinitials>
+
+        <revremark>Initial draft by N. Guerin</revremark>
+      </revision>
+
+    </revhistory>
+  </bookinfo>
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_Programmer_Guide.xml" "book" "chapter")
+End:
+-->
+

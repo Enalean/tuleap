@@ -1,0 +1,18 @@
+<?xml version='1.0'?>
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id: 
+//
+//	Originally written by Stephane Bouhet 2002, CodeX Team, Xerox
+//
+-->
+<!DOCTYPE l:i18n SYSTEM "l10n.dtd" [
+<!ENTITY en SYSTEM "en.xml">
+]>
+<l:i18n xmlns:l="http://docbook.sourceforge.net/xmlns/l10n/1.0">
+&en;
+</l:i18n>
