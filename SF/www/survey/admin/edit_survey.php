@@ -18,7 +18,7 @@ if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 }
 
 if ($post_changes) {
-	$sql="UPDATE surveys SET survey_title='$survey_title', survey_questions='$survey_questions', is_active='$is_active' ".
+	$sql="UPDATE surveys SET survey_title='$survey_title', survey_questions='$survey_questions', is_active='$is_active', is_anonymous='$is_anonymous' ".
 		"WHERE survey_id='$survey_id' AND group_id='$group_id'";
 	$result=db_query($sql);
 	if (db_affected_rows($result) < 1) {
@@ -38,6 +38,7 @@ if ($survey_id) {
 	$survey_title=db_result($result, 0, "survey_title");
 	$survey_questions=db_result($result, 0, "survey_questions");
 	$is_active=db_result($result, 0, "is_active");
+	$is_anonymous=db_result($result, 0, "is_anonymous");
 }
 ?>
 <SCRIPT LANGUAGE="JavaScript">
@@ -52,6 +53,9 @@ function show_questions() {
 // -->
 </script>
 
+<?php
+if ($survey_id) {
+?>
 <H2>Edit a Survey</H2><P>
 
 <H3><FONT COLOR="RED">WARNING! It is a bad idea to edit a survey after responses have been posted</FONT></H3>
@@ -64,7 +68,7 @@ If you change a survey after you already have responses, your results pages coul
 <B>Name of Survey:</B>
 <BR>
 <INPUT TYPE="HIDDEN" NAME="survey_id" VALUE="<?php echo $survey_id; ?>">
-<INPUT TYPE="TEXT" NAME="survey_title" VALUE="<?php echo $survey_title; ?>" LENGTH="60" MAXLENGTH="150">
+<INPUT TYPE="TEXT" NAME="survey_title" VALUE="<?php echo $survey_title; ?>" SIZE="30" MAXLENGTH="150">
 <P>
 <B>Questions:</B>
 <BR>
@@ -72,38 +76,44 @@ List question numbers, in desired order, separated by commas. <B>Refer to your l
 the question id's. Do <B>not</B> include spaces or end your list with a comma.
 <BR>
 Ex: 1,2,3,4,5,6,7
-<BR><INPUT TYPE="TEXT" NAME="survey_questions" VALUE="<?php echo $survey_questions; ?>" LENGTH="90" MAXLENGTH="1500"><P>
-<B>Is Active</B>
-<BR><INPUT TYPE="RADIO" NAME="is_active" VALUE="1"<?php if ($is_active=='1') { echo ' CHECKED'; } ?>> Yes
-<BR><INPUT TYPE="RADIO" NAME="is_active" VALUE="0"<?php if ($is_active=='0') { echo ' CHECKED'; } ?>> No
+<BR><INPUT TYPE="TEXT" NAME="survey_questions" VALUE="<?php echo $survey_questions; ?>" SIZE="30" MAXLENGTH="1500">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<INPUT TYPE="BUTTON" NAME="none" VALUE="Show Existing Questions" ONCLICK="show_questions()">
+<table border="0">
+<tr><td><B>Is Active?</B></td>
+<td><INPUT TYPE="RADIO" NAME="is_active" VALUE="1"<?php if ($is_active=='1') { echo ' CHECKED'; } ?>> Yes</td>
+<td><INPUT TYPE="RADIO" NAME="is_active" VALUE="0"<?php if ($is_active=='0') { echo ' CHECKED'; } ?>> No</td>
+<tr>
+<tr><td><B>Anonymous answer ok?</B></td>
+<td><INPUT TYPE="RADIO" NAME="is_anonymous" VALUE="1"<?php if ($is_anonymous=='1') { echo ' CHECKED'; } ?>> Yes</td>
+<td><INPUT TYPE="RADIO" NAME="is_anonymous" VALUE="0"<?php if ($is_anonymous=='0') { echo ' CHECKED'; } ?>> No</td>
+</tr>
+</table>
 <P>
 <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit Changes">
 </FORM>  
 
 <?php
+}
+
+//' comment for correct syntax highlighting
 
 Function  ShowResultsEditSurvey($result) {
 	global $group_id,$PHP_SELF;
-	$rows  =  db_NumRows($result);
-	$cols  =  db_NumFields($result);
+	$rows  =  db_numrows($result);
+	$cols  =  db_numfields($result);
 	echo "<h3>$rows Found</h3>";
 
-	echo /*"<TABLE BGCOLOR=\"NAVY\"><TR><TD BGCOLOR=\"NAVY\">*/ "<table border=0>\n";
 	/*  Create  the  headers  */
-	echo "<tr BGCOLOR=\"$GLOBALS[COLOR_MENUBARBACK]\">\n";
 	for ($i = 0; $i < $cols; $i++)  {
-		printf( "<th><FONT COLOR=\"WHITE\"><B>%s</th>\n",  db_fieldname($result,$i));
+	    $title_arr[] = db_fieldname($result,$i);
 	}
-	echo "</tr>";
+
+	echo html_build_list_table_top ($title_arr);
+
 	for ($j=0; $j<$rows; $j++)  {
 
-		if ($j%2==0) {
-			$row_bg="#FFFFFF";
-		} else {
-			$row_bg="$GLOBALS[COLOR_LTBACK1]";
-		}
-
-		echo "<tr BGCOLOR=\"$row_bg\">\n";
+		echo '<tr BGCOLOR="'.html_get_alt_row_color($j).'">';
 
 		echo "<TD><A HREF=\"$PHP_SELF?group_id=$group_id&survey_id=".
 			db_result($result,$j,0)."\">".db_result($result,$j,0)."</A></TD>";
@@ -113,7 +123,8 @@ Function  ShowResultsEditSurvey($result) {
 
 		echo "</tr>";
 	}
-	echo "</table>"; //</TD></TR></TABLE>";
+	echo "</table>";
+
 }
 
 /*
@@ -125,10 +136,7 @@ $sql="SELECT * FROM surveys WHERE group_id='$group_id'";
 $result=db_query($sql);
 
 ?>
-<P>
-<FORM>
-<INPUT TYPE="BUTTON" NAME="none" VALUE="Show Existing Questions" ONCLICK="show_questions()">
-</FORM>
+
 <P>
 <H2>Existing Surveys</H2>
 <?php

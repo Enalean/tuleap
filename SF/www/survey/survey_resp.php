@@ -11,6 +11,10 @@ require('../survey/survey_utils.php');
 
 survey_header(array('title'=>'Survey Complete'));
 
+// select this survey from the database
+$sql="select * from surveys where survey_id='$survey_id'";
+$result_survey=db_query($sql);
+
 if (!$survey_id || !$group_id) {
 	/*
 		Quit if params are not provided
@@ -20,12 +24,14 @@ if (!$survey_id || !$group_id) {
 	exit;
 }
 
-if (!user_isloggedin()) {
+if (!user_isloggedin() && !db_result($result_survey, 0, "is_anonymous")) {
 	/*
 		Tell them they need to be logged in
 	*/
-	echo "<H1>You need to be logged in</H1>";
-	echo "Unfortunately, you have to be logged in to participate in surveys.";
+	echo '<h3><FONT COLOR="RED">You Are NOT logged in.</font></H3>
+                        <P>Unfortunately, you have to be logged in to participate in surveys.<BR>
+                        <P> Please <A HREF="/account/login.php?return_to='.
+	      urlencode($REQUEST_URI).'">log in </A> first.</FONT></B>';
 	survey_footer(array());
 	exit;
 }
@@ -47,19 +53,12 @@ Regards,
 
 $result=db_query("DELETE FROM survey_responses WHERE survey_id='$survey_id' AND group_id='$group_id' AND user_id='".user_getid()."'");
 
-/*
-	Select this survey from the database
-*/
-
-$sql="select * from surveys where survey_id='$survey_id'";
-
-$result=db_query($sql);
 
 /*
 	Select the questions for this survey
 */
 
-$quest_array=explode(',', db_result($result, 0, "survey_questions"));
+$quest_array=explode(',', db_result($result_survey, 0, "survey_questions"));
 
 $count=count($quest_array);
 $now=time();

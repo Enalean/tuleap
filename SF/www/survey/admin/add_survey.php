@@ -19,7 +19,7 @@ if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 
 if ($post_changes) {
 	//$survey_questions=trim(ltrim($survey_questions));
-	$sql="insert into surveys (survey_title,group_id,survey_questions) values ('$survey_title','$group_id','$survey_questions')";
+	$sql="insert into surveys (survey_title,group_id,survey_questions,is_active,is_anonymous) values ('$survey_title','$group_id','$survey_questions','$is_active','$is_anonymous')";
 	$result=db_query($sql);
 	if ($result) {
 		$feedback .= " Survey Inserted ";
@@ -54,47 +54,56 @@ List question numbers, in desired order, separated by commas. <B>Refer to your l
 the question id's. Do <B>not</B> include spaces or end your list with a comma.
 <BR>
 Ex: 1,2,3,4,5,6,7
-<BR><INPUT TYPE="TEXT" NAME="survey_questions" VALUE="" LENGTH="90" MAXLENGTH="1500"><P>
-<B>Is Active</B>
-<BR><INPUT TYPE="RADIO" NAME="is_active" VALUE="1" CHECKED> Yes
-<BR><INPUT TYPE="RADIO" NAME="is_active" VALUE="0"> No
+<BR><INPUT TYPE="TEXT" NAME="survey_questions" VALUE="" LENGTH="90" MAXLENGTH="1500">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<INPUT TYPE="BUTTON" NAME="none" VALUE="Show Existing Questions" ONCLICK="show_questions()">
+<table border="0">
+<tr><td><B>Is Active?</B></td>
+<td><INPUT TYPE="RADIO" NAME="is_active" VALUE="1" CHECKED> Yes</td>
+<td><INPUT TYPE="RADIO" NAME="is_active" VALUE="0"> No</td>
+<tr>
+<tr><td><B>Anonymous answer ok?</B></td>
+<td><INPUT TYPE="RADIO" NAME="is_anonymous" VALUE="1"> Yes</td>
+<td><INPUT TYPE="RADIO" NAME="is_anonymous" VALUE="0" CHECKED> No</td>
+</tr>
+</table>
 <P>
 <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Add This Survey">
 </FORM>  
 
+<INPUT TYPE="BUTTON" NAME="none" VALUE="Show Existing Questions" ONCLICK="show_questions()">
 <?php
 
+
+//' comment for correct syntax highlighting
+
 Function  ShowResultsEditSurvey($result) {
-	global $group_id;
-	$rows  =  db_NumRows($result);
-	$cols  =  db_NumFields($result);
+	global $group_id,$PHP_SELF;
+	$rows  =  db_numrows($result);
+	$cols  =  db_numfields($result);
 	echo "<h3>$rows Found</h3>";
 
-	echo /*"<TABLE BGCOLOR=\"NAVY\"><TR><TD BGCOLOR=\"NAVY\">*/ "<table border=0>\n";
-
 	/*  Create  the  headers  */
-	echo "<tr BGCOLOR=\"$GLOBALS[COLOR_MENUBARBACK]\">\n";
-	for ($i  =  0;  $i  <  $cols;  $i++)  {
-		printf( "<th><FONT COLOR=\"WHITE\"><B>%s</th>\n",  db_fieldname($result,$i));
+	for ($i = 0; $i < $cols; $i++)  {
+	    $title_arr[] = db_fieldname($result,$i);
 	}
-	echo "</tr>";
-	for($j  =  0;  $j  <  $rows;  $j++)  {
 
-		if ($j%2==0) {
-			$row_bg="#FFFFFF";
-		} else {
-			$row_bg="$GLOBALS[COLOR_LTBACK1]";
-		}
+	echo html_build_list_table_top ($title_arr);
 
-		echo "<tr BGCOLOR=\"$row_bg\">\n";
-		echo "<TD><A HREF=\"edit_survey.php?group_id=$group_id&survey_id=".db_result($result,$j,0)."\">".db_result($result,$j,0)."</A></TD>";
+	for ($j=0; $j<$rows; $j++)  {
+
+		echo '<tr BGCOLOR="'.html_get_alt_row_color($j).'">';
+
+		echo "<TD><A HREF=\"$PHP_SELF?group_id=$group_id&survey_id=".
+			db_result($result,$j,0)."\">".db_result($result,$j,0)."</A></TD>";
 		for ($i = 1; $i < $cols; $i++)  {
 			printf("<TD>%s</TD>\n",db_result($result,$j,$i));
 		}
 
 		echo "</tr>";
 	}
-	echo "</table>"; //</TD></TR></TABLE>";
+	echo "</table>";
+
 }
 
 /*
@@ -106,9 +115,6 @@ $sql="SELECT * FROM surveys WHERE group_id='$group_id'";
 $result=db_query($sql);
 
 ?>
-<FORM>
-<INPUT TYPE="BUTTON" NAME="none" VALUE="Show Existing Questions" ONCLICK="show_questions()">
-</FORM>
 
 <P>
 <H2>Existing Surveys</H2>

@@ -55,3 +55,10 @@ ALTER TABLE user ADD sticky_login INTEGER DEFAULT '0' NOT NULL AFTER mail_va;
 #
 
 ALTER TABLE user ADD windows_pw VARCHAR(80) DEFAULT '' NOT NULL;
+
+#
+# Add a field in the survey table to determine whether a survey
+# can be taken by anonymous users (default is NO)
+#
+
+ALTER TABLE surveys ADD is_anonymous INTEGER DEFAULT '0' NOT NULL AFTER is_active;
