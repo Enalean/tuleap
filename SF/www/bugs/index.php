@@ -42,6 +42,11 @@ if ($group_id) {
 			    $changes);
 	}
 
+	// Add new cc if any
+	if ($add_cc) {
+	    bug_add_cc($bug_id,$group_id,$add_cc,$cc_comment,$changes);
+	}
+
 	// send an email to notify the user of the bug update
 	if ($bug_id) {
 	    bug_mail_followup($bug_id,$project->getNewBugAddress());

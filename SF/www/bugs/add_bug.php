@@ -75,6 +75,15 @@ while ( $field_name = bug_list_all_fields() ) {
 // Then display all mandatory fields 
 
 ?>
+     <TR><TD colspan="<?php echo 2*$fields_per_line; ?>"><hr>
+
+      <h3>CC List <?php echo help_button('BugUpdate.html#BugCCList'); ?></h3>
+	  <b><u>Note:</b></u> for CodeX users use their login name rather than their email addresses.<p>
+	  <B>Add CC:&nbsp;</b><input type="text" name="add_cc" size="30">&nbsp;&nbsp;&nbsp;
+	  <B>Comment:&nbsp;</b><input type="text" name="cc_comment" size="40" maxlength="255"><p>
+      </TD></TR>
+
+
       <TR><TD colspan="<?php echo 2*$fields_per_line; ?>">
 
 	<?php
