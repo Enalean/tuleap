@@ -9,7 +9,7 @@
 require "pre.php";    
 $HTML->header(array(title=>'About '.$GLOBALS['sys_name']));
 
-util_get_content('homepage/about');
+include(util_get_content('homepage/about'));
 
 $HTML->footer(array());
 

@@ -45,7 +45,7 @@ require('browser.php');
 //various html utilities
 require('utils.php');
 
-util_get_content('layout/osdn_sites');
+include(util_get_content('layout/osdn_sites'));
 
 // HTML layout class, may be overriden by the Theme class
 require('Layout.class');

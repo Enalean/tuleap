@@ -12,7 +12,7 @@ session_require( array( isloggedin=>1 ) );
 $HTML->header(array(title=>"Terms of Service"));
 
 echo '<p><h2>Step 2: Terms of Service Agreement</h2></p>';
-util_get_content('register/tos');
+include(util_get_content('register/tos'));
 
 echo '<BR><HR><BR>
 

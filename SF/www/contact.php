@@ -9,7 +9,7 @@
 require "pre.php";    // Initial db and session library, opens session
 $HTML->header(array('title'=>'Contact Us'));
 
-util_get_content('contact/contact');
+include(util_get_content('contact/contact'));
 
 $HTML->footer(array());
 ?>

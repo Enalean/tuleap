@@ -6,7 +6,6 @@
 //
 // $Id$
 //
-global $group_id,$random_num;
 ?>
 
 <H2>Step 4: Project Name</H2>
@@ -19,26 +18,23 @@ There are two types of names that will be associated with this project.
 
 <P>The "Full Name" is descriptive, has no real name restrictions (except
 a 40 character limit), and
-can be changed. The "Short Name" (also known as the "Group Name") has several restrictions because it is used in so many places around the site. They are:
+can be changed.</P>
+
+<p>The project "Short Name" (also known as the "Group Name") has several restrictions. They are as follows:
 
 <UL>
-<LI>Cannot match the Short name of any other project
-<LI>Must be between 3 and 15 characters in length
-<LI>Can only contain characters, numbers, and dashes. NO SPACE.
-<!-- <LI>Must be a valid unix username -->
-<LI>Cannot match one of our reserved name in the <?php echo $GLOBALS['sys_default_domain']; ?> domain name (e.g. lists, cvs, www,...)
+<LI>It cannot match the Short name of any other project
+<LI>It must be between 3 and 15 characters in length
+<LI>It can only contain characters, numbers, and dashes. NO SPACE.
+<LI>It cannot match one of our reserved name in the <?php echo $GLOBALS['sys_default_domain']; ?> domain name (e.g. lists, cvs, www,...)
 <LI>As opposed to the Full Name the Short name will never change for this project
 </UL>
 
-<P>Your Short name is important, however, because it will be used for
-many things, including:
+<P>In spite of these restrictions make it easy to remember because it will be used in several very visible places like:
 
 <UL>
-<LI>A web site at shortname.<?php echo $GLOBALS['sys_default_domain']; ?> 
-<!-- <LI>Email at aliases@unixname.<?php echo $GLOBALS['sys_default_domain']; ?> -->
+<LI>Your project web site at shortname.<?php echo $GLOBALS['sys_default_domain']; ?> 
 <LI>A CVS Repository root of /cvsroot/shortname
-<LI>Shell access to shortname.<?php echo $GLOBALS['sys_default_domain']; ?> 
-<!-- <LI>Search engines throughout the site -->
 </UL>
 
 <P>Please make your selections.

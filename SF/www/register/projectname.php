@@ -55,7 +55,7 @@ if ($insert_purpose && $form_purpose && $form_short_description) {
 
 $HTML->header(array('title'=>'Project Name'));
 
-util_get_content('register/projectname');
+include(util_get_content('register/projectname'));
 
 $HTML->footer(array());
 

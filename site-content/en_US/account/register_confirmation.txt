@@ -11,7 +11,7 @@
  and an email has been sent for confirmation to the user  -->
 <p><b><?php echo $GLOBALS['sys_name']; ?> New Account Registration - Confirmation</b>
 <p>Congratulations. You have registered on <?php echo $GLOBALS['sys_name'];?>. 
-Your new user name is: <?php echo $args['user_name'];?></b>
+Your new user name is: <?php echo $user_name;?></b>
 
 <p>You are now being sent a confirmation email to verify your email 
 address. Visiting the link sent to you in this email will activate

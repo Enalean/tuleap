@@ -84,13 +84,12 @@ if ($Register) {
     
 	$HTML->header(array('title'=>'Register Confirmation'));
 
+	$user_name = user_getname($new_userid);
 	if ($GLOBALS['sys_user_approval'] == 0) {
 	    send_new_user_email($GLOBALS['form_email'], $confirm_hash);
-	    util_get_content('account/register_confirmation',
-			     array('user_name' => user_getname($new_userid)));
+	    include(util_get_content('account/register_confirmation'));
 	} else {
-	    util_get_content('account/register_needs_approval',
-			     array('user_name' => user_getname($new_userid)));
+	    include(util_get_content('account/register_needs_approval'));
 	}
 	$HTML->footer(array());
 	exit;
@@ -117,6 +116,7 @@ $star = '<span class="highlight"><big>*</big></span>';
 <form action="/account/register.php" method="post">
 <p>Login Name <strong>(Lower case only!)</strong> <? echo $star; ?>:<br>
 <input type="text" name="form_loginname" value="<?php print stripslashes($form_loginname); ?>">
+<? include(util_get_content('account/register_login')); ?>
 
 <p>Password (min. 6 chars) <? echo $star; ?>:<br>
 <input type="password" name="form_pw" value="<?php print stripslashes($form_pw); ?>">
@@ -129,7 +129,7 @@ $star = '<span class="highlight"><big>*</big></span>';
 
 <P>Email Address <? echo $star; ?>:<BR>
 <INPUT size=40 type="text" name="form_email" value="<?php print stripslashes($form_email); ?>"><BR>
-<? util_get_content('account/register_email'); ?>
+<? include(util_get_content('account/register_email')); ?>
 <P>Timezone:<BR>
 <?php echo html_get_timezone_popup ('timezone','GMT'); ?>
 <P>
@@ -143,7 +143,7 @@ Receive additional community mailings. <I>(Low traffic.)</I>
 
 <?php
 if ($GLOBALS['sys_user_approval'] == 1) {
-    util_get_content('account/register_purpose');
+    include(util_get_content('account/register_purpose'));
     echo '<textarea wrap="virtual" rows="5" cols="70" name="form_register_purpose"></textarea></p>';
 }
 ?>

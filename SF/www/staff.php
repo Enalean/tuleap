@@ -7,9 +7,9 @@
 // $Id$
 
 require ('pre.php');    
-$HTML->header(array('title'=>'Codex Team'));
+$HTML->header(array('title'=>'CodeX Team'));
 
-util_get_content('homepage/staff');
+include(util_get_content('homepage/staff'));
 
 $HTML->footer(array());
 ?>

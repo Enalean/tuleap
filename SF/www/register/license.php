@@ -40,7 +40,7 @@ if ($insert_group_name && $group_id && $rand_hash && $form_full_name && $form_un
 
 $HTML->header(array('title'=>'License'));
 
-util_get_content('register/license');
+include(util_get_content('register/license'));
 
 $HTML->footer(array());
 

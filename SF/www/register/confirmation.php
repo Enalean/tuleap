@@ -21,7 +21,7 @@ if ($show_confirm) {
 
     $HTML->header(array('title'=>'Registration Complete'));
 
-    util_get_content('register/confirmation');
+    include(util_get_content('register/confirmation'));
 
     $HTML->footer(array());
 
@@ -113,8 +113,7 @@ if ($show_confirm) {
 	// notification (it's all in the content part)
 	$HTML->header(array('title'=>'Registration Complete'));
 
-	util_get_content('register/complete', 
-			 array('group_name' => $form_full_name, 'tracker_error' => $tracker_error));
+	include(util_get_content('register/complete'));
     
 	$HTML->footer(array());
 

@@ -9,7 +9,7 @@
 require "pre.php";    // Initial db and session library, opens session
 $HTML->header(array(title=>"Privacy Policy"));
 
-util_get_content('tos/privacy');
+include(util_get_content('tos/privacy'));
 
 $HTML->footer(array());
 

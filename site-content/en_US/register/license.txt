@@ -6,7 +6,6 @@
 //
 // $Id$
 //
-global $group_id,$rand_hash,$LICENSE;
 ?>
 
 <H2>Step 5: Software Policy</H2>

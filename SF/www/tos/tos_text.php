@@ -8,6 +8,6 @@
 
 
 require "pre.php";
-util_get_content('register/tos');
+include(util_get_content('register/tos'));
 
 ?>

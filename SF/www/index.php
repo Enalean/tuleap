@@ -16,7 +16,7 @@ $HTML->header(array('title'=>'Welcome'));
 <!-- whole page table -->
 <TABLE width=100% cellpadding=5 cellspacing=0 border=0>
 <TR><TD width="65%" VALIGN="TOP">
-<? util_get_content('homepage/welcome_intro'); ?>
+<? include(util_get_content('homepage/welcome_intro')); ?>
 <?php
 $HTML->box1_top('Latest News');
 echo news_show_latest($GLOBALS['sys_news_group'],5,true,false,false,5);

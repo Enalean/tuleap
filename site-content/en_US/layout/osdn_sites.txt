@@ -6,7 +6,9 @@
 //
 // $Id$
 //
-global $osdn_sites;
+
+// Define here the Web sites that will appear in the Network Gallery
+// on the CodeX pages
 
 $osdn_sites[0] = array('XRCE' => 'http://www.xrce.xerox.com/');
 $osdn_sites[1] = array('PARC' => 'http://parcweb.parc.xerox.com/');

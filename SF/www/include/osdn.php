@@ -1,6 +1,6 @@
 <?php
 
-util_get_content('layout/osdn_sites');
+include(util_get_content('layout/osdn_sites'));
 
 function osdn_nav_dropdown() {
     GLOBAL $osdn_sites;

@@ -9,7 +9,7 @@
 require "pre.php";    
 $HTML->header(array(title=>"Thanks and Acknowledgment"));
 
-util_get_content('homepage/thanks');
+include(util_get_content('homepage/thanks'));
 
 $HTML->footer(array());
 

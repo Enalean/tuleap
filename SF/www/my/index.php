@@ -36,7 +36,7 @@ if (user_isloggedin()) {
     <span class="small">
 	<H3>Personal Page for: <?php print user_getname(); ?>
 	     <?php echo help_button('LoginAndPersonalPage.html'); ?></H3>
-    <? util_get_content('my/intro'); ?>
+    <? include(util_get_content('my/intro')); ?>
 	<?php
 
 	$atf = new ArtifactTypeFactory(false);

@@ -6,7 +6,6 @@
 //
 // $Id$
 //
-global $group_id,$rand_hash;
 ?>
 
 <H2>Step 6: Categories</H2>

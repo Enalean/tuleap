@@ -10,7 +10,7 @@ require ($DOCUMENT_ROOT.'/snippet/snippet_utils.php');
 function snippet_mainpage() {
 	global $SCRIPT_LANGUAGE,$SCRIPT_CATEGORY;
 	?>
-    <? util_get_content('snippet/homepage'); ?>
+    <? include(util_get_content('snippet/homepage')); ?>
 	<H3>Browse Snippets</H3>
 	<P>
 	You can browse the snippet library quickly by language or category. You can also search code snippets by keywords using the Search box in the left menu pane.

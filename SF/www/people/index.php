@@ -31,7 +31,7 @@ if ($group_id) {
 
 } else {
 
-    util_get_content('people/browse_projects');
+    include(util_get_content('people/browse_projects'));
 	echo people_show_category_table();
 
 }

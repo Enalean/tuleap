@@ -23,7 +23,7 @@ $res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
 $row_grp = db_fetch_array($res_grp);
 
 // Show CVS access information
-util_get_content('cvs/intro');
+include(util_get_content('cvs/intro'));
 
 // Summary info
 print '</TD><TD width="25%">';

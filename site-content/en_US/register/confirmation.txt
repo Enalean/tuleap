@@ -6,7 +6,6 @@
 //
 // $Id$
 //
-global $group_id,$rand_hash,$LICENSE,$sys_show_project_type;
 
 	$sql="SELECT * FROM groups WHERE group_id='$group_id' AND rand_hash='__$rand_hash'";
 	$result=db_query($sql);

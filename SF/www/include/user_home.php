@@ -82,7 +82,7 @@ if ($sys_ldap_server) {
 	$ds=ldap_connect($sys_ldap_server);
 	if ($ds) {
 	    $r=ldap_bind($ds);
-	    util_get_content('include/user_home');
+	    include(util_get_content('include/user_home'));
 	    // Build the LDAP filter for the search
 	    if ($GLOBALS['sys_ldap_filter']) {
 		$ldap_filter = $GLOBALS['sys_ldap_filter'];
