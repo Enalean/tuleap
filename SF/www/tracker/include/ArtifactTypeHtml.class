@@ -392,21 +392,21 @@ class ArtifactTypeHtml extends ArtifactType {
 		      }
 		    
 			  function onChangeGroup() {
-			  	form_create.func.value = "create";
-			  	form_create.submit();
+			  	document.form_create.func.value = "create";
+			  	document.form_create.submit();
 			  }
 			  
 			  function checkValues() {
-			  	if ( trimStr(form_create.name.value) == "" ) {
-		  			form_create.feedback.value = "Please, fill the tracker name.";
+			  	if ( trimStr(document.form_create.name.value) == "" ) {
+		  			document.form_create.feedback.value = "Please, fill the tracker name.";
 		  			return false;
 				}
-			  	if ( trimStr(form_create.description.value) == "" ) {
-		  			form_create.feedback.value = "Please, fill the tracker description.";
+			  	if ( trimStr(document.form_create.description.value) == "" ) {
+		  			document.form_create.feedback.value = "Please, fill the tracker description.";
 		  			return false;
 				}
-			  	if ( trimStr(form_create.itemname.value) == "" ) {
-		  			form_create.feedback.value = "Please, fill the tracker short name.";
+			  	if ( trimStr(document.form_create.itemname.value) == "" ) {
+		  			document.form_create.feedback.value = "Please, fill the tracker short name.";
 		  			return false;
 				}
 	  			return true;
@@ -415,30 +415,30 @@ class ArtifactTypeHtml extends ArtifactType {
 			
 			  function onSubmitCreateTemplate() {
 			  	if ( checkValues() ) {
-			  		if ( (form_create.group_id_template.value == 100)||(form_create.atid_template.value == 100) ) {
-			  			form_create.feedback.value = "Please, choose a project and a tracker first.";
-					  	form_create.func.value = "create";
+			  		if ( (document.form_create.group_id_template.value == "")||(document.form_create.atid_template.value == "") ) {
+			  			document.form_create.feedback.value = "Please, choose a project and a tracker first.";
+					  	document.form_create.func.value = "create";
 			  		}
-			  		form_create.atid_chosen.value = form_create.atid_template.value;
-			  		form_create.group_id_chosen.value = form_create.group_id_template.value;
+			  		document.form_create.atid_chosen.value = document.form_create.atid_template.value;
+			  		document.form_create.group_id_chosen.value = document.form_create.group_id_template.value;
 				} else {
-				  	form_create.func.value = "create";
+				  	document.form_create.func.value = "create";
 				}
-			  	form_create.submit();
+			  	document.form_create.submit();
 			  }
 
 			  function onSubmitCreateCodeXTemplate() {
 			  	if ( checkValues() ) {
-			  		if ( form_create.codex_template.value == 100 ) {
-			  			form_create.feedback.value = "Please, choose a template first.";
-					  	form_create.func.value = "create";
+			  		if ( document.form_create.codex_template.value == 100 ) {
+			  			document.form_create.feedback.value = "Please, choose a template first.";
+					  	document.form_create.func.value = "create";
 			  		}
-			  		form_create.atid_chosen.value = form_create.codex_template.value;
-			  		form_create.group_id_chosen.value = 100;
+			  		document.form_create.atid_chosen.value = document.form_create.codex_template.value;
+			  		document.form_create.group_id_chosen.value = 100;
 				} else {
-				  	form_create.func.value = "create";
+				  	document.form_create.func.value = "create";
 				}
-			  	form_create.submit();
+			  	document.form_create.submit();
 			  }
 
 			  function showGroupSelection() {
@@ -447,12 +447,12 @@ class ArtifactTypeHtml extends ArtifactType {
 			  }
 
 			  function showTrackerSelection() {
-			  	if ( form_create.group_id_template.value == "" ) {
+			  	if ( document.form_create.group_id_template.value == "" ) {
 			  		alert("Please, select a project first!");
 			  		return;
 			  	}
 			  	win=window.open("","artifact_group_id_selection","height=45,width=200,toolbar=no,location=no,resizable=yes,left=200,top=200");
-				win.location = "/tracker/tracker_selection.php?group_id=" + form_create.group_id_template.value + "&opener_form=form_create&opener_field=atid_template";
+				win.location = "/tracker/tracker_selection.php?group_id=" + document.form_create.group_id_template.value + "&opener_form=form_create&opener_field=atid_template";
 			  }
 
 			  </script>

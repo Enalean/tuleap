@@ -20,9 +20,9 @@ $gf = new GroupFactory();
 <link rel="stylesheet" type="text/css" href="<? echo util_get_css_theme(); ?>">
 <script language="JavaScript">
 
-function doSelection() {
-	if ( form_selection.group_id.value != "" ) {
-		window.opener.<? echo $opener_form; ?>.<? echo $opener_field; ?>.value = form_selection.group_id.value;
+function doSelection(form) {
+	if ( form.group_id.value != "" ) {
+		window.opener.document.<? echo $opener_form; ?>.<? echo $opener_field; ?>.value = form.group_id.value;
 	}
 	close();
 }
@@ -68,7 +68,7 @@ function onChangeAllFilter() {
           <td><input type="radio" name="radiobutton" value="radiobutton"<? if ( $filter == "all" ) echo " checked"; ?> onClick="onChangeAllFilter()"> all projects</td>
         </tr>
       </table><br>
-      <input type="button" name="selection" value="Choose" onClick="doSelection()">
+      <input type="button" name="selection" value="Select" onClick="doSelection(form_selection)">
       </td>
   </tr>
 </table>

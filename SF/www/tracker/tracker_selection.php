@@ -19,9 +19,9 @@ require($DOCUMENT_ROOT.'/../common/tracker/ArtifactTypeFactory.class');
 <link rel="stylesheet" type="text/css" href="<? echo util_get_css_theme(); ?>">
 <script language="JavaScript">
 
-function doSelection() {
-	if ( form_selection.artifact_type_id.value != "" ) {
-		window.opener.<? echo $opener_form; ?>.<? echo $opener_field; ?>.value = form_selection.artifact_type_id.value;
+function doSelection(form) {
+	if ( form.artifact_type_id.value != "" ) {
+		window.opener.document.<? echo $opener_form; ?>.<? echo $opener_field; ?>.value = form.artifact_type_id.value;
 	}
 	close();
 }
@@ -59,7 +59,7 @@ function doSelection() {
 </select>
 </td>
 <td>
-<input type="button" name="selection" value="Choose" onClick="doSelection()">
+<input type="button" name="selection" value="Select" onClick="doSelection(form_selection)">
 <? } else { ?>
 <b>No tracker available for this project!</b>
 <br><br><input type="button" value="Close" onClick="window.close()">
