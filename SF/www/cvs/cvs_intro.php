@@ -15,12 +15,12 @@ if (!$group_id) {
 
 commits_header(array ('title'=>'CVS Information'));
 
-$project=project_get_object($group_id);
-
 // Table for summary info
-
 print '<TABLE width="100%"><TR valign="top"><TD width="65%">'."\n";
 
+// Get group properties
+$res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
+$row_grp = db_fetch_array($res_grp);
 
 // Show CVS access information
 util_get_content('cvs/intro');
@@ -52,7 +52,7 @@ of this project\'s code. You may also view the complete histories of any
 file in the repository.
 <UL>
 <LI><A href="http'.(session_issecure() ? 's':'').'://'.$sys_cvs_host.'/cgi-bin/cvsweb.cgi?cvsroot='
-.$project->getUnixName().'"><B>Browse CVS Tree</B>';
+.$row_grp['unix_group_name'].'"><B>Browse CVS Tree</B>';
 }
 
 
