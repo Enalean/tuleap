@@ -708,7 +708,7 @@ class ArtifactHtml extends Artifact {
 		
 			    $out .= sprintf($fmt,
 					    util_get_alt_row_color($i),
-					    "<a href=\"/tracker/?func=detail&aid=$dependent_on_artifact_id&atid=$group_artifact_id&group_id=$group_id\">$dependent_on_artifact_id</a>",
+					    "<a href=\"/tracker/?func=gotoid&aid=$dependent_on_artifact_id\">$dependent_on_artifact_id</a>",
 					    $summary,
 					    $tracker_label,
 					    $group_label);
