@@ -743,13 +743,13 @@
     <para>A user group, sometimes called a  &#34;ugroup &#34;, is simply a group of CodeX users.
       User groups are used to set specific permissions to some project data (releases, packages, 
       see  <xref linkend="FileAccessPermissions" />).
-      A user group is always attached to a project, but the users composing the group do not 
+      A user group is always attached to a project, but the users comprising the group do not 
       necessarily belong to that project.
       </para>
     
     <section id="UGroupList">
       <title>User Groups Management</title>
-      <para>The &#34;User Groups Admin&#34; item of the Project Administration
+      <para>The &#34;User Groups Admin&#34; function of the Project Administration
       menu lists all available user groups, and provides a way to create new ones.</para>
       <figure id="FigureUserGroupManagementPage">
         <title>User Group Management Page</title>
@@ -784,7 +784,7 @@
 
     <section id="UGroupCreation">
       <title>Creating a User Group </title>
-      <para>When creating a user group, one has to fill the following fields:</para>
+      <para>When creating a user group, one has to provide the following fields:</para>
      <procedure>
         <step>
           <para><emphasis role="bold">Name</emphasis>:
@@ -879,9 +879,9 @@
       </para>
       <para>The bottom of the User Group Edit page (<xref linkend="FigureUserGroupEdit" />) also lists all
       the permissions granted to this group, e.g. packages and releases this user group is granted access to.</para>
-      <para>When a project member is removed from a project, or quits a project, s/he is also automatically
-      removed from all project's user groups.</para>
-      <para>Similarly, when a user is deleted (not just suspended) by the site administrator, s/he is
+      <para>When a project member is removed from a project, or quits a project, they are also automatically
+      removed from all project user groups.</para>
+      <para>Similarly, when a user is deleted (not just suspended) by the site administrator, they are
       removed from all user groups.</para>
     </section>
 
