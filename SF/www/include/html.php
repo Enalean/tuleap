@@ -70,7 +70,7 @@ function html_get_timezone_popup ($title='timezone',$selected='xzxzxzx') {
     return html_build_select_box_from_arrays ($TZs,$TZs,$title,$selected,false);
 }
 
-function html_build_list_table_top ($title_arr,$links_arr=false) {
+function html_build_list_table_top ($title_arr,$links_arr=false,$mass_change=false) {
 	/*
 		Takes an array of titles and builds
 		The first row of a new table
@@ -83,6 +83,7 @@ function html_build_list_table_top ($title_arr,$links_arr=false) {
 	<TABLE WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="2">
 		<TR class="boxtable">';
 
+	if ($mass_change) $return .= '<TD class="boxtitle">Select?</TD>';
 	$count=count($title_arr);
 	if ($links_arr) {
 		for ($i=0; $i<$count; $i++) {
@@ -148,7 +149,7 @@ function html_build_select_box_from_array ($vals,$select_name,$checked_val='xzxz
 	return $return;
 }
 
-function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_val='xzxz',$show_100=true,$text_100='None', $show_any=false,$text_any='Any') {
+function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_val='xzxz',$show_100=true,$text_100='None', $show_any=false,$text_any='Any',$show_unchanged=false,$text_unchanged='Unchanged') {
 	/*
 
 		The infamous '100 row' has to do with the
@@ -188,6 +189,12 @@ function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_v
 			<SELECT NAME="'.$select_name.'">';
 	}
 
+	/*
+		Put in the Unchanged box
+	*/
+	if ($show_unchanged) {
+	  $return .= "\n".'<OPTION VALUE="Unchanged" SELECTED>'.$text_unchanged.'</OPTION>';
+	}
 
 	//we don't always want the default any  row shown
 	if ($show_any) {
@@ -248,7 +255,7 @@ function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_v
 	return $return;
 }
 
-function html_build_select_box ($result, $name, $checked_val="xzxz",$show_100=true,$text_100='None',$show_any=false,$text_any='Any') {
+function html_build_select_box ($result, $name, $checked_val="xzxz",$show_100=true,$text_100='None',$show_any=false,$text_any='Any',$show_unchanged=false,$text_unchanged='Unchanged') {
 	/*
 		Takes a result set, with the first column being the "id" or value
 		and the second column being the text you want displayed
@@ -262,10 +269,10 @@ function html_build_select_box ($result, $name, $checked_val="xzxz",$show_100=tr
 		The fifth parameter is optional - what to call the '100 row' defaults to none
 	*/
 
-	return html_build_select_box_from_arrays (util_result_column_to_array($result,0),util_result_column_to_array($result,1),$name,$checked_val,$show_100,$text_100,$show_any,$text_any);
+	return html_build_select_box_from_arrays (util_result_column_to_array($result,0),util_result_column_to_array($result,1),$name,$checked_val,$show_100,$text_100,$show_any,$text_any,$show_unchanged,$text_unchanged);
 }
 
-function html_build_multiple_select_box ($result,$name,$checked_array,$size='8',$show_100=true,$text_100='None', $show_any=false,$text_any='Any',$show_value=true) {
+function html_build_multiple_select_box ($result,$name,$checked_array,$size='8',$show_100=true,$text_100='None', $show_any=false,$text_any='Any',$show_unchanged=false,$text_unchanged='Unchanged',$show_value=true) {
 	/*
 		Takes a result set, with the first column being the "id" or value
 		and the second column being the text you want displayed
@@ -286,6 +293,13 @@ function html_build_multiple_select_box ($result,$name,$checked_array,$size='8',
 //      echo '-- '.$checked_count.' --';
 	$return .= '
 		<SELECT NAME="'.$name.'" MULTIPLE SIZE="'.$size.'">';
+
+	/*
+		Put in the Unchanged box
+	*/
+	if ($show_unchanged)
+	  $return .= "\n".'<OPTION VALUE="Unchanged" SELECTED>'.$text_unchanged.'</OPTION>';
+
 	/*
 		Put in the Any box
 	*/

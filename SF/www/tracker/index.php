@@ -10,7 +10,9 @@
 //  Written for CodeX by Stephane Bouhet
 //
 
+
 require('pre.php');
+require ($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
 require($DOCUMENT_ROOT.'/../common/tracker/Artifact.class');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactFile.class');
 require('./include/ArtifactFileHtml.class');
@@ -27,6 +29,8 @@ require($DOCUMENT_ROOT.'/../common/tracker/ArtifactReport.class');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactReportField.class');
 require('./include/ArtifactFieldHtml.class');
 require('./include/ArtifactReportHtml.class');
+
+
 
 
 if ( $func == 'gotoid' ) {
@@ -99,10 +103,10 @@ if ( $func == 'gotoid' ) {
                         // First check parameters
                         
                         // CC
-                    if ($add_cc && !$ah->validateCCList(util_split_emails($add_cc), $message)) {
+			if ($add_cc && !util_validateCCList(util_split_emails($add_cc), $message)) {
                         exit_error("Error - The CC list is invalid", $message);
-                    }
-                    // Files
+			}
+			// Files
                         if ($add_file && !util_check_fileupload($input_file)) {
                                 exit_error("Error","Invalid filename");
                         }
@@ -276,6 +280,7 @@ if ( $func == 'gotoid' ) {
                 break;
         }
 
+
         case 'postmod' : {
                 //
                 //      Modify an Artifact
@@ -300,7 +305,7 @@ if ( $func == 'gotoid' ) {
                         // First check parameters
                         
                         // CC
-                    if ($add_cc && !$ah->validateCCList(util_split_emails($add_cc), $message)) {
+                    if ($add_cc && !util_validateCCList(util_split_emails($add_cc), $message)) {
                         exit_error("Error - The CC list is invalid", $message);
                     }
                     // Files
@@ -365,6 +370,128 @@ if ( $func == 'gotoid' ) {
                 break;
         }
         
+        case 'postmasschange' : {
+                //
+                //      Modify several Artifacts
+                //
+	        // Check if users can update anonymously
+                if ( $ath->allowsAnon() == 0 && !user_isloggedin() ) {
+		  exit_not_logged_in();
+                }
+                        
+                if ( !$ath->userIsAdmin() ) {
+		  exit_permission_denied();
+		  return;
+                }
+
+		// First check parameters
+                        
+                // CC
+		if ($add_cc && !util_validateCCList(util_split_emails($add_cc), $message)) {
+		  exit_error("Error - The CC list is invalid", $message);
+		}
+		// Files
+                if ($add_file && !util_check_fileupload($input_file)) {
+		  exit_error("Error","Invalid filename");
+                }
+
+		if ($report_id) {
+		  // Create factories
+		  $report_fact = new ArtifactReportFactory();
+		  // Create the HTML report object
+		  $art_report_html = $report_fact->getArtifactReportHtml($report_id,$atid);
+		  $query = $art_field_fact->extractFieldList(true,'query_');
+		  $art_report_html->getQueryElements($query,$morder,$advsrch,$select,$from,$where,$order_by);
+		  $sql = "select distinct a.artifact_id ".$from." ".$where;
+
+		  $result = db_query($sql);
+		  $number_aid = db_numrows($result);
+		} else {
+		  reset($mass_change_ids);
+		  $number_aid = count($mass_change_ids);
+		}
+		
+		
+		for ($i = 0; $i<$number_aid; $i++) {
+		  if ($report_id) {
+		    $row = db_fetch_array($result);
+		    $aid = $row['artifact_id'];
+		    
+		  } else {
+		    $aid = $mass_change_ids[$i];
+		  }
+
+		  $ah=new ArtifactHtml($ath,$aid);
+		  if (!$ah || !is_object($ah)) {
+		    exit_error('ERROR','Artifact Could Not Be Created');
+		  } else if ($ah->isError()) {
+		    exit_error('ERROR',$ah->getErrorMessage());
+		  } else {
+                        
+                    //data control layer
+		    $changed = $ah->handleUpdate($artifact_id_dependent,$canned_response,$changes,true);
+		    if ($changed) {
+		      if ($i > 0) $feedback .= ",";
+		      if ($i == 0) $feedback .= "Updated";
+		      $feedback .= " $aid";
+				    
+		    }
+		    //
+		    //  Attach file to this Artifact.
+		    //
+		    if ($add_file) {
+		      $afh=new ArtifactFileHtml($ah);
+		      if (!$afh || !is_object($afh)) {
+			$feedback .= 'Could Not Create File Object';
+		      } elseif ($afh->isError()) {
+			$feedback .= $afh->getErrorMessage();
+		      } else {
+			if (!$afh->upload($input_file,$input_file_name,$input_file_type,$file_description,$changes)) {
+			  $feedback .= ' <br>File Upload: '.$afh->getErrorMessage();
+			  $was_error=true;
+			}
+		      }
+		    }
+		    
+		    // Add new cc if any
+		    if ($add_cc) {
+		      $changed |= $ah->addCC($add_cc,$cc_comment,$changes,true);
+		    }
+
+                
+		  }
+		}
+
+		//Delete cc if any
+		if ($delete_cc) {
+		  $ath->deleteCC($delete_cc);
+		}
+
+		//Delete attached files
+		if ($delete_attached) {
+		    $ath->deleteAttachedFiles($delete_attached);
+		}
+
+		//Delete dependencies if any
+		if ($delete_depend) {
+		  $ath->deleteDependencies($delete_depend);
+		}
+
+
+		//update group history
+		$old_value = $ath->getName();
+		group_add_history("Mass Change",$old_value,$group_id);
+
+		//
+		//      Show just one feedback entry if no errors
+		//
+		if (!$was_error) {
+		  $feedback .= ' - Successfully Updated';
+		}
+		include './masschange.php';
+                break;
+        }
+        
         case 'postaddcomment' : {
             //
             //  Attach a comment to an artifact
@@ -416,6 +543,22 @@ if ( $func == 'gotoid' ) {
                 include './browse.php';
                 break;
         }
+        
+        case 'masschange' : {
+                include './masschange.php';
+                break;
+        }
+        
+        case 'masschange_detail' : {
+	        $ah=new ArtifactHtml($ath);
+                if (!$ah || !is_object($ah)) {
+                        exit_error('ERROR','Artifact Could Not Be Created');
+                } else {
+		        include './masschange_detail.php';
+		}
+                break;
+        }
+        
         
         case 'detail' : {
                 //

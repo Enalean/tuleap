@@ -220,7 +220,7 @@ class ArtifactReportHtml extends ArtifactReport {
                                                           $prefs[$field->getName().'_end'][0],0,0,$pv);
                     } else {
                         $boxes .= $field_html->fieldDateOperator($prefs[$field->getName().'_op'][0],$pv).
-                            $field_html->fieldDate($prefs[$field->getName()][0],0,0,$pv);
+                            $field_html->fieldDate($prefs[$field->getName()][0],$pv);
                     }
                             
                 } else if ( $field->isTextField() || 
@@ -267,9 +267,10 @@ class ArtifactReportHtml extends ArtifactReport {
          *      @return string
          *
          */
-        function showResult ($group_id,$prefs,$offset,$total_rows,$url,$nolink,$chunksz,$morder,$advsrch,$offset,$chunksz) {
+        function showResult ($group_id,$prefs,$offset,$total_rows,$url,$nolink,$chunksz,$morder,$advsrch,$offset,$chunksz,$masschange=false) {
             global $PHP_SELF;
-        
+            global $ath;
+
             $html_result = "";
         
             // Build the list of links to use for column headings
@@ -297,16 +298,16 @@ class ArtifactReportHtml extends ArtifactReport {
               Show extra rows for <-- Prev / Next -->
             */  
             $nav_bar ='<table width= "100%"><tr>';
-            $nav_bar .= '<td width="20%" align ="left">';
+            $nav_bar .= '<td width="40%" align ="left">';
         
             // If all artifacts on screen so no prev/begin pointer at all
             if ($total_rows > $chunksz) {
                 if ($offset > 0) {
                     $nav_bar .=
-                    '<A HREF="'.$url.'&offset=0#results"><B><< Begin</B></A>'.
-                    '&nbsp;&nbsp;&nbsp;&nbsp;'.
+                    '<A HREF="'.$url.'&offset=0#results" class="small"><B>&lt;&lt; Begin</B></A>'.
+                    '&nbsp;&nbsp;&nbsp;'.
                     '<A HREF="'.$url.'&offset='.($offset-$chunksz).
-                    '#results"><B>< Previous '.$chunksz.'</B></A></td>';
+                    '#results" class="small"><B>&lt; Previous '.$chunksz.'</B></A></td>';
                 } else {
                     $nav_bar .=
                         '<span class="disable">&lt;&lt; Begin&nbsp;&nbsp;&lt; Previous '.$chunksz.'</span>';
@@ -317,10 +318,10 @@ class ArtifactReportHtml extends ArtifactReport {
             
             $offset_last = min($offset+$chunksz-1, $total_rows-1);
         
-            $nav_bar .= '<td width= "60% " align = "center" class="small">Items '.($offset+1).' - '.
+            $nav_bar .= '<td width= "20% " align = "center" class="small">Items '.($offset+1).' - '.
                 ($offset_last+1)."</td>\n";
         
-            $nav_bar .= '<td width="20%" align ="right">';
+            $nav_bar .= '<td width="40%" align ="right">';
         
             // If all artifacts on screen, no next/end pointer at all
             if ($total_rows > $chunksz) {
@@ -332,7 +333,7 @@ class ArtifactReportHtml extends ArtifactReport {
                     $nav_bar .= 
                         '<A HREF="'.$url.'&offset='.($offset+$chunksz).
                         '#results" class="small"><B>Next '.$chunksz.' &gt;</B></A>'.
-                        '&nbsp;&nbsp;&nbsp;&nbsp;'.
+                        '&nbsp;&nbsp;&nbsp;'.
                         '<A HREF="'.$url.'&offset='.($offset_end).
                         '#results" class="small"><B>End &gt;&gt;</B></A></td>';
                 } else {
@@ -346,12 +347,24 @@ class ArtifactReportHtml extends ArtifactReport {
          
             $html_result .= $nav_bar;
 
-            $html_result .= html_build_list_table_top ($title_arr,$links_arr);
+
+
+	    if ($masschange) {
+               	$html_result .= '<FORM NAME="artifact_list" action="'.$PHP_SELF.'" METHOD="POST">';
+               	$html_result .= html_build_list_table_top ($title_arr,$links_arr,true);
+            } else {
+               	$html_result .= html_build_list_table_top ($title_arr,$links_arr);
+            }
+
         
                 
             for ($i=0; $i < $rows ; $i++) {
         
                 $html_result .= '<TR class="'.get_priority_color($result[$i]['severity_id']) .'">'."\n";
+
+                if ($masschange) {
+                        $html_result .= '<TD align="center"><INPUT TYPE="checkbox" name="mass_change_ids[]" value="'.$result[$i]['artifact_id'].'"></td>';
+                }
 
                 reset($result_fields);  
                 while (list($key,$field) = each($result_fields) ) {
@@ -396,7 +409,60 @@ class ArtifactReportHtml extends ArtifactReport {
             }
         
             $html_result .= '</TABLE>';
-            $html_result .= $nav_bar;
+
+            if ($masschange) {
+               	$html_result .= '
+       <script language="JavaScript">
+       <!--
+              function checkAll(val) {
+                       al=document.artifact_list;
+                       len = al.elements.length;
+                       var i=0;
+                       for( i=0 ; i<len ; i++) {
+                               if (al.elements[i].name==\'mass_change_ids[]\') {al.elements[i].checked=val;}
+                      }
+               }
+       //-->
+       </script>';
+
+		$html_result .= '<INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$this->group_artifact_id.'">
+                          <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
+                          <INPUT TYPE="HIDDEN" NAME="report_id" VALUE="'.$this->report_id.'">
+                          <INPUT TYPE="HIDDEN" NAME="func" VALUE="masschange_detail">';
+		// get the query
+		while (list($field,$value) = each($prefs) ) {
+			if (is_array($value)) {
+				while (list(,$val) = each($value)) {
+					$html_result .= '<INPUT TYPE="HIDDEN" NAME="'.$field.'[]" VALUE="'.$val.'">';	
+				}
+			} else {
+				$html_result .= '<INPUT TYPE="HIDDEN" NAME="'.$field.'" VALUE="'.$value.'">';
+			}
+		}
+		if ($total_rows > $chunksz) {
+               		$html_result .=
+           	    	'<a href="javascript:checkAll(1)">Check items '.($offset+1).'-'.($offset_last+1).'</a>'.
+               		' - <a href="javascript:checkAll(0)">Clear items '.($offset+1).'-'.($offset_last+1).'</a><p>';
+		
+	      	 	$html_result .= '<table width= "100%"><tr><td width="50%" align ="center" class="small">';
+			$html_result .= '<INPUT TYPE="SUBMIT" NAME="submit" VALUE="Mass Change Selected Items (from '.($offset+1).'-'.($offset_last+1).')">';
+			$html_result .= '</td><td width="50%" align ="center" class="small">';
+			$html_result .= '<INPUT TYPE="SUBMIT" NAME="submit" VALUE="Mass Change All Items ('.$total_rows.' matches)">';
+			$html_result .= '</td></tr></table>';
+		} else {
+			$html_result .=
+           	    	'<a href="javascript:checkAll(1)">Check all items</a>'.
+               		' - <a href="javascript:checkAll(0)">Clear all items </a><p>';
+		
+			$html_result .= '<table width= "100%"><tr><td width="60%" align ="center" class="small">';
+			$html_result .= '<INPUT TYPE="SUBMIT" NAME="submit" VALUE="Mass Change Selected Items (from 1-'.$total_rows.')">';
+			$html_result .= '</td></tr></table>';
+		}
+		$html_result .= '</FORM>';
+            } else {
+               	$html_result .= $nav_bar;
+            }
+
             
             return $html_result;
         }
@@ -410,7 +476,7 @@ class ArtifactReportHtml extends ArtifactReport {
          *      @return string
          *
          */
-        function displayReport($prefs,$group_id,$report_id,$set,$advsrch,$msort,$morder,$order,$pref_stg,$offset,$chunksz,$pv) {
+        function displayReport($prefs,$group_id,$report_id,$set,$advsrch,$msort,$morder,$order,$pref_stg,$offset,$chunksz,$pv,$masschange=false) {
                 
                 global $ath,$art_field_fact;
                 
@@ -421,13 +487,23 @@ class ArtifactReportHtml extends ArtifactReport {
                         $html_result .= $ath->getBrowseInstructions();
                 }
                 
-                $html_result .= '<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="5">
-                          <FORM ACTION="/tracker" METHOD="GET" NAME="artifact_form">
+                $html_result .= '
+                          <FORM ACTION="'.$PHP_SELF.'" METHOD="GET" NAME="artifact_form">
                           <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$this->group_artifact_id.'">
-                          <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
-                          <INPUT TYPE="HIDDEN" NAME="set" VALUE="custom">
+                          <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">';
+		if ($masschange) {
+                          $html_result .= ' 
+			  <INPUT TYPE="HIDDEN" NAME="func" VALUE="masschange">';
+		} else {
+			  $html_result .= '
+			  <INPUT TYPE="HIDDEN" NAME="func" VALUE="browse">';
+		}
+
+                $html_result .= '
+			  <INPUT TYPE="HIDDEN" NAME="set" VALUE="custom">
                           <INPUT TYPE="HIDDEN" NAME="advsrch" VALUE="'.$advsrch.'">
                           <INPUT TYPE="HIDDEN" NAME="msort" VALUE="'.$msort.'">
+			  <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="5">
                           <TR><TD colspan="'.$fields_per_line.'" nowrap>'.
                      ($pv ? '<h3>Selected '.$ath->getCapsItemName().'</h3>':'<h3>Browse '.$ath->getCapsItemName());
                 
@@ -442,7 +518,11 @@ class ArtifactReportHtml extends ArtifactReport {
                 }
                 
                 // Start building the URL that we use to for hyperlink in the form
-                $url = "/tracker/?atid=".$this->group_artifact_id."&group_id=$group_id&func=browse&set=$set&msort=$msort";
+		if ($masschange) {
+                	$url = "/tracker/?atid=".$this->group_artifact_id."&group_id=$group_id&func=masschange&set=$set&msort=$msort";
+		} else {
+			$url = "/tracker/?atid=".$this->group_artifact_id."&group_id=$group_id&func=browse&set=$set&msort=$msort";
+		} 
                 if ($set == 'custom')
                      $url .= $pref_stg;
                 else
@@ -525,7 +605,7 @@ class ArtifactReportHtml extends ArtifactReport {
                     }
                 
                     if ($pv) { $chunksz = 100000; }
-                    $html_result .= $this->showResult($group_id,$prefs,$offset,$totalrows,($pv ? '' : $url), ($pv ? true:false) ,$chunksz ,$morder,$advsrch,$offset,$chunksz );
+                    $html_result .= $this->showResult($group_id,$prefs,$offset,$totalrows,($pv ? '' : $url), ($pv ? true:false) ,$chunksz ,$morder,$advsrch,$offset,$chunksz,$masschange);
                     $html_result .= $this->showPriorityColorsKey('Severity colors:');
                 
                 } else {
@@ -822,6 +902,8 @@ class ArtifactReportHtml extends ArtifactReport {
                 '</FORM>';
 
         }
+
+
 }
 
 ?>

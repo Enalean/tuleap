@@ -1625,6 +1625,124 @@ class ArtifactType extends Error {
 		
 		return $sql;
 	}
+
+
+	/** retrieves all the cc addresses with their artifact_cc_ids
+	 * for a list of artifact_ids
+	 * @param change_ids: the list of artifact_ids for which we search the emails
+	 */ 
+	function getCC($change_ids) {
+		$sql = "select email,artifact_cc_id from artifact_cc where artifact_id in (".implode(",",$change_ids).") order by email";
+		$result = db_query($sql);
+		return $result;
+	}
+
+	/**
+     	* Delete an email address in the CC list
+     	*
+     	* @param artifact_cc_id: cc list id
+     	* @param changes (OUT): list of changes
+     	*
+     	* @return boolean
+     	*/
+    	function deleteCC($delete_cc) {
+        	global $feedback;
+        	
+		$ok=true;
+		while (list(,$artifact_ccs) = each($delete_cc)) {
+			$artifact_cc_ids = explode(",",$artifact_ccs);
+			$i = 0;
+			while (list(,$artifact_cc_id) = each($artifact_cc_ids)) {
+	        		$sql = "SELECT artifact_id from artifact_cc WHERE artifact_cc_id=$artifact_cc_id";
+        			$res = db_query($sql);
+        			if (db_numrows($res) > 0) {
+					$i++;
+					$aid = db_result($res, 0, 'artifact_id');
+					$ah = new ArtifactHtml($this,$aid);
+					$ok &= $ah->deleteCC($artifact_cc_id,$changes,true);
+				}
+        		}
+		}
+		return $ok;
+    	}
+
+
+	/**
+	 * retrieves all the attached files with their size and id
+	 * for a list of artifact_ids
+	 * @param change_ids: the list of artifact_ids for which we search the attached files
+	*/
+	function getAttachedFiles($change_ids) {
+		$sql = "select filename,filesize,id from artifact_file where artifact_id in (".implode(",",$change_ids).") order by filename,filesize";
+		return db_query($sql);
+	}
+
+
+	/**
+	* Delete the files with specified id from $ids
+	* @return bool
+	*/
+	function deleteAttachedFiles($delete_attached) {
+		global $feedback;
+		$ok=true;
+		$i = 0;
+		while (list(,$id_list) = each($delete_attached)) {
+			$ids = explode(",",$id_list);
+			while (list(,$id) = each($ids)) {
+				$sql = "SELECT artifact_id FROM artifact_file WHERE id = $id";
+				$res = db_query($sql);
+        			if (db_numrows($res) > 0) {
+					$aid = db_result($res, 0, 'artifact_id');
+					$ah = new ArtifactHtml($this,$aid);
+					$afh=new ArtifactFileHtml($ah,$id);
+                        		if (!$afh || !is_object($afh)) {
+                               	 		$feedback .= 'Could Not Create File Object::'.$afh->getName();
+                        		} elseif ($afh->isError()) {
+                                		$feedback .= $afh->getErrorMessage().'::'.$afh->getName();
+                        		} else {
+						$i++;
+                                		$okthis = $afh->delete();
+						if (!$okthis) $feedback .= ' <br>File Delete: '.$afh->getErrorMessage();
+						$ok &= $okthis;
+                        		}	
+				}
+			}
+		}
+		return $ok;
+	}
+
+	/**
+	 * retrieves all artifacts
+	 * for a list of artifact_ids
+	 * @param change_ids: the list of artifact_ids for which we search the attached files
+	*/
+	function getDependencies($change_ids) {
+		$sql = "select d.artifact_depend_id,d.is_dependent_on_artifact_id,a.summary,ag.name,g.group_name ".
+			"from artifact_dependencies as d, artifact_group_list ag, groups g, artifact a ".
+			"where d.artifact_id in (".implode(",",$change_ids).") AND ".
+			"d.is_dependent_on_artifact_id = a.artifact_id AND ".
+            		"a.group_artifact_id = ag.group_artifact_id AND ".
+            		"ag.group_id = g.group_id ".
+			"order by is_dependent_on_artifact_id";
+		return db_query($sql);
+	}
+
+
+	/** delete all the dependencies specified in delete_dependend */
+	function deleteDependencies($delete_depend) {
+		global $feedback;
+		$changed = true;
+		while (list(,$depend) = each($delete_depend)) {
+			$sql = "DELETE FROM artifact_dependencies WHERE artifact_depend_id IN ($depend)";
+        		$res = db_query($sql);
+        		if (!$res) {
+            			$feedback .= " - Error deleting dependencies $dependent: ".db_error($res);
+				$changed = false;
+        		}
+		}
+		if ($changed) $feedback .= " - Dependency Removed";
+		return $changed;
+        }	
 	
 }
 

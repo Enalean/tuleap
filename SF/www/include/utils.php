@@ -545,6 +545,46 @@ function validate_emails ($addresses) {
     return true;
 }
 
+/**
+     * Return if the email addresses are valid
+     *
+     * @param arr_email: list of email addresses
+     * @param message (OUT): error message if an error is found
+     *
+     * @return boolean
+     */
+    function util_validateCCList($arr_email, &$message) {
+        $valid = true;
+        $message = "";
+        
+        while (list(,$cc) = each($arr_email)) {
+            // Make sure that the address is valid
+            if (! validate_email($cc)) {
+                // check for a valid CodeX user.
+                $res = user_get_result_set_from_unix($cc);
+                if (db_numrows($res) == 0) {
+                    $valid = false;
+                    $message .= "$cc<br>";
+                    continue;
+                }
+            }
+        }
+        
+        if (! $valid) {
+            $message = "There are problems with the following addresses:"
+                . "<blockquote>$message</blockquote>"
+                . "Email addresses must either be valid "
+                . "CodeX user names (e.g., 'jdoe') or fully qualified "
+                . "email addresses (e.g., 'jill.doe@somewhere.xerox.com'). "
+                . "Lists of email addresses may be separated by either "
+                . "commas or semicolons."
+                ;
+        }
+        
+        return $valid;
+    }
+
+
 function util_is_valid_filename ($file) {
 	if (ereg("[]~`! ~@#\"$%^,&*();=|[{}<>?/]",$file)) {
 		return false;
@@ -682,6 +722,7 @@ function util_check_fileupload($filename) {
 
 	/* This should be enough... */
 	if (!is_uploaded_file($filename)) {
+	  //echo "$filename is not uploaded file";
 		return false;
 	}
 	/* ... but we'd rather be paranoic */
@@ -689,9 +730,11 @@ function util_check_fileupload($filename) {
 		return false;
 	}
 	if (!is_file($filename)) {
+	  //echo "$filename is not file";
 		return false;
 	}
 	if (!file_exists($filename)) {
+	  //echo "$filename does not exist";
 		return false;
 	}
 	return true;

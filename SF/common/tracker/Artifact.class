@@ -269,7 +269,7 @@ class Artifact extends Error {
     function addHistory ($field,$old_value,$new_value,$type=false,$email=false) {
         
 	//MLS: add case where we add CC and file_attachment into history for task #240
-	if ($field == 'cc' || $field == 'attachment') {
+	if ($field == 'cc' || $field == 'attachment' || $field == 'submitted_by') {
 	   $name = $field;
 	} else {
            // If field is not to be kept in bug change history then do nothing
@@ -506,13 +506,17 @@ class Artifact extends Error {
      *
      *  @return boolean
      */
-    function handleUpdate ($artifact_id_dependent,$canned_response,&$changes)
+    function handleUpdate ($artifact_id_dependent,$canned_response,&$changes,$masschange=false)
         {
-            global $feedback,$art_field_fact;
+            global $feedback,$art_field_fact,$HTTP_POST_VARS;
+
+	    //verify permissions - Must have Tech permission
+            if (!$this->ArtifactType->userIsTech()) exit_permission_denied();
+	    if ($masschange && !$this->ArtifactType->userIsAdmin()) exit_permission_denied();
         
             // Retrieve HTTP GET variables and store them in $vfl array
             $vfl = $art_field_fact->extractFieldList();
-                        
+
             // make sure  required fields are not empty
             if ( !$canned_response || 
                  ($art_field_fact->checkEmptyFields($vfl) == false) ) {
@@ -522,10 +526,7 @@ class Artifact extends Error {
             //get this artifact from the db
             $result=$this->getFieldsValues();
         
-            //verify permissions - Must have Tech permission
-            if ( !$this->ArtifactType->userIsTech() ) {
-                exit_permission_denied();
-            }
+            
                 
             //
             //  See which fields changed during the modification
@@ -536,6 +537,7 @@ class Artifact extends Error {
             reset($vfl);
             while (list($field_name,$value) = each($vfl)) {
                 
+		
                 $field = $art_field_fact->getFieldFromName($field_name);
                 if ( $field ) {
                     // skip over special fields  except for details which in this 
@@ -545,6 +547,10 @@ class Artifact extends Error {
                     }
                         
                     if ( ($field->isMultiSelectBox())&&(is_array($value)) ) {
+
+			if ($masschange && (in_array('Unchanged',$value))) {
+				continue;
+			}
                         // The field is a multi values field and it has multi assigned values
                         $values = $value;
                         $old_values = $field->getValues($this->getID());
@@ -580,13 +586,15 @@ class Artifact extends Error {
                         }
                                         
                     } else {
-                                
+	        	if ($masschange && ($value=='Unchanged')) {
+				continue;
+			}	
+       
                         $old_value = $result[$field_name];
                         $is_text = ($field->isTextField() || $field->isTextArea());
                         if  ($is_text) {
                             $differ = ($old_value != stripslashes(htmlspecialchars($value))); 
                         } else if ($field->isDateField()) {
-				//$feedback .= " in handleUpdate: value=$value and old_value=$value... ";
                             // if it's a date we must convert the format to unix time
                             list($value,$ok) = util_date_to_unixtime($value);
 
@@ -625,7 +633,7 @@ class Artifact extends Error {
                             // Update the field value
                             if ( !$field->isStandardField() ) {
                                 if ( !$field->updateValue($this->getID(),$update_value) ) {
-                                    $feedback .= "Fail to update the field value ".$field->getName();
+                                    $feedback .= " Fail to update the field value ".$field->getName();
                                 }
                             }
                                     
@@ -638,6 +646,21 @@ class Artifact extends Error {
                 }
                         
             } // while
+
+	
+	    //for masschange look at the special case of changing the submitted_by param
+	    if ($masschange) {
+		reset($HTTP_POST_VARS);
+		while ( list($key, $val) = each($HTTP_POST_VARS)) {
+			if ($key == 'submitted_by' && $val != 'Unchanged') {
+				$sql = "UPDATE artifact SET submitted_by=$val WHERE artifact_id = ".$this->getID();
+				$res = db_query($sql);
+				$field = $art_field_fact->getFieldFromName('submitted_by');
+				if ($this->getSubmittedBy() != $val)
+					$this->addHistory('submitted_by',$this->getSubmittedBy(),$val);
+			}
+		}
+	    }
 
             // Details field history is handled a little differently. Followup comments
             // are added in the bug history along with the comment type.
@@ -690,7 +713,7 @@ class Artifact extends Error {
             //  Insert the list of dependencies 
             //
         
-            if (!$this->addDependencies($artifact_id_dependent,&$changes)) {
+            if (!$this->addDependencies($artifact_id_dependent,&$changes,$masschange)) {
                 return false;
             }
                 
@@ -710,53 +733,16 @@ class Artifact extends Error {
             }
         
             if (!$res_upd) {
-                exit_error('UPDATE FAILED','UPDATE FAILED');
+                exit_error('UPDATE FAILED: '.$sql,'UPDATE FAILED');
                 return false;
             } else {
-                $feedback .= " Successfully Updated Artifact ";
+                if (!masschange) $feedback .= " Successfully Updated Artifact ";
                 return true;
             }
 
         }
 
-    /**
-     * Return if the email addresses are valid
-     *
-     * @param arr_email: list of email addresses
-     * @param message (OUT): error message if an error is found
-     *
-     * @return boolean
-     */
-    function validateCCList($arr_email, &$message) {
-        $valid = true;
-        $message = "";
-        
-        while (list(,$cc) = each($arr_email)) {
-            // Make sure that the address is valid
-            if (! validate_email($cc)) {
-                // check for a valid CodeX user.
-                $res = user_get_result_set_from_unix($cc);
-                if (db_numrows($res) == 0) {
-                    $valid = false;
-                    $message .= "$cc<br>";
-                    continue;
-                }
-            }
-        }
-        
-        if (! $valid) {
-            $message = "There are problems with the following addresses:"
-                . "<blockquote>$message</blockquote>"
-                . "Email addresses must either be valid "
-                . "CodeX user names (e.g., 'jdoe') or fully qualified "
-                . "email addresses (e.g., 'jill.doe@somewhere.xerox.com'). "
-                . "Lists of email addresses may be separated by either "
-                . "commas or semicolons."
-                ;
-        }
-        
-        return $valid;
-    }
+
 
     /**
      * Check if an email address already exists
@@ -798,7 +784,7 @@ class Artifact extends Error {
      *
      * @return boolean
      */
-    function addCC($email,$comment,&$changes) {
+    function addCC($email,$comment,&$changes,$masschange=false) {
         global $feedback;
         
         $user_id = (user_isloggedin() ? user_getid(): 100);
@@ -808,7 +794,7 @@ class Artifact extends Error {
         $ok = true;
         $changed = false;
         
-        if (! $this->validateCCList($arr_email, $message)) {
+        if (! util_validateCCList($arr_email, $message)) {
             exit_error("Error - The CC list is invalid", $message);
         }
 	
@@ -834,7 +820,7 @@ class Artifact extends Error {
         if (!$ok) {
             $feedback .= ' - CC addition failed';
         } else {
-            $feedback .= '- CC Added';
+            if (!masschange) $feedback .= '- CC Added';
 	    $this->addHistory('cc',$old_value,$new_value);
             $changes['CC']['add'] = join(',', $arr_email);
         }
@@ -849,7 +835,7 @@ class Artifact extends Error {
      *
      * @return boolean
      */
-    function deleteCC($artifact_cc_id=false,&$changes) {
+    function deleteCC($artifact_cc_id=false,&$changes,$masschange=false) {
         global $feedback;
         
         // If both bug_id and bug_cc_id are given make sure the cc belongs 
@@ -870,7 +856,7 @@ class Artifact extends Error {
             $feedback .= " - Error deleting CC ID $artifact_cc_id: ".db_error($res2);
             return false;
         } else {
-            $feedback .= " - CC Removed";
+            if (!$masschange) $feedback .= " - CC Removed";
 	    $new_value=$this->getCCEmails();
 	    $this->addHistory('cc',$old_value,$new_value);
             $changes['CC']['del'] = db_result($res1,0,'email');
@@ -935,7 +921,7 @@ class Artifact extends Error {
      *
      * @return boolean
      */
-    function addDependencies($artifact_id_dependent,&$changes) {
+    function addDependencies($artifact_id_dependent,&$changes,$masschange) {
         global $feedback;
         
         if ( !$artifact_id_dependent ) 
@@ -952,7 +938,7 @@ class Artifact extends Error {
                 $ok = false;
                 $feedback .= " Invalid artifact #".$id;
             }
-            if ($ok&&!$this->existDependency($id)) {
+            if ($ok && ($id != $this->getID()) && !$this->existDependency($id)) {
                 $res = $this->insertDependency($id);
                 if (!$res) { $ok = false; }
             }
@@ -961,7 +947,7 @@ class Artifact extends Error {
         if (!$ok) {
             $feedback .= ' - Dependencies addition failed';
         } else {
-            $feedback .= '- Dependencies Added';
+            if (!masschange) $feedback .= '- Dependencies Added';
             $changes['Dependencies']['add'] = $artifact_id_dependent;
         }
         return $ok;
@@ -980,13 +966,12 @@ class Artifact extends Error {
         
         // Delete the dependency
         $sql = "DELETE FROM artifact_dependencies WHERE is_dependent_on_artifact_id=$dependent_on_artifact_id AND artifact_id=".$this->getID();
-        //echo $sql."<br>";
         $res2 = db_query($sql);
         if (!$res2) {
             $feedback .= " - Error deleting dependency $dependent_on_artifact_id: ".db_error($res2);
             return false;
         } else {
-            $feedback .= " - Denpendency Removed";
+            $feedback .= " - Dependency Removed";
             $changes['Dependencies']['del'] = $dependent_on_artifact_id;
             return true;
         }

@@ -48,6 +48,9 @@ class ArtifactTypeHtml extends ArtifactType {
 		echo '<strong><a href="/tracker/?func=add&group_id='.$group_id.'&atid='. $this->getID() .'">Submit A New '.$this->getCapsItemName().'</a>';
 		echo ' | <a href="/tracker/?func=browse&set=my&group_id='.$group_id.'&atid='. $this->getID() .'">My '.$this->getCapsItemName().'s </a>';
 		echo ' | <a href="/tracker/?func=browse&set=open&group_id='.$group_id.'&atid='. $this->getID() .'">Open '.$this->getCapsItemName().'s </a>';
+		if ($this->userIsAdmin()) {
+			echo ' | <a href="/tracker/?func=masschange&group_id='.$group_id.'&atid='. $this->getID() .'">Mass Change </a>';
+		}
 		echo ' | <a href="/tracker/?func=reporting&group_id='.$group_id.'&atid='.$this->getID().'">Reporting</a>';
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='.$this->getID().'">Admin</a>';
 		if ($params['help']) {
@@ -1804,6 +1807,438 @@ class ArtifactTypeHtml extends ArtifactType {
 	}
 
 
+
+	/**
+         * Display the artifact to do mass changes
+         *
+         * @param ro: read only parameter - Display mode or update mode
+         * @param pv: printer version
+	 * @param query: only in the case of func=masschange, the query that retrieves all the artifacts to be changed
+	 * @param $mass_change_ids[]: only in the case of func=masschange_selected, an array containing all the artifact ids to be changed
+         *
+         * @return void
+         */
+        function displayMassChange($mass_change_ids=null,$query=null,$art_report_html=null) {
+            global $PHP_SELF,$art_field_fact,$sys_datefmt,$sys_max_size_attachment;
+            
+            $fields_per_line=2;
+            $max_size=40;
+            
+            $group = $this->getGroup();
+            $atid = $this->getID();
+            $group_id = $group->getGroupId();
+
+	    if ($query) {
+		$art_report_html->getQueryElements($query,$morder,$advsrch,$select,$from,$where,$order_by);
+	  	$sql = "select distinct a.artifact_id ".$from." ".$where;
+	  	$result = db_query($sql);
+		while ($row = db_fetch_array($result)) {
+			$mass_change_ids[] = $row['artifact_id'];
+		}
+	    }
+            
+	    //if ($mass_change_ids) {
+            	echo "<H2>Changing ".count($mass_change_ids)." selected item(s): </H2>";
+		reset($mass_change_ids);
+		while ( list($key, $val) = each($mass_change_ids)) {
+			if ($key == 0) echo "<a href=\"/tracker/?func=detail&group_id=$group_id&aid=$val&atid=$atid\">".$this->getItemName()." #$val</a>";
+			if ($key > 0) echo ", <a href=\"/tracker/?func=detail&group_id=$group_id&aid=$val&atid=$atid\"> #$val</a>";
+			if ($key == 100) {echo ", .."; break;}
+		}
+
+
+		echo '
+	    <br><br>';
+                echo '
+            <FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data" NAME="masschange_form">
+            <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="'.$sys_max_size_attachment.'">
+            <INPUT TYPE="HIDDEN" NAME="func" VALUE="postmasschange">
+            <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
+            <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$atid.'">';
+		reset($mass_change_ids);
+		while (list(,$val) = each($mass_change_ids)) {
+			echo '
+	    <INPUT TYPE="HIDDEN" NAME="mass_change_ids[]" VALUE="'.$val.'">';	
+		}
+
+
+                echo '
+            <TABLE cellpadding="0">';
+
+		//first special case for submitted_by
+		$field = $art_field_fact->getFieldFromName('submitted_by');
+		$field_html = new ArtifactFieldHtml($field);
+		$field_value = "Unchanged";
+                                
+                list($sz,) = explode("/",$field->getDisplaySize());
+                $label = $field_html->labelDisplay(false,false,!$ro);
+                // original submission field must be displayed read-only
+                $value = $field_html->display($this->getID(),$field_value,false,false,$ro,false,false,'None',false,'Any',true,'Unchanged');
+
+                echo "\n<TR>";
+                echo '
+	    <TD valign="middle">'.$label.'&nbsp;</TD>
+            <TD valign="middle">'.$value.'&nbsp;</TD>
+            <TD colspan="2"><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit Mass Changes"></TD>';
+            	echo '
+            </TR>
+            <TR><TD COLSPAN="'.($fields_per_line*2).'">&nbsp</TD></TR>
+            <script language="JavaScript" src="/include/calendar.js"></script>';
+        
+        
+                // Now display the variable part of the field list (depend on the project)
+        
+		$i = 0;            
+            	$result_fields = $art_field_fact->getAllUsedFields();
+        	while ( list($key, $field) = each($result_fields) ) {
+                
+                	$field_html = new ArtifactFieldHtml($field);
+                
+                        // if the field is a special field (except summary and details) 
+                        // then skip it.
+                        if ( !$field->isSpecial() && $field->getName()!='summary' && $field->getName()!='details') {
+                                           
+                                // display the artifact field
+                                // if field size is greatest than max_size chars then force it to
+                                // appear alone on a new line or it won't fit in the page
+                                
+                                $field_value = "Unchanged";
+                                
+                                list($sz,) = explode("/",$field->getDisplaySize());
+                                $label = $field_html->labelDisplay(false,false,!$ro);
+                                $value = $field_html->display($this->getID(),$field_value,false,false,$ro,false,false,'None',false,'Any',true,'Unchanged');
+
+                                        
+                                // Details field must be on one row
+                                if ($sz > $max_size) {
+                                        echo "\n<TR>".
+                                          '<TD valign="middle">'.$label.'</td>'.
+                                          '<TD valign="middle" colspan="'.(2*$fields_per_line-1).'">'.
+                                          $value.'</TD>'.                     
+                                          "\n</TR>";
+                                        $i=0;
+                                } else {
+                                        echo ($i % $fields_per_line ? '':"\n<TR>");
+                                        echo '<TD valign="middle">'.$label.'</td>'.
+                                          '<TD valign="middle">'.$value.'</TD>';
+                                        $i++;
+                                        echo ($i % $fields_per_line ? '':"\n</TR>");
+                                }
+                        }
+                } // while
+                          
+
+		echo '
+	    </TABLE>
+	    <table cellspacing="0">';
+
+		//
+                // Followups comments
+                //
+                echo '
+	    <TR><TD colspan="2" align="top"><HR></td></TR>
+	    <TR><TD>
+            <h3>Follow-up Comments '.help_button('ArtifactUpdate.html#ArtifactComments').'</h3></td>
+            <TD>
+            <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit Mass Changes">
+            </td></tr>';
+
+                echo '
+            <tr><TD colspan="2" align="top">
+            <B>Use a Canned Response:</B>&nbsp;';
+                        
+                echo $this->cannedResponseBox ();
+                        
+                echo '
+            &nbsp;&nbsp;&nbsp;<A HREF="/tracker/admin/?func=canned&atid='.$atid.'&group_id='.$group_id.'&create_canned=1">Or define a new Canned Response</A>
+            </TD></TR>';
+                        
+                echo '
+            <TR><TD colspan="2">';
+                        
+                $field = $art_field_fact->getFieldFromName('comment_type_id');
+                if ( $field ) {
+                     $field_html = new ArtifactFieldHtml( $field );
+                     echo '<P><B>Comment Type:</B>'.
+                          $field_html->fieldBox('',$atid,$field->getDefaultValue(),true,'None').'<BR>';
+                }
+                echo '<TEXTAREA NAME="details" ROWS="7" COLS="60" WRAP="SOFT"></TEXTAREA><p>';
+                                
+        
+                echo '</td></tr>';
+                
+                //
+                // CC List
+                //
+                echo '          
+                <TR><TD colspan="2"><hr></td></tr>
+                
+                <TR><TD colspan="2">
+                <h3>CC List '.help_button('ArtifactUpdate.html#ArtifactCCList').'</h3>';
+                
+                if ( !$ro ) {
+                        echo '
+                        <b><u>Note:</b></u> for CodeX users use their login name rather than their email addresses.<br>Fill your list using comma or semi-column as separator.<p>
+                        <B>Add CC:&nbsp;</b><input type="text" name="add_cc" size="30">&nbsp;&nbsp;&nbsp;
+                        <B>Comment:&nbsp;</b><input type="text" name="cc_comment" size="40" maxlength="255"><p>';
+                }
+                
+	
+		
+		echo $this->showCCList($mass_change_ids);
+
+
+                echo '</TD></TR>';
+                        
+                //
+                // File attachments
+                //
+                echo '
+                <TR><TD colspan="2"><hr></td></tr>
+                <TR><TD colspan="2">
+                <h3>Attachments '.help_button('ArtifactUpdate.html#ArtifactAttachments').'</h3>';
+                
+
+                echo '
+                        <B>Check to Upload&hellip;  <input type="checkbox" name="add_file" VALUE="1">
+                        &nbsp;&hellip;&amp; Attach File:</B>
+                        <input type="file" name="input_file" size="40">
+                        <br><span class="small"><i>(The maximum upload file size is '.formatByteToMb($sys_max_size_attachment).' Mb - <u>Please compress your files</u>)</i></span>
+                        <P>
+                        <B>File Description:</B>&nbsp;
+                        <input type="text" name="file_description" size="60" maxlength="255">
+                        <P>';
+                                
+		reset($mass_change_ids);
+                echo $this->showAttachedFiles($mass_change_ids);
+                echo '</TD></TR>';
+
+                //
+                // Artifact dependencies
+                //
+                echo '
+                <TR><TD colspan="2"><hr></td></tr>
+                <TR ><TD colspan="2">';
+                
+                echo '<h3>Dependencies '.help_button('ArtifactUpdate.html#ArtifactDependencies').'</h3>
+                <B>Dependent on:</B><BR>
+                <P>';
+                if ( !$ro ) {
+                        echo '
+                        <B>Artifact IDs:</B>&nbsp;
+                        <input type="text" name="artifact_id_dependent" size="20" maxlength="255">
+                        &nbsp;<i>(Fill your list using the comma as separator)</i><p>';
+                }
+		echo $this->showDependencies($mass_change_ids);
+
+                echo '</TD></TR>';
+        	echo '<TR><TD colspan="2"><hr></td></tr>';                        
+		echo '</TD></TR>                
+                        <TR><TD colspan="2" ALIGN="center">
+                                <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit Mass Changes">
+                                </FORM>
+                        </TD></TR>';
+                
+                echo '</table>';
+	}
+
+
+	/**
+	* Show all the cc addresses of all the artifacts in $change_ids
+	* @param group_id: the group id
+        * @param group_artifact_id: the artifact type ID
+	* @param change_ids: all the ids of the artifacts affected
+	*/
+	function showCCList($change_ids) {
+		$out = "";
+			
+		$result = $this->getCC($change_ids);			
+		
+		if (db_numrows($result) > 0) {
+			$title_arr=array();
+                        $title_arr[]='CC Address';
+                        $title_arr[]='Occurrence';
+                        $title_arr[]='Delete?';
+                        $out .= html_build_list_table_top ($title_arr);
+                
+                        $fmt = "\n".'<TR class="%s"><td>%s</td><td align="center">%s</td><td align="center">%s</td></tr>';				
+
+			
+			// Loop through the cc and format them
+			$email = "";
+			$row_color = 0;
+			$i = 0;
+            		while ($row = db_fetch_array($result)) {
+				if ($row['email'] != $email) {
+					if ($email != "") {
+						$html_delete = '
+		<INPUT TYPE="CHECKBOX" NAME="delete_cc[]" VALUE="'.$delete_ids.'">';
+						$out .= sprintf($fmt,
+                                        		util_get_alt_row_color($row_color),
+                                        		$href_cc,
+							$i,
+                                        		$html_delete);
+						$row_color++;
+						$i = 0;	
+					}
+					$email = $row['email'];
+					$res_username = user_get_result_set_from_unix($email);
+                        		if ($res_username && (db_numrows($res_username) == 1))
+                            			$href_cc = util_user_link($email);
+                        		else
+                            			$href_cc = "<a href=\"mailto:".util_normalize_email($email)."\">".$email.'</a>';
+					$delete_ids = $row['artifact_cc_id'];
+				} else {
+					$delete_ids .= ",".$row['artifact_cc_id'];
+				}
+				$i++;
+			}
+			$html_delete = '
+		<INPUT TYPE="CHECKBOX" NAME="delete_cc[]" VALUE="'.$delete_ids.'">';
+			$out .= sprintf($fmt,
+                                        util_get_alt_row_color($row_color),
+                                        $href_cc,
+					$i,
+                                        $html_delete);	
+			$out .= "</TABLE>";
+            	}
+        
+            	return($out);
+	}
+
+	/**
+	* Display the list of attached files of all the artifacts in $change_ids
+	* @param group_id: the group id
+        * @param group_artifact_id: the artifact type ID
+	* @param change_ids: all the ids of the artifacts affected
+	*/
+	function showAttachedFiles($change_ids) {
+		$out = "";
+		$result = $this->getAttachedFiles($change_ids);		
+	
+		if (db_numrows($result) > 0) {
+			$title_arr=array();
+                	$title_arr[]='Name';
+                	$title_arr[]='Size (KB)';
+                	$title_arr[]='Occurrence';
+            		$title_arr[]='Delete?';
+        
+                	$out .= html_build_list_table_top ($title_arr);
+
+			$fmt = "$sys_lf".'<TR class="%s"><td>%s</td><td align="center">%s</td><td align="center">%s</td><td align="center">%s</td></tr>';
+
+			// Loop throuh the attached files and format them
+			$i = 0;
+			$rowcolor = 0;
+			$filename = "";
+			$filesize = -1;
+			while ($row = db_fetch_array($result)) {
+				if ($row['filename'] != $filename || $row['filesize'] != $filesize) {
+					if ($filename != "") {
+						$html_delete = '
+	<INPUT TYPE="CHECKBOX" NAME="delete_attached[]" VALUE="'.$delete_ids.'">';
+						$out .= sprintf($fmt,
+                                            		util_get_alt_row_color($rowcolor),
+                                            		$filename,
+                                            		intval($filesize/1024),
+							$i,
+                                            		$html_delete);
+						$i = 0;	
+						$rowcolor++;
+					}
+					$delete_ids = $row['id'];
+					$filename = $row['filename'];
+					$filesize = $row['filesize'];	
+				} else {
+					$delete_ids .= ",".$row['id'];						
+				}
+				$i++;
+			}
+			$html_delete = '
+	<INPUT TYPE="CHECKBOX" NAME="delete_attached[]" VALUE="'.$delete_ids.'">';
+			$out .= sprintf($fmt,
+                                        util_get_alt_row_color($rowcolor),
+                                        $filename,
+                                        intval($filesize/1024),
+					$i,
+                                        $html_delete);	
+			$out .= "</TABLE>";	
+		}
+		return $out;
+
+	}
+
+	/**
+         * Display the artifact dependencies list for all artifacts in change_ids 
+         *
+         * @param change_ids: the artifacts for that we search dependencies
+         * @return string
+         */
+        function showDependencies ($change_ids) {
+            $result=$this->getDependencies($change_ids);
+            $rows=db_numrows($result);
+        
+            // Nobody in the dependencies list -> return now
+            if ($rows > 0) {
+            	$title_arr=array();
+              	$title_arr[]='Artifact';
+                $title_arr[]='Summary';
+                $title_arr[]='Tracker';
+                $title_arr[]='Group';
+                $title_arr[]='Occurrence';
+                $title_arr[]='Delete?';
+                $out .= html_build_list_table_top ($title_arr);
+                
+                $fmt = "\n".'<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td>'.
+                            '<td align="center">%s</td><td align="center">%s</td><td align="center">%s</td></tr>';
+                
+            	// Loop through the denpendencies and format them
+		$occ = 0;
+		$dependent_on_artifact_id = -1;
+		$row_color = 0;
+            	for ($i=0; $i < $rows; $i++) {
+        		if ($dependent_on_artifact_id != db_result($result, $i, 'is_dependent_on_artifact_id')) {
+				if ($dependent_on_artifact_id != -1) {
+					$html_delete = '
+	<INPUT TYPE="CHECKBOX" NAME="delete_depend[]" VALUE="'.$depend_ids.'">';
+					$out .= sprintf($fmt,
+                                            	util_get_alt_row_color($row_color),
+                                            	"<a href=\"/tracker/?func=gotoid&group_id=$group_id&aid=$dependent_on_artifact_id\">$dependent_on_artifact_id</a>",
+                                            	$summary,
+                                            	$tracker_label,
+                                            	$group_label,
+						$occ,
+                                            	$html_delete);
+					$row_color++;
+					$occ = 0;	
+				}
+				$dependent_on_artifact_id = db_result($result, $i, 'is_dependent_on_artifact_id');
+                        	$summary = db_result($result, $i, 'summary');
+                        	$tracker_label = db_result($result, $i, 'name');
+                        	$group_label = db_result($result, $i, 'group_name');
+				$depend_ids = db_result($result, $i, 'artifact_depend_id');
+			} else {
+				$depend_ids .= ",".db_result($result, $i, 'artifact_depend_id');
+			}
+			$occ++;
+                } // for
+		$html_delete = '
+	<INPUT TYPE="CHECKBOX" NAME="delete_depend[]" VALUE="'.$depend_ids.'">';
+		$out .= sprintf($fmt,
+                                util_get_alt_row_color($row_color),
+                                "<a href=\"/tracker/?func=gotoid&group_id=$group_id&aid=$dependent_on_artifact_id\">$dependent_on_artifact_id</a>",
+                                $summary,
+                                $tracker_label,
+                                $group_label,
+				$occ,
+                                $html_delete);
+        
+            	// final touch...
+            	$out .= "</TABLE>";
+            }
+        
+            return($out);
+        }
 }
 
 ?>

@@ -277,11 +277,13 @@ class ArtifactField extends Error {
 	
 	/**
 	 *  Get the keep_history attribute value
+	 *  add CC and file_attachment into history for task #240
 	 *
 	 * @return boolean
 	 */
 	function getKeepHistory() {
-		return $this->keep_history;
+		if ($this->field_name == 'cc' || $this->field_name == 'attachment' || $this->field_name == 'submitted_by') return true;
+		else return $this->keep_history;
 	}
 	
 	/**

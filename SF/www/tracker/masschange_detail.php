@@ -1,0 +1,61 @@
+<?php
+/**
+  *
+  * SourceForge Generic Tracker facility
+  *
+  * SourceForge: Breaking Down the Barriers to Open Source Development
+  * Copyright 1999-2001 (c) VA Linux Systems
+  * http://sourceforge.net
+  *
+  * @version   $Id$
+  *
+  */
+
+//require_once($DOCUMENT_ROOT.'/../common/include/Error.class');
+//require_once($DOCUMENT_ROOT.'/../common/tracker/ArtifactField.class');
+//require_once('include/ArtifactFieldHtml.class');
+//require_once($DOCUMENT_ROOT.'/../common/tracker/ArtifactFieldFactory.class');
+
+
+
+// Printer version ?
+if ( !isset($pv) ) {
+	$pv = false;
+	$ro = false;
+} else {
+	if ( $pv ) $ro = true;
+}
+
+if ($pv) {
+    help_header('Mass Change'.format_date($sys_datefmt,time()),false);	
+} else {
+	$ath->header(array ('title'=>'Mass Change: '.$ath->getID(). ' - ' . $ath->getName(),'pagename'=>'tracker',
+	       'atid'=>$ath->getID(),'sectionvals'=>array($group->getPublicName()),
+	       'help' => 'ArtifactMassChange.html'));
+}
+
+
+if (strstr($submit,"Mass Change Selected Items")) {
+  if (!$mass_change_ids) {
+    $feedback = "No items have been selected";
+  } else {
+    $ath->displayMassChange($mass_change_ids);
+  }
+} else {
+  // If still not defined then force it to system 'Default' report
+  if (!$report_id) { $report_id=100; }
+  // Create factories
+  $report_fact = new ArtifactReportFactory();
+  // Create the HTML report object
+  $art_report_html = $report_fact->getArtifactReportHtml($report_id,$atid);
+  $query = $art_field_fact->extractFieldList();
+  $ath->displayMassChange(null,$query,$art_report_html);
+}
+// Display footer page
+if ( $pv ) {
+     help_footer();
+} else {
+	$ath->footer(array());
+}
+
+?>

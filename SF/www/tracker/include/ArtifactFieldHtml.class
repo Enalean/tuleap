@@ -74,7 +74,7 @@ class ArtifactFieldHtml extends ArtifactField {
      *
 	 *	@return	string
 	 */
-	function multipleFieldBox($box_name='',$group_artifact_id,$checked=false,$show_none=false,$text_none='None',$show_any=false, $text_any='Any',$show_value=false) {
+	function multipleFieldBox($box_name='',$group_artifact_id,$checked=false,$show_none=false,$text_none='None',$show_any=false, $text_any='Any',$show_unchanged=false,$text_unchanged='Unchanged',$show_value=false) {
 	
 	    if (!$group_artifact_id) {
 			return 'ERROR - no group_artifact_id';
@@ -84,7 +84,7 @@ class ArtifactFieldHtml extends ArtifactField {
 			if ($box_name == '') {
 			    $box_name = $this->field_name.'[]';
 			}
-			return html_build_multiple_select_box($result,$box_name,$checked,($this->getDisplaySize()!=""?$this->getDisplaySize():"6"),$show_none,$text_none, $show_any,$text_any,$show_value);
+			return html_build_multiple_select_box($result,$box_name,$checked,($this->getDisplaySize()!=""?$this->getDisplaySize():"6"),$show_none,$text_none, $show_any,$text_any,$show_unchanged,$text_unchanged,$show_value);
 	    }
 	}
 	
@@ -100,7 +100,7 @@ class ArtifactFieldHtml extends ArtifactField {
      *
 	 *	@return	string
 	 */
-	function fieldBox($box_name='',$group_artifact_id,$checked=false,$show_none=false,$text_none='None',$show_any=false, $text_any='Any') {
+	function fieldBox($box_name='',$group_artifact_id,$checked=false,$show_none=false,$text_none='None',$show_any=false,$text_any='Any',$show_unchanged=false,$text_unchanged='Unchanged') {
 	
 	    if (!$group_artifact_id) {
 			return 'ERROR - no group_artifact_id';
@@ -110,7 +110,7 @@ class ArtifactFieldHtml extends ArtifactField {
 			if ($box_name == '') {
 			    $box_name = $this->field_name;
 			}
-			return html_build_select_box ($result,$box_name,$checked,$show_none,$text_none,$show_any, $text_any);
+			return html_build_select_box ($result,$box_name,$checked,$show_none,$text_none,$show_any, $text_any,$show_unchanged,$text_unchanged);
 	    }
 	}
 	
@@ -189,18 +189,16 @@ class ArtifactFieldHtml extends ArtifactField {
      *
 	 *	@return	string
 	 */
-	function fieldDate($value='',$size=0,$maxlength=0,$ro=false) {
-	
-	    // CAUTION!!!! The Javascript below assumes that the date always appear
-	    // in a form called 'artifact_form'
+	function fieldDate($value='',$ro=false,$size='10',$maxlength='10',$form_name='artifact_form',$today=false) {
 	    if ($ro)
 			$html = $value;
 	    else {
+		$timeval = ($today ? 'null' : 'document.'.$form_name.'.'.$this->field_name.'.value'); 
 	
-			$html = '<INPUT TYPE="text" name="'.$this->field_name.
-			'" size="10" MAXLENGTH="10" VALUE="'.$value.'">'.
-			'<a href="javascript:show_calendar(\'document.artifact_form.'.$this->field_name.'\', document.artifact_form.'.$this->field_name.'.value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
-			'<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="Click Here to Pick up a date"></a>';
+		$html = '<INPUT TYPE="text" name="'.$this->field_name.
+		'" size="'.$size.'" MAXLENGTH="'.$maxlength.'" VALUE="'.$value.'">'.
+		'<a href="javascript:show_calendar(\'document.'.$form_name.'.'.$this->field_name.'\','.$timeval.',\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
+		'<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="Click Here to Pick up a date"></a>';
 	    }
 	    return($html);
 	
@@ -275,7 +273,8 @@ class ArtifactFieldHtml extends ArtifactField {
 	function display($group_artifact_id, $value='xyxy',
 				   $break=false, $label=true, $ro=false, $ascii=false, 
 				   $show_none=false, $text_none='None',
-				   $show_any=false, $text_any='Any') {
+				   $show_any=false, $text_any='Any',
+				   $show_unchanged=false,$text_unchanged='Unchanged') {
 	    global $sys_datefmt;
 	
 	    if ($label) {
@@ -313,11 +312,11 @@ class ArtifactFieldHtml extends ArtifactField {
 		    if (is_array($value))
 				$output .= $this->multipleFieldBox('',$group_artifact_id, $value,
 						       $show_none,$text_none,$show_any,
-						       $text_any);
+						       $text_any,$show_unchanged,$text_unchanged);
 		    else
 				$output .= $this->fieldBox('',$group_artifact_id, $value,
 						       $show_none,$text_none,$show_any,
-						       $text_any);
+						       $text_any,$show_unchanged,$text_unchanged);
 						       
 		}
 		break; 
@@ -350,7 +349,7 @@ class ArtifactFieldHtml extends ArtifactField {
 		    //if (is_array($value))
 				$output .= $this->multipleFieldBox('',$group_artifact_id, $value,
 						       $show_none,$text_none,$show_any,
-						       $text_any);
+						       $text_any,$show_unchanged,$text_unchanged);
 		   // else
 			//	$output .= $this->fieldBox('',$group_artifact_id, $value,
 			//			       $show_none,$text_none,$show_any,
@@ -360,26 +359,38 @@ class ArtifactFieldHtml extends ArtifactField {
 		break; 
 
 	    case 'DF':
-	    // Default value
-	    if ( $value == "" ) {
-	    	$value = time();
-	    }
-		if ($ascii) 
-		    // most date fields (except open_date) are real dates (without time), so do not use $sys_datefmt
-		    // any more which can include an hour:min (than set on 00:00 for most dates). Especially in mail_follow_ups
-		    // after changing an Artifact
-		    $output .= ( ($value == 0) ? '' : format_date("Y-m-j",$value));
-		else
-		    if ($ro) {
-				$output .= format_date($sys_datefmt,$value);
-		    } else {
-				$output .= $this->fieldDate((($value == 0) ? '' : format_date("Y-m-j",$value,'')));
-		    }
+		if ($value == 'Unchanged') {
+			//$value = 'Unchanged (e.g. '.format_date("Y-m-j",time()).')';
+			$value = 'Unchanged';
+			$output .= $this->fieldDate($value,false,(strlen($value)+1),(strlen($value)+1),'masschange_form',true);
+		} else {
+	    	   	// Default value
+	    		if ( $value == "" ) {
+	    			$value = time();
+	    		}
+			if ($ascii) 
+		    		// most date fields (except open_date) are real dates (without time), so do not use $sys_datefmt
+		    		// any more which can include an hour:min (than set on 00:00 for most dates). Especially in mail_follow_ups
+		    		// after changing an Artifact
+		    		$output .= ( ($value == 0) ? '' : format_date("Y-m-j",$value));
+			else
+		    		if ($ro) {
+					$output .= format_date($sys_datefmt,$value);
+		    		} else {
+					$output .= $this->fieldDate((($value == 0) ? '' : format_date("Y-m-j",$value,'')));
+		    		}
+		}
 		break;
 	
 	    case 'TF':
 	    if ( $this->getDataType() == $this->DATATYPE_FLOAT ) {
-	    	$value = number_format($value,2);
+		if ($value == 'Unchanged') {
+			//$value = 'Unchanged (e.g. '.number_format($value,2).')';
+			$output .= $this->fieldText($value,(strlen($value)+1),(strlen($value)+1));
+			break;
+		} else {
+	    		$value = number_format($value,2);
+		}
 	    }
 		if ($ascii) 
 		    $output .= util_unconvert_htmlspecialchars($value);
