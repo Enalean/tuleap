@@ -742,7 +742,7 @@ class ArtifactType extends Error {
 			if (!user_isloggedin()) {
 				return false;
 			} else {
-				return ( ($this->getCurrentUserPerm() != 0)||(user_is_super_user) );
+				return ( ($this->getCurrentUserPerm() != 0)||(user_is_super_user()) );
 			}
 		}
 	}
