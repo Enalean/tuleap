@@ -90,7 +90,8 @@ function bug_header_admin($params) {
     echo '<P><B><A HREF="/bugs/admin/?group_id='.$group_id.'">Admin</A></B>';
     echo ' | <B><A HREF="/bugs/admin/field_usage.php?group_id='.$group_id.'">Field Usage</A></B>';
     echo ' | <b><A HREF="/bugs/admin/field_values.php?group_id='.$group_id.'">Field Values</A></b>';
-    echo ' <hr width="300" size="1" align="left" noshade>';
+    echo ' | <b><A HREF="/bugs/admin/other_settings.php?group_id='.$group_id.'">Other Settings</A></b>';
+     echo ' <hr width="300" size="1" align="left" noshade>';
 
 }
 
