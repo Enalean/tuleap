@@ -74,6 +74,8 @@ class ArtifactFile extends Error {
 	 */
 	function create($filename, $filetype, $filesize, $bin_data, $description='None',&$changes) {
 
+		$old_value = $this->Artifact->getAttachedFileNames();
+
 		// Some browsers don't supply mime type if they don't know it
 		if (!$filetype) {
 			// Let's be on safe side?
@@ -113,6 +115,13 @@ class ArtifactFile extends Error {
 			$changes['attach']['name'] = $filename;
 			$changes['attach']['size'] = $filesize;
 
+			if ($old_value == '') {
+            		$new_value = $filename;
+			} else {
+	    		$new_value = $old_value .",".$filename;
+			}
+			$this->Artifact->addHistory('attachment',$old_value,$new_value);
+
 			// Determine which protocol to use for the URL of the attachement
 			if (session_issecure()) {
 			    $server = 'https://'.$GLOBALS['sys_https_host'];
@@ -132,6 +141,7 @@ class ArtifactFile extends Error {
 	 *	@return	boolean	success.
 	 */
 	function delete() {
+		$old_value = $this->Artifact->getAttachedFileNames();
 		$sql = "DELETE FROM artifact_file WHERE id=".$this->getID();
 		//echo "sql=$sql<br>";
 		$res=db_query($sql);
@@ -139,6 +149,8 @@ class ArtifactFile extends Error {
 			$this->setError('ArtifactFile: Unable to Delete');
 			return false;
 		} else {
+			$new_value = $this->Artifact->getAttachedFileNames();
+			$this->Artifact->addHistory('attachment',$old_value,$new_value);
 			return true;
 		}
 	}

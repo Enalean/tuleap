@@ -2785,6 +2785,7 @@ CREATE TABLE artifact_history (
   artifact_id int(11) NOT NULL default '0',
   field_name text NOT NULL,
   old_value text NOT NULL,
+  new_value text NOT NULL,
   mod_by int(11) NOT NULL default '0',
   email VARCHAR(100) NOT NULL,
   date int(11) default NULL,

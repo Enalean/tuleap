@@ -307,6 +307,7 @@ class ArtifactHtml extends Artifact {
                         $title_arr=array();
                         $title_arr[]='Field';
                         $title_arr[]='Old Value';
+                        $title_arr[]='New Value';
                         $title_arr[]='Date';
                         $title_arr[]='By';
                 
@@ -314,7 +315,8 @@ class ArtifactHtml extends Artifact {
                 
                         for ($i=0; $i < $rows; $i++) {
                             $field_name = db_result($result, $i, 'field_name');
-                            $value_id =  db_result($result, $i, 'old_value');
+                            $value_id_old =  db_result($result, $i, 'old_value');
+                            $value_id_new =  db_result($result, $i, 'new_value');
                 
                                 $field = $art_field_fact->getFieldFromName($field_name);
                                 if ( $field ) {
@@ -323,21 +325,47 @@ class ArtifactHtml extends Artifact {
                         
                                     if ($field->isSelectBox()) {
                                                 // It's a select box look for value in clear
-                                                echo $field->getValue($group_artifact_id, $value_id);
+                                                echo $field->getValue($group_artifact_id, $value_id_old).'</TD><TD>';
+						//this is a hack for those rows that existed before introduction of new_value column (task #240)
+						if ($value_id_new == '') {
+						    echo $value_id_new;
+						} else {	
+                                                     echo $field->getValue($group_artifact_id, $value_id_new);
+						}
                                     } else if ($field->isDateField()) {
                                                 // For date fields do some special processing
-                                                echo format_date($sys_datefmt,$value_id);
+                                                echo format_date($sys_datefmt,$value_id_old).'</TD><TD>';
+						//this is a hack for those rows that existed before introduction of new_value column (task #240)
+						if ($value_id_new == '') { 
+						    echo $value_id_new;
+						} else {
+						    echo format_date($sys_datefmt,$value_id_new);
+						}
                                     } else if ($field->isFloat() ) {
-                                        echo number_format($value_id,2);
+                                        echo number_format($value_id_old,2).'</TD><TD>';
+					if ($value_id_new == '') {
+						    echo $value_id_new;
+						} else {
+                                        	    echo number_format($value_id_new,2);
+						}
                                     } else {
                                                 // It's a text zone then display directly
-                                                echo $value_id;
+                                                echo $value_id_old.'</TD><TD>';
+						echo $value_id_new;
                                     }
                         
                                     echo '</TD>'.
                                         '<TD>'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
                                         '<TD>'.db_result($result, $i, 'user_name').'</TD></TR>';
-                                }
+                                } else {
+				    echo "\n".'<TR class="'. util_get_alt_row_color($i) .
+                                        '"><TD>'.$field_name.'</TD><TD>';
+				    echo $value_id_old.'</TD><TD>';
+				    echo $value_id_new;
+				    echo '</TD>'.
+                                        '<TD>'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
+                                        '<TD>'.db_result($result, $i, 'user_name').'</TD></TR>';
+				}
 
                         }
                 echo '</TABLE>';

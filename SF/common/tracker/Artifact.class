@@ -260,15 +260,22 @@ class Artifact extends Error {
      *
      *  @param field: the field object
      *  @param old_value: the previous value of the field
+     *  @param new_value: the current value of the field	
      *  @param type: extra information used to store the 'comment_type_id' field value (for the follow up comments)
      *  @param email: the email is the user is not logged in
      *
      *  @return int : the artifact_history_id
      */
-    function addHistory ($field,$old_value,$type=false,$email=false) {
+    function addHistory ($field,$old_value,$new_value,$type=false,$email=false) {
         
-        // If field is not to be kept in bug change history then do nothing
-        if (!$field->getGlobalKeepHistory()) { return; }
+	//MLS: add case where we add CC and file_attachment into history for task #240
+	if ($field == 'cc' || $field == 'attachment') {
+	   $name = $field;
+	} else {
+           // If field is not to be kept in bug change history then do nothing
+           if (!$field->getGlobalKeepHistory()) { return; }
+	   $name = $field->getName();
+	}
         
         /*
           handle the insertion of history for these parameters
@@ -295,11 +302,10 @@ class Artifact extends Error {
             if ($field_name == 'details') {
                 $fld_type = ',type'; $val_type = ",'100'";
             }
-        }
-                        
+        }             
         
-        $sql="insert into artifact_history(artifact_id,field_name,old_value,mod_by,email,date $fld_type) ".
-            "VALUES (".$this->getID().",'".$field->getName()."','$old_value','$user','".$email."','".time()."' $val_type)";
+        $sql="insert into artifact_history(artifact_id,field_name,old_value,new_value,mod_by,email,date $fld_type) ".
+            "VALUES (".$this->getID().",'".$name."','$old_value','$new_value','$user','".$email."','".time()."' $val_type)";
         //echo $sql;
         return db_query($sql);
     }
@@ -467,13 +473,13 @@ class Artifact extends Error {
                 // For none project members force the comment type to None (100)
                 if ( !user_isloggedin() ) {
                     if ( $email ) {
-                        $this->addHistory($field,htmlspecialchars($details), 100, $email);
+                        $this->addHistory($field,htmlspecialchars($details), "", 100, $email);
                     } else {
                         $feedback .= ' You need to enter an email!';
                         return false;
                     }
                 } else {
-                    $this->addHistory($field,htmlspecialchars($details), 100);
+                    $this->addHistory($field,htmlspecialchars($details), "", 100);
                 }
                 $changes['details']['add'] = stripslashes($details);
                 $changes['details']['type'] = 'None';
@@ -550,7 +556,9 @@ class Artifact extends Error {
                             // Add values in the history
                             $a = $field->getLabelValues($this->ArtifactType->getID(),$old_values);
                             $val = join(",",$a);
-                            $this->addHistory($field,$val);
+			    $b = $field->getLabelValues($this->ArtifactType->getID(),$values);
+			    $new_val = join(",",$b);
+                            $this->addHistory($field,$val,$new_val);
                                 
                             // Update the field value
                             if ( !$field->updateValues($this->getID(),$values) ) {
@@ -590,7 +598,7 @@ class Artifact extends Error {
                                     $update_value = htmlspecialchars($value);
                                 }
                                                 
-                                $this->addHistory($field,addslashes($old_value));
+                                $this->addHistory($field,addslashes($old_value),addslashes($value));
                                 $value = stripslashes($value);
                             } else {
                                 if ( $field->isStandardField() ) {
@@ -598,7 +606,7 @@ class Artifact extends Error {
                                 } else {
                                     $update_value = $value;
                                 }
-                                $this->addHistory($field,$old_value);
+                                $this->addHistory($field,$old_value,$value);
                             }
                                 
                             // Update the field value
@@ -643,7 +651,7 @@ class Artifact extends Error {
             if ($details != '') {
                 $field = $art_field_fact->getFieldFromName('details');
                 if ( $field ) {
-                    $this->addHistory($field,htmlspecialchars($details), $vfl['comment_type_id']);
+                    $this->addHistory($field,htmlspecialchars($details), '', $vfl['comment_type_id']);
                 }
                 $changes['details']['add'] = stripslashes($details);
                 $field = $art_field_fact->getFieldFromName($field_name);
@@ -661,7 +669,7 @@ class Artifact extends Error {
                 $upd_list .= "close_date='$now',";
                 $field = $art_field_fact->getFieldFromName('close_date');
                 if ( $field ) {
-                    $this->addHistory ($field,$result['close_date']);
+                    $this->addHistory ($field,$result['close_date'],'');
                 }
             }
         
@@ -790,20 +798,31 @@ class Artifact extends Error {
         if (! $this->validateCCList($arr_email, $message)) {
             exit_error("Error - The CC list is invalid", $message);
         }
-        
+	
+	//calculate old_values to put into artifact_history
+	$old_value=$this->getCCEmails();
+	
+
         while (list(,$cc) = each($arr_email)) {
             // Add this cc only if not there already
             if (!$this->existCC($cc)) {
                 $changed = true;
                 $res = $this->insertCC($cc,$user_id,$comment,$date);
-                if (!$res) { $ok = false; }
+                if (!$res) { $ok = false; } 
             }
         }
-        
+	
+	if ($old_value == '') {
+            $new_value = join(',', $arr_email);
+	} else {
+	    $new_value = $old_value .",".join(',', $arr_email);
+	}
+
         if (!$ok) {
             $feedback .= ' - CC addition failed';
         } else {
             $feedback .= '- CC Added';
+	    $this->addHistory('cc',$old_value,$new_value);
             $changes['CC']['add'] = join(',', $arr_email);
         }
         return $ok;
@@ -828,14 +847,19 @@ class Artifact extends Error {
             $feedback .= " - Error CC ID $artifact_cc_id doesn't belong to artifact ID";
             return false;
         }
+        	
+	//calculate old_values to put into artifact_history
+	$old_value=$this->getCCEmails();
         
-        // Now delete the CC address
+	// Now delete the CC address
         $res2 = db_query("DELETE FROM artifact_cc WHERE artifact_cc_id='$artifact_cc_id'");
         if (!$res2) {
             $feedback .= " - Error deleting CC ID $artifact_cc_id: ".db_error($res2);
             return false;
         } else {
             $feedback .= " - CC Removed";
+	    $new_value=$this->getCCEmails();
+	    $this->addHistory('cc',$old_value,$new_value);
             $changes['CC']['del'] = db_result($res1,0,'email');
             return true;
         }
@@ -1043,7 +1067,7 @@ class Artifact extends Error {
      * @return array
      */
     function getHistory () {
-        $sql="select artifact_history.field_name,artifact_history.old_value,artifact_history.date,artifact_history.type,user.user_name ".
+        $sql="select artifact_history.field_name,artifact_history.old_value,artifact_history.new_value,artifact_history.date,artifact_history.type,user.user_name ".
             "FROM artifact_history,user ".
             "WHERE artifact_history.mod_by=user.user_id ".
             "AND artifact_history.field_name <> 'details' ".
@@ -1063,6 +1087,30 @@ class Artifact extends Error {
             "WHERE added_by=user.user_id ".
             "AND artifact_id=".$this->getID()." ORDER BY date DESC";
         return db_query($sql);
+    }
+
+    /**
+     * Return the CC list emails only
+     *
+     * @return string
+     */
+    function getCCEmails() {
+                
+        $sql="SELECT email ".
+            "FROM artifact_cc ".
+            "WHERE artifact_id=".$this->getID()." ORDER BY date DESC";
+        $result = db_query($sql);
+	$rows=db_numrows($result);
+        if ($rows <= 0) {
+	    return '';
+	} else {
+	    $email_arr=array();
+	    for ($i=0; $i < $rows; $i++) {
+	        $email_arr[] = db_result($result, $i, 'email');
+	    }
+	    $old_value = join(",",$email_arr);
+	    return $old_value;
+	}
     }
 
     /**
@@ -1114,6 +1162,29 @@ class Artifact extends Error {
             "ag.group_id = g.group_id ORDER BY a.artifact_id";
         //echo "sql=$sql<br>";
         return db_query($sql);
+    }
+
+    /**
+     * Return the names of attached files
+     *
+     * @return string
+     */
+    function getAttachedFileNames () {
+        $sql="SELECT filename ".
+            "FROM artifact_file ".
+            "WHERE artifact_id=".$this->getID()." ORDER BY adddate DESC";
+        $result = db_query($sql);
+	$rows=db_numrows($result);
+        if ($rows <= 0) {
+	    return '';
+	} else {
+	    $name_arr=array();
+	    for ($i=0; $i < $rows; $i++) {
+	        $name_arr[] = db_result($result, $i, 'filename');
+	    }
+	    $old_value = join(',',$name_arr);
+	    return $old_value;
+	}
     }
 
     /**
