@@ -454,4 +454,12 @@ function site_user_footer($params) {
 	echo $HTML->footer($params);
 }       
 
+function html_display_boolean($value,$true_value='Yes',$false_value='No') {
+    if ( ($value == 1)||($value == true) ) {
+        echo $true_value;
+    } else {
+        echo $false_value;
+    }
+}
+
 ?>

@@ -74,40 +74,8 @@ Ex: 1,2,3,4,5,6,7
 <INPUT TYPE="BUTTON" NAME="none" VALUE="Show Existing Questions" ONCLICK="show_questions()">
 <?php
 
-
-//' comment for correct syntax highlighting
-
-Function  ShowResultsEditSurvey($result) {
-	global $group_id,$PHP_SELF;
-	$rows  =  db_numrows($result);
-	$cols  =  db_numfields($result);
-	echo "<h3>$rows Found</h3>";
-
-	/*  Create  the  headers  */
-	for ($i = 0; $i < $cols; $i++)  {
-	    $title_arr[] = db_fieldname($result,$i);
-	}
-
-	echo html_build_list_table_top ($title_arr);
-
-	for ($j=0; $j<$rows; $j++)  {
-
-		echo '<tr BGCOLOR="'.html_get_alt_row_color($j).'">';
-
-		echo "<TD><A HREF=\"$PHP_SELF?group_id=$group_id&survey_id=".
-			db_result($result,$j,0)."\">".db_result($result,$j,0)."</A></TD>";
-		for ($i = 1; $i < $cols; $i++)  {
-			printf("<TD>%s</TD>\n",db_result($result,$j,$i));
-		}
-
-		echo "</tr>";
-	}
-	echo "</table>";
-
-}
-
 /*
-	Select this survey from the database
+	Select all surveys from the database
 */
 
 $sql="SELECT * FROM surveys WHERE group_id='$group_id'";
@@ -118,8 +86,8 @@ $result=db_query($sql);
 
 <P>
 <H2>Existing Surveys</H2>
-<P>
 <?php
+
 ShowResultsEditSurvey($result);
 
 survey_footer(array());

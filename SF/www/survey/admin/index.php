@@ -23,7 +23,7 @@ if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 <H2>Survey Administration</H2>
 <P>
 <A HREF="/survey/admin/add_survey.php?group_id=<?php echo $group_id; ?>">Add Surveys</A><BR>
-<A HREF="/survey/admin/edit_survey.php?group_id=<?php echo $group_id; ?>">Edit Existing Surveys</A><BR>
+<A HREF="/survey/admin/edit_survey.php?func=browse&group_id=<?php echo $group_id; ?>">Edit Existing Surveys</A><BR>
 <A HREF="/survey/admin/add_question.php?group_id=<?php echo $group_id; ?>">Add Questions</A><BR>
 <A HREF="/survey/admin/show_questions.php?group_id=<?php echo $group_id; ?>">Edit Existing Questions</A><BR>
 <A HREF="/survey/admin/show_results.php?group_id=<?php echo $group_id; ?>">Show Survey Results</A><BR>
