@@ -11,6 +11,7 @@
 //
 
 //require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');
+include ($DOCUMENT_ROOT.'/include/HTML_Graphs.php');
 
 class ArtifactTypeHtml extends ArtifactType {
 
@@ -1603,89 +1604,92 @@ class ArtifactTypeHtml extends ArtifactType {
 		}
 	}
 
- /* *********************************************
-  *
-  *       From here reporting screens
-  *
-  * ********************************************* */
-
-function reportingMainPage() {
-	global $art_field_fact;
-
-	$this->header(array("title"=>"Tracker '".$this->getName()."' - Reporting System",
-			  'help' => 'TrackerReporting.html'));
-
-	echo '<H2>Tracker Reporting System</H2>';
-	echo "\n<P>";
-	echo "\n<A HREF=\"/tracker?func=reporting&group_id=".$this->Group->getID()."&atid=".$this->getID()."&field=aging\">Aging Report</A><BR>";
-
-	$fields = $art_field_fact->getAllUsedFields();
-
-	while (list($field_name,$field) = each($fields)	) {
-	    if ($field->isSpecial()) { continue;}
-
-	    if ($field->isSelectBox()) {
-
-		echo "\n<A HREF=\"/tracker?func=reporting&group_id=".$this->Group->getID()."&atid=".$this->getID()."&field=".$field->getID()."\"> ".$this->getItemName()."s by '".$field->getLabel()."'</A><BR>";
-	    }
-	}
-
-	$this->footer(array());
-
-}
-
-
-
-function reportingByAge() {
-	global $DOCUMENT_ROOT;
-
-	$this->header(array("title"=>"Tracker '".$this->getName()."' - Aging Report",
-			  'help' => 'TrackerReporting.html'));
-
+	/**
+	 *  Display the reporting main page
+	 *
+	 *  @return void
+	 */
+	function reportingMainPage() {
+		global $art_field_fact;
 	
-	$closedItems = $this->get_artifacts_by_age();
-
-
-	echo '<H2>Tracker Aging Report</H2>';
-
-    	include ($DOCUMENT_ROOT.'/include/HTML_Graphs.php');
-	GraphIt($closedItems['names'], $closedItems['values'],"Average Turnaround Time For Closed ".$this->getItemName()."s");
-	echo "<P>";
-
-	$openItems = $this->get_open_artifacts_by_age();
+		$this->header(array("title"=>"Tracker '".$this->getName()."' - Reporting System",
+				  'help' => 'TrackerReporting.html'));
 	
-	GraphIt($openItems['names'], $openItems['values'],"Number of Opened ".$this->getItemName()."s");
-	$this->footer(array());
-}
-
-function reportingByField($field_id) {
-	global $art_field_fact, $DOCUMENT_ROOT;
-
-	$field = $art_field_fact->getFieldFromId($field_id);
-
-	$this->header(array("title"=>"Tracker '".$this->getName()."' - Reporting on field '".$field->getLabel()."'",
-			  'help' => 'TrackerReporting.html'));
-
-	if ($field->isStandardField()) {
-		$openItems = $this->get_open_artifacts_by($field->getName());
-		$allItems = $this->get_artifacts_by($field->getName());
-	} else {
-		$openItems = $this->get_open_artifacts_by_field($field);
-
-		$allItems = $this->get_artifacts_by_field($field);
+		echo '<H2>Tracker Reporting System</H2>';
+		echo "\n<P>";
+		echo "\n<A HREF=\"/tracker?func=reporting&group_id=".$this->Group->getID()."&atid=".$this->getID()."&field=aging\">Aging Report</A><BR>";
+	
+		$fields = $art_field_fact->getAllUsedFields();
+	
+		while (list($field_name,$field) = each($fields)	) {
+		    if ($field->isSpecial()) { continue;}
+	
+		    if ($field->isSelectBox()) {
+	
+			echo "\n<A HREF=\"/tracker?func=reporting&group_id=".$this->Group->getID()."&atid=".$this->getID()."&field=".$field->getID()."\"> ".$this->getItemName()."s by '".$field->getLabel()."'</A><BR>";
+		    }
+		}
+	
+		$this->footer(array());
+	
 	}
-
-
-	echo '<H3>Open \'<a href="/tracker?group_id='.$this->Group->getID().'&atid='.$this->getID().'">'.$this->getName().'</a>\' by '.$field->getLabel().'</H3>';
-
-    	include ($DOCUMENT_ROOT.'/include/HTML_Graphs.php');
-	GraphIt($openItems['names'], $openItems['values'],"Open ".$this->getItemName()." By ".$field->getLabel());
-	echo '<H3>All \'<a href="/tracker?group_id='.$this->Group->getID().'&atid='.$this->getID().'">'.$this->getName().'</a>\' by '.$field->getLabel().'</H3>';
-
-	GraphIt($allItems['names'], $allItems['values'],"All ".$this->getItemName()." By ".$field->getLabel());
-	$this->footer(array());
-
-}
+	
+	/**
+	 *  Display the reporting by age
+	 *
+	 *  @return void
+	 */
+	function reportingByAge() {
+		global $DOCUMENT_ROOT;
+	
+		$this->header(array("title"=>"Tracker '".$this->getName()."' - Aging Report",
+				  'help' => 'TrackerReporting.html'));
+	
+		
+		$closedItems = $this->getArtifactsByAge();
+	
+	
+		echo '<H2>Tracker Aging Report</H2>';
+	
+		GraphIt($closedItems['names'], $closedItems['values'],"Average Turnaround Time For Closed ".$this->getItemName()."s");
+		echo "<P>";
+	
+		$openItems = $this->getOpenArtifactsByAge();
+		
+		GraphIt($openItems['names'], $openItems['values'],"Number of Opened ".$this->getItemName()."s");
+		$this->footer(array());
+	}
+	
+	/**
+	 *  Display the reporting by field
+	 *
+	 *  @return void
+	 */
+	function reportingByField($field_id) {
+		global $art_field_fact, $DOCUMENT_ROOT;
+	
+		$field = $art_field_fact->getFieldFromId($field_id);
+	
+		$this->header(array("title"=>"Tracker '".$this->getName()."' - Reporting on field '".$field->getLabel()."'",
+				  'help' => 'TrackerReporting.html'));
+	
+		if ($field->isStandardField()) {
+			$openItems = $this->getOpenArtifactsBy($field);
+			$allItems = $this->getArtifactsBy($field);
+		} else {
+			$openItems = $this->getOpenArtifactsByField($field);
+			$allItems = $this->getArtifactsByField($field);
+		}
+	
+		echo '<H3>Open \'<a href="/tracker?group_id='.$this->Group->getID().'&atid='.$this->getID().'">'.$this->getName().'</a>\' by '.$field->getLabel().'</H3>';
+	
+		GraphIt($openItems['names'], $openItems['values'],"Open ".$this->getItemName()." By ".$field->getLabel());
+		echo '<H3>All \'<a href="/tracker?group_id='.$this->Group->getID().'&atid='.$this->getID().'">'.$this->getName().'</a>\' by '.$field->getLabel().'</H3>';
+	
+		GraphIt($allItems['names'], $allItems['values'],"All ".$this->getItemName()." By ".$field->getLabel());
+		$this->footer(array());
+	
+	}
 
 
 }
