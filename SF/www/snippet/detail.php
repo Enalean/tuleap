@@ -47,8 +47,8 @@ if ($type=='snippet') {
 		<H3>Versions Of This Snippet:</H3>
 		<P>';
 		$title_arr=array();
-		$title_arr[]='Snippet ID';
-		$title_arr[]='Download Version';
+		$title_arr[]='ID';
+		$title_arr[]='Snippet Version';
 		$title_arr[]='Date Posted';
 		$title_arr[]='Author';
 		$title_arr[]='Delete';
@@ -64,8 +64,8 @@ if ($type=='snippet') {
 			echo '
 				<TR BGCOLOR="'. html_get_alt_row_color($i) .'"><TD>'.db_result($result,$i,'snippet_version_id').
 				'</TD><TD><A HREF="/snippet/download.php?type=snippet&id='.
-				db_result($result,$i,'snippet_version_id').'"><B>'.
-				db_result($result,$i,'version').'</B></A></TD><TD>'. 
+				db_result($result,$i,'snippet_version_id').'"><B><center>'.
+				db_result($result,$i,'version').'</center></B></A></TD><TD>'. 
 				date($sys_datefmt,db_result($result,$i,'date')).'</TD><TD align="middle">'.
 				'<a href="/users/'.db_result($result,$i,'user_name').'"><b>'.
 				db_result($result,$i,'user_name').'</b></a></TD><TD ALIGN="MIDDLE"><A HREF="/snippet/delete.php?type=snippet&snippet_version_id='.
@@ -82,8 +82,11 @@ if ($type=='snippet') {
 
 		echo '
 		<P>
-		Download a raw-text version of this code by clicking on &quot;<B>Download Version</B>&quot;
-		<P>';
+		- Download a raw-text version of this code by clicking on the &quot;<B>Snippet Version</B>&quot; label</p>';
+		echo '
+                            <P>- You can <A HREF="/snippet/addversion.php?type=snippet&id='.$id.'"><b><u>submit a new version</u></b></A> of this snippet if you have modified it 
+	and you feel it is appropriate to share with others.</p>';
+
 	}
 	/*
 		show the latest version of this snippet's code
@@ -100,14 +103,6 @@ if ($type=='snippet') {
 '. db_result($result,0,'code') .'
 		</FONT></PRE>
 		<P>';
-	/*
-		Show a link so you can add a new version of this snippet
-	*/
-	echo '
-	<H3><A HREF="/snippet/addversion.php?type=snippet&id='.$id.'"><FONT COLOR="RED">Submit a new version</FONT></A></H3>
-	<P>
-	You can submit a new version of this snippet if you have modified it 
-	and you feel it is appropriate to share with others.';
 
 	snippet_footer(array());
 
@@ -146,7 +141,7 @@ if ($type=='snippet') {
 		$title_arr[]='Package Version';
 		$title_arr[]='Date Posted';
 		$title_arr[]='Author';
-		$title_arr[]='Edit/Del';
+		$title_arr[]='Edit/Delete';
 
 		echo html_build_list_table_top ($title_arr);
 
@@ -159,24 +154,24 @@ if ($type=='snippet') {
 		for ($i=0; $i<$rows; $i++) {
 			echo '
 			<TR BGCOLOR="'. html_get_alt_row_color($i) .'"><TD><A HREF="/snippet/detail.php?type=packagever&id='.
-				db_result($result,$i,'snippet_package_version_id').'"><B>'.
-				db_result($result,$i,'version').'</B></A></TD><TD>'.
+				db_result($result,$i,'snippet_package_version_id').'"><B><center>'.
+				db_result($result,$i,'version').'</center></B></A></TD><TD>'.
 				date($sys_datefmt,db_result($result,$i,'date')).'</TD><TD align="middle">'.
 				'<a href="/users/'.db_result($result,$i,'user_name').'"><b>'.
 				db_result($result,$i,'user_name').
 				'</b></a></TD><TD ALIGN="MIDDLE"><A HREF="/snippet/add_snippet_to_package.php?snippet_package_version_id='.
 				db_result($result,$i,'snippet_package_version_id').
-				'"><IMG SRC="/images/ic/pencil.png" HEIGHT="25" WIDTH="20" BORDER="0"></A>
+				'"><IMG SRC="/images/ic/notes.png" BORDER="0"></A>
 				&nbsp; &nbsp; &nbsp; <A HREF="/snippet/delete.php?type=package&snippet_package_version_id='.
 				db_result($result,$i,'snippet_package_version_id').
-				'"><IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" BORDER="0"></A></TD></TR>';
+				'"><IMG SRC="/images/ic/trash.png" BORDER="0"></A></TD></TR>';
 		}
 		echo '</TABLE>';
 
+		
 		echo '
-		<P>
-		Download a raw-text version of this code by clicking on &quot;<B>Download Version</B>&quot;
-		<P>';
+                            <P>You can <A HREF="/snippet/addversion.php?type=package&id='.$id.'"><b><u>submit a new version</u></b></A> of this package if you have modified it 
+	and you feel it is appropriate to share with others.</p>';
 	}
 
 	/*
@@ -193,14 +188,9 @@ if ($type=='snippet') {
 		<P>';
 	snippet_show_package_snippets($newest_version);
 
-	/*
-		Show a form so you can add a new version of this package
-	*/
 	echo '
-	<H3><A HREF="/snippet/addversion.php?type=package&id='.$id.'"><FONT COLOR="RED">Submit a new version</FONT></A></H3>
-	<P>
-	You can submit a new version of this package if you have modified it
-	and you feel it is appropriate to share with others.';
+		<P>
+		Download a raw-text version of this code by clicking on the &quot;<B>Snippet Version</B>&quot; label</p>';
 
 	snippet_footer(array());
 

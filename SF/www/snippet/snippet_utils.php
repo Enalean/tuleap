@@ -87,8 +87,8 @@ function snippet_header($params) {
 	echo '<H2>' . $params['header'] . '</H2>';
 	echo '<P><B>';
 	echo '<A HREF="/snippet/">Browse</A>
-		 | <A HREF="/snippet/submit.php">Submit A New Snippet</A>
-		 | <A HREF="/snippet/package.php">Create A Package</A></B>';
+		 | <A HREF="/snippet/submit.php">Create a New Snippet</A>
+		 | <A HREF="/snippet/package.php">Create A New Package</A></B>';
 	echo '<P>';
 }
 
@@ -116,8 +116,8 @@ function snippet_show_package_snippets($version) {
 	<P>';
 
 	$title_arr=array();
-	$title_arr[]='Snippet ID';
-	$title_arr[]='Download Version';
+	$title_arr[]='ID';
+	$title_arr[]='Snippet Version';
 	$title_arr[]='Title';
 	$title_arr[]='Author';
 
@@ -136,8 +136,8 @@ function snippet_show_package_snippets($version) {
 			echo '
 			<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD>'.db_result($result,$i,'snippet_version_id').
 				'</TD><TD><A HREF="/snippet/download.php?type=snippet&id='.
-				db_result($result,$i,'snippet_version_id').'">'.
-				db_result($result,$i,'version').'</A></TD><TD>'.
+				db_result($result,$i,'snippet_version_id').'"><b><center>'.
+				db_result($result,$i,'version').'</center></b></A></TD><TD>'.
 				db_result($result,$i,'name').'</TD><TD>'.
 				db_result($result,$i,'user_name').'</TD></TR>';
 		}

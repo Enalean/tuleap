@@ -52,7 +52,7 @@ if ((!$result || $rows < 1) && (!$result2 || $rows2 < 1)) {
 } else {
 
 	$title_arr=array();
-	$title_arr[]='Snippet ID';
+	$title_arr[]='ID';
 	$title_arr[]='Title';
 	$title_arr[]='Creator';
 
