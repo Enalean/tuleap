@@ -83,7 +83,23 @@ if ($func) {
             $feedback .= ' Removed a User ';
             group_add_history ('removed user',$rm_id,$group_id);
         }
-    }
+    } /* else if ($func == "import") {
+       session_require(array('group'=>$group_id,'admin_flags'=>'A'));
+      
+      //	  
+      //  get the Group object
+      //
+       $group = group_get_object($group_id);
+       if (!$group || !is_object($group) || $group->isError()) {
+	 exit_no_group();
+       } 		   
+       $atf = new ArtifactTypeFactory($group);
+       if (!$group || !is_object($group) || $group->isError()) {
+ 	exit_error('Error','Could Not Get ArtifactTypeFactory');
+       }
+       $mode = "admin";
+       include '../../tracker/import.php';
+    } */
 }
 
 project_admin_header(array('title'=>"Project Admin: ".group_getname($group_id),'group'=>$group_id,

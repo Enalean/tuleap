@@ -316,20 +316,24 @@ class Artifact extends Error {
      *
      *  @return boolean
      */
-    function create() {
-
+    function create($vfl=false,$import=false,$row=0) {
         global $feedback,$ath,$art_field_fact;
         
         $group = $ath->getGroup();
         $group_artifact_id = $ath->getID();
+	$error_message = ($import ? "Row $row:" : "");
 
         // Retrieve HTTP GET variables and store them in $vfl array
-        $vfl = $art_field_fact->extractFieldList();
-                        
-        // make sure  required fields are not empty
-        if ( $art_field_fact->checkEmptyFields($vfl) == false ) {
-            exit_missing_param();
+        if (!$vfl) {
+		$vfl = $art_field_fact->extractFieldList();
         }
+                
+	if (!$import) {
+	        // make sure  required fields are not empty
+        	if ( $art_field_fact->checkEmptyFields($vfl) == false ) {
+            		exit_missing_param();
+        	}
+	}
 
         // we don't force them to be logged in to submit a bug
         if (!user_isloggedin()) {
@@ -337,17 +341,22 @@ class Artifact extends Error {
         } else {
             $user=user_getid();
         }
+
+	if ($import &&
+	    $vfl['submitted_by'] &&
+	    $vfl['submitted_by'] != "")
+	  $user = $vfl['submitted_by'];
         
-        // first make sure this wasn't double-submitted
-            
-        $field = $art_field_fact->getFieldFromName('summary');
-        if ( $field && $field->isUsed() ) {
-            $res=db_query("SELECT * FROM artifact WHERE submitted_by='$user' AND summary='".$vfl['summary']);
-            if ($res && db_numrows($res) > 0) {
-                $this->setError(' ERROR - DOUBLE SUBMISSION. You have already submitted a bug with the same summary. Please don\'t do that ');
-                return false;           
-            }
-        }
+	// first make sure this wasn't double-submitted
+	$field = $art_field_fact->getFieldFromName('summary');
+	if ( $field && $field->isUsed()) {
+	  $res=db_query("SELECT * FROM artifact WHERE submitted_by=$user AND summary=\"".$vfl['summary']."\"");
+	  if ($res && db_numrows($res) > 0) {
+	    $this->setError(' ERROR - DOUBLE SUBMISSION. You have already submitted an artifact (id='.db_result($res,0,'artifact_id').') with the same summary. Please don\'t do that. ');
+	    return false;           
+	  }
+	}
+
                         
         //
         //  Create the insert statement for standard field
@@ -355,6 +364,17 @@ class Artifact extends Error {
         reset($vfl);
         while (list($field_name,$value) = each($vfl)) {
                 
+	    //echo "<br>field_name=$field_name, value=$value";
+	    if ($import && $field_name == "details") continue;
+	    if ($import && $field_name == "original_submission") {
+		//special treatment for "Original Submission" alias "details"
+		//in the import. The follow-up comments are also named "details"
+		//and in an import (in contrast to a normal create) we can
+		//have both information "original submission" AND "follow-up comments"
+		$vfl_cols .= ',details';
+		$vfl_values .= ',\''.htmlspecialchars($value).'\'';
+	    }
+ 
             $field = $art_field_fact->getFieldFromName($field_name);
             if ( $field && $field->isStandardField() ) {
                 // skip over special fields  
@@ -379,8 +399,14 @@ class Artifact extends Error {
 
         // Add all special fields that were not handled in the previous block
         $fixed_cols = 'open_date,group_artifact_id,submitted_by';
-        $fixed_values = "'".time()."','$group_artifact_id','$user'";
-                
+	if ($import) {
+		if (!$vfl['open_date'] || $vfl['open_date'] == "") $open_date = time();
+		else list($open_date,$ok) = util_date_to_unixtime($vfl['open_date']);
+		$fixed_values = "'".$open_date."','$group_artifact_id','$user'";
+	} else {
+	        $fixed_values = "'".time()."','$group_artifact_id','$user'";
+        }        
+
         //
         //  Finally, build the full SQL query and insert the artifact itself 
         //
@@ -393,7 +419,7 @@ class Artifact extends Error {
         
 	$was_error = false;
         if (!$artifact_id) {
-            $this->setError('INSERT new artifact failed. Report to the Administrator<br>'.
+            $this->setError($error_prefix.'INSERT new artifact failed. Report to the Administrator<br>'.
                             'SQL statement:<br>'.$sql.'<br>');
             $was_error = true;
         } else {
@@ -495,6 +521,36 @@ class Artifact extends Error {
         }
     }
         
+    /**
+     *  Add a list of follow-up comments coming from the import facility
+     *
+     * @param parsed_details (OUT): an array (#detail => array2), where array2 is of the form
+     *                              ("date" => date, "by" => user, "type" => comment-type, "comment" => comment-string)
+     *  @return boolean
+     */
+    function addDetails($parsed_details) {
+
+        while (list(,$arr) = each($parsed_details)) {        
+	    $by = $arr['by'];
+	    if (user_getname($by)) {
+		$user_id = $by;
+		$email = "";
+	    } else {
+		$email = $by;
+		$user_id = 100;
+	    }	
+
+	    $sql="insert into artifact_history(artifact_id,field_name,old_value,new_value,mod_by,email,date,type) ".
+            		"VALUES (".$this->getID().",'details','".$arr['comment']."','$email','$user_id','','".$arr['date']."','".$arr['type']."')";
+	    //echo $sql."<br>\n";
+
+            db_query($sql);
+
+	}
+
+	return true;
+    }
+        
         
     /**
      *  Update an artifact. Rk: vfl is an variable list of fields, Vary from one project to another
@@ -506,7 +562,7 @@ class Artifact extends Error {
      *
      *  @return boolean
      */
-    function handleUpdate ($artifact_id_dependent,$canned_response,&$changes,$masschange=false)
+    function handleUpdate ($artifact_id_dependent,$canned_response,&$changes,$masschange=false,$vfl,$import=false)
         {
             global $feedback,$art_field_fact,$HTTP_POST_VARS;
 
@@ -514,14 +570,16 @@ class Artifact extends Error {
             if (!$this->ArtifactType->userIsTech()) exit_permission_denied();
 	    if ($masschange && !$this->ArtifactType->userIsAdmin()) exit_permission_denied();
         
-            // Retrieve HTTP GET variables and store them in $vfl array
-            $vfl = $art_field_fact->extractFieldList();
+	    if (!$import) {
+	    	// Retrieve HTTP GET variables and store them in $vfl array
+        	$vfl = $art_field_fact->extractFieldList();
 
-            // make sure  required fields are not empty
-            if ( !$canned_response || 
-                 ($art_field_fact->checkEmptyFields($vfl) == false) ) {
-                exit_missing_param();
-            }
+	        // make sure  required fields are not empty
+        	if ( !$canned_response || 
+                	($art_field_fact->checkEmptyFields($vfl) == false) ) {
+                	exit_missing_param();
+            	}
+	    }
         
             //get this artifact from the db
             $result=$this->getFieldsValues();
@@ -727,6 +785,10 @@ class Artifact extends Error {
             //  Insert the list of dependencies 
             //
         
+	    if ($import && $artifact_id_dependent) {
+		if (!$this->deleteAllDependencies()) return false;
+		if ($artifact_id_dependent == "None") unset($artifact_id_dependent);
+	    }
             if (!$this->addDependencies($artifact_id_dependent,&$changes,$masschange)) {
                 return false;
             }
@@ -795,6 +857,7 @@ class Artifact extends Error {
      * @param email: list of email addresses
      * @param comment: comment for these addresses
      * @param changes (OUT): list of changes
+     * @param masschange: if in a masschange, we do not wan't to get feedback when everything ok
      *
      * @return boolean
      */
@@ -814,7 +877,6 @@ class Artifact extends Error {
 	
 	//calculate old_values to put into artifact_history
 	$old_value=$this->getCCEmails();
-	
 
         while (list(,$cc) = each($arr_email)) {
             // Add this cc only if not there already
@@ -840,6 +902,57 @@ class Artifact extends Error {
         }
         return $ok;
     }
+
+    /**
+     * Delete old cc list and add new email instead
+     *
+     * @param email: list of email addresses
+     * @param comment: comment for these addresses
+     *
+     * @return boolean
+     */
+    function updateCC($email,$comment) {
+        global $feedback;
+        
+        $user_id = (user_isloggedin() ? user_getid(): 100);
+        
+        $arr_email = util_split_emails($email);
+        $date = time();
+        $ok = true;
+        $changed = false;
+        
+        if (! util_validateCCList($arr_email, $message)) {
+            exit_error("Error - The CC list is invalid", $message);
+        }
+	
+	//calculate old_values to put into artifact_history
+	$old_value=$this->getCCEmails();
+        $new_value = join(',', $arr_email);
+
+	//look if there is really something to do or not
+	list($deleted_values,$added_values) = util_double_diff_array(explode(",",$old_value),$arr_email);
+	if (count($deleted_values) == 0 && count($added_values) == 0) return true;
+
+	if (!$this->deleteAllCC()) {
+		$feedback = "problem deleting old CC List (aid=".$this-getID(). "). ";
+		$ok = false;
+	}
+	
+	while (list(,$cc) = each($arr_email)) {
+                $changed = true;
+                $res = $this->insertCC($cc,$user_id,$comment,$date);
+                if (!$res) { $ok = false; } 
+        }
+
+        if (!$ok) {
+            $feedback .= ' - CC addition failed';
+        } else {
+	    $this->addHistory('cc',$old_value,$new_value);
+        }
+        return $ok;
+    }
+
+
 
     /**
      * Delete an email address in the CC list
@@ -927,6 +1040,44 @@ class Artifact extends Error {
         
     }
 
+
+    /**
+     * Delete all the CC Names of this Artifact
+     */
+    function deleteAllCC() {
+	$sql = "SELECT artifact_cc_id FROM artifact_cc WHERE artifact_id=".$this->getID();
+	$res = db_query($sql);
+	if (db_numrows($res) > 0) {
+		for ($i=0;$i<db_numrows($res);$i++) {
+			if ($i==0) $ccNames = db_result($res,$i,'artifact_cc_id');
+			else $ccNames .= ",".db_result($res,$i,'artifact_cc_id');
+		}
+		$sql = "DELETE FROM artifact_cc WHERE artifact_cc_id IN ($ccNames) AND artifact_id=".$this->getID();
+		$res_del = db_query($sql);
+		if (!$res_del) return false; 
+	}
+	return true;
+    }
+
+     /**
+      * Delete all the dependencies of this Artifact
+      */
+     function deleteAllDependencies() {
+	$sql = "SELECT is_dependent_on_artifact_id FROM artifact_dependencies WHERE artifact_id=".$this->getID();
+	$res = db_query($sql);
+	if (db_numrows($res) > 0) {
+		for ($i=0;$i<db_numrows($res);$i++) {
+			if ($i==0) $dependencies = db_result($res,$i,'is_dependent_on_artifact_id');
+			else $dependencies .= ",".db_result($res,$i,'is_dependent_on_artifact_id');
+		}
+		$sql = "DELETE FROM artifact_dependencies WHERE is_dependent_on_artifact_id IN ($dependencies) AND artifact_id=".$this->getID();
+		$res_del = db_query($sql);
+		if (!$res_del) return false; 
+	}
+	return true;
+     }
+
+
     /**
      * Insert artifact dependencies
      *
@@ -959,7 +1110,7 @@ class Artifact extends Error {
         }
         
         if (!$ok) {
-            $feedback .= ' - Dependencies addition failed';
+            $feedback .= ' - Dependencies addition for artifact #'.$this->getID().' failed';
         } else {
             if (!masschange) $feedback .= '- Dependencies Added';
             $changes['Dependencies']['add'] = $artifact_id_dependent;

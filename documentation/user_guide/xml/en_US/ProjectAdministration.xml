@@ -298,14 +298,14 @@
           this is a simple text extract of your project data. It uses
           the well known CSV (Comma Separated Value) format. CSV is
           recognized by almost every Office Suite or database tool on
-          the market. In case youu want to develop your own report
+          the market. In case you want to develop your own report
           application most programming languages also come with a
           standard library that knows how to parse CSV format. </para>
         </listitem>
 
         <listitem>
           <para><emphasis role="bold">Direct Database
-          Connection</emphasis>: so to speak this not a Data
+          Connection</emphasis>: so to speak this is not a Data
           Export. It is rather a direct connection to your project
           database through an ODBC or JDBC driver. If you want to
           manipulate your project data with a database tool (like
@@ -841,6 +841,15 @@
       permission are allowed to access the CodeX services administration
       pages.</para>
     </section>
+
+    <section id="TrackerImport">
+      <title>Tracker Artifact Import</title>
+
+      <para><emphasis>Location: Project Administration Menu</emphasis></para>
+
+      <para>Please see <xref linkend="ArtifactImport" /></para>
+    </section>
+
   </chapter>
 <!--
 Local Variables:

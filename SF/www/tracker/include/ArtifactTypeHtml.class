@@ -50,6 +50,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		echo ' | <a href="/tracker/?func=browse&set=open&group_id='.$group_id.'&atid='. $this->getID() .'">Open '.$this->getCapsItemName().'s </a>';
 		if ($this->userIsAdmin()) {
 			echo ' | <a href="/tracker/?func=masschange&group_id='.$group_id.'&atid='. $this->getID() .'">Mass Change </a>';
+			echo ' | <a href="/tracker/?func=import&group_id='.$group_id.'&atid='. $this->getID() .'">Import </a>';
 		}
 		echo ' | <a href="/tracker/?func=reporting&group_id='.$group_id.'&atid='.$this->getID().'">Reporting</a>';
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='.$this->getID().'">Admin</a>';

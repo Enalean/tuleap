@@ -544,6 +544,23 @@ if ( $func == 'gotoid' ) {
             break;
         }
         
+        case 'import' : {
+	   if ( !user_isloggedin()) {
+	     exit_not_logged_in();
+	     return;
+	   }
+                        
+	   //
+	   //  make sure this person has permission to import artifacts
+	   //
+	   if (!$ath->userIsTech()) {
+	     exit_permission_denied();
+	   }
+	   $user_id = user_getid();
+	   include './import.php';
+	   break;
+        }
+        
         case 'browse' : {
                 include './browse.php';
                 break;

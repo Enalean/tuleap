@@ -120,7 +120,7 @@ function pm_footer($params) {
 
 function pm_multiple_status_box($name='status[]',$checked,$show_none=true,$text_none='None',$show_any=false,$text_any='Any') {
     $result=pm_data_get_statuses();
-    return html_build_multiple_select_box($result,$name,$checked,6,$show_none,$text_none,$show_any,$text_any,false);
+    return html_build_multiple_select_box($result,$name,$checked,6,$show_none,$text_none,$show_any,$text_any,false,'',false);
   
 }
 
@@ -134,7 +134,7 @@ function pm_multiple_tech_box($name='assigned_to[]',$group_id=false,$checked,$sh
 		return 'ERROR - no group_id specified';
 	} else {
 	    $result=pm_data_get_technicians($group_id);
-	    return html_build_multiple_select_box($result,$name,$checked,6,$show_none,$text_none, $show_any,$text_any,false);
+	    return html_build_multiple_select_box($result,$name,$checked,6,$show_none,$text_none, $show_any,$text_any,false,'',false);
 	}
 }
 
@@ -168,7 +168,7 @@ function pm_multiple_subprojects_box($name='group_project_id[]',$group_id=false,
 		return 'ERROR - no group_id specified';
 	} else {
 	    $result=pm_data_get_subprojects($group_id);
-	    return html_build_multiple_select_box($result,$name,$checked,6,$show_none,$text_none,$show_any,$text_any,false);
+	    return html_build_multiple_select_box($result,$name,$checked,6,$show_none,$text_none,$show_any,$text_any,false,'',false);
 	}
 }
 
@@ -189,7 +189,7 @@ function pm_multiple_assigned_box ($name='assigned_to[]',$group_id=false,$projec
                 if ($project_task_id) {
                         //get the data so we can mark items as SELECTED
                         $result2=pm_data_get_assigned_to ($project_task_id);
-                        return html_build_multiple_select_box ($result,$name,util_result_column_to_array($result2),6,true,'None',false,'',false);
+                        return html_build_multiple_select_box ($result,$name,util_result_column_to_array($result2),6,true,'None',false,'',false,'',false);
                 } else {
                         if ( !$checked_array ) {
                             return html_build_multiple_select_box ($result,$name,array(),6);
@@ -874,7 +874,7 @@ function pm_multiple_field_box($field_name,$box_name='',$group_id,$checked=false
     	if ($box_name == '') {
     	    $box_name = $field_name.'[]';
     	}
-    	return html_build_multiple_select_box($result,$box_name,$checked,6,$show_none,$text_none, $show_any,$text_any,$show_value);
+    	return html_build_multiple_select_box($result,$box_name,$checked,6,$show_none,$text_none, $show_any,$text_any,false,'',$show_value);
     }
 }
 

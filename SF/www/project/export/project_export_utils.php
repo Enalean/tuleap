@@ -18,7 +18,12 @@ function tocsv($string) {
 
     //Surround with double quotes if there is a comma 
     // or a space in the string
-    if (strchr($string,' ') || strchr($string,',')) {
+    if (strchr($string,' ') || strchr($string,',') || 
+	strchr($string,"\n") ||
+	strchr($string,"\t") ||
+	strchr($string,"\r") ||
+	strchr($string,"\0") ||
+	strchr($string,"\x0B")) {
 	return "\"$string\"";
     } else {
 	return $string;
@@ -65,10 +70,9 @@ function insert_record_in_table($dbname, $tbl_name, $col_list, $record) {
 
 }
 
-function display_exported_fields($col_list,$lbl_list,$dsc_list,$sample_val){
+function display_exported_fields($col_list,$lbl_list,$dsc_list,$sample_val,$mand_list=false){
    
     $title_arr=array();
-    $title_arr[]='Field name';
     $title_arr[]='Label';
     $title_arr[]='Sample Value';
     $title_arr[]='Description';
@@ -76,9 +80,10 @@ function display_exported_fields($col_list,$lbl_list,$dsc_list,$sample_val){
     echo html_build_list_table_top ($title_arr);
     reset($col_list);
     while (list(,$col) = each($col_list)) {
-	echo '<tr class="'.util_get_alt_row_color($cnt++).'">'.
-	    '<td><b>'.$col.'</b></td><td>'.$lbl_list[$col].
-	    '</td><td>'.nl2br($sample_val[$col]).'</td><td>'.$dsc_list[$col].'</td></tr>';
+      $star = (($mand_list && $mand_list[$col]) ? ' <span class="highlight"><big>*</big></b></span>':'');
+      echo '<tr class="'.util_get_alt_row_color($cnt++).'">'.
+	'<td><b>'.$lbl_list[$col].'</b>'.$star.
+	'</td><td>'.nl2br($sample_val[$col]).'</td><td>'.$dsc_list[$col].'</td></tr>';
     }
 
     echo '</table>';

@@ -58,6 +58,58 @@ function util_date_explode($date) {
     return array($year,$month,$day);
 }
 
+// Convert a date in sys_datefmt (Y-M-d H:i ex: 2004-Feb-03 16:13)
+// into a Unix time. if string is empty return 0 (Epoch time)
+// Returns a list with two values: the unix time and a boolean saying whether the conversion
+// went well (true) or bad (false)
+function util_sysdatefmt_to_unixtime($date) {
+    $time = 0;
+    if (!$date||$date=="") {
+    	return array($time,false);
+    }
+    
+    list($year,$month,$day,$hour,$minute) = util_sysdatefmt_explode($date);
+    $time = mktime($hour, $minute, 0, $month, $day, $year);
+    return array($time,true);
+}
+
+// Explode a date in the form of (Y-M-d H:i) into its a list of 5 parts (YYYY,MM,DD,H,i)
+// if DD and MM are not defined then default them to 1
+function util_sysdatefmt_explode($date) {
+  $months = array("Jan"=>1, "Feb"=>2, "Mar"=>3, "Apr"=>4, "May"=>5, "Jun"=>6, "Jul"=>7, "Aug"=>8, "Sep"=>9, "Oct"=>10, "Nov"=>11, "Dec"=>12);
+
+  $res = preg_match("/\s*(\d+)-(\D+)-(\d+) (\d+):(\d+)/",$date,$match);
+  if ($res == 0) { 
+    //if it doesn't work try (Y-M-d) only
+    $res = preg_match("/\s*(\d+)-(\D+)-(\d+)/",$date,$match);
+    if ($res == 0) { 
+      
+      // if it doesn't work try Y-M only
+      $res = preg_match("/\s*(\d+)-(\D+)/",$date,$match);
+      if ($res == 0) {
+	// if it doesn't work try YYYY only
+	$res = preg_match("/\s*(\d+)/",$date,$match);
+	if ($res == 0) {
+	  // nothing is valid return Epoch time
+	  $year = '1970'; $month='1'; $day='1'; $hour='0'; $minute='0';
+	} else {
+	  list(,$year) = $match ; $month='1'; $day='1'; $hour='0'; $minute='0';
+	}
+	
+      } else {
+	list(,$year,$month) = $match ; $day='1'; $hour='0'; $minute='0';
+      }
+      
+    } else {
+      list(,$year,$month,$day) = $match; $hour='0'; $minute='0';
+    }
+  } else {
+    list(,$year,$month,$day,$hour,$minute) = $match;
+  }
+
+  return array($year,$months[$month],$day,$hour,$minute);
+}
+
 function util_prep_string_for_sendmail($body) {
 	$body=str_replace("\\","\\\\",$body);
 	$body=str_replace("\"","\\\"",$body);

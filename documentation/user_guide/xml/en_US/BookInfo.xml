@@ -339,6 +339,18 @@
 
         <revremark>Added Artifact Mass Change section in Tracker chapter</revremark>
       </revision>
+      <revision>
+        <revnumber>2.6.10</revnumber>
+
+        <date>9-Sep-2004</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Added Tracker Artifact Import section in Tracker chapter. 
+	Added link in the Project Administration chapter to the Tracker Artifact
+	Import section. Corrected typos in chapter Project Administration,
+	section Data Export</revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--

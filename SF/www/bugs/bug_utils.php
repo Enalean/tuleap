@@ -386,7 +386,7 @@ function bug_multiple_field_box($field_name,$box_name='',$group_id,$checked=fals
 	if ($box_name == '') {
 	    $box_name = $field_name.'[]';
 	}
-	return html_build_multiple_select_box($result,$box_name,$checked,6,$show_none,$text_none, $show_any,$text_any,$show_value);
+	return html_build_multiple_select_box($result,$box_name,$checked,6,$show_none,$text_none, $show_any,$text_any,false,'',$show_value);
     }
 }
 

@@ -967,7 +967,7 @@
   <section id="ArtifactMassChange">
     <title>Artifact Mass Change</title>
   
-    <para>Codex provides project administrators with the possibility to
+    <para>CodeX provides project administrators with the possibility to
     update several artificats in one step: delete/add the same CC 
     name entry or file attachment to a set of artifacts, assign a list of 
     artifacts to a person, etc... A typical application of the 
@@ -1146,6 +1146,161 @@ width="14.5cm" />
     Category field).</para>
   </section>
 
+  <section id="ArtifactImport">
+    <title>Tracker Artifact Import</title>
+
+      <para>Project Administrators have the means to import
+    artifacts into CodeX trackers using the well known
+    CSV (Comma Separated Value) format supported by all
+    of the major office productivity suites. The artifact
+    import functionality greatly facilitates the migration
+    and integration of external project tracking and management
+    tools into CodeX trackers. </para>
+
+    <para>The import is divided into three steps:
+
+    	<itemizedlist mark="bullet" spacing="compact">
+    	<listitem><para><emphasis role="bold">CSV file submission. </emphasis>
+      	The project administrators can access the Import
+      	functionality from the tracker browsing screens or 
+	over the Project Administration Menu. Enter/choose 
+	the tracker to update and specify the CSV file to 
+	import.</para>
+    	</listitem>
+   
+    	<listitem><para><emphasis role="bold">CSV file parsing. </emphasis>
+      	If no parse errors were found in the uploaded file, 
+      	a parse report is shown to validate that the information 
+      	to import is correct.</para>
+    	</listitem>
+   
+    	<listitem><para><emphasis role="bold">Database update. </emphasis>
+      	Depending on the parsed information
+      	new artifacts are created or existing ones updated.
+      	</para></listitem>
+    	</itemizedlist>
+    </para>
+
+    <section>
+      <title>When to use the Import</title>
+	<para>You will find below a couple of suggestions regarding
+	  the use of the tracker import feature:
+
+	<itemizedlist mark="bullet" spacing="compact">
+	<listitem><para>Initial import from a project management software
+	  to your CodeX task tracker.</para></listitem>
+	<listitem><para>Migration of your legacy defect tracking system
+	  into your new CodeX defect tracker.</para></listitem>
+	<listitem><para>Migration of artifacts from one CodeX tracker
+	  to another.</para></listitem>
+	</itemizedlist>
+	</para>
+    </section>
+
+    <section>
+	<title>Exporting Excel Sheets in CSV Format</title>
+	  <para>To export an Excel sheet to CSV format, simply follow the steps below:
+	  <itemizedlist mark="bullet" spacing="compact">
+	  <listitem><para>Select <literal>File -> Save As</literal>
+		</para></listitem>
+	  <listitem><para>In the dialog window choose 
+		<literal>CSV</literal> as the <literal>Save 
+		as type</literal></para></listitem>
+	  </itemizedlist>
+	</para>
+    </section>
+
+    <section>
+      <title>CSV File Parsing</title>
+	<para>The CSV format that is accepted as import input 
+	is accessible over the CSV file submission screen. 
+	This page allows manual validation of the tracker 
+	field labels, indicating which fields are mandatory in
+      	case of a new artifact submission. In addition, it gives
+      	you a sample CSV file. If you already use the Tracker
+      	Artifact Export (see <xref linkend="ProjectDataExport" />)
+      	you will notice that the format of the files to import
+      	and the exported files are exactly the same. You can
+      	refer to the export format especially
+      	for the date formats as well as the format of the
+      	follow-up comments (see <xref linkend="ArtifactComments" />).
+      	The first record in the CSV import file is always the 
+      	header row containing all the tracker field labels that 
+      	will be used in the following artifact records.</para>
+
+    	<para>Depending on whether you want to import new artifacts
+      	or update the ones that already exist in the tracker you
+      	need to provide different information. Nevertheless,
+      	you can mix in one CSV file the submission of new artifacts
+      	and the update of existing ones.</para>
+     
+    	<para>For the artifact creation you need to provide
+      	information on all fields that are specified
+      	as mandatory in the CSV import format. You may omit
+      	the submitter and submission date. The artifact
+      	submitter is then automatically set to the
+      	user importing the CSV file and the submission date
+      	will be the date of the import.</para>
+
+    	<para>For the artifact update you need to provide the
+      	artifact identifier of the artifacts to update. Beside
+      	this, you only need to provide the fields you want
+      	to update. </para>
+
+    	<para>The parsing method checks several potential errors 
+	in the CSV file:
+ 	<itemizedlist mark="bullet" spacing="compact">
+	<listitem><para>Omission of mandatory fields when submitting
+	new artifacts </para></listitem>
+	<listitem><para>Not the same number of columns in the header 
+	row and a artifact row</para></listitem>
+	<listitem><para>Unknown tracker field label</para></listitem>
+	<listitem><para>Field values that do not correspond to the 
+	predefined field values of a (multi) select box field
+	</para></listitem>
+	<listitem><para>Double submission (i.e. submission of a new 
+	artifact with exactly the same summary as an existing
+	artifact)</para></listitem>
+	<listitem><para>Unkown artifact identifier</para></listitem>
+	</itemizedlist>
+
+	All other potential errors have to be checked manually
+	by looking at the parse report table.
+	</para>
+    </section>
+
+    <section>
+	<title>The Database Update</title>
+
+	<para>If you import new artifacts, all 
+	non-mandatory fields that are omitted in the CSV 
+	file will be initialized to their default value.</para>
+	
+	<para>If you want to update the CC list or
+      	dependencies list of an existing artifact, be aware 
+	that the import will delete all former CC names or 
+	dependencies of the artifact and put the CC names 
+	or dependencies from the import file instead.
+	All follow-up comments in the import file are simply
+	added. There is no verification if the same follow-up
+	comment already exists.
+	The submitter and submission date of an existing
+	artifact is never changed by an import even if the
+	import file contains relevant information.</para>
+
+	<para>If an error occurs for some artifact during 
+	the database update the following artifacts in the CSV
+	file are not imported any more.</para>
+
+	<para>Each import is tracked in the project history 
+	(<xref linkend="ProjectHistory" />). On the other
+	hand, no e-mail notification is sent in response to 
+	the import.</para>
+    </section>
+
+  </section>
+      
+
   <section id="TrackerAccessPermissions">
     <title>Tracker Access Permissions</title>
 
@@ -1197,6 +1352,11 @@ width="14.5cm" />
 	  <row>
 	    <entry><link linkend="MassChange">Mass Update of Artifacts
 	      </link></entry> <entry>Only available to project
+	      administrators.</entry>
+	  </row>
+	  <row>
+	    <entry><link linkend="ArtifactImport">Tracker Artifact
+	      Import</link></entry> <entry>Only available to project
 	      administrators.</entry>
 	  </row>
 	  <row>

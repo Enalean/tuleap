@@ -1627,6 +1627,25 @@ class ArtifactType extends Error {
 	}
 
 
+	/**
+	 * Return the artifact data with all fields set to default values. (for export)
+	 *
+	 * @return array: the sql query
+	 */
+	function buildDefaultRecord() {
+		global $art_field_fact;
+		
+		$fields = $art_field_fact->getAllUsedFields();
+
+		reset($fields);
+		while (list(,$field) = each($fields) ) {
+		  $record[$field->getName()] = $field->getDefaultValue();
+		}
+		
+		return $record;
+	}
+
+
 	/** retrieves all the cc addresses with their artifact_cc_ids
 	 * for a list of artifact_ids
 	 * @param change_ids: the list of artifact_ids for which we search the emails
