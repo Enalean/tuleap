@@ -74,7 +74,6 @@ class ArtifactField extends Error {
 	var $DATATYPE_FLOAT = 3;
 	var $DATATYPE_DATE = 4;	
 	var $DATATYPE_USER = 5;	
-	
 
 	/**
 	 *  Constructor.
@@ -183,11 +182,12 @@ class ArtifactField extends Error {
 	}
 	
 	/**
-	 *  Get the label of the display_type 
+	 *  Get the label of the field. The field type is a combination
+	 * of the field data type and the field display type
 	 *
 	 * @return string
 	 */
-	function getLabelDisplayType() {
+	function getLabelFieldType() {
 
 		if ( ($this->data_type == $this->DATATYPE_INT || $this->data_type == $this->DATATYPE_USER)
 			 &&($this->display_type == "SB") ) 

@@ -23,7 +23,7 @@ function help_button($type,$helpid=false,$prompt='[?]') {
     } else {
 	// $type is a php script - the invoker probably wants to customize 
 	// the help display somehow
-	$script = '/help/'.$type.'.php?helpid='.$helpid;
+	$script = '/help/'.$type.'.php?helpid='.urlencode($helpid);
     }	
 
     return ('<A href="javascript:help_window(\''.$script.'\')"><B>'.$prompt.'</B></A>');

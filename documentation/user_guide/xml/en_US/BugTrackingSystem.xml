@@ -11,7 +11,14 @@
 -->
       
 <chapter id="BugTrackingSystem">
-  <title>Bug Tracking System</title>
+  <title>Bug Tracking System (deprecated)</title>
+
+  <para><tip><title>** The Bug Tracking System is DEPRECATED
+  **</title> <para>In CodeX version 1.7 and above, the Bug Tracking
+  System has been discontinued. It is now replaced by the CodeX
+  Tracker Service (see <xref linkend="TrackerService"/>). This chapter
+  is included in the CodeX User Guide for projects that originally
+  used the legacy Bug Tracking System.</para></tip></para>
 
   <para>The CodeX Bug Tracking System (BTS) is one of the most powerful
     services offered to CodeX hosted projects. It is also one of the most

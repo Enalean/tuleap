@@ -87,10 +87,10 @@ class ArtifactTypeHtml extends ArtifactType {
 		echo '<strong><a href="/tracker/admin/?group_id='.$group_id.'">Admin All Trackers</a>';
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'">Admin</a>';
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=editoptions">General Settings</a>';
-		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=canned">Manage Canned Responses</a>';
-		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=field_usage">Manage Field Usage</a>';
-		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=field_values">Manage Field Values</a>';
-		echo ' | <a href="/tracker/admin/?func=report&group_id='.$group_id.'&atid='. $this->getID() .'">Manage Reports</a>';
+		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=field_usage">Field Usage</a>';
+		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=field_values">Field Values</a>';
+		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=canned">Canned Responses</a>';
+		echo ' | <a href="/tracker/admin/?func=report&group_id='.$group_id.'&atid='. $this->getID() .'">Tracker Reports</a>';
 		echo ' | <a href="/tracker/admin/?func=notification&group_id='.$group_id.'&atid='. $this->getID() .'&func=notification">Email Notification Settings</a>';
 	    echo ' | '.help_button($params['help'],false,'Help');
 		echo '</strong><hr>';
@@ -237,18 +237,18 @@ class ArtifactTypeHtml extends ArtifactType {
 	 */
 	function displayAdminTracker($group_id,$atid) {
 		
-	    echo '<H2>Tracker \'<a href="/tracker?group_id='.$group_id.'&atid='.$atid.'">'.$this->getName().'</a>\' - Administration</H2>';
+	    echo '<H2>Tracker \'<a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'">'.$this->getName().'</a>\' - Administration</H2>';
 	
 	    if ( $this->userIsAdmin() ) {
 			echo '<H3><a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=editoptions">General Settings</a></H3>';
 			echo 'Define the title, the description, etc of this tracker.<P>';
-			echo '<H3><a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=canned">Manage Canned Responses</a></H3>';
-			echo 'Add, update or delete the canned responses.';
 			echo '<H3><a href="/tracker/admin/?func=field_usage&group_id='.$group_id.'&atid='.$atid.'">Manage Field Usage</a></H3>';
 			echo 'Define what tracker fields you want to use in this tracker (remark: some of the fields like status, assignee, severity&hellip; are mandatory and cannot be removed).<P>';
 			echo '<H3><a href="/tracker/admin/?func=field_values&group_id='.$group_id.'&atid='.$atid.'">Manage Field Values</a></H3>';
 			echo 'Define the set of values for the tracker fields you have decided to use in your tracker. <P>';
-			echo '<H3><a href="/tracker/admin/?func=report&group_id='.$group_id.'&atid='.$atid.'">Manage Reports</a></H3>';
+			echo '<H3><a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=canned">Manage Canned Responses</a></H3>';
+			echo 'Add, update or delete the canned responses.';
+			echo '<H3><a href="/tracker/admin/?func=report&group_id='.$group_id.'&atid='.$atid.'">Manage Tracker Reports</a></H3>';
 			echo 'Define personal or project-wide tracker reports: what search criteria to use and what tracker fields to show in the tracker report table&hellip;';
 		
 			echo '<H3><a href="/tracker/admin?func=notification&group_id='.$group_id.'&atid='.$atid.'">Email Notification Settings</a></H3>';
@@ -335,7 +335,7 @@ class ArtifactTypeHtml extends ArtifactType {
 	 */
 	function displayOptions($group_id,$atid) {
 		
-		echo '<H2>Tracker \'<a href="/tracker?group_id='.$group_id.'&atid='.$atid.'">'.$this->getName().'</a>\' - General Settings</H2>';
+		echo '<H2>Tracker \'<a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'">'.$this->getName().'</a>\' - General Settings</H2>';
 		echo '<form name="form1" >
 		  <input type="hidden" name="update" value="1">
 		  <input type="hidden" name="group_id" value="'.$group_id.'">
@@ -605,7 +605,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		    $html .= '<TD><A HREF="'.$PHP_SELF.'?group_id='.$this->Group->getID()."&atid=".$this->getID().
 			'&func=display_field_update&field_id='.$field->getID().'">'.
 			$field->getLabel().'</A></td>'.
-			"\n<td>".$field->getLabelDisplayType().'</td>'.
+			"\n<td>".$field->getLabelFieldType().'</td>'.
 			"\n<td>".$field->getDescription().'</td>'.
 			"\n<td align =\"center\">".$rank.'</td>'.
 			"\n<td align =\"center\">".$status.'</td>';
@@ -645,7 +645,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		    $html .= '<TD><A HREF="'.$PHP_SELF.'?group_id='.$this->Group->getID()."&atid=".$this->getID().
 			'&func=display_field_update&field_id='.$field->getID().'">'.
 			$field->getLabel().'</A></td>'.
-			"\n<td>".$field->getLabelDisplayType().'</td>'.
+			"\n<td>".$field->getLabelFieldType().'</td>'.
 			"\n<td>".$field->getDescription().'</td>'.
 			"\n<td align =\"center\">".$rank.'</td>'.
 			"\n<td align =\"center\">".$status.'</td>';
@@ -863,8 +863,10 @@ class ArtifactTypeHtml extends ArtifactType {
 		}
 	
 		echo '
-		  <b>Field identification and description:</b><br>
-          <p>Field Label: <font color="red">*</font> ';
+		  <b>Field Identification and Description</b> ';
+		echo  help_button('TrackerAdministration.html#CreationandModificationofaTrackerField');
+		echo '
+                              <p>Field Label: <font color="red">*</font> ';
 		      
 		if ( $label ) {
 			echo '<input type="text" name="label" size="30" maxlength="40" value="'.$label.'">';
@@ -884,14 +886,16 @@ class ArtifactTypeHtml extends ArtifactType {
 		  <p>Field type: <font color="red">*</font>&nbsp;';
 		
 		if ( $field && $field->isStandardField() ) {
-			echo $field->getLabelDisplayType();
+			echo $field->getLabelFieldType();
 		} else {
 			$this->displayFieldType($data_type,$display_type,"form_create");
 		}
 		
 		echo '			
-		  <p><b>Display informations:</b><br>
-		  <table width="100%" border="0" cellpadding="5" cellspacing="0">
+		  <p><b>Display informations </b>';
+		echo  help_button('TrackerAdministration.html#CreationandModificationofaTrackerField');
+		echo'
+                                <table width="100%" border="0" cellpadding="5" cellspacing="0">
 		    <tr> 
 		      <td>Display Size:&nbsp;';
 		      
@@ -1097,10 +1101,11 @@ class ArtifactTypeHtml extends ArtifactType {
 	function displayValueFunctionForm($field_id,$value_function="",$or_label="") {
 	    
 	    if ( $or_label ) {
-	    	echo '<h3>'.$or_label.' Bind the field to a list of values</h3>';
+	    	echo '<h3>'.$or_label.' Bind the field to a list of values ';
 	    } else {
-	    	echo '<h3>Bind the field to a list of values</h3>';
-		}
+	    	echo '<h3>Bind the field to a list of values ';
+	    }
+	    echo  help_button('TrackerAdministration.html#TrackerBindingFieldToValueList').'</h3>';
 	
 	    echo '
 	      <FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
@@ -1161,9 +1166,9 @@ class ArtifactTypeHtml extends ArtifactType {
 		global $PHP_SELF;
 		
 		if ( $func == "value_create" ) {
-			echo '<h3>Create a new field value</h3>';
+			echo '<h3>Create a new field value '.help_button('TrackerAdministration.html#TrackerCreatingaTrackerFieldValue').'</h3>';
 		} else {
-			echo '<h3>Update the field value</h3>';
+			echo '<h3>Update the field value '.help_button('TrackerAdministration.html#TrackerUpdatingaTrackerFieldValue').'</h3>';
 		}
 					
 		echo '
@@ -1426,7 +1431,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		$group_artifact_id = $this->getID();
 		$group_id = $group->getGroupId();
 
-		echo '<H2>Tracker \'<a href="/tracker?group_id='.$group_id.'&atid='.$group_artifact_id.'">'.$this->getName().'</a>\' - Email Notification Settings</h2>';
+		echo '<H2>Tracker \'<a href="/tracker/admin/?group_id='.$group_id.'&atid='.$group_artifact_id.'">'.$this->getName().'</a>\' - Email Notification Settings</h2>';
 		// Build Wachees UI
 		$res = $this->getWatchees($user_id);
 		$arr_watchees = array();
@@ -1442,7 +1447,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		<INPUT type="hidden" name="group_id" value="'.$group_id.'">';
 		
 		echo '<h3><a name="GlobalEmailNotification"></a>Global Email Notification '.
-		help_button('HELP_FIXME.html#HELP_FIXME').'</h3>';
+		help_button('TrackerAdministration.html#TrackerGlobalEmailNotification').'</h3>';
 		
 		if ($this->userIsAdmin()) {
 		    echo '
@@ -1469,7 +1474,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		    // To watch other users you must have at least tech rights on the tracker
 		    echo'
 		<h4>Users To Watch '.
-		help_button('HELP_FIXME.html#HELP_FIXME').'</h4>
+		help_button('TrackerAdministration.html#TrackerWatchers').'</h4>
 		<P>If you want to be the backup of someone when they\'re away from the office, or if you need to do the QA to all their artifacts. '.$GLOBALS['sys_name'].' can send their email notification to you also. List the login name of any user you wish to watch, separated by commas.</b>
 		<p><INPUT TYPE="TEXT" NAME="watchees" VALUE="'.$watchees.'" SIZE="55" MAXLENGTH="255"><br></p>
 		';
@@ -1493,7 +1498,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		// Build Role/Event table 
 		// Rk: Can't use html_build_list_table_top because of the specific layout
 		echo '<h4>Event/Role Specific Settings '.
-		help_button('HELP_FIXME.html#HELP_FIXME').'</h4>
+		help_button('TrackerAdministration.html#TrackerEventRoleBasedEmailNotification').'</h4>
 		              <P>You can tune your notification settings and decide what artifact changes you
 		want to be aware of depending on your role. <p>
 		<b><u>Note</u></b>: Notification of *new* artifact submission to people other than the assignee
@@ -1560,7 +1565,7 @@ class ArtifactTypeHtml extends ArtifactType {
 			return;
 		}
 
-		echo '<h3>Define Default Value</h3>';
+		echo '<h3>Define Default Value '.help_button('TrackerAdministration.html#TrackerDefiningaDefaultFieldValue').'</h3>';
 					
 		echo '
 	      <FORM ACTION="'.$PHP_SELF.'" METHOD="POST">

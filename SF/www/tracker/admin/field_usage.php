@@ -8,9 +8,9 @@
 //  Written for CodeX by Stephane Bouhet
 //
 
-$ath->adminHeader(array('title'=>'Tracker Administration - Field Usage Administration','help' => 'HELP_FIXME.html'));
+$ath->adminHeader(array('title'=>'Tracker Administration - Field Usage Administration','help' => 'TrackerAdministration.html#TrackerFieldUsageManagement'));
 
-echo '<H2>Tracker \'<a href="/tracker?group_id='.$group_id.'&atid='.$atid.'">'.$ath->getName().'</a>\' - Field Usage Administration</H2>';
+echo '<H2>Tracker \'<a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'">'.$ath->getName().'</a>\' - Field Usage Administration</H2>';
 $ath->displayFieldUsageList();
 $ath->displayFieldUsageForm();
 

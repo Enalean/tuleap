@@ -8,8 +8,10 @@
 //  Written for CodeX by Stephane Bouhet
 //
 
-$ath->adminHeader(array('title'=>'Tracker Administration - Field Values Administration','help' => 'HELP_FIXME.html'));
-echo "<H2>Tracker '<a href=\"/tracker?group_id=".$group_id."&atid=".$atid."\">".$ath->getName()."</a>' - Manage Field Values for '".$field->getLabel()."'</H2>";
+$ath->adminHeader(array('title'=>'Tracker Administration - Field Values Administration',
+			'help' => 'TrackerAdministration.html#TrackerBrowsingTrackerFieldValues'));
+
+echo "<H2>Tracker '<a href=\"/tracker/admin/?group_id=".$group_id."&atid=".$atid."\">".$ath->getName()."</a>' - Manage Field Values for '".$field->getLabel()."'</H2>";
 
 if ( !$field->isSelectBox() && !$field->isMultiSelectBox() ) {
 	$ath->displayDefaultValueForm($field_id,$field->getDefaultValue());

@@ -10,7 +10,15 @@
 //
 -->
   <chapter id="SupportRequestManager">
-    <title>Support Request Manager</title>
+    <title>Support Request Manager (deprecated)</title>
+
+  <para><tip><title>** The Support Request Manager is DEPRECATED
+  **</title> <para>In CodeX version 1.7 and above, the Support Request
+  Manager has been discontinued. It is now replaced by the CodeX
+  Tracker Service (see <xref linkend="TrackerService"/>). This chapter
+  is included in the CodeX User Guide for projects that originally
+  used the legacy Support Request Manager.</para></tip></para>
+
 
     <para>One of the CodeX goals is to help project team to grow a community
     of users and developers around their project. The Support Request (SR)

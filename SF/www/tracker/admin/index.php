@@ -26,8 +26,6 @@ require('../include/ArtifactReportHtml.class');
 require('../include/ArtifactHtml.class');
 
 
-//  echo "gid, aid ".$group_id.", ".$atid;
-
 if ($group_id && !$atid) {
 	//
 	// Manage trackers: create and delete
@@ -64,7 +62,7 @@ if ($group_id && !$atid) {
 			return;
 		}
 	
-		$ath->adminTrackersHeader(array('title'=>'Tracker Administration - Create tracker','help' => 'HELP_FIXME.html'));
+		$ath->adminTrackersHeader(array('title'=>'Tracker Administration - Create tracker','help' => 'TrackerCreation.html'));
 		$ath->displayCreateTracker($group_id,$codex_template,$group_id_template,$atid_template,$name,$description,$itemname,$feedback);
 		$ath->footer(array());
 		break;
@@ -93,10 +91,8 @@ if ($group_id && !$atid) {
 			exit_permission_denied();
 			return;
 		}
-	
-		$ath->adminTrackersHeader(array('title'=>'All Trackers Administration','help' => 'HELP_FIXME.html'));
-		echo $ath->displayAdminTrackers();
-		$ath->footer(array());
+		include './admin_trackers.php';
+
 	}
 				
 } else if ($group_id && $atid) {
@@ -249,14 +245,16 @@ if ($group_id && !$atid) {
 		} // End of post_changes
 		// Display the UI Form
 		if ($update_canned && !$post_changes) {
-			$ath->adminHeader(array ('title'=>'Modify Canned Response'));
+			$ath->adminHeader(array ('title'=>'Modify Canned Response',
+		   'help' => 'TrackerAdministration.html#TrackerCannedResponses'));
 			$aci = $ach->fetchData($artifact_canned_id);
 			if (!$aci) {
 				exit_error('Error','ArtifactCanned Item # '.$artifact_canned_id.' could not be found');
 			}
 			$ach->displayUpdateForm();
 		} else {
-			$ath->adminHeader(array ('title'=>'Create/Modify Canned Responses'));
+			$ath->adminHeader(array ('title'=>'Create/Modify Canned Responses',
+		   'help' => 'TrackerAdministration.html#TrackerCannedResponses'));
 			$ach->displayCannedResponses();
 			
 			$ach->displayCreateForm();
@@ -267,7 +265,7 @@ if ($group_id && !$atid) {
 	case 'notification':
 		$ath->adminHeader(
 		array ('title'=>'Artifact Administration - Personal Email Notification Settings',
-		   'help' => 'HELP_FIXME.html#HELP_FIXME'));
+		   'help' => 'TrackerAdministration.html#TrackerEmailNotificationSettings'));
 		if ($submit) {
 			$res_new = $ath->updateNotificationSettings($send_all_artifacts, ($new_artifact_address?$new_artifact_address : ''), user_getid(), $watchees);
 		    // Event/Role specific settings
@@ -339,7 +337,7 @@ if ($group_id && !$atid) {
 			}
 		}
 	
-		$ath->adminHeader(array('title'=>'Tracker Administration - Options','help' => 'HELP_FIXME.html'));
+		$ath->adminHeader(array('title'=>'Tracker Administration - Options','help' => 'TrackerAdministration.html#TrackerGeneralSettings'));
 		if ( $succeed ) {
 			echo '<H3><span class="feedback">SUCCESSFUL UPDATE</span></H3>';
 		}
@@ -379,15 +377,16 @@ if ($group_id && !$atid) {
 	case 'display_field_values':
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
-			include './field_values_details.php';
+		    include './field_values_details.php';
 		}
 		break;
 		
 	case 'display_field_value':
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
-			$ath->adminHeader(array('title'=>'Tracker Administration - Field Values Administration','help' => 'HELP_FIXME.html'));
-			echo "<H2>Tracker '".$ath->getName()."' - Manage Field Values for '".$field->getLabel()."'</H2>";
+			$ath->adminHeader(array('title'=>'Tracker Administration - Field Values Administration','help' => 'TrackerAdministration.html#TrackerUpdatingaTrackerFieldValue'));
+			echo "<H2>Tracker '<a href=\"/tracker/admin/?group_id=".$group_id."&atid=".$atid."\">".$ath->getName()."</a>' - Manage Field Values for '".$field->getLabel()."'</H2>";
+
 			$value_array = $field->getFieldValue($atid,$value_id);
 			$ath->displayFieldValueForm("value_update",$field_id,$value_array['value_id'],$value_array['value'],$value_array['order_id'],$value_array['status'],$value_array['description']);
 			$ath->footer(array());
@@ -480,8 +479,8 @@ if ($group_id && !$atid) {
 	case 'display_field_update':
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
-			$ath->adminHeader(array('title'=>'Tracker Administration - Field Usage Administration','help' => 'HELP_FIXME.html'));
-			echo "<H2>Tracker '<a href=\"/tracker?group_id=".$group_id."&atid=".$atid."\">".$ath->getName()."</a>' - Field Usage Administration</H2>";
+			$ath->adminHeader(array('title'=>'Tracker Administration - Modify Field Usage','help' => 'TrackerAdministration.html#CreationandModificationofaTrackerField'));
+			echo "<H2>Tracker '<a href=\"/tracker/admin/?group_id=".$group_id."&atid=".$atid."\">".$ath->getName()."</a>' - Modify Field Usage for '".$field->getLabel()."'</H2>";
 			$ath->displayFieldUsageForm("field_update",$field->getID(),$field->getName(),$field->getDescription(),$field->getLabel(),$field->getDataType(),$field->getDefaultValue(),$field->getDisplayType(),
 									   $field->getDisplaySize(),$field->getPlace(),$field->getShowOnAdd(),$field->getShowOnAddMembers(),
 									   $field->getEmptyOk(),$field->getKeepHistory(),$field->isSpecial(),$field->getUseIt(),true);
@@ -495,7 +494,7 @@ if ($group_id && !$atid) {
 			return;
 		}
 	
-		$ath->adminHeader(array('title'=>$ath->getName().' Tracker Administration','help' => 'HELP_FIXME.html'));
+		$ath->adminHeader(array('title'=>$ath->getName().' Tracker Administration','help' => 'TrackerAdministration.html'));
 		if (!$ath->pre_delete()) {
 		  $feedback = "Tracker '".$ath->getName()."' - Deletion Failed - ";
 		} else {
@@ -516,7 +515,7 @@ if ($group_id && !$atid) {
 			return;
 		}
 	
-		$ath->adminHeader(array('title'=>$ath->getName().' Tracker Administration','help' => 'HELP_FIXME.html'));
+		$ath->adminHeader(array('title'=>$ath->getName().' Tracker Administration','help' => 'TrackerAdministration.html'));
 		$ath->displayAdminTracker($group_id,$atid);
 		$ath->footer(array());
 	} // switch

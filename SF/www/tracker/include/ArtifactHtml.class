@@ -152,7 +152,7 @@ class ArtifactHtml extends Artifact {
 		if ( !$ro ) {
 			echo '
 			<TR><TD>
-			<h3>Follow-up Comments '.help_button('HELP_FIXME.html#HELP_FIXME').'</h3></td>
+			<h3>Follow-up Comments '.help_button('ArtifactUpdate.html#ArtifactComments').'</h3></td>
 			<TD>
 			<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit Changes">
 			</td></tr>';
@@ -202,7 +202,7 @@ class ArtifactHtml extends Artifact {
 		<TR><TD colspan="2"><hr></td></tr>
 		
 		<TR><TD colspan="2">
-		<h3>CC List '.help_button('HELP_FIXME.html#HELP_FIXME').'</h3>';
+		<h3>CC List '.help_button('ArtifactUpdate.html#ArtifactCCList').'</h3>';
 		
 		if ( !$ro ) {
 			echo '
@@ -221,7 +221,7 @@ class ArtifactHtml extends Artifact {
 		echo '
 		<TR><TD colspan="2"><hr></td></tr>
 		<TR><TD colspan="2">
-		<h3>Attachments '.help_button('HELP_FIXME.html#HELP_FIXME').'</h3>';
+		<h3>Attachments '.help_button('ArtifactUpdate.html#ArtifactAttachments').'</h3>';
 		
 		if ( !$ro ) {
 			echo '
@@ -246,7 +246,7 @@ class ArtifactHtml extends Artifact {
 		<TR><TD colspan="2"><hr></td></tr>
 		<TR ><TD colspan="2">';
 		
-		echo '<h3>Dependencies '.help_button('HELP_FIXME.html#HELP_FIXME').'</h3>
+		echo '<h3>Dependencies '.help_button('ArtifactUpdate.html#ArtifactDependencies').'</h3>
 		<B>Dependent on:</B><BR>
 		<P>';
 		if ( !$ro ) {
@@ -271,7 +271,7 @@ class ArtifactHtml extends Artifact {
         echo '
 		<TR><TD colspan="2" >';
 		
-		echo '<H3>Change History '.help_button('HELP_FIXME.html#HELP_FIXME').'</H3>';
+		echo '<H3>Change History '.help_button('ArtifactUpdate.html#ArtifactHistory').'</H3>';
 		echo $this->showHistory($group_id,$group_artifact_id);
 		
 		// 
@@ -908,7 +908,7 @@ class ArtifactHtml extends Artifact {
 		<TR><TD colspan="'.(2*$fields_per_line).'"><hr></td></tr>
 		
 		<TR><TD colspan="'.(2*$fields_per_line).'">
-		<h3>CC List '.help_button('HELP_FIXME.html#HELP_FIXME').'</h3>
+		<h3>CC List '.help_button('ArtifactUpdate.html#ArtifactCCList').'</h3>
 		<b><u>Note:</b></u> for CodeX users use their login name rather than their email addresses.<p>
 		<B>Add CC:&nbsp;</b><input type="text" name="add_cc" size="30">&nbsp;&nbsp;&nbsp;
 		<B>Comment:&nbsp;</b><input type="text" name="cc_comment" size="40" maxlength="255"><p>';
@@ -921,7 +921,7 @@ class ArtifactHtml extends Artifact {
 		echo '
 		<TR><TD colspan="'.(2*$fields_per_line).'"><hr></td></tr>
 		<TR><TD colspan="'.(2*$fields_per_line).'">
-		<h3>Attachments '.help_button('HELP_FIXME.html#HELP_FIXME').'</h3>
+		<h3>Attachments '.help_button('ArtifactUpdate.html#ArtifactAttachments').'</h3>
 		<B>Check to Upload&hellip;  <input type="checkbox" name="add_file" VALUE="1">
 		&nbsp;&hellip;&amp; Attach File:</B>
 		<input type="file" name="input_file" size="40">

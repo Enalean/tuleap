@@ -327,9 +327,11 @@ if ($group_id && $atid) {
 		} else {
 			
 			// Check if users can browse anonymously
-			if ( !user_isloggedin()&&$ath->allowsAnon() == 0 ) {
-				exit_not_logged_in();
-				return;
+			if ( $ath->allowsAnon() == 0 && !user_isloggedin() ) {
+			    exit_error('You are NOT logged in.',
+          '<P><b>This project has requested that users be logged in before submitting/updating an artifact.</p>
+	   <P> Please <u><A HREF="/account/login.php?return_to='.urlencode($REQUEST_URI). 
+	'">log in</A></u> first.</b></p>');
 			}
 			
 			if ( $ah->ArtifactType->userIsTech() ) {
@@ -369,7 +371,7 @@ if ($group_id && $atid) {
 	$params['pagename']='trackers';
 	$params['title']='Trackers';
 	$params['sectionvals']=array($group->getPublicName());
-	$params['help']='HELP_FIXME.html';
+	$params['help']='TrackerService.html';
 	
 	echo site_project_header($params);
 	echo '<strong>'

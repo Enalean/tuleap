@@ -91,11 +91,8 @@ $group = group_get_object(1);
 $ath = new ArtifactTypeHtml($group);
 
 $HTML->header(array('title'=>"Pending Tracker Deletions"));
-//$ath->adminHeader(array('title'=>$ath->getName().' Pending Tracker Deletion','help' => 'HELP_FIXME.html'));
 $atf = new ArtifactTypeFactory($group);
 $ath->displayPendingTrackers();
-//$ath->footer(array());
 $HTML->footer(array());
-
 
 ?>

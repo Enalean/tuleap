@@ -8,7 +8,7 @@
 //  Written for CodeX by Stephane Bouhet
 //
 
-$ath->adminTrackersHeader(array('title'=>'Trackers Administration','help' => 'HELP_FIXME.html'));
+$ath->adminTrackersHeader(array('title'=>'All Trackers Administration','help' => 'TrackerAdministration.html'));
 echo $ath->displayAdminTrackers();
 $ath->footer(array());
 

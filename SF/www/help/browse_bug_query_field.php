@@ -16,7 +16,7 @@ require "$DOCUMENT_ROOT/bugs/bug_data.php";
 
 // Initialize the global data structure before anyhting else
 bug_init($group_id);
-$field = $helpid;
+$field = urldecode($helpid);
 
 // get the SQL field type
 $res_type = db_query("SHOW COLUMNS FROM bug LIKE '$field'");

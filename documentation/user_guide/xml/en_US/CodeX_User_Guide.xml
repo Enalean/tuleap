@@ -17,25 +17,26 @@ href="file:/C:/Program Files/XMLmind_XML_Editor/css/docbook.css"
 "file:/usr/local/docbook-dtd/docbookx.dtd"
 [
 <!-- Entities for inclusion of document chapters -->
-<!ENTITY book-info SYSTEM "BookInfo.xml">
-<!ENTITY chapter1 SYSTEM "Introduction.xml">
-<!ENTITY chapter2 SYSTEM "CodeXSiteOverview.xml">
-<!ENTITY chapter3 SYSTEM "BecomingACodeXCitizen.xml">
-<!ENTITY chapter4 SYSTEM "CreatingANewProject.xml">
-<!ENTITY chapter5 SYSTEM "ProjectSummary.xml">
-<!ENTITY chapter6 SYSTEM "ProjectAdministration.xml">
-<!ENTITY chapter7 SYSTEM "BugTrackingSystem.xml">
-<!ENTITY chapter8 SYSTEM "TaskManager.xml">
-<!ENTITY chapter9 SYSTEM "FileRelease.xml">
-<!ENTITY chapter10 SYSTEM "VersionControlWithCVS.xml">
-<!ENTITY chapter11 SYSTEM "PatchManager.xml">
-<!ENTITY chapter12 SYSTEM "DocumentManager.xml">
-<!ENTITY chapter13 SYSTEM "SupportRequestManager.xml">
-<!ENTITY chapter14 SYSTEM "CommunicationServices.xml">
-<!ENTITY chapter15 SYSTEM "SurveyManager.xml">
-<!ENTITY chapter16 SYSTEM "ProjectWebSite.xml">
-<!ENTITY chapter17 SYSTEM "OtherServices.xml">
-<!ENTITY references SYSTEM "References.xml">
+<!ENTITY BookInfo SYSTEM "BookInfo.xml">
+<!ENTITY ChapterIntroduction SYSTEM "Introduction.xml">
+<!ENTITY ChapterCodeXSiteOverview SYSTEM "CodeXSiteOverview.xml">
+<!ENTITY ChapterBecomingACodeXCitizen SYSTEM "BecomingACodeXCitizen.xml">
+<!ENTITY ChapterCreatingANewProject SYSTEM "CreatingANewProject.xml">
+<!ENTITY ChapterProjectSummary SYSTEM "ProjectSummary.xml">
+<!ENTITY ChapterProjectAdministration SYSTEM "ProjectAdministration.xml">
+<!ENTITY ChapterTracker SYSTEM "Tracker.xml">
+<!ENTITY ChapterBugTrackingSystem SYSTEM "BugTrackingSystem.xml">
+<!ENTITY ChapterTaskManager SYSTEM "TaskManager.xml">
+<!ENTITY ChapterFileRelease SYSTEM "FileRelease.xml">
+<!ENTITY ChapterVersionControlWithCVS SYSTEM "VersionControlWithCVS.xml">
+<!ENTITY ChapterPatchManager SYSTEM "PatchManager.xml">
+<!ENTITY ChapterDocumentManager SYSTEM "DocumentManager.xml">
+<!ENTITY ChapterSupportRequestManager SYSTEM "SupportRequestManager.xml">
+<!ENTITY ChapterCommunicationServices SYSTEM "CommunicationServices.xml">
+<!ENTITY ChapterSurveyManager SYSTEM "SurveyManager.xml">
+<!ENTITY ChapterProjectWebSite SYSTEM "ProjectWebSite.xml">
+<!ENTITY ChapterOtherServices SYSTEM "OtherServices.xml">
+<!ENTITY References SYSTEM "References.xml">
 
 <!-- Entity definition and inclusion for default and custom parameters
 (e.g. site name, server names, company name,etc.)
@@ -55,26 +56,27 @@ an entity cannot be redefined. Hence this particular order  -->
 
   <subtitle><emphasis role="bold">&SYS_DEFAULT_DOMAIN;</emphasis></subtitle>
 
-  &book-info;
+  &BookInfo;
 
-  &chapter1;
-  &chapter2;
-  &chapter3;
-  &chapter4;
-  &chapter5;
-  &chapter6;
-  &chapter7;
-  &chapter8;
-  &chapter9;
-  &chapter10;
-  &chapter11;
-  &chapter12;
-  &chapter13;
-  &chapter14;
-  &chapter15;
-  &chapter16;
-  &chapter17;
+  &ChapterIntroduction;
+  &ChapterCodeXSiteOverview;
+  &ChapterBecomingACodeXCitizen;
+  &ChapterCreatingANewProject;
+  &ChapterProjectSummary;
+  &ChapterProjectAdministration;
+  &ChapterTracker;
+  &ChapterFileRelease;
+  &ChapterVersionControlWithCVS;
+  &ChapterPatchManager;
+  &ChapterDocumentManager;
+  &ChapterCommunicationServices;
+  &ChapterSurveyManager;
+  &ChapterProjectWebSite;
+  &ChapterOtherServices;
+  &ChapterBugTrackingSystem;
+  &ChapterTaskManager;
+  &ChapterSupportRequestManager;
 
-  &references;
+  &References;
 
 </book>

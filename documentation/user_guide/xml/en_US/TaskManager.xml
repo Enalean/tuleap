@@ -11,16 +11,23 @@
 -->
 
   <chapter id="TaskManager">
-    <title>Task Manager</title>
+    <title>Task Manager (deprecated)</title>
 
-    <para>The CodeX Task Manager can be seen as a light weight project
-    manager. By light weight we mean that it is nowhere near a project
-    management software like CA-SuperProject, MS-Project or other powerful and
-    complex desktop products available on the market. The CodeX Task Manager
-    cannot build a Gantt or Pert chart, it doesn&#39;t have any planning
-    capabilities. It is rather a time sheet tool which allows project members
-    to track their time and manage other things like weekly TODO list for
-    instance.</para>
+  <para><tip><title>** The Task Manager is DEPRECATED **</title>
+  <para>In CodeX version 1.7 and above, the Task Manager has been
+  discontinued. It is now replaced by the CodeX Tracker Service (see
+  <xref linkend="TrackerService"/>). This chapter is included in the
+  CodeX User Guide for projects that originally used the legacy Task
+  Manager.</para></tip></para>
+
+  <para>The CodeX Task Manager can be seen as a light weight project
+  manager. By light weight we mean that it is nowhere near a project
+  management software like CA-SuperProject, MS-Project or other
+  powerful and complex desktop products available on the market. The
+  CodeX Task Manager cannot build a Gantt or Pert chart, it
+  doesn&#39;t have any planning capabilities. It is rather a time
+  sheet tool which allows project members to track their time and
+  manage other things like weekly TODO list for instance.</para>
 
     <para>However the CodeX Task Manager offer a number of features that makes
     it very complementary with the above mentioned project planning tools:</para>

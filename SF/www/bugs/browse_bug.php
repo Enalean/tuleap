@@ -313,7 +313,7 @@ while ( $field = bug_list_all_fields(cmp_place_query)) {
     }
 
     $labels .= '<td class="small"><b>'.bug_data_get_label($field).'&nbsp;'.
-	($pv ? '':help_button('browse_bug_query_field',$field)).
+	($pv ? '':help_button('browse_bug_query_field',urlencode($field))).
 	'</b></td>';
 
     $boxes .= '<TD><FONT SIZE="-1">';

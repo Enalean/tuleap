@@ -273,7 +273,8 @@ if ($set=='my') {
 if ( !$pv ) {
 	// Display the menus
 	$ath->header(array('title'=>'Browse Trackers','titlevals'=>array($ath->getName()),'pagename'=>'tracker_browse',
-		'atid'=>$ath->getID(),'sectionvals'=>array($group->getPublicName()),'help' => 'HELP_FIXME.html'));
+		'atid'=>$ath->getID(),'sectionvals'=>array($group->getPublicName()),
+		'help' => 'ArtifactBrowsing.html'));
 } else {
     help_header('Tracker Search Report - '.format_date($sys_datefmt,time()),false);
 }	

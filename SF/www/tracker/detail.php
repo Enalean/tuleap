@@ -22,7 +22,10 @@ $art_field_fact = new ArtifactFieldFactory($ath);
 if ($pv) {
     help_header('Artifact detail '.format_date($sys_datefmt,time()),false);	
 } else {
-	$ath->header(array ('title'=>'Modify: '.$ah->getID(). ' - ' . $ah->getSummary(),'pagename'=>'tracker','atid'=>$ath->getID(),'sectionvals'=>array($group->getPublicName()),'help' => 'HELP_FIXME.html' ));
+	$ath->header(array ('title'=>'Modify: '.$ah->getID(). ' - ' . $ah->getSummary(),
+	      'pagename'=>'tracker','atid'=>$ath->getID(),
+	      'sectionvals'=>array($group->getPublicName()),
+	      'help' => 'ArtifactSubmission.html' ));
 }
 
 $res = $ah->getFieldsValues();

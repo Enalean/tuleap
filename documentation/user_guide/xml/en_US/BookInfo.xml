@@ -17,7 +17,7 @@
         <surname>Julliard</surname>
 
         <affiliation>
-          <orgname>XIG/SSTC - Open Source Team, Laurent.Julliard@crt.xerox.com</orgname>
+          <orgname>Xerox/XIG/ISTC - Open Source Team, Laurent.Julliard@crt.xerox.com</orgname>
         </affiliation>
       </author>
     </authorgroup>
@@ -226,7 +226,7 @@
 
         <date>06-Feb-2003</date>
 
-        <authorinitials>Stephane Bouhet</authorinitials>
+        <authorinitials>St&eacute;phane Bouhet</authorinitials>
 
         <revremark>Add the Email notification mechanism for the Task Manager.</revremark>
       </revision>
@@ -248,7 +248,16 @@
 
         <revremark>Almost everything making documentation Xerox specific was removed. Company name, machine names,etc. are now definable XML entities.</revremark>
       </revision>
-     </revhistory>
+      <revision>
+        <revnumber>2.6</revnumber>
+
+        <date>14-Oct-2003</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>New chapter about the CodeX generic tracker and modification in all impacted chapters.</revremark>
+      </revision>
+    </revhistory>
   </bookinfo>
 <!--
 Local Variables:

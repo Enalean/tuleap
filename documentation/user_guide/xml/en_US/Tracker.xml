@@ -1,0 +1,2522 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2003. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+//	Originally written by Laurent Julliard 2003, CodeX Team, Xerox
+//
+-->
+      
+<chapter id="TrackerService">
+  <title>Tracker Service</title>
+
+  <para>The CodeX Tracker is one of the most powerful and versatile
+  services offered to CodeX hosted projects. Originally CodeX was
+  provided with individual tracking services that were only able to
+  track certain types of predefined artifacts like defects (bugs),
+  support requests or tasks. It soon appeared that there was a need
+  not only to expand the type of artifacts that one can track in a
+  project but also to be able to instantiate the Tracker service as
+  many times as necessary in the context of a single project.</para>
+
+  <para>Beside defects, tasks and support requests project teams may
+  want to track other artifacts like requirements, action requests,
+  etc. This is precisely what the CodeX Tracker allows you to
+  do. Beside the usual trackers (defects, tasks, support requests)
+  that come standards in the Tracker service, other type of trackers can
+  be created at any time and in any numbers under the same CodeX
+  project. All trackers can be fully customized, including the
+  predefined ones. </para>
+
+  <section id="CodeXTrackerPrinciples">
+    <title>CodeX Tracker Terminology</title>
+
+    <para>Before we explain the features of the tracker service, it's
+    worth spending some time on the terminology used in the tracker
+    service as well as some of the features that are shared by all
+    trackers.</para>
+
+    <para>As the Tracker Service is meant to track virtually any kind
+    of items, the generic term 'artifact' will be used throughout this
+    document to designate items that are being tracked be it bug,
+    task, support request or others.</para>
+
+    <para>Defining a tracker is just a matter of giving it a name,
+    choose the fields that are going to be used in this particular
+    tracker and what values will be allowed in those fields.</para>
+
+    <para>In addition to the project definable fields and field values there
+    are other fields that are permanently attached to a tracker
+    artifact. These are:</para>
+
+    <itemizedlist mark="bullet" spacing="compact">
+
+      <listitem>
+	<para> <emphasis role="bold">Follow-up
+	    comments</emphasis>: all artifacts have the full list of
+	    free text comments posted by users attached to it.</para>
+      </listitem>
+
+      <listitem>
+	<para><emphasis role="bold">File attachment</emphasis>:
+	    all artifacts can have any number of files attached to
+	    it. File attachments generally contains supplementary
+	    information that help better characterize the nature of
+	    the artifact.</para>
+      </listitem>
+
+      <listitem>
+	<para><emphasis role="bold">CC list</emphasis>: any number
+	    of users can be notified of modification happening to an
+	    artifact by including their CodeX user name or email
+	    address in the CC list.</para>
+      </listitem>
+
+    </itemizedlist>
+  </section>
+
+
+  <section id="EnteringtheTrackerService">
+    <title>Entering the Tracker Service</title>
+
+    <para>To enter the Tracker service of a given project, first go to
+    the Project Summary page (see <xref
+	linkend="AccessingAProjectSummaryPage" />) and either click
+    the &#34;Trackers&#34; item in the Project Main Menu located in the
+    upper part of the page or you can directly choose a tracker from the
+    trackers listed in the Public Area of the Project Summary page
+    (see <xref linkend="AccessingAProjectSummaryPage" />).</para>
+
+    <para>You will be presented with a list of trackers available for
+    this particular project (see <xref linkend="TrackerWelcomeScreen"
+	/>. Select the tracker you are interested in. Entering the
+    tracker will give you access to various tracker functions
+    depending on the permissions you have with this tracker. You may
+    be able to submit new artifacts, update existing ones, search
+    and browse the artifact database or configure the tracker.</para>
+
+    <figure id="TrackerWelcomeScreen">
+      <title>Tracker Welcome Screen</title>
+
+      <mediaobject>
+	<imageobject>
+	  <imagedata format="PNG"
+	    fileref="../../screenshots/en_US/sc_trackerwelcomescreen.png" width="14.5cm" />
+	</imageobject>
+      </mediaobject>
+    </figure>
+    
+
+  </section>
+
+  <section id="ArtifactSubmission">
+    <title>New Artifact Submission</title>
+
+    <para>To submit a new artifact to a given project you must first
+    access the appropriate tracker of that project as indicated in the
+    section above (see <xref linkend="EnteringtheTrackerService" />.</para>
+
+    <para>When entering a given tracker you are presented with the
+    artifact selection and browsing screen (more about this facility
+    in <xref linkend="ArtifactBrowsing" />). For now let&#39;s click
+    on the &#34;Submit a New Artifact&#34; item (or whatever the artifact
+    name is) from the Tracker Menu Bar in the upper part of the welcome
+    screen (see <xref linkend="FigureASampleTrackerBrowsingScreen"
+	/>).</para>
+
+    <figure id="ArtifactSubmissionScreenFromTheCodeXProject">
+      <title>A sample artifact submission screen (the artifact is of type 'bug' here)</title>
+
+      <mediaobject>
+	<imageobject>
+	  <imagedata format="PNG"
+	    fileref="../../screenshots/en_US/sc_artifactsubmission.png" width="14.5cm" />
+	</imageobject>
+      </mediaobject>
+    </figure>
+
+    <para><xref linkend="ArtifactSubmissionScreenFromTheCodeXProject"
+	/> shows a sample submission screen from one of the CodeX hosted
+    projects. Because of the CodeX Tracker high level of
+    customizability no two submission screens look alike. Depending on
+    the project more or less fields may appear on the tracker
+    submission form and the name of artifact managed by the tracker
+    may change as well.</para>
+
+    <para>In the example provided on <xref
+	linkend="ArtifactSubmissionScreenFromTheCodeXProject" /> the
+    artifact type is a bug (also know as 'defect' in corporate
+    language). The user is asked to choose a bug Category, a bug
+    Group, a Priority and an Assignee from a series of pull down
+    menus. Then comes a one-line description for the bug and a longer
+    piece of text where you can fully characterize the bug.</para>
+
+    <para>When submitting a new artifact, make the Summary and the
+    detailled description as explicit as possible.  Do not use a
+    clueless summary like: &#34;Service X doesn&#39;t work&#34; or
+    &#34;Blocking problem in Document Mgr&#34;. Explain the nature of
+    the bug. Giving an explicit Summary and Description is immensely
+    helpful to the project members in charge of the bug classification
+    and characterization. A unique ID is automatically assigned to
+    the submitted artifact.</para>
+
+    <para>As explained above, artifact submission forms vary from one
+    project to another depending on the fields used by the
+    tracker. The submission form can also vary according to the
+    citizen class the user belongs to. Depending whether you are a
+    project member or an ordinary registered user the artifact fields
+    displayed on the screen may differ. As an example, on <xref
+	linkend="ArtifactSubmissionScreenFromTheCodeXProject" />, the bug
+    submitter using the form is probably a project member because
+    giving access to the &#34;Assigned to&#34; field to an ordinary
+    registered user doesn&#39;t make much sense. It is very unlikely
+    that users external to the project team know enough about the
+    project organization to correctly assign the bug. Therefore bug
+    fields shown to project members and registered users on the
+    submission form can be configured in the Tracker Administration
+    module (see <xref linkend="TrackerAdministration" />)</para>
+
+    <para>In any case don&#39;t forget to click on the
+    &#34;Submit&#34; button when you are finished !</para>
+
+    <para><tip><title>Tip: make sure your artifact hasn&#39;t yet been
+    submitted</title><para>About to submit a bug or a support request
+    to a CodeX Project? Before you do that, make sure that others
+    haven&#39;t yet submitted a similar artifact. To do so you can
+    either browse the artifact database through the Artifact Selection
+    and Browsing facility or you can use the search box in the CodeX
+    Main Menu and search by keywords.</para></tip></para>
+
+  </section>
+
+  <section id="ArtifactBrowsing">
+    <title>Artifact Browsing</title>
+
+    <para>CodeX provides project members, ordinary registered users
+    and even anonymous users with the ability to browse the artifact
+    database according to a variable set of criteria.</para>
+
+    <section id="ArtifactSelectionCriteria">
+      <title>Selection Criteria</title>
+
+      <para>The upper part of the artifact browsing screen is devoted to the
+        selection criteria. <xref
+	  linkend="FigureASampleTrackerBrowsingScreen" /> shows the
+        default set of selection criteria that is available when a new project
+        is created. You can select bugs by Category (the module in which the
+        bug occurred), Group (nature of the bug like Crash, Documentation
+        Typo, ...), Status (e.g. Open, Closed, ...) and Assignee (the person
+        in charge of the bug). Other projects may show more, less or different
+        selection fields depending on the configuration put in place by the
+        project administrators.</para>
+
+      <para>How selection criteria are filled out depend on their
+      field type. The Tracker Service currently has 6 different types
+      of fields used as search criteria:</para>
+
+      <section id="ArtifactSelectBoxField">
+	<title>Select Box Field</title>
+
+	<para>A select box field can take its value in a set of
+	predefined values. If you are using the simple search
+	interface only one value can be selected at a time. If you
+	want to select multiple values at once use the Advanced Search
+	facility.</para>
+
+	<para>There might be 2 specific values in the list of choices:
+	'Any' matches any value in the list and 'None' matches the
+	items where no value has been assigned yet</para>
+      </section>
+
+      <section id="ArtifactMultipleSelectBoxField">
+	<title>Multiple Select Box Field</title>
+
+	<para>A multiple select box field take its value in a set of
+	predefined values. While the select box fiel introduced above
+	only allows one to select only a single field value, the
+	multiple select box field allows the user to select multiple
+	values for the same field. If you are using the simple search
+	interface only one value can be selected at a time. If you
+	want to select multiple values at once use the Advanced Search
+	facility.</para>
+
+	<para>There might be 2 specific values in the list of choices:
+	'Any' matches any value in the list and 'None' matches the
+	items where no value has been assigned yet</para>
+      </section>
+
+      <section id="ArtifactTextField">
+	<title>Text Field</title> <para>A Text field can contain any
+	kind of text. There are two ways to query an text
+	field:</para>
+
+
+	<itemizedlist mark="bullet" spacing="compact">
+
+	  <listitem>
+	    <para> <emphasis role="underline">Keyword
+	    search</emphasis>: you can type a series of space
+	    separated keywords that will ALL be searched for in the
+	    text field (including as subtring in
+	    words)</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="underline"></emphasis>Regular
+	    expression: You can also specify a <ulink
+	    url="http://www.mysql.com/doc/P/a/Pattern_matching.html">MySQL
+	    Extended Regular Expression</ulink> as a matching criteria
+	    (mind the surrounding /.../ !)</para>
+
+	    <para>Examples:</para>
+	    <itemizedlist mark="dash" spacing="compact">
+	      <listitem>
+		<para>/^[Aa]ddition/ : matches any text field starting
+		with either 'addition'or 'Addition'</para>
+	      </listitem>
+	      <listitem>
+		<para>/foo|bar|dim/ : matches text fields containing the string 'foo', 'bar' or 'dim'</para>
+	      </listitem>
+	    </itemizedlist>
+	  </listitem>
+
+	</itemizedlist>
+
+      </section>
+
+      <section id="ArtifactDateField">
+	<title>Date Field</title>
+
+	<para>A date criteria follows the following pattern:
+	YYYY-MM-DD where YYYY is the year number, MM is the month
+	number and DD is the day number.</para>
+
+	<para>Examples: 1999-03-21 is March 21st, 1999, 2002-12-05 is
+	Dec 5th, 2002. </para>
+
+      </section>
+
+      <section id="ArtifactIntegerField">
+	<title>Integer Field</title>
+
+	<para>An integer field can take positive or (possibly)
+	negative values and has no decimal part.</para>
+
+	<para>Examples: 0, 1, +2, -100&hellip;</para>
+
+	<para>There are several ways to query an integer field. Here
+	are the values you can specify in a integer query field:</para>
+	<itemizedlist>
+	  <listitem>
+	    <para> <emphasis role="underline">Single
+	    Integer</emphasis>: if you type a single integer the field
+	    will be matched against this value (e.g. 610)</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="underline">Inequality</emphasis>: if
+	    you use &gt;, &lt;, &ge; or &le; followed by an integer
+	    the search will look for integer values which are greater,
+	    lesser, greater or equal, lesser or equal to the integer
+	    value (e.g. &gt; 120 , &lt; -30)</para>
+	  </listitem>
+	  <listitem><para><emphasis role="underline">Range</emphasis>:
+	  if you use the 'integer1-integer2' notation the search
+	  engine will look for all values greater or equal to integer1
+	  and lesser or equal to integer2 (e.g. 800 - 900 for integers
+	  between 800 and 900, -45 - 12 for integers between -45 and
+	  +12)</para>
+	  </listitem>
+	  <listitem><para><emphasis role="underline">Regular
+	  expression</emphasis>: <ulink
+	  url="http://www.mysql.com/doc/P/a/Pattern_matching.html">MySQL
+	  Extended Regular Expression</ulink> can also be used as a
+	  matching criteria (e.g. /^4.*8$/ will look for all integer
+	  values starting with a '4', ending with an '8' with any
+	  number of digits in between.</para>
+	  </listitem>
+	</itemizedlist>
+      </section>
+
+      <section id="ArtifactFloatingPointNumberField">
+	<title>Floating Point Number Field</title><para>A floating
+	point number field can take positive or (possibly) negative
+	values, may have a decimal part or use the exponential
+	notation for large values.. .</para>
+
+	<para>Examples: 0, 1.23, -2.456, 122.45E+12&hellip;</para>
+
+	<para>There are several ways to query an floating point number
+	field. Here are the values you can specify in such a
+	field:</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para> <emphasis role="underline">Single
+	    Number</emphasis>: if you type a single number the field
+	    will be matched against this value (e.g. 2.35)</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="underline">Inequality</emphasis>: if
+	    you use &gt;, &lt;, &ge; or &le; followed by a number
+	    the search will look for all values which are greater,
+	    lesser, greater or equal, lesser or equal to the integer
+	    value (e.g. &gt; 120.3 , &lt; -3.3456E-2)</para>
+	  </listitem>
+	  <listitem><para><emphasis role="underline">Range</emphasis>:
+	  if you use the 'number1-number2' notation the search
+	  engine will look for all values greater or equal to integer1
+	  and lesser or equal to integer2 (e.g. -1.2 - 4.5 for integers greater than or equal to -1.2 and lesser than or equal to 4.5)</para>
+	  </listitem>
+	  <listitem><para><emphasis role="underline">Regular
+	  expression</emphasis>: <ulink
+	  url="http://www.mysql.com/doc/P/a/Pattern_matching.html">MySQL
+	  Extended Regular Expression</ulink> can also be usedas a
+	  matching criteria (e.g. /^4.*8$/ will look for all integer
+	  values starting with a '4', ending with an '8' with any
+	  number of characters in between including the decimal point.</para>
+	  </listitem>
+	</itemizedlist>
+      </section>
+
+    </section>
+
+    <section id="TrackerQueries">
+      <title>Favorites and Predefined Tracker Queries</title>
+
+      <para><tip><title>Tip: save and re-use your tracker queries</title><para>If
+        you often run the same queries against a tracker with the same set of
+        selection criteria, it is probably a good idea to save this query for
+        later re-use. To do this: select the appropriate tracker report, then
+        choose your search criteria, click on the &#34;Browse&#34; button to
+        run the query. Finally click on the &#34;Bookmark this Page&#34; item
+        in the CodeX Main Menu. A new bookmark will show up in your Personal
+        Page. A click on this bookmark will run the exact same query again.</para></tip></para>
+
+      <para>Your favorite queries can be saved via the CodeX
+      bookmark mechanism as explained in the Tip box but there are
+      also shortcuts in the Tracker Menu Bar for the most common
+      queries. They are:</para>
+
+      <itemizedlist mark="bullet" spacing="compact">
+	<listitem>
+	  <para><emphasis role="bold">Open Artifacts</emphasis>: display all the
+            bugs that are not yet closed for this project.</para>
+	</listitem>
+
+	<listitem>
+	  <para><emphasis role="bold">My Artifacts</emphasis>: display the bugs
+            assigned to you (based on the CodeX account you are currently
+            using)</para>
+	</listitem>
+      </itemizedlist>
+
+      <para>Also notice that CodeX always keeps track of the last ran
+      query. Next time you enter the tracker welcome screen, CodeX will
+      use the same set of selection criteria in the selection fields
+      and display the list of matching artifacts accordingly.</para>
+
+      <section id="TrackerAdvancedSearchMode">
+	<title>Advanced Search Mode</title>
+
+	<para>At any time during the search phase, you can toggle the search
+          mode from Simple to Advanced and vice-versa (see the Advanced Search
+          link). The Advance Search mode allows you to select multiple values
+          for each selection criteria. Using this mode you could search for
+          both open and suspended bugs assigned to project members A and B.</para>
+      </section>
+    </section>
+
+    <section id="TrackerSearchResults">
+      <title>Tracker Search Results</title> 
+      
+      <para>Based on your selection of search riteria, CodeX runs a
+      query against the tracker database, select the matching
+      artifacts and displays them right below the selection
+      criteria. Columns displayed in the artifact list are entirely
+      configurable by the project team (see <xref
+	  linkend="TrackerReports" />). Therefore, the artifact browsing
+      screen might look completely different from the one shown in
+      <xref linkend="FigureASampleTrackerBrowsingScreen" />.</para>
+
+      <figure id="FigureASampleTrackerBrowsingScreen">
+	<title>A sample Tracker browsing screen (the artifact is of type 'bug')</title>
+
+	<mediaobject>
+	  <imageobject>
+	    <imagedata format="PNG"
+	      fileref="../../screenshots/en_US/sc_artifactbrowsing.png" width="15.3cm" />
+	  </imageobject>
+	</mediaobject>
+      </figure>
+
+      <para>Artifact severity is color coded. Colors associated with
+      severity levels may vary from one CodeX site to another and it
+      is therefore show at the bottom of the list of results generated
+      by the search.  Finally, results are listed by chunks of N
+      artifacts where N is user-definable. If more than N artifacts
+      are retrieved from the tracker database you are invited to click
+      on the navigation bar to display the next or previous chunk of
+      artifacts.</para>
+
+      <para>To access a given artifact from the list of results,
+      simply click on the corresponding &#34;Artifact ID&#34;.</para>
+
+      <section id="ArtifactListSorting">
+	<title>Artifact List Sorting</title>
+
+	<para>By default, artifacts are sorted by ID which happens to
+	be the chronological order in which they have been submitted
+	and stored in the CodeX database.</para>
+
+	<para>The list of artifacts can be sorted by any of the
+	columns displayed on the screen by clicking on the column
+	heading. Clicking twice on the same heading reverses the sort
+	order from ascending to descending and vice-versa.  The
+	sorting direction is shown by a small up or down arrow next to
+	the sort criteria right above the artifact list. One exception
+	to this rule is for sorting by Severity. Severity being shown
+	as a color code and not as a column per se, there is a special
+	link at the bottom of the screen to sort the list of results
+	by Severity.</para>
+
+	<para>For more sophisticated sorting you can also activate the
+	multi-column sort.  In this mode sort criteria cumulates as
+	you click on column headings.  So you can for instance click
+	'Severity' first and 'Assigned To' second to see who in the
+	team is assigned critical bugs and how many.At any point in
+	the multi-column sort process, a click on one of the sort
+	criteria displayed in the list (criteria 1 > criteria 2 >
+	criteria 3...)  will bring you backward in the sort criteria
+	list. Using this feature you can easily test various sorting
+	strategies.</para>
+
+	<note><para>Note:Sorting criteria, like selection criteria,
+	are also saved into your preferences and the same sorting
+	criterion is re-used in subsequent queries.</para></note>
+
+	<para><tip><title>Tip: keep an eye on unassigned
+	artifacts</title><para>In most cases when an artifact is submitted by a
+	person external to the project team, the assignee is given
+	the value &#34;None&#34;. In other words the artifact has been
+	submitted but it is awaiting an assignment by the project
+	member in charge of the artifact dispatch. Since nobody is in
+	charge, the artifact can be completely overlooked by the project
+	team. Two solutions can help with this problem: 1) Use a an
+	e-mail address where all new submissions are sent (see <xref
+		linkend="TrackerReportManagement" />) and/or 2) Assign somebody in
+	the team the responsibility to run a query once or twice a
+	day to collect the artifacts with Assignee field set to &#34;None&#34;
+	and give him/her the responsibility to assign the
+	bugs.</para></tip></para>
+
+      </section>
+
+      <section id="ArtifactPrinterFriendlyVersion">
+	<title>Printer Friendly Version</title>
+
+	<para>At any point in the process of browsing the tracker database
+	you can click on the &#34;Printer Version&#34; link to display
+	a simplified and non-decorated artifact list that will print
+	nicely. For better readability we strongly advise you to print
+	the list of results in landscape format.</para>
+      </section>
+
+      <section id="TrackerReports">
+	<title>Tracker Reports</title>
+
+	<para>Tracker reports allow for the definition of a specific
+	layout of the artifact search and browsing screen where one
+	can choose the selection criteria and the columns used in the
+	list of matching artifacts. Depending on the project, users
+	may enjoy the ability to choose from several tracker reports
+	by using the upper pull-down menu of the artifact browsing
+	screen. If no project or user specific tracker report has been
+	defined, the CodeX &#39;Default&#39; report is the only one
+	available.</para>
+
+	<para>Any CodeX user (even those who do not belong to a
+	project) can define her own personal tracker. In this case the
+	reports will only be visible to this particular user. On the
+	contrary, Project Administrators have the ability to define
+	project-wide reports that all users will be able to use. See
+	<xref linkend="TrackerReportManagement" /> for more details on
+	managing tracker reports.</para>
+      </section>
+
+    </section>
+    
+  </section>
+  
+  <section id="ArtifactUpdate">
+    <title>Artifact Update</title>
+
+    <para>Selecting an artifact ID from the list results generated by
+    a search operation will bring you to a screen all the artifact
+    details. If you are a member of the project the artifact belongs
+    to, the detailed view is made of text fields and menus that you
+    can update with new values. On the other hand, if you are an
+    anonymous user or a registered user who does not belong to the
+    project team, most of the fields will appear as immutable
+    text. Non-project members cannot edit any of the artifact
+    fields. They can only submit a follow-up comment, add themselves
+    in the CC list or attach new files to the artifact.</para>
+
+    <para>All the screen shots used in this section assume that the
+    CodeX user is part of the project team. For non-project members
+    the screen layout is basically the same but the information shown
+    on the screen cannot be changed.</para>
+
+    <para>The Artifact Update screen is divided in several parts:
+    <emphasis role="bold">Header, Comments, CC List, Artifact
+    Attachments, Dependencies and History.</emphasis></para>
+
+    <section id="ArtifactHeaders">
+      <title>Header</title>
+
+      <para>The header zone is where you&#39;ll find all the fields
+      associated with an artifact. As shown on <xref
+	  linkend="FigureHeaderOfArtifactUpdateScreen" />, many of these
+      fields are assigned a set of predefined values (Status,
+      Category, Resolution) while some others have a number format
+      (Effort) or a free text format (Summary). The set of fields used
+      in a given tracker, as well as the related set of predefined values
+      can be configured by project members with appropriate
+      permissions. (see <xref linkend="TrackerAdministration" /> for more
+      details on the Tracker configuration)</para>
+
+      <figure id="FigureHeaderOfArtifactUpdateScreen">
+	<title>Header of Tracker Update screen (artifact fields)</title>
+
+	<mediaobject>
+	  <imageobject>
+	    <imagedata format="PNG"
+	      fileref="../../screenshots/en_US/sc_artifactupdateheader.png" width="15.3cm" />
+	  </imageobject>
+	</mediaobject>
+      </figure>
+    </section>
+
+    <section id="ArtifactComments">
+      <title>Comments</title>
+
+      <para>As many follow-up comments as needed can be attached to
+      any given artifact. Follow-up comments are free text fields
+      where virtually any kind of information or comment can be typed
+      in. The &#34;Original Submission&#34; field filled out by the
+      artifact submitter can actually be considered as the first
+      follow-up comment in the life of an artifact.</para>
+
+      <para>Follow-up comments have a couple of interesting capabilities and extensions:</para>
+
+      <itemizedlist mark="bullet">
+	<listitem>
+	  <para><emphasis role="bold">Canned Responses</emphasis>: It
+	  is not infrequent to see the project members in charge of
+	  the artifact classification and dispatch process to post the
+	  same follow-up comments again and again. Typical examples of
+	  repeatedly posted comments are: a thank you message to the
+	  originator, a request for the originator to provide commonly
+	  missing information like version numbers or type of machine
+	  used, etc. Rather than typing the same comments all the
+	  time, CodeX allows project members to create a predefined
+	  set of responses. Each canned response is defined by a name
+	  and by the body of the response.</para>
+
+	  <para>Posting a canned response is just a matter of
+	  selecting the appropriate response from the pull down menu
+	  in the artifact update screen and submitting the
+	  changes. Defining a new Canned Response can be done on the
+	  fly from the artifact submission form by clicking on the
+	  &#34;define a new Canned Response&#34; link.</para>
+	</listitem>
+
+	<listitem>
+	  <para><emphasis role="bold">Comment Types</emphasis>: In
+	  order to avoid the exponential growth of new artifact fields
+	  to store all sorts of free text information, CodeX offers an
+	  interesting mechanism called Comment Types. The project team
+	  has the ability to define a list of labels that can be used
+	  to characterize the nature of a follow-up comment. This is a
+	  very helpful feature to define the nature of the information
+	  contained in a follow-up comment and to quickly identify
+	  these comments in the long list of follow-up
+	  comments. Typical examples of such comment types are: 
+	  &#34;Workaround&#34; for a comment where you explain how to
+	  work around a bug, &#34;Impacted Files&#34; to give the list
+	  of source files impacted by the bug resolution (assuming
+	  your artifacts are bugs), &#34;Test case&#34; to document
+	  how to test the code in the future to make sure that this
+	  case will be tested in the future test suite, etc. Comment
+	  types are defined in the Tracker Administration module (see
+	  <xref linkend="TrackerAdministration" />)</para>
+	</listitem>
+	<listitem>
+	  <para><emphasis role="bold">Cross-References</emphasis>:
+	  While typing a follow-up comment, you can use some special
+	  text pattern to refer to other artifacts or CVS commits
+	  (check-ins). These pattern while be automatically displayed
+	  as hyperlinks when the follow-up comment is displayed on the
+	  screen. See <xref linkend="ArtifactCrossReferecing" /> for
+	  more details about the cross-referencing mechanism.</para>
+	</listitem>
+
+      </itemizedlist>
+
+
+      <figure id="FigureFollowupCommentsAttachedToAnArtifact">
+	<title>Follow-up comments attached to an artifact</title>
+	
+	<mediaobject>
+	  <imageobject>
+	    <imagedata format="PNG"
+	      fileref="../../screenshots/en_US/sc_artifactupdatecomments.png" width="15.3cm" />
+	  </imageobject>
+	</mediaobject>
+      </figure>
+      
+    </section>
+
+    <section id="ArtifactCCList">
+      <title>CC List</title>
+
+      <para>As explained later in this chapter (see <xref
+	  linkend="TrackerEmailNotification" />) the CodeX Tracker offers
+      a powerful email notification system for those users who, at
+      some point, were involved in the life of the artifact whether as
+      a submitter, an assignee or as a person who posted a follow-up
+      comment (commenter).</para>
+
+      <para>Sometimes it is however helpful to involve other people in
+      the email notification process even if they did not play an
+      explicit role in the life of the artifact so far. For instance,
+      you may want a QA contact or the originator of the artifact when
+      different from the submitter to receive a carbon-copy (CC) of
+      the email notifications. This is precisely what the CC List is
+      intended for. Inserting CC names in the CC list will allow these
+      people to receive updates notifications for this specific
+      artifact.</para>
+
+      <section id="ArtifactCCNames">
+        <title>CC Names</title>
+
+        <para>The CC names can be either email addresses or a
+        CodeX login name if the user has a CodeX account.</para>
+
+        <itemizedlist mark="bullet">
+	  <listitem>
+            <para><emphasis role="bold">CodeX login name</emphasis>:
+            when the person you want involve in the notification
+            process has a CodeX account use it in place of her email
+            address. Using the CodeX login name give to the recipient
+            the ability to customize the kind of update events she
+            wants to receive. For more information on how to customize
+            notification preferences for a given project see <xref
+		linkend="TrackerEmailNotificationSettings" />.</para>
+          </listitem>
+          <listitem>
+            <para><emphasis role="bold">Email Address</emphasis>:
+            there is no restriction on the type of email address you
+            can type. It can be either individuals or mailing list - see
+            <xref linkend="MailingLists" />. Unlike CC names entered
+            as login names, CC names added in the form of email
+            addresses have no customization capabilities and 
+            receive all bug updates.</para>
+          </listitem>
+	</itemizedlist>
+
+      </section>
+
+      <section id="ArtifactAddingDeletingCCNames">
+        <title>Adding and Deleting CC Names</title>
+
+        <para>Several CC names can be added at once by separating them
+        with commas or semi-column in the 'Add CC' field. Using the
+        comment field, one can also explain why these CC names were
+        added and/or who they are.</para>
+
+        <para>CC names addition and deletion is subject to a number of
+        permission rules:</para>
+
+        <itemizedlist mark="bullet">
+          <listitem>
+            <para>Adding a CC name: Anonymous users cannot add CC
+            names. Any other CodeX user who is logged in can add CC
+            names and the CC list will clearly show who added this
+            entry and when.</para>
+          </listitem>
+          <listitem>
+            <para>Deleting a CC name: users with Tracker Administrator
+            permissions on a given project (see <xref
+		linkend="UserPermissions" />) can delete any entry in the
+            CC list for any bug of this project. All other users can
+            delete CC entries that were either added by themselves or
+            entries where the CC name matches their own name or email
+            address in any CodeX projects. In other words a CodeX user
+            has the right to undo what she has done or remove herself
+            from a CC list in any project. </para>
+          </listitem>
+        </itemizedlist>
+      </section>
+
+    </section>
+
+    <section id="ArtifactAttachments">
+      <title>Artifact Attachments</title>
+
+      <para>In addition to comments, the CodeX Tracker 
+      allows you to attach virtually any piece of information to an artifact
+      in the form of a file. Typical examples of artifact attachments are
+      application screen shots in PNG, GIF, JPEG or whatever image
+      format is appropriate; it can also be core dumps, a binary image
+      of program that crashed or even a simple text file showing a
+      stack trace or an error message.</para>
+
+      <para>Artifact attachments can be of any type (image, video,
+      sound, text, binary&hellip;) and a comment field can be
+      optionally used to annotate the attachment. The maximum size of
+      a file attachment is site dependent. The default is 2
+      MByte.</para>
+    </section>
+
+    <section id="ArtifactDependencies">
+      <title>Artifact Dependencies</title>
+
+      <para>The next section on the artifact update screen deals with
+      artifact dependencies (see <xref
+	  linkend="FigureArtifactDependencies" />). CodeX users have the
+      ability to establish a dependency link from an artifact to one
+      or several other artifacts belonging to any of the tracker of
+      any CodeX project. This is made possible by the fact that
+      artifacts have a unique ID across the entire CodeX
+      system.</para>
+
+      <para>The CodeX system does not impose any semantic on the
+      nature of these dependency links. As a project team, you are
+      free to agree on a specific meaning for these links. However, in
+      order to guide the CodeX users, a number of ways in which these
+      dependencies are commonly used are listed below: </para>
+
+      <itemizedlist mark="bullet" spacing="compact">
+	<listitem>
+	  <para>Assuming your artifact is a bug, when a bug is closed
+	  with Resolution field set to &#34;Duplicate&#34; then a
+	  bug-to-bug dependency for this bug means the bugs it depends
+	  on is considered as the &#34;master&#34; bug by the project
+	  members. All other bug submissions that are actually a
+	  duplicate of this master will be made dependent on the
+	  master bug (probably the first one that was
+	  submitted)</para>
+	</listitem>
+
+	<listitem>
+	  <para>For all other value of the Resolution field a
+	  bug-to-bug dependency link could mean that this particular
+	  bug cannot be resolved as long as the bug it depends on is
+	  not resolved itself.</para>
+	</listitem>
+
+	<listitem>
+	  <para>A dependency between a artifact of type bug and an
+	  artifact of type task generally means that a task has been
+	  created to cover or encompass the work required to resolve
+	  the bug.  Creating a task to fix a bug generally happens
+	  when the bug fix implies a major rework or because the work
+	  that is being done in the related task will resolve the bug
+	  as a side effect.</para>
+
+	  <figure id="FigureArtifactDependencies">
+	    <title>Artifact Dependencies</title>
+
+	    <mediaobject>
+	      <imageobject>
+		<imagedata format="PNG"
+		  fileref="../../screenshots/en_US/sc_artifactupdatedependencies.png" width="15.3cm" />
+	      </imageobject>
+	    </mediaobject>
+	  </figure>
+	</listitem>
+      </itemizedlist>
+
+      <para>To create an artifact dependency, type one or
+      several artifact IDs (comma separated) and submit the form. The
+      cross-referenced artifacts appear in a table right below the
+      input field showing their description as well as the tracker and
+      the project they belong to.</para>
+
+      <para>To delete an artifact dependency simply click on the
+      wastebasket icon to the right of the artifact description line
+      and confirm or cancel when asked by the dialog box.</para>
+
+      <para>The dependency section shows the artifact dependencies in
+      both ways (cross-reference): it shows the list of artifact(s)
+      the displayed artifact depends on but also the list of artifacts
+      that depend upon the one you are browsing.</para>
+    </section>
+
+    <section id="ArtifactCrossReferencing">
+      <title>Artifact Cross-Referencing</title>
+
+      <para>In addition to the rather formal way of expressing a
+      depency between two artifacts presented in
+      <xref linkend="ArtifactDependencies"/>, CodeX offers the ability to
+      cross-reference any artifact from within a follow-up
+      comment.</para>
+
+      <para>When typing a follow-up comment, any text that follows the
+      pattern 'art #XXX' will be interpreted as a reference to the
+      artifact XXX where XXX is the unique artifact ID. Each time
+      CodeX displays a piece of text that follows this pattern it will
+      automagically create an hyperlink to the web page showing all
+      the details of the artifact.</para>
+
+      <para>A follow-up comment can contain a reference to an artifact
+      of any nature and from any project. It is <emphasis
+      role="bold">not</emphasis> limited in scope to the artifact
+      belonging to the same tracker or the same project. This is made
+      possible because an artifact has a unique ID across the entire
+      CodeX site.</para>
+
+      <para><emphasis role="bold">Important Notes</emphasis></para>
+
+      <itemizedlist mark="bullet" spacing="compact">
+	<listitem>
+	  <para>You can also use the pattern 'commit #XXX' in a
+	  follow-up comment to refer to the commit with ID number XXX
+	  has listed in your CVS tracking database. This is very
+	  useful for instance when you want to close a defect or a
+	  task artifact with a reference to corresponding the source
+	  code modifications. Conversely your commit message can also
+	  contain a reference to the originating artifact therefore
+	  ensuring a two directional cross-references between source
+	  code modifications and the related artifact. For more
+	  details about the CVS tracking database see <xref
+	      linkend="CVSWebInterface"/></para>
+	</listitem>
+	<listitem>
+	  <para>If a project uses one of the legacy bug tracking
+	  system, task manager or support request manager, it is also
+	  possible to refer to one of those by using the patterns 'bug
+	  #XXX', 'task #XXX' or 'sr #XXX'.</para>
+	</listitem>
+
+      </itemizedlist>
+
+    </section>
+
+    <section id="ArtifactHistory">
+      <title>Artifact History</title>
+
+      <para>The last part of the artifact update screen is devoted to
+      the artifact history (see <xref linkend="FigureArtifactHistory"
+	  />). The artifact history keeps track of all the changes that
+      occurred on all artifact fields since the creation of the
+      artifact.</para>
+
+      <para>The artifact history shows what fields changed, what was
+      the old value before the change took place, who changed it and
+      when. Since the artifact history only shows the old value of a 
+      field it requires a bit of exercise to determine what the new
+      value was right after the change took place.</para>
+
+      <para>Let&#39;s take an example: <xref
+	  linkend="FigureArtifactHistory" /> shows the history of a sample
+      artifact. Let's assume that the current value of the Severity
+      field of this artifact is currently &#34;9-Critical&#34;. You
+      won't see this value in the change history because this is the
+      current value of the Severity field and it is therefore only
+      visible in the artifact form. What the sample change history
+      tells us when you start reading it from the top is that the
+      Severity field was modified on Oct 10th, 2003 at 11:01am by user
+      'ljulliar' and the previous Severity level was
+      &#34;5-Major&#34;. As there is no other Severity item in the
+      history list you can safely assume that &#34;5-Major&#34; was
+      the Severity value assigned to the artifact when it was first
+      created.</para>
+
+      <figure id="FigureArtifactHistory">
+	<title>Artifact History</title>
+
+	<mediaobject>
+	  <imageobject>
+	    <imagedata format="PNG"
+	      fileref="../../screenshots/en_US/sc_artifacthistory.png" width="13.5cm" />
+	  </imageobject>
+	</mediaobject>
+      </figure>
+    </section>
+  </section>
+
+  <section id="TrackerEmailNotification">
+    <title>E-mail Notification</title>
+
+    <para>The CodeX Tracker is equipped with a powerful and flexible
+    e-mail notification system. Unless otherwise instructed by the
+    project administrators or the users themselves, the e-mail
+    notification system follows simple default rules. Whenever an
+    artifact is created or updated - whether with an additional
+    follow-up comment, a new attachment or a change in any of the
+    artifact fields - an e-mail message is sent to the following
+    actors:</para>
+
+    <itemizedlist mark="bullet" spacing="compact">
+      <listitem>
+	<para>The artifact submitter (the person who initially submitted the artifact)</para>
+      </listitem>
+
+      <listitem>
+	<para>The artifact assignee (the project member to whom the artifact is
+          currently assigned)</para>
+      </listitem>
+
+      <listitem>
+	<para>The people on the CC list if any (the persons who are
+	listed in the CC list of a given artifact)</para>
+      </listitem>
+
+      <listitem>
+	<para>All users who posted at least one follow-up comment to
+	the artifact.</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Beside these simple rules, the Administration module of the
+    CodeX Tracker allows CodeX users to customize the email notification
+    process. For further information see <xref
+	linkend="TrackerEmailNotificationSettings" />). </para>
+
+    <para>The e-mail message generated by the CodeX Tracker first
+    shows the most recent changes that occurred on the artifact in
+    case of an update. It is then followed by a complete snapshot of
+    the artifact. Web pointers are also included in the message to
+    quickly and easily access the artifact form on CodeX.</para>
+
+  </section>
+
+  <section id="TrackerReporting">
+    <title>Tracker Reporting</title>
+
+    <para>As explained earlier in this document (<xref
+	linkend="ProjectDataExport" />), CodeX can export your project data
+      outside of the CodeX system for re-use in another tool or document.
+      However for simple statistics, you can also use the Tracker Reporting
+      module. This function can be accessed from the Tracker Menu Bar via the item
+      &#34;Reporting&#34;.</para>
+
+    <figure id="FigureValueDistributionOfTheCategoryFieldForTheCodeXProject">
+      <title>Sample value distribution of the Category field for the CodeX
+        project</title>
+
+      <mediaobject>
+	<imageobject>
+	  <imagedata format="PNG"
+	    fileref="../../screenshots/en_US/sc_artifactreporting.png" width="13cm"/>
+	</imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>The Tracker Reporting mechanism allows you to see how your
+    artifacts (open only or all of them) are distributed across the
+    set of predefined values used in the various fields of type
+    select-box. For instance you might want to see how your artifacts
+    are distributed across the status, category or resolution values
+    (see <xref
+	linkend="FigureValueDistributionOfTheCategoryFieldForTheCodeXProject"
+	/> for an example of how the bug artifacts of the CodeX project
+    are distributed across the various CodeX modules stored in the
+    Category field).</para>
+  </section>
+
+  <section id="TrackerAccessPermissions">
+    <title>Tracker Access Permissions</title>
+
+    <para>Depending on the class of citizen a user belongs to and
+      the level of permissions granted as a project member, the
+      various features of the CodeX Tracker may or may not be
+      accessible. Access permissions are summarized in the table
+      below:</para>
+
+    <table frame="all">
+      <title>Tracker Access Permissions</title>
+      <tgroup cols="2">
+	<colspec colname="c1" colwidth="200pt" />
+
+	<colspec colname="c2" colwidth="250pt"  />
+
+	<thead>
+	  <row>
+	    <entry>Tracker Feature</entry>
+	    <entry>Access Permission</entry>
+	  </row>
+	</thead>
+
+	<tbody>
+	  <row>
+	    <entry><link linkend="ArtifactSubmission">New Artifact
+	      Submission</link></entry> <entry>By default any CodeX
+	      visitor, whether logged in or not, has the ability to
+	      submit a new artifact to a tracker. The project
+	      administrator has the ability to limit the scope of this
+	      feature to CodeX registered users (anonymous users are
+	      requested to login first) or to the project members if
+	      the tracker is made private.</entry>
+	  </row>
+	  <row>
+	    <entry><link linkend="ArtifactBrowsing">Artifact
+	      Browsing</link></entry> <entry>Searching the Artifact
+	      database and browsing the results is available to all
+	      CodeX visitors (whether registered or not) unless the
+	      tracker has been made private by the project
+	      administrator. If so the tracker is only visible to
+	      project members.</entry>
+	  </row>
+	  <row>
+	    <entry><link linkend="ArtifactUpdate">Artifact
+	      Update</link></entry> <entry>Same as New Artifact
+	      Submission (see above).</entry>
+	  </row>
+	  <row>
+	    <entry><link
+	      linkend="TrackerFieldUsageManagement">Tracker
+	      Creation</link></entry> <entry>Only available to project
+	      administrators.</entry>
+	  </row>
+	  <row>
+	    <entry><link
+	      linkend="TrackerFieldUsageManagement">Tracker
+	      Administration - General Settings</link></entry>
+	    <entry>Only available to project administrators and
+	      project members with Admin. permission on this
+	      tracker.</entry>
+	  </row>
+	  <row>
+	    <entry><link
+	      linkend="TrackerFieldUsageManagement">Tracker
+	      Administration - Field Usage Management</link></entry>
+	    <entry>Only available to project administrators and
+	      project members with Admin. permission on this
+	      tracker.</entry>
+	  </row>
+
+	  <row>
+	    <entry><link
+	      linkend="TrackerFieldValuesManagement">Tracker
+	      Administration - Field Values Management</link></entry>
+	    <entry>Only available to project administrators and
+	      project members with Admin. permission on this
+	      tracker.</entry>
+	  </row>
+	  <row>
+	    <entry><link linkend="TrackerReportManagement">Tracker
+	      Administration - Reports Management</link></entry>
+	    <entry>Only Project administrators can define project
+	        wide tracker reports that will be available to
+	        all users. All other CodeX users (except anonymous
+	        users) can define personal tracker reports.</entry>
+	  </row>
+	  <row>
+	    <entry><link
+	      linkend="TrackerEmailNotificationSettings">Tracker
+	      Administration - Email Notification
+	      Settings</link></entry> <entry>Only Project
+	      administrators can add email addresses in the global
+	      email notification field. Project members must at least
+	      have Tech. permission on the Tracker to watch artifacts
+	      of other team members. Any registered CodeX user can
+	      customize her notification preferences.</entry>
+	  </row>
+
+	</tbody>
+      </tgroup>
+    </table>
+  </section>
+
+
+  <section id="TrackerCreation">
+    <title>Tracker Creation</title>
+
+    <para>Before one can define what fields and field values to use
+      in a tracker it must first be created. Tracker creation can be
+      accessed from the 'Create a New Tracker' menu item available in
+      the Tracker Administration section.</para>
+
+    <para><tip><title>Tip: Use the predefined trackers
+      first!</title> <para>When a new project is created on CodeX a
+      number of trackers are automatically created for this
+      project. This would typically be a bug tracker, a task tracker
+      and a support request tracker. If your project manages this type
+      of artifact please use the prefined trackers first. Of course,
+      you are free to define new fields or customize existing ones in
+      each of the trackers.</para></tip></para>
+
+    <para>To define a new tracker you must provide the following
+      information (see <xref linkend="FigureCreateANewTracker"
+	/>): </para>
+
+    <itemizedlist mark="bullet" spacing="compact">
+      <listitem id="TrackerCreationName">
+	<para><emphasis role="bold">Name</emphasis>: this is the
+	  name of your tracker. A tracker is typically named after the
+	  type of artifact it is going to manage. This name will be
+	  used by CodeX in the title of the various screens of the
+	  trackers. Typical example of tracker names are: Action
+	  Requests, Support Requests, Requirements, Defects,
+	  Bugs&hellip;</para>
+      </listitem>
+      <listitem id="TrackerCreationDescription">
+	<para><emphasis role="bold">Description</emphasis>: A longer
+	  description of what this tracker is all about and the type
+	  of managed artifacts.</para>
+      </listitem>
+
+      <listitem id="TrackerCreationShortName">
+	<para><emphasis role="bold">Short name</emphasis>: this is a
+	  short name that best describe the type of artifact managed
+	  in this tracker. This name must be quite short as it is used
+	  in various screens of the CodeX Tracker like the artifact
+	  update form next to the artifact ID. Following the examples
+	  given for the Name field above, short names can be: AR for
+	  Action Request, SR for Support Requests, Reqt for
+	  Requirements, bug for Bugs&hellip;</para>
+      </listitem>
+    </itemizedlist>
+
+    <figure id="FigureCreateANewTracker">
+      <title>Creation of a new tracker (here a defect tracking system)</title>
+      
+      <mediaobject>
+	<imageobject>
+	  <imagedata format="PNG"
+	    fileref="../../screenshots/en_US/sc_trackercreatenewtracker.png" width="13cm"/>
+	</imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>The next step is to decide upon the set of fields
+      available for this tracker. In order to avoid the pain of
+      defining the most common type of trackers again and again
+      (e.g. Bug tracker, Support Request tracker, etc.) CodeX offers
+      the ability to create a new tracker from a set of
+      templates. Those templates are either CodeX-wide templates (also
+      known as site templates) or project specific templates.</para>
+
+    <para><emphasis role="bold">Remark</emphasis>: using a template
+      doesn't mean you have to stick to the list of fields and field
+      values defined in this template. You can always add or remove
+      fields or tune the field settings afterwards.</para>
+
+    <itemizedlist mark="bullet" spacing="compact">
+      <listitem id="TrackerCreationFromCodeXTemplate">
+	<para><emphasis role="bold">CodeX-wide Template</emphasis>:
+	  these are templates that have been defined by the
+	  administrators of the CodeX site because it is expected that
+	  most project needs them. It is also a way to ensure a
+	  certain level of harmonization across projects that will
+	  make developers' life easier. The list of available
+	  templates may vary from one CodeX site to another but you
+	  will typically find templates for Bugs, Tasks, etc. A
+	  specific tracker called 'Empty' allows you to create a
+	  virgin tracker with no predefined fields other than the
+	  minimal set of required fields.</para>
+      </listitem>
+
+      <listitem id="TrackerCreationFromProjectTemplate">
+	<para><emphasis role="bold">Project Templates</emphasis>: in
+	  case you have already defined a tracker that suits your
+	  needs or you have seen a tracker from another project that
+	  you'd like to reuse, you just have to specify the project ID
+	  and tracker ID either by hand or from the pull down menus
+	  and click on the create button to create the exact same
+	  tracker in your project (<emphasis
+	  role="bold">Note</emphasis>: this does not copy the
+	  artifacts of the original tracker but only the field
+	  settings).</para>
+      </listitem>
+
+    </itemizedlist>
+
+  </section>
+
+
+  <section id="TrackerAdministration">
+    <title>Tracker Administration</title>
+
+    <para>As we went through the description of the CodeX Tracker
+    features, we referred several times to the flexibility of this
+    system and how easy it is to customize your own tracker. This can
+    be done through the Tracker Administration module unvailable under
+    the &#34;All Trackers Admin&#34; menu item in the Tracker Menu
+    bar.</para>
+
+    <para>The top level administration screen shows a list of existing
+    trackers for your project. From this page, existing trackers can
+    be configured and new ones can be created (see <xref
+    linkend="FigureTrackerTopAdminPage" />). This section focuses on
+    the configuration of an existing tracker. Creation of new tracker
+    is covered in <xref linkend="TrackerCreation" />.</para>
+
+    <figure id="FigureTrackerTopAdminPage">
+      <title>Tracker Administration - Top Level Page</title>
+
+      <mediaobject>
+	<imageobject>
+	  <imagedata format="PNG"
+	    fileref="../../screenshots/en_US/sc_trackertopadminpage.png" width="13cm"/>
+	</imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>The configuration settings for a given tracker is divided
+      in six sections:</para>
+
+    <itemizedlist mark="bullet" spacing="compact">
+      <listitem><para><emphasis role="bold">General
+	Settings</emphasis>: name description, access permission and
+	privacy are defined in this section</para>
+      </listitem>
+      <listitem><para><emphasis role="bold">Manage Canned
+	Responses</emphasis>: allows you to create some pre-defined
+	follow-up comments that your team is using on a regular basis.</para>
+      </listitem>
+      <listitem><para><emphasis role="bold">Manage Field
+	Usage</emphasis>: this is where you'll decide what fields to
+	use in your tracker.</para>
+      </listitem>
+      <listitem><para><emphasis role="bold">Manage Field
+	Values</emphasis>: this section allows you to define the lists
+	of values to be used by certain fields.</para>
+      </listitem>
+      <listitem><para><emphasis role="bold">Manage
+	Reports</emphasis>: search and browsing templates for the
+	artifact search screen are defined here.</para>
+      </listitem>
+      <listitem><para><emphasis role="bold">Email Notification
+	Settings</emphasis>: fine tuning of the global and personal
+	email notification settings.</para>
+      </listitem>
+    </itemizedlist>
+
+    <section id="TrackerGeneralSettings">
+      <title>General Configuration Settings</title>
+
+      <para>This module allows you to define a series of properties
+      for your tracker. Some of those properties have already been
+      defined in the tracker creation form while some others are only
+      available on this configuration page. The properties are as
+      follows:</para>
+
+      <itemizedlist mark="bullet" spacing="compact">
+	<listitem id="TrackerGeneralSettingsName">
+	  <para><emphasis role="bold">Name</emphasis>: this is the
+	  name of your tracker. More precisely you want to name your
+	  tracker after the type of artifact that are going to be
+	  managed in your tracker. This name will be used by CodeX in
+	  the title of the various screens of the trackers. Typical
+	  example of tracker names are: Action Requests, Support Requests,
+	  Requirements, Defects or Bugs&hellip;</para>
+	</listitem>
+
+	<listitem id="TrackerGeneralSettingsDescription">
+	  <para><emphasis role="bold">Description</emphasis>: A longer
+	  description of what this tracker is all about and the type
+	  of artifact that it manages.</para>
+	</listitem>
+
+	<listitem id="TrackerGeneralSettingsShortName">
+	  <para><emphasis role="bold">Short name</emphasis>: this is a
+	  short name that best describe the type of artifact managed
+	  in this tracker. This name must be quite short as it is used
+	  in various screens of the CodeX Tracker like the artifact
+	  update form next to the artifact ID. Following the examples
+	  given for the Name field above, short names can be: AR for
+	  Action Request, SR for Support Requests, Reqt for
+	  Requirements, bug for Bugs&hellip;</para>
+	</listitem>
+
+	<listitem id="TrackerGeneralSettingsPublicTracker">
+	  <para><emphasis role="bold">Public tracker</emphasis>:
+	  checking this box (default) will make this tracker
+	  public. Public trackers can be viewed by all CodeX users
+	  where as Private trackers can only be accessed by project
+	  team members. In order to support the information sharing
+	  culture promoted by CodeX we strongly advise you to make
+	  your trackers public.</para>
+	</listitem>
+
+	<listitem id="TrackerGeneralSettingsAnonymousSubmission">
+	  <para><emphasis role="bold">Allow anonymous
+	  submission</emphasis>: checking this box (default)
+	  allows users who are not registered or not logged in to
+	  submit a new bug or update an existing bug. If you want to
+	  avoid anonymous follow-up comments or unknown artifact
+	  submitter you should uncheck this box.</para>
+	</listitem>
+
+	<listitem id="TrackerGeneralSettingsSubmitInstructions">
+	  <para><emphasis role="bold">Submit instructions</emphasis>:
+	  an introductory message that displays at the top of the
+	  artifact submission form. This is a convenient way to give
+	  directions and recommendations to the submitter. The text
+	  must use HTML tags for formatting which gives a great
+	  flexibility to shape the content of this preamble (you can
+	  use bold, italic, colors, embedded URL&hellip;)</para>
+	</listitem>
+
+	<listitem id="TrackerGeneralSettingsBrowseInstructions">
+	  <para><emphasis role="bold">Browse
+	    instructions</emphasis>: an introductory message that
+	    displays at the top of the artifact searching and browsing
+	    screen.  The text must use HTML tags for formatting which
+	    gives a great flexibility to shape the content of this
+	    preamble (you can use bold, italic, colors, embedded
+	    URL&hellip;)</para>
+	</listitem >
+      </itemizedlist>
+    </section>
+
+    <section id="TrackerCannedResponses">
+      <title>Canned Responses</title>
+
+      <para>It is not infrequent to see the project members in
+	charge of the artifact classification and dispatch process to
+	post the same follow-up comments again and again. Typical
+	examples of repeatedly posted comments are: a thank you
+	message to the originator, a request for the originator to
+	provide commonly missing information like version numbers or
+	type of machine used, etc. (see <xref
+	  linkend="FigureTrackerCannedResponses" /></para>
+
+      <para>Rather than repeatedly typing the same follow-up
+	comments, CodeX allows project members to create a predefined
+	set of responses. After these canned responses have been
+	defined, posting a follow-up comment is just a matter of
+	selecting the appropriate response from the pull down menu in
+	the artifact update form.</para>
+
+      <para>Also note that defining a new Canned Response can be
+	done on the fly from the artifact update form by clicking on
+	the &#34;define a new Canned Response&#34; link (see <xref
+	  linkend="FigureFollowupCommentsAttachedToAnArtifact"
+	  />).</para>
+
+      <figure id="FigureTrackerCannedResponses">
+	<title>Definition of Canned Reponses</title>
+
+	<mediaobject>
+	  <imageobject>
+	    <imagedata format="PNG"
+	      fileref="../../screenshots/en_US/sc_trackercannedresponses.png" width="15.3cm" />
+	  </imageobject>
+	</mediaobject>
+      </figure>
+    </section>
+    
+    <section id="TrackerFieldUsageManagement">
+      <title>Field Usage Management</title>
+
+      <para>When a tracker is first created, it comes pre-configured
+      with a set of fields inherited form the template that was used
+      to create it. For the majority of projects hosted on CodeX it is
+      very likely that the standard Tracker templates (e.g Bugs,
+      Tasks, Support Requests) will cover most of the needs.</para>
+
+      <para> However CodeX gives you the ability to customize the list
+      of fields for your trackers. It can be a variation on an
+      existing template with some field addition or removal or it can
+      be an entirely new tracker created from an empty
+      template.</para>
+
+      <para>As an example, the Bug Template offers a list of about
+	30 predefined fields that you can choose from and customize
+	for your own project Bug tracker. Although the list of
+	predefined fields is quite rich, there might still be cases
+	when one would like to use other fields in their own bug
+	tracker. Should this happen, there are two ways to solve the
+	problem:</para>
+
+      <procedure>
+
+	<step>
+	  <para><emphasis role="bold">Define your own custom
+	    fields</emphasis>: in addition to the list of predefined
+	    fields, CodeX gives tracker administrators the ability
+	    define new fields. Note that you can also tune predefined
+	    fields to suit your needs or even delete them if you want
+	    to do some clean-up in the list of fields..</para>
+	</step>
+
+	<step>
+	  <para><emphasis role="bold">Ask the Site
+	    Administrator</emphasis>: if you think that the missing
+	    field is not specific to your project and should be part
+	    of a good bug tracking system, then we urge you to contact
+	    the CodeX Site Administrators and ask them to create the
+	    new field. By doing so CodeX will over time offer a richer
+	    and more pertinent set of standard fields.</para>
+	</step>	  
+
+      </procedure>
+      
+      <section id="TrackerFieldTypes" xreflabel="Tracker Field Types">
+	<title>Tracker Field Types</title>
+
+	<para>The fields of a tracker can be of several types: Select
+	Box, Multi-Select Box, Text Area, Text Field, Integer Field,
+	Float Field and Date Field.</para>
+
+	<para>Find below a detailled description of each type:</para>
+
+	<itemizedlist mark="dash" spacing="compact">
+	  <listitem>
+	    <para><emphasis role="underline">Select Box</emphasis>: a
+	    'Select Box' field takes its value from a predefined list
+	    of values defined by the Project Administrator. Depending
+	    on the browser you use it may be displayed slightly
+	    differently but it is generally shown as a pull-down menu
+	    with the list of values that you have defined. At any
+	    given time this type of field can only be assigned one
+	    single value. An example of such a field is the 'Category'
+	    field int he bug template.</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="underline">Multi-Select
+	    Box</emphasis>: like the Select Box field described above
+	    this field takes its value from a predefined list of
+	    values. As opposed to the Select Box field, the
+	    Multi-Select Box can be given multiple values at once by
+	    the end user. An example of such a field is the 'Assigned
+	    To' field of the task manager where a task can be assigned
+	    to multiple project members at once.</para>
+	  </listitem>
+
+	  <listitem>
+	    <para> <emphasis role="underline">Text Area</emphasis>:
+	    allows the user to enter free text in a multi-line text
+	    area. The field 'Original Submission' that is used to describe in
+	    details a defect, a task, etc. is of type 'Text
+	    Area.</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="underline">Text Field</emphasis>:
+	    allows the user to enter free text either in a one-line
+	    text field or in a multi-line text area. The summary of a
+	    defect or a task is a good example of a one-line text
+	    field.</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="underline">Date Field</emphasis>:
+	    one-line field that only accept ISO formatted dates
+	    (YYYY-MM-DD)</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="underline">Integer Field</emphasis>:
+	    one-line field that only accept well-formed integral
+	    numbers (e.g 3, -100, 2345&hellip;)</para>
+	  </listitem>
+	  
+	  <listitem>
+	    <para><emphasis role="underline">Float Field</emphasis>:
+	    one-line field that only accept well-formed floating point
+	    numbers (e.g 3.56, -100.3, 2345, 34E+6&hellip;)</para>
+	  </listitem>
+	  
+	</itemizedlist>
+
+      </section>
+
+      <section id="TrackerFieldList">
+	<title>Tracker Field List</title>
+
+	<para>To decide what field to use and what field not to use
+	select the item &#34;Manage Field Usage&#34; on the welcome
+	page of any Tracker Administration screen. The Field Usage screen
+	(<xref linkend="FigureTrackerFieldUsageScreenOfACodeXHostedProject"
+	    />) shows you a sample list of fields available in the tracker
+	of a CodeX project. The screen is divided in 3 parts:</para>
+
+	<procedure>
+	  <step>
+	    <para>the list of tracker fields currently in use by this
+	specific project</para>
+	  </step>
+	  
+	  <step>
+	    <para>the list of unused tracker fields (not shown on
+	      <xref
+		linkend="FigureTrackerFieldUsageScreenOfACodeXHostedProject"
+		/>)</para>
+	  </step>
+	  
+	  <step>
+	    <para>a form to create new tracker fields (not shown on
+	      <xref
+		linkend="FigureTrackerFieldUsageScreenOfACodeXHostedProject"
+		/>)</para>
+	  </step>
+	</procedure>
+
+
+	<para>Information displayed on the Tracker Field list page are as follows:</para>
+
+	<itemizedlist mark="bullet">
+	  <listitem>
+	    <para><emphasis role="bold">Field Label</emphasis>: the
+	    name of the field.  To change the propertiers of a field
+	    simply click on the field name.</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="bold">Type</emphasis>:tracker
+	      fields can be of several types: Select Box, Multi-Select
+	      Box, Text Field, Text Area, Date Field, Integer Field or
+	      Float Field. For a detailed description of the field
+	      types see <xref linkend="TrackerFieldTypes" /></para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Rank on Screen</emphasis>:
+	      the rank number indicates in which order the fields will
+	      appear on the artifact submission form and the artifact
+	      update form. Fields with a smaller rank number are
+	      displayed first.</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Status</emphasis>:</para>
+	    <itemizedlist mark="dash" spacing="compact">
+	      <listitem>
+		<para><emphasis role="underline">Required</emphasis>:
+		required fields are always in use. They are often
+		fields considered vital for a tracker like Artifact
+		ID, Submitter,etc. So you cannot remove them from the
+		list of fields in use by your tracker but you can
+		however customize them to a certain extent.</para>
+	      </listitem>
+	      <listitem>
+		<para><emphasis role="underline">Used</emphasis>: the field is used by your project.</para>
+	      </listitem>
+	      <listitem>
+		<para><emphasis role="underline">Unused</emphasis>:
+		the field is not used by your project. Not that an
+		unused field is just a 'hidden' field. if you change
+		the status of a field from used to unused all the data
+		associated with this field are preserved.</para>
+	      </listitem>
+	    </itemizedlist>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Delete?</emphasis>: when a
+	    field is deleted, it completely disappears from the list
+	    of available fields. Furthermore all the data associated
+	    with this field is destroyed from all artifacts.</para>
+	  </listitem>
+
+	</itemizedlist>
+
+
+	<figure id="FigureTrackerFieldUsageScreenOfACodeXHostedProject">
+	  <title>Field Usage screen of a project tracker</title>
+
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata format="PNG"
+		fileref="../../screenshots/en_US/sc_trackerfieldusage.png" width="15.3cm" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+      </section>
+
+
+      <section id="CreationandModificationofaTrackerField">
+	<title>Creation and Modification of a Tracker Field</title>
+
+	<para>The forms used for the creation of a new tracker field
+	  or the modification of an existing one being very similar
+	  both are covered in the same section.</para>
+
+	<para>The field creation form is available at the bottom of
+	  the tracker field list where as the field update form can be
+	  accessed by clicking on the field label located on the left
+	  hand side of the field list.</para>
+
+
+	<para><tip><title>Tip: Use Predefined Fields
+	First!</title><para>At any time in the life of your project
+	you can enrich your trackers with new custom fields. However
+	before you decide to create a new field make sure that there
+	isn't a predefined field that already plays the same role. By
+	using predefined fields whenever possible, you'll contribute
+	to keep the global CodeX environment consistent and make it
+	easier for visitors, contributors or new team members to
+	switch from project to another.</para></tip></para>
+
+
+	<para>Properties that can be tuned for a tracker field are
+	  as follows:</para>
+	<itemizedlist mark="bullet" spacing="compact">
+	  <listitem>
+	    <para><emphasis role="bold">Field Label</emphasis>: this
+	    is the name of the field. Although you are entirely free
+	    to change the name of a field, we recommend that you only
+	    change it for a new name with a similar meaning. If you
+	    want to change the name for something radically different
+	    then we recommend that you create an entirely new field
+	    and you leave the existing field in the list of unused
+	    fields.</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="bold">Description</emphasis>: a
+	    longer description of the purpose of this field.</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Field
+	      Type</emphasis>:tracker fields can be of several types:
+	      Select Box, Multi-Select Box, Text Area, Text Field,
+	      Integer Field, Float Field and Date Field. For a
+	      detailed description of the various field types see
+	      <xref linkend="TrackerFieldTypes" /></para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Display Size</emphasis>:
+	      this property allows you to define how much space a
+	      field is going to take on the screen. It has a different
+	      meaning and a different format depending on the field
+	      type.</para>
+
+
+	    <itemizedlist mark="dash" spacing="compact">
+	      <listitem>
+		<para><emphasis role="underline">Select
+		Box</emphasis>: the display size does not
+		apply to a select box. Any input typed in the
+		display size field will be silently ignored.</para>
+	      </listitem>
+	      <listitem>
+		<para><emphasis role="underline">Multi-Select
+		  Box</emphasis>: the display size is made of a single
+		  number which indicates how many of the values
+		  associated with this field are visible at once. A
+		  reasonable value for the size of multi-select box is
+		  between 2 and 5.</para>
+	      </listitem>
+	      <listitem>
+		<para><emphasis role="underline">Text Field, Integer
+		  Field, Float Field</emphasis>: for all one-line
+		  text fields, the display size follows the pattern
+		  'M/V' where M is the maximum number of characters
+		  that can be typed in this field and V is the number
+		  of character visible at once in the field display
+		  window. If V is less than M then the text will shift
+		  in the visible window has more text is entered. The
+		  maximum value of M is 255.</para>
+
+		<para>A display size of '40/10' means a field that
+		  accepts 40 characters maximum and the field display
+		  is 10 characters in width. </para>
+	      </listitem>
+	      <listitem>
+		<para><emphasis role="underline">Date Field</emphasis>: A date
+		always follows the same pattern (YYYY-MM-DD) and
+		therefore it always has a fixed length of 10
+		characters.</para>
+	      </listitem>
+
+	      <listitem>
+		<para><emphasis role="underline">Text
+		  Area</emphasis>: for text areas, the display size
+		  follows the pattern 'C/R' where C is the number of
+		  columns in the text area (the width in number of
+		  characters) and R is the number of rows or lines of
+		  text. Note that the number of lines is not limited
+		  to R. If the text typed in the field has more than R
+		  lines then a scrollbar will show up to navigate
+		  through the text.</para>
+
+		<para>A display size of 60/7 means a text area with
+		  7 lines that are 60 characters long.</para>
+	      </listitem>
+	    </itemizedlist>
+
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Rank on screen</emphasis>:
+	    this arbitrary number allows you to define the position of
+	    this field on the artifact submission form and the
+	    artifact update form relative to other fields. The fields
+	    with smaller values will appear first on the screen. The
+	    rank values doesn't have to be consecutive values. It is a
+	    good idea to use values like 10,20,30,... so that it is
+	    easy for you to insert new fields in the future without
+	    having to renumber all the fields.</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Display this field
+	    ...</emphasis>: you can decide if you want to see this
+	    field to appear on the bug submission form for project
+	    members and non project members. In general non project
+	    members are given access to restricted set of fields when
+	    they submit a bug. As an example they are not supposed to
+	    know how critical a bug is ('Severity' field), how to
+	    prioritize it ('Priority' field) (or whom a bug should be
+	    assigned to ('Assigned To' field). Therefore these fields
+	    should probably not appear on non project members submission
+	    form.</para>
+
+	    <para>Finally, some fields have fixed display settings and
+	    they always or never appear on the submission form. For
+	    instance the 'Artifact ID' field never appears on the bug
+	    submission form because by definition a bug not yet
+	    submitted has no Artifact ID.</para>
+	    
+	    <figure id="FigureTrackerFieldUsageSettings">
+	      <title>Tracker field usage settings</title>
+	      
+	      <mediaobject>
+		<imageobject>
+		  <imagedata format="PNG"
+		    fileref="../../screenshots/en_US/sc_trackerfieldusagesettings.png" width="14cm" />
+		</imageobject>
+	      </mediaobject>
+	    </figure>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Allow Empty Value</emphasis>:
+	    determines whether leaving the field blank in the artifact
+	    submission or update form is allowed or not. If unchecked
+	    the tracker won't accept the form unless the field is
+	    given a value.</para></listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Keep Change
+	    History</emphasis>: determines whether changes made to
+	    this field will be kept in the artifact history (see <xref
+		linkend="ArtifactHistory" /> )</para>
+	  </listitem>
+	  
+	  <listitem>
+	    <para><emphasis role="bold">Status</emphasis>: Used or
+	      Unused.  Changing the status in either direction can be
+	      done at any time in the life of the project without
+	      negative impact on the existing artifacts. Newly used
+	      fields will appear with value &#34;None&#34; in existing
+	      artifacts and fields becoming unused will simply be
+	      hidden from the user view but are still present in the
+	      bug database.</para>
+	  </listitem>
+	</itemizedlist>
+      </section>
+      
+    </section>
+
+    <section id="TrackerFieldValuesManagement">
+      <title>Field Values Management</title>
+
+      <para>Once fields have been defined for your tracker, the next
+	step is to define a set of values for your fields. This mostly
+	applies to 'Select Box' and 'Multi-Select Box' type of fields
+	where the list of values you are going to choose will show up
+	in the pull-down menus when an artifact is submitted or
+	updated. Other field types are simply one-line fields with no
+	restricted set of values. For those fields only the default
+	value can be defined.</para>
+
+      <section id="TrackerFieldValuesFieldList">
+	<title>Field List</title>
+
+	<para>To configure values assigned to the used fields of
+	  your tracker select the item &#34;Manage Field Values&#34;
+	  on the welcome page of the Tracker Administration screen or
+	  select the &#34;Manage Field Values&#34; item from the
+	  Tracker Administration menu bar at the top of the
+	  screen.</para>
+
+	<figure id="FigureTrackerFieldListWithUserDefinableValues">
+	  <title>Tracker field list with user definable values</title>
+
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata format="PNG"
+		fileref="../../screenshots/en_US/sc_trackerfieldvaluesmgt.png" width="13cm" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+	<para>Information displayed on this page are as follows:</para>
+	<itemizedlist mark="bullet" spacing="compact">
+	  <listitem>
+	    <para><emphasis role="bold">Field Label</emphasis>: the
+	    name of the field. Click on this name to view the list of
+	    values for this field.</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="bold">Description</emphasis>: what
+	    this field is about</para>
+	  </listitem>
+	</itemizedlist>
+      </section>
+
+
+      <section id="TrackerBrowsingTrackerFieldValues">
+	<title>Browsing Tracker Field Values</title>
+
+	<para>A click on any of the fields listed in the Field Value
+	  Management screen (see <xref
+	    linkend="TrackerFieldValuesManagement" /> brings you to the
+	  list of existing values for this field (see <xref
+	    linkend="FigureListOfValuesForTrackerFieldStatus"
+	    />).</para>
+
+	<para>The table of values shows the following information:</para>
+
+
+	<itemizedlist mark="dash" spacing="compact">
+	  <!--
+	  <listitem>
+	  <para><emphasis role="bold">ID</emphasis> (optional): the
+	  ID column is only shown for fields which have a 'System'
+	  scope. For this type of field the ID often carry a
+	  semantic meaning and if you redefine the label of a value
+	  associated with a given ID it is important that you know
+	  about the ID.(FIXME - A cause de severity - est-ce qu'on
+	  le maintient?)</para>
+
+	  <para>As an example the 'Severity' field has 9 possible
+	  values and the bugs with the highest ID are always
+	  considered as the most critical bug by the system. So it
+	  would be a bad idea to redefine the value label for ID 9
+	  to something like 'Very Minor' :-) but it is ok to
+	  redefine it as 'Fatal'</para>
+	</listitem>
+	  -->
+	  <listitem>
+	    <para><emphasis role="bold">Value Label</emphasis>: text
+	    label of the value as shown in the select box. Click on
+	    this label to modify the value settings (see <xref
+		linkend="TrackerUpdatingaTrackerFieldValue" />)</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="bold">Description</emphasis>:
+	    meaning of the value</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="bold">Rank</emphasis>: defines the
+	    order of the field values in the select box. The smaller
+	    values appear first at the top of the select box.
+</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Status</emphasis>:</para>
+
+	    <itemizedlist mark="dash" spacing="compact">
+	      <listitem>
+		<para><emphasis role="underline">Active</emphasis>:
+		the value is currently visible in the pull-down menus
+		and can be assigned to the corresponding artifact
+		field.</para>
+	      </listitem>
+	      
+	      <listitem>
+		<para><emphasis role="underline">Hidden</emphasis>:
+		the value is currently not visible in the pull-down
+		menu. However if this value was used in the past by
+		any of your project artifacts, it will continue to
+		show up OK for this specific bug.</para>
+	      </listitem>
+	      
+	      <listitem>
+		<para><emphasis role="underline">Permanent</emphasis>:
+		this value has been defined for the entire CodeX
+		system and it cannot be hidden.  It is active for all
+		CodeX projects and will remain as is forever.  Well,
+		at least until the CodeX Team decides otherwise.</para>
+	      </listitem>
+	    </itemizedlist>
+	  </listitem>
+	  
+	</itemizedlist>
+	
+	<para><xref linkend="FigureListOfValuesForTrackerFieldStatus"
+	    /> shows the list of available values for the Status field of
+	tracker managing 'Bugs' artifacts. The Status field was chosen
+	on purpose. Not only is the Status field a required field of
+	the 'Bugs' template, but it also comes with set of predefined values
+	that are available to all CodeX projects. By default only
+	&#34;Open&#34; and &#34;Closed&#34; values are active (and
+	permanent in this case) but there is a series of 7 other
+	values (Accepted, Analyzed, etc.)  that you can choose from if
+	you want to have a finer grain Status field.</para>
+
+	<para>Of course you are free to add your own values to the
+	Status field. This is actually what has been done for this
+	particular project: the Status value &#34;Assigned&#34; as
+	been added to the list of active values. However, in order to
+	keep a certain harmony from one CodeX project to another, we
+	highly recommend that you use the list of predefined status
+	values as much as you can before creating new ones.</para>
+
+	<figure id="FigureListOfValuesForTrackerFieldStatus">
+	  <title>List of values for the 'Status' field</title>
+	  
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata format="PNG"
+		fileref="../../screenshots/en_US/sc_trackerfieldvalues.png" width="13cm" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+      </section>
+
+      <section id="TrackerDefiningaDefaultFieldValue">
+	<title>Defining a Default Field Value</title>
+	
+	<para>All fields used in a tracker can be assigned a default
+	  value. Depending on the field type you will be presented
+	  with either a free text field for text, date, integer and
+	  float fields or a select box containing all the values
+	  already defined for this field for select box and
+	  multi-select box fields (not shown on <xref
+	    linkend="FigureTrackerFieldListWithUserDefinableValues" />)
+	  . </para>
+
+      </section>
+
+      <section id="TrackerCreatingaTrackerFieldValue">
+	<title>Creating a Tracker Field Value</title>
+	
+	<para>To add a value use the value creation form located
+	  below the list of field values (not shown on <xref
+	    linkend="FigureTrackerFieldListWithUserDefinableValues"
+	    />).</para>
+
+      </section>
+
+      <section id="TrackerBindingFieldToValueList">
+	<title>Binding a Field to a List of Values</title>
+	
+	<para>Not only does the CodeX Tracker allows you to create a
+	list of values for a select box but it also offers the ability
+	to associate a select box with a list of predefined values
+	that is actually dynamically generated by the CodeX system. A
+	typical example of this is when one would like to create a new
+	select box showing the list of project members. You could also
+	create it manually but such a list would be tedious to create
+	and maintain.</para>
+
+	<para>Rather than creating your own set of values you can
+	bind a select box to such a list of predefined values that
+	CodeX will keep current for you. Note that if you decide to
+	bind a select box to a list of dynamically generated values
+	you can no longer create your own values. The following lists
+	are currently available (others may be added in the
+	future):</para>
+
+	<itemizedlist mark="dash" spacing="compact">
+	  <listitem>
+	    <para><emphasis role="bold">Project Members</emphasis> :
+	    list of people belonging to the project.</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="bold">Project Administrators</emphasis> :
+	    project members who have been granted the status of
+	    project administrators.</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="bold">Artifact
+	    Technicians</emphasis>: project members who have been
+	    granted the permission to process artifacts (see <xref
+		linkend="UserPermissions" /> for more information on user
+	    permissions).</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="bold">Artifact
+	    Submitters</emphasis>: the full list of people who once
+	    submitted an artifact to the project.</para>
+	  </listitem>
+	</itemizedlist>
+
+      </section>
+
+      <section id="TrackerUpdatingaTrackerFieldValue">
+	<title>Updating a Tracker Field Value</title>
+	
+	<para>From the screen showing the list of values for a given
+	  field (see <xref
+	    linkend="FigureTrackerFieldListWithUserDefinableValues" />)
+	  you can change the properties of a field value:</para>
+
+	<itemizedlist mark="bullet" spacing="compact">
+	  <listitem>
+	    <para><emphasis role="bold">Value</emphasis>: change the value
+            itself. The value typed here will appear as is in the pull-down
+            menu.</para>
+	  </listitem>
+	  
+	  <listitem>
+	    <para><emphasis role="bold">Rank</emphasis>: a number that allows
+            you to specify where you want this value to appear in the list of
+            all active values. The values with smaller rank are displayed
+            first. When the &#34;None&#34; value is available for this bug
+            field it has a rank number of 10. This number is deliberately
+            small because by convention &#34;None&#34; always appear at the
+            top of the pull-down menu. Please be a good CodeX citizen and
+            choose rank numbers higher than 10 for your own values.</para>
+	  </listitem>
+	  
+	  <listitem>
+	    <para><emphasis role="bold">Status</emphasis>: Active or Hidden.
+            As explained above going from one to the other in the course of
+            the project life has no negative impact on the bug database.</para>
+	  </listitem>
+	  
+	  <listitem>
+	    <para><emphasis role="bold">Description</emphasis>: says a bit
+            more about the meaning of this value.</para>
+	  </listitem>
+	</itemizedlist>
+
+	<figure id="FigureUpdatingATrackerFieldValue">
+	  <title>Setting a Bug field value</title>
+	  
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata format="PNG"
+		fileref="../../screenshots/en_US/sc_trackerfieldvalueupdate.png" width="12cm" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+	<para><tip><title>Tip: Leave some space between rank
+	numbers</title><para>Whether for Fields or Field Values
+	remember to use large numbers (in the hundreds or the
+	thousands like 100, 200, 300,..) when you create new
+	values. By doing so you&#39;ll make your life easier if you
+	ever want to insert new values in between existing ones in the
+	future and avoid a tedious renumbering of the existing
+	items.</para></tip></para>
+      </section>
+    </section>
+
+    <section id="TrackerReportManagement">
+      <title>Tracker Report Management</title>
+
+      <para>Knowing that project administrators, project members and other
+        CodeX users may have different needs in searching the tracker 
+        database, CodeX offers the ability to define project or user specific
+        tracker reports.</para>
+
+      <para>Choosing a tracker report consists in deciding what fields
+      you want to use as search criteria and what fields you want to
+      see in the columns of the table where the results of the search
+      are presented. You can also define the order in which the search
+      criteria and the columns will appear on the screen.</para>
+
+      <para>Project Administrators have the ability to define tracker
+      reports that will be usable by all project members whereas
+      non-project administrators can only define reports for their
+      personal use.</para>
+
+      <para><tip><title>Tracker Reports specifies the report layout
+      not the report content</title><para>While configuring Tracker
+      reports you will probably notice that the configuration screen
+      allows you to define the fields that you are going to use a
+      search criteria but not the values of this search criteria. This
+      is on purpose. Defining a report template and filling out the
+      search template with content (values) are 2 distinct operations
+      on CodeX. Once a report template has been defined in the
+      administration module (e.g &#39;Simple Report&#39;, &#39;QA
+      report&#39;, &#39;Daily report&#39; ...)  you can go to the
+      tracker searching and browsing module and use the report
+      template for all sorts of queries. Select the report you want
+      from the pull-down menu, fill out the search form with the
+      values you are interested in and click on the browse
+      button. Then you can save the entire query (report plus values)
+      with the CodeX bookmarking mechanism (see tip in <xref
+	      linkend="ArtifactSelectionCriteria" />). And voila!</para></tip></para>
+
+      <section id="TrackerReportBrowsing">
+	<title>Browsing Tracker Reports</title>
+
+	<para>Clicking on the 'Manage Reports' item in the Tracker
+	Administration menu bar at the top of the page displays the
+	list of available reports (see <xref
+	    linkend="FigureTrackerReportBrowsing" />) with the following
+	information:</para>
+
+	<itemizedlist mark="bullet" spacing="compact">
+	  <listitem>
+	    <para><emphasis role="bold">ID</emphasis>: a number that
+	    uniquely identify the report. A click on the report ID
+	    brings you to the report configuration screen (see <xref linkend="TrackerReportSetting" />).</para>
+	  </listitem>
+	  
+	  <listitem>
+	    <para><emphasis role="bold">Report Name</emphasis>: the
+	    report short name as it will appear in the report
+	    select box when you'll be using the artifact browsing screen
+	    (e.g. Simple Report, QA report, Monthly Report&hellip;).</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Description</emphasis>: a longer description of the report.</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="bold">Scope</emphasis>:</para>
+
+	    <itemizedlist mark="dash" spacing="compact">
+	      <listitem>
+		<para><emphasis role="underline">Project</emphasis>:
+		this report will be usable by all project
+		members. Only project administrators can define
+		project-wide reports.</para>
+	      </listitem>
+	      
+	      <listitem>
+		<para><emphasis
+		role="underline">Personal</emphasis>: this report will
+		be usable by its creator only.</para>
+	      </listitem>
+	    </itemizedlist>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Delete?</emphasis>: click the
+	    trash icon to delete the report. Project-wide reports can
+	    only be deleted by project administrators.</para>
+	  </listitem>
+
+	</itemizedlist>
+
+	<figure id="FigureTrackerReportBrowsing">
+	  <title>List of tracker reports from the CodeX project</title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata format="PNG"
+		fileref="../../screenshots/en_US/sc_trackerreportbrowsing.png" width="14.3cm" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+      </section>
+
+      <section id="TrackerReportSetting">
+	<title>Tracker Report Setting</title>
+
+	<para>After you click on a report ID in the report list (see
+	<xref linkend="TrackerReportBrowsing" />, the report setting
+	screen appears (see <xref linkend="FigureTrackerReportSetting"
+	    />). This screen allows you to define what fields you'd like
+	to use as search criteria and what fields you'd like to see in
+	the list of artifacts retrieved from the database.</para>
+
+	<para>Information available on this screen are as follows:</para>
+
+	<itemizedlist mark="bullet"
+	  spacing="compact">
+	  <listitem>
+	    <para><emphasis role="bold">Name</emphasis>: each report
+	    must be given a name. This name must not be too long as it
+	    will appear in a select box in the artifact browsing module
+	    when you are asked to choose what tracker report you want to
+	    use to query your artifact database.</para>
+	  </listitem>
+	  
+	  <listitem>
+	    <para><emphasis role="bold">Scope</emphasis> (optional):
+	    project administrators can define project-wide reports
+	    that will be made available to all users. Non project
+	    administrators can only define personal report.</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Description</emphasis>: a longer description of the report.</para>
+	  </listitem
+	    >
+	  <listitem>
+	    <para><emphasis role="bold">Field selection</emphasis>:
+	    the field table shows all the fields that are
+	    currently in use in your tracker. For
+	    each field you can set up the following parameters:</para>
+
+	    <itemizedlist mark="bullet" spacing="compact">
+	      <listitem>
+		<para><emphasis role="underline">Use as a Search
+		Criteria</emphasis>: If you check this box the field
+		will appear as one of the selection criteria when you
+		search the tracker database.</para>
+	      </listitem>
+	      <listitem>
+		<para><emphasis role="underline">Rank on
+		Search</emphasis>: A number can be entered in this
+		field. The rank number allows you to place the field
+		with respect to the others. The fields with smaller
+		values will appear first on the list of selection
+		criteria displayed on the screen. These number doesn't
+		have to be consecutive numbers.</para>
+	      </listitem>
+	      <listitem>
+		<para><emphasis role="underline">Use as a Report
+		Column</emphasis>: If you check this box the field
+		will appear as one of the column in the search results 
+		table.</para>
+	      </listitem>
+	      
+	      <listitem>
+		<para><emphasis role="underline">Rank on
+		Report</emphasis>: A number can be entered in this
+		field. The rank number allows you to place the field
+		with respect to the others. The fields with smaller
+		values will appear first in the search results
+		table (from left to right). These number doesn't have
+		to be consecutive numbers.</para>
+	      </listitem>
+	    </itemizedlist>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Column
+	    Width</emphasis>(optional): In case you want to impose a
+	    specific width to the column in the report table you can
+	    specify a column width in percentage of the total page
+	    width. This is optional and our recommendation is to leave
+	    it blank unless your Web browser doesn't make a good job
+	    at formatting your table. If you want a column to be as
+	    narrow as possible while preserving word boundaries enter
+	    a very small percentage like 1 or 2 in the column width
+	    field.</para>
+	  </listitem>
+	</itemizedlist>
+
+	<note><para><emphasis role="bold">Note</emphasis>: it is
+	perfectly OK to use a field as a search criteria and not as a
+	column in the tracker report and vice versa. For the fields you don't
+	want to use at all in the report leave both check
+	boxes.</para></note>
+
+	<figure id="FigureTrackerReportSetting">
+	  <title>Setting a  Tracker Report</title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata format="PNG"
+		fileref="../../screenshots/en_US/sc_trackerreportsetting.png" width="14.2cm" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+	
+      </section>
+
+    </section>
+
+    <section id="TrackerEmailNotificationSettings">
+      <title>Email Notification Settings</title>
+
+      <para>As explained earlier in <xref
+	  linkend="TrackerEmailNotification" /> the CodeX Tracker comes
+      with a predefined set of rules to keep relevant people aware of
+      the artifact life. The default rules can however be complemented
+      or tuned in a number of ways:</para>
+
+      <section id="TrackerGlobalEmailNotification">
+	<title>Global Email Notification</title>
+
+	<para>In addition to the default notification rules, the
+	project administrators have the ability to specify a list of
+	comma separated email addresses to which submissions of new
+	artifacts (and optionally artifact updates) will be
+	systematically sent. Note that in this case notifications will
+	be sent to users regardless of their personal preferences
+	defined (see section '<xref
+	linkend="TrackerEventRoleBasedEmailNotification" />'
+	below).</para>
+
+	<para>This feature is typically used to send submissions of
+	new artifacts to a number of well identified persons in the
+	team who are in charge of qualifying and dispatching the
+	artifacts.</para>
+
+	<para><tip>
+	    <title>Tip: Create a Distribution List to notify several people</title>
+	    
+	    <para>If you want to notify many people at once, we suggest
+	  that you use the CodeX Mailing Lists service to create a
+	  distribution lists (see <xref linkend="MailingLists"
+		/>). Once the Mailing List is up and running type the e-mail
+	  address in the Global Email Notification field.</para>
+
+	    <para>Creating a Mailing List on CodeX has several
+	  advantages: first individuals can (un)subscribe by
+	  themselves and second all messages sent to a CodeX mailing
+	  list are kept in an archive that can serve as an audit
+	  trail for your tracker.</para>
+	  </tip>
+        </para>
+
+      </section>
+
+
+      <section id="TrackerWatchers">
+	<title>Tracker Watchers</title>
+
+	<para>The CodeX Tracker offers to all project members the
+	ability to be carbon-copied on all email notifications sent to
+	some other project members. If you use this feature you'll
+	systematically receive a copy of the email notifications sent
+	to the people you are watching. </para>
+
+	<para>Here are a couple of examples where the tracker watch
+	feature can be extremely useful:</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para><emphasis role="bold">Backups</emphasis>: when a
+	    team member is away from the office it is often convenient
+	    to delegate her artifact management activity to another
+	    person in the team who is acting as a backup. Becoming the
+	    backup of another team member is as easy as inserting her
+	    name in the Watchers field of the backup person when
+	    the team member quits and remove it when the team member
+	    returns.</para>
+
+	    <para>As soon as you specify a person name in the 
+	    watchers field you'll start receiving all the artifact
+	    notification of this person and you can act accordingly on her
+	    behalf.</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="bold">QA Contacts</emphasis>:
+	    another possible use is for the QA team members to fill
+	    the tracker watcher field with the names of the software
+	    engineers whom QA activity they are responsible for.</para>
+	  </listitem>
+	</itemizedlist>
+
+	<note><para>Remark: The goal of the tracker watch feature is not
+	to spy on you. To make sure that you are only watched by
+	authorized persons, CodeX always shows you the list of CodeX
+	users who are currently watching your email 
+	notifications. </para></note>
+
+      </section>
+
+      <section id="TrackerEventRoleBasedEmailNotification" xreflabel="Event/Role Based Notification Settings">
+	<title>Event/Role Based Notification Settings</title>
+
+	<para>This is the most sophisticated part of the customization
+	process. It allows any user to specify what types of events
+	she wants to be notified by email. Note that these settings
+	are project and user specific so you can tune your own email
+	notification preferences for each project you are involved
+	with.</para>
+
+	<para>The customization matrix (see <xref
+	    linkend="FigureTrackerNotificationMatrix" />) presents you with a
+	series of check boxes. Each check box allows you to specify
+	what kind of events you want to be aware of depending on
+	the role you play with repect to the artifact.</para>
+
+	<para>There are 4 roles defined with respect to an artifact:</para>
+
+	<itemizedlist mark="bullet" spacing="compact">
+	  <listitem>
+	    <para><emphasis role="bold">Submitter</emphasis>: you are
+	    the person who initially reported the artifact by filling
+	    out the artifact submission form.</para>
+	  </listitem>
+	  
+	  <listitem>
+	    <para><emphasis role="bold">Assignee</emphasis>: you were
+	    assigned the artifact and you are therefore responsible
+	    for managing it.</para>
+	  </listitem>
+	  
+	  <listitem>
+	    <para><emphasis role="bold">CC</emphasis>: you are
+	    mentioned in the list of CC names.</para>
+	  </listitem>
+	  
+	  <listitem>
+	    <para><emphasis role="bold">Commenter</emphasis>: you have
+	    once posted a follow-up comment in the artifact.</para>
+	  </listitem>
+	</itemizedlist>
+
+	<para>For each of these roles you can instruct the CodeX
+	Tracker to send email notifications to you only when some
+	specific events occur. Nine different events (see the right
+	most column on <xref linkend="FigureTrackerNotificationMatrix"
+	    />) are monitored by the CodeX Tracker. The description of the
+	events is self explanatory and only appeal one comment: the
+	first 8 events in the list can only occur on artifact
+	updates. Only the last event relates to the submission of a
+	new artifact.</para>
+
+	<para>Let's review the sample matrix shown on <xref
+	    linkend="FigureTrackerNotificationMatrix" /> and see, step by
+	step, how this user has configured her notification
+	settings:</para>
+
+	<itemizedlist>
+	  <listitem><para>First let's look at the Commenter
+	  column. The Commenter column says that this user has decided
+	  that if she was involved in an artifact as a Commenter (she just
+	  posted a follow-up comment at some point in time) then she
+	  is only interested in receiving email notification when the
+	  status of the artifact goes to 'Closed' or when any of the fields
+	  Priority, Status and Severity is modified. All other events
+	  will be ignored by the CodeX tracker and no notification
+	  will be sent to this user.</para></listitem>
+
+	  <listitem><para>Second, looking at the matrix by row, one can see
+	  that the user said that when she makes a modification to an artifact 
+	  herself (Event 'I am the author of the change') she doesn't
+	  want to receive any email notification whatever her role 
+	  in this artifact is.</para></listitem>
+
+	  <listitem><para>Finally, the user also said that when a new
+	  artifact is submitted to the project and is immediately assigned
+	  to her (Assignee role) she wants to be notified. However if
+	  she is the submitter of the new artifact then she is not
+	  interested in receiving the notification.</para>
+
+	    <para>Note that the Commenter role is meaningless for
+	      the event 'A new artifact has been submitted' because
+	      follow-up comments can only be added in update time not
+	      at creation time.</para>
+	  </listitem>
+
+	</itemizedlist>
+
+	<figure id="FigureTrackerNotificationMatrix">
+	  <title>Personal Notification Settings</title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata format="PNG"
+		fileref="../../screenshots/en_US/sc_trackernotificationmatrix.png" width="12.5cm" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+      </section>
+    </section>
+
+  </section>
+
+</chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+End:
+-->
+

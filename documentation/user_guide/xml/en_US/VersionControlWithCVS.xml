@@ -405,7 +405,60 @@
 	</mediaobject>
       </figure>
 
+    <section id="Cross-Referencing CVS Commits">
+    <title>Cross-Referencing Artifacts and CVS Commits</title>
 
+      <para>While working in the development or the maintenance phase
+      of a software project, it is vital to keep track of the changes
+      made to the source code. This is what Version Control systems
+      like CVS do. In addition to keeping track of the source code
+      change history it is often critical to relate the changes to the
+      artifact (a task, a defect or a support request) that led the
+      developers to make a change in the code. And conversely, when
+      reading the artifact description it is also very helpful to
+      immediately see how the change was implemented.</para>
+
+      <para>The integration of CVS in CodeX precisely provide the
+      CodeX users with this bi-directionnal cross-referencing
+      mechanism. This is achieved through the use of text patterns
+      that are automatically detected by CodeX in either the follow-up
+      comments of the project artifacts or in the messages attached to
+      a CVS commit.</para>
+      
+      <para>The text patterns to type in a commit message or a follow-up comment are as follows:</para>
+
+   <itemizedlist mark="bullet" spacing="compact">
+      <listitem>
+	<para> <emphasis role="bold">art #XXX</emphasis>: this pattern
+	refers to the artifact XXX where XXX is the artifact unique ID
+	(e.g art #2387). When browsing a message containing this
+	pattern anywhere in CodeX, the pattern will be automatically
+	transformed into an hyperlink to the artifact
+	description.</para>
+      </listitem>
+
+      <listitem>
+	<para><emphasis role="bold">commit #YYY</emphasis>: this
+	pattern refers t the commit YYY where YYY is the commit unqiue
+	ID as liste when querying the CVS tracking database. When
+	browsing a message containing this pattern anywhere in CodeX,
+	the pattern will be automatically transformed into an
+	hyperlink to the commit description description (log messages,
+	impacted files, versions and author of the change.</para>
+      </listitem>
+   </itemizedlist>
+
+   <para><tip><title>Tip: cross-reference artifacts and CVS
+   commits</title><para>It is considered a best practice to always
+   reference a bug, a task or a support request in any of the log
+   message attached to a CVS commit. Similarly when closing the
+   related artifact (task, bug,etc.) make sure you mention the commit
+   ID in the follow-up comment. You will find this extremelly
+   convenient while trying to keep track of the changes and why it was
+   made.</para></tip></para>
+
+
+    </section>
 
     <section id="CVSAdministration">
       <title>CVS Administration</title>

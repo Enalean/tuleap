@@ -25,7 +25,7 @@ if (!$ath->userIsTech() && !$ath->allowsAnon() ) {
 
 // Display the menus
 $ath->header(array('title'=>'Add A '.$ath->getCapsItemName(),'titlevals'=>array($ath->getName()),'pagename'=>'tracker_browse',
-	'atid'=>$ath->getID(),'sectionvals'=>array($group->getPublicName()),'help' => 'HELP_FIXME.html'));
+	'atid'=>$ath->getID(),'sectionvals'=>array($group->getPublicName()),'help' => 'ArtifactSubmission.html'));
 
 // Display the artifact items according to all the parameters
 $ah->displayAdd();

@@ -637,7 +637,6 @@ class Artifact extends Error {
 			$sql="UPDATE artifact SET $upd_list ".
 			    " WHERE artifact_id=".$this->getID();
 		
-			// echo "DBG - update sql : $sql<br>";
 			$result=db_query($sql);
 	    }
 	
@@ -988,8 +987,6 @@ class Artifact extends Error {
 			$this->getQueryElements($select,$from,$where);		
 			
 			$sql = $select." ".$from." ".$where;
-				   
-			//echo "sql=$sql<br>";
 			
 			$this->data_fields = db_query($sql);
 		}
