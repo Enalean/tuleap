@@ -365,6 +365,21 @@ function bug_data_copy_default_values($field, $group_id, $by_field_id=false) {
     }
 }
 
+function bug_data_get_cached_field_value($field,$group_id,$value_id) {
+    global $BF_VALUE_BY_NAME;
+
+    if (!isset($BF_VALUE_BY_NAME[$field][$value_id])) {
+	$res = bug_data_get_field_predefined_values ($field, $group_id,false,false,false);
+
+	while ($fv_array = db_fetch_array($res)) {
+	    // $fv_array[0] has the value_id and [1] is the value
+	    $BF_VALUE_BY_NAME[$field][$fv_array['value_id']] = $fv_array[1];
+	}
+    }
+
+    return $BF_VALUE_BY_NAME[$field][$value_id];
+}
+
 function bug_data_get_field_value ($bug_fv_id) {
     /*
       Get all the columns associated to a given field value

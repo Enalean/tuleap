@@ -27,8 +27,7 @@ while ($field = bug_list_all_fields()) {
     $lbl_list[$field] = bug_data_get_label($field);
     $dsc_list[$field] = bug_data_get_description($field);
 
-    // user names requires some special processing and keep priority
-    //  as an integer value
+    // user names requires some special processing 
     if ($field == 'assigned_to') {
 	$select .= ',user_at.user_name AS assigned_to';
 	$from .= ',user user_at';
@@ -38,23 +37,10 @@ while ($field = bug_list_all_fields()) {
 	$from .= ',user';
 	$where .= ' AND user.user_id=bug.submitted_by ';
     } else {
-
-	if (bug_data_is_select_box($field) && ($field != 'priority') ) {
-	    // we need to "decode" the value_id and return the corresponding
-	    // user readable value. Use field_id instead of field_name to speed
-	    // up query process
-	    $bfv_alias = 'bug_field_value'."$is";
-	    $select .= ",$bfv_alias.value AS $field";
-	    $from .= ",bug_field_value $bfv_alias";
-	    $where .= " AND ($bfv_alias.bug_field_id=".bug_data_get_field_id($field).
-		" AND $bfv_alias.value_id=bug.$field AND ($bfv_alias.group_id='$group_id' OR $bfv_alias.group_id='100')) ";
-	    $is++;
-	} else {
-	    // It's a text field so leave it as it is
-	    $select .= ",bug.$field";
-	}
+	$select .= ",bug.$field";
     }
 }
+
 
 // Add the 3 fields that we build ourselves for user convenience
 // - All follow-up comments

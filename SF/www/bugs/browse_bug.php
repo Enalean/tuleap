@@ -238,24 +238,13 @@ while ($field = bug_list_all_fields()) {
 	$col_list[] = $field;
 	$lbl_list[] = bug_data_get_label($field);
 
-	if (bug_data_is_select_box($field)) {
-	    if ($field == 'assigned_to') {
-		// user names requires some special processing
-		$select .= ",user_at.user_name AS assigned_to";
-		$from .= ",user user_at";
-		$where .= " AND user_at.user_id=bug.assigned_to ";
-	    } else {
-		// we need to "decode" the value_id and return the corresponding
-		// user readable value.
-		$bfv_alias = 'bug_field_value'."$is";
-		$select .= ",$bfv_alias.value AS $field";
-		$from .= ",bug_field_value $bfv_alias";
-		$where .= " AND ($bfv_alias.bug_field_id=".bug_data_get_field_id($field).
-		    " AND $bfv_alias.value_id=bug.$field AND ($bfv_alias.group_id='$group_id' OR $bfv_alias.group_id='100')) ";
-		$is++;
-	    }
+	if ($field == 'assigned_to') {
+	    // user names requires some special processing
+	    $select .= ",user_at.user_name AS assigned_to";
+	    $from .= ",user user_at";
+	    $where .= " AND user_at.user_id=bug.assigned_to ";
 	} else {
-	    // It's a text field so leave it as it is
+	    // otherwise just select this column as is
 	    $select .= ",bug.$field";
 	}
     }

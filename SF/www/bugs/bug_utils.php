@@ -380,18 +380,27 @@ function show_buglist ($result,$offset,$field_arr,$title_arr,$url) {
 
 	for ($j=0; $j<$nb_of_fields; $j++) {
 	    
+	    $value = db_result($result, $i, $field_arr[$j]);
+
 	    if ($field_arr[$j] == 'date') {
 		echo '<TD>'.
-		    (db_result($result, $i, 'date')<$then ?'<B>* ':'&nbsp; '). 
-		    date($sys_datefmt,db_result($result, $i, 'date')).
-		    (db_result($result, $i, 'date')<$then ?'</B> ':'').'</TD>'."\n";
+		    ($value_<$then ?'<B>* ':'&nbsp; '). 
+		    date($sys_datefmt,$value).
+		    ($value<$then ?'</B> ':'').'</TD>'."\n";
 	    } else if ($field_arr[$j] == 'bug_id') {
 		echo '<TD><A HREF="/bugs/?func=detailbug&bug_id='.
-		    db_result($result, $i, 'bug_id').
-		    '&group_id='.$group_id.'">'. 
-		    db_result($result, $i, 'bug_id') .'</A></TD>'."\n";
+		    $value.'&group_id='.$group_id.'">'. 
+		    $value .'</A></TD>'."\n";
+
+	    } else if ( ($field_arr[$j] == 'assigned_to') ||
+			($field_arr[$j] == 'submitted_by') ) {
+		echo "<TD><A HREF=\"/users/$value\">$value</A></TD>\n";
+		
+	    } else if (bug_data_is_select_box($field_arr[$j])) {
+		echo '<TD>'. bug_data_get_cached_field_value($field_arr[$j], $group_id, $value) .'</TD>'."\n";
+
 	    } else {
-		echo '<TD>'. db_result($result, $i, $field_arr[$j]) .'&nbsp;</TD>'."\n";
+		echo '<TD>'. $value .'&nbsp;</TD>'."\n";
 	    }
 	}
 	echo "</tr>\n";

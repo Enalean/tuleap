@@ -136,6 +136,12 @@ function prepare_bug_record($group_id, &$col_list, &$record) {
     while (list(,$col) = each($col_list)) {
 	if (bug_data_is_text_field($col) || bug_data_is_text_area($col)) {
 	    $record[$col] = prepare_textarea($record[$col]);
+
+	} else if (bug_data_is_select_box($col) && ($col != 'priority') &&
+		   ($col != 'assigned_to') ) {
+	    // All value_ids transformed in human readable values 
+	    // except priority that remains a number.
+	    $record[$col] = bug_data_get_cached_field_value($col, $group_id, $record[$col]);
 	}
     }
 
