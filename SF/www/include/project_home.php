@@ -461,7 +461,7 @@ if ($project->usesNews()) {
 	<?php
 	// ############################# Latest News
 
-	echo $HTML->box1_top('Latest News');
+	echo $HTML->box1_top('Latest News&nbsp;<A href="/export/rss_sfnews.php?group_id='.$group_id.'" title="Latest News - RSS Format">[XML]</A>');
 
 	echo news_show_latest($group_id,10,false);
 
