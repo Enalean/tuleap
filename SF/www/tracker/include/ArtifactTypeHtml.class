@@ -941,9 +941,9 @@ class ArtifactTypeHtml extends ArtifactType {
 		      <td>Display Size:&nbsp;';
 		      
 		if ( $display_size ) {
-		  echo '<input type="text" name="display_size" size="5" maxlength="5" value="'.$display_size.'">';
+		  echo '<input type="text" name="display_size" size="7" maxlength="7" value="'.$display_size.'">';
 		} else {
-		  echo '<input type="text" name="display_size" size="5" maxlength="5" value="N/A">';
+		  echo '<input type="text" name="display_size" size="7" maxlength="7" value="N/A">';
 		}
 			    
 	    echo '
