@@ -1531,7 +1531,7 @@ image named '<span style="font-family: monospace;">organization_logo.png</span>'
 By default this is a transparent image of size 52x52 pixels. We
 recommend that your logo do not exceed 60x140 pixels to preserve the
 nice looking layout of the menu bar.<br>
-<h2>Site content</h2>
+<h2><a name="Site_content"></a>Site content</h2>
 Several PHP scripts in the CodeX source code contain pieces of text
 that are generally here to give instructions to the CodeX users.
 Typical
@@ -1636,18 +1636,32 @@ software packages to install</a>.<br>
 <h2>LDAP Directory</h2>
 While visiting a user information page on CodeX, you have the ability
 to query the LDAP directory of your company to get more information
-about this user.&nbsp; There are two variables in the local.inc
+about this user.&nbsp; The follwoing variables in the local.inc
 configuration file (see <a href="#System_configuration_file_local.inc">above</a>)
-that allow you to customize the LDAP search:<br>
+allow you to customize the LDAP search:<br>
 <ul>
   <li>$<span style="font-family: monospace;">sys_ldap_server</span>:
 the full name of your the LDAP server to query (ask your system
 administrator if you don't know of any around you)</li>
   <li><span style="font-family: monospace;">$sys_ldap_dn</span>: the
 distinguished name (DN) to use in the LDAP query (Remark: the LDAP
-query in CodeX uses the user email address as the search key)<br>
-  </li>
+query in CodeX uses the user email address as the search key)</li>
+  <li><span style="font-family: monospace;">$sys_ldap_filter:</span>
+the search filter to use when a query is sent to the LDAP server . This
+is the filter argument used in the ldap_search call. Any pattern of the
+form %name% in the search filter will be replaced with the
+corresponding value from the user table before ldap_search is called.
+As an example <span style="font-family: monospace;">%email%</span>
+will be replaced by the user email, <span
+ style="font-family: monospace;">%user_name%</span> means the user
+login name,etc...</li>
 </ul>
+It is also possible to customize the HTML output of the LDAP search
+when one accesses the information about a user on CodeX. You must edit
+the script <span style="font-family: monospace;">site-content/<span
+ style="font-style: italic;">LANG_COUNTRY</span>/include/user_home.txt</span>
+to customize the HTML output and save it in the corresponding custom
+directory (see <a href="#Site_content">Site Content</a> section above).<br>
 <hr>
 <h1>Scripts Backend</h1>
 Most of the backend scripts used by the CodeX system are writen in Perl

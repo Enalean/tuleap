@@ -126,8 +126,11 @@ $sys_news_group=46;
 // LDAP server to query for more information on CodeX users
 // (leave blank to disable LDAP lookup). If LDAP is defined
 // then also define the distinguised name to use in LDAP queries
+// the ldap filter is the filter to use to query the LDAP directory
+// (%name% are substituted with the value from the user table)
 $sys_ldap_server='Choose_an_LDAP_server_next_to_you';
 $sys_ldap_dn='o=XEROX, c=US';
+$sys_ldap_filter='mail=%email%';
 
 //
 // System name to be used in Web pages, documentation,etc.
