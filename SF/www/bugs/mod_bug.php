@@ -109,12 +109,17 @@ if (db_numrows($result) > 0) {
 
       <table cellspacing="0">
       <TR><TD colspan="2" align="top"><HR></td></TR>
-      <TR><TD colspan="2" >
-      <h3>Follow-up Comments <?php echo help_button('BugUpdate.html#BugComments'); ?></h3>
+      <TR><TD>
+      <h3>Follow-up Comments <?php echo help_button('BugUpdate.html#BugComments'); ?></h3></td>
+      <TD>
+	 <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit Changes">
+      </td></tr>
+      
+      <tr><TD colspan="2" align="top">
       <B>Use a Canned Response:</B>&nbsp;
       <?php
       echo bug_canned_response_box ($group_id,'canned_response');
-      echo '&nbsp;&nbsp;&nbsp;<A HREF="/bugs/admin/field_values.php?group_id='.$group_id.'&create_canned=1">Or define a new Canned Response</A><P>';
+      echo '&nbsp;&nbsp;&nbsp;<A HREF="/bugs/admin/field_values.php?group_id='.$group_id.'&create_canned=1">Or define a new Canned Response</A>';
       ?>
       </TD></TR>
  
