@@ -265,7 +265,7 @@ while ($ln = pop(@groupdump_array)) {
 	  if (! $blockispresent)
 	    {
 	      system("echo \"# !!! CodeX Specific !!! DO NOT REMOVE (NEEDED CODEX MARKER)\n# the following block is regularly added when not present\n# But keeping the block will prevent you from this automatic add if you need some manual modification to the active line within the block\" >> $cvs_dir/CVSROOT/commitinfo");
-	      system("echo \"ALL (/usr/local/bin/commit_prep -T $gname -r\" >> $cvs_dir/CVSROOT/commitinfo");	 
+	      system("echo \"ALL /usr/local/bin/commit_prep -T $gname -r\" >> $cvs_dir/CVSROOT/commitinfo");	 
 	      system("echo \"# END OF NEEDED CODEX BLOCK\" >> $cvs_dir/CVSROOT/commitinfo");
 	      system("cd $cvs_dir/CVSROOT; rcs -q -l commitinfo; ci -q -m\"CodeX modifications: entering commit_prep from group fields (cvs_tracker/cvs_events)\" commitinfo; co -q commitinfo");
 	    }
