@@ -534,8 +534,8 @@ class Artifact extends Error {
 					} else {
 					    $differ = ($old_value != $value);
 					}
-				
 					if ($differ) {
+echo "field=".$field->getName()."differ=".$old_value."-".$value;
 					    if ($is_text) {
 					    	if ( $field->isStandardField() ) {
 								$upd_list .= "$field_name='".htmlspecialchars($value)."',";							
@@ -551,7 +551,6 @@ class Artifact extends Error {
 							} else {
 								$update_value = $value;
 							}
-							
 							$this->addHistory($field,$old_value);
 					    }
 				
@@ -856,7 +855,7 @@ class Artifact extends Error {
 	    global $feedback;
 	
 		if ( !$artifact_id_dependent ) 
-			return;
+			return true;
 			
 		$ok = true;
 		$ids = explode(",",$artifact_id_dependent);
