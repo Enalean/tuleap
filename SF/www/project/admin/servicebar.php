@@ -12,6 +12,55 @@ require ('pre.php');
 require ('vars.php');
 require ($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
 
+
+function display_service_row($group_id, $service_id, $label, $short_name, $description, $is_active, $is_used, $scope, $rank, &$row_num, $su) {
+
+    // Normal projects should not see inactive services.
+    if (!$su) {
+        if (!$is_active) return;
+    }
+
+    if ($service_id==100) return; // 'None' service
+
+    echo '<TR class="'. util_get_alt_row_color($row_num) .'">
+            <TD>
+              <a href="/project/admin/editservice.php?group_id='.$group_id.'&service_id='.$service_id.'" title="'.$description.'">'.$label.'</TD>';
+    
+    if ($group_id==100) {
+        echo '<TD align="center">'.( $is_active ? 'Available' : 'Unavailable' ).'</TD>';
+    }
+    
+    #echo '<TD align="center">'.( $is_used ? 'Yes' : 'No' ).'</TD>';
+    echo '<TD align="center">'.( $is_used ? 'Enabled' : ( $is_active ? '<i>Disabled</i>' : '-' ) ).'</TD>';
+    if ($group_id==100) {
+        echo'<TD align="center">'.$scope.'</TD>';
+    }
+    echo '<TD align="center">'.$rank.'</TD>';
+ 
+    if ((($scope!="system")&&($label!='Home Page'))||($group_id==100)) {
+        if ($short_name) {
+            $short= "&short_name=$short_name";
+        } else $short='';
+        echo '<TD align="center"><A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&service_id='.$service_id.'&func=delete'.$short.'" onClick="return confirm(\'';
+        if ($group_id==100) {
+             echo '*********** WARNING ***********\n';
+             echo ' Do you want to delete the service?\n';
+             echo ' NOTE: this will remove this service ('.$label.') from ALL projects of this server.\n';
+             echo ' Are you SURE you want to continue ?';
+       } else {
+            echo 'Delete this service ?';
+        }
+        echo '\')"><IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A></TD>';
+    } else {
+        echo '<TD align="center">-</TD>';
+    }
+    echo '<TR>';
+    $row_num++;
+}
+
+
+
+
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
 
@@ -219,50 +268,5 @@ project_admin_footer(array());
 
 
  
-function display_service_row($group_id, $service_id, $label, $short_name, $description, $is_active, $is_used, $scope, $rank, &$row_num, $su) {
-
-    // Normal projects should not see inactive services.
-    if (!$su) {
-        if (!$is_active) return;
-    }
-
-    if ($service_id==100) return; // 'None' service
-
-    echo '<TR class="'. util_get_alt_row_color($row_num) .'">
-            <TD>
-              <a href="/project/admin/editservice.php?group_id='.$group_id.'&service_id='.$service_id.'" title="'.$description.'">'.$label.'</TD>';
-    
-    if ($group_id==100) {
-        echo '<TD align="center">'.( $is_active ? 'Available' : 'Unavailable' ).'</TD>';
-    }
-    
-    #echo '<TD align="center">'.( $is_used ? 'Yes' : 'No' ).'</TD>';
-    echo '<TD align="center">'.( $is_used ? 'Enabled' : ( $is_active ? '<i>Disabled</i>' : '-' ) ).'</TD>';
-    if ($group_id==100) {
-        echo'<TD align="center">'.$scope.'</TD>';
-    }
-    echo '<TD align="center">'.$rank.'</TD>';
- 
-    if ((($scope!="system")&&($label!='Home Page'))||($group_id==100)) {
-        if ($short_name) {
-            $short= "&short_name=$short_name";
-        } else $short='';
-        echo '<TD align="center"><A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&service_id='.$service_id.'&func=delete'.$short.'" onClick="return confirm(\'';
-        if ($group_id==100) {
-             echo '*********** WARNING ***********\n';
-             echo ' Do you want to delete the service?\n';
-             echo ' NOTE: this will remove this service ('.$label.') from ALL projects of this server.\n';
-             echo ' Are you SURE you want to continue ?';
-       } else {
-            echo 'Delete this service ?';
-        }
-        echo '\')"><IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A></TD>';
-    } else {
-        echo '<TD align="center">-</TD>';
-    }
-    echo '<TR>';
-    $row_num++;
-}
-
 
 ?>

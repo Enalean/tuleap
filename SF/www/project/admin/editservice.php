@@ -13,57 +13,6 @@
 require ('pre.php');
 require ($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
 
-session_require(array('group'=>$group_id,'admin_flags'=>'A'));
-$project=project_get_object($group_id);
-
-project_admin_header(array('title'=>'Edit Service','group'=>$group_id,
-			   'help' => 'ServiceConfiguration.html'));
-
-// $func is either: 
-// 'create' -> blank form that allow service creation (-> do_create)
-// '' -> show service and allow modification (-> do_update) 
-
-
-
-if ($func=="create") {
-    $is_superuser=false;
-    if (user_is_super_user()) {
-            $is_superuser=true;
-    }
-    display_service_creation_form($group_id,$is_superuser);
-}
-else {
-
-    if (!$service_id) {
-        exit_error('ERROR','Service Id was not specified ');
-    }
-    
-    $sql = "SELECT * FROM service WHERE group_id=$group_id AND service_id=$service_id";
-    
-    $result=db_query($sql);
-    if (db_numrows($result) < 1) {
-        exit_error('ERROR','Service does not exist: '.$service_id);
-    }
-    $service = db_fetch_array($result);
-    $readonly=false;
-    $is_superuser=true;
-    if (!user_is_super_user()) {
-        $is_superuser=false;
-        if (!$service['is_active']) {
-            exit_error('Forbidden','You cannot access an inactive service');
-        }
-        if ($service['scope']=="system") {
-            // Display service as read-only
-            $readonly=true;
-        }
-    }
-    display_service_configuration_form($group_id, $service_id, $service, $readonly, $is_superuser);
-}
-
-
-
-project_admin_footer(array());
-
 
 /* 
  * Display service configuration form
@@ -239,6 +188,61 @@ echo '
 ';
 
 }
+
+
+session_require(array('group'=>$group_id,'admin_flags'=>'A'));
+$project=project_get_object($group_id);
+
+project_admin_header(array('title'=>'Edit Service','group'=>$group_id,
+			   'help' => 'ServiceConfiguration.html'));
+
+// $func is either: 
+// 'create' -> blank form that allow service creation (-> do_create)
+// '' -> show service and allow modification (-> do_update) 
+
+
+
+if ($func=="create") {
+    $is_superuser=false;
+    if (user_is_super_user()) {
+            $is_superuser=true;
+    }
+    display_service_creation_form($group_id,$is_superuser);
+}
+else {
+
+    if (!$service_id) {
+        exit_error('ERROR','Service Id was not specified ');
+    }
+    
+    $sql = "SELECT * FROM service WHERE group_id=$group_id AND service_id=$service_id";
+    
+    $result=db_query($sql);
+    if (db_numrows($result) < 1) {
+        exit_error('ERROR','Service does not exist: '.$service_id);
+    }
+    $service = db_fetch_array($result);
+    $readonly=false;
+    $is_superuser=true;
+    if (!user_is_super_user()) {
+        $is_superuser=false;
+        if (!$service['is_active']) {
+            exit_error('Forbidden','You cannot access an inactive service');
+        }
+        if ($service['scope']=="system") {
+            // Display service as read-only
+            $readonly=true;
+        }
+    }
+    display_service_configuration_form($group_id, $service_id, $service, $readonly, $is_superuser);
+}
+
+
+
+project_admin_footer(array());
+
+
+
 
 
 ?>
