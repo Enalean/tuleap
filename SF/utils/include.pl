@@ -22,10 +22,12 @@ $dummy_uid      =       "103";                  # UserID of the dummy user that 
 $date           =       int(time()/3600/24);    # Get the number of days since 1/1/1970 for /etc/shadow
 $apache_conf    =       "/etc/httpd/conf/httpd.conf"; # Apache configuration file
 
+
 ##############################
-# Database Connect Functions
+# Local Configuration Load
 ##############################
-sub db_connect {
+
+sub load_local_config {
 	my ($foo, $bar);
 	
 	# open up database include file and get the database variables
@@ -36,7 +38,15 @@ sub db_connect {
 		if ($foo) { eval $_ };
 	}
 	close(FILE);
+}
 
+
+##############################
+# Database Connect Functions
+##############################
+sub db_connect {
+
+        &load_local_config();
 	# connect to the database
 	$dbh ||= DBI->connect("DBI:mysql:$sys_dbname:$sys_dbhost", "$sys_dbuser", "$sys_dbpasswd");
 }

@@ -22,6 +22,9 @@ umask 002;
 
 require("include.pl");  # Include all the predefined functions and variables
 
+&load_local_config();
+
+
 my $user_file = $file_dir . "user_dump";
 my $group_file = $file_dir . "group_dump";
 my ($uid, $status, $username, $shell, $passwd, $win_passwd, $winnt_passwd, $email, $realname);
@@ -245,7 +248,7 @@ while ($ln = pop(@groupdump_array)) {
 	      system("echo \"#       -U URL          - Base URL for cvsweb if -C option (above) is used.\" >> $cvs_dir/CVSROOT/loginfo");
 	      system("echo \"#       -D              - generate diffs as part of the notification mail\" >> $cvs_dir/CVSROOT/loginfo");
 
-	      system("echo \"DEFAULT (/usr/local/bin/log_accum -T $gname -C $gname -U http://$hostname.xerox.com/cgi-bin/cvsweb.cgi/-s %{sVv})>/dev/null 2>&1\" >> $cvs_dir/CVSROOT/loginfo");	 
+	      system("echo \"DEFAULT (/usr/local/bin/log_accum -T $gname -C $gname -U http://$sys_default_domain/cgi-bin/cvsweb.cgi/ -s %{sVv})>/dev/null 2>&1\" >> $cvs_dir/CVSROOT/loginfo");	 
 	      system("echo \"# END OF WAITED CODEX BLOCK\" >> $cvs_dir/CVSROOT/loginfo");
 	      system("cd $cvs_dir/CVSROOT; rcs -q -l loginfo; ci -q -m\"CodeX modifications: entering log_accum from group fields (cvs_tracker/cvs_events)\" loginfo; co -q loginfo");
 	    }
