@@ -33,7 +33,7 @@ if ($show_confirm) {
 	*/
 
 	$result=db_query("UPDATE groups SET status='P', ".
-		"short_description='".htmlspecialchars($form_short_description)."', ".
+		"short_description='".$form_short_description."', ".
 		"register_purpose='".htmlspecialchars($form_purpose)."', ".
 		"required_software='".htmlspecialchars($form_required_sw)."', ".
 		"patents_ips='".htmlspecialchars($form_patents)."', ".

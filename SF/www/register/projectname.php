@@ -35,7 +35,7 @@ if ($insert_purpose && $form_purpose && $form_short_description) {
 		. "'shell1'," // unix_box
 		. "'cvs1'," // cvs_box
 		. "'__$random_num',"
-		. "'".htmlspecialchars($form_short_description)."',"
+		. "'".$form_short_description."',"
 		. "'".htmlspecialchars($form_purpose)."',"
 		. "'".htmlspecialchars($form_required_sw)."',"
 		. "'".htmlspecialchars($form_patents)."',"

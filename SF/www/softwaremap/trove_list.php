@@ -267,7 +267,7 @@ for ($i_proj=1;$i_proj<=$querytotalcount;$i_proj++) {
 		print "$i_proj. <a href=\"/projects/". strtolower($row_grp['unix_group_name']) ."/\"><B>"
 			.htmlspecialchars($row_grp['group_name'])."</B></a> ";
 		if ($row_grp['short_description']) {
-			print "- " . htmlspecialchars($row_grp['short_description']);
+			print "- " . $row_grp['short_description'];
 		}
 
 		print '<BR>&nbsp;';

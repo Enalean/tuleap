@@ -23,7 +23,7 @@ Shall the purpose and goals change in the future, you'll have to modify the stat
 
 <P>
 <B><u>Short Project Description<font color="red">*</font>:</u></B>
-<BR>What's the purpose of your project (3-4 lines description).
+<BR>What's the purpose of your project (3-4 lines description). HTML tags allowed.
 <br><TEXTAREA name="form_short_description" wrap="virtual" cols="70" rows="3">
 </TEXTAREA>
 
