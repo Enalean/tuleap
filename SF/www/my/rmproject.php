@@ -5,15 +5,14 @@
 // http://sourceforge.net
 //
 // $Id$
-
-/*
-
-	Thanks to Wallace Lee for submitting this
-
-*/
+//
+// Modified by Laurent Julliard, Xerox.
+//
 
 require($DOCUMENT_ROOT.'/include/pre.php');
 require($DOCUMENT_ROOT.'/project/admin/ugroup_utils.php');
+
+$LANG->loadLanguageMsg('my/my');
 
 if (user_isloggedin()) {
 	$user_id = user_getid();
@@ -21,21 +20,20 @@ if (user_isloggedin()) {
 	// make sure that user is not an admin
 	$result=db_query("SELECT admin_flags FROM user_group WHERE user_id='$user_id' AND group_id='$group_id'");
 	if (!$result || db_numrows($result) < 1) {
-		exit_error('Error','You are not a member of that project.');
+	    exit_error($LANG->getText('include_exit', 'error'),
+		       $LANG->getText('bookmark_rmproject', 'err_notmember'));
 	}
 	$row_flags = db_fetch_array($result);
 
 	if (ereg("A",$row_flags['admin_flags'],$ereg_match)) {
-		exit_error("Error Removing Group Member","You cannot remove a group administrator. "
-		. "Remove this persons admininstrator privileges on the user permissions page before attempting to remove them from the project. </A> ");
+		exit_error($LANG->getText('include_exit', 'error'),
+			   $LANG->getText('bookmark_rmproject', 'err_removing'));
 	} 
        
 	db_query("DELETE FROM user_group WHERE user_id='$user_id' AND group_id='$group_id'");
 
         // Remove user from all ugroups attached to this project
         ugroup_delete_user_from_project_ugroups($group_id,$user_id);
-
-	session_redirect("/my/");
 
 	/********* mail the changes so the admins know what happened *********/
 	$res_admin = db_query("SELECT user.user_id AS user_id, user.email AS email, user.user_name AS user_name FROM user,user_group "
@@ -56,19 +54,20 @@ if (user_isloggedin()) {
 	    $server = 'http://'.$GLOBALS['sys_default_domain'];
 	}
 
+	$project=new Project($group_id);
+	$project_name = $project->getPublicName();
 
-        list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
+        list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
+	$link_members = "$server/project/memberlist.php?group_id=$group_id";
 	$hdrs = "From: noreply@".$host.$GLOBALS['sys_lf'];
 	$hdrs .='Content-type: text/plain; charset=iso-8859-1'.$GLOBALS['sys_lf'];
-	$subject = "[".$GLOBALS['sys_name']."] $user_id has been removed from project $group_id";
-	$body = "This message is being sent to notify the administrator(s) of".
-		"\nproject ID $group_id that user ID $user_id has chosen to".
-		"\nremove him/herself from the project.".
-		"\n\nFollow this link to see the current members of your project:".
-		"\n$server/project/memberlist.php?group_id=$group_id".
-		"\n\n";
+	$subject = $LANG->getText('bookmark_rmproject', 'mail_subject', array($GLOBALS['sys_name'],user_getname($user_id),$project_name));
+	$body = stripcslashes($LANG->getText('bookmark_rmproject', 'mail_body', array($project_name, user_getname($user_id),$link_members)));
 
 	mail($to,$subject,$body,$hdrs);
+
+	// display the personal page again
+	session_redirect("/my/");
 
 } else {
 

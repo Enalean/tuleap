@@ -28,7 +28,7 @@ if ($row_user[status] == 'P') {
 <?php
 } else {
 	exit_error($LANG->getText('include_exit', 'error'),
-		   $LANG->getText('ccount_pending-resend', 'notpending'));
+		   $LANG->getText('account_pending-resend', 'notpending'));
 }
 
 $HTML->footer(array());

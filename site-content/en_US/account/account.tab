@@ -170,7 +170,7 @@ account_myprojectlist	grp_list	Group List for $1
 #
 account_pending-resend	title	Account Pending Verification
 account_pending-resend	message	<B>Pending Account</B><P>Your email confirmation has been resent. Visit the link in this email to complete the registration process.
-account_pending-resend	not_pending	This account is not pending verification.
+account_pending-resend	notpending	This account is not pending verification.
 #
 #-----------------------------------------------
 # Script: SF/www/account/pending.php

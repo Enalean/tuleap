@@ -8,13 +8,16 @@
 require($DOCUMENT_ROOT.'/include/pre.php');
 require($DOCUMENT_ROOT.'/include/bookmarks.php');
 
-$HTML->header(array("title"=>"Delete Bookmark"));
+$LANG->loadLanguageMsg('my/my');
 
-print "<H3>Delete Bookmark</H3>";
+$HTML->header(array("title"=>$LANG->getText('bookmark_delete', 'title')));
+
+print "<H3>".$LANG->getText('bookmark_delete', 'title')."</H3>\n";
 
 if ($bookmark_id) {
 	bookmark_delete ($bookmark_id);
-	print "Bookmark deleted.<P><A HREF=\"/my/\">Return</A>";
+	print "<p>".$LANG->getText('bookmark_delete', 'deleted').
+	    "<P><A HREF=\"/my/\">[".$LANG->getText('global', 'back_home')."]</A>";
 }
 
 $HTML->footer(array());

@@ -1,0 +1,80 @@
+#/**
+#  *
+#  * Personal Home Page message catalog (English)
+#  *
+#  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
+#  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
+#  * http://codex.xrce.xerox.com
+#  *
+#  * @version   $Id$
+#  *
+#  */
+#
+#
+#-----------------------------------------------
+# Script: SF/www/my/index.php
+#
+my_index	title	Personal Page for $1
+my_index	err_badbrowser	Warning: your browser (Netscape 4.x) is not supported. Some functionalities will not be available (artifact creation and edition, tracker creation, etc.).
+my_index	message	Your personal page contains lists of bugs [<b>A</b>]ssigned to or  [<b>S</b>]ubmitted by you, tasks assigned with percentage completion, monitored forums and packages plus a list of groups that you are a member of.<P>
+my_index	err_artf	Failed to create ArtifactTypeFactory
+my_index	my_bugs	My Bugs
+my_index	my_srs	My Support Requests
+my_index	my_forums	Monitored Forums
+my_index	my_forums_msg	<b>You are not monitoring any forums</b><P>If you monitor forums, you will be sent new posts in the form of an email, with a link to the new message.<P>You can monitor forums by clicking &quot;Monitor Forum&quot; in any given discussion forum.<BR>&nbsp;
+my_index	stop_forum	Stop monitoring this Forum?
+my_index	my_files	Monitored File Packages
+my_index	my_files_msg	<b>You are not monitoring any files</b><P>If you monitor files, you will be sent new release notices via email, with a link to the new file on our download server.<P>You can monitor files by visiting a project\'s &quot;Summary Page&quot; and clicking on the check box in the files section.<BR>&nbsp;
+my_index	stop_file	Stop Monitoring this Package?	
+my_index	stop_monitor	STOP MONITORING
+my_index	my_tasks	My Tasks
+my_index	my_arts	My Artifacts
+my_index	err_artt	ArtifactType could not be created
+my_index	my_survey	Quick Survey
+my_index	survey_done	You have taken your developer survey
+my_index	my_bookmarks	My Bookmarks
+my_index	edit_link	Edit
+my_index	del_bookmark	Delete this bookmark?
+my_index	my_projects	My Projects
+my_index	not_member	You're not a member of any public projects
+my_index	admin_link	Admin
+my_index	quit_proj	Quit this project?
+my_index	priv_proj	<em>Private projects</em>
+#
+#-----------------------------------------------
+# Script: SF/www/my/my_utils.php
+#
+my_utils	collapse	Collapse
+my_utils	expand	Expand
+my_utils	new_items	$1 new
+#
+#-----------------------------------------------
+# Script: SF/www/my/bookmark_add.php
+#
+bookmark_add	title	Add New Bookmark
+bookmark_add	message	Added bookmark for <b>'$1'</b> with title <b>'$2'</b>.
+bookmark_add	visit	Visit the bookmarked page
+bookmark_add	edit	Edit this bookmark
+bookmark_add	bkm_url	Bookmark Address
+bookmark_add	bkm_title	Bookmark Title
+bookmark_add	favorite	My Favorite Site
+#
+#-----------------------------------------------
+# Script: SF/www/my/bookmark_delete.php
+#
+bookmark_delete	title	Delete Bookmark
+bookmark_delete	deleted	Bookmark deleted!
+#
+#-----------------------------------------------
+# Script: SF/www/my/bookmark_edit.php
+#
+bookmark_edit	title	Edit Bookmark
+#
+#-----------------------------------------------
+# Script: SF/www/my/rmproject.php
+#
+bookmark_rmproject	title	Edit Bookmark
+bookmark_rmproject	err_notmember	You are not a member of that project.
+bookmark_rmproject	err_removing	You cannot remove a group administrator. Remove this person's administrator privileges on the user permissions page before attempting to remove them from the project. 
+bookmark_rmproject	mail_subject	$1: user $2 removed from project '$3'
+bookmark_rmproject	mail_body	This message is being sent to notify the administrator(s) of\nproject ID '$1' that user ID $2 has chosen to\nremove him/herself from the project.\n\nFollow this link to see the current members of your project:\n$3\n\n

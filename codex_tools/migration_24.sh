@@ -1502,5 +1502,6 @@ When migrating a 2.2 site to 2.4 here are the things that must be done:
 - Check for the existence of the following customized content files and advise the the person in charge of the installation of the new .tab files to customize to obtain the same effect:
   * account/register_confirmation.txt, account/register_needs_approval.txt, account/register_email.txt, account/register_purpose.txt: see account/account.tab#account_register
   * homepage/staff.txt, homepage/thanks.txt, homepage/welcome_intro.txt: see homepage/homepage.tab
+  * my/intro.txt: see my/my.tab
 
 EOF

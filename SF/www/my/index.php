@@ -22,6 +22,8 @@ require($DOCUMENT_ROOT.'/../common/tracker/ArtifactReport.class');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactReportField.class');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactFactory.class');
 
+$LANG->loadLanguageMsg('my/my');
+
 if (user_isloggedin()) {
 
     // If it's super user and license terms have not yet been agreed then redirect
@@ -37,20 +39,24 @@ if (user_isloggedin()) {
         header("Pragma: no-cache");  // for HTTP 1.0
 	
         if (browser_is_netscape4()) {
-            $feedback.='Warning: your browser (Netscape 4.x) is not supported. Some functionalities will not be available (artifact creation and edition, tracker creation, etc.).';
+            $feedback.= $LANG->getText('my_index', 'err_badbrowser');
         }
-        site_header(array('title'=>'My Personal Page'));
+	$title = $LANG->getText('my_index', 'title', array(user_getrealname(user_getid()).' ('.user_getname().')'));
+        site_header(array('title'=>$title));
 	?>
 
     <span class="small">
-	<H3>Personal Page for: <?php print user_getname(); ?>
-	     <?php echo help_button('LoginAndPersonalPage.html'); ?></H3>
-    <? include(util_get_content('my/intro')); ?>
+	 <H3>
+         <?php echo $title.'&nbsp;'.help_button('LoginAndPersonalPage.html'); ?>
+         </H3>
+        <p>
 	<?php
+         echo $LANG->getText('my_index', 'message');
 
 	$atf = new ArtifactTypeFactory(false);
 	if ( !$atf ) {
-		exit_error("Error","Fail to create ArtifactTypeFactory");
+	    exit_error($LANG->getText('include_exit', 'error'),
+		       $LANG->getText('my_index', 'err_artf'));
 	}
 
 	/*
@@ -70,7 +76,7 @@ if (user_isloggedin()) {
 	
 	if ($result && $rows >= 1) {
 
-		$html_my_bugs .= $HTML->box1_top('My Bugs',0);
+		$html_my_bugs .= $HTML->box1_top($LANG->getText('my_index', 'my_bugs'),0);
 
 	    for ($j=0; $j<$rows; $j++) {
 
@@ -131,7 +137,7 @@ if (user_isloggedin()) {
 	$rows=db_numrows($result);
 	if ($result && $rows >= 1) {
 
-		$html_my_srs .= $HTML->box1_top('My Support Requests',0);
+		$html_my_srs .= $HTML->box1_top($LANG->getText('my_index', 'my_srs'),0);
 	    for ($j=0; $j<$rows; $j++) {
 
 			$group_id = db_result($result,$j,'group_id');
@@ -180,7 +186,7 @@ if (user_isloggedin()) {
 		Forums that are actively monitored
 	*/
 	$html_my_monitored_forums = "";
-	$html_my_monitored_forums .= $HTML->box1_top('Monitored Forums',0);
+	$html_my_monitored_forums .= $HTML->box1_top($LANG->getText('my_index', 'my_forums'),0);
 
 	$sql="SELECT groups.group_id, groups.group_name ".
 		"FROM groups,forum_group_list,forum_monitored_forums ".
@@ -191,15 +197,7 @@ if (user_isloggedin()) {
 	$result=db_query($sql);
 	$rows=db_numrows($result);
 	if (!$result || $rows < 1) {
-		$html_my_monitored_forums .= '
-			<b>You are not monitoring any forums</b>
-			<P>
-			If you monitor forums, you will be sent new posts in 
-			the form of an email, with a link to the new message.
-			<P>
-			You can monitor forums by clicking &quot;Monitor Forum&quot; in 
-			any given discussion forum.
-			<BR>&nbsp;';
+		$html_my_monitored_forums .= $LANG->getText('my_index', 'my_forums_msg');
 		$html_my_monitored_forums .= db_error();
 	} else {
 
@@ -236,9 +234,9 @@ if (user_isloggedin()) {
 			    '&nbsp;&nbsp;&nbsp;-&nbsp;<A HREF="/forum/forum.php?forum_id='.$group_forum_id.'">'.
 			    stripslashes(db_result($result2,$i,'forum_name')).'</A></TD>'.
 			    '<TD ALIGN="center"><A HREF="/forum/monitor.php?forum_id='.$group_forum_id.
-			    '" onClick="return confirm(\'Stop monitoring this Forum?\')">'.
+			    '" onClick="return confirm(\''.$LANG->getText('my_index', 'stop_forum').'\')">'.
 			    '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" '.
-			    'BORDER=0 ALT="STOP MONITORING""></A></TD></TR>';
+			    'BORDER=0 ALT="'.$LANG->getText('my_index', 'stop_monitor').'"></A></TD></TR>';
 		    }
 		}
 
@@ -255,7 +253,7 @@ if (user_isloggedin()) {
 	*/
 
 	$html_my_monitored_fp = "";
-	$html_my_monitored_fp .= $HTML->box1_top('Monitored File Packages',0);
+	$html_my_monitored_fp .= $HTML->box1_top($LANG->getText('my_index', 'my_files'),0);
 	$sql="SELECT groups.group_name,groups.group_id ".
 		"FROM groups,filemodule_monitor,frs_package ".
 		"WHERE groups.group_id=frs_package.group_id ".
@@ -265,15 +263,7 @@ if (user_isloggedin()) {
 	$result=db_query($sql);
 	$rows=db_numrows($result);
 	if (!$result || $rows < 1) {
-		$html_my_monitored_fp .= '
-			<b>You are not monitoring any files</b>
-			<P>
-			If you monitor files, you will be sent new release notices via
-			email, with a link to the new file on our download server.
-			<P>
-			You can monitor files by visiting a project\'s &quot;Summary Page&quot; 
-			and clicking on the check box in the files section.
-			<BR>&nbsp;';
+		$html_my_monitored_fp .= $LANG->getText('my_index', 'my_files_msg');
 		$html_my_monitored_fp .= db_error();
 	} else {
 	    for ($j=0; $j<$rows; $j++) {
@@ -308,9 +298,9 @@ if (user_isloggedin()) {
 			    db_result($result2,$i,'name').'</A></TD>'.
 			    '<TD><A HREF="/file/filemodule_monitor.php?filemodule_id='.
 			    db_result($result2,$i,'filemodule_id').
-			    '" onClick="return confirm(\'Stop Monitoring this Package?\')">'.
+			    '" onClick="return confirm(\''.$LANG->getText('my_index', 'stop_file').'\')">'.
 			    '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" '.
-			    'BORDER=0" ALT="STOP MONITORING"></A></TD></TR>';
+			    'BORDER=0" ALT="'.$LANG->getText('my_index', 'stop_monitoring').'"></A></TD></TR>';
 		    }
 		}
 		
@@ -342,7 +332,7 @@ if (user_isloggedin()) {
 
 	if ($result && $rows >= 1) {
 
-		$html_my_tasks .= $HTML->box1_top('My Tasks',0,'',3);
+		$html_my_tasks .= $HTML->box1_top($LANG->getText('my_index', 'my_tasks'),0,'',3);
 	
 	    for ($j=0; $j<$rows; $j++) {
 
@@ -410,7 +400,7 @@ if (user_isloggedin()) {
 	
 	if (count($list_trackers) > 0) {
 
-		$html_my_artifacts .= $HTML->box1_top('My Artifacts',0,'',3);
+		$html_my_artifacts .= $HTML->box1_top($LANG->getText('my_index', 'my_arts'),0,'',3);
 		reset($list_trackers);
 	
 		while (list($key,$count) = each($list_trackers) ) {
@@ -429,10 +419,12 @@ if (user_isloggedin()) {
 			//
 			$at = new ArtifactType($group,$atid);
 			if (!$at || !is_object($at)) {
-				exit_error('Error','ArtifactType could not be created');
+				exit_error($LANG->getText('include_exit', 'error'),
+					   $LANG->getText('my_index', 'err_artt'));
 			}
 			if ($at->isError()) {
-				exit_error('Error',$at->getErrorMessage());
+				exit_error($LANG->getText('include_exit', 'error'),
+					   $at->getErrorMessage());
 			}
 
 			// Create field factory
@@ -519,12 +511,12 @@ if (user_isloggedin()) {
             $result=db_query($sql);
 
             $html_my_survey = "";
-            $html_my_survey .= $HTML->box1_top('Quick Survey',0);
+            $html_my_survey .= $HTML->box1_top($LANG->getText('my_index', 'my_survey'),0);
 
             if (db_numrows($result) < 1) {
 		$html_my_survey .= survey_utils_show_survey(1,$developer_survey_id,0);
             } else {
-		$html_my_survey .= 'You have taken your developer survey';
+		$html_my_survey .= $LANG->getText('my_index', 'survey_done');
             }
             $html_my_survey .= '<TR align=left><TD COLSPAN="2">&nbsp;</TD></TR>';
             $html_my_survey .= $HTML->box1_bottom(0);
@@ -535,7 +527,7 @@ if (user_isloggedin()) {
 	       Personal bookmarks
 	*/
 	$html_my_bookmarks = "";
-	$html_my_bookmarks .= $HTML->box1_top('My Bookmarks',0);
+	$html_my_bookmarks .= $HTML->box1_top($LANG->getText('my_index', 'my_bookmarks'),0);
 
 	$result = db_query("SELECT bookmark_url, bookmark_title, bookmark_id from user_bookmarks where ".
 		"user_id='". user_getid() ."' ORDER BY bookmark_title");
@@ -551,9 +543,9 @@ if (user_isloggedin()) {
 		    $html_my_bookmarks .= '
                                            <B><A HREF="'. db_result($result,$i,'bookmark_url') .'">'.
 			db_result($result,$i,'bookmark_title') .'</A></B> '.
-			'<SMALL><A HREF="/my/bookmark_edit.php?bookmark_id='. db_result($result,$i,'bookmark_id') .'">[Edit]</A></SMALL></TD>'.
+			'<SMALL><A HREF="/my/bookmark_edit.php?bookmark_id='. db_result($result,$i,'bookmark_id') .'">['.$LANG->getText('my_index', 'edit_link').']</A></SMALL></TD>'.
 			'<td><A HREF="/my/bookmark_delete.php?bookmark_id='. db_result($result,$i,'bookmark_id') .
-			'" onClick="return confirm(\'Delete this bookmark?\')">'.
+			'" onClick="return confirm(\''.$LANG->getText('my_index', 'del_bookmark').'\')">'.
 			'<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A>	</td></tr>';
 			}
 	}
@@ -565,7 +557,7 @@ if (user_isloggedin()) {
 	*/
 
 	$html_my_projects = "";
-	$html_my_projects .= $HTML->box1_top('My Projects',0);
+	$html_my_projects .= $HTML->box1_top($LANG->getText('my_index', 'my_projects'),0);
 	$result = db_query("SELECT groups.group_name,"
 		. "groups.group_id,"
 		. "groups.unix_group_name,"
@@ -578,7 +570,7 @@ if (user_isloggedin()) {
 		. "AND groups.type='1' AND groups.status='A' ORDER BY group_name");
 	$rows=db_numrows($result);
 	if (!$result || $rows < 1) {
-		$html_my_projects .= "You're not a member of any public projects";
+		$html_my_projects .= $LANG->getText('my_index', 'not_member');
 		$html_my_projects .= db_error();
 	} else {
 
@@ -588,7 +580,7 @@ if (user_isloggedin()) {
 			    '<A href="/projects/'. db_result($result,$i,'unix_group_name') .'/"><b>'.
 			    db_result($result,$i,'group_name') .'</b></A>';
 			if ( db_result($result,$i,'admin_flags') == 'A' ) {
-			    $html_my_projects .= ' <small><A HREF="/project/admin/?group_id='.db_result($result,$i,'group_id').'">[Admin]</A></small>';
+			    $html_my_projects .= ' <small><A HREF="/project/admin/?group_id='.db_result($result,$i,'group_id').'">['.$LANG->getText('my_index', 'admin_link').']</A></small>';
 			}
 			if ( db_result($result,$i,'is_public') == 0 ) {
 			    $html_my_projects .= ' (*)';
@@ -600,7 +592,7 @@ if (user_isloggedin()) {
                         } else {
                             $html_my_projects .= '</TD>'.
                                 '<td><A href="rmproject.php?group_id='. db_result($result,$i,'group_id').
-                                '" onClick="return confirm(\'Quit this project?\')">'.
+                                '" onClick="return confirm(\''.$LANG->getText('my_index', 'quit_proj').'\')">'.
                                 '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0"></A></TD></TR>';
                         }
 		}
@@ -608,7 +600,7 @@ if (user_isloggedin()) {
 		if ($private_shown) {
 		  $html_my_projects .= '
 			       <TR class="'. util_get_alt_row_color($i) .'"><TD colspan="2" class="small">'.
-		      '(*) <em>Private projects</em></td></tr>';
+		      '(*)&nbsp;'.$LANG->getText('my_index', 'priv_proj').'</td></tr>';
 		}
 	}
     $html_my_projects .= '<TR><TD COLSPAN="2">&nbsp;</TD></TR>';

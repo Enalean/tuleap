@@ -41,7 +41,7 @@ if (register_valid()) {
 <p><b><?php $LANG->getText('account_change_realname', 'title'); ?></b>
 <?php if ($register_error) print "<p>$register_error"; ?>
 <form action="change_realname.php" method="post">
-<p><?php $LANG->getText('account_change_realname', 'new_name'); ?>:
+<p><?php echo $LANG->getText('account_change_realname', 'new_name'); ?>:
 <br><input type="text" name="form_realname">
 <p><input type="submit" name="Update" value="<?php echo $LANG->getText('global', 'btn_update'); ?>">
 </form>

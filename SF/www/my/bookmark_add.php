@@ -8,27 +8,29 @@
 require($DOCUMENT_ROOT.'/include/pre.php');
 require($DOCUMENT_ROOT.'/include/bookmarks.php');
 
-$HTML->header(array("title"=>"Add New Bookmark"));
+$LANG->loadLanguageMsg('my/my');
 
-print "<H3>Add New Bookmarks</H3>";
+$HTML->header(array("title"=>$LANG->getText('bookmark_add', 'title')));
+
+print "<H3>".$LANG->getText('bookmark_add', 'title')."</H3>";
 
 if ($bookmark_url) {
-	print "Added bookmark for <b>'$bookmark_url'</b> with title <b>'$bookmark_title'</b>.<p>";
+    print $LANG->getText('bookmark_add', 'message', array($bookmark_url,$bookmark_title))."<p>\n";
 
 	$bookmark_id = bookmark_add ($bookmark_url, $bookmark_title);
-	print "<A HREF=\"$bookmark_url\">Visit the bookmarked page</A> - ";
-	print "<A HREF=\"/my/bookmark_edit.php?bookmark_id=$bookmark_id\">Edit this bookmark</A> - ";
-	print "<A HREF=\"/my/\">Back to your homepage</A>";
+	print "<A HREF=\"$bookmark_url\">".$LANG->getText('bookmark_add', 'visit')."</A> - ";
+	print "<A HREF=\"/my/bookmark_edit.php?bookmark_id=$bookmark_id\">".$LANG->getText('bookmark_add', 'edit')."</A>";
+	print "<p><A HREF=\"/my/\">[".$LANG->getText('global', 'back_home')."]</A>";
 } else {
 	?>
 	<FORM METHOD=POST>
-	Bookmark URL:<br>
-	<input type="text" name="bookmark_url" value="http://">
+	<?php echo $LANG->getText('bookmark_add', 'bkm_url'); ?>:<br>
+	<input type="text" size="60" name="bookmark_url" value="http://">
 	<p>
-	Bookmark Title:<br>
-	<input type="text" name="bookmark_title" value="My Fav Site">
+	<?php echo $LANG->getText('bookmark_add', 'bkm_title'); ?>:<br>
+	<input type="text" size="60" name="bookmark_title" value="<?php echo $LANG->getText('bookmark_add', 'favorite'); ?>">
 	<p>
-	<input type="submit" value=" Submit Form ">
+	<input type="submit" value="<?php echo $LANG->getText('global', 'btn_submit'); ?>">
 	</form>
 	<?php
 }

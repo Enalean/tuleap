@@ -38,6 +38,7 @@ class BaseLanguage {
 	//array to hold the string values
 	var $text_array ;
 	var $lang, $name, $id, $code ;
+	var $file_array = array();
 
 	function BaseLanguage() {
 		$this->loadLanguage('en_US');
@@ -78,6 +79,8 @@ class BaseLanguage {
 	}
 
 	function loadLanguageFile($fname) {
+		if (array_key_exists($fname, $this->file_array)) { return; }
+		$this->file_array[$fname] = 1;
 		$ary = @file($fname,1);
 		for( $i=0; $i<sizeof($ary); $i++) {
 			if (substr($ary[$i], 0, 1) == '#') {
