@@ -393,14 +393,17 @@ function pm_format_tasklist ($result,$result_taskdeps,$offset,$url,&$count) {
 	reset($all_rows);
 	while (list($k,$row) = each($all_rows)) {
 
+	        $task_url = $PHP_SELF.'?func=detailtask'.
+		    '&project_task_id='.$row['project_task_id'].
+		    '&group_id='.$group_id.
+		    '&group_project_id='.$row['group_project_id'];
+
 		$out .= '
 			<TR BGCOLOR="'.get_priority_color($row['priority']).'">'.
-			'<TD><A HREF="'.$PHP_SELF.'?func=detailtask'.
-			'&project_task_id='.$row['project_task_id'].
-			'&group_id='.$group_id.
-			'&group_project_id='.$row['group_project_id'].'">'.
+			'<TD><A HREF="'.$task_url.'">'.
 			$row['project_task_id'].'</A></TD>'.
-			'<TD>'.$row['summary'].'</TD>'.
+			'<TD><A HREF="'.$task_url.'">'.
+		        $row['summary'].'</A></TD>'.
 			'<TD>'.$row['project_name'].'</TD>'.
 			'<TD>'.format_date('Y-m-d',$row['start_date']).'</TD>'.
 			'<TD>'. (($now>$row['end_date'])?'<B>* ':'&nbsp; ') . format_date('Y-m-d',$row['end_date']).'</TD>'.
@@ -415,6 +418,16 @@ function pm_format_tasklist ($result,$result_taskdeps,$offset,$url,&$count) {
 
 	$out .= '</TABLE>';
 	return($out);
+}
+
+
+function pm_mail_followup($project_task_id,$mail_grp) {
+	global $sys_datefmt,$feedback;
+	/*
+		Send a message to the person who opened this bug and the person it is assigned to
+	*/
+
+	// To be done
 }
 
 function pm_show_dependent_tasks ($project_task_id,$group_id,$group_project_id) {

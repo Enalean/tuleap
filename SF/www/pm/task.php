@@ -8,6 +8,7 @@
 
 require('pre.php');
 require('../pm/pm_utils.php');
+require($DOCUMENT_ROOT.'/bugs/bug_data.php'); // needed by pm_data
 require('../pm/pm_data.php');
 
 if ($group_id ) {
