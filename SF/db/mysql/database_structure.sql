@@ -2007,6 +2007,7 @@ CREATE TABLE user (
   email text NOT NULL,
   user_pw varchar(32) NOT NULL default '',
   realname varchar(32) NOT NULL default '',
+  register_purpose text,
   status char(1) NOT NULL default 'A',
   shell varchar(20) NOT NULL default '/bin/bash',
   unix_pw varchar(40) NOT NULL default '',
