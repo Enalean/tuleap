@@ -151,4 +151,7 @@ set       toc
 <!-- CX-SBT: No watermark image -->
 <xsl:param name="draft.watermark.image" select="''"/>
 
+<!-- CX-SBT: Generate the PDF bookmark - Specific to FOP -->
+<xsl:param name="fop.extensions" select="1"/>
+
 </xsl:stylesheet>
