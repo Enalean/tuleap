@@ -664,7 +664,7 @@
       or tar gzipped ) of their software on CodeX for public consumption. All
       posted file releases can be accessed from the Project Summary page.</para>
 
-      <para>Chapter <xref linkend="FileRelease" /> is entirely dedicated to
+      <para><xref linkend="FileRelease" /> is entirely dedicated to
       the description of the File Release Service.</para>
     </section>
 
