@@ -211,7 +211,9 @@ function support_data_handle_update ($group_id,$support_id,$priority,
     while (list($field,$label) = each($flist)) {
 
 	$new_value = $$field;
-	if (db_result($result,0,$field) != $new_value) {
+	if ($field == 'summary') 
+	  $new_value = stripslashes($new_value);
+	if (db_result($result,0,$field) != $new_value){
 
 	    support_data_add_history($field,db_result($result,0,$field),$support_id);
 
