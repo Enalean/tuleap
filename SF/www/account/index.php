@@ -115,7 +115,7 @@ if ($row_user['theme'] == "" || $row_user['theme'] == "default") {
 // Build the theme select box from directories in css and css/custom
 $dir = opendir($GLOBALS['sys_urlroot']."/css");
 $theme_list = array();
-$theme_dirs = array($GLOBALS['sys_urlroot']."/css", $GLOBALS['sys_urlroot']."/css/custom");
+$theme_dirs = array($GLOBALS['sys_urlroot']."/css", getenv('SF_LOCAL_INC_PREFIX')."/etc/codex/themes/css/");
 while (list(,$dirname) = each($theme_dirs)) {
     // before scanning the directory make sure it exists to avoid warning messages
     if (is_dir($dirname)) {
