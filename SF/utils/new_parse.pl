@@ -217,17 +217,18 @@ while ($ln = pop(@groupdump_array)) {
 	# Align directory permissions with public/private flag
 	# (chmod o-rwx for project home and cvs root if private)
 	if ($gstatus eq 'A') {
-	  ($d,$d,$mode) = stat("$cvs_prefix/$gname");
+	  ($d,$d,$cvsmode) = stat("$cvs_prefix/$gname");
+	  ($d,$d,$grpmode) = stat("$grpdir_prefix/$gname");
 	  if ($gis_public) {
-	    $newmode = ($mode | 0005) ;
+	    $new_cvsmode = ($cvsmode | 0005);
+	    $new_grpmode = ($grpmode | 0005);
 	  } else {
-	    $newmode = ($mode & ~0007);
-	  }	
-	  
-	  if ($mode != $newmode) {
-	    chmod $newmode, "$cvs_prefix/$gname";
-	    chmod $newmode, "$grpdir_prefix/$gname";
+	    $new_cvsmode = ($cvsmode & ~0007);
+	    $new_grpmode = ($grpmode & ~0007);
 	  }
+
+	  chmod $new_cvsmode,"$cvs_prefix/$gname" if ($cvsmode != $new_cvsmode);
+	  chmod $new_grpmode,"$grpdir_prefix/$gname" if ($grpmode != $new_grpmode);
         }
 
       }
