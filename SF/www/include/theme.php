@@ -8,6 +8,8 @@
 //
 //
 
-   $theme = $sys_themedefault;
-
+    // default value
+    if ( !isset($theme) ) {
+        $theme = $sys_themedefault;
+    }
 ?>

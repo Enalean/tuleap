@@ -52,8 +52,10 @@ echo '<H3>Edit Your Project\'s Images</H3>
 	<H4>Add Image</H4>
 	<P>
 	<FORM ACTION="'. $PHP_SELF .'" METHOD="POST" enctype="multipart/form-data">
+    <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="1000000">
 	<input type="hidden" name="group_id" VALUE="'.$group_id.'">
 	<input type="file" name="input_file" size="30">
+    <br><span class="smaller"><i>(The maximum upload file size is 2 Mo)</i></span>
 	<P>
 	<B>Description:</B><BR>
 	<input type="text" name="description" size="40" maxlength="255"><P>

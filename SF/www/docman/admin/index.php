@@ -54,6 +54,7 @@ if (strstr($mode,"docedit")) {
     echo '
 	
 	<form name="editdata" action="index.php?mode=docdoedit&group_id='.$group_id.'" method="POST"  enctype="multipart/form-data">
+      <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="2000000">
 
 	  <table border="0" width="75%">
 
@@ -75,7 +76,9 @@ if (strstr($mode,"docedit")) {
 
 	<tr>
 	<th> <input type="checkbox" name="upload_instead" value="1"> <B>Upload HTML File:</B></th>
-	<td> <input type="file" name="uploaded_data" size="50"></td>
+	<td> <input type="file" name="uploaded_data" size="50">
+      <br><span class="smaller"><i>(The maximum upload file size is 2 Mo)</i></span>
+	</td>
 	<td> (HTML file) </td>
 
 	</tr>

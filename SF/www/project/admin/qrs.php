@@ -138,7 +138,7 @@ if( $submit ) {
 ?>
 
 <FORM ENCTYPE="multipart/form-data" METHOD="POST" ACTION="<?php echo $PHP_SELF; ?>">
-<INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="1000000">
+    <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="<? echo $sys_max_size_upload; ?>">
 	<TABLE BORDER="0" CELLPADDING="2" CELLSPACING="2">
 	<TR>
 		<TD>
@@ -203,7 +203,10 @@ if( $submit ) {
 			print '<OPTION value="'.$file.'">'.$file.'</OPTION>';
 		}
 	}
-	echo '</SELECT> Or, upload a new file: <input type="file" name="userfile"  size="30">';
+	echo '</SELECT> Or, upload a new file: <input type="file" name="userfile"  size="30">
+      <br><span class="smaller"><i>(The maximum upload file size is ';
+    echo $sys_max_size_upload;
+    echo ' bytes)</i></span>';
 	if (!$atleastone) {
 		print '<h3>No available files</H3>
 			<P>

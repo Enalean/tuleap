@@ -77,6 +77,7 @@ if (user_isloggedin()) {
 	entirely new script or function.
 	<P>
 	<FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST" enctype="multipart/form-data">
+    <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="2000000">
 	<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 	<INPUT TYPE="HIDDEN" NAME="changes" VALUE="First Posted Version">
 
@@ -122,6 +123,7 @@ if (user_isloggedin()) {
 	 <br><B>Upload the Snippet (binary or source code)</B>
 		<P>
 		<input type="file" name="uploaded_data"  size="40">
+        <br><span class="smaller"><i>(The maximum upload file size is 2 Mo)</i></span>
 		<P>
                 <B>OR paste the snippet source code here:</B><BR>
 		<TEXTAREA NAME="code" ROWS="20" COLS="85" WRAP="SOFT"></TEXTAREA>

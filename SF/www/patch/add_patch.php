@@ -16,6 +16,7 @@ echo '<H2>Submit A Patch</H2>';
 echo util_unconvert_htmlspecialchars(db_result($res_preamble,0,'patch_preamble'));
 
 echo'		<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data">
+        <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="2000000">
 		<INPUT TYPE="HIDDEN" NAME="func" VALUE="postaddpatch">
 		<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 		<TABLE>
@@ -35,6 +36,7 @@ echo'		<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data">
 	 <br><B>Upload the Patch (binary or text format)</B>
 		<P>
 		<input type="file" name="uploaded_data"  size="40">
+        <br><span class="smaller"><i>(The maximum upload file size is 2 Mo)</i></span>
 		<P>
 		<B>OR Paste the patch here (text only), instead of uploading it:</B>
 		<P>

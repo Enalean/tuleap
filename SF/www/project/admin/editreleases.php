@@ -421,6 +421,9 @@ if ($release_id) {
 	$package_id=db_result($result,0,'package_id');
 
 	echo '<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data">
+        <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="';
+    echo $sys_max_size_upload;
+    echo '">
 		<INPUT TYPE="HIDDEN" NAME="func" VALUE="update_release">
 		<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 		<INPUT TYPE="HIDDEN" NAME="release_id" VALUE="'.$release_id.'">
@@ -447,6 +450,9 @@ if ($release_id) {
 		<INPUT TYPE="RADIO" NAME="upload_instead" VALUE="2"> <B>Upload Release Notes</B><BR>
 		<P>
 		<input type="file" name="uploaded_data"  size="30">
+        <br><span class="smaller"><i>(The maximum upload file size is ';
+    echo $sys_max_size_upload;
+    echo ' bytes)</i></span>
 		<P>
 		<B>Release Notes:</B><BR>
 		<TEXTAREA NAME="notes" ROWS="10" COLS="60" WRAP="SOFT">'. htmlspecialchars(db_result($result,0,'notes')) .'</TEXTAREA>

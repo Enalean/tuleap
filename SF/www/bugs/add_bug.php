@@ -18,6 +18,7 @@ echo util_unconvert_htmlspecialchars(db_result($res_preamble,0,'bug_preamble'));
 
 // Beginning of the submission form with fixed fields
 echo '<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data" NAME="bug_form">
+    <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="2000000">
 	<INPUT TYPE="HIDDEN" NAME="func" VALUE="postaddbug">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 	<TABLE cellpadding="0">
