@@ -18,10 +18,6 @@ use CGI::Cookie;
 
 use vars qw ( %G_SESSION %G_USER %cookies);
 
-sub user_isloggedin {
-  return defined($G_USER{'user_id'});
-}
-
 
 sub session_checkip {
   my ($oldip, $newip) = @_;
