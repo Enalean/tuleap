@@ -143,6 +143,7 @@ if ($SERVER_NAME != 'localhost' &&
     $SCRIPT_NAME != '/account/lostpw.php' &&
     $SCRIPT_NAME != '/account/lostlogin.php' &&
     $SCRIPT_NAME != '/account/lostpw-confirm.php' &&
+    $SCRIPT_NAME != '/account/pending-resend.php' &&
     $SCRIPT_NAME != '/account/verify.php' ) {
     if ($GLOBALS['sys_force_ssl'] == 1 || $HTTPS == 'on')
 	header("Location: https://".$GLOBALS['sys_https_host']."/account/login.php");
