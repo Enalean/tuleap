@@ -245,6 +245,7 @@ individual text files (CSV format) or in a project specific database that you ca
   	$iu = 0;
 	$legacy = (($sys_activate_tracker == 1) ? "Legacy":"");
 
+	if ($group->activatesOldBugTracker()) {
   	echo '
   <tr class="'.util_get_alt_row_color($iu).'"> 
     <td><b>'.$legacy.' Bug Tracker</b></td>
@@ -264,6 +265,9 @@ individual text files (CSV format) or in a project specific database that you ca
     </td>
   </tr>';
   	$iu ++;
+	}
+
+	if ($group->activatesOldTaskTracker()) {
   	echo '
   <tr class="'.util_get_alt_row_color($iu).'"> 
     <td><b>'.$legacy.' Task Manager</b></td>
@@ -281,6 +285,9 @@ individual text files (CSV format) or in a project specific database that you ca
     </td>
   </tr>';
   	$iu ++;
+	}
+
+	if ($group->activatesOldSRTracker()) {
   	echo '
   <tr class="'.util_get_alt_row_color($iu).'"> 
     <td><b>'.$legacy.' Support Request</b></td>
@@ -292,6 +299,8 @@ individual text files (CSV format) or in a project specific database that you ca
     <td align="center">-<br>-</td>
   </tr>';
   	$iu ++;
+	}
+
   	echo '
   <tr class="'.util_get_alt_row_color($iu).'"> 
     <td><b>Survey Responses</b></td>

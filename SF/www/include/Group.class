@@ -228,13 +228,29 @@ class Group extends Error {
 
 	//whether or not this group has opted to use discussion forums
 	function usesForum() {
-		return $this->project_data_array['use_forum'];
+		return $this->data_array['use_forum'];
 	}       
 
 	//whether or not this group has opted to use surveys
 	function usesSurvey() {
-		return $this->project_data_array['use_survey'];
+		return $this->data_array['use_survey'];
 	}       
+
+	//whether or not this group has legacy bug tracker activated 
+	function activatesOldBugTracker() {
+		return $this->data_array['activate_old_bug'];
+	}       
+
+	//whether or not this group has legacy task manager activated 
+	function activatesOldTaskTracker() {
+		return $this->data_array['activate_old_task'];
+	}       
+
+	//whether or not this group has legacy Support Request tracker activated 
+	function activatesOldSRTracker() {
+		return $this->data_array['activate_old_sr'];
+	}       
+
 
 	/*
 		The URL for this project's home page
