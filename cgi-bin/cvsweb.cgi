@@ -1,4 +1,4 @@
-#!/usr/bin/perl -ws
+#!/usr/bin/perl -s
 #
 # cvsweb - a CGI interface to CVS trees.
 #
