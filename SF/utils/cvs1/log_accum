@@ -297,7 +297,7 @@ sub db_checkins_add {
 	    {
 	        ($who, $repo, $module, $dir) = split(',', $checkins[$i]);
 	    }
-	    elsif ($dir ne './' && $checkins[$i] !~ /\//)
+	    elsif ($checkins[$i] !~ /\//)
 	    {
 	      local ($added, $removed);
 	      $added = '';
@@ -730,7 +730,7 @@ $cvsmailto = &cvsGroup_mailto();
 
 $cvsmailheader = &cvsGroup_mail_header();
 
-if (debug) {
+if ($debug) {
   print STDERR "\n header in db: ", $cvsmailheader, "\n";
 }
 if ($cvsmailheader eq 'NULL') {
