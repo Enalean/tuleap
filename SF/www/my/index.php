@@ -581,10 +581,15 @@ if (user_isloggedin()) {
 			    $html_my_projects .= ' (*)';
 			    $private_shown = true;
 			}
-			$html_my_projects .= '</TD>'.
-			    '<td><A href="rmproject.php?group_id='. db_result($result,$i,'group_id').
-			    '" onClick="return confirm(\'Quit this project?\')">'.
-			    '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0"></A></TD></TR>';
+			if ( db_result($result,$i,'admin_flags') == 'A' ) {
+                            // User can't exit of project if she is admin
+                            $html_my_projects .= '</td><td>&nbsp;</td></TR>';
+                        } else {
+                            $html_my_projects .= '</TD>'.
+                                '<td><A href="rmproject.php?group_id='. db_result($result,$i,'group_id').
+                                '" onClick="return confirm(\'Quit this project?\')">'.
+                                '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0"></A></TD></TR>';
+                        }
 		}
 		
 		if ($private_shown) {
