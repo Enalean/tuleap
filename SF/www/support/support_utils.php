@@ -176,6 +176,7 @@ function mail_followup($support_id,$more_addresses=false) {
 
 		/*
 			get all the email addresses that have dealt with this request
+			also add a) the assignee and b) the notification email address
 		*/
 
 		$email_res=db_query("SELECT distinct from_email FROM support_messages WHERE support_id='$support_id'");
@@ -183,6 +184,9 @@ function mail_followup($support_id,$more_addresses=false) {
 		if ($email_res && $rows > 0) {
 			$mail_arr=result_column_to_array($email_res,0);
 			$to=implode($mail_arr,', ');
+		}
+		if ( ($assigned_to_email = db_result($result,0,'assigned_to_email')) ) {
+		    $to .= ','.$assigned_to_email;
 		}
 		if ($more_addresses) {
 			$to .= ','.$more_addresses;
