@@ -15,8 +15,6 @@
 #    to allow Perl scripts to handle exit errors and messages
 
 
-require("include.pl");
-
 sub exit_not_logged_in {
 
   my $redirect = "http://$sys_default_domain/account/login.php?return_to=".urlencode("http://".$ENV{'HTTP_HOST'}.$ENV{'REQUEST_URI'});
