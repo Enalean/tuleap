@@ -1,7 +1,7 @@
 #!/bin/sh
 # honor JAVA_HOME if defined
 if [ -z "$JAVA_HOME" ]; then 
-    JAVA_HOME=/usr/java/jre1.3.1_04/bin
+    JAVA_HOME=/usr/java/jre/bin
 fi
 
 # honor FOP_HOME if defined
