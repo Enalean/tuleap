@@ -24,7 +24,7 @@ please <A HREF="/bugs/?func=addbug&group_id=1">[ Submit a bug ]</A>.<br><br>
 <b>Technical Questions</b>: all questions on software development tools and techniques (version control, programming, algorithms,...) should be directed to the appropriate <A HREF="/mail/?group_id=1">[ Developers Channel ]</a> whenever possible.<br><br>
 
 <li><b>Other Requests</b>: all other inquiries should be directed to the 
-<A href="<?php print $GLOBALS['sys_email_contact']; ?>">[ <?php print $GLOBALS['sys_name']; ?> contact ]</A><br><br>
+<A href="mailto:<?php print $GLOBALS['sys_email_contact']; ?>">[ <?php print $GLOBALS['sys_name']; ?> contact ]</A><br><br>
 </ul>
 
 <P>You may also contact any member of the <A href="staff.php">[ <?php print $GLOBALS['sys_name']; ?> Team ]</A> individually directly via email (response time may vary in this case)
