@@ -21,7 +21,7 @@ $message = "Someone (presumably you) on the CodeX site requested a\n"
 	. "ignore this message and nothing will happen.\n\n"
 	. "If you requested this verification, visit the following URL\n"
 	. "to change your password:\n\n"
-	. "<http://$GLOBALS[HTTP_HOST]/account/lostlogin.php?confirm_hash=$confirm_hash\n\n>"
+	. "<http://$GLOBALS[HTTP_HOST]/account/lostlogin.php?confirm_hash=$confirm_hash>\n\n"
 	. " -- the CodeX staff\n";
 
 mail ($row_user['email'],"CodeX Verification",$message,"From: noreply@$GLOBALS[HTTP_HOST]");
