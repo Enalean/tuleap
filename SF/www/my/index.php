@@ -454,9 +454,13 @@ of groups that you are a member of.
 
 		for ($i=0; $i<$rows; $i++) {
 			echo '
-				<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD WIDTH="99%">'.
+			       <TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD WIDTH="99%">'.
 			    '<A href="/projects/'. db_result($result,$i,'unix_group_name') .'/"><b>'.
-			    db_result($result,$i,'group_name') .'</b></A></TD>'.
+			    db_result($result,$i,'group_name') .'</b></A>';
+			if ( db_result($result,$i,'admin_flags') == 'A' ) {
+			    echo ' <small><A HREF="/project/admin/?group_id='.db_result($result,$i,'group_id').'">[Admin]</A></small>';
+			}
+			echo '</TD>'.
 			    '<td><A href="rmproject.php?group_id='. db_result($result,$i,'group_id').
 			    '" onClick="return confirm(\'Quit this project?\')">'.
 			    '<IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" BORDER="0"></A></TD></TR>';
