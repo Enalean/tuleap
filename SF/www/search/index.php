@@ -292,14 +292,18 @@ if ($type_of_search == "soft") {
 	$array=explode(" ",$words);
 	$words1=implode($array,"%' $crit project_task.details LIKE '%");
 	$words2=implode($array,"%' $crit project_task.summary LIKE '%");
+	$words3=implode($array,"%' $crit project_history.old_value LIKE '%");
 
 	$sql =	"SELECT project_task.project_task_id,project_task.group_project_id,project_task.summary,"
 	    . "project_task.start_date,project_task.end_date,user.user_name "
 		. "FROM project_group_list,project_task,user "
-		. "WHERE user.user_id=project_task.created_by AND ((project_task.details LIKE '%$words1%') "
-		. "OR (project_task.summary LIKE '%$words2%')) "
-	        . "AND (project_task.group_project_id=project_group_list.group_project_id AND project_group_list.group_id='$group_id') "
-		.  "GROUP BY project_task_id,summary,start_date,user_name LIMIT $offset,26";
+		. "    LEFT JOIN project_history ON project_history.project_task_id=project_task.project_task_id "
+		. "WHERE user.user_id=project_task.created_by AND "
+		. "  (    (project_task.details LIKE '%$words1%') "
+		. "    OR (project_task.summary LIKE '%$words2%') "
+		. "    OR (project_history.field_name = 'details' AND project_history.old_value like '%$words3%') ) "
+	    . "AND (project_task.group_project_id=project_group_list.group_project_id AND project_group_list.group_id='$group_id') "
+		. "GROUP BY project_task_id,summary,start_date,user_name LIMIT $offset,26";
 	//echo "DBG: $sql<br>";
 
 	$result = db_query($sql);
