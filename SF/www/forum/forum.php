@@ -36,7 +36,7 @@ function forum_show_a_nested_message ($result,$row=0) {
 	}
 
 	$ret_val = '
-		<TABLE BORDER="0">
+		<TABLE BORDER="0" WIDTH="100%">
 			<TR>
 				<TD class="thread" NOWRAP>By: <A HREF="/users/'.
 					db_result($result, $row, 'user_name') .'/">'. 
@@ -291,6 +291,7 @@ if ($forum_id) {
 					//show submessages for this message
 					$ret_val .= forum_show_nested_messages ( db_result($result,$i,'thread_id'), db_result($result,$i,'msg_id') );
 				}
+				$ret_val .= '<hr /><br />';
 			} else if ($style == 'flat') {
 
 				//just show the message boxes one after another
