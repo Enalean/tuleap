@@ -22,6 +22,11 @@ if ($details != '') {
     
 }
 
+// Add a new cc if any
+if ($add_cc) {
+    $changed |= bug_add_cc($bug_id,$group_id,$add_cc,$cc_comment,$changes);
+}
+
 // Attach new file if there is one
 if ($add_file && $input_file) {
     $changed |= bug_attach_file($bug_id,$group_id,$input_file,
