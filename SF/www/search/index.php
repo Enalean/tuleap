@@ -193,6 +193,8 @@ if ($type_of_search == "soft") {
 		. "WHERE user.user_id=bug.submitted_by AND ((bug.details LIKE '%$words1%') "
 		. "OR (bug.summary LIKE '%$words2%')) AND bug.group_id='$group_id' "
 		.  "GROUP BY bug_id,summary,date,user_name LIMIT $offset,26";
+
+	//	echo "DBG: $sql<br>";
 	$result = db_query($sql);
 	$rows = $rows_returned = db_numrows($result);
 
@@ -200,7 +202,6 @@ if ($type_of_search == "soft") {
 		$no_rows = 1;
 		echo "<H2>No matches found for $words</H2>";
 		echo db_error();
-//		echo $sql;
 	} else {
 
 		if ( $rows_returned > 25) {
@@ -227,6 +228,104 @@ if ($type_of_search == "soft") {
 		}
 		echo "</TABLE>\n";
 	}
+} else if ($type_of_search == 'support') {
+
+	$array=explode(" ",$words);
+	$words1=implode($array,"%' $crit support.summary LIKE '%");
+
+	$sql =	"SELECT support.support_id,support.summary,support.open_date,user.user_name "
+		. "FROM support,user "
+		. "WHERE user.user_id=support.submitted_by AND (support.summary LIKE '%$words1%') "
+		. " AND support.group_id='$group_id' "
+		.  "GROUP BY support_id,summary,open_date,user_name LIMIT $offset,26";
+
+	echo "DBG: $sql<br>";
+	$result = db_query($sql);
+	$rows = $rows_returned = db_numrows($result);
+
+	if ( !$result || $rows < 1) {
+		$no_rows = 1;
+		echo "<H2>No matches found for $words</H2>";
+		echo db_error();
+	} else {
+
+		if ( $rows_returned > 25) {
+			$rows = 25;
+		}
+
+		echo "<H3>Search results for $words</H3><P>\n";
+
+		$title_arr = array();
+		$title_arr[] = 'SR Summary';
+		$title_arr[] = 'Submitted By';
+		$title_arr[] = 'Date';
+
+		echo html_build_list_table_top ($title_arr);
+
+		echo "\n";
+
+		for ( $i = 0; $i < $rows; $i++ ) {
+			print	"\n<TR BGCOLOR=\"". html_get_alt_row_color($i) ."\"><TD><A HREF=\"/support/?group_id=$group_id&func=detailsupport&support_id="
+				. db_result($result, $i, "support_id")."\"><IMG SRC=\"/images/msg.gif\" BORDER=0 HEIGHT=12 WIDTH=10> "
+				. db_result($result, $i, "summary")."</A></TD>"
+				. "<TD>".db_result($result, $i, "user_name")."</TD>"
+				. "<TD>".date($sys_datefmt,db_result($result,$i,"date"))."</TD></TR>";
+		}
+		echo "</TABLE>\n";
+	}
+
+} else if ($type_of_search == 'tasks') {
+
+	$array=explode(" ",$words);
+	$words1=implode($array,"%' $crit project_task.details LIKE '%");
+	$words2=implode($array,"%' $crit project_task.summary LIKE '%");
+
+	$sql =	"SELECT project_task.project_task_id,project_task.group_project_id,project_task.summary,"
+	    . "project_task.start_date,project_task.end_date,user.user_name "
+		. "FROM project_group_list,project_task,user "
+		. "WHERE user.user_id=project_task.created_by AND ((project_task.details LIKE '%$words1%') "
+		. "OR (project_task.summary LIKE '%$words2%')) "
+	        . "AND (project_task.group_project_id=project_group_list.group_project_id AND project_group_list.group_id='$group_id') "
+		.  "GROUP BY project_task_id,summary,start_date,user_name LIMIT $offset,26";
+	//echo "DBG: $sql<br>";
+
+	$result = db_query($sql);
+	$rows = $rows_returned = db_numrows($result);
+
+	if ( !$result || $rows < 1) {
+		$no_rows = 1;
+		echo "<H2>No matches found for $words</H2>";
+		echo db_error();
+	} else {
+
+		if ( $rows_returned > 25) {
+			$rows = 25;
+		}
+
+		echo "<H3>Search results for $words</H3><P>\n";
+
+		$title_arr = array();
+		$title_arr[] = 'Task Summary';
+		$title_arr[] = 'Created By';
+		$title_arr[] = 'Start Date';
+		$title_arr[] = 'End Date';
+
+		echo html_build_list_table_top ($title_arr);
+
+		echo "\n";
+
+		for ( $i = 0; $i < $rows; $i++ ) {
+			print	"\n<TR BGCOLOR=\"". html_get_alt_row_color($i) ."\"><TD><A HREF=\"/pm/task.php?group_id=$group_id&func=detailtask&project_task_id="
+				. db_result($result, $i, "project_task_id").
+			    "&group_project_id=".db_result($result, $i, "group_project_id")."\"><IMG SRC=\"/images/msg.gif\" BORDER=0 HEIGHT=12 WIDTH=10> "
+				. db_result($result, $i, "summary")."</A></TD>"
+				. "<TD>".db_result($result, $i, "user_name")."</TD>"
+			        . "<TD>".date($sys_datefmt,db_result($result, $i, "start_date"))."</TD>"
+				. "<TD>".date($sys_datefmt,db_result($result,$i,"end_date"))."</TD></TR>";
+		}
+		echo "</TABLE>\n";
+	}
+
 } else if ($type_of_search == 'snippets') {
 
 	/*

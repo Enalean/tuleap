@@ -15,7 +15,10 @@
 */
 
 function support_header($params) {
-	global $group_id,$DOCUMENT_ROOT;
+	global $group_id,$is_support_page,$DOCUMENT_ROOT;
+
+	//set to 1 so the search box will add the necessary element to the pop-up box
+	$is_support_page=1;
 
 	//required by new site_project_header
 	$params['group']=$group_id;

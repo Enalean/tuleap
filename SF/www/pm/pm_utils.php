@@ -31,6 +31,9 @@ function pm_convert_to_url_arg($varname, $var) {
 function pm_header($params) {
 	global $group_id,$is_pm_page,$words,$group_project_id,$DOCUMENT_ROOT,$order,$advsrch;
 
+	//Set to 1 so the  search box will add the necessary element to the pop-up box
+	$is_pm_page=1;
+
 	//required by site_project_header
 	$params['group']=$group_id;
 	$params['toptab']='pm';

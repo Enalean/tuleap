@@ -28,7 +28,8 @@ function menu_site_admin() {
 
 
 function menu_show_search_box() {
-    global $words,$forum_id,$group_id,$is_bug_page,$is_snippet_page,$exact,$type_of_search;
+    global $words,$forum_id,$group_id,$is_bug_page,$is_support_page,
+	$is_pm_page,$is_snippet_page,$exact,$type_of_search;
 
     // if there is no search currently, set the default
     if ( ! isset($type_of_search) ) {
@@ -42,6 +43,10 @@ function menu_show_search_box() {
     print "\t<SELECT name=\"type_of_search\">\n";
     if ($is_bug_page && $group_id) {
 	print "\t<OPTION value=\"bugs\"".( $type_of_search == "bugs" ? " SELECTED" : "" ).">Bugs</OPTION>\n";
+    } else if ($is_pm_page && $group_id) {
+	print "\t<OPTION value=\"tasks\"".( $type_of_search == "tasks" ? " SELECTED" : "" ).">Tasks</OPTION>\n";
+    } else if ($is_support_page && $group_id) {
+	print "\t<OPTION value=\"support\"".( $type_of_search == "support" ? " SELECTED" : "" ).">Support Requests</OPTION>\n";
     } else if ($group_id && $forum_id) {
 	print "\t<OPTION value=\"forums\"".( $type_of_search == "forums" ? " SELECTED" : "" ).">This Forum</OPTION>\n";
     }
@@ -60,6 +65,12 @@ function menu_show_search_box() {
     } 
     if ( isset($is_bug_page) ) {
 	print "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$is_bug_page\" NAME=\"is_bug_page\">\n";
+    }
+    if ( isset($is_support_page) ) {
+	print "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$is_support_page\" NAME=\"is_support_page\">\n";
+    }
+    if ( isset($is_pm_page) ) {
+	print "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$is_pm_page\" NAME=\"is_pm_page\">\n";
     }
     if ( isset($is_snippet_page) ) {
 	print "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$is_snippet_page\" NAME=\"is_snippet_page\">\n";
