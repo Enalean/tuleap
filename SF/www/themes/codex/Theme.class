@@ -1,0 +1,27 @@
+<?php   
+
+//
+// SourceForge: Breaking Down the Barriers to Open Source Development
+// Copyright 1999-2000 (c) The SourceForge Crew
+// http://sourceforge.net
+//              
+// $Id$
+
+
+/*
+
+	Theme class, extends Tim's basic Error class
+
+	Geoffrey Herteg, August 28, 2000
+
+*/
+
+
+class Theme extends Layout {
+
+	function Theme() {
+		// Parent constructor
+		$this->Layout();
+	}
+}
+?>
