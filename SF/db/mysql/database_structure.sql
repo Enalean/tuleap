@@ -1010,7 +1010,7 @@ CREATE TABLE groups (
   pm_preamble text NOT NULL,
   xrx_export_ettm int(11) NOT NULL default '0',
   project_type int(11) NOT NULL default '0',
-  bug_allow_anon int(11) NOT NULL default '1'
+  bug_allow_anon int(11) NOT NULL default '1',
   cvs_tracker int(11)   NOT NULL default '1',
   cvs_events_mailing_list varchar(64) binary DEFAULT NULL,
   cvs_events_mailing_header varchar(64) binary DEFAULT NULL,
