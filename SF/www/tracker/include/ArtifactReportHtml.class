@@ -195,7 +195,7 @@ class ArtifactReportHtml extends ArtifactReport {
     							$values[] = $prefs[$field->getName()];
     						}
     					} else {
-    						$values[] = 100;
+							$values[] = 0;
     					}
     				} else {
     					$values = $prefs[$field->getName()][0];
