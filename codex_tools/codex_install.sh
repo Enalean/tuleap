@@ -746,9 +746,16 @@ EOF
 cd $INSTALL_DIR/SF/utils/cvs1
 $CP log_accum /usr/local/bin
 $CP commit_prep /usr/local/bin
+$CP cvssh /usr/local/bin
+$CP cvssh-restricted /usr/local/bin
+$CAT <<'EOF' >> /etc/shells
+/usr/local/bin/cvssh
+/usr/local/bin/cvssh-restricted
+EOF
+  	 
 cd /usr/local/bin
 $CHOWN sourceforge.sourceforge log_accum commit_prep
-$CHMOD 755 log_accum commit_prep
+$CHMOD 755 log_accum commit_prep cvssh cvssh-restricted
 $CHMOD u+s log_accum   # sets the uid bit (-rwsr-xr-x)
 
 cd $INSTALL_DIR/SF/etc
@@ -1172,7 +1179,7 @@ todo "  - register_globals = On"
 todo "  - memory_limit = 30M"
 todo "  - post_max_size = 20M"
 todo "  - upload_max_file_size = 20M"
-todo "  - include_path = /home/httpd/SF/www/include"
+todo "  - include_path = /home/httpd/SF/www/include:/home/httpd/SF:."
 # things to do by hand
 todo "Change the default login shell if needed in the database (/sbin/nologin or /usr/local/bin/cvssh, etc."
 

@@ -57,7 +57,7 @@ License
 <dt><a href="#HowTo_Recompile_RPM">Recompiling a CodeX specific RPM</a></dt>
 <dt><a href="#HowTo_Change_PW">Change privileged account passwords</a></dt>
 <dt><a href="#HowTo_Delete_Bug">Delete a bug from the CodeX database</a></dt>
-<dt><a href="#HowTo_"></a></dt>
+<dt><a href="#HowTo_Restricted_Users">Enabling 'Restricted Users' on a CodeX server</a></dt>
 </dl></dd>
 </dl>
 <p></p>
@@ -2706,6 +2706,78 @@ of the selected mailing list, then it is OK.
       <tt>mysql -u sourceforge -v -v -v -p sourceforge &lt; del_bug.sql &gt; out</tt>
 </p>
 
+
+<hr>
+
+<h2><a name="HowTo_Restricted_Users"></a>Enabling 'Restricted Users' on a CodeX server</h2>
+<p><em>Enabling restricted users to benefit from code sharing without compromising security.</em>
+
+<h3>Overview</h3>
+<p>One of CodeX main benefits is to enable code sharing and reusability in a corporation. The goal is to provide visibility of your project and code in the whole community of users. Still, in some cases, this visibility becomes an issue: 
+<ul><li>When CodeX is used for customer interaction, e.g. to collect customer support requests and bugs. 
+<li>when some project members are from other companies (contractors), and should not have access to the whole site
+</ul>
+<p>In both cases, external people (customers and contractors) need an access to the server; yet, they should not be granted access to all the other projects hosted on CodeX.
+<p>A solution to this problem has already been put in place: use two servers instead of one (one for internal use, one for 'partners'). Yet, there is an issue with projects that are being developped internally and that have customer feedback. In this case, you need to duplicate the project, which is not convenient; customers cannot access commit pages referenced in commit emails (because they point to the internal server),etc.
+<p>Now, there is another solution by enabling restricted users on your server: these users (typically, external users), are granted access to their project pages only, and are denied access to any other page (other projects, software map, etc.). Normal users still have access to the whole server.
+
+<h3>Configuration</h3>
+<h4>local.inc</h4>
+<p>In order to setup restricted users, you need a coherent local.inc.
+<p>Edit /etc/codex/conf/local.inc and make sure that the following variables are properly set:
+<pre>
+$sys_user_approval = 1;
+$sys_is_project_public = 1;
+$sys_allow_anon = 0;
+$sys_allow_restricted_users = 1;
+</pre>
+<p>Some explanation:
+<ul><li><b>$sys_user_approval = 1</b> is needed because it is during the user approval phase that the CodeX administrator is able to set the user status to 'Restricted' (R) or 'Active' (A). If the variable is set to '0', users will be created as Active by default.
+<li><b>$sys_is_project_public = 1</b> is not absolutely necessary. It just seems useless to have restricted users if all projects are private.
+<li><b>$sys_allow_anon = 0</b> is needed. Otherwise, anonymous users (i.e. users who have not logged in) would have more privilege than restricted users. So a restricted user would simply need to log out to be able to browse other projects, etc.
+<li><b>$sys_allow_restricted_users = 1</b> simply enables the 'Restricted' status for users.
+</ul>
+<h4>Restricted Shell</h4>
+<p>By default, restricted users do not have a regular shell access: they are given a restricted shell access that only supports a few command (only 'cvs' today).
+<p>The default shell is '/usr/local/bin/cvssh-restricted'. It grants CVS access to projects the user is member of, and forbid access to all other projects repositories.
+<p>If you need to completely remove shell access (and forbid CVS), you need to modify the shell manually in the administration interface for each user: set it to /sbin/nologin.
+<p>Setup: in order to use CVS, the restricted user must do the following:
+<ul><li>Set the 'CVS_RSH' environment variable to 'ssh'
+<li>use the following command line: cvs -d:ext:username@codex.xerox.com:/cvsroot/projectname co module
+</ul>
+See also 'CodeX Installation Guide'.
+<h3>Setting restricted users privileges</h3>
+<p>You may fine tune the priviledges of restricted users on your system. Simply copy /home/httpd/site-content/en_US/include/restricted_user_permissions.txt in /etc/codex/site-content/en_US/include/ and edit it. This is a sample configuration file:
+<pre>
+// comment/uncomment forbidden URLs
+$forbidden_url = array(
+          '/snippet/',     // Code Snippet Library
+          '/softwaremap/', // browsable software map
+          '/new/',         // list of the newest releases made on the CodeX site
+          '/search/',      // search for people, projects, and artifacts in trackers!
+          '/people/',      // people skills and profile
+          '/stats/',       // CodeX site statistics
+          '/top/',         // projects rankings (active, downloads, etc)
+          '/register/',    // Register a new project
+          '/export/',      // CodeX XML feeds
+          '/info.php'      // PHP info
+          );
+
+// Use true/false for those options
+$allow_codex_welcome_page=false;// Allow access to CodeX welcome page (at e.g. http://codex.xerox.com/)
+$allow_news_browsing=false;     // Allow restricted users to read/comment news, including for their project
+$allow_user_browsing=true;      // Allow restricted users to access other user's page (Developer Profile)
+$allow_access_to_codex_forums=true;   // CodeX help forums are accessible through the 'Discussion Forums' link
+$allow_access_to_codex_trackers=false;// CodeX trackers are used for support requests on CodeX
+$allow_access_to_codex_docs=false; // CodeX documents (Note that the User Guide is always accessible)
+$allow_access_to_codex_mail=false; // CodeX mailing lists (Developers Channels)
+</pre>
+<h3>Other considerations</h3>
+<ul>
+<li>Restricted users must be denied access to the pserver protocol to access CVS: only the SSH method is supported (through the restricted shell). If you want to disable the pserver access, make sure you edit/etc/xinetd.d/cvs, change the 'disable' parameter to 'yes' and restart xinetd (service xinetd restart). You may also fine-tune the configuration file to allow pserver for some IP addresses and deny it for others..
+<li>Access to projects web sites by Restricted Users is not controlled. If a project web site displays sensitive data, then it should put in place access restriction mechanisms (e.g. a '.htaccess' file).
+<li><strong>Subversion</strong>: currently, if the sys_allow_restricted_user variable is set to '1', subversion repositories have their default access policy changed: by default, only project members have read access (as well as write access). If other users need to access the SVN repository, they need to be individually added to the subversion access file (through the svn admin page).
+</ul>
 <hr width="100%" size="2" noshade="noshade"> End of Document<br>
 <br>
 </body>

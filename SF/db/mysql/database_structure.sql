@@ -1997,7 +1997,7 @@ CREATE TABLE user (
   realname varchar(32) NOT NULL default '',
   register_purpose text,
   status char(1) NOT NULL default 'A',
-  shell varchar(20) NOT NULL default '/bin/bash',
+  shell varchar(50) NOT NULL default '/bin/bash',
   unix_pw varchar(40) NOT NULL default '',
   unix_status char(1) NOT NULL default 'N',
   unix_uid int(11) NOT NULL default '0',

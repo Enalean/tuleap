@@ -1388,6 +1388,7 @@ CVS access method.<br>
     <br>
   </li>
 </ul>
+See also the section on <a href="#RestrictedShell">restricted shells</a>.
 <h2>The CVS Tracking Database</h2>
 CodeX offers the ability for each project to build a database of all
 CVS events (commit, add, delete) happening on their CVS repository.
@@ -1521,7 +1522,7 @@ network. If you are on the Internet we *strongly* recommend that you
 disable it. To enable/disable the telnet access on your CodeX server,
 edit the /etc/xinetd.d/telnet file and change the 'disable' parameter
 accordingly. Then restart xinetd.<br>
-<h2>Restricted Shell Capabilities</h2>
+<h2><a name="RestrictedShell">Restricted Shell Capabilities</h2>
 It is sometimes desirable to allow the creation of a Shell Account for
 CodeX users while limiting the thing they can do with it. For instance
 you may want to limit the capabilities of certain users to use only CVS
@@ -1537,19 +1538,26 @@ the
 cron job s/he will have /bin/bash as a shell and therefore s/he will be
 given full shell capabilities. You can later decide to change the shell
 of a given user through the user admin interface of the CodeX Web site
-and use a restricted shell like the one CodeX provide in
-SF/utils/cvs1/cvssh. This is a little script that simply check the
-command that are remotely executed through ssh by the user (it can be
-cvs, sftp, rsync,...) and decide to accept or reject the command.<br>
-<br>
-To activate this pseudo shell:<br>
+and use a restricted shell like the ones CodeX provide in
+SF/utils/cvs1/:
 <ul>
-  <li>copy the file cvssh in /usr/local/bin,
+<li><b>cvssh</b>: This is a little script that simply check the
+command that are remotely executed through ssh by the user (it can be
+cvs, sftp, rsync,...) and decide to accept or reject the command.
+<li><b>cvssh-restricted</b>: works as cvssh, but prevents CVS access to
+projects the user is not member of. This is the default shell for
+CodeX restricted users (status 'R')
+</ul>
+<br>
+<br>
+To activate these pseudo shells:<br>
+<ul>
+  <li>copy the file cvssh (or cvssh-restricted) in /usr/local/bin,
 make sure it is executable and also add the file to the list of
 authorized shells in /etc/shells. Adding cvssh to /etc/shells will make
 it appear in the list of possible shells in the CodeX user admin
-interface.</li>
-  <li>If you want the retricted shell to be the default for all users
+interface. Note: This is already done for you on CodeX versions after 2.4</li>
+  <li>If you want the restricted shell to be the default for all users
 then
 change the default value of the shell column in the user table with the
 following mysql command:<br>

@@ -64,6 +64,8 @@ switch ($func) {
        $_commit_id = $commit_id;
        require('../cvs/browse_commit.php');
    } else {
+       // cvs_intro depends on the user shell access
+       $shell=get_user_shell(user_getid());
        require('../cvs/cvs_intro.php');
    }
 

@@ -86,8 +86,19 @@ if ($action=='suspend') {
 	Restrict their account
 */
 if (($action=='restrict')&&($GLOBALS['sys_allow_restricted_users'])) {
-	db_query("UPDATE user SET status='R' WHERE user_id='$user_id'");
-	echo '<H2>'.$LANG->getText('admin_userlist','user_restricted').'</H2>';
+    // If the user had a shell, set it to restricted shell
+    $shell="";
+    $res_shell = db_query("SELECT shell FROM user WHERE user_id='$user_id'");
+    if (db_numrows($res_newuser) > 0) {
+        $user_shell = db_result($res_shell,0,'shell');
+        if (($user_shell != "/bin/false")
+            &&($user_shell != "/sbin/nologin")
+            &&($user_shell != "")) {
+            $shell=",shell='/usr/local/bin/cvssh-restricted'";
+        }
+    }
+    db_query("UPDATE user SET status='R'$shell WHERE user_id='$user_id'");
+    echo '<H2>'.$LANG->getText('admin_userlist','user_restricted').'</H2>';
 }
 
 /*

@@ -7,6 +7,7 @@
 #
 
 
+# use DBI;
 use Sys::Hostname;
 use Carp;
 
@@ -23,6 +24,19 @@ umask 002;
 require("include.pl");  # Include all the predefined functions and variables
 
 &load_local_config();
+# This section is used to get the list of active users so that we can customize 
+# the SVN access rights... But it is not clear how!
+# &db_connect;
+# my $active_userlist;
+# if ($sys_allow_restricted_users) {
+#   # Get comma-separated list of all active users (so not restricted) in the system
+#   my $c = $dbh->prepare("SELECT user_name FROM user WHERE status='A'");
+#   my $res = $c->execute();
+#   while( $active_user=$c->fetchrow_array) {
+#     if ($active_userlist) { $active_userlist.=',';}
+#     $active_userlist.=$active_user;
+#   }
+# }
 
 
 my $user_file = $file_dir . "user_dump";
@@ -64,6 +78,7 @@ my ($cxname) = get_codex_user();
 #
 my $cvs_root_allow_file = "/etc/cvs_root_allow";
 @cvs_root_allow_array = open_array_file($cvs_root_allow_file);
+
 
 #
 # Loop through @userdump_array and deal w/ users.
@@ -331,12 +346,17 @@ while ($ln = pop(@groupdump_array)) {
 
 	# update Subversion DAV access control file if needed
 	my $svnaccess_file = "$svn_prefix/$gname/.SVNAccessFile";
-	if ($group_modified || 
-	    ($gstatus eq 'A' && !(-e "$svnaccess_file")) ) {
+        # This test will be removed if we need to list active/restricted users in the SVN auth file
+        $filetime= ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,
+         $atime,$mtime,$ctime,$blksize,$blocks)
+          = (stat($filename))[9];
+        if ($group_modified ||
+            ($gstatus eq 'A' && !(-e "$svnaccess_file")) ||
+            ((stat($0))[9] > (stat("$svnaccess_file"))[9]) ) { # i.e. this script has been modified since last update
           my $custom_perm=0;
           my $custom_lines;
-	  my $public_svn = $gis_public && ! -e "$svn_prefix/$gname/.CODEX_PRIVATE";
-
+          my $public_svn = $gis_public && ! -e "$svn_prefix/$gname/.CODEX_PRIVATE";
+          
           # Retrieve custom permissions, if any
           if (-e "$svnaccess_file") {
             open(SVNACCESS,"$svnaccess_file");
@@ -349,29 +369,35 @@ while ($ln = pop(@groupdump_array)) {
             }
             close(SVNACCESS);
           }
-     
-          open(SVNACCESS,">$svnaccess_file")
-	    or croak "Can't open Subversion access file $svnaccess_file: $!";
-	  # if you change these block markers also change them in
-	  # SF/www/svn/svn_utils.php
-	  print SVNACCESS "# BEGIN CODEX DEFAULT SETTINGS - DO NOT REMOVE\n";
-	  print SVNACCESS "[groups]\n";
-	  print SVNACCESS "members = ",$userlist,"\n\n";
-
-	  print SVNACCESS "[/]\n";
-	  if ($public_svn) { print SVNACCESS "* = r\n"; }
-	  print SVNACCESS "\@\members = rw\n";
-	  print SVNACCESS "# END CODEX DEFAULT SETTINGS\n";
-          if ($custom_perm) { print SVNACCESS $custom_lines;}
-	  close(SVNACCESS);
-
-	  # set group ownership, codex user as owner so that
-	  # PHP scripts can write to it directly
-	  system("chown -R $cxname:$gid $svnaccess_file");
-	  system("chmod g+rw $svnaccess_file");
-
-	}
-
+          
+          if (-d "$svn_prefix/$gname") {
+            open(SVNACCESS,">$svnaccess_file")
+              or croak "Can't open Subversion access file $svnaccess_file: $!";
+            # if you change these block markers also change them in
+            # SF/www/svn/svn_utils.php
+            print SVNACCESS "# BEGIN CODEX DEFAULT SETTINGS - DO NOT REMOVE\n";
+            print SVNACCESS "[groups]\n";
+            print SVNACCESS "members = ",$userlist,"\n\n";
+            print SVNACCESS "[/]\n";
+            if ($sys_allow_restricted_users) {
+              print SVNACCESS "* = \n"; # deny all access by default
+              # we don't know yet how to enable read access to all active users,
+              # and deny it to all restricted users...
+            } else {
+              if ($public_svn) { print SVNACCESS "* = r\n"; }
+              else { print SVNACCESS "* = \n";}
+            }
+            print SVNACCESS "\@members = rw\n";
+            print SVNACCESS "# END CODEX DEFAULT SETTINGS\n";
+            if ($custom_perm) { print SVNACCESS $custom_lines;}
+            close(SVNACCESS);
+            
+            # set group ownership, codex user as owner so that
+            # PHP scripts can write to it directly
+            system("chown -R $cxname:$gid $svnaccess_file");
+            system("chmod g+rw $svnaccess_file");
+          }
+        }
 
 	# Put in place the svn post-commit hook for email notification
 	# if not present (if the file does not exist it is created)
@@ -380,7 +406,7 @@ while ($ln = pop(@groupdump_array)) {
 	  open (FD, "+>>$postcommit_file") ;
 	  $blockispresent = 0;
 	  while (<FD>) {
-	    if ($_ eq "$MARKER_BEGIN\n") { $blockispresent = 1; break; }
+	    if ($_ eq "$MARKER_BEGIN\n") { $blockispresent = 1; last; }
 	  }
 	  if (! $blockispresent) {
 	    print FD "#!/bin/sh\n";
@@ -465,7 +491,7 @@ sub update_user {
 	
 	print("Updating Account for: $username\n");
 	
-	my $counter = 0;
+	$counter = 0;
 	my $found   = 0;
 	foreach (@passwd_array) {
 		($p_username, $p_junk, $p_uid, $p_gid, $p_realname_email, $p_homedir, $p_shell) = split(":", $_);
@@ -478,7 +504,7 @@ sub update_user {
 		$counter++;
 	}
 	
-	my $counter    = 0;
+	$counter = 0;
 	foreach (@shadow_array) {
 		($s_username, $s_passwd, $s_date, $s_min, $s_max, $s_inact, $s_expire, $s_flag, $s_resv) = split(":", $_);
 		if ($username eq $s_username) {
@@ -567,7 +593,7 @@ sub update_httpuser {
 sub delete_user {
 	my ($username, $junk, $uid, $gid, $realname, $homedir, $shell, $counter);
 	my $this_user = shift(@_);
-        my $counter = 0;	
+        $counter = 0;	
 	foreach (@passwd_array) {
 		($username, $junk, $uid, $gid, $realname, $homedir, $shell) = split(":", $_);
 		if ($this_user eq $username) {
@@ -576,7 +602,7 @@ sub delete_user {
 		$counter++;
 	}
 
-        my $counter = 0;	
+        $counter = 0;	
 	foreach (@shadow_array) {
 		($username) = split(":", $_);
 		if ($this_user eq $username) {
@@ -585,7 +611,7 @@ sub delete_user {
 		$counter++;
 	}
 
-        my $counter = 0;	
+        $counter = 0;	
 	foreach (@group_array) {
 		($groupname) = split(":", $_);
 		if ($this_user eq $groupname) {

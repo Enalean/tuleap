@@ -119,7 +119,7 @@ $row_user = db_fetch_array($res_user);
 <P>
 <?php echo $LANG->getText('admin_usergroup','shell'); ?>:
 <SELECT name="form_shell">
-<?php account_shellselects($row_user[shell]); ?>
+<?php account_shellselects($row_user['shell']); ?>
 </SELECT>
 
 <P>

@@ -17,12 +17,14 @@ session_require(array('group'=>'1','admin_flags'=>'A'));
 
 if (($action=='activate') || ($action=='activate_restricted')) {
 
+    $shell="";
     if ($action=='activate_restricted') {
         $newstatus='R';
+        $shell=",shell='/usr/local/bin/cvssh-restricted'";
     } else $newstatus='A';
 
     // update the user status flag to active
-    db_query("UPDATE user SET status='".$newstatus."'"
+    db_query("UPDATE user SET status='".$newstatus."'".$shell.
 	     . " WHERE user_id IN ($list_of_users)");
 
     // Now send the user verification emails

@@ -620,6 +620,11 @@ function get_cvs_history($group_id, $period=false) {
   return($result);
 }
 
+function get_user_shell($user_id) {
+    $res_user = db_query("SELECT shell FROM user WHERE user_id=$user_id");
+    $row_user = db_fetch_array($res_user);
+    return $row_user['shell'];
+}
 
 function check_cvs_access($username, $group_name, $cvspath) {
  

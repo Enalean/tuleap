@@ -59,7 +59,12 @@ if ($Login){
 	// LJ a unix user_id a second time
 	  $res_user = db_query("SELECT unix_uid FROM user WHERE user_name='$GLOBALS[form_loginname]'");
 	  if (db_result($res_user,0,'unix_uid') == 0) {	
-	    $res = db_query("UPDATE user SET status='".$newstatus."',unix_status='A',unix_uid=". account_nextuid()."  WHERE user_name='$GLOBALS[form_loginname]'");
+              $shell="";
+              if ($newstatus=='R') {
+                  // Set restricted shell for restricted users.
+                  $shell=",shell='/usr/local/bin/cvssh-restricted'";
+              }
+	    $res = db_query("UPDATE user SET status='".$newstatus."',unix_status='A',unix_uid=". account_nextuid().$shell."  WHERE user_name='$GLOBALS[form_loginname]'");
 	  } else {
 	    $res = db_query("UPDATE user SET status='".$newstatus."',unix_status='A'  WHERE user_name='$GLOBALS[form_loginname]'");
 	  }
