@@ -1181,7 +1181,7 @@ for ($i = 0; ; $i++) {
     	push (@text, "");
         push (@text, "Artifact references:");
         foreach $art (keys %arts) {
-          push (@text, "artifact #$art: http://$sys_cvs_host/tracker/?func=gotoid&aid=$art");
+          push (@text, "artifact #$art: http://$sys_default_domain/tracker/?func=gotoid&aid=$art");
         }
 	    if ($db_track) {
 	      &db_add_ref('artifact', $commit_id, $art);
