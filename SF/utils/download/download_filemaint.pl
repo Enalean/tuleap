@@ -67,7 +67,7 @@ close(WAITING_FILES);
 #
 
 print `find $delete_dir -type f -mtime +7 -exec rm {} \\;`;
-print `find $delete_dir/* -type d -empty -exec rm -R {} \\;`;
+print `find $delete_dir -type d -empty -mindepth 1 -exec rm -R {} \\;`;
 
 
 ##
