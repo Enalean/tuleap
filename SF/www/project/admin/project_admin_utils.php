@@ -228,7 +228,7 @@ function show_grouphistory ($group_id) {
 				echo db_result($result, $i, 'old_value');
 			}			
 			echo '</TD>'.
-				'<TD>'.date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
+				'<TD>'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
 				'<TD>'.db_result($result, $i, 'user_name').'</TD></TR>';
 		}	       
 				

@@ -427,7 +427,7 @@ if ($release_id) {
 		<H3>Edit Release:'. htmlspecialchars(db_result($result,0,'release_name')) .' of Package: '. db_result($result,0,'package_name') .'</H3>
 		<P>
 		<B>Release Date:</B><BR>
-		<INPUT TYPE="TEXT" NAME="release_date" VALUE="'. date('Y-m-d',db_result($result,0,'release_date')) .'" SIZE="10" MAXLENGTH="10">
+		<INPUT TYPE="TEXT" NAME="release_date" VALUE="'. format_date('Y-m-d',db_result($result,0,'release_date')) .'" SIZE="10" MAXLENGTH="10">
 		<P>
 		<B>Release Name:</B><BR>
 		<INPUT TYPE="TEXT" NAME="release_name" VALUE="'. db_result($result,0,'release_name') .'" SIZE="20" MAXLENGTH="25">
@@ -577,7 +577,7 @@ Then check the boxes next to the files belonging to your new project release and
 			<TR BGCOLOR="'. util_get_alt_row_color($i) .'">
 				<TD><FONT SIZE="-1">'. 
 					frs_show_release_popup ($group_id, $name='new_release_id',db_result($res,$i,'release_id')) .'</TD>
-				<TD><FONT SIZE="-1"><INPUT TYPE="TEXT" NAME="release_time" VALUE="'. date('Y-m-d',db_result($res,$i,'release_time')) .'" SIZE="10" MAXLENGTH="10"></TD>
+				<TD><FONT SIZE="-1"><INPUT TYPE="TEXT" NAME="release_time" VALUE="'. format_date('Y-m-d',db_result($res,$i,'release_time')) .'" SIZE="10" MAXLENGTH="10"></TD>
 				<TD><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="submit" VALUE="Update/Refresh"></TD>
 			</TR></FORM>
 			<FORM ACTION="'. $PHP_SELF .'" METHOD="POST">

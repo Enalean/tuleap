@@ -124,11 +124,11 @@ function prepare_bug_record($group_id, &$col_list, &$record) {
 
     // replace the date fields with human readable dates that
     // is also accepted as a valid format in future import
-    $record['date'] = date($datetime_fmt,$record['date']);
+    $record['date'] = format_date($datetime_fmt,$record['date']);
     if ($record['close_date'] == 0)
 	$record['close_date'] = '';
     else
-	$record['close_date'] = date($datetime_fmt,$record['close_date']);
+	$record['close_date'] = format_date($datetime_fmt,$record['close_date']);
 	
     // all text fields converted from HTML to ASCII
     reset($col_list);
@@ -184,7 +184,7 @@ function pe_utils_format_bug_followups($group_id,$bug_id) {
 		    '=================================================='.
 		    "\n".
 		    'Type: '.$row['type'].'     By: '.$row['mod_by'].'      On: '.
-		    date($sys_datefmt,$row['date'])."\n\n".
+		    format_date($sys_datefmt,$row['date'])."\n\n".
 		    prepare_textarea($row['old_value']).
 		    "\n";
 	    }
@@ -293,7 +293,7 @@ function prepare_bug_history_record(&$record) {
        */
 
     // replace the modification date field with human readable dates 
-    $record['date'] = date($datetime_fmt,$record['date']);
+    $record['date'] = format_date($datetime_fmt,$record['date']);
 
     if (bug_data_is_select_box($record['field_name']) &&
 	($record['field_name'] != 'severity') ) {
@@ -310,7 +310,7 @@ function prepare_bug_history_record(&$record) {
 	    if ($record['old_value'] == 0)
 		$record['old_value'] = '';
 	    else
-		$record['old_value'] = date($datetime_fmt,$record['old_value']);
+		$record['old_value'] = format_date($datetime_fmt,$record['old_value']);
 	}
 	
 	// revert HTML entities to ASCII code in text fields
@@ -342,7 +342,7 @@ function prepare_task_history_record(&$record) {
        */
 
     // replace the modification date field with human readable dates
-    $record['date'] = date($datetime_fmt,$record['date']);
+    $record['date'] = format_date($datetime_fmt,$record['date']);
 
     switch ($record['field_name']) {
 
@@ -351,7 +351,7 @@ function prepare_task_history_record(&$record) {
 	if ($record['old_value'] == 0)
 	    $record['old_value'] = '';
 	else
-	    $record['old_value'] = date($datetime_fmt,$record['old_value']);
+	    $record['old_value'] = format_date($datetime_fmt,$record['old_value']);
 	break;
 
     case 'summary':
@@ -387,12 +387,12 @@ function prepare_task_record($group_id, &$record) {
     if ($record['start_date'] == 0)
 	$record['start_date'] = '';
     else
-	$record['start_date'] = date($datetime_fmt,$record['start_date']);
+	$record['start_date'] = format_date($datetime_fmt,$record['start_date']);
 
     if ($record['end_date'] == 0)
 	$record['end_date'] = '';
     else
-	$record['end_date'] = date($datetime_fmt,$record['end_date']);
+	$record['end_date'] = format_date($datetime_fmt,$record['end_date']);
 
     $record['summary'] = prepare_textarea($record['summary']);
     $record['details'] = prepare_textarea($record['details']);
@@ -415,7 +415,7 @@ function prepare_survey_responses_record($group_id, &$record) {
           Output: the same row with values transformed for database export
        */
 
-    $record['date'] = date($datetime_fmt,$record['date']);
+    $record['date'] = format_date($datetime_fmt,$record['date']);
     $record['reponse'] = prepare_textarea($record['response']);
  
 }
@@ -490,7 +490,7 @@ function pe_utils_format_task_followups ($group_id,$task_id) {
 		$TASK_FU[$row['project_task_id']] .= 
 		    '=================================================='."\n".
 		    'By: '.$row['mod_by'].'      On: '.
-		    date($sys_datefmt,$row['date'])."\n\n".
+		    format_date($sys_datefmt,$row['date'])."\n\n".
 		    prepare_textarea($row['old_value']).
 		    "\n";
 	    }
@@ -559,12 +559,12 @@ function prepare_support_request_record($group_id, &$record) {
     if ($record['open_date'] == 0)
 	$record['open_date'] = '';
     else
-	$record['open_date'] = date($datetime_fmt,$record['open_date']);
+	$record['open_date'] = format_date($datetime_fmt,$record['open_date']);
 
     if ($record['close_date'] == 0)
 	$record['close_date'] = '';
     else
-	$record['close_date'] = date($datetime_fmt,$record['close_date']);
+	$record['close_date'] = format_date($datetime_fmt,$record['close_date']);
 
     $record['summary'] = prepare_textarea($record['summary']);
     $sr_id = $record['support_id'];
@@ -598,7 +598,7 @@ function pe_utils_format_sr_messages($group_id,$sr_id) {
 		    '=================================================='.
 		    "\n".
 		    'By: '.$row['from_email'].'      On: '.
-		    date($sys_datefmt,$row['date'])."\n\n".
+		    format_date($sys_datefmt,$row['date'])."\n\n".
 		    prepare_textarea($row['body']).
 		    "\n";
 	    }
