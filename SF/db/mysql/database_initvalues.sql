@@ -25,11 +25,11 @@
 # for the entire site
 
 INSERT INTO user VALUES (100, 'None', 'noreply@_DOMAIN_NAME_', \
-'*********34343', '0', 'S', '0', '0', '0', 0, '0', 940000000, NULL, 1, \
+'*********34343', '0', NULL, 'S', '0', '0', '0', 0, '0', 940000000, NULL, 1, \
 0, 0, NULL, NULL, 0, '', 'GMT', '', 0, '');
 
 INSERT INTO user VALUES (101, 'admin', '', \
-'6f3cac6213ffceee27cc85414f458caa', 'Site Administrator', 'A', \
+'6f3cac6213ffceee27cc85414f458caa', 'Site Administrator', NULL, 'A', \
 '/bin/bash', '$1$Sn;W@$PXu/wJEYCCN2.BmF2uSfT/', 'A', 1,'shell1', \
 940000000, NULL, 0, 0, 0, NULL, NULL, 0, '', 'GMT', \
 'AD3682DB98997A758E5D533411003C5C:2E17AE860AC9D678CD6B9C16DBBA6006', 0, '');
