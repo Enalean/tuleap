@@ -25,6 +25,7 @@ $SCRIPT_CATEGORY[9]='Scientific Computation';
 $SCRIPT_CATEGORY[10]='Office Utilities';
 $SCRIPT_CATEGORY[11]='User Interface';
 $SCRIPT_CATEGORY[12]='Other';
+$SCRIPT_CATEGORY[13]='Data Acquisition and Control';
 
 $SCRIPT_TYPE[0]='Choose One';
 $SCRIPT_TYPE[1]='Function';
