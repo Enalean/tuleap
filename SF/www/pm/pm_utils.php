@@ -1517,9 +1517,9 @@ function pm_mail_followup($project_task_id,$more_addresses=false,$changes=false)
     	// title of the task form and here as a text field
     
     	$body .= "\n".pm_field_display('summary', $group_id,
-    			   db_result($result,0,'summary'),false,true,true,true).
+    		      util_unconvert_htmlspecialchars(db_result($result,0,'summary')),false,true,true,true).
     	    "\n\n".pm_field_display('details', $group_id,
-    			   db_result($result,0,'details'),false,true,true,true);
+    		   util_unconvert_htmlspecialchars(db_result($result,0,'details')),false,true,true,true);
     
     	// Then output for assigned to 
     	$body .= "\n\n".format_task_assigned_to($project_task_id, $group_id, true);

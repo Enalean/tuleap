@@ -222,7 +222,7 @@ function sr_utils_mail_followup($support_id,$more_addresses=false,$changes=false
 			     "Summary: ".util_unconvert_htmlspecialchars(db_result($result,0,'summary')) );
 
 	    $odq = support_data_get_original_description($support_id);
-	    $body .= "Original submission:\n".db_result($odq,0,'body')."\n\n";
+	    $body .= "Original submission:\n".util_unconvert_htmlspecialchars(db_result($odq,0,'body'))."\n\n";
 
 	    // Include all follow-up comments
 	    $body .= format_support_details($support_id,$group_id,true);

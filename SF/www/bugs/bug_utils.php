@@ -925,9 +925,9 @@ function bug_mail_followup($bug_id,$more_addresses=false,$changes=false) {
 	// title of the bug form and here as a text field
 
 	$body .= "\n".bug_field_display('summary', $group_id,
-			   db_result($result,0,'summary'),false,true,true,true).
+		      util_unconvert_htmlspecialchars(db_result($result,0,'summary')),false,true,true,true).
 	    "\n\n".bug_field_display('details', $group_id,
-			   db_result($result,0,'details'),false,true,true,true);
+		      util_unconvert_htmlspecialchars(db_result($result,0,'details')),false,true,true,true);
 
 	// Then output the history of bug details from newest to oldest
 	$body .= "\n\n".format_bug_details($bug_id, $group_id, true);
