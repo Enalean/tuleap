@@ -58,7 +58,7 @@ function in_array ($needle, $haystack, $strict=false) {
 	}
     } else {
 	while (list(,$v) = each($haystack)) {
-	    if ( ($v == $needle) && (gettype($needle) == gettype($v))) { return true;}
+	    if ( ($v == $needle) ) { return true;}
 	}
     }
     return false;

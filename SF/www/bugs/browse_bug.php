@@ -338,9 +338,8 @@ while ( $field = bug_list_all_fields(cmp_place_query)) {
 			// Retrieve then the tech list
 			$res_tech = bug_data_get_technicians($group_id);
 			$tech_array = util_result_build_array($res_tech,0,1);
-			// Merge the arrays
-			$result_array = $tech_all_array+$tech_array;
-			$result_array = array_merge($tech_all_array,$tech_array);
+			// Merge the arrays			
+			$result_array = merge_hashtable($tech_all_array,$tech_array);
 			uasort($result_array,cmp_username);
 			$boxes .= html_build_select_box_from_arrays (array_keys($result_array),array_values($result_array),$field,($advsrch ? $prefs[$field] : $prefs[$field][0]),true,'None', true,'Any');
 		} else {

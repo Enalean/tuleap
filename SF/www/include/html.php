@@ -179,19 +179,41 @@ function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_v
 
 		The 8th parameter is optional - what to call the 'Any row' defaults to nAny	*/
 
-	$return .= '
-		<SELECT NAME="'.$select_name.'">';
+
+	if ( is_array($checked_val) ) {
+		$return .= '
+			<SELECT NAME="'.$select_name.'[]" MULTIPLE SIZE="6">';
+	} else {
+		$return .= '
+			<SELECT NAME="'.$select_name.'">';
+	}
 
 
 	//we don't always want the default any  row shown
 	if ($show_any) {
-	    $selected = ( $checked_val == 0 ? 'SELECTED':'');
+		if ( is_array($checked_val) ) {
+			if ( in_array(0,$checked_val) ) {
+				$selected = "SELECTED";
+			} else {
+				$selected = "";
+			}
+		} else {
+	    	$selected = ( $checked_val == 0 ? 'SELECTED':'');
+	    }
 	    $return .= "\n<OPTION VALUE=\"0\" $selected>$text_any </OPTION>";
 	}
 
 	//we don't always want the default 100 row shown
 	if ($show_100) {
-	    $selected = ( $checked_val == 100 ? 'SELECTED':'');
+		if ( is_array($checked_val) ) {
+			if ( in_array(100,$checked_val) ) {
+				$selected = "SELECTED";
+			} else {
+				$selected = "";
+			}
+		} else {
+		    $selected = ( $checked_val == 100 ? 'SELECTED':'');
+		}
 	    $return .= "\n<OPTION VALUE=\"100\" $selected>$text_100 </OPTION>";
 	}
 
@@ -208,8 +230,14 @@ function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_v
 		 ($vals[$i] == '0' && !$show_any) ) {
 			$return .= '
 				<OPTION VALUE="'.$vals[$i].'"';
-			if ($vals[$i] == $checked_val) {
-				$return .= ' SELECTED';
+			if ( is_array($checked_val) ) {
+				if ( in_array($vals[$i],$checked_val) ) {
+					$return .= ' SELECTED';
+				}
+			} else {
+				if ($vals[$i] == $checked_val) {
+					$return .= ' SELECTED';
+				}
 			}
 			$return .= '>'.$texts[$i].'</OPTION>';
 		}

@@ -97,6 +97,15 @@ function util_result_column_to_array($result, $col=0) {
 	return $arr;
 }
 
+function merge_hashtable ($arr_1, $arr_2) {
+    while (list($k,$v) = each($arr_1)) {
+        if (!in_array($v,$arr_2)) {
+            $arr_2[$k] = $v;
+        }
+    }
+    return $arr_2;
+}
+
 function util_result_build_array($result, $col_id=0, $col_value=1) {
 	$rows=db_numrows($result);
 
