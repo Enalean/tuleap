@@ -4,9 +4,9 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id: 
+// $Id$
 //
-//	Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
 //
 -->
   <chapter id="ProjectWebSite">
@@ -588,3 +588,8 @@ http://codex.xerox.com/sflogo.php?group_id=N&#38;type=1
       in the URL of the page (see the Location bar in Netscape and IE).</note></para>
     </section>
   </chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+End:
+-->

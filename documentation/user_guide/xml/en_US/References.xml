@@ -4,9 +4,9 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id: 
+// $Id$
 //
-//	Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
 //
 -->
   <bibliography id="References">
@@ -194,3 +194,8 @@
     </biblioentry>
 
   </bibliography>
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+End:
+-->
