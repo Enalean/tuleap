@@ -581,6 +581,11 @@ todo "You may want to move /var/lib/mysql to a larger file system (e.g. /home/va
 ##############################################
 # Mailman installation
 #
+# - First make sure any mailman RPM is deleted
+# - Compile and install our own version
+#
+echo "Removing installed mailman RPM if any .."
+$RPM -e --nodeps mailman 2>/dev/null
 MAILMAN_DIR="/home/mailman"
 echo "Installing the mailman software in $MAILMAN_DIR..."
 yn="-"
