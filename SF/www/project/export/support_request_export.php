@@ -10,7 +10,7 @@
 // This is the SQL query to retrieve all the task history for this group
 
 $sql = "SELECT support.support_id,'$group_id' AS group_id,".
-'support_category.category_name AS support_category_id, support.summary,'.
+'support_category.category_name AS support_category, support.summary,'.
 'support.priority, user.user_name AS submitted_by, user2.user_name AS assigned_to,'.
 'support.open_date, support.close_date, support_status.status_name AS status '.
 'FROM support, support_category,support_status, user, user user2 '.
@@ -19,12 +19,12 @@ $sql = "SELECT support.support_id,'$group_id' AS group_id,".
 'support.support_status_id=support_status.support_status_id AND '.
 'user.user_id=support.submitted_by AND user2.user_id=support.assigned_to)';
 
-$col_list = array('support_id','group_id','support_category_id','summary',
+$col_list = array('support_id','group_id','support_category','summary',
 		  'priority','submitted_by','assigned_to', 'open_date','close_date',
 		  'status','follow_ups');
 $lbl_list = array('support_id' => 'Support ID',
 		  'group_id' => 'Group ID',
-		  'support_category_id' => 'Category',
+		  'support_category' => 'Category',
 		  'summary' => 'Summary',
 		  'priority' => 'Priority',
 		  'submitted_by' => 'Submitted by',
@@ -35,7 +35,7 @@ $lbl_list = array('support_id' => 'Support ID',
 		  'follow_ups' => 'Follow-up Comments');
 $dsc_list = array('support_id' => 'Unique support request identifier',
 		  'group_id' => 'Unique project identifier',
-		  'support_category_id' => 'Name of the category the support request is in',
+		  'support_category' => 'Name of the category the support request is in',
 		  'summary' => 'One line description of the support request',
 		  'priority' => 'Priority',
 		  'submitted_by' => 'Name of the user who submitted the support request',
