@@ -24,7 +24,7 @@ if (user_isloggedin()) {
 	<H3>Personal Page for: <?php print user_getname(); ?></H3>
 	<P>
 	Your personal page contains lists of bugs [<b>A</b>]ssigned to or 
-  [<b>S</b>]ubmitted by you, tasks that you are assigned, monitored forums and packages plus a list
+  [<b>S</b>]ubmitted by you, tasks assigned with percentage completion, monitored forums and packages plus a list
 of groups that you are a member of.
 	<P>
 	<TABLE width="100%" border="0">
@@ -308,7 +308,7 @@ of groups that you are a member of.
 		Tasks assigned to me
 	*/
 	$last_group=0;
-	echo $HTML->box1_top('My Tasks');
+	echo $HTML->box1_top('My Tasks',1,'',3);
 
 	$sql = 'SELECT groups.group_id, groups.group_name, project_group_list.group_project_id, project_group_list.project_name '.
 	    'FROM groups,project_group_list,project_task,project_assigned_to '.
@@ -332,7 +332,7 @@ of groups that you are a member of.
 		$group_id = db_result($result,$j,'group_id');
 		$group_project_id = db_result($result,$j,'group_project_id');
 
-		$sql2 = 'SELECT project_task.project_task_id, project_task.priority, project_task.summary '.
+		$sql2 = 'SELECT project_task.project_task_id, project_task.priority, project_task.summary,project_task.percent_complete '.
 		    'FROM groups,project_group_list,project_task,project_assigned_to '.
 		    'WHERE project_task.project_task_id=project_assigned_to.project_task_id '.
 		    "AND project_assigned_to.assigned_to_id='".user_getid()."' AND project_task.status_id='1'  ".
@@ -347,7 +347,7 @@ of groups that you are a member of.
 		list($hide_now,$count_diff,$hide_url) = 
 		    my_hide_url('pm',$group_project_id,$hide_item_id,$rows2,$hide_pm);
 
-		$html_hdr = ($j ? '<td colspan="2">' : '').
+		$html_hdr = ($j ? '<td colspan="3">' : '').
 		    $hide_url.'<A HREF="/pm/task.php?group_id='.$group_id.
 		    '&group_project_id='.$group_project_id.'"><B>'.
 		    db_result($result,$j,'group_name').' - '.
@@ -364,7 +364,8 @@ of groups that you are a member of.
 			    db_result($result2, $i, 'project_task_id').'&group_id='.
 			    $group_id.'&group_project_id='.$group_project_id.
 			    '">'.db_result($result2,$i,'project_task_id').'</A></TD>'.
-			    '<TD>'.stripslashes(db_result($result2,$i,'summary')).'</TD></TR>';
+			    '<TD>'.stripslashes(db_result($result2,$i,'summary')).'</TD>'.
+			    '<TD>'.db_result($result2,$i,'percent_complete').'%</TD></TR>';
 
 		    }
 		}
@@ -374,7 +375,7 @@ of groups that you are a member of.
 	    }
 
 
-	    echo '<TR><TD COLSPAN="2" BGCOLOR="'.$HTML->COLOR_CONTENT_BACK.'">&nbsp;</TD></TR>';
+	    echo '<TR><TD COLSPAN="3" BGCOLOR="'.$HTML->COLOR_CONTENT_BACK.'">&nbsp;</TD></TR>';
 	}
 	echo $HTML->box1_bottom();
 
