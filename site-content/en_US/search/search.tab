@@ -1,0 +1,39 @@
+#/**
+#  *
+#  * Include scripts message catalog (English)
+#  *
+#  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
+#  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
+#  * http://codex.xrce.xerox.com
+#  *
+#  * @version   $Id$
+#  *
+#  */
+#
+#-----------------------------------------------
+# Script: SF/www/search/index.php
+#
+search_index	search	Search
+search_index	at_least_3_ch	Search must be at least three characters
+search_index	enter_s_words	Enter Your Search Words Above
+search_index	no_match_found	No matches found for $1
+search_index	search_res	Search results for $1
+search_index	project_name	Project Name
+search_index	description	Description
+search_index	user_n	User Name
+search_index	real_n	Real Name
+search_index	thread	Thread
+search_index	author	Author
+search_index	date	Date
+search_index	bug_summary	Bug Summary
+search_index	submitted_by	Submitted By
+search_index	sr_summary	SR Summary
+search_index	task_summary	Task Summary
+search_index	created_by	Created By
+search_index	start_date	Start Date
+search_index	end_date	End Date
+search_index	snippet_name	Snippet Name
+search_index	artifact_summary	Artifact Summary
+search_index	invalid_search	Invalid Search - ERROR!!!!
+search_index	prev_res	Previous Results
+search_index	next_res	Next Results
