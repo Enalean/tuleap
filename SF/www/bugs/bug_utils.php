@@ -865,7 +865,13 @@ function bug_mail_followup($bug_id,$more_addresses=false,$changes=false) {
     $sql="SELECT * from bug WHERE bug_id='$bug_id'";
 
     $result=db_query($sql);
-    $bug_href = "http://$GLOBALS[sys_default_domain]/bugs/?func=detailbug&bug_id=$bug_id&group_id=".db_result($result,0,'group_id');
+
+    if (session_issecure())
+	$bug_href = "https://".$GLOBALS['sys_https_host'];
+    else
+	$bug_href = "http://".$GLOBALS['sys_default_domain'];
+
+    $bug_href .= "/bugs/?func=detailbug&bug_id=$bug_id&group_id=".db_result($result,0,'group_id');
 
     if ($result && db_numrows($result) > 0) {
 			

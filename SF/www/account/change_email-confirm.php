@@ -17,12 +17,17 @@ $row_user = db_fetch_array($res_user);
 db_query("UPDATE user SET confirm_hash='$confirm_hash',email_new='$form_newemail' "
 	. "WHERE user_id=$row_user[user_id]");
 
+if (session_issecure()) {
+    $server = 'https://'.$GLOBALS['sys_https_host'];
+} else {
+    $server = 'http://'.$GLOBALS['sys_default_domain'];
+}
 $message = "You have requested a change of email address on ".$GLOBALS['sys_name']."\n"
 	. "Please visit the following URL to complete the email change:\n\n"
-	. "http://".$GLOBALS['sys_default_domain']."/account/change_email-complete.php?confirm_hash=$confirm_hash\n\n"
+	. "$server/account/change_email-complete.php?confirm_hash=$confirm_hash\n\n"
 	. " -- The ".$GLOBALS['sys_name']." Team\n";
 
-mail ($form_newemail,$GLOBALS['sys_name']." Email Verification",$message,"From: noreply@$GLOBALS[HTTP_HOST]");
+mail ($form_newemail,$GLOBALS['sys_name']." Email Verification",$message,"From: noreply@".$GLOBALS['sys_default_domain']);
 
 $HTML->header(array('title'=>"Email Change Confirmation"));
 ?>

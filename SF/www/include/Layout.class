@@ -212,7 +212,6 @@ echo html_blankimage(5,100);
         <!-- VA Linux Stats Counter -->
         <?php
         if (!session_issecure()) {
-               //(LJ) print '<IMG src="http://www2.valinux.com/clear.gif?id=105" width=140 height=1 alt="Counter"><BR>';
                 print '<IMG src="'.util_get_image_theme("clear.png").'" width=140 height=1 alt="Counter"><BR>';
         } else {
                 print html_blankimage(1,140) . '<br>';
@@ -299,7 +298,7 @@ echo html_blankimage(5,100);
 			$selected is a boolean to test if the tab is 'selected'
                 @result text - echos HTML to the screen directly
         */
-	function tab_entry($url='http://localhost/', $icon='', $title='Home', $selected=0) {
+	function tab_entry($url, $icon='', $title='Home', $selected=0) {
         	print '
                 <A ';
 	        if ($selected){
@@ -355,7 +354,7 @@ echo html_blankimage(5,100);
 	        $this->tab_entry('/project/admin/?group_id='.$group , $this->icons['Admin'], 'Admin', $toptab == 'admin');
 
         	// Homepage
-	        $this->tab_entry('http://'. $project->getHomePage(), $this->icons['Homepage'], 'Home Page');
+	        $this->tab_entry((session_issecure() ? 'https://':'http://'). $project->getHomePage(), $this->icons['Homepage'], 'Home Page');
 
         	// Forums
 	        if ($project->usesForum()) {

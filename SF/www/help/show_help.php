@@ -22,15 +22,19 @@ if ( !isset($section) ) {
     $section = "index.html";
 }
 
-$help_url = 'http://'.$GLOBALS['sys_default_domain']."/documentation/user_guide/html/".$lang."/".$section;
-//echo "DBG URL = $help_url";
+if (session_issecure())
+    $help_url = "https://".$GLOBALS['sys_https_host'];
+else
+    $help_url = "http://".$GLOBALS['sys_default_domain'];
 
-// Check if the file exist
-$fp = @fopen ($help_url, "r");
+$help_url .= '/documentation/user_guide/html/'.$lang."/".$section;
 
-if ( $fp ) {
-    // The file exists. Fine! Close the file handle and redirect to the help page
-    fclose($fp);
+// Check if the file exist - Don't use fopen because it doesn't
+// understand the https protocol
+$cl = apache_lookup_uri($help_url);
+
+if ( $cl->status == 200) {
+    // The file exists. Fine! Redirect to the help page
     header("location: ".$help_url);
 } else {
     // Display error message ...

@@ -114,7 +114,7 @@ Password:
 // Only show the stay in SSL mode if the server is SSL enabled
 if ($GLOBALS['sys_https_host'] != '') {
     echo '<INPUT TYPE="CHECKBOX" NAME="stay_in_ssl" VALUE="1" '.
-    (((browser_is_ie() && browser_get_version() < '5.1') || ($HTTPS != 'on')) ?'':'CHECKED').'>'.
+    (((browser_is_ie() && browser_get_version() < '5.1') || !session_issecure()) ?'':'CHECKED').'>'.
     'Stay in secure connection mode after login';
     echo '<br><em>
 &nbsp;&nbsp;&nbsp;(You will be connected with a secure Web server and all your web pages will travel encrypted over the network).
