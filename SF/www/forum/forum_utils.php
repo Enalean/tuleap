@@ -403,6 +403,7 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
 }
 
 function show_post_form($forum_id, $thread_id=0, $is_followup_to=0, $subject="") {
+    global $REQUEST_URI;
 
 	if (user_isloggedin()) {
 		if ($subject) {
@@ -437,7 +438,8 @@ function show_post_form($forum_id, $thread_id=0, $is_followup_to=0, $subject="")
 
 	} else {
 		echo "<CENTER>";
-		echo "\n\n<H3><FONT COLOR=\"RED\">You could post if you were logged in</FONT></H3>";
+		echo "\n\n<H3><A HREF=\"/account/login.php?return_to=".urlencode($REQUEST_URI).
+		"\"><u>Log in first</u></A><FONT COLOR=\"RED\"> to post messages</FONT></H3>";
 		echo "</CENTER>";
 	}
 
