@@ -65,7 +65,7 @@ $sql    = "SELECT frs_package.group_id AS group_id,COUNT(*) "
         ."WHERE filedownload_log.filerelease_id = frs_file.file_id "
         ."AND (filedownload_log.time >  $time_begin AND filedownload_log.time <= $time_end) "
         ."AND frs_file.release_id = frs_release.release_id "
-        ."AND frs_release.package_id = frs_package.package_id  GROUP BY group_id"
+        ."AND frs_release.package_id = frs_package.package_id  GROUP BY group_id";
 $rel = $dbh->prepare($sql) || die "SQL parse error: $!";
 $rel->execute() || die "SQL execute error: $!";
 while ( @tmp_ar = $rel->fetchrow_array() ) {
