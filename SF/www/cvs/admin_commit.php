@@ -52,7 +52,7 @@ if (!user_isloggedin()) {
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 	<INPUT TYPE="HIDDEN" NAME="func" VALUE="setAdmin">
 	<h3> CVS Tracking</H3><I>When CVS tracking is on, the commits (file change, addition and 
-removal) are registered in the '.$GLOBALS['sys_name'].' database so that they can be browsed and searched. Else commits are not logged in the database</I><p><b>CVS Tracking</b>&nbsp;&nbsp;&nbsp;&nbsp;<SELECT name=tracked '.
+removal) are registered in the '.$GLOBALS['sys_name'].' database so that they can be browsed and searched. Else commits are not logged in the database</I><p><b>CVS Tracking</b>&nbsp;&nbsp;&nbsp;&nbsp;<SELECT name="tracked"> '.
  	'<OPTION VALUE="1"'.(($cvs_tracked == '1') ? ' SELECTED':'').'>on</OPTION>'.
  	'<OPTION VALUE="0"'.(($cvs_tracked == '0') ? ' SELECTED':'').'>off</OPTION>'.
 	'</SELECT></p>'.
