@@ -337,7 +337,7 @@ class ArtifactReportHtml extends ArtifactReport {
                 
             for ($i=0; $i < $rows ; $i++) {
         
-                        $html_result .= '<TR class="'.get_priority_color($result[$i]['severity']) .'">'."\n";
+                        $html_result .= '<TR class="'.get_priority_color($result[$i]['severity_id']) .'">'."\n";
 
                         reset($result_fields);  
                         while (list($key,$field) = each($result_fields) ) {
