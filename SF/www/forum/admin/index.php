@@ -100,9 +100,9 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 			<INPUT TYPE="HIDDEN" NAME="add_forum" VALUE="y">
 			<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 			<B>Forum Name:</B><BR>
-			<INPUT TYPE="TEXT" NAME="forum_name" VALUE="" SIZE="20" MAXLENGTH="30"><BR>
+			<INPUT TYPE="TEXT" NAME="forum_name" VALUE="" SIZE="30" MAXLENGTH="50"><BR>
 			<B>Description:</B><BR>
-			<INPUT TYPE="TEXT" NAME="description" VALUE="" SIZE="40" MAXLENGTH="80"><BR>
+			<INPUT TYPE="TEXT" NAME="description" VALUE="" SIZE="60" MAXLENGTH="255"><BR>
 			<B>Is Public?</B><BR>
 			<INPUT TYPE="RADIO" NAME="is_public" VALUE="1" CHECKED> Yes<BR>
 			<INPUT TYPE="RADIO" NAME="is_public" VALUE="0"> No<P>
@@ -164,9 +164,9 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 					</TD></TR>
 					<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD COLSPAN="3">
 						<B>Forum Name:</B><BR>
-						<INPUT TYPE="TEXT" NAME="forum_name" VALUE="'. db_result($result,$i,'forum_name').'" SIZE="20" MAXLENGTH="30"><BR>
+						<INPUT TYPE="TEXT" NAME="forum_name" VALUE="'. db_result($result,$i,'forum_name').'" SIZE="30" MAXLENGTH="50"><BR>
 						<B>Description:</B><BR>
-						<INPUT TYPE="TEXT" NAME="description" VALUE="'. db_result($result,$i,'description') .'" SIZE="40" MAXLENGTH="80"><BR>
+						<INPUT TYPE="TEXT" NAME="description" VALUE="'. db_result($result,$i,'description') .'" SIZE="60" MAXLENGTH="255"><BR>
 					</TD></TR></FORM>';
 			}
 			echo '</TABLE>';
