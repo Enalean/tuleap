@@ -110,6 +110,13 @@ $res_dev = db_query("SELECT user.user_name AS user_name,"
 
 project_admin_header(array('title'=>'User Permissions','group'=>$group_id,
 		     'help' => 'UserPermissions.html'));
+
+$project=project_get_object($group_id);
+if ($project->isError()) {
+        //wasn't found or some other problem
+        echo "Unable to load project object<br>";
+    	return;
+}
 ?>
 
 <h2>User Permissions</h2>
@@ -119,11 +126,23 @@ project_admin_header(array('title'=>'User Permissions','group'=>$group_id,
 <TR><TD><B>Developer Name</B></TD>
 <TD><B>Project<BR>Admin</B></TD>
 <TD><B>CVS Write</B></TD>
-<TD><B>Bug Tracking</B></TD>
+<?
+if ($project->usesBugs() && !($sys_activate_tracker && !$project->activateOldBug())) {
+	print '<TD><B>Bug Tracking</B></TD>';
+}
+?>
 <TD><B>Forums</B></TD>
-<TD><B>Task Manager</B></TD>
+<?
+if ($project->usesPm() && !($sys_activate_tracker && !$project->activateOldTask())) {
+	print '<TD><B>Task Manager</B></TD>';
+}
+?>
 <TD><B>Patch Manager</B></TD>
-<TD><B>Support Manager</B></TD>
+<?
+if ($project->usesSupport() && !($sys_activate_tracker && !$project->activateOldSR())) {
+	print '<TD><B>Support Manager</B></TD>';
+}
+?>
 <TD><B>Doc. Manager</B></TD>
 <?
 if ( $row_grp['use_trackers']&&$sys_activate_tracker&&$at_arr ) {
@@ -150,44 +169,53 @@ if (!$res_dev || db_numrows($res_dev) < 1) {
 			</TD>';
 		print '<TD>Yes</TD>';
 		// bug selects
-		print '<TD><FONT size="-1"><SELECT name="bugs_user_'.$row_dev['user_id'].'">';
-		print '<OPTION value="0"'.(($row_dev['bug_flags']==0)?" selected":"").'>None';
-		print '<OPTION value="1"'.(($row_dev['bug_flags']==1)?" selected":"").'>Tech Only';
-		print '<OPTION value="2"'.(($row_dev['bug_flags']==2)?" selected":"").'>Tech & Admin';
-		print '<OPTION value="3"'.(($row_dev['bug_flags']==3)?" selected":"").'>Admin Only';
-		print '</SELECT></FONT></TD>
-	';
+        if ($project->usesBugs() && !($sys_activate_tracker && !$project->activateOldBug())) {
+			print '<TD><FONT size="-1"><SELECT name="bugs_user_'.$row_dev['user_id'].'">';
+			print '<OPTION value="0"'.(($row_dev['bug_flags']==0)?" selected":"").'>None';
+			print '<OPTION value="1"'.(($row_dev['bug_flags']==1)?" selected":"").'>Tech Only';
+			print '<OPTION value="2"'.(($row_dev['bug_flags']==2)?" selected":"").'>Tech & Admin';
+			print '<OPTION value="3"'.(($row_dev['bug_flags']==3)?" selected":"").'>Admin Only';
+			print '</SELECT></FONT></TD>';
+		} else {
+			print '<input type="Hidden" name="bugs_user_'.$row_dev['user_id'].'" value="'.$row_dev['bug_flags'].'">';
+		}
 		// forums
 		print '<TD><FONT size="-1"><SELECT name="forums_user_'.$row_dev['user_id'].'">';
 		print '<OPTION value="0"'.(($row_dev['forum_flags']==0)?" selected":"").'>None';
 		print '<OPTION value="2"'.(($row_dev['forum_flags']==2)?" selected":"").'>Moderator';
-		print '</SELECT></FONT></TD>
-	';
+		print '</SELECT></FONT></TD>';
+		
 		// project selects
-		print '<TD><FONT size="-1"><SELECT name="projects_user_'.$row_dev['user_id'].'">';
-		print '<OPTION value="0"'.(($row_dev['project_flags']==0)?" selected":"").'>None';
-		print '<OPTION value="1"'.(($row_dev['project_flags']==1)?" selected":"").'>Tech Only';
-		print '<OPTION value="2"'.(($row_dev['project_flags']==2)?" selected":"").'>Tech & Admin';
-		print '<OPTION value="3"'.(($row_dev['project_flags']==3)?" selected":"").'>Admin Only';
-		print '</SELECT></FONT></TD>
-	';
+        if ($project->usesPm() && !($sys_activate_tracker && !$project->activateOldTask())) {
+			print '<TD><FONT size="-1"><SELECT name="projects_user_'.$row_dev['user_id'].'">';
+			print '<OPTION value="0"'.(($row_dev['project_flags']==0)?" selected":"").'>None';
+			print '<OPTION value="1"'.(($row_dev['project_flags']==1)?" selected":"").'>Tech Only';
+			print '<OPTION value="2"'.(($row_dev['project_flags']==2)?" selected":"").'>Tech & Admin';
+			print '<OPTION value="3"'.(($row_dev['project_flags']==3)?" selected":"").'>Admin Only';
+			print '</SELECT></FONT></TD>';
+		} else {
+			print '<input type="Hidden" name="projects_user_'.$row_dev['user_id'].'" value="'.$row_dev['project_flags'].'">';
+		}
+		
 	    // patch selects
 	    print '<TD><FONT size="-1"><SELECT name="patch_user_'.$row_dev['user_id'].'">';
 	    print '<OPTION value="0"'.(($row_dev['patch_flags']==0)?" selected":"").'>None';
 	    print '<OPTION value="1"'.(($row_dev['patch_flags']==1)?" selected":"").'>Tech Only';
 	    print '<OPTION value="2"'.(($row_dev['patch_flags']==2)?" selected":"").'>Tech & Admin';
 	    print '<OPTION value="3"'.(($row_dev['patch_flags']==3)?" selected":"").'>Admin Only';
-	    print '</SELECT></FONT></TD>
-	';
+	    print '</SELECT></FONT></TD>';
 	
-		// patch selects
-		print '<TD><FONT size="-1"><SELECT name="support_user_'.$row_dev['user_id'].'">';
-		print '<OPTION value="0"'.(($row_dev['support_flags']==0)?" selected":"").'>None';
-		print '<OPTION value="1"'.(($row_dev['support_flags']==1)?" selected":"").'>Tech Only';
-		print '<OPTION value="2"'.(($row_dev['support_flags']==2)?" selected":"").'>Tech & Admin';
-		print '<OPTION value="3"'.(($row_dev['support_flags']==3)?" selected":"").'>Admin Only';
-		print '</SELECT></FONT></TD>
-	';
+		// support selects
+        if ($project->usesSupport() && !($sys_activate_tracker && !$project->activateOldSR())) {
+			print '<TD><FONT size="-1"><SELECT name="support_user_'.$row_dev['user_id'].'">';
+			print '<OPTION value="0"'.(($row_dev['support_flags']==0)?" selected":"").'>None';
+			print '<OPTION value="1"'.(($row_dev['support_flags']==1)?" selected":"").'>Tech Only';
+			print '<OPTION value="2"'.(($row_dev['support_flags']==2)?" selected":"").'>Tech & Admin';
+			print '<OPTION value="3"'.(($row_dev['support_flags']==3)?" selected":"").'>Admin Only';
+			print '</SELECT></FONT></TD>';
+		} else {
+			print '<input type="Hidden" name="support_user_'.$row_dev['user_id'].'" value="'.$row_dev['support_flags'].'">';
+		}
 	
 		//documenation states - nothing or editor	
 		print '<TD><FONT size="-1"><SELECT name="doc_user_'.$row_dev['user_id'].'">';
