@@ -364,7 +364,8 @@ echo html_blankimage(5,100);
 	        $this->tab_entry('/project/admin/?group_id='.$group , $this->icons['Admin'], 'Admin', $toptab == 'admin');
 
         	// Homepage
-	        $this->tab_entry((session_issecure() ? 'https://':'http://'). $project->getHomePage(), $this->icons['Homepage'], 'Home Page');
+	        // used to be: $this->tab_entry((session_issecure() ? 'https://':'http://'). $project->getHomePage(), $this->icons['Homepage'], 'Home Page');
+	        $this->tab_entry('http://'. $project->getHomePage(), $this->icons['Homepage'], 'Home Page');
 
         	// Forums
 	        if ($project->usesForum()) {
