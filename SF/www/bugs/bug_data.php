@@ -708,7 +708,7 @@ function bug_data_get_valid_bugs ($group_id=false,$bug_id='') {
 	$sql="SELECT bug_id,summary ".
 		"FROM bug ".
 		"WHERE group_id='$group_id' ".
-		"AND bug_id <> '$bug_id' AND bug.resolution_id <> '2' ORDER BY bug_id DESC LIMIT 100";
+		"AND bug_id <> '$bug_id' AND bug.resolution_id <> '2' ORDER BY bug_id DESC LIMIT 200";
 	return db_query($sql);
 }
 
