@@ -39,7 +39,7 @@ function osdn_nav_dropdown() {
         </form>
 
         <noscript>
-        <a href="<?php print $GLOBALS['sys_default_domain']; ?>"><img src="'.util_get_image_theme("codex_logo.png").'" width="135" height="33" hspace="10" alt="<?php print $GLOBALS['sys_default_domain']; ?>"  border="0"></A><br>
+        <a href="<?php print $GLOBALS['sys_default_domain']; ?>"><?php echo html_image("codex_logo.png", array("width"=>"135", "height"=>"33", "hspace"=>"10", "alt"=>$GLOBALS['sys_default_domain'], "border"=>"0")); ?></A><br>
         </noscript>
 	<!-- end OSDN navdropdown -->
 <?php
