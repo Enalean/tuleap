@@ -710,6 +710,11 @@ UPDATE artifact_field SET value_function = 'artifact_submitters' WHERE field_nam
 ---
 UPDATE artifact_field SET default_value = '1' WHERE field_name = 'status_id';
 
+---
+--- Fix SR 90 on Partners
+--- (cvs mail address field not limited on 64 characters)
+---
+ALTER TABLE groups CHANGE cvs_events_mailing_list cvs_events_mailing_list text NOT NULL;
 
 --- NOT APPLIED YET
 --- File service for future project should point to the new script
