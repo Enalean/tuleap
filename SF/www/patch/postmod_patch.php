@@ -16,10 +16,12 @@ if ((db_numrows($result) > 0) && (user_ismember($group_id,'C2'))) {
 
 	//user is uploading a new version of the patch
 
-	if ($upload_new) {
+	if ($uploaded_data) {
 		$code = addslashes(fread( fopen($uploaded_data, 'r'), filesize($uploaded_data)));
 		if ((strlen($code) > 20) && (strlen($code) < 512000)) {
-			$codesql=", code='".htmlspecialchars($code)."' ";
+			$codesql=", code='$code', filename='$uploaded_data_name',".
+			    "filesize='$uploaded_data_size',".
+			    "filetype='$uploaded_data_type'";
 			 patch_history_create('Patch Code','Modified - New Version',$patch_id);
 		} else {
 			$feedback .= ' Patch not changed - patch must be > 20 chars and < 512000 chars in length ';

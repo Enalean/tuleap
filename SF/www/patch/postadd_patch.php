@@ -10,14 +10,15 @@ if (!$patch_category_id) {
 	$patch_category_id=100;
 }
 
-if ($upload_instead) {
+
+if ($uploaded_data) {
 	$code = addslashes(fread( fopen($uploaded_data, 'r'), filesize($uploaded_data)));
 	if ((strlen($code) > 20) && (strlen($code) < 512000)) {
 		//size is fine
 		$feedback .= ' Patch Uploaded ';
 	} else {
 		//too big or small
-		$feedback .= ' ERROR - patch must be > 20 chars and < 512000 chars in length ';
+		$feedback .= ' ERROR - patch must be > 20 bytes and < 512000 bytrs in length ';
 		$code='';
 	}
 }
@@ -32,8 +33,12 @@ if (!$group_id || !$summary || !$code) {
 	exit_error('Missing Info',$feedback.' - Go Back and fill in all the information requested');
 }
 
-$sql="INSERT INTO patch (close_date,group_id,patch_status_id,patch_category_id,submitted_by,assigned_to,open_date,summary,code) ".
-	"VALUES ('0','$group_id','1','$patch_category_id','$user','100','".time()."','".htmlspecialchars($summary)."','".htmlspecialchars($code)."')";
+$sql="INSERT INTO patch (close_date,group_id,patch_status_id,patch_category_id,submitted_by,assigned_to,open_date,summary,code, filename,filesize,filetype) ".
+"VALUES ('0','$group_id','1','$patch_category_id','$user','100','".time()."','".
+htmlspecialchars($summary)."','".
+($uploaded_data ? $code : htmlspecialchars($code))."',".
+"'$uploaded_data_name','$uploaded_data_size','$uploaded_data_type')";
+
 
 $result=db_query($sql);
 

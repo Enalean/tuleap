@@ -133,7 +133,7 @@ patch_header(array('title'=>'Browse Patches'.
 	(($_status && ($_status != 100))?' By Status: '. get_patch_status_name($_status):'')));
 
 
-$sql="SELECT patch.group_id,patch.patch_id,patch.summary,".
+$sql="SELECT patch.group_id,patch.patch_id,patch.summary,patch.filename, patch.filesize,".
 	"patch.open_date AS date,user.user_name AS submitted_by,user2.user_name AS assigned_to_user ".
 	"FROM patch,user,user user2 ".
 	"WHERE user.user_id=patch.submitted_by ".
@@ -172,9 +172,12 @@ $tech_box=html_build_select_box_from_arrays ($tech_id_arr,$tech_name_arr,'_assig
 echo '<TABLE WIDTH="10%" BORDER="0"><FORM ACTION="'. $PHP_SELF .'" METHOD="GET">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 	<INPUT TYPE="HIDDEN" NAME="set" VALUE="custom">
-	<TR><TD COLSPAN="3" nowrap><b>Browse Patches by User and/or Status/Category:</b></TD></TR>
-	<TR><TD><FONT SIZE="-1">'. $tech_box .'</TD><TD><FONT SIZE="-1">'. patch_status_box('_status',$_status,'Any') .'</TD>'.
-	'<TD><FONT SIZE="-1">'. patch_category_box($group_id,'_category',$_category,'Any') .'</TD>'.
+	<TR><TD COLSPAN="3" nowrap>Browse Patches by:</TD></TR>
+              <TR align="center"><TD><b>Category</b></TD><TD><b>Assignee</b></TD><TD><b>Status</b></TD><TR>'.
+        '<TR><TD><FONT SIZE="-1">'. patch_category_box($group_id,'_category',$_category,'Any') .'</TD>
+	<TD><FONT SIZE="-1">'. $tech_box .
+        '</TD><TD><FONT SIZE="-1">'. patch_status_box('_status',$_status,'Any') .'</TD>'.
+	
 '<TD><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Browse"></TD></TR></FORM></TABLE>';
 
 

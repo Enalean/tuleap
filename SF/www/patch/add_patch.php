@@ -26,16 +26,16 @@ echo'		<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data">
 	?>
 	</TD></TR>
 
-	<TR><TD COLSPAN="2"><B>Summary:</B><BR>
-		<INPUT TYPE="TEXT" NAME="summary" SIZE="45" MAXLENGTH="60">
+	<TR><TD COLSPAN="2"><B>Summary:</B>&nbsp;
+		<INPUT TYPE="TEXT" NAME="summary" SIZE="45" MAXLENGTH="120">
 	</TD></TR>
 
 	<TR><TD COLSPAN="2">
-		<INPUT TYPE="CHECKBOX" NAME="upload_instead" VALUE="1"> <B>Upload Patch</B>
+	 <br><B>Upload the Patch (binary or text format)</B>
 		<P>
-		<input type="file" name="uploaded_data"  size="30">
+		<input type="file" name="uploaded_data"  size="40">
 		<P>
-		<B>OR Paste the patch here, instead of uploading it:</B>
+		<B>OR Paste the patch here (text only), instead of uploading it:</B>
 		<P>
 		<TEXTAREA NAME="code" ROWS="30" COLS="85" WRAP="SOFT"></TEXTAREA>
 	</TD></TR>

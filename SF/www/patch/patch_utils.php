@@ -41,6 +41,7 @@ function patch_header($params) {
 	echo ' | <A HREF="/patch/admin/?group_id='.$group_id.'">Admin</A>';
 
 	echo '</B>';
+	echo ' <hr width="300" size="1" align="left" noshade>';
 }
 
 function patch_header_admin($params) {
@@ -120,8 +121,9 @@ function show_patchlist ($result,$offset,$set='open') {
 	$rows=db_numrows($result);
 	$url = "/patch/?group_id=$group_id&set=$set&order=";
 	$title_arr=array();
-	$title_arr[]='Patch ID';
+	$title_arr[]='ID';
 	$title_arr[]='Summary';
+	$title_arr[]='File Name';
 	$title_arr[]='Date';
 	$title_arr[]='Assigned To';
 	$title_arr[]='Submitted By';
@@ -129,6 +131,7 @@ function show_patchlist ($result,$offset,$set='open') {
 	$links_arr=array();
 	$links_arr[]=$url.'patch_id';
 	$links_arr[]=$url.'summary';
+	$links_arr[]=$url.'filename';
 	$links_arr[]=$url.'date';
 	$links_arr[]=$url.'assigned_to_user';
 	$links_arr[]=$url.'submitted_by';
@@ -138,9 +141,10 @@ function show_patchlist ($result,$offset,$set='open') {
 	for ($i=0; $i < $rows; $i++) {
 		echo '
 			<TR BGCOLOR="'. util_get_alt_row_color($i) .'">'.
-			'<TD><A HREF="'.$PHP_SELF.'?func=detailpatch&patch_id='.db_result($result, $i, 'patch_id').
-			'&group_id='.db_result($result, $i, 'group_id').'">'.db_result($result, $i, 'patch_id').'</A></TD>'.
+			'<TD><b><A HREF="'.$PHP_SELF.'?func=detailpatch&patch_id='.db_result($result, $i, 'patch_id').
+			'&group_id='.db_result($result, $i, 'group_id').'">'.db_result($result, $i, 'patch_id').'</b></A></TD>'.
 			'<TD>'.db_result($result, $i, 'summary').'</TD>'.
+			'<TD>'.db_result($result, $i, 'filename').'&nbsp;</TD>'.
 			'<TD>'.date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
 			'<TD>'.db_result($result, $i, 'assigned_to_user').'</TD>'.
 			'<TD>'.db_result($result, $i, 'submitted_by').'</TD></TR>';
