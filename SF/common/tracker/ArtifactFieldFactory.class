@@ -599,7 +599,7 @@ class ArtifactFieldFactory extends Error {
 		// If select box or multi select box, we need to create the None value
 		if ( $display_type == "SB" || $display_type == "MB" ) {
 			$sql = "INSERT INTO artifact_field_value_list VALUES ( ".$field_id.",".$this->ArtifactType->getID().
-				   ",100,".$LANG->getText('global','none').",'',10,'P')";
+				   ",100,'".$LANG->getText('global','none')."','',10,'P')";
 			$result=db_query($sql);
 		}
 		

@@ -49,7 +49,7 @@ tracker_group_selection	my_proj	all projects
 # Script: SF/www/tracker/import_admin.php
 #
 tracker_import_admin	not_get_atf	Could Not Get ArtifactTypeFactory
-tracker_import_admin	art_import	Tracker Artifact Import $1
+tracker_import_admin	art_import	Tracker Artifact Import
 tracker_import_admin	welcome	<P> You can import artifacts into a specific tracker from a text file (CSV format).<h3>Tracker Artifact Import</h3><P>Click on the links below to import artifacts (insert of new artifacts or update of existing ones) or to see the CSV import format.<P>
 tracker_import_admin	art_data_import	Artifacts Data Import
 tracker_import_admin	format	Import Format
@@ -133,7 +133,7 @@ tracker_import_utils	not_a_predefined_value	<b>Line $1 [</b>$2<b>]</b>:<br>value
 tracker_import_utils	field_mandatory_and_current	<b>Line $1 [</b>$2<b>]</b>:<br>"$3" is a mandatory field in tracker $4. Please specify it in your csv file (Current val is "$5").
 tracker_import_utils	incorrect_date	<b>Line $1 [</b>$2<b>]</b>:<br>Date "$3" is not in correct format (Y-m-d).
 tracker_import_utils	field_mandatory_and_line	<b>Line $1 [</b>$2<b>]</b>:<br>"$3" is a mandatory field in tracker $4. Please specify it in your csv file.	
-tracker_import_utils	already_submitted	<b>Line $1 [</b>$2<b>]</b>:<br>User $3 has already submitted a artifact with the same summary ("$4"). Please don't try to import it again.	
+tracker_import_utils	already_submitted	<b>Line $1 [</b>$2<b>]</b>:<br>User $3 has already submitted an artifact with the same summary ("$4"). Please don't try to import it again.	
 tracker_import_utils	art_not_exists	<b>Line $1 [</b>$2<b>]</b>:<br>the specified artifact (id=$3) does not exist in tracker $4
 tracker_import_utils	date	Date
 tracker_import_utils	type	type
