@@ -72,19 +72,19 @@ if ($Update) {
 		."use_forum='$use_forum',"
 		."use_cvs='$use_cvs',"
 		."use_news='$use_news',"
-		."use_docman='$use_docman', ";
+		."use_docman='$use_docman' ";
 		
 	if ( $row_grp['activate_old_bug'] ) {
-		$sql .= "use_bugs='$use_bugs',";
+		$sql .= ",use_bugs='$use_bugs'";
 	}
 	if ( $row_grp['activate_old_task'] ) {
-		$sql .= "use_pm='$use_pm',";
+		$sql .= ",use_pm='$use_pm'";
 	}
 	if ( $row_grp['activate_old_sr'] ) {
-		$sql .= "use_support='$use_support',";
+		$sql .= ",use_support='$use_support'";
 	}	
 	if ( $sys_activate_tracker ) {
-		$sql .= "use_trackers='$use_trackers'";
+		$sql .= ",use_trackers='$use_trackers'";
 	}	
 	$sql .= " WHERE group_id=$group_id";
 
