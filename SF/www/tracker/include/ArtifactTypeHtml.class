@@ -1307,6 +1307,9 @@ class ArtifactTypeHtml extends ArtifactType {
 		// Show all the fields currently available in the system
 		$i=0;
 		$title_arr=array();
+		if ( $field->getName() == "severity" ) {
+			$title_arr[]='ID';
+		}
 		$title_arr[]='Value Label';
 		$title_arr[]='Description';
 		$title_arr[]='Rank';
@@ -1327,6 +1330,9 @@ class ArtifactTypeHtml extends ArtifactType {
 			$html .= '<TR class="'. 
 			    util_get_alt_row_color($iu) .'">';
 		
+			if ( $field->getName() == "severity" ) {
+				$html .= '<TD align="center">'.$row['value_id'].'</TD>';
+			}
 		    $html .= '<TD><A HREF="'.$PHP_SELF.'?group_id='.$this->Group->getID()."&atid=".$this->getID().
 			'&func=display_field_value&field_id='.$field->getID().'&value_id='.$row['value_id'].'">'.
 			$row['value'].'</A></td>'.
@@ -1334,7 +1340,7 @@ class ArtifactTypeHtml extends ArtifactType {
 			"\n<td align =\"center\">".$rank.'</td>'.
 			"\n<td align =\"center\">".$status.'</td>';
 			
-			if ( $row['status'] == "P" ) {
+			if ( $row['status'] == "P" || $field->getName() == "severity" ) {
 				// Unable to delete Permanent values
 		    	$html .= "\n<td align =\"center\">-</td>";
 			} else {
@@ -1366,6 +1372,10 @@ class ArtifactTypeHtml extends ArtifactType {
 			$html .= '<TR class="'. 
 			    util_get_alt_row_color($iu) .'">';
 		
+			if ( $field->getName() == "severity" ) {
+				$html .= '<TD align="center">'.$row['value_id'].'</TD>';
+			}
+
 		    $html .= '<TD><A HREF="'.$PHP_SELF.'?group_id='.$this->Group->getID()."&atid=".$this->getID().
 			'&func=display_field_value&field_id='.$field->getID().'&value_id='.$row['value_id'].'">'.
 			$row['value'].'</A></td>'.
@@ -1373,7 +1383,7 @@ class ArtifactTypeHtml extends ArtifactType {
 			"\n<td align =\"center\">".$rank.'</td>'.
 			"\n<td align =\"center\">".$status.'</td>';
 
-			if ( $row['status'] == "P" ) {
+			if ( $row['status'] == "P" || $field->getName() == "severity" ) {
 				// Unable to delete Permanent values
 		    	$html .= "\n<td align =\"center\">-</td>";
 			} else {
