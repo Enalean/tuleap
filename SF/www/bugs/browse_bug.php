@@ -13,6 +13,14 @@
 //	Very Heavy rewrite by Laurent Julliard 2001, 2002, CodeX Team, Xerox
 //
 
+// Sort function
+function cmp_username($v1, $v2) {
+    if ($v1 < $v2)
+		return -1;
+    else if ($v1 > $v2)
+		return 1;
+    return 0;
+}
 
 // Number of search criteria (boxes) displayed in one row
 $fields_per_line=5;
@@ -332,8 +340,8 @@ while ( $field = bug_list_all_fields(cmp_place_query)) {
 			$tech_array = util_result_build_array($res_tech,0,1);
 			// Merge the arrays
 			$result_array = $tech_all_array+$tech_array;
-			$result_array = array_unique($result_array);
-			sort($result_array);
+			$result_array = array_merge($tech_all_array,$tech_array);
+			uasort($result_array,cmp_username);
 			$boxes .= html_build_select_box_from_arrays (array_keys($result_array),array_values($result_array),$field,($advsrch ? $prefs[$field] : $prefs[$field][0]),true,'None', true,'Any');
 		} else {
 			$boxes .= 

@@ -12,7 +12,7 @@
 (see pre.php)
 */
 
-// array_keys: return al keys of a Hash in an array
+// array_keys: return all keys of a Hash in an array
 // Got this code snippet from the php.net documentation
 function array_keys ($arr, $term="") {
     if (!is_array($arr)) { return; }
@@ -24,6 +24,29 @@ function array_keys ($arr, $term="") {
         $t[] = $k;
     }
     return $t;
+}
+
+// array_values: return all values of a Hash in an array
+function array_values ($arr, $term="") {
+    if (!is_array($arr)) { return; }
+    $t = array();
+    while (list($k,$v) = each($arr)) {
+        if ($term && $v != $term) {
+            continue;
+        }
+        $t[] = $v;
+    }
+    return $t;
+}
+
+// array_merge: merge two arrays
+function array_merge ($arr_1, $arr_2) {
+    while (list($k,$v) = each($arr_1)) {
+        if (!in_array($v,$arr_2)) {
+            $arr_2[$k] = $v;
+        }
+    }
+    return $arr_2;
 }
 
 // in_array: test whether the needle can be found in the array values
