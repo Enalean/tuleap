@@ -49,9 +49,13 @@ Regards,
 <?php
 /*
 	Delete this customer's responses in case they had back-arrowed
+	Only do that for non anonymous users because if anonymous
+	responses are allowed then they all have user_id = 0 and we don't
+	want to delete them.
 */
-
-$result=db_query("DELETE FROM survey_responses WHERE survey_id='$survey_id' AND group_id='$group_id' AND user_id='".user_getid()."'");
+if (user_isloggedin()) {
+    $result=db_query("DELETE FROM survey_responses WHERE survey_id='$survey_id' AND group_id='$group_id' AND user_id='".user_getid()."'");
+}
 
 
 /*
