@@ -179,116 +179,73 @@ individual text files (CSV format) or in a project specific database that you ca
 	echo '
   <tr class="boxtable"> 
     <td class="boxtitle">&nbsp;</td>
-    <td class="boxtitle" colspan="2"> 
+    <td class="boxtitle"> 
       <div align="center"><b>Artifacts Data</b></div>
     </td>
-    <td class="boxtitle" colspan="2"> 
+    <td class="boxtitle"> 
       <div align="center"><b>History</b></div>
     </td>
-    <td class="boxtitle" colspan="2"> 
+    <td class="boxtitle"> 
       <div align="center"><b>Dependencies</b></div>
     </td>
   </tr>';
   	$iu = 0;
   	echo '
   <tr class="'.util_get_alt_row_color($iu).'"> 
-    <td rowspan="2"><b>Legacy Bug Tracker</b></td>
-    <td rowspan="2"> 
-      <div align="center"><a href="'.$PHP_SELF.'?group_id=$group_id&export=bug">Export</a></div>
+    <td><b>Legacy Bug Tracker</b></td>
+    <td align="center"> 
+      <a href="'.$PHP_SELF.'?group_id=$group_id&export=bug">Export</a>
+      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_format">Show Format</a>
     </td>
-    <td rowspan="2"> 
-      <div align="center"><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_format">Show Format</a></div>
+    <td align="center"> 
+      <a href="'.$PHP_SELF.'?group_id=$group_id&export=bug_history">Export</a>
+      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_history_format">Show Format</a>
     </td>
-    <td rowspan="2"> 
-      <div align="center"><a href="'.$PHP_SELF.'?group_id=$group_id&export=bug_history">Export</a></div>
-    </td>
-    <td rowspan="2"> 
-      <div align="center"><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_history_format">Show Format</a></div>
-    </td>
-    <td> 
-      <div align="center"><a href="'.$PHP_SELF.'?group_id=$group_id&export=bug_bug_deps">Export Bug-Bug</a></div>
-    </td>
-    <td> 
-      <div align="center"><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_bug_deps_format">Show Format</a></div>
-    </td>
-  </tr>';
-  	echo '
-  <tr class="'.util_get_alt_row_color($iu).'"> 
-    <td> 
-      <div align="center"><a href="'.$PHP_SELF.'?group_id=$group_id&export=bug_task_deps">Export Bug-Task</a></div>
-    </td>
-    <td> 
-      <div align="center"><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_task_deps_format">Show Format</a></div>
+    <td align="center"> 
+      <a href="'.$PHP_SELF.'?group_id=$group_id&export=bug_bug_deps">Export Bug-Bug Deps</a>
+      - <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_bug_deps_format">Show Format</a>
+      <br><a href="'.$PHP_SELF.'?group_id=$group_id&export=bug_task_deps">Export Bug-Task Deps</a>
+      - <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_task_deps_format">Show Format</a>
     </td>
   </tr>';
   	$iu ++;
   	echo '
   <tr class="'.util_get_alt_row_color($iu).'"> 
     <td><b>Legacy Task Manager</b></td>
-    <td> 
-      <div align="center"><a href="'.$PHP_SELF.'?group_id=$group_id&export=task">Export</a></div>
+    <td align="center"> 
+      <a href="'.$PHP_SELF.'?group_id=$group_id&export=task">Export</a>
+	  <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_format">Show Format</a>
     </td>
-    <td> 
-      <div align="center"><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_format">Show Format</a></div>
+    <td align="center"> 
+      <a href="'.$PHP_SELF.'?group_id=$group_id&export=task_history">Export</a>
+      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_history_format">Show Format</a>
     </td>
-    <td> 
-      <div align="center"><a href="'.$PHP_SELF.'?group_id=$group_id&export=task_history">Export</a></div>
-    </td>
-    <td> 
-      <div align="center"><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_history_format">Show Format</a></div>
-    </td>
-    <td> 
-      <div align="center"><a href="'.$PHP_SELF.'?group_id=$group_id&export=task_task_deps">Export</a></div>
-    </td>
-    <td> 
-      <div align="center"><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_task_deps_format">Show Format</a></div>
+    <td align="center"> 
+      <a href="'.$PHP_SELF.'?group_id=$group_id&export=task_task_deps">Export</a>
+      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_task_deps_format">Show Format</a>
     </td>
   </tr>';
   	$iu ++;
   	echo '
   <tr class="'.util_get_alt_row_color($iu).'"> 
     <td><b>Legacy Support Request</b></td>
-    <td> 
-      <div align="center"><a href="'.$PHP_SELF.'?group_id=$group_id&export=support_request">Export</a></div>
+    <td align="center"> 
+      <a href="'.$PHP_SELF.'?group_id=$group_id&export=support_request">Export</a>
+      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=support_request_format">Show Format</a>
     </td>
-    <td> 
-      <div align="center"><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=support_request_format">Show Format</a></div>
-    </td>
-    <td> 
-      <div align="center">-</div>
-    </td>
-    <td> 
-      <div align="center">-</div>
-    </td>
-    <td> 
-      <div align="center">-</div>
-    </td>
-    <td> 
-      <div align="center">-</div>
-    </td>
+    <td align="center">-<br>-</td>
+    <td align="center">-<br>-</td>
   </tr>';
   	$iu ++;
   	echo '
   <tr class="'.util_get_alt_row_color($iu).'"> 
     <td><b>Survey Responses</b></td>
-    <td> 
-      <div align="center"><a href="'.$PHP_SELF.'?group_id=$group_id&export=survey_responses">Export</a></div>
+    <td align="center"> 
+      <a href="'.$PHP_SELF.'?group_id=$group_id&export=survey_responses">Export</a>
+      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=survey_responses_format">Show Format</a>
     </td>
-    <td> 
-      <div align="center"><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=survey_responses_format">Show Format</a></div>
-    </td>
-    <td> 
-      <div align="center">-</div>
-    </td>
-    <td> 
-      <div align="center">-</div>
-    </td>
-    <td> 
-      <div align="center">-</div>
-    </td>
-    <td> 
-      <div align="center">-</div>
-    </td>
+    <td align="center">-<br>-</td>
+    <td align="center">-<br>-</td>
   </tr>';		
   
 	//	  
@@ -312,23 +269,17 @@ individual text files (CSV format) or in a project specific database that you ca
 		  	echo '
 		  <tr class="'.util_get_alt_row_color($iu).'"> 
 		    <td><b>Tracker: '.$at_arr[$j]->getName().'</b></td>
-		    <td> 
-		      <div align="center"><a href="'.$PHP_SELF.'?group_id=$group_id&atid='.$at_arr[$j]->getID().'">Export</a></div>
+		    <td align="center"> 
+		      <a href="'.$PHP_SELF.'?group_id=$group_id&atid='.$at_arr[$j]->getID().'">Export</a>
+		      <br><a href="'.$PHP_SELF.'?group_id=$group_id&atid='.$at_arr[$j]->getID().'">Show Format</a>
 		    </td>
-		    <td> 
-		      <div align="center"><a href="'.$PHP_SELF.'?group_id=$group_id&atid='.$at_arr[$j]->getID().'">Show Format</a></div>
+		    <td align="center"> 
+		      <a href="'.$PHP_SELF.'?group_id=$group_id&atid='.$at_arr[$j]->getID().'">Export</a>
+		      <br><a href="'.$PHP_SELF.'?group_id=$group_id&atid='.$at_arr[$j]->getID().'">Show Format</a>
 		    </td>
-		    <td> 
-		      <div align="center"><a href="'.$PHP_SELF.'?group_id=$group_id&atid='.$at_arr[$j]->getID().'">Export</a></div>
-		    </td>
-		    <td> 
-		      <div align="center"><a href="'.$PHP_SELF.'?group_id=$group_id&atid='.$at_arr[$j]->getID().'">Show Format</a></div>
-		    </td>
-		    <td> 
-		      <div align="center"><a href="'.$PHP_SELF.'?group_id=$group_id&atid='.$at_arr[$j]->getID().'">Export</a></div>
-		    </td>
-		    <td> 
-		      <div align="center"><a href="'.$PHP_SELF.'?group_id=$group_id&atid='.$at_arr[$j]->getID().'">Show Format</a></div>
+		    <td align="center"> 
+		      <a href="'.$PHP_SELF.'?group_id=$group_id&atid='.$at_arr[$j]->getID().'">Export</a>
+		      <br><a href="'.$PHP_SELF.'?group_id=$group_id&atid='.$at_arr[$j]->getID().'">Show Format</a>
 		    </td>
 		  </tr>';
 		}
