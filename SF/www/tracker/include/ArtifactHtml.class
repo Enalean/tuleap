@@ -172,7 +172,7 @@ class ArtifactHtml extends Artifact {
                         if ( $field ) {
                                 $field_html = new ArtifactFieldHtml( $field );
                                 echo '<P><B>Comment Type:</B>'.
-                                     $field_html->fieldBox('',$group_artifact_id,'',true,'None').'<BR>';
+                                     $field_html->fieldBox('',$group_artifact_id,$field->getDefaultValue(),true,'None').'<BR>';
                         }
                         echo '<TEXTAREA NAME="details" ROWS="7" COLS="60" WRAP="SOFT"></TEXTAREA><p>';
                 } else {
