@@ -213,9 +213,23 @@ function support_data_handle_update ($group_id,$support_id,$priority,
 
 	$new_value = $$field;
 	if (db_result($result,0,$field) != $new_value) {
+
 	    support_data_add_history($field,db_result($result,0,$field),$support_id);
-	    $changes[$field]['del'] = db_result($result,0,$field);
-	    $changes[$field]['add'] = $new_value;
+
+	    if ($field == 'support_category_id') {
+		$changes[$field]['del'] = support_data_get_category_name(db_result($result,0,$field));
+		$changes[$field]['add'] = support_data_get_category_name($new_value);
+	    } else if ($field == 'support_status_id') {
+		$changes[$field]['del'] = support_data_get_status_name(db_result($result,0,$field));
+		$changes[$field]['add'] = support_data_get_status_name($new_value);
+	    } else if ($field == 'assigned_to') {
+		$changes[$field]['del'] = user_getname(db_result($result,0,$field));
+		$changes[$field]['add'] = user_getname($new_value);
+	    } else {
+		$changes[$field]['del'] = db_result($result,0,$field);
+		$changes[$field]['add'] = $new_value;
+	    }
+
 	    $changes[$field]['label'] = $label;
 	}
     }
