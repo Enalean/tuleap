@@ -61,8 +61,8 @@ ALTER TABLE bug CHANGE priority severity INT (11) DEFAULT '5' not null;
 ALTER TABLE bug ADD priority INT (11) DEFAULT '100' not null;
 
 # user preferences for bug select/browse is now much longer
-# so change it from varchar(20) to varchar(255)
-ALTER TABLE user_preferences MODIFY preference_value VARCHAR(255);
+# so change it from varchar(20) to TEXT
+ALTER TABLE user_preferences MODIFY preference_value TEXT;
 
 # add a column in the bug_history field to store the comment type
 # (the type column will be NULL when the history field is not a comment)
