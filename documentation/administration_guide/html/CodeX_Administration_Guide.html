@@ -2276,8 +2276,9 @@ on the CodeX server. Here is the procedure to follow to change a group name (ass
 
 <br>Comment: the last 3 would be done automatically at the next cron update but doing it by hand keep everything consistent with the next step<br>
 
-<li>Edit the <tt>/cvsroot/xxx/CVSROOT/config</tt> file and change the group name in
-the <tt>LockDir</tt> parameter at the end of the file
+<li>Checkout the CVSROOT directory of the project:
+<tt>cvs -d:pserver:username@codex.xerox.com:/cvsroot/projectname co CVSROOT</tt>.
+Then edit the 'config' and  'commitinfo' files and change the project name wherever it appears. Last, commit the changes. (you may also directly edit those files in the /cvsroot/projectname/CVSROOT directory, but don't forget to also edit the ',v' files then).
 
 <li>Edit the 'groups' table of the SourceForge DB with phpMyAdmin and change
 the name (2 occurences in 2 columns: <tt>unix_group_name,
