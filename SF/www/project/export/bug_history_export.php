@@ -103,7 +103,7 @@ indicate what the field data types are.<p>';
 	// Let's create the project database if it does not exist
 	// Drop the existing table and create a fresh one
 	db_project_create($dbname);
-	db_project_query($dbname,'DROP TABLE IF EXISTS'. $tbl_name);
+	db_project_query($dbname,'DROP TABLE IF EXISTS '. $tbl_name);
 	
 	$sql_create = "CREATE TABLE $tbl_name (".
 	    'bug_id INTEGER, group_id INTEGER, field_name VARCHAR(255), '.
