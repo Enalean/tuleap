@@ -23,7 +23,6 @@ $row_grp = db_fetch_array($res_grp);
 
 if ($Update) {
 
-    group_add_history ('Changed Public Info','',$group_id);
     
     // in the database, these all default to '1', 
     // so we have to explicity set 0
@@ -44,6 +43,7 @@ if ($Update) {
         $feedback .= ' UPDATE FAILED OR NO DATA CHANGED! '.db_error();
     } else {
         $feedback .= ' UPDATE SUCCESSFUL ';
+	group_add_history ('Changed Public Info','',$group_id);
     }
 }
 
