@@ -14,7 +14,7 @@ if ($option == "newest") {
 
 if ($type == "rss") {
 
-header("Content-Type: text/plain");
+header("Content-Type: text/xml");
 print '<?xml version="1.0"?>
 <!DOCTYPE rss SYSTEM "http://my.netscape.com/publish/formats/rss-0.91.dtd">
 <rss version="0.91">

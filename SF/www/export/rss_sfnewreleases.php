@@ -8,7 +8,7 @@
 // ## export sf front page news in RSS
 require($DOCUMENT_ROOT.'/include/pre.php');
 require('./rss_utils.inc');
-header("Content-Type: text/plain");
+header("Content-Type: text/xml");
 print '<?xml version="1.0"?>
 <!DOCTYPE rss SYSTEM "http://my.netscape.com/publish/formats/rss-0.91.dtd">
 <rss version="0.91">

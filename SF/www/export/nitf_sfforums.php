@@ -1,7 +1,7 @@
 <?php
 // ## export sf front page news in RSS
 require($DOCUMENT_ROOT.'/include/pre.php');
-header("Content-Type: text/plain");
+header("Content-Type: text/xml");
 
 // ## group_id must be specified
 $res_grp = db_query('SELECT group_id,group_name FROM groups '

@@ -2,7 +2,7 @@
 // ## export sf front page news in RSS
 require($DOCUMENT_ROOT.'/include/pre.php');
 require('./rss_utils.inc');
-header("Content-Type: text/plain");
+header("Content-Type: text/xml");
 print '<?xml version="1.0"?>
 <!DOCTYPE rss SYSTEM "http://my.netscape.com/publish/formats/rss-0.91.dtd">
 <rss version="0.91">
@@ -11,8 +11,12 @@ print '<?xml version="1.0"?>
 if (!$limit) $limit = 10;
 if ($limit > 100) $limit = 100;
 
+if ($group_id) {
+    $where_group = " AND group_id=$group_id ";
+}
+
 $res = db_query('SELECT forum_id,summary,date,details,group_id FROM news_bytes '
-	.'WHERE is_approved=1 ORDER BY date DESC LIMIT '.$limit);
+	.'WHERE is_approved=1 '.$where_group.' ORDER BY date DESC LIMIT '.$limit);
 
 // ## one time output
 print " <channel>\n";
