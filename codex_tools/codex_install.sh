@@ -47,6 +47,8 @@ MYSQL='/usr/bin/mysql'
 TOUCH='/bin/touch'
 CAT='/bin/cat'
 MAKE='/usr/bin/make'
+TAIL='/usr/bin/tail'
+GREP='/bin/grep'
 
 # Functions
 create_group() {
@@ -224,9 +226,9 @@ service mysql stop
 $RPM -e --nodeps mysql mysql-devel mysql-server 2>/dev/null
 echo "Installing MySQL RPMs for CodeX...."
 cd ${RPMS_DIR}/mysql
-newest_rpm=`$LS -1 | tail -1`
+newest_rpm=`$LS -1  -I old | $TAIL -1`
 $RPM -Uvh --force ${newest_rpm}/MySQL-*.i386.rpm
-service mysql restart
+service mysql start
 
 # -> apache
 echo "Removing RedHat Apache..."
@@ -234,7 +236,7 @@ service httpd stop
 $RPM -e --nodeps apache apache-devel apache-manual 2>/dev/null
 echo "Installing Apache RPMs for CodeX...."
 cd ${RPMS_DIR}/apache
-newest_rpm=`$LS -1 | tail -1`
+newest_rpm=`$LS -1  -I old | $TAIL -1`
 $RPM -Uvh --force ${newest_rpm}/apache-*.i386.rpm
 service httpd restart
 
@@ -243,10 +245,10 @@ echo "Removing RedHat Java JRE..."
 $RPM -e --nodeps jre 2>/dev/null
 echo "Installing Java JRE RPMs for CodeX...."
 cd ${RPMS_DIR}/jre
-newest_rpm=`$LS -1 | tail -1`
+newest_rpm=`$LS -1 -I old | $TAIL -1`
 $RPM -Uvh --force ${newest_rpm}/jre-*.i386.rpm
 cd /usr/java
-newest_jre=`$LS -1d jre* | tail -1`
+newest_jre=`$LS -1d jre* | $TAIL -1`
 $LN -sf $newest_jre jre
 
 # -> cvs
@@ -254,22 +256,23 @@ echo "Removing RedHat CVS .."
 $RPM -e --nodeps cvs 2>/dev/null
 echo "Installing CVS RPMs for CodeX...."
 cd ${RPMS_DIR}/cvs
-newest_rpm=`$LS -1 | tail -1`
+newest_rpm=`$LS -1  -I old | $TAIL -1`
 $RPM -Uvh --force ${newest_rpm}/cvs-*.i386.rpm
 
-# -> gd 1.3 (needed by php)
+# -> gd 1.3 (needed by php3)
 echo "Removing RedHat GD library .."
 $RPM -e --nodeps gd gd-devel 2>/dev/null
 echo "Installing GD library for CodeX...."
-cd ${RPMS_DIR}/others
-$RPM -Uvh --force gd-*.i386.rpm
+cd ${RPMS_DIR}/gd
+newest_rpm=`$LS -1  -I old | $TAIL -1`
+$RPM -Uvh --force ${newest_rpm}/gd-*.i386.rpm
 
 # -> php
 echo "Removing RedHat PHP .."
 $RPM -e --nodeps php php-dbg php-devel php-imap php-ldap php-manual php-mysql php-odbc php-pgsql php-snmp 2>/dev/null
 echo "Installing PHP RPMs for CodeX...."
 cd ${RPMS_DIR}/php
-newest_rpm=`$LS -1 | tail -1`
+newest_rpm=`$LS -1  -I old | $TAIL -1`
 $RPM -Uvh --force ${newest_rpm}/php-*.i386.rpm
 phpini_file=`rpm -ql php | grep .ini`
 todo "Customize file $phpini_file"
@@ -344,6 +347,7 @@ for f in /etc/httpd/conf/cvsweb.conf /etc/httpd/conf/httpd.conf /etc/local.inc /
     [ -f "$f" ] && read -p "$f already exist. Overwrite? [y|n]:" yn
 
     if [ "$yn" = "y" ]; then
+	$CP -f $f $f.orig
 	$CP -f /home/httpd/SF/etc/$fn.dist $f
     fi
 
@@ -357,25 +361,21 @@ $MKDIR -p  /home/httpd/documentation/user_guide/pdf/en_US
 $CHOWN -R sourceforge.sourceforge /home/httpd/documentation/user_guide/pdf/en_US
 $TOUCH /etc/httpd/conf/codex_vhosts.conf
 $CP /home/httpd/codex_tools/backup_job /home/tools
-$CHOWN root root /home/tools/backup_job
+$CHOWN root.root /home/tools/backup_job
 $CHMOD 740 /home/tools/backup_job
 
-todo "Edit and customize /etc/local.inc"
-todo "Edit and customize /etc/httpd/conf/httpd.conf"
-todo "Edit and customize /etc/httpd/conf/cvsweb.conf"
-todo "Edit and customize /etc/httpd/conf/mailman.conf"
-todo "Edit and customize /home/httpd/documentation/user_guide/xml/en_US/ParametersLocal.dtd"
-todo "Edit and customize /home/tools/backup_job"
+todo "Customize /etc/local.inc"
+todo "Customize /etc/httpd/conf/httpd.conf"
+todo "Customize /etc/httpd/conf/cvsweb.conf"
+todo "Customize /etc/httpd/conf/mailman.conf"
+todo "Customize /home/httpd/documentation/user_guide/xml/en_US/ParametersLocal.dtd"
+todo "Customize /home/tools/backup_job"
 
 
 ##############################################
 # Installing the CodeX database
 #
 echo "Creating the CodeX database..."
-if [ ! -L /var/lib/mysql ]; then
-    $MV /var/lib/mysql /home/var/lib/
-    cd /var/lib; $LN -sf /home/var/lib/mysql # move mysql data to /home
-fi
 
 yn="-"
 freshdb=0
@@ -422,6 +422,8 @@ set-variable = max_allowed_packet=3M
 err-log=/var/log/mysqld.log
 EOF
 
+todo "You may want to move /var/lib/mysql to a larger file system (e.g. /home/var/lib/mysql) and create a symbolic link"
+
 ##############################################
 # Installing Sendmail
 #
@@ -444,7 +446,7 @@ if [ "$yn" = "y" -o "$yn" = "-" ]; then
     $RM -rf /tmp/mailman; $MKDIR -p /tmp/mailman; cd /tmp/mailman;
     $RM -rf $MAILMAN_DIR/*
     $TAR xvfz $nonRPMS_DIR/mailman/mailman-*.tgz
-    newest_ver=`$LS -1 | tail -1`
+    newest_ver=`$LS -1  -I old | $TAIL -1`
     cd $newest_ver
     mail_gid=`id -g mail`
     cgi_gid=`id -g sourceforge`
@@ -546,12 +548,30 @@ shutdown /etc/shutmsg
 passwd-check rfc822 warn
 EOF
 
+##############################################
+# Create the custom default page for the project Web sites
+#
+echo "Creating the custom default page for the project Web sites..."
+def_page=/home/httpd/SF/utils/custom/default_page.php
+yn="y"
+[ -f "$def_page" ] && read -p "Custom Default Project Home page already exists. Overwrite? [y|n]:" yn
+if [ "$yn" = "y" ]; then
+    $MKDIR -p /home/httpd/SF/utils/custom
+    $CHOWN sourceforge.sourceforge 775 /home/httpd/SF/utils/custom
+    $CP /home/httpd/SF/utils/default_page.php /home/httpd/SF/utils/custom/default_page.php
+fi
+todo "Customize /home/httpd/SF/utils/custom/default_page.php"
 
 ##############################################
 # Shell Access configuration
 #
 echo "Shell access configuration defaulted to 'No shell account'..."
 $MYSQL -u sourceforge sourceforge --password=$sf_passwd -e "ALTER TABLE user ALTER COLUMN shell SET DEFAULT '/bin/false'"
+
+##############################################
+# DNS Configuration
+#
+todo "Create the DNS configuration files as explained in the CodeX Installation Guide"
 
 ##############################################
 # Crontab configuration
@@ -722,10 +742,10 @@ $CHMOD 644 /etc/logrotate.d/ftpd
 # Create CodeX Shell skeleton files
 #
 echo "Create CodeX Shell skeleton files..."
-cp -a /etc/skel /etc/skel_codex
+$MKDIR -p /etc/skel_codex
 
 # customize the global profile 
-grep profile_codex /etc/profile 1>/dev/null
+$GREP profile_codex /etc/profile 1>/dev/null
 [ $? -ne 0 ] && \
     cat <<'EOF' >>/etc/profile
 # LJ Now the Part specific to CodeX users
@@ -735,10 +755,10 @@ if [ `id -u` -gt 20000 -a `id -u` -lt 50000 ]; then
 fi
 EOF
 
-cat <<'EOF' >/etc/profile_codex
+$CAT <<'EOF' >/etc/profile_codex
 # /etc/profile_codex
 #
-# Spcific login set up and messages for CodeX users`
+# Specific login set up and messages for CodeX users`
  
 # All projects this user belong to
  
@@ -787,12 +807,14 @@ and responsibilities.
 EOM
 EOF
 
+todo "Create the shell login files for CodeX users in /etc/skel_codex"
+
 # things to do by hand
 
 
 # End of it
 echo "=============================================="
-echo "Installation completed succesfully completed!"
-cat $TODO_FILE
+echo "Installation completed succesfully!"
+$CAT $TODO_FILE
 
 exit 0
