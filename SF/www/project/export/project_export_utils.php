@@ -124,7 +124,10 @@ function prepare_bug_record($group_id, &$col_list, &$record) {
     // replace the date fields with human readable dates that
     // is also accepted as a valid format in future import
     $record['date'] = date($datetime_fmt,$record['date']);
-    $record['close_date'] = date($datetime_fmt,$record['close_date']);
+    if ($record['close_date'] == 0)
+	$record['close_date'] = '';
+    else
+	$record['close_date'] = date($datetime_fmt,$record['close_date']);
 	
     // all text fields converted from HTML to ASCII
     reset($col_list);
@@ -296,8 +299,12 @@ function prepare_bug_history_record(&$record) {
 	$record['old_value']= bug_data_get_value($record['field_name'],$group_id,$record['old_value']);
     } else {
 	// Make close date human readable
-	if ($record['field_name'] == 'close_date')
-	    $record['old_value'] = date($datetime_fmt,$record['old_value']);
+	if ($record['field_name'] == 'close_date') {
+	    if ($record['old_value'] == 0)
+		$record['old_value'] = '';
+	    else
+		$record['old_value'] = date($datetime_fmt,$record['old_value']);
+	}
 	
 	// revert HTML entities to ASCII code in text fields
 	if ( ($record['field_name'] == 'summary') ||
@@ -334,7 +341,10 @@ function prepare_task_history_record(&$record) {
 
     case 'start_date':
     case 'end_date':
-	$record['old_value'] = date($datetime_fmt,$record['old_value']);
+	if ($record['old_value'] == 0)
+	    $record['old_value'] = '';
+	else
+	    $record['old_value'] = date($datetime_fmt,$record['old_value']);
 	break;
 
     case 'summary':
@@ -367,8 +377,15 @@ function prepare_task_record($group_id, &$record) {
           Output: the same row with values transformed for database export
        */
 
-    $record['start_date'] = date($datetime_fmt,$record['start_date']);
-    $record['end_date'] = date($datetime_fmt,$record['end_date']);
+    if ($record['start_date'] == 0)
+	$record['start_date'] = '';
+    else
+	$record['start_date'] = date($datetime_fmt,$record['start_date']);
+
+    if ($record['end_date'] == 0)
+	$record['end_date'] = '';
+    else
+	$record['end_date'] = date($datetime_fmt,$record['end_date']);
 
     $record['summary'] = prepare_textarea($record['summary']);
     $record['details'] = prepare_textarea($record['details']);
