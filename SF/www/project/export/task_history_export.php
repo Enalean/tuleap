@@ -6,6 +6,7 @@
 //
 // $Id$
 
+$LANG->loadLanguageMsg('project/project');
 
 // This is the SQL query to retrieve all the task history for this group
 
@@ -18,18 +19,18 @@ $sql = "SELECT project_history.project_task_id,'$group_id' AS group_id,project_h
 'AND user.user_id=project_history.mod_by';
 
 $col_list = array('project_task_id','group_id','field_name','old_value','mod_by','date');
-$lbl_list = array('project_task_id' => 'Task ID',
-		  'group_id' => 'Group ID',
-		  'field_name' => 'Field Name',
-		  'old_value' => 'Old Value',
-		  'mod_by' => 'Modified By',
-		  'date' => 'Modified On');
-$dsc_list = array('project_task_id' => 'Unique task identifier',
-		  'group_id' => 'Unique project identifier',
-		  'field_name' => 'Name of the task field which value changed',
-		  'old_value' => 'Value of the task field before it changed',
-		  'mod_by' => 'Login name of the user who changed the value',
-		  'date' => 'Modification date');
+$lbl_list = array('project_task_id' => $LANG->getText('project_export_task_assigned_to_export','task_id'),
+		  'group_id' => $LANG->getText('project_export_bug_deps_export','g_id'),
+		  'field_name' => $LANG->getText('project_export_artifact_history_export','field_name'),
+		  'old_value' => $LANG->getText('project_export_artifact_history_export','old_val'),
+		  'mod_by' => $LANG->getText('project_export_artifact_history_export','mod_by'),
+		  'date' => $LANG->getText('project_export_artifact_history_export','mod_on'));
+$dsc_list = array('project_task_id' => $LANG->getText('project_export_task_assigned_to_export','task_id_desc'),
+		  'group_id' => $LANG->getText('project_export_bug_deps_export','g_id_desc'),
+		  'field_name' => $LANG->getText('project_export_artifact_history_export','field_name_desc'),
+		  'old_value' => $LANG->getText('project_export_artifact_history_export','old_val_desc'),
+		  'mod_by' => $LANG->getText('project_export_artifact_history_export','mod_by_desc'),
+		  'date' => $LANG->getText('project_export_artifact_history_export','mod_on_desc'));
 
 $tbl_name = 'task_history';
 
@@ -59,11 +60,11 @@ if ($export == 'task_history') {
 
 	project_admin_header(array('title'=>$pg_title));
 
-	echo '<h3>Task History export</h3>';
+	echo '<h3>'.$LANG->getText('project_export_artifact_deps_export','bug_deps_export','Task History').'</h3>';
 	if ($result) {
-	    echo '<P>No task history found. Could not generate an export.';
+	    echo '<P>'.$LANG->getText('project_export_artifact_deps_export','no_bug_deps_found','task history');
 	} else {
-	    echo '<P>Error while accessing your task database. Please report the error to the '.$GLOBALS['sys_name'].' Administrator';
+	    echo '<P>'.$LANG->getText('project_export_artifact_deps_export','db_access_err',array('task history',$GLOBALS['sys_name']));
 	    echo '<br>'.db_error();
 	}
 	site_project_footer( array() );
@@ -72,11 +73,7 @@ if ($export == 'task_history') {
 
 } else if ($export == 'task_history_format') {
 
-    echo '<h3>Task History Export Format</h3> The Task History export
-provides you with the following task history fields. The sample values
-indicate what the field data types are. Beware that the old_value
-field can contain all sorts of data and is therefore always treated as
-a text field in any case.<p>';
+    echo $LANG->getText('project_export_artifact_deps_export','bug_deps_export_format',' Task History');
 
     $record = pick_a_record_at_random($result, $rows, $col_list);
     prepare_task_history_record($record);    
@@ -108,11 +105,11 @@ a text field in any case.<p>';
 	    }
 
 	} else {
-	    $feedback .= 'Error in Create project '.$tbl_name.' table:'.db_project_error();
+	    $feedback .= $LANG->getText('project_export_artifact_deps_export','create_proj_err',array($tbl_name,db_project_error()));
 	}
 
     } else {
-	$feedback .= "SECURITY VIOLATION!!! Unauthorized database name: $dbname";
+	$feedback .= $LANG->getText('project_export_artifact_deps_export','security_violation',$dbname);
     }
    
 }

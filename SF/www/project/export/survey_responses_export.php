@@ -6,6 +6,7 @@
 //
 // $Id$
 
+$LANG->loadLanguageMsg('project/project');
 
 // This is the SQL query to retrieve all the survey responses for this group
 
@@ -16,18 +17,18 @@ $sql = "SELECT group_id,survey_id,question_id,response,date,date AS date_stamp "
 
 $col_list = array('group_id','survey_id','question_id',
 		  'response','date','date_stamp');
-$lbl_list = array( 'group_id' => 'Group ID',
-		   'survey_id' => 'Survey ID',
-		   'question_id' => 'Question ID',
-		   'response' => 'Response',
-		   'date' => 'Date',
-		  'date_stamp' => 'Date Stamp');
-$dsc_list = array( 'group_id' => 'Unique project identifier',
-		   'survey_id' => 'Unique survey identifier',
-		   'question_id' => 'Unique question identifier',
-		   'response' => 'The response to the question',
-		   'date' => 'Date/Time the user response was registered',
-		   'date_stamp' => 'A unique identifier for the responses that belong to a survey taken by a given user');
+$lbl_list = array( 'group_id' => $LANG->getText('project_export_bug_deps_export','g_id'),
+		   'survey_id' => $LANG->getText('project_export_survey_responses_export','survey_id'),
+		   'question_id' => $LANG->getText('project_export_survey_responses_export','question_id'),
+		   'response' => $LANG->getText('project_export_survey_responses_export','response'),
+		   'date' => $LANG->getText('project_admin_utils','date'),
+		  'date_stamp' => $LANG->getText('project_export_survey_responses_export','date_stamp'));
+$dsc_list = array( 'group_id' => $LANG->getText('project_export_bug_deps_export','g_id_desc'),
+		   'survey_id' => $LANG->getText('project_export_survey_responses_export','survey_id_desc'),
+		   'question_id' => $LANG->getText('project_export_survey_responses_export','question_id_desc'),
+		   'response' => $LANG->getText('project_export_survey_responses_export','response_desc'),
+		   'date' => $LANG->getText('project_export_survey_responses_export','date_desc'),
+		   'date_stamp' => $LANG->getText('project_export_survey_responses_export','date_stamp_desc'));
 
 $tbl_name = 'survey_responses';
 
@@ -58,11 +59,11 @@ if ($export == 'survey_responses') {
 
 	project_admin_header(array('title'=>$pg_title));
 
-	echo '<h3>Survey Responses Export</h3>';
+	echo '<h3>'.$LANG->getText('project_export_artifact_deps_export','bug_deps_export','Survey Responses').'</h3>';
 	if ($result) {
-	    echo '<P>No survey responses found. Could not generate an export.';
+	    echo '<P>'.$LANG->getText('project_export_artifact_deps_export','no_bug_deps_found','survey responses');
 	} else {
-	    echo '<P>Error while accessing your response database. Please report the error to the '.$GLOBALS['sys_name'].' Administrator';
+	    echo '<P>'.$LANG->getText('project_export_artifact_deps_export','db_access_err',array('response',$GLOBALS['sys_name']));
 	    echo '<br>'.db_error();
 	}
 	site_project_footer( array() );
@@ -71,9 +72,7 @@ if ($export == 'survey_responses') {
 
 } else if ($export == "survey_responses_format") {
 
-    echo '<h3>Survey Export Format</h3> The Survey export provides you
-with the following survey fields. The sample values indicate what the
-field data types are. <p>';
+    echo $LANG->getText('project_export_bug_deps_export','bug_deps_export_format','Survey');
 
     $record = pick_a_record_at_random($result, $rows, $col_list);
     prepare_survey_responses_record($group_id,$record);   
@@ -107,11 +106,11 @@ field data types are. <p>';
 	    }
 
 	} else {
-	    $feedback .= 'Error in Create project '.$tbl_name.' table:'.db_project_error();
+	    $feedback .= $LANG->getText('project_export_artifact_deps_export','create_proj_err',array($tbl_name,db_project_error()));
 	}
 
     } else {
-	$feedback .= "SECURITY VIOLATION!!! Unauthorized database name: $dbname";
+	$feedback .= $LANG->getText('project_export_artifact_deps_export','security_violation',$dbname);
     }
    
 }

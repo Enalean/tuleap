@@ -18,16 +18,19 @@
 require($DOCUMENT_ROOT.'/project/admin/ugroup_utils.php');
 require($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
 
+$LANG->loadLanguageMsg('project/project');
+
 /**
  * Return a printable name for a given permission type
  */
 function permission_get_name($permission_type) {
+  global $LANG;
     if ($permission_type=='PACKAGE_READ') {
-        return "Package Download";
+        return $LANG->getText('project_admin_permissions','pack_download');
     } else if ($permission_type=='RELEASE_READ') {
-        return "Release Download";
+        return $LANG->getText('project_admin_permissions','rel_download');
     } else if ($permission_type=='DOCUMENT_READ') {
-        return "Document Access";
+        return $LANG->getText('project_admin_permissions','doc_access');
     } else return $permission_type;
 }
 
@@ -36,13 +39,14 @@ function permission_get_name($permission_type) {
  * Return a printable name for a given object
  */
 function permission_get_object_name($permission_type,$object_id) {
+  global $LANG;
     if ($permission_type=='PACKAGE_READ') {
-        return "package ".file_get_package_name_from_id($object_id);
+        return $LANG->getText('project_admin_permissions','pack',file_get_package_name_from_id($object_id));
     } else if ($permission_type=='RELEASE_READ') {
         return "release ".file_get_release_name_from_id($object_id);
     } else if ($permission_type=='DOCUMENT_READ') {
-        return "document ".$object_id;
-    } else return "object ".$object_id;
+        return $LANG->getText('project_admin_permissions','doc',$object_id);
+    } else return $LANG->getText('project_admin_permissions','obj',$object_id);
 }
 
 /**
@@ -132,7 +136,7 @@ function permission_is_authorized($permission_type, $object_id, $user_id) {
  */
 
 function permission_display_selection_form($permission_type, $object_id, $group_id, $post_url) {
-
+  global $LANG;
     if (!$post_url) $post_url=$_SERVER['PHP_SELF'];
 
     // Get ugroups already defined for this permission_type
@@ -145,7 +149,7 @@ function permission_display_selection_form($permission_type, $object_id, $group_
     $predefined_ugroups='';
     $default_values=array();
     if (db_numrows($res)<1) {
-        echo "<p><b>Error</b>: permission_type '$permission_type' is not defined";
+        echo "<p><b>".$LANG->getText('global','error')."</b>: ".$LANG->getText('project_admin_permissions','perm_type_not_def',$permission_type);
         return;
     } else { 
         while ($row = db_fetch_array($res)) {
@@ -164,10 +168,10 @@ function permission_display_selection_form($permission_type, $object_id, $group_
 		<INPUT TYPE="HIDDEN" NAME="permission_type" VALUE="'.$permission_type.'">
 		<INPUT TYPE="HIDDEN" NAME="object_id" VALUE="'.$object_id.'">';
     echo html_build_multiple_select_box($res,"ugroups[]",($nb_set?util_result_column_to_array($res_ugroups):$default_values),8, true, 'nobody', false, '', false, '',false);
-    echo '<p><INPUT TYPE="SUBMIT" NAME="submit" VALUE="Submit Permissions">';
-    echo '<INPUT TYPE="SUBMIT" NAME="reset" VALUE="Reset To Defaults">';
+    echo '<p><INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$LANG->getText('project_admin_permissions','submit_perm').'">';
+    echo '<INPUT TYPE="SUBMIT" NAME="reset" VALUE="'.$LANG->getText('project_admin_permissions','reset_to_def').'">';
     echo '</FORM>';
-    echo '<p>Project admins can also <a href="/project/admin/editugroup.php?func=create&group_id='.$group_id.'">create</a> or <a href="/project/admin/ugroup.php?group_id='.$group_id.'">modify</a> user groups</a>.';
+    echo '<p>'.$LANG->getText('project_admin_permissions','admins_create_modify_ug',array("/project/admin/editugroup.php?func=create&group_id=$group_id","/project/admin/ugroup.php?group_id=$group_id"));
 }
 
 
@@ -251,10 +255,11 @@ function permission_equals_to_default($permission_type, $object_id) {
  * Log permission change in project history
  */
 function permission_add_history($group_id, $permission_type, $object_id){
+  global $LANG;
     $res=permission_db_authorized_ugroups($permission_type, $object_id);
     if (db_numrows($res) < 1) {
         // No ugroup defined => no permissions set 
-        group_add_history("Permission reset for ".permission_get_object_name($permission_type,$object_id),'default',$group_id);
+        group_add_history($LANG->getText('project_admin_permissions','perm_reset_for',permission_get_object_name($permission_type,$object_id),'default',$group_id));
         return;
     } 
     $ugroup_list='';
@@ -262,7 +267,7 @@ function permission_add_history($group_id, $permission_type, $object_id){
         if ($ugroup_list) { $ugroup_list.=', ';}
         $ugroup_list.= ugroup_get_name_from_id($row['ugroup_id']);
     }
-    group_add_history("Permission granted for ".permission_get_object_name($permission_type,$object_id),$ugroup_list,$group_id);
+    group_add_history($LANG->getText('project_admin_permissions','perm_granted_for',permission_get_object_name($permission_type,$object_id),$ugroup_list,$group_id));
 }
 
 
@@ -281,15 +286,16 @@ function permission_add_history($group_id, $permission_type, $object_id){
  **/
  
 function permission_process_selection_form($group_id, $permission_type, $object_id, $ugroups) {
+  global $LANG;
     // Check that we have all parameters
     if (!$object_id) {
-        return array(false,"object_id is missing");
+        return array(false,$LANG->getText('project_admin_permissions','obj_id_missed'));
     }
     if (!$permission_type) {
-        return array(false,"permission_type is missing");
+        return array(false,$LANG->getText('project_admin_permissions','perm_type_missed'));
     }
     if (!$group_id) {
-        return array(false,"group_id is missing");
+        return array(false,$LANG->getText('project_admin_permissions','g_id_missed'));
     }
   
 
@@ -308,45 +314,45 @@ function permission_process_selection_form($group_id, $permission_type, $object_
     $msg='';
     if ($anon_selected) {
         if (permission_add_ugroup($group_id, $permission_type, $object_id, $GLOBALS['UGROUP_ANONYMOUS'])) {
-            $msg .= "All users added, including anonymous ones";
+            $msg .= $LANG->getText('project_admin_permissions','all_users_added');
         } else {
-            return array(false, $msg." - ERROR: Cannot add ugroup Anonymous");
+            return array(false, $LANG->getText('project_admin_permissions','cant_add_ug_anonymous',$msg));
         }
         if ($num_ugroups>1) {
-            $msg .= "- ignoring other specified groups";
+            $msg .= $LANG->getText('project_admin_permissions','ignore_g');
         }
     } else if ($any_selected) {
         if (permission_add_ugroup($group_id, $permission_type, $object_id, $GLOBALS['UGROUP_REGISTERED'])) {
-            $msg .= "All registered users added ";
+            $msg .= $LANG->getText('project_admin_permissions','all_registered_users_added')." ";
         } else {
-            return array(false, $msg." - ERROR: Cannot add ugroup Registered Users");
+            return array(false, $LANG->getText('project_admin_permissions','cant_add_ug_reg_users',$msg));
         }
         if ($num_ugroups>1) {
-            $msg.="- ignoring other specified groups";
+            $msg.=$LANG->getText('project_admin_permissions','ignore_g');
         }
     } else {
         reset($ugroups);
         while (list(,$selected_ugroup) = each($ugroups)) {
             if ($selected_ugroup==$GLOBALS['UGROUP_NONE']) {
                 if ($num_ugroups>1) {
-                    $msg .= "Group 'nobody' ignored since other groups where selected. ";
+                    $msg .= $LANG->getText('project_admin_permissions','g_nobody_ignored')." ";
                     continue;
-                } else $msg .= "Please note that nobody has access to this object any longer! ";
+                } else $msg .= $LANG->getText('project_admin_permissions','nobody_has_no_access')." ";
             }
             if (permission_add_ugroup($group_id, $permission_type, $object_id, $selected_ugroup)) {
                 # $msg .= "+g$selected_ugroup ";
             } else {
-                return array(false, $msg." - ERROR: Cannot add ugroup $selected_ugroup. Are you a project administrator?");
+                return array(false, $LANG->getText('project_admin_permissions','cant_add_ug',array($msg,$selected_ugroup)));
             }
         }
     }
     // If selected permission is the same as default, then don't store it!
     if (permission_equals_to_default($permission_type, $object_id)) {
         permission_clear_all($group_id, $permission_type, $object_id, false);
-        $msg.=' (default values)';
+        $msg.=' '.$LANG->getText('project_admin_permissions','def_val');
     }
     permission_add_history($group_id,$permission_type, $object_id);
-    return array(true, $msg." - Permissions successfully updated");
+    return array(true, $LANG->getText('project_admin_permissions','perm_update_success',$msg));
 }
 
 ?>

@@ -6,6 +6,7 @@
 //
 // $Id$
 
+$LANG->loadLanguageMsg('project/project');
 
 // This is the SQL query to retrieve all the tasks which depends on another task
 
@@ -18,13 +19,13 @@ $sql = 'SELECT project_dependencies.project_task_id,'.
 "project_group_list.group_id='$group_id' ";
 
 $col_list = array('project_task_id','group_id','is_dependent_on_task_id');
-$lbl_list = array('project_task_id' => 'Task ID',
-		  'group_id' => 'Group ID',
-		  'is_dependent_on_task_id' => 'Depend on Task');
+$lbl_list = array('project_task_id' => $LANG->getText('project_export_task_assigned_to_export','task_id'),
+		  'group_id' => $LANG->getText('project_export_bug_deps_export','g_id'),
+		  'is_dependent_on_task_id' => $LANG->getText('project_export_task_task_deps_export','depend_on_task'));
 
-$dsc_list = array('project_task_id' => 'Unique task identifier',
-		  'group_id' => 'Unique project identifier',
-		  'is_dependent_on_task_id' => 'Task  the project task depends on');
+$dsc_list = array('project_task_id' => $LANG->getText('project_export_task_assigned_to_export','task_id_desc'),
+		  'group_id' => $LANG->getText('project_export_bug_deps_export','g_id_desc'),
+		  'is_dependent_on_task_id' => $LANG->getText('project_export_task_task_deps_export','depend_on_task_desc'));
 $tbl_name = 'task_task_dependencies';
 
 $eol = "\n";
@@ -53,11 +54,11 @@ if ($export == 'task_task_deps') {
 
 	project_admin_header(array('title'=>$pg_title));
 
-	echo '<h3>Task-Task Dependencies Export</h3>';
+	echo '<h3>'.$LANG->getText('project_export_artifact_deps_export','bug_deps_export','Task-Task Dependencies').'</h3>';
 	if ($result) {
-	    echo '<P>No task-task depencies  found. Could not generate an export.';
+	    echo '<P>'.$LANG->getText('project_export_artifact_deps_export','no_bug_deps_found','task-task dependencies');
 	} else {
-	    echo '<P>Error while accessing your task depencies database. Please report the error to the '.$GLOBALS['sys_name'].' Administrator';
+	    echo '<P>'.$LANG->getText('project_export_artifact_deps_export','db_access_err',array('task dependencies',$GLOBALS['sys_name']));
 	    echo '<br>'.db_error();
 	}
 	site_project_footer( array() );
@@ -66,9 +67,7 @@ if ($export == 'task_task_deps') {
 
 } else if ($export == "task_task_deps_format") {
     
-    echo '<h3>Task-Task Dependencies Export Format</h3> The Task-Task
-Dependencies export provides you with the following fields. The sample
-values indicate what the field data types are. <p>';
+    echo $LANG->getText('project_export_artifact_deps_export','bug_deps_export_format',' Task-Task Dependencies');
 
     $record = pick_a_record_at_random($result, $rows, $col_list);
     prepare_task_history_record($record);    
@@ -98,11 +97,11 @@ values indicate what the field data types are. <p>';
 	    }
 
 	} else {
-	    $feedback .= 'Error in Create project '.$tbl_name.' table:'.db_project_error();
+	    $feedback .= $LANG->getText('project_export_artifact_deps_export','create_proj_err',array($tbl_name,db_project_error()));
 	}
 
     } else {
-	$feedback .= "SECURITY VIOLATION!!! Unauthorized database name: $dbname";
+	$feedback .= $LANG->getText('project_export_artifact_deps_export','security_violation',$dbname);
     }
    
 }

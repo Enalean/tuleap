@@ -9,15 +9,17 @@ require($DOCUMENT_ROOT.'/include/pre.php');
 require('../admin/project_admin_utils.php');
 require('./source_code_access_utils.php');
 
+$LANG->loadLanguageMsg('project/project');
+
 // Only for project administrators
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
 if ( !$group_id ) {
-	exit_error("Invalid Group","That group could not be found.");
+	exit_error($LANG->getText('project_admin_userperms','invalid_g'),$LANG->getText('project_admin_userperms','group_not_exist'));
 }
 $project=new Project($group_id);
 
-project_admin_header(array('title'=>"Project Admin: ".group_getname($group_id),
+project_admin_header(array('title'=>$LANG->getText('project_admin_index','p_admin',group_getname($group_id)),
 			   'group'=>$group_id,
 			   'help' => 'SourceCodeAccessLogs.html'));
 
@@ -39,17 +41,17 @@ if ( !$view ) {
 	$view = "daily";
 }
 
-echo '<h2>Access Logs</h2>';
+echo '<h2>'.$LANG->getText('project_admin_utils','access_logs').'</h2>';
 
 ?>
 <FORM action="<?php echo $PHP_SELF; ?>" method="get">
 <TABLE BORDER="0" WIDTH="80%">
-<tr><td><b>Access Log From</b></td><td><b>For Last...</b></td><td> </td></tr>
+<tr><td><b><?php echo $LANG->getText('project_stats_source_code_access','access_log_from'); ?></b></td><td><b><?php echo $LANG->getText('project_stats_source_code_access','for_last'); ?></b></td><td> </td></tr>
 <tr><td>
 <SELECT NAME="who">
-<OPTION VALUE="nonmembers" <?php if ($who == "nonmembers") {echo 'SELECTED';} ?>>Non Project Members</OPTION>
-<OPTION VALUE="members" <?php if ($who == "members") {echo 'SELECTED';} ?>>Project Members</OPTION>
-<OPTION VALUE="allusers" <?php if ($who == "allusers") {echo 'SELECTED';} ?>>All Users</OPTION>
+<OPTION VALUE="nonmembers" <?php if ($who == "nonmembers") {echo 'SELECTED';} ?>><?php echo $LANG->getText('project_stats_source_code_access','non_proj_members'); ?></OPTION>
+<OPTION VALUE="members" <?php if ($who == "members") {echo 'SELECTED';} ?>><?php echo $LANG->getText('project_admin_editugroup','proj_members'); ?></OPTION>
+<OPTION VALUE="allusers" <?php if ($who == "allusers") {echo 'SELECTED';} ?>><?php echo $LANG->getText('project_stats_source_code_access','all_users'); ?></OPTION>
 </SELECT></td>
 <td> 
 <SELECT NAME="span">
@@ -62,14 +64,14 @@ echo '<h2>Access Logs</h2>';
 </SELECT>
 &nbsp;
 <SELECT NAME="view">
-<OPTION VALUE="monthly" <?php if ($view == "monthly") {echo 'SELECTED';} ?>>Months</OPTION>
-<OPTION VALUE="weekly" <?php if ($view == "weekly") {echo 'SELECTED';} ?>>Weeks</OPTION>
-<OPTION VALUE="daily" <?php if ($view == "daily" || !isset($view) ) {echo 'SELECTED';} ?>>Days</OPTION>
+<OPTION VALUE="monthly" <?php if ($view == "monthly") {echo 'SELECTED';} ?>><?php echo $LANG->getText('project_stats_index','months'); ?></OPTION>
+<OPTION VALUE="weekly" <?php if ($view == "weekly") {echo 'SELECTED';} ?>><?php echo $LANG->getText('project_stats_index','weeks'); ?></OPTION>
+<OPTION VALUE="daily" <?php if ($view == "daily" || !isset($view) ) {echo 'SELECTED';} ?>><?php echo $LANG->getText('project_stats_index','days'); ?></OPTION>
 </SELECT>
 </td>
 <td>
 &nbsp; 
-<INPUT type="submit" value="Browse">
+<INPUT type="submit" value="<?php echo $LANG->getText('global','btn_browse'); ?>">
 <INPUT type="hidden" name="group_id" value="<?php echo $group_id; ?>">
 </td>
 </tr>

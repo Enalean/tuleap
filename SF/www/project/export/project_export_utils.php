@@ -9,7 +9,7 @@
 $datetime_fmt = 'Y-m-d H:i:s';
 $datetime_msg = 'yyyy-mm-dd hh:mm:ss';
 
-
+$LANG->loadLanguageMsg('project/project');
 
 function tocsv($string) {
 
@@ -52,7 +52,7 @@ function build_csv_record($col_list, $record) {
 }
 
 function insert_record_in_table($dbname, $tbl_name, $col_list, $record) {
-
+  global $LANG;
     // Generate the values list for the INSERT statement
     reset($col_list); $values = '';
     while (list(,$col) = each($col_list)) {
@@ -65,17 +65,18 @@ function insert_record_in_table($dbname, $tbl_name, $col_list, $record) {
     $res_insert = db_project_query($dbname,$sql_insert);
     
     if (!$res_insert) {
-	$feedback .= '<BR>Error in Insert '.$tbl_name.':'.db_project_error();
+	$feedback .= $LANG->getText('project_export_utils','ins_err',array($tbl_name,db_project_error()));
     }
 
 }
 
 function display_exported_fields($col_list,$lbl_list,$dsc_list,$sample_val,$mand_list=false){
-   
+   global $LANG;
+
     $title_arr=array();
-    $title_arr[]='Label';
-    $title_arr[]='Sample Value';
-    $title_arr[]='Description';
+    $title_arr[]=$LANG->getText('project_export_utils','label');
+    $title_arr[]=$LANG->getText('project_export_utils','sample_val');
+    $title_arr[]=$LANG->getText('project_admin_editugroup','desc');
 
     echo html_build_list_table_top ($title_arr);
     reset($col_list);
@@ -162,7 +163,7 @@ function prepare_bug_record($group_id, &$col_list, &$record) {
 
 function prepare_artifact_record($at,$fields,$group_artifact_id, &$record) {
 
-    global $datetime_fmt,$sys_lf;
+    global $datetime_fmt,$sys_lf,$LANG;
     /*
            Prepare the column values in the artifact record
            Input: a row from the artifact table (passed by reference.
@@ -217,12 +218,12 @@ function prepare_artifact_record($at,$fields,$group_artifact_id, &$record) {
 		$dependent_on_artifact_id = db_result($result, $i, 'is_dependent_on_artifact_id');
 		$dependent .= $dependent_on_artifact_id.",";
 	}
-    $record['is_dependent_on'] = ($dependent?substr($dependent,0,strlen($dependent)-1):"None");
+    $record['is_dependent_on'] = ($dependent?substr($dependent,0,strlen($dependent)-1):$LANG->getText('global','none'));
 
 }
 
 function pe_utils_format_bug_followups($group_id,$bug_id) {
-    global $BUG_FU, $sys_datefmt;
+    global $BUG_FU, $sys_datefmt,$LANG;
 
     // return all the follow-up comments attached to a given bug
     // Do a big SQl query the first time and then cache the results
@@ -251,7 +252,7 @@ function pe_utils_format_bug_followups($group_id,$bug_id) {
 		$BUG_FU[$row['bug_id']] .= 
 		    '=================================================='.
 		    "\n".
-		    'Type: '.$row['type'].'     By: '.$row['mod_by'].'      On: '.
+		    $LANG->getText('project_export_utils','type').': '.$row['type'].'     '.$LANG->getText('global','by').': '.$row['mod_by'].'      '.$LANG->getText('global','on').': '.
 		    format_date($sys_datefmt,$row['date'])."\n\n".
 		    prepare_textarea($row['old_value']).
 		    "\n";
@@ -266,7 +267,7 @@ function pe_utils_format_bug_followups($group_id,$bug_id) {
 }
 
 function pe_utils_format_bug_task_dependencies ($group_id,$bug_id) {
-    global $BUG_TD;
+    global $BUG_TD,$LANG;
 
     // return all the tasks a bug depends on
     // Do a big SQL query the first time and then cache the results
@@ -294,7 +295,7 @@ function pe_utils_format_bug_task_dependencies ($group_id,$bug_id) {
 		} else {
 		    $BUG_TD[$tid] = 
 			($row['is_dependent_on_task_id'] == 100 ?
-			 'None' : $row['is_dependent_on_task_id']);
+			 $LANG->getText('global','none') : $row['is_dependent_on_task_id']);
 		}
 	    }
 
@@ -308,7 +309,7 @@ function pe_utils_format_bug_task_dependencies ($group_id,$bug_id) {
 }
 
 function pe_utils_format_bug_bug_dependencies($group_id,$bug_id) {
-    global $BUG_BD;
+    global $BUG_BD, $LANG;
 
     // return all the bugs a bug depends on
     // Do a big SQL query the first time and then cache the results
@@ -336,7 +337,7 @@ function pe_utils_format_bug_bug_dependencies($group_id,$bug_id) {
 		} else {
 		    $BUG_BD[$tid] = 
 			($row['is_dependent_on_bug_id'] == 100 ?
-			 'None' : $row['is_dependent_on_bug_id']);
+			 $LANG->getText('global','none') : $row['is_dependent_on_bug_id']);
 		}
 	    }
 
@@ -601,7 +602,7 @@ function pe_utils_format_task_assignees ($group_id,$task_id) {
 }
 
 function pe_utils_format_task_followups ($group_id,$task_id) {
-    global $TASK_FU, $sys_datefmt;
+    global $TASK_FU, $sys_datefmt,$LANG;
 
     // return all the follow-up comments attached to a given task
     // Do a big SQl query the first time and then cache the results
@@ -626,7 +627,7 @@ function pe_utils_format_task_followups ($group_id,$task_id) {
 
 		$TASK_FU[$row['project_task_id']] .= 
 		    '=================================================='."\n".
-		    'By: '.$row['mod_by'].'      On: '.
+		    $LANG->getText('global','by').': '.$row['mod_by'].'      '.$LANG->getText('global','on').': '.
 		    format_date($sys_datefmt,$row['date'])."\n\n".
 		    prepare_textarea($row['old_value']).
 		    "\n";
@@ -641,7 +642,7 @@ function pe_utils_format_task_followups ($group_id,$task_id) {
 }
 
 function pe_utils_format_task_dependencies ($group_id,$task_id) {
-    global $TASK_TD;
+    global $TASK_TD,$LANG;
 
     // return all the tasks a task depends on
     // Do a big SQL query the first time and then cache the results
@@ -670,7 +671,7 @@ function pe_utils_format_task_dependencies ($group_id,$task_id) {
 		} else {
 		    $TASK_TD[$tid] = 
 			($row['is_dependent_on_task_id'] == 100 ?
-			 'None' : $row['is_dependent_on_task_id']);
+			 $LANG->getText('global','none') : $row['is_dependent_on_task_id']);
 		}
 	    }
 
@@ -710,7 +711,7 @@ function prepare_support_request_record($group_id, &$record) {
 }
 
 function pe_utils_format_sr_messages($group_id,$sr_id) {
-    global $SR_MSG, $sys_datefmt;
+    global $SR_MSG, $sys_datefmt,$LANG;
 
     // return all the follow-up comments attached to a given bug
     // Do a big SQl query the first time and then cache the results
@@ -734,7 +735,7 @@ function pe_utils_format_sr_messages($group_id,$sr_id) {
 		$SR_MSG[$row['support_id']] .= 
 		    '=================================================='.
 		    "\n".
-		    'By: '.$row['from_email'].'      On: '.
+		    $LANG->getText('global','by').': '.$row['from_email'].'      '.$LANG->getText('global','on').': '.
 		    format_date($sys_datefmt,$row['date'])."\n\n".
 		    prepare_textarea($row['body']).
 		    "\n";
@@ -749,21 +750,21 @@ function pe_utils_format_sr_messages($group_id,$sr_id) {
 }
 
 function display_db_params () {
-    global $sys_default_domain, $dbname;
-    list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
-?>
+    global $sys_default_domain, $dbname, $LANG;
+    $host = $GLOBALS['sys_dbhost'];
+echo '
 <table align="center" cellpadding="0">
-      <tr><td>Server:</td><td><?php echo $host; ?></td></tr>
-      <tr><td>Port:</td><td>(leave it blank)</td></tr>
-      <tr><td>Database:</td><td><?php echo $dbname; ?></td></tr>
-      <tr><td>User:</td><td>cxuser</td></tr>
-      <tr><td>Password:</td><td>(leave it blank)</td></tr>
-</table>
-<?php
+      <tr><td>'.$LANG->getText('project_export_utils','server').'</td><td>'.$host.'</td></tr>
+      <tr><td>'.$LANG->getText('project_export_utils','port').':</td><td>'.$LANG->getText('project_export_utils','leave_blank').'</td></tr>
+      <tr><td>'.$LANG->getText('project_export_utils','db').':</td><td>'.$dbname.'</td></tr>
+      <tr><td>'.$LANG->getText('project_export_utils','user').':</td><td>cxuser</td></tr>
+      <tr><td>'.$LANG->getText('project_export_utils','passwd').':</td><td>'.$LANG->getText('project_export_utils','leave_blank').'</td></tr>
+</table>';
 }
 
 function db_project_query($dbname,$qstring,$print=0) {
-	if ($print) print "<br>Query is ($dbname): $qstring<br>";
+  global $LANG;
+	if ($print) print '<br>'.$LANG->getText('project_export_utils','query_is',array($dbname,$qstring)).'<br>';
 	$GLOBALS['db_project_qhandle'] = @mysql_db_query($dbname,$qstring);
 	return $GLOBALS['db_project_qhandle'];
 }

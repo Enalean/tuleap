@@ -12,6 +12,8 @@ require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactTypeFactory.class');
 require($DOCUMENT_ROOT.'/project/admin/ugroup_utils.php');
 
+$LANG->loadLanguageMsg('project/project');
+
 //	  
 //  get the Group object
 //	  
@@ -21,7 +23,7 @@ if (!$group || !is_object($group) || $group->isError()) {
 }		   
 $atf = new ArtifactTypeFactory($group);
 if (!$group || !is_object($group) || $group->isError()) {
-	exit_error('Error','Could Not Get ArtifactTypeFactory');
+	exit_error($LANG->getText('global','error'),$LANG->getText('project_admin_index','not_get_atf'));
 }
 // Get the artfact type list
 $at_arr = $atf->getArtifactTypes();
@@ -32,19 +34,19 @@ $res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
 
 //no results found
 if (db_numrows($res_grp) < 1) {
-	exit_error("Invalid Group","That group does not exist.");
+	exit_error($LANG->getText('project_admin_userperms','invalid_g'),$LANG->getText('project_admin_userperms','group_not_exist'));
 }
 $project=project_get_object($group_id);
 if ($project->isError()) {
         //wasn't found or some other problem
-        echo "Unable to load project object<br>";
+        echo $LANG->getText('project_admin_userperms','unable_load_p')."<br>";
     	return;
 }
 $row_grp = db_fetch_array($res_grp);
 
 // ########################### form submission, make updates
 if ($submit) {
-    group_add_history ('Changed Member Permissions','',$group_id); // Used to be 'Changed Permissions'
+    group_add_history ($LANG->getText('project_admin_userperms','changed_member_perm'),'',$group_id); // Used to be 'Changed Permissions'
 
 	$res_dev = db_query("SELECT user_id FROM user_group WHERE group_id=$group_id");
 	while ($row_dev = db_fetch_array($res_dev)) {
@@ -66,7 +68,7 @@ if ($submit) {
                             }
                         }
                         if (!$other_admin_exists) {
-                            $feedback .= ' Cannot remove your admin status: project needs at least one admin! ';
+                            $feedback .= ' '.$LANG->getText('project_admin_userperms','cannot_remove_admin_stat').' ';
                             $$admin_flags='A';
                         }
                     }
@@ -113,11 +115,11 @@ if ($submit) {
 
 		if (!$res || $tracker_error) {
 			echo db_error();
-			$feedback .= ' Permissions Failed For '.$row_dev['user_id'].' ';
+			$feedback .= ' '.$LANG->getText('project_admin_userperms','perm_fail_for',$row_dev['user_id']).' ';
 		}
 	}
 
-	$feedback .= ' Permissions Updated ';
+	$feedback .= ' '.$LANG->getText('project_admin_userperms','perm_upd').' ';
 }
 
 $res_dev = db_query("SELECT user.user_name AS user_name,"
@@ -134,7 +136,7 @@ $res_dev = db_query("SELECT user.user_name AS user_name,"
 	. "user.user_id=user_group.user_id AND user_group.group_id=$group_id "
 	. "ORDER BY user.user_name");
 
-project_admin_header(array('title'=>'User Permissions','group'=>$group_id,
+project_admin_header(array('title'=>$LANG->getText('project_admin_utils','user_perms'),'group'=>$group_id,
 		     'help' => 'UserPermissions.html'));
 
 /*$project=project_get_object($group_id);
@@ -144,49 +146,49 @@ if ($project->isError()) {
     	return;
 }
 */
-?>
 
-<h2>User Permissions</h2>
+echo '
+<h2>'.$LANG->getText('project_admin_utils','user_perms').'</h2>
 <FORM action="userperms.php" method="post">
 <INPUT type="hidden" name="group_id" value="<?php print $group_id; ?>">
 <TABLE width="100%" cellspacing=0 cellpadding=3 border=0>
-<TR><TD><B>Developer Name</B></TD>
-<TD><B>Project<BR>Admin</B></TD>
-<?
+<TR><TD><B>'.$LANG->getText('project_admin_userperms','devel_name').'</B></TD>
+<TD><B>'.$LANG->getText('project_admin_userperms','proj_admin').'</B></TD>';
+
 if ($project->usesCVS()) {
-    print '<TD><B>CVS Write</B></TD>';
+    print '<TD><B>'.$LANG->getText('project_admin_userperms','cvs_write').'</B></TD>';
 }
 if ($project->usesBugs() && !($sys_activate_tracker && !$project->activateOldBug())) {
-	print '<TD><B>Bug Tracking</B></TD>';
+	print '<TD><B>'.$LANG->getText('project_admin_userperms','bug_track').'</B></TD>';
 }
 if ($project->usesForum()) {
-    print '<TD><B>Forums</B></TD>';
+    print '<TD><B>'.$LANG->getText('project_admin_userperms','forums').'</B></TD>';
 }
 if ($project->usesPm() && !($sys_activate_tracker && !$project->activateOldTask())) {
-	print '<TD><B>Task Manager</B></TD>';
+	print '<TD><B>'.$LANG->getText('project_admin_userperms','task_man').'</B></TD>';
 }
 
 if ($project->usesPatch()) {
-    print '<TD><B>Patch Manager</B></TD>';
+    print '<TD><B>'.$LANG->getText('project_admin_userperms','patch_man').'</B></TD>';
 }
 if ($project->usesSupport() && !($sys_activate_tracker && !$project->activateOldSR())) {
-	print '<TD><B>Support Manager</B></TD>';
+	print '<TD><B>'.$LANG->getText('project_admin_userperms','supp_man').'</B></TD>';
 }
 
 if ($project->usesDocman()) {
-    print '<TD><B>Doc. Manager</B></TD>';
+    print '<TD><B>'.$LANG->getText('project_admin_userperms','doc_man').'</B></TD>';
 }
 
 if ($project->usesFile()) {
-    print '<TD><B>File Manager</B></TD>';
+    print '<TD><B>'.$LANG->getText('project_admin_userperms','file_man').'</B></TD>';
 }
 
 if ( $project->usesTracker()&&$sys_activate_tracker&&$at_arr ) {
 	for ($j = 0; $j < count($at_arr); $j++) {
-		echo '<TD><B>Tracker:<br>'.$at_arr[$j]->getName().'</B></TD>';
+		echo '<TD><B>'.$LANG->getText('project_admin_userperms','tracker',$at_arr[$j]->getName()).'</B></TD>';
 	}
 }
-print '<TD><B>Member of user groups:</B></TD>';
+print '<TD><B>'.$LANG->getText('project_admin_userperms','member_ug').'</B></TD>';
 
 ?>
 </TR>
@@ -194,7 +196,7 @@ print '<TD><B>Member of user groups:</B></TD>';
 <?php
 
 if (!$res_dev || db_numrows($res_dev) < 1) {
-    echo '<H2>No Users Found</H2>';
+    echo '<H2>'.$LANG->getText('project_admin_userperms','no_users_found').'</H2>';
 } else {
 
     while ($row_dev = db_fetch_array($res_dev)) {
@@ -202,17 +204,17 @@ if (!$res_dev || db_numrows($res_dev) < 1) {
         print '<TR class="'. util_get_alt_row_color($i) .'"><TD>'.$row_dev['user_name'].'</TD>';
         print '
 			<TD>
-			<INPUT TYPE="RADIO" NAME="admin_user_'.$row_dev['user_id'].'" VALUE="A" '.(($row_dev['admin_flags']=='A')?'CHECKED':'').'>&nbsp;Yes<BR>
-			<INPUT TYPE="RADIO" NAME="admin_user_'.$row_dev['user_id'].'" VALUE="" '.(($row_dev['admin_flags']=='')?'CHECKED':'').'>&nbsp;No
+			<INPUT TYPE="RADIO" NAME="admin_user_'.$row_dev['user_id'].'" VALUE="A" '.(($row_dev['admin_flags']=='A')?'CHECKED':'').'>&nbsp;'.$LANG->getText('global','yes').'<BR>
+			<INPUT TYPE="RADIO" NAME="admin_user_'.$row_dev['user_id'].'" VALUE="" '.(($row_dev['admin_flags']=='')?'CHECKED':'').'>&nbsp;'.$LANG->getText('global','no').'
 			</TD>';
-        if ($project->usesCVS()) { print '<TD>Yes</TD>'; }
+        if ($project->usesCVS()) { print '<TD>'.$LANG->getText('global','yes').'</TD>'; }
         // bug selects
         if ($project->usesBugs() && !($sys_activate_tracker && !$project->activateOldBug())) {
             print '<TD><FONT size="-1"><SELECT name="bugs_user_'.$row_dev['user_id'].'">';
-            print '<OPTION value="0"'.(($row_dev['bug_flags']==0)?" selected":"").'>None';
-            print '<OPTION value="1"'.(($row_dev['bug_flags']==1)?" selected":"").'>Tech Only';
-            print '<OPTION value="2"'.(($row_dev['bug_flags']==2)?" selected":"").'>Tech & Admin';
-            print '<OPTION value="3"'.(($row_dev['bug_flags']==3)?" selected":"").'>Admin Only';
+            print '<OPTION value="0"'.(($row_dev['bug_flags']==0)?" selected":"").'>'.$LANG->getText('global','none');
+            print '<OPTION value="1"'.(($row_dev['bug_flags']==1)?" selected":"").'>'.$LANG->getText('project_admin_userperms','tech_only');
+            print '<OPTION value="2"'.(($row_dev['bug_flags']==2)?" selected":"").'>'.$LANG->getText('project_admin_userperms','tech&admin');
+            print '<OPTION value="3"'.(($row_dev['bug_flags']==3)?" selected":"").'>'.$LANG->getText('project_admin_userperms','admin_only');
             print '</SELECT></FONT></TD>';
         } else {
             print '<input type="Hidden" name="bugs_user_'.$row_dev['user_id'].'" value="'.$row_dev['bug_flags'].'">';
@@ -220,17 +222,17 @@ if (!$res_dev || db_numrows($res_dev) < 1) {
         // forums
         if ($project->usesForum()) {
             print '<TD><FONT size="-1"><SELECT name="forums_user_'.$row_dev['user_id'].'">';
-            print '<OPTION value="0"'.(($row_dev['forum_flags']==0)?" selected":"").'>None';
-            print '<OPTION value="2"'.(($row_dev['forum_flags']==2)?" selected":"").'>Moderator';
+            print '<OPTION value="0"'.(($row_dev['forum_flags']==0)?" selected":"").'>'.$LANG->getText('global','none');
+            print '<OPTION value="2"'.(($row_dev['forum_flags']==2)?" selected":"").'>'.$LANG->getText('project_admin_userperms','moderator');
             print '</SELECT></FONT></TD>';
         }
         // project selects
         if ($project->usesPm() && !($sys_activate_tracker && !$project->activateOldTask())) {
             print '<TD><FONT size="-1"><SELECT name="projects_user_'.$row_dev['user_id'].'">';
-            print '<OPTION value="0"'.(($row_dev['project_flags']==0)?" selected":"").'>None';
-            print '<OPTION value="1"'.(($row_dev['project_flags']==1)?" selected":"").'>Tech Only';
-            print '<OPTION value="2"'.(($row_dev['project_flags']==2)?" selected":"").'>Tech & Admin';
-            print '<OPTION value="3"'.(($row_dev['project_flags']==3)?" selected":"").'>Admin Only';
+            print '<OPTION value="0"'.(($row_dev['project_flags']==0)?" selected":"").'>'.$LANG->getText('global','none');
+            print '<OPTION value="1"'.(($row_dev['project_flags']==1)?" selected":"").'>'.$LANG->getText('project_admin_userperms','tech_only');
+            print '<OPTION value="2"'.(($row_dev['project_flags']==2)?" selected":"").'>'.$LANG->getText('project_admin_userperms','tech&admin');
+            print '<OPTION value="3"'.(($row_dev['project_flags']==3)?" selected":"").'>'.$LANG->getText('project_admin_userperms','admin_only');
             print '</SELECT></FONT></TD>';
         } else {
             print '<input type="Hidden" name="projects_user_'.$row_dev['user_id'].'" value="'.$row_dev['project_flags'].'">';
@@ -239,20 +241,20 @@ if (!$res_dev || db_numrows($res_dev) < 1) {
         // patch selects
         if ($project->usesPatch()) {
 	    print '<TD><FONT size="-1"><SELECT name="patch_user_'.$row_dev['user_id'].'">';
-	    print '<OPTION value="0"'.(($row_dev['patch_flags']==0)?" selected":"").'>None';
-	    print '<OPTION value="1"'.(($row_dev['patch_flags']==1)?" selected":"").'>Tech Only';
-	    print '<OPTION value="2"'.(($row_dev['patch_flags']==2)?" selected":"").'>Tech & Admin';
-	    print '<OPTION value="3"'.(($row_dev['patch_flags']==3)?" selected":"").'>Admin Only';
+	    print '<OPTION value="0"'.(($row_dev['patch_flags']==0)?" selected":"").'>'.$LANG->getText('global','none');
+	    print '<OPTION value="1"'.(($row_dev['patch_flags']==1)?" selected":"").'>'.$LANG->getText('project_admin_userperms','tech_only');
+	    print '<OPTION value="2"'.(($row_dev['patch_flags']==2)?" selected":"").'>'.$LANG->getText('project_admin_userperms','tech&admin');
+	    print '<OPTION value="3"'.(($row_dev['patch_flags']==3)?" selected":"").'>'.$LANG->getText('project_admin_userperms','admin_only');
 	    print '</SELECT></FONT></TD>';
 	}
 
         // support selects
         if ($project->usesSupport() && !($sys_activate_tracker && !$project->activateOldSR())) {
             print '<TD><FONT size="-1"><SELECT name="support_user_'.$row_dev['user_id'].'">';
-            print '<OPTION value="0"'.(($row_dev['support_flags']==0)?" selected":"").'>None';
-            print '<OPTION value="1"'.(($row_dev['support_flags']==1)?" selected":"").'>Tech Only';
-            print '<OPTION value="2"'.(($row_dev['support_flags']==2)?" selected":"").'>Tech & Admin';
-            print '<OPTION value="3"'.(($row_dev['support_flags']==3)?" selected":"").'>Admin Only';
+            print '<OPTION value="0"'.(($row_dev['support_flags']==0)?" selected":"").'>'.$LANG->getText('global','none');
+            print '<OPTION value="1"'.(($row_dev['support_flags']==1)?" selected":"").'>'.$LANG->getText('project_admin_userperms','tech_only');
+            print '<OPTION value="2"'.(($row_dev['support_flags']==2)?" selected":"").'>'.$LANG->getText('project_admin_userperms','tech&admin');
+            print '<OPTION value="3"'.(($row_dev['support_flags']==3)?" selected":"").'>'.$LANG->getText('project_admin_userperms','admin_only');
             print '</SELECT></FONT></TD>';
         } else {
             print '<input type="Hidden" name="support_user_'.$row_dev['user_id'].'" value="'.$row_dev['support_flags'].'">';
@@ -261,16 +263,16 @@ if (!$res_dev || db_numrows($res_dev) < 1) {
         //documentation states - nothing or editor	
         if ($project->usesDocman()) {
             print '<TD><FONT size="-1"><SELECT name="doc_user_'.$row_dev['user_id'].'">';
-            print '<OPTION value="0"'.(($row_dev['doc_flags']==0)?" selected":"").'>None';
-            print '<OPTION value="1"'.(($row_dev['doc_flags']==1)?" selected":"").'>Editor';
+            print '<OPTION value="0"'.(($row_dev['doc_flags']==0)?" selected":"").'>'.$LANG->getText('global','none');
+            print '<OPTION value="1"'.(($row_dev['doc_flags']==1)?" selected":"").'>'.$LANG->getText('project_admin_userperms','editor');
             print '</SELECT></FONT></TD>';
         }
         
         // File release manager: nothing or admin
         if ($project->usesFile()) {
             print '<TD><FONT size="-1"><SELECT name="file_user_'.$row_dev['user_id'].'">';
-            print '<OPTION value="0"'.(($row_dev['file_flags']==0)?" selected":"").'>None';
-            print '<OPTION value="2"'.(($row_dev['file_flags']==2)?" selected":"").'>Admin';
+            print '<OPTION value="0"'.(($row_dev['file_flags']==0)?" selected":"").'>'.$LANG->getText('global','none');
+            print '<OPTION value="2"'.(($row_dev['file_flags']==2)?" selected":"").'>'.$LANG->getText('project_admin_index','admin');
             print '</SELECT></FONT></TD>
 	';
         }
@@ -281,10 +283,10 @@ if (!$res_dev || db_numrows($res_dev) < 1) {
             for ($j = 0; $j < count($at_arr); $j++) {
                 $perm = $at_arr[$j]->getUserPerm($row_dev['user_id']);
                 print '<TD><FONT size="-1"><SELECT name="tracker_user_'.$row_dev['user_id'].'_'.$at_arr[$j]->getID().'">';
-                print '<OPTION value="0"'.(($perm==0)?" selected":"").'>None';
-                print '<OPTION value="1"'.(($perm==1)?" selected":"").'>Tech Only';
-                print '<OPTION value="2"'.(($perm==2)?" selected":"").'>Tech & Admin';
-                print '<OPTION value="3"'.(($perm==3)?" selected":"").'>Admin Only';
+                print '<OPTION value="0"'.(($perm==0)?" selected":"").'>'.$LANG->getText('global','none');
+                print '<OPTION value="1"'.(($perm==1)?" selected":"").'>'.$LANG->getText('project_admin_userperms','tech_only');
+                print '<OPTION value="2"'.(($perm==2)?" selected":"").'>'.$LANG->getText('project_admin_userperms','tech&admin');
+                print '<OPTION value="3"'.(($perm==3)?" selected":"").'>'.$LANG->getText('project_admin_userperms','admin_only');
                 print '</SELECT></FONT></TD>';
             }
         }
@@ -309,12 +311,12 @@ if (!$res_dev || db_numrows($res_dev) < 1) {
     } // while
 
 }
-?>
 
+echo '
 </TABLE>
-<P align="center"><INPUT type="submit" name="submit" value="Update User Permissions">
-</FORM>
+<P align="center"><INPUT type="submit" name="submit" value="'.$LANG->getText('project_admin_userperms','upd_user_perm').'">
+</FORM>',
 
-<?php
+
 project_admin_footer(array());
 ?>

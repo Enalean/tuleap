@@ -6,6 +6,7 @@
 //
 // $Id$
 
+$LANG->loadLanguageMsg('project/project');
 
 // This is the SQL query to retrieve all the task history for this group
 
@@ -24,36 +25,36 @@ $col_list = array('project_task_id','group_id','subproject_id','summary',
 		  'details','percent_complete','priority','hours',
 		  'start_date','end_date','created_by','status',
 		  'assigned_to','follow_ups','is_dependent_on_task_id');
-$lbl_list = array('project_task_id' => 'Task ID',
-		  'group_id' => 'Group ID',
-		  'subproject_id' => 'Subproject',
-		  'summary' => 'Task Summary',
-		  'details' => 'Original Comment',
-		  'percent_complete' => 'Percent Complete',
-		  'priority' => 'Priority',
-		  'hours' => 'Hours',
-		  'start_date' => 'Start Date',
-		  'end_date' => 'End Date',
-		  'created_by' => 'Created By',
-		  'status' => 'Status',
-		  'assigned_to' => 'Assigned To',
-		  'follow_ups' => 'Follow-up Comments',
-		  'is_dependent_on_task_id'=> 'Depend on Task(s)');
-$dsc_list = array('project_task_id' => 'Unique task identifier',
-		  'group_id' => 'Unique project identifier',
-		  'subproject_id' => 'Name of the subproject the task is in',
-		  'summary' => 'One line description of the task',
-		  'details' => 'Detailled description of the task',
-		  'percent_complete' => 'How much of the task has already been completed',
-		  'priority' => 'Priority',
-		  'hours' => 'Effort spent on the task in hours',
-		  'start_date' => 'Date when the task was started',
-		  'end_date' => 'Date when the task was finished',
-		  'created_by' => 'Project member who created the task',
-		  'status' => 'Status (Open, Closed,...)',
-		  'assigned_to' => 'List of project members the task is assigned to',
-		  'follow_ups' => 'All follow-up comments in one chunck of text',
-		  'is_dependent_on_task_id' => 'List of  tasks this task depends on');
+$lbl_list = array('project_task_id' => $LANG->getText('project_export_task_assigned_to_export','task_id'),
+		  'group_id' => $LANG->getText('project_export_bug_deps_export','g_id'),
+		  'subproject_id' => $LANG->getText('project_export_task_export','subproject'),
+		  'summary' => $LANG->getText('project_export_task_export','summary'),
+		  'details' => $LANG->getText('project_export_task_export','details'),
+		  'percent_complete' => $LANG->getText('project_export_task_export','percent_complete'),
+		  'priority' => $LANG->getText('project_export_support_request_export','priority'),
+		  'hours' => $LANG->getText('project_export_task_export','hours'),
+		  'start_date' => $LANG->getText('project_export_task_export','start_date'),
+		  'end_date' => $LANG->getText('project_export_task_export','end_date'),
+		  'created_by' => $LANG->getText('project_export_task_export','created_by'),
+		  'status' => $LANG->getText('project_export_support_request_export','status'),
+		  'assigned_to' => $LANG->getText('project_export_support_request_export','assigned_to'),
+		  'follow_ups' => $LANG->getText('project_export_artifact_export','follow_up_comments'),
+		  'is_dependent_on_task_id'=> $LANG->getText('project_export_task_export','depend_on_task'));
+$dsc_list = array('project_task_id' => $LANG->getText('project_export_task_assigned_to_export','task_id_desc'),
+		  'group_id' => $LANG->getText('project_export_bug_deps_export','g_id_desc'),
+		  'subproject_id' => $LANG->getText('project_export_task_export','subproject_desc'),
+		  'summary' => $LANG->getText('project_export_task_export','summary_desc'),
+		  'details' => $LANG->getText('project_export_task_export','details_desc'),
+		  'percent_complete' => $LANG->getText('project_export_task_export','percent_complete_desc'),
+		  'priority' => $LANG->getText('project_export_support_request_export','priority'),
+		  'hours' => $LANG->getText('project_export_task_export','hours_desc'),
+		  'start_date' => $LANG->getText('project_export_task_export','start_date_desc'),
+		  'end_date' => $LANG->getText('project_export_task_export','end_date_desc'),
+		  'created_by' => $LANG->getText('project_export_task_export','created_by_desc'),
+		  'status' => $LANG->getText('project_export_support_request_export','status_desc'),
+		  'assigned_to' => $LANG->getText('project_export_task_assigned_to_export','assigned_to_desc'),
+		  'follow_ups' => $LANG->getText('project_export_artifact_export','all_followup_comments'),
+		  'is_dependent_on_task_id' => $LANG->getText('project_export_task_export','depend_on_task_desc'));
 
 $tbl_name = 'task';
 
@@ -84,11 +85,11 @@ if ($export == 'task') {
 
 	project_admin_header(array('title'=>$pg_title));
 
-	echo '<h3>Task Export</h3>';
+	echo '<h3>'.$LANG->getText('project_export_artifact_deps_export','bug_deps_export','Task').'</h3>';
 	if ($result) {
-	    echo '<P>No task found. Could not generate an export.';
+	    echo '<P>'.$LANG->getText('project_export_artifact_deps_export','no_bug_deps_found','task');
 	} else {
-	    echo '<P>Error while accessing your task database. Please report the error to the '.$GLOBALS['sys_name'].' Administrator';
+	    echo '<P>'.$LANG->getText('project_export_artifact_deps_export','db_access_err',array('task',$GLOBALS['sys_name']));
 	    echo '<br>'.db_error();
 	}
 	site_project_footer( array() );
@@ -97,9 +98,7 @@ if ($export == 'task') {
 
 } else if ($export == "task_format") {
 
-    echo '<h3>Task Export Format</h3> The Task export provides you
-with the following task fields. The sample values indicate what the
-field data types are. <p>';
+    echo $LANG->getText('project_export_artifact_deps_export','bug_deps_export_format',' Task');
 
     $record = pick_a_record_at_random($result, $rows, $col_list);
     prepare_task_record($group_id,$record);   
@@ -137,11 +136,11 @@ field data types are. <p>';
 	    }
 
 	} else {
-	    $feedback .= 'Error in Create project '.$tbl_name.' table:'.db_project_error();
+	    $feedback .= $LANG->getText('project_export_artifact_deps_export','create_proj_err',array($tbl_name,db_project_error()));
 	}
 
     } else {
-	$feedback .= "SECURITY VIOLATION!!! Unauthorized database name: $dbname";
+	$feedback .= $LANG->getText('project_export_artifact_deps_export','security_violation',$dbname);
     }
    
 }

@@ -6,6 +6,8 @@
 //
 // $Id$
 
+$LANG->loadLanguageMsg('project/project');
+
 bug_init($group_id);
 
 // This is the SQL query to retrieve all the bug history for this group
@@ -22,21 +24,21 @@ $sql = "SELECT bug_history.bug_id,'$group_id' AS group_id,bug_history.field_name
 $col_list = array('bug_id','group_id','field_name','old_value','mod_by','date','type');
 $lbl_list = array('bug_id' => '',
 		  'group_id' => '',
-		  'field_name' => 'Field Name',
-		  'old_value' => 'Old Value',
-		  'mod_by' => 'Modified By',
-		  'date' => 'Modified On',
-		  'type' => 'Comment Type');
+		  'field_name' => $LANG->getText('project_export_artifact_history_export','field_name'),
+		  'old_value' => $LANG->getText('project_export_artifact_history_export','old_val'),
+		  'mod_by' => $LANG->getText('project_export_artifact_history_export','mod_by'),
+		  'date' => $LANG->getText('project_export_artifact_history_export','mod_on'),
+		  'type' => $LANG->getText('project_export_artifact_history_export','comment_type'));
 $lbl_list['bug_id'] = bug_data_get_label('bug_id');
 $lbl_list['group_id'] = bug_data_get_label('group_id');
 
 $dsc_list = array('bug_id' => '',
 		  'group_id' => '',
-		  'field_name' => 'Name of the bug field which value changed',
-		  'old_value' => 'Value of the bug field before it changed',
-		  'mod_by' => 'Login name of the user who changed the value',
-		  'date' => 'Modification date',
-		  'type' => 'Type of the followup comment added to history (this field only applies for field name \'<tt>details</tt>\'');
+		  'field_name' => $LANG->getText('project_export_artifact_history_export','field_name_desc'),
+		  'old_value' => $LANG->getText('project_export_artifact_history_export','old_val_desc'),
+		  'mod_by' => $LANG->getText('project_export_artifact_history_export','mod_by_desc'),
+		  'date' => $LANG->getText('project_export_artifact_history_export','mod_by_desc'),
+		  'type' => $LANG->getText('project_export_artifact_history_export','comment_type_desc'));
 
 $dsc_list['bug_id'] = bug_data_get_description('bug_id');
 $dsc_list['group_id'] = bug_data_get_description('group_id');
@@ -67,11 +69,11 @@ if ($export == 'bug_history') {
 
 	project_admin_header(array('title'=>$pg_title));
 
-	echo '<h3>Bug History export</h3>';
+	echo '<h3>'.$LANG->getText('project_export_artifact_deps_export','bug_deps_export','Bug History').'</h3>';
 	if ($result) {
-	    echo '<P>No bug history found. Could not generate an export.';
+	    echo '<P>'.$LANG->getText('project_export_artifact_deps_export','no_bug_deps_found','bug history');
 	} else {
-	    echo '<P>Error while accessing your bug history database. Please report the error to the '.$GLOBALS['sys_name'].' Administrator';
+	    echo '<P>'.$LANG->getText('project_export_artifact_deps_export','db_access_err',array('bug history',$GLOBALS['sys_name']));
 	    echo '<br>'.db_error();
 	}
 	site_project_footer( array() );
@@ -80,9 +82,7 @@ if ($export == 'bug_history') {
 
 } else if ($export == "bug_history_format") {
 
-    echo '<h3>Bug History Export Format</h3> The Bug History export
-provides you with the following bug history fields. The sample values
-indicate what the field data types are.<p>';
+    echo $LANG->getText('project_export_artifact_deps_export','bug_deps_export_format',' Bug History');
    
     $record = pick_a_record_at_random($result, $rows, $col_list);
     prepare_bug_history_record($group_id,$col_list,$record);   
@@ -116,11 +116,11 @@ indicate what the field data types are.<p>';
 	    }
 
 	} else {
-	    $feedback .= 'Error in Create project '.$tbl_name.' table:'.db_project_error();
+	    $feedback .= $LANG->getText('project_export_artifact_deps_export','create_proj_err',array($tbl_name,db_project_error()));
 	}
 
     } else {
-	$feedback .= "SECURITY VIOLATION!!! Unauthorized database name: $dbname";
+	$feedback .= $LANG->getText('project_export_artifact_deps_export','security_violation',$dbname);
     }
    
 }

@@ -6,6 +6,9 @@
 //
 // $Id$
 
+
+$LANG->loadLanguageMsg('project/project');
+
 //
 //	get the Group object
 //
@@ -19,14 +22,14 @@ if ( $atid ) {
 	//
 	$at = new ArtifactType($group,$atid);
 	if (!$at || !is_object($at)) {
-		exit_error('Error','ArtifactType could not be created');
+		exit_error($LANG->getText('global','error'),$LANG->getText('project_export_artifact_deps_export','at_not_created'));
 	}
 	if ($at->isError()) {
-		exit_error('Error',$at->getErrorMessage());
+		exit_error($LANG->getText('global','error'),$at->getErrorMessage());
 	}
 	// Check if this tracker is valid (not deleted)
 	if ( !$at->isValid() ) {
-		exit_error('Error',"This tracker is no longer valid.");
+		exit_error($LANG->getText('global','error'),$LANG->getText('project_export_artifact_deps_export','tracker_no_longer_valid'));
 	}
 
         //
@@ -34,16 +37,16 @@ if ( $atid ) {
         //
         $ath = new ArtifactTypeHtml($group,$atid);
         if (!$ath || !is_object($ath)) {
-            exit_error('Error','ArtifactTypeHtml could not be created');
+            exit_error($LANG->getText('global','error'),$LANG->getText('project_export_artifact_export','ath_not_created'));
         }
         if ($ath->isError()) {
-            exit_error('Error',$ath->getErrorMessage());
+            exit_error($LANG->getText('global','error'),$ath->getErrorMessage());
         }
 
 	// Create field factory
 	$art_field_fact = new ArtifactFieldFactory($at);
 	if ($art_field_fact->isError()) {
-		exit_error('Error',$art_field_fact->getErrorMessage());
+		exit_error($LANG->getText('global','error'),$art_field_fact->getErrorMessage());
 	}
 	
 	$sql = $at->buildExportQuery($fields,$col_list,$lbl_list,$dsc_list);
@@ -57,11 +60,11 @@ if ( $atid ) {
 $col_list[] = 'follow_ups';
 $col_list[] = 'is_dependent_on';
 
-$lbl_list['follow_ups'] = 'Follow-up Comments';
-$lbl_list['is_dependent_on'] = 'Depend on';
+$lbl_list['follow_ups'] = $LANG->getText('project_export_artifact_export','follow_up_comments');
+$lbl_list['is_dependent_on'] = $LANG->getText('project_export_artifact_export','depend_on');
 
-$dsc_list['follow_ups'] = 'All follow-up comments in one chunck of text';
-$dsc_list['is_dependent_on'] = 'List of artifacts this artifact depends on';
+$dsc_list['follow_ups'] = $LANG->getText('project_export_artifact_export','all_followup_comments');
+$dsc_list['is_dependent_on'] = $LANG->getText('project_export_artifact_export','depend_on_list');
 
 $eol = "\n";
     
@@ -90,11 +93,11 @@ if ($export == 'artifact') {
 
 		project_admin_header(array('title'=>$pg_title));
 	
-		echo '<h3>Artifact export</h3>';
+		echo '<h3>'.$LANG->getText('project_export_artifact_export','art_export').'</h3>';
 		if ($result) {
-		    echo '<P>No artifact found. Could not generate an export.';
+		    echo '<P>'.$LANG->getText('project_export_artifact_export','no_art_found');
 		} else {
-		    echo '<P>Error while accessing your artifact database. Please report the error to the '.$GLOBALS['sys_name'].' Administrator';
+		    echo '<P>'.$LANG->getText('project_export_artifact_export','db_access_err',$GLOBALS['sys_name']);
 		    echo '<br>'.db_error();
 		}
 		site_project_footer( array() );
@@ -103,8 +106,7 @@ if ($export == 'artifact') {
 
 } else if ($export == "artifact_format") {
 
-    echo '<h3>Artifact Export Format</h3>
-The artifact export provides you with the following artifact fields. The sample values indicate what the field data types are.<p>';
+    echo $LANG->getText('project_export_artifact_export','art_exp_format');
 
     $record = pick_a_record_at_random($result, $rows, $col_list);
     prepare_artifact_record($at,$fields,$atid,$record);
@@ -132,10 +134,10 @@ The artifact export provides you with the following artifact fields. The sample 
 				//
 				$at = new ArtifactType($group,$atid);
 				if (!$at || !is_object($at)) {
-					exit_error('Error','ArtifactType could not be created');
+					exit_error($LANG->getText('global','error'),$LANG->getText('project_export_artifact_deps_export','at_not_created'));
 				}
 				if ($at->isError()) {
-					exit_error('Error',$at->getErrorMessage());
+					exit_error($LANG->getText('global','error'),$at->getErrorMessage());
 				}
 				// Check if this tracker is valid (not deleted)
 				if ( !$at->isValid() ) {
@@ -147,17 +149,17 @@ The artifact export provides you with the following artifact fields. The sample 
                                 //
                                 $ath = new ArtifactTypeHtml($group,$atid);
                                 if (!$ath || !is_object($ath)) {
-                                    exit_error('Error','ArtifactTypeHtml could not be created');
+                                    exit_error($LANG->getText('global','error'),$LANG->getText('project_export_artifact_export','ath_not_created'));
                                 }
                                 if ($ath->isError()) {
-                                    exit_error('Error',$ath->getErrorMessage());
+                                    exit_error($LANG->getText('global','error'),$ath->getErrorMessage());
                                 }
 
 
 				// Create field factory
 				$art_field_fact = new ArtifactFieldFactory($at);
 				if ($art_field_fact->isError()) {
-					exit_error('Error',$art_field_fact->getErrorMessage());
+					exit_error($LANG->getText('global','error'),$art_field_fact->getErrorMessage());
 				}
 				
 				$col_list = array();
@@ -210,14 +212,14 @@ The artifact export provides you with the following artifact fields. The sample 
 				    }
 			
 				} else {
-				    $feedback .= 'Error in Create project '.$tbl_name.' table:'.db_project_error();
+				    $feedback .= $LANG->getText('project_export_artifact_deps_export','create_proj_err',array($tbl_name,db_project_error()));
 				}
 
 			} // for
 		} // if 
 
     } else {
-		$feedback .= "SECURITY VIOLATION!!! Unauthorized database name: $dbname";
+		$feedback .= $LANG->getText('project_export_artifact_deps_export','security_violation',$dbname);
     }
 
    

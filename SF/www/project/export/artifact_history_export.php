@@ -6,6 +6,8 @@
 //
 // $Id$
 
+$LANG->loadLanguageMsg('project/project');
+
 //
 //	get the Group object
 //
@@ -19,20 +21,20 @@ if ( $atid ) {
 	//
 	$at = new ArtifactType($group,$atid);
 	if (!$at || !is_object($at)) {
-		exit_error('Error','ArtifactType could not be created');
+		exit_error($LANG->getText('global','error'),$LANG->getText('project_export_artifact_deps_export','at_not_created'));
 	}
 	if ($at->isError()) {
-		exit_error('Error',$at->getErrorMessage());
+		exit_error($LANG->getText('global','error'),$at->getErrorMessage());
 	}
 	// Check if this tracker is valid (not deleted)
 	if ( !$at->isValid() ) {
-		exit_error('Error',"This tracker is no longer valid.");
+		exit_error($LANG->getText('global','error'),$LANG->getText('project_export_artifact_deps_export','tracker_no_longer_valid'));
 	}
 	
 	// Create field factory
 	$art_field_fact = new ArtifactFieldFactory($at);
 	if ($art_field_fact->isError()) {
-		exit_error('Error',$art_field_fact->getErrorMessage());
+		exit_error($LANG->getText('global','error'),$art_field_fact->getErrorMessage());
 	}
 
 }
@@ -49,22 +51,22 @@ $sql = "SELECT ah.artifact_id,ah.field_name,".
 'user.user_id=ah.mod_by ORDER BY ah.artifact_id,ah.date DESC';
 
 $col_list = array('artifact_id','field_name','old_value','new_value','mod_by','email','date','type');
-$lbl_list = array('artifact_id' => 'Artifact ID',
-		  'field_name' => 'Field Name',
-		  'old_value' => 'Old Value',
-		  'new_value' => 'New Value',
-		  'mod_by' => 'Modified By',
-		  'email' => 'Email',
-		  'date' => 'Modified On',
-		  'type' => 'Comment Type');
+$lbl_list = array('artifact_id' => $LANG->getText('project_export_artifact_history_export','art_id'),
+		  'field_name' => $LANG->getText('project_export_artifact_history_export','field_name'),
+		  'old_value' => $LANG->getText('project_export_artifact_history_export','old_val'),
+		  'new_value' => $LANG->getText('project_export_artifact_history_export','new_val'),
+		  'mod_by' => $LANG->getText('project_export_artifact_history_export','mod_by'),
+		  'email' => $LANG->getText('project_export_artifact_history_export','email'),
+		  'date' => $LANG->getText('project_export_artifact_history_export','mod_on'),
+		  'type' => $LANG->getText('project_export_artifact_history_export','comment_type'));
 
-$dsc_list = array('artifact_id' => 'Artifact ID',
-		  'field_name' => 'Name of the bug field which value changed',
-		  'old_value' => 'Value of the bug field before it changed',
-		  'new_value' => 'Value of the bug field after it changed',
-		  'mod_by' => 'Login name of the user who changed the value',
-		  'date' => 'Modification date',
-		  'type' => 'Type of the followup comment added to history (this field only applies for field name \'<tt>details</tt>\'');
+$dsc_list = array('artifact_id' => $LANG->getText('project_export_artifact_history_export','art_id'),
+		  'field_name' => $LANG->getText('project_export_artifact_history_export','field_name_desc'),
+		  'old_value' => $LANG->getText('project_export_artifact_history_export','old_val_desc'),
+		  'new_value' => $LANG->getText('project_export_artifact_history_export','new_val_desc'),
+		  'mod_by' => $LANG->getText('project_export_artifact_history_export','mod_by_desc'),
+		  'date' => $LANG->getText('project_export_artifact_history_export','mod_on_desc'),
+		  'type' => $LANG->getText('project_export_artifact_history_export','comment_type_desc'));
 
 $eol = "\n";
 
@@ -90,11 +92,11 @@ if ($export == 'artifact_history') {
 
 	project_admin_header(array('title'=>$pg_title));
 
-	echo '<h3>Artifact History export</h3>';
+	echo '<h3>'.$LANG->getText('project_export_artifact_history_export','art_hist_export').'</h3>';
 	if ($result) {
-	    echo '<P>No artifact history found. Could not generate an export.';
+	    echo '<P>'.$LANG->getText('project_export_artifact_history_export','no_hist_found');
 	} else {
-	    echo '<P>Error while accessing your artifact history database. Please report the error to the '.$GLOBALS['sys_name'].' Administrator';
+	    echo '<P>'.$LANG->getText('project_export_artifact_history_export','db_access_err',$GLOBALS['sys_name']);
 	    echo '<br>'.db_error();
 	}
 	site_project_footer( array() );
@@ -103,9 +105,7 @@ if ($export == 'artifact_history') {
 
 } else if ($export == "artifact_history_format") {
 
-    echo '<h3>Artifact History Export Format</h3> The Artifact History export
-provides you with the following artifact history fields. The sample values
-indicate what the field data types are.<p>';
+    echo $LANG->getText('project_export_artifact_history_export','hist_export_format');
    
     $record = pick_a_record_at_random($result, $rows, $col_list);
     prepare_artifact_history_record($at,$art_field_fact,$record);
@@ -133,10 +133,10 @@ indicate what the field data types are.<p>';
 				//
 				$at = new ArtifactType($group,$atid);
 				if (!$at || !is_object($at)) {
-					exit_error('Error','ArtifactType could not be created');
+					exit_error($LANG->getText('global','error'),$LANG->getText('project_export_artifact_deps_export','at_not_created'));
 				}
 				if ($at->isError()) {
-					exit_error('Error',$at->getErrorMessage());
+					exit_error($LANG->getText('global','error'),$at->getErrorMessage());
 				}
 				// Check if this tracker is valid (not deleted)
 				if ( !$at->isValid() ) {
@@ -146,7 +146,7 @@ indicate what the field data types are.<p>';
 				// Create field factory
 				$art_field_fact = new ArtifactFieldFactory($at);
 				if ($art_field_fact->isError()) {
-					exit_error('Error',$art_field_fact->getErrorMessage());
+					exit_error($LANG->getText('global','error'),$art_field_fact->getErrorMessage());
 				}
 
 				// Let's create the project database if it does not exist
@@ -175,14 +175,14 @@ indicate what the field data types are.<p>';
 						insert_record_in_table($dbname, $tbl_name, $col_list, $arr);
 				    }
 				} else {
-				    $feedback .= 'Error in Create project '.$tbl_name.' table:'.db_project_error();
+				    $feedback .= $LANG->getText('project_export_artifact_deps_export','create_proj_err',array($tbl_name,db_project_error()));
 				}
 			} // for
 	
 		}
 
     } else {
-		$feedback .= "SECURITY VIOLATION!!! Unauthorized database name: $dbname";
+		$feedback .= $LANG->getText('project_export_artifact_deps_export','security_violation',$dbname);
     }
    
 }

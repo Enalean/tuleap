@@ -9,12 +9,15 @@
 require($DOCUMENT_ROOT.'/include/pre.php');    
 require($DOCUMENT_ROOT.'/include/trove.php');
 require($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
+
+$LANG->loadLanguageMsg('project/project');
+
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
 // Check for submission. If so, make changes and redirect
 
 if ($GLOBALS['Submit'] && $root1) {
-	group_add_history ('Changed Trove',$rm_id,$group_id);
+	group_add_history ($LANG->getText('project_admin_grouptrove','changed_trove'),$rm_id,$group_id);
 
 	// there is at least a $root1[xxx]
 	while (list($rootnode,$value) = each($root1)) {
@@ -33,27 +36,13 @@ if ($GLOBALS['Submit'] && $root1) {
 	session_redirect('/project/admin/?group_id='.$group_id);
 }
 
-project_admin_header(array('title'=>'Group Trove Information','group'=>$group_id));
+project_admin_header(array('title'=>$LANG->getText('project_admin_grouptrove','g_trove_info'),'group'=>$group_id));
 
 // LJ New message added to explain that if a Topic category is not there
 // LJ put the project unclassified and the CodeX team will create the
 // Lj new entry
 //
-print '<P>Please select up to three classifications for this
-project in each of the Trove root categories. This will help potential
-developers and users to find your project and engage. If the project does not require any or all of these classification, simply select "None Selected".
-
-<P>IMPORTANT REMARKS: 
-<ul>
-<li>Projects should be categorized in the most specific locations
-available in the map.</li>
-<li>Simultaneous categorization in a specific category
-AND a parent category will result in only the more specific categorization
-being accepted.</li>
-<li><em><b>Topic Trove only</b></em>: If your project does
-  not seem to fit into any of the categories or sub-categories, simply select "Other/Non Listed Topics". As new projects are submitted, the '.$GLOBALS['sys_name'].' Team will refine the Topic Trove by defining 2nd and possibly 3rd level subcategories.  We welcome any suggestions on this. You can change the trove categories for this project at any time.</li> 
-</ul>
-';
+print '<P>'.$LANG->getText('project_admin_grouptrove','select_3_classifs',$GLOBALS['sys_name']);
 
 print "\n<FORM method=\"post\">";
 
@@ -76,7 +65,7 @@ while (list($catroot,$fullname) = each($CATROOTS)) {
 	}
 }
 
-print '<P><INPUT type="submit" name="Submit" value="Submit All Category Changes">';
+print '<P><INPUT type="submit" name="Submit" value="'.$LANG->getText('project_admin_grouptrove','submit_all_changes').'">';
 print '</FORM>';
 
 project_admin_footer(array());

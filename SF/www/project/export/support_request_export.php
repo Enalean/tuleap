@@ -6,6 +6,7 @@
 //
 // $Id$
 
+$LANG->loadLanguageMsg('project/project');
 
 // This is the SQL query to retrieve all the task history for this group
 
@@ -22,28 +23,28 @@ $sql = "SELECT support.support_id,'$group_id' AS group_id,".
 $col_list = array('support_id','group_id','support_category','summary',
 		  'priority','submitted_by','assigned_to', 'open_date','close_date',
 		  'status','follow_ups');
-$lbl_list = array('support_id' => 'Support ID',
-		  'group_id' => 'Group ID',
-		  'support_category' => 'Category',
-		  'summary' => 'Summary',
-		  'priority' => 'Priority',
-		  'submitted_by' => 'Submitted by',
-		  'assigned_to' => 'Assigned to',
-		  'open_date' => 'Open Date',
-		  'close_date' => 'Close Date',
-		  'status' => 'Status',
-		  'follow_ups' => 'Follow-up Comments');
-$dsc_list = array('support_id' => 'Unique support request identifier',
-		  'group_id' => 'Unique project identifier',
-		  'support_category' => 'Name of the category the support request is in',
-		  'summary' => 'One line description of the support request',
-		  'priority' => 'Priority',
-		  'submitted_by' => 'Name of the user who submitted the support request',
-		  'assigned_to' => 'Project member the support request is assigned to',
-		  'open_date' => 'Support request submission date',
-		  'close_date' => 'Support request close date',
-		  'status' => 'Status (Open, Closed,...)',
-		  'follow_ups' => 'All follow-up comments in one chunck of text including the original description');
+$lbl_list = array('support_id' => $LANG->getText('project_export_support_request_export','support_id'),
+		  'group_id' => $LANG->getText('project_export_bug_deps_export','g_id'),
+		  'support_category' => $LANG->getText('project_export_support_request_export','category'),
+		  'summary' => $LANG->getText('project_export_support_request_export','summary'),
+		  'priority' => $LANG->getText('project_export_support_request_export','priority'),
+		  'submitted_by' => $LANG->getText('project_export_support_request_export','submitted_by'),
+		  'assigned_to' => $LANG->getText('project_export_support_request_export','assigned_to'),
+		  'open_date' => $LANG->getText('project_export_support_request_export','open_date'),
+		  'close_date' => $LANG->getText('project_export_support_request_export','close_date'),
+		  'status' => $LANG->getText('project_export_support_request_export','status'),
+		  'follow_ups' => $LANG->getText('project_export_artifact_export','follow_up_comments'));
+$dsc_list = array('support_id' => $LANG->getText('project_export_support_request_export','support_id_desc'),
+		  'group_id' => $LANG->getText('project_export_bug_deps_export','g_id_desc'),
+		  'support_category' => $LANG->getText('project_export_support_request_export','category_desc'),
+		  'summary' => $LANG->getText('project_export_support_request_export','summary_desc'),
+		  'priority' => $LANG->getText('project_export_support_request_export','priority'),
+		  'submitted_by' => $LANG->getText('project_export_support_request_export','submitted_by_desc'),
+		  'assigned_to' => $LANG->getText('project_export_support_request_export','assigned_to_desc'),
+		  'open_date' => $LANG->getText('project_export_support_request_export','open_date_desc'),
+		  'close_date' => $LANG->getText('project_export_support_request_export','close_date_desc'),
+		  'status' => $LANG->getText('project_export_support_request_export','status_desc'),
+		  'follow_ups' => $LANG->getText('project_export_support_request_export','follow_up_desc'));
 
 $tbl_name = 'support_request';
 
@@ -72,11 +73,11 @@ if ($export == 'support_request') {
 
 	project_admin_header(array('title'=>$pg_title));
 
-	echo '<h3>Support Request Export</h3>';
+	echo '<h3>'.$LANG->getText('project_export_artifact_deps_export','bug_deps_export','Support Request').'</h3>';
 	if ($result) {
-	    echo '<P>No support request found. Could not generate an export.';
+	    echo '<P>'.$LANG->getText('project_export_artifact_deps_export','no_bug_deps_found','support request');
 	} else {
-	    echo '<P>Error while accessing your support request database. Please report the error to the '.$GLOBALS['sys_name'].' Administrator';
+	    echo '<P>'.$LANG->getText('project_export_artifact_deps_export','db_access_err',array('support request',$GLOBALS['sys_name']));
 	    echo '<br>'.db_error();
 	}
 	site_project_footer( array() );
@@ -85,9 +86,7 @@ if ($export == 'support_request') {
 
 } else if ($export == "support_request_format") {
 
-    echo '<h3>Support Request Export Format</h3> The Support Request export provides you
-with the following suppor request fields. The sample values indicate what the
-field data types are. <p>';
+    echo $LANG->getText('project_export_artifact_deps_export','bug_deps_export_format',' Support Request');
 
     $record = pick_a_record_at_random($result, $rows, $col_list);
     prepare_support_request_record($group_id,$record);   
@@ -124,11 +123,11 @@ field data types are. <p>';
 	    }
 
 	} else {
-	    $feedback .= 'Error in Create project '.$tbl_name.' table:'.db_project_error();
+	    $feedback .= $LANG->getText('project_export_artifact_deps_export','create_proj_err',array($tbl_name,db_project_error()));
 	}
 
     } else {
-	$feedback .= "SECURITY VIOLATION!!! Unauthorized database name: $dbname";
+	$feedback .= $LANG->getText('project_export_artifact_deps_export','security_violation',$dbname);
     }
    
 }

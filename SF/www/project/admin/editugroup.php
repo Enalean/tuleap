@@ -13,18 +13,21 @@ require($DOCUMENT_ROOT.'/include/pre.php');
 require($DOCUMENT_ROOT.'/project/admin/permissions.php');
 require($DOCUMENT_ROOT.'/file/file_utils.php');
 
+$LANG->loadLanguageMsg('project/project');
 
 function display_name_and_desc_form($ugroup_name,$ugroup_description) {
+  global $LANG;
+
     echo '	<table width="100%" border="0" cellpadding="5">
 	<tr> 
-	  <td width="21%"><b>Name</b>:</td>
+	  <td width="21%"><b>'.$LANG->getText('project_admin_editugroup','name').'</b>:</td>
 	  <td width="79%"> 
 	    <input type="text" name="ugroup_name" value="'.$ugroup_name.'">
 	  </td>
 	</tr>
-        <tr><td colspan=2><i>Please avoid space and punctuation in user group names</td></tr>
+        <tr><td colspan=2><i>'.$LANG->getText('project_admin_editugroup','avoid_special_ch').'</td></tr>
 	<tr> 
-	  <td width="21%"><b>Description</b>:</td>
+	  <td width="21%"><b>'.$LANG->getText('project_admin_editugroup','desc').'</b>:</td>
 	  <td width="79%"> 
 	  <textarea name="ugroup_description" rows="3" cols="50">'.$ugroup_description.'</textarea>
 	  </td>
@@ -38,7 +41,7 @@ session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
 
 if (browser_is_netscape4()) {
-    exit_error('Error','Sorry, your browser (Netscape 4.x) is not supported. In order to edit or create a user group, please use a different browser');
+    exit_error($LANG->getText('global','error'),$LANG->getText('project_admin_editugroup','browser_not_accepted'));
     return;
 }
 
@@ -52,28 +55,28 @@ if ($func=='do_create') {
 
 
 if ($func=='create') {
-    project_admin_header(array('title'=>'Create User Group','group'=>$group_id,
+    project_admin_header(array('title'=>$LANG->getText('project_admin_editugroup','create_ug'),'group'=>$group_id,
 			   'help' => 'UserGroups.html#UGroupCreation'));
     $project=project_get_object($group_id);
 
-    print '<P><h2>Creating new user group for <B>'.$project->getPublicName().'</B></h2>';
-    echo '<p>Please, fill the name and description of this new user group:</p>';
+    print '<P><h2>'.$LANG->getText('project_admin_editugroup','create_ug_for',$project->getPublicName()).'</h2>';
+    echo '<p>'.$LANG->getText('project_admin_editugroup','fill_ug_desc').'</p>';
     echo '<form method="post" name="form_create" action="/project/admin/editugroup.php?group_id='.$group_id.'">
 	<input type="hidden" name="func" value="do_create">
 	<input type="hidden" name="group_id" value="'.$group_id.'">';
     display_name_and_desc_form($ugroup_name,$ugroup_description);
     echo '<tr> 
-	  <td width="21%"><b>Create from</b>:</td>
+	  <td width="21%"><b>'.$LANG->getText('project_admin_editugroup','create_from').'</b>:</td>
 	  <td width="79%">';
     //<textarea name="ugroup_description" rows="3" cols="50">'.$ugroup_description.'</textarea>
     $group_arr=array();
-    $group_arr[]='Empty Group';
+    $group_arr[]=$LANG->getText('project_admin_editugroup','empty_g');
     $group_arr_value[]='cx_empty';
     $group_arr[]='-------------------';
     $group_arr_value[]='cx_empty2';
-    $group_arr[]='Project Members';
+    $group_arr[]=$LANG->getText('project_admin_editugroup','proj_members');
     $group_arr_value[]='cx_members';
-    $group_arr[]='Project Admins';
+    $group_arr[]=$LANG->getText('project_admin_editugroup','proj_admins');
     $group_arr_value[]='cx_admins';
     $group_arr[]='-------------------';
     $group_arr_value[]='cx_empty2';
@@ -85,7 +88,7 @@ if ($func=='create') {
     echo html_build_select_box_from_arrays ($group_arr_value,$group_arr,"group_templates",'cx_empty',false);
      
     echo '</td>
-	</tr><tr><td><input type="submit" value="Create User Group"></tr></td>
+	</tr><tr><td><input type="submit" value="'.$LANG->getText('project_admin_editugroup','create_ug').'"></tr></td>
         </table>
       </form>';
 }
@@ -94,19 +97,19 @@ if ($func=='create') {
 if (($func=='edit')||($func=='do_create')) {
     // Sanity check
     if (!$ugroup_id) { 
-        exit_error("ERROR",'The ugroup ID is missing');
+        exit_error($LANG->getText('global','error'),'The ugroup ID is missing');
     }
     $res=ugroup_db_get_ugroup($ugroup_id);
     if (!$res) {
-        exit_error("ERROR","ERROR - Can not find ugroup:$ugroup_id -".db_error());
+        exit_error($LANG->getText('global','error'),$LANG->getText('project_admin_editugroup','ug_not_found',array($ugroup_id,db_error())));
     }
     if (!$ugroup_name) { $ugroup_name=db_result($res,0,'name'); }
     if (!$ugroup_description) { $ugroup_description=db_result($res,0,'description'); }
 
-    project_admin_header(array('title'=>'Edit User Group','group'=>$group_id,
+    project_admin_header(array('title'=>$LANG->getText('project_admin_editugroup','edit_ug'),'group'=>$group_id,
 			   'help' => 'UserGroups.html#UGroupCreation'));
-    print '<P><h2>User Group \'<B>'.$ugroup_name.'</B>\' - Administration</h2>';
-    echo '<p>You can update the name and description of this user group:</p>';
+    print '<P><h2>'.$LANG->getText('project_admin_editugroup','ug_admin',$ugroup_name).'</h2>';
+    echo '<p>'.$LANG->getText('project_admin_editugroup','upd_ug_name').'</p>';
     echo '<form method="post" name="form_create" action="/project/admin/ugroup.php?group_id='.$group_id.'" onSubmit="return selIt();">
 	<input type="hidden" name="func" value="do_update">
 	<input type="hidden" name="group_id" value="'.$group_id.'">
@@ -128,39 +131,39 @@ if (($func=='edit')||($func=='do_create')) {
 .t1 { visibility:hidden; }
 .t2 { visibility:visible; }
 </style>
-<p><b>Please select user group members:</b>
+<p><b>'.$LANG->getText('project_admin_editugroup','select_ug_members').'</b>
 <SCRIPT src="/include/filterlist.js" type="text/javascript"></SCRIPT>
 
 <TABLE cellpadding=0 cellspacing=0>
 <TR>
 <TD>
-Quick Filters: 
-<A title="Show items starting with A" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^A\');switchMessage(1)">A</A> 
-<A title="Show items starting with B" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^B\');switchMessage(1)">B</A> 
-<A title="Show items starting with C" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^C\');switchMessage(1)">C</A>  
-<A title="Show items starting with D" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^D\');switchMessage(1)">D</A> 
-<A title="Show items starting with E" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^E\');switchMessage(1)">E</A> 
-<A title="Show items starting with F" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^F\');switchMessage(1)">F</A> 
-<A title="Show items starting with G" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^G\');switchMessage(1)">G</A> 
-<A title="Show items starting with H" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^H\');switchMessage(1)">H</A> 
-<A title="Show items starting with I" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^I\');switchMessage(1)">I</A> 
-<A title="Show items starting with J" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^J\');switchMessage(1)">J</A> 
-<A title="Show items starting with K" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^K\');switchMessage(1)">K</A> <br>
-<A title="Show items starting with L" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^L\');switchMessage(1)">L</A> 
-<A title="Show items starting with M" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^M\');switchMessage(1)">M</A> 
-<A title="Show items starting with N" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^N\');switchMessage(1)">N</A> 
-<A title="Show items starting with O" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^O\');switchMessage(1)">O</A> 
-<A title="Show items starting with P" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^P\');switchMessage(1)">P</A> 
-<A title="Show items starting with Q" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^Q\');switchMessage(1)">Q</A> 
-<A title="Show items starting with R" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^R\');switchMessage(1)">R</A> 
-<A title="Show items starting with S" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^S\');switchMessage(1)">S</A> 
-<A title="Show items starting with T" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^T\');switchMessage(1)">T</A> 
-<A title="Show items starting with U" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^U\');switchMessage(1)">U</A> 
-<A title="Show items starting with V" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^V\');switchMessage(1)">V</A> 
-<A title="Show items starting with W" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^W\');switchMessage(1)">W</A> 
-<A title="Show items starting with X" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^X\');switchMessage(1)">X</A> 
-<A title="Show items starting with Y" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^Y\');switchMessage(1)">Y</A> 
-<A title="Show items starting with Z" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^Z\');switchMessage(1)">Z</A> 
+'.$LANG->getText('project_admin_editugroup','quick_filters').'
+<A title="'.$LANG->getText('project_admin_editugroup','show_items','A').'" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^A\');switchMessage(1)">A</A> 
+<A title="'.$LANG->getText('project_admin_editugroup','show_items','B').'" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^B\');switchMessage(1)">B</A> 
+<A title="'.$LANG->getText('project_admin_editugroup','show_items','C').'" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^C\');switchMessage(1)">C</A>  
+<A title="'.$LANG->getText('project_admin_editugroup','show_items','D').'" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^D\');switchMessage(1)">D</A> 
+<A title="'.$LANG->getText('project_admin_editugroup','show_items','E').'" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^E\');switchMessage(1)">E</A> 
+<A title="'.$LANG->getText('project_admin_editugroup','show_items','F').'" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^F\');switchMessage(1)">F</A> 
+<A title="'.$LANG->getText('project_admin_editugroup','show_items','G').'" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^G\');switchMessage(1)">G</A> 
+<A title="'.$LANG->getText('project_admin_editugroup','show_items','H').'" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^H\');switchMessage(1)">H</A> 
+<A title="'.$LANG->getText('project_admin_editugroup','show_items','I').'" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^I\');switchMessage(1)">I</A> 
+<A title="'.$LANG->getText('project_admin_editugroup','show_items','J').'" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^J\');switchMessage(1)">J</A> 
+<A title="'.$LANG->getText('project_admin_editugroup','show_items','K').'" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^K\');switchMessage(1)">K</A> <br>
+<A title="'.$LANG->getText('project_admin_editugroup','show_items','L').'" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^L\');switchMessage(1)">L</A> 
+<A title="'.$LANG->getText('project_admin_editugroup','show_items','M').'" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^M\');switchMessage(1)">M</A> 
+<A title="'.$LANG->getText('project_admin_editugroup','show_items','N').'" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^N\');switchMessage(1)">N</A> 
+<A title="'.$LANG->getText('project_admin_editugroup','show_items','O').'" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^O\');switchMessage(1)">O</A> 
+<A title="'.$LANG->getText('project_admin_editugroup','show_items','P').'" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^P\');switchMessage(1)">P</A> 
+<A title="'.$LANG->getText('project_admin_editugroup','show_items','Q').'" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^Q\');switchMessage(1)">Q</A> 
+<A title="'.$LANG->getText('project_admin_editugroup','show_items','R').'" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^R\');switchMessage(1)">R</A> 
+<A title="'.$LANG->getText('project_admin_editugroup','show_items','S').'" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^S\');switchMessage(1)">S</A> 
+<A title="'.$LANG->getText('project_admin_editugroup','show_items','T').'" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^T\');switchMessage(1)">T</A> 
+<A title="'.$LANG->getText('project_admin_editugroup','show_items','U').'" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^U\');switchMessage(1)">U</A> 
+<A title="'.$LANG->getText('project_admin_editugroup','show_items','V').'" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^V\');switchMessage(1)">V</A> 
+<A title="'.$LANG->getText('project_admin_editugroup','show_items','W').'" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^W\');switchMessage(1)">W</A> 
+<A title="'.$LANG->getText('project_admin_editugroup','show_items','X').'" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^X\');switchMessage(1)">X</A> 
+<A title="'.$LANG->getText('project_admin_editugroup','show_items','Y').'" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^Y\');switchMessage(1)">Y</A> 
+<A title="'.$LANG->getText('project_admin_editugroup','show_items','Z').'" onMousedown="switchMessage(2)" href="javascript:myfilter.set(\'^Z\');switchMessage(1)">Z</A> 
 </TD>
 <td></td>
 <td></td>
@@ -207,13 +210,13 @@ Quick Filters:
 </TD>
 <TD align="left">
 <SELECT NAME="PickList[]" ID="PickList" SIZE="16" multiple>
-<OPTION VALUE="01sel">Selection 01 - please ignore</OPTION>
+<OPTION VALUE="01sel">'.$LANG->getText('project_admin_editugroup','sel01').'</OPTION>
 </SELECT>
 </TD>
 </TR>
 <TR>
 <TD ALIGN="middle">
-<p class=t1 id=textone><b>&nbsp;Please wait...</b></p>
+<p class=t1 id=textone><b>&nbsp;'.$LANG->getText('project_admin_editugroup','please_wait').'</b></p>
 
 <SCRIPT type=text/javascript>
 
@@ -239,14 +242,14 @@ function switchMessage(_I)
 
 </SCRIPT>
 
-<P>Filter: 
+<P>'.$LANG->getText('project_admin_editugroup','filter').' 
 <INPUT onkeydown="switchMessage(2)" onkeyup="myfilter.set(this.value);switchMessage(1)" name=regexp>
 <INPUT onMousedown="switchMessage(2)" onclick="myfilter.reset();this.form.regexp.value=\'\';switchMessage(1)" type=button value="Reset"> 
 </TD>
 <TD></TD>
 <TD ALIGN="left">
 <p>&nbsp;<p>
-<INPUT TYPE="submit" VALUE="Submit">
+<INPUT TYPE="submit" VALUE="'.$LANG->getText('global','btn_submit').'">
 </TD>
 </TR>
 </TABLE>
@@ -258,12 +261,12 @@ function switchMessage(_I)
     $res=db_query($sql);
     if (db_numrows($res)>0) {
         echo '
-<hr><p><b>This user group is granted the following permissions:</b>
+<hr><p><b>'.$LANG->getText('project_admin_editugroup','ug_perms').'</b>
 <p>';
         
         $title_arr=array();
-        $title_arr[]='Permission';
-        $title_arr[]='Resource Name';
+        $title_arr[]=$LANG->getText('project_admin_editugroup','permission');
+        $title_arr[]=$LANG->getText('project_admin_editugroup','');
         echo html_build_list_table_top($title_arr,false,false,false);
         $row_num=0;
         
@@ -271,10 +274,10 @@ function switchMessage(_I)
             echo '<TR class="'. util_get_alt_row_color($row_num) .'">';
             echo '<TD>'.permission_get_name($row['permission_type']).'</TD>';
             if ($row['permission_type'] == 'PACKAGE_READ') {
-                echo '<TD>Package <a href="/file/admin/editpackagepermissions.php?package_id='.$row['object_id'].'&group_id='.$group_id.'">'.file_get_package_name_from_id($row['object_id']).'</a></TD>';
+                echo '<TD>'.$LANG->getText('project_admin_editugroup','package').' <a href="/file/admin/editpackagepermissions.php?package_id='.$row['object_id'].'&group_id='.$group_id.'">'.file_get_package_name_from_id($row['object_id']).'</a></TD>';
             } else if ($row['permission_type'] == 'RELEASE_READ') {
                 $package_id=file_get_package_id_from_release_id($row['object_id']);
-                echo '<TD>Release <a href="/file/admin/editreleasepermissions.php?release_id='.$row['object_id'].'&group_id='.$group_id.'&package_id='.$package_id.'">'.file_get_release_name_from_id($row['object_id']).'</a> (from package <a href="/file/admin/editreleases.php?package_id='.$package_id.'&group_id='.$group_id.'">'.file_get_package_name_from_id($package_id).'</a>)</TD>';
+                echo '<TD>'.$LANG->getText('project_admin_editugroup','release').' <a href="/file/admin/editreleasepermissions.php?release_id='.$row['object_id'].'&group_id='.$group_id.'&package_id='.$package_id.'">'.file_get_release_name_from_id($row['object_id']).'</a> (from package <a href="/file/admin/editreleases.php?package_id='.$package_id.'&group_id='.$group_id.'">'.file_get_package_name_from_id($package_id).'</a>)</TD>';
             } else {
                 echo '<TD>'.$row['permission_type'].'</TD>
               <TD>'.$row['object_id'].'</TD>';

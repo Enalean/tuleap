@@ -16,6 +16,9 @@ require($DOCUMENT_ROOT.'/../common/tracker/ArtifactTypeFactory.class');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactField.class');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactFieldFactory.class');
 
+$LANG->loadLanguageMsg('project/project');
+
+
 // Conditionally include the appropriate modules
 if (ereg('^bug',$export) || ($export == 'project_db') ) {
     require($DOCUMENT_ROOT.'/bugs/bug_data.php');
@@ -32,7 +35,7 @@ if (ereg('^support',$export) || ($export == 'project_db') ) {
 
 // Group ID must be defined and must be a project admin
 if ( !$group_id ) {
-    exit_error("Invalid Group","That group could not be found."); }
+    exit_error($LANG->getText('project_admin_userperms','invalid_g'),$LANG->getText('project_admin_userperms','group_not_exist')); }
 
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
@@ -45,12 +48,12 @@ if (!$group || !is_object($group) || $group->isError()) {
 }		   
 $atf = new ArtifactTypeFactory($group);
 if (!$group || !is_object($group) || $group->isError()) {
-	exit_error('Error','Could Not Get ArtifactTypeFactory');
+	exit_error($LANG->getText('global','error'),$LANG->getText('project_admin_index','not_get_atf'));
 }
 
 $project=project_get_object($group_id);
 $dbname = $groupname = $project->getUnixName();
-$pg_title = 'Project Data Export '.$groupname;
+$pg_title = $LANG->getText('project_admin_utils','project_data_export').' '.$groupname;
 
 switch ($export) {
 
@@ -200,15 +203,9 @@ switch ($export) {
      require('./artifact_history_export.php');
      require('./artifact_deps_export.php');
 
-?>
-   <P>Your project database has been succesfully generated. You can now use 
-your favorite desktop application and access your project database through 
-the MySQL ODBC/JDBC driver installed on your desktop machine.
- The parameters to configure your ODBC/JDBC database 
-connection are as follows:
-<p>
-
-<?php
+echo '
+   <P>'.$LANG->getText('project_export_index','proj_db_success').'
+<p>';
      display_db_params ();
      site_project_footer( array() );
      break;
@@ -217,15 +214,11 @@ connection are as follows:
      project_admin_header(array('title'=>$pg_title,
 				'help' => 'ProjectDataExport.html'));
     // Display the welcome screen
-?>
-<P> Your project data can either be exported in
-individual text files (CSV format) or in a project specific database that you can directly access from your desktop machine through an ODBC/JDBC connection. See <?php echo help_button('ProjectDataExport.html',false,'Online Help'); ?> for more information.
 
-<h3>Text File Export <?php echo help_button('ProjectDataExport.html#TextFileExport'); ?></h3>
-
-     <P>Click on the links below to generate a text file export (CSV format).
-<P>
-<?
+echo '
+<P> '.$LANG->getText('project_export_index','export_to_csv_or_db',array(help_button('ProjectDataExport.html',false,$LANG->getText('project_export_index','online_help')),
+									help_button('ProjectDataExport.html#TextFileExport'))).'
+<P>';
 		
 	// Show all the fields currently available in the system
 
@@ -234,35 +227,35 @@ individual text files (CSV format) or in a project specific database that you ca
   <tr class="boxtable"> 
     <td class="boxtitle">&nbsp;</td>
     <td class="boxtitle"> 
-      <div align="center"><b>Artifacts Data</b></div>
+      <div align="center"><b>'.$LANG->getText('project_export_index','art_data').'</b></div>
     </td>
     <td class="boxtitle"> 
-      <div align="center"><b>History</b></div>
+      <div align="center"><b>'.$LANG->getText('project_export_index','history').'</b></div>
     </td>
     <td class="boxtitle"> 
-      <div align="center"><b>Dependencies</b></div>
+      <div align="center"><b>'.$LANG->getText('project_export_index','dependencies').'</b></div>
     </td>
   </tr>';
   	$iu = 0;
-	$legacy = (($sys_activate_tracker == 1) ? "Legacy":"");
+	$legacy = (($sys_activate_tracker == 1) ? $LANG->getText('project_export_index','legacy'):"");
 
 	if ($project->activateOldBug()) {
   	echo '
   <tr class="'.util_get_alt_row_color($iu).'"> 
-    <td><b>'.$legacy.' Bug Tracker</b></td>
+    <td><b>'.$legacy.' '.$LANG->getText('project_export_index','bug_tracker').'</b></td>
     <td align="center"> 
-      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug">Export</a>
-      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_format">Show Format</a>
+      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug">'.$LANG->getText('project_export_index','export').'</a>
+      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_format">'.$LANG->getText('project_export_index','show_format').'</a>
     </td>
     <td align="center"> 
-      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_history">Export</a>
-      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_history_format">Show Format</a>
+      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_history">'.$LANG->getText('project_export_index','export').'</a>
+      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_history_format">'.$LANG->getText('project_export_index','show_format').'</a>
     </td>
     <td align="center"> 
-      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_bug_deps">Export Bug-Bug Deps</a>
-      - <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_bug_deps_format">Show Format</a>
-      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_task_deps">Export Bug-Task Deps</a>
-      - <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_task_deps_format">Show Format</a>
+      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_bug_deps">'.$LANG->getText('project_export_index','export_x','Bug-Bug Deps').'</a>
+      - <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_bug_deps_format">'.$LANG->getText('project_export_index','show_format').'</a>
+      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_task_deps">'.$LANG->getText('project_export_index','export_x','Bug-Task Deps').'</a>
+      - <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_task_deps_format">'.$LANG->getText('project_export_index','show_format').'</a>
     </td>
   </tr>';
   	$iu ++;
@@ -271,18 +264,18 @@ individual text files (CSV format) or in a project specific database that you ca
 	if ($project->activateOldTask()) {
   	echo '
   <tr class="'.util_get_alt_row_color($iu).'"> 
-    <td><b>'.$legacy.' Task Manager</b></td>
+    <td><b>'.$legacy.' '.$LANG->getText('project_admin_userperms','task_man').'</b></td>
     <td align="center"> 
-      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task">Export</a>
-	  <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_format">Show Format</a>
+      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task">'.$LANG->getText('project_export_index','export').'</a>
+	  <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_format">'.$LANG->getText('project_export_index','show_format').'</a>
     </td>
     <td align="center"> 
-      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_history">Export</a>
-      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_history_format">Show Format</a>
+      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_history">'.$LANG->getText('project_export_index','export').'</a>
+      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_history_format">'.$LANG->getText('project_export_index','show_format').'</a>
     </td>
     <td align="center"> 
-      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_task_deps">Export</a>
-      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_task_deps_format">Show Format</a>
+      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_task_deps">'.$LANG->getText('project_export_index','export').'</a>
+      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_task_deps_format">'.$LANG->getText('project_export_index','show_format').'</a>
     </td>
   </tr>';
   	$iu ++;
@@ -291,10 +284,10 @@ individual text files (CSV format) or in a project specific database that you ca
 	if ($project->activateOldSR()) {
   	echo '
   <tr class="'.util_get_alt_row_color($iu).'"> 
-    <td><b>'.$legacy.' Support Request</b></td>
+    <td><b>'.$legacy.' '.$LANG->getText('project_export_index','support_request').'</b></td>
     <td align="center"> 
-      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=support_request">Export</a>
-      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=support_request_format">Show Format</a>
+      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=support_request">'.$LANG->getText('project_export_index','export').'</a>
+      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=support_request_format">'.$LANG->getText('project_export_index','show_format').'</a>
     </td>
     <td align="center">-<br>-</td>
     <td align="center">-<br>-</td>
@@ -304,10 +297,10 @@ individual text files (CSV format) or in a project specific database that you ca
 
   	echo '
   <tr class="'.util_get_alt_row_color($iu).'"> 
-    <td><b>Survey Responses</b></td>
+    <td><b>'.$LANG->getText('project_export_index','survey_responses').'</b></td>
     <td align="center"> 
-      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=survey_responses">Export</a>
-      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=survey_responses_format">Show Format</a>
+      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=survey_responses">'.$LANG->getText('project_export_index','export').'</a>
+      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=survey_responses_format">'.$LANG->getText('project_export_index','show_format').'</a>
     </td>
     <td align="center">-<br>-</td>
     <td align="center">-<br>-</td>
@@ -322,30 +315,30 @@ individual text files (CSV format) or in a project specific database that you ca
 		  	echo '
 		  <tr class="'.util_get_alt_row_color($iu).'"> 
 		    <td><b>Tracker: '.$at_arr[$j]->getName().'</b></td>
-		    <td align="center"><a href="'.$PHP_SELF.'?group_id='.$group_id.'&atid='.$at_arr[$j]->getID().'&export=artifact">Export</a>
-		      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&atid='.$at_arr[$j]->getID().'&export=artifact_format">Show Format</a>
+		    <td align="center"><a href="'.$PHP_SELF.'?group_id='.$group_id.'&atid='.$at_arr[$j]->getID().'&export=artifact">'.$LANG->getText('project_export_index','export').'</a>
+		      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&atid='.$at_arr[$j]->getID().'&export=artifact_format">'.$LANG->getText('project_export_index','show_format').'</a>
 		    </td>
 		    <td align="center"> 
-		      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&atid='.$at_arr[$j]->getID().'&export=artifact_history">Export</a>
-		      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&atid='.$at_arr[$j]->getID().'&export=artifact_history_format">Show Format</a>
+		      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&atid='.$at_arr[$j]->getID().'&export=artifact_history">'.$LANG->getText('project_export_index','export').'</a>
+		      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&atid='.$at_arr[$j]->getID().'&export=artifact_history_format">'.$LANG->getText('project_export_index','show_format').'</a>
 		    </td>
 		    <td align="center"> 
-		      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&atid='.$at_arr[$j]->getID().'&export=artifact_deps">Export</a>
-		      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&atid='.$at_arr[$j]->getID().'&export=artifact_deps_format">Show Format</a>
+		      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&atid='.$at_arr[$j]->getID().'&export=artifact_deps">'.$LANG->getText('project_export_index','export').'</a>
+		      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&atid='.$at_arr[$j]->getID().'&export=artifact_deps_format">'.$LANG->getText('project_export_index','show_format').'</a>
 		    </td>
 		  </tr>';
 		}
 	}
 
 	echo '</TABLE>';
-?>
+echo '
 <br>
-<h3>Direct Database Access <?php echo help_button('ProjectDataExport.html#DirectDatabaseAccess'); ?></h3>
+<h3>'.$LANG->getText('project_export_index','direct_db_access').' '.help_button('ProjectDataExport.html#DirectDatabaseAccess').'</h3>
 
-<ol>
-<?php
-    echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=project_db\">Generate Full Project Database</a> </b> (<- Click to generate)"."\n";
-    echo '<li>Database connection parameters: ';
+<ol>';
+
+    echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=project_db\">".$LANG->getText('project_export_index','generate_full_db')."\n";
+    echo '<li>'.$LANG->getText('project_export_index','db_connection_params').' ';
 ?>
 </ol>
 

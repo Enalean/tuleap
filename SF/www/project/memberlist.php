@@ -8,13 +8,14 @@
 
 require($DOCUMENT_ROOT.'/include/pre.php');    
 
+$LANG->loadLanguageMsg('project/project');
+
 if ((!$group_id) && $form_grp) 
 	$group_id=$form_grp;
 
-site_project_header(array('title'=>"Project Member List",'group'=>$group_id,'toptab'=>'memberlist'));
+site_project_header(array('title'=>$LANG->getText('project_memberlist','proj_member_list'),'group'=>$group_id,'toptab'=>'memberlist'));
 
-print '<P>If you would like to contribute to this project by becoming a developer,
-contact one of the project admins, designated in bold text below.<br><br>';
+print $LANG->getText('project_memberlist','contact_to_become_member');
 
 // list members
 // LJ email column added 
@@ -28,10 +29,10 @@ $query =  "SELECT user.user_name AS user_name,user.user_id AS user_id,"
 
 
 $title_arr=array();
-$title_arr[]='Developer';
-$title_arr[]='Username';
-$title_arr[]='Email';
-$title_arr[]='Skills';
+$title_arr[]=$LANG->getText('project_memberlist','developer');
+$title_arr[]=$LANG->getText('project_memberlist','username');
+$title_arr[]=$LANG->getText('project_export_artifact_history_export','Email');
+$title_arr[]=$LANG->getText('project_memberlist','skills');
 
 echo html_build_list_table_top ($title_arr);
 
@@ -55,7 +56,7 @@ LJ */
 
 
 	print "\t\t<td align=\"center\"><A href=\"/people/viewprofile.php?user_id=".
-		$row_memb['user_id']."\">View Skills</a></td>\n";
+		$row_memb['user_id']."\">'.$LANG->getText('project_memberlist','view_skills').'</a></td>\n";
 	print "\t<tr>\n";
 }
 print "\t</table>";
