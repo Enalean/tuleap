@@ -171,6 +171,10 @@ connection are as follows:
 <P> Your project data can either be exported in
 individual text files (CSV format) or in a project specific database that you can directly access from your desktop machine through an ODBC/JDBC connection. See <?php echo help_button('ProjectDataExport.html',false,'Online Help'); ?> for more information.
 
+<h3>Text File Export <?php echo help_button('ProjectDataExport.html#TextFileExport'); ?></h3>
+
+     <P>Click on the links below to generate a text file export (CSV format).
+<P>
 <?
 		
 	// Show all the fields currently available in the system
@@ -190,9 +194,11 @@ individual text files (CSV format) or in a project specific database that you ca
     </td>
   </tr>';
   	$iu = 0;
+	$legacy = (($sys_activate_tracker == 1) ? "Legacy":"");
+
   	echo '
   <tr class="'.util_get_alt_row_color($iu).'"> 
-    <td><b>Legacy Bug Tracker</b></td>
+    <td><b>'.$legacy.' Bug Tracker</b></td>
     <td align="center"> 
       <a href="'.$PHP_SELF.'?group_id=$group_id&export=bug">Export</a>
       <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_format">Show Format</a>
@@ -211,7 +217,7 @@ individual text files (CSV format) or in a project specific database that you ca
   	$iu ++;
   	echo '
   <tr class="'.util_get_alt_row_color($iu).'"> 
-    <td><b>Legacy Task Manager</b></td>
+    <td><b>'.$legacy.' Task Manager</b></td>
     <td align="center"> 
       <a href="'.$PHP_SELF.'?group_id=$group_id&export=task">Export</a>
 	  <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_format">Show Format</a>
@@ -228,7 +234,7 @@ individual text files (CSV format) or in a project specific database that you ca
   	$iu ++;
   	echo '
   <tr class="'.util_get_alt_row_color($iu).'"> 
-    <td><b>Legacy Support Request</b></td>
+    <td><b>'.$legacy.' Support Request</b></td>
     <td align="center"> 
       <a href="'.$PHP_SELF.'?group_id=$group_id&export=support_request">Export</a>
       <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=support_request_format">Show Format</a>
@@ -286,7 +292,7 @@ individual text files (CSV format) or in a project specific database that you ca
 
 	echo '</TABLE>';
 ?>
-
+<br>
 <h3>Direct Database Access <?php echo help_button('ProjectDataExport.html#DirectDatabaseAccess'); ?></h3>
 
 <ol>
