@@ -1070,8 +1070,8 @@ class ArtifactField extends Error {
 		// Retrieve the full list (id+label)
 		if ( $this->isUserName() ) {
 			// For user fields, we need to retrieve all users because for
-			// tracker which allows anonymous submission
-			$all_values = $this->getUsersList();
+			// tracker which allows anonymous submission for the values
+			$all_values = $this->getUsersList($values);
 		} else {
 			$all_values = $this->getFieldPredefinedValues($group_artifact_id,false,false,false,true);		
 		}
@@ -1097,18 +1097,11 @@ class ArtifactField extends Error {
 	 *
 	 *  @return array
 	 */
-	function getUsersList() {
-		global $RES_USER_CACHE;
-		
-		if ( !isset($RES_USER_CACHE) ) {
-			$sql="SELECT user_id,user_name ".
-			    "FROM user";
-			$res_value = db_query($sql);
-			$RES_USER_CACHE = $res_value;
-		} else {
-			// Use cache
-			$res_value = $RES_USER_CACHE;
-		}
+	function getUsersList($values) {
+		$sql="SELECT user_id,user_name ".
+		    "FROM user ".
+		    "WHERE user_id IN (".join(",",$values).")";
+		$res_value = db_query($sql);
 		
 		return $res_value;
 	}
