@@ -45,7 +45,6 @@ if (!$result) {
 			$feedback .= ' Comment Failed ';
 		} else {
 			$feedback .= ' Comment added to support request ';
-			//mail_followup($support_id);
 		}
 	}
 

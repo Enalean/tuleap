@@ -78,7 +78,7 @@ function display_exported_fields($col_list,$lbl_list,$dsc_list,$sample_val){
     while (list(,$col) = each($col_list)) {
 	echo '<tr bgcolor="'.util_get_alt_row_color($cnt++).'">'.
 	    '<td><b>'.$col.'</b></td><td>'.$lbl_list[$col].
-	    '</td><td>'.$sample_val[$col].'</td><td>'.$dsc_list[$col].'</td></tr>';
+	    '</td><td>'.nl2br($sample_val[$col]).'</td><td>'.$dsc_list[$col].'</td></tr>';
     }
 
     echo '</table>';
@@ -147,13 +147,13 @@ function prepare_bug_record($group_id, &$col_list, &$record) {
     }
 
     $bug_id = $record['bug_id'];
-    $record['follow_ups'] = get_bug_followups($group_id,$bug_id);
-    $record['is_dependent_on_task_id'] = get_bug_task_dependencies($group_id,$bug_id);
-    $record['is_dependent_on_bug_id'] = get_bug_bug_dependencies($group_id,$bug_id);
+    $record['follow_ups'] = pe_utils_format_bug_followups($group_id,$bug_id);
+    $record['is_dependent_on_task_id'] = pe_utils_format_bug_task_dependencies($group_id,$bug_id);
+    $record['is_dependent_on_bug_id'] = pe_utils_format_bug_bug_dependencies($group_id,$bug_id);
 
 }
 
-function get_bug_followups ($group_id,$bug_id) {
+function pe_utils_format_bug_followups($group_id,$bug_id) {
     global $BUG_FU, $sys_datefmt;
 
     // return all the follow-up comments attached to a given bug
@@ -178,10 +178,9 @@ function get_bug_followups ($group_id,$bug_id) {
 	$res = db_query($sql);
 	if ($res) {
 
-	    while ($row = db_fetch_array($result)) {
+	    while ($row = db_fetch_array($res)) {
 
 		$BUG_FU[$row['bug_id']] .= 
-		    "\n".
 		    '=================================================='.
 		    "\n".
 		    'Type: '.$row['type'].'     By: '.$row['mod_by'].'      On: '.
@@ -198,7 +197,7 @@ function get_bug_followups ($group_id,$bug_id) {
 
 }
 
-function get_bug_task_dependencies ($group_id,$bug_id) {
+function pe_utils_format_bug_task_dependencies ($group_id,$bug_id) {
     global $BUG_TD;
 
     // return all the tasks a bug depends on
@@ -216,7 +215,7 @@ function get_bug_task_dependencies ($group_id,$bug_id) {
 	$res = db_query($sql);
 	if ($res) {
 
-	    while ($row = db_fetch_array($result)) {
+	    while ($row = db_fetch_array($res)) {
 
 		$tid = $row['bug_id'];
 
@@ -240,7 +239,7 @@ function get_bug_task_dependencies ($group_id,$bug_id) {
 
 }
 
-function get_bug_bug_dependencies ($group_id,$bug_id) {
+function pe_utils_format_bug_bug_dependencies($group_id,$bug_id) {
     global $BUG_BD;
 
     // return all the bugs a bug depends on
@@ -258,7 +257,7 @@ function get_bug_bug_dependencies ($group_id,$bug_id) {
 	$res = db_query($sql);
 	if ($res) {
 
-	    while ($row = db_fetch_array($result)) {
+	    while ($row = db_fetch_array($res)) {
 
 		$tid = $row['bug_id'];
 
@@ -399,9 +398,9 @@ function prepare_task_record($group_id, &$record) {
     $record['details'] = prepare_textarea($record['details']);
 
     $task_id = $record['project_task_id'];
-    $record['assigned_to'] = get_task_assignees ($group_id,$task_id);
-    $record['follow_ups'] = get_task_followups ($group_id,$task_id);
-    $record['is_dependent_on_task_id'] = get_task_dependencies($group_id,$task_id);
+    $record['assigned_to'] = pe_utils_format_task_assignees ($group_id,$task_id);
+    $record['follow_ups'] = pe_utils_format_task_followups ($group_id,$task_id);
+    $record['is_dependent_on_task_id'] = pe_utils_format_task_dependencies($group_id,$task_id);
 
 }
 
@@ -421,7 +420,7 @@ function prepare_survey_responses_record($group_id, &$record) {
  
 }
 
-function get_task_assignees ($group_id,$task_id) {
+function pe_utils_format_task_assignees ($group_id,$task_id) {
     
     global $TASK_AT;
 
@@ -442,7 +441,7 @@ function get_task_assignees ($group_id,$task_id) {
 	$res = db_query($sql);
 	if ($res) {
 
-	    while ($row = db_fetch_array($result)) {
+	    while ($row = db_fetch_array($res)) {
 
 		$tid = $row['project_task_id'];
 
@@ -464,7 +463,7 @@ function get_task_assignees ($group_id,$task_id) {
 
 }
 
-function get_task_followups ($group_id,$task_id) {
+function pe_utils_format_task_followups ($group_id,$task_id) {
     global $TASK_FU, $sys_datefmt;
 
     // return all the follow-up comments attached to a given task
@@ -486,10 +485,9 @@ function get_task_followups ($group_id,$task_id) {
 	$res = db_query($sql);
 	if ($res) {
 
-	    while ($row = db_fetch_array($result)) {
+	    while ($row = db_fetch_array($res)) {
 
 		$TASK_FU[$row['project_task_id']] .= 
-		    "\n".
 		    '=================================================='."\n".
 		    'By: '.$row['mod_by'].'      On: '.
 		    date($sys_datefmt,$row['date'])."\n\n".
@@ -505,7 +503,7 @@ function get_task_followups ($group_id,$task_id) {
 
 }
 
-function get_task_dependencies ($group_id,$task_id) {
+function pe_utils_format_task_dependencies ($group_id,$task_id) {
     global $TASK_TD;
 
     // return all the tasks a task depends on
@@ -524,7 +522,7 @@ function get_task_dependencies ($group_id,$task_id) {
 	$res = db_query($sql);
 	if ($res) {
 
-	    while ($row = db_fetch_array($result)) {
+	    while ($row = db_fetch_array($res)) {
 
 		$tid = $row['project_task_id'];
 
@@ -548,6 +546,70 @@ function get_task_dependencies ($group_id,$task_id) {
 
 }
 
+function prepare_support_request_record($group_id, &$record) {
+
+    global $datetime_fmt;
+
+    /*
+           Prepare the column values in the SR record
+           Input: a row from the support table (passed by reference)
+          Output: the same row with values transformed for database export
+       */
+
+    if ($record['open_date'] == 0)
+	$record['open_date'] = '';
+    else
+	$record['open_date'] = date($datetime_fmt,$record['open_date']);
+
+    if ($record['close_date'] == 0)
+	$record['close_date'] = '';
+    else
+	$record['close_date'] = date($datetime_fmt,$record['close_date']);
+
+    $record['summary'] = prepare_textarea($record['summary']);
+    $sr_id = $record['support_id'];
+    $record['follow_ups'] = pe_utils_format_sr_messages($group_id,$sr_id);
+
+}
+
+function pe_utils_format_sr_messages($group_id,$sr_id) {
+    global $SR_MSG, $sys_datefmt;
+
+    // return all the follow-up comments attached to a given bug
+    // Do a big SQl query the first time and then cache the results
+    // instead of doing one SQL query for each bug
+
+    if (!isset($SR_MSG)) {
+
+
+	$sql = 'SELECT support_messages.support_id, support_messages.from_email,'.
+	    'support_messages.date,support_messages.body '.
+	    'FROM support_messages, support '.
+	    'WHERE (support_messages.support_id=support.support_id AND '.
+	    "support.group_id='$group_id') ".
+	    'ORDER BY date DESC';
+
+	$res = db_query($sql);
+	if ($res) {
+
+	    while ($row = db_fetch_array($res)) {
+
+		$SR_MSG[$row['support_id']] .= 
+		    '=================================================='.
+		    "\n".
+		    'By: '.$row['from_email'].'      On: '.
+		    date($sys_datefmt,$row['date'])."\n\n".
+		    prepare_textarea($row['body']).
+		    "\n";
+	    }
+
+	} else
+	    $SR_MSG = array();
+    }
+
+    return $SR_MSG[$sr_id];
+
+}
 
 function display_db_params () {
     global $sys_default_domain, $dbname;
@@ -580,8 +642,16 @@ function db_project_create($dbname) {
              mysql> UPDATE user SET Grant_priv='Y' where User='sourceforge';
              mysql> FLUSH PRIVILEGES;
      */
-    mysql_create_db($dbname);
-    db_project_query($dbname,'GRANT SELECT ON '.$dbname.'.* TO cxuser@\'%\'');
+
+    // make sure the database name is not the same as the 
+    // system database name !!!!
+    if ($dbname != $GLOBALS['sys_dbname']) {
+	mysql_create_db($dbname);
+	db_project_query($dbname,'GRANT SELECT ON '.$dbname.'.* TO cxuser@\'%\'');
+	return true;
+    } else {
+	return false;
+    }
 }
 
 function db_project_error() {

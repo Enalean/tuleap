@@ -7,7 +7,7 @@
 // $Id$
 
 	if ($mail_followup) {
-		mail_followup($support_id);
+		sr_utils_mail_followup($support_id);
 	}
 
 ?>

@@ -24,7 +24,7 @@ if ($group_id) {
 
 			if ($support_id) {
 				//send an email to the submittor and default address for the project
-				mail_followup($support_id, $project->getNewSupportAddress());
+				sr_utils_mail_followup($support_id, $project->getNewSupportAddress());
 				include '../support/browse_support.php';
 			} else {
 				//some kind of error in creation
@@ -51,7 +51,7 @@ if ($group_id) {
 				now send the email
 				it's no longer optional due to the group-level notification address
 			*/
-			mail_followup($support_id,$address,$changes);
+			sr_utils_mail_followup($support_id,$address,$changes);
 		    }
 
 			include '../support/browse_support.php';
@@ -63,7 +63,7 @@ if ($group_id) {
 			if ($project->sendAllSupportUpdates()) {
 				$address=$project->getNewSupportAddress();
 			}
-			mail_followup($support_id,$address);
+			sr_utils_mail_followup($support_id,$address);
 			include '../support/browse_support.php';
 			break;
 		}

@@ -170,7 +170,7 @@ function show_supportlist ($result,$offset,$set='open') {
 	echo '</TD></TR></TABLE>';
 }
 
-function mail_followup($support_id,$more_addresses=false,$changes=false) {
+function sr_utils_mail_followup($support_id,$more_addresses=false,$changes=false) {
     global $sys_datefmt,$feedback;
     /*
              Send a message to the person who opened this support and the person it is assigned to

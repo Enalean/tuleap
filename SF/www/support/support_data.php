@@ -165,7 +165,6 @@ function support_data_create_support ($group_id,$support_category_id,$user_email
 				$feedback .= ' Comment Failed ';
 			} else {
 				$feedback .= ' Comment added to support request ';
-				//mail_followup($support_id);
 			}
 		}
 
@@ -257,7 +256,6 @@ function support_data_handle_update ($group_id,$support_id,$priority,
 		support_data_create_message($details,$support_id,$user_email);
 		$changes['details']['add'] = stripslashes($details);
 		$feedback .= ' Comment added ';
-		//mail_followup($support_id);
 	}
 
 	/*
