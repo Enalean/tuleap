@@ -477,4 +477,34 @@ function util_is_valid_filename ($file) {
 	}
 }
 
+// this function permit including site specific content with ease
+function util_get_content($file){
+    // Default language
+    $lang = $GLOBALS['sys_lang'];
+    
+    // Retrieve the user language if not guest
+    // TODO
+
+    // Test first the custom directory
+    $fn = $GLOBALS['sys_incdir']."custom/".$lang."/".$file.".txt";
+    $fp = @fopen ($fn, "r");
+    
+    if ( $fp ) {
+        // The custom file exists. 
+        fclose($fp);
+        include($fn);
+        return;
+    } else {
+        // Use the default file
+        // Check first if exist
+        $fn = $GLOBALS['sys_incdir'].$lang."/".$file.".txt";
+        $fp = @fopen ($fn, "r");
+        if ( $fp ) {
+            // The file exists. 
+            fclose($fp);
+            include($fn);
+        }
+    }
+}
+
 ?>

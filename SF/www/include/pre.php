@@ -30,13 +30,15 @@ require('browser.php');
 //base error library for new objects
 require('Error.class');
 
+//various html utilities
+require('utils.php');
+
+util_get_content('layout/osdn_sites');
+
 // HTML layout class, may be overriden by the Theme class
 require('Layout.class');
 
 $HTML = new Layout();
-
-//various html utilities
-require('utils.php');
 
 //PHP4-like functions - only if running php3
 if (substr(phpversion(),0,1) == "3") {

@@ -15,56 +15,7 @@ if ($show_confirm) {
 
 	$HTML->header(array('title'=>'Registration Complete'));
 
-	$sql="SELECT * FROM groups WHERE group_id='$group_id' AND rand_hash='__$rand_hash'";
-	$result=db_query($sql);
-
-	echo '
-	<H2>Final Confirmation</H2>
-	<P>
-	<B><FONT COLOR="RED">Do NOT backarrow!</FONT></B>
-	<P>
-	<FORM action="'.$PHP_SELF.'" method="post">
-	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
-	<INPUT TYPE="HIDDEN" NAME="rand_hash" VALUE="'.$rand_hash.'">
-	<B>Description:</B><BR>
-	<TEXTAREA name="form_purpose" wrap="virtual" cols="70" rows="12">'.db_result($result,0,'register_purpose').'</TEXTAREA>
-	<P>
-	<B>Intellectual Property:</B><BR>
-	<TEXTAREA name="form_patents" wrap="virtual" cols="70" rows="6">'.db_result($result,0,'patents_ips').'</TEXTAREA>
-	<P>
-	<B>Other Software Required:</B><BR>
-	<TEXTAREA name="form_required_sw" wrap="virtual" cols="70" rows="6">'.db_result($result,0,'required_software').'</TEXTAREA>
-	<P>
-	<B>Other Comments:</B><BR>
-	<TEXTAREA name="form_comments" wrap="virtual" cols="70" rows="4">'.db_result($result,0,'other_comments').'</TEXTAREA>
-
-	<P>	<B>Full Name:</B><BR>
-	<INPUT size="40" maxlength="40" type="text" name="form_full_name" VALUE="'.db_result($result,0,'group_name').'">
-	<P>
-	<B>Unix Name:</B><BR>
-	'.db_result($result,0,'unix_group_name').'
-	<P>
-	<B>License:</B><BR>
-	<SELECT NAME="form_license">
-	';
-
-	while (list($k,$v) = each($LICENSE)) {
-		print "<OPTION value=\"$k\"";
-		if ($k==db_result($result,0,'license')) {
-			echo ' SELECTED';
-		}
-		print ">$v\n";
-	}
-	echo '</SELECT>';
-	echo '
-	<P>
-	<B>If Other License:</B><BR>
-	<TEXTAREA name="form_license_other" wrap=virtual cols=60 rows=10>'.db_result($result,0,'license_other').'</TEXTAREA>
-	<P>
-	If you agree, your project will be created. If you disagree, it will be deleted from the system.
-	<P>
-	<INPUT type=submit name="i_agree" value="I AGREE"> <INPUT type=submit name="i_disagree" value="I DISAGREE">
-	</FORM>';
+    util_get_content('register/confirmation');
 
 	$HTML->footer(array());
 
@@ -121,17 +72,8 @@ if ($show_confirm) {
 	//
 	$HTML->header(array('title'=>'Registration Complete'));
 	
-	?>
-
-	<H1>Registration Complete!</H1>
-	<P>Your project has been submitted to the <?php print $GLOBALS['sys_name']; ?> Administrators. 
-	Within 24 hours, you will receive decision notification and further 
-	instructions.
-	<P>
-	Thank you for using <?php print $GLOBALS['sys_name']; ?>.
-	<P>
-
-	<?php
+    util_get_content('register/complete');
+    
 	$HTML->footer(array());
 
 } else if ($i_disagree && $group_id && $rand_hash) {

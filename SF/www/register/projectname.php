@@ -47,61 +47,8 @@ if ($insert_purpose && $form_purpose) {
 
 $HTML->header(array('title'=>'Project Name'));
 
-?>
+util_get_content('register/projectname');
 
-<H2>Step 4: Project Name</H2>
-
-
-<P><B>Project Name</B>
-
-<P>We now need some basic technical information for your project.
-There are two types of names that will be associated with this project.
-
-<P>The "Full Name" is descriptive, has no real name restrictions (except
-a 40 character limit), and
-can be changed. The "Short Name" (also known as the "Group Name") has several restrictions because it is used in so many places around the site. They are:
-
-<UL>
-<LI>Cannot match the Short name of any other project
-<LI>Must be between 3 and 15 characters in length
-<LI>Can only contain characters, numbers, and dashes. NO SPACE.
-<!-- <LI>Must be a valid unix username -->
-<LI>Cannot match one of our reserved name in the <?php echo $GLOBALS['sys_default_domain']; ?> domain name (e.g. lists, cvs, www,...)
-<LI>As opposed to the Full Name the Short name will never change for this project
-</UL>
-
-<P>Your Short name is important, however, because it will be used for
-many things, including:
-
-<UL>
-<LI>A web site at shortname.<?php echo $GLOBALS['sys_default_domain']; ?> 
-<!-- <LI>Email at aliases@unixname.<?php echo $GLOBALS['sys_default_domain']; ?> -->
-<LI>A CVS Repository root of /cvsroot/shortname
-<LI>Shell access to shortname.<?php echo $GLOBALS['sys_default_domain']; ?> 
-<!-- <LI>Search engines throughout the site -->
-</UL>
-
-<P>Please make your selections.
-
-<P><B>Project Name</B>
-<FONT size=-1>
-<FORM action="license.php" method="post">
-<INPUT TYPE="HIDDEN" NAME="insert_group_name" VALUE="y">
-<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">  
-<INPUT TYPE="HIDDEN" NAME="rand_hash" VALUE="<?php echo md5($random_num); ?>">
-Full Name:
-<BR>
-<INPUT size="40" maxlength="40" type=text name="form_full_name">
-<P>Short Name:
-<BR>
-<INPUT type=text maxlength="15" SIZE="15" name="form_unix_name">
-<P>
-<H2><FONT COLOR="RED">Do Not Back Arrow After This Point</FONT></H2>
-<INPUT type=submit name="Submit" value="Step 5: Software Policy">
-</FORM>
-</FONT>
-
-<?php
 $HTML->footer(array());
 
 ?>

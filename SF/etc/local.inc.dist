@@ -127,5 +127,13 @@ $sys_email_admin='codex-admin@lists.codex.xerox.com';
 // for use Web pages, documentation,etc.
 $sys_email_contact='codex-contact@codex.xerox.com';
 
+//
+// Directory which hosts the site content
+$sys_incdir='/home/httpd/site-content/';
+
+//
+// Default language for the system
+$sys_lang='en_US';
+
 // End of customizations -- place nothing after the closing PHP tag!
 ?>

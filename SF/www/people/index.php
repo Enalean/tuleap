@@ -31,16 +31,7 @@ if ($group_id) {
 
 } else {
 
-	echo '
-	<H3>Projects Needing Help</H3>
-	<P>
-	Browse through the category menu to find projects looking for your help.
-	<P>
-	If you\'re a project admin, log in and submit help wanted requests through
-	your project page.
-	<P>
-	To suggest new job categories, visit the support manager
-		<P>';
+    util_get_content('people/browse_projects');
 	echo people_show_category_table();
 
 }

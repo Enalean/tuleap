@@ -137,8 +137,7 @@ if ($register_error) {
 
 <P>Email Address *:<BR>
 <INPUT size=40 type="text" name="form_email" value="<?php print($form_email); ?>"><BR>
-<em><strong>Remark:</strong> This email address will be verified before account activation. Please use a Xerox internal e-mail address or an address from a Xerox approved extranet (XISS, GSN, FX,...). Do <b>not</b> use e-mail address hosted by Internet e-mail forwarders (hotmail, caramail,...)</em>
-
+<? util_get_content('account/register_email'); ?>
 <P>Timezone:<BR>
 <?php echo html_get_timezone_popup ('timezone','GMT'); ?>
 <P>

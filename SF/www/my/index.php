@@ -23,11 +23,7 @@ if (user_isloggedin()) {
 
 	<H3>Personal Page for: <?php print user_getname(); ?>
 	     <?php echo help_button('LoginAndPersonalPage.html'); ?></H3>
-	<P>
-	Your personal page contains lists of bugs [<b>A</b>]ssigned to or 
-  [<b>S</b>]ubmitted by you, tasks assigned with percentage completion, monitored forums and packages plus a list
-of groups that you are a member of.
-	<P>
+    <? util_get_content('my/intro'); ?>
 	<TABLE width="100%" border="0">
 	<TR><TD VALIGN="TOP" WIDTH="50%">
 	<?php
