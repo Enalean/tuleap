@@ -4,10 +4,6 @@ include(util_get_content('layout/osdn_sites'));
 
 function osdn_nav_dropdown() {
     GLOBAL $osdn_sites;
-// LJ write the FORM directly instead of using
-// document.write because Netscape 4.x gets crazy
-// and doesn't know how to redraw the page when 
-// window is resized.
 
     if (session_issecure()) 
 	$server = 'https://'.$GLOBALS['sys_https_host'];
@@ -67,7 +63,7 @@ function osdn_print_navbar() {
 	    <td valign="middle" align="left">
 ';
 
-    $motd = getenv('SF_LOCAL_INC_PREFIX').'/etc/motd.inc';
+    $motd = util_get_content('others/motd');
     if (file_exists($motd) && filesize($motd)>0 ) {
 	$fp = fopen($motd,"r");
 	$output = fread($fp,200000);
@@ -79,7 +75,6 @@ function osdn_print_navbar() {
 	print '</span>';
     }
 
-// LJ
 print '	     </td>';
 
 	srand((double)microtime()*1000000);
