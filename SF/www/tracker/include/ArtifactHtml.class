@@ -1139,12 +1139,10 @@ class ArtifactHtml extends Artifact {
 			// If both removed and added items are empty skip - Sanity check
 			if (!$h['del'] && !$h['add']) { continue; }
 		
+			$label = $field_name;
 			$field = $art_field_fact->getFieldFromName($field_name);
 			if ( $field ) {
 				$label = $field->getLabel();
-			}
-			if (!$label) { 
-				$label = $field_name; 
 			}
 			$out .= sprintf($fmt, $label, $h['del'],$h['add']);
 		} // while
