@@ -493,10 +493,13 @@ echo html_blankimage(5,100);
 	<HR SIZE="1" NoShade>';
 
         	// Summary
-	        $this->tab_entry('/projects/'. $project->getUnixName() .'/', $this->icons['Summary'], 'Main', $toptab == 'home');
+	        $this->tab_entry('/projects/'. $project->getUnixName() .'/', $this->icons['Summary'], 'Summary', $toptab == 'home');
+
+        	// Admin
+	        $this->tab_entry('/project/admin/?group_id='.$group , $this->icons['Admin'], 'Admin', $toptab == 'admin');
 
         	// Homepage
-	        $this->tab_entry('http://'. $project->getHomePage(), $this->icons['Homepage'], 'Homepage');
+	        $this->tab_entry('http://'. $project->getHomePage(), $this->icons['Homepage'], 'Home Page');
 
         	// Forums
 	        if ($project->usesForum()) {
