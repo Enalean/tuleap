@@ -88,7 +88,7 @@ if (strstr($mode,"docedit")) {
 	<tr>
 	<th valign="top"><br><br>or Edit Document in place (only for HTML format):</th>
 	<td><textarea cols="60" rows="20" wrap="virtual" name="data">';
-	// Display the content only HTML documents
+	// Display the content only HTML and text documents
 	if ( ($row['filetype'] == 'text/html')||($row['filetype'] == 'text/plain') ) {
 	    echo $row['data'];
 	}
@@ -231,18 +231,22 @@ if (strstr($mode,"docedit")) {
 
 	if ($upload_instead) {
 	    // Upload file
-    	$query = "update doc_data "
-    	    ."set title = '".htmlspecialchars($title)."', "
-    	    ."data = '".$data."', "
-    	    ."updatedate = '".time()."', "
-    	    ."doc_group = '".$doc_group."', "
-    	    ."stateid = '".$stateid."', " 
-    	    ."description = '".htmlspecialchars($description)."', "
-    	    ."restricted_access = '".$restricted_access."', "
-    	    ."filename = '".$uploaded_data_name."', "
-    	    ."filesize = '".$uploaded_data_size."', "
-    	    ."filetype = '".$uploaded_data_type."' "
-    	    ."where docid = '".$docid."'"; 
+            if ($uploaded_data_type=='text/html') {
+                $data=htmlspecialchars($data);
+            }
+
+            $query = "update doc_data "
+                ."set title = '".htmlspecialchars($title)."', "
+                ."data = '".$data."', "
+                ."updatedate = '".time()."', "
+                ."doc_group = '".$doc_group."', "
+                ."stateid = '".$stateid."', " 
+                ."description = '".htmlspecialchars($description)."', "
+                ."restricted_access = '".$restricted_access."', "
+                ."filename = '".$uploaded_data_name."', "
+                ."filesize = '".$uploaded_data_size."', "
+                ."filetype = '".$uploaded_data_type."' "
+                ."where docid = '".$docid."'"; 
 	} else {
 	    if ( strlen($data) > 0 ) {
 	        // Copy/paste data
@@ -258,8 +262,8 @@ if (strstr($mode,"docedit")) {
         	    ."filesize = '0', "
         	    ."filetype = 'text/html' "
         	    ."where docid = '".$docid."'"; 
-        } else {
-            // No new document - Just update the associated data
+            } else {
+                // No new document - Just update the associated data
         	$query = "update doc_data "
         	    ."set title = '".htmlspecialchars($title)."', "
         	    ."updatedate = '".time()."', "
@@ -268,8 +272,8 @@ if (strstr($mode,"docedit")) {
         	    ."description = '".htmlspecialchars($description)."', "
         	    ."restricted_access = '".$restricted_access."' "
         	    ."where docid = '".$docid."'"; 
+            }
         }
-    }
     		
 	$res_insert = db_query($query);
     if (db_affected_rows($res_insert) < 1) {
