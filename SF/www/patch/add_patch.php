@@ -47,7 +47,9 @@ patch_header(array ('title'=>'Submit a Patch'));
 		<P>
 	<?php 
 	if (!user_isloggedin()) {
-		echo '<B><FONT COLOR="RED"><H3>You Are NOT Logged In</H3><P>Please <A HREF="/account/login.php">log in,</A> so followups can be emailed to you.</FONT></B>';
+		echo '<h3><FONT COLOR="RED">You Are NOT Logged In</font></H3><P><b>Please <A HREF="/account/login.php?return_to='.
+		urlencode($REQUEST_URI).
+		'">log in,</A> so followups can be emailed to you.</B>';
 	} 
 	?>
 		</FORM>
