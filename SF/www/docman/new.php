@@ -39,37 +39,49 @@ if($group_id) {
 		}
 
 		if ($upload_instead) {
-		        $data = addslashes(fread( fopen($uploaded_data, 'r'), filesize($uploaded_data)));
-        		if ((strlen($data) > 20) && (strlen($data) < 512000)) {
-                		//size is fine
-                		$feedback .= ' Document Uploaded ';
-        		} else {
-                		//too big or small
-                		$feedback .= ' ERROR - document must be > 20 chars and < 512000 chars in length ';
-                		exit_error('Missing Info',$feedback.' - Please click back and fix the error.');
-        		}
-		}
-
-		if ( !isset($restricted_access) ) {
-		    $restricted_access = 0;
+	        $data = addslashes(fread( fopen($uploaded_data, 'r'), filesize($uploaded_data)));
+    		if ((strlen($data) <= 20) || (strlen($data) >= 2000000)) {
+        		//too big or small
+        		$feedback .= ' ERROR - document must be > 20 chars and < 2000000 chars in length ';
+        		exit_error('Missing Info',$feedback.' - Please click back and fix the error.');
+    		}
 		}
 
 		docman_header(array('title'=>'New Document Submitted',
 				    'help'=>'DocumentSubmission.html'));
 		
-		$query = "insert into doc_data(stateid,title,data,createdate,updatedate,created_by,doc_group,description,restricted_access) "
-		."values('3',"
-		// state = 3 == pending
-		."'".htmlspecialchars($title)."',"
-		."'".htmlspecialchars($data)."',"
-		."'".time()."',"
-		."'".time()."',"
-		."'".$user."',"
-		."'".$doc_group."',"			
-		."'".htmlspecialchars($description)."',"		
-		."'0')";
+		if ($upload_instead) {
+		    // Upload file
+    		$query = "insert into doc_data(stateid,title,data,createdate,updatedate,created_by,doc_group,description,restricted_access,filename,filesize,filetype) "
+    		."values('3',"
+    		// state = 3 == pending
+    		."'".htmlspecialchars($title)."',"
+    		."'".$data."',"
+    		."'".time()."',"
+    		."'".time()."',"
+    		."'".$user."',"
+    		."'".$doc_group."',"			
+    		."'".htmlspecialchars($description)."',"		
+    		."'0',"
+    		."'".$uploaded_data_name."',"
+    		."'".$uploaded_data_size."',"
+    		."'".$uploaded_data_type."')";
+		} else {
+		    // Copy/paste data
+    		$query = "insert into doc_data(stateid,title,data,createdate,updatedate,created_by,doc_group,description,restricted_access,filename,filesize,filetype) "
+    		."values('3',"
+    		// state = 3 == pending
+    		."'".htmlspecialchars($title)."',"
+    		."'".htmlspecialchars($data)."',"
+    		."'".time()."',"
+    		."'".time()."',"
+    		."'".$user."',"
+    		."'".$doc_group."',"			
+    		."'".htmlspecialchars($description)."',"		
+    		."'0','',0,'text/html')";
+    	}
 	
-		db_query($query); 
+		$res_insert = db_query($query); 
 	    if (db_affected_rows($res_insert) < 1) {
            echo '<p>An error occurs:</p><h3><span class="feedback">'. db_error() .'</span></h3>';
 	    } else {
@@ -77,6 +89,7 @@ if($group_id) {
         }
         
 		docman_footer($params);
+
 	} else {
 		docman_header(array('title'=>'Add document',
 				    'help'=>'DocumentSubmission.html'));
@@ -102,7 +115,7 @@ if($group_id) {
 			<td><textarea cols="60" rows="4"  wrap="virtual" name="description"></textarea></td>			</tr>
 
 			<tr>
-			<th> <input type="checkbox" name="upload_instead" value="1"> <B>Upload HTML File:</B></th>
+			<th> <input type="checkbox" name="upload_instead" value="1"> <B>Upload File:</B></th>
 			<td> <input type="file" name="uploaded_data" size="50">
                  <br><span class="smaller"><i>(The maximum upload file size is 2 Mb)</i></span>
 			</td>

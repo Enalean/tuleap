@@ -75,7 +75,7 @@ if (strstr($mode,"docedit")) {
 	</tr>
 
 	<tr>
-	<th> <input type="checkbox" name="upload_instead" value="1"> <B>Upload HTML File:</B></th>
+	<th> <input type="checkbox" name="upload_instead" value="1"> <B>Upload File:</B></th>
 	<td> <input type="file" name="uploaded_data" size="50">
       <br><span class="smaller"><i>(The maximum upload file size is 2 Mb)</i></span>
 	</td>
@@ -83,8 +83,13 @@ if (strstr($mode,"docedit")) {
 
 	</tr>
 	<tr>
-	<th valign="top"><br><br>or Edit Document in place (HTML format):</th>
-	<td><textarea cols="60" rows="20" wrap="virtual" name="data">'.$row['data'].'</textarea></td>
+	<th valign="top"><br><br>or Edit Document in place (only for HTML format):</th>
+	<td><textarea cols="60" rows="20" wrap="virtual" name="data">';
+	// Display the content only HTML documents
+	if ( ($row['filetype'] == 'text/html')||($row['filetype'] == 'text/plain') ) {
+	    echo $row['data'];
+	}
+	echo '</textarea></td>
 	</tr>
 
 	<tr>
@@ -181,21 +186,16 @@ if (strstr($mode,"docedit")) {
 } elseif (strstr($mode,"docdoedit")) {
     
     // Check a number of things: group_id is correct, title and
-    // description are non empty and either HTML file is provided
-    // or uploaded.
+    // description are non empty
     if (!$doc_group || $doc_group ==100) {
-	//cannot add a doc unless an appropriate group is provided
-	exit_error('Error','No Valid Document Group Was Selected');
+    	//cannot add a doc unless an appropriate group is provided
+    	exit_error('Error','No Valid Document Group Was Selected');
     }
     
     if (!$title || !$description) { 
-	exit_missing_param();
+    	exit_missing_param();
     }
     
-    if (!$upload_instead && !$data) {
-	exit_missing_param();
-    }
-
     //Page security - checks someone isnt updating a doc
     //that isnt theirs.
 
@@ -212,12 +212,12 @@ if (strstr($mode,"docedit")) {
 	// Upload the document if needed
 	if ($upload_instead) {
 	    $data = addslashes(fread( fopen($uploaded_data, 'r'), filesize($uploaded_data)));
-	    if ((strlen($data) > 20) && (strlen($data) < 512000)) {
+	    if ((strlen($data) > 20) && (strlen($data) < 2000000)) {
 		//size is fine
 		$feedback .= ' Document Uploaded ';
 	    } else {
 		//too big or small
-		$feedback .= ' ERROR - document must be > 20 chars and < 512000 chars in length ';
+		$feedback .= ' ERROR - document must be > 20 chars and < 2000000 chars in length ';
 		exit_error('Missing Info',$feedback.' - Please click back and fix the error.');
 	    }
 	}
@@ -226,23 +226,60 @@ if (strstr($mode,"docedit")) {
 	    $restricted_access = 0;
 	}
 
-	$query = "update doc_data "
-	    ."set title = '".htmlspecialchars($title)."', "
-	    ."data = '".htmlspecialchars($data)."', "
-	    ."updatedate = '".time()."', "
-	    ."doc_group = '".$doc_group."', "
-	    ."stateid = '".$stateid."', " 
-	    ."description = '".htmlspecialchars($description)."', "
-	    ."restricted_access = '".$restricted_access."' "
-	    ."where docid = '".$docid."'"; 
-		
-	db_query($query);
+	if ($upload_instead) {
+	    // Upload file
+    	$query = "update doc_data "
+    	    ."set title = '".htmlspecialchars($title)."', "
+    	    ."data = '".$data."', "
+    	    ."updatedate = '".time()."', "
+    	    ."doc_group = '".$doc_group."', "
+    	    ."stateid = '".$stateid."', " 
+    	    ."description = '".htmlspecialchars($description)."', "
+    	    ."restricted_access = '".$restricted_access."', "
+    	    ."filename = '".$uploaded_data_name."', "
+    	    ."filesize = '".$uploaded_data_size."', "
+    	    ."filetype = '".$uploaded_data_type."' "
+    	    ."where docid = '".$docid."'"; 
+	} else {
+	    if ( strlen($data) > 0 ) {
+	        // Copy/paste data
+        	$query = "update doc_data "
+        	    ."set title = '".htmlspecialchars($title)."', "
+        	    ."data = '".htmlspecialchars($data)."', "
+        	    ."updatedate = '".time()."', "
+        	    ."doc_group = '".$doc_group."', "
+        	    ."stateid = '".$stateid."', " 
+        	    ."description = '".htmlspecialchars($description)."', "
+        	    ."restricted_access = '".$restricted_access."', "
+        	    ."filename = '', "
+        	    ."filesize = '0', "
+        	    ."filetype = 'text/html' "
+        	    ."where docid = '".$docid."'"; 
+        } else {
+            // No new document - Just update the associated data
+        	$query = "update doc_data "
+        	    ."set title = '".htmlspecialchars($title)."', "
+        	    ."updatedate = '".time()."', "
+        	    ."doc_group = '".$doc_group."', "
+        	    ."stateid = '".$stateid."', " 
+        	    ."description = '".htmlspecialchars($description)."', "
+        	    ."restricted_access = '".$restricted_access."' "
+        	    ."where docid = '".$docid."'"; 
+        }
+    }
+    		
+	$res_insert = db_query($query);
+    if (db_affected_rows($res_insert) < 1) {
+    	$feedback .= ' ERROR - SQL Error= '. db_error();
+    	exit_error('DB Error',$feedback);
+    }
+    
 	$feedback .= "Document \" ".htmlspecialchars($title)." \" updated";
 	main_page($group_id);
 
     } else {
 
-	exit_error("Error","Unable to update - Document does not exist, or document's group not the same as that to which your account belongs.");
+	    exit_error("Error","Unable to update - Document does not exist, or document's group not the same as that to which your account belongs.");
 
     }
 

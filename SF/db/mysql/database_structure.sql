@@ -517,13 +517,16 @@ CREATE TABLE doc_data (
   docid int(11) NOT NULL auto_increment,
   stateid int(11) NOT NULL default '0',
   title varchar(255) NOT NULL default '',
-  data longtext NOT NULL,
+  data longblob NOT NULL,
   updatedate int(11) NOT NULL default '0',
   createdate int(11) NOT NULL default '0',
   created_by int(11) NOT NULL default '0',
   doc_group int(11) NOT NULL default '0',
   description text,
   restricted_access INT UNSIGNED NOT NULL DEFAULT 0,
+  filename text,
+  filesize INT UNSIGNED NOT NULL DEFAULT 0,
+  filetype text,
   PRIMARY KEY  (docid),
   KEY idx_doc_group_doc_group (doc_group)
 ) TYPE=MyISAM;
