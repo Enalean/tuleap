@@ -8,16 +8,16 @@
 
 require ('pre.php');
 require ('vote_function.php');
+require ('./my_utils.php');
 
 if (user_isloggedin()) {
 
-        // LJ Make sure this page is not cached because
-        // LJ it uses the exact same URL for all user's
-        // LJ personal page
+        // Make sure this page is not cached because
+        // it uses the exact same URL for all user's
+        // personal page
         header("Cache-Control: no-cache, must-revalidate"); // for HTTP 1.1
         header("Pragma: no-cache");  // for HTTP 1.0
-  
-
+	
 	$HTML->header(array('title'=>'My Personal Page'));
 	?>
 
@@ -34,67 +34,145 @@ of groups that you are a member of.
 	/*
 		Bugs assigned to or submitted by this person
 	*/
-	$last_group=0;
 	echo $HTML->box1_top('My Bugs');
 
-	$sql="SELECT group_id,bug_id,severity,assigned_to,submitted_by,summary ".
-		"FROM bug ".
-		"WHERE status_id <> '3' ".
-		"AND (assigned_to='".user_getid()."' ".
-		"OR submitted_by='".user_getid()."') ORDER BY group_id ASC LIMIT 100";
+	$sql='SELECT group_id,COUNT(bug_id) '.
+		'FROM bug '.
+		'WHERE status_id <> 3 '.
+		'AND (assigned_to='.user_getid().
+		' OR submitted_by='.user_getid().') GROUP BY group_id ORDER BY group_id ASC LIMIT 100';
 
 	$result=db_query($sql);
 	$rows=db_numrows($result);
 	if (!$result || $rows < 1) {
-		echo '
+	    echo '
 			<B>No Open Bugs are assigned to you or were submitted by you</B>';
 	} else {
-		for ($i=0; $i<$rows; $i++) {
-		    
-		    // Form the Submitted by/Assigned to marking
-		    $AS_flag = '';
-		    if (db_result($result,$i,'assigned_to') == user_getid()) {
-			$AS_flag = 'A';
-		    }
-		    if (db_result($result,$i,'submitted_by') == user_getid()) {
-			$AS_flag .= 'S';
-		    }
-		    if ($AS_flag) { $AS_flag = '[<b>'.$AS_flag.'</b>]'; }
 
-			if (db_result($result,$i,'group_id') != $last_group) {
-			    echo ($i ? '<TR><TD colspan ="2">' : '');
-				echo '
-				<B><A HREF="/bugs/?group_id='.
-					db_result($result,$i,'group_id').'">'.
-					group_getname(db_result($result,$i,'group_id')).'</A>';
-			}
-			echo '
-			<TR BGCOLOR="'.get_priority_color(db_result($result,$i,'severity')).'"><TD><A HREF="/bugs/?func=detailbug&group_id='.
-				db_result($result,$i,'group_id').'&bug_id='.db_result($result,$i,'bug_id').
-				'">'.db_result($result,$i,'bug_id').'</A></TD>'.
-				'<TD>'.stripslashes(db_result($result,$i,'summary')).'&nbsp;'.$AS_flag.'</TD></TR>';
+	    for ($j=0; $j<$rows; $j++) {
 
-			$last_group=db_result($result,$i,'group_id');
+		$group_id = db_result($result,$j,'group_id');
+
+		$sql2='SELECT bug_id,severity,assigned_to,submitted_by,date AS open_date,summary '.
+		'FROM bug '.
+		'WHERE group_id='.$group_id.' AND status_id <> 3 '.
+		'AND (assigned_to='.user_getid().
+		' OR submitted_by='.user_getid().') LIMIT 100';
+
+		$result2 = db_query($sql2);
+		$rows2 = db_numrows($result2);
+
+		list($hide_now,$count_diff,$hide_url) = 
+		    my_hide_url('bug',$group_id,$hide_item_id,$rows2,$hide_bug);
+		$html_hdr = ($j ? '<td colspan="2">' : '').
+		    $hide_url.'<A HREF="/bugs/?group_id='.$group_id.'"><B>'.
+		    group_getname($group_id).'</B></A>&nbsp;&nbsp;&nbsp;&nbsp;';
+		$html = '';
+		$count_new = max(0, $count_diff);
+		for ($i=0; $i<$rows2; $i++) {
+
+		    if (!$hide_now) {
+			// Form the 'Submitted by/Assigned to flag' for marking
+			$AS_flag = my_format_as_flag(db_result($result2,$i,'assigned_to'), db_result($result2,$i,'submitted_by'));
+
+			$html .= '
+			<TR BGCOLOR="'.get_priority_color(db_result($result2,$i,'severity')).
+			'"><TD><A HREF="/bugs/?func=detailbug&group_id='.
+			$group_id.'&bug_id='.db_result($result2,$i,'bug_id').
+			'">'.db_result($result2,$i,'bug_id').'</A></TD>'.
+			'<TD>'.stripslashes(db_result($result2,$i,'summary')).'&nbsp;'.$AS_flag.'</TD></TR>';
+
+		    }
 		}
-		echo '<TR><TD COLSPAN="2" BGCOLOR="'.$HTML->COLOR_CONTENT_BACK.'">&nbsp;</TD></TR>';
+
+		$html_hdr .= my_item_count($rows2,$count_new).'</td></tr>';
+		echo $html_hdr.$html;
+	    }
+
+
+	    echo '<TR><TD COLSPAN="2" BGCOLOR="'.$HTML->COLOR_CONTENT_BACK.'">&nbsp;</TD></TR>';
+
+	}
+	echo $HTML->box1_bottom();
+
+	/*
+		SRs assigned to or submitted by this person
+	*/
+	echo $HTML->box1_top('My Support Requests');
+
+	$sql='SELECT group_id FROM support '.
+	    'WHERE support_status_id <> 2 '.
+	    'AND (assigned_to='.user_getid().
+	    ' OR submitted_by='.user_getid().') GROUP BY group_id ORDER BY group_id ASC LIMIT 100';
+
+	$result=db_query($sql);
+	$rows=db_numrows($result);
+	if (!$result || $rows < 1) {
+	    echo '
+			<B>No Open SR are assigned to you or were submitted by you</B>';
+	} else {
+
+	    for ($j=0; $j<$rows; $j++) {
+
+		$group_id = db_result($result,$j,'group_id');
+
+		$sql2="SELECT support_id,priority,assigned_to,submitted_by,open_date,summary ".
+		    "FROM support ".
+		    "WHERE group_id='$group_id' AND support_status_id <> '2' ".
+		    "AND (assigned_to='".user_getid()."' ".
+		    "OR submitted_by='".user_getid()."') LIMIT 100";
+		    
+		$result2 = db_query($sql2);
+		$rows2 = db_numrows($result2);
+
+		list($hide_now,$count_diff,$hide_url) = 
+		    my_hide_url('sr',$group_id,$hide_item_id,$rows2,$hide_sr);
+
+		$html_hdr = ($j ? '<td colspan="2">' : '').
+		    $hide_url.'<A HREF="/support/?group_id='.$group_id.'"><B>'.
+		    group_getname($group_id).'</B></A>&nbsp;&nbsp;&nbsp;&nbsp;';
+
+		$html = ''; $count_new = max(0, $count_diff);
+		for ($i=0; $i<$rows2; $i++) {
+			
+		    if (!$hide_now) {
+			// Form the 'Submitted by/Assigned to flag' for marking
+			$AS_flag = my_format_as_flag(db_result($result2,$i,'assigned_to'), db_result($result2,$i,'submitted_by'));
+
+			$html .= '
+			<TR BGCOLOR="'.get_priority_color(db_result($result2,$i,'priority')).
+			'"><TD><A HREF="/support/?func=detailsupport&group_id='.
+			$group_id.'&support_id='.db_result($result2,$i,'support_id').
+			'">'.db_result($result2,$i,'support_id').'</A></TD>'.
+			'<TD>'.stripslashes(db_result($result2,$i,'summary')).'&nbsp;'.$AS_flag.'</TD></TR>';
+		    }
+		}
+
+		$html_hdr .= my_item_count($rows2,$count_new).'</td></tr>';
+		echo $html_hdr.$html;
+	    }
+
+
+	    echo '<TR><TD COLSPAN="2" BGCOLOR="'.$HTML->COLOR_CONTENT_BACK.'">&nbsp;</TD></TR>';
 	}
 	echo $HTML->box1_bottom();
 
 	/*
 		Forums that are actively monitored
 	*/
-	$last_group=0;
 	echo $HTML->box1_top('Monitored Forums');
-	$sql="SELECT groups.group_name,groups.group_id,forum_group_list.group_forum_id,forum_group_list.forum_name ".
+
+	$sql="SELECT groups.group_id, groups.group_name ".
 		"FROM groups,forum_group_list,forum_monitored_forums ".
 		"WHERE groups.group_id=forum_group_list.group_id ".
 		"AND forum_group_list.group_forum_id=forum_monitored_forums.forum_id ".
-		"AND forum_monitored_forums.user_id='".user_getid()."' ORDER BY group_name DESC";
+		"AND forum_monitored_forums.user_id='".user_getid()."' GROUP BY group_id ORDER BY group_id ASC LIMIT 100";
+
 	$result=db_query($sql);
 	$rows=db_numrows($result);
 	if (!$result || $rows < 1) {
 		echo '
-			<H3>You are not monitoring any forums</H3>
+			<b>You are not monitoring any forums</b>
 			<P>
 			If you monitor forums, you will be sent new posts in 
 			the form of an email, with a link to the new message.
@@ -104,46 +182,70 @@ of groups that you are a member of.
 			<BR>&nbsp;';
 		echo db_error();
 	} else {
-		for ($i=0; $i<$rows; $i++) {
-			if (db_result($result,$i,'group_id') != $last_group) {
-			    echo ($i ? '<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD colspan ="2">' : '');
-			    echo '
-				<B><A HREF="/forum/?group_id='.
-					db_result($result,$i,'group_id').'">'.
-					db_result($result,$i,'group_name').'</A></TD></TR>';
-			}
-			echo '
-			<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD WIDTH="99%">'.
-			'-&nbsp;&nbsp;<A HREF="/forum/forum.php?forum_id='.
-				db_result($result,$i,'group_forum_id').'">'.
-				stripslashes(db_result($result,$i,'forum_name')).'</A></TD>'.
-			    '<TD ALIGN="MIDDLE"><A HREF="/forum/monitor.php?forum_id='.
-			    db_result($result,$i,'group_forum_id').
-			    '" onClick="return confirm(\'Stop monitoring this Forum?\')">'.
-				'<IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" '.
-				'BORDER=0 ALT="STOP MONITORING""></A></TD></TR>';
 
-			$last_group=db_result($result,$i,'group_id');
+	    for ($j=0; $j<$rows; $j++) {
+
+		$group_id = db_result($result,$j,'group_id');
+
+		$sql2="SELECT forum_group_list.group_forum_id,forum_group_list.forum_name ".
+		    "FROM groups,forum_group_list,forum_monitored_forums ".
+		    "WHERE groups.group_id=forum_group_list.group_id ".
+		    "AND groups.group_id=$group_id ".
+		    "AND forum_group_list.group_forum_id=forum_monitored_forums.forum_id ".
+		    "AND forum_monitored_forums.user_id='".user_getid()."' LIMIT 100";
+
+		$result2 = db_query($sql2);
+		$rows2 = db_numrows($result2);
+
+		list($hide_now,$count_diff,$hide_url) = 
+		    my_hide_url('forum',$group_id,$hide_item_id,$rows2,$hide_forum);
+
+		$html_hdr = ($j ? '<td colspan="2">' : '').
+		    $hide_url.'<A HREF="/forum/?group_id='.$group_id.'"><B>'.
+		    db_result($result,$j,'group_name').'</B></A>&nbsp;&nbsp;&nbsp;&nbsp;';
+
+		$html = '';
+		$count_new = max(0, $count_diff);
+		for ($i=0; $i<$rows2; $i++) {
+
+		    if (!$hide_now) {
+
+			$html .= '
+			<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD WIDTH="99%">'.
+			    '&nbsp;&nbsp;&nbsp;-&nbsp;<A HREF="/forum/forum.php?forum_id='.$group_forum_id.'">'.
+			    stripslashes(db_result($result2,$i,'forum_name')).'</A></TD>'.
+			    '<TD ALIGN="MIDDLE"><A HREF="/forum/monitor.php?forum_id='.
+			    db_result($result2,$i,'group_forum_id').
+			    '" onClick="return confirm(\'Stop monitoring this Forum?\')">'.
+			    '<IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" '.
+			    'BORDER=0 ALT="STOP MONITORING""></A></TD></TR>';
+		    }
 		}
-		echo '<TR bgcolor="'.$HTML->COLOR_CONTENT_BACK.'"><TD COLSPAN="2">&nbsp;</TD></TR>';
+
+		$html_hdr .= my_item_count($rows2,$count_new).'</td></tr>';
+		echo $html_hdr.$html;
+	    }
+
+	    echo '<TR bgcolor="'.$HTML->COLOR_CONTENT_BACK.'"><TD COLSPAN="2">&nbsp;</TD></TR>';
 	}
 	echo $HTML->box1_bottom();
 
 	/*
 		Filemodules that are actively monitored
 	*/
-	$last_group=0;
+
 	echo $HTML->box1_top('Monitored File Packages');
-	$sql="SELECT groups.group_name,groups.group_id,frs_package.name,filemodule_monitor.filemodule_id ".
+	$sql="SELECT groups.group_name,groups.group_id ".
 		"FROM groups,filemodule_monitor,frs_package ".
 		"WHERE groups.group_id=frs_package.group_id ".
 		"AND frs_package.package_id=filemodule_monitor.filemodule_id ".
-		"AND filemodule_monitor.user_id='".user_getid()."' ORDER BY group_name DESC";
+		"AND filemodule_monitor.user_id='".user_getid()."' GROUP BY group_id ORDER BY group_id ASC LIMIT 100";
+
 	$result=db_query($sql);
 	$rows=db_numrows($result);
 	if (!$result || $rows < 1) {
 		echo '
-			<H3>You are not monitoring any files</H3>
+			<b>You are not monitoring any files</b>
 			<P>
 			If you monitor files, you will be sent new release notices via
 			email, with a link to the new file on our download server.
@@ -153,30 +255,51 @@ of groups that you are a member of.
 			<BR>&nbsp;';
 		echo db_error();
 	} else {
-		
+	    for ($j=0; $j<$rows; $j++) {
+
+		$group_id = db_result($result,$j,'group_id');
+
+		$sql2="SELECT frs_package.name,filemodule_monitor.filemodule_id ".
+		    "FROM groups,filemodule_monitor,frs_package ".
+		    "WHERE groups.group_id=frs_package.group_id ".
+		    "AND groups.group_id=$group_id ".
+		    "AND frs_package.package_id=filemodule_monitor.filemodule_id ".
+		    "AND filemodule_monitor.user_id='".user_getid()."'  LIMIT 100";
+		$result2 = db_query($sql2);
+		$rows2 = db_numrows($result2);
+
+		list($hide_now,$count_diff,$hide_url) = 
+		    my_hide_url('frs',$group_id,$hide_item_id,$rows2,$hide_frs);
+
+		$html_hdr = ($j ? '<td colspan="2">' : '').
+		    $hide_url.'<A HREF="/project/?group_id='.$group_id.'"><B>'.
+		    db_result($result,$j,'group_name').'</B></A>&nbsp;&nbsp;&nbsp;&nbsp;';
+
+		$html = '';
+		$count_new = max(0, $count_diff);		
 		for ($i=0; $i<$rows; $i++) {
-			if (db_result($result,$i,'group_id') != $last_group) {
-			    echo ($i ? '<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD colspan ="2">' : '');
-			    echo '
-				<B><A HREF="/project/?group_id='.
-					db_result($result,$i,'group_id').'">'.
-					db_result($result,$i,'group_name').'</A></TD></TR>';
-			}
-			echo '
+
+		    if (!$hide_now) {
+
+			$html .='
 			<TR BGCOLOR="'. util_get_alt_row_color($i) .'">'.
 			    '<TD WIDTH="99%">-&nbsp;&nbsp;<A HREF="/project/filelist.php?group_id='.
-			    db_result($result,$i,'group_id').'">'.
-			    db_result($result,$i,'name').'</A></TD>'.
+			    db_result($result2,$i,'group_id').'">'.
+			    db_result($result2,$i,'name').'</A></TD>'.
 			    '<TD><A HREF="/project/filemodule_monitor.php?filemodule_id='.
-			    db_result($result,$i,'filemodule_id').
+			    db_result($result2,$i,'filemodule_id').
 			    '" onClick="return confirm(\'Stop Monitoring this Package?\')">'.
 			    '<IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" '.
 			    'BORDER=0" ALT="STOP MONITORING"></A></TD></TR>';
-
-			$last_group=db_result($result,$i,'group_id');
+		    }
 		}
-	}
+		
+		$html_hdr .= my_item_count($rows2,$count_new).'</td></tr>';
+		echo $html_hdr.$html;
+	    }
 
+	    echo '<TR bgcolor="'.$HTML->COLOR_CONTENT_BACK.'"><TD COLSPAN="2">&nbsp;</TD></TR>';
+	}
 	echo $HTML->box1_bottom();
 
 	?>
@@ -188,48 +311,74 @@ of groups that you are a member of.
 	$last_group=0;
 	echo $HTML->box1_top('My Tasks');
 
-	$sql="SELECT groups.group_name,project_group_list.project_name,project_group_list.group_id, ".
-		"project_task.group_project_id,project_task.priority,project_task.project_task_id,project_task.summary ".
-		"FROM groups,project_group_list,project_task,project_assigned_to ".
-		"WHERE project_task.project_task_id=project_assigned_to.project_task_id ".
-		"AND project_assigned_to.assigned_to_id='".user_getid()."' AND project_task.status_id='1'  ".
-		"AND project_group_list.group_id=groups.group_id ".
-		"AND project_group_list.group_project_id=project_task.group_project_id ORDER BY project_name";
+	$sql = 'SELECT groups.group_id, groups.group_name, project_group_list.group_project_id, project_group_list.project_name '.
+	    'FROM groups,project_group_list,project_task,project_assigned_to '.
+	    'WHERE project_task.project_task_id=project_assigned_to.project_task_id '.
+	    'AND project_assigned_to.assigned_to_id='.user_getid().
+	    ' AND project_task.status_id=1 AND project_group_list.group_id=groups.group_id '.
+	    'AND project_group_list.group_project_id=project_task.group_project_id GROUP BY group_id,group_project_id';
+
 
 	$result=db_query($sql);
 	$rows=db_numrows($result);
 
-	if ($rows > 0) {
-
-		for ($i=0; $i < $rows; $i++) {
-			if (db_result($result,$i,'group_project_id') != $last_group) {
-			    echo ($i ? '<TR><TD colspan ="2">' : '');
-
-				echo '
-				<B><A HREF="/pm/task.php?group_id='.
-					db_result($result,$i,'group_id').'&group_project_id='.
-					db_result($result,$i,'group_project_id').'">'.
-					db_result($result,$i,'group_name').' - '.
-					db_result($result,$i,'project_name').'</A></TD></TR>';
-			}
-			echo '
-			<TR BGCOLOR="'.get_priority_color(db_result($result,$i,'priority')).'">
-				<TD><A HREF="/pm/task.php?func=detailtask&project_task_id='.
-				db_result($result, $i, 'project_task_id').
-				'&group_id='.db_result($result, $i, 'group_id').
-				'&group_project_id='.db_result($result, $i, 'group_project_id').'">'.
-				db_result($result, $i, 'project_task_id').'</TD>
-				<TD>'.stripslashes(db_result($result, $i, 'summary')).'</TD></TR>';
-			$last_group = db_result($result,$i,'group_project_id');
-		}
-		echo '<TR align=left bgcolor="'.$HTML->COLOR_CONTENT_BACK.'"><TD COLSPAN="2">&nbsp;</TD></TR>
-';
-	} else {
-		echo '
-			You have no open tasks assigned to you';
+	if (!$result || $rows < 1) {
+	    echo '
+			<b>You have no open tasks assigned to you</b>';
 		echo db_error();
+	} else {
+
+	    for ($j=0; $j<$rows; $j++) {
+
+		$group_id = db_result($result,$j,'group_id');
+		$group_project_id = db_result($result,$j,'group_project_id');
+
+		$sql2 = 'SELECT project_task.project_task_id, project_task.priority, project_task.summary '.
+		    'FROM groups,project_group_list,project_task,project_assigned_to '.
+		    'WHERE project_task.project_task_id=project_assigned_to.project_task_id '.
+		    "AND project_assigned_to.assigned_to_id='".user_getid()."' AND project_task.status_id='1'  ".
+		    'AND project_group_list.group_id=groups.group_id '.
+		    "AND groups.group_id=$group_id ".
+		    'AND project_group_list.group_project_id=project_task.group_project_id '.
+		    "AND project_group_list.group_project_id= $group_project_id LIMIT 100";
+
+		$result2 = db_query($sql2);
+		$rows2 = db_numrows($result2);
+
+		list($hide_now,$count_diff,$hide_url) = 
+		    my_hide_url('pm',$group_project_id,$hide_item_id,$rows2,$hide_pm);
+
+		$html_hdr = ($j ? '<td colspan="2">' : '').
+		    $hide_url.'<A HREF="/pm/task.php?group_id='.$group_id.
+		    '&group_project_id='.$group_project_id.'"><B>'.
+		    db_result($result,$j,'group_name').' - '.
+		    db_result($result,$j,'project_name').'</B></A>&nbsp;&nbsp;&nbsp;&nbsp;';
+		$html = '';
+		$count_new = max(0, $count_diff);
+		for ($i=0; $i<$rows2; $i++) {
+			
+		    if (!$hide_now) {
+
+			$html .= '
+			<TR BGCOLOR="'.get_priority_color(db_result($result2,$i,'priority')).
+			    '"><TD><A HREF="/pm/task.php/?func=detailtask&project_task_id='.
+			    db_result($result2, $i, 'project_task_id').'&group_id='.
+			    $group_id.'&group_project_id='.$group_project_id.
+			    '">'.db_result($result2,$i,'project_task_id').'</A></TD>'.
+			    '<TD>'.stripslashes(db_result($result2,$i,'summary')).'</TD></TR>';
+
+		    }
+		}
+
+		$html_hdr .= my_item_count($rows2,$count_new).'</td></tr>';
+		echo $html_hdr.$html;
+	    }
+
+
+	    echo '<TR><TD COLSPAN="2" BGCOLOR="'.$HTML->COLOR_CONTENT_BACK.'">&nbsp;</TD></TR>';
 	}
 	echo $HTML->box1_bottom();
+
 
 	/*
 		DEVELOPER SURVEYS
