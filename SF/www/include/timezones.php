@@ -411,6 +411,7 @@ $TZs[]='Mideast/Riyadh89';
 $TZs[]='MST';
 $TZs[]='MST7MDT';
 $TZs[]='Navajo';
+$TZs[]='None';
 $TZs[]='NZ';
 $TZs[]='NZ-CHAT';
 $TZs[]='Pacific/Apia';

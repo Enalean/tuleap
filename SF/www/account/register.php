@@ -34,6 +34,10 @@ function register_valid($confirm_hash)	{
 	$GLOBALS['register_error'] = "Passwords do not match.";
 	return 0;
     }
+    if ($HTTP_POST_VARS['timezone'] == 'None') {
+	$GLOBALS['register_error'] = "You must supply a timezone.";
+	return 0;
+    }
     if (!$HTTP_POST_VARS['form_register_purpose'] && $GLOBALS['sys_user_approval']) {
 	$GLOBALS['register_error'] = "You must explain the purpose of your registration.";
 	return 0;
@@ -130,8 +134,10 @@ $star = '<span class="highlight"><big>*</big></span>';
 <P>Email Address <? echo $star; ?>:<BR>
 <INPUT size=40 type="text" name="form_email" value="<?php print stripslashes($form_email); ?>"><BR>
 <? include(util_get_content('account/register_email')); ?>
-<P>Timezone:<BR>
-<?php echo html_get_timezone_popup ('timezone','GMT'); ?>
+<P>Timezone <? echo $star; ?>:<BR>
+<?php 
+$timezone = ($timezone?stripslashes($timezone):'None');
+echo html_get_timezone_popup ('timezone',$timezone); ?>
 <P>
 
 <P><INPUT type="checkbox" name="form_mail_site" value="1" checked>

@@ -17,6 +17,9 @@ if (!user_isloggedin()) {
 if ($submit) {	
 	if (!$timezone) {
 		$feedback .= ' Nothing Updated ';
+	} else if ($timezone == 'None') {
+		$feedback .= ' Please choose a timezone other than none. ';
+	  
 	} else {
 		// if we got this far, it must be good
 		db_query("UPDATE user SET timezone='$timezone' WHERE user_id=" . user_getid());
@@ -35,7 +38,7 @@ as if it were in your neighborhood.
 <FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">
 <?php
 
-echo '<H4>'.$feedback.'</H4>';
+echo '<H4><span class="feedback">'.$feedback.'</span></H4>';
 
 echo html_get_timezone_popup ('timezone',user_get_timezone());
 
