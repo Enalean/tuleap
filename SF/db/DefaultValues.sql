@@ -49,6 +49,7 @@ INSERT INTO project_status (status_id, status_name) VALUES (1,'Open');
 INSERT INTO project_status (status_id, status_name) VALUES (2,'Closed');
 INSERT INTO project_status (status_id, status_name) VALUES (100,'None');
 INSERT INTO project_status (status_id, status_name) VALUES (3,'Deleted');
+INSERT INTO project_status (status_id, status_name) VALUES (4,'Suspended');
 
 #
 # Default Data for 'survey_question_types'
