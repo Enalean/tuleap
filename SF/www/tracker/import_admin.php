@@ -38,13 +38,13 @@ if ($group_id && $mode == "admin") {
   
   
   project_admin_header(array('title'=>$pg_title,
-			     'help' => 'ArtifactsImport.html'));
+			     'help' => 'ArtifactImport.html'));
   // Display the welcome screen
   echo '
     <P> You can import artifacts into a specific tracker from
-    a text file (CSV format). See '.help_button('ArtifactImport.html',false,'Online Help').' for more information.
+    a text file (CSV format).
 																			 
-    <h3>Tracker Artifact Import '.help_button('ArtifactImport.html').'</h3>
+    <h3>Tracker Artifact Import</h3>
 										
     <P>Click on the links below to import artifacts (insert of new artifacts or update of existing ones) or to see the CSV import format.
     <P>';
