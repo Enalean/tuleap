@@ -46,8 +46,7 @@ if ($docid) {
         }
 
         if ( ($row['filetype'] == 'text/html')||($row['filetype'] == 'text/plain') ) {
-        	docman_header($row['title'],$row['title']);
-        
+        	docman_header(array('title'=>$row['title']));
         	// Document data can now contain HTML tags and php code
         	// so unescape HTML chars and evaluate the text.
         	eval('?>'.util_unconvert_htmlspecialchars($row['data']));

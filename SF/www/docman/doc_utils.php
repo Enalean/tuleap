@@ -118,8 +118,8 @@ function docman_header($params) {
 	if (!$project->usesDocman()) {
 		exit_error('Error','This Project Has Turned Off The Doc Manager');
 	}
-
-	site_project_header(array('title'=>$params['title'],'group'=>$group_id,'toptab'=>'docman'));
+        // There might be encoded HTML tags in the title
+	site_project_header(array('title'=>strip_tags(util_unconvert_htmlspecialchars($params['title'])),'group'=>$group_id,'toptab'=>'docman'));
 
 	print "<p><b><a href=\"/docman/new.php?group_id=".$group_id."\">Submit new documentation</a> | ".
 		"<a href=\"/docman/index.php?group_id=".$group_id."\">View Documentation</a> | ".
