@@ -73,8 +73,8 @@ if ($submit) {
     // email adresses for new bugs
     $res_new=db_query('UPDATE groups SET '
 	."send_all_bugs='$send_all_bugs', "
-	.($new_bug_address? "new_bug_address='$new_bug_address' " : "")
-	."WHERE group_id=$group_id");
+	."new_bug_address=".($new_bug_address? "'$new_bug_address' " : "''")
+	." WHERE group_id=$group_id");
 
     // Users to watch
     $res_watch = true;
