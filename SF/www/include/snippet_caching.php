@@ -8,7 +8,6 @@
 require ($DOCUMENT_ROOT.'/snippet/snippet_utils.php');
 
 function snippet_mainpage() {
-	global $SCRIPT_LANGUAGE,$SCRIPT_CATEGORY;
 	?>
     <? include(util_get_content('snippet/homepage')); ?>
 	<H3>Browse Snippets</H3>
@@ -27,20 +26,19 @@ function snippet_mainpage() {
 	<P>
 	<?php
 
-// LJ What we actually want is to list the entry
-// in alphabetical order
-//	$count=count($SCRIPT_LANGUAGE);
-//	for ($i=1; $i<$count; $i++) {
+         // List is sorted in alphabetical order
+         $sql="SELECT * FROM snippet_language WHERE language_id!=100 ORDER BY language_name";// We don't want 'None' to appear
+         $result = db_query ($sql);
+         while ($language_array = db_fetch_array($result)) {
+             $sql2="SELECT count(*) FROM snippet WHERE language=".$language_array["language_id"];
+             $result2 = db_query ($sql2);
+             $sql3="SELECT count(*) FROM snippet_package WHERE language=".$language_array["language_id"];
+             $result3 = db_query ($sql3);
+             $total=(db_result($result2,0,0)+db_result($result3,0,0));
+             echo '
+		<LI><A HREF="/snippet/browse.php?by=lang&lang='.$language_array["language_id"].'">'.$language_array["language_name"].'</A> ('.$total.')<BR>';
+         }
 
-	unset($SCRIPT_LANGUAGE[0]); // We don't want 'Choose One' to appear
-	asort($SCRIPT_LANGUAGE);
-	while (list ($i, $val) = each($SCRIPT_LANGUAGE)) {
-		$sql="SELECT count(*) FROM snippet WHERE language=$i";
-		$result = db_query ($sql);
-
-		echo '
-		<LI><A HREF="/snippet/browse.php?by=lang&lang='.$i.'">'.$SCRIPT_LANGUAGE[$i].'</A> ('.db_result($result,0,0).')<BR>';
-	}
 
 	?>
 	</TD>
@@ -49,22 +47,20 @@ function snippet_mainpage() {
 	<P>
 	<?php
 
-// LJ What we actually want is to list the entry
-// in alphabetical order
-//	$count=count($SCRIPT_CATEGORY);
-//	for ($i=1; $i<$count; $i++) {
 
+         // List is sorted in alphabetical order
+         $sql="SELECT * FROM snippet_category WHERE category_id!=100 ORDER BY category_name";// We don't want 'None' to appear
+         $result = db_query ($sql);
+         while ($category_array = db_fetch_array($result)) {
+             $sql2="SELECT count(*) FROM snippet WHERE category=".$category_array["category_id"];
+             $result2 = db_query ($sql2);
+             $sql3="SELECT count(*) FROM snippet_package WHERE category=".$category_array["category_id"];
+             $result3 = db_query ($sql3);
+             $total=(db_result($result2,0,0)+db_result($result3,0,0));
+             echo '
+		<LI><A HREF="/snippet/browse.php?by=cat&cat='.$category_array["category_id"].'">'.$category_array["category_name"].'</A> ('.$total.')<BR>';
+         }
 
-	unset($SCRIPT_CATEGORY[0]); // We don't want 'Choose One' to appear
-	asort($SCRIPT_CATEGORY);
-	while (list ($i, $val) = each($SCRIPT_CATEGORY)) {
-
-		$sql="SELECT count(*) FROM snippet WHERE category=$i";
-		$result = db_query ($sql);
-
-		echo '
-		<LI><A HREF="/snippet/browse.php?by=cat&cat='.$i.'">'.$SCRIPT_CATEGORY[$i].'</A> ('.db_result($result,0,0).')<BR>';
-	}
 	?>
 	</TD>
 	</TR>

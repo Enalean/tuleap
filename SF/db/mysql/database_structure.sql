@@ -2740,7 +2740,7 @@ CREATE TABLE artifact_report_field (
 #                   a value must appear
 # status          : A the value is active. It displays in select boxes
 #                   H the value is hidden (not shown in select boxes but
-#                   it's still here for old artifacts using it
+#                   it is still here for old artifacts using it
 #                   P the value is permanent. It means that it is active and
 #                   it cannot be changed to hidden by the project even if 
 #                   artifact field has a 'project' scope (very useful to force
@@ -2932,6 +2932,42 @@ CREATE TABLE artifact_watcher (
   INDEX `watchee_id_idx` (`watchee_id`,`artifact_group_id`),
   INDEX `user_id_idx` (`user_id`,`artifact_group_id`)  
 );
+
+
+#
+# snippet category table
+#
+CREATE TABLE snippet_category (
+  category_id int(11) NOT NULL,
+  category_name varchar(255) NOT NULL default ''
+);
+
+#
+# snippet type table
+#
+CREATE TABLE snippet_type (
+  type_id int(11) NOT NULL,
+  type_name varchar(255) NOT NULL default ''
+);
+
+
+#
+# snippet license table
+#
+CREATE TABLE snippet_license (
+  license_id int(11) NOT NULL,
+  license_name varchar(255) NOT NULL default ''
+);
+
+
+#
+# snippet language table
+#
+CREATE TABLE snippet_language (
+  language_id int(11) NOT NULL,
+  language_name varchar(255) NOT NULL default ''
+);
+
 
 
 #

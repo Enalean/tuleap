@@ -15,8 +15,37 @@ require ('../snippet/snippet_utils.php');
 	or a specific version of a package
 
 */
-
 if ($type=='snippet') {
+
+
+
+    // Snippet was updated?
+    if ($post_changes) {
+        // The author or site admin have updated the snippet
+        if (snippet_data_can_modify_snippet($id)) {
+            if ($snippet_license==100) {
+                // No license!
+		$feedback .= ' ERROR: Please select a license ';
+            } else if ($snippet_category==100) {
+		$feedback .= ' ERROR: Please select a category ';
+            } else if ($snippet_type==100) {
+		$feedback .= ' ERROR: Please select a type ';
+            } else if ($snippet_language==100) {
+		$feedback .= ' ERROR: Please select a language ';
+            } else {
+                $sql="UPDATE snippet SET category=$snippet_category, type=$snippet_type, license=$snippet_license, language=$snippet_language, name='".
+                    htmlspecialchars($snippet_name)."', description='".
+                    htmlspecialchars($snippet_description)."' WHERE snippet_id=$id";
+                $result=db_query($sql);
+                if (!$result) {
+                    $feedback .= ' ERROR DOING SNIPPET UPDATE! ';
+                    echo db_error();
+                } else {
+                    $feedback .= ' Snippet Updated Successfully. ';
+                }
+            }
+        }
+    }
 	/*
 
 
@@ -28,7 +57,12 @@ if ($type=='snippet') {
 
 	snippet_header(array('title'=>'Snippet Library'));
 
-	snippet_show_snippet_details($id);
+        // Only the snippet author(s) or site admin may edit snippet details
+        if (snippet_data_can_modify_snippet($id)) {
+            snippet_edit_snippet_details($id);
+        } else {
+            snippet_show_snippet_details($id);
+        }
 
 	/*
 		Get all the versions of this snippet
@@ -112,6 +146,31 @@ if ($type=='snippet') {
 	snippet_footer(array());
 
 } else if ($type=='package') {
+
+
+    // Snippet package was updated?
+    if ($post_changes) {
+        // The author or site admin have updated the snippet
+        if (snippet_data_can_modify_snippet_package($id)) {
+            if ($snippet_category==100) {
+		$feedback .= ' ERROR: Please select a category ';
+            } else if ($snippet_language==100) {
+		$feedback .= ' ERROR: Please select a language ';
+            } else {
+                $sql="UPDATE snippet_package SET category=$snippet_category, language=$snippet_language, name='".
+                    htmlspecialchars($snippet_name)."', description='".
+                    htmlspecialchars($snippet_description)."' WHERE snippet_package_id=$id";
+                $result=db_query($sql);
+                if (!$result) {
+                    $feedback .= ' ERROR DOING SNIPPET PACKAGE UPDATE! ';
+                    echo db_error();
+                } else {
+                    $feedback .= ' Snippet Package Updated Successfully. ';
+                }
+            }
+        }
+    }
+
 	/*
 
 
@@ -123,7 +182,14 @@ if ($type=='snippet') {
 
 	snippet_header(array('title'=>'Snippet Library'));
 
-	snippet_show_package_details($id);
+
+        // Only the snippet package author(s) or site admin may edit snippet details
+        if (snippet_data_can_modify_snippet_package($id)) {
+            snippet_edit_package_details($id);
+        } else {
+            snippet_show_package_details($id);
+        }
+
 
 	/*
 		Get all the versions of this package
@@ -168,7 +234,7 @@ if ($type=='snippet') {
 		    }
 
 			echo '
-			<TR class="'. html_get_alt_row_color($i) .'"><TD><A HREF="/snippet/detail.php?type=packagever&id='.
+			<TR class="'. html_get_alt_row_color($i) .'"><TD><A HREF="/snippet/detail.php?type=packagever&id='.$id.'&vid='.
 				db_result($result,$i,'snippet_package_version_id').'"><B><center>'.
 				db_result($result,$i,'version').'</center></B></A></TD>'.
 				$changes_output.'<td align="center">'.
@@ -220,7 +286,7 @@ if ($type=='snippet') {
 
 	snippet_show_package_details($id);
 
-	snippet_show_package_snippets($id);
+	snippet_show_package_snippets($vid);
 
 	snippet_footer(array());
 

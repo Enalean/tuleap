@@ -28,7 +28,7 @@ if (user_isloggedin()) {
 	/*
 	  Create a new snippet entry, then create a new snippet version entry
 	*/
-	if ($name && $description && $language != 0 && $category != 0 && $type != 0 && $version && $code) {
+	if ($name && $description && $language != 0 && $category != 0 && $type != 0 && $version && $code && $license != 100) {
 
 	    $sql="INSERT INTO snippet (category,created_by,name,description,type,language,license) ".
 		"VALUES ('$category','". user_getid() ."','". htmlspecialchars($name)."','".
@@ -93,23 +93,23 @@ if (user_isloggedin()) {
 
 	<TR>
 	<TD><B>Type:</B>&nbsp;
-		<?php echo html_build_select_box_from_array($SCRIPT_TYPE,'type'); ?>
+		<?php echo html_build_select_box(snippet_data_get_all_types() ,'type'); ?>
 	</TD>
 
 	<TD><B>License:</B>&nbsp;
-		<?php echo html_build_select_box_from_array ($SCRIPT_LICENSE,'license'); ?>
+		<?php echo html_build_select_box(snippet_data_get_all_licenses() ,'license',"1",false); ?>
 	</TD>
 	</TR>
 
 	<TR>
 	<TD><B>Language:</B>&nbsp;
-		<?php echo html_build_select_box_from_array ($SCRIPT_LANGUAGE,'language'); ?>
+		<?php echo html_build_select_box (snippet_data_get_all_languages(),'language'); ?>
 		<BR>
 		<A HREF="/support/?func=addsupport&group_id=1">Suggest a Language</A>
 	</TD>
 
 	<TD><B>Category:</B>&nbsp;
-		<?php echo html_build_select_box_from_array ($SCRIPT_CATEGORY,'category'); ?>
+		<?php echo html_build_select_box (snippet_data_get_all_categories(),'category'); ?>
                 <BR>
                 <A HREF="/support/?func=addsupport&group_id=1">Suggest a Category</A>
 	</TD>

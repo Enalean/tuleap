@@ -11,71 +11,10 @@
 	By Tim Perdue, Sourceforge, Jan 2000
 */
 
-$SCRIPT_CATEGORY=array();
-$SCRIPT_CATEGORY[0]='Choose One';
-$SCRIPT_CATEGORY[1]='UNIX Admin';
-$SCRIPT_CATEGORY[2]='HTML Manipulation';
-$SCRIPT_CATEGORY[3]='Text Processing';
-$SCRIPT_CATEGORY[4]='Print Processing';
-$SCRIPT_CATEGORY[5]='Calendars';
-$SCRIPT_CATEGORY[6]='Database';
-$SCRIPT_CATEGORY[7]='Data Structure Manipulation';
-$SCRIPT_CATEGORY[8]='File Management';
-$SCRIPT_CATEGORY[9]='Scientific Computation';
-$SCRIPT_CATEGORY[10]='Office Utilities';
-$SCRIPT_CATEGORY[11]='User Interface';
-$SCRIPT_CATEGORY[12]='Other';
-$SCRIPT_CATEGORY[13]='Data Acquisition and Control';
-$SCRIPT_CATEGORY[13]='Network';
 
-$SCRIPT_TYPE[0]='Choose One';
-$SCRIPT_TYPE[1]='Function';
-$SCRIPT_TYPE[2]='Full Script';
-$SCRIPT_TYPE[3]='Sample Code (HOWTO)';
-$SCRIPT_TYPE[4]='README';
-$SCRIPT_TYPE[5]='Class';
-$SCRIPT_TYPE[6]='Macros';
-$SCRIPT_TYPE[6]='Full Program';
+require ('snippet_data.php');
 
-$SCRIPT_LICENSE = array();
-$SCRIPT_LICENSE[0] = $GLOBALS['sys_org_name'].' Code eXchange Policy';
-$SCRIPT_LICENSE[1] = 'Other';
-$SCRIPT_LICENSE[2] = '--- For COMIP approved Open Source projects ---';
-$SCRIPT_LICENSE[3] = 'GNU General Public License';
-$SCRIPT_LICENSE[4] = 'GNU Library Public License';
-$SCRIPT_LICENSE[5] = 'BSD License';
-$SCRIPT_LICENSE[6] = 'MIT/X Consortium License';
-$SCRIPT_LICENSE[7] = 'Artistic License';
-$SCRIPT_LICENSE[8] = 'Mozilla Public License';
-$SCRIPT_LICENSE[9] = 'Qt Public License';
-$SCRIPT_LICENSE[10] = 'IBM Public License';
-$SCRIPT_LICENSE[11] = 'Python License';
-$SCRIPT_LICENSE[12] = 'Public Domain (Sure ?!)';
 
-// **NEVER EVER** change the description of an item. the index of the 
-// array is used as a language id in the DB. Add new languages at the end
-$SCRIPT_LANGUAGE = array();
-$SCRIPT_LANGUAGE[0] = 'Choose One';
-$SCRIPT_LANGUAGE[1] = 'Awk';
-$SCRIPT_LANGUAGE[2] = 'C';
-$SCRIPT_LANGUAGE[3] = 'C++';
-$SCRIPT_LANGUAGE[4] = 'Perl';
-$SCRIPT_LANGUAGE[5] = 'PHP';
-$SCRIPT_LANGUAGE[6] = 'Python';
-$SCRIPT_LANGUAGE[7] = 'Unix Shell';
-$SCRIPT_LANGUAGE[8] = 'Java';
-$SCRIPT_LANGUAGE[9] = 'AppleScript';
-$SCRIPT_LANGUAGE[10] = 'Visual Basic';
-$SCRIPT_LANGUAGE[11] = 'TCL';
-$SCRIPT_LANGUAGE[12] = 'Lisp';
-$SCRIPT_LANGUAGE[13] = 'Mixed';
-$SCRIPT_LANGUAGE[14] = 'JavaScript';
-$SCRIPT_LANGUAGE[15] = 'SQL';
-$SCRIPT_LANGUAGE[16] = 'MatLab';
-$SCRIPT_LANGUAGE[17] = 'Other Language';
-$SCRIPT_LANGUAGE[18] = 'LabView';
-$SCRIPT_LANGUAGE[19] = 'C#';
-$SCRIPT_LANGUAGE[20] = 'Postscript';
 
 function snippet_header($params) {
 	global $is_snippet_page,$DOCUMENT_ROOT,$HTML,$feedback;
@@ -110,7 +49,7 @@ function snippet_footer($params) {
 
 function snippet_show_package_snippets($version) {
 	//show the latest version
-	$sql="SELECT snippet_package_item.snippet_version_id, snippet_version.version,snippet.name,user.user_name ".
+	$sql="SELECT snippet.snippet_id, snippet_package_item.snippet_version_id, snippet_version.version,snippet.name,user.user_name ".
 		"FROM snippet,snippet_version,snippet_package_item,user ".
 		"WHERE snippet.snippet_id=snippet_version.snippet_id ".
 		"AND user.user_id=snippet_version.submitted_by ".
@@ -143,11 +82,13 @@ function snippet_show_package_snippets($version) {
 
 		for ($i=0; $i<$rows; $i++) {
 			echo '
-			<TR class="'. util_get_alt_row_color($i) .'"><TD>'.db_result($result,$i,'snippet_version_id').
-				'</TD><TD><A HREF="/snippet/download.php?type=snippet&id='.
+			<TR class="'. util_get_alt_row_color($i) .'">
+                            <TD><A HREF="/snippet/detail.php?type=snippet&id='.db_result($result,$i,'snippet_id').'"><b><center>'.
+				db_result($result,$i,'snippet_version_id').'</center></b></A></TD>
+                            <TD><A HREF="/snippet/download.php?type=snippet&id='.
 				db_result($result,$i,'snippet_version_id').'"><b><center>'.
-				db_result($result,$i,'version').'</center></b></A></TD><TD>'.
-				db_result($result,$i,'name').'</TD><TD>'.
+				db_result($result,$i,'version').'</center></b></A></TD>
+                             <TD>'.db_result($result,$i,'name').'</TD><TD>'.
 				db_result($result,$i,'user_name').'</TD></TR>';
 		}
 	}
@@ -156,7 +97,6 @@ function snippet_show_package_snippets($version) {
 }
 
 function snippet_show_package_details($id) {
-	global $SCRIPT_CATEGORY,$SCRIPT_LANGUAGE;
 
 	$sql="SELECT * FROM snippet_package WHERE snippet_package_id='$id'";
 	$result=db_query($sql);
@@ -171,11 +111,11 @@ function snippet_show_package_details($id) {
 
 	<TR>
 		<TD><B>Category:</B><BR>
-		'.$SCRIPT_CATEGORY[db_result($result,0,'category')].'
+		'.snippet_data_get_category_from_id(db_result($result,0,'category')).'
 		</TD>
 
 		<TD><B>Language:</B><BR>
-		'.$SCRIPT_LANGUAGE[db_result($result,0,'language')].'
+		'.snippet_data_get_language_from_id(db_result($result,0,'language')).'
 		</TD>
 	</TR>
 
@@ -188,7 +128,6 @@ function snippet_show_package_details($id) {
 }
 
 function snippet_show_snippet_details($id) {
-	global $SCRIPT_TYPE,$SCRIPT_CATEGORY,$SCRIPT_LICENSE,$SCRIPT_LANGUAGE;
 
 	$sql="SELECT * FROM snippet WHERE snippet_id='$id'";
 	$result=db_query($sql);
@@ -202,15 +141,15 @@ function snippet_show_snippet_details($id) {
 	</TD></TR>
 
 	<TR><TD><B>Type:</B><BR>
-		'.$SCRIPT_TYPE[db_result($result,0,'type')].'</TD>
+		'.snippet_data_get_type_from_id(db_result($result,0,'type')).'</TD>
 	<TD><B>Category:</B><BR>
-		'.$SCRIPT_CATEGORY[db_result($result,0,'category')].'
+		'.snippet_data_get_category_from_id(db_result($result,0,'category')).'
 	</TD></TR>
 
 	<TR><TD><B>License:</B><BR>
-		'.$SCRIPT_LICENSE[db_result($result,0,'license')].'</TD>
+		'.snippet_data_get_license_from_id(db_result($result,0,'license')).'</TD>
 	<TD><B>Language:</B><BR>
-		'.$SCRIPT_LANGUAGE[db_result($result,0,'language')].'
+		'.snippet_data_get_language_from_id(db_result($result,0,'language')).'
 	</TD></TR>
 
 	<TR><TD COLSPAN="2">&nbsp;<BR>
@@ -219,6 +158,92 @@ function snippet_show_snippet_details($id) {
 	</TD></TR>
 
 	</TABLE>';
+}
+
+function snippet_edit_package_details($id) {
+
+	$sql="SELECT * FROM snippet_package WHERE snippet_package_id='$id'";
+	$result=db_query($sql);
+
+	echo '
+	<FORM ACTION="" METHOD="POST" enctype="multipart/form-data">
+	<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
+	<P>
+	<TABLE WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="2">
+
+	<TR><TD COLSPAN="2">
+	<B>Title:</B><BR>
+        <INPUT TYPE="TEXT" NAME="snippet_name" SIZE="45" MAXLENGTH="60" VALUE='.db_result($result,0,'name').'>
+	</TD></TR>
+
+	<TR>
+		<TD><B>Category:</B><BR>
+		'.html_build_select_box(snippet_data_get_all_categories() ,'snippet_category',db_result($result,0,'category'),false).'
+		</TD>
+
+		<TD><B>Language:</B><BR>
+		'.html_build_select_box(snippet_data_get_all_languages() ,"snippet_language",db_result($result,0,'language'),false).'
+		</TD>
+	</TR>
+
+	<TR><TD COLSPAN="2">&nbsp;<BR><B>Description:</B><BR>
+	    <TEXTAREA NAME="snippet_description" ROWS="5" COLS="45" WRAP="SOFT">'.db_result($result,0,'description').'</TEXTAREA>
+	</TD></TR>
+	<TR><TD COLSPAN="2" ALIGN="center">
+		<B>Make sure all info is complete and accurate</B>
+		<BR>
+		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
+	</TD></TR>
+	</TABLE>
+	</FORM>
+        <HR>
+';
+
+}
+
+
+function snippet_edit_snippet_details($id) {
+
+	$sql="SELECT * FROM snippet WHERE snippet_id='$id'";
+	$result=db_query($sql);
+
+	echo '
+	<FORM ACTION="" METHOD="POST" enctype="multipart/form-data">
+	<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
+	<P>
+	<TABLE WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="2">
+
+	<TR><TD COLSPAN="2">
+        <B>Title:</B>&nbsp;
+	<INPUT TYPE="TEXT" NAME="snippet_name" SIZE="45" MAXLENGTH="60" VALUE='.db_result($result,0,'name').'>
+	</TD></TR>
+
+	<TR><TD><B>Type:</B><BR>
+		'.html_build_select_box(snippet_data_get_all_types() ,'snippet_type',db_result($result,0,'type'),false).'
+        </TD><TD><B>Category:</B><BR>
+		'.html_build_select_box(snippet_data_get_all_categories() ,'snippet_category',db_result($result,0,'category'),false).'
+	</TD></TR>
+
+	<TR><TD><B>License:</B><BR>
+		'.html_build_select_box(snippet_data_get_all_licenses() ,'snippet_license',db_result($result,0,'license'),false).'
+        </TD><TD><B>Language:</B><BR>
+		'.html_build_select_box(snippet_data_get_all_languages() ,"snippet_language",db_result($result,0,'language'),false).'
+	</TD></TR>
+
+	<TR><TD COLSPAN="2">&nbsp;<BR>
+	<B>Description:</B><BR>
+	    <TEXTAREA NAME="snippet_description" ROWS="5" COLS="45" WRAP="SOFT">'.db_result($result,0,'description').'</TEXTAREA>
+	</TD></TR>
+
+	<TR><TD COLSPAN="2" ALIGN="center">
+		<B>Make sure all info is complete and accurate</B>
+		<BR>
+		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
+	</TD></TR>
+	</TABLE>
+	</FORM>
+        <HR>
+';
 }
 
 ?>

@@ -149,7 +149,7 @@ if (user_isloggedin()) {
 					exit;
 				} else {
 					//so far so good - now add snippets to the package
-					$feedback .= ' Snippet Pacakge Version Added Successfully. ';
+					$feedback .= ' Snippet Package Version Added Successfully. ';
 
 					//id for this snippet_package_version
 					$snippet_package_version_id=db_insertid($result);

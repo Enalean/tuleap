@@ -49,7 +49,7 @@ if (user_isloggedin()) {
 					exit;
 				} else {
 					//so far so good - now add snippets to the package
-					$feedback .= ' Snippet Pacakge Version Added Successfully. ';
+					$feedback .= ' Snippet Package Version Added Successfully. ';
 
 					//id for this snippet_package_version
 					$snippet_package_version_id=db_insertid($result);
@@ -131,13 +131,13 @@ then add them using the new window link shown above.
 
 	<TR>
 	<TD><B>Language:</B><BR>
-		<?php echo html_build_select_box_from_array ($SCRIPT_LANGUAGE,'language'); ?>
+		<?php echo html_build_select_box (snippet_data_get_all_languages(),'language'); ?>
 		<BR>
 		<A HREF="/support/?func=addsupport&group_id=1">Suggest a Language</A>
 	</TD>
 
 	<TD><B>Category:</B><BR>
-		<?php echo html_build_select_box_from_array ($SCRIPT_CATEGORY,'category'); ?>
+		<?php echo html_build_select_box (snippet_data_get_all_categories(),'category'); ?>
 		<BR>
 		<A HREF="/support/?func=addsupport&group_id=1">Suggest a Category</A>
 	</TD>

@@ -23,7 +23,7 @@ if ($by=='lang') {
 		"FROM snippet_package,user ".
 		"WHERE user.user_id=snippet_package.created_by AND snippet_package.language='$lang'";
 
-	echo '<H2>Snippets by language: '.$SCRIPT_LANGUAGE[$lang].'</H2>';
+	echo '<H2>Snippets by language: '.snippet_data_get_language_from_id($lang).'</H2>';
 
 } else if ($by=='cat') {
 
@@ -35,7 +35,7 @@ if ($by=='lang') {
 		"FROM snippet_package,user ".
 		"WHERE user.user_id=snippet_package.created_by AND snippet_package.category='$cat'";
 
-	echo '<H3>Snippet category: '.$SCRIPT_CATEGORY[$cat].'</H3>';
+	echo '<H3>Snippet category: '.snippet_data_get_category_from_id($cat).'</H3>';
 
 } else {
 
@@ -97,7 +97,8 @@ if ((!$result || $rows < 1) && (!$result2 || $rows2 < 1)) {
 			'<a href="/users/'.db_result($result,$i,'user_name').'"><b>'.
 			db_result($result,$i,'user_name').'</b></a></TD></TR>';
 		echo '
-			<TR class="'. util_get_alt_row_color($i) .'"><TD COLSPAN="2">'.util_make_links(nl2br(db_result($result,$i,'description'))).'</TD></TR>';
+			<TR class="'. util_get_alt_row_color($i) .'"><TD COLSPAN="2">'.util_make_links(nl2br(db_result($result,$i,'description'))).'</TD></TR>
+			<TR class="'. util_get_alt_row_color($i) .'"><TD COLSPAN="2">'.nl2br(db_result($result,$i,'description')).'</TD></TR>';
 	}
 
 	echo '
