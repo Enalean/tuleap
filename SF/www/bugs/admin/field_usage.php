@@ -24,8 +24,12 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 	// A form was posted to update a field
 
 	if ($submit) {
-	    bug_data_update_usage($field,$group_id,$status,$place,
-				  $show_on_add_members, $show_on_add);
+	    if (isset($n1) && isset($n2)) {
+		$display_size = "$n1/$n2";
+	    }
+	    bug_data_update_usage($field,$group_id,$label,$description,
+				  $status,$place,$display_size,$empty_ok,$keep_history,
+				  $show_on_add_members,$show_on_add);
 	} else if ($reset) {
 	    bug_data_reset_usage($field,$group_id);
 	}
@@ -49,22 +53,69 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
       <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
       <INPUT TYPE="HIDDEN" NAME="field" VALUE="<?php echo $field; ?>">
       <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">
-      <P><h3>Field Label: <?php echo bug_data_get_label($field); ?></h3>
-      <B>Rank on screen:</B>
-      
-      <INPUT TYPE="TEXT" NAME="place" VALUE="<?php echo bug_data_get_place($field); ?>" SIZE="6" MAXLENGTH="6">
-      &nbsp;&nbsp;
-      <b>Status:</b>
-<?php 
+      <P><h3>Field Label: 
 
-     if (bug_data_is_required($field)) {
-	 echo 'Required';
-	 echo '<INPUT TYPE="HIDDEN" NAME="status" VALUE="1">';
+<?php
+										     // If it is a custom field let the user change the label, description...
+     if (bug_data_is_custom($field)) {
+	 echo '<INPUT TYPE="TEXT" NAME="label" VALUE="'.bug_data_get_label($field).
+	 '" SIZE="20" MAXLENGTH="40"></h3>';
+	 echo '<B>Description: </B>';
+	 echo '<INPUT TYPE="TEXT" NAME="description" VALUE="'.bug_data_get_description($field).
+	 '" SIZE="70" MAXLENGTH="255"><P>';	 
      } else {
-	 echo '<SELECT NAME="status">
+	 echo bug_data_get_label($field)."</h3>\n";
+     }
+
+
+      echo '<B>Rank on screen:</B>';
+      
+      echo '<INPUT TYPE="TEXT" NAME="place" VALUE="'.bug_data_get_place($field).
+	  '" SIZE="6" MAXLENGTH="6">&nbsp;&nbsp;'."\n";
+      echo '<b>Status:</b>';
+      // Display the Usage box (Used, Unused select box  or hardcoded "required')
+      if (bug_data_is_required($field)) {
+	  echo 'Required';
+	  echo '<INPUT TYPE="HIDDEN" NAME="status" VALUE="1">';
+      } else {
+	  echo '<SELECT NAME="status">
 	   <OPTION VALUE="1"'.(bug_data_is_used($field)?' SELECTED':'').'>Used</OPTION>
 	   <OPTION VALUE="0"'.(bug_data_is_used($field)?'':' SELECTED').'>Unused</OPTION>
       </SELECT>';
+      }
+
+     if (bug_data_is_custom($field)) {
+	 $display_type = bug_data_get_display_type($field);
+	 if ($display_type == 'TF') {
+	     list($size,$maxlength) = bug_data_get_display_size($field);
+	     echo '<P><b>Field Size...</b> (in characters)<ul>';
+	     echo '<li>Visible Field Size: ';
+	     echo '<INPUT TYPE="TEXT" NAME="n1" VALUE="'.$size.
+		 '" SIZE="3" MAXLENGTH="3">&nbsp;&nbsp;';
+	     echo '<li>Maximum length: ';
+	     echo '<INPUT TYPE="TEXT" NAME="n2" VALUE="'.$maxlength.
+		 '" SIZE="3" MAXLENGTH="3">&nbsp;&nbsp; (up to  255)</ul>';
+	 } else if ($display_type == 'TA') {
+	     list($rows,$cols) = bug_data_get_display_size($field);
+	     echo '<P><b>Field Size...</b><ul>';
+	     echo '<li>Number of rows&nbsp;&nbsp;: ';
+	     echo '<INPUT TYPE="TEXT" NAME="n1" VALUE="'.$rows.
+		 '" SIZE="3" MAXLENGTH="3">&nbsp;&nbsp;';
+	     echo '<li>Number of columns: ';
+	     echo '<INPUT TYPE="TEXT" NAME="n2" VALUE="'.$cols.
+		 '" SIZE="3" MAXLENGTH="3"></ul>';
+         }
+	 
+	 if (bug_data_is_text_field($field) || bug_data_is_text_area($field) ||
+	     bug_data_is_date_field($field)) {
+	     echo '<P><b>Properties...</b><ul>';
+	     echo '<li>Allow Empty Value: ';
+	     echo '<INPUT TYPE="CHECKBOX" NAME="empty_ok" VALUE="1" '.
+	     (bug_data_is_empty_ok($field)?' CHECKED':'').'>&nbsp;&nbsp;';
+	     echo '<li>Keep Change History: ';
+	     echo '<INPUT TYPE="CHECKBOX" NAME="keep_history" VALUE="1" '.
+	     (bug_data_is_empty_ok($field)?' CHECKED':'').'></ul>';
+	 }
      }
 
 
@@ -135,7 +186,7 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 	$hdr = html_build_list_table_top ($title_arr);
 
 	// Build HTML ouput for  Used fields first and Unused field second
-	$iu=$in=0;
+	$iu=$in=$inc=0;
 	while ( $field_name = bug_list_all_fields() ) {
 
 	    // Do not show some special fields any way
@@ -146,8 +197,9 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 	    }
 
 	    // Show Used, Unused and Required fields on separate lists
-	    // Do not show required fields any way.
+	    // SHow Unused Custom field in a separate list at the very end
 	    $is_required = bug_data_is_required($field_name);
+	    $is_custom = bug_data_is_custom($field_name);
 
 	    $is_used = bug_data_is_used($field_name);
 	    $status_label = ($is_required?'Required':($is_used?'Used':'Unused'));
@@ -160,7 +212,8 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 		'&update_field=1&field='.$field_name.'">'.
 		bug_data_get_label($field_name).'</A></td>'.
 		"\n<td>".bug_data_get_display_type_in_clear($field_name).'</td>'.
-		"\n<td>".bug_data_get_description($field_name).'</td>'.
+		"\n<td>".bug_data_get_description($field_name).
+		(($is_custom && $is_used) ? ' - <b>[Custom Field]</b>':'').'</td>'.
 		"\n<td align =\"center\">".$place_label.'</td>'.
 		"\n<td align =\"center\">".$scope_label.'</td>'.
 		"\n<td align =\"center\">".$status_label.'</td>';
@@ -171,10 +224,17 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 		$iu++;
 		$hu .= $html;
 	    } else {
-		$html = '<TR BGCOLOR="'. 
-		    util_get_alt_row_color($in) .'">'.$html.'</tr>';
-		$in++;
-		$hn .= $html;
+		if ($is_custom) {
+		    $html = '<TR BGCOLOR="'. 
+			util_get_alt_row_color($inc) .'">'.$html.'</tr>';
+		    $inc++;
+		    $hnc .= $html;
+		} else {
+		    $html = '<TR BGCOLOR="'. 
+			util_get_alt_row_color($in) .'">'.$html.'</tr>';
+		    $in++;
+		    $hn .= $html;
+		}
 	    }
 		
 	} /* end while all fields */
@@ -186,10 +246,15 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 	    $hu= '<tr><td colspan="5"><center><b>---- USED FIELDS ----</b></center></tr>'.$hu;  
 	    if ($in) {
 		$hn = '<tr><td colspan="5"> &nbsp;</td></tr>'.
-		    '<tr><td colspan="5"><center><b>---- UNUSED FIELDS ----</b></center></tr>'.$hn;
+		    '<tr><td colspan="5"><center><b>---- UNUSED STANDARD FIELDS ----</b></center></tr>'.$hn;
+	    }
+
+	    if ($inc) {
+		$hnc = '<tr><td colspan="5"> &nbsp;</td></tr>'.
+		    '<tr><td colspan="5"><center><b>---- UNUSED CUSTOM FIELDS ----</b></center></tr>'.$hnc;
 	    }
 	}
-	echo $hdr.$hu.$hn.'</TABLE>';
+	echo $hdr.$hu.$hn.$hnc.'</TABLE>';
 
 ?>
 

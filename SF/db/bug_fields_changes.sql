@@ -40,6 +40,59 @@ ALTER TABLE bug ADD plan_release VARCHAR(255) DEFAULT '' NOT NULL;
 ALTER TABLE bug ADD keywords VARCHAR(255) DEFAULT '' NOT NULL;
 ALTER TABLE bug ADD release_id int DEFAULT '100' NOT NULL;
 ALTER TABLE bug ADD release VARCHAR(255) DEFAULT '' NOT NULL;
+ALTER TABLE bug ADD originator_name VARCHAR(255) DEFAULT '' NOT NULL;
+ALTER TABLE bug ADD originator_email VARCHAR(255) DEFAULT '' NOT NULL;
+ALTER TABLE bug ADD originator_phone VARCHAR(255) DEFAULT '' NOT NULL;
+
+#
+# Add customizable fields 
+#
+#   - Customizable text fields
+ALTER TABLE bug ADD custom_tf1 VARCHAR(255) DEFAULT '' NOT NULL;
+ALTER TABLE bug ADD custom_tf2 VARCHAR(255) DEFAULT '' NOT NULL;
+ALTER TABLE bug ADD custom_tf3 VARCHAR(255) DEFAULT '' NOT NULL;
+ALTER TABLE bug ADD custom_tf4 VARCHAR(255) DEFAULT '' NOT NULL;
+ALTER TABLE bug ADD custom_tf5 VARCHAR(255) DEFAULT '' NOT NULL;
+ALTER TABLE bug ADD custom_tf6 VARCHAR(255) DEFAULT '' NOT NULL;
+ALTER TABLE bug ADD custom_tf7 VARCHAR(255) DEFAULT '' NOT NULL;
+ALTER TABLE bug ADD custom_tf8 VARCHAR(255) DEFAULT '' NOT NULL;
+ALTER TABLE bug ADD custom_tf9 VARCHAR(255) DEFAULT '' NOT NULL;
+ALTER TABLE bug ADD custom_tf10 VARCHAR(255) DEFAULT '' NOT NULL;
+#
+#   - Customizable text areas
+#
+ALTER TABLE bug ADD custom_ta1 TEXT DEFAULT '' NOT NULL;
+ALTER TABLE bug ADD custom_ta2 TEXT DEFAULT '' NOT NULL;
+ALTER TABLE bug ADD custom_ta3 TEXT DEFAULT '' NOT NULL;
+ALTER TABLE bug ADD custom_ta4 TEXT DEFAULT '' NOT NULL;
+ALTER TABLE bug ADD custom_ta5 TEXT DEFAULT '' NOT NULL;
+ALTER TABLE bug ADD custom_ta6 TEXT DEFAULT '' NOT NULL;
+ALTER TABLE bug ADD custom_ta7 TEXT DEFAULT '' NOT NULL;
+ALTER TABLE bug ADD custom_ta8 TEXT DEFAULT '' NOT NULL;
+ALTER TABLE bug ADD custom_ta9 TEXT DEFAULT '' NOT NULL;
+ALTER TABLE bug ADD custom_ta10 TEXT DEFAULT '' NOT NULL;
+#
+#   - Customizable select boxes
+#
+ALTER TABLE bug ADD custom_sb1 INT DEFAULT 100 NOT NULL;
+ALTER TABLE bug ADD custom_sb2 INT DEFAULT 100 NOT NULL;
+ALTER TABLE bug ADD custom_sb3 INT DEFAULT 100 NOT NULL;
+ALTER TABLE bug ADD custom_sb4 INT DEFAULT 100 NOT NULL;
+ALTER TABLE bug ADD custom_sb5 INT DEFAULT 100 NOT NULL;
+ALTER TABLE bug ADD custom_sb6 INT DEFAULT 100 NOT NULL;
+ALTER TABLE bug ADD custom_sb7 INT DEFAULT 100 NOT NULL;
+ALTER TABLE bug ADD custom_sb8 INT DEFAULT 100 NOT NULL;
+ALTER TABLE bug ADD custom_sb9 INT DEFAULT 100 NOT NULL;
+ALTER TABLE bug ADD custom_sb10 INT DEFAULT 100 NOT NULL;
+#
+#   - Customizable date fields
+#
+ALTER TABLE bug ADD custom_df1 INT DEFAULT 0 NOT NULL;
+ALTER TABLE bug ADD custom_df2 INT DEFAULT 0 NOT NULL;
+ALTER TABLE bug ADD custom_df3 INT DEFAULT 0 NOT NULL;
+ALTER TABLE bug ADD custom_df4 INT DEFAULT 0 NOT NULL;
+ALTER TABLE bug ADD custom_df5 INT DEFAULT 0 NOT NULL;
+
 
 # Make sure default value for historical fields is now '100'
 # that is to say None (where "None" means something of course).
@@ -93,6 +146,8 @@ ALTER TABLE bug_history ADD type int;
 #               1 yes keep the old values in the history table
 # special     : 0 process this field as usual
 #               1 this field require some special processing
+# custom      : 0 this is a CodeX field which semantic (label) cannot be customized
+#               1 this field is a custom field which label can be user defined
 #
 CREATE TABLE bug_field (
   bug_field_id int(11)  NOT NULL auto_increment,
@@ -106,6 +161,7 @@ CREATE TABLE bug_field (
   empty_ok int(11) DEFAULT '0' NOT NULL,
   keep_history int(11) DEFAULT '0' NOT NULL,
   special int(11) DEFAULT '0' NOT NULL,
+  custom int(11) DEFAULT '0' NOT NULL,
   PRIMARY KEY (bug_field_id),
   KEY idx_bug_field_name (field_name)
 );
@@ -166,6 +222,11 @@ CREATE TABLE bug_field_value (
 #                   members with appropriate rigths, 0 do not show it.
 # place           : A value indicating in which order the fields appear on
 #                   the bug submission screen (lowest first)
+# custom_label    : Label of the custom field as defined by the user. NULL if 
+#                   the field is not a customizable one
+#
+# custom_description : Description of the custom field as defined by the user. NULL if 
+#                   the field is not customizable one
 #
 # Remark: for all fields declared in bug_field table there must be a
 # corresponding entry here (group_id = 100) to define default usage rules.
@@ -179,6 +240,11 @@ CREATE TABLE bug_field_usage (
   show_on_add int(11) DEFAULT '0' NOT NULL,
   show_on_add_members int(11) DEFAULT '0' NOT NULL,
   place int(11) DEFAULT '0' NOT NULL,
+  custom_label varchar(255),
+  custom_description varchar(255),
+  custom_display_size varchar(255),
+  custom_empty_ok int(11),
+  custom_keep_history int(11),
   KEY idx_bug_fu_field_id (bug_field_id),
   KEY idx_bug_fu_group_id (group_id)
 );
@@ -252,6 +318,75 @@ CREATE TABLE bug_file (
   filetype text DEFAULT '' NOT NULL,
   PRIMARY KEY (bug_file_id),
   KEY bug_id_idx (bug_id)
+);
+
+#
+# Table structure for table 'bug_cc' for carbon-copied people
+# on bug email notification
+#
+
+CREATE TABLE bug_cc (
+  bug_cc_id int(11) NOT NULL auto_increment,
+  bug_id int(11) NOT NULL,
+  email varchar(255) DEFAULT '' NOT NULL,
+  added_by int(11) DEFAULT '0' NOT NULL,
+  comment text DEFAULT '' NOT NULL,
+  date int(11) DEFAULT '0' NOT NULL,
+  PRIMARY KEY (bug_cc_id),
+  KEY bug_id_idx (bug_id)
+);
+
+#
+# Table structure for table 'bug_watcher' 
+# Allow a user to receive the same notification as a list
+# of other
+#
+
+CREATE TABLE bug_watcher (
+  user_id int(11) NOT NULL,
+  watchee_id int(11) NOT NULL,
+  KEY user_id_idx (user_id),
+  KEY watchee_id_idx (watchee_id)
+);
+
+
+#
+# Table structure for table 'bug_notification' saying which user
+# want to receive email depending on her role and bug update events
+#
+
+CREATE TABLE bug_notification (
+  user_id int(11) NOT NULL,
+  role_id int(11) NOT NULL,
+  event_id int(11) NOT NULL,
+  notify int(11) DEFAULT '1' NOT NULL,
+  KEY user_id_idx (user_id)
+);
+
+#
+# Table structure for table 'bug_notification_role' and 
+# 'bug_notification_event'
+#
+# Rk: rank is an integer which allows to present the information
+#     in a given order on the screen.
+#
+
+CREATE TABLE bug_notification_role (
+  role_id int(11) NOT NULL,
+  role_label varchar(255),
+  short_description varchar(40),
+  description varchar(255),
+  rank int(11) default '0' NOT NULL,
+  KEY role_id_idx (role_id)
+);
+
+CREATE TABLE bug_notification_event (
+  event_id int(11) NOT NULL,
+  event_label varchar(255),
+  short_description varchar(40),
+  description varchar(255),
+  rank int(11) default '0' NOT NULL,
+  KEY event_id_idx (event_id)
 );
 
 #

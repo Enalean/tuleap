@@ -25,7 +25,7 @@ if (db_numrows($result) > 0) {
     <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">
     <INPUT TYPE="HIDDEN" NAME="bug_id" VALUE="<?php echo $bug_id; ?>">
 
-    <TABLE CELLPADDING="0" WIDTH="100%">
+    <TABLE CELLPADDING="0">
       <TR><TD><B>Submitted By:</B>&nbsp;<?php echo user_getname(db_result($result,0,'submitted_by')); ?></TD>
           <TD><B>Group:</B>&nbsp;<?php echo group_getname($group_id); ?></TD>
       </TR>
@@ -97,7 +97,9 @@ if (db_numrows($result) > 0) {
 ?>
 
      </TD></TR>
-     <P>
+     </table>
+
+     <table>
 
      <TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
         <?php echo show_bug_details($bug_id); ?>

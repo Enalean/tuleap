@@ -39,8 +39,9 @@ function bug_data_get_all_fields ($group_id=false,$reload=false) {
 
     // First get the all the defaults. 
     $sql='SELECT bug_field.bug_field_id, field_name, display_type, '.
-	'display_size,label, description,scope,required,empty_ok,keep_history,special, '.
-	'group_id, use_it,show_on_add,show_on_add_members, place '.
+	'display_size,label, description,scope,required,empty_ok,keep_history,special, custom, '.
+	'group_id, use_it,show_on_add,show_on_add_members, place, custom_label,'.
+	'custom_description,custom_display_size,custom_empty_ok,custom_keep_history '.
 	'FROM bug_field, bug_field_usage '.
 	'WHERE group_id=100  '.
 	'AND bug_field.bug_field_id=bug_field_usage.bug_field_id ';
@@ -57,8 +58,9 @@ function bug_data_get_all_fields ($group_id=false,$reload=false) {
 
     // Then select  all project specific entries
     $sql='SELECT bug_field.bug_field_id, field_name, display_type, '.
-	'display_size,label, description,scope,required,empty_ok,keep_history,special, '.
-	'group_id, use_it, show_on_add, show_on_add_members, place '.
+	'display_size,label, description,scope,required,empty_ok,keep_history,special, custom, '.
+	'group_id, use_it, show_on_add, show_on_add_members, place, custom_label,'.
+	'custom_description,custom_display_size,custom_empty_ok,custom_keep_history '.
 	'FROM bug_field, bug_field_usage '.
 	'WHERE group_id='.$group_id.
 	' AND bug_field.bug_field_id=bug_field_usage.bug_field_id ';
@@ -198,6 +200,11 @@ function bug_data_get_field_predefined_values ($field, $group_id=false, $checked
 
 }
 
+function bug_data_is_custom($field, $by_field_id=false) {
+    global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
+    return($by_field_id ? $BF_USAGE_BY_ID[$field]['custom']: $BF_USAGE_BY_NAME[$field]['custom']);
+}
+
 function bug_data_is_special($field, $by_field_id=false) {
     global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
     return($by_field_id ? $BF_USAGE_BY_ID[$field]['special']: $BF_USAGE_BY_NAME[$field]['special']);
@@ -205,7 +212,14 @@ function bug_data_is_special($field, $by_field_id=false) {
 
 function bug_data_is_empty_ok($field, $by_field_id=false) {
     global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
-    return($by_field_id ? $BF_USAGE_BY_ID[$field]['empty_ok']: $BF_USAGE_BY_NAME[$field]['empty_ok']);
+    if ($by_field_id) {
+	$val = $BF_USAGE_BY_ID[$field]['custom_empty_ok'];
+	if (!isset($val)) { $val = $BF_USAGE_BY_ID[$field]['empty_ok']; }
+    } else {
+	$val = $BF_USAGE_BY_NAME[$field]['custom_empty_ok'];
+	if (!isset($val)) { $val = $BF_USAGE_BY_NAME[$field]['empty_ok']; }
+    }
+    return($val);
 }
 
 function bug_data_is_required($field, $by_field_id=false) {
@@ -293,12 +307,26 @@ function bug_data_get_group_id($field, $by_field_id=false) {
 
 function bug_data_get_label($field, $by_field_id=false) {
     global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
-    return($by_field_id ? $BF_USAGE_BY_ID[$field]['label'] : $BF_USAGE_BY_NAME[$field]['label']);
+    if ($by_field_id) {
+	$lbl = $BF_USAGE_BY_ID[$field]['custom_label'];
+	if (!isset($lbl)) { $lbl = $BF_USAGE_BY_ID[$field]['label']; }
+    } else {
+	$lbl = $BF_USAGE_BY_NAME[$field]['custom_label'];
+	if (!isset($lbl)) { $lbl = $BF_USAGE_BY_NAME[$field]['label']; }
+    }
+    return($lbl);
 }
 
 function bug_data_get_description($field, $by_field_id=false) {
     global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
-    return($by_field_id ? $BF_USAGE_BY_ID[$field]['description'] : $BF_USAGE_BY_NAME[$field]['description']);
+    if ($by_field_id) {
+	$desc = $BF_USAGE_BY_ID[$field]['custom_description'];
+	if (!isset($desc)) { $desc = $BF_USAGE_BY_ID[$field]['description']; }
+    } else {
+	$desc = $BF_USAGE_BY_NAME[$field]['custom_description'];
+	if (!isset($desc)) { $desc = $BF_USAGE_BY_NAME[$field]['description']; }
+    }
+    return($desc);
 }
 
 function bug_data_get_display_type($field, $by_field_id=false) {
@@ -326,7 +354,14 @@ function bug_data_get_display_type_in_clear($field, $by_field_id=false) {
 
 function bug_data_get_keep_history($field, $by_field_id=false) {
     global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
-    return($by_field_id ? $BF_USAGE_BY_ID[$field]['keep_history'] : $BF_USAGE_BY_NAME[$field]['keep_history']);
+    if ($by_field_id) {
+	$val = $BF_USAGE_BY_ID[$field]['custom_keep_history'];
+	if (!isset($val)) { $val = $BF_USAGE_BY_ID[$field]['keep_history']; }
+    } else {
+	$val = $BF_USAGE_BY_NAME[$field]['custom_keep_history'];
+	if (!isset($val)) { $val = $BF_USAGE_BY_NAME[$field]['keep_history']; }
+    }
+    return($val);
 }
 
 function bug_data_get_place($field, $by_field_id=false) {
@@ -347,10 +382,13 @@ function bug_data_get_col_width($field, $by_field_id=false) {
 function bug_data_get_display_size($field, $by_field_id=false) {
     global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
     if ($by_field_id) {
-	return(explode('/',$BF_USAGE_BY_ID[$field]['display_size']));
+	$val = $BF_USAGE_BY_ID[$field]['custom_display_size'];
+	if (!isset($val)) { $val = $BF_USAGE_BY_ID[$field]['display_size']; }
     } else {
-	return(explode('/',$BF_USAGE_BY_NAME[$field]['display_size']));
+	$val = $BF_USAGE_BY_NAME[$field]['custom_display_size'];
+	if (!isset($val)) { $val = $BF_USAGE_BY_NAME[$field]['display_size']; }
     }
+    return(explode('/',$val));
 }
 
 function bug_data_get_default_value($field,  $by_field_id=false) {
@@ -618,8 +656,9 @@ function bug_data_reset_usage($field_name,$group_id)
     }
 }
 
- function bug_data_update_usage($field_name, $group_id, $use_it, $rank,
-				$show_on_add_members=0, $show_on_add=0)
+ function bug_data_update_usage($field_name,$group_id,$label,$description,
+				$use_it,$rank,$display_size,$empty_ok=0,
+				$keep_history=0,$show_on_add_members=0,$show_on_add=0)
 {
     global $feedback;
     /*
@@ -635,6 +674,17 @@ function bug_data_reset_usage($field_name,$group_id)
 
     $field_id = bug_data_get_field_id($field_name);
 
+    // if it's a custom field then take label into account else store NULL
+    if (bug_data_is_custom($field_name)) {
+	$lbl = "'$label'";
+	$desc = "'$description'";
+	$disp_size = "'$display_size'";
+	$empty = "'$empty_ok'";
+	$keep_hist = "'$keep_history'";
+    } else {
+	$lbl = $desc = $disp_size = $empty = $keep_hist = "NULL";
+    }
+
     // See if this field usage exists in the table for this project
     $sql = 'SELECT bug_field_id FROM bug_field_usage '.
 	"WHERE bug_field_id='$field_id' AND group_id='$group_id'";
@@ -645,13 +695,16 @@ function bug_data_reset_usage($field_name,$group_id)
     if ($rows) {
 	$sql = 'UPDATE bug_field_usage '.
 	    "SET use_it='$use_it',show_on_add='$show_on_add',".
-	    "show_on_add_members='$show_on_add_members',place='$rank' ".
+	    "show_on_add_members='$show_on_add_members',place='$rank', ".
+	    "custom_label=$lbl,  custom_description=$desc,".
+	    "custom_display_size=$disp_size,  custom_empty_ok=$empty,".
+	    "custom_keep_history=$keep_hist ".
 	    "WHERE bug_field_id='$field_id' AND group_id='$group_id'";
 	$result = db_query($sql);
     } else {
 	$sql = 'INSERT INTO  bug_field_usage '.
 	    "VALUES ('$field_id','$group_id','$use_it','$show_on_add',".
-	    "'$show_on_add_members','$rank')";
+	    "'$show_on_add_members','$rank',$lbl,$desc,$disp_size,$empty,$keep_hist )";
 	$result = db_query($sql);
     }
 
@@ -741,6 +794,13 @@ function bug_data_get_followups ($bug_id=false) {
 	return db_query($sql);
 }
 
+function bug_data_get_commenters($bug_id) {
+    $sql="SELECT DISTINCT mod_by FROM bug_history ".
+	"WHERE bug_history.bug_id='$bug_id' ".
+	"AND bug_history.field_name = 'details' ";
+    return db_query($sql);
+}
+
 function bug_data_get_history ($bug_id=false) {
 	$sql="select bug_history.field_name,bug_history.old_value,bug_history.date,bug_history.type,user.user_name ".
 		"FROM bug_history,user ".
@@ -758,7 +818,19 @@ function bug_data_get_attached_files ($bug_id=false) {
 	return db_query($sql);
 }
 
+function bug_data_get_cc_list ($bug_id=false) {
+    $sql="SELECT bug_cc_id,bug_cc.email,bug_cc.added_by,bug_cc.comment,bug_cc.date,user.user_name ".
+	    "FROM bug_cc,user ".
+	    "WHERE added_by=user.user_id ".
+	    "AND bug_id='$bug_id' ORDER BY date DESC";
+    return db_query($sql);
+}
+
 function bug_data_add_history ($field_name,$old_value,$bug_id,$type=false) {
+
+    // If field is not to be kept in bug change history then do nothing
+    if (!bug_data_get_keep_history($field_name)) { return; }
+
 	/*
 		handle the insertion of history for these parameters
 	*/
@@ -833,6 +905,10 @@ function bug_data_handle_update ($group_id,$bug_id,$dependent_on_task,
 	$is_text = (bug_data_is_text_field($field) || bug_data_is_text_area($field));
 	if  ($is_text) {
 	    $differ = ($old_value != stripslashes(htmlspecialchars($value))); 
+	} else if (bug_data_is_date_field($field)) {
+	    // if it's a date we must convert the format to unix time
+	    list($value,$ok) = util_date_to_unixtime($value);
+	    $differ = ($old_value != $value);
 	} else {
 	    $differ = ($old_value != $value);
 	}
@@ -907,8 +983,10 @@ function bug_data_handle_update ($group_id,$bug_id,$dependent_on_task,
     $dependent_on_task[] = 100;
     list($deleted_tasks,$added_tasks) = util_double_diff_array($old_dep_on_task,$dependent_on_task);
 
-    $changes['Dependent Tasks']['del'] = join(',',$deleted_tasks);
-    $changes['Dependent Tasks']['add'] = join(',',$added_tasks);
+    if (count($deleted_tasks))
+	$changes['Dependent Tasks']['del'] = join(',',$deleted_tasks);
+    if (count($added_tasks))
+	$changes['Dependent Tasks']['add'] = join(',',$added_tasks);
 
 
     /*
@@ -926,8 +1004,10 @@ function bug_data_handle_update ($group_id,$bug_id,$dependent_on_task,
     $old_dep_on_bug[] = 100;
     list($deleted_bugs, $added_bugs) = util_double_diff_array($old_dep_on_bug, $dependent_on_bug);
 
-    $changes['Dependent Bugs']['del'] = join(',',$deleted_bugs);
-    $changes['Dependent Bugs']['add'] = join(',',$added_bugs);
+    if (count($deleted_bugs))
+	$changes['Dependent Bugs']['del'] = join(',',$deleted_bugs);
+    if (count($added_bugs))
+	$changes['Dependent Bugs']['add'] = join(',',$added_bugs);
 
 
     /*
@@ -1165,4 +1245,74 @@ function bug_data_get_reports($group_id, $user_id) {
     //echo "DBG sql report = $sql";
     return db_query($sql);
 }
+
+function bug_data_get_notification($user_id) {
+    $sql = "SELECT role_id,event_id,notify FROM bug_notification WHERE user_id='$user_id'";
+    return db_query($sql);
+}
+
+function bug_data_get_notification_with_labels($user_id) {
+    $sql = 'SELECT role_label,event_label,notify FROM bug_notification_role, bug_notification_event,bug_notification '.
+	"WHERE bug_notification.role_id=bug_notification_role.role_id AND ".
+	"bug_notification.event_id=bug_notification_event.event_id AND user_id='$user_id'";
+    return db_query($sql);
+}
+
+function bug_data_get_notification_roles() {
+    $sql = 'SELECT * FROM bug_notification_role ORDER BY rank ASC;';
+    return db_query($sql);
+}
+
+function bug_data_get_notification_events() {
+    $sql = 'SELECT * FROM bug_notification_event ORDER BY rank ASC;';
+    return db_query($sql);
+}
+
+function bug_data_delete_notification($user_id) {
+    $sql = "DELETE FROM bug_notification WHERE user_id='$user_id'";
+    return db_query($sql);
+}
+
+function bug_data_insert_notification($user_id, $arr_roles, $arr_events,
+				    $arr_notification) {
+    $sql = 'INSERT INTO bug_notification (user_id,role_id,event_id,notify) VALUES ';
+
+    $num_roles = count($arr_roles);
+    $num_events = count($arr_events);
+    for ($i=0; $i<$num_roles; $i++) {
+	$role_id = $arr_roles[$i]['role_id'];
+ 	for ($j=0; $j<$num_events; $j++) { 
+	    $event_id = $arr_events[$j]['event_id'];
+ 	    $sql .= "('$user_id','$role_id','$event_id','".$arr_notification[$role_id][$event_id]."'),"; 
+ 	} 
+     } 
+     $sql = substr($sql,0,-1); // remove extra comma at the end 
+     return db_query($sql); 
+}
+
+function bug_data_get_watchers($user_id) {
+    $sql = "SELECT user_id FROM bug_watcher WHERE watchee_id='$user_id'";
+    return db_query($sql);    
+}
+
+function bug_data_get_watchees($user_id) {
+    $sql = "SELECT watchee_id FROM bug_watcher WHERE user_id='$user_id'";
+    return db_query($sql);    
+}
+
+function bug_data_insert_watchees($user_id, $arr_watchees) {
+    $sql = 'INSERT INTO bug_watcher (user_id,watchee_id) VALUES ';
+    $num_watchees = count($arr_watchees);
+    for ($i=0; $i<$num_watchees; $i++) {
+	$sql .= "('$user_id','".$arr_watchees[$i]."'),";
+    } 
+    $sql = substr($sql,0,-1); // remove extra comma at the end 
+    return db_query($sql);
+}
+
+function bug_data_delete_watchees($user_id) {
+    $sql = "DELETE FROM bug_watcher WHERE user_id='$user_id'";
+    return db_query($sql);
+}
+
 ?>

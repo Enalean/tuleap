@@ -16,12 +16,13 @@ $res_preamble  = db_query("SELECT bug_preamble FROM groups WHERE group_id=$group
 echo util_unconvert_htmlspecialchars(db_result($res_preamble,0,'bug_preamble'));
 
 // Beginning of the submission form with fixed fields
-echo '<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data">
+echo '<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data" NAME="bug_form">
 	<INPUT TYPE="HIDDEN" NAME="func" VALUE="postaddbug">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
-	<TABLE>
-	<TR><TD VALIGN="TOP" COLSPAN="'.$fields_per_line.'">
-              <B>Group:</B>&nbsp;'.group_getname($group_id).'</TD></TR>';
+	<TABLE cellpadding="0">
+	<TR><TD VALIGN="TOP" COLSPAN="'.(2*$fields_per_line).'">
+                  <B>Group:</B>&nbsp;'.group_getname($group_id).'</TD></TR>
+                 <script language="JavaScript" src="/include/calendar.js"></script>';
 
 
 
@@ -48,14 +49,15 @@ while ( $field_name = bug_list_all_fields() ) {
 	    list($sz,) = bug_data_get_display_size($field_name);
 	    if ($sz > $max_size) {
 		echo "\n<TR>".
-		    '<TD valign="top" colspan="'.$fields_per_line.'">'.
-		    bug_field_display($field_name,$group_id,$field_value).
-		    '</TD>'.
+		    '<TD valign="middle">'.bug_field_label_display($field_name,$group_id,false,false).'</td>'.
+		    '<TD valign="middle" colspan="'.(2*$fields_per_line-1).'">'.
+		    bug_field_display($field_name,$group_id,$field_value,false,false).'</TD>'.		      
 		    "\n</TR>";
 		$i=0;
 	    } else {
 		echo ($i % $fields_per_line ? '':"\n<TR>");
-		echo '<TD valign="top">'.bug_field_display($field_name,$group_id,$field_value).'</TD>';
+		  echo '<TD valign="middle">'.bug_field_label_display($field_name,$group_id,false,false).'</td>'.
+		      '<TD valign="middle">'.bug_field_display($field_name,$group_id,$field_value,false,false).'</TD>';
 		$i++;
 		echo ($i % $fields_per_line ? '':"\n</TR>");
 	    }
@@ -67,13 +69,13 @@ while ( $field_name = bug_list_all_fields() ) {
 // Then display all mandatory fields 
 
 ?>
-      <TR><TD colspan="<?php echo $fields_per_line; ?>">
+      <TR><TD colspan="<?php echo 2*$fields_per_line; ?>">
 <?php echo bug_field_display('summary',$group_id,'',true); ?></td></tr>
 
-      <TR><TD colspan="<?php echo $fields_per_line; ?>">
+      <TR><TD colspan="<?php echo 2*$fields_per_line; ?>">
 <?php echo bug_field_display('details',$group_id,'',true); ?></td></tr>
 
-      <TR><TD colspan="<?php echo $fields_per_line; ?>">
+      <TR><TD colspan="<?php echo 2*$fields_per_line; ?>">
 
 	<?php
 	if (!user_isloggedin()) {
@@ -94,13 +96,13 @@ while ( $field_name = bug_list_all_fields() ) {
       <input type="text" name="file_description" size="60" maxlength="255">
       </TR></TD>
 
-<TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
+<TR><TD COLSPAN="<?php echo 2*$fields_per_line; ?>">
 	<P>
 	<hr>
 	<B><FONT COLOR="RED">Did you check to see if this bug has already been submitted?</FONT></b> (use the search box in the left menu pane)
-	<P>
+	<P><center>
 	<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
-	<P>
+	</center>
 	</FORM>
 </TD></TR>
 

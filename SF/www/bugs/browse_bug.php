@@ -257,24 +257,14 @@ while (list($field,$value_id) = each($prefs)) {
     } else if (bug_data_is_date_field($field) && $prefs[$field][0]) {
 
 	// transform a date field into a unix time and use <, > or =
-
-	preg_match("/\s*(\d+)-(\d+)-(\d+)/", $prefs[$field][0],$match);
-	list(,$year,$month,$day) = $match;
-	//echo "<br>DBG Matching $field: ".$prefs[$field][0];
-	//echo "<br>DBG $field -> year $year, month $month,day $day";
-	$time = mktime(0, 0, 0, $month, $day, $year);
+	list($time,$ok) = util_date_to_unixtime($prefs[$field][0]);
 
 	if ($advsrch) {
-	    preg_match("/\s*(\d+)-(\d+)-(\d+)/", $prefs[$field.'_end'][0],$match_end);
-	    list(,$year_end,$month_end,$day_end) = $match_end;
-	    //echo "<br>DBG Matching $field"."_end:".$prefs[$field.'_end'][0];
-	    //echo "<br>DBG $field"."_end -> year $year_end, month $month_end,day $day_end";
-	    $time_end = mktime(23, 59, 59, $month_end, $day_end, $year_end);
-
-	    if ($match)
+	    list($time_end,$ok_end) = util_date_to_unixtime($prefs[$field.'_end'][0]);
+	    if ($ok)
 		$where .= ' AND bug.'.$field.' >= '. $time;
 
-	    if ($match_end)
+	    if ($ok_end)
 		$where .= ' AND bug.'.$field.' <= '. $time_end;
 
 

@@ -101,6 +101,7 @@ function bug_header_admin($params) {
         echo ' | <b><A HREF="/bugs/admin/field_values.php?group_id='.$group_id.'">Create Task</A></b>';
     }
     echo ' | <b><A HREF="/bugs/admin/reports.php?group_id='.$group_id.'">Bug Reports</A></b>';
+    echo ' | <b><A HREF="/bugs/admin/notification_settings.php?group_id='.$group_id.'">Notification Settings</A></b>';
     echo ' | <b><A HREF="/bugs/admin/other_settings.php?group_id='.$group_id.'">Other Settings</A></b>';
     echo ' <hr width="300" size="1" align="left" noshade>';
 
@@ -149,6 +150,17 @@ function bug_list_all_fields($sort_func=false,$by_field_id=false) {
     }
 }
 
+function bug_field_label_display($field_name, $group_id,$break=false,$ascii=false) {
+    $output = bug_data_get_label($field_name).': ';
+    if (!$ascii) 
+	$output = '<B>'.$output.'</B>';
+    if ($break) 
+	$output .= ($ascii?"\n":'<BR>');
+    else
+	$output .= ($ascii? ' ':'&nbsp;');
+    return $output;
+}
+
 function bug_field_display($field_name, $group_id, $value='xyxy',
 			   $break=false, $label=true, $ro=false, $ascii=false, 
 			   $show_none=false, $text_none='None',
@@ -175,13 +187,7 @@ function bug_field_display($field_name, $group_id, $value='xyxy',
     global $sys_datefmt;
 
     if ($label) {
-	$output = bug_data_get_label($field_name).': ';
-	if (!$ascii) 
-	    $output = '<B>'.$output.'</B>';
-	if ($break) 
-	    $output .= ($ascii?"\n":'<BR>');
-	else
-	    $output .= ($ascii? ' ':'&nbsp;');
+	$output = bug_field_label_display($field_name,$group_id,$break,$ascii);
     }
 
     // display depends upon display type of this field
@@ -224,9 +230,14 @@ function bug_field_display($field_name, $group_id, $value='xyxy',
 
     case 'DF':
 	if ($ascii) 
-	    $output .= format_date($sys_datefmt,$value);
+	    $output .= ( ($value == 0) ? '' : format_date($sys_datefmt,$value));
 	else
-	    $output .= ($ro ? format_date($sys_datefmt,$value) : bug_field_date($field_name,$value));
+	    if ($ro) {
+		$output .= format_date($sys_datefmt,$value);
+	    } else {
+		$output .= bug_field_date($field_name,
+					  (($value == 0) ? '' : format_date("Y-m-j",$value,'')));
+	    }
 	break;
 
     case 'TF':
@@ -235,6 +246,7 @@ function bug_field_display($field_name, $group_id, $value='xyxy',
 	else
 	    $output .= ($ro ? $value: bug_field_text($field_name,$value));
 	break;
+
     case 'TA':
 	if ($ascii) 
 	    $output .= util_unconvert_htmlspecialchars($value);
@@ -252,7 +264,7 @@ function bug_field_display($field_name, $group_id, $value='xyxy',
 function bug_field_date($field_name,$value='',$size=0,$maxlength=0,$ro=false) {
 
     // CAUTION!!!! The Javascript below assumes that the date always appear
-    // in a field called 'bug_form'
+    // in a form called 'bug_form'
     if ($ro)
 	$html = $value;
     else {
@@ -327,8 +339,7 @@ function bug_field_textarea($field_name,$value='',$cols=0,$rows=0) {
 	list($cols, $rows) = bug_data_get_display_size($field_name);
 
     $html = '<TEXTAREA NAME="'.$field_name.
-	'" ROWS="'.$rows.'" COLS="'.$cols.'" WRAP="SOFT">'
-	.nl2br($value).'</TEXTAREA>';
+	'" ROWS="'.$rows.'" COLS="'.$cols.'" WRAP="SOFT">'.$value.'</TEXTAREA>';
     return($html);
 
 }
@@ -584,10 +595,252 @@ function show_buglist ($result,$offset,$total_rows,$field_arr,$title_arr,
     echo $nav_bar;
 }
 
-function mail_followup($bug_id,$more_addresses=false,$changes=false) {
+function bug_build_notification_matrix($user_id) {
+
+    // Build the notif matrix indexed with roles and events labels (not id)
+    $res_notif = bug_data_get_notification_with_labels($user_id);
+    while ($arr = db_fetch_array($res_notif)) {
+	$arr_notif[$arr['role_label']][$arr['event_label']] = $arr['notify'];
+    }
+    return $arr_notif;
+}
+
+
+function bug_check_notification($user_id, $role, $changes=false) {
+
+    $send = false;
+    $arr_notif = bug_build_notification_matrix($user_id);
+    if (!$arr_notif) { return true; }
+
+    //echo "==== DBG Checking Notif. for $user_id (role=$role)<br>";
+    $user_name = user_getname($user_id);
+
+    //----------------------------------------------------------
+    // If it's a new bug only (changes is false) check the NEW_BUG event and
+    // ignore all other events
+    if ($changes==false) {
+	if ($arr_notif[$role]['NEW_BUG']) {
+	    //echo "DBG NEW_BUG notified<br>";
+	    return true;
+	} else {
+	    //echo "DBG No notification<br>";
+	    return false;
+	}
+    }
+
+    //----------------------------------------------------------
+    //Check: I_MADE_IT  (I am the author of the change )
+    // Check this one first because if the user said no she doesn't want to be 
+    // aware of any of her change in this role and we can return immediately.
+    if (($user_id == user_getid()) && !$arr_notif[$role]['I_MADE_IT']) {
+	//echo "DBG Dont want to receive my own changes<br>";
+	return false;
+    }
+    
+    //----------------------------------------------------------
+    // Check :  NEW_COMMENT  A new followup comment is added 
+    if ($arr_notif[$role]['NEW_COMMENT'] && isset($changes['details'])) {
+	//echo "DBG NEW_COMMENT notified<br>";
+	return true;
+    }
+
+    //----------------------------------------------------------
+    //Check: NEW_FILE  (A new file attachment is added)
+    if ($arr_notif[$role]['NEW_FILE'] && isset($changes['attach'])) {
+	//echo "DBG NEW_FILE notified<br>";
+	return true;
+    }
+  
+    //----------------------------------------------------------
+    //Check: CLOSED  (The bug is closed)
+    // Rk: this one has precedence over PSS_CHANGE. So notify even if PSS_CHANGE
+    // says no.
+    if ($arr_notif[$role]['CLOSED'] && ($changes['status_id']['add'] == 'Closed')) {
+	//echo "DBG CLOSED bug notified<br>";
+	return true;
+    }
+
+    //----------------------------------------------------------
+    //Check: PSS_CHANGE  (Priority,Status,Severity changes)
+    if ($arr_notif[$role]['PSS_CHANGE'] && 
+	(isset($changes['priority']) || isset($changes['status_id']) || isset($changes['severity'])) ) {
+	//echo "DBG PSS_CHANGE notified<br>";
+	return true;
+    }
+
+
+    //----------------------------------------------------------
+    // Check :  ROLE_CHANGE (I'm added to or removed from this role)
+    // Rk: This event is meanningless for Commenters. It also is for submitter but may be
+    // one day the submitter will be changeable by the project admin so test it.
+    // Rk #2: check this one at the end because it is the most CPU intensive and this
+    // event seldomly happens
+    if ($arr_notif['SUBMITTER']['ROLE_CHANGE'] &&
+	(($changes['submitted_by']['add'] == $user_name) || ($changes['submitted_by']['del'] == $user_name)) &&
+	($role == 'SUBMITTER') ) {
+	//echo "DBG ROLE_CHANGE for submitter notified<br>";
+	return true;
+    }
+
+    if ($arr_notif['ASSIGNEE']['ROLE_CHANGE'] &&
+	(($changes['assigned_to']['add'] == $user_name) || ($changes['assigned_to']['del'] == $user_name)) &&
+	($role == 'ASSIGNEE') ) {
+	//echo "DBG ROLE_CHANGE for role assignee notified<br>";
+	return true;
+    }
+
+    $arr_cc_changes = array();
+    if (isset($changes['CC']['add']))
+	$arr_cc_changes = split(',',$changes['CC']['add']);
+    $arr_cc_changes[] = $changes['CC']['del'];
+    $is_user_in_cc_changes = in_array($user_name,$arr_cc_changes);    
+    $are_anyother_user_in_cc_changes =
+	(!$is_user_in_cc_changes || count($arr_cc_changes)>1);    
+
+    if ($arr_notif['CC']['ROLE_CHANGE'] && ($role == 'CC')) {
+	if ($is_user_in_cc_changes) {
+	    //echo "DBG ROLE_CHANGE for cc notified<br>";
+	    return true;
+	}
+    }
+    
+    //----------------------------------------------------------
+    //Check: CC_CHANGE  (CC_CHANGE is added or removed)
+    // check this right after because  role cahange for cc can contradict
+    // thee cc_change notification. If the role change on cc says no notification
+    // then it has precedence over a cc_change
+    if ($arr_notif[$role]['CC_CHANGE'] && isset($changes['CC'])) {
+	// it's enough to test role against 'CC' because if we are at that point
+	// it means that the role_change for CC was false or that role is not CC
+	// So if role is 'CC' and we are here it means that the user asked to not be
+	// notified on role_change as CC, unless other users are listed in the cc changes
+	if (($role != 'CC') || (($role == 'CC') && $are_anyother_user_in_cc_changes)) {
+	    //echo "DBG CC_CHANGE notified<br>";
+	    return true; 
+	}
+    }
+
+
+    //----------------------------------------------------------
+    //Check: CHANGE_OTHER  (Any changes not mentioned above)
+    // *** THIS ONE MUST ALWAYS BE TESTED LAST
+    
+    // Delete all tested fields from the $changes array. If any remains then it
+    // means a notification must be sent
+    unset($changes['details']);
+    unset($changes['attach']);
+    unset($changes['priority']);
+    unset($changes['severity']);
+    unset($changes['status_id']);
+    unset($changes['CC']);
+    unset($changes['assigned_to']);
+    unset($changes['submitted_by']);
+    if ($arr_notif[$role]['ANY_OTHER_CHANGE'] && count($changes)) {
+	//echo "DBG ANY_OTHER_CHANGE notified<br>";
+	return true;
+    }
+
+    // Sorry, no notification...
+    //echo "DBG No notification!!<br>";
+    return false;
+}
+
+function bug_build_notification_list($bug_id, $group_id, $changes) {
+
+    $sql="SELECT assigned_to, submitted_by from bug WHERE bug_id='$bug_id'";
+    $res_as=db_query($sql);
+
+    // Rk: we store email addresses in a hash to make sure they are only
+    // stored once. Normally if an email is repeated several times sendmail
+    // would take care of it but I prefer taking care of it now.
+    // Same for user ids.
+    // We also use the user_ids hash to check if a user has already been selected for 
+    // notification. If so it is not necessary to check it again in another role.
+    $addresses = array();
+    $user_ids = array();
+
+    // check submitter notification preferences
+    $user_id = db_result($res_as,0,'submitted_by');
+    if ($user_id != 100) {
+	if (bug_check_notification($user_id, 'SUBMITTER', $changes)) {
+	    $user_ids[$user_id] = true;
+	}
+    }
+
+    // check assignee  notification preferences
+    $user_id = db_result($res_as,0,'assigned_to');
+    if ($user_id != 100) {
+	if (!$user_ids[$user_id] && bug_check_notification($user_id, 'ASSIGNEE', $changes)) {
+	    $user_ids[$user_id] = true;
+	}
+    }
+
+    // check old assignee  notification preferences if assignee was just changed
+    $user_name = $changes['assigned_to']['del'];
+    if ($user_name) {
+	$res_oa = user_get_result_set_from_unix($user_name);
+	$user_id = db_result($res_oa,0,'user_id');
+	if (!$user_ids[$user_id] && bug_check_notification($user_id, 'ASSIGNEE', $changes)) {
+	    $user_ids[$user_id] = true;
+	}
+    }
+    
+    // check all CC 
+    // a) check all the people in the current CC list
+    // b) check the CC that has just been removed if any and see if she
+    // wants to be notified as well
+    // if the CC indentifier is an email address then notify in any case
+    // because this user has no personal setting
+    $res_cc = bug_data_get_cc_list($bug_id);
+    $arr_cc = array();
+    if ($res_cc && (db_numrows($res_cc) > 0)) {
+	while ($row = db_fetch_array($res_cc)) {
+	    $arr_cc[] = $row['email'];
+	}
+    }
+    // Only one CC can be deleted at once so just append it to the list....
+    $arr_cc[] = $changes['CC']['del'];
+
+    while (list(,$cc) = each($arr_cc)) {
+	if (validate_email($cc)) {
+	    $addresses[util_normalize_email($cc)] = true;
+	} else {
+	    $res = user_get_result_set_from_unix($cc);
+	    $user_id = db_result($res,0,'user_id');
+	    if (!$user_ids[$user_id] && bug_check_notification($user_id, 'CC', $changes)) {
+		$user_ids[$user_id] = true;
+	    }
+	}
+    } // while
+
+
+    // check all commenters
+    $res_com = bug_data_get_commenters($bug_id);
+    if (db_numrows($res_com) > 0) {
+	while ($row = db_fetch_array($res_com)) {
+	    $user_id = $row['mod_by'];
+	    if (!$user_ids[$user_id] && bug_check_notification($user_id, 'COMMENTER', $changes)) {
+		$user_ids[$user_id] = true;
+	    }
+	}
+    }
+
+    // build the final list of email addresses
+    reset($user_ids);
+    while (list($user_id,) = each($user_ids)) {
+	$addresses[user_getemail($user_id)] = true;
+    }
+
+    // return an array with all the email addresses the notification must be sent to
+    return (array_keys($addresses));
+
+}
+
+function bug_mail_followup($bug_id,$more_addresses=false,$changes=false) {
     global $sys_datefmt,$feedback;
     /*
-      Send a message to the person who opened this bug and the person it is assigned to - modified by jstidd on 1/30/01 to eliminate default user assigned to
+      Send a message to the person who opened this bug and the person it is assigned to - 
+      modified by jstidd on 1/30/01 to eliminate default user assigned to
     */
 
     $sql="SELECT * from bug WHERE bug_id='$bug_id'";
@@ -658,20 +911,20 @@ function mail_followup($bug_id,$more_addresses=false,$changes=false) {
 	$body .= "\n".$bug_href;
 
 
-	// And send it to the submitter and the assignee (if any)
-	$subject='[Bug #'.db_result($result,0,'bug_id').'] '.util_unconvert_htmlspecialchars(db_result($result,0,'summary'));
-
-	$to = user_getemail(db_result($result,0,'submitted_by'));
-	$assigned_to = db_result($result,0,'assigned_to');
-	if ($assigned_to != 100) {
-	    $to .= ','.user_getemail($assigned_to);
-	}
+	// See who is going to receive the notification. Plus append any other email 
+	// given at the end of the list.
+	$arr_addresses = bug_build_notification_list($bug_id,$group_id,$changes);
+	$to = join(',',$arr_addresses);
 
 	if ($more_addresses) {
-	    $to .= ','.$more_addresses;
+	    $to .= ($to ? ',':'').$more_addresses;
 	}
 
+	//echo "DBG Sending email to: $to<br";
+
 	$more='From: noreply@'.$GLOBALS['sys_default_domain'];
+        $subject='[Bug #'.db_result($result,0,'bug_id').'] '.util_unconvert_htmlspecialchars(db_result($result,0,'summary'));
+
 
 	mail($to,$subject,$body,$more);
 
@@ -878,19 +1131,17 @@ function show_bughistory ($bug_id,$group_id) {
 	    $value_id =  db_result($result, $i, 'old_value');
 
 	    echo "\n".'<TR BGCOLOR="'. util_get_alt_row_color($i) .
-		'"><TD>'.$field.'</TD><TD>';
+		'"><TD>'.bug_data_get_label($field).'</TD><TD>';
 
 	    if (bug_data_is_select_box($field)) {
 		// It's a select box look for value in clear
 		echo bug_data_get_value($field, $group_id, $value_id);
+	    } else if (bug_data_is_date_field($field)) {
+		// For date fields do some special processing
+		echo format_date($sys_datefmt,$value_id);
 	    } else {
 		// It's a text zone then display directly
-		// For date fields do some special processing
-		if ($field == 'close_date')
-		    echo format_date($sys_datefmt,$value_id);
-		else
-		    echo $value_id;
-
+		echo $value_id;
 	    }
 
 	    echo '</TD>'.
@@ -929,7 +1180,6 @@ function format_bug_attached_files ($bug_id,$group_id,$ascii=false) {
     if ($ascii) {
 	$out .= "File Attachments\n****************";
     } else {	
-	$out .= "\n<H3>File Attachments</H3><P>";
 	
 	$title_arr=array();
 	$title_arr[]='Name';
@@ -992,6 +1242,91 @@ function show_bug_attached_files ($bug_id,$group_id, $ascii=false) {
     echo format_bug_attached_files ($bug_id,$group_id, $ascii);
 }
 
+function format_bug_cc_list ($bug_id,$group_id, $ascii=false) {
+
+    global $sys_datefmt;
+
+    /*
+          show the files attached to this bug
+       */
+
+    $result=bug_data_get_cc_list($bug_id);
+    $rows=db_numrows($result);
+
+    // No file attached -> return now
+    if ($rows <= 0) {
+	if ($ascii)
+	    $out = "\n\nCC list is empty\n";
+	else
+	    $out = '<H4>CC list is empty</H4>';
+	return $out;
+    }
+
+    // Header first
+    if ($ascii) {
+	$out .= "CC list\n****************";
+    } else {	
+
+	$title_arr=array();
+	$title_arr[]='CC address';
+	$title_arr[]='Comment';
+	$title_arr[]='Added by';
+	$title_arr[]='On';
+	if (user_ismember($group_id,'B2')) {
+	    $title_arr[]='Delete?';
+	}
+
+	$out .= html_build_list_table_top ($title_arr);
+    }
+
+    // Determine what the print out format is based on output type (Ascii, HTML)
+    if ($ascii) {
+	$fmt = "\n\n-------------------------------------------------------\n".
+	    "Date: %s  Name: %s  Size: %dKB   By: %s\n%s\n%s";
+    } else {
+	$fmt = "\n".'<TR BGCOLOR="%s"><td>%s</td><td>%s</td><td align="center">%s</td><td align="center">%s</td>'.
+	    (user_ismember($group_id,'B2') ? '<td align="center">%s</td>':'').'</tr>';
+    }
+
+    // Loop throuh the cc and format them
+    for ($i=0; $i < $rows; $i++) {
+
+	$email = db_result($result, $i, 'email');
+	$bug_cc_id = db_result($result, $i, 'bug_cc_id');
+	$href = "mailto:".util_normalize_email($email);
+
+	if ($ascii) {
+	    $out .= sprintf($fmt,
+			    format_date($sys_datefmt,db_result($result, $i, 'date')),
+			    db_result($result, $i, 'filename'),
+			    intval(db_result($result, $i, 'filesize')/1024),
+			    db_result($result, $i, 'user_name'),
+			    db_result($result, $i, 'description'),
+			    'http://'.$GLOBALS['sys_default_domain'].$href);
+	} else {
+	    $out .= sprintf($fmt,
+			    util_get_alt_row_color($i),
+			    "<a href=\"$href\">".$email.'</a>',
+			    db_result($result, $i, 'comment'),
+			    util_user_link(db_result($result, $i, 'user_name')),
+			    format_date($sys_datefmt,db_result($result, $i, 'date')),
+			    "<a href=\"$PHP_SELF?func=delete_cc&group_id=$group_id&bug_id=$bug_id&bug_cc_id=$bug_cc_id\" ".
+			    '" onClick="return confirm(\'Delete this CC address?\')">'.
+			    '<IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A>');
+	}
+    }
+
+    // final touch...
+    $out .= ($ascii ? "\n" : "</TABLE>");
+
+    return($out);
+
+}
+
+function show_bug_cc_list ($bug_id,$group_id, $ascii=false) {
+    echo format_bug_cc_list ($bug_id,$group_id, $ascii);
+}
+
 function bug_delete_file($group_id=false,$bug_id=false,$bug_file_id=false) {
 
     // Make sure the attachment belongs to the group
@@ -1032,7 +1367,7 @@ function bug_attach_file($bug_id,$group_id,$input_file,$input_file_name,$input_f
 	return false;
     } else {
 	$file_id = db_insertid($res);
-	$feedback .= " - File succesfully attached (ID $file_id) ";
+	$feedback .= " - File attached (ID $file_id) ";
 	$changes['attach']['description'] = $file_description;
 	$changes['attach']['name'] = $input_file_name;
 	$changes['attach']['size'] = $input_file_size;
@@ -1041,6 +1376,73 @@ function bug_attach_file($bug_id,$group_id,$input_file,$input_file_name,$input_f
 	return true;
     }
 }
+
+function bug_exist_cc($bug_id,$cc) {
+    $sql = "SELECT bug_cc_id FROM bug_cc WHERE bug_id='$bug_id' AND email='$cc'";
+    $res = db_query($sql);
+    return (db_numrows($res) >= 1);
+}
+
+function bug_insert_cc($bug_id,$cc,$added_by,$comment,$date) {
+    $sql = "INSERT INTO bug_cc (bug_id,email,added_by,comment,date) ".
+	"VALUES ('$bug_id','$cc','$added_by','$comment','$date')";
+    $res = db_query($sql);
+    return ($res);
+
+}
+
+function bug_add_cc($bug_id,$group_id,$email,$comment,&$changes) {
+    global $feedback;
+
+    $user_id = (user_isloggedin() ? user_getid(): 100);
+
+    $arr_email = util_split_emails($email);
+    $date = time();
+    $ok = true;
+    $changed = false;
+    while (list(,$cc) = each($arr_email)) {
+	// Add this cc only if not there already
+	if (!bug_exist_cc($bug_id,$cc)) {
+	    $changed = true;
+	    $res = bug_insert_cc($bug_id,$cc,$user_id,$comment,$date);
+	    if (!$res) { $ok = false; }
+	}
+    }
+
+    if (!$ok) {
+	$feedback .= ' - CC addition failed';
+    } else {
+	$feedback .= '- CC Added';
+	$changes['CC']['add'] = join(',', $arr_email);
+    }
+    return $ok;
+}
+
+function bug_delete_cc($group_id=false,$bug_id=false,$bug_cc_id=false,&$changes) {
+    global $feedback;
+
+    // If both bug_id and bug_cc_id are given make sure the cc belongs 
+    // to this bug (it's a bit paranoid but...)
+    if ($bug_id) {
+	$res1 = db_query("SELECT bug_id,email from bug_cc WHERE bug_cc_id='$bug_cc_id'");
+	if ((db_numrows($res1) <= 0) || (db_result($res1,0,'bug_id') != $bug_id) ) {
+	    $feedback .= " - Error CC ID $bug_cc_id doesn't belong to bug ID";
+	    return false;
+	}
+    }
+
+    // Now delete the CC address
+    $res2 = db_query("DELETE FROM bug_cc WHERE bug_cc_id='$bug_cc_id'");
+    if (!$res2) {
+	$feedback .= " - Error deleting CC ID $bug_cc_id: ".db_error($res2);
+	return false;
+    } else {
+	$feedback .= " - CC Removed";
+	$changes['CC']['del'] = db_result($res1,0,'email');
+	return true;
+    }
+}
+
 
 /* 
    The ANY value is 0. The simple fact that
@@ -1249,4 +1651,5 @@ function bug_build_match_expression($field, &$to_match)
     return ' ('.$expr.') ';
 
 }
+
 ?>
