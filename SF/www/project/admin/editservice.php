@@ -114,7 +114,7 @@ echo '
 echo '<input type="CHECKBOX" NAME="is_used" VALUE="1"'.( $service['is_used'] ? ' CHECKED' : '' ).'>';
 
 echo '</td></tr>
-<tr><td><a href="#" title="Position in service bar">Rank on screen:</a> </td><td>';
+<tr><td><a href="#" title="Position in service bar">Rank on screen:</a> <font color="red">*</font></td><td>';
 echo '<input type="text" name="rank" size="5" maxlength="5" value="'.$service['rank'].'">';
 echo '
 </td></tr>
@@ -177,7 +177,7 @@ if (($group_id==100)&&($su)) {
 echo '
 <tr><td><a href="#" title="Is displayed in the service bar?">Enabled:</a> </td>
 <td><input type="CHECKBOX" NAME="is_used" VALUE="1" CHECKED></td></tr>
-<tr><td><a href="#" title="Position in service bar">Rank on screen:</a> </td>
+<tr><td><a href="#" title="Position in service bar">Rank on screen:</a> <font color="red">*</font></td>
 <td><input type="text" name="rank" size="5" maxlength="5">
 </td></tr>
 </table>

@@ -109,6 +109,9 @@ if (($func=='do_create')||($func=='do_update')) {
     if (!$link) {
         exit_error("ERROR",'The link is missing, please press the "Back" button and complete this information');
     }
+    if (!$rank) {
+        exit_error("ERROR",'The rank is missing, please press the "Back" button and complete this information');
+    }
     if (($group_id==100)&&(!$short_name)) {
         exit_error("ERROR",'Cannot make system-wide service without short name, please press the "Back" button and complete this information');
     }
