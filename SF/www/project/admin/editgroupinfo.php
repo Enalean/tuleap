@@ -50,29 +50,6 @@ if ($Update) {
 	if (!$use_docman) {
 		$use_docman=0;
 	}
-	if (!$send_all_bugs) {
-		$send_all_bugs=0;
-	}
-	if (!$send_all_patches) {
-		$send_all_patches=0;
-	}
-	if (!$send_all_support) {
-		$send_all_support=0;
-	}
- 
-	//blank out any invalid email addresses
-	if ($new_bug_address && !validate_email($new_bug_address)) {
-		$new_bug_address='';
-		$feedback .= ' Bug Address Appeared Invalid ';
-	}
-	if ($new_patch_address && !validate_email($new_patch_address)) {
-		$new_patch_address='';
-		$feedback .= ' Patch Address Appeared Invalid ';
-	}
-	if ($new_support_address && !validate_email($new_support_address)) {
-		$new_support_address='';
-		$feedback .= ' Support Address Appeared Invalid ';
-	}
 
 	$result=db_query('UPDATE groups SET '
 		."group_name='$form_group_name',"
@@ -91,13 +68,7 @@ if ($Update) {
 		."use_cvs='$use_cvs',"
 		."use_news='$use_news',"
 		."use_support='$use_support',"
-		."use_docman='$use_docman',"
-		."new_bug_address='$new_bug_address',"
-		."new_patch_address='$new_patch_address',"
-		."new_support_address='$new_support_address',"
-		."send_all_bugs='$send_all_bugs', "
-		."send_all_patches='$send_all_patches', "
-		."send_all_support='$send_all_support' "
+		."use_docman='$use_docman' "
 		."WHERE group_id=$group_id");
 
 	if (!$result || db_affected_rows($result) < 1) {
@@ -167,14 +138,6 @@ echo '
 	<B>Use News:</B> <INPUT TYPE="CHECKBOX" NAME="use_news" VALUE="1"'.( ($row_grp['use_news']==1) ? ' CHECKED' : '' ).'><BR>
 	<B>Use Doc Mgr:</B> <INPUT TYPE="CHECKBOX" NAME="use_docman" VALUE="1"'.( ($row_grp['use_docman']==1) ? ' CHECKED' : '' ).'><BR>
 	<B>Use Support:</B> <INPUT TYPE="CHECKBOX" NAME="use_support" VALUE="1"'.( ($row_grp['use_support']==1) ? ' CHECKED' : '' ).'>';
-echo '
-	<P><B>If you wish, you can provide default email addresses to which new submissions will be sent.</B><BR>
-	<B>New Bugs:</B><BR><INPUT TYPE="TEXT" NAME="new_bug_address" VALUE="'.$row_grp['new_bug_address'].'" SIZE="35" MAXLENGTH="40"> 
-	(send on all updates) <INPUT TYPE="CHECKBOX" NAME="send_all_bugs" VALUE="1" '. (($row_grp['send_all_bugs'])?'CHECKED':'') .'><BR>
-	<B>New Patches:</B><BR><INPUT TYPE="TEXT" NAME="new_patch_address" VALUE="'.$row_grp['new_patch_address'].'" SIZE="35" MAXLENGTH="40">
-	(send on all updates) <INPUT TYPE="CHECKBOX" NAME="send_all_patches" VALUE="1" '. (($row_grp['send_all_patches'])?'CHECKED':'') .'><BR>
-	<B>New Support Requests:</B><BR><INPUT TYPE="TEXT" NAME="new_support_address" VALUE="'.$row_grp['new_support_address'].'" SIZE="35" MAXLENGTH="40">
-	(send on all updates) <INPUT TYPE="CHECKBOX" NAME="send_all_support" VALUE="1" '. (($row_grp['send_all_support'])?'CHECKED':'') .'><BR>';
 
 echo '
 <HR>
