@@ -1,0 +1,28 @@
+--- /usr/src/redhat/BUILD/apache_1.3.19/src/support/suexec.c	Wed Nov  7 10:16:50 2001
++++ ./suexec.c	Wed Nov  7 10:32:50 2001
+@@ -508,8 +508,9 @@
+ 
+     /*
+      * Error out if the program is writable by others.
++     * LJ: Writable by the group is ok on CodeX
+      */
+-    if ((prg_info.st_mode & S_IWOTH) || (prg_info.st_mode & S_IWGRP)) {
++    if ((prg_info.st_mode & S_IWOTH)) {
+ 	log_err("error: file is writable by others: (%s/%s)\n", cwd, cmd);
+ 	exit(118);
+     }
+@@ -525,10 +526,11 @@
+     /*
+      * Error out if the target name/group is different from
+      * the name/group of the cwd or the program.
++     * LJ: uid is "dummy" on CodeX because any group member can create
++     * CGI scripts. So do not check that user id matches the CGI script owner
++     * Just the group
+      */
+-    if ((uid != dir_info.st_uid) ||
+-	(gid != dir_info.st_gid) ||
+-	(uid != prg_info.st_uid) ||
++    if ((gid != dir_info.st_gid) ||
+ 	(gid != prg_info.st_gid)) {
+ 	log_err("error: target uid/gid (%ld/%ld) mismatch "
+ 		"with directory (%ld/%ld) or program (%ld/%ld)\n",
