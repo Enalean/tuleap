@@ -586,7 +586,7 @@ class ArtifactFieldFactory extends Error {
 		for ($i=0; $i<$count; $i++) {
 		  $id = db_result($res,$i,"artifact_id");
 		  if ($i > 0) $sql .= ",";
-		  $sql .= "($field_id,$id,$default_value)";
+		  $sql .= "($field_id,$id,'$default_value')";
 		}
 		
 		$result=db_query($sql);
