@@ -239,7 +239,7 @@ function html_build_select_box ($result, $name, $checked_val="xzxz",$show_100=tr
 	return html_build_select_box_from_arrays (util_result_column_to_array($result,0),util_result_column_to_array($result,1),$name,$checked_val,$show_100,$text_100,$show_any,$text_any);
 }
 
-function html_build_multiple_select_box ($result,$name,$checked_array,$size='8',$show_100=true,$text_100='None', $show_any=false,$text_any='Any') {
+function html_build_multiple_select_box ($result,$name,$checked_array,$size='8',$show_100=true,$text_100='None', $show_any=false,$text_any='Any',$show_value=true) {
 	/*
 		Takes a result set, with the first column being the "id" or value
 		and the second column being the text you want displayed
@@ -249,6 +249,11 @@ function html_build_multiple_select_box ($result,$name,$checked_array,$size='8',
 		The third parameter is an array of checked values;
 
 		The fourth parameter is optional. Pass the size of this box
+
+		Fifth to eigth params determine whether to show None and Any
+
+		Ninth param determine whether to show numeric values next to
+		the menu label (default true for backward compatibility
 	*/
 
 	$checked_count=count($checked_array);
@@ -298,7 +303,8 @@ function html_build_multiple_select_box ($result,$name,$checked_array,$size='8',
 					$return .= ' SELECTED';
 				}
 			}
-			$return .= '>'.$val.'-'. substr(db_result($result,$i,1),0,35). '</OPTION>';
+			$return .= '>'. ($show_value?$val.'-':'').
+			    substr(db_result($result,$i,1),0,35). '</OPTION>';
 		}
 	}
 	$return .= '
