@@ -100,33 +100,19 @@ if ($group_id && user_ismember($group_id,"B2")) {
 		// First graph the bug distribution for Open bugs only	
 		// Open means not status is neither closed (3) and nor Declined (7)
 		// and resolution is not equal to Invalid (2)
-		if ($field == 'assigned_to') {
-
-		    $sql="SELECT user.user_name, count(*) AS Count FROM user,bug ".
-			"WHERE user.user_id=bug.assigned_to AND ".
-			"bug.status_id <> '3' AND bug.status_id <> '7' AND ".
-			"bug.resolution_id <> '2' AND bug.group_id='$group_id' ".
-			"GROUP BY user_name";
-
-		} else {
-
-		    // make sure to include default values as well in case
-		    // the project doesn't yet have its own instance of the
-		    // value set and is using the default one (group_id  = '100')
-		    $sql="SELECT bug_field_value.value, count(*) AS Count FROM bug_field_value,bug ".
-			"WHERE bug_field_value.value_id=bug.$field AND ".
-			"bug_field_value.bug_field_id='".
-			bug_data_get_field_id($field)."' AND ".
-			"(bug_field_value.group_id=bug.group_id OR bug_field_value.group_id='100') AND ".
-			"bug.status_id <> '3' AND bug.status_id <> '7' AND ".
-			"bug.resolution_id <> '2' AND bug.group_id='$group_id' ".
-			"GROUP BY value_id";
-
-		}
+		$sql="SELECT bug.$field, count(*) AS Count FROM bug ".
+		    "WHERE bug.status_id <> '3' AND bug.status_id <> '7' AND ".
+		    "bug.resolution_id <> '2' AND bug.group_id='$group_id' ".
+		    "GROUP BY bug.$field";
 
 		$result=db_query($sql);
 		if ($result && db_numrows($result) > 0) {
-		    GraphResult($result,"Open Bugs By '$label'");
+		    for ($j=0; $j<db_numrows($result); $j++) {
+			$names[$j]= bug_data_get_cached_field_value($field, $group_id,db_result($result, $j, 0));
+			$values[$j]= db_result($result, $j, 1);
+		    }
+		    GraphIt($names, $values,"Open Bugs By '$label'");
+
 		} else { 
 		    echo "<H3>Open Bugs By $label</H3>";
 		    echo "No data found to report - Field probably not used";
@@ -134,27 +120,18 @@ if ($group_id && user_ismember($group_id,"B2")) {
 		echo "<P>";
 
 		//Second  graph the bug distribution for all bugs only
+		$sql="SELECT bug.$field, count(*) AS Count FROM bug ".
+		    "WHERE bug.resolution_id <> '2' AND bug.group_id='$group_id' ".
+		    "GROUP BY bug.$field";
 
-		if ($field == 'assigned_to') {
-
-		    $sql="SELECT user.user_name, count(*) AS Count FROM user,bug ".
-		    "WHERE user.user_id=bug.assigned_to AND ".
-		    "bug.resolution_id <> '2' AND bug.group_id='$group_id' ".
-		    "GROUP BY user_name";
-
-		} else {
-
-		    $sql="SELECT bug_field_value.value, count(*) AS Count FROM bug_field_value,bug ".
-			"WHERE bug_field_value.value_id=bug.$field AND ".
-			"bug_field_value.bug_field_id='".
-			bug_data_get_field_id($field)."' AND ".
-			"(bug_field_value.group_id=bug.group_id OR bug_field_value.group_id='100') AND ".
-			"bug.resolution_id <> '2' AND bug.group_id='$group_id' ".
-			"GROUP BY value_id";
-		}
 		$result=db_query($sql);
 		if ($result && db_numrows($result) > 0) {
-		    GraphResult($result,"All Bugs By $label");
+		    for ($j=0; $j<db_numrows($result); $j++) {
+			$names[$j]= bug_data_get_cached_field_value($field, $group_id,db_result($result, $j, 0));
+			$values[$j]= db_result($result, $j, 1);
+		    }
+		    GraphIt($names, $values,"All Bugs By '$label'");
+
 		} else {
 		    echo "<H3>All Bugs By $label</H3>";
 		    echo "No data found to report - Field probably not used";

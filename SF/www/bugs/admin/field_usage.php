@@ -134,7 +134,7 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 	  echo '<INPUT TYPE="HIDDEN" NAME="empty_ok_here" VALUE="1">';
 	  echo '<li>Keep Change History: ';
 	  echo '<INPUT TYPE="CHECKBOX" NAME="keep_history" VALUE="1" '.
-	      (bug_data_do_keep_history($field)?' CHECKED':'').'></ul>';
+	      (bug_data_get_keep_history($field)?' CHECKED':'').'></ul>';
 	  echo '<INPUT TYPE="HIDDEN" NAME="keep_history_here" VALUE="1">';
       }
       

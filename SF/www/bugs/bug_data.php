@@ -40,8 +40,10 @@ function bug_data_get_all_fields ($group_id=false,$reload=false) {
     // First get the all the defaults. 
     $sql='SELECT bug_field.bug_field_id, field_name, display_type, '.
 	'display_size,label, description,scope,required,empty_ok,keep_history,special, custom, '.
+	'value_function,'.
 	'group_id, use_it,show_on_add,show_on_add_members, place, custom_label,'.
-	'custom_description,custom_display_size,custom_empty_ok,custom_keep_history '.
+	'custom_description,custom_display_size,custom_empty_ok,custom_keep_history, '.
+	'custom_value_function '.
 	'FROM bug_field, bug_field_usage '.
 	'WHERE group_id=100  '.
 	'AND bug_field.bug_field_id=bug_field_usage.bug_field_id ';
@@ -59,8 +61,10 @@ function bug_data_get_all_fields ($group_id=false,$reload=false) {
     // Then select  all project specific entries
     $sql='SELECT bug_field.bug_field_id, field_name, display_type, '.
 	'display_size,label, description,scope,required,empty_ok,keep_history,special, custom, '.
+	'value_function,'.
 	'group_id, use_it, show_on_add, show_on_add_members, place, custom_label,'.
-	'custom_description,custom_display_size,custom_empty_ok,custom_keep_history '.
+	'custom_description,custom_display_size,custom_empty_ok,custom_keep_history, '.
+	'custom_value_function '.
 	'FROM bug_field, bug_field_usage '.
 	'WHERE group_id='.$group_id.
 	' AND bug_field.bug_field_id=bug_field_usage.bug_field_id ';
@@ -75,10 +79,10 @@ function bug_data_get_all_fields ($group_id=false,$reload=false) {
 
     //Debug code
     //echo "<br>DBG - At end of bug_get_all_fields: $rows";
-    reset($BF_USAGE_BY_NAME);
-    while (list($key, $val) = each($BF_USAGE_BY_NAME)) {
-    	//echo "<br>DBG - $key -> use_it: $val[use_it], $val[place]";
-    }
+    //reset($BF_USAGE_BY_NAME);
+    //  while (list($key, $val) = each($BF_USAGE_BY_NAME)) {
+	//echo "<br>DBG - $key -> use_it: $val[use_it], $val[place],$val[value_function]";
+    //}
       
     // rewind internal pointer of global arrays
     reset($BF_USAGE_BY_ID);
@@ -158,10 +162,17 @@ function bug_data_get_field_predefined_values ($field, $group_id=false, $checked
     // The "Assigned_to" box requires some special processing
     // because possible values  are project members) and they are
     // not stored in the bug_field_value table but in the user_group table
-    if ($field_name == 'assigned_to') {
+    if ($value_func = bug_data_get_value_function($field_name)) {
+
+	if ($value_func == 'group_members')
+	    $res_value = bug_data_get_group_members($group_id);
+	else if ($value_func == 'group_admins')
+	    $res_value = bug_data_get_group_admins($group_id);
+	else if ($value_func == 'bug_technicians')
 	    $res_value = bug_data_get_technicians($group_id);
-    } else if ($field_name == 'submitted_by') {
+	else if ($value_func == 'bug_submitters')
 	    $res_value = bug_data_get_submitters($group_id);
+
     } else {
 
 	// If only active field
@@ -218,18 +229,6 @@ function bug_data_is_empty_ok($field, $by_field_id=false) {
     } else {
 	$val = $BF_USAGE_BY_NAME[$field]['custom_empty_ok'];
 	if (!isset($val)) { $val = $BF_USAGE_BY_NAME[$field]['empty_ok']; }
-    }
-    return($val);
-}
-
-function bug_data_do_keep_history($field, $by_field_id=false) {
-    global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
-    if ($by_field_id) {
-	$val = $BF_USAGE_BY_ID[$field]['custom_keep_history'];
-	if (!isset($val)) { $val = $BF_USAGE_BY_ID[$field]['empty_keep_history']; }
-    } else {
-	$val = $BF_USAGE_BY_NAME[$field]['custom_keep_history'];
-	if (!isset($val)) { $val = $BF_USAGE_BY_NAME[$field]['keep_history']; }
     }
     return($val);
 }
@@ -403,6 +402,18 @@ function bug_data_get_display_size($field, $by_field_id=false) {
     return(explode('/',$val));
 }
 
+function bug_data_get_value_function($field, $by_field_id=false) {
+    global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
+    if ($by_field_id) {
+	$val = $BF_USAGE_BY_ID[$field]['custom_value_function'];
+	if (!isset($val)) { $val = $BF_USAGE_BY_ID[$field]['value_function']; }
+    } else {
+	$val = $BF_USAGE_BY_NAME[$field]['custom_value_function'];
+	if (!isset($val)) { $val = $BF_USAGE_BY_NAME[$field]['value_function']; }
+    }
+    return($val);
+}
+
 function bug_data_get_default_value($field,  $by_field_id=false) {
     global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
     /*
@@ -525,8 +536,19 @@ function bug_data_get_cached_field_value($field,$group_id,$value_id) {
 
 	while ($fv_array = db_fetch_array($res)) {
 	    // $fv_array[0] has the value_id and [1] is the value
-	    $BF_VALUE_BY_NAME[$field][$fv_array['value_id']] = $fv_array[1];
+	    $BF_VALUE_BY_NAME[$field][$fv_array[0]] = $fv_array[1];
 	}
+
+	// Make sure 'None' (value_id = 100) is always in the list
+	if (!isset($BF_VALUE_BY_NAME[$field][100])) {
+	    $BF_VALUE_BY_NAME[$field][100] = 'None';
+	}
+
+	// If the value is still unkown the return the value_id saying unkown
+	if (!isset($BF_VALUE_BY_NAME[$field][$value_id])) {
+	    $BF_VALUE_BY_NAME[$field][$value_id] = " Unknown ($value_id)";
+	}
+	
     }
 
     return $BF_VALUE_BY_NAME[$field][$value_id];
@@ -552,6 +574,42 @@ function bug_data_is_default_value ($bug_fv_id) {
     $res = db_query($sql);
     
     return ( (db_numrows($res) >= 1) ? $res : false);
+}
+
+function bug_data_create_field_binding($field, $group_id, $value_function, $by_field_id=false) {
+
+    global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME,$feedback;
+
+    if (!$by_field_id) {
+	$field_id = bug_data_get_field_id($field);
+	$field_name = $field;
+    } else {
+	$field_name = bug_data_get_field_name($field);
+	$field_id = $field;
+
+    }
+
+    // Update the value in the db and also in the cache 
+    if ($value_function == 'none') {
+	$db_val = 'NULL';
+	unset($BF_USAGE_BY_ID[$field_id]['custom_value_function']);
+	unset($BF_USAGE_BY_NAME[$field_name]['custom_value_function']);
+    } else {
+	$db_val = "'$value_function'";
+	$BF_USAGE_BY_ID[$field_id]['custom_value_function'] = $value_function;
+	$BF_USAGE_BY_NAME[$field_name]['custom_value_function'] = $value_function;
+    }
+    $sql = "UPDATE bug_field_usage SET custom_value_function = $db_val ".
+	"WHERE bug_field_id=$field_id AND group_id=$group_id";
+    $result = db_query($sql);
+    
+
+    if (!$result) {
+	$feedback .= 'BINDING UPDATE FAILED ';
+	$feedback .=  ' - '.db_error();
+    } else {
+	$feedback .= ' Binding Updated Succesfully';
+    }
 }
 
 function bug_data_create_value ($field, $group_id, $value, $description,$order_id,$status='A',$by_field_id=false) {
@@ -714,7 +772,9 @@ function bug_data_reset_usage($field_name,$group_id)
 	    "WHERE bug_field_id='$field_id' AND group_id='$group_id'";
 	$result = db_query($sql);
     } else {
-	$sql = 'INSERT INTO  bug_field_usage '.
+	$sql = 'INSERT INTO  bug_field_usage  (bug_field_id, group_id,use_it,show_on_add,'.
+	    'show_on_add_members,place,custom_label,custom_description,custom_displaY_size,'.
+	    'custom_empty_ok, custom_keep_history) '.
 	    "VALUES ('$field_id','$group_id','$use_it','$show_on_add',".
 	    "'$show_on_add_members','$rank',$lbl,$desc,$disp_size,$empty,$keep_hist )";
 	$result = db_query($sql);
@@ -729,21 +789,46 @@ function bug_data_reset_usage($field_name,$group_id)
 
 }
 
+// People who have Tech and Tech&Admin permission 
 function bug_data_get_technicians ($group_id=false) {
 	$sql="SELECT user.user_id,user.user_name ".
 		"FROM user,user_group ".
-		"WHERE user.user_id=user_group.user_id ".
+		"WHERE (user.user_id=user_group.user_id ".
 		"AND user_group.bug_flags IN (1,2) ".
-		"AND user_group.group_id='$group_id' ".
+		"AND user_group.group_id='$group_id' ) ".
 		"ORDER BY user.user_name";
 	return db_query($sql);
 }
 
+// People who have once submitted a bug
 function bug_data_get_submitters ($group_id=false) {
 	$sql="SELECT DISTINCT user.user_id,user.user_name ".
 		"FROM user,bug ".
-		"WHERE user.user_id=bug.submitted_by ".
-		"AND bug.group_id='$group_id' ".
+		"WHERE (user.user_id=bug.submitted_by ".
+		"AND bug.group_id='$group_id') ".
+		"ORDER BY user.user_name";
+	return db_query($sql);
+}
+
+//
+// People who are project members
+function bug_data_get_group_members ($group_id=false) {
+	$sql="SELECT user.user_id,user.user_name ".
+		"FROM user,user_group ".
+		"WHERE (user.user_id=user_group.user_id ".
+		"AND user_group.group_id='$group_id') ".
+		"ORDER BY user.user_name";
+	return db_query($sql);
+}
+
+//
+// People who are project admins
+function bug_data_get_group_admins ($group_id=false) {
+	$sql="SELECT user.user_id,user.user_name ".
+		"FROM user,user_group ".
+		"WHERE (user.user_id=user_group.user_id ".
+		"AND user_group.group_id='$group_id') OR user.user_id=100 ".
+	        "AND user_group.admin_flags = 'A' ".
 		"ORDER BY user.user_name";
 	return db_query($sql);
 }
@@ -1196,7 +1281,10 @@ function bug_data_get_value($field,$group_id,$value_id,$by_field_id=false) {
     */
 
     // close_date and assigned_to fields are special select box fields
-    if (($field == 'assigned_to') || ($field == 'submitted_by')) {
+    if ($value_func = bug_data_get_value_function($field)) {
+	// For now all of our value functions returns users so there is no need
+	// to make a test for the type of value function it is
+	// if ($value_func == '...')
 	return user_getname($value_id);
     } else if (bug_data_is_date_field($field)) {
 	return format_date($sys_datefmt,$value_id);

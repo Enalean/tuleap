@@ -12,6 +12,7 @@
 require ('pre.php');
 require('../bug_data.php');
 require('../bug_utils.php');
+require('./bug_admin_utils.php');
 $is_admin_page='y';
 
 if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))) {
@@ -24,8 +25,8 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 	// an existing value
 
 	if ($create_value) {
-	    // A form was posted to update a field value
 	    if ($value) {
+		// A form was posted to create a field value
 		bug_data_create_value($field,$group_id,
 				      htmlspecialchars($value),
 				      htmlspecialchars($description),
@@ -34,6 +35,9 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 		$feedback .= ' Error: empty field value not allowed!';
 	    }
 	    
+	} else if ($create_binding) {
+		// A list binding was requested
+		bug_data_create_field_binding($field,$group_id,$value_function);
 	} else if ($update_value) {
 	    // A form was posted to update a field value
 	    if ($value) {
@@ -91,109 +95,38 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 	echo "<H2>$hdr</H2>";
 
 	// First check that this field is used by the project and
-	// it is in the project scope
+	// it is a select box
 
 	$is_project_scope = bug_data_is_project_scope($field);
+	$vf = bug_data_get_value_function($field);
 
 	if ( bug_data_get_field_id($field) && 
 	     bug_data_is_select_box($field)) {
 
-	    $result = bug_data_get_field_predefined_values($field, $group_id,false,false,false);
-	    $rows = db_numrows($result);
+	    // Only show list of values if select box is not bind to a function
+	    if  (!$vf) {
 
-	    if ($result && $rows > 0) {
-		echo "\n<H3>Existing Values</H3> (Click to modify)";
-
-		$title_arr=array();
-		if (!$is_project_scope) { $title_arr[]='ID'; }
-		$title_arr[]='Value label';
-		$title_arr[]='Description';
-		$title_arr[]='Rank';
-		$title_arr[]='Status';
+		$result = bug_data_get_field_predefined_values($field, $group_id,false,false,false);
+		$rows = db_numrows($result);
 		
-		
-		$hdr = html_build_list_table_top ($title_arr);
-
-		$ia = $ih = 0;
-		$status_stg = array('A' => 'Active', 'P' => 'Permanent', 'H' => 'Hidden');
-
-		// Display the list of values in 2 blocks : active first
-		// Hidden second
-		while ( $fld_val = db_fetch_array($result) ) {
-
-		    $bug_fv_id = $fld_val['bug_fv_id'];
-		    $status = $fld_val['status'];	
-		    $value_id = $fld_val['value_id'];
-		    $value = $fld_val['value'];
-		    $description = $fld_val['description'];
-		    $order_id = $fld_val['order_id'];
-
-		    $html = '';
-
-		    // keep the rank of the 'None' value in mind if any (see below)
-		    if ($value == 100) { $none_rk = $order_id; }
-
-		    // Show the value ID only for system wide fields which
-		    // value id are fixed and serve as a guide.
-		    if (!$is_project_scope) 
-			!$html .='<td>'.$value_id.'</td>';
-
-		    // The permanent values can't be modified (No link)
-		    if ($status == 'P') {
-			$html .= '<td>'.$value.'</td>';
-		    } else {
-			$html .= '<td><A HREF="'.$PHP_SELF.'?update_value=1'.
-			    '&fv_id='.$bug_fv_id.'&field='.$field.
-			    '&group_id='.$group_id.'">'.$value.'</A></td>';
-		    }
-
-		    $html .= '<TD>'.$description.'&nbsp;</TD>'.
-			'<TD align="center">'.$order_id.'</TD>'.
-			'<TD align="center">'.$status_stg[$status].'</TD>';
-
-		    if ($status == 'A' || $status == 'P') {
-			$html = '<TR class="'. 
-			util_get_alt_row_color($ia) .'">'.$html.'</tr>';
-			$ia++;
-			$ha .= $html;
-		    } else {
-			$html = '<TR class="'. 
-			util_get_alt_row_color($ih) .'">'.$html.'</tr>';
-			$ih++;
-			$hh .= $html;
-		    }
-
-		}
-
-		//Display the list of values now
-		if ($ia == 0) {
-		    $hdr = '<p>No Active value for this field. Create one or reactivate a hidden value (if any)<p>'.$hdr;
+		if ($result && $rows > 0) {
+		    echo "\n<H3>Existing Values</H3> (Click to modify)";
+		    echo format_bug_field_values($field, $group_id, $result);
 		} else {
-		    $ha = '<tr><td colspan="4"><center><b>---- ACTIVE VALUES ----</b></center></tr>'.$ha;		    
-		}
-		if ($ih) {
-		    $hh = '<tr><td colspan="4"> &nbsp;</td></tr>'.
-		'<tr><td colspan="4"><center><b>---- HIDDEN VALUES ----</b></center></tr>'.$hh;
+		    echo "\n<H3>No values defined yet for ".bug_data_get_label($field)."</H3>";
 		}
 
-		echo $hdr.$ha.$hh.'</TABLE>';
-		
-	    } else {
-		echo "\n<H3>No values defined yet for ".bug_data_get_label($field)."</H3>";
-	    }
+		// Only show the add value form if this is a project scope field
+		if ($is_project_scope) {
 
+		    echo ' <P><BR> <H3>Create a new field value'.
+			help_button('BTSAdministration.html#BugCreatingaBugFieldValue').'</H3>';
 
-	    // Only show the add value form if this is a project scope field
-	    if ($is_project_scope) {
-
-		echo ' <P><BR> <H3>Create a new field value'.
-		    help_button('BTSAdministration.html#BugCreatingaBugFieldValue').'</H3>';
-
-		if ($ih) {
-		    echo "<P>Before you create a new value make sure there isn't one in the hidden list that suits your needs.";
-		}
-
-		echo '
+		    if ($ih) {
+			echo "<P>Before you create a new value make sure there isn't one in the hidden list that suits your needs.";
+		    }
+		    
+		    echo '
       <FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
       <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
       <INPUT TYPE="HIDDEN" NAME="create_value" VALUE="y">
@@ -204,21 +137,53 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
       <INPUT TYPE="TEXT" NAME="value" VALUE="" SIZE="30" MAXLENGTH="60">
       &nbsp;&nbsp;
       <B>Rank:</B>
-      <INPUT TYPE="TEXT" NAME="order_id" VALUE="" SIZE="6" MAXLENGTH="6">';
+      <INPUT TYPE="TEXT" NAME="order_id" VALUE="" SIZE="6" MAXLENGTH="6">
+       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
+      </FORM>';
 
-		if (isset($none_rk)) {
-		    echo "&nbsp;&nbsp;<b> (must be &gt; $none_rk)</b><BR>";
-		}
+		    if (isset($none_rk)) {
+			echo "&nbsp;&nbsp;<b> (must be &gt; $none_rk)</b><BR>";
+		    }
 		
-		echo '
+		    echo '
       <P>
       <B>Description:</B> (optional)<BR>
-      <TEXTAREA NAME="description" ROWS="4" COLS="65" WRAP="HARD"></TEXTAREA>
-      <P>
-      <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
-      </FORM>';
-	       
+      <TEXTAREA NAME="description" ROWS="2" COLS="65" WRAP="HARD"></TEXTAREA>
+      <P>';
+		}
+
+		echo '<hr align ="left">
+      <h3>Or Bind the field to a list of values '.help_button('BTSAdministration.html#BugBindingFieldToValueList').'</h3>';
+
+	    } else {
+
+		// Offer to bind the select box only if it is a custom select box
+		if ($is_project_scope && bug_data_is_custom($field)) {
+		    if ($vf) {
+			echo '<p>This field is currently bound to a list of values.'.help_button('BTSAdministration.html#BugBindingFieldToValueList');
+		    }
+		}
 	    }
+
+	    echo '
+      <FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
+      <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
+      <INPUT TYPE="HIDDEN" NAME="create_binding" VALUE="y">
+      <INPUT TYPE="HIDDEN" NAME="list_value" VALUE="y">
+      <INPUT TYPE="HIDDEN" NAME="field" VALUE="'.$field.'">
+      <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
+      Bind To: &nbsp; 
+      <SELECT NAME="value_function">
+      <OPTION VALUE="none" '.(isset($vf) ? '':'SELECTED').'>None</OPTION>      
+      <OPTION VALUE="group_members" '.($vf == 'group_members' ? 'SELECTED':'').'>Project Members</OPTION>
+      <OPTION VALUE="group_admins" '.($vf == 'group_admins' ? 'SELECTED':'').'>Project Administrators</OPTION>
+      <OPTION VALUE="bug_technicians" '.($vf == 'bug_technicians' ? 'SELECTED':'').'>Bug Technicians</OPTION>
+      <OPTION VALUE="bug_submitters" '.($vf == 'bug_submitters' ? 'SELECTED':'').'>Bug Submitters</OPTION>
+     </SELECT>
+      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
+      </FORM>';
+
 	} else {
 	    
 	    echo '<H3>The Bug field you requested \''.$field.'\' is not used by your project or you are not allowed to customize it';
@@ -418,4 +383,5 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
     }
 
 }
+
 ?>

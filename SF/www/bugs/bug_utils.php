@@ -216,9 +216,9 @@ function bug_field_display($field_name, $group_id, $value='xyxy',
 	    $output .= join('<br>', $arr);
 
 	} else {
-	    // If it is a user name field (assigned_to, submitted_by) then make
-	    // sure to add the "None" entry in the menu 'coz it's not in the DB
-	    if (bug_data_is_username_field($field_name)) {
+	    
+	    // Only show the 'None" label if empty value is allowed
+	    if (bug_data_is_empty_ok($field_name)) {
 		$show_none=true;
 		$text_none='None';
 	    }
