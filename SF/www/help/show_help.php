@@ -12,7 +12,7 @@
 require "pre.php";
 
 // Default language
-$lang = "en_US";
+$lang = $GLOBALS['sys_lang'];
 
 // Retrieve the user language if not guest
 // TODO
