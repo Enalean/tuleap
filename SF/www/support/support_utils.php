@@ -303,18 +303,23 @@ function format_support_details ($support_id, $ascii=false) {
     // Loop throuh the follow-up comments and format them
     for ($i=0; $i < $rows; $i++) {
 	
+	// Determine  wether we use the login name or the email address
 	$email_arr=explode('@',db_result($result,$i,'from_email'));
-	if ($email_arr[1]) {
-	    $user_link = '<a href="mailto:'. db_result($result,$i,'from_email').'">'.$email_arr[0].'</a>';
+	if ($ascii) {
+	    $user_link = ($email_arr[1] ? db_result($result,$i,'from_email') : $email_arr[0]);
 	} else {
-	    $user_link = util_user_link($email_arr[0]);
+	    if ($email_arr[1]) {
+		$user_link = '<a href="mailto:'. db_result($result,$i,'from_email').'">'.$email_arr[0].'</a>';
+	    } else {
+		$user_link = util_user_link($email_arr[0]);
+	    }
 	}
 	
 	// Generate formatted output
 	if ($ascii) {
 	    $out .= sprintf($fmt,	
 			    date($sys_datefmt,db_result($result, $i, 'date')),
-			    $email_arr[0],
+			    $user_link,
 			    util_unconvert_htmlspecialchars(db_result($result, $i, 'body')) );
 	} else {
 	    $out .= sprintf($fmt, util_get_alt_row_color($i),
@@ -337,15 +342,19 @@ function show_support_details ($support_id, $ascii=false) {
 
 function format_support_changes($changes) {
 
-    global $sys_datefmt;
+    global $sys_datefmt, $user_email;
 
     reset($changes);
     $fmt = "%20s | %-25s | %s\n";
 
-    $user_id = user_getid();
+    if (user_isloggedin()) {
+	$user_id = user_getid();
+	$out_hdr = 'Changes by: '.user_getrealname($user_id).' <'.user_getemail($user_id).">\n";
+	$out_hdr .= 'Date: '.date($sys_datefmt,time()).' ('.user_get_timezone().')';
+    } else {
+	$out_hdr = 'Changes by: '.$user_email.'     Date: '.date($sys_datefmt,time());
+    }
 
-    $out_hdr = 'Changes by: '.user_getrealname($user_id).' <'.user_getemail($user_id).">\n".
-	'Date: '.date($sys_datefmt,time()).' ('.user_get_timezone().')';
 
     //Process special cases first: follow-up comment
     if ($changes['details']) {

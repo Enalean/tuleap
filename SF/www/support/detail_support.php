@@ -23,6 +23,10 @@ if (db_numrows($result) > 0) {
 
 	echo '
 		<H2>[ Support Request #'.$support_id.' ] '.db_result($result,0,'summary').'</H2>
+		 <FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
+		 <INPUT TYPE="HIDDEN" NAME="func" VALUE="postaddcomment">
+		 <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
+		 <INPUT TYPE="HIDDEN" NAME="support_id" VALUE="'.$support_id.'">
 
 	<TABLE CELLPADDING="0" WIDTH="100%">
 	 <TR>
@@ -49,17 +53,13 @@ if (db_numrows($result) > 0) {
 			<TD><B>Status:</B>&nbsp;'.db_result($result,0,'status_name').'</TD>
 			<TD><B>Priority:</B>&nbsp;'.db_result($result,0,'priority').'</TD>
 		</TR>
+ 
+                                    <TR><TD COLSPAN="2">&nbsp</TD></TR>
 
 		<TR><TD COLSPAN="2"><B>Summary:</B>&nbsp;'.db_result($result,0,'summary').'</TD></TR>';
 
 	echo '
-		<FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
-
 		<TR><TD COLSPAN="2">
-			<FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
-			<INPUT TYPE="HIDDEN" NAME="func" VALUE="postaddcomment">
-			<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
-			<INPUT TYPE="HIDDEN" NAME="support_id" VALUE="'.$support_id.'">
 			<P>
 			<B>Add A Comment:</B><BR>
 			<TEXTAREA NAME="details" ROWS="10" COLS="60"></TEXTAREA>

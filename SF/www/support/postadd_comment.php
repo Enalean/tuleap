@@ -6,6 +6,9 @@
 //
 // $Id$
 
+$changes = array();
+$changed = false;
+
 if (!user_isloggedin()) {
 	if (!$user_email) {
 		//force them to fill in user_email if they aren't logged in
@@ -13,13 +16,16 @@ if (!user_isloggedin()) {
 	}
 } else {
 	//use user login name instead of email if they are logged in
-	// LJ No alias on CodeX $user_email=user_getname().'@'.$GLOBALS['sys_users_host'];
 	$user_email=user_getname(user_getid());
 }
 
+// Add a new comment if there is one
 if ($details != '') {
-	//create the first message for this ticket
+
 	$result= support_data_create_message($details,$support_id,$user_email);
+	$changes['details']['add'] = stripslashes($details);
+	$changed = true;
+
 	if (!$result) {
 		$feedback .= ' Comment Failed ';
 	} else {
@@ -27,5 +33,7 @@ if ($details != '') {
 	}
 }
 
-
+if (!$changed) {
+    $feedback .= ' Nothing Done ';
+}
 ?>

@@ -41,12 +41,14 @@ echo util_unconvert_htmlspecialchars(db_result($res_preamble,0,'support_preamble
 	<TR><TD COLSPAN="2">
 	<?php 
 	if (!user_isloggedin()) {
-		echo '
-		<h3><FONT COLOR="RED">Please <A HREF="/account/login.php">log in!</A></FONT></h3><BR>
-		If you <B>cannot</B> login, then enter your email address here:<P>
-		<INPUT TYPE="TEXT" NAME="user_email" SIZE="30" MAXLENGTH="35">
-		';
+		echo '<B><FONT COLOR="RED"><H2>You Are NOT Logged In</H2>
+                                               <P>Please <A HREF="/account/login.php?return_to='.
+		    urlencode($REQUEST_URI).
+		    '">log in,</A> so followups can be emailed to you.</FONT></B><P>';
 
+		echo '
+                                                 If you <B>cannot</B> login, then enter your email address here:<P>
+		       <INPUT TYPE="TEXT" NAME="user_email" SIZE="30" MAXLENGTH="35">';
 	} 
 	?>
 		<P>

@@ -63,7 +63,7 @@ if ($group_id) {
 			if ($project->sendAllSupportUpdates()) {
 				$address=$project->getNewSupportAddress();
 			}
-			sr_utils_mail_followup($support_id,$address);
+			sr_utils_mail_followup($support_id,$address,$changes);
 			include '../support/browse_support.php';
 			break;
 		}
