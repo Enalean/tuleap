@@ -1040,20 +1040,6 @@ class ArtifactHtml extends Artifact {
 	
 		// Now display other special fields
 		
-		// Summary first. It is a special field because it is both displayed in the
-		// title of the artifact form and here as a text field
-		$field = $art_field_fact->getFieldFromName('summary');
-		if ( $field ) {
-			$field_html = new ArtifactFieldHtml( $field );
-			$body .= "$sys_lf".$field_html->display($group_artifact_id,
-				      util_unconvert_htmlspecialchars(db_result($result,0,'summary')),false,true,true,true);
-		}
-		$field = $art_field_fact->getFieldFromName('details');
-		if ( $field ) {
-			$field_html = new ArtifactFieldHtml( $field );
-			$body .= "$sys_lf$sys_lf".$field_html->display($group_artifact_id,
-				      util_unconvert_htmlspecialchars(db_result($result,0,'details')),false,true,true,true);
-		}
 		// Then output the history of bug details from newest to oldest
 		$body .= "$sys_lf$sys_lf".$this->showDetails($group_id, true);
 	
