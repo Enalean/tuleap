@@ -38,3 +38,11 @@ ALTER TABLE doc_data MODIFY data LONGTEXT NOT NULL;
 ALTER TABLE groups ADD required_software TEXT AFTER register_purpose;
 ALTER TABLE groups ADD patents_ips TEXT AFTER required_software;
 ALTER TABLE groups ADD other_comments TEXT AFTER patents_ips;
+
+#
+# Add a field in the user table to store whether the
+# user wants a permanent login or not. Default value is
+# 0 (no sticky login)
+#
+
+ALTER TABLE user ADD sticky_login INTEGER DEFAULT '0' NOT NULL AFTER mail_va;

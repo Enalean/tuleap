@@ -33,46 +33,45 @@ to view your developer/consultant profiles and ratings.
 
 <TR valign=top>
 <TD>Member Since: </TD>
-<TD><B><?php print date($sys_datefmt,$row_user['add_date']); ?></B></TD>
+<TD colspan="2"><B><?php print date($sys_datefmt,$row_user['add_date']); ?></B></TD>
 </TR>
 <TR valign=top>
 <TD>User ID: </TD>
-<TD><B><?php print $row_user['user_id']; ?></B></TD>
+<TD colspan="2"><B><?php print $row_user['user_id']; ?></B></TD>
 </TR>
 
 <TR valign=top>
 <TD>Login Name: </TD>
-<TD><B><?php print $row_user['user_name']; ?></B>
-<BR><A href="change_pw.php">[Change Password]</A></TD>
+<TD><B><?php print $row_user['user_name']; ?></B></td>
+<td><A href="change_pw.php">[Change Password]</A></TD>
 </TR>
 
 <TR valign=top>
 <TD>Timezone: </TD>
-<TD><B><?php print $row_user['timezone']; ?></B>
-<BR><A href="change_timezone.php">[Change Timezone]</A></TD>
+<TD><B><?php print $row_user['timezone']; ?></B></td>
+<td><A href="change_timezone.php">[Change Timezone]</A></TD>
 </TR>
 
 
 <TR valign=top>
 <TD>Real Name: </TD>
-<TD><B><?php print $row_user['realname']; ?></B>
-<BR><A href="change_realname.php">[Change Real Name]</A></TD>
+<TD><B><?php print $row_user['realname']; ?></B></td>
+<td><A href="change_realname.php">[Change Real Name]</A></TD>
 </TR>
 
 <TR valign=top>
 <TD>Email Addr: </TD>
-<TD><B><?php print $row_user['email']; ?></B>
-<BR><A href="change_email.php">[Change Email Addr]</A>
+<TD><B><?php print $row_user['email']; ?></B></td>
+<td><A href="change_email.php">[Change Email Addr]</A>
 </TD>
 </TR>
 
-<TR valign=top>
-<TD>Skills Profile: </TD>
-<TD><A href="/people/editprofile.php">[Edit Skills Profile]</A></TD>
-</TR>
+<TR>
+<TD COLSPAN=3>&nbsp;<BR></td>
+</tr>
 
 <TR>
-<TD COLSPAN=2>
+<TD COLSPAN=3>
 <?php 
 // ############################# Preferences
 $HTML->box1_top("Preferences"); ?>
@@ -80,11 +79,14 @@ $HTML->box1_top("Preferences"); ?>
 
 <INPUT type="checkbox" name="form_mail_site" value="1"<?php 
 	if ($row_user['mail_siteupdates']) print " checked"; ?>> Receive Email for Site Updates
-<I>(This is very low traffic and will include security notices. Highly recommended.)</I>
+<I>(Low traffic. Includes security notices, major site news. Highly recommended.)</I>
 
 <P><INPUT type="checkbox"  name="form_mail_va" value="1"<?php
 	if ($row_user['mail_va']) print " checked"; ?>> Receive additional community mailings. 
 <I>(Low traffic.)</I>
+
+<P><INPUT type="checkbox"  name="form_sticky_login" value="1"<?php
+	if ($row_user['sticky_login']) print " checked"; ?>> Remember my login/password <I>(CodeX remembers your login/password. . Not recommended. <u>If you change this preference make sure to logout and login again</u>)</I>
 
 <P align=center><CENTER><INPUT type="submit" name="Update" value="Update"></CENTER>
 </FORM>

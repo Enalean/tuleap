@@ -81,11 +81,8 @@ function session_issecure() {
 	return (getenv('SERVER_PORT') == '443');
 }
 
-function session_cookie($n,$v) {
-// LJ We need to specify the domain name in the cookie for CodeX
-// LJ because the CVS Web server needs it as well
-// LJ	setcookie($n,$v,0,'/','',0);
-	setcookie($n,$v,0,'/',$GLOBALS['sys_default_domain'],0);
+function session_cookie($n,$v, $expire = 0) {
+    setcookie($n,$v,$expire,'/',$GLOBALS['sys_default_domain'],0);
 }
 
 function session_redirect($loc) {
@@ -165,8 +162,14 @@ function session_set_new($user_id) {
 
 	} while (db_numrows(db_query("SELECT session_hash FROM session WHERE session_hash='$GLOBALS[session_hash]'")) > 0);
 		
+	// If permanent login configured then cookie expires in one year from now
+	$res = db_query('SELECT sticky_login from user where user_id = '.$user_id);
+	if ($res) {
+	    $expire = (db_result($res,0,'sticky_login') ? time()+3600*24*365 :0);
+	}
+
 	// set session cookie
-	session_cookie("session_hash",$GLOBALS['session_hash']);
+	session_cookie("session_hash",$GLOBALS['session_hash'],$expire);
 
 	// make new session entries into db
 	db_query("INSERT INTO session (session_hash, ip_addr, time,user_id) VALUES "
