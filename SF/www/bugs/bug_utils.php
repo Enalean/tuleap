@@ -1003,9 +1003,6 @@ function format_bug_details ($bug_id, $ascii=false) {
     if ($ascii) {
 	$out .= "Follow-up Comments\n*******************";
     } else {
-	
-	$out .= "\n<H3>Follow-up Comments</H3><P>";
-	
 	$title_arr=array();
 	$title_arr[]='Comment';
 	$title_arr[]='Date';

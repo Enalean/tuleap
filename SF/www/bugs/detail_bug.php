@@ -98,6 +98,7 @@ if (db_numrows($result) > 0) {
      <table>
 
      <TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
+         <h3>Follow-up Comments</h3>
         <?php echo show_bug_details($bug_id); ?>
      </TD></TR>
 

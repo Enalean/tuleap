@@ -120,7 +120,11 @@ if (db_numrows($result) > 0) {
       <TR><TD colspan="2">
       <P><B>Comment Type:</B>
       <?php echo bug_field_box('comment_type_id','',$group_id,'',true,'None'); ?><BR>
-      <?php echo bug_field_textarea('details',''); ?>
+      <?php
+      echo bug_field_textarea('details',''); 
+      echo '<p>';
+      echo show_bug_details($bug_id);
+      ?>
       </td></tr>
 
       <TR><TD colspan="2"><hr></td></tr>
