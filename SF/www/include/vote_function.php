@@ -98,6 +98,8 @@ function vote_show_release_radios ($vote_on_id,$flag) {
 /*
 
 	Select and show a specific survey from the database
+        WARNING: the method does not check that the survey belongs to 
+        the given group.
 
 */
 

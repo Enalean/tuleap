@@ -489,23 +489,37 @@ if (user_isloggedin()) {
 		DEVELOPER SURVEYS
 
 		This needs to be updated manually to display any given survey
+                Default behavior: get first survey from group #1 
 	*/
 
-	$sql="SELECT * from survey_responses ".
-		"WHERE survey_id='1' AND user_id='".user_getid()."' AND group_id='1'";
+
+        // Get developer survey id
+        $sql="SELECT * from surveys WHERE group_id=1 ORDER BY survey_id";
 
 	$result=db_query($sql);
+        $developer_survey_id=db_result($result,0,'survey_id');
 
-	$html_my_survey = "";
-	$html_my_survey .= $HTML->box1_top('Quick Survey',0);
+        // Check that the survey is active
+        $devsurvey_is_active=db_result($result,0,'is_active');
 
-	if (db_numrows($result) < 1) {
-		$html_my_survey .= show_survey(1,1,0);
-	} else {
+        if ($devsurvey_is_active==1) {
+
+            $sql="SELECT * from survey_responses ".
+		"WHERE survey_id='".$developer_survey_id."' AND user_id='".user_getid()."'";
+
+            $result=db_query($sql,1);
+
+            $html_my_survey = "";
+            $html_my_survey .= $HTML->box1_top('Quick Survey',0);
+
+            if (db_numrows($result) < 1) {
+		$html_my_survey .= show_survey(1,$developer_survey_id,0);
+            } else {
 		$html_my_survey .= 'You have taken your developer survey';
-	}
-	$html_my_survey .= '<TR align=left><TD COLSPAN="2">&nbsp;</TD></TR>';
-	$html_my_survey .= $HTML->box1_bottom(0);
+            }
+            $html_my_survey .= '<TR align=left><TD COLSPAN="2">&nbsp;</TD></TR>';
+            $html_my_survey .= $HTML->box1_bottom(0);
+        }
 
 
 	/*
