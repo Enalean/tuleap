@@ -580,6 +580,7 @@ ScriptAlias /cgi-bin/ "/home/httpd/cgi-bin/"
     Options ExecCGI
     Order allow,deny
     Allow from all
+    RedirectMatch permanent /cgi-bin/cvsweb.cgi/(.*) /cgi-bin/viewcvs.cgi/$1 
 </Directory>
 
 #

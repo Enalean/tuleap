@@ -107,7 +107,7 @@ NameVirtualHost %sys_ip_address%:443
 # ServerAdmin you@your.address
 ServerName %sys_default_domain%:443
 
-# Use same log files fro SSL traffic to preserve CodeX statisitics:
+# Use same log files fro SSL traffic to preserve CodeX statistics:
 ErrorLog logs/error_log
 TransferLog logs/access_log
 
