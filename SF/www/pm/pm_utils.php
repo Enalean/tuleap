@@ -199,6 +199,32 @@ function pm_show_tasklist ($result,$offset,$set='open') {
 
 	$rows=db_numrows($result);
 
+	/*
+	   A task can be assigned to several users and they most all show on
+	   the same line. Unfortunately MySQL cannot concat user names
+	   from different rows on a GROUP BY clause hence this piece of code
+
+	   Remark: the maximum nuber of rows that normally display on one
+	   page is 50. But because of the possible line merge it might
+	   actually be less than that. There is not much we can do to fix
+	   this.
+	*/
+
+	$all_rows = array();
+	while ( $a_row = db_fetch_array($result)) {
+
+		$tid = $a_row['project_task_id'];
+
+		if ( isset($all_rows[$tid]) ) {
+			// if this task id entry already exists then
+			// it means there is an additional "assigned to" user
+			$all_rows[$tid]['user_name'] .= ','.$a_row['user_name'];	
+		} else {
+			$all_rows[$tid] = $a_row;
+		}
+	}
+
+
 	$url = "/pm/task.php?group_id=$group_id&group_project_id=$group_project_id&func=browse&set=$set&order=";
 
 	$title_arr=array();
@@ -206,32 +232,36 @@ function pm_show_tasklist ($result,$offset,$set='open') {
 	$title_arr[]='Summary';
 	$title_arr[]='Start Date';
 	$title_arr[]='End Date';
-	$title_arr[]='Percent Complete';
+	$title_arr[]='Assigned To';
+	$title_arr[]='% Complete';
 
 	$links_arr=array();
 	$links_arr[]=$url.'project_task_id';
 	$links_arr[]=$url.'summary';
 	$links_arr[]=$url.'start_date';
 	$links_arr[]=$url.'end_date';
+	$links_arr[]=$url.'user_name';
 	$links_arr[]=$url.'percent_complete';
 
 	echo html_build_list_table_top ($title_arr,$links_arr);
 
 	$now=time();
 
-	for ($i=0; $i < $rows; $i++) {
+	reset($all_rows);
+	while (list($k,$row) = each($all_rows)) {
 
 		echo '
-			<TR BGCOLOR="'.get_priority_color(db_result($result, $i, 'priority')).'">'.
+			<TR BGCOLOR="'.get_priority_color($row['priority']).'">'.
 			'<TD><A HREF="'.$PHP_SELF.'?func=detailtask'.
-			'&project_task_id='.db_result($result, $i, 'project_task_id').
+			'&project_task_id='.$row['project_task_id'].
 			'&group_id='.$group_id.
-			'&group_project_id='.db_result($result, $i, 'group_project_id').'">'.
-			db_result($result, $i, 'project_task_id').'</A></TD>'.
-			'<TD>'.db_result($result, $i, 'summary').'</TD>'.
-			'<TD>'.date('Y-m-d',db_result($result, $i, 'start_date')).'</TD>'.
-			'<TD>'. (($now>db_result($result, $i, 'end_date'))?'<B>* ':'&nbsp; ') . date('Y-m-d',db_result($result, $i, 'end_date')).'</TD>'.
-			'<TD>'.db_result($result, $i, 'percent_complete').'%</TD></TR>';
+			'&group_project_id='.$row['group_project_id'].'">'.
+			$row['project_task_id'].'</A></TD>'.
+			'<TD>'.$row['summary'].'</TD>'.
+			'<TD>'.date('Y-m-d',$row['start_date']).'</TD>'.
+			'<TD>'. (($now>$row['end_date'])?'<B>* ':'&nbsp; ') . date('Y-m-d',$row['end_date']).'</TD>'.
+			'<TD>'.$row['user_name'].'</TD>'.
+			'<TD>'.$row['percent_complete'].'%</TD></TR>';
 
 	}
 

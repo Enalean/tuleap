@@ -15,7 +15,7 @@ if (!$offset || $offset < 0) {
 // Automatically discard invalid field names.
 //
 if ($order) {
-	if ($order=='project_task_id' || $order=='percent_complete' || $order=='summary' || $order=='start_date' || $order=='end_date' || $order=='priority') {
+	if ($order=='project_task_id' || $order=='percent_complete' || $order=='summary' || $order=='start_date' || $order=='end_date' || $order=='priority' || $order=='user_name') {
 		if(user_isloggedin()) {
 			user_set_preference('pm_task_order', $order);
 		}
@@ -30,7 +30,8 @@ if ($order) {
 
 if ($order) {
 	//if ordering by priority, sort DESC
-	$order_by = " ORDER BY project_task.$order".(($order=='priority') ? ' DESC ':' ');
+	//if ordering by user assigned to then use the user table 
+	$order_by = " ORDER BY ".(($order=='user_name') ? 'user':'project_task').".$order".(($order=='priority') ? ' DESC ':' ');
 } else {
 	$order_by = "";
 }
@@ -103,11 +104,6 @@ if ($_status && ($_status != 100)) {
 //if assigned to selected, and more to where clause
 if ($_assigned_to) {
 	$assigned_str="AND project_assigned_to.assigned_to_id='$_assigned_to'";
-
-	//workaround for old tasks that do not have anyone assigned to them
-	//should not be needed for tasks created/updated after may, 2000
-	$assigned_str2=',project_assigned_to';
-	$assigned_str3='project_task.project_task_id=project_assigned_to.project_task_id AND';
 	
 } else {
 	//no assigned to was chosen, so don't add it to where clause
@@ -122,9 +118,9 @@ pm_header(array('title'=>'Browse Tasks'.
 	(($_status && ($_status != 100))?' By Status: '.pm_data_get_status_name($_status):'')));
 
 $sql="SELECT project_task.priority,project_task.group_project_id,project_task.project_task_id,".
-	"project_task.start_date,project_task.end_date,project_task.percent_complete,project_task.summary ".
-	"FROM project_task $assigned_str2 ".
-	"WHERE $assigned_str3 project_task.group_project_id='$group_project_id' ".
+	"project_task.start_date,project_task.end_date,project_task.percent_complete,project_task.summary,user.user_name ".
+	"FROM project_task, project_assigned_to, user ".
+	"WHERE project_task.group_project_id='$group_project_id' AND project_task.project_task_id=project_assigned_to.project_task_id AND user.user_id=project_assigned_to.assigned_to_id".
 	" $assigned_str $status_str ".
 	$order_by .
 	" LIMIT $offset,50";
