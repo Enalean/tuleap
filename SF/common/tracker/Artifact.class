@@ -230,7 +230,7 @@ class Artifact extends Error {
 		}
 	
 		// If type has a value add it into the sql statement (this is only for
-		// the follow up comments (details field)
+		// the follow up comments (details field))
 		if ($type) {
 		    $fld_type = ',type'; $val_type = ",'$type'";
 		} else {
@@ -1122,11 +1122,20 @@ class Artifact extends Error {
 		
 	    $sql = "SELECT role_label,event_label,notify FROM artifact_notification_role r, artifact_notification_event e,artifact_notification n ".
 		"WHERE n.group_artifact_id=$group_artifact_id AND n.user_id=$user_id AND ".
-		"n.role_id=r.role_id AND r.user_id=$user_id AND r.group_artifact_id=$group_artifact_id AND ".
-		"n.event_id=e.event_id AND e.user_id=$user_id AND e.group_artifact_id=$group_artifact_id";
+		"n.role_id=r.role_id AND r.group_artifact_id=$group_artifact_id AND ".
+		"n.event_id=e.event_id AND e.group_artifact_id=$group_artifact_id";
+
+/*
+	$sql = "SELECT role_label,event_label,notify FROM artifact_notification_role_default r, artifact_notification_event_default e,artifact_notification n ".
+		"WHERE n.user_id=$user_id AND ".
+		"n.role_id=r.role_id AND ".
+		"n.event_id=e.event_id";
+*/
+	    //echo $sql."<br>";
 	    return db_query($sql);
 	}
 
+		
 }
 
 ?>

@@ -96,7 +96,7 @@ if ($group_id && $atid) {
 				    $ah->addCC($add_cc,$cc_comment,$changes);
 				}
 
-				// send an email to notify the user of the bug update
+				// send an email to notify the user of the artifact update
 				$ah->mailFollowup($ath->getEmailAddress(),$changes);
 				$feedback .= ' Item Successfully Created ';
 			    include './browse.php';

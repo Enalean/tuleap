@@ -25,9 +25,9 @@ class ArtifactReportFactory extends Error {
 	}
 	
 	/**
-	 * Return a new ArtifactReportHtml object 
+	 * Return a new ArtifactReport object 
 	 *
-	 * @param report_id: the report id to create the new ArtifactReportHtml
+	 * @param report_id: the report id to create the new ArtifactReport
 	 *
 	 * @return void
 	 */

@@ -87,8 +87,8 @@ class ArtifactTypeHtml extends ArtifactType {
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=permissions">Users Permissions</a>';
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=fieldusage">Manage Field Usage</a>';
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=fieldvalues">Manage Field Values</a>';
-		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=reports">Manage Reports</a>';
-		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=notification">Email Notification Settings</a>';
+		echo ' | <a href="/tracker/admin/?func=report&group_id='.$group_id.'&atid='. $this->getID() .'">Manage Reports</a>';
+		echo ' | <a href="/tracker/admin/?func=notification&group_id='.$group_id.'&atid='. $this->getID() .'&func=notification">Email Notification Settings</a>';
 		echo '</strong><hr>';
 	}
 
@@ -199,10 +199,10 @@ class ArtifactTypeHtml extends ArtifactType {
 	    }
 	
 	    if (user_isloggedin()) {
-			echo '<H3><a href="/tracker/admin/reports.php?group_id='.$group_id.'&atid='.$atid.'">Manage Reports</a></H3>';
+			echo '<H3><a href="/tracker/admin/?func=report&group_id='.$group_id.'&atid='.$atid.'">Manage Reports</a></H3>';
 			echo 'Define personal or project-wide tracker reports: what search criteria to use and what tracker fields to show in the tracker report table&hellip;';
 		
-			echo '<H3><a href="/tracker/admin/notification_settings.php?group_id='.$group_id.'&atid='.$atid.'">Email Notification Settings</a></H3>';
+			echo '<H3><a href="/tracker/admin?func=notification&group_id='.$group_id.'&atid='.$atid.'">Email Notification Settings</a></H3>';
 			echo 'Users can define when they want to be notified of a tracker update via email. Project Administrators can also define global email notification rules.<P>';
 	    }
 	}

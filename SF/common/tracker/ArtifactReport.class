@@ -67,6 +67,7 @@ class ArtifactReport extends Error {
 		// Error constructor
 		$this->Error();
 		$this->group_artifact_id = $atid;
+		$this->fields = array();
 
 		if ( !$this->fetchData($report_id,$atid) ) {
 			return false;
@@ -75,6 +76,134 @@ class ArtifactReport extends Error {
 		return true;
 	}
 	
+	/**
+	 *	recreate - use this to reset a Report in the database.
+	 *
+	 *	@param	string	The report name.
+	 *	@param	string	The report description.
+	 *	@return true on success, false on failure.
+	 */
+	function recreate($user_id,$name,$description,$scope) {
+	global $ath;
+	/* 
+	$perm = $ath->Group->getPermissionFromId( $user_id);
+
+		if (!$perm || !is_object($perm) || !$perm->isArtifactAdmin()) {
+			$this->setError('ArtifactReport: Permission Denied');
+			return false;
+		}
+*/	
+
+	if (!$name || !$description ||!$scope) {
+			$this->setError('ArtifactReport: Name, Description and scope are required');
+			echo 'ArtifactReport: Name, Description and scope are required';
+			return false;
+		}
+
+	$group_id = $ath->Group->getID();
+	
+
+	//db_begin();
+	// first delete any report field entries for this report
+	$res = db_query("DELETE FROM artifact_report_field WHERE report_id=".$this->report_id);
+
+	$res = db_query("UPDATE artifact_report SET name='$name', description='$description',scope='$scope' WHERE report_id=".$this->report_id);
+
+	$this->name = $name;
+	$this->description = $description;
+	$this->scope = $scope;
+	$this->fields = array();
+	//db_commit();
+	return true;
+	}
+
+	/**
+	 *	delete - use this to remove a Report from the database.
+	 *
+	 *	@return true on success, false on failure.
+	 */
+	function delete() {
+	global $ath;
+
+	//db_begin();
+	// first delete any report field entries for this report
+	$res = db_query("DELETE FROM artifact_report_field WHERE report_id=".$this->report_id);
+
+// then delete the report entry item
+	$res = db_query("DELETE FROM artifact_report WHERE report_id=".$this->report_id);
+
+	$this->name = '';
+	$this->description = '';
+	$this->scope = '';
+	$this->fields = array();
+	//db_commit();
+	return true;
+	}
+
+	/**
+	 *	create - use this to create a new Report in the database.
+	 *
+	 *	@param	string	The report name.
+	 *	@param	string	The report description.
+	 *	@return id on success, false on failure.
+	 */
+	function create($user_id,$name,$description,$scope) {
+	global $ath;
+	/*$perm = $ath->Group->getPermissionFromId( $user_id);
+
+		if (!$perm || !is_object($perm) || !$perm->isArtifactAdmin()) {
+			$this->setError('ArtifactReport: Permission Denied');
+			return false;
+		}
+*/
+	if (!$name || !$description ||!$scope) {
+			$this->setError('ArtifactReport: Name, Description and scope are required');
+			return false;
+		}
+
+	$group_id = $ath->Group->getID();
+	$atid=$ath->getID();
+
+	//db_begin();
+	$sql = 'INSERT INTO artifact_report (group_artifact_id,user_id,name,description,scope) '.
+			"VALUES ('".$atid."','".$user_id."','$name',".
+			"'$description','$scope')";
+	//echo $sql;
+
+		$res = db_query($sql);
+
+		$report_id = db_insertid($res, 'artifact_report', 'report_id');
+		
+		if (!$res || !$report_id) {
+			$this->setError('ArtifactReport: '.db_error());
+			//db_rollback();
+			return false;
+		} else {
+			$this->report_id = $report_id;
+			$this->description = $description;
+			$this->name = $name;
+			$this->scope = $scope;
+			$this->fields = array();
+			//	db_commit();
+			return true;
+		}
+	}
+
+        function add_report_field($field_name,$show_on_query,$show_on_result,$place_query,$place_result,$col_width) {
+		$sql = 'INSERT INTO artifact_report_field (report_id, field_name,'.
+		'show_on_query,show_on_result,place_query,place_result,col_width) VALUES ';
+	
+		$sql .= "('$this->report_id','$field_name',$show_on_query,$show_on_result,".
+			"$place_query,$place_result,$col_width)";
+		echo $sql.'<br>';
+		$res = db_query($sql);
+		if ($res) {
+	   		return true;
+        	} else {
+           		return false;
+        	}
+	}
+
 	/**
 	 *	fetchData - re-fetch the data for this ArtifactReport from the database.
 	 *
@@ -86,15 +215,17 @@ class ArtifactReport extends Error {
 		// Read the report infos
 		$sql = "SELECT * FROM artifact_report ".
 			   "WHERE report_id=".$report_id;
+		//echo $sql.'<br>';
 		$res=db_query($sql);
 		if (!$res || db_numrows($res) < 1) {
-			$this->setError('ArtifactReport:fetchData');
+			$this->setError('ArtifactReport:fetchData unfound report');
 			return false;
 		}
 		$data_array = db_fetch_array($res);
 		$this->name = $data_array['name'];
 		$this->description = $data_array['description'];
 		$this->scope = $data_array['scope'];
+	 	$this->report_id = $report_id;
 		
 		// Read the fields infos
 		$res=db_query("SELECT * FROM artifact_report_field ".
@@ -131,7 +262,7 @@ class ArtifactReport extends Error {
 	    
 	    // If user is unknown then get only project-wide and system wide reports
 	    // else get personal reports in addition  project-wide and system wide.
-	    $sql = 'SELECT report_id,name FROM artifact_report WHERE ';
+	    $sql = 'SELECT report_id,name,description FROM artifact_report WHERE ';
 	    if (!$user_id || ($user_id == 100)) {
 			$sql .= "(group_artifact_id=$group_artifact_id AND scope='P') OR scope='S' ".
 			    'ORDER BY report_id';

@@ -19,6 +19,7 @@ class ArtifactCanned extends Error {
 	 * @var		object	$ArtifactType.
 	 */
 	var $ArtifactType; 
+	var $atid;
 
 	/**
 	 * Array of artifact data.
@@ -38,8 +39,12 @@ class ArtifactCanned extends Error {
 		$this->Error(); 
 
 		//was ArtifactType legit?
-		if (!$ArtifactType || !is_object($ArtifactType)) {
-			$this->setError('ArtifactCanned: No Valid ArtifactType');
+		if (!$ArtifactType) {
+			$this->setError('ArtifactCanned: No ArtifactType');
+			return false;
+		}
+		if ( !is_object($ArtifactType)) {
+			$this->setError('ArtifactCanned: No Valid ArtifactType object');
 			return false;
 		}
 		//did ArtifactType have an error?
@@ -48,6 +53,7 @@ class ArtifactCanned extends Error {
 			return false;
 		}
 		$this->ArtifactType = $ArtifactType;
+		$this->atid = $ArtifactType->getID();
 
 		if ($data) {
 			if (is_array($data)) {
@@ -114,7 +120,7 @@ class ArtifactCanned extends Error {
 	 *	@return	boolean	success.
 	 */
 	function fetchData($id) {
-		$res=db_query("SELECT * FROM artifact_canned_responses WHERE id='$id'");
+		$res=db_query("SELECT * FROM artifact_canned_responses WHERE artifact_canned_id='$id' AND group_artifact_id='$this->atid'");
 		if (!$res || db_numrows($res) < 1) {
 			$this->setError('ArtifactCanned: Invalid ArtifactCanned ID');
 			return false;
@@ -139,7 +145,7 @@ class ArtifactCanned extends Error {
 	 *	@return	int	The id #.
 	 */
 	function getID() {
-		return $this->data_array['id'];
+		return $this->data_array['artifact_canned_id'];
 	}
 
 	/**
@@ -179,7 +185,7 @@ class ArtifactCanned extends Error {
 
 		$sql="UPDATE artifact_canned_responses 
 			SET title='". htmlspecialchars($title) ."',body='". htmlspecialchars($body) ."'
-			WHERE group_artifact_id='". $this->ArtifactType->getID() ."' AND id='". $this->getID() ."'";
+			WHERE group_artifact_id='". $this->ArtifactType->getID() ."' AND artifact_canned_id='". $this->getID() ."'";
 
 		$result=db_query($sql);
 

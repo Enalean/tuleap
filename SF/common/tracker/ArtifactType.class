@@ -50,6 +50,34 @@ class ArtifactType extends Error {
 	var $data_array;
 
 	/**
+	 * number of notification events
+	 *
+	 * @var		array	
+	 */
+	var $num_events = 0;
+
+	/**
+	 * Array of events
+	 *
+	 * @var		array	
+	 */
+	var $arr_events = array();
+
+	/**
+	 * number of roles
+	 *
+	 * @var		array	
+	 */
+	var $num_roles = 0;
+
+	/**
+	 * Array of roles
+	 *
+	 * @var		array	
+	 */
+	var $arr_roles = array();
+
+	/**
 	 *	ArtifactType - constructor.
 	 *
 	 *	@param	object	The Group object.
@@ -70,6 +98,20 @@ class ArtifactType extends Error {
 		
 		$this->Group = $Group;
 		if ($artifact_type_id) {
+			$res_events = $this->get_notification_events($artifact_type_id);
+			$this->num_events = db_numrows($res_events);
+			$i=0;
+			while ($arr = db_fetch_array($res_events)) {
+    				$this->arr_events[$i] = $arr; $i++;
+			}
+
+			$res_roles = $this->get_notification_roles($artifact_type_id);
+			$this->num_roles = db_numrows($res_roles);
+			$i=0;
+			while ($arr = db_fetch_array($res_roles)) {
+    				$this->arr_roles[$i] = $arr; $i++;
+			}
+
 			if (!$arr || !is_array($arr)) {
 				if (!$this->fetchData($artifact_type_id)) {
 					return false;
@@ -189,6 +231,32 @@ class ArtifactType extends Error {
 				return $id;
 			}
 		}
+	}
+
+	/**
+	 *  fetch the notification roles for this ArtifactType from the database.
+	 *
+	 *  @param	int		The artifact type ID.
+	 *  @return query result.
+	 */
+	function get_notification_roles($artifact_type_id) {
+	    $sql = 'SELECT * FROM artifact_notification_role WHERE group_artifact_id='.$artifact_type_id.' ORDER BY rank ASC;';
+	    //$sql = 'SELECT * FROM artifact_notification_role_default ORDER BY rank ASC;';
+	    //echo $sql.'<br>';
+	    return db_query($sql);
+	}
+
+	/**
+	 *  fetch the notification events for this ArtifactType from the database.
+	 *
+	 *  @param	int		The artifact type ID.
+	 *  @return query result.
+	 */
+	function get_notification_events($artifact_type_id) {
+	    $sql = 'SELECT * FROM artifact_notification_event WHERE group_artifact_id='.$artifact_type_id.' ORDER BY rank ASC;';
+	    //$sql = 'SELECT * FROM artifact_notification_event_default ORDER BY rank ASC;';
+	    //echo $sql.'<br>';
+	return db_query($sql);
 	}
 
 	/**
@@ -645,6 +713,130 @@ class ArtifactType extends Error {
 			return true;
 		}
 	}
+	/**
+	 *  updateNotificationSettings - use this to update this ArtifactType in the database.
+	 *
+	 *  @param	bool	(1) true (0) false - whether to email on all updates.
+	 *  @param	string	The address to send new entries and updates to.
+	 *  @param	int	uid the user to set watches on
+	 *  @param	string	the list of users to watch
+	 *  @param	string	the list of watching users
+	 *  @return true on success, false on failure.
+	 */
+	function updateNotificationSettings($email_all,$email_address,$user_id, $watchees) {
+
+		if ( !$this->userIsAdmin()) {
+			$this->setError('ArtifactType: Permission Denied');
+			return false;
+		}
+		
+	
+		if ($email_address && !validate_email($email_address)) {
+			$email_address='';
+		}
+		if ($email_all && !$email_address) {
+			$email_all=0;
+		}
+
+		$email_all = ((!$email_all) ? 0 : $email_all); 
+		$sql="UPDATE artifact_group_list SET 
+			email_all_updates='$email_all',
+			email_address='$email_address' 
+			WHERE 
+			group_artifact_id='".$this->getID()."' 
+			AND group_id='".$this->Group->getID()."'";
+
+		$res=db_query($sql);
+		//echo $sql."<br>";
+		if (!$res ) {
+			$this->setError('ArtifactType::Update(): '.db_error());
+			return false;
+		} else {
+			// set watchees 
+			$this->set_watchees($user_id, $watchees);
+			
+			$this->fetchData($this->getID());
+			return true;
+		}
+	}
+
+	function delete_watchees($user_id) {
+
+    		$sql = "DELETE FROM artifact_watcher WHERE user_id='$user_id' AND artifact_group_id='".$this->getID()."'";
+		//echo $sql."<br>";
+    		return db_query($sql);
+	}
+	
+	function get_watchees($user_id) {
+	    $sql = "SELECT watchee_id FROM artifact_watcher WHERE user_id='$user_id' AND artifact_group_id=".$this->getID();
+		//echo $sql."<br>";
+	    return db_query($sql);    
+	}
+	
+	function set_watchees($user_id, $watchees) {
+		//echo "set_watchees($user_id, $watchees)<br>";
+		if ($watchees) {
+			//echo "watchees";
+   			$res_watch = true;
+			$watchees = preg_replace("/\s+/","",$watchees);
+ 			$arr_user_names = split(',',$watchees);
+			$arr_user_ids = array();
+			while (list(,$user_name) = each($arr_user_names)) {
+			    $res = user_get_result_set_from_unix($user_name);
+			    if (!$res || (db_numrows($res) <= 0)) {
+				// user doesn;t exist  so abort this step and give feedback
+				$this->setError(" - Error Invalid user name '$user_name'");
+				$res_watch = false;
+				continue;
+			    } else {
+				// store in a hash to eliminate duplicates. skip user itself
+				if (db_result($res,0,'user_id') != $user_id)
+				    $arr_user_ids[db_result($res,0,'user_id')] = 1;
+			    }
+			}
+			
+			if ($res_watch) {
+			    $this->delete_watchees($user_id); 
+			    $arr_watchees = array_keys($arr_user_ids);
+			    $sql = 'INSERT INTO artifact_watcher (artifact_group_id, user_id,watchee_id) VALUES ';
+    			    $num_watchees = count($arr_watchees);
+    			    for ($i=0; $i<$num_watchees; $i++) {
+				$sql .= "('".$this->getID()."','$user_id','".$arr_watchees[$i]."'),";
+    			    } 
+    			$sql = substr($sql,0,-1); // remove extra comma at the end 
+			//echo $sql."<br>";
+    			return db_query($sql);
+
+			}   
+		} else 
+			$this->delete_watchees($user_id);	
+	}
+	
+	function get_watchers($user_id) {
+	    $sql = "SELECT user_id FROM artifact_watcher WHERE watchee_id='$user_id' AND artifact_group_id='$this->getID()'";
+	    return db_query($sql);    
+	}
+	
+function delete_notification($user_id) {
+    $sql = "DELETE FROM artifact_notification WHERE user_id='$user_id' AND group_artifact_id='".$this->getID()."'";
+    //echo $sql."<br>";
+    return db_query($sql);
+}
+
+function set_notification($user_id,$arr_notification) {
+    $sql = 'INSERT INTO artifact_notification (group_artifact_id, user_id,role_id,event_id,notify) VALUES ';
+
+    for ($i=0; $i<$this->num_roles; $i++) {
+	$role_id = $this->arr_roles[$i]['role_id'];
+ 	for ($j=0; $j<$this->num_events; $j++) { 
+	    $event_id = $this->arr_events[$j]['event_id'];
+ 	    $sql .= "('".$this->getID()."','$user_id','$role_id','$event_id','".$arr_notification[$role_id][$event_id]."'),"; 
+ 	} 
+     } 
+     $sql = substr($sql,0,-1); // remove extra comma at the end 
+     //echo $sql."<br>";
+     return db_query($sql); 
+}
 	
 	//
 	// People who are project members
