@@ -37,7 +37,7 @@ $GLOBALS['sys_name']; ?> Team has put together the <b><A
 href="/docman/display_doc.php?docid=16&group_id=1">Xerox Code eXchange
 Policy</a></b>. It governs internal code sharing and re-use and is the
 cornerstone of the <?php print $GLOBALS['sys_name']; ?> edifice. Make
-sure you <A href="/docs/licenses/xrx.php">read it</a>. <P>
+sure you <A href="/docman/display_doc.php?docid=16&group_id=1">read it</a>. <P>
 
 <?php print $GLOBALS['sys_name']; ?> also offers a full-featured,
 purely web-based and easy to use project management and communication
