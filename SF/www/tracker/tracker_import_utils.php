@@ -49,14 +49,33 @@ function parse_field_names($data,$used_fields,$ath,
     //get already the predefined values of this field (if applicable)
     if ($curr_field != "" && 
 	($curr_field->getDisplayType() == "SB" || $curr_field->getDisplayType() == "MB")) {
-      $predef_val = $curr_field->getFieldPredefinedValues($ath->getID());
-      $count = db_numrows($predef_val);
-      unset($values);
-      for ($i=0;$i<$count;$i++) {
-	$values[db_result($predef_val,$i,1)] = db_result($predef_val,$i,0);
-      }
-      $predefined_values[$c] = $values;
+
+      //special case for submitted by
+      if ($curr_field->getLabel() == "Submitted by") {
+	if ($ath->allowsAnon()) {
+	  //$predefined_values[$c] = array();
+	} else {
+	  $techs = $ath->getTechnicians();
+	  $count = db_numrows($techs);
+	  unset($values);
+	  for ($i=0;$i<$count;$i++) {
+	    $values[db_result($techs,$i,1)] = db_result($techs,$i,0);
+	  }
+	  $predefined_values[$c] = $values;
+	}
       
+	//for all other fields not submitted by
+      } else {
+
+
+	$predef_val = $curr_field->getFieldPredefinedValues($ath->getID());
+	$count = db_numrows($predef_val);
+	unset($values);
+	for ($i=0;$i<$count;$i++) {
+	  $values[db_result($predef_val,$i,1)] = db_result($predef_val,$i,0);
+	}
+	$predefined_values[$c] = $values;
+      }
     }
   }
 
@@ -73,6 +92,7 @@ function parse_field_names($data,$used_fields,$ath,
 	  $label != "CC List" &&
 	  $label != "CC Comment" &&
 	  !$field->isEmptyOk() && !in_array($label,$parsed_fields)) {
+	
 	$errors .= "\"$label\" is a mandatory field in tracker ".$ath->getName().". Please specify it in your csv file. ";
 	return false;
       }
@@ -111,11 +131,12 @@ function check_values($row,&$data,$used_fields,$parsed_fields,$predefined_values
 	}
       } else {
 	if (!array_key_exists($val,$predef_vals) && $val != 'None') {
-	  if ($label == 'Severity' &&
+	  if (($label == 'Severity' || $label == 'Priority') &&
 	      (strcasecmp($val,'1') == 0 || strcasecmp($val,'5') == 0 || strcasecmp($val,9) == 0)) {
 	    //accept simple ints for Severity fields instead of 1 - Ordinary,5 - Major,9 - Critical
-	  } else if ($label == 'Submitted by' && $val == '') {
-	    //accept and use importing user as 'submitted by'
+	    //accept simple ints for Priority fields instead of 1 - Lowest,5 - Medium,9 - Highest
+	  } else if ($label == 'Submitted by' && ($val == '' || $ath->allowsAnon())) {
+	    //accept anonymous user or use importing user as 'submitted by'
 	  } else {
 	    $errors .= "<b>Line ".($row+1)." [</b>".implode(",",$data)."<b>]</b>:<br>value \"$val\" is not one of the predefined values of field \"$label\" (".implode(",",array_keys($predef_vals)).")";
 	    return false;
@@ -125,7 +146,8 @@ function check_values($row,&$data,$used_fields,$parsed_fields,$predefined_values
     }
     
     // check whether we specify None for a field which is mandatory
-    if ($field != "" && !$field->isEmptyOk() && $label != "Artifact ID") {
+    if ($field != "" && !$field->isEmptyOk() &&
+	$label != "Artifact ID") {
       if ($label == "Submitted by" ||
 	   $label == "Submitted on") {
 	//submitted on and submitted by are accepted as "" on inserts and
@@ -137,6 +159,7 @@ function check_values($row,&$data,$used_fields,$parsed_fields,$predefined_values
 	} else {
 	  $is_empty = ( ($field->isSelectBox()) ? ($val=='None') : ($val==''));
 	}
+
 	if ($is_empty) {
 	  $errors .= "<b>Line ".($row+1)." [</b>".implode(",",$data)."<b>]</b>:<br>\"$label\" is a mandatory field in tracker ".$ath->getName().". Please specify it in your csv file. ";
 	  return false;
@@ -172,6 +195,7 @@ function check_values($row,&$data,$used_fields,$parsed_fields,$predefined_values
 	  $label != "CC List" &&
 	  $label != "CC Comment" &&
 	  !$field->isEmptyOk() && !in_array($label,$parsed_fields)) {
+
 	  $errors .= "<b>Line ".($row+1)." [</b>".implode(",",$data)."<b>]</b>:<br>\"$label\" is a mandatory field in tracker ".$ath->getName().". Please specify it in your csv file. ";
 	  return false;
       } 
@@ -538,12 +562,31 @@ function getPredefinedValues($used_fields,$parsed_fields) {
     $curr_field = $used_fields[$field_label];
     if ($curr_field != "" && 
 	($curr_field->getDisplayType() == "SB" || $curr_field->getDisplayType() == "MB")) {
-      $predef_val = $curr_field->getFieldPredefinedValues($ath->getID());
-      $count = db_numrows($predef_val);
-      for ($i=0;$i<$count;$i++) {
-	$values[db_result($predef_val,$i,1)] = db_result($predef_val,$i,0);
+
+      //special case for submitted by
+      if ($curr_field->getLabel() == "Submitted by") {
+	if ($ath->allowsAnon()) {
+	  //$predefined_values[$c] = array();
+	} else {
+	  $techs = $ath->getTechnicians();
+	  $count = db_numrows($techs);
+	  unset($values);
+	  for ($i=0;$i<$count;$i++) {
+	    $values[db_result($techs,$i,1)] = db_result($techs,$i,0);
+	  }
+	  $predefined_values[$c] = $values;
+	}
+	
+	//for all other fields not submitted by
+      } else {
+	
+	$predef_val = $curr_field->getFieldPredefinedValues($ath->getID());
+	$count = db_numrows($predef_val);
+	for ($i=0;$i<$count;$i++) {
+	  $values[db_result($predef_val,$i,1)] = db_result($predef_val,$i,0);
+	}
+	$predefined_values[$c] = $values;
       }
-      $predefined_values[$c] = $values;
     }
   }
   return $predefined_values;
@@ -710,6 +753,7 @@ function prepare_vfl($data,$used_fields,$parsed_fields,$predefined_values,&$arti
 	  else $value[] = $predef_vals[$name];
 	}
       } else {
+
 	if ($imported_value == 'None') $value = 100;
 	else $value = $predef_vals[$imported_value];
 
@@ -725,10 +769,21 @@ function prepare_vfl($data,$used_fields,$parsed_fields,$predefined_values,&$arti
 	}
       }
       $vfl[$field_name] = $value; 
+
     } else {
+
+      if ($label == "Submitted by") {
+	$sub_user_name = $data[$label];
+	if ($sub_user_name && $sub_user_name != "") {
+	  $res = user_get_result_set_from_unix($sub_user_name);
+	  $imported_value = db_result($res,0,'user_id');
+	}
+      }
+      
       $vfl[$field_name] = $imported_value;
     }
   }
+
   return $vfl;
 }
 
