@@ -507,7 +507,7 @@ if (user_isloggedin()) {
             $sql="SELECT * from survey_responses ".
 		"WHERE survey_id='".$developer_survey_id."' AND user_id='".user_getid()."'";
 
-            $result=db_query($sql,1);
+            $result=db_query($sql);
 
             $html_my_survey = "";
             $html_my_survey .= $HTML->box1_top('Quick Survey',0);
