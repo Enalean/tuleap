@@ -308,7 +308,8 @@ function pm_show_tasklist ($result,$result_taskdeps,$offset,$url) {
 	$title_arr[]='Subproject';
 	$title_arr[]='Start Date';
 	$title_arr[]='End Date';
-	$title_arr[]='Assigned To';
+	$title_arr[]='Assignee';
+	$title_arr[]='Effort';
 	$title_arr[]='% Complete';
 	$title_arr[]='Depend On';
 	$title_arr[]='Status';
@@ -320,6 +321,7 @@ function pm_show_tasklist ($result,$result_taskdeps,$offset,$url) {
 	$links_arr[]=$url.'&order=start_date';
 	$links_arr[]=$url.'&order=end_date';
 	$links_arr[]=$url.'&order=user_name';
+	$links_arr[]=$url.'&order=hours';
 	$links_arr[]=$url.'&order=percent_complete';
 	$links_arr[]='#'; /* no sort on task deps */
 	$links_arr[]=$url.'&order=status_name';
@@ -358,6 +360,7 @@ function pm_show_tasklist ($result,$result_taskdeps,$offset,$url) {
 			'<TD>'.date('Y-m-d',$row['start_date']).'</TD>'.
 			'<TD>'. (($now>$row['end_date'])?'<B>* ':'&nbsp; ') . date('Y-m-d',$row['end_date']).'</TD>'.
 			'<TD>'.$row['user_name'].'</TD>'.
+			'<TD>'.sprintf("%10.2f",$row['hours']).'</TD>'.
 			'<TD>'.$row['percent_complete'].'%</TD>'.
 			'<TD>&nbsp;'.$row['task_deps'].'</TD>'.
 		        '<TD>'.$row['status_name'].'</TD>'.

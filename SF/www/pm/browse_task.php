@@ -45,13 +45,13 @@ if (isset($_status)) {
 /* ==================================================
   Memorize order by field as a user preference if explicitly specified.
   Automatically discard invalid field names.
-    - if ordering by priority, sort DESC
+    - if ordering by priority or effort then sort DESCending
     - if ordering by user assigned to then use the user table
     - if ordering by status assigned to then use the project_status table
     - all others sort cirteria are in the project_task table
  ================================================== */
 if ($order) {
-	if ($order=='project_task_id' || $order=='percent_complete' || $order=='summary' || $order=='start_date' || $order=='end_date' || $order=='priority' || $order=='user_name' || $order=='status_name'|| $order=='project_name') {
+	if ($order=='project_task_id' || $order=='percent_complete' || $order=='summary' || $order=='start_date' || $order=='end_date' || $order=='priority' || $order=='user_name' || $order=='status_name'|| $order=='project_name' || $order=='hours') {
 		if(user_isloggedin()) {
 			user_set_preference('pm_task_order', $order);
 		}
@@ -84,6 +84,10 @@ if ($order) {
 	break;	
     case 'end_date':
 	$order_lbl = 'End Date';
+	break;	
+    case 'hours':
+	$way = 'DESC';
+	$order_lbl = 'Effort';
 	break;	
     case 'user_name':
 	$tbl = 'user';
@@ -232,7 +236,7 @@ if (!pm_isvarany($group_project_id)) {
 $sql='SELECT project_task.priority,project_task.group_project_id,project_task.project_task_id,'.
 	'project_task.start_date,project_task.end_date,project_task.percent_complete,'.
         'project_task.summary,user.user_name,project_status.status_name,'.
-        'project_group_list.project_name '.
+        'project_group_list.project_name, project_task.hours '.
 	'FROM project_group_list, project_task, project_assigned_to, user,project_status '.
 	'WHERE '.$subproj_where.' project_task.project_task_id=project_assigned_to.project_task_id '.
         'AND user.user_id=project_assigned_to.assigned_to_id '.
