@@ -15,13 +15,14 @@ CVS trees should register on '.$GLOBALS['sys_name'].'.
 <I>username</I> with the proper values. Enter your site password when
 prompted.
 
-<P><FONT size="-1" face="courier">cvs -d:pserver:username@cvs.'.$row_grp['http_domain'].':/cvsroot/'.$row_grp['unix_group_name'].' login
+<P><span class="command">cvs -d:pserver:username@cvs.'.$row_grp['http_domain'].':/cvsroot/'.$row_grp['unix_group_name'].' login
 <BR>&nbsp;<BR>cvs -d:pserver:username@cvs.'.$row_grp['http_domain'].':/cvsroot/'.$row_grp['unix_group_name'].' co <I>modulename</I>
+</span>
 
 <!-- LJ no ssh access here
-</FONT><P><FONT size="-1" face="courier">export CVS_RSH=ssh
+<P><span class="command">export CVS_RSH=ssh
 <BR>&nbsp;<BR>cvs -z3 -d<I>developername</I>@cvs.'.$row_grp['http_domain'].':/cvsroot/'.$row_grp['unix_group_name'].' co <I>modulename</I>
-</FONT>-->';
+</span>-->';
 
-print '<P>'.help_button('VersionControlWithCVS.html',false,'[More on how to use CVS&hellip;]');
+print '<P>'.help_button('VersionControlWithCVS.html',false,'[More on how to use CVS &hellip;]');
 ?>

@@ -8,12 +8,11 @@
 //
 -->
 <center>
-<P class="footer">
-<font face="arial, helvetica" size="1" color="#FFFFFF">
+<br><span class="footer">
 The <?php echo $GLOBALS['sys_name']; ?> Website is a Xerox internal Web site. For the Internal Software Sharing Policy see the <a href="/docman/display_doc.php?docid=16&group_id=1" class="legallink">Xerox Code eXchange Policy</a>. For site wide terms of service, please see the <a href="/tos/tos.php" class="legallink"><?php echo $GLOBALS['sys_name']; ?> Terms of Service</a>. For privacy policy  
 information, please see the <a href="/tos/privacy.php" class="legallink"><?php echo $GLOBALS['sys_name']; ?> Privacy Policy</a>. The <?php echo $GLOBALS['sys_name']; ?> Web site heavily relies on the Open Source software developed by VA Linux Systems for their SourceForge Web site. The Web Front end owned by VA Linux Systems is copyright 
 1999-2000 VA Linux Systems, Inc.  All rights reserved.<BR>
 The design of the Web pages is derived from the graphics design of the <a href="http://www.ximian.com">Ximian</a> (formerly Helix Code) Web Site.
-</font>
+</span>
 </center>
 <BR>&nbsp;
