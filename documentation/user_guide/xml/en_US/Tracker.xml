@@ -658,7 +658,7 @@
 	<listitem>
 	  <para><emphasis role="bold">Cross-References</emphasis>:
 	  While typing a follow-up comment, you can use some special
-	  text pattern to refer to other artifacts, documents, or CVS and Subversion commits
+	  text pattern to refer to other artifacts or CVS commits
 	  (check-ins). These pattern while be automatically displayed
 	  as hyperlinks when the follow-up comment is displayed on the
 	  screen. See <xref linkend="ArtifactCrossReferencing" /> for
@@ -864,7 +864,7 @@
       <para>In addition to the rather formal way of expressing a
       depency between two artifacts presented in
       <xref linkend="ArtifactDependencies"/>, CodeX offers the ability to
-      cross-reference any artifact, document, or commit from within a follow-up
+      cross-reference any artifact from within a follow-up
       comment.</para>
 
       <para>When typing a follow-up comment, any text that follows the
@@ -891,26 +891,15 @@
 	<listitem>
 	  <para>You can also use the pattern &#34;commit #NNN&#34; in a
 	  follow-up comment to refer to the commit with ID number NNN
-	  as listed in your CVS or Subversion tracking database. This is very
+	  as listed in your CVS tracking database. This is very
 	  useful for instance when you want to close a defect or a
 	  task artifact with a reference to the corresponding source
 	  code modifications. Conversely your commit message can also
 	  contain a reference to the originating artifact therefore
 	  ensuring a two directional cross-reference between source
-	  code modifications and the related artifact. You may also
-          refer to a Subversion revision  using the "revision #NNN"
-          pattern. For more
-	  details about the CVS and Subversion tracking databases see 
-          <xref linkend="CVSWebInterface"/> and 
-          <xref linkend="SubversionBrowsingInterface"/> .</para>
-	</listitem>
-	<listitem>
-	  <para>Documents stored in the CodeX Document Manager may 
-          also be referenced with this mechanism:
-          simply type the "doc #NNN" pattern to automatically create
-          a link to the document with ID number NNN. Document IDs are
-          visible in the 'Docs' main page by hovering over a document title
-          with the mouse pointer.</para>
+	  code modifications and the related artifact. For more
+	  details about the CVS tracking database see <xref
+	      linkend="CVSWebInterface"/>.</para>
 	</listitem>
 	<listitem>
 	  <para>If the referenced artifact belongs to another project, or if
@@ -1310,6 +1299,39 @@ width="14.5cm" />
 	hand, no e-mail notification is sent in response to 
 	the import.</para>
     </section>
+
+    <para><tip><title>Tip: Excel and Regionals</title>
+    <para>
+    If a .csv file is opened in Excel, any change to the file 
+    (even something as simple as a column resizing) may cause 
+    Excel to modify and update the .csv file. Changes that may 
+    occur include: dates, times and numbers converted to 
+	the same format as those used by your system's regional 
+	settings, single line feeds converted to line feed 
+	and carriage return, extra commas appended to certain lines.
+    </para>
+	
+    <para>
+    The updated date format might not be compatible with the 
+    CodeX date format and potentially cause troubles when 
+    importing such updated CSV files back into CodeX.
+    On the other hand CodeX-exported CSV files might not open correctly
+    under Excel in certain Regionals.
+    </para>
+    
+    <para>
+    If you have a .csv file that either will not open correctly under 
+    Excel or was opened in Excel and will not import 
+	into CodeX please try the following:
+	Make sure all applications are closed. Change your system's 
+        regional settings (Start > Settings > Control Panel > Regional 
+	Options) to use the English with the following formats: 
+	Date = MM/dd/YYYY Time = hh:mm. Using Excel, open the 
+	.csv files that don't import, make a column width change, 
+	save the files and exit Excel. Go back and restore your 
+	original regional settings. Import the "fixed" .csv file into CodeX.
+    </para>
+    </tip></para>
 
   </section>
       

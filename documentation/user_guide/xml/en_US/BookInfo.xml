@@ -441,7 +441,7 @@
         </revremark>
       </revision>
       <revision>
-        <revnumber>2.7</revnumber>
+        <revnumber>2.6.20</revnumber>
 
         <date>3-Mar-2005</date>
 
@@ -455,23 +455,14 @@
         </revremark>
       </revision>
       <revision>
-        <revnumber>2.7.1</revnumber>
+        <revnumber>2.6.21</revnumber>
 
-        <date>16-Mar-2005</date>
+        <date>18-Mar-2005</date>
 
-        <authorinitials>Nicolas Guerin</authorinitials>
+        <authorinitials>Marie-Luise Schneider</authorinitials>
 
-        <revremark>Reworked document manager chapter after major update of this service.
-        </revremark>
-      </revision>
-      <revision>
-        <revnumber>2.7.2</revnumber>
-
-        <date>17-Mar-2005</date>
-
-        <authorinitials>Nicolas Guerin</authorinitials>
-
-        <revremark>Added information on document cross-referencing.
+        <revremark> Tracker chapter: Add a tip for handling csv files under 
+	Excel corresponding to SR 162 on partners.
         </revremark>
       </revision>
     </revhistory>
