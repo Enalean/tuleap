@@ -17,15 +17,15 @@ flush();
 // LJ in the sendmail command later in this script
 switch ($destination) {
 	case 'comm': 
-		$res_mail = db_query("SELECT email,user_name FROM user WHERE status='A' AND mail_va=1");
+		$res_mail = db_query("SELECT email,user_name FROM user WHERE status='A' AND mail_va=1 GROUP BY lcase(email)");
 		$to_name = 'Additional Community Mailings Subcribers';
 		break;
 	case 'sf':
-		$res_mail = db_query("SELECT email,user_name FROM user WHERE status='A' AND mail_siteupdates=1");
+		$res_mail = db_query("SELECT email,user_name FROM user WHERE status='A' AND mail_siteupdates=1 GROUP BY lcase(email)");
 		$to_name = 'Site Updates Subcribers';
 		break;
 	case 'all':
-		$res_mail = db_query("SELECT email,user_name FROM user WHERE status='A'");
+		$res_mail = db_query("SELECT email,user_name FROM user WHERE status='A' GROUP BY lcase(email)");
 		$to_name = 'All Users';
 		break;
 	case 'admin':
@@ -39,20 +39,20 @@ switch ($destination) {
 		$res_mail = db_query("SELECT user.email AS email,user.user_name AS user_name "
 		."FROM user,user_group WHERE "	
 		."user.user_id=user_group.user_id AND user.status='A' AND user_group.group_id=1 "
-		."GROUP by user.user_id");
+		."GROUP by lcase(email)");
 		$to_name = 'CodeX Administrators';
 		break;
 	case 'devel':
 		$res_mail = db_query("SELECT user.email AS email,user.user_name AS user_name "
 		."FROM user,user_group WHERE "
-		."user.user_id=user_group.user_id AND user.status='A' GROUP BY user.user_id");
+		."user.user_id=user_group.user_id AND user.status='A' GROUP BY lcase(email)");
 		$to_name = 'Project Developers';
 		break;
 	default:
 		exit_error('Unrecognized Post','cannot execute');
 }
 
-print "Query Complete. Beginning mailings to ".db_numrows($res_mail)."\n\n";
+print "Query Complete. Beginning mailings to ".db_numrows($res_mail)." distinct email addresses\n\n";
 flush();
 
 $rows=db_numrows($res_mail);
