@@ -151,15 +151,7 @@ if (db_numrows($result) > 0) {
 		} else {
 			echo '
 				<TR><TD VALIGN=TOP><B>';
-			/*
-				If it's a 1-5 question box and first in series, move Quest
-				number down a bit
-			*/
-			if (($question_type != $last_question_type) && (($question_type == '1') || ($question_type == '3'))) {
-				echo '&nbsp;<BR>';
-			}
-
-			echo $q_num.'&nbsp;&nbsp;&nbsp;&nbsp;<BR></TD><TD>';
+			echo $q_num.'&nbsp;&nbsp;-&nbsp;&nbsp;</B></TD><TD>';
 			$q_num++;
 		}
 
@@ -167,21 +159,15 @@ if (db_numrows($result) > 0) {
 			/*
 				This is a rædio-button question. Values 1-5.
 			*/
-			// Show the 1-5 markers only if this is the first in a series
 
-			if ($question_type != $last_question_type) {
-				echo '
-					<B>1 &nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; 5</B>';
-				echo '<BR>';
-
-			}
-
-			for ($j=1; $j<=5; $j++) {
-				echo '
+		    echo stripslashes(db_result($result, 0, 'question'));
+		    echo '<BR>';
+		    echo "<b>1</b>";
+		    for ($j=1; $j<=5; $j++) {
+			echo '
 					<INPUT TYPE="RADIO" NAME="_'.$quest_array[$i].'" VALUE="'.$j.'">';
-			}
-
-			echo '&nbsp; '.stripslashes(db_result($result, 0, 'question'));
+		    }
+		    echo "&nbsp;&nbsp;<b>5</b>";
 
 		} else if ($question_type == '2') {
 			/*
@@ -197,25 +183,20 @@ if (db_numrows($result) > 0) {
 				This is a Yes/No question.
 			*/
 
-			//Show the Yes/No only if this is the first in a series
-
-			if ($question_type != $last_question_type) {
-				echo '<B>Yes / No</B><BR>';
-			}
-
+			echo stripslashes(db_result($result, 0, 'question'));
+			echo '<br>';
 			echo '
-				<INPUT TYPE="RADIO" NAME="_'.$quest_array[$i].'" VALUE="1">';
+				<b>Yes</b> <INPUT TYPE="RADIO" NAME="_'.$quest_array[$i].'" VALUE="1">';
+			echo '&nbsp;&nbsp;';
 			echo '
-				<INPUT TYPE="RADIO" NAME="_'.$quest_array[$i].'" VALUE="5">';
-
-			echo '&nbsp; '.stripslashes(db_result($result, 0, 'question'));
+				 <b>No</b><INPUT TYPE="RADIO" NAME="_'.$quest_array[$i].'" VALUE="5">';
 
 		} else if ($question_type == '4') {
 			/*
-				This is a comment only.
+				This is a comment only. Bold by default
 			*/
 
-			echo '&nbsp;<BR><B>'.stripslashes(db_result($result, 0, 'question')).'</B>';
+			echo '<B>'.stripslashes(db_result($result, 0, 'question')).'</B>';
 			echo '
 				<INPUT TYPE="HIDDEN" NAME="_'.$quest_array[$i].'" VALUE="-666">';
 
@@ -226,7 +207,7 @@ if (db_numrows($result) > 0) {
 
 			echo stripslashes(db_result($result, 0, 'question')).'<BR>';
 			echo '
-				<INPUT TYPE="TEXT" name="_'.$quest_array[$i].'" SIZE=20 MAXLENGTH=70>';
+				<INPUT TYPE="TEXT" name="_'.$quest_array[$i].'" SIZE=30 MAXLENGTH=100>';
 
 		}
 		echo '</TD></TR>';
