@@ -6,9 +6,9 @@
 //
 // $Id$
 
-// This function returns a string of the date $value with the format $format and if this date is not set, return the default value $default_value
+// This function returns a string of the date $value with the format $format and
+// if this date is not set, return the default value $default_value
 function format_date($format,$value,$default_value = '-') {
-
     if ( $value == 0 ) {
         return $default_value;
     } else {
@@ -16,27 +16,17 @@ function format_date($format,$value,$default_value = '-') {
     }
 }
 
-//LJ The localtime function does not exist in PHP3
-//LJ here is a way to mimic the function. Probably twice
-//LJ the size it should be but at least it works !
-function localtime( $time, $is_associative=false) {
-
-	$tm_sec= date("s", $time);
-	$tm_min= date("i", $time);
-	$tm_hour= date("H", $time);
-	$tm_mday= date("d", $time);
-	$tm_mon= date("m", $time) - 1;
-	$tm_year=date("Y", $time) - 1900;
-	$tm_wday=date("w", $time);
-	$tm_yday=date("z", $time);
-	$tm_isdst=date("I", $time);
-
-	if ($is_associative) {
-		return array("tm_sec" => $tm_sec, "tm_min" => $tm_min, "tm_hour" => $tm_hour, "tm_mday" => $tm_mday, "tm_mon" => $tm_mon, "tm_year" => $tm_year, "tm_wday" => $tm_wday, "tm_yday" => $tm_yday, "tm_isdst" => $tm_isdst);
-	} else {
-		return array($tm_sec, $tm_min, $tm_hour, $tm_mday, $tm_mon, $tm_year, $tm_wday, $tm_yday, $tm_isdst);
-	}
-
+// Convert a date as used in the bug tracking system and other services (YYYY-MM-DD)
+// into a Unix time
+// Returns a list with two values: the unix time and a boolean saying whether the conversion
+// went well (true) or bad (false)
+function util_date_to_unixtime($date) {
+    $res = preg_match("/\s*(\d+)-(\d+)-(\d+)/",$date,$match);
+    if ($res == 0) { return array(0,false); }
+    list(,$year,$month,$day) = $match;
+    $time = mktime(0, 0, 0, $month, $day, $year);
+    //echo "<br>DBG Matching date $date -> year $year, month $month,day $day -> time = $time<br>";
+    return array($time,true);
 }
 
 function util_prep_string_for_sendmail($body) {
@@ -431,6 +421,28 @@ Function  ShowResultSet($result,$title="Untitled",$linkify=false)  {
 	}
 }
 
+// Clean up email address (remove spaces...) and put to lower case
+function util_cleanup_emails ($addresses) {
+    return strtolower(preg_replace("/\s/","", $addresses));
+}
+
+// Clean up email address (remove spaces...) and add @... if it is a simple
+// login name
+function util_normalize_email ($address) {
+    global $sys_users_host;
+    $address = util_cleanup_emails($address);
+    if (validate_email($address))
+	return $address;
+    else
+	return $address."@$sys_users_host";
+}
+
+// Clean up email address (remove spaces...) and split comma separated emails
+function util_split_emails($addresses) {
+    $addresses = util_cleanup_emails($addresses);
+    return split(',',$addresses);
+}
+
 // One Email Verification
 function validate_email ($address) {
 	return (ereg('^[-!#$%&\'*+\\./0-9=?A-Z^_`a-z{|}~]+'. '@'. '[-!#$%&\'*+\\/0-9=?A-Z^_`a-z{|}~]+\.' . '[-!#$%&\'*+\\./0-9=?A-Z^_`a-z{|}~]+$', $address));
@@ -438,8 +450,7 @@ function validate_email ($address) {
 
 // Verification of comma separated list of email addresses
 function validate_emails ($addresses) {
-    $addresses = str_replace(' ','',$addresses);
-    $arr = split(',',$addresses);
+    $arr = util_split_emails($addresses);
     while (list(, $addr) = each ($arr)) {
 	if (!validate_email($addr)) { return false; echo "nV: $addr";}
     }	    
