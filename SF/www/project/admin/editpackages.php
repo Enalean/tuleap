@@ -33,9 +33,6 @@ if ($submit) {
 	  if ($res && (db_numrows($res) > 0)) {
 	    $feedback .= ' This package name already exists. Please choose another name. ';
 	  } else {
-	    db_query("INSERT INTO frs_package (group_id,name,status_id) ".
-			"VALUES ('$group_id','". htmlspecialchars($package_name)  ."','1')");
-
 		//create a new package
 		db_query("INSERT INTO frs_package (group_id,name,status_id) ".
 			"VALUES ('$group_id','". htmlspecialchars($package_name)  ."','1')");
