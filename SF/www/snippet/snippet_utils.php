@@ -75,6 +75,7 @@ $SCRIPT_LANGUAGE[16] = 'MatLab';
 $SCRIPT_LANGUAGE[17] = 'Other Language';
 $SCRIPT_LANGUAGE[18] = 'LabView';
 $SCRIPT_LANGUAGE[19] = 'C#';
+$SCRIPT_LANGUAGE[20] = 'Postscript';
 
 function snippet_header($params) {
 	global $is_snippet_page,$DOCUMENT_ROOT,$HTML,$feedback;
