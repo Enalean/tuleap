@@ -66,7 +66,7 @@
 
       <para>Tasks can be created by any project member having the
       &#34;Tech&#34; level of permission on the Task Manager (see <xref
-      linkend="MemberPermissions" />). A task can be assigned to one or
+      linkend="UserPermissions" />). A task can be assigned to one or
       several project members and each of the project members will see the
       tasks in their own time sheet as soon as assignees are designated.</para>
 

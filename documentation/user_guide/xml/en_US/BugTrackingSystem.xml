@@ -644,7 +644,7 @@
           <listitem>
             <para>Deleting a CC name: users with Bug Administrator
             permissions in a given project (see <xref
-            linkend="MemberPermissions" />) can delete any entry in
+            linkend="UserPermissions" />) can delete any entry in
             the CC list for any bug of this project. All other users
             can delete CC entries that were either added by themselves
             or entries where the CC name matches their own name or
