@@ -1161,6 +1161,60 @@ class ArtifactField extends Error {
 			return false;
 		}
 		
+		if ( ($use_it == "1")&&($this->getUseIt() == "0") ) {
+			
+			// We need to insert with the default value, records in artifact_field_value table
+			// for the unused field
+		    $sql_artifacts='SELECT artifact_id '.
+			'FROM artifact '.
+			'WHERE group_artifact_id='. $group_artifact_id;
+			
+			//echo $sql_artifacts;
+			
+		    $res = db_query($sql_artifacts);
+		
+		    while ($artifacts_array = db_fetch_array($res)) {
+				$id = $artifacts_array["artifact_id"];
+	
+				// Check if there is an existing record
+				$sql = "SELECT * FROM artifact_field_value WHERE ".
+				"artifact_id = ".$id." AND field_id = ".$this->getID();
+				$res_artifact = db_query($sql);
+				
+				if ( db_numrows($res_artifact) <= 0 ) {
+					// Insert artifact_field_value record
+					$sql = "INSERT INTO artifact_field_value (field_id,artifact_id,";
+					$values = $this->getID().",".$id.",'".$this->getDefaultValue()."'";
+					
+					switch ( $this->getDataType() ) {
+					case $this->DATATYPE_TEXT:
+						$name = "valueText";
+						break;
+						
+					case $this->DATATYPE_INT:
+					case $this->DATATYPE_USER:
+						$name = "valueInt";
+						break;
+						
+					case $this->DATATYPE_FLOAT:
+						$name = "valueFloat";
+						break;
+						
+					case $this->DATATYPE_DATE:
+						$name = "valueDate";
+						break;
+					} // switch
+					
+					$sql .= $name . ") VALUES (" . $values . ")";
+					
+					$result=db_query($sql);
+					//echo $sql."<br>";
+				}
+									    	
+			} // while
+			
+		}
+	
 		// Reload the field
 		$this->fetchData($group_artifact_id,$field_name);
 
