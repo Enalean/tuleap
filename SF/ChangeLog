@@ -1,7 +1,2070 @@
 ------------------------------------------------------------------------------
+CODEX 1.5 (tag: CX_1_5) - 2002-08-13
+
+2002-08-13 12:38  ljulliar
+
+	* AUTHORS, CONTRIBUTING, INSTALL, README: Adapt the file to the
+	CodeX context (task #2140)
+
+2002-08-13 11:27  ljulliar
+
+	* db/CodeX.sql, www/export/rss_sfprojects.php: Field
+	xrx_export_ettm added to the groups table. value 0 or 1. 1 means it
+	can be made visible in the Xerox eTTM Software Inventory (task
+	#2139)
+
+2002-08-05 16:54  ljulliar
+
+	* utils/session.pl: [no log message]
+
+2002-08-04 15:18  ljulliar
+
+	* www/bugs/index.php: An empty array is now passsed as an argument
+	to receive changes even if it not applicable when a bug is first
+	created. We need it in the parameter list (bug #7554)
+	
+------------------------------------------------------------------------------
+CODEX 1.4 (tag: CX_1_4) - 2002-08-03
+
+2002-07-29 10:07  ljulliar
+
+	* www/include/osdn.php: if file /etc/motd.inc exists then display
+	it instead of the Network Gallery toolbar. motd.inc can contain
+	HTML tags.
+
+2002-07-10 19:11  ljulliar
+
+	* www/snippet/snippet_utils.php: C# language added to the snippet
+	language (request received on codex-admin)
+
+2002-07-10 11:09  ljulliar
+
+	* www/mail/: mail_utils.php, admin/index.php: ML name pattern fixed
+	(should projectname-xxxx for super user and mail admin header
+	created to be consistent with the other services (task #2015)
+
+2002-07-10 10:45  ljulliar
+
+	* www/mail/admin/index.php: CodeX super user can choose the full
+	name of a mailing list (task #2015)
+
+2002-07-01 10:59  ljulliar
+
+	* www/bugs/browse_bug.php: GIF icons are now all in PNG format.
+	msg.gif forgotten in this file.
+
+2002-06-28 18:28  ljulliar
+
+	* www/forum/forum_utils.php: Latest news showing next to a news
+	item are now project news not site news as it used to be. Alignment
+	with Savannah code.
+
+2002-06-26 16:29  ljulliar
+
+	* www/survey/: survey_data.php, survey_utils.php,
+	admin/add_question.php, admin/add_survey.php,
+	admin/browse_question.php, admin/browse_survey.php,
+	admin/edit_question.php, admin/edit_survey.php, admin/index.php,
+	admin/show_questions.php, admin/show_results.php,
+	admin/show_results_aggregate.php, admin/show_results_comments.php,
+	admin/update_question.php, admin/update_survey.php: Reorganization
+	of the Survey Manager source code to make it compliant with other
+	services. some aesthetic changes here and there in the way results
+	are presented (blan and none blank responses are now clearly shown)
+	(task #1979)
+
+2002-06-25 17:37  ljulliar
+
+	* www/survey/admin/show_results_aggregate.php: Now counting 'non
+	blank' answers only in the calculation of the average values in 1-5
+	and yes-No questions (bug #6185).
+
+2002-06-25 11:39  sbouhet
+
+	* www/: include/html.php, survey/survey_utils.php,
+	survey/admin/add_survey.php, survey/admin/browse_survey.php,
+	survey/admin/edit_survey.php, survey/admin/index.php,
+	survey/admin/update_survey.php: Add a column delete to the
+	Admin/Edit survey list and reformat the list.  Reorganize the code
+	associate (Task #1971).
+
+2002-06-24 14:53  sbouhet
+
+	* www/: sflogo.php, forum/forum.php, forum/forum_utils.php,
+	images/blank.png, images/clear.gif, images/clear.png,
+	images/codex_logo.png, images/msg.gif, images/msg.png,
+	images/pointer_down.png, images/pointer_left.png,
+	images/pointer_right.png, images/pointer_up.png, images/t.gif,
+	images/t.png, images/t2.gif, images/t2.png,
+	images/calendar/next.png, images/calendar/next_year.png,
+	images/calendar/prev.png, images/calendar/prev_year.png,
+	images/ic/bug16b.png, images/ic/cfolder15.png, images/ic/check.png,
+	images/ic/check16b.png, images/ic/cvs16b.png,
+	images/ic/docman16b.png, images/ic/ftp16b.png,
+	images/ic/home16.png, images/ic/home16b.png, images/ic/mail16b.png,
+	images/ic/manual16b.png, images/ic/monitor16b.png,
+	images/ic/ofolder15.png, images/ic/save.png, images/ic/save16b.png,
+	images/ic/survey16b.png, images/ic/taskman16b.png,
+	include/Layout.class, include/Theme.class, include/html.php,
+	include/osdn.php, new/index.php, search/index.php,
+	themes/classic/Theme.class, themes/classic/theme.php,
+	themes/codex/images/bottom_left_corner.gif,
+	themes/codex/images/bottom_left_corner.png,
+	themes/codex/images/bottom_right_corner.gif,
+	themes/codex/images/bottom_right_corner.png,
+	themes/codex/images/clear.gif, themes/codex/images/clear.png,
+	themes/codex/images/codex_banner_lc.png,
+	themes/codex/images/left_border.gif,
+	themes/codex/images/left_border.png,
+	themes/codex/images/right_border.gif,
+	themes/codex/images/right_border.png,
+	themes/codex/images/top_border.gif,
+	themes/codex/images/top_border.png,
+	themes/codex/images/upper_left_corner.gif,
+	themes/codex/images/upper_left_corner.png,
+	themes/codex/images/upper_right_corner.gif,
+	themes/codex/images/upper_right_corner.png: Remove all the GIF
+	files used in the CodeX project and convert it in PNG. Recreate
+	some PNG files with a real transparency (Task # 1910)
+
+2002-06-24 14:46  ljulliar
+
+	* www/: bugs/detail_bug.php, project/showfiles.php: Some
+	format_date() calls forgotten in task #1852
+
+2002-06-21 19:23  ljulliar
+
+	* www/pm/: pm_data.php, pm_utils.php, task.php,
+	admin/other_settings.php, admin/personal_settings.php: move the
+	require bug_data.php needed by pm_data.php from pm_data to the
+	upper task scripts. bug_data.php was initially included in
+	pm_data.php (introduced while implementing task #1900) which caused
+	a double inclusion in project/export/index.php for full DB export.
+	Ideally we need the PHP4 require_once statement to fix this kind of
+	problem but PHP3 doesn't have it.  (bug #6190).
+
+2002-06-21 10:22  ljulliar
+
+	* www/survey/admin/show_results_aggregate.php: Oops... forgot to
+	remove the debug flag for a SQL query (bug #6185).
+
+2002-06-21 10:17  ljulliar
+
+	* www/pm/browse_task.php: Stupid mistake (wrong variable) used when
+	formatting the HTML title causing the title to show "Error not
+	found" instead of real values (bug #6186).
+
+2002-06-21 09:58  ljulliar
+
+	* www/: include/utils.php, survey/admin/show_results_aggregate.php:
+	1-5 and Yes/No type of questions were wrongly formatted when there
+	was no only empty responses given by user (bug #6185).
+
+2002-06-20 16:10  sbouhet
+
+	* www/pm/admin/index.php: Bug fix - Task # 1904
+
+2002-06-20 15:52  sbouhet
+
+	* db/CodeX.sql, www/pm/index.php, www/pm/pm_data.php,
+	www/pm/pm_utils.php, www/pm/admin/index.php: Ability to reorder
+	subprojects in the Task manager (Task #1904)
+
+2002-06-20 14:29  sbouhet
+
+	* www/pm/pm_data.php: Fix a bug in the require statement. Set an
+	absolute path with $DOCUMENT_ROOT
+
+2002-06-20 12:10  ljulliar
+
+	* www/bugs/mod_bug.php: Reference to originating bug added in the
+	task description of a new task based upon an existing bug. This
+	code was mistakenly erased when task #1900 was committed (task
+	#1900)
+
+2002-06-20 11:05  sbouhet
+
+	* www/: account/index.php, bugs/browse_bug.php, bugs/bug_data.php,
+	bugs/bug_utils.php, bugs/mod_bug.php, bugs/reporting/index.php,
+	docman/doc_utils.php, forum/forum.php, forum/forum_utils.php,
+	forum/message.php, include/stats_function.php, include/utils.php,
+	news/news_utils.php, patch/detail_patch.php, patch/mod_patch.php,
+	patch/patch_utils.php, people/people_utils.php, people/viewjob.php,
+	pm/detail_task.php, pm/pm_utils.php, search/index.php,
+	snippet/detail.php, softwaremap/trove_list.php,
+	support/detail_support.php, support/mod_support.php,
+	support/support_utils.php: date() PHP function call replaced by
+	CodeX specific function format_date() which allow date value 0
+	(Unix time) to be formatted in a specific way (default is '-')
+	(task #1852)
+
+2002-06-20 10:22  sbouhet
+
+	* www/: pm/add_task.php, pm/pm_data.php, pm/pm_utils.php,
+	pm/task.php, bugs/bug_utils.php, bugs/mod_bug.php: Add a 'Create
+	Task' function in the bug tracker to derive a new task from an
+	existing bug (task #1900)
+
+2002-06-19 16:29  sbouhet
+
+	* www/project/: admin/editreleases.php,
+	admin/project_admin_utils.php, export/project_export_utils.php:
+	Format undefined date (Task #1852)
+
+2002-06-19 16:29  sbouhet
+
+	* www/project/: confirm_download.php, showfiles.php: Show a dialog
+	box with the CodeX policy for the software download (Task #1774)
+
+2002-06-19 11:44  ljulliar
+
+	* www/contact.php: Badly formed mailto: URL causing the CodeX user
+	to be unable to join the CodeX Team via email (bug #6083).
+
+2002-06-18 17:43  ljulliar
+
+	* www/: docs/site/about_codex.php, include/Layout.class,
+	register/license.php: Link to CodeX Policy updated to point to the
+	document in the CodeX Document Manager (bug #5964)
+
+2002-06-17 11:36  ljulliar
+
+	* www/forum/admin/index.php: Forum creator in now offered (and
+	strongly invited to) monitor the newly created forum. This is to
+	avoid orphan Forums whereby project admins create new forums and
+	are not aware of incoming traffic (task #1366).
+
+2002-06-17 11:16  ljulliar
+
+	* www/: forum/forum_utils.php, forum/monitor.php,
+	register/confirmation.php: The project creator (initial project
+	admin) now monitors the default forums at project creation time.
+	New functions created in forum_utils.php (forum_is_monitored,
+	forum_add_monitor, forum_delete_monitor). The monitor.php script
+	has also bee reworked to use these new functions (task #1365)
+
+2002-06-12 09:18  ljulliar
+
+	* www/my/index.php: Missing bracket causing a syntax error at the
+	end of the file
+
+2002-06-12 08:54  ljulliar
+
+	* www/pm/pm_data.php: Forgot to remove debugging flag for db_query
+	(task #1307)
+
+2002-06-11 10:19  ljulliar
+
+	* db/CodeX.sql: New field pm_preamble introduced (task #1307)
+
+2002-06-11 10:10  ljulliar
+
+	* www/: include/utils.php, pm/add_task.php, pm/mod_task.php,
+	pm/pm_data.php, pm/pm_utils.php, pm/admin/index.php,
+	pm/admin/other_settings.php, pm/admin/personal_settings.php: Task
+	Mgr now allows to specify whether a new task takes today's date as
+	the default start and end dates or if these two fields should be
+	blank (undefined) (task #1307)
+
+2002-06-07 16:58  ljulliar
+
+	* db/CodeX.sql: Typo in the SQL statements previously modified (bug
+	#3561)
+
+2002-06-07 16:28  ljulliar
+
+	* www/include/user.php: 1.78Fix the ever growing user_preference
+	table by making the user_id+preference_name columns a unique index
+	(primary) fix inconsistencies in cached user preferences after a
+	user_set_preference. (bug #3561)
+
+2002-06-07 16:28  ljulliar
+
+	* db/CodeX.sql: 1.10Fix the ever growing user_preference table by
+	making the user_id+preference_name columns a unique index (primary)
+	fix inconsistencies in cached user preferences after a
+	user_set_preference. (bug #3561)
+
+2002-06-05 14:34  ljulliar
+
+	* www/support/: add_support.php, detail_support.php, index.php,
+	postadd_comment.php, support_utils.php: Support Request changes
+	made by non project members are weren't correctly notified.  The
+	"latest modification" section at the top of the email notification
+	was missing (bug #5629)
+
+2002-06-05 11:14  ljulliar
+
+	* www/bugs/: add_bug.php, bug_utils.php, detail_bug.php, index.php,
+	postadd_comment.php: Bug changes made by non project members are
+	weren't correctly notified.  The "latest modification" section at
+	the top of the email notification was missing. They could not
+	attach files to existing bug either
+
+2002-06-05 10:48  ljulliar
+
+	* www/support/: detail_support.php, mod_support.php: Fine tuning to
+	harmonize SR manager screens layout with Bug Tracker (not logged in
+	message, horizontal rules...)
+
+2002-06-05 10:28  ljulliar
+
+	* www/support/support_utils.php: Fix a typo in the URL pointing to
+	the original support request on CodeX (bug #5627)
+
+2002-06-03 18:17  ljulliar
+
+	* www/include/osdn.php: Fixed CodeX Site malformed URL.
+
+2002-06-03 18:09  ljulliar
+
+	* www/include/utils.php: malformed was stopping before the '&' char
+	when theree was a URL with parameters in it. THis bug was
+	introduced in 1.128 when applying a bug fix from Savannah
+
+2002-06-03 17:35  ljulliar
+
+	* www/: project/export/index.php,
+	project/export/project_export_utils.php,
+	project/export/support_request_export.php, support/index.php,
+	support/postadd_support.php, support/postmod_support.php,
+	support/support_data.php, support/support_utils.php: Support
+	Request data are now available for export. A new script has been
+	added in project/export and it also implied renaming mail_followup
+	in support/support_utils.php into sr_utils_mail_followup because of
+	a name conflict with the include from bugs/bug_utils.php
+
+2002-06-03 11:27  ljulliar
+
+	* www/support/support_data.php: Addendum to previous commit. SR Mgr
+	email notification showed values id for status, category, etc.
+	instead of the human readable value (task #1216)"
+
+2002-06-03 10:51  ljulliar
+
+	* www/support/: add_support.php, browse_support.php,
+	detail_support.php, index.php, mod_support.php,
+	postadd_comment.php, support_data.php, support_utils.php,
+	admin/index.php: Email notification of SR manager now showing the
+	changes compared to previous state like the Bug Tracking System
+	does. SR browser screen layout also revised to look like
+	patch/task/bug browsers (task #1216)
+
+2002-06-03 10:03  ljulliar
+
+	* www/my/index.php: Private projects now showing in the Project
+	section of the personal page. Marked with an (*) sign (task #1805)
+
+2002-05-30 10:14  ljulliar
+
+	* www/pm/: browse_task.php, pm_utils.php: task count reported by
+	the task browser is not the number of SQL rows but the number of
+	merged rows (bug #5492)
+
+2002-05-30 09:29  ljulliar
+
+	* www/bugs/bug_utils.php: Test on file attachment size fixed
+
+2002-05-29 14:23  ljulliar
+
+	* www/bugs/: bug_utils.php, detail_bug.php, index.php, mod_bug.php:
+	Files attached to bugs are now listed in the email notification in
+	the full bug snapshot. URL to attachment also added in 'latest
+	modification' section (task #1804)
+
+2002-05-29 10:41  ljulliar
+
+	* db/: bug_fields_changes.sql, bug_fields_defaults.sql: New field
+	'Release' added to the Savannah Bug Tracking System (task #1803)
+
+2002-05-28 15:41  ljulliar
+
+	* etc/local.inc, www/contact.php, www/account/login.php,
+	www/account/pending-resend.php, www/admin/massmail.php,
+	www/mail/admin/index.php, www/project/admin/editaliases-new.php,
+	www/register/category.php, www/register/confirmation.php,
+	www/register/license.php, www/register/projectname.php: Hardcoded
+	codex-admin and codex-contact email replaced with $sys_email_...
+	parameters in etc/local.inc (task #1801)
+
+2002-05-24 11:06  ljulliar
+
+	* etc/local.inc, www/about.php, www/contact.php, www/index.php,
+	www/staff.php, www/thanks.php,
+	www/account/change_email-complete.php,
+	www/account/change_email-confirm.php, www/account/change_email.php,
+	www/account/change_timezone.php, www/account/first.php,
+	www/account/index.php, www/account/login.php,
+	www/account/lostpw-confirm.php, www/account/lostpw.php,
+	www/account/pending-resend.php, www/account/register.php,
+	www/account/verify.php, www/admin/admin_utils.php,
+	www/admin/groupedit-add.php, www/admin/grouplist.php,
+	www/admin/index.php, www/admin/massmail.php,
+	www/admin/massmail_execute.php, www/bugs/bug_utils.php,
+	www/cvs/index.php, www/docs/site/about_codex.php,
+	www/docs/site/index.php, www/export/index.php,
+	www/export/rss_sfnewreleases.php, www/export/rss_sfnews.php,
+	www/export/rss_sfprojects.php, www/forum/forum_utils.php,
+	www/help/bug_admin_field_usage_list.php, www/help/index.php,
+	www/include/account.php, www/include/features_boxes.php,
+	www/include/help.php, www/include/menu.php, www/include/osdn.php,
+	www/include/proj_email.php, www/include/project_home.php,
+	www/mail/index.php, www/mail/admin/index.php,
+	www/news/news_utils.php, www/news/submit.php,
+	www/news/admin/index.php, www/pm/pm_utils.php,
+	www/project/download.php, www/project/admin/editreleases.php,
+	www/project/admin/group_trove.php,
+	www/project/export/bug_bug_deps_export.php,
+	www/project/export/bug_export.php,
+	www/project/export/bug_history_export.php,
+	www/project/export/bug_task_deps_export.php,
+	www/project/export/index.php,
+	www/project/export/survey_responses_export.php,
+	www/project/export/task_assigned_to_export.php,
+	www/project/export/task_export.php,
+	www/project/export/task_history_export.php,
+	www/project/export/task_task_deps_export.php,
+	www/register/basicinfo.php, www/register/confirmation.php,
+	www/register/form.php, www/register/index.php,
+	www/register/license.php, www/register/requirements.php,
+	www/register/why.php, www/stats/projects.php,
+	www/survey/privacy.php, www/survey/survey_utils.php,
+	www/top/index.php, www/top/toplist.php, www/tos/privacy.php,
+	www/tos/tos_text.php: Hardcoded 'CodeX' name replaced by $sysname
+	parameter (task #1800)
+
+2002-05-23 16:41  ljulliar
+
+	* www/include/tos_text.php: This file is already in the www/tos
+	directory. Duplicate Removed
+
+2002-05-23 11:31  ljulliar
+
+	* db/bug_fields_changes.sql, db/bug_fields_defaults.sql,
+	www/bugs/add_bug.php, www/bugs/detail_bug.php,
+	www/bugs/mod_bug.php: keyword field added to bug tracker and long
+	fields are now displayed alone on a new line (bug #4867)
+
+2002-05-15 23:20  ljulliar
+
+	* www/export/rss_sfprojects.php: CSV format now exports project
+	admin email addresses as well (task #1762)
+
+2002-05-12 16:22  ljulliar
+
+	* www/include/utils.php: email address links stops when there is an
+	'>' or a &gt; at the end (Savannah bug #379)
+
+2002-05-08 23:06  ljulliar
+
+	* www/images/: pointer_down.png, pointer_left.png,
+	pointer_right.png, pointer_up.png: Background saved as transparent.
+	Works better with IE
+
+2002-05-08 22:15  ljulliar
+
+	* www/include/session.php: Revert to no period in domain name
+	because it breaks Netscape 4.7x and it doesn't comply with cookie
+	specs. Must be a Mozilla 1.0 RC1 bug
+
+2002-05-07 17:21  ljulliar
+
+	* www/include/session.php: Include . for domain cookies - needed by
+	Mozilla 1.0 RC1
+
+2002-05-02 14:21  ljulliar
+
+	* www/mail/index.php: HTML reformatting and link to ML admin added
+
+2002-05-02 13:57  ljulliar
+
+	* utils/mailing_lists_create.pl: New mailing deactivates monthly
+	reminders (CodeX users complained about password in clear)
+
+2002-05-02 10:09  ljulliar
+
+	* www/my/index.php: URL to monitored forums and file release works
+	again (bug #4753)
+
+2002-04-30 09:49  ljulliar
+
+	* www/my/index.php: Show Open SR only (Savannah bug #143)
+
+2002-04-29 11:40  ljulliar
+
+	* www/my/index.php: [Admin] pointer added next to project name
+
+2002-04-29 10:35  ljulliar
+
+	* etc/local.inc: Version with no sensitive information in it
+
+2002-04-29 09:56  ljulliar
+
+	* www/my/my_utils.php: $ sign forgotten in new variable
+
+2002-04-29 09:47  ljulliar
+
+	* www/: images/pointer_down.png, images/pointer_left.png,
+	images/pointer_right.png, images/pointer_up.png, my/index.php,
+	my/my_utils.php: Personal page section can be expanded/collapsed
+	(task #1665)
+
+2002-04-25 10:49  ljulliar
+
+	* www/bugs/bug_data.php: Bug fields with 'system' scope can also be
+	customized at project level now (bug #4521)
+
+2002-04-24 19:25  ljulliar
+
+	* www/bugs/bug_utils.php: User names hyperlinks use util_user_link
+	fucntion
+
+2002-04-24 19:20  ljulliar
+
+	* www/: include/utils.php, patch/patch_utils.php, pm/pm_utils.php,
+	support/support_utils.php: User names are now hyperlinks + URL
+	detection in Support messages
+
+2002-04-24 17:47  ljulliar
+
+	* utils/: new_parse.pl, underworld-dummy/dump_database.pl: email
+	now included in realname password field (for CVS log_accum email
+	notification
+
+2002-04-24 16:59  ljulliar
+
+	* www/survey/admin/: show_results_aggregate.php,
+	show_results_comments.php: question number now showing next to the
+	title in "View comments" (bug #4417)
+
+2002-04-24 15:45  ljulliar
+
+	* www/bugs/bug_utils.php: double quote needed - typo
+
+2002-04-24 14:32  ljulliar
+
+	* www/bugs/: bug_data.php, bug_utils.php, index.php: No changes
+	header in new bug notification,  bug fields added/reformatted in
+	full snapshot and code clean-up (bug #4454,4455)
+
+2002-04-24 09:12  ljulliar
+
+	* www/bugs/bug_data.php: Change date now showing timezone (task
+	#1216)
+
+2002-04-23 15:44  ljulliar
+
+	* www/bugs/: bug_data.php, bug_utils.php, index.php: Bug email
+	notifications now shows incremental changes (task #1216)
+
+2002-04-23 15:44  ljulliar
+
+	* www/include/utils.php: Function for differences between 2 arrays
+	(both ways)
+
+2002-04-22 13:37  ljulliar
+
+	* www/include/utils.php: Backquote must be escaped in email body
+	(Savannah bug #12)
+
+2002-04-19 14:29  ljulliar
+
+	* www/bugs/bug_data.php: increase list of bug to 200 items in
+	dependency box
+
+2002-04-19 12:41  ljulliar
+
+	* db/: bug_fields_changes.sql, bug_fields_defaults.sql: SQL and
+	comment fixes
+
+2002-04-19 09:08  ljulliar
+
+	* db/bug_fields_changes.sql: preferences_value is now much longer
+	becasue of long URLs in the new bug tracking system
+
+2002-04-15 09:12  ljulliar
+
+	* www/patch/: detail_patch.php, mod_patch.php, patch_utils.php:
+	Wrong URL argument for patch_id (SR #100216, #100217)
+
+2002-04-15 08:46  ljulliar
+
+	* www/project/export/: bug_export.php, project_export_utils.php:
+	Submitted by field was not exported - Introduced with the 2nd
+	enhanced bug tracking system (bug #3662)
+
+2002-04-15 08:35  ljulliar
+
+	* www/bugs/admin/other_settings.php: Email notification field
+	extended to 255 chars (bug #3609)
+
+2002-04-15 08:18  ljulliar
+
+	* db/bug_fields_defaults.sql: Forgot to change default values - 2nd
+	enhanced CodeX BTS (task #1522,#1526,#1527,#1592)
+
+2002-04-05 13:42  ljulliar
+
+	* www/bugs/browse_bug.php: Make sure multisort and advanced search
+	flags are always 0 or 1
+
+2002-04-05 11:56  ljulliar
+
+	* www/: bugs/browse_bug.php, forum/expand.php,
+	patch/browse_patch.php, pm/browse_task.php,
+	support/browse_support.php: set user pref only if it has changed
+	(bug #3561)
+
+2002-04-05 09:36  ljulliar
+
+	* db/: bug_fields_changes.sql, bug_fields_defaults.sql:
+	show_on_query/result columns no longer needed (task #1592)
+
+2002-04-04 15:14  ljulliar
+
+	* db/bug_fields_changes.sql: attachment field is actually called
+	file (task #1413)
+
+2002-04-04 15:05  ljulliar
+
+	* db/bug_fields_changes.sql, www/bugs/add_bug.php,
+	www/bugs/bug_data.php, www/bugs/bug_utils.php,
+	www/bugs/detail_bug.php, www/bugs/download.php, www/bugs/index.php,
+	www/bugs/mod_bug.php: Files can be attached to bugs (task #1413)
+
+2002-03-26 11:23  ljulliar
+
+	* www/bugs/bug_utils.php: Calendar icon is PNG not GIF
+
+2002-03-26 07:24  ljulliar
+
+	* db/bug_fields_changes.sql: wrong profile_id index, it's report_id
+
+2002-03-25 16:11  ljulliar
+
+	* www/bugs/browse_bug.php, www/bugs/bug_data.php,
+	www/bugs/bug_utils.php, www/bugs/detail_bug.php,
+	www/bugs/admin/field_usage.php, www/bugs/admin/field_values.php,
+	www/bugs/admin/index.php, www/bugs/admin/reports.php,
+	db/bug_fields_changes.sql, db/bug_fields_defaults.sql: 2nd enhanced
+	Bug Tracking System (task #1522,#1526,#1527,#1592)
+
+2002-03-25 16:09  ljulliar
+
+	* www/help/browse_bug_query_field.php: Some reformatting
+
+2002-03-25 16:08  ljulliar
+
+	* www/help/browse_bug_sort.php: reformatting and up/down arrows are
+	PNG format
+
+2002-03-25 16:06  ljulliar
+
+	* www/include/help.php: Change bg color and add banner argument
+	(task #256)
+
+2002-03-25 16:06  ljulliar
+
+	* www/include/Layout.class: Increase help window size (task #256)
+
+2002-03-25 16:05  ljulliar
+
+	* www/sourceforge.css: Change style to fit CodeX look'n feel (task
+	#256)
+
+2002-03-25 16:04  ljulliar
+
+	* www/images/: dn_arrow.png, up_arrow.png: Initial revision (task
+	#1527)
+
+2002-03-25 15:45  ljulliar
+
+	* www/: images/calendar/cal.png, images/calendar/next.png,
+	images/calendar/next_year.png, images/calendar/prev.png,
+	images/calendar/prev_year.png, include/calendar.js: Initial
+	revision (task #1526)
+
+2002-03-25 15:41  ljulliar
+
+	* www/help/: browse_bug_query_field.php, browse_bug_sort.php,
+	bug_admin_field_usage_list.php, bug_admin_field_usage_settings.php,
+	bug_admin_field_values_field_list.php,
+	bug_admin_field_values_list.php,
+	bug_admin_field_values_settings.php, bug_admin_report_list.php,
+	bug_admin_report_settings.php: Initial revision (task
+	#1526,#1527,#1592)
+
+2002-03-13 08:50  ljulliar
+
+	* www/project/export/.htaccess: Set PHP execution time to 30
+	minutes for big data export (bug #2886)
+
+2002-03-11 18:10  ljulliar
+
+	* www/: my/index.php, project/export/project_export_utils.php:
+	Rename Priority to Severity in CodeX BTS (task #1591)
+
+2002-03-09 20:57  ljulliar
+
+	* db/bug_fields_changes.sql, db/bug_fields_defaults.sql,
+	www/bugs/browse_bug.php, www/bugs/bug_utils.php,
+	www/bugs/mod_filters.php, www/bugs/admin/field_usage.php,
+	www/bugs/admin/field_values.php, www/bugs/admin/index.php,
+	www/include/utils.php: Rename Priority to Severity in CodeX BTS and
+	priority now contains timing information and can be customized
+	(task #1591)
+
+2002-03-01 15:01  ljulliar
+
+	* www/my/index.php: Trash icons moved and confim before deletion
+	(task #1573)
+
+2002-02-26 11:11  ljulliar
+
+	* db/CodeX.sql, www/snippet/addversion.php, www/snippet/detail.php,
+	www/snippet/download.php, www/snippet/snippet_utils.php,
+	www/snippet/submit.php: Code Snippet can now be uploaded in binary
+	format (#task 1548)
+
+2002-02-25 17:09  ljulliar
+
+	* db/CodeX.sql, www/patch/add_patch.php,
+	www/patch/browse_patch.php, www/patch/download.php,
+	www/patch/mod_patch.php, www/patch/patch_utils.php,
+	www/patch/postadd_patch.php, www/patch/postmod_patch.php: Patch can
+	now be uploaded in binary format (#task 1549)
+
+2002-02-25 11:12  ljulliar
+
+	* www/project/admin/editgroupinfo.php: Email notification rules
+	moved to Bug,SR,Patch modules (task #1524, #1525, #1523)
+
+2002-02-25 10:17  ljulliar
+
+	* db/CodeX.sql: Introductory msg added to patch mgr and email
+	notification migrated in patch config (task #1525)
+
+2002-02-22 17:05  ljulliar
+
+	* www/pm/: pm_utils.php, admin/index.php: Make the Task Mgr Admin
+	interface consistent with Bug, SR and Patch Mgr (task #1524, #1525,
+	#1523)
+
+2002-02-22 16:45  ljulliar
+
+	* www/patch/: add_patch.php, patch_utils.php, admin/index.php:
+	Introductory msg added to patch mgr and email notification migrated
+	in patch config (task #1525)
+
+2002-02-22 16:26  ljulliar
+
+	* www/support/admin/index.php: Typo correction
+
+2002-02-22 16:01  ljulliar
+
+	* db/CodeX.sql, www/support/add_support.php,
+	www/support/support_utils.php, www/support/admin/index.php:
+	Introductory msg added to SR mgr and email notification migrated in
+	SR config (task #1524)
+
+2002-02-22 14:44  ljulliar
+
+	* www/bugs/admin/other_settings.php: Some code cleanup
+
+2002-02-22 14:44  ljulliar
+
+	* www/include/utils.php: Validate comma separated emails
+
+2002-02-22 12:04  ljulliar
+
+	* www/bugs/add_bug.php: Preamble now showing on bug submission form
+	(task #1523)
+
+2002-02-22 11:48  ljulliar
+
+	* db/CodeX.sql, www/bugs/bug_utils.php, www/bugs/admin/index.php,
+	www/bugs/admin/other_settings.php: Bug submission preamble and
+	email notification rules now in Bug Admin module (task #1523)
+
+2002-02-21 16:45  ljulliar
+
+	* www/include/features_boxes.php: Sort SQL results for releases
+	from newest to oldest
+
+2002-02-21 16:42  ljulliar
+
+	* www/include/features_boxes.php: Show at least 10 items. Remove
+	unnecessary <br>
+
+2002-02-21 16:25  ljulliar
+
+	* www/include/features_boxes.php: Newest releases added in the side
+	bar
+
+2002-02-20 17:49  ljulliar
+
+	* www/export/: index.php, rss_sfprojects.php: Export more project
+	information in CSV format for Xerox Software inventory (task #1505)
+
+2002-02-20 12:04  ljulliar
+
+	* www/snippet/: browse.php, detail.php, snippet_utils.php: Snippet
+	ID/Version and UI clarification (bug #148)
+
+2002-02-18 17:40  ljulliar
+
+	* www/my/index.php: ALT text messages added on trash icons to avoid
+	confusion with the real link next to it
+
+2002-02-18 12:06  ljulliar
+
+	* utils/default_page.php: Red X logo now stored in CodeX images.
+	Bazaar machine has passed away
+
+2002-02-18 12:05  ljulliar
+
+	* www/images/redx_medium_trans.gif: First version
+
+2002-02-18 11:30  ljulliar
+
+	* db/bug_fields_changes.sql, db/bug_fields_defaults.sql,
+	www/bugs/bug_data.php, www/bugs/admin/field_usage.php: 2 new bug
+	fields of type text added and one modified in addition to the same
+	fields of type select box (bug #2287)
+
+2002-02-18 09:48  ljulliar
+
+	* www/support/support_utils.php: SR assignee now receives email
+	notification of SR changes (bug #2254)
+
+2002-02-10 00:02  ljulliar
+
+	* www/: bugs/browse_bug.php, bugs/bug_data.php, bugs/bug_utils.php,
+	project/export/bug_export.php,
+	project/export/project_export_utils.php: Removed the (too) many
+	joins on bug search and export. Now using PHP caching mechanism
+	(bug #2041)
+
+2002-02-07 19:46  ljulliar
+
+	* www/account/index.php: / changed with or. Better english
+
+2002-02-06 20:47  ljulliar
+
+	* www/survey/admin/show_results_aggregate.php: Relax group_id
+	checking on questions to be able to use questions from other
+	projects (bug #1937)
+
+2002-02-03 20:07  ljulliar
+
+	* www/survey/admin/show_results_aggregate.php: In 1-5 question type
+	don't graph empty results. Was hidding the last (and real!) graph
+	bar
+
+2002-01-29 13:30  ljulliar
+
+	* www/include/osdn.php: AlphaX URL now points to internal site
+
+2002-01-28 12:13  ljulliar
+
+	* www/: write_cache.php, include/pre.php, include/session.php: Code
+	simplification and setcookie update for multiple servers on the
+	same machine (task #1404)
+
+2002-01-23 11:55  ljulliar
+
+	* utils/underworld-root/db_project_cleanup.pl,
+	www/include/account.php, www/project/admin/index.php: Pending
+	account cannot be added to projects. Expiration delay for pending
+	account augmented to 2 weeks (bug #1549)
+
+2002-01-22 14:49  ljulliar
+
+	* www/include/osdn.php: Open Source at Xerox link updated
+
+2002-01-18 09:10  ljulliar
+
+	* www/: images/favicon.ico, include/Layout.class: Favicon added to
+	the site
+
+2002-01-17 18:20  ljulliar
+
+	* www/bugs/bug_data.php: Empty bug field values not allowed (bug
+	#419)
+
+2002-01-15 15:56  ljulliar
+
+	* www/index.php: Typo correction
+
+2002-01-15 15:42  ljulliar
+
+	* utils/include.pl, www/index.php, www/write_cache.php,
+	www/include/cache.php, www/include/pre.php,
+	www/include/pre_vhosts.php, www/include/squal_pre.php: multiple
+	servers can run on the same machine (task #1404)
+
+2002-01-11 16:59  ljulliar
+
+	* db/SourceForge.sql: User preferences string can be longer than
+	255 chars (bug #1289)
+
+2002-01-11 15:04  ljulliar
+
+	* www/survey/admin/show_results_comments.php: Survey questions can
+	now include HTML (task #1324)
+
+2002-01-11 15:00  ljulliar
+
+	* www/survey/admin/show_results_aggregate.php: Survey questions can
+	now include HTML (task #1324)
+
+2002-01-10 13:04  ljulliar
+
+	* utils/new_parse.pl: No need to print error msg if user already
+	deleted
+
+2002-01-08 16:06  ljulliar
+
+	* www/project/export/task_history_export.php: Changed end of line
+	to \n for CSV record to avoid empty rows (bug #813 re-opened)
+
+2002-01-08 15:55  ljulliar
+
+	* www/project/export/: bug_bug_deps_export.php, bug_export.php,
+	bug_history_export.php, bug_task_deps_export.php,
+	project_export_utils.php, survey_responses_export.php,
+	task_assigned_to_export.php, task_export.php,
+	task_task_deps_export.php: Changed end of line to \n for CSV record
+	to avoid empty rows (bug #813 re-opened)
+
+2002-01-08 13:53  ljulliar
+
+	* www/project/export/bug_export.php: details (not summary) field is
+	of type TEXT (bug #1220)
+
+2002-01-08 10:40  ljulliar
+
+	* www/account/login.php: Login name field automatically gets the
+	focus for easier typing
+
+2002-01-08 09:32  ljulliar
+
+	* db/: bug_fields_changes.sql, bug_fields_defaults.sql: New bug
+	field workproduct_version added (bug #842)
+
+2001-12-21 15:19  ljulliar
+
+	* utils/underworld-dummy/aliases.zone: codex-admin is now a mailing
+	list not an alias
+
+2001-12-20 14:04  ljulliar
+
+	* www/survey/admin/: add_question.php, edit_question.php: Question
+	field changed to TEXTAREA for easier editing
+
+2001-12-19 13:55  ljulliar
+
+	* www/include/Layout.class: Useless <center> tag causing IE 6 to
+	center-align page content removed + HTML clean up (Bug #1062)
+
+2001-12-18 15:25  ljulliar
+
+	* utils/underworld-dummy/apache_conf.pl: If http_domain specified,
+	use it as the project web server name
+
+2001-12-13 20:32  ljulliar
+
+	* www/include/osdn.php: alphaAvenue added to network gallery (bug#
+	989)
+
+2001-12-12 00:05  ljulliar
+
+	* utils/underworld-dummy/aliases.zone: noreply alias now goes into
+	a block hole (previous version was wrong)
+
+2001-12-12 00:00  ljulliar
+
+	* utils/underworld-dummy/aliases.zone: noreply alias now goes into
+	a block hole\!
+
+2001-11-30 12:17  ljulliar
+
+	* utils/underworld-dummy/aliases.zone: Peter and Floyd added. John
+	removed (unfortunately :-(( )
+
+2001-11-30 12:12  ljulliar
+
+	* www/bugs/browse_bug.php: Removed not needed bug_field table from
+	SELECT causing big performance problems! (bug #845)
+
+2001-11-30 12:04  ljulliar
+
+	* www/project/export/bug_export.php: Missing quote in debug line
+
+2001-11-30 12:02  ljulliar
+
+	* utils/apache_1.3.19-suexec.patch: Initial version
+
+2001-11-29 14:24  ljulliar
+
+	* www/bugs/bug_utils.php: Add a space to all field values so that
+	table cells display correctly even when field has an empty value.
+
+2001-11-27 10:16  ljulliar
+
+	* www/staff.php: Updated CodeX staff page with John's departure and
+	Pete's arrival.
+
+2001-11-13 16:38  ljulliar
+
+	* www/forum/forum_utils.php: Return_to after login added for
+	anonymous users (bug #828)
+
+2001-11-13 10:28  ljulliar
+
+	* www/include/vote_function.php: Survey questions can now include
+	HTML (task #1324)
+
+2001-11-13 10:15  ljulliar
+
+	* www/include/vote_function.php: Change questions layout to avoid
+	aligment problems (bug #829)
+
+2001-11-09 09:05  ljulliar
+
+	* www/admin/approve-pending.php: Projects can be approved one at a
+	time (task #1313)
+
+2001-11-06 13:44  ljulliar
+
+	* www/project/export/project_export_utils.php: Undefined dates in
+	task/bug export now exported as empty values (bug #812)
+
+2001-11-06 12:14  ljulliar
+
+	* www/project/export/project_export_utils.php: Exported text fields
+	use \n (newline) as line break (bug #813)
+
+2001-10-26 21:56  ljulliar
+
+	* utils/user.pl: CVS access control ok for private project (bug
+	#805)
+
+2001-10-26 21:55  ljulliar
+
+	* utils/session.pl: user_isloggedin removed. Is in user.pl
+
+2001-10-26 18:08  ljulliar
+
+	* www/survey/survey_resp.php: Don't delete survey responses for
+	anonymous users (post-task #1290)
+
+2001-10-26 00:41  ljulliar
+
+	* db/CodeX.sql, www/survey/survey.php, www/survey/survey_resp.php,
+	www/survey/admin/add_survey.php, www/survey/admin/edit_survey.php:
+	Anonymous users can take surveys (task #1290)
+
+2001-10-25 21:48  ljulliar
+
+	* www/search/index.php: Debug for support search commented out
+
+2001-10-23 20:17  ljulliar
+
+	* www/project/export/: index.php, project_export_utils.php,
+	survey_responses_export.php: Survey responses can be exported (task
+	#1079)
+
+2001-10-19 02:45  ljulliar
+
+	* www/survey/survey_resp.php: Signature says "project team"
+
+2001-10-19 00:36  ljulliar
+
+	* www/project/export/bug_history_export.php: Missing space in DROP
+	TABLE statement!
+
+2001-10-18 01:49  ljulliar
+
+	* www/pm/: browse_task.php, pm_utils.php: Effort added in the
+	result list
+
+2001-10-09 11:25  ljulliar
+
+	* www/: include/menu.php, pm/pm_utils.php, search/index.php,
+	support/support_utils.php: Add a keyword search facility for
+	support request and tasks (task #799)
+
+2001-10-08 16:17  ljulliar
+
+	* www/my/index.php: Make introductory sentence clearer about what
+	is shown on this page.
+
+2001-10-08 16:09  ljulliar
+
+	* www/my/index.php: Bugs assigned and owned are clearly marked.
+	Introductory sentence modified (see bug #257)
+
+2001-10-03 10:41  ljulliar
+
+	* utils/new_parse.pl: rcs commands ran quiet to prevent spurious
+	output in the xerox_crontab.sh script
+
+2001-10-03 10:34  ljulliar
+
+	* utils/xerox_crontab.sh: Apache reload after User/Group update 
+	because of Groups directive in Vhosts
+
+2001-10-02 14:01  ljulliar
+
+	* utils/underworld-dummy/apache_conf.pl: User dummy / Group
+	'project_name' added in Virtual Hosts (see SR #100113 and #100114)
+
+2001-10-02 14:00  ljulliar
+
+	* www/include/pre_vhosts.php: Minimal pre.php file for use by
+	project Web sites (see SR #100113 and #100114)
+
+2001-10-01 17:43  ljulliar
+
+	* www/admin/massmail_execute.php: Mass mailing send only once to
+	the same e-mail address (bug #734)
+
+2001-10-01 16:36  ljulliar
+
+	* www/bugs/admin/field_usage.php: Preserve show_add... field usage
+	settings for required/special fields (bug #607)
+
+2001-09-21 11:51  ljulliar
+
+	* www/robots.txt: Disallow all indexing engines
+
+2001-09-18 12:25  ljulliar
+
+	* utils/new_parse.pl: Modifications in CVS config and loginfo files
+	now checked in (see bug #713)
+
+2001-09-18 11:21  ljulliar
+
+	* utils/: include.pl, user.pl: New functions for CVS access control
+	(see bug #710, #711, #714)
+
+2001-09-18 10:56  ljulliar
+
+	* utils/new_parse.pl: No Read/Write permission for private project
+	for the rest of the world (bug #711 #710)
+
+2001-09-18 10:46  ljulliar
+
+	* utils/underworld-dummy/dump_database.pl: Is Public flag added in
+	the group dump
+
+2001-09-18 10:40  ljulliar
+
+	* utils/group.pl: Initial revision introduced for private project
+	handling in cvsweb.cgi
+
+2001-09-04 16:13  ljulliar
+
+	* www/: bugs/browse_bug.php, bugs/bug_utils.php, pm/add_task.php,
+	pm/browse_task.php, pm/index.php, pm/mod_task.php, pm/pm_utils.php,
+	pm/task.php: Multiple values criteria for task and bug selection
+	(Advanced Search). Covers task #800 and #1015
+
+2001-09-04 16:13  ljulliar
+
+	* www/include/html.php: html_build_multiple_select_box has an
+	additional argument for showing box values. Backward compatible
+	with old version.
+
+2001-09-04 16:04  ljulliar
+
+	* utils/: new_parse.pl, xerox_crontab.sh: Management
+	(create/delete/modify) of Windows passwords for Samba in the CodeX
+	front end, back end and database
+
+2001-09-04 13:37  ljulliar
+
+	* www/include/account.php: New account_genwinpw to generate Windows
+	passwords
+
+2001-09-04 12:57  ljulliar
+
+	* db/CodeX.sql, utils/SambaMakefile.patch, utils/gensmbpasswd.c,
+	utils/underworld-dummy/dump_database.pl, www/account/change_pw.php,
+	www/account/lostlogin.php, www/account/register.php,
+	www/admin/user_changepw.php: Management (create/delete/modify) of
+	Windows passwords for Samba in the CodeX front end, back end and
+	database
+
+2001-08-27 16:40  ljulliar
+
+	* www/include/html.php: Multiple select box function now accept
+	None and Any values as parameters
+
+2001-08-22 17:36  ljulliar
+
+	* utils/underworld-dummy/mail_aliases.pl: User aliases activated so
+	that the CVS watch mechanism works OK
+
+2001-08-22 16:22  ljulliar
+
+	* www/: bugs/browse_bug.php, pm/browse_task.php,
+	support/browse_support.php: Sort by priority link is now displayed
+	at the top of the bugs, tasks and support requests results (bug
+	#448)
+
+2001-08-22 15:54  ljulliar
+
+	* www/snippet/snippet_utils.php: Data Acquisition and Control added
+	in Snippet categories
+
+2001-08-01 15:12  ljulliar
+
+	* www/include/vote_function.php: Survey Privacy link now working ok
+	(bug #490)
+
+2001-07-23 10:47  ljulliar
+
+	* www/include/osdn.php: Wilson Technical Information Center added
+	to the network gallery
+
+2001-07-20 14:29  ljulliar
+
+	* utils/underworld-root/db_project_cleanup.pl,
+	www/include/session.php: Session lifetime reduced to 6 months -
+	Session cleanup daemon updated accordingly (bug #380)
+
+2001-07-20 13:55  ljulliar
+
+	* db/DefaultValues.sql: Status 'Suspended' added in the task
+	manager. No specific code written. Just project_status table update
+	(bug #382)
+
+2001-07-20 10:04  ljulliar
+
+	* www/project/admin/editreleases.php: Clarify Instructions in Step
+	2 of file release. Add Files becomes Attach Files and 2 different
+	buttons for Refresh and Attach
+
+2001-07-19 11:43  ljulliar
+
+	* www/pm/: detail_task.php, mod_task.php, pm_utils.php: Layout of
+	Task submission form and details form aligned with Bug Tracking
+	System (task #798)
+
+2001-07-18 15:34  ljulliar
+
+	* www/: bugs/bug_utils.php, bugs/detail_bug.php, bugs/mod_bug.php,
+	pm/detail_task.php, pm/mod_task.php, pm/pm_utils.php: Bug and task
+	mgr modified to display clickable URLs in follow-up comments and
+	original description (task #784)
+
+2001-07-04 17:38  ljulliar
+
+	* www/project/admin/editreleases.php: package_id value added to
+	frs_show_package_popup so that the proper package name is
+	pre-selected
+
+2001-07-02 11:39  ljulliar
+
+	* www/include/Layout.class: project main menu updated to reflect
+	new SourceForge Layout
+
+2001-06-27 09:13  ljulliar
+
+	* www/patch/: detail_patch.php, mod_patch.php: View raw path
+	hyperlink modified to display Patch name when user use 'Save as...'
+	in browser
+
+2001-06-20 14:21  ljulliar
+
+	* www/forum/admin/index.php: Size and Max length of Forum Name and
+	Description enlarged in both create and update forum pages
+
+2001-06-20 13:53  ljulliar
+
+	* www/: index.php, news/news_utils.php: New layout for latest news
+	on front page. More news visible some without summary (see task
+	#542)
+
+2001-06-15 14:48  ljulliar
+
+	* www/pm/: browse_task.php, pm_utils.php: New task dependencies
+	column added in the browse list (task #198)
+
+2001-06-13 16:26  ljulliar
+
+	* www/pm/: browse_task.php, mod_task.php, pm_utils.php: Status
+	value 'Any' does not show up in the task status box when a task is
+	modified (bug #249)
+
+2001-06-13 16:06  ljulliar
+
+	* www/pm/: detail_task.php, mod_task.php: Task header made
+	consistent with bug and SR when viewing or editing a task (bug
+	#248)
+
+2001-06-13 15:19  ljulliar
+
+	* www/docman/admin/index.php: New version of an edited document can
+	be uploaded in addition of being modified in place (task #71)
+
+2001-06-12 14:42  ljulliar
+
+	* db/CodeX.sql, www/account/index.php, www/account/updateprefs.php,
+	www/include/session.php: Login can now be made permanent. No need
+	to retype password unless explicit logout (bug #223)
+
+2001-06-12 09:42  ljulliar
+
+	* www/register/confirmation.php: SourceForge changed with CodeX in
+	the page content (bug #232)
+
+2001-06-01 09:51  ljulliar
+
+	* www/bugs/: add_bug.php, bug_data.php: Default bug field values
+	now display ok on the bug submission form. Plus empty text field
+	values (if any) are correctly inserted in the SQL INSERT statement
+	that create a new bug (bug #228)
+
+2001-05-31 14:32  ljulliar
+
+	* www/support/support_utils.php: Receiver of the support request
+	mail follow-up now appear in clear in the To: field. Code in
+	mail_followup function harmonized with the same code in the patch
+	and bug managers (bug #86)
+
+2001-05-31 12:03  ljulliar
+
+	* www/pm/: browse_task.php, pm_utils.php: Tasks with status None
+	and Open can now be displayed separately. Status column added task
+	list. Columns sub-project and status now showing systematically
+	even when a specific value is selected (bug #218)
+
+2001-05-30 16:05  ljulliar
+
+	* www/patch/patch_utils.php: Project name was blank in the body of
+	the mail follow-ups (bug #179
+
+2001-05-30 15:49  ljulliar
+
+	* www/patch/add_patch.php: Return To URL added if user not logged
+	in.
+	
+------------------------------------------------------------------------------
+CODEX 1.3 (tag: CX_1_3) - 2001-05-18
+
+2001-05-18 15:56  ljulliar
+
+	* www/include/Layout.class: Admin toptab added for Project
+	Administration pages (instead of 'home'/Summary used before)
+
+2001-05-18 15:54  ljulliar
+
+	* www/project/: admin/project_admin_utils.php,
+	export/bug_bug_deps_export.php, export/bug_export.php,
+	export/bug_history_export.php, export/bug_task_deps_export.php,
+	export/index.php, export/project_export_utils.php,
+	export/task_assigned_to_export.php, export/task_export.php,
+	export/task_history_export.php, export/task_task_deps_export.php:
+	Initial revision of the project data export facility
+
+2001-05-18 15:15  ljulliar
+
+	* www/bugs/bug_utils.php: Next 50 pointer was not showing at the
+	end of the bug page when number of bugs were greatest than 50
+
+
+------------------------------------------------------------------------------
+CODEX 1.2 (tag: CX_1_2) - 2001-05-12
+
+2001-05-11 10:29  ljulliar
+
+	* utils/underworld-dummy/aliases.zone: Steve and Gerry's e-mail
+	added to codex-admin alias
+
+2001-05-11 10:18  ljulliar
+
+	* www/bugs/bug_utils.php: Unused function bug_list_used_fields
+	removed
+
+2001-05-11 10:15  ljulliar
+
+	* www/bugs/browse_bug.php: Select query for bug browsing has been
+	optimized (bug #178)
+
+2001-04-20 10:07  ljulliar
+
+	* www/bugs/: add_bug.php, browse_bug.php, bug_data.php,
+	bug_utils.php, detail_bug.php, index.php, mod_bug.php,
+	postadd_comment.php, admin/index.php, reporting/index.php: New
+	version that implements the new extended bug tracking system
+
+2001-04-20 10:06  ljulliar
+
+	* www/bugs/admin/field_usage.php: New script to use/unuse bug
+	fields in the new bug tracking system
+
+2001-04-20 10:05  ljulliar
+
+	* www/bugs/admin/field_values.php: New script to
+	activate/create/hide bug field values in the new bug tracking
+	system
+
+2001-04-20 10:03  ljulliar
+
+	* db/bug_fields_defaults.sql: Run this script after
+	bug_fields_changes.sql to initialize the new tables and transfer
+	projects' legacy values
+
+2001-04-20 10:01  ljulliar
+
+	* db/bug_fields_changes.sql: Run this SQL script to upgrade the
+	CodeX database to the new Bug Tracking System (tables modifications
+	and additions)
+
+2001-04-20 09:55  ljulliar
+
+	* www/include/html.php: html_build_select_box modified to handle
+	special value 'Any' (0). Added for new bug tracking system
+
+2001-04-19 09:15  ljulliar
+
+	* www/include/account.php: Previous correction was incomplete. The
+	unix_uid was also missing in the first select statement of
+	account_add_user_to_group
+
+2001-04-17 11:09  ljulliar
+
+	* www/include/account.php: Missing unix_status in SQL statement of
+	account_add_user_to_group caused to unix uid to be re-generated
+	each time a user was made a member of new projet (see bug #141)
+
+2001-04-17 01:52  jstidd
+
+	* www/pm/pm_data.php: Bug 140 Deleted sub-project still shows
+
+2001-04-06 19:33  ljulliar
+
+	* www/support/support_data.php: Use of SourceForge e-mail alias
+	removed. Use real e-mail instead (bug #138)
+
+2001-04-06 14:09  ljulliar
+
+	* www/account/lostpw-confirm.php: Misplaced newline chars after
+	hashed URL moved at the right place. Was causing problem when
+	clicking on the URL in Outlook
+
+2001-04-02 17:55  ljulliar
+
+	* www/account/: change_email-complete.php, change_email.php:
+	SourceForge changed with CodeX (bug #128)
+
+2001-03-23 16:53  ljulliar
+
+	* utils/default_page.php: A couple of HTML glitches corrected
+	(contrib from Adam Stein)
+
+2001-03-23 09:34  ljulliar
+
+	* utils/default_page.php: Display a pointer to the project summary
+	page instead of just the CodeX home page. Removed pointer to
+	partners at the top of the page
+
+------------------------------------------------------------------------------
+CODEX 1.1 (tag: CX_1_1) - 2001-03-22
+	
+2001-03-22 18:21  ljulliar
+
+	* www/include/user_home.php: Connection to Company LDAP server in
+	place using the PHP LDAP extension (task #179)
+
+2001-03-22 15:51  ljulliar
+
+	* www/include/osdn.php: WRC entry in network gallery replace with
+	Wilson Center. www.wrc.xerox.com should have been called XR&T East
+
+2001-03-21 14:51  ljulliar
+
+	* utils/tmpfilemove.c: Initial revision with same rev. number as in
+	SF 2.5
+
+2001-03-21 14:32  ljulliar
+
+	* utils/tmpfilemove.c: Initial revision
+
+2001-03-20 17:36  ljulliar
+
+	* www/project/stats/stats_graph.png: Empty stat graph generated ok
+	when ther is no data to graph (or just one record) - (bug #112)
+
+2001-03-20 15:18  ljulliar
+
+	* www/docman/admin/index.php: textarea to type document content
+	changed to virtual wrap mode
+
+2001-03-20 14:45  ljulliar
+
+	* www/pm/: add_task.php, mod_task.php, pm_data.php, pm_utils.php:
+	Task add/modify forms now show all tasks in the task dependency
+	box. The old code has been preserved. The Group_id parametmer has
+	been added and if it is null (false) it means all tasks (task #164)
+
+2001-03-20 11:30  ljulliar
+
+	* www/register/category.php: A couple of minor typos in the text
+	explaining why user should categorize their project
+
+2001-03-20 11:17  ljulliar
+
+	* utils/new_parse.pl: typo on variable t_shell in update_user
+	function. Should be p_shell
+
+2001-03-20 11:06  ljulliar
+
+	* utils/new_parse.pl: Setgid sticky bit added to webserver
+	directories
+
+2001-03-20 00:36  ljulliar
+
+	* www/index.php: Fixed link to docs. Bug 89
+
+2001-03-19 14:11  ljulliar
+
+	* www/account/register.php: Email is now checked for validity (see
+	bug #99). Timezone can also be defined at register time.
+
+2001-03-19 14:05  ljulliar
+
+	* www/account/change_timezone.php: Now using the
+	html_get_timezone_popup from html.php to display the timezone
+	select box
+
+2001-03-19 14:04  ljulliar
+
+	* www/include/html.php: Function html_get_timezone_popup added to
+	display the time zone select box
+
+2001-03-16 17:26  ljulliar
+
+	* www/contact.php: Comment added on the Developers Channels. Some
+	clean up here and there.
+
+2001-03-16 11:12  ljulliar
+
+	* www/project/admin/index.php: Changed Unix Name label in Login
+	Name in the Add User form. Suggestion made by Richard Sauvain (see
+	bug #106). Entire file re-indented with php-mode
+
+2001-03-16 10:33  ljulliar
+
+	* www/include/menu.php: Pointer to Developers Mailing Lists added
+	in the menu_sourceforge function. Site Documentation pointer in
+	bold. Plus entire file re-indented with php-mode
+
+2001-03-15 18:04  ljulliar
+
+	* www/include/features_boxes.php: Only active projects must show in
+	the highest ranked project list
+
+2001-03-15 08:54  ljulliar
+
+	* www/bugs/browse_bug.php: Put the Group and Category pulldown menu
+	labels in the right order in the bug selection/browse header. Bug
+	introduced in revision 1.68. (see bug #105)
+
+2001-03-13 12:44  ljulliar
+
+	* www/include/features_boxes.php: The top downloads is now computed
+	from the filedownload_log tables instead of the analysis of the
+	Apache logs (more accurate, no missed download because of HTTP
+	caching (see task #112)
+
+2001-03-13 11:01  ljulliar
+
+	* www/bugs/browse_bug.php: Header for bug selection/browsing
+	reformatted (see task #124)
+
+2001-03-13 10:54  ljulliar
+
+	* www/pm/: browse_task.php, index.php, pm_data.php, pm_utils.php,
+	task.php: All tasks of all subproject can be viewed at once (see
+	task #124). Plus header for task selection/browsing reformatted
+
+2001-03-12 16:00  ljulliar
+
+	* www/pm/: mod_task.php, pm_data.php, task.php: When editing a
+	task, the Original Comment field can now be modified (see task #24)
+
+2001-03-08 17:07  ljulliar
+
+	* www/bugs/: add_bug.php, mod_bug.php: Made the Bug Summary longer
+	for typing. MAX is 100 char now.(see Task #23)
+
+2001-03-08 17:03  ljulliar
+
+	* www/support/: add_support.php, mod_support.php: Made the Support
+	Request Summary longer for typing. MAX is 100 char now.(see Task
+	#23)
+
+2001-03-08 16:55  ljulliar
+
+	* www/pm/: add_task.php, mod_task.php: Made the Task Summary longer
+	for typing. MAX is 100 char now.
+
+2001-03-08 12:14  ljulliar
+
+	* www/pm/: browse_task.php, pm_utils.php: Assigned To users now
+	shows up on task list (Task #123)
+
+2001-03-06 16:45  ljulliar
+
+	* www/people/people_utils.php: Skill levels now sorted by asc.
+	order (bug #64)
+
+2001-03-06 12:27  ljulliar
+
+	* www/themes/codex/images/steel3.jpg.backup: File Removed.
+	Forgotten in the CodeX cleanup
+
+2001-03-06 12:09  ljulliar
+
+	* utils/default_page.php, utils/fileforge.c, utils/include.pl,
+	utils/mailing_lists_create.pl, utils/new_parse.pl,
+	utils/cvs1/cvs_history_parse.pl, utils/download/db_dlstats_grp.pl,
+	utils/download/stats_ftp_logparse.pl,
+	utils/download/stats_logparse.sh,
+	utils/projects-fileserver/stats_projects_logparse.pl,
+	utils/underworld-dummy/aliases.zone,
+	utils/underworld-dummy/dns_conf.pl,
+	utils/underworld-dummy/mail_aliases.pl,
+	utils/underworld-dummy/mailing_lists_dump.pl,
+	utils/underworld-dummy/ssh_dump.pl,
+	utils/underworld-root/db_project_metric.pl,
+	utils/underworld-root/db_project_weekly_metric.pl,
+	utils/underworld-root/db_rating_stats.pl,
+	utils/underworld-root/db_stats_cvs_history.pl,
+	utils/underworld-root/stats_nightly.sh, www/.htaccess, www/404.php,
+	www/about.php, www/contact.php, www/index.php, www/pager.php3,
+	www/sflogo.php, www/staff.php, www/thanks.php,
+	www/account/change_email-complete.php,
+	www/account/change_email-confirm.php,
+	www/account/change_timezone.php, www/account/editsshkeys.php,
+	www/account/first.php, www/account/index.php,
+	www/account/login.php, www/account/lostpw-confirm.php,
+	www/account/lostpw.php, www/account/pending-resend.php,
+	www/account/register.php, www/account/verify.php,
+	www/admin/admin_utils.php, www/admin/groupedit-add.php,
+	www/admin/grouplist.php, www/admin/index.php,
+	www/admin/massmail.php, www/admin/massmail_execute.php,
+	www/bugs/bug_utils.php, www/bugs/mod_bug.php,
+	www/bugs/admin/index.php, www/cvs/index.php,
+	www/docman/display_doc.php, www/docman/doc_utils.php,
+	www/docman/index.php, www/docman/new.php,
+	www/docman/admin/index.php, www/docs/site/index.php,
+	www/export/index.php, www/export/rss_sfnewreleases.php,
+	www/export/rss_sfnews.php, www/forum/forum.php,
+	www/forum/forum_utils.php, www/forum/index.php, www/help/index.php,
+	www/include/Group.class, www/include/Layout.class,
+	www/include/Theme.class, www/include/account.php,
+	www/include/features_boxes.php, www/include/help.php,
+	www/include/menu.php, www/include/osdn.php,
+	www/include/proj_email.php, www/include/project_home.php,
+	www/include/session.php, www/include/snippet_caching.php,
+	www/include/trove.php, www/include/user.php,
+	www/include/user_home.php, www/include/utils.php,
+	www/include/vars.php, www/mail/index.php, www/mail/admin/index.php,
+	www/my/index.php, www/new/index.php, www/news/index.php,
+	www/news/news_utils.php, www/news/submit.php,
+	www/news/admin/index.php, www/people/people_utils.php,
+	www/project/memberlist.php, www/project/showfiles.php,
+	www/project/admin/editgroupinfo.php,
+	www/project/admin/editpackages.php,
+	www/project/admin/editreleases.php,
+	www/project/admin/group_trove.php, www/project/admin/index.php,
+	www/project/admin/project_admin_utils.php,
+	www/project/admin/qrs.php, www/project/stats/.htaccess,
+	www/project/stats/index.php,
+	www/project/stats/project_stats_utils.php,
+	www/project/stats/stats_graph.png, www/register/basicinfo.php,
+	www/register/confirmation.php, www/register/form.php,
+	www/register/index.php, www/register/license.php,
+	www/register/projectname.php, www/register/requirements.php,
+	www/register/why.php, www/search/index.php, www/snippet/browse.php,
+	www/snippet/detail.php, www/snippet/snippet_utils.php,
+	www/stats/.htaccess, www/stats/index.php, www/stats/projects.php,
+	www/stats/users_graph.png, www/stats/views_graph.png,
+	www/support/add_support.php, www/support/postadd_comment.php,
+	www/support/postadd_support.php, www/support/support_data.php,
+	www/survey/privacy.php, www/survey/survey_resp.php,
+	www/survey/admin/show_results.php,
+	www/survey/admin/show_results_comments.php, www/top/index.php,
+	www/top/toplist.php, www/tos/privacy.php, www/tos/tos_text.php:
+	File changed since SourceForge 2.0
+
+2001-03-06 12:01  ljulliar
+
+	* www/themes/codex/: images/codex_banner_2lines.xcf,
+	images/fade.png, images/codex_banner_uc.xcf, images/black.gif,
+	images/clear.gif, images/codex_banner_lc.xcf,
+	images/codex_banner_lc.gif, images/codex_banner_uc.gif, theme.php,
+	Theme.class: File added in CodeX
+
+2001-03-06 11:58  ljulliar
+
+	* www/themes/codex/images/: point1.png, point2.png, rateit.png,
+	rightbar1.png, sf-bar2.png, sflogo-hammer1.jpg, steel3.jpg,
+	tbar1.png, tleft1.png, tright1.png, valogo5.jpg, codex_logo.gif,
+	codex_banner_2lines.gif, fade.xcf, steel3.jpg.backup,
+	bottom_left_corner.gif, bottom_right_corner.gif, hx_logo.gif,
+	left_border.gif, top_border.gif, tablebg.gif, fade.gif,
+	upper_left_corner.gif, upper_right_corner.gif, right_border.gif,
+	bottom_border.gif, point1.gif: File added in CodeX
+
+2001-03-06 11:55  ljulliar
+
+	* backend/zones/README, db/CodeX.sql, utils/compile_fileforge.sh,
+	utils/download/README, utils/exit.pl, utils/mail_test.sh,
+	utils/session.pl, utils/underworld-dummy/apache_conf.pl,
+	utils/user.pl, utils/xerox_all_daily_stats.sh,
+	utils/xerox_crontab.sh, www/codex.css,
+	www/docs/site/about_codex.php, www/images/bkg.gif,
+	www/images/clear.gif, www/images/codex_logo.gif,
+	www/include/tos_text.php, www/info.php, www/info.php3,
+	www/project/download.php, www/project/showdetails.php,
+	www/project/stats/source_code_access.php,
+	www/project/stats/source_code_access_utils.php,
+	www/themes/codex/images/bbar1.png,
+	www/themes/codex/images/bleft1.png,
+	www/themes/codex/images/bright1.png,
+	www/themes/codex/images/fade1.png,
+	www/themes/codex/images/leftbar1.png: File added in CodeX
+
+2001-03-06 11:33  ljulliar
+
+	* www/docs/site/: account-email.php, account-lostpw.php, delay.php,
+	displaylogo.php, faq.php, hardware.php, modules.php,
+	project-adminusers.php, services-cvs.php, services-web.php,
+	services.php, software.php: removed files now in CodeX Doc Mgr
+
+------------------------------------------------------------------------------
+CODEX 1.0 (tag: CX_1_0) - 2001-03-06
+	
+2001-03-06 11:03  root
+
+	* docs/Adminstration_Guide.html, docs/Contributor_Guide.html,
+	docs/Install_Guide.html, utils/default_page.php, utils/fileforge.c,
+	utils/grap.c, utils/ia64_parse.pl, utils/include.pl,
+	utils/mailing_lists_create.pl, utils/new_aliases_parse.pl,
+	utils/new_parse.pl, utils/sort_file.pl, utils/ssh_create.pl,
+	utils/cvs1/cvs_history_parse.pl,
+	utils/download/db_dlstats_allagg.pl,
+	utils/download/db_dlstats_filetotal.pl,
+	utils/download/db_dlstats_grouptotal.pl,
+	utils/download/db_dlstats_grp.pl,
+	utils/download/download_filemaint.pl,
+	utils/download/remission_filemaint.pl,
+	utils/download/stats_agr_filerelease.pl,
+	utils/download/stats_ftp_logparse.pl,
+	utils/download/stats_http_logparse.pl,
+	utils/download/stats_nightly_filerelease.pl,
+	utils/projects-fileserver/stats_projects_logparse.pl,
+	utils/underworld-dummy/dns_conf.pl,
+	utils/underworld-dummy/dump_database.pl,
+	utils/underworld-dummy/ia64_dump.pl,
+	utils/underworld-dummy/mail_aliases.pl,
+	utils/underworld-dummy/mailing_lists_dump.pl,
+	utils/underworld-dummy/new_aliases.pl,
+	utils/underworld-dummy/ssh_dump.pl,
+	utils/underworld-root/db_project_cleanup.pl,
+	utils/underworld-root/db_project_metric.pl,
+	utils/underworld-root/db_project_weekly_metric.pl,
+	utils/underworld-root/db_rating_stats.pl,
+	utils/underworld-root/db_site_stats.pl,
+	utils/underworld-root/db_stats_prepare.pl,
+	utils/underworld-root/db_stats_projects_nightly.pl,
+	utils/underworld-root/db_stats_site_nightly.pl,
+	utils/underworld-root/db_top_groups_calc.pl,
+	utils/underworld-root/db_trove_treesums.pl, www/404.php,
+	www/about.php, www/contact.php, www/download.php, www/home.php,
+	www/index.php, www/staff.php, www/thanks.php, www/users,
+	www/account/change_email-complete.php,
+	www/account/change_email-confirm.php, www/account/change_email.php,
+	www/account/change_pw.php, www/account/change_realname.php,
+	www/account/change_timezone.php, www/account/deleted.php,
+	www/account/editsshkeys.php, www/account/first.php,
+	www/account/index.php, www/account/login.php,
+	www/account/logout.php, www/account/lostlogin.php,
+	www/account/lostpw-confirm.php, www/account/lostpw.php,
+	www/account/myprojectlist.php, www/account/pending-resend.php,
+	www/account/pending.php, www/account/register.php,
+	www/account/suspended.php, www/account/updateprefs.php,
+	www/account/verify.php, www/admin/approve-pending.php,
+	www/admin/calculate_user_metric.php, www/admin/groupedit-add.php,
+	www/admin/groupedit.php, www/admin/grouplist.php,
+	www/admin/index.php, www/admin/lastlogins.php,
+	www/admin/massmail.php, www/admin/massmail_execute.php,
+	www/admin/newgroup.php, www/admin/newprojectmail.php,
+	www/admin/populate_foundries.php, www/admin/upgrade_bug_data.php,
+	www/admin/upgrade_filerelease_data.php,
+	www/admin/upgrade_forum_data.php, www/admin/upgrade_task_data.php,
+	www/admin/user_changepw.php, www/admin/usergroup.php,
+	www/admin/userlist.php, www/admin/trove/trove_cat_add.php,
+	www/admin/trove/trove_cat_edit.php,
+	www/admin/trove/trove_cat_list.php, www/bugs/add_bug.php,
+	www/bugs/browse_bug.php, www/bugs/bug_utils.php,
+	www/bugs/detail_bug.php, www/bugs/index.php, www/bugs/mod_bug.php,
+	www/bugs/mod_filters.php, www/bugs/postadd_comment.php,
+	www/bugs/postmod_filters.php, www/bugs/admin/index.php,
+	www/bugs/reporting/index.php, www/cvs/index.php,
+	www/developer/index.php, www/docs/site/account-email.php,
+	www/docs/site/account-lostpw.php, www/docs/site/awards.php,
+	www/docs/site/delay.php, www/docs/site/displaylogo.php,
+	www/docs/site/faq.php, www/docs/site/hardware.php,
+	www/docs/site/index.php, www/docs/site/modules.php,
+	www/docs/site/news.php, www/docs/site/project-adminusers.php,
+	www/docs/site/services-cvs.php, www/docs/site/services-web.php,
+	www/docs/site/services.php, www/docs/site/software.php,
+	www/forum/expand.php, www/forum/forum.php,
+	www/forum/forum_utils.php, www/forum/index.php,
+	www/forum/message.php, www/forum/monitor.php, www/forum/save.php,
+	www/forum/thread.php, www/forum/admin/index.php,
+	www/patch/add_patch.php, www/patch/browse_patch.php,
+	www/patch/detail_patch.php, www/patch/download.php,
+	www/patch/index.php, www/patch/mod_patch.php,
+	www/patch/patch_utils.php, www/patch/postadd_comment.php,
+	www/patch/postadd_patch.php, www/patch/postmod_patch.php,
+	www/patch/admin/index.php, backend/DatabaseDump.pl,
+	backend/include.pl, monitor/check-system.pl, monitor/systemdaemon,
+	www/about_foundries.php, www/foundry, www/partners.php,
+	www/projects, www/sendmessage.php, www/sflogo.php,
+	www/write_cache.php, www/contest/index.php, www/contest/rules.php,
+	www/export/index.php, www/export/rss_utils.inc,
+	www/export/sf_forum_0.1.dtd, www/export/sf_forum_0.1.dtd.txt,
+	www/help/index.php, www/help/trove_cat.php,
+	www/include/Error.class, www/include/Foundry.class,
+	www/include/Group.class, www/include/HTML_Graphs.php,
+	www/include/Layout.class, www/include/Project.class,
+	www/include/Theme.class, www/include/account.php,
+	www/include/browser.php, www/include/cache.php,
+	www/include/database.php, www/include/exit.php,
+	www/include/features_boxes.php, www/include/filechecks.php,
+	www/include/foundry_admin.php, www/include/foundry_news.php,
+	www/include/help.php, www/include/html.php,
+	www/include/imagevar.php, www/include/logger.php,
+	www/include/menu.php, www/include/pre.php,
+	www/include/proj_email.php, www/include/project_home.php,
+	www/include/session.php, www/include/snippet_caching.php,
+	www/include/squal_pre.php, www/include/stats_function.php,
+	www/include/theme.php, www/include/trove.php, www/include/user.php,
+	www/include/user_home.php, www/include/utils.php,
+	www/include/vars.php, www/include/vote_function.php,
+	www/mail/index.php, www/mail/mail_nav.php, www/mail/mail_utils.php,
+	www/mail/admin/index.php, www/mirrors/index.php, www/my/index.php,
+	www/my/rmproject.php, www/new/index.php, www/news/index.php,
+	www/news/news_utils.php, www/news/submit.php,
+	www/news/admin/index.php, www/people/createjob.php,
+	www/people/editjob.php, www/people/editprofile.php,
+	www/people/index.php, www/people/people_utils.php,
+	www/people/viewjob.php, www/people/viewprofile.php,
+	www/people/admin/index.php, www/pm/add_task.php,
+	www/pm/browse_task.php, www/pm/calendar.php,
+	www/pm/detail_task.php, www/pm/index.php, www/pm/mod_task.php,
+	www/pm/pm_utils.php, www/pm/task.php, www/pm/admin/index.php,
+	www/project/filelist.php, www/project/filemodule_monitor.php,
+	www/project/filenotes.php, www/project/index.php,
+	www/project/memberlist.php, www/project/showfiles.php,
+	www/project/shownotes.php, www/project/admin/addfile.php,
+	www/project/admin/editaliases-delete.php,
+	www/project/admin/editaliases-edit.php,
+	www/project/admin/editaliases-new.php,
+	www/project/admin/editaliases.php,
+	www/project/admin/editgroupinfo.php,
+	www/project/admin/editimages.php,
+	www/project/admin/editmembers.php,
+	www/project/admin/editpackages.php,
+	www/project/admin/editreleases.php,
+	www/project/admin/filerelease-edit.php,
+	www/project/admin/filerelease-list.php,
+	www/project/admin/group-rename.php,
+	www/project/admin/group_trove.php, www/project/admin/history.php,
+	www/project/admin/homepage-edit.php, www/project/admin/index.php,
+	www/project/admin/module-add.php,
+	www/project/admin/module-edit.php,
+	www/project/admin/project_admin_utils.php,
+	www/project/admin/qrs.php, www/project/admin/userperms.php,
+	www/project/stats/index.php, www/project/stats/stats_graph.png,
+	www/register/basicinfo.php, www/register/category.php,
+	www/register/confirmation.php, www/register/form.php,
+	www/register/index.php, www/register/license.php,
+	www/register/projectname.php, www/register/requirements.php,
+	www/register/tos.php, www/register/why.php, www/search/index.php,
+	www/snippet/add_snippet_to_package.php, www/snippet/addversion.php,
+	www/snippet/browse.php, www/snippet/delete.php,
+	www/snippet/detail.php, www/snippet/download.php,
+	www/snippet/index.php, www/snippet/package.php,
+	www/snippet/snippet_utils.php, www/snippet/submit.php,
+	www/softwaremap/index.php, www/softwaremap/trove_list.php,
+	www/squal/get_session_hash.php, www/stats/graphs.php,
+	www/stats/index.php, www/stats/oldindex.php,
+	www/stats/projects.php, www/stats/site_stats_utils.php,
+	www/stats/users_graph.png, www/stats/views_graph.png,
+	www/stats/weekly_views.png, www/support/add_support.php,
+	www/support/browse_support.php, www/support/detail_support.php,
+	www/support/index.php, www/support/mod_support.php,
+	www/support/postadd_comment.php, www/support/postadd_support.php,
+	www/support/postmod_support.php, www/support/support_utils.php,
+	www/support/admin/index.php, www/survey/index.php,
+	www/survey/privacy.php, www/survey/rating_resp.php,
+	www/survey/survey.php, www/survey/survey_resp.php,
+	www/survey/survey_utils.php, www/survey/admin/add_question.php,
+	www/survey/admin/add_survey.php,
+	www/survey/admin/edit_question.php,
+	www/survey/admin/edit_survey.php, www/survey/admin/index.php,
+	www/survey/admin/show_questions.php,
+	www/survey/admin/show_results.php,
+	www/survey/admin/show_results_aggregate.php,
+	www/survey/admin/show_results_comments.php,
+	www/survey/admin/show_results_csv.php,
+	www/survey/admin/show_results_individual.php, www/themes/index.php,
+	www/themes/classic/Theme.class, www/themes/classic/theme.php,
+	www/themes/forged/Theme.class, www/themes/forged/theme.php,
+	www/top/index.php, www/top/mostactive.php, www/top/toplist.php,
+	www/tos/privacy.php, www/tos/tos.php, www/tos/tos_text.php,
+	db/DefaultValues.sql, db/SQL_diff_1.5_to_2.0.sql,
+	db/SourceForge.sql, db/db-image.sql, db/filerelease-changes.sql,
+	db/foundry.sql, db/statistics_tables.sql, db/themes.sql,
+	db/trove_defaults.sql, db/user_rating.sql,
+	docs/images/sflogo2-105a.png, utils/cvs.txt, utils/sffingerd.c,
+	utils/cvs1/cvscreate.sh, utils/cvs1/cvstar_genlist.pl,
+	utils/cvs1/cvstar_superscript.pl, utils/cvs1/run_span.pl,
+	utils/download/stats_logparse.sh,
+	utils/underworld-dummy/aliases.zone,
+	utils/underworld-root/db_jobs_close.pl,
+	utils/underworld-root/db_stats_cvs_history.pl,
+	utils/underworld-root/run_span.pl,
+	utils/underworld-root/stats_nightly.sh, www/sourceforge.css,
+	www/admin/admin_utils.php, www/admin/search.php,
+	www/bugs/bug_data.php, www/bugs/bugs-er-diagram.sda,
+	www/bugs/dependency.sql, www/developer/rate.php,
+	www/forum/forum-er-diagram.sda, www/forum/forum_saved_place.sql,
+	www/images/404.png, www/images/anvil.gif, www/images/anvildot.png,
+	www/images/bg-blue1-rt.gif, www/images/bg-blue1.gif,
+	www/images/binary-code.gif, www/images/blackdot.gif,
+	www/images/blank.gif, www/images/bug.png, www/images/cfolder.gif,
+	www/images/msg.gif, www/images/docs/developerperms.png,
+	www/images/docs/groupmembers.png, www/images/ic/anvil24.png,
+	www/images/ic/bug-poo.png, www/images/ic/bug.png,
+	www/images/ic/bug16b.png, www/images/ic/caret.png,
+	www/images/ic/cfolder.png, www/images/ic/cfolder1.png,
+	www/images/ic/cfolder15.png, www/images/ic/check.png,
+	www/images/ic/check16b.png, www/images/ic/convert.png,
+	www/images/ic/cvs16b.png, www/images/ic/docman.png,
+	www/images/ic/docman16b.png, www/images/ic/env-be.png,
+	www/images/ic/env-mac.png, www/images/ic/env-oth.png,
+	www/images/ic/env-palm.png, www/images/ic/env-tux.png,
+	www/images/ic/env-web1.png, www/images/ic/env-win.png,
+	www/images/ic/env-x.png, www/images/ic/forge9.png,
+	www/images/ic/ftp16b.png, www/images/ic/halfcheck.png,
+	www/images/ic/home.png, www/images/ic/home16.png,
+	www/images/ic/home16b.png, www/images/ic/index.png,
+	www/images/ic/mail.png, www/images/ic/mail16b.png,
+	www/images/ic/mail16c.png, www/images/ic/mail16d.png,
+	www/images/ic/manual16b.png, www/images/ic/manual16c.png,
+	www/images/ic/manual16d.png, www/images/ic/monitor16b.png,
+	www/images/ic/news.png, www/images/ic/notes.png,
+	www/images/ic/notes16.png, www/images/ic/ofolder.png,
+	www/images/ic/ofolder1.png, www/images/ic/ofolder15.png,
+	www/images/ic/paper16-p.png, www/images/ic/paper16.png,
+	www/images/ic/patch.png, www/images/ic/pencil.png,
+	www/images/ic/save.png, www/images/ic/save16.png,
+	www/images/ic/save16b.png, www/images/ic/scissors.png,
+	www/images/ic/search.png, www/images/ic/support.png,
+	www/images/ic/support16b.jpg, www/images/ic/survey.png,
+	www/images/ic/survey16b.png, www/images/ic/taskman16b.png,
+	www/images/ic/trash.png, www/patch/patch-er-diagram.sda,
+	www/patch/patch-plan.txt, www/stats/.htaccess, AUTHORS,
+	CONTRIBUTING, COPYING, ChangeLog, INSTALL, README,
+	backend/shell/apache.sh, backend/zones/aliases.zone,
+	backend/zones/dns.zone, backend/zones/httpd.conf.zone,
+	backend/zones/sendmail.cw.zone, etc/local.inc, www/.htaccess,
+	www/dbimage.php, www/pager.php3, www/compilefarm/index.php,
+	www/docman/display_doc.php, www/docman/doc_utils.php,
+	www/docman/index.php, www/docman/new.php,
+	www/docman/admin/index.php, www/export/nitf_sfforums.php,
+	www/export/rss_sfnewreleases.php, www/export/rss_sfnews.php,
+	www/export/rss_sfprojects.php, www/images/OSDN-lc.gif,
+	www/images/logo2border.png, www/images/mail16d.png,
+	www/images/manual16c.png, www/images/ofolder.gif,
+	www/images/osdn_logo_grey.png, www/images/rateit.png,
+	www/images/ratesubmit.png, www/images/sflogo-88-1.png,
+	www/images/sflogo2-105a.png, www/images/sflogo2-105b.png,
+	www/images/sflogo2-steel.png, www/images/sourceforge-templogo.png,
+	www/images/sourceforge.gif, www/images/sourceforge.png,
+	www/images/steel3.jpg, www/images/t.gif, www/images/t2.gif,
+	www/images/tab-bugs-lo.png, www/images/tab-bugs.png,
+	www/images/tab-downloads-lo.png, www/images/tab-downloads.png,
+	www/images/tab-forums-lo.png, www/images/tab-forums-t.png,
+	www/images/tab-forums.png, www/images/tab-home-t.png,
+	www/images/tab-home.png, www/images/tab-l-lo.png,
+	www/images/tab-l.png, www/images/tab-lover.png,
+	www/images/tab-lover2.png, www/images/tab-m.png,
+	www/images/tab-r-lo.png, www/images/tab-r.png,
+	www/images/tab-r2-lo.png, www/images/tab-r2.png,
+	www/images/tab-rover.png, www/images/tab-summary-lo.png,
+	www/images/tab-summary.png, www/images/tab-surveys-lo.png,
+	www/images/tab-surveys.png, www/images/va-btn-small-light.png,
+	www/images/valogo3.png, www/images/vatop-100x100.png,
+	www/images/vatop-75x75.png, www/images/foundry/1872admin.png,
+	www/images/foundry/1872logo.png, www/images/foundry/6770admin.png,
+	www/images/foundry/6770logo.png, www/images/foundry/6771admin.png,
+	www/images/foundry/6771logo.png, www/images/foundry/6772admin.png,
+	www/images/foundry/6772logo.png, www/images/foundry/9571admin.png,
+	www/images/foundry/9571logo.png, www/images/foundry/9572admin.png,
+	www/images/foundry/9572logo.png,
+	www/images/foundry/powered_by_va.png,
+	www/images/foundry/sflogo4-steel.png,
+	www/images/others/cosource142x31.gif,
+	www/images/others/dmoz-cool1.gif, www/images/others/gnome1.png,
+	www/images/others/kde-logotp3.png, www/images/others/suse_g_sm.png,
+	www/include/bookmarks.php, www/include/foundry_home.php,
+	www/include/foundry_html_admin.php, www/include/graph_lib.php,
+	www/include/group-model-er-diagram.sda,
+	www/include/multi-threads.php, www/include/osdn.php,
+	www/include/squal_exit.php, www/include/timezones.php,
+	www/my/bookmark_add.php, www/my/bookmark_delete.php,
+	www/my/bookmark_edit.php, www/people/people-er-diagram.sda,
+	www/people/people-plan.txt, www/pm/db-scheme.sql,
+	www/pm/pm-er-diagram.sda, www/pm/pm_data.php,
+	www/project/stats/.htaccess,
+	www/project/stats/project_stats_utils.php,
+	www/register/publicdomain.txt, www/snippet/snippet-er-diagram.sda,
+	www/snippet/snippet-plan.txt, www/support/support-er-diagram.sda,
+	www/support/support-plan.txt, www/support/support_data.php,
+	www/survey/survey-er-diagram.sda, www/survey/admin/survey.sql,
+	www/themes/classic/sourceforge.css,
+	www/themes/forged/images/bbar1.png,
+	www/themes/forged/images/bleft1.png,
+	www/themes/forged/images/bright1.png,
+	www/themes/forged/images/fade1.png,
+	www/themes/forged/images/leftbar1.png,
+	www/themes/forged/images/point1.png,
+	www/themes/forged/images/point2.png,
+	www/themes/forged/images/rateit.png,
+	www/themes/forged/images/rightbar1.png,
+	www/themes/forged/images/sf-bar2.png,
+	www/themes/forged/images/sflogo-hammer1.jpg,
+	www/themes/forged/images/steel3.jpg,
+	www/themes/forged/images/tbar1.png,
+	www/themes/forged/images/tleft1.png,
+	www/themes/forged/images/tright1.png,
+	www/themes/forged/images/valogo5.jpg: Original SourceForge 2.0
+
+------------------------------------------------------------------------------
 Wed Sep 6, 3:30:30 PDT 2000
 
-2.0   
+SOURCEFORGE 2.0   
 	- To get help setting up your copy of SourceForge, 
 	  visit the "SF Offsite Talk" discussion boards at 
 	  http://sourceforge.net/forum/forum.php?forum_id=21304
@@ -49,7 +2112,7 @@ Wed Sep 6, 3:30:30 PDT 2000
 ------------------------------------------------------------------------------
 Thu Jul  13 10:45:26 PDT 2000
 
-1.5.0 
+SOURCEFORGE 1.5.0 
 
         - To get help setting up your copy of SourceForge,           
           visit the "SF Offsite Talk" discussion boards at
@@ -92,7 +2155,7 @@ Thu Jul  13 10:45:26 PDT 2000
 ------------------------------------------------------------------------------
 Thu May  4 15:23:26 PDT 2000
 
-1.1.0 - Added Support Manager
+SOURCEFORGE 1.1.0 - Added Support Manager
 
       - Added Help Wanted System
 
@@ -119,7 +2182,8 @@ Thu May  4 15:23:26 PDT 2000
 ------------------------------------------------------------------------------
 Sun Jan 30 09:22:39 PST 2000
 
-1.0.4 - Added docs/ Directory containing both and Installation Guide and a
+SOURCEFORGE 1.0.4
+      - Added docs/ Directory containing both and Installation Guide and a
         Administration guide provided by the SF Docs Projects. Thanks to
 	the sfdocs people for contributing this. http://sfdocs.sourceforge.net
 
@@ -139,7 +2203,8 @@ Sun Jan 30 09:22:39 PST 2000
 
 Thu Jan 14 09:10:37 PST 2000
 
-1.0.3 - *** Initial Code Relase ***
+SOURCEFORGE 1.0.3
+      - *** Initial Code Relase ***
         Includes: Bugtracking, Project Management, Forums, Mailing Lists,
 	Surveys, Software Map, File Releases, Top Projects, Site Docs,
 	Project News, Site News, Snippet Library, Registration System, and
