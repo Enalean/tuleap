@@ -70,9 +70,9 @@ if (db_numrows($result) > 0) {
 	</TD></TR>
 
 	<TR><TD COLSPAN="2"><B>Summary:</B><BR>
-		<INPUT TYPE="TEXT" NAME="summary" SIZE="45" VALUE="<?php 
+		<INPUT TYPE="TEXT" NAME="summary" SIZE="60" VALUE="<?php 
 			echo db_result($result,0,'summary'); 
-			?>" MAXLENGTH="60">
+			?>" MAXLENGTH="100">
 	</TD></TR>
 
 	<TR><TD COLSPAN="2">

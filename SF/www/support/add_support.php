@@ -34,13 +34,13 @@ support_header(array ('title'=>'Submit a Support Request'));
 	</TD></TR>
 
 	<TR><TD COLSPAN="2"><B>Summary:</B><BR>
-		<INPUT TYPE="TEXT" NAME="summary" SIZE="35" MAXLENGTH="40">
+		<INPUT TYPE="TEXT" NAME="summary" SIZE="60" MAXLENGTH="100">
 	</TD></TR>
 
 	<TR><TD COLSPAN="2">
 		<B>Detailed Description:</B>
 		<P>
-		<TEXTAREA NAME="details" ROWS="30" COLS="55" WRAP="HARD"></TEXTAREA>
+		<TEXTAREA NAME="details" ROWS="15" COLS="60" WRAP="HARD"></TEXTAREA>
 	</TD></TR>
 
 	<TR><TD COLSPAN="2">
