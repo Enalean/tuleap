@@ -21,7 +21,10 @@ if ($group_id && user_ismember($group_id,'A')) {
 			if (!$list_name || strlen($list_name) < 4) {
 				exit_error('Error','Must Provide List Name That Is 4 or More Characters Long');
 			}
-			$new_list_name=strtolower(group_getunixname($group_id).'-'.$list_name);
+			if (user_is_super_user())
+			    $new_list_name = strtolower($list_name);
+			else
+			    $new_list_name=strtolower(group_getunixname($group_id).'-'.$list_name);
 
 			//see if that's a valid email address
 			if (validate_email($new_list_name.'@'.$GLOBALS['sys_lists_host'])) {
@@ -126,14 +129,21 @@ if ($group_id && user_ismember($group_id,'A')) {
 			<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 			<INPUT TYPE="HIDDEN" NAME="add_list" VALUE="y">
 			<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
-			<B>Mailing List Name:</B><BR>
-			<B>'.group_getunixname($group_id).'-<INPUT TYPE="TEXT" NAME="list_name" VALUE="" SIZE="10" MAXLENGTH="12">@'.$GLOBALS['sys_lists_host'].'</B><BR>
-			<P>
+			<B>Mailing List Name:</B><BR>';
+
+		// if the user is super user then he has the right to choose the 
+		// full mailing list name
+		if (user_is_super_user()) {
+		    echo '<INPUT TYPE="TEXT" NAME="list_name" VALUE="xxxx-'.group_getunixname($group_id).'" SIZE="15" MAXLENGTH="20">@'.$GLOBALS['sys_lists_host'].'</B><BR>';
+		} else {
+		    echo '<B>'.group_getunixname($group_id).'-<INPUT TYPE="TEXT" NAME="list_name" VALUE="" SIZE="15" MAXLENGTH="20">@'.$GLOBALS['sys_lists_host'].'</B><BR>';
+		}
+		echo '	<P>
 			<B>Is Public? </B>(Public means subscription right is granted to any Xerox employee)<BR>
 			<INPUT TYPE="RADIO" NAME="is_public" VALUE="1" CHECKED> Yes<BR>
 			<INPUT TYPE="RADIO" NAME="is_public" VALUE="0"> No<P>
 			<B>Description:</B><BR>
-			<INPUT TYPE="TEXT" NAME="description" VALUE="" SIZE="40" MAXLENGTH="80"><BR>
+			<INPUT TYPE="TEXT" NAME="description" VALUE="" SIZE="60" MAXLENGTH="160"><BR>
 			<P>
 			<B><FONT COLOR="RED">Once created, this list will ALWAYS be attached to your project 
 			and cannot be deleted!</FONT></B>
@@ -178,7 +188,7 @@ if ($group_id && user_ismember($group_id,'A')) {
 
 			for ($i=0; $i<$rows; $i++) {
 				echo '
-					<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD>'.db_result($result,$i,'list_name').'</TD>';
+					<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD><B>'.db_result($result,$i,'list_name').'</B></TD>';
 				echo '
 					<FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
 					<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
@@ -187,9 +197,8 @@ if ($group_id && user_ismember($group_id,'A')) {
 					<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 					<TD>
 						<FONT SIZE="-1">
-						<B>Is Public?</B><BR>
-						<INPUT TYPE="RADIO" NAME="is_public" VALUE="1"'.((db_result($result,$i,'is_public')=='1')?' CHECKED':'').'> Yes<BR>
-						<INPUT TYPE="RADIO" NAME="is_public" VALUE="0"'.((db_result($result,$i,'is_public')=='0')?' CHECKED':'').'> No<BR>
+						<INPUT TYPE="RADIO" NAME="is_public" VALUE="1"'.((db_result($result,$i,'is_public')=='1')?' CHECKED':'').'> Public<BR>
+						<INPUT TYPE="RADIO" NAME="is_public" VALUE="0"'.((db_result($result,$i,'is_public')=='0')?' CHECKED':'').'> Private<BR>
 						<INPUT TYPE="RADIO" NAME="is_public" VALUE="9"'.((db_result($result,$i,'is_public')=='9')?' CHECKED':'').'> Deleted<BR>
 					</TD><TD>
 						<FONT SIZE="-1">
@@ -198,10 +207,10 @@ if ($group_id && user_ismember($group_id,'A')) {
 					<TD><A href="http://'. $GLOBALS['sys_lists_host'] .'/mailman/admin/'
 					.db_result($result,$i,'list_name').'">[Administrate this list in GNU Mailman]</A>
 				       </TD></TR>
-				       <TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD COLSPAN="3">
-				       		<B>Description:</B><BR>
+				       <TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD COLSPAN="4">
+				       		Description: 
 						<INPUT TYPE="TEXT" NAME="description" VALUE="'.
-						db_result($result,$i,'description') .'" SIZE="40" MAXLENGTH="80"><BR>
+						db_result($result,$i,'description') .'" SIZE="70" MAXLENGTH="160"><BR>
 					</TD></TR></FORM>';
 			}
 			echo '</TABLE>';
