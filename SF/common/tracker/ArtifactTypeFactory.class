@@ -97,8 +97,8 @@ class ArtifactTypeFactory extends Error {
 			return $this->ArtifactTypes;
 		}
 		if (user_isloggedin()) {
-			// For project admin user (adn surperuser), we can see all the trackers (both public and non public)
-			if ( user_ismember($this->Group->getID(),'A') ) {
+			// For project members, we can see all the trackers (both public and non public)
+			if ( user_ismember($this->Group->getID()) ) {
 				$public_flag='0,1';
 			} else {
 				$public_flag='1';
@@ -128,7 +128,6 @@ class ArtifactTypeFactory extends Error {
 					$arr['open_count'] = $arr_count['open_count'];
 					$arr['count'] = $arr_count['count'];
 				}
-				
 				$this->ArtifactTypes[] = new ArtifactType($this->Group, $arr['group_artifact_id'], $arr);
 			}
 		}

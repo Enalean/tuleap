@@ -124,13 +124,6 @@ class ArtifactType extends Error {
 					return false;
 				}
 			}
-			if (!$this->isPublic()) {
-			        if ( (!$this->userIsAdmin()) || (!$this->userIsTech()) ) {
-	                		$this->setError('Permission Denied');
-					$this->data_array = null;
-	                		return false;
-				}
-			}
 		}
 		
 		unset($this->technicians_res);
@@ -772,6 +765,7 @@ class ArtifactType extends Error {
 			return false;
 		}
 	}
+
 
 	/**
 	 *	getCurrentUserPerm - get the logged-in user's perms from artifact_perm.
