@@ -6,7 +6,7 @@
 //
 // $Id$
 
-pm_header(array('title'=>'Modify A Task',
+pm_header(array('title'=>'Modify a Task',
 		'help'=>'TaskUpdate.html'));
 
 // Test if we have the group_project_id in the arguments
@@ -35,9 +35,12 @@ $result=db_query($sql);
 		<?php echo pm_subprojects_box('new_group_project_id',$group_id,$group_project_id); ?>
 		</TD>
 
-		
-		<TD><FONT SIZE="-1">
-		<INPUT TYPE="submit" value="Submit Changes" name="submit"></FONT>
+		<TD>
+		<DIV class="vspace-bottom">
+		<FONT SIZE="-1">
+		<INPUT TYPE="submit" value="Submit Changes" name="submit">
+		</FONT>
+		</DIV>
 		</TD>
 	</TR>
 

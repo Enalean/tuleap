@@ -9,7 +9,7 @@
 pm_header(array('title'=>'Add a New Task',
 		'help'=>'TaskSubmission.html'));
 
-echo '<H2>Add A Task</H2>';
+echo '<H2>Add a Task</H2>';
 
 // First display the message preamble
 $res_preamble  = db_query("SELECT pm_preamble FROM groups WHERE group_id=$group_id");

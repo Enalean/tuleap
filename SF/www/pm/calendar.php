@@ -8,7 +8,7 @@
 
 require "pre.php";    // Initial db and session library, opens session
 
-$HTML->header(array(title=>"Project Management: Add Task"));
+$HTML->header(array(title=>"Project Management: Add a Task"));
 
 $timedate = time();
 

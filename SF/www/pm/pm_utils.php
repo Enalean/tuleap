@@ -59,7 +59,7 @@ function pm_header($params) {
 	    echo' | <A HREF="/pm/task.php?group_id='.$group_id.
 		'&group_project_id='.
 		(is_array($group_project_id) ? $group_project_id[0] : $group_project_id).
-		'&func=addtask">Add Task</A>';
+		'&func=addtask">Add a Task</A>';
 	    
 	    echo ' | <A HREF="/pm/task.php?group_id='.$group_id.
 		pm_convert_to_url_arg('group_project_id',$group_project_id).

@@ -130,3 +130,7 @@ PRE,TT { font-family: courier,sans-serif; }
   background-color: #ffffff;
 }
 
+/* Vertical spacing */
+.vspace-bottom { margin-bottom: 4ex; }
+.vspace-top { margin-top: 4ex; }
+.vspace-both { margin-top: 4ex; margin-bottom: 4ex; }
