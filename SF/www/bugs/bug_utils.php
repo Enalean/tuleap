@@ -277,11 +277,11 @@ function bug_multiple_field_date($field_name,$date_begin='',$date_end='',$size=0
 	$html = 'Start:<INPUT TYPE="text" name="'.$field_name.
 	'" size="'.$size.'" MAXLENGTH="'.$maxlength.'" VALUE="'.$date_begin.'">'.
 	'<a href="javascript:show_calendar(\'document.bug_form.'.$field_name.'\', document.bug_form.'.$field_name.'.value);">'.
-	'<img src="/images/calendar/cal.gif" width="16" height="16" border="0" alt="Click Here to Pick up start date"></a><br>'.
+	'<img src="/images/calendar/cal.png" width="16" height="16" border="0" alt="Click Here to Pick up start date"></a><br>'.
 	'End :<INPUT TYPE="text" name="'.$field_name.'_end'.
 	'" size="'.$size.'" MAXLENGTH="'.$maxlength.'" VALUE="'.$date_end.'">'.
 	'<a href="javascript:show_calendar(\'document.bug_form.'.$field_name.'_end\', document.bug_form.'.$field_name.'_end.value);">'.
-	'<img src="/images/calendar/cal.gif" width="16" height="16" border="0" alt="Click Here to Pick up end date"></a>';
+	'<img src="/images/calendar/cal.png" width="16" height="16" border="0" alt="Click Here to Pick up end date"></a>';
     }
 
     return($html);
