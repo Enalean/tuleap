@@ -51,7 +51,7 @@ print '<HR><B>Browse the CVS Tree</B>
 of this project\'s code. You may also view the complete histories of any
 file in the repository.
 <UL>
-<LI><A href="http'.(session_issecure() ? 's':'').'://'.$sys_cvs_host.'/cgi-bin/cvsweb.cgi?cvsroot='
+<LI><A href="http'.(session_issecure() ? 's':'').'://'.$sys_cvs_host.'/cgi-bin/cvsweb.cgi/?cvsroot='
 .$row_grp['unix_group_name'].'"><B>Browse CVS Tree</B>';
 }
 
