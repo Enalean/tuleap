@@ -1,0 +1,55 @@
+#
+# Directives required for Gnu/Mailman.
+#
+# Configure to allow URLs for Pipermail archives
+#
+# $Id$
+#
+# -- CodeX Specific --
+# This file assumes that:
+# a) Mailman is intalled in /usr/local/mailman
+# b) The directory holding the mailing list archives was moved
+#    to /home/mailman/archives/private (on another file system)
+#
+Alias /pipermail/ "/usr/local/mailman/archives/public/"
+<Directory "/usr/local/mailman/archives">
+    Options FollowSymLinks
+    Order allow,deny
+    Allow from all
+</Directory>
+<Directory "/usr/local/mailman/archives/public">
+    Options FollowSymLinks Indexes 
+    Order allow,deny
+    Allow from all
+</Directory>
+<Directory "/home/mailman/archives/private">
+    Order allow,deny
+    Allow from all
+</Directory>
+
+#
+# Give /usr/local/mailman/cgi-bin permission to run CGI scripts
+# Needed for any mailing list management functions performed directly
+# by Mailman.
+#
+ScriptAlias /mailman/ "/usr/local/mailman/cgi-bin/"
+<Directory "/usr/local/mailman/cgi-bin">
+    AllowOverride None
+    Options ExecCGI
+    Order allow,deny
+    Allow from all
+</Directory>
+
+#
+# Configure to pick up Mailman jpeg files
+#
+Alias /MailmanImages/ "/usr/local/mailman/MailmanImages/"
+<Directory "/usr/local/mailman/MailmanImages">
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+</Directory>
+
+#
+# End Gnu/Mailman directives
+#
