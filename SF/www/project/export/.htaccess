@@ -10,3 +10,7 @@ php3_max_execution_time "1800"
 <IfModule mod_php4.c>
 php_value max_execution_time "1800"
 </IfModule>
+
+<IfModule sapi_apache2.c>
+php_value max_execution_time "1800"
+</IfModule>

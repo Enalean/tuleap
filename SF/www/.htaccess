@@ -21,3 +21,21 @@ ForceType application/x-httpd-php
 ForceType application/x-httpd-php
 </Files>
 </IfModule>
+
+<IfModule sapi_apache2.c>
+<Files projects>
+ AcceptPathInfo on
+ SetOutputFilter PHP
+ SetInputFilter PHP
+</Files>
+<Files users>
+ AcceptPathInfo on
+ SetOutputFilter PHP
+ SetInputFilter PHP
+</Files>
+<Files foundry>
+ AcceptPathInfo on
+ SetOutputFilter PHP
+ SetInputFilter PHP
+</Files>
+</IfModule>

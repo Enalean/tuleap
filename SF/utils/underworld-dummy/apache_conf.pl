@@ -19,6 +19,10 @@ my $query = "SELECT http_domain,unix_group_name,group_name,unix_box FROM groups 
 my $c = $dbh->prepare($query);
 $c->execute();
 
+# Determine Apache version installed
+$output = `httpd -v`;
+($apache_version) = ($output =~ /version:.*\/(\d)\.\d+\.\d+/);
+
 while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow()) {
 
 	($name, $aliases, $addrtype, $length, @addrs) = gethostbyname("$unix_box.$sys_default_domain");
@@ -46,20 +50,36 @@ while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow())
 	    $server_alias = "";
 	  }
 
-	push @apache_zone,
-	( "<VirtualHost $ip>\n",
-	  "$server_name",
-	  "$server_alias",
-          "  User dummy\n",
-          "  Group $unix_group_name\n",
-	  "  DocumentRoot /home/groups/$unix_group_name/htdocs/\n",
-	  "  <Directory /home/groups/$unix_group_name/htdocs>\n",
-	  "    AllowOverride Options Indexes\n",
-	  "  </Directory>\n",
-	  "  CustomLog logs/vhosts-access_log combined\n",
-	  "  ScriptAlias /cgi-bin/ /home/groups/$unix_group_name/cgi-bin/\n",
-	  "</VirtualHost>\n\n");
-
+	if ($apache_version eq "1") {
+	  # Apache 1.x syntax
+	  push @apache_zone,
+	    ( "<VirtualHost $ip>\n",
+	      "$server_name",
+	      "$server_alias",
+	      "  User dummy\n",
+	      "  Group $unix_group_name\n",
+	      "  DocumentRoot /home/groups/$unix_group_name/htdocs/\n",
+	      "  <Directory /home/groups/$unix_group_name/htdocs>\n",
+	      "    AllowOverride AuthConfig Limit Options Indexes\n",
+	      "  </Directory>\n",
+	      "  CustomLog logs/vhosts-access_log combined\n",
+	      "  ScriptAlias /cgi-bin/ /home/groups/$unix_group_name/cgi-bin/\n",
+	      "</VirtualHost>\n\n");
+	} else {
+	  # Apache 2.x syntax
+	  push @apache_zone,
+	    ( "<VirtualHost $ip>\n",
+	      "$server_name",
+	      "$server_alias",
+	      "  SuexecUserGroup dummy $unix_group_name\n",
+	      "  DocumentRoot /home/groups/$unix_group_name/htdocs/\n",
+	      "  <Directory /home/groups/$unix_group_name/htdocs>\n",
+	      "    AllowOverride AuthConfig Limit Options Indexes\n",
+	      "  </Directory>\n",
+	      "  CustomLog logs/vhosts-access_log combined\n",
+	      "  ScriptAlias /cgi-bin/ /home/groups/$unix_group_name/cgi-bin/\n",
+	      "</VirtualHost>\n\n");
+	}
 }
 
 # Retrieve the dummy's home directory
