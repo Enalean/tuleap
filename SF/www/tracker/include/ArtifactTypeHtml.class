@@ -259,8 +259,8 @@ class ArtifactTypeHtml extends ArtifactType {
 	 */
 	function displayAdminTracker($group_id,$atid) {
 		
-	    echo '<H2>Tracker \'<a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'">'.$this->getName().'</a>\' - Administration</H2>';
-	
+	    echo '<H2>Tracker \'<a href="/tracker/?group_id='.$group_id.'&atid='.$atid.'&func=browse">'.$this->getName().'</a>\' - Administration</H2>';
+
 	    if ( $this->userIsAdmin() ) {
 			echo '<H3><a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=editoptions">General Settings</a></H3>';
 			echo 'Define the title, the description, etc of this tracker.<P>';
@@ -1689,7 +1689,7 @@ class ArtifactTypeHtml extends ArtifactType {
 	   	} else if ($field->isMultiSelectBox() ) {
 			echo html_build_multiple_select_box($predefinedValues,"default_value[]",$default_value,
 							($field->getDisplaySize()!=""?$field->getDisplaySize():"6"),
-							$show_none,$text_none,$show_any,$text_any,$show_value);
+							$show_none,$text_none,$show_any,$text_any,false,'',$show_value);
 		} else {
 			echo 'Why are we in this case ??';
 		}
