@@ -1005,7 +1005,7 @@ function bug_attach_file($bug_id,$group_id,$input_file,$input_file_name,$input_f
     $user_id = (user_isloggedin() ? user_getid(): 100);
 
     $data = addslashes(fread( fopen($input_file, 'r'), filesize($input_file)));
-    if ((strlen($data) < 20) && (strlen($data) > 512000)) {
+    if ((strlen($data) < 20) || (strlen($data) > 512000)) {
 	$feedback .= " - File not attached: must be > 20 chars and < 512000 chars in length";
 	return false;
     }
