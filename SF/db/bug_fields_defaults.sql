@@ -72,7 +72,8 @@ INSERT INTO bug_field \
   VALUES (206,'hours','TF','5/5','Effort','Number of hours of work needed to fix the bug (including testing)','S',0,0,1,0);
 INSERT INTO bug_field \
   VALUES (207,'plan_release_id','SB','','Planned Release','The release in which you initially planned the bug to be fixed','P',0,0,1,0);
-
+INSERT INTO bug_field \
+  VALUES (208,'workproduct_version','TF','10/40','Work Product Version','Version of the work product impacted by the bug. As opposed to the Component Version field for which predefined values are selected from a pull down-menu this one is free text.','S',0,0,1,0);
 
 # ==============================
 # Bug field value table
@@ -259,6 +260,10 @@ INSERT INTO bug_field_usage VALUES (206,100,0,0,0,0,0,1700);
 # planned release (bug_field_id = 207)
 #
 INSERT INTO bug_field_usage VALUES (207,100,0,0,0,0,0,1600);
+
+# work product version (bug_field_id = 208)
+#
+INSERT INTO bug_field_usage VALUES (208,100,0,0,0,0,0,1800);
 
 #**********************************
 # TRANSFER LEGACY FIELD VALUES
