@@ -85,7 +85,7 @@ provides you with the following bug history fields. The sample values
 indicate what the field data types are.<p>';
    
     $record = pick_a_record_at_random($result, $rows, $col_list);
-    prepare_bug_history_record($record);   
+    prepare_bug_history_record($group_id,$col_list,$record);   
     display_exported_fields($col_list,$lbl_list,$dsc_list,$record);
 
 
@@ -111,7 +111,7 @@ indicate what the field data types are.<p>';
 	// the project database table
 	if ($res) {
 	    while ($arr = db_fetch_array($result)) {
-		prepare_bug_history_record($arr);
+		prepare_bug_history_record($group_id,$col_list,$arr);
 		insert_record_in_table($dbname, $tbl_name, $col_list, $arr);
 	    }
 
