@@ -519,6 +519,7 @@ class ArtifactFieldFactory extends Error {
 		$show_on_add = ($show_on_add?$show_on_add:0);
 		$show_on_add_members = ($show_on_add_members?$show_on_add_members:0);
 		$special = ($special?$special:0);
+		$display_size = (($display_size != "N/A") ? $display_size : "" );
 		
 		$default_value = $this->getDefaultValue($data_type,$display_type);
 		// First create the artifact_field
