@@ -249,7 +249,7 @@ function show_highest_ranked_projects() {
 		"project_weekly_metric.ranking,project_weekly_metric.percentile ".
 		"FROM groups,project_weekly_metric ".
 		"WHERE groups.group_id=project_weekly_metric.group_id AND ".
-		"groups.is_public=1 AND groups.type=1 ".
+		"groups.is_public=1 AND groups.type=1 AND groups.status='A' ".
 		"ORDER BY ranking ASC LIMIT 20";
 	$result=db_query($sql);
 	if (!$result || db_numrows($result) < 1) {
