@@ -121,7 +121,7 @@
 	<para>Many CVS graphical front-ends can be used on your client
         workstation. There are clients for all platforms: Windows, Linux, Unix
         and Mac. WinCVS seems to be one of the most well known client
-        for Windows platform. On Linux, gCVS and Cervisia are the most
+        for Windows platform (see below). On Linux, gCVS and Cervisia are the most
         popular.</para>
 
 	<para>There is also a 100% Java client called jCVS that runs on any
@@ -136,6 +136,91 @@
 	Visual Age, IntelliJ IDEA, Eclipse,&hellip;) comes with CVS
 	plugins either provided natively or by 3rd party companies.
 	</para>
+      </section>
+
+      <section id="SettingUpWinCVS">
+	<title>Setting up WinCVS for CodeX</title>
+
+        <para>As mentioned above, WinCVS is one of the most popular CVS clients
+        on Windows. Below are all the instructions needed to get WinCVS running on
+        a CodeX project. In the examples, "username" is the user login name, and "projectname"
+        is the short project name.</para>
+
+        <itemizedlist mark="bullet" spacing="compact">
+        <listitem>
+	  <para>Download WinCVS from  <ulink
+	  url="http://www.wincvs.org">http://www.wincvs.org</ulink> and
+          install it on your PC.</para>
+        </listitem>
+
+        <listitem>
+	  <para>Run WinCVS: <literal>Start->Programs->WinCvs</literal>
+          </para>
+        </listitem>
+	
+        <listitem>
+	  <para>Setup the connection to the Codex project: 
+          <literal>Admin->Preferences</literal>
+          </para><para>Enter the CVSROOT:</para><para>
+          <literal>:pserver:username@cvs.projectname.&SYS_DEFAULT_DOMAIN;:/cvsroot/projectname</literal>
+          </para><para>Make sure the Authentication is set to: 
+          <literal>"passwd" file on the cvs server</literal></para>
+        </listitem>
+
+        <listitem>
+	  <para>Log in to CVS: <literal>Admin->Login...</literal> Enter your password.
+          </para>
+        </listitem>
+	
+        <listitem>
+          <para>Identify the place where you are going to install the source code: 
+          <literal>View->Browse Location->Change...</literal>
+          </para>
+        </listitem> 
+	
+        <listitem>
+	  <para>Setup the connection to the Codex project:</para>
+          <para><literal>Create->Check out module</literal></para>
+          <para><literal>Enter the module name and path on the server:</literal></para>
+          <para><literal>  projectname</literal></para>
+          <para>then hit OK.</para>
+          <para>Note that this may take a while for large projects
+          </para>
+        </listitem>
+	
+        <listitem>
+	  <para>Now you have a project on your system, with a CVS directory in each
+          of the folders. These help CVS keep track of which files you've checked out,
+          and when you last synchronized your copy with the repository on Codex. 
+          This is useful for WinCVS, as it keeps track of changed files by marking 
+          them with a red icon.
+          </para>
+        </listitem>
+        </itemizedlist>
+
+        <para>Other things to know about WinCVS:</para>
+
+        <itemizedlist mark="bullet" spacing="compact">
+        <listitem>
+	  <para>If someone modifies a text file at the same time you do, and
+          checks it in first, then when you go to check yours in, the lines that you
+          both changed independent of the other will automatically get updated to
+          the latest changes. If any lines conflict, you'll get an error message 
+          letting you know that there were conflicts, and that your version of the
+          file will need to be modified to resolve the conflicts. You'll also find
+          lines in your version with "&gt;&gt;&gt;&gt;&gt;&gt;" and "&lt;&lt;&lt;&lt;&lt;&lt;"
+          delimiting the conflicts. Edit the conflicts, then re-commit.
+          </para><para>Note: this doesn't apply to binary files: these are replaced 
+          in whole, in CVS.</para>
+        </listitem>
+	
+        <listitem>
+	  <para>Be careful with the "remove selected" (the big black X), which 
+          doesn't delete your local version of the file, it queues the file for 
+          removal from CVS.
+          </para>
+        </listitem>
+        </itemizedlist>
       </section>
     </section>
 

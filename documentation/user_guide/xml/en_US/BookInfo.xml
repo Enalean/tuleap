@@ -284,6 +284,15 @@
 
         <revremark>Added information about the CVS preamble customization.</revremark>
       </revision>
+      <revision>
+        <revnumber>2.6.4</revnumber>
+
+        <date>9-Mar-2004</date>
+
+        <authorinitials>Nicolas Guerin</authorinitials>
+
+        <revremark>Added information about setting up WinCVS for CodeX, based on description for the TIFFany project: http://tiffany.codex.xerox.com/wincvs.php</revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--
