@@ -11,7 +11,8 @@
 
 $sql = "SELECT group_id,survey_id,question_id,response,date,date AS date_stamp ".
 'FROM survey_responses '.
-"WHERE group_id='$group_id'";
+"WHERE group_id='$group_id' ".
+'ORDER BY survey_id, date_stamp, question_id';
 
 $col_list = array('group_id','survey_id','question_id',
 		  'response','date','date_stamp');
