@@ -72,7 +72,7 @@ http://projectname.&SYS_DEFAULT_DOMAIN;
             developed by the Apache Consortium. It is available under an Open
             Source license and is by far the most popular Web server in the
             world with more than 60% of the market share. For more information
-            on Apache see <ulink url="http://www.apache.org">http://www.apache.org</ulink></para></footnote>
+            on Apache see <ulink url="http://www.apache.org">http://httpd.apache.org</ulink></para></footnote>
             jargon the directory <literal>/home/groups/projectname/htdocs</literal>
             is the Document Root of your Web Site.</para>
 
@@ -101,7 +101,8 @@ http://projectname.&SYS_DEFAULT_DOMAIN;
             default index.php file created by CodeX into something else by
             using the following commands from your Shell Account:</para>
 
-            <para><literal> cd /home/groups/projectname/htdocs
+            <para><literal>
+            cd /home/groups/projectname/htdocs
             mv index.php index_default.php </literal></para>
           </listitem>
 
@@ -123,8 +124,9 @@ http://projectname.&SYS_DEFAULT_DOMAIN;
         <title>Web Site Scripting with PHP</title>
 
         <para>Project members can build sophisticated project Web sites by
-        using the PHP language. PHP, an Open Source equivalent to Microsoft
-        ASP, is becoming extremely popular as a server-side scripting language
+        using the <ulink url="http://www.php.net">PHP language</ulink>. 
+        PHP, is becoming extremely popular as 
+        a server-side scripting language
         for the Web. PHP is easy to learn, optimized for the Web and interact
         nicely with SQL databases.</para>
 
@@ -133,6 +135,12 @@ http://projectname.&SYS_DEFAULT_DOMAIN;
         with PHP code in it. For pure HTML pages use the &#34;htm&#34; or
         &#34;html&#34; extensions as usual.</para>
 
+        <para>For <ulink url="http://www.php.net/manual/en/security.php">security reasons</ulink>,
+        your php scripts will only be allowed to
+        access files located in the document root of your project (e.g. 
+        <literal>/home/groups/projectname/htdocs</literal>).</para>
+
+<!-- We removed access to the pre_vhost.php include file for security reasons
         <para>CodeX offers a system wide include file called
         &#34;pre_vhosts.php&#34; that you should include at the very top of
         all your PHP pages if you want to be given access to the current user,
@@ -395,6 +403,7 @@ if ( user_isloggedin() ) {
             </programlisting>
           </example>
         </section>
+-->
       </section>
 
       <section id="WebSitePublishing">
