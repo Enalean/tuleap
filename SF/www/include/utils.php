@@ -505,7 +505,7 @@ function util_is_valid_filename ($file) {
 }
 
 // this function permit including site specific content with ease
-function util_get_content($file){
+function util_get_content($file, $args=false){
     // Default language
     $lang = $GLOBALS['sys_lang'];
     
