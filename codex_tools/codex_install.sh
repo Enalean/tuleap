@@ -295,6 +295,13 @@ cd ${RPMS_DIR}/perl-dbd-mysql
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh --force ${newest_rpm}/perl-DBD-MySQL-*.i386.rpm
 
+# perl-Crypt-SmbHash needed by gensmbpasswd
+echo "Removing existing perl-Crypt-SmbHash..."
+$RPM -e --nodeps perl-Crypt-SmbHash 2>/dev/null
+echo "Installing perl-Crypt-SmbHash..."
+cd ${RPMS_DIR}/others
+$RPM -Uvh --force perl-Crypt-SmbHash*.noarch.rpm
+
 # -> mysql
 echo "Removing RedHat MySQL..."
 $SERVICE mysql stop 2>/dev/null
@@ -668,6 +675,14 @@ cd /home/httpd/SF/etc
 $CP cvsweb.conf.dist /etc/httpd/conf/cvsweb.conf
 $CHOWN root.root /etc/httpd/conf/cvsweb.conf
 $CHMOD 644 /etc/httpd/conf/cvsweb.conf
+
+##############################################
+# Samba configuration
+#
+cd /usr/local/bin
+$CP /home/httpd/SF/utils/gensmbpasswd.pl gensmbpasswd
+$CHOWN sourceforge.sourceforge gensmbpasswd
+$CHMOD 755 gensmbpasswd
 
 ##############################################
 # Subversion configuration

@@ -330,6 +330,18 @@ $TOUCH /etc/httpd/conf/codex_htpasswd
 $CHOWN sourceforge.sourceforge /etc/httpd/conf/codex_htpasswd
 $CHMOD 775 /etc/httpd/conf/codex_htpasswd
 
+# perl-Crypt-SmbHash needed by gensmbpasswd.pl
+echo "Removing existing perl-Crypt-SmbHash..."
+$RPM -e --nodeps perl-Crypt-SmbHash 2>/dev/null
+echo "Installing perl-Crypt-SmbHash..."
+cd ${RPMS_DIR}/others
+$RPM -Uvh --force perl-Crypt-SmbHash*.noarch.rpm
+cd /usr/local/bin
+$RM -f gensmbpasswd
+$CP /home/httpd/SF/utils/gensmbpasswd.pl gensmbpasswd
+$CHOWN sourceforge.sourceforge gensmbpasswd
+$CHMOD 755 gensmbpasswd
+
 ######
 # Now install the non RPMs stuff 
 #
