@@ -20,7 +20,7 @@ L. Julliard</p>
 </center>
 <br>
 &nbsp;
-l
+<br>
 <h1>Preamble</h1>
 Before or while you read the CodeX Installation Guide westrongly
 recommend that you also have a llok at the CodeX Administration Guide
@@ -1012,6 +1012,13 @@ in
 /etc/aliases to avoid conflict when merging new code from CodeX CVS
 repository<br>
 <br>
+<h2>Sendmail shell wrappers</h2>
+In the CodeX Configuration, sendmail uses a number of shell wrappers
+used in pipe commands in the aliases file. These shell wrappers must be
+explicitely delcared in the /etc/smrsh directory in order to execute
+properly. You should create the following links:<br>
+<br>
+<pre>	# cd /etc/srmsh<br>	# ln -sf /usr/local/bin/gotohell<br>	# ln -sf /usr/local/mailman/mail/wrapper<br></pre>
 <br>
 <hr>
 <h1>Mailman Installation and Configuration</h1>
@@ -1327,7 +1334,7 @@ Simply check that the ssh daemon is started (command is 'service ssh
 start'). Also make sure that it is started at boot time (command is
 'chkconfig sshd on').
 <h2>Telnet Configuration</h2>
-Telnet access shuld only be enabled when your CodeX site is on a safe
+Telnet access should only be enabled when your CodeX site is on a safe
 network. If you are on the Internet we *strongly* recommend that you
 disable it. To enable/disable the telnet access on your CodeX server,
 edit the /etc/xinetd.d/telnet file and change the 'disable' parameter
@@ -1353,20 +1360,37 @@ SF/utils/cvs1/cvssh. This is a little script that simply check the
 command that are remotely executed through ssh by the user (it can be
 cvs, sftp, rsync,...) and decide to accept or reject the command.<br>
 <br>
-To activate this pseudo shell, copy the file cvssh in /usr/local/bin,
+To activate this pseudo shell:<br>
+<ul>
+  <li>copy the file cvssh in /usr/local/bin,
 make sure it is executable and also add the file to the list of
 authorized shells in /etc/shells. Adding cvssh to /etc/shells will make
 it appear in the list of possible shells in the CodeX user admin
-interface. <br>
-<br>
-If you want the retricted shell to be the default for all users then
+interface.</li>
+  <li>If you want the retricted shell to be the default for all users
+then
 change the default value of the shell column in the user table with the
 following mysql command:<br>
+    <pre>$ mysql -u sourceforge sourceforge -p<br>mysql&gt;&nbsp; ALTER TABLE user ALTER COLUMN shell SET DEFAULT
+'/usr/local/bin/cvssh' ;</pre>
+  </li>
+</ul>
 <br>
-$ mysql -u sourceforge sourceforge -p<br>
-mysql&gt;&nbsp; ALTER TABLE user ALTER COLUMN shell SET DEFAULT
-'/usr/local/bin/cvssh' ;<br>
-<br>
+<h2>No Shell Access</h2>
+It is also possible to disable the shell access to all user by default.
+The procedure is as follows:<br>
+<ul>
+  <li>Add '/bin/false' to the list of allowed shells in /etc/shells.</li>
+  <li>If you want to deactivate shell access for all users by default
+then
+change the default value of the shell column in the user table with the
+following mysql command:<br>
+    <pre>$ mysql -u sourceforge sourceforge -p<br>mysql&gt;&nbsp; ALTER TABLE user ALTER COLUMN shell SET DEFAULT<br>'/bin/false' ;</pre>
+  </li>
+</ul>
+Note: if you do this then you must use the pserver protocol to access
+the cvs repository as the access through ssh requires a shell account
+to be activated.<br>
 <br>
 <hr>
 <h1>CodeX Site Customization</h1>
