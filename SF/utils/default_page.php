@@ -12,7 +12,7 @@ $headers = getallheaders();
 <LINK rel="stylesheet" href="http://codex.xerox.com/codex.css" type="text/css" >
 </HEAD>
 
-<BODY bgcolor="#BCBCAD" link="#8b4020" vlink="#8b4020 topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" marginheight="0" marginwidth="0">
+<BODY bgcolor="#BCBCAD" link="#8b4020" vlink="#8b4020" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" marginheight="0" marginwidth="0">
 
 <!-- top strip -->
 <TABLE width="100%" border=0 cellspacing=0 cellpadding=2 bgcolor="#BCBCAD">
@@ -21,7 +21,7 @@ $headers = getallheaders();
       <A class=maintitlebar href="http://codex.xerox.com/"><B>Home</B></A> | 
       <A class=maintitlebar href="http://codex.xerox.com/about.php"><B>About</B></A> | 
       <A class=maintitlebar href="http://codex.xerox.com/contact.php"><B>Contact Us</B></A> |
-      <A class=maintitlebar href="http://codex.xerox.com/account/logout.php"><B>Logout</B></A></SPAN></TD>
+      <A class=maintitlebar href="http://codex.xerox.com/account/logout.php"><B>Logout</B></A></SPAN>
     </TD>
   </TR>
 </TABLE>
@@ -51,8 +51,8 @@ $headers = getallheaders();
 $pieces = explode('.', $headers[Host]);
 $project_name = $pieces[0];
 ?>
-      <P><h3>This Project hasn't yet set up it's personal web site.<BR>
-      Please check back soon for updates or visit the <A href="http://codex.xerox.com/projects/<?php echo $project_name; ?>">Project Summary</a> page on CodeX<BR></h3></P>
+      <h3>This Project hasn't yet set up it's personal web site.<BR>
+      Please check back soon for updates or visit the <A href="http://codex.xerox.com/projects/<?php echo $project_name; ?>">Project Summary</a> page on CodeX<BR></h3>
       </CENTER>
     </TD>
   </TR>
@@ -63,7 +63,7 @@ $project_name = $pieces[0];
 <TABLE width="100%" border="0" cellspacing="0" cellpadding="2" bgcolor="#BCBCAD">
   <TR>
     <TD align="center"><FONT color="#ffffff"><B><SPAN class="maintitlebar">
-     Code eXchange is a Xerox internal Web site. All material hosted on this site is the property of Xerox. ©2001 Xerox Corporation.</SPAN><B></FONT>
+     Code eXchange is a Xerox internal Web site. All material hosted on this site is the property of Xerox. ©2001 Xerox Corporation.</SPAN></B></FONT>
     </TD>
   </TR>
 </TABLE>
