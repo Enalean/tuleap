@@ -18,6 +18,10 @@ if (!user_isloggedin()) {
     exit_not_logged_in();
 }
 
+$authorized_user=false;
+if (user_ismember($group_id,'R2') || user_ismember($group_id,'A')) {
+    $authorized_user=true;
+}
 $num_packages=0;
 $sql = "SELECT * FROM frs_package WHERE group_id='$group_id' AND status_id='1'";
 $res = db_query( $sql );
@@ -25,7 +29,7 @@ $res = db_query( $sql );
 if (db_numrows($res)>0) {
     while ($row = db_fetch_array($res)) {
         $authorized=false;
-        if (permission_is_authorized('PACKAGE_READ',$row['package_id'],user_getid())) {
+        if (($authorized_user)||(permission_is_authorized('PACKAGE_READ',$row['package_id'],user_getid()))) {
             $authorized=true;
         } else {
             // Get corresponding releases and check access. 
@@ -108,7 +112,15 @@ function download(group_id,file_id,filename) {
     // Iterate and show the packages
     while (list($package_id, $package_name) = each($res_package)) {
 
-	print '<TR><TD><B>'.$package_name.'</B></TD><TD COLSPAN="7">&nbsp;</TD></TR>'."\n";
+	print '<TR><TD><B>'.$package_name;
+        if ($authorized_user) {
+            if (permission_exist('PACKAGE_READ',$package_id)) {
+                print ' <a href="/file/admin/editpackagepermissions.php?package_id='.$package_id.
+                    '&group_id='.$group_id.'"><img src="'.util_get_image_theme("ic/lock.png").'" border="0"></a>';
+            }
+        }
+        print '</B></TD><TD COLSPAN="7">&nbsp;</TD></TR>'."\n";
+
 
 	// get the releases of the package
 	// Order by release_date and release_id in case two releases
@@ -128,7 +140,8 @@ function download(group_id,file_id,filename) {
 			$package_release = db_fetch_array( $res_release );
 
                         // Check permissions for release, then package
-                        if (permission_exist('RELEASE_READ', $package_release['release_id'])) {
+                        $permission_exists = permission_exist('RELEASE_READ', $package_release['release_id']);
+                        if (($permission_exists)&&(!$authorized_user)) {
                             if (!permission_is_authorized('RELEASE_READ',$package_release['release_id'],user_getid())) {
                                 // Skip this release
                                 continue;
@@ -147,7 +160,15 @@ function download(group_id,file_id,filename) {
 
 			print "\t" . '<TR class="'. $bgcolor .'"><TD>&nbsp;</TD><TD><B>'
 				. '<A HREF="shownotes.php?release_id='.$package_release['release_id'].'">'
-				. $package_release['name'] .'</A></B></TD><TD COLSPAN="5">&nbsp;</TD><TD>'
+				. $package_release['name'] .'</A></B>';
+                        if ($authorized_user) {
+                            if ($permission_exists) {
+                                print ' <a href="/file/admin/editreleasepermissions.php?release_id='.$package_release['release_id'].
+                                    '&group_id='.$group_id.'&package_id='.$package_id.'"><img src="'.util_get_image_theme("ic/lock.png").'" border="0"></a>';
+                            }
+                        }
+
+                        print '</TD><TD COLSPAN="5">&nbsp;</TD><TD>'
 				. format_date("Y-m-d", $package_release['release_date'] ) .'</TD></TR>'."\n";
 
 			   // get the files in this release....

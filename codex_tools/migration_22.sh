@@ -442,6 +442,12 @@ if [ -d /etc/codex/site-content/en_US/project/ ]; then
     $MV -f /etc/codex/site-content/en_US/project/editrelease_attach_file.txt /etc/codex/site-content/en_US/file/
 fi
 
+
+#############################################
+# Copy new icon in all custom themes
+$CP  $INSTALL_DIR/SF/www/images/codex.theme/ic/lock.png /etc/codex/themes/images/*/ic/
+
+
 ##############################################
 # Database Structure and initvalues upgrade
 #
@@ -675,9 +681,6 @@ DROP TABLE mailaliases;
 --- File service for future project should point to the new script
 UPDATE service SET link='/file/showfiles.php?group_id=$group_id' where short_name='file';
 
---- !!!!!!!!! NEED TO UPGRADE all files services in perl script!
-
-
 EOF
 
 # Update 'file' service for each project
@@ -718,7 +721,6 @@ while (my ($group_id) = $c->fetchrow()) {
 
 exit;
 EOF
-
 
 
 # Add svn service entry for each project
