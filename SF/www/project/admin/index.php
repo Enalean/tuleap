@@ -188,17 +188,69 @@ echo '</TD></TR>
 
 $HTML->box1_top('Tool Admin');
 
+$project=new Project($group_id);
+
 echo '
-	<BR>
-	<A HREF="/docman/admin/?group_id='.$group_id.'">DocManager Admin</A><BR>
-	<A HREF="/bugs/admin/?group_id='.$group_id.'">Bug Admin</A><BR>
-	<A HREF="/patch/admin/?group_id='.$group_id.'">Patch Admin</A><BR>
-	<A HREF="/mail/admin/?group_id='.$group_id.'">Mail Admin</A><BR>
-	<A HREF="/news/admin/?group_id='.$group_id.'">News Admin</A><BR>
-	<A HREF="/pm/admin/?group_id='.$group_id.'">Task Manager Admin</A><BR>
-	<A HREF="/support/admin/?group_id='.$group_id.'">Support Manager Admin</A><BR>
-	<A HREF="/forum/admin/?group_id='.$group_id.'">Forum Admin</A><BR>
-	';
+	<BR>';
+if ($project->usesForum()) {
+    echo '	<A HREF="/forum/admin/?group_id='.$group_id.'">Forum Admin</A><BR>';
+}
+if ($project->usesBugs() && !($sys_activate_tracker && !$project->activateOldBug())) {
+    echo '	<A HREF="/bugs/admin/?group_id='.$group_id.'">Bug Admin</A><BR>';
+}
+if ($project->usesSupport() && !($sys_activate_tracker && !$project->activateOldSR())) {
+    echo '	<A HREF="/support/admin/?group_id='.$group_id.'">Support Manager Admin</A><BR>';
+}
+if ($project->usesPatch()) {
+    echo '	<A HREF="/patch/admin/?group_id='.$group_id.'">Patch Admin</A><BR>';
+}
+if ($project->usesMail()) {
+    echo '	<A HREF="/mail/admin/?group_id='.$group_id.'">Lists Admin</A><BR>';
+}
+if ($project->usesPm() && !($sys_activate_tracker && !$project->activateOldTask())) {
+    echo '	<A HREF="/pm/admin/?group_id='.$group_id.'">Task Manager Admin</A><BR>';
+}
+if ($project->usesDocman()) {
+    echo '	<A HREF="/docman/admin/?group_id='.$group_id.'">DocManager Admin</A><BR>';
+}
+if ($project->usesSurvey()) {
+    echo '	<A HREF="/survey/admin/?group_id='.$group_id.'">Survey Admin</A><BR>';
+}
+if ($project->usesNews()) {
+    echo '	<A HREF="/news/admin/?group_id='.$group_id.'">News Admin</A><BR>';
+}
+if ($project->usesCVS()) {
+    echo '	<A HREF="/cvs/?func=admin&group_id='.$group_id.'">CVS Admin</A><BR>';
+}
+if ( $project->usesTracker()&&$sys_activate_tracker ) {
+    echo '	<A HREF="/tracker/admin/?group_id='.$group_id.'">Tracker Admin</A>';
+    //	  
+    //  get the Group object
+    //	  
+    $group = group_get_object($group_id);
+    if (!$group || !is_object($group) || $group->isError()) {
+        exit_no_group();
+    }		   
+    $atf = new ArtifactTypeFactory($group);
+    if (!$group || !is_object($group) || $group->isError()) {
+        exit_error('Error','Could Not Get ArtifactTypeFactory');
+    }
+    
+    // Get the artfact type list
+    $at_arr = $atf->getArtifactTypes();
+    
+    if (!$at_arr || count($at_arr) < 1) {
+        echo "<br><i>-&nbsp;No Accessible Trackers Found</i>";
+    } else {
+        for ($j = 0; $j < count($at_arr); $j++) {
+            echo '<br><i>-&nbsp;
+			<a href="/tracker/admin/?atid='. $at_arr[$j]->getID() .
+                '&group_id='.$group_id.'">' .
+                $at_arr[$j]->getName() .' Admin</a></i>';
+        }
+    }
+
+}
 
 $HTML->box1_bottom(); 
 
