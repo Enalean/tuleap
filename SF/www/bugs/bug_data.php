@@ -222,6 +222,18 @@ function bug_data_is_empty_ok($field, $by_field_id=false) {
     return($val);
 }
 
+function bug_data_do_keep_history($field, $by_field_id=false) {
+    global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
+    if ($by_field_id) {
+	$val = $BF_USAGE_BY_ID[$field]['custom_keep_history'];
+	if (!isset($val)) { $val = $BF_USAGE_BY_ID[$field]['empty_keep_history']; }
+    } else {
+	$val = $BF_USAGE_BY_NAME[$field]['custom_keep_history'];
+	if (!isset($val)) { $val = $BF_USAGE_BY_NAME[$field]['keep_history']; }
+    }
+    return($val);
+}
+
 function bug_data_is_required($field, $by_field_id=false) {
     global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
     return($by_field_id ? $BF_USAGE_BY_ID[$field]['required']: $BF_USAGE_BY_NAME[$field]['required']);

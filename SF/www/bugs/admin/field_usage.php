@@ -107,8 +107,8 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
          }else if ($display_type == 'DF') {
 	     // Date fields have a fixed size that cannot be changed
 	     list($size,$maxlength) = bug_data_get_display_size($field);
-	     echo '<INPUT TYPE="hidden" NAME="n1" VALUE="'.$size.">\n";
-	     echo '<INPUT TYPE="hidden" NAME="n2" VALUE="'.$maxlength.">\n";
+	     echo '<INPUT TYPE="hidden" NAME="n1" VALUE="'.$size."\">\n";
+	     echo '<INPUT TYPE="hidden" NAME="n2" VALUE="'.$maxlength."\">\n";
 	 }
 	 
 	 if (bug_data_is_text_field($field) || bug_data_is_text_area($field) ||
@@ -119,7 +119,7 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 	     (bug_data_is_empty_ok($field)?' CHECKED':'').'>&nbsp;&nbsp;';
 	     echo '<li>Keep Change History: ';
 	     echo '<INPUT TYPE="CHECKBOX" NAME="keep_history" VALUE="1" '.
-	     (bug_data_is_empty_ok($field)?' CHECKED':'').'></ul>';
+	     (bug_data_do_keep_history($field)?' CHECKED':'').'></ul>';
 	 }
      }
 
