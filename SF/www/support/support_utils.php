@@ -169,7 +169,7 @@ function mail_followup($support_id,$more_addresses=false) {
 			"\nSummary: ".util_unconvert_htmlspecialchars(db_result($result,0,'summary'));
 
 
-		$subject="[ ".db_result($result,0,"support_id")." ] ".util_unconvert_htmlspecialchars(db_result($result,0,"summary"));
+		$subject="[ SR #".db_result($result,0,"support_id")." ] ".util_unconvert_htmlspecialchars(db_result($result,0,"summary"));
 
 		/*
 			get all the email addresses that have dealt with this request
@@ -179,10 +179,10 @@ function mail_followup($support_id,$more_addresses=false) {
 		$rows=db_numrows($email_res);
 		if ($email_res && $rows > 0) {
 			$mail_arr=result_column_to_array($email_res,0);
-			$emails=implode($mail_arr,', ');
+			$to=implode($mail_arr,', ');
 		}
 		if ($more_addresses) {
-			$emails .= ','.$more_addresses;
+			$to .= ','.$more_addresses;
 		}
 
 		/*
@@ -205,20 +205,13 @@ function mail_followup($support_id,$more_addresses=false) {
 				"\n\n----------------------------------------------------------------------";
 			}
 			$body .= "\nYou can respond by visiting: ".
-			"\nhttp://$GLOBALS[HTTP_HOST]/support/?func=detailsupport&support_id=".db_result($result,0,'support_id')."&group_id=".db_result($result,0,'group_id');
+			"\nhttp://".$GLOBALS['sys_default_domain'].'/support/?func=detailsupport&support_id='.db_result($result,0,'support_id').'&group_id='.db_result($result,0,'group_id');
 		}
 
-		//attach the headers to the body
+		$more='From: noreply@'.$GLOBALS['sys_default_domain'];
 
-		$body = "To: noreply@$GLOBALS[HTTP_HOST]".
-			"\nBCC: $emails".
-			"\nSubject: $subject".
-			$body;
-		/*
-			Send the email
-		*/
-		exec ("/bin/echo \"". util_prep_string_for_sendmail($body) ."\" | /usr/sbin/sendmail -fnoreply@$GLOBALS[HTTP_HOST] -t &");
-//		echo $body;
+		mail($to, $subject, $body, $more);
+
 		$feedback .= " Support Request Update Emailed ";
 
 	} else {
