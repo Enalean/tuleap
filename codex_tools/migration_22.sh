@@ -681,6 +681,12 @@ DROP TABLE mailaliases;
 --- 
 UPDATE artifact_field SET value_function = 'artifact_submitters' WHERE field_name = 'submitted_by';
 
+---
+--- Fix SR 92 on Partners
+--- (use default value for fields that are not shown on add)
+---
+UPDATE artifact_field SET default_value = '1' WHERE field_name = 'status_id';
+
 
 --- NOT APPLIED YET
 --- File service for future project should point to the new script

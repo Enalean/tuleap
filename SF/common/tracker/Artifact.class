@@ -327,25 +327,36 @@ class Artifact extends Error {
         if (!$vfl) {
 		$vfl = $art_field_fact->extractFieldList();
         }
+
                 
 	if (!$import) {
-	        // make sure  required fields are not empty
-        	if ( $art_field_fact->checkEmptyFields($vfl) == false ) {
-            		exit_missing_param();
-        	}
+	  // make sure  required fields are not empty
+	  if ( $art_field_fact->checkEmptyFields($vfl) == false ) {
+	    exit_missing_param();
+	  }
 	}
+
 
         // we don't force them to be logged in to submit a bug
         if (!user_isloggedin()) {
-            $user=100;
+	  $user=100;
         } else {
-            $user=user_getid();
+	  $user=user_getid();
         }
+	
 
+	// add default values for fields that have not been shown
+	$add_fields = $art_field_fact->getAllFieldsNotShownOnAdd();
+	while (list($key,$def_val) = each($add_fields)) {
+	  if (!array_key_exists($key,$vfl)) $vfl[$key] = $def_val;
+	}
+
+	
 	if ($import &&
 	    $vfl['submitted_by'] &&
 	    $vfl['submitted_by'] != "")
 	  $user = $vfl['submitted_by'];
+
         
 	// first make sure this wasn't double-submitted
 	$field = $art_field_fact->getFieldFromName('summary');
@@ -397,6 +408,7 @@ class Artifact extends Error {
                         
         } // while
 
+
         // Add all special fields that were not handled in the previous block
         $fixed_cols = 'open_date,group_artifact_id,submitted_by';
 	if ($import) {
@@ -405,7 +417,8 @@ class Artifact extends Error {
 		$fixed_values = "'".$open_date."','$group_artifact_id','$user'";
 	} else {
 	        $fixed_values = "'".time()."','$group_artifact_id','$user'";
-        }        
+        }  
+
 
         //
         //  Finally, build the full SQL query and insert the artifact itself 
@@ -452,7 +465,7 @@ class Artifact extends Error {
                     if ( !$field->insertValue($artifact_id,$value) ) {
                         $error_message .= " Artifact created, but failed to insert the field value - ".$field->getName()." : ".$value;
                         $was_error = true;
-                        $ath->setError($error_message);
+                        $this->setError($error_message);
                     }
                                     
                 } else {
@@ -464,7 +477,7 @@ class Artifact extends Error {
                     if ( !$field->insertValue($artifact_id,$field->getDefaultValue()) ) {
                         $error_message .= " Artifact created, but failed to insert the default field value - ".$field->getName()." : ".$field->getDefaultValue();
                         $was_error = true;
-                        $ath->setError($error_message);
+                        $this->setError($error_message);
                     }
                                         
                 }
@@ -562,7 +575,7 @@ class Artifact extends Error {
      *
      *  @return boolean
      */
-    function handleUpdate ($artifact_id_dependent,$canned_response,&$changes,$masschange=false,$vfl,$import=false)
+    function handleUpdate ($artifact_id_dependent,$canned_response,&$changes,$masschange=false,$vfl=false,$import=false)
         {
             global $feedback,$art_field_fact,$HTTP_POST_VARS;
 

@@ -217,7 +217,7 @@ class ArtifactFieldFactory extends Error {
 	}
 
 	/**
-     * 
+	 * 
 	 *  Check whether empty values are allowed for the bug fields
 	 *
 	 *  @param field_array: associative array of field_name -> value
@@ -251,8 +251,35 @@ class ArtifactFieldFactory extends Error {
 	
 	}
 
+
+	/** 
+	 * return all the fields (+ their default value) 
+	 * of this tracker that have not been showed to the user
+	 * during the artifact creation
+	 */
+	function getAllFieldsNotShownOnAdd() {
+	  $is_member = false;
+	  if (user_ismember($this->ArtifactType->Group->getID())) {
+	    $is_member = true;
+	  } 
+
+	  $result_fields = array();
+	  reset($this->USAGE_BY_NAME);
+	  
+	  while (list($key,$field) = each($this->USAGE_BY_NAME) ) {
+	    if ( $field->getUseIt() == 1 && 
+		 ((!$field->show_on_add && !$is_member) ||
+		  (!$field->show_on_add_members && $is_member))){
+	      $result_fields[$key] = $field->getDefaultValue();
+	    }
+	  }
+	  
+	  return $result_fields;
+	}
+
+
 	/**
-     * 
+	 * 
 	 *  Copy all the fields informations from a tracker to another.
 	 *
 	 *  @param atid_source: source tracker

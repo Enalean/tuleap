@@ -117,7 +117,7 @@ if ( $func == 'gotoid' ) {
 
                         // Artifact creation                
                         if (!$ah->create()) {
-                                exit_error('ERROR',$ath->getErrorMessage());
+                                exit_error('ERROR',$ah->getErrorMessage());
                         } else {
                                 //
                                 //      Attach file to this Artifact.
