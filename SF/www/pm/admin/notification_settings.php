@@ -166,7 +166,7 @@ help_button('TaskManagerAdministration.html#TaskEmailNotificationSettings').'</h
 if (user_ismember($group_id,'A')) {
     echo '
               <P><B>As a project administrator</B> you can provide email addresses (comma separated) to which new Task submissions (and possibly updates) will be systematically sent.<BR>
-	<BR><INPUT TYPE="TEXT" NAME="new_task_address" VALUE="'.$row_grp['new_task_address'].'" SIZE="55" MAXLENGTH="255"> 
+	<BR><INPUT TYPE="TEXT" NAME="new_task_address" VALUE="'.$row_grp['new_task_address'].'" SIZE="55"> 
 	&nbsp;&nbsp;&nbsp;(send on all updates) <INPUT TYPE="CHECKBOX" NAME="send_all_tasks" VALUE="1" '. (($row_grp['send_all_tasks'])?'CHECKED':'') .'><BR><br>';
 } else {
     if ($row_grp['new_task_address'])

@@ -69,6 +69,7 @@ while ($arr = db_fetch_array($res_notif)) {
 
 if ($submit) {
 
+
     // email adresses for new bugs
     $res_new=db_query('UPDATE groups SET '
 	."send_all_bugs='$send_all_bugs', "
@@ -165,7 +166,7 @@ help_button('BTSAdministration.html#BugGlobalEmailNotification').'</h3>';
 if (user_ismember($group_id,'A')) {
     echo '
               <P><B>As a project administrator</B> you can provide email addresses (comma separated) to which new Bug submissions (and possibly updates) will be systematically sent.<BR>
-	<BR><INPUT TYPE="TEXT" NAME="new_bug_address" VALUE="'.$row_grp['new_bug_address'].'" SIZE="55" MAXLENGTH="255"> 
+	<BR><INPUT TYPE="TEXT" NAME="new_bug_address" VALUE="'.$row_grp['new_bug_address'].'" SIZE="55"> 
 	&nbsp;&nbsp;&nbsp;(send on all updates) <INPUT TYPE="CHECKBOX" NAME="send_all_bugs" VALUE="1" '. (($row_grp['send_all_bugs'])?'CHECKED':'') .'><BR><br>';
 } else {
     if ($row_grp['new_bug_address'])

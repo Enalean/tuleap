@@ -177,7 +177,7 @@ $row_grp['patch_preamble'].'</TEXTAREA>';
 		echo '<h3>Email Notification Rules</h3>
               <P><B>If you wish, you can provide email addresses (separated by a comma) to which new Patch submissions will be sent.</B><BR>
               (Remark: Patch submission and updates are always sent to the patch submitter and assignee)<br>
-	<BR><INPUT TYPE="TEXT" NAME="new_patch_address" VALUE="'.$row_grp['new_patch_address'].'" SIZE="45" MAXLENGTH="80"> 
+	<BR><INPUT TYPE="TEXT" NAME="new_patch_address" VALUE="'.$row_grp['new_patch_address'].'" SIZE="55"> 
 	&nbsp;&nbsp;&nbsp;(send on all updates) <INPUT TYPE="CHECKBOX" NAME="send_all_patches" VALUE="1" '. (($row_grp['send_all_patches'])?'CHECKED':'') .'><BR>';
 
 		echo '<HR>
