@@ -37,7 +37,7 @@ done
 
 if [ $HELP == 1 ]
 then
-    echo "Usage: generate_doc.sh [-d CVSROOT] [-f] [-v] [-h]";
+    echo "Usage: generate_programmer_doc.sh [-d CVSROOT] [-f] [-v] [-h]";
     echo "  -d CVSROOT : specify the CVSROOT";
     echo "  -f : force to generate the documentation witout checking CVS";
     echo "  -v : verbose";
