@@ -9,6 +9,8 @@
 require($DOCUMENT_ROOT.'/include/pre.php');
 require('../forum/forum_utils.php');
 
+$Language->loadLanguageMsg('news/news');
+
 if (user_isloggedin()) {
 
 	if ($post_changes) {
@@ -27,12 +29,12 @@ if (user_isloggedin()) {
 				" VALUES ('$group_id','".user_getid()."','0','".time()."','$new_id','".htmlspecialchars($summary)."','".htmlspecialchars($details)."')";
 			$result=db_query($sql);
 			if (!$result) {
-				$feedback .= ' ERROR doing insert ';
+				$feedback .= ' '.$Language->getText('news_submit','insert_err').' ';
 			} else {
-				$feedback .= ' News Added. ';
+				$feedback .= ' '.$Language->getText('news_submit','news_added').' ';
 			}
 		} else {
-			exit_error('Permission Denied.','Permission Denied. You cannot submit news for a project unless you are an admin on that project');
+			exit_error($Language->getText('news_admin_index','permission_denied'),$Language->getText('news_submit','only_admin_submits'));
 		}
 	}
 
@@ -44,35 +46,25 @@ if (user_isloggedin()) {
 	/*
 		Show the submit form
 	*/
-	news_header(array('title'=>'News',
+	news_header(array('title'=>$Language->getText('news_index','news'),
 			  'help'=>'NewsService.html'));
 
 	echo '
-		<H3>Submit News For '.group_getname($group_id).'</H3>
+		<H3>'.$Language->getText('news_submit','submit_news_for',group_getname($group_id)).'</H3>
 		<P>
-		You can post news about your project if you are an admin on your project. 
-		You may also post "help wanted" notes if your project needs help.
-		<P>
-		All posts <B>for your project</B> will appear instantly on your project 
-		summary page. Posts that are of special interest to the community will 
-		have to be approved by a member of the news team before they will appear 
-		on the '.$GLOBALS['sys_name'].' home page.
-		<P>
-		You may include URLs, but not HTML in your submissions.
-		<P>
-		URLs that start with http:// are made clickable.
+		'.$Language->getText('news_submit','post_explain',$GLOBALS['sys_name']).'
 		<P>
 		<FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
 		<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
-		<B>For Project: '. group_getname($group_id) .'</B>
+		<B>'.$Language->getText('news_submit','for_project',group_getname($group_id)) .'</B>
 		<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 		<P>
-		<B>Subject:</B><BR>
+		<B>'.$Language->getText('news_admin_index','subject').':</B><BR>
 		<INPUT TYPE="TEXT" NAME="summary" VALUE="" SIZE="30" MAXLENGTH="60">
 		<P>
-		<B>Details:</B><BR>
+		<B>'.$Language->getText('news_admin_index','details').':</B><BR>
 		<TEXTAREA NAME="details" ROWS="5" COLS="50" WRAP="SOFT"></TEXTAREA><BR>
-		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
+		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
 		</FORM>';
 
 	news_footer(array());

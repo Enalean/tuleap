@@ -11,8 +11,10 @@
 	By Tim Perdue, Sourceforge, 12/99
 */
 
+$Language->loadLanguageMsg('news/news');
+
 function news_header($params) {
-	global $DOCUMENT_ROOT,$HTML,$group_id,$news_name,$news_id;
+  global $DOCUMENT_ROOT,$HTML,$group_id,$news_name,$news_id,$Language;
 
 	$params['toptab']='news';
 	$params['group']=$group_id;
@@ -25,13 +27,13 @@ function news_header($params) {
 	} else {
 		$HTML->header($params);
 		echo '
-			<H2>'.$GLOBALS['sys_name'].' <A HREF="/news/">News</A></H2>';
+			<H2>'.$GLOBALS['sys_name'].' <A HREF="/news/">'.$Language->getText('news_index','news').'</A></H2>';
 	}
         if (!$params['pv']){
             echo '<P><B>';
-            echo '<A HREF="/news/submit.php?group_id='.$group_id.'">Submit</A> | <A HREF="/news/admin/?group_id='.$group_id.'">Admin</A>';
+            echo '<A HREF="/news/submit.php?group_id='.$group_id.'">Submit</A> | <A HREF="/news/admin/?group_id='.$group_id.'">'.$Language->getText('news_utils','admin').'</A>';
             if ($params['help']) {
-                echo ' | '.help_button($params['help'],false,'Help');
+                echo ' | '.help_button($params['help'],false,$Language->getText('global','help'));
             }
             echo '</b><P>';
         }
@@ -42,7 +44,7 @@ function news_footer($params) {
 }
 
 function news_show_latest($group_id='',$limit=10,$show_summaries=true,$allow_submit=true,$flat=false,$tail_headlines=0) {
-    global $sys_datefmt, $sys_news_group;
+  global $sys_datefmt, $sys_news_group,$Language;
     if (!$group_id) {
 	$group_id=$sys_news_group;
     }
@@ -68,7 +70,7 @@ function news_show_latest($group_id='',$limit=10,$show_summaries=true,$allow_sub
     $rows=db_numrows($result);
 
     if (!$result || $rows < 1) {
-	$return .= '<H3>No News Items Found</H3>';
+	$return .= '<H3>'.$Language->getText('news_utils','no_news_items_found').'</H3>';
 	$return .= db_error();
     } else {
 	echo '
@@ -121,12 +123,12 @@ function news_show_latest($group_id='',$limit=10,$show_summaries=true,$allow_sub
 		}
 
 		if ($num_comments == 1) {
-		    $comments_txt = " Comment";
+		    $comments_txt = ' '.$Language->getText('news_utils','comment');
 		} else {
-		    $comments_txt = " Comments";
+		    $comments_txt = ' '.$Language->getText('news_utils','comments');
 		}
 
-		$return .= '<div align="center">(' . $num_comments . $comments_txt . ') <A HREF="/forum/forum.php?forum_id='. db_result($result,$i,'forum_id') .'">[Read More/Comment]</a></div><HR width="100%" size="1" noshade>';
+		$return .= '<div align="center">(' . $num_comments . $comments_txt . ') <A HREF="/forum/forum.php?forum_id='. db_result($result,$i,'forum_id') .'">['.$Language->getText('news_utils','read_more_comments').']</a></div><HR width="100%" size="1" noshade>';
                                       
 	    }
 
@@ -150,19 +152,19 @@ function news_show_latest($group_id='',$limit=10,$show_summaries=true,$allow_sub
     }
     
     $return .= '<div align="center">'
-	.'<a href="'.$archive_url.'">[News archive]</a></div>';
+	.'<a href="'.$archive_url.'">['.$Language->getText('news_utils','news_archive').']</a></div>';
 
     if ($allow_submit && $group_id != $sys_news_group) {
 	//you can only submit news from a project now
 	//you used to be able to submit general news
-	$return .= '<div align="center"><A HREF="/news/submit.php?group_id='.$group_id.'"><FONT SIZE="-1">[Submit News]</FONT></A></center>';
+	$return .= '<div align="center"><A HREF="/news/submit.php?group_id='.$group_id.'"><FONT SIZE="-1">['.$Language->getText('news_utils','submit_news').']</FONT></A></center>';
     }
 
     return $return;
 }
 
 function news_foundry_latest($group_id=0,$limit=5,$show_summaries=true) {
-	global $sys_datefmt;
+  global $sys_datefmt,$Language;
 	/*
 		Show a the latest news for a portal 
 	*/
@@ -180,7 +182,7 @@ function news_foundry_latest($group_id=0,$limit=5,$show_summaries=true) {
 	$rows=db_numrows($result);
 
 	if (!$result || $rows < 1) {
-		$return .= '<H3>No News Items Found</H3>';
+		$return .= '<H3>'.$Language->getText('news_utils','no_news_items_found').'</H3>';
 		$return .= db_error();
 	} else {
 		for ($i=0; $i<$rows; $i++) {

@@ -8,13 +8,15 @@
 
 require($DOCUMENT_ROOT.'/include/pre.php');
 
+$Language->loadLanguageMsg('new/new');
+
 // By default, display releases
 if (!$func) $func='releases';
 
 switch ($func) {
 
  case 'releases':
-$HTML->header(array("title"=>"New File Releases"));
+$HTML->header(array("title"=>$Language->getText('new_index','new_file_release')));
 
 
 function build_new_release_query ($start_time, $offset) {
@@ -74,9 +76,9 @@ if (!$res_new || db_numrows($res_new) < 1) {
 	if (!$res_new) {
 		echo $query . "<BR><BR>"	;
 		echo db_error();
-		echo "<H2>No new releases found. DB error.</H2>";
+		echo '<H2>'.$Language->getText('new_index','no_release_found').' '.$Language->getText('new_index','db_err').'</H2>';
 	} else {
-		echo "<H2>No new releases found. </H2>";
+		echo '<H2>'.$Language->getText('new_index','no_release_found').' </H2>';
 	}
 } else {
 
@@ -94,11 +96,11 @@ if (!$res_new || db_numrows($res_new) < 1) {
 			print "<TR valign=top>";
 			print "<TD colspan=2>";
 			print "<A href=\"/projects/$row_new[unix_group_name]/\"><B>$row_new[group_name]</B></A>"
-				. "\n</TD><TD nowrap><I>Released by: <A href=\"/users/$row_new[user_name]/\">"
+				. "\n</TD><TD nowrap><I>".$Language->getText('new_index','released_by').": <A href=\"/users/$row_new[user_name]/\">"
 				. "$row_new[user_name]</A></I></TD></TR>\n";	
 
-			print "<TR><TD>Module: $row_new[module_name]</TD>\n";
-			print "<TD>Version: $row_new[release_version]</TD>\n";
+			print "<TR><TD>".$Language->getText('new_index','module').": $row_new[module_name]</TD>\n";
+			print "<TD>".$Language->getText('new_index','version').": $row_new[release_version]</TD>\n";
 			print "<TD>" . date("M d, h:iA",$row_new[release_date]) . "</TD>\n";
 			print "</TR>";
 
@@ -107,7 +109,7 @@ if (!$res_new || db_numrows($res_new) < 1) {
 			if ($row_new[short_description]) {
 				print "<I>$row_new[short_description]</I>";
 			} else {
-				print "<I>This project has not submitted a description.</I>";
+				print "<I>".$Language->getText('new_index','no_desc')."</I>";
 			}
 
 			print "</TD>";
@@ -118,11 +120,11 @@ if (!$res_new || db_numrows($res_new) < 1) {
 			print '<TR><TD colspan=3>';
 			// link to whole file list for downloads
 			print "&nbsp;<BR><A href=\"/file/showfiles.php?group_id=$row_new[group_id]&release_id=$row_new[release_id]\">";
-			print "Download</A> ";
-			print '(Project Total: '.$row_new[downloads].') | ';
+			print $Language->getText('new_index','download')."</A> ";
+			print '('.$Language->getText('new_index','total').': '.$row_new[downloads].') | ';
 			// notes for this release
 			print "<A href=\"/file/shownotes.php?release_id=".$row_new[release_id]."\">";
-			print "Notes & Changes</A>";
+			print $Language->getText('new_index','notes')."</A>";
 			print '<HR></TD></TR>';
 
 			$G_RELEASE["$row_new[group_id]"] = 1;
@@ -132,7 +134,7 @@ if (!$res_new || db_numrows($res_new) < 1) {
 	echo "<TR class=\"newproject\"><TD>";
         if ($offset != 0) {
 		echo "<B>";
-        	echo "<A HREF=\"/new/?func=releases&offset=".($offset-20)."\"><B><IMG SRC=\"".util_get_image_theme("t2.png")."\" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE> Newer Releases</A></B>";
+        	echo "<A HREF=\"/new/?func=releases&offset=".($offset-20)."\"><B><IMG SRC=\"".util_get_image_theme("t2.png")."\" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE> ".$Language->getText('new_index','newer_releases')."</A></B>";
         } else {
         	echo "&nbsp;";
         }
@@ -140,7 +142,7 @@ if (!$res_new || db_numrows($res_new) < 1) {
 	echo "</TD><TD COLSPAN=\"2\" ALIGN=\"RIGHT\">";
 	if (db_numrows($res_new)>$rows) {
 		echo "<B>";
-		echo "<A HREF=\"/new/?func=releases&offset=".($offset+20)."\"><B>Older Releases <IMG SRC=\"".util_get_image_theme("t.png")."\" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE></A></B>";
+		echo "<A HREF=\"/new/?func=releases&offset=".($offset+20)."\"><B>".$Language->getText('new_index','older_releases')." <IMG SRC=\"".util_get_image_theme("t.png")."\" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE></A></B>";
 	} else {
 		echo "&nbsp;";
 	}
@@ -149,7 +151,7 @@ if (!$res_new || db_numrows($res_new) < 1) {
 	break;
 
  case 'projects':
-$HTML->header(array("title"=>"New Projects"));
+$HTML->header(array("title"=>$Language->getText('new_index','new_projects')));
 
 function build_new_project_query ($start_time,$offset) {
 	$query	= "SELECT group_id,unix_group_name,group_name,short_description,register_time FROM groups " .
@@ -174,14 +176,14 @@ $res_new = db_query( $query );
 
 //If there is exactly 0 no new
 //then it's not an error
-echo '<h2>New Projects</h2>';
+echo '<h2>'.$Language->getText('new_index','new_projects').'</h2>';
 if (!$res_new || db_numrows($res_new) < 1) {
 	if (!$res_new) {
 		echo $query . "<BR><BR>"	;
 		echo db_error();
-		echo "<H2>No new projects found. DB error.</H2>";
+		echo '<H2>'.$Language->getText('new_index','no_projects_found').' '.$Language->getText('new_index','db_err').'</H2>';
 	} else {
-		echo "<H2>No new projects found. </H2>";
+		echo '<H2>'.$Language->getText('new_index','no_projects_found').' </H2>';
 	}
 } else {
 
@@ -222,13 +224,16 @@ if (!$res_new || db_numrows($res_new) < 1) {
 		    $folders = explode(" :: ",$row_trovecat['fullpath']);
 		    $folders_len = count($folders);
 		    
-		    if ( preg_match("/Programming Language/", $folders[0])) {
+		    $pl_pattern = '"/'.$Language->getText('new_index','prog_lang').'/"';
+		    $os_pattern = '"/'.$Language->getText('new_index','os').'/"';
+		    $devel_status_pattern = '"/'.$Language->getText('new_index','devel_status').'/"';
+		    if ( preg_match($pl_pattern, $folders[0])) {
 		      $lang[] = $folders[$folders_len - 1];
 		    }
-		    else if ( preg_match("/Operating System/", $folders[0])) {
+		    else if ( preg_match($os_pattern, $folders[0])) {
 		      $os[] = $folders[$folders_len - 1];
 		    }
-		    else if ( preg_match("/Development Status/", $folders[0])) {
+		    else if ( preg_match($devel_status_pattern, $folders[0])) {
 		      $devstate[] = $folders[$folders_len - 1];
 		    }
 		  }
@@ -236,7 +241,7 @@ if (!$res_new || db_numrows($res_new) < 1) {
 		  print "<TR valign=top>";
 		  print "<TD colspan=2>";
 		  print "<A href=\"/projects/$row_new[unix_group_name]/\"><B>$row_new[group_name]</B> (" . date("y/m/d",$row_new[register_time]) . ")</A>\n</TD>";
-		  print "<TD nowrap><I>Contact: ";
+		  print "<TD nowrap><I>".$Language->getText('new_index','contact').": ";
 		  print join(',',$admins);
 		  print "</I></TD></TR>\n";	
 		  
@@ -245,7 +250,7 @@ if (!$res_new || db_numrows($res_new) < 1) {
 		  if ($row_new[short_description]) {
 		    print "<I>$row_new[short_description]</I>";
 		  } else {
-		    print "<I>This project has not submitted a description.</I>";
+		    print "<I>'.$Language->getText('new_index','no_desc').'</I>";
 		  }
 		  print "</TD>";
 		  print '<TD align=center nowrap border=1>';
@@ -253,21 +258,21 @@ if (!$res_new || db_numrows($res_new) < 1) {
 		  print "</TR>";
 		  print '<TR><TD colspan=3>&nbsp;<BR>';
 		  if (count($lang) > 0) {
-		    print "Languages: ";
+		    print $Language->getText('new_index','languages').": ";
 		    print join(',',$lang);
 		  }
 		  if (count($os) > 0) {
 		    if (count($lang) > 0) {
 		      print '</TD></TR><TR><TD colspan=3>';
 		    }
-		    print "OS Runtime Support: ";
+		    print $Language->getText('new_index','os_runtime_support').": ";
 		    print join(',',$os);
 		  }
 		  if (count($devstate) > 0) {
 		    if ((count($os) > 0) || (count($lang) > 0)) {
 		      print '</TD></TR><TR><TD colspan=3>';
 		    }
-		    print "Development State: ";
+		    print $Language->getText('new_index','devel_state').": ";
 		    print join(',',$devstate);
 		  }
 		  print '<HR></TD></TR>';
@@ -279,7 +284,7 @@ if (!$res_new || db_numrows($res_new) < 1) {
 	echo "<TR class=\"newproject\"><TD>";
         if ($offset != 0) {
 		echo "<B>";
-        	echo "<A HREF=\"/new/?func=projects&offset=".($offset-20)."\"><B><IMG SRC=\"".util_get_image_theme("t2.png")."\" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE> Newer Projects</A></B>";
+        	echo "<A HREF=\"/new/?func=projects&offset=".($offset-20)."\"><B><IMG SRC=\"".util_get_image_theme("t2.png")."\" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE> ".$Language->getText('new_index','newer_projects')."</A></B>";
         } else {
         	echo "&nbsp;";
         }
@@ -287,7 +292,7 @@ if (!$res_new || db_numrows($res_new) < 1) {
 	echo "</TD><TD COLSPAN=\"2\" ALIGN=\"RIGHT\">";
 	if (db_numrows($res_new)>$rows) {
 		echo "<B>";
-		echo "<A HREF=\"/new/?func=projects&offset=".($offset+20)."\"><B>Older Projects <IMG SRC=\"".util_get_image_theme("t.png")."\" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE></A></B>";
+		echo "<A HREF=\"/new/?func=projects&offset=".($offset+20)."\"><B>".$Language->getText('new_index','older_projects')." <IMG SRC=\"".util_get_image_theme("t.png")."\" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE></A></B>";
 	} else {
 		echo "&nbsp;";
 	}

@@ -1,0 +1,76 @@
+#/**
+#  *
+#  * Include scripts message catalog (English)
+#  *
+#  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
+#  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
+#  * http://codex.xrce.xerox.com
+#  *
+#  * @version   $Id$
+#  *
+#  */
+#
+#-----------------------------------------------
+# Script: SF/www/news/admin/index.php
+#
+news_admin_index	group_update_err	ERROR doing group update
+news_admin_index	project_newsbyte_updated	Project NewsByte Updated.
+news_admin_index	title	NewsBytes
+news_admin_index	not_found_err	Error - not found
+news_admin_index	approve_for	Approve a NewsByte For Project: $1
+news_admin_index	submitted_by	Submitted by
+news_admin_index	status	Status
+news_admin_index	subject	Subject
+news_admin_index	details	Details
+news_admin_index	if_edit_delete	If this item is on the $1 home page and you edit it, it will be removed from the home page.
+news_admin_index	no_queued_item_found_for	No Queued Items Found For Project: $1
+news_admin_index	new_items	These News Items Were Submitted For Project: $1
+news_admin_index	update_err	ERROR doing update
+news_admin_index	newsbyte_updated	NewsByte Updated.
+news_admin_index	newsbyte_deleted	NewsByte Deleted.
+news_admin_index	approve	Approve a NewsByte
+news_admin_index	submitted_for_group	Submitted for group
+news_admin_index	approve_for_front	Approve For Front Page
+news_admin_index	do_nothing	Do Nothing
+news_admin_index	displayed	Displayed
+news_admin_index	delete	Delete
+news_admin_index	no_queued_item_found	No Queued Items Found
+news_admin_index	need_approve	These items need to be approved
+news_admin_index	no_deleted_items_this_week	No deleted items found for this week
+news_admin_index	items_deleted_last_week	These items were deleted this past week
+news_admin_index	no_approved_items_this_week	No approved items found for this week
+news_admin_index	items_approved_last_week	These items were approved this past week
+news_admin_index	permission_denied	Permission Denied.
+news_admin_index	need_to_be_admin	Permission Denied. You have to be an admin on the project you are editing or a member of the $1 News team.
+#
+#-----------------------------------------------
+# Script: SF/www/news/index.php
+#
+news_index	news	 News	
+news_index	news_for	News for $1
+news_index	choose_news	Choose a News item and you can browse, search, and post messages.
+news_index	no_news_found	No News Found
+news_index	for	For $1
+news_index	no_items_found	No items were found
+news_index	pv	Printer Version
+#
+#-----------------------------------------------
+# Script: SF/www/news/news_utils.php
+#
+news_utils	admin	Admin
+news_utils	no_news_item_found	No News Items Found
+news_utils	comment	Comment
+news_utils	comments	Comments
+news_utils	read_more_comments	Read More/Comment
+news_utils	news_archive	News archive
+news_utils	submit_news	Submit News
+#
+#-----------------------------------------------
+# Script: SF/www/news/submit.php
+#
+news_submit	insert_err	ERROR doing insert
+news_submit	news_added	News Added.
+news_submit	only_admin_submits	Permission Denied. You cannot submit news for a project unless you are an admin on that project
+news_submit	submit_news_for	Submit News For $1
+news_submit	post_explain	You can post news about your project if you are an admin on your project. You may also post "help wanted" notes if your project needs help.<P>All posts <B>for your project</B> will appear instantly on your project summary page. Posts that are of special interest to the community will have to be approved by a member of the news team before they will appear on the $1 home page.<P>You may include URLs, but not HTML in your submissions.<P>URLs that start with http:// are made clickable.
+news_submit	for_project	For Project: $1

@@ -9,25 +9,26 @@
 require($DOCUMENT_ROOT.'/include/pre.php');
 require('../forum/forum_utils.php');
 
+$Language->loadLanguageMsg('news/news');
 
-$params=array('title'=>'News for '.group_getname($group_id),
+$params=array('title'=>$Language->getText('news_index','news_for',group_getname($group_id)),
               'help'=>'NewsService.html',
               'pv'=>$pv);
 
 news_header($params);
 
 if ($pv) {
-    echo '<H3>News</H3>';
+    echo '<H3>'.$Language->getText('news_index','news').'</H3>';
 } else {
     echo "<TABLE width='100%'><TR><TD>";
-    echo '<H3>News</H3>';
+    echo '<H3>'.$Language->getText('news_index','news').'</H3>';
     echo "</TD>";
-    echo "<TD align='left'> ( <A HREF='".$PHP_SELF."?group_id=$group_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;Printer version</A> ) </TD>";
+    echo "<TD align='left'> ( <A HREF='".$PHP_SELF."?group_id=$group_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;'.$Language->getText('news_index','pv').'</A> ) </TD>";
     echo "</TR></TABLE>";    
 }
 
 
-    echo '<P>Choose a News item and you can browse, search, and post messages.<P>';
+    echo '<P>'.$Language->getText('news_index','choose_news').'<P>';
 
 /*
 	Put the result set (list of forums for this group) into a column with folders
@@ -42,13 +43,13 @@ $result=db_query($sql);
 $rows=db_numrows($result);
 
 if ($rows < 1) {
-	echo '<H2>No News Found';
+	echo '<H2>'.$Language->getText('news_index','no_news_found');
 	if ($group_id) {
-		echo ' For '.group_getname($group_id);
+	  echo ' '.$Language->getText('news_index','for',group_getname($group_id));
 	}
 	echo '</H2>';
 	echo '
-		<P>No items were found';
+		<P>'.$Language->getText('news_index','no_items_found');
 	echo db_error();
 } else {
 	echo '<table WIDTH="100%" border=0>
