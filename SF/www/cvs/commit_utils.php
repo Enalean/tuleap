@@ -420,7 +420,7 @@ function show_commit_details ($result) {
 
 	$rows=db_numrows($result);
 	$url = "/cvs/?func=detailcommit&commit_id=$commit_id&group_id=$group_id&order=";
-	$list_log = '<pre>'.join('<br>', split("\n",db_result($result, 0, 'description'))).'</pre>';
+	$list_log = '<pre>'.util_line_wrap (db_result($result, 0, 'description')).'</pre>';
 
 	if ($commit_id) {
 	  $hdr = '[Commit #'.$commit_id.'] - ';
