@@ -866,6 +866,7 @@ CREATE TABLE frs_package (
   group_id int(11) NOT NULL default '0',
   name text,
   status_id int(11) NOT NULL default '0',
+  rank int(11) NOT NULL default '0',
   PRIMARY KEY  (package_id),
   KEY idx_package_group_id (group_id)
 ) TYPE=MyISAM;

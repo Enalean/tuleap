@@ -23,7 +23,7 @@ if (user_ismember($group_id,'R2') || user_ismember($group_id,'A')) {
     $authorized_user=true;
 }
 $num_packages=0;
-$sql = "SELECT * FROM frs_package WHERE group_id='$group_id' AND status_id='1'";
+$sql = "SELECT * FROM frs_package WHERE group_id='$group_id' AND status_id='1' ORDER BY rank";
 $res = db_query( $sql );
 // Retain only packages the user is authorized to access, or packages containing releases the user is authorized to access...
 if (db_numrows($res)>0) {

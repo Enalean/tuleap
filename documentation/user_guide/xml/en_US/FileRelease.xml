@@ -235,7 +235,12 @@
         Switching the status from Active to Hidden doesn&#39;t delete any
         attached releases and files.</para>
 
-        <para>Whenever you update the name or the status don&#39;t forget to
+         <para>You may also define the rank of a package in the
+  	 package releases page. The rank number indicates in which order the
+         packages will appear in the list. Packages with a
+         smaller rank number are displayed first.</para>
+
+        <para>Whenever you update the name, the rank,  or the status don&#39;t forget to
         push on the &#34;Update&#34; button!</para>
 
         <figure id="FigureAPartOfThePackageAdministrationScreenGSAProject">

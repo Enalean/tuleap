@@ -37,8 +37,8 @@ if ($submit) {
 	    $feedback .= ' This package name already exists. Please choose another name. ';
 	  } else {
 		//create a new package
-		db_query("INSERT INTO frs_package (group_id,name,status_id) ".
-			"VALUES ('$group_id','". htmlspecialchars($package_name)  ."','1')");
+		db_query("INSERT INTO frs_package (group_id,name,rank,status_id) ".
+			"VALUES ('$group_id','". htmlspecialchars($package_name)."','$rank','1')");
 		$feedback .= ' Added Package ';
 	  }
 	} else if ($func=='update_package' && $package_id && $package_name && $status_id) {
@@ -55,7 +55,7 @@ if ($submit) {
 			}
 		}
 		//update an existing package
-		db_query("UPDATE frs_package SET name='". htmlspecialchars($package_name)  ."', status_id='$status_id' ".
+		db_query("UPDATE frs_package SET name='". htmlspecialchars($package_name)  ."', status_id='$status_id', rank='$rank'".
 			"WHERE package_id='$package_id' AND group_id='$group_id'");
 		$feedback .= ' Updated Package ';
 
@@ -107,13 +107,14 @@ You can create new releases of packages by clicking on <B>Add/Edit Releases</B> 
 // LJ status_id field was missing from the select statement
 // LJ Causing the displayed status of packages to be wrong
 // LJ $res=db_query("SELECT package_id,name AS package_name FROM frs_packag
-$res=db_query("SELECT status_id,package_id,name AS package_name FROM frs_package WHERE group_id='$group_id'");
+$res=db_query("SELECT status_id,package_id,name AS package_name,rank FROM frs_package WHERE group_id='$group_id' ORDER BY rank");
 $rows=db_numrows($res);
 if (!$res || $rows < 1) {
 	echo '<h4>You Have No Packages Defined</h4>';
 } else {
 	$title_arr=array();
 	$title_arr[]='Package Name';
+	$title_arr[]='Rank On Screen';
 	$title_arr[]='Status';
 	$title_arr[]='Update';
 	$title_arr[]='Releases';
@@ -130,6 +131,7 @@ if (!$res || $rows < 1) {
 		<TR class="'. util_get_alt_row_color($i) .'">
 			<TD><FONT SIZE="-1"><INPUT TYPE="TEXT" NAME="package_name" VALUE="'. 
 				db_result($res,$i,'package_name') .'" SIZE="20" MAXLENGTH="30"></TD>
+                        <TD align="center"><INPUT TYPE="TEXT" NAME="rank" SIZE="3" MAXLENGTH="3" VALUE="'.db_result($res,$i,'rank').'"/></TD>
 			<TD align="center"><FONT SIZE="-1">'. frs_show_status_popup ('status_id', db_result($res,$i,'status_id')) .'</TD>
 			<TD align="center"><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="submit" VALUE="Update"></TD>
 			<TD  align="center" NOWRAP><FONT SIZE="-1"><A HREF="editreleases.php?package_id='. 
@@ -152,15 +154,16 @@ if (!$res || $rows < 1) {
 
 */
 
-echo '<P>
-<h3>New Package Name:</h3>
+echo '<p><hr><P>
+<h3>Create a New Package</h3>
 <P>
 <FORM ACTION="'. $PHP_SELF .'" METHOD="POST">
 <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 <INPUT TYPE="HIDDEN" NAME="func" VALUE="add_package">
-<INPUT TYPE="TEXT" NAME="package_name" VALUE="" SIZE="20" MAXLENGTH="30">
-<P>
-<INPUT TYPE="SUBMIT" NAME="submit" VALUE="Create This Package">
+<table>
+<tr><th>Package Name:</th>  <td><input type="text" name="package_name" size="20" MAXLENGTH="30"></td></tr>
+<tr><th>Rank on screen:</th>  <td><input type="text" name="rank" size="4" maxlength="4"></td></tr>
+<tr><td> <input type="submit" NAME="submit" VALUE="Create This Package"></td></tr></table>	
 </FORM>';
 
 file_utils_footer(array());
