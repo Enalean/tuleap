@@ -327,13 +327,23 @@ while ($ln = pop(@groupdump_array)) {
 	  my $public_svn = $gis_public && ! -e "$svn_prefix/$gname/.CODEX_PRIVATE";
 	  open(SVNACCESS,"+>$svnaccess_file")
 	    or croak "Can't open Subversion access file $svnaccess_file: $!";
+	  # if you change these block markers also change them in
+	  # SF/www/svn/svn_utils.php
+	  print SVNACCESS "# BEGIN CODEX DEFAULT SETTINGS - DO NOT REMOVE\n";
 	  print SVNACCESS "[groups]\n";
 	  print SVNACCESS "members = ",$userlist,"\n\n";
 
 	  print SVNACCESS "[/]\n";
 	  if ($public_svn) { print SVNACCESS "* = r\n"; }
 	  print SVNACCESS "\@\members = rw\n";
+	  print SVNACCESS "# END CODEX DEFAULT SETTINGS\n";
 	  close(SVNACCESS);
+
+	  # set group ownership, codex user as owner so that
+	  # PHP scripts can write to it directly
+	  system("chown -R $cxname:$gid $svnaccess_file");
+	  system("chmod g+rw $svnaccess_file");
+
 	}
 
 

@@ -220,6 +220,45 @@ class Project extends Group {
     function sendAllTaskUpdates() {
         return $this->project_data_array['send_all_tasks'];
     }
+
+    /*
+
+    Subversion and CVS settings
+
+    */
+
+    function cvsMailingList() {
+        return $this->project_data_array['cvs_events_mailing_list'];
+    }
+
+    function getCVSMailingHeader() {
+        return $this->project_data_array['cvs_events_mailing_header'];
+    }
+
+    function isCVSTracked() {
+        return $this->project_data_array['cvs_tracker'];
+    }
+
+    function getCVSpreamble() {
+        return $this->project_data_array['cvs_preamble'];
+    }
+
+    function getSVNMailingList() {
+        return $this->project_data_array['svn_events_mailing_list'];
+    }
+
+    function getSVNMailingHeader() {
+        return $this->project_data_array['svn_events_mailing_header'];
+    }
+
+    function isSVNTracked() {
+        return $this->project_data_array['svn_tracker'];
+    }
+
+    function getSVNpreamble() {
+        return $this->project_data_array['svn_preamble'];
+    }
+
 }
 
 /*

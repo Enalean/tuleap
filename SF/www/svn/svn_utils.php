@@ -9,15 +9,6 @@
 //      Originally written by Laurent Julliard 2004 CodeX Team, Xerox
 //
 
-function uniformat_date($format, $date) {
-
-  if (ereg("([0-9]{4})-?([0-9]{2})-?([0-9]{2}) ?([0-9]{2}):?([0-9]{2}):?([0-9]{2})", $date, $gp)) {
-    list(,$y, $m, $d, $h, $min, $s) = $gp;
-    $time = mktime($h, $min, $s, $m, $d, $y);
-    $date = date($format, $time);
-  }
-  return $date;
-}
 
 function svn_header($params) {
 	global $group_id,$DOCUMENT_ROOT;
@@ -38,16 +29,14 @@ function svn_header($params) {
 
 	echo '<P><B><A HREF="/svn/?func=info&group_id='.$group_id.'">Subversion Info</A>';
 
-	$sys_svn_host = $GLOBALS['sys_cvs_host'];
-
 	if ($project->isPublic() || user_isloggedin()) {
-	  echo ' | <A HREF="http'.(session_issecure() ? 's':'').'://'.$sys_svn_host.'/cgi-bin/viewcvs.cgi/?roottype=svn&root='.$project->getUnixName().'">Browse SVN Tree</A>';
+	  echo ' | <A HREF="/cgi-bin/viewcvs.cgi/?roottype=svn&root='.$project->getUnixName().'">Browse SVN Tree</A>';
 	}
 	if (user_isloggedin()) {
-	  echo ' | <A HREF="/svn/?func=browse&group_id='.$group_id.'&set=my">My CVS Commits</A>';
+	  echo ' | <A HREF="/svn/?func=browse&group_id='.$group_id.'&set=my">My SVN Commits</A>';
 	}
 	echo ' | <A HREF="/svn/?func=browse&group_id='.$group_id.'">SVN Query</A>';
-	echo ' | <A HREF="/svn/?func=admin&group_id='.$group_id.'">SVN Admin</A>';	
+	echo ' | <A HREF="/svn/admin/?group_id='.$group_id.'">SVN Admin</A>';	
 	if (!$params['help']) { $params['help'] = "VersionControlWithSubversion.html";}
 	echo ' | '.help_button($params['help'],false,'Help');
 
@@ -60,7 +49,7 @@ function svn_header_admin($params) {
     
     //required params for site_project_header();
     $params['group']=$group_id;
-    $params['toptab']='commits';
+    $params['toptab']='svn';
     
     $project=project_get_object($group_id);
     
@@ -68,14 +57,18 @@ function svn_header_admin($params) {
     if (!$project->isProject()) {
 	exit_error('Error','Only Projects Can Use The Commits Browser');
     }
-    if (!$project->usesSVN()) {
+    if (!$project->usesService('svn')) {
 	exit_error('Error','This Project Has Turned Off The Subversion Browser');
     }
     echo site_project_header($params);
-    if ($params['help']) {
-	echo ' | <b>'.help_button($params['help'],false,'Help').'</b>';
-    }
-     echo ' <hr width="300" size="1" align="left" noshade>';
+    echo '<P><B><A HREF="/svn/admin/?group_id='.$group_id.'">Admin</A></B>';
+    echo ' | <B><A HREF="/svn/admin/?func=general_settings&group_id='.$group_id.'">General Settings</A></B>';
+    echo ' | <b><A HREF="/svn/admin/?func=access_control&group_id='.$group_id.'">Access Control</A></b>';
+    echo ' | <B><A HREF="/svn/admin/?func=notification&group_id='.$group_id.'">Email Notification</A></B>';    
+
+    if (!$params['help']) { $params['help'] = "SubversionAdministrationInterface.html";}
+    echo ' | <b>'.help_button($params['help'],false,'Help').'</b>';
+    echo ' <hr width="300" size="1" align="left" noshade>';
 }
 
 
@@ -84,41 +77,20 @@ function svn_footer($params) {
 }
 
 
-
-function svn_data_get_technicians($group_id) {
-
-    // FIXME: Ideally this should be a merge of the current project member list
-    // with the list of all people who once committed something in the CVS
-    // and may have been removed from the project since then.
-    // problem is: the structure of the cvs tracker does not allow for a quick 
-    // search. 
-    $sql="SELECT distinct user.user_name, user.user_name ".
-	//"FROM user, user_group, cvs_checkins, cvs_repositories ".
-	"FROM user, user_group ".
-	"WHERE (user_group.group_id='$group_id' ".
-	"AND user.user_id=user_group.user_id) ".
-	//"OR (cvs_repositories.repository='/cvsroot/".$projectname."' ".
-	//	"AND cvs_checkins.repositoryid=cvs_repositories.id ".
-	//"AND user.user_id=cvs_checkins.whoid) ". 
-	"ORDER BY user.user_name ASC";
-
-	return db_query($sql);
-}
-
-function svn_technician_box($group_id,$name='_commiter',$checked='xzxz',$text_100='None') {
+function svn_utils_technician_box($group_id,$name='_commiter',$checked='xzxz',$text_100='None') {
 	if (!$group_id) {
 		return 'ERROR - no group_id';
 	} else {
-		$result=commits_data_get_technicians($group_id);
+		$result=svn_data_get_technicians($group_id);
 		return html_build_select_box($result,$name,$checked,true,$text_100);
 	}
 }
 
 
-function show_revision_list ($result,$offset,$total_rows,$set='any', $commiter='100', $tag='100', $branch='100', $chunksz=15, $morder='', $msort=0) {
+function svn_utils_show_revision_list ($result,$offset,$total_rows,$set='any', $commiter='100', $path='', $chunksz=15, $morder='', $msort=0) {
 	global $sys_datefmt,$group_id;
 	/*
-		Accepts a result set from the commits table. Should include all columns from
+		Accepts a result set from the svn_commits table. Should include all columns from
 		the table, and it should be joined to USER to get the user_name.
 	*/
     $url = $PHP_SELF.'?func=browse&group_id='.$group_id.'&set='.$set.'&msort='.$msort;
@@ -130,12 +102,12 @@ function show_revision_list ($result,$offset,$total_rows,$set='any', $commiter='
     $url .= "&morder=$morder";
 
 	if ($morder != '') {
-	  $orderstr = ' sorted by '.svn_criteria_list_to_text($morder, $url_nomorder);
+	  $orderstr = ' sorted by '.svn_utils_criteria_list_to_text($morder, $url_nomorder);
 	} else {
 	  $orderstr = '';
 	}
 	echo '<A name="results"></A>';  
-	echo '<h3>'.$total_rows.' matching commit'.($totalrows>1 ? 's':'').$orderstr.'</h3>';
+	echo '<h3>'.$total_rows.' matching commit'.($total_rows>1 ? 's':'').$orderstr.'</h3>';
 
     $nav_bar ='<table width= "100%"><tr>';
     $nav_bar .= '<td width="20%" align ="left">';
@@ -208,27 +180,24 @@ function show_revision_list ($result,$offset,$total_rows,$set='any', $commiter='
 	if ($commiter != '100') {
 	  $filter_str = "&commiter='$commiter'";
 	}
-	if ($tag != '100') {
-	  $filter_str = $filter_str."&tag='$tag'";
-	}
-	if ($branch != '100') {
-	  $filter_str = $filter_str."&branch='$branch'";
+	if ($path != '') {
+	  $filter_str = $filter_str."&path='$path'";
 	}
 	
 
 	$rows=db_numrows($result);
 	$url .= "&order=";
 	$title_arr=array();
-	$title_arr[]='ID';
+	$title_arr[]='Revision';
 	$title_arr[]='Description';
 	$title_arr[]='Date';
-	$title_arr[]='Submitted By';
+	$title_arr[]='Commiter';
 
 	$links_arr=array();
-	$links_arr[]=$url.'id#results';
+	$links_arr[]=$url.'revision#results';
 	$links_arr[]=$url.'description#results';
-	$links_arr[]=$url.'f_when#results';
-	$links_arr[]=$url.'user_name#results';
+	$links_arr[]=$url.'date#results';
+	$links_arr[]=$url.'who#results';
 
 	$url_nomorder = $url;
 	$url .= "&morder=$morder";
@@ -237,32 +206,17 @@ function show_revision_list ($result,$offset,$total_rows,$set='any', $commiter='
 
 	for ($i=0; $i < $rows; $i++) {
 
-	    $filename = db_result($result, $i, 'filename');
-	    if (!$filename) {
-		$filename = '';
-	    }
-
-	    $id_str = db_result($result, $i, 'id');
+	    $id_str = db_result($result, $i, 'commit_id');
+	    $rev = db_result($result, $i, 'revision');
 	    $id_link = '&commit_id='.$id_str;
 	    $id_sublink = '';
-	    if ($id_str == '0') {
-	      $id_str = ' ? ';
-	      $id_link = "&checkin_id=".db_result($result, $i, 'did').
-		  "&when=".db_result($result, $i, 'c_when').$filter_string;
-	      ##$id_sublink =" <br><A HREF=\"".$PHP_SELF."?func=detailcommit&group_id=".$group_id."&checkin_id=".db_result($result, $i, 'did').$filter_string."&desc_id=".db_result($result, $i, 'did')."\">no date on this log</A>";
-	    } else {
-	      ##$id_sublink =" <br><A HREF=\"".$PHP_SELF."?func=detailcommit&group_id=".$group_id.$id_link.$filter_string."&desc_id=".db_result($result, $i, 'did')."\">".$id_str." on this log</A>";
-	      
-	    }
 	    
 	    echo '
 			<TR class="'. util_get_alt_row_color($i) .'">'.
-			'<TD class="small"><b><A HREF="'.$PHP_SELF.'?func=detailcommit&group_id='.$group_id.$id_link.$filter_string.'">'.$id_str.
+			'<TD class="small"><b><A HREF="'.$PHP_SELF.'?func=detailrevision&group_id='.$group_id.$id_link.$filter_string.'">'.$rev.
 		  '</b></A></TD>'.
 			'<TD class="small">'.util_make_links(join('<br>', split("\n",db_result($result, $i, 'description'))),$group_id).$id_sublink.'</TD>'.
-			##'<TD class="small">'.$commits_url.'</TD>'.
-			'<TD class="small">'.uniformat_date($sys_datefmt, db_result($result, $i, 'c_when')).'</TD>'.
-			## '<TD class="small">'.util_user_link(db_result($result,$i,'assigned_to_user')).'</TD>'.
+			'<TD class="small">'.format_date($sys_datefmt, db_result($result, $i, 'date')).'</TD>'.
 			'<TD class="small">'.util_user_link(db_result($result,$i,'who')).'</TD></TR>';
 
 	}
@@ -274,35 +228,15 @@ function show_revision_list ($result,$offset,$total_rows,$set='any', $commiter='
 	echo $nav_bar;
 }
 
-function makeSvnLink($group_id, $filename='', $text, $rev='', $displayfunc='') {
-  $res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
-
-  $view_str=$displayfunc;
-  if ($rev) {
-    $view_str=$view_str.'&rev='.$rev;
-  }
-    
-
-  $row_grp = db_fetch_array($res_grp);
-    return '<A href="http'.(session_issecure() ? 's':'').'://'.$GLOBALS['sys_svn_host'].'/cgi-bin/cvsweb.cgi/'.$filename.'?root='.$row_grp['unix_group_name'].'&roottype=svn'.$view_str.'"><B>'.$text.'</B></A>';
+function svn_utils_make_viewlink($group_name, $filename, $text, $view_params) {
+    return '<A href="/cgi-bin/viewcvs.cgi/'.$filename.'?root='.$group_name.'&roottype=svn'.$view_params.'"><B>'.$text.'</B></A>';
 }
 
-function makeCvsDirLink($group_id, $filename='', $text, $dir='') {
-  $res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
-
-  //  $view_str='&content-type=text/vnd.viewcvs-markup';
-   
-
-  $row_grp = db_fetch_array($res_grp);
-
-  return  '<A href="http'.(session_issecure() ? 's':'').'://'.$GLOBALS['sys_svn_host'].'/cgi-bin/cvsweb.cgi/'.$dir."/Attic/".$filename.'?root='.$row_grp['unix_group_name'].'&roottype=svn"><B>'.$text.'</B></A>';
-
-}
 
 // Check if a sort criteria is already in the list of comma
 // separated criterias. If so invert the sort order, if not then
 // simply add it
-function svn_add_sort_criteria($criteria_list, $order, $msort)
+function svn_utils_add_sort_criteria($criteria_list, $order, $msort)
 {
     //echo "<br>DBG \$criteria_list=$criteria_list,\$order=$order";
     if ($criteria_list) {
@@ -337,7 +271,7 @@ function svn_add_sort_criteria($criteria_list, $order, $msort)
 
 // Transform criteria list to SQL query (+ means ascending
 // - is descending)
-function commit_criteria_list_to_query($criteria_list)
+function svn_utils_criteria_list_to_query($criteria_list)
 {
 
     $criteria_list = str_replace('>',' ASC',$criteria_list);
@@ -347,7 +281,7 @@ function commit_criteria_list_to_query($criteria_list)
 
 // Transform criteria list to readable text statement
 // $url must not contain the morder parameter
-function svn_criteria_list_to_text($criteria_list, $url){
+function svn_utils_criteria_list_to_text($criteria_list, $url){
 
     if ($criteria_list) {
 
@@ -360,7 +294,7 @@ function svn_criteria_list_to_text($criteria_list, $url){
 	    $attr = str_replace('<','',$attr);
 
 	    $arr_text[] = '<a href="'.$url.'&morder='.$morder.'#results">'.
-		commit_field_get_label($attr).'</a><img src="'.util_get_dir_image_theme().
+		svn_utils_field_get_label($attr).'</a><img src="'.util_get_dir_image_theme().
 		((substr($crit, -1) == '<') ? 'dn' : 'up').
 		'_arrow.png" border="0">';
 	}
@@ -369,156 +303,191 @@ function svn_criteria_list_to_text($criteria_list, $url){
     return join(' > ',$arr_text);
 }
 
-function commit_field_get_label($sortField) {
+function svn_utils_field_get_label($sortField) {
   if ($sortField == "id") {
-    return "ID";
+    return "Revision";
   }
-  if ($sortField == "f_when") {
+  else if ($sortField == "date") {
     return "Date";
+  }
+  else if ($sortField == "who") {
+    return "Commiter";
   }
   return $sortField;
   }
 
 
-function show_revision_details ($result) {
-	global $sys_datefmt,$group_id,$rev_id;
-	/*
-		Accepts a result set from the commits table. Should include all columns from
-		the table, and it should be joined to USER to get the user_name.
-	*/
+function svn_utils_show_revision_detail($result,$group_id,$group_name,$commit_id) {
+    global $sys_datefmt;
+    /*
+      Accepts a result set from the svn_checkins table. Should include all columns from
+      the table, and it should be joined to USER to get the user_name.
+    */
 
-	$rows=db_numrows($result);
-	$url = "/cvs/?func=detailrevision&rev_id=$rev_id&group_id=$group_id&order=";
-	$list_log = '<pre>'.util_make_links(util_line_wrap(db_result($result, 0, 'description')), $group_id).'</pre>';
+    $rows=db_numrows($result);
+    $url = "/svn/?func=detailrevision&commit_id=$commit_id&group_id=$group_id&order=";
+    $list_log = '<pre>'.util_make_links(util_line_wrap(db_result($result, 0, 'description')), $group_id).'</pre>';
+    $revision = db_result($result, 0, 'revision');
+    $hdr = '[Revision #'.$revision.'] - ';
 
-	if ($rev_id) {
-	  $hdr = '[Revision #'.$commit_id.'] - ';
+    echo '<h2>'.$hdr.format_date($sys_datefmt, db_result($result, 0, 'date')).'</h2></h2>';
+    echo '<table WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="2"><tr class="'. util_get_alt_row_color(0).'"><td>'.$list_log.'</td></tr></table>';
+    echo '<h3> List of impacted files</h3>';
+    $title_arr=array();
+    $title_arr[]= 'File';
+    $title_arr[]='Revision';
+    $title_arr[]='Type';
+    //$title_arr[]='AddedLines'; To be implemented
+    //$title_arr[]='RemovedLines'; To be implemented
+
+    $links_arr=array();
+    $links_arr[]=$url.'filename';
+    $links_arr[]=$url.'';
+    $links_arr[]=$url.'type';
+
+    echo html_build_list_table_top ($title_arr,$links_arr);
+
+    for ($i=0; $i < $rows; $i++) {
+
+	$type = db_result($result, $i, 'type');
+	$dirname = db_result($result, $i, 'dir');
+	$filename = db_result($result, $i, 'file');
+	$fullpath = $dirname.$filename;
+
+	if ($filename) {
+	    // It' a file
+	    $viewfile_url = svn_utils_make_viewlink($group_name, $fullpath, $fullpath,'');
+	    $viewrev_url = svn_utils_make_viewlink($group_name, $fullpath, $revision, "&rev=$revision&view=markup");
+
 	} else {
-	  $hdr = 'Checkin - ';
-	}
-	echo '<h2>'.$hdr.uniformat_date($sys_datefmt, db_result($result, 0, 'c_when')).'</h2></h2>';
-	echo '<table WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="2"><tr class="'. util_get_alt_row_color(0).'"><td>'.$list_log.'</td></tr></table>';
-	echo '<h3> List of impacted files</h3>';
-	$title_arr=array();
-	$title_arr[]= 'File';
-	$title_arr[]='Revision';
-	$title_arr[]='Branch';
-	$title_arr[]='Type';
-	$title_arr[]='AddedLines';
-	$title_arr[]='RemovedLines';
-
-	$links_arr=array();
-	$links_arr[]=$url.'filename';
-	$links_arr[]=$url.'revision';
-	$links_arr[]=$url.'branch';
-	$links_arr[]=$url.'type';
-	$links_arr[]=$url.'addedlines';
-	$links_arr[]=$url.'removedlines';
-
-	echo html_build_list_table_top ($title_arr,$links_arr);
-
-	for ($i=0; $i < $rows; $i++) {
-
-	    $commit_id = db_result($result, $i, 'id');
-	    $type = db_result($result, $i, 'type');
-	    $added = db_result($result, $i, 'addedlines');
-	    $removed = db_result($result,$i,'removedlines');
-	    $revision = db_result($result,$i,'revision');
-	    $filename = db_result($result, $i, 'dir').'/'.
-	      db_result($result, $i, 'file');
-	    if (($type == "Change") &&
-		($added == 999) && 
-		($removed == 999)) { // the default values
-	      // back to rcs to complete
-	      $repo = db_result($result,$i,'repository');
-	      $command = "rlog -r".$revision." ".$repo."/".$filename;
-	      $output = array();
-	      exec($command, $output, $ret);
-	      $added = 0;
-	      $removed = 0;
-	      $l =0;
-	      while ($l < count($output)) { // parse the rlog result till getting "state: Exp;  lines:" 
-		$line = $output[$l];
-		$l++;
-		if (ereg ('state: +Exp; +lines: +\+([0-9]*) +\-([0-9]*)$', $line, $na)) {
-		  $added = $na[1];
-		  $removed = $na[2];
-		  $sql_up = "UPDATE cvs_checkins SET addedlines=".$added.", removedlines=".$removed." WHERE repositoryid=".db_result($result,$i,'repositoryid')." AND dirid=".db_result($result,$i,'dirid')." AND fileid=".db_result($result,$i,'fileid')." AND revision=".$revision;
-		  $res=db_query($sql_up);
-		  break;
-		}
-		
-	      }
-		  
-
-	    }
-	      
-
-	    if (!$filename) {
-		$filename = '';
-	    } else {
-	      if ($type == 'Remove') {
-	      $filename = makeCvsDirLink($group_id, db_result($result, $i, 'file'), $filename, db_result($result, $i, 'dir'));
-	      $rev_text = '';
-	      } else {
-		if ($type == 'Change') {
-		  // horrible hack to 'guess previous revision' to diff with
-		  $prev = explode(".", $revision);
-
-		  $lastIndex = sizeof($prev);
-		  $lastIndex = $lastIndex - 1;
-		  if ($prev[$lastIndex] != '1') {
-		    $prev[$lastIndex] = $prev[$lastIndex] - 1;
-		    $previous = join(".", $prev);
-		  } else {
-		    $index = 0;
-		    $new_prev = array();
-		    while ($index < $lastIndex - 2) {
-		      $new_prev[$index] = $prev[$index];
-		      $index++;
-		    }
-		    $previous = $new_prev;
-		  }
-		  $previous = join('.', $prev);
-		  $type = makeCvsLink($group_id, $filename.'.diff', 'Change', '', '&r1='.$previous.'&r2='.$revision);
-		}
-		$rev_text = makeCvsLink($group_id, $filename, $revision, $revision, '&content-type=text/x-cvsweb-markup');
-		$filename = makeCvsLink($group_id, $filename, $filename);
-	      }
-	    }
-	    ##$commits_url = '<A HREF="/commits/download.php/Commits'.$commit_id.'.txt?commit_id='.$id.'">'.$filename.'</a>';
-	    
-	    echo '
-			<TR class="'. util_get_alt_row_color($i) .'">'.
-			'<TD class="small"><b>'.$filename.'</b></TD>'.
-			'<TD class="small">'.$rev_text.'</TD>'.
-			'<TD class="small">'.db_result($result, $i, 'branch').'</TD>'.
-			'<TD class="small">'.$type.'</TD>'.
-			'<TD class="small">'.$added.'</TD>'.
-			'<TD class="small">'.$removed.'</TD></TR>';
-
-
+	    // It' a directory
+	    $viewfile_url = svn_utils_make_viewlink($group_name, $fullpath, $fullpath,'');
+	    $viewrev_url = svn_utils_make_viewlink($group_name, $fullpath, $revision, "&rev=$revision");
 	}
 
-	/*
-		Show extra rows for <-- Prev / Next -->
-	*/
+	if ($type == 'Change') {	    
+
+	    $viewtype_url = svn_utils_make_viewlink($group_name, $fullpath, $type,
+					   "&r1=text&tr1=$revision&r2=text&tr2=".($revision-1)."&diff_format=h");
+
+	} else if ($type == 'Add') {
+	    $viewtype_url = $type;
+	} else if ($type == 'Delete') {
+	    $viewtype_url = $type;
+	}
+
 	echo '
-		<TR><TD COLSPAN="2" class="small">';
-	if ($offset > 0) {
-		echo '<A HREF="'.$PHP_SELF.'?func=browse&group_id='.$group_id.'&set='.$set.'&offset='.($offset-50).'"><B><-- Previous 50</B></A>';
-	} else {
-		echo '&nbsp;';
-	}
-	echo '</TD><TD>&nbsp;</TD><TD COLSPAN="2" class="small">';
-	
-	if ($rows==50) {
-		echo '<A HREF="'.$PHP_SELF.'?func=browse&group_id='.$group_id.'&set='.$set.'&offset='.($offset+50).'"><B>Next 50 --></B></A>';
-	} else {
-		echo '&nbsp;';
-	}
-	echo '</TD></TR></TABLE>';
+	       <TR class="'. util_get_alt_row_color($i) .'">'.
+	    '<TD class="small"><b>'.$viewfile_url.'</b></TD>'.
+	    '<TD class="small" width="10%" align="center">'.$viewrev_url.'</TD>'.
+	    '<TD class="small" width="10%" align="center">'.$viewtype_url.'</TD>';
+	//'<TD class="small">'.$added.'</TD>'. // To be done
+	//'<TD class="small">'.$removed.'</TD></TR>'; // To be done
+
+    }
+
+    echo '</TD></TR></TABLE>';
 }
 
+// Is there anything in the svn history table ?
+function svn_utils_format_svn_history($group_id) {
+
+    $res_svnfullhist = svn_data_get_svn_history($group_id);
+
+    if (!$res_svnfullhist || db_numrows($res_svnfullhist) < 1) {
+        print '<P>This project has no Subversion history.';
+    } else {
+	$svnhist = array();
+	while ($row_svnfullhist = db_fetch_array($res_svnfullhist)) {
+	    $svnhist[$row_svnfullhist['user_name']]['full'] = $row_svnfullhist['commits'];
+	    $svnhist[$row_svnfullhist['user_name']]['last'] = 0;
+	}
+
+	// Now over the last 7 days
+	$res_svnlasthist = svn_data_get_svn_history($group_id,7*24*3600);
+	
+	while ($row_svnlasthist = db_fetch_array($res_svnlasthist)) {
+	    $svnhist[$row_svnlasthist['user_name']]['last'] = $row_svnlasthist['commits'];
+	}
+    }
+
+    // Format output 
+    $output = '<P><b>Developer Commits (Last 7 days/Total)</b><BR>&nbsp;';
+    reset($svnhist);
+    while (list($user, ) = each($svnhist)) {
+	$output .= '<BR>'.$user.' ('.$svnhist[$user]['last'].'/'
+	    .$svnhist[$user]['full'].')';
+    }
+    return $output;
+}
+
+// read permission access file. The default settings part.
+function svn_utils_read_svn_access_file_defaults($gname) {
+    global $feedback;
+
+    $filename = "/svnroot/$gname/.SVNAccessFile";
+
+    $fd = @fopen("$filename", "r");
+    $in_settings = false;
+    $buffer = '';
+    while (!feof($fd)) {
+	$line = fgets($fd, 4096);
+	if (strpos($line,'# BEGIN CODEX DEFAULT') !== false) { $in_settings = true; }
+	if ($in_settings) { $buffer .= $line; }
+	if (strpos($line,'# END CODEX DEFAULT') !== false) { $in_settings = false; break; }
+    }
+    fclose($fd);
+    return $buffer;
+
+}
+
+// read permission access file. The project specific part.
+function svn_utils_read_svn_access_file($gname) {
+
+    global $feedback;
+
+    $filename = "/svnroot/$gname/.SVNAccessFile";
+
+    $fd = @fopen("$filename", "r");
+    if (!$fd) {
+	$feedback .= "Error: Can't open file $filename";
+    }
+
+    $in_settings = false;
+    $buffer = '';
+    while (!feof($fd)) {
+	$line = fgets($fd, 4096);
+	if (strpos($line,'# BEGIN CODEX DEFAULT') !== false) { $in_settings = true; }
+	if (!$in_settings) { $buffer .= $line; }
+	if (strpos($line,'# END CODEX DEFAULT') !== false) { $in_settings = false; }
+    }
+    fclose($fd);
+    return $buffer;
+}
+
+function svn_utils_write_svn_access_file($gname, $contents) {
+
+    global $feedback;
+
+    $filename = "/svnroot/$gname/.SVNAccessFile";
+    $fd = fopen("$filename", "w+");
+    if ($fd) {
+	if (fwrite($fd, $contents) === false) {
+	    $feedback .= "Error: Can't write to file $filename";
+	    $ret = false;
+	} else {
+	    $ret = true;
+	}
+    } else {
+	$feedback .= "Error: Can't open to file $filename";
+	$ret = false;
+    }
+    fclose($fd);
+    return $ret;
+}
+
+function svn_utils_svn_repo_exists($gname) {
+    return is_dir("/svnroot/$gname");
+}
 
 ?>

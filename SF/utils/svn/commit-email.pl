@@ -11,7 +11,13 @@
 # $LastChangedDate: 2004-01-29 16:00:49 -0600 (Thu, 29 Jan 2004) $
 # $LastChangedBy: blair $
 # $LastChangedRevision: 8540 $
-#    
+#
+#
+# $Id$
+#
+# Heavily modified by Laurent Julliard for the CodeX project at Xerox
+# Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2004. All Rights Reserved
+#
 # ====================================================================
 # Copyright (c) 2000-2004 CollabNet.  All rights reserved.
 #
@@ -36,6 +42,8 @@
 
 #use strict;
 use Carp;
+use Time::Local;
+use File::Basename;
 
 ######################################################################
 # Configuration section.
@@ -149,6 +157,9 @@ while (@ARGV)
         if (! defined $repos)
           {
             $repos = $arg;
+	    # make sure we normalize the path to the repository. There should be
+	    # no slash at the end
+	    $repos =~ s|/*\s*$||;
           }
         elsif (! defined $rev)
           {
@@ -217,7 +228,7 @@ use DBI;
 my $root_path = $ENV{'SF_LOCAL_INC_PREFIX'} || "/home/";
 require $root_path."httpd/SF/utils/include.pl";
 require $root_path."httpd/SF/utils/group.pl";
-require $root_path."httpd/SF/utils/cvs1/checkins.pl";
+require $root_path."httpd/SF/utils/svn/svn-checkins.pl";
 
 &db_connect;
 
@@ -276,6 +287,7 @@ chdir($tmp_dir)
 my @svnlooklines = &read_from_process($svnlook, 'info', $repos, '-r', $rev);
 my $author = shift @svnlooklines;
 my $date = shift @svnlooklines;
+my $unix_gmtime = date_to_gmtime($date);
 shift @svnlooklines;
 my @log = map { "$_\n" } @svnlooklines;
 &extract_xrefs(@log);
@@ -355,10 +367,12 @@ my @adds;
 my @dels;
 my @mods;
 my @difflines = ();
+my @changed_files = ();
 foreach my $line (@svnlooklines)
   {
     my $path = '';
     my $code = '';
+    my $change_file = {};
 
     # Split the line up into the modification code and path, ignoring
     # property modifications.
@@ -366,23 +380,36 @@ foreach my $line (@svnlooklines)
       {
         $code = $1;
         $path = $2;
+	$change_file->{'path'} = $path;
       }
 
     if ($code eq 'A')
       {
+	$change_file->{'state'} = 'A';
         push(@adds, $path);
 	push(@difflines,sprintf($add_url,$path)) if ($no_diff);
       }
     elsif ($code eq 'D')
       {
+	$change_file->{'state'} = 'D';
         push(@dels, $path);
       }
     else
       {
+	# Can be M or _
+	$change_file->{'state'} = 'M';
         push(@mods, $path);
 	push(@difflines,sprintf($mod_url,$path,$rev-1,$rev)) if ($no_diff);
       }
+
+    push(@changed_files, $change_file) if ($change_file->{'path'});
+
   }
+
+if ($debug) {
+  print "Array of files changed: \n";
+  print @changed_files;
+}
 
 # Get the diff from svnlook.
 # CodeX Specific - no diff output for CodeX - Build the viewcvs URL  instead
@@ -599,6 +626,18 @@ foreach my $project (@project_settings_list)
       }
   }
 
+# Now add the Subversion information in the CodeX tracking database
+if (&isGroupSvnTracked) {
+  $commit_id = db_get_commit($group_id,$repos,$rev,$unix_gmtime,$author,@log);
+
+  for $file (@changed_files) {
+    print "file_path = ".$file->{'path'}."\n" if $debug;
+    print "file_state = ".$file->{'state'}."\n" if $debug;
+    ($filename,$dir,$suffix) = fileparse($file->{'path'},());
+    db_add_record($file->{'state'},$commit_id,$repos,$dir,$filename,0,0);
+  }
+}
+
 exit 0;
 
 sub usage
@@ -805,4 +844,20 @@ sub format_xref {
     }
 
     return @text;
+}
+
+# transform time stamp returned by svnlook info in epoch time
+# relative to GMT
+sub date_to_gmtime() {
+  my $svndate = shift;
+
+  # svnlook info return time stamp as
+  # 2004-05-11 11:12:22 +0200 (Tue, 11 May 2004)
+
+  ($year,$mon,$mday,$hours,$min,$sec,$plusorminus,$shift_hrs,$shift_min) =
+    ($svndate =~ /^(\d+)-(\d+)-(\d+)\s+(\d+):(\d+):(\d+)\s*([+-])(\d\d)(\d\d)/);
+
+  $shift = ($shift_hrs*60+$shift_min)*60;
+  $shift = -$shift if ($plusorminus eq '-');
+  return (timegm($sec, $min, $hours, $mday, $mon-1, $year) - $shift);
 }

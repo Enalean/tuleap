@@ -9,53 +9,19 @@
 if (!$group_id) {
     exit_no_group(); // need a group_id !!!
 }
-
-$order_str = "";
-
-if ($order) {
-  if ($order != 'filename')
-    $order_str = " ORDER BY ".$order;
-  else
-    $order_str = " ORDER BY dir, file";
-}
-
-$when_str = '';
-
-$id_str = "AND cvs_checkins.descid='$checkin_id' ";
-if ($commit_id) {
-  $id_str = "AND cvs_checkins.commitid='$commit_id' ";
-  if ($desc_id) {
-    $id_str = $id_str . "AND cvs_checkins.descid='$desc_id' ";
-  }
-}
-
-if ($when) {
-  $when_str = "AND cvs_checkins.ci_when='$when' ";
-}
-if ($tag) {
-  $when_str = $when_str."AND cvs_checkins.stickytag='$tag' ";
-}
-$sql="SELECT repository, cvs_commits.comm_when as c_when, repositoryid, description, file, fileid, dir, dirid, type, branch, revision, addedlines, removedlines ".
-	"FROM cvs_dirs, cvs_descs, cvs_files, cvs_checkins, cvs_branches, cvs_repositories, cvs_commits ".
-	"WHERE cvs_checkins.fileid=cvs_files.id ".
-	"AND cvs_checkins.dirid=cvs_dirs.id ".
-	"AND cvs_checkins.commitid=cvs_commits.id ".
-	"AND cvs_checkins.branchid=cvs_branches.id ".
-        "AND cvs_checkins.descid=cvs_descs.id ".
-	"AND cvs_checkins.repositoryid=cvs_repositories.id ".
-	$id_str.
-        $when_str.$order_str;
+$project = project_get_object($group_id);
+$group_name = $project->getUnixName();
 
 
-$result=db_query($sql);
+$result = svn_data_get_revision_detail($group_id, $commit_id, $rev_id, $order);
 
 if (db_numrows($result) > 0) {
-    commits_header(array ('title'=>'CVS Commit '.$commit_id.' - Details',
-			  'help' => 'CVSWebInterface.html#QueryingCVS'));
-    show_commit_details($result);
-    commits_footer(array());
+    svn_header(array ('title'=>'SVN Revision '.$revision.' - Details',
+			  'help' => 'SubversionBrowsingInterface.html'));
+    svn_utils_show_revision_detail($result,$group_id,$group_name,$commit_id);
+    svn_footer(array());
 } else {
-    exit_error('Error','Commit #'.$commit_id.' not found in this project');
+    exit_error('Error','Internal Commit ID #'.$commit_id.' not found in this project');
 }
 
 ?>

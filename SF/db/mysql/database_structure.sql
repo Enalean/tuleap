@@ -2523,6 +2523,65 @@ CREATE TABLE cvs_tracks (
   tracker varchar(64) binary DEFAULT '' NOT NULL, 
   artifact_id int(11) NOT NULL, 
   commit_id int(11) NOT NULL	
+);
+
+# CREATE SVN support tables
+
+CREATE TABLE svn_checkins (
+  id int(11) DEFAULT '0' NOT NULL auto_increment,
+  type enum('Change','Add','Delete'),
+  commitid int(11) DEFAULT '0' NOT NULL,
+  dirid int(11) DEFAULT '0' NOT NULL,
+  fileid int(11) DEFAULT '0' NOT NULL,
+  addedlines int(11) DEFAULT '999' NOT NULL,
+  removedlines int(11) DEFAULT '999' NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE uniq_checkins_idx (commitid,dirid,fileid),
+  KEY dirid (dirid),
+  KEY fileid (fileid)
+);
+
+CREATE TABLE svn_commits (
+  id int(11) DEFAULT '0' NOT NULL auto_increment,
+  group_id int(11) DEFAULT '0' NOT NULL,
+  repositoryid int(11) DEFAULT '0' NOT NULL,
+  revision int(11) DEFAULT '0' NOT NULL,
+  date int(11) NOT NULL default '0',
+  whoid int(11) DEFAULT '0' NOT NULL,
+  description text,
+  PRIMARY KEY (id),
+  UNIQUE uniq_commits_idx (repositoryid,revision),
+  KEY whoid (whoid),
+  FULLTEXT (description)
+);
+
+CREATE TABLE svn_dirs (
+  id int(11) DEFAULT '0' NOT NULL auto_increment,
+  dir varchar(255) binary DEFAULT '' NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE uniq_dir_idx (dir)
+);
+
+CREATE TABLE svn_files (
+  id int(11) DEFAULT '0' NOT NULL auto_increment,
+  file varchar(255) binary DEFAULT '' NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE uniq_file_idx (file)
+);
+
+CREATE TABLE svn_repositories (
+  id int(11) DEFAULT '0' NOT NULL auto_increment,
+  repository varchar(255) binary DEFAULT '' NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE uniq_repository_idx (repository)
+);
+
+
+CREATE TABLE svn_tracks ( 
+  group_artifact_id int(11),
+  tracker varchar(64) binary DEFAULT '' NOT NULL, 
+  artifact_id int(11) NOT NULL, 
+  commit_id int(11) NOT NULL
 ); 
 
 

@@ -23,7 +23,7 @@ $res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
 $row_grp = db_fetch_array($res_grp);
 
 // Show CVS access information
-if ($row_grp['svn_preamble']!='') {
+if ($row_grp['svn_preamble'] != '') {
     echo util_unconvert_htmlspecialchars($row_grp['svn_preamble']);
 } else {
     include(util_get_content('svn/intro'));
@@ -33,21 +33,7 @@ if ($row_grp['svn_preamble']!='') {
 print '</TD><TD width="25%">';
 print $HTML->box1_top("Repository History");
 
-// Is there anything in the cvs history table ?
-$res_cvshist = db_query("SELECT * FROM group_svn_history WHERE group_id='$group_id'");
-if (db_numrows($res_svnhist) < 1) {
-        print '<P>This project has no Subversion history.';
-} else {
-
-    print '<P><b>Developer (Commits) (Adds) 7day/Total</b><BR>&nbsp;';
-
-    while ($row_svnhist = db_fetch_array($res_svnhist)) {
-        print '<BR>'.$row_svnhist['user_name'].' ('.$row_svnhist['svn_commits_wk'].'/'
-	    .$row_svnhist['svn_commits'].') ('.$row_svnhist['svn_adds_wk'].'/'
-	    .$row_svnhist['svn_adds'].')';
-    }
-
-}
+echo svn_utils_format_svn_history($group_id);
 
 // SVN Browsing Box
 $uri = session_make_url('/cgi-bin/viewcvs.cgi/?root='.$row_grp['unix_group_name'].'&roottype=svn');
