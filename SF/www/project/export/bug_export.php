@@ -122,42 +122,34 @@ The Bug export provides you with the following bug fields. The sample values ind
 	reset($col_list);
 	while (list(,$col) = each($col_list)) {
 
-	    // all fields are created with type varchar(255) except
-	    // for some exceptions. This is really quick and dirty and 
-	    // column type should be determined from both the data
-	    // type of the columns in the bug table and the display type
-	    // from the bug_field table
-	    switch ($col) {
-	    case 'date':
-	    case 'close_date':
-		$type = 'DATETIME';
-		break;
-		
-	    case 'group_id':
-	    case 'bug_id':
+	    // process some special fields first. They do not follow
+	    // the general pattern
+	    if ($col == 'group_id' || $col == 'bug_id') {
 		$type = 'INTEGER';
-		break;
-		
-	    case 'hours':
+
+	    } else if ($col == 'hours') {
 		$type = 'FLOAT(10,2)';
-		break;
 
-	    case 'details':
-		$type = 'TEXT';
-		break;
-
-	    case 'follow_ups':
-		$type = 'TEXT';
-		break;
-
-	    case 'is_dependent_on_task_id':
-	    case 'is_dependent_on_bug_id':
+	    } else if ($col == 'is_dependent_on_task_id' ||
+		       $col == 'is_dependent_on_bug_id') {
 		$type = 'VARCHAR(255)';
-		break;
 
-	    default:
+	    } else if (bug_data_is_select_box($col)) {
+		$type = 'INTEGER';
+		
+	    } else if (bug_data_is_text_field($col)) {
 		$type = 'VARCHAR(255)';
-		break;
+
+	    } else if (bug_data_is_text_area($col)) {
+		$type = 'TEXT';
+
+	    } else if (bug_data_is_date_field($col)) {
+		$type = 'DATETIME';
+
+	    } else {
+		// We should not get there... But just in case default
+		// to a varchar type which is sort of safe
+		$type = 'VARCHAR(255)';
 	    }
 
 	    $sql_create .= $col.' '.$type.',';

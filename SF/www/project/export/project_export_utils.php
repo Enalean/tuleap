@@ -120,20 +120,13 @@ function prepare_bug_record($group_id, &$col_list, &$record) {
            Input: a row from the bug table (passed by reference.
           Output: the same row with values transformed for export
        */
-
-    // replace the date fields with human readable dates that
-    // is also accepted as a valid format in future import
-    $record['date'] = format_date($datetime_fmt,$record['date']);
-    if ($record['close_date'] == 0)
-	$record['close_date'] = '';
-    else
-	$record['close_date'] = format_date($datetime_fmt,$record['close_date']);
 	
-    // all text fields converted from HTML to ASCII
-    reset($col_list);
+   reset($col_list);
     $line = '';
     while (list(,$col) = each($col_list)) {
-	if (bug_data_is_text_field($col) || bug_data_is_text_area($col)) {
+
+ 	if (bug_data_is_text_field($col) || bug_data_is_text_area($col)) {
+	    // all text fields converted from HTML to ASCII
 	    $record[$col] = prepare_textarea($record[$col]);
 
 	} else if (bug_data_is_select_box($col) && ($col != 'severity') &&
@@ -142,6 +135,16 @@ function prepare_bug_record($group_id, &$col_list, &$record) {
 	    // except severity that remains a number and usernames
 	    // which are already in clear
 	    $record[$col] = bug_data_get_cached_field_value($col, $group_id, $record[$col]);
+	} else if (bug_data_is_date_field($col)) {
+	    // replace the date fields (unix time) with human readable dates that
+	    // is also accepted as a valid format in future import
+	    if ($record[$col] == '')
+		// if date undefined then set datetime to 0. Ideally should
+		// NULL as well but if we pass NULL it is interpreted as a string
+		// later in the process
+		$record[$col] = '0';
+	    else
+		$record[$col] = format_date($datetime_fmt,$record[$col]);
 	}
     }
 
