@@ -132,10 +132,6 @@ class ArtifactFile extends Error {
 	 *	@return	boolean	success.
 	 */
 	function delete() {
-		if (!$this->Artifact->ArtifactType->userIsAdmin()) {
-			$this->setError('ArtifactFile: Permission Denied');
-			return false;
-		}
 		$sql = "DELETE FROM artifact_file WHERE id=".$this->getID();
 		//echo "sql=$sql<br>";
 		$res=db_query($sql);

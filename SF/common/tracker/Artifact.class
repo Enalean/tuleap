@@ -623,7 +623,9 @@ class Artifact extends Error {
 	    //  Insert the list of dependencies 
 	    //
 	
-		$this->addDependencies($artifact_id_dependent,&$changes);		
+		if (!$this->addDependencies($artifact_id_dependent,&$changes)) {
+			return false;
+		}
 		
 	    //
 	    //  Finally, build the full SQL query and update the artifact itself (if need be)
@@ -806,6 +808,23 @@ class Artifact extends Error {
 	    $res = db_query($sql);
 	    return (db_numrows($res) >= 1);
 	}
+	
+	/**
+	 * Check if an artifact exists
+	 *
+	 * @param id: the artifact id
+	 *
+	 * @return boolean
+	 */
+	function validArtifact($id) {
+	    $sql = "SELECT * FROM artifact WHERE artifact_id=".$id;
+	    $res = db_query($sql);
+	    if ( db_numrows($res) >= 1 )
+	    	return true;
+	    else
+	    	return false;
+	}
+	
 
 	/**
 	 * Insert a artifact dependency with the current one
@@ -841,9 +860,14 @@ class Artifact extends Error {
 		$ids = explode(",",$artifact_id_dependent);
 		
 	    while (list(,$id) = each($ids)) {
-			// Add this id only if not there already
+			// Add this id only if not already exist
 			//echo "add id=".$id."<br>";
-			if (!$this->existDependency($id)) {
+			// Check existance
+			if (!$this->validArtifact($id)) {
+				$ok = false;
+				$feedback .= " Invalid artifact #".$id;
+			}
+			if ($ok&&!$this->existDependency($id)) {
 			    $res = $this->insertDependency($id);
 			    if (!$res) { $ok = false; }
 			}
@@ -1083,6 +1107,23 @@ class Artifact extends Error {
 	}
 
 	/**
+	 * Return a CC list values
+	 *
+	 * @param artifact_cc_id: the artifact cc id
+	 *
+	 * @return array
+	 */
+	function getCC($artifact_cc_id) {
+		
+	    $sql="SELECT artifact_cc_id,artifact_cc.email,artifact_cc.added_by,artifact_cc.comment,artifact_cc.date,user.user_name ".
+		    "FROM artifact_cc,user ".
+		    "WHERE artifact_cc_id=".$artifact_cc_id." ".
+		    "AND added_by=user.user_id";
+	    $res = db_query($sql);
+	    return db_fetch_array($res);
+	}
+
+	/**
 	 * Return the artifact dependencies values
 	 *
 	 * @return array
@@ -1128,6 +1169,23 @@ class Artifact extends Error {
 			"AND artifact_id=".$this->getID()." ORDER BY adddate DESC";
 		//echo "sql=$sql<br>";
 		return db_query($sql);
+	}
+
+	/**
+	 * Return a attached file
+	 *
+	 * @param id: the file id
+	 *
+	 * @return array
+	 */
+	function getAttachedFile ($id) {
+		$sql="SELECT id,filename,filesize,description,adddate,user.user_name ".
+			"FROM artifact_file,user ".
+			"WHERE submitted_by=user.user_id ".
+			"AND id=".$id;
+		//echo "sql=$sql<br>";
+		$res = db_query($sql);
+		return db_fetch_array($res);
 	}
 
 	/**

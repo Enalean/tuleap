@@ -389,10 +389,7 @@ class ArtifactHtml extends Artifact {
 		$title_arr[]='Size (KB)';
 		$title_arr[]='By';
 		$title_arr[]='On';
-		
-		if ($this->ArtifactType->userIsAdmin()) {
-		    $title_arr[]='Delete?';
-		}
+	    $title_arr[]='Delete?';
 	
 		$out .= html_build_list_table_top ($title_arr);
 	    }
@@ -403,7 +400,7 @@ class ArtifactHtml extends Artifact {
 			    "Date: %s  Name: %s  Size: %dKB   By: %s$sys_lf%s$sys_lf%s";
 	    } else {
 			$fmt = "$sys_lf".'<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td><td align="center">%s</td><td align="center">%s</td>'.
-		    ( $this->ArtifactType->userIsAdmin() ? '<td align="center">%s</td>':'').'</tr>';
+		    '<td align="center">%s</td></tr>';
 	    }
 	
 	    // Determine which protocl to use for embedded URL in ASCII format
@@ -428,7 +425,11 @@ class ArtifactHtml extends Artifact {
 					    db_result($result, $i, 'description'),
 					    $server.$href);
 			} else {
-			    if ( $this->ArtifactType->userIsAdmin() ) {
+			    // show CC delete icon if one of the condition is met:
+			    // (a) current user is a artifact tech
+			    // (b) the current user is the person who added a gieven name in CC list
+			    if ( $this->ArtifactType->userIsTech() ||
+				(user_getname(user_getid()) == db_result($result, $i, 'user_name') )) {
 					$html_delete = "<a href=\"$PHP_SELF?func=delete_file&group_id=".$group_id."&atid=".$group_artifact_id."&aid=".$this->getID()."&id=".db_result($result, $i, 'id')."\" ".
 					    " onClick=\"return confirm('Delete this attachment?')\">".
 					    '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A>';
@@ -521,11 +522,11 @@ class ArtifactHtml extends Artifact {
 			} else {
 		
 			    // show CC delete icon if one of the condition is met:
-			    // (a) current user is a artifact admin
+			    // (a) current user is a artifact tech
 			    // (b) then CC name is the current user 
 			    // (c) the CC email address matches the one of the current user
 			    // (d) the current user is the person who added a gieven name in CC list
-			    if ( $this->ArtifactType->userIsAdmin() ||
+			    if ( $this->ArtifactType->userIsTech() ||
 				(user_getname(user_getid()) == $email) ||  
 				(user_getemail(user_getid()) == $email) ||
 				(user_getname(user_getid()) == db_result($result, $i, 'user_name') )) {
@@ -616,7 +617,7 @@ class ArtifactHtml extends Artifact {
 			    $out .= sprintf($fmt, $dependent_on_artifact_id, $summary);
 			} else {
 		
-			    if ( $this->ArtifactType->userIsAdmin() ) {
+			    if ( $this->ArtifactType->userIsTech() ) {
 					$html_delete = "<a href=\"$PHP_SELF?func=delete_dependent&group_id=$group_id&aid=".$this->getID()."&atid=".$group_artifact_id."&dependent_on_artifact_id=$dependent_on_artifact_id\" ".
 					" onClick=\"return confirm('Delete this dependency?')\">".
 					'<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A>';
@@ -626,7 +627,7 @@ class ArtifactHtml extends Artifact {
 		
 			    $out .= sprintf($fmt,
 					    util_get_alt_row_color($i),
-					    "<a href=\"/tracker/?func=detail&aid=$dependent_on_artifact_id&atid=$group_artifact_id&group_id=$group_id\">$dependent_on_artifact_id</a>",
+					    "<a href=\"/tracker/?func=gotoid&aid=$dependent_on_artifact_id\">$dependent_on_artifact_id</a>",
 					    $summary,
 					    $tracker_label,
 					    $group_label,

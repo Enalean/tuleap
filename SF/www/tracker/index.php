@@ -66,10 +66,24 @@ if ($group_id && $atid) {
 		//
 		//		Create a new Artifact
 		//	
+
 		$ah=new ArtifactHtml($ath);
 		if (!$ah || !is_object($ah)) {
 			exit_error('ERROR','Artifact Could Not Be Created');
 		} else {
+			// Check if a user can submit a new without loggin
+			if ( !user_isloggedin() && !$ath->allowsAnon() ) {
+				exit_not_logged_in();
+				return;
+			}
+			
+			//
+			//  make sure this person has permission to add artifacts
+			//
+			if (!$ath->userIsTech() && !$ath->allowsAnon() ) {
+				exit_permission_denied();
+			}
+
 			// First check parameters
 			
 			// CC
@@ -125,33 +139,61 @@ if ($group_id && $atid) {
 		} else if ($ah->isError()) {
 			exit_error('ERROR',$ah->getErrorMessage());
 		} else {
-			$changed = $ah->deleteCC($artifact_cc_id,$changes);
-			if ($changed) {
-			    //
-			    //  see if we're supposed to send all modifications to an address
-			    //
-			    if ($ath->emailAll()) {
-					$address=$ath->getEmailAddress();
-			    }
-			    
-			    //
-			    //  now send the email
-			    //  it's no longer optional due to the group-level notification address
-			    //
-			    $ah->mailFollowup($address,$changes);
-			}
+			$cc_array = $ah->getCC($artifact_cc_id);
+			// Perform CC deletion if one of the condition is met:
+			// (a) current user is a artifact tech
+			// (b) then CC name is the current user 
+			// (c) the CC email address matches the one of the current user
+			// (d) the current user is the person who added a gieven name in CC list
+			if ( $ath->userIsTech() ||
+			(user_getname(user_getid()) == $cc_array['email']) ||  
+			(user_getemail(user_getid()) == $cc_array['email']) ||
+			(user_getname(user_getid()) == $cc_array['user_name'] )) {
 
-			// unsent artifact_id var to make sure that it doesn;t
-			// impact the next artifact query.
-			unset($aid);
-			unset($HTTP_GET_VARS['aid']);
-			include './browse.php';
+				$changed = $ah->deleteCC($artifact_cc_id,$changes);
+				if ($changed) {
+				    //
+				    //  see if we're supposed to send all modifications to an address
+				    //
+				    if ($ath->emailAll()) {
+						$address=$ath->getEmailAddress();
+				    }
+				    
+				    //
+				    //  now send the email
+				    //  it's no longer optional due to the group-level notification address
+				    //
+				    $ah->mailFollowup($address,$changes);
+				}
+	
+				// unsent artifact_id var to make sure that it doesn;t
+				// impact the next artifact query.
+				unset($aid);
+				unset($HTTP_GET_VARS['aid']);
+				include './browse.php';
+			
+			} else {
+				// Invalid permission
+				exit_permission_denied();
+				return;
+			}
+	
 		}
 		break;
 	}
 
     case 'delete_dependent' : {
     	
+		if ( !user_isloggedin() ) {
+			exit_not_logged_in();
+			return;
+		}
+		
+	    if ( !$ath->userIsTech() ) {
+			exit_permission_denied();
+			return;
+		}
+		
 		$ah=new ArtifactHtml($ath,$aid);
 		if (!$ah || !is_object($ah)) {
 			exit_error('ERROR','Artifact Could Not Be Created');
@@ -187,24 +229,38 @@ if ($group_id && $atid) {
 		//
 		//	Delete a file from this artifact
 		//
+		
 		$ah=new ArtifactHtml($ath,$aid);
-		$afh=new ArtifactFileHtml($ah,$id);
-		if (!$afh || !is_object($afh)) {
-			$feedback .= 'Could Not Create File Object::'.$afh->getName();
-		} elseif ($afh->isError()) {
-			$feedback .= $afh->getErrorMessage().'::'.$afh->getName();
-		} else {
-			if (!$afh->delete()) {
-				$feedback .= ' <br>File Delete: '.$afh->getErrorMessage();
+
+		// Check permissions
+		$file_array = $ah->getAttachedFile($id);
+	    if ( $ath->userIsTech() ||
+		(user_getname(user_getid()) == $file_array['user_name'] )) {
+
+			$afh=new ArtifactFileHtml($ah,$id);
+			if (!$afh || !is_object($afh)) {
+				$feedback .= 'Could Not Create File Object::'.$afh->getName();
+			} elseif ($afh->isError()) {
+				$feedback .= $afh->getErrorMessage().'::'.$afh->getName();
 			} else {
-				$feedback .= ' <br>File Delete: Successful ';
+				if (!$afh->delete()) {
+					$feedback .= ' <br>File Delete: '.$afh->getErrorMessage();
+				} else {
+					$feedback .= ' <br>File Delete: Successful ';
+				}
 			}
+			// unsent artifact_id var to make sure that it doesn;t
+			// impact the next artifact query.
+			unset($aid);
+			unset($HTTP_GET_VARS['aid']);
+			include './browse.php';
+
+		} else {
+			// Invalid permission
+			exit_permission_denied();
+			return;
 		}
-		// unsent artifact_id var to make sure that it doesn;t
-		// impact the next artifact query.
-		unset($aid);
-		unset($HTTP_GET_VARS['aid']);
-		include './browse.php';
+	
 		break;
 	}
 
@@ -218,6 +274,17 @@ if ($group_id && $atid) {
 		} else if ($ah->isError()) {
 			exit_error('ERROR',$ah->getErrorMessage());
 		} else {
+
+			// Check if users can update anonymously
+			if ( $ath->allowsAnon() == 0 && !user_isloggedin() ) {
+			    exit_not_logged_in();
+			}
+			
+			if ( !$ah->ArtifactType->userIsTech() ) {
+				exit_permission_denied();
+				return;
+			}
+
 			// First check parameters
 			
 			// CC
@@ -231,6 +298,9 @@ if ($group_id && $atid) {
 
 			//data control layer
 			$changed = $ah->handleUpdate($artifact_id_dependent,$canned_response,$changes);
+			if (!$changed) {
+				include './browse.php';
+			}
 		
 			//
 			//  Attach file to this Artifact.
@@ -256,11 +326,6 @@ if ($group_id && $atid) {
 			    $changed |= $ah->addCC($add_cc,$cc_comment,$changes);
 			}
 		
-			// Add new dependency if any
-			if ($artifact_id_dependent) {
-			    $changed |= $ah->addDependencies($artifact_id_dependent,$changes);
-			}
-
 			if ($changed) {
 			    //
 			    //  see if we're supposed to send all modifications to an address
@@ -348,10 +413,7 @@ if ($group_id && $atid) {
 			
 			// Check if users can browse anonymously
 			if ( $ath->allowsAnon() == 0 && !user_isloggedin() ) {
-			    exit_error('You are NOT logged in.',
-          '<P><b>This project has requested that users be logged in before submitting/updating an artifact.</p>
-	   <P> Please <u><A HREF="/account/login.php?return_to='.urlencode($REQUEST_URI). 
-	'">log in</A></u> first.</b></p>');
+			    exit_not_logged_in();
 			}
 			
 			if ( $ah->ArtifactType->userIsTech() ) {
@@ -365,16 +427,22 @@ if ($group_id && $atid) {
 
 	case 'reporting': {
 
-	  if (!user_ismember($group_id,"B2") && !user_ismember($group_id,"A") ) {
-	      exit_permission_denied();
-	    }
+		if ( !user_isloggedin() ) {
+			exit_not_logged_in();
+			return;
+		}
+		
+	    if ( !$ath->userIsAdmin() ) {
+			exit_permission_denied();
+			return;
+		}
 
 	    if ($field) {
 	      if ($field == 'aging') {
-		$ath->reportingByAge();
+			$ath->reportingByAge();
 	      } else {
-		// It's any of the select box field. 
-		$ath->reportingByField($field);
+			// It's any of the select box field. 
+			$ath->reportingByField($field);
 	      }
 		
 	    } else {
