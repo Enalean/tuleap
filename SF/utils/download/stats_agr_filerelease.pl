@@ -109,14 +109,14 @@ $rel = $dbh->do($sql) || die "SQL parse error: $!";
 #$rel = $dbh->prepare($sql) || die "SQL parse error: $!";
 #$rel->execute() || die "SQL execute error: $!";
 #while ( @tmp_ar = $rel->fetchrow_array() ) {
-#	$downloads{ $tmp_ar[0] } += $tmp_ar[1]; 
+#	$filedownloads{ $tmp_ar[0] } += $tmp_ar[1]; 
 #}
 
 #$sql	= "SELECT filerelease_id,SUM(downloads) FROM stats_ftp_downloads GROUP BY filerelease_id";
 #$rel = $dbh->prepare($sql) || die "SQL parse error: $!";
 #$rel->execute() || die "SQL execute error: $!";
 #while ( @tmp_ar = $rel->fetchrow_array() ) {
-#	$downloads{ $tmp_ar[0] } += $tmp_ar[1]; 
+#	$filedownloads{ $tmp_ar[0] } += $tmp_ar[1]; 
 #}
 
 my $sql = "SELECT filerelease_id, COUNT(*) "
@@ -124,11 +124,11 @@ my $sql = "SELECT filerelease_id, COUNT(*) "
 my $rel = $dbh->prepare($sql);
 $rel->execute();
 while( @tmp_ar = $rel->fetchrow_array() ) {
-  $downloads{$tmp_ar[0]} += $tmp_ar[1];
+  $filedownloads{$tmp_ar[0]} += $tmp_ar[1];
 }
 
-foreach $file_id ( keys %downloads ) {
-	$xfers = $downloads{$file_id};
+foreach $file_id ( keys %filedownloads ) {
+	$xfers = $filedownloads{$file_id};
 
 	$sql  = "INSERT INTO frs_dlstats_filetotal_agg_tmp VALUES ('$file_id','$xfers')";
 	$rel = $dbh->do($sql) || die "SQL parse error: $!";
