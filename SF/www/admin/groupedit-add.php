@@ -10,6 +10,8 @@ require($DOCUMENT_ROOT.'/include/pre.php');
 require($DOCUMENT_ROOT.'/include/account.php');
 require($DOCUMENT_ROOT.'/admin/admin_utils.php');
 
+$LANG->loadLanguageMsg('admin/admin');
+
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
 // ########################################################
@@ -28,27 +30,27 @@ if ($Submit) {
 	session_redirect("/admin/groupedit.php?group_id=$newid");
 } 
 
-site_admin_header(array('title'=>"Welcome to ".$GLOBALS['sys_name']."Project Add"));
+site_admin_header(array('title'=>$LANG->getText('admin_groupedit_add','title')));
 ?>
 
 <form action="groupedit-add.php" method="post">
-<p>New descriptive group name:
+    <p><?php echo $LANG->getText('admin_groupedit_add','desc_name'); ?>:
 <br><input type="text" name="group_idname">
-<p>New unix group name:
+<p><?php echo $LANG->getText('admin_groupedit_add','unix_name'); ?>:
 <br><input type="text" name="form_unixgrp">
-<br>Status
+<br><?php echo $LANG->getText('admin_groupedit','status'); ?>
 <SELECT name="form_status">
-<OPTION value="A">Active
-<OPTION value="P">Pending
-<OPTION value="H">Holding
-<OPTION value="D">Deleted
+<OPTION value="A"><?php echo $LANG->getText('admin_groupedit','active'); ?>
+<OPTION value="P"><?php echo $LANG->getText('admin_groupedit','pending'); ?>
+<OPTION value="H"><?php echo $LANG->getText('admin_groupedit','holding'); ?>
+<OPTION value="D"><?php echo $LANG->getText('admin_groupedit','deleted'); ?>
 </SELECT>
-<br>Public?
+<br><?php echo $LANG->getText('admin_groupedit','public'); ?>
 <SELECT name="form_public">
-<OPTION value="1">Yes
-<OPTION value="0">No
+<OPTION value="1"><?php echo $LANG->getText('global','yes'); ?>
+<OPTION value="0"><?php echo $LANG->getText('global','no'); ?>
 </SELECT>
-<br><input type="submit" name="Submit" value="Submit">
+<br><input type="submit" name="Submit" value="<?php echo $LANG->getText('global','btn_submit'); ?>">
 </form>
 
 <?php

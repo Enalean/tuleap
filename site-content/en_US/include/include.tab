@@ -14,5 +14,7 @@
 # Script: SF/www/include/exit.php
 #
 include_exit	error	Error
+include_exit	info	Information
+include_exit	warn	Warning
 
 

@@ -7,6 +7,9 @@
 // $Id$
 
 require($DOCUMENT_ROOT.'/include/pre.php');    
+
+$LANG->loadLanguageMsg('admin/admin');
+
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
 $res_logins = db_query("SELECT session.user_id AS user_id,"
@@ -17,9 +20,9 @@ $res_logins = db_query("SELECT session.user_id AS user_id,"
 	. "session.user_id>0 AND session.time>0 ORDER BY session.time DESC LIMIT 50");
 if (db_numrows($res_logins) < 1) exit_error("No records found","There must be an error somewhere.");
 
-$HTML->header(array('title'=>"Last Logins"));
+$HTML->header(array('title'=>$LANG->getText('admin_lastlogins','title')));
 
-print '<P><B>Most Recent Sessions with Logins</B>';
+print '<P><B>'.$LANG->getText('admin_lastlogins','recent').'</B>';
 print "\n<P>";
 print '<TABLE width=100% cellpadding=0 cellspacing=0 border=0>';
 
@@ -27,7 +30,7 @@ while ($row_logins = db_fetch_array($res_logins)) {
 	print '<TR>';
 	print "<TD>$row_logins[user_name]</TD>";
 	print "<TD>$row_logins[ip_addr]</TD>";
-	print "<TD>" . date("Y/m/d G:i",$row_logins['time']) . "</TD>";
+	print "<TD>" . date($LANG->getText('system','datefmt'),$row_logins['time']) . "</TD>";
 	print '</TR>';
 }
 

@@ -17,6 +17,11 @@ conf	default_font	verdana,arial,helvetica,sans-serif
 conf	language_code	en
 conf	language_id	1
 global	back_home	Back to Home Page
+global	back	Back
+global	btn_delete	Delete
+global	btn_cancel	Cancel
 global	btn_update	Update
 global	btn_submit	Submit
+global	yes	Yes
+global	no	No
 

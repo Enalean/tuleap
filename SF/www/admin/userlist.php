@@ -9,15 +9,16 @@
 require($DOCUMENT_ROOT.'/include/pre.php');    
 require($DOCUMENT_ROOT.'/include/account.php');
 require($DOCUMENT_ROOT.'/project/admin/ugroup_utils.php');
+
+$LANG->loadLanguageMsg('admin/admin');
+
 session_require(array('group'=>'1','admin_flags'=>'A'));
-$HTML->header(array('title'=>'Admin - User List'));
+
+$HTML->header(array('title'=>$LANG->getText('admin_userlist','title')));
 
 function show_users_list ($result) {
-	echo '<P>Key:
-		<B>Active</B>
-		<I>Deleted</I>
-		Suspended
-		(*)Pending
+    global $LANG;
+	echo '<P>'.$LANG->getText('admin_userlist','legend').'
 		<P>
 		<TABLE width=100% cellspacing=0 cellpadding=0 BORDER="1">';
 
@@ -49,7 +50,7 @@ function show_users_list ($result) {
 if ($action=='delete') {
 	db_query("UPDATE user SET status='D',unix_status='D'  WHERE user_id='$user_id'");
         ugroup_delete_user_from_all_ugroups($user_id);
-	echo '<H2>User Updated to DELETE Status - UNIX account scheduled for deletion</H2>';
+	echo '<H2>'.$LANG->getText('admin_userlist','user_deleted').'</H2>';
 }
 
 /*
@@ -57,7 +58,7 @@ if ($action=='delete') {
 */
 if ($action=='activate') {
 	db_query("UPDATE user SET status='A' WHERE user_id='$user_id'");
-	echo '<H2>User Updated to ACTIVE status</H2>';
+	echo '<H2>'.$LANG->getText('admin_userlist','user_active').'</H2>';
 }
 
 /*
@@ -65,7 +66,7 @@ if ($action=='activate') {
 */
 if ($action=='suspend') {
 	db_query("UPDATE user SET status='S' WHERE user_id='$user_id'");
-	echo '<H2>User Updated to SUSPEND Status</H2>';
+	echo '<H2>'.$LANG->getText('admin_userlist','user_suspended').'</H2>';
 }
 
 /*
@@ -77,19 +78,19 @@ if ($action=='add_to_group') {
     if (db_numrows($res_newuser) > 0) {
         $user_name = db_result($res_newuser,0,'user_name');
         if (!account_add_user_to_group($group_id,$user_name)) {
-            print "<H3><span class='feedback'>Error - Can't add user to group: ".$feedback."</span></H3>";
+            $feedback .= ' '.$LANG->getText('admin_userlist','error_noadd');
         }
     } else {
-            print "<H3><span class='feedback'>Error - Can't find user with id=".$user_id."</span></H3>";
+	$feedback .= ' '.$LANG->getText('admin_userlist','error_uid',array($user_id));
     }
 }
 
 /*
 	Show list of users
 */
-print "<p>User List for:  ";
+print "<p>".$LANG->getText('admin_userlist','user_list').":  ";
 if (!$group_id) {
-	print "<b>All Groups</b>";
+	print "<b>".$LANG->getText('admin_userlist','all_groups')."</b>";
 	print "\n<p>";
 	
 	if ($user_name_search) {
@@ -102,7 +103,7 @@ if (!$group_id) {
 	/*
 		Show list for one group
 	*/
-	print "<b>Group " . group_getname($group_id) . "</b>";
+    print "<b>Group ".$LANG->getText('admin_userlist','group',array(group_getname($group_id)))."</b>";
 	
 	print "\n<p>";
 
@@ -120,12 +121,12 @@ if (!$group_id) {
 	<P>
 	<form action="<?php echo $PHP_SELF; ?>" method="post">
 	<input type="HIDDEN" name="action" VALUE="add_to_group">
-        <p>Please enter a user ID:<br>
+	<p><?php echo $LANG->getText('admin_userlist','uid_toadd'); ?>:&nbsp;
 	<input name="user_id" type="TEXT" value="">
 	<br>
 	<input type="HIDDEN" name="group_id" VALUE="<?php print $group_id; ?>">
 	<p>
-	<input type="submit" name="Submit" value="Add User to Group <?php print group_getname($group_id); ?>">
+	<input type="submit" name="Submit" value="<?php echo $LANG->getText('global','btn_submit'); ?>">
 	</form>
 
 	<?php	

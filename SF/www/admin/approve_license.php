@@ -11,9 +11,14 @@
 
 require($DOCUMENT_ROOT.'/include/pre.php');
 
-$HTML->header(array('title'=>'CodeX License Terms - Agreement'));
+$LANG->loadLanguageMsg('admin/admin');
 
-if (user_isloggedin() && user_is_super_user()) {
+if (!(user_isloggedin() && user_is_super_user())) {
+    exit_error('ERROR',$LANG->getText('admin_approve_license', 'error'));
+}
+
+$HTML->header(array('title'=>$LANG->getText('admin_approve_lic', 'title',array($GLOBALS['sys_name']))));
+
 
     if ($legal_acceptance == 'ACCEPT') {
 
@@ -32,9 +37,7 @@ if (user_isloggedin() && user_is_super_user()) {
 
 	// Preamble
 
-	echo '<p>Please indicate whether you accept or do not accept the following
-             software license agreement(s) by choosing either "Accept" or "Decline" and
-             clicking the "Continue" button at the bottom of the page.';
+	echo '<p>'.$LANG->getText('admin_approve_license', 'msg_accept');
  
 	// display the license and the agree/disagree buttons
 	include(util_get_content('admin/codex_license_terms'));
@@ -42,23 +45,19 @@ if (user_isloggedin() && user_is_super_user()) {
         echo '</td></tr>
              <tr VALIGN="MIDDLE" class="boxtitle">
                  <td ALIGN="RIGHT"><b>&nbsp;&nbsp  </b>
-                    <input TYPE="RADIO" name="legal_acceptance" value="ACCEPT"><b>Accept</b>&nbsp;&nbsp;
-                   <input TYPE="RADIO" name="legal_acceptance" value="DECLINE"><b>Decline</b>&nbsp;&nbsp;
+                    <input TYPE="RADIO" name="legal_acceptance" value="ACCEPT"><b>'.$LANG->getText('admin_approve_license', 'accept').'</b>&nbsp;&nbsp;
+                   <input TYPE="RADIO" name="legal_acceptance" value="DECLINE"><b>'.$LANG->getText('admin_approve_license', 'decline').'</b>&nbsp;&nbsp;
                  </td>
              </tr>
              <tr VALIGN="MIDDLE">
                  <td ALIGN="RIGHT"><b>&nbsp;&nbsp  </b>
-            <input type="submit" name="continueShopping_0"  border="0" class="buttonblue" value="Continue"
+            <input type="submit" name="continueShopping_0"  border="0" class="buttonblue" value="'.$LANG->getText('admin_approve_license', 'continue').'">
                 </td>
              </tr>
        </table>';
  
 	echo '</form>';
     }
-
-} else {
-    exit_error('ERROR','Only site adminstrators can browse this page');
-}
 
 $HTML->footer(array());
 

@@ -8,9 +8,12 @@
 
 require($DOCUMENT_ROOT.'/include/pre.php');    
 require($DOCUMENT_ROOT.'/include/account.php');
+
+$LANG->loadLanguageMsg('admin/admin');
+
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
-$HTML->header(array('title'=>'Admin - User Info'));
+$HTML->header(array('title'=>$LANG->getText('admin_usergroup','title')));
 
 // user remove from group
 if ($action=='remove_user_from_group') {
@@ -20,10 +23,10 @@ if ($action=='remove_user_from_group') {
 
 	$result = db_query("DELETE FROM user_group WHERE user_id='$user_id' AND group_id='$group_id'");
 	if (!$result || db_affected_rows($result) < 1) {
-		$feedback .= ' Error Removing User ';
+		$feedback .= ' '.$LANG->getText('admin_usergroup','error_del_u');
 		echo db_error();
 	} else {
-		$feedback .= ' Successfully removed user ';
+		$feedback .= ' '.$LANG->getText('admin_usergroup','success_del_u');
 	}
 
 } else if ($action=='update_user_group') {
@@ -35,10 +38,10 @@ if ($action=='remove_user_from_group') {
 		. "WHERE user_id=$user_id AND "
 		. "group_id=$group_id");
 	if (!$result || db_affected_rows($result) < 1) {
-		$feedback .= ' Error Updating User_group ';
+		$feedback .= ' '.$LANG->getText('admin_usergroup','error_upd_ug');
 		echo db_error();
 	} else {
-		$feedback .= ' Successfully updated user_group ';
+		$feedback .= ' '.$LANG->getText('admin_usergroup','success_upd_ug');
 	}
 
 
@@ -49,9 +52,9 @@ if ($action=='remove_user_from_group') {
 
 	$result=db_query("UPDATE user SET shell='$form_shell', email='$email' WHERE user_id=$user_id");
 	if (!$result || db_affected_rows($result) < 1) {
-		echo db_error();
+		$feedback .= ' '.$LANG->getText('admin_usergroup','error_upd_u');		echo db_error();
 	} else {
-		$feedback .= ' Successfully updated user ';
+		$feedback .= ' '.$LANG->getText('admin_usergroup','success_upd_u');
 	}
 	// status changing
 	if ($form_unixstatus != 'N') {
@@ -64,9 +67,10 @@ if ($action=='remove_user_from_group') {
 		// now do update
 		$result=db_query("UPDATE user SET unix_status='$form_unixstatus' WHERE user_id=$user_id");	
 		if (!$result || db_affected_rows($result) < 1) {
-			echo db_error();
+		    $feedback .= ' '.$LANG->getText('admin_usergroup','error_upd_ux');
+		    echo db_error();
 		} else {
-			$feedback .= 'Successfully updated unix ';
+		    $feedback .= ' '.$LANG->getText('admin_usergroup','success_upd_ux');
 		}
 
 	}
@@ -77,9 +81,9 @@ if ($action=='remove_user_from_group') {
     */
     // Check that user_id is not null, and that the user does not already belong to the group
     if (!$user_id) {
-        $feedback .= ' User ID is missing! ';
+        $feedback .= ' '.$LANG->getText('admin_usergroup','error_nouid');
     } else if (!$group_id) {
-        $feedback .= ' Group ID is missing! ';
+        $feedback .= ' '.$LANG->getText('admin_usergroup','error_nogid');
     } else {
 	$query = "SELECT user_id FROM user_group "
 		. "WHERE user_id='$user_id' AND group_id='$group_id'";
@@ -88,13 +92,13 @@ if ($action=='remove_user_from_group') {
             // User does not already belong to this group
             $result=db_query("INSERT INTO user_group (user_id,group_id) VALUES ($user_id,$group_id)");
             if (!$result || db_affected_rows($result) < 1) {
-		$feedback .= ' Error adding User to group ';
+		$feedback .= ' '.$LANG->getText('admin_usergroup','error_add_ug');
 		echo db_error();
             } else {
-		$feedback .= ' Successfully added user to group ';
+		$feedback .= ' '.$LANG->getText('admin_usergroup','success_add_ug');
             }
 	} else {
-            $feedback .= " User is already a member of group $group_id";
+            $feedback .= ' '.$LANG->getText('admin_usergroup','error_member',array($group_id));
 	}
     }
 }
@@ -104,41 +108,45 @@ $res_user = db_query("SELECT * FROM user WHERE user_id=$user_id");
 $row_user = db_fetch_array($res_user);
 
 ?>
-<p>
-User Group Edit for user: <b><?php print $user_id . ": " . user_getname($user_id); ?></b>
-<p>
-Unix Account Info:
+<h2>
+<?php echo $LANG->getText('admin_usergroup','header').user_getname($user_id)." (ID ".$user_id.")"; ?></h2>
+<h3>
+<?php echo $LANG->getText('admin_usergroup','account_info'); ?></h3>
 <FORM method="post" action="<?php echo $PHP_SELF; ?>">
 <INPUT type="hidden" name="action" value="update_user">
 <INPUT type="hidden" name="user_id" value="<?php print $user_id; ?>">
 
 <P>
-Shell:
+<?php echo $LANG->getText('admin_usergroup','shell'); ?>:
 <SELECT name="form_shell">
 <?php account_shellselects($row_user[shell]); ?>
 </SELECT>
 
 <P>
-Unix Account Status:
+<?php echo $LANG->getText('admin_usergroup','unix_status'); ?>:
 <SELECT name="form_unixstatus">
-<OPTION <?php echo ($row_user[unix_status] == 'N') ? 'selected ' : ''; ?>value="N">No Unix Account
-<OPTION <?php echo ($row_user[unix_status] == 'A') ? 'selected ' : ''; ?>value="A">Active
-<OPTION <?php echo ($row_user[unix_status] == 'S') ? 'selected ' : ''; ?>value="S">Suspended
-<OPTION <?php echo ($row_user[unix_status] == 'D') ? 'selected ' : ''; ?>value="D">Deleted
+<OPTION <?php echo ($row_user[unix_status] == 'N') ? 'selected ' : ''; ?>value="N">
+<?php echo $LANG->getText('admin_usergroup','no_account'); ?>
+<OPTION <?php echo ($row_user[unix_status] == 'A') ? 'selected ' : ''; ?>value="A">
+<?php echo $LANG->getText('admin_usergroup','active'); ?>
+<OPTION <?php echo ($row_user[unix_status] == 'S') ? 'selected ' : ''; ?>value="S">
+<?php echo $LANG->getText('admin_usergroup','suspended'); ?>
+<OPTION <?php echo ($row_user[unix_status] == 'D') ? 'selected ' : ''; ?>value="D">
+<?php echo $LANG->getText('admin_usergroup','deleted'); ?>
 </SELECT>
 
 <P>
-<INPUT TYPE="TEXT" NAME="email" VALUE="<?php echo $row_user[email]; ?>" SIZE="25" MAXLENGTH="55">
+<?php echo $LANG->getText('admin_usergroup','email'); ?>:
+<INPUT TYPE="TEXT" NAME="email" VALUE="<?php echo $row_user[email]; ?>" SIZE="35" MAXLENGTH="55">
 
 <P>
-<INPUT type="submit" name="Update_Unix" value="Update">
+<INPUT type="submit" name="Update_Unix" value="<?php echo $LANG->getText('global','btn_update'); ?>">
 </FORM>
 
 <HR>
 
 <p>
-<H2>Current Groups:</H2>
-<br>
+<H3><?php echo $LANG->getText('admin_usergroup','current_groups'); ?></H3>
 &nbsp;
 
 <?php
@@ -152,9 +160,9 @@ $res_cat = db_query("SELECT groups.group_name AS group_name, "
 	. "groups.group_id=user_group.group_id");
 
 	while ($row_cat = db_fetch_array($res_cat)) {
-		print ("<br><hr><b>" . group_getname($row_cat[group_id]) . "</b> "
+		print ("<br><b>" . group_getname($row_cat[group_id]) . "</b> "
 			. "<a href=\"usergroup.php?user_id=$user_id&action=remove_user_from_group&group_id=$row_cat[group_id]\">"
-			. "[Remove User from Group]</a>");
+			. "[".$LANG->getText('admin_usergroup','remove_ug')."]</a>");
 		// editing for flags
 		?>
 		<form action="<?php echo $PHP_SELF; ?>" method="post">
@@ -162,11 +170,11 @@ $res_cat = db_query("SELECT groups.group_name AS group_name, "
 		<input name="user_id" type="hidden" value="<?php print $user_id; ?>">
 		<input name="group_id" type="hidden" value="<?php print $row_cat[group_id]; ?>">
 		<br>
-		Admin Flags: 
+		<?php echo $LANG->getText('admin_usergroup','admin_flags'); ?>: 
 		<BR>
 		<input type="text" name="admin_flags" value="<?php print $row_cat[admin_flags]; ?>">
 		<BR>
-		<input type="submit" name="Update_Group" value="Update">
+		<input type="submit" name="Update_Group" value="<?php echo $LANG->getText('global','btn_update'); ?>">
 		</form>
 		<?php
 	}
@@ -181,14 +189,14 @@ $res_cat = db_query("SELECT groups.group_name AS group_name, "
 <INPUT type="hidden" name="action" value="add_user_to_group">
 <input name="user_id" type="hidden" value="<?php print $user_id; ?>">
 <p>
-Add User to Group (group_id):
+<?php echo $LANG->getText('admin_usergroup','add_ug'); ?>:
 <br>
 <input type="text" name="group_id" LENGTH="4" MAXLENGTH="5">
 <p>
-<input type="submit" name="Submit" value="Submit">
+<input type="submit" name="Submit" value="<?php echo $LANG->getText('global','btn_submit'); ?>">
 </form>
 
-<P><A href="user_changepw.php?user_id=<?php print $user_id; ?>">[Change User PW]</A>
+<P><A href="user_changepw.php?user_id=<?php print $user_id; ?>">[<?php echo $LANG->getText('admin_usergroup','change_passwd'); ?>]</A>
 
 <?php
 html_feedback_bottom($feedback);

@@ -9,28 +9,30 @@
 require($DOCUMENT_ROOT.'/include/pre.php');    
 require($DOCUMENT_ROOT.'/admin/admin_utils.php');
 
+$LANG->loadLanguageMsg('admin/admin');
+
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
-site_admin_header(array('title'=>$GLOBALS['sys_name'].": Group List"));
+site_admin_header(array('title'=>$LANG->getText('admin_grouplist','title')));
 
 // start from root if root not passed in
 if (!$form_catroot) {
 	$form_catroot = 1;
 }
 
-print "<br><a href=\"groupedit-add.php\">[Add Group]</a>";
-print "<p>".$GLOBALS['sys_name']." Group List for Category: ";
+print "<br><a href=\"groupedit-add.php\">[".$LANG->getText('admin_grouplist','add_group')."]</a>";
+print "<p>".$LANG->getText('admin_grouplist','for_categ').": ";
 
 if ($form_catroot == 1) {
 
 	if (isset($group_name_search)) {
-		print "<b>Groups that begin with $group_name_search</b>\n";
+	    print "<b>".$LANG->getText('admin_grouplist','add_group',array($group_name_search))."</b>\n";
 		$res = db_query("SELECT group_name,unix_group_name,group_id,is_public,status,license "
 			. "FROM groups WHERE group_name LIKE '$group_name_search%' "
 			. ($form_pending?"AND WHERE status='P' ":"")
 			. " ORDER BY group_name");
 	} else {
-		print "<b>All Categories</b>\n";
+	    print "<b>".$LANG->getText('admin_grouplist','all_categ')."</b>\n";
 		$res = db_query("SELECT group_name,unix_group_name,group_id,is_public,status,license "
 			. "FROM groups "
 			. ($status?"WHERE status='$status' ":"")
@@ -52,13 +54,13 @@ if ($form_catroot == 1) {
 <P>
 <TABLE width=100% border=1>
 <TR>
-<TD><b>Group Name (click to edit)</b></TD>
-<TD><b>UNIX Name</b></TD>
-<TD><b>Status</b></TD>
-<TD><b>Public?</b></TD>
-<TD><b>License</b></TD>
-<TD><b>Categories</b></TD>
-<TD><B>Members</B></TD>
+<TD><b><?php echo $LANG->getText('admin_groupedit','grp_name')." ".$LANG->getText('admin_grouplist','click');?></b></TD>
+<TD><b><?php echo $LANG->getText('admin_groupedit','unix_grp'); ?></b></TD>
+<TD><b><?php echo $LANG->getText('admin_groupedit','status'); ?></b></TD>
+<TD><b><?php echo $LANG->getText('admin_groupedit','public'); ?></b></TD>
+<TD><b><?php echo $LANG->getText('admin_groupedit','license'); ?></b></TD>
+<TD><b><?php echo $LANG->getText('admin_grouplist','categ'); ?></b></TD>
+<TD><B><?php echo $LANG->getText('admin_grouplist','members'); ?></B></TD>
 </TR>
 
 <?php

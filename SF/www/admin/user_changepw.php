@@ -8,25 +8,30 @@
 
 require($DOCUMENT_ROOT.'/include/pre.php');    
 require($DOCUMENT_ROOT.'/include/account.php');
+
+$LANG->loadLanguageMsg('admin/admin');
+
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
 // ###### function register_valid()
 // ###### checks for valid register from form post
 
 function register_valid()	{
+    global $LANG;
+
   if (!$GLOBALS['Update']) {
     return 0;
   }
   if (!$GLOBALS['user_id']) {
-    $GLOBALS['register_error'] = "Internal error: no user ID";
+    $GLOBALS['register_error'] = $LANG->getText('admin_user_changepw','error_userid');
     return 0;
   }
   if (!$GLOBALS['form_pw']) {
-    $GLOBALS['register_error'] = "You must supply a password.";
+    $GLOBALS['register_error'] = $LANG->getText('admin_user_changepw','error_nopasswd');
     return 0;
   }
   if ($GLOBALS['form_pw'] != $GLOBALS['form_pw2']) {
-    $GLOBALS['register_error'] = "Passwords do not match.";
+    $GLOBALS['register_error'] = $LANG->getText('admin_user_changepw','error_passwd');
     return 0;
   }
   if (!account_pwvalid($GLOBALS['form_pw'])) {
@@ -40,7 +45,7 @@ function register_valid()	{
 		  . "user_id=" . $GLOBALS['user_id']);
 
   if (! $res) {
-    $GLOBALS['register_error'] = "Internal error: Could not update password.";
+    $GLOBALS['register_error'] = $LANG->getText('admin_user_changepw','error_update');
     return 0;
   }
     
@@ -50,36 +55,29 @@ function register_valid()	{
 // ###### first check for valid login, if so, congratulate
 
 if (register_valid()) {
-	$HTML->header(array(title=>"Successfully Changed Password"));
+    $HTML->header(array(title=>$LANG->getText('admin_user_changepw','title_changed')));
+    $d = getdate(time());
+    $h = ($sys_crondelay - 1) - ($d[hours] % $sys_crondelay);
+    $m= 60 - $d['minutes'];
 ?>
-<p><b>CodeX Change Confirmation</b>
-<p>The user's password has been changed.
-This change is immediate on the web site, but will not take
-effect on the user's shell/cvs account until the next cron update,
-which will happen in
-<?php
-     $d = getdate(time());
-     $h = ($sys_crondelay - 1) - ($d[hours] % $sys_crondelay);
-     $m= 60 - $d[minutes];
-     print "<span class=\"highlight\"><b> $h&nbsp;h&nbsp;$m&nbsp;minutes</b></span>";
-?>
- from now.
+<h3><?php echo $LANG->getText('admin_user_changepw','header_changed'); ?></h3>
+									       <p><?php echo $LANG->getText('admin_user_changepw','msg_changed',array($h,$m)); ?></h3>
 
-<p>You should now <a href="/admin/userlist.php">Return to UserList</a>.
+<p><a href="/admin"><?php echo $LANG->getText('global','back'); ?></a>.
 <?php
 } else { // not valid registration, or first time to page
-	$HTML->header(array(title=>"Change Password"));
+    $HTML->header(array(title=>$LANG->getText('admin_user_changepw','title')));
 
 ?>
-<p><b>CodeX Password Change</b>
-<?php if ($register_error) print "<p>$register_error"; ?>
+<h3><?php echo $LANG->getText('admin_user_changepw','header'); ?></h3>
+<?php if ($register_error) print "<p><span class=\"highlight\">$register_error</span>"; ?>
 <form action="user_changepw.php" method="post">
-<p>New Password:
+<p><?php echo $LANG->getText('admin_user_changepw','new_passwd'); ?>:
 <br><input type="password" name="form_pw">
-<p>New Password (repeat):
+<p><?php echo $LANG->getText('admin_user_changepw','new_passwd2'); ?>:
 <br><input type="password" name="form_pw2">
 <INPUT type=hidden name="user_id" value="<?php print $user_id; ?>">
-<p><input type="submit" name="Update" value="Update">
+<p><input type="submit" name="Update" value="<?php echo $LANG->getText('global','btn_update'); ?>">
 </form>
 
 <?php

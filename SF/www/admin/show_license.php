@@ -11,7 +11,9 @@
 
 require($DOCUMENT_ROOT.'/include/pre.php');
 
-$HTML->header(array('title'=>'CodeX License Terms and Conditions'));
+$LANG->loadLanguageMsg('admin/admin');
+
+$HTML->header(array('title'=>$LANG->getText('admin_show_license','title')));
 
 // display the license
 include(util_get_content('admin/codex_license_terms'));

@@ -8,6 +8,9 @@
 
 require($DOCUMENT_ROOT.'/include/pre.php');
 require($DOCUMENT_ROOT.'/include/trove.php');
+
+$LANG->loadLanguageMsg('admin/admin');
+
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
 // #######################################################
@@ -74,17 +77,17 @@ if ($GLOBALS["Cancel"]) {
 // MAIN PAGE
 //
 $res_cat = db_query("SELECT * FROM trove_cat WHERE trove_cat_id=$trove_cat_id");
-if (db_numrows($res_cat)<1) 
-	{ exit_error("No Suck Category","That trove cat does not exist"); }
+if (db_numrows($res_cat)<1) {
+    exit_error("ERROR",$LANG->getText('admin_trove_cat_delete','error_nocat'));
+}
 $row_cat = db_fetch_array($res_cat);
 
-$HTML->header(array(title=>"Trove - Delete Category"));
+$HTML->header(array(title=>$LANG->getText('admin_trove_cat_delete','title')));
 ?>
 
-<H2>Delete a Trove Category - '<?php print $row_cat["fullname"]; ?>'</H2>
+<H2><?php echo $LANG->getText('admin_trove_cat_delete','header').': '.$row_cat["fullname"]; ?>'</H2>
 
-<P><span class="feedback">**WARNING**</span>
-<b> You are about to delete a trove category of the software map.</b>
+<P><b><?php echo $LANG->getText('admin_trove_cat_delete','warning'); ?></b>
 <form action="trove_cat_delete.php" method="post">
 <input type="hidden" name="form_trove_cat_id" value="<?php
   print $GLOBALS['trove_cat_id']; ?>">
@@ -92,9 +95,9 @@ $HTML->header(array(title=>"Trove - Delete Category"));
   print $GLOBALS['shortname']; ?>">
 
 <table border="1" cellpadding="2">
-<tr><td>Category short name</td><td> <?php print $row_cat["shortname"]; ?></td></tr>
-<tr><td>Category full name</td><td> <?php print $row_cat["fullname"]; ?></td></tr>
-<tr><td>Category description</td><td> <?php print $row_cat["description"]; ?></td></tr>
+<tr><td><?php echo $LANG->getText('admin_trove_cat_add','short_name'); ?></td><td> <?php print $row_cat["shortname"]; ?></td></tr>
+<tr><td><?php echo $LANG->getText('admin_trove_cat_add','full_name'); ?></td><td> <?php print $row_cat["fullname"]; ?></td></tr>
+<tr><td><?php echo $LANG->getText('admin_trove_cat_add','description'); ?></td><td> <?php print $row_cat["description"]; ?></td></tr>
 </table>
 
 <?php
@@ -103,11 +106,9 @@ $child_list = array();
 listallchilds($GLOBALS['trove_cat_id'],$GLOBALS['shortname'], $child_list);
 
 if (($nb_child = count($child_list)) > 0) {
-    echo "<p><span class=\"feedback\">**CAUTION**</span>";
-    echo " This category has <b>$nb_child child categories</b>.";
-    echo " Deleting the category will also delete all the childs recursively!!";
+    echo "<p>".$LANG->getText('admin_trove_cat_delete','caution_child',array($nb_child));
 } else {
-    echo "<p>This category has NO child category";
+    echo "<p>".$LANG->getText('admin_trove_cat_delete','no_child');
 }
 
 // See if projects are using this category or one of his child
@@ -117,19 +118,16 @@ $res_proj = db_query("SELECT DISTINCT group_id FROM trove_group_link "
 $nb_proj = db_numrows($res_proj);
 
 if ($nb_proj > 0) {
-    echo "<p><span class=\"feedback\">**CAUTION**</span>";
-    echo " This category and its childs (if any) are being used by <b>$nb_proj project(s)</b>.";
-    echo " Deleting this category will reset existing project categories to the parent category (or 'None' if the parent is a root category)";
+    echo "<p>".$LANG->getText('admin_trove_cat_delete','caution_proj',array($nb_proj));
 } else {
-    echo "<p>This category is NOT used by any project";
+    echo "<p>".$LANG->getText('admin_trove_cat_delete','no_proj');
 }
 ?>
 
-<h3>To confirm deletion click on 'Delete'.</h3>
 <p>
-<br><input type="submit" name="Delete" value="Delete">
+<br><input type="submit" name="Delete" value="<?php echo $LANG->getText('global','btn_delete'); ?>">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<input type="submit" name="Cancel" value="Cancel">
+<input type="submit" name="Cancel" value="<?php echo $LANG->getText('global','btn_cancel'); ?>">
 </form>
 
 <?php

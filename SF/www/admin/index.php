@@ -11,7 +11,9 @@ require($DOCUMENT_ROOT.'/admin/admin_utils.php');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
-site_admin_header(array('title'=>$GLOBALS['sys_name']." Admin"));
+$LANG->loadLanguageMsg('admin/admin');
+
+site_admin_header(array('title'=>$LANG->getText('admin_main', 'title')));
 
 $abc_array = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','0','1','2','3','4','5','6','7','8','9');
 
@@ -26,115 +28,106 @@ $pending_users = $row['count'];
 
 ?>
  
-<h2>Administrative Functions</h2>
-<p><i><b>Warning!</b> These functions currently have minimal error checking,
-if any. They are fine to play with but may not act as expected if you leave
-fields blank, etc... Also, navigating the admin functions with the 
-<b>back</b> button is highly unadvised.</i>
+<h2><?php echo $LANG->getText('admin_main', 'header'); ?></h2>
+<p><i><?php echo $LANG->getText('admin_main', 'message'); ?></i>
 
-<h3>User Administration</h3>
+<h3><?php echo $LANG->getText('admin_main', 'header_user'); ?></h3>
 <ul>
-<!--
-<li><a href="userlist.php">Display Full User List/Edit Users</a>&nbsp;&nbsp;
--->
-<li>Display Users Beginning with : 
-<?php
+<li><?php echo $LANG->getText('admin_main', 'display_user');
+
 	for ($i=0; $i < count($abc_array); $i++) {
 		echo "<a href=\"userlist.php?user_name_search=$abc_array[$i]\">$abc_array[$i]</a>|";
 	}
 ?>
 <br>
-Search (email,username,realname,userid):
+<?php echo $LANG->getText('admin_main', 'search_user'); ?>
 <br>
 <form name="usersrch" action="search.php" method="POST">
   <input type="text" name="search">
   <input type="hidden" name="usersearch" value="1">
-  <input type="submit" value="get">
+  <input type="submit" value="<?php echo $LANG->getText('admin_main', 'search'); ?>">
 </form>
 <ul>
-<LI>Users in <a href="approve_pending_users.php"><B>P</B> (pending) Status</A>
+<LI><?php echo $LANG->getText('admin_main', 'pending_user',array("approve_pending_users.php")); ?>
 <?php echo " <b>($pending_users";
 if ($GLOBALS['sys_user_approval'] == 1 && $pending_users != 0) {
-    print "&nbsp;-&nbsp; <a href=\"approve_pending_users.php\">approval needed</a>";
+    print "&nbsp;-&nbsp; <a href=\"approve_pending_users.php\">".$LANG->getText('admin_main', 'need_approval')."</a>";
 }
 echo ")</b>";
 ?>
 </ul>
 </ul>
 
-<h3>Group Administration</h3>
+<h3><?php echo $LANG->getText('admin_main', 'header_group'); ?></h3>
 <ul>
-<!-- 
-<li><a href="grouplist.php">Display Full Group List/Edit Groups</a>
--->
 
-<li>Display Groups Beginning with : 
-<?php
+<li><?php echo $LANG->getText('admin_main', 'display_group');
 	for ($i=0; $i < count($abc_array); $i++) {
 		echo "<a href=\"grouplist.php?group_name_search=$abc_array[$i]\">$abc_array[$i]</a>|";
 	}
 ?>
-
-Search (groupid,groupunixname,groupname):
+<br>
+<?php echo $LANG->getText('admin_main', 'search_group'); ?>
 <br>
 <form name="gpsrch" action="search.php" method="POST">
   <input type="text" name="search">
   <input type="hidden" name="groupsearch" value="1">
-  <input type="submit" value="get">
+  <input type="submit" value="<?php echo $LANG->getText('admin_main', 'search'); ?>">
 </form>
 
 <p>
 
 <ul>
-<LI>Groups in <a href="grouplist.php?status=I"><B>I</B> (incomplete) Status</A>
-<LI>Groups in <a href="approve-pending.php"><B>P</B> (pending) Status</A><?php echo " <b>($pending_projects";
+<LI><?php echo $LANG->getText('admin_main', 'incomplete_group',array("grouplist.php?status=I")); ?>
+<LI><?php echo $LANG->getText('admin_main', 'pending_group',array("approve-pending.php")); ?>
+<?php echo " <b>($pending_projects";
 if ($pending_projects != 0) {
-    print "&nbsp;-&nbsp; <a href=\"approve-pending.php\">approval needed</a>";
+    print "&nbsp;-&nbsp; <a href=\"approve-pending.php\">".$LANG->getText('admin_main', 'need_approval')."</a>";
 }
 echo ")</b>";?>
-<LI>Groups in <a href="grouplist.php?status=D"><B>D</B> (deleted) Status</A>
+<LI><?php echo $LANG->getText('admin_main', 'deleted_group',array("grouplist.php?status=D")); ?>
 </ul>
 </ul>
 
-<h3>Service Administration</h3>
+<h3><?php echo $LANG->getText('admin_main', 'header_svc'); ?></h3>
 <ul>
-<li><a href="/project/admin/servicebar.php?group_id=100">Configuration of predefined services</A>
+<li><a href="/project/admin/servicebar.php?group_id=100"><?php echo $LANG->getText('admin_main', 'configure_svc'); ?></A>
 </ul>
 
-<h3>Trackers Administration</h3>
+<h3><?php echo $LANG->getText('admin_main', 'header_tracker'); ?></h3>
 <ul>
-<li><a href="/tracker/admin/restore.php">Pending Tracker Removals</A>
-<li><a href="/tracker/admin/?group_id=100">Configuration of predefined CodeX templates</A>
+<li><a href="/tracker/admin/restore.php"><?php echo $LANG->getText('admin_main', 'tracker_remove'); ?></A>
+<li><a href="/tracker/admin/?group_id=100"><?php echo $LANG->getText('admin_main', 'tracker_template'); ?></A>
 </ul>
 
-<h3>Statistics</h3>
+<h3><?php echo $LANG->getText('admin_main', 'header_stat'); ?></h3>
 <ul>
-<li><a href="lastlogins.php">View Most Recent Logins</A>
-<li><a href="/stats/">Generate Site/Projects/Users Statistics</A>
+<li><a href="lastlogins.php"><?php echo $LANG->getText('admin_main', 'stat_login'); ?></A>
+<li><a href="/stats/"><?php echo $LANG->getText('admin_main', 'stat_spu'); ?></A>
 </ul>
 
-<h3>Site Utilities</h3>
+<h3><?php echo $LANG->getText('admin_main', 'header_utils'); ?></h3>
 <UL>
-<LI><A href="massmail.php">Mail Engine for <?php print $GLOBALS['sys_name']; ?> Subscribers (MESS)</A>
+<LI><A href="massmail.php"><?php echo $LANG->getText('admin_main', 'mail_engine'); ?></A>
 </UL>
 
-<h3>Site Stats</h3>
+<h3><?php echo $LANG->getText('admin_main', 'header_sstat'); ?></h3>
 <?php
         db_query("SELECT count(*) AS count FROM user WHERE status='A'");
         $row = db_fetch_array();
-        print "<P>Registered active site users: <B>$row[count]</B>";
+        print "<P>".$LANG->getText('admin_main', 'sstat_reg_u').": <B>$row[count]</B>";
 
         db_query("SELECT count(*) AS count FROM groups");
         $row = db_fetch_array();
-        print "<BR>Registered projects: <B>$row[count]</B>";
+        print "<BR>".$LANG->getText('admin_main', 'sstat_reg_g').": <B>$row[count]</B>";
 
         db_query("SELECT count(*) AS count FROM groups WHERE status='A'");
         $row = db_fetch_array();
-        print "<BR>Registered/hosted projects: <B>$row[count]</B>";
+        print "<BR>".$LANG->getText('admin_main', 'sstat_reg_act_g').": <B>$row[count]</B>";
 
-	print "<BR>Pending projects: <B>$pending_projects</B>";
+	print "<BR>".$LANG->getText('admin_main', 'sstat_pend_g').": <B>$pending_projects</B>";
 
-        print "<BR>Pending users: <B>$pending_users</B>";
+        print "<BR>".$LANG->getText('admin_main', 'sstat_pend_u').": <B>$pending_users</B>";
 
 ?>
 

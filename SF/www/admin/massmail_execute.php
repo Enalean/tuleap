@@ -7,10 +7,13 @@
 // $Id$
 
 require($DOCUMENT_ROOT.'/include/pre.php');
+
+$LANG->loadLanguageMsg('admin/admin');
+
 session_require(array('group'=>1,'admin_flags'=>'A'));
 
 header ('Content-Type: text/plain');
-print "Received Post. Making Query.\n";
+print $LANG->getText('admin_massmail_execute','post_recvd')."\n";
 flush();
 
 // LJ The to_name variable has been added here to be used
@@ -52,7 +55,7 @@ switch ($destination) {
 		exit_error('Unrecognized Post','cannot execute');
 }
 
-print "Query Complete. Beginning mailings to ".db_numrows($res_mail)." distinct email addresses\n\n";
+print $LANG->getText('admin_massmail_execute','mailing',array(db_numrows($res_mail)))."\n\n";
 flush();
 
 $rows=db_numrows($res_mail);
@@ -71,7 +74,7 @@ for ($i=0; $i<$rows; $i++) {
 		        stripslashes($mail_message);
 		exec ("/bin/echo \"". util_prep_string_for_sendmail($body) ."\" | /usr/sbin/sendmail -f".$GLOBALS['sys_email_admin']." -t -i &");
 		usleep(2000000);
-		print "\nsending to $tolist";
+		print "\n".$LANG->getText('admin_massmail_execute','sending').": ".$tolist;
 		$tolist='';
 		flush();
 	}
@@ -88,8 +91,8 @@ stripslashes($mail_message);
 
 exec ("/bin/echo \"". util_prep_string_for_sendmail($body) ."\" | /usr/sbin/sendmail -f".$GLOBALS['sys_email_admin']." -t -i &");
 usleep(2000000);
-print "\nsending to $tolist";
+print "\n".$LANG->getText('admin_massmail_execute','sending').": ".$tolist."\n";
 $tolist='';
+print "\n".$LANG->getText('admin_massmail_execute','done')."\n";
 flush();
-
 ?>

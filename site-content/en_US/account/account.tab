@@ -12,7 +12,7 @@
 #
 #
 #-----------------------------------------------
-# Script: SF/www/account/index/php
+# Script: SF/www/account/index.php
 #
 account_options	title		Account Maintenance
 account_options	welcome		Welcome

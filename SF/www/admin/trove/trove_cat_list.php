@@ -8,23 +8,28 @@
 
 require($DOCUMENT_ROOT.'/include/pre.php');
 require($DOCUMENT_ROOT.'/include/trove.php');
+
+$LANG->loadLanguageMsg('admin/admin');
+
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
 // #######################################################
 
 function printnode ($nodeid,$text,$delete_ok=false) {
+    global $LANG;
+
 	// print current node, then all subnodes
 	print ('<BR>');
 	for ($i=0;$i<$GLOBALS[depth];$i++) { print "&nbsp; &nbsp; "; }
 	html_image('ic/cfolder15.png',array());
 	print ('&nbsp; '.$text." ");
-	if ($text!="root") {
-	  print ('&nbsp; <A href="trove_cat_edit.php?trove_cat_id='.$nodeid.'">[Edit]</A> ');
+	if ($nodeid != 0) {
+	  print ('&nbsp; <A href="trove_cat_edit.php?trove_cat_id='.$nodeid.'">['.$LANG->getText('admin_trove_cat_list','edit').']</A> ');
 	}
 	if ($delete_ok) {
-	    print ('&nbsp; <A href="trove_cat_delete.php?trove_cat_id='.$nodeid.'">[Delete]</A> ');
+	    print ('&nbsp; <A href="trove_cat_delete.php?trove_cat_id='.$nodeid.'">['.$LANG->getText('admin_trove_cat_list','delete').']</A> ');
 	}
-	if ($text!="root") {
+	if ($nodeid != 0) {
 	  print ('&nbsp;'.help_button('trove_cat',$nodeid)."\n");
 	}
 	$GLOBALS["depth"]++;
@@ -39,9 +44,13 @@ function printnode ($nodeid,$text,$delete_ok=false) {
 
 // ########################################################
 
-$HTML->header(array(title=>"Trove - Category List"));
+$HTML->header(array(title=>$LANG->getText('admin_trove_cat_list','title')));
 
-printnode(0,"root");
+echo "<H2>".$LANG->getText('admin_trove_cat_list','header')."</H2>";
+
+printnode(0,$LANG->getText('admin_trove_cat_edit','root'));
+
+echo "<p>";
 
 $HTML->footer(array());
 

@@ -1,0 +1,297 @@
+#/**
+#  *
+#  * Admin scripts message catalog (English)
+#  *
+#  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
+#  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
+#  * http://codex.xrce.xerox.com
+#  *
+#  * @version   $Id$
+#  *
+#  */
+#
+#
+#-----------------------------------------------
+# Script: SF/www/admin/index.php
+#
+admin_main	title		Site Administration
+admin_main	header		Administrative Functions
+admin_main	message		<b>Warning!</b> Navigating the admin functions with the <b>back</b> button is highly unadvised.
+admin_main	header_user	User Administration
+admin_main	display_user	Display Users Beginning with :
+admin_main	search_user	or Search (email,user name,real name,userid):
+admin_main	search	Search
+admin_main	pending_user	Users in <a href="$1"><B>P</B> (pending) Status</a>
+admin_main	need_approval	approval needed
+admin_main	header_group	Group Administration
+admin_main	display_group	Display Groups Beginning with :
+admin_main	search_group	or Search (groupid,groupunixname,groupname):
+admin_main	incomplete_group	Groups in <a href="$1"><B>I</B> (incomplete) Status</A>
+admin_main	pending_group	Groups in <a href="$1"><B>P</B> (pending) Status</A>
+admin_main	deleted_group	Groups in <a href="$1"><B>D</B> (deleted) Status</A>
+admin_main	header_svc	Service Administration
+admin_main	configure_svc	Configuration of predefined services
+admin_main	header_tracker	Trackers Administration
+admin_main	tracker_remove	Pending Trackers Removal
+admin_main	tracker_template	Configuration of predefined CodeX templates
+admin_main	header_stat	Statistics
+admin_main	stat_login	View Most Recent Logins
+admin_main	stat_spu	Generate Site/Projects/Users Statistics
+admin_main	header_utils	Site Utilities
+admin_main	mail_engine	Mass Mail Engine
+admin_main	header_sstat	Site Statistics
+admin_main	sstat_reg_u	Registered active site users
+admin_main	sstat_reg_g	Registered projects
+admin_main	sstat_reg_act_g	Registered active projects
+admin_main	sstat_pend_g	Pending projects
+admin_main	sstat_pend_u	Pending users
+#
+#-----------------------------------------------
+# Script: SF/www/admin/admin_utils.php
+#
+admin_utils	title	$1 Site Administration
+admin_utils	menu	Site Admin Home
+#
+#-----------------------------------------------
+# Script: SF/www/admin/approve_license.php
+#
+admin_approve_license	title	$1 License Terms - Agreement
+admin_approve_license	msg_accept	Please indicate whether you accept or do not accept the following software license agreement(s) by choosing either "Accept" or "Decline" and clicking the "Continue" button at the bottom of the page.
+admin_approve_license	accept	Accept
+admin_approve_license	decline	Decline
+admin_approve_license	continue	Continue
+admin_approve_license	error	Only site administrators can browse this page
+#
+#-----------------------------------------------
+# Script: SF/www/admin/approve_pending.php
+#
+admin_approve_pending	title	Approving Pending Projects	
+admin_approve_pending	no_pending	No Pending Projects to Approve
+admin_approve_pending	approve	Approve Project
+admin_approve_pending	delete	Delete Project
+admin_approve_pending	remove_category	Remove from Category
+admin_approve_pending	approve_all	Approve All On This Page
+#
+#-----------------------------------------------
+# Script: SF/www/admin/approve-pending_users.php
+#
+admin_approve_pending_users	title	Approving Pending User Registration
+admin_approve_pending_users	no_pending	No Pending User Registration to Approve
+admin_approve_pending_users	user_info	Show User Info / Send a mail note
+admin_approve_pending_users	user_edit	Edit User/Group Settings
+admin_approve_pending_users	approve	Approve User
+admin_approve_pending_users	delete	Delete User
+admin_approve_pending_users	purpose	Purpose
+admin_approve_pending_users	other_info	Other Information
+admin_approve_pending_users	name	User Name
+admin_approve_pending_users	id	User ID
+admin_approve_pending_users	email	User Email
+admin_approve_pending_users	reg_date	Registration Date
+admin_approve_pending_users	approve_all	Approve All On This Page
+#
+#-----------------------------------------------
+# Script: SF/www/admin/groupedit-add.php
+#
+admin_groupedit_add	title	Adding a Project Group
+admin_groupedit_add	desc_name	New descriptive group name
+admin_groupedit_add	unix_name	New unix group name
+#
+#-----------------------------------------------
+# Script: SF/www/admin/groupedit.php
+#
+admin_groupedit	title	Editing Group
+admin_groupedit	feedback_info	Updating Project Info
+admin_groupedit	feedback_history	added foundry_data row
+admin_groupedit	feedback_foundry	CREATING NEW FOUNDRY_DATA ROW 
+admin_groupedit	feedback_insert	COULD NOT INSERT NEW FOUNDRY_DATA ROW 
+admin_groupedit	error_group	Invalid group was passed in.Editing Group
+admin_groupedit	proj_edit	Edit Project Details
+admin_groupedit	proj_admin	Project Admin
+admin_groupedit	proj_member	View/Edit Project Members
+admin_groupedit	group_type	Group Type
+admin_groupedit	project_type	Project Type
+admin_groupedit	incomplete	Incomplete
+admin_groupedit	active	Active
+admin_groupedit	pending	Pending
+admin_groupedit	holding	Holding
+admin_groupedit	deleted	Deleted
+admin_groupedit	status	Status
+admin_groupedit	public	Public?
+admin_groupedit	license	License
+admin_groupedit	home_box	Home Box
+admin_groupedit	http_domain	HTTP Domain
+admin_groupedit	license_other	Other
+admin_groupedit	license_na	N/A
+admin_groupedit	send_email	Send New Project Instruction Email
+admin_groupedit	other_info	Other Information
+admin_groupedit	grp_name	Group Name
+admin_groupedit	unix_grp	Unix Group Name
+admin_groupedit	description	Description
+admin_groupedit	license_other	License Other
+#
+#-----------------------------------------------
+# Script: SF/www/admin/grouplist.php
+#
+admin_grouplist	title	Group List
+admin_grouplist	add_group	Add Group
+admin_grouplist	for_categ	Group List for Category
+admin_grouplist	begins_with	Groups that begin with $1
+admin_grouplist	all_categ	All Categories
+admin_grouplist	click	(click to edit)
+admin_grouplist	categ	Categories
+admin_grouplist	members	Members
+#
+#-----------------------------------------------
+# Script: SF/www/admin/lastlogins.php
+#
+admin_lastlogins	title	Last Logins
+admin_lastlogins	recent	Most Recent Sessions with Logins
+#
+#-----------------------------------------------
+# Script: SF/www/admin/massmail_execute.php
+#
+admin_massmail_execute	post_recvd	Received Post. Making Query	
+admin_massmail_execute	mailing	Query Complete. Beginning mailings to $1 distinct email addresses
+admin_massmail_execute	sending	sending to
+admin_massmail_execute	done	Done!
+#
+#-----------------------------------------------
+# Script: SF/www/admin/massmail.php
+#
+admin_massmail	title	Administrative Mass Mail Engine
+admin_massmail	header	Mail Engine for $1 Subscribers
+admin_massmail	warning	Be <span class="highlight"><B>VERY</B></span> careful with this form, because sutmitting it WILL send email to lots of users.
+admin_massmail	to_additional	Send only to users subscribed to "Additional Community Mailings"
+admin_massmail	to_update	Send only to users that agreed to receive "Site Updates"
+admin_massmail	to_devel	Send only to project developers 
+admin_massmail	to_proj_admin	Send only to project administrators 
+admin_massmail	to_site_admin	Send only to site administrators
+admin_massmail	to_all	Send to all users, regardless of their preferences
+admin_massmail	subject	Subject
+admin_massmail	text	Text of Message
+admin_massmail	footer	Your message here...\n\n---------------------\nThis email was sent from $1'. To change your email receiptpreferences, please visit the site and edit your account via the "Account Maintenance" link.\n\nDirect any question to $2 or reply to this e-mail.
+#
+#-----------------------------------------------
+# Script: SF/www/admin/newprojectmail.php
+#
+admin_newprojectmail	title	New Project Email Notification
+admin_newprojectmail	success	Mail successfully sent.
+#
+#-----------------------------------------------
+# Script: SF/www/admin/search.php
+#
+admin_search	title	Administration - Search Users/Groups
+admin_search	header	Administrative Search Functions
+admin_search	maintenance	User/Group/Category Maintenance
+admin_search	criteria	Search Criteria
+admin_search	error_nowholedb	An empty search criteria would display the whole database.  Please use the database command line interface if you wish to do this.
+admin_search	nomatch	No matches
+admin_search	login	Login Name
+admin_search	user_name	User's Name
+admin_search	unix_grp_name	Unix Group Name
+admin_search	grp_name	Group Name
+#
+#-----------------------------------------------
+# Script: SF/www/admin/show_license.php
+#
+admin_show_license	title	License Terms and Conditions
+#
+#-----------------------------------------------
+# Script: SF/www/admin/user_changepw.php
+#
+admin_user_changepw	error_userid	Internal error: no user ID
+admin_user_changepw	error_nopasswd	You must supply a password.
+admin_user_changepw	error_passwd	Passwords do not match.
+admin_user_changepw	error_update	Internal error: Could not update password.
+admin_user_changepw	title_changed	Successfully Changed Password	
+admin_user_changepw	header_changed	CodeX Change Confirmation
+admin_user_changepw	msg_changed	The user's password has been changed. This change is immediate on the web site, but will not take effect on the user's shell/cvs account until the next cron update, which will happen in <span class=\"highlight\"><b>$1 h $2 minutes</b></span> from now.
+admin_user_changepw	title	Change Password
+admin_user_changepw	header	CodeX Password Change
+admin_user_changepw	new_passwd	New Password
+admin_user_changepw	new_passwd2	New Password (repeat)
+#
+#-----------------------------------------------
+# Script: SF/www/admin/usergroup.php
+#
+admin_usergroup	title	Administration - User Information
+admin_usergroup	error_del_u	Error removing user
+admin_usergroup	success_del_u	Successfully removed user
+admin_usergroup	error_upd_ug	Error Updating User_group
+admin_usergroup	success_upd_ug	Successfully updated user_group
+admin_usergroup	error_upd_u	Error updating user
+admin_usergroup	success_upd_u	Successfully updated user
+admin_usergroup	error_upd_ux	Error updating unix status
+admin_usergroup	success_upd_ux	Successfully updated unix status
+admin_usergroup	error_nouid	User ID is missing!
+admin_usergroup	error_nogid	Group ID is missing!
+admin_usergroup	error_add_ug	Error adding User to group
+admin_usergroup	success_add_ug	Successfully added user to group
+admin_usergroup	error_member	User is already a member of group $1
+admin_usergroup	header	User/Group Management for user
+admin_usergroup	account_info	Unix Account Information
+admin_usergroup	shell	Shell
+admin_usergroup	email	Email
+admin_usergroup	unix_status	Unix Account Status
+admin_usergroup	noaccount	No Unix Account
+admin_usergroup	active	Active
+admin_usergroup	suspended	Suspended
+admin_usergroup	deleted	Deleted
+admin_usergroup	current_groups	Current Groups
+admin_usergroup	remove_ug	Remove User from Group
+admin_usergroup	admin_flags	Administration Flags
+admin_usergroup	add_ug	Add User to Group (group id)
+admin_usergroup	change_passwd	Change User Password
+#
+#-----------------------------------------------
+# Script: SF/www/admin/userlist.php
+#
+admin_userlist	title	Administration - User List
+admin_userlist	legend	Status Legend:&nbsp;&nbsp;<B>Active</B>&nbsp;&nbsp;<I>Deleted</I>&nbsp;&nbsp;Suspended&nbsp;&nbsp;(*)Pending
+admin_userlist	user_deleted	User Updated to DELETE Status - UNIX account scheduled for deletion
+admin_userlist	user_active	User Updated to ACTIVE status
+admin_userlist	user_suspended	User Updated to SUSPEND Status
+admin_userlist	error_uid	Error - Can't find user with ID $1
+admin_userlist	error_noadd	Error - Can't add user to group
+admin_userlist	user_list	User List for
+admin_userlist	all_groups	All Groups
+admin_userlist	group	Group $1
+admin_userlist	uid_toadd	User ID to add
+#
+#-----------------------------------------------
+# Script: SF/www/admin/trove/trove_cat_add.php
+#
+admin_trove_cat_add	title	Trove - Add Category
+admin_trove_cat_add	header	Add a Trove Category
+admin_trove_cat_add	short_name	Category short name
+admin_trove_cat_add	short_name_note	(no spaces)
+admin_trove_cat_add	full_name	Category full name
+admin_trove_cat_add	full_name_note	(80 chars max)
+admin_trove_cat_add	description	Category description
+admin_trove_cat_add	description_note	(255 chars max)
+admin_trove_cat_add	parent	Parent Category
+#
+#-----------------------------------------------
+# Script: SF/www/admin/trove/trove_cat_delete.php
+#
+admin_trove_cat_delete	title	Trove - Delete Category
+admin_trove_cat_delete	header	Delete a Trove Category
+admin_trove_cat_delete	warning	<span class="feedback">**WARNING**</span> You are about to delete a trove category of the software map.
+admin_trove_cat_delete	caution_child	<span class="feedback">**CAUTION**</span> This category has <b>$1 child</b> categorie(s). Deleting the category will also delete all the child categories recursively!!
+admin_trove_cat_delete	no_child	This category has NO child category
+admin_trove_cat_delete	caution_proj	<span class="feedback">**CAUTION**</span> This category and its childs (if any) are being used by <b>$1 project(s)</b>. Deleting this category will reset existing project categories to the parent category (or 'None' if the parent is a root category)
+admin_trove_cat_delete	no_proj	This category is NOT used by any project
+admin_trove_cat_delete	error_nocat	That trove category does not exist
+#-----------------------------------------------
+# Script: SF/www/admin/trove/trove_cat_edit.php
+#
+admin_trove_cat_edit	title	Trove - Edit Category
+admin_trove_cat_edit	header	Edit a Trove Category
+admin_trove_cat_edit	root	Root
+#-----------------------------------------------
+# Script: SF/www/admin/trove/trove_cat_list.php
+#
+admin_trove_cat_list	title	Trove - Category List
+admin_trove_cat_list	header	List of Trove Categories
+admin_trove_cat_list	edit	Edit
+admin_trove_cat_list	delete	Delete

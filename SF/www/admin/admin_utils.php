@@ -1,12 +1,14 @@
 <?php
 
+$LANG->loadLanguageMsg('admin/admin');
+
 function site_admin_header($params) {
-	GLOBAL $HTML;
+    GLOBAL $HTML, $LANG;
 	global $feedback;
 	$HTML->header($params);
 	echo html_feedback_top($feedback);
-	echo '<H2>'.$GLOBALS['sys_name'].' Site Admin</H2>
-	<P><A HREF="/admin/">Site Admin Home</A>
+	echo '<H2>'.$LANG->getText('admin_utils', 'title', array($GLOBALS['sys_name'])).'</H2>
+	<P><A HREF="/admin/"><b>'.$LANG->getText('admin_utils', 'menu').'</b></A>
 	<P>';
 }
 

@@ -7,8 +7,12 @@
 // $Id$
 
 require($DOCUMENT_ROOT.'/include/pre.php');    
+
+$LANG->loadLanguageMsg('admin/admin');
+
 session_require(array('group'=>'1','admin_flags'=>'A'));
-$HTML->header(array('title'=>"Administrative Mass Mail Engine"));
+
+$HTML->header(array('title'=>$LANG->getText('admin_massmail','title')));
 
 // get numbers of users for each mailing
 $res_count = db_query("SELECT count(*) AS count FROM user WHERE status='A' AND mail_va=1");
@@ -33,48 +37,41 @@ $res_count = db_query("SELECT count(*) AS count FROM user,user_group WHERE "
 $row_count = db_fetch_array($res_count);
 $count_sfadmin = $row_count[count];
 
-print '<P><B>Mail Engine for '.$GLOBALS['sys_name'].' Subscribers (MESS)</B>
+print '<h2>'.$LANG->getText('admin_massmail','header',array($GLOBALS['sys_name'])).'</h2>
 
-<P>Be <span class="highlight"><B>VERY</B></span> careful with this form,
-because sutmitting it WILL send email to lots of users.
+<P>'.$LANG->getText('admin_massmail','warning').'
 
 <FORM action="massmail_execute.php">
 <INPUT type="radio" name="destination" value="comm">
-Send only to users subscribed to "Additional Community Mailings" ('
+'.$LANG->getText('admin_massmail','to_additional').' ('
 .$count_comm
 .' users)<BR><INPUT type="radio" name="destination" value="sf">
-Send only to users that agreed to receive "Site Updates" ('
+'.$LANG->getText('admin_massmail','to_update').' ('
 .$count_sf
 .' users)<BR><INPUT type="radio" name="destination" value="devel">
-Send only to project developers ('
+'.$LANG->getText('admin_massmail','to_devel').' ('
 .$count_devel
 .' users)<BR><INPUT type="radio" name="destination" value="admin">
-Send only to project administrators ('
+'.$LANG->getText('admin_massmail','to_proj_admin').' ('
 .$count_admin
 .' users)<BR><INPUT type="radio" name="destination" value="sfadmin">
-Send only to '.$GLOBALS['sys_name'].' Administrators (test) ('
+'.$LANG->getText('admin_massmail','to_site_admin').' ('
 .$count_sfadmin
 .' users)<BR><INPUT type="radio" name="destination" value="all">
-Send to all users, regardless of their preferences ('
+'.$LANG->getText('admin_massmail','to_all').' ('
 .$count_all
 .' users)
 
-<P>Subject:
+<P>'.$LANG->getText('admin_massmail','subject').'
 <BR><INPUT type="text" name="mail_subject" value="'.$GLOBALS['sys_name'].': "size="40">
 
-<P>Text of Message:
+<P>'.$LANG->getText('admin_massmail','text').'
 <PRE>
 <BR><TEXTAREA name="mail_message" cols="70" rows="40" wrap="physical">
-
----------------------
-This email was sent from '. $GLOBALS['sys_default_domain'] .'. To change your email receipt
-preferences, please visit the site and edit your account via the
-"Account Maintenance" link.
-
-Direct any question to '.$GLOBALS['sys_email_admin'].' or reply to this e-mail.
+'.stripcslashes($LANG->getText('admin_massmail','footer',array($GLOBALS['sys_default_domain'],$GLOBALS['sys_email_admin']))).'
 </TEXTAREA>
 </PRE>
-<P><INPUT type="submit" name="Submit" value="Submit">
+<P><INPUT type="submit" name="Submit" value="'.$LANG->getText('global','btn_submit').'">
 
 </FORM>
 ';

@@ -11,6 +11,8 @@ require($DOCUMENT_ROOT.'/include/account.php');
 require($DOCUMENT_ROOT.'/include/proj_email.php');
 require($DOCUMENT_ROOT.'/admin/admin_utils.php');
 
+$LANG->loadLanguageMsg('admin/admin');
+
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
 // group public choice
@@ -40,10 +42,10 @@ if ($action=='activate') {
 $res = db_query("SELECT * FROM user WHERE status='P'");
 
 if (db_numrows($res) < 1) {
-	exit_error("None Found","No Pending User Registration to Approve");
+    exit_error($LANG->getText('include_exit', 'info'),$LANG->getText('admin_approve_pending_users','no_pending'));
 }
 
-site_admin_header(array('title'=>'Approving Pending User Registration'));
+site_admin_header(array('title'=>$LANG->getText('admin_approve_pending_users','title')));
 
 while ($row = db_fetch_array($res)) {
 
@@ -51,10 +53,10 @@ while ($row = db_fetch_array($res)) {
 	<H2><?php echo $row['realname'].' ('.$row['user_name'].')'; ?></H2>
 
 	<p>
-	<A href="/users/<?php echo $row['user_name']; ?>"><H3>[Show User Info / Send a mail note]</H3></A>
+									    <A href="/users/<?php echo $row['user_name']; ?>"><H3>[<?php echo $LANG->getText('admin_approve_pending_users','user_info'); ?>]</H3></A>
 
 	<p>
-	<A href="/admin/usergroup.php?user_id=<?php echo $row['user_id']; ?>"><H3>[Edit User/Group Settings]</H3></A>
+	<A href="/admin/usergroup.php?user_id=<?php echo $row['user_id']; ?>"><H3>[<?php echo $LANG->getText('admin_approve_pending_users','user_edit'); ?>]</H3></A>
 
 	<p>
         <TABLE WIDTH="70%">
@@ -63,7 +65,7 @@ while ($row = db_fetch_array($res)) {
 	<FORM action="<?php echo $PHP_SELF; ?>" method="POST">
 	<INPUT TYPE="HIDDEN" NAME="action" VALUE="activate">
 	<INPUT TYPE="HIDDEN" NAME="list_of_users" VALUE="<?php print $row['user_id']; ?>">
-	<INPUT type="submit" name="submit" value="Approve User">
+	<INPUT type="submit" name="submit" value="<?php echo $LANG->getText('admin_approve_pending_users','approve'); ?>">
 	</FORM>
  	</TD>
 
@@ -71,13 +73,13 @@ while ($row = db_fetch_array($res)) {
 	<FORM action="<?php echo $PHP_SELF; ?>" method="POST">
 	<INPUT TYPE="HIDDEN" NAME="action" VALUE="delete">
 	<INPUT TYPE="HIDDEN" NAME="user_id" VALUE="<?php print $row['user_id']; ?>">
-	<INPUT type="submit" name="submit" value="Delete User">
+	<INPUT type="submit" name="submit" value="<?php echo $LANG->getText('admin_approve_pending_users','delete'); ?>">
 	</FORM>
         </TD>
         </TR>
         </TABLE>
 	<P>
-	<B>Purpose:</B><br> <?php echo $row['register_purpose']; ?>
+	<B><?php echo $LANG->getText('admin_approve_pending_users','purpose'); ?>:</B><br> <?php echo $row['register_purpose']; ?>
 
 	<br>
 	&nbsp;
@@ -85,13 +87,13 @@ while ($row = db_fetch_array($res)) {
 
 	// ########################## OTHER INFO
 
-	print "<P><B>Other Information</B>";
-	print "<br>&nbsp;&nbsp;User Name: $row[user_name]";
+	print "<P><B>".$LANG->getText('admin_approve_pending_users','other_info')."</B>";
+	print "<br>&nbsp;&nbsp;".$LANG->getText('admin_approve_pending_users','name').": $row[user_name]";
 
-	print "<br>&nbsp;&nbsp;User ID:  $row[user_id]";
+	print "<br>&nbsp;&nbsp;".$LANG->getText('admin_approve_pending_users','id').":  $row[user_id]";
 
-	print "<br>&nbsp;&nbsp;User Email:  <a href=\"mailto:$row[email]\">$row[email]</a>";
-	print "<br>&nbsp;&nbsp;Registration Date:  ".format_date($sys_datefmt,$row[add_date]);
+	print "<br>&nbsp;&nbsp;".$LANG->getText('admin_approve_pending_users','email').":  <a href=\"mailto:$row[email]\">$row[email]</a>";
+	print "<br>&nbsp;&nbsp;".$LANG->getText('admin_approve_pending_users','reg_date').":  ".format_date($sys_datefmt,$row[add_date]);
 	echo "<P><HR><P>";
 
 }
@@ -105,7 +107,7 @@ echo '
 	<FORM action="'.$PHP_SELF.'" method="POST">
 	<INPUT TYPE="HIDDEN" NAME="action" VALUE="activate">
 	<INPUT TYPE="HIDDEN" NAME="list_of_users" VALUE="'.$user_list.'">
-	<INPUT type="submit" name="submit" value="Approve All On This Page">
+	<INPUT type="submit" name="submit" value="'.$LANG->getText('admin_approve_pending_users','approve_all').'">
 	</FORM>
 	';
 	
