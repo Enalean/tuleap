@@ -26,23 +26,6 @@
     <xsl:apply-templates select="." mode="label.markup"/>
   </xsl:variable>
 
-  <xsl:choose>
-    <xsl:when test="$fop.extensions != 0">
-      <fo:block text-align="start">
-        <fo:basic-link internal-destination="{$id}">
-          <fo:inline keep-with-next.within-line="always">
-            <xsl:apply-templates select="." mode="object.title.markup"/>
-          </fo:inline>
-          <fo:inline keep-together.within-line="always" font-style="italic">
-            <xsl:text>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</xsl:text>
-            <fo:page-number-citation ref-id="{$id}"/>
-            <xsl:text></xsl:text>
-          </fo:inline>
-        </fo:basic-link>
-      </fo:block>
-    </xsl:when>
-    <xsl:otherwise>
-
   <!-- CX-SBT: For level 1 (chapter), we use a bold font -->
   <xsl:variable name="depth" select="count(ancestor::*)"/>
   <xsl:variable name="weight">
@@ -104,8 +87,6 @@
           </fo:basic-link>
         </fo:inline>
       </fo:block>
-    </xsl:otherwise>
-  </xsl:choose>
 </xsl:template>
 
 <!-- CX-SBT: For figure, table, example and equation, we use the standard template : no italic or bold for the levels -->
@@ -118,24 +99,6 @@
     <xsl:apply-templates select="." mode="label.markup"/>
   </xsl:variable>
 
-  <xsl:choose>
-    <xsl:when test="$fop.extensions != 0">
-      <fo:block text-align="start">
-        <fo:basic-link internal-destination="{$id}">
-          <fo:inline keep-with-next.within-line="always">
-            <xsl:apply-templates select="." mode="object.title.markup"/>
-          </fo:inline>
-          <fo:inline keep-together.within-line="always" font-style="italic">
-            <xsl:text>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</xsl:text>
-            <fo:page-number-citation ref-id="{$id}"/>
-            <xsl:text></xsl:text>
-          </fo:inline>
-        </fo:basic-link>
-      </fo:block>
-    </xsl:when>
-    <xsl:otherwise>
-
-  
       <fo:block text-align-last="justify"
                 end-indent="{$toc.indent.width}pt"
                 last-line-end-indent="-{$toc.indent.width}pt">
@@ -158,8 +121,6 @@
           </fo:basic-link>
         </fo:inline>
       </fo:block>
-    </xsl:otherwise>
-  </xsl:choose>
 </xsl:template>
 
 <xsl:template match="figure|table|example|equation" mode="toc">
