@@ -1177,7 +1177,7 @@ INSERT INTO artifact_field VALUES (10,1,'comment_type_id',2,'SB','','Comment Typ
 INSERT INTO artifact_field VALUES (9,1,'details',1,'TA','60/7','Original Submission','A full description of the artifact','',0,1,1,0,NULL,'');
 INSERT INTO artifact_field VALUES (16,1,'resolution_id',2,'SB','','Resolution','How you have decided to fix the artifact (Fixed, Work for me, Duplicate,..)','',0,1,1,0,NULL,'100');
 INSERT INTO artifact_field VALUES (20,1,'bug_group_id',2,'SB','','Group','Characterizes the nature of the artifact (e.g. Feature Request, Action Request, Crash Error, Documentation Typo, Installation Problem,...','',0,1,1,0,NULL,'100');
-INSERT INTO artifact_field VALUES (2,2,'percent_complete',2,'SB','2','Percent complete','Percentage of completion','',0,0,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (2,2,'percent_complete',2,'SB','2','Percent complete','Percentage of completion','',0,0,1,0,NULL,'1000');
 INSERT INTO artifact_field VALUES (4,2,'hours',3,'TF','5/5','Effort','Number of hours of work needed to fix the artifact (including testing)','',0,1,1,0,NULL,'0.00');
 INSERT INTO artifact_field VALUES (5,2,'start_date',4,'DF','','Start Date','Start Date','',0,0,0,0,NULL,'');
 INSERT INTO artifact_field VALUES (6,2,'close_date',4,'DF','','End Date','End Date','',0,0,0,0,NULL,'');
@@ -1205,7 +1205,7 @@ INSERT INTO artifact_field VALUES (15,1,'fix_release_id',2,'SB','','Fixed Releas
 INSERT INTO artifact_field VALUES (17,1,'hours',3,'TF','5/5','Effort','Number of hours of work needed to fix the artifact (including testing)','S',0,1,1,0,NULL,'');
 INSERT INTO artifact_field VALUES (18,1,'plan_release_id',2,'SB','','Planned Release','The release in which you initially planned the artifact to be fixed','P',0,1,1,0,NULL,'100');
 INSERT INTO artifact_field VALUES (19,1,'component_version',1,'TF','10/40','Component Version','Version of the system component (or work product) impacted by the artifact. Same as the other Component Version field <u>except</u> this one is free text.','S',0,1,1,0,NULL,'');
-INSERT INTO artifact_field VALUES (22,1,'priority',2,'SB','','Priority','How quickly the artifact must be fixed (Immediate, Normal, Low, Later,...)','S',0,1,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (22,1,'priority',2,'SB','','Priority','How quickly the artifact must be fixed (Immediate, Normal, Low, Later,...)','S',0,1,1,0,NULL,'100');
 INSERT INTO artifact_field VALUES (23,1,'keywords',1,'TF','60/120','Keywords','A list of comma separated keywords associated with a artifact','S',0,1,1,0,NULL,'');
 INSERT INTO artifact_field VALUES (24,1,'release_id',2,'SB','','Release','The release (global version number) impacted by the artifact','P',0,1,1,0,NULL,'100');
 INSERT INTO artifact_field VALUES (26,1,'originator_name',1,'TF','20/40','Originator Name','The name of the person who reported the artifact (if different from the submitter field)','S',0,1,1,0,NULL,'');
