@@ -2,6 +2,7 @@
 #
 # CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
 # Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2003. All Rights Reserved
+# This file is licensed under the CodeX Component Software License
 # http://codex.xerox.com
 #
 # THIS FILE IS THE PROPERTY OF XEROX AND IS ONLY DISTRIBUTED WITH A
@@ -232,6 +233,7 @@ build_dir /home/var root root 755
 build_dir /home/var/lib root root 755
 #build_dir /home/var/lib/mysql mysql bin 755 # see CodeX DB installation
 build_dir /etc/skel_codex root root 755
+build_dir /etc/codex sourceforge sourceforge 755
 
 build_dir /var/run/log_accum root root 1777
 build_dir /cvsroot sourceforge sourceforge 755

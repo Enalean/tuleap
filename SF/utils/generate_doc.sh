@@ -1,14 +1,11 @@
 #!/bin/sh
 #
 # CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
-# Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001. All Rights Reserved# http://codex.xerox.com
+# Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+# This file is licensed under the CodeX Component Software License
+# http://codex.xerox.com
 #
 # $Id$
-#
-#  License:
-#    This file is subject to the terms and conditions of the GNU General Public
-#    license. See the file COPYING in the main directory of this archive for
-#    more details.
 #
 # Purpose:
 #    Automatically re-generate online documentation

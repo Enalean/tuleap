@@ -1,6 +1,13 @@
 <?php
-// SourceForge Universal Site Modifications
-// by David HM Spector <spector@zeitgeist.com>
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright 1999-2000 (c) The SourceForge Crew
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// http://codex.xerox.com
+// 
+// $Id$
+//
+// CodeX Global Configuration File
 //
 // Really Important Safety Tip: --> DO NOT LEAVE ANY WHITE
 // SPACE AFTER THE CLOSING PHP TAG AT THE END OF THIS FILE!

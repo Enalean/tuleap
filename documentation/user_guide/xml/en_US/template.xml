@@ -1,14 +1,17 @@
-<!-- These are the Docbook tags  that are most commonly used
-in the CodeX User Guide
-
-CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
-Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2001. All Rights Reserved
-http://codex.xerox.com
-
-$Id$
-
-Originally written by Laurent Julliard and Stéphane Bouhet 2002, CodeX Team, Xerox
-
+<!-- 
+// 
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+// 
+// These are the Docbook tags  that are most commonly used in the
+// CodeX User Guide
+//
+// $Id$
+// 
+// Originally written by Laurent Julliard and Stéphane Bouhet 2002, CodeX Team, Xerox
+//
 -->
 
 

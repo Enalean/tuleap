@@ -1,9 +1,16 @@
 <?php
-// Default Web Page for groups that haven't setup their page yet
-// Please replace this file with your own website
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
 //
 // $Id$
 //
+// Purpose:
+//    Default Web Page for groups that haven't setup their page yet
+//   Please replace this file with your own website
+
 $headers = getallheaders();
 ?>
 <HTML>

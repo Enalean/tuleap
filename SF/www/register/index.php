@@ -6,6 +6,7 @@
 //
 // $Id$
 
+require "license.php";    // Initial db and session library, opens session
 require "pre.php";    // Initial db and session library, opens session
 session_require(array(isloggedin=>1));
 $HTML->header(array(title=>"Project Registration"));
@@ -15,4 +16,3 @@ include(util_get_content('register/intro'));
 $HTML->footer(array());
 
 ?>
-

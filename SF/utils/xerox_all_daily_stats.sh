@@ -1,7 +1,15 @@
 #!/bin/sh
-# Written by LJ to chain all the 
-# stats scripts that have to be run 
-# daily
+#
+# CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+# Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+# This file is licensed under the CodeX Component Software License
+# http://codex.xerox.com
+#
+# $Id$
+#
+# Purpose:
+#    Chain all the stats scripts that have to be run daily
+#
 
 UTILSHOME="/home/httpd/SF/utils"
 

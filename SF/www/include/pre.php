@@ -120,6 +120,14 @@ if (user_isloggedin()) {
 //Set up the vars and theme functions 
 require('theme.php');
 
+// If the CodeX Software license was declined by the site admin
+// so stop all accesses to the site
+require($DOCUMENT_ROOT.'/include/license.php');
+if (license_already_declined()) {
+   exit_error('ERROR','Your site administrator declined the CodeX Software License. 
+The CodeX site has been shut down. For more information contact your  
+<a href="mailto:'.$GLOBALS['sys_email_admin'].'">Site Administrator</a>.');
+}
 
 // Check if anonymous user is allowed to browse the site
 // Bypass the test for:

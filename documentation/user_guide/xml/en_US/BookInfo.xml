@@ -1,7 +1,8 @@
 <!--
 //
 // CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
-// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
 // http://codex.xerox.com
 //
 // $Id$
@@ -24,17 +25,17 @@
 
     <copyright>
       <year>2000</year>
-
       <year>2001</year>
-
       <year>2002</year>
-
       <year>2003</year>
+      <year>2004</year>
 
       <holder>The Document Company - Xerox. All rights reserved.</holder>
     </copyright>
 
     <legalnotice>
+      <para>This document is licensed under the Codex Component Software License</para>
+
       <para>Copyright protection claimed includes all forms and matters of
       copyrightable material and information now allowed by statutory or
       judicial law or hereinafter granted, including without limitation,
