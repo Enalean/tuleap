@@ -91,7 +91,7 @@ function my_format_as_flag($assigned_to, $submitted_by) {
 }
 
 function my_item_count($total, $new) {
-    return '['.$total.($new ? ", <b>new new</b>)" : ']');
+    return '['.$total.($new ? ", <b>$new new</b>)" : ']');
 }
 
 ?>
