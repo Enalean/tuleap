@@ -409,14 +409,15 @@ function svn_utils_format_svn_history($group_id) {
 	while ($row_svnlasthist = db_fetch_array($res_svnlasthist)) {
 	    $svnhist[$row_svnlasthist['user_name']]['last'] = $row_svnlasthist['commits'];
 	}
-    }
+    
 
-    // Format output 
-    $output = '<P><b>Developer Commits (Last 7 days/Total)</b><BR>&nbsp;';
-    reset($svnhist);
-    while (list($user, ) = each($svnhist)) {
-	$output .= '<BR>'.$user.' ('.$svnhist[$user]['last'].'/'
-	    .$svnhist[$user]['full'].')';
+        // Format output 
+        $output = '<P><b>Developer Commits (Last 7 days/Total)</b><BR>&nbsp;';
+        reset($svnhist);
+        while (list($user, ) = each($svnhist)) {
+            $output .= '<BR>'.$user.' ('.$svnhist[$user]['last'].'/'
+                .$svnhist[$user]['full'].')';
+        }
     }
     return $output;
 }

@@ -93,7 +93,7 @@ die() {
 
 substitute() {
   # $1: filename, $2: string to match, $3: replacement string
-  $PERL -pi -e 's/$2/$3/g' $1
+  $PERL -pi -e "s/$2/$3/g" $1
 }
 
 ##############################################
@@ -138,7 +138,7 @@ rpms_ok=1
 for rpm in openssh-server openssh openssh-clients openssh-askpass \
    openssl openldap perl perl-DBI perl-CGI gd gcc \
    sendmail telnet bind ntp samba python php php-mysql php-ldap enscript \
-   bind
+   bind python-devel rcs
 do
     $RPM -q $rpm  2>/dev/null 1>&2
     if [ $? -eq 1 ]; then
@@ -230,6 +230,7 @@ $USERADD -c 'Dummy CodeX User' -M -d '/home/dummy' -u 103 -g 103 dummy
 
 # Build file structure
 
+build_dir /home/httpd sourceforge sourceforge 775
 build_dir /home/users sourceforge sourceforge 775
 build_dir /home/groups sourceforge sourceforge 775
 
@@ -265,7 +266,6 @@ build_dir /etc/codex/themes/images sourceforge sourceforge 755
 
 build_dir /var/run/log_accum root root 1777
 build_dir /cvsroot sourceforge sourceforge 755
-build_dir /cvsroot/.mysql_backup mysql mysql 755
 build_dir /cvsroot/.mysql_backup/old root root 775
 build_dir /svnroot sourceforge sourceforge 755
 
@@ -277,15 +277,17 @@ build_dir /svnroot sourceforge sourceforge 755
 echo "Removing Redhat vsftp daemon.."
 $RPM -e --nodeps vsftpd 2>/dev/null
 echo "Installing wu-ftpd..."
-cd ${RPMS_DIR}/others
-$RPM -Uvh --force wu-ftpd*.i386.rpm
+cd ${RPMS_DIR}/wu-ftpd
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh --force ${newest_rpm}/wu-ftpd*.i386.rpm
 
 # -> perlsuid
 echo "Removing Perl suid if any..."
-$RPM -e --nodeps perlsuid-perl 2>/dev/null
+$RPM -e --nodeps perl-suidperl 2>/dev/null
 echo "Installing Perl suid..."
-cd ${RPMS_DIR}/others
-$RPM -Uvh --force perl-suidperl*.i386.rpm
+cd ${RPMS_DIR}/perl-suidperl
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh --force ${newest_rpm}/perl-suidperl*.i386.rpm
 
 # -> Perl DBD for MySQL
 echo "Removing Redhat Perl DBD MySQL if any..."
@@ -299,8 +301,9 @@ $RPM -Uvh --force ${newest_rpm}/perl-DBD-MySQL-*.i386.rpm
 echo "Removing existing perl-Crypt-SmbHash..."
 $RPM -e --nodeps perl-Crypt-SmbHash 2>/dev/null
 echo "Installing perl-Crypt-SmbHash..."
-cd ${RPMS_DIR}/others
-$RPM -Uvh --force perl-Crypt-SmbHash*.noarch.rpm
+cd ${RPMS_DIR}/perl-Crypt-SmbHash
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh --force ${newest_rpm}/perl-Crypt-SmbHash*.noarch.rpm
 
 # -> mysql
 echo "Removing RedHat MySQL..."
@@ -316,6 +319,9 @@ $RPM -Uvh --force ${newest_rpm}/MySQL-*.i386.rpm
 $SERVICE mysql start
 $CHKCONFIG mysql on
 
+# Now user mysql exists...
+build_dir /cvsroot/.mysql_backup mysql mysql 755
+
 # -> mysql module for Python
 echo "Removing RedHat MySQL module for Python..."
 $RPM -e --nodeps MySQL-python 2>/dev/null
@@ -327,11 +333,14 @@ $RPM -Uvh --force ${newest_rpm}/MySQL-python-*.i386.rpm
 # -> apache
 echo "Removing RedHat Apache..."
 $SERVICE httpd stop
-$RPM -e --nodeps httpd httpd-devel httpd-manual 2>/dev/null
+$RPM -e --nodeps httpd httpd-devel httpd-manual 'apr*' apr-util mod_ssl 2>/dev/null
+$RPM -e --nodeps db4-devel db4-utils 2>/dev/null
 echo "Installing Apache RPMs for CodeX...."
 cd ${RPMS_DIR}/apache
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --force ${newest_rpm}/httpd-*.i386.rpm
+$RPM -Uvh --force ${newest_rpm}/db42-4.*.i386.rpm ${newest_rpm}/db42-utils*.i386.rpm
+$RPM -Uvh --force ${newest_rpm}/apr-0.*.i386.rpm ${newest_rpm}/apr-util-0.*.i386.rpm
+$RPM -Uvh --force ${newest_rpm}/httpd-2*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/mod_ssl-*.i386.rpm
 $CHKCONFIG httpd on
 # restart Apache after subversion installation - see below
@@ -342,9 +351,9 @@ $RPM -e --nodeps jre j2re 2>/dev/null
 echo "Installing Java JRE RPMs for CodeX...."
 cd ${RPMS_DIR}/jre
 newest_rpm=`$LS -1 -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --force ${newest_rpm}/j2re-*.i?86.rpm
+$RPM -Uvh --force ${newest_rpm}/j2re-*i?86.rpm
 cd /usr/java
-newest_jre=`$LS -1d jre* | $TAIL -1`
+newest_jre=`$LS -1d j2re* | $TAIL -1`
 $LN -sf $newest_jre jre
 
 # -> cvs
@@ -357,15 +366,13 @@ $RPM -Uvh --force ${newest_rpm}/cvs-*.i386.rpm
 
 # -> subversion
 echo "Removing RedHat subversion .."
-$RPM -e --nodeps `rpm -qa 'subversion*' 'apr*' 'neon*' 'rapidsvn*'` 2>/dev/null
-$RPM -e --nodeps db4-devel db4-utils 2>/dev/null
+$RPM -e --nodeps `rpm -qa 'subversion*' 'swig*' 'neon*' 'rapidsvn*'` 2>/dev/null
 echo "Installing Subversion RPMs for CodeX...."
 cd ${RPMS_DIR}/subversion
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --force ${newest_rpm}/db42-4.*.i386.rpm ${newest_rpm}/db42-utils*.i386.rpm
-$RPM -Uvh --force ${newest_rpm}/neon.*.i386.rpm
-$RPM -Uvh --force ${newest_rpm}/apr-0.*.i386.rpm ${newest_rpm}/apr-util*.i386.rpm
-$RPM -Uvh --force ${newest_rpm}/subversion-1.*.i386.rpm \
+$RPM -Uvh --force ${newest_rpm}/neon-0*.i386.rpm
+$RPM -Uvh --force ${newest_rpm}/swig-1*.i386.rpm
+$RPM -Uvh --force ${newest_rpm}/subversion-1.*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/subversion-server*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/subversion-python*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/subversion-tools*.i386.rpm
@@ -373,6 +380,13 @@ $RPM -Uvh --force ${newest_rpm}/subversion-tools*.i386.rpm
 # Restart Apache after subversion is installed
 # so that mod_dav_svn module is taken into account
 $SERVICE httpd restart
+
+# -> cvsgraph
+$RPM -e --nodeps cvsgraph 2>/dev/null
+echo "Installing cvsgraph RPM for CodeX...."
+cd ${RPMS_DIR}/cvsgraph
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh --force ${newest_rpm}/cvsgraph-*i?86.rpm
 
 # -> viewcvs 
 echo "Removing installed viewcvs if any .."
@@ -456,7 +470,7 @@ $FIND /home/httpd -type f -exec $CHMOD u+rw,g+rw,o-w+r, {} \;
 $FIND /home/httpd -type d -exec $CHMOD 775 {} \;
 
 make_backup /etc/httpd/conf/httpd.conf
-for f in /etc/httpd/conf/cvsweb.conf /etc/httpd/conf/httpd.conf \
+for f in /etc/httpd/conf/httpd.conf \
 /etc/httpd/conf/mailman.conf /etc/httpd/conf.d/ssl.conf \
 /etc/httpd/conf.d/php.conf /etc/httpd/conf.d/subversion.conf \
 /etc/codex/conf/local.inc; do
@@ -486,6 +500,7 @@ $CHOWN -R sourceforge.sourceforge /home/httpd/documentation/user_guide/html/en_U
 $MKDIR -p  /home/httpd/documentation/user_guide/pdf/en_US
 $CHOWN -R sourceforge.sourceforge /home/httpd/documentation/user_guide/pdf/en_US
 $TOUCH /etc/httpd/conf/codex_vhosts.conf
+$TOUCH /etc/httpd/conf/codex_svnhosts.conf
 $CP /home/httpd/codex_tools/backup_job /home/tools
 $CHOWN root.root /home/tools/backup_job
 $CHMOD 740 /home/tools/backup_job
@@ -509,7 +524,7 @@ substitute '/etc/httpd/conf.d/ssl.conf' '%sys_ip_address%' "$sys_ip_address"
 
 todo "Customize /etc/codex/conf/local.inc"
 todo "Customize /etc/httpd/conf/httpd.conf"
-todo "Customize /etc/httpd/conf/cvsweb.conf. Edit %CVSROOT (if needed) and $logo"
+#todo "Customize /etc/httpd/conf/cvsweb.conf. Edit %CVSROOT (if needed) and $logo"
 todo "Customize /etc/httpd/conf/mailman.conf"
 todo "Customize /home/httpd/documentation/user_guide/xml/en_US/ParametersLocal.dtd"
 todo "Customize /home/tools/backup_job"
@@ -608,7 +623,7 @@ yn="-"
 if [ "$yn" = "y" -o "$yn" = "-" ]; then
     $RM -rf /tmp/mailman; $MKDIR -p /tmp/mailman; cd /tmp/mailman;
     $RM -rf $MAILMAN_DIR/*
-    $TAR xvfz $nonRPMS_DIR/mailman/mailman-*.tgz
+    $TAR xfz $nonRPMS_DIR/mailman/mailman-*.tgz
     newest_ver=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
     cd $newest_ver
     mail_gid=`id -g mail`
@@ -626,6 +641,7 @@ and DEFAULT_URL variables (overrides Defaults.py settings). Recompile with pytho
 ##############################################
 # Installing and configuring Sendmail
 #
+echo "##############################################"
 echo "Installing sendmail shell wrappers and configuring sendmail..."
 cd /etc/smrsh
 $LN -sf /usr/local/bin/gotohell
@@ -672,9 +688,9 @@ $CHMOD 755 log_accum commit_prep
 $CHMOD u+s log_accum   # sets the uid bit (-rwsr-xr-x)
 
 cd /home/httpd/SF/etc
-$CP cvsweb.conf.dist /etc/httpd/conf/cvsweb.conf
-$CHOWN root.root /etc/httpd/conf/cvsweb.conf
-$CHMOD 644 /etc/httpd/conf/cvsweb.conf
+#$CP cvsweb.conf.dist /etc/httpd/conf/cvsweb.conf
+#$CHOWN root.root /etc/httpd/conf/cvsweb.conf
+#$CHMOD 644 /etc/httpd/conf/cvsweb.conf
 
 ##############################################
 # Samba configuration
@@ -696,8 +712,8 @@ $CHMOD 755 commit-email.pl
 $CHMOD u+s commit-email.pl   # sets the uid bit (-rwsr-xr-x)
 
 # Make the system daily cronjob run at 23:58pm
-echo "Updating daily cron job in system crontab..."
-perl -i'.orig' -p -e's/\d+ \d+ (.*daily)/58 23 \1/g' /tmp/crontab
+#echo "Updating daily cron job in system crontab..."
+#perl -i'.orig' -p -e's/\d+ \d+ (.*daily)/58 23 \1/g' /tmp/crontab
 
 ##############################################
 # FTP server configuration
@@ -760,15 +776,15 @@ EOF
 # Create the custom default page for the project Web sites
 #
 echo "Creating the custom default page for the project Web sites..."
-def_page=/home/httpd/SF/utils/custom/default_page.php
+def_page=/etc/codex/site-content/en_US/others/default_page.php
 yn="y"
 [ -f "$def_page" ] && read -p "Custom Default Project Home page already exists. Overwrite? [y|n]:" yn
 if [ "$yn" = "y" ]; then
-    $MKDIR -p /home/httpd/SF/utils/custom
-    $CHOWN sourceforge.sourceforge /home/httpd/SF/utils/custom
-    $CP /home/httpd/SF/utils/default_page.php /home/httpd/SF/utils/custom/default_page.php
+    $MKDIR -p /etc/codex/site-content/en_US/others
+    $CHOWN sourceforge.sourceforge /etc/codex/site-content/en_US/others
+    $CP /home/httpd/site-content/en_US/others/default_page.php /etc/codex/site-content/en_US/others/default_page.php
 fi
-todo "Customize /home/httpd/SF/utils/custom/default_page.php (project web site default home page)"
+todo "Customize /etc/codex/site-content/en_US/others/default_page.php (project web site default home page)"
 
 ##############################################
 # Shell Access configuration
@@ -948,8 +964,8 @@ $CAT <<'EOF' >/etc/logrotate.d/httpd
     endscript
 }
 EOF
-$CHOWN root.root /etc/logrotate.d/apache
-$CHMOD 644 /etc/logrotate.d/apache
+$CHOWN root.root /etc/logrotate.d/httpd
+$CHMOD 644 /etc/logrotate.d/httpd
 
 
 make_backup "/etc/logrotate.d/ftpd"

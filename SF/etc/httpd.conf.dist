@@ -1077,7 +1077,8 @@ Include conf/mailman.conf
                                                       
 # Include per project virtual hosts (automatically generated)
 Include conf/codex_vhosts.conf
-                                                                               # Include per project Subversion repository (automatically generated)
+
+# Include per project Subversion repository (automatically generated)
 Include conf/codex_svnhosts.conf
                                              
 #

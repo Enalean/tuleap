@@ -112,7 +112,7 @@ $sf_cache_dir = "/home/sfcache";
  
 // Themeing related vars... Some of this needs to change in the session stuff
 // The theme base directory, everything else is handled by theme_sysinit()
-$sys_themeroot=$sys_urlroot."themes/";
+$sys_themeroot="/home/httpd/SF/www/themes/";
 
 // Specific to Xerox CodeX
 //
