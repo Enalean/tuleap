@@ -107,9 +107,9 @@ NameVirtualHost %sys_ip_address%:443
 # ServerAdmin you@your.address
 ServerName %sys_default_domain%:443
 
-# Use separate log files:
-ErrorLog logs/ssl_error_log
-TransferLog logs/ssl_access_log
+# Use same log files fro SSL traffic to preserve CodeX statisitics:
+ErrorLog logs/error_log
+TransferLog logs/access_log
 
 #   SSL Engine Switch:
 #   Enable/Disable SSL for this virtual host.
