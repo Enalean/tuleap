@@ -161,10 +161,11 @@ class ArtifactTypeHtml extends ArtifactType {
 			$title_arr=array();
 			$title_arr[]='ID';
 			$title_arr[]='Tracker';
+			$title_arr[]='Description';
 			$title_arr[]='Delete?';
 			echo html_build_list_table_top ($title_arr);
 		
-			$fmt = "\n".'<TR class="%s"><td>%s</td><td>%s</td>'.
+			$fmt = "\n".'<TR class="%s"><td>%s</td><td>%s</td><td>%s</td>'.
 			    '<td align="center">%s</td></tr>';
 
 			for ($i = 0; $i < count($at_arr); $i++) {
@@ -172,6 +173,7 @@ class ArtifactTypeHtml extends ArtifactType {
 					    util_get_alt_row_color($i),
 					    "<a href=\"/tracker/admin/?group_id=".$this->Group->getID()."&atid=".$at_arr[$i]->getID()."\">".$at_arr[$i]->getID()."</a>",
 					    $at_arr[$i]->getName(),
+					    $at_arr[$i]->getDescription().'&nbsp;',
 					    "<a href=\"/tracker/admin/?func=delete_tracker&group_id=".$this->Group->getID()."&atid=".$at_arr[$i]->getID()."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('Delete this tracker and all its dependencies?')\"></a>" );
 
 			}
