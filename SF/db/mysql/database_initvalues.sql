@@ -1026,7 +1026,7 @@ INSERT INTO project_type VALUES (100,'None','None');
 
 INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, is_public, allow_anon, email_all_updates, email_address, submit_instructions, browse_instructions) VALUES (1, 100, 'Bugs', 'Bugs Tracker', 'bug', 1, 0, 0, '', NULL, NULL);
 INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, is_public, allow_anon, email_all_updates, email_address, submit_instructions, browse_instructions) VALUES (2, 100, 'Tasks', 'Tasks Manager', 'task', 1, 0, 0, '', NULL, NULL);
-INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, is_public, allow_anon, email_all_updates, email_address, submit_instructions, browse_instructions) VALUES (3, 100, 'Supports', 'Support Requests', 'SR', 1, 1, 0, '', NULL, NULL);
+INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, is_public, allow_anon, email_all_updates, email_address, submit_instructions, browse_instructions) VALUES (3, 100, 'Support Requests', 'Support Requests', 'SR', 1, 1, 0, '', NULL, NULL);
 INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, is_public, allow_anon, email_all_updates, email_address, submit_instructions, browse_instructions) VALUES (4, 100, 'Empty', 'Empty tracker', '', 1, 0, 0, '', NULL, NULL);
 
 --
@@ -1341,7 +1341,7 @@ INSERT INTO artifact_field_value_list VALUES (7,4,9,'9 - Critical','',90,'P');
 INSERT INTO artifact_report VALUES (100,100,100,'Default','The system default artifact report','S');
 INSERT INTO artifact_report VALUES (2,2,100,'Tasks','Tasks Report','P');
 INSERT INTO artifact_report VALUES (3,3,100,'SR','Support Requests Report','P');
-INSERT INTO artifact_report VALUES (4,1,100,'Bugs','Bugs Reports','P');
+INSERT INTO artifact_report VALUES (4,1,100,'Bugs','Bugs Report','P');
 
 
 --
