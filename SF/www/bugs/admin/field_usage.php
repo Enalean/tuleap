@@ -54,7 +54,7 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 	// Escape to display the form	    
 ?>
 	    
-      <H2>Modify a bug field <?php echo $help; ?></H2>
+      <H2>Modify a bug field</H2>
       <FORM ACTION="<?php echo $PHP_SELF ?>" METHOD="POST">
       <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
       <INPUT TYPE="HIDDEN" NAME="field" VALUE="<?php echo $field; ?>">

@@ -369,7 +369,7 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 	bug_header_admin(array ('title'=>'Bug Administration - Field Values Management',
 				'help' => 'BTSAdministration.html#BugFieldValuesManagement'));
 	
-	echo '<H2>Manage Field values '.help_button('BTSAdministration.html#BugFieldValuesManagement').'</H2>';
+	echo '<H2>Manage Field values</H2>';
 	echo '<p>(Click to modify)';
 	
 	// Loop through the list of all used fields that are project manageable
