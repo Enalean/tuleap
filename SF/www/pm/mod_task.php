@@ -195,7 +195,7 @@ $result=db_query($sql);
 	</TR>
 
 	<TR>
-		<TD COLSPAN="2" ALIGN="MIDDLE">
+		<TD COLSPAN="2" ALIGN="center">
 		<INPUT TYPE="submit" value="Submit Changes" name="submit">
 		</TD>
 		</form>

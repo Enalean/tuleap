@@ -99,7 +99,7 @@ if (db_numrows($result) > 0) {
 		?>
 	</TD></TR>
 
-	<TR><TD COLSPAN="2" ALIGN="MIDDLE">
+	<TR><TD COLSPAN="2" ALIGN="center">
 		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit Changes">
 		</FORM>
 	</TD></TR>

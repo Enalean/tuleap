@@ -582,7 +582,7 @@ function show_buglist ($result,$offset,$total_rows,$field_arr,$title_arr,
 		if ($value)
 		    echo "<TD $width>".format_date($sys_datefmt,$value).'</TD>'."\n";
 		else
-		    echo "<TD align=\"middle\" $width>-</TD>\n";
+		    echo "<TD align=\"center\">-</TD>\n";
 
 	    } else if ($field_arr[$j] == 'bug_id') {
 

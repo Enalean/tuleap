@@ -127,7 +127,7 @@ if (user_isloggedin()) {
 		<TEXTAREA NAME="code" ROWS="20" COLS="85" WRAP="SOFT"></TEXTAREA>
 	</TD></TR>
  
-	<TR><TD COLSPAN="2" ALIGN="MIDDLE">
+	<TR><TD COLSPAN="2" ALIGN="center">
 		<B>Make sure all info is complete and accurate</B>
 		<BR>
 		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">

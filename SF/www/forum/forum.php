@@ -341,7 +341,7 @@ if ($forum_id) {
 		if ($offset != 0) {
 			$ret_val .= '<B><span class="normal">
 				<A HREF="javascript:history.back()">
-				<B><IMG SRC="'.util_get_image_theme("t2.png").'" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE> Previous Messages</A></B></span>';
+				<B><IMG SRC="'.util_get_image_theme("t2.png").'" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=center> Previous Messages</A></B></span>';
 		} else {
 			$ret_val .= '&nbsp;';
 		}
@@ -350,7 +350,7 @@ if ($forum_id) {
 		if (db_numrows($result) > $i) {
 			$ret_val .= '<B><span class="normal">
 				<A HREF="/forum/forum.php?max_rows='.$max_rows.'&style='.$style.'&offset='.($offset+$i).'&forum_id='.$forum_id.'">
-				<B>Next Messages <IMG SRC="'.util_get_image_theme("t.png").'" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE></A></span>';
+				<B>Next Messages <IMG SRC="'.util_get_image_theme("t.png").'" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=center></A></span>';
 		} else {
 			$ret_val .= '&nbsp;';
 		}

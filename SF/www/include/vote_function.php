@@ -207,7 +207,7 @@ if (db_numrows($result) > 0) {
 	}
 
 	?>
-	<TR><TD ALIGN="MIDDLE" COLSPAN="2">
+	<TR><TD ALIGN="center" COLSPAN="2">
 
 	<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
 	<BR>

@@ -147,7 +147,7 @@ then add them using the new window link shown above.
 		<INPUT TYPE="TEXT" NAME="version" SIZE="10" MAXLENGTH="15">
 	</TD></TR>
   
-	<TR><TD COLSPAN="2" ALIGN="MIDDLE">
+	<TR><TD COLSPAN="2" ALIGN="center">
 		<B>Make sure all info is complete and accurate</B>
 		<BR>
 		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">

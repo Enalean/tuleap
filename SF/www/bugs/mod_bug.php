@@ -190,7 +190,7 @@ if (db_numrows($result) > 0) {
 		<?php echo show_bughistory($bug_id,$group_id); ?>
 	</TD></TR>
 
-	<TR><TD colspan="2" ALIGN="MIDDLE">
+	<TR><TD colspan="2" ALIGN="center">
 		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit Changes">
 		</FORM>
 	</TD></TR>

@@ -117,12 +117,12 @@ if (user_isloggedin()) {
 	<INPUT TYPE="HIDDEN" NAME="suppress_nav" VALUE="<?php echo $suppress_nav; ?>">
 
 	<TABLE>
-	<TR><TD COLSPAN="2" ALIGN="MIDDLE">
+	<TR><TD COLSPAN="2" ALIGN="center">
 		<B>Add This Snippet Version ID:</B><BR>
 		<INPUT TYPE="TEXT" NAME="snippet_version_id" SIZE="6" MAXLENGTH="7">
 	</TD></TR>
 
-	<TR><TD COLSPAN="2" ALIGN="MIDDLE">
+	<TR><TD COLSPAN="2" ALIGN="center">
 		<B>Make sure all info is complete and accurate</B>
 		<BR>
 		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
@@ -148,7 +148,7 @@ if (user_isloggedin()) {
 		$HTML->box1_top('Snippets In This Package');
 		for ($i=0; $i<$rows; $i++) {
 			echo '
-			<TR class="'. util_get_alt_row_color($i) .'"><TD ALIGN="MIDDLE">
+			<TR class="'. util_get_alt_row_color($i) .'"><TD ALIGN="center">
 				<A HREF="/snippet/delete.php?type=frompackage&snippet_version_id='.
 				db_result($result,$i,'snippet_version_id').
 				'&snippet_package_version_id='.$snippet_package_version_id.

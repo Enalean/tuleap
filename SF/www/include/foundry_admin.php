@@ -120,7 +120,7 @@ if (!$res_grp || $rows < 1) {
 		print '
 		<FORM ACTION="'. $PHP_SELF .'" METHOD="POST"><INPUT TYPE="HIDDEN" NAME="func" VALUE="rmproject">'.
 		'<INPUT TYPE="HIDDEN" NAME="rm_id" VALUE="'. db_result($res_grp,$i,'group_id') .'">'.
-		'<TR><TD ALIGN="MIDDLE"><INPUT TYPE="IMAGE" NAME="DELETE" SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0"></TD></FORM>'.
+		'<TR><TD ALIGN="center"><INPUT TYPE="IMAGE" NAME="DELETE" SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0"></TD></FORM>'.
 		'<TD><A href="/projects/'. strtolower(db_result($res_grp,$i,'unix_group_name')) .'/">'. 
 		db_result($res_grp,$i,'group_name') .'</A> ( '. db_result($res_grp,$i,'rank') .' )</TD></TR>';
 	}
@@ -153,7 +153,7 @@ $res_memb = db_query("SELECT user.realname,user.user_id,user.user_name ".
 		print '
 		<FORM ACTION="/foundry/'.$expl_pathinfo[2].'/admin/" METHOD="POST"><INPUT TYPE="HIDDEN" NAME="func" VALUE="rmuser">'.
 		'<INPUT TYPE="HIDDEN" NAME="rm_id" VALUE="'.$row_memb['user_id'].'">'.
-		'<TR><TD ALIGN="MIDDLE"><INPUT TYPE="IMAGE" NAME="DELETE" SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0"></TD></FORM>'.
+		'<TR><TD ALIGN="center"><INPUT TYPE="IMAGE" NAME="DELETE" SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0"></TD></FORM>'.
 		'<TD><A href="/users/'.$row_memb['user_name'].'/">'.$row_memb['realname'].'</A></TD></TR>';
 	}
 	print '</TABLE>

@@ -101,7 +101,7 @@ if (user_isloggedin()) {
 			<TEXTAREA NAME="code" ROWS="30" COLS="85" WRAP="SOFT"></TEXTAREA>
 		</TD></TR>
  
-		<TR><TD COLSPAN="2" ALIGN="MIDDLE">
+		<TR><TD COLSPAN="2" ALIGN="center">
 			<B>Make sure all info is complete and accurate</B>
 			<BR>
 			<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
@@ -216,7 +216,7 @@ then add them using the new window link shown above.
 			<TEXTAREA NAME="changes" ROWS="5" COLS="45"></TEXTAREA>
 		</TD></TR>
 
-		<TR><TD COLSPAN="2" ALIGN="MIDDLE">
+		<TR><TD COLSPAN="2" ALIGN="center">
 			<B>Make sure all info is complete and accurate</B>
 			<BR>
 			<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">

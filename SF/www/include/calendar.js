@@ -79,7 +79,7 @@ function show_calendar(str_target, str_datetime, css_theme) {
                 "<img src=\"/images/"+css_theme+".theme/calendar/prev.png\" width=\"16\" height=\"16\" border=\"0\""+
                 " alt=\"previous month\"></a></td>\n"+
 
-                "        <td class=\"calendar_month\" colspan=\"3\" align=\"middle\">"+
+                "        <td class=\"calendar_month\" colspan=\"3\" align=\"center\">"+
                 "<span class=\"calendar_font_month\">"
                 +arr_months[dt_datetime.getMonth()]+" "+dt_datetime.getFullYear()+"</span></td>\n"+
 

@@ -466,7 +466,7 @@ function show_post_form($forum_id, $thread_id=0, $is_followup_to=0, $subject="")
 		<TR><TD><B>Message:</TD><TD>
 		<TEXTAREA NAME="body" VALUE="" ROWS="10" COLS="60" WRAP="SOFT"></TEXTAREA>
 		</TD></TR>
-		<TR><TD COLSPAN="2" ALIGN="MIDDLE">
+		<TR><TD COLSPAN="2" ALIGN="center">
 		<B><span class="highlight">HTML tags will display in your post as text</span></B>
 		<BR>
 		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Post Comment">

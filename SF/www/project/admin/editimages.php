@@ -74,7 +74,7 @@ echo html_build_list_table_top($arr);
 $rows=db_numrows($result);
 for ($i=0; $i<$rows; $i++) {
 	echo '	  
-	<TR class="'. html_get_alt_row_color($i) .'"><TD ALIGN="MIDDLE">'.
+	<TR class="'. html_get_alt_row_color($i) .'"><TD ALIGN="center">'.
 	'<A HREF="'. $PHP_SELF .'?submit=1&group_id='.$group_id.'&remove_image=1&id='.
 	db_result($result,$i,'id').
 	'"><IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" '.
