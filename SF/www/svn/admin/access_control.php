@@ -39,7 +39,7 @@ if (svn_utils_svn_repo_exists($gname)) {
        <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
       <p>The default CodeX policy is to allow read-write access to all project members
       on the entire repository and read-only access to all other '.$GLOBALS['sys_name'].' users.You can tune or even redefine the access permissions below to suit your needs. 
-      <h3>Access Control File '. help_button('SVNWebInterface.html#SVNAdministration').':</h3> 
+      <h3>Access Control File '. help_button('SubversionAdministrationInterface.html#SubversionAccessControl').':</h3> 
        <TEXTAREA cols="70" rows="20" wrap="virtual" name="form_accessfile">'.$svn_accessfile.'</TEXTAREA>
         </p>
         <p><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit"></p></FORM>';
