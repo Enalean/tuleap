@@ -1254,9 +1254,10 @@ class ArtifactTypeHtml extends ArtifactType {
 		      <td width="30%">';
 	       
 		if ( $func == "value_update" ) {
-			if ( $status == "P" ) {
-				echo 'Status: Permanent';
-				echo '<input type="hidden" name="status" value="P">';
+			if (( $status == "P" ) && ( $this->Group->getID() != 100 ) ) {
+                            // Can't change 'Permanent' status unless you're working on the tracker templates (group 100)
+                            echo 'Status: Permanent';
+                            echo '<input type="hidden" name="status" value="P">';
 			} else {
 				echo 'Status:&nbsp;
 				<select name="status">';
@@ -1270,11 +1271,22 @@ class ArtifactTypeHtml extends ArtifactType {
 					if ( $status == "H" ) 
 						$selected = " selected";
 					echo '<option value="H"'.$selected.'>Hidden</option>';
+
+                                        if ($this->Group->getID() == 100 ) {
+                                            $selected = "";
+                                            if ( $status == "P" ) 
+						$selected = " selected";
+                                            echo '<option value="P"'.$selected.'>Permanent</option>';
+                                        }
 		
 				} else {
 					echo '				
 				          <option value="A" selected>Active</option>
-				          <option value="H">Hidden</option>';
+				          <option value="H">Hidden</option>;';
+                                        if ($this->Group->getID() == 100 ) {
+                                            echo '				
+				          <option value="P">Permanent</option>';
+                                        }
 				}
 				echo '
 				</select> ';
@@ -1376,8 +1388,9 @@ class ArtifactTypeHtml extends ArtifactType {
 			"\n<td align =\"center\">".$rank.'</td>'.
 			"\n<td align =\"center\">".$status.'</td>';
 			
-			if ( $row['status'] == "P" || $field->getName() == "severity" ) {
-				// Unable to delete Permanent values
+			if (( $row['status'] == "P" || $field->getName() == "severity" )
+                            &&($this->Group->getID() != 100)){
+				// Unable to delete Permanent values, except for values in the tracker templates (for CodeX admins)
 		    	$html .= "\n<td align =\"center\">-</td>";
 			} else {
 		    	$html .= "\n<td align =\"center\"><a href=\"/tracker/admin/?func=value_delete&group_id=".$this->Group->getID()."&atid=".$this->getID()."&field_id=".$field->getID()."&value_id=".$row['value_id']."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('Delete this field value?')\"></a></td>";
