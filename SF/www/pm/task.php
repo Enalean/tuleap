@@ -10,7 +10,7 @@ require('pre.php');
 require('../pm/pm_utils.php');
 require('../pm/pm_data.php');
 
-if ($group_id && $group_project_id) {
+if ($group_id ) {
 	/*
 		Verify that this group_project_id falls under this group
 	*/
@@ -22,18 +22,30 @@ if ($group_id && $group_project_id) {
 		$public_flag='1';
 	}
 
-	/*
-		Verify that this subproject belongs to this project
-	*/
-	$result=db_query("SELECT * FROM project_group_list ".
-		"WHERE group_project_id='$group_project_id' AND group_id='$group_id' AND is_public IN ($public_flag)");
-	if (db_numrows($result) < 1) {
-		exit_permission_denied();
-	}
-
+	/* if no function given then it defaults to browse */
 	if (!$func) {
 		$func='browse';
 	}
+
+	/* if no sub project id given then it defaults to any (0) */
+	if (!isset($group_project_id)) {
+		$group_project_id = 0; 
+	}
+
+	/*
+		Verify that this subproject belongs to this project.
+		If sub project is 0 then it means any sub project
+		for this group so don't make any verification
+	*/
+	
+	if ($group_project_id) {
+		$result=db_query("SELECT * FROM project_group_list ".
+			"WHERE group_project_id='$group_project_id' AND group_id='$group_id' AND is_public IN ($public_flag)");
+		if (db_numrows($result) < 1) {
+			exit_permission_denied();
+		}
+	}
+
 	/*
 		Figure out which function we're dealing with here
 	*/

@@ -50,6 +50,16 @@ if ($group_id) {
 		db_result($result, $j, 'description').'<P>';
 	}
 
+	//If there is more than one subproject offer the option
+	//to see them all at once
+	if ($rows > 1) {
+		echo '
+		<A HREF="/pm/task.php?group_project_id=0'.
+		'&group_id='.$group_id.'&func=browse"><IMG SRC="/images/ic/index.png" HEIGHT=13 WIDTH=15 BORDER=0> &nbsp;'.
+		'All tasks in all subprojects</A><BR>'.
+		'See all the tasks regardless of the sub-project they belong to.<P>';
+	}
+
 } else {
 	pm_header(array('title'=>'Choose a Group First'));
 	echo '<H1>Error - choose a group first</H1>';

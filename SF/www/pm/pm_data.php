@@ -1,4 +1,10 @@
 <?php
+//
+// SourceForge: Breaking Down the Barriers to Open Source Development
+// Copyright 1999-2000 (c) The SourceForge Crew
+// http://sourceforge.net
+//
+// $Id$
 
 function pm_data_get_tasks ($group_project_id) {
 	$sql="SELECT project_task_id,summary ".

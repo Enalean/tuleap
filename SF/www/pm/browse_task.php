@@ -110,17 +110,32 @@ if ($_assigned_to) {
 	$assigned_str='';
 }
 
+
+//if sub_project to selected, add more to where and from clauses
+if ($group_project_id) {
+	$subproj_where = " project_task.group_project_id='$group_project_id' AND ";
+	
+} else {
+	//no subproj was chosen so make sur it belongs to the
+	//right group_id and make a join on sub projects
+	$subproj_where = " project_group_list.group_id='$group_id' AND project_group_list.group_project_id=project_task.group_project_id AND ";
+	$subproj_from = ' project_group_list, ';
+}
+
+
+
 //build page title to make bookmarking easier
 //if a user was selected, add the user_name to the title
 //same for status
-pm_header(array('title'=>'Browse Tasks'.
+pm_header(array('title'=>'Browse Tasks '.
+	(($group_project_id) ? ' In: '. pm_data_get_group_name($group_project_id) : '').
 	(($_assigned_to)?' For: '.user_getname($_assigned_to):'').
 	(($_status && ($_status != 100))?' By Status: '.pm_data_get_status_name($_status):'')));
 
 $sql="SELECT project_task.priority,project_task.group_project_id,project_task.project_task_id,".
 	"project_task.start_date,project_task.end_date,project_task.percent_complete,project_task.summary,user.user_name ".
-	"FROM project_task, project_assigned_to, user ".
-	"WHERE project_task.group_project_id='$group_project_id' AND project_task.project_task_id=project_assigned_to.project_task_id AND user.user_id=project_assigned_to.assigned_to_id".
+	"FROM ".$subproj_from." project_task, project_assigned_to, user ".
+	"WHERE".$subproj_where." project_task.project_task_id=project_assigned_to.project_task_id AND user.user_id=project_assigned_to.assigned_to_id".
 	" $assigned_str $status_str ".
 	$order_by .
 	" LIMIT $offset,50";
@@ -143,18 +158,37 @@ $tech_name_arr[]='Any';
 
 $tech_box=html_build_select_box_from_arrays ($tech_id_arr,$tech_name_arr,'_assigned_to',$_assigned_to,true,'Unassigned');
 
+/*
+
+	creating a custom Sub-project box which includes "Any". We cannot
+	create the infamous "100" value (None) in the sub_project table
+	and make it appear as "Any" because the "Any" item
+	would also show up in the select box when we modify a task. And we
+	do not want a task to be associated with "None" sub-project
+
+*/
+
+$res_subproj = pm_data_get_subprojects($group_id);
+$subproj_id_arr=util_result_column_to_array($res_subproj,0);
+$subproj_id_arr[]='0';  //this will be the 'any' row
+
+$subproj_name_arr=util_result_column_to_array($res_subproj,1);
+$subproj_name_arr[]='Any';
+
+$subproj_box=html_build_select_box_from_arrays ($subproj_id_arr,$subproj_name_arr,'group_project_id',$group_project_id,false);
 
 
 /*
 	Show the new pop-up boxes to select assigned to and/or status
 */
-echo '<TABLE WIDTH="10%" BORDER="0"><FORM ACTION="'. $PHP_SELF .'" METHOD="GET">
+echo '<TABLE WIDTH="10%" BORDER="0" CELLPADDING="0" CELLSPACING="0"><FORM ACTION="'. $PHP_SELF .'" METHOD="GET">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 	<INPUT TYPE="HIDDEN" NAME="set" VALUE="custom">
-	<TR><TD COLSPAN="4" nowrap><b>Browse Tasks by User and/or Status:</b></TD></TR>
-	<TR><TD>'. pm_show_subprojects_box('group_project_id',$group_id,$group_project_id) .'</TD>'.
-		'<TD><FONT SIZE="-1">'. $tech_box .'</TD><TD><FONT SIZE="-1">'. pm_status_box('_status',$_status,'Any') .'</TD>'.
-		'<TD><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Browse"></TD></TR></FORM></TABLE>';
+	<TR><TD COLSPAN="4" nowrap>Browse Tasks by:</TD></TR>
+	<TR align="center" valign="bottom"><TH><b>Sub-Project</b></TH><TH><b>Assignee</b></TH><TH><b>Status</b></TH></TR>
+	<TR><TD><FONT SIZE="-1">'. $subproj_box .'</FONT></TD>'.
+		'<TD><FONT SIZE="-1">'. $tech_box .'</FONT></TD><TD><FONT SIZE="-1">'. pm_status_box('_status',$_status,'Any') .'</FONT></TD>'.
+		'<TD><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Browse"></FONT></TD></TR></FORM></TABLE>';
 
 
 if (db_numrows($result) < 1) {
@@ -180,9 +214,9 @@ if (db_numrows($result) < 1) {
 
 	echo '
 		<br>
-		<H3>'.$message.' In '. pm_data_get_group_name($group_project_id) .'</H3>';
+		<H3>'.$message.' In '. ($group_project_id ? pm_data_get_group_name($group_project_id) : 'Any Sub-project') .'</H3>';
 	pm_show_tasklist($result,$offset,$set);
-	echo '<P>* Denotes overdue tasks';
+	echo '<P><b>* Denotes overdue tasks</b>';
 	show_priority_colors_key();
 	$url = "/pm/task.php?group_id=$group_id&group_project_id=$group_project_id&func=browse&set=$set&order=";
 	echo '<P>Click a column heading to sort by that column, or <A HREF="'.$url.'priority">Sort by Priority</A>';

@@ -35,16 +35,19 @@ function pm_header($params) {
 
 	echo "<P><B>";
 
-	if ($group_project_id) {
-		echo "<A HREF=\"/pm/?group_id=$group_id\">Project List</A>";
+	if (isset($group_project_id)) {
+		echo "<A HREF=\"/pm/?group_id=$group_id\">Subproject List</A>";
 		if (user_isloggedin()) {
-			echo " | <A HREF=\"/pm/task.php?group_id=$group_id&group_project_id=$group_project_id&func=addtask\">Add Task</A>";
+			if ($group_project_id) {
+				// No Add if a no subproject specified
+				echo " | <A HREF=\"/pm/task.php?group_id=$group_id&group_project_id=$group_project_id&func=addtask\">Add Task</A>";
+			}
 			echo " | <A HREF=\"/pm/task.php?group_id=$group_id&group_project_id=$group_project_id&func=browse&set=my\">My Tasks</A>";
 		}
 		echo " | <A HREF=\"/pm/task.php?group_id=$group_id&group_project_id=$group_project_id&func=browse&set=open\">Browse Open Tasks</A> | ";
 	}
-	echo " <A HREF=\"/pm/admin/?group_id=$group_id\">Admin</A>";
-	echo "</B>";
+	echo " <A HREF=\"/pm/admin/?group_id=$group_id\">Admin</A></B>";
+	echo ' <hr width="300" size="1" align="left" noshade>';
 
 }
 
@@ -230,6 +233,9 @@ function pm_show_tasklist ($result,$offset,$set='open') {
 	$title_arr=array();
 	$title_arr[]='Task ID';
 	$title_arr[]='Summary';
+	if ($group_project_id == 0) {
+		$title_arr[]='Subproject';
+	}
 	$title_arr[]='Start Date';
 	$title_arr[]='End Date';
 	$title_arr[]='Assigned To';
@@ -238,6 +244,9 @@ function pm_show_tasklist ($result,$offset,$set='open') {
 	$links_arr=array();
 	$links_arr[]=$url.'project_task_id';
 	$links_arr[]=$url.'summary';
+	if ($group_project_id == 0) {
+		$links_arr[]=$url.'group_project_id';
+	}
 	$links_arr[]=$url.'start_date';
 	$links_arr[]=$url.'end_date';
 	$links_arr[]=$url.'user_name';
@@ -258,6 +267,7 @@ function pm_show_tasklist ($result,$offset,$set='open') {
 			'&group_project_id='.$row['group_project_id'].'">'.
 			$row['project_task_id'].'</A></TD>'.
 			'<TD>'.$row['summary'].'</TD>'.
+			($group_project_id ? '' : '<TD>'.pm_data_get_group_name($row['group_project_id']).'</TD>').
 			'<TD>'.date('Y-m-d',$row['start_date']).'</TD>'.
 			'<TD>'. (($now>$row['end_date'])?'<B>* ':'&nbsp; ') . date('Y-m-d',$row['end_date']).'</TD>'.
 			'<TD>'.$row['user_name'].'</TD>'.
