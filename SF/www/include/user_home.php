@@ -53,11 +53,6 @@ if (!$res_user || db_numrows($res_user) < 1) {
 	<TD>Email Addr: </TD>
 	<TD>
 	<B>
-	<!-- LJ A HREF="/sendmessage.php?touser=<?php print db_result($res_user,0,'user_id'); ?>"--> 
-	<?php //LJ print db_result($res_user,0,'user_name'); ?>
-	<!-- LJ at --> 
-	<?php // LJ print $GLOBALS['sys_users_host']; ?>
-	<!-- LJ Direct e-mail. No alias -->
 	<A HREF="/sendmessage.php?touser=<?php print db_result($res_user,0,'user_id'); ?>">
 	<?php print db_result($res_user,0,'email'); ?>	
 	</A></B>
@@ -74,6 +69,55 @@ if (!$res_user || db_numrows($res_user) < 1) {
 	Site Member Since: 
 	</TD>
 	<TD><B><?php print date("M d, Y",db_result($res_user,0,'add_date')); ?></B></TD>
+</TR>
+
+
+<?php
+// Some more information on the user from the LDAP server if available
+if ($sys_ldap_server) {
+    if (!$showdir) {
+	echo '<td colspan="2" align="center"><a href="'.$PHP_SELF.'/?showdir=1"><hr>[ More from the Xerox Directory... ]</a><td>';
+	
+    } else {
+	$ds=ldap_connect($sys_ldap_server);
+	if ($ds) {
+	    $r=ldap_bind($ds);
+	    $sr=ldap_search($ds,'o=XEROX, c=US', 'mail='.db_result($res_user,0,'email'));
+	    if ($sr) {
+		// Normally the e-mail address is unique so
+		// we should only have one reply
+		$info = ldap_get_entries($ds, $sr);
+		if ($info['count'] > 0) {
+		    echo '<td colspan="2" align="center"><hr><td>';
+		    echo '<tr valign="top"><td>Title: </td><td><b>'. 
+			$info[0]['title'][0] .'</b></td></tr>';
+		    echo '<tr valign="top"><td>Organization: </td><td><b>'.
+			$info[0]['department'][0] .'</b></td></tr>';
+		    echo '<tr valign="top"><td>Address: </td><td><b>'.
+			$info[0]['postaladdress'][0].'</b></td></tr>';
+		    echo '<tr valign="top"><td> </td><td><b>'. 
+			$info[0]['st'][0] .' '.
+			$info[0]['postalcode'][0].' - '.
+			$info[0]['co'][0].'</b></td></tr>';
+		    echo'<tr valign="top"><td>Phone #1:</td><td><b>'.
+			$info[0]['telephonenumber'][0] .'</b></td></tr>';
+		    echo'<tr valign="top"><td>Phone #2:</td><td><b>'.
+			$info[0]['telephone-office2'][0] .'</b></td></tr>';
+		    echo'<tr valign="top"><td>Fax:</td><td><b>'.
+			$info[0]['facsimiletelephonenumber'][0] .'</b></td></tr>';			    
+		} else
+		    $feedback = "Xerox Directory: unkown user";
+	    } else
+		$feedback = "Xerox Directory: search failed";
+	} else
+	    $feedback = "LDAP server not responding";
+
+	if ($feedback)
+	    echo '<td colspan="2" align="center"><hr><b>'.$feedback.'</b></td>';
+    }
+}
+?>
+
 </TR>
 
 <?php 
