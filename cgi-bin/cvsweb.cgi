@@ -90,6 +90,7 @@ require "../SF/utils/include.pl";
 require "../SF/utils/exit.pl";
 require "../SF/utils/user.pl";
 require "../SF/utils/session.pl";
+require "../SF/utils/group.pl";
 
 &db_connect;
 session_set();
@@ -296,6 +297,7 @@ $cvstree = $input{'cvsroot'};
 $cvsroot = "$CVSROOT{$cvstreedefault}/$input{'cvsroot'}";
 }
 
+
 # create icons out of description
 foreach my $k (keys %ICONS) {
     no strict 'refs';
@@ -329,6 +331,18 @@ if ($allow_compress && $maycompress) {
 	}
     }
 }
+
+
+#### Check that user is project member for private project  #####
+#     LJ - This is CodeX specific
+#     If not then deny access
+my $group_id = set_group_info_from_name($cvstree);
+
+if ($group_id && !isGroupPublic() && !user_is_member($group_id, '0')) {
+  &fatal("403 Forbidden",
+	 'You are not allowed to browse the source code of this project');
+}
+
 
 if (-d $fullname) {
     #
@@ -2539,7 +2553,7 @@ sub download_url {
 	&& (!defined($mimetype) || $mimetype ne "text/x-cvsweb-markup")) {
 	my ($path);
 	($path = $where) =~ s|/[^/]*$|/|;
-	$url = urlencode("$scriptname/$checkoutMagic/${path}$url");
+	$url = "$scriptname/$checkoutMagic/${path}$url";
     }
     $url .= "?rev=$revision";
     $url .= "&amp;content-type=$mimetype" if (defined($mimetype));
