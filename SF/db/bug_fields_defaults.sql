@@ -27,15 +27,15 @@
 # management throughout the bug tracking system
 #
 INSERT INTO bug_field \
-  VALUES (90,'bug_id','TF','','Bug ID','Unique bug identifier','S',1,0,0,1);
+  VALUES (90,'bug_id','TF','6/10','Bug ID','Unique bug identifier','S',1,0,0,1);
 INSERT INTO bug_field \
   VALUES (91,'group_id','TF','','Group ID','Unique project identifier','S',1,0,0,1);
 INSERT INTO bug_field \
-  VALUES (92,'submitted_by','TF','','Submitted by','User who originally submitted the bug','S',1,0,0,1);
+  VALUES (92,'submitted_by','SB','','Submitted by','User who originally submitted the bug','S',1,0,0,1);
 INSERT INTO bug_field \
-  VALUES (93,'date','TF','','Submitted on','Date and time for the initial bug submission','S',1,0,0,1);
+  VALUES (93,'date','DF','10/15','Submitted on','Date and time for the initial bug submission','S',1,0,0,1);
 INSERT INTO bug_field \
-  VALUES (94,'close_date','TF','','Closed on','Date and time when the bug status was changed to ''Closed''','S',1,0,0,1);
+  VALUES (94,'close_date','DF','10/15','Closed on','Date and time when the bug status was changed to ''Closed''','S',1,0,0,1);
 INSERT INTO bug_field \
   VALUES (101,'status_id','SB','','Status','Bug Status','P',1,0,1,0);
 INSERT INTO bug_field \
