@@ -49,7 +49,7 @@ $result=db_query($sql);
   	<TR>
 		<TD COLSPAN="2"><B>Task Summary:</B>
 		<BR>
-		<INPUT TYPE="text" name="summary" size="40" MAXLENGTH="65" VALUE="<?php echo db_result($result,0,'summary'); ?>">
+		<INPUT TYPE="text" name="summary" size="60" MAXLENGTH="100" VALUE="<?php echo db_result($result,0,'summary'); ?>">
 		</TD>
 	</TR>
 
@@ -61,7 +61,7 @@ $result=db_query($sql);
 		<P>
 		<B>Add A Comment:</B>
 		<BR>
-		<TEXTAREA NAME="details" ROWS="5" COLS="40" WRAP="SOFT"></TEXTAREA>
+		<TEXTAREA NAME="details" ROWS="5" COLS="60" WRAP="SOFT"></TEXTAREA>
 		</TD>
 	</TR>
 

@@ -33,13 +33,13 @@ pm_header(array('title'=>'Add a New Task'));
   	<TR>
 		<TD COLSPAN="2"><B>Task Summary:</B>
 		<BR>
-		<INPUT TYPE="text" name="summary" size="40" MAXLENGTH="65">
+		<INPUT TYPE="text" name="summary" size="60" MAXLENGTH="100">
 		</td>
 	</TR>
 	<TR>
 		<TD COLSPAN="2"><B>Task Details:</B>
 		<BR>
-		<TEXTAREA NAME="details" ROWS="5" COLS="40" WRAP="SOFT"></TEXTAREA></td>
+		<TEXTAREA NAME="details" ROWS="5" COLS="60" WRAP="SOFT"></TEXTAREA></td>
 	</TR>
 	<TR>
     		<TD COLSPAN="2"><B>Start Date:</B>
