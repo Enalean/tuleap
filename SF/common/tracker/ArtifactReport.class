@@ -280,7 +280,7 @@ class ArtifactReport extends Error {
 		reset($this->fields);
 
 		while (list($key,$field) = each($this->fields) ) {
-			if ( ($field->isShowOnQuery())&&($field->getUseIt() == 1) ) {
+			if ( ($field->isShowOnQuery())&&($field->isUsed()) ) {
 				$query_fields[$key] = $field;
 			}
 		}
@@ -302,7 +302,7 @@ class ArtifactReport extends Error {
 		reset($this->fields);
 	
 		while (list($key,$field) = each($this->fields) ) {
-			if ( ($field->isShowOnResult())&&($field->getUseIt() == 1) ) {
+			if ( ($field->isShowOnResult())&&($field->isUsed()) ) {
 				$result_fields[$key] = $field;
 			}
 		}
@@ -324,7 +324,7 @@ class ArtifactReport extends Error {
 		reset($this->fields);
 	
 		while (list($key,$field) = each($this->fields) ) {
-			if ( $field->getUseIt() == 1 ) {
+			if ( $field->isUsed() ) {
 				$result_fields[$key] = $field;
 			}
 		}
@@ -494,23 +494,26 @@ class ArtifactReport extends Error {
 	 */
 	function getFieldsOrder($morder) {
 		
-		global $art_field_fact;
-		
-		$fields_order = array();
-		
-		$arr = explode(',',$morder);
-		while (list(,$attr) = each($arr)) {
-		    preg_match("/\s*([^<>]*)([<>]*)/", $attr,$match);
-		    list(,$mattr,$mdir) = $match;
-		    //echo "<br>DBG \$mattr=$mattr,\$mdir=$mdir";
-			if ( ($mdir == '>') || (!isset($mdir)) ) {
-			    $fields_order[$mattr] = "ASC";
-			} else {
-			    $fields_order[$mattr] = "DESC";
-			}
-		}
-
-		return $fields_order;
+	  global $art_field_fact;
+	  
+	  $fields_order = array();
+	  
+	  $arr = explode(',',$morder);
+	  while (list(,$attr) = each($arr)) {
+	    $field = $art_field_fact->getFieldFromName(substr($attr,0,(strlen($attr)-1)));
+	    if ($field && $field->isUsed()) {
+	      preg_match("/\s*([^<>]*)([<>]*)/", $attr,$match);
+	      list(,$mattr,$mdir) = $match;
+	      //echo "<br>DBG \$mattr=$mattr,\$mdir=$mdir";
+	      if ( ($mdir == '>') || (!isset($mdir)) ) {
+		$fields_order[$mattr] = "ASC";
+	      } else {
+		$fields_order[$mattr] = "DESC";
+	      }
+	    }
+	  }
+	  
+	  return $fields_order;
 	
 	}
 	
@@ -526,25 +529,32 @@ class ArtifactReport extends Error {
 	 */
 	function getQueryElements($prefs,$morder,$advsrch,&$select,&$from,&$where,&$order_by) {
 		
-		//
-		// NOTICE
-		//
-		// We can't use left join because the performs are very bad.
-		// So the restriction to this: all fields used in the query must have a value.
-		// That involves artifact creation or artifact admin (add a field) must create
-		// empty records with default values for fields which haven't a value (from the user).
-		//
-		/* The query must be something like this :
-			SELECT a.artifact_id,u.user_name,v1.valueInt,v2.valueText,u3.user_name
-			FROM artifact a, artifact_field_value v1, artifact_field_value v2, artifact_field_value v3, user u3, user u
+	  //
+	  // NOTICE
+	  //
+	  // Use left join because of the performance.
+	  // Performance should not really be an issue here because standard reports 
+	  // do not contain as much fields.
+	  // So the restriction to this: all fields used in the query must have a value.
+	  // That involves artifact creation or artifact admin (add a field) must create
+	  // empty records with default values for fields which haven't a value (from the user).
+	  //
+	  /* The query must be something like this :
+		        SELECT a.artifact_id,u.user_name,v1.valueInt,v2.valueText,u3.user_name
+			FROM artifact a 
+                             LEFT JOIN artifact_field_value v1 ON (v1.artifact_id=a.artifact_id)
+                             LEFT JOIN artifact_field_value v2 ON (v2.artifact_id=a.artifact_id)
+                             LEFT JOIN artifact_field_value v3 ON (v2.artifact_id=a.artifact_id)
+                             LEFT JOIN user u3 ON (v3.valueInt = u3.user_id)
+                             LEFT JOIN user u
 			WHERE a.group_artifact_id = 100 and 
-			a.artifact_id = v1.artifact_id and v1.field_id=101 and
-			a.artifact_id = v2.artifact_id and v2.field_id=103 and
-			a.artifact_id = v3.artifact_id and v3.field_id=104 and v3.valueInt = u3.user_id and
+			v1.field_id=101 and
+			v2.field_id=103 and
+			v3.field_id=104 and
 			a.submitted_by = u.user_id
 			group by a.artifact_id
 			order by v3.valueText,v1.valueInt
-		*/
+	  */
 
 		// Get the fields sorted by the result order
 		$fields = $this->getSortedFields();
@@ -561,7 +571,6 @@ class ArtifactReport extends Error {
 		
 		$fields_order_result = array();
 		
-		$user_table = false;
 		$order_by_count = 0;
 		$select_count = 0;
 		
@@ -585,9 +594,7 @@ class ArtifactReport extends Error {
 					// Special case for fields which are user name
 					if ( ($field->isUsername())&&(!$field->isSelectBox())&&(!$field->isMultiSelectBox()) ) {
 						$select .= " u.user_name as ".$field->getName();
-						$where .= " and a.".$field->getName()." = u.user_id";
-						if ( !$user_table ) 
-							$from .= ", user u";
+						$from .= " LEFT JOIN user u ON (u.user_id=a.".$field->getName().")";
 					} else {
 						$select .= " a.".$field->getName();
 					}
@@ -600,11 +607,8 @@ class ArtifactReport extends Error {
 
 				// Set the fields_order_result array to	build the order_by			
 				if ( $fields_order[$field->getName()] ) {
-					if ( $order_by_count != 0 ) {
-						$order_by_count ++;
-					} else {
-						$order_by_count = 1;
-					}
+				        $order_by_count ++;
+
 					if ( ($field->isUsername())&&(!$field->isSelectBox())&&(!$field->isMultiSelectBox()) ) {
 						$fields_order_result[$field->getName()] = "u.user_name";
 					} else {
@@ -616,6 +620,8 @@ class ArtifactReport extends Error {
 				
 				// The field value is stored into the artifact_field_value table
 				// So we need to add a new join
+			        $from .= " LEFT JOIN artifact_field_value v".$count." ON (v".$count.".artifact_id=a.artifact_id)";
+				$where .= " and v".$count.".field_id=".$field->getID();
 				if ( $field->isShowOnResult() ) {
 					if ( $select_count != 0 ) {
 						$select .= ",";
@@ -627,14 +633,12 @@ class ArtifactReport extends Error {
 					// Special case for fields which are user name
 					if ( ($field->isUsername())&&(!$field->isSelectBox())&&(!$field->isMultiSelectBox()) ) {
 						$select .= " u".$count.".user_name as ".$field->getName();
-						$where .= " and v".$count.".".$field->getValueFieldName()." = u".$count.".user_id";
-						$from .= ", user u".$count;
+						$from .= " LEFT JOIN user u".$count." ON (v".$count.".".$field->getValueFieldName()." = u".$count.".user_id)";
 					} else {
 						$select .= " v".$count.".".$field->getValueFieldName()." as ".$field->getName();
 					}
 				}
-				$from .= ", artifact_field_value v".$count;
-				$where .= " and a.artifact_id = v".$count.".artifact_id and v".$count.".field_id=".$field->getID();
+				
 					
 				// Build the where
 				if ( $field->isShowOnQuery() ) {
@@ -643,11 +647,7 @@ class ArtifactReport extends Error {
 
 				// Set the fields_order_result array to	build the order_by			
 				if ( $fields_order[$field->getName()] ) {
-					if ( $order_by_count != 0 ) {
-						$order_by_count ++;
-					} else {
-						$order_by_count = 1;
-					}
+					$order_by_count ++;
 
 					if ( ($field->isUsername())&&(!$field->isSelectBox())&&(!$field->isMultiSelectBox()) ) {
 						$fields_order_result[$field->getName()] = "u".$count.".user_name";

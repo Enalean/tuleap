@@ -107,32 +107,30 @@ class ArtifactReportHtml extends ArtifactReport {
          */
         function criteriaListToText($criteria_list, $url) {
                 
-                global $art_field_fact;
-        
-            if ($criteria_list) {
-        
-                        $arr = explode(',',$criteria_list);
-                
-                        while (list(,$crit) = each($arr)) {
-                
-                            $morder .= ($morder ? ",".$crit : $crit);
-                            $attr = str_replace('>','',$crit);
-                            $attr = str_replace('<','',$attr);
-                
-                                $field = $art_field_fact->getFieldFromName($attr);
-                                if ( !$field ) {
-                                        $label = "Unknow field";
-                                } else {
-                                        $label = $field->getLabel();
-                                }
-                            $arr_text[] = '<a href="'.$url.'&morder='.$morder.'#results">'.
-                                $label.'</a><img src="'.util_get_dir_image_theme().
-                                ((substr($crit, -1) == '<') ? 'dn' : 'up').
-                                '_arrow.png" border="0">';
-                        }
-            }
-        
-            return join(' > ',$arr_text);
+	  global $art_field_fact;
+	  
+	  if ($criteria_list) {
+	    
+	    $arr = explode(',',$criteria_list);
+	    
+	    while (list(,$crit) = each($arr)) {
+	      
+	      $morder .= ($morder ? ",".$crit : $crit);
+	      $attr = str_replace('>','',$crit);
+	      $attr = str_replace('<','',$attr);
+	      
+	      $field = $art_field_fact->getFieldFromName($attr);
+	      if ( $field && $field->isUsed() ) {
+		$label = $field->getLabel();
+		$arr_text[] = '<a href="'.$url.'&morder='.$morder.'#results">'.
+		  $label.'</a><img src="'.util_get_dir_image_theme().
+		  ((substr($crit, -1) == '<') ? 'dn' : 'up').
+		  '_arrow.png" border="0">';
+	      }
+	    }
+	  }
+	  
+	  return join(' > ',$arr_text);
         }
         
         /**
@@ -581,7 +579,7 @@ class ArtifactReportHtml extends ArtifactReport {
                     if (!$pv) {
                                 $html_result .= '<P>Click a column heading to sort results (up or down), ';
                                 $field = $art_field_fact->getFieldFromName('severity');
-                                if ( $field ) {
+                                if ( $field && $field->isUsed()) {
                                         $html_result .= 'or <A HREF="'.$url.'&order=severity#results"><b>Sort by Severity</b></A> ';
                                 }
                                 $html_result .= 'or <A HREF="'.$url.'&order=#results"><b>Reset sort</b></a>. ';
