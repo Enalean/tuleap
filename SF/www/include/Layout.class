@@ -22,8 +22,6 @@
 
 class Layout extends Error {
 
-	var $imgroot = util_get_dir_image_theme();
-
 	//Define all the icons for this theme
 	var $icons = array('Summary' => 'ic/anvil24.png',
 		'Homepage' => 'ic/home.png',
@@ -245,7 +243,7 @@ echo html_blankimage(5,100);
         <!-- end content -->
         </tr>
 <!-- New row added for the thin black line at the bottom of the array -->
-<tr><td background="<? echo util_get_image_theme("black.png"); ?>" colspan="4" align="center"><img src="<?php echo $this->imgroot; ?>clear.png" width="2" height="2" alt=" "></td> </tr>
+<tr><td background="<? echo util_get_image_theme("black.png"); ?>" colspan="4" align="center"><img src="<? echo util_get_image_theme("clear.png"); ?>" width="2" height="2" alt=" "></td> </tr>
         </table>
 
                 </td>
