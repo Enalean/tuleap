@@ -34,9 +34,10 @@ $is_bugadmin = user_ismember($group_id,'B2');
 
 while ( $field_name = bug_list_all_fields() ) {
 
-    // if the field is a special field or if not used by this project 
-    // then skip it. Plus only show fields allowed on the bug submit_form 
-    if ( !bug_data_is_special($field_name) &&
+    // if the field is a special field (except summary and original description)
+    // or if not used by this project  then skip it. 
+    // Plus only show fields allowed on the bug submit_form 
+    if ( (!bug_data_is_special($field_name) || $field_name=='summary' || $field_name=='details') &&
 	 bug_data_is_used($field_name) ) {
 
 	if  (($is_bugadmin && bug_data_is_showed_on_add_members($field_name)) ||
@@ -46,19 +47,20 @@ while ( $field_name = bug_list_all_fields() ) {
 	    // if field size is greatest than max_size chars then force it to
 	    // appear alone on a new line or it won't fit in the page
 	    $field_value = bug_data_get_default_value($field_name);
-
 	    list($sz,) = bug_data_get_display_size($field_name);
+	    $label = bug_field_label_display($field_name,$group_id,false,false);
+	    $value = bug_field_display($field_name,$group_id,$field_value,false,false);
 	    if ($sz > $max_size) {
 		echo "\n<TR>".
-		    '<TD valign="middle">'.bug_field_label_display($field_name,$group_id,false,false).'</td>'.
+		    '<TD valign="middle">'.$label.'</td>'.
 		    '<TD valign="middle" colspan="'.(2*$fields_per_line-1).'">'.
-		    bug_field_display($field_name,$group_id,$field_value,false,false).'</TD>'.		      
+		    $value.'</TD>'.		      
 		    "\n</TR>";
 		$i=0;
 	    } else {
 		echo ($i % $fields_per_line ? '':"\n<TR>");
-		  echo '<TD valign="middle">'.bug_field_label_display($field_name,$group_id,false,false).'</td>'.
-		      '<TD valign="middle">'.bug_field_display($field_name,$group_id,$field_value,false,false).'</TD>';
+		  echo '<TD valign="middle">'.$label.'</td>'.
+		      '<TD valign="middle">'.$value.'</TD>';
 		$i++;
 		echo ($i % $fields_per_line ? '':"\n</TR>");
 	    }
@@ -71,12 +73,6 @@ while ( $field_name = bug_list_all_fields() ) {
 
 ?>
       <TR><TD colspan="<?php echo 2*$fields_per_line; ?>">
-<?php echo bug_field_display('summary',$group_id,'',true); ?></td></tr>
-
-      <TR><TD colspan="<?php echo 2*$fields_per_line; ?>">
-<?php echo bug_field_display('details',$group_id,'',true); ?></td></tr>
-
-      <TR><TD colspan="<?php echo 2*$fields_per_line; ?>">
 
 	<?php
 	if (!user_isloggedin()) {
@@ -88,7 +84,8 @@ while ( $field_name = bug_list_all_fields() ) {
 	}
 	?>
 
-      <hr><h4>Optionally, you may also attach a file (e.g. a screenshot, a log file,...)</h4>
+      <hr><h3>Bug Attachments <?php echo help_button('BugUpdate.html#BugAttachments'); ?></h3>
+       <p>Optionally, you may also attach a file (e.g. a screenshot, a log file,...)</p>
       <B>Check to Upload &amp; Attach File:</B> <input type="checkbox" name="add_file" VALUE="1">
       &nbsp;&nbsp;&nbsp;
       <input type="file" name="input_file" size="40">

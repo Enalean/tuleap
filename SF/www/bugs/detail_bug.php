@@ -41,9 +41,10 @@ if (db_numrows($result) > 0) {
       $i=0;
       while ( $field_name = bug_list_all_fields() ) {
 
-	  // if the field is a special field or if not used byt his project 
-	  // then skip it.
-	  if ( !bug_data_is_special($field_name) &&
+
+	  // if the field is a special field (except summary and details) 
+	  // or if not used by this project  then skip it.
+	  if ( (!bug_data_is_special($field_name)  || $field_name=='summary' || $field_name=='details') &&
 	       bug_data_is_used($field_name) ) {
 				   
 	      // display the bug field
@@ -51,16 +52,19 @@ if (db_numrows($result) > 0) {
 	      // appear alone on a new line or it won't fit in the page
 	      $field_value = db_result($result,0,$field_name);
 	      list($sz,) = bug_data_get_display_size($field_name);
+
+	      $field_display = bug_field_display($field_name,$group_id,$field_value,false,true,true);
+	      if ($field_name=='details') 
+		  $value = util_make_links($field_display);
+
 	      if ($sz > $max_size) {
 		  echo "\n<TR>".
 		      '<TD valign="top" colspan="'.$fields_per_line.'">'.
-		      bug_field_display($field_name,$group_id,$field_value,false,true,true).
-		      '</TD>'.
-		      "\n</TR>";
+		     $field_display.'</TD>'."\n</TR>";
 		  $i=0;
 	      } else {
 		  echo ($i % $fields_per_line ? '':"\n<TR>");
-		  echo '<TD valign="top">'.bug_field_display($field_name,$group_id,$field_value,false,true,true).'</TD>';
+		  echo '<TD valign="top">'.$field_display.'</TD>';
 		  $i++;
 		  echo ($i % $fields_per_line ? '':"\n</TR>");
 	      }
@@ -74,16 +78,7 @@ if (db_numrows($result) > 0) {
 ?>
       <TR><TD COLSPAN="<?php echo $fields_per_line; ?>">&nbsp</TD></TR>
 
-     <TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
-<?php echo bug_field_display('summary',$group_id,db_result($result,0,'summary'),false,true,true); ?>
-     </TD></TR>
-
-     <TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
-<?php echo bug_field_display('details',$group_id,
-			util_make_links(nl2br(db_result($result,0,'details'))),true,true,true); ?>
-     </TD></TR>
-
-         <TR><TD COLSPAN="<?php echo $fields_per_line; ?>"><B>Add A Comment:</B><BR>
+      <TR><TD COLSPAN="<?php echo $fields_per_line; ?>"><B>Add A Comment:</B><BR>
      <?php echo bug_field_textarea('details',''); ?>
          </TD></TR>
 
@@ -108,7 +103,7 @@ if (db_numrows($result) > 0) {
 
      <?php if (user_isloggedin()) {
 	 echo '<TR><TD COLSPAN="'.$fields_per_line.'">
-                     <hr><h3>CC List</h3>
+                     <hr><h3>CC List '.help_button('BugUpdate.html#BugCCList').'</h3>
 	   <b><u>Note:</b></u> for CodeX users use their login name rather than their email addresses.<p>
 	   <B>Add CC:&nbsp;</b><input type="text" name="add_cc" size="30">&nbsp;&nbsp;&nbsp;
 	   <B>Comment:&nbsp;</b><input type="text" name="cc_comment" size="40" maxlength="255"><p>';

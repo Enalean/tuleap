@@ -67,9 +67,9 @@ if (db_numrows($result) > 0) {
       $i=0;
       while ( $field_name = bug_list_all_fields() ) {
 
-	  // if the field is a special field or if not used byt his project 
-	  // then skip it.
-	  if ( !bug_data_is_special($field_name) &&
+	  // if the field is a special field (except summary and details) 
+	  // or if not used by this project  then skip it.
+	  if ( (!bug_data_is_special($field_name) || $field_name=='summary' || $field_name=='details') &&
 	       bug_data_is_used($field_name) ) {
 				   
 	      // display the bug field
@@ -77,18 +77,24 @@ if (db_numrows($result) > 0) {
 	      // appear alone on a new line or it won't fit in the page
 	      $field_value = db_result($result,0,$field_name);
 	      list($sz,) = bug_data_get_display_size($field_name);
+	      $label = bug_field_label_display($field_name,$group_id,false,false);
+	      // original submission field must be displayed read-only
+	      if ($field_name=='details') 
+		  $value = util_make_links(bug_field_display($field_name,$group_id,$field_value,false,false,true));
+	      else
+		  $value = bug_field_display($field_name,$group_id,$field_value,false,false);
+
 	      if ($sz > $max_size) {
 		  echo "\n<TR>".
-		      '<TD valign="middle">'.bug_field_label_display($field_name,$group_id,false,false).'</td>'.
+		      '<TD valign="middle">'.$label.'</td>'.
 		      '<TD valign="middle" colspan="'.(2*$fields_per_line-1).'">'.
-		      bug_field_display($field_name,$group_id,$field_value,false,false).'</TD>'.		      
+		      $value.'</TD>'.		      
 		      "\n</TR>";
 		  $i=0;
 	      } else {
 		  echo ($i % $fields_per_line ? '':"\n<TR>");
-		  //echo '<TD valign="middle">'.bug_field_display($field_name,$group_id,$field_value).'</TD>';
-		  echo '<TD valign="middle">'.bug_field_label_display($field_name,$group_id,false,false).'</td>'.
-		      '<TD valign="middle">'.bug_field_display($field_name,$group_id,$field_value,false,false).'</TD>';
+		  echo '<TD valign="middle">'.$label.'</td>'.
+		      '<TD valign="middle">'.$value.'</TD>';
 		  $i++;
 		  echo ($i % $fields_per_line ? '':"\n</TR>");
 	      }
@@ -97,12 +103,7 @@ if (db_numrows($result) > 0) {
       
       // Now display other special fields
 
-      // Summary first. It is a special field because it is both displayed in the
-      // title of the bug form and here as a text field
 ?>
-      <TR><TD colspan="<?php echo 2*$fields_per_line; ?>"><br>
-<?php echo bug_field_display('summary',$group_id,db_result($result,0,'summary')); ?>
-      </td></tr>
       </table>
 
       <table cellspacing="0">
@@ -112,7 +113,7 @@ if (db_numrows($result) > 0) {
       <B>Use a Canned Response:</B>&nbsp;
       <?php
       echo bug_canned_response_box ($group_id,'canned_response');
-      echo '&nbsp;&nbsp;&nbsp;<A HREF="/bugs/admin/index.php?group_id='.$group_id.'&create_canned=1">Or define a new Canned Response</A><P>';
+      echo '&nbsp;&nbsp;&nbsp;<A HREF="/bugs/admin/field_values.php?group_id='.$group_id.'&create_canned=1">Or define a new Canned Response</A><P>';
       ?>
       </TD></TR>
  
@@ -120,12 +121,6 @@ if (db_numrows($result) > 0) {
       <P><B>Comment Type:</B>
       <?php echo bug_field_box('comment_type_id','',$group_id,'',true,'None'); ?><BR>
       <?php echo bug_field_textarea('details',''); ?>
-      <P>
-      <B>Original Submission:</B><BR>
-      <?php
-      echo util_make_links(nl2br(db_result($result,0,'details')));
-      echo show_bug_details($bug_id); 
-      ?>
       </td></tr>
 
       <TR><TD colspan="2"><hr></td></tr>
