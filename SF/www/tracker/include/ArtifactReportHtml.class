@@ -211,9 +211,9 @@ class ArtifactReportHtml extends ArtifactReport {
                                 
                     } else if ( $field->isTextField() || 
                                $field->isTextArea() ) {
-                
+
                                 $boxes .= 
-                                    ($pv ? $prefs[$field][0] : $field_html->fieldText($prefs[$field->getName()][0],15,80)) ;
+                                    ($pv ? $prefs[$field->getName()][0] : $field_html->fieldText($prefs[$field->getName()][0],15,80)) ;
                 
                     }
                     $boxes .= "</TD>\n";
