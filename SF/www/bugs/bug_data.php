@@ -389,9 +389,17 @@ function bug_data_is_default_value ($bug_fv_id) {
 
 function bug_data_create_value ($field, $group_id, $value, $description,$order_id,$status='A',$by_field_id=false) {
 
+    global $feedback;
+
     /*
       Insert a new value for a given field for a given group
       */
+
+    // An empty field value is not allowed
+    if (preg_match ("/^\s*$/", $value)) {
+	$feedback .= 'EMPTY FIELD VALUE NOT ALLOWED';
+	return;
+    }
 
     if (!$by_field_id) {
 	$field_id = bug_data_get_field_id($field);
@@ -438,6 +446,12 @@ function bug_data_update_value ($bug_fv_id,$field,$group_id,$value,$description,
     /*
       Insert a new value for a given field for a given group
       */
+
+    // An empty field value is not allowed
+    if (preg_match ("/^\s*$/", $value)) {
+	$feedback .= 'EMPTY FIELD VALUE NOT ALLOWED';
+	return;
+    }
 
     // Updating a bug field value that belong to group 100 (None) is
     // forbidden. These are default values that cannot be changed so
