@@ -186,9 +186,7 @@ while ($ln = pop(@groupdump_array)) {
 		# setup loginfo to make group ownership every commit
 		# commit changes to config file (directly with RCS)
 		system("echo \"ALL (cat;chgrp -R $gname $cvs_dir)>/dev/null 2>&1\" > $cvs_dir/CVSROOT/loginfo");
-		system("echo \"ALL /usr/local/bin/commit_prep -T $gname -r\" >> $cvs_dir/CVSROOT/commitinfo");
 		system("cd $cvs_dir/CVSROOT; rcs -q -l loginfo; ci -q -m\"CodeX modifications\" loginfo; co -q loginfo");
-		system("cd $cvs_dir/CVSROOT; rcs -q -l commitinfo; ci -q -m\"CodeX modifications\" commitinfo; co -q commitinfo");
 
 		# put an empty line in in the valid tag cache (means no tag yet)
 		# (this file is not under version control so don't check it in)
@@ -229,11 +227,11 @@ while ($ln = pop(@groupdump_array)) {
 	  close(FD);
 	  $blockispresent = 0;
 	  foreach (@file_array) {
-	    $blockispresent = $blockispresent || ($_ eq "# !!! CodeX Specific !!! DO NOT REMOVE (CODEX BLOCK WAITED)\n");
+	    $blockispresent = $blockispresent || ($_ eq "# !!! CodeX Specific !!! DO NOT REMOVE (NEEDED CODEX MARKER)\n");
 	  }
 	  if (! $blockispresent)
 	    {
-	      system("echo \"# !!! CodeX Specific !!! DO NOT REMOVE (CODEX BLOCK WAITED)\n# the following block is regularly added when not present\n# But keeping the block will prevent you from this automatic add if you need some manual modification to the active line within the block\" >> $cvs_dir/CVSROOT/loginfo");
+	      system("echo \"# !!! CodeX Specific !!! DO NOT REMOVE (NEEDED CODEX MARKER)\n# the following block is regularly added when not present\n# But keeping the block will prevent you from this automatic add if you need some manual modification to the active line within the block\" >> $cvs_dir/CVSROOT/loginfo");
 	      system("echo \"# Usage: log_accum.pl [-d] [-nodb] [-s] [-M module] [[-m mailto] ...] [-f logfile]\" >> $cvs_dir/CVSROOT/loginfo");
 	      system("echo \"#	-d		- turn on debugging\" >> $cvs_dir/CVSROOT/loginfo");
 	      system("echo \"#       -G database     - interface to Gnats\" >> $cvs_dir/CVSROOT/loginfo");
@@ -248,9 +246,28 @@ while ($ln = pop(@groupdump_array)) {
 	      system("echo \"#       -U URL          - Base URL for cvsweb if -C option (above) is used.\" >> $cvs_dir/CVSROOT/loginfo");
 	      system("echo \"#       -D              - generate diffs as part of the notification mail\" >> $cvs_dir/CVSROOT/loginfo");
 
-	      system("echo \"DEFAULT (/usr/local/bin/log_accum -T $gname -C $gname -U http://$sys_default_domain/cgi-bin/cvsweb.cgi/ -s %{sVv})>/dev/null 2>&1\" >> $cvs_dir/CVSROOT/loginfo");	 
-	      system("echo \"# END OF WAITED CODEX BLOCK\" >> $cvs_dir/CVSROOT/loginfo");
+	      system("echo \"ALL (/usr/local/bin/log_accum -T $gname -C $gname -U http://$sys_default_domain/cgi-bin/cvsweb.cgi/ -s %{sVv})>/dev/null 2>&1\" >> $cvs_dir/CVSROOT/loginfo");	 
+	      system("echo \"# END OF NEEDED CODEX BLOCK\" >> $cvs_dir/CVSROOT/loginfo");
 	      system("cd $cvs_dir/CVSROOT; rcs -q -l loginfo; ci -q -m\"CodeX modifications: entering log_accum from group fields (cvs_tracker/cvs_events)\" loginfo; co -q loginfo");
+	    }
+
+	  # hook for commit tracking in cvs commitinfo file
+	  $cvs_dir = "$cvs_prefix/$gname";
+	  # if $cvs_dir/CVSROOT/commitinfo contains block break;
+	  $filename = "$cvs_dir/CVSROOT/commitinfo";
+	  open (FD, $filename) ;
+	  @file_array = <FD>;
+	  close(FD);
+	  $blockispresent = 0;
+	  foreach (@file_array) {
+	    $blockispresent = $blockispresent || ($_ eq "# !!! CodeX Specific !!! DO NOT REMOVE (NEEDED CODEX MARKER)\n");
+	  }
+	  if (! $blockispresent)
+	    {
+	      system("echo \"# !!! CodeX Specific !!! DO NOT REMOVE (NEEDED CODEX MARKER)\n# the following block is regularly added when not present\n# But keeping the block will prevent you from this automatic add if you need some manual modification to the active line within the block\" >> $cvs_dir/CVSROOT/commitinfo");
+	      system("echo \"ALL (/usr/local/bin/commit_prep -T $gname -r\" >> $cvs_dir/CVSROOT/commitinfo");	 
+	      system("echo \"# END OF NEEDED CODEX BLOCK\" >> $cvs_dir/CVSROOT/commitinfo");
+	      system("cd $cvs_dir/CVSROOT; rcs -q -l commitinfo; ci -q -m\"CodeX modifications: entering commit_prep from group fields (cvs_tracker/cvs_events)\" commitinfo; co -q commitinfo");
 	    }
 	}
 	# Align directory permissions with public/private flag
