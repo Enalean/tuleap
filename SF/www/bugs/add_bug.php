@@ -54,7 +54,7 @@ if (user_ismember($group_id,'A')) {
 ?>
 
 <TR><TD COLSPAN="2"><B>Summary:</B><BR>
-	<INPUT TYPE="TEXT" NAME="summary" SIZE="45" MAXLENGTH="60">
+	<INPUT TYPE="TEXT" NAME="summary" SIZE="60" MAXLENGTH="100">
 </TD></TR>
 
 <TR><TD COLSPAN="2"><B>Details:</B><BR>
