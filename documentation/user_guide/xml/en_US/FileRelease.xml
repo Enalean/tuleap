@@ -224,8 +224,9 @@
         field at the bottom of the screen and push on the &#34;Create This
         package&#34; button. Once a package has been created you can modify
         its name and status. A package is either active, which means that it
-        is visible to the CodeX users in the File Release service, or Hidden,
-        which means that it is not visible on the Project Summary Page.
+        is visible to the CodeX users in the File Release service and in the
+        Project Summary Page, or Hidden, which means that it is only visible 
+        to the Project Administrators.
         Switching the status from Active to Hidden doesn&#39;t delete any
         attached releases and files.</para>
 
@@ -421,6 +422,9 @@
       <para>Don&#39;t forget to specify the hardware architecture and the file
       type. Then push on the &#34;Release File&#34; button at the bottom of
       the screen.</para>
+      <para>If some CodeX users were monitoring the package, they will 
+      automatically receive an email notification, unless you set the release
+      status to 'Hidden'.</para>
     </section>
   </chapter>
 <!--

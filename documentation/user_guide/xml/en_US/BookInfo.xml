@@ -257,6 +257,15 @@
 
         <revremark>New chapter about the CodeX generic tracker and modification in all impacted chapters.</revremark>
       </revision>
+      <revision>
+        <revnumber>2.6.1</revnumber>
+
+        <date>23-Feb-2004</date>
+
+        <authorinitials>Nicolas Guerin</authorinitials>
+
+        <revremark>Small update on File Release mechanism, concerning hidden packages and email notifications.</revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--
