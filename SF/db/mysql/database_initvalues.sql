@@ -64,6 +64,11 @@ INSERT INTO groups VALUES (100, 'none', '', 0, 'S', 'none', 'shell1', \
 INSERT INTO user_group VALUES (1, 101, 1, 'A', 2, 2, 2, 2, 2, 1);
 
 #
+# Default bug (None)
+#
+INSERT INTO bug VALUES (100, 100, 3, 1, 100, 100, 100, 1058260700, 'None', '', 0, 100, 100, 100, 100, 100, 100, 100, 100, '0.00', '', '', '', 100, '', 100, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 0, 0, 0, 0, 0);
+
+#
 #  Default data for group_type
 #
 INSERT INTO group_type VALUES ('1','Project');
