@@ -21,7 +21,7 @@ if ( $ARGV[0] && $ARGV[1] && $ARGV[2] ) {
   ## compute the date for yesterday as well as the Unix time for begin and end of
   ## the day
 
-  ## We also need the time at 0:00 and 23:59:59 for yesterday
+  ## We also need the time at 0:00:00 and 23:59:59 for yesterday
   $time_begin = timegm( 0, 0, 0, (gmtime( time() - 86400 ))[3,4,5] );
   $time_end   = timegm( 59, 59, 23,(gmtime( time() - 86400 ))[3,4,5] );
 
@@ -38,6 +38,8 @@ print "Running year $year, month $month, day $day.\n" if $verbose;
 ##
 ## POPULATE THE frs_dlstats_group_agg TABLE.
 ##
+
+# Count all the downloads through direct HTTP access (group by project)
 $sql	= "SELECT group_id,SUM(downloads) FROM stats_http_downloads "
 	. "WHERE ( day = '$today' ) GROUP BY group_id";
 $rel = $dbh->prepare($sql) || die "SQL parse error: $!";
@@ -46,8 +48,24 @@ while ( @tmp_ar = $rel->fetchrow_array() ) {
 	$downloads{ $tmp_ar[0] } += $tmp_ar[1]; 
 }
 
+# Count all the downloads through direct HTTP access (group by project)
 $sql	= "SELECT group_id,SUM(downloads) FROM stats_ftp_downloads "
 	. "WHERE ( day = '$today' ) GROUP BY group_id";
+$rel = $dbh->prepare($sql) || die "SQL parse error: $!";
+$rel->execute() || die "SQL execute error: $!";
+while ( @tmp_ar = $rel->fetchrow_array() ) {
+	$downloads{ $tmp_ar[0] } += $tmp_ar[1]; 
+}
+
+# Count all the downloads through the CodeX Web Frontend  (group by project)
+# (this used to be counted through HTTP downloads but access is now
+# managed thorugh a PHP script and there is special table storing download information
+$sql    = "SELECT frs_package.group_id AS group_id,COUNT(*) "
+        ."FROM frs_package,frs_release, frs_file, filedownload_log "
+        ."WHERE filedownload_log.filerelease_id = frs_file.file_id "
+        ."AND (filedownload_log.time >  $time_begin AND filedownload_log.time <= $time_end) "
+        ."AND frs_file.release_id = frs_release.release_id "
+        ."AND frs_release.package_id = frs_package.package_id  GROUP BY group_id"
 $rel = $dbh->prepare($sql) || die "SQL parse error: $!";
 $rel->execute() || die "SQL execute error: $!";
 while ( @tmp_ar = $rel->fetchrow_array() ) {
@@ -64,7 +82,7 @@ foreach $group_id ( keys %downloads ) {
 }
 
 
-   ## do some housekeeping before the next set.
+## do some housekeeping before the next set.
 %downloads = {};
 $first_xfers = $total_xfers;
 $total_xfers = 0;
@@ -74,7 +92,7 @@ $total_xfers = 0;
 ## POPULATE THE frs_dlstats_file_agg TABLE.
 ##
 
-# Count all the downloads through direct HTTP access
+# Count all the downloads through direct HTTP access (group by file)
 $sql	= "SELECT filerelease_id,SUM(downloads) FROM stats_http_downloads "
 	. "WHERE ( day = '$today' ) GROUP BY filerelease_id";
 $rel = $dbh->prepare($sql) || die "SQL parse error: $!";
@@ -83,7 +101,7 @@ while ( @tmp_ar = $rel->fetchrow_array() ) {
 	$downloads{ $tmp_ar[0] } += $tmp_ar[1]; 
 }
 
-# Count all the downloads through direct FTP access
+# Count all the downloads through direct FTP access (group by file)
 $sql	= "SELECT filerelease_id,SUM(downloads) FROM stats_ftp_downloads "
 	. "WHERE ( day = '$today' ) GROUP BY filerelease_id";
 $rel = $dbh->prepare($sql) || die "SQL parse error: $!";
@@ -92,7 +110,7 @@ while ( @tmp_ar = $rel->fetchrow_array() ) {
 	$downloads{ $tmp_ar[0] } += $tmp_ar[1]; 
 }
 
-# Count all the downloads through the CodeX Web Frontend
+# Count all the downloads through the CodeX Web Frontend  (group by file)
 # (this used to be counted through HTTP downloads but access is now
 # monitored on CodeX and there is special table storing download information
 $sql	= " SELECT filerelease_id,COUNT(*) AS downloads FROM filedownload_log "
@@ -118,8 +136,11 @@ foreach $file_id ( keys %downloads ) {
 ##
 
 if ( $total_xfers != $first_xfers ) {
-	print "stats_nightly_filerelease.pl: THE TRANSER STATS DID NOT AGREE!! FIX ME!!\n";
+  # Sanity check: sum by file must equal sum by project because file releases
+  # belong to the same project
+  print "stats_nightly_filerelease.pl: THE TRANSER STATS DID NOT AGREE!! FIX ME!!\n";
 }
+
 $sql	= "UPDATE stats_site SET downloads='$total_xfers' WHERE (month='" . sprintf("%04d%02d", $year, $month) . "' AND day='$day') ";
 $rel = $dbh->do($sql) || die "SQL parse error: $!";
 
