@@ -9,113 +9,80 @@
 bug_header(array ('title'=>'Modify a Bug'));
 
 $sql="SELECT * FROM bug WHERE bug_id='$bug_id' AND group_id='$group_id'";
+$fields_per_line=2;
 
 $result=db_query($sql);
 
 if (db_numrows($result) > 0) {
 
-	echo "\n<H2>[ Bug #$bug_id ] ".db_result($result,0,"summary")."</H2>";
+    // First display some  internal fields - Cannot be modified by the user
+?>
+    <H2>[ Bug #<?php echo $bug_id.' ] '.db_result($result,0,'summary');?></H2>
 
-	echo "<FORM ACTION=\"$PHP_SELF\" METHOD=\"POST\">\n".
-		"<INPUT TYPE=\"HIDDEN\" NAME=\"func\" VALUE=\"postmodbug\">\n".
-		"<INPUT TYPE=\"HIDDEN\" NAME=\"group_id\" VALUE=\"$group_id\">\n".
-		"<INPUT TYPE=\"HIDDEN\" NAME=\"bug_id\" VALUE=\"$bug_id\">";
+    <FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">
+    <INPUT TYPE="HIDDEN" NAME="func" VALUE="postmodbug">
+    <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id;; ?>">
+    <INPUT TYPE="HIDDEN" NAME="bug_id" VALUE="<?php echo $bug_id; ?>">
 
-	echo	"\n<TABLE WIDTH=\"100%\">
-	<TR><TD><B>Submitted By:</B><BR>".user_getname(db_result($result,0,"submitted_by"))."</TD>
-		<TD><B>Group:</B><BR>".group_getname($group_id)."</TD></TR>
+    <TABLE WIDTH="100%" cellpadding="0">
+      <TR><TD><B>Submitted By:</B>&nbsp;<?php echo user_getname(db_result($result,0,'submitted_by')); ?></TD>
+          <TD><B>Group:</B>&nbsp;<?php echo group_getname($group_id); ?></TD>
+      </TR>
+      <TR><TD><B>Submitted on:</B>&nbsp;<?php  echo date($sys_datefmt,db_result($result,0,'date')); ?></TD>
+          <TD><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit Changes"></TD>
+      </TR>
 
-	<TR>
-		<TD><B>Date Submitted:</B><BR>
-		". date($sys_datefmt,db_result($result,0,'date')) ."
-		</TD>
-		<TD><FONT SIZE=\"-1\">
-		<INPUT TYPE=\"SUBMIT\" NAME=\"SUBMIT\" VALUE=\"Submit Changes\">
-		</TD>
-	</TR>
+<?php
+      // Now display the variable part of the field list (depend on the project)
 
-	<TR><TD><B>Category:</B><BR>\n";
-	/*
-		List of bug_categories for this project.
-	*/
-	echo  bug_category_box ('category_id',$group_id,db_result($result,0,'category_id'));
+      $i=0;
+      while ( $field_name = bug_list_all_fields() ) {
 
-	echo "</TD><TD><B>Priority:</B><BR>\n";
+	  // if the field is a special field or if not used byt his project 
+	  // then skip it.
+	  if ( !bug_data_is_special($field_name) &&
+	       bug_data_is_used($field_name) ) {
+				   
+	      // display the bug field
+	      $field_value = db_result($result,0,$field_name);
+	      echo ($i % $fields_per_line ? '':"\n<TR>");
+	      echo '<TD>'.bug_field_display($field_name,$group_id,$field_value).'</TD>';
+	      $i++;
+	      echo ($i % $fields_per_line ? '':"\n</TR>");
+	  }
+      }
+      
+      // Now display other special fields
 
-	/*
-		Priority of this bug
-	*/
-	echo build_priority_select_box('priority',db_result($result,0,'priority'));
+      // Summary first. It is a special field because it is both displayed in the
+      // title of the bug form and here as a text field
+?>
+      <TR><TD colspan="<?php echo $fields_per_line; ?>">
+<?php echo bug_field_display('summary',$group_id,db_result($result,0,'summary')); ?>
+      </td></tr>
 
-	?>
-	</TD></TR>
-
-	<TR><TD><B>Group:</B><BR>
-	<?php
-	/*
-		List of possible bug_groups for this project
-	*/
-	echo bug_group_box ('bug_group_id',$group_id,db_result($result,0,'bug_group_id'));
-
-	?>
-	</TD><TD><B>Resolution:</B><BR>
-	<?php
-	/*
-		List of possible bug_resolutions
-	*/
-	echo bug_resolution_box ('resolution_id',db_result($result,0,'resolution_id'));
-
-	?>
-	</TD></TR>
-	<TR><TD>
-		<B>Assigned To:</B><BR>
-		<?php
-
-		/*
-			List of people that can be assigned this bug
-		*/
-		echo bug_technician_box ('assigned_to',$group_id,db_result($result,0,'assigned_to'));
-		?>
-	</TD>
-	<TD>
-		<B>Status:</B><BR>
-		<?php
-		/*
-			Status of this bug
-		*/
-		echo bug_status_box ('status_id',db_result($result,0,'status_id'));
-		?>
-	</TD></TR>
-
-	<TR><TD COLSPAN="2"><B>Summary:</B><BR>
-		<INPUT TYPE="TEXT" NAME="summary" SIZE="60" VALUE="<?php 
-			echo db_result($result,0,'summary'); 
-			?>" MAXLENGTH="100">
-	</TD></TR>
-
-<?php // LJ modify wording and layout for Canned Response versus
-// LJ one shot comment ?>
-
-	<TR><TD COLSPAN="2"><B>Use a Canned Response:</B><BR>
-		<?php
-		echo bug_canned_response_box ($group_id,'canned_response');
-		echo '<BR><A HREF="/bugs/admin/index.php?group_id='.$group_id.'&create_canned=1">Or define a new Canned Response</A><P>';
-		?>
-	</TD></TR>
+      <TR><TD colspan="<?php echo $fields_per_line; ?>" align="top"><HR></td></TR>
+      <TR><TD COLSPAN="<?php echo $fields_per_line; ?>"><B>Use a Canned Response:</B>&nbsp;
+      <?php
+      echo bug_canned_response_box ($group_id,'canned_response');
+      echo '&nbsp;&nbsp;&nbsp;<A HREF="/bugs/admin/index.php?group_id='.$group_id.'&create_canned=1">Or define a new Canned Response</A><P>';
+      ?>
+      </TD></TR>
 
 
-	<TR><TD COLSPAN="2"><P><B>Alternatively you can send a specific commentin your repsonse:</B><BR>
-		<TEXTAREA NAME="details" ROWS="7" COLS="60" WRAP="SOFT"></TEXTAREA>
-		<P>
-		<B>Original Submission:</B><BR>
-		<?php
-			echo nl2br(db_result($result,0,'details'));
-
-			echo "<P>";
-
-			echo show_bug_details($bug_id); 
-		?>
-	</TD></TR>
+      <TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
+      <P><B>Or post a followup comment of any given type:</B>
+      <?php echo bug_field_box('comment_type_id','',$group_id,'',true,'None'); ?><BR>
+      <?php echo bug_field_textarea('details',''); ?>
+      <P>
+      <B>Original Submission:</B><BR>
+      <?php
+      echo nl2br(db_result($result,0,'details'));
+      echo "<P>";
+      echo show_bug_details($bug_id); 
+      ?>
+      </TD></TR>
+      <TR><TD colspan="<?php echo $fields_per_line; ?>"><HR NoShade></td></TR>
 
 	<TR><TD VALIGN="TOP">
 	<B>Dependent on Task:</B><BR>
@@ -138,15 +105,15 @@ if (db_numrows($result) > 0) {
 	?>
 	</TD></TR>
 
-	<TR><TD COLSPAN="2">
+	<TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
 		<?php echo show_dependent_bugs($bug_id,$group_id); ?>
 	</TD></TR>
 
-	<TR><TD COLSPAN="2">
-		<?php echo show_bughistory($bug_id); ?>
+	<TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
+		<?php echo show_bughistory($bug_id,$group_id); ?>
 	</TD></TR>
 
-	<TR><TD COLSPAN="2" ALIGN="MIDDLE">
+	<TR><TD COLSPAN="<?php echo $fields_per_line; ?>" ALIGN="MIDDLE">
 		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit Changes">
 		</FORM>
 	</TD></TR>
@@ -158,7 +125,7 @@ if (db_numrows($result) > 0) {
 } else {
 
 	echo '
-		<H1>Bug Not Found</H1>';
+	<H1>Bug Not Found</H1>';
 	echo db_error();
 }
 

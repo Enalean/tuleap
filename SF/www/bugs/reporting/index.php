@@ -7,231 +7,194 @@
 // $Id$
 
 require('pre.php');
+require('../bug_data.php');
 require('../bug_utils.php');
 
 if ($group_id && user_ismember($group_id,"B2")) {
 
-	include ($DOCUMENT_ROOT.'/include/HTML_Graphs.php');
+    // Initialize the global data structure before anything else
+    bug_init($group_id);
 
-	if ($run_report) {
-		/*
-			Update the database
-		*/
+    include ($DOCUMENT_ROOT.'/include/HTML_Graphs.php');
 
-		if ($aging) {
+    if ($field) {
+	if ($field == 'aging') {
+	    bug_header(array ("title"=>"Aging Report"));
+	    echo "\n<H1>Aging Report</H1>";
 
-			bug_header(array ("title"=>"Aging Report"));
-			echo "\n<H1>Aging Report</H1>";
+	    $time_now=time();
+	    //			echo $time_now."<P>";
 
-			$time_now=time();
-//			echo $time_now."<P>";
+	    for ($counter=1; $counter<=8; $counter++) {
 
-			for ($counter=1; $counter<=8; $counter++) {
+		$start=($time_now-($counter*604800));
+		$end=($time_now-(($counter-1)*604800));
 
-				$start=($time_now-($counter*604800));
-				$end=($time_now-(($counter-1)*604800));
+		$sql="SELECT avg((close_date-date)/86400) FROM bug WHERE close_date > 0 AND (date >= $start AND date <= $end) AND resolution_id <> '2' AND group_id='$group_id'";
 
-				$sql="SELECT avg((close_date-date)/86400) FROM bug WHERE close_date > 0 AND (date >= $start AND date <= $end) AND resolution_id <> '2' AND group_id='$group_id'";
+		$result = db_query($sql);
 
-				$result = db_query($sql);
+		$names[$counter-1]=date("m/d/y",($start))." to ".date("m/d/y",($end));
+		$values[$counter-1]=db_result($result, 0,0);
+	    }
 
-				$names[$counter-1]=date("m/d/y",($start))." to ".date("m/d/y",($end));
-				$values[$counter-1]=db_result($result, 0,0);
-			}
+	    GraphIt($names, $values, "Average Turnaround Time For Closed Bugs");
 
-			GraphIt($names, $values, "Average Turnaround Time For Closed Bugs");
+	    echo "<P>";
 
-			echo "<P>";
+	    for ($counter=1; $counter<=8; $counter++) {
 
-			for ($counter=1; $counter<=8; $counter++) {
+		$start=($time_now-($counter*604800));
+		$end=($time_now-(($counter-1)*604800));
 
-				$start=($time_now-($counter*604800));
-				$end=($time_now-(($counter-1)*604800));
+		$sql="SELECT count(*) FROM bug WHERE date >= $start AND date <= $end AND resolution_id <> '2' AND group_id='$group_id'";
 
-				$sql="SELECT count(*) FROM bug WHERE date >= $start AND date <= $end AND resolution_id <> '2' AND group_id='$group_id'";
+		$result = db_query($sql);
 
-				$result = db_query($sql);
+		$names[$counter-1]=date("m/d/y",($start))." to ".date("m/d/y",($end));
+		$values[$counter-1]=db_result($result, 0,0);
+	    }
 
-				$names[$counter-1]=date("m/d/y",($start))." to ".date("m/d/y",($end));
-				$values[$counter-1]=db_result($result, 0,0);
-			}
+	    GraphIt($names, $values, "Number of Bugs Opened");
 
-			GraphIt($names, $values, "Number of Bugs Opened");
+	    echo "<P>";
 
-			echo "<P>";
+	    for ($counter=1; $counter<=8; $counter++) {
 
-			for ($counter=1; $counter<=8; $counter++) {
+		$start=($time_now-($counter*604800));
+		$end=($time_now-(($counter-1)*604800));
 
-				$start=($time_now-($counter*604800));
-				$end=($time_now-(($counter-1)*604800));
+		$sql="SELECT count(*) FROM bug WHERE date <= $end AND (close_date >= $end OR close_date < 1 OR close_date is null) AND resolution_id <> '2' AND group_id='$group_id'";
 
-				$sql="SELECT count(*) FROM bug WHERE date <= $end AND (close_date >= $end OR close_date < 1 OR close_date is null) AND resolution_id <> '2' AND group_id='$group_id'";
+		$result = db_query($sql);
 
-				$result = db_query($sql);
+		$names[$counter-1]=date("m/d/y",($end));
+		$values[$counter-1]=db_result($result, 0,0);
+	    }
 
-				$names[$counter-1]=date("m/d/y",($end));
-				$values[$counter-1]=db_result($result, 0,0);
-			}
+	    GraphIt($names, $values, "Number of Bugs Still Open");
 
-			GraphIt($names, $values, "Number of Bugs Still Open");
+	    echo "<P>";
 
-			echo "<P>";
+	    bug_footer(array());
 
-			bug_footer(array());
+	} else {
 
-		} else if ($category) {
+	    // It's any of the select box field. 
 
-			bug_header(array ("title"=>"Bugs By Category"));
-			echo "\n<H1>Bugs by Category</H1>";
+	    $label = bug_data_get_label($field);
+	    bug_header(array ("title"=>"Bugs By $label"));
 
-			$sql="SELECT bug_category.category_name AS Category, count(*) AS Count FROM bug_category,bug ".
-				"WHERE bug_category.bug_category_id=bug.category_id AND bug.status_id <> '3' AND bug.resolution_id <> '2' AND bug.group_id='$group_id' ".
-				"GROUP BY Category";
+	    // Make sure it is a correct field
+	    if (bug_data_is_special($field) || !bug_data_is_used($field) ||
+		!bug_data_is_select_box($field) ) {
 
-			$result=db_query($sql);
-			if ($result && db_numrows($result) > 0) {
-				GraphResult($result,"Open Bugs By Category");
-			} else {
-				echo "<H2>No data found to report</H2>";
-			}
+		echo "<h2>Can't generate report for field $label";
 
-			echo "<P>";
+	    } else {
 
-			$sql="SELECT bug_category.category_name AS Category, count(*) AS Count FROM bug_category,bug ".
-				"WHERE bug_category.bug_category_id=bug.category_id AND bug.resolution_id <> '2' AND bug.group_id='$group_id' ".
-				"GROUP BY Category";
+		echo "\n<H2>Bugs by $label</H2>";
 
-			$result=db_query($sql);
-			if ($result && db_numrows($result) > 0) {
-				GraphResult($result,"All Bugs By Category");
-			} else {
-				echo "<H2>No data found to report</H2>";
-			}
+		// First graph the bug distribution for Open bugs only	
+		// Open means not status is neither closed (3) and nor Declined (7)
+		// and resolution is not equal to Invalid (2)
+		if ($field == 'assigned_to') {
 
-			bug_footer(array());
+		    $sql="SELECT user.user_name, count(*) AS Count FROM user,bug ".
+			"WHERE user.user_id=bug.assigned_to AND ".
+			"bug.status_id <> '3' AND bug.status_id <> '7' AND ".
+			"bug.resolution_id <> '2' AND bug.group_id='$group_id' ".
+			"GROUP BY user_name";
 
-		} else if ($tech) {
+		} else {
 
-			bug_header(array ("title"=>"Bugs By Technician"));
-			echo "\n<H1>Bugs By Technician</H1>";
-
-			$sql="SELECT user.user_name AS Technician, count(*) AS Count FROM user,bug ".
-				"WHERE user.user_id=bug.assigned_to AND bug.status_id <> '3' AND bug.resolution_id <> '2' AND bug.group_id='$group_id' ".
-				"GROUP BY Technician";
-
-			$result=db_query($sql);
-			if ($result && db_numrows($result) > 0) {
-				GraphResult($result,"Open Bugs By Technician");
-			} else {
-				echo "<H2>No data found to report</H2>";
-			}
-
-			echo "<P>";
-
-			$sql="SELECT user.user_name AS Technician, count(*) AS Count FROM user,bug ".
-				"WHERE user.user_id=bug.assigned_to AND bug.resolution_id <> '2' AND bug.group_id='$group_id' ".
-				"GROUP BY Technician";
-
-			$result=db_query($sql);
-			if ($result && db_numrows($result) > 0) {
-				GraphResult($result,"All Bugs By Technician");
-			} else {
-				echo "<H2>No data found to report</H2>";
-			}
-
-			bug_footer(array());
-
-		} else if ($bug_group) {
-
-			bug_header(array ("title"=>"Bugs By Bug Group"));
-			echo "\n<H1>Bugs By Bug Group</H1>";
-
-			$sql="SELECT bug_group.group_name AS Bug_Group_Name, count(*) AS Count FROM bug_group,bug ".
-				"WHERE bug_group.bug_group_id=bug.bug_group_id AND bug.status_id <> '3' AND bug.resolution_id <> '2' AND bug.group_id='$group_id' ".
-				"GROUP BY Bug_Group_Name";
-
-			$result=db_query($sql);
-			if ($result && db_numrows($result) > 0) {
-				GraphResult($result,"Open Bugs By Bug Group");
-			} else {
-				echo "<H2>No data found to report</H2>";
-			}
-
-			echo "<P>";
-
-			$sql="SELECT bug_group.group_name AS Bug_Group_Name, count(*) AS Count FROM bug_group,bug ".
-				"WHERE bug_group.bug_group_id=bug.bug_group_id AND bug.resolution_id <> '2' AND bug.group_id='$group_id' ".
-				"GROUP BY Bug_Group_Name";
-
-			$result=db_query($sql);
-			if ($result && db_numrows($result) > 0) {
-				GraphResult($result,"All Bugs By Bug Group");
-			} else {
-				echo "<H2>No data found to report</H2>";
-			}
-
-			bug_footer(array());
-
-		} else if ($resolution) {
-
-			bug_header(array ("title"=>"Bugs By Resolution"));
-			echo "\n<H1>Bugs By Resolution</H1>";
-
-			$sql="SELECT bug_resolution.resolution_name AS Resolution, count(*) AS Count FROM bug_resolution,bug ".
-				"WHERE bug_resolution.resolution_id=bug.resolution_id AND bug.status_id <> '3' AND bug.resolution_id <> '2' AND bug.group_id='$group_id' ".
-				"GROUP BY Resolution";
-
-			$result=db_query($sql);
-			if ($result && db_numrows($result) > 0) {
-				GraphResult($result,"Open Bugs By Resolution");
-			} else {
-				echo "<H2>No data found to report</H2>";
-			}
-
-			echo "<P>";
-
-			$sql="SELECT bug_resolution.resolution_name AS Resolution, count(*) AS Count FROM bug_resolution,bug ".
-				"WHERE bug_resolution.resolution_id=bug.resolution_id AND bug.resolution_id <> '2' AND bug.group_id='$group_id' ".
-				"GROUP BY Resolution";
-
-			$result=db_query($sql);
-			if ($result && db_numrows($result) > 0) {
-				GraphResult($result,"All Bugs By Resolution");
-			} else {
-				echo "<H2>No data found to report</H2>";
-			}
-
-			bug_footer(array());
+		    // make sure to include default values as well in case
+		    // the project doesn't yet have its own instance of the
+		    // value set and is using the default one (group_id  = '100')
+		    $sql="SELECT bug_field_value.value, count(*) AS Count FROM bug_field_value,bug ".
+			"WHERE bug_field_value.value_id=bug.$field AND ".
+			"bug_field_value.bug_field_id='".
+			bug_data_get_field_id($field)."' AND ".
+			"(bug_field_value.group_id=bug.group_id OR bug_field_value.group_id='100') AND ".
+			"bug.status_id <> '3' AND bug.status_id <> '7' AND ".
+			"bug.resolution_id <> '2' AND bug.group_id='$group_id' ".
+			"GROUP BY value_id";
 
 		}
 
-	} else {
-		/*
-			Show main page
-		*/
-		bug_header(array ("title"=>"Bug Reporting System"));
+		$result=db_query($sql);
+		if ($result && db_numrows($result) > 0) {
+		    GraphResult($result,"Open Bugs By '$label'");
+		} else { 
+		    echo "<H3>Open Bugs By $label</H3>";
+		    echo "No data found to report - Field probably not used";
+		}
+		echo "<P>";
 
-		echo "\n<H1>Bug Reporting System</H1>";
-		echo "\n<P>";
-		echo "\n<A HREF=\"/bugs/reporting/?group_id=$group_id&run_report=1&aging=1\">Aging Report</A><BR>";
-		echo "\n<A HREF=\"/bugs/reporting/?group_id=$group_id&run_report=1&tech=1\">Bugs by Technician</A><BR>";
-		echo "\n<A HREF=\"/bugs/reporting/?group_id=$group_id&run_report=1&category=1\">Bugs by Category</A><BR>";
-		echo "\n<A HREF=\"/bugs/reporting/?group_id=$group_id&run_report=1&bug_group=1\">Bugs by Bug Group</A><BR>";
-		echo "\n<A HREF=\"/bugs/reporting/?group_id=$group_id&run_report=1&resolution=1\">Bugs by Resolution</A>";
+		//Second  graph the bug distribution for all bugs only
+
+		if ($field == 'assigned_to') {
+
+		    $sql="SELECT user.user_name, count(*) AS Count FROM user,bug ".
+		    "WHERE user.user_id=bug.assigned_to AND ".
+		    "bug.resolution_id <> '2' AND bug.group_id='$group_id' ".
+		    "GROUP BY user_name";
+
+		} else {
+
+		    $sql="SELECT bug_field_value.value, count(*) AS Count FROM bug_field_value,bug ".
+			"WHERE bug_field_value.value_id=bug.$field AND ".
+			"bug_field_value.bug_field_id='".
+			bug_data_get_field_id($field)."' AND ".
+			"(bug_field_value.group_id=bug.group_id OR bug_field_value.group_id='100') AND ".
+			"bug.resolution_id <> '2' AND bug.group_id='$group_id' ".
+			"GROUP BY value_id";
+		}
+		$result=db_query($sql);
+		if ($result && db_numrows($result) > 0) {
+		    GraphResult($result,"All Bugs By $label");
+		} else {
+		    echo "<H3>All Bugs By $label</H3>";
+		    echo "No data found to report - Field probably not used";
+		}
 
 		bug_footer(array());
-
+	    }
 	}
+
+    } else {
+	/*
+	  Show main page
+	*/
+	bug_header(array ("title"=>"Bug Reporting System"));
+
+	echo "\n<H1>Bug Reporting System</H1>";
+	echo "\n<P>";
+	echo "\n<A HREF=\"/bugs/reporting/?group_id=$group_id&field=aging\">Aging Report</A><BR>";
+
+	while ($field = bug_list_all_fields()) {
+
+	    if (bug_data_is_special($field)) { continue;}
+
+	    if (bug_data_is_select_box($field) && bug_data_is_used($field)) {
+
+		echo "\n<A HREF=\"/bugs/reporting/?group_id=$group_id&field=$field\">Bugs by '".bug_data_get_label($field)."'</A><BR>";
+	    }
+	}
+
+	bug_footer(array());
+
+    }
 
 } else {
 
-	//browse for group first message
+    //browse for group first message
 
-	if (!$group_id) {
-		exit_no_group();
-	} else {
-		exit_permission_denied();
-	}
+    if (!$group_id) {
+	exit_no_group();
+    } else {
+	exit_permission_denied();
+    }
 
 }
 ?>

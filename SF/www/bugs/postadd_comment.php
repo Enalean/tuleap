@@ -8,12 +8,13 @@
 
 if ($details != '') { 
 
-	bug_data_add_history ('details',htmlspecialchars($details),$bug_id);  
-	$feedback .= ' Comment added to bug ';
-
+    // For none project members force the comment type to None (100)
+    bug_data_add_history ('details',htmlspecialchars($details),$bug_id,100);  
+    $feedback .= ' Comment added to bug ';
+    
 } else {
-
-	$feedback .= ' Nothing Done ';
+    
+    $feedback .= ' Nothing Done ';
 
 }
 

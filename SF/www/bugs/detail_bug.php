@@ -8,70 +8,89 @@
 
 bug_header(array ('title'=>'Bug Detail: '.$bug_id));
 
-$sql="SELECT bug_group.group_name,bug_resolution.resolution_name,bug.details,bug.summary,user.user_name AS submitted_by,".
-	"user2.user_name AS assigned_to,bug.priority,bug_status.status_name,bug.date,bug_category.category_name ".
-	"FROM bug,user,user user2,bug_group,bug_resolution,bug_category,bug_status WHERE bug.submitted_by=user.user_id AND bug.assigned_to=user2.user_id AND ".
-	"bug.status_id=bug_status.status_id AND bug.category_id=bug_category.bug_category_id AND bug.bug_id='$bug_id' ".
-	"AND bug.bug_group_id=bug_group.bug_group_id AND bug.resolution_id=bug_resolution.resolution_id";
+$sql="SELECT * FROM bug WHERE bug_id='$bug_id' AND group_id='$group_id'";
+$fields_per_line=2;
 
 $result=db_query($sql);
 
 if (db_numrows($result) > 0) {
 
-	echo '
-		<H2>[ Bug #'.$bug_id.' ] '.db_result($result,0,'summary').'</H2>
+?>
+    <H2>[ Bug #<?php echo $bug_id.' ] '.db_result($result,0,'summary');?></H2>
 
-	<TABLE CELLPADDING="0" WIDTH="100%">
-		<TR><TD COLSPAN="2"><B>Date:</B><BR>'.date($sys_datefmt,db_result($result,0,'date')).'</TD></TR>
+    <TABLE CELLPADDING="0" WIDTH="100%">
+      <TR><TD><B>Submitted By:</B>&nbsp;<?php echo user_getname(db_result($result,0,'submitted_by')); ?></TD>
+          <TD><B>Group:</B>&nbsp;<?php echo group_getname($group_id); ?></TD>
+      </TR>
+      <TR><TD><B>Submitted on:</B>&nbsp;<?php echo date($sys_datefmt,db_result($result,0,'date')); ?></TD>
+          <TD><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit Changes"></TD>
+      </TR>
+      <TR><TD COLSPAN="<?php echo $fields_per_line; ?>">&nbsp</TD></TR>
 
-		<TR>
-			<TD><B>Submitted By:</B><BR>'.db_result($result,0,'submitted_by').'</TD>
-			<TD><B>Assigned To:</B><BR>'.db_result($result,0,'assigned_to').'</TD>
-		</TR>
+<?php
+      // Now display the variable part of the field list (depend on the project)
 
-		<TR>
-			<TD><B>Category:</B><BR>'.db_result($result,0,'category_name').'</TD>
-			<TD><B>Priority:</B><BR>'.db_result($result,0,'priority').'</TD>
-		</TR>
+      $i=0;
+      while ( $field_name = bug_list_all_fields() ) {
 
-		<TR>
-			<TD><B>Bug Group:</B><BR>'.db_result($result,0,'group_name').'</TD>
-			<TD><B>Resolution:</B><BR>'.db_result($result,0,'resolution_name').'</TD>
-		</TR>
+	  // if the field is a special field or if not used byt his project 
+	  // then skip it.
+	  if ( !bug_data_is_special($field_name) &&
+	       bug_data_is_used($field_name) ) {
+				   
+	      // display the bug field
+	      $field_value = db_result($result,0,$field_name);
+	      echo ($i % $fields_per_line ? '':"\n<TR>");
+	      echo '<TD>'.bug_field_display($field_name,$group_id,$field_value,false,true).'</TD>';
+	      $i++;
+	      echo ($i % $fields_per_line ? '':"\n</TR>");
+	  }
+      }
+      
+      // Now display other special fields
 
-		<TR><TD COLSPAN="2"><B>Summary:</B><BR>'.db_result($result,0,'summary').'</TD></TR>
+      // Summary first. It is a special field because it is both displayed in the
+      // title of the bug form and here as a text field
+?>
+      <TR><TD COLSPAN="<?php echo $fields_per_line; ?>">&nbsp</TD></TR>
 
-		<TR><TD COLSPAN="2"><P><B>Original Submission:</B><BR>'. nl2br(db_result($result,0,'details')).'</TD></TR>';
+     <TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
+<?php echo bug_field_display('summary',$group_id,db_result($result,0,'summary'),false,true); ?>
+     </TD></TR>
 
-	echo '
-		<FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
-		<INPUT TYPE="HIDDEN" NAME="func" VALUE="postaddcomment">
-		<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
-		<INPUT TYPE="HIDDEN" NAME="bug_id" VALUE="'.$bug_id.'">
+     <TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
+<?php echo bug_field_display('details',$group_id,
+			nl2br(db_result($result,0,'details')),true,true); ?>
+     </TD></TR>
 
-		<TR><TD COLSPAN="2"><B>Add A Comment:</B><BR>
-			<TEXTAREA NAME="details" ROWS="10" COLS="60" WRAP="SOFT"></TEXTAREA>
-		</TD></TR>
+     <FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">
+         <INPUT TYPE="HIDDEN" NAME="func" VALUE="postaddcomment">
+         <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">
+         <INPUT TYPE="HIDDEN" NAME="bug_id" VALUE="<?php echo $bug_id; ?>">
 
-		<TR><TD COLSPAN="2">';
+         <TR><TD COLSPAN="<?php echo $fields_per_line; ?>"><B>Add A Comment:</B><BR>
+     <?php echo bug_field_textarea('details',''); ?>
+         </TD></TR>
 
+         <TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
+
+<?php
 	if (!user_isloggedin()) {
-		echo '<BR><B><FONT COLOR="RED"><H2>You Are NOT Logged In</H2><P>Please <A HREF="/account/login.php">log in,</A> so followups can be emailed to you.</FONT></B><P>';
+		echo '<BR><B><FONT COLOR="RED"><H2>You Are NOT Logged In</H2><P>Please <A HREF="/account/login.php?return_to='.
+		urlencode($REQUEST_URI).
+		'">log in,</A> so followups can be emailed to you.</FONT></B><P>';
 	}
+?>
 
-	echo '
-			<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
-			</FORM>
-		</TD></TR>
-		<P>
+     <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
+     </FORM>
+     </TD></TR>
+     <P>
 
-		<TR><TD COLSPAN="2">';
+     <TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
+        <?php echo show_bug_details($bug_id); ?>
 
-	echo show_bug_details($bug_id);
-
-	?>
-
-	<TR><TD VALIGN="TOP">
+         <TR><TD VALIGN="TOP">
 	<?php
 		$result2=db_query("SELECT bug.summary ".
 			"FROM bug,bug_bug_dependencies ".
@@ -89,14 +108,14 @@ if (db_numrows($result) > 0) {
 	?>
 	</TD></TR>
 
-	<TR><TD COLSPAN="2">
+	<TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
 		<?php echo show_dependent_bugs($bug_id,$group_id); ?>
 	</TD></TR>
  
-	<TR><TD COLSPAN="2">
+	<TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
 	<?php
 
-	show_bughistory($bug_id);
+	show_bughistory($bug_id,$group_id);
 
 	?>
 	</TD></TR></TABLE>

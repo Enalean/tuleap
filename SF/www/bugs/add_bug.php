@@ -7,71 +7,65 @@
 // $Id$
 
 bug_header(array ('title'=>'Submit a Bug'));
+$fields_per_line=2;
 
 echo '<FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
 	<INPUT TYPE="HIDDEN" NAME="func" VALUE="postaddbug">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 	<TABLE>
-	<TR><TD VALIGN="TOP" COLSPAN="2"><B>Group:</B><BR>'.group_getname($group_id).'</TD></TR>
-	<TR><TD VALIGN="TOP"><B>Category:</B><BR>';
+	<TR><TD VALIGN="TOP" COLSPAN="'.$fields_per_line.'">
+              <B>Group:</B>&nbsp;'.group_getname($group_id).'</TD></TR>';
 
-/*
-	List of possible categories for this project
-*/
-echo bug_category_box ('category_id',$group_id);
 
-echo '</TD>
-	<TD><B>Bug Group:</B><BR>';
+// Now display the variable part of the field list (depend on the project)
 
-/*
-	List of possible bug_groups for this project 
-*/
-echo bug_group_box ('bug_group_id',$group_id);
+$i=0;
+$is_bugadmin = user_ismember($group_id,'B2');
 
-echo '</TD></TR>';
+while ( $field_name = bug_list_all_fields() ) {
 
-if (user_ismember($group_id,'A')) {
+    // if the field is a special field or if not used by this project 
+    // then skip it. Plus only show fields allowed on the bug submit_form 
+    if ( !bug_data_is_special($field_name) &&
+	 bug_data_is_used($field_name) ) {
 
-	echo '
-		<TR><TD><B>Priority:</B><BR>';
-
-	/*
-		Priority of this bug
-	*/
-	echo build_priority_select_box('priority',db_result($result,0,'priority'));
-
-	echo '</TD>
-	<TD><B>Assigned To:</B><BR>';
-	/*
-		List of people that can be assigned this bug
-	*/
-	echo bug_technician_box ('assigned_to',$group_id,db_result($result,0,'assigned_to'));
-
-	echo '</TD></TR>';
-
+	if  (($is_bugadmin && bug_data_is_showed_on_add_members($field_name)) ||
+	     (!$is_bugadmin && bug_data_is_showed_on_add($field_name)) ) {
+	    
+	    // display the bug field
+	    $field_value = db_result($result,0,$field_name);
+	    echo ($i % $fields_per_line ? '':"\n<TR>");
+	    echo '<TD valign="top">'.bug_field_display($field_name,$group_id,$field_value).'</TD>';
+	    $i++;
+	    echo ($i % $fields_per_line ? '':"\n</TR>");
+	}
+    }
 }
 
+	     
+// Then display all mandatory fields 
+
 ?>
+      <TR><TD colspan="<?php echo $fields_per_line; ?>">
+<?php echo bug_field_display('summary',$group_id,'',true); ?></td></tr>
 
-<TR><TD COLSPAN="2"><B>Summary:</B><BR>
-	<INPUT TYPE="TEXT" NAME="summary" SIZE="60" MAXLENGTH="100">
-</TD></TR>
+      <TR><TD colspan="<?php echo $fields_per_line; ?>">
+<?php echo bug_field_display('details',$group_id,'',true); ?></td></tr>
 
-<TR><TD COLSPAN="2"><B>Details:</B><BR>
-	<TEXTAREA NAME="details" ROWS="15" COLS="60" WRAP="SOFT"></TEXTAREA>
-</TD></TR>
 
-<TR><TD COLSPAN="2">
+<TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
 	<?php
 	if (!user_isloggedin()) {
 		echo '
 		<h3><FONT COLOR="RED">You Are NOT logged in.</H3>
-		<P> Please <A HREF="/account/login.php">log in,</A> so followups can be emailed to you.</FONT></B>';
+		<P> Please <A HREF="/account/login.php?return_to='.
+		urlencode($REQUEST_URI).
+		'">log in,</A> so followups can be emailed to you.</FONT></B>';
 	}
 	?>
 
 	<P>
-	<B><FONT COLOR="RED">Did you check to see if this has already been submitted?</FONT></B>
+	<B><FONT COLOR="RED">Did you check to see if this has already been submitted?</FONT></b> (use the search box in the left menu pane)
 	<P>
 	<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
 	<P>

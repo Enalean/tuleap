@@ -6,249 +6,274 @@
 //
 // $Id$
 
+$fields_per_line=5;
+
 if (!$offset || $offset < 0) {
-	$offset=0;
+    $offset=0;
 }
 
 //
 // Memorize order by field as a user preference if explicitly specified.
 // Automatically discard invalid field names.
+// Rk: bug_id, date and submitted_by are internal fields not stored 
+// in the bug field table so put them explicitely in the order since they are
+// always displayed on the report table
 //
+
 if ($order) {
-	if ($order=='bug_id' || $order=='summary' || $order=='date' || $order=='assigned_to_user' || $order=='submitted_by' || $order=='priority') {
-		if(user_isloggedin()) {
-			user_set_preference('bug_browse_order', $order);
-		}
-	} else {
-		$order = false;
-	}
-} else {
+    // always accept priority as a valid sort criteria because it is shown with
+    // color code and there is URL at the end of the page to re-order by
+    // priority in all cases.
+    if (bug_data_is_showed_on_result($order) || ($order == 'priority')) {
 	if(user_isloggedin()) {
-		$order = user_get_preference('bug_browse_order');
+	    user_set_preference('bug_browse_order', $order);
 	}
+    } else {
+	$order = false;
+    }
+} else {
+    if(user_isloggedin()) {
+	$order = user_get_preference('bug_browse_order');
+    }
 }
 
 if ($order) {
-	//if ordering by priority OR closed date, sort DESC
-	$order_by = " ORDER BY $order ".((($set=='closed' && $order=='date') || ($order=='priority')) ? ' DESC ':'');
+    //if ordering by priority OR closed date, sort DESC
+    $order_by = " ORDER BY $order ".
+	(($order=='date') || ($order=='priority') || ($order=='hours')? ' DESC ':'');
+    $order_statement = 'sorted by \''.bug_data_get_label($order).'\'';
 } else {
-	$order_by = "";
+    $order_by = '';
+    $order_statement = ' not sorted';
 }
 
 if (!$set) {
-	/*
-		if no set is passed in, see if a preference was set
-		if no preference or not logged in, use open set
-	*/
-	if (user_isloggedin()) {
-		$custom_pref=user_get_preference('bug_brow_cust'.$group_id);
-		if ($custom_pref) {
-			$pref_arr=explode('|',$custom_pref);
-			$_assigned_to=$pref_arr[0];
-			$_status=$pref_arr[1];
-			$_category=$pref_arr[2];
-			$_bug_group=$pref_arr[3];
-			$set='custom';
-		} else {
-			$set='open';
-			$_assigned_to=0;
-		}
+    /*
+      if no set is passed in, see if a preference was set
+      if no preference or not logged in, use open set
+      (Prefs is a string of the form  field1=value_id1|field21=value_id2|.... )
+    */
+    if (user_isloggedin()) {
+	$custom_pref=user_get_preference('bug_brow_cust'.$group_id);
+	$pref_arr = explode('&',$custom_pref);
+	if ($custom_pref) {
+	    while (list(,$pref_elt) = each($pref_arr)) {
+		list($field,$value_id) = explode('=',$pref_elt);
+		$prefs[$field] = $value_id;
+	    }
+	    $set='custom';
 	} else {
-		$set='open';
-		$_assigned_to=0;
+	    $set='open';
+	    $prefs['assigned_to']=0;
 	}
+    } else {
+	$set='open';
+	$prefs['assigned_to']=0;
+    }
 }
 
 if ($set=='my') {
-	/*
-		My bugs - backwards compat can be removed 9/10
-	*/
-	$_status='1';
-	$_assigned_to=user_getid();
+    /*
+      My bugs - backwards compat can be removed 9/10
+    */
+    $prefs['status_id']='1';
+    $prefs['assigned_to']=user_getid();
 
 } else if ($set=='custom') {
-	/*
-		if this custom set is different than the stored one, reset preference
-	*/
-	$pref_=$_assigned_to.'|'.$_status.'|'.$_category.'|'.$_bug_group;
-	if ($pref_ != user_get_preference('bug_brow_cust'.$group_id)) {
-		//echo 'setting pref';
-		user_set_preference('bug_brow_cust'.$group_id,$pref_);
+
+    // Get the list of bug fields used in the form (they are in the URL - GET method)
+    // and then build the preferences array accordingly
+    // Exclude the group_id parameter
+    $vfl = bug_extract_field_list(false);
+    unset($vfl['group_id']);
+    while (list($field,$value_id) = each($vfl)) {
+	$prefs[$field] = $value_id;
+	$pref_stg .= '&'.$field.'='.$value_id;
+	
+	// build part of the HTML title of this page for more friendly bookmarking
+	// Do not add the criteria in the header if value is "Any"
+	if ($value_id != 0) {
+	    $hdr .= ' By '.bug_data_get_label($field).': '.
+		bug_data_get_value($field,$group_id,$value_id);
 	}
+    }
+    
+    if ($pref_stg != user_get_preference('bug_brow_cust'.$group_id)) {
+	//echo 'setting pref';
+	user_set_preference('bug_brow_cust'.$group_id,$pref_stg);
+    }
+
 } else if ($set=='closed') {
-	/*
+    /*
 		Closed bugs - backwards compat can be removed 9/10
 	*/
-	$_assigned_to=0;
-	$_status='3';
+    $prefs['status_id']='3';
+    $prefs['assigned_to']=0;
+
 } else {
-	/*
+    /*
 		Open bugs - backwards compat can be removed 9/10
 	*/
-	$_assigned_to=0;
-	$_status='1';
-}
+    $prefs['status_id']='1';
+    $prefs['assigned_to']=0;
 
-/*
-	Display support requests based on the form post - by user or status or both
-*/
-
-//if status selected, add more to where clause
-if ($_status && ($_status != 100)) {
-	//for open tasks, add status=100 to make sure we show all
-	$status_str="AND bug.status_id IN ($_status".(($_status==1)?',100':'').")";
-} else {
-	//no status was chosen, so don't add it to where clause
-	$status_str='';
-}
-
-//if assigned to selected, add to where clause
-if ($_assigned_to) {
-	$assigned_str="AND bug.assigned_to='$_assigned_to'";
-} else {
-	//no assigned to was chosen, so don't add it to where clause
-	$assigned_str='';
-}
-
-//if category selected, add to where clause
-if ($_category && ($_category != 100)) {
-	$category_str="AND bug.category_id='$_category' ";
-} else {
-	//no category to was chosen, so don't add it to where clause
-	$category_str='';
-}
-
-//if bug_group selected, add to where clause
-if ($_bug_group && ($_bug_group != 100)) {
-	$bug_group_str="AND bug.bug_group_id='$_bug_group' ";
-} else {
-	//no bug_group was chosen, so don't add it to where clause
-	$bug_group_str='';
 }
 
 
-//build page title to make bookmarking easier
+//Output the HTML page title to make bookmarking easier
 //if a user was selected, add the user_name to the title
-//same for status
-bug_header(array('title'=>'Browse Bugs'.
-	(($_assigned_to)?' For: '.user_getname($_assigned_to):'').
-	(($_status && ($_status != 100))?' By Status: '. bug_data_get_status_name($_status):'')));
+bug_header(array('title'=>'Browse Bugs '.$hdr));
+
 
 /*
-	creating a custom technician box which includes "any" and "unassigned"
+  Display all the field select box as configured by the project admin
+  and also build the part of the select and where clause for the final query
 */
 
-$res_tech=bug_data_get_technicians ($group_id);
+// Select a few fields that will be displayed  anyway
+// priority is shown as a color code so don't put it in the report table column list
+$col_list = $lbl_list = array();
+$select = "SELECT DISTINCT bug.bug_id,bug.priority,bug.summary,bug.date,user.user_name AS submitted_by";
+$from = 'FROM bug, bug_field, user';
+$where = 'WHERE bug.group_id='.$group_id.' AND user.user_id=bug.submitted_by ';
+$col_list[] = 'bug_id'; $lbl_list[] = 'Bug ID';
+$col_list[] = 'summary'; $lbl_list[] = 'Summary';
+$col_list[] = 'date'; $lbl_list[] = 'Submitted on';
 
-$tech_id_arr=util_result_column_to_array($res_tech,0);
-$tech_id_arr[]='0';  //this will be the 'any' row
+// prepare the where clause with the selection criteria given by the user
+reset($prefs);
+while (list($field,$value_id) = each($prefs)) { 
+    // 0 means Any so no where clause in this case
+    if ($value_id != 0) {
+	$where .= "AND bug.$field = '$value_id' "; }
+}
 
-$tech_name_arr=util_result_column_to_array($res_tech,1);
-$tech_name_arr[]='Any';
 
-$tech_box=html_build_select_box_from_arrays ($tech_id_arr,$tech_name_arr,'_assigned_to',$_assigned_to,true,'Unassigned');
+$ib=0;$is=0;
+while ($field = bug_list_all_fields()) {
 
+    if (bug_data_is_special($field) || !bug_data_is_used($field)) { 
+	continue;}
+
+    // the select boxes for the bug DB search first
+    if (bug_data_is_showed_on_query($field) &&
+	bug_data_is_select_box($field) ) {
+
+	// beginning of a new row
+	if ($ib % $fields_per_line == 0) {
+	    $labels .= "\n".'<TR align="center" valign="top">';
+	    $boxes .= "\n".'<TR align="center" valign="top">';
+	}
+
+	$labels .= '<td><b>'.bug_data_get_label($field).'</b></td>';
+	$boxes .= '<td><FONT SIZE="-1">'.
+	    bug_field_box($field,'',$group_id,$prefs[$field],true,'None',
+			  true,'Any') .'</TD>';			  
+	$ib++;
+
+	// end of this row
+	if ($ib % $fields_per_line == 0) {
+	    $html_select .= $labels.'</TR>'.$boxes.'</TR>';
+	    $labels = $boxes = '';
+	}
+    }
+
+    // Second the columns to display and the SQL query build.
+    // This is complex SQL query because we want to generate a table with the real
+    // user value associated with each column from the bug table not simply the
+    // value_id. So a simple "SELECT * from bug..." is not enough
+    if (bug_data_is_showed_on_result($field)) {
+
+	$col_list[] = $field;
+	$lbl_list[] = bug_data_get_label($field);
+
+	if (bug_data_is_select_box($field)) {
+	    if ($field == 'assigned_to') {
+		// user names requires some special processing
+		$select .= ",user_at.user_name AS assigned_to";
+		$from .= ",user user_at";
+		$where .= " AND user_at.user_id=bug.assigned_to ";
+	    } else {
+		// we need to "decode" the value_id and return the corresponding
+		// user readable value.
+		$bf_alias = 'bug_field'."$is";
+		$bfv_alias = 'bug_field_value'."$is";
+		$select .= ",$bfv_alias.value AS $field";
+		$from .= ",bug_field $bf_alias,bug_field_value $bfv_alias";
+		$where .= " AND ($bf_alias.field_name = '$field' AND $bf_alias.bug_field_id = $bfv_alias.bug_field_id AND $bfv_alias.value_id=bug.$field AND ($bfv_alias.group_id='$group_id' OR $bfv_alias.group_id='100')) ";
+		$is++;
+	    }
+	} else {
+	    // It's a text field so leave it as it is
+	    $select .= ",bug.$field";
+	}
+    }
+}
+
+// Make sure the last few cells are in the table
+if ($labels) {
+    $html_select .= $labels.'</TR>'.$boxes.'</TR>';
+}
+
+// Force the submitted_by field at the very end 
+// (not sure this one is really needed but we keep it for historical reasons)
+$col_list[] = 'submitted_by';
+$lbl_list[] = 'Submitter';
+
+$sql = "$select $from $where $order_by LIMIT $offset,50";
 
 /*
 	Show the new pop-up boxes to select assigned to and/or status
 */
-echo '<FORM ACTION="'. $PHP_SELF .'" METHOD="GET">
-	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
-	<INPUT TYPE="HIDDEN" NAME="set" VALUE="custom">
-	<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
-	<TR><TD colspan="4" nowrap>Browse Bugs by:</td></tr>
-	<tr align="center" valign="bottom"><th><b>Assignee</b></th><th><b>Status</b></th><th><b>Category</b></th><th><b>Group</b></th></TR>
-	<TR><TD><FONT SIZE="-1">'. $tech_box . '</TD>'.
-	'<TD><FONT SIZE="-1">'. bug_status_box('_status',$_status,'Any') .'</TD>'.
-	'<TD><FONT SIZE="-1">'. bug_category_box ('_category',$group_id,$_category,'Any') .'</TD>'.
-	'<TD><FONT SIZE="-1">'. bug_group_box ('_bug_group',$group_id,$_bug_group,'Any') .'</TD>'.
-	'<TD><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Browse"></TD></TR></TABLE></FORM>';
+?>
 
+<FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="GET">
+<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">
+<INPUT TYPE="HIDDEN" NAME="set" VALUE="custom">
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+<TR><TD colspan="<?php echo $fields_per_line; ?>" nowrap>Browse Bugs by:</td></tr>
+<?php echo $html_select; ?>
 
-if ($set=='open') {
-	/*
-		For open or default, see if the user has a filer set up
-	*/
-	$sql="SELECT sql_clause FROM bug_filter WHERE user_id='".user_getid()."' AND group_id='$group_id' AND is_active='1'";
+</TABLE>
+<FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Browse"></FONT>
+</FORM>
 
-	$result=db_query($sql);
+<?php
 
-	if ($result && db_numrows($result) > 0) {
-		$sql="SELECT bug.group_id,bug.priority,bug.bug_id,bug.summary,bug.date,user.user_name AS submitted_by,".
-			"user2.user_name AS assigned_to_user ".
-			"FROM bug,user,user user2 ".
-			"WHERE (". stripslashes( db_result($result,0,'sql_clause') ) .") ".
-			"AND user.user_id=bug.submitted_by ".
-			"AND user2.user_id=bug.assigned_to ".
-			"AND group_id='$group_id'".
-			$order_by .
-			" LIMIT $offset,50";
-
-		$statement="Using Your Filter";
-
-	} else {
-		/*
-			Just browse the bugs in this group
-		*/
-		$sql="SELECT bug.group_id,bug.priority,bug.bug_id,bug.summary,bug.date,user.user_name AS submitted_by,".
-			"user2.user_name AS assigned_to_user ".
-			"FROM bug,user,user user2 ".
-			"WHERE user.user_id=bug.submitted_by ".
-			"AND bug.status_id <> '3' ".
-			"AND user2.user_id=bug.assigned_to ".
-			"AND group_id='$group_id'".
-			$order_by .
-			" LIMIT $offset,50";
-
-	}
-
-} else {
-	/*
-		Use the query from the form post
-	*/
-	$sql="SELECT bug.group_id,bug.priority,bug.bug_id,bug.summary,bug.date,user.user_name AS submitted_by,".
-		"user2.user_name AS assigned_to_user ".
-		"FROM bug,user,user user2 ".
-		"WHERE user.user_id=bug.submitted_by ".
-		" $status_str $assigned_str $bug_group_str $category_str ".
-		"AND user2.user_id=bug.assigned_to ".
-		"AND group_id='$group_id'".
-		$order_by .
-		" LIMIT $offset,51";
-
-}
-
+// print the table report with the selected bugs
 $result=db_query($sql);
+$statement .= db_numrows($result).' bugs matching';
 
 if ($result && db_numrows($result) > 0) {
 
-	echo '<hr size="1" noshade>
+    echo '<hr size="1" noshade>
 ';
-	echo "<h3>$statement</H3>";
+    echo "<h3>$statement $order_statement</h3>";
 
-	//create a new $set string to be used for next/prev button
-	if ($set=='custom') {
-		$set .= '&_assigned_to='.$_assigned_to.'&_status='.$_status.'&_category='.$_category.'&_bug_group='.$_bug_group;
-	}
+    //create a new $set string to be used for next/prev button
+    if ($set=='custom') {
+	$set .= $pref_stg;
+    }
 
-	show_buglist($result,$offset,$set);
-	echo '<P>* Denotes Bugs > 30 Days Old';
-	show_priority_colors_key();
+    show_buglist($result,$offset,$col_list,$lbl_list,$set);
+    echo '<P>* Denotes Bugs > 30 Days Old';
+    show_priority_colors_key();
 
-	$url = "/bugs/?group_id=$group_id&set=$set&order=";
-	echo '<P>Click a column heading to sort by that column, or <A HREF="'.$url.'priority">Sort by Priority</A>';
+    $url = "/bugs/?group_id=$group_id&set=$set&order=";
+    echo '<P>Click a column heading to sort by that column, or <A HREF="'.$url.'priority">Sort by Priority</A>';
 
 } else {
 
-	echo '<hr width="300" size="1" noshade>
+    echo '<hr width="300" size="1" noshade>
 ';
-	echo "<H3>$statement</H3>
+    echo "<H3>$statement</H3>
 
 		<H2>No Matching Bugs Found for ".group_getname($group_id)." or filters too restrictive</H2>";
-	echo db_error();
+    echo db_error();
 
 }
 
+//Debug echo '<FORM>SQL query = <TEXTAREA name ="toto"cols="60" rows="20" wrap="soft">'.$sql.'</TEXTAREA><BR></FORM>';
 bug_footer(array());
 
 ?>
