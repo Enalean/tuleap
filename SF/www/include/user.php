@@ -216,12 +216,10 @@ function user_get_result_set_from_unix($user_name) {
 	//so it doesn't have to be fetched each time
 		
 	global $USER_RES;
-	if (!$USER_RES["_".$user_id."_"]) {
-		$USER_RES["_".$user_id."_"]=db_query("SELECT * FROM user WHERE user_name='$user_name'");
-		return $USER_RES["_".$user_id."_"];
-	} else {
-		return $USER_RES["_".$user_id."_"];
-	}
+	$res = db_query("SELECT * FROM user WHERE user_name='$user_name'");
+	$user_id = db_result($res,0,'user_id');
+	$USER_RES["_".$user_id."_"] = $res;
+	return $USER_RES["_".$user_id."_"];
 }       
 
 function user_get_timezone() {
