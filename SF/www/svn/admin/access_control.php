@@ -42,7 +42,7 @@ if (svn_utils_svn_repo_exists($gname)) {
       <h3>Access Control File '. help_button('SVNWebInterface.html#SVNAdministration').':</h3> 
        <TEXTAREA cols="70" rows="20" wrap="virtual" name="form_accessfile">'.$svn_accessfile.'</TEXTAREA>
         </p>
-        <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit"></p></FORM>';
+        <p><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit"></p></FORM>';
 
 } else {
       echo '<p>Your subversion repository has not been created yet. Access
