@@ -35,7 +35,7 @@ print '<TABLE width="100%"><TR valign="top"><TD width="65%">'."\n";
 // LJ if ($row_grp['is_public']) {
 if (0) {
 	print '<P><B>Anonymous CVS Access</B>
-<P>This project\'s CodeX CVS repository can be checked out through anonymous
+<P>The CVS repository of this project can be checked out through anonymous
 (pserver) CVS with the following instruction set. The module you wish
 to check out must be specified as the <I>modulename</I>. When prompted
 for a password for <I>anonymous</I>, simply press the Enter key.
@@ -50,9 +50,9 @@ for a password for <I>anonymous</I>, simply press the Enter key.
 // ############################ developer access
 
 print '<P><B>CVS Access</B>
-<P>CVS read-only  access is granted to all CodeX registered users. Anonymous users do not have access to the CVS tree, because many CodeX projects want to know who is in their community of users. Users desiring read access to project 
-CVS trees should register on CodeX. 
-<P>Any registered and logged-in CodeX user has read access to the CVS tree.  Project members (the developers who are part of the core team) are granted read (checkout) and write (commit) access to the CVS tree. Below are the typical commands you would use to login into the CVS server and checkout the source code of this project. In the command below substitute <I>modulename</I> and
+<P>CVS read-only  access is granted to all '.$GLOBALS['sys_name'].' registered users. Anonymous users do not have access to the CVS tree, because many '.$GLOBALS['sys_name'].' projects want to know who is in their community of users. Users desiring read access to project 
+CVS trees should register on '.$GLOBALS['sys_name'].'. 
+<P>Any registered and logged-in '.$GLOBALS['sys_name'].' user has read access to the CVS tree.  Project members (the developers who are part of the core team) are granted read (checkout) and write (commit) access to the CVS tree. Below are the typical commands you would use to login into the CVS server and checkout the source code of this project. In the command below substitute <I>modulename</I> and
 <I>username</I> with the proper values. Enter your site password when
 prompted.
 

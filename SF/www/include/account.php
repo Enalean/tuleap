@@ -56,7 +56,7 @@ function account_add_user_to_group ($group_id,$user_unix_name) {
 		}
 	} else {
 		//user doesn't exist
-		$feedback .= "User does not exist on CodeX";
+		$feedback .= "User does not exist";
 	}
 
 	return $ret;

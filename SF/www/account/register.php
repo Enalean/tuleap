@@ -68,13 +68,13 @@ function register_valid()	{
 	$GLOBALS['newuserid'] = db_insertid($result);
 
 	// send mail
-	$message = "Thank you for registering on the CodeX web site. In order\n"
+	$message = "Thank you for registering on the ".$GLOBALS['sys_name']." web site. In order\n"
 	    . "to confirm your registration you must visit the following url: \n\n"
 	    . "<http://". $GLOBALS['HTTP_HOST'] ."/account/verify.php?confirm_hash=$confirm_hash>\n\n"
 	    . "Enjoy the site.\n\n"
-	    . " -- the CodeX Team\n";
+	    . " -- The ".$GLOBALS['sys_name']." Team\n";
 
-	mail($GLOBALS['form_email'],"CodeX Account Registration",$message,"From: noreply@".$GLOBALS['HTTP_HOST']);
+	mail($GLOBALS['form_email'], $GLOBALS['sys_name']." Account Registration",$message,"From: noreply@".$GLOBALS['HTTP_HOST']);
 
 	return 1;
     }
@@ -87,8 +87,8 @@ if ($Register && register_valid()) {
     $HTML->header(array('title'=>'Register Confirmation'));
 ?>
 
-<p><b>CodeX: New Account Registration Confirmation</b>
-<p>Congratulations. You have registered on CodeX.
+<p><b><?php print $GLOBALS['sys_name']; ?>: New Account Registration Confirmation</b>
+<p>Congratulations. You have registered on <?php print $GLOBALS['sys_name']; ?>.
 Your new username is: <b><?php print user_getname($newuserid); ?></b>
 
 <p>You are now being sent a confirmation email to verify your email 
@@ -99,7 +99,7 @@ your account.
 
 } else { // not valid registration, or first time to page
 
-    $HTML->header(array('title'=>'CodeX: Register'));
+    $HTML->header(array('title'=> $GLOBALS['sys_name'].': Register'));
 
     if (browser_is_windows() && browser_is_ie() && browser_get_version() < '5.1') {
 	// LJ not needed on CodeX. We do not use SSL
@@ -114,7 +114,7 @@ your account.
 
 ?>
     
-<h2>CodeX New Account Registration</h2>
+<h2><?php print $GLOBALS['sys_name']; ?> New Account Registration</h2>
 
 <?php 
 if ($register_error) {

@@ -37,7 +37,7 @@ function help_header($title, $help_banner=true) {
 <LINK rel="stylesheet" href="/sourceforge.css" type="text/css">
 </HEAD>
 <BODY bgcolor="#bcbcad">
-<?php print ($help_banner ? '<H4>CodeX Site Help System</H4>' : ''); ?>
+<?php print ($help_banner ? '<H4>'.$GLOBALS['sys_name'].' Site Help System</H4>' : ''); ?>
 <H2><?php print $title; ?></H2>
 <HR>
 <?php

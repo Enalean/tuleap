@@ -11,16 +11,16 @@ session_require(array(isloggedin=>1));
 $HTML->header(array(title=>"Project Registration"));
 ?>
 
-<H2>CodeX Project Registration</H2>
+<H2><?php print $GLOBALS['sys_name']; ?> Project Registration</H2>
 
 <p>
-The CodeX team would like to extend an invitation to any 
-Xerox Software project to be hosted for no price and no catch on the CodeX Website and to provide the source code to the entire Xerox community. 
+The <?php print $GLOBALS['sys_name']; ?> Team would like to extend an invitation to any 
+Xerox Software project to be hosted for no price and no catch on the <?php print $GLOBALS['sys_name']; ?> site and to provide the source code to the entire Xerox community. 
 </p>
 
 <p><B>The Process</B>
 
-<P>Registering a project with CodeX is an easy process, but we do require
+<P>Registering a project with <?php print $GLOBALS['sys_name']; ?> is an easy process, but we do require
 a some information in order to automate things as much as possible. The entire
 process should take about 5 to 10 minutes.
 

@@ -16,15 +16,15 @@ $row_user = db_fetch_array($res_user);
 
 db_query("UPDATE user SET confirm_hash='$confirm_hash' WHERE user_id=$row_user[user_id]");
 
-$message = "Someone (presumably you) on the CodeX site requested a\n"
+$message = "Someone (presumably you) on the ".$GLOBALS['sys_name']." site requested a\n"
 	. "password change through email verification. If this was not you,\n"
 	. "ignore this message and nothing will happen.\n\n"
 	. "If you requested this verification, visit the following URL\n"
 	. "to change your password:\n\n"
 	. "<http://$GLOBALS[HTTP_HOST]/account/lostlogin.php?confirm_hash=$confirm_hash>\n\n"
-	. " -- the CodeX staff\n";
+	. " -- The ".$GLOBALS['sys_name']." Team\n";
 
-mail ($row_user['email'],"CodeX Verification",$message,"From: noreply@$GLOBALS[HTTP_HOST]");
+mail ($row_user['email'],$GLOBALS['sys_name']." Password Verification",$message,"From: noreply@$GLOBALS[HTTP_HOST]");
 
 $HTML->header(array('title'=>"Lost Password Confirmation"));
 
@@ -35,7 +35,7 @@ $HTML->header(array('title'=>"Lost Password Confirmation"));
 <P>An email has been sent to the address you have on file. Follow
 the instructions in the email to change your account password.
 
-<P><A href="/">[ Home ]</A>
+<P><A href="/">[ Return to <?php print $GLOBALS['sys_name']; ?> ]</A>
 
 <?php
 $HTML->footer(array());

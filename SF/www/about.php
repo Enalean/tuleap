@@ -7,28 +7,28 @@
 // $Id$
 
 require "pre.php";    
-$HTML->header(array(title=>"About CodeX"));
+$HTML->header(array(title=>'About '.$GLOBALS['sys_name']));
 ?>
 
 <P>
-<h2>About CodeX</h2>
+<h2>About <?php print $GLOBALS['sys_name']; ?></h2>
 
 <B>Mission Statement</b><br>
-CodeX' mission is to enrich the Xerox Inner Source community by providing 
+The mission of <?php print $GLOBALS['sys_name']; ?> is to enrich the Xerox Software Development community by providing 
 a centralized place for Xerox Developers to share, control and
 manage Xerox internally developed software.
 <br><br>
 
 <B>People</b><br>
-Based on the work done by the world famous SourceForge.net site, the CodeX <a href="staff.php">staff</a> has worked hard to make 
-CodeX a reality, here's your chance to meet the people behind the site.
+Based on the work done by the world famous SourceForge.net site, the <?php print $GLOBALS['sys_name']; ?> <a href="staff.php">Team</a> has worked hard to make 
+<?php print $GLOBALS['sys_name']; ?> a reality, here's your chance to meet the people behind the site.
 <br><br>
 
 <b>Thanks</b><br>
-We owe a lot of thanks to the people that wrote 
-the <a href="/docman/display_doc.php?docid=27&group_id=1">Software</a> that runs CodeX.
+We owe a lot of thanks to the people who wrote 
+the <a href="/docman/display_doc.php?docid=27&group_id=1">Software</a> that runs <?php print $GLOBALS['sys_name']; ?>.
 We'd also like to give <a href="thanks.php">Kudos</a> to the following people and organizations
-for helping make CodeX happen.
+for helping make <?php print $GLOBALS['sys_name']; ?> happen.
 <br><br>
 
 <b>More Information</b><br>

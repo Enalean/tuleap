@@ -57,7 +57,7 @@ if ($export == 'task_task_deps') {
 	if ($result) {
 	    echo '<P>No task-task depencies  found. Could not generate an export.';
 	} else {
-	    echo '<P>Error while accessing your task depencies database. Please report the error to the CodeX administrator';
+	    echo '<P>Error while accessing your task depencies database. Please report the error to the '.$GLOBALS['sys_name'].' Administrator';
 	    echo '<br>'.db_error();
 	}
 	site_project_footer( array() );

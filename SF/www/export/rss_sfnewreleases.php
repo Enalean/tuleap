@@ -44,11 +44,11 @@ $res=db_query($query);
 
 // ## one time output
 print " <channel>\n";
-print "  <copyright>Copyright (c) Xerox Corporation, CodeX Team, 2001. All Rights Reserved</copyright>\n";
+print "  <copyright>Copyright (c) Xerox Corporation, ".$GLOBALS['sys_name']." Team, 2001-2002. All Rights Reserved</copyright>\n";
 print "  <pubDate>".gmdate('D, d M Y g:i:s',time())." GMT</pubDate>\n";
-print "  <descriptionCodeX New Releases</description>\n";
+print "  <description>New Releases</description>\n";
 print "  <link>http://$GLOBALS[sys_default_domain]</link>\n";
-print "  <title>CodeX New Releases</title>\n";
+print "  <title>New Releases</title>\n";
 print "  <webMaster>webmaster@$GLOBALS[sys_default_domain]</webMaster>\n";
 print "  <language>en-us</language>\n";
 // ## item outputs

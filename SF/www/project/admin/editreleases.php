@@ -354,17 +354,17 @@ if ($submit) {
 			$array_emails=result_column_to_array($result);
 			$list=implode($array_emails,', ');
 		
-			$subject='CodeX File Release Notice';
+			$subject=$GLOBALS['sys_name'].' File Release Notice';
 		
 			$body = "To: noreply@$GLOBALS[HTTP_HOST]".
 				"\nBCC: $list".
 				"\nSubject: $subject".
 				"\n\nA new version of ". db_result($result,0,'name')." has been released. ".
-				"\nYou can download it from CodeX by following this link: ".
+				"\nYou can download it at: ".
 				"\n\n<http://".$GLOBALS['HTTP_HOST']."/project/showfiles.php?group_id=$group_id&release_id=$release_id> ".
 				"\n\nYou requested to be notified when new versions of this file ".
 				"\nwere released. If you don't wish to be notified in the ".
-				"\nfuture, please login to CodeX and click this link: ".
+				"\nfuture, please login to ".$GLOBALS['sys_name']." and click this link: ".
 				"\n<http://$GLOBALS[HTTP_HOST]/project/filemodule_monitor.php?filemodule_id=$package_id> ";
 			
 			exec ("/bin/echo \"$body\" | /usr/sbin/sendmail -fnoreply@$GLOBALS[HTTP_HOST] -t");
@@ -475,7 +475,7 @@ if ($release_id) {
 		<H3>Attach Files To This Release</H3>
 		
 		<P>
-		To attach your files to this release you must first upload them to the CodeX server. To do so
+		To attach your files to this release you must first upload them to the '.$GLOBALS['sys_name'].' server. To do so
                             use FTP  to ';
 echo "<b>$sys_download_host</b> (login ftp / password is your email address)";
 echo ' and put your files in the <B>/incoming</B> directory. When you 

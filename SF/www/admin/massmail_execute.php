@@ -40,7 +40,7 @@ switch ($destination) {
 		."FROM user,user_group WHERE "	
 		."user.user_id=user_group.user_id AND user.status='A' AND user_group.group_id=1 "
 		."GROUP by lcase(email)");
-		$to_name = 'CodeX Administrators';
+		$to_name = $GLOBALS['sys_name'].' Administrators';
 		break;
 	case 'devel':
 		$res_mail = db_query("SELECT user.email AS email,user.user_name AS user_name "
@@ -96,7 +96,7 @@ while ($row_mail = db_fetch_array($res_mail)) {
 	mail("$row_mail[user_name] <$row_mail[email]>",
 		stripslashes($GLOBALS['mail_subject']),
 		stripslashes($GLOBALS['mail_message']),
-		"From: CodeX <noreply@$GLOBALS[sys_default_domain]>");
+		"From: ".$GLOBALS['sys_name']." <noreply@$GLOBALS[sys_default_domain]>");
 	usleep(250000);
 	flush();
 }

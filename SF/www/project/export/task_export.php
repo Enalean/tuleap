@@ -88,7 +88,7 @@ if ($export == 'task') {
 	if ($result) {
 	    echo '<P>No task found. Could not generate an export.';
 	} else {
-	    echo '<P>Error while accessing your task database. Please report the error to the CodeX administrator';
+	    echo '<P>Error while accessing your task database. Please report the error to the '.$GLOBALS['sys_name'].' Administrator';
 	    echo '<br>'.db_error();
 	}
 	site_project_footer( array() );

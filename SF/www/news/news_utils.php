@@ -25,7 +25,7 @@ function news_header($params) {
 	} else {
 		$HTML->header($params);
 		echo '
-			<H2>CodeX <A HREF="/news/">News</A></H2>';
+			<H2>'.$GLOBALS['sys_name'].' <A HREF="/news/">News</A></H2>';
 	}
 	echo '<P><B>';
 	echo '<A HREF="/news/submit.php?group_id='.$group_id.'">Submit</A> | <A HREF="/news/admin/?group_id='.$group_id.'">Admin</A></B>';

@@ -8,9 +8,9 @@
 require('pre.php');
 require('site_stats_utils.php');
 
-$HTML->header(array(title=>"CodeX Site Statistics "));
+$HTML->header(array(title=> $GLOBALS['sys_name'].' Site Statistics'));
 
-   // require you to be a member of the super-admin group
+// require you to be a member of the super-admin group
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
 

@@ -60,7 +60,7 @@ if ($group_id && user_ismember($group_id,'A')) {
 					$row_email = db_fetch_array($res_email);
 
 					// mail password to admin
-					$message = "A mailing list will be created on CodeX in less than ".$GLOBALS['sys_crondelay']." hours \n"
+					$message = "A mailing list will be created on ".$GLOBALS['sys_name']." in less than ".$GLOBALS['sys_crondelay']." hours \n"
 					. "and you are the list administrator.\n\n"
 					. "This list is: $new_list_name@" .$GLOBALS['sys_lists_host'] ."\n\n"
 					. "Your mailing list info is at:\n"
@@ -69,10 +69,10 @@ if ($group_id && user_ismember($group_id,'A')) {
 					. "http://".$GLOBALS['sys_lists_host']."/mailman/admin/$new_list_name\n\n"
 					. "Your list password is: $list_password\n"
 					. "You are encouraged to change this password as soon as possible.\n\n"
-					. "Thank you for registering your project with CodeX.\n\n"
-					. " -- the CodeX team\n";
+					. "Thank you for registering your project with ".$GLOBALS['sys_name']."\n\n"
+					. " -- The ".$GLOBALS['sys_name']." Team\n";
 
-					mail ($row_email['email'],"CodeX New Mailing List",$message,"From: codex-admin@$GLOBALS[sys_default_domain]");
+					mail ($row_email['email'],$GLOBALS['sys_name']." New Mailing List",$message,"From: codex-admin@$GLOBALS[sys_default_domain]");
  
 					$feedback .= " Email sent with details to: $row_email[email] ";
 				}
@@ -109,7 +109,7 @@ if ($group_id && user_ismember($group_id,'A')) {
 		echo '
 			<H3>Add a Mailing List</H3>
 			<P>Lists are named in this manner: <em>projectname-listname@'. $GLOBALS['sys_lists_host'] .'</em>
-<P> In order to harmonize mailing lists names on Codex we advise you to create (at least) the following mailing lists for your project:<BR>
+<P> In order to harmonize mailing lists names on '.$GLOBALS['sys_name'].' we advise you to create (at least) the following mailing lists for your project:<BR>
 <ul>
 <li><b>'.group_getunixname($group_id).'-interest</b>: for general purpose discussion especially at user level.
 <li><b>'.group_getunixname($group_id).'-devel</b>: for developement questions and debates.
@@ -166,7 +166,7 @@ if ($group_id && user_ismember($group_id,'A')) {
 			<H2>Update Mailing Lists</H2>
 			<P>
 			You can administrate lists from here. Please note that private lists
-			can still be viewed by members of your project, but are not listed on CodeX.<P>';
+			can still be viewed by members of your project, but are not listed on '.$GLOBALS['sys_name'].'<P>';
 
 			$title_arr=array();
 			$title_arr[]='List';

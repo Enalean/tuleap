@@ -153,7 +153,7 @@ connection are as follows:
 <P> Your project data can either be exported in
 individual text files (CSV format) or in a project specific database that you can directly access from your desktop machine through an ODBC/JDBC connection.
 
-<P>For more information about the Export Facility please read the document "<a href="/docman/display_doc.php?docid=85&group_id=1">Extracting your project data from CodeX</a>" first.
+<P>For more information about the Export Facility please read the document "<a href="/docman/display_doc.php?docid=85&group_id=1">Extracting your project data from <?php print $GLOBALS['sys_name']; ?></a>" first.
 
 <h3><u>Text File Exports</u></h3>
 
@@ -244,7 +244,7 @@ $group_id;?>&export=task_assigned_to_format">available</a>.
 <h3><u>Direct Database Access</u></h3>
 
 <P>Alternatively you can generate your own project database on the
-CodeX server and access it with any ODBC/JDBC (e.g MS-Access,
+<?php print $GLOBALS['sys_name']; ?> server and access it with any ODBC/JDBC (e.g MS-Access,
 Excel,...) capable tool directly from your workstation. Depending on
 the size of your project data the generation of the project database
 may take a while.

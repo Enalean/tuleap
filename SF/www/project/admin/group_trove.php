@@ -51,7 +51,7 @@ available in the map.</li>
 AND a parent category will result in only the more specific categorization
 being accepted.</li>
 <li><em><b>Topic Trove only</b></em>: If your project does
-  not seem to fit into any of the categories or sub-categories, simply select "Other/Non Listed Topics". As new projects are submitted the CodeX team will refine the Topic Trove by defining 2nd and possibly 3rd level subcategories.  We welcome any suggestions on this. You can change the trove categories for this project at any time.</li> 
+  not seem to fit into any of the categories or sub-categories, simply select "Other/Non Listed Topics". As new projects are submitted, the '.$GLOBALS['sys_name'].' Team will refine the Topic Trove by defining 2nd and possibly 3rd level subcategories.  We welcome any suggestions on this. You can change the trove categories for this project at any time.</li> 
 </ul>
 ';
 

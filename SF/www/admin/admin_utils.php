@@ -5,7 +5,7 @@ function site_admin_header($params) {
 	global $feedback;
 	$HTML->header($params);
 	echo html_feedback_top($feedback);
-	echo '<H3>CodeX Site Admin</H3>
+	echo '<H3>'.$GLOBALS['sys_name'].' Site Admin</H3>
 	<P><A HREF="/admin/">Site Admin Home</A>
 	<P>';
 }

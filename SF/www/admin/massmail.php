@@ -33,7 +33,7 @@ $res_count = db_query("SELECT count(*) AS count FROM user,user_group WHERE "
 $row_count = db_fetch_array($res_count);
 $count_sfadmin = $row_count[count];
 
-print '<P><B>Mail Engine for CodeX Subscribers (MESS)</B>
+print '<P><B>Mail Engine for '.$GLOBALS['sys_name'].' Subscribers (MESS)</B>
 
 <P>Be <FONT color=#FF0000><B>VERY</B></FONT> careful with this form,
 because sutmitting it WILL send email to lots of users.
@@ -52,7 +52,7 @@ Send only to project developers ('
 Send only to project administrators ('
 .$count_admin
 .' users)<BR><INPUT type="radio" name="destination" value="sfadmin">
-Send only to CodeX administrators (test) ('
+Send only to '.$GLOBALS['sys_name'].' Administrators (test) ('
 .$count_sfadmin
 .' users)<BR><INPUT type="radio" name="destination" value="all">
 Send to all users, regardless of their preferences ('
@@ -60,7 +60,7 @@ Send to all users, regardless of their preferences ('
 .' users)
 
 <P>Subject:
-<BR><INPUT type="text" name="mail_subject" value="CodeX: "size="40">
+<BR><INPUT type="text" name="mail_subject" value="'.$GLOBALS['sys_name'].': "size="40">
 
 <P>Text of Message:
 <PRE>

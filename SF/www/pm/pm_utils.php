@@ -576,7 +576,7 @@ function pm_show_task_history ($project_task_id) {
 }
 
 /* 
-   The ANY value is 0 in CodeX. The simple fact that
+   The ANY value is 0. The simple fact that
    ANY (0) is one of the value means it is Any even if there are
    other non zero values in the  array
 */

@@ -102,7 +102,7 @@ if (browser_is_ie() && browser_is_mac()) {
 ?>
 	
 <p>
-<h2>CodeX Site Login</h2>
+<h2><?php print $GLOBALS['sys_name']; ?> Site Login</h2>
 <p>
 <font color="red"><B>Cookies must be enabled past this point.</B></font>
 <P>
@@ -118,21 +118,32 @@ Password:
 <!-- (LJ) Comment the stay in SSL checkbox. We do not use SSL
 <INPUT TYPE="CHECKBOX" NAME="stay_in_ssl" VALUE="1" <?php echo ((browser_is_ie() && browser_get_version() < '5.5')?'':'CHECKED') ?>> Stay in SSL mode after login
 <p>
-You will be connected with an SSL server and your password will not be visible to other users. 
+You will be connected with an SSL server and your password will not be
+visible to other users.
 <P>
-<B>Internet Explorer</B> users will have intermittent SSL problems, so they should leave SSL 
-after login. Netscape users should stay in SSL mode permanently for maximum security.
-Visit <A HREF="http://www.microsoft.com/">Microsoft</A> for more information about this known problem.
+<B>Internet Explorer</B> users will have intermittent SSL problems, so
+they should leave SSL after login. Netscape users should stay in SSL
+mode permanently for maximum security.  Visit <A
+HREF="http://www.microsoft.com/">Microsoft</A> for more information
+about this known problem.
 <P>
 -->
 <input type="submit" name="login" value="Login">
 </form>
 <P>
-<b><A href="lostpw.php">[Lost your password?]</A></b><BR>
-If you have lost your password please do not create another account but follow us and we'll help you <a href="lostpw.php">remember your lost password</a>. If it fails then contact the <a href="mailto:codex-admin@codex.xerox.com"><b>CodeX</b> administrator</a>.
+<b><A href="lostpw.php">[Lost your password?]</A></b><BR> If you have
+lost your password please do not create another account but follow us
+and we'll help you <a href="lostpw.php">remember your lost
+password</a>. If it fails then contact the <a
+href="mailto:codex-admin@codex.xerox.com"><b><?php print $GLOBALS['sys_name']; ?></b>
+administrator</a>.
 <P>
-<b><A HREF="register.php">[Create a new Account]</A></b><BR>
-If it's your first time on the <b>CodeX</b> site you can become a member right now ! The creation of a <a href="register.php">new account</a> takes a few seconds and you can take advantage of the services offered by the CodeX site to all Xerox developers.
+<b><A HREF="register.php">[Create a new Account]</A></b><BR> If it's
+your first time on the <b><?php print $GLOBALS['sys_name']; ?></b>
+site you can become a member right now ! The creation of a <a
+href="register.php">new account</a> takes a few seconds and you can
+take advantage of the services offered by the <?php print
+$GLOBALS['sys_name']; ?> site to all Xerox developers.
 
 <SCRIPT language="JavaScript"> <!-- 
     document.form_login.form_loginname.focus();

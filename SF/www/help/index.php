@@ -7,11 +7,9 @@
 // $Id$
 
 require "pre.php";    
-$HTML->header(array(title=>"Welcome to CodeX"));
+$HTML->header(array(title=>"Welcome to ".$GLOBALS['sys_name']));
 
 print "<p>Page Information";
-print "<p>Page Information";
-
 
 $HTML->footer(array());
 

@@ -38,7 +38,7 @@ $res_admin = db_query("SELECT user.user_id AS user_id,user.user_name AS user_nam
 	. "user_group.admin_flags = 'A'");
 
 if ($project->getStatus() == 'H') {
-	print "<P>NOTE: This project entry is maintained by the CodeX staff. We are not "
+	print "<P>NOTE: This project entry is maintained by the ".$GLOBALS['sys_name']." staff. We are not "
 		. "the official site "
 		. "for this product. Additional copyright information may be found on this project's homepage.\n";
 }

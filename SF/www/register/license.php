@@ -34,7 +34,7 @@ if ($insert_group_name && $group_id && $rand_hash && $form_full_name && $form_un
 
 } else {
 	exit_error('Error','Missing Info Or Invalid State. Some form variables were missing. 
-		If you are certain you entered everything, <B>PLEASE</B> report to admin@'. $GLOBALS['sys_default_domain'].' and
+		If you are certain you entered everything, <B>PLEASE</B> report to codex-admin@'. $GLOBALS['sys_default_domain'].' and
 		include info on your browser and platform configuration');
 }
 
@@ -45,20 +45,43 @@ $HTML->header(array('title'=>'License'));
 
 
 
-<P>CodeX was created to promote code sharing of Xerox internally developed software and to have one single place where to shop for pieces of source code.
-To keep things simple, the Xerox Open Source Committee and the Xerox Intellectual Property Law Dept have put together a default <a href="/docs/licenses/xrx.php" target="side_window">Xerox Code eXchange Policy</a> that defines the terms and conditions under which source code can be shared inside Xerox.
+<P><?php print $GLOBALS['sys_name']; ?> was created to promote code
+sharing of Xerox internally developed software and to have one single
+place where to shop for pieces of source code.
 
-<P>We think that this policy serves well the purpose of code sharing while offering a good level of protection. However if this default policy doesn't fit your needs select the item "Other" in the menu below and let us know why you wish to use another policy. Your new policy will be reviewed by the Xerox Intellectual Property Law Dept and the Xerox Open Source Committee for approval.
+<p>To keep things simple, the Xerox Open Source Committee and the
+Xerox Intellectual Property Law Dept have put together a default <a
+href="/docs/licenses/xrx.php" target="side_window">Xerox Code eXchange
+Policy</a> that defines the terms and conditions under which source
+code can be shared inside Xerox.
+
+<P>We think that this policy serves well the purpose of code sharing
+while offering a good level of protection. However if this default
+policy doesn't fit your needs select the item "Other" in the menu
+below and let us know why you wish to use another policy. Your new
+policy will be reviewed by the Xerox Intellectual Property Law Dept
+and the Xerox Open Source Committee for approval.
 
 <P>Choosing a new policy is a serious decision. Please take some time
-to read the <a href="/docs/licenses/xrx.php" target="side_window">default policy</a> before making a choice about your project. CodeX is not responsible for legal discrepencies regarding your own software policy.
+to read the <a href="/docs/licenses/xrx.php"
+target="side_window">default policy</a> before making a choice about
+your project. <?php print $GLOBALS['sys_name']; ?> is not responsible
+for legal discrepencies regarding your own software policy.
 
 <P>
 Two important remarks:
 <ul>
-<li>If you are applying for a website hosting-only project and do not expect to host any source code (why ? :-) on CodeX, please
-select "website-only" from the choices below and proceed.</LI>
-<LI>If your software has already been approved by the COMIP for external Open Source then choose the Open Source license that covers your Xerox code. It will help other Xerox teams to decide whether they can/want to re-use your code in there own Xerox owned software.
+
+<li>If you are applying for a website hosting-only project and do not
+expect to host any source code (why ? :-) on <?php print
+$GLOBALS['sys_name']; ?>, please select "website-only" from the
+choices below and proceed.</LI>
+
+<LI>If your software has already been approved by the COMIP for
+external Open Source then choose the Open Source license that covers
+your Xerox code. It will help other Xerox teams to decide whether they
+can/want to re-use your code in there own Xerox owned software.</li>
+
 </UL>
 <!-- LJ
 <P>For many legal reasons, you may not change a project's license once it has been set. If you

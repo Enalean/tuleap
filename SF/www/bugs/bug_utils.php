@@ -991,7 +991,7 @@ function bug_attach_file($bug_id,$input_file,$input_file_name,$input_file_type,$
 }
 
 /* 
-   The ANY value is 0 in CodeX. The simple fact that
+   The ANY value is 0. The simple fact that
    ANY (0) is one of the value means it is Any even if there are
    other non zero values in the  array
 */

@@ -25,7 +25,7 @@ function survey_header($params) {
 
 	site_project_header($params);
 
-	echo "<P><B><A HREF=\"/survey/admin/?group_id=$group_id\">Admin</A>";
+	echo "<P><B><A HREF=\"/survey/admin/?group_id=$group_id\">Admin</A></B>";
 
 	if ($is_admin_page && $group_id) {
 		echo " | <A HREF=\"/survey/admin/add_survey.php?group_id=$group_id\">Add Surveys</A>";

@@ -33,10 +33,10 @@ $HTML->header(array('title'=>"Email Change Complete"));
 <P>Welcome, <?php print $row_user['realname'] ?>.<BR>
  Your email change is complete. Your new email address on file is 
 <B><?php print $row_user[email_new]; ?></B>. Mail sent to
-CodeX user <?php print $row_user['realname'] ?> (<?php print $row_user['user_name']; ?>) <!-- LJ @ --><?php //LJ print $GLOBALS['sys_users_host']; ?>
+<?php print $GLOBALS['sys_name']; ?> user <?php print $row_user['realname'] ?> (<?php print $row_user['user_name']; ?>) <!-- LJ @ --><?php //LJ print $GLOBALS['sys_users_host']; ?>
 will now be forwarded to this new email.
 
-<P><A href="/">[Return to CodeX]</A>
+<P><A href="/">[Return to <?php print $GLOBALS['sys_name']; ?>]</A>
 
 <?php
 $HTML->footer(array());

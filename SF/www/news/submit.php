@@ -55,7 +55,7 @@ if (user_isloggedin()) {
 		All posts <B>for your project</B> will appear instantly on your project 
 		summary page. Posts that are of special interest to the community will 
 		have to be approved by a member of the news team before they will appear 
-		on the CodeX home page.
+		on the '.$GLOBALS['sys_name'].' home page.
 		<P>
 		You may include URLs, but not HTML in your submissions.
 		<P>

@@ -16,11 +16,11 @@ print '<?xml version="1.0"?>
 
 // ## one time output
 print " <channel>\n";
-print "  <copyright>Copyright (c) 2001-2002 Xerox, Inc. All Rights Reserved.</copyright>\n";
+print "  <copyright>Copyright (c) 2001-2002 Xerox, Inc.".$GLOBALS['sys_name']." Team. All Rights Reserved.</copyright>\n";
 print "  <pubDate>".gmdate('D, d M Y g:i:s',time())." GMT</pubDate>\n";
-print "  <description>CodeX Full Project Listing</description>\n";
+print "  <description>Full Project Listing</description>\n";
 print "  <link>http://$GLOBALS[sys_default_domain]</link>\n";
-print "  <title>CodeX Full Project Listing</title>\n";
+print "  <title>Full Project Listing</title>\n";
 print "  <webMaster>webmaster@$GLOBALS[sys_default_domain]</webMaster>\n";
 print "  <language>en-us</language>\n";
 // ## item outputs
@@ -40,10 +40,10 @@ print " </channel>\n";
 } else if ($type == "csv") {
 
     header('Content-Type: text/csv');
-    header ('Content-Disposition: filename=codex_projects.csv');
+    header ('Content-Disposition: filename=all_projects.csv');
 
     // ## one time output
-    print 'CodeX ID, Short Name, Name, Description, Language, OS Runtime Support,'.
+    print 'Project ID, Short Name, Name, Description, Language, OS Runtime Support,'.
 	'Development State, Release Location, Additional Information, Point of contact'."\n";
     // ## item outputs
     while ($row = db_fetch_array($res)) {

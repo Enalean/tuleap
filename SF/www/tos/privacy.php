@@ -11,40 +11,40 @@ $HTML->header(array(title=>"Terms of Service Agreement"));
 ?>
 
 <p>
-<h2>CodeX Privacy Policy</h2>
+<h2><?php print $GLOBALS['sys_name']; ?> Privacy Policy</h2>
 </p>
 
 <p>
-At CodeX, we intend to give you as much control as possible over your
+At <?php print $GLOBALS['sys_name']; ?>, we intend to give you as much control as possible over your
 personal information, including the Registration Data.   We will let each
 user know how we will use the personal information derived from each user's
-access to and use of CodeX and/or the Services.
+access to and use of <?php print $GLOBALS['sys_name']; ?> and/or the Services.
 </p>
 
 <p>
-NOTICE
+<b>NOTICE</b>
 </p>
 
 <p>
-CodeX will track the domains from which people visit CodeX and
+<?php print $GLOBALS['sys_name']; ?> will track the domains from which people visit <?php print $GLOBALS['sys_name']; ?> and
 analyze this data for trends and statistics.  Subject to the provisions of
-this Privacy Policy, different CodeX sites may use accumulated data
+this Privacy Policy, different <?php print $GLOBALS['sys_name']; ?> sites may use accumulated data
 for different purposes, including but not limited to marketing analysis,
 service evaluation and planning.
 </p>
 
 <p>
-CodeX contains links to other Websites, whether owned or controlled by
-CodeX affiliates or unrelated third parties.  CodeX is not
+<?php print $GLOBALS['sys_name']; ?> contains links to other Websites, whether owned or controlled by
+<?php print $GLOBALS['sys_name']; ?> affiliates or unrelated third parties.  <?php print $GLOBALS['sys_name']; ?> is not
 responsible for the privacy policies and practices of any linked Website.
 </p>
 
 <p>
-Currently, CodeX uses personal information as a basis for
+Currently, <?php print $GLOBALS['sys_name']; ?> uses personal information as a basis for
 notifications to users, "opt-in" emails, and in order to implement the terms
 of the Terms of Service governing the website (the "TOS").    User names and
 email addresses (as well as any additional information that a user may
-choose to post) are publicly available on the CodeX site, unless a
+choose to post) are publicly available on the <?php print $GLOBALS['sys_name']; ?> site, unless a
 user elects to "opt-out" of such display of personal information.  However,
 in cases where users voluntarily and publicly disclose personal information
 which may contain Registration Data, or otherwise post personal information
@@ -54,16 +54,16 @@ applicable license.
 </p>
 
 <p>
-Subject to the foregoing, CodeX may conduct surveys of other studies
+Subject to the foregoing, <?php print $GLOBALS['sys_name']; ?> may conduct surveys of other studies
 of its customer base and usage for marketing and planning purposes.  With
 respect to information collected from such surveys or studies, and in the
 event that responses are to be publicly disclosed, users will be notified at
-the time they take the survey and CodeX will disclose only aggregate
+the time they take the survey and <?php print $GLOBALS['sys_name']; ?> will disclose only aggregate
 information regarding its users and not personal information identifying any
 specific individual.  Notwithstanding the foregoing, in cases where surveys
-allow users to submit written comments, and where CodeX advises users
+allow users to submit written comments, and where <?php print $GLOBALS['sys_name']; ?> advises users
 of the possibility of such disclosure at the time they take the survey,
-CodeX reserves the right to disclose text information provided by any
+<?php print $GLOBALS['sys_name']; ?> reserves the right to disclose text information provided by any
 user through such a survey, provided that no personal information
 identifying that user is disclosed.
 </p>
@@ -73,11 +73,11 @@ identifying that user is disclosed.
 </p>
 
 <p>
-Cookies:  CodeX employs "cookies" to provide a user with tailored
+Cookies:  <?php print $GLOBALS['sys_name']; ?> employs "cookies" to provide a user with tailored
 information.  A "cookie" is an element of data which a Service or site, when
 visited by a user, sends to that user's browser which, in turn, may store
-that element on the user's hard drive or memory.  CodeX uses cookies
-to better serve users who use our Services; any cookies sent by CodeX
+that element on the user's hard drive or memory.  <?php print $GLOBALS['sys_name']; ?> uses cookies
+to better serve users who use our Services; any cookies sent by <?php print $GLOBALS['sys_name']; ?> 
 will be marked so that they will only be accessible by websites subject to
 this Privacy Policy.  However, at his or her option and at his or her sole
 expense and responsibility, any user may block or delete our cookies from
@@ -93,10 +93,10 @@ will include directions for how a user may remove him or herself from the
 list, or a URL where the user may find such directions.
 </p>
 
-<p>
-Other Notification: In order to implement or enforce the Terms of Service of
-the relevant CodeX site, CodeX may use personal information to
-contact users on an individual basis.
+<p> Other Notification: In order to implement or enforce the Terms of
+Service of the relevant <?php print $GLOBALS['sys_name']; ?> site, the
+<?php print $GLOBALS['sys_name']; ?> Team may use personal information
+to contact users on an individual basis.
 </p>
 
 <p>
@@ -130,34 +130,34 @@ application.
 
 <p>
 At no time, unless such disclosure is required by law or a user specifically
-authorizes such disclosure, will CodeX disclose individual user
+authorizes such disclosure, will <?php print $GLOBALS['sys_name']; ?> disclose individual user
 personal information that is not publicly available to unrelated third
 parties.
 </p>
 
 <p>
-Surveys and Resulting Information:  Subject to the foregoing, CodeX
+Surveys and Resulting Information:  Subject to the foregoing, <?php print $GLOBALS['sys_name']; ?> 
 may conduct surveys or other studies of its customer base and usage for
 marketing and planning purposes.  Participation in such surveys is at the
-user's option;  CodeX does not conduct mandatory surveys.
+user's option;  <?php print $GLOBALS['sys_name']; ?> does not conduct mandatory surveys.
 </p>
 
 <p>
 With respect to information collected from such surveys or studies, and in
 the event that responses are to be publicly disclosed, users will be
-notified at the time they take the survey and CodeX will disclose
+notified at the time they take the survey and <?php print $GLOBALS['sys_name']; ?> will disclose
 only aggregate information regarding its users and not personal information
-identifying any specific individual.  Circumstances under which CodeX
+identifying any specific individual.  Circumstances under which <?php print $GLOBALS['sys_name']; ?> 
 would publicly disclose such aggregate information include, but are not
 limited to, sharing survey results with the site population, providing data
-to CodeX advertisers on user preferences and/or demographics, and
+to <?php print $GLOBALS['sys_name']; ?> advertisers on user preferences and/or demographics, and
 publicizing overall usage data in press communications.
 </p>
 
 <p>
 Notwithstanding the foregoing, in cases where surveys allow users to submit
-written comments, and where CodeX advises users of the possibility of
-such disclosure at the time they take the survey, CodeX reserves the
+written comments, and where <?php print $GLOBALS['sys_name']; ?> advises users of the possibility of
+such disclosure at the time they take the survey, <?php print $GLOBALS['sys_name']; ?> reserves the
 right to disclose text information provided by any user through such a
 survey, provided that no personal information identifying that user is
 disclosed.
@@ -170,8 +170,8 @@ disclosed.
 <p>
 With regard to personal information, users can view their data on their
 personal profile page.  When technically feasible, users are permitted to
-update their personal information directly through CodeX Service.
-When such updating service is not technically feasible, CodeX will
+update their personal information directly through <?php print $GLOBALS['sys_name']; ?> Service.
+When such updating service is not technically feasible, <?php print $GLOBALS['sys_name']; ?> will
 make reasonable efforts to assist users in updating their personal
 information.
 </p>
@@ -181,7 +181,7 @@ information.
 </p>
 
 <p>
-To secure site integrity, CodeX employs measures including but not
+To secure site integrity, <?php print $GLOBALS['sys_name']; ?> employs measures including but not
 limited to security audits, use of encryption tools and software, and other
 reasonable security measures and procedures.
 </p>
@@ -196,21 +196,21 @@ restricted to site administrators and individuals on a need-to-know basis.
 </p>
 
 <p>
-In the event that CodeX becomes aware that site security is
+In the event that <?php print $GLOBALS['sys_name']; ?> becomes aware that site security is
 compromised or user nonpublic information has been disclosed to unrelated
 third parties as a result of external activity, including but not limited to
-external security attacks, CodeX shall take reasonable measures which
+external security attacks, <?php print $GLOBALS['sys_name']; ?> shall take reasonable measures which
 it deems appropriate, including but not limited to internal investigation
 and reporting, and notification to and cooperation with law enforcement
 authorities.
 </p>
 
 <p>
-If CodeX becomes aware that a user's personal information provided to
-CodeX has been disclosed in a manner not permitted by this Privacy
-Policy, CodeX shall make reasonable efforts to notify the affected
+If the <?php print $GLOBALS['sys_name']; ?> Team becomes aware that a user's personal information provided to
+<?php print $GLOBALS['sys_name']; ?> has been disclosed in a manner not permitted by this Privacy
+Policy, <?php print $GLOBALS['sys_name']; ?> shall make reasonable efforts to notify the affected
 user, as soon as reasonably possible and as permitted by law, of what
-information has been disclosed, to the extent that CodeX knows this
+information has been disclosed, to the extent that <?php print $GLOBALS['sys_name']; ?> knows this
 information.
 </p>
 

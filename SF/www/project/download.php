@@ -34,7 +34,7 @@ if (user_isloggedin()) {
   // there must be only just one release - Not 0
   // Not more than one. Just one.
   if ( !$res_file || $num_files != 1 ) {
-    exit_error('Incorrect File Release ID or Group ID', 'Please report the error to the CodeX Administrator in the <i>Contact Us</i> section');
+    exit_error('Incorrect File Release ID or Group ID', 'Please report the error to the '.$GLOBALS['sys_name'].' Administrator using the <i>Contact Us</i> link in the main menu');
   }
   $file_release = db_fetch_array( $res_file );
 
@@ -55,7 +55,7 @@ if (user_isloggedin()) {
   header("Cache-Control: no-cache, must-revalidate");
   header("Content-type: text/html");
   header("Location: $url");
-  print ("Thanks for using CodeX!");
+  print ("Thanks for using ".$GLOBALS['sys_name']."\n");
 
 } else {
   /*

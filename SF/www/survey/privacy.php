@@ -35,7 +35,7 @@ If any changes are made to this policy, it will affect
 only future data that is collected and the user will of 
 course have the ability to 'opt-out'.
 <P>
-<B>The CodeX Team</B>
+<B>The <?php print $GLOBALS['sys_name']; ?> Team</B>
 <P>
 <?php
 

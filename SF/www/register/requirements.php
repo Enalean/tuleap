@@ -11,12 +11,12 @@ session_require(array(isloggedin=>1));
 $HTML->header(array(title=>"Project Requirements"));
 ?>
 
-<H2>Step 1: CodeX Services & Requirements (Service Specific Rules)</H2>
+<H2>Step 1: <?php print $GLOBALS['sys_name']; ?> Services & Requirements (Service Specific Rules)</H2>
 
 <p>
-We are now offering a full suite of services for CodeX projects. If
+We are now offering a full suite of services for <?php print $GLOBALS['sys_name']; ?> projects. If
 you haven't already, please be sure to browse the most recent revision of
-the <a href="/docs/site" target="side_window">CodeX Services</a>.
+the <a href="/docs/site" target="side_window"><?php print $GLOBALS['sys_name']; ?> Services</a>.
 </p>
 
 <p>
@@ -26,11 +26,11 @@ the <a href="/docs/site" target="side_window">CodeX Services</a>.
 <p>
 The space given to you on this server is given for the expressed purpose of
 Xerox software development or, in the case of web sites, the advancement of
-Code eXchange culture inside Xerox. For more information, please read the CodeX Terms of Service ("Terms of Service") in Step 2.
+Code eXchange culture inside Xerox. For more information, please read the <?php print $GLOBALS['sys_name']; ?> Terms of Service ("Terms of Service") in Step 2.
 </p>
 
 
-<!-- LJ Not sure what it means in the CodeX context 
+<!-- LJ Not sure what it means in the Xerox context 
 <p>
 <b>Creative Freedom</b>
 </p>
@@ -43,27 +43,27 @@ value our freedom. Details about these restrictions are described in the
 Terms of Service.
 </p>
 -->
-<!-- LJ Not sure what it means in the CodeX context 
+<!-- LJ Not sure what it means in the Xerox context 
 <p>
 <b>Advertisements</b>
 </p>
 
 <p>
 You may not place any revenue-generating advertisements on a site hosted at
-CodeX.
+<?php print $GLOBALS['sys_name']; ?>.
 </p>
 -->
 <p>
-<b>CodeX Link</b>
+<b><?php print $GLOBALS['sys_name']; ?> Link</b>
 </p>
 
 <p>
-If you host a web site at CodeX, you must place one of our approved
-graphic images on your site with a link back to CodeX. The graphic may
-either link to the main CodeX site or to your project page on
-CodeX. We will leave placement up to you.  For information about how
-to insert a CodeX logo which will track your pageviews, please read
-the <a href="/docman/display_doc.php?docid=21&group_id=1" target="side_window">CodeX Logo display documentation</a>.
+If you host a web site at <?php print $GLOBALS['sys_name']; ?>, you must place one of our approved
+graphic images on your site with a link back to <?php print $GLOBALS['sys_name']; ?>. The graphic may
+either link to the main <?php print $GLOBALS['sys_name']; ?> site or to your project page on
+<?php print $GLOBALS['sys_name']; ?>. We will leave placement up to you.  For information about how
+to insert a <?php print $GLOBALS['sys_name']; ?> logo which will track your pageviews, please read
+the <a href="/docman/display_doc.php?docid=21&group_id=1" target="side_window"><?php print $GLOBALS['sys_name']; ?> Logo display documentation</a>.
 </p>
 
 <p>

@@ -61,7 +61,7 @@ fields.
 
   <li><i><u>System</u></i> : these fields have a limited level of
   customization. System fields of type 'Select Box' have a fixed
-  number of values for the CodeX site globally. You can only change
+  number of values for the site globally. You can only change
   the label and the rank of these existing values but you can't create
   any new one.
   

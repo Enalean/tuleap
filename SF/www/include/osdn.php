@@ -8,7 +8,7 @@ $osdn_sites[5] = array('Wilson Center' => 'http://techweb.wrc.xerox.com/');
 $osdn_sites[6] = array('Slashdot.Org' => 'http://www.slashdot.com/');
 $osdn_sites[7] = array('SourceForge' => 'http://www.sourceforge.net/');
 $osdn_sites[8] = array('Freshmeat' => 'http://www.freshmeat.net/');
-$osdn_sites[9] = array('XAC' => 'http://xww.xac.world.xerox.com/');
+$osdn_sites[9] = array('SSTC' => 'http://xww.xac.world.xerox.com/');
 $osdn_sites[10] = array('Xerox eTTM' => 'http://ettm.wrc.xerox.com/');
 $osdn_sites[11] = array('Wilson TIC' => 'http://tic.wrc.xerox.com/');
 $osdn_sites[12] = array('alphaAvenue' => 'http://alphax.wrc.xerox.com/');
@@ -23,9 +23,9 @@ function osdn_nav_dropdown() {
 	<!-- OSDN navdropdown -->
         <form name=form1>
         <font size=-1>
-        <a href="http://codex.xerox.com"><?php echo html_image("codex_logo.gif",array("width"=>"135", "height"=>"33", "hspace"=>"10", "alt"=>"CodeX - The Xerox Code eXchange Network", "border"=>"0")); ?></A><br>
+        <a href="<?php print $GLOBALS['sys_default_domain']; ?>"><?php echo html_image("codex_logo.gif",array("width"=>"135", "height"=>"33", "hspace"=>"10", "alt"=>$GLOBALS['sys_default_domain'], "border"=>"0")); ?></A><br>
         <select name=navbar onChange="window.location=this.options[selectedIndex].value">
-        <option value="http://codex.xerox.com/gallery.html">Network Gallery</option>
+        <option value="<?php print $GLOBALS['sys_default_domain']; ?>/gallery.html">Network Gallery</option>
         <option>------------</option>
 <?php
         reset ($osdn_sites);
@@ -39,7 +39,7 @@ function osdn_nav_dropdown() {
         </form>
 
         <noscript>
-        <a href="http://codex.xerox.com"><img src="/images/codex_logo.gif" width="135" height="33" hspace="10" alt=" CodeX - The Xerox Code eXchange Network "  border="0"></A><br>
+        <a href="<?php print $GLOBALS['sys_default_domain']; ?>"><img src="/images/codex_logo.gif" width="135" height="33" hspace="10" alt="<?php print $GLOBALS['sys_default_domain']; ?>"  border="0"></A><br>
         </noscript>
 	<!-- end OSDN navdropdown -->
 <?php

@@ -112,7 +112,7 @@ function menu_software() {
 
 function menu_sourceforge() {
     GLOBAL $HTML;
-    $HTML->menuhtml_top('CodeX');
+    $HTML->menuhtml_top($GLOBALS['sys_name']);
     $HTML->menu_entry('/docs/site/','<b>Site Documentation</b>');
     $HTML->menu_entry('/mail/?group_id=1','Developers Channels');
     $HTML->menu_entry('/forum/?group_id=1','Discussion Forums');
@@ -221,7 +221,7 @@ function menu_loggedin($page_title) {
     $HTML->menu_entry('/my/','My Personal Page');
 
     if (!$GLOBALS['HTTP_POST_VARS']) {
-	$bookmark_title = urlencode( str_replace('CodeX: ', '', $page_title));
+	$bookmark_title = urlencode( str_replace($GLOBALS['sys_name'].': ', '', $page_title));
 	print '<P>';
 	$HTML->menu_entry('/my/bookmark_add.php?bookmark_url='.urlencode($GLOBALS['REQUEST_URI']).'&bookmark_title='.$bookmark_title,'Bookmark This Page');
     }

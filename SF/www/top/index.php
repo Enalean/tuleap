@@ -10,9 +10,9 @@ require ('pre.php');
 $HTML->header(array('title'=>'Top Project Listings'));
 ?>
 
-<P><B>Top CodeX Projects</B></P>
+<H2>Top <?php print $GLOBALS['sys_name']; ?> Projects</H2>
 
-<P>We track many project usage statistics on CodeX, and display here
+<P>We track many project usage statistics on <?php print $GLOBALS['sys_name']; ?>, and display here
 the top ranked projects in several categories.
 
 <UL>

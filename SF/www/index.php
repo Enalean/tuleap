@@ -25,14 +25,14 @@ $HTML->header(array('title'=>'Welcome'));
 	</span>
         <hr width="100%" size="1" noshade>
 	&nbsp;<br>
-CodeX is a <B>service to
-all Xerox software development teams</B> who want to share their project source code with others <b>inside</b> Xerox. <A href="/docs/site/about_codex.php"><font size="-1">[&nbsp;More about CodeX&nbsp;]</font></A><P>
-CodeX offers an easy access to a full featured and totally web-based project management environment. Using CodeX project teams can better focus on software development while making their community of users and developers grow. <A href="/docs/site/"><font size="-1">[&nbsp;More on CodeX Services&nbsp;]</font></A>
+<?php print $GLOBALS['sys_name']; ?> is a <B>service to
+all Xerox software development teams</B> who want to share their project source code with others <b>inside</b> Xerox. <A href="/docs/site/about_codex.php"><font size="-1">[&nbsp;More about <?php print $GLOBALS['sys_name']; ?>&nbsp;]</font></A><P>
+<?php print $GLOBALS['sys_name']; ?> offers an easy access to a full featured and totally web-based project management environment. Using <?php print $GLOBALS['sys_name']; ?> project teams can better focus on software development while making their community of users and developers grow. <A href="/docs/site/"><font size="-1">[&nbsp;More on <?php print $GLOBALS['sys_name']; ?> Services&nbsp;]</font></A>
 <A href="/docman/display_doc.php?docid=17&group_id=1"><font size="-1">[&nbsp;FAQ&nbsp;]</font></A>
 <P>
 <u><B>Site Participation</B></u>
 <BR>
-In order to get the most out of CodeX, you should
+In order to get the most out of <?php print $GLOBALS['sys_name']; ?>, you should
  <A href="/account/register.php">register as a
 site user</A>. It's easy and fast and it allows you to participate fully in all we have to offer. Also make sure you read the <b><A href="/docman/display_doc.php?docid=16&group_id=1">Xerox Code eXchange Policy</a></b> before using this site.
 <!--You may of course browse the site without registering, but will

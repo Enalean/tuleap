@@ -7,19 +7,19 @@
 // $Id$
 
 require "pre.php";    
-$HTML->header(array(title=>"About SorceForge"));
+$HTML->header(array(title=>"Thanks and Acknowledgment"));
 ?>
 
 <P>
-<h2>CodeX Acknowledgements</h2>
+<h2>Acknowledgements</h2>
 
-The Developers of CodeX would like to thank the following people for their support and encouragement:
+The Developers of <?php print $GLOBALS['sys_name'] would like to thank the following people for their support and encouragement:
 <ul>
 <li>Rick Koehler
 <li>Tony Federico
 <li>Herv&eacute; Gallaire
 <li>Ted Smith
-<li> and all the fellows who have subscribed to the opensource-interest and linux-interest mailing lists.
+<li>and all the subscribers of the opensource-interest and linux-interest mailing lists who have supported us from the very beginning.
 </ul>
 
 

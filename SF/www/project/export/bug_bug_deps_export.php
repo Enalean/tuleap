@@ -55,7 +55,7 @@ if ($export == 'bug_bug_deps') {
 	if ($result) {
 	    echo '<P>No bug-bug depencies  found. Could not generate an export.';
 	} else {
-	    echo '<P>Error while accessing your bug dependencies database. Please report the error to the CodeX administrator';
+	    echo '<P>Error while accessing your bug dependencies database. Please report the error to the '.$GLOBALS['sys_name'].' Administrator';
 	    echo '<br>'.db_error();
 	}
 	site_project_footer( array() );

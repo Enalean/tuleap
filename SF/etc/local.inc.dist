@@ -113,5 +113,9 @@ $sys_news_group=46;
 // (leave blank to disable LDAP lookup)
 $sys_ldap_server='Choose_an_LDAP/Exchange_server_next_to_you';
 
+//
+// System name to be used in Web pages, documentation,etc.
+$sys_name='CodeX';
+
 // End of customizations -- place nothing after the closing PHP tag!
 ?>

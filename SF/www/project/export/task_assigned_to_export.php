@@ -56,7 +56,7 @@ if ($export == 'task_assigned_to') {
 	if ($result) {
 	    echo '<P>No task assignee  found. Could not generate an export.';
 	} else {
-	    echo '<P>Error while accessing your task assignees database. Please report the error to the CodeX administrator';
+	    echo '<P>Error while accessing your task assignees database. Please report the error to the '.$GLOBALS['sys_name'].' Administrator';
 	    echo '<br>'.db_error();
 	}
 	site_project_footer( array() );

@@ -34,7 +34,7 @@ if ($group_id) {
 		exit;
 	}
 
-	echo "<P>Mailing lists provided via a CodeX version of "
+	echo "<P>Mailing lists provided via a "
 		. "<A href=\"http://www.list.org\">GNU Mailman</A>. "
 		. "Thanks to the Mailman and <A href=\"http://www.python.org\">Python</A> "
 		. "crews for excellent software.";

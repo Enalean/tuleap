@@ -10,10 +10,10 @@ require "pre.php";
 $HTML->header(array(title=>"Welcome to Codex"));
 ?>
 
-<P><h2>Welcome to CodeX!</h2>
+<P><h2>Welcome to <?php print $GLOBALS['sys_name']; ?>!</h2>
 
-<P>You are now a registered user on CodeX. As a registered user, you can now fully participate in the activities
-of the CodeX Web Site. You may use forums, subscribe to mailing lists, browse through the list of hosted projects, or even start your own project.
+<P>You are now a registered user on <?php print $GLOBALS['sys_name']; ?>. As a registered user, you can now fully participate in the activities
+of the <?php print $GLOBALS['sys_name']; ?> Web Site. You may use forums, subscribe to mailing lists, browse through the list of hosted projects, or even start your own project.
 
 <?php
 	// LJ modified. Cron delay now in /etc/local.inc.
@@ -24,7 +24,7 @@ of the CodeX Web Site. You may use forums, subscribe to mailing lists, browse th
 ?>
 
 <P><center><b><font color="red">** IMPORTANT REMARKS **</font></b></center>
-<BR>While your Web account is available right now, it takes some time for CodeX to create your <u>Shell account</u> (same user name, same password). Some features like CVS access depend on it. Your Shell account will be activated in about 
+<BR>While your Web account is available right now, it takes some time for <?php print $GLOBALS['sys_name']; ?> to create your <u>Shell account</u> (same user name, same password). Some features like CVS access depend on it. Your Shell account will be activated in about 
 
 <?php print "<b> $hoursleft</B> hour <B>$minutesleft</B> minutes"; ?> from now.
 
@@ -34,9 +34,9 @@ of the CodeX Web Site. You may use forums, subscribe to mailing lists, browse th
 <P><center><b><font color="red">*-*-*-*</font></b></center>
 
 <P>Enjoy the site, provide us with feedback on ways
-that we can improve CodeX and speak of CodeX around you.
+that we can improve <?php print $GLOBALS['sys_name']; ?> and speak of <?php print $GLOBALS['sys_name']; ?> around you.
 
-<P>-- The CodeX team
+<P>-- The <?php print $GLOBALS['sys_name']; ?> Team
 
 <?php
 $HTML->footer(array());

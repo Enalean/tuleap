@@ -62,7 +62,7 @@ if ($Login){
 $HTML->header(array('title'=>'Login'));
 
 ?>
-<p><h2>CodeX Account Verification</h2>
+<p><h2><?php print $GLOBALS['sys_name']; ?> Account Verification</h2>
 <P>In order to complete your registration, login now. Your account will
 then be activated for normal logins.
 <?php 

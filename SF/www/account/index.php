@@ -86,7 +86,7 @@ $HTML->box1_top("Preferences"); ?>
 <I>(Low traffic.)</I>
 
 <P><INPUT type="checkbox"  name="form_sticky_login" value="1"<?php
-	if ($row_user['sticky_login']) print " checked"; ?>> Remember my login/password <I>(CodeX remembers your login/password. . Not recommended. <u>If you change this preference make sure to logout and login again</u>)</I>
+	if ($row_user['sticky_login']) print " checked"; ?>> Remember my login/password <I>(<?php print $GLOBALS['sys_name']; ?> remembers your login/password. . Not recommended. <u>If you change this preference make sure to logout and login again</u>)</I>
 
 <P align=center><CENTER><INPUT type="submit" name="Update" value="Update"></CENTER>
 </FORM>

@@ -119,11 +119,11 @@ if ($show_confirm) {
 	?>
 
 	<H1>Registration Complete!</H1>
-	<P>Your project has been submitted to the CodeX administrators. 
+	<P>Your project has been submitted to the <?php print $GLOBALS['sys_name']; ?> Administrators. 
 	Within 24 hours, you will receive decision notification and further 
 	instructions.
 	<P>
-	Thank you for using CodeX.
+	Thank you for using <?php print $GLOBALS['sys_name']; ?>.
 	<P>
 
 	<?php

@@ -11,11 +11,11 @@ session_require(array('isloggedin'=>'1'));
 $HTML->header(array('title'=>'Basic Project Information'));
 ?>
 
-<H2>Step 3: CodeX Project Registration</H2>
+<H2>Step 3: Project Registration</H2>
 
-<p>We now need to know a little bit more about your project. All information typed here will be accessible to CodeX users once your project is registered. So please be as accurate as possible.
+<p>We now need to know a little bit more about your project. All information typed here will be accessible to <?php print $GLOBALS['sys_name']; ?> users once your project is registered. So please be as accurate as possible.
 
-<P>If the CodeX team approves your project account, the account
+<P>If the <?php print $GLOBALS['sys_name']; ?> Team approves your project account, the account
 is to be used purely to meet the goals set forth in this statement.
 Shall the purpose and goals change in the future, you'll have to modify the statement below accordingly.
 

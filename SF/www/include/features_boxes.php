@@ -9,7 +9,7 @@
 
 function show_features_boxes() {
 	GLOBAL $HTML;
-	$return .= $HTML->box1_top('CodeX Statistics',0);
+	$return .= $HTML->box1_top($GLOBALS['sys_name'].' Statistics',0);
 	$return .= '<font face="arial, helvetica" size="2">';
 	$return .= show_sitestats();
 	$return .= '</font>';

@@ -17,12 +17,12 @@ $row_user = db_fetch_array($res_user);
 db_query("UPDATE user SET confirm_hash='$confirm_hash',email_new='$form_newemail' "
 	. "WHERE user_id=$row_user[user_id]");
 
-$message = "You have requested a change of email address on CodeX.\n"
+$message = "You have requested a change of email address on ".$GLOBALS['sys_name']."\n"
 	. "Please visit the following URL to complete the email change:\n\n"
 	. "http://$GLOBALS[HTTP_HOST]/account/change_email-complete.php?confirm_hash=$confirm_hash\n\n"
-	. " -- the CodeX staff\n";
+	. " -- the ".$GLOBALS['sys_name']." staff\n";
 
-mail ($form_newemail,"CodeX Verification",$message,"From: noreply@$GLOBALS[HTTP_HOST]");
+mail ($form_newemail,$GLOBALS['sys_name']." Email Verification",$message,"From: noreply@$GLOBALS[HTTP_HOST]");
 
 $HTML->header(array('title'=>"Email Change Confirmation"));
 ?>

@@ -18,9 +18,9 @@ $group_id = 1;
 
 $usermem = user_ismember($group_id);
 
-echo $HTML->header(array('title'=>"CodeX Site Documentation"));
+echo $HTML->header(array('title'=> $GLOBALS['sys_name']." Site Documentation"));
 
-echo "<H2>CodeX Site Documentation</H2>";
+echo '<H2>'.$GLOBALS['sys_name'].' Site Documentation</H2>';
 
 //get a list of group numbers that this project owns
 $query = "select * "
