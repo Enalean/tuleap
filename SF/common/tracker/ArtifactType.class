@@ -553,7 +553,7 @@ class ArtifactType extends Error {
 			$this->setError('Permission Denied');
 			return false;
 		}
-		$date = date("Y-m-d",time() + 1000000); // 12 days of delay
+		$date = (time() + 1000000); // 12 days of delay
 		$sql="update artifact_group_list SET status='D', deletion_date='$date'
 			WHERE group_artifact_id='".$this->getID()."'";
 		$result=db_query($sql);
@@ -582,7 +582,7 @@ class ArtifactType extends Error {
 		 	$this->setError('Delay date must not be in the past');
 			return false;
 		}
-		$sql="update artifact_group_list SET deletion_date='$date'
+		$sql="update artifact_group_list SET deletion_date='$ts'
 			WHERE group_artifact_id='".$this->getID()."'";
 		$result=db_query($sql);
 		if ($result) {
