@@ -40,7 +40,7 @@ companion document to the CodeX Installation Guide.<br>
 The Installation procedure is documented so that CodeX adminstrators
 learn about the interns of the CodeX software. However the CodeX
 installation script provided by Xerox as part of the CodeX software
-takes car of most of the installation process. The manual work that
+takes care of most of the installation process. The manual work that
 remains to be done is displayed on the screen when the installation
 script comes to an end.<br>
 <h1>Linux OS Installation</h1>
@@ -253,7 +253,7 @@ Projects Directories</b><br>
       </td>
     </tr>
     <tr>
-      <td colspan="4" rowspan="1" valign="top"><b>Temporay CodeX
+      <td colspan="4" rowspan="1" valign="top"><b>Temporary CodeX
 database dumps</b><br>
       </td>
     </tr>
@@ -837,7 +837,7 @@ In RedHat 7.3 manual it is at <a
 Note: although RedHat recommends that you generate a password protected
 key for your certificate it has some serious implications. The most
 noticeable is that a system administrator must be physically present
-will rebooting the CodeX system to type the password when the Apache
+while rebooting the CodeX system to type the password when the Apache
 server is started. This prevent from doing an unattended reboot.<br>
 <br>
 The sample http.conf.dist contains all the necessary Apache directives
@@ -1034,7 +1034,7 @@ time.&nbsp; Right now the configuration file looks like this<br>
  style="font-family: monospace;">
 <span style="font-family: monospace;">[mysqld]</span><br
  style="font-family: monospace;">
-<span style="font-family: monospace;">log-bin=/cvsroot/.mysql_backup/atlas-bin</span><br
+<span style="font-family: monospace;">log-bin=/cvsroot/.mysql_backup/codex-bin</span><br
  style="font-family: monospace;">
 <span style="font-family: monospace;">skip-innodb</span><br
  style="font-family: monospace;">
@@ -1441,7 +1441,7 @@ CodeX users while limiting the thing they can do with it. For instance
 you may want to limit the capabilities of certain users to use only CVS
 and may be sftp if you decide to use the secure ftp server but you
 don't
-want them the log into the system with a real shell like bash. Doing so
+want them to log into the system with a real shell like bash. Doing so
 is just a matter of changing the shell account associated with a given
 user.<br>
 <br>
@@ -1564,7 +1564,7 @@ replace all the images you want to customize with your own but make
 sure
 to keep the exact same file names.</li>
 </ol>
-Finally edit the look /etc/local.inc file and set the <tt>$sys_themedefault</tt>
+Finally edit the /etc/local.inc file and set the <tt>$sys_themedefault</tt>
 variable to the value of the default theme name for your site.<br>
 <h2>Organization Logo</h2>
 At the top of the left hand side CodeX menu pane (just above the Logged
@@ -1741,7 +1741,7 @@ user/project permission to the Linux user/group permission mechanism.
 it
 also create all the user and project related directories automatically.<br>
 <br>
-Other cron jobs runs dialy and weekly statistics.<br>
+Other cron jobs run daily and weekly statistics.<br>
 <br>
 <h2>Root crontab</h2>
 Find below a copy of the root crontab file. we highly recommend that
@@ -1775,7 +1775,7 @@ that</tt><br>
   <tt>#</tt><br>
   <br>
 </blockquote>
-Please note that your own root crontab shoudl probably contain some
+Please note that your own root crontab should probably contain some
 additional jobs like may be stopping the mysql engine before starting
 your backup procedure or something similar.<br>
 <h2>SourceForge crontab</h2>
@@ -2075,7 +2075,7 @@ a super user on the entire site. Set permissions for this new account.<br>
   </li>
   <li>You probably want to rename this 'Admin Project' to 'CodeX
 Project' and use this project to create a bug tracker and a support
-request tracker that will beused by user to get helpo from your CodeX
+request tracker that will be used by user to get help from your CodeX
 Team.</li>
   <li>Create the trackers you need (bug and support requests most
 likely)</li>
@@ -2084,7 +2084,7 @@ likely)</li>
 who wants to experiment with the site. Setup the project completely,
 approve it and then set up the CVS repository with some sample code,
 create a release, download it,etc...</li>
-  <li>Under the 'CodeX Project' create a peice of news to announce the
+  <li>Under the 'CodeX Project' create a piece of news to announce the
 launch of the CodeX site and promote the news to the front page.<br>
   </li>
 </ul>

@@ -245,7 +245,7 @@ These are not login account but were just used to give checkout capabilities
 to anonymous users when access to source code was available to anonymous users
 in CodeX. This is no longer the case so these account aren't really useful.
 We keep maintaining them in case a project would like to activate anonymous
-read access on their CVS repository (uid range 50000-65535) want</li>
+read access on their CVS repository (uid range 50000-65535)</li>
  
 </ul>
  
@@ -400,7 +400,7 @@ type of authentication so it must be readable for sourceforge user/group only
        <td valign="top">There are a couple of executables in this directory
 that work in cooperation with the CodeX WEB Site:       
       <ul>
-         <li> <b>tmpfilemove:</b> moves file releases uploaded via HTTP form
+         <li> <b>tmpfilemove:</b> moves file releases uploaded via HTTP from
 the temporary reception area into the FTP incoming space where the file release
 script is looking for uploaded files (runs suid root because it must read/write
 in all project space areas)</li>
@@ -419,7 +419,7 @@ a CVS repository. For a example of how to use this script&nbsp;See the <a
 of the CodeX project</a> for an example of how to set up email notification
 (look at CVSROOT/loginfo and CVSROOT/commitinfo files)<tt></tt></li>
          <li><b>log_accum</b> and <b>commit_prep</b>: another set of perl 
-scripts used to sent one single email on cvs commit. use them instead of the
+scripts used to send one single email on cvs commit. Use them instead of the
 syncmail. See the <a
  href="http://cvs.codex.xerox.com/cgi-bin/cvsweb.cgi/?cvsroot=codex">CVS repository
 of the CodeX project</a> for an example of how to set up email notification
@@ -563,8 +563,8 @@ Files </a>section). It is basically a daily copy of the FTP log file /var/log/xf
  
 <p><b><font color="#ff0000">Remark:</font></b> CodeX admin should have a
 look at the size of the HTTP access log file. We had troubles in the past 
-with remoter machine accessing the CodeX site at a much higher rate that
-is humanly possible :-) We had 2 cases in fact: the first one was on indexing 
+with remote machine accessing the CodeX site at a much higher rate that
+is humanly possible :-) We had 2 cases in fact: the first one was an indexing 
 robot from the Xerox Web Board entering an endless loop and the second one 
 was a blocked return Key on a keyboard causing URL reloading&nbsp; again and 
 again. In this case it is a good idea to clean up the log files and remove
@@ -595,7 +595,7 @@ dump are stored in this directory.
       <p>Files found in this directory are&nbsp; </p>
        
       <ul>
-         <li> <b>aliases:</b> all CodeX users have an email aliases in the
+         <li> <b>aliases:</b> all CodeX users have an email alias in the
 form of login login_name@users.codex.xerox.com. By creating such aliases
 one can send an email to a CodeX user simply by using it's login name. This 
 is very convenient if the project admin wants to send e-mail to certain developers
@@ -603,7 +603,7 @@ of the team through CVS notification for instance. They can use the login
 name with no fear: if the user address changes the alias will be automatically
 updated.</li>
          <br>
- All user aliases ad mailing list aliases are actually appended to the master
+ All user aliases and mailing list aliases are actually appended to the master
 file <tt>/home/httpd/SF/utils/underworld-dummy/aliases.zone</tt>. This file
 contains codex wide aliases like codex-admin or codex-contact. If you want
 to add more aliases modify this file NOT the /etc/aliases... files <li> <b>
@@ -694,7 +694,7 @@ be written in Perl, Python, C/C++,...). Must have executable permission.</li>
 Web server. Not used at the moment.</li>
        
       </ul>
- These directory are all have the group setuid but set. On Linux this ensures
+ These directories all have the group setuid bit set. On Linux this ensures
 that files created under this directory by a group member are automatically
 created with the right group owner. The reason for that is because a user
 can belong to several CodeX projects and therefore it can be a member of several
@@ -739,13 +739,13 @@ writable.&nbsp;</td>
      </tr>
      <tr nosave="">
        <td valign="top" nosave="">/home/ftp/incoming</td>
-       <td>The is the FTP incoming directory is used by the project members
+       <td>The FTP incoming directory is used by the project members
 to upload the software packages that are going to be part of the release
 they are about to create through the File Release Service on CodeX. This
 is a temporary storage area because when the new software release is created
 the associated software packages are moved to /home/ftp/codex/xxxx (see above) 
       
-      <p><b><font color="#ff0000">Remark: </font></b>There is script in the
+      <p><b><font color="#ff0000">Remark: </font></b>There is a script in the
 root crontab that removes all the files older than 2 weeks from this directory.
 The reason we do that is because this zone is shared by all the projects and
 we don't want that ghost files stay in there.</p>
@@ -881,7 +881,7 @@ DB from the local host (atlas) and not from a remote machine. Same password
 as the sourceforge Unix account. The PHP scripts all use this user to connect
 to the database (see the file /etc/local.inc where DB user/password to be
 used by CodeX PHP scripts is stored. THIS FILE MUST BELONG to sourceforge.sourceforge
-and must not be world writable because it contains the sourceforge password
+and must not be world readable because it contains the sourceforge password
 in clear)</li>
    <li> <b>dummy</b>: this user was created with read only access on the CodeX
 database (SELECT granted). It has no password and can only be used for a
@@ -979,7 +979,7 @@ It is password protected. </p>
 to the FTP Release space. Its document root is /home/ftp/codex/. You can not
 really browse this site because it points to a collection of directories and
 file releases and the File Indexing view is disable in this Virtual server.
-So you can only access a file release when you now the associated file name. 
+So you can only access a file release when you know the associated file name. 
 <p>This download mechanism is used when a CodeX user wants to download a
 file from a project page. It's just a way to make sure that they have no other 
 way to access the file and we can make sure that the user is logged in before
@@ -1094,9 +1094,9 @@ at&nbsp; <a
 <h2> CodeX specific CVS</h2>
  The CVS&nbsp;RPM&nbsp;packages installed on CodeX contains a modified version
 of cvs. The reason the CVS source code has been modified is as follows: 
-<p>When cvs runs in client server mode (as it does on&nbsp;CodeX the server
-must be told which directories are allowed as CVS root directories. This is
-the various places where the CVS repositories are locate. The way you&nbsp;
+<p>When cvs runs in client server mode (as it does on&nbsp;CodeX) the server
+must be told which directories are allowed as CVS root directories. These are
+the various places where the CVS repositories are located. The way you&nbsp;
 do that is by using the command line option --allow-root=pathname where path
 name is the allowed path. and you can repeat this option as many times as
 the number of distinct paths where CVS repo can be located. </p>
@@ -1129,7 +1129,7 @@ the command line we use to run the cvs server.
  
 <hr width="100%" size="2"> 
 <h1> DNS</h1>
- CodeX has its own internal domain : codex.xerox.com. And it is the codex
+ CodeX has its own internal domain : codex.xerox.com. And the codex
 machine is the name server for this domain. The DNS configuration files are
 located in:<br>
  
@@ -1151,7 +1151,7 @@ and must be edited by hand. </p>
 <p>The static part of the CodeX zone is defined in <tt>/usr/local/domain/data/primary/codex.zone</tt> 
 . It contains the IP address for the master CodeX server known as atlas. And
 there are many aliases defined like www,&nbsp; xww,&nbsp; cvs, download, shell,
-users, lists, etc.... The reason why all these aliases has been defined is
+users, lists, etc.... The reason why all these aliases have been defined is
 because as the load on the CodeX server increases it may be desirable to
 host some CodeX functions on a separate server (e.g the mailing list manager).
 In this case it will just be a matter of changing the IP address associated
@@ -1486,7 +1486,7 @@ backed up to disk.&nbsp; The sequence is as follows: </p>
    
   <ul>
      <li> /etc/rc.d/init.d/mysql stop</li>
-     <li> move old atlas-bin.index, atlas-bin.001, sqldump.&lt;last week's 
+     <li> move old codex-bin.index, codex-bin.001, sqldump.&lt;last week's 
 date/time&gt; to</li>
      <br>
  /cvsroot/.mysql_backup/old directory <li> dump&nbsp; 0f&nbsp;&nbsp; /cvsroot/.mysql_backup/sqldump.&lt;date&gt;.&lt;time&gt;&nbsp;&nbsp; 
@@ -1497,9 +1497,9 @@ date/time&gt; to</li>
  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
 -&nbsp;&nbsp;&nbsp; reads /etc/my.cnf <br>
  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
--&nbsp;&nbsp;&nbsp; new atlas-bin.index created <br>
+-&nbsp;&nbsp;&nbsp; new codex-bin.index created <br>
  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
--&nbsp;&nbsp;&nbsp; new atlas-bin.001 created 
+-&nbsp;&nbsp;&nbsp; new codex-bin.001 created 
 </ul>
  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
 The whole MySQL data backup process takes less than 15 seconds 
@@ -1555,9 +1555,9 @@ using SmartStart CD - Rebuild RAID array <br>
   
       <ul>
          <li><b>sqldump.&lt;date&gt;.&lt;time&gt;:</b>&nbsp; dump of /home/var/lib/mysql</li>
-         <li><b>atlas-bin.index:</b> Text file indicating file name to use
+         <li><b>codex-bin.index:</b> Text file indicating file name to use
 when restoring mysql data</li>
-         <li><b>atlas-bin.001:&nbsp;</b> Binary log file used for viewing 
+         <li><b>codex-bin.001:&nbsp;</b> Binary log file used for viewing 
 or piping into a mysql command if rebuilding database</li>
        
       </ul>

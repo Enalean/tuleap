@@ -28,7 +28,7 @@ sleep 5
 
 /bin/mkdir /cvsroot/.mysql_backup/old/`date +%m%d%y`
 
-/bin/mv /cvsroot/.mysql_backup/atlas-bin.* /cvsroot/.mysql_backup/old/`date +%m%d%y`
+/bin/mv /cvsroot/.mysql_backup/codex-bin.* /cvsroot/.mysql_backup/old/`date +%m%d%y`
 
 /bin/mv /cvsroot/.mysql_backup/sqldump* /cvsroot/.mysql_backup/old/`date +%m%d%y`
 
