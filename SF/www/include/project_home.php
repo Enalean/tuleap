@@ -358,7 +358,7 @@ if ($project->usesCVS()) {
         if (!$cvs_commit_num) $cvs_commit_num=0;
         if (!$cvs_add_num) $cvs_add_num=0;
         if (!$cvs_co_num) $cvs_co_num=0;
-	$uri = session_make_url('/cgi-bin/viewcvs.cgi/?root='.$project->getUnixName().'&roottype=cvs');
+	$uri = session_make_url('/cvs/viewcvs.php/?root='.$project->getUnixName().'&roottype=cvs');
 
         echo ' ( <B>'.$cvs_commit_num.'</B> commits, <B>'.$cvs_add_num.'</B> adds, <B>'.$cvs_co_num.'</B> checkouts )';
         if ($cvs_commit_num || $cvs_add_num || $cvs_co_num) {
@@ -380,7 +380,7 @@ if ($project->usesService('svn')) {
 
         echo ' ( <B>'.$svn_accesses.'</B> accesses )';
         if ($svn_accesses) {
-	    $uri = session_make_url('/cgi-bin/viewcvs.cgi/?root='.$project->getUnixName().'&roottype=svn');
+	    $uri = session_make_url('/svn/viewcvs.php/?root='.$project->getUnixName().'&roottype=svn');
             echo '<br> &nbsp; - <a href="'.$uri.'">Browse Subversion</a>';
         }
 }

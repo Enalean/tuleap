@@ -13,6 +13,9 @@ require($DOCUMENT_ROOT.'/cvs/commit_utils.php');
 $LANG->loadLanguageMsg('cvs/cvs');
 
 if (user_isloggedin()) {
+  // be backwards compatible with old viewcvs.cgi links that are now redirected
+  if (!$root) $root = $cvsroot;
+
   if (!check_cvs_access(user_getname(), $root, viewcvs_utils_getfile("/cvs/viewcvs.php"))) {
       exit_error($LANG->getText('cvs_viewcvs', 'error_noaccess'),
 		 $LANG->getText('cvs_viewcvs', 'error_noaccess_msg'));

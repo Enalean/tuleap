@@ -238,8 +238,8 @@ my $group_id = &set_group_info_from_name($gname);
 
 my $codex_srv = "http".($sys_force_ssl ? 's':'').'://'.$sys_default_domain;
 
-my $mod_url = $codex_srv."/cgi-bin/viewcvs.cgi/%s?r1=text&tr1=%s&r2=text&tr2=%s&roottype=svn&root=$gname&diff_format=h";
-my $add_url  = $codex_srv."/cgi-bin/viewcvs.cgi/%s?rev=$rev&view=markup&roottype=svn&root=$gname";
+my $mod_url = $codex_srv."/svn/viewcvs.php/%s?r1=text&tr1=%s&r2=text&tr2=%s&roottype=svn&root=$gname&diff_format=h";
+my $add_url  = $codex_srv."/svn/viewcvs.php/%s?rev=$rev&view=markup&roottype=svn&root=$gname";
 my $patch_url = $codex_srv."/patch/?func=detailpatch&patch_id=%s&group_id=$group_id";
 my $commit_url = $codex_srv."/cvs/?func=detailcommit&commit_id=%s&group_id=$group_id";
 my $revision_url = $codex_srv."/cvs/?func=detailrevision&rev_id=%s&group_id=$group_id";
@@ -501,7 +501,7 @@ if (@mods)
 push(@body, "\nLog message:\n");
 push(@body, @log);
 #push(@body, "\n");
-push(@body, map { /[\r\n]+$/ ? $_ : "$_\n" } @difflines) if !$no_diff;
+push(@body, map { /[\r\n]+$/ ? $_ : "$_\n" } @difflines);
 push(@body, map { "$_\n" } &format_xref(@log));
 
 if ($debug) {
@@ -547,6 +547,7 @@ foreach my $project (@project_settings_list)
       {
         $subject = "$subject_prefix $subject";
       }
+    $subject = $svnmailheader.$subject;
     my $mail_from = $author;
 
     if ($from_address =~ /\w/)

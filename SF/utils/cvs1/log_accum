@@ -56,7 +56,7 @@ $GNATS_MAIL_FORMAT = "%s-gnats\@sourceware.cygnus.com";
 $GNATS_ROOT_FORMAT = "/sourceware/gnats/%s-db";
 
 # Base name of viewcvs specification.
-$CVSWEB_URL = "http://cvs.codex.xerox.com/cgi-bin/viewcvs.cgi/";
+$CVSWEB_URL = "http://$sys_default_domain/cvs/viewcvs.php/";
 
 # Constants (don't change these!)
 #
@@ -469,7 +469,7 @@ sub generate_cvsweb_urls {
     }
     else
     {
-	$args .= 'cvsroot=' . $cvsweb_name;
+	$args .= 'root=' . $cvsweb_name;
 	$need_amp = 1;
     }
     $start .= $dir . '/';
@@ -498,8 +498,8 @@ sub generate_cvsweb_urls {
         # for NEW-REV indicates a file removed and no URL is generated.
 	elsif ($r2 ne 'NONE')
 	{
-	    push (@result, ($start . $sp[0] . '.diff' . $args. 'tr1=' . $r1
-			 . '&tr2=' . $r2 . '&r1=text&r2=text'));
+	    push (@result, ($start . $sp[0] . $args. 'tr1=' . $r1
+			 . '&tr2=' . $r2 . '&r1=text&r2=text&roottype=cvs'));
 	}
     }
     return @result;

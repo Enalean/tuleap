@@ -565,6 +565,11 @@ function check_cvs_access($username, $group_name, $cvspath) {
  
   $group_id = group_getid_by_name($group_name);
 
+  //accept old url containing a .diff at the end of the filename
+  if (strpos($cvspath, '.diff') == (strlen($cvspath)-5)) {
+    $cvspath = substr($cvspath, 0 , (strlen($cvspath)-5));
+  }
+
   // if the file path exists as such then it's a directory
   // else add the ,v extension because it's a file
   $path = "/cvsroot/".$group_name.'/'.$cvspath;

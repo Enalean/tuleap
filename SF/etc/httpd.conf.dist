@@ -591,7 +591,6 @@ ScriptAlias /cgi-bin/ "/home/httpd/cgi-bin/"
       RewriteCond %{QUERY_STRING} roottype=svn
       RewriteRule viewcvs.cgi/(.*) /svn/viewcvs.php/$1 [R]
 
-      RewriteCond %{QUERY_STRING} roottype=cvs
       RewriteRule viewcvs.cgi/(.*) /cvs/viewcvs.php/$1 [R]
     </IfModule>
 </Directory>
