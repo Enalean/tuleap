@@ -215,7 +215,7 @@ while ($ln = pop(@groupdump_array)) {
 	  print WRITERS join("\n",split(",",$userlist)),"\n";
 	  close(WRITERS);
 	}
-
+	## cvs backend
 	if ($cvs_tracker) {
 	  # hook for commit tracking in cvs loginfo file
 	  $cvs_dir = "$cvs_prefix/$gname";
