@@ -552,7 +552,6 @@ cvs commit -m&#34;Explain the nature of the change here...&#34; [filenames]
         For example some projects require that only working, build-able, code
         that passes automatic unit tests be checked into the main branch. Thus
         the baseline can automatically be built and unit tested nightly.</para>
-      </section>
 
         <para><tip><title>Tip: update before you commit</title><para>If you
         try to commit a modified file that was also modified on the CVS
@@ -564,6 +563,8 @@ cvs commit -m&#34;Explain the nature of the change here...&#34; [filenames]
         your own changes back to the CVS repository. If you want to be immune
         from others&#39; changes then create a CVS branch and work with it in
         isolation.</para></tip></para>
+
+      </section>
 
       <section id="ContributingyourChanges">
         <title>Contributing your Changes (other users)</title>
