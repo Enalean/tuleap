@@ -993,10 +993,10 @@ class ArtifactTypeHtml extends ArtifactType {
 		if ( $field && $field->isStandardField() ) {
 			if ( $empty_ok ) {
 				echo 'Yes';
-			    echo '<input type="hidden" name="empty_ok" value="1" checked>';
+			    echo '<input type="hidden" name="empty_ok" value="1">';
 			} else {
 				echo 'No';
-			    echo '<input type="hidden" name="empty_ok" value="1">';
+			    echo '<input type="hidden" name="empty_ok" value="0">';
 			}
 		} else {
 			if ( $empty_ok ) {
@@ -1012,10 +1012,10 @@ class ArtifactTypeHtml extends ArtifactType {
 		if ( $field && $field->isStandardField() ) {
 			if ( $keep_history ) {
 				echo 'Yes';
-			    echo '<input type="hidden" name="keep_history" value="1" checked>';
+			    echo '<input type="hidden" name="keep_history" value="1">';
 			} else {
 				echo 'No';
-			    echo '<input type="hidden" name="keep_history" value="1">';
+			    echo '<input type="hidden" name="keep_history" value="0">';
 			}
 		} else {
 			if ( $keep_history ) {

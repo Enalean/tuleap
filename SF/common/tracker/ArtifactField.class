@@ -1214,7 +1214,7 @@ class ArtifactField extends Error {
 				
 		$res = db_query($sql);
 		if (!$res) {
-			$this->setError("Error during updating artifact_field (".$field_id."-".$group_artifact_id."): ".db_error());
+			$this->setError("Error during updating artifact_field (".$this->field_id."-".$group_artifact_id."): ".db_error());
 			return false;
 		}
 		
