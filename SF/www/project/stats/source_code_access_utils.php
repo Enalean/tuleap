@@ -68,7 +68,7 @@ function filedownload_logs_daily($project, $span = 7, $who="allusers") {
 			. '<TD><B>User</B></TD>'
 			. '<TD><B>E-mail</B></TD>'
 			. '<TD align><B>File</B></TD>'
-			. '<TD align="right"><B>Time (local)</B></TD>'
+			. '<TD align="right"><B>Time (GMT)</B></TD>'
 			. '</TR>' . "\n";
 		
 		while ( $row = db_fetch_array($res) ) {
@@ -303,7 +303,7 @@ function doc_logs_daily($project, $span = 7, $who="allusers") {
 			. '<TD><B>User</B></TD>'
 			. '<TD><B>E-mail</B></TD>'
 			. '<TD align><B>Document</B></TD>'
-			. '<TD align="right"><B>Time (local)</B></TD>'
+			. '<TD align="right"><B>Time (GMT)</B></TD>'
 			. '</TR>' . "\n";
 		
 		while ( $row = db_fetch_array($res) ) {
