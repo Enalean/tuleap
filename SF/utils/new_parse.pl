@@ -232,7 +232,7 @@ sub update_user {
 		if ($uid == $p_uid) {
 			if ($realname ne $p_realname) {
 				$passwd_array[$counter] = "$username:x:$uid:$uid:$realname:$p_homedir:$shell\n";
-			} elsif ($shell ne $t_shell) {
+			} elsif ($shell ne $p_shell) {
 				$passwd_array[$counter] = "$username:x:$uid:$uid:$p_realname:$p_homedir:$p_shell";
 			}
 		}
