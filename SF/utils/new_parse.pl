@@ -316,11 +316,18 @@ sub add_group {
 #	if (substr($hostname,0,3) ne "cvs") {
 
 		# Now lets create the group's homedir.
+                # (put the SGID sticky bit on all dir so that all files
+                # in there are owned by the project group and not
+                # the user own group
+                # For some reason setting the SGID bit in mkdir doesn't work
+                # (perl bug ?) hence the chmod
 		mkdir $group_dir, 0775;
 		mkdir $log_dir, 0775;
 		mkdir $cgi_dir, 0775;
 		mkdir $ht_dir, 0775;
 		chown $dummy_uid, $gid, ($group_dir, $log_dir, $cgi_dir, $ht_dir);
+                chmod 02775, ($group_dir, $log_dir, $cgi_dir, $ht_dir);
+
 		# Added by LJ - Copy the default empty page for Web site
 		system("cp default_page.php $ht_dir/index.php");
 		chown $dummy_uid, $gid, "$ht_dir/index.php";
