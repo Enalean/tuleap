@@ -4,5 +4,5 @@ However Codex does not use them. Here is where the file are:
    dynaimically generated aliases are in /etc/aliases.codex
 - sendmail.cw.zone : is not used because there is no per 
    project MX records like on SourceForge
-- dns.zone : the equivalent is in /usr/local/domain/data/primary/codex.zone and the complete DNS config file for the CodeX is generated in /usr/local/domain/data/primary/codex_full.zone
+- dns.zone : the equivalent is in /var/named/codex.zone and the complete DNS config file for the CodeX is generated in /var/named/codex_full.zone
 - httpd.conf.zone : the file is in /etc/httpd/conf/httpd.conf and includes the file /etc/httpd/conf/codex_vhosts.conf which is generated automatically.

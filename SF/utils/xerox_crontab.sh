@@ -55,7 +55,7 @@ cp ~dummy/dumps/aliases /etc/aliases.codex
 # generate the DNS zone file and restart the DNS daemon
 #
 ./dns_conf.pl
-DNS_DIR=/usr/local/domain/data/primary
+DNS_DIR=/var/named
 cp -f $DNS_DIR/codex_full.zone $DNS_DIR/codex_full.zone.backup
 cp -f ~dummy/dumps/dns_dump $DNS_DIR/codex_full.zone
 killall -HUP named
