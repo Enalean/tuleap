@@ -69,9 +69,11 @@ for ( $p = 0; $p < $num_packages; $p++ ) {
 
 	print '<TR><TD><B>'.db_result($res_package,$p,'name').'</B></TD><TD COLSPAN="7">&nbsp;</TD></TR>'."\n";
 
-	   // get the releases of the package
+	// get the releases of the package
+	// Order by release_date and release_id in case two releases
+	// are published the same day
 	$sql	= "SELECT * FROM frs_release WHERE package_id='". db_result($res_package,$p,'package_id') . "' "
-		. "AND status_id=1 ORDER BY release_date DESC";
+		. "AND status_id=1 ORDER BY release_date DESC, release_id DESC";
 	$res_release = db_query( $sql );
 	$num_releases = db_numrows( $res_release );
 
