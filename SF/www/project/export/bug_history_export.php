@@ -45,8 +45,6 @@ $tbl_name = 'bug_history';
 
 $eol = "\n";
 
-//echo "DBG -- $sql<br>";
-
 $result=db_query($sql);
 $rows = db_numrows($result);       
 
@@ -61,7 +59,7 @@ if ($export == 'bug_history') {
 	echo build_csv_header($col_list, $lbl_list).$eol;
 
 	while ($arr = db_fetch_array($result)) {
-	    prepare_bug_history_record($arr);
+	    prepare_bug_history_record($group_id,$col_list,$arr);
 	    echo build_csv_record($col_list, $arr).$eol;
 	}
 

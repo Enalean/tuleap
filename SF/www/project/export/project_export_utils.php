@@ -117,8 +117,7 @@ function prepare_bug_record($group_id, &$col_list, &$record) {
     global $datetime_fmt;
     /*
            Prepare the column values in the bug record
-           Input: a row from the bug_history database (passed by
-                   reference.
+           Input: a row from the bug table (passed by reference.
           Output: the same row with values transformed for export
        */
 
@@ -281,7 +280,7 @@ function pe_utils_format_bug_bug_dependencies($group_id,$bug_id) {
 
 }
 
-function prepare_bug_history_record(&$record) {
+function prepare_bug_history_record($group_id, &$col_list, &$record) {
 
     global $datetime_fmt;
 
@@ -303,7 +302,7 @@ function prepare_bug_history_record(&$record) {
 	// for projects with lots of bugs. A solution is to cache
 	// the values when we get them the first time (either here
 	// or in the bug_data_get_value function
-	$record['old_value']= bug_data_get_value($record['field_name'],$group_id,$record['old_value']);
+	$record['old_value']= bug_data_get_cached_field_value($record['field_name'],$group_id,$record['old_value']);
     } else {
 	// Make close date human readable
 	if ($record['field_name'] == 'close_date') {
@@ -323,7 +322,7 @@ function prepare_bug_history_record(&$record) {
     // Decode the comment type value. If null make sure there is
     // a blank entry in the array
     if (isset($record['type'])) {
-	$record['type'] = bug_data_get_value('comment_type_id',$group_id,$record['type']);
+	$record['type'] = bug_data_get_cached_field_value('comment_type_id',$group_id,$record['type']);
     } else {
 	$record['type']='';
     }
