@@ -1,21 +1,23 @@
+If you ever make changes to the CodeX code base, please keep us
+informed of your changes via email at codex-contact@codex.xerox.com or
+even better, submit a patch file with the modifications you made
+through our Patch Manager available at:
 
-Contribute patches to SourceForge at:
-
-http://sourceforge.net/patch/?group_id=1
+http://codex.xerox.com/patch/?group_id=1
 
 
 CONTRIBUTION GUIDELINES
 
 While we want to encourage you to submit code contributions and patches
-to SourceForge, we do need to make sure they are cleanly implemented and
+to CodeX, we do need to make sure they are cleanly implemented and
 make sense in the way they are designed.
 
 When designing your changes, think about a few things:
 
--Is this scalable? For example, if you want to have a pop-up box listing
-groups or users, that obviously would never scale up to sourceforge
-levels. It might work great if you have 10 projects on your test version
-of sourceforge, but what happens when you have 10,000?
+-Is this scalable? For example, if you want to have a pop-up box
+listing groups or users, that obviously would never scale up to CodeX
+levels. It might work great if you have 10 projects on your test
+version of CodeX, but what happens when you have 10,000?
 
 -Is it secure? When updating or inserting into the database, are you
 checking to make sure that the user has permissions to do it and that
@@ -27,6 +29,11 @@ helps improve readability and maintainability.
 
 -Is it commented? Did you add simple comments throughout your code
 explaining why/how you're approaching the task?
+
+-Is it customizable? When you implement a new feature make sure that
+it can be configured to match the needs of a large spectrum of
+users. In some cases it may just require a little bit mroe work to
+make hundreds of users happy instead of just a couple.
 
 When you prepare your patches, make sure they are tested and known to
 work, and make sure that each patch handles basically one feature at a

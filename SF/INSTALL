@@ -1,6 +1,31 @@
-To get help setting up your copy of SourceForge,
-visit the "SF Offsite Talk" discussion boards at
+#
+# CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+# Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2001,2002. All Rights Reserved
+# http://codex.xerox.com
+#
+# $Id$
+#
 
-http://sourceforge.net/forum/forum.php?forum_id=21304
+The CodeX software developed and maintained internally by the Xerox
+CodeX Team derives from the SourceForge software version 2.0. There is
+no official installation guide for CodeX. However you can use the
+following documents to help you install the Software.
 
-                    - The SourceForge Crew <staff@sourceforge.net>
+- SourceForge Installation Guide (http://zoy.org/~guillaum/SF/)
+- CodeX Administration Guide (http://codex.codex.xerox.com/documents/CodeX_Administration_Guide.html)
+- CodeX User Guide (http://codex.codex.xerox.com/documents/CUG_color.pdf)
+
+Also see the README file for more information.
+
+		      **** IMPORTANT REMARK ****
+
+Before installing another instance of the CodeX software in Xerox we
+strongly suggest you contact the CodeX Team at codex-contact@codex.xerox.com.
+
+We are interested in learning more about your needs, why you choose
+not to use the official CodeX site. We also want to make sure that
+Xerox software developers throughout the corporation still have a
+global view of what are the on-going software projects in Xerox even
+if you fork another site.
+
+-- The CodeX Team
