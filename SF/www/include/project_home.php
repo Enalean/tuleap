@@ -130,7 +130,7 @@ echo $HTML->box1_top('Latest File Releases');
 			"WHERE frs_package.package_id=frs_release.package_id ".
 			"AND frs_package.group_id='$group_id' ".
 			"AND frs_release.status_id=1 ".
-			"ORDER BY frs_package.package_id,frs_release.release_date DESC";
+			"ORDER BY frs_package.package_id,frs_release.release_date DESC, frs_release.release_id DESC";
 
 		$res_files = db_query($sql);
 		$rows_files=db_numrows($res_files);
