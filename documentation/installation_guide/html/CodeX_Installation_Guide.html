@@ -1175,6 +1175,7 @@ reminders will appear to come from.
 <pre>    % bin/newlist mailman<br>    % bin/config_list -i data/sitelist.cfg mailman<br></pre>
 Be sure to subscribe yourself to the site list with the web admin
 interface.
+Update /etc/aliases as precised, and remove existing mailman aliases if any. Then run 'newaliases'.
 <br>
 You must also override some Mailman variable settings, most notably set
 the
@@ -1185,6 +1186,15 @@ and redefine them in <span style="font-family: monospace;">/home/mailman/Mailman
 When you change either variable in your mm_cfg.py, then be sure to also
 include the following:
 <pre>     add_virtualhost(DEFAULT_URL_HOST, DEFAULT_EMAIL_HOST)<br></pre>
+<p>
+If you wish to run Mailman with HTTPS (secure server), you need to add two more lines to
+ <span style="font-family: monospace;">/home/mailman/Mailman/mm_cfg.py.</span>:
+<pre>
+DEFAULT_URL_PATTERN = 'https://%s/mailman/'
+PUBLIC_ARCHIVE_URL = 'https://%(hostname)s/pipermail/%(listname)s'
+</pre>
+See also <a href="http://www.python.org/cgi-bin/faqw-mm.py?req=show&file=faq04.027.htp">Mailman FAQ on this topic</a>.
+<p>
 Then recompile with python -O mm_cfg.py.<br>
 <br>
 <hr size="2" width="100%">

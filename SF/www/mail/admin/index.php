@@ -11,7 +11,12 @@ require('../mail_utils.php');
 
 if ($group_id && user_ismember($group_id,'A')) {
 
-	if ($post_changes) {
+    if (session_issecure()) 
+	$list_server = 'https://'.$GLOBALS['sys_lists_host'];
+    else
+	$list_server = 'http://'.$GLOBALS['sys_lists_host'];
+
+    if ($post_changes) {
 		/*
 			Update the DB to reflect the changes
 		*/
@@ -67,9 +72,9 @@ if ($group_id && user_ismember($group_id,'A')) {
 					. "and you are the list administrator.\n\n"
 					. "This list is: $new_list_name@" .$GLOBALS['sys_lists_host'] ."\n\n"
 					. "Your mailing list info is at:\n"
-					. "http://".$GLOBALS['sys_lists_host']."/mailman/listinfo/$new_list_name\n\n"
+					. $list_server."/mailman/listinfo/$new_list_name\n\n"
 					. "List administration can be found at:\n"
-					. "http://".$GLOBALS['sys_lists_host']."/mailman/admin/$new_list_name\n\n"
+					. $list_server."/mailman/admin/$new_list_name\n\n"
 					. "Your list password is: $list_password\n"
 					. "You are encouraged to change this password as soon as possible.\n\n"
 					. "Thank you for registering your project with ".$GLOBALS['sys_name']."\n\n"
@@ -198,7 +203,7 @@ if ($group_id && user_ismember($group_id,'A')) {
 						<FONT SIZE="-1">
 						<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Update">
 					</TD>
-					<TD><A href="http://'. $GLOBALS['sys_lists_host'] .'/mailman/admin/'
+					<TD><A href="'. $list_server .'/mailman/admin/'
 					.db_result($result,$i,'list_name').'">[Administrate this list in GNU Mailman]</A>
 				       </TD></TR>
 				       <TR class="'. util_get_alt_row_color($i) .'"><TD COLSPAN="4">

@@ -11,6 +11,11 @@ require('../mail/mail_utils.php');
 
 if ($group_id) {
 
+    if (session_issecure()) 
+	$list_server = 'https://'.$GLOBALS['sys_lists_host'];
+    else
+	$list_server = 'http://'.$GLOBALS['sys_lists_host'];
+
     $params=array('title'=>'Mailing Lists for '.group_getname($group_id),
               'help'=>'CommunicationServices.html#MailingLists',
               'pv'   => $pv);
@@ -67,13 +72,13 @@ if ($group_id) {
 
 	    echo '<IMG SRC="'.util_get_image_theme("ic/cfolder15.png").'" HEIGHT="13" WIDTH="15" BORDER="0">&nbsp;<b>'.$list_name.'</b> [';
                 if ($list_is_public) {
-                    echo ' <A HREF="http://'.$GLOBALS['sys_lists_host'].'/pipermail/'.$list_name.'">Archives</A>';
+                    echo ' <A HREF="'.$list_server.'/pipermail/'.$list_name.'">Archives</A>';
                 } else {
                     echo ' Archives: <A HREF="http://'.$GLOBALS['sys_lists_host'].'/pipermail/'.$list_name.'">public</A>/<A HREF="http://'.$GLOBALS['sys_lists_host'].'/mailman/private/'.$list_name.'">private</A>';
                 }
 	  
-		echo ' | <A HREF="http://'.$GLOBALS['sys_lists_host'].'/mailman/listinfo/'.$list_name.'">(Un)Subscribe/Preferences</A>)';
-		echo ' | <A HREF="http://'.$GLOBALS['sys_lists_host'].'/mailman/admin/'.$list_name.'">ML Administration</A> ]';
+		echo ' | <A HREF="'.$list_server.'/mailman/listinfo/'.$list_name.'">(Un)Subscribe/Preferences</A>)';
+		echo ' | <A HREF="'.$list_server.'/mailman/admin/'.$list_name.'">ML Administration</A> ]';
 		
 		echo '<br>&nbsp;'.  db_result($result, $j, 'description') .'<P>';
 	}

@@ -688,6 +688,10 @@ add_virtualhost(DEFAULT_URL_HOST, DEFAULT_EMAIL_HOST)
 # Remove images from Mailman pages (GNU, Python and Mailman logos)
 IMAGE_LOGOS = 0
 
+# Uncomment to run Mailman on secure server
+#DEFAULT_URL_PATTERN = 'https://%s/mailman/'
+#PUBLIC_ARCHIVE_URL = 'https://%(hostname)s/pipermail/%(listname)s'
+
 EOF
 # Compile file
 `python -O $MAILMAN_DIR/Mailman/mm_cfg.py`
