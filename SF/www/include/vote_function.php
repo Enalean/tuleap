@@ -156,7 +156,8 @@ if (db_numrows($result) > 0) {
 				<TR><TD VALIGN=TOP><B>';
 			echo $q_num.'&nbsp;&nbsp;-&nbsp;&nbsp;</B></TD><TD>';
 			$q_num++;
-			echo util_unconvert_htmlspecialchars(stripslashes(db_result($result, 0, 'question'))).'</br>';		}
+			echo util_unconvert_htmlspecialchars(stripslashes(db_result($result, 0, 'question'))).'<br>';
+		}
 
 		if ($question_type == "1") {
 			/*
