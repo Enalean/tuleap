@@ -273,6 +273,7 @@ while (list($field,$value_id) = each($prefs)) {
 	    $operator = $prefs[$field.'_op'][0];
 	    // '=' means that day between 00:00 and 23:59
 	    if ($operator == '=') {
+		list($year,$month,$day) = util_date_explode($prefs[$field][0]);
 		$time_end = mktime(23, 59, 59, $month, $day, $year);
 		$where .= ' AND bug.'.$field." >= $time ".'AND bug.'.$field." <= $time_end ";
 	    } else {
@@ -401,7 +402,6 @@ $totalrows = db_result($result_count,0,'count');
 
 $sql = "$select $from $where $order_by $limit";
 $result=db_query($sql);
-//echo "<br> DBG SQL = $sql";
 //exit 0;
 
 

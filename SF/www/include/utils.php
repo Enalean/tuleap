@@ -21,12 +21,37 @@ function format_date($format,$value,$default_value = '-') {
 // Returns a list with two values: the unix time and a boolean saying whether the conversion
 // went well (true) or bad (false)
 function util_date_to_unixtime($date) {
-    $res = preg_match("/\s*(\d+)-(\d+)-(\d+)/",$date,$match);
-    if ($res == 0) { return array(0,false); }
-    list(,$year,$month,$day) = $match;
+    list($year,$month,$day) = util_date_explode($date);
     $time = mktime(0, 0, 0, $month, $day, $year);
     //echo "<br>DBG Matching date $date -> year $year, month $month,day $day -> time = $time<br>";
     return array($time,true);
+}
+
+// Explode a date in the form of (YYYY-MM-DD) into its a list of 3 parts (YYYY,MM,DD)
+// if DD and MM are not defined then default them to 1
+function util_date_explode($date) {
+    $res = preg_match("/\s*(\d+)-(\d+)-(\d+)/",$date,$match);
+    if ($res == 0) { 
+	// if it doesn't work try YYYY-MM only
+	$res = preg_match("/\s*(\d+)-(\d+)/",$date,$match);
+	if ($res == 0) {
+	    // if it doesn't work try YYYY only
+	    $res = preg_match("/\s*(\d+)/",$date,$match);return array('1970','1','1');
+	    if ($res == 0) {
+		// nothing is valid return Epoch time
+		$year = '1970'; $month='1'; $day='1';
+	    } else {
+		list(,$year) = $match ; $month='1'; $day='1';
+	    }
+	    
+	} else {
+	    list(,$year,$month) = $match ; $day='1';
+	}
+	
+    } else {
+	list(,$year,$month,$day) = $match;
+    }
+    return array($year,$month,$day);
 }
 
 function util_prep_string_for_sendmail($body) {
