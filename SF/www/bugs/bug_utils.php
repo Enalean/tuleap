@@ -710,7 +710,7 @@ function bug_check_notification($user_id, $role, $changes=false) {
 
     $arr_cc_changes = array();
     if (isset($changes['CC']['add']))
-	$arr_cc_changes = split(',',$changes['CC']['add']);
+	$arr_cc_changes = split('[,;]',$changes['CC']['add']);
     $arr_cc_changes[] = $changes['CC']['del'];
     $is_user_in_cc_changes = in_array($user_name,$arr_cc_changes);    
     $are_anyother_user_in_cc_changes =
@@ -1440,6 +1440,37 @@ function bug_insert_cc($bug_id,$cc,$added_by,$comment,$date) {
 
 }
 
+function bug_validate_cc_list($arr_email, &$message) {
+    $valid = true;
+    $message = "";
+
+    while (list(,$cc) = each($arr_email)) {
+	// Make sure that the address is valid
+	if (! validate_email($cc)) {
+	    // check for a valid CodeX user.
+	    $res = user_get_result_set_from_unix($cc);
+	    if (db_numrows($res) == 0) {
+		$valid = false;
+	        $message .= "$cc<br>";
+		continue;
+	    }
+	}
+    }
+
+    if (! $valid) {
+        $message = "There are problems with the following addresses:"
+                 . "<blockquote>$message</blockquote>"
+		 . "Email addresses must either be valid "
+		 . "CodeX user names (e.g., 'jdoe') or fully qualified "
+		 . "email addresses (e.g., 'jill.doe@somewhere.xerox.com'). "
+	         . "Lists of email addresses may be separated by either "
+	         . "commas or semicolons."
+		 ;
+    }
+
+    return $valid;
+}
+
 function bug_add_cc($bug_id,$group_id,$email,$comment,&$changes) {
     global $feedback;
 
@@ -1449,6 +1480,11 @@ function bug_add_cc($bug_id,$group_id,$email,$comment,&$changes) {
     $date = time();
     $ok = true;
     $changed = false;
+
+    if (! bug_validate_cc_list($arr_email, $message)) {
+        exit_error("Error - The CC list is invalid", $message);
+    }
+
     while (list(,$cc) = each($arr_email)) {
 	// Add this cc only if not there already
 	if (!bug_exist_cc($bug_id,$cc)) {
