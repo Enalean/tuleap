@@ -53,6 +53,9 @@ while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow())
           "  User dummy\n",
           "  Group $unix_group_name\n",
 	  "  DocumentRoot /home/groups/$unix_group_name/htdocs/\n",
+	  "  <Directory /home/groups/$unix_group_name/htdocs>\n",
+	  "    AllowOverride Options Indexes\n",
+	  "  </Directory>\n",
 	  "  CustomLog logs/vhosts-access_log combined\n",
 	  "  ScriptAlias /cgi-bin/ /home/groups/$unix_group_name/cgi-bin/\n",
 	  "</VirtualHost>\n\n");
