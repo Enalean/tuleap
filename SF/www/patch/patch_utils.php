@@ -236,7 +236,7 @@ function mail_followup($patch_id,$more_addresses=false) {
 
 	if ($result && db_numrows($result) > 0) {
 
-		$body = "Patch #".db_result($result,0,"patch_id")." has been updated. ".
+		$body = "Patch #".$patch_id." has been updated. ".
 			"\n\nProject: ".db_result($result,0,'group_name').
 			"\nCategory: ".db_result($result,0,'category_name').
 			"\nStatus: ".db_result($result,0,'status_name').
@@ -266,9 +266,9 @@ function mail_followup($patch_id,$more_addresses=false) {
 
 		$body .= "\n\n-------------------------------------------------------".
 			"\nFor more info, visit:".
-			"\n\nhttp://$GLOBALS[sys_default_domain]/patch/?func=detailpatch&patch_id=". db_result($result,0,'patch_id') .'&group_id='. db_result($result,0,'group_id');
+			"\n\nhttp://$GLOBALS[sys_default_domain]/patch/?func=detailpatch&patch_id=". $patch_id.'&group_id='. db_result($result,0,'group_id');
 
-		$subject="[Patch #".db_result($result,0,'patch_id').'] '.util_unconvert_htmlspecialchars(db_result($result,0,'summary'));
+		$subject="[Patch #".$patch_id.'] '.util_unconvert_htmlspecialchars(db_result($result,0,'summary'));
 
 		$to=db_result($result,0,'email'). ', '. db_result($result,0,'assigned_to_email');
 
@@ -276,9 +276,12 @@ function mail_followup($patch_id,$more_addresses=false) {
 			$to .= ','.$more_addresses;
 		}
 
-		$more='From: noreply@'.$GLOBALS['sys_default_domain'];
+		$hdrs = 'From: noreply@'.$GLOBALS['sys_default_domain']."\n";
+		$hdrs .='X-CodeX-Project: '.group_getunixname(db_result($result,0,'group_id'))."\n";
+		$hdrs .='X-CodeX-Artifact: patch'."\n";
+		$hdrs .='X-CodeX-Artifact-ID: '.$patch_id."\n";
 
-		mail($to,$subject,$body,$more);
+		mail($to,$subject,$body,$hdrs);
 
 		$feedback .= " Patch Update Sent "; //to $to ";
 

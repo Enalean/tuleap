@@ -1549,10 +1549,13 @@ function pm_mail_followup($project_task_id,$more_addresses=false,$changes=false)
     
     	//echo "DBG Sending email to: $to<br";
     
-    	$more='From: noreply@'.$GLOBALS['sys_default_domain'];
-            $subject='[Task #'.db_result($result,0,'project_task_id').'] '.util_unconvert_htmlspecialchars(db_result($result,0,'summary'));
+    	$hdrs = 'From: noreply@'.$GLOBALS['sys_default_domain']."\n";
+	$hdrs .='X-CodeX-Project: '.group_getunixname($group_id)."\n";
+	$hdrs .='X-CodeX-Artifact: task'."\n";
+	$hdrs .='X-CodeX-Artifact-ID: '.$project_task_id."\n";
+	$subject='[Task #'.$project_task_id.'] '.util_unconvert_htmlspecialchars(db_result($result,0,'summary'));
 
-    	mail($to,$subject,$body,$more);
+    	mail($to,$subject,$body,$hdrs);
     
     	$feedback .= ' Task Update Sent '; //to '.$to;
 

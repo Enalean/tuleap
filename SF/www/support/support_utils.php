@@ -251,11 +251,14 @@ function sr_utils_mail_followup($support_id,$more_addresses=false,$changes=false
 	    }
 	    
 	    // Send the email message
-	    $more='From: noreply@'.$GLOBALS['sys_default_domain'];
+	    $hdrs = 'From: noreply@'.$GLOBALS['sys_default_domain']."\n";
+	    $hdrs .='X-CodeX-Project: '.group_getunixname($group_id)."\n";
+	    $hdrs .='X-CodeX-Artifact: support'."\n";
+	    $hdrs .='X-CodeX-Artifact-ID: '.$support_id."\n";
 	    $subject="[ SR #".db_result($result,0,"support_id")." ] ".
 		util_unconvert_htmlspecialchars(db_result($result,0,"summary"));
 
-	    mail($to, $subject, $body, $more);
+	    mail($to, $subject, $body, $hdrs);
 
 	    $feedback .= " Support Request Update Emailed ";
 	    

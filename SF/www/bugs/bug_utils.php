@@ -972,11 +972,14 @@ function bug_mail_followup($bug_id,$more_addresses=false,$changes=false) {
 
 	//echo "DBG Sending email to: $to<br";
 
-	$more='From: noreply@'.$GLOBALS['sys_default_domain'];
+	$hdrs='From: noreply@'.$GLOBALS['sys_default_domain']."\n";
+	$hdrs .='X-CodeX-Project: '.group_getunixname($group_id)."\n";
+	$hdrs .='X-CodeX-Artifact: bug'."\n";
+	$hdrs .='X-CodeX-Artifact-ID: '.$bug_id."\n";
         $subject='[Bug #'.db_result($result,0,'bug_id').'] '.util_unconvert_htmlspecialchars(db_result($result,0,'summary'));
 
 
-	mail($to,$subject,$body,$more);
+	mail($to,$subject,$body,$hdrs);
 
 	$feedback .= ' Bug Update Sent '; //to '.$to;
 
