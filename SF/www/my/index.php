@@ -101,7 +101,7 @@ of groups that you are a member of.
 	echo $HTML->box1_top('My Support Requests');
 
 	$sql='SELECT group_id FROM support '.
-	    'WHERE support_status_id <> 2 '.
+	    'WHERE support_status_id = 1 '.
 	    'AND (assigned_to='.user_getid().
 	    ' OR submitted_by='.user_getid().') GROUP BY group_id ORDER BY group_id ASC LIMIT 100';
 
