@@ -211,7 +211,7 @@ CREATE TABLE bug_report (
   name VARCHAR(80),
   description VARCHAR(255),
   scope VARCHAR(1) DEFAULT 'I' NOT NULL,
-  PRIMARY KEY (profile_id),
+  PRIMARY KEY (report_id),
   KEY group_id_idx (group_id),
   KEY user_id_idx (user_id),
   KEY scope_idx (scope)
@@ -230,7 +230,7 @@ CREATE TABLE bug_report_field (
   place_query int(11),
   place_result int(11),
   col_width int(11),
-  KEY profile_id_idx (profile_id)
+  KEY report_id_idx (profile_id)
 );
 
 #
