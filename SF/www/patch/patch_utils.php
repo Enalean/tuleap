@@ -223,7 +223,7 @@ function mail_followup($patch_id,$more_addresses=false) {
 
 	$sql="SELECT patch.group_id,patch.patch_id,patch.summary,groups.group_name,".
 		"patch_status.status_name,patch_category.category_name, ".
-		"user.email,user2.email AS assigned_to_email ".
+		"user.user_id AS submitter_id, user.email, user2.user_id AS assigned_to_id, user2.email AS assigned_to_email ".
 		"FROM patch,user,user user2,groups,patch_category,patch_status ".
 		"WHERE user2.user_id=patch.assigned_to ".
 		"AND patch.patch_status_id=patch_status.patch_status_id ".
@@ -270,10 +270,18 @@ function mail_followup($patch_id,$more_addresses=false) {
 
 		$subject="[Patch #".$patch_id.'] '.util_unconvert_htmlspecialchars(db_result($result,0,'summary'));
 
-		$to=db_result($result,0,'email'). ', '. db_result($result,0,'assigned_to_email');
+		$user_emails = Array();
+		if (db_result($result,0,'submitter_id') != 100) {
+		    $user_emails[] = db_result($result,0,'email');
+		}
+		if (db_result($result,0,'assigned_to_id') != 100) {
+		    $user_emails[] = db_result($result,0,'assigned_to_email');
+		}
+
+		$to = join(',',$user_emails);
 
 		if ($more_addresses) {
-			$to .= ','.$more_addresses;
+		    $to .= ','.$more_addresses;
 		}
 
 		$hdrs = 'From: noreply@'.$GLOBALS['sys_default_domain']."\n";
