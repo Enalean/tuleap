@@ -7,6 +7,7 @@
 // $Id$
 
 require ('pre.php');    
+require ('../cvs/commit_utils.php');    
 
 //only projects can use the bug tracker, and only if they have it turned on
 $project=project_get_object($group_id);
@@ -27,69 +28,72 @@ $row_grp = db_fetch_array($res_grp);
 
 // ######################## table for summary info
 
-print '<TABLE width="100%"><TR valign="top"><TD width="65%">'."\n";
-
-// ######################## anonymous CVS instructions
 
 // LJ No anonymous access anymore on CodeX
 // LJ if ($row_grp['is_public']) {
-if (0) {
-	print '<h2>CVS Access '.help_button('VersionControlWithCVS.html').'</h2>
-<P>The CVS repository of this project can be checked out through anonymous
-(pserver) CVS with the following instruction set. The module you wish
-to check out must be specified as the <I>modulename</I>. When prompted
-for a password for <I>anonymous</I>, simply press the Enter key.
 
-<P><span class="command">cvs -d:pserver:anonymous@cvs.'.$row_grp['http_domain'].':/cvsroot/'.$row_grp['unix_group_name'].' login
-<BR>&nbsp;<BR>cvs -d:pserver:anonymous@cvs.'.$row_grp['http_domain'].':/cvsroot/'.$row_grp['unix_group_name'].' co <I>modulename</I>
-</span>
+commits_header($params);
+switch ($func) {
 
-<P>Updates from within the module\'s directory do not need the -d parameter.';
+ case 'browse' : {
+   include '../cvs/browse_commit.php';
+   break;
+ }
+
+ case 'detailcommit' : {
+   include '../cvs/detail_commit.php';
+   break;
+ }
+
+
+ case 'admin' : {
+   include '../cvs/admin_commit.php';
+   break;
+ }
+
+ case 'setAdmin' : {
+   $feedback = 'Configuration updated ';
+   $status = 'successfuly';
+
+   if (trim($custom_mailing_header) == '') {
+     $mailing_header = 'NULL';
+   } else {
+     $mailing_header = $custom_mailing_header;
+   }
+   if (trim($mailing_list) == '') {
+     $mailing_list = 'NULL';
+   } else {
+     if (!validate_emails ($mailing_list)) {
+       $mailing_list = 'NULL';
+       $status = 'partly<br> Email Address Appeared Invalid, e-mail notification is off. ';
+     }
+   }
+   $feedback = $feedback.$status;
+   $query = 'update groups set cvs_tracker="'.$tracked.'", cvs_events_mailing_list="'.$mailing_list.'", cvs_events_mailing_header="'.$mailing_header.'" where group_id='.$group_id;
+   $result=db_query($query);
+   include '../cvs/admin_commit.php';
+   break;
+ }
+
+
+ default : {
+
+   // ############################ developer access
+   if ($commit_id) {
+     $_commit_id = $commit_id;
+     include '../cvs/browse_commit.php';
+   }
+   else
+     util_get_content('cvs/intro');
+
+   break;
+ }
 }
 
-// ############################ developer access
-
-util_get_content('cvs/intro');
-
-// ################## summary info
-
-print '</TD><TD width="35%">';
-print $HTML->box1_top("Repository History");
-
-// ################ is there commit info?
-
-$res_cvshist = db_query("SELECT * FROM group_cvs_history WHERE group_id='$group_id'");
-if (db_numrows($res_cvshist) < 1) {
-	print '<P>This project has no CVS history.';
-} else {
-
-// LJ Change formatting and it is not 30 but 7 day
-print '<P><b>Developer (Commits) (Adds) 7day/Total</b><BR>&nbsp;';
-
-while ($row_cvshist = db_fetch_array($res_cvshist)) {
-	print '<BR>'.$row_cvshist['user_name'].' ('.$row_cvshist['cvs_commits_wk'].'/'
-		.$row_cvshist['cvs_commits'].') ('.$row_cvshist['cvs_adds_wk'].'/'
-		.$row_cvshist['cvs_adds'].')';
-}
-
-} // ### else no cvs history
-
-// ############################## CVS Browsing
-if ($row_grp['is_public']) {
-	print '<HR><B>Browse the CVS Tree</B>
-<P>Browsing the CVS tree gives you a great view into the current status
-of this project\'s code. You may also view the complete histories of any
-file in the repository.
-<UL>
-<LI><A href="http'.(session_issecure() ? 's':'').'://'.$sys_default_domain.'/cgi-bin/cvsweb.cgi/?cvsroot='
-.$row_grp['unix_group_name'].'"><B>Browse CVS Repository</B>';
-}
 
 
-print $HTML->box1_bottom();
 
-print '</TD></TR></TABLE>';
 
-site_project_footer(array());
+site_project_footer(array()); 
 
 ?>

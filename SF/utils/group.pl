@@ -35,6 +35,18 @@ sub set_group_info_from_name {
     
 }
 
+sub isGroupCvsTracked {
+  return $$GROUP_INFO{'cvs_tracker'};
+}
+
+sub cvsGroup_mail_header {
+  return $$GROUP_INFO{'cvs_events_mailing_header'};
+}
+
+sub cvsGroup_mailto {
+  return $$GROUP_INFO{'cvs_events_mailing_list'};
+}
+
 sub isGroupPublic {
   return $$GROUP_INFO{'is_public'};
 }

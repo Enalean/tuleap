@@ -667,6 +667,7 @@ CREATE TABLE forum_group_list (
   is_public int(11) NOT NULL default '0',
   description text,
   PRIMARY KEY  (group_forum_id),
+  FULLTEXT (description),
   KEY idx_forum_group_list_group_id (group_id)
 ) TYPE=MyISAM;
 
@@ -1010,6 +1011,9 @@ CREATE TABLE groups (
   xrx_export_ettm int(11) NOT NULL default '0',
   project_type int(11) NOT NULL default '0',
   bug_allow_anon int(11) NOT NULL default '1'
+  cvs_tracker int(11)   NOT NULL default '1',
+  cvs_events_mailing_list varchar(64) binary DEFAULT NULL,
+  cvs_events_mailing_header varchar(64) binary DEFAULT NULL,
   PRIMARY KEY  (group_id),
   KEY idx_groups_status (status),
   KEY idx_groups_public (is_public),
@@ -2434,6 +2438,95 @@ CREATE TABLE project_type (
   PRIMARY KEY  (project_type_id),
   KEY project_label_idx (label)
 ) TYPE=MyISAM;
+
+# CREATE cvs support tables
+
+CREATE TABLE cvs_checkins (
+  type enum('Change','Add','Remove'),
+  ci_when datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+  whoid mediumint(9) DEFAULT '0' NOT NULL,
+  repositoryid mediumint(9) DEFAULT '0' NOT NULL,
+  dirid mediumint(9) DEFAULT '0' NOT NULL,
+  fileid mediumint(9) DEFAULT '0' NOT NULL,
+  revision varchar(32) binary ,
+  stickytag varchar(255) binary DEFAULT '' NOT NULL,
+  branchid mediumint(9) DEFAULT '0' NOT NULL,
+  addedlines int(11) DEFAULT '999' NOT NULL,
+  removedlines int(11) DEFAULT '999' NOT NULL,
+  commitid int(11) DEFAULT '0' NOT NULL,
+  descid int(11) DEFAULT '0' NOT NULL,
+  UNIQUE repositoryid (repositoryid,dirid,fileid,revision),
+  KEY ci_when (ci_when),
+  KEY repositoryid_2 (repositoryid),
+  KEY dirid (dirid),
+  KEY fileid (fileid),
+  KEY branchid (branchid)
+) TYPE=MyISAM;
+
+CREATE TABLE cvs_commits (
+  id mediumint(9) DEFAULT '0' NOT NULL auto_increment,
+  comm_when timestamp,
+  whoid mediumint(9) DEFAULT '0' NOT NULL,
+  KEY whoid (whoid),
+  PRIMARY KEY (id)
+) TYPE=MyISAM;
+
+CREATE TABLE cvs_descs (
+  id mediumint(9) DEFAULT '0' NOT NULL auto_increment,
+  description text,
+  hash bigint(20) DEFAULT '0' NOT NULL,
+  PRIMARY KEY (id),
+  KEY hash (hash)
+) TYPE=MyISAM;
+
+CREATE TABLE cvs_dirs (
+  id mediumint(9) DEFAULT '0' NOT NULL auto_increment,
+  dir varchar(128) binary DEFAULT '' NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE dir (dir)
+);
+
+CREATE TABLE cvs_files (
+  id mediumint(9) DEFAULT '0' NOT NULL auto_increment,
+  file varchar(128) binary DEFAULT '' NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE file (file)
+);
+
+CREATE TABLE cvs_repositories (
+  id mediumint(9) DEFAULT '0' NOT NULL auto_increment,
+  repository varchar(64) binary DEFAULT '' NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE repository (repository)
+);
+
+CREATE TABLE cvs_tags (
+  repositoryid mediumint(9) DEFAULT '0' NOT NULL,
+  branchid mediumint(9) DEFAULT '0' NOT NULL,
+  dirid mediumint(9) DEFAULT '0' NOT NULL,
+  fileid mediumint(9) DEFAULT '0' NOT NULL,
+  revision varchar(32) binary DEFAULT '' NOT NULL,
+  KEY repositoryid_2 (repositoryid),
+  KEY dirid (dirid),
+  KEY fileid (fileid),
+  KEY branchid (branchid)
+);
+
+CREATE TABLE cvs_branches ( 
+  id mediumint(9) DEFAULT '0' NOT NULL auto_increment,
+  branch varchar(64) binary DEFAULT '' NOT NULL, 
+  PRIMARY KEY (id), 
+  UNIQUE branch (branch)  
+); 
+
+CREATE TABLE cvs_tracks ( 
+  group_artifact_id int(11),
+  tracker varchar(64) binary DEFAULT '' NOT NULL, 
+  artifact_id int(11) NOT NULL, 
+  commit_id int(11) NOT NULL	
+); 
+
+
 
 #
 # EOF

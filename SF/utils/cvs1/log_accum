@@ -17,6 +17,7 @@
 # Usage: log_accum.pl [-d] [-s] [-M module] [[-m mailto] ...] [-f logfile]
 #	-d		- turn on debugging
 #       -G database     - interface to Gnats
+#       -nodb           - suppress default codex database commit tracking
 #	-m mailto	- send mail to "mailto" (multiple)
 #	-M modulename	- set module name to "modulename"
 #	-f logfile	- write commit messages to logfile too
@@ -70,6 +71,8 @@ my %bugs;
 my %tasks;
 my %srs;
 my %patches;
+my %branches;
+my %commits;
 
 # group_id
 my $group_id;
@@ -88,6 +91,7 @@ sub set_temp_vars {
     $REMOVED_FILE  = sprintf ("$TMPDIR/#%s.files.removed", $name);
     $LOG_FILE      = sprintf ("$TMPDIR/#%s.files.log", $name);
     $URL_FILE      = sprintf ("$TMPDIR/#%s.files.urls", $name);
+    $DB_FILE      = sprintf ("$TMPDIR/#%s.files.DB", $name);
 
     # Quote for use in a regexp.
     ($FILE_PREFIX   = sprintf ("#%s.files", $name)) =~ s/(\W)/\\$1/g;
@@ -260,6 +264,74 @@ sub compile_subject {
     $text;
 }
 
+
+sub checkin_describe {
+  local ($dir) = @_;
+
+  return "$login,$cvsroot,$modulename,$dir";
+
+}
+
+sub db_add_ref {
+  local($tracker_name, $commit_id, $item_id) = @_;
+  ## get the tracker_id when possible (not yet implemented, sait for meta_trackers implementation)
+  ## ($tracker_id, $tracker_name) = dbGet_tracker($tracker_name);
+  db_add_ref_record($tracker_id,$tracker_name, $commit_id, $item_id);
+}
+
+
+sub db_checkins_add {
+  local($index, $commit_id, @descs) = @_;
+  @checkins = &read_logfile("$DB_FILE.$index.$id", "");
+
+  if ($debug) {
+    print STDERR "treating for DB_FILE.$index.$id \n";
+
+
+  }
+  my ($dir, $i, $who, $repo);
+  local $when = localtime(time);
+  
+  for ($i = 0; $i <= $#checkins; $i ++) {
+     if ($checkins[$i] =~ /\/$/)
+	    {
+	        ($who, $repo, $module, $dir) = split(',', $checkins[$i]);
+	    }
+	    elsif ($dir ne './' && $checkins[$i] !~ /\//)
+	    {
+	      local ($added, $removed);
+	      $added = '';
+	      $removed = '';
+
+	      $dir =~ s/\/$//;
+	      local ($file, $version, $type, $branch) = split(",",$checkins[$i]);
+	      if ($debug) {
+		print STDERR "add checkin for \n";
+		print STDERR " commit_id ", $commit_id, " \n";
+		print STDERR " who ", $who, " \n";
+		print STDERR " repo ", $repo, " \n";
+		print STDERR " module ", $module, " \n";
+		print STDERR " when ", $when, " \n";
+		print STDERR " dir ", $dir, " \n";
+		print STDERR " file ", $file, " \n";
+		print STDERR " type ", $type, " \n";
+		print STDERR " version ", $version, " \n";
+		print STDERR " branch ", $branch, " \n";
+		print STDERR " desc ", join("\n", @descs), " \n";
+	      }
+
+	      if ($type eq 'c') {
+		$added = '999';
+		$removed = '999';
+	      }
+
+	      &db_add_record($commit_id, $who, $repo, $when, $module."/".$dir, $file, $type, $version, $branch, $added, $removed, @descs);
+	    }
+   }
+
+}
+
+
 sub append_names_to_file {
     local($filename, $dir, @files) = @_;
 
@@ -416,6 +488,75 @@ sub generate_cvsweb_urls {
     return @result;
 }
 
+
+sub get_branch {
+  local ($file) = @_;
+  if ($debug) {
+    print STDERR "entering get_branch\n";
+  }
+
+  local (@files, @keys, $key, $f);
+  @keys = keys %branches;
+  foreach $key (@keys) {
+    $files = $branches{$key};
+    if ($debug) {
+      print STDERR $key, " branch value ", $files, " inspection for ", $file, "\n";
+    }
+    @filelist = split(' ', $files);
+    foreach $f (@filelist) {
+      if ($debug) {
+	print STDERR $key, " branch inspection for ", $file, " and file ", $f, "\n";
+      }
+
+      if ($file eq $f) {
+	if ($debug) {
+	  print STDERR "branch found: ", $key, "\n";
+	}
+	return $key;
+      }
+    }
+  }
+  if ($debug) {
+    print STDERR "branch not found\n";
+  }
+  return 'not found';
+}
+
+
+# Return a list of all cvsweb URLs for this commit.
+sub generate_checkins {
+    local ($dir, @files) = @_;
+    local (@sp, @result);
+
+    if ($debug) {
+      print STDERR "entering generate_checkins with ", $dir, ": ", join(' ', @files), "\n";
+    }
+
+    local ($rev,$file);
+    foreach (@files) {
+      if ($debug) {
+	print STDERR $_, " file in generate_checkins \n";
+      }
+
+      # List is (FILE OLD-REV NEW-REV).
+      @sp = split (',');
+      $file = $sp[0];
+      $rev = $sp[2];
+      if ($debug) {
+	print STDERR "looking for ",$file, $rev, " branch \n";
+      }
+
+      # then, go and find the branch if any for file
+      local ($branch) = &get_branch($file);
+      local (@res) = ($file, $rev, $branch);
+      push (@result, join(',', @res));
+    }
+    if ($debug) {
+      print STDERR " checkin : ", join(',', @res);
+    }
+    return @result;
+}
+
 #
 #	Main Body
 #
@@ -471,6 +612,7 @@ $temp_name = "temp";
 $do_cvsweb = 0;
 $cvsweb_name = '';
 $do_diffs = 0;
+$codexdb = 1;
 %diffmon = ();
 
 # parse command line arguments (file list is seen as one arg)
@@ -493,6 +635,8 @@ while (@ARGV) {
     } elsif ($arg eq '-G') {
 	($gnatsdb) && die("Too many '-G' args\n");
 	$gnatsdb = shift @ARGV;
+    } elsif ($arg eq '-nodb') {
+	$codexdb = 0;
     } elsif ($arg eq '-T') {
 	$temp_name = shift @ARGV;
     } elsif ($arg eq '-C') {
@@ -513,12 +657,22 @@ while (@ARGV) {
 	$do_diffs = 1 if (! $do_diffs);
 	$diffmon{$1} = $2;
     } else {
-	($donefiles) && die("Too many arguments!  Check usage.\n");
+	($donefiles) && die("Too many arguments!  Check usage.", $arg, "\n");
 	$donefiles = 1;
 	@files = split(/ /, $arg);
+	if ($debug) {
+	  foreach $f (@files) {
+	    print STDERR $f, ", ";
+	  }
+	}
     }
 }
-($mailto) || die("No -m mail recipient specified\n");
+
+if ($debug) {
+  print STDERR "\nentering log_accum\n";
+}
+
+($mailto) || ($codexdb) || die("No -m mail recipient specified\n");
 $mailto =~ s/^\s+//;
 &set_temp_vars ($temp_name);
 
@@ -559,11 +713,50 @@ use DBI;
 $root_path = $ENV{'SF_LOCAL_INC_PREFIX'} || "/home/";
 require $root_path."httpd/SF/utils/include.pl";
 require $root_path."httpd/SF/utils/group.pl";
+require $root_path."httpd/SF/utils/cvs1/checkins.pl";
 
 &db_connect;
+# &cvs_db_connect; now work on sourceforge dn, no more ViewCVS
 
 # retrieve the group_id
-$group_id = &set_group_info_from_name($cvsweb_name);
+($rootnull, $root, $gname) = split ('/', $cvsroot);
+$group_id = &set_group_info_from_name($gname);
+if ($debug) {
+  print STDERR "group_repo: ", $gname, "\n";
+  print STDERR "group_id: ", $group_id, "\n";
+}
+
+$cvsmailto = &cvsGroup_mailto();
+
+$cvsmailheader = &cvsGroup_mail_header();
+
+if (debug) {
+  print STDERR "\n header in db: ", $cvsmailheader, "\n";
+}
+if ($cvsmailheader eq 'NULL') {
+  ##$cvsmailheader = "[cvs-".$gname."]";
+  $cvsmailheader = "";
+}
+
+if ($debug) {
+  print STDERR "mailto: ", $mailto, "\n";
+  print STDERR "cvsmailto: ", $cvsmailto, "\n";
+}
+
+if ($cvsmailto ne 'NULL') {
+  if ($debug) {
+    print STDERR "update mailto with database controled mail\n";
+  }
+  if ($mailto) {
+    $mailto = "$mailto , $cvsmailto";
+  } else {
+    $mailto = $cvsmailto;
+  }
+}
+if ($debug) {
+  print STDERR "mailto: ", $mailto, "\n";
+}
+
 
 # Check for a new directory first.  This appears with files set as follows:
 #
@@ -586,7 +779,9 @@ if ($files[2] =~ /New/ && $files[3] =~ /directory/) {
 	push(@text, $_);
     }
 
-    &mail_notification($mailto, $files[0], @text);
+    if ($mailto) {
+      &mail_notification($mailto, $cvsmailheader.$files[0], @text);
+    }
 
     if ($commitlog) {
 	&write_commitlog($commitlog, @text);
@@ -597,7 +792,17 @@ if ($files[2] =~ /New/ && $files[3] =~ /directory/) {
 
 # Iterate over the body of the message collecting information.
 #
+
+
+
+if ($debug) {
+  print STDERR $codexdb, " value for codexdb \n";
+}
+
 while (<STDIN>) {
+    if ($debug) {
+      print STDERR $_, "\n";
+    }
     chop;			# Drop the newline
 
     if (/^Modified Files/) { $state = $STATE_CHANGED; next; }
@@ -609,11 +814,40 @@ while (<STDIN>) {
     s/^[ \t\n]+//;		# delete leading whitespace
     s/[ \t\n]+$//;		# delete trailing whitespace
 
-    if ($state == $STATE_CHANGED) { push(@changed_files, split); }
-    if ($state == $STATE_ADDED)   { push(@added_files,   split); }
-    if ($state == $STATE_REMOVED) { push(@removed_files, split); }
+    if ($state == $STATE_CHANGED) {
+      push(@changed_files, split);
+
+      if ($branches{'c,'.$branch}) {
+	$branched = $branches{'c,'.$branch}.' '.$_;
+	$branches{'c,'.$branch} = $branched;
+      } else {
+	$branches{'c,'.$branch} =  $_;
+      }
+    }
+
+    
+    if ($state == $STATE_ADDED)   {
+      push(@added_files,   split);
+      if ($branches{'a,'.$branch}) {
+	$branched = $branches{'a,'.$branch}.' '.$_;
+	$branches{'a,'.$branch} = $branched;
+      } else {
+	$branches{'a,'.$branch} =  $_;
+      }
+    }
+
+    if ($state == $STATE_REMOVED) { 
+      push(@removed_files, split);
+      if ($branches{'r,'.$branch}) {
+	$branched = $branches{'c,'.$branch}.' '.$_;
+	$branches{'r,'.$branch} = $branched;
+      } else {
+	$branches{'r,'.$branch} =  $_;
+      }
+    }
     if ($state == $STATE_LOG)     { push(@log_lines,     $_); }
-}
+  }
+
 
 # Strip leading and trailing blank lines from the log message.  Also
 # compress multiple blank lines in the body of the message down to a
@@ -653,10 +887,32 @@ if ($files[2] =~ /Imported/ && $files[3] =~ /sources/) {
 	shift(@log_lines);
     }
 
-    &mail_notification($mailto, "Import $file[0]", @text);
+    if ($mailto) {
+      &mail_notification($mailto,  $cvsmailheader." Import $file[0]", @text);
+    }
 
     if ($commitlog) {
 	&write_commitlog($commitlog, @text);
+    }
+    
+    $db_track = 0;
+    $db_events_list = 'NULL';
+    if ($codexdb) {
+      $db_track = &isGroupCvsTracked();
+      $db_events_list = &cvsGroup_mailto();
+      if ($debug) {
+	print STDERR "tracking: ", $db_track, "\n";
+	print STDERR "mailing: ", $db_events_list, "\n";
+      }
+      $codexdb = $codexdb && (($db_events_list != 'NULL') || $db_track);
+    }
+    if ($db_track) {
+      $commit_id = db_get_commit($debug);
+      if ($debug) {
+	
+	print STDERR "desc: ", join ('\n', @text), "\n";
+      }
+      &db_add_record($commit_id, $ENV{'USER'}, $cvsroot, '', $modulename, '.', 'a', '', '', 'NULL', 'NULL', @text);
     }
 
     exit 0;
@@ -665,6 +921,32 @@ if ($files[2] =~ /Imported/ && $files[3] =~ /sources/) {
 # Compute the list of cvsweb URLs if necessary.
 if ($do_cvsweb) {
     @urls = &generate_cvsweb_urls (join ('/', @path), $branch,
+				   @files[1 .. $#files]);
+}
+
+if ($codexdb) {
+  $db_track = &isGroupCvsTracked();
+  $db_events_list = &cvsGroup_mailto();
+  if ($debug) {
+     print STDERR "group_id: ", $group_id, "\n";
+    print STDERR "tracking: ", $db_track, "\n";
+    print STDERR "mailing: ", $db_events_list, "\n";
+  }
+  $codexdb = $codexdb && (($db_events_list != 'NULL') || $db_track);
+}
+if ($codexdb) {  
+  if ($debug) {
+    local @keys = keys %branches;
+    print STDERR $#keys , " found branches\n";
+    print STDERR "calling for checkins with ",
+      join ('/', @path),
+	" with ",
+	  join ('|', @keys),
+	    " branches and ",
+	      join (' ', @files[1 .. $#files]),
+		" files\n";
+  }
+  @checkins = &generate_checkins (join ('/', @path),
 				   @files[1 .. $#files]);
 }
 
@@ -691,6 +973,9 @@ if ($debug) {
 &append_names_to_file("$ADDED_FILE.$i.$id",   $dir, @added_files);
 &append_names_to_file("$REMOVED_FILE.$i.$id", $dir, @removed_files);
 &append_names_to_file("$URL_FILE.$i.$id",     $dir, @urls);
+if ($codexdb) {
+  &append_names_to_file("$DB_FILE.$i.$id",    &checkin_describe($dir), @checkins);
+}
 &write_logfile("$LOG_FILE.$i.$id", @log_lines);
 
 # Check whether this is the last directory.  If not, quit.
@@ -730,6 +1015,14 @@ if ($debug) {
 push(@text, &build_header());
 push(@text, "");
 
+my ($commit_id);
+
+if ($db_track) {
+  $commit_id = db_get_commit($debug);
+}
+
+
+
 for ($i = 0; ; $i++) {
     last if (! -e "$LOG_FILE.$i.$id"); # we're done them all!
     @lines = &read_logfile("$CHANGED_FILE.$i.$id", "");
@@ -759,6 +1052,9 @@ for ($i = 0; ; $i++) {
 	push(@text, @log_txt);
 	push(@text, "");
     }
+    if ($db_track) {
+      &db_checkins_add($i, $commit_id, @log_txt);
+    }
     @url_txt = &read_logfile("$URL_FILE.$i.$id", "");
     if ($#url_txt >= 0) {
 	push (@text, "CVSWeb URLs:");
@@ -773,6 +1069,9 @@ for ($i = 0; ; $i++) {
         push (@text, "Bugs references:");
         foreach $bug (keys %bugs) {
             push (@text, "Bug #$bug: http://$sys_default_domain/bugs/?func=detailbug&bug_id=$bug&group_id=$group_id");
+	    if ($db_track) {
+	      &db_add_ref('bug', $commit_id, $bug);
+	    }
         }
     }
     @keys = keys %tasks;
@@ -781,7 +1080,10 @@ for ($i = 0; ; $i++) {
         push (@text, "Tasks references:");
         foreach $task (keys %tasks) {
             push (@text, "Task #$task: http://$sys_default_domain/pm/task.php?func=detailtask&project_task_id=$task&group_id=$group_id");
-        }
+	    if ($db_track) {
+	      &db_add_ref('task', $commit_id, $task);
+	    }
+                }
     }
     @keys = keys %srs;
     if ( $#keys >= 0 ) {
@@ -789,6 +1091,9 @@ for ($i = 0; ; $i++) {
         push (@text, "Support Requests references:");
         foreach $sr (keys %srs) {
             push (@text, "Sr #$sr: http://$sys_default_domain/support/index.php?func=detailsupport&support_id=$sr&group_id=$group_id");
+	    if ($db_track) {
+	      &db_add_ref('sr', $commit_id, $sr);
+	    }
         }
     }
     @keys = keys %patches;
@@ -798,7 +1103,23 @@ for ($i = 0; ; $i++) {
         foreach $patch (keys %patches) {
             push (@text, "Patch #$patch: http://$sys_default_domain/patch/?func=detailpatch&patch_id=$patch&group_id=$group_id");
         }
+	    if ($db_track) {
+	      &db_add_ref('patch', $commit_id, $patch);
+	    }
     }
+
+        @keys = keys %patches;
+    if ( $#keys >= 0 ) {
+    	push (@text, "");
+        push (@text, "Commits references:");
+        foreach $comm (keys %commits) {
+            push (@text, "commit #$comm: http://$sys_default_domain/cvs/?func=detailcommit&commit_id=$commit&group_id=$group_id");
+        }
+	    if ($db_track) {
+	      &db_add_ref('commit', $commit_id, $comm);
+	    }
+    }
+
     
     if ($do_status || $do_diffs) {
 	local(@changed_files);
@@ -860,7 +1181,7 @@ for ($i = 0; ; $i++) {
 		else
 		{
 		    &mail_notification ($addr,
-					"Changes to $modulename/$dofile",
+					 $cvsmailheader." Changes to $modulename/$dofile",
 					@diff);
 		}
 	    }
@@ -880,26 +1201,32 @@ for ($i = 0; ; $i++) {
     }
 }
 
-$subject_txt = &compile_subject(@subject_files);
-
-# Write to the commitlog file
-#
-if ($commitlog) {
-    &write_commitlog($commitlog, @text);
+if (debug) {
+  print STDERR "mailto: ", $mailto, "\n";
 }
+if ($mailto) {
+  
+  $subject_txt = &compile_subject(@subject_files);
 
-if ($#diff_txt >= 0) {
+  # Write to the commitlog file
+  #
+  if ($commitlog) {
+    &write_commitlog($commitlog, @text);
+  }
+
+  if ($#diff_txt >= 0) {
     push (@text, "Patches:");
     push (@text, @diff_txt);
-}
+  }
 
-if ($#status_txt >= 0) {
+  if ($#status_txt >= 0) {
     push(@text, @status_txt);
-}
+  }
 
-# Mailout the notification.
-#
-&mail_notification($mailto, $subject_txt, @text);
+  # Mailout the notification.
+  #
+  &mail_notification($mailto, $cvsmailheader.$subject_txt, @text);
+}
 
 # Send mail to Gnats, if required.
 if ($gnatsdb ne '') {
