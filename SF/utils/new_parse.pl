@@ -124,7 +124,8 @@ while ($ln = pop(@groupdump_array)) {
 	# Add sourceforge user to the group if it is a private project
 	# otherwise Apache won't be able to access the document Root
 	# of the project web iste which is not world readable (see below)
-	$userlist .= ",sourceforge" unless $gis_public;
+	$public_grp = $gis_public && ! -e "$grpdir_prefix/$gname/.CODEX_PRIVATE";
+	$userlist .= ",sourceforge" unless $public_grp;
 
 	# make all user names lower case.
 	$userlist =~ tr/A-Z/a-z/;
