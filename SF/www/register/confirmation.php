@@ -25,7 +25,7 @@ if ($show_confirm) {
 
     $HTML->footer(array());
 
-} else if ($i_agree && $group_id && $rand_hash) {
+} else if ($i_agree && $group_id && $rand_hash && $form_short_description && $form_purpose) {
 	/*
 
 		Finalize the db entries
@@ -33,6 +33,7 @@ if ($show_confirm) {
 	*/
 
 	$result=db_query("UPDATE groups SET status='P', ".
+		"short_description='".htmlspecialchars($form_short_description)."', ".
 		"register_purpose='".htmlspecialchars($form_purpose)."', ".
 		"required_software='".htmlspecialchars($form_required_sw)."', ".
 		"patents_ips='".htmlspecialchars($form_patents)."', ".

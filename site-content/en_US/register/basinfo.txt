@@ -16,18 +16,22 @@ is to be used purely to meet the goals set forth in this statement.
 Shall the purpose and goals change in the future, you'll have to modify the statement below accordingly.
 
 <P>(<em>Remark</em>: Your text formatting (e.g. line breaks) will be preserved. URLs typed in the text will be automatically transformed into hyperlinks in the final text.)
-<P>
+<p><font color="red">*</font>: Fields Required</p>
 <FONT size=-1>
 <FORM action="projectname.php" method="post">
 <INPUT TYPE="HIDDEN" NAME="insert_purpose" VALUE="y">
 
 <P>
-<B><u>Project Description:</u></B>
-<BR>What's the purpose of your project and what are your goals.
-<br><TEXTAREA name="form_purpose" wrap="virtual" cols="70" rows="12">
+<B><u>Short Project Description<font color="red">*</font>:</u></B>
+<BR>What's the purpose of your project (3-4 lines description).
+<br><TEXTAREA name="form_short_description" wrap="virtual" cols="70" rows="3">
 </TEXTAREA>
 
-
+<P>
+<B><u>Full Project Description<font color="red">*</font>:</u></B>
+<BR><b>*** IMPORTANT NOTE ***</b> Make sure you provide a detailed decscription that contains all the keywords that will help others to find and reuse your software component. Failing to provide an accurate description may also delay the approval of your project.
+<br><TEXTAREA name="form_purpose" wrap="virtual" cols="70" rows="12">
+</TEXTAREA>
 
 <P><B><u>Intellectual Property:</u></B>
 <br> If your project is covered by Patents or IPs list them here:

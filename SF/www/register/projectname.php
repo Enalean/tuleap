@@ -11,14 +11,15 @@ session_require(array('isloggedin'=>'1'));
 require "account.php";
 
 // push received vars
-if ($insert_purpose && $form_purpose) { 
+if ($insert_purpose && $form_purpose && $form_short_description) { 
 
 	srand((double)microtime()*1000000);
 	$random_num=rand(0,1000000);
 
 	// make group entry
 	$result = db_query("INSERT INTO groups (group_name,is_public,unix_group_name,http_domain,homepage,status,"
-		. "unix_box,cvs_box,license,register_purpose,required_software,patents_ips,other_comments,register_time,license_other,rand_hash) VALUES ("
+		. "unix_box,cvs_box,license,short_description,register_purpose,"
+                . "required_software,patents_ips,other_comments,register_time,license_other,rand_hash) VALUES ("
 		. "'__$random_num',"
 		. "1," // public
 		. "'__$random_num',"
@@ -28,6 +29,7 @@ if ($insert_purpose && $form_purpose) {
 		. "'shell1'," // unix_box
 		. "'cvs1'," // cvs_box
 		. "'__$random_num',"
+		. "'".htmlspecialchars($form_short_description)."',"
 		. "'".htmlspecialchars($form_purpose)."',"
 		. "'".htmlspecialchars($form_required_sw)."',"
 		. "'".htmlspecialchars($form_patents)."',"
