@@ -1,0 +1,162 @@
+#!/usr/bin/perl
+#
+# CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+# Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2004. All Rights Reserved
+# http://codex.xerox.com
+#
+# $Id$
+#
+#  License:
+#    This file is subject to the terms and conditions of the GNU General Public
+#    license. See the file COPYING in the main directory of this archive for
+#    more details.
+#
+# Purpose:
+#
+# NIGHTLY SCRIPT
+#
+# Pulls the subversion access logs out of the http log file and push it into
+# the database. Remark: the subversion access log available in the http log
+# log file gives a low level view of the subversion accesses (HTTP methods:
+# PROPFIND, REPORT,...) and we cannot infere from this what the highler
+# level operations are (update, checkout.etc...). So for now we just store in the
+# DB the fact there were some accesses but we cannot count them.
+#
+# Written by Laurent Julliard, Xerox Corporation
+#
+#use strict; # uncomment to check thoroughly
+
+use DBI;
+use Time::Local;
+use POSIX qw( strftime );
+require("../include.pl");  # Include all the predefined functions
+&db_connect;
+
+my ($logfile, $sql, $res, $temp, %groups, $group_id, $errors );
+my ($sql_del, $res_del, %users, $user_id);
+
+my $verbose = 1;
+my $chronolog_basedir = "/home/log";
+
+##
+## Set begin and end times (in epoch seconds) of day to be run
+## Either specified on the command line, or auto-calculated
+## to run yesterday's data.
+##
+
+my ($query,$filepath, $group_name);
+my %svn_access = ();
+
+&db_connect;
+
+if ( $ARGV[0] && $ARGV[1] && $ARGV[2] ) {
+  ## Set params manually, so we can run
+  ## regressive log parses.
+  $year = $ARGV[0];
+  $month = $ARGV[1];
+  $day = $ARGV[2];
+} else {
+  ## Otherwise, we just parse the logs for yesterday.
+  ($day, $month, $year) = (gmtime(timegm( 0, 0, 0, (gmtime( time() - 86400 ))[3,4,5] )))[3,4,5];
+  $year += 1900;
+  $month += 1;
+}
+
+# Day YYYYMMDD used in the group_svn_full_history table
+$day_date = "$year$month$day";
+
+$file = "$chronolog_basedir/$year/" . sprintf("%02d",$month) . "/http_combined_$year" 
+	. sprintf("%02d%02d", $month, $day) . ".log";
+
+print "Running year $year, month $month, day $day from \'$file\'\n" if $verbose;
+print "Beginning Subversion access parsing logfile \'$file\'...\n" if $verbose;			
+# Open the log file first
+if ( -f $file ) {
+  open(LOGFILE, "< $file" ) || die "Cannot open $file";
+} elsif( -f "$file.gz" ) {
+  open(LOGFILE, "/usr/bin/gunzip -c $file.gz |" ) || die "Cannot open gunzip pipe for $file.gz";
+}
+
+# Now that open was succesful make sure that we delete all the rows
+# in the group_svn_full_history for that day so that his day is not 
+# twice in the table in case of a rerun.
+$sql_del = "DELETE FROM group_svn_full_history WHERE day='$day_date'";
+$res_del = $dbh->do($sql_del);
+
+
+## Now, we will pull all of the project ID's and names into a *massive*
+## hash, because it will save us some real time in the log processing.
+print "Caching group information from groups table.\n" if $verbose;
+$sql = "SELECT group_id,unix_group_name FROM groups";
+$res = $dbh->prepare($sql);
+$res->execute();
+while ( $temp = $res->fetchrow_arrayref() ) {
+  $groups{${$temp}[1]} = ${$temp}[0];
+}
+
+# And we now do the same for users since we log stats about
+# users as well in CodeX (See group_svn_full_history table)
+print "Caching user information from user table.\n" if $verbose;
+$sql = "SELECT user_id,user_name FROM user";
+$res = $dbh->prepare($sql);
+$res->execute();
+while ( $temp = $res->fetchrow_arrayref() ) {
+  ${$temp}[1] =~ tr/A-Z/a-z/; # Unix users are lower case only
+  $users{${$temp}[1]} = ${$temp}[0];
+}
+
+while (<LOGFILE>) {
+  chomp($_);
+  #$_ =~ m/^([\d\.]+) [^ ]? ([^ ]?) \[(\d+)/(\w)/(\d+)/(\d+):(\d+):(\d+):(\d+) ([+-]\d+)\]\s\"(\w) (.+) HTTP.+" (\d\d\d)\s(\d+)/;
+
+  $_ =~ m/^([\d\.]+)\s.+\s(.+)\s\[(.+)\]\s\"\w+\s(.+)\sHTTP.+(\d\d\d)\s(\d+)/;
+
+  $ip   = $1;
+  $user = $2;
+  $date = $3;
+  $filepath = $4;
+  $code = $5;
+  $size = $6;
+
+  if ( $filepath =~ m:$svn_prefix/([^ /]+): && $user ne '-') {
+    $gname = $1;
+    $group_id = $groups{$gname};
+
+    if ( $group_id == 0 ) {
+      print STDERR "$_";
+      print STDERR "db_stats_svn_history.pl: bad unix_group_name \'$group\' \n";
+      next;
+    }
+
+    $user_id = $users{$user};
+
+    if ( $user_id == 0 ) {
+      print STDERR "$_";
+      print STDERR "db_stats_svn_history.pl: bad user_name \'$user\' \n";
+      next;
+    }
+
+    $svn_access{$group_id}{$user_id} += 1;
+  }
+}
+close(LOGFILE);
+
+# loop through the group_id/user_id array and insert svn access entries
+print "Saving Subversion access in database \'$file\'...\n" if $verbose;
+for my $g ( keys %svn_access ) {
+  #print "key=$g\n";
+
+  for my $u ( keys %{$svn_access{$g}} ) {
+    #print "\t$u\n";
+    $sql = "INSERT INTO group_svn_full_history (group_id,user_id,day)
+			VALUES ('$g', '$u', '$day_date')";
+    $dbh->do($sql)|| warn "SQL error in $sql: $!";
+    #print "SQL -> $sql\n";
+  }
+}
+print " done.\n" if $verbose;
+
+##
+## EOF
+##
+
