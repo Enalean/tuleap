@@ -8,12 +8,12 @@
 
 require($DOCUMENT_ROOT.'/include/pre.php');    
 
-$LANG->loadLanguageMsg('account/account');
+$Language->loadLanguageMsg('account/account');
 
-$HTML->header(array(title=>$LANG->getText('account_first', 'title', array($GLOBALS['sys_name']))));
+$HTML->header(array(title=>$Language->getText('account_first', 'title', array($GLOBALS['sys_name']))));
 ?>
 
-<P><h2><?php echo $LANG->getText('account_first', 'title', array($GLOBALS['sys_name'])); ?></h2>
+<P><h2><?php echo $Language->getText('account_first', 'title', array($GLOBALS['sys_name'])); ?></h2>
 
 <P>
 <?php 
@@ -22,7 +22,7 @@ $date = getdate(time());
 $hoursleft = ($sys_crondelay - 1) - ($date[hours] % $sys_crondelay);
 $minutesleft = 60 - $date[minutes];
 
-echo $LANG->getText('account_first', 'message', array($GLOBALS['sys_name'],$hoursleft,$minutesleft));
+echo $Language->getText('account_first', 'message', array($GLOBALS['sys_name'],$hoursleft,$minutesleft));
 
 $HTML->footer(array());
 

@@ -8,9 +8,9 @@
 require($DOCUMENT_ROOT.'/include/pre.php');
 require('./site_stats_utils.php');
 
-$LANG->loadLanguageMsg('stats/stats');
+$Language->loadLanguageMsg('stats/stats');
 
-$HTML->header(array(title=>$LANG->getText('stats_graph','stats',$GLOBALS['sys_name'])));
+$HTML->header(array(title=>$Language->getText('stats_graph','stats',$GLOBALS['sys_name'])));
 
    // require you to be a member of the super-admin group
 session_require(array('group'=>'1','admin_flags'=>'A'));
@@ -23,16 +23,16 @@ session_require(array('group'=>'1','admin_flags'=>'A'));
 echo "\n\n";
 
 print '<DIV ALIGN="CENTER">' . "\n";
-print '<span class="normal"><b>'.$LANG->getText('stats_graph','sitewide_stats').'</b></span><BR>' . "\n";
+print '<span class="normal"><b>'.$Language->getText('stats_graph','sitewide_stats').'</b></span><BR>' . "\n";
 
 print '
 <HR>
 
 <table width="100%" cellpadding="0" cellspacing="0" border="0">
 <tr>
-<td align="center"><a href="index.php">'.$LANG->getText('stats_graph','overview').'</a></td>
-<td align="center"><a href="projects.php">'.$LANG->getText('stats_graph','project_stats').'</a></td>
-<td align="center"><B>'.$LANG->getText('stats_graph','site_graphs').'</B></td>
+<td align="center"><a href="index.php">'.$Language->getText('stats_graph','overview').'</a></td>
+<td align="center"><a href="projects.php">'.$Language->getText('stats_graph','project_stats').'</a></td>
+<td align="center"><B>'.$Language->getText('stats_graph','site_graphs').'</B></td>
 </tr>
 </table>
 

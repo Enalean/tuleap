@@ -8,16 +8,16 @@
 require($DOCUMENT_ROOT.'/include/pre.php');
 require($DOCUMENT_ROOT.'/include/bookmarks.php');
 
-$LANG->loadLanguageMsg('my/my');
+$Language->loadLanguageMsg('my/my');
 
 if ($bookmark_url && $bookmark_title) {
 	bookmark_edit($bookmark_id, $bookmark_url, $bookmark_title);
         header ("Location: /my/");
 }
 
-$HTML->header(array("title"=>$LANG->getText('bookmark_edit', 'title')));
+$HTML->header(array("title"=>$Language->getText('bookmark_edit', 'title')));
 
-print "<H3>".$LANG->getText('bookmark_edit', 'title')."</H3>\n";
+print "<H3>".$Language->getText('bookmark_edit', 'title')."</H3>\n";
 
 $result = db_query("SELECT * from user_bookmarks where "
 	. "bookmark_id='".$bookmark_id."' and user_id='".user_getid()."'");
@@ -27,17 +27,17 @@ if ($result) {
 }
 ?>
 <FORM METHOD="POST">
-<?php echo $LANG->getText('bookmark_add', 'bkm_url'); ?>:<br>
+<?php echo $Language->getText('bookmark_add', 'bkm_url'); ?>:<br>
 <input type="text" name="bookmark_url" size="60" value="<?php echo $bookmark_url; ?>">
 <p>
-<?php echo $LANG->getText('bookmark_add', 'bkm_title'); ?>:<br>
+<?php echo $Language->getText('bookmark_add', 'bkm_title'); ?>:<br>
 <input type="text" name="bookmark_title" size="60" value="<?php echo $bookmark_title; ?>">
 <p>
-<input type="submit" value="<?php echo $LANG->getText('global', 'btn_submit'); ?>">
+<input type="submit" value="<?php echo $Language->getText('global', 'btn_submit'); ?>">
 </form>
 <?php
 
-print "<P><A HREF=\"/my/\">[".$LANG->getText('global', 'back_home')."]</A>";
+print "<P><A HREF=\"/my/\">[".$Language->getText('global', 'back_home')."]</A>";
 
 $HTML->footer(array());
 

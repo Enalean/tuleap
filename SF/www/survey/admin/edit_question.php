@@ -10,12 +10,12 @@ require($DOCUMENT_ROOT.'/include/pre.php');
 require('../survey_data.php');
 require('../survey_utils.php');
 
-$LANG->loadLanguageMsg('survey/survey');
+$Language->loadLanguageMsg('survey/survey');
 
 $is_admin_page='y';
 
 if (!user_isloggedin() || !user_ismember($group_id,'A')) {
-	echo '<H1>'.$LANG->getText('survey_admin_add_question','perm_denied').'</H1>';
+	echo '<H1>'.$Language->getText('survey_admin_add_question','perm_denied').'</H1>';
 	survey_footer(array());
 	exit;
 }

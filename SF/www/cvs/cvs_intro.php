@@ -13,9 +13,9 @@ if (!$group_id) {
     exit_no_group(); // need a group_id !!!
 }
 
-$LANG->loadLanguageMsg('cvs/cvs');
+$Language->loadLanguageMsg('cvs/cvs');
 
-commits_header(array ('title'=>$LANG->getText('cvs_intro', 'title')));
+commits_header(array ('title'=>$Language->getText('cvs_intro', 'title')));
 
 // Table for summary info
 print '<TABLE width="100%"><TR valign="top"><TD width="65%">'."\n";
@@ -33,16 +33,16 @@ if ($row_grp['cvs_preamble']!='') {
 
 // Summary info
 print '</TD><TD width="25%">';
-print $HTML->box1_top($LANG->getText('cvs_intro', 'repo_history'));
+print $HTML->box1_top($Language->getText('cvs_intro', 'repo_history'));
 echo format_cvs_history($group_id);
 
 
 // CVS Browsing Box
 $uri = session_make_url('/cvs/viewcvs.php/?root='.$row_grp['unix_group_name'].'&roottype=cvs');
-print '<HR><B>'.$LANG->getText('cvs_intro', 'browse_title').'</B>
-<P>'.$LANG->getText('cvs_intro', 'browse_msg').'
+print '<HR><B>'.$Language->getText('cvs_intro', 'browse_title').'</B>
+<P>'.$Language->getText('cvs_intro', 'browse_msg').'
 <UL>
-<LI><A href="'.$uri.'"><B>'.$LANG->getText('cvs_commit_utils', 'menu_browse').'</B></A></LI>';
+<LI><A href="'.$uri.'"><B>'.$Language->getText('cvs_commit_utils', 'menu_browse').'</B></A></LI>';
 
 print $HTML->box1_bottom();
 

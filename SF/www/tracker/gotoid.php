@@ -12,7 +12,7 @@
 // It is called from function util_make_links
 
 require('../svn/svn_data.php');
-$LANG->loadLanguageMsg('tracker/tracker');
+$Language->loadLanguageMsg('tracker/tracker');
 
 // Redirect function for legacy trackers (bug, task and SR)
 function legacy_redirect($location,$aid, $group_id, $atn) {
@@ -46,16 +46,16 @@ function legacy_redirect($location,$aid, $group_id, $atn) {
  * If the artifact does not belong to the same project as the referring page, a warning is also displayed.
  */
 function generic_redirect($location,$aid,$group_id,$art_group_id,$atid,$atn,$art_name) {
-  global $LANG;
+  global $Language;
 
     if (($group_id)&&($group_id != $art_group_id)) {
         // The link is coming from another project, add a warning msg
         $group_name=util_get_group_name_from_id($art_group_id);
-        $feed="&feedback=".$LANG->getText('tracker_gotoid','art_belongs_to',$group_name);
+        $feed="&feedback=".$Language->getText('tracker_gotoid','art_belongs_to',$group_name);
     }
     if (($atn)&&(strtolower($atn) != strtolower($art_name))) {
         if ((strtolower($atn)!="art")&&(strtolower($atn)!="artifact")) {
-            $feed.=$LANG->getText('tracker_gotoid','art_is_a',array($art_name,$atn));
+            $feed.=$Language->getText('tracker_gotoid','art_is_a',array($art_name,$atn));
         }
     }
 
@@ -99,7 +99,7 @@ if ($atn == 'commit') {
         if (($commit_group_id)&&($group_id != $commit_group_id)) {
             // The link is coming from another project, add a warning msg
             $group_name=util_get_group_name_from_id($commit_group_id);
-            $feed="&feedback".$LANG->getText('tracker_gotoid','commit_belongs_to',$group_name);
+            $feed="&feedback".$Language->getText('tracker_gotoid','commit_belongs_to',$group_name);
         }
 	$location .= $cvs_loc.$feed;
     }
@@ -111,14 +111,14 @@ if ($atn == 'commit') {
 if ((!$sys_activate_tracker)) {
     // If generic trackers are not available, then use only legacy!
     legacy_redirect($location,$aid,$group_id,$atn);
-    exit_error($LANG->getText('global','error'),$LANG->getText('tracker_gotoid', 'invalid_tracker_vb',$atn));
+    exit_error($Language->getText('global','error'),$Language->getText('tracker_gotoid', 'invalid_tracker_vb',$atn));
 }
 
 // Should we remove this one?
 if (!$group_id) {
     // group_id is necessary for legacy trackers -> link to generic tracker
     if (!util_get_ids_from_aid($aid,$art_group_id,$atid,$art_name)) {
-        exit_error($LANG->getText('global','error'),$LANG->getText('tracker_gotoid', 'invalid_art_nb', $aid));
+        exit_error($Language->getText('global','error'),$Language->getText('tracker_gotoid', 'invalid_art_nb', $aid));
     }
     generic_redirect($location,$aid,$art_group_id,$art_group_id,$atid,$atn,$art_name);
 }
@@ -131,7 +131,7 @@ if (($atn == 'bug')||($atn == 'task')||($atn == 'sr')||($atn == 'patch')) {
     if (!util_get_ids_from_aid($aid,$art_group_id,$atid,$art_name)) {
         // The artifact does not exist -> legacy
         legacy_redirect($location,$aid,$group_id,$atn);
-        exit_error($LANG->getText('global','error'),$LANG->getText('tracker_gotoid', 'invalid_art_nb', $aid));
+        exit_error($Language->getText('global','error'),$Language->getText('tracker_gotoid', 'invalid_art_nb', $aid));
     }
     // Are the legacy trackers activated for this project? 
     $grp=project_get_object($group_id);
@@ -160,7 +160,7 @@ if (($atn == 'bug')||($atn == 'task')||($atn == 'sr')||($atn == 'patch')) {
     if (($atn != strtolower($art_name))||($group_id!=$art_group_id)) {
         // Let's choose the legacy trackers
         legacy_redirect($location,$aid,$group_id,$atn);
-        exit_error($LANG->getText('global', 'error'),$LANG->getText('tracker_gotoid', 'invalid_tracker'));
+        exit_error($Language->getText('global', 'error'),$Language->getText('tracker_gotoid', 'invalid_tracker'));
     } else {
         // If the artifact belongs to the current project, let's choose the generic trackers
         generic_redirect($location,$aid,$group_id,$art_group_id,$atid,$atn,$art_name);
@@ -169,7 +169,7 @@ if (($atn == 'bug')||($atn == 'task')||($atn == 'sr')||($atn == 'patch')) {
 } else {
     // not standard atn -> generic tracker.
     if (!util_get_ids_from_aid($aid,$art_group_id,$atid,$art_name)) {
-        exit_error($LANG->getText('global','error'),$LANG->getText('tracker_gotoid', 'invalid_art_nb', $aid));
+        exit_error($Language->getText('global','error'),$Language->getText('tracker_gotoid', 'invalid_art_nb', $aid));
     }
     generic_redirect($location,$aid,$group_id,$art_group_id,$atid,$atn,$art_name);
 }

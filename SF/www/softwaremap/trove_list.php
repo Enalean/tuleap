@@ -10,11 +10,11 @@ require($DOCUMENT_ROOT.'/include/pre.php');
 require($DOCUMENT_ROOT.'/include/vars.php');
 require($DOCUMENT_ROOT.'/include/trove.php');
 
-$LANG->loadLanguageMsg('softwaremap/softwaremap');
+$Language->loadLanguageMsg('softwaremap/softwaremap');
 
-$HTML->header(array('title'=>$LANG->getText('softwaremap_trove_list','map')));
+$HTML->header(array('title'=>$Language->getText('softwaremap_trove_list','map')));
 echo'
-	<h2>'.$LANG->getText('softwaremap_trove_list','map').' '.help_button('TheCodeXMainMenu.html#SoftwareMap').'</h2>
+	<h2>'.$Language->getText('softwaremap_trove_list','map').' '.help_button('TheCodeXMainMenu.html#SoftwareMap').'</h2>
 	<HR NoShade>
 ';
 
@@ -26,7 +26,7 @@ $form_cat = intval($form_cat);
 $res_trove_cat = db_query('SELECT * FROM trove_cat WHERE trove_cat_id='.$form_cat);
 if (db_numrows($res_trove_cat) < 1) {
 	echo db_error();
-	exit_error($LANG->getText('softwaremap_trove_list','invalid_cat'),$LANG->getText('softwaremap_trove_list','cat_not_exist'));
+	exit_error($Language->getText('softwaremap_trove_list','invalid_cat'),$Language->getText('softwaremap_trove_list','cat_not_exist'));
 }
 $row_trove_cat = db_fetch_array($res_trove_cat);
 
@@ -88,14 +88,14 @@ if ($discrim) {
 	// build text for top of page on what viewier is seeing
 	$discrim_desc = '<FONT size="-1">
 <span class="highlight">
-'.$LANG->getText('softwaremap_trove_list','limit_view').'
+'.$Language->getText('softwaremap_trove_list','limit_view').'
 </span>';
 	
 	for ($i=0;$i<sizeof($expl_discrim);$i++) {
 		$discrim_desc .= '<BR> &nbsp; &nbsp; &nbsp; '
 			.trove_getfullpath($expl_discrim[$i])
 			.' <A href="/softwaremap/trove_list.php?form_cat='.$form_cat
-			.$discrim_url_b[$i].'">['.$LANG->getText('softwaremap_trove_list','remove_view').']'
+			.$discrim_url_b[$i].'">['.$Language->getText('softwaremap_trove_list','remove_view').']'
 			.'</A>';
 	}
 	$discrim_desc .= "<HR></FONT>\n";
@@ -151,7 +151,7 @@ while ($row_sub = db_fetch_array($res_sub)) {
 	html_image("ic/cfolder15.png",array());
 	print ('&nbsp; '.$row_sub['fullname'].'</a> <I>('
 		.($row_sub['subprojects']?$row_sub['subprojects']:'0')
-		.' '.$LANG->getText('softwaremap_trove_list','projs').')</I><BR>');
+		.' '.$Language->getText('softwaremap_trove_list','projs').')</I><BR>');
 }
 // ########### right column: root level
 print '</TD><TD>';
@@ -159,7 +159,7 @@ print '</TD><TD>';
 $res_rootcat = db_query('SELECT trove_cat_id,fullname FROM trove_cat WHERE '
 	.'parent=0 ORDER BY fullname');
 echo db_error();
-print $LANG->getText('softwaremap_trove_list','browse_by');
+print $Language->getText('softwaremap_trove_list','browse_by');
 while ($row_rootcat = db_fetch_array($res_rootcat)) {
 	// print open folder if current, otherwise closed
 	// also make anchor if not current
@@ -224,11 +224,11 @@ if (!$page) {
 // store this as a var so it can be printed later as well
 $html_limit = '<SPAN><CENTER><FONT size="-1">';
 if ($querytotalcount == $TROVE_HARDQUERYLIMIT)
-     $html_limit .= $LANG->getText('softwaremap_trove_list','projs_in_res',$querytotalcount);
+     $html_limit .= $Language->getText('softwaremap_trove_list','projs_in_res',$querytotalcount);
 
 // only display pages stuff if there is more to display
 if ($querytotalcount > $TROVE_BROWSELIMIT) {
-	$html_limit .= ' '.$LANG->getText('softwaremap_trove_list','display_per_page',$TROVE_BROWSELIMIT);
+	$html_limit .= ' '.$Language->getText('softwaremap_trove_list','display_per_page',$TROVE_BROWSELIMIT);
 
 	// display all the numbers
 	for ($i=1;$i<=ceil($querytotalcount/$TROVE_BROWSELIMIT);$i++) {
@@ -278,9 +278,9 @@ for ($i_proj=1;$i_proj<=$querytotalcount;$i_proj++) {
 		trove_getcatlisting($row_grp['group_id'],1,0);
 
 		print '</TD>'."\n".'<TD align="right">'; // now the right side of the display
-		print $LANG->getText('softwaremap_trove_list','activity_percentile').' <B>'.$row_grp['percentile'].'</B>';
-		print '<BR>'.$LANG->getText('softwaremap_trove_list','activity_ranking').' <B>'.$row_grp['ranking'].'</B>';
-		print '<BR>'.$LANG->getText('softwaremap_trove_list','register_date').' <B>'.format_date($sys_datefmt,$row_grp['register_time']).'</B>';
+		print $Language->getText('softwaremap_trove_list','activity_percentile').' <B>'.$row_grp['percentile'].'</B>';
+		print '<BR>'.$Language->getText('softwaremap_trove_list','activity_ranking').' <B>'.$row_grp['ranking'].'</B>';
+		print '<BR>'.$Language->getText('softwaremap_trove_list','register_date').' <B>'.format_date($sys_datefmt,$row_grp['register_time']).'</B>';
 		print '</TD></TR></TABLE>';
 		print '<HR>';
 	} // end if for row and range chacking

@@ -10,7 +10,7 @@
 //
 
 require($DOCUMENT_ROOT.'/include/pre.php');
-$LANG->loadLanguageMsg('tracker/tracker');
+$Language->loadLanguageMsg('tracker/tracker');
 
 $sql="SELECT description,bin_data,filename,filesize,filetype FROM artifact_file WHERE id='$id' AND artifact_id ='$artifact_id'";
 //echo $sql;
@@ -20,7 +20,7 @@ if ($result && db_numrows($result) > 0) {
 
     if (db_result($result,0,'filesize') == 0) {
 
-	exit_error($LANG->getText('global', 'error'),$LANG->getText('tracker_download','file_is_null');
+	exit_error($Language->getText('global', 'error'),$Language->getText('tracker_download','file_is_null');
 
     } else {
 	
@@ -35,7 +35,7 @@ if ($result && db_numrows($result) > 0) {
     }
 
 } else {
-    exit_error($LANG->getText('global', 'error'),$LANG->getText('tracker_download', 'file_not_found', $id);
+    exit_error($Language->getText('global', 'error'),$Language->getText('tracker_download', 'file_not_found', $id);
 }
 
 ?>

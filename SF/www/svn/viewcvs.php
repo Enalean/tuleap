@@ -10,11 +10,11 @@ require($DOCUMENT_ROOT.'/include/pre.php');
 require($DOCUMENT_ROOT.'/include/viewcvs_utils.php');
 require($DOCUMENT_ROOT.'/svn/svn_utils.php');
 
-$LANG->loadLanguageMsg('svn/svn');
+$Language->loadLanguageMsg('svn/svn');
 
 if (user_isloggedin()) {
   if (!svn_utils_check_access(user_getname(), $root, viewcvs_utils_getfile("/svn/viewcvs.php"))) {
-    exit_error($LANG->getText('svn_viewcvs','access_denied'), $LANG->getText('svn_viewcvs','acc_den_comment'));
+    exit_error($Language->getText('svn_viewcvs','access_denied'), $Language->getText('svn_viewcvs','acc_den_comment'));
   }
 
   $res_grp = db_query("SELECT * FROM groups WHERE unix_group_name='".$root."'");
@@ -26,7 +26,7 @@ if (user_isloggedin()) {
   $display_header_footer = viewcvs_utils_display_header();
 
   if ($display_header_footer) {
-    svn_header(array ('title'=>$LANG->getText('svn_utils','browse_tree')));
+    svn_header(array ('title'=>$Language->getText('svn_utils','browse_tree')));
   }
 
   viewcvs_utils_passcommand();

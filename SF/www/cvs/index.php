@@ -9,7 +9,7 @@
 require($DOCUMENT_ROOT.'/include/pre.php');    
 require('../cvs/commit_utils.php');    
 
-$LANG->loadLanguageMsg('cvs/cvs');
+$Language->loadLanguageMsg('cvs/cvs');
 
 // ######################## table for summary info
 
@@ -33,8 +33,8 @@ switch ($func) {
  }
 
  case 'setAdmin' : {
-   $feedback .= $LANG->getText('cvs_index', 'config_updated');
-   $status = $LANG->getText('cvs_index', 'full_success');
+   $feedback .= $Language->getText('cvs_index', 'config_updated');
+   $status = $Language->getText('cvs_index', 'full_success');
 
    if (trim($custom_mailing_header) == '') {
      $mailing_header = 'NULL';
@@ -46,7 +46,7 @@ switch ($func) {
    } else {
      if (!validate_emails ($mailing_list)) {
        $mailing_list = 'NULL';
-       $status = $LANG->getText('cvs_index', 'partial_success');
+       $status = $Language->getText('cvs_index', 'partial_success');
      }
    }
    $feedback = $feedback.' '.$status;

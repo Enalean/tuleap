@@ -14,7 +14,7 @@
 require($DOCUMENT_ROOT.'/include/pre.php');
 require($DOCUMENT_ROOT.'/project/admin/permissions.php');
 
-$LANG->loadLanguageMsg('project/project');
+$Language->loadLanguageMsg('project/project');
 
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
@@ -33,19 +33,19 @@ if ($func=='do_update') {
 //
 
 
-project_admin_header(array('title'=>$LANG->getText('project_admin_ugroup','view_ug'),'group'=>$group_id,
+project_admin_header(array('title'=>$Language->getText('project_admin_ugroup','view_ug'),'group'=>$group_id,
 			   'help' => 'UserGroups.html'));
 $project=project_get_object($group_id);
 
-print '<P><h2>'.$LANG->getText('project_admin_ugroup','edit_ug_for',$project->getPublicName()).'</h2>';
+print '<P><h2>'.$Language->getText('project_admin_ugroup','edit_ug_for',$project->getPublicName()).'</h2>';
 print '
 <P>
-<H3><a href="/project/admin/editugroup.php?func=create&group_id='.$group_id.'">'.$LANG->getText('project_admin_ugroup','create_ug').'</a></H3>
-'.$LANG->getText('project_admin_ugroup','create_ug_for_p').'
+<H3><a href="/project/admin/editugroup.php?func=create&group_id='.$group_id.'">'.$Language->getText('project_admin_ugroup','create_ug').'</a></H3>
+'.$Language->getText('project_admin_ugroup','create_ug_for_p').'
 <p>
 
 
-<H3>'.$LANG->getText('project_admin_ugroup','manage_ug').'</H3>
+<H3>'.$Language->getText('project_admin_ugroup','manage_ug').'</H3>
 <P>
 <HR>';
 
@@ -53,10 +53,10 @@ echo '
 <TABLE width="100%" cellspacing=0 cellpadding=3 border=0>';
 
 $title_arr=array();
-$title_arr[]=$LANG->getText('project_admin_ugroup','ug_name');
-$title_arr[]=$LANG->getText('project_admin_editugroup','desc');
-$title_arr[]=$LANG->getText('project_admin_ugroup','members');
-$title_arr[]=$LANG->getText('project_admin_servicebar','del?');
+$title_arr[]=$Language->getText('project_admin_ugroup','ug_name');
+$title_arr[]=$Language->getText('project_admin_editugroup','desc');
+$title_arr[]=$Language->getText('project_admin_ugroup','members');
+$title_arr[]=$Language->getText('project_admin_servicebar','del?');
 echo html_build_list_table_top($title_arr);
 $row_num=0;
 
@@ -86,14 +86,14 @@ if (db_numrows($result) > 0) {
         else echo '<TD align="center">0</TD>';
 
 
-        echo '<TD align="center"><A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&ugroup_id='.$row['ugroup_id'].'&func=delete" onClick="return confirm(\''.$LANG->getText('project_admin_ugroup','del_ug').'\')"><IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="'.$LANG->getText('project_admin_servicebar','del').'"></A></TD>
+        echo '<TD align="center"><A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&ugroup_id='.$row['ugroup_id'].'&func=delete" onClick="return confirm(\''.$Language->getText('project_admin_ugroup','del_ug').'\')"><IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="'.$Language->getText('project_admin_servicebar','del').'"></A></TD>
 </TR>';
         $row_num++;
     }
 }
 
 echo '</TABLE>';
-echo '<P>'.$LANG->getText('project_admin_ugroup','predef_g');
+echo '<P>'.$Language->getText('project_admin_ugroup','predef_g');
 
 
 project_admin_footer(array());

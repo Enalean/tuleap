@@ -6,7 +6,7 @@
 //
 // $Id$
 
-$LANG->loadLanguageMsg('project/project');
+$Language->loadLanguageMsg('project/project');
 
 // This is the SQL query to retrieve all the survey responses for this group
 
@@ -17,18 +17,18 @@ $sql = "SELECT group_id,survey_id,question_id,response,date,date AS date_stamp "
 
 $col_list = array('group_id','survey_id','question_id',
 		  'response','date','date_stamp');
-$lbl_list = array( 'group_id' => $LANG->getText('project_export_bug_deps_export','g_id'),
-		   'survey_id' => $LANG->getText('project_export_survey_responses_export','survey_id'),
-		   'question_id' => $LANG->getText('project_export_survey_responses_export','question_id'),
-		   'response' => $LANG->getText('project_export_survey_responses_export','response'),
-		   'date' => $LANG->getText('project_admin_utils','date'),
-		  'date_stamp' => $LANG->getText('project_export_survey_responses_export','date_stamp'));
-$dsc_list = array( 'group_id' => $LANG->getText('project_export_bug_deps_export','g_id_desc'),
-		   'survey_id' => $LANG->getText('project_export_survey_responses_export','survey_id_desc'),
-		   'question_id' => $LANG->getText('project_export_survey_responses_export','question_id_desc'),
-		   'response' => $LANG->getText('project_export_survey_responses_export','response_desc'),
-		   'date' => $LANG->getText('project_export_survey_responses_export','date_desc'),
-		   'date_stamp' => $LANG->getText('project_export_survey_responses_export','date_stamp_desc'));
+$lbl_list = array( 'group_id' => $Language->getText('project_export_bug_deps_export','g_id'),
+		   'survey_id' => $Language->getText('project_export_survey_responses_export','survey_id'),
+		   'question_id' => $Language->getText('project_export_survey_responses_export','question_id'),
+		   'response' => $Language->getText('project_export_survey_responses_export','response'),
+		   'date' => $Language->getText('project_admin_utils','date'),
+		  'date_stamp' => $Language->getText('project_export_survey_responses_export','date_stamp'));
+$dsc_list = array( 'group_id' => $Language->getText('project_export_bug_deps_export','g_id_desc'),
+		   'survey_id' => $Language->getText('project_export_survey_responses_export','survey_id_desc'),
+		   'question_id' => $Language->getText('project_export_survey_responses_export','question_id_desc'),
+		   'response' => $Language->getText('project_export_survey_responses_export','response_desc'),
+		   'date' => $Language->getText('project_export_survey_responses_export','date_desc'),
+		   'date_stamp' => $Language->getText('project_export_survey_responses_export','date_stamp_desc'));
 
 $tbl_name = 'survey_responses';
 
@@ -59,11 +59,11 @@ if ($export == 'survey_responses') {
 
 	project_admin_header(array('title'=>$pg_title));
 
-	echo '<h3>'.$LANG->getText('project_export_artifact_deps_export','bug_deps_export','Survey Responses').'</h3>';
+	echo '<h3>'.$Language->getText('project_export_artifact_deps_export','bug_deps_export','Survey Responses').'</h3>';
 	if ($result) {
-	    echo '<P>'.$LANG->getText('project_export_artifact_deps_export','no_bug_deps_found','survey responses');
+	    echo '<P>'.$Language->getText('project_export_artifact_deps_export','no_bug_deps_found','survey responses');
 	} else {
-	    echo '<P>'.$LANG->getText('project_export_artifact_deps_export','db_access_err',array('response',$GLOBALS['sys_name']));
+	    echo '<P>'.$Language->getText('project_export_artifact_deps_export','db_access_err',array('response',$GLOBALS['sys_name']));
 	    echo '<br>'.db_error();
 	}
 	site_project_footer( array() );
@@ -72,7 +72,7 @@ if ($export == 'survey_responses') {
 
 } else if ($export == "survey_responses_format") {
 
-    echo $LANG->getText('project_export_bug_deps_export','bug_deps_export_format','Survey');
+    echo $Language->getText('project_export_bug_deps_export','bug_deps_export_format','Survey');
 
     $record = pick_a_record_at_random($result, $rows, $col_list);
     prepare_survey_responses_record($group_id,$record);   
@@ -106,11 +106,11 @@ if ($export == 'survey_responses') {
 	    }
 
 	} else {
-	    $feedback .= $LANG->getText('project_export_artifact_deps_export','create_proj_err',array($tbl_name,db_project_error()));
+	    $feedback .= $Language->getText('project_export_artifact_deps_export','create_proj_err',array($tbl_name,db_project_error()));
 	}
 
     } else {
-	$feedback .= $LANG->getText('project_export_artifact_deps_export','security_violation',$dbname);
+	$feedback .= $Language->getText('project_export_artifact_deps_export','security_violation',$dbname);
     }
    
 }

@@ -9,7 +9,7 @@
 require($DOCUMENT_ROOT.'/include/pre.php');
 require('../snippet/snippet_utils.php');
 
-$LANG->loadLanguageMsg('snippet/snippet');
+$Language->loadLanguageMsg('snippet/snippet');
 
 /*
 	By Tim Perdue, 2000/01/10
@@ -18,7 +18,7 @@ $LANG->loadLanguageMsg('snippet/snippet');
 */
 
 if (user_isloggedin()) {
-	snippet_header(array('title'=>$LANG->getText('snippet_delete','delete_s')));
+	snippet_header(array('title'=>$Language->getText('snippet_delete','delete_s')));
 
 	if ($type=='frompackage' && $snippet_version_id && $snippet_package_version_id) {
 		/*
@@ -30,7 +30,7 @@ if (user_isloggedin()) {
 			"WHERE submitted_by='".user_getid()."' AND ".
 			"snippet_package_version_id='$snippet_package_version_id'");
 		if (!$result || db_numrows($result) < 1) {
-			echo '<H1>'.$LANG->getText('snippet_delete','only_creator_deletes').'</H1>';
+			echo '<H1>'.$Language->getText('snippet_delete','only_creator_deletes').'</H1>';
 			snippet_footer(array());
 			exit;
 		} else {
@@ -40,11 +40,11 @@ if (user_isloggedin()) {
 				"WHERE snippet_version_id='$snippet_version_id' ".
 				"AND snippet_package_version_id='$snippet_package_version_id'");
 			if (!$result || db_affected_rows($result) < 1) {
-				echo '<H1>'.$LANG->getText('snippet_delete','s_not_exist_in_p').'</H1>';
+				echo '<H1>'.$Language->getText('snippet_delete','s_not_exist_in_p').'</H1>';
 				snippet_footer(array());
 				exit;
 			} else {
-				echo '<H1>'.$LANG->getText('snippet_delete','removed').'</H1>';
+				echo '<H1>'.$Language->getText('snippet_delete','removed').'</H1>';
 				snippet_footer(array());
 				exit;
 			}
@@ -59,7 +59,7 @@ if (user_isloggedin()) {
 		$result=db_query("SELECT * FROM snippet_version ".
 			"WHERE snippet_version_id='$snippet_version_id' AND submitted_by='".user_getid()."'");
 		if (!$result || db_numrows($result) < 1) {
-			echo '<H1>'.$LANG->getText('snippet_add_snippet_to_package','error_s_not_exist').'</H1>';
+			echo '<H1>'.$Language->getText('snippet_add_snippet_to_package','error_s_not_exist').'</H1>';
 			snippet_footer(array());
 			exit;
 		} else {
@@ -77,7 +77,7 @@ if (user_isloggedin()) {
 				$result=db_query("DELETE FROM snippet WHERE snippet_id='$snippet_id'");
 			}
 
-			echo '<H1>'.$LANG->getText('snippet_delete','s_removed').'</H1>';
+			echo '<H1>'.$Language->getText('snippet_delete','s_removed').'</H1>';
 			snippet_footer(array());
 			exit;
 		}
@@ -94,7 +94,7 @@ if (user_isloggedin()) {
 			"snippet_package_version_id='$snippet_package_version_id'");
 		if (!$result || db_numrows($result) < 1) {
 			//they don't own it or it's not found
-			echo '<H1>'.$LANG->getText('snippet_delete','only_creator_delete_p').'</H1>';
+			echo '<H1>'.$Language->getText('snippet_delete','only_creator_delete_p').'</H1>';
 			snippet_footer(array());
 			exit;
 		} else {
@@ -117,12 +117,12 @@ if (user_isloggedin()) {
 				//delete the main package even if the user didn't create it
 				$result=db_query("DELETE FROM snippet_package WHERE snippet_package_id='$snippet_package_id'");
 			}
-			echo '<H1>'.$LANG->getText('snippet_delete','p_removed').'</H1>';
+			echo '<H1>'.$Language->getText('snippet_delete','p_removed').'</H1>';
 			snippet_footer(array());
 			exit;
 		}
 	} else {
-		exit_error($LANG->getText('global','error'),$LANG->getText('snippet_delete','url_mangled'));
+		exit_error($Language->getText('global','error'),$Language->getText('snippet_delete','url_mangled'));
 	}
 
 } else {

@@ -6,7 +6,7 @@
 //
 // $Id$
 
-$LANG->loadLanguageMsg('project/project');
+$Language->loadLanguageMsg('project/project');
 
 // This is the SQL query to retrieve all the task history for this group
 
@@ -25,36 +25,36 @@ $col_list = array('project_task_id','group_id','subproject_id','summary',
 		  'details','percent_complete','priority','hours',
 		  'start_date','end_date','created_by','status',
 		  'assigned_to','follow_ups','is_dependent_on_task_id');
-$lbl_list = array('project_task_id' => $LANG->getText('project_export_task_assigned_to_export','task_id'),
-		  'group_id' => $LANG->getText('project_export_bug_deps_export','g_id'),
-		  'subproject_id' => $LANG->getText('project_export_task_export','subproject'),
-		  'summary' => $LANG->getText('project_export_task_export','summary'),
-		  'details' => $LANG->getText('project_export_task_export','details'),
-		  'percent_complete' => $LANG->getText('project_export_task_export','percent_complete'),
-		  'priority' => $LANG->getText('project_export_support_request_export','priority'),
-		  'hours' => $LANG->getText('project_export_task_export','hours'),
-		  'start_date' => $LANG->getText('project_export_task_export','start_date'),
-		  'end_date' => $LANG->getText('project_export_task_export','end_date'),
-		  'created_by' => $LANG->getText('project_export_task_export','created_by'),
-		  'status' => $LANG->getText('project_export_support_request_export','status'),
-		  'assigned_to' => $LANG->getText('project_export_support_request_export','assigned_to'),
-		  'follow_ups' => $LANG->getText('project_export_artifact_export','follow_up_comments'),
-		  'is_dependent_on_task_id'=> $LANG->getText('project_export_task_export','depend_on_task'));
-$dsc_list = array('project_task_id' => $LANG->getText('project_export_task_assigned_to_export','task_id_desc'),
-		  'group_id' => $LANG->getText('project_export_bug_deps_export','g_id_desc'),
-		  'subproject_id' => $LANG->getText('project_export_task_export','subproject_desc'),
-		  'summary' => $LANG->getText('project_export_task_export','summary_desc'),
-		  'details' => $LANG->getText('project_export_task_export','details_desc'),
-		  'percent_complete' => $LANG->getText('project_export_task_export','percent_complete_desc'),
-		  'priority' => $LANG->getText('project_export_support_request_export','priority'),
-		  'hours' => $LANG->getText('project_export_task_export','hours_desc'),
-		  'start_date' => $LANG->getText('project_export_task_export','start_date_desc'),
-		  'end_date' => $LANG->getText('project_export_task_export','end_date_desc'),
-		  'created_by' => $LANG->getText('project_export_task_export','created_by_desc'),
-		  'status' => $LANG->getText('project_export_support_request_export','status_desc'),
-		  'assigned_to' => $LANG->getText('project_export_task_assigned_to_export','assigned_to_desc'),
-		  'follow_ups' => $LANG->getText('project_export_artifact_export','all_followup_comments'),
-		  'is_dependent_on_task_id' => $LANG->getText('project_export_task_export','depend_on_task_desc'));
+$lbl_list = array('project_task_id' => $Language->getText('project_export_task_assigned_to_export','task_id'),
+		  'group_id' => $Language->getText('project_export_bug_deps_export','g_id'),
+		  'subproject_id' => $Language->getText('project_export_task_export','subproject'),
+		  'summary' => $Language->getText('project_export_task_export','summary'),
+		  'details' => $Language->getText('project_export_task_export','details'),
+		  'percent_complete' => $Language->getText('project_export_task_export','percent_complete'),
+		  'priority' => $Language->getText('project_export_support_request_export','priority'),
+		  'hours' => $Language->getText('project_export_task_export','hours'),
+		  'start_date' => $Language->getText('project_export_task_export','start_date'),
+		  'end_date' => $Language->getText('project_export_task_export','end_date'),
+		  'created_by' => $Language->getText('project_export_task_export','created_by'),
+		  'status' => $Language->getText('project_export_support_request_export','status'),
+		  'assigned_to' => $Language->getText('project_export_support_request_export','assigned_to'),
+		  'follow_ups' => $Language->getText('project_export_artifact_export','follow_up_comments'),
+		  'is_dependent_on_task_id'=> $Language->getText('project_export_task_export','depend_on_task'));
+$dsc_list = array('project_task_id' => $Language->getText('project_export_task_assigned_to_export','task_id_desc'),
+		  'group_id' => $Language->getText('project_export_bug_deps_export','g_id_desc'),
+		  'subproject_id' => $Language->getText('project_export_task_export','subproject_desc'),
+		  'summary' => $Language->getText('project_export_task_export','summary_desc'),
+		  'details' => $Language->getText('project_export_task_export','details_desc'),
+		  'percent_complete' => $Language->getText('project_export_task_export','percent_complete_desc'),
+		  'priority' => $Language->getText('project_export_support_request_export','priority'),
+		  'hours' => $Language->getText('project_export_task_export','hours_desc'),
+		  'start_date' => $Language->getText('project_export_task_export','start_date_desc'),
+		  'end_date' => $Language->getText('project_export_task_export','end_date_desc'),
+		  'created_by' => $Language->getText('project_export_task_export','created_by_desc'),
+		  'status' => $Language->getText('project_export_support_request_export','status_desc'),
+		  'assigned_to' => $Language->getText('project_export_task_assigned_to_export','assigned_to_desc'),
+		  'follow_ups' => $Language->getText('project_export_artifact_export','all_followup_comments'),
+		  'is_dependent_on_task_id' => $Language->getText('project_export_task_export','depend_on_task_desc'));
 
 $tbl_name = 'task';
 
@@ -85,11 +85,11 @@ if ($export == 'task') {
 
 	project_admin_header(array('title'=>$pg_title));
 
-	echo '<h3>'.$LANG->getText('project_export_artifact_deps_export','bug_deps_export','Task').'</h3>';
+	echo '<h3>'.$Language->getText('project_export_artifact_deps_export','bug_deps_export','Task').'</h3>';
 	if ($result) {
-	    echo '<P>'.$LANG->getText('project_export_artifact_deps_export','no_bug_deps_found','task');
+	    echo '<P>'.$Language->getText('project_export_artifact_deps_export','no_bug_deps_found','task');
 	} else {
-	    echo '<P>'.$LANG->getText('project_export_artifact_deps_export','db_access_err',array('task',$GLOBALS['sys_name']));
+	    echo '<P>'.$Language->getText('project_export_artifact_deps_export','db_access_err',array('task',$GLOBALS['sys_name']));
 	    echo '<br>'.db_error();
 	}
 	site_project_footer( array() );
@@ -98,7 +98,7 @@ if ($export == 'task') {
 
 } else if ($export == "task_format") {
 
-    echo $LANG->getText('project_export_artifact_deps_export','bug_deps_export_format',' Task');
+    echo $Language->getText('project_export_artifact_deps_export','bug_deps_export_format',' Task');
 
     $record = pick_a_record_at_random($result, $rows, $col_list);
     prepare_task_record($group_id,$record);   
@@ -136,11 +136,11 @@ if ($export == 'task') {
 	    }
 
 	} else {
-	    $feedback .= $LANG->getText('project_export_artifact_deps_export','create_proj_err',array($tbl_name,db_project_error()));
+	    $feedback .= $Language->getText('project_export_artifact_deps_export','create_proj_err',array($tbl_name,db_project_error()));
 	}
 
     } else {
-	$feedback .= $LANG->getText('project_export_artifact_deps_export','security_violation',$dbname);
+	$feedback .= $Language->getText('project_export_artifact_deps_export','security_violation',$dbname);
     }
    
 }

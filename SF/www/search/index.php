@@ -8,9 +8,9 @@
 
 require($DOCUMENT_ROOT.'/include/pre.php');
 
-$LANG->loadLanguageMsg('search/search');
+$Language->loadLanguageMsg('search/search');
 
-$HTML->header(array('title'=>$LANG->getText('search_index','search')));
+$HTML->header(array('title'=>$Language->getText('search_index','search')));
 
 echo "<P><CENTER>";
 
@@ -20,13 +20,13 @@ menu_show_search_box();
 	Force them to enter at least three characters
 */
 if ($words && (strlen($words) < 3)) {
-	echo '<H2>'.$LANG->getText('search_index','at_least_3_ch').'</H2>';
+	echo '<H2>'.$Language->getText('search_index','at_least_3_ch').'</H2>';
 	$HTML->footer(array());
 	exit;
 }
 
 if (!$words) {
-	echo '<BR>'.$LANG->getText('search_index','enter_s_words').'</CENTER><P>';
+	echo '<BR>'.$Language->getText('search_index','enter_s_words').'</CENTER><P>';
 	$HTML->footer(array());
 	exit;
 }
@@ -64,7 +64,7 @@ if ($type_of_search == "soft") {
 
 	if (!$result || $rows < 1) {
 		$no_rows = 1;
-		echo '<H2>'.$LANG->getText('search_index','no_match_found',$words).'</H2>';
+		echo '<H2>'.$Language->getText('search_index','no_match_found',$words).'</H2>';
 		echo db_error();
 //		echo $sql;
 	} else {
@@ -73,11 +73,11 @@ if ($type_of_search == "soft") {
 			$rows = 25;
 		}
 
-		echo '<H3>'.$LANG->getText('search_index','search_res',$words)."</H3><P>\n\n";
+		echo '<H3>'.$Language->getText('search_index','search_res',$words)."</H3><P>\n\n";
 
 		$title_arr = array();
-		$title_arr[] = $LANG->getText('search_index','project_name');
-		$title_arr[] = $LANG->getText('search_index','description');
+		$title_arr[] = $Language->getText('search_index','project_name');
+		$title_arr[] = $Language->getText('search_index','description');
 
 		echo html_build_list_table_top($title_arr);
 
@@ -111,7 +111,7 @@ if ($type_of_search == "soft") {
 
 	if (!$result || $rows < 1) {
 		$no_rows = 1;
-		echo '<H2>'.$LANG->getText('search_index','no_match_found',$words).'</H2>';
+		echo '<H2>'.$Language->getText('search_index','no_match_found',$words).'</H2>';
 		echo db_error();
 //		echo $sql;
 	} else {
@@ -120,11 +120,11 @@ if ($type_of_search == "soft") {
 			$rows = 25;
 		}
 
-		echo '<H3>'.$LANG->getText('search_index','search_res',$words)."</H3><P>\n\n";
+		echo '<H3>'.$Language->getText('search_index','search_res',$words)."</H3><P>\n\n";
 
 		$title_arr = array();
-		$title_arr[] = $LANG->getText('search_index','user_n');
-		$title_arr[] = $LANG->getText('search_index','real_n');
+		$title_arr[] = $Language->getText('search_index','user_n');
+		$title_arr[] = $Language->getText('search_index','real_n');
 
 		echo html_build_list_table_top ($title_arr);
 
@@ -154,7 +154,7 @@ if ($type_of_search == "soft") {
 
 	if (!$result || $rows < 1) {
 		$no_rows = 1;
-		echo '<H2>'.$LANG->getText('search_index','no_match_found',$words).'</H2>';
+		echo '<H2>'.$Language->getText('search_index','no_match_found',$words).'</H2>';
 		echo db_error();
 //		echo $sql;
 	} else {
@@ -163,12 +163,12 @@ if ($type_of_search == "soft") {
 			$rows = 25;
 		}
 
-		echo '<H3>'.$LANG->getText('search_index','search_res',$words)."</H3><P>\n\n";
+		echo '<H3>'.$Language->getText('search_index','search_res',$words)."</H3><P>\n\n";
 
 		$title_arr = array();
-		$title_arr[] = $LANG->getText('search_index','thread');
-		$title_arr[] = $LANG->getText('search_index','author');
-		$title_arr[] = $LANG->getText('search_index','date');
+		$title_arr[] = $Language->getText('search_index','thread');
+		$title_arr[] = $Language->getText('search_index','author');
+		$title_arr[] = $Language->getText('search_index','date');
 
 		echo html_build_list_table_top ($title_arr);
 
@@ -209,7 +209,7 @@ if ($type_of_search == "soft") {
 
 	if ( !$result || $rows < 1) {
 		$no_rows = 1;
-		echo '<H2>'.$LANG->getText('search_index','no_match_found',$words).'</H2>';
+		echo '<H2>'.$Language->getText('search_index','no_match_found',$words).'</H2>';
 		echo db_error();
 	} else {
 
@@ -217,12 +217,12 @@ if ($type_of_search == "soft") {
 			$rows = 25;
 		}
 
-		echo '<H3>'.$LANG->getText('search_index','search_res',$words)."</H3><P>\n";
+		echo '<H3>'.$Language->getText('search_index','search_res',$words)."</H3><P>\n";
 
 		$title_arr = array();
-		$title_arr[] = $LANG->getText('search_index','bug_summary');
-		$title_arr[] = $LANG->getText('search_index','submitted_by');
-		$title_arr[] = $LANG->getText('search_index','date');
+		$title_arr[] = $Language->getText('search_index','bug_summary');
+		$title_arr[] = $Language->getText('search_index','submitted_by');
+		$title_arr[] = $Language->getText('search_index','date');
 
 		echo html_build_list_table_top ($title_arr);
 
@@ -260,7 +260,7 @@ if ($type_of_search == "soft") {
 
 	if ( !$result || $rows < 1) {
 		$no_rows = 1;
-		echo '<H2>'.$LANG->getText('search_index','no_match_found',$words).'</H2>';
+		echo '<H2>'.$Language->getText('search_index','no_match_found',$words).'</H2>';
 		echo db_error();
 	} else {
 
@@ -268,12 +268,12 @@ if ($type_of_search == "soft") {
 			$rows = 25;
 		}
 
-		echo '<H3>'.$LANG->getText('search_index','search_res',$words)."</H3><P>\n";
+		echo '<H3>'.$Language->getText('search_index','search_res',$words)."</H3><P>\n";
 
 		$title_arr = array();
-		$title_arr[] = $LANG->getText('search_index','sr_summary');
-		$title_arr[] = $LANG->getText('search_index','submitted_by');
-		$title_arr[] = $LANG->getText('search_index','date');
+		$title_arr[] = $Language->getText('search_index','sr_summary');
+		$title_arr[] = $Language->getText('search_index','submitted_by');
+		$title_arr[] = $Language->getText('search_index','date');
 
 		echo html_build_list_table_top ($title_arr);
 
@@ -313,7 +313,7 @@ if ($type_of_search == "soft") {
 
 	if ( !$result || $rows < 1) {
 		$no_rows = 1;
-		echo '<H2>'.$LANG->getText('search_index','no_match_found',$words).'</H2>';
+		echo '<H2>'.$Language->getText('search_index','no_match_found',$words).'</H2>';
 		echo db_error();
 	} else {
 
@@ -321,13 +321,13 @@ if ($type_of_search == "soft") {
 			$rows = 25;
 		}
 
-		echo '<H3>'.$LANG->getText('search_index','search_res',$words)."</H3><P>\n";
+		echo '<H3>'.$Language->getText('search_index','search_res',$words)."</H3><P>\n";
 
 		$title_arr = array();
-		$title_arr[] = $LANG->getText('search_index','task_summary');
-		$title_arr[] = $LANG->getText('search_index','created_by');
-		$title_arr[] = $LANG->getText('search_index','start_date');
-		$title_arr[] = $LANG->getText('search_index','end_date');
+		$title_arr[] = $Language->getText('search_index','task_summary');
+		$title_arr[] = $Language->getText('search_index','created_by');
+		$title_arr[] = $Language->getText('search_index','start_date');
+		$title_arr[] = $Language->getText('search_index','end_date');
 
 		echo html_build_list_table_top ($title_arr);
 
@@ -365,7 +365,7 @@ if ($type_of_search == "soft") {
 
 	if (!$result || $rows < 1) {
 		$no_rows = 1;
-		echo '<H2>'.$LANG->getText('search_index','no_match_found',$words).'</H2>';
+		echo '<H2>'.$Language->getText('search_index','no_match_found',$words).'</H2>';
 		echo db_error();
 //		echo $sql;
 	} else {
@@ -374,11 +374,11 @@ if ($type_of_search == "soft") {
 			$rows = 25;
 		}
 
-		echo '<H3>'.$LANG->getText('search_index','search_res',$words)."</H3><P>\n\n";
+		echo '<H3>'.$Language->getText('search_index','search_res',$words)."</H3><P>\n\n";
 
 		$title_arr = array();
-		$title_arr[] = $LANG->getText('search_index','snippet_name');
-		$title_arr[] = $LANG->getText('search_index','description');
+		$title_arr[] = $Language->getText('search_index','snippet_name');
+		$title_arr[] = $Language->getText('search_index','description');
 
 		echo html_build_list_table_top($title_arr);
 
@@ -417,7 +417,7 @@ if ($type_of_search == "soft") {
 
 	if ( !$result || $rows < 1) {
 		$no_rows = 1;
-		echo '<H2>'.$LANG->getText('search_index','no_match_found',$words).'</H2>';
+		echo '<H2>'.$Language->getText('search_index','no_match_found',$words).'</H2>';
 		echo db_error();
 	} else {
 
@@ -425,12 +425,12 @@ if ($type_of_search == "soft") {
 			$rows = 25;
 		}
 
-		echo '<H3>'.$LANG->getText('search_index','search_res',$words)."</H3><P>\n";
+		echo '<H3>'.$Language->getText('search_index','search_res',$words)."</H3><P>\n";
 
 		$title_arr = array();
-		$title_arr[] = $LANG->getText('search_index','artifact_summary');
-		$title_arr[] = $LANG->getText('search_index','submitted_by');
-		$title_arr[] = $LANG->getText('search_index','date');
+		$title_arr[] = $Language->getText('search_index','artifact_summary');
+		$title_arr[] = $Language->getText('search_index','submitted_by');
+		$title_arr[] = $Language->getText('search_index','date');
 
 		echo html_build_list_table_top ($title_arr);
 
@@ -447,7 +447,7 @@ if ($type_of_search == "soft") {
 	}
 } else {
 
-	echo '<H1>'.$LANG->getText('search_index','invalid_search').'</H1>';
+	echo '<H1>'.$Language->getText('search_index','invalid_search').'</H1>';
 
 }
 
@@ -461,7 +461,7 @@ if ( !$no_rows && ( ($rows_returned > $rows) || ($offset != 0) ) ) {
 	echo "\t<TD ALIGN=\"left\">";
 	if ($offset != 0) {
 		echo "<span class=\"normal\"><B>";
-		echo "<A HREF=\"javascript:history.back()\"><B><IMG SRC=\"".util_get_image_theme('t2.png')."\" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE> ".$LANG->getText('search_index','prev_res')." </A></B></span>";
+		echo "<A HREF=\"javascript:history.back()\"><B><IMG SRC=\"".util_get_image_theme('t2.png')."\" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE> ".$Language->getText('search_index','prev_res')." </A></B></span>";
 	} else {
 		echo "&nbsp;";
 	}
@@ -475,7 +475,7 @@ if ( !$no_rows && ( ($rows_returned > $rows) || ($offset != 0) ) ) {
 		if ( $type_of_search == 'forums' ) {
 			echo "&forum_id=$forum_id&is_forum_page=1";
 		}
-		echo "\"><B>".$LANG->getText('search_index','next_res')." <IMG SRC=\"".util_get_image_theme('t.png')."\" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE></A></B></span>";
+		echo "\"><B>".$Language->getText('search_index','next_res')." <IMG SRC=\"".util_get_image_theme('t.png')."\" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE></A></B></span>";
 	} else {
 		echo "&nbsp;";
 	}

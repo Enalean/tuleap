@@ -6,13 +6,13 @@
 //
 // $Id$
 
-$LANG->loadLanguageMsg('svn/svn');
+$Language->loadLanguageMsg('svn/svn');
 
 if (!$group_id) {
     exit_no_group(); // need a group_id !!!
 }
 
-svn_header(array ('title'=>$LANG->getText('svn_browse_revision','browsing'),
+svn_header(array ('title'=>$Language->getText('svn_browse_revision','browsing'),
 		  'help' => 'SubversionBrowsingInterface.html'));
 
 if (!$offset || $offset < 0) {
@@ -160,7 +160,7 @@ if ($order_by == '') {
 
 $sql=$select.$from.$where.$order_by.$limit;
 
-$statement=$LANG->getText('svn_browse_revision','view_commit');
+$statement=$Language->getText('svn_browse_revision','view_commit');
 
 $result=db_query($sql);
 
@@ -187,13 +187,13 @@ $tech_box=svn_utils_technician_box($group_id, '_commiter', $_commiter, 'Any');
 /*
   Show the new pop-up boxes to select assigned to and/or status
 */
-echo '<H3>'.$LANG->getText('svn_browse_revision','browse_commit').'</H3>'; 
+echo '<H3>'.$Language->getText('svn_browse_revision','browse_commit').'</H3>'; 
 echo '<FORM name="commit_form" ACTION="'. $PHP_SELF .'" METHOD="GET">
         <TABLE WIDTH="10%" BORDER="0">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 	<INPUT TYPE="HIDDEN" NAME="func" VALUE="browse">
 	<INPUT TYPE="HIDDEN" NAME="set" VALUE="custom">
-        <TR align="center"><TD><b>'.$LANG->getText('svn_browse_revision','rev').'</b></TD><TD><b>'.$LANG->getText('svn_browse_revision','commiter').'</b></TD><TD><b>'.$LANG->getText('svn_browse_revision','path').'</b></TD><TD><b>'.$LANG->getText('svn_browse_revision','search').'</b></TD>'.
+        <TR align="center"><TD><b>'.$Language->getText('svn_browse_revision','rev').'</b></TD><TD><b>'.$Language->getText('svn_browse_revision','commiter').'</b></TD><TD><b>'.$Language->getText('svn_browse_revision','path').'</b></TD><TD><b>'.$Language->getText('svn_browse_revision','search').'</b></TD>'.
 '</TR>'.
 '<TR><TD><INPUT TYPE="TEXT" SIZE=5 NAME=_rev_id VALUE='.$_rev_id.'></TD>'.
 '<TD><FONT SIZE="-1">'. $tech_box .'</TD>'.
@@ -201,9 +201,9 @@ echo '<FORM name="commit_form" ACTION="'. $PHP_SELF .'" METHOD="GET">
 '<TD><FONT SIZE="-1">'. '<INPUT type=text size=35 name=_srch value='.$_srch.'></TD>'.
 '</TR></TABLE>'.
 	
-'<br><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$LANG->getText('global','btn_browse').'">'.
+'<br><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_browse').'">'.
 ' <input TYPE="text" name="chunksz" size="3" MAXLENGTH="5" '.
-'VALUE="'.$chunksz.'">'.$LANG->getText('svn_browse_revision','commit_at_once').
+'VALUE="'.$chunksz.'">'.$Language->getText('svn_browse_revision','commit_at_once').
 '</FORM>';
 
 
@@ -225,7 +225,7 @@ if ($result && db_numrows($result) > 0) {
 		<P>
 		<P>';
     echo '
-		<H1>'.$LANG->getText('svn_browse_revision','no_match').'</H1>';
+		<H1>'.$Language->getText('svn_browse_revision','no_match').'</H1>';
     echo db_error();
 }
 

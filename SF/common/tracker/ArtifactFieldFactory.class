@@ -12,7 +12,7 @@
 //require($DOCUMENT_ROOT.'/../common/include/Error.class');
 //require($DOCUMENT_ROOT.'/../common/tracker/ArtifactField.class');
 
-$LANG->loadLanguageMsg('tracker/tracker');
+$Language->loadLanguageMsg('tracker/tracker');
 
 // Sort by place result
 function art_field_factory_cmp_place($field1, $field2) {
@@ -41,13 +41,13 @@ class ArtifactFieldFactory extends Error {
 	 *	@return	boolean	success.
 	 */
 	function ArtifactFieldFactory(&$ArtifactType) {
-	  global $LANG;
+	  global $Language;
 
 		// Error constructor
 		$this->Error();
 		
 		if (!$ArtifactType || !is_object($ArtifactType)) {
-			$this->setError($LANG->getText('tracker_common_canned','not_valid'));
+			$this->setError($Language->getText('tracker_common_canned','not_valid'));
 			return false;
 		}
 		if ($ArtifactType->isError()) {
@@ -229,7 +229,7 @@ class ArtifactFieldFactory extends Error {
 	 *	@return	boolean
 	 */
 	function checkEmptyFields($field_array) {
-	    global $feedback,$LANG;
+	    global $feedback,$Language;
 	
 	    $bad_fields = array();
 	    reset($field_array);
@@ -250,7 +250,7 @@ class ArtifactFieldFactory extends Error {
 	    }
 	
 	    if (count($bad_fields) > 0) {
-	      $feedback = $LANG->getText('tracker_common_field_factory','missing',join(', ',$bad_fields));
+	      $feedback = $Language->getText('tracker_common_field_factory','missing',join(', ',$bad_fields));
 			return false;
 	    } else {
 			return true;
@@ -295,7 +295,7 @@ class ArtifactFieldFactory extends Error {
 	 *	@return	boolean
 	 */
 	function copyFields($atid_source,$atid_dest) {
-	  global $LANG;
+	  global $Language;
 		//
 		// Copy artifact_field records
 		//
@@ -317,7 +317,7 @@ class ArtifactFieldFactory extends Error {
 			$res_insert = db_query($sql_insert);
 			//echo $sql_insert;
 			if (!$res_insert || db_affected_rows($res_insert) <= 0) {
-				$this->setError($LANG->getText('tracker_common_field_factory','ins_err',array($field_array["field_id"],$atid_dest,db_error())));
+				$this->setError($Language->getText('tracker_common_field_factory','ins_err',array($field_array["field_id"],$atid_dest,db_error())));
 				return false;
 			}
 		} // while
@@ -341,7 +341,7 @@ class ArtifactFieldFactory extends Error {
 			//echo $sql_insert;
 			$res_insert = db_query($sql_insert);
 			if (!$res_insert || db_affected_rows($res_insert) <= 0) {
-				$this->setError($LANG->getText('tracker_common_field_factory','use_ins_err',array($field_array["field_id"],$atid_dest,db_error())));
+				$this->setError($Language->getText('tracker_common_field_factory','use_ins_err',array($field_array["field_id"],$atid_dest,db_error())));
 				return false;
 			}
 		} // while
@@ -365,7 +365,7 @@ class ArtifactFieldFactory extends Error {
 			//echo $sql_insert;
 			$res_insert = db_query($sql_insert);
 			if (!$res_insert || db_affected_rows($res_insert) <= 0) {
-				$this->setError($LANG->getText('tracker_common_field_factory','vl_ins_err',array($field_array["field_id"],$atid_dest,db_error())));
+				$this->setError($Language->getText('tracker_common_field_factory','vl_ins_err',array($field_array["field_id"],$atid_dest,db_error())));
 				return false;
 			}
 		} // while
@@ -508,11 +508,11 @@ class ArtifactFieldFactory extends Error {
 						 $display_size,$rank_on_screen,$show_on_add,$show_on_add_members,
 						 $empty_ok,$keep_history,$special,$use_it) {
 
-	  global $LANG;
+	  global $Language;
 
 		// Check arguments
 		if ( $data_type=="" || $display_type=="" || $label=="" ) {
-			$this->setError($LANG->getText('tracker_common_field_factory','label_requ'));
+			$this->setError($Language->getText('tracker_common_field_factory','label_requ'));
 			return false;
 		}
 
@@ -538,7 +538,7 @@ class ArtifactFieldFactory extends Error {
 								
 		$res_insert = db_query($sql);
 		if (!$res_insert || db_affected_rows($res_insert) <= 0) {
-			$this->setError($LANG->getText('tracker_common_field_factory','ins_err',array($field_id,$this->ArtifactType->getID(),db_error())));
+			$this->setError($Language->getText('tracker_common_field_factory','ins_err',array($field_id,$this->ArtifactType->getID(),db_error())));
 			return false;
 		}
 		
@@ -549,7 +549,7 @@ class ArtifactFieldFactory extends Error {
 				
 		$res_insert = db_query($sql);
 		if (!$res_insert || db_affected_rows($res_insert) <= 0) {
-			$this->setError($LANG->getText('tracker_common_field_factory','use_ins_err',array($field_id,$this->ArtifactType->getID(),db_error())));
+			$this->setError($Language->getText('tracker_common_field_factory','use_ins_err',array($field_id,$this->ArtifactType->getID(),db_error())));
 			return false;
 		}
 		
@@ -599,7 +599,7 @@ class ArtifactFieldFactory extends Error {
 		// If select box or multi select box, we need to create the None value
 		if ( $display_type == "SB" || $display_type == "MB" ) {
 			$sql = "INSERT INTO artifact_field_value_list VALUES ( ".$field_id.",".$this->ArtifactType->getID().
-				   ",100,'".$LANG->getText('global','none')."','',10,'P')";
+				   ",100,'".$Language->getText('global','none')."','',10,'P')";
 			$result=db_query($sql);
 		}
 		

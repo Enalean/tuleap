@@ -6,7 +6,7 @@
 //
 // $Id$
 
-$LANG->loadLanguageMsg('project/project');
+$Language->loadLanguageMsg('project/project');
 
 // This is the SQL query to retrieve all the task history for this group
 
@@ -19,18 +19,18 @@ $sql = "SELECT project_history.project_task_id,'$group_id' AS group_id,project_h
 'AND user.user_id=project_history.mod_by';
 
 $col_list = array('project_task_id','group_id','field_name','old_value','mod_by','date');
-$lbl_list = array('project_task_id' => $LANG->getText('project_export_task_assigned_to_export','task_id'),
-		  'group_id' => $LANG->getText('project_export_bug_deps_export','g_id'),
-		  'field_name' => $LANG->getText('project_export_artifact_history_export','field_name'),
-		  'old_value' => $LANG->getText('project_export_artifact_history_export','old_val'),
-		  'mod_by' => $LANG->getText('project_export_artifact_history_export','mod_by'),
-		  'date' => $LANG->getText('project_export_artifact_history_export','mod_on'));
-$dsc_list = array('project_task_id' => $LANG->getText('project_export_task_assigned_to_export','task_id_desc'),
-		  'group_id' => $LANG->getText('project_export_bug_deps_export','g_id_desc'),
-		  'field_name' => $LANG->getText('project_export_artifact_history_export','field_name_desc'),
-		  'old_value' => $LANG->getText('project_export_artifact_history_export','old_val_desc'),
-		  'mod_by' => $LANG->getText('project_export_artifact_history_export','mod_by_desc'),
-		  'date' => $LANG->getText('project_export_artifact_history_export','mod_on_desc'));
+$lbl_list = array('project_task_id' => $Language->getText('project_export_task_assigned_to_export','task_id'),
+		  'group_id' => $Language->getText('project_export_bug_deps_export','g_id'),
+		  'field_name' => $Language->getText('project_export_artifact_history_export','field_name'),
+		  'old_value' => $Language->getText('project_export_artifact_history_export','old_val'),
+		  'mod_by' => $Language->getText('project_export_artifact_history_export','mod_by'),
+		  'date' => $Language->getText('project_export_artifact_history_export','mod_on'));
+$dsc_list = array('project_task_id' => $Language->getText('project_export_task_assigned_to_export','task_id_desc'),
+		  'group_id' => $Language->getText('project_export_bug_deps_export','g_id_desc'),
+		  'field_name' => $Language->getText('project_export_artifact_history_export','field_name_desc'),
+		  'old_value' => $Language->getText('project_export_artifact_history_export','old_val_desc'),
+		  'mod_by' => $Language->getText('project_export_artifact_history_export','mod_by_desc'),
+		  'date' => $Language->getText('project_export_artifact_history_export','mod_on_desc'));
 
 $tbl_name = 'task_history';
 
@@ -60,11 +60,11 @@ if ($export == 'task_history') {
 
 	project_admin_header(array('title'=>$pg_title));
 
-	echo '<h3>'.$LANG->getText('project_export_artifact_deps_export','bug_deps_export','Task History').'</h3>';
+	echo '<h3>'.$Language->getText('project_export_artifact_deps_export','bug_deps_export','Task History').'</h3>';
 	if ($result) {
-	    echo '<P>'.$LANG->getText('project_export_artifact_deps_export','no_bug_deps_found','task history');
+	    echo '<P>'.$Language->getText('project_export_artifact_deps_export','no_bug_deps_found','task history');
 	} else {
-	    echo '<P>'.$LANG->getText('project_export_artifact_deps_export','db_access_err',array('task history',$GLOBALS['sys_name']));
+	    echo '<P>'.$Language->getText('project_export_artifact_deps_export','db_access_err',array('task history',$GLOBALS['sys_name']));
 	    echo '<br>'.db_error();
 	}
 	site_project_footer( array() );
@@ -73,7 +73,7 @@ if ($export == 'task_history') {
 
 } else if ($export == 'task_history_format') {
 
-    echo $LANG->getText('project_export_artifact_deps_export','bug_deps_export_format',' Task History');
+    echo $Language->getText('project_export_artifact_deps_export','bug_deps_export_format',' Task History');
 
     $record = pick_a_record_at_random($result, $rows, $col_list);
     prepare_task_history_record($record);    
@@ -105,11 +105,11 @@ if ($export == 'task_history') {
 	    }
 
 	} else {
-	    $feedback .= $LANG->getText('project_export_artifact_deps_export','create_proj_err',array($tbl_name,db_project_error()));
+	    $feedback .= $Language->getText('project_export_artifact_deps_export','create_proj_err',array($tbl_name,db_project_error()));
 	}
 
     } else {
-	$feedback .= $LANG->getText('project_export_artifact_deps_export','security_violation',$dbname);
+	$feedback .= $Language->getText('project_export_artifact_deps_export','security_violation',$dbname);
     }
    
 }

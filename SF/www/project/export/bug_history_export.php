@@ -6,7 +6,7 @@
 //
 // $Id$
 
-$LANG->loadLanguageMsg('project/project');
+$Language->loadLanguageMsg('project/project');
 
 bug_init($group_id);
 
@@ -24,21 +24,21 @@ $sql = "SELECT bug_history.bug_id,'$group_id' AS group_id,bug_history.field_name
 $col_list = array('bug_id','group_id','field_name','old_value','mod_by','date','type');
 $lbl_list = array('bug_id' => '',
 		  'group_id' => '',
-		  'field_name' => $LANG->getText('project_export_artifact_history_export','field_name'),
-		  'old_value' => $LANG->getText('project_export_artifact_history_export','old_val'),
-		  'mod_by' => $LANG->getText('project_export_artifact_history_export','mod_by'),
-		  'date' => $LANG->getText('project_export_artifact_history_export','mod_on'),
-		  'type' => $LANG->getText('project_export_artifact_history_export','comment_type'));
+		  'field_name' => $Language->getText('project_export_artifact_history_export','field_name'),
+		  'old_value' => $Language->getText('project_export_artifact_history_export','old_val'),
+		  'mod_by' => $Language->getText('project_export_artifact_history_export','mod_by'),
+		  'date' => $Language->getText('project_export_artifact_history_export','mod_on'),
+		  'type' => $Language->getText('project_export_artifact_history_export','comment_type'));
 $lbl_list['bug_id'] = bug_data_get_label('bug_id');
 $lbl_list['group_id'] = bug_data_get_label('group_id');
 
 $dsc_list = array('bug_id' => '',
 		  'group_id' => '',
-		  'field_name' => $LANG->getText('project_export_artifact_history_export','field_name_desc'),
-		  'old_value' => $LANG->getText('project_export_artifact_history_export','old_val_desc'),
-		  'mod_by' => $LANG->getText('project_export_artifact_history_export','mod_by_desc'),
-		  'date' => $LANG->getText('project_export_artifact_history_export','mod_by_desc'),
-		  'type' => $LANG->getText('project_export_artifact_history_export','comment_type_desc'));
+		  'field_name' => $Language->getText('project_export_artifact_history_export','field_name_desc'),
+		  'old_value' => $Language->getText('project_export_artifact_history_export','old_val_desc'),
+		  'mod_by' => $Language->getText('project_export_artifact_history_export','mod_by_desc'),
+		  'date' => $Language->getText('project_export_artifact_history_export','mod_by_desc'),
+		  'type' => $Language->getText('project_export_artifact_history_export','comment_type_desc'));
 
 $dsc_list['bug_id'] = bug_data_get_description('bug_id');
 $dsc_list['group_id'] = bug_data_get_description('group_id');
@@ -69,11 +69,11 @@ if ($export == 'bug_history') {
 
 	project_admin_header(array('title'=>$pg_title));
 
-	echo '<h3>'.$LANG->getText('project_export_artifact_deps_export','bug_deps_export','Bug History').'</h3>';
+	echo '<h3>'.$Language->getText('project_export_artifact_deps_export','bug_deps_export','Bug History').'</h3>';
 	if ($result) {
-	    echo '<P>'.$LANG->getText('project_export_artifact_deps_export','no_bug_deps_found','bug history');
+	    echo '<P>'.$Language->getText('project_export_artifact_deps_export','no_bug_deps_found','bug history');
 	} else {
-	    echo '<P>'.$LANG->getText('project_export_artifact_deps_export','db_access_err',array('bug history',$GLOBALS['sys_name']));
+	    echo '<P>'.$Language->getText('project_export_artifact_deps_export','db_access_err',array('bug history',$GLOBALS['sys_name']));
 	    echo '<br>'.db_error();
 	}
 	site_project_footer( array() );
@@ -82,7 +82,7 @@ if ($export == 'bug_history') {
 
 } else if ($export == "bug_history_format") {
 
-    echo $LANG->getText('project_export_artifact_deps_export','bug_deps_export_format',' Bug History');
+    echo $Language->getText('project_export_artifact_deps_export','bug_deps_export_format',' Bug History');
    
     $record = pick_a_record_at_random($result, $rows, $col_list);
     prepare_bug_history_record($group_id,$col_list,$record);   
@@ -116,11 +116,11 @@ if ($export == 'bug_history') {
 	    }
 
 	} else {
-	    $feedback .= $LANG->getText('project_export_artifact_deps_export','create_proj_err',array($tbl_name,db_project_error()));
+	    $feedback .= $Language->getText('project_export_artifact_deps_export','create_proj_err',array($tbl_name,db_project_error()));
 	}
 
     } else {
-	$feedback .= $LANG->getText('project_export_artifact_deps_export','security_violation',$dbname);
+	$feedback .= $Language->getText('project_export_artifact_deps_export','security_violation',$dbname);
     }
    
 }

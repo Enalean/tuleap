@@ -6,7 +6,7 @@
 //
 // $Id$
 
-$LANG->loadLanguageMsg('project/project');
+$Language->loadLanguageMsg('project/project');
 
 bug_init($group_id);
 
@@ -52,13 +52,13 @@ $col_list[] = 'follow_ups';
 $col_list[] = 'is_dependent_on_task_id';
 $col_list[] = 'is_dependent_on_bug_id';
 
-$lbl_list['follow_ups'] = $LANG->getText('project_export_artifact_export','follow_up_comments');
-$lbl_list['is_dependent_on_task_id'] = $LANG->getText('project_export_bug_export','depend_on_tasks');
-$lbl_list['is_dependent_on_bug_id'] = $LANG->getText('project_export_bug_export','depend_on_bugs');
+$lbl_list['follow_ups'] = $Language->getText('project_export_artifact_export','follow_up_comments');
+$lbl_list['is_dependent_on_task_id'] = $Language->getText('project_export_bug_export','depend_on_tasks');
+$lbl_list['is_dependent_on_bug_id'] = $Language->getText('project_export_bug_export','depend_on_bugs');
 
-$dsc_list['follow_ups'] = $LANG->getText('project_export_artifact_export','follow_up_comments_desc');
-$dsc_list['is_dependent_on_task_id'] = $LANG->getText('project_export_bug_export','depend_on_tasks_desc');
-$dsc_list['is_dependent_on_bug_id'] = $LANG->getText('project_export_bug_export','depend_on_bugs_desc');
+$dsc_list['follow_ups'] = $Language->getText('project_export_artifact_export','follow_up_comments_desc');
+$dsc_list['is_dependent_on_task_id'] = $Language->getText('project_export_bug_export','depend_on_tasks_desc');
+$dsc_list['is_dependent_on_bug_id'] = $Language->getText('project_export_bug_export','depend_on_bugs_desc');
 
 $tbl_name = 'bug';
 
@@ -89,11 +89,11 @@ if ($export == 'bug') {
 
 	project_admin_header(array('title'=>$pg_title));
 
-	echo '<h3>'.$LANG->getText('project_export_artifact_deps_export','bug_deps_export','Bug').'</h3>';
+	echo '<h3>'.$Language->getText('project_export_artifact_deps_export','bug_deps_export','Bug').'</h3>';
 	if ($result) {
-	    echo '<P>'.$LANG->getText('project_export_artifact_deps_export','no_bug_deps_found','bug');
+	    echo '<P>'.$Language->getText('project_export_artifact_deps_export','no_bug_deps_found','bug');
 	} else {
-	    echo '<P>'.$LANG->getText('project_export_artifact_deps_export','db_access_err',array('bug',$GLOBALS['sys_name']));
+	    echo '<P>'.$Language->getText('project_export_artifact_deps_export','db_access_err',array('bug',$GLOBALS['sys_name']));
 	    echo '<br>'.db_error();
 	}
 	site_project_footer( array() );
@@ -102,7 +102,7 @@ if ($export == 'bug') {
 
 } else if ($export == "bug_format") {
 
-  echo $LANG->getText('project_export_artifact_deps_export','bug_deps_export_format',' Bug');
+  echo $Language->getText('project_export_artifact_deps_export','bug_deps_export_format',' Bug');
 
     $record = pick_a_record_at_random($result, $rows, $col_list);
     prepare_bug_record($group_id,$col_list,$record);
@@ -169,11 +169,11 @@ if ($export == 'bug') {
 	    }
 
 	} else {
-	    $feedback .= $LANG->getText('project_export_artifact_deps_export','create_proj_err',array($tbl_name,db_project_error()));
+	    $feedback .= $Language->getText('project_export_artifact_deps_export','create_proj_err',array($tbl_name,db_project_error()));
 	}
 
     } else {
-	$feedback .= $LANG->getText('project_export_artifact_deps_export','security_violation',$dbname);
+	$feedback .= $Language->getText('project_export_artifact_deps_export','security_violation',$dbname);
     }
    
 }

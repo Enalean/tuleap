@@ -22,7 +22,7 @@ require($DOCUMENT_ROOT.'/../common/tracker/ArtifactReport.class');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactReportField.class');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactFactory.class');
 
-$LANG->loadLanguageMsg('my/my');
+$Language->loadLanguageMsg('my/my');
 
 if (user_isloggedin()) {
 
@@ -39,9 +39,9 @@ if (user_isloggedin()) {
         header("Pragma: no-cache");  // for HTTP 1.0
 	
         if (browser_is_netscape4()) {
-            $feedback.= $LANG->getText('my_index', 'err_badbrowser');
+            $feedback.= $Language->getText('my_index', 'err_badbrowser');
         }
-	$title = $LANG->getText('my_index', 'title', array(user_getrealname(user_getid()).' ('.user_getname().')'));
+	$title = $Language->getText('my_index', 'title', array(user_getrealname(user_getid()).' ('.user_getname().')'));
         site_header(array('title'=>$title));
 	?>
 
@@ -51,12 +51,12 @@ if (user_isloggedin()) {
          </H3>
         <p>
 	<?php
-         echo $LANG->getText('my_index', 'message');
+         echo $Language->getText('my_index', 'message');
 
 	$atf = new ArtifactTypeFactory(false);
 	if ( !$atf ) {
-	    exit_error($LANG->getText('include_exit', 'error'),
-		       $LANG->getText('my_index', 'err_artf'));
+	    exit_error($Language->getText('include_exit', 'error'),
+		       $Language->getText('my_index', 'err_artf'));
 	}
 
 	/*
@@ -76,7 +76,7 @@ if (user_isloggedin()) {
 	
 	if ($result && $rows >= 1) {
 
-		$html_my_bugs .= $HTML->box1_top($LANG->getText('my_index', 'my_bugs'),0);
+		$html_my_bugs .= $HTML->box1_top($Language->getText('my_index', 'my_bugs'),0);
 
 	    for ($j=0; $j<$rows; $j++) {
 
@@ -137,7 +137,7 @@ if (user_isloggedin()) {
 	$rows=db_numrows($result);
 	if ($result && $rows >= 1) {
 
-		$html_my_srs .= $HTML->box1_top($LANG->getText('my_index', 'my_srs'),0);
+		$html_my_srs .= $HTML->box1_top($Language->getText('my_index', 'my_srs'),0);
 	    for ($j=0; $j<$rows; $j++) {
 
 			$group_id = db_result($result,$j,'group_id');
@@ -186,7 +186,7 @@ if (user_isloggedin()) {
 		Forums that are actively monitored
 	*/
 	$html_my_monitored_forums = "";
-	$html_my_monitored_forums .= $HTML->box1_top($LANG->getText('my_index', 'my_forums'),0);
+	$html_my_monitored_forums .= $HTML->box1_top($Language->getText('my_index', 'my_forums'),0);
 
 	$sql="SELECT groups.group_id, groups.group_name ".
 		"FROM groups,forum_group_list,forum_monitored_forums ".
@@ -197,7 +197,7 @@ if (user_isloggedin()) {
 	$result=db_query($sql);
 	$rows=db_numrows($result);
 	if (!$result || $rows < 1) {
-		$html_my_monitored_forums .= $LANG->getText('my_index', 'my_forums_msg');
+		$html_my_monitored_forums .= $Language->getText('my_index', 'my_forums_msg');
 		$html_my_monitored_forums .= db_error();
 	} else {
 
@@ -234,9 +234,9 @@ if (user_isloggedin()) {
 			    '&nbsp;&nbsp;&nbsp;-&nbsp;<A HREF="/forum/forum.php?forum_id='.$group_forum_id.'">'.
 			    stripslashes(db_result($result2,$i,'forum_name')).'</A></TD>'.
 			    '<TD ALIGN="center"><A HREF="/forum/monitor.php?forum_id='.$group_forum_id.
-			    '" onClick="return confirm(\''.$LANG->getText('my_index', 'stop_forum').'\')">'.
+			    '" onClick="return confirm(\''.$Language->getText('my_index', 'stop_forum').'\')">'.
 			    '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" '.
-			    'BORDER=0 ALT="'.$LANG->getText('my_index', 'stop_monitor').'"></A></TD></TR>';
+			    'BORDER=0 ALT="'.$Language->getText('my_index', 'stop_monitor').'"></A></TD></TR>';
 		    }
 		}
 
@@ -253,7 +253,7 @@ if (user_isloggedin()) {
 	*/
 
 	$html_my_monitored_fp = "";
-	$html_my_monitored_fp .= $HTML->box1_top($LANG->getText('my_index', 'my_files'),0);
+	$html_my_monitored_fp .= $HTML->box1_top($Language->getText('my_index', 'my_files'),0);
 	$sql="SELECT groups.group_name,groups.group_id ".
 		"FROM groups,filemodule_monitor,frs_package ".
 		"WHERE groups.group_id=frs_package.group_id ".
@@ -263,7 +263,7 @@ if (user_isloggedin()) {
 	$result=db_query($sql);
 	$rows=db_numrows($result);
 	if (!$result || $rows < 1) {
-		$html_my_monitored_fp .= $LANG->getText('my_index', 'my_files_msg');
+		$html_my_monitored_fp .= $Language->getText('my_index', 'my_files_msg');
 		$html_my_monitored_fp .= db_error();
 	} else {
 	    for ($j=0; $j<$rows; $j++) {
@@ -298,9 +298,9 @@ if (user_isloggedin()) {
 			    db_result($result2,$i,'name').'</A></TD>'.
 			    '<TD><A HREF="/file/filemodule_monitor.php?filemodule_id='.
 			    db_result($result2,$i,'filemodule_id').
-			    '" onClick="return confirm(\''.$LANG->getText('my_index', 'stop_file').'\')">'.
+			    '" onClick="return confirm(\''.$Language->getText('my_index', 'stop_file').'\')">'.
 			    '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" '.
-			    'BORDER=0" ALT="'.$LANG->getText('my_index', 'stop_monitoring').'"></A></TD></TR>';
+			    'BORDER=0" ALT="'.$Language->getText('my_index', 'stop_monitoring').'"></A></TD></TR>';
 		    }
 		}
 		
@@ -332,7 +332,7 @@ if (user_isloggedin()) {
 
 	if ($result && $rows >= 1) {
 
-		$html_my_tasks .= $HTML->box1_top($LANG->getText('my_index', 'my_tasks'),0,'',3);
+		$html_my_tasks .= $HTML->box1_top($Language->getText('my_index', 'my_tasks'),0,'',3);
 	
 	    for ($j=0; $j<$rows; $j++) {
 
@@ -401,7 +401,7 @@ if (user_isloggedin()) {
 	
 	if (db_numrows($list_group_trackers) > 0 || db_numrows($list_non_group_trackers) > 0) {
 
-	  $html_my_artifacts .= $HTML->box1_top($LANG->getText('my_index', 'my_arts'),0,'',3);
+	  $html_my_artifacts .= $HTML->box1_top($Language->getText('my_index', 'my_arts'),0,'',3);
 	  
 	  $html_my_artifacts .= display_artifacts($list_group_trackers, 0);
 	  $html_my_artifacts .= display_artifacts($list_non_group_trackers, (db_numrows($list_group_trackers) > 0));
@@ -435,12 +435,12 @@ if (user_isloggedin()) {
             $result=db_query($sql);
 
             $html_my_survey = "";
-            $html_my_survey .= $HTML->box1_top($LANG->getText('my_index', 'my_survey'),0);
+            $html_my_survey .= $HTML->box1_top($Language->getText('my_index', 'my_survey'),0);
 
             if (db_numrows($result) < 1) {
 		$html_my_survey .= survey_utils_show_survey(1,$developer_survey_id,0);
             } else {
-		$html_my_survey .= $LANG->getText('my_index', 'survey_done');
+		$html_my_survey .= $Language->getText('my_index', 'survey_done');
             }
             $html_my_survey .= '<TR align=left><TD COLSPAN="2">&nbsp;</TD></TR>';
             $html_my_survey .= $HTML->box1_bottom(0);
@@ -451,7 +451,7 @@ if (user_isloggedin()) {
 	       Personal bookmarks
 	*/
 	$html_my_bookmarks = "";
-	$html_my_bookmarks .= $HTML->box1_top($LANG->getText('my_index', 'my_bookmarks'),0);
+	$html_my_bookmarks .= $HTML->box1_top($Language->getText('my_index', 'my_bookmarks'),0);
 
 	$result = db_query("SELECT bookmark_url, bookmark_title, bookmark_id from user_bookmarks where ".
 		"user_id='". user_getid() ."' ORDER BY bookmark_title");
@@ -467,9 +467,9 @@ if (user_isloggedin()) {
 		    $html_my_bookmarks .= '
                                            <B><A HREF="'. db_result($result,$i,'bookmark_url') .'">'.
 			db_result($result,$i,'bookmark_title') .'</A></B> '.
-			'<SMALL><A HREF="/my/bookmark_edit.php?bookmark_id='. db_result($result,$i,'bookmark_id') .'">['.$LANG->getText('my_index', 'edit_link').']</A></SMALL></TD>'.
+			'<SMALL><A HREF="/my/bookmark_edit.php?bookmark_id='. db_result($result,$i,'bookmark_id') .'">['.$Language->getText('my_index', 'edit_link').']</A></SMALL></TD>'.
 			'<td><A HREF="/my/bookmark_delete.php?bookmark_id='. db_result($result,$i,'bookmark_id') .
-			'" onClick="return confirm(\''.$LANG->getText('my_index', 'del_bookmark').'\')">'.
+			'" onClick="return confirm(\''.$Language->getText('my_index', 'del_bookmark').'\')">'.
 			'<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A>	</td></tr>';
 			}
 	}
@@ -481,7 +481,7 @@ if (user_isloggedin()) {
 	*/
 
 	$html_my_projects = "";
-	$html_my_projects .= $HTML->box1_top($LANG->getText('my_index', 'my_projects'),0);
+	$html_my_projects .= $HTML->box1_top($Language->getText('my_index', 'my_projects'),0);
 	$result = db_query("SELECT groups.group_name,"
 		. "groups.group_id,"
 		. "groups.unix_group_name,"
@@ -494,7 +494,7 @@ if (user_isloggedin()) {
 		. "AND groups.type='1' AND groups.status='A' ORDER BY group_name");
 	$rows=db_numrows($result);
 	if (!$result || $rows < 1) {
-		$html_my_projects .= $LANG->getText('my_index', 'not_member');
+		$html_my_projects .= $Language->getText('my_index', 'not_member');
 		$html_my_projects .= db_error();
 	} else {
 
@@ -504,7 +504,7 @@ if (user_isloggedin()) {
 			    '<A href="/projects/'. db_result($result,$i,'unix_group_name') .'/"><b>'.
 			    db_result($result,$i,'group_name') .'</b></A>';
 			if ( db_result($result,$i,'admin_flags') == 'A' ) {
-			    $html_my_projects .= ' <small><A HREF="/project/admin/?group_id='.db_result($result,$i,'group_id').'">['.$LANG->getText('my_index', 'admin_link').']</A></small>';
+			    $html_my_projects .= ' <small><A HREF="/project/admin/?group_id='.db_result($result,$i,'group_id').'">['.$Language->getText('my_index', 'admin_link').']</A></small>';
 			}
 			if ( db_result($result,$i,'is_public') == 0 ) {
 			    $html_my_projects .= ' (*)';
@@ -516,7 +516,7 @@ if (user_isloggedin()) {
                         } else {
                             $html_my_projects .= '</TD>'.
                                 '<td><A href="rmproject.php?group_id='. db_result($result,$i,'group_id').
-                                '" onClick="return confirm(\''.$LANG->getText('my_index', 'quit_proj').'\')">'.
+                                '" onClick="return confirm(\''.$Language->getText('my_index', 'quit_proj').'\')">'.
                                 '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0"></A></TD></TR>';
                         }
 		}
@@ -524,7 +524,7 @@ if (user_isloggedin()) {
 		if ($private_shown) {
 		  $html_my_projects .= '
 			       <TR class="'. util_get_alt_row_color($i) .'"><TD colspan="2" class="small">'.
-		      '(*)&nbsp;'.$LANG->getText('my_index', 'priv_proj').'</td></tr>';
+		      '(*)&nbsp;'.$Language->getText('my_index', 'priv_proj').'</td></tr>';
 		}
 	}
     $html_my_projects .= '<TR><TD COLSPAN="2">&nbsp;</TD></TR>';

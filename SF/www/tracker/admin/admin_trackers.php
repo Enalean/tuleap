@@ -8,7 +8,7 @@
 //  Written for CodeX by Stephane Bouhet
 //
 
-$LANG->loadLanguageMsg('tracker/tracker');
+$Language->loadLanguageMsg('tracker/tracker');
 
 if ( !user_isloggedin() ) {
 	exit_not_logged_in();
@@ -20,7 +20,7 @@ if ( !user_ismember($group_id,'A') ) {
 	return;
 }
 
-$ath->adminTrackersHeader(array('title'=>$LANG->getText('tracker_admin_trackers','all_admin'),'help' => 'TrackerAdministration.html'));
+$ath->adminTrackersHeader(array('title'=>$Language->getText('tracker_admin_trackers','all_admin'),'help' => 'TrackerAdministration.html'));
 echo $ath->displayAdminTrackers();
 $ath->footer(array());
 

@@ -7,18 +7,18 @@
 // $Id$ 
 //
 
-$LANG->loadLanguageMsg('project/project');
+$Language->loadLanguageMsg('project/project');
 
 // filedownload_logs_daily
 function filedownload_logs_daily($project, $span = 7, $who="allusers") {
-  global $LANG;
+  global $Language;
 
 	// check first if service is used by this project
 	// if service not used return immediately
 	$q = "SELECT is_used FROM service WHERE short_name='file' AND group_id=".$project->getGroupId();
 	$res = db_query($q);
 	if (db_result($res,0,0) == 0) {
-		print '<P><B><U>'.$LANG->getText('project_stats_source_code_access_utils','service_disabled',$LANG->getText('project_stats_source_code_access_utils','file_download')).'</U></B>';
+		print '<P><B><U>'.$Language->getText('project_stats_source_code_access_utils','service_disabled',$Language->getText('project_stats_source_code_access_utils','file_download')).'</U></B>';
 		return;
 	}
 
@@ -66,20 +66,20 @@ function filedownload_logs_daily($project, $span = 7, $who="allusers") {
 	// Executions will continue until morale improves.
 	$res = db_query( $sql);
 
-	print '<P><B><U>'.$LANG->getText('project_stats_source_code_access_utils','access_for_past_x_days',array($LANG->getText('project_stats_source_code_access_utils','file_download'),$span)).'</U></B>';
+	print '<P><B><U>'.$Language->getText('project_stats_source_code_access_utils','access_for_past_x_days',array($Language->getText('project_stats_source_code_access_utils','file_download'),$span)).'</U></B>';
 
 	// if there are any days, we have valid data.
 	if ( ($nb_downloads = db_numrows( $res )) >= 1 ) {
 
-	print '<B><U> - '. $LANG->getText('project_stats_source_code_access_utils','in_total',$nb_downloads).'</U></B>';
+	print '<B><U> - '. $Language->getText('project_stats_source_code_access_utils','in_total',$nb_downloads).'</U></B>';
 
 		print	'<P><TABLE width="100%" cellpadding=2 cellspacing=0 border=0>'
 			. '<TR valign="top">'
-			. '<TD><B>'.$LANG->getText('project_admin_utils','date').'</B></TD>'
-			. '<TD><B>'.$LANG->getText('project_export_utils','user').'</B></TD>'
-			. '<TD><B>'.$LANG->getText('project_export_artifact_history_export','email').'</B></TD>'
-			. '<TD align><B>'.$LANG->getText('project_stats_source_code_access_utils','file').'</B></TD>'
-			. '<TD align="right"><B>'.$LANG->getText('project_stats_source_code_access_utils','time_gmt').'</B></TD>'
+			. '<TD><B>'.$Language->getText('project_admin_utils','date').'</B></TD>'
+			. '<TD><B>'.$Language->getText('project_export_utils','user').'</B></TD>'
+			. '<TD><B>'.$Language->getText('project_export_artifact_history_export','email').'</B></TD>'
+			. '<TD align><B>'.$Language->getText('project_stats_source_code_access_utils','file').'</B></TD>'
+			. '<TD align="right"><B>'.$Language->getText('project_stats_source_code_access_utils','time_gmt').'</B></TD>'
 			. '</TR>' . "\n";
 		
 		while ( $row = db_fetch_array($res) ) {
@@ -95,20 +95,20 @@ function filedownload_logs_daily($project, $span = 7, $who="allusers") {
 		print '</TABLE>';
 
 	} else {
-	  echo '<P>'.$LANG->getText('project_stats_source_code_access_utils','no_access',$LANG->getText('project_stats_source_code_access_utils','file_download'));
+	  echo '<P>'.$Language->getText('project_stats_source_code_access_utils','no_access',$Language->getText('project_stats_source_code_access_utils','file_download'));
 	}
 
 }
 
 function cvsaccess_logs_daily($project, $span = 7, $who="allusers") {
-  global $LANG;
+  global $Language;
 
 	// check first if service is used by this project
         // if service not used return immediately
         $q = "SELECT is_used FROM service WHERE short_name='cvs' AND group_id=".$project->getGroupId();
         $res = db_query($q);
         if (db_result($res,0,0) == 0) {
-                print '<P><B><U>'.$LANG->getText('project_stats_source_code_access_utils','service_disabled',$LANG->getText('project_stats_index','cvs')).'</U></B>';
+                print '<P><B><U>'.$Language->getText('project_stats_source_code_access_utils','service_disabled',$Language->getText('project_stats_index','cvs')).'</U></B>';
 		return;
 	}
 
@@ -158,18 +158,18 @@ function cvsaccess_logs_daily($project, $span = 7, $who="allusers") {
 	// Executions will continue until morale improves.
 	$res = db_query( $sql );
 
-	print '<P><B><U>'.$LANG->getText('project_stats_source_code_access_utils','access_for_past_x_days',array($LANG->getText('project_stats_source_code_access_utils','cvs_co_upd'),$span)).'</U></B></P>';
+	print '<P><B><U>'.$Language->getText('project_stats_source_code_access_utils','access_for_past_x_days',array($Language->getText('project_stats_source_code_access_utils','cvs_co_upd'),$span)).'</U></B></P>';
 
 	// if there are any days, we have valid data.
 	if ( ($nb_downloads = db_numrows( $res )) >= 1 ) {
 
 		print	'<P><TABLE width="100%" cellpadding=2 cellspacing=0 border=0>'
 			. '<TR valign="top">'
-			. '<TD><B>'.$LANG->getText('project_admin_utils','date').'</B></TD>'
-			. '<TD><B>'.$LANG->getText('project_export_utils','user').'</B></TD>'
-			. '<TD><B>'.$LANG->getText('project_export_artifact_history_export','email').'</B></TD>'
-			. '<TD align><B>'.$LANG->getText('project_stats_source_code_access_utils','co_upd').'</B></TD>'
-			. '<TD align><B>'.$LANG->getText('project_stats_source_code_access_utils','browsing').'</B></TD>'
+			. '<TD><B>'.$Language->getText('project_admin_utils','date').'</B></TD>'
+			. '<TD><B>'.$Language->getText('project_export_utils','user').'</B></TD>'
+			. '<TD><B>'.$Language->getText('project_export_artifact_history_export','email').'</B></TD>'
+			. '<TD align><B>'.$Language->getText('project_stats_source_code_access_utils','co_upd').'</B></TD>'
+			. '<TD align><B>'.$Language->getText('project_stats_source_code_access_utils','browsing').'</B></TD>'
 			. '</TR>' . "\n";
 		
 		while ( $row = db_fetch_array($res) ) {
@@ -186,7 +186,7 @@ function cvsaccess_logs_daily($project, $span = 7, $who="allusers") {
 		print '</TABLE>';
 
 	} else {
-		echo '<P>'.$LANG->getText('project_stats_source_code_access_utils','no_access',$LANG->getText('project_stats_source_code_access_utils','cvs_access'));
+		echo '<P>'.$Language->getText('project_stats_source_code_access_utils','no_access',$Language->getText('project_stats_source_code_access_utils','cvs_access'));
 	}
 
 
@@ -194,14 +194,14 @@ function cvsaccess_logs_daily($project, $span = 7, $who="allusers") {
 }
 
 function svnaccess_logs_daily($project, $span = 7, $who="allusers") {
-  global $LANG;
+  global $Language;
 
 	// check first if service is used by this project
         // if service not used return immediately
         $q = "SELECT is_used FROM service WHERE short_name='svn' AND group_id=".$project->getGroupId();
         $res = db_query($q);
         if (db_result($res,0,0) == 0) {
-                print '<P><B><U>'.$LANG->getText('project_stats_source_code_access_utils','service_disabled',$LANG->getText('project_stats_source_code_access_utils','subversion')).'</U></B>';
+                print '<P><B><U>'.$Language->getText('project_stats_source_code_access_utils','service_disabled',$Language->getText('project_stats_source_code_access_utils','subversion')).'</U></B>';
 		return;
 	}
 	
@@ -251,18 +251,18 @@ function svnaccess_logs_daily($project, $span = 7, $who="allusers") {
 	// Executions will continue until morale improves.
 	$res = db_query( $sql );
 
-	print '<P><B><U>'.$LANG->getText('project_stats_source_code_access_utils','access_for_past_x_days',array($LANG->getText('project_stats_source_code_access_utils','svn_access'),$span)).'</U></B></P>';
+	print '<P><B><U>'.$Language->getText('project_stats_source_code_access_utils','access_for_past_x_days',array($Language->getText('project_stats_source_code_access_utils','svn_access'),$span)).'</U></B></P>';
 
 	// if there are any days, we have valid data.
 	if ( ($nb_downloads = db_numrows( $res )) >= 1 ) {
 
 		print	'<P><TABLE width="100%" cellpadding=2 cellspacing=0 border=0>'
 			. '<TR valign="top">'
-			. '<TD><B>'.$LANG->getText('project_admin_utils','date').'</B></TD>'
-			. '<TD><B>'.$LANG->getText('project_export_utils','user').'</B></TD>'
-			. '<TD><B>'.$LANG->getText('project_export_artifact_history_export','email').'</B></TD>'
-			. '<TD><B>'.$LANG->getText('project_stats_source_code_access_utils','accesses').'</B></TD>'
-			. '<TD><B>'.$LANG->getText('project_stats_source_code_access_utils','browsing').'</B></TD>'
+			. '<TD><B>'.$Language->getText('project_admin_utils','date').'</B></TD>'
+			. '<TD><B>'.$Language->getText('project_export_utils','user').'</B></TD>'
+			. '<TD><B>'.$Language->getText('project_export_artifact_history_export','email').'</B></TD>'
+			. '<TD><B>'.$Language->getText('project_stats_source_code_access_utils','accesses').'</B></TD>'
+			. '<TD><B>'.$Language->getText('project_stats_source_code_access_utils','browsing').'</B></TD>'
 			. '</TR>' . "\n";
 		
 		while ( $row = db_fetch_array($res) ) {
@@ -279,7 +279,7 @@ function svnaccess_logs_daily($project, $span = 7, $who="allusers") {
 		print '</TABLE>';
 
 	} else {
-		echo '<P>'.$LANG->getText('project_stats_source_code_access_utils','no_access',$LANG->getText('project_stats_source_code_access_utils','svn_access'));
+		echo '<P>'.$Language->getText('project_stats_source_code_access_utils','no_access',$Language->getText('project_stats_source_code_access_utils','svn_access'));
 	}
 
 
@@ -288,13 +288,13 @@ function svnaccess_logs_daily($project, $span = 7, $who="allusers") {
 
 // doc_logs_daily
 function doc_logs_daily($project, $span = 7, $who="allusers") {
-  global $LANG;
+  global $Language;
 	// check first if service is used by this project
         // if service not used return immediately
         $q = "SELECT is_used FROM service WHERE short_name='doc' AND group_id=".$project->getGroupId();
         $res = db_query($q);
         if (db_result($res,0,0) == 0) {
-                print '<P><B><U>'.$LANG->getText('project_stats_source_code_access_utils','service_disabled',$LANG->getText('project_stats_source_code_access_utils','docs')).'</U></B>';
+                print '<P><B><U>'.$Language->getText('project_stats_source_code_access_utils','service_disabled',$Language->getText('project_stats_source_code_access_utils','docs')).'</U></B>';
 		return;
 	}
 
@@ -337,20 +337,20 @@ function doc_logs_daily($project, $span = 7, $who="allusers") {
 	// Executions will continue until morale improves.
 	$res = db_query( $sql );
 
-	print '<P><B><U>'.$LANG->getText('project_stats_source_code_access_utils','access_for_past_x_days',array($LANG->getText('project_stats_source_code_access_utils','doc_download'),$span)).'</B></U>';
+	print '<P><B><U>'.$Language->getText('project_stats_source_code_access_utils','access_for_past_x_days',array($Language->getText('project_stats_source_code_access_utils','doc_download'),$span)).'</B></U>';
 
 	// if there are any days, we have valid data.
 	if ( ($nb_downloads = db_numrows( $res )) >= 1 ) {
 
-	print '<B><U> - '. $LANG->getText('project_stats_source_code_access_utils','in_total',$nb_downloads).'</U></B>';
+	print '<B><U> - '. $Language->getText('project_stats_source_code_access_utils','in_total',$nb_downloads).'</U></B>';
 
 		print	'<P><TABLE width="100%" cellpadding=2 cellspacing=0 border=0>'
 			. '<TR valign="top">'
-			. '<TD><B>'.$LANG->getText('project_admin_utils','date').'</B></TD>'
-			. '<TD><B>'.$LANG->getText('project_export_utils','user').'</B></TD>'
-			. '<TD><B>'.$LANG->getText('project_export_artifact_history_export','email').'</B></TD>'
-			. '<TD align><B>'.$LANG->getText('project_stats_source_code_access_utils','doc').'</B></TD>'
-			. '<TD align="right"><B>'.$LANG->getText('project_stats_source_code_access_utils','time_gmt').'</B></TD>'
+			. '<TD><B>'.$Language->getText('project_admin_utils','date').'</B></TD>'
+			. '<TD><B>'.$Language->getText('project_export_utils','user').'</B></TD>'
+			. '<TD><B>'.$Language->getText('project_export_artifact_history_export','email').'</B></TD>'
+			. '<TD align><B>'.$Language->getText('project_stats_source_code_access_utils','doc').'</B></TD>'
+			. '<TD align="right"><B>'.$Language->getText('project_stats_source_code_access_utils','time_gmt').'</B></TD>'
 			. '</TR>' . "\n";
 		
 		while ( $row = db_fetch_array($res) ) {
@@ -366,7 +366,7 @@ function doc_logs_daily($project, $span = 7, $who="allusers") {
 		print '</TABLE>';
 
 	} else {
-		echo '<P>'.$LANG->getText('project_stats_source_code_access_utils','no_access',$LANG->getText('project_stats_source_code_access_utils','doc_download'));
+		echo '<P>'.$Language->getText('project_stats_source_code_access_utils','no_access',$Language->getText('project_stats_source_code_access_utils','doc_download'));
 	}
 
 }

@@ -8,13 +8,13 @@
 
 require($DOCUMENT_ROOT.'/include/pre.php');
 
-$LANG->loadLanguageMsg('homepage/homepage');
+$Language->loadLanguageMsg('homepage/homepage');
 
-$HTML->header(array('title'=>$LANG->getText('contact', 'title')));
+$HTML->header(array('title'=>$Language->getText('contact', 'title')));
 
-echo '<h2>'.$LANG->getText('contact', 'title')."</h2>\n";
+echo '<h2>'.$Language->getText('contact', 'title')."</h2>\n";
 
-echo $LANG->getText('contact', 'message', array($GLOBALS['sys_name'],$GLOBALS['sys_email_contact']));
+echo $Language->getText('contact', 'message', array($GLOBALS['sys_name'],$GLOBALS['sys_email_contact']));
 
 $HTML->footer(array());
 ?>

@@ -13,7 +13,7 @@
 // Define various functions for user group management
 //
 
-$LANG->loadLanguageMsg('project/project');
+$Language->loadLanguageMsg('project/project');
 
 // Predefined ugroups. Should be consistent with DB (table 'ugroup')
 $UGROUP_NONE=100;
@@ -143,20 +143,20 @@ function ugroup_delete_user_from_project_ugroups($group_id,$user_id) {
  * @return ugroup_id
  */
 function ugroup_create($group_id, $ugroup_name, $ugroup_description, $group_templates) {
-    global $feedback,$LANG;
+    global $feedback,$Language;
 
     // Sanity check
     if (!$ugroup_name) { 
-        exit_error($LANG->getText('global','error'),$LANG->getText('project_admin_ugroup_utils','ug_name_missed'));
+        exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','ug_name_missed'));
     }
     if (!eregi("^[a-zA-Z0-9_\-]+$",$ugroup_name)) {
-        exit_error($LANG->getText('global','error'),$LANG->getText('project_admin_ugroup_utils','invalid_ug_name',$ugroup_name));
+        exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','invalid_ug_name',$ugroup_name));
     }
     // Check that there is no ugroup with the same name in this project
     $sql = "SELECT * FROM ugroup WHERE name='$ugroup_name' AND group_id='$group_id'";
     $result=db_query($sql);
     if (db_numrows($result)>0) {
-        exit_error($LANG->getText('global','error'),$LANG->getText('project_admin_ugroup_utils','ug__exist',$ugroup_name)); 
+        exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','ug__exist',$ugroup_name)); 
     }
     
     
@@ -165,19 +165,19 @@ function ugroup_create($group_id, $ugroup_name, $ugroup_description, $group_temp
     $result=db_query($sql);
 
     if (!$result) {
-        exit_error($LANG->getText('global','error'),$LANG->getText('project_admin_ugroup_utils','cant_create_ug',db_error()));
+        exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','cant_create_ug',db_error()));
     } else {
-        $feedback .= " ".$LANG->getText('project_admin_ugroup_utils','ug_create_success')." ";
+        $feedback .= " ".$Language->getText('project_admin_ugroup_utils','ug_create_success')." ";
     }
     // Now get the corresponding ugroup_id
     $sql="SELECT ugroup_id FROM ugroup WHERE group_id=$group_id AND name='$ugroup_name'";
     $result = db_query($sql);
     if (!$result) {
-        exit_error($LANG->getText('global','error'),$LANG->getText('project_admin_ugroup_utils','ug_created_but_no_id',db_error()));
+        exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','ug_created_but_no_id',db_error()));
     }
     $ugroup_id = db_result($result,0,0);
     if (!$ugroup_id) {
-        exit_error($LANG->getText('global','error'),$LANG->getText('project_admin_ugroup_utils','ug_created_but_no_id',db_error()));
+        exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','ug_created_but_no_id',db_error()));
     }
 
     //
@@ -191,7 +191,7 @@ function ugroup_create($group_id, $ugroup_name, $ugroup_description, $group_temp
     } else if ($group_templates == "cx_empty2") {
         // The user selected '----'
         $query='';
-        $feedback .= ' '.$LANG->getText('project_admin_ugroup_utils','no_g_template').' ';
+        $feedback .= ' '.$Language->getText('project_admin_ugroup_utils','no_g_template').' ';
     } else if ($group_templates == "cx_members") {
         // Get members from predefined groups
         $query="SELECT user_id FROM user_group WHERE group_id=$group_id";
@@ -210,11 +210,11 @@ function ugroup_create($group_id, $ugroup_name, $ugroup_description, $group_temp
         while ($row = db_fetch_array($res)) {
             $sql="INSERT INTO ugroup_user (ugroup_id,user_id) VALUES ($ugroup_id,".$row['user_id'].")";
             if (!db_query($sql)) {
-                exit_error($LANG->getText('global','error'),$LANG->getText('project_admin_ugroup_utils','cant_insert_u_in_g',array($row['user_id'],$ugroup_id,db_error())));
+                exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','cant_insert_u_in_g',array($row['user_id'],$ugroup_id,db_error())));
             }
             $countuser++;
         }
-        $feedback .= " ".$LANG->getText('project_admin_ugroup_utils','u_added',$countuser)." ";
+        $feedback .= " ".$Language->getText('project_admin_ugroup_utils','u_added',$countuser)." ";
     }
     return $ugroup_id;
 }
@@ -225,24 +225,24 @@ function ugroup_create($group_id, $ugroup_name, $ugroup_description, $group_temp
  * Update ugroup with list of members
  */
 function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description, $pickList) {
-    global $feedback,$LANG;
+    global $feedback,$Language;
 
     // Sanity check
     if (!$ugroup_name) { 
-        exit_error($LANG->getText('global','error'),$LANG->getText('project_admin_ugroup_utils','g_name_missed'));
+        exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','g_name_missed'));
     }
     if (!eregi("^[a-zA-Z0-9_\-]+$",$ugroup_name)) {
-        exit_error($LANG->getText('global','error'),$LANG->getText('project_admin_ugroup_utils','invalid_g_name',$ugroup_name));
+        exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','invalid_g_name',$ugroup_name));
     }
     if (!$ugroup_id) {
-        exit_error($LANG->getText('global','error'),$LANG->getText('project_admin_editugroup','ug_id_missed'));
+        exit_error($Language->getText('global','error'),$Language->getText('project_admin_editugroup','ug_id_missed'));
     }
 
     // Check that there is no ugroup with the same name and a different id in this project
     $sql = "SELECT * FROM ugroup WHERE name='$ugroup_name' AND group_id='$group_id' AND ugroup_id!='$ugroup_id'";
     $result=db_query($sql);
     if (db_numrows($result)>0) {
-        exit_error($LANG->getText('global','error'),$LANG->getText('project_admin_ugroup_utils','ug__exist',$ugroup_name)); 
+        exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','ug__exist',$ugroup_name)); 
     }
 
     // Update
@@ -250,13 +250,13 @@ function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description,
     $result=db_query($sql);
 
     if (!$result) {
-        exit_error($LANG->getText('global','error'),$LANG->getText('project_admin_ugroup_utils','cant_update_ug',db_error()));
+        exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','cant_update_ug',db_error()));
     }
 
     // Reset members of the group
     $sql="DELETE FROM ugroup_user WHERE ugroup_id=$ugroup_id";
     if (!db_query($sql)) {
-        exit_error($LANG->getText('global','error'),$LANG->getText('project_admin_ugroup_utils','cant_reset_ug',array($ugroup_id,db_error())));
+        exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','cant_reset_ug',array($ugroup_id,db_error())));
     }
 
     // Then add all selected users
@@ -265,14 +265,14 @@ function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description,
     for ($i=0; $i<$user_count; $i++) {
         $sql="INSERT INTO ugroup_user (ugroup_id,user_id) VALUES ($ugroup_id,".$pickList[$i].")";
         if (!db_query($sql)) {
-            exit_error($LANG->getText('global','error'),$LANG->getText('project_admin_ugroup_utils','cant_insert_u_in_g',array($pickList[$i],db_error())));
+            exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','cant_insert_u_in_g',array($pickList[$i],db_error())));
         }
     }
 
     // Now log in project history
-    group_add_history($LANG->getText('project_admin_ugroup_utils','upd_ug'),$ugroup_name,$group_id);
+    group_add_history($Language->getText('project_admin_ugroup_utils','upd_ug'),$ugroup_name,$group_id);
 
-    $feedback .= " ".$LANG->getText('project_admin_ugroup_utils','ug_upd_success',array($ugroup_name,$user_count));
+    $feedback .= " ".$Language->getText('project_admin_ugroup_utils','ug_upd_success',array($ugroup_name,$user_count));
 }
 
 
@@ -283,9 +283,9 @@ function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description,
  * @return false if error
  */
 function ugroup_delete($group_id, $ugroup_id) { 
-    global $feedback,$LANG;
+    global $feedback,$Language;
     if (!$ugroup_id) {
-        $feedback .= ' '.$LANG->getText('project_admin_ugroup_utils','ug_not_given').' ';
+        $feedback .= ' '.$Language->getText('project_admin_ugroup_utils','ug_not_given').' ';
         return false;
     }
     $ugroup_name=ugroup_get_name_from_id($ugroup_id);
@@ -293,30 +293,30 @@ function ugroup_delete($group_id, $ugroup_id) {
         
     $result=db_query($sql);
     if (!$result || db_affected_rows($result) < 1) {
-        $feedback .= ' '.$LANG->getText('project_admin_ugroup_utils','upd_fail',(db_error() ? db_error() : ' ' ));
+        $feedback .= ' '.$Language->getText('project_admin_ugroup_utils','upd_fail',(db_error() ? db_error() : ' ' ));
          return false;           
     }
-    $feedback .= ' '.$LANG->getText('project_admin_ugroup_utils','g_del').' ';
+    $feedback .= ' '.$Language->getText('project_admin_ugroup_utils','g_del').' ';
     // Now remove users
     $sql = "DELETE FROM ugroup_user WHERE ugroup_id=$ugroup_id";
     
     $result=db_query($sql);
     if (!$result) {
-        $feedback .= ' '.$LANG->getText('project_admin_ugroup_utils','cant_remove_u',db_error());
+        $feedback .= ' '.$Language->getText('project_admin_ugroup_utils','cant_remove_u',db_error());
         return false;
     } 
-    $feedback .= $LANG->getText('project_admin_ugroup_utils','all_u_removed').' ';
+    $feedback .= $Language->getText('project_admin_ugroup_utils','all_u_removed').' ';
     // Last, remove permissions for this group
     $perm_cleared=permission_clear_ugroup($group_id, $ugroup_id); 
     if (!($perm_cleared)) {
-        $feedback .= ' '.$LANG->getText('project_admin_ugroup_utils','cant_remove_perm',db_error());
+        $feedback .= ' '.$Language->getText('project_admin_ugroup_utils','cant_remove_perm',db_error());
         return false;
     } else if ($perm_cleared>1) {
         $perm_cleared--;
-        $feedback .= $LANG->getText('project_admin_ugroup_utils','perm_warning',$perm_cleared);
+        $feedback .= $Language->getText('project_admin_ugroup_utils','perm_warning',$perm_cleared);
     } 
     // Now log in project history
-    group_add_history($LANG->getText('project_admin_ugroup_utils','del_ug'),$ugroup_name,$group_id);
+    group_add_history($Language->getText('project_admin_ugroup_utils','del_ug'),$ugroup_name,$group_id);
 
     return true;
 }

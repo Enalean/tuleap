@@ -9,9 +9,9 @@
 require($DOCUMENT_ROOT.'/include/pre.php');
 require('../survey/survey_utils.php');
 
-$LANG->loadLanguageMsg('survey/survey');
+$Language->loadLanguageMsg('survey/survey');
 
-survey_header(array('title'=>$LANG->getText('survey_s_resp','s_compl')));
+survey_header(array('title'=>$Language->getText('survey_s_resp','s_compl')));
 
 // select this survey from the database
 $sql="select * from surveys where survey_id='$survey_id'";
@@ -21,7 +21,7 @@ if (!$survey_id || !$group_id) {
 	/*
 		Quit if params are not provided
 	*/
-	echo "<H1>".$LANG->getText('survey_index','g_id_err')."</H1>";
+	echo "<H1>".$Language->getText('survey_index','g_id_err')."</H1>";
 	survey_footer(array());
 	exit;
 }
@@ -30,16 +30,16 @@ if (!user_isloggedin() && !db_result($result_survey, 0, "is_anonymous")) {
 	/*
 		Tell them they need to be logged in
 	*/
-	echo $LANG->getText('survey_s','log_in','/account/login.php?return_to='.urlencode($REQUEST_URI));
+	echo $Language->getText('survey_s','log_in','/account/login.php?return_to='.urlencode($REQUEST_URI));
 	survey_footer(array());
 	exit;
 }
 
 ?>
 
-<H2><?php echo $LANG->getText('survey_s_resp','s_compl'); ?></H2><P>
+<H2><?php echo $Language->getText('survey_s_resp','s_compl'); ?></H2><P>
 
-<?php echo $LANG->getText('survey_s_resp','thanks'); ?>
+<?php echo $Language->getText('survey_s_resp','thanks'); ?>
 <P>
 <?php
 /*
@@ -74,7 +74,7 @@ for ($i=0; $i<$count; $i++) {
 		"VALUES ('".user_getid()."','$group_id','$survey_id','$quest_array[$i]','". $$val . "','$now')";
 	$result=db_query($sql);
 	if (!$result) {
-		echo "<h1>".$LANG->getText('global','error')."</h1>";
+		echo "<h1>".$Language->getText('global','error')."</h1>";
 	}
 }
 

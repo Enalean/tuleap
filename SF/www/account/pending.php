@@ -8,15 +8,15 @@
 
 require($DOCUMENT_ROOT.'/include/pre.php'); 
    
-$LANG->loadLanguageMsg('account/account');
+$Language->loadLanguageMsg('account/account');
 
-$HTML->header(array(title=>$LANG->getText('account_pending', 'title')));
+$HTML->header(array(title=>$Language->getText('account_pending', 'title')));
 ?>
 
-<P><?php echo $LANG->getText('account_pending', 'message'); ?>
+<P><?php echo $Language->getText('account_pending', 'message'); ?>
 
-<P><A href="pending-resend.php?form_user=<?php print $form_user; ?>">[<?php echo $LANG->getText('account_pending', 'btn_resend'); ?>]</A>
-<BR><A href="/">[<?php echo $LANG->getText('global', 'back_home'); ?>]</A>
+<P><A href="pending-resend.php?form_user=<?php print $form_user; ?>">[<?php echo $Language->getText('account_pending', 'btn_resend'); ?>]</A>
+<BR><A href="/">[<?php echo $Language->getText('global', 'back_home'); ?>]</A>
  
 <?php
 $HTML->footer(array());

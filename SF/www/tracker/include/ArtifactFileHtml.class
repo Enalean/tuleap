@@ -14,7 +14,7 @@
 
 //require($DOCUMENT_ROOT.'/../common/tracker/ArtifactFile.class');
 
-$LANG->loadLanguageMsg('tracker/tracker');
+$Language->loadLanguageMsg('tracker/tracker');
 
 class ArtifactFileHtml extends ArtifactFile {
 
@@ -37,16 +37,16 @@ class ArtifactFileHtml extends ArtifactFile {
 	 * @return boolean
 	 */
 	function upload($input_file,$input_file_name,$input_file_type,$description,&$changes) {
-            global $sys_max_size_attachment,$LANG;
+            global $sys_max_size_attachment,$Language;
 
             if (!util_check_fileupload($input_file)) {
-	      $this->setError($LANG->getText('tracker_include_artifactfile','invalid_name'));
+	      $this->setError($Language->getText('tracker_include_artifactfile','invalid_name'));
 	      return false;
             }
             $size = @filesize($input_file);
             $input_data = addslashes(@fread(@fopen($input_file, 'r'), $size));
 	    if ((strlen($input_data) < 1) || (strlen($input_data) > $sys_max_size_attachment)) {
-                $this->setError($LANG->getText('tracker_include_artifactfile','not_attached'));
+                $this->setError($Language->getText('tracker_include_artifactfile','not_attached'));
                 return false;
             }
             return $this->create($input_file_name,$input_file_type,$size,$input_data,$description,$changes);

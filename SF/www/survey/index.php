@@ -9,23 +9,23 @@
 require($DOCUMENT_ROOT.'/include/pre.php');
 require('../survey/survey_utils.php');
 
-$LANG->loadLanguageMsg('survey/survey');
+$Language->loadLanguageMsg('survey/survey');
 
-survey_header(array('title'=>$LANG->getText('survey_index','s'),
+survey_header(array('title'=>$Language->getText('survey_index','s'),
 		    'help'=>'SurveyManager.html'));
 
 if (!$group_id) {
-	echo "<H1>".$LANG->getText('survey_index','g_id_err')."</H1>";
+	echo "<H1>".$Language->getText('survey_index','g_id_err')."</H1>";
 }
 
 function  ShowResultsGroupSurveys($result) {
-	global $group_id,$LANG;
+	global $group_id,$Language;
 	$rows  =  db_numrows($result);
 	$cols  =  db_numfields($result);
 
 	$title_arr=array();
-	$title_arr[]=$LANG->getText('survey_index','s_id');
-	$title_arr[]=$LANG->getText('survey_index','s_tit');
+	$title_arr[]=$Language->getText('survey_index','s_id');
+	$title_arr[]=$Language->getText('survey_index','s_tit');
 
 	echo html_build_list_table_top ($title_arr);
 
@@ -50,10 +50,10 @@ $sql="SELECT survey_id,survey_title FROM surveys WHERE group_id='$group_id' AND 
 $result=db_query($sql);
 
 if (!$result || db_numrows($result) < 1) {
-	echo "<H2>".$LANG->getText('survey_index','no_act_s')."</H2>";
+	echo "<H2>".$Language->getText('survey_index','no_act_s')."</H2>";
 	echo db_error();
 } else {
-	echo "<H2>".$LANG->getText('survey_index','s_for',group_getname($group_id))."</H2>";
+	echo "<H2>".$Language->getText('survey_index','s_for',group_getname($group_id))."</H2>";
 	ShowResultsGroupSurveys($result);
 }
 

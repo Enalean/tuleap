@@ -21,22 +21,22 @@ if (!($group_id)) {
 	exit_no_group();
 }
 
-$LANG->loadLanguageMsg('docman/docman');
+$Language->loadLanguageMsg('docman/docman');
 
 if (!(user_ismember($group_id,"D1"))) {
-    $feedback .= $LANG->getText('docman_admin_index','error_perm');
+    $feedback .= $Language->getText('docman_admin_index','error_perm');
     exit_permission_denied();
 }
 
 function main_page($group_id) {
-    global $LANG;
-    docman_header_admin(array('title'=>$LANG->getText('docman_admin_index','title'),
+    global $Language;
+    docman_header_admin(array('title'=>$Language->getText('docman_admin_index','title'),
 			      'help'=>'DocumentAdministration.html'));
-    echo '<h3>'.$LANG->getText('docman_admin_index','pending_doc').'</h3>  <p>';
+    echo '<h3>'.$Language->getText('docman_admin_index','pending_doc').'</h3>  <p>';
     display_docs('3',$group_id);
     // doc_group 3 == pending
     echo '<p>';
-    echo '<h3>'.$LANG->getText('docman_admin_index','active_doc').'</h3>  <p>';
+    echo '<h3>'.$Language->getText('docman_admin_index','active_doc').'</h3>  <p>';
     display_docs('1',$group_id);
     //doc_group 1 == active
     docman_footer($params);
@@ -44,18 +44,18 @@ function main_page($group_id) {
 }
 
 function group_main_page($group_id) {
-    global $LANG;
-    docman_header_admin(array('title'=>$LANG->getText('docman_admin_index','title_group_mgt'),
+    global $Language;
+    docman_header_admin(array('title'=>$Language->getText('docman_admin_index','title_group_mgt'),
 			      'help'=>'DocumentAdministration.html#DocumentGroupManagement'));
-    echo '<h2>'.$LANG->getText('docman_admin_index','header_group_mgt').'</h2>
-	    <h3>'.$LANG->getText('docman_admin_index','create_doc_group').'</h3>
+    echo '<h2>'.$Language->getText('docman_admin_index','header_group_mgt').'</h2>
+	    <h3>'.$Language->getText('docman_admin_index','create_doc_group').'</h3>
 	    <form name="addgroup" action="index.php?mode=groupadd&group_id='.$group_id.'" method="POST">
 	    <table>
-	        <tr><th>'.$LANG->getText('docman_doc_utils','group_name').':</th>  <td><input type="text" name="groupname" size="32"></td></tr>
-	        <tr><th>'.$LANG->getText('docman_doc_utils','rank').':</th>  <td><input type="text" name="group_rank" size="4"></td></tr>
-                <tr><td><input type="submit" value="'.$LANG->getText('global','btn_create').'"></td></tr></table>	
+	        <tr><th>'.$Language->getText('docman_doc_utils','group_name').':</th>  <td><input type="text" name="groupname" size="32"></td></tr>
+	        <tr><th>'.$Language->getText('docman_doc_utils','rank').':</th>  <td><input type="text" name="group_rank" size="4"></td></tr>
+                <tr><td><input type="submit" value="'.$Language->getText('global','btn_create').'"></td></tr></table>	
 	    </form>	
-	<h3>'.$LANG->getText('docman_admin_index','doc_group_list').'</h3>	';
+	<h3>'.$Language->getText('docman_admin_index','doc_group_list').'</h3>	';
     display_groups($group_id);
 }
 
@@ -70,7 +70,7 @@ if (strstr($mode,"docedit")) {
     $result = db_query($query);
     $row = db_fetch_array($result);
     
-    docman_header_admin(array('title'=>$LANG->getText('docman_admin_index','title_edit'),
+    docman_header_admin(array('title'=>$Language->getText('docman_admin_index','title_edit'),
 			'help'=>'DocumentAdministration.html#DocumentPublication'));
     
     echo '
@@ -81,23 +81,23 @@ if (strstr($mode,"docedit")) {
 	  <table border="0" width="75%">
 
 	  <tr>
-	    <th>'.$LANG->getText('docman_new','doc_title').':</th>
+	    <th>'.$Language->getText('docman_new','doc_title').':</th>
 	    <td><input type="text" name="title" size="60" maxlength="255" value="'.$row['title'].'"></td>
 
 	  </tr>
 	  <tr>
 	  </tr>
 	  <tr>
-	  <th>'.$LANG->getText('docman_new','doc_desc').':</th>
+	  <th>'.$Language->getText('docman_new','doc_desc').':</th>
 			       
 	  <td><textarea cols="60" rows="4"  wrap="virtual" name="description">'.$row['description'].'</textarea></td>
 
 	</tr>
 
 	<tr>
-	<th> <input type="checkbox" name="upload_instead" value="1"> <B>'.$LANG->getText('docman_new','doc_upload').':</B></th>
+	<th> <input type="checkbox" name="upload_instead" value="1"> <B>'.$Language->getText('docman_new','doc_upload').':</B></th>
 	<td> <input type="file" name="uploaded_data" size="50">
-            <br><span class="smaller"><i>'.$LANG->getText('docman_new','max_size_msg',array(formatByteToMb($sys_max_size_upload))).'
+            <br><span class="smaller"><i>'.$Language->getText('docman_new','max_size_msg',array(formatByteToMb($sys_max_size_upload))).'
               </i></span>
 	</td>
 
@@ -105,7 +105,7 @@ if (strstr($mode,"docedit")) {
 	// Display the content only for HTML and text documents that were not uploaded but copy/pasted
 	if ( ( ($row['filetype'] == 'text/html')||($row['filetype'] == 'text/plain') ) && ($row['filesize']==0) ){
             echo '<tr>
-	<th valign="top"><br><br>'.$LANG->getText('docman_admin_index','doc_edit').':</th>
+	<th valign="top"><br><br>'.$Language->getText('docman_admin_index','doc_edit').':</th>
 	<td><textarea cols="60" rows="20" wrap="virtual" name="data">';
 	    echo $row['data'];
             echo '</textarea></td>
@@ -113,7 +113,7 @@ if (strstr($mode,"docedit")) {
         }
 
 	echo '<tr>
-	<th>'.$LANG->getText('docman_new','doc_group').':</th>
+	<th>'.$Language->getText('docman_new','doc_group').':</th>
         	<td>';
 
     display_groups_option($group_id,$row['doc_group']);
@@ -122,7 +122,7 @@ if (strstr($mode,"docedit")) {
 	    </tr>
 
 	    <tr>
-	    <th>'.$LANG->getText('docman_admin_index','doc_state').':</th>
+	    <th>'.$Language->getText('docman_admin_index','doc_state').':</th>
 	    <td>';
 
     $res_states=db_query("select * from doc_states;");
@@ -132,7 +132,7 @@ if (strstr($mode,"docedit")) {
 	    </tr>
 
 	    <tr>
-	    <th>'.$LANG->getText('docman_doc_utils','rank_in_group').':</th>
+	    <th>'.$Language->getText('docman_doc_utils','rank_in_group').':</th>
 	    <td>
               <input type="text" size="3" maxlength="3" name="rank" value="'.$row['rank'].'"/>';
     
@@ -142,7 +142,7 @@ if (strstr($mode,"docedit")) {
 	    </tr>
 
 	    <tr>
-	    <th>'.$LANG->getText('docman_admin_index','registered_only').':</th>
+	    <th>'.$Language->getText('docman_admin_index','registered_only').':</th>
 		<td><input type="checkbox" name="restricted_access" value="1"';
 		if ( $row['restricted_access'] == 1 ) {
 		    print " checked";
@@ -153,7 +153,7 @@ if (strstr($mode,"docedit")) {
                       </table>
 
 	   <input type="hidden" name="docid" value="'.$row['docid'].'">
-	   <input type="submit" value="'.$LANG->getText('global','btn_submit').'">
+	   <input type="submit" value="'.$Language->getText('global','btn_submit').'">
 
 	   </form>';
 
@@ -169,16 +169,16 @@ if (strstr($mode,"docedit")) {
 	    ."where doc_group = '$doc_group' "
 	    ."and group_id = $group_id";
 	db_query($query);
-        $feedback .= $LANG->getText('docman_admin_index','msg_group_del',array($doc_group));
+        $feedback .= $Language->getText('docman_admin_index','msg_group_del',array($doc_group));
         group_main_page($group_id);	
     } else {	
 	db_query($query);
-        $feedback .= $LANG->getText('docman_admin_index','msg_group_del_fail');
+        $feedback .= $Language->getText('docman_admin_index','msg_group_del_fail');
         group_main_page($group_id);
     }
     
 } elseif (strstr($mode,"groupedit")) {
-    docman_header_admin(array('title'=>$LANG->getText('docman_admin_index','title_group_edit'),
+    docman_header_admin(array('title'=>$Language->getText('docman_admin_index','title_group_edit'),
 			      'help'=>'DocumentAdministration.html#DocumentGroupManagement'));
     $query = "select * "
 	."from doc_groups "
@@ -187,14 +187,14 @@ if (strstr($mode,"docedit")) {
     $result = db_query($query);
     $row = db_fetch_array($result);
     echo '
-			<h2>'.$LANG->getText('docman_admin_index','header_group_edit').'</h2>
+			<h2>'.$Language->getText('docman_admin_index','header_group_edit').'</h2>
 
 			<form name="editgroup" action="index.php?mode=groupdoedit&group_id='.$group_id.'" method="POST">
 			<table>
-			<tr><th>'.$LANG->getText('docman_doc_utils','group_name').':</th>  <td><input type="text" size="55" name="groupname" value="'.$row['groupname'].'"></td></tr>
-                        <tr><th>'.$LANG->getText('docman_doc_utils','rank').':</th>  <td><input type="text" name="group_rank" size="4" maxlength="4" value="'.$row['group_rank'].'"></td></tr>
+			<tr><th>'.$Language->getText('docman_doc_utils','group_name').':</th>  <td><input type="text" size="55" name="groupname" value="'.$row['groupname'].'"></td></tr>
+                        <tr><th>'.$Language->getText('docman_doc_utils','rank').':</th>  <td><input type="text" name="group_rank" size="4" maxlength="4" value="'.$row['group_rank'].'"></td></tr>
 			<input type="hidden" name="doc_group" value="'.$row['doc_group'].'">
-			<tr><td> <input type="submit" name="submit" value="'.$LANG->getText('global','btn_submit').'"></td></tr></table>	
+			<tr><td> <input type="submit" name="submit" value="'.$Language->getText('global','btn_submit').'"></td></tr></table>	
 			</form>	
 			';
     docman_footer($params);
@@ -206,7 +206,7 @@ if (strstr($mode,"docedit")) {
 	."where doc_group='$doc_group' "
 	."and group_id = '$group_id'";
     db_query($query);
-    $feedback .= $LANG->getText('docman_admin_index','feedback_group_updated');
+    $feedback .= $Language->getText('docman_admin_index','feedback_group_updated');
     group_main_page($group_id);
     
 } elseif (strstr($mode,"docdoedit")) {
@@ -215,8 +215,8 @@ if (strstr($mode,"docedit")) {
     // description are non empty
     if (!$doc_group || $doc_group ==100) {
     	//cannot add a doc unless an appropriate group is provided
-    	exit_error($LANG->getText('global','error'),
-		   $LANG->getText('docman_admin_index','error_nodocgroup'));
+    	exit_error($Language->getText('global','error'),
+		   $Language->getText('docman_admin_index','error_nodocgroup'));
     }
     
     if (!$title || !$description) { 
@@ -241,11 +241,11 @@ if (strstr($mode,"docedit")) {
 	    $data = addslashes(fread( fopen($uploaded_data, 'r'), filesize($uploaded_data)));
 	    if ((strlen($data) > 0) && (strlen($data) < $sys_max_size_upload)) {
 		//size is fine
-		$feedback .= $LANG->getText('docman_admin_index','feedback_doc_uploaded');
+		$feedback .= $Language->getText('docman_admin_index','feedback_doc_uploaded');
 	    } else {
 		//too big or small
-		exit_error($LANG->getText('global','error'),
-			   $LANG->getText('docman_new','error_size',array($sys_max_size_upload)));
+		exit_error($Language->getText('global','error'),
+			   $Language->getText('docman_new','error_size',array($sys_max_size_upload)));
 	    }
 	}
 
@@ -300,16 +300,16 @@ if (strstr($mode,"docedit")) {
     		
 	$res_insert = db_query($query);
 	if (db_affected_rows($res_insert) < 1) {
-	    exit_error($LANG->getText('global','error'),
-		       $LANG->getText('docman_new','error_dbupdate', array(db_error())));
+	    exit_error($Language->getText('global','error'),
+		       $Language->getText('docman_new','error_dbupdate', array(db_error())));
 	}
     
-	$feedback .= $LANG->getText('docman_admin_index','feedback_doc_updated');
+	$feedback .= $Language->getText('docman_admin_index','feedback_doc_updated');
 	main_page($group_id);
 
     } else {
-	exit_error($LANG->getText('global','error'),
-		   $LANG->getText('docman_admin_index','error_nodoc'));
+	exit_error($Language->getText('global','error'),
+		   $Language->getText('docman_admin_index','error_nodoc'));
     }
 
 } elseif (strstr($mode,"groupadd")) {
@@ -320,7 +320,7 @@ if (strstr($mode,"docedit")) {
 	."'$group_rank')";
 		
     db_query($query);
-    $feedback .= $LANG->getText('docman_admin_index','feedback_group_added');
+    $feedback .= $Language->getText('docman_admin_index','feedback_group_added');
     group_main_page($group_id);
 	
 } elseif (strstr($mode,"editgroups")) {
@@ -328,18 +328,18 @@ if (strstr($mode,"docedit")) {
 
 } elseif (strstr($mode,"editdocs")) {
 
-    docman_header_admin(array('title'=>$LANG->getText('docman_admin_index','title_doc_mgt'),
+    docman_header_admin(array('title'=>$Language->getText('docman_admin_index','title_doc_mgt'),
 			      'help'=>'DocumentAdministration.html'));
-    echo '<h2>'.$LANG->getText('docman_admin_index','header_doc_mgt').'</h2>';
-    print "<p><b>".$LANG->getText('docman_admin_index','active_doc').":</b><p>";	
+    echo '<h2>'.$Language->getText('docman_admin_index','header_doc_mgt').'</h2>';
+    print "<p><b>".$Language->getText('docman_admin_index','active_doc').":</b><p>";	
     display_docs('1',$group_id);
-    print "<p><b>".$LANG->getText('docman_admin_index','pending_doc').":</b><p>";	
+    print "<p><b>".$Language->getText('docman_admin_index','pending_doc').":</b><p>";	
     display_docs('3',$group_id);
-    print "<p><b>".$LANG->getText('docman_admin_index','hidden_doc').":</b><p>";	
+    print "<p><b>".$Language->getText('docman_admin_index','hidden_doc').":</b><p>";	
     display_docs('4',$group_id);
-    print "<p><b>".$LANG->getText('docman_admin_index','deleted_doc').":</b><p>";	
+    print "<p><b>".$Language->getText('docman_admin_index','deleted_doc').":</b><p>";	
     display_docs('2',$group_id);
-    print "<p><b>".$LANG->getText('docman_admin_index','private_doc').":</b><p>";	
+    print "<p><b>".$Language->getText('docman_admin_index','private_doc').":</b><p>";	
     display_docs('5',$group_id);
     docman_footer($params);	
 

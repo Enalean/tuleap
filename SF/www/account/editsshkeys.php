@@ -10,7 +10,7 @@ require($DOCUMENT_ROOT.'/include/pre.php');
 require($DOCUMENT_ROOT.'/include/account.php');
 session_require(array(isloggedin=>1));
 
-$LANG->loadLanguageMsg('account/account');
+$Language->loadLanguageMsg('account/account');
 
 // ###### function register_valid()
 // ###### checks for valid register from form post
@@ -34,24 +34,24 @@ function register_valid()	{
 if (register_valid()) {
 	session_redirect("/account/");
 } else { // not valid registration, or first time to page
-	$HTML->header(array(title=>$LANG->getText('account_editsshkeys', 'title')));
+	$HTML->header(array(title=>$Language->getText('account_editsshkeys', 'title')));
 
 ?>
 
-<h2><?php echo $LANG->getText('account_editsshkeys', 'title').' '.help_button('OtherServices.html#ShellAccount'); ?></h2>
+<h2><?php echo $Language->getText('account_editsshkeys', 'title').' '.help_button('OtherServices.html#ShellAccount'); ?></h2>
 <?php
-        echo $LANG->getText('account_editsshkeys', 'message');
+        echo $Language->getText('account_editsshkeys', 'message');
 	$date = getdate(time());
 	$hoursleft = ($sys_crondelay - 1) - ($date[hours] % $sys_crondelay);
 	$minutesleft = 60 - $date[minutes];
-        echo $LANG->getText('account_editsshkeys', 'important', array($hoursleft, $minutesleft));
+        echo $Language->getText('account_editsshkeys', 'important', array($hoursleft, $minutesleft));
 
 ?>
 
 <?php if ($register_error) print "<p>$register_error"; ?>
 <form action="editsshkeys.php" method="post">
-<p><?php echo $LANG->getText('account_editsshkeys', 'title'); ?>
-<p><?php echo $LANG->getText('account_editsshkeys', 'keys'); ?>
+<p><?php echo $Language->getText('account_editsshkeys', 'title'); ?>
+<p><?php echo $Language->getText('account_editsshkeys', 'keys'); ?>
 <br><TEXTAREA rows=10 cols=60 name="form_authorized_keys">
 <?php
 	$res_keys = db_query("SELECT authorized_keys FROM user WHERE user_id=".user_getid());
@@ -60,7 +60,7 @@ if (register_valid()) {
 	print $authorized_keys;
 ?>
 </TEXTAREA>
-<p><input type="submit" name="Update" value="<?php echo $LANG->getText('global', 'btn_update'); ?>">
+<p><input type="submit" name="Update" value="<?php echo $Language->getText('global', 'btn_update'); ?>">
 </form>
 
 <?php

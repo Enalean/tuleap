@@ -9,7 +9,7 @@
 require($DOCUMENT_ROOT.'/include/pre.php');    
 require($DOCUMENT_ROOT.'/include/account.php');
 
-$LANG->loadLanguageMsg('account/account');
+$Language->loadLanguageMsg('account/account');
 
 // ###### function register_valid()
 // ###### checks for valid register from form post
@@ -67,30 +67,30 @@ function register_valid()	{
 // ###### first check for valid login, if so, congratulate
 
 if (register_valid()) {
-    $HTML->header(array(title=>$LANG->getText('account_change_pw', 'title_success')));
+    $HTML->header(array(title=>$Language->getText('account_change_pw', 'title_success')));
     $d = getdate(time());
     $h = ($sys_crondelay - 1) - ($d[hours] % $sys_crondelay);
     $m= 60 - $d[minutes];
 ?>
-<p><b><? echo $LANG->getText('account_change_pw', 'title_success'); ?></b>
-<p><? echo $LANG->getText('account_change_pw', 'message', array($GLOBALS['sys_name'],$h,$m)); ?
+<p><b><? echo $Language->getText('account_change_pw', 'title_success'); ?></b>
+<p><? echo $Language->getText('account_change_pw', 'message', array($GLOBALS['sys_name'],$h,$m)); ?
 
-<p>[ <? echo $LANG->getText('global', 'back_home');?> ]
+<p>[ <? echo $Language->getText('global', 'back_home');?> ]
 <?php
 } else { // not valid registration, or first time to page
 	$HTML->header(array(title=>));
 
 ?>
-<p><b><? echo $LANG->getText('account_change_pw', 'title'); ?></b>
+<p><b><? echo $Language->getText('account_change_pw', 'title'); ?></b>
 <?php if ($register_error) print "<p><span class=\"highlight\"><b>$register_error</b></span>"; ?>
 <form action="change_pw.php" method="post">
-<p><? echo $LANG->getText('account_change_pw', 'old_password'); ?>:
+<p><? echo $Language->getText('account_change_pw', 'old_password'); ?>:
 <br><input type="password" name="form_oldpw">
-<p><? echo $LANG->getText('account_change_pw', 'new_password'); ?>:
+<p><? echo $Language->getText('account_change_pw', 'new_password'); ?>:
 <br><input type="password" name="form_pw">
-<p><? echo $LANG->getText('account_change_pw', 'new_password2'); ?>:
+<p><? echo $Language->getText('account_change_pw', 'new_password2'); ?>:
 <br><input type="password" name="form_pw2">
-<p><input type="submit" name="Update" value="<? echo $LANG->getText('global', 'btn_update'); ?>">
+<p><input type="submit" name="Update" value="<? echo $Language->getText('global', 'btn_update'); ?>">
 </form>
 
 <?php

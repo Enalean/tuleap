@@ -8,45 +8,45 @@
 
 require($DOCUMENT_ROOT.'/include/pre.php');  
 
-$LANG->loadLanguageMsg('top/top'); 
+$Language->loadLanguageMsg('top/top'); 
 
 if ($GLOBALS[type] == 'downloads_week') {
 	$rankfield = 'downloads_week';
-	$title = $LANG->getText('top_toplist','downl_week');
-	$column1 = $LANG->getText('top_toplist','downl');
+	$title = $Language->getText('top_toplist','downl_week');
+	$column1 = $Language->getText('top_toplist','downl');
 }
 else if ($GLOBALS[type] == 'pageviews_proj') {
 	$rankfield = 'pageviews_proj';
-	$title = $LANG->getText('top_toplist','top_pageviews',array($GLOBALS['sys_default_domain'],$GLOBALS['sys_name']));
-	$column1 = $LANG->getText('top_toplist','pageviews');
+	$title = $Language->getText('top_toplist','top_pageviews',array($GLOBALS['sys_default_domain'],$GLOBALS['sys_name']));
+	$column1 = $Language->getText('top_toplist','pageviews');
 }
 else if ($GLOBALS[type] == 'forumposts_week') {
 	$rankfield = 'forumposts_week';
-	$title = $LANG->getText('top_toplist','forum_counts');
-	$column1 = $LANG->getText('top_toplist','posts');
+	$title = $Language->getText('top_toplist','forum_counts');
+	$column1 = $Language->getText('top_toplist','posts');
 }
 // default to downloads
 else {
 	$rankfield = 'downloads_all';
-	$title = $LANG->getText('top_index','download');
-	$column1 = $LANG->getText('top_toplist','downl');
+	$title = $Language->getText('top_index','download');
+	$column1 = $Language->getText('top_toplist','downl');
 }
 
 
 $HTML->header(array('title'=>$title));
 
 print '<P><B><FONT size="+1">'.$title.'</FONT></B>
-<BR><I>'.$LANG->getText('top_mostactive','update_daily').'</I>
+<BR><I>'.$Language->getText('top_mostactive','update_daily').'</I>
 
-<P><A href="/top/">'.$LANG->getText('top_mostactive','view_other_top_cat').'</A>
+<P><A href="/top/">'.$Language->getText('top_mostactive','view_other_top_cat').'</A>
 
 <P><TABLE width="100%" cellpadding=0 cellspacing=0 border=0>
 <TR valign="top">
-<TD><B>'.$LANG->getText('top_mostactive','rank').'</B></TD>
-<TD><B>'.$LANG->getText('top_mostactive','name').'<BR>&nbsp;</B></TD>
+<TD><B>'.$Language->getText('top_mostactive','rank').'</B></TD>
+<TD><B>'.$Language->getText('top_mostactive','name').'<BR>&nbsp;</B></TD>
 <TD align="right"><B>'.$column1.'</B></TD>
-<TD align="right"><B>'.$LANG->getText('top_toplist','last_rank').'</B></TD>
-<TD align="right"><B>'.$LANG->getText('top_toplist','change').'</B>&nbsp;&nbsp;&nbsp;</TD></TR>
+<TD align="right"><B>'.$Language->getText('top_toplist','last_rank').'</B></TD>
+<TD align="right"><B>'.$Language->getText('top_toplist','change').'</B>&nbsp;&nbsp;&nbsp;</TD></TR>
 ';
 
 $res_top = db_query("SELECT groups.group_id,groups.group_name,groups.unix_group_name,top_group.$rankfield,".
@@ -74,13 +74,13 @@ while ($row_top = db_fetch_array($res_top)) {
 		print "N/A";
 	}
 	else if ($diff == 0) {
-		print $LANG->getText('top_toplist','same');
+		print $Language->getText('top_toplist','same');
 	}
 	else if ($diff > 0) {
-		print "<span class=\"top_up\">".$LANG->getText('top_toplist','up',$diff)."</span>";
+		print "<span class=\"top_up\">".$Language->getText('top_toplist','up',$diff)."</span>";
 	}
 	else if ($diff < 0) {
-		print "<span class=\"top_down\">".$LANG->getText('top_toplist','down',(0-$diff))."</span>";
+		print "<span class=\"top_down\">".$Language->getText('top_toplist','down',(0-$diff))."</span>";
 	}
 
 	print '&nbsp;&nbsp;&nbsp;</TD></TR>

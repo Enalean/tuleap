@@ -11,7 +11,7 @@
 
 require($DOCUMENT_ROOT.'/include/pre.php');
 
-$LANG->loadLanguageMsg('docman/docman');
+$Language->loadLanguageMsg('docman/docman');
 
 $sql="SELECT description,data,filename,filesize,filetype FROM doc_data WHERE docid='$docid'";
 $result=db_query($sql);
@@ -20,8 +20,8 @@ if ($result && db_numrows($result) > 0) {
 
     if (db_result($result,0,'filesize') == 0) {
 
-	exit_error($LANG->getText('global','error'),
-		   $LANG->getText('docman_download','error_nofile'));
+	exit_error($Language->getText('global','error'),
+		   $Language->getText('docman_download','error_nofile'));
 
     } else {
 	
@@ -35,8 +35,8 @@ if ($result && db_numrows($result) > 0) {
     }
 
 } else {
-    exit_error($LANG->getText('global','error'),
-	       $LANG->getText('docman_download','error_nodoc', array($docid)));
+    exit_error($Language->getText('global','error'),
+	       $Language->getText('docman_download','error_nodoc', array($docid)));
 }
 
 ?>

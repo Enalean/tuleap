@@ -10,7 +10,7 @@ require($DOCUMENT_ROOT.'/include/pre.php');
 require($DOCUMENT_ROOT.'/include/vars.php');
 require($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
 
-$LANG->loadLanguageMsg('project/project');
+$Language->loadLanguageMsg('project/project');
 
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
@@ -42,10 +42,10 @@ if ($Update) {
     //echo $sql;
     $result=db_query($sql);
     if (!$result || db_affected_rows($result) < 1) {
-        $feedback .= ' '.$LANG->getText('project_admin_editgroupinfo','upd_fail',(db_error() ? db_error() : ' ' ));
+        $feedback .= ' '.$Language->getText('project_admin_editgroupinfo','upd_fail',(db_error() ? db_error() : ' ' ));
     } else {
-        $feedback .= ' '.$LANG->getText('project_admin_editgroupinfo','upd_success').' ';
-	group_add_history ($LANG->getText('project_admin_editgroupinfo','changed_public_info'),'',$group_id);
+        $feedback .= ' '.$Language->getText('project_admin_editgroupinfo','upd_success').' ';
+	group_add_history ($Language->getText('project_admin_editgroupinfo','changed_public_info'),'',$group_id);
     }
 }
 
@@ -56,40 +56,40 @@ if (db_numrows($res_grp) < 1) {
 }
 $row_grp = db_fetch_array($res_grp);
 
-project_admin_header(array('title'=>$LANG->getText('project_admin_editgroupinfo','editing_g_info'),'group'=>$group_id,
+project_admin_header(array('title'=>$Language->getText('project_admin_editgroupinfo','editing_g_info'),'group'=>$group_id,
 			   'help' => 'ProjectPublicInformation.html'));
 
-print '<P><h3>'.$LANG->getText('project_admin_editgroupinfo','editing_g_info_for',$row_grp['group_name']).'</h3>';
+print '<P><h3>'.$Language->getText('project_admin_editgroupinfo','editing_g_info_for',$row_grp['group_name']).'</h3>';
 
 print '
 <P>
 <FORM action="'.$PHP_SELF.'" method="post">
 <INPUT type="hidden" name="group_id" value="'.$group_id.'">
 
-<P>'.$LANG->getText('project_admin_editgroupinfo','descriptive_g_name').'
+<P>'.$Language->getText('project_admin_editgroupinfo','descriptive_g_name').'
 <BR><INPUT type="text" size="40" maxlen="40" name="form_group_name" value="'.$row_grp['group_name'].'">
 
-<P>'.$LANG->getText('project_admin_editgroupinfo','short_desc').'
+<P>'.$Language->getText('project_admin_editgroupinfo','short_desc').'
 <BR><TEXTAREA cols="70" rows="3" wrap="virtual" name="form_shortdesc">
 '.$row_grp['short_description'].'</TEXTAREA>
 
-<P>'.$LANG->getText('project_admin_editgroupinfo','long_desc').'
+<P>'.$Language->getText('project_admin_editgroupinfo','long_desc').'
 <BR><TEXTAREA cols="70" rows="10" wrap="virtual" name="form_purpose">
 '.$row_grp['register_purpose'].'</TEXTAREA>
 
-<P>'.$LANG->getText('project_admin_editgroupinfo','patents').'
+<P>'.$Language->getText('project_admin_editgroupinfo','patents').'
 <BR><TEXTAREA cols="70" rows="6" wrap="virtual" name="form_patents">
 '.$row_grp['patents_ips'].'</TEXTAREA>
 
-<P>'.$LANG->getText('project_admin_editgroupinfo','soft_required').'
+<P>'.$Language->getText('project_admin_editgroupinfo','soft_required').'
 <BR><TEXTAREA cols="70" rows="6"wrap="virtual" name="form_required_sw">
 '.$row_grp['required_software'].'</TEXTAREA>
 
-<P>'.$LANG->getText('project_admin_editgroupinfo','comments').'<BR>
+<P>'.$Language->getText('project_admin_editgroupinfo','comments').'<BR>
 <TEXTAREA name="form_comments" wrap="virtual" cols="70" rows="4">'.$row_grp['other_comments'].'</TEXTAREA>
 <HR>
 
-<P><INPUT type="submit" name="Update" value="'.$LANG->getText('global','btn_update').'">
+<P><INPUT type="submit" name="Update" value="'.$Language->getText('global','btn_update').'">
 </FORM>
 ';
 

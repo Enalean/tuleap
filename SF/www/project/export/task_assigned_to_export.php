@@ -6,7 +6,7 @@
 //
 // $Id$
 
-$LANG->loadLanguageMsg('project/project');
+$Language->loadLanguageMsg('project/project');
 
 // This is the SQL query to retrieve all the tasks which depends on another task
 
@@ -19,13 +19,13 @@ $sql = 'SELECT project_assigned_to.project_task_id,'.
 "project_group_list.group_id='$group_id' ";
 
 $col_list = array('project_task_id','group_id','assigned_to');
-$lbl_list = array('project_task_id' => $LANG->getText('project_export_task_assigned_to_export','task_id'),
-		  'group_id' => $LANG->getText('project_export_bug_deps_export','g_id'),
-		  'assigned_to' => $LANG->getText('project_export_support_request_export','assigned_to'));
+$lbl_list = array('project_task_id' => $Language->getText('project_export_task_assigned_to_export','task_id'),
+		  'group_id' => $Language->getText('project_export_bug_deps_export','g_id'),
+		  'assigned_to' => $Language->getText('project_export_support_request_export','assigned_to'));
 
-$dsc_list = array('project_task_id' => $LANG->getText('project_export_task_assigned_to_export','task_id_desc'),
-		  'group_id' => $LANG->getText('project_export_bug_deps_export','g_id_desc'),
-		  'assigned_to' => $LANG->getText('project_export_task_assigned_to_export','assigned_to_desc'));
+$dsc_list = array('project_task_id' => $Language->getText('project_export_task_assigned_to_export','task_id_desc'),
+		  'group_id' => $Language->getText('project_export_bug_deps_export','g_id_desc'),
+		  'assigned_to' => $Language->getText('project_export_task_assigned_to_export','assigned_to_desc'));
 $tbl_name = 'task_assigned_to';
 
 $eol = "\n";
@@ -53,11 +53,11 @@ if ($export == 'task_assigned_to') {
 
 	project_admin_header(array('title'=>$pg_title));
 
-	echo '<h3>'.$LANG->getText('project_export_artifact_deps_export','bug_deps_export','Task Assignees').'</h3>';
+	echo '<h3>'.$Language->getText('project_export_artifact_deps_export','bug_deps_export','Task Assignees').'</h3>';
 	if ($result) {
-	    echo '<P>'.$LANG->getText('project_export_artifact_deps_export','no_bug_deps_found','task assignee');
+	    echo '<P>'.$Language->getText('project_export_artifact_deps_export','no_bug_deps_found','task assignee');
 	} else {
-	    echo '<P>'.$LANG->getText('project_export_artifact_deps_export','db_access_err',array('task assignees',$GLOBALS['sys_name']));
+	    echo '<P>'.$Language->getText('project_export_artifact_deps_export','db_access_err',array('task assignees',$GLOBALS['sys_name']));
 	    echo '<br>'.db_error();
 	}
 	site_project_footer( array() );
@@ -66,7 +66,7 @@ if ($export == 'task_assigned_to') {
 
 } else if ($export == "task_assigned_to_format") {
 
-    echo $LANG->getText('project_export_artifact_deps_export','bug_deps_export_format',' Task Assignees');
+    echo $Language->getText('project_export_artifact_deps_export','bug_deps_export_format',' Task Assignees');
     
     $record = pick_a_record_at_random($result, $rows, $col_list);   
     display_exported_fields($col_list,$lbl_list,$dsc_list,$record);
@@ -95,11 +95,11 @@ if ($export == 'task_assigned_to') {
 	    }
 
 	} else {
-	    $feedback .= $LANG->getText('project_export_artifact_deps_export','create_proj_err',array($tbl_name,db_project_error()));
+	    $feedback .= $Language->getText('project_export_artifact_deps_export','create_proj_err',array($tbl_name,db_project_error()));
 	}
 
     } else {
-	$feedback .= $LANG->getText('project_export_artifact_deps_export','security_violation',$dbname);
+	$feedback .= $Language->getText('project_export_artifact_deps_export','security_violation',$dbname);
     }
    
 }

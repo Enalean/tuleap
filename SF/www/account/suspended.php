@@ -8,11 +8,11 @@
 
 require($DOCUMENT_ROOT.'/include/pre.php');
    
-$LANG->loadLanguageMsg('account/account');
+$Language->loadLanguageMsg('account/account');
 
-$HTML->header(array(title=>$LANG->getText('account_suspended', 'title')));
+$HTML->header(array(title=>$Language->getText('account_suspended', 'title')));
 	
-echo '<P>'.$LANG->getText('account_suspended', 'message', array($GLOBALS['sys_email_contact']));
+echo '<P>'.$Language->getText('account_suspended', 'message', array($GLOBALS['sys_email_contact']));
 
 echo $HTML->footer(array());
 

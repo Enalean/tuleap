@@ -9,19 +9,19 @@
 require($DOCUMENT_ROOT.'/include/pre.php');    
 require($DOCUMENT_ROOT.'/include/account.php');
  
-$LANG->loadLanguageMsg('account/account');
+$Language->loadLanguageMsg('account/account');
 
 // ###### function register_valid()
 // ###### checks for valid register from form post
 
 $res_lostuser = db_query("SELECT * FROM user WHERE confirm_hash='$confirm_hash'");
 if (db_numrows($res_lostuser) > 1) {
-    exit_error($LANG->getText('include_exit', 'error'),
-	       $LANG->getText('account_lostlogin', 'duplicate_hash'));
+    exit_error($Language->getText('include_exit', 'error'),
+	       $Language->getText('account_lostlogin', 'duplicate_hash'));
 }
 if (db_numrows($res_lostuser) < 1) {
-	exit_error($LANG->getText('include_exit', 'error'),
-		   $LANG->getText('account_lostlogin', 'invalid_hash'));
+	exit_error($Language->getText('include_exit', 'error'),
+		   $Language->getText('account_lostlogin', 'invalid_hash'));
 }
 $row_lostuser = db_fetch_array($res_lostuser);
 
@@ -35,18 +35,18 @@ if ($Update && $form_pw && !strcmp($form_pw,$form_pw2)) {
 	session_redirect("/");
 }
 
-$HTML->header(array('title'=>$LANG->getText('account_lostlogin', 'title')));
+$HTML->header(array('title'=>$Language->getText('account_lostlogin', 'title')));
 ?>
-<p><b><?php echo $LANG->getText('account_lostlogin', 'title'); ?></b>
-<P><?php echo $LANG->getText('account_lostlogin', 'message', array($row_lostuser['realname'])); ?>.
+<p><b><?php echo $Language->getText('account_lostlogin', 'title'); ?></b>
+<P><?php echo $Language->getText('account_lostlogin', 'message', array($row_lostuser['realname'])); ?>.
 
 <FORM action="lostlogin.php">
-<p><?php echo $LANG->getText('account_lostlogin', 'newpasswd'); ?>:
+<p><?php echo $Language->getText('account_lostlogin', 'newpasswd'); ?>:
 <br><input type="password" name="form_pw">
-<p><?php echo $LANG->getText('account_lostlogin', 'newpasswd2'); ?>:
+<p><?php echo $Language->getText('account_lostlogin', 'newpasswd2'); ?>:
 <br><input type="password" name="form_pw2">
 <input type="hidden" name="confirm_hash" value="<?php print $confirm_hash; ?>">
-<p><input type="submit" name="Update" value="<?php echo $LANG->getText('global', 'btn_update'); ?>">
+<p><input type="submit" name="Update" value="<?php echo $Language->getText('global', 'btn_update'); ?>">
 </form>
 
 <?php

@@ -9,7 +9,7 @@
 require($DOCUMENT_ROOT.'/include/pre.php');
 require('../snippet/snippet_utils.php');
 
-$LANG->loadLanguageMsg('snippet/snippet');
+$Language->loadLanguageMsg('snippet/snippet');
 
 if (user_isloggedin()) {
   if ($type=='snippet') {
@@ -18,7 +18,7 @@ if (user_isloggedin()) {
     */
     $result=db_query("SELECT * FROM snippet WHERE snippet_id='$id'");
     if (!$result || db_numrows($result) < 1) {
-      exit_error($LANG->getText('global','error'),$LANG->getText('snippet_add_snippet_to_package','error_s_not_exist'));
+      exit_error($Language->getText('global','error'),$Language->getText('snippet_add_snippet_to_package','error_s_not_exist'));
     }
     
     /*
@@ -31,10 +31,10 @@ if (user_isloggedin()) {
 	$code = addslashes(fread( fopen($uploaded_data, 'r'), filesize($uploaded_data)));
 	if ((strlen($code) > 0) && (strlen($code) < $sys_max_size_upload)) {
 	  //size is fine
-	  $feedback .= ' '.$LANG->getText('snippet_addversion','s_uploaded').' ';
+	  $feedback .= ' '.$Language->getText('snippet_addversion','s_uploaded').' ';
 	} else {
 	  //too big or small
-	  $feedback .= ' '.$LANG->getText('snippet_addversion','min_max_length',$sys_max_size_upload).' ';
+	  $feedback .= ' '.$Language->getText('snippet_addversion','min_max_length',$sys_max_size_upload).' ';
 	  $code='';
 	}
       }
@@ -57,19 +57,19 @@ if (user_isloggedin()) {
 	$result=db_query($sql);
 	
 	if (!$result) {
-	  $feedback .= ' '.$LANG->getText('snippet_add_snippet_to_package','error_insert').' ';
+	  $feedback .= ' '.$Language->getText('snippet_add_snippet_to_package','error_insert').' ';
 	  echo db_error();
 	} else {
-	  $feedback .= ' '.$LANG->getText('snippet_add_snippet_to_package','add_success').' ';
+	  $feedback .= ' '.$Language->getText('snippet_add_snippet_to_package','add_success').' ';
 	}
       } else {
-	exit_error($LANG->getText('global','error'),$LANG->getText('snippet_add_snippet_to_package','error_fill_all_info'));
+	exit_error($Language->getText('global','error'),$Language->getText('snippet_add_snippet_to_package','error_fill_all_info'));
       }
       
     }
-    snippet_header(array('title'=>$LANG->getText('snippet_addversion','submit_s')));
+    snippet_header(array('title'=>$Language->getText('snippet_addversion','submit_s')));
     
-    echo $LANG->getText('snippet_addversion','post_s').'
+    echo $Language->getText('snippet_addversion','post_s').'
 		<P>
 		<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data">
         <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="'.$sys_max_size_upload.'">
@@ -79,28 +79,28 @@ if (user_isloggedin()) {
 		<INPUT TYPE="HIDDEN" NAME="id" VALUE="'.$id.'">
 
 		<TABLE>
-		<TR><TD COLSPAN="2"><B>'.$LANG->getText('snippet_addversion','version').'</B>&nbsp;
+		<TR><TD COLSPAN="2"><B>'.$Language->getText('snippet_addversion','version').'</B>&nbsp;
 			<INPUT TYPE="TEXT" NAME="version" SIZE="10" MAXLENGTH="15">
 		</TD></TR>
 
-		<TR><TD COLSPAN="2"><B>'.$LANG->getText('snippet_addversion','changes').'</B><BR>
+		<TR><TD COLSPAN="2"><B>'.$Language->getText('snippet_addversion','changes').'</B><BR>
 			<TEXTAREA NAME="changes" ROWS="5" COLS="45"></TEXTAREA>
 		</TD></TR>
   
 		<TR><TD COLSPAN="2">
-                <br><B>'.$LANG->getText('snippet_addversion','upload_s').'</B> 
+                <br><B>'.$Language->getText('snippet_addversion','upload_s').'</B> 
 		<P>
 	        <input type="file" name="uploaded_data"  size="40">
-        <br><span class="smaller"><i>'.$LANG->getText('snippet_addversion','max_size',formatByteToMb($sys_max_size_upload)).'</i></span>
+        <br><span class="smaller"><i>'.$Language->getText('snippet_addversion','max_size',formatByteToMb($sys_max_size_upload)).'</i></span>
 	        <P>
-		 <B>'.$LANG->getText('snippet_addversion','paste_code').'</B><BR>
+		 <B>'.$Language->getText('snippet_addversion','paste_code').'</B><BR>
 	        	<TEXTAREA NAME="code" ROWS="30" COLS="85" WRAP="SOFT"></TEXTAREA>
 	        </TD></TR>
  
 	        <TR><TD COLSPAN="2" ALIGN="center">
-			<B>'.$LANG->getText('snippet_add_snippet_to_package','all_info_complete').'</B>
+			<B>'.$Language->getText('snippet_add_snippet_to_package','all_info_complete').'</B>
 			<BR>
-			<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$LANG->getText('global','btn_submit').'">
+			<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
 	        </TD></TR>
 	        </FORM>
 	        </TABLE>';
@@ -118,7 +118,7 @@ if (user_isloggedin()) {
     */
     $result=db_query("SELECT * FROM snippet_package WHERE snippet_package_id='$id'");
     if (!$result || db_numrows($result) < 1) {
-      exit_error($LANG->getText('global','error'),$LANG->getText('snippet_addversion','s_p_not_exist'));
+      exit_error($Language->getText('global','error'),$Language->getText('snippet_addversion','s_p_not_exist'));
     }
 
     if ($post_changes) {
@@ -136,18 +136,18 @@ if (user_isloggedin()) {
 	$result=db_query($sql);
 	if (!$result) {
 	  //error in database
-	  $feedback .= ' '.$LANG->getText('snippet_addversion','error_insert').' ';
-	  snippet_header(array('title'=>$LANG->getText('snippet_addversion','submit_p')));
+	  $feedback .= ' '.$Language->getText('snippet_addversion','error_insert').' ';
+	  snippet_header(array('title'=>$Language->getText('snippet_addversion','submit_p')));
 	  echo db_error();
 	  snippet_footer(array());
 	  exit;
 	} else {
 	  //so far so good - now add snippets to the package
-	  $feedback .= ' '.$LANG->getText('snippet_addversion','p_add_success').' ';
+	  $feedback .= ' '.$Language->getText('snippet_addversion','p_add_success').' ';
 	  
 	  //id for this snippet_package_version
 	  $snippet_package_version_id=db_insertid($result);
-	  snippet_header(array('title'=>$LANG->getText('snippet_addversion','add')));
+	  snippet_header(array('title'=>$Language->getText('snippet_addversion','add')));
 	  
 	  /*
 	This allows the user to add snippets to the package
@@ -165,15 +165,15 @@ function show_add_snippet_box() {
 </script>
 <BODY onLoad="show_add_snippet_box()">
 
-<H2>'.$LANG->getText('snippet_addversion','now_add').'</H2>
+<H2>'.$Language->getText('snippet_addversion','now_add').'</H2>
 <P>
-<span class="highlight"><B>'.$LANG->getText('snippet_addversion','important').'</B></span>
+<span class="highlight"><B>'.$Language->getText('snippet_addversion','important').'</B></span>
 <P>
-'.$LANG->getText('snippet_addversion','important_comm').'
+'.$Language->getText('snippet_addversion','important_comm').'
 <P>
-<A HREF="/snippet/add_snippet_to_package.php?snippet_package_version_id='.$snippet_package_version_id.'" TARGET="_blank">'.$LANG->getText('snippet_addversion','add').'</A>
+<A HREF="/snippet/add_snippet_to_package.php?snippet_package_version_id='.$snippet_package_version_id.'" TARGET="_blank">'.$Language->getText('snippet_addversion','add').'</A>
 <P>
-'.$LANG->getText('snippet_addversion','browse_lib').'
+'.$Language->getText('snippet_addversion','browse_lib').'
 <P>';
  
  
@@ -182,14 +182,14 @@ function show_add_snippet_box() {
 	}
 	
       } else {
-	exit_error($LANG->getText('global','error'),$LANG->getText('snippet_add_snippet_to_package','error_fill_all_info'));
+	exit_error($Language->getText('global','error'),$Language->getText('snippet_add_snippet_to_package','error_fill_all_info'));
       }
       
     }
-    snippet_header(array('title'=>$LANG->getText('snippet_addversion','submit_s')));
+    snippet_header(array('title'=>$Language->getText('snippet_addversion','submit_s')));
     
     echo 
-      $LANG->getText('snippet_addversion','post_p').'
+      $Language->getText('snippet_addversion','post_p').'
 		<P>
 		<FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
 		<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
@@ -198,18 +198,18 @@ function show_add_snippet_box() {
 		<INPUT TYPE="HIDDEN" NAME="id" VALUE="'.$id.'">
 
 		<TABLE>
-		<TR><TD COLSPAN="2"><B>'.$LANG->getText('snippet_addversion','version').'</B><BR>
+		<TR><TD COLSPAN="2"><B>'.$Language->getText('snippet_addversion','version').'</B><BR>
 			<INPUT TYPE="TEXT" NAME="version" SIZE="10" MAXLENGTH="15">
 		</TD></TR>
 
-		<TR><TD COLSPAN="2"><B>'.$LANG->getText('snippet_addversion','changes').'</B><BR>
+		<TR><TD COLSPAN="2"><B>'.$Language->getText('snippet_addversion','changes').'</B><BR>
 			<TEXTAREA NAME="changes" ROWS="5" COLS="45"></TEXTAREA>
 		</TD></TR>
 
 		<TR><TD COLSPAN="2" ALIGN="center">
-			<B>'.$LANG->getText('snippet_add_snippet_to_package','all_info_complete').'</B>
+			<B>'.$Language->getText('snippet_add_snippet_to_package','all_info_complete').'</B>
 			<BR>
-			<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$LANG->getText('global','btn_submit').'">
+			<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
 		</TD></TR>
 	        </FORM>
 	        </TABLE>
@@ -219,7 +219,7 @@ function show_add_snippet_box() {
     
     
   } else {
-    exit_error($LANG->getText('global','error'),$LANG->getText('snippet_addversion','form_mangled'));
+    exit_error($Language->getText('global','error'),$Language->getText('snippet_addversion','form_mangled'));
   }
   
 } else {

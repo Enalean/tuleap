@@ -13,7 +13,7 @@ require($DOCUMENT_ROOT.'/include/proj_email.php');
 require($DOCUMENT_ROOT.'/admin/admin_utils.php');
 require($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
 
-$LANG->loadLanguageMsg('admin/admin');
+$Language->loadLanguageMsg('admin/admin');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
@@ -74,10 +74,10 @@ if ($action=='activate') {
 $res_grp = db_query("SELECT * FROM groups WHERE status='P'");
 
 if (db_numrows($res_grp) < 1) {
-    exit_error($LANG->getText('include_exit', 'info'),$LANG->getText('admin_approve_pending','title'));
+    exit_error($Language->getText('include_exit', 'info'),$Language->getText('admin_approve_pending','title'));
 }
 
-site_admin_header(array('title'=>$LANG->getText('admin_approve_pending','no_pending')));
+site_admin_header(array('title'=>$Language->getText('admin_approve_pending','no_pending')));
 
 while ($row_grp = db_fetch_array($res_grp)) {
 
@@ -85,13 +85,13 @@ while ($row_grp = db_fetch_array($res_grp)) {
 	<H2><?php echo $row_grp['group_name']; ?></H2>
 
 	<p>
-	<A href="/admin/groupedit.php?group_id=<?php echo $row_grp['group_id']; ?>"><H3>[<?php echo $LANG->getText('admin_groupedit','proj_edit'); ?>]</H3></A>
+	<A href="/admin/groupedit.php?group_id=<?php echo $row_grp['group_id']; ?>"><H3>[<?php echo $Language->getText('admin_groupedit','proj_edit'); ?>]</H3></A>
 
 	<p>
-	<A href="/project/admin/?group_id=<?php echo $row_grp['group_id']; ?>"><H3>[<?php echo $LANG->getText('admin_groupedit','proj_admin'); ?>]</H3></A>
+	<A href="/project/admin/?group_id=<?php echo $row_grp['group_id']; ?>"><H3>[<?php echo $Language->getText('admin_groupedit','proj_admin'); ?>]</H3></A>
 
 	<P>
-	<A href="userlist.php?group_id=<?php print $row_grp['group_id']; ?>"><H3>[<?php echo $LANG->getText('admin_groupedit','proj_member'); ?>]</H3></A>
+	<A href="userlist.php?group_id=<?php print $row_grp['group_id']; ?>"><H3>[<?php echo $Language->getText('admin_groupedit','proj_member'); ?>]</H3></A>
 
 	<p>
         <TABLE WIDTH="70%">
@@ -100,7 +100,7 @@ while ($row_grp = db_fetch_array($res_grp)) {
 	<FORM action="<?php echo $PHP_SELF; ?>" method="POST">
 	<INPUT TYPE="HIDDEN" NAME="action" VALUE="activate">
 	<INPUT TYPE="HIDDEN" NAME="list_of_groups" VALUE="<?php print $row_grp['group_id']; ?>">
-	<INPUT type="submit" name="submit" value="<?php echo $LANG->getText('admin_approve_pending','approve'); ?>">
+	<INPUT type="submit" name="submit" value="<?php echo $Language->getText('admin_approve_pending','approve'); ?>">
 	</FORM>
  	</TD>
 
@@ -108,16 +108,16 @@ while ($row_grp = db_fetch_array($res_grp)) {
 	<FORM action="<?php echo $PHP_SELF; ?>" method="POST">
 	<INPUT TYPE="HIDDEN" NAME="action" VALUE="delete">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php print $row_grp['group_id']; ?>">
-	<INPUT type="submit" name="submit" value="<?php echo $LANG->getText('admin_approve_pending','delete'); ?>">
+	<INPUT type="submit" name="submit" value="<?php echo $Language->getText('admin_approve_pending','delete'); ?>">
 	</FORM>
         </TD>
         </TR>
         </TABLE>
 	<P>
-	<B><?php echo $LANG->getText('admin_groupedit','license'); ?>: <?php echo $row_grp['license']; ?></B>
+	<B><?php echo $Language->getText('admin_groupedit','license'); ?>: <?php echo $row_grp['license']; ?></B>
 
-	<BR><B><?php echo $LANG->getText('admin_groupedit','home_box'); ?>Home Box: <?php print $row_grp['unix_box']; ?></B>
-	<BR><B><?php echo $LANG->getText('admin_groupedit','http_domain'); ?>n: <?php print $row_grp['http_domain']; ?></B>
+	<BR><B><?php echo $Language->getText('admin_groupedit','home_box'); ?>Home Box: <?php print $row_grp['unix_box']; ?></B>
+	<BR><B><?php echo $Language->getText('admin_groupedit','http_domain'); ?>n: <?php print $row_grp['http_domain']; ?></B>
 
 	<br>
 	&nbsp;
@@ -129,20 +129,20 @@ while ($row_grp = db_fetch_array($res_grp)) {
 	while ($row_cat = db_fetch_array($res_cat)) {
 		print "<br>$row_cat[category_name] "
 		. "<A href=\"groupedit.php?group_id=$row_grp[group_id]&group_idrm=$row_grp[group_id]&form_catrm=$row_cat[category_id]\">"
-		    . "[".$LANG->getText('admin_approve_pending','remove_category')."]</A>";
+		    . "[".$Language->getText('admin_approve_pending','remove_category')."]</A>";
 	}
 
 	// ########################## OTHER INFO
 
-	print "<P><B>".$LANG->getText('admin_groupedit','other_info')."</B>";
-	print "<br><u>".$LANG->getText('admin_groupedit','unix_grp')."</u>: $row_grp[unix_group_name]";
+	print "<P><B>".$Language->getText('admin_groupedit','other_info')."</B>";
+	print "<br><u>".$Language->getText('admin_groupedit','unix_grp')."</u>: $row_grp[unix_group_name]";
 
-	print "<br><u>".$LANG->getText('admin_groupedit','description')."</u>:<br> $row_grp[register_purpose]";
+	print "<br><u>".$Language->getText('admin_groupedit','description')."</u>:<br> $row_grp[register_purpose]";
 
-	print "<br><u>".$LANG->getText('admin_groupedit','license_other')."</u>: <br> $row_grp[license_other]";
+	print "<br><u>".$Language->getText('admin_groupedit','license_other')."</u>: <br> $row_grp[license_other]";
 	
 	if ( $sys_show_project_type ) {
-		print "<br><u>".$LANG->getText('admin_groupedit','project_type')."</u>: ";
+		print "<br><u>".$Language->getText('admin_groupedit','project_type')."</u>: ";
 		$res_type = db_query("SELECT * FROM project_type WHERE project_type_id = ". $row_grp[project_type]);
 		$row_type = db_fetch_array($res_type);
 		print $row_type[description];
@@ -161,7 +161,7 @@ echo '
 	<FORM action="'.$PHP_SELF.'" method="POST">
 	<INPUT TYPE="HIDDEN" NAME="action" VALUE="activate">
 	<INPUT TYPE="HIDDEN" NAME="list_of_groups" VALUE="'.$group_list.'">
-	<INPUT type="submit" name="submit" value="'.$LANG->getText('admin_approve_pending','approve_all').'">
+	<INPUT type="submit" name="submit" value="'.$Language->getText('admin_approve_pending','approve_all').'">
 	</FORM>
 	';
 	

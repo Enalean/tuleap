@@ -8,9 +8,9 @@
 
 require($DOCUMENT_ROOT.'/include/pre.php');
 
-$LANG->loadLanguageMsg('docman/docman');
+$Language->loadLanguageMsg('docman/docman');
 
-$HTML->header(array(title=>$LANG->getText('docs_site_about','title', array($GLOBALS['sys_name']))));
+$HTML->header(array(title=>$Language->getText('docs_site_about','title', array($GLOBALS['sys_name']))));
 
 include(util_get_content('docman/about_codex'));
 

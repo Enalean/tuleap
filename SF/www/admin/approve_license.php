@@ -11,13 +11,13 @@
 
 require($DOCUMENT_ROOT.'/include/pre.php');
 
-$LANG->loadLanguageMsg('admin/admin');
+$Language->loadLanguageMsg('admin/admin');
 
 if (!(user_isloggedin() && user_is_super_user())) {
-    exit_error('ERROR',$LANG->getText('admin_approve_license', 'error'));
+    exit_error('ERROR',$Language->getText('admin_approve_license', 'error'));
 }
 
-$HTML->header(array('title'=>$LANG->getText('admin_approve_lic', 'title',array($GLOBALS['sys_name']))));
+$HTML->header(array('title'=>$Language->getText('admin_approve_lic', 'title',array($GLOBALS['sys_name']))));
 
 
     if ($legal_acceptance == 'ACCEPT') {
@@ -37,7 +37,7 @@ $HTML->header(array('title'=>$LANG->getText('admin_approve_lic', 'title',array($
 
 	// Preamble
 
-	echo '<p>'.$LANG->getText('admin_approve_license', 'msg_accept');
+	echo '<p>'.$Language->getText('admin_approve_license', 'msg_accept');
  
 	// display the license and the agree/disagree buttons
 	include(util_get_content('admin/codex_license_terms'));
@@ -45,13 +45,13 @@ $HTML->header(array('title'=>$LANG->getText('admin_approve_lic', 'title',array($
         echo '</td></tr>
              <tr VALIGN="MIDDLE" class="boxtitle">
                  <td ALIGN="RIGHT"><b>&nbsp;&nbsp  </b>
-                    <input TYPE="RADIO" name="legal_acceptance" value="ACCEPT"><b>'.$LANG->getText('admin_approve_license', 'accept').'</b>&nbsp;&nbsp;
-                   <input TYPE="RADIO" name="legal_acceptance" value="DECLINE"><b>'.$LANG->getText('admin_approve_license', 'decline').'</b>&nbsp;&nbsp;
+                    <input TYPE="RADIO" name="legal_acceptance" value="ACCEPT"><b>'.$Language->getText('admin_approve_license', 'accept').'</b>&nbsp;&nbsp;
+                   <input TYPE="RADIO" name="legal_acceptance" value="DECLINE"><b>'.$Language->getText('admin_approve_license', 'decline').'</b>&nbsp;&nbsp;
                  </td>
              </tr>
              <tr VALIGN="MIDDLE">
                  <td ALIGN="RIGHT"><b>&nbsp;&nbsp  </b>
-            <input type="submit" name="continueShopping_0"  border="0" class="buttonblue" value="'.$LANG->getText('admin_approve_license', 'continue').'">
+            <input type="submit" name="continueShopping_0"  border="0" class="buttonblue" value="'.$Language->getText('admin_approve_license', 'continue').'">
                 </td>
              </tr>
        </table>';

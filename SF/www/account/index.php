@@ -10,26 +10,26 @@ require($DOCUMENT_ROOT.'/include/pre.php');
 
 session_require(array('isloggedin'=>'1'));
 
-$LANG->loadLanguageMsg('account/account');
+$Language->loadLanguageMsg('account/account');
 
-$HTML->header(array('title'=>$LANG->getText('account_options', 'title')));
+$HTML->header(array('title'=>$Language->getText('account_options', 'title')));
 
 // get global user vars
 $res_user = db_query("SELECT * FROM user WHERE user_id=" . user_getid());
 $row_user = db_fetch_array($res_user);
 
-$HTML->box1_top($LANG->getText('account_options', 'title').": ".user_getrealname(user_getid()));
+$HTML->box1_top($Language->getText('account_options', 'title').": ".user_getrealname(user_getid()));
 ?>
 
-<p><?php echo $LANG->getText('account_options', 'welcome'); ?>,
+<p><?php echo $Language->getText('account_options', 'welcome'); ?>,
     <b><?php echo user_getrealname(user_getid()); ?></b>
 
-<p><?php echo $LANG->getText('account_options', 'welcome_intro'); ?>
+<p><?php echo $Language->getText('account_options', 'welcome_intro'); ?>
 
 <UL>
 <LI><A href="/users/<?php print $row_user['user_name']; ?>/">
-<B><?php echo $LANG->getText('account_options', 'view_developer_profile'); ?></B></A>
-<LI><A HREF="/people/editprofile.php"><B><?php echo $LANG->getText('account_options', 'edit_skills_profile'); ?></B></A>
+<B><?php echo $Language->getText('account_options', 'view_developer_profile'); ?></B></A>
+<LI><A HREF="/people/editprofile.php"><B><?php echo $Language->getText('account_options', 'edit_skills_profile'); ?></B></A>
 </UL>
 <?php $HTML->box1_bottom(); ?>
 
@@ -37,37 +37,37 @@ $HTML->box1_top($LANG->getText('account_options', 'title').": ".user_getrealname
 <TABLE width=100% border=0>
 
 <TR valign=top>
-<TD><?php echo $LANG->getText('account_options', 'member_since'); ?>: </TD>
+<TD><?php echo $Language->getText('account_options', 'member_since'); ?>: </TD>
 <TD colspan="2"><B><?php print format_date($sys_datefmt,$row_user['add_date']); ?></B></TD>
 </TR>
 <TR valign=top>
-<TD><?php echo $LANG->getText('account_options', 'user_id'); ?>: </TD>
+<TD><?php echo $Language->getText('account_options', 'user_id'); ?>: </TD>
 <TD colspan="2"><B><?php print $row_user['user_id']; ?></B></TD>
 </TR>
 
 <TR valign=top>
-<TD><?php echo $LANG->getText('account_options', 'login_name'); ?>: </TD>
+<TD><?php echo $Language->getText('account_options', 'login_name'); ?>: </TD>
 <TD><B><?php print $row_user['user_name']; ?></B></td>
 <td><A href="change_pw.php">[Change Password]</A></TD>
 </TR>
 
 <TR valign=top>
-<TD><?php echo $LANG->getText('account_options', 'timezone'); ?>: </TD>
+<TD><?php echo $Language->getText('account_options', 'timezone'); ?>: </TD>
 <TD><B><?php print $row_user['timezone']; ?></B></td>
-<td><A href="change_timezone.php">[<?php echo $LANG->getText('account_options', 'change_timezone'); ?>]</A></TD>
+<td><A href="change_timezone.php">[<?php echo $Language->getText('account_options', 'change_timezone'); ?>]</A></TD>
 </TR>
 
 
 <TR valign=top>
-<TD><?php echo $LANG->getText('account_options', 'real_name'); ?>: </TD>
+<TD><?php echo $Language->getText('account_options', 'real_name'); ?>: </TD>
 <TD><B><?php print $row_user['realname']; ?></B></td>
-<td><A href="change_realname.php">[<?php echo $LANG->getText('account_options', 'change_real_name'); ?>]</A></TD>
+<td><A href="change_realname.php">[<?php echo $Language->getText('account_options', 'change_real_name'); ?>]</A></TD>
 </TR>
 
 <TR valign=top>
-<TD><?php echo $LANG->getText('account_options', 'email_address'); ?>: </TD>
+<TD><?php echo $Language->getText('account_options', 'email_address'); ?>: </TD>
 <TD><B><?php print $row_user['email']; ?></B></td>
-<td><A href="change_email.php">[<?php echo $LANG->getText('account_options', 'change_email_address'); ?>]</A>
+<td><A href="change_email.php">[<?php echo $Language->getText('account_options', 'change_email_address'); ?>]</A>
 </TD>
 </TR>
 
@@ -79,47 +79,47 @@ $HTML->box1_top($LANG->getText('account_options', 'title').": ".user_getrealname
 <TD COLSPAN=3>
 <?php 
 // ############################# Preferences
-$HTML->box1_top($LANG->getText('account_options', 'preferences')); ?>
+$HTML->box1_top($Language->getText('account_options', 'preferences')); ?>
 <FORM action="updateprefs.php" method="post">
 
 <INPUT type="checkbox" name="form_mail_site" value="1" 
 <?php 
 if ($row_user['mail_siteupdates']) print " checked"; 
-echo '>'.$LANG->getText('account_register', 'siteupdate');
+echo '>'.$Language->getText('account_register', 'siteupdate');
 ?>
 
 <P><INPUT type="checkbox"  name="form_mail_va" value="1" 
 <?php
 if ($row_user['mail_va']) print " checked";
-echo '>'.$LANG->getText('account_register', 'communitymail');
+echo '>'.$Language->getText('account_register', 'communitymail');
 ?>
 
 <P><INPUT type="checkbox"  name="form_sticky_login" value="1" 
 <?php
 if ($row_user['sticky_login']) print " checked";
-echo '>'.$LANG->getText('account_options', 'remember_me', $GLOBALS['sys_name']);
+echo '>'.$Language->getText('account_options', 'remember_me', $GLOBALS['sys_name']);
 ?>
 
 <P>Font size: <select name="user_fontsize">
 <option value="0" <?
 if ( $row_user['fontsize'] == 0 ) print "selected";
-echo '>'.$LANG->getText('account_options', 'font_size_browser');
+echo '>'.$Language->getText('account_options', 'font_size_browser');
 ?></option>
 <option value="1" <?
 if ( $row_user['fontsize'] == 1 ) print "selected";
-echo '>'.$LANG->getText('account_options', 'font_size_small');
+echo '>'.$Language->getText('account_options', 'font_size_small');
 ?></option>
 <option value="2" <?
 if ( $row_user['fontsize'] == 2 ) print "selected";
-echo '>'.$LANG->getText('account_options', 'font_size_normal');
+echo '>'.$Language->getText('account_options', 'font_size_normal');
 ?></option>
 <option value="3" <?
 if ( $row_user['fontsize'] == 3 ) print "selected";
-echo '>'.$LANG->getText('account_options', 'font_size_large');
+echo '>'.$Language->getText('account_options', 'font_size_large');
 ?></option>
 </select>
     
-&nbsp;&nbsp;<?php echo $LANG->getText('account_options', 'theme'); ?>: 
+&nbsp;&nbsp;<?php echo $Language->getText('account_options', 'theme'); ?>: 
 <?php
 // see what current user them is
 if ($row_user['theme'] == "" || $row_user['theme'] == "default") {
@@ -158,10 +158,10 @@ print "</select>\n";
 
 ?>
 
-&nbsp;&nbsp;<?php echo $LANG->getText('account_options', 'language'); ?>: 
+&nbsp;&nbsp;<?php echo $Language->getText('account_options', 'language'); ?>: 
 <?php
 // display supported languages
-echo html_get_language_popup($LANG,'language_id',$LANG->getLanguageId());
+echo html_get_language_popup($Language,'language_id',$Language->getLanguageId());
 ?>
 
 <P align=center><CENTER><INPUT type="submit" name="Update" value="Update"></CENTER>
@@ -171,10 +171,10 @@ echo html_get_language_popup($LANG,'language_id',$LANG->getLanguageId());
 // ############################### Shell Account
 
 if ($row_user['unix_status'] == 'A') {
-	$HTML->box1_top($LANG->getText('account_options', 'shell_account_title').' '.help_button('OtherServices.html#ShellAccount')); 
+	$HTML->box1_top($Language->getText('account_options', 'shell_account_title').' '.help_button('OtherServices.html#ShellAccount')); 
 	print '&nbsp;
-<BR>'.$LANG->getText('account_options', 'shell_box').': <b>'.$row_user['unix_box'].'</b>
-<BR>'.$LANG->getText('account_options', 'shell_shared_keys').': <B>';
+<BR>'.$Language->getText('account_options', 'shell_box').': <b>'.$row_user['unix_box'].'</b>
+<BR>'.$Language->getText('account_options', 'shell_shared_keys').': <B>';
 	// get shared key count from db
 	$expl_keys = explode("###",$row_user['authorized_keys']);
 	if ($expl_keys[0]) {
@@ -182,7 +182,7 @@ if ($row_user['unix_status'] == 'A') {
 	} else {
 		print '0';
 	}
-	print '</B> <A href="editsshkeys.php">['.$LANG->getText('account_options', 'shell_edit_keys').']</A>';
+	print '</B> <A href="editsshkeys.php">['.$Language->getText('account_options', 'shell_edit_keys').']</A>';
 	$HTML->box1_bottom(); 
 } 
 ?>

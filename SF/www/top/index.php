@@ -8,25 +8,25 @@
 
 require($DOCUMENT_ROOT.'/include/pre.php');
 
-$LANG->loadLanguageMsg('top/top');
+$Language->loadLanguageMsg('top/top');
 
-$HTML->header(array('title'=>$LANG->getText('top_index','top_list')));
+$HTML->header(array('title'=>$Language->getText('top_index','top_list')));
 ?>
 
-<H2><?php print $LANG->getText('top_index','top_proj',$GLOBALS['sys_name']); ?></H2>
+<H2><?php print $Language->getText('top_index','top_proj',$GLOBALS['sys_name']); ?></H2>
 
-<P><?php print $LANG->getText('top_index','rank',$GLOBALS['sys_name']); ?>
+<P><?php print $Language->getText('top_index','rank',$GLOBALS['sys_name']); ?>
 
 <UL>
-<LI><A href="mostactive.php?type=week"><?php print $LANG->getText('top_index','act_week'); ?></A>
-<LI><A href="mostactive.php"><?php print $LANG->getText('top_index','act_all_time'); ?></A>
+<LI><A href="mostactive.php?type=week"><?php print $Language->getText('top_index','act_week'); ?></A>
+<LI><A href="mostactive.php"><?php print $Language->getText('top_index','act_all_time'); ?></A>
 <BR>&nbsp;
-<LI><A href="toplist.php?type=downloads"><?php print $LANG->getText('top_index','download'); ?></A>
-<LI><A href="toplist.php?type=downloads_week"><?php print $LANG->getText('top_index','downl_week'); ?></A>
+<LI><A href="toplist.php?type=downloads"><?php print $Language->getText('top_index','download'); ?></A>
+<LI><A href="toplist.php?type=downloads_week"><?php print $Language->getText('top_index','downl_week'); ?></A>
 <BR>&nbsp;
-<LI><A href="toplist.php?type=pageviews_proj"><?php print $LANG->getText('top_index','pageviews'); ?>
+<LI><A href="toplist.php?type=pageviews_proj"><?php print $Language->getText('top_index','pageviews'); ?>
 <BR>&nbsp;
-<LI><A href="toplist.php?type=forumposts_week"><?php print $LANG->getText('top_index','forum'); ?></A>
+<LI><A href="toplist.php?type=forumposts_week"><?php print $Language->getText('top_index','forum'); ?></A>
 </UL>
 
 <?php

@@ -13,7 +13,7 @@
 //require($DOCUMENT_ROOT.'/../common/include/Error.class');
 //require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');
 
-$LANG->loadLanguageMsg('tracker/tracker');
+$Language->loadLanguageMsg('tracker/tracker');
 
 class ArtifactTypeFactory extends Error {
 
@@ -95,7 +95,7 @@ class ArtifactTypeFactory extends Error {
 	 *	@return	array	The array of ArtifactType objects.
 	 */
 	function getArtifactTypes() {
-	  global $LANG;
+	  global $Language;
 
 		if ($this->ArtifactTypes) {
 			return $this->ArtifactTypes;
@@ -122,7 +122,7 @@ class ArtifactTypeFactory extends Error {
 		$rows = db_numrows($result);
 
 		if (!$result || $rows < 1) {
-			$this->setError($LANG->getText('tracker_common_type','none_found').' '.db_error());
+			$this->setError($Language->getText('tracker_common_type','none_found').' '.db_error());
 			return false;
 		} else {
 			while ($arr = db_fetch_array($result)) {
@@ -146,7 +146,7 @@ class ArtifactTypeFactory extends Error {
 	 *	@return	resultSet
 	 */
 	function getArtifactTypesFromId($group_id) {
-	  global $LANG;
+	  global $Language;
 
 		if ($this->ArtifactTypes) {
 			return $this->ArtifactTypes;
@@ -175,7 +175,7 @@ class ArtifactTypeFactory extends Error {
 		$rows = db_numrows($result);
 
 		if (!$result || $rows < 1) {
-			$this->setError($LANG->getText('tracker_common_type','none_found').' '.db_error());
+			$this->setError($Language->getText('tracker_common_type','none_found').' '.db_error());
 			return false;
 		}
 
@@ -191,7 +191,7 @@ class ArtifactTypeFactory extends Error {
 	 *	@return	resultSet
 	 */
 	function getPendingArtifactTypes() {
-	  global $LANG;
+	  global $Language;
 
 		$sql="SELECT group_artifact_id,name, deletion_date, groups.group_name as project_name, groups.group_id FROM artifact_group_list, groups
 			WHERE artifact_group_list.status='D'
@@ -203,7 +203,7 @@ class ArtifactTypeFactory extends Error {
 		$result = db_query ($sql);
 		$rows = db_numrows($result);
 		if (!$result || $rows < 1) {
-			$this->setError($LANG->getText('tracker_common_type','none_found').' '.db_error());
+			$this->setError($Language->getText('tracker_common_type','none_found').' '.db_error());
 			return false;
 		}
 

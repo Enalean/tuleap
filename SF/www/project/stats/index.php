@@ -8,12 +8,12 @@
 require($DOCUMENT_ROOT.'/include/pre.php');
 require('./project_stats_utils.php');
 
-$LANG->loadLanguageMsg('project/project');
+$Language->loadLanguageMsg('project/project');
 
 site_project_header(array('title'=>"Project statistics ".$groupname,'group'=>$group_id,'toptab'=>'summary'));
 
 if ( !$group_id ) {
-	exit_error($LANG->getText('project_admin_userperms','invalid_g'),$LANG->getText('project_admin_userperms','That group does not exist.'));
+	exit_error($Language->getText('project_admin_userperms','invalid_g'),$Language->getText('project_admin_userperms','That group does not exist.'));
 }
    //if the project isn't active, require you to be a member of the super-admin group
 //if ( !(db_result($res_grp,0,'status') == 'A') ) {
@@ -35,7 +35,7 @@ if ( !$view ) {
 }
 
 print '<DIV ALIGN="CENTER">';
-print '<font size="+1"><b>'.$LANG->getText('project_stats_index','usage_stats').' </b></font><BR>';
+print '<font size="+1"><b>'.$Language->getText('project_stats_index','usage_stats').' </b></font><BR>';
 print '<IMG SRC="stats_graph.png?group_id='.$group_id.'&span='.$span.'&view='.$view.'">';
 print '</DIV>';
 
@@ -79,12 +79,12 @@ View the Last <SELECT NAME="span">
 </SELECT>
 &nbsp;
 <SELECT NAME="view">
-<OPTION VALUE="monthly" <?php if ($view == "monthly") {echo 'SELECTED';} ?>><?php echo $LANG->getText('project_stats_index','months'); ?></OPTION>
-<OPTION VALUE="weekly" <?php if ($view == "weekly") {echo 'SELECTED';} ?>><?php echo $LANG->getText('project_stats_index','weeks'); ?></OPTION>
-<OPTION VALUE="daily" <?php if ($view == "daily" || !isset($view) ) {echo 'SELECTED';} ?>><?php echo $LANG->getText('project_stats_index','days'); ?></OPTION>
+<OPTION VALUE="monthly" <?php if ($view == "monthly") {echo 'SELECTED';} ?>><?php echo $Language->getText('project_stats_index','months'); ?></OPTION>
+<OPTION VALUE="weekly" <?php if ($view == "weekly") {echo 'SELECTED';} ?>><?php echo $Language->getText('project_stats_index','weeks'); ?></OPTION>
+<OPTION VALUE="daily" <?php if ($view == "daily" || !isset($view) ) {echo 'SELECTED';} ?>><?php echo $Language->getText('project_stats_index','days'); ?></OPTION>
 </SELECT>
 &nbsp; 
-<INPUT type="submit" value="<?php echo $LANG->getText('project_stats_index','change_stats_view'); ?>">
+<INPUT type="submit" value="<?php echo $Language->getText('project_stats_index','change_stats_view'); ?>">
 <INPUT type="hidden" name="group_id" value="<?php echo $group_id; ?>">
 </FORM>
 </DIV>

@@ -10,7 +10,7 @@
 
 //require_once($DOCUMENT_ROOT.'/../common/tracker/ArtifactFactory.class');
 
-$LANG->loadLanguageMsg('tracker/tracker');
+$Language->loadLanguageMsg('tracker/tracker');
 
 // Check if a user can submit a new without loggin
 if ( !user_isloggedin() && !$ath->allowsAnon() ) {
@@ -20,7 +20,7 @@ if ( !user_isloggedin() && !$ath->allowsAnon() ) {
 
 // Check if this tracker is valid (not deleted)
 if ( !$ath->isValid() ) {
-	exit_error($LANG->getText('global', 'error'),$LANG->getText('tracker_add', 'invalid'));
+	exit_error($Language->getText('global', 'error'),$Language->getText('tracker_add', 'invalid'));
 }
 
 //
@@ -31,7 +31,7 @@ if (!$ath->userIsTech() && !$ath->isPublic() ) {
 }
 
 // Display the menus
-$ath->header(array('title'=>$LANG->getText('tracker_add', 'add_a').$ath->getCapsItemName(),'titlevals'=>array($ath->getName()),'pagename'=>'tracker_browse',
+$ath->header(array('title'=>$Language->getText('tracker_add', 'add_a').$ath->getCapsItemName(),'titlevals'=>array($ath->getName()),'pagename'=>'tracker_browse',
 	'atid'=>$ath->getID(),'sectionvals'=>array($group->getPublicName()),'help' => 'ArtifactSubmission.html'));
 
 // Display the artifact items according to all the parameters

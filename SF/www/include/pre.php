@@ -127,8 +127,8 @@ if (!$GLOBALS['sys_lang']) {
 	$GLOBALS['sys_lang']="en_US";
 }
 if (user_isloggedin()) {
-    $LANG = new BaseLanguage();
-    $LANG->loadLanguageID(user_get_language());
+    $Language = new BaseLanguage();
+    $Language->loadLanguageID(user_get_language());
 } else {
     //if you aren't logged in, check your browser settings 
     //and see if we support that language
@@ -138,15 +138,15 @@ if (user_isloggedin()) {
 	$lang_code=db_result($res,0,'language_code');
     }
     if (!$lang_code) { $lang_code = $GLOBALS['sys_lang']; }
-    $LANG = new BaseLanguage();
-    $LANG->loadLanguage($lang_code);
+    $Language = new BaseLanguage();
+    $Language->loadLanguage($lang_code);
 }
 
-setlocale (LC_TIME, $LANG->getText('system','locale'));
-$sys_strftimefmt = $LANG->getText('system','strftimefmt');
-$sys_datefmt = $LANG->getText('system','datefmt');
+setlocale (LC_TIME, $Language->getText('system','locale'));
+$sys_strftimefmt = $Language->getText('system','strftimefmt');
+$sys_datefmt = $Language->getText('system','datefmt');
 
-$LANG->loadLanguageMsg('include/include');
+$Language->loadLanguageMsg('include/include');
 
 // If the CodeX Software license was declined by the site admin
 // so stop all accesses to the site

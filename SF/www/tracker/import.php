@@ -12,7 +12,7 @@
 require('./tracker_import_utils.php');
 require($DOCUMENT_ROOT.'/project/export/project_export_utils.php');
 
-$LANG->loadLanguageMsg('tracker/tracker');
+$Language->loadLanguageMsg('tracker/tracker');
 
 if($group_id && $atid && $user_id) {
 
@@ -43,15 +43,15 @@ if($group_id && $atid && $user_id) {
 		$number_inserts,$number_updates,
 		$errors);
 
-    $ath->header(array ('title'=>$LANG->getText('tracker_import','art_import').$ath->getID(). ' - ' . $ath->getName(),'pagename'=>'tracker',
+    $ath->header(array ('title'=>$Language->getText('tracker_import','art_import').$ath->getID(). ' - ' . $ath->getName(),'pagename'=>'tracker',
 			'atid'=>$ath->getID(),'sectionvals'=>array($group->getPublicName()),
 			'help' => 'ArtifactImport.html'));
 
-    echo '<h2>'.$LANG->getText('tracker_import','parse_report').'</h2>';
+    echo '<h2>'.$Language->getText('tracker_import','parse_report').'</h2>';
     if (!$ok) {
       show_errors($errors);
     } else {
-      echo $LANG->getText('tracker_import','ready',array(($number_inserts+$number_updates),$number_inserts, $number_updates))."<br><br>\n";
+      echo $Language->getText('tracker_import','ready',array(($number_inserts+$number_updates),$number_inserts, $number_updates))."<br><br>\n";
       show_parse_results($used_fields,$fields,$artifacts_data,$aid_column,$submitted_by_column,$submitted_on_column,$group_id);
     }
 
@@ -73,11 +73,11 @@ if($group_id && $atid && $user_id) {
     
     $ok = update_db($parsed_labels,$artifacts_data,$aid_column,$errors);
     
-    if ($ok) $feedback = $LANG->getText('tracker_import','success_import',$count_artifacts)." ";
+    if ($ok) $feedback = $Language->getText('tracker_import','success_import',$count_artifacts)." ";
     else $feedback = $errors;
 
     //update group history
-    group_add_history($LANG->getText('tracker_import_admin','import'),$ath->getName(),$group_id);
+    group_add_history($Language->getText('tracker_import_admin','import'),$ath->getName(),$group_id);
 
     require('./browse.php');
     
@@ -87,7 +87,7 @@ if($group_id && $atid && $user_id) {
 
     // project_export_utils is using $at instead of $ath
     $at = $ath;
-    $ath->header(array ('title'=>$LANG->getText('tracker_import','art_import').' '.$ath->getID(). ' - ' . $ath->getName(),'pagename'=>'tracker',
+    $ath->header(array ('title'=>$Language->getText('tracker_import','art_import').' '.$ath->getID(). ' - ' . $ath->getName(),'pagename'=>'tracker',
 			'atid'=>$ath->getID(),'sectionvals'=>array($group->getPublicName()),
 			'help' => 'ArtifactImport.html'));
     $sql = $ath->buildExportQuery($fields,$col_list,$lbl_list,$dsc_list);
@@ -107,22 +107,22 @@ if($group_id && $atid && $user_id) {
     $col_list[] = 'add_cc';
     $col_list[] = 'cc_comment';
     
-    $lbl_list['follow_ups'] = $LANG->getText('tracker_import','follow_ups');
-    $lbl_list['is_dependent_on'] = $LANG->getText('tracker_import','depend_on');
-    $lbl_list['add_cc'] = $LANG->getText('tracker_import','cc_list');
-    $lbl_list['cc_comment'] = $LANG->getText('tracker_import','cc_comment');
+    $lbl_list['follow_ups'] = $Language->getText('tracker_import','follow_ups');
+    $lbl_list['is_dependent_on'] = $Language->getText('tracker_import','depend_on');
+    $lbl_list['add_cc'] = $Language->getText('tracker_import','cc_list');
+    $lbl_list['cc_comment'] = $Language->getText('tracker_import','cc_comment');
     
-    $dsc_list['follow_ups'] = $LANG->getText('tracker_import','follow_ups_desc');
-    $dsc_list['is_dependent_on'] = $LANG->getText('tracker_import','depend_on_desc');
-    $dsc_list['add_cc'] = $LANG->getText('tracker_import','cc_list_desc');
-    $dsc_list['cc_comment'] = $LANG->getText('tracker_import','cc_comment_desc');
+    $dsc_list['follow_ups'] = $Language->getText('tracker_import','follow_ups_desc');
+    $dsc_list['is_dependent_on'] = $Language->getText('tracker_import','depend_on_desc');
+    $dsc_list['add_cc'] = $Language->getText('tracker_import','cc_list_desc');
+    $dsc_list['cc_comment'] = $Language->getText('tracker_import','cc_comment_desc');
     
     $eol = "\n";
     
     $result=db_query($sql);
     $rows = db_numrows($result); 
 
-    echo $LANG->getText('tracker_import','format_desc');
+    echo $Language->getText('tracker_import','format_desc');
 
     if ($rows > 0) { 
       $record = pick_a_record_at_random($result, $rows, $col_list);
@@ -132,7 +132,7 @@ if($group_id && $atid && $user_id) {
     prepare_artifact_record($at,$fields,$atid,$record);
     display_exported_fields($col_list,$lbl_list,$dsc_list,$record,$mand_list);
     
-    echo '<br><br><h4>'.$LANG->getText('tracker_import','sample_cvs_file').'</h4>';
+    echo '<br><br><h4>'.$Language->getText('tracker_import','sample_cvs_file').'</h4>';
     echo build_csv_header($col_list,$lbl_list);
     echo '<br>';
     echo build_csv_record($col_list,$record);
@@ -141,13 +141,13 @@ if($group_id && $atid && $user_id) {
     //   screen accepting the CSV file to be parsed **************************************************************
   } else {
     
-    $ath->header(array ('title'=>$LANG->getText('tracker_import','art_import').' '.$ath->getID(). ' - ' . $ath->getName(),'pagename'=>'tracker',
+    $ath->header(array ('title'=>$Language->getText('tracker_import','art_import').' '.$ath->getID(). ' - ' . $ath->getName(),'pagename'=>'tracker',
 			'atid'=>$ath->getID(),'sectionvals'=>array($group->getPublicName()),
 			'help' => 'ArtifactImport.html'));
 
-    echo '<h3>'.$LANG->getText('tracker_import','import_new', array(help_button('ArtifactImport.html'),'/tracker/index.php?group_id='.$group_id.'&atid='.$atid.'&user_id='.$user_id.'&mode=showformat&func=import'));
+    echo '<h3>'.$Language->getText('tracker_import','import_new', array(help_button('ArtifactImport.html'),'/tracker/index.php?group_id='.$group_id.'&atid='.$atid.'&user_id='.$user_id.'&mode=showformat&func=import'));
     if ($user == 100) {
-      print $LANG->getText('tracker_import','not_logged');
+      print $Language->getText('tracker_import','not_logged');
     }
     
     echo '
@@ -160,9 +160,9 @@ if($group_id && $atid && $user_id) {
 			<table border="0" width="75%">
 			<tr>
 			<th> ';//<input type="checkbox" name="file_upload" value="1"> 
-    echo '<B>'.$LANG->getText('tracker_import','upload_file').'</B></th>
+    echo '<B>'.$Language->getText('tracker_import','upload_file').'</B></th>
 			<td> <input type="file" name="csv_filename" size="50">
-                 <br><span class="smaller"><i>'.$LANG->getText('tracker_import','max_upload_size',formatByteToMb($sys_max_size_upload)).'</i></span>
+                 <br><span class="smaller"><i>'.$Language->getText('tracker_import','max_upload_size',formatByteToMb($sys_max_size_upload)).'</i></span>
 			</td>
 			</tr>';
 
@@ -173,7 +173,7 @@ if($group_id && $atid && $user_id) {
     echo '
                         </table>
 
-			<input type="submit" value="'.$LANG->getText('tracker_import','submit_info').'">
+			<input type="submit" value="'.$Language->getText('tracker_import','submit_info').'">
 
 	    </FORM> '; 
     $ath->footer(array());

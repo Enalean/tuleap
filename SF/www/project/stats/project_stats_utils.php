@@ -1,6 +1,6 @@
 <?php
 
-$LANG->loadLanguageMsg('project/project');
+$Language->loadLanguageMsg('project/project');
 
 // week_to_dates
 function week_to_dates( $week, $year = 0 ) {
@@ -24,7 +24,7 @@ function week_to_dates( $week, $year = 0 ) {
 
 // stats_project_daily
 function stats_project_daily( $group_id, $span = 7 ) {
-    global $sys_activate_tracker,$LANG;
+    global $sys_activate_tracker,$Language;
 
     if (! $span ) { 
         $span = 7;
@@ -59,24 +59,24 @@ function stats_project_daily( $group_id, $span = 7 ) {
     // if there are any days, we have valid data.
     if ( ($valid_days = db_numrows( $res )) > 1 ) {
         
-        print '<P><B>'.$LANG->getText('project_stats_index','stats_for_past_x_days',$valid_days).'</B></P>';
+        print '<P><B>'.$Language->getText('project_stats_index','stats_for_past_x_days',$valid_days).'</B></P>';
 
         print	'<P><TABLE width="100%" cellpadding=2 cellspacing=1 border=0>'
             . '<TR class="boxtable">'
-            . '<TD class="boxtitle">'.$LANG->getText('project_admin_utils','date').'</TD>'
-            . '<TD class="boxtitle">'.$LANG->getText('project_stats_index','rank').'</TD>'
-            . '<TD class="boxtitle">'.$LANG->getText('project_stats_index','page_views').'</TD>'
-            . '<TD class="boxtitle">'.$LANG->getText('project_stats_index','downloads').'</TD>';
+            . '<TD class="boxtitle">'.$Language->getText('project_admin_utils','date').'</TD>'
+            . '<TD class="boxtitle">'.$Language->getText('project_stats_index','rank').'</TD>'
+            . '<TD class="boxtitle">'.$Language->getText('project_stats_index','page_views').'</TD>'
+            . '<TD class="boxtitle">'.$Language->getText('project_stats_index','downloads').'</TD>';
         if ($grp->activateOldBug())
-            print '<TD class="boxtitle">'.$LANG->getText('project_stats_index','bugs').'</TD>';
+            print '<TD class="boxtitle">'.$Language->getText('project_stats_index','bugs').'</TD>';
         if ($grp->activateOldSR())
-            print '<TD class="boxtitle">'.$LANG->getText('project_stats_index','support').'</TD>';
+            print '<TD class="boxtitle">'.$Language->getText('project_stats_index','support').'</TD>';
         if ($grp->activateOldTask())
-            print '<TD class="boxtitle">'.$LANG->getText('project_stats_index','tasks').'</TD>';
+            print '<TD class="boxtitle">'.$Language->getText('project_stats_index','tasks').'</TD>';
         if ($sys_activate_tracker)
-            print '<TD class="boxtitle">'.$LANG->getText('project_stats_index','artifacts').'</TD>';
-        print '<TD class="boxtitle">'.$LANG->getText('project_stats_index','patches').'</TD>'
-            . '<TD class="boxtitle">'.$LANG->getText('project_stats_index','cvs').'</TD>'
+            print '<TD class="boxtitle">'.$Language->getText('project_stats_index','artifacts').'</TD>';
+        print '<TD class="boxtitle">'.$Language->getText('project_stats_index','patches').'</TD>'
+            . '<TD class="boxtitle">'.$Language->getText('project_stats_index','cvs').'</TD>'
             . '</TR>' . "\n";
         while ( $row = db_fetch_array($res) ) {
             print	'<TR class="' . util_get_alt_row_color($i++) . '">'
@@ -101,7 +101,7 @@ function stats_project_daily( $group_id, $span = 7 ) {
         print '</TABLE>';
         
     } else {
-        echo $LANG->getText('project_export_artifact_deps_export','proj_not_exist_on_date');
+        echo $Language->getText('project_export_artifact_deps_export','proj_not_exist_on_date');
     }
     
 }
@@ -109,7 +109,7 @@ function stats_project_daily( $group_id, $span = 7 ) {
 
 // stats_project_weekly
 function stats_project_weekly( $group_id, $span = 8 ) {
-    global $sys_activate_tracker,$LANG;
+    global $sys_activate_tracker,$Language;
 
     $grp=project_get_object($group_id);
 
@@ -145,24 +145,24 @@ function stats_project_weekly( $group_id, $span = 8 ) {
     // if there are any weeks, we have valid data.
     if ( ($valid_weeks = db_numrows( $res )) > 1 ) {
 
-        print '<P><B>'.$LANG->getText('project_stats_index','stats_for_past_x_weeks',($valid_weeks - 1));
+        print '<P><B>'.$Language->getText('project_stats_index','stats_for_past_x_weeks',($valid_weeks - 1));
 
         print	'<P><TABLE width="100%" cellpadding=2 cellspacing=1 border=0>'
             . '<TR class="boxtable">'
-            . '<TD class="boxtitle">'.$LANG->getText('project_stats_index','week').'</TD>'
-            . '<TD class="boxtitle">'.$LANG->getText('project_stats_index','rank').'</TD>'
-            . '<TD class="boxtitle">'.$LANG->getText('project_stats_index','page_views').'</TD>'
-            . '<TD class="boxtitle">'.$LANG->getText('project_stats_index','downloads').'</TD>';
+            . '<TD class="boxtitle">'.$Language->getText('project_stats_index','week').'</TD>'
+            . '<TD class="boxtitle">'.$Language->getText('project_stats_index','rank').'</TD>'
+            . '<TD class="boxtitle">'.$Language->getText('project_stats_index','page_views').'</TD>'
+            . '<TD class="boxtitle">'.$Language->getText('project_stats_index','downloads').'</TD>';
         if ($grp->activateOldBug())
-            print '<TD class="boxtitle">'.$LANG->getText('project_stats_index','bugs').'</TD>';
+            print '<TD class="boxtitle">'.$Language->getText('project_stats_index','bugs').'</TD>';
         if ($grp->activateOldSR())
-            print '<TD class="boxtitle">'.$LANG->getText('project_stats_index','support').'</TD>';
+            print '<TD class="boxtitle">'.$Language->getText('project_stats_index','support').'</TD>';
         if ($grp->activateOldTask())
-            print '<TD class="boxtitle">'.$LANG->getText('project_stats_index','tasks').'</TD>';
+            print '<TD class="boxtitle">'.$Language->getText('project_stats_index','tasks').'</TD>';
         if ($sys_activate_tracker)
-            print '<TD class="boxtitle">'.$LANG->getText('project_stats_index','artifacts').'</TD>';
-        print '<TD class="boxtitle">'.$LANG->getText('project_stats_index','patches').'</TD>'
-            . '<TD class="boxtitle">'.$LANG->getText('project_stats_index','cvs').'</TD>'
+            print '<TD class="boxtitle">'.$Language->getText('project_stats_index','artifacts').'</TD>';
+        print '<TD class="boxtitle">'.$Language->getText('project_stats_index','patches').'</TD>'
+            . '<TD class="boxtitle">'.$Language->getText('project_stats_index','cvs').'</TD>'
             . '</TR>' . "\n";
 
         $today = time();
@@ -195,7 +195,7 @@ function stats_project_weekly( $group_id, $span = 8 ) {
         print '</TABLE>';
 
     } else {
-        echo $LANG->getText('project_stats_index','proj_not_exist_on_date');
+        echo $Language->getText('project_stats_index','proj_not_exist_on_date');
     }
 
 }
@@ -203,7 +203,7 @@ function stats_project_weekly( $group_id, $span = 8 ) {
 
 // stats_project_monthly
 function stats_project_monthly( $group_id, $span = 4 ) {
-    global $sys_activate_tracker,$LANG;
+    global $sys_activate_tracker,$Language;
 
     $grp=project_get_object($group_id);
 
@@ -240,24 +240,24 @@ function stats_project_monthly( $group_id, $span = 4 ) {
     // if there are any weeks, we have valid data.
     if ( ($valid_months = db_numrows( $res )) > 1 ) {
 
-        print '<P><B>'.$LANG->getText('project_stats_index','stats_for_past_x_months',$valid_months).'</B></P>';
+        print '<P><B>'.$Language->getText('project_stats_index','stats_for_past_x_months',$valid_months).'</B></P>';
 
         print	'<P><TABLE width="100%" cellpadding=0 cellspacing=0 border=0>'
             . '<TR class="boxtable">'
-            . '<TD class="boxtitle">'.$LANG->getText('project_stats_index','month').'</TD>'
-            . '<TD class="boxtitle">'.$LANG->getText('project_stats_index','rank').'</TD>'
-            . '<TD class="boxtitle">'.$LANG->getText('project_stats_index','page_views').'</TD>'
-            . '<TD class="boxtitle">'.$LANG->getText('project_stats_index','downloads').'</TD>';
+            . '<TD class="boxtitle">'.$Language->getText('project_stats_index','month').'</TD>'
+            . '<TD class="boxtitle">'.$Language->getText('project_stats_index','rank').'</TD>'
+            . '<TD class="boxtitle">'.$Language->getText('project_stats_index','page_views').'</TD>'
+            . '<TD class="boxtitle">'.$Language->getText('project_stats_index','downloads').'</TD>';
         if ($grp->activateOldBug())
-            print '<TD class="boxtitle">'.$LANG->getText('project_stats_index','bugs').'</TD>';
+            print '<TD class="boxtitle">'.$Language->getText('project_stats_index','bugs').'</TD>';
         if ($grp->activateOldSR())
-            print '<TD class="boxtitle">'.$LANG->getText('project_stats_index','support').'</TD>';
+            print '<TD class="boxtitle">'.$Language->getText('project_stats_index','support').'</TD>';
         if ($grp->activateOldTask())
-            print '<TD class="boxtitle">'.$LANG->getText('project_stats_index','tasks').'</TD>';
+            print '<TD class="boxtitle">'.$Language->getText('project_stats_index','tasks').'</TD>';
         if ($sys_activate_tracker)
-            print '<TD class="boxtitle">'.$LANG->getText('project_stats_index','artifacts').'</TD>';
-        print '<TD class="boxtitle">'.$LANG->getText('project_stats_index','patches').'</TD>'
-            . '<TD class="boxtitle">'.$LANG->getText('project_stats_index','cvs').'</TD>'
+            print '<TD class="boxtitle">'.$Language->getText('project_stats_index','artifacts').'</TD>';
+        print '<TD class="boxtitle">'.$Language->getText('project_stats_index','patches').'</TD>'
+            . '<TD class="boxtitle">'.$Language->getText('project_stats_index','cvs').'</TD>'
             . '</TR>' . "\n";
 
         while ( $row = db_fetch_array($res) ) {
@@ -282,14 +282,14 @@ function stats_project_monthly( $group_id, $span = 4 ) {
         print '</TABLE>';
 
     } else {
-        echo $LANG->getText('project_stats_index','proj_not_exist_on_date');
+        echo $Language->getText('project_stats_index','proj_not_exist_on_date');
     }
 }
 
 
 // stats_site_alltime
 function stats_site_agregate( $group_id ) {
-    global $sys_activate_tracker,$LANG;
+    global $sys_activate_tracker,$Language;
 
     $grp=project_get_object($group_id);
 
@@ -312,29 +312,29 @@ function stats_site_agregate( $group_id ) {
     $res = db_query( $sql );
     $row = db_fetch_array($res);
 
-    print '<P><B>'.$LANG->getText('project_stats_index','stats_for_all_time').'</B></P>';
+    print '<P><B>'.$Language->getText('project_stats_index','stats_for_all_time').'</B></P>';
     
     print '<P><TABLE width="100%" cellpadding=2 cellspacing=1 border=0>'
         . '<TR class="boxtable">'
-        . '<TD class="boxtitle">'.$LANG->getText('project_stats_index','lifespan').'</TD>'
-        . '<TD class="boxtitle">'.$LANG->getText('project_stats_index','rank').'</TD>'
-        . '<TD class="boxtitle">'.$LANG->getText('project_stats_index','page_views').'</TD>'
-        . '<TD class="boxtitle">'.$LANG->getText('project_stats_index','downloads').'</TD>'
-        . '<TD class="boxtitle">'.$LANG->getText('project_stats_index','developers').'</TD>';
+        . '<TD class="boxtitle">'.$Language->getText('project_stats_index','lifespan').'</TD>'
+        . '<TD class="boxtitle">'.$Language->getText('project_stats_index','rank').'</TD>'
+        . '<TD class="boxtitle">'.$Language->getText('project_stats_index','page_views').'</TD>'
+        . '<TD class="boxtitle">'.$Language->getText('project_stats_index','downloads').'</TD>'
+        . '<TD class="boxtitle">'.$Language->getText('project_stats_index','developers').'</TD>';
     if ($grp->activateOldBug())
-        print '<TD class="boxtitle">'.$LANG->getText('project_stats_index','bugs').'</TD>';
+        print '<TD class="boxtitle">'.$Language->getText('project_stats_index','bugs').'</TD>';
     if ($grp->activateOldSR())
-        print '<TD class="boxtitle">'.$LANG->getText('project_stats_index','support').'</TD>';
+        print '<TD class="boxtitle">'.$Language->getText('project_stats_index','support').'</TD>';
     if ($grp->activateOldTask())
-        print '<TD class="boxtitle">'.$LANG->getText('project_stats_index','tasks').'</TD>';
+        print '<TD class="boxtitle">'.$Language->getText('project_stats_index','tasks').'</TD>';
     if ($sys_activate_tracker)
-        print '<TD class="boxtitle">'.$LANG->getText('project_stats_index','artifacts').'</TD>';
-    print '<TD class="boxtitle">'.$LANG->getText('project_stats_index','patches').'</TD>'
-        . '<TD class="boxtitle">'.$LANG->getText('project_stats_index','cvs').'</TD>'
+        print '<TD class="boxtitle">'.$Language->getText('project_stats_index','artifacts').'</TD>';
+    print '<TD class="boxtitle">'.$Language->getText('project_stats_index','patches').'</TD>'
+        . '<TD class="boxtitle">'.$Language->getText('project_stats_index','cvs').'</TD>'
         . '</TR>' . "\n";
 
     print	'<TR class="' . util_get_alt_row_color(0) . '">'
-        . '<TD align="center">' . $row["COUNT(day)"] . ' '.$LANG->getText('project_stats_index','ddays').' </TD>'
+        . '<TD align="center">' . $row["COUNT(day)"] . ' '.$Language->getText('project_stats_index','ddays').' </TD>'
         . '<TD align="center">' . sprintf("%d", $row["AVG(group_ranking)"]) . " ( " . sprintf("%0.2f", $row["AVG(group_metric)"]) . ' ) </TD>'
         . '<TD align="center">' . number_format( $row["SUM(site_views + subdomain_views)"] ) . '</TD>'
         . '<TD align="center">' . number_format( $row["SUM(downloads)"] ) . '</TD>'

@@ -12,7 +12,7 @@
 //  Written for CodeX by Stephane Bouhet
 //
 
-$LANG->loadLanguageMsg('tracker/tracker');
+$Language->loadLanguageMsg('tracker/tracker');
 
 class ArtifactHtml extends Artifact {
 
@@ -38,7 +38,7 @@ class ArtifactHtml extends Artifact {
          * @return void
          */
         function display($ro,$pv) {
-            global $art_field_fact,$sys_datefmt,$sys_max_size_attachment,$LANG;
+            global $art_field_fact,$sys_datefmt,$sys_max_size_attachment,$Language;
             
             $fields_per_line=2;
             $max_size=40;
@@ -54,7 +54,7 @@ class ArtifactHtml extends Artifact {
             echo "<H2>[ ".$this->ArtifactType->getItemName()." #".$this->getID()." ] ".$summary."</H2>";
             echo "</TD>";
             if ( !$pv ) 
-                echo "<TD align='right'><A HREF='?func=detail&aid=".$this->getID()."&group_id=".$group_id."&atid=".$group_artifact_id."&pv=true' target='_blank'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$LANG->getText('tracker_index','printer_version')."</A></TD>";
+                echo "<TD align='right'><A HREF='?func=detail&aid=".$this->getID()."&group_id=".$group_id."&atid=".$group_artifact_id."&pv=true' target='_blank'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('tracker_index','printer_version')."</A></TD>";
             echo "</TR></TABLE>";
         
                 echo '
@@ -72,12 +72,12 @@ class ArtifactHtml extends Artifact {
             
                 echo '
             <TABLE cellpadding="0">
-              <TR><TD><B>'.$LANG->getText('tracker_include_artifact','submitted_by').'</B>&nbsp;</td><td>'.util_user_link(user_getname($this->getValue('submitted_by'))).'</a></TD>
-                  <TD><B>'.$LANG->getText('tracker_include_artifact','project').'</B>&nbsp;</td><td>'.group_getname($group_id).'</TD>
+              <TR><TD><B>'.$Language->getText('tracker_include_artifact','submitted_by').'</B>&nbsp;</td><td>'.util_user_link(user_getname($this->getValue('submitted_by'))).'</a></TD>
+                  <TD><B>'.$Language->getText('tracker_include_artifact','project').'</B>&nbsp;</td><td>'.group_getname($group_id).'</TD>
               </TR>
-              <TR><TD><B>'.$LANG->getText('tracker_include_artifact','submitted_on').'</B>&nbsp;</td><td>'.format_date($sys_datefmt,$this->getValue('open_date')).'</TD>';
+              <TR><TD><B>'.$Language->getText('tracker_include_artifact','submitted_on').'</B>&nbsp;</td><td>'.format_date($sys_datefmt,$this->getValue('open_date')).'</TD>';
             
-            if (!$pv) echo '<TD colspan="2"><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$LANG->getText('tracker_include_artifact','submit').'"></TD>';
+            if (!$pv) echo '<TD colspan="2"><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('tracker_include_artifact','submit').'"></TD>';
             
             echo '
             </TR>
@@ -148,19 +148,19 @@ class ArtifactHtml extends Artifact {
                 if ( !$ro ) {
                         echo '
                         <TR><TD>
-                        <h3>'.$LANG->getText('tracker_import','follow_ups').' '.help_button('ArtifactUpdate.html#ArtifactComments').'</h3></td>
+                        <h3>'.$Language->getText('tracker_import','follow_ups').' '.help_button('ArtifactUpdate.html#ArtifactComments').'</h3></td>
                         <TD>
-                        <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$LANG->getText('tracker_include_artifact','submit').'">
+                        <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('tracker_include_artifact','submit').'">
                         </td></tr>';
 
                         echo '
                         <tr><TD colspan="2" align="top">
-                        <B>'.$LANG->getText('tracker_include_artifact','use_canned').'</B>&nbsp;';
+                        <B>'.$Language->getText('tracker_include_artifact','use_canned').'</B>&nbsp;';
                         
                         echo $this->ArtifactType->cannedResponseBox ();
                         
                         echo '
-                        &nbsp;&nbsp;&nbsp;<A HREF="/tracker/admin/?func=canned&atid='.$group_artifact_id.'&group_id='.$group_id.'&create_canned=1">'.$LANG->getText('tracker_include_artifact','define_canned').'</A>
+                        &nbsp;&nbsp;&nbsp;<A HREF="/tracker/admin/?func=canned&atid='.$group_artifact_id.'&group_id='.$group_id.'&create_canned=1">'.$Language->getText('tracker_include_artifact','define_canned').'</A>
                         </TD></TR>';
                         
                         echo '
@@ -169,20 +169,20 @@ class ArtifactHtml extends Artifact {
                         $field = $art_field_fact->getFieldFromName('comment_type_id');
                         if ( $field && $field->isUsed()) {
                                 $field_html = new ArtifactFieldHtml( $field );
-                                echo '<P><B>'.$LANG->getText('tracker_include_artifact','comment_type').'</B>'.
-                                     $field_html->fieldBox('',$group_artifact_id,$field->getDefaultValue(),true,$LANG->getText('global','none')).'<BR>';
+                                echo '<P><B>'.$Language->getText('tracker_include_artifact','comment_type').'</B>'.
+                                     $field_html->fieldBox('',$group_artifact_id,$field->getDefaultValue(),true,$Language->getText('global','none')).'<BR>';
                         }
                         echo '<TEXTAREA NAME="details" ROWS="7" COLS="60" WRAP="SOFT"></TEXTAREA><p>';
                 } else {
                         if (!$pv) {
-                                echo '<br><TR><TD COLSPAN="2"><B>'.$LANG->getText('tracker_include_artifact','add_comment').'</B><BR>
+                                echo '<br><TR><TD COLSPAN="2"><B>'.$Language->getText('tracker_include_artifact','add_comment').'</B><BR>
                             <TEXTAREA NAME="details" ROWS="7" COLS="60" WRAP="SOFT"></TEXTAREA><p>';
                         }
                 }
                                 
                 if (!user_isloggedin()&&!$pv) {
                         echo '<B><span class="highlight"><H2>'.
-			  $LANG->getText('tracker_include_artifact','not_logged_in','/account/login.php?return_to='.urlencode($REQUEST_URI));
+			  $Language->getText('tracker_include_artifact','not_logged_in','/account/login.php?return_to='.urlencode($REQUEST_URI));
                 echo '<br><input type="text" name="email" maxsize="100" size="50"/><p>';
                 }
         
@@ -196,11 +196,11 @@ class ArtifactHtml extends Artifact {
                 <TR><TD colspan="2"><hr></td></tr>
                 
                 <TR><TD colspan="2">
-                <h3>'.$LANG->getText('tracker_import','cc_list').' '.help_button('ArtifactUpdate.html#ArtifactCCList').'</h3>';
+                <h3>'.$Language->getText('tracker_import','cc_list').' '.help_button('ArtifactUpdate.html#ArtifactCCList').'</h3>';
                 
                 if ( !$ro ) {
-		  echo $LANG->getText('tracker_include_artifact','codex_user');
-		  echo $LANG->getText('tracker_include_artifact','fill_cc_list');
+		  echo $Language->getText('tracker_include_artifact','codex_user');
+		  echo $Language->getText('tracker_include_artifact','fill_cc_list');
                 }
                         
                 echo $this->showCCList($group_id,$group_artifact_id);
@@ -213,10 +213,10 @@ class ArtifactHtml extends Artifact {
                 echo '
                 <TR><TD colspan="2"><hr></td></tr>
                 <TR><TD colspan="2">
-                <h3>'.$LANG->getText('tracker_include_artifact','attachment').' '.help_button('ArtifactUpdate.html#ArtifactAttachments').'</h3>';
+                <h3>'.$Language->getText('tracker_include_artifact','attachment').' '.help_button('ArtifactUpdate.html#ArtifactAttachments').'</h3>';
                 
 
-                echo $LANG->getText('tracker_include_artifact','upload',formatByteToMb($sys_max_size_attachment));
+                echo $Language->getText('tracker_include_artifact','upload',formatByteToMb($sys_max_size_attachment));
                                 
                 echo $this->showAttachedFiles($group_id,$group_artifact_id);
                 
@@ -229,19 +229,19 @@ class ArtifactHtml extends Artifact {
                 <TR><TD colspan="2"><hr></td></tr>
                 <TR ><TD colspan="2">';
                 
-                echo '<h3>'.$LANG->getText('tracker_include_artifact','dependencies').' '.help_button('ArtifactUpdate.html#ArtifactDependencies').'</h3>
-                <B>'.$LANG->getText('tracker_include_artifact','depend_on').'</B><BR>
+                echo '<h3>'.$Language->getText('tracker_include_artifact','dependencies').' '.help_button('ArtifactUpdate.html#ArtifactDependencies').'</h3>
+                <B>'.$Language->getText('tracker_include_artifact','depend_on').'</B><BR>
                 <P>';
                 if ( !$ro ) {
                         echo '
-                        <B>'.$LANG->getText('tracker_include_artifact','aids').'</B>&nbsp;
+                        <B>'.$Language->getText('tracker_include_artifact','aids').'</B>&nbsp;
                         <input type="text" name="artifact_id_dependent" size="20" maxlength="255">
-                        &nbsp;<i>'.$LANG->getText('tracker_include_artifact','fill').'</i><p>';
+                        &nbsp;<i>'.$Language->getText('tracker_include_artifact','fill').'</i><p>';
                 }
                 echo $this->showDependencies($group_id,$group_artifact_id);
                 
                 echo '
-                <P><B>'.$LANG->getText('tracker_include_artifact','dependent_on').'</B><BR>
+                <P><B>'.$Language->getText('tracker_include_artifact','dependent_on').'</B><BR>
                 <P>';
                 echo $this->showInverseDependencies($group_id,$group_artifact_id);
                 
@@ -254,7 +254,7 @@ class ArtifactHtml extends Artifact {
         echo '
                 <TR><TD colspan="2" >';
                 
-                echo '<H3>'.$LANG->getText('tracker_include_artifact','change_history').' '.help_button('ArtifactUpdate.html#ArtifactHistory').'</H3>';
+                echo '<H3>'.$Language->getText('tracker_include_artifact','change_history').' '.help_button('ArtifactUpdate.html#ArtifactHistory').'</H3>';
                 echo $this->showHistory($group_id,$group_artifact_id);
                 
                 // 
@@ -263,7 +263,7 @@ class ArtifactHtml extends Artifact {
                 if ( !$pv ) {
                         echo '</TD></TR>                
                         <TR><TD colspan="2" ALIGN="center">
-                                <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$LANG->getText('tracker_include_artifact','submit').'">
+                                <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('tracker_include_artifact','submit').'">
                                 </FORM>
                         </TD></TR>';
                 }
@@ -284,18 +284,18 @@ class ArtifactHtml extends Artifact {
             //
                 //      show the artifact_history rows that are relevant to this artifact_id, excluding details
                 //
-            global $sys_datefmt,$art_field_fact,$sys_lf,$LANG;
+            global $sys_datefmt,$art_field_fact,$sys_lf,$Language;
             $result=$this->getHistory();
             $rows=db_numrows($result);
         
             if ($rows > 0) {
         
                         $title_arr=array();
-                        $title_arr[]=$LANG->getText('tracker_include_artifact','field');
-                        $title_arr[]=$LANG->getText('tracker_include_artifact','old_val');
-                        $title_arr[]=$LANG->getText('tracker_include_artifact','new_val');
-                        $title_arr[]=$LANG->getText('tracker_import_utils','date');
-                        $title_arr[]=$LANG->getText('global','by');
+                        $title_arr[]=$Language->getText('tracker_include_artifact','field');
+                        $title_arr[]=$Language->getText('tracker_include_artifact','old_val');
+                        $title_arr[]=$Language->getText('tracker_include_artifact','new_val');
+                        $title_arr[]=$Language->getText('tracker_import_utils','date');
+                        $title_arr[]=$Language->getText('global','by');
                 
                         echo html_build_list_table_top ($title_arr);
                 
@@ -345,7 +345,7 @@ class ArtifactHtml extends Artifact {
                 echo '</TABLE>';
             
             } else {
-                echo "\n".$LANG->getText('tracker_include_artifact','no_changes',$this->ArtifactType->getItemName()).'</H4>';
+                echo "\n".$Language->getText('tracker_include_artifact','no_changes',$this->ArtifactType->getItemName()).'</H4>';
             }
         }
 
@@ -361,7 +361,7 @@ class ArtifactHtml extends Artifact {
          */
         function showAttachedFiles ($group_id,$group_artifact_id,$ascii=false) {
         
-            global $sys_datefmt,$sys_lf,$LANG;
+            global $sys_datefmt,$sys_lf,$Language;
         
             //
             //  show the files attached to this artifact
@@ -373,24 +373,24 @@ class ArtifactHtml extends Artifact {
             // No file attached -> return now
             if ($rows <= 0) {
                         if ($ascii)
-                            $out = $LANG->getText('tracker_include_artifact','no_file_attached')."$sys_lf";
+                            $out = $Language->getText('tracker_include_artifact','no_file_attached')."$sys_lf";
                         else
-                            $out = '<H4>'.$LANG->getText('tracker_include_artifact','no_file_attached').'</H4>';
+                            $out = '<H4>'.$Language->getText('tracker_include_artifact','no_file_attached').'</H4>';
                         return $out;
                 }
                 
             // Header first
             if ($ascii) {
-                        $out .= $LANG->getText('tracker_include_artifact','file_attachment')."$sys_lf****************";
+                        $out .= $Language->getText('tracker_include_artifact','file_attachment')."$sys_lf****************";
             } else {    
                 
                 $title_arr=array();
-                $title_arr[]=$LANG->getText('tracker_include_artifact','name');
-                $title_arr[]=$LANG->getText('tracker_include_artifact','desc');
-                $title_arr[]=$LANG->getText('tracker_include_artifact','size_kb');
-                $title_arr[]=$LANG->getText('global','by');
-                $title_arr[]=$LANG->getText('global','on');
-		$title_arr[]=$LANG->getText('tracker_include_canned','delete');
+                $title_arr[]=$Language->getText('tracker_include_artifact','name');
+                $title_arr[]=$Language->getText('tracker_include_artifact','desc');
+                $title_arr[]=$Language->getText('tracker_include_artifact','size_kb');
+                $title_arr[]=$Language->getText('global','by');
+                $title_arr[]=$Language->getText('global','on');
+		$title_arr[]=$Language->getText('tracker_include_canned','delete');
         
                 $out .= html_build_list_table_top ($title_arr);
             }
@@ -398,7 +398,7 @@ class ArtifactHtml extends Artifact {
             // Determine what the print out format is based on output type (Ascii, HTML)
             if ($ascii) {
                         $fmt = "$sys_lf$sys_lf------------------------------------------------------------------$sys_lf".
-                            $LANG->getText('tracker_import_utils','date').": %s  ".$LANG->getText('tracker_include_artifact','name').": %s  ".$LANG->getText('tracker_include_artifact','size').": %dKB   ".$LANG->getText('global','by').": %s$sys_lf%s$sys_lf%s";
+                            $Language->getText('tracker_import_utils','date').": %s  ".$Language->getText('tracker_include_artifact','name').": %s  ".$Language->getText('tracker_include_artifact','size').": %dKB   ".$Language->getText('global','by').": %s$sys_lf%s$sys_lf%s";
             } else {
                         $fmt = "$sys_lf".'<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td><td align="center">%s</td><td align="center">%s</td>'.
                     '<td align="center">%s</td></tr>';
@@ -428,8 +428,8 @@ class ArtifactHtml extends Artifact {
                             if ( $this->ArtifactType->userIsTech() ||
                                 (user_getname(user_getid()) == db_result($result, $i, 'user_name') )) {
                                         $html_delete = "<a href=\"$PHP_SELF?func=delete_file&group_id=".$group_id."&atid=".$group_artifact_id."&aid=".$this->getID()."&id=".db_result($result, $i, 'id')."\" ".
-                                            " onClick=\"return confirm('".$LANG->getText('tracker_include_artifact','delete_attachment')."')\">".
-                                            '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="'.$LANG->getText('global','btn_delete').'"></A>';
+                                            " onClick=\"return confirm('".$Language->getText('tracker_include_artifact','delete_attachment')."')\">".
+                                            '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="'.$Language->getText('global','btn_delete').'"></A>';
                             } else {
                                         $html_delete = '-';
                             }
@@ -462,7 +462,7 @@ class ArtifactHtml extends Artifact {
          */
         function showCCList ($group_id, $group_artifact_id, $ascii=false) {
         
-            global $sys_datefmt,$sys_lf,$LANG;
+            global $sys_datefmt,$sys_lf,$Language;
         
             //
             //      format the CC list for this artifact
@@ -474,27 +474,27 @@ class ArtifactHtml extends Artifact {
             // Nobody in the CC list -> return now
             if ($rows <= 0) {
                         if ($ascii)
-                            $out = $LANG->getText('tracker_include_artifact','cc_empty')."$sys_lf";
+                            $out = $Language->getText('tracker_include_artifact','cc_empty')."$sys_lf";
                         else
-                            $out = '<H4>'.$LANG->getText('tracker_include_artifact','cc_empty').'</H4>';
+                            $out = '<H4>'.$Language->getText('tracker_include_artifact','cc_empty').'</H4>';
                         return $out;
             }
         
             // Header first an determine what the print out format is
             // based on output type (Ascii, HTML)
             if ($ascii) {
-                        $out .= $LANG->getText('tracker_import','cc_list')."$sys_lf*******$sys_lf$sys_lf";
+                        $out .= $Language->getText('tracker_import','cc_list')."$sys_lf*******$sys_lf$sys_lf";
                         $fmt = "%-35s | %s$sys_lf";
-                        $out .= sprintf($fmt, $LANG->getText('tracker_include_artifact','cc_address'), $LANG->getText('tracker_include_artifact','comment'));
+                        $out .= sprintf($fmt, $Language->getText('tracker_include_artifact','cc_address'), $Language->getText('tracker_include_artifact','comment'));
                         $out .= "------------------------------------------------------------------$sys_lf";
             } else {    
         
                         $title_arr=array();
-                        $title_arr[]=$LANG->getText('tracker_include_artifact','cc_address');
-                        $title_arr[]=$LANG->getText('tracker_include_artifact','comment');
-                        $title_arr[]=$LANG->getText('tracker_include_artifact','added_by');
-                        $title_arr[]=$LANG->getText('global','on');
-                        $title_arr[]=$LANG->getText('tracker_include_canned','delete');
+                        $title_arr[]=$Language->getText('tracker_include_artifact','cc_address');
+                        $title_arr[]=$Language->getText('tracker_include_artifact','comment');
+                        $title_arr[]=$Language->getText('tracker_include_artifact','added_by');
+                        $title_arr[]=$Language->getText('global','on');
+                        $title_arr[]=$Language->getText('tracker_include_canned','delete');
                         $out .= html_build_list_table_top ($title_arr);
                 
                         $fmt = "\n".'<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td>'.
@@ -528,8 +528,8 @@ class ArtifactHtml extends Artifact {
                                 (user_getemail(user_getid()) == $email) ||
                                 (user_getname(user_getid()) == db_result($result, $i, 'user_name') )) {
                                         $html_delete = "<a href=\"$PHP_SELF?func=delete_cc&group_id=$group_id&aid=".$this->getID()."&atid=".$group_artifact_id."&artifact_cc_id=$artifact_cc_id\" ".
-                                        " onClick=\"return confirm('".$LANG->getText('tracker_include_artifact','delete_cc')."')\">".
-                                        '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="'.$LANG->getText('global','btn_delete').'"></A>';
+                                        " onClick=\"return confirm('".$Language->getText('tracker_include_artifact','delete_cc')."')\">".
+                                        '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="'.$Language->getText('global','btn_delete').'"></A>';
                             } else {
                                         $html_delete = '-';
                             }
@@ -563,7 +563,7 @@ class ArtifactHtml extends Artifact {
          */
         function showDependencies ($group_id, $group_artifact_id, $ascii=false) {
         
-            global $sys_datefmt,$sys_lf,$LANG;
+            global $sys_datefmt,$sys_lf,$Language;
         
             //
             //      format the dependencies list for this artifact
@@ -575,27 +575,27 @@ class ArtifactHtml extends Artifact {
             // Nobody in the dependencies list -> return now
             if ($rows <= 0) {
                         if ($ascii)
-                            $out = $LANG->getText('tracker_include_artifact','dep_list_empty')."$sys_lf";
+                            $out = $Language->getText('tracker_include_artifact','dep_list_empty')."$sys_lf";
                         else
-                            $out = '<H4>'.$LANG->getText('tracker_include_artifact','dep_list_empty').'</H4>';
+                            $out = '<H4>'.$Language->getText('tracker_include_artifact','dep_list_empty').'</H4>';
                         return $out;
             }
         
             // Header first an determine what the print out format is
             // based on output type (Ascii, HTML)
             if ($ascii) {
-                        $out .= $LANG->getText('tracker_include_artifact','dep_list')."$sys_lf*****************$sys_lf$sys_lf";
+                        $out .= $Language->getText('tracker_include_artifact','dep_list')."$sys_lf*****************$sys_lf$sys_lf";
                         $fmt = "%-15s | %s$sys_lf";
-                        $out .= sprintf($fmt, $LANG->getText('tracker_include_artifact','artifact'), $LANG->getText('tracker_include_artifact','summary'));
+                        $out .= sprintf($fmt, $Language->getText('tracker_include_artifact','artifact'), $Language->getText('tracker_include_artifact','summary'));
                         $out .= "------------------------------------------------------------------$sys_lf";
             } else {    
         
                         $title_arr=array();
-                        $title_arr[]=$LANG->getText('tracker_include_artifact','artifact');
-                        $title_arr[]=$LANG->getText('tracker_include_artifact','summary');
-                        $title_arr[]=$LANG->getText('tracker_import_admin','tracker');
-                        $title_arr[]=$LANG->getText('tracker_include_artifact','group');
-                        $title_arr[]=$LANG->getText('tracker_include_canned','delete');
+                        $title_arr[]=$Language->getText('tracker_include_artifact','artifact');
+                        $title_arr[]=$Language->getText('tracker_include_artifact','summary');
+                        $title_arr[]=$Language->getText('tracker_import_admin','tracker');
+                        $title_arr[]=$Language->getText('tracker_include_artifact','group');
+                        $title_arr[]=$Language->getText('tracker_include_canned','delete');
                         $out .= html_build_list_table_top ($title_arr);
                 
                         $fmt = "\n".'<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td>'.
@@ -616,8 +616,8 @@ class ArtifactHtml extends Artifact {
                 
                             if ( $this->ArtifactType->userIsTech() ) {
                                         $html_delete = "<a href=\"$PHP_SELF?func=delete_dependent&group_id=$group_id&aid=".$this->getID()."&atid=".$group_artifact_id."&dependent_on_artifact_id=$dependent_on_artifact_id\" ".
-                                        " onClick=\"return confirm('".$LANG->getText('tracker_include_artifact','del_dep')."')\">".
-                                        '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="'.$LANG->getText('global','btn_delete').'"></A>';
+                                        " onClick=\"return confirm('".$Language->getText('tracker_include_artifact','del_dep')."')\">".
+                                        '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="'.$Language->getText('global','btn_delete').'"></A>';
                             } else {
                                         $html_delete = '-';
                             }
@@ -651,7 +651,7 @@ class ArtifactHtml extends Artifact {
          */
         function showInverseDependencies ($group_id, $group_artifact_id, $ascii=false) {
         
-            global $sys_datefmt,$sys_lf,$LANG;
+            global $sys_datefmt,$sys_lf,$Language;
         
             //
             //      format the dependencies list for this artifact
@@ -663,26 +663,26 @@ class ArtifactHtml extends Artifact {
             // Nobody in the dependencies list -> return now
             if ($rows <= 0) {
                         if ($ascii)
-                            $out = $LANG->getText('tracker_include_artifact','no_depend')."$sys_lf";
+                            $out = $Language->getText('tracker_include_artifact','no_depend')."$sys_lf";
                         else
-                            $out = '<H4>'.$LANG->getText('tracker_include_artifact','no_depend').'</H4>';
+                            $out = '<H4>'.$Language->getText('tracker_include_artifact','no_depend').'</H4>';
                         return $out;
             }
         
             // Header first an determine what the print out format is
             // based on output type (Ascii, HTML)
             if ($ascii) {
-                        $out .= $LANG->getText('tracker_include_artifact','dep_list')."$sys_lf*****************$sys_lf$sys_lf";
+                        $out .= $Language->getText('tracker_include_artifact','dep_list')."$sys_lf*****************$sys_lf$sys_lf";
                         $fmt = "%-15s | %s$sys_lf";
-                        $out .= sprintf($fmt, $LANG->getText('tracker_include_artifact','artifact'), $LANG->getText('tracker_include_artifact','summary'));
+                        $out .= sprintf($fmt, $Language->getText('tracker_include_artifact','artifact'), $Language->getText('tracker_include_artifact','summary'));
                         $out .= "------------------------------------------------------------------$sys_lf";
             } else {    
         
                         $title_arr=array();
-                        $title_arr[]=$LANG->getText('tracker_include_artifact','artifact');
-                        $title_arr[]=$LANG->getText('tracker_include_artifact','summary');
-                        $title_arr[]=$LANG->getText('tracker_import_admin','tracker');
-                        $title_arr[]=$LANG->getText('tracker_include_artifact','group');
+                        $title_arr[]=$Language->getText('tracker_include_artifact','artifact');
+                        $title_arr[]=$Language->getText('tracker_include_artifact','summary');
+                        $title_arr[]=$Language->getText('tracker_import_admin','tracker');
+                        $title_arr[]=$Language->getText('tracker_include_artifact','group');
                         $out .= html_build_list_table_top ($title_arr);
                 
                         $fmt = "\n".'<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td>'.
@@ -731,7 +731,7 @@ class ArtifactHtml extends Artifact {
             //
             //  Format the details rows from artifact_history
             //  
-            global $sys_datefmt,$sys_lf,$LANG;
+            global $sys_datefmt,$sys_lf,$Language;
             
                 $group = $this->ArtifactType->getGroup();
                 $group_artifact_id = $this->ArtifactType->getID();
@@ -743,21 +743,21 @@ class ArtifactHtml extends Artifact {
             // No followup comment -> return now
             if ($rows <= 0) {
                         if ($ascii)
-                            $out = "$sys_lf$sys_lf ".$LANG->getText('tracker_import_utils','no_followups')."$sys_lf";
+                            $out = "$sys_lf$sys_lf ".$Language->getText('tracker_import_utils','no_followups')."$sys_lf";
                         else
-                            $out = '<H4>'.$LANG->getText('tracker_import_utils','no_followups').'</H4>';
+                            $out = '<H4>'.$Language->getText('tracker_import_utils','no_followups').'</H4>';
                         return $out;
             }
         
         
             // Header first
             if ($ascii) {
-                        $out .= $LANG->getText('tracker_import','follow_ups')."$sys_lf*******************";
+                        $out .= $Language->getText('tracker_import','follow_ups')."$sys_lf*******************";
             } else {
                         $title_arr=array();
-                        $title_arr[]=$LANG->getText('tracker_include_artifact','comment');
-                        $title_arr[]=$LANG->getText('tracker_import_utils','date');
-                        $title_arr[]=$LANG->getText('global','by');
+                        $title_arr[]=$Language->getText('tracker_include_artifact','comment');
+                        $title_arr[]=$Language->getText('tracker_import_utils','date');
+                        $title_arr[]=$Language->getText('global','by');
                         
                         $out .= html_build_list_table_top ($title_arr);
             }
@@ -766,13 +766,13 @@ class ArtifactHtml extends Artifact {
             for ($i=0; $i < $rows; $i++) {
                 
                         $comment_type = db_result($result, $i, 'comment_type');
-                        if ( ($comment_type == $LANG->getText('global','none'))||($comment_type == "") )
+                        if ( ($comment_type == $Language->getText('global','none'))||($comment_type == "") )
                             $comment_type = '';
                         else
                             $comment_type = '['.$comment_type.']';
                         if ($ascii) {
                             $fmt = "$sys_lf$sys_lf------------------------------------------------------------------$sys_lf".
-                                $LANG->getText('tracker_import_utils','date').": %-30s".$LANG->getText('global','by').": %s$sys_lf".
+                                $Language->getText('tracker_import_utils','date').": %-30s".$Language->getText('global','by').": %s$sys_lf".
                                 ($comment_type != ""? "%s$sys_lf%s" : '%s');
                         } else {
                             $fmt = "\n".'<tr class="%s"><td>'.($comment_type != ""? "<b>%s</b><BR>" : "").'%s</td>'.
@@ -822,7 +822,7 @@ class ArtifactHtml extends Artifact {
         }
         
         function displayAdd() {
-                global $art_field_fact,$sys_datefmt,$sys_max_size_attachment,$LANG;
+                global $art_field_fact,$sys_datefmt,$sys_max_size_attachment,$Language;
         
                 $fields_per_line=2;
                 $max_size = 40;
@@ -906,10 +906,10 @@ class ArtifactHtml extends Artifact {
                 <TR><TD colspan="'.(2*$fields_per_line).'"><hr></td></tr>
                 
                 <TR><TD colspan="'.(2*$fields_per_line).'">
-                <h3>'.$LANG->getText('tracker_import','cc_list').' '.help_button('ArtifactUpdate.html#ArtifactCCList').'</h3>
-                '.$LANG->getText('tracker_include_artifact','codex_user').'<p>
-                <B>'.$LANG->getText('tracker_include_artifact','add_cc').'&nbsp;</b><input type="text" name="add_cc" size="30">&nbsp;&nbsp;&nbsp;
-                <B>'.$LANG->getText('tracker_include_artifact','comment').':&nbsp;</b><input type="text" name="cc_comment" size="40" maxlength="255"><p>';
+                <h3>'.$Language->getText('tracker_import','cc_list').' '.help_button('ArtifactUpdate.html#ArtifactCCList').'</h3>
+                '.$Language->getText('tracker_include_artifact','codex_user').'<p>
+                <B>'.$Language->getText('tracker_include_artifact','add_cc').'&nbsp;</b><input type="text" name="add_cc" size="30">&nbsp;&nbsp;&nbsp;
+                <B>'.$Language->getText('tracker_include_artifact','comment').':&nbsp;</b><input type="text" name="cc_comment" size="40" maxlength="255"><p>';
                 
                 echo '</TD></TR>';
                         
@@ -919,8 +919,8 @@ class ArtifactHtml extends Artifact {
                 echo '
                 <TR><TD colspan="'.(2*$fields_per_line).'"><hr></td></tr>
                 <TR><TD colspan="'.(2*$fields_per_line).'">
-                <h3>'.$LANG->getText('tracker_include_artifact','attachment').' '.help_button('ArtifactUpdate.html#ArtifactAttachments').'</h3>'.
-		  $LANG->getText('tracker_include_artifact','upload',formatByteToMb($sys_max_size_attachment));
+                <h3>'.$Language->getText('tracker_include_artifact','attachment').' '.help_button('ArtifactUpdate.html#ArtifactAttachments').'</h3>'.
+		  $Language->getText('tracker_include_artifact','upload',formatByteToMb($sys_max_size_attachment));
                 
                 echo '</TD></TR>';
 
@@ -931,7 +931,7 @@ class ArtifactHtml extends Artifact {
                 <TR><TD COLSPAN="'.(2*$fields_per_line).'">
                         <P>
                         <hr>
-                        <B><span class="highlight">'.$LANG->getText('tracker_include_artifact','check_already_submitted',$this->ArtifactType->getItemName()).'<P><center>
+                        <B><span class="highlight">'.$Language->getText('tracker_include_artifact','check_already_submitted',$this->ArtifactType->getItemName()).'<P><center>
                         <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
                         </center>
                         </FORM>
@@ -948,7 +948,7 @@ class ArtifactHtml extends Artifact {
          * @return void
          */
         function mailFollowup($more_addresses=false,$changes=false) {
-            global $sys_datefmt,$feedback,$art_field_fact,$sys_lf,$LANG;
+            global $sys_datefmt,$feedback,$art_field_fact,$sys_lf,$Language;
 
             $artifact_href = get_server_url();
         
@@ -967,19 +967,19 @@ class ArtifactHtml extends Artifact {
                 // artifact fields - Changes first if there are some.
                 if ($changes) {
                     $body = "$sys_lf=============   ".strtoupper($this->ArtifactType->getName())." #".$this->getID().
-                        ": ".$LANG->getText('tracker_include_artifact','latest_modif')."   =============$sys_lf".$artifact_href."$sys_lf$sys_lf".
+                        ": ".$Language->getText('tracker_include_artifact','latest_modif')."   =============$sys_lf".$artifact_href."$sys_lf$sys_lf".
                         $this->formatChanges($changes)."$sys_lf$sys_lf$sys_lf$sys_lf";
                 }
         
                 $body .= "=============   ".strtoupper($this->ArtifactType->getName())." #".$this->getID().
-                    ": ".$LANG->getText('tracker_include_artifact','full_snapshot',strtoupper($this->ArtifactType->getName()))."   =============$sys_lf".
+                    ": ".$Language->getText('tracker_include_artifact','full_snapshot',strtoupper($this->ArtifactType->getName()))."   =============$sys_lf".
                     ($changes ? '':$artifact_href)."$sys_lf$sys_lf";
             
                 // Some special field first (group, submitted by/on)
                 $body .= sprintf($fmt_left.$fmt_right."$sys_lf", 
-                                 $LANG->getText('tracker_include_artifact','submitted_by').' '.user_getname($this->getSubmittedBy()),
-                                 $LANG->getText('tracker_include_artifact','project').' '.group_getname($group_id) );
-                $body .= $LANG->getText('tracker_include_artifact','submitted_on').' '.format_date($sys_datefmt,$this->getOpenDate())."$sys_lf";
+                                 $Language->getText('tracker_include_artifact','submitted_by').' '.user_getname($this->getSubmittedBy()),
+                                 $Language->getText('tracker_include_artifact','project').' '.group_getname($group_id) );
+                $body .= $Language->getText('tracker_include_artifact','submitted_on').' '.format_date($sys_datefmt,$this->getOpenDate())."$sys_lf";
         
                 // All other regular fields now          
                 $left = 1;
@@ -1040,7 +1040,7 @@ class ArtifactHtml extends Artifact {
                 $body .= "$sys_lf$sys_lf".$this->showAttachedFiles($group_id,$group_artifact_id,true);
         
                 // Finally output the message trailer
-                $body .= "$sys_lf$sys_lf".$LANG->getText('tracker_include_artifact','follow_link');
+                $body .= "$sys_lf$sys_lf".$Language->getText('tracker_include_artifact','follow_link');
                 $body .= "$sys_lf".$artifact_href;
         
         
@@ -1069,7 +1069,7 @@ class ArtifactHtml extends Artifact {
                 //echo "DBG: body:".$body."<br>";
                 if ($to) { mail($to,$subject,$body,$hdrs); }
         
-                $feedback .= ' '.$LANG->getText('tracker_include_artifact','update_sent').' '; //to '.$to;
+                $feedback .= ' '.$Language->getText('tracker_include_artifact','update_sent').' '; //to '.$to;
         
         }
 
@@ -1082,23 +1082,23 @@ class ArtifactHtml extends Artifact {
          */
         function formatChanges($changes) {
         
-            global $sys_datefmt,$art_field_fact,$sys_lf,$LANG;
+            global $sys_datefmt,$art_field_fact,$sys_lf,$Language;
         
             reset($changes);
             $fmt = "%20s | %-25s | %s$sys_lf";
         
             if (user_isloggedin()) {
                         $user_id = user_getid();
-                        $out_hdr = $LANG->getText('tracker_include_artifact','changes_by').' '.user_getrealname($user_id).' <'.user_getemail($user_id).">$sys_lf";
-                        $out_hdr .= $LANG->getText('tracker_import_utils','date').': '.format_date($sys_datefmt,time()).' ('.user_get_timezone().')';
+                        $out_hdr = $Language->getText('tracker_include_artifact','changes_by').' '.user_getrealname($user_id).' <'.user_getemail($user_id).">$sys_lf";
+                        $out_hdr .= $Language->getText('tracker_import_utils','date').': '.format_date($sys_datefmt,time()).' ('.user_get_timezone().')';
             } else {
-                        $out_hdr = $LANG->getText('tracker_include_artifact','changes_by').' '.$LANG->getText('tracker_include_artifact','anon_user').'        '.$LANG->getText('tracker_import_utils','date').': '.format_date($sys_datefmt,time());
+                        $out_hdr = $Language->getText('tracker_include_artifact','changes_by').' '.$Language->getText('tracker_include_artifact','anon_user').'        '.$Language->getText('tracker_import_utils','date').': '.format_date($sys_datefmt,time());
             }
         
             //Process special cases first: follow-up comment
             if ($changes['details']) {
-                        $out_com = "$sys_lf$sys_lf---------------   ".$LANG->getText('tracker_include_artifact','add_flup_comment')."   ----------------$sys_lf";
-                        if ($changes['details']['type'] != $LANG->getText('global','none')) {
+                        $out_com = "$sys_lf$sys_lf---------------   ".$Language->getText('tracker_include_artifact','add_flup_comment')."   ----------------$sys_lf";
+                        if ($changes['details']['type'] != $Language->getText('global','none')) {
                             $out_com .= "[".$changes['details']['type']."]$sys_lf";
                         }
                         $out_com .= util_unconvert_htmlspecialchars($changes['details']['add']);
@@ -1107,8 +1107,8 @@ class ArtifactHtml extends Artifact {
         
             //Process special cases first: file attachment
             if ($changes['attach']) {
-                        $out_att = "$sys_lf$sys_lf---------------    ".$LANG->getText('tracker_include_artifact','add_attachment')."     -----------------$sys_lf";
-                        $out_att .= sprintf($LANG->getText('tracker_include_artifact','file_name')." %-30s ".$LANG->getText('tracker_include_artifact','size').":%d KB$sys_lf",$changes['attach']['name'],
+                        $out_att = "$sys_lf$sys_lf---------------    ".$Language->getText('tracker_include_artifact','add_attachment')."     -----------------$sys_lf";
+                        $out_att .= sprintf($Language->getText('tracker_include_artifact','file_name')." %-30s ".$Language->getText('tracker_include_artifact','size').":%d KB$sys_lf",$changes['attach']['name'],
                                          intval($changes['attach']['size']/1024) );
                         $out_att .= $changes['attach']['description']."$sys_lf".$changes['attach']['href'];
                         unset($changes['attach']);
@@ -1130,7 +1130,7 @@ class ArtifactHtml extends Artifact {
                 } // while
 
                 if ($out) {
-                        $out = "$sys_lf$sys_lf".sprintf($fmt,$LANG->getText('tracker_include_artifact','what').'    ',$LANG->getText('tracker_include_artifact','removed'),$LANG->getText('tracker_include_artifact','added')).
+                        $out = "$sys_lf$sys_lf".sprintf($fmt,$Language->getText('tracker_include_artifact','what').'    ',$Language->getText('tracker_include_artifact','removed'),$Language->getText('tracker_include_artifact','added')).
                         "------------------------------------------------------------------$sys_lf".$out;
             }
         

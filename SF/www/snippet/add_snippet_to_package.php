@@ -9,7 +9,7 @@
 require($DOCUMENT_ROOT.'/include/pre.php');
 require('../snippet/snippet_utils.php');
 
-$LANG->loadLanguageMsg('snippet/snippet');
+$Language->loadLanguageMsg('snippet/snippet');
 
 function handle_add_exit() {
 	global $suppress_nav;
@@ -29,12 +29,12 @@ if (user_isloggedin()) {
 		<HTML>
 		<BODY>';
 	} else {
-		snippet_header(array('title'=>$LANG->getText('snippet_add_snippet_to_package','submit_snippet')));
+		snippet_header(array('title'=>$Language->getText('snippet_add_snippet_to_package','submit_snippet')));
 	}
 
 	if (!$snippet_package_version_id) {
 		//make sure the package id was passed in
-		echo '<H1>'.$LANG->getText('snippet_add_snippet_to_package','error_v_id_missed').'</H1>';
+		echo '<H1>'.$Language->getText('snippet_add_snippet_to_package','error_v_id_missed').'</H1>';
 		handle_add_exit();
 	}
 
@@ -50,7 +50,7 @@ if (user_isloggedin()) {
 				"WHERE submitted_by='".user_getid()."' AND ".
 				"snippet_package_version_id='$snippet_package_version_id'");
 			if (!$result || db_numrows($result) < 1) {
-				echo '<H1>'.$LANG->getText('snippet_add_snippet_to_package','error_only_creator').'</H1>';
+				echo '<H1>'.$Language->getText('snippet_add_snippet_to_package','error_only_creator').'</H1>';
 				handle_add_exit();
 			}
 
@@ -59,8 +59,8 @@ if (user_isloggedin()) {
 			*/
 			$result=db_query("SELECT * FROM snippet_version WHERE snippet_version_id='$snippet_version_id'");
 			if (!$result || db_numrows($result) < 1) {
-				echo '<H1>'.$LANG->getText('snippet_add_snippet_to_package','error_s_not_exist').'</H1>';
-				echo '<A HREF="/snippet/add_snippet_to_package.php?snippet_package_version_id='.$snippet_package_version_id.'">'.$LANG->getText('snippet_add_snippet_to_package','back').'</A>';
+				echo '<H1>'.$Language->getText('snippet_add_snippet_to_package','error_s_not_exist').'</H1>';
+				echo '<A HREF="/snippet/add_snippet_to_package.php?snippet_package_version_id='.$snippet_package_version_id.'">'.$Language->getText('snippet_add_snippet_to_package','back').'</A>';
 				handle_add_exit();
 			}
 
@@ -71,8 +71,8 @@ if (user_isloggedin()) {
 				"WHERE snippet_package_version_id='$snippet_package_version_id' ".
 				"AND snippet_version_id='$snippet_version_id'");
 			if ($result && db_numrows($result) > 0) {
-				echo '<H1>'.$LANG->getText('snippet_add_snippet_to_package','already_added').'</H1>';
-				echo '<A HREF="/snippet/add_snippet_to_package.php?snippet_package_version_id='.$snippet_package_version_id.'">'.$LANG->getText('snippet_add_snippet_to_package','back').'</A>';
+				echo '<H1>'.$Language->getText('snippet_add_snippet_to_package','already_added').'</H1>';
+				echo '<A HREF="/snippet/add_snippet_to_package.php?snippet_package_version_id='.$snippet_package_version_id.'">'.$Language->getText('snippet_add_snippet_to_package','back').'</A>';
 				handle_add_exit();
 			}
 
@@ -84,14 +84,14 @@ if (user_isloggedin()) {
 			$result=db_query($sql);
 
 			if (!$result) {
-				$feedback .= ' '.$LANG->getText('snippet_add_snippet_to_package','error_insert').' ';
+				$feedback .= ' '.$Language->getText('snippet_add_snippet_to_package','error_insert').' ';
 				echo db_error();
 			} else {
-				$feedback .= ' '.$LANG->getText('snippet_add_snippet_to_package','add_success').' ';
+				$feedback .= ' '.$Language->getText('snippet_add_snippet_to_package','add_success').' ';
 			}
 		} else {
-			echo '<H1>'.$LANG->getText('snippet_add_snippet_to_package','error_fill_all_info').'</H1>';
-			echo '<A HREF="/snippet/add_snippet_to_package.php?snippet_package_version_id='.$snippet_package_version_id.'">'.$LANG->getText('snippet_add_snippet_to_package','back').'</A>';
+			echo '<H1>'.$Language->getText('snippet_add_snippet_to_package','error_fill_all_info').'</H1>';
+			echo '<A HREF="/snippet/add_snippet_to_package.php?snippet_package_version_id='.$snippet_package_version_id.'">'.$Language->getText('snippet_add_snippet_to_package','back').'</A>';
 			handle_add_exit();
 		}
 
@@ -103,11 +103,11 @@ if (user_isloggedin()) {
 			"AND snippet_package_version.snippet_package_version_id='$snippet_package_version_id'");
 
 	echo '
-	<H1>'.$LANG->getText('snippet_add_snippet_to_package','add_s').'</H2>
+	<H1>'.$Language->getText('snippet_add_snippet_to_package','add_s').'</H2>
 	<P>
-	<B>'.$LANG->getText('snippet_add_snippet_to_package','package',array(db_result($result,0,'name'),db_result($result,0,'version'))).'
+	<B>'.$Language->getText('snippet_add_snippet_to_package','package',array(db_result($result,0,'name'),db_result($result,0,'version'))).'
 	<P>
-	'.$LANG->getText('snippet_add_snippet_to_package','use_add_form').'
+	'.$Language->getText('snippet_add_snippet_to_package','use_add_form').'
 	<P>
 	<FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
 	<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
@@ -116,14 +116,14 @@ if (user_isloggedin()) {
 
 	<TABLE>
 	<TR><TD COLSPAN="2" ALIGN="center">
-		<B>'.$LANG->getText('snippet_add_snippet_to_package','add_v_id').'</B><BR>
+		<B>'.$Language->getText('snippet_add_snippet_to_package','add_v_id').'</B><BR>
 		<INPUT TYPE="TEXT" NAME="snippet_version_id" SIZE="6" MAXLENGTH="7">
 	</TD></TR>
 
 	<TR><TD COLSPAN="2" ALIGN="center">
-		<B>'.$LANG->getText('snippet_add_snippet_to_package','all_info_complete').'</B>
+		<B>'.$Language->getText('snippet_add_snippet_to_package','all_info_complete').'</B>
 		<BR>
-		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$LANG->getText('global','btn_submit').'">
+		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
 	</TD></TR>
 	</FORM>
 	</TABLE>';
@@ -141,9 +141,9 @@ if (user_isloggedin()) {
 		echo db_error();
 		echo '
 		<P>
-		'.$LANG->getText('snippet_add_snippet_to_package','no_s_in_p');
+		'.$Language->getText('snippet_add_snippet_to_package','no_s_in_p');
 	} else {
-		$HTML->box1_top($LANG->getText('snippet_add_snippet_to_package','s_in_p'));
+		$HTML->box1_top($Language->getText('snippet_add_snippet_to_package','s_in_p'));
 		for ($i=0; $i<$rows; $i++) {
 			echo '
 			<TR class="'. util_get_alt_row_color($i) .'"><TD ALIGN="center">

@@ -10,14 +10,14 @@ require($DOCUMENT_ROOT.'/include/pre.php');
 require($DOCUMENT_ROOT.'/include/trove.php');
 require($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
 
-$LANG->loadLanguageMsg('project/project');
+$Language->loadLanguageMsg('project/project');
 
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
 // Check for submission. If so, make changes and redirect
 
 if ($GLOBALS['Submit'] && $root1) {
-	group_add_history ($LANG->getText('project_admin_grouptrove','changed_trove'),$rm_id,$group_id);
+	group_add_history ($Language->getText('project_admin_grouptrove','changed_trove'),$rm_id,$group_id);
 
 	// there is at least a $root1[xxx]
 	while (list($rootnode,$value) = each($root1)) {
@@ -36,13 +36,13 @@ if ($GLOBALS['Submit'] && $root1) {
 	session_redirect('/project/admin/?group_id='.$group_id);
 }
 
-project_admin_header(array('title'=>$LANG->getText('project_admin_grouptrove','g_trove_info'),'group'=>$group_id));
+project_admin_header(array('title'=>$Language->getText('project_admin_grouptrove','g_trove_info'),'group'=>$group_id));
 
 // LJ New message added to explain that if a Topic category is not there
 // LJ put the project unclassified and the CodeX team will create the
 // Lj new entry
 //
-print '<P>'.$LANG->getText('project_admin_grouptrove','select_3_classifs',$GLOBALS['sys_name']);
+print '<P>'.$Language->getText('project_admin_grouptrove','select_3_classifs',$GLOBALS['sys_name']);
 
 print "\n<FORM method=\"post\">";
 
@@ -65,7 +65,7 @@ while (list($catroot,$fullname) = each($CATROOTS)) {
 	}
 }
 
-print '<P><INPUT type="submit" name="Submit" value="'.$LANG->getText('project_admin_grouptrove','submit_all_changes').'">';
+print '<P><INPUT type="submit" name="Submit" value="'.$Language->getText('project_admin_grouptrove','submit_all_changes').'">';
 print '</FORM>';
 
 project_admin_footer(array());

@@ -25,7 +25,7 @@ require('../include/ArtifactCannedHtml.class');
 require('../include/ArtifactReportHtml.class');
 require('../include/ArtifactHtml.class');
 
-$LANG->loadLanguageMsg('tracker/tracker');
+$Language->loadLanguageMsg('tracker/tracker');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
@@ -35,9 +35,9 @@ session_require(array('group'=>'1','admin_flags'=>'A'));
 	        $group = group_get_object($group_id);	
 		$ath =  new ArtifactType($group, $atid);
 		if (!$ath->restore()) {
-		  $feedback = $LANG->getText('tracker_admin_restore','restore_failed');
+		  $feedback = $Language->getText('tracker_admin_restore','restore_failed');
 		} else {
-		  $feedback = $LANG->getText('tracker_admin_restore','tracker_restored');
+		  $feedback = $Language->getText('tracker_admin_restore','tracker_restored');
 		}
 		break;
 		
@@ -48,10 +48,10 @@ session_require(array('group'=>'1','admin_flags'=>'A'));
 
 		if (!$ath->delay($delay_date)) {
 		  if ($ath->isError())
-		    exit_error($LANG->getText('global','error'),$ath->getErrorMessage()." | ".$LANG->getText('tracker_admin_restore','delay_failed'));
-		  exit_error($LANG->getText('global','error'),$LANG->getText('tracker_admin_restore','delay_failed'));
+		    exit_error($Language->getText('global','error'),$ath->getErrorMessage()." | ".$Language->getText('tracker_admin_restore','delay_failed'));
+		  exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_restore','delay_failed'));
 		} else {
-		  $feedback = $LANG->getText('tracker_admin_restore','delayed_deletion');
+		  $feedback = $Language->getText('tracker_admin_restore','delayed_deletion');
 		}
 		break;
 
@@ -65,7 +65,7 @@ session_require(array('group'=>'1','admin_flags'=>'A'));
 
 		// Then delete all the fields informations
 		if ( !$art_field_fact->deleteFields($atid) ) {
-			exit_error($LANG->getText('global','error'),$art_field_fact->getErrorMessage());
+			exit_error($Language->getText('global','error'),$art_field_fact->getErrorMessage());
 			return false;
 		}
 		
@@ -74,15 +74,15 @@ session_require(array('group'=>'1','admin_flags'=>'A'));
 		$art_report_fact = new ArtifactReportFactory();
 
 		if ( !$art_report_fact->deleteReports($atid) ) {
-			exit_error($LANG->getText('global','error'),$art_report_fact->getErrorMessage());
+			exit_error($Language->getText('global','error'),$art_report_fact->getErrorMessage());
 			return false;
 		}
 		
 		// Delete the artifact type itself
 		if ( !$atf->deleteArtifactType($atid) ) {
-			exit_error($LANG->getText('global','error'),$atf->getErrorMessage());
+			exit_error($Language->getText('global','error'),$atf->getErrorMessage());
 		}
-		$feedback = $LANG->getText('tracker_admin_restore','tracker_deleted');
+		$feedback = $Language->getText('tracker_admin_restore','tracker_deleted');
 		break;
 
 
@@ -92,7 +92,7 @@ session_require(array('group'=>'1','admin_flags'=>'A'));
 $group = group_get_object(1);	
 $ath = new ArtifactTypeHtml($group);
 
-$HTML->header(array('title'=>$LANG->getText('tracker_admin_restore','pending_deletions')));
+$HTML->header(array('title'=>$Language->getText('tracker_admin_restore','pending_deletions')));
 $atf = new ArtifactTypeFactory($group);
 $ath->displayPendingTrackers();
 $HTML->footer(array());

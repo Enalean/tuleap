@@ -12,7 +12,7 @@ Header( "Cache-Control: must-revalidate");
 
 require('../include/pre.php');
 
-$LANG->loadLanguageMsg('account/account');
+$Language->loadLanguageMsg('account/account');
 
 if (!session_issecure() && ($GLOBALS['sys_https_host'] != "")) {
     //force use of SSL for login
@@ -62,17 +62,17 @@ if ($session_hash) {
 	session_cookie('session_hash','');
 	db_query("DELETE FROM session WHERE session_hash='$session_hash'");
 }
-$HTML->header(array('title'=>$LANG->getText('account_login', 'title')));
+$HTML->header(array('title'=>$Language->getText('account_login', 'title')));
 
 if ($login && !$success) {
 
     if ($status == 'P') {
-	echo "<P><B>".$LANG->getText('account_login', 'pending_title')."</B>";
-	echo "<P>".$LANG->getText('account_login', 'pending_msg');
-	echo "<P><A href=\"pending-resend.php?form_user=$form_loginname; \">[".$LANG->getText('account_login', 'resend_btn')."]</A><br><hr><p>";
+	echo "<P><B>".$Language->getText('account_login', 'pending_title')."</B>";
+	echo "<P>".$Language->getText('account_login', 'pending_msg');
+	echo "<P><A href=\"pending-resend.php?form_user=$form_loginname; \">[".$Language->getText('account_login', 'resend_btn')."]</A><br><hr><p>";
     } else if ($status == 'S') {
-	echo "<P><B>".$LANG->getText('account_suspended', 'title')."</B>";
-	echo "<P>".$LANG->getText('account_suspended', 'message', array($GLOBALS['sys_email_contact']));
+	echo "<P><B>".$Language->getText('account_suspended', 'title')."</B>";
+	echo "<P>".$Language->getText('account_suspended', 'message', array($GLOBALS['sys_email_contact']));
 	echo "<br><hr><p>";
     } else {
 	echo '<h2><span class="feedback">'. $feedback .'</span></H2>';
@@ -87,19 +87,19 @@ if ($GLOBALS['sys_https_host']) {
 ?>
 
 <p>
-<h2><?php print $LANG->getText('account_login', 'title', array($GLOBALS['sys_Name'])); ?>
+<h2><?php print $Language->getText('account_login', 'title', array($GLOBALS['sys_Name'])); ?>
 <?php print ($GLOBALS['sys_https_host'] != "" ? ' (Secure)':''); ?>
 </h2>
 <p>
-<span class="highlight"><B><?php print $LANG->getText('account_login', 'cookies'); ?>.</B></span>
+<span class="highlight"><B><?php print $Language->getText('account_login', 'cookies'); ?>.</B></span>
 <P>
 <form action="<?php echo $form_url; ?>/account/login.php" method="post" name="form_login">
 <INPUT TYPE="HIDDEN" NAME="return_to" VALUE="<?php echo $return_to; ?>">
 <p>
-<?php print $LANG->getText('account_login', 'name'); ?>:
+<?php print $Language->getText('account_login', 'name'); ?>:
 <br><input type="text" name="form_loginname" VALUE="<?php echo $form_loginname; ?>">
 <p>
-<?php print $LANG->getText('account_login', 'password'); ?>:
+<?php print $Language->getText('account_login', 'password'); ?>:
 <br><input type="password" name="form_pw">
 <P>
 <?php
@@ -110,22 +110,22 @@ if ( $GLOBALS['sys_https_host'] != '' && $GLOBALS['sys_force_ssl'] == 0 &&
      $GLOBALS['sys_stay_in_ssl'] == 1 ) {
     echo '<INPUT TYPE="CHECKBOX" NAME="stay_in_ssl" VALUE="1" '.
     (((browser_is_ie() && browser_get_version() < '5.1') || !session_issecure()) ?'':'CHECKED').'>'.
-    $LANG->getText('account_login', 'name').'
+    $Language->getText('account_login', 'name').'
 <p>
 ';
 
     if  (browser_is_ie() && browser_get_version() < '5.1') {
-	echo $LANG->getText('account_login', 'msie_pb');
+	echo $Language->getText('account_login', 'msie_pb');
     }
 }
 ?>
 <p>
-<input type="submit" name="login" value="<?php echo $LANG->getText('account_login', 'login_btn'); ?>">
+<input type="submit" name="login" value="<?php echo $Language->getText('account_login', 'login_btn'); ?>">
 </form>
 <P>
-<?php echo $LANG->getText('account_login', 'lost_pw',array($GLOBALS['sys_email_admin'],$GLOBALS['sys_name'])); ?>
+<?php echo $Language->getText('account_login', 'lost_pw',array($GLOBALS['sys_email_admin'],$GLOBALS['sys_name'])); ?>
 <P>
-<?php echo $LANG->getText('account_login', 'create_acct',array($GLOBALS['sys_name'],$GLOBALS['sys_org_name'])); ?>
+<?php echo $Language->getText('account_login', 'create_acct',array($GLOBALS['sys_name'],$GLOBALS['sys_org_name'])); ?>
 
 <SCRIPT language="JavaScript"> <!-- 
     document.form_login.form_loginname.focus();

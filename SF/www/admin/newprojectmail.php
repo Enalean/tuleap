@@ -9,15 +9,15 @@
 require($DOCUMENT_ROOT.'/include/pre.php');
 require($DOCUMENT_ROOT.'/include/proj_email.php');
 
-$LANG->loadLanguageMsg('admin/admin');
+$Language->loadLanguageMsg('admin/admin');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
-$HTML->header(array('title'=>$LANG->getText('admin_newprojectmail','title')));
+$HTML->header(array('title'=>$Language->getText('admin_newprojectmail','title')));
 
 send_new_project_email($group_id);
 
-print "<p>".$LANG->getText('admin_newprojectmail','success')."</p>";
+print "<p>".$Language->getText('admin_newprojectmail','success')."</p>";
 
 $HTML->footer(array());
 ?>

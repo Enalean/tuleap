@@ -8,9 +8,9 @@
 
 require($DOCUMENT_ROOT.'/include/pre.php');
  
-$LANG->loadLanguageMsg('account/account');
+$Language->loadLanguageMsg('account/account');
 
-$HTML->header(array(title=>$LANG->getText('account_myprojectlist', 'title')));
+$HTML->header(array(title=>$Language->getText('account_myprojectlist', 'title')));
 
 $res_proj = db_query("SELECT groups.group_name AS group_name,"
 		. "groups.group_id AS group_id,"
@@ -21,7 +21,7 @@ $res_proj = db_query("SELECT groups.group_name AS group_name,"
 		. "user_group.user_id=" . user_getid());
 ?>
 
-<P><?php echo $LANG->getText('account_myprojectlist', 'title', array(user_getname())); ?></B>
+<P><?php echo $Language->getText('account_myprojectlist', 'title', array(user_getname())); ?></B>
 
 <P>
 <TABLE width=100% cellpadding=0 cellspacing=0 border=0 class="small">

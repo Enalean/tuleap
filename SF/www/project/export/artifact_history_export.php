@@ -6,7 +6,7 @@
 //
 // $Id$
 
-$LANG->loadLanguageMsg('project/project');
+$Language->loadLanguageMsg('project/project');
 
 //
 //	get the Group object
@@ -21,20 +21,20 @@ if ( $atid ) {
 	//
 	$at = new ArtifactType($group,$atid);
 	if (!$at || !is_object($at)) {
-		exit_error($LANG->getText('global','error'),$LANG->getText('project_export_artifact_deps_export','at_not_created'));
+		exit_error($Language->getText('global','error'),$Language->getText('project_export_artifact_deps_export','at_not_created'));
 	}
 	if ($at->isError()) {
-		exit_error($LANG->getText('global','error'),$at->getErrorMessage());
+		exit_error($Language->getText('global','error'),$at->getErrorMessage());
 	}
 	// Check if this tracker is valid (not deleted)
 	if ( !$at->isValid() ) {
-		exit_error($LANG->getText('global','error'),$LANG->getText('project_export_artifact_deps_export','tracker_no_longer_valid'));
+		exit_error($Language->getText('global','error'),$Language->getText('project_export_artifact_deps_export','tracker_no_longer_valid'));
 	}
 	
 	// Create field factory
 	$art_field_fact = new ArtifactFieldFactory($at);
 	if ($art_field_fact->isError()) {
-		exit_error($LANG->getText('global','error'),$art_field_fact->getErrorMessage());
+		exit_error($Language->getText('global','error'),$art_field_fact->getErrorMessage());
 	}
 
 }
@@ -51,22 +51,22 @@ $sql = "SELECT ah.artifact_id,ah.field_name,".
 'user.user_id=ah.mod_by ORDER BY ah.artifact_id,ah.date DESC';
 
 $col_list = array('artifact_id','field_name','old_value','new_value','mod_by','email','date','type');
-$lbl_list = array('artifact_id' => $LANG->getText('project_export_artifact_history_export','art_id'),
-		  'field_name' => $LANG->getText('project_export_artifact_history_export','field_name'),
-		  'old_value' => $LANG->getText('project_export_artifact_history_export','old_val'),
-		  'new_value' => $LANG->getText('project_export_artifact_history_export','new_val'),
-		  'mod_by' => $LANG->getText('project_export_artifact_history_export','mod_by'),
-		  'email' => $LANG->getText('project_export_artifact_history_export','email'),
-		  'date' => $LANG->getText('project_export_artifact_history_export','mod_on'),
-		  'type' => $LANG->getText('project_export_artifact_history_export','comment_type'));
+$lbl_list = array('artifact_id' => $Language->getText('project_export_artifact_history_export','art_id'),
+		  'field_name' => $Language->getText('project_export_artifact_history_export','field_name'),
+		  'old_value' => $Language->getText('project_export_artifact_history_export','old_val'),
+		  'new_value' => $Language->getText('project_export_artifact_history_export','new_val'),
+		  'mod_by' => $Language->getText('project_export_artifact_history_export','mod_by'),
+		  'email' => $Language->getText('project_export_artifact_history_export','email'),
+		  'date' => $Language->getText('project_export_artifact_history_export','mod_on'),
+		  'type' => $Language->getText('project_export_artifact_history_export','comment_type'));
 
-$dsc_list = array('artifact_id' => $LANG->getText('project_export_artifact_history_export','art_id'),
-		  'field_name' => $LANG->getText('project_export_artifact_history_export','field_name_desc'),
-		  'old_value' => $LANG->getText('project_export_artifact_history_export','old_val_desc'),
-		  'new_value' => $LANG->getText('project_export_artifact_history_export','new_val_desc'),
-		  'mod_by' => $LANG->getText('project_export_artifact_history_export','mod_by_desc'),
-		  'date' => $LANG->getText('project_export_artifact_history_export','mod_on_desc'),
-		  'type' => $LANG->getText('project_export_artifact_history_export','comment_type_desc'));
+$dsc_list = array('artifact_id' => $Language->getText('project_export_artifact_history_export','art_id'),
+		  'field_name' => $Language->getText('project_export_artifact_history_export','field_name_desc'),
+		  'old_value' => $Language->getText('project_export_artifact_history_export','old_val_desc'),
+		  'new_value' => $Language->getText('project_export_artifact_history_export','new_val_desc'),
+		  'mod_by' => $Language->getText('project_export_artifact_history_export','mod_by_desc'),
+		  'date' => $Language->getText('project_export_artifact_history_export','mod_on_desc'),
+		  'type' => $Language->getText('project_export_artifact_history_export','comment_type_desc'));
 
 $eol = "\n";
 
@@ -92,11 +92,11 @@ if ($export == 'artifact_history') {
 
 	project_admin_header(array('title'=>$pg_title));
 
-	echo '<h3>'.$LANG->getText('project_export_artifact_history_export','art_hist_export').'</h3>';
+	echo '<h3>'.$Language->getText('project_export_artifact_history_export','art_hist_export').'</h3>';
 	if ($result) {
-	    echo '<P>'.$LANG->getText('project_export_artifact_history_export','no_hist_found');
+	    echo '<P>'.$Language->getText('project_export_artifact_history_export','no_hist_found');
 	} else {
-	    echo '<P>'.$LANG->getText('project_export_artifact_history_export','db_access_err',$GLOBALS['sys_name']);
+	    echo '<P>'.$Language->getText('project_export_artifact_history_export','db_access_err',$GLOBALS['sys_name']);
 	    echo '<br>'.db_error();
 	}
 	site_project_footer( array() );
@@ -105,7 +105,7 @@ if ($export == 'artifact_history') {
 
 } else if ($export == "artifact_history_format") {
 
-    echo $LANG->getText('project_export_artifact_history_export','hist_export_format');
+    echo $Language->getText('project_export_artifact_history_export','hist_export_format');
    
     $record = pick_a_record_at_random($result, $rows, $col_list);
     prepare_artifact_history_record($at,$art_field_fact,$record);
@@ -133,10 +133,10 @@ if ($export == 'artifact_history') {
 				//
 				$at = new ArtifactType($group,$atid);
 				if (!$at || !is_object($at)) {
-					exit_error($LANG->getText('global','error'),$LANG->getText('project_export_artifact_deps_export','at_not_created'));
+					exit_error($Language->getText('global','error'),$Language->getText('project_export_artifact_deps_export','at_not_created'));
 				}
 				if ($at->isError()) {
-					exit_error($LANG->getText('global','error'),$at->getErrorMessage());
+					exit_error($Language->getText('global','error'),$at->getErrorMessage());
 				}
 				// Check if this tracker is valid (not deleted)
 				if ( !$at->isValid() ) {
@@ -146,7 +146,7 @@ if ($export == 'artifact_history') {
 				// Create field factory
 				$art_field_fact = new ArtifactFieldFactory($at);
 				if ($art_field_fact->isError()) {
-					exit_error($LANG->getText('global','error'),$art_field_fact->getErrorMessage());
+					exit_error($Language->getText('global','error'),$art_field_fact->getErrorMessage());
 				}
 
 				// Let's create the project database if it does not exist
@@ -175,14 +175,14 @@ if ($export == 'artifact_history') {
 						insert_record_in_table($dbname, $tbl_name, $col_list, $arr);
 				    }
 				} else {
-				    $feedback .= $LANG->getText('project_export_artifact_deps_export','create_proj_err',array($tbl_name,db_project_error()));
+				    $feedback .= $Language->getText('project_export_artifact_deps_export','create_proj_err',array($tbl_name,db_project_error()));
 				}
 			} // for
 	
 		}
 
     } else {
-		$feedback .= $LANG->getText('project_export_artifact_deps_export','security_violation',$dbname);
+		$feedback .= $Language->getText('project_export_artifact_deps_export','security_violation',$dbname);
     }
    
 }

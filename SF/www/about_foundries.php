@@ -8,9 +8,9 @@
 
 require($DOCUMENT_ROOT.'/include/pre.php');    
 
-$LANG->loadLanguageMsg('homepage/homepage');
+$Language->loadLanguageMsg('homepage/homepage');
 
-$HTML->header(array(title=>$LANG->getText('about_foundries', 'title')));
+$HTML->header(array(title=>$Language->getText('about_foundries', 'title')));
 
 // List of foudnries
 $html = "";
@@ -20,7 +20,7 @@ $query = "SELECT group_name,unix_group_name ".
 $result = db_query($query);
 $rows = db_numrows($result);
 if (!$result || $rows < 1) {
-    $html .= "<H2>".$LANG->getText('about_foundries', 'no_foundries')."</H2><p>".db_error();
+    $html .= "<H2>".$Language->getText('about_foundries', 'no_foundries')."</H2><p>".db_error();
  } else {
     $html .=  "<UL>\n";
     for ($i=0; $i<$rows; $i++) {
@@ -32,9 +32,9 @@ if (!$result || $rows < 1) {
 ?>
 
 <P>
-<h2><?php echo $LANG->getText('about_foundries', 'title'); ?></h2>
+<h2><?php echo $Language->getText('about_foundries', 'title'); ?></h2>
 
-<p><?php echo $LANG->getText('about_foundries', 'message', array($html,$GLOBALS['sys_email_contact'])); ?>
+<p><?php echo $Language->getText('about_foundries', 'message', array($html,$GLOBALS['sys_email_contact'])); ?>
 
 <?php
 $HTML->footer(array());

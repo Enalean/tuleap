@@ -16,7 +16,7 @@
 //require_once('include/ArtifactFieldHtml.class');
 //require_once($DOCUMENT_ROOT.'/../common/tracker/ArtifactFieldFactory.class');
 
-$LANG->loadLanguageMsg('tracker/tracker');
+$Language->loadLanguageMsg('tracker/tracker');
 
 // Printer version ?
 if ( !isset($pv) ) {
@@ -26,7 +26,7 @@ if ( !isset($pv) ) {
 	if ( $pv ) $ro = true;
 }
 
-$params=array('title'=>$group->getPublicName().' '.$ath->getName().' '.$LANG->getText('tracker_index','mass_change'),
+$params=array('title'=>$group->getPublicName().' '.$ath->getName().' '.$Language->getText('tracker_index','mass_change'),
               'pagename'=>'tracker',
               'atid'=>$ath->getID(),
               'sectionvals'=>array($group->getPublicName()),
@@ -36,9 +36,9 @@ $params=array('title'=>$group->getPublicName().' '.$ath->getName().' '.$LANG->ge
 $ath->header($params);
 
 
-if (strstr($submit,$LANG->getText('tracker_masschange_detail','selected_items'))) {
+if (strstr($submit,$Language->getText('tracker_masschange_detail','selected_items'))) {
   if (!$mass_change_ids) {
-    $feedback = $LANG->getText('tracker_masschange_detail','no_items_selected');
+    $feedback = $Language->getText('tracker_masschange_detail','no_items_selected');
   } else {
     $ath->displayMassChange($mass_change_ids);
   }

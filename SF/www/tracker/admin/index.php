@@ -25,7 +25,7 @@ require('../include/ArtifactCannedHtml.class');
 require('../include/ArtifactReportHtml.class');
 require('../include/ArtifactHtml.class');
 
-$LANG->loadLanguageMsg('tracker/tracker');
+$Language->loadLanguageMsg('tracker/tracker');
 
 if ($group_id && !$atid) {
 	//
@@ -43,10 +43,10 @@ if ($group_id && !$atid) {
 	//
 	$ath = new ArtifactTypeHtml($group);
 	if (!$ath || !is_object($ath)) {
-		exit_error($LANG->getText('global','error'),$LANG->getText('tracker_index','not_create_at'));
+		exit_error($Language->getText('global','error'),$Language->getText('tracker_index','not_create_at'));
 	}
 	if ($ath->isError()) {
-		exit_error($LANG->getText('global','error'),$ath->getErrorMessage());
+		exit_error($Language->getText('global','error'),$ath->getErrorMessage());
 	}
 
 	$atf = new ArtifactTypeFactory($group);
@@ -64,11 +64,11 @@ if ($group_id && !$atid) {
 		}
 	
             if (browser_is_netscape4()) {
-	      exit_error($LANG->getText('global','error'),$LANG->getText('tracker_index','browser_not_supported','a tracker'));
+	      exit_error($Language->getText('global','error'),$Language->getText('tracker_index','browser_not_supported','a tracker'));
                 return;
             }
 
-		$ath->adminTrackersHeader(array('title'=>$LANG->getText('tracker_admin_field_usage','tracker_admin').$LANG->getText('tracker_admin_index','create_tracker'),'help' => 'TrackerCreation.html'));
+		$ath->adminTrackersHeader(array('title'=>$Language->getText('tracker_admin_field_usage','tracker_admin').$Language->getText('tracker_admin_index','create_tracker'),'help' => 'TrackerCreation.html'));
 		$ath->displayCreateTracker($group_id,$codex_template,$group_id_template,$atid_template,$name,$description,$itemname,$feedback);
 		$ath->footer(array());
 		break;
@@ -85,9 +85,9 @@ if ($group_id && !$atid) {
 		}
 
 		if ( !$ath->create($group_id,$group_id_chosen,$atid_chosen,$name,$description,$itemname) ) {
-			exit_error($LANG->getText('global','error'),$ath->getErrorMessage());
+			exit_error($Language->getText('global','error'),$ath->getErrorMessage());
 		} else {
-			$feedback = $LANG->getText('tracker_admin_index','tracker_created');
+			$feedback = $Language->getText('tracker_admin_index','tracker_created');
 		}
 		require('./admin_trackers.php');
 		break;
@@ -114,22 +114,22 @@ if ($group_id && !$atid) {
 	//
 	$ath = new ArtifactTypeHtml($group,$atid);
 	if (!$ath || !is_object($ath)) {
-		exit_error($LANG->getText('global','error'),$LANG->getText('tracker_index','not_create_at'));
+		exit_error($Language->getText('global','error'),$Language->getText('tracker_index','not_create_at'));
 	}
 	if ($ath->isError()) {
-		exit_error($LANG->getText('global','error'),$ath->getErrorMessage());
+		exit_error($Language->getText('global','error'),$ath->getErrorMessage());
 	}
 	// Check if this tracker is valid (not deleted)
 	if ( !$ath->isValid() ) {
-		exit_error($LANG->getText('global','error'),$LANG->getText('tracker_add','invalid'));
+		exit_error($Language->getText('global','error'),$Language->getText('tracker_add','invalid'));
 	}
 
 	$ach = new ArtifactCannedHtml($ath);
 	if (!$ach || !is_object($ach)) {
-	  exit_error($LANG->getText('global','error'),$LANG->getText('tracker_admin_index','not_create_canned'));
+	  exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','not_create_canned'));
 	}
 	if ($ach->isError()) {
-	  exit_error($LANG->getText('global','error'),$ach->getErrorMessage());
+	  exit_error($Language->getText('global','error'),$ach->getErrorMessage());
 	}
 
 	$atf = new ArtifactTypeFactory($group);
@@ -146,7 +146,7 @@ if ($group_id && !$atid) {
 		
 		$arh = new ArtifactReportHtml($report_id, $atid);
 		if (!$arh) {
-			exit_error($LANG->getText('global','error'),$LANG->getText('tracker_admin_index','not_retrieved_report',$arh->getErrorMessage()));
+			exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','not_retrieved_report',$arh->getErrorMessage()));
 		}
 		if ($post_changes) {
 			// apply update or create in bd
@@ -154,18 +154,18 @@ if ($group_id && !$atid) {
 				$updated = $arh->recreate(user_getid(), $rep_name, $rep_desc, $rep_scope);
 				if (!$updated) {
 					if ($arh->isError())
-						exit_error($LANG->getText('global','error'),$LANG->getText('tracker_admin_index','not_updated_report').': '.$arh->getErrorMessage());
-					exit_error($LANG->getText('global','error'),$LANG->getText('tracker_admin_index','not_updated_report'));
+						exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','not_updated_report').': '.$arh->getErrorMessage());
+					exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','not_updated_report'));
 				}
 				$feedback = "Report definition updated";
 			} else {
 				$report_id = $arh->create(user_getid(), $rep_name, $rep_desc, $rep_scope);
 				if (!$report_id) {
 					if ($arh->isError())
-						exit_error($LANG->getText('global','error'),$LANG->getText('tracker_admin_index','not_created_report').': '.$arh->getErrorMessage());
-					exit_error($LANG->getText('global','error'),$LANG->getText('tracker_admin_index','not_created_report'));
+						exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','not_created_report').': '.$arh->getErrorMessage());
+					exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','not_created_report'));
 				};
-				$feedback = $LANG->getText('tracker_admin_index','new_report_created');
+				$feedback = $Language->getText('tracker_admin_index','new_report_created');
 			}
 		
 			// now insert all the field entries in the artifact_report_field table
@@ -198,7 +198,7 @@ if ($group_id && !$atid) {
 				exit_permission_denied();
 			}	    
 			$arh->delete();
-			$feedback = $LANG->getText('tracker_admin_index','report_deleted');
+			$feedback = $Language->getText('tracker_admin_index','report_deleted');
 		}
 		
 		if ($new_report) {
@@ -239,43 +239,43 @@ if ($group_id && !$atid) {
 			if ($create_canned) {
 				$aci = $ach->create($title, $body);
 				if (!$aci) {
-					exit_error($LANG->getText('global','error'),$LANG->getText('tracker_admin_index','not_create_canneditem'));
+					exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','not_create_canneditem'));
 				} 
 			} else if ($update_canned) {
 				$aci = $ach->fetchData($artifact_canned_id);
 				if (!$aci) {
-					exit_error($LANG->getText('global','error'),$LANG->getText('tracker_admin_index','not_found_canneditem',$artifact_canned_id));
+					exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','not_found_canneditem',$artifact_canned_id));
 				}
 				if (!$ach->update($title, $body)) {
-					exit_error($LANG->getText('global','error'),$LANG->getText('tracker_admin_index','not_update_canneditem',$artifact_canned_id));
+					exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','not_update_canneditem',$artifact_canned_id));
 				}
 				if ($ach->isError()) {
-					exit_error($LANG->getText('global','error'), $ach->getErrorMessage());
+					exit_error($Language->getText('global','error'), $ach->getErrorMessage());
 				}
-				$feedback .= $LANG->getText('tracker_admin_index','updated_cannedresponse');
+				$feedback .= $Language->getText('tracker_admin_index','updated_cannedresponse');
 			
 			}
 		} else if ($delete_canned) {
 		    if (!$ach->delete($artifact_canned_id)) {
-		      exit_error($LANG->getText('global','error'),$LANG->getText('tracker_admin_index','not_delete_canneditem',$artifact_canned_id));
+		      exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','not_delete_canneditem',$artifact_canned_id));
 		    }
 		    if ($ach->isError()) {
-		       exit_error($LANG->getText('global','error'), $ach->getErrorMessage());
+		       exit_error($Language->getText('global','error'), $ach->getErrorMessage());
 		    }
-		    $feedback .= $LANG->getText('tracker_admin_index','deleted_cannedresponse');
+		    $feedback .= $Language->getText('tracker_admin_index','deleted_cannedresponse');
 
 		} // End of post_changes
 		// Display the UI Form
 		if ($update_canned && !$post_changes) {
-		  $ath->adminHeader(array ('title'=>$LANG->getText('tracker_admin_index','modify_cannedresponse'),
+		  $ath->adminHeader(array ('title'=>$Language->getText('tracker_admin_index','modify_cannedresponse'),
 					   'help' => 'TrackerAdministration.html#TrackerCannedResponses'));
 			$aci = $ach->fetchData($artifact_canned_id);
 			if (!$aci) {
-			  exit_error($LANG->getText('global','error'),$LANG->getText('tracker_admin_index','not_found_canned_item',$artifact_canned_id));
+			  exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','not_found_canned_item',$artifact_canned_id));
 			}
 			$ach->displayUpdateForm();
 		} else {
-		  $ath->adminHeader(array ('title'=>$LANG->getText('tracker_admin_index','create_modify_cannedresponse'),
+		  $ath->adminHeader(array ('title'=>$Language->getText('tracker_admin_index','create_modify_cannedresponse'),
 		   'help' => 'TrackerAdministration.html#TrackerCannedResponses'));
 			$ach->displayCannedResponses();
 			
@@ -291,7 +291,7 @@ if ($group_id && !$atid) {
 		}
 
 		$ath->adminHeader(
-		array ('title'=>$LANG->getText('tracker_admin_index','art_admin'),
+		array ('title'=>$Language->getText('tracker_admin_index','art_admin'),
 		   'help' => 'TrackerAdministration.html#TrackerEmailNotificationSettings'));
 		if ($submit) {
 			$res_new = $ath->updateNotificationSettings($send_all_artifacts, ($new_artifact_address?$new_artifact_address : ''), user_getid(), $watchees,$feedb);
@@ -315,12 +315,12 @@ if ($group_id && !$atid) {
 			
 			// Give Feedback
 			if ($res_notif && $res_new) {
-				$feedback .= $LANG->getText('tracker_admin_index','update_success');
+				$feedback .= $Language->getText('tracker_admin_index','update_success');
 			} else {
 			  if (!$res_new && $feedb) {
-			    $feedback .= $LANG->getText('tracker_admin_index','update_failed',$feedb);
+			    $feedback .= $Language->getText('tracker_admin_index','update_failed',$feedb);
 			  } else {
-			    $feedback .= $LANG->getText('tracker_admin_index','update_failed',$ath->getErrorMessage());
+			    $feedback .= $Language->getText('tracker_admin_index','update_failed',$ath->getErrorMessage());
 			  }
 			}
 			$ath->fetchData($ath->getID());
@@ -344,15 +344,15 @@ if ($group_id && !$atid) {
 		if ( $update ) {
 			if ( !$ath->update($name,$description,$itemname,$is_public,$allow_anon,
                                            $submit_instructions,$browse_instructions,$instantiate_for_new_projects) ) {
-				exit_error($LANG->getText('global','error'),$ath->getErrorMessage());
+				exit_error($Language->getText('global','error'),$ath->getErrorMessage());
 			} else {
 				$succeed = true;
 			}
 		}
 	
-		$ath->adminHeader(array('title'=>$LANG->getText('tracker_admin_field_usage','tracker_admin').$LANG->getText('tracker_admin_index','options'),'help' => 'TrackerAdministration.html#TrackerGeneralSettings'));
+		$ath->adminHeader(array('title'=>$Language->getText('tracker_admin_field_usage','tracker_admin').$Language->getText('tracker_admin_index','options'),'help' => 'TrackerAdministration.html#TrackerGeneralSettings'));
 		if ( $succeed ) {
-			echo '<H3><span class="feedback">'.$LANG->getText('tracker_admin_index','update_success_title').'</span></H3>';
+			echo '<H3><span class="feedback">'.$Language->getText('tracker_admin_index','update_success_title').'</span></H3>';
 		}
 		$ath->displayOptions($group_id,$atid);
 		$ath->footer(array());
@@ -377,9 +377,9 @@ if ($group_id && !$atid) {
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
 			if ( !$field->updateValueFunction($atid,$value_function) ) {
-				exit_error($LANG->getText('global','error'),$art_field_fact->getErrorMessage());
+				exit_error($Language->getText('global','error'),$art_field_fact->getErrorMessage());
 			} else {
-				$feedback = $LANG->getText('tracker_admin_index','values_updated');
+				$feedback = $Language->getText('tracker_admin_index','values_updated');
 			}
 		}
 		require('./field_values.php');
@@ -399,9 +399,9 @@ if ($group_id && !$atid) {
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
 			if ( !$field->updateDefaultValue($atid,$default_value) ) {
-				exit_error($LANG->getText('global','error'),$art_field_fact->getErrorMessage());
+				exit_error($Language->getText('global','error'),$art_field_fact->getErrorMessage());
 			} else {
-				$feedback = $LANG->getText('tracker_admin_index','values_updated');
+				$feedback = $Language->getText('tracker_admin_index','values_updated');
 			}
 		}
 		require('./field_values.php');
@@ -437,12 +437,12 @@ if ($group_id && !$atid) {
 		
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
-			$ath->adminHeader(array('title'=>$LANG->getText('tracker_admin_field_usage','tracker_admin').
-						$LANG->getText('tracker_admin_field_values_details','values_admin'),
+			$ath->adminHeader(array('title'=>$Language->getText('tracker_admin_field_usage','tracker_admin').
+						$Language->getText('tracker_admin_field_values_details','values_admin'),
 						'help' => 'TrackerAdministration.html#TrackerUpdatingaTrackerFieldValue'));
-			echo "<H2>".$LANG->getText('tracker_import_admin','tracker').
+			echo "<H2>".$Language->getText('tracker_import_admin','tracker').
 			  " '<a href=\"/tracker/admin/?group_id=".$group_id."&atid=".$atid."\">".$ath->getName()."</a>'".
-			  $LANG->getText('tracker_admin_field_values_details','manage_for',$field->getLabel())."'</H2>";
+			  $Language->getText('tracker_admin_field_values_details','manage_for',$field->getLabel())."'</H2>";
 
 			$value_array = $field->getFieldValue($atid,$value_id);
 			$ath->displayFieldValueForm("value_update",$field_id,$value_array['value_id'],$value_array['value'],$value_array['order_id'],$value_array['status'],$value_array['description']);
@@ -464,9 +464,9 @@ if ($group_id && !$atid) {
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
 			if ( !$field->createValueList($atid,$value,$description,$order_id) ) {
-				exit_error($LANG->getText('global','error'),$field->getErrorMessage());
+				exit_error($Language->getText('global','error'),$field->getErrorMessage());
 			} else {
-				$feedback = $LANG->getText('tracker_admin_index','value_created');
+				$feedback = $Language->getText('tracker_admin_index','value_created');
 			}
 			require('./field_values_details.php');
 		}
@@ -486,9 +486,9 @@ if ($group_id && !$atid) {
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
 			if ( !$field->updateValueList($atid,$value_id,$value,$description,$order_id,$status) ) {
-				exit_error($LANG->getText('global','error'),$field->getErrorMessage());
+				exit_error($Language->getText('global','error'),$field->getErrorMessage());
 			} else {
-				$feedback = $LANG->getText('tracker_admin_index','value_updated');
+				$feedback = $Language->getText('tracker_admin_index','value_updated');
 			}
 			require('./field_values_details.php');
 		}
@@ -508,9 +508,9 @@ if ($group_id && !$atid) {
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
 			if ( !$field->deleteValueList($atid,$value_id) ) {
-				exit_error($LANG->getText('global','error'),$field->getErrorMessage());
+				exit_error($Language->getText('global','error'),$field->getErrorMessage());
 			} else {
-				$feedback = $LANG->getText('tracker_admin_index','value_deleted');
+				$feedback = $Language->getText('tracker_admin_index','value_deleted');
 			}
 			require('./field_values_details.php');
 		}
@@ -534,9 +534,9 @@ if ($group_id && !$atid) {
 		if ( !$art_field_fact->createField($description,$label,$data_type,$display_type,
 						 $display_size,$rank_on_screen,$show_on_add,$show_on_add_members,
 						 $empty_ok,$keep_history,$special,$use_it) ) {
-			exit_error($LANG->getText('global','error'),$art_field_fact->getErrorMessage());
+			exit_error($Language->getText('global','error'),$art_field_fact->getErrorMessage());
 		} else {
-		  $feedback = $LANG->getText('tracker_admin_index','field_created');
+		  $feedback = $Language->getText('tracker_admin_index','field_created');
 		}
 		require('./field_usage.php');
 		break;
@@ -557,12 +557,12 @@ if ($group_id && !$atid) {
 			if ( !$field->update($atid,$field_name,$description,$label,$data_type,$display_type,
 							 ($display_size=="N/A"?"":$display_size),$rank_on_screen,$show_on_add,$show_on_add_members,
 							 $empty_ok,$keep_history,$special,$use_it) ) {
-				exit_error($LANG->getText('global','error'),$field->getErrorMessage());
+				exit_error($Language->getText('global','error'),$field->getErrorMessage());
 			} else {
 				// Reload the field factory
 				$art_field_fact = new ArtifactFieldFactory($ath);
 
-				$feedback = $LANG->getText('tracker_admin_index','field_updated');
+				$feedback = $Language->getText('tracker_admin_index','field_updated');
 			}
 		}
 		require('./field_usage.php');
@@ -582,12 +582,12 @@ if ($group_id && !$atid) {
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
 			if ( !$field->delete($atid) ) {
-				exit_error($LANG->getText('global','error'),$field->getErrorMessage());
+				exit_error($Language->getText('global','error'),$field->getErrorMessage());
 			} else {
 				// Reload the field factory
 				$art_field_fact = new ArtifactFieldFactory($ath);
 				
-				$feedback = $LANG->getText('tracker_admin_index','field_deleted');
+				$feedback = $Language->getText('tracker_admin_index','field_deleted');
 			}
 		}
 		require('./field_usage.php');
@@ -606,11 +606,11 @@ if ($group_id && !$atid) {
 		
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
-			$ath->adminHeader(array('title'=>$LANG->getText('tracker_admin_field_usage','tracker_admin').$LANG->getText('tracker_admin_index','modify_usage'),
+			$ath->adminHeader(array('title'=>$Language->getText('tracker_admin_field_usage','tracker_admin').$Language->getText('tracker_admin_index','modify_usage'),
 						'help' => 'TrackerAdministration.html#CreationandModificationofaTrackerField'));
-			echo "<H2>".$LANG->getText('tracker_import_admin','tracker').
+			echo "<H2>".$Language->getText('tracker_import_admin','tracker').
 			  " '<a href=\"/tracker/admin/?group_id=".$group_id."&atid=".$atid."\">".$ath->getName()."</a>' ".
-			  $LANG->getText('tracker_admin_index','modify_usage_for',$field->getLabel())."'</H2>";
+			  $Language->getText('tracker_admin_index','modify_usage_for',$field->getLabel())."'</H2>";
 			$ath->displayFieldUsageForm("field_update",$field->getID(),
 						    $field->getName(),$field->getDescription(),$field->getLabel(),
 						    $field->getDataType(),$field->getDefaultValue(),$field->getDisplayType(),
@@ -631,13 +631,13 @@ if ($group_id && !$atid) {
 			return;
 		}
 
-		$ath->adminHeader(array('title'=>$ath->getName().' '.$LANG->getText('tracker_admin_field_usage','tracker_admin'),
+		$ath->adminHeader(array('title'=>$ath->getName().' '.$Language->getText('tracker_admin_field_usage','tracker_admin'),
 					'help' => 'TrackerAdministration.html'));
 		if (!$ath->preDelete()) {
-		  $feedback = $LANG->getText('tracker_admin_index','deletion_failed',$ath->getName());
+		  $feedback = $Language->getText('tracker_admin_index','deletion_failed',$ath->getName());
 		} else {
-		  $feedback = $LANG->getText('tracker_admin_index','delete_success',$ath->getName());
-		  echo $LANG->getText('tracker_admin_index','tracker_deleted',array($ath->getName(),$GLOBALS['sys_email_admin']));
+		  $feedback = $Language->getText('tracker_admin_index','delete_success',$ath->getName());
+		  echo $Language->getText('tracker_admin_index','tracker_deleted',array($ath->getName(),$GLOBALS['sys_email_admin']));
 		} 
 		$ath->footer(array());
 	  break;
@@ -648,7 +648,7 @@ if ($group_id && !$atid) {
 			return;
 		}
 		
-		$ath->adminHeader(array('title'=>$ath->getName().' '.$LANG->getText('tracker_admin_field_usage','tracker_admin'),'help' => 'TrackerAdministration.html'));
+		$ath->adminHeader(array('title'=>$ath->getName().' '.$Language->getText('tracker_admin_field_usage','tracker_admin'),'help' => 'TrackerAdministration.html'));
 		$ath->displayAdminTracker($group_id,$atid);
 		$ath->footer(array());
 	} // switch

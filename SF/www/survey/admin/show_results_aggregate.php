@@ -10,14 +10,14 @@ require($DOCUMENT_ROOT.'/include/pre.php');
 require($DOCUMENT_ROOT.'/include/HTML_Graphs.php');
 require($DOCUMENT_ROOT.'/survey/survey_utils.php');
 
-$LANG->loadLanguageMsg('survey/survey');
+$Language->loadLanguageMsg('survey/survey');
 
 $is_admin_page='y';
-survey_header(array('title'=>$LANG->getText('survey_admin_show_r_aggregate','agg_res'),
+survey_header(array('title'=>$Language->getText('survey_admin_show_r_aggregate','agg_res'),
 		    'help'=>'AdministeringSurveys.html#ReviewingSurveyResults'));
 
 if (!user_isloggedin() || !user_ismember($group_id,'A')) {
-	echo '<H1>'.$LANG->getText('survey_admin_add_question','perm_denied').'</H1>';
+	echo '<H1>'.$Language->getText('survey_admin_add_question','perm_denied').'</H1>';
 	survey_footer(array());
 	exit;
 }
@@ -106,12 +106,12 @@ for ($i=0; $i<$quest_count; $i++) {
 		$result3=db_query($sql);
 
 		if (!$result2 || db_numrows($result2) < 1) {
-		    echo $LANG->getText('global','error');
+		    echo $Language->getText('global','error');
 		    echo db_error();
 		} else {		    
 		    $answers_cnt=db_result($result2, 0, 'count');
 		    $blank_cnt=db_result($result3, 0, 'count');
-		    echo "<B>$answers_cnt</B> ".$LANG->getText('survey_admin_show_r_aggregate','resp');
+		    echo "<B>$answers_cnt</B> ".$Language->getText('survey_admin_show_r_aggregate','resp');
 		    if ($blank_cnt) { echo "  (+ $blank_cnt blank)"; }
 		}
 
@@ -126,12 +126,12 @@ for ($i=0; $i<$quest_count; $i++) {
 
 		    $result2=db_query($sql);
 		    if (!$result2 || db_numrows($result2) < 1) {
-			echo $LANG->getText('global','error');
+			echo $Language->getText('global','error');
 			echo db_error();
 		    } else {
 			$avg = db_result($result2, 0, 'avg');
 			echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-			printf($LANG->getText('survey_admin_show_r_aggregate','avg')." <B>%.2f</B>",$avg);
+			printf($Language->getText('survey_admin_show_r_aggregate','avg')." <B>%.2f</B>",$avg);
 		    }
 		}
 
@@ -139,7 +139,7 @@ for ($i=0; $i<$quest_count; $i++) {
 
 		if ($question_type != $last_question_type) {
 			echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.
-			    $LANG->getText('survey_admin_show_r_aggregate','type')." <B>1 &lt;--- - - - ---&gt; 5</B>\n";
+			    $Language->getText('survey_admin_show_r_aggregate','type')." <B>1 &lt;--- - - - ---&gt; 5</B>\n";
 		}
 
 		$sql="SELECT response,count(*) AS count FROM survey_responses WHERE survey_id='$survey_id' AND question_id='$quest_array[$i]' AND response IN (1,2,3,4,5) AND group_id='$group_id' GROUP BY response";
@@ -148,7 +148,7 @@ for ($i=0; $i<$quest_count; $i++) {
 		// Graph it even if there is zero row because GraphResult
 		// is in charge of displaying the question itself
 		if (!$result2) {
-			echo $LANG->getText('global','error');
+			echo $Language->getText('global','error');
 			echo db_error();
 		} else {
 			GraphResult($result2,util_unconvert_htmlspecialchars(db_result($result, 0, "question")));
@@ -172,9 +172,9 @@ for ($i=0; $i<$quest_count; $i++) {
 
 		echo util_unconvert_htmlspecialchars(db_result($result, 0, "question"))."<BR>\n";
 
-		echo "<A HREF=\"show_results_comments.php?survey_id=$survey_id&question_id=$quest_array[$i]&question_num=$q_num&group_id=$group_id\">".$LANG->getText('survey_admin_show_r_aggregate','view_cmmts')."</A>".
+		echo "<A HREF=\"show_results_comments.php?survey_id=$survey_id&question_id=$quest_array[$i]&question_num=$q_num&group_id=$group_id\">".$Language->getText('survey_admin_show_r_aggregate','view_cmmts')."</A>".
 		    '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-		echo ($answers_cnt ? "$answers_cnt ".$LANG->getText('survey_admin_show_r_aggregate','cmmts') : $LANG->getText('global','none'));
+		echo ($answers_cnt ? "$answers_cnt ".$Language->getText('survey_admin_show_r_aggregate','cmmts') : $Language->getText('global','none'));
 		echo ($blank_cnt ? " (+ $blank_cnt blank)" : '');
 		echo '<br>';
 
@@ -197,12 +197,12 @@ for ($i=0; $i<$quest_count; $i++) {
 		$result3=db_query($sql);
 
 		if (!$result2 || db_numrows($result2) < 1) {
-		    echo $LANG->getText('global','error');
+		    echo $Language->getText('global','error');
 		    echo db_error();
 		} else {
 		    $answers_cnt=db_result($result2, 0, 'count');
 		    $blank_cnt=db_result($result3, 0, 'count');
-		    echo "<B>$answers_cnt</B> ".$LANG->getText('survey_admin_show_r_aggregate','resp');
+		    echo "<B>$answers_cnt</B> ".$Language->getText('survey_admin_show_r_aggregate','resp');
 		    if ($blank_cnt) { echo "  (+ $blank_cnt blank)"; }
 		}
 
@@ -217,11 +217,11 @@ for ($i=0; $i<$quest_count; $i++) {
 
 		    $result2=db_query($sql);
 		    if (!$result2 || db_numrows($result2) < 1) {
-			echo $LANG->getText('global','error');
+			echo $Language->getText('global','error');
 		    } else {
 			$avg = db_result($result2, 0, 'avg');
 			echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-			printf($LANG->getText('survey_admin_show_r_aggregate','avg')." <B>%.2f</B>",$avg);
+			printf($Language->getText('survey_admin_show_r_aggregate','avg')." <B>%.2f</B>",$avg);
 		    }
 		}
 
@@ -230,7 +230,7 @@ for ($i=0; $i<$quest_count; $i++) {
 		*/
 
 		if ($question_type != $last_question_type) {
-			echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$LANG->getText('survey_admin_show_r_aggregate','type')." <B>".$LANG->getText('global','yes')." / ".$LANG->getText('global','no')."</B><BR>\n";
+			echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$Language->getText('survey_admin_show_r_aggregate','type')." <B>".$Language->getText('global','yes')." / ".$Language->getText('global','no')."</B><BR>\n";
 		}
 
 		/*
@@ -240,7 +240,7 @@ for ($i=0; $i<$quest_count; $i++) {
 
 		$result2=db_query($sql);
 
-		$name_array[0]=$LANG->getText('global','yes');
+		$name_array[0]=$Language->getText('global','yes');
 
 		if (!$result2 || db_numrows($result2) < 1) {
 			$value_array[0]=0;
@@ -255,7 +255,7 @@ for ($i=0; $i<$quest_count; $i++) {
 
 		$result2=db_query($sql);
 
-		$name_array[1]=$LANG->getText('global','no');
+		$name_array[1]=$Language->getText('global','no');
 
 		if (!$result2 || db_numrows($result2) < 1) {
 			$value_array[1]=0;
@@ -293,9 +293,9 @@ for ($i=0; $i<$quest_count; $i++) {
 
 		echo util_unconvert_htmlspecialchars(db_result($result, 0, "question"))."<BR>\n";
 
-		echo "<A HREF=\"show_results_comments.php?survey_id=$survey_id&question_id=$quest_array[$i]&question_num=$q_num&group_id=$group_id\">".$LANG->getText('survey_admin_show_r_aggregate','view_cmmts')."</A>".
+		echo "<A HREF=\"show_results_comments.php?survey_id=$survey_id&question_id=$quest_array[$i]&question_num=$q_num&group_id=$group_id\">".$Language->getText('survey_admin_show_r_aggregate','view_cmmts')."</A>".
 		    '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-		echo ($answers_cnt ? "$answers_cnt ".$LANG->getText('survey_admin_show_r_aggregate','cmmts') : $LANG->getText('global','none'));
+		echo ($answers_cnt ? "$answers_cnt ".$Language->getText('survey_admin_show_r_aggregate','cmmts') : $Language->getText('global','none'));
 		echo ($blank_cnt ? " (+ $blank_cnt blank)" : '');
 		echo '<br>';
 

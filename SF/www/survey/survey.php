@@ -9,13 +9,13 @@
 require($DOCUMENT_ROOT.'/include/pre.php');
 require('../survey/survey_utils.php');
 
-$LANG->loadLanguageMsg('survey/survey');
+$Language->loadLanguageMsg('survey/survey');
 
-survey_header(array('title'=>$LANG->getText('survey_s','s'),
+survey_header(array('title'=>$Language->getText('survey_s','s'),
 		    'help'=>'SurveyManager.html#PublishingaSurvey'));
 
 if (!$survey_id || !$group_id) {
-	echo "<H1>".$LANG->getText('survey_s','g_id_err')."</H1>";
+	echo "<H1>".$Language->getText('survey_s','g_id_err')."</H1>";
 } else {
 
     // select this survey from the database
@@ -26,7 +26,7 @@ if (!$survey_id || !$group_id) {
 	/*
 		Tell them they need to be logged in
 	*/
-	echo $LANG->getText('survey_s','log_in','/account/login.php?return_to='.urlencode($REQUEST_URI));
+	echo $Language->getText('survey_s','log_in','/account/login.php?return_to='.urlencode($REQUEST_URI));
 	survey_footer(array());
 	exit;
     } else {

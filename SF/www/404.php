@@ -8,17 +8,17 @@
 
 require($DOCUMENT_ROOT.'/include/pre.php');
 
-$LANG->loadLanguageMsg('homepage/homepage');
+$Language->loadLanguageMsg('homepage/homepage');
 
-$HTML->header(array(title=>$LANG->getText('404', 'title')));
+$HTML->header(array(title=>$Language->getText('404', 'title')));
 
 echo '<a href="'.get_server_url().'">';
 
 if (strpos($REQUEST_URI, "pipermail")) {
-  echo "<CENTER><H1>".$LANG->getText('404', 'no_archive')."</H1></CENTER><P>";
+  echo "<CENTER><H1>".$Language->getText('404', 'no_archive')."</H1></CENTER><P>";
 }
 else {
-  echo "<CENTER><H1>".$LANG->getText('404', 'no_page')."</H1></CENTER>";
+  echo "<CENTER><H1>".$Language->getText('404', 'no_page')."</H1></CENTER>";
 
   echo "<P>";
 }

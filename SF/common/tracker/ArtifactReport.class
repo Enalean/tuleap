@@ -10,7 +10,7 @@
 //require($DOCUMENT_ROOT.'/../common/include/Error.class');
 //require($DOCUMENT_ROOT.'/../common/tracker/ArtifactReportField.class');
 
-$LANG->loadLanguageMsg('tracker/tracker');
+$Language->loadLanguageMsg('tracker/tracker');
 
 //
 // Sort functions - Must be outside the classes
@@ -86,7 +86,7 @@ class ArtifactReport extends Error {
 	 *	@return true on success, false on failure.
 	 */
 	function recreate($user_id,$name,$description,$scope) {
-		global $ath,$LANG;
+		global $ath,$Language;
 		/* 
 		$perm = $ath->Group->getPermissionFromId( $user_id);
 	
@@ -97,8 +97,8 @@ class ArtifactReport extends Error {
 	*/	
 	
 		if (!$name || !$description ||!$scope) {
-				$this->setError('ArtifactReport: '.$LANG->getText('tracker_common_report','name_requ'));
-				echo 'ArtifactReport: '.$LANG->getText('tracker_common_report','name_requ');
+				$this->setError('ArtifactReport: '.$Language->getText('tracker_common_report','name_requ'));
+				echo 'ArtifactReport: '.$Language->getText('tracker_common_report','name_requ');
 				return false;
 		}
 	
@@ -146,7 +146,7 @@ class ArtifactReport extends Error {
 	 *	@return id on success, false on failure.
 	 */
 	function create($user_id,$name,$description,$scope) {
-		global $ath,$LANG;
+		global $ath,$Language;
 		/*$perm = $ath->Group->getPermissionFromId( $user_id);
 	
 			if (!$perm || !is_object($perm) || !$perm->isArtifactAdmin()) {
@@ -155,7 +155,7 @@ class ArtifactReport extends Error {
 			}
 	*/
 		if (!$name || !$description ||!$scope) {
-				$this->setError('ArtifactReport: '.$LANG->getText('tracker_common_report','name_requ'));
+				$this->setError('ArtifactReport: '.$Language->getText('tracker_common_report','name_requ'));
 				return false;
 			}
 	
@@ -207,7 +207,7 @@ class ArtifactReport extends Error {
 	 *	@return	boolean	success.
 	 */
 	function fetchData($report_id) {
-	  global $LANG;
+	  global $Language;
 		
 		// Read the report infos
 		$sql = "SELECT * FROM artifact_report ".
@@ -215,7 +215,7 @@ class ArtifactReport extends Error {
 		//echo $sql.'<br>';
 		$res=db_query($sql);
 		if (!$res || db_numrows($res) < 1) {
-			$this->setError('ArtifactReport: '.$LANG->getText('tracker_common_report','not_found'));
+			$this->setError('ArtifactReport: '.$Language->getText('tracker_common_report','not_found'));
 			return false;
 		}
 		$data_array = db_fetch_array($res);

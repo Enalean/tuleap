@@ -11,9 +11,9 @@
 
 require($DOCUMENT_ROOT.'/include/pre.php');
 
-$LANG->loadLanguageMsg('admin/admin');
+$Language->loadLanguageMsg('admin/admin');
 
-$HTML->header(array('title'=>$LANG->getText('admin_show_license','title')));
+$HTML->header(array('title'=>$Language->getText('admin_show_license','title')));
 
 // display the license
 include(util_get_content('admin/codex_license_terms'));

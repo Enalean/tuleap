@@ -10,7 +10,7 @@ require($DOCUMENT_ROOT.'/include/pre.php');    // Initial db and session library
 require($DOCUMENT_ROOT.'/include/vars.php');
 require($DOCUMENT_ROOT.'/include/account.php');
 
-$LANG->loadLanguageMsg('register/register');
+$Language->loadLanguageMsg('register/register');
 
 session_require(array('isloggedin'=>'1'));
 
@@ -19,13 +19,13 @@ if ($insert_group_name && $group_id && $rand_hash && $form_full_name && $form_un
 		check for valid group name
 	*/
 	if (!account_groupnamevalid($form_unix_name)) {
-		exit_error($LANG->getText('register_license','invalid_g_name'),$register_error);
+		exit_error($Language->getText('register_license','invalid_g_name'),$register_error);
 	}
 	/*
 		See if it's taken already
 	*/
 	if (db_numrows(db_query("SELECT group_id FROM groups WHERE unix_group_name LIKE '$form_unix_name'")) > 0) {
-		exit_error($LANG->getText('register_license','g_name_taken'),$LANG->getText('register_license','g_name_exist'));
+		exit_error($Language->getText('register_license','g_name_taken'),$Language->getText('register_license','g_name_exist'));
 	}
 	/*
 		Hash prevents them from updating a live, existing group account
@@ -36,10 +36,10 @@ if ($insert_group_name && $group_id && $rand_hash && $form_full_name && $form_un
 	$result=db_query($sql);
 
 } else {
-	exit_error($LANG->getText('global','error'),$LANG->getText('register_category','var_missing',$GLOBALS['sys_email_admin']));
+	exit_error($Language->getText('global','error'),$Language->getText('register_category','var_missing',$GLOBALS['sys_email_admin']));
 }
 
-$HTML->header(array('title'=>$LANG->getText('register_license','license')));
+$HTML->header(array('title'=>$Language->getText('register_license','license')));
 
 include(util_get_content('register/license'));
 

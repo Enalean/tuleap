@@ -14,7 +14,7 @@
 //require($DOCUMENT_ROOT.'/../common/tracker/ArtifactGroup.class');
 //require($DOCUMENT_ROOT.'/../common/tracker/ArtifactCategory.class');
 
-$LANG->loadLanguageMsg('tracker/tracker');
+$Language->loadLanguageMsg('tracker/tracker');
 
 class ArtifactTypes extends Error {
 
@@ -39,11 +39,11 @@ class ArtifactTypes extends Error {
 	 *	@return	boolean	success.
 	 */
 	function ArtifactTypes(&$Group) {
-	  global $LANG;
+	  global $Language;
 
 		$this->Error();
 		if (!$Group || !is_object($Group)) {
-			$this->setError($LANG->getText('tracker_common_type','invalid'));
+			$this->setError($Language->getText('tracker_common_type','invalid'));
 			return false;
 		}
 		if ($Group->isError()) {
@@ -94,28 +94,28 @@ class ArtifactTypes extends Error {
 	 *	@access private.
 	 */
 	function createBugTracker() {
-	  global $LANG;
+	  global $Language;
 
 		$at=new ArtifactType($this->Group);
 		if (!$at || !is_object($at)) {
-			$this->setError($LANG->getText('tracker_common_types','err_create'));
+			$this->setError($Language->getText('tracker_common_types','err_create'));
 			return false;
 		} else {
-			if ($at->create($LANG->getText('tracker_common_types','bugs'),$LANG->getText('tracker_common_types','bug_desc'),1,1,0,'',30,1,'','',1)) {
+			if ($at->create($Language->getText('tracker_common_types','bugs'),$Language->getText('tracker_common_types','bug_desc'),1,1,0,'',30,1,'','',1)) {
 				//
 				//	create a default category
 				//	
 				$ac=new ArtifactCategory($at);
-				$ac->create($LANG->getText('tracker_common_types','bug_ex'),100);
+				$ac->create($Language->getText('tracker_common_types','bug_ex'),100);
 
 				//
 				//	create a default group
 				//	
 				$ag=new ArtifactGroup($at);
-				$ag->create($LANG->getText('tracker_common_types','v1_ex'));
+				$ag->create($Language->getText('tracker_common_types','v1_ex'));
 				return true;
 			} else {
-				$this->setError($LANG->getText('tracker_common_types','fail_bug',$at->getErrorMessage()));
+				$this->setError($Language->getText('tracker_common_types','fail_bug',$at->getErrorMessage()));
 				return false;
 			}
 		}	  
@@ -128,28 +128,28 @@ class ArtifactTypes extends Error {
 	 *	@access private.
 	 */
 	function createSupportTracker() {
-	  global $LANG;
+	  global $Language;
 
 		$at=new ArtifactType($this->Group);
 		if (!$at || !is_object($at)) {
-			$this->setError($LANG->getText('tracker_common_types','err_sr'));
+			$this->setError($Language->getText('tracker_common_types','err_sr'));
 			return false;
 		} else {
-			if ($at->create($LANG->getText('tracker_common_types','sr'),$LANG->getText('tracker_common_types','sr_desc'),1,1,0,'',15,0,'','',2)) {
+			if ($at->create($Language->getText('tracker_common_types','sr'),$Language->getText('tracker_common_types','sr_desc'),1,1,0,'',15,0,'','',2)) {
 				//
 				//  create a default category
 				//  
 				$ac=new ArtifactCategory($at);
-				$ac->create($LANG->getText('tracker_common_types','sr_ex'),100);
+				$ac->create($Language->getText('tracker_common_types','sr_ex'),100);
 
 				//
 				//  create a default group
 				//  
 				$ag=new ArtifactGroup($at);
-				$ag->create($LANG->getText('tracker_common_types','v1_ex'));
+				$ag->create($Language->getText('tracker_common_types','v1_ex'));
 				return true;
 			} else {
-				$this->setError($LANG->getText('tracker_common_types','fail_sr',$at->getErrorMessage()));
+				$this->setError($Language->getText('tracker_common_types','fail_sr',$at->getErrorMessage()));
 				return false;
 			}   
 		}
@@ -162,31 +162,31 @@ class ArtifactTypes extends Error {
 	 *	@access private.
 	 */
 	function createPatchTracker() {
-	  global $LANG;
+	  global $Language;
 
 		//	
 		//  Set up a patch tracker for this group
 		//  
 		$at=new ArtifactType($this->Group);
 		if (!$at || !is_object($at)) {
-			$this->setError($LANG->getText('tracker_common_types','err_patch'));
+			$this->setError($Language->getText('tracker_common_types','err_patch'));
 			return false;
 		} else {
-			if ($at->create($LANG->getText('tracker_common_types','patch'),$LANG->getText('tracker_common_types','patch_desc'),1,1,0,'',15,1,'','',3)) {
+			if ($at->create($Language->getText('tracker_common_types','patch'),$Language->getText('tracker_common_types','patch_desc'),1,1,0,'',15,1,'','',3)) {
 				//
 				//  create a default category
 				//
 				$ac=new ArtifactCategory($at);
-				$ac->create($LANG->getText('tracker_common_types','patch_ex1'),100);
+				$ac->create($Language->getText('tracker_common_types','patch_ex1'),100);
 
 				//  
 				//  create a default group
 				//
 				$ag=new ArtifactGroup($at);
-				$ag->create($LANG->getText('tracker_common_types','patch_ex2'));
+				$ag->create($Language->getText('tracker_common_types','patch_ex2'));
 				return true;
 			} else {
-				$this->setError($LANG->getText('tracker_common_types','fail_patch',$at->getErrorMessage()));
+				$this->setError($Language->getText('tracker_common_types','fail_patch',$at->getErrorMessage()));
 				return false;
 			}
 		}
@@ -199,31 +199,31 @@ class ArtifactTypes extends Error {
 	 *	@access private.
 	 */
 	function createFeatureTracker() {
-	 global $LANG;
+	 global $Language;
  
 		//	
 		//  Set up a feature request tracker for this group
 		//	
 		$at=new ArtifactType($this->Group);
 		if (!$at || !is_object($at)) {
-			$this->setError($LANG->getText('tracker_common_types','err_fr'));
+			$this->setError($Language->getText('tracker_common_types','err_fr'));
 			return false;
 		} else {
-			if ($at->create($LANG->getText('tracker_common_types','fr'),$LANG->getText('tracker_common_types','fr_desc'),1,1,0,'',45,0,'','',4)) {
+			if ($at->create($Language->getText('tracker_common_types','fr'),$Language->getText('tracker_common_types','fr_desc'),1,1,0,'',45,0,'','',4)) {
 				//
 				//  create a default category
 				//
 				$ac=new ArtifactCategory($at);
-				$ac->create($LANG->getText('tracker_common_types','fr_ex1'),100);
+				$ac->create($Language->getText('tracker_common_types','fr_ex1'),100);
 
 				//  
 				//  create a default group
 				//
 				$ag=new ArtifactGroup($at);
-				$ag->create($LANG->getText('tracker_common_types','fr_ex2');
+				$ag->create($Language->getText('tracker_common_types','fr_ex2');
 				return true;
 			} else {
-				$this->setError($LANG->getText('tracker_common_types','fail_fr',$at->getErrorMessage()));
+				$this->setError($Language->getText('tracker_common_types','fail_fr',$at->getErrorMessage()));
 				return false;
 			}
 		}

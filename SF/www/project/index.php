@@ -8,7 +8,7 @@
 
 require($DOCUMENT_ROOT.'/include/pre.php');
     
-$LANG->loadLanguageMsg('project/project');
+$Language->loadLanguageMsg('project/project');
 
 /*
 	Project Summary Page
@@ -20,7 +20,7 @@ if ((!$group_id) && $form_grp) {
 }
 
 if (!$group_id) {
-	exit_error($LANG->getText('project_index','g_missed'),$LANG->getText('project_index','must_spec_g'));
+	exit_error($Language->getText('project_index','g_missed'),$Language->getText('project_index','must_spec_g'));
 }
 
 header ("Location: /projects/". group_getunixname($group_id) ."/");

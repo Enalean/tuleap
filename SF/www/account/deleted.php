@@ -8,15 +8,15 @@
 
 require($DOCUMENT_ROOT.'/include/pre.php');    
 
-$LANG->loadLanguageMsg('account/account');
+$Language->loadLanguageMsg('account/account');
 
-$HTML->header(array(title=>$LANG->getText('account_deleted', 'title')));
+$HTML->header(array(title=>$Language->getText('account_deleted', 'title')));
 list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
 ?>
 
-<P><B><?php echo $LANG->getText('account_deleted', 'title'); ?></B>
+<P><B><?php echo $Language->getText('account_deleted', 'title'); ?></B>
 
-<P><?php echo $LANG->getText('account_deleted', 'message', array($GLOBALS['sys_email_contact'], $GLOBALS['sys_email_contact'])); ?>
+<P><?php echo $Language->getText('account_deleted', 'message', array($GLOBALS['sys_email_contact'], $GLOBALS['sys_email_contact'])); ?>
 
 <?php
 $HTML->footer(array());

@@ -14,10 +14,10 @@
 
 require($DOCUMENT_ROOT.'/snippet/snippet_data.php');
 
-$LANG->loadLanguageMsg('snippet/snippet');
+$Language->loadLanguageMsg('snippet/snippet');
 
 function snippet_header($params) {
-	global $is_snippet_page,$DOCUMENT_ROOT,$HTML,$feedback,$LANG;
+	global $is_snippet_page,$DOCUMENT_ROOT,$HTML,$feedback,$Language;
 
 	// LJ used so the search box will add the necessary element to the pop-up box
 	// CodeX Specific
@@ -30,11 +30,11 @@ function snippet_header($params) {
 	*/
 	echo '<H2>' . $params['header'] . '</H2>';
 	echo '<P><B>';
-	echo '<A HREF="/snippet/">'.$LANG->getText('snippet_utils','browse').'</A>
-		 | <A HREF="/snippet/submit.php">'.$LANG->getText('snippet_utils','create_s').'</A>
-		 | <A HREF="/snippet/package.php">'.$LANG->getText('snippet_utils','create_p').'</A></B>';
+	echo '<A HREF="/snippet/">'.$Language->getText('snippet_utils','browse').'</A>
+		 | <A HREF="/snippet/submit.php">'.$Language->getText('snippet_utils','create_s').'</A>
+		 | <A HREF="/snippet/package.php">'.$Language->getText('snippet_utils','create_p').'</A></B>';
 	if ($params['help']) {
-	    echo ' | '.help_button($params['help'],false,$LANG->getText('global','help'));
+	    echo ' | '.help_button($params['help'],false,$Language->getText('global','help'));
 	}
 	echo '<P>';
 	html_feedback_top($feedback);
@@ -48,7 +48,7 @@ function snippet_footer($params) {
 }
 
 function snippet_show_package_snippets($version) {
-  global $LANG;
+  global $Language;
 	//show the latest version
 	$sql="SELECT snippet.snippet_id, snippet_package_item.snippet_version_id, snippet_version.version,snippet.name,user.user_name ".
 		"FROM snippet,snippet_version,snippet_package_item,user ".
@@ -61,21 +61,21 @@ function snippet_show_package_snippets($version) {
 	$rows=db_numrows($result);
 	echo '
 	<P>
-	<H3>'.$LANG->getText('snippet_add_snippet_to_package','s_in_p').'</H3>
+	<H3>'.$Language->getText('snippet_add_snippet_to_package','s_in_p').'</H3>
 	<P>';
 
 	$title_arr=array();
-	$title_arr[]=$LANG->getText('snippet_browse','id');
-	$title_arr[]=$LANG->getText('snippet_details','s_version');
-	$title_arr[]=$LANG->getText('snippet_browse','title');
-	$title_arr[]=$LANG->getText('snippet_details','author');
+	$title_arr[]=$Language->getText('snippet_browse','id');
+	$title_arr[]=$Language->getText('snippet_details','s_version');
+	$title_arr[]=$Language->getText('snippet_browse','title');
+	$title_arr[]=$Language->getText('snippet_details','author');
 
 	echo html_build_list_table_top ($title_arr,$links_arr);
 
 	if (!$result || $rows < 1) {
 		echo db_error();
 		echo '
-			<TR><TD COLSPAN="4"><H3>'.$LANG->getText('snippet_add_snippet_to_package','no_s_in_p').'</H3></TD></TR>';
+			<TR><TD COLSPAN="4"><H3>'.$Language->getText('snippet_add_snippet_to_package','no_s_in_p').'</H3></TD></TR>';
 	} else {
 
 		//get the newest version, so we can display it's code
@@ -98,7 +98,7 @@ function snippet_show_package_snippets($version) {
 }
 
 function snippet_show_package_details($id) {
-  global $LANG;
+  global $Language;
 
 	$sql="SELECT * FROM snippet_package WHERE snippet_package_id='$id'";
 	$result=db_query($sql);
@@ -112,16 +112,16 @@ function snippet_show_package_details($id) {
 	</TD></TR>
 
 	<TR>
-		<TD><B>'.$LANG->getText('snippet_package','category').'</B><BR>
+		<TD><B>'.$Language->getText('snippet_package','category').'</B><BR>
 		'.snippet_data_get_category_from_id(db_result($result,0,'category')).'
 		</TD>
 
-		<TD><B>'.$LANG->getText('snippet_package','language').'</B><BR>
+		<TD><B>'.$Language->getText('snippet_package','language').'</B><BR>
 		'.snippet_data_get_language_from_id(db_result($result,0,'language')).'
 		</TD>
 	</TR>
 
-	<TR><TD COLSPAN="2">&nbsp;<BR><B>'.$LANG->getText('snippet_package','description').'</B><BR>
+	<TR><TD COLSPAN="2">&nbsp;<BR><B>'.$Language->getText('snippet_package','description').'</B><BR>
 	'. util_make_links(nl2br(db_result($result,0,'description'))).'
 	</TD></TR>
 
@@ -130,7 +130,7 @@ function snippet_show_package_details($id) {
 }
 
 function snippet_show_snippet_details($id) {
-  global $LANG;
+  global $Language;
 
 	$sql="SELECT * FROM snippet WHERE snippet_id='$id'";
 	$result=db_query($sql);
@@ -143,20 +143,20 @@ function snippet_show_snippet_details($id) {
 	<H2>'. db_result($result,0,'name').'</H2>
 	</TD></TR>
 
-	<TR><TD><B>'.$LANG->getText('snippet_utils','type').'</B><BR>
+	<TR><TD><B>'.$Language->getText('snippet_utils','type').'</B><BR>
 		'.snippet_data_get_type_from_id(db_result($result,0,'type')).'</TD>
-	<TD><B>'.$LANG->getText('snippet_package','category').'</B><BR>
+	<TD><B>'.$Language->getText('snippet_package','category').'</B><BR>
 		'.snippet_data_get_category_from_id(db_result($result,0,'category')).'
 	</TD></TR>
 
-	<TR><TD><B>'.$LANG->getText('snippet_utils','license').'</B><BR>
+	<TR><TD><B>'.$Language->getText('snippet_utils','license').'</B><BR>
 		'.snippet_data_get_license_from_id(db_result($result,0,'license')).'</TD>
-	<TD><B>'.$LANG->getText('snippet_utils','language').'</B><BR>
+	<TD><B>'.$Language->getText('snippet_utils','language').'</B><BR>
 		'.snippet_data_get_language_from_id(db_result($result,0,'language')).'
 	</TD></TR>
 
 	<TR><TD COLSPAN="2">&nbsp;<BR>
-	<B>'.$LANG->getText('snippet_package','description').'</B><BR>
+	<B>'.$Language->getText('snippet_package','description').'</B><BR>
 	'. util_make_links(nl2br(db_result($result,0,'description'))).'
 	</TD></TR>
 
@@ -164,7 +164,7 @@ function snippet_show_snippet_details($id) {
 }
 
 function snippet_edit_package_details($id) {
-  global $LANG;
+  global $Language;
 
 	$sql="SELECT * FROM snippet_package WHERE snippet_package_id='$id'";
 	$result=db_query($sql);
@@ -176,27 +176,27 @@ function snippet_edit_package_details($id) {
 	<TABLE WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="2">
 
 	<TR><TD COLSPAN="2">
-	<B>'.$LANG->getText('snippet_browse','title').'</B><BR>
+	<B>'.$Language->getText('snippet_browse','title').'</B><BR>
         <INPUT TYPE="TEXT" NAME="snippet_name" SIZE="45" MAXLENGTH="60" VALUE="'.db_result($result,0,'name').'">
 	</TD></TR>
 
 	<TR>
-		<TD><B>'.$LANG->getText('snippet_package','category').'</B><BR>
+		<TD><B>'.$Language->getText('snippet_package','category').'</B><BR>
 		'.html_build_select_box(snippet_data_get_all_categories() ,'snippet_category',db_result($result,0,'category'),false).'
 		</TD>
 
-		<TD><B>'.$LANG->getText('snippet_package','language').'</B><BR>
+		<TD><B>'.$Language->getText('snippet_package','language').'</B><BR>
 		'.html_build_select_box(snippet_data_get_all_languages() ,"snippet_language",db_result($result,0,'language'),false).'
 		</TD>
 	</TR>
 
-	<TR><TD COLSPAN="2">&nbsp;<BR><B>'.$LANG->getText('snippet_package','description').'</B><BR>
+	<TR><TD COLSPAN="2">&nbsp;<BR><B>'.$Language->getText('snippet_package','description').'</B><BR>
 	    <TEXTAREA NAME="snippet_description" ROWS="5" COLS="45" WRAP="SOFT">'.db_result($result,0,'description').'</TEXTAREA>
 	</TD></TR>
 	<TR><TD COLSPAN="2" ALIGN="center">
-		<B>'.$LANG->getText('snippet_add_snippet_to_package','all_info_complete').'</B>
+		<B>'.$Language->getText('snippet_add_snippet_to_package','all_info_complete').'</B>
 		<BR>
-		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$LANG->getText('global','btn_submit').'">
+		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
 	</TD></TR>
 	</TABLE>
 	</FORM>
@@ -207,7 +207,7 @@ function snippet_edit_package_details($id) {
 
 
 function snippet_edit_snippet_details($id) {
-  global $LANG;
+  global $Language;
 
 	$sql="SELECT * FROM snippet WHERE snippet_id='$id'";
 	$result=db_query($sql);
@@ -219,31 +219,31 @@ function snippet_edit_snippet_details($id) {
 	<TABLE WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="2">
 
 	<TR><TD COLSPAN="2">
-        <B>'.$LANG->getText('snippet_browse','title').'</B>&nbsp;
+        <B>'.$Language->getText('snippet_browse','title').'</B>&nbsp;
 	<INPUT TYPE="TEXT" NAME="snippet_name" SIZE="45" MAXLENGTH="60" VALUE="'.db_result($result,0,'name').'">
 	</TD></TR>
 
-	<TR><TD><B>'.$LANG->getText('snippet_utils','type').'</B><BR>
+	<TR><TD><B>'.$Language->getText('snippet_utils','type').'</B><BR>
 		'.html_build_select_box(snippet_data_get_all_types() ,'snippet_type',db_result($result,0,'type'),false).'
-        </TD><TD><B>'.$LANG->getText('snippet_package','category').'</B><BR>
+        </TD><TD><B>'.$Language->getText('snippet_package','category').'</B><BR>
 		'.html_build_select_box(snippet_data_get_all_categories() ,'snippet_category',db_result($result,0,'category'),false).'
 	</TD></TR>
 
-	<TR><TD><B>'.$LANG->getText('snippet_utils','license').'</B><BR>
+	<TR><TD><B>'.$Language->getText('snippet_utils','license').'</B><BR>
 		'.html_build_select_box(snippet_data_get_all_licenses() ,'snippet_license',db_result($result,0,'license'),false).'
-        </TD><TD><B>'.$LANG->getText('snippet_package','language').'</B><BR>
+        </TD><TD><B>'.$Language->getText('snippet_package','language').'</B><BR>
 		'.html_build_select_box(snippet_data_get_all_languages() ,"snippet_language",db_result($result,0,'language'),false).'
 	</TD></TR>
 
 	<TR><TD COLSPAN="2">&nbsp;<BR>
-	<B>'.$LANG->getText('snippet_package','description').'</B><BR>
+	<B>'.$Language->getText('snippet_package','description').'</B><BR>
 	    <TEXTAREA NAME="snippet_description" ROWS="5" COLS="45" WRAP="SOFT">'.db_result($result,0,'description').'</TEXTAREA>
 	</TD></TR>
 
 	<TR><TD COLSPAN="2" ALIGN="center">
-		<B>'.$LANG->getText('snippet_add_snippet_to_package','all_info_complete').'</B>
+		<B>'.$Language->getText('snippet_add_snippet_to_package','all_info_complete').'</B>
 		<BR>
-		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$LANG->getText('global','btn_submit').'">
+		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
 	</TD></TR>
 	</TABLE>
 	</FORM>

@@ -11,9 +11,9 @@ if (!$group_id) {
     exit_no_group(); // need a group_id !!!
 }
 
-$LANG->loadLanguageMsg('cvs/cvs');
+$Language->loadLanguageMsg('cvs/cvs');
 
-commits_header(array ('title'=>$LANG->getText('cvs_browse_commit', 'title'),
+commits_header(array ('title'=>$Language->getText('cvs_browse_commit', 'title'),
 		      'help' => 'CVSWebInterface.html#QueryingCVS'));
 
 if (!$offset || $offset < 0) {
@@ -236,18 +236,18 @@ $tech_box=commits_technician_box($group_id, '_commiter', $_commiter, 'Any');
 /*
 	Show the new pop-up boxes to select assigned to and/or status
 */
-echo '<H3>'.$LANG->getText('cvs_browse_commit', 'browse_by').':</H3>'; 
+echo '<H3>'.$Language->getText('cvs_browse_commit', 'browse_by').':</H3>'; 
 echo '<FORM name="commit_form" ACTION="'. $PHP_SELF .'" METHOD="GET">
         <TABLE WIDTH="10%" BORDER="0">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 	<INPUT TYPE="HIDDEN" NAME="func" VALUE="browse">
 	<INPUT TYPE="HIDDEN" NAME="set" VALUE="custom">
         <TR align="center">
-                      <TD><b>'.$LANG->getText('cvs_browse_commit', 'id').'</b></TD>
-                      <TD><b>'.$LANG->getText('cvs_browse_commit', 'branch').'</b></TD>
-                      <TD><b>'.$LANG->getText('cvs_browse_commit', 'who').'</b></TD>
-                      <TD><b>'.$LANG->getText('cvs_browse_commit', 'keyword').'</b></TD>'.
-        ##'<TD><b>'.$LANG->getText('cvs_browse_commit', 'date').'</b></TD>'.
+                      <TD><b>'.$Language->getText('cvs_browse_commit', 'id').'</b></TD>
+                      <TD><b>'.$Language->getText('cvs_browse_commit', 'branch').'</b></TD>
+                      <TD><b>'.$Language->getText('cvs_browse_commit', 'who').'</b></TD>
+                      <TD><b>'.$Language->getText('cvs_browse_commit', 'keyword').'</b></TD>'.
+        ##'<TD><b>'.$Language->getText('cvs_browse_commit', 'date').'</b></TD>'.
         '</TR>'.
         '<TR><TD><INPUT TYPE="TEXT" SIZE=5 NAME=_commit_id VALUE='.$_commit_id.'></TD><TD><FONT SIZE="-1">'. commits_branches_box($group_id,'_branch',$_branch, 'Any') .'</TD>
 	<TD><FONT SIZE="-1">'. $tech_box .
@@ -256,12 +256,12 @@ echo '<FORM name="commit_form" ACTION="'. $PHP_SELF .'" METHOD="GET">
         ##'<TD nowrap><font SIZE="-1"><select name="_commit_date_op">'.
         ##'<option VALUE=">" SELECTED>&gt;</option><option VALUE="=">=</option>'.
         ##'<option VALUE="<">&lt;</option></select>'.
-        ##'<input TYPE="text" name="_commit_date" size="10" MAXLENGTH="15" VALUE="'.$_commit_date.'"><a href="javascript:show_calendar(\'document.commit_form._commit_date\', document.commit_form._commit_date.value,'.util_get_css_theme().','.util_get_dir_image_theme().);"><img src=".util_get_image_theme('calendar/cal.png')." width="16" height="16" border="0" alt="'.$LANG->getText('cvs_browse_commit', 'pick_date').'"></a></TD>'.
+        ##'<input TYPE="text" name="_commit_date" size="10" MAXLENGTH="15" VALUE="'.$_commit_date.'"><a href="javascript:show_calendar(\'document.commit_form._commit_date\', document.commit_form._commit_date.value,'.util_get_css_theme().','.util_get_dir_image_theme().);"><img src=".util_get_image_theme('calendar/cal.png')." width="16" height="16" border="0" alt="'.$Language->getText('cvs_browse_commit', 'pick_date').'"></a></TD>'.
        '</TR></TABLE>'.
 	
-'<br><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$LANG->getText('global', 'btn_browse').'">'.
+'<br><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global', 'btn_browse').'">'.
 ' <input TYPE="text" name="chunksz" size="3" MAXLENGTH="5" '.
-'VALUE="'.$chunksz.'">'.$LANG->getText('cvs_browse_commit', 'nb_at_once').'.'.
+'VALUE="'.$chunksz.'">'.$Language->getText('cvs_browse_commit', 'nb_at_once').'.'.
 '</FORM>';
 
 
@@ -278,7 +278,7 @@ if ($result && db_numrows($result) > 0) {
 
 } else {
 	echo '
-	       <H3>'.$LANG->getText('cvs_browse_commit', 'no_commit').'</H3>';
+	       <H3>'.$Language->getText('cvs_browse_commit', 'no_commit').'</H3>';
 }
 
 commits_footer(array());

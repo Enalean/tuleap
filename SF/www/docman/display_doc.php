@@ -15,7 +15,7 @@
 require($DOCUMENT_ROOT.'/include/pre.php');
 require('./doc_utils.php');
 
-$LANG->loadLanguageMsg('docman/docman');
+$Language->loadLanguageMsg('docman/docman');
 
 $usermem = user_ismember($group_id);
 
@@ -32,8 +32,8 @@ if ($docid) {
 	$result = db_query($query);
 	
 	if (db_numrows($result) < 1) {
-	    exit_error($LANG->getText('global','error'),
-		       $LANG->getText('docman_display_doc','error_nodoc',array($docid)));
+	    exit_error($Language->getText('global','error'),
+		       $Language->getText('docman_display_doc','error_nodoc',array($docid)));
 	} else {
 		$row = db_fetch_array($result);
 	}
@@ -69,7 +69,7 @@ if ($docid) {
     }
 
 } else {
-    exit_error($LANG->getText('global','error'),
-	       $LANG->getText('docman_display_doc','error_wrongid'));
+    exit_error($Language->getText('global','error'),
+	       $Language->getText('docman_display_doc','error_wrongid'));
 }
 

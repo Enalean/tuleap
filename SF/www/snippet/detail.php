@@ -9,7 +9,7 @@
 require($DOCUMENT_ROOT.'/include/pre.php');
 require('../snippet/snippet_utils.php');
 
-$LANG->loadLanguageMsg('snippet/snippet');
+$Language->loadLanguageMsg('snippet/snippet');
 
 /*
 
@@ -27,23 +27,23 @@ if ($type=='snippet') {
         if (snippet_data_can_modify_snippet($id)) {
             if ($snippet_license==100) {
                 // No license!
-		$feedback .= ' '.$LANG->getText('snippet_details','select_license').' ';
+		$feedback .= ' '.$Language->getText('snippet_details','select_license').' ';
             } else if ($snippet_category==100) {
-		$feedback .= ' '.$LANG->getText('snippet_details','select_category').' ';
+		$feedback .= ' '.$Language->getText('snippet_details','select_category').' ';
             } else if ($snippet_type==100) {
-		$feedback .= ' '.$LANG->getText('snippet_details','select_type').' ';
+		$feedback .= ' '.$Language->getText('snippet_details','select_type').' ';
             } else if ($snippet_language==100) {
-		$feedback .= ' '.$LANG->getText('snippet_details','select_lang').' ';
+		$feedback .= ' '.$Language->getText('snippet_details','select_lang').' ';
             } else {
                 $sql="UPDATE snippet SET category=$snippet_category, type=$snippet_type, license=$snippet_license, language=$snippet_language, name='".
                     htmlspecialchars($snippet_name)."', description='".
                     htmlspecialchars($snippet_description)."' WHERE snippet_id=$id";
                 $result=db_query($sql);
                 if (!$result) {
-                    $feedback .= ' '.$LANG->getText('snippet_details','upd_fail').' ';
+                    $feedback .= ' '.$Language->getText('snippet_details','upd_fail').' ';
                     echo db_error();
                 } else {
-                    $feedback .= ' '.$LANG->getText('snippet_details','upd_success').' ';
+                    $feedback .= ' '.$Language->getText('snippet_details','upd_success').' ';
                 }
             }
         }
@@ -57,7 +57,7 @@ if ($type=='snippet') {
 
 	*/
 
-	snippet_header(array('title'=>$LANG->getText('snippet_browse','s_library')));
+	snippet_header(array('title'=>$Language->getText('snippet_browse','s_library')));
 
         // Only the snippet author(s) or site admin may edit snippet details
         if (snippet_data_can_modify_snippet($id)) {
@@ -77,18 +77,18 @@ if ($type=='snippet') {
 	$result=db_query($sql);
 	$rows=db_numrows($result);
 	if (!$result || $rows < 1) {
-		echo '<H3>'.$LANG->getText('snippet_details','no_v_found').'</H3>';
+		echo '<H3>'.$Language->getText('snippet_details','no_v_found').'</H3>';
 	} else {
 		echo '
-		<H3>'.$LANG->getText('snippet_details','versions_of_s').'</H3>
+		<H3>'.$Language->getText('snippet_details','versions_of_s').'</H3>
 		<P>';
 		$title_arr=array();
-		$title_arr[]=$LANG->getText('snippet_browse','id');
-		$title_arr[]=$LANG->getText('snippet_details','s_version');
-		$title_arr[]=$LANG->getText('snippet_details','rel_notes');
-		$title_arr[]=$LANG->getText('snippet_details','posted_on');
-		$title_arr[]=$LANG->getText('snippet_details','author');
-		$title_arr[]=$LANG->getText('snippet_details','delete');
+		$title_arr[]=$Language->getText('snippet_browse','id');
+		$title_arr[]=$Language->getText('snippet_details','s_version');
+		$title_arr[]=$Language->getText('snippet_details','rel_notes');
+		$title_arr[]=$Language->getText('snippet_details','posted_on');
+		$title_arr[]=$Language->getText('snippet_details','author');
+		$title_arr[]=$Language->getText('snippet_details','delete');
 
 		echo html_build_list_table_top ($title_arr);
 
@@ -115,8 +115,8 @@ if ($type=='snippet') {
 
 		echo '
 		<P>
-		'.$LANG->getText('snippet_details','download_s').'</p>';
-		echo '<p>'.$LANG->getText('snippet_details','submit_s',"/snippet/addversion.php?type=snippet&id=$id").'</p>';
+		'.$Language->getText('snippet_details','download_s').'</p>';
+		echo '<p>'.$Language->getText('snippet_details','submit_s',"/snippet/addversion.php?type=snippet&id=$id").'</p>';
 
 	}
 	/*
@@ -128,13 +128,13 @@ if ($type=='snippet') {
 		<P>
 		<HR>
 		<P>
-		<H2>'.$LANG->getText('snippet_details','latest_s_v',db_result($result,0,'version')).'</H2>';
+		<H2>'.$Language->getText('snippet_details','latest_s_v',db_result($result,0,'version')).'</H2>';
 
 	if (db_result($result,0,'filename')) {
 
 	    echo '<P> '.db_result($result,0,'filename').
 		' ('.sprintf('%d', db_result($result,0,'filesize')/1024).' KB)'.
-		'&nbsp;&nbsp;<a href="/snippet/download.php?type=snippet&id='.$newest_version.'"><b>'.$LANG->getText('snippet_details','view_s').'</b></a>';
+		'&nbsp;&nbsp;<a href="/snippet/download.php?type=snippet&id='.$newest_version.'"><b>'.$Language->getText('snippet_details','view_s').'</b></a>';
 
 	} else {
 	    echo '<P>
@@ -153,19 +153,19 @@ if ($type=='snippet') {
         // The author or site admin have updated the snippet
         if (snippet_data_can_modify_snippet_package($id)) {
             if ($snippet_category==100) {
-		$feedback .= ' '.$LANG->getText('snippet_details','select_category').' ';
+		$feedback .= ' '.$Language->getText('snippet_details','select_category').' ';
             } else if ($snippet_language==100) {
-		$feedback .= ' '.$LANG->getText('snippet_details','select_language').' ';
+		$feedback .= ' '.$Language->getText('snippet_details','select_language').' ';
             } else {
                 $sql="UPDATE snippet_package SET category=$snippet_category, language=$snippet_language, name='".
                     htmlspecialchars($snippet_name)."', description='".
                     htmlspecialchars($snippet_description)."' WHERE snippet_package_id=$id";
                 $result=db_query($sql);
                 if (!$result) {
-                    $feedback .= ' '.$LANG->getText('snippet_details','p_upd_fail').' ';
+                    $feedback .= ' '.$Language->getText('snippet_details','p_upd_fail').' ';
                     echo db_error();
                 } else {
-                    $feedback .= ' '.$LANG->getText('snippet_details','p_upd_success').' ';
+                    $feedback .= ' '.$Language->getText('snippet_details','p_upd_success').' ';
                 }
             }
         }
@@ -180,7 +180,7 @@ if ($type=='snippet') {
 
 	*/
 
-	snippet_header(array('title'=>$LANG->getText('snippet_browse','s_library')));
+	snippet_header(array('title'=>$Language->getText('snippet_browse','s_library')));
 
 
         // Only the snippet package author(s) or site admin may edit snippet details
@@ -203,18 +203,18 @@ if ($type=='snippet') {
 	$result=db_query($sql);
 	$rows=db_numrows($result);
 	if (!$result || $rows < 1) {
-		echo '<H3>'.$LANG->getText('snippet_details','no_v_found').'</H3>';
+		echo '<H3>'.$Language->getText('snippet_details','no_v_found').'</H3>';
 	} else {
 		echo '
-		<H3>'.$LANG->getText('snippet_details','versions_of_p').'</H3>
+		<H3>'.$Language->getText('snippet_details','versions_of_p').'</H3>
 		<P>';
 		$title_arr=array();
-		$title_arr[]=$LANG->getText('snippet_details','p_version');
-		$title_arr[]=$LANG->getText('snippet_details','rel_notes');
-		$title_arr[]=$LANG->getText('snippet_details','posted_on');
-		$title_arr[]=$LANG->getText('snippet_details','author');
-		$title_arr[]=$LANG->getText('snippet_details','edit');
-		$title_arr[]=$LANG->getText('snippet_details','delete');
+		$title_arr[]=$Language->getText('snippet_details','p_version');
+		$title_arr[]=$Language->getText('snippet_details','rel_notes');
+		$title_arr[]=$Language->getText('snippet_details','posted_on');
+		$title_arr[]=$Language->getText('snippet_details','author');
+		$title_arr[]=$Language->getText('snippet_details','edit');
+		$title_arr[]=$Language->getText('snippet_details','delete');
 
 		echo html_build_list_table_top ($title_arr);
 
@@ -253,7 +253,7 @@ if ($type=='snippet') {
 
 		
 		echo '
-                            <P>'.$LANG->getText('snippet_details','submit_p',"/snippet/addversion.php?type=package&id=$id").'</p>';
+                            <P>'.$Language->getText('snippet_details','submit_p',"/snippet/addversion.php?type=package&id=$id").'</p>';
 	}
 
 	/*
@@ -265,14 +265,14 @@ if ($type=='snippet') {
 		<P>
 		<HR>
 		<P>
-		<H2>'.$LANG->getText('snippet_details','latest_p_v',db_result($result,0,'version')).'</H2>
+		<H2>'.$Language->getText('snippet_details','latest_p_v',db_result($result,0,'version')).'</H2>
 		<P>
 		<P>';
 	snippet_show_package_snippets($newest_version);
 
 	echo '
 		<P>
-		'.$LANG->getText('snippet_details','download_s').'</p>';
+		'.$Language->getText('snippet_details','download_s').'</p>';
 
 	snippet_footer(array());
 
@@ -281,7 +281,7 @@ if ($type=='snippet') {
 		Show a specific version of a package and its specific snippet versions
 	*/
 	
-	snippet_header(array('title'=>$LANG->getText('snippet_browse','library')));
+	snippet_header(array('title'=>$Language->getText('snippet_browse','library')));
 
 	snippet_show_package_details($id);
 
@@ -291,7 +291,7 @@ if ($type=='snippet') {
 
 } else {
 
-	exit_error($LANG->getText('global','error'),$LANG->getText('snippet_delete','url_mangled'));
+	exit_error($Language->getText('global','error'),$Language->getText('snippet_delete','url_mangled'));
 
 }
 

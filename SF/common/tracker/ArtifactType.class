@@ -12,7 +12,7 @@
 
 //require($DOCUMENT_ROOT.'/../common/include/Error.class');
 
-$LANG->loadLanguageMsg('tracker/tracker');
+$Language->loadLanguageMsg('tracker/tracker');
 
 class ArtifactType extends Error {
 
@@ -88,11 +88,11 @@ class ArtifactType extends Error {
 	 *	@return boolean	success.
 	 */
 	function ArtifactType(&$Group,$artifact_type_id=false, $arr=false) {
-	  global $LANG;
+	  global $Language;
 
 		$this->Error();
 		if (!$Group || !is_object($Group)) {
-			$this->setError($LANG->getText('tracker_common_type','invalid'));
+			$this->setError($Language->getText('tracker_common_type','invalid'));
 			return false;
 		}
 		if ($Group->isError()) {
@@ -123,7 +123,7 @@ class ArtifactType extends Error {
 			} else {
 				$this->data_array = $arr;
 				if ($this->data_array['group_id'] != $this->Group->getID()) {
-					$this->setError($LANG->getText('tracker_common_type','no_match'));
+					$this->setError($Language->getText('tracker_common_type','no_match'));
 					$this->data_array = null;
 					return false;
 				}
@@ -143,7 +143,7 @@ class ArtifactType extends Error {
 	 *	@return boolean
 	 */
 	function createUserPerms($atid) {
-	  global $LANG;
+	  global $Language;
 
 		$sql = "SELECT "
 			. "user.user_id AS user_id, "
@@ -163,7 +163,7 @@ class ArtifactType extends Error {
 			}
 
 			if ( !$this->addUser($row['user_id'],$perm) ) {
-				$this->setError($LANG->getText('tracker_common_type','perm_fail',$this->getErrorMessage()));
+				$this->setError($Language->getText('tracker_common_type','perm_fail',$this->getErrorMessage()));
 				return false;
 			}
 		}
@@ -184,23 +184,23 @@ class ArtifactType extends Error {
 	 *	@return id on success, false on failure.
 	 */
 	function create($group_id,$group_id_template,$atid_template,$name,$description,$itemname) {
-		global $feedback,$ath,$LANG;
+		global $feedback,$ath,$Language;
 
 		if (!$name || !$description || !$itemname || trim($name) == "" || trim($description) == "" || trim($itemname) == ""  ) {
-			$this->setError('ArtifactType: '.$LANG->getText('tracker_common_type','name_requ'));
+			$this->setError('ArtifactType: '.$Language->getText('tracker_common_type','name_requ'));
 			return false;
 		}
 
                 // Necessary test to avoid issues when exporting the tracker to a DB (e.g. '-' not supported as table name)
                 if (!eregi("^[a-zA-Z0-9_]+$",$itemname)) {
-                    $this->setError($LANG->getText('tracker_common_type','invalid_shortname',$itemname));
+                    $this->setError($Language->getText('tracker_common_type','invalid_shortname',$itemname));
 			return false;
                 }
 
 		//	get the template Group object
 		$group = group_get_object($group_id_template);
 		if (!$group || !is_object($group) || $group->isError()) {
-			$this->setError('ArtifactType: '.$LANG->getText('tracker_common_type','invalid_templ'));
+			$this->setError('ArtifactType: '.$Language->getText('tracker_common_type','invalid_templ'));
 		}
 
 		// We retrieve public and anonymous submission from the template
@@ -230,7 +230,7 @@ class ArtifactType extends Error {
 		} else {
 			$id = db_insertid($res,'artifact_group_list','group_artifact_id');
 			if (!$this->fetchData($id)) {
-				$this->setError('ArtifactType: '.$LANG->getText('tracker_common_type','load_fail'));
+				$this->setError('ArtifactType: '.$Language->getText('tracker_common_type','load_fail'));
 				return false;
 			} else {
 				// Create field factory
@@ -314,14 +314,14 @@ class ArtifactType extends Error {
 	 *  @return boolean	success.
 	 */
 	function fetchData($artifact_type_id) {
-	  global $LANG;
+	  global $Language;
 
 		$sql = "SELECT * FROM artifact_group_list
 			WHERE group_artifact_id='$artifact_type_id' 
 			AND group_id='". $this->Group->getID() ."'";
 		$res=db_query($sql);
 		if (!$res || db_numrows($res) < 1) {
-			$this->setError('ArtifactType: '.$LANG->getText('tracker_common_type','invalid_at'));
+			$this->setError('ArtifactType: '.$Language->getText('tracker_common_type','invalid_at'));
 			return false;
 		}
 		$this->data_array = db_fetch_array($res);
@@ -529,14 +529,14 @@ class ArtifactType extends Error {
 	 *	@return boolean	success.
 	 */
 	function addUser($id,$value) {
-	  global $LANG;
+	  global $Language;
 
 		if (!$this->userIsAdmin()) {
-			$this->setError($LANG->getText('tracker_common_canned','perm_denied'));
+			$this->setError($Language->getText('tracker_common_canned','perm_denied'));
 			return false;
 		}
 		if (!$id) {
-			$this->setError($LANG->getText('tracker_common_canned','missing_param'));
+			$this->setError($Language->getText('tracker_common_canned','missing_param'));
 			return false;
 		}
 		$sql="INSERT INTO artifact_perm (group_artifact_id,user_id,perm_level) 
@@ -557,10 +557,10 @@ class ArtifactType extends Error {
 	 *	@return boolean	success.
 	 */
 	function existUser($id) {
-	 global $LANG;
+	 global $Language;
  
 		if (!$id) {
-			$this->setError($LANG->getText('tracker_common_canned','missing_param'));
+			$this->setError($Language->getText('tracker_common_canned','missing_param'));
 			return false;
 		}
 		$sql="SELECT * FROM artifact_perm WHERE user_id=$id AND group_artifact_id=".$this->getID();
@@ -580,14 +580,14 @@ class ArtifactType extends Error {
 	 *	@return boolean	success.
 	 */
 	function updateUser($id,$perm_level) {
-	  global $LANG;
+	  global $Language;
 
 		if (!$this->userIsAdmin()) {
-			$this->setError($LANG->getText('tracker_common_canned','perm_denied'));
+			$this->setError($Language->getText('tracker_common_canned','perm_denied'));
 			return false;
 		}
 		if (!$id) {
-			$this->setError($LANG->getText('tracker_common_canned','missing_param').': '.$id.'|'.$perm_level);
+			$this->setError($Language->getText('tracker_common_canned','missing_param').': '.$id.'|'.$perm_level);
 			return false;
 		}
 		$sql="UPDATE artifact_perm SET perm_level='$perm_level'
@@ -608,14 +608,14 @@ class ArtifactType extends Error {
 	 *	@return boolean	success.
 	 */
 	function deleteUser($id) {
-	  global $LANG;
+	  global $Language;
 
 		if (!$this->userIsAdmin()) {
-			$this->setError($LANG->getText('tracker_common_canned','perm_denied'));
+			$this->setError($Language->getText('tracker_common_canned','perm_denied'));
 			return false;
 		}
 		if (!$id) {
-			$this->setError($LANG->getText('tracker_common_canned','missing_param'));
+			$this->setError($Language->getText('tracker_common_canned','missing_param'));
 			return false;
 		}
 		$sql="DELETE FROM artifact_perm
@@ -635,10 +635,10 @@ class ArtifactType extends Error {
 	 *	@return boolean	success.
 	 */
 	function preDelete() {
-	  global $LANG;
+	  global $Language;
 
 		if (!$this->userIsAdmin()) {
-			$this->setError($LANG->getText('tracker_common_canned','perm_denied'));
+			$this->setError($Language->getText('tracker_common_canned','perm_denied'));
 			return false;
 		}
 		$date = (time() + 1000000); // 12 days of delay
@@ -659,15 +659,15 @@ class ArtifactType extends Error {
 	 *	@return boolean	success.
 	 */
 	function delay($date) {
-		global $sys_datefmt,$LANG;
+		global $sys_datefmt,$Language;
 		if (!$this->userIsAdmin()) {
-			$this->setError($LANG->getText('tracker_common_canned','perm_denied'));
+			$this->setError($Language->getText('tracker_common_canned','perm_denied'));
 			return false;		
 		}
 		$keywords = preg_split("/-/", $date);
 		$ts = mktime("23", "59", "59", $keywords[1], $keywords[2], $keywords[0]);
 		if (time() > $ts) {
-		 	$this->setError($LANG->getText('tracker_common_type','invalid_date'));
+		 	$this->setError($Language->getText('tracker_common_type','invalid_date'));
 			return false;
 		}
 		$sql="update artifact_group_list SET deletion_date='$ts'
@@ -687,10 +687,10 @@ class ArtifactType extends Error {
 	 *	@return boolean	success.
 	 */
 	function restore() {
-	  global $LANG;
+	  global $Language;
 
 		if (!$this->userIsAdmin()) {
-			$this->setError($LANG->getText('tracker_common_canned','perm_denied'));
+			$this->setError($Language->getText('tracker_common_canned','perm_denied'));
 			return false;
 		}
 		$sql="update artifact_group_list SET status='A'
@@ -712,7 +712,7 @@ class ArtifactType extends Error {
 	 *	@return boolean	success.
 	 */
 	function updateUsers($atid,$user_name) {
-	  global $LANG;
+	  global $Language;
 
 	    $result=$this->getUsersPerm($this->getID());
 	    $rows=db_numrows($result);
@@ -728,7 +728,7 @@ class ArtifactType extends Error {
 				//echo $sql."<br>";
 				$result2=db_query($sql);
 				if (!$result2) {
-					$update_error .= " ".$LANG->getText('tracker_common_type','perm_err',array($user_id,db_error()));
+					$update_error .= " ".$Language->getText('tracker_common_type','perm_err',array($user_id,db_error()));
 				}
 				
 			}
@@ -847,15 +847,15 @@ class ArtifactType extends Error {
 	 */
 	function update($name,$description,$itemname,$is_public,$allow_anon,
 		            $submit_instructions,$browse_instructions,$instantiate_for_new_projects) {
-	  global $LANG;
+	  global $Language;
 
 		if ( !$this->userIsAdmin() ) {
-			$this->setError('ArtifactType: '.$LANG->getText('tracker_common_canned','perm_denied'));
+			$this->setError('ArtifactType: '.$Language->getText('tracker_common_canned','perm_denied'));
 			return false;
 		}
 		
 		if (!$name || !$description || !$itemname || trim($name) == "" || trim($description) == "" || trim($itemname) == ""  ) {
-			$this->setError('ArtifactType: '.$LANG->getText('tracker_common_type','name_requ'));
+			$this->setError('ArtifactType: '.$Language->getText('tracker_common_type','name_requ'));
 			return false;
 		}
 		
@@ -898,12 +898,12 @@ class ArtifactType extends Error {
 	 *  @return true on success, false on failure.
 	 */
 	function updateNotificationSettings($email_all,$email_address,$user_id, $watchees, &$feedback) {
-	  global $LANG;
+	  global $Language;
 
 	  $result = true;
 
 		if ($email_address && !validate_emails($email_address)) {
-			$feedback = $LANG->getText('tracker_common_type','invalid_mail',$email_address);
+			$feedback = $Language->getText('tracker_common_type','invalid_mail',$email_address);
 			$email_address='';
 			$result = false;
 		}
@@ -958,7 +958,7 @@ class ArtifactType extends Error {
 			    $res = user_get_result_set_from_unix($user_name);
 			    if (!$res || (db_numrows($res) <= 0)) {
 				// user doesn;t exist  so abort this step and give feedback
-				$this->setError(" - ".$LANG->getText('tracker_common_type','invalid_name',$user_name));
+				$this->setError(" - ".$Language->getText('tracker_common_type','invalid_name',$user_name));
 				$res_watch = false;
 				continue;
 			    } else {
@@ -1071,7 +1071,7 @@ class ArtifactType extends Error {
 		$res_insert = db_query($sql);
 		
 		if (!$res_insert || db_affected_rows($res_insert) <= 0) {
-			$this->setError($LANG->getText('tracker_common_type','copy_fail'));
+			$this->setError($Language->getText('tracker_common_type','copy_fail'));
 			return false;
 		}
 		
@@ -1093,7 +1093,7 @@ class ArtifactType extends Error {
 		$res_insert = db_query($sql);
 		
 		if (!$res_insert || db_affected_rows($res_insert) <= 0) {
-			$this->setError($LANG->getText('tracker_common_type','notif_fail'));
+			$this->setError($Language->getText('tracker_common_type','notif_fail'));
 			return false;
 		}
 		
@@ -1784,11 +1784,11 @@ class ArtifactType extends Error {
 			$sql = "DELETE FROM artifact_dependencies WHERE artifact_depend_id IN ($depend)";
         		$res = db_query($sql);
         		if (!$res) {
-            			$feedback .= " - ".$LANG->getText('tracker_common_type','del_err',array($dependent,db_error($res)));
+            			$feedback .= " - ".$Language->getText('tracker_common_type','del_err',array($dependent,db_error($res)));
 				$changed = false;
         		}
 		}
-		if ($changed) $feedback .= " - ".$LANG->getText('tracker_common_artifact','depend_removed');
+		if ($changed) $feedback .= " - ".$Language->getText('tracker_common_artifact','depend_removed');
 		return $changed;
         }	
 	

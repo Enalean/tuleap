@@ -12,7 +12,7 @@
 require($DOCUMENT_ROOT.'/include/pre.php');
 require($DOCUMENT_ROOT.'/project/admin/ugroup_utils.php');
 
-$LANG->loadLanguageMsg('my/my');
+$Language->loadLanguageMsg('my/my');
 
 if (user_isloggedin()) {
 	$user_id = user_getid();
@@ -20,14 +20,14 @@ if (user_isloggedin()) {
 	// make sure that user is not an admin
 	$result=db_query("SELECT admin_flags FROM user_group WHERE user_id='$user_id' AND group_id='$group_id'");
 	if (!$result || db_numrows($result) < 1) {
-	    exit_error($LANG->getText('include_exit', 'error'),
-		       $LANG->getText('bookmark_rmproject', 'err_notmember'));
+	    exit_error($Language->getText('include_exit', 'error'),
+		       $Language->getText('bookmark_rmproject', 'err_notmember'));
 	}
 	$row_flags = db_fetch_array($result);
 
 	if (ereg("A",$row_flags['admin_flags'],$ereg_match)) {
-		exit_error($LANG->getText('include_exit', 'error'),
-			   $LANG->getText('bookmark_rmproject', 'err_removing'));
+		exit_error($Language->getText('include_exit', 'error'),
+			   $Language->getText('bookmark_rmproject', 'err_removing'));
 	} 
        
 	db_query("DELETE FROM user_group WHERE user_id='$user_id' AND group_id='$group_id'");
@@ -54,8 +54,8 @@ if (user_isloggedin()) {
 	$link_members = get_server_url()."/project/memberlist.php?group_id=$group_id";
 	$hdrs = "From: noreply@".$host.$GLOBALS['sys_lf'];
 	$hdrs .='Content-type: text/plain; charset=iso-8859-1'.$GLOBALS['sys_lf'];
-	$subject = $LANG->getText('bookmark_rmproject', 'mail_subject', array($GLOBALS['sys_name'],user_getname($user_id),$project_name));
-	$body = stripcslashes($LANG->getText('bookmark_rmproject', 'mail_body', array($project_name, user_getname($user_id),$link_members)));
+	$subject = $Language->getText('bookmark_rmproject', 'mail_subject', array($GLOBALS['sys_name'],user_getname($user_id),$project_name));
+	$body = stripcslashes($Language->getText('bookmark_rmproject', 'mail_body', array($project_name, user_getname($user_id),$link_members)));
 
 	mail($to,$subject,$body,$hdrs);
 

@@ -9,14 +9,14 @@
 require($DOCUMENT_ROOT.'/include/pre.php');
 require($DOCUMENT_ROOT.'/survey/survey_utils.php');
 
-$LANG->loadLanguageMsg('survey/survey');
+$Language->loadLanguageMsg('survey/survey');
 
 $is_admin_page='y';
-survey_header(array('title'=>$LANG->getText('survey_admin_show_r_individual','res'),
+survey_header(array('title'=>$Language->getText('survey_admin_show_r_individual','res'),
 		    'help'=>'AdministeringSurveys.html#ReviewingSurveyResults'));
 
 if (!user_isloggedin() || !user_ismember($group_id,'A')) {
-        echo '<H1>'.$LANG->getText('survey_admin_add_question','perm_denied').'</H1>';
+        echo '<H1>'.$Language->getText('survey_admin_add_question','perm_denied').'</H1>';
         survey_footer(array());
 	exit;
 }
@@ -183,7 +183,7 @@ for ($i=0; $i<$count; $i++) {
 		*/
 
 		if ($question_type != $last_question_type) {
-	                echo '<B>'.$LANG->getText('global','yes').' / .'$LANG->getText('global','no')."</B><BR>\n";
+	                echo '<B>'.$Language->getText('global','yes').' / .'$Language->getText('global','no')."</B><BR>\n";
 		}
 
 		echo "\n<INPUT TYPE=\"RADIO\" NAME=\"_".$quest_array[$i]."\" VALUE=\"1\"";

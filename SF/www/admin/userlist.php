@@ -10,15 +10,15 @@ require($DOCUMENT_ROOT.'/include/pre.php');
 require($DOCUMENT_ROOT.'/include/account.php');
 require($DOCUMENT_ROOT.'/project/admin/ugroup_utils.php');
 
-$LANG->loadLanguageMsg('admin/admin');
+$Language->loadLanguageMsg('admin/admin');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
-$HTML->header(array('title'=>$LANG->getText('admin_userlist','title')));
+$HTML->header(array('title'=>$Language->getText('admin_userlist','title')));
 
 function show_users_list ($result) {
-    global $LANG;
-	echo '<P>'.$LANG->getText('admin_userlist','legend').'
+    global $Language;
+	echo '<P>'.$Language->getText('admin_userlist','legend').'
 		<P>
 		<TABLE width=100% cellspacing=0 cellpadding=0 BORDER="1">';
 
@@ -36,19 +36,19 @@ function show_users_list ($result) {
 		if ($usr[status] == 'P') print "</TD>";
 		print "\n<TD><A HREF=\"/users/$usr[user_name]/\">[DevProfile]</A></TD>";
                 if ($usr[status] == 'A') {
-                    print "\n<TD>".$LANG->getText('admin_userlist','active')."</TD>";
-                } else { print "\n<TD><A HREF=\"userlist.php?action=activate&user_id=$usr[user_id]\">[".$LANG->getText('admin_userlist','activate')."]</A></TD>"; }
+                    print "\n<TD>".$Language->getText('admin_userlist','active')."</TD>";
+                } else { print "\n<TD><A HREF=\"userlist.php?action=activate&user_id=$usr[user_id]\">[".$Language->getText('admin_userlist','activate')."]</A></TD>"; }
                 if ($GLOBALS['sys_allow_restricted_users']) {
                     if ($usr[status] == 'R') {
-                        print "\n<TD>".$LANG->getText('admin_userlist','restricted')."</TD>";
-                    } else { print "\n<TD><A HREF=\"userlist.php?action=restrict&user_id=$usr[user_id]\">[".$LANG->getText('admin_userlist','restrict')."]</A></TD>"; }
+                        print "\n<TD>".$Language->getText('admin_userlist','restricted')."</TD>";
+                    } else { print "\n<TD><A HREF=\"userlist.php?action=restrict&user_id=$usr[user_id]\">[".$Language->getText('admin_userlist','restrict')."]</A></TD>"; }
                 }
                 if ($usr[status] == 'D') {
-                    print "\n<TD>".$LANG->getText('admin_userlist','deleted')."</TD>";
-                } else { print "\n<TD><A HREF=\"userlist.php?action=delete&user_id=$usr[user_id]\">[".$LANG->getText('admin_userlist','delete')."]</A></TD>";}
+                    print "\n<TD>".$Language->getText('admin_userlist','deleted')."</TD>";
+                } else { print "\n<TD><A HREF=\"userlist.php?action=delete&user_id=$usr[user_id]\">[".$Language->getText('admin_userlist','delete')."]</A></TD>";}
                 if ($usr[status] == 'S') {
-                    print "\n<TD>".$LANG->getText('admin_userlist','suspended')."</TD>";
-                } else { print "\n<TD><A HREF=\"userlist.php?action=suspend&user_id=$usr[user_id]\">[".$LANG->getText('admin_userlist','suspend')."]</A></TD>"; }
+                    print "\n<TD>".$Language->getText('admin_userlist','suspended')."</TD>";
+                } else { print "\n<TD><A HREF=\"userlist.php?action=suspend&user_id=$usr[user_id]\">[".$Language->getText('admin_userlist','suspend')."]</A></TD>"; }
 		print "</TR>";
 	}
 	print "</TABLE>";
@@ -63,7 +63,7 @@ function show_users_list ($result) {
 if ($action=='delete') {
 	db_query("UPDATE user SET status='D',unix_status='D'  WHERE user_id='$user_id'");
         ugroup_delete_user_from_all_ugroups($user_id);
-	echo '<H2>'.$LANG->getText('admin_userlist','user_deleted').'</H2>';
+	echo '<H2>'.$Language->getText('admin_userlist','user_deleted').'</H2>';
 }
 
 /*
@@ -71,7 +71,7 @@ if ($action=='delete') {
 */
 if ($action=='activate') {
 	db_query("UPDATE user SET status='A' WHERE user_id='$user_id'");
-	echo '<H2>'.$LANG->getText('admin_userlist','user_active').'</H2>';
+	echo '<H2>'.$Language->getText('admin_userlist','user_active').'</H2>';
 }
 
 /*
@@ -79,7 +79,7 @@ if ($action=='activate') {
 */
 if ($action=='suspend') {
 	db_query("UPDATE user SET status='S' WHERE user_id='$user_id'");
-	echo '<H2>'.$LANG->getText('admin_userlist','user_suspended').'</H2>';
+	echo '<H2>'.$Language->getText('admin_userlist','user_suspended').'</H2>';
 }
 
 /*
@@ -98,7 +98,7 @@ if (($action=='restrict')&&($GLOBALS['sys_allow_restricted_users'])) {
         }
     }
     db_query("UPDATE user SET status='R'$shell WHERE user_id='$user_id'");
-    echo '<H2>'.$LANG->getText('admin_userlist','user_restricted').'</H2>';
+    echo '<H2>'.$Language->getText('admin_userlist','user_restricted').'</H2>';
 }
 
 /*
@@ -110,19 +110,19 @@ if ($action=='add_to_group') {
     if (db_numrows($res_newuser) > 0) {
         $user_name = db_result($res_newuser,0,'user_name');
         if (!account_add_user_to_group($group_id,$user_name)) {
-            $feedback .= ' '.$LANG->getText('admin_userlist','error_noadd');
+            $feedback .= ' '.$Language->getText('admin_userlist','error_noadd');
         }
     } else {
-	$feedback .= ' '.$LANG->getText('admin_userlist','error_uid',array($user_id));
+	$feedback .= ' '.$Language->getText('admin_userlist','error_uid',array($user_id));
     }
 }
 
 /*
 	Show list of users
 */
-print "<p>".$LANG->getText('admin_userlist','user_list').":  ";
+print "<p>".$Language->getText('admin_userlist','user_list').":  ";
 if (!$group_id) {
-	print "<b>".$LANG->getText('admin_userlist','all_groups')."</b>";
+	print "<b>".$Language->getText('admin_userlist','all_groups')."</b>";
 	print "\n<p>";
 	
 	if ($user_name_search) {
@@ -135,7 +135,7 @@ if (!$group_id) {
 	/*
 		Show list for one group
 	*/
-    print "<b>Group ".$LANG->getText('admin_userlist','group',array(group_getname($group_id)))."</b>";
+    print "<b>Group ".$Language->getText('admin_userlist','group',array(group_getname($group_id)))."</b>";
 	
 	print "\n<p>";
 
@@ -153,12 +153,12 @@ if (!$group_id) {
 	<P>
 	<form action="<?php echo $PHP_SELF; ?>" method="post">
 	<input type="HIDDEN" name="action" VALUE="add_to_group">
-	<p><?php echo $LANG->getText('admin_userlist','uid_toadd'); ?>:&nbsp;
+	<p><?php echo $Language->getText('admin_userlist','uid_toadd'); ?>:&nbsp;
 	<input name="user_id" type="TEXT" value="">
 	<br>
 	<input type="HIDDEN" name="group_id" VALUE="<?php print $group_id; ?>">
 	<p>
-	<input type="submit" name="Submit" value="<?php echo $LANG->getText('global','btn_submit'); ?>">
+	<input type="submit" name="Submit" value="<?php echo $Language->getText('global','btn_submit'); ?>">
 	</form>
 
 	<?php	

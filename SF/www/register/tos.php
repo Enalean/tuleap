@@ -8,18 +8,18 @@
 
 require($DOCUMENT_ROOT.'/include/pre.php');    // Initial db and session library, opens session
 
-$LANG->loadLanguageMsg('register/register');
+$Language->loadLanguageMsg('register/register');
 
 session_require( array( isloggedin=>1 ) );
 
-$HTML->header(array(title=>$LANG->getText('register_tos','tos')));
+$HTML->header(array(title=>$Language->getText('register_tos','tos')));
 
-echo '<p><h2>'.$LANG->getText('register_tos','tos_agreement').'</h2></p>';
+echo '<p><h2>'.$Language->getText('register_tos','tos_agreement').'</h2></p>';
 include(util_get_content('register/tos'));
 
 echo '<BR><HR><BR>
 
-<P align=center>'.$LANG->getText('register_tos','tos_agree','basicinfo.php');
+<P align=center>'.$Language->getText('register_tos','tos_agree','basicinfo.php');
 
 $HTML->footer(array());
 
