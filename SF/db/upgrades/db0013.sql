@@ -468,7 +468,6 @@ INSERT INTO artifact_field VALUES (9,1,'details',1,'TA','60/7','Original Submiss
 INSERT INTO artifact_field VALUES (16,1,'resolution_id',2,'SB','','Resolution','How you have decided to fix the artifact (Fixed, Work for me, Duplicate,..)','',0,1,1,0,NULL,'100');
 INSERT INTO artifact_field VALUES (20,1,'bug_group_id',2,'SB','','Group','Characterizes the nature of the artifact (e.g. Feature Request, Action Request, Crash Error, Documentation Typo, Installation Problem,...','',0,1,1,0,NULL,'100');
 INSERT INTO artifact_field VALUES (2,2,'percent_complete',2,'SB','2','Percent complete','Percentage of completion','',0,0,1,0,NULL,'');
-INSERT INTO artifact_field VALUES (3,2,'priority',2,'SB','','Priority','How quickly the artifact must be fixed (Immediate, Normal, Low, Later,...)','',0,0,1,0,NULL,'180');
 INSERT INTO artifact_field VALUES (4,2,'hours',3,'TF','5/5','Effort','Number of hours of work needed to fix the artifact (including testing)','',0,1,1,0,NULL,'0.00');
 INSERT INTO artifact_field VALUES (5,2,'start_date',4,'DF','','Start Date','Start Date','',0,0,0,0,NULL,'');
 INSERT INTO artifact_field VALUES (6,2,'close_date',4,'DF','','End Date','End Date','',0,0,0,0,NULL,'');
@@ -479,6 +478,7 @@ INSERT INTO artifact_field VALUES (1,2,'artifact_id',2,'TF','6/10','Artifact ID'
 INSERT INTO artifact_field VALUES (10,2,'open_date',4,'DF','','Submitted on','Date and time for the initial artifact submission','',0,0,0,1,'','');
 INSERT INTO artifact_field VALUES (9,2,'multi_assigned_to',5,'MB','','Assigned to (multiple)','Who is in charge of this artifact','',0,1,1,0,'artifact_technicians','');
 INSERT INTO artifact_field VALUES (12,2,'subproject_id',2,'SB','','Subproject','Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)','',0,1,1,0,NULL,'100');
+INSERT INTO artifact_field VALUES (14,2,'severity',2,'SB','','Priority','Impact of the artifact on the system (Critical, Major,...)','',0,0,1,0,NULL,'5');
 INSERT INTO artifact_field VALUES (9,3,'submitted_by',5,'SB','','Submitted by','User who originally submitted the artifact','',0,1,0,1,'group_members','');
 INSERT INTO artifact_field VALUES (8,3,'priority',2,'SB','','Priority','How quickly the artifact must be fixed (Immediate, Normal, Low, Later,...)','',0,0,1,0,NULL,'180');
 INSERT INTO artifact_field VALUES (7,3,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'20');
@@ -506,7 +506,6 @@ INSERT INTO artifact_field VALUES (28,1,'originator_phone',1,'TF','10/40','Origi
 INSERT INTO artifact_field VALUES (29,1,'close_date',4,'DF','','End Date','End Date','',0,0,0,0,NULL,'');
 
 INSERT INTO artifact_field VALUES (13,2,'submitted_by',5,'SB','','Submitted by','User who originally submitted the artifact','',0,1,0,1,'group_members','');
-INSERT INTO artifact_field VALUES (14,2,'severity',2,'SB','','Severity','Impact of the artifact on the system (Critical, Major,...)','',0,0,1,0,NULL,'5');
 
 INSERT INTO artifact_field VALUES (10,3,'close_date',4,'DF','','End Date','End Date','',0,0,0,0,NULL,'');
 INSERT INTO artifact_field VALUES (11,3,'severity',2,'SB','','Severity','Impact of the artifact on the system (Critical, Major,...)','',0,0,1,0,NULL,'5');
@@ -538,7 +537,6 @@ INSERT INTO artifact_field_usage VALUES (9,1,1,1,1,1000);
 INSERT INTO artifact_field_usage VALUES (16,1,1,0,0,40);
 INSERT INTO artifact_field_usage VALUES (20,1,1,1,1,30);
 INSERT INTO artifact_field_usage VALUES (2,2,1,1,1,20);
-INSERT INTO artifact_field_usage VALUES (3,2,1,1,1,30);
 INSERT INTO artifact_field_usage VALUES (4,2,1,1,1,40);
 INSERT INTO artifact_field_usage VALUES (5,2,1,1,1,60);
 INSERT INTO artifact_field_usage VALUES (6,2,1,1,1,80);
@@ -558,6 +556,7 @@ INSERT INTO artifact_field_usage VALUES (2,3,1,1,1,900);
 INSERT INTO artifact_field_usage VALUES (1,3,1,1,1,1);
 INSERT INTO artifact_field_usage VALUES (9,2,1,1,1,70);
 INSERT INTO artifact_field_usage VALUES (12,2,1,1,1,10);
+INSERT INTO artifact_field_usage VALUES (14,2,1,1,1,30);
 
 INSERT INTO artifact_field_usage VALUES (11,1,0,0,0,0);
 INSERT INTO artifact_field_usage VALUES (12,1,0,0,0,0);
@@ -576,7 +575,6 @@ INSERT INTO artifact_field_usage VALUES (28,1,0,0,0,0);
 INSERT INTO artifact_field_usage VALUES (29,1,0,0,0,0);
 
 INSERT INTO artifact_field_usage VALUES (13,2,0,0,0,0);
-INSERT INTO artifact_field_usage VALUES (14,2,0,0,0,0);
 
 INSERT INTO artifact_field_usage VALUES (10,3,0,0,0,0);
 INSERT INTO artifact_field_usage VALUES (11,3,0,0,0,0);
@@ -633,22 +631,6 @@ INSERT INTO artifact_field_value_list VALUES (11,2,8,'In Test','Updated/Created 
 INSERT INTO artifact_field_value_list VALUES (11,2,9,'Approved','The artifact fix has been succesfully tested. It is approved and awaiting release.',130,'H');
 INSERT INTO artifact_field_value_list VALUES (11,2,10,'Declined','The artifact was not accepted. Alternatively, you can also Set the status to \"Closed\" and use the Resolution field to explain why it was declined',150,'H');
 INSERT INTO artifact_field_value_list VALUES (12,2,100,'None','',10,'P');
-INSERT INTO artifact_field_value_list VALUES (3,2,100,'None','',10,'P');
-INSERT INTO artifact_field_value_list VALUES (3,2,120,'Later','',20,'A');
-INSERT INTO artifact_field_value_list VALUES (3,2,130,'Later+','',30,'H');
-INSERT INTO artifact_field_value_list VALUES (3,2,140,'Later++','',40,'H');
-INSERT INTO artifact_field_value_list VALUES (3,2,150,'Low','',50,'A');
-INSERT INTO artifact_field_value_list VALUES (3,2,160,'Low+','',60,'H');
-INSERT INTO artifact_field_value_list VALUES (3,2,170,'Low++','',70,'H');
-INSERT INTO artifact_field_value_list VALUES (3,2,180,'Normal','',80,'A');
-INSERT INTO artifact_field_value_list VALUES (3,2,190,'Normal+','',90,'H');
-INSERT INTO artifact_field_value_list VALUES (3,2,200,'Normal++','',100,'H');
-INSERT INTO artifact_field_value_list VALUES (3,2,210,'High','',110,'A');
-INSERT INTO artifact_field_value_list VALUES (3,2,220,'High+','',120,'H');
-INSERT INTO artifact_field_value_list VALUES (3,2,230,'High++','',130,'H');
-INSERT INTO artifact_field_value_list VALUES (3,2,240,'Immediate','',140,'A');
-INSERT INTO artifact_field_value_list VALUES (3,2,250,'Immediate+','',150,'H');
-INSERT INTO artifact_field_value_list VALUES (3,2,260,'Immediate++','',160,'H');
 INSERT INTO artifact_field_value_list VALUES (2,2,1095,'95%','',95,'A');
 INSERT INTO artifact_field_value_list VALUES (2,2,1090,'90%','',90,'A');
 INSERT INTO artifact_field_value_list VALUES (2,2,1085,'85%','',85,'A');
