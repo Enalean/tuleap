@@ -74,7 +74,7 @@ class ArtifactField extends Error {
 	var $DATATYPE_FLOAT = 3;
 	var $DATATYPE_DATE = 4;	
 	var $DATATYPE_USER = 5;	
-
+	
 	/**
 	 *  Constructor.
 	 *
@@ -585,10 +585,10 @@ class ArtifactField extends Error {
 	 *
 	 * @return array
 	 */
-	function getFieldPredefinedValues ($group_artifact_id=false, $checked=false,$by_field_id=false,$active_only=true) {
+	function getFieldPredefinedValues ($group_artifact_id=false, $checked=false,$by_field_id=false,$active_only=true,$use_cache=false) {
 	
 		// ArtifactTypeHtml object created in index.php
-		global $ath;
+		global $ath, $RES_CACHE;
 
 	    // The "Assigned_to" box requires some special processing
 	    // because possible values  are project members) and they are
@@ -622,7 +622,19 @@ class ArtifactField extends Error {
 			    "FROM artifact_field_value_list ".
 			    "WHERE group_artifact_id=".$group_artifact_id." AND field_id= ".$this->field_id." ".
 			    $status_cond." ORDER BY order_id ASC";
-			$res_value = db_query($sql);
+			    
+			// Use cache ?
+			if ( $use_cache ) {
+				if ( isset($RES_CACHE[$sql]) ) {
+					$res_value = $RES_CACHE[$sql];
+				} else {
+					$res_value = db_query($sql);
+					$RES_CACHE[$sql] = $res_value;
+				}
+			} else {
+				$res_value = db_query($sql);
+			}
+			
 			//echo $sql;
 			$rows=db_numrows($res_value);
 			
@@ -1061,7 +1073,7 @@ class ArtifactField extends Error {
 			// tracker which allows anonymous submission
 			$all_values = $this->getUsersList();
 		} else {
-			$all_values = $this->getFieldPredefinedValues($group_artifact_id,false,false,false);		
+			$all_values = $this->getFieldPredefinedValues($group_artifact_id,false,false,false,true);		
 		}
 		// Create an hash table with the id as key
 		for($i=0;$i<db_numrows($all_values);$i++) {
@@ -1086,10 +1098,17 @@ class ArtifactField extends Error {
 	 *  @return array
 	 */
 	function getUsersList() {
+		global $RES_USER_CACHE;
 		
-		$sql="SELECT user_id,user_name ".
-		    "FROM user";
-		$res_value = db_query($sql);
+		if ( !isset($RES_USER_CACHE) ) {
+			$sql="SELECT user_id,user_name ".
+			    "FROM user";
+			$res_value = db_query($sql);
+			$RES_USER_CACHE = $res_value;
+		} else {
+			// Use cache
+			$res_value = $RES_USER_CACHE;
+		}
 		
 		return $res_value;
 	}

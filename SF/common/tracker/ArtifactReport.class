@@ -681,7 +681,7 @@ class ArtifactReport extends Error {
 
 	/**
 	 * Return the query result in a multi array
-	 * For SelectBox or MultiBox, w retreive the label value
+	 * For SelectBox or MultiBox, we retreive the label value
 	 *
 	 * @param query: the SQL query
 	 *
