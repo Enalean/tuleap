@@ -1367,23 +1367,34 @@ class ArtifactField extends Error {
 	}
 	
 	/**
-	 *  Check if a field value id already exists
+	 *  Check if a field value id or a field value already exists
 	 *
 	 *  @param group_artifact_id: the group artifact id
 	 *  @param field_id: the field id
 	 *  @param value_id: the value id
+	 *  @param value: the value
 	 *
 	 *  @return boolean - exist or not
 	 */
-	function existValueId($group_artifact_id,$value_id) {
-		$sql = "SELECT * FROM artifact_field_values_list WHERE group_artifact_id=".$group_artifact_id.
+	function existValue($group_artifact_id,$value_id,$value) {
+		// Check id first
+		$sql = "SELECT * FROM artifact_field_value_list WHERE group_artifact_id=".$group_artifact_id.
 			   " AND field_id=".$this->getID()." AND value_id=".$value_id;
 			   
 		$result = db_query($sql);
 	    if ($result && db_numrows($result) > 0) {
 	    	return true;
 	    } else {
-	    	return false;
+	    	// Check value
+			$sql = "SELECT * FROM artifact_field_value_list WHERE group_artifact_id=".$group_artifact_id.
+				   " AND field_id=".$this->getID()." AND value='".$value."'";
+				   
+			$result = db_query($sql);
+		    if ($result && db_numrows($result) > 0) {
+	    		return true;
+	    	} else {
+	    		return false;
+	    	}
 	    }
 			
 	}	
@@ -1408,7 +1419,7 @@ class ArtifactField extends Error {
 		$value_id = $this->getNextValueID($group_artifact_id,$this->getID());
 		
 		// Check if a field value id already exists
-		if ( $this->existValueId($group_artifact_id,$value_id) ) {
+		if ( $this->existValue($group_artifact_id,$value_id,$value) ) {
 			$this->setError("This value id already exists.");
 			return false;
 		}
