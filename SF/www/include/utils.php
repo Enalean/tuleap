@@ -142,6 +142,26 @@ function util_make_links ($data='') {
 	return $newText;
 }
 
+function util_double_diff_array($arr1, $arr2) {
+    
+    // first transform both arrays in hashes
+    reset($arr1); reset($arr2);
+    while ( list(,$v) = each($arr1)) { $h1[$v] = $v; }
+    while ( list(,$v) = each($arr2)) { $h2[$v] = $v; }
+
+    $deleted = array();
+    while ( list($k,) = each($h1)) {
+	if (!isset($h2[$k])) { $deleted[] = $k; }
+    }
+
+    $added = array();
+    while ( list($k,) = each($h2)) {
+	if (!isset($h1[$k])) { $added[] = $k; }
+    }
+
+    return array($deleted, $added);
+}
+
 function show_priority_colors_key($msg='') {
 
 	echo '<P><B>'.($msg ? $msg : 'Priority Colors:').'</B><BR>
