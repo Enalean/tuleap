@@ -83,7 +83,7 @@ function osdn_print_navbar() {
 print '	     </td>';
 
 	srand((double)microtime()*1000000);
-        $random_num=rand(0,100000);
+        $random_num=rand(0,10000);
 
 	if (session_issecure()) {
 		$_SSL='s';

@@ -232,4 +232,15 @@ function session_set() {
 	}
 }
 
+/**
+ *	session_get_userid() - Wrapper function to return the User object for the logged in user.
+ *	
+ *	@return User
+ *	@access public
+ */
+function session_get_userid() {
+	global $G_USER;
+	return $G_USER['user_id'];
+}
+
 ?>

@@ -198,5 +198,13 @@ $sys_max_size_upload = 20000000;
 // Show the project type
 $sys_show_project_type = 0;
 
+//
+// Linefeed characters: \r\n for Windows, \n for Linux/Unix
+$sys_lf = "\n";
+
+//
+// Display or not the tracker menu
+$sys_show_tracker_menu = 0;
+
 // End of customizations -- place nothing after the closing PHP tag!
 ?>

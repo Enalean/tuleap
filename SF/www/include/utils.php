@@ -155,7 +155,7 @@ function util_line_wrap ($text, $wrap = 80, $break = "\n") {
 	return implode($break, $result);
 }
 
-function util_make_links ($data='',$group_id = 0) {
+function util_make_links ($data='',$group_id = 0, $group_artifact_id = 0) {
 	if(empty($data)) { return $data; }
 
 	$lines = split("\n",$data);
@@ -171,6 +171,11 @@ function util_make_links ($data='',$group_id = 0) {
 		    $text = eregi_replace("patch[ ]?#([0-9]+)", "<a href=\"/patch/?func=detailpatch&patch_id=\\1&group_id=$group_id\">Patch #\\1</a>", $text);
 		    $text = eregi_replace("commit[ ]?#([0-9]+)", "<a href=\"/cvs/?func=detailcommit&commit_id=\\1&group_id=$group_id\">Commit #\\1</a>", $text);
 		}
+		// If $group_artifact_id and $group_id is assigned then we can replace the pattern: art #id
+		if ( $group_artifact_id && $group_id ) {
+		    $text = eregi_replace("art[ ]?#([0-9]+)", "<a href=\"/tracker/?func=detail&aid=\\1&atid=$group_artifact_id&group_id=$group_id\">Artifact #\\1</a>", $text);
+		}
+	
 		$lines[$key] = $text;
 	}
 	return join("\n", $lines);
@@ -179,6 +184,25 @@ function util_make_links ($data='',$group_id = 0) {
 function util_user_link ($username) {
     if ( $username == 'None' || empty($username)) { return $username; }
     return '<a href="/users/'.$username.'">'.$username.'</a>';
+}
+
+function util_multi_user_link ($usernames) {
+	
+	$users = explode(",",$usernames);
+	if ( count($users) > 1 ) {
+		// Multiple users
+				
+		$str = "";
+		for($i=0;$i<count($users)-1;$i++) {
+			$str .= util_user_link($users[$i]).",";
+		}
+		$str .= util_user_link($users[$i]);
+		return $str;
+		
+	} else {
+		// Single user name
+		return util_user_link ($usernames);
+	}
 }
 
 function util_double_diff_array($arr1, $arr2) {
@@ -605,6 +629,38 @@ function make_local_url($path) {
     $info = parse_url("http://" . $GLOBALS['sys_default_domain']);
     $port = isset($info['port'])? ":".$info['port'] : "";
     return "http://localhost" . $port . "/" . $path;
+}
+
+/**
+ * util_check_fileupload() - determines if a filename is appropriate for upload
+ *
+ * @param	   string  The name of the file being uploaded
+ */
+function util_check_fileupload($filename) {
+
+	/* Empty file is a valid file.
+	This is because this function should be called
+	unconditionally at the top of submit action processing
+	and many forms have optional file upload. */
+	if ($filename == 'none' || $filename == '') {
+		return true;
+	}
+
+	/* This should be enough... */
+	if (!is_uploaded_file($filename)) {
+		return false;
+	}
+	/* ... but we'd rather be paranoic */
+	if (strstr($filename, '..')) {
+		return false;
+	}
+	if (!is_file($filename)) {
+		return false;
+	}
+	if (!file_exists($filename)) {
+		return false;
+	}
+	return true;
 }
 
 ?>

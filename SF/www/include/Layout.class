@@ -8,6 +8,8 @@
 // $Id$
 
 
+require($DOCUMENT_ROOT.'/../common/include/Error.class');
+
 /*
 
 	Extends the basic Error class to add HTML functions for displaying all site dependent HTML, while allowing extendibility/overriding by themes via the Theme class.
@@ -35,7 +37,8 @@ class Layout extends Error {
 		'Surveys' => 'ic/survey.png',
 		'News' => 'ic/news.png',
 		'CVS' => 'ic/convert.png',
-		'Files' => 'ic/save.png'
+		'Files' => 'ic/save.png',
+		'Trackers' => 'ic/tracker20w.png'
 		);
 
 	var $bgpri = array();
@@ -317,6 +320,8 @@ echo html_blankimage(5,100);
         	@result text - echos HTML to the screen directly
 	*/
 	function project_tabs($toptab,$group) {
+		
+		global $sys_show_tracker_menu;
 
         	// get group info using the common result set
 	        $project=project_get_object($group);
@@ -341,6 +346,7 @@ echo html_blankimage(5,100);
         	        case 'news': print 'News'; break;
 	                case 'patch': print 'Patches'; break;
 	                case 'admin': print 'Administration'; break;
+	                case 'trackers': print 'Trackers'; break;
                 	default: print 'Summary'; break;
         	}
         print '</H2>
@@ -409,9 +415,14 @@ echo html_blankimage(5,100);
 	        // Downloads
 	        $this->tab_entry('/project/filelist.php?group_id='.$group, $this->icons['Files'], 'Files', $toptab == 'downloads');
 
+	        // Trackers
+	        if ( $project->usesTrackers() && $sys_show_tracker_menu) {
+	        	$this->tab_entry('/tracker/index.php?group_id='.$group, $this->icons['Trackers'], 'Trackers', $toptab == 'trackers');
+	        }
+
         	print '<HR SIZE="1" NoShade><P>';
 	}
 
 
-}
+	}
 ?>

@@ -8,6 +8,8 @@
 // $Id$
 
 
+//require_once($DOCUMENT_ROOT.'/../common/include/Error.class');
+
 /*
 
 	An object wrapper for project (as opposed to foundry) data
@@ -68,6 +70,10 @@ class Project extends Group {
 		$this->project_data_array=$this->data_array;
 	}
 
+
+	function usesTrackers() {
+		return $this->project_data_array['use_trackers'];
+	}
 
 	function usesCVS() {
 		return $this->project_data_array['use_cvs'];

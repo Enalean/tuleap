@@ -40,7 +40,7 @@ if ($location) {
 require('browser.php');
 
 //base error library for new objects
-require('Error.class');
+//require('Error.class');
 
 //various html utilities
 require('utils.php');

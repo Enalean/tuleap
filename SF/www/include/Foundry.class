@@ -8,6 +8,8 @@
 // $Id$
 
 
+require_once($DOCUMENT_ROOT.'/../common/include/Error.class');
+
 /*
 
 	An object wrapper for foundry (as opposed to project) data

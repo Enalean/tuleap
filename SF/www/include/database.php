@@ -73,4 +73,15 @@ function db_error() {
 	return @mysql_error();
 }
 
+/**
+ *  db_reset_result() - Reset a result set.
+ *
+ *  Reset is useful for db_fetch_array sometimes you need to start over
+ *
+ *  @param		string	Query result set handle
+ *  @param		int		Row number
+ */
+function db_reset_result($qhandle,$row=0) {
+	return mysql_data_seek($qhandle,$row);
+}
 ?>

@@ -349,6 +349,12 @@ if ($project->usesCVS()) {
         }
 }
 
+// ######################### Trackers (only for Active)
+if ( $project->usesTrackers()&&$sys_show_tracker_menu ) {
+	print '<HR SIZE="1" NoShade><A href="/tracker/?group_id='.$group_id.'">';
+	html_image("ic/tracker20w.png",array('width'=>'20', 'height'=>'20', 'alt'=>'Trackers'));
+	print " Trackers</A>";
+}
 
 
 // ######################## AnonFTP (only for Active)
