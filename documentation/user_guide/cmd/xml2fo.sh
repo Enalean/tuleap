@@ -13,6 +13,7 @@ fi
 progname=$0
 scriptdir=`dirname $progname`
 DOC_HOME="$scriptdir/../.."
+cd ${DOC_HOME} ; DOC_HOME=`pwd`; cd -
 
 if [ $# != 2 ]
 then

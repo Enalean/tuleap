@@ -7,29 +7,37 @@ then
 fi 
 
 # Determine the script location
+# and the CMD_HOME directory (absolute path)
 progname=$0
-scriptdir=`dirname $progname`
+CMD_HOME=`dirname $progname`
+cd ${CMD_HOME} ; CMD_HOME=`pwd`; cd -
 
 xmldir=`dirname $1`
 xmlfilename=`basename $1`
 
+pdfdir=`dirname $2`
+pdffilename=`basename $2`
+cd ${pdfdir}; PDFDIR=`pwd`; cd -
+
 echo "Transforming XML file '$1' to PDF file '$2' ..."
-tmpfile="/tmp/docbook-$$"
+tmpfile="/tmp/docbook-cug-$$"
 
 prevdir=`pwd`;
 cd $xmldir
-$prevdir/$scriptdir/xml2fo.sh $xmlfilename $tmpfile.fo
+$CMD_HOME/xml2fo.sh $xmlfilename $tmpfile.fo
 if [ $? != 0 ]
 then
         echo "Failed!"
         exit 1
 fi
-$prevdir/$scriptdir/fo2pdf.sh $tmpfile.fo $prevdir/$2
+
+$CMD_HOME/fo2pdf.sh $tmpfile.fo ${PDFDIR}/${pdffilename}
 if [ $? != 0 ]
 then
         echo "Failed!"
         exit 1
 fi
+cd $prevdir
 echo "Done!"
 exit 0
 
