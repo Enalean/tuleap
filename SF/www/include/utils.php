@@ -259,7 +259,7 @@ Function GraphResult($result,$title) {
 	*/
 	$rows=db_numrows($result);
 
-	if ((!$result) || ($rows < 1)) {
+	if ((!$result)) {
 		echo 'None Found.';
 	} else {
 		$names=array();

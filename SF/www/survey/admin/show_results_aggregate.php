@@ -25,7 +25,7 @@ if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 */
 
 $sql="SELECT * FROM surveys WHERE survey_id='$survey_id' AND group_id='$group_id'";
-$result=db_query($sql);
+$result=db_query($sql,1);
 
 echo "<H2>".db_result($result, 0, "survey_title")."</H2><P>";
 
@@ -39,13 +39,13 @@ echo "<H3><A HREF=\"show_results_csv.php?survey_id=$survey_id&group_id=$group_id
 
 $questions=db_result($result, 0, "survey_questions");
 $quest_array=explode(',', $questions);
-$count=count($quest_array);
+$quest_count=count($quest_array);
 
 echo "\n\n<TABLE>";
 
 $q_num=1;
 
-for ($i=0; $i<$count; $i++) {
+for ($i=0; $i<$quest_count; $i++) {
 
 	/*
 		Build the questions on the HTML form
@@ -88,13 +88,6 @@ for ($i=0; $i<$count; $i++) {
 			This is a rædio-button question. Values 1-5.	
 		*/
 
-		# Show the 1-5 markers only if this is the first in a series
-
-		if ($question_type != $last_question_type) {
-			echo "\n<B>1 &nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; 5</B>\n";
-			echo "<BR>";
-
-		}
 
 		/*
 			Select the number of responses to this question
@@ -103,29 +96,44 @@ for ($i=0; $i<$count; $i++) {
 
 		$result2=db_query($sql);
 		if (!$result2 || db_numrows($result2) < 1) {
-			echo "error";
-			echo db_error();
-		} else {
-			echo "<B>".db_result($result2, 0, 'count')."</B> Responses<BR>";
+		    echo "error";
+		    echo db_error();
+		} else {		    
+		    $answers_cnt=db_result($result2, 0, 'count');
+		    echo "<B>$answers_cnt</B> Response".($answers_cnt>1 ? 's':'');
 		}
+
 		/*
-			average
+			compute average only if we have answers available
 		*/
 
-		$sql="SELECT avg(response) AS avg FROM survey_responses WHERE survey_id='$survey_id' AND question_id='$quest_array[$i]' AND group_id='$group_id'";
+		if ($answers_cnt > 0) {
+		    $sql="SELECT avg(response) AS avg FROM survey_responses WHERE survey_id='$survey_id' AND question_id='$quest_array[$i]' AND group_id='$group_id'";
 
-		$result2=db_query($sql);
-		if (!$result2 || db_numrows($result2) < 1) {
+		    $result2=db_query($sql);
+		    if (!$result2 || db_numrows($result2) < 1) {
 			echo "error";
 			echo db_error();
-		} else {
-			echo "<B>".db_result($result2, 0, 'avg')."</B> Average";
+		    } else {
+			$avg = db_result($result2, 0, 'avg');
+			echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.
+			    "Average: <B>$avg</B>";
+		    }
+		}
+
+		// Show the 1-5 markers only if this is the first in a series
+
+		if ($question_type != $last_question_type) {
+			echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.
+			    "Type: <B>1 &lt;--- - - - ---&gt; 5</B>\n";
 		}
 
 		$sql="SELECT response,count(*) AS count FROM survey_responses WHERE survey_id='$survey_id' AND question_id='$quest_array[$i]' AND response IN (1,2,3,4,5) AND group_id='$group_id' GROUP BY response";
 
 		$result2=db_query($sql);
-		if (!$result2 || db_numrows($result2) < 1) {
+		// Graph it even if there is zero row because GraphResult
+		// is in charge of displaying the question itself
+		if (!$result2) {
 			echo "error";
 			echo db_error();
 		} else {
@@ -139,20 +147,13 @@ for ($i=0; $i<$count; $i++) {
 
 		echo util_unconvert_htmlspecialchars(db_result($result, 0, "question"))."<BR>\n";
 
-		echo "<A HREF=\"show_results_comments.php?survey_id=$survey_id&question_id=$quest_array[$i]&question_num=$q_num&group_id=$group_id\">View Comments</A>";
+		echo "<A HREF=\"show_results_comments.php?survey_id=$survey_id&question_id=$quest_array[$i]&question_num=$q_num&group_id=$group_id\">View Comments</A><br>";
 
 	} else if ($question_type == "3") {
 		/*
 			This is a Yes/No question.
 		*/
 
-		/*
-			Show the Yes/No only if this is the first in a series
-		*/
-
-		if ($question_type != $last_question_type) {
-			echo "<B>Yes / No</B><BR>\n";
-		}
 
 		/*
 			Select the count and average of responses to this question
@@ -161,21 +162,36 @@ for ($i=0; $i<$count; $i++) {
 
 		$result2=db_query($sql);
 		if (!$result2 || db_numrows($result2) < 1) {
-			echo "error";
-			echo db_error();
+		    echo "error";
+		    echo db_error();
 		} else {
-			echo "<B>".db_result($result2, 0, 0)."</B> Responses<BR>";
+		    $answers_cnt=db_result($result2, 0, 'count');
+		    echo "<B>$answers_cnt</B> Response".($answers_cnt>1 ? 's':'');
 		}
-		/*
-			average
-		*/
-		$sql="SELECT avg(response) AS avg FROM survey_responses WHERE survey_id='$survey_id' AND question_id='$quest_array[$i]' AND group_id='$group_id'";
 
-		$result2=db_query($sql);
-		if (!$result2 || db_numrows($result2) < 1) {
+		/*
+			compute average only if we have answers available
+		*/
+		if ($answers_cnt > 0) {
+
+		    $sql="SELECT avg(response) AS avg FROM survey_responses WHERE survey_id='$survey_id' AND question_id='$quest_array[$i]' AND group_id='$group_id'";
+
+		    $result2=db_query($sql);
+		    if (!$result2 || db_numrows($result2) < 1) {
 			echo "error";
-		} else {
-			echo "<B>".db_result($result2, 0, 0)."</B> Average";
+		    } else {
+			$avg = db_result($result2, 0, 'avg');
+			echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.
+			    "Average: <B>$avg</B>";
+		    }
+		}
+
+		/*
+			Show the Yes/No only if this is the first in a series
+		*/
+
+		if ($question_type != $last_question_type) {
+			echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Type: <B>Yes / No</B><BR>\n";
 		}
 
 		/*
@@ -227,11 +243,11 @@ for ($i=0; $i<$count; $i++) {
 
 		echo util_unconvert_htmlspecialchars(db_result($result, 0, "question"))."<BR>\n";
 
-		echo "<A HREF=\"show_results_comments.php?survey_id=$survey_id&question_id=$quest_array[$i]&question_num=$q_num&group_id=$group_id\">View Comments</A>";
+		echo "<A HREF=\"show_results_comments.php?survey_id=$survey_id&question_id=$quest_array[$i]&question_num=$q_num&group_id=$group_id\">View Comments</A><br>";
 
 	}
 
-	echo "</TD></TR>";
+	echo "<br></TD></TR>";
 
 	$last_question_type=$question_type;
 
