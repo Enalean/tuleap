@@ -116,6 +116,10 @@ class Layout extends Error {
 	        } else {
         	        $params['title'] = $GLOBALS['sys_name'].": " . $params['title'];
 	        }
+                if ($GLOBALS['sys_force_ssl']) {
+                    $sys_url='https://'.$GLOBALS['sys_default_domain']; 
+                } else { $sys_url='http://'.$GLOBALS['sys_default_domain']; }
+                
         	?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -134,6 +138,9 @@ class Layout extends Error {
         </SCRIPT>
         <link rel="stylesheet" type="text/css" href="<? echo util_get_css_theme(); ?>">
         <link rel="SHORTCUT ICON" href="<? echo util_get_image_theme("favicon.ico"); ?>">
+        <link rel="alternate" title="<? echo $GLOBALS['sys_name']; ?> Latest News RSS" href="<? echo $sys_url; ?>/export/rss_sfnews.php" type="application/rss+xml">
+        <link rel="alternate" title="<? echo $GLOBALS['sys_name']; ?> Newest Releases RSS" href="<? echo $sys_url; ?>/export/rss_sfnewreleases.php" type="application/rss+xml">
+        <link rel="alternate" title="<? echo $GLOBALS['sys_name']; ?> Newest Projects RSS" href="<? echo $sys_url; ?>/export/rss_sfprojects.php?type=rss&option=newest" type="application/rss+xml">
 
 <?php
 	}
