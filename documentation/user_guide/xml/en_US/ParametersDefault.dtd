@@ -28,6 +28,6 @@ redefine your entities there. If this file doesn't exist create it.-->
 <!ENTITY FTPFILES_DIR "/home/ftp/codex">
 <!ENTITY SYS_ORG_NAME "Xerox">
 <!ENTITY SYS_LONG_ORG_NAME "Xerox Corporation">
-<!ENTITY SYS_EMAIL_ADMIN  "codex-admin@lists.codex.xerox.com">
+<!ENTITY SYS_EMAIL_ADMIN  "codex-admin@codex.xerox.com">
 <!ENTITY SYS_EMAIL_CONTACT "codex-contact@codex.xerox.com">
 <!ENTITY SYS_SAMBA_DOMAIN "WCRT">

@@ -380,6 +380,15 @@
 
         <revremark>Minor correction on summary of Tracker Access Permissions for Mass Update and Import</revremark>
       </revision>
+      <revision>
+        <revnumber>2.6.14</revnumber>
+
+        <date>04-Jan-2005</date>
+
+        <authorinitials>Nicolas Guerin</authorinitials>
+
+        <revremark>Minor correction on codex-contact and codex-admin email parameters</revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--

@@ -432,7 +432,7 @@
         can subscribe. Each channel is dedicated to a given software related
         topic. The creation of a new channel is under the responsibility of
         the CodeX Team. If you want to create a new developers channel please
-        contact the CodeX Team at <email>codex-contact@&SYS_DEFAULT_DOMAIN;</email>.</para>
+        contact the CodeX Team at <email>&SYS_EMAIL_CONTACT;</email>.</para>
 
         <para>The Developers Channels managed on CodeX have a certain number
         of advantages over conventional distribution lists:</para>
