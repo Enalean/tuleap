@@ -26,13 +26,14 @@ if ( !isset($pv) ) {
 	if ( $pv ) $ro = true;
 }
 
-if ($pv) {
-    help_header('Mass Change'.format_date($sys_datefmt,time()),false);	
-} else {
-	$ath->header(array ('title'=>'Mass Change: '.$ath->getID(). ' - ' . $ath->getName(),'pagename'=>'tracker',
-	       'atid'=>$ath->getID(),'sectionvals'=>array($group->getPublicName()),
-	       'help' => 'ArtifactMassChange.html'));
-}
+$params=array('title'=>$group->getPublicName().' '.$ath->getName().' Mass Change',
+              'pagename'=>'tracker',
+              'atid'=>$ath->getID(),
+              'sectionvals'=>array($group->getPublicName()),
+              'pv'=>$pv,
+              'help' => 'ArtifactMassChange.html');
+
+$ath->header($params);
 
 
 if (strstr($submit,"Mass Change Selected Items")) {
@@ -52,10 +53,6 @@ if (strstr($submit,"Mass Change Selected Items")) {
   $ath->displayMassChange(null,$query,$art_report_html);
 }
 // Display footer page
-if ( $pv ) {
-     help_footer();
-} else {
-	$ath->footer(array());
-}
+$ath->footer($params);
 
 ?>

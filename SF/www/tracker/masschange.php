@@ -265,23 +265,21 @@ if ($set=='my') {
    If not defined then defaults to ANY (0)
   ================================================== */
 
-if ( !$pv ) {
-	// Display the menus
-	$ath->header(array('title'=>'Mass Change Trackers','titlevals'=>array($ath->getName()),'pagename'=>'tracker_masschange',
-		'atid'=>$ath->getID(),'sectionvals'=>array($group->getPublicName()),
-		'help' => 'ArtifactMassChange.html'));
-} else {
-    help_header('Tracker Search Report - '.format_date($sys_datefmt,time()),false);
-}	
+$params=array('title'=>$group->getPublicName().': \''.$ath->getName().'\' Mass Change Report',
+              'titlevals'=>array($ath->getName()),
+              'pagename'=>'tracker_masschange',
+              'atid'=>$ath->getID(),
+              'sectionvals'=>array($group->getPublicName()),
+              'pv'=>$pv,
+              'help' => 'ArtifactMassChange.html');
+
+// Display the menus
+$ath->header($params);
 
 // Display the artifact items according to all the parameters
 $art_report_html->displayReport($prefs,$group_id,$report_id,$set,$advsrch,$msort,$morder,$order,$pref_stg,$offset,$chunksz,$pv,true);
 
-if ( !$pv ) {
-    // Display footer page
-    $ath->footer(array());
-} else {
-    help_footer();
-}	
+// Display footer page
+$ath->footer($params);
 
 ?>

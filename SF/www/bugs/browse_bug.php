@@ -438,12 +438,10 @@ $result=db_query($sql);
    Display the HTML search form
   ================================================== */
 
-if ($pv) {
-    help_header('Bug Search Report - '.format_date($sys_datefmt,time()),false);
-} else {
-    bug_header(array('title'=>'Browse Bugs '.$hdr,
-		     'help' => 'BugBrowsing.html'));
-}
+$params=array('title'=>'Bug Report '.$hdr,
+              'help' => 'BugBrowsing.html',
+              'pv'=>$pv);
+bug_header($params);
 
 if ($load_cal) {
     echo "\n<script language=\"JavaScript\" src=\"/include/calendar.js\"></script>\n";
@@ -554,9 +552,6 @@ if ($result && $numrows > 0) {
 
 }
 
-if ($pv)
-     help_footer();
-else
-     bug_footer(array());
+bug_footer($params);
 
 ?>

@@ -641,7 +641,7 @@ if (user_isloggedin()) {
 	</span>
 	
 <?php
-	$HTML->footer(array());
+	site_footer(array());
 
 } else {
 

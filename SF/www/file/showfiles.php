@@ -55,18 +55,28 @@ if (db_numrows($res)>0) {
     }
 }
 
-file_utils_header(array('title'=>'Project Filelist'));
+$params=array('title'=>'File packages for '.group_getname($group_id),
+              'pv'=>$pv);
 
+file_utils_header($params);
 if ( $num_packages < 1) {
     echo '<h3>No File Packages</h3><p>There are no file packages available';
-    file_utils_footer(array());
+    file_utils_footer($params);
     exit;
 }
 
+if ($pv) {
+    echo '<h3>Package Releases:</h3>';
+} else {
+    echo "<TABLE width='100%'><TR><TD>";
+    echo '<h3>Package Releases '. help_button('FileReleaseJargon.html').'</h3>';
+    echo "</TD>";
+    echo "<TD align='left'> ( <A HREF='".$PHP_SELF."?group_id=$group_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;Printer version</A> ) </TD>";
+    echo "</TR></TABLE>";
 
-echo '<h3>Package Releases '. help_button('FileReleaseJargon.html').'</h3>';
-echo '<p>Select Release to see Release Notes and Change Log, &nbsp;';
-echo 'Select File to request file download.</p>';
+    echo '<p>Select Release to see Release Notes and Change Log, &nbsp;';
+    echo 'Select File to request file download.</p>';
+}
 
 if (session_issecure()) {
     $url = "https://".$GLOBALS['sys_https_host'];
@@ -240,7 +250,7 @@ if ( $proj_stats['size'] ) {
 
 print "</TABLE>\n\n";
 
-file_utils_footer(array());
+file_utils_footer($params);
 
 
 ?>

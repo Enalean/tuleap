@@ -133,20 +133,22 @@ function docman_header($params) {
 		exit_error('Error','This Project Has Turned Off The Doc Manager');
 	}
         // There might be encoded HTML tags in the title
-	site_project_header(array('title'=>strip_tags(util_unconvert_htmlspecialchars($params['title'])),'group'=>$group_id,'toptab'=>'doc'));
+	site_project_header(array('title'=>strip_tags(util_unconvert_htmlspecialchars($params['title'])),'group'=>$group_id,'toptab'=>'doc','pv'=>$params['pv']));
 
-	print "<p><b><a href=\"/docman/new.php?group_id=".$group_id."\">Submit new documentation</a> | ".
+        if (!$params['pv']) {
+            print "<p><b><a href=\"/docman/new.php?group_id=".$group_id."\">Submit new documentation</a> | ".
 		"<a href=\"/docman/index.php?group_id=".$group_id."\">View Documentation</a> | ".
 		"<a href=\"/docman/admin/index.php?group_id=".$group_id."\">Admin</a></b>"; 
 	
-	if ($param['style'] == 'admin') {
+            if ($param['style'] == 'admin') {
 		print "<b>  | <a href=\"/docman/admin/index.php?mode=editdocs&group_id=".$group_id."\">Edit Documents</a> | ".
-		"<a href=\"/docman/admin/index.php?mode=editgroups&group_id=".$group_id." \">Edit Document Groups</a></b>";
+                    "<a href=\"/docman/admin/index.php?mode=editgroups&group_id=".$group_id." \">Edit Document Groups</a></b>";
 
-	} 
-	if ($params['help']) {
-	    echo ' | <b>  '.help_button($params['help'],false,'Help').'</b>';
-	}
+            } 
+            if ($params['help']) {
+                echo ' | <b>  '.help_button($params['help'],false,'Help').'</b>';
+            }
+        }
 }
 
 function docman_header_admin($params) {
@@ -181,7 +183,6 @@ function doc_get_state_box() {
 
 function docman_footer($params) {
 	site_project_footer($params);
-
 }
 
 ?>

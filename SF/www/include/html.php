@@ -396,20 +396,22 @@ function html_buildcheckboxarray($options,$name,$checked_array) {
         @param params array() must contain $user_id
         @result text - echos HTML to the screen directly
 */
-function site_header($params) {                                                         GLOBAL $HTML;
-
-        /*
+function site_header($params) {
+    GLOBAL $HTML;
+    /*
                 Check to see if active user
                 Check to see if logged in
-        */
-        echo $HTML->header($params);
-        echo html_feedback_top($GLOBALS['feedback']);
+    */
+    echo $HTML->header($params);
+    echo html_feedback_top($GLOBALS['feedback']);
 }
 
 function site_footer($params) {
-	GLOBAL $HTML;
-	$HTML->footer($params);
+    GLOBAL $HTML;
+    echo html_feedback_bottom($GLOBALS['feedback']);
+    $HTML->footer($params);
 }
+
 
 /*! 	@function site_project_header
 	@abstract everything required to handle security and state checks for a project web page
@@ -447,9 +449,14 @@ function site_project_header($params) {
 		session_require(array('group'=>'1'));
 	}
 
-	echo $HTML->header($params);
-	echo html_feedback_top($GLOBALS['feedback']);
-	echo $HTML->project_tabs($params['toptab'],$params['group']);
+        if ($params['pv']) {
+            // Printer version: no right column, no tabs...
+            echo $HTML->pv_header($params);
+        } else {
+            echo $HTML->header($params);
+            echo html_feedback_top($GLOBALS['feedback']);
+            echo $HTML->project_tabs($params['toptab'],$params['group']);
+        }
 }
 
 /*!     @function site_project_footer
@@ -461,39 +468,15 @@ function site_project_header($params) {
 function site_project_footer($params) {
 	GLOBAL $HTML;
 
-	echo html_feedback_bottom($GLOBALS['feedback']);
-	echo $HTML->footer($params);
+        if ($params['pv']) {
+            // Printer version
+            echo $HTML->pv_footer($params);
+        } else {
+            echo html_feedback_bottom($GLOBALS['feedback']);
+            echo $HTML->footer($params);
+        }
 }
 
-/*!     @function site_user_header
-	@abstract everything required to handle security and 
-		add navigation for user pages like /my/ and /account/
-	@param params array() must contain $user_id
-	@result text - echos HTML to the screen directly
-*/
-function site_user_header($params) {
-	GLOBAL $HTML;
-
-	/*
-		Check to see if active user
-		Check to see if logged in
-	*/
-	echo $HTML->header($params);
-	echo html_feedback_top($GLOBALS['feedback']);
-}       
-
-/*!     @function site_user_footer
-	@abstract currently a simple shim that should be on every user page, 
-		rather than a direct call to site_footer() or theme_footer()
-	@param params array() empty
-	@result text - echos HTML to the screen directly
-*/
-function site_user_footer($params) {
-	GLOBAL $HTML;
-
-	echo html_feedback_bottom($GLOBALS['feedback']);
-	echo $HTML->footer($params);
-}       
 
 function html_display_boolean($value,$true_value='Yes',$false_value='No') {
     if ( ($value == 1)||($value == true) ) {

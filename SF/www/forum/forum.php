@@ -166,7 +166,9 @@ if ($forum_id) {
 	$group_id=db_result($result,0,'group_id');
 	$forum_name=db_result($result,0,'forum_name');
 
-	forum_header(array('title'=>$forum_name));
+        $params=array('title'=>group_getname($group_id).' forum: '.$forum_name,
+                      'pv'   =>$pv);
+	forum_header($params);
 
 	//private forum check
 	if (db_result($result,0,'is_public') != '1') {
@@ -175,7 +177,7 @@ if ($forum_id) {
 				If this is a private forum, kick 'em out
 			*/
 			echo '<h1>Forum is restricted</H1>';
-			forum_footer(array());
+			forum_footer($params);
 			exit;
 		}
 	}
@@ -243,13 +245,16 @@ if ($forum_id) {
 		$max_row_popup=html_build_select_box_from_arrays ($vals,$texts,'max_rows',$max_rows,false);
 
 	//now show the popup boxes in a form
-		$ret_val .= '<TABLE BORDER="0" WIDTH="50%">
+		$ret_val .= '<TABLE BORDER="0" WIDTH="50%">';
+                if (!$pv) {
+                    $ret_val .= '
 				<FORM ACTION="'. $PHP_SELF .'" METHOD="POST">
 				<INPUT TYPE="HIDDEN" NAME="set" VALUE="custom">
 				<TR><TD><FONT SIZE="-1">'. $forum_popup .
 					'</TD><TD><FONT SIZE="-1">'. $options_popup .
 					'</TD><TD><FONT SIZE="-1">'. $max_row_popup .
 					'</TD><TD><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Change View"></TD></TR></TABLE></FORM>';
+                }
 
 		if ($style == 'nested') {
 			/*
@@ -368,12 +373,14 @@ if ($forum_id) {
 
 	echo $ret_val;
 
-	echo '<P>&nbsp;<P>';
+        if (!$pv) {
+            echo '<P>&nbsp;<P>';
+            
+            echo '<CENTER><h3>Start a New Thread:</H3></CENTER>';
+            show_post_form($forum_id);
+        }
 
-	echo '<CENTER><h3>Start a New Thread:</H3></CENTER>';
-	show_post_form($forum_id);
-
-	forum_footer(array());
+	forum_footer($params);
 
 } else {
 

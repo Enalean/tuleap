@@ -43,23 +43,25 @@ class ArtifactTypeHtml extends ArtifactType {
 		$params['tabtext']=$this->getName();
 
 		site_project_header($params);
-		echo '<h3>Tracker: <a href="/tracker/?group_id='.$group_id.'&atid='.$this->getID().'">'.$this->getName().'</a></h3><p>';
+                if (!$params['pv']) {
+                    echo '<h3>Tracker: <a href="/tracker/?group_id='.$group_id.'&atid='.$this->getID().'">'.$this->getName().'</a></h3><p>';
 
-		echo '<strong><a href="/tracker/?func=add&group_id='.$group_id.'&atid='. $this->getID() .'">Submit A New '.$this->getCapsItemName().'</a>';
-		echo ' | <a href="/tracker/?func=browse&set=my&group_id='.$group_id.'&atid='. $this->getID() .'">My '.$this->getCapsItemName().'s </a>';
-		echo ' | <a href="/tracker/?func=browse&set=open&group_id='.$group_id.'&atid='. $this->getID() .'">Open '.$this->getCapsItemName().'s </a>';
-		if ($this->userIsAdmin()) {
+                    echo '<strong><a href="/tracker/?func=add&group_id='.$group_id.'&atid='. $this->getID() .'">Submit A New '.$this->getCapsItemName().'</a>';
+                    echo ' | <a href="/tracker/?func=browse&set=my&group_id='.$group_id.'&atid='. $this->getID() .'">My '.$this->getCapsItemName().'s </a>';
+                    echo ' | <a href="/tracker/?func=browse&set=open&group_id='.$group_id.'&atid='. $this->getID() .'">Open '.$this->getCapsItemName().'s </a>';
+                    if ($this->userIsAdmin()) {
 			echo ' | <a href="/tracker/?func=masschange&group_id='.$group_id.'&atid='. $this->getID() .'">Mass Change </a>';
 			echo ' | <a href="/tracker/?func=import&group_id='.$group_id.'&atid='. $this->getID() .'">Import </a>';
-		}
-		echo ' | <a href="/tracker/?func=reporting&group_id='.$group_id.'&atid='.$this->getID().'">Reporting</a>';
-		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='.$this->getID().'">Admin</a>';
-		if ($params['help']) {
-		    echo ' | '.help_button($params['help'],false,'Help');
-		}
-
-		echo '</strong><br>';
-		echo '<HR NoShade SIZE="1" SIZE="90%">';
+                    }
+                    echo ' | <a href="/tracker/?func=reporting&group_id='.$group_id.'&atid='.$this->getID().'">Reporting</a>';
+                    echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='.$this->getID().'">Admin</a>';
+                    if ($params['help']) {
+                        echo ' | '.help_button($params['help'],false,'Help');
+                    }
+                    
+                    echo '</strong><br>';
+                    echo '<HR NoShade SIZE="1" SIZE="90%">';
+                }
 	}
 
 	/**

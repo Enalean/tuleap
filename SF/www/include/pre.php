@@ -33,6 +33,7 @@ if ($location) {
     exit;
 }   
 
+$sys_datefmt = "Y-M-d H:i";
 
 //library to determine browser settings
 require($DOCUMENT_ROOT.'/include/browser.php');
@@ -78,8 +79,6 @@ require($DOCUMENT_ROOT.'/include/html.php');
 
 //left-hand nav library, themable
 require($DOCUMENT_ROOT.'/include/menu.php');
-
-$sys_datefmt = "Y-M-d H:i";
 
 // #### Connect to db
 

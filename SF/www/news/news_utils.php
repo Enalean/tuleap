@@ -27,17 +27,18 @@ function news_header($params) {
 		echo '
 			<H2>'.$GLOBALS['sys_name'].' <A HREF="/news/">News</A></H2>';
 	}
-	echo '<P><B>';
-	echo '<A HREF="/news/submit.php?group_id='.$group_id.'">Submit</A> | <A HREF="/news/admin/?group_id='.$group_id.'">Admin</A>';
-	if ($params['help']) {
-	    echo ' | '.help_button($params['help'],false,'Help');
-	}
-	echo '</b><P>';
+        if (!$params['pv']){
+            echo '<P><B>';
+            echo '<A HREF="/news/submit.php?group_id='.$group_id.'">Submit</A> | <A HREF="/news/admin/?group_id='.$group_id.'">Admin</A>';
+            if ($params['help']) {
+                echo ' | '.help_button($params['help'],false,'Help');
+            }
+            echo '</b><P>';
+        }
 }
 
 function news_footer($params) {
-	GLOBAL $HTML;
-	$HTML->footer($params);
+    site_project_footer($params);
 }
 
 function news_show_latest($group_id='',$limit=10,$show_summaries=true,$allow_submit=true,$flat=false,$tail_headlines=0) {

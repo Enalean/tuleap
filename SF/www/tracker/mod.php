@@ -32,22 +32,20 @@ if ( !isset($pv) ) {
 	if ( $pv ) $ro = true;
 }
 
-if ($pv) {
-    help_header('Artifact detail '.format_date($sys_datefmt,time()),false);	
-} else {
-	$ath->header(array ('title'=>'Modify: '.$ah->getID(). ' - ' . $ah->getSummary(),'pagename'=>'tracker',
-	       'atid'=>$ath->getID(),'sectionvals'=>array($group->getPublicName()),
-	       'help' => 'ArtifactUpdate.html'));
-}
+$params=array('title'=>$group->getPublicName().' '.$ath->getName().' #'.$ah->getID(). ' - \'' . $ah->getSummary().'\'',
+              'pagename'=>'tracker',
+              'atid'=>$ath->getID(),
+              'sectionvals'=>array($group->getPublicName()),
+              'pv'=>$pv,
+              'help' => 'ArtifactUpdate.html');
+
+$ath->header($params);
+
 
 // artifact object (and field values) initialized in script above (index.php)
 $ah->display($ro,$pv);
 
 // Display footer page
-if ( $pv ) {
-     help_footer();
-} else {
-	$ath->footer(array());
-}
+$ath->footer($params);
 
 ?>

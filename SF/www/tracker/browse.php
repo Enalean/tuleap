@@ -269,23 +269,20 @@ if ($set=='my') {
    If not defined then defaults to ANY (0)
   ================================================== */
 
-if ( !$pv ) {
-	// Display the menus
-	$ath->header(array('title'=>'Browse Trackers','titlevals'=>array($ath->getName()),'pagename'=>'tracker_browse',
-		'atid'=>$ath->getID(),'sectionvals'=>array($group->getPublicName()),
-		'help' => 'ArtifactBrowsing.html'));
-} else {
-    help_header($group->getPublicName().': \''.$ath->getName().'\' Search Report - '.format_date($sys_datefmt,time()),false);
-}	
+$params=array('title'=>$group->getPublicName().': \''.$ath->getName().'\' Search Report',
+              'titlevals'=>array($ath->getName()),
+              'pagename'=>'tracker_browse',
+              'atid'=>$ath->getID(),
+              'sectionvals'=>array($group->getPublicName()),
+              'pv'=>$pv,
+              'help' => 'ArtifactBrowsing.html');
+
+// Display the menus
+$ath->header($params);
 
 // Display the artifact items according to all the parameters
 $art_report_html->displayReport($prefs,$group_id,$report_id,$set,$advsrch,$msort,$morder,$order,$pref_stg,$offset,$chunksz,$pv);
 
-if ( !$pv ) {
-    // Display footer page
-    $ath->footer(array());
-} else {
-    help_footer();
-}	
+$ath->footer($params);
 
 ?>

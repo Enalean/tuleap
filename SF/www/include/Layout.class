@@ -132,8 +132,8 @@ class Layout extends Error {
         }
         // -->
         </SCRIPT>
-    <link rel="stylesheet" type="text/css" href="<? echo util_get_css_theme(); ?>">
-	<link rel="SHORTCUT ICON" href="<? echo util_get_image_theme("favicon.ico"); ?>">
+        <link rel="stylesheet" type="text/css" href="<? echo util_get_css_theme(); ?>">
+        <link rel="SHORTCUT ICON" href="<? echo util_get_image_theme("favicon.ico"); ?>">
 
 <?php
 	}
@@ -157,6 +157,29 @@ class Layout extends Error {
 </html>
         <?php
 	}
+
+        function pv_header($params) {
+            global $sys_datefmt;
+	        $this->generic_header_start($params); 
+                $this->generic_header_end($params); 
+                echo '
+<body class="bg_help">
+';
+                if ($params['title']) {
+                    echo '
+<H2>'.$params['title'].' - '.format_date($sys_datefmt,time()).'</H2>
+<HR>
+';
+                }
+        }
+
+        function pv_footer($params) {
+?>
+</BODY>
+</HTML>
+<?php
+}
+
 
 	function header($params) {
 	

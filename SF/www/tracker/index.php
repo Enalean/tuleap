@@ -663,10 +663,11 @@ if ( $func == 'gotoid' ) {
         $params['group']=$group_id;
         $params['toptab']='tracker';
         $params['pagename']='trackers';
-        $params['title']='Trackers';
+        $params['title']='Trackers for '.group_getname($group_id);
         $params['sectionvals']=array($group->getPublicName());
         $params['help']='TrackerService.html';
-        
+        $params['pv']=$pv;
+
         echo site_project_header($params);
         echo '<strong>'
                  .'<a href="/tracker/admin/?group_id='.$group_id.'">Admin All Trackers</a>';
@@ -682,7 +683,12 @@ if ( $func == 'gotoid' ) {
                         <strong>No trackers have been set up, or you cannot view them.<p><FONT COLOR=RED>The Admin for this project ".
                         "will have to set up data types using the <a href=\"/tracker/admin/?group_id=$group_id\">admin page</a></FONT></strong>";
         } else {
-                echo '<p>Choose a tracker and you can browse/edit/add items to it.<p>';
+            echo "<p>Choose a tracker and you can browse/edit/add items to it.";
+            if (!$pv) {
+                echo " ( <A HREF='".$PHP_SELF."?group_id=$group_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;Printer version</A> )";
+            }
+            echo "<p>";
+
                 //
                 // Put the result set (list of trackers for this group) into a column with folders
                 //
@@ -696,7 +702,7 @@ if ( $func == 'gotoid' ) {
                         $at_arr[$j]->getDescription() .'<p>';
                 }
         }
-        echo site_project_footer(array());
+        echo site_project_footer($params);
 } else {
     exit_no_group();
 }

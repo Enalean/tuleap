@@ -85,24 +85,28 @@ function forum_header($params) {
 	if ($forum_id && $forum_name) {
 		echo '<P><H3>Discussion Forums: <A HREF="/forum/forum.php?forum_id='.$forum_id.'">'.$forum_name.'</A></H3>';
 	}
-	echo '<P><B>';
 
-	if ($forum_id && user_isloggedin() ) {
-	    if (forum_is_monitored($forum_id,user_getid()) )
-		$msg = "Stop Monitoring Forum";
-	    else 
-		$msg = "Monitor Forum";
-		    
+        if (!$params['pv']) {
+            echo '<P><B>';
+
+            if ($forum_id && user_isloggedin() ) {
+                if (forum_is_monitored($forum_id,user_getid()) )
+                    $msg = "Stop Monitoring Forum";
+                else 
+                    $msg = "Monitor Forum";
+                
 		echo '<A HREF="/forum/monitor.php?forum_id='.$forum_id.'">' . 
-			html_image("ic/check.png",array()).' '.$msg.' | '.
-			'<A HREF="/forum/save.php?forum_id='.$forum_id.'">';
+                    html_image("ic/check.png",array()).' '.$msg.' | '.
+                    '<A HREF="/forum/save.php?forum_id='.$forum_id.'">';
 		echo  html_image("ic/save.png",array()) .' Save Place</A> | ';
-	}
-
-	echo '  <A HREF="/forum/admin/?group_id='.$group_id.'">Admin</A></B>';
-	if ($params['help']) {
-	    echo ' | '.help_button($params['help'],false,'Help');
-	}
+                echo "<A HREF='".$PHP_SELF."?forum_id=$forum_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;Printer version</A> | ";
+            }
+            
+            echo '  <A HREF="/forum/admin/?group_id='.$group_id.'">Admin</A></B>';
+            if ($params['help']) {
+                echo ' | '.help_button($params['help'],false,'Help');
+            }
+        }
 	echo '<P>';
 }
 

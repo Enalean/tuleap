@@ -20,12 +20,14 @@ function file_utils_header($params) {
     
     site_project_header($params);
 
-    if (user_ismember($group_id,"R2")) {
-        echo '<strong>'
-            .'<a href="/file/admin/index.php?group_id='.$group_id.'">Admin</a>';
-	if (!$params['help']) { $params['help'] = "FileRelease.html";}
-	echo ' | '.help_button($params['help'],false,'Help');
-        echo "</strong><p>";
+    if (!$params['pv']) {
+        if (user_ismember($group_id,"R2")) {
+            echo '<strong>'
+                .'<a href="/file/admin/index.php?group_id='.$group_id.'">Admin</a>';
+            if (!$params['help']) { $params['help'] = "FileRelease.html";}
+            echo ' | '.help_button($params['help'],false,'Help');
+            echo "</strong><p>";
+        }
     }
 }
 

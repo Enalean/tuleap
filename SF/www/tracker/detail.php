@@ -24,14 +24,14 @@ if ( !$ath->isValid() ) {
 // Create factories
 $art_field_fact = new ArtifactFieldFactory($ath);
 
-if ($pv) {
-    help_header('Artifact detail '.format_date($sys_datefmt,time()),false);	
-} else {
-	$ath->header(array ('title'=>'Modify: '.$ah->getID(). ' - ' . $ah->getSummary(),
-	      'pagename'=>'tracker','atid'=>$ath->getID(),
-	      'sectionvals'=>array($group->getPublicName()),
-	      'help' => 'ArtifactSubmission.html' ));
-}
+$params=array('title'=>$group->getPublicName().' '.$ath->getName().' #'.$ah->getID(). ' - \'' . $ah->getSummary().'\'',
+              'pagename'=>'tracker',
+              'atid'=>$ath->getID(),
+              'sectionvals'=>array($group->getPublicName()),
+              'pv'=>$pv,
+              'help' => 'ArtifactSubmission.html' );
+
+$ath->header($params);
 
 // Printer version ?
 if ( !isset($pv) ) {
@@ -42,9 +42,6 @@ if ( !isset($pv) ) {
 $ah->display(true,$pv);
 
 // Display footer page
-if ( $pv ) {
-     help_footer();
-} else {
-	$ath->footer(array());
-}
+$ath->footer($params);
+
 ?>

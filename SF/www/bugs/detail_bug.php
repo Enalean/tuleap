@@ -6,12 +6,11 @@
 //
 // $Id$
 
-if ($pv) {
-    help_header('Bug Detail - '.format_date($sys_datefmt,time()),false);
-} else {
-    bug_header(array ('title'=>'Bug Detail: '.$bug_id,
-		        'help' => 'BugUpdate.html'));
-}
+$params=array('title'=>'Details for bug #'.$bug_id,
+              'help' => 'BugUpdate.html',
+              'pv'=>$pv);
+bug_header($params);
+
 
 // First check access control for updates
 $res_access = db_query("SELECT bug_allow_anon FROM groups WHERE group_id=$group_id");
@@ -23,7 +22,7 @@ if (!user_isloggedin() && db_result($res_access,0,'bug_allow_anon') == 0) {
 	  urlencode($REQUEST_URI). 
 	'">log in</A></u> first.</span></B>';
 
-    bug_footer(array());
+    bug_footer($params);
     exit;
 }
 
@@ -222,9 +221,6 @@ if (db_numrows($result) > 0) {
 
 }
 
-if ($pv)
-     help_footer();
-else
-     bug_footer(array());
+bug_footer($params);
 
 ?>

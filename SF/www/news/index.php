@@ -9,11 +9,25 @@
 require($DOCUMENT_ROOT.'/include/pre.php');
 require('../forum/forum_utils.php');
 
-news_header(array('title'=>'News',
-		  'help'=>'NewsService.html'));
 
-echo '<H3>News</H3>
-	<P>Choose a News item and you can browse, search, and post messages.<P>';
+$params=array('title'=>'News for '.group_getname($group_id),
+              'help'=>'NewsService.html',
+              'pv'=>$pv);
+
+news_header($params);
+
+if ($pv) {
+    echo '<H3>News</H3>';
+} else {
+    echo "<TABLE width='100%'><TR><TD>";
+    echo '<H3>News</H3>';
+    echo "</TD>";
+    echo "<TD align='left'> ( <A HREF='".$PHP_SELF."?group_id=$group_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;Printer version</A> ) </TD>";
+    echo "</TR></TABLE>";    
+}
+
+
+    echo '<P>Choose a News item and you can browse, search, and post messages.<P>';
 
 /*
 	Put the result set (list of forums for this group) into a column with folders
@@ -61,6 +75,7 @@ if ($rows < 1) {
 	</TD></TR></TABLE>';
 }
 
-news_footer(array());
+// Display footer page
+news_footer($params);
 
 ?>
