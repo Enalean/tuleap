@@ -544,6 +544,77 @@ class ArtifactType extends Error {
 	}
 
 	/**
+	 *	pre_delete - Mark this for deletion.
+	 *
+	 *	@return boolean	success.
+	 */
+	function pre_delete() {
+		if (!$this->userIsAdmin()) {
+			$this->setError('Permission Denied');
+			return false;
+		}
+		$date = date("Y-m-d",time() + 1000000); // 12 days of delay
+		$sql="update artifact_group_list SET status='D', deletion_date='$date'
+			WHERE group_artifact_id='".$this->getID()."'";
+		$result=db_query($sql);
+		if ($result) {
+			return true;
+		} else {
+			$this->setError(db_error());
+			return false;
+		}
+	}
+
+	/**
+	 *	delay - change date for deletion.
+	 *
+	 *	@return boolean	success.
+	 */
+	function delay($date) {
+		global $sys_datefmt;
+		if (!$this->userIsAdmin()) {
+			$this->setError('Permission Denied');
+			return false;		
+		}
+		$keywords = preg_split("/-/", $date);
+		$ts = mktime("23", "59", "59", $keywords[1], $keywords[2], $keywords[0]);
+		if (time() > $ts) {
+		 	$this->setError('Delay date must not be in the past');
+			return false;
+		}
+		$sql="update artifact_group_list SET deletion_date='$date'
+			WHERE group_artifact_id='".$this->getID()."'";
+		$result=db_query($sql);
+		if ($result) {
+			return true;
+		} else {
+			$this->setError(db_error());
+			return false;
+		}
+	}
+
+	/**
+	 *	restore - Unmark this for deletion.
+	 *
+	 *	@return boolean	success.
+	 */
+	function restore() {
+		if (!$this->userIsAdmin()) {
+			$this->setError('Permission Denied');
+			return false;
+		}
+		$sql="update artifact_group_list SET status='A'
+			WHERE group_artifact_id='".$this->getID()."'";
+		$result=db_query($sql);
+		if ($result) {
+			return true;
+		} else {
+			$this->setError(db_error());
+			return false;
+		}
+	}
+
+	/**
 	 *	updateUsers - update the user's permissions.
 	 *
 	 *  @param atid: the group artifact id

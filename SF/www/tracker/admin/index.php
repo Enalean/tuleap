@@ -347,32 +347,6 @@ if ($group_id && !$atid) {
 		$ath->footer(array());
 		break;
 		
-	case 'delete_tracker':
-		// Create field factory
-		$art_field_fact = new ArtifactFieldFactory($ath);
-
-		// Then delete all the fields informations
-		if ( !$art_field_fact->deleteFields($atid) ) {
-			exit_error('Error',$art_field_fact->getErrorMessage());
-			return false;
-		}
-		
-		// Then delete all the reports informations
-		// Create field factory
-		$art_report_fact = new ArtifactReportFactory();
-
-		if ( !$art_report_fact->deleteReports($atid) ) {
-			exit_error('Error',$art_report_fact->getErrorMessage());
-			return false;
-		}
-		
-		// Delete the artifact type itself
-		if ( !$atf->deleteArtifactType($atid) ) {
-			exit_error('Error',$atf->getErrorMessage());
-		}
-		
-		include './admin_trackers.php';
-		break;
 
 	case 'field_values':
 		include './field_values.php';
@@ -504,6 +478,23 @@ if ($group_id && !$atid) {
 		}
 		break;
 
+	case 'delete_tracker':
+	  if ( !$ath->userIsAdmin() ) {
+			exit_permission_denied();
+			return;
+		}
+	
+		$ath->adminHeader(array('title'=>$ath->getName().' Tracker Administration','help' => 'HELP_FIXME.html'));
+		if (!$ath->pre_delete()) {
+		  $feedback = "Tracker '".$ath->getName()."' - Deletion Failed - ";
+		} else {
+		  $feedback = "Tracker '".$ath->getName()."' - Successfully Deleted";
+		  echo "<H2>Tracker '".$ath->getName()."' - Deleted</H2> <h3>In case you have inadvertently deleted this tracker and want it to be 
+restored,</H3><p> please contact the <a href=\"mailto:".$GLOBALS['sys_email_admin']."\">Codex Administrator</A>  within the next 10 days.</p>"; 
+
+		} 
+		$ath->footer(array());
+	  break;
 	default:    
 		if ( !user_isloggedin() ) {
 			exit_not_logged_in();

@@ -112,6 +112,7 @@ class ArtifactTypeFactory extends Error {
 
 		$sql="SELECT *, 0 as open_count, 0 as count FROM artifact_group_list
 			WHERE group_id='". $this->Group->getID() ."'
+			AND status != 'D'
 			AND is_public IN ($public_flag)
 			ORDER BY name ASC";
 
@@ -170,6 +171,33 @@ class ArtifactTypeFactory extends Error {
 
 		$rows = db_numrows($result);
 
+		if (!$result || $rows < 1) {
+			$this->setError('None Found '.db_error());
+			return false;
+		}
+
+		return $result;
+	}
+	
+
+	/**
+	 *	getPendingArtifactTypes - return an array of ArtifactType objects with 'D' status
+	 *
+	 *  @aparam group_id: the group id
+	 *
+	 *	@return	resultSet
+	 */
+	function getPendingArtifactTypes() {
+		$sql="SELECT group_artifact_id,name, deletion_date, groups.group_name as project_name, groups.group_id FROM artifact_group_list, groups
+			WHERE artifact_group_list.status='D'
+			AND groups.group_id=artifact_group_list.group_id
+			AND groups.group_id!=100
+			ORDER BY group_artifact_id ASC";
+
+		//echo $sql;
+		
+		$result = db_query ($sql);
+		$rows = db_numrows($result);
 		if (!$result || $rows < 1) {
 			$this->setError('None Found '.db_error());
 			return false;
