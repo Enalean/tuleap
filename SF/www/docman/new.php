@@ -29,7 +29,10 @@ if($group_id) {
 		}
 
 		if (!$upload_instead && !$data) {
-			exit_missing_param();
+                    // Check if there is a link in the title
+                    if (!strstr($title,"href")) {
+                        exit_missing_param();
+                    }
 		}
 
 		if (!user_isloggedin()) {
