@@ -186,6 +186,12 @@ class ArtifactType extends Error {
 			return false;
 		}
 
+                // Necessary test to avoid issues when exporting the tracker to a DB (e.g. '-' not supported as table name)
+                if (!eregi("^[a-zA-Z0-9_]+$",$itemname)) {
+                    $this->setError("Invalid short name: $itemname. Please use only alphanumerical characters. Press the \"Back\" button and update this information.");
+			return false;
+                }
+
 		//	get the template Group object
 		$group = group_get_object($group_id_template);
 		if (!$group || !is_object($group) || $group->isError()) {
