@@ -272,7 +272,7 @@ $inputTextSize = 12;
 # cvsweb to guess the correct mime-type on
 # checkout; you can use the mime.types from
 # apache here:
-$mime_types = '/etc/httpd/conf/apache-mime.types';
+$mime_types = '/etc/mime.types';
 
 # quick mime-type lookup; maps file-suffices to
 # mime-types for displaying checkouts in the browser.
@@ -285,7 +285,6 @@ $mime_types = '/etc/httpd/conf/apache-mime.types';
 	   "gif"   => "image/gif",
 	   "jpeg"  => "image/jpeg",
 	   "jpg"   => "image/jpeg",   
-	   "*"	   => "text/plain",
 	   );
 
 ##############
