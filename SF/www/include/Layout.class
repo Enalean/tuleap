@@ -183,7 +183,8 @@ class Layout extends Error {
         <SCRIPT language="JavaScript">
         <!--
         function help_window(helpurl) {
-                HelpWin = window.open(helpurl,'HelpWindow','scrollbars=yes,resizable=yes,toolbar=no,height=400,width=400');
+                HelpWin = window.open(helpurl,'HelpWindow','scrollbars=yes,resizable=yes,toolbar=no,height=550,width=500');
+		HelpWin.focus();
         }
         // -->
         </SCRIPT>
