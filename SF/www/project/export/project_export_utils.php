@@ -105,6 +105,12 @@ function pick_a_record_at_random($result, $numrows, $col_list) {
     return $record;
 }
 
+function prepare_textarea($textarea) {
+    // Turn all HTML entities in ASCII and remove all \r characters
+    // because even MS Office apps don't like it in text cells (Excel)
+    return( str_replace("\r\n","\n",util_unconvert_htmlspecialchars($textarea)) );
+}
+
 function prepare_bug_record($group_id, &$col_list, &$record) {
 
     global $datetime_fmt;
@@ -125,7 +131,7 @@ function prepare_bug_record($group_id, &$col_list, &$record) {
     $line = '';
     while (list(,$col) = each($col_list)) {
 	if (bug_data_is_text_field($col) || bug_data_is_text_area($col)) {
-	    $record[$col] = util_unconvert_htmlspecialchars($record[$col]);
+	    $record[$col] = prepare_textarea($record[$col]);
 	}
     }
 
@@ -137,7 +143,7 @@ function prepare_bug_record($group_id, &$col_list, &$record) {
 }
 
 function get_bug_followups ($group_id,$bug_id) {
-    global $BUG_FU, $eol, $sys_datefmt;
+    global $BUG_FU, $sys_datefmt;
 
     // return all the follow-up comments attached to a given bug
     // Do a big SQl query the first time and then cache the results
@@ -164,13 +170,13 @@ function get_bug_followups ($group_id,$bug_id) {
 	    while ($row = db_fetch_array($result)) {
 
 		$BUG_FU[$row['bug_id']] .= 
-		    $eol.
+		    "\n".
 		    '=================================================='.
-		    $eol.
+		    "\n".
 		    'Type: '.$row['type'].'     By: '.$row['mod_by'].'      On: '.
-		    date($sys_datefmt,$row['date']).$eol.$eol.
-		    util_unconvert_htmlspecialchars($row['old_value']).
-		    $eol;
+		    date($sys_datefmt,$row['date'])."\n\n".
+		    prepare_textarea($row['old_value']).
+		    "\n";
 	    }
 
 	} else
@@ -296,7 +302,7 @@ function prepare_bug_history_record(&$record) {
 	// revert HTML entities to ASCII code in text fields
 	if ( ($record['field_name'] == 'summary') ||
 	     ($record['field_name'] == 'details') ) {
-	    $record['old_value'] = util_unconvert_htmlspecialchars($record['old_value']);
+	    $record['old_value'] = prepare_textarea($record['old_value']);
 	}
     }
 
@@ -333,7 +339,7 @@ function prepare_task_history_record(&$record) {
 
     case 'summary':
     case 'details':
-	$record['old_value'] = util_unconvert_htmlspecialchars($record['old_value']);
+	$record['old_value'] = prepare_textarea($record['old_value']);
 	break;
 
     case 'status_id':
@@ -364,8 +370,8 @@ function prepare_task_record($group_id, &$record) {
     $record['start_date'] = date($datetime_fmt,$record['start_date']);
     $record['end_date'] = date($datetime_fmt,$record['end_date']);
 
-    $record['summary'] = util_unconvert_htmlspecialchars($record['summary']);
-    $record['details'] = util_unconvert_htmlspecialchars($record['details']);
+    $record['summary'] = prepare_textarea($record['summary']);
+    $record['details'] = prepare_textarea($record['details']);
 
     $task_id = $record['project_task_id'];
     $record['assigned_to'] = get_task_assignees ($group_id,$task_id);
@@ -386,7 +392,7 @@ function prepare_survey_responses_record($group_id, &$record) {
        */
 
     $record['date'] = date($datetime_fmt,$record['date']);
-    $record['reponse'] = util_unconvert_htmlspecialchars($record['response']);
+    $record['reponse'] = prepare_textarea($record['response']);
  
 }
 
@@ -434,7 +440,7 @@ function get_task_assignees ($group_id,$task_id) {
 }
 
 function get_task_followups ($group_id,$task_id) {
-    global $TASK_FU, $eol, $sys_datefmt;
+    global $TASK_FU, $sys_datefmt;
 
     // return all the follow-up comments attached to a given task
     // Do a big SQl query the first time and then cache the results
@@ -458,11 +464,12 @@ function get_task_followups ($group_id,$task_id) {
 	    while ($row = db_fetch_array($result)) {
 
 		$TASK_FU[$row['project_task_id']] .= 
-		    $eol.$eol.
-		    '=================================================='.$eol.
+		    "\n".
+		    '=================================================='."\n".
 		    'By: '.$row['mod_by'].'      On: '.
-		    date($sys_datefmt,$row['date']).$eol.$eol.
-		    util_unconvert_htmlspecialchars($row['old_value']);
+		    date($sys_datefmt,$row['date'])."\n\n".
+		    prepare_textarea($row['old_value']).
+		    "\n";
 	    }
 
 	} else
