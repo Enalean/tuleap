@@ -1,5 +1,1084 @@
-------------------------------------------------------------------------------
-CODEX 1.6 (tag: CX_1_6) - 2003-07-08 - 6:00am EST
+2003-11-25 14:15  ljulliar
+
+	* www/VERSION: Initial revision for CodeX 2.0
+
+2003-11-21 19:08  ljulliar
+
+	* utils/new_parse.pl: A project homedir is private either when the
+	project is private or the file .CODEX_PRIVATE is created by hand.
+	This is a fix to commit #3088 correcting bug #30982.
+
+2003-11-21 18:59  ljulliar
+
+	* utils/new_parse.pl: Must add sourceforge user to the group if it
+	is a private project otherwise Apache won't be able to access the
+	document Root of the project web iste which is not world readable.
+	See Bug #3982.
+	
+	This bug is a side effect of the implementation of task #2940.
+
+2003-11-21 11:53  ljulliar
+
+	* db/mysql/database_initvalues.sql: Missing initialisation values
+	in groups table (task #2627)
+
+2003-11-20 16:05  sbouhet
+
+	* www/bugs/bug_utils.php: Bug #26468: A Bug technicians (not admin)
+	or the owner of an attachment can delete this attachment.
+
+2003-11-20 14:48  sbouhet
+
+	* www/project/admin/userperms.php: Bug #30966: User permissions
+	display now legacy trackers only if there are enable.
+
+2003-11-19 17:20  ljulliar
+
+	* www/survey/: survey_data.php, survey_utils.php,
+	admin/add_survey.php: Cleanup question list before storing it in
+	the database. Spurious spaces or commas cause survey data to be
+	lost when survey forms are filled in. (see bug #26666)
+
+2003-11-19 16:32  ljulliar
+
+	* AUTHORS, CONTRIBUTING, INSTALL, README,
+	docs/Adminstration_Guide.html, docs/Contributor_Guide.html,
+	docs/Install_Guide.html, docs/images/sflogo2-105a.png: Some file
+	cleanup dating from the old sourceforge days and some top level
+	files updated to reflect the fact that we now have external
+	customers for CodeX.
+
+2003-11-17 10:33  sbouhet
+
+	* common/tracker/ArtifactFieldFactory.class,
+	common/tracker/ArtifactType.class,
+	www/project/export/artifact_deps_export.php,
+	www/project/export/artifact_export.php,
+	www/project/export/artifact_history_export.php,
+	www/project/export/index.php,
+	www/project/export/project_export_utils.php,
+	www/tracker/include/ArtifactHtml.class,
+	www/tracker/include/ArtifactReportHtml.class: Task #2627: Generic
+	tracker Add tracker export feature.
+
+2003-11-14 18:06  sbouhet
+
+	* common/tracker/ArtifactReport.class: Bug #30356: Add
+	systematically artifact_id into the SQL query for reports.
+
+2003-11-14 12:19  jacquin
+
+	* db/upgrades/db0013.pl: base support tracker has been renamed
+	'Support Requests'
+	
+	perl script needs to use this name
+
+2003-11-14 10:55  jacquin
+
+	* db/upgrades/db0013.pl: Existing legacy tasks test update - this
+	made some legacy task trackers to disappear from the web menus.
+	
+	For upgraded servers who already applied db0013.pl, it should be
+	re-applied: trackers are not re-created, only flags for old legacy
+	trackers are updated then.
+
+2003-11-14 10:21  ljulliar
+
+	* www/: project/stats/stats_graph.png, stats/users_graph.png,
+	stats/views_graph.png, stats/weekly_views.png: Some more changes in
+	the code to make it run on both PHP3 and PHP4. Other changes were
+	made in commit #2333.
+
+2003-11-14 09:50  ljulliar
+
+	* www/stats/.htaccess: Fixing typo introduced in previous revision
+	(see commit #2333).
+
+2003-11-13 15:03  ljulliar
+
+	* etc/local.inc.dist, www/include/user_home.php: Generalize the
+	LDAP search criteria and the HTML output of the LDAP search.  The
+	LDAP filter is now a new parameter in etc/local.inc called
+	$sys_ldap_filter and a new site content file called
+	site-content/en_US/include/user_home.txt now contains the HTML
+	output to be used when a LDAP search is performed on a user. The
+	CodeX Installation Guide has been updated accordingly (Task #3062)
+	
+	Note to site administrators: to upgrade make a cvs update on all
+	top directories (SF, site-content, documentation) and add the new
+	$sys_ldap_filter parameter in etc/local.inc as listed in the
+	SF/etc/local.inc.dist file.
+
+2003-11-13 14:59  jacquin
+
+	* www/project/: showfiles.php, admin/editreleases.php,
+	admin/qrs.php: Task #2755 - File release upload - avoid name
+	collisions when not in the same release
+	
+	(see also Bug #29478)
+	
+	  To upload files with already used names but in any other
+	package/release, the following changes are done:
+	
+	 1- the uploaded file is stored for download under an intermediate
+	directory named pxx_ryy where xx is the package_id and yy is the
+	release_id. pxx_ryy subdir is eventualy created through an
+	additional fileforge command (fileforge creates one directory when
+	needed). fileforge is unchanged. then, a second fileforge command
+	moves filename to the pxx_ryy subdir.(editreleases.php and qrs.php)
+	
+	 2- pxx_ryy/filename is stored in database (no collision except if
+	in same release) (editreleases.php and qrs.php)
+	
+	 3- only filename is shown to users. (showfiles.php)
+	
+	 4- download anchor uses pxx_ryy/filename path (to use the right
+	stored file for download). (showfiles.php)
+
+2003-11-12 13:52  ljulliar
+
+	* db/: mysql/database_initvalues.sql, upgrades/db0013.sql:
+	Harmonize names of tracker service (Tracker names on CodeX central
+	server updated manually through SQL). Task #2627
+
+2003-11-12 13:36  ljulliar
+
+	* db/: mysql/database_initvalues.sql, upgrades/db0013.sql: The
+	Support Request tracker was named 'Supports' which is not correct
+	english. Let's call it Support Requests. It is a bit long but it's
+	clear. (Remark: No need to update existing support request
+	trackers)
+
+2003-11-12 10:44  ljulliar
+
+	* www/patch/patch_utils.php: If patch assignee or submitter is
+	'None' then do not include it in the list of recipient for the
+	patch email notification.  (See bug #24120)
+
+2003-11-12 10:06  ljulliar
+
+	* utils/cvs1/checkins.pl: Log messages containing simple quote and
+	double quote were causing the CVS tracking script to fail inserting
+	the log message in the CVS tracking database. Single quote was
+	wrongly converted in &quot; and double quote wasn't converted at
+	all causing the failure.  (See bug #30539)
+
+2003-11-12 09:26  ljulliar
+
+	* www/account/register.php: When there is an error in the user
+	registration form make sure that all field values are displayed
+	again with no backslashed (escaped) characters. These escape
+	sequences might have been automatically introduced if there was ',
+	" or \ charaters when the form was first submitted. (bug #30538)
+
+2003-11-06 14:52  sbouhet
+
+	* db/upgrades/db0013.sql: Task #2627: Generic tracker For task
+	template, priority is in fact the standard field severity with a
+	label to 'Priority'.  Central site has been updated with a specific
+	script.
+
+2003-11-06 09:30  sbouhet
+
+	* www/project/admin/userperms.php: Fix concerning a bug on the
+	admin access permission screen.  See SR #102819
+
+2003-11-04 14:35  sbouhet
+
+	* etc/cvsweb.conf.dist: Fix concerning cvsweb which didn't use the
+	mime type to display the file.
+
+2003-11-04 09:56  sbouhet
+
+	* www/tracker/include/ArtifactHtml.class: Bug #30041: URL in "is
+	dependent on" list must use the gotoid function (for cross tracker
+	link).
+
+2003-11-03 11:11  sbouhet
+
+	* www/tracker/include/ArtifactHtml.class: Task #2627: Generic
+	Trackers Fix concerning the notification email: display only once
+	summary and original submission.
+
+2003-11-03 11:03  sbouhet
+
+	* common/tracker/ArtifactField.class,
+	www/tracker/include/ArtifactFieldHtml.class,
+	www/tracker/include/ArtifactHtml.class: Task #2627: Generic
+	Trackers Display alway float fields with 2 digits.
+
+2003-11-01 18:16  ljulliar
+
+	* www/support/support_utils.php: Send the email notification to
+	both the assignee and the submitter of a support request. (SR
+	#102364)
+
+2003-11-01 13:45  ljulliar
+
+	* www/my/index.php: Project list on Personal Page now sorted
+	aplhabetically to help those who are members of many projects (See
+	SR #102533).
+
+2003-10-31 08:46  sbouhet
+
+	* www/my/index.php: On the Home Page, move the 'My bookmarks'
+	section just after 'My Projects'
+
+2003-10-31 08:28  sbouhet
+
+	* www/project/export/index.php: Export data: fix invalid url for
+	export data.
+
+2003-10-30 16:28  sbouhet
+
+	* common/tracker/Artifact.class: Task #2627: Generic Tracker Remove
+	extra debug trace.
+
+2003-10-30 16:26  sbouhet
+
+	* common/tracker/Artifact.class: Task #2627: Generic Tracker A fix
+	concerning a forgotten return true.
+
+2003-10-30 15:48  sbouhet
+
+	* www/tracker/admin/index.php: Task #2627: Generic Tracker Only
+	super user can modify System reports.
+
+2003-10-30 15:15  sbouhet
+
+	* www/tracker/index.php: Task #2627: Generic Tracker For a
+	creation, for the email notification, don't show any changes, just
+	display the fullsnapshot.
+
+2003-10-30 09:24  ljulliar
+
+	* www/register/: confirmation.php, projectname.php: Short project
+	description field added in the project registration form.  Prior to
+	this modification this field was only accessible once the project
+	had been created and was rarely filled in afterwards.  (task #3051)
+
+2003-10-29 17:39  ljulliar
+
+	* www/project/export/index.php: Only show the "Legacy" term in the
+	data export page if the new generic tracker is activated. Also
+	inserted the header for the text export which disappeared. (task
+	#2627)
+
+2003-10-29 16:57  ljulliar
+
+	* www/tos/: privacy.php, tos_text.php: Fixed a hardcoded reference
+	to the sourceforge web site in the privacy policy.  Also moved the
+	privacy policy out of the script in the site content directory to
+	make it customizable. Also did the same for the Terms Of Services
+	agreement script (tos_text.php) which now takes its content from
+	the site content directory.  (see bug #29779)
+
+2003-10-29 14:08  sbouhet
+
+	* www/tracker/include/ArtifactReportHtml.class: Task #2627: Generic
+	Tracker Fix concerning the advanced search (default value selected
+	for SelectBox or MultiSelectBox).
+
+2003-10-29 10:41  sbouhet
+
+	* www/tracker/include/ArtifactReportHtml.class: Task #2627: Generic
+	Tracker Fix concerning the advanced search (not all the select box
+	fields were not displayed in multiline mode).
+
+2003-10-29 10:16  sbouhet
+
+	* common/tracker/ArtifactField.class: Task #2627: Generic Tracker
+	Improve performance for reports to retrieve user name
+
+2003-10-29 09:42  sbouhet
+
+	* common/tracker/: ArtifactField.class, ArtifactReport.class: Task
+	#2627: Generic Tracker Implement a cache to improve performance for
+	reports
+
+2003-10-29 08:22  sbouhet
+
+	* common/tracker/ArtifactField.class: Task #2627: Generic Tracker
+	Check we can't create a duplicate field value.
+
+2003-10-29 07:50  sbouhet
+
+	* common/tracker/Artifact.class,
+	common/tracker/ArtifactField.class,
+	www/tracker/include/ArtifactReportHtml.class,
+	www/tracker/include/ArtifactTypeHtml.class: Task #2627: Generic
+	Tracker Add a selection date button on Default Field Value sreen
+	for Date Field.  Display Float Field with 2 digits on reports.
+
+2003-10-28 17:00  sbouhet
+
+	* db/: mysql/database_initvalues.sql, upgrades/db0013.sql: Task
+	#2627: Generic Tracker Status_id field is a selectbox so
+	display_size is not valid => set to null
+
+2003-10-28 15:50  sbouhet
+
+	* www/tracker/include/: ArtifactHtml.class, ArtifactTypeHtml.class:
+	Task #2627: Generic Tracker Fix concerning field display (member or
+	not).
+
+2003-10-28 15:07  sbouhet
+
+	* common/tracker/ArtifactReport.class: Task #2627: Generic Tracker
+	Fix concerning advanced search query (date interval)
+
+2003-10-28 10:05  sbouhet
+
+	* common/tracker/ArtifactType.class,
+	www/tracker/include/ArtifactTypeHtml.class: Task #2627: Generic
+	Tracker Fix on reporting.
+
+2003-10-28 09:34  ljulliar
+
+	* www/: bugs/bugs-er-diagram.sda,
+	include/group-model-er-diagram.sda, patch/patch-er-diagram.sda,
+	people/people-er-diagram.sda, pm/pm-er-diagram.sda,
+	snippet/snippet-er-diagram.sda, forum/forum-er-diagram.sda,
+	support/support-er-diagram.sda, survey/survey-er-diagram.sda:
+	Entiry Relation drawing files (OpenOffice) were erroneously
+	committed for unknown reason in commit #2385. Reason is because
+	.sda files were not declared as binary. sda extension as well as
+	others are now in CVSROOT/cvswrappers (see commit #2425)
+
+2003-10-28 09:14  sbouhet
+
+	* www/tracker/include/ArtifactHtml.class: Task #2627: Generic
+	Tracker Fix on notification report.
+
+2003-10-27 18:21  sbouhet
+
+	* common/tracker/ArtifactType.class, www/tracker/add.php,
+	www/tracker/browse.php, www/tracker/detail.php,
+	www/tracker/index.php, www/tracker/mod.php,
+	www/tracker/admin/field_usage.php,
+	www/tracker/admin/field_values.php,
+	www/tracker/admin/field_values_details.php,
+	www/tracker/admin/index.php: Task #2627: Generic Tracker Deleted
+	trackers (status D) could not be used using a direct url.
+
+2003-10-27 18:00  sbouhet
+
+	* common/tracker/ArtifactFieldFactory.class: Task #2627: Generic
+	Tracker Fix on field addition (default values creation)
+
+2003-10-27 17:34  sbouhet
+
+	* db/: mysql/database_initvalues.sql, upgrades/db0013.sql: Task
+	#2627: Generic Tracker Empty template has some used fields:
+	artifact_id, summary, details, submitted by and submitted on
+
+2003-10-27 17:16  sbouhet
+
+	* common/tracker/Artifact.class, common/tracker/ArtifactFile.class,
+	www/tracker/index.php, www/tracker/include/ArtifactHtml.class: Task
+	#2627: Generic Tracker Access control and dependencies fixes.
+
+2003-10-27 14:04  sbouhet
+
+	* common/tracker/ArtifactReport.class: Task #2627: Generic Tracker
+	Remove debug trace.
+
+2003-10-27 13:56  sbouhet
+
+	* common/tracker/ArtifactReport.class, www/include/utils.php: Task
+	#2627: Generic Tracker Fix for date criteria search.
+
+2003-10-27 11:41  sbouhet
+
+	* common/tracker/ArtifactType.class,
+	common/tracker/ArtifactTypeFactory.class,
+	www/bugs/bugs-er-diagram.sda, www/forum/forum-er-diagram.sda,
+	www/include/group-model-er-diagram.sda,
+	www/patch/patch-er-diagram.sda, www/people/people-er-diagram.sda,
+	www/pm/pm-er-diagram.sda, www/project/admin/index.php,
+	www/project/admin/userperms.php,
+	www/snippet/snippet-er-diagram.sda,
+	www/support/support-er-diagram.sda,
+	www/survey/survey-er-diagram.sda,
+	www/tracker/admin/admin_trackers.php,
+	www/tracker/admin/browse_perm.php,
+	www/tracker/admin/field_usage.php,
+	www/tracker/admin/field_values.php,
+	www/tracker/admin/field_values_details.php,
+	www/tracker/admin/index.php,
+	www/tracker/include/ArtifactReportHtml.class,
+	www/tracker/include/ArtifactTypeHtml.class: Task #2627: Generic
+	Tracker Fixes on admin tracker access right.
+
+2003-10-27 09:39  sbouhet
+
+	* db/: mysql/database_initvalues.sql, upgrades/db0013.sql: Task
+	#2627: Generic Tracker Empty template must be public.
+
+2003-10-24 15:51  ljulliar
+
+	* www/tracker/include/ArtifactHtml.class: Add unit (Kbytes) to the
+	Size column of attached file list (task #2627)
+
+2003-10-24 15:39  ljulliar
+
+	* www/include/osdn.php: Improper link on logo image introduced in
+	version 1.15 for task #2301
+
+2003-10-24 15:03  sbouhet
+
+	* www/: include/Foundry.class, tracker/detail.php: Task #2627:
+	generic trackers Remove require_once (invalid in PHP3)
+
+2003-10-24 14:56  sbouhet
+
+	* common/tracker/ArtifactFile.class: Task #2627: generic trackers
+	Fix: Notification/Upload files: in the 'Lastest Modification', file
+	name, size and description are blank.
+
+2003-10-24 14:54  ljulliar
+
+	* www/tracker/index.php: Tracker Reporting is accessible to tracker
+	admin and project admind (task #2627)
+
+2003-10-24 14:42  sbouhet
+
+	* db/: upgrades/db0013.sql, mysql/database_initvalues.sql: Task
+	#2627: generic trackers Default value for SelectBox is '100'
+	(release_id field, ...)
+
+2003-10-24 14:35  sbouhet
+
+	* common/tracker/Artifact.class, www/tracker/index.php: Task #2627:
+	generic trackers Check when we create a new artifact (or update an
+	existing one) if CC or upload files are valid before create or
+	update this artifact.  Add controls.
+
+2003-10-24 13:52  sbouhet
+
+	* www/tracker/: index.php, include/ArtifactHtml.class: Task #2627:
+	generic trackers Check when we create a new artifact (or update an
+	existing one) if CC or upload files are valid before create or
+	update this artifact.
+
+2003-10-24 13:17  ljulliar
+
+	* www/: images/default.theme/bargraph.png,
+	images/savannah.theme/bargraph.png, include/utils.php: Bar graph
+	image used for tracker reporting because the hack using an non
+	existing image was no longer working on Mozilla 1.4
+
+2003-10-24 12:06  ljulliar
+
+	* www/bugs/admin/: index.php, notification_settings.php,
+	reports.php: Anonymous user must not be given access to admin pages
+	and scripts. Some scripts did not include this test. (bug #29536)
+
+2003-10-24 11:50  sbouhet
+
+	* common/tracker/ArtifactField.class: Task #2627: generic trackers
+	Fix for: All field values for reports could be displayed So no
+	restriction on 'A' and 'P' values.
+
+2003-10-24 11:16  sbouhet
+
+	* common/tracker/ArtifactReport.class, www/tracker/browse.php,
+	www/tracker/include/ArtifactReportHtml.class: Task #2627: generic
+	trackers Fix for: My Bugs => Default Report => Advanced Search:
+	don't switch to Advanced Search Form Also Open Bugs
+
+2003-10-24 10:40  ljulliar
+
+	* www/: .htaccess, project/export/.htaccess,
+	project/stats/.htaccess, stats/.htaccess: Modify all local
+	.htaccess files so that they work with both PHP3 (Apache Module
+	mod_php3.c) and PHP4 (Apache Module mod_php4.c). This will allow
+	for a smooth migration to PHP4.
+
+2003-10-24 10:15  sbouhet
+
+	* common/tracker/ArtifactReport.class, etc/local.inc.dist,
+	www/.htaccess: Task #2627: generic trackers Sort on user field
+	fixe.
+
+2003-10-23 19:12  ljulliar
+
+	* www/tracker/include/ArtifactReportHtml.class: Search criteria are
+	not correctly fetched from the field object when artifact reported
+	is formatted in the printer version (task #2627).
+
+2003-10-23 19:10  ljulliar
+
+	* www/tracker/browse.php: Replaced 'bug' term by proper artifact
+	and tracker words in comments (task #2627)
+
+2003-10-23 18:41  ljulliar
+
+	* common/tracker/ArtifactReport.class: Make where clause on date
+	fields compliant with the old bug tracker (task #2627)
+
+2003-10-23 18:11  ljulliar
+
+	* www/.htaccess: Wrong commit of modified .htaccess. Reverting to
+	previous version suitable for PHP3
+
+2003-10-23 18:09  ljulliar
+
+	* www/: .htaccess, tracker/browse.php: Code cleanup. Removed unused
+	code. (task #2627)
+
+2003-10-23 11:57  jacquin
+
+	* www/include/: Layout.class, project_home.php: task #2627 :
+	usesXx() to be considered in all cases in display of items
+
+2003-10-23 09:48  jacquin
+
+	* db/upgrades/: db0013.pl, initTrackers.pl: Renamed initTrackers.pl
+	in db0013.pl
+
+2003-10-22 17:47  jacquin
+
+	* db/upgrades/initTrackers.pl: task #2627
+	
+	Don't want to reset useXx flag to 0 at migration time any more. 
+	Let it as it is.
+
+2003-10-22 17:02  jacquin
+
+	* www/include/: Layout.class, project_home.php: task #2627 : test
+	for displaying old trackers items in menus or pages must also take
+	into consideration the sys_activate_tracker variable
+
+2003-10-22 16:18  jacquin
+
+	* www/project/export/index.php: Task #2627
+	
+	  Temporary, no link for trackers exports.
+	
+	  Waiting for export code, then links will be added.
+
+2003-10-22 15:29  sbouhet
+
+	* common/tracker/ArtifactField.class,
+	db/mysql/database_initvalues.sql, db/upgrades/db0013.sql,
+	db/upgrades/initTrackers.pl,
+	www/tracker/include/ArtifactTypeHtml.class: Task #2627: Generic
+	Trackers Status 'Active' for field value is 'A' not 'V'
+
+2003-10-22 15:27  jacquin
+
+	* www/include/: Layout.class, project_home.php: task #2627 :
+	condition with usesXx() and activateOldXx() in menu display: not a
+	&& but a || since usesXx are set to 0 at migration time
+
+2003-10-21 16:02  sbouhet
+
+	* common/tracker/ArtifactField.class: Task #2627: Generic Trackers
+	For unused field , we need to create records into
+	artifact_field_values if this field is set to used.
+
+2003-10-21 14:51  sbouhet
+
+	* db/: mysql/database_initvalues.sql, mysql/database_structure.sql,
+	upgrades/db0013.sql: Task #2627: Generic Trackers SQL tables
+	creation and init values for generic trackers.
+
+2003-10-20 14:51  ljulliar
+
+	* www/admin/massmail_execute.php: When sending to admin users make
+	sure select do not take the same email address twice. Plus some
+	code cleanup at the end of the file.  (bug #29170)
+
+2003-10-17 19:41  ljulliar
+
+	* common/tracker/ArtifactFactory.class: Typo corrected in
+	assignement operator. It was harmless in PHP4 (!?) but failed in
+	PHP3 (task #2627)
+
+2003-10-17 17:25  sbouhet
+
+	* www/project/export/index.php: Task #2627: Generic Trackers: .
+	export data: layout change
+
+2003-10-17 16:04  sbouhet
+
+	* www/project/export/index.php: Task #2627: Generic Trackers: .
+	export data: layout improvement and tracker addition
+
+2003-10-17 14:12  sbouhet
+
+	* common/tracker/ArtifactField.class,
+	common/tracker/ArtifactFieldFactory.class,
+	common/tracker/ArtifactType.class, www/admin/index.php,
+	www/include/project_home.php, www/include/vote_function.php,
+	www/my/index.php, www/project/admin/editgroupinfo.php,
+	www/tracker/group_selection.php,
+	www/tracker/admin/field_values_details.php,
+	www/tracker/admin/index.php,
+	www/tracker/include/ArtifactCannedHtml.class,
+	www/tracker/include/ArtifactReportHtml.class,
+	www/tracker/include/ArtifactTypeHtml.class: Task #2627: Generic
+	Trackers: . tracker creation: project selection window layout
+	improvement . manage reports: can't remove System reports . field
+	creation and field value creation: id are computed just before the
+	SQL insert statement . My Personal Page: layout improvement . Site
+	Admin: add Trackers Administration with templates admin.  . field
+	value: for severity field, no creation form or bind form . project
+	summary: add trackers list . admin project/Active Services: label
+	changes.
+
+2003-10-17 09:16  ljulliar
+
+	* www/tracker/include/ArtifactTypeHtml.class: Help pointers updated
+	to the right location and some cosmetic changes in the page titles
+	and headers (task #2627)
+
+2003-10-17 08:54  ljulliar
+
+	* www/images/: default.theme/ic/convert.png,
+	default.theme/ic/trash.png, savannah.theme/ic/convert.png,
+	savannah.theme/ic/trash.png: Icon background made transparent (task
+	#2627)
+
+2003-10-15 17:08  sbouhet
+
+	* www/my/index.php: Task #2627: Generic Trackers Add 'Percent
+	Complete' in 'My Artifact'/'My Personal Page'.
+
+2003-10-15 16:17  sbouhet
+
+	* www/tracker/include/ArtifactTypeHtml.class: Task #2627: Generic
+	Trackers Don't display special fields (except comment_type_id) for
+	the values list.
+
+2003-10-15 16:04  sbouhet
+
+	* common/tracker/ArtifactReport.class,
+	www/tracker/include/ArtifactReportHtml.class: Task #2627: Generic
+	Trackers Fix on priority colors.
+
+2003-10-15 15:42  jacquin
+
+	* www/tracker/index.php, common/tracker/ArtifactType.class,
+	www/tracker/include/ArtifactTypeHtml.class: task #2627 - the
+	reporting part for trackers : repartition by age/by field
+
+2003-10-14 15:14  ljulliar
+
+	* common/tracker/Artifact.class,
+	common/tracker/ArtifactField.class, www/bugs/browse_bug.php,
+	www/help/browse_bug_query_field.php,
+	www/help/browse_tracker_query_field.php, www/include/help.php,
+	www/tracker/add.php, www/tracker/browse.php,
+	www/tracker/detail.php, www/tracker/index.php, www/tracker/mod.php,
+	www/tracker/admin/admin_trackers.php,
+	www/tracker/admin/field_usage.php,
+	www/tracker/admin/field_values.php,
+	www/tracker/admin/field_values_details.php,
+	www/tracker/admin/index.php, www/tracker/admin/restore.php,
+	www/tracker/include/ArtifactHtml.class,
+	www/tracker/include/ArtifactReportHtml.class,
+	www/tracker/include/ArtifactTypeHtml.class: Tracker documentation
+	added to the CodeX User Guide and references to online help added
+	to the tracker PHP scripts. (task #2627)
+
+2003-10-14 11:01  sbouhet
+
+	* www/tracker/include/ArtifactReportHtml.class: Task #2627: Generic
+	Trackers Remove specific test on severity field for displaying
+	reports.
+
+2003-10-13 17:15  sbouhet
+
+	* common/include/GroupFactory.class,
+	common/tracker/ArtifactType.class, www/include/utils.php,
+	www/tracker/add.php, www/tracker/index.php,
+	www/tracker/admin/index.php,
+	www/tracker/include/ArtifactFieldHtml.class,
+	www/tracker/include/ArtifactHtml.class,
+	www/tracker/include/ArtifactTypeHtml.class: Task #2627: Generic
+	Trackers Some minor adjustments and fixes.
+
+2003-10-10 17:52  ljulliar
+
+	* www/tracker/include/ArtifactTypeHtml.class: HTML tag <hr> added
+	after the default value form (task #2627)
+
+2003-10-10 17:31  sbouhet
+
+	* common/tracker/Artifact.class,
+	common/tracker/ArtifactFactory.class,
+	common/tracker/ArtifactTypeFactory.class, www/my/index.php,
+	www/my/my_utils.php: Task #2627: Generic Trackers Add 'My
+	Artifacts' into 'My Personal Page'
+
+2003-10-10 16:32  jacquin
+
+	* www/tracker/include/ArtifactTypeHtml.class,
+	common/tracker/ArtifactType.class: Task #2627. deletion date format
+	changed from date to INT - code adaptation
+
+2003-10-10 14:27  jacquin
+
+	* db/upgrades/initTrackers.pl: task #2627 - Reviewed version of
+	tracker deletion
+	
+	now project deletion leads to mark a tracker in artifact_group_list
+	and provide a deletion date
+	
+	site Admin may delay the deletion date, activate deletion for true
+	or restore tracker to project
+
+2003-10-09 11:46  jacquin
+
+	* www/admin/index.php: task #2627
+	
+	A link from main site admin to trackers deletion
+
+2003-10-09 11:46  sbouhet
+
+	* common/tracker/ArtifactField.class,
+	common/tracker/ArtifactFieldFactory.class, etc/local.inc.dist,
+	www/tracker/admin/field_values_details.php,
+	www/tracker/admin/index.php,
+	www/tracker/include/ArtifactFieldHtml.class,
+	www/tracker/include/ArtifactTypeHtml.class: Task #2627: Generic
+	Trackers Additional features and corrections on admin tracker.
+
+2003-10-07 18:22  jacquin
+
+	* www/tracker/admin/index.php, www/tracker/admin/restore.php,
+	www/tracker/include/ArtifactTypeHtml.class,
+	common/tracker/ArtifactType.class,
+	common/tracker/ArtifactTypeFactory.class: task #2627 - Reviewed
+	version of tracker deletion
+	
+	now project deletion leads to mark a tracker in artifact_group_list
+	and provide a deletion date
+	
+	site Admin may delay the deletion date, activate deletion for true
+	or restore tracker to project
+
+2003-10-07 16:59  sbouhet
+
+	* www/project/admin/editgroupinfo.php: Bug #28481: Public
+	Information update failed. Extra comma used when trackers are not
+	available.
+
+2003-10-07 10:28  sbouhet
+
+	* db/mysql/database_initvalues.sql: Add bug initialization for
+	bug_id 100 (None)
+
+2003-10-07 09:11  ljulliar
+
+	* www/tracker/: admin/field_values_details.php, admin/index.php,
+	include/ArtifactTypeHtml.class: Cosmetic changes in the headers of
+	the field value administration screen to make them look like the
+	old Bug Tracking system. Also changed the term 'Visible' to
+	'Active' for the status of field values as it was in the old bug
+	tracking system. (task #2627)
+
+2003-10-03 18:18  ljulliar
+
+	* www/tracker/: admin/field_usage.php, admin/index.php,
+	include/ArtifactTypeHtml.class: Some cosmetic changes and typo
+	fixed into the headers of field usage screens and forms.
+
+2003-10-03 17:00  sbouhet
+
+	* common/tracker/ArtifactField.class,
+	common/tracker/ArtifactFieldFactory.class,
+	common/tracker/ArtifactType.class, www/register/confirmation.php,
+	www/tracker/admin/index.php,
+	www/tracker/include/ArtifactHtml.class,
+	www/tracker/include/ArtifactTypeHtml.class: Task #2627:  Generic
+	Tracker Create standard trackers (Bug, Task, SR) when a new project
+	is created.  Add a new field type: USER type.  Simplify the field
+	creation form.
+
+2003-10-02 17:44  ljulliar
+
+	* www/tracker/include/ArtifactTypeHtml.class: Some changes in the
+	layout of the field creation form (task #2627)
+
+2003-10-02 16:14  ljulliar
+
+	* www/tracker/admin/index.php: Fixed the Canned Response screen
+	where the page footer was missing (task #2627)
+
+2003-10-02 16:13  ljulliar
+
+	* www/tracker/include/ArtifactTypeHtml.class: Tracker description
+	added in the table that display the list of trackers (task #2627)
+
+2003-10-02 14:56  sbouhet
+
+	* www/.htaccess: Task #2627:  Generic Tracker Wrong commit
+
+2003-10-02 14:51  sbouhet
+
+	* common/tracker/ArtifactType.class, etc/local.inc.dist,
+	www/.htaccess, www/include/Layout.class, www/include/Project.class,
+	www/include/project_home.php, www/project/admin/editgroupinfo.php,
+	www/project/admin/userperms.php, www/project/export/index.php,
+	www/tracker/admin/index.php,
+	www/tracker/include/ArtifactTypeHtml.class: Task #2627:  Generic
+	Tracker Add flags: activate_old_bug, activate_old_task and
+	activate_old_sr to enable or disable old services (BTS,TM,SR) A
+	migration program will initialize these flags.
+
+2003-10-02 09:52  ljulliar
+
+	* www/: images/default.theme/organization_logo.png,
+	images/savannah.theme/organization_logo.png, include/Layout.class:
+	You now have the ability to add your organization logo at the top
+	of the left hand side menu pane when you create your own theme. The
+	Installation Guide has instructions on how to do that. (Requested
+	by ST Microelectronics)
+
+2003-10-01 14:08  sbouhet
+
+	* www/tracker/: group_selection.php, tracker_selection.php,
+	include/ArtifactTypeHtml.class: Task #2627:  Generic Tracker Fixes
+	for Mozilla compiliance for tracker creation feature
+
+2003-10-01 12:30  sbouhet
+
+	* common/include/GroupFactory.class: Task #2627:  Generic Tracker
+	Wrong constructor name
+
+2003-10-01 11:52  sbouhet
+
+	* www/.htaccess: Task #2627:  Generic Tracker Wrong commit for this
+	file (still use PHP3 extension)
+
+2003-10-01 11:42  sbouhet
+
+	* www/tracker/: group_selection.php, tracker_selection.php,
+	admin/admin_trackers.php, admin/field_usage.php,
+	admin/field_values.php, admin/field_values_details.php: Task #2627:
+	 Generic Tracker Additional files for admin features
+
+2003-09-30 16:59  sbouhet
+
+	* www/images/: default.theme/button_choose.png,
+	savannah.theme/button_choose.png: Task #2627:  Generic Tracker
+	Additional images
+
+2003-09-30 11:33  sbouhet
+
+	* common/tracker/ArtifactFieldFactory.class,
+	common/tracker/ArtifactReport.class,
+	common/tracker/ArtifactType.class, www/tracker/add.php,
+	www/tracker/index.php, www/tracker/admin/index.php,
+	www/tracker/include/ArtifactCannedHtml.class,
+	www/tracker/include/ArtifactReportHtml.class,
+	www/tracker/include/ArtifactTypeHtml.class: Task #2627 : Generic
+	trackers Fixes on visual aspects.
+
+2003-09-29 16:36  jacquin
+
+	* common/tracker/ArtifactCanned.class,
+	www/tracker/include/ArtifactCannedHtml.class,
+	www/tracker/include/ArtifactTypeHtml.class,
+	www/tracker/admin/index.php: All the required modifications
+	affected to me having visual impact from UI review.
+	
+	When adding the tracker name in the admin header, also provided the
+	link to the tracker usage.
+	
+	- Page Admin : Manage Canned Responses (up.case) - Page Admin
+	trackers: "All Trackers Admin."   "Manage Trackers"	  Lien ID
+	=>  admin du tracker	Suppress description column	"Click on
+	ID to administrate"
+	
+	- Manage Canned Resp. : rappeler le nom du tracker dans le titre H2
+	    Rajouter la suppression (non prioritaire)
+
+2003-09-29 14:22  sbouhet
+
+	* common/include/GroupFactory.class: Additional file for generic
+	tracker
+
+2003-09-29 10:20  sbouhet
+
+	* common/tracker/Artifact.class,
+	common/tracker/ArtifactField.class,
+	common/tracker/ArtifactFieldFactory.class,
+	common/tracker/ArtifactReport.class,
+	common/tracker/ArtifactReportFactory.class,
+	common/tracker/ArtifactType.class,
+	common/tracker/ArtifactTypeFactory.class, www/.htaccess,
+	www/include/menu.php, www/search/index.php, www/tracker/add.php,
+	www/tracker/browse.php, www/tracker/detail.php,
+	www/tracker/index.php, www/tracker/mod.php,
+	www/tracker/admin/browse_perm.php, www/tracker/admin/index.php,
+	www/tracker/include/ArtifactFieldHtml.class,
+	www/tracker/include/ArtifactHtml.class,
+	www/tracker/include/ArtifactReportHtml.class,
+	www/tracker/include/ArtifactTypeHtml.class: Task #2627 : admin
+	generic trackers . creation,deletion . field usage et values
+
+2003-09-23 09:44  jacquin
+
+	* common/tracker/Artifact.class,
+	common/tracker/ArtifactCanned.class,
+	common/tracker/ArtifactReport.class,
+	common/tracker/ArtifactReportFactory.class,
+	common/tracker/ArtifactType.class, www/tracker/index.php,
+	www/tracker/admin/index.php,
+	www/tracker/include/ArtifactCannedHtml.class,
+	www/tracker/include/ArtifactHtml.class,
+	www/tracker/include/ArtifactReportHtml.class,
+	www/tracker/include/ArtifactTypeHtml.class: task #2627 : admin of
+	reports, canned responses and notifications for generic Trackers
+
+2003-08-28 16:45  sbouhet
+
+	* etc/local.inc.dist, www/images/default.theme/ic/admin.png,
+	www/images/default.theme/ic/tracker20w.png,
+	www/images/savannah.theme/ic/admin.png,
+	www/images/savannah.theme/ic/tracker20w.png: Additionnal files for
+	the generic tracker.
+
+2003-08-28 15:04  sbouhet
+
+	* common/tracker/Artifact.class,
+	common/tracker/ArtifactCanned.class,
+	common/tracker/ArtifactFactory.class,
+	common/tracker/ArtifactField.class,
+	common/tracker/ArtifactFieldFactory.class,
+	common/tracker/ArtifactFile.class,
+	common/tracker/ArtifactFromID.class,
+	common/tracker/ArtifactGroup.class,
+	common/tracker/ArtifactReport.class,
+	common/tracker/ArtifactReportFactory.class,
+	common/tracker/ArtifactReportField.class,
+	common/tracker/ArtifactType.class,
+	common/tracker/ArtifactTypeFactory.class,
+	common/tracker/ArtifactTypes.class, common/tracker/Artifacts.class,
+	www/tracker/add.php, www/tracker/browse.php,
+	www/tracker/detail.php, www/tracker/download.php,
+	www/tracker/index.php, www/tracker/mod.php,
+	www/tracker/admin/browse_perm.php, www/tracker/admin/index.php,
+	www/tracker/include/ArtifactFieldHtml.class,
+	www/tracker/include/ArtifactFileHtml.class,
+	www/tracker/include/ArtifactHtml.class,
+	www/tracker/include/ArtifactReportHtml.class,
+	www/tracker/include/ArtifactTypeHtml.class: This is the second
+	commit to prepare the generic tracker integration in CodeX.  Files
+	committed DOESN'T impact the current version.  They are only used
+	for the generic tracker.
+
+2003-08-28 14:54  sbouhet
+
+	* common/include/Error.class: Additionnal file of the first commit
+	to prepare the generic tracker integration in CodeX.
+
+2003-08-28 14:23  sbouhet
+
+	* etc/local.inc.dist, www/include/Foundry.class,
+	www/include/Group.class, www/include/Layout.class,
+	www/include/Project.class, www/include/database.php,
+	www/include/exit.php, www/include/osdn.php, www/include/pre.php,
+	www/include/project_home.php, www/include/session.php,
+	www/include/theme.php, www/include/utils.php: This is a first
+	commit to prepare the generic tracker integration in CodeX.  This
+	commit is only on the common files and it's FULL compatible with
+	the current version.  All new files will be commited into another
+	commit. These new files will NOT impact the current version. 
+	Generic trackers will be available soon.
+
+2003-08-01 18:26  ljulliar
+
+	* etc/local.inc.dist, www/account/first.php, www/account/login.php,
+	www/bugs/bug_utils.php, www/docs/site/about_codex.php,
+	www/export/rss_sfnewreleases.php, www/export/rss_sfnews.php,
+	www/export/rss_sfprojects.php, www/include/proj_email.php,
+	www/include/user_home.php, www/include/vars.php,
+	www/mail/admin/index.php, www/project/confirm_download.php,
+	www/register/tos.php, www/register/why.php,
+	www/snippet/snippet_utils.php, www/tos/tos.php,
+	www/tos/tos_text.php: Removed hardcoded terms specific to Xerox
+	from the PHP scripts, site content and documentation. This task was
+	triggered by the installation at ST Microelectronics, our first
+	CodeX customer.
+	
+	PHP scripts and SITE-CONTENT files
+	---------------------------------- The term 'Xerox' have been
+	replaced by the global variable $sys_org_name declared in the
+	etc/local.inc.dist file. $sys_long_org_name has also been
+	introduced to hold the long name of your company (e.g. 'Xerox' for
+	$sys_org_name and 'Xerox Corporation' for $sys_long_org_name).
+	
+	The hardcoded distinguished name (DN) used in the LDAP search has
+	been replaced by the $sys_ldap_dn global variable because it also
+	refered to Xerox.
+	
+	**IMPORTANT NOTE** All CodeX administrators must copy the 3 global
+	variables listed above from the SF/etc/local.inc.dist file to the
+	/etc/local.inc file of their running system and change their value
+	accordingly if need be.
+	
+	DOCUMENTATION ------------- The CodeX User Guide has also been made
+	configurable by removing all harcoded references to Xerox like in
+	the company name, the machine names, URLs containing xerox.com,
+	etc...
+	
+	The file documentation/user/guide/xml/en_US/ParametersDefault.dtd
+	contains all the entities that are used in the CodeX User Guide.
+	All these entities can be redefined locally by each CodeX site in
+	the ParametersLocal.dtd file which is initially empty. Never change
+	the ParametersDefault.dtd file!!
+	
+	The CodeX Installation Guide has been updated to reflect these new
+	configuration capabilities.
+	
+	(see Task #2978)
+
+2003-07-30 17:15  ljulliar
+
+	* www/export/rss_sfnewreleases.php: Forgot to make copyright date
+	dynamic in commit #1052 for new releases feed.
+
+2003-07-30 14:23  ljulliar
+
+	* www/export/: rss_sfnewreleases.php, rss_sfnews.php,
+	rss_sfprojects.php: Description and Title of the RSS feeds now
+	include the CodeX system name (Suggestion from L. Klotz). Minor
+	clean up on a few hash keys and copyright dates is now generated
+	dynamically.
+
+2003-07-10 23:35  ljulliar
+
+	* www/.htaccess: .htacces should not have been included in commit
+	#757. Reverting to version 1.2
+
+2003-07-10 23:16  ljulliar
+
+	* www/: .htaccess, softwaremap/trove_list.php: Fixed typo in
+	pointer to the help section of the Software Map.
+
+2003-07-10 22:40  ljulliar
+
+	* www/bugs/add_bug.php: Fixed typo in SQL result variable name
+	causing the Bug message preamble to disappear from the bug
+	submission form.
+
+2003-07-09 16:42  jmayer
+
+	* utils/new_parse.pl, www/cvs/cvs_intro.php,
+	www/include/session.php: See Task #2940.  The changes add the
+	ability for projects to restrict access to the CVS repository or
+	project home by adding a ".CODEX_PRIVATE" file to the appropriate
+	directory.
+
+2003-07-08 12:00  ljulliar
+
+	* ChangeLog: Updating Changelog before tagging version 1.6
+	installed at ST Microelectronics
 
 2003-07-07 18:52  ljulliar
 
@@ -1915,9 +2994,6 @@ CODEX 1.6 (tag: CX_1_6) - 2003-07-08 - 6:00am EST
 	results in order: by survey id then block of answers and finally by
 	question_id. This makes the export clearer (bug #8049)
 
-------------------------------------------------------------------------------
-CODEX 1.5 (tag: CX_1_5) - 2002-08-13
-
 2002-08-13 15:43  ljulliar
 
 	* ChangeLog: Prepared for release 1.5
@@ -1943,9 +3019,6 @@ CODEX 1.5 (tag: CX_1_5) - 2002-08-13
 	* www/bugs/index.php: An empty array is now passsed as an argument
 	to receive changes even if it not applicable when a bug is first
 	created. We need it in the parameter list (bug #7554)
-	
-------------------------------------------------------------------------------
-CODEX 1.4 (tag: CX_1_4) - 2002-08-03
 
 2002-07-29 10:07  ljulliar
 
@@ -2016,37 +3089,11 @@ CODEX 1.4 (tag: CX_1_4) - 2002-08-03
 	images/codex_logo.png, images/msg.gif, images/msg.png,
 	images/pointer_down.png, images/pointer_left.png,
 	images/pointer_right.png, images/pointer_up.png, images/t.gif,
-	images/t.png, images/t2.gif, images/t2.png,
-	images/calendar/next.png, images/calendar/next_year.png,
-	images/calendar/prev.png, images/calendar/prev_year.png,
-	images/ic/bug16b.png, images/ic/cfolder15.png, images/ic/check.png,
-	images/ic/check16b.png, images/ic/cvs16b.png,
-	images/ic/docman16b.png, images/ic/ftp16b.png,
-	images/ic/home16.png, images/ic/home16b.png, images/ic/mail16b.png,
-	images/ic/manual16b.png, images/ic/monitor16b.png,
-	images/ic/ofolder15.png, images/ic/save.png, images/ic/save16b.png,
-	images/ic/survey16b.png, images/ic/taskman16b.png,
-	include/Layout.class, include/Theme.class, include/html.php,
-	include/osdn.php, new/index.php, search/index.php,
-	themes/classic/Theme.class, themes/classic/theme.php,
-	themes/codex/images/bottom_left_corner.gif,
-	themes/codex/images/bottom_left_corner.png,
-	themes/codex/images/bottom_right_corner.gif,
-	themes/codex/images/bottom_right_corner.png,
-	themes/codex/images/clear.gif, themes/codex/images/clear.png,
-	themes/codex/images/codex_banner_lc.png,
-	themes/codex/images/left_border.gif,
-	themes/codex/images/left_border.png,
-	themes/codex/images/right_border.gif,
-	themes/codex/images/right_border.png,
-	themes/codex/images/top_border.gif,
-	themes/codex/images/top_border.png,
-	themes/codex/images/upper_left_corner.gif,
-	themes/codex/images/upper_left_corner.png,
-	themes/codex/images/upper_right_corner.gif,
-	themes/codex/images/upper_right_corner.png: Remove all the GIF
-	files used in the CodeX project and convert it in PNG. Recreate
-	some PNG files with a real transparency (Task # 1910)
+	images/t.png, images/t2.gif, images/t2.png, include/Layout.class,
+	include/Theme.class, include/html.php, include/osdn.php,
+	new/index.php, search/index.php: Remove all the GIF files used in
+	the CodeX project and convert it in PNG. Recreate some PNG files
+	with a real transparency (Task # 1910)
 
 2002-06-24 14:46  ljulliar
 
@@ -2300,7 +3347,7 @@ CODEX 1.4 (tag: CX_1_4) - 2002-08-03
 
 2002-05-28 15:41  ljulliar
 
-	* etc/local.inc, www/contact.php, www/account/login.php,
+	* etc/local.inc.dist, www/contact.php, www/account/login.php,
 	www/account/pending-resend.php, www/admin/massmail.php,
 	www/mail/admin/index.php, www/project/admin/editaliases-new.php,
 	www/register/category.php, www/register/confirmation.php,
@@ -2310,8 +3357,8 @@ CODEX 1.4 (tag: CX_1_4) - 2002-08-03
 
 2002-05-24 11:06  ljulliar
 
-	* etc/local.inc, www/about.php, www/contact.php, www/index.php,
-	www/staff.php, www/thanks.php,
+	* etc/local.inc.dist, www/about.php, www/contact.php,
+	www/index.php, www/staff.php, www/thanks.php,
 	www/account/change_email-complete.php,
 	www/account/change_email-confirm.php, www/account/change_email.php,
 	www/account/change_timezone.php, www/account/first.php,
@@ -2417,7 +3464,7 @@ CODEX 1.4 (tag: CX_1_4) - 2002-08-03
 
 2002-04-29 10:35  ljulliar
 
-	* etc/local.inc: Version with no sensitive information in it
+	* etc/local.inc.dist: Version with no sensitive information in it
 
 2002-04-29 09:56  ljulliar
 
@@ -2598,12 +3645,9 @@ CODEX 1.4 (tag: CX_1_4) - 2002-08-03
 	* www/images/: dn_arrow.png, up_arrow.png: Initial revision (task
 	#1527)
 
-2002-03-25 15:45  ljulliar
+2002-03-25 15:47  ljulliar
 
-	* www/: images/calendar/cal.png, images/calendar/next.png,
-	images/calendar/next_year.png, images/calendar/prev.png,
-	images/calendar/prev_year.png, include/calendar.js: Initial
-	revision (task #1526)
+	* www/include/calendar.js: Initial revision (task #1526)
 
 2002-03-25 15:41  ljulliar
 
@@ -2690,11 +3734,11 @@ CODEX 1.4 (tag: CX_1_4) - 2002-08-03
 
 2002-02-22 14:44  ljulliar
 
-	* www/bugs/admin/other_settings.php: Some code cleanup
+	* www/include/utils.php: Validate comma separated emails
 
 2002-02-22 14:44  ljulliar
 
-	* www/include/utils.php: Validate comma separated emails
+	* www/bugs/admin/other_settings.php: Some code cleanup
 
 2002-02-22 12:04  ljulliar
 
@@ -3272,9 +4316,6 @@ CODEX 1.4 (tag: CX_1_4) - 2002-08-03
 
 	* www/patch/add_patch.php: Return To URL added if user not logged
 	in.
-	
-------------------------------------------------------------------------------
-CODEX 1.3 (tag: CX_1_3) - 2001-05-18
 
 2001-05-18 15:56  ljulliar
 
@@ -3295,10 +4336,6 @@ CODEX 1.3 (tag: CX_1_3) - 2001-05-18
 
 	* www/bugs/bug_utils.php: Next 50 pointer was not showing at the
 	end of the bug page when number of bugs were greatest than 50
-
-
-------------------------------------------------------------------------------
-CODEX 1.2 (tag: CX_1_2) - 2001-05-12
 
 2001-05-11 10:29  ljulliar
 
@@ -3393,9 +4430,6 @@ CODEX 1.2 (tag: CX_1_2) - 2001-05-12
 	page instead of just the CodeX home page. Removed pointer to
 	partners at the top of the page
 
-------------------------------------------------------------------------------
-CODEX 1.1 (tag: CX_1_1) - 2001-03-22
-	
 2001-03-22 18:21  ljulliar
 
 	* www/include/user_home.php: Connection to Company LDAP server in
@@ -3544,11 +4578,6 @@ CODEX 1.1 (tag: CX_1_1) - 2001-03-22
 	* www/people/people_utils.php: Skill levels now sorted by asc.
 	order (bug #64)
 
-2001-03-06 12:27  ljulliar
-
-	* www/themes/codex/images/steel3.jpg.backup: File Removed.
-	Forgotten in the CodeX cleanup
-
 2001-03-06 12:09  ljulliar
 
 	* utils/default_page.php, utils/fileforge.c, utils/include.pl,
@@ -3624,25 +4653,6 @@ CODEX 1.1 (tag: CX_1_1) - 2001-03-22
 	www/top/toplist.php, www/tos/privacy.php, www/tos/tos_text.php:
 	File changed since SourceForge 2.0
 
-2001-03-06 12:01  ljulliar
-
-	* www/themes/codex/: images/codex_banner_2lines.xcf,
-	images/fade.png, images/codex_banner_uc.xcf, images/black.gif,
-	images/clear.gif, images/codex_banner_lc.xcf,
-	images/codex_banner_lc.gif, images/codex_banner_uc.gif, theme.php,
-	Theme.class: File added in CodeX
-
-2001-03-06 11:58  ljulliar
-
-	* www/themes/codex/images/: point1.png, point2.png, rateit.png,
-	rightbar1.png, sf-bar2.png, sflogo-hammer1.jpg, steel3.jpg,
-	tbar1.png, tleft1.png, tright1.png, valogo5.jpg, codex_logo.gif,
-	codex_banner_2lines.gif, fade.xcf, steel3.jpg.backup,
-	bottom_left_corner.gif, bottom_right_corner.gif, hx_logo.gif,
-	left_border.gif, top_border.gif, tablebg.gif, fade.gif,
-	upper_left_corner.gif, upper_right_corner.gif, right_border.gif,
-	bottom_border.gif, point1.gif: File added in CodeX
-
 2001-03-06 11:55  ljulliar
 
 	* backend/zones/README, db/CodeX.sql, utils/compile_fileforge.sh,
@@ -3655,12 +4665,7 @@ CODEX 1.1 (tag: CX_1_1) - 2001-03-22
 	www/include/tos_text.php, www/info.php, www/info.php3,
 	www/project/download.php, www/project/showdetails.php,
 	www/project/stats/source_code_access.php,
-	www/project/stats/source_code_access_utils.php,
-	www/themes/codex/images/bbar1.png,
-	www/themes/codex/images/bleft1.png,
-	www/themes/codex/images/bright1.png,
-	www/themes/codex/images/fade1.png,
-	www/themes/codex/images/leftbar1.png: File added in CodeX
+	www/project/stats/source_code_access_utils.php: File added in CodeX
 
 2001-03-06 11:33  ljulliar
 
@@ -3669,9 +4674,6 @@ CODEX 1.1 (tag: CX_1_1) - 2001-03-22
 	project-adminusers.php, services-cvs.php, services-web.php,
 	services.php, software.php: removed files now in CodeX Doc Mgr
 
-------------------------------------------------------------------------------
-CODEX 1.0 (tag: CX_1_0) - 2001-03-06
-	
 2001-03-06 11:03  root
 
 	* docs/Adminstration_Guide.html, docs/Contributor_Guide.html,
@@ -3848,19 +4850,16 @@ CODEX 1.0 (tag: CX_1_0) - 2001-03-06
 	www/survey/admin/show_results_aggregate.php,
 	www/survey/admin/show_results_comments.php,
 	www/survey/admin/show_results_csv.php,
-	www/survey/admin/show_results_individual.php, www/themes/index.php,
-	www/themes/classic/Theme.class, www/themes/classic/theme.php,
-	www/themes/forged/Theme.class, www/themes/forged/theme.php,
-	www/top/index.php, www/top/mostactive.php, www/top/toplist.php,
-	www/tos/privacy.php, www/tos/tos.php, www/tos/tos_text.php,
-	db/DefaultValues.sql, db/SQL_diff_1.5_to_2.0.sql,
-	db/SourceForge.sql, db/db-image.sql, db/filerelease-changes.sql,
-	db/foundry.sql, db/statistics_tables.sql, db/themes.sql,
-	db/trove_defaults.sql, db/user_rating.sql,
-	docs/images/sflogo2-105a.png, utils/cvs.txt, utils/sffingerd.c,
-	utils/cvs1/cvscreate.sh, utils/cvs1/cvstar_genlist.pl,
-	utils/cvs1/cvstar_superscript.pl, utils/cvs1/run_span.pl,
-	utils/download/stats_logparse.sh,
+	www/survey/admin/show_results_individual.php, www/top/index.php,
+	www/top/mostactive.php, www/top/toplist.php, www/tos/privacy.php,
+	www/tos/tos.php, www/tos/tos_text.php, db/DefaultValues.sql,
+	db/SQL_diff_1.5_to_2.0.sql, db/SourceForge.sql, db/db-image.sql,
+	db/filerelease-changes.sql, db/foundry.sql,
+	db/statistics_tables.sql, db/themes.sql, db/trove_defaults.sql,
+	db/user_rating.sql, docs/images/sflogo2-105a.png, utils/cvs.txt,
+	utils/sffingerd.c, utils/cvs1/cvscreate.sh,
+	utils/cvs1/cvstar_genlist.pl, utils/cvs1/cvstar_superscript.pl,
+	utils/cvs1/run_span.pl, utils/download/stats_logparse.sh,
 	utils/underworld-dummy/aliases.zone,
 	utils/underworld-root/db_jobs_close.pl,
 	utils/underworld-root/db_stats_cvs_history.pl,
@@ -3874,42 +4873,12 @@ CODEX 1.0 (tag: CX_1_0) - 2001-03-06
 	www/images/bg-blue1-rt.gif, www/images/bg-blue1.gif,
 	www/images/binary-code.gif, www/images/blackdot.gif,
 	www/images/blank.gif, www/images/bug.png, www/images/cfolder.gif,
-	www/images/msg.gif, www/images/docs/developerperms.png,
-	www/images/docs/groupmembers.png, www/images/ic/anvil24.png,
-	www/images/ic/bug-poo.png, www/images/ic/bug.png,
-	www/images/ic/bug16b.png, www/images/ic/caret.png,
-	www/images/ic/cfolder.png, www/images/ic/cfolder1.png,
-	www/images/ic/cfolder15.png, www/images/ic/check.png,
-	www/images/ic/check16b.png, www/images/ic/convert.png,
-	www/images/ic/cvs16b.png, www/images/ic/docman.png,
-	www/images/ic/docman16b.png, www/images/ic/env-be.png,
-	www/images/ic/env-mac.png, www/images/ic/env-oth.png,
-	www/images/ic/env-palm.png, www/images/ic/env-tux.png,
-	www/images/ic/env-web1.png, www/images/ic/env-win.png,
-	www/images/ic/env-x.png, www/images/ic/forge9.png,
-	www/images/ic/ftp16b.png, www/images/ic/halfcheck.png,
-	www/images/ic/home.png, www/images/ic/home16.png,
-	www/images/ic/home16b.png, www/images/ic/index.png,
-	www/images/ic/mail.png, www/images/ic/mail16b.png,
-	www/images/ic/mail16c.png, www/images/ic/mail16d.png,
-	www/images/ic/manual16b.png, www/images/ic/manual16c.png,
-	www/images/ic/manual16d.png, www/images/ic/monitor16b.png,
-	www/images/ic/news.png, www/images/ic/notes.png,
-	www/images/ic/notes16.png, www/images/ic/ofolder.png,
-	www/images/ic/ofolder1.png, www/images/ic/ofolder15.png,
-	www/images/ic/paper16-p.png, www/images/ic/paper16.png,
-	www/images/ic/patch.png, www/images/ic/pencil.png,
-	www/images/ic/save.png, www/images/ic/save16.png,
-	www/images/ic/save16b.png, www/images/ic/scissors.png,
-	www/images/ic/search.png, www/images/ic/support.png,
-	www/images/ic/support16b.jpg, www/images/ic/survey.png,
-	www/images/ic/survey16b.png, www/images/ic/taskman16b.png,
-	www/images/ic/trash.png, www/patch/patch-er-diagram.sda,
+	www/images/msg.gif, www/patch/patch-er-diagram.sda,
 	www/patch/patch-plan.txt, www/stats/.htaccess, AUTHORS,
 	CONTRIBUTING, COPYING, ChangeLog, INSTALL, README,
 	backend/shell/apache.sh, backend/zones/aliases.zone,
 	backend/zones/dns.zone, backend/zones/httpd.conf.zone,
-	backend/zones/sendmail.cw.zone, etc/local.inc, www/.htaccess,
+	backend/zones/sendmail.cw.zone, etc/local.inc.dist, www/.htaccess,
 	www/dbimage.php, www/pager.php3, www/compilefarm/index.php,
 	www/docman/display_doc.php, www/docman/doc_utils.php,
 	www/docman/index.php, www/docman/new.php,
@@ -3937,21 +4906,9 @@ CODEX 1.0 (tag: CX_1_0) - 2001-03-06
 	www/images/tab-summary.png, www/images/tab-surveys-lo.png,
 	www/images/tab-surveys.png, www/images/va-btn-small-light.png,
 	www/images/valogo3.png, www/images/vatop-100x100.png,
-	www/images/vatop-75x75.png, www/images/foundry/1872admin.png,
-	www/images/foundry/1872logo.png, www/images/foundry/6770admin.png,
-	www/images/foundry/6770logo.png, www/images/foundry/6771admin.png,
-	www/images/foundry/6771logo.png, www/images/foundry/6772admin.png,
-	www/images/foundry/6772logo.png, www/images/foundry/9571admin.png,
-	www/images/foundry/9571logo.png, www/images/foundry/9572admin.png,
-	www/images/foundry/9572logo.png,
-	www/images/foundry/powered_by_va.png,
-	www/images/foundry/sflogo4-steel.png,
-	www/images/others/cosource142x31.gif,
-	www/images/others/dmoz-cool1.gif, www/images/others/gnome1.png,
-	www/images/others/kde-logotp3.png, www/images/others/suse_g_sm.png,
-	www/include/bookmarks.php, www/include/foundry_home.php,
-	www/include/foundry_html_admin.php, www/include/graph_lib.php,
-	www/include/group-model-er-diagram.sda,
+	www/images/vatop-75x75.png, www/include/bookmarks.php,
+	www/include/foundry_home.php, www/include/foundry_html_admin.php,
+	www/include/graph_lib.php, www/include/group-model-er-diagram.sda,
 	www/include/multi-threads.php, www/include/osdn.php,
 	www/include/squal_exit.php, www/include/timezones.php,
 	www/my/bookmark_add.php, www/my/bookmark_delete.php,
@@ -3963,172 +4920,6 @@ CODEX 1.0 (tag: CX_1_0) - 2001-03-06
 	www/register/publicdomain.txt, www/snippet/snippet-er-diagram.sda,
 	www/snippet/snippet-plan.txt, www/support/support-er-diagram.sda,
 	www/support/support-plan.txt, www/support/support_data.php,
-	www/survey/survey-er-diagram.sda, www/survey/admin/survey.sql,
-	www/themes/classic/sourceforge.css,
-	www/themes/forged/images/bbar1.png,
-	www/themes/forged/images/bleft1.png,
-	www/themes/forged/images/bright1.png,
-	www/themes/forged/images/fade1.png,
-	www/themes/forged/images/leftbar1.png,
-	www/themes/forged/images/point1.png,
-	www/themes/forged/images/point2.png,
-	www/themes/forged/images/rateit.png,
-	www/themes/forged/images/rightbar1.png,
-	www/themes/forged/images/sf-bar2.png,
-	www/themes/forged/images/sflogo-hammer1.jpg,
-	www/themes/forged/images/steel3.jpg,
-	www/themes/forged/images/tbar1.png,
-	www/themes/forged/images/tleft1.png,
-	www/themes/forged/images/tright1.png,
-	www/themes/forged/images/valogo5.jpg: Original SourceForge 2.0
+	www/survey/survey-er-diagram.sda, www/survey/admin/survey.sql:
+	Original SourceForge 2.0
 
-------------------------------------------------------------------------------
-Wed Sep 6, 3:30:30 PDT 2000
-
-SOURCEFORGE 2.0   
-	- To get help setting up your copy of SourceForge, 
-	  visit the "SF Offsite Talk" discussion boards at 
-	  http://sourceforge.net/forum/forum.php?forum_id=21304
-
-	- Foundry code now present and cleaned up.
-	  You can create new foundries simply by selecting that option in 
-	  the /admin/groupedit.php page (Tim)
-
-	- Theming support sitewide and html library cleanup. Sample themes 
-	  included in /www/themes/ (Geoff)
-
-	- Audit trail for projects. Now when site-admins and project-admins 
-	  change a project, certain events will cause an audit trail recording 
-	  (events like adding/removing users, updating permissions, etc) (Tim)
-
-	- File release system totally rewritten from the ground up to use a 
-	  more normalized database schema. There is an upgrade script in 
-	  /www/admin/ which should help you migrate data from the old 
-	  structure (Tim)
-
-	- Using some classes to "objectize" things like Groups, Projects, 
-	  and Foundries. Project and Foundry extend Group. See 
-	  /include/Group.class /include/Foundry.class and 
-	  /include/Project.class (Tim)
-
-	- Hundreds of misc. interface cleanups sitewide. More user feedback, 
-	  ordering of pop-up list boxes, submit buttons added to the tops of 
-	  many forms sitewide, etc etc (Tim, Geoff, Wallace Lee)
-
-	- Task manager can now move tasks among subprojects. (Wallace Lee)
-
-	- Sitewide stats project. Organizing daily stats for each project 
-	  into summary tables, graphing the results. (Matt Snelham)
-
-	- Groundwork for advogato-like system of peer ratings. Need to 
-	  finish user interface. New system goes beyond advogato, as each 
-	  user has a unique "importance factor" and overall ranking among 
-	  all users on the entire site. Only users that have achieved a 
-	  "trust" level will be able to successfully rate others. See 
-	  /www/admin/calculate_user_metric.php (Tim)
-
-	- Changed user home pages to /users/*user_name*/ using .htaccess 
-	  directive similar to /foundry/ and /project/ (Tim)
-
-------------------------------------------------------------------------------
-Thu Jul  13 10:45:26 PDT 2000
-
-SOURCEFORGE 1.5.0 
-
-        - To get help setting up your copy of SourceForge,           
-          visit the "SF Offsite Talk" discussion boards at
-          http://sourceforge.net/forum/forum.php?forum_id=21304
-
-	- Added a "portability" patch. Massive thanks to 
-	  William Hardeman and David HM Spector for this. SF deployers 
-	  everywhere will thank them
-
-	- Removed a lot of hard-coded references to SF.net everywhere, 
-	  including hard-coded user_id's of the SF core staff
-
-	- Wallace Lee continues to make numerous clean patches throughout 
-	  the site (naming forums/subprojects/mailing lists among others)
-
-	- Optimizations throughout the code base - added intelligence to the
-	  user.php and group.php library so database queries aren't wasted. 
-
-	- Tested under PHP4 and only one know issue was found and fixed.
-
-	- Starting the process of database portability. Changed the keyword 
-	  "public" in groups to "is_public". Changing the "user" table to 
-	  "users" is next in line, but it is a HUGE task.
-
-	- Tested some features on Postgres and found that LIMIT/OFFSET 
-	  syntax is incompatible. Postgres also cannot yet handle large 
-	  text fields that are > 8K in length (problem for the patch Mgr)
-
-	- Slick new "browse" options on the bug/task/support/project mgrs
-
-	- Changed project homepages to "/projects/*project_name*/" using 
-	  the .htaccess "files" directive. This is known to be problematic 
-	  on some other platforms.
-
-	- Laid groundwork for "portals" which are half-baked and considered 
-	  useless right now.
-
-	- Project Admin page modernized
-
-------------------------------------------------------------------------------
-Thu May  4 15:23:26 PDT 2000
-
-SOURCEFORGE 1.1.0 - Added Support Manager
-
-      - Added Help Wanted System
-
-      - Data abstraction in all modules
-
-      - TROVE catorgization
-
-      - Download Stats Rewrite
-
-      - eval() security fixes (muks)
-
-      - Custom Bug/Support Categories (wallace)
-
-      - Ability to remove yourself from project (wallace)
-
-      - Bundles of code cleanups
-
-      - Navigation Updates
-
-      - Hooks Added to sitewide help
-
-      - other fixes to numerous to list
-        
-------------------------------------------------------------------------------
-Sun Jan 30 09:22:39 PST 2000
-
-SOURCEFORGE 1.0.4
-      - Added docs/ Directory containing both and Installation Guide and a
-        Administration guide provided by the SF Docs Projects. Thanks to
-	the sfdocs people for contributing this. http://sfdocs.sourceforge.net
-
-      - Added etc/local.inc as a example for /etc/local.inc which contains
-        the database information need to run this application.
-
-      - Patch Manager
-
-      - Email notification of files and forums that are being monitored. 
-
-      - Sorting of columns via link through the bugtracker, patch managers,
-        and task manager.  - (loic@users.sourceforge.net) - Thanks!
-
-      - All file extensions allowed on file uploads.
-
-------------------------------------------------------------------------------
-
-Thu Jan 14 09:10:37 PST 2000
-
-SOURCEFORGE 1.0.3
-      - *** Initial Code Relase ***
-        Includes: Bugtracking, Project Management, Forums, Mailing Lists,
-	Surveys, Software Map, File Releases, Top Projects, Site Docs,
-	Project News, Site News, Snippet Library, Registration System, and
-	Individual Account Maitenance.
-
-------------------------------------------------------------------------------
