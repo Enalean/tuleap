@@ -11,10 +11,10 @@
   *
   */
 
-require_once($DOCUMENT_ROOT.'/../common/include/Error.class');
-require_once($DOCUMENT_ROOT.'/../common/tracker/ArtifactField.class');
-require_once('include/ArtifactFieldHtml.class');
-require_once($DOCUMENT_ROOT.'/../common/tracker/ArtifactFieldFactory.class');
+//require_once($DOCUMENT_ROOT.'/../common/include/Error.class');
+//require_once($DOCUMENT_ROOT.'/../common/tracker/ArtifactField.class');
+//require_once('include/ArtifactFieldHtml.class');
+//require_once($DOCUMENT_ROOT.'/../common/tracker/ArtifactFieldFactory.class');
 
 // Create factories
 $art_field_fact = new ArtifactFieldFactory($ath);
