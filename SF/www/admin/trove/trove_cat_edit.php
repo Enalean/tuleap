@@ -39,6 +39,7 @@ $row_cat = db_fetch_array($res_cat);
 $HTML->header(array(title=>"Trove - Edit Category"));
 ?>
 
+<H2>Edit a Trove Category</H2>
 <form action="trove_cat_edit.php" method="post">
 <input type="hidden" name="form_trove_cat_id" value="<?php
   print $GLOBALS['trove_cat_id']; ?>">

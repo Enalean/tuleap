@@ -12,20 +12,24 @@ session_require(array('group'=>'1','admin_flags'=>'A'));
 
 // #######################################################
 
-function printnode ($nodeid,$text) {
+function printnode ($nodeid,$text,$delete_ok=false) {
 	// print current node, then all subnodes
 	print ('<BR>');
 	for ($i=0;$i<$GLOBALS[depth];$i++) { print "&nbsp; &nbsp; "; }
 	html_image('ic/cfolder15.png',array());
 	print ('&nbsp; '.$text." ");
-	print ('<A href="trove_cat_edit.php?trove_cat_id='.$nodeid.'">[Edit]</A> ');
-	print (help_button('trove_cat',$nodeid)."\n");
+	print ('&nbsp; <A href="trove_cat_edit.php?trove_cat_id='.$nodeid.'">[Edit]</A> ');
+	if ($delete_ok) {
+	    print ('&nbsp; <A href="trove_cat_delete.php?trove_cat_id='.$nodeid.'">[Delete]</A> ');
+	}
+	print ('&nbsp;'.help_button('trove_cat',$nodeid)."\n");
 
 	$GLOBALS["depth"]++;
-	$res_child = db_query("SELECT trove_cat_id,fullname FROM trove_cat "
+	$res_child = db_query("SELECT trove_cat_id,fullname,parent FROM trove_cat "
 		."WHERE parent='$nodeid'");
 	while ($row_child = db_fetch_array($res_child)) {
-		printnode($row_child["trove_cat_id"],$row_child["fullname"]);
+	    $delete_ok = ($row_child["parent"] != 0);
+	    printnode($row_child["trove_cat_id"],$row_child["fullname"],$delete_ok);
 	}
 	$GLOBALS["depth"]--;
 }
