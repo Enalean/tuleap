@@ -719,7 +719,7 @@ function format_bug_details ($bug_id, $ascii=false) {
     // No followup comment -> return now
     if ($rows <= 0) {
 	if ($ascii)
-	    $out = '\n\nNo Followups Have Been Posted\n';
+	    $out = "\n\nNo Followups Have Been Posted\n";
 	else
 	    $out = '<H4>No Followups Have Been Posted</H4>';
 	return $out;
