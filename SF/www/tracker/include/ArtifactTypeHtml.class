@@ -442,7 +442,7 @@ class ArtifactTypeHtml extends ArtifactType {
 			  }
 
 			  function showGroupSelection() {
-			  	win=window.open("","group_id_selection","height=145,width=270,toolbar=no,location=no,resizable=yes,left=200,top=200");
+			  	win=window.open("","group_id_selection","height=145,width=480,toolbar=no,location=no,resizable=yes,left=200,top=200");
 				win.location = "/tracker/group_selection.php?opener_form=form_create&opener_field=group_id_template&filter=member";
 			  }
 

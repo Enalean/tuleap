@@ -14,6 +14,13 @@ session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
 // If this was a submission, make updates
 
+// update info for page
+$res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
+if (db_numrows($res_grp) < 1) {
+	exit_no_group();
+}
+$row_grp = db_fetch_array($res_grp);
+
 if ($Update) {
 
 	group_add_history ('Changed Public Info','',$group_id);
@@ -51,7 +58,7 @@ if ($Update) {
 		$use_docman=0;
 	}
 
-	$result=db_query('UPDATE groups SET '
+	$sql = 'UPDATE groups SET '
 		."group_name='$form_group_name',"
 		."homepage='$form_homepage',"
 		."short_description='$form_shortdesc',"
@@ -59,18 +66,30 @@ if ($Update) {
 		."required_software='".htmlspecialchars($form_required_sw)."', "
 		."patents_ips='".htmlspecialchars($form_patents)."', "
 		."other_comments='".htmlspecialchars($form_comments)."', "
-		."use_bugs='$use_bugs',"
 		."use_mail='$use_mail',"
 		."use_survey='$use_survey',"
 		."use_patch='$use_patch',"
 		."use_forum='$use_forum',"
-		."use_pm='$use_pm',"
 		."use_cvs='$use_cvs',"
 		."use_news='$use_news',"
-		."use_support='$use_support',"
-		."use_docman='$use_docman' "
-		."WHERE group_id=$group_id");
+		."use_docman='$use_docman', ";
+		
+	if ( $row_grp['activate_old_bug'] ) {
+		$sql .= "use_bugs='$use_bugs',";
+	}
+	if ( $row_grp['activate_old_task'] ) {
+		$sql .= "use_pm='$use_pm',";
+	}
+	if ( $row_grp['activate_old_sr'] ) {
+		$sql .= "use_support='$use_support',";
+	}	
+	if ( $sys_activate_tracker ) {
+		$sql .= "use_trackers='$use_trackers'";
+	}	
+	$sql .= " WHERE group_id=$group_id";
 
+	//echo $sql;
+	$result=db_query($sql);
 	if (!$result || db_affected_rows($result) < 1) {
 		$feedback .= ' UPDATE FAILED OR NO DATA CHANGED! '.db_error();
 	} else {
@@ -128,18 +147,27 @@ print '
 	Show the options that this project is using
 */
 
+if ( $row_grp['activate_old_bug'] ) {
+	echo '<B>Use Bug Tracker:</B> <INPUT TYPE="CHECKBOX" NAME="use_bugs" VALUE="1"'.( ($row_grp['use_bugs']==1) ? ' CHECKED' : '' ).'><BR>';
+}
 echo '
-	<B>Use Bug Tracker:</B> <INPUT TYPE="CHECKBOX" NAME="use_bugs" VALUE="1"'.( ($row_grp['use_bugs']==1) ? ' CHECKED' : '' ).'><BR>
 	<B>Use Mailing Lists:</B> <INPUT TYPE="CHECKBOX" NAME="use_mail" VALUE="1"'.( ($row_grp['use_mail']==1) ? ' CHECKED' : '' ).'><BR>
 	<B>Use Surveys:</B> <INPUT TYPE="CHECKBOX" NAME="use_survey" VALUE="1"'.( ($row_grp['use_survey']==1) ? ' CHECKED' : '' ).'><BR>
 	<B>Use Patch Manager:</B> <INPUT TYPE="CHECKBOX" NAME="use_patch" VALUE="1"'.( ($row_grp['use_patch']==1) ? ' CHECKED' : '' ).'><BR>
-	<B>Use Forums:</B> <INPUT TYPE="CHECKBOX" NAME="use_forum" VALUE="1"'.( ($row_grp['use_forum']==1) ? ' CHECKED' : '' ).'><BR>
-	<B>Use Project/Task Manager:</B> <INPUT TYPE="CHECKBOX" NAME="use_pm" VALUE="1"'.( ($row_grp['use_pm']==1) ? ' CHECKED' : '' ).'><BR>
+	<B>Use Forums:</B> <INPUT TYPE="CHECKBOX" NAME="use_forum" VALUE="1"'.( ($row_grp['use_forum']==1) ? ' CHECKED' : '' ).'><BR>';
+if ( $row_grp['activate_old_task'] ) {
+	echo '<B>Use Project/Task Manager:</B> <INPUT TYPE="CHECKBOX" NAME="use_pm" VALUE="1"'.( ($row_grp['use_pm']==1) ? ' CHECKED' : '' ).'><BR>';
+}
+echo '
 	<B>Use CVS:</B> <INPUT TYPE="CHECKBOX" NAME="use_cvs" VALUE="1"'.( ($row_grp['use_cvs']==1) ? ' CHECKED' : '' ).'><BR>
 	<B>Use News:</B> <INPUT TYPE="CHECKBOX" NAME="use_news" VALUE="1"'.( ($row_grp['use_news']==1) ? ' CHECKED' : '' ).'><BR>
-	<B>Use Doc Mgr:</B> <INPUT TYPE="CHECKBOX" NAME="use_docman" VALUE="1"'.( ($row_grp['use_docman']==1) ? ' CHECKED' : '' ).'><BR>
-	<B>Use Support:</B> <INPUT TYPE="CHECKBOX" NAME="use_support" VALUE="1"'.( ($row_grp['use_support']==1) ? ' CHECKED' : '' ).'>';
-
+	<B>Use Doc Mgr:</B> <INPUT TYPE="CHECKBOX" NAME="use_docman" VALUE="1"'.( ($row_grp['use_docman']==1) ? ' CHECKED' : '' ).'><BR>';
+if ( $row_grp['activate_old_sr'] ) {
+	echo '<B>Use Support:</B> <INPUT TYPE="CHECKBOX" NAME="use_support" VALUE="1"'.( ($row_grp['use_support']==1) ? ' CHECKED' : '' ).'><BR>';
+}	
+if ( $sys_activate_tracker ) {
+	echo '<B>Use Trackers:</B> <INPUT TYPE="CHECKBOX" NAME="use_trackers" VALUE="1"'.( ($row_grp['use_trackers']==1) ? ' CHECKED' : '' ).'><BR>';
+}
 echo '
 <HR>
 <P><INPUT type="submit" name="Update" value="Update">

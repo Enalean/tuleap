@@ -299,7 +299,7 @@ if ($group_id && !$atid) {
 		if ( $ath->existUser($user_id) ) {
 			exit_error('Error','The user \''.$user_name.'\' is already is the tracker permissions.');
 		}
-		if ( !$ath->addUser($user_id) ) {
+		if ( !$ath->addUser($user_id,0) ) {
 			exit_error('Error',$ath->getErrorMessage());
 		}
 

@@ -207,8 +207,8 @@ $sys_lf = "\n";
 $sys_user_fields = array("assigned_to","submitted_by","multi_assigned_to");
 
 //
-// Display or not the tracker menu
-$sys_show_tracker_menu = 0;
+// Use or not generic trackers
+$sys_activate_tracker = 0;
 
 // End of customizations -- place nothing after the closing PHP tag!
 ?>

@@ -325,7 +325,7 @@ echo html_blankimage(5,100);
 	*/
 	function project_tabs($toptab,$group) {
 		
-		global $sys_show_tracker_menu;
+		global $sys_activate_tracker;
 
         	// get group info using the common result set
 	        $project=project_get_object($group);
@@ -372,12 +372,12 @@ echo html_blankimage(5,100);
 	        }
 
         	// Bug Tracking
-	        if ($project->usesBugs()) {
+	        if ($project->usesBugs()&&$project->activateOldBug()) {
         	        $this->tab_entry('/bugs/?group_id='.$group, $this->icons['Bugs'], 'Bugs', $toptab == 'bugs');
 	        }
 
         	// Support Tracking
-	        if ($project->usesSupport()) {
+	        if ($project->usesSupport()&&$project->activateOldSR()) {
         	        $this->tab_entry('/support/?group_id='.$group, $this->icons['Support'], 'Support', $toptab == 'support');
 	        }
 
@@ -392,7 +392,7 @@ echo html_blankimage(5,100);
 	        }
 
         	// Project Manager
-	        if ($project->usesPm()) {
+	        if ($project->usesPm()&&$project->activateOldTask()) {
         	        $this->tab_entry('/pm/?group_id='.$group, $this->icons['Tasks'], 'Tasks', $toptab == 'pm');
 	        }
 
@@ -420,7 +420,7 @@ echo html_blankimage(5,100);
 	        $this->tab_entry('/project/filelist.php?group_id='.$group, $this->icons['Files'], 'Files', $toptab == 'downloads');
 
 	        // Trackers
-	        if ( $project->usesTrackers() && $sys_show_tracker_menu) {
+	        if ( $project->usesTracker() && $sys_activate_tracker) {
 	        	$this->tab_entry('/tracker/index.php?group_id='.$group, $this->icons['Trackers'], 'Trackers', $toptab == 'trackers');
 	        }
 

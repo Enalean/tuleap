@@ -174,42 +174,27 @@ individual text files (CSV format) or in a project specific database that you ca
      <P>Click on the links below to generate a text file export (CSV format).
 <P>
 <ul>
-<?php
+<?
+if ($project->usesBugs()&&$project->activateOldBug()) {
     echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=bug\">Bug export</a></b><br>\n";
-?>
-All bugs submitted to your project. Show <a href="<?php echo $PHP_SELF;
-?>?group_id=<?php echo $group_id;?>&export=bug_format">export format</a>.
-
-
-<?php
+	echo 'All bugs submitted to your project. Show <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_format">export format</a>.';
     echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=bug_history\">Bug History export</a></b><br>"."\n";
-?>
-A history of all the changes your project bugs have gone
-through. Show <a href="<?php echo $PHP_SELF; ?>?group_id=<?php echo
-$group_id;?>&export=bug_history_format">export format</a>.
+	echo 'A history of all the changes your project bugs have gone through. Show <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_history_format">export format</a>.';
+}
 
-
-<?php
+if ($project->usesPm()&&$project->activateOldTask()) {
     echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=task\">Task export</a></b><br>"."\n";
-?>
-All tasks created in your project. Show <a href="<?php echo $PHP_SELF;
-?>?group_id=<?php echo $group_id;?>&export=task_format">export format</a>.
+	echo 'All tasks created in your project. Show <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_format">export format</a>.';
+	echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=task_history\">Task History export</a></b><br>"."\n";
+	echo 'A history of all the changes your project tasks have gone through. Show <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_history_format">export format</a>.';
+}
 
-<?php
-    echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=task_history\">Task History export</a></b><br>"."\n";
-?>
-A history of all the changes your project tasks have gone
-through. Show <a href="<?php echo $PHP_SELF; ?>?group_id=<?php echo
-$group_id;?>&export=task_history_format">export format</a>.
-
-<?php
+if ($project->usesSupport()&&$project->activateOldSR()) {
     echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=support_request\">Support Request export</a></b><br>"."\n";
-?>
-All support requests created in your project. Show <a href="<?php echo $PHP_SELF;
-?>?group_id=<?php echo $group_id;?>&export=support_request_format">export format</a>.
+	echo 'All support requests created in your project. Show <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=support_request_format">export format</a>.';
+}
 
-<?php
-    echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=survey_responses\">Survey Responses export</a></b><br>"."\n";
+echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=survey_responses\">Survey Responses export</a></b><br>"."\n";
 ?>
 A list of all the responses to all the surveys posted by your project. Show <a href="<?php echo $PHP_SELF; ?>?group_id=<?php echo
 $group_id;?>&export=survey_responses_format">export format</a>.
@@ -217,40 +202,26 @@ $group_id;?>&export=survey_responses_format">export format</a>.
 
 </ul>
 
-Optional data exports:
-
-<ul>
-<?php
-    echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=bug_bug_deps\">Bug-Bug Dependencies export</a></b><br>"."\n";
+<?
+if ( ($project->usesBugs()&&$project->activateOldBug())||($project->usesPm()&&$project->activateOldTask()) ) {
+	echo 'Optional data exports:';
+	echo '<ul>';
+	if ($project->usesBugs()&&$project->activateOldBug()) {
+	    echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=bug_bug_deps\">Bug-Bug Dependencies export</a></b><br>"."\n";
+		echo 'A list of all bug to bug dependencies. Show <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_bug_deps_format">export format</a>.';
+	    echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=bug_task_deps\">Bug-Task Dependencies export</a></b><br>"."\n";
+		echo 'A list of all bug to task dependencies. Show <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_task_deps_format">export format</a>.';
+	}
+	
+	if ($project->usesPm()&&$project->activateOldTask()) {
+	    echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=task_task_deps\">Task-Task Dependencies export</a></b><br>"."\n";
+		echo 'A list of all task to task dependencies. Show <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_task_deps_format">export format</a>.';
+	    echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=task_assigned_to\">Task Assignees export</a></b><br>"."\n";
+		echo 'A list of tasks and the project members in charge. Show <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_assigned_to_format">export format</a>.';
+	}
+	echo '</ul>';
+}
 ?>
-A list of all bug to bug dependencies. Show <a href="<?php echo $PHP_SELF;
-?>?group_id=<?php echo
-$group_id;?>&export=bug_bug_deps_format">export format</a>.
-
-<?php
-    echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=bug_task_deps\">Bug-Task Dependencies export</a></b><br>"."\n";
-?>
-A list of all bug to task dependencies. Show <a href="<?php echo $PHP_SELF;
-?>?group_id=<?php echo
-$group_id;?>&export=bug_task_deps_format">export format</a>.
-
-
-<?php
-    echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=task_task_deps\">Task-Task Dependencies export</a></b><br>"."\n";
-?>
-A list of all task to task dependencies. Show <a href="<?php echo $PHP_SELF;
-?>?group_id=<?php echo
-$group_id;?>&export=task_task_deps_format">export format</a>.
-
-<?php
-    echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=task_assigned_to\">Task Assignees export</a></b><br>"."\n";
-?>
-A list of tasks and the project members in charge. Show <a href="<?php echo $PHP_SELF;
-?>?group_id=<?php echo
-$group_id;?>&export=task_assigned_to_format">export format</a>.
-
-
-</ul>
 
 <h3>Direct Database Access <?php echo help_button('ProjectDataExport.html#DirectDatabaseAccess'); ?></h3>
 

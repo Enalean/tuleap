@@ -71,8 +71,20 @@ class Project extends Group {
 	}
 
 
-	function usesTrackers() {
+	function usesTracker() {
 		return $this->project_data_array['use_trackers'];
+	}
+
+	function activateOldBug() {
+		return $this->project_data_array['activate_old_bug'];
+	}
+
+	function activateOldTask() {
+		return $this->project_data_array['activate_old_task'];
+	}
+
+	function activateOldSR() {
+		return $this->project_data_array['activate_old_sr'];
 	}
 
 	function usesCVS() {
