@@ -57,7 +57,7 @@ function pm_footer($params) {
 
 function pm_status_box($name='status_id',$checked='xyxy',$text_100='None') {
 	$result=pm_data_get_statuses();
-	return html_build_select_box($result,$name,$checked,true,$text_100);
+	return html_build_select_box($result,$name,$checked,true,$text_100,true,'Any');
 }
 
 function pm_tech_select_box($name='assigned_to',$group_id=false,$checked='xzxz') {
@@ -194,7 +194,7 @@ function pm_show_year_box($name,$year=1) {
 }
 
 function pm_show_tasklist ($result,$offset,$set='open') {
-	global $sys_datefmt,$group_id,$group_project_id,$PHP_SELF;
+	global $sys_datefmt,$group_id,$group_project_id,$_status,$PHP_SELF;
 	/*
 		Accepts a result set from the bugs table. Should include all columns from
 		the table, and it should be joined to USER to get the user_name.
@@ -233,24 +233,22 @@ function pm_show_tasklist ($result,$offset,$set='open') {
 	$title_arr=array();
 	$title_arr[]='Task ID';
 	$title_arr[]='Summary';
-	if ($group_project_id == 0) {
-		$title_arr[]='Subproject';
-	}
+	$title_arr[]='Subproject';
 	$title_arr[]='Start Date';
 	$title_arr[]='End Date';
 	$title_arr[]='Assigned To';
 	$title_arr[]='% Complete';
+	$title_arr[]='Status';
 
 	$links_arr=array();
 	$links_arr[]=$url.'project_task_id';
 	$links_arr[]=$url.'summary';
-	if ($group_project_id == 0) {
-		$links_arr[]=$url.'group_project_id';
-	}
+	$links_arr[]=$url.'project_name';
 	$links_arr[]=$url.'start_date';
 	$links_arr[]=$url.'end_date';
 	$links_arr[]=$url.'user_name';
 	$links_arr[]=$url.'percent_complete';
+	$links_arr[]=$url.'status_name';
 
 	echo html_build_list_table_top ($title_arr,$links_arr);
 
@@ -267,11 +265,13 @@ function pm_show_tasklist ($result,$offset,$set='open') {
 			'&group_project_id='.$row['group_project_id'].'">'.
 			$row['project_task_id'].'</A></TD>'.
 			'<TD>'.$row['summary'].'</TD>'.
-			($group_project_id ? '' : '<TD>'.pm_data_get_group_name($row['group_project_id']).'</TD>').
+			'<TD>'.$row['project_name'].'</TD>'.
 			'<TD>'.date('Y-m-d',$row['start_date']).'</TD>'.
 			'<TD>'. (($now>$row['end_date'])?'<B>* ':'&nbsp; ') . date('Y-m-d',$row['end_date']).'</TD>'.
 			'<TD>'.$row['user_name'].'</TD>'.
-			'<TD>'.$row['percent_complete'].'%</TD></TR>';
+			'<TD>'.$row['percent_complete'].'%</TD>'.
+		        '<TD>'.$row['status_name'].'</TD>'.
+		        '</TR>';
 
 	}
 

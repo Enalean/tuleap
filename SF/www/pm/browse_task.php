@@ -15,7 +15,7 @@ if (!$offset || $offset < 0) {
 // Automatically discard invalid field names.
 //
 if ($order) {
-	if ($order=='project_task_id' || $order=='percent_complete' || $order=='summary' || $order=='start_date' || $order=='end_date' || $order=='priority' || $order=='user_name') {
+	if ($order=='project_task_id' || $order=='percent_complete' || $order=='summary' || $order=='start_date' || $order=='end_date' || $order=='priority' || $order=='user_name' || $order=='status_name'|| $order=='project_name') {
 		if(user_isloggedin()) {
 			user_set_preference('pm_task_order', $order);
 		}
@@ -29,11 +29,33 @@ if ($order) {
 }
 
 if ($order) {
-	//if ordering by priority, sort DESC
-	//if ordering by user assigned to then use the user table 
-	$order_by = " ORDER BY ".(($order=='user_name') ? 'user':'project_task').".$order".(($order=='priority') ? ' DESC ':' ');
+    //if ordering by priority, sort DESC
+    //if ordering by user assigned to then use the user table
+    //if ordering by status assigned to then use the project_status table
+
+    switch ($order) {
+
+    case 'user_name':
+	$tbl = 'user';
+	break;
+    case 'status_name':
+	$tbl = 'project_status';
+	break;
+    case 'project_name':
+	$tbl = 'project_group_list';
+	break;
+    case 'priority':
+	$tbl = 'project_task';
+	$way = 'DESC';
+	break;
+    default:
+	$tbl = 'project_task';
+	break;
+    }
+
+    $order_by = ' ORDER BY '.$tbl.'.'.$order.' '.$way;
 } else {
-	$order_by = "";
+    $order_by = "";
 }
 
 //the default is to show 'my' tasks, not 'open' as it used to be
@@ -93,11 +115,11 @@ if ($set=='my') {
 */
 
 //if status selected, and more to where clause
-if ($_status && ($_status != 100)) {
+if ($_status) {
 	//for open tasks, add status=100 to make sure we show all
-	$status_str="AND project_task.status_id IN ($_status".(($_status==1)?',100':'').")";
+	$status_str="AND project_task.status_id = '$_status' ";
 } else {
-	//no status was chosen, so don't add it to where clause
+	//no status (or any status) was chosen, so don't add it to where clause
 	$status_str='';
 }
 
@@ -113,13 +135,13 @@ if ($_assigned_to) {
 
 //if sub_project to selected, add more to where and from clauses
 if ($group_project_id) {
-	$subproj_where = " project_task.group_project_id='$group_project_id' AND ";
+	$subproj_where = ' project_task.group_project_id='.$group_project_id.' AND project_group_list.group_project_id=project_task.group_project_id AND ';
 	
 } else {
 	//no subproj was chosen so make sur it belongs to the
 	//right group_id and make a join on sub projects
 	$subproj_where = " project_group_list.group_id='$group_id' AND project_group_list.group_project_id=project_task.group_project_id AND ";
-	$subproj_from = ' project_group_list, ';
+
 }
 
 
@@ -132,16 +154,20 @@ pm_header(array('title'=>'Browse Tasks '.
 	(($_assigned_to)?' For: '.user_getname($_assigned_to):'').
 	(($_status && ($_status != 100))?' By Status: '.pm_data_get_status_name($_status):'')));
 
-$sql="SELECT project_task.priority,project_task.group_project_id,project_task.project_task_id,".
-	"project_task.start_date,project_task.end_date,project_task.percent_complete,project_task.summary,user.user_name ".
-	"FROM ".$subproj_from." project_task, project_assigned_to, user ".
-	"WHERE".$subproj_where." project_task.project_task_id=project_assigned_to.project_task_id AND user.user_id=project_assigned_to.assigned_to_id".
+$sql='SELECT project_task.priority,project_task.group_project_id,project_task.project_task_id,'.
+	'project_task.start_date,project_task.end_date,project_task.percent_complete,'.
+        'project_task.summary,user.user_name,project_status.status_name,'.
+        'project_group_list.project_name '.
+	'FROM project_group_list, project_task, project_assigned_to, user,project_status '.
+	'WHERE '.$subproj_where.' project_task.project_task_id=project_assigned_to.project_task_id '.
+        'AND user.user_id=project_assigned_to.assigned_to_id '.
+        'AND project_status.status_id=project_task.status_id '.
 	" $assigned_str $status_str ".
 	$order_by .
 	" LIMIT $offset,50";
 
 $message="Browsing Custom Task List";
-
+//echo "DBG -- $sql <BR>";
 $result=db_query($sql);
 
 /*
@@ -187,7 +213,7 @@ echo '<TABLE WIDTH="10%" BORDER="0" CELLPADDING="0" CELLSPACING="0"><FORM ACTION
 	<TR><TD COLSPAN="4" nowrap>Browse Tasks by:</TD></TR>
 	<TR align="center" valign="bottom"><TH><b>Sub-Project</b></TH><TH><b>Assignee</b></TH><TH><b>Status</b></TH></TR>
 	<TR><TD><FONT SIZE="-1">'. $subproj_box .'</FONT></TD>'.
-		'<TD><FONT SIZE="-1">'. $tech_box .'</FONT></TD><TD><FONT SIZE="-1">'. pm_status_box('_status',$_status,'Any') .'</FONT></TD>'.
+		'<TD><FONT SIZE="-1">'. $tech_box .'</FONT></TD><TD><FONT SIZE="-1">'. pm_status_box('_status',$_status) .'</FONT></TD>'.
 		'<TD><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Browse"></FONT></TD></TR></FORM></TABLE>';
 
 
