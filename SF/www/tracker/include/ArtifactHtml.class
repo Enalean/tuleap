@@ -386,7 +386,7 @@ class ArtifactHtml extends Artifact {
 		$title_arr=array();
 		$title_arr[]='Name';
 		$title_arr[]='Description';
-		$title_arr[]='Size';
+		$title_arr[]='Size (KB)';
 		$title_arr[]='By';
 		$title_arr[]='On';
 		
