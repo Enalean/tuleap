@@ -36,14 +36,20 @@ def set_group_info_from_name(gname):
 def isGroupCvsTracked():
   return GROUP_INFO['cvs_tracker']
 
-
 def cvsGroup_mail_header():
   return GROUP_INFO['cvs_events_mailing_header']
-
 
 def cvsGroup_mailto():
   return GROUP_INFO['cvs_events_mailing_list']
 
+def isGroupSvnTracked():
+  return GROUP_INFO['cvs_tracker']
+
+def svnGroup_mail_header():
+  return GROUP_INFO['cvs_events_mailing_header']
+
+def svnGroup_mailto():
+  return GROUP_INFO['cvs_events_mailing_list']
 
 def isGroupPublic():
   return GROUP_INFO['is_public']

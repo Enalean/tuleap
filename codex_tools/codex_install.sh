@@ -773,6 +773,9 @@ $CAT <<'EOF' >/tmp/cronfile
 # It looks like we have memory leaks in Apache in some versions so restart it
 # on Sunday. Do it while the DB is down for backup
 50 0 * * Sun /etc/rc.d/init.d/httpd restart
+#
+# Once a minute make sure that the setuid bit is set on some critical files
+* * * * * (cd /usr/local/bin; /bin/chmod u+s commit-email.pl log_accum tmpfilemove fileforge)
 EOF
 crontab -u root /tmp/cronfile
 

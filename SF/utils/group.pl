@@ -47,6 +47,18 @@ sub cvsGroup_mailto {
   return $$GROUP_INFO{'cvs_events_mailing_list'};
 }
 
+sub isGroupSvnTracked {
+  return $$GROUP_INFO{'svn_tracker'};
+}
+
+sub svnGroup_mail_header {
+  return $$GROUP_INFO{'svn_events_mailing_header'};
+}
+
+sub svnGroup_mailto {
+  return $$GROUP_INFO{'svn_events_mailing_list'};
+}
+
 sub isGroupPublic {
   return $$GROUP_INFO{'is_public'};
 }

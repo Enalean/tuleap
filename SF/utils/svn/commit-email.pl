@@ -7,10 +7,10 @@
 # For usage, see the usage subroutine or run the script with no
 # command line arguments.
 #
-# $HeadURL: https://svn.collab.net/repos/svn/tags/1.0.1/tools/hook-scripts/commit-email.pl.in $
-# $LastChangedDate: 2004-02-12 04:07:35 -0600 (Thu, 12 Feb 2004) $
-# $LastChangedBy: dlr $
-# $LastChangedRevision: 8621 $
+# $HeadURL: https://svn.collab.net/repos/svn/trunk/tools/hook-scripts/commit-email.pl.in $
+# $LastChangedDate: 2004-01-29 16:00:49 -0600 (Thu, 29 Jan 2004) $
+# $LastChangedBy: blair $
+# $LastChangedRevision: 8540 $
 #    
 # ====================================================================
 # Copyright (c) 2000-2004 CollabNet.  All rights reserved.
@@ -29,16 +29,19 @@
 # The warning switch is set here and not in the shebang line above
 # with /usr/bin/env because env will try to find the binary named
 # 'perl -w', which won't work.
-BEGIN
-  {
-    $^W = 1;
-  }
+#BEGIN
+#  {
+#    $^W = 1;
+#  }
 
-use strict;
+#use strict;
 use Carp;
 
 ######################################################################
 # Configuration section.
+
+# debug output flag
+my $debug = 0;
 
 # Sendmail path.
 my $sendmail = "/usr/sbin/sendmail";
@@ -77,7 +80,6 @@ my $no_diff_deleted = 0;
   exit 1 unless $ok;
 }
 
-
 ######################################################################
 # Initial setup/command-line handling.
 
@@ -99,7 +101,7 @@ my $current_project = $project_settings_list[0];
 # project.  If a key exists but has a false value (''), then the
 # command line option is allowed but requires special handling.
 my %opt_to_hash_key = ('--from' => 'from_address',
-                       '-h'     => 'hostname',
+		       '-h'     => 'hostname',
                        '-l'     => 'log_file',
                        '-m'     => '',
                        '-r'     => 'reply_to',
@@ -206,6 +208,61 @@ unless (-d _)
   exit 1 unless $ok;
 }
 
+#####################################################################
+#
+# Connect to CodeX database and include all files needed
+#
+use DBI;
+
+my $root_path = $ENV{'SF_LOCAL_INC_PREFIX'} || "/home/";
+require $root_path."httpd/SF/utils/include.pl";
+require $root_path."httpd/SF/utils/group.pl";
+require $root_path."httpd/SF/utils/cvs1/checkins.pl";
+
+&db_connect;
+
+# retrieve the group_id
+my ($rootnull, $root, $gname) = split ('/', $repos);
+my $group_id = &set_group_info_from_name($gname);
+
+my $codex_srv = "http".($sys_force_ssl ? 's':'').'://'.$sys_default_domain;
+
+my $mod_url = $codex_srv."/cgi-bin/viewcvs.cgi/%s?r1=text&tr1=%s&r2=text&tr2=%s&roottype=svn&root=$gname&diff_format=h";
+my $add_url  = $codex_srv."/cgi-bin/viewcvs.cgi/%s?rev=$rev&view=markup&roottype=svn&root=$gname";
+my $patch_url = $codex_srv."/patch/?func=detailpatch&patch_id=%s&group_id=$group_id";
+my $commit_url = $codex_srv."/cvs/?func=detailcommit&commit_id=%s&group_id=$group_id";
+my $revision_url = $codex_srv."/cvs/?func=detailrevision&rev_id=%s&group_id=$group_id";
+my $artifact_url = $codex_srv."/tracker/?func=gotoid%s&aid=%s&atn=%s";
+
+my $no_diff = 1; # no inline diff for CodeX
+
+# arrays to store all artifact ref.
+my %artifacts;
+my %artifact_names;
+my %patches;
+my %commits;
+my %branches;
+
+# get the mail header and mailto address from CodeX DB
+$svnmailheader = &svnGroup_mail_header();
+if ($svnmailheader eq 'NULL') {
+  $svnmailheader = "";
+}
+
+$svnmailto = &svnGroup_mailto();
+if ($svnmailto ne 'NULL' && $svnmailto ne '') {
+  push(@{$current_project->{email_addresses}}, $svnmailto);
+}
+
+if ($debug) {
+  print STDERR "group_repo: ", $gname, "\n";
+  print STDERR "group_id: ", $group_id, "\n";
+  print STDERR "mod_url: ", $mod_url, "\n";
+  print STDERR "add_url: ", $add_url, "\n";
+  print STDERR "mail header in db: ", $svnmailheader, "\n";
+  print STDERR "svnmailto: ", $svnmailto, "\n";
+}
+
 ######################################################################
 # Harvest data using svnlook.
 
@@ -221,6 +278,55 @@ my $author = shift @svnlooklines;
 my $date = shift @svnlooklines;
 shift @svnlooklines;
 my @log = map { "$_\n" } @svnlooklines;
+&extract_xrefs(@log);
+
+# CodeX - Figure out what the real user name and email are
+#
+
+local ($login, $gecos);
+$login = $author;
+if (! $login)
+{
+    ($login, $gecos) = (getpwuid ($<))[0,6];
+}
+else
+{
+    $login = "nobody" if (! $login);
+    $gecos = (getpwnam ($login))[6];
+}
+
+# Determine the mailname and fullname.
+if ($gecos =~ /^([^<]*\s+)<(\S+@\S+)>/)
+{
+    $fullname = $1;
+    $mailname = $2;
+    $fullname =~ s/\s+$//;
+}
+else
+{
+    $fullname = $gecos;
+    $fullname =~ s/,.*$//;
+
+    local ($hostdomain, $hostname);
+    chop($hostdomain = `hostname -f`);
+    if ($hostdomain !~ /\./)
+    {
+        chop($hostname = `hostname`);
+        if ($hostname !~ /\./) {
+            chop($domainname = `domainname`);
+            $hostdomain = $hostname . "." . $domainname;
+        } else {
+            $hostdomain = $hostname;
+        }
+    }
+    $mailname = "$login\@$hostdomain";
+}
+
+if ($debug) {
+  print STDERR "$fullname\n";
+  print STDERR "$mailname\n";
+}
+
 
 # Figure out what directories have changed using svnlook.
 my @dirschanged = &read_from_process($svnlook, 'dirs-changed', $repos, 
@@ -248,6 +354,7 @@ for (my $i=0; $i<@dirschanged; ++$i)
 my @adds;
 my @dels;
 my @mods;
+my @difflines = ();
 foreach my $line (@svnlooklines)
   {
     my $path = '';
@@ -264,6 +371,7 @@ foreach my $line (@svnlooklines)
     if ($code eq 'A')
       {
         push(@adds, $path);
+	push(@difflines,sprintf($add_url,$path)) if ($no_diff);
       }
     elsif ($code eq 'D')
       {
@@ -272,13 +380,20 @@ foreach my $line (@svnlooklines)
     else
       {
         push(@mods, $path);
+	push(@difflines,sprintf($mod_url,$path,$rev-1,$rev)) if ($no_diff);
       }
   }
 
 # Get the diff from svnlook.
-my @no_diff_deleted = $no_diff_deleted ? ('--no-diff-deleted') : ();
-my @difflines = &read_from_process($svnlook, 'diff', $repos,
+# CodeX Specific - no diff output for CodeX - Build the viewcvs URL  instead
+my @no_diff_deleted;
+if ($no_diff == 0) {
+  @no_diff_deleted = $no_diff_deleted ? ('--no-diff-deleted') : ();
+  @difflines = &read_from_process($svnlook, 'diff', $repos,
                                    '-r', $rev, @no_diff_deleted);
+} else {
+  unshift(@difflines,"\nSource code changes:\n");
+}
 
 ######################################################################
 # Modified directory name collapsing.
@@ -334,32 +449,38 @@ my $dirlist = join(' ', @dirschanged);
 
 # Put together the body of the log message.
 my @body;
-push(@body, "Author: $author\n");
-push(@body, "Date: $date\n");
-push(@body, "New Revision: $rev\n");
+push(@body, sprintf("SVN Repository:\t%s\n",$repos));
+push(@body, sprintf("Changes by:\t%s\t%s\n","$fullname <$mailname>", $date));
+push(@body, sprintf("New Revision: \t%s\n",$rev));
 push(@body, "\n");
 if (@adds)
   {
     @adds = sort @adds;
-    push(@body, "Added:\n");
+    push(@body, "\nAdded files:\n");
     push(@body, map { "   $_\n" } @adds);
   }
 if (@dels)
   {
     @dels = sort @dels;
-    push(@body, "Removed:\n");
+    push(@body, "\nRemoved files:\n");
     push(@body, map { "   $_\n" } @dels);
   }
 if (@mods)
   {
     @mods = sort @mods;
-    push(@body, "Modified:\n");
+    push(@body, "\nModified files:\n");
     push(@body, map { "   $_\n" } @mods);
   }
-push(@body, "Log:\n");
+push(@body, "\nLog message:\n");
 push(@body, @log);
-push(@body, "\n");
-push(@body, map { /[\r\n]+$/ ? $_ : "$_\n" } @difflines);
+#push(@body, "\n");
+push(@body, map { /[\r\n]+$/ ? $_ : "$_\n" } @difflines) if !$no_diff;
+push(@body, map { "$_\n" } &format_xref(@log));
+
+if ($debug) {
+  print @head;
+  print @body;
+}
 
 # Go through each project and see if there are any matches for this
 # project.  If so, send the log out.
@@ -588,4 +709,100 @@ sub read_from_process
     {
       return @output;
     }
+}
+
+# CodeX - extract all items that needs to be cross-referenced
+# in the log message
+sub extract_xrefs {
+    my (@log) = @_;
+
+    # Compile regexp for efficiency
+    my $patch_reg = qr/patch[ ]?#([0-9]+)/i;
+    my $commit_reg = qr/commit[ ]?#([0-9]+)/i;
+    my $rev_reg = qr/rev[ ]?#([0-9]+)/i;
+    my $art_reg = qr|([^\s()\$&!;~\#\|{}%,\?=\+\"\.\':/<>]+)[ ]?#([0-9]+)|i;
+
+    foreach $line (@log) {
+      # store the patch ref
+      while ($line =~ /$patch_reg/g) {
+	$patches{$1} = $1;
+      }
+
+      # store the CVS commit ref
+      while ($line =~ /$commit_reg/g) {
+	$commits{$1} = $1;
+      }
+
+      # store the SVN revision ref
+      while ($line =~ /$rev_reg/g) {
+	$revs{$1} = $1;
+      }
+
+      while ($line =~ m|$art_reg|g) {
+	next if (lc($1) eq 'commit');
+	next if (lc($1) eq 'rev');
+	next if (lc($1) eq 'patch');
+	$artifacts{"$1_$2"} = $2;
+	$artifact_names{"$1_$2"} = $1;
+      }
+    }
+
+}
+
+sub format_xref {
+
+    @keys = keys %patches;
+    if ( $#keys >= 0 ) {
+    	push (@text, "");
+        push (@text, "Patch references:");
+        foreach $patch (keys %patches) {
+            push (@text, sprintf("Patch #%s: $patch_url",$patch,$patch));
+        }
+	if ($db_track) {
+	  &db_add_ref('patch', $commit_id, $patch);
+	}
+    }
+
+    @keys = keys %commits;
+    if ( $#keys >= 0 ) {
+    	push (@text, "");
+        push (@text, "CVS Commit references:");
+        foreach $comm (keys %commits) {
+            push (@text, sprintf("commit #%s: $commit_url",$comm,$comm));
+        }
+	if ($db_track) {
+	  &db_add_ref('commit', $commit_id, $comm);
+	}
+    }
+    @keys = keys %revs;
+    if ( $#keys >= 0 ) {
+    	push (@text, "");
+        push (@text, "SVN revision references:");
+        foreach $rev (keys %revs) {
+            push (@text, sprintf("revision #%rev: $revision_url",$rev,$rev));
+        }
+	if ($db_track) {
+	  &db_add_ref('revision', $commit_id, $comm);
+	}
+    }
+
+    @keys = keys %artifacts;
+    if ( $#keys >= 0 ) {
+    	push (@text, "");
+        push (@text, "Artifact references:");
+        foreach $artkey (keys %artifacts) {
+          my $art=$artifacts{$artkey};
+          my $art_name=$artifact_names{$artkey};
+          my $group_param;
+          if ($group_id) {
+            $group_param="&group_id=$group_id";
+          }
+          push (@text, sprintf("%s #%s: $artifact_url", $art_name,$art,$group_param,$art,$art_name));
+        }
+        if ($db_track) {
+          &db_add_ref('artifact', $commit_id, $art);
+        }
+    }
+
+    return @text;
 }
