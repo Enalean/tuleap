@@ -19,7 +19,7 @@ $row_user = db_fetch_array($res_user);
 $HTML->box1_top("Account Maintenance: " . user_getname()); ?>
 
 <p>Welcome, <b><?php print user_getname(); ?></b>. 
-<p>You can view/change all of your account features from here. You may also wish
+<p>You can view or change all of your account features from here. You may also wish
 to view your developer/consultant profiles and ratings.
 
 <UL>
