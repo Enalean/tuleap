@@ -35,7 +35,7 @@ echo util_unconvert_htmlspecialchars(db_result($res_preamble,0,'support_preamble
 	<TR><TD COLSPAN="2">
 		<B>Detailed Description:</B>
 		<P>
-		<TEXTAREA NAME="details" ROWS="15" COLS="60" WRAP="HARD"></TEXTAREA>
+		<TEXTAREA NAME="details" ROWS="15" COLS="60"></TEXTAREA>
 	</TD></TR>
 
 	<TR><TD COLSPAN="2">

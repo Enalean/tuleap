@@ -185,7 +185,7 @@ if ($group_id && user_ismember($group_id,'S2')) {
 		<INPUT TYPE="TEXT" NAME="title" VALUE="" SIZE="15" MAXLENGTH="30">
 		<P>
 		<B>Message Body:</B><BR>
-		<TEXTAREA NAME="body" ROWS="30" COLS="65" WRAP="HARD"></TEXTAREA>
+		<TEXTAREA NAME="body" ROWS="30" COLS="65"></TEXTAREA>
 		<P>
 		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
 		</FORM>

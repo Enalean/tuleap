@@ -12,10 +12,9 @@ if (!user_isloggedin()) {
 		exit_error('ERROR','Go Back and fill in the user_email address or login');
 	}
 } else {
-	//use their user_name if they are logged in
+	//use user login name instead of email if they are logged in
 	// LJ No alias on CodeX $user_email=user_getname().'@'.$GLOBALS['sys_users_host'];
-	$user=user_getid();
-	$user_email=user_getemail($user);
+	$user_email=user_getname(user_getid());
 }
 
 if ($details != '') {
@@ -27,5 +26,6 @@ if ($details != '') {
 		$feedback .= ' Comment added to support request ';
 	}
 }
+
 
 ?>

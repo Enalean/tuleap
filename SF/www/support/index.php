@@ -32,12 +32,18 @@ if ($group_id) {
 			}
 			break;
 		}
+
 		case 'postmodsupport' : {
-			echo support_data_handle_update ($group_id,$support_id,$priority,$support_status_id,
-				$support_category_id,$assigned_to,$summary,$canned_response,$details);
+
+		    $changes = array();
+
+		    $changed = support_data_handle_update($group_id,$support_id,$priority,$support_status_id,
+						     $support_category_id,$assigned_to,$summary,$canned_response,$details,$changes);
 			/*
 				see if we're supposed to send all modifications to an address
 			*/
+
+		    if ($changed) {
 			if ($project->sendAllSupportUpdates()) {
 				$address=$project->getNewSupportAddress();
 			}
@@ -45,10 +51,13 @@ if ($group_id) {
 				now send the email
 				it's no longer optional due to the group-level notification address
 			*/
-			mail_followup($support_id,$address);
+			mail_followup($support_id,$address,$changes);
+		    }
+
 			include '../support/browse_support.php';
 			break;
 		}
+
 		case 'postaddcomment' : {
 			include '../support/postadd_comment.php';
 			if ($project->sendAllSupportUpdates()) {

@@ -77,18 +77,12 @@ function support_data_create_message ($body,$support_id,$by) {
 		handle the insertion of history for these parameters
 	*/
 
-	if (user_isloggedin()) {
-		$body="Logged In: YES \nuser_id=". user_getid() ."\nBrowser: ". $GLOBALS['HTTP_USER_AGENT'] ."\n\n".$body;
-	} else {
-		$body="Logged In: NO \nBrowser: ". $GLOBALS['HTTP_USER_AGENT'] ."\n\n".$body;
-	}
-
 	$sql="insert into support_messages(support_id,body,from_email,date) ".
 		"VALUES ('$support_id','". htmlspecialchars($body). "','$by','".time()."')";
 	return db_query($sql);
 }
 
-function support_data_create_history ($field_name,$old_value,$support_id) {
+function support_data_add_history ($field_name,$old_value,$support_id) {
 	/*
 		handle the insertion of history for these parameters
 	*/
@@ -107,6 +101,13 @@ function support_data_get_messages ($support_id) {
 	$sql="select * ".
 		"FROM support_messages ".
 		"WHERE support_id='$support_id' ORDER BY date DESC";
+	return db_query($sql);
+}
+
+function support_data_get_original_description ($support_id) {
+	$sql="select * ".
+		"FROM support_messages ".
+		"WHERE support_id='$support_id' ORDER BY date ASC LIMIT 1";
 	return db_query($sql);
 }
 
@@ -130,7 +131,7 @@ function support_data_create_support ($group_id,$support_category_id,$user_email
 		//use their user_name if they are logged in
 		// LJ No alias on CodeX. Use real e-mail
 		// LJ $user_email=user_getname().'@'.$GLOBALS['sys_users_host'];
-		$user_email=user_getemail($user);
+		$user_email=user_getname($user);
 	}
 
 	if (!$group_id || !$summary || !$details) {
@@ -174,46 +175,50 @@ function support_data_create_support ($group_id,$support_category_id,$user_email
 	return $support_id;
 }
 
-function support_data_handle_update ($group_id,$support_id,$priority,$support_status_id,$support_category_id,$assigned_to,$summary,$canned_response,$details) {
-	global $feedback;
+function support_data_handle_update ($group_id,$support_id,$priority,
+				     $support_status_id,$support_category_id,
+				     $assigned_to,$summary,$canned_response,
+				     $details, &$changes) {
+    global $feedback;
 
-	if (!$group_id || !$support_id || !$priority || !$support_status_id || !$support_category_id || !$assigned_to || !$summary || !$canned_response) {
-		exit_missing_param();
+    if (!$group_id || !$support_id || !$priority || !$support_status_id || !$support_category_id || !$assigned_to || !$summary || !$canned_response) {
+	exit_missing_param();
+    }
+
+    $sql="SELECT * FROM support WHERE support_id='$support_id'";
+    $result=db_query($sql);
+
+    if (!((db_numrows($result) > 0) && (user_ismember(db_result($result,0,'group_id'),'S2')))) {
+	exit_permission_denied();
+    }
+
+    if (!user_isloggedin()) {
+	$user=100;
+	if (!$user_email) {
+	    //force them to fill in user_email if they aren't logged in
+	    exit_error('ERROR','Go Back and fill in the user_email address or login so that we know what your email address is.');
 	}
+    } else {
+	$user_email=user_getname(user_getid());
+    }
 
-	$sql="SELECT * FROM support WHERE support_id='$support_id'";
-	$result=db_query($sql);
+    // See which fields changed during the modification
+    $changes = array();
+    $flist = array( "priority" => 'Priority', "support_status_id" => 'Status',
+	      "support_category_id" => 'Category',"assigned_to" => 'Assigned to',
+	      "summary" => 'Summary');
 
-	if (!((db_numrows($result) > 0) && (user_ismember(db_result($result,0,'group_id'),'S2')))) {
-		exit_permission_denied();
+    reset($flist);
+    while (list($field,$label) = each($flist)) {
+
+	$new_value = $$field;
+	if (db_result($result,0,$field) != $new_value) {
+	    support_data_add_history($field,db_result($result,0,$field),$support_id);
+	    $changes[$field]['del'] = db_result($result,0,$field);
+	    $changes[$field]['add'] = $new_value;
+	    $changes[$field]['label'] = $label;
 	}
-
-	if (!user_isloggedin()) {
-		$user=100;
-		if (!$user_email) {
-			//force them to fill in user_email if they aren't logged in
-			exit_error('ERROR','Go Back and fill in the user_email address or login so that we know what your email address is.');
-		}
-	} else {
-		$user=user_getid();
-		$user_email=user_getemail($user);
-	}
-
-
-
-	/*
-		See which fields changed during the modification
-	*/
-	if (db_result($result,0,'priority') != $priority)
-		{ support_data_create_history('priority',db_result($result,0,'priority'),$support_id);  }
-	if (db_result($result,0,'support_status_id') != $support_status_id)
-		{ support_data_create_history('support_status_id',db_result($result,0,'support_status_id'),$support_id);  }
-	if (db_result($result,0,'support_category_id') != $support_category_id)
-		{ support_data_create_history('support_category_id',db_result($result,0,'support_category_id'),$support_id);  }
-	if (db_result($result,0,'assigned_to') != $assigned_to)
-		{ support_data_create_history('assigned_to',db_result($result,0,'assigned_to'),$support_id);  }
-	if (db_result($result,0,'summary') != stripslashes(htmlspecialchars($summary)))
-		{ support_data_create_history('summary',htmlspecialchars(addslashes(db_result($result,0,'summary'))),$support_id);  }
+    }
 
 	/*
 		handle canned responses
@@ -236,7 +241,8 @@ function support_data_handle_update ($group_id,$support_id,$priority,$support_st
 	if ($details != '') {
 		//create the first message for this ticket
 		support_data_create_message($details,$support_id,$user_email);
-		$feedback .= ' Comment added to support request ';
+		$changes['details']['add'] = stripslashes($details);
+		$feedback .= ' Comment added ';
 		//mail_followup($support_id);
 	}
 
@@ -246,7 +252,7 @@ function support_data_handle_update ($group_id,$support_id,$priority,$support_st
 	if ($support_status_id == "2") {
 		$now=time();
 		$close_date=", close_date='$now' ";
-		support_data_create_history('close_date',db_result($result,0,'close_date'),$support_id);
+		support_data_add_history('close_date',db_result($result,0,'close_date'),$support_id);
 	} else {
 		$close_date='';
 	}
@@ -261,9 +267,11 @@ function support_data_handle_update ($group_id,$support_id,$priority,$support_st
 	$result=db_query($sql);
 
 	if (!$result) {
-		exit_error('Error','UPDATE FAILED '.db_error());
+	    exit_error('Error','UPDATE FAILED '.db_error());
+	    return false;
 	} else {
-		$feedback .= " Successfully Modified Support Request ";
+	    $feedback .= " Successfully Updated Support Request ";
+	    return true;
 	}
 }
 

@@ -158,10 +158,12 @@ $tech_box=html_build_select_box_from_arrays ($tech_id_arr,$tech_name_arr,'_assig
 echo '<TABLE WIDTH="10%" BORDER="0"><FORM ACTION="'. $PHP_SELF .'" METHOD="GET">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 	<INPUT TYPE="HIDDEN" NAME="set" VALUE="custom">
-	<TR><TD COLSPAN="3" nowrap><b>Browse Requests by User/Status/Category:</b></TD></TR>
-	<TR><TD><FONT SIZE="-1">'. $tech_box .'</TD><TD><FONT SIZE="-1">'. support_status_box('_status',$_status,'Any') .'</TD>'.
-	'<TD><FONT SIZE="-1">'. support_category_box ($group_id,$name='_category',$_category,'Any') .'</TD>'.
-'<TD><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Browse"></TD></TR></FORM></TABLE>';
+	<TR><TD COLSPAN="3" nowrap>Browse Requests by:</TD></TR>
+	<TR align="center"><TD><b>Category</b></TD><TD><b>Assignee</b></TD><TD><b>Status</b></TD></TR>'.
+       '<TR><TD><FONT SIZE="-1">'. support_category_box ($group_id,$name='_category',$_category,'Any') .'</TD>
+                 <TD><FONT SIZE="-1">'. $tech_box .'</TD>
+                 <TD><FONT SIZE="-1">'. support_status_box('_status',$_status,'Any') .'</TD>
+                 <TD><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Browse"></TD></TR></FORM></TABLE>';
 
 $result=db_query($sql);
 

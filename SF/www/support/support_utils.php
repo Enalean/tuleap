@@ -170,122 +170,217 @@ function show_supportlist ($result,$offset,$set='open') {
 	echo '</TD></TR></TABLE>';
 }
 
-function mail_followup($support_id,$more_addresses=false) {
-	global $sys_datefmt,$feedback;
-	/*
-		Send a message to the person who opened this support and the person it is assigned to
-	*/
+function mail_followup($support_id,$more_addresses=false,$changes=false) {
+    global $sys_datefmt,$feedback;
+    /*
+             Send a message to the person who opened this support and the person it is assigned to
+    */
 
-	$sql="SELECT support.priority,support.group_id,support.support_id,support.summary,".
-		"support_status.status_name,support_category.category_name,support.open_date, ".
-		"user.email,user2.email AS assigned_to_email ".
-		"FROM support,user,user user2,support_status,support_category ".
-		"WHERE user2.user_id=support.assigned_to ".
-		"AND support.support_status_id=support_status.support_status_id ".
-		"AND support.support_category_id=support_category.support_category_id ".
-		"AND user.user_id=support.submitted_by AND support.support_id='$support_id'";
+    $sql="SELECT support.priority,support.group_id,support.support_id,support.summary,".
+	"support_status.status_name,support_category.category_name,support.open_date, ".
+	"support.submitted_by,support.assigned_to ".
+	"FROM support,user,support_status,support_category ".
+	"WHERE support.support_status_id=support_status.support_status_id ".
+	"AND support.support_category_id=support_category.support_category_id ".
+	"AND support.support_id='$support_id'";
 
 	$result=db_query($sql);
+	$sr_href = "http://$GLOBALS[sys_default_domain]/bugssupport/?func=detailsupport&support_id=$support_id&group_id=".db_result($result,0,'group_id');
 
 	if ($result && db_numrows($result) > 0) {
-		/*
-			Set up the body
-		*/
-		$body = "\n\nSupport Request #".db_result($result,0,'support_id').", was updated on ".date($sys_datefmt,db_result($result,0,'open_date')). 
-			"\nYou can respond by visiting: ".
-			"\nhttp://".$GLOBALS['sys_default_domain']."/support/?func=detailsupport&support_id=".db_result($result,0,"support_id")."&group_id=".db_result($result,0,"group_id").
-			"\n\nCategory: ".db_result($result,0,'category_name').
-			"\nStatus: ".db_result($result,0,'status_name').
-			"\nPriority: ".db_result($result,0,'priority').
-			"\nSummary: ".util_unconvert_htmlspecialchars(db_result($result,0,'summary'));
+
+	    $group_id = db_result($result,0,'group_id');
+	    $fmt = "%-40s";
+
+	    // Generate the message preamble with all required
+	    // bug fields - Changes first if there are some.
+	    if ($changes) {
+		$body = "\n============== SUPPORT REQ. #".$support_id.
+		    ": LATEST MODIFICATIONS ===============\n".$sr_href."\n\n".
+		format_support_changes($changes)."\n\n\n\n";
+	    }
 
 
-		$subject="[ SR #".db_result($result,0,"support_id")." ] ".util_unconvert_htmlspecialchars(db_result($result,0,"summary"));
+	    $body .= "\n============== SUPPORT REQ. #".$support_id.
+		": FULL SNAPSHOT  ===============\n".
+		($changes ? '':$sr_href)."\n\n";
+	    
+	    $body .= sprintf("$fmt$fmt\n$fmt\n",
+			     'Submitted by: '.user_getname(db_result($result,0,'submitted_by')),
+			     'Project: '.group_getname($group_id),
+			     'Submitted on: '.date($sys_datefmt,db_result($result,0,'open_date')));
+	    $body .= sprintf("$fmt$fmt\n$fmt$fmt\n\n%s\n\n",
+			     "Category: ".db_result($result,0,'category_name'),
+			     'Assigned to: '.user_getname(db_result($result,0,'assigned_to')),
+			     "Status: ".db_result($result,0,'status_name'),
+			     "Priority: ".db_result($result,0,'priority'),
+			     "Summary: ".util_unconvert_htmlspecialchars(db_result($result,0,'summary')) );
 
-		/*
-			get all the email addresses that have dealt with this request
-			also add a) the assignee and b) the notification email address
-		*/
+	    $odq = support_data_get_original_description($support_id);
+	    $body .= "Original submission:\n".db_result($odq,0,'body')."\n\n";
 
-		$email_res=db_query("SELECT distinct from_email FROM support_messages WHERE support_id='$support_id'");
-		$rows=db_numrows($email_res);
-		if ($email_res && $rows > 0) {
-			$mail_arr=result_column_to_array($email_res,0);
-			$to=implode($mail_arr,', ');
-		}
-		if ( ($assigned_to_email = db_result($result,0,'assigned_to_email')) ) {
-		    $to .= ','.$assigned_to_email;
-		}
-		if ($more_addresses) {
-			$to .= ','.$more_addresses;
-		}
+	    // Include all follow-up comments
+	    $body .= format_support_details($support_id,true);
 
-		/*
-			Now include the two most recent emails
-		*/
-		$sql="select * ".
-			"FROM support_messages ".
-			"WHERE support_id='$support_id' ORDER BY date DESC LIMIT 2";
-		$result2=db_query($sql);
-		$rows=db_numrows($result2);
-		if ($result && $rows > 0) {
-			for ($i=0; $i<$rows; $i++) {
-				//get the first part of the email address
-				$email_arr=explode('@',db_result($result2,$i,'from_email'));
+	    /*
+	                  get all the email addresses that have dealt with this request
+		also add a) the assignee and b) the notification email address
+		**** IMPORTANT REMARK ****
+		The from_email field contains both user login names or email addresses. 
+		So the mail command assumes that each login name has an email 
+		alias ok in /etc/aliases
+	         */
 
-				$body .= "\n\nBy: ". $email_arr[0] .
-				"\nDate: ".date($sys_datefmt,db_result($result2,$i,'date')).
-				"\n\nMessage:".
-				"\n".util_unconvert_htmlspecialchars(db_result($result2,$i,'body')).
-				"\n\n----------------------------------------------------------------------";
-			}
-			$body .= "\nYou can respond by visiting: ".
-			"\nhttp://".$GLOBALS['sys_default_domain'].'/support/?func=detailsupport&support_id='.db_result($result,0,'support_id').'&group_id='.db_result($result,0,'group_id');
-		}
+	    $email_res=db_query("SELECT distinct from_email FROM support_messages WHERE support_id='$support_id'");
+	    $rows=db_numrows($email_res);
+	    if ($email_res && $rows > 0) {
+		$mail_arr=result_column_to_array($email_res,0);
+		$to=implode($mail_arr,', ');
+	    }
+	    
+	    if ( ($assigned_to_email = db_result($result,0,'assigned_to_email')) ) {
+		$to .= ','.$assigned_to_email;
+	    }
+	    if ($more_addresses) {
+		$to .= ','.$more_addresses;
+	    }
+	    
+	    // Send the email message
+	    $more='From: noreply@'.$GLOBALS['sys_default_domain'];
+	    $subject="[ SR #".db_result($result,0,"support_id")." ] ".
+		util_unconvert_htmlspecialchars(db_result($result,0,"summary"));
 
-		$more='From: noreply@'.$GLOBALS['sys_default_domain'];
+	    mail($to, $subject, $body, $more);
 
-		mail($to, $subject, $body, $more);
-
-		$feedback .= " Support Request Update Emailed ";
-
+	    $feedback .= " Support Request Update Emailed ";
+	    
 	} else {
 
-		$feedback .= " Could Not Send Support Request Update ";
-		echo db_error();
+	    $feedback .= " Could Not Send Support Request Update ";
+	    echo db_error();   
 
 	}
 }
 
-function show_support_details ($support_id) {
-	/*
-		Show the details rows from support_history
-	*/
-	global $sys_datefmt;
-	$result= support_data_get_messages ($support_id);
-	$rows=db_numrows($result);
-
-	if ($rows > 0) {
-		echo '
-		<H3>Followups</H3>
+function format_support_details ($support_id, $ascii=false) {
+    /*
+           Show the details rows from support_history
+          */
+    global $sys_datefmt;
+    $result= support_data_get_messages ($support_id);
+    $rows=db_numrows($result);
+    
+    // No followup comment -> return now
+    if ($rows <= 0) {
+	if ($ascii)
+	    $out = "\n\nNo Followups Have Been Posted\n";
+	else
+	    $out = '<H4>No Followups Have Been Posted</H4>';
+	return $out;
+    }
+    
+    // Header first define formats
+    if ($ascii) {
+	$out .= "Follow-up Comments\n*******************";
+	$fmt = "\n\n-------------------------------------------------------\n".
+	    "Date: %-30sBy: %s\n%s";
+    } else {
+	$out .= '
+		<H3>Follow-up Comments</H3>
 		<P>';
-		$title_arr=array();
-		$title_arr[]='Message';
-
-		echo html_build_list_table_top ($title_arr);
-
-		for ($i=0; $i < $rows; $i++) {
-			$email_arr=explode('@',db_result($result,$i,'from_email'));
-			echo '<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD><PRE>
-Date: '. date($sys_datefmt,db_result($result, $i, 'date')) .'
-Sender: <a href="mailto:'. $email_arr[0].'@'.$email_arr[1].'">'.$email_arr[0].'</a>'.'
-'.util_make_links(util_line_wrap ( db_result($result, $i, 'body'),85,"\n")). '</PRE></TD></TR>';
-		}
-		echo '</TABLE>';
+	$title_arr=array();
+	$title_arr[]='Message';
+	$title_arr[]='Date';
+	$title_arr[]='By';
+	
+	$out .= html_build_list_table_top ($title_arr);
+	
+	$fmt = "\n".'<tr BGCOLOR="%s"><td>%s</td>'.
+	    '<td valign="top">%s</td><td valign="top">%s</td></tr>';
+	
+    }
+    
+    // Loop throuh the follow-up comments and format them
+    for ($i=0; $i < $rows; $i++) {
+	
+	$email_arr=explode('@',db_result($result,$i,'from_email'));
+	if ($email_arr[1]) {
+	    $user_link = '<a href="mailto:'. db_result($result,$i,'from_email').'">'.$email_arr[0].'</a>';
 	} else {
-		echo '
-			<H3>No Followups Have Been Posted</H3>';
+	    $user_link = util_user_link($email_arr[0]);
 	}
+	
+	// Generate formatted output
+	if ($ascii) {
+	    $out .= sprintf($fmt,	
+			    date($sys_datefmt,db_result($result, $i, 'date')),
+			    $email_arr[0],
+			    util_unconvert_htmlspecialchars(db_result($result, $i, 'body')) );
+	} else {
+	    $out .= sprintf($fmt, util_get_alt_row_color($i),
+			    util_make_links(nl2br(db_result($result, $i, 'body'))),
+			    date($sys_datefmt,db_result($result, $i, 'date')),
+			    $user_link);
+	}
+    }
+    
+    // final touch...
+    $out .= ($ascii ? "\n" : "</TABLE>");
+    
+    return($out);
+}
+
+function show_support_details ($support_id, $ascii=false) {
+    echo format_support_details($support_id, $ascii);
+}
+
+
+function format_support_changes($changes) {
+
+    global $sys_datefmt;
+
+    reset($changes);
+    $fmt = "%20s | %-25s | %s\n";
+
+    $user_id = user_getid();
+
+    $out_hdr = 'Changes by: '.user_getrealname($user_id).' <'.user_getemail($user_id).">\n".
+	'Date: '.date($sys_datefmt,time()).' ('.user_get_timezone().')';
+
+    //Process special cases first: follow-up comment
+    if ($changes['details']) {
+	$out_com = "\n\n------------------ Additional Follow-up Comments ----------------------------\n";
+	$out_com .= util_unconvert_htmlspecialchars($changes['details']['add']);
+	unset($changes['details']);
+    }
+
+    //Process special cases first: bug file attachment
+    if ($changes['attach']) {
+	$out_att = "\n\n------------------ Additional File Attachment  ----------------------------\n";
+	$out_att .= sprintf("File name: %-30s Size:%d KB\n",$changes['attach']['name'],
+			 intval($changes['attach']['size']/1024) );
+	$out_att .= $changes['attach']['description']."\n".$changes['attach']['href'];
+	unset($changes['attach']);
+    }
+
+    // All the rest of the fields now
+    reset($changes);
+    while ( list($field,$h) = each($changes)) {
+
+	// If both removed and added items are empty skip - Sanity check
+	if (!$h['del'] && !$h['add']) { continue; }
+
+	$label = $h['label'];
+	if (!$label) { $label = $field; }
+	$out .= sprintf($fmt, $label, $h['del'],$h['add']);
+    }
+    if ($out) {
+	$out = "\n\n".sprintf($fmt,'What    ','Removed','Added').
+	"---------------------------------------------------------------------------\n".$out;
+    }
+
+    return($out_hdr.$out.$out_com.$out_att);
+
 }
 
 function show_supporthistory ($support_id) {
@@ -298,6 +393,7 @@ function show_supporthistory ($support_id) {
 
 	if ($rows > 0) {
 
+	    echo "\n".'<H3>Change History</H3><P>';
 		$title_arr=array();
 		$title_arr[]='Field';
 		$title_arr[]='Old Value';
