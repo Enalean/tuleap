@@ -415,7 +415,7 @@ function people_show_job_list($result) {
 					db_result($result,$i,'job_id') .'">'. 
 					db_result($result,$i,'title') .'</A></TD><TD>'. 
 					db_result($result,$i,'category_name') .'</TD><TD>'. 
-					date($sys_datefmt,db_result($result,$i,'date')) .
+					format_date($sys_datefmt,db_result($result,$i,'date')) .
 					'</TD><TD><a href="/projects/'.strtolower(db_result($result,$i,'unix_group_name')).'/">'.
 					db_result($result,$i,'group_name') .'</a></TD></TR>';
 		}

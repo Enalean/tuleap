@@ -38,7 +38,7 @@ function forum_show_a_nested_message ($result,$row=0) {
 					db_result($result, $row, 'msg_id') .'">'.
 					'<IMG SRC="/images/msg.gif" BORDER=0 HEIGHT=12 WIDTH=10> '.
 					db_result($result, $row, 'subject') .' [ reply ]</A> &nbsp; '.
-					'<BR>'. date($sys_datefmt,db_result($result,$row,'date')) .'
+					'<BR>'. format_date($sys_datefmt,db_result($result,$row,'date')) .'
 				</TD>
 			</TR>
 			<TR>
@@ -310,7 +310,7 @@ if ($forum_id) {
 				*/
 				$ret_val .= db_result($result, $i, 'subject').'</A></TD>'.
 					'<TD>'.db_result($result, $i, 'user_name').'</TD>'.
-					'<TD>'.date($sys_datefmt,db_result($result,$i,'date')).'</TD></TR>';
+					'<TD>'.format_date($sys_datefmt,db_result($result,$i,'date')).'</TD></TR>';
 
 				/*
 

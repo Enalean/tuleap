@@ -68,7 +68,7 @@ if ($type=='snippet') {
 				db_result($result,$i,'snippet_version_id').'"><B><center>'.
 				db_result($result,$i,'version').'</center></B></A></TD><TD>'. 
 			        nl2br(db_result($result,$i,'changes')).'</TD><TD align="middle">'.
-			        date($sys_datefmt,db_result($result,$i,'date')).'</TD><TD>'.
+			        format_date($sys_datefmt,db_result($result,$i,'date')).'</TD><TD>'.
 				'<a href="/users/'.db_result($result,$i,'user_name').'"><b>'.
 				db_result($result,$i,'user_name').'</b></a></TD><TD ALIGN="MIDDLE"><A HREF="/snippet/delete.php?type=snippet&snippet_version_id='.
 				db_result($result,$i,'snippet_version_id').
@@ -172,7 +172,7 @@ if ($type=='snippet') {
 				db_result($result,$i,'snippet_package_version_id').'"><B><center>'.
 				db_result($result,$i,'version').'</center></B></A></TD>'.
 				$changes_output.'<td align="middle">'.
-			        date($sys_datefmt,db_result($result,$i,'date')).'</TD><TD align="middle">'.
+			        format_date($sys_datefmt,db_result($result,$i,'date')).'</TD><TD align="middle">'.
 				'<a href="/users/'.db_result($result,$i,'user_name').'"><b>'.
 				db_result($result,$i,'user_name').
 				'</b></a></TD><TD ALIGN="MIDDLE">'.

@@ -224,9 +224,9 @@ function bug_field_display($field_name, $group_id, $value='xyxy',
 
     case 'DF':
 	if ($ascii) 
-	    $output .= date($sys_datefmt,$value);
+	    $output .= format_date($sys_datefmt,$value);
 	else
-	    $output .= ($ro ? date($sys_datefmt,$value) : bug_field_date($field_name,$value));
+	    $output .= ($ro ? format_date($sys_datefmt,$value) : bug_field_date($field_name,$value));
 	break;
 
     case 'TF':
@@ -550,7 +550,7 @@ function show_buglist ($result,$offset,$total_rows,$field_arr,$title_arr,
 
 	    if (bug_data_is_date_field($field_arr[$j]) ) {
 		if ($value)
-		    echo "<TD $width>".date($sys_datefmt,$value).'</TD>'."\n";
+		    echo "<TD $width>".format_date($sys_datefmt,$value).'</TD>'."\n";
 		else
 		    echo "<TD align=\"middle\" $width>-</TD>\n";
 
@@ -617,7 +617,7 @@ function mail_followup($bug_id,$more_addresses=false,$changes=false) {
 	$body .= sprintf($fmt.$fmt."\n", 
 			 'Submitted by: '.user_getname(db_result($result,0,'submitted_by')),
 			 'Project: '.group_getname($group_id) );
-	$body .= 'Submitted on: '.date($sys_datefmt,db_result($result,0,'date'))."\n";
+	$body .= 'Submitted on: '.format_date($sys_datefmt,db_result($result,0,'date'))."\n";
 
 	// All other regular fields now		 
 	$i=0;
@@ -774,7 +774,7 @@ function format_bug_details ($bug_id, $ascii=false) {
 	// we don't so do it the ugly way...
 	if ($ascii) {
 	    $out .= sprintf($fmt,
-			    date($sys_datefmt,db_result($result, $i, 'date')),
+			    format_date($sys_datefmt,db_result($result, $i, 'date')),
 			    db_result($result, $i, 'user_name'),
 			    $comment_type,
 			    util_unconvert_htmlspecialchars(db_result($result, $i, 'old_value'))
@@ -784,7 +784,7 @@ function format_bug_details ($bug_id, $ascii=false) {
 			    util_get_alt_row_color($i),
 			    $comment_type,
 			    util_make_links(nl2br(db_result($result, $i, 'old_value'))),
-			    date($sys_datefmt,db_result($result, $i, 'date')),
+			    format_date($sys_datefmt,db_result($result, $i, 'date')),
 			    db_result($result, $i, 'user_name'));
 	}
     }
@@ -809,9 +809,9 @@ function format_bug_changes($changes) {
     if (user_isloggedin()) {
 	$user_id = user_getid();
 	$out_hdr = 'Changes by: '.user_getrealname($user_id).' <'.user_getemail($user_id).">\n";
-	$out_hdr .= 'Date: '.date($sys_datefmt,time()).' ('.user_get_timezone().')';
+	$out_hdr .= 'Date: '.format_date($sys_datefmt,time()).' ('.user_get_timezone().')';
     } else {
-	$out_hdr = 'Changes by: Anonymous user        Date: '.date($sys_datefmt,time());
+	$out_hdr = 'Changes by: Anonymous user        Date: '.format_date($sys_datefmt,time());
     }
 
     //Process special cases first: follow-up comment
@@ -887,14 +887,14 @@ function show_bughistory ($bug_id,$group_id) {
 		// It's a text zone then display directly
 		// For date fields do some special processing
 		if ($field == 'close_date')
-		    echo date($sys_datefmt,$value_id);
+		    echo format_date($sys_datefmt,$value_id);
 		else
 		    echo $value_id;
 
 	    }
 
 	    echo '</TD>'.
-		'<TD>'.date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
+		'<TD>'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
 		'<TD>'.db_result($result, $i, 'user_name').'</TD></TR>';
 	}
         echo '</TABLE>';
@@ -961,7 +961,7 @@ function format_bug_attached_files ($bug_id,$group_id,$ascii=false) {
 
 	if ($ascii) {
 	    $out .= sprintf($fmt,
-			    date($sys_datefmt,db_result($result, $i, 'date')),
+			    format_date($sys_datefmt,db_result($result, $i, 'date')),
 			    db_result($result, $i, 'filename'),
 			    intval(db_result($result, $i, 'filesize')/1024),
 			    db_result($result, $i, 'user_name'),
@@ -974,7 +974,7 @@ function format_bug_attached_files ($bug_id,$group_id,$ascii=false) {
 			    db_result($result, $i, 'description'),
 			    intval(db_result($result, $i, 'filesize')/1024),
 			    util_user_link(db_result($result, $i, 'user_name')),
-			    date($sys_datefmt,db_result($result, $i, 'date')),
+			    format_date($sys_datefmt,db_result($result, $i, 'date')),
 			    "<a href=\"$PHP_SELF?func=delete_file&group_id=$group_id&bug_id=$bug_id&bug_file_id=$bug_file_id\" ".
 			    '" onClick="return confirm(\'Delete this attachment?\')">'.
 			    '<IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A>');

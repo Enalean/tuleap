@@ -144,7 +144,7 @@ function show_supportlist ($result,$offset,$set='open') {
 			'<TD><A HREF="'.$PHP_SELF.'?func=detailsupport&support_id='. db_result($result, $i, 'support_id').
 			'&group_id='. db_result($result, $i, 'group_id').'">'. db_result($result, $i, 'support_id') .'</A></TD>'.
 			'<TD>'. db_result($result, $i, 'summary') .'</TD>'.
-			'<TD>'. (($set != 'closed' && db_result($result, $i, 'date') < $then)?'<B>* ':'&nbsp; ') . date($sys_datefmt,db_result($result, $i, 'date')) .'</TD>'.
+			'<TD>'. (($set != 'closed' && db_result($result, $i, 'date') < $then)?'<B>* ':'&nbsp; ') . format_date($sys_datefmt,db_result($result, $i, 'date')) .'</TD>'.
 			'<TD>'.util_user_link(db_result($result,$i,'assigned_to_user')).'</TD>'.
 			'<TD>'.util_user_link(db_result($result,$i,'submitted_by')).'</TD></TR>';
 
@@ -208,7 +208,7 @@ function sr_utils_mail_followup($support_id,$more_addresses=false,$changes=false
 	    $body .= sprintf("$fmt$fmt\n$fmt\n",
 			     'Submitted by: '.user_getname(db_result($result,0,'submitted_by')),
 			     'Project: '.group_getname($group_id),
-			     'Submitted on: '.date($sys_datefmt,db_result($result,0,'open_date')));
+			     'Submitted on: '.format_date($sys_datefmt,db_result($result,0,'open_date')));
 	    $body .= sprintf("$fmt$fmt\n$fmt$fmt\n\n%s\n\n",
 			     "Category: ".db_result($result,0,'category_name'),
 			     'Assigned to: '.user_getname(db_result($result,0,'assigned_to')),
@@ -318,13 +318,13 @@ function format_support_details ($support_id, $ascii=false) {
 	// Generate formatted output
 	if ($ascii) {
 	    $out .= sprintf($fmt,	
-			    date($sys_datefmt,db_result($result, $i, 'date')),
+			    format_date($sys_datefmt,db_result($result, $i, 'date')),
 			    $user_link,
 			    util_unconvert_htmlspecialchars(db_result($result, $i, 'body')) );
 	} else {
 	    $out .= sprintf($fmt, util_get_alt_row_color($i),
 			    util_make_links(nl2br(db_result($result, $i, 'body'))),
-			    date($sys_datefmt,db_result($result, $i, 'date')),
+			    format_date($sys_datefmt,db_result($result, $i, 'date')),
 			    $user_link);
 	}
     }
@@ -350,9 +350,9 @@ function format_support_changes($changes) {
     if (user_isloggedin()) {
 	$user_id = user_getid();
 	$out_hdr = 'Changes by: '.user_getrealname($user_id).' <'.user_getemail($user_id).">\n";
-	$out_hdr .= 'Date: '.date($sys_datefmt,time()).' ('.user_get_timezone().')';
+	$out_hdr .= 'Date: '.format_date($sys_datefmt,time()).' ('.user_get_timezone().')';
     } else {
-	$out_hdr = 'Changes by: '.$user_email.'     Date: '.date($sys_datefmt,time());
+	$out_hdr = 'Changes by: '.$user_email.'     Date: '.format_date($sys_datefmt,time());
     }
 
 
@@ -430,7 +430,7 @@ function show_supporthistory ($support_id) {
 
 			} else if ($field == 'close_date') {
 
-				echo date($sys_datefmt,db_result($result, $i, 'old_value'));
+				echo format_date($sys_datefmt,db_result($result, $i, 'old_value'));
 
 			} else {
 
@@ -438,7 +438,7 @@ function show_supporthistory ($support_id) {
 
 		}
 		echo '</TD>'.
-			'<TD>'. date($sys_datefmt,db_result($result, $i, 'date')) .'</TD>'.
+			'<TD>'. format_date($sys_datefmt,db_result($result, $i, 'date')) .'</TD>'.
 			'<TD>'. db_result($result, $i, 'user_name'). '</TD></TR>';
 	}
 

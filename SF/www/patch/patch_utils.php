@@ -154,7 +154,7 @@ function show_patchlist ($result,$offset,$set='open') {
 			'&group_id='.db_result($result, $i, 'group_id').'">'.db_result($result, $i, 'patch_id').'</b></A></TD>'.
 			'<TD>'.db_result($result, $i, 'summary').'</TD>'.
 			'<TD>'.$patch_url.'</TD>'.
-			'<TD>'.date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
+			'<TD>'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
 			'<TD>'.util_user_link(db_result($result,$i,'assigned_to_user')).'</TD>'.
 			'<TD>'.util_user_link(db_result($result,$i,'submitted_by')).'</TD></TR>';
 
@@ -252,7 +252,7 @@ function mail_followup($patch_id,$more_addresses=false) {
 		if ($result2 && $rows > 0) {
 			$body .= "\n\nFollow-Ups:";
 			for ($i=0; $i<$rows;$i++) {
-				$body .= "\n\nDate: ".date($sys_datefmt,db_result($result2,$i,'date'));
+				$body .= "\n\nDate: ".format_date($sys_datefmt,db_result($result2,$i,'date'));
 				$body .= "\nBy: ".db_result($result2,$i,'user_name');
 				$body .= "\n\nComment:\n".util_unconvert_htmlspecialchars(db_result($result2,$i,'old_value'));
 				$body .= "\n-------------------------------------------------------";
@@ -313,7 +313,7 @@ function show_patch_details ($patch_id) {
 			echo '<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD>'.
 				nl2br( db_result($result, $i, 'old_value') ) .'</TD>'.
 				'</TD>'.
-				'<TD VALIGN="TOP">'.date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
+				'<TD VALIGN="TOP">'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
 				'<TD VALIGN="TOP">'.db_result($result, $i, 'user_name').'</TD></TR>';
 		}
 		echo '</TABLE>';
@@ -368,7 +368,7 @@ function show_patchhistory ($patch_id) {
 
 			} else if ($field == 'close_date') {
 
-				echo date($sys_datefmt,db_result($result, $i, 'old_value'));
+				echo format_date($sys_datefmt,db_result($result, $i, 'old_value'));
 
 			} else {
 
@@ -376,7 +376,7 @@ function show_patchhistory ($patch_id) {
 
 			}
 			echo '</TD>'.
-				'<TD>'.date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
+				'<TD>'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
 				'<TD>'.db_result($result, $i, 'user_name').'</TD></TR>';
 		}
 

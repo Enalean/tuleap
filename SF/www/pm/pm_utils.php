@@ -402,8 +402,8 @@ function pm_format_tasklist ($result,$result_taskdeps,$offset,$url,&$count) {
 			$row['project_task_id'].'</A></TD>'.
 			'<TD>'.$row['summary'].'</TD>'.
 			'<TD>'.$row['project_name'].'</TD>'.
-			'<TD>'.date('Y-m-d',$row['start_date']).'</TD>'.
-			'<TD>'. (($now>$row['end_date'])?'<B>* ':'&nbsp; ') . date('Y-m-d',$row['end_date']).'</TD>'.
+			'<TD>'.format_date('Y-m-d',$row['start_date']).'</TD>'.
+			'<TD>'. (($now>$row['end_date'])?'<B>* ':'&nbsp; ') . format_date('Y-m-d',$row['end_date']).'</TD>'.
 			'<TD>'.$row['user_name'].'</TD>'.
 			'<TD>'.sprintf("%10.2f",$row['hours']).'</TD>'.
 			'<TD>'.$row['percent_complete'].'%</TD>'.
@@ -517,7 +517,7 @@ function pm_show_task_details ($project_task_id) {
 			echo '
 			<TR BGCOLOR="'. util_get_alt_row_color ($i) .'">
 				<TD>'. util_make_links(nl2br(db_result($result, $i, 'old_value'))).'</TD>
-				<TD VALIGN="TOP">'.date($sys_datefmt,db_result($result, $i, 'date')).'</TD>
+				<TD VALIGN="TOP">'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</TD>
 				<TD VALIGN="TOP">'.db_result($result, $i, 'user_name').'</TD></TR>';
 		}
 		echo '</TABLE>';
@@ -567,11 +567,11 @@ function pm_show_task_history ($project_task_id) {
 
 			} else if ($field == 'start_date') {
 
-				echo date('Y-m-d',db_result($result, $i, 'old_value'));
+				echo format_date('Y-m-d',db_result($result, $i, 'old_value'));
 
 			} else if ($field == 'end_date') {
 
-				echo date('Y-m-d',db_result($result, $i, 'old_value'));
+				echo format_date('Y-m-d',db_result($result, $i, 'old_value'));
 
 			} else {
 
@@ -579,7 +579,7 @@ function pm_show_task_history ($project_task_id) {
 
 			}
 			echo '</TD>
-				<TD>'.date($sys_datefmt,db_result($result, $i, 'date')).'</TD>
+				<TD>'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</TD>
 				<TD>'.db_result($result, $i, 'user_name').'</TD></TR>';
 		}
 

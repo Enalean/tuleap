@@ -40,12 +40,12 @@ $result=db_query($sql);
 	<TR>
     		<TD><B>Start Date:</B>
 		&nbsp;
-		<?php echo date('Y-m-d', db_result($result,0,'start_date')); ?>
+		<?php echo format_date('Y-m-d', db_result($result,0,'start_date')); ?>
 		</TD>
 
 		<TD><B>End Date:</B>
 		&nbsp;
-		<?php echo date('Y-m-d', db_result($result,0,'end_date')); ?>
+		<?php echo format_date('Y-m-d', db_result($result,0,'end_date')); ?>
 		</TD>
 	</TR>
 	<TR>

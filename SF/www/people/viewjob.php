@@ -51,7 +51,7 @@ if ($group_id && $job_id) {
 
 		<TR><TD>
 			<B>Open Date:</B><BR>
-			'. date($sys_datefmt,db_result($result,0,'date')) .'
+			'. format_date($sys_datefmt,db_result($result,0,'date')) .'
 		</TD><TD>
 			<B>For Project:<BR>
 			<A HREF="/project/?group_id='. $group_id .'">'. db_result($result,0,'group_name') .'</A></B>

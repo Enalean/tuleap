@@ -31,7 +31,7 @@ if (db_numrows($result) > 0) {
 
 	<TR>
 		<TD><B>Submitted on:&nbsp;</B>
-		'. date($sys_datefmt,db_result($result,0,'open_date')) .'
+		'. format_date($sys_datefmt,db_result($result,0,'open_date')) .'
 		</TD>
 		<TD><FONT SIZE="-1">
 		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit Changes">

@@ -25,7 +25,7 @@ if (db_numrows($result) > 0) {
 		<H2>[ Patch #'.$patch_id.' ] '. db_result($result,0,'summary') .'</H2>
 
 	<TABLE CELLPADDING="0" WIDTH="100%">
-		<TR><TD COLSPAN="2"><B>Date:</B><BR>'.date($sys_datefmt,db_result($result,0,'open_date')).'</TD></TR>
+		<TR><TD COLSPAN="2"><B>Date:</B><BR>'.format_date($sys_datefmt,db_result($result,0,'open_date')).'</TD></TR>
 
 		<TR>
 			<TD><B>Submitted By:</B><BR>'.db_result($result,0,'submitted_by').'</TD>

@@ -177,7 +177,7 @@ if ($type_of_search == "soft") {
 				. db_result($result, $i, "msg_id")."\"><IMG SRC=\"/images/msg.gif\" BORDER=0 HEIGHT=12 WIDTH=10> "
 				. db_result($result, $i, "subject")."</A></TD>"
 				. "<TD>".db_result($result, $i, "user_name")."</TD>"
-				. "<TD>".date($sys_datefmt,db_result($result,$i,"date"))."</TD></TR>\n";
+				. "<TD>".format_date($sys_datefmt,db_result($result,$i,"date"))."</TD></TR>\n";
 		}
 		echo "</TABLE>\n";
 	}
@@ -224,7 +224,7 @@ if ($type_of_search == "soft") {
 				. db_result($result, $i, "bug_id")."\"><IMG SRC=\"/images/msg.gif\" BORDER=0 HEIGHT=12 WIDTH=10> "
 				. db_result($result, $i, "summary")."</A></TD>"
 				. "<TD>".db_result($result, $i, "user_name")."</TD>"
-				. "<TD>".date($sys_datefmt,db_result($result,$i,"date"))."</TD></TR>";
+				. "<TD>".format_date($sys_datefmt,db_result($result,$i,"date"))."</TD></TR>";
 		}
 		echo "</TABLE>\n";
 	}
@@ -269,7 +269,7 @@ if ($type_of_search == "soft") {
 				. db_result($result, $i, "support_id")."\"><IMG SRC=\"/images/msg.gif\" BORDER=0 HEIGHT=12 WIDTH=10> "
 				. db_result($result, $i, "summary")."</A></TD>"
 				. "<TD>".db_result($result, $i, "user_name")."</TD>"
-				. "<TD>".date($sys_datefmt,db_result($result,$i,"date"))."</TD></TR>";
+				. "<TD>".format_date($sys_datefmt,db_result($result,$i,"date"))."</TD></TR>";
 		}
 		echo "</TABLE>\n";
 	}
@@ -320,8 +320,8 @@ if ($type_of_search == "soft") {
 			    "&group_project_id=".db_result($result, $i, "group_project_id")."\"><IMG SRC=\"/images/msg.gif\" BORDER=0 HEIGHT=12 WIDTH=10> "
 				. db_result($result, $i, "summary")."</A></TD>"
 				. "<TD>".db_result($result, $i, "user_name")."</TD>"
-			        . "<TD>".date($sys_datefmt,db_result($result, $i, "start_date"))."</TD>"
-				. "<TD>".date($sys_datefmt,db_result($result,$i,"end_date"))."</TD></TR>";
+			        . "<TD>".format_date($sys_datefmt,db_result($result, $i, "start_date"))."</TD>"
+				. "<TD>".format_date($sys_datefmt,db_result($result,$i,"end_date"))."</TD></TR>";
 		}
 		echo "</TABLE>\n";
 	}

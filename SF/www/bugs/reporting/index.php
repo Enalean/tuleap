@@ -34,7 +34,7 @@ if ($group_id && user_ismember($group_id,"B2")) {
 
 		$result = db_query($sql);
 
-		$names[$counter-1]=date("m/d/y",($start))." to ".date("m/d/y",($end));
+		$names[$counter-1]=format_date("m/d/y",($start))." to ".format_date("m/d/y",($end));
 		$values[$counter-1]=db_result($result, 0,0);
 	    }
 
@@ -51,7 +51,7 @@ if ($group_id && user_ismember($group_id,"B2")) {
 
 		$result = db_query($sql);
 
-		$names[$counter-1]=date("m/d/y",($start))." to ".date("m/d/y",($end));
+		$names[$counter-1]=format_date("m/d/y",($start))." to ".format_date("m/d/y",($end));
 		$values[$counter-1]=db_result($result, 0,0);
 	    }
 
@@ -68,7 +68,7 @@ if ($group_id && user_ismember($group_id,"B2")) {
 
 		$result = db_query($sql);
 
-		$names[$counter-1]=date("m/d/y",($end));
+		$names[$counter-1]=format_date("m/d/y",($end));
 		$values[$counter-1]=db_result($result, 0,0);
 	    }
 

@@ -98,7 +98,7 @@ function display_docs($style,$group_id) {
 			print 	"<tr bgcolor=\"".util_get_alt_row_color($i)."\">"
 				."<td>".$row['docid']."</td>"
 				."<td><a href=\"index.php?docid=".$row['docid']."&mode=docedit&group_id=".$group_id."\">".$row['title']."</a></td>"
-				."<td>".date($sys_datefmt,$row['createdate'])."</td></tr>";
+				."<td>".format_date($sys_datefmt,$row['createdate'])."</td></tr>";
 			$i++;
 		}	
 		echo '</table>';

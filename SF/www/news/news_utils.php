@@ -95,7 +95,7 @@ function news_show_latest($group_id='',$limit=10,$show_summaries=true,$allow_sub
 	    if (!$limit) {
 
 		$return .= '<li><A HREF="http://'.$GLOBALS['sys_default_domain'].'/forum/forum.php?forum_id='. db_result($result,$i,'forum_id') .'"><B>'. db_result($result,$i,'summary') . '</B></A>';
-		$return .= ' &nbsp; <I>'. date($sys_datefmt,db_result($result,$i,'date')).'</I><br>';
+		$return .= ' &nbsp; <I>'. format_date($sys_datefmt,db_result($result,$i,'date')).'</I><br>';
 	    } else {
 		$return .= '
 				<A HREF="/forum/forum.php?forum_id='. db_result($result,$i,'forum_id') .'"><B>'. db_result($result,$i,'summary') . '</B></A>';
@@ -105,7 +105,7 @@ function news_show_latest($group_id='',$limit=10,$show_summaries=true,$allow_sub
                                                <BR>&nbsp;';
 		}
 		$return .= '&nbsp;&nbsp;&nbsp;<I>'. db_result($result,$i,'user_name') .' - '.
-		    date($sys_datefmt,db_result($result,$i,'date')) .' </I>'.
+		    format_date($sys_datefmt,db_result($result,$i,'date')) .' </I>'.
 		    $proj_name . $summ_txt;
 
 		$sql='SELECT famc.count as total '.
@@ -202,7 +202,7 @@ function news_foundry_latest($group_id=0,$limit=5,$show_summaries=true) {
 			$return .= '
 				<A HREF="/forum/forum.php?forum_id='. db_result($result,$i,'forum_id') .'"><B>'. db_result($result,$i,'summary') . '</B></A>
 				<BR><I>'. db_result($result,$i,'user_name') .' - '.
-					date($sys_datefmt,db_result($result,$i,'date')) . $proj_name . '</I>
+					format_date($sys_datefmt,db_result($result,$i,'date')) . $proj_name . '</I>
 				'. $summ_txt .'<HR WIDTH="100%" SIZE="1">';
 		}
 	}

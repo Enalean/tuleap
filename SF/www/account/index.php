@@ -33,7 +33,7 @@ to view your developer/consultant profiles and ratings.
 
 <TR valign=top>
 <TD>Member Since: </TD>
-<TD colspan="2"><B><?php print date($sys_datefmt,$row_user['add_date']); ?></B></TD>
+<TD colspan="2"><B><?php print format_date($sys_datefmt,$row_user['add_date']); ?></B></TD>
 </TR>
 <TR valign=top>
 <TD>User ID: </TD>

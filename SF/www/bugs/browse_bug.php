@@ -419,7 +419,7 @@ $result=db_query($sql);
   ================================================== */
 
 if ($pv) {
-    help_header('Bug Search Report - '.date($sys_datefmt,time()),false);
+    help_header('Bug Search Report - '.format_date($sys_datefmt,time()),false);
 } else {
     bug_header(array('title'=>'Browse Bugs '.$hdr));
 }

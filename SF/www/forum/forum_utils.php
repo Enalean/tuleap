@@ -60,7 +60,7 @@ function forum_header($params) {
 			} else {
 				echo '
 				<B>Posted By:</B> '.user_getname( db_result($result,0,'submitted_by')).'<BR>
-				<B>Date:</B> '. date($sys_datefmt,db_result($result,0,'date')).'<BR>
+				<B>Date:</B> '. format_date($sys_datefmt,db_result($result,0,'date')).'<BR>
 				<B>Summary:</B><A HREF="/forum/forum.php?forum_id='.db_result($result,0,'forum_id').'">'. db_result($result,0,'summary').'</A>
 				<P>
 				'. util_make_links( nl2br( db_result($result,0,'details')));
@@ -243,7 +243,7 @@ function show_thread($thread_id,$et=0) {
 
 			$ret_val .= db_result($result, $i, 'subject') .'</A></TD>'.
 				'<TD>'.db_result($result, $i, 'user_name').'</TD>'.
-				'<TD>'.date($sys_datefmt,db_result($result,$i,'date')).'</TD></TR>';
+				'<TD>'.format_date($sys_datefmt,db_result($result,$i,'date')).'</TD></TR>';
 			/*
 				Show the body/message if requested
 			*/
@@ -307,7 +307,7 @@ function show_submessages($thread_id, $msg_id, $level,$et=0) {
 
 			$ret_val .= db_result($result, $i, 'subject').'</A></TD>'.
 				'<TD>'.db_result($result, $i, 'user_name').'</TD>'.
-				'<TD>'.date($sys_datefmt,db_result($result,$i,'date')).'</TD></TR>';
+				'<TD>'.format_date($sys_datefmt,db_result($result,$i,'date')).'</TD></TR>';
 
 			/*
 				Show the body/message if requested

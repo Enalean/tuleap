@@ -6,6 +6,15 @@
 //
 // $Id$
 
+// This function returns a string of the date $value with the format $format and if this date is not set, return the default value $default_value
+function format_date($format,$value,$default_value = '-') {
+
+    if ( $value == 0 ) {
+        return $default_value;
+    } else {
+        return date($format,$value);
+    }
+}
 
 //LJ The localtime function does not exist in PHP3
 //LJ here is a way to mimic the function. Probably twice

@@ -78,7 +78,7 @@ function stats_sf_stats() {
 
 		for ($i=0;$i<$rows;$i++) {
 			//convert the dates and add to an array
-			$dates[$i]=date($sys_datefmt,db_result($result,$i,0));
+			$dates[$i]=format_date($sys_datefmt,db_result($result,$i,0));
 		}
 		GraphIt($dates,$count,'New Projects Added Each Week');
 	}
@@ -101,7 +101,7 @@ function stats_sf_stats() {
 
 		for ($i=0;$i<$rows;$i++) {
 			//convert the dates and add to an array
-			$dates[$i]=date($sys_datefmt,db_result($result,$i,0));
+			$dates[$i]=format_date($sys_datefmt,db_result($result,$i,0));
 		}
 		GraphIt($dates,$count,'New Users Added Each Week');
 	}

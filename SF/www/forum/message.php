@@ -46,7 +46,7 @@ if ($msg_id) {
 
 	echo "<TR><TD BGCOLOR=\"E3E3E3\">\n";
 	echo "BY: ".db_result($result,0, "user_name")."<BR>";
-	echo "DATE: ".date($sys_datefmt,db_result($result,0, "date"))."<BR>";
+	echo "DATE: ".format_date($sys_datefmt,db_result($result,0, "date"))."<BR>";
 	echo "SUBJECT: ". db_result($result,0, "subject")."<P>";
 	echo util_make_links(nl2br(db_result($result,0, 'body')));
 	echo "</TD></TR></TABLE>";

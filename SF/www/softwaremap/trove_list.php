@@ -279,7 +279,7 @@ for ($i_proj=1;$i_proj<=$querytotalcount;$i_proj++) {
 		print '</TD>'."\n".'<TD align="right"><FONT face="arial, helvetica" size="3">'; // now the right side of the display
 		print 'Activity Percentile: <B>'.$row_grp['percentile'].'</B>';
 		print '<BR>Activity Ranking: <B>'.$row_grp['ranking'].'</B>';
-		print '<BR>Register Date: <B>'.date($sys_datefmt,$row_grp['register_time']).'</B>';
+		print '<BR>Register Date: <B>'.format_date($sys_datefmt,$row_grp['register_time']).'</B>';
 		print '</TD></TR></TABLE>';
 		print '<HR>';
 	} // end if for row and range chacking
