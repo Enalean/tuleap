@@ -361,6 +361,16 @@
         <revremark>Added User Group section in the Project Administration chapter.
         Added Permissions section in the File Release chapter.</revremark>
       </revision>
+      <revision>
+        <revnumber>2.6.12</revnumber>
+
+        <date>10-Nov-2004</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Added documentation on patch from ST (bind tracker fields to 
+        user groups) in the Tracker chapter.</revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--

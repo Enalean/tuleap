@@ -2330,6 +2330,14 @@ width="14.5cm" />
 	    Submitters</emphasis>: the full list of people who once
 	    submitted an artifact to the project.</para>
 	  </listitem>
+	  <listitem>
+	    <para><emphasis role="bold">Project Defined User Groups</emphasis>: 
+            you can bind a select box to any of the user groups that
+            are defined by the project. To see how to define such
+            user groups refer to <xref linkend="UserGroups" />.
+            </para>
+	  </listitem>
+	   
 	</itemizedlist>
 
       </section>
