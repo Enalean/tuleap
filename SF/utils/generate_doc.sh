@@ -71,6 +71,9 @@ then
     fi
 fi
 
+mkdir ../../html > /dev/null
+mkdir ../../html/en_US > /dev/null
+
 $CMDDIR/xml2html.sh CodeX_User_Guide.xml ../../html/en_US/ >/tmp/log_xml2html_$$ 2>&1
 if [ $? != 0 ]
 then
@@ -89,6 +92,9 @@ fi
 OLD_PATH=${PATH}
 export PATH=${PATH}:${BASEDIR}/user_guide/cmd
 
+mkdir $BASEDIR/user_guide/pdf > /dev/null
+mkdir $BASEDIR/user_guide/pdf/en_US > /dev/null
+
 $CMDDIR/xml2pdf.sh CodeX_User_Guide.xml $BASEDIR/user_guide/pdf/en_US/CodeX_User_Guide_new.pdf >/tmp/log_xml2pdf_$$ 2>&1 
 if [ $? != 0 ]
 then
@@ -106,7 +112,7 @@ fi
 export PATH=${OLD_PATH}
 
 cd $BASEDIR/user_guide/pdf/en_US
-cp -f CodeX_User_Guide.pdf CodeX_User_Guide_old.pdf
+cp -f CodeX_User_Guide.pdf CodeX_User_Guide_old.pdf > /dev/null
 mv CodeX_User_Guide_new.pdf CodeX_User_Guide.pdf
 cd "$CURRENTDIR"
 exit 0
