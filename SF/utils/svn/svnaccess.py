@@ -95,11 +95,11 @@ def check_read_access(username, svnrepo, svnpath):
     perm = ''
     path = '/'+svnpath
     while True:
-        if SVNACCESS[username].has_key(path):
+        if SVNACCESS.has_key(username) and SVNACCESS[username].has_key(path):
             perm = SVNACCESS[username][path]
             #print "match: SVNACCESS[",username,"][",path,"]",perm
             break
-        elif SVNACCESS['*'].has_key(path):
+        elif SVNACCESS.has_key('*') and SVNACCESS['*'].has_key(path):
             perm = SVNACCESS['*'][path]
             #print "match: SVNACCESS[*][",path,"]",perm
             break
