@@ -12,7 +12,6 @@ if ($SERVER_NAME != 'localhost') {
 }
 
 require ('pre.php');
-require ($DOCUMENT_ROOT.'/include/vote_function.php');
 require ($DOCUMENT_ROOT.'/include/features_boxes.php');
 require ($DOCUMENT_ROOT.'/include/stats_function.php');
 require ($DOCUMENT_ROOT.'/include/snippet_caching.php');

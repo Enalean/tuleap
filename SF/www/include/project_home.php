@@ -6,7 +6,6 @@
 //
 // $Id$
 
-require ('vote_function.php');
 require ('vars.php');
 require ($DOCUMENT_ROOT.'/news/news_utils.php');
 require ('trove.php');
