@@ -413,9 +413,9 @@
 	list. Using this feature you can easily test various sorting
 	strategies.</para>
 
-	<note><para>Note:Sorting criteria, like selection criteria,
+	<para><note>Note:Sorting criteria, like selection criteria,
 	are also saved into your preferences and the same sorting
-	criterion is re-used in subsequent bug queries.</para></note>
+	criterion is re-used in subsequent bug queries.</note></para>
 
       </section>
 
@@ -658,14 +658,15 @@
     </section>
 
     <section id="BugAttachments">
-      <title>Bug Attachments</title> <para>In addition to comments,
-      the CodeX Bug Tracking System allows you to attach virtually any
-      piece of information to a bug in the form of a file. Typical
-      examples of bug attachments are application screen shots in PNG,
-      GIF, JPEG or whatever image format is appropriate; it can also
-      be core dumps, a binary image of program that crashed or even a
-      simple text file showing a stack trace or an error
-      message.</para>
+      <title>Bug Attachments</title>
+
+      <para>In addition to comments, the CodeX Bug Tracking System
+      allows you to attach virtually any piece of information to a bug
+      in the form of a file. Typical examples of bug attachments are
+      application screen shots in PNG, GIF, JPEG or whatever image
+      format is appropriate; it can also be core dumps, a binary image
+      of program that crashed or even a simple text file showing a
+      stack trace or an error message.</para>
 
       <para>Bug attachments can be of any type (image, video, sound,
       text, binary&hellip;) and a comment field can be optionally used
@@ -773,6 +774,22 @@
 	</mediaobject>
       </figure>
     </section>
+
+    <section id="BugCreateTask">
+      <title>Deriving a New Task from a Bug</title>
+
+      <para>When a bug submitted to a project happens to be a big work
+      to fix it is not unusual to create a new task in the CodeX Task
+      Manager to plan and track this work.</para>
+
+      <para>CodeX makes it very easy to derive a new task from an
+      existing bug. Just click on the 'Create Task' item in the CodeX
+      BTS menu bar at the top of the screen. A new task form will show
+      up with  some fields  pre-filled with values derived from
+      the bug form. You can then modify the proposed values, and
+      validate the new task.</para>
+    </section>
+    
   </section>
 
   <section id="BugEmailNotification">
@@ -878,28 +895,28 @@
 
             <tbody>
               <row>
-                <entry>Field Usage Management</entry>
+	    <entry><link linkend="BugFieldUsageManagement">Field Usage Management</link></entry>
                 <entry>Only available to project administrators and
                 project members with Bug Admin. permission on the
                 BTS.</entry>
               </row>
 
               <row>
-                <entry>Field Values Management</entry>
+                <entry><link linkend="BugFieldValuesManagement">Field Values Management</link></entry>
                 <entry>Same as above.</entry>
               </row>
 
               <row>
-                <entry>Bug Reports</entry>
+                <entry><link linkend="BugReports">Bug Reports</link></entry>
 
 	        <entry>Only Project administrators can define project
-	        wide bug report templates that will be available to
+	        wide bug reports that will be available to
 	        all users. All other CodeX users (except anonymous
 	        users) can define personal bug reports.</entry>
               </row>
 
               <row>
-                <entry>Email Notification Settings</entry>
+                <entry><link linkend="BugEmailNotificationSettings">Email Notification Settings</link></entry>
 
 	        <entry>Only Project administrators can add email
 	        addresses in the global email notification
@@ -910,7 +927,7 @@
               </row>
 
               <row>
-                <entry>Other Settings</entry>
+                <entry><link linkend="BugOtherConfigurationSettings">Other Configuration Settings</link></entry>
 
 	        <entry>For project administrators and project members
 	        with Bug Admin. permission on the BTS</entry>
@@ -921,7 +938,7 @@
 
 
 
-    <section id="FieldUsageManagement">
+    <section id="BugFieldUsageManagement">
       <title>Field Usage Management</title>
 
       <para>When a project is first created, its bug tracking system
@@ -935,7 +952,11 @@
 
       <para>The CodeX Bug Tracker offers a list of about 30 fields
       that you can choose from to customize your project BTS. They are
-      called 'Standard Fields'. Although the list of standard fields is quite rich, there might still be cases when one would like to use other fields in their own bug tracker. Should this happen, there are two ways to solve the problem:</para>
+      called 'Standard Fields'. Although the list of standard fields
+      is quite rich, there might still be cases when one would like to
+      use other fields in their own bug tracker. Should this happen,
+      there are two ways to solve the problem:</para>
+
       <procedure>
 	<step>
 	  <para><emphasis role="bold">Ask the Site
@@ -958,38 +979,136 @@
 	</step>
       </procedure>
 
-      <figure id="FigureFieldUsageScreenOfACodeXHostedProject">
-	<title>Field Usage screen of a CodeX hosted project</title>
 
-	<mediaobject>
-	  <imageobject>
-	    <imagedata format="PNG"
-		       fileref="../../screenshots/en_US/sc_bugfieldusage.png" width="15.3cm" />
-	  </imageobject>
-	</mediaobject>
-      </figure>
+      <section id="BugFieldList">
+	<title>Bug Field List</title>
 
-      <para>To decide what field to use and what field not to use select the
-        item &#34;Manage Field Usage&#34; on the welcome page of the BTS
-        Administration module. The Field Usage screen (<xref
-							     linkend="FigureFieldUsageScreenOfACodeXHostedProject" />) shows you
-        the full list of bug fields available on CodeX. The list is divided in
-        3 parts:</para>
+	<para>To decide what field to use and what field not to use
+	select the item &#34;Manage Field Usage&#34; on the welcome
+	page of the BTS Administration module. The Field Usage screen
+	(<xref linkend="FigureBugFieldUsageScreenOfACodeXHostedProject"
+	/>) shows you the full list of bug fields available on
+	CodeX. The list is divided in 3 parts:</para>
 
-      <procedure>
-	<step>
-	  <para>the list of bug fields currently used by this
+	<procedure>
+	  <step>
+	    <para>the list of bug fields currently used by this
 	specific project</para>
-	</step>
-	
-	<step>
-	  <para>the list of unused standard fields</para>
-	</step>
+	  </step>
+	  
+	  <step>
+	    <para>the list of unused standard fields</para>
+	  </step>
+	  
+	  <step>
+	    <para>the list of unused custom fields</para>
+	  </step>
+	</procedure>
 
-	<step>
-	  <para>the list of unused custom fields</para>
-	</step>
-      </procedure>
+
+	<para>Information displayed on the Bug Field list page are as follows:</para>
+
+	<itemizedlist mark="bullet">
+	  <listitem>
+	    <para><emphasis role="bold">Field Label</emphasis>: the
+	    name of the field.  To change the Status of a field
+	    (Used/Unused) as well as other parameters simply click on
+	    the field name.</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="bold">Type</emphasis>:bug fields can be of several types:</para>
+
+	    <itemizedlist mark="dash" spacing="compact">
+	      <listitem>
+		<para><emphasis role="underline">Select
+		Box</emphasis>: this field will take its value from a
+		predefined list of values that can be defined by the
+		Project Adminstrator</para>
+	      </listitem>
+	      <listitem>
+		<para><emphasis role="underline">Text Field</emphasis>
+		and <emphasis role="underline">Text Area</emphasis>:
+		allows the user to enter free text either in a
+		one-line text field or in a multi-line text
+		area.</para>
+	      </listitem>
+	      <listitem>
+		<para><emphasis role="underline">Date Field</emphasis>:
+		fields that only accept ISO formatted dates (YYYY-MM-DD)</para>
+	      </listitem>
+	      
+	    </itemizedlist>
+
+	    <para><emphasis role="bold">Important
+	    Remark</emphasis>: Some fields appear twice in the
+	    list. Although they have the same name they actually come
+	    with a different type. Choose the type that best suits
+	    your needs: predefined values ('Select Box') or free text
+	    ('Text Field').</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Rank on Screen</emphasis>: the
+	    rank number allows you to place the field with respect to
+	    the others both in the bug submission form and in the bug
+	    update form. The fields with smaller values will appear
+	    first on the screen. The rank values doesn't have to be
+	    consecutive values. It is a good idea to use values like
+	    10,20,30,... so that it is easy for you to insert new
+	    fields in the future without having to renumber all the
+	    fields.</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Scope</emphasis>:</para>
+	    <itemizedlist mark="dash" spacing="compact">
+	      <listitem>
+		<para><emphasis role="underline">System</emphasis>:
+		these fields have a limited level of
+		customization. System fields of type 'Select Box' have
+		a fixed number of values defined globally for the
+		entire site. You can only change the label and the
+		rank of these existing values but you can't create any
+		new one.</para>
+	      </listitem>
+	      <listitem>
+		<para><emphasis role="underline">Project</emphasis>:
+		these fields are fully customizable. You can
+		create/delete field values, make it appear or not on
+		the bug forms, etc.</para>
+	      </listitem>
+	    </itemizedlist>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Status</emphasis>:</para>
+	    <itemizedlist mark="dash" spacing="compact">
+	      <listitem>
+		<para><emphasis role="underline">Required</emphasis>: required fields are always in use. They are often fields considered vital for a Bug Tracking System  like Bug ID, bug submitter,etc.</para>
+	      </listitem>
+	      <listitem>
+		<para><emphasis role="underline">Used</emphasis>: the field is used by your project.</para>
+	      </listitem>
+	      <listitem>
+		<para><emphasis role="underline">Unused</emphasis>: the field is not used by your project.</para>
+	      </listitem>
+	    </itemizedlist>
+	  </listitem>
+	</itemizedlist>
+
+
+	<figure id="FigureBugFieldUsageScreenOfACodeXHostedProject">
+	  <title>Field Usage screen of a CodeX hosted project</title>
+
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata format="PNG"
+			 fileref="../../screenshots/en_US/sc_bugfieldusage.png" width="15.3cm" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+      </section>
 
 
       <section id="StandardBugFields">
@@ -1029,10 +1148,23 @@
 	  </listitem>
 	  
 	  <listitem>
-	    <para><emphasis role="bold">Display this field ...</emphasis>: you
-            can decide on which screens you want this field to show up. This
-            setting can also be changed at any time without any adverse effect
-            on the project database.</para>
+	    <para><emphasis role="bold">Display this field
+	    ...</emphasis>: you can decide if you want to see this
+	    field to appear on the bug submission form for project
+	    members and non project members. In general non project
+	    members are given access to restricted set of fields when
+	    they submit a bug. As an example they are not supposed to
+	    know how critical a bug is ('Severity' field), how to
+	    prioritize it ('Priority' field) (or whom a bug should be
+	    assigned to ('Assigned To' field). Therefore these fields
+	    should probably not appear on non project members submission
+	    form.</para>
+
+	    <para>Finally, some fields have fixed display settings and
+	    they always or never appear on the submission form. For
+	    instance the 'Bug ID' field never appears on the bug
+	    submission form because by definition a bug not yet
+	    submitted has no Bug ID.</para>
 	    
 	    <figure id="FigureBugFieldUsageSettings">
 	      <title>Bug field usage settings</title>
@@ -1071,12 +1203,12 @@
 	  </listitem>
 	  
 	  <listitem>
-	    <para>5 Date Fields: fields that accepts ISO formatted date values (YYYY-MM-DD).</para>
+	    <para>5 Date Fields: fields accepting ISO formatted dates (YYYY-MM-DD).</para>
 	  </listitem>
 	</itemizedlist>
 
 	<para>Compared to standard bug fields (see <xref
-	linkend="StandardBugFields" />, custom field settings offer
+	linkend="StandardBugFields" />), custom field settings offer
 	additional customization capabilities:</para>
       
 	<itemizedlist mark="bullet" spacing="compact">
@@ -1121,123 +1253,212 @@
 
     </section>
 
-    <section id="FieldValuesManagement">
-      <title>Field values management</title>
+    <section id="BugFieldValuesManagement">
+      <title>Field Values Management</title>
 
-      <para>Once you have configured the list of bug fields to be used by
-        your project BTS you probably want to define a set of predefined
-        values for some of these fields. This is the set of values that will
-        show up in the pull-down menus when a bug is submitted or updated.</para>
+      <para>Once the list of bug fields to be used in your project BTS
+      has been defined, the next step is to define a set of predefined
+      values for the fields of type 'Select Box'. These values will
+      show up in the pull-down menus when a bug is submitted or
+      updated.</para>
 
-      <para>To configure values assigned to your used bug fields select the
-        item &#34;Manage Field Values&#34; on the welcome page of the Bug
-        Administration or select the &#34;Field Values&#34; item from the Bug
-        Administration menu bar at the top of the screen. The list of used
-        (and required) fields which type is a pull-down menu will appear on
-        the screen. Other field types like number fields or text fields (e.g.
-        Effort or Summary) do not appear in this list because setting a list
-        of predefined values for these field types doesn&#39;t make any sense.
-        In addition you&#39;ll always see required bug fields like
-        &#34;Comment Type&#34; and &#34;Canned Response&#34; items in the
-        list. (See <xref linkend="FigureListOfAProjectBugFieldsWhichValuesCanBeDefined" />)</para>
+      <section id="BugFieldValuesFieldList">
+	<title>Bug Fields with Customizable Values</title>
 
-      <figure id="FigureListOfAProjectBugFieldsWhichValuesCanBeDefined">
-	<title>List of a project bug fields which values can be defined</title>
+	<para>To configure values assigned to your used bug fields
+	select the item &#34;Manage Field Values&#34; on the welcome
+	page of the Bug Administration or select the &#34;Field
+	Values&#34; item from the Bug Administration menu bar at the
+	top of the screen.</para>
 
-	<mediaobject>
-	  <imageobject>
-	    <imagedata format="PNG"
-		       fileref="../../screenshots/en_US/sc_bugfieldvaluesmgt.png" width="13cm" />
-	  </imageobject>
-	</mediaobject>
-      </figure>
+	<para>The list of used (and required) fields which type is a
+	pull-down menu will appear on the screen. Other field types
+	like number fields or text fields (e.g.  Effort or Summary) do
+	not appear in this list because setting a list of predefined
+	values for these field types doesn&#39;t make any sense.  In
+	addition you&#39;ll always see required bug fields like
+	&#34;Comment Type&#34; and &#34;Canned Response&#34; items in
+	the list. (See <xref
+	linkend="FigureBugFieldListWithUserDefinableValues"
+	/>)</para>
 
-      <para>A click on any of the listed fields will bring you to the list
-        of available values for this field (<xref
-						  linkend="FigureListOfValuesForBugFieldStatus" />). Available values
-        have 3 possible statuses:</para>
+	<figure id="FigureBugFieldListWithUserDefinableValues">
+	  <title>Bug field list  with user definable values</title>
 
-      <itemizedlist mark="bullet"
-		    spacing="compact">
-	<listitem>
-	  <para><emphasis role="bold">Active</emphasis>: the value is
-            currently visible in the pull-down menus and can be assigned to
-            the corresponding bug field.</para>
-	</listitem>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata format="PNG"
+			 fileref="../../screenshots/en_US/sc_bugfieldvaluesmgt.png" width="13cm" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
 
-	<listitem>
-	  <para><emphasis role="bold">Hidden</emphasis>: the value is
-            currently not visible in the pull-down menu. However if this value
-            was used in the past by any of your project bugs, it will continue
-            to show up OK for this specific bug.</para>
-	</listitem>
+	<para>Information displayed on this page are as follows:</para>
+	<itemizedlist mark="bullet" spacing="compact">
+	  <listitem>
+	    <para><emphasis role="bold">Field Label</emphasis>: the
+	    name of the field. Click on this name to view the list of
+	    values for this field.</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="bold">Description</emphasis>: what
+	    this field is about</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="bold">Scope</emphasis>:</para>
+	    <itemizedlist mark="dash" spacing="compact">
+	      <listitem>
+		<para><emphasis role="underline">System</emphasis>:
+		these fields have a limited level of
+		customization. System fields of type 'Select Box' have
+		a fixed number of values defined globally for the
+		entire site. You can only change the label of system
+		defined values but you cannot create new ones.</para>
+	      </listitem>
+	      <listitem>
+		<para><emphasis role="underline">Project</emphasis>:
+		these fields are fully customizable. You can create
+		new field values as well as hide/unhide existing
+		ones.</para>
+	      </listitem>
+	    </itemizedlist>
+	  </listitem>
+	</itemizedlist>
+      </section>
 
-	<listitem>
-	  <para><emphasis role="bold">Permanent</emphasis>: this value has
-            been defined for the entire CodeX system and it cannot be hidden.
-            It is active for all CodeX projects and will remain as is forever.
-            Well, at least until the CodeX Team decides otherwise</para>
-	</listitem>
-      </itemizedlist>
 
-      <para><xref linkend="FigureListOfValuesForBugFieldStatus" /> shows the
-        list of available values for the Status bug field. The status field
-        was chosen on purpose. Not only is the Status field a required field
-        of the CodeX BTS, but it also comes with set of predefined values that
-        are available to all CodeX projects. By default only &#34;Open&#34;
-        and &#34;Closed&#34; values are active (and permanent in this case)
-        but there is a series of 7 other values (Accepted, Analyzed, etc.)
-        that you can choose from if you want to have a finer grain Status
-        field.</para>
+      <section id="BugBrowsingBugFieldValues">
+	<title>Browsing Bug Field Values</title>
 
-      <para>Of course you are free to add your own values to the Status
-        field. This is actually what has been done for this particular
-        project: the Status value &#34;Assigned&#34; as been added to the list
-        of active values. However, in order to keep a certain harmony from one
-        CodeX project to another, we highly recommend that you use the list of
-        predefined status values as much as you can before creating new ones.</para>
+	<para>A click on any of the bug fields with user-definable
+	values (see <xref linkend="BugFieldValuesFieldList" />) will
+	bring you to the list of existing values for this field (see <xref
+	linkend="FigureListOfValuesForBugFieldStatus" />).</para>
 
-      <figure id="FigureListOfValuesForBugFieldStatus">
-	<title>List of values for the 'Status' bug field</title>
+	<para>The table of values shows tha following inormation:</para>
 
-	<mediaobject>
-	  <imageobject>
-	    <imagedata format="PNG"
-		       fileref="../../screenshots/en_US/sc_bugfieldvalues.png" width="13cm" />
-	  </imageobject>
-	</mediaobject>
-      </figure>
 
-      <para>To add a value use the form right below the list of field values
-        (not shown on <xref linkend="FigureListOfAProjectBugFieldsWhichValuesCanBeDefined" />). To
-        modify the status of a given value from Active to Hidden (or
-        vice-versa) simply click on the label of the value (see <xref
-								      linkend="FigureUpdatingAFieldValue" />).</para>
+	<itemizedlist mark="dash" spacing="compact">
+	  <listitem>
+	    <para><emphasis role="bold">ID</emphasis> (optional): the ID
+	    column is only shown for fields which have
+	    a 'System' scope. For this type of field the ID often
+	    carry a semantic meaning and if you redefine the label of
+	    a value associated with a given ID it is important
+	    that you know about the ID.</para>
 
-      <figure id="FigureUpdatingAFieldValue">
-	<title>Setting a Bug field value</title>
+	    <para>As an example the 'Severity' field has 9 possible
+	    values and the bugs with the highest ID are always
+	    considered as the most critical bug by the system. So it
+	    would be a bad idea to redefine the value label for ID 9
+	    to something like 'Very Minor' :-) but it is ok to
+	    redefine it as 'Fatal'</para>
+	  </listitem>
 
-	<mediaobject>
-	  <imageobject>
-	    <imagedata format="PNG"
-		       fileref="../../screenshots/en_US/sc_bugfieldvalueupdate.png" width="12cm" />
-	  </imageobject>
-	</mediaobject>
-      </figure>
+	  <listitem>
+	    <para><emphasis role="bold">Value Label</emphasis>: text
+	    label of the value as shown in the select box. Click on
+	    this label to modify the value settings (see <xref
+	    linkend="BugUpdatingaBugFieldValue" />)</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="bold">Description</emphasis>:
+	    meaning of the value</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="bold">Rank</emphasis>: defines the
+	    order of the field values in the select box. The smaller
+	    values appear first in the select box.
+</para>
+	  </listitem>
 
-      <para>From this screen you can change the following attributes of the
-        field value:</para>
+	  <listitem>
+	    <para><emphasis role="bold">Status</emphasis>:</para>
 
-      <itemizedlist mark="bullet"
-		    spacing="compact">
-	<listitem>
-	  <para><emphasis role="bold">Value</emphasis>: change the value
+	    <itemizedlist mark="dash" spacing="compact">
+	      <listitem>
+		<para><emphasis role="underline">Active</emphasis>:
+		the value is currently visible in the pull-down menus
+		and can be assigned to the corresponding bug
+		field.</para>
+	      </listitem>
+	      
+	      <listitem>
+		<para><emphasis role="underline">Hidden</emphasis>:
+		the value is currently not visible in the pull-down
+		menu. However if this value was used in the past by
+		any of your project bugs, it will continue to show up
+		OK for this specific bug.</para>
+	      </listitem>
+	      
+	      <listitem>
+		<para><emphasis role="underline">Permanent</emphasis>:
+		this value has been defined for the entire CodeX
+		system and it cannot be hidden.  It is active for all
+		CodeX projects and will remain as is forever.  Well,
+		at least until the CodeX Team decides otherwise</para>
+	      </listitem>
+	    </itemizedlist>
+	  </listitem>
+ 
+	</itemizedlist>
+	
+	<para><xref linkend="FigureListOfValuesForBugFieldStatus" />
+	shows the list of available values for the Status bug
+	field. The status field was chosen on purpose. Not only is the
+	Status field a required field of the CodeX BTS, but it also
+	comes with set of predefined values that are available to all
+	CodeX projects. By default only &#34;Open&#34; and
+	&#34;Closed&#34; values are active (and permanent in this
+	case) but there is a series of 7 other values (Accepted,
+	Analyzed, etc.)  that you can choose from if you want to have
+	a finer grain Status field.</para>
+
+	<para>Of course you are free to add your own values to the
+	Status field. This is actually what has been done for this
+	particular project: the Status value &#34;Assigned&#34; as
+	been added to the list of active values. However, in order to
+	keep a certain harmony from one CodeX project to another, we
+	highly recommend that you use the list of predefined status
+	values as much as you can before creating new ones.</para>
+
+	<figure id="FigureListOfValuesForBugFieldStatus">
+	  <title>List of values for the 'Status' bug field</title>
+	  
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata format="PNG"
+			 fileref="../../screenshots/en_US/sc_bugfieldvalues.png" width="13cm" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+      </section>
+
+      <section id="BugCreatingaBugFieldValue">
+	<title>Creating a Bug Field Value</title>
+	
+	<para>To add a value use the form right below the list of
+	field values (not shown on <xref
+	linkend="FigureBugFieldListWithUserDefinableValues" />).</para>
+
+      </section>
+
+      <section id="BugUpdatingaBugFieldValue">
+	<title>Updating a Bug Field Value</title>
+	
+	<para>From the screen showing the list of values for a given field (see <xref
+	linkend="FigureBugFieldListWithUserDefinableValues" />) screen you can change the properties of a bug field value:</para>
+
+	<itemizedlist mark="bullet" spacing="compact">
+	  <listitem>
+	    <para><emphasis role="bold">Value</emphasis>: change the value
             itself. The value typed here will appear as is in the pull-down
             menu.</para>
-	</listitem>
-
-	<listitem>
-	  <para><emphasis role="bold">Rank</emphasis>: a number that allows
+	  </listitem>
+	  
+	  <listitem>
+	    <para><emphasis role="bold">Rank</emphasis>: a number that allows
             you to specify where you want this value to appear in the list of
             all active values. The values with smaller rank are displayed
             first. When the &#34;None&#34; value is available for this bug
@@ -1245,26 +1466,40 @@
             small because by convention &#34;None&#34; always appear at the
             top of the pull-down menu. Please be a good CodeX citizen and
             choose rank numbers higher than 10 for your own values.</para>
-	</listitem>
-
-	<listitem>
-	  <para><emphasis role="bold">Status</emphasis>: Active or Hidden.
+	  </listitem>
+	  
+	  <listitem>
+	    <para><emphasis role="bold">Status</emphasis>: Active or Hidden.
             As explained above going from one to the other in the course of
             the project life has no negative impact on the bug database.</para>
-	</listitem>
-
-	<listitem>
-	  <para><emphasis role="bold">Description</emphasis>: says a bit
+	  </listitem>
+	  
+	  <listitem>
+	    <para><emphasis role="bold">Description</emphasis>: says a bit
             more about the meaning of this value.</para>
-	</listitem>
-      </itemizedlist>
+	  </listitem>
+	</itemizedlist>
 
-      <para><tip><title>Tip: Leave some space between rank numbers</title><para>Whether
-        for Fields or Field Values remember to use large numbers (in the
-        hundreds or the thousands like 100, 200, 300,..) when you create new
-        values. By doing so you&#39;ll make your life easier if you ever want
-        to insert new values in between existing ones in the future. And avoid
-        a tedious renumbering of the existing items.</para></tip></para>
+	<figure id="FigureUpdatingABugFieldValue">
+	  <title>Setting a Bug field value</title>
+	  
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata format="PNG"
+			 fileref="../../screenshots/en_US/sc_bugfieldvalueupdate.png" width="12cm" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+	<para><tip><title>Tip: Leave some space between rank
+	numbers</title><para>Whether for Fields or Field Values
+	remember to use large numbers (in the hundreds or the
+	thousands like 100, 200, 300,..) when you create new
+	values. By doing so you&#39;ll make your life easier if you
+	ever want to insert new values in between existing ones in the
+	future. And avoid a tedious renumbering of the existing
+	items.</para></tip></para>
+      </section>
     </section>
 
     <section id="BugReportManagement">
@@ -1297,6 +1532,179 @@
         the values you are interested in, click on the browse button and then
         save the entire query with the CodeX bookmarking mechanism (see tip in
         <xref linkend="SelectionCriteria" />). And voila!</para></tip></para>
+
+      <section id="BugReportBrowsing">
+	<title>Browsing Bug Reports</title>
+
+	<para>Clicking on the 'Bug Reports' item in the Bug
+	Administration menu bar at the top of the page displays the
+	list of available bug reports (see <xref
+	linkend="FigureBugReportBrowsing" />) with the following
+	information:</para>
+
+	<itemizedlist mark="bullet"
+		      spacing="compact">
+	  <listitem>
+	    <para><emphasis role="bold">ID</emphasis>: a number that
+	    uniquely identify the bug report. A click on the report ID
+	    brings you to the bug report configuration screen (see <xref linkend="BugReportSetting" />).</para>
+	  </listitem>
+	  
+	  <listitem>
+	    <para><emphasis role="bold">Report Name</emphasis>: the
+	    report short name as it will appear in the bug report
+	    select box when you'll be using the bug browsing screen
+	    (e.g. Simple Report, QA report, Monthly Report&hellip;).</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Description</emphasis>: a longer description of the bug report.</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="bold">Scope</emphasis>:</para>
+
+	    <itemizedlist mark="dash" spacing="compact">
+	      <listitem>
+		<para><emphasis role="underline">Project</emphasis>:
+		this report will be usable by all project
+		members. Only project administrators can define
+		project-wide reports.</para>
+	      </listitem>
+	      
+	      <listitem>
+		<para><emphasis
+		role="underline">Personal</emphasis>: this report will
+		be usable by its creator only.</para>
+	      </listitem>
+	    </itemizedlist>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Delete?</emphasis>: click the
+	    trash icon to delete the report. Project-wide reports can
+	    only be deleted by project administrators.</para>
+	  </listitem>
+
+	</itemizedlist>
+
+	<figure id="FigureBugReportBrowsing">
+	  <title>List of bug reports from the CodeX project</title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata format="PNG"
+			 fileref="../../screenshots/en_US/sc_bugreportbrowsing.png" width="14.3cm" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+      </section>
+
+      <section id="BugReportSetting">
+	<title>Bug Report Setting</title>
+
+	<para>After you click on a report ID in the bug report list
+	(see <xref linkend="BugReportBrowsing" />, the bug report
+	setting screen appears (see <xref
+	linkend="FigureBugReportSetting" />). This screen allows you
+	to define what bug fields you'd like to see in your bug report
+	and at what place, both as search criteria and in the list of
+	bugs retrieved from the database (called bug search results
+	table) .</para>
+
+	<para>Information available on this screen are as follows:</para>
+
+	<itemizedlist mark="bullet"
+		      spacing="compact">
+	  <listitem>
+	    <para><emphasis role="bold">Name</emphasis>: each report
+	    must be given a name. This name must not be too long as it
+	    will appear in a select box in the bug browsing module
+	    when you are asked to choose what bug report you want to
+	    use to query your bug database.</para>
+	  </listitem>
+	  
+	  <listitem>
+	    <para><emphasis role="bold">Scope</emphasis> (optional):
+	    project administrators can define project-wide reports
+	    that will be made available to all users. Non project
+	    administrators can only define personal bug report.</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Description</emphasis>: a longer description of the report.</para>
+	  </listitem
+>
+	  <listitem>
+	    <para><emphasis role="bold">Field selection</emphasis>:
+	    the bug field table shows all the bug fields that are
+	    currently in use in your project Bug Tracking System. For
+	    each field you can set up the following parameters:</para>
+
+	    <itemizedlist mark="bullet" spacing="compact">
+	      <listitem>
+		<para><emphasis role="underline">Use as a Search
+		Criteria</emphasis>: If you check this box the field
+		will appear as one of the selection criteria when you
+		search the bug database.</para>
+	      </listitem>
+	      <listitem>
+		<para><emphasis role="underline">Rank on
+		Search</emphasis>: A number can be entered in this
+		field. The rank number allows you to place the field
+		with respect to the others. The fields with smaller
+		values will appear first on the list of selection
+		criteria displayed on the screen. These number doesn't
+		have to be consecutive numbers.</para>
+	      </listitem>
+	      <listitem>
+		<para><emphasis role="underline">Use as a Report
+		Column</emphasis>: If you check this box the field
+		will appear as one of the column in the bug search results 
+		table.</para>
+	      </listitem>
+	      
+	      <listitem>
+		<para><emphasis role="underline">Rank on
+		Report</emphasis>: A number can be entered in this
+		field. The rank number allows you to place the field
+		with respect to the others. The fields with smaller
+		values will appear first in the bug search results
+		table (from left to right). These number doesn't have
+		to be consecutive numbers.</para>
+	      </listitem>
+	    </itemizedlist>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Column
+	    Width</emphasis>(optional): In case you want to impose a
+	    specific width to the column in the report table you can
+	    specify a column width in percentage of the total page
+	    width. This is optional and our recommendation is to leave
+	    it blank unless your Web browser doesn't make a good job
+	    at formatting your table. If you want a column to be as
+	    narrow as possible while preserving word boundaries enter
+	    a very small percentage like 1 or 2 in the column width
+	    field.</para>
+	  </listitem>
+	</itemizedlist>
+
+	<para><note><emphasis role="bold">Note</emphasis>: it is
+	perfectly OK to use a field as a search criteria and not as a
+	column in the bug report and vice versa. For the fiels you
+	don't want to use at all in the report leave all boxes and
+	text fields blank.</note></para>
+      </section>
+
+      <figure id="FigureBugReportSetting">
+	<title>Setting a  bug report</title>
+	<mediaobject>
+	  <imageobject>
+	    <imagedata format="PNG"
+		       fileref="../../screenshots/en_US/sc_bugreportsetting.png" width="14.2cm" />
+	  </imageobject>
+	</mediaobject>
+      </figure>
     </section>
 
 
@@ -1316,7 +1724,7 @@
 	(and optionally all bug updates) will be systematically
 	sent. Note that email notification will be sent to users
 	regardless of their personal preferences (see <xref
-	linkend="BugPersonalNotificationSettings" />).</para>
+	linkend="BugEventRoleBasedEmailNotification" />).</para>
 
 	<para>This feature is typically used to send new bug
 	submissions to a number of well identified persons in the team
@@ -1385,8 +1793,8 @@
 
       </section>
 
-      <section id="BugPersonalNotificationSettings">
-	<title>Personal Notification Settings</title>
+      <section id="BugEventRoleBasedEmailNotification">
+	<title>Event/Role Based Notification Settings</title>
 
 	<para>This is the most sophisticated part of the customization
 	process. It allows any user to specify what types of events
