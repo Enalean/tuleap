@@ -12,7 +12,7 @@ require "trove.php";
 
 $HTML->header(array('title'=>'Software Map'));
 echo'
-	<h2>Software Map '.help_button('TheCodexMainMMenu.html#SoftwareMap').'</h2>
+	<h2>Software Map '.help_button('TheCodeXMainMenu.html#SoftwareMap').'</h2>
 	<HR NoShade>
 ';
 
