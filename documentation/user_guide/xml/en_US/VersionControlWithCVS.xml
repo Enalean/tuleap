@@ -14,8 +14,8 @@
 
     <para>This chapter is not a CVS Tutorial. It focuses on the integration of
     CVS with CodeX and how to use it in an optimal way in this context. If you
-    are not familiar with CVS version control system look at the CVS
-    references on page <xref linkend="References" /></para>
+    are not familiar with the CVS version control system look at the CVS
+    references (see <xref linkend="CVSReferences" />).</para>
 
     <para>It is important to note that version control is just a part of the
     overall configuration management activity. Therefore, CVS alone does not
@@ -49,8 +49,7 @@
       RCS, PKS...) or Commercial (SourceSafe, ClearCase, TeamWare...)</para></footnote>.
       CodeX made it the default version control tool for several reasons:</para>
 
-      <itemizedlist mark="bullet"
-                    spacing="compact">
+      <itemizedlist mark="bullet" spacing="compact">
         <listitem>
           <para>It has an elegant and efficient client/server architecture
           that makes it usable from anywhere on the Xerox Intranet.</para>
@@ -94,6 +93,47 @@
 
     <section id="CVSIntegrationinCodeX">
       <title>CVS Integration in CodeX</title>
+
+    <section id="CVSAccessControl">
+      <title>CVS Access Control</title>
+      
+      <para>CVS access permission depends upon the class of citizen
+      (see <xref linkend="ClassesOfCitizens" />) you belong to:</para>
+
+      <itemizedlist mark="bullet" spacing="compact">
+	<listitem>
+	  <para><emphasis role="bold">Anonymous Users</emphasis>:
+	  users who have not registered with CodeX (or are not logged
+	  in) have <emphasis role="underline">no access at
+	  all</emphasis> to the CVS repositories.</para>
+	</listitem>
+    
+	<listitem>
+	  <para><emphasis role="bold">Registered Users</emphasis>:
+	  have read-only access to CVS repositories. In other words
+	  they can checkout a working copy of the software but they
+	  are not allowed to commit any changes they have made to the
+	  source code. Source code contributions (bug fix,
+	  enhancements&hellip;) from this class of user must return to
+	  the project team via the Patch Manager (see <xref
+	  linkend="PatchManager" /> ).</para>
+
+	  <para><note><emphasis role="bold">Note</emphasis>: all source code
+	  accesses are recorded by CodeX. Project administrators
+	  always have access to the list of people who accessed the
+	  source code (see <xref linkend="SourceCodeAccessLogs" />).</note></para>
+	</listitem>
+	<listitem>
+	  <para><emphasis role="bold">Project Members</emphasis>:
+	  members of a CodeX hosted project are granted a
+	  password protected read/write access.</para>
+	</listitem>
+	<listitem>
+	  <para><emphasis role="bold">Project
+	  Administrators</emphasis>: same as project members.</para>
+	</listitem>
+      </itemizedlist>
+    </section>
 
       <section id="TheCVSRepository">
         <title>The CVS Repository</title>
@@ -181,6 +221,53 @@
         these editors. Many commercial text editors also offer tight
         integration with CVS.</para>
       </section>
+
+    <section id="CVSReferences">
+        <title>CVS References</title>
+
+      <para>As stated earlier in this chapter, this document is not a
+      CVS Tutorial. It focuses on the integration of CVS in CodeX and
+      how to use CVS in the CodeX context. If you want to learn more
+      about CVS refer to the following documents:</para>
+
+      <itemizedlist mark="bullet" spacing="compact">
+	<listitem>
+	  <para>A CVS Tutorial (Powerpoint): see <ulink
+	  url="http://codex.codex.xerox.com/slides/CVS_Tutorial.ppt">http://codex.codex.xerox.com/slides/CVS_Tutorial.ppt</ulink>). An
+	  HTML version (compressed) is also available at <ulink
+	  url="http://codex.codex.xerox.com/slides/slideCVS_HTML.zip">http://codex.codex.xerox.com/slides/slideCVS_HTML.zip</ulink></para>
+	</listitem>
+	<listitem>
+	  <para>Open Source Development with CVS : excellent book also
+	  known as "The CVS Black Book". Also available
+	  in printed form from Coriolis Press. See <ulink url="http://cvsbook.red-bean.com/">http://cvsbook.red-bean.com/</ulink>.
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>The official CVS Manual. Otherwise known as the
+	  "Cederqvist" after the name of the author. See <ulink
+	  url="http://www.cvshome.org/docs/manual/index.html">http://www.cvshome.org/docs/manual/index.html</ulink>This
+	  document is also contained in the CVS software releases -
+	  see below.</para>
+	</listitem>
+	<listitem>
+	  <para>Another CVS tutorial written by members of the Xerox
+	  Wilson Center. See <ulink
+	  url="http://techweb.wrc.xerox.com/Get/File-71895/cvs-strategy.html">http://techweb.wrc.xerox.com/Get/File-71895/cvs-strategy.html</ulink></para>
+	</listitem>
+    
+	<listitem>
+	  <para>Various CVS Docs and FAQs. See <ulink
+	  url="http://www.loria.fr/~molli/cvs-index.html">http://www.loria.fr/~molli/cvs-index.html</ulink>.</para>
+	</listitem>
+	<listitem>
+	  <para>The Official CVS Web Site. See <ulink
+	  url="http://www.cvshome.org/">http://www.cvshome.org/</ulink>.</para>
+	</listitem>
+      </itemizedlist>
+
+    </section>
+
     </section>
 
     <section id="ATypicalCVSLifeCycle">
@@ -206,7 +293,7 @@
         </mediaobject>
       </figure>
 
-      <section id="Loggingin">
+      <section id="LoggingIn">
         <title>Logging In</title>
 
         <para><emphasis>Audience: all CodeX users</emphasis></para>
@@ -256,8 +343,8 @@ login
         use the &#34;<literal>cvs logout</literal>&#34; command.</para>
       </section>
 
-      <section id="Importingexistingsourcecode">
-        <title>Importing existing source code</title>
+      <section id="ImportingExistingSourceCode">
+        <title>Importing Existing Source Code</title>
 
         <para><emphasis>Audience: project members</emphasis></para>
 
@@ -320,8 +407,8 @@ import topdirectory vendor_tag start
         CodeX server. Contact us for more information.</note></para>
       </section>
 
-      <section id="Checkingcodeout">
-        <title>Checking code out</title>
+      <section id="CheckingCodeOut">
+        <title>Checking Code Out</title>
 
         <para><emphasis>Audience: all CodeX users</emphasis></para>
 
@@ -384,8 +471,8 @@ checkout directory
         </itemizedlist>
       </section>
 
-      <section id="Updatingthesourcecode">
-        <title>Updating the source code</title>
+      <section id="UpdatingtheSourceCode">
+        <title>Updating the Source Code</title>
 
         <para><emphasis>Audience: all CodeX users</emphasis></para>
 
@@ -414,8 +501,8 @@ cvs -n -q update
         points. Refer to your CVS documentation for complete details.</para>
       </section>
 
-      <section id="Committingyourchanges">
-        <title>Committing your changes (project team)</title>
+      <section id="CommittingyourChanges">
+        <title>Committing your Changes (project team)</title>
 
         <para><emphasis>Audience: project members</emphasis></para>
 
@@ -478,8 +565,8 @@ cvs commit -m&#34;Explain the nature of the change here...&#34; [filenames]
         the baseline can automatically be built and unit tested nightly.</para>
       </section>
 
-      <section id="Contributingyourchanges">
-        <title>Contributing your changes (other users)</title>
+      <section id="ContributingyourChanges">
+        <title>Contributing your Changes (other users)</title>
 
         <para><emphasis>Audience: all CodeX users</emphasis></para>
 
@@ -646,32 +733,25 @@ export project-1.2
       </section>
     </section>
 
-    <section id="CVSforprojectadministrators">
-      <title>CVS for project administrators</title>
+    <section id="CVSforProjectAdministrators">
+      <title>CVS for Project Administrators</title>
 
       <para>There are a few things that Project Administrators must absolutely
       be aware of to manage their CVS repository well.</para>
 
-      <section id="Accesscontrol">
-        <title>Access control</title>
+      <section id="MoreonCVSAccessControl">
+        <title>More on CVS Access Control</title>
 
-        <para>CVS read access is granted to any CodeX registered user. CodeX
-        is about sharing source code not about burying it. So this is the
-        standard CodeX setting and, unless otherwise agreed with the CodeX
-        Team, the read permission has to remain active at any time. Source
-        Code accesses, whether through CVS or File Release download are
-        tracked in the Source Code Access Logs (see <xref
-        linkend="SourceCodeAccessLogs" />). Finally, it is worth noting that
-        anonymous users are denied access to the source code; even read
-        access.</para>
+        <para>As explained in <xref linkend="CVSAccessControl" /> CVS
+        is setup in such a way that write access is granted to all project
+        members (and project members only).</para>
 
-        <para>By default, CVS write access is granted to all project members.
-        It is, however, possible for a project administrator to deny CVS write
-        access to certain project members. Revoking CVS write access for
-        project members is not feasible from the Web interface. You must use
-        your Shell Account to log into the CodeX server (see <xref
-        linkend="ShellAccount" />) and type the following commands at the
-        shell prompt:</para>
+        <para>It is, however, possible for a project administrator to
+        deny CVS write access to certain project members. Revoking CVS
+        write access for project members is not (yet!) feasible from
+        the Web interface. You must use your Shell Account to log into
+        the CodeX server (see <xref linkend="ShellAccount" />) and
+        type the following commands at the shell prompt:</para>
 
         <itemizedlist mark="bullet"
                       spacing="compact">
@@ -723,8 +803,8 @@ export project-1.2
         doing.</note></para>
       </section>
 
-      <section id="CVSE-mailnotification">
-        <title>CVS E-mail notification</title>
+      <section id="CVSE-mailNotification">
+        <title>CVS E-mail Notification</title>
 
         <para>CVS comes with a number of e-mail notification capabilities. CVS
         allows you to send e-mail to the development teams. For example, using
@@ -746,8 +826,8 @@ export project-1.2
         There is virtually no limit.</para>
 
         <para>For more information about the CVS notification capabilities
-        please refer to the CVS material listed in the References section (see
-        <xref linkend="References" />).</para>
+        please refer to the CVS material listed in the CVS References section (see
+        <xref linkend="CVSReferences" />).</para>
       </section>
     </section>
   </chapter>

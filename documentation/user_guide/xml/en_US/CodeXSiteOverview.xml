@@ -59,7 +59,7 @@
       </procedure>
     </section>
 
-    <section id="TheCodexMainMMenu">
+    <section id="TheCodeXMainMenu">
       <title>The CodeX Main Menu</title>
 
       <para>The CodeX main menu is a permanent piece of information that
@@ -273,7 +273,7 @@
           </figure>
         </section>
 
-        <section id="CodeSnippetSbmission">
+        <section id="CodeSnippetSubmission">
           <title>Code Snippet Submission</title>
 
           <para>To submit a new code snippet click on the &#34;Submit a new

@@ -187,13 +187,16 @@
       </revision>
 
      <revision>
-        <revnumber>1.8</revnumber>
+        <revnumber>2.0</revnumber>
 
-        <date>16-Sep-2002</date>
+        <date>19-Sep-2002</date>
 
         <authorinitials>Laurent Julliard</authorinitials>
 
-        <revremark>Bug Attachment, CC List, new notification process, type of search criteria, Custom fields documented in the bug tracking system</revremark>
+        <revremark>Major Release. Bug Attachment, CC List, new
+        notification process, type of search criteria, Custom fields
+        documented in the bug tracking system. Merge with existing
+        on-line CodeX help.</revremark>
       </revision>
      </revhistory>
   </bookinfo>

@@ -26,36 +26,6 @@
     project team can easily and efficient coordinate technical support
     activities.</para>
 
-    <section id="SupportRequestSubmission">
-      <title>Support Request Submission</title>
-
-      <para>Anyone is allowed to submit a Support Request. To submit a SR to a
-      given project, first go to the Project Summary page (see <xref
-      linkend="AccessingAProjectSummaryPage" />) and then select either the
-      &#34;Support&#34; item from the Project Main Menu in the upper part of
-      the page or the &#34;Support Request&#34; item from the Public Area.</para>
-
-      <para>From there you enter the SR Manager and the first screen you are
-      faced with is the SR selection and browsing screen (more about this
-      facility in <xref linkend="SupportRequestBrowsing" />). For now
-      let&#39;s click on the &#34;Submit a Request&#34; item from the SR
-      Manager Menu Bar in the upper part of the welcome screen (see <xref
-      linkend="FigureTheSupportRequestBrowsingScreen" />).</para>
-
-      <para><tip><title>Tip: make sure your SR hasn&#39;t yet been submitted</title><para>About
-      to submit a support request to a CodeX Project? Before you do that, make
-      sure that a similar SR hasn&#39;t yet been submitted by others. To do so
-      you can either browse the SR database through the SR Selection and
-      Browsing possibly using the Category criteria to narrow the number of
-      selected SRs.</para></tip></para>
-
-      <para>Select the category that is most appropriate to your request. Fill
-      the Summary and the Description fields giving as much detail as possible
-      like the version of the software you are using, the machine it runs on,
-      etc. Then submit your request by clicking on the &#34;Submit
-      Request&#34; button.</para>
-    </section>
-
     <section id="SupportRequestBrowsing">
       <title>Support Request Browsing</title>
 
@@ -87,6 +57,36 @@
       menu also offers 2 shortcuts to quickly select all SRs with status value
       at Open (&#34;Open Requests&#34; item) and those that have been assigned
       to you (&#34;My Requests&#34; item). This is mostly for project members.</para>
+    </section>
+
+    <section id="SupportRequestSubmission">
+      <title>Support Request Submission</title>
+
+      <para>Anyone is allowed to submit a Support Request. To submit a SR to a
+      given project, first go to the Project Summary page (see <xref
+      linkend="AccessingAProjectSummaryPage" />) and then select either the
+      &#34;Support&#34; item from the Project Main Menu in the upper part of
+      the page or the &#34;Support Request&#34; item from the Public Area.</para>
+
+      <para>From there you enter the SR Manager and the first screen you are
+      faced with is the SR selection and browsing screen (more about this
+      facility in <xref linkend="SupportRequestBrowsing" />). For now
+      let&#39;s click on the &#34;Submit a Request&#34; item from the SR
+      Manager Menu Bar in the upper part of the welcome screen (see <xref
+      linkend="FigureTheSupportRequestBrowsingScreen" />).</para>
+
+      <para><tip><title>Tip: make sure your SR hasn&#39;t yet been submitted</title><para>About
+      to submit a support request to a CodeX Project? Before you do that, make
+      sure that a similar SR hasn&#39;t yet been submitted by others. To do so
+      you can either browse the SR database through the SR Selection and
+      Browsing possibly using the Category criteria to narrow the number of
+      selected SRs.</para></tip></para>
+
+      <para>Select the category that is most appropriate to your request. Fill
+      the Summary and the Description fields giving as much detail as possible
+      like the version of the software you are using, the machine it runs on,
+      etc. Then submit your request by clicking on the &#34;Submit
+      Request&#34; button.</para>
     </section>
 
     <section id="SupportRequestProcessing">

@@ -524,34 +524,87 @@
       &#34;Admin&#34; in the Task Menu bar. Only project members with Task
       Administrator permission are allowed to interact with this module.</para>
 
-      <para>The Task Administration module is very simple. It gives access to
-      the 2 following administrative functions:</para>
+      <para>The Task Administration module gives access to
+      the following administrative functions:</para>
 
-      <itemizedlist mark="bullet"
-                    spacing="compact">
-        <listitem>
-          <para><emphasis role="bold">Add a Subproject</emphasis>: this is to
-          create a new subproject in the Task Manager. Subprojects generally
-          correspond to high level modules or activities in the project. To
-          create a project you must give it a short subproject name, a one
-          line description and decide whether it is a public or private
-          subprojects. Private Subprojects are only visible to project
-          members.</para>
-        </listitem>
+    <section id="TaskManagerAddaSubproject">
+      <title>Add a Subproject</title>
 
-        <listitem>
-          <para><emphasis role="bold">Update Project/Task Manager</emphasis>:
-          use this function whenever you want to update a subproject. You can
-          change its name and description, whether it is public or private.
-          You can also mark a subproject as deleted. Deleted subprojects will
-          disappear from the Task selection and browsing screen as well as all
-          the tasks that belong to this subproject. At any point in time you
-          can decide to re-activate a deleted subproject without loosing any
-          data.</para>
-        </listitem>
+      <para>This is to create a new subproject in the Task
+      Manager. Subprojects generally correspond to high level modules
+      or activities in the project. To create a project you must give
+      it a short subproject name, a one line description and decide
+      whether it is a public or private subprojects. Private
+      Subprojects are only visible to project members.</para>
+    </section>
+
+    <section id="TaskManagerUpdateaSubproject">
+      <title>Update a Subproject</title>
+
+      <para>Use this function whenever you want to update a
+      subproject. You can change its name and description, whether it
+      is public or private.  You can also mark a subproject as
+      deleted. Deleted subprojects will disappear from the Task
+      selection and browsing screen as well as all the tasks that
+      belong to this subproject. At any point in time you can decide
+      to re-activate a deleted subproject without loosing any
+      data.</para>
+    </section>
+
+    <section id="TaskManagerPersonalConfigurationSettings">
+      <title>Personal Configuration Settings</title>
+
+      <para>This page allows a user to set up personal preferences for
+      the Task Manager. In its current version it allows the user to
+      specify which default date should be displayed in the task
+      submission form for the 'Start Date' and 'End Date'
+      fields. There are two possible choices:</para>
+
+      <itemizedlist mark="bullet" spacing="compact">
+	<listitem>
+	  <para><emphasis role="bold">Current Date</emphasis>: if you
+	  choose this value, the task creation form displays the
+	  current date in both the 'Start Date' and 'End Date'
+	  fields. This is the default setting.</para>
+	</listitem>
+    
+	<listitem>
+	  <para><emphasis role="bold">No Date</emphasis>: both fields
+	  remain empty and the 'Start Date' and 'End Date' are
+	  undefined. You may select this option if you use the task
+	  manager as a simple TODO list where start and end dates do not
+	  really matter.</para>
+	</listitem>
+      </itemizedlist>
+
+    </section>
+
+    <section id="TaskManagerOtherConfigurationSettings">
+      <title>Other Configuration Settings</title>
+
+        <para>This module allows you to define the following
+        configuration parameters for the CodeX Bug Tracking
+        System:</para>
+
+      <itemizedlist mark="bullet" spacing="compact">
+	<listitem>
+	  <para>An introductory message that displays at the top of
+            the Bug submission form. This is a convenient way to give
+            directions and recommendations to the bug submitter. The text must
+            use HTML tags for formatting which gives a great flexibility to
+            shape the content of this preamble (you can use bold, italic,
+            embedded URL, ...)</para>
+	</listitem>
+
+	<listitem>
+	  <para>Other items may be added in the future.</para>
+	</listitem>
       </itemizedlist>
     </section>
-  </chapter>
+
+
+  </section>
+</chapter>
 <!--
 Local Variables:
 sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")

@@ -317,40 +317,342 @@
       progress made, what goes well or wrong, how far you are from the end
       date, derive statistical data, etc.</para>
 
-      <para>It is far beyond the scope of CodeX to provide project teams with
-      such reporting tools. There are many specialized tools on the market to
-      generate progress reports and each project team has its favorite one. In
-      order to satisfy this diversity of needs, the CodeX Team has developed a
-      very efficient system that allows the project team to export the project
-      data outside of CodeX for re-use in other tools like Access, Excel,
-      Crystal Report, Word or any other ad-hoc tools.</para>
+      <para>It is far beyond the scope of CodeX to provide project
+      teams with such reporting tools. There are many specialized
+      tools on the market to generate progress reports and each
+      project team has its favorite one. In order to satisfy this
+      diversity of needs, the CodeX Team has developed a very
+      efficient system that allows the project team to export the
+      project data outside of CodeX for re-use in other tools like
+      Access, Excel, Crystal Report, Word, Open Office, Star Office or
+      any other ad-hoc tools.</para>
 
       <para>CodeX provides you with 2 kinds of Data Export:</para>
 
       <itemizedlist mark="bullet">
         <listitem>
-          <para><emphasis role="bold">Text File Export</emphasis>: these are
-          bugs and tasks data extracted from the project database and exported
-          in text format. The text format used is called CSV (Comma Separated
-          Values) and is recognized by almost every Office or database tool on
-          the market</para>
+          <para><emphasis role="bold">Text File Export</emphasis>:
+          this is a simple text extract of your project data. It uses
+          the well known CSV (Comma Separated Value) format. CSV is
+          recognized by almost every Office Suite or database tool on
+          the market. In case youu want to develop your own report
+          application most programming languages also come with a
+          standard library that knows how to parse CSV format. </para>
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Direct Database Connection</emphasis>:
-          so to speak this not a Data Export. It is rather a direct connection
-          to your project database through an ODBC or JDBC driver. If you want
-          to manipulate your project data with a database tool (like
-          MS-Access) this is certainly the best choice.</para>
+          <para><emphasis role="bold">Direct Database
+          Connection</emphasis>: so to speak this not a Data
+          Export. It is rather a direct connection to your project
+          database through an ODBC or JDBC driver. If you want to
+          manipulate your project data with a database tool (like
+          MS-Access or an ODBC/JDBC application) this is certainly the
+          best choice.</para>
         </listitem>
-      </itemizedlist>
+    </itemizedlist>
 
-      <para>Full documentation on how to use and configure the Data Export
-      Facility is available on the CodeX Site Documentation (<ulink
-      url="http://codex.xerox.com/docs/site/">http://codex.xerox.com/docs/site/</ulink>
-      ) under the title <emphasis>&#34;Extracting your Project Data from
-      CodeX&#34;</emphasis>.</para>
+
+    <section id="ExportedData">
+      <title>Exported Data</title>
+      <para>CodeX gives access to the following data (details on exported fields are listed on the CodeX page): </para>
+
+      <itemizedlist mark="bullet" spacing="compact">
+	<listitem>
+	  <para><emphasis role="bold">Bug</emphasis>: all bugs submitted to your project.</para>
+	</listitem>
+	
+	<listitem>
+	  <para><emphasis role="bold">Bug History</emphasis>: full
+	  history of all the changes your project bugs have gone
+	  through.</para>
+	</listitem>
+	<listitem>
+	  <para><emphasis role="bold">Bug-to-Bug
+	  Dependencies</emphasis>: a list of all bug to bug
+	  dependencies.</para>
+	</listitem>
+	<listitem>
+	  <para><emphasis role="bold">Bug-to-Task
+	  Dependencies</emphasis>: a list of all bug to task
+	  dependencies.</para>
+	</listitem>
+	<listitem>
+	  <para><emphasis role="bold">Task</emphasis>: all tasks
+	  created in your project</para>
+	</listitem>
+	<listitem>
+	  <para><emphasis role="bold">Task History</emphasis>: full
+	  history of all the changes your project tasks have gone
+	  through</para>
+	</listitem>
+	<listitem>
+	  <para><emphasis role="bold">Task-to-Task
+	  Dependencies</emphasis>: a list of all task to task
+	  dependencies</para>
+	</listitem>
+	<listitem>
+	  <para><emphasis role="bold">Task Assignees</emphasis>: an
+	  SQL like form of task assignees. A task may be listed
+	  several times if it has several assignees.</para>
+	</listitem>
+	<listitem>
+	  <para><emphasis role="bold">Support Request</emphasis>: all
+	  support requests submitted to your project</para>
+	</listitem>
+	<listitem>
+	  <para><emphasis role="bold">Survey Responses</emphasis>: all
+	  responses to all the surveys you have created in your
+	  project.</para>
+	</listitem>
+      </itemizedlist>
     </section>
+
+    <section id="TextFileExport">
+      <title>Text File Export</title>
+
+      <para>Text File Export follow the well known CSV (Comma
+      Separated Values) format, recognized by almost every Office
+      Suite on the market. It can easily be imported in MS-Access,
+      Excel, StarCalc&hellip;</para>
+
+      <section id="ImportingCSVFilesinExcel">
+	<title>Importing CSV Files in Excel</title>
+	<para>Double-clicking on any of the table export link (Bug
+	Export, Task Export,..) on the Project Data Export page 
+	generates and downloads a CSV file that you can save on your
+	local disk or directly open in Excel or any other spreadsheet
+	of your choice (StarCalc, QuattroPro,...). No particular
+	setting is required.</para>
+      </section>
+
+      <section id="ImportingCSVFilesinMS-Access">
+	<title>Importing CSV Files in MS-Access</title>
+
+	<para>Before you import external data you must first create a
+	new database. Then go through the following steps:</para>
+
+	<itemizedlist mark="bullet" spacing="compact">
+	  <listitem>
+	    <para>Select <literal>File Menu -> Get External Data -> Import</literal></para>
+	  </listitem>
+	  <listitem>
+	    <para>Choose the appropriate CSV file that you have just
+	    generated and then click on the
+	    <literal>Import...</literal> button. A preview of the
+	    imported table shows up on the screen</para>
+	  </listitem>
+	  <listitem>
+	    <para>Click on the <literal>Advanced...</literal> button</para>
+	  </listitem>
+	  <listitem>
+	    <para>Set Text Delimiter to " (double quote)</para>
+	  </listitem>
+	  <listitem>
+	    <para>Set Date Format to <literal>YMD</literal> </para>
+	  </listitem>
+	  <listitem>
+	    <para>Set Date delimiter to - (dash)</para>
+	  </listitem>
+	  
+	  <listitem>
+	    <para>Then enter the name and the type of each field in
+	    the lower part of the dialog box. Remember that this
+	    information is available on the Project Data
+	    Export page.</para>
+
+	    <para><note><emphasis role="bold">Important
+	    Remark</emphasis>: you can leave the default field name
+	    (Field1,....FieldN) as well as the default Text type in
+	    most cases. However long text fields like bug/tasks
+	    follow-up comments (details field) and original comment
+	    must be declared as type Memo. Failing to do so will cause
+	    MS-Access to corrupt the imported data. </note></para>
+	  </listitem>
+	</itemizedlist>
+
+	<para>Once you are done with the specification of the Import,
+	save it by clicking on the <literal>Save As...</literal>
+	button. For future import of the same table simply click on
+	the Specs... button and reload your Import
+	specification. </para>
+      </section>
+
+    </section>
+
+    <section id="DirectDatabaseAccess">
+      <title>Direct Database Access</title>
+
+      <para>To offer maximum flexibility CodeX also provides a direct
+      access to your project data via an ODBC or JDBC database
+      connection. Once installed on your PC the MySQL
+      ODBC (or JDBC) driver allows a transparent access to your
+      project specific database tables.</para>
+
+      <para>If you use MS-Access to generate your progress or status
+      report then the 'Direct Database Access' is the easiest way to
+      access all of your project data in no time.</para>
+
+
+      <section id="GeneratingYourProjectDatabase">
+	<title>Generating Your Project Database</title>
+
+	<para>Before you attempt to access your project data with
+	MS-Access or anyother ODBC/JDBC capable application you must
+	first generate your project database. Go to the
+	<literal>Project Admin -> Project Data Export</literal> and
+	click on the 'Generate Full Project Database' link at the
+	bottom of the page.The 'Generate Full Project Database' link
+	generates a snapshot of your project data. This means you must
+	click on the link again each time you want the project
+	database to be updated with current data.</para>
+
+	<para>If everything goes well your project database will be
+	generated in real time and a message will tell you about the
+	result of the generation process and what are the parameters
+	to use to connect to the remote database from your
+	desktop. Write them down and keep them in a safe
+	place. </para>
+
+	<para><note><emphasis role="bold">Remark</emphasis>: if your project
+	database contains several thousands of records (tasks,
+	bugs,&hellip;) it may take the project database generation may
+	take several minutes to complete.</note></para>
+      </section>
+      
+      <section id="InstallingandConfiguringtheMySQLODBCDriver">
+	<title>Installing and Configuring the MySQL ODBC Driver</title>
+
+	<procedure>
+	  <step>
+	    <para>First download the <ulink
+	    url="http://www.mysql.com/downloads/api-myodbc.html">MySQL
+	    ODBC driver</ulink> and unzip the zip archive in a
+	    temporary directory of your choice.</para> </step>
+	  <step>
+	    <para>Run the setup program and go through the
+	    installation process.<emphasis role="bold">Important
+	    Remark</emphasis>: On Windows NT/2000/XP you must have
+	    administrator rights to install the driver.</para>
+	  </step>
+	  <step>
+	    <para>Add your project database to Windows Data
+	    Sources. For Windows NT/2000/XP users:</para>
+
+	    <itemizedlist mark="bullet" spacing="compact">
+	      <listitem>
+		<para>Use your normal user account to logon.</para>
+	      </listitem>
+	      <listitem>
+		<para>Go to <literal>Start menu -> Settings -> Control
+		Panel -> Administrative Tools -> Data Sources
+		(ODBC)</literal></para>
+	      </listitem>
+	      <listitem>
+		<para>Select the "User DSN" tab and then click on the
+		"Add" button</para>
+	      </listitem>
+	      <listitem>
+		<para>Select the "MySQL" item from the list and then
+		click on the "Finish" button</para>
+	      </listitem>
+	      
+	      <listitem>
+		<para>A dialog box will pop up asking for the database
+		following connections parameters:</para>
+
+		<itemizedlist mark="bullet" spacing="compact">
+		  <listitem>
+		    <para><emphasis>Windows DSN Name</emphasis>: is
+		    your choice of a name for this connection. Use
+		    "Project X Database" for instance.</para>
+		  </listitem>
+		  <listitem>
+		    <para><emphasis>MySQL host (IP or Name)</emphasis>; codex.xerox.com</para>
+		  </listitem>
+		  <listitem>
+		    <para><emphasis>MySQL Database Name</emphasis>:
+		    the database name is your project shortname as
+		    displayed by CodeX after you generated your
+		    project database (see above)</para>
+		  </listitem>
+		  <listitem>
+		    <para><emphasis>User</emphasis>: the user name is
+		    'cxuser'.</para>
+		  </listitem>
+		  <listitem>
+		    <para><emphasis>Password</emphasis>: No password
+		    (leave blank).</para>
+		  </listitem>
+		  <listitem>
+		    <para><emphasis>Port (if not 3306)</emphasis>: use
+		    the default port (leave blank).</para>
+		  </listitem>
+		  
+		  <listitem>
+		    <para><emphasis>SQL command on connect</emphasis>:
+		    none (leave blank).</para>
+		  </listitem>
+		</itemizedlist>
+	      </listitem>
+	    </itemizedlist>
+	  </step>
+	</procedure>
+      </section>
+
+      <section id="InstallingandConfiguringtheMySQLJDBCDriver">
+	<title>Installing and Configuring the MySQL JDBC Driver</title>
+
+	<para>For those using a Java application based on a JDBC
+	driver, the MySQL JDBC driver and installation instructions
+	are available on the <ulink
+	url="http://www.mysql.com/doc/en/Java.html">MySQL Java
+	Connectivity</ulink> page.</para>
+
+      </section>
+
+      <section id="UsingYourProjectDatabaseFromMS-Access">
+	<title>Using Your Project Database From MS-Access</title>
+
+	<para>Before you use MS-Access to connect to your project
+	database make sure that the MySQL OBDC driver has been
+	installed on your PC (see <xref
+	linkend="InstallingandConfiguringtheMySQLODBCDriver" />) and
+	that you have generated your project database (see <xref
+	linkend="GeneratingYourProjectDatabase" />). Then go through
+	the following steps:</para>
+
+	<itemizedlist mark="bullet" spacing="compact">
+	  <listitem>
+	    <para>Launch MS-Access and open a new database.</para>
+	  </listitem>
+	  <listitem>
+	    <para>In the <literal>File Menu</literal> select
+	    <literal>Get External Data -> Import</literal>. </para>
+	  </listitem>
+	  <listitem>
+	    <para>In the <literal>File of Types</literal> pull down
+	    menu select the <literal>ODBC Databases</literal>
+	    item.</para>
+	  </listitem>
+	  <listitem>
+	    <para>Select the <literal>Machine Data Source</literal>
+	    tab and click on your project database.</para>
+	  </listitem>
+	  <listitem>
+	    <para>Select the tables you are interested or simply click
+	    on <literal>Select All</literal>.</para>
+	  </listitem>
+	</itemizedlist>
+
+	<para>MS-Access will instantly (according to MS-Access
+	standards :-) import your project data and you can then
+	process your project data exactly as you would do for a native
+	MS-Access database.</para>
+      </section>
+
+    </section>
+
+  </section>
 
     <section id="Edit-ReleaseFiles">
       <title>Edit/Release Files</title>

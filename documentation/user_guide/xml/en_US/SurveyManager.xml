@@ -78,6 +78,82 @@
       </mediaobject>
     </figure>
 
+    <section id="PublishingaSurvey">
+      <title>Publishing a Survey</title>
+
+      <para><emphasis>Audience: project members</emphasis></para>
+
+      <para>You have been working hard to produce this perfectly polished
+      survey and now you want to reach the broadest possible audience. With
+      CodeX you can make your survey visible in a number of ways:</para>
+
+      <procedure>
+        <step>
+          <para><emphasis role="bold">Through the Survey Manager itself</emphasis>:
+          as soon as a survey is created it is visible in your Survey Manager
+          Welcome screen (see <xref linkend="FigureSurveyManagerWelcomeScreen" />).
+          So any CodeX user visiting your Project Summary page will see that
+          surveys are available in the &#34;Public Area&#34; (survey count not
+          null) and by clicking on &#34;Surveys&#34; she will be able to take
+          whatever survey is available.</para>
+        </step>
+
+        <step>
+          <para><emphasis role="bold">Project News Service</emphasis>: when
+          you have your new survey ready, make sure you publish a piece of
+          news about this survey: why you did it, who is expected to take it
+          and type the Web location corresponding to the survey (see below).
+          By publishing a piece of news you also have a chance to see it on
+          the CodeX front page if the CodeX Team decides so.</para>
+        </step>
+
+        <step>
+          <para><emphasis role="bold">E-mail</emphasis>: the survey you have
+          created can be accessed directly via a Web pointer (URL) on the
+          CodeX site. As a consequence you can push your survey to virtually
+          anybody in the Corporation simply by referencing the survey Web
+          pointer in an e-mail message, a web page or any kind of office
+          document. Even non CodeX Users will be able to take the survey.</para>
+        </step>
+      </procedure>
+
+      <para>All surveys created on CodeX can be accessed through the following
+      Web pointer (URL):</para>
+
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+http://codex.xerox.com/survey/survey.php?group_id=N&#38;survey_id=X
+</programlisting>
+
+      <para>where N is your project ID number and X is the survey ID number as
+      shown in the survey list displayed on the Survey Manager welcome screen.
+      Your project ID number N is visible on the Survey Manager Administration
+      screen (see <xref linkend="FigureSurveyManagerWelcomeScreen" />)</para>
+
+      <para>Taking a survey is just a matter of accessing the survey by one of
+      the previously mentioned method, answer the questions and click on the
+      &#34;Submit&#34; button at the bottom of the page. A sample survey is
+      shown on <xref linkend="FigureASampleSurveyTakenFromTheCodeXProject" />.</para>
+
+      <para><tip><title>Important note: Survey Privacy</title><para>The
+      information collected in these surveys are strictly internal to Xerox.
+      This information is being gathered to build a profile of the projects
+      and developers being surveyed. The identity of those who answer surveys
+      are suppressed and not viewable by project administrators or the public
+      or third parties. The information gathered is used only in aggregate
+      form, not to single out specific users or developers.</para></tip></para>
+
+      <figure id="FigureASampleSurveyTakenFromTheCodeXProject">
+        <title>A sample survey taken from the CodeX project</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+                       fileref="../../screenshots/en_US/sc_surveysample.png" width="15.3cm" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+
     <section id="AdministeringSurveys">
       <title>Administering Surveys</title>
 
@@ -121,7 +197,7 @@
       </figure>
 
       <section id="SurveyStructure">
-        <title>SurveyStructure</title>
+        <title>Survey Structure</title>
 
         <para>In order to understand the survey creation and update process
         you must first understand that the Survey module manages two distinct
@@ -298,6 +374,13 @@
         average value as well as the value distribution for radio button
         answers.</para>
 
+      <para><tip> <title>Export Your Survey Results for Finer Grain
+      Analysis</title> <para>If you want to further massage the
+      results of your surveys remember that CodeX allows project
+      administrators to export project data including survey
+      results. For more details see <xref linkend="ProjectDataExport"
+      /> </para></tip></para>
+      
         <figure id="FigureSurveyResults">
           <title>Survey Results</title>
 
@@ -315,81 +398,7 @@
     <para></para>
     <para></para>
     
-    <section id="PublishingaSurvey">
-      <title>Publishing a Survey</title>
 
-      <para><emphasis>Audience: project members</emphasis></para>
-
-      <para>You have been working hard to produce this perfectly polished
-      survey and now you want to reach the broadest possible audience. With
-      CodeX you can make your survey visible in a number of ways:</para>
-
-      <procedure>
-        <step>
-          <para><emphasis role="bold">Through the Survey Manager itself</emphasis>:
-          as soon as a survey is created it is visible in your Survey Manager
-          Welcome screen (see <xref linkend="FigureSurveyManagerWelcomeScreen" />).
-          So any CodeX user visiting your Project Summary page will see that
-          surveys are available in the &#34;Public Area&#34; (survey count not
-          null) and by clicking on &#34;Surveys&#34; she will be able to take
-          whatever survey is available.</para>
-        </step>
-
-        <step>
-          <para><emphasis role="bold">Project News Service</emphasis>: when
-          you have your new survey ready, make sure you publish a piece of
-          news about this survey: why you did it, who is expected to take it
-          and type the Web location corresponding to the survey (see below).
-          By publishing a piece of news you also have a chance to see it on
-          the CodeX front page if the CodeX Team decides so.</para>
-        </step>
-
-        <step>
-          <para><emphasis role="bold">E-mail</emphasis>: the survey you have
-          created can be accessed directly via a Web pointer (URL) on the
-          CodeX site. As a consequence you can push your survey to virtually
-          anybody in the Corporation simply by referencing the survey Web
-          pointer in an e-mail message, a web page or any kind of office
-          document. Even non CodeX Users will be able to take the survey.</para>
-        </step>
-      </procedure>
-
-      <para>All surveys created on CodeX can be accessed through the following
-      Web pointer (URL):</para>
-
-<programlisting format="linespecific" linenumbering="unnumbered" width="80">
-http://codex.xerox.com/survey/survey.php?group_id=N&#38;survey_id=X
-</programlisting>
-
-      <para>where N is your project ID number and X is the survey ID number as
-      shown in the survey list displayed on the Survey Manager welcome screen.
-      Your project ID number N is visible on the Survey Manager Administration
-      screen (see <xref linkend="FigureSurveyManagerWelcomeScreen" />)</para>
-
-      <para>Taking a survey is just a matter of accessing the survey by one of
-      the previously mentioned method, answer the questions and click on the
-      &#34;Submit&#34; button at the bottom of the page. A sample survey is
-      shown on <xref linkend="FigureASampleSurveyTakenFromTheCodeXProject" />.</para>
-
-      <para><tip><title>Important note: Survey Privacy</title><para>The
-      information collected in these surveys are strictly internal to Xerox.
-      This information is being gathered to build a profile of the projects
-      and developers being surveyed. The identity of those who answer surveys
-      are suppressed and not viewable by project administrators or the public
-      or third parties. The information gathered is used only in aggregate
-      form, not to single out specific users or developers.</para></tip></para>
-
-      <figure id="FigureASampleSurveyTakenFromTheCodeXProject">
-        <title>A sample survey taken from the CodeX project</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata format="PNG"
-                       fileref="../../screenshots/en_US/sc_surveysample.png" width="15.3cm" />
-          </imageobject>
-        </mediaobject>
-      </figure>
-    </section>
   </chapter>
 <!--
 Local Variables:

@@ -140,7 +140,7 @@
 
       <para>Before you submit a patch you must first generate it. This has
       been discussed in the CVS chapter. For more information please refer to
-      section <xref linkend="Contributingyourchanges" />.</para>
+      section <xref linkend="ContributingyourChanges" />.</para>
 
       <para>To submit a patch, click on the &#34;Submit a Patch&#34; item in
       the Patch Manager menu bar (see <xref linkend="FigurePatchBrowsing" />).
