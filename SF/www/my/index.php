@@ -446,32 +446,28 @@ if (user_isloggedin()) {
 			while (list(,$artifact) = each($artifact_list) ) {
 
 			    if (!$hide_now) {
-			    	// Retrieve all fields values
-			    	$result_field = $artifact->getFieldsValues();
 			    	
-					// Form the 'Submitted by/Assigned to flag' for marking
-					$AS_flag = my_format_as_flag(db_result($result_field,0,'assigned_to'), $artifact->getSubmittedBy() );
+				// Form the 'Submitted by/Assigned to flag' for marking
+				$AS_flag = my_format_as_flag($artifact->getValue('assigned_to'), $artifact->getSubmittedBy() );
 
-					if ( db_result($result_field,0,'percent_complete') ) {
-						$field = $art_field_fact->getFieldFromName('percent_complete');
-						$percent_complete = $field->getValue($at->getID(),db_result($result_field,0,'percent_complete'));
-						
-						$html .= '
+				if ( $artifact->getValue('percent_complete') ) {
+				    $field = $art_field_fact->getFieldFromName('percent_complete');
+				    $percent_complete = $field->getValue($at->getID(),$artifact->getValue('percent_complete'));
+				    $html .= '
+		<TR class="'.get_priority_color($artifact->getSeverity()).
+					'"><TD class="small"><A HREF="/tracker/?func=detail&group_id='.
+					$group_id.'&aid='.$artifact->getID().'&atid='.$atid.
+					'">'.$artifact->getID().'</A></TD>'.
+					'<TD class="small">'.stripslashes($artifact->getSummary()).'&nbsp;'.$AS_flag.'</TD>'.
+					'<TD class="small">'.$percent_complete.'</TD></TR>';
+				} else {
+				    $html .= '
 						<TR class="'.get_priority_color($artifact->getSeverity()).
-						'"><TD class="small"><A HREF="/tracker/?func=detail&group_id='.
-						$group_id.'&aid='.$artifact->getID().'&atid='.$atid.
-						'">'.$artifact->getID().'</A></TD>'.
-						'<TD class="small">'.stripslashes($artifact->getSummary()).'&nbsp;'.$AS_flag.'</TD>'.
-						'<TD class="small">'.$percent_complete.'</TD></TR>';
-					} else {
-						$html .= '
-						<TR class="'.get_priority_color($artifact->getSeverity()).
-						'"><TD class="small"><A HREF="/tracker/?func=detail&group_id='.
-						$group_id.'&aid='.$artifact->getID().'&atid='.$atid.
-						'">'.$artifact->getID().'</A></TD>'.
-						'<TD class="small" colspan="2">'.stripslashes($artifact->getSummary()).'&nbsp;'.$AS_flag.'</TD></TR>';
-					}
-	
+					'"><TD class="small"><A HREF="/tracker/?func=detail&group_id='.
+					$group_id.'&aid='.$artifact->getID().'&atid='.$atid.
+					'">'.$artifact->getID().'</A></TD>'.
+					'<TD class="small" colspan="2">'.stripslashes($artifact->getSummary()).'&nbsp;'.$AS_flag.'</TD></TR>';
+				}
 			    }
 			}
 	

@@ -33,14 +33,13 @@ if ($pv) {
 	      'help' => 'ArtifactSubmission.html' ));
 }
 
-$res = $ah->getFieldsValues();
-
 // Printer version ?
 if ( !isset($pv) ) {
 	$pv = false;
 }
 
-$ah->display($res,true,$pv);
+// artifact object (and field values) initialized in script above (index.php)
+$ah->display(true,$pv);
 
 // Display footer page
 if ( $pv ) {

@@ -69,7 +69,7 @@ class ArtifactFactory extends Error {
 			return false;
 		} else {
 			while ($arr = db_fetch_array($result)) {
-				$artifacts[$arr['artifact_id']] = new Artifact($this->ArtifactType, $arr);
+				$artifacts[$arr['artifact_id']] = new Artifact($this->ArtifactType, $arr['artifact_id']);
 			}
 			if ( count($artifacts) ) {
 				return $artifacts;
@@ -90,7 +90,7 @@ class ArtifactFactory extends Error {
 			return false;
 		} else {
 			while ($arr = db_fetch_array($result)) {
-				$artifacts[$arr['artifact_id']] = new Artifact($this->ArtifactType, $arr);
+				$artifacts[$arr['artifact_id']] = new Artifact($this->ArtifactType, $arr['artifact_id']);
 			}
 		}
 

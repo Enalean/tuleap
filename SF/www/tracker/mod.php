@@ -40,8 +40,8 @@ if ($pv) {
 	       'help' => 'ArtifactUpdate.html'));
 }
 
-$res = $ah->getFieldsValues();
-$ah->display($res,$ro,$pv);
+// artifact object (and field values) initialized in script above (index.php)
+$ah->display($ro,$pv);
 
 // Display footer page
 if ( $pv ) {

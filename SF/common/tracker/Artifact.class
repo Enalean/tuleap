@@ -16,1328 +16,1250 @@
 
 class Artifact extends Error {
 
-	/**
-	 * Artifact Type object.
-	 *
-	 * @var		object	$ArtifactType.
-	 */
-	var $ArtifactType; 
+    /**
+     * Artifact Type object.
+     *
+     * @var             object  $ArtifactType.
+     */
+    var $ArtifactType; 
 
-	/**
-	 * Array of artifact data.
-	 *
-	 * @var		array	$data_array.
-	 */
-	var $data_array;
-	
-	/**
-	 * Array of field data.
-	 *
-	 * @var		array	
-	 */
-	var $data_fields;
+    /**
+     * Array of artifact data.
+     *
+     * @var             array   $data_array.
+     */
+    var $data_array;
+        
 
-	/**
-	 *  Artifact - constructor.
-	 *
-	 *	@param	object	The ArtifactType object.
-	 *  @param	integer	(primary key from database OR complete assoc array) 
-	 *		ONLY OPTIONAL WHEN YOU PLAN TO IMMEDIATELY CALL ->create()
-	 *  @return	boolean	success.
-	 */
-	function Artifact(&$ArtifactType, $data=false) {
-		$this->Error(); 
+    /**
+     *  Artifact - constructor.
+     *
+     *  @param  object  The ArtifactType object.
+     *  @param  integer (primary key from database OR complete assoc array) 
+     *          ONLY OPTIONAL WHEN YOU PLAN TO IMMEDIATELY CALL ->create()
+     *  @return boolean success.
+     */
+    function Artifact(&$ArtifactType, $data=false) {
+        $this->Error(); 
 
-		$this->ArtifactType = $ArtifactType;
-		$this->data_fields = false;
+        $this->ArtifactType = $ArtifactType;
 
-		//was ArtifactType legit?
-		if (!$ArtifactType || !is_object($ArtifactType)) {
-			$this->setError('Artifact: No Valid ArtifactType');
-			return false;
-		}
-		//did ArtifactType have an error?
-		if ($ArtifactType->isError()) {
-			$this->setError('Artifact: '.$ArtifactType->getErrorMessage());
-			return false;
-		}
-		
-		//
-		//	make sure this person has permission to view artifacts
-		//
-		if (!$this->ArtifactType->userCanView()) {
-			$this->setError('Artifact: Only Group Members Can View Private ArtifactTypes');
-			return false;
-		}
+        //was ArtifactType legit?
+        if (!$ArtifactType || !is_object($ArtifactType)) {
+            $this->setError('Artifact: No Valid ArtifactType');
+            return false;
+        }
+        //did ArtifactType have an error?
+        if ($ArtifactType->isError()) {
+            $this->setError('Artifact: '.$ArtifactType->getErrorMessage());
+            return false;
+        }
+                
+        //
+        //      make sure this person has permission to view artifacts
+        //
+        if (!$this->ArtifactType->userCanView()) {
+            $this->setError('Artifact: Only Group Members Can View Private ArtifactTypes');
+            return false;
+        }
 
-		//
-		//	set up data structures
-		//
-		if ($data) {
-			if (is_array($data)) {
-				$this->data_array = $data;
-//
-//	Should verify ArtifactType ID
-//
-				return true;
-			} else {
-				if (!$this->fetchData($data)) {
-					return false;
-				} else {
-					return true;
-				}
-			}
-		}
-	}
+        //
+        //      set up data structures
+        //
+        if ($data) {
+            if (is_array($data)) {
+                $this->data_array = $data;
+                //
+                //      Should verify ArtifactType ID
+                //
+                return true;
+            } else {
+                if (!$this->fetchData($data)) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        }
+    }
 
 
-	/**
-	 *	fetchData - re-fetch the data for this Artifact from the database.
-	 *
-	 *	@param	int		The artifact ID.
-	 *	@return	boolean	success.
-	 */
-	function fetchData($artifact_id) {
-		$sql = "SELECT * FROM artifact WHERE artifact_id='$artifact_id' AND group_artifact_id='".$this->ArtifactType->getID()."'";
-		$res=db_query($sql);
-		if (!$res || db_numrows($res) < 1) {
-			$this->setError('Artifact: Invalid ArtifactID');
-			return false;
-		}
-		$this->data_array = db_fetch_array($res);
-		db_free_result($res);
-		return true;
-	}
+    /**
+     *  fetchData - re-fetch the data for this Artifact from the database.
+     *
+     *  @param  int             The artifact ID.
+     *  @return boolean success.
+     */
+    function fetchData($artifact_id) {
 
-	/**
-	 *	getArtifactType - get the ArtifactType Object this Artifact is associated with.
-	 *
-	 *	@return object	ArtifactType.
-	 */
-	function getArtifactType() {
-		return $this->ArtifactType;
-	}
-	
-	/**
-	 *	getGenericValue - get a value for this artifact.
-	 *
-	 *	@return	value
-	 */
-	function getGenericValue($name) {
-		return $this->data_array[$name];
-	}
+        global $art_field_fact;
 
-	/**
-	 *	getID - get this ArtifactID.
-	 *
-	 *	@return	int	The artifact_id #.
-	 */
-	function getID() {
-		return $this->data_array['artifact_id'];
-	}
+        // first fetch values of standard fields
+        $sql = "SELECT * FROM artifact WHERE artifact_id='$artifact_id' AND group_artifact_id='".$this->ArtifactType->getID()."'";
+        $res=db_query($sql);
+        if (!$res || db_numrows($res) < 1) {
+            $this->setError('Artifact: Invalid ArtifactID');
+            return false;
+        }
+        $this->data_array = db_fetch_array($res);
+        db_free_result($res);
+            
 
-	/**
-	 *	getStatusID - get open/closed/deleted flag.
-	 *
-	 *	@return	int	Status: (1) Open, (2) Closed, (3) Deleted.
-	 */
-	function getStatusID() {
-		return $this->data_array['status_id'];
-	}
+        // now get the values for generic fields if any
+        $sql = "SELECT * FROM artifact_field_value WHERE artifact_id='$artifact_id'";
+        $res=db_query($sql);
+        if (!$res || db_numrows($res) < 1) {
+            // if no result then it is possible that there isn't any generic fields
+            return true;
+        }
+        while ($row = db_fetch_array($res)) {
+            $data_fields[$row['field_id']] = $row;
+        }
 
-	/**
-	 *	getArtifactGroupID - get artifact_group_id flag.
-	 *
-	 *	@return int artifact_group_id
-	 */
-	function getArtifactGroupID() {
-		return $this->data_array['artifact_group_id'];
-	}
+        // Get the list of all fields used by this tracker and append
+        // the values for these generic fields to data_array
+        $fields = $art_field_fact->getAllUsedFields();
 
-	/**
-	 *	getSubmittedBy - get ID of submitter.
-	 *
-	 *	@return int user_id of submitter.
-	 */
-	function getSubmittedBy() {
-		return $this->data_array['submitted_by'];
-	}
+        while (list($key,$field) = each($fields) ) {
+            //echo $field->getName()."-".$field->getID()."<br>";
+            // Skip! Standard field values fectched in previous query
+            // and comment_type_id is not stored in artifact_field_value table
+            if ( $field->isStandardField() ||
+                 $field->getName() == "comment_type_id") {
+                continue;
+            }
+            $this->data_array[$field->getName()] = $data_fields[$field->getID()][$field->getValueFieldName()];
 
-	/**
-	 *	getOpenDate - get unix time of creation.
-	 *
-	 *	@return int unix time.
-	 */
-	function getOpenDate() {
-		return $this->data_array['open_date'];
-	}
+        }
 
-	/**
-	 *	getCloseDate - get unix time of closure.
-	 *
-	 *	@return int unix time.
-	 */
-	function getCloseDate() {
-		return $this->data_array['close_date'];
-	}
+        return true;
+    }
 
-	/**
-	 *	getSummary - get text summary of artifact.
-	 *
-	 *	@return	string The summary (subject).
-	 */
-	function getSummary() {
-		return $this->data_array['summary'];
-	}
+    /**
+     *  getArtifactType - get the ArtifactType Object this Artifact is associated with.
+     *
+     *  @return object  ArtifactType.
+     */
+    function getArtifactType() {
+        return $this->ArtifactType;
+    }
+        
+    /**
+     *  getValue - get the value for this artifact field.
+     *
+     *           @param name: the field name
+     *  @return value
+     */
+    function getValue($name) {
+        return $this->data_array[$name];
+    }
 
-	/**
-	 *	getDetails - get text body (message) of artifact.
-	 *
-	 *	@return	string	The body (message).
-	 */
-	function getDetails() {
-		return $this->data_array['details'];
-	}
+    /**
+     *  getID - get this ArtifactID.
+     *
+     *  @return int     The artifact_id #.
+     */
+    function getID() {
+        return $this->data_array['artifact_id'];
+    }
 
-	/**
-	 *	getSeverity - get the severity of this artifact
-	 *
-	 *	@return int
-	 */
-	function getSeverity() {
-		return $this->data_array['severity'];
-	}
+    /**
+     *  getStatusID - get open/closed/deleted flag.
+     *
+     *  @return int     Status: (1) Open, (2) Closed, (3) Deleted.
+     */
+    function getStatusID() {
+        return $this->data_array['status_id'];
+    }
 
-	/**
-	 *	Insert an entry into the artifact_history
-	 *
-	 *  @param field: the field object
-	 *  @param old_value: the previous value of the field
-	 *  @param type: extra information used to store the 'comment_type_id' field value (for the follow up comments)
-	 *  @param email: the email is the user is not logged in
-	 *
-	 *	@return int : the artifact_history_id
-	 */
-	function addHistory ($field,$old_value,$type=false,$email=false) {
-	
-	    // If field is not to be kept in bug change history then do nothing
-	    if (!$field->getGlobalKeepHistory()) { return; }
-	
-		/*
-			handle the insertion of history for these parameters
-		*/
-		if ($email) {
-			// We use the email to identify the user
-			$user=100;
-		} else {
-			if ( user_isloggedin() ) {
-				$user=user_getid();
-			} else {
-				$user = 100;
-			}
-			$email = "";
-		}
-	
-		// If type has a value add it into the sql statement (this is only for
-		// the follow up comments (details field))
-		if ($type) {
-		    $fld_type = ',type'; $val_type = ",'$type'";
-		} else {
-		    // No comment type specified for a followup comment
-		    // so force it to None (100)
-		    if ($field_name == 'details') {
-				$fld_type = ',type'; $val_type = ",'100'";
-		    }
-		}
-			
-	
-		$sql="insert into artifact_history(artifact_id,field_name,old_value,mod_by,email,date $fld_type) ".
-		    "VALUES (".$this->getID().",'".$field->getName()."','$old_value','$user','".$email."','".time()."' $val_type)";
-		//echo $sql;
-		return db_query($sql);
-	}
-	
-	
-	/**
-	 *	Create a new artifact (and its values) in the db
-	 *
-	 *	@return boolean
-	 */
-	function create() {
+    /**
+     *  getArtifactGroupID - get artifact_group_id flag.
+     *
+     *  @return int artifact_group_id
+     */
+    function getArtifactGroupID() {
+        return $this->data_array['artifact_group_id'];
+    }
 
-	    global $feedback,$ath,$art_field_fact;
-	
-		$group = $ath->getGroup();
-		$group_artifact_id = $ath->getID();
+    /**
+     *  getSubmittedBy - get ID of submitter.
+     *
+     *  @return int user_id of submitter.
+     */
+    function getSubmittedBy() {
+        return $this->data_array['submitted_by'];
+    }
 
-		// Retrieve HTTP GET variables and store them in $vfl array
-		$vfl = $art_field_fact->extractFieldList();
-			
-	    // make sure  required fields are not empty
-	    if ( $art_field_fact->checkEmptyFields($vfl) == false ) {
-			exit_missing_param();
-	    }
+    /**
+     *  getOpenDate - get unix time of creation.
+     *
+     *  @return int unix time.
+     */
+    function getOpenDate() {
+        return $this->data_array['open_date'];
+    }
 
-	    // we don't force them to be logged in to submit a bug
-	    if (!user_isloggedin()) {
-			$user=100;
-	    } else {
-			$user=user_getid();
-	    }
-	
-	    // first make sure this wasn't double-submitted
-	    
-	    $field = $art_field_fact->getFieldFromName('summary');
-	    if ( $field && $field->isUsed() ) {
-		    $res=db_query("SELECT * FROM artifact WHERE submitted_by='$user' AND summary='".$vfl['summary']);
-		    if ($res && db_numrows($res) > 0) {
-				$this->setError(' ERROR - DOUBLE SUBMISSION. You have already submitted a bug with the same summary. Please don\'t do that ');
-				return false;		
-		    }
-		}
-			
-	    //
-	    //  Create the insert statement for standard field
-	    //
-	    reset($vfl);
-	    while (list($field_name,$value) = each($vfl)) {
-		
-	    	$field = $art_field_fact->getFieldFromName($field_name);
-	    	if ( $field && $field->isStandardField() ) {
-				// skip over special fields  
-				if ($field->isSpecial()) {
-				    continue; 
-				}
-			
-				$vfl_cols .= ','.$field->getName();
-				$is_text = ($field->isTextField() || $field->isTextArea());
-				if  ($is_text) {
-				    $value = htmlspecialchars($value);
-				} else if ($field->isDateField()) {
-				    // if it's a date we must convert the format to unix time
-				    list($value,$ok) = util_date_to_unixtime($value);
-				}
+    /**
+     *  getCloseDate - get unix time of closure.
+     *
+     *  @return int unix time.
+     */
+    function getCloseDate() {
+        return $this->data_array['close_date'];
+    }
 
-				$vfl_values .= ',\''.$value.'\'';
-						    
-			}
-			
-	    } // while
+    /**
+     *  getSummary - get text summary of artifact.
+     *
+     *  @return string The summary (subject).
+     */
+    function getSummary() {
+        return $this->data_array['summary'];
+    }
 
-	    // Add all special fields that were not handled in the previous block
-	    $fixed_cols = 'open_date,group_artifact_id,submitted_by';
-	    $fixed_values = "'".time()."','$group_artifact_id','$user'";
-		
-	    //
-	    //  Finally, build the full SQL query and insert the artifact itself 
-	    //
-	
-	    $sql="INSERT INTO artifact ($fixed_cols $vfl_cols) VALUES ($fixed_values $vfl_values)";
-	    //echo "DBG - SQL insert artifact: $sql";
-	    $result=db_query($sql);
-	    $artifact_id=db_insertid($result);
+    /**
+     *  getDetails - get text body (message) of artifact.
+     *
+     *  @return string  The body (message).
+     */
+    function getDetails() {
+        return $this->data_array['details'];
+    }
 
-	    // 
-	    // Reload values
-	    //
-	    $this->fetchData($artifact_id);
-	
-	    if (!$artifact_id) {
-			$this->setError('INSERT new artifact failed. Report to the Administrator<br>'.
-			    'SQL statement:<br>'.$sql.'<br>');
-			return false;
-	    } else {
-			$was_error = false;
-			
-		    //
-		    //  Insert the field values for no standard field
-		    //
-		    $fields = $art_field_fact->getAllUsedFields();
-		    while (list($field_name,$field) = each($fields)) {
-			
-				// skip over special fields  
-				if ( ($field->isSpecial())||($field->isStandardField()) ) {
-				    continue; 
-				}
-				
-		    	if ( $vfl[$field_name] ) {
-		    		// The field has a value from the user input
+    /**
+     *  getSeverity - get the severity of this artifact
+     *
+     *  @return int
+     */
+    function getSeverity() {
+        return $this->data_array['severity'];
+    }
 
-					$value = $vfl[$field_name];
-					
-					$is_text = ($field->isTextField() || $field->isTextArea());
-					if  ($is_text) {
-					    $value = htmlspecialchars($value);
-					} else if ($field->isDateField()) {
-					    // if it's a date we must convert the format to unix time
-					    list($value,$ok) = util_date_to_unixtime($value);
-					}
-	
-					// Insert the field value
-		    		if ( !$field->insertValue($artifact_id,$value) ) {
-		    			$error_message .= " Fail to insert the field value - ".$field->getName();
-		    			$was_error = true;
-		    		}
-				    
-				} else {
-					// The field hasn't a value from the user input
-					// We need to insert default value for this field
-					// because all SQL queries (from Report or Artifact read/update) don't allow 
-					// empty record (we must use join and not left join for performance reasons).
-					
-		    		if ( !$field->insertValue($artifact_id,$field->getDefaultValue()) ) {
-		    			$error_message .= " Fail to insert the default field value - ".$field->getName();
-		    			$was_error = true;
-		    		}
-					
-				}
-				
-		    } // while
+    /**
+     *  Insert an entry into the artifact_history
+     *
+     *  @param field: the field object
+     *  @param old_value: the previous value of the field
+     *  @param type: extra information used to store the 'comment_type_id' field value (for the follow up comments)
+     *  @param email: the email is the user is not logged in
+     *
+     *  @return int : the artifact_history_id
+     */
+    function addHistory ($field,$old_value,$type=false,$email=false) {
+        
+        // If field is not to be kept in bug change history then do nothing
+        if (!$field->getGlobalKeepHistory()) { return; }
+        
+        /*
+          handle the insertion of history for these parameters
+        */
+        if ($email) {
+            // We use the email to identify the user
+            $user=100;
+        } else {
+            if ( user_isloggedin() ) {
+                $user=user_getid();
+            } else {
+                $user = 100;
+            }
+            $email = "";
+        }
+        
+        // If type has a value add it into the sql statement (this is only for
+        // the follow up comments (details field))
+        if ($type) {
+            $fld_type = ',type'; $val_type = ",'$type'";
+        } else {
+            // No comment type specified for a followup comment
+            // so force it to None (100)
+            if ($field_name == 'details') {
+                $fld_type = ',type'; $val_type = ",'100'";
+            }
+        }
+                        
+        
+        $sql="insert into artifact_history(artifact_id,field_name,old_value,mod_by,email,date $fld_type) ".
+            "VALUES (".$this->getID().",'".$field->getName()."','$old_value','$user','".$email."','".time()."' $val_type)";
+        //echo $sql;
+        return db_query($sql);
+    }
+        
+        
+    /**
+     *  Create a new artifact (and its values) in the db
+     *
+     *  @return boolean
+     */
+    function create() {
 
-			return !$was_error;
-	    }
-	}
+        global $feedback,$ath,$art_field_fact;
+        
+        $group = $ath->getGroup();
+        $group_artifact_id = $ath->getID();
 
-	/**
+        // Retrieve HTTP GET variables and store them in $vfl array
+        $vfl = $art_field_fact->extractFieldList();
+                        
+        // make sure  required fields are not empty
+        if ( $art_field_fact->checkEmptyFields($vfl) == false ) {
+            exit_missing_param();
+        }
+
+        // we don't force them to be logged in to submit a bug
+        if (!user_isloggedin()) {
+            $user=100;
+        } else {
+            $user=user_getid();
+        }
+        
+        // first make sure this wasn't double-submitted
+            
+        $field = $art_field_fact->getFieldFromName('summary');
+        if ( $field && $field->isUsed() ) {
+            $res=db_query("SELECT * FROM artifact WHERE submitted_by='$user' AND summary='".$vfl['summary']);
+            if ($res && db_numrows($res) > 0) {
+                $this->setError(' ERROR - DOUBLE SUBMISSION. You have already submitted a bug with the same summary. Please don\'t do that ');
+                return false;           
+            }
+        }
+                        
+        //
+        //  Create the insert statement for standard field
+        //
+        reset($vfl);
+        while (list($field_name,$value) = each($vfl)) {
+                
+            $field = $art_field_fact->getFieldFromName($field_name);
+            if ( $field && $field->isStandardField() ) {
+                // skip over special fields  
+                if ($field->isSpecial()) {
+                    continue; 
+                }
+                        
+                $vfl_cols .= ','.$field->getName();
+                $is_text = ($field->isTextField() || $field->isTextArea());
+                if  ($is_text) {
+                    $value = htmlspecialchars($value);
+                } else if ($field->isDateField()) {
+                    // if it's a date we must convert the format to unix time
+                    list($value,$ok) = util_date_to_unixtime($value);
+                }
+
+                $vfl_values .= ',\''.$value.'\'';
+                                                    
+            }
+                        
+        } // while
+
+        // Add all special fields that were not handled in the previous block
+        $fixed_cols = 'open_date,group_artifact_id,submitted_by';
+        $fixed_values = "'".time()."','$group_artifact_id','$user'";
+                
+        //
+        //  Finally, build the full SQL query and insert the artifact itself 
+        //
+        
+        $sql="INSERT INTO artifact ($fixed_cols $vfl_cols) VALUES ($fixed_values $vfl_values)";
+        //echo "<br>DBG - SQL insert artifact: $sql";
+        $result=db_query($sql);
+        $artifact_id=db_insertid($result);
+
+        
+	$was_error = false;
+        if (!$artifact_id) {
+            $this->setError('INSERT new artifact failed. Report to the Administrator<br>'.
+                            'SQL statement:<br>'.$sql.'<br>');
+            $was_error = true;
+        } else {
+                        
+            //
+            //  Insert the field values for no standard field
+            //
+            $fields = $art_field_fact->getAllUsedFields();
+            while (list($field_name,$field) = each($fields)) {
+                        
+                // skip over special fields  
+                if ( ($field->isSpecial())||($field->isStandardField()) ) {
+                    continue; 
+                }
+                                
+                if ( $vfl[$field_name] ) {
+                    // The field has a value from the user input
+
+                    $value = $vfl[$field_name];
+                                        
+                    $is_text = ($field->isTextField() || $field->isTextArea());
+                    if  ($is_text) {
+                        $value = htmlspecialchars($value);
+                    } else if ($field->isDateField()) {
+                        // if it's a date we must convert the format to unix time
+                        list($value,$ok) = util_date_to_unixtime($value);
+                    }
+        
+                    // Insert the field value
+                    if ( !$field->insertValue($artifact_id,$value) ) {
+                        $error_message .= " Fail to insert the field value - ".$field->getName();
+                        $was_error = true;
+                    }
+                                    
+                } else {
+                    // The field hasn't a value from the user input
+                    // We need to insert default value for this field
+                    // because all SQL queries (from Report or Artifact read/update) don't allow 
+                    // empty record (we must use join and not left join for performance reasons).
+                                        
+                    if ( !$field->insertValue($artifact_id,$field->getDefaultValue()) ) {
+                        $error_message .= " Fail to insert the default field value - ".$field->getName();
+                        $was_error = true;
+                    }
+                                        
+                }
+                                
+            } // while
+
+        }
+
+        // All ok then reload the artifact dat to make sure it is cached
+        // correctly in memory
+        $this->fetchData($artifact_id);
+
+        return !$was_error;
+    }
+
+    /**
      *  Add a followup comment
-	 *
-	 * @param details: the comment
-	 * @param email: user email if the user is not logged in
-	 * @param changes (OUT): array of changes (for notifications)
-	 *
-	 *	@return boolean
-	 */
-	function addComment($details,$email=false,&$changes) {
-			
-	    global $feedback,$art_field_fact;
+     *
+     * @param details: the comment
+     * @param email: user email if the user is not logged in
+     * @param changes (OUT): array of changes (for notifications)
+     *
+     *  @return boolean
+     */
+    function addComment($details,$email=false,&$changes) {
+                        
+        global $feedback,$art_field_fact;
 
-		// Add a new comment if there is one
-		if ($details != '') {
-		
-	    	$field = $art_field_fact->getFieldFromName('details');
-	    	if ( $field ) {
-			    // For none project members force the comment type to None (100)
-			    if ( !user_isloggedin() ) {
-			    	if ( $email ) {
-			    		$this->addHistory($field,htmlspecialchars($details), 100, $email);
-			    	} else {
-			    		$feedback .= ' You need to enter an email!';
-			    		return false;
-			    	}
-			    } else {
-			    	$this->addHistory($field,htmlspecialchars($details), 100);
-			    }
-			    $changes['details']['add'] = stripslashes($details);
-			    $changes['details']['type'] = 'None';
-			
-			    $feedback .= ' Comment added to artifact ';
-			}		    
-			return true;
-			
-		} else {
-			return false;
-		}
-	}
-	
-	
-	/**
+        // Add a new comment if there is one
+        if ($details != '') {
+                
+            $field = $art_field_fact->getFieldFromName('details');
+            if ( $field ) {
+                // For none project members force the comment type to None (100)
+                if ( !user_isloggedin() ) {
+                    if ( $email ) {
+                        $this->addHistory($field,htmlspecialchars($details), 100, $email);
+                    } else {
+                        $feedback .= ' You need to enter an email!';
+                        return false;
+                    }
+                } else {
+                    $this->addHistory($field,htmlspecialchars($details), 100);
+                }
+                $changes['details']['add'] = stripslashes($details);
+                $changes['details']['type'] = 'None';
+                        
+                $feedback .= ' Comment added to artifact ';
+            }               
+            return true;
+                        
+        } else {
+            return false;
+        }
+    }
+        
+        
+    /**
      *  Update an artifact. Rk: vfl is an variable list of fields, Vary from one project to another
      *  return true if artifact updated, false if nothing changed or DB update failed
-	 *
-	 * @param artifact_id_dependent: artifact dependencies
-	 * @param canned_response: canned responses
-	 * @param changes (OUT): array of changes (for notifications)
-	 *
-	 *	@return boolean
-	 */
-	function handleUpdate ($artifact_id_dependent,$canned_response,&$changes)
-	{
-	    global $feedback,$art_field_fact;
-	
-		// Retrieve HTTP GET variables and store them in $vfl array
-		$vfl = $art_field_fact->extractFieldList();
-			
-	    // make sure  required fields are not empty
-	    if ( !$canned_response || 
-		($art_field_fact->checkEmptyFields($vfl) == false) ) {
-			exit_missing_param();
-	    }
-	
-	    //get this artifact from the db
-	    $result=$this->getFieldsValues();
-	
-		//verify permissions - Must have Tech permission
-	    if ( !$this->ArtifactType->userIsTech() ) {
-			exit_permission_denied();
-	    }
-		
-	    //
-	    //  See which fields changed during the modification
-	    //  and if we must keep history then do it. Also add them to the update
-	    //  statement
-	    //
-	    $changes = array();
-	    reset($vfl);
-	    while (list($field_name,$value) = each($vfl)) {
-		
-	    	$field = $art_field_fact->getFieldFromName($field_name);
-	    	if ( $field ) {
-				// skip over special fields  except for details which in this 
-				// particular case can be processed normally
-				if ($field->isSpecial() || ($field_name == 'details')) {
-				    continue; 
-				}
-			
-				if ( ($field->isMultiSelectBox())&&(is_array($value)) ) {
-					// The field is a multi values field and it has multi assigned values
-					$values = $value;
-				    $old_values = $field->getValues($this->getID());
-			
-				    list($deleted_values,$added_values) = util_double_diff_array($old_values,$values);
+     *
+     * @param artifact_id_dependent: artifact dependencies
+     * @param canned_response: canned responses
+     * @param changes (OUT): array of changes (for notifications)
+     *
+     *  @return boolean
+     */
+    function handleUpdate ($artifact_id_dependent,$canned_response,&$changes)
+        {
+            global $feedback,$art_field_fact;
+        
+            // Retrieve HTTP GET variables and store them in $vfl array
+            $vfl = $art_field_fact->extractFieldList();
+                        
+            // make sure  required fields are not empty
+            if ( !$canned_response || 
+                 ($art_field_fact->checkEmptyFields($vfl) == false) ) {
+                exit_missing_param();
+            }
+        
+            //get this artifact from the db
+            $result=$this->getFieldsValues();
+        
+            //verify permissions - Must have Tech permission
+            if ( !$this->ArtifactType->userIsTech() ) {
+                exit_permission_denied();
+            }
+                
+            //
+            //  See which fields changed during the modification
+            //  and if we must keep history then do it. Also add them to the update
+            //  statement
+            //
+            $changes = array();
+            reset($vfl);
+            while (list($field_name,$value) = each($vfl)) {
+                
+                $field = $art_field_fact->getFieldFromName($field_name);
+                if ( $field ) {
+                    // skip over special fields  except for details which in this 
+                    // particular case can be processed normally
+                    if ($field->isSpecial() || ($field_name == 'details')) {
+                        continue; 
+                    }
+                        
+                    if ( ($field->isMultiSelectBox())&&(is_array($value)) ) {
+                        // The field is a multi values field and it has multi assigned values
+                        $values = $value;
+                        $old_values = $field->getValues($this->getID());
+                        
+                        list($deleted_values,$added_values) = util_double_diff_array($old_values,$values);
 
-					// Check if there are some differences
-					if ( ((count($deleted_values) > 0)||(count($added_values) > 0)) && 
-					     ((count($added_values) != 1)||($added_values[0]!=100)||(count($values) == 1)) ) {
+                        // Check if there are some differences
+                        if ( ((count($deleted_values) > 0)||(count($added_values) > 0)) && 
+                             ((count($added_values) != 1)||($added_values[0]!=100)||(count($values) == 1)) ) {
 
-						// Add values in the history
-						$a = $field->getLabelValues($this->ArtifactType->getID(),$old_values);
-						$val = join(",",$a);
-						$this->addHistory($field,$val);
-				
-						// Update the field value
-			    		if ( !$field->updateValues($this->getID(),$values) ) {
-			    			$feedback .= "Fail to update the field value ".$field->getName();
-			    		}
-				    
-					    // Keep track of the change
-					    $field_html = new ArtifactFieldHtml($field);
-					    if (count($deleted_values) > 0) {
-					    	$val = join(",",$field->getLabelValues($this->ArtifactType->getID(),$deleted_values));
-						    $changes[$field_name]['del']=$val;
-						}
-					    if (count($added_values) > 0) {
-					    	$val = join(",",$field->getLabelValues($this->ArtifactType->getID(),$added_values));
-						    $changes[$field_name]['add']=$val;
-						}
-					}
-					
-				} else {
-				
-					$old_value = db_result($result,0,$field_name);
-					$is_text = ($field->isTextField() || $field->isTextArea());
-					if  ($is_text) {
-					    $differ = ($old_value != stripslashes(htmlspecialchars($value))); 
-					} else if ($field->isDateField()) {
-					    // if it's a date we must convert the format to unix time
-					    list($value,$ok) = util_date_to_unixtime($value);
-					    $differ = ($old_value != $value);
-					} else {
-					    $differ = ($old_value != $value);
-					}
-					if ($differ) {
-					    if ($is_text) {
-					    	if ( $field->isStandardField() ) {
-								$upd_list .= "$field_name='".htmlspecialchars($value)."',";							
-							} else {
-								$update_value = htmlspecialchars($value);
-							}
-						
-							$this->addHistory($field,addslashes($old_value));
-							$value = stripslashes($value);
-					    } else {
-					    	if ( $field->isStandardField() ) {
-								$upd_list .= "$field_name='$value',";
-							} else {
-								$update_value = $value;
-							}
-							$this->addHistory($field,$old_value);
-					    }
-				
-						// Update the field value
-				    	if ( !$field->isStandardField() ) {
-				    		if ( !$field->updateValue($this->getID(),$update_value) ) {
-				    			$feedback .= "Fail to update the field value ".$field->getName();
-				    		}
-				    	}
-				    
-					    // Keep track of the change
-					    $field_html = new ArtifactFieldHtml($field);
-					    $changes[$field_name]['del']=$field_html->display($this->ArtifactType->getID(),$old_value,false,false,true,true);
-					    $changes[$field_name]['add']=$field_html->display($this->ArtifactType->getID(),$value,false,false,true,true);
-					}
-				}
-			}
-			
-	    } // while
+                            // Add values in the history
+                            $a = $field->getLabelValues($this->ArtifactType->getID(),$old_values);
+                            $val = join(",",$a);
+                            $this->addHistory($field,$val);
+                                
+                            // Update the field value
+                            if ( !$field->updateValues($this->getID(),$values) ) {
+                                $feedback .= "Fail to update the field value ".$field->getName();
+                            }
+                                    
+                            // Keep track of the change
+                            $field_html = new ArtifactFieldHtml($field);
+                            if (count($deleted_values) > 0) {
+                                $val = join(",",$field->getLabelValues($this->ArtifactType->getID(),$deleted_values));
+                                $changes[$field_name]['del']=$val;
+                            }
+                            if (count($added_values) > 0) {
+                                $val = join(",",$field->getLabelValues($this->ArtifactType->getID(),$added_values));
+                                $changes[$field_name]['add']=$val;
+                            }
+                        }
+                                        
+                    } else {
+                                
+                        $old_value = $result[$field_name];
+                        $is_text = ($field->isTextField() || $field->isTextArea());
+                        if  ($is_text) {
+                            $differ = ($old_value != stripslashes(htmlspecialchars($value))); 
+                        } else if ($field->isDateField()) {
+                            // if it's a date we must convert the format to unix time
+                            list($value,$ok) = util_date_to_unixtime($value);
+                            $differ = ($old_value != $value);
+                        } else {
+                            $differ = ($old_value != $value);
+                        }
+                        if ($differ) {
+                            if ($is_text) {
+                                if ( $field->isStandardField() ) {
+                                    $upd_list .= "$field_name='".htmlspecialchars($value)."',";                                                 
+                                } else {
+                                    $update_value = htmlspecialchars($value);
+                                }
+                                                
+                                $this->addHistory($field,addslashes($old_value));
+                                $value = stripslashes($value);
+                            } else {
+                                if ( $field->isStandardField() ) {
+                                    $upd_list .= "$field_name='$value',";
+                                } else {
+                                    $update_value = $value;
+                                }
+                                $this->addHistory($field,$old_value);
+                            }
+                                
+                            // Update the field value
+                            if ( !$field->isStandardField() ) {
+                                if ( !$field->updateValue($this->getID(),$update_value) ) {
+                                    $feedback .= "Fail to update the field value ".$field->getName();
+                                }
+                            }
+                                    
+                            // Keep track of the change
+                            $field_html = new ArtifactFieldHtml($field);
+                            $changes[$field_name]['del']=$field_html->display($this->ArtifactType->getID(),$old_value,false,false,true,true);
+                            $changes[$field_name]['add']=$field_html->display($this->ArtifactType->getID(),$value,false,false,true,true);
+                        }
+                    }
+                }
+                        
+            } // while
 
-	    // Details field history is handled a little differently. Followup comments
-	    // are added in the bug history along with the comment type.
-	    // 
-	    // If a canned response is given it overrides anything typed in the followup
-	    // comment text area (aka details area). 
-	    $details = $vfl['details'];
-	    if ($canned_response != 100) {
-	    	
-			$sql="SELECT * FROM artifact_canned_responses WHERE artifact_canned_id='".$canned_response."'";
-			$res3=db_query($sql);
-		
-			if ($res3 && db_numrows($res3) > 0) {
-			    $details = addslashes(util_unconvert_htmlspecialchars(db_result($res3,0,'body')));
-			    $feedback .= ' Canned Response Used ';
-			} else {
-			    $feedback .= ' Unable to use Canned Response ';
-			    $feedback .= ' - '.db_error();
-			}
-	    }
-	
-	    // Details field history is handled a little differently. Followup comments
-	    // are added in the bug history along with the comment type.
-	    if ($details != '') {
-	    	$field = $art_field_fact->getFieldFromName('details');
-	    	if ( $field ) {
-				$this->addHistory($field,htmlspecialchars($details), $vfl['comment_type_id']);
-			}
-			$changes['details']['add'] = stripslashes($details);
-			$field = $art_field_fact->getFieldFromName($field_name);
-			if ( $field ) {
-				$changes['details']['type'] =
-				    $field->getValue($this->ArtifactType->getID(), $vfl['comment_type_id']);
-			}
-	    }
-	    
-	    //
-	    //  Enter the timestamp if we are changing to closed or declined
-	    //
-	    if ($this->isStatusClosed($vfl['status_id'])) {
-			$now=time();
-			$upd_list .= "close_date='$now',";
-	    	$field = $art_field_fact->getFieldFromName('close_date');
-	    	if ( $field ) {
-				$this->addHistory ($field,db_result($result,0,'close_date'));
-			}
-	    }
-	
-	    //
-	    //  Insert the list of dependencies 
-	    //
-	
-		if (!$this->addDependencies($artifact_id_dependent,&$changes)) {
-			return false;
-		}
-		
-	    //
-	    //  Finally, build the full SQL query and update the artifact itself (if need be)
-	    //
-	
-	    $result = true;
-	    if ($upd_list) {
-			// strip the excess comma at the end of the update field list
-			$upd_list = substr($upd_list,0,-1);
-		
-			$sql="UPDATE artifact SET $upd_list ".
-			    " WHERE artifact_id=".$this->getID();
-		
-			$result=db_query($sql);
-	    }
-	
-	    if (!$result) {
-			exit_error('UPDATE FAILED','UPDATE FAILED');
-			return false;
-	    } else {
-			$feedback .= " Successfully Updated Artifact ";
-			return true;
-	    }
-
-	}
-
-	/**
-	 * Return if the email addresses are valid
-	 *
-	 * @param arr_email: list of email addresses
-	 * @param message (OUT): error message if an error is found
-	 *
-	 * @return boolean
-	 */
-	function validateCCList($arr_email, &$message) {
-	    $valid = true;
-	    $message = "";
-	
-	    while (list(,$cc) = each($arr_email)) {
-			// Make sure that the address is valid
-			if (! validate_email($cc)) {
-			    // check for a valid CodeX user.
-			    $res = user_get_result_set_from_unix($cc);
-			    if (db_numrows($res) == 0) {
-					$valid = false;
-			        $message .= "$cc<br>";
-					continue;
-			    }
-			}
-	    }
-	
-	    if (! $valid) {
-	        $message = "There are problems with the following addresses:"
-	                 . "<blockquote>$message</blockquote>"
-			 . "Email addresses must either be valid "
-			 . "CodeX user names (e.g., 'jdoe') or fully qualified "
-			 . "email addresses (e.g., 'jill.doe@somewhere.xerox.com'). "
-		         . "Lists of email addresses may be separated by either "
-		         . "commas or semicolons."
-			 ;
-	    }
-	
-	    return $valid;
-	}
-
-	/**
-	 * Check if an email address already exists
-	 *
-	 * @param cc: the email address
-	 *
-	 * @return boolean
-	 */
-	function existCC($cc) {
-	    $sql = "SELECT artifact_cc_id FROM artifact_cc WHERE artifact_id=".$this->getID()." AND email='$cc'";
-	    $res = db_query($sql);
-	    return (db_numrows($res) >= 1);
-	}
-
-	/**
-	 * Insert an email address for the CC list
-	 *
-	 * @param cc: the email address
-	 * @param added_by: user who insert this cc list
-	 * @param comment: comment for this cc list
-	 * @param date: date of creation
-	 *
-	 * @return boolean
-	 */
-	function insertCC($cc,$added_by,$comment,$date) {
-	    $sql = "INSERT INTO artifact_cc (artifact_id,email,added_by,comment,date) ".
-		"VALUES (".$this->getID().",'$cc','$added_by','$comment','$date')";
-	    $res = db_query($sql);
-	    return ($res);
-	
-	}
-
-	/**
-	 * Insert email addresses for CC list
-	 *
-	 * @param email: list of email addresses
-	 * @param comment: comment for these addresses
-	 * @param changes (OUT): list of changes
-	 *
-	 * @return boolean
-	 */
-	function addCC($email,$comment,&$changes) {
-	    global $feedback;
-	
-	    $user_id = (user_isloggedin() ? user_getid(): 100);
-	
-	    $arr_email = util_split_emails($email);
-	    $date = time();
-	    $ok = true;
-	    $changed = false;
-	
-	    if (! $this->validateCCList($arr_email, $message)) {
-	        exit_error("Error - The CC list is invalid", $message);
-	    }
-	
-	    while (list(,$cc) = each($arr_email)) {
-			// Add this cc only if not there already
-			if (!$this->existCC($cc)) {
-			    $changed = true;
-			    $res = $this->insertCC($cc,$user_id,$comment,$date);
-			    if (!$res) { $ok = false; }
-			}
-	    }
-	
-	    if (!$ok) {
-			$feedback .= ' - CC addition failed';
-	    } else {
-			$feedback .= '- CC Added';
-			$changes['CC']['add'] = join(',', $arr_email);
-	    }
-	    return $ok;
-	}
-
-	/**
-	 * Delete an email address in the CC list
-	 *
-	 * @param artifact_cc_id: cc list id
-	 * @param changes (OUT): list of changes
-	 *
-	 * @return boolean
-	 */
-	function deleteCC($artifact_cc_id=false,&$changes) {
-	    global $feedback;
-	
-	    // If both bug_id and bug_cc_id are given make sure the cc belongs 
-	    // to this bug (it's a bit paranoid but...)
-	    $sql = "SELECT artifact_id,email from artifact_cc WHERE artifact_cc_id='$artifact_cc_id'";
-		$res1 = db_query($sql);
-		if ((db_numrows($res1) <= 0) || (db_result($res1,0,'artifact_id') != $this->getID()) ) {
-		    $feedback .= " - Error CC ID $artifact_cc_id doesn't belong to artifact ID";
-		    return false;
-		}
-	
-	    // Now delete the CC address
-	    $res2 = db_query("DELETE FROM artifact_cc WHERE artifact_cc_id='$artifact_cc_id'");
-	    if (!$res2) {
-			$feedback .= " - Error deleting CC ID $artifact_cc_id: ".db_error($res2);
-			return false;
-	    } else {
-			$feedback .= " - CC Removed";
-			$changes['CC']['del'] = db_result($res1,0,'email');
-			return true;
-	    }
-	}
-
-	/**
-	 * Check if an artifact depends already from the current one
-	 *
-	 * @param id: the artifact id
-	 *
-	 * @return boolean
-	 */
-	function existDependency($id) {
-	    $sql = "SELECT is_dependent_on_artifact_id FROM artifact_dependencies WHERE artifact_id=".$this->getID()." AND is_dependent_on_artifact_id=$id";
-	    //echo $sql;
-	    $res = db_query($sql);
-	    return (db_numrows($res) >= 1);
-	}
-	
-	/**
-	 * Check if an artifact exists
-	 *
-	 * @param id: the artifact id
-	 *
-	 * @return boolean
-	 */
-	function validArtifact($id) {
-	    $sql = "SELECT * FROM artifact a, artifact_group_list agl WHERE ".
-	    	   "a.group_artifact_id = agl.group_artifact_id AND a.artifact_id=".$id." AND ".
-	    	   "agl.status = 'A'";
-	    $res = db_query($sql);
-	    if ( db_numrows($res) >= 1 )
-	    	return true;
-	    else
-	    	return false;
-	}
-	
-
-	/**
-	 * Insert a artifact dependency with the current one
-	 *
-	 * @param id: the artifact id
-	 *
-	 * @return boolean
-	 */
-	function insertDependency($id) {
-	    $sql = "INSERT INTO artifact_dependencies (artifact_id,is_dependent_on_artifact_id) ".
-		"VALUES (".$this->getID().",$id)";
-		//echo $sql;
-	    $res = db_query($sql);
-	    return ($res);
-	
-	}
-
-	/**
-	 * Insert artifact dependencies
-	 *
-	 * @param artifact_id_dependent: list of artifact which are depend on (comma sperator)
-	 * @param changes (OUT): list of changes
-	 *
-	 * @return boolean
-	 */
-	function addDependencies($artifact_id_dependent,&$changes) {
-	    global $feedback;
-	
-		if ( !$artifact_id_dependent ) 
-			return true;
-			
-		$ok = true;
-		$ids = explode(",",$artifact_id_dependent);
-		
-	    while (list(,$id) = each($ids)) {
-			// Add this id only if not already exist
-			//echo "add id=".$id."<br>";
-			// Check existance
-			if (!$this->validArtifact($id)) {
-				$ok = false;
-				$feedback .= " Invalid artifact #".$id;
-			}
-			if ($ok&&!$this->existDependency($id)) {
-			    $res = $this->insertDependency($id);
-			    if (!$res) { $ok = false; }
-			}
-	    }
-	
-	    if (!$ok) {
-			$feedback .= ' - Dependencies addition failed';
-	    } else {
-			$feedback .= '- Dependencies Added';
-			$changes['Dependencies']['add'] = $artifact_id_dependent;
-	    }
-	    return $ok;
-	}
-
-	/**
-	 * Delete an artifact id from the dependencies list
-	 *
-	 * @param dependent_on_artifact_id: artifact id which is depend on
-	 * @param changes (OUT): list of changes
-	 *
-	 * @return boolean
-	 */
-	function deleteDependency($dependent_on_artifact_id,&$changes) {
-	    global $feedback;
-	
-	    // Delete the dependency
-	    $sql = "DELETE FROM artifact_dependencies WHERE is_dependent_on_artifact_id=$dependent_on_artifact_id AND artifact_id=".$this->getID();
-	    //echo $sql."<br>";
-	    $res2 = db_query($sql);
-	    if (!$res2) {
-			$feedback .= " - Error deleting dependency $dependent_on_artifact_id: ".db_error($res2);
-			return false;
-	    } else {
-			$feedback .= " - Denpendency Removed";
-			$changes['Dependencies']['del'] = $dependent_on_artifact_id;
-			return true;
-	    }
-	}
-
-	/**
-	 * Return if the status is closed status
-	 *
-	 * @param status: the status
-	 *
-	 * @return boolean
-	 */
-	function isStatusClosed($status) {
-	    return (($status == '3') || ($status == '10') );
-	}
-
-
-	/**
-	 * Return the different elements for building the current query for retrieving all the values
-	 *
-	 * @param select: the select value
-	 * @param from: the from value
-	 * @param where: the where value
-	 *
-	 * @return void
-	 */
-	function getQueryElements(&$select,&$from,&$where) {
-		
-		global $art_field_fact;
-		
-		//
-		// NOTICE
-		//
-		// We can't use left join because the performs are very bad.
-		// So the restriction to this is: all fields used in the query must have a value.
-		// That involves artifact creation or artifact admin (add a field) must create
-		// empty records with default values for fields which haven't a value (from the user).
-		//
-		/* The query must be something like this :
-			SELECT a.artifact_id as artifact_id,v1.valueInt as category_id,v2.valueInt as assigned_to,u3.user_id as submitted_by
-			FROM artifact a, artifact_field_value v1, artifact_field_value v2, artifact_field_value v3, user u3, user u
-			WHERE a.group_artifact_id = 100 and 
-			a.artifact_id = v1.artifact_id and v1.field_id=101 and
-			a.artifact_id = v2.artifact_id and v2.field_id=103 and
-			a.artifact_id = v3.artifact_id and v3.field_id=104 and v3.valueInt = u3.user_id and
-			a.submitted_by = u.user_id
-		*/
-
-		// Get the fields sorted by the result order
-		$fields = $art_field_fact->getAllUsedFields();
-		
-		$count = 1;
-		
-		$select = "SELECT ";
-		$from = "FROM artifact a";
-		$where = "WHERE a.artifact_id = ".$this->getID(); 
-		
-		
-		$user_table = false;
-		$select_count = 0;
-		
-		while (list($key,$field) = each($fields) ) {
-			
-			//echo $field->getName()."-".$field->getID()."<br>";
-			
-			// If the field is a standard field ie the value is stored directly into the artifact table (severity, artifact_id, ...)
-			if ( $field->isStandardField() ) {
-				if ( $select_count != 0 ) {
-					$select .= ",";
-					$select_count ++;
-				} else {
-					$select_count = 1;
-				}
-
-				$select .= " a.".$field->getName()." as ".$field->getName();
-
-			} else {
-				
-				// Special case for comment_type_id field - No data stored in artifact_field_value
-				if ( $field->getName() != "comment_type_id" ) {
-					// The field value is stored into the artifact_field_value table
-					// So we need to add a new join
-					if ( $select_count != 0 ) {
-						$select .= ",";
-						$select_count ++;
-					} else {
-						$select_count = 1;
-					}
-	
-					$select .= " v".$count.".".$field->getValueFieldName()." as ".$field->getName();
-					$from .= ", artifact_field_value v".$count;
-					$where .= " and a.artifact_id = v".$count.".artifact_id and v".$count.".field_id=".$field->getID();
-									
-					$count ++;
-				}
-			}
-
-		}
-		
-	}
-
-	/**
-	 * Return all the field values
-	 *
-	 * @return array
-	 */
-	function getFieldsValues() {
-
-		if ( !$this->data_fields ) {
-			$this->getQueryElements($select,$from,$where);		
-			
-			$sql = $select." ".$from." ".$where;
-			
-			$this->data_fields = db_query($sql);
-		}
-
-		return $this->data_fields;
-	}
-	
-	/**
-	 * Return all the field values, but do not use cached values
-	 *
-	 * @return array
-	 */
-	function getNewFieldsValues() {
-
-            $this->getQueryElements($select,$from,$where);		
+            // Details field history is handled a little differently. Followup comments
+            // are added in the bug history along with the comment type.
+            // 
+            // If a canned response is given it overrides anything typed in the followup
+            // comment text area (aka details area). 
+            $details = $vfl['details'];
+            if ($canned_response != 100) {
+                
+                $sql="SELECT * FROM artifact_canned_responses WHERE artifact_canned_id='".$canned_response."'";
+                $res3=db_query($sql);
+                
+                if ($res3 && db_numrows($res3) > 0) {
+                    $details = addslashes(util_unconvert_htmlspecialchars(db_result($res3,0,'body')));
+                    $feedback .= ' Canned Response Used ';
+                } else {
+                    $feedback .= ' Unable to use Canned Response ';
+                    $feedback .= ' - '.db_error();
+                }
+            }
+        
+            // Details field history is handled a little differently. Followup comments
+            // are added in the bug history along with the comment type.
+            if ($details != '') {
+                $field = $art_field_fact->getFieldFromName('details');
+                if ( $field ) {
+                    $this->addHistory($field,htmlspecialchars($details), $vfl['comment_type_id']);
+                }
+                $changes['details']['add'] = stripslashes($details);
+                $field = $art_field_fact->getFieldFromName($field_name);
+                if ( $field ) {
+                    $changes['details']['type'] =
+                        $field->getValue($this->ArtifactType->getID(), $vfl['comment_type_id']);
+                }
+            }
             
-            $sql = $select." ".$from." ".$where;
-			
-            $this->data_fields = db_query($sql);
-	     
+            //
+            //  Enter the timestamp if we are changing to closed or declined
+            //
+            if ($this->isStatusClosed($vfl['status_id'])) {
+                $now=time();
+                $upd_list .= "close_date='$now',";
+                $field = $art_field_fact->getFieldFromName('close_date');
+                if ( $field ) {
+                    $this->addHistory ($field,$result['close_date']);
+                }
+            }
+        
+            //
+            //  Insert the list of dependencies 
+            //
+        
+            if (!$this->addDependencies($artifact_id_dependent,&$changes)) {
+                return false;
+            }
+                
+            //
+            //  Finally, build the full SQL query and update the artifact itself (if need be)
+            //
+        
+            $res_upd = true;
+            if ($upd_list) {
+                // strip the excess comma at the end of the update field list
+                $upd_list = substr($upd_list,0,-1);
+                
+                $sql="UPDATE artifact SET $upd_list ".
+                    " WHERE artifact_id=".$this->getID();
+                
+                $res_upd=db_query($sql);
+            }
+        
+            if (!$res_upd) {
+                exit_error('UPDATE FAILED','UPDATE FAILED');
+                return false;
+            } else {
+                $feedback .= " Successfully Updated Artifact ";
+                return true;
+            }
 
-            return $this->data_fields;
-	}
-	
-	/**
-	 * Return the follow ups 
-	 *
-	 * @return array
-	 */
-	function getCommenters() {
-	    $sql="SELECT DISTINCT mod_by FROM artifact_history ".
-		"WHERE artifact_history.artifact_id=$artifact_id ".
-		"AND artifact_history.field_name = 'details' ";
-	    return db_query($sql);
-	}
+        }
 
-	/**
-	 * Return the follow ups 
-	 *
-	 * @return array
-	 */
-	function getFollowups () {
-		global $art_field_fact;
+    /**
+     * Return if the email addresses are valid
+     *
+     * @param arr_email: list of email addresses
+     * @param message (OUT): error message if an error is found
+     *
+     * @return boolean
+     */
+    function validateCCList($arr_email, &$message) {
+        $valid = true;
+        $message = "";
+        
+        while (list(,$cc) = each($arr_email)) {
+            // Make sure that the address is valid
+            if (! validate_email($cc)) {
+                // check for a valid CodeX user.
+                $res = user_get_result_set_from_unix($cc);
+                if (db_numrows($res) == 0) {
+                    $valid = false;
+                    $message .= "$cc<br>";
+                    continue;
+                }
+            }
+        }
+        
+        if (! $valid) {
+            $message = "There are problems with the following addresses:"
+                . "<blockquote>$message</blockquote>"
+                . "Email addresses must either be valid "
+                . "CodeX user names (e.g., 'jdoe') or fully qualified "
+                . "email addresses (e.g., 'jill.doe@somewhere.xerox.com'). "
+                . "Lists of email addresses may be separated by either "
+                . "commas or semicolons."
+                ;
+        }
+        
+        return $valid;
+    }
 
-		$field = $art_field_fact->getFieldFromName('comment_type_id');
-		if ( $field ) {
-			// Look for project specific values first
-		    $sql="SELECT DISTINCT artifact_history.artifact_history_id,artifact_history.field_name,artifact_history.old_value,artifact_history.date,user.user_name,artifact_history.mod_by,artifact_history.email,artifact_field_value_list.value AS comment_type ".
-			"FROM artifact_history,artifact_field_value_list,artifact_field,artifact,user ".
-			"WHERE artifact_history.artifact_id=".$this->getID()." ".
-			"AND artifact_history.field_name = 'details' ".
-			"AND artifact_history.mod_by=user.user_id ".
-			"AND artifact_history.artifact_id=artifact.artifact_id ".
-			"AND artifact_history.type = artifact_field_value_list.value_id ".
-			"AND artifact_field_value_list.field_id = artifact_field.field_id ".
-			"AND artifact_field_value_list.group_artifact_id = artifact.group_artifact_id ".
-			"AND artifact_field.group_artifact_id = artifact.group_artifact_id ".
-			"AND artifact_field.field_name = 'comment_type_id' ".
-			"ORDER BY artifact_history.date DESC";
-			//echo $sql;
-			$res_value = db_query($sql);
-			$rows=db_numrows($res_value);
-			
-			//echo "sql=".$sql." - rows=".$rows."<br>";
-		} else {
-			// Look for project specific values first
-		    $sql="SELECT DISTINCT artifact_history.artifact_history_id,artifact_history.field_name,artifact_history.old_value,artifact_history.date,user.user_name,artifact_history.mod_by,artifact_history.email,null AS comment_type ".
-			"FROM artifact_history,user ".
-			"WHERE artifact_history.artifact_id=".$this->getID()." ".
-			"AND artifact_history.field_name = 'details' ".
-			"AND artifact_history.mod_by=user.user_id ".
-			"ORDER BY artifact_history.date DESC";
-			//echo $sql;
-			$res_value = db_query($sql);
-			$rows=db_numrows($res_value);
-			
-		}
-	    return($res_value);
+    /**
+     * Check if an email address already exists
+     *
+     * @param cc: the email address
+     *
+     * @return boolean
+     */
+    function existCC($cc) {
+        $sql = "SELECT artifact_cc_id FROM artifact_cc WHERE artifact_id=".$this->getID()." AND email='$cc'";
+        $res = db_query($sql);
+        return (db_numrows($res) >= 1);
+    }
 
-	}
-	
-	/**
-	 * Return the history events for this artifact (excluded details events - See followups)
-	 *
-	 * @return array
-	 */
-	function getHistory () {
-		$sql="select artifact_history.field_name,artifact_history.old_value,artifact_history.date,artifact_history.type,user.user_name ".
-			"FROM artifact_history,user ".
-			"WHERE artifact_history.mod_by=user.user_id ".
-			"AND artifact_history.field_name <> 'details' ".
-			"AND artifact_id=".$this->getID()." ORDER BY artifact_history.date DESC";
-		return db_query($sql);
-	}
+    /**
+     * Insert an email address for the CC list
+     *
+     * @param cc: the email address
+     * @param added_by: user who insert this cc list
+     * @param comment: comment for this cc list
+     * @param date: date of creation
+     *
+     * @return boolean
+     */
+    function insertCC($cc,$added_by,$comment,$date) {
+        $sql = "INSERT INTO artifact_cc (artifact_id,email,added_by,comment,date) ".
+            "VALUES (".$this->getID().",'$cc','$added_by','$comment','$date')";
+        $res = db_query($sql);
+        return ($res);
+        
+    }
 
-	/**
-	 * Return the CC list values
-	 *
-	 * @return array
-	 */
-	function getCCList() {
-		
-	    $sql="SELECT artifact_cc_id,artifact_cc.email,artifact_cc.added_by,artifact_cc.comment,artifact_cc.date,user.user_name ".
-		    "FROM artifact_cc,user ".
-		    "WHERE added_by=user.user_id ".
-		    "AND artifact_id=".$this->getID()." ORDER BY date DESC";
-	    return db_query($sql);
-	}
+    /**
+     * Insert email addresses for CC list
+     *
+     * @param email: list of email addresses
+     * @param comment: comment for these addresses
+     * @param changes (OUT): list of changes
+     *
+     * @return boolean
+     */
+    function addCC($email,$comment,&$changes) {
+        global $feedback;
+        
+        $user_id = (user_isloggedin() ? user_getid(): 100);
+        
+        $arr_email = util_split_emails($email);
+        $date = time();
+        $ok = true;
+        $changed = false;
+        
+        if (! $this->validateCCList($arr_email, $message)) {
+            exit_error("Error - The CC list is invalid", $message);
+        }
+        
+        while (list(,$cc) = each($arr_email)) {
+            // Add this cc only if not there already
+            if (!$this->existCC($cc)) {
+                $changed = true;
+                $res = $this->insertCC($cc,$user_id,$comment,$date);
+                if (!$res) { $ok = false; }
+            }
+        }
+        
+        if (!$ok) {
+            $feedback .= ' - CC addition failed';
+        } else {
+            $feedback .= '- CC Added';
+            $changes['CC']['add'] = join(',', $arr_email);
+        }
+        return $ok;
+    }
 
-	/**
-	 * Return a CC list values
-	 *
-	 * @param artifact_cc_id: the artifact cc id
-	 *
-	 * @return array
-	 */
-	function getCC($artifact_cc_id) {
-		
-	    $sql="SELECT artifact_cc_id,artifact_cc.email,artifact_cc.added_by,artifact_cc.comment,artifact_cc.date,user.user_name ".
-		    "FROM artifact_cc,user ".
-		    "WHERE artifact_cc_id=".$artifact_cc_id." ".
-		    "AND added_by=user.user_id";
-	    $res = db_query($sql);
-	    return db_fetch_array($res);
-	}
+    /**
+     * Delete an email address in the CC list
+     *
+     * @param artifact_cc_id: cc list id
+     * @param changes (OUT): list of changes
+     *
+     * @return boolean
+     */
+    function deleteCC($artifact_cc_id=false,&$changes) {
+        global $feedback;
+        
+        // If both bug_id and bug_cc_id are given make sure the cc belongs 
+        // to this bug (it's a bit paranoid but...)
+        $sql = "SELECT artifact_id,email from artifact_cc WHERE artifact_cc_id='$artifact_cc_id'";
+        $res1 = db_query($sql);
+        if ((db_numrows($res1) <= 0) || (db_result($res1,0,'artifact_id') != $this->getID()) ) {
+            $feedback .= " - Error CC ID $artifact_cc_id doesn't belong to artifact ID";
+            return false;
+        }
+        
+        // Now delete the CC address
+        $res2 = db_query("DELETE FROM artifact_cc WHERE artifact_cc_id='$artifact_cc_id'");
+        if (!$res2) {
+            $feedback .= " - Error deleting CC ID $artifact_cc_id: ".db_error($res2);
+            return false;
+        } else {
+            $feedback .= " - CC Removed";
+            $changes['CC']['del'] = db_result($res1,0,'email');
+            return true;
+        }
+    }
 
-	/**
-	 * Return the artifact dependencies values
-	 *
-	 * @return array
-	 */
-	function getDependencies() {
-		
-	    $sql="SELECT d.is_dependent_on_artifact_id, a.summary, ag.name, g.group_name ".
-		     "FROM artifact_dependencies d, artifact_group_list ag, groups g, artifact a ".
-		     "WHERE d.is_dependent_on_artifact_id = a.artifact_id AND ".
-		     "a.group_artifact_id = ag.group_artifact_id AND ".
-		     "d.artifact_id = ".$this->getID()." AND ".
-		     "ag.group_id = g.group_id ORDER BY a.artifact_id";
-		//echo "sql=$sql<br>";
-	    return db_query($sql);
-	}
+    /**
+     * Check if an artifact depends already from the current one
+     *
+     * @param id: the artifact id
+     *
+     * @return boolean
+     */
+    function existDependency($id) {
+        $sql = "SELECT is_dependent_on_artifact_id FROM artifact_dependencies WHERE artifact_id=".$this->getID()." AND is_dependent_on_artifact_id=$id";
+        //echo $sql;
+        $res = db_query($sql);
+        return (db_numrows($res) >= 1);
+    }
+        
+    /**
+     * Check if an artifact exists
+     *
+     * @param id: the artifact id
+     *
+     * @return boolean
+     */
+    function validArtifact($id) {
+        $sql = "SELECT * FROM artifact a, artifact_group_list agl WHERE ".
+            "a.group_artifact_id = agl.group_artifact_id AND a.artifact_id=".$id." AND ".
+            "agl.status = 'A'";
+        $res = db_query($sql);
+        if ( db_numrows($res) >= 1 )
+            return true;
+        else
+            return false;
+    }
+        
 
-	/**
-	 * Return the artifact inverse dependencies values
-	 *
-	 * @return array
-	 */
-	function getInverseDependencies() {
-		
-	    $sql="SELECT d.artifact_id, a.summary, ag.name, g.group_name ".
-		     "FROM artifact_dependencies d, artifact_group_list ag, groups g, artifact a ".
-		     "WHERE d.artifact_id = a.artifact_id AND ".
-		     "a.group_artifact_id = ag.group_artifact_id AND ".
-		     "d.is_dependent_on_artifact_id = ".$this->getID()." AND ".
-		     "ag.group_id = g.group_id ORDER BY a.artifact_id";
-		//echo "sql=$sql<br>";
-	    return db_query($sql);
-	}
+    /**
+     * Insert a artifact dependency with the current one
+     *
+     * @param id: the artifact id
+     *
+     * @return boolean
+     */
+    function insertDependency($id) {
+        $sql = "INSERT INTO artifact_dependencies (artifact_id,is_dependent_on_artifact_id) ".
+            "VALUES (".$this->getID().",$id)";
+        //echo $sql;
+        $res = db_query($sql);
+        return ($res);
+        
+    }
 
-	/**
-	 * Return the attached files
-	 *
-	 * @return array
-	 */
-	function getAttachedFiles () {
-		$sql="SELECT id,filename,filesize,description,adddate,user.user_name ".
-			"FROM artifact_file,user ".
-			"WHERE submitted_by=user.user_id ".
-			"AND artifact_id=".$this->getID()." ORDER BY adddate DESC";
-		//echo "sql=$sql<br>";
-		return db_query($sql);
-	}
+    /**
+     * Insert artifact dependencies
+     *
+     * @param artifact_id_dependent: list of artifact which are depend on (comma sperator)
+     * @param changes (OUT): list of changes
+     *
+     * @return boolean
+     */
+    function addDependencies($artifact_id_dependent,&$changes) {
+        global $feedback;
+        
+        if ( !$artifact_id_dependent ) 
+            return true;
+                        
+        $ok = true;
+        $ids = explode(",",$artifact_id_dependent);
+                
+        while (list(,$id) = each($ids)) {
+            // Add this id only if not already exist
+            //echo "add id=".$id."<br>";
+            // Check existance
+            if (!$this->validArtifact($id)) {
+                $ok = false;
+                $feedback .= " Invalid artifact #".$id;
+            }
+            if ($ok&&!$this->existDependency($id)) {
+                $res = $this->insertDependency($id);
+                if (!$res) { $ok = false; }
+            }
+        }
+        
+        if (!$ok) {
+            $feedback .= ' - Dependencies addition failed';
+        } else {
+            $feedback .= '- Dependencies Added';
+            $changes['Dependencies']['add'] = $artifact_id_dependent;
+        }
+        return $ok;
+    }
 
-	/**
-	 * Return a attached file
-	 *
-	 * @param id: the file id
-	 *
-	 * @return array
-	 */
-	function getAttachedFile ($id) {
-		$sql="SELECT id,filename,filesize,description,adddate,user.user_name ".
-			"FROM artifact_file,user ".
-			"WHERE submitted_by=user.user_id ".
-			"AND id=".$id;
-		//echo "sql=$sql<br>";
-		$res = db_query($sql);
-		return db_fetch_array($res);
-	}
+    /**
+     * Delete an artifact id from the dependencies list
+     *
+     * @param dependent_on_artifact_id: artifact id which is depend on
+     * @param changes (OUT): list of changes
+     *
+     * @return boolean
+     */
+    function deleteDependency($dependent_on_artifact_id,&$changes) {
+        global $feedback;
+        
+        // Delete the dependency
+        $sql = "DELETE FROM artifact_dependencies WHERE is_dependent_on_artifact_id=$dependent_on_artifact_id AND artifact_id=".$this->getID();
+        //echo $sql."<br>";
+        $res2 = db_query($sql);
+        if (!$res2) {
+            $feedback .= " - Error deleting dependency $dependent_on_artifact_id: ".db_error($res2);
+            return false;
+        } else {
+            $feedback .= " - Denpendency Removed";
+            $changes['Dependencies']['del'] = $dependent_on_artifact_id;
+            return true;
+        }
+    }
 
-	/**
-	 * Build an array of email using the changes array
-	 *
-	 * @param changes: array of changes
-	 *
-	 * @return array
-	 */
-	function buildNotificationList($changes) {
-		
-		global $art_field_fact;
-	
-	    // Rk: we store email addresses in a hash to make sure they are only
-	    // stored once. Normally if an email is repeated several times sendmail
-	    // would take care of it but I prefer taking care of it now.
-	    // Same for user ids.
-	    // We also use the user_ids hash to check if a user has already been selected for 
-	    // notification. If so it is not necessary to check it again in another role.
-	    $addresses = array();
-	    $user_ids = array();
+    /**
+     * Return if the status is closed status
+     *
+     * @param status: the status
+     *
+     * @return boolean
+     */
+    function isStatusClosed($status) {
+        return (($status == '3') || ($status == '10') );
+    }
 
-		// Retrieve field values for the assigned_to value
-		$result = $this->getFieldsValues();
-	
-	    // check submitter notification preferences
-	    $user_id = $this->getSubmittedBy();
-	    if ($user_id != 100) {
-			if ($this->ArtifactType->checkNotification($user_id, 'SUBMITTER', $changes)) {
-				//echo "DBG - SUBMITTER - user=$user_id<br>";
-			    $user_ids[$user_id] = true;
-			}
-	    }
-	
-	    // check assignee  notification preferences
-	    // Never notify user 'none' (id #100)
-	    // Check for field 'assigned_to' (SelectBox)
-	    $user_id = db_result($result,0,'assigned_to');
-		if ( ($user_id) && ($user_id != 100) ) {
-			if (!$user_ids[$user_id] && $this->ArtifactType->checkNotification($user_id, 'ASSIGNEE', $changes)) {
-				//echo "DBG - ASSIGNEE - user=$user_id<br>";
-			    $user_ids[$user_id] = true;
-			}
-	    }
-	
-	    // check assignee  notification preferences
-	    // Never notify user 'none' (id #100)
-	    // Check for field 'multi_assigned_to' (MultiBox)
-	    $field = $art_field_fact->getFieldFromName("multi_assigned_to");
-		if ( $field ) {
-			$field_value = $field->getValues($this->getID());
-	    	if ($field_value && (db_numrows($field_value) > 0)) {
-				while ($row = db_fetch_array($field_value)) {
-				    $user_id = db_result($field_value,0,'assigned_to');
-					if ( ($user_id) && ($user_id != 100) ) {
-						if (!$user_ids[$user_id] && $this->ArtifactType->checkNotification($user_id, 'ASSIGNEE', $changes)) {
-							//echo "DBG - ASSIGNEE - user=$user_id<br>";
-						    $user_ids[$user_id] = true;
-						}
-				    }
-				}
-	    	}
-	    }
 
-	    // check old assignee  notification preferences if assignee was just changed
-	    // Never notify user 'none' (id #100)
-	    $user_name = $changes['assigned_to']['del'];
-	    if ($user_name) {
-			$res_oa = user_get_result_set_from_unix($user_name);
-			$user_id = db_result($res_oa,0,'user_id');
-			if ($user_id != 100 && !$user_ids[$user_id] && $this->ArtifactType->checkNotification($user_id, 'ASSIGNEE', $changes)) {
-				//echo "DBG - ASSIGNEE OLD - user=$user_id<br>";
-			    $user_ids[$user_id] = true;
-			}
-	    }
-	    
-	    // check all CC 
-	    // (a) check all the people in the current CC list
-	    // (b) check the CC that has just been removed if any and see if she
-	    // wants to be notified as well
-	    // if the CC indentifier is an email address then notify in any case
-	    // because this user has no personal setting
-	    $res_cc = $this->getCCList();
-	    $arr_cc = array();
-	    if ($res_cc && (db_numrows($res_cc) > 0)) {
-			while ($row = db_fetch_array($res_cc)) {
-			    $arr_cc[] = $row['email'];
-			}
-	    }
-	    if ( $changes['CC']['del'] ) {
-		    // Only one CC can be deleted at once so just append it to the list....
-		    $arr_cc[] = $changes['CC']['del'];
-		}
-			
-	    while (list(,$cc) = each($arr_cc)) {
-	    	//echo "DBG - CC=$cc<br>";
-			if (validate_email($cc)) {
-				//echo "DBG - CC email - email=".util_normalize_email($cc)."<br>";
-			    $addresses[util_normalize_email($cc)] = true;
-			} else {
-			    $res = user_get_result_set_from_unix($cc);
-			    $user_id = db_result($res,0,'user_id');
-			    if (!$user_ids[$user_id] && $this->ArtifactType->checkNotification($user_id, 'CC', $changes)) {
-					//echo "DBG - CC - user=$user_id<br>";
-					$user_ids[$user_id] = true;
-			    }
-			}
-	    } // while
-	
-	
-	    // check all commenters
-	    $res_com = $this->getCommenters();
-	    if (db_numrows($res_com) > 0) {
-			while ($row = db_fetch_array($res_com)) {
-			    $user_id = $row['mod_by'];
-			    if (!$user_ids[$user_id] && $this->ArtifactType->checkNotification($user_id, 'COMMENTER', $changes)) {
-					//echo "DBG - COMMENTERS - user=$user_id<br>";
-					$user_ids[$user_id] = true;
-			    }
-			}
-	    }
-	
-	    // build the final list of email addresses
-	    reset($user_ids);
-	    while (list($user_id,) = each($user_ids)) {
-			//echo "DBG - final list - user=$user_id<br>";
-			$addresses[user_getemail($user_id)] = true;
-	    }
-	
-	    // return an array with all the email addresses the notification must be sent to
-	    return (array_keys($addresses));
-	
-	}
+    /**
+     * get all the field values for this artifact
+     *
+     * @return array
+     */
+    function getFieldsValues() {
 
-		
+        // get the artifact data
+        $this->fetchData($this->getID());
+        return $this->data_array;
+    }
+
+        
+    /**
+     * Return the follow ups 
+     *
+     * @return array
+     */
+    function getCommenters() {
+        $sql="SELECT DISTINCT mod_by FROM artifact_history ".
+            "WHERE artifact_history.artifact_id=$artifact_id ".
+            "AND artifact_history.field_name = 'details' ";
+        return db_query($sql);
+    }
+
+    /**
+     * Return the follow ups 
+     *
+     * @return array
+     */
+    function getFollowups () {
+        global $art_field_fact;
+
+        $field = $art_field_fact->getFieldFromName('comment_type_id');
+        if ( $field ) {
+            // Look for project specific values first
+            $sql="SELECT DISTINCT artifact_history.artifact_history_id,artifact_history.field_name,artifact_history.old_value,artifact_history.date,user.user_name,artifact_history.mod_by,artifact_history.email,artifact_field_value_list.value AS comment_type ".
+                "FROM artifact_history,artifact_field_value_list,artifact_field,artifact,user ".
+                "WHERE artifact_history.artifact_id=".$this->getID()." ".
+                "AND artifact_history.field_name = 'details' ".
+                "AND artifact_history.mod_by=user.user_id ".
+                "AND artifact_history.artifact_id=artifact.artifact_id ".
+                "AND artifact_history.type = artifact_field_value_list.value_id ".
+                "AND artifact_field_value_list.field_id = artifact_field.field_id ".
+                "AND artifact_field_value_list.group_artifact_id = artifact.group_artifact_id ".
+                "AND artifact_field.group_artifact_id = artifact.group_artifact_id ".
+                "AND artifact_field.field_name = 'comment_type_id' ".
+                "ORDER BY artifact_history.date DESC";
+            //echo $sql;
+            $res_value = db_query($sql);
+            $rows=db_numrows($res_value);
+                        
+            //echo "sql=".$sql." - rows=".$rows."<br>";
+        } else {
+            // Look for project specific values first
+            $sql="SELECT DISTINCT artifact_history.artifact_history_id,artifact_history.field_name,artifact_history.old_value,artifact_history.date,user.user_name,artifact_history.mod_by,artifact_history.email,null AS comment_type ".
+                "FROM artifact_history,user ".
+                "WHERE artifact_history.artifact_id=".$this->getID()." ".
+                "AND artifact_history.field_name = 'details' ".
+                "AND artifact_history.mod_by=user.user_id ".
+                "ORDER BY artifact_history.date DESC";
+            //echo $sql;
+            $res_value = db_query($sql);
+            $rows=db_numrows($res_value);
+                        
+        }
+        return($res_value);
+
+    }
+        
+    /**
+     * Return the history events for this artifact (excluded details events - See followups)
+     *
+     * @return array
+     */
+    function getHistory () {
+        $sql="select artifact_history.field_name,artifact_history.old_value,artifact_history.date,artifact_history.type,user.user_name ".
+            "FROM artifact_history,user ".
+            "WHERE artifact_history.mod_by=user.user_id ".
+            "AND artifact_history.field_name <> 'details' ".
+            "AND artifact_id=".$this->getID()." ORDER BY artifact_history.date DESC";
+        return db_query($sql);
+    }
+
+    /**
+     * Return the CC list values
+     *
+     * @return array
+     */
+    function getCCList() {
+                
+        $sql="SELECT artifact_cc_id,artifact_cc.email,artifact_cc.added_by,artifact_cc.comment,artifact_cc.date,user.user_name ".
+            "FROM artifact_cc,user ".
+            "WHERE added_by=user.user_id ".
+            "AND artifact_id=".$this->getID()." ORDER BY date DESC";
+        return db_query($sql);
+    }
+
+    /**
+     * Return a CC list values
+     *
+     * @param artifact_cc_id: the artifact cc id
+     *
+     * @return array
+     */
+    function getCC($artifact_cc_id) {
+                
+        $sql="SELECT artifact_cc_id,artifact_cc.email,artifact_cc.added_by,artifact_cc.comment,artifact_cc.date,user.user_name ".
+            "FROM artifact_cc,user ".
+            "WHERE artifact_cc_id=".$artifact_cc_id." ".
+            "AND added_by=user.user_id";
+        $res = db_query($sql);
+        return db_fetch_array($res);
+    }
+
+    /**
+     * Return the artifact dependencies values
+     *
+     * @return array
+     */
+    function getDependencies() {
+                
+        $sql="SELECT d.is_dependent_on_artifact_id, a.summary, ag.name, g.group_name ".
+            "FROM artifact_dependencies d, artifact_group_list ag, groups g, artifact a ".
+            "WHERE d.is_dependent_on_artifact_id = a.artifact_id AND ".
+            "a.group_artifact_id = ag.group_artifact_id AND ".
+            "d.artifact_id = ".$this->getID()." AND ".
+            "ag.group_id = g.group_id ORDER BY a.artifact_id";
+        //echo "sql=$sql<br>";
+        return db_query($sql);
+    }
+
+    /**
+     * Return the artifact inverse dependencies values
+     *
+     * @return array
+     */
+    function getInverseDependencies() {
+                
+        $sql="SELECT d.artifact_id, a.summary, ag.name, g.group_name ".
+            "FROM artifact_dependencies d, artifact_group_list ag, groups g, artifact a ".
+            "WHERE d.artifact_id = a.artifact_id AND ".
+            "a.group_artifact_id = ag.group_artifact_id AND ".
+            "d.is_dependent_on_artifact_id = ".$this->getID()." AND ".
+            "ag.group_id = g.group_id ORDER BY a.artifact_id";
+        //echo "sql=$sql<br>";
+        return db_query($sql);
+    }
+
+    /**
+     * Return the attached files
+     *
+     * @return array
+     */
+    function getAttachedFiles () {
+        $sql="SELECT id,filename,filesize,description,adddate,user.user_name ".
+            "FROM artifact_file,user ".
+            "WHERE submitted_by=user.user_id ".
+            "AND artifact_id=".$this->getID()." ORDER BY adddate DESC";
+        //echo "sql=$sql<br>";
+        return db_query($sql);
+    }
+
+    /**
+     * Return a attached file
+     *
+     * @param id: the file id
+     *
+     * @return array
+     */
+    function getAttachedFile ($id) {
+        $sql="SELECT id,filename,filesize,description,adddate,user.user_name ".
+            "FROM artifact_file,user ".
+            "WHERE submitted_by=user.user_id ".
+            "AND id=".$id;
+        //echo "sql=$sql<br>";
+        $res = db_query($sql);
+        return db_fetch_array($res);
+    }
+
+    /**
+     * Build an array of email using the changes array
+     *
+     * @param changes: array of changes
+     *
+     * @return array
+     */
+    function buildNotificationList($changes) {
+                
+        global $art_field_fact;
+        
+        // Rk: we store email addresses in a hash to make sure they are only
+        // stored once. Normally if an email is repeated several times sendmail
+        // would take care of it but I prefer taking care of it now.
+        // Same for user ids.
+        // We also use the user_ids hash to check if a user has already been selected for 
+        // notification. If so it is not necessary to check it again in another role.
+        $addresses = array();
+        $user_ids = array();
+
+        // Retrieve field values for the assigned_to value
+        $result = $this->getFieldsValues();
+        
+        // check submitter notification preferences
+        $user_id = $this->getSubmittedBy();
+        if ($user_id != 100) {
+            if ($this->ArtifactType->checkNotification($user_id, 'SUBMITTER', $changes)) {
+                //echo "DBG - SUBMITTER - user=$user_id<br>";
+                $user_ids[$user_id] = true;
+            }
+        }
+        
+        // check assignee  notification preferences
+        // Never notify user 'none' (id #100)
+        // Check for field 'assigned_to' (SelectBox)
+        $user_id = $result['assigned_to'];
+        if ( ($user_id) && ($user_id != 100) ) {
+            if (!$user_ids[$user_id] && $this->ArtifactType->checkNotification($user_id, 'ASSIGNEE', $changes)) {
+                //echo "DBG - ASSIGNEE - user=$user_id<br>";
+                $user_ids[$user_id] = true;
+            }
+        }
+        
+        // check assignee  notification preferences
+        // Never notify user 'none' (id #100)
+        // Check for field 'multi_assigned_to' (MultiBox)
+        $field = $art_field_fact->getFieldFromName("multi_assigned_to");
+        if ( $field ) {
+            $field_value = $field->getValues($this->getID());
+            if ($field_value && (db_numrows($field_value) > 0)) {
+                while ($row = db_fetch_array($field_value)) {
+                    $user_id = db_result($field_value,0,'assigned_to');
+                    if ( ($user_id) && ($user_id != 100) ) {
+                        if (!$user_ids[$user_id] && $this->ArtifactType->checkNotification($user_id, 'ASSIGNEE', $changes)) {
+                            //echo "DBG - ASSIGNEE - user=$user_id<br>";
+                            $user_ids[$user_id] = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        // check old assignee  notification preferences if assignee was just changed
+        // Never notify user 'none' (id #100)
+        $user_name = $changes['assigned_to']['del'];
+        if ($user_name) {
+            $res_oa = user_get_result_set_from_unix($user_name);
+            $user_id = db_result($res_oa,0,'user_id');
+            if ($user_id != 100 && !$user_ids[$user_id] && $this->ArtifactType->checkNotification($user_id, 'ASSIGNEE', $changes)) {
+                //echo "DBG - ASSIGNEE OLD - user=$user_id<br>";
+                $user_ids[$user_id] = true;
+            }
+        }
+            
+        // check all CC 
+        // (a) check all the people in the current CC list
+        // (b) check the CC that has just been removed if any and see if she
+        // wants to be notified as well
+        // if the CC indentifier is an email address then notify in any case
+        // because this user has no personal setting
+        $res_cc = $this->getCCList();
+        $arr_cc = array();
+        if ($res_cc && (db_numrows($res_cc) > 0)) {
+            while ($row = db_fetch_array($res_cc)) {
+                $arr_cc[] = $row['email'];
+            }
+        }
+        if ( $changes['CC']['del'] ) {
+            // Only one CC can be deleted at once so just append it to the list....
+            $arr_cc[] = $changes['CC']['del'];
+        }
+                        
+        while (list(,$cc) = each($arr_cc)) {
+            //echo "DBG - CC=$cc<br>";
+            if (validate_email($cc)) {
+                //echo "DBG - CC email - email=".util_normalize_email($cc)."<br>";
+                $addresses[util_normalize_email($cc)] = true;
+            } else {
+                $res = user_get_result_set_from_unix($cc);
+                $user_id = db_result($res,0,'user_id');
+                if (!$user_ids[$user_id] && $this->ArtifactType->checkNotification($user_id, 'CC', $changes)) {
+                    //echo "DBG - CC - user=$user_id<br>";
+                    $user_ids[$user_id] = true;
+                }
+            }
+        } // while
+        
+        
+        // check all commenters
+        $res_com = $this->getCommenters();
+        if (db_numrows($res_com) > 0) {
+            while ($row = db_fetch_array($res_com)) {
+                $user_id = $row['mod_by'];
+                if (!$user_ids[$user_id] && $this->ArtifactType->checkNotification($user_id, 'COMMENTER', $changes)) {
+                    //echo "DBG - COMMENTERS - user=$user_id<br>";
+                    $user_ids[$user_id] = true;
+                }
+            }
+        }
+        
+        // build the final list of email addresses
+        reset($user_ids);
+        while (list($user_id,) = each($user_ids)) {
+            //echo "DBG - final list - user=$user_id<br>";
+            $addresses[user_getemail($user_id)] = true;
+        }
+        
+        // return an array with all the email addresses the notification must be sent to
+        return (array_keys($addresses));
+        
+    }
+
+                
 }
 
 ?>
