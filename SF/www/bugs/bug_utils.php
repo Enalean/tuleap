@@ -103,30 +103,6 @@ function bug_list_all_fields($by_field_id=false) {
     }
 }
 
-function bug_list_used_fields($group_id,$by_field_id=false) {
-    global $BF_USAGE_BY_FIELD;
-
-    // return the next bug field in the list. If the global
-    // bug field usage array is not set then set it the
-    // first time.
-    // group_id: the id of the project
-    // by_field_id: true return the list of field id, false returns the
-    // list of field names
-
-    if (!$group_id) {
-	return 'ERROR - no group_id';
-    } else {
-	if ( list($key, $field_array) = each($BF_USAGE_BY_FIELD)) {
-		return($by_field_id ? $field_array['bug_field_id'] : $field_array['field_name']);
-	} else {
-	    // rewind internal pointer for next time
-	    reset($BF_USAGE_BY_FIELD);
-	    return(false);
-	}
-    }
-    
-}
-
 function bug_field_display($field_name, $group_id, $value='xyxy',
 			   $break=false, $ro=false, $ascii=false,
 			   $show_none=false, $text_none='None',
