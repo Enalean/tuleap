@@ -122,7 +122,7 @@ for ($i=0; $i<$count; $i++) {
 			echo "<B>".db_result($result2, 0, 'avg')."</B> Average";
 		}
 
-		$sql="SELECT response,count(*) AS count FROM survey_responses WHERE survey_id='$survey_id' AND question_id='$quest_array[$i]' AND group_id='$group_id' GROUP BY response";
+		$sql="SELECT response,count(*) AS count FROM survey_responses WHERE survey_id='$survey_id' AND question_id='$quest_array[$i]' AND response IN (1,2,3,4,5) AND group_id='$group_id' GROUP BY response";
 
 		$result2=db_query($sql);
 		if (!$result2 || db_numrows($result2) < 1) {
