@@ -65,6 +65,7 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
 		if (db_numrows($result) < 1) {
 			exit_error('Error','Error - none found');
 		}
+                $username=user_getname(db_result($result,0,'submitted_by'));
 
 		echo '
 		<H3>Approve a NewsByte For Project: '.group_getname($group_id).'</H3>
@@ -73,7 +74,7 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
 		<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.db_result($result,0,'group_id').'">
 		<INPUT TYPE="HIDDEN" NAME="id" VALUE="'.db_result($result,0,'id').'">
 
-		<B>Submitted by:</B> '.user_getname(db_result($result,0,'submitted_by')).'<BR>
+		<B>Submitted by:</B> <a href="/users/'.$username.'">'.$username.'</a><BR>
 		<INPUT TYPE="HIDDEN" NAME="approve" VALUE="y">
 		<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 
@@ -175,6 +176,8 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
 			exit_error('Error','Error - not found');
 		}
 
+                $username=user_getname(db_result($result,0,'submitted_by'));
+
 		echo '
 		<H3>Approve a NewsByte</H3>
 		<P>
@@ -182,7 +185,7 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
 		<INPUT TYPE="HIDDEN" NAME="for_group" VALUE="'.db_result($result,0,'group_id').'">
 		<INPUT TYPE="HIDDEN" NAME="id" VALUE="'.db_result($result,0,'id').'">
 		<B>Submitted for group:</B> <a href="/projects/'.strtolower(db_result($result,0,'unix_group_name')).'/">'.group_getname(db_result($result,0,'group_id')).'</a><BR>
-		<B>Submitted by:</B> '.user_getname(db_result($result,0,'submitted_by')).'<BR>
+		<B>Submitted by:</B> <a href="/users/'.$username.'">'.$username.'</a><BR>
 		<INPUT TYPE="HIDDEN" NAME="approve" VALUE="y">
 		<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 		<INPUT TYPE="RADIO" NAME="status" VALUE="1"> Approve For Front Page<BR>
