@@ -33,7 +33,9 @@ ALTER TABLE bug ADD size_id int DEFAULT '100' NOT NULL;
 ALTER TABLE bug ADD fix_release_id int DEFAULT '100' NOT NULL;
 ALTER TABLE bug ADD plan_release_id int DEFAULT '100' NOT NULL;
 ALTER TABLE bug ADD hours  float(10,2) DEFAULT '0.00' NOT NULL;
-ALTER TABLE bug ADD workproduct_version VARCHAR(255) DEFAULT '' NOT NULL;
+ALTER TABLE bug ADD component_version VARCHAR(255) DEFAULT '' NOT NULL;
+ALTER TABLE bug ADD fix_release VARCHAR(255) DEFAULT '' NOT NULL;
+ALTER TABLE bug ADD plan_release VARCHAR(255) DEFAULT '' NOT NULL;
 
 # Make sure default value for historical fields is now '100'
 # that is to say None (where "None" means something of course).

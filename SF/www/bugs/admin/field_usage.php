@@ -117,7 +117,8 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 	echo '<H2>Bug Field Usage Administration</H2>';
 
 	echo '<h3>List of all Available Fields</h3>'.
-	    '<p>The CodeX bug tracking system allows you to define what fields you want to use in the Bug Tracking System of this project. Click on a field to change its status (Used/Unused) and tune some other parameters. Required fields can only be tuned, they cannot be deactivated.<p>';
+	    '<p>The CodeX bug tracking system allows you to define what fields you want to use in the Bug Tracking System of this project. Click on a field to change its status (Used/Unused) and tune some other parameters. Required fields can only be tuned, they cannot be deactivated. '.
+	    '<br>Sometimes you\'ll also see the same field twice in the list but they actually come with a different type field (predefined values from a select box or free text). Choose the type that is best suited to your project.<p>';
 
 
 	// show all required fields plus all those explicitely asked by the project
@@ -127,6 +128,7 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 	$i=0;
 	$title_arr=array();
 	$title_arr[]='Field Label';
+	$title_arr[]='Type';
 	$title_arr[]='Description';
 	$title_arr[]='Rank<br>on screen';
 	$title_arr[]='Scope';
@@ -155,6 +157,7 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 	    $html = '<TD><A HREF="'.$PHP_SELF.'?group_id='.$group_id.
 		'&update_field=1&field='.$field_name.'">'.
 		bug_data_get_label($field_name).'</A></td>'.
+		"\n<td>".bug_data_get_display_type_in_clear($field_name).'</td>'.
 		"\n<td>".bug_data_get_description($field_name).'</td>'.
 		"\n<td align =\"center\">".$place_label.'</td>'.
 		"\n<td align =\"center\">".$scope_label.'</td>'.
@@ -189,6 +192,7 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 ?>
 	<P><B>Some Help:</b>
         <ul type="compact">
+	<li><b>Type:</b> fields can be of type "Select Box" in which case values are taken from a predefined list of values that can be defined by the Bug Adminstrator. "Text Field" and "Text Area" allows the user to enter free text. Sometimes you'll see the same bug field twice in the list but they actually come with a different type. Choose the type you like most: predefined values or free text..
         <li><b>Scope:</b> when equals to 'CodeX' it means that the possible values for this field are defined once for all for the CodeX site globally. Fields with scope 'Project' can be assigned a set of values at the project level. See the "Field values" item in the menu bar above.
         <li><b>Rank</b>: the rank number allows you to place the field with respect to the others. The fields with smaller values will appear first on the screen (bug submission form, query report,...)
       </ul>

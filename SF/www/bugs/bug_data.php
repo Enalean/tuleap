@@ -227,6 +227,21 @@ function bug_data_get_display_type($field, $by_field_id=false) {
     return($by_field_id ? $BF_USAGE_BY_FIELD[$field]['display_type'] : $BF_USAGE_BY_NAME[$field]['display_type']);
 }
 
+function bug_data_get_display_type_in_clear($field, $by_field_id=false) {
+    if (bug_data_is_select_box($field, $by_field_id)) {
+	return 'Select Box';
+    }
+    else if (bug_data_is_text_field($field, $by_field_id)) {
+	return 'Text Field';
+    } 
+    else if (bug_data_is_text_area($field, $by_field_id)) {
+	return 'Text Area';
+    }
+    else {
+	return '?';
+    }
+}
+
 function bug_data_get_keep_history($field, $by_field_id=false) {
     global $BF_USAGE_BY_FIELD,$BF_USAGE_BY_NAME;
     return($by_field_id ? $BF_USAGE_BY_FIELD[$field]['keep_history'] : $BF_USAGE_BY_NAME[$field]['keep_history']);

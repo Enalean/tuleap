@@ -73,7 +73,11 @@ INSERT INTO bug_field \
 INSERT INTO bug_field \
   VALUES (207,'plan_release_id','SB','','Planned Release','The release in which you initially planned the bug to be fixed','P',0,0,1,0);
 INSERT INTO bug_field \
-  VALUES (208,'workproduct_version','TF','10/40','Work Product Version','Version of the work product impacted by the bug. As opposed to the Component Version field for which predefined values are selected from a pull down-menu this one is free text.','S',0,0,1,0);
+  VALUES (208,'component_version','TF','10/40','Component Version','Version of the system component (or work product) impacted by the bug. Same as the other Component Version field <u>except</u> this one is free text.','S',0,0,1,0);
+INSERT INTO bug_field \
+  VALUES (209,'fix_release','TF','10/40','Fixed Release','The release in which the bug was actually fixed. Same as the other Fixed Release field <u>except</u> this one is free text.','S',0,0,1,0);
+INSERT INTO bug_field \
+  VALUES (210,'plan_release','TF','10/40','Planned Release','The release in which you initially planned the bug to be fixed. Same as the other Planned Release field <u>except</u> this one is free text.','S',0,0,1,0);
 
 # ==============================
 # Bug field value table
@@ -261,9 +265,17 @@ INSERT INTO bug_field_usage VALUES (206,100,0,0,0,0,0,1700);
 #
 INSERT INTO bug_field_usage VALUES (207,100,0,0,0,0,0,1600);
 
-# work product version (bug_field_id = 208)
+# component version string (bug_field_id = 208)
 #
 INSERT INTO bug_field_usage VALUES (208,100,0,0,0,0,0,1800);
+
+# fixed release string (bug_field_id = 209)
+#
+INSERT INTO bug_field_usage VALUES (209,100,0,0,0,0,0,1900);
+
+# planned release string (bug_field_id = 210)
+#
+INSERT INTO bug_field_usage VALUES (210,100,0,0,0,0,0,2000);
 
 #**********************************
 # TRANSFER LEGACY FIELD VALUES
