@@ -11,6 +11,8 @@
 
 require($DOCUMENT_ROOT.'/include/pre.php');
 
+$LANG->loadLanguageMsg('docman/docman');
+
 $sql="SELECT description,data,filename,filesize,filetype FROM doc_data WHERE docid='$docid'";
 $result=db_query($sql);
 
@@ -18,7 +20,8 @@ if ($result && db_numrows($result) > 0) {
 
     if (db_result($result,0,'filesize') == 0) {
 
-	exit_error('Error','nothing in here - File has a null size');
+	exit_error($LANG->getText('global','error'),
+		   $LANG->getText('docman_download','error_nofile'));
 
     } else {
 	
@@ -32,7 +35,8 @@ if ($result && db_numrows($result) > 0) {
     }
 
 } else {
-    exit_error('Error',"Couldn't find file (id #$docid)");
+    exit_error($LANG->getText('global','error'),
+	       $LANG->getText('docman_download','error_nodoc', array($docid)));
 }
 
 ?>

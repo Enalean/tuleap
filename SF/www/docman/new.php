@@ -12,8 +12,10 @@
 	by Quentin Cregan, SourceForge 06/2000
 */
 
-require('./doc_utils.php');
 require($DOCUMENT_ROOT.'/include/pre.php');
+require('./doc_utils.php');
+
+$LANG->loadLanguageMsg('docman/docman');
 
 if($group_id) {
 
@@ -21,7 +23,8 @@ if($group_id) {
 
 		if (!$doc_group || $doc_group ==100) {
 			//cannot add a doc unless an appropriate group is provided
-			exit_error('Error','No Valid Document Group Was Selected');
+		    exit_error($LANG->getText('global','error'),
+			       $LANG->getText('docman_new','error_noproj'));
 		}
 
 		if (!$title || !$description) { 
@@ -44,13 +47,13 @@ if($group_id) {
 		if ($upload_instead) {
 	        $data = addslashes(fread( fopen($uploaded_data, 'r'), filesize($uploaded_data)));
     		if ((strlen($data) <= 0 ) || (strlen($data) >= $sys_max_size_upload)) {
-        		//too big or small
-        		$feedback .= ' ERROR - document must be non null and < '.$sys_max_size_upload.' chars in length ';
-        		exit_error('Missing Info',$feedback.' - Please click back and fix the error.');
+		    //too big or small
+		    exit_error($LANG->getText('global','error'),
+			       $LANG->getText('docman_new','error_size',array($sys_max_size_upload)));
     		}
 		}
 
-		docman_header(array('title'=>'New Document Submitted',
+		docman_header(array('title'=>$LANG->getText('docman_new','title_new'),
 				    'help'=>'DocumentSubmission.html'));
 		
 		if ($upload_instead) {
@@ -86,22 +89,23 @@ if($group_id) {
 	
 		$res_insert = db_query($query); 
 	    if (db_affected_rows($res_insert) < 1) {
-           echo '<p>An error occurs:</p><h3><span class="feedback">'. db_error() .'</span></h3>';
+		echo '<p>'.$LANG->getText('docman_new','error_dbinsert').':</p><h3><span class="feedback">'. db_error() .'</span></h3>';
 	    } else {
-    	   print "<p><b>Thank You!  Your submission has been placed in the database for review before posting.</b> \n\n<p>\n <a href=\"/docman/index.php?group_id=".$group_id."\">Back</a>"; 
+		print "<p><b>".$LANG->getText('docman_new','insert_ok')."</b> \n\n";
+		print "<p>\n <a href=\"/docman/index.php?group_id=".$group_id."\">".$LANG->getText('global','back')."</a>"; 
         }
         
 		docman_footer($params);
 
 	} else {
-		docman_header(array('title'=>'Add document',
+		docman_header(array('title'=>$LANG->getText('docman_new','title_add'),
 				    'help'=>'DocumentSubmission.html'));
-		echo '<h2>Submit New Document</h2>';
+		echo '<h2>'.$LANG->getText('docman_new','header_add').'</h2>';
 		if ($user == 100) {
-  			print "<p>You are not logged in, and will not be given credit for this.<p>";
+  			print "<p>".$LANG->getText('docman_new','not_logged')."<p>";
 		}
 		if (!groups_defined($group_id)) {
-		  echo "<p>You have to specify document groups before submitting a new document. Click on <a href=\"/docman/admin/index.php?group_id=".$group_id."\">Admin</a></b> and edit the projects document groups. <p>";
+		    echo "<p>".$LANG->getText('docman_new','title_add',array("/docman/admin/index.php?group_id=".$group_id))."<p>";
 		}
 
 		echo '
@@ -111,29 +115,28 @@ if($group_id) {
 			<table border="0" width="75%">
 
 			<tr>
-			<th>Document Title:</th>
+			<th>'.$LANG->getText('docman_new','doc_title').':</th>
 			<td><input type="text" name="title" size="60" maxlength="255"></td>
 
 			</tr>
 			<tr>
-			<th>Description: <br> (HTML tag ok)</th> 
-			<!-- LJ td><input type="text" name="description" size="50" maxlength="255"></td -->
+			<th>'.$LANG->getText('docman_new','doc_desc').'</th> 
 			<td><textarea cols="60" rows="4"  wrap="virtual" name="description"></textarea></td>			</tr>
 
 			<tr>
-			<th> <input type="checkbox" name="upload_instead" value="1"> <B>Upload File:</B></th>
+			<th> <input type="checkbox" name="upload_instead" value="1"> <B>'.$LANG->getText('docman_new','doc_upload').':</B></th>
 			<td> <input type="file" name="uploaded_data" size="50">
-                 <br><span class="smaller"><i>(The maximum upload file size is '.formatByteToMb($sys_max_size_upload).' Mb)</i></span>
+                 <br><span class="smaller"><i>'.$LANG->getText('docman_new','max_size_msg',array(formatByteToMb($sys_max_size_upload))).'</i></span>
 			</td>
 			</tr>
 
 			<tr>
-			<th>OR Paste Document (in HTML format):</th>
+			<th>'.$LANG->getText('docman_new','doc_paste').':</th>
 			<td><textarea cols="60" rows="10" name="data"></textarea></td>
 			</tr>
 
 			<tr>
-			<th>Group that document belongs in:</th>
+			<th>'.$LANG->getText('docman_new','doc_group').':</th>
 			<td>';
 
 		display_groups_option($group_id);
@@ -142,7 +145,7 @@ if($group_id) {
 		
     	    </table>
 
-			<input type="submit" value="Submit Information">
+			<input type="submit" value="'.$LANG->getText('global','btn_submit').'">
 
 			</form> '; 
 	

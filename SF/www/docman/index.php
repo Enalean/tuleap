@@ -19,17 +19,19 @@ if (!$group_id) {
     exit_no_group();
 }
 
+$LANG->loadLanguageMsg('docman/docman');
+
 $usermem = user_ismember($group_id);
-$params=array('title'=>'Documentation for '.group_getname($group_id),
+$params=array('title'=>$LANG->getText('docman_index','title',array(group_getname($group_id))),
               'help'=>'DocumentManager.html',
               'pv'=>$pv);
 docman_header($params);
 
 if ($pv) {
-    echo "<h3>Project Documentation</h3>";
+    echo "<h2>".$LANG->getText('docman_index','header')."</h2>";
 } else {
     echo "<TABLE width='100%'><TR><TD>";
-    echo '<H3>Project Documentation</H3>';
+    echo '<H2>'.$LANG->getText('docman_index','header').'</H2>';
     echo "</TD>";
     echo "<TD align='left'> ( <A HREF='".$PHP_SELF."?group_id=$group_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;Printer version</A> ) </TD>";
     echo "</TR></TABLE>";    
@@ -45,7 +47,7 @@ $result = db_query($query);
 
 //otherwise, throw up an error
 if (db_numrows($result) < 1) {
-    print "<b>This project has no categorized data.</b><p>";
+    print "<b>".$LANG->getText('docman_index','nodoc')."</b><p>";
 } else { 
     // get the groupings and display them with their members.
     while ($row = db_fetch_array($result)) {
@@ -70,7 +72,7 @@ if (db_numrows($result) < 1) {
                 print "<li><a href=\"display_doc.php?docid=".$subrow['docid']."&group_id=".$group_id."\">";
                 eval('?>'.util_unconvert_htmlspecialchars($subrow['title']));
                 print "</a>";
-                print "<BR><i>Description:</i> ";
+                print "<BR><i>".$LANG->getText('docman_index','description').":</i> ";
                 eval('?>'.util_unconvert_htmlspecialchars($subrow['description'])); 
                 
             }

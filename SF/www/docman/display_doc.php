@@ -15,6 +15,8 @@
 require($DOCUMENT_ROOT.'/include/pre.php');
 require('./doc_utils.php');
 
+$LANG->loadLanguageMsg('docman/docman');
+
 $usermem = user_ismember($group_id);
 
 if ($docid) {
@@ -30,7 +32,8 @@ if ($docid) {
 	$result = db_query($query);
 	
 	if (db_numrows($result) < 1) {
-		exit_error('Document unavailable','Document is not available.');
+	    exit_error($LANG->getText('global','error'),
+		       $LANG->getText('docman_display_doc','error_nodoc',array($docid)));
 	} else {
 		$row = db_fetch_array($result);
 	}
@@ -66,6 +69,7 @@ if ($docid) {
     }
 
 } else {
-	exit_error("No document data.","No document to display - invalid or inactive document number.");
+    exit_error($LANG->getText('global','error'),
+	       $LANG->getText('docman_display_doc','error_wrongid'));
 }
 

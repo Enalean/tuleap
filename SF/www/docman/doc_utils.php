@@ -10,6 +10,7 @@
 	by Quentin Cregan, SourceForge 06/2000
 */
 
+$LANG->loadLanguageMsg('docman/docman');
 
 function display_groups_option($group_id=false,$checkedval='xyxy') {
 
@@ -44,6 +45,8 @@ function groups_defined($group_id) {
 
 
 function display_groups($group_id) {
+    global $LANG;
+
 	// show list of groups to edit.
 	$query = "select * "
 		."from doc_groups "
@@ -51,22 +54,23 @@ function display_groups($group_id) {
 	$result = db_query($query);
 	
 	if (db_numrows($result) < 1) {
-		print "<p>No groups currently exist.";
+		print "<p>".$LANG->getText('docman_doc_utils','error_nogroup');
 	} else {
 
 		$title_arr=array();
-		$title_arr[]='Group ID';
-		$title_arr[]='Group Name';
-		$title_arr[]='Controls';
+		$title_arr[]=$LANG->getText('docman_doc_utils','group_id');
+		$title_arr[]=$LANG->getText('docman_doc_utils','group_name');
+		$title_arr[]=$LANG->getText('docman_doc_utils','delete_ask');
 
 		echo html_build_list_table_top ($title_arr);
 
 		$i = 0;
 		while ($row = db_fetch_array($result)) {
 			$output = "<tr class=\"".util_get_alt_row_color($i)."\">".
-				"<td>".$row['doc_group']."</td>\n".
-				"<td>".$row['groupname']."</td>\n".
-				"<td>[ <a href=\"index.php?mode=groupdelete&doc_group=".$row['doc_group']."&group_id=".$group_id."\">Delete</A> ] [ <a href=\"index.php?mode=groupedit&doc_group=".$row['doc_group']."&group_id=".$group_id."\">Change Name</a> ]\n</td>".
+			    '<td><b><a href="index.php?mode=groupedit&doc_group='.$row['doc_group'].'&group_id='.$group_id.'">'.$row['doc_group']."</a></b></td>\n".
+			    "<td>".$row['groupname']."</td>\n".
+			    '<td align="center"><a href="index.php?mode=groupdelete&doc_group='.$row['doc_group'].'&group_id='.
+			    $group_id.'"><img src="'.util_get_image_theme("ic/trash.png").'" border="0" onClick="return confirm(\''.$LANG->getText('docman_doc_utils','delete_confirm').'\')"></A> </td>'.
 				"</tr>\n";
 
 			print "$output";
@@ -80,7 +84,7 @@ function display_groups($group_id) {
 }
 
 function display_docs($style,$group_id) {
-	global $sys_datefmt;
+    global $sys_datefmt, $LANG;
 
 	$query = "select * "
 		."from doc_data as d1, doc_groups as d2 "
@@ -101,18 +105,19 @@ function display_docs($style,$group_id) {
 	} else {
 
 		$title_arr=array();
-		$title_arr[]='Document ID';
-		$title_arr[]='Name';
-		$title_arr[]='Create Date';
+		$title_arr[]=$LANG->getText('docman_doc_utils','doc_id');
+		$title_arr[]=$LANG->getText('docman_doc_utils','doc_name');
+		$title_arr[]=$LANG->getText('docman_doc_utils','create_date');
 
 		echo html_build_list_table_top ($title_arr);
 
 		$i = 0;
 		while ($row = db_fetch_array($result)) {
-			print 	"<tr class=\"".util_get_alt_row_color($i)."\">"
-				."<td>".$row['docid']."</td>"
-				."<td><a href=\"index.php?docid=".$row['docid']."&mode=docedit&group_id=".$group_id."\">".$row['title']."</a></td>"
-				."<td>".format_date($sys_datefmt,$row['createdate'])."</td></tr>";
+		    $edit_uri = "index.php?docid=".$row['docid']."&mode=docedit&group_id=".$group_id;
+		    print "<tr class=\"".util_get_alt_row_color($i)."\">"
+			 ."<td><b><a href=\"".$edit_uri."\">".$row['docid']."</b></a></td>"
+			 ."<td><a href=\"".$edit_uri."\">".$row['title']."</a></td>"
+				."<td>".format_date($LANG->getText('system','datefmt'),$row['createdate'])."</td></tr>";
 			$i++;
 		}	
 		echo '</table>';
@@ -122,56 +127,60 @@ function display_docs($style,$group_id) {
 
 function docman_header($params) {
 
-	global $group_id;
+    global $group_id,$LANG;
 
 	$project=project_get_object($group_id);
 	
 	if (!$project->isProject()) {
-		exit_error('Error','Only Projects Can Use The Doc Manager');
+	    exit_error($LANG->getText('global','error'),
+		       $LANG->getText('docman_doc_utils','error_proj'));
 	}
 	if (!$project->usesDocman()) {
-		exit_error('Error','This Project Has Turned Off The Doc Manager');
+	    exit_error($LANG->getText('global','error'),
+		       $LANG->getText('docman_doc_utils','error_off'));
 	}
         // There might be encoded HTML tags in the title
 	site_project_header(array('title'=>strip_tags(util_unconvert_htmlspecialchars($params['title'])),'group'=>$group_id,'toptab'=>'doc','pv'=>$params['pv']));
 
         if (!$params['pv']) {
-            print "<p><b><a href=\"/docman/new.php?group_id=".$group_id."\">Submit new documentation</a> | ".
-		"<a href=\"/docman/index.php?group_id=".$group_id."\">View Documentation</a> | ".
-		"<a href=\"/docman/admin/index.php?group_id=".$group_id."\">Admin</a></b>"; 
+            print "<p><b><a href=\"/docman/new.php?group_id=".$group_id."\">".$LANG->getText('docman_doc_utils','submit_doc')."</a> | ".
+		"<a href=\"/docman/index.php?group_id=".$group_id."\">".$LANG->getText('docman_doc_utils','view_doc')."</a> | ".
+		"<a href=\"/docman/admin/index.php?group_id=".$group_id."\">".$LANG->getText('docman_doc_utils','admin')."</a></b>"; 
 	
             if ($param['style'] == 'admin') {
-		print "<b>  | <a href=\"/docman/admin/index.php?mode=editdocs&group_id=".$group_id."\">Edit Documents</a> | ".
-                    "<a href=\"/docman/admin/index.php?mode=editgroups&group_id=".$group_id." \">Edit Document Groups</a></b>";
+		print "<b>  | <a href=\"/docman/admin/index.php?mode=editdocs&group_id=".$group_id."\">".$LANG->getText('docman_doc_utils','edit_doc')."</a> | ".
+                    "<a href=\"/docman/admin/index.php?mode=editgroups&group_id=".$group_id." \">".$LANG->getText('docman_doc_utils','edit_groups')."</a></b>";
 
             } 
             if ($params['help']) {
-                echo ' | <b>  '.help_button($params['help'],false,'Help').'</b>';
+                echo ' | <b>  '.help_button($params['help'],false,$LANG->getText('global','help')).'</b>';
             }
         }
 }
 
 function docman_header_admin($params) {
 
-    global $group_id;
+    global $group_id,$LANG;
 
     $project=project_get_object($group_id);
     
     if (!$project->isProject()) {
-	exit_error('Error','Only Projects Can Use The Doc Manager');
+	exit_error($LANG->getText('global','error'),
+		   $LANG->getText('docman_doc_utils','error_proj'));
     }
     if (!$project->usesDocman()) {
-	exit_error('Error','This Project Has Turned Off The Doc Manager');
+	exit_error($LANG->getText('global','error'),
+		   $LANG->getText('docman_doc_utils','error_off'));
     }
     
     site_project_header(array('title'=>$params['title'],'group'=>$group_id,'toptab'=>'doc'));
     
-    print "<b><a href=\"/docman/admin/index.php?group_id=".$group_id."\">Admin</a>"; 
-    print "<b>  | <a href=\"/docman/admin/index.php?mode=editdocs&group_id=".$group_id."\">Edit Documents</a> | ".
-	"<a href=\"/docman/admin/index.php?mode=editgroups&group_id=".$group_id." \">Edit Document Groups</a></b>";
+    print "<b><a href=\"/docman/admin/index.php?group_id=".$group_id."\">".$LANG->getText('docman_doc_utils','admin')."</a>"; 
+    print "<b>  | <a href=\"/docman/admin/index.php?mode=editdocs&group_id=".$group_id."\">".$LANG->getText('docman_doc_utils','edit_doc')."</a> | ".
+	"<a href=\"/docman/admin/index.php?mode=editgroups&group_id=".$group_id." \">".$LANG->getText('docman_doc_utils','edit_groups')."</a></b>";
     
     if ($params['help']) {
-	echo ' | <b>  '.help_button($params['help'],false,'Help').'</b>';
+	echo ' | <b>  '.help_button($params['help'],false,$LANG->getText('global','help')).'</b>';
     }
 }
 

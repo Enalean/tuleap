@@ -14,26 +14,29 @@
 //	Originally written by Quentin Cregan, SourceForge 06/2000
 //	Modified by Laurent Julliard 2001-2004, CodeX Team, Xerox
 
-require('../doc_utils.php');
 require($DOCUMENT_ROOT.'/include/pre.php');
+require('../doc_utils.php');
 
 if (!($group_id)) {
 	exit_no_group();
 }
 
+$LANG->loadLanguageMsg('docman/docman');
+
 if (!(user_ismember($group_id,"D1"))) {
-    $feedback.="You need Document Editor permissions to access this page.";
+    $feedback .= $LANG->getText('docman_admin_index','error_perm');
     exit_permission_denied();
 }
 
 function main_page($group_id) {
-    docman_header_admin(array('title'=>'Document Manager Admin Page',
+    global $LANG;
+    docman_header_admin(array('title'=>$LANG->getText('docman_admin_index','title'),
 			      'help'=>'DocumentAdministration.html'));
-    echo '<p><b>Pending Submissions:</b>  <p>';
+    echo '<h3>'.$LANG->getText('docman_admin_index','pending_doc').'</h3>  <p>';
     display_docs('3',$group_id);
     // doc_group 3 == pending
     echo '<p>';
-    echo '<b>Active Submissions:</b>  <p>';
+    echo '<h3>'.$LANG->getText('docman_admin_index','active_doc').'</h3>  <p>';
     display_docs('1',$group_id);
     //doc_group 1 == active
     docman_footer($params);
@@ -50,7 +53,7 @@ if (strstr($mode,"docedit")) {
     $result = db_query($query);
     $row = db_fetch_array($result);
     
-    docman_header_admin(array('title'=>'Edit Document',
+    docman_header_admin(array('title'=>$LANG->getText('docman_admin_index','title_edit'),
 			'help'=>'DocumentAdministration.html#DocumentPublication'));
     
     echo '
@@ -61,35 +64,31 @@ if (strstr($mode,"docedit")) {
 	  <table border="0" width="75%">
 
 	  <tr>
-	    <th>Document Title:</th>
+	    <th>'.$LANG->getText('docman_new','doc_title').':</th>
 	    <td><input type="text" name="title" size="60" maxlength="255" value="'.$row['title'].'"></td>
-	    <!-- td class="example">(e.g. How to use the download server)</td -->
 
 	  </tr>
 	  <tr>
 	  </tr>
 	  <tr>
-	  <th>Description:</th>
+	  <th>'.$LANG->getText('docman_new','doc_desc').':</th>
 			       
 	  <td><textarea cols="60" rows="4"  wrap="virtual" name="description">'.$row['description'].'</textarea></td>
-	  <!-- td class="example">(e.g. Instructions on how to download files for newbies)</td -->
 
 	</tr>
 
 	<tr>
-	<th> <input type="checkbox" name="upload_instead" value="1"> <B>Upload New File:</B></th>
+	<th> <input type="checkbox" name="upload_instead" value="1"> <B>'.$LANG->getText('docman_new','doc_upload').':</B></th>
 	<td> <input type="file" name="uploaded_data" size="50">
-      <br><span class="smaller"><i>(The maximum upload file size is ';
-    echo formatByteToMb($sys_max_size_upload);
-    echo ' Mb)</i></span>
+            <br><span class="smaller"><i>'.$LANG->getText('docman_new','max_size_msg',array(formatByteToMb($sys_max_size_upload))).'
+              </i></span>
 	</td>
-	<!-- td> (HTML file) </td -->
 
 	</tr>';
 	// Display the content only for HTML and text documents that were not uploaded but copy/pasted
 	if ( ( ($row['filetype'] == 'text/html')||($row['filetype'] == 'text/plain') ) && ($row['filesize']==0) ){
             echo '<tr>
-	<th valign="top"><br><br>or Edit Document in place:</th>
+	<th valign="top"><br><br>'.$LANG->getText('docman_admin_index','doc_edit').':</th>
 	<td><textarea cols="60" rows="20" wrap="virtual" name="data">';
 	    echo $row['data'];
             echo '</textarea></td>
@@ -97,7 +96,7 @@ if (strstr($mode,"docedit")) {
         }
 
 	echo '<tr>
-	<th>Group doc belongs in:</th>
+	<th>'.$LANG->getText('docman_new','doc_group').':</th>
         	<td>';
 
     display_groups_option($group_id,$row['doc_group']);
@@ -106,7 +105,7 @@ if (strstr($mode,"docedit")) {
 	    </tr>
 
 	    <tr>
-	    <th>State:</th>
+	    <th>'.$LANG->getText('docman_admin_index','doc_state').':</th>
 	    <td>';
 
     $res_states=db_query("select * from doc_states;");
@@ -116,7 +115,7 @@ if (strstr($mode,"docedit")) {
 	    </tr>
 
 	    <tr>
-	    <th>Access to registered user only:</th>
+	    <th>'.$LANG->getText('docman_admin_index','registered_only').':</th>
 		<td><input type="checkbox" name="restricted_access" value="1"';
 		if ( $row['restricted_access'] == 1 ) {
 		    print " checked";
@@ -127,7 +126,7 @@ if (strstr($mode,"docedit")) {
                       </table>
 
 	   <input type="hidden" name="docid" value="'.$row['docid'].'">
-	   <input type="submit" value="Submit Edit">
+	   <input type="submit" value="'.$LANG->getText('global','btn_submit').'">
 
 	   </form>';
 
@@ -143,22 +142,22 @@ if (strstr($mode,"docedit")) {
 	    ."where doc_group = '$doc_group' "
 	    ."and group_id = $group_id";
 	db_query($query);
-	docman_header_admin(array('title'=>'Document Group Delete',
+	docman_header_admin(array('title'=>$LANG->getText('docman_admin_index','title_group_del'),
 			'help'=>'DocumentGroupManagement.html'));
-	print "<p><b>Group deleted. (GroupID : ".$doc_group.")</b>";	
+	print "<p><b>".$LANG->getText('docman_admin_index','msg_group_del',array(doc_group))."</b>";	
 	docman_footer($params);	
 	
     } else {
 	
 	db_query($query);
-	docman_header_admin(array('title'=>'Document Group Delete - Failed',
+	docman_header_admin(array('title'=>$LANG->getText('docman_admin_index','title_group_del_fail'),
 			'help'=>'DocumentGroupManagement.html'));
-	print "Group was not deleted.  Cannot delete groups that still have documents grouped under them."; 
+	print '<p>'.$LANG->getText('docman_admin_index','msg_group_del_fail'); 
 	docman_footer($params);
     }
     
 } elseif (strstr($mode,"groupedit")) {
-    docman_header_admin(array('title'=>'Document Group Edit',
+    docman_header_admin(array('title'=>$LANG->getText('docman_admin_index','title_group_edit'),
 			      'help'=>'DocumentAdministration.html#DocumentGroupManagement'));
     $query = "select * "
 	."from doc_groups "
@@ -167,13 +166,13 @@ if (strstr($mode,"docedit")) {
     $result = db_query($query);
     $row = db_fetch_array($result);
     echo '
-			<h2>Edit a Group</h2>
+			<h2>'.$LANG->getText('docman_admin_index','header_group_edit').'</h2>
 
 			<form name="editgroup" action="index.php?mode=groupdoedit&group_id='.$group_id.'" method="POST">
 			<table>
-			<tr><th>Group Name:</th>  <td><input type="text" name="groupname" value="'.$row['groupname'].'"></td></tr>
+			<tr><th>'.$LANG->getText('docman_doc_utils','group_name').':</th>  <td><input type="text" size="55" name="groupname" value="'.$row['groupname'].'"></td></tr>
 			<input type="hidden" name="doc_group" value="'.$row['doc_group'].'">
-			<tr><td> <input type="submit"></td></tr></table>	
+			<tr><td> <input type="submit" name="submit" value="'.$LANG->getText('global','btn_submit').'"></td></tr></table>	
 			</form>	
 			';
     docman_footer($params);
@@ -184,7 +183,7 @@ if (strstr($mode,"docedit")) {
 	."where doc_group='$doc_group' "
 	."and group_id = '$group_id'";
     db_query($query);
-    $feedback .= "Document Group Edited.";
+    $feedback .= $LANG->getText('docman_admin_index','feedback_group_updated');
     main_page($group_id);
     
 } elseif (strstr($mode,"docdoedit")) {
@@ -193,7 +192,8 @@ if (strstr($mode,"docedit")) {
     // description are non empty
     if (!$doc_group || $doc_group ==100) {
     	//cannot add a doc unless an appropriate group is provided
-    	exit_error('Error','No Valid Document Group Was Selected');
+    	exit_error($LANG->getText('global','error'),
+		   $LANG->getText('docman_admin_index','error_nodocgroup'));
     }
     
     if (!$title || !$description) { 
@@ -218,11 +218,11 @@ if (strstr($mode,"docedit")) {
 	    $data = addslashes(fread( fopen($uploaded_data, 'r'), filesize($uploaded_data)));
 	    if ((strlen($data) > 0) && (strlen($data) < $sys_max_size_upload)) {
 		//size is fine
-		$feedback .= ' Document Uploaded ';
+		$feedback .= $LANG->getText('docman_admin_index','feedback_doc_uploaded');
 	    } else {
 		//too big or small
-		$feedback .= ' ERROR - document must be non null and < '.$sys_max_size_upload.' chars in length ';
-		exit_error('Missing Info',$feedback.' - Please click back and fix the error.');
+		exit_error($LANG->getText('global','error'),
+			   $LANG->getText('docman_new','error_size',array($sys_max_size_upload)));
 	    }
 	}
 
@@ -273,18 +273,17 @@ if (strstr($mode,"docedit")) {
         }
     		
 	$res_insert = db_query($query);
-    if (db_affected_rows($res_insert) < 1) {
-    	$feedback .= ' ERROR - SQL Error= '. db_error();
-    	exit_error('DB Error',$feedback);
-    }
+	if (db_affected_rows($res_insert) < 1) {
+	    exit_error($LANG->getText('global','error'),
+		       $LANG->getText('docman_new','error_dbupdate', array(db_error())));
+	}
     
-	$feedback .= "Document \" ".htmlspecialchars($title)." \" updated";
+	$feedback .= $LANG->getText('docman_admin_index','feedback_doc_updated');
 	main_page($group_id);
 
     } else {
-
-	    exit_error("Error","Unable to update - Document does not exist, or document's group not the same as that to which your account belongs.");
-
+	exit_error($LANG->getText('global','error'),
+		   $LANG->getText('docman_admin_index','error_nodoc'));
     }
 
 } elseif (strstr($mode,"groupadd")) {
@@ -294,35 +293,35 @@ if (strstr($mode,"docedit")) {
 	."'$group_id')";
 		
     db_query($query);
-    $feedback .= "Group ".htmlspecialchars($groupname)." added.";
+    $feedback .= $LANG->getText('docman_admin_index','feedback_group_added');
     main_page($group_id);
 	
 } elseif (strstr($mode,"editgroups")) {
-    docman_header_admin(array('title'=>'Edit Document Group List',
+    docman_header_admin(array('title'=>$LANG->getText('docman_admin_index','title_group_mgt'),
 			      'help'=>'DocumentAdministration.html#DocumentGroupManagement'));
-    echo '<h2>Edit Document Groups</h2>
-	    <h3>Add a Group</h3>
+    echo '<h2>'.$LANG->getText('docman_admin_index','header_group_mgt').'</h2>
+	    <h3>'.$LANG->getText('docman_admin_index','create_doc_group').'</h3>
 	    <form name="addgroup" action="index.php?mode=groupadd&group_id='.$group_id.'" method="POST">
 	    <table>
-	        <tr><th>New Group Name:</th>  <td><input type="text" name="groupname"></td><td><input type="submit" value="Add"></td></tr></table>	
+	        <tr><th>'.$LANG->getText('docman_doc_utils','group_name').':</th>  <td><input type="text" name="groupname"></td><td><input type="submit" value="Add"></td></tr></table>	
 	    </form>	
-	<h3>Group List</h3>	';
+	<h3>'.$LANG->getText('docman_admin_index','doc_group_list').'</h3>	';
     display_groups($group_id);
 
 } elseif (strstr($mode,"editdocs")) {
 
-    docman_header_admin(array('title'=>'Edit Document List',
+    docman_header_admin(array('title'=>$LANG->getText('docman_admin_index','title_doc_mgt'),
 			      'help'=>'DocumentAdministration.html'));
-    echo '<h2>Edit Documents</h2>';
-    print "<p><b>Active Documents:</b><p>";	
+    echo '<h2>'.$LANG->getText('docman_admin_index','header_doc_mgt').'</h2>';
+    print "<p><b>".$LANG->getText('docman_admin_index','active_doc').":</b><p>";	
     display_docs('1',$group_id);
-    print "<p><b>Pending Documents:</b><p>";	
+    print "<p><b>".$LANG->getText('docman_admin_index','pending_doc').":</b><p>";	
     display_docs('3',$group_id);
-    print "<p><b>Hidden Documents:</b><p>";	
+    print "<p><b>".$LANG->getText('docman_admin_index','hidden_doc').":</b><p>";	
     display_docs('4',$group_id);
-    print "<p><b>Deleted Documents:</b><p>";	
+    print "<p><b>".$LANG->getText('docman_admin_index','deleted_doc').":</b><p>";	
     display_docs('2',$group_id);
-    print "<p><b>Private Documents:</b><p>";	
+    print "<p><b>".$LANG->getText('docman_admin_index','private_doc').":</b><p>";	
     display_docs('5',$group_id);
     docman_footer($params);	
 
