@@ -281,7 +281,7 @@ sub init_trackers_db {
     $activate_srs = check_old_used($group_id, 'support', 'group_id');
     $activate_tasks = check_old_used($group_id, 'project_task', 'group_project_id');
  
-     $query = "UPDATE groups SET activate_old_bug=$activate_bugs, activate_old_task=$activate_tasks, activate_old_sr=$activate_srs, use_trackers='1', use_bugs='0', use_support='0', use_pm='0' WHERE group_id=".$group_id;
+     $query = "UPDATE groups SET activate_old_bug=$activate_bugs, activate_old_task=$activate_tasks, activate_old_sr=$activate_srs, use_trackers='1' WHERE group_id=".$group_id;
       $c2 = $dbh->prepare($query);
       $c2->execute();
      ## print stderr $query, "\n";
