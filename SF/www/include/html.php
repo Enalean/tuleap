@@ -239,7 +239,7 @@ function html_build_select_box ($result, $name, $checked_val="xzxz",$show_100=tr
 	return html_build_select_box_from_arrays (util_result_column_to_array($result,0),util_result_column_to_array($result,1),$name,$checked_val,$show_100,$text_100,$show_any,$text_any);
 }
 
-function html_build_multiple_select_box ($result,$name,$checked_array,$size='8') {
+function html_build_multiple_select_box ($result,$name,$checked_array,$size='8',$show_100=true,$text_100='None', $show_any=false,$text_any='Any') {
 	/*
 		Takes a result set, with the first column being the "id" or value
 		and the second column being the text you want displayed
@@ -256,16 +256,32 @@ function html_build_multiple_select_box ($result,$name,$checked_array,$size='8')
 	$return .= '
 		<SELECT NAME="'.$name.'" MULTIPLE SIZE="'.$size.'">';
 	/*
+		Put in the Any box
+	*/
+	if ($show_any) {
+	    $return .= '
+		<OPTION VALUE="0"';
+	    for ($j=0; $j<$checked_count; $j++) {
+		if ($checked_array[$j] == '0') {
+		    $return .= ' SELECTED';
+		}
+	    }
+	    $return .= '>'.$text_any.'</OPTION>';
+	}
+
+	/*
 		Put in the default NONE box
 	*/
-	$return .= '
+	if ($show_100) {
+	    $return .= '
 		<OPTION VALUE="100"';
-	for ($j=0; $j<$checked_count; $j++) {
+	    for ($j=0; $j<$checked_count; $j++) {
 		if ($checked_array[$j] == '100') {
-			$return .= ' SELECTED';
+		    $return .= ' SELECTED';
 		}
+	    }
+	    $return .= '>'.$text_100.'</OPTION>';
 	}
-	$return .= '>None</OPTION>';
 
 	$rows=db_numrows($result);
 
