@@ -40,62 +40,50 @@
 // the standard http protocol (for https see below). You can also 
 // define a specific port number (useful for test servers - default 80)
 //
-$sys_default_domain = "codex.xerox.com";
+$sys_default_domain = "%sys_default_domain%";
 
 // If your Apache server have SSL configured give here the name
 // of the secure server. In most cases it will likely be the same
 // as $sys_default_domain. However you can also use this variable
 // to indicate a specific port for the https traffic (default 443)
-$sys_https_host = "codex.xerox.com";
+$sys_https_host = "%sys_default_domain%";
 
 // Machine that hosts CVS.
 // Note that while this machine need not be the same as the CodeX host,
 // the "cvsweb" interface currently must run on the CodeX host system.
 // If this host is different from the CodeX host, then the CodeX host
 // will need to be able to access the CVS file tree via NFS.
-$sys_cvs_host = "cvs.codex.xerox.com";
+$sys_cvs_host = "cvs.%sys_default_domain%";
  
 // Machine used for downloading sources/packages
-$sys_download_host = "download.codex.xerox.com";
+$sys_download_host = "download.%sys_default_domain%";
  
 // Machine(s) that host users' shell accounts
 //  N.B. to the SourceForge Crew: What's the difference between the user
 // host and the shell host?  They are clearly two different hostnames
 // in the source code, but they seem to serve the same purpose..?
-$sys_shell_host = "shell.codex.xerox.com";
-$sys_users_host = "users.codex.xerox.com";
+$sys_shell_host = "shell.%sys_default_domain%";
+$sys_users_host = "users.%sys_default_domain%";
  
-// Machine that hosts docs (such as the FAQs and the various software
-// licenses (*BSD, [L]GPL, etc.).  You REALLY want this to be the same
-// machine that the SourceForge code is running on because all of the
-// PHP makes reference to these documents in terms of relative paths that
-// are part of the SourceForge code tree.
-$sys_docs_host = "cxdocs.codex.xerox.com";
- 
-// Machine that hosts the SourceForge mailing lists (This could also be
+// Machine that hosts the mailing lists (This could also be
 // the mail host if you have enough horsepower & bandwidth)
-$sys_lists_host = "lists.codex.xerox.com";
+$sys_lists_host = "lists.%sys_default_domain%";
  
-// Domain Name Servers
-//    N.B.: Use terminated FQDNs here (with the final ".") so the resolver
-//    doesn't attempt to recurse in the case of a slightly broken DNS
-//    configuration
-$sys_dns1_host = "atlas.codex.xerox.com";
-$sys_dns2_host = "lilac.wrc.xerox.com";
+// Windows Workgroup CodeX belog to (Samba)
+$sys_win_domain = "%sys_win_domain%";
+
 
 // Part II - Databases, html/php/other paths
 $sys_dbhost="localhost";
-$sys_dbname="your_db_name_here";
-$sys_dbuser="your_db_user_name_here";
-$sys_dbpasswd="your_db_password_here";
+$sys_dbname="sourceforge";
+$sys_dbuser="sourceforge";
+$sys_dbpasswd="%sys_dbpasswd%";
 $sys_server="mysql";
  
 // Where files are placed when uploaded
-//$FTPINCOMING_DIR = "/nfs/remission/u7/ftp/incoming";
 $FTPINCOMING_DIR = "/home/ftp/incoming";
 
 // Where the released files are located
-//$FTPFILES_DIR = "/nfs/garbage/sourceforge";
 $FTPFILES_DIR = "/home/ftp/codex";
  
 // Where the SourceForge files are placed
@@ -135,7 +123,7 @@ $sys_news_group=46;
 // then also define the distinguised name to use in LDAP queries
 // the ldap filter is the filter to use to query the LDAP directory
 // (%name% are substituted with the value from the user table)
-$sys_ldap_server='Choose_an_LDAP_server_next_to_you';
+$sys_ldap_server='%sys_ldap_server%';
 $sys_ldap_dn='o=XEROX, c=US';
 $sys_ldap_filter='mail=%email%';
 
@@ -145,21 +133,22 @@ $sys_name='CodeX';
 
 //
 // Company/Organization running the system (short and long)
-$sys_org_name='Xerox';
-$sys_long_org_name='Xerox Corporation';
+$sys_org_name='%sys_org_name%';
+$sys_long_org_name='%sys_long_org_name%';
 
+//
 // Fully qualified name
-$sys_fullname="atlas.codex.xerox.com";
+$sys_fullname="%sys_fullname%";
 
 //
 // Email address pointing to the CodeX site administrators
 // for use Web pages, documentation,etc.
-$sys_email_admin='codex-admin@lists.codex.xerox.com';
+$sys_email_admin='codex-admin@%sys_default_domain%';
 
 //
 // Email address pointing to the CodeX contacts.
 // for use Web pages, documentation,etc.
-$sys_email_contact='codex-contact@codex.xerox.com';
+$sys_email_contact='codex-contact@%sys_default_domain%';
 
 //
 // Directory which hosts the site content
