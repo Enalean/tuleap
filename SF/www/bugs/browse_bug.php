@@ -156,7 +156,8 @@ echo '<FORM ACTION="'. $PHP_SELF .'" METHOD="GET">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 	<INPUT TYPE="HIDDEN" NAME="set" VALUE="custom">
 	<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
-	<TR><TD COLSPAN="5" nowrap><b>Browse Requests by User and/or Status/Group/Category:</b><br><br></TD></TR>
+	<TR><TD colspan="4" nowrap>Browse Bugs by:</td></tr>
+	<tr align="center" valign="bottom"><th><b>Assignee</b></th><th><b>Status</b></th><th><b>Group</b></th><th><b>Category</b></th></TR>
 	<TR><TD><FONT SIZE="-1">'. $tech_box . '</TD>'.
 	'<TD><FONT SIZE="-1">'. bug_status_box('_status',$_status,'Any') .'</TD>'.
 	'<TD><FONT SIZE="-1">'. bug_category_box ('_category',$group_id,$_category,'Any') .'</TD>'.
