@@ -497,6 +497,11 @@ optional<br>
 generate the HTML and PDF version of the CodeX User Guide. Install the
 jre rpm. Ignore the file with the .bin extension that may be visible as
 well in this directory<br>
+      <br>
+The package normally installs in /usr/java. Once installed make sure
+you create a symbolic link in /usr/java from 'jre' pointing to
+'jre_xxxx' where xxxx is the version number. This is required by the
+DocBook processing chain to generate the CodeX User Guide.<br>
       </td>
     </tr>
     <tr>
@@ -598,7 +603,6 @@ must be installed in /usr/local:<br>
         <li>saxon-x.y.z.tgz: XSLT engine to process the DocBook XML
 documents</li>
       </ul>
-      <br>
 Each of these packages must be dearchived in /usr/local and for each
 directory make sure your create a generic symbolic link (with no
 version
@@ -606,6 +610,7 @@ number in it) to the top level directory. Like this:<br>
       <blockquote>docbook-dtd &nbsp;-&gt; docbook-dtd-x.y.z<br>
 docbook-xsl &nbsp;-&gt; docbook-xsl-x.y.z<br>
 fop -&gt; fop-x.y.z<br>
+jimi -&gt; Jimi-x.y.z (Caution!! symbolic link uses lower case only)<br>
 etc...<br>
       </blockquote>
       </td>
