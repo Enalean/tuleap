@@ -16,14 +16,15 @@ xmlfilename=`basename $1`
 echo "Transforming XML file '$1' to PDF file '$2' ..."
 tmpfile="/tmp/docbook-$$"
 
+prevdir=`pwd`;
 cd $xmldir
-$scriptdir/xml2fo.sh $xmlfilename $tmpfile.fo
+$prevdir/$scriptdir/xml2fo.sh $xmlfilename $tmpfile.fo
 if [ $? != 0 ]
 then
         echo "Failed!"
         exit 1
 fi
-$scriptdir/fo2pdf.sh $tmpfile.fo $2
+$prevdir/$scriptdir/fo2pdf.sh $tmpfile.fo $prevdir/$2
 if [ $? != 0 ]
 then
         echo "Failed!"
