@@ -85,10 +85,12 @@ while ($ln = pop(@userdump_array)) {
 	if ($status eq 'A' && $user_exists) {
 		update_user($uid, $username, $realname, $shell, $passwd, $email);
 		update_winuser($uid, $username, $realname, $win_passwd, $winnt_passwd);
-	
+		update_httpuser($username, $passwd);
+
 	} elsif ($status eq 'A' && !$user_exists) {
 		add_user($uid, $username, $realname, $shell, $passwd, $email);
 		add_winuser($uid, $username, $realname, $win_passwd, $winnt_passwd);
+		add_httpuser($username, $passwd);
 	
 	} elsif ($status eq 'D') {
 
@@ -97,11 +99,13 @@ while ($ln = pop(@userdump_array)) {
 	        if ($user_exists) {
 		  delete_user($username);
 		  delete_winuser($username);
+		  delete_httpuser($username);
 		}
 		
 	} elsif ($status eq 'S' && $user_exists) {
 		suspend_user($username);
 		suspend_winuser($username);
+		suspend_httpuser($username);
 		
 	} elsif ($status eq 'S' && !$user_exists) {
 		print("Error trying to suspend user: $username\n");
@@ -473,7 +477,7 @@ sub update_httpuser {
 
     if ($username eq $p_username) {
       if ($passwd ne $p_passwd) {
-	$htpasswd_array[$counter] = "$username:$p_passwd\n";
+	$htpasswd_array[$counter] = "$username:$passwd\n";
       }
       last;
     }
