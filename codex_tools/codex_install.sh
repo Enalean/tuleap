@@ -509,7 +509,10 @@ if [ $freshdb -eq 1 ]; then
 echo "Populating the CodeX database..."
 cd /home/httpd/SF/db/mysql/
 $MYSQL -u sourceforge sourceforge --password=$sf_passwd < database_structure.sql   # create the DB
-$MYSQL -u sourceforge sourceforge --password=$sf_passwd < database_initvalues.sql  # populate with init values.
+cp database_initvalues.sql /tmp/database_initvalues.sql
+substitute '/tmp/database_initvalues.sql' '_DOMAIN_NAME_' "$sys_default_domain"
+$MYSQL -u sourceforge sourceforge --password=$sf_passwd < /tmp/database_initvalues.sql  # populate with init values.
+rm -f /tmp/database_initvalues.sql
 fi
 
 echo "Creating MySQL conf file..."
