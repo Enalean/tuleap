@@ -78,7 +78,7 @@ if (db_numrows($result) > 0) {
 		    echo "Text File";
 		}
 
-		echo '&nbsp;&nbsp;<A HREF="/patch/download.php?group_id='.$group_id.'&patch_id='.$patch_id.'">
+		echo '&nbsp;&nbsp;<A HREF="/patch/download.php/Patch'.$patch_id.'.txt?group_id='.$group_id.'&patch_id='.$patch_id.'">
                                           <B>[View Raw Patch]</B></A>';
 		echo'
 			<P>

@@ -139,12 +139,21 @@ function show_patchlist ($result,$offset,$set='open') {
 	echo html_build_list_table_top ($title_arr,$links_arr);
 
 	for ($i=0; $i < $rows; $i++) {
+
+	    $patch_id = db_result($result, $i, 'patch_id');
+
+	    $filename = db_result($result, $i, 'filename');
+	    if (!$filename) {
+		$filename = 'Plain Text';
+	    }
+	    $patch_url = '<A HREF="/patch/download.php/Patch'.$patch_id.'.txt?patch_id='.$patch_id.'">'.$filename.'</a>';
+	    
 		echo '
 			<TR BGCOLOR="'. util_get_alt_row_color($i) .'">'.
 			'<TD><b><A HREF="'.$PHP_SELF.'?func=detailpatch&patch_id='.db_result($result, $i, 'patch_id').
 			'&group_id='.db_result($result, $i, 'group_id').'">'.db_result($result, $i, 'patch_id').'</b></A></TD>'.
 			'<TD>'.db_result($result, $i, 'summary').'</TD>'.
-			'<TD>'.db_result($result, $i, 'filename').'&nbsp;</TD>'.
+			'<TD>'.$patch_url.'</TD>'.
 			'<TD>'.date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
 			'<TD>'.db_result($result, $i, 'assigned_to_user').'</TD>'.
 			'<TD>'.db_result($result, $i, 'submitted_by').'</TD></TR>';

@@ -41,7 +41,7 @@ if (db_numrows($result) > 0) {
 
 	echo '
 		<TR><TD COLSPAN="2"><P><B>Patch:</B><BR>
-		<A HREF="/patch/download.php/Patch'.$patch_id.'.txt?id='.$patch_id.'"><B>View Raw Patch</B></A>
+		<A HREF="/patch/download.php/Patch'.$patch_id.'.txt?patch_id='.$patch_id.'"><B>View Raw Patch</B></A>
 		</TD></TR>';
 
 	echo '
