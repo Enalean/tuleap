@@ -127,7 +127,7 @@ if ($group_id && $atid) {
 				}
 
 				// send an email to notify the user of the artifact update
-				$ah->mailFollowup($ath->getEmailAddress(),$changes);
+				$ah->mailFollowup($ath->getEmailAddress(),$null);
 				$feedback .= ' Item Successfully Created ';
 			    include './browse.php';
 			}
