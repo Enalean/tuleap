@@ -367,7 +367,7 @@ class ArtifactReport extends Error {
 		$sql = "select count(*) ".$from." ".$where." group by a.artifact_id";
 		//echo "<DBG> query count=".$sql."<br>";
 		
-		$result_count = db_query($sql);
+		$result_count = db_query($sql  );
 		$totalrows = db_numrows($result_count);
 			   
 		return $totalrows;
@@ -457,7 +457,7 @@ class ArtifactReport extends Error {
 					$time_end = mktime(23, 59, 59, $month, $day, $year);
 					$where = " AND ".$field_name." >= ".$time." AND ".$field_name." <= ".$time_end;
 			    } else {
-					$where = " AND ".$field_name." ".$operator." ".$time;
+					$where = " AND ".$field_name." ".$operator."=".$time;
 			    }
 			}
 		
