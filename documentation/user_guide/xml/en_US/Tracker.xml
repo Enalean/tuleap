@@ -905,6 +905,7 @@
           of the tracker it belongs to, a message will be diplayed on top of the
           target page to warn the user that she was redirected to another project,
           or that she should check the tracker name.</para>
+	</listitem>
 	<listitem>
 	  <para>If a project uses one of the legacy bug tracking
 	  system, task manager or support request manager, it is also
