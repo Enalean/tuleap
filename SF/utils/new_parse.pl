@@ -267,7 +267,9 @@ sub add_user {
 	# Now lets create the homedir and copy the contents of
 	# /etc/skel_codex into it. The change the ownership
 	mkdir $home_dir, 0751;
-	system("cd /etc/skel_codex; tar cf - . | (cd  $home_dir ; tar xf - )");	
+	if (-d "/etc/skel_codex") {
+	  system("cd /etc/skel_codex; tar cf - . | (cd  $home_dir ; tar xf - )");
+	}
 #	chown $uid, $uid, $home_dir;
 	system("chown -R $uid.$uid $home_dir");
 }
