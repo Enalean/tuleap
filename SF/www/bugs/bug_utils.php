@@ -358,7 +358,7 @@ function show_buglist ($result,$offset,$field_arr,$title_arr,$set='open') {
     }
     echo '</TD><TD>&nbsp;</TD><TD COLSPAN="2">';
 	
-    if ($rows > 50) {
+    if ($rows >= 50) {
 	echo '<A HREF="'.$PHP_SELF.'?func=browse&group_id='.$group_id.'&set='.$set.'&offset='.($offset+50).'"><B>Next 50 --></B></A>';
     } else {
 	echo '&nbsp;';
