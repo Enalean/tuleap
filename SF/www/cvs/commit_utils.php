@@ -117,9 +117,9 @@ function commits_data_get_technicians($group_id) {
 		"FROM user, user_group, cvs_checkins, cvs_repositories ".
 		"WHERE (user_group.group_id='$group_id' ".
 		"AND user.user_id=user_group.user_id) ".
-	        "OR (cvs_repositories.repository='/cvsroot/".$projectname."' ".
-		"AND cvs_checkins.repositoryid=cvs_repositories.id ".
-                "AND user.user_id=cvs_checkins.whoid) ". 
+	  //"OR (cvs_repositories.repository='/cvsroot/".$projectname."' ".
+	  //	"AND cvs_checkins.repositoryid=cvs_repositories.id ".
+	  //"AND user.user_id=cvs_checkins.whoid) ". 
 		"ORDER BY user.user_name ASC";
 
 	return db_query($sql);
