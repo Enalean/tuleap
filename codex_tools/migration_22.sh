@@ -887,6 +887,9 @@ echo "Removing installed mailman RPM if any .."
 $RPM -e --nodeps mailman 2>/dev/null
 MAILMAN_DIR="/home/mailman"
 echo "Updating mailman in $MAILMAN_DIR..."
+if [ ! -a $MAILMAN_DIR ]; then
+    $CP -a /usr/local/mailman /home/mailman
+fi
 if [ ! -d $MAILMAN_DIR"_20" ]; then
     $CP -a /home/mailman /home/mailman_20
 fi
@@ -914,7 +917,13 @@ $MAILMAN_DIR/bin/check_perms -f
 # modify mailman crontab for mailman 2.1
 crontab -u mailman -l > /tmp/mailman_cronfile
 $PERL -i'.orig' -p -e's:(^.*mailman)/cron/qrunner\s*$:\1/bin/qrunner -o -r -All\n:' /tmp/mailman_cronfile
+# Mailman used to be in /local/mailman
+$PERL -i'.orig2' -p -e's:/usr/local/mailman:/home/mailman:' /tmp/mailman_cronfile
+
 crontab -u mailman /tmp/mailman_cronfile
+todo "Check $MAILMAN_DIR/Mailman/mm_cfg.py: setup DEFAULT_HOST_NAME\n\
+and DEFAULT_URL variables, and insert add_virtualhost(DEFAULT_URL_HOST, DEFAULT_EMAIL_HOST).(overrides Defaults.py settings). Recompile with python -O mm_cfg.py"
+todo "Create a site-wide mailing list: in $MAILMAN_DIR, type 'bin/newlist mailman', then 'bin/config_list -i data/sitelist.cfg mailman', and don't forget to subscribe to this ML'."
 
 ##############################################
 # Install and Configure Subversion
@@ -962,6 +971,9 @@ cat <<EOF >/etc/logrotate.d/httpd
 
 EOF
 fi
+
+# Remove useless files in logrotate.d that generate errors
+$RM -rf /etc/logrotate.d/*.nocodex /etc/logrotate.d/*.rpmnew
 
 ##############################################
 # Restarting some services before upgrading

@@ -1149,13 +1149,13 @@ Installation and Configuration</h1>
 For historical reasons CodeX do not use the RedHat mailman RPMs but the
 stock archive directly from the Mailman Web site. You can get mailman
 at <a href="http://www.gnu.org/software/mailman/">http://www.gnu.org/software/mailman/</a>
-(CodeX uses the 2.0.x version). Unarchive the tar file in
-/usr/local/mailman and make sure your read the README, INSTALL and
-UPGRADING files (in case of an upgrade).<br>
+(CodeX uses the 2.1.x version). Unarchive the tar file and make sure your read the README, INSTALL and
+UPGRADING files (in case of an upgrade). Then compile and install it in
+/home/mailman .<br>
 <br>
 Also setup a mailman admin password once the installation is done (we
-recommend that you se the same password as the sourceforge account). To
-this end use the 'mmsitepass' script in /usr/local/mailman/bin.<br>
+recommend that you use the same password as the sourceforge account). To
+this end use the 'mmsitepass' script in /home/mailman/bin.<br>
 <br>
 You must also configure the Apache configuration <tt>httpd.conf</tt>
 to
@@ -1166,10 +1166,21 @@ same
 directory as your <tt>httpd.conf</tt> file and include it at the end
 of <tt>httpd.conf</tt>.<br>
 <br>
+Create a "site-wide" mailing list.  This is the one that password reminders will appear to come from.
+<pre>
+    % bin/newlist mailman
+    % bin/config_list -i data/sitelist.cfg mailman
+</pre>
+Be sure to subscribe yourself to the site list with the web admin interface.
+<br>
 You must also override some Mailman variable settings, most notably the
-DEFAULT_HOST_NAME and&nbsp; DEFAULT_URL. Look at their original
+DEFAULT_EMAIL_HOST and&nbsp; DEFAULT_URL_HOST. Look at their original
 definition in <span style="font-family: monospace;">/home/mailman/Mailman/Defaults.py</span>
 and redefine them in <span style="font-family: monospace;">/home/mailman/Mailman/mm_cfg.py.</span>
+If you change either variable in your mm_cfg.py, then be sure to also include the following:
+<pre>
+     add_virtualhost(DEFAULT_URL_HOST, DEFAULT_EMAIL_HOST)
+</pre>
 Then recompile with python -O mm_cfg.py.<br>
 <br>
 <hr width="100%" size="2">
