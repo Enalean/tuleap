@@ -581,14 +581,14 @@ INSERT INTO artifact_field_usage VALUES (14,2,0,0,0,0);
 INSERT INTO artifact_field_usage VALUES (10,3,0,0,0,0);
 INSERT INTO artifact_field_usage VALUES (11,3,0,0,0,0);
 
-INSERT INTO artifact_field_usage VALUES (1,4,0,0,0,0);
-INSERT INTO artifact_field_usage VALUES (2,4,0,0,0,0);
+INSERT INTO artifact_field_usage VALUES (1,4,1,1,1,0);
+INSERT INTO artifact_field_usage VALUES (2,4,1,1,1,0);
 INSERT INTO artifact_field_usage VALUES (3,4,0,0,0,0);
-INSERT INTO artifact_field_usage VALUES (4,4,0,0,0,0);
-INSERT INTO artifact_field_usage VALUES (5,4,0,0,0,0);
+INSERT INTO artifact_field_usage VALUES (4,4,1,1,1,10);
+INSERT INTO artifact_field_usage VALUES (5,4,1,1,1,0);
 INSERT INTO artifact_field_usage VALUES (6,4,0,0,0,0);
 INSERT INTO artifact_field_usage VALUES (7,4,0,0,0,0);
-INSERT INTO artifact_field_usage VALUES (8,4,0,0,0,0);
+INSERT INTO artifact_field_usage VALUES (8,4,1,1,1,20);
 
 --
 -- Dumping data for table 'artifact_field_value_list'
