@@ -586,13 +586,20 @@ class Artifact extends Error {
                         if  ($is_text) {
                             $differ = ($old_value != stripslashes(htmlspecialchars($value))); 
                         } else if ($field->isDateField()) {
+				//$feedback .= " in handleUpdate: value=$value and old_value=$value... ";
                             // if it's a date we must convert the format to unix time
                             list($value,$ok) = util_date_to_unixtime($value);
-			    // and make also sure that the old_value has been treated as the new value
-			    // i.e. old_value (unix timestamp) -> local date (with hours cut off, so change the date by x  hours) -> unixtime
+
+			    //first have a look if both dates are uninitialized
+			    if (($old_value == 0 || $old_value == '') && !$ok) {
+				$differ = false;
+			    } else {
+			    	// and make also sure that the old_value has been treated as the new value
+			    	// i.e. old_value (unix timestamp) -> local date (with hours cut off, so change the date by x  hours) -> unixtime
 				$old_date = format_date("Y-m-j",$old_value);
-				list($old_value,$ok) = util_date_to_unixtime($old_date);
-                            $differ = ($old_value != $value);
+				list($old_val,$ok) = util_date_to_unixtime($old_date);
+                            	$differ = ($old_val != $value);
+			    }
                         } else {
                             $differ = ($old_value != $value);
                         }
