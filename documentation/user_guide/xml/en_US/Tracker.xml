@@ -1300,7 +1300,7 @@ width="14.5cm" />
 	the import.</para>
     </section>
 
-    <para><tip><title>Tip: Excel and Regionals</title>
+    <para><tip id="ExcelAndRegionals"><title>Tip: Excel and Regionals</title>
     <para>
     If a .csv file is opened in Excel, any change to the file 
     (even something as simple as a column resizing) may cause 

@@ -462,7 +462,8 @@
         <authorinitials>Marie-Luise Schneider</authorinitials>
 
         <revremark> Tracker chapter: Add a tip for handling csv files under 
-	Excel corresponding to SR 162 on partners.
+	Excel corresponding to SR 162 on partners. Point from Project Administration
+	Chapter to this tip.
         </revremark>
       </revision>
     </revhistory>

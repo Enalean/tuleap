@@ -134,7 +134,7 @@
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Document Manager</emphasis>: 
+          <para><emphasis role="bold">Trackers, Patch Manager</emphasis>: 
           </para>
 
           <itemizedlist spacing="compact">
@@ -145,28 +145,29 @@
 
             <listitem>
               <para><emphasis role="underline">Technician Only</emphasis>:
-              Document manager technicians can submit new documents to the doument
-              manager. Submitted documents are immediately visible in the document list.</para>
+              tool technicians can be assigned artifacts/bugs/tasks/patches/support
+              requests and has the ability to update these items from
+              assignment to closure.</para>
             </listitem>
 
             <listitem>
               <para><emphasis role="underline">Administrator Only</emphasis>:
-              Document manager administrators have full access to the administration part
-              of the document manager. As an example, they can define new document
-              groups, edit or delete documents, set access permissions, etc.</para>
+              tool administrators have full access to the administration part
+              of the tools. As an example, they can define new artifact
+              categories, new predefined values for artifact fields, etc.</para>
             </listitem>
 
             <listitem>
               <para><emphasis role="underline">Technician &#38; Administrator</emphasis>:
-              the one-man-can-do-it-all on the document manager</para>
+              the one-man-can-do-it-all on that tool</para>
             </listitem>
           </itemizedlist>
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Forums, File Manager</emphasis>:
-          These two services have less sophisticated permission schema.
-          3 permission levels are available:</para>
+          <para><emphasis role="bold">Forums, Documentation Manager, File Manager</emphasis>:
+          These three services have less sophisticated permission schema.
+          4 permission levels are available:</para>
 
           <itemizedlist spacing="compact">
             <listitem>
@@ -183,6 +184,13 @@
             </listitem>
 
             <listitem>
+              <para><emphasis role="underline">Editor</emphasis>: (Doc Mgr
+              only): An editor has the ability to review and validate a
+              document prior to its publication. S/he can also update and
+              delete a document.</para>
+            </listitem>
+
+            <listitem>
               <para><emphasis role="underline">Administrator</emphasis>: (File Mgr
               only): A file manager administrator has the ability to upload and 
               manage file packages and releases. S/he can also set access permissions
@@ -191,38 +199,6 @@
             </listitem>
           </itemizedlist>
         </listitem>
-
-        <listitem>
-          <para><emphasis role="bold">Trackers</emphasis>: 
-          </para>
-
-          <itemizedlist spacing="compact">
-            <listitem>
-              <para><emphasis role="underline">None</emphasis>: well, you
-              can&#39;t do much with this one</para>
-            </listitem>
-
-            <listitem>
-              <para><emphasis role="underline">Technician Only</emphasis>:
-              tracker technicians can be assigned artifacts/bugs/tasks/patches/support
-              requests and has the ability to update these items from
-              assignment to closure.</para>
-            </listitem>
-
-            <listitem>
-              <para><emphasis role="underline">Administrator Only</emphasis>:
-              tracker administrators have full access to the administration part
-              of the trackers. As an example, they can define new artifact
-              categories, new predefined values for artifact fields, etc.</para>
-            </listitem>
-
-            <listitem>
-              <para><emphasis role="underline">Technician &#38; Administrator</emphasis>:
-              the one-man-can-do-it-all on that tool</para>
-            </listitem>
-          </itemizedlist>
-        </listitem>
-
         <listitem>
           <para><emphasis role="bold">Member of user groups</emphasis>:
           For each individual members, the column lists all the project user groups s/he belongs to. 
@@ -439,7 +415,10 @@
 	    most cases. However long text fields like bug/tasks
 	    follow-up comments (details field) and original comment
 	    must be declared as type Memo. Failing to do so will cause
-	    MS-Access to corrupt the imported data.</para></note>
+	    MS-Access to corrupt the imported data.</para>
+		<para>In case you encounter difficulties opening your exported
+		CSV file please consult our <xref linkend="ExcelAndRegionals"/>
+		</para></note>
 	  </listitem>
 	</itemizedlist>
 
