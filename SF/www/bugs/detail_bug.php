@@ -105,6 +105,17 @@ if (db_numrows($result) > 0) {
         <?php echo show_bug_details($bug_id); ?>
      </TD></TR>
 
+     <?php if (user_isloggedin()) {
+	 echo '<TR><TD COLSPAN="'.$fields_per_line.'">
+                     <hr><h3>CC List</h3>
+	   <b><u>Note:</b></u> for CodeX users use their login name rather than their email addresses.<p>
+	   <B>Add CC:&nbsp;</b><input type="text" name="add_cc" size="30">&nbsp;&nbsp;&nbsp;
+	   <B>Comment:&nbsp;</b><input type="text" name="cc_comment" size="40" maxlength="255"><p>';
+	  show_bug_cc_list($bug_id, $group_id);
+	  echo "</TD></TR>\n";
+     }
+     ?>
+
      <TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
         <hr><h3>Bug Attachments</h3>
 	<A href="javascript:help_window('/help/mod_bug.php?helpname=attach_file')"><b>(?)</b></a>
