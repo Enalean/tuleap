@@ -50,7 +50,8 @@ function people_skill_level_box($name='skill_level_id',$checked='xyxy') {
 	global $PEOPLE_SKILL_LEVEL;
 	if (!$PEOPLE_SKILL_LEVEL) {
 		//will be used many times potentially on a single page
-		$sql="SELECT * FROM people_skill_level";
+		// Order by Skill Level id to have them in a consistent order
+		$sql="SELECT * FROM people_skill_level ORDER BY skill_level_id ASC";
 		$PEOPLE_SKILL_LEVEL=db_query($sql);
 	}
 	return html_build_select_box ($PEOPLE_SKILL_LEVEL,$name,$checked);
