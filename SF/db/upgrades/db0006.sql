@@ -26,6 +26,7 @@
 #
 
 ALTER TABLE bug_field ADD value_function VARCHAR(255);
+ALTER TABLE bug_field_usage ADD custom_value_function VARCHAR(255);
 
 update bug_field set value_function='bug_technicians' where field_name='assigned_to';
 update bug_field set value_function='bug_submitters' where field_name='submitted_by';
