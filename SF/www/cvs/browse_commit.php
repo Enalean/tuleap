@@ -260,7 +260,7 @@ echo '<FORM name="commit_form" ACTION="'. $PHP_SELF .'" METHOD="GET">
         ##'<TD nowrap><font SIZE="-1"><select name="_commit_date_op">'.
         ##'<option VALUE=">" SELECTED>&gt;</option><option VALUE="=">=</option>'.
         ##'<option VALUE="<">&lt;</option></select>'.
-        ##'<input TYPE="text" name="_commit_date" size="10" MAXLENGTH="15" VALUE="'.$_commit_date.'"><a href="javascript:show_calendar(\'document.commit_form._commit_date\', document.commit_form._commit_date.value,\'savannah\',\'_normal\');"><img src="/images/savannah.theme/calendar/cal.png" width="16" height="16" border="0" alt="Click Here to Pick up a date"></a></TD>'.
+        ##'<input TYPE="text" name="_commit_date" size="10" MAXLENGTH="15" VALUE="'.$_commit_date.'"><a href="javascript:show_calendar(\'document.commit_form._commit_date\', document.commit_form._commit_date.value,'.util_get_css_theme().','.util_get_dir_image_theme().);"><img src=".util_get_image_theme('calendar/cal.png')." width="16" height="16" border="0" alt="Click Here to Pick up a date"></a></TD>'.
        '</TR></TABLE>'.
 	
 '<br><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Browse">'.

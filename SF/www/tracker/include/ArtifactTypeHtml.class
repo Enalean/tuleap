@@ -174,7 +174,7 @@ class ArtifactTypeHtml extends ArtifactType {
 					    $arr['group_artifact_id'],
 					    $arr['project_name'],
 					    $arr['name'],
-					    '<input type="text" name="delay_date" value="'.date("Y-m-d",$arr['deletion_date']).'"><a href="javascript:show_calendar(\'document.cal.delay_date\',document.cal.delay_date.value,\''.$GLOBALS['sys_user_theme'].'\',\''.getFontsizeName($GLOBALS['sys_user_font_size']).'\');"><img src="'.util_get_image_theme("calendar/cal.png").'"  border="0"></a>',
+					    '<input type="text" name="delay_date" value="'.date("Y-m-d",$arr['deletion_date']).'"><a href="javascript:show_calendar(\'document.cal.delay_date\',document.cal.delay_date.value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');"><img src="'.util_get_image_theme("calendar/cal.png").'"  border="0"></a>',
 					    '<a href="javascript: var delay = document.cal.delay_date.value; document.location=\'/tracker/admin/restore.php?func=delay&group_id='.$arr['group_id'].'&atid='.$arr['group_artifact_id'].'&delay_date=\'+delay;"><img src="'.util_get_image_theme("ic/save16b.png").'" border="0" onClick="return confirm(\'Delay deletion for this tracker?\')"></a>',
 					    "<a href=\"/tracker/admin/restore.php?func=restore&group_id=".$arr['group_id']."&atid=".$arr['group_artifact_id']."\"><img src=\"".util_get_image_theme("ic/convert.png")."\" border=\"0\" onClick=\"return confirm('Restore this tracker?')\"></a>",
 					    "<a href=\"/tracker/admin/restore.php?func=delete&group_id=".$arr['group_id']."&atid=".$arr['group_artifact_id']."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('** WARNING!! ** Delete this tracker and all its dependencies (no possible restore operation)?')\"></a>" );
@@ -1638,7 +1638,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		} else if ( $field->isDateField() ) {
 			echo 'Value: <INPUT TYPE="text" name="default_value"'.
 			' size="10" MAXLENGTH="10" VALUE="'.($default_value?format_date("Y-m-j",$default_value,''):'').'">'.
-			'<a href="javascript:show_calendar(\'document.artifact_form.default_value\', document.artifact_form.default_value.value,\''.$GLOBALS['sys_user_theme'].'\',\''.getFontsizeName($GLOBALS['sys_user_font_size']).'\');">'.
+			'<a href="javascript:show_calendar(\'document.artifact_form.default_value\', document.artifact_form.default_value.value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
 			'<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="Click Here to Pick up a date"></a>';
 		} else {
 	      	echo 'Value: <INPUT TYPE="text" NAME="default_value" VALUE="'.$default_value.'">';

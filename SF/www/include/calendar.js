@@ -13,7 +13,7 @@
 // Modified by Laurent Julliard for CodeX project
 // $Id$
 
-function show_calendar(str_target, str_datetime, css_theme, font_size) {
+function show_calendar(str_target, str_datetime, css_theme_file, img_theme_path) {
         var arr_months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
                 "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         var week_days = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
@@ -61,7 +61,7 @@ function show_calendar(str_target, str_datetime, css_theme, font_size) {
                 "<html>\n"+
                 "<head>\n"+
                 "        <title>Calendar</title>\n"+
-                "<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/"+css_theme+"/"+css_theme+font_size+".css\">\n"+
+                "<link rel=\"stylesheet\" type=\"text/css\" href=\""+css_theme_file+"\">\n"+
                 "</head>\n"+
                 "<body>\n"+
                 "<table class=\"clsOTable\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n"+
@@ -70,13 +70,13 @@ function show_calendar(str_target, str_datetime, css_theme, font_size) {
                 "<tr>\n"+
                 "        <td class=\"calendar_month\"><a href=\"javascript:window.opener.show_calendar('"+
                 //str_target+"', '"+dt2dtstr(dt_prev_year)+"'+document.cal.time.value);\">"+
-                str_target+"', '"+dt2dtstr(dt_prev_year)+"','"+css_theme+"','"+font_size+"');\">"+
-		"<img src=\"/images/"+css_theme+".theme/calendar/prev_year.png\" width=\"16\" height=\"16\" border=\"0\""+
+                str_target+"', '"+dt2dtstr(dt_prev_year)+"','"+css_theme_file+"','"+img_theme_path+"');\">"+
+		"<img src=\""+img_theme_path+"/calendar/prev_year.png\" width=\"16\" height=\"16\" border=\"0\""+
                 " alt=\"previous year\"></a></td>\n"+
                 "        <td class=\"calendar_month\"><a href=\"javascript:window.opener.show_calendar('"+
                 //str_target+"', '"+ dt2dtstr(dt_prev_month)+"'+document.cal.time.value);\">"+
-		str_target+"', '"+ dt2dtstr(dt_prev_month)+"','"+css_theme+"','"+font_size+"');\">"+
-                "<img src=\"/images/"+css_theme+".theme/calendar/prev.png\" width=\"16\" height=\"16\" border=\"0\""+
+		str_target+"', '"+ dt2dtstr(dt_prev_month)+"','"+css_theme_file+"','"+img_theme_path+"');\">"+
+                "<img src=\""+img_theme_path+"/calendar/prev.png\" width=\"16\" height=\"16\" border=\"0\""+
                 " alt=\"previous month\"></a></td>\n"+
 
                 "        <td class=\"calendar_month\" colspan=\"3\" align=\"center\">"+
@@ -85,13 +85,13 @@ function show_calendar(str_target, str_datetime, css_theme, font_size) {
 
                 "        <td class=\"calendar_month\" align=\"right\"><a href=\"javascript:window.opener.show_calendar('"
                 //+str_target+"', '"+dt2dtstr(dt_next_month)+"'+document.cal.time.value);\">"+
-                +str_target+"', '"+dt2dtstr(dt_next_month)+"','"+css_theme+"','"+font_size+"');\">"+
-                "<img src=\"/images/"+css_theme+".theme/calendar/next.png\" width=\"16\" height=\"16\" border=\"0\""+
+                +str_target+"', '"+dt2dtstr(dt_next_month)+"','"+css_theme_file+"','"+img_theme_path+"');\">"+
+                "<img src=\""+img_theme_path+"/calendar/next.png\" width=\"16\" height=\"16\" border=\"0\""+
                 " alt=\"next month\"></a></td>\n"+
                 "        <td class=\"calendar_month\" align=\"right\"><a href=\"javascript:window.opener.show_calendar('"
                 //+str_target+"', '"+dt2dtstr(dt_next_year)+"'+document.cal.time.value);\">"+
-		+str_target+"', '"+dt2dtstr(dt_next_year)+"','"+css_theme+"','"+font_size+"');\">"+
-                "<img src=\"/images/"+css_theme+".theme/calendar/next_year.png\" width=\"16\" height=\"16\" border=\"0\""+
+		+str_target+"', '"+dt2dtstr(dt_next_year)+"','"+css_theme_file+"','"+img_theme_path+"');\">"+
+                "<img src=\""+img_theme_path+"/calendar/next_year.png\" width=\"16\" height=\"16\" border=\"0\""+
                 " alt=\"next year\"></a></td>\n"+
                 "</tr>\n");
         var dt_current_day = new Date(dt_firstday);

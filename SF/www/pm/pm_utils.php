@@ -912,7 +912,7 @@ function pm_field_date($field_name,$value='',$size=0,$maxlength=0,$ro=false) {
 
 	$html = '<INPUT TYPE="text" name="'.$field_name.
 	'" size="'.$size.'" MAXLENGTH="'.$maxlength.'" VALUE="'.$value.'">'.
-	'<a href="javascript:show_calendar(\'document.task_form.'.$field_name.'\', document.task_form.'.$field_name.'.value,\''.$GLOBALS['sys_user_theme'].'\',\''.getFontsizeName($GLOBALS['sys_user_font_size']).'\');">'.
+	'<a href="javascript:show_calendar(\'document.task_form.'.$field_name.'\', document.task_form.'.$field_name.'.value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
 	'<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="Click Here to Pick up a date"></a>';
     }
     return($html);

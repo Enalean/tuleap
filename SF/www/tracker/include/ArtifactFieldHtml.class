@@ -138,11 +138,11 @@ class ArtifactFieldHtml extends ArtifactField {
 		
 				$html = 'Start:<INPUT TYPE="text" name="'.$this->getName().
 				'" size="'.$size.'" MAXLENGTH="'.$maxlength.'" VALUE="'.$date_begin.'">'.
-				'<a href="javascript:show_calendar(\'document.artifact_form.'.$this->getName().'\', document.artifact_form.'.$this->getName().'.value,\''.$GLOBALS['sys_user_theme'].'\',\''.getFontsizeName($GLOBALS['sys_user_font_size']).'\');">'.
+				'<a href="javascript:show_calendar(\'document.artifact_form.'.$this->getName().'\', document.artifact_form.'.$this->getName().'.value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
 				'<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="Click Here to Pick up start date"></a><br>'.
 				'End :<INPUT TYPE="text" name="'.$this->getName().'_end'.
 				'" size="'.$size.'" MAXLENGTH="'.$maxlength.'" VALUE="'.$date_end.'">'.
-				'<a href="javascript:show_calendar(\'document.artifact_form.'.$this->getName().'_end\', document.artifact_form.'.$this->getName().'_end.value,\''.$GLOBALS['sys_user_theme'].'\',\''.getFontsizeName($GLOBALS['sys_user_font_size']).'\');">'.
+				'<a href="javascript:show_calendar(\'document.artifact_form.'.$this->getName().'_end\', document.artifact_form.'.$this->getName().'_end.value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
 				'<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="Click Here to Pick up end date"></a>';
 		    }
 	
@@ -195,7 +195,7 @@ class ArtifactFieldHtml extends ArtifactField {
 	
 			$html = '<INPUT TYPE="text" name="'.$this->field_name.
 			'" size="10" MAXLENGTH="10" VALUE="'.$value.'">'.
-			'<a href="javascript:show_calendar(\'document.artifact_form.'.$this->field_name.'\', document.artifact_form.'.$this->field_name.'.value,\''.$GLOBALS['sys_user_theme'].'\',\''.getFontsizeName($GLOBALS['sys_user_font_size']).'\');">'.
+			'<a href="javascript:show_calendar(\'document.artifact_form.'.$this->field_name.'\', document.artifact_form.'.$this->field_name.'.value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
 			'<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="Click Here to Pick up a date"></a>';
 	    }
 	    return($html);
