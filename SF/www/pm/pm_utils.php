@@ -697,7 +697,7 @@ function format_task_cc_list ($project_task_id,$group_id, $ascii=false) {
 	$out .= "CC List\n*******\n\n";
 	$fmt = "%-35s | %s\n";
 	$out .= sprintf($fmt, 'CC Address', 'Comment');
-	$out .= "------------------------------------+-----------------------------\n";
+	$out .= "------------------------------------------------------------------\n";
     } else {	
 
 	$title_arr=array();
@@ -1039,14 +1039,14 @@ function format_task_changes($changes) {
 
     //Process special cases first: follow-up comment
     if ($changes['details']) {
-    	$out_com = "\n\n------------------ Additional Follow-up Comments ----------------------------\n";
+    	$out_com = "\n\n----------------   Additional Follow-up Comments   --------------------------\n";
     	$out_com .= util_unconvert_htmlspecialchars($changes['details']['add']);
     	unset($changes['details']);
     }
 
     //Process special cases first: task file attachment
     if ($changes['attach']) {
-    	$out_att = "\n\n------------------ Additional Task Attachment  ----------------------------\n";
+    	$out_att = "\n\n----------------   Additional Task Attachment   --------------------------\n";
     	$out_att .= sprintf("File name: %-30s Size:%d KB\n",$changes['attach']['name'],
     			 intval($changes['attach']['size']/1024) );
     	$out_att .= $changes['attach']['description']."\n".$changes['attach']['href'];
@@ -1478,13 +1478,13 @@ function pm_mail_followup($project_task_id,$more_addresses=false,$changes=false)
     	// task fields - Changes first if there are some.
     	if ($changes) {
     
-    	    $body = "\n=================== TASK #".$project_task_id.
-    		": LATEST MODIFICATIONS ==================\n".$task_href."\n\n".
+    	    $body = "\n=================   TASK #".$project_task_id.
+    		": LATEST MODIFICATIONS   ================\n".$task_href."\n\n".
     		format_task_changes($changes)."\n\n\n\n";
     	}
     
-    	$body .= "=================== TASK #".$project_task_id.
-    	    ": FULL TASK SNAPSHOT ===================\n".
+    	$body .= "=================   TASK #".$project_task_id.
+    	    ": FULL TASK SNAPSHOT   =================\n".
     	    ($changes ? '':$task_href)."\n\n";
         
     	// Some special field first (group, created by/on)

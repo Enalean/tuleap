@@ -886,13 +886,13 @@ function bug_mail_followup($bug_id,$more_addresses=false,$changes=false) {
 	// Generate the message preamble with all required
 	// bug fields - Changes first if there are some.
 	if ($changes) {
-	    $body = "\n=================== BUG #".$bug_id.
-		": LATEST MODIFICATIONS ==================\n".$bug_href."\n\n".
+	    $body = "\n=============   BUG #".$bug_id.
+		": LATEST MODIFICATIONS   =============\n".$bug_href."\n\n".
 		format_bug_changes($changes)."\n\n\n\n";
 	}
 
-	$body .= "=================== BUG #".$bug_id.
-	    ": FULL BUG SNAPSHOT ===================\n".
+	$body .= "=============   BUG #".$bug_id.
+	    ": FULL BUG SNAPSHOT   =============\n".
 	    ($changes ? '':$bug_href)."\n\n";
     
 	// Some special field first (group, submitted by/on)
@@ -1044,7 +1044,7 @@ function format_bug_details ($bug_id, $group_id, $ascii=false) {
 	    $comment_type = '['.$comment_type.']';
 	
 	if ($ascii) {
-	    $fmt = "\n\n-------------------------------------------------------\n".
+	    $fmt = "\n\n------------------------------------------------------------------\n".
 		"Date: %-30sBy: %s\n".
 		($comment_type ? "%s\n%s" : '%s%s');
 	} else {
@@ -1098,7 +1098,7 @@ function format_bug_changes($changes) {
 
     //Process special cases first: follow-up comment
     if ($changes['details']) {
-	$out_com = "\n\n------------------ Additional Follow-up Comments ----------------------------\n";
+	$out_com = "\n\n---------------   Additional Follow-up Comments   ----------------\n";
 	if ($changes['details']['type'] != 'None') {
 	    $out_com .= '['.$changes['details']['type']."]\n";
 	}
@@ -1108,7 +1108,7 @@ function format_bug_changes($changes) {
 
     //Process special cases first: bug file attachment
     if ($changes['attach']) {
-	$out_att = "\n\n------------------ Additional Bug Attachment  ----------------------------\n";
+	$out_att = "\n\n---------------    Additional Bug Attachment     -----------------\n";
 	$out_att .= sprintf("File name: %-30s Size:%d KB\n",$changes['attach']['name'],
 			 intval($changes['attach']['size']/1024) );
 	$out_att .= $changes['attach']['description']."\n".$changes['attach']['href'];
@@ -1128,7 +1128,7 @@ function format_bug_changes($changes) {
     }
     if ($out) {
 	$out = "\n\n".sprintf($fmt,'What    ','Removed','Added').
-	"---------------------------------------------------------------------------\n".$out;
+	"------------------------------------------------------------------\n".$out;
     }
 
     return($out_hdr.$out.$out_com.$out_att);
@@ -1224,7 +1224,7 @@ function format_bug_attached_files ($bug_id,$group_id,$ascii=false) {
 
     // Determine what the print out format is based on output type (Ascii, HTML
     if ($ascii) {
-	$fmt = "\n\n-------------------------------------------------------\n".
+	$fmt = "\n\n------------------------------------------------------------------\n".
 	    "Date: %s  Name: %s  Size: %dKB   By: %s\n%s\n%s";
     } else {
 	$fmt = "\n".'<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td><td align="center">%s</td><td align="center">%s</td>'.
@@ -1303,7 +1303,7 @@ function format_bug_cc_list ($bug_id,$group_id, $ascii=false) {
 	$out .= "CC List\n*******\n\n";
 	$fmt = "%-35s | %s\n";
 	$out .= sprintf($fmt, 'CC Address', 'Comment');
-	$out .= "------------------------------------+-----------------------------\n";
+	$out .= "------------------------------------------------------------------\n";
     } else {	
 
 	$title_arr=array();

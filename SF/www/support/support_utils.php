@@ -200,14 +200,14 @@ function sr_utils_mail_followup($support_id,$more_addresses=false,$changes=false
 	    // Generate the message preamble with all required
 	    // bug fields - Changes first if there are some.
 	    if ($changes) {
-		$body = "\n============== SUPPORT REQ. #".$support_id.
-		    ": LATEST MODIFICATIONS ===============\n".$sr_href."\n\n".
+		$body = "\n============   SUPPORT REQ. #".$support_id.
+		    ": LATEST MODIFICATIONS   =============\n".$sr_href."\n\n".
 		format_support_changes($changes)."\n\n\n\n";
 	    }
 
 
-	    $body .= "\n============== SUPPORT REQ. #".$support_id.
-		": FULL SNAPSHOT  ===============\n".
+	    $body .= "\n============   SUPPORT REQ. #".$support_id.
+		": FULL SNAPSHOT   ==============\n".
 		($changes ? '':$sr_href)."\n\n";
 	    
 	    $body .= sprintf("$fmt$fmt\n$fmt\n",
@@ -363,14 +363,14 @@ function format_support_changes($changes) {
 
     //Process special cases first: follow-up comment
     if ($changes['details']) {
-	$out_com = "\n\n------------------ Additional Follow-up Comments ----------------------------\n";
+	$out_com = "\n\n----------------   Additional Follow-up Comments   ---------------------------\n";
 	$out_com .= util_unconvert_htmlspecialchars($changes['details']['add']);
 	unset($changes['details']);
     }
 
     //Process special cases first: bug file attachment
     if ($changes['attach']) {
-	$out_att = "\n\n------------------ Additional File Attachment  ----------------------------\n";
+	$out_att = "\n\n----------------   Additional File Attachment   ---------------------------\n";
 	$out_att .= sprintf("File name: %-30s Size:%d KB\n",$changes['attach']['name'],
 			 intval($changes['attach']['size']/1024) );
 	$out_att .= $changes['attach']['description']."\n".$changes['attach']['href'];
