@@ -509,7 +509,7 @@ function pm_show_dependent_bugs ($project_task_id,$group_id,$group_project_id) {
 }
 
 
-function pm_show_task_details ($project_task_id) {
+function pm_show_task_details ($project_task_id, $group_id) {
 	/*
 		Show the details rows from task_history
 	*/
@@ -536,7 +536,7 @@ function pm_show_task_details ($project_task_id) {
 		for ($i=0; $i < $rows; $i++) {
 			echo '
 			<TR BGCOLOR="'. util_get_alt_row_color ($i) .'">
-				<TD>'. util_make_links(nl2br(db_result($result, $i, 'old_value'))).'</TD>
+				<TD>'. util_make_links(nl2br(db_result($result, $i, 'old_value')), $group_id).'</TD>
 				<TD VALIGN="TOP">'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</TD>
 				<TD VALIGN="TOP">'.db_result($result, $i, 'user_name').'</TD></TR>';
 		}

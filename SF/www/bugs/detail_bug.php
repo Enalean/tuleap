@@ -55,7 +55,7 @@ if (db_numrows($result) > 0) {
 
 	      $field_display = bug_field_display($field_name,$group_id,$field_value,false,true,true);
 	      if ($field_name=='details') 
-		  $value = util_make_links($field_display);
+		  $value = util_make_links($field_display,$group_id);
 
 	      if ($sz > $max_size) {
 		  echo "\n<TR>".
@@ -99,7 +99,7 @@ if (db_numrows($result) > 0) {
 
      <TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
          <h3>Follow-up Comments</h3>
-        <?php echo show_bug_details($bug_id); ?>
+        <?php echo show_bug_details($bug_id,false,$group_id); ?>
      </TD></TR>
 
      <?php if (user_isloggedin()) {

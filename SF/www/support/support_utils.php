@@ -225,7 +225,7 @@ function sr_utils_mail_followup($support_id,$more_addresses=false,$changes=false
 	    $body .= "Original submission:\n".db_result($odq,0,'body')."\n\n";
 
 	    // Include all follow-up comments
-	    $body .= format_support_details($support_id,true);
+	    $body .= format_support_details($support_id,true,$group_id);
 
 	    /*
 	                  get all the email addresses that have dealt with this request
@@ -267,7 +267,7 @@ function sr_utils_mail_followup($support_id,$more_addresses=false,$changes=false
 	}
 }
 
-function format_support_details ($support_id, $ascii=false) {
+function format_support_details ($support_id, $ascii=false, $group_id) {
     /*
            Show the details rows from support_history
           */
@@ -328,7 +328,7 @@ function format_support_details ($support_id, $ascii=false) {
 			    util_unconvert_htmlspecialchars(db_result($result, $i, 'body')) );
 	} else {
 	    $out .= sprintf($fmt, util_get_alt_row_color($i),
-			    util_make_links(nl2br(db_result($result, $i, 'body'))),
+			    util_make_links(nl2br(db_result($result, $i, 'body')), $group_id),
 			    format_date($sys_datefmt,db_result($result, $i, 'date')),
 			    $user_link);
 	}
@@ -340,8 +340,8 @@ function format_support_details ($support_id, $ascii=false) {
     return($out);
 }
 
-function show_support_details ($support_id, $ascii=false) {
-    echo format_support_details($support_id, $ascii);
+function show_support_details ($support_id, $ascii=false, $group_id) {
+    echo format_support_details($support_id, $ascii, $group_id);
 }
 
 

@@ -9,6 +9,11 @@
 pm_header(array('title'=>'Modify A Task',
 		'help'=>'TaskUpdate.html'));
 
+// Test if we have the group_project_id in the arguments
+if ( !isset($group_project_id)||($group_project_id == 0) ) {
+    $group_project_id = pm_data_get_group_project_id($project_task_id);
+}
+
 $sql="SELECT * FROM project_task ".
 	"WHERE project_task_id='$project_task_id' AND group_project_id='$group_project_id'";
 
@@ -130,7 +135,7 @@ $result=db_query($sql);
 		if (!$_eoc) {
 			// Add a pointer to switch to editable comment field
 			echo "<a href=\"$PHP_SELF?func=detailtask&project_task_id=$project_task_id&group_id=$group_id&group_project_id=$group_project_id&_eoc=1\"> [Edit]</a>";
-			echo '<P>'.util_make_links(nl2br(db_result($result,0,'details')));
+			echo '<P>'.util_make_links(nl2br(db_result($result,0,'details')), $group_id);
 		} else {
 			// If _eoc flag is set then put the original comment
 			// in a editable text area
@@ -148,7 +153,7 @@ $result=db_query($sql);
  
 	<TR>
 		<TD COLSPAN="2">
-			<?php echo pm_show_task_details ($project_task_id); ?>
+			<?php echo pm_show_task_details ($project_task_id, $group_id); ?>
 		</TD>
 	</TR>
 

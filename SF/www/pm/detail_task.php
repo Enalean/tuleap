@@ -9,6 +9,11 @@
 pm_header(array('title'=>'View A Task',
 		'help'=>'TaskUpdate.html'));
 
+// Test if we have the group_project_id in the arguments
+if ( !isset($group_project_id)||($group_project_id == 0) ) {
+    $group_project_id = pm_data_get_group_project_id($project_task_id);
+}
+
 $sql="SELECT * FROM project_task ".
 	"WHERE project_task_id='$project_task_id' AND group_project_id='$group_project_id'";
 
@@ -75,13 +80,13 @@ $result=db_query($sql);
 		<TD COLSPAN="2">
 		<B>Original Comment:</B>
 		<br>
-		<?php echo util_make_links(nl2br(db_result($result,0,'details'))); ?>
+		<?php echo util_make_links(nl2br(db_result($result,0,'details')), $group_id); ?>
 		</TD>
 	</TR>
 
 	<TR>
 		<TD COLSPAN="2">
-			<?php echo pm_show_task_details ($project_task_id); ?>
+			<?php echo pm_show_task_details ($project_task_id, $group_id); ?>
 		</TD>
 	</TR>
 

@@ -915,7 +915,7 @@ function bug_mail_followup($bug_id,$more_addresses=false,$changes=false) {
 			   db_result($result,0,'details'),false,true,true,true);
 
 	// Then output the history of bug details from newest to oldest
-	$body .= "\n\n".format_bug_details($bug_id, true);
+	$body .= "\n\n".format_bug_details($bug_id, true, $group_id);
 
 	// Then output the CC list
 	$body .= "\n\n".format_bug_cc_list($bug_id, $group_id, true);
@@ -988,7 +988,7 @@ function show_dependent_bugs ($bug_id,$group_id) {
 	}
 }
 
-function format_bug_details ($bug_id, $ascii=false) {
+function format_bug_details ($bug_id, $ascii=false, $group_id=-1) {
 
     /*
       Format the details rows from bug_history
@@ -1050,7 +1050,7 @@ function format_bug_details ($bug_id, $ascii=false) {
 	    $out .= sprintf($fmt,
 			    util_get_alt_row_color($i),
 			    $comment_type,
-			    util_make_links(nl2br(db_result($result, $i, 'old_value'))),
+			    util_make_links(nl2br(db_result($result, $i, 'old_value')),$group_id),
 			    format_date($sys_datefmt,db_result($result, $i, 'date')),
 			    db_result($result, $i, 'user_name'));
 	}
@@ -1062,8 +1062,8 @@ function format_bug_details ($bug_id, $ascii=false) {
     return($out);
 }
 
-function show_bug_details ($bug_id, $ascii=false) {
-    echo format_bug_details($bug_id, $ascii);
+function show_bug_details ($bug_id, $ascii=false,$group_id) {
+    echo format_bug_details($bug_id, $ascii,$group_id);
 }
 
 function format_bug_changes($changes) {

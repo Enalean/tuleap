@@ -63,7 +63,7 @@ function forum_header($params) {
 				<B>Date:</B> '. format_date($sys_datefmt,db_result($result,0,'date')).'<BR>
 				<B>Summary:</B><A HREF="/forum/forum.php?forum_id='.db_result($result,0,'forum_id').'">'. db_result($result,0,'summary').'</A>
 				<P>
-				'. util_make_links( nl2br( db_result($result,0,'details')));
+				'. util_make_links( nl2br( db_result($result,0,'details')), $group_id);
 
 				echo '<P>';
 			}

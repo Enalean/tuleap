@@ -43,7 +43,7 @@ function forum_show_a_nested_message ($result,$row=0) {
 			</TR>
 			<TR>
 				<TD>
-					'. util_make_links( nl2br ( db_result($result,$row,'body') ) ) .'
+					'. util_make_links( nl2br ( db_result($result,$row,'body') ), db_result($result,$row,'group_id') ) .'
 				</TD>
 			</TR>
 		</TABLE>';
@@ -53,8 +53,8 @@ function forum_show_a_nested_message ($result,$row=0) {
 function forum_show_nested_messages ($thread_id, $msg_id) {
 	global $total_rows,$sys_datefmt;
 
-	$sql="SELECT user.user_name,forum.has_followups,user.realname,user.user_id,forum.msg_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to ".
-		"FROM forum,user WHERE forum.thread_id='$thread_id' AND user.user_id=forum.posted_by AND forum.is_followup_to='$msg_id' ".
+	$sql="SELECT user.user_name,forum.has_followups,user.realname,user.user_id,forum.msg_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to, forum_group_list.group_id ".
+		"FROM forum,user,forum_group_list WHERE forum.thread_id='$thread_id' AND user.user_id=forum.posted_by AND forum.is_followup_to='$msg_id' AND forum_group_list.group_forum_id = forum.group_forum_id ".
 		"ORDER BY forum.date ASC;";
 
 	$result=db_query($sql);
@@ -179,8 +179,8 @@ if ($forum_id) {
 		$threading_sql='AND forum.is_followup_to=0';
 	}
 
-	$sql="SELECT user.user_name,user.realname,forum.has_followups,user.user_id,forum.msg_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to ".
-		"FROM forum,user WHERE forum.group_forum_id='$forum_id' AND user.user_id=forum.posted_by $threading_sql ".
+	$sql="SELECT user.user_name,user.realname,forum.has_followups,user.user_id,forum.msg_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to, forum_group_list.group_id ".
+		"FROM forum,user,forum_group_list WHERE forum.group_forum_id='$forum_id' AND user.user_id=forum.posted_by $threading_sql AND forum_group_list.group_forum_id = forum.group_forum_id ".
 		"ORDER BY forum.date DESC LIMIT $offset,".($max_rows+1);
 
 	$result=db_query($sql);

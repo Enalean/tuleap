@@ -80,7 +80,7 @@ if (db_numrows($result) > 0) {
 	      $label = bug_field_label_display($field_name,$group_id,false,false);
 	      // original submission field must be displayed read-only
 	      if ($field_name=='details') 
-		  $value = util_make_links(bug_field_display($field_name,$group_id,$field_value,false,false,true));
+		  $value = util_make_links(bug_field_display($field_name,$group_id,$field_value,false,false,true),$group_id);
 	      else
 		  $value = bug_field_display($field_name,$group_id,$field_value,false,false);
 	      $star = (bug_data_is_empty_ok($field_name) ? '':'<font color="red"><big>*</big></b></font>');
@@ -124,7 +124,7 @@ if (db_numrows($result) > 0) {
       <?php
       echo bug_field_textarea('details',''); 
       echo '<p>';
-      echo show_bug_details($bug_id);
+      echo show_bug_details($bug_id,false,$group_id);
       ?>
       </td></tr>
 

@@ -89,7 +89,7 @@ if (db_numrows($result) > 0) {
 		<TEXTAREA NAME="details" ROWS="7" COLS="60"></TEXTAREA>
 		<hr>
 		<?php
-			echo show_support_details($support_id); 
+			echo show_support_details($support_id,false,$group_id); 
 		?>
 	</TD></TR>
 

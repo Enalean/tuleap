@@ -363,4 +363,18 @@ function pm_data_update_task ($group_project_id,$project_task_id,$start_month,$s
 
 }
 
+function pm_data_get_group_project_id($project_task_id) {
+	/*
+		simply return the group_project_id associated to $project_task_id
+	*/
+	$sql="SELECT * FROM project_task WHERE project_task_id = $project_task_id";
+	$result=db_query($sql);
+	if ($result && db_numrows($result) > 0) {
+		return db_result($result,0,'group_project_id');
+	} else {
+	    // return the default to ANY (0)
+		return 0;
+	}
+}
+
 ?>
