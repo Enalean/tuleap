@@ -95,10 +95,10 @@ $result=db_query($sql);
 ?>
 
 <P>
-<H2>Existing Surveys</H2>
+<H3>Existing Surveys</H3>
 <?php
 
-ShowResultsEditSurvey($result);
+survey_utils_show_surveys($result);
 
 survey_footer(array());
 

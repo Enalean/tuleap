@@ -7,7 +7,9 @@
 // $Id$
 
 require('pre.php');
-require($DOCUMENT_ROOT.'/survey/survey_utils.php');
+require('../survey_data.php');
+require('../survey_utils.php');
+
 $is_admin_page='y';
 survey_header(array('title'=>'Add A Survey'));
 
@@ -18,14 +20,8 @@ if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 }
 
 if ($post_changes) {
-	//$survey_questions=trim(ltrim($survey_questions));
-	$sql="insert into surveys (survey_title,group_id,survey_questions,is_active,is_anonymous) values ('$survey_title','$group_id','$survey_questions','$is_active','$is_anonymous')";
-	$result=db_query($sql);
-	if ($result) {
-		$feedback .= " Survey Inserted ";
-	} else {
-		$feedback .= " Error in Survey Insert ";
-	}
+    survey_data_survey_create($group_id,$survey_title,$survey_questions,
+			      $is_active, $is_anonymous);
 }
 
 ?>
@@ -34,7 +30,7 @@ if ($post_changes) {
 var timerID2 = null;
 
 function show_questions() {
-        newWindow = open("","occursDialog","height=600,width=500,scrollbars=yes,resizable=yes");
+        newWindow = open("","occursDialog","height=600,width=700,scrollbars=yes,resizable=yes");
         newWindow.location=('show_questions.php?group_id=<?php echo $group_id; ?>');
 }
 
@@ -57,6 +53,7 @@ Ex: 1,2,3,4,5,6,7
 <BR><INPUT TYPE="TEXT" NAME="survey_questions" VALUE="" LENGTH="90" MAXLENGTH="1500">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <INPUT TYPE="BUTTON" NAME="none" VALUE="Show Existing Questions" ONCLICK="show_questions()">
+<p>
 <table border="0">
 <tr><td><B>Is Active?</B></td>
 <td><INPUT TYPE="RADIO" NAME="is_active" VALUE="1" CHECKED> Yes</td>
@@ -71,7 +68,6 @@ Ex: 1,2,3,4,5,6,7
 <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Add This Survey">
 </FORM>  
 
-<INPUT TYPE="BUTTON" NAME="none" VALUE="Show Existing Questions" ONCLICK="show_questions()">
 <?php
 
 /*
@@ -85,10 +81,10 @@ $result=db_query($sql);
 ?>
 
 <P>
-<H2>Existing Surveys</H2>
+<H3>Existing Surveys</H3>
 <?php
 
-ShowResultsEditSurvey($result);
+survey_utils_show_surveys($result);
 
 survey_footer(array());
 ?>

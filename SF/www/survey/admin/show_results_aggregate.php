@@ -92,15 +92,23 @@ for ($i=0; $i<$quest_count; $i++) {
 		/*
 			Select the number of responses to this question
 		*/
-		$sql="SELECT count(*) AS count FROM survey_responses WHERE survey_id='$survey_id' AND question_id='$quest_array[$i]' AND response IN (1,2,3,4,5) AND group_id='$group_id'";
+		$sql="SELECT count(*) AS count FROM survey_responses WHERE survey_id='$survey_id' ".
+		    "AND question_id='$quest_array[$i]' AND response IN (1,2,3,4,5) AND group_id='$group_id'";
 
 		$result2=db_query($sql);
+
+		$sql="SELECT count(*) AS count FROM survey_responses WHERE survey_id='$survey_id' ".
+		    "AND question_id='$quest_array[$i]' AND response='' AND group_id='$group_id'";
+		$result3=db_query($sql);
+
 		if (!$result2 || db_numrows($result2) < 1) {
 		    echo "error";
 		    echo db_error();
 		} else {		    
 		    $answers_cnt=db_result($result2, 0, 'count');
+		    $blank_cnt=db_result($result3, 0, 'count');
 		    echo "<B>$answers_cnt</B> Response".($answers_cnt>1 ? 's':'');
+		    if ($blank_cnt) { echo "  (+ $blank_cnt blank)"; }
 		}
 
 		/*
@@ -118,8 +126,8 @@ for ($i=0; $i<$quest_count; $i++) {
 			echo db_error();
 		    } else {
 			$avg = db_result($result2, 0, 'avg');
-			echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.
-			    "Average: <B>$avg</B>";
+			echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+			printf("Average: <B>%.2f</B>",$avg);
 		    }
 		}
 
@@ -146,10 +154,25 @@ for ($i=0; $i<$quest_count; $i++) {
 		/*
 			This is a text-area question.
 		*/
+		$sql="SELECT count(*) AS count FROM survey_responses WHERE survey_id='$survey_id' ".
+		    "AND question_id='$quest_array[$i]' AND group_id='$group_id' AND response<>'' ";
+
+		$result2=db_query($sql);
+
+		$sql="SELECT count(*) AS count FROM survey_responses WHERE survey_id='$survey_id' ".
+		    "AND question_id='$quest_array[$i]' AND group_id='$group_id' AND response='' ";
+		$result3=db_query($sql);
+
+		$answers_cnt=db_result($result2, 0, 'count');
+		$blank_cnt=db_result($result3, 0, 'count');
 
 		echo util_unconvert_htmlspecialchars(db_result($result, 0, "question"))."<BR>\n";
 
-		echo "<A HREF=\"show_results_comments.php?survey_id=$survey_id&question_id=$quest_array[$i]&question_num=$q_num&group_id=$group_id\">View Comments</A><br>";
+		echo "<A HREF=\"show_results_comments.php?survey_id=$survey_id&question_id=$quest_array[$i]&question_num=$q_num&group_id=$group_id\">View Comments</A>".
+		    '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+		echo ($answers_cnt ? "$answers_cnt Comments" : 'None');
+		echo ($blank_cnt ? " (+ $blank_cnt blank)" : '');
+		echo '<br>';
 
 	} else if ($question_type == "3") {
 		/*
@@ -160,15 +183,23 @@ for ($i=0; $i<$quest_count; $i++) {
 		/*
 			Select the count and average of responses to this question
 		*/
-		$sql="SELECT count(*) AS count FROM survey_responses WHERE survey_id='$survey_id' AND question_id='$quest_array[$i]' AND group_id='$group_id' AND response IN (1,5)";
+		$sql="SELECT count(*) AS count FROM survey_responses WHERE survey_id='$survey_id' ".
+		    "AND question_id='$quest_array[$i]' AND group_id='$group_id' AND response IN (1,5)";
 
 		$result2=db_query($sql);
+
+		$sql="SELECT count(*) AS count FROM survey_responses WHERE survey_id='$survey_id' ".
+		    "AND question_id='$quest_array[$i]' AND group_id='$group_id' AND response='' ";
+		$result3=db_query($sql);
+
 		if (!$result2 || db_numrows($result2) < 1) {
 		    echo "error";
 		    echo db_error();
 		} else {
 		    $answers_cnt=db_result($result2, 0, 'count');
+		    $blank_cnt=db_result($result3, 0, 'count');
 		    echo "<B>$answers_cnt</B> Response".($answers_cnt>1 ? 's':'');
+		    if ($blank_cnt) { echo "  (+ $blank_cnt blank)"; }
 		}
 
 		/*
@@ -185,8 +216,8 @@ for ($i=0; $i<$quest_count; $i++) {
 			echo "error";
 		    } else {
 			$avg = db_result($result2, 0, 'avg');
-			echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.
-			    "Average: <B>$avg</B>";
+			echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+			printf("Average: <B>%.2f</B>",$avg);
 		    }
 		}
 
@@ -244,10 +275,26 @@ for ($i=0; $i<$quest_count; $i++) {
 		/*
 			This is a text-field question.
 		*/
+		$sql="SELECT count(*) AS count FROM survey_responses WHERE survey_id='$survey_id' ".
+		    "AND question_id='$quest_array[$i]' AND group_id='$group_id' AND response<>'' ";
+
+		$result2=db_query($sql);
+
+		$sql="SELECT count(*) AS count FROM survey_responses WHERE survey_id='$survey_id' ".
+		    "AND question_id='$quest_array[$i]' AND group_id='$group_id' AND response='' ";
+		$result3=db_query($sql);
+
+		$answers_cnt=db_result($result2, 0, 'count');
+		$blank_cnt=db_result($result3, 0, 'count');
 
 		echo util_unconvert_htmlspecialchars(db_result($result, 0, "question"))."<BR>\n";
 
-		echo "<A HREF=\"show_results_comments.php?survey_id=$survey_id&question_id=$quest_array[$i]&question_num=$q_num&group_id=$group_id\">View Comments</A><br>";
+		echo "<A HREF=\"show_results_comments.php?survey_id=$survey_id&question_id=$quest_array[$i]&question_num=$q_num&group_id=$group_id\">View Comments</A>".
+		    '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+		echo ($answers_cnt ? "$answers_cnt Comment" : 'None');
+		echo ($blank_cnt ? " (+ $blank_cnt blank)" : '');
+		echo '<br>';
+
 
 	}
 

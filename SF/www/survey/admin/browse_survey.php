@@ -23,10 +23,11 @@ $result=db_query($sql);
 ?>
 
 <P>
-<H2>Existing Surveys</H2>
+<H2>Edit a Survey</H2>
+Click on the 'Survey ID' to edit a survey
 <?php
 
-ShowResultsEditSurvey($result);
+survey_utils_show_surveys($result);
 
 survey_footer(array());
 ?>

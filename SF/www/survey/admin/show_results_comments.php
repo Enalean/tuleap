@@ -18,48 +18,19 @@ if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 	exit;
 }
 
-Function  ShowResultComments($result) {
-	global $survey_id;
-
-	$rows  =  db_numrows($result);
-	$cols  =  db_numfields($result);
-	echo "<h3>$rows Found</h3>";
-
-	echo /*"<TABLE BGCOLOR=\"NAVY\"><TR><TD BGCOLOR=\"NAVY\">*/ "<table border=0>\n";
-	/*  Create  the  headers  */
-	echo "<tr BGCOLOR=\"$GLOBALS[COLOR_MENUBARBACK]\">\n";
-
-	for($i  =  0;  $i  <  $cols;  $i++)  {
-		printf( "<th><FONT COLOR=\"$GLOBALS[FONTCOLOR_HTMLBOX_TITLE]\"><B>%s</th>\n",  db_fieldname($result,$i));
-	}
-	echo "</tr>";
-
-	for($j  =  0;  $j  <  $rows;  $j++)  {
-		if ($j%2==0) {
-			$row_bg="#FFFFFF";
-		} else {
-			$row_bg="$GLOBALS[COLOR_LTBACK1]";
-		}
-
-		echo "<tr BGCOLOR=\"$row_bg\">\n";
-
-		for ($i = 0; $i < $cols; $i++) {
-			printf("<TD>%s</TD>\n",db_result($result,$j,$i));
-		}
-
-		echo "</tr>";
-	}
-	echo "</table>"; //</TD></TR></TABLE>";
-}
-
 $sql="SELECT question FROM survey_questions WHERE question_id='$question_id'";
 $result=db_query($sql);
-echo "<h2>Question #$question_num: ".util_unconvert_htmlspecialchars(db_result($result,0,"question"))."</H2>";
+
+echo '<h2>Survey Results</h2>';
+
+echo "<h3>Question #$question_num: ".util_unconvert_htmlspecialchars(db_result($result,0,"question"))."</H3>";
 echo "<P>";
 
-$sql="SELECT DISTINCT response FROM survey_responses WHERE survey_id='$survey_id' AND question_id='$question_id' AND group_id='$group_id'";
+$sql="SELECT response, count(*) AS count FROM survey_responses WHERE survey_id='$survey_id' ".
+"AND question_id='$question_id' AND group_id='$group_id' ".
+"GROUP BY response";
 $result=db_query($sql);
-ShowResultComments($result);
+survey_utils_show_comments($result);
 
 survey_footer(array());
 

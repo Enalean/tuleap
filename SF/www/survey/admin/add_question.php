@@ -7,7 +7,9 @@
 // $Id$
 
 require('pre.php');
-require($DOCUMENT_ROOT.'/survey/survey_utils.php');
+require('../survey_data.php');
+require('../survey_utils.php');
+
 $is_admin_page='y';
 survey_header(array('title'=>'Add A Question'));
 
@@ -18,13 +20,7 @@ if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 }
 
 if ($post_changes) {
-	$sql="INSERT INTO survey_questions (group_id,question,question_type) VALUES ('$group_id','".htmlspecialchars($question)."','$question_type')";
-	$result=db_query($sql);
-	if ($result) {
-		$feedback .= "Question Added";
-	} else {
-		$feedback .= "Error inserting question";
-	}
+    survey_data_question_create($group_id,htmlspecialchars($question),$question_type);
 }
 
 ?>
@@ -60,10 +56,7 @@ echo html_build_select_box($result,'question_type','xzxz',false);
 <P>
 
 <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Add This Question">
-</FORM>  
-
-<P>
-<FORM>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <INPUT TYPE="BUTTON" NAME="none" VALUE="Show Existing Questions" ONCLICK="show_questions()">
 </FORM>
 

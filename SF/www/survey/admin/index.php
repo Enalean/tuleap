@@ -21,12 +21,22 @@ if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 ?>
 
 <H2>Survey Administration</H2>
-<P>
-<A HREF="/survey/admin/add_survey.php?group_id=<?php echo $group_id; ?>">Add Surveys</A><BR>
-<A HREF="/survey/admin/edit_survey.php?func=browse&group_id=<?php echo $group_id; ?>">Edit Existing Surveys</A><BR>
-<A HREF="/survey/admin/add_question.php?group_id=<?php echo $group_id; ?>">Add Questions</A><BR>
-<A HREF="/survey/admin/show_questions.php?group_id=<?php echo $group_id; ?>">Edit Existing Questions</A><BR>
-<A HREF="/survey/admin/show_results.php?group_id=<?php echo $group_id; ?>">Show Survey Results</A><BR>
+<h3><A HREF="/survey/admin/add_survey.php?group_id=<?php echo $group_id; ?>">Add Surveys</A></h3>
+<p>Create a new survey. Before creating a survey it is recommended to create the associated questions first (see 'Add Question' below)
+
+<h3><A HREF="/survey/admin/edit_survey.php?func=browse&group_id=<?php echo $group_id; ?>">Edit Existing Surveys</A></h3>
+<p>Modify an existing survey. You can modify the survey title, the associated question, make it active or inactive, etc.
+
+<h3><A HREF="/survey/admin/add_question.php?group_id=<?php echo $group_id; ?>">Add Questions</A></h3>
+<p>Create a new question.
+
+<h3><A HREF="/survey/admin/show_questions.php?group_id=<?php echo $group_id; ?>">Edit Existing Questions</A></h3>
+<p>Modify existing questions. You can change the question title and type.
+
+<h3><A HREF="/survey/admin/show_results.php?group_id=<?php echo $group_id; ?>">Show Survey Results</A></h3>
+<p>Survey results are shown in an aggregated way. Bar charts are provided for mutliple choice type of questions.
+
+<h3>Quick Instructions</h3>
 <P>
 It's simple to create a survey.
 <OL>
