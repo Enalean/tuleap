@@ -189,7 +189,6 @@ class ArtifactTypeFactory extends Error {
 		$sql="SELECT group_artifact_id,name, deletion_date, groups.group_name as project_name, groups.group_id FROM artifact_group_list, groups
 			WHERE artifact_group_list.status='D'
 			AND groups.group_id=artifact_group_list.group_id
-			AND groups.group_id!=100
 			ORDER BY group_artifact_id ASC";
 
 		//echo $sql;
