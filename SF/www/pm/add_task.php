@@ -70,7 +70,13 @@ echo util_unconvert_htmlspecialchars(db_result($res_preamble,0,'pm_preamble'));
     		<TD COLSPAN="2"><B>Start Date:</B>
     	    <? 
     	        $field_name = "start_date";
-                $field_value = pm_data_get_default_value($field_name);
+    	        $pref_date = user_get_preference('pm_pref_date'.$group_id);
+    	        if ($pref_date == 1) { 
+    	        	// No date choose in the user pref
+    	        	$field_value = "";
+    	        } else {
+	                $field_value = pm_data_get_default_value($field_name);
+	            }
                 echo pm_field_display($field_name,$group_id,$field_value,false,false); ?>
 		 </td>
 
@@ -79,7 +85,13 @@ echo util_unconvert_htmlspecialchars(db_result($res_preamble,0,'pm_preamble'));
 		<TD COLSPAN="2"><B>End Date:</B>
     	    <? 
     	        $field_name = "end_date";
-                $field_value = pm_data_get_default_value($field_name);
+    	        $pref_date = user_get_preference('pm_pref_date'.$group_id);
+    	        if ($pref_date == 1) { 
+    	        	// No date choose in the user pref
+    	        	$field_value = "";
+    	        } else {
+	                $field_value = pm_data_get_default_value($field_name);
+	            }
                 echo pm_field_display($field_name,$group_id,$field_value,false,false); ?>
 		</td>
 
