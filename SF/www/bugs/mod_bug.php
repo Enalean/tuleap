@@ -29,8 +29,8 @@ if (db_numrows($result) > 0) {
     }
     
     // Insert a reference to the originating bug in the task description
-    $task_details = db_result($result,0,'details')."\n\nSee bug #$bug_id\nhttp://".
-	$GLOBALS['sys_default_domain']."/bugs/?func=detailbug&bug_id=$bug_id&group_id=$group_id";
+    $url = '/bugs/?func=detailbug&bug_id='.$bug_id.'&group_id='.$group_id;
+    $task_details = db_result($result,0,'details')."\n\nSee bug #$bug_id";
 
     bug_header(array ('title'=>'Modify a Bug',
                       'create_task'=>'Create task',
@@ -44,7 +44,16 @@ if (db_numrows($result) > 0) {
     
     // First display some  internal fields - Cannot be modified by the user
 ?>
+    <TABLE cellpadding="0" cellspacing="0" width="100%"><TR>
+    <TD valign="top">
     <H2>[ Bug #<?php echo $bug_id.' ] '.db_result($result,0,'summary');?></H2>
+    </TD>
+    <TD valign="top"><img src="<?php echo util_get_image_theme("msg.png");?>" border="0" valign="top"></TD>
+    <TD align="left" valign="top">
+    <a href="<?php echo $url.'&pv=1';?>" target="_blank">Printer&nbsp;version</a>
+    </TD>
+    </TR>
+    </TABLE>
 
     <FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST" enctype="multipart/form-data" NAME="bug_form">
     <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="2000000">

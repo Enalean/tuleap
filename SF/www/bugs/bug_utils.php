@@ -1202,7 +1202,7 @@ function show_bughistory ($bug_id,$group_id) {
 }
 
 
-function format_bug_attached_files ($bug_id,$group_id,$ascii=false) {
+function format_bug_attached_files ($bug_id,$group_id,$ascii=false,$pv=false) {
 
     global $sys_datefmt;
 
@@ -1233,7 +1233,7 @@ function format_bug_attached_files ($bug_id,$group_id,$ascii=false) {
 	$title_arr[]='Size';
 	$title_arr[]='By';
 	$title_arr[]='On';
-	if (user_ismember($group_id,'B2')) {
+	if (user_ismember($group_id,'B2') && !$pv) {
 	    $title_arr[]='Delete?';
 	}
 
@@ -1246,7 +1246,7 @@ function format_bug_attached_files ($bug_id,$group_id,$ascii=false) {
 	    "Date: %s  Name: %s  Size: %dKB   By: %s\n%s\n%s";
     } else {
 	$fmt = "\n".'<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td><td align="center">%s</td><td align="center">%s</td>'.
-	    (user_ismember($group_id,'B2') ? '<td align="center">%s</td>':'').'</tr>';
+	    (user_ismember($group_id,'B2') && !$pv ? '<td align="center">%s</td>':'').'</tr>';
     }
 
     // Determine which protocl to use for embedded URL in ASCII format
@@ -1291,11 +1291,11 @@ function format_bug_attached_files ($bug_id,$group_id,$ascii=false) {
 
 }
 
-function show_bug_attached_files ($bug_id,$group_id, $ascii=false) {
-    echo format_bug_attached_files ($bug_id,$group_id, $ascii);
+function show_bug_attached_files ($bug_id,$group_id,$ascii=false,$pv=false) {
+    echo format_bug_attached_files ($bug_id,$group_id,$ascii,$pv);
 }
 
-function format_bug_cc_list ($bug_id,$group_id, $ascii=false) {
+function format_bug_cc_list ($bug_id,$group_id,$ascii=false,$pv=false) {
 
     global $sys_datefmt;
 
@@ -1329,11 +1329,14 @@ function format_bug_cc_list ($bug_id,$group_id, $ascii=false) {
 	$title_arr[]='Comment';
 	$title_arr[]='Added by';
 	$title_arr[]='On';
-	$title_arr[]='Delete?';
+	if (!$pv) {
+	    $title_arr[]='Delete?';
+	}
 	$out .= html_build_list_table_top ($title_arr);
 
 	$fmt = "\n".'<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td>'.
-	    '<td align="center">%s</td><td align="center">%s</td></tr>';
+	    '<td align="center">%s</td>'.
+	    ($pv ? '':'<td align="center">%s</td>').'</tr>';
     }
 
     // Loop through the cc and format them
@@ -1386,8 +1389,8 @@ function format_bug_cc_list ($bug_id,$group_id, $ascii=false) {
 
 }
 
-function show_bug_cc_list ($bug_id,$group_id, $ascii=false) {
-    echo format_bug_cc_list ($bug_id,$group_id, $ascii);
+function show_bug_cc_list ($bug_id,$group_id,$ascii=false,$pv=false) {
+    echo format_bug_cc_list ($bug_id,$group_id,$ascii,$pv);
 }
 
 function bug_delete_file($group_id=false,$bug_id=false,$bug_file_id=false) {

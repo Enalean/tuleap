@@ -6,8 +6,12 @@
 //
 // $Id$
 
-bug_header(array ('title'=>'Bug Detail: '.$bug_id,
-		  'help' => 'BugUpdate.html'));
+if ($pv) {
+    help_header('Bug Detail - '.format_date($sys_datefmt,time()),false);
+} else {
+    bug_header(array ('title'=>'Bug Detail: '.$bug_id,
+		        'help' => 'BugUpdate.html'));
+}
 
 // First check access control for updates
 $res_access = db_query("SELECT bug_allow_anon FROM groups WHERE group_id=$group_id");
@@ -30,10 +34,20 @@ $max_size=40;
 $result=db_query($sql);
 
 if (db_numrows($result) > 0) {
+    $url = '/bugs/?func=detailbug&bug_id='.$bug_id.'&group_id='.$group_id;
 
+    echo '<TABLE cellpadding="0" cellspacing="0" width="100%"><TR>
+                 <TD valign="top">';
+    echo "<H2>[ Bug #$bug_id ] ".db_result($result,0,'summary')."</H2></TD>\n";
+    if (!$pv) {
+	echo '<TD valign="top"><img src="'.util_get_image_theme("msg.png").'" border="0"></TD>
+                  <TD align="left" valign="top">
+                  <a href="'.$url.'&pv=1" target="_blank">&nbsp;Printer&nbsp;version</a>
+                 </TD>';
+    }
+    echo '</TR>
+                 </TABLE>';
 ?>
-    <H2>[ Bug #<?php echo $bug_id.' ] '.db_result($result,0,'summary');?></H2>
-
     <FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST" enctype="multipart/form-data">
  
     <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="2000000">
@@ -46,7 +60,10 @@ if (db_numrows($result) > 0) {
           <TD><B>Group:</B>&nbsp;<?php echo group_getname($group_id); ?></TD>
       </TR>
       <TR><TD><B>Submitted on:</B>&nbsp;<?php echo format_date($sys_datefmt,db_result($result,0,'date')); ?></TD>
-          <TD><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit Changes"></TD>
+          <TD>
+       <?php
+	  echo ($pv ? '-':'<FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit Changes">'); ?>
+          </TD>
       </TR>
       <TR><TD COLSPAN="<?php echo $fields_per_line; ?>">&nbsp</TD></TR>
 
@@ -93,18 +110,19 @@ if (db_numrows($result) > 0) {
 ?>
       <TR><TD COLSPAN="<?php echo $fields_per_line; ?>">&nbsp</TD></TR>
 
-      <TR><TD COLSPAN="<?php echo $fields_per_line; ?>"><B>Add A Comment:</B><BR>
-     <?php echo bug_field_textarea('details',''); ?>
-         </TD></TR>
-
-         <TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
-
 <?php
-	if (!user_isloggedin()) {
-		echo '<BR><B><span class="highlight"><H2>You Are NOT Logged In</H2><P>Please <A HREF="/account/login.php?return_to='.
-		urlencode($REQUEST_URI).
-		'">log in,</A> so followups can be emailed to you.</span></B><P>';
-	}
+	  if (!$pv) {
+	      echo '<TR><TD COLSPAN="'.$fields_per_line.'"><B>Add A Comment:</B><BR>';
+	      echo bug_field_textarea('details','')."</TD></TR>\n";
+
+	      echo '<TR><TD COLSPAN="'.$fields_per_line.'">';
+
+	      if (!user_isloggedin()) {
+		  echo '<BR><B><span class="highlight"><H2>You Are NOT Logged In</H2><P>Please <A HREF="/account/login.php?return_to='.
+		      urlencode($REQUEST_URI).
+		      '">log in,</A> so followups can be emailed to you.</span></B><P>';
+	      }
+	  }
 ?>
 
      </TD></TR>
@@ -119,30 +137,35 @@ if (db_numrows($result) > 0) {
 
      <?php if (user_isloggedin()) {
 	 echo '<TR><TD COLSPAN="'.$fields_per_line.'">
-                     <hr><h3>CC List '.help_button('BugUpdate.html#BugCCList').'</h3>
-	   <b><u>Note:</b></u> for CodeX users use their login name rather than their email addresses.<p>
+                     <hr><h3>CC List '.($pv ? '':help_button('BugUpdate.html#BugCCList')).'</h3>';
+	 if (!$pv) {
+	   echo '<b><u>Note:</b></u> for CodeX users use their login name rather than their email addresses.<p>
 	   <B>Add CC:&nbsp;</b><input type="text" name="add_cc" size="30">&nbsp;&nbsp;&nbsp;
 	   <B>Comment:&nbsp;</b><input type="text" name="cc_comment" size="40" maxlength="255"><p>';
-	  show_bug_cc_list($bug_id, $group_id);
+	 }
+	  show_bug_cc_list($bug_id,$group_id,false,$pv);
 	  echo "</TD></TR>\n";
      }
      ?>
 
      <TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
-        <hr><h3>Bug Attachments <?php echo help_button('BugUpdate.html#BugAttachments'); ?></h3>
-        <B>Check to Upload &amp; Attach File:</B> <input type="checkbox" name="add_file" VALUE="1">
-      &nbsp;&nbsp;&nbsp;
-        <input type="file" name="input_file" size="40">
-        <br><span class="smaller"><i>(The maximum upload file size is 2 Mb)</i></span>
-        <P>
-        <B>File Description:</B>&nbsp;
-        <input type="text" name="file_description" size="60" maxlength="255">
-        <P>
-        <?php echo show_bug_attached_files($bug_id,$group_id); ?>
+        <hr><h3>Bug Attachments <?php if (!$pv) {echo help_button('BugUpdate.html#BugAttachments');} ?></h3>
+     <?php if (!$pv) {
+	 echo '<B>Check to Upload &amp; Attach File:</B> <input type="checkbox" name="add_file" VALUE="1">
+                    &nbsp;&nbsp;&nbsp;
+                    <input type="file" name="input_file" size="40">
+                   <br><span class="smaller"><i>(The maximum upload file size is 2 Mb)</i></span>
+                   <P>
+                   <B>File Description:</B>&nbsp;
+                   <input type="text" name="file_description" size="60" maxlength="255">
+                   <P>';
+          }
+	  show_bug_attached_files($bug_id,$group_id,false,$pv);
+      ?>
      </TD></TR>
 
      <TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
-        <hr><h3>Bug Dependencies <?php echo help_button('BugUpdate.html#BugDependencies'); ?></h3>
+        <hr><h3>Bug Dependencies <?php if (!$pv) { echo help_button('BugUpdate.html#BugDependencies');} ?></h3>
      </TD></TR>
 
          <TR><TD VALIGN="TOP">
@@ -169,7 +192,7 @@ if (db_numrows($result) > 0) {
  
 	<TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
 	<hr>
-	<H3>Bug Change History <?php echo help_button('BugUpdate.html#BugHistory'); ?></H3>
+	<H3>Bug Change History <?php if (!$pv) {echo help_button('BugUpdate.html#BugHistory');} ?></H3>
 
 	<?php
 	show_bughistory($bug_id,$group_id);
@@ -177,9 +200,11 @@ if (db_numrows($result) > 0) {
 	?>
 	</TD></TR>
 
-	<TR><TD COLSPAN="<?php echo $fields_per_line; ?>" ALIGN="center">
-	  <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit Changes">
-	  </FORM>
+	<?php if (!$pv) {
+	    echo '<TR><TD COLSPAN="'.$fields_per_line.'" ALIGN="center">
+	         <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit Changes">';
+	} ?>
+	</FORM>
 	</TD></TR>
 
 	</TABLE>
@@ -195,6 +220,9 @@ if (db_numrows($result) > 0) {
 
 }
 
-bug_footer(array());
+if ($pv)
+     help_footer();
+else
+     bug_footer(array());
 
 ?>

@@ -163,7 +163,9 @@ if ($group_id) {
     }
 
     case 'detailbug' : {
-	if (user_ismember($group_id,'B1')) {
+	// If a printer version is requested force the detail_bug script
+	// even if user logged in.
+	if (user_ismember($group_id,'B1') && !$pv) {
 	    include '../bugs/mod_bug.php';
 	} else {
 	    include '../bugs/detail_bug.php';
