@@ -112,7 +112,10 @@ Password:
 <P>
 <?php
 // Only show the stay in SSL mode if the server is SSL enabled
-if ($GLOBALS['sys_https_host'] != '') {
+// and it is not forced to operate in SSL mode
+// and the stay in SSL check box can be shown
+if ( $GLOBALS['sys_https_host'] != '' && $GLOBALS['sys_force_ssl'] == 0 &&
+     $GLOBALS['sys_stay_in_ssl'] == 1 ) {
     echo '<INPUT TYPE="CHECKBOX" NAME="stay_in_ssl" VALUE="1" '.
     (((browser_is_ie() && browser_get_version() < '5.1') || !session_issecure()) ?'':'CHECKED').'>'.
     'Stay in secure connection mode after login';
