@@ -15,12 +15,11 @@
 
 require (getenv('SF_LOCAL_INC_PREFIX').'/etc/local.inc');
 
-list($host,$port) = explode(':', $HTTP_HOST);
-if (($host != $GLOBALS['sys_default_domain']) && ($host != 'localhost')) {
+if (($HTTP_HOST != $GLOBALS['sys_default_domain']) && ($SERVER_NAME != 'localhost')) {
 	if ($SERVER_PORT == '443') {
 		header ("Location: https://".$GLOBALS['sys_default_domain']."$REQUEST_URI");
 	} else {
-		header ("Location: http://".$GLOBALS['sys_default_domain'].":$port$REQUEST_URI");
+		header ("Location: http://".$GLOBALS['sys_default_domain']."$REQUEST_URI");
 	}
 	exit;
 }

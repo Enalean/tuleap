@@ -7,8 +7,7 @@
 // $Id$
 
 // Try to avoid 'sploits by requiring the request to come from localhost
-list($host,$port) = explode(':', $HTTP_HOST);
-if ($host != 'localhost') {
+if ($SERVER_NAME != 'localhost') {
 	exit;
 }
 
