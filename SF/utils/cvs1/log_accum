@@ -73,6 +73,7 @@ my %srs;
 my %patches;
 my %branches;
 my %commits;
+my %arts;
 
 # group_id
 my $group_id;
@@ -383,6 +384,17 @@ sub read_logfile {
     while ($line =~ /commit[ ]?#([0-9]+)/gi) {
         $commits{$1} = $1;
     }
+
+    # store the artifact ref
+    while ($line =~ /art[ ]?#([0-9]+)/gi) {
+        $arts{$1} = $1;
+    }
+
+    # store the artifact ref
+    while ($line =~ /artifact[ ]?#([0-9]+)/gi) {
+        $arts{$1} = $1;
+    }
+
 
 	push(@text, $line);
     }
@@ -1161,6 +1173,18 @@ for ($i = 0; ; $i++) {
         }
 	    if ($db_track) {
 	      &db_add_ref('commit', $commit_id, $comm);
+	    }
+    }
+
+    @keys = keys %arts;
+    if ( $#keys >= 0 ) {
+    	push (@text, "");
+        push (@text, "Artifact references:");
+        foreach $art (keys %arts) {
+          push (@text, "artifact #$art: http://$sys_cvs_host/tracker/?func=gotoid&aid=$art");
+        }
+	    if ($db_track) {
+	      &db_add_ref('artifact', $commit_id, $art);
 	    }
     }
 
