@@ -9,6 +9,8 @@
 require($DOCUMENT_ROOT.'/include/pre.php');
 require('../snippet/snippet_utils.php');
 
+$LANG->loadLanguageMsg('snippet/snippet');
+
 if (user_isloggedin()) {
 
     if ($post_changes) {
@@ -17,9 +19,9 @@ if (user_isloggedin()) {
         */
         if ($name && $description && $language != 0 && $category != 0 && $version) {
             if ($category==100) {
-                $feedback .= ' ERROR: Please select a category ';
+                $feedback .= ' '.$LANG->getText('snippet_details','select_category').' ';
             } else if ($language==100) {
-                $feedback .= ' ERROR: Please select a language ';
+                $feedback .= ' '.$LANG->getText('snippet_details','select_language').' ';
             } else {
                 /*
 				Create the new package
@@ -29,13 +31,13 @@ if (user_isloggedin()) {
                 $result=db_query($sql);
                 if (!$result) {
                     //error in database
-                    $feedback .= ' ERROR DOING SNIPPET PACKAGE INSERT! ';
-                    snippet_header(array('title'=>'Submit A New Snippet Package'));
+                    $feedback .= ' '.$LANG->getText('snippet_package','error_p_insert').' ';
+                    snippet_header(array('title'=>$LANG->getText('snippet_addversion','submit_p')));
                     echo db_error();
                     snippet_footer(array());
                     exit;
                 } else {
-                    $feedback .= ' Snippet Package Added Successfully. ';
+                    $feedback .= ' '.$LANG->getText('snippet_package','p_add_success').' ';
                     $snippet_package_id=db_insertid($result);
                     /*
 					create the snippet package version
@@ -47,50 +49,44 @@ if (user_isloggedin()) {
                     $result=db_query($sql);
                     if (!$result) {
                         //error in database
-                        $feedback .= ' ERROR DOING SNIPPET PACKAGE VERSION INSERT! ';
-                        snippet_header(array('title'=>'Submit A New Snippet Package'));
+                        $feedback .= ' '.$LANG->getText('snippet_addversion','errir_insert').' ';
+                        snippet_header(array('title'=>$LANG->getText('snippet_addversion','submit_p')));
                         echo db_error();
                         snippet_footer(array());
                         exit;
                     } else {
                         //so far so good - now add snippets to the package
-                        $feedback .= ' Snippet Package Version Added Successfully. ';
+                        $feedback .= ' '.$LANG->getText('snippet_addversion','p_add_success').' ';
 
                         //id for this snippet_package_version
                         $snippet_package_version_id=db_insertid($result);
-                        snippet_header(array('title'=>'Add Snippets to Package'));
+                        snippet_header(array('title'=>$LANG->getText('snippet_addversion','add')));
 
                         /*
                         This raw HTML allows the user to add snippets to the package
                         */
 
-					?>
-
+echo '
 <SCRIPT LANGUAGE="JavaScript">
 <!--
 function show_add_snippet_box() {
 	newWindow = open("","occursDialog","height=500,width=300,scrollbars=yes,resizable=yes");
-	newWindow.location=('/snippet/add_snippet_to_package.php?suppress_nav=1&snippet_package_version_id=<?php 
-			echo $snippet_package_version_id; ?>');
+	newWindow.location=(\'/snippet/add_snippet_to_package.php?suppress_nav=1&snippet_package_version_id='.$snippet_package_version_id.'\');
 }
 // -->
 </script>
 <BODY onLoad="show_add_snippet_box()">
 
-<H2>Now add snippets to your package</H2>
+<H2>'.$LANG->getText('snippet_addversion','now_add').'</H2>
 <P>
-<span class="highlight"><B>IMPORTANT!</B></span>
+<span class="highlight"><B>'.$LANG->getText('snippet_addversion','important').'</B></span>
 <P>
-If a new window opened, use it to add snippets to your package. 
-If a new window did not open, use the following link to add to your package BEFORE you leave this page.
+'.$LANG->getText('snippet_addversion','important_comm').'
 <P>
-<A HREF="/snippet/add_snippet_to_package.php?snippet_package_version_id=<?php echo $snippet_package_version_id; ?>" TARGET="_blank">Add Snippets To Package</A>
+<A HREF="/snippet/add_snippet_to_package.php?snippet_package_version_id=<?php echo $snippet_package_version_id; ?>" TARGET="_blank">'.$LANG->getText('snippet_addversion','add').'</A>
 <P>
-<B>Browse the library</B> to find the snippets you want to add, 
-then add them using the new window link shown above.
-<P>
-
-					<?php
+'.$LANG->getText('snippet_addversion','browse_lib').'
+<P>';
 
                         snippet_footer(array());
                         exit;
@@ -98,66 +94,56 @@ then add them using the new window link shown above.
                 }
             }
         } else {
-            exit_error('Error','Error - Go back and fill in all the information');
+            exit_error($LANG->getText('global','error'),$LANG->getText('snippet_add_snippet_to_package','error_fill_all_info'));
         }
 
     }
-    snippet_header(array('title'=>'Submit A New Snippet Package',
-			     'header'=>'Create a New Snippet Package',
+    snippet_header(array('title'=>$LANG->getText('snippet_addversion','submit_p'),
+			     'header'=>$LANG->getText('snippet_package','create_p'),
 			     'help' => 'TheCodeXMainMenu.html#GroupingCodeSnippets'));
 
-	?>
+
+    echo '
 	<P>
-	You can group together existing snippets into a package using this interface. Before 
-	creating your package, make sure all your snippets are in place and you have made a note 
-	of the snippet ID's.
+	'.$LANG->getText('snippet_package','group_s_into_p').'
 	<P>
-	<OL>
-	<LI>Create the package using this form.
-	<LI><B>Then</B> use the "Add Snippets to Package" link to add files to your package.
-	</OL>
-	<P>
-	<span class="highlight"><B>Note:</B></span> You can submit a new version of an existing package by 
-	browsing the library and using the link on the existing package. You should only use this 
-	page if you are submitting an entirely new package.
-	<P>
-	<FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">
+	<FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
 	<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
-	<INPUT TYPE="HIDDEN" NAME="changes" VALUE="First Posted Version">
+	<INPUT TYPE="HIDDEN" NAME="changes" VALUE="'.$LANG->getText('snippet_package','first_posted_v').'">
 
 	<TABLE>
 
-	<TR><TD COLSPAN="2"><B>Title:</B><BR>
+	<TR><TD COLSPAN="2"><B>'.$LANG->getText('snippet_browse','title').':</B><BR>
 		<INPUT TYPE="TEXT" NAME="name" SIZE="45" MAXLENGTH="60">
 	</TD></TR>
 
-	<TR><TD COLSPAN="2"><B>Description:</B><BR>
+	<TR><TD COLSPAN="2"><B>'.$LANG->getText('snippet_package','description').'</B><BR>
 		<TEXTAREA NAME="description" ROWS="5" COLS="45" WRAP="SOFT"></TEXTAREA>
 	</TD></TR>
 
 	<TR>
-	<TD><B>Language:</B><BR>
-		<?php echo html_build_select_box (snippet_data_get_all_languages(),'language'); ?>
+	<TD><B>'.$LANG->getText('snippet_package','language').'</B><BR>
+		'.html_build_select_box (snippet_data_get_all_languages(),'language').'
 	</TD>
 
-	<TD><B>Category:</B><BR>
-		<?php echo html_build_select_box (snippet_data_get_all_categories(),'category'); ?>
+	<TD><B>'.$LANG->getText('snippet_package','category').'</B><BR>
+		'.html_build_select_box (snippet_data_get_all_categories(),'category').'
 	</TD>
 	</TR>
  
-	<TR><TD COLSPAN="2"><B>Version:</B><BR>
+	<TR><TD COLSPAN="2"><B>'.$LANG->getText('snippet_addversion','version').'</B><BR>
 		<INPUT TYPE="TEXT" NAME="version" SIZE="10" MAXLENGTH="15">
 	</TD></TR>
   
 	<TR><TD COLSPAN="2" ALIGN="center">
-		<B>Make sure all info is complete and accurate</B>
+		<B>'.$LANG->getText('snippet_add_snippet_to_package','all_info_complete').'</B>
 		<BR>
-		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
+		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$LANG->getText('global','btn_submit').'">
 	</TD></TR>
 
-	</TABLE>
-	<?php
-	snippet_footer(array());
+	</TABLE>';
+
+    snippet_footer(array());
 
 } else {
 

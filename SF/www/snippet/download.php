@@ -8,6 +8,8 @@
 
 require($DOCUMENT_ROOT.'/include/pre.php');
 
+$LANG->loadLanguageMsg('snippet/snippet');
+
 $sql="SELECT * FROM snippet_version WHERE snippet_version_id='$id'";
 $result=db_query($sql);
 
@@ -20,7 +22,7 @@ if ($result && db_numrows($result) > 0) {
 	if (strlen(db_result($result,0,'code')) > 1) {
 		echo util_unconvert_htmlspecialchars( db_result($result,0,'code') );
 	} else {
-		echo 'nothing in here';
+		echo $LANG->getText('snippet_download','nothing_in_here');
 	}
 
    } else {
@@ -35,7 +37,7 @@ if ($result && db_numrows($result) > 0) {
     }
 
 } else {
-	echo 'Error';
+	echo $LANG->getText('global','error');
 }
 
 ?>

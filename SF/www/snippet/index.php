@@ -11,8 +11,11 @@ require($DOCUMENT_ROOT.'/include/pre.php');
 require('../snippet/snippet_utils.php');
 require($DOCUMENT_ROOT.'/include/cache.php');
 
-snippet_header(array('title'=>'Snippet Library', 
-		     'header'=>'Snippet Library',
+$LANG->loadLanguageMsg('snippet/snippet');
+
+
+snippet_header(array('title'=>$LANG->getText('snippet_browse','s_library'), 
+		     'header'=>$LANG->getText('snippet_browse','s_library'),
 		     'help' => 'TheCodeXMainMenu.html#TheCodeSnippetLibrary'));
 
 echo cache_display('snippet_mainpage','4',1800);
