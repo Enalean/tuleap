@@ -131,6 +131,10 @@ if (($func=='do_create')||($func=='do_update')) {
             $link=str_replace('$projectname',group_getunixname($group_id),$link);
         }
         $link=str_replace('$sys_default_domain',$GLOBALS['sys_default_domain'],$link);
+        if ($GLOBALS['sys_force_ssl']) {
+            $sys_default_protocol='https'; 
+        } else { $sys_default_protocol='http'; }
+        $link=str_replace('$sys_default_protocol',$sys_default_protocol,$link);
         $link=str_replace('$group_id',$group_id,$link);
     }
 
@@ -166,7 +170,11 @@ if ($func=='do_create') {
         $sql1="SELECT group_id FROM groups WHERE group_id!=100";
         $result1=db_query($sql1);
         $link=str_replace('$sys_default_domain',$GLOBALS['sys_default_domain'],$link);
+        $link=str_replace('$sys_default_protocol',$sys_default_protocol,$link);
         $nbproj=1;
+        if ($GLOBALS['sys_force_ssl']) {
+            $sys_default_protocol='https'; 
+        } else { $sys_default_protocol='http'; }
         while ($arr = db_fetch_array($result1)) {
             $my_group_id=$arr['group_id'];
             // Substitute values in links

@@ -686,6 +686,13 @@
               </para>
               <para></para>
             </listitem>
+
+            <listitem>
+              <para><emphasis role="bold">$sys_default_protocol</emphasis>: 
+              'https' if your server is configured in secure mode, 'http' otherwise.
+              </para>
+              <para></para>
+            </listitem>
           </itemizedlist>
           </para>
         </step>

@@ -91,6 +91,11 @@ if ($show_confirm) {
             $link=str_replace('$projectname',group_getunixname($group_id),$link);
             $link=str_replace('$sys_default_domain',$GLOBALS['sys_default_domain'],$link);
             $link=str_replace('$group_id',$group_id,$link);
+            if ($GLOBALS['sys_force_ssl']) {
+                $sys_default_protocol='https'; 
+            } else { $sys_default_protocol='http'; }
+            $link=str_replace('$sys_default_protocol',$sys_default_protocol,$link);
+
             $sql2 = "INSERT INTO service (group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES ($group_id, '".$arr['label']."', '".$arr['description']."', '".$arr['short_name']."', '".$link."', ".$arr['is_active'].", ".$arr['is_used'].", '".$arr['scope']."', ".$arr['rank'].")";
             $result2=db_query($sql2);
             

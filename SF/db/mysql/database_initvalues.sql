@@ -1599,7 +1599,7 @@ INSERT INTO snippet_language VALUES (20,'Postscript');
 -- Group 100 (templates)
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (1, 100, 'Summary', 'Project Summary', 'summary', '/projects/$projectname/', 1, 1, 'system', 10);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (2, 100, 'Admin', 'Project Administration', 'admin', '/project/admin/?group_id=$group_id', 1, 1, 'system', 20);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (3, 100, 'Home Page', 'Project Home Page', 'homepage', 'http://$projectname.$sys_default_domain', 1, 1, 'system', 30);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (3, 100, 'Home Page', 'Project Home Page', 'homepage', '$sys_default_protocol://$projectname.$sys_default_domain', 1, 1, 'system', 30);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (4, 100, 'Forums', 'Project Forums', 'forum', '/forum/?group_id=$group_id', 1, 1, 'system', 40);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (5, 100, 'Bugs', 'Bug Tracking System', 'bugs', '/bugs/?group_id=$group_id', 0, 0, 'system', 50);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (6, 100, 'Support', 'Support Request Manager', 'support', '/support/?group_id=$group_id', 0, 0, 'system', 60);
