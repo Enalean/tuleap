@@ -53,7 +53,6 @@ file in the repository.
 <UL>
 <LI><A href="http'.(session_issecure() ? 's':'').'://'.$sys_cvs_host.'/cgi-bin/cvsweb.cgi/?cvsroot='
 .$row_grp['unix_group_name'].'"><B>Browse CVS Tree</B>';
-}
 
 
 print $HTML->box1_bottom();
