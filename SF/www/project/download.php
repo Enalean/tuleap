@@ -40,22 +40,36 @@ if (user_isloggedin()) {
 
   //Build the URL to download the file
   $group_unix_name=group_getunixname($group_id);
-  $url = 'http://'.$sys_download_host.'/'.$group_unix_name.'/'.$file_release['filename'];
-  
-  //Insert a new entry in the file release download log table
-  $sql = "INSERT INTO filedownload_log(user_id,filerelease_id,time) "
-        ."VALUES ('".user_getid()."','".$file_release['file_id']."','".time()."')";
+  $basename = $file_release['filename'];
+  $file = $FTPFILES_DIR.'/'.$group_unix_name.'/'.$basename;
 
-  $res_insert = db_query( $sql );
+  if ($fp=fopen($file,"r")) {
+      $size = filesize($file);
 
-  // Now Redirect the browser to actually download the file
+      //Insert a new entry in the file release download log table
+      $sql = "INSERT INTO filedownload_log(user_id,filerelease_id,time) "
+	  ."VALUES ('".user_getid()."','".$file_release['file_id']."','".time()."')";
+      $res_insert = db_query( $sql );
+
+  // Now transfer the file to the client
   // Make sure this URL is not cached anywhere otherwise download
-  // logs would be wrong
-  header("Pragma: no-cache");
-  header("Cache-Control: no-cache, must-revalidate");
-  header("Content-type: text/html");
-  header("Location: $url");
-  print ("Thanks for using ".$GLOBALS['sys_name']."\n");
+  //  would be wrong
+  header("Pragma: no-cache");  // HTTP 1.0
+  header("Cache-Control: no-cache, must-revalidate");  // HTTP 1.1
+  header("Content-type: application/octet-stream");
+  if (browser_is_ie()) {
+      header("Content-Disposition: filename=$basename");  
+  } else {
+      header("Content-Disposition: attachment; filename=$basename");
+  }
+  header("Content-Length:	$size");
+  header("Content-Transfer-Encoding: binary\n");
+  fpassthru($fp);
+  
+  } else {
+      // Can't open the file for download. There is a problem here !!
+      exit_error('Error', 'Internal Error: File not available. Please contact the system administrator');
+  }
 
 } else {
   /*

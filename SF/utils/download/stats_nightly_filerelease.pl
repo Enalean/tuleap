@@ -11,16 +11,25 @@ my $verbose = 1;
 &db_connect;
 
 if ( $ARGV[0] && $ARGV[1] && $ARGV[2] ) {
-           ## Set params manually, so we can run
-           ## regressive log parses.
-        $year = $ARGV[0];
-        $month = $ARGV[1];
-        $day = $ARGV[2];
+  ## Set params manually, so we can run
+  ## regressive log parses.
+  $year = $ARGV[0];
+  $month = $ARGV[1];
+  $day = $ARGV[2];
 } else {
-           ## Otherwise, we just parse the logs for yesterday.
-        ($day, $month, $year) = (gmtime(timegm( 0, 0, 0, (gmtime( time() - 86400 ))[3,4,5] )))[3,4,5];
-        $year += 1900;
-        $month += 1;
+  ## Otherwise, we just parse the logs for yesterday.
+  ## compute the date for yesterday as well as the Unix time for begin and end of
+  ## the day
+
+  ## We also need the time at 0:00 and 23:59:59 for yesterday
+  $time_begin = timegm( 0, 0, 0, (gmtime( time() - 86400 ))[3,4,5] );
+  $time_end   = timegm( 59, 59, 23,(gmtime( time() - 86400 ))[3,4,5] );
+
+
+  ($day, $month, $year) = (gmtime($time_begin))[3,4,5];
+  $year += 1900;
+  $month += 1;
+
 }
 
 $today = sprintf("%04d%02d%02d", $year, $month, $day);
@@ -64,6 +73,8 @@ $total_xfers = 0;
 ##
 ## POPULATE THE frs_dlstats_file_agg TABLE.
 ##
+
+# Count all the downloads through direct HTTP access
 $sql	= "SELECT filerelease_id,SUM(downloads) FROM stats_http_downloads "
 	. "WHERE ( day = '$today' ) GROUP BY filerelease_id";
 $rel = $dbh->prepare($sql) || die "SQL parse error: $!";
@@ -72,12 +83,24 @@ while ( @tmp_ar = $rel->fetchrow_array() ) {
 	$downloads{ $tmp_ar[0] } += $tmp_ar[1]; 
 }
 
+# Count all the downloads through direct FTP access
 $sql	= "SELECT filerelease_id,SUM(downloads) FROM stats_ftp_downloads "
 	. "WHERE ( day = '$today' ) GROUP BY filerelease_id";
 $rel = $dbh->prepare($sql) || die "SQL parse error: $!";
 $rel->execute() || die "SQL execute error: $!";
 while ( @tmp_ar = $rel->fetchrow_array() ) {
 	$downloads{ $tmp_ar[0] } += $tmp_ar[1]; 
+}
+
+# Count all the downloads through the CodeX Web Frontend
+# (this used to be counted through HTTP downloads but access is now
+# monitored on CodeX and there is special table storing download information
+$sql	= " SELECT filerelease_id,COUNT(*) AS downloads FROM filedownload_log "
+	. "WHERE ( time >= $time_begin AND time <= $time_end) GROUP BY filerelease_id";
+$rel = $dbh->prepare($sql) || die "SQL parse error: $!";
+$rel->execute() || die "SQL execute error: $!";
+while ( @tmp_ar = $rel->fetchrow_array() ) {
+	$downloads{ $tmp_ar[0] } += $tmp_ar[1];
 }
 
 $sql = "DELETE FROM frs_dlstats_file_agg WHERE day='$today'";
