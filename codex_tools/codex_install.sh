@@ -251,6 +251,7 @@ build_dir /home/var/lib root root 755
 build_dir /etc/skel_codex root root 755
 build_dir /etc/codex sourceforge sourceforge 755
 build_dir /etc/codex/conf sourceforge sourceforge 755
+build_dir /etc/codex/documentation sourceforge sourceforge 755
 build_dir /etc/codex/site-content sourceforge sourceforge 755
 build_dir /etc/codex/site-content/en_US sourceforge sourceforge 755
 build_dir /etc/codex/themes sourceforge sourceforge 755
@@ -420,6 +421,14 @@ for f in /etc/httpd/conf/cvsweb.conf /etc/httpd/conf/httpd.conf \
     $CHMOD 640 $f
 done
 
+# CodeX User Guide
+# a) copy the local parameters file in custom area
+# b) create the html target directory
+# c) create the PDF target directory
+#
+$MKDIR -p  /etc/codex/documentation/user_guide/xml/en_US
+$CHOWN -R sourceforge.sourceforge /etc/codex/documentation
+$CP /home/httpd/documentation/user_guide/xml/en_US/ParametersLocal.dtd /etc/codex/documentation/user_guide/xml/en_US
 $MKDIR -p  /home/httpd/documentation/user_guide/html/en_US
 $CHOWN -R sourceforge.sourceforge /home/httpd/documentation/user_guide/html/en_US
 $MKDIR -p  /home/httpd/documentation/user_guide/pdf/en_US
