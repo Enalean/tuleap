@@ -20,6 +20,7 @@ L. Julliard</p>
 </center>
 <br>
 &nbsp;
+l
 <h1>Preamble</h1>
 Before or while you read the CodeX Installation Guide westrongly
 recommend that you also have a llok at the CodeX Administration Guide
@@ -344,6 +345,17 @@ central server<br>
       </td>
       <td valign="top">Temporary storage space for cvs commit (needs a
 lot of space so we can not keep the default /tmp location)<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">/var/run/log_accum<br>
+      </td>
+      <td style="vertical-align: top;">root.root<br>
+      </td>
+      <td style="vertical-align: top;">drwxrwxrwt<br>
+      </td>
+      <td style="vertical-align: top;">Temporary storage space for the
+cvs tracking script that feed the CodeX database<br>
       </td>
     </tr>
     <tr>
@@ -883,16 +895,6 @@ following value:<br>
     <pre>&nbsp; &nbsp; &nbsp; include_path&nbsp;&nbsp;&nbsp; = .:/home/httpd/SF/www/include:/home/httpd/SF/www/phpMyAdmin<br></pre>
   </li>
 </ul>
-<h2><a name="Permission_Settings"></a>Permission Settings</h2>
-<ul>
-  <li>The log_accum script in /home/httpd/SF/utils/cvs1 requires the
-sourceforge group ownership to execute properly. <br>
-  </li>
-</ul>
-<pre>	# cd /home/httpd/SF/utils/cvs1<br>	# chown sourceforge.sourceforge log_accum<br>	# chmod 2775 fileforge   # sets the gid bit (-rwxrwsr-x)<br></pre>
-Be careful that you must set the gid bit again whenever the log_accum
-script is updated from CVS.<b><font color="#ff0000"> **HIGHLY CRITICAL**</font></b>
-<pre></pre>
 <hr width="100%" size="2">
 <h1>Installing the CodeX Database</h1>
 As user root go through the following steps:<br>
@@ -1200,9 +1202,14 @@ This feature is activated in the CVS Web interface of the CodeX Web
 frontend under CVS -&gt; Admin. For this feature to work properly
 symbolic links must be created from the /usr/local/bin directory as
 follows:<br>
-<pre><tt>&nbsp;&nbsp;&nbsp; cd /usr/local/bin<br>&nbsp;&nbsp;&nbsp; ln -sf /home/httpd/SF/utils/cvs1/log_accum<br>&nbsp;&nbsp;&nbsp; ln -sf /home/httpd/SF/utils/cvs1/commit_prep</tt></pre>
-Also make sure that the log_accum script has the proper permission
-set up. (See <a href="#Permission_Settings">here</a>)<br>
+<pre><tt>&nbsp;&nbsp;&nbsp; # cd /</tt><tt>/home/httpd/SF/utils/cvs1</tt><tt><br>&nbsp;&nbsp;&nbsp; # cp log_accum /usr/local/bin<br>&nbsp;&nbsp;&nbsp; # cp commit_prep</tt><tt> /usr/local/bin</tt></pre>
+The log_accum script in requires the
+sourceforge group ownership to execute properly. <b><font
+ color="#ff0000">**HIGHLY CRITICAL**</font></b>
+<pre>	# cd /usr/local/bin<br>	# chown sourceforge.sourceforge log_accum prep_commit<br>	# chmod 755 log_accum prep_commit<br>	# chmod u+s log_accum   # sets the uid bit (-rwsr-xr-x)<br></pre>
+Be careful that you must set the uid bit again whenever the log_accum
+script is updated from CVSanc opied again into the /usr/local/bin
+directory.<br>
 <tt><br>
 </tt>
 <h2>Browsing the CVS Trees</h2>
