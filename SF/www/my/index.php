@@ -129,7 +129,7 @@ if (user_isloggedin()) {
 	
 			$sql2="SELECT support_id,priority,assigned_to,submitted_by,open_date,summary ".
 			    "FROM support ".
-			    "WHERE group_id='$group_id' AND support_status_id <> '2' ".
+			    "WHERE group_id='$group_id' AND support_status_id = '1' ".
 			    "AND (assigned_to='".user_getid()."' ".
 			    "OR submitted_by='".user_getid()."') LIMIT 100";
 			    
