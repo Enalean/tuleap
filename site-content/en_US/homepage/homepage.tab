@@ -1,0 +1,61 @@
+#/**
+#  *
+#  * Top level scripts message catalog (English)
+#  *
+#  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
+#  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
+#  * http://codex.xrce.xerox.com
+#  *
+#  * @version   $Id$
+#  *
+#  */
+#
+#-----------------------------------------------
+# Script: SF/www/contact.php
+#
+contact	title	Contact Us
+contact	message	<UL><li><b>Assistance and Support Request</b>: all support questions, request for help, new feature requests... related to $1 use should be submitted through the $1 <A HREF="/tracker/?func=add&group_id=1&atid=XXX">[ Support Manager ]</A>.<br><br><li><b>Defects (aka Bugs)</b>:If you feel you are encountering a bug or an unusual error of any kind, please <A HREF="/tracker/?func=add&group_id=1&atid=YYY">[ Submit a bug ]</A>.<br><br><li><b>Technical Questions</b>: all questions on software development tools and techniques (version control, programming, algorithms,...) should be directed to the appropriate <A HREF="/mail/?group_id=1">[ Developers Channel ]</a> whenever possible.<br><br><li><b>Other Requests</b>: all other inquiries should be directed to the <A href="mailto:$2">[ $1 contact ]</A>.<br><br></ul>
+#
+#-----------------------------------------------
+# Script: SF/www/404.php
+#
+404	title	Requested Page not Found (Error 404)
+404	no_archive	No messages archived
+404	no_page	PAGE NOT FOUND
+#
+#-----------------------------------------------
+# Script: SF/www/about_foundries.php
+#
+about_foundries	title	About Foundries
+about_foundries	message	Foundries serve as places for developers interested in a given topic to congregate, share expertise and news, get and give advice, and generally help each other develop  better software faster.<p>If you're interested in volunteering to help support or start a foundry please <a href="mailto:$1">contact us</a>.<p>Here is a list of all foundries currently available on the system:$1</p>
+about_foundries	no_foundries	No foundry found
+#
+#-----------------------------------------------
+# Script: SF/www/index.php
+#
+homepage	title	Welcome
+homepage	introduction	\n<hr width="100%" size="1" noshade><span class="slogan"><div align="center">\n"Breaking Down The Barriers to Code Sharing inside $1."<br>\n</div></span>\n<hr width="100%" size="1" noshade>\n&nbsp;<br>$2 is a <B>service to all $1 software development teams</B> who want to share their project source code with others <b>inside</b> $1. <A href="/docs/site/about_codex.php">[&nbsp;More about $2&nbsp;]</A><P>\n$2 offers an easy access to a full featured and totally web-based project management environment. Using $2 project teams can better focus on software development while making their community of users and developers grow. <A href="/docs/site/">[&nbsp;More on $2 Services&nbsp;]</A>\n<A href="/docman/display_doc.php?docid=17&group_id=1">[&nbsp;FAQ&nbsp;]</A>\n<P>\n<u><B>Site Participation</B></u>\n<BR>\nIn order to get the most out of $2, you should\n<A href="/account/register.php">register as a\nsite user</A>. It's easy and fast and it allows you to participate fully in all we have to offer. Also make sure you read the <b><A href="/docman/display_doc.php?docid=1&group_id=1">$1 Code eXchange Policy</a></b> before using this site.\n<P>\n<u><B>Set Up Your Own Project</B></u><BR>If you want other $2 developers to know what you are doing first <A href="/account/register.php">Register as a site user</A>,\nthen <A HREF="/account/login.php">Login</A> and finally,\n<A HREF="/register/">Register Your Project.</A> It only takes a couple of minutes to get a fully working environment to share your code.\n<P>\nThanks... and enjoy the site.\n
+homepage	news_title	Latest News
+homepage	news_title2	Latest News - RSS Format#
+#
+#-----------------------------------------------
+# Script: SF/www/sendmessage.php
+#
+sendmessage	title	Send a Message to $1
+sendmessage	message	In an attempt to reduce spam, we are using this form to send email.<p>Fill it out accurately and completely or the receiver may not be able to respond.<P><span class="highlight"><B>IF YOU ARE WRITING FOR HELP:</B> Did you read the site documentation? Did you include your <B>user_id</B> and <B>user_name?</B> If you are writing about a project, include your <B>project id</B> (<B>group_id</B>) and <B>Project Name</B>.</span>
+sendmessage	err_nouser	That user does not exist.
+sendmessage	err_host	You can only send to addresses @$1.
+sendmessage	err_noparam	Some variables were not provided (user ID or email address)
+sendmessage	title_sent	Message to $1 Sent
+sendmessage	email	Your Email Address
+sendmessage	name	Your Name
+sendmessage	subject	Subject
+sendmessage	message_body	Message
+sendmessage	send_btn	Send Message
+#
+#-----------------------------------------------
+# Script: SF/www/sflogo.php
+#
+sflogo	err_logger	An error occured in the logger.	
+sflogo	err_nogroup	xxxxx NO GROUP ID SPECIFIED xxxxxxx	
+

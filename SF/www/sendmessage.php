@@ -8,8 +8,10 @@
 
 require($DOCUMENT_ROOT.'/include/pre.php');    
 
+$LANG->loadLanguageMsg('homepage/homepage');
+
 if (!$toaddress && !$touser) {
-	exit_error('Error','Error - some variables were not provided');
+	exit_error($LANG->getText('include_exit', 'error'),$LANG->getText('sendmessage','err_noparam'));
 }
 
 if ($touser) {
@@ -19,14 +21,16 @@ if ($touser) {
 	*/
 	$result=db_query("SELECT email,user_name FROM user WHERE user_id='$touser'");
 	if (!$result || db_numrows($result) < 1) {
-		exit_error('Error','Error - That user does not exist.');
+	    exit_error($LANG->getText('include_exit', 'error'),
+		       $LANG->getText('sendmessage','err_nouser'));
 	}
 }
 
 list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
 
 if ($toaddress && !eregi($host,$toaddress)) {
-	exit_error("error","You can only send to addresses @".$host);
+	exit_error($LANG->getText('include_exit', 'error'),
+		   $LANG->getText('sendmessage','err_host',array($host)));
 }
 
 
@@ -53,54 +57,45 @@ if ($send_mail) {
 		$to=db_result($result,0,'email');
 	}
 	mail($to, stripslashes($subject),stripslashes($body),$hdrs);
-	$HTML->header(array('title'=>($GLOBALS['sys_name'].' Contact')));
-	echo '<H2>Message sent</H2>';
+	$HTML->header(array('title'=>$LANG->getText('sendmessage', 'title_sent',array($to))));
+	echo '<H2>'.$LANG->getText('sendmessage', 'title_sent',array($to)).'</H2>';
 	$HTML->footer(array());
 	exit;
 
 }
 
-$HTML->header(array('title'=>($GLOBALS['sys_name'].' Staff')));
+if ($toaddress) {
+	$to_msg = $toaddress;
+} else {
+	$to_msg = db_result($result,0,'user_name');
+}
+
+$HTML->header(array('title'=>$LANG->getText('sendmessage', 'title',array($to_msg))));
 
 ?>
 
-<H2>Send a Message to <?php 
-
-if ($toaddress) {
-	echo $toaddress;
-} else {
-	echo db_result($result,0,'user_name');
-}
-
-?></H2>
+<H2><?php echo $LANG->getText('sendmessage', 'title',array($to_msg)); ?></H2>
 <P>
-In an attempt to reduce spam, we are using this form to send email.
-<p>
-Fill it out accurately and completely or the receiver may not be able to respond.
-<P>
-<span class="highlight"><B>IF YOU ARE WRITING FOR HELP:</B> Did you read the site 
-documentation? Did you include your <B>user_id</B> and <B>user_name?</B> If you are writing 
-about a project, include your <B>project id</B> (<B>group_id</B>) and <B>Project Name</B>.
-</span>
+<?php echo $LANG->getText('sendmessage', 'message'); ?>
 <P>
 <FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">
 <INPUT TYPE="HIDDEN" NAME="toaddress" VALUE="<?php echo $toaddress; ?>">
 <INPUT TYPE="HIDDEN" NAME="touser" VALUE="<?php echo $touser; ?>">
 
-<B>Your Email Address:</B><BR>
+<B><?php echo $LANG->getText('sendmessage', 'email'); ?>:</B><BR>
 <INPUT TYPE="TEXT" NAME="email" SIZE="30" MAXLENGTH="40" VALUE="">
 <P>
-<B>Your Name:</B><BR>
+<B><?php echo $LANG->getText('sendmessage', 'name'); ?>:</B><BR>
 <INPUT TYPE="TEXT" NAME="name" SIZE="30" MAXLENGTH="40" VALUE="">
 <P>
-<B>Subject:</B><BR>
+<B><?php echo $LANG->getText('sendmessage', 'subject'); ?>:</B><BR>
 <INPUT TYPE="TEXT" NAME="subject" SIZE="30" MAXLENGTH="40" VALUE="<?php echo $subject; ?>">
 <P>
-<B>Message:</B><BR>
+<B><?php echo $LANG->getText('sendmessage', 'message_body'); ?>:</B><BR>
 <TEXTAREA NAME="body" ROWS="15" COLS="60" WRAP="HARD"></TEXTAREA>
 <P>
 <CENTER>
-<INPUT TYPE="SUBMIT" NAME="send_mail" VALUE="Send Message">
+<INPUT TYPE="SUBMIT" NAME="send_mail" VALUE="<?php echo $LANG->getText('sendmessage', 'send_btn'); ?>">
 </CENTER>
 </FORM>
 <?php

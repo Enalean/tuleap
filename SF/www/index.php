@@ -6,19 +6,22 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/pre.php');    // Initial db and session library, opens session
+require($DOCUMENT_ROOT.'/include/pre.php');
 require($DOCUMENT_ROOT.'/include/cache.php');
 require($DOCUMENT_ROOT.'/forum/forum_utils.php');
 
-$HTML->header(array('title'=>'Welcome'));
+$LANG->loadLanguageMsg('homepage/homepage');
+
+$HTML->header(array('title'=>$LANG->getText('homepage', 'title')));
 
 ?>
 <!-- whole page table -->
 <TABLE width=100% cellpadding=5 cellspacing=0 border=0>
 <TR><TD width="65%" VALIGN="TOP">
-<? include(util_get_content('homepage/welcome_intro')); ?>
+
 <?php
-$HTML->box1_top('Latest News <A href="/export/rss_sfnews.php" title="Latest News - RSS Format">[XML]</A>');
+echo stripcslashes($LANG->getText('homepage', 'introduction',array($GLOBALS['sys_org_name'],$GLOBALS['sys_name'])));
+$HTML->box1_top($LANG->getText('homepage', 'news_title')."<A href=\"/export/rss_sfnews.php\" title=\"".$LANG->getText('homepage', 'news_title2').'">&nbsp;[XML]</A>');
 echo news_show_latest($GLOBALS['sys_news_group'],5,true,false,false,5);
 $HTML->box1_bottom();
 ?>

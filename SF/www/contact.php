@@ -6,10 +6,15 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/pre.php');    // Initial db and session library, opens session
-$HTML->header(array('title'=>'Contact Us'));
+require($DOCUMENT_ROOT.'/include/pre.php');
 
-include(util_get_content('contact/contact'));
+$LANG->loadLanguageMsg('homepage/homepage');
+
+$HTML->header(array('title'=>$LANG->getText('contact', 'title')));
+
+echo '<h2>'.$LANG->getText('contact', 'title')."</h2>\n";
+
+echo $LANG->getText('contact', 'message', array($GLOBALS['sys_name'],$GLOBALS['sys_email_contact']));
 
 $HTML->footer(array());
 ?>

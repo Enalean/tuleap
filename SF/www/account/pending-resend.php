@@ -27,7 +27,8 @@ if ($row_user[status] == 'P') {
  
 <?php
 } else {
-	exit_error("Error","This account is not pending verification.");
+	exit_error($LANG->getText('include_exit', 'error'),
+		   $LANG->getText('ccount_pending-resend', 'notpending'));
 }
 
 $HTML->footer(array());

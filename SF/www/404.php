@@ -6,8 +6,11 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/pre.php');    // Initial db and session library, opens session
-$HTML->header(array(title=>"Requested Page not Found (Error 404)"));
+require($DOCUMENT_ROOT.'/include/pre.php');
+
+$LANG->loadLanguageMsg('homepage/homepage');
+
+$HTML->header(array(title=>$LANG->getText('404', 'title')));
 
 if (session_issecure()) {
 	echo "<a href=\"https://$GLOBALS[sys_default_domain]\">";
@@ -16,10 +19,10 @@ if (session_issecure()) {
 }
 
 if (strpos($REQUEST_URI, "pipermail")) {
-  echo "<CENTER><H1>No messages archived</H1></CENTER><P>";
+  echo "<CENTER><H1>".$LANG->getText('404', 'no_archive')."</H1></CENTER><P>";
 }
 else {
-  echo "<CENTER><H1>PAGE NOT FOUND</H1></CENTER>";
+  echo "<CENTER><H1>".$LANG->getText('404', 'no_page')."</H1></CENTER>";
 
   echo "<P>";
 }
