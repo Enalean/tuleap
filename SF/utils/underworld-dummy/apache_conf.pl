@@ -31,6 +31,8 @@ while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow())
 	push @apache_zone,
 	( "<VirtualHost $ip>\n",
 	  "  ServerName $unix_group_name.codex.xerox.com\n",
+          "  User dummy\n",
+          "  Group $unix_group_name\n",
 	  "  DocumentRoot /home/groups/$unix_group_name/htdocs/\n",
 	  "  CustomLog logs/vhosts-access_log combined\n",
 	  "  ScriptAlias /cgi-bin/ /home/groups/$unix_group_name/cgi-bin/\n",
