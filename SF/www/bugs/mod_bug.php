@@ -15,20 +15,27 @@ $result=db_query($sql);
 
 if (db_numrows($result) > 0) {
 
-    // Retrieve the bug field value for the Create Task URL in the bug menu
-    // assigned_to is required
+    // Prepare all the necessary fields in case the user wants to 
+    // Create a new task based on this bug
+
+    // assigned_to is passed along
     $assigned_to = db_result($result,0,'assigned_to');
-    // Check if hours is used and retrieve his value
+
+    // Check if hours is used. If so pass it along as well
     if ( bug_data_is_used('hours') ) {
         $hours = db_result($result,0,'hours');
     } else {
         $hours = '';
     }
     
+    // Insert a reference to the originating bug in the task description
+    $task_details = db_result($result,0,'details')."\n\nSee bug #$bug_id\nhttp://".
+	$GLOBALS['sys_default_domain']."/bugs/?func=detailbug&bug_id=$bug_id&group_id=$group_id";
+
     bug_header(array ('title'=>'Modify a Bug',
                       'create_task'=>'Create task',
                       'summary' => db_result($result,0,'summary'),
-                      'details' => db_result($result,0,'details'),
+                      'details' => $task_details,
                       'assigned_to' => $assigned_to,
                       'hours' => $hours,
                       'bug_id' => $bug_id
