@@ -44,7 +44,7 @@ $row_grp = db_fetch_array($res_grp);
 
 // ########################### form submission, make updates
 if ($submit) {
-	group_add_history ('Changed Permissions','',$group_id);
+    group_add_history ('Changed Member Permissions','',$group_id); // Used to be 'Changed Permissions'
 
 	$res_dev = db_query("SELECT user_id FROM user_group WHERE group_id=$group_id");
 	while ($row_dev = db_fetch_array($res_dev)) {

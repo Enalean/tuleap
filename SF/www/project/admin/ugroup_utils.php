@@ -42,6 +42,11 @@ function ugroup_db_list_all_ugroups_for_user($group_id,$user_id) {
     return db_query($sql);
 }
 
+/** Return user group name from ID */
+function ugroup_get_name_from_id($ugroup_id) {
+    $res=ugroup_db_get_ugroup($ugroup_id);
+    return db_result($res,0,'name');
+}
 
 /**
  * Check membership of the user to a specified ugroup
@@ -254,6 +259,10 @@ function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description,
             exit_error("ERROR","ERROR - Can not insert user ".$pickList[$i]." in group $ugroup_id:".db_error());
         }
     }
+
+    // Now log in project history
+    group_add_history("Updated User Group",$ugroup_name,$group_id);
+
     $feedback .= " Successfully Updated User Group ".$ugroup_name." (".$user_count." members)";
 }
 
@@ -270,7 +279,7 @@ function ugroup_delete($group_id, $ugroup_id) {
         $feedback .= ' FAILED: ugroup ID was not specified ';
         return false;
     }
-        
+    $ugroup_name=ugroup_get_name_from_id($ugroup_id);
     $sql = "DELETE FROM ugroup WHERE group_id=$group_id AND ugroup_id=$ugroup_id";
         
     $result=db_query($sql);
@@ -297,5 +306,8 @@ function ugroup_delete($group_id, $ugroup_id) {
         $perm_cleared--;
         $feedback .= '- WARNING: '.$perm_cleared.' associated permissions deleted. <br>Note: If this group was the only one authorized to access an object, permissions are now reset to default for this object.';
     } 
+    // Now log in project history
+    group_add_history("Deleted User Group",$ugroup_name,$group_id);
+
     return true;
 }

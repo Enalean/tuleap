@@ -103,8 +103,8 @@ function show_grouphistory ($group_id) {
 		<H3>Group Change History</H3>
 		<P>';
 		$title_arr=array();
-		$title_arr[]='Field';
-		$title_arr[]='Old Value';
+		$title_arr[]='Event';
+		$title_arr[]='Value';
 		$title_arr[]='Date';
 		$title_arr[]='By';
 		

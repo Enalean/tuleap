@@ -12,8 +12,7 @@
 // Show/manage ugroup list
 
 require($DOCUMENT_ROOT.'/include/pre.php');
-require($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
-require($DOCUMENT_ROOT.'/include/permissions.php');
+require($DOCUMENT_ROOT.'/project/admin/permissions.php');
 
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 

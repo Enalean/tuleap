@@ -10,8 +10,7 @@
 //
 
 require($DOCUMENT_ROOT.'/include/pre.php');
-require($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
-require($DOCUMENT_ROOT.'/project/admin/ugroup_utils.php');
+require($DOCUMENT_ROOT.'/project/admin/permissions.php');
 require($DOCUMENT_ROOT.'/file/file_utils.php');
 
 
@@ -167,7 +166,7 @@ Quick Filters:
 <td></td>
 </tr>
 <tr>
-<TD>
+<TD align="right">
 <SELECT multiple size=16 name="SelectList" ID="SelectList"> ';
 
     // Display list of users
@@ -187,10 +186,11 @@ Quick Filters:
     echo '
 </SELECT>
 </TD>
-<TD align="center"><INPUT TYPE="BUTTON" VALUE="  ->  " ONCLICK="addIt();"></INPUT><BR>
-<INPUT TYPE="BUTTON" VALUE="  <-  " ONCLICK="delIt();"></INPUT>
+<TD align="center">
+&nbsp;<INPUT TYPE="BUTTON" VALUE="  ->  " ONCLICK="addIt();"></INPUT>&nbsp;<BR>
+&nbsp;<INPUT TYPE="BUTTON" VALUE="  <-  " ONCLICK="delIt();"></INPUT>&nbsp;
 </TD>
-<TD>
+<TD align="left">
 <SELECT NAME="PickList[]" ID="PickList" SIZE="16" multiple>
 <OPTION VALUE="01sel">Selection 01 - please ignore</OPTION>
 </SELECT>
@@ -254,11 +254,10 @@ function switchMessage(_I)
         
         while ($row = db_fetch_array($res)) {
             echo '<TR class="'. util_get_alt_row_color($row_num) .'">';
+            echo '<TD>'.permission_get_name($row['permission_type']).'</TD>';
             if ($row['permission_type'] == 'PACKAGE_READ') {
-                echo '<TD>Package Download</TD>';
                 echo '<TD>Package <a href="/file/admin/editpackagepermissions.php?package_id='.$row['object_id'].'&group_id='.$group_id.'">'.file_get_package_name_from_id($row['object_id']).'</a></TD>';
             } else if ($row['permission_type'] == 'RELEASE_READ') {
-                echo '<TD>Release Download</TD>';
                 $package_id=file_get_package_id_from_release_id($row['object_id']);
                 echo '<TD>Release <a href="/file/admin/editreleasepermissions.php?release_id='.$row['object_id'].'&group_id='.$group_id.'&package_id='.$package_id.'">'.file_get_release_name_from_id($row['object_id']).'</a> (from package <a href="/file/admin/editreleases.php?package_id='.$package_id.'&group_id='.$group_id.'">'.file_get_package_name_from_id($package_id).'</a>)</TD>';
             } else {

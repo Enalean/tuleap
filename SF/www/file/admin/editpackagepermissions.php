@@ -12,7 +12,7 @@
 // Simple script to edit package permissions
 
 require($DOCUMENT_ROOT.'/include/pre.php');
-require($DOCUMENT_ROOT.'/include/permissions.php');
+require($DOCUMENT_ROOT.'/project/admin/permissions.php');
 require($DOCUMENT_ROOT.'/file/file_utils.php');
 
 
