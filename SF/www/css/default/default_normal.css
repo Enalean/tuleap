@@ -18,7 +18,7 @@ BODY {
   margin-bottom: 0;
   background-color: #bcbcad;
   font-family: helvetica,arial,verdana,sans-serif;
-  font-size: x-small;
+  font-size: small;
   color: #333333;
 }
 
@@ -28,8 +28,8 @@ a:visited { text-decoration:none; color: #8b4020}
 a:active { text-decoration:none; color: #000000}
 
 .smaller { font-size: x-small; }
-.small { font-size: smaller; }
-.normal { font-size: small; }
+.small { font-size: small; }
+.normal { font-size: medium; }
 
 .center { text-align: center; }
 .left { text-align: left; }
@@ -120,10 +120,10 @@ PRE,TT { font-family: courier,sans-serif; }
 .calendar_currentday { background-color: #FFFFA3; }
 .calendar_nextmonth { background-color: #DBEAF5; }
 .calendar_daymonth { background-color: white; } 
-.calendar_font_othermonth { font-size: smaller; color: gray; }
-.calendar_font { font-size: smaller; color: black; }
-.calendar_font_month { font-size: smaller; color: black; }
-.calendar_font_day { font-size: smaller; color: black; }
+.calendar_font_othermonth { font-size: x-small; color: gray; }
+.calendar_font { font-size: x-small; color: black; }
+.calendar_font_month { font-size: x-small; color: black; }
+.calendar_font_day { font-size: x-small; color: black; }
 
         
 

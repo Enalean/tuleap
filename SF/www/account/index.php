@@ -88,6 +88,38 @@ $HTML->box1_top("Preferences"); ?>
 <P><INPUT type="checkbox"  name="form_sticky_login" value="1"<?php
 	if ($row_user['sticky_login']) print " checked"; ?>> Remember my login/password <I>(<?php print $GLOBALS['sys_name']; ?> remembers your login/password. . Not recommended. <u>If you change this preference make sure to logout and login again</u>)</I>
 
+<P>Font size: <select name="user_fontsize">
+<option value="0" <?
+    if ( $row_user['fontsize'] == 0 ) print "selected";
+?>>Browser default</option>
+<option value="1" <?
+    if ( $row_user['fontsize'] == 1 ) print "selected";
+?>>Small</option>
+<option value="2" <?
+    if ( $row_user['fontsize'] == 2 ) print "selected";
+?>>Normal</option>
+<option value="3" <?
+    if ( $row_user['fontsize'] == 3 ) print "selected";
+?>>Large</option>
+</select>
+    
+&nbsp;&nbsp;Theme / Color scheme: <select name="user_theme">
+<?php
+     $dir = opendir($sys_urlroot."/css");
+     while ($file = readdir($dir)) {
+      if ($file != "." && $file != ".." && $file != "CVS" && $file != ".cvsignore" && $file != "Makefile" && $file != "Makefile.in") {
+        $theme_list = ereg_replace(".css", "", $file);
+        print '<option value="'.$theme_list.'"';
+        if ($theme_list==$row_user['theme']){ print ' selected'; }
+        print '>'.$theme_list;
+        if ($theme_list==$sys_themedefault){ print ' (default)'; }
+        print '</option>';
+        }
+     }
+     closedir($dir);
+?>
+</select>
+
 <P align=center><CENTER><INPUT type="submit" name="Update" value="Update"></CENTER>
 </FORM>
 <?php $HTML->box1_bottom(); 

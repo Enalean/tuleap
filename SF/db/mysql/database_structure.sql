@@ -2022,6 +2022,8 @@ CREATE TABLE user (
   people_resume text NOT NULL,
   timezone varchar(64) default 'GMT',
   windows_pw varchar(80) NOT NULL default '',
+  fontsize INT UNSIGNED NOT NULL DEFAULT 0,
+  theme varchar(50),
   PRIMARY KEY  (user_id),
   KEY idx_user_user (status)
 ) TYPE=MyISAM;

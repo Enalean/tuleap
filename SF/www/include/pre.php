@@ -30,9 +30,6 @@ require('browser.php');
 //base error library for new objects
 require('Error.class');
 
-//theme functions 
-require('theme.php');
-
 //various html utilities
 require('utils.php');
 
@@ -110,5 +107,8 @@ if (user_isloggedin()) {
 } else {
 	//just use pacific time as always
 }
+
+//theme functions 
+require('theme.php');
 
 ?>
