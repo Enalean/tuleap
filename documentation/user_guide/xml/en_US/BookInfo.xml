@@ -428,6 +428,18 @@
 
         <revremark>Minor update, introducing 'Restricted' user status.</revremark>
       </revision>
+      <revision>
+        <revnumber>2.6.19</revnumber>
+
+        <date>22-Feb-2005</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Corrected typos in chapter tracker artifact cross-referencing.
+        Slight rephrasing in SVN chapter in the cross-referencing section 
+	(related to SR 163 on Partners)
+        </revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--

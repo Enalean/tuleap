@@ -84,8 +84,8 @@ if (($atn == 'rev') || ($atn == 'revision')) {
 }
 if ($atn == 'commit') {
     // when commit is used see if it revision exists in SVN else redirect to CVS
-    $res = svn_data_get_revision_detail($group_id, $aid);
-    if ($res && db_numrows($res) == 1) {
+    $res = svn_data_get_revision_detail($group_id, 0, $aid);
+    if ($res && db_numrows($res) > 0) {
 	$location .= $svn_loc.$feed;
     } else {
         // Check that the commit belongs to the same project
@@ -110,7 +110,7 @@ if ($atn == 'patch') {
 if ((!$sys_activate_tracker)) {
     // If generic trackers are not available, then use only legacy!
     legacy_redirect($location,$aid,$group_id,$atn);
-    exit_error($LANG->getText('global','error'),$LANG->getText('tracker_gotoid', 'invalid_tracker_vb',$atn);
+    exit_error($LANG->getText('global','error'),$LANG->getText('tracker_gotoid', 'invalid_tracker_vb',$atn));
 }
 
 // Should we remove this one?

@@ -77,17 +77,24 @@ function svn_data_get_revision_detail($group_id, $commit_id, $rev_id=0, $order='
     // URL to access a revision
     if ($rev_id) {
 	// To be done -> get the commit ID from the svn-commit table
-    }
+      $sql="SELECT svn_commits.description, svn_commits.date, svn_commits.revision, svn_checkins.type,svn_checkins.commitid,svn_dirs.dir,svn_files.file ".
+	"FROM svn_dirs, svn_files, svn_checkins, svn_commits ".
+	"WHERE svn_checkins.fileid=svn_files.id ".
+	"AND svn_checkins.dirid=svn_dirs.id ".
+	"AND svn_checkins.commitid=svn_commits.id ".
+	"AND svn_commits.revision=$rev_id ".
+	"AND svn_commits.group_id=$group_id ".
+	$order_str;
+    } else {
 
-
-    $sql="SELECT svn_commits.description, svn_commits.date, svn_commits.revision, svn_checkins.type,svn_checkins.commitid,svn_dirs.dir,svn_files.file ".
+      $sql="SELECT svn_commits.description, svn_commits.date, svn_commits.revision, svn_checkins.type,svn_checkins.commitid,svn_dirs.dir,svn_files.file ".
 	"FROM svn_dirs, svn_files, svn_checkins, svn_commits ".
 	"WHERE svn_checkins.fileid=svn_files.id ".
 	"AND svn_checkins.dirid=svn_dirs.id ".
 	"AND svn_checkins.commitid=svn_commits.id ".
 	"AND svn_commits.id=$commit_id ".
 	$order_str;
-
+    }
 
     $result=db_query($sql);
     return $result;

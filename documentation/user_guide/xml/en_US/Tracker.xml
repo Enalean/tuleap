@@ -891,19 +891,19 @@
 	<listitem>
 	  <para>You can also use the pattern &#34;commit #NNN&#34; in a
 	  follow-up comment to refer to the commit with ID number NNN
-	  has listed in your CVS tracking database. This is very
+	  as listed in your CVS tracking database. This is very
 	  useful for instance when you want to close a defect or a
-	  task artifact with a reference to corresponding the source
+	  task artifact with a reference to the corresponding source
 	  code modifications. Conversely your commit message can also
 	  contain a reference to the originating artifact therefore
-	  ensuring a two directional cross-references between source
+	  ensuring a two directional cross-reference between source
 	  code modifications and the related artifact. For more
 	  details about the CVS tracking database see <xref
-	      linkend="CVSWebInterface"/></para>
+	      linkend="CVSWebInterface"/>.</para>
 	</listitem>
 	<listitem>
 	  <para>If the referenced artifact belongs to another project, or if
-          the artifact given name (&#34;XXX&#34; above) does not match the short name
+          the artifact name (&#34;XXX&#34; above) does not match the short name
           of the tracker it belongs to, a message will be diplayed on top of the
           target page to warn the user that she was redirected to another project,
           or that she should check the tracker name.</para>
@@ -914,7 +914,7 @@
 	  possible to refer to one of those by using the patterns &#34;bug
 	  #NNN&#34;, &#34;task #NNN&#34; or &#34;sr #NNN&#34;. If there is a
           tracker with the same short name (e.g. a &#34;bug&#34; tracker), the
-          system should be smart enough to link to the right page</para>
+          system should be smart enough to link to the right page.</para>
 	</listitem>
 
       </itemizedlist>
