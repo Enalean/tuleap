@@ -68,8 +68,6 @@ if (user_isloggedin()) {
       header("Content-Length:  $size");
       header("Content-Transfer-Encoding: binary\n");
       fpassthru($fp);
-      fclose($fp);
-
   
   } else {
       // Can't open the file for download. There is a problem here !!
