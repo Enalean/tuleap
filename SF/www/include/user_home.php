@@ -144,16 +144,6 @@ if ($sys_ldap_server) {
 
 </TR>
 
-<?php 
-/*
-<TR><TD VALIGN=TOP>
-Rating:
-</TD><TD>
-<P>&nbsp;
-<?php echo vote_show_release_radios (db_result($res_user,0,'user_id'],4); ? >
-</TD></TR>
-*/ 
-?>
 </TABLE>
 <?php $HTML->box1_bottom(); ?>
 

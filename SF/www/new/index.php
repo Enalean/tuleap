@@ -6,10 +6,9 @@
 //
 // $Id$
 
-require "pre.php";    
-require "vote_function.php";
+require "pre.php";
 
-# By default, display releases
+// By default, display releases
 if (!$func) $func='releases';
 
 switch ($func) {
@@ -110,12 +109,9 @@ if (!$res_new || db_numrows($res_new) < 1) {
 			} else {
 				print "<I>This project has not submitted a description.</I>";
 			}
-			// print "<P>Release rating: ";
-			// print vote_show_thumbs($row_new[filerelease_id],2);
+
 			print "</TD>";
 			print '<TD align=center nowrap border=1>';
-			// print '&nbsp;<BR>Rate this Release!<BR>';
-			// print vote_show_release_radios($row_new[filerelease_id],2);
 			print "&nbsp;</TD>";
 			print "</TR>";
 

@@ -7,7 +7,6 @@
 // $Id$
 
 require('pre.php');
-require('vote_function.php');
 require('../survey/survey_utils.php');
 survey_header(array('title'=>'Survey',
 		    'help'=>'SurveyManager.html#PublishingaSurvey'));
@@ -31,7 +30,7 @@ if (!$survey_id || !$group_id) {
 	survey_footer(array());
 	exit;
     } else {
-	show_survey($group_id,$survey_id);
+	survey_utils_show_survey($group_id,$survey_id);
     }
 }
 

@@ -26,7 +26,7 @@ $headers = getallheaders();
   <TR>
     <TD><SPAN class=maintitlebar>&nbsp;&nbsp;
       <A class=maintitlebar href="http://codex.xerox.com/"><B>Home</B></A> | 
-      <A class=maintitlebar href="http://codex.xerox.com/about.php"><B>About</B></A> | 
+      <A class=maintitlebar href="http://codex.xerox.com/docs/site/about_codex.php"><B>About</B></A> | 
       <A class=maintitlebar href="http://codex.xerox.com/contact.php"><B>Contact Us</B></A> |
       <A class=maintitlebar href="http://codex.xerox.com/account/logout.php"><B>Logout</B></A></SPAN>
     </TD>

@@ -7,7 +7,6 @@
 // $Id$
 
 require('pre.php');
-require('vote_function.php');
 require('../forum/forum_utils.php');
 
 if ($msg_id) {
@@ -50,8 +49,6 @@ if ($msg_id) {
 	echo "SUBJECT: ". db_result($result,0, "subject")."<P>";
 	echo util_make_links(nl2br(db_result($result,0, 'body')), $group_id);
 	echo "</TD></TR></TABLE>";
-//	echo '<BR><CENTER>';
-//	vote_show_release_radios ($msg_id,3);
 
 	/*
 		Show entire thread

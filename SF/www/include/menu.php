@@ -125,7 +125,6 @@ function menu_sourceforge() {
     $HTML->menu_entry('/forum/?group_id=1','Discussion Forums');
     $HTML->menu_entry('/people/','Project Help Wanted');
     print '<P>';
-    // LJ No compile farm		$HTML->menu_entry('/compilefarm/','Compile Farm');
     print '<P>';
     $HTML->menu_entry('/contact.php','Contact Us');
     $HTML->menuhtml_bottom();

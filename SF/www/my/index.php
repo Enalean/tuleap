@@ -7,7 +7,7 @@
 // $Id$
 
 require ('pre.php');
-require ('vote_function.php');
+require ('../survey/survey_utils.php');
 require ('./my_utils.php');
 require($DOCUMENT_ROOT.'/../common/tracker/Artifact.class');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactFile.class');
@@ -519,7 +519,7 @@ if (user_isloggedin()) {
             $html_my_survey .= $HTML->box1_top('Quick Survey',0);
 
             if (db_numrows($result) < 1) {
-		$html_my_survey .= show_survey(1,$developer_survey_id,0);
+		$html_my_survey .= survey_utils_show_survey(1,$developer_survey_id,0);
             } else {
 		$html_my_survey .= 'You have taken your developer survey';
             }

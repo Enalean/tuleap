@@ -7,7 +7,6 @@
 // $Id$
 
 require('pre.php');
-require('vote_function.php');
 require('../survey/survey_utils.php');
 survey_header(array('title'=>'Survey'));
 
