@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
 # Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2003. All Rights Reserved
@@ -49,6 +49,11 @@ CAT='/bin/cat'
 MAKE='/usr/bin/make'
 TAIL='/usr/bin/tail'
 GREP='/bin/grep'
+CHKCONFIG='/sbin/chkconfig'
+SERVICE='/sbin/service'
+CMD_LIST="GROUPADD GROUDEL USERADD USERDEL USERMOD MV CP LN LS RM TAR \
+MKDIR RPM CHOWN CHMOD FIND MYSQL TOUCH CAT MAKE TAIL GREP CHKCONFIG \
+SERVICE"
 
 # Functions
 create_group() {
@@ -71,12 +76,25 @@ make_backup() {
 
 todo() {
     # $1: message to log in the todo file
-    echo "- $1" >> $TODO_FILE
+    echo -e "- $1" >> $TODO_FILE
+}
+
+die() {
+  # $1: message to prompt before exiting
+  echo -e "**ERROR** $1"; exit 1
 }
 
 ##############################################
 # CodeX installation
 ##############################################
+
+##############################################
+# Check that all command line tools we need are available
+#
+for cmd in `echo ${CMD_LIST}`
+do
+    [ ! -x ${!cmd} ] && die "Command line tool '${!cmd}' not available. Stopping installation!"
+done
 
 ##############################################
 # Check we are running on RH 7.3
@@ -98,6 +116,30 @@ fi
 
 rm -f $TODO_FILE
 todo "WHAT TO DO TO FINISH THE CODEX INSTALLATION (see $TODO_FILE)"
+
+
+##############################################
+# Check Required Stock RedHat RPMs are installed
+#
+rpms_ok=1
+for rpm in mm mm-devel openssh-server openssh openssh-clients openssh-askpass \
+   openssl openldap perl perl-DBI perl-DBD-MySQL perl-Digest-MD5 perl-suidperl perl-CGI \
+   sendmail wu-ftpd telnet bind ntp samba \
+   compat-libstdc++ compat-glibc python
+do
+    $RPM -q $rpm  2>/dev/null 1>&2
+    if [ $? -eq 1 ]; then
+	rpms_ok=0
+	missing_rpms="$missing_rpms $rpm"
+    fi
+done
+if [ $rpms_ok -eq 0 ]; then
+    msg="The following Redhat Linux RPMs must be installed first:\n"
+    msg="${msg}$missing_rpms\n"
+    msg="${msg}Get them from your Redhat CDROM or FTP site, install them and re-run the installation script"
+    die "$msg"
+fi
+echo "All requested RedHat RPMS installed... good!"
 
 ##############################################
 # Create Groups and Users
@@ -159,7 +201,7 @@ $USERDEL ftpadmin 2>/dev/null 1>&2
 $USERADD -c 'FTP Administrator' -M -d '/home/ftp' -u 96 -g 96 ftpadmin
 
 $USERDEL ftp 2>/dev/null 1>&2
-$USERADD -c 'FTP User' -M -d '/home/ftp' -u 50 -g 14 ftp
+$USERADD -c 'FTP User' -M -d '/home/ftp' -u 14 -g 50 ftp
 
 $USERDEL dummy 2>/dev/null 1>&2
 $USERADD -c 'Dummy CodeX User' -M -d '/home/dummy' -u 103 -g 103 dummy
@@ -194,58 +236,40 @@ build_dir /var/run/log_accum root root 1777
 build_dir /cvsroot sourceforge sourceforge 755
 build_dir /cvsroot/.mysql_backup mysql mysql 755
 
-##############################################
-# Check Required Stock RedHat RPMs are installed
-#
-rpms_ok=1
-for rpm in mm mm-devel openssh-server openssh openssh-clients openssh-askpass \
-   openssl openldap perl perl-DBI perl-DBD-MySQL perl-Digest-MD5 perl-suidperl perl-CGI \
-   sendmail wu-ftpd telnet bind ntp samba \
-   compat-libstdc++ compat-glibc python 
-do
-    $RPM -q $rpm  2>/dev/null 1>&2
-    if [ $? -eq 1 ]; then
-	rpms_ok=0
-	missing_rpms="$missing_rpms $rpm"
-    fi
-done
-if [ $rpms_ok -eq 0 ]; then
-    echo "**ERROR** The following Redhat Linux RPMs must be installed first:"
-    echo $missing_rpms
-    echo "Get them from your Redhat CDROM or FTP site, install them and re-run the installation script"
-    exit 1
-fi
-echo "All requested RedHat RPMS installed... good!"
-
 ######
 # Now install CodeX specific RPMS (and remove RedHat RPMs)
 #
 # -> mysql
 echo "Removing RedHat MySQL..."
-service mysql stop; mysqladmin shutdown; sleep 5
+$SERVICE mysql stop 2>/dev/null
+sleep 2
+[ -e /usr/bin/mysqladmin ] && /usr/bin/mysqladmin shutdown 2>/dev/null
+sleep 2
 $RPM -e --nodeps mysql mysql-devel mysql-server 2>/dev/null
 echo "Installing MySQL RPMs for CodeX...."
 cd ${RPMS_DIR}/mysql
-newest_rpm=`$LS -1  -I old | $TAIL -1`
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh --force ${newest_rpm}/MySQL-*.i386.rpm
-service mysql start
+$SERVICE mysql start
+$CHKCONFIG mysql on
 
 # -> apache
 echo "Removing RedHat Apache..."
-service httpd stop
+$SERVICE httpd stop
 $RPM -e --nodeps apache apache-devel apache-manual 2>/dev/null
 echo "Installing Apache RPMs for CodeX...."
 cd ${RPMS_DIR}/apache
-newest_rpm=`$LS -1  -I old | $TAIL -1`
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh --force ${newest_rpm}/apache-*.i386.rpm
-service httpd restart
+$CHKCONFIG httpd on
+# restart Apache after PHP installation - see below
 
 # -> jre
 echo "Removing RedHat Java JRE..."
 $RPM -e --nodeps jre 2>/dev/null
 echo "Installing Java JRE RPMs for CodeX...."
 cd ${RPMS_DIR}/jre
-newest_rpm=`$LS -1 -I old | $TAIL -1`
+newest_rpm=`$LS -1 -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh --force ${newest_rpm}/jre-*.i386.rpm
 cd /usr/java
 newest_jre=`$LS -1d jre* | $TAIL -1`
@@ -256,7 +280,7 @@ echo "Removing RedHat CVS .."
 $RPM -e --nodeps cvs 2>/dev/null
 echo "Installing CVS RPMs for CodeX...."
 cd ${RPMS_DIR}/cvs
-newest_rpm=`$LS -1  -I old | $TAIL -1`
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh --force ${newest_rpm}/cvs-*.i386.rpm
 
 # -> gd 1.3 (needed by php3)
@@ -264,7 +288,7 @@ echo "Removing RedHat GD library .."
 $RPM -e --nodeps gd gd-devel 2>/dev/null
 echo "Installing GD library for CodeX...."
 cd ${RPMS_DIR}/gd
-newest_rpm=`$LS -1  -I old | $TAIL -1`
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh --force ${newest_rpm}/gd-*.i386.rpm
 
 # -> php
@@ -272,10 +296,13 @@ echo "Removing RedHat PHP .."
 $RPM -e --nodeps php php-dbg php-devel php-imap php-ldap php-manual php-mysql php-odbc php-pgsql php-snmp 2>/dev/null
 echo "Installing PHP RPMs for CodeX...."
 cd ${RPMS_DIR}/php
-newest_rpm=`$LS -1  -I old | $TAIL -1`
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh --force ${newest_rpm}/php-*.i386.rpm
 phpini_file=`rpm -ql php | grep .ini`
 todo "Customize file $phpini_file"
+
+# Restart Apache after PHP is installed
+$SERVICE httpd restart
 
 ######
 # Now install the non RPMs stuff 
@@ -366,7 +393,7 @@ $CHMOD 740 /home/tools/backup_job
 
 todo "Customize /etc/local.inc"
 todo "Customize /etc/httpd/conf/httpd.conf"
-todo "Customize /etc/httpd/conf/cvsweb.conf"
+todo "Customize /etc/httpd/conf/cvsweb.conf. Edit %CVSROOT (if needed) and $logo"
 todo "Customize /etc/httpd/conf/mailman.conf"
 todo "Customize /home/httpd/documentation/user_guide/xml/en_US/ParametersLocal.dtd"
 todo "Customize /home/tools/backup_job"
@@ -438,7 +465,7 @@ cd /etc/smrsh
 $LN -sf /usr/local/bin/gotohell
 $LN -sf /home/mailman/mail/wrapper
 
-todo "Finish sendmail settings (see installation Guide)"
+todo "Finish sendmail settings (see installation Guide) and create codex-contact and codex-admin aliases in /etc/aliases"
 
 ##############################################
 # Mailman installation
@@ -452,7 +479,7 @@ if [ "$yn" = "y" -o "$yn" = "-" ]; then
     $RM -rf /tmp/mailman; $MKDIR -p /tmp/mailman; cd /tmp/mailman;
     $RM -rf $MAILMAN_DIR/*
     $TAR xvfz $nonRPMS_DIR/mailman/mailman-*.tgz
-    newest_ver=`$LS -1  -I old | $TAIL -1`
+    newest_ver=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
     cd $newest_ver
     mail_gid=`id -g mail`
     cgi_gid=`id -g sourceforge`
@@ -461,6 +488,9 @@ if [ "$yn" = "y" -o "$yn" = "-" ]; then
 fi
 $CHOWN -R mailman.mailman $MAILMAN_DIR
 $MAILMAN_DIR/bin/mmsitepass $mm_passwd
+$LN -sf $MAILMAN_DIR /usr/local/mailman
+todo "Edit $MAILMAN_DIR/Mailman/mm_cfg.py and setup DEFAULT_HOST_NAME\n\
+and DEFAULT_URL variables (overrides Defaults.py settings). Recompile with python -O mm_cfg.py"
 
 ##############################################
 # CVS configuration
@@ -563,10 +593,10 @@ yn="y"
 [ -f "$def_page" ] && read -p "Custom Default Project Home page already exists. Overwrite? [y|n]:" yn
 if [ "$yn" = "y" ]; then
     $MKDIR -p /home/httpd/SF/utils/custom
-    $CHOWN sourceforge.sourceforge 775 /home/httpd/SF/utils/custom
+    $CHOWN sourceforge.sourceforge /home/httpd/SF/utils/custom
     $CP /home/httpd/SF/utils/default_page.php /home/httpd/SF/utils/custom/default_page.php
 fi
-todo "Customize /home/httpd/SF/utils/custom/default_page.php"
+todo "Customize /home/httpd/SF/utils/custom/default_page.php (project web site default home page)"
 
 ##############################################
 # Shell Access configuration
@@ -816,7 +846,7 @@ EOF
 todo "Create the shell login files for CodeX users in /etc/skel_codex"
 
 # things to do by hand
-
+todo "Change the default login shell if needed in the database (/sbin/nologin or /usr/local/bin/cvssh, etc."
 
 # End of it
 echo "=============================================="

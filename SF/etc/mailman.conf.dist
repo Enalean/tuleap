@@ -6,18 +6,15 @@
 # $Id$
 #
 # -- CodeX Specific --
-# This file assumes that:
-# a) Mailman is intalled in /usr/local/mailman
-# b) The directory holding the mailing list archives was moved
-#    to /home/mailman/archives/private (on another file system)
+# This file assumes that Mailman is intalled in /home/mailman
 #
-Alias /pipermail/ "/usr/local/mailman/archives/public/"
-<Directory "/usr/local/mailman/archives">
+Alias /pipermail/ "/home/mailman/archives/public/"
+<Directory "/home/mailman/archives">
     Options FollowSymLinks
     Order allow,deny
     Allow from all
 </Directory>
-<Directory "/usr/local/mailman/archives/public">
+<Directory "/home/mailman/archives/public">
     Options FollowSymLinks Indexes 
     Order allow,deny
     Allow from all
@@ -28,12 +25,12 @@ Alias /pipermail/ "/usr/local/mailman/archives/public/"
 </Directory>
 
 #
-# Give /usr/local/mailman/cgi-bin permission to run CGI scripts
+# Give /home/mailman/cgi-bin permission to run CGI scripts
 # Needed for any mailing list management functions performed directly
 # by Mailman.
 #
-ScriptAlias /mailman/ "/usr/local/mailman/cgi-bin/"
-<Directory "/usr/local/mailman/cgi-bin">
+ScriptAlias /mailman/ "/home/mailman/cgi-bin/"
+<Directory "/home/mailman/cgi-bin">
     AllowOverride None
     Options ExecCGI
     Order allow,deny
@@ -43,8 +40,8 @@ ScriptAlias /mailman/ "/usr/local/mailman/cgi-bin/"
 #
 # Configure to pick up Mailman jpeg files
 #
-Alias /MailmanImages/ "/usr/local/mailman/MailmanImages/"
-<Directory "/usr/local/mailman/MailmanImages">
+Alias /MailmanImages/ "/home/mailman/MailmanImages/"
+<Directory "/home/mailman/MailmanImages">
     AllowOverride None
     Order allow,deny
     Allow from all

@@ -35,10 +35,12 @@ The CodeX Administration Guide give a lot more explanation about the
 services and files role on a typical CodeX server. It is an excellent
 companion document to the CodeX Installation Guide.<br>
 <br>
-People interested in the installation of the
-original SourceForge software can also refer to the 'SourceForge
-Installation Guide' by Guillaume Morin at <a
- href="http://zoy.org/%7Eguillaum/SF/">http://zoy.org/~guillaum/SF/</a>
+The Installation procedure is documented so that CodeX adminstrators
+learn about the interns of the CodeX software. However the CodeX
+installation script provided by Xerox as part of the CodeX software
+takes car of most of the installation process. The manual work that
+remains to be done is displayed on the screen when the installation
+script comes to an end.<br>
 <h1>Linux OS Installation</h1>
 On a PC of your choice install Linux RedHat 7.3 choosing an
 installation of type 'server'. We recommend using the ext3 file system
@@ -574,7 +576,7 @@ perl-suidperl, perl-CGI</li>
         <li>python (for mailman)<br>
         </li>
         <li>sendmail (8.9.x)</li>
-        <li>wu-ftpd, telnet, named, bind, ntp</li>
+        <li>wu-ftpd, telnet, named, ntp</li>
         <li>samba (if you want to activate windows connectivity to the
 project Web site storage space and software release space)</li>
         <li>compat-glibc-x.y.z and compat-libstdc++-x.y.z (needed by
@@ -1098,6 +1100,13 @@ code at <tt>SF/etc/mailman.conf.dist</tt> . Place this file in the
 same
 directory as your <tt>httpd.conf</tt> file and include it at the end
 of <tt>httpd.conf</tt>.<br>
+<br>
+You must also override some Mailman variable settings, most notably the
+DEFAULT_HOST_NAME and&nbsp; DEFAULT_URL. Look at their original
+definition in <span style="font-family: monospace;">/home/mailman/Mailman/Defaults.py</span>
+and redefine them in <span style="font-family: monospace;">/home/mailman/Mailman/mm_cfg.py.</span>
+Then recompile with python -O mm_cfg.py.<br>
+<br>
 <hr size="2" width="100%">
 <h1><a name="Miscellaneous_Utilities"></a>Miscellaneous Utilities</h1>
 There are a few utilities that must be either compiled and/or installed
@@ -1150,7 +1159,8 @@ Ownership and permission must be:<br>
 <br>
 <br>
 <hr>
-<h1>Samba Configuration</h1>
+<h1>Samba Configuration (optional)<br>
+</h1>
 CodeX allows Window users to access their user directory, project
 directory and FTP Incoming space through Windows network drives. To
 enable this feature you just need to:<br>
@@ -1934,7 +1944,8 @@ $destdir</span><br style="font-family: monospace;">
 <br>
 <br>
 <hr>
-<h1>Installing phpMyAdmin</h1>
+<h1>Installing phpMyAdmin (optional)<br>
+</h1>
 phpMyAdmin is a Web based GUI to manage MySQL database. Although
 installing phpMyAdmin is not mandatory it is a very convenient for a
 CodeX site adminstrator. Installation is really easy:<br>
@@ -1942,7 +1953,8 @@ CodeX site adminstrator. Installation is really easy:<br>
 <ul>
   <li>Get phpMyAdmin from <a
  href="http://www.phpwizard.net/projects/phpMyAdmin/">http://www.phpwizard.net/projects/phpMyAdmin/</a>
-. Make sure you get the version for PHP 3!!</li>
+. Make sure you get the version for PHP 3 if your CodeX site is running
+php version 3!!</li>
   <li>Uncompressed the file in /home/httpd/. You should see a new
 directory called phpMyAdmin-X.Y.Z (where X.Y.Z is the version number)</li>
   <li>In /home/httpd, create a symbolic link called phpMyAdmin to the
@@ -1950,7 +1962,7 @@ phpMyAdmin-X.Y.Z directory</li>
   <li>Edit config.inc.php and change the following lines to reflect
 your own site configuration:<br>
     <br>
-    <tt>$cfgPmaAbsoluteUri = 'http://codex.xerox.com/phpMyAdmin';<br>
+    <tt>$cfgPmaAbsoluteUri = 'http://your_codex_domain_here/phpMyAdmin';<br>
 $cfgServers[$i]['host']&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 = 'localhost'; // MySQL hostname<br>
 $cfgServers[$i]['port']&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -1980,14 +1992,14 @@ $cfgServers[$i]['auth_type']&nbsp;&nbsp;&nbsp;&nbsp; =
 'http';&nbsp;&nbsp;&nbsp; // Authentication method (config, <br>
 http or cookie based)?<br>
 $cfgServers[$i]['user']&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-= 'sourceforge';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // MySQL user<br>
+= '';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // MySQL user<br>
 $cfgServers[$i]['password']&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
 '';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // MySQL
 password (only needed<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 // with 'config' auth_type)<br>
 $cfgServers[$i]['only_db']&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
-'sourceforge';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
+'';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
 $cfgServers[$i]['verbose']&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
 '';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Verbose
 name for this host -<br>
@@ -2008,14 +2020,44 @@ describe the relation between links (see doc)<br>
 //&nbsp;&nbsp; - leave blank for no relation-links support</tt><br>
     <br>
   </li>
-  <li><tt>When you access the phpMyAdmin GUI at
+  <li>When you access the phpMyAdmin GUI at
 http://your_codex_server_name_here/phpMyAdmin you'll be prompted for a
-user name and password. Use the MySQL 'sourceforge' login and password.<br>
+user name and password. Use the MySQL 'sourceforge' login and password.<tt><br>
     </tt></li>
 </ul>
-<br>
 <p> </p>
-<hr size="2" width="100%"><br>
+<br>
+<hr>
+<h1>First Things To Do to run the site</h1>
+<ul>
+  <li>Access the CodeX server and login as admin with default password
+siteadmin. Then change the password immediately. We suggest that you
+use the same as the root password on the Linux side</li>
+  <li>Logout and create your own account on the CodeX site: click on
+'New User' and fill out the form. Wait for the email notification to
+arrive and confirm the registration. If the mail doesn't work yet then
+login as 'admin' again and force User registration approval in 'Main
+Page' of the Site Administration menu.</li>
+  <li>Login again as user 'admin' and make your own account a project
+member of the Admin Project (group_id=1) so that you are considered as
+a super user on the entire site. Set permissions for this new account.<br>
+  </li>
+  <li>You probably want to rename this 'Admin Project' to 'CodeX
+Project' and use this project to create a bug tracker and a support
+request tracker that will beused by user to get helpo from your CodeX
+Team.</li>
+  <li>Create the trackers you need (bug and support requests most
+likely)</li>
+  <li>From your own account create a new project 'Guinea Pig'
+(shortname: gpig)&nbsp; that you will use as a test project for anybody
+who wants to experiment with the site. Setup the project completely,
+approve it and then set up the CVS repository with some sample code,
+create a release, download it,etc...</li>
+  <li>Under the 'CodeX Project' create a peice of news to announce the
+launch of the CodeX site and promote the news to the front page.<br>
+  </li>
+</ul>
+<br>
 <u><font size="-2">History:</font></u>
 <p><font size="-2">0.1 - Oct 18th, 2002 - Initial revision<br>
 0.2 - Nov 8th, 2002 - Configuration of secure HTTP in Apache added.<br>
