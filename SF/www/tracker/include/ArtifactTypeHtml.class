@@ -84,7 +84,7 @@ class ArtifactTypeHtml extends ArtifactType {
 
 		site_project_header($params);
 
-		echo '<strong><a href="/tracker/admin/?group_id='.$group_id.'">Admin Trackers</a>';
+		echo '<strong><a href="/tracker/admin/?group_id='.$group_id.'">All Trackers Admin</a>';
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'">Admin</a>';
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=editoptions">Edit Options</a>';
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=permissions">Users Permissions</a>';
@@ -115,7 +115,7 @@ class ArtifactTypeHtml extends ArtifactType {
 
 		site_project_header($params);
 
-		echo '<strong><a href="/tracker/admin/?group_id='.$group_id.'">Admin Trackers</a>';
+		echo '<strong><a href="/tracker/admin/?group_id='.$group_id.'">All Trackers Admin</a>';
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&func=create">Create a New Tracker</a>';
 		if ($params['help']) {
 		    echo ' | '.help_button($params['help'],false,'Help');
@@ -163,19 +163,17 @@ class ArtifactTypeHtml extends ArtifactType {
 			$title_arr=array();
 			$title_arr[]='ID';
 			$title_arr[]='Tracker';
-			$title_arr[]='Admin?';
 			$title_arr[]='Delete?';
 			echo html_build_list_table_top ($title_arr);
 		
-			$fmt = "\n".'<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td>'.
+			$fmt = "\n".'<TR class="%s"><td>%s</td><td>%s</td>'.
 			    '<td align="center">%s</td></tr>';
 
 			for ($i = 0; $i < count($at_arr); $i++) {
 			    echo sprintf($fmt,
 					    util_get_alt_row_color($i),
-					    "<a href=\"/tracker/?group_id=".$this->Group->getID()."&atid=".$at_arr[$i]->getID()."\">".$at_arr[$i]->getID()."</a>",
+					    "<a href=\"/tracker/admin/?group_id=".$this->Group->getID()."&atid=".$at_arr[$i]->getID()."\">".$at_arr[$i]->getID()."</a>",
 					    $at_arr[$i]->getName(),
-					    "<a href=\"/tracker/admin/?group_id=".$this->Group->getID()."&atid=".$at_arr[$i]->getID()."\"><img src=\"".util_get_image_theme("ic/admin.png")."\" border=\"0\"></a>",
 					    "<a href=\"/tracker/admin/?func=delete_tracker&group_id=".$this->Group->getID()."&atid=".$at_arr[$i]->getID()."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('Delete this tracker and all its dependencies?')\"></a>" );
 
 			}
@@ -191,14 +189,14 @@ class ArtifactTypeHtml extends ArtifactType {
 	 */
 	function displayAdminTracker($group_id,$atid) {
 		
-	    echo '<H2>'.$this->getName().' Tracker Administration</H2>';
+	    echo '<H2>Tracker Administration - <a href="/tracker?group_id='.$group_id.'&atid='.$atid.'&func=editoptions">'.$this->getName().'</a></H2>';
 	
 	    if ( $this->userIsAdmin() ) {
 			echo '<H3><a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=editoptions">General Settings</a></H3>';
 			echo 'Define the title, the description, etc of this tracker.<P>';
 			echo '<H3><a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=permissions">Users Permissions</a></H3>';
 			echo 'Add a user, change a permission or delete a user from the authorized users list.<P>';
-			echo '<H3><a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=canned">Manage the canned responses</a></H3>';
+			echo '<H3><a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=canned">Manage Canned Responses</a></H3>';
 			echo 'Add, update or delete the canned responses.';
 			echo '<H3><a href="/tracker/admin/?func=field_usage&group_id='.$group_id.'&atid='.$atid.'">Manage Field Usage</a></H3>';
 			echo 'Define what tracker fields you want to use in this tracker (remark: some of the fields like status, assignee, severity&hellip; are mandatory and cannot be removed).<P>';

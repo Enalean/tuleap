@@ -173,6 +173,34 @@ class ArtifactCanned extends Error {
 	 *  @param	string	Body of the message.
 	 *  @return	boolean	success.
 	 */
+	function delete($artifact_canned_id) {
+		if (!$this->ArtifactType->userIsAdmin()) {
+			$this->setError('Permission Denied');
+			return false;
+		}   
+
+		$sql="delete from artifact_canned_responses 
+			
+			WHERE group_artifact_id='". $this->ArtifactType->getID() ."' AND artifact_canned_id='". $artifact_canned_id ."'";
+
+		$result=db_query($sql);
+
+		if (!$result) {
+			$this->setError(db_error());
+			return false;
+		} else {
+		        return true;
+		}
+		
+	}
+
+	/**
+	 *  update - update an ArtifactCanned message.
+	 *
+	 *  @param	string	Title of the message.
+	 *  @param	string	Body of the message.
+	 *  @return	boolean	success.
+	 */
 	function update($title,$body) {
 		if (!$this->ArtifactType->userIsAdmin()) {
 			$this->setError('Permission Denied');

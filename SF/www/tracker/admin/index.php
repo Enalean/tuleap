@@ -89,8 +89,9 @@ if ($group_id && !$atid) {
 			return;
 		}
 	
-		include './admin_trackers.php';
-		break;
+		$ath->adminTrackersHeader(array('title'=>'All Trackers Administration'));
+		echo $ath->displayAdminTrackers();
+		$ath->footer(array());
 	}
 				
 } else if ($group_id && $atid) {
@@ -231,6 +232,15 @@ if ($group_id && !$atid) {
 				$feedback .= ' Canned response updated';
 			
 			}
+		} else if ($delete_canned) {
+		  if (!$ach->delete($artifact_canned_id)) {
+		    exit_error('Error','ArtifactCanned Item # '.$artifact_canned_id.' could not be deleted');
+		  }
+		  if ($ach->isError()) {
+		    exit_error('Error', $ach->getErrorMessage());
+				}
+		  $feedback .= ' Canned response deleted';
+
 		} // End of post_changes
 		// Display the UI Form
 		if ($update_canned && !$post_changes) {

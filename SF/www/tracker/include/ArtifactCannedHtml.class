@@ -94,8 +94,10 @@ class ArtifactCannedHtml extends ArtifactCanned {
 	 *  @return void
 	 */
 	function displayCannedResponses() {
-	  echo "<H2>Create/Modify Canned Responses</H2>";
+	$group_id = $this->ArtifactType->Group->getID();
+	$atid = $this->ArtifactType->getID();
 
+	  echo '<H2>Create/Modify Tracker Canned Responses - <a href="/tracker?group_id='.$group_id.'&atid='.$atid.'">'.$this->ArtifactType->getName().'</a></H2>';
 	  $result = $this->ArtifactType->getCannedResponses();
 	  $rows=db_numrows($result);
 	  echo "<P>";
@@ -109,7 +111,8 @@ class ArtifactCannedHtml extends ArtifactCanned {
   	    $title_arr=array();
   	    $title_arr[]='Title';
   	    $title_arr[]='Body (extract)';
-  	    
+ 	    $title_arr[]='Delete?';
+ 	    
   	    echo html_build_list_table_top ($title_arr);
   	    $atid = $this->ArtifactType->getID();
 	    $g = $this->ArtifactType->getGroup();
@@ -120,7 +123,10 @@ class ArtifactCannedHtml extends ArtifactCanned {
 	      db_result($result, $i, 'artifact_canned_id').'&atid='.$atid.'&group_id='.$group_id.'">'.
 	      db_result($result, $i, 'title').'</A></TD>'.
 	      '<TD>'.substr(db_result($result, $i, 'body'),0,160).
-	      '<b>...</b></TD></TR>';
+	      '<b>...</b></TD>'.
+	      '<td><A HREF="/tracker/admin/?func=canned&delete_canned=1&artifact_canned_id='.
+	      db_result($result, $i, 'artifact_canned_id').'&atid='.$atid.'&group_id='.$group_id.'" onClick="return confirm(\'Delete this Canned Response : '.db_result($result, $i, 'title').'  ?\')">'.
+			    '<img src="'.util_get_image_theme("ic/trash.png").'" border="0"></A></td></TR>';
 	    }
 	    echo '</TABLE>';
 	  
