@@ -441,7 +441,7 @@
         </revremark>
       </revision>
       <revision>
-        <revnumber>2.6.20</revnumber>
+        <revnumber>2.7</revnumber>
 
         <date>3-Mar-2005</date>
 
@@ -452,6 +452,16 @@
 	This section is a copy paste of main processes from the deprecated Bug, SR, Patch 
 	and Task Manager chapters. In CVS and Subversion chapters refer to the new
 	tracker template section instead of the Patch Manager chapter.
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>2.7.1</revnumber>
+
+        <date>16-Mar-2005</date>
+
+        <authorinitials>Nicolas Guerin</authorinitials>
+
+        <revremark>Reworked document manager chapter after major update of this service.
         </revremark>
       </revision>
     </revhistory>

@@ -12,6 +12,7 @@
 require($DOCUMENT_ROOT.'/include/pre.php');
 require($DOCUMENT_ROOT.'/project/admin/permissions.php');
 require($DOCUMENT_ROOT.'/file/file_utils.php');
+require($DOCUMENT_ROOT.'/docman/doc_utils.php');
 
 $Language->loadLanguageMsg('project/project');
 
@@ -266,7 +267,7 @@ function switchMessage(_I)
         
         $title_arr=array();
         $title_arr[]=$Language->getText('project_admin_editugroup','permission');
-        $title_arr[]=$Language->getText('project_admin_editugroup','');
+        $title_arr[]=$Language->getText('project_admin_editugroup','resource_name');
         echo html_build_list_table_top($title_arr,false,false,false);
         $row_num=0;
         
@@ -278,12 +279,16 @@ function switchMessage(_I)
             } else if ($row['permission_type'] == 'RELEASE_READ') {
                 $package_id=file_get_package_id_from_release_id($row['object_id']);
                 echo '<TD>'.$Language->getText('project_admin_editugroup','release').' <a href="/file/admin/editreleasepermissions.php?release_id='.$row['object_id'].'&group_id='.$group_id.'&package_id='.$package_id.'">'.file_get_release_name_from_id($row['object_id']).'</a> (from package <a href="/file/admin/editreleases.php?package_id='.$package_id.'&group_id='.$group_id.'">'.file_get_package_name_from_id($package_id).'</a>)</TD>';
+            } else if ($row['permission_type'] == 'DOCUMENT_READ') {
+                echo '<TD>'.$Language->getText('project_admin_editugroup','document').' <a href="/docman/admin/editdocpermissions.php?docid='.$row['object_id'].'&group_id='.$group_id.'">'.util_unconvert_htmlspecialchars(doc_get_title_from_id($row['object_id'])).'</a></TD>';
+            } else if ($row['permission_type'] == 'DOCGROUP_READ') {
+                echo '<TD>'.$Language->getText('project_admin_editugroup','document_group').' <a href="/docman/admin/editdocgrouppermissions.php?doc_group='.$row['object_id'].'&group_id='.$group_id.'">'.doc_get_docgroupname_from_id($row['object_id']).'</a></TD>';
             } else {
-                echo '<TD>'.$row['permission_type'].'</TD>
-              <TD>'.$row['object_id'].'</TD>';
+                echo '<TD>'.$row['object_id'].'</TD>';
             }
 
-            echo '</TR>';
+            echo '</TR>
+';
             $row_num++;
         }
         echo '</table><p>';

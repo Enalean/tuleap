@@ -260,11 +260,13 @@ if (!$res_dev || db_numrows($res_dev) < 1) {
             print '<input type="Hidden" name="support_user_'.$row_dev['user_id'].'" value="'.$row_dev['support_flags'].'">';
         }
 	
-        //documentation states - nothing or editor	
+        //documentation states
         if ($project->usesDocman()) {
             print '<TD><FONT size="-1"><SELECT name="doc_user_'.$row_dev['user_id'].'">';
             print '<OPTION value="0"'.(($row_dev['doc_flags']==0)?" selected":"").'>'.$Language->getText('global','none');
-            print '<OPTION value="1"'.(($row_dev['doc_flags']==1)?" selected":"").'>'.$Language->getText('project_admin_userperms','editor');
+            print '<OPTION value="1"'.(($row_dev['doc_flags']==1)?" selected":"").'>'.$Language->getText('project_admin_userperms','tech_only');
+            print '<OPTION value="2"'.(($row_dev['doc_flags']==2)?" selected":"").'>'.$Language->getText('project_admin_userperms','tech&admin');
+            print '<OPTION value="3"'.(($row_dev['doc_flags']==3)?" selected":"").'>'.$Language->getText('project_admin_userperms','admin_only');
             print '</SELECT></FONT></TD>';
         }
         

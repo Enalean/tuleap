@@ -65,10 +65,10 @@ function permission_user_allowed_to_change($group_id, $permission_type) {
         return (user_ismember($group_id,'R2'));
     }
     if ($permission_type=='DOCGROUP_READ') {
-        return (user_ismember($group_id,'D1'));
+        return (user_ismember($group_id,'D2'));
     }
     if ($permission_type=='DOCUMENT_READ') {
-        return (user_ismember($group_id,'D1'));
+        return (user_ismember($group_id,'D2'));
     }
     return false;
 }

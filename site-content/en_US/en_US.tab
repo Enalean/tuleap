@@ -16,6 +16,7 @@ conf	content_encoding	iso-8859-1
 conf	default_font	verdana,arial,helvetica,sans-serif
 conf	language_code	en
 conf	language_id	1
+global	perm_denied	Permission Denied
 global	back_home	Back to Home Page
 global	back	Back
 global	btn_delete	Delete
@@ -35,6 +36,7 @@ global	begin	Begin
 global	end	End
 global	next	Next
 global	prev	Previous
+global	printer_version	Printer version
 global	error	Error
 global	help	Help
 global	by	By

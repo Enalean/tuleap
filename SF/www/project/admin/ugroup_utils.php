@@ -21,8 +21,9 @@ $UGROUP_ANONYMOUS=1;
 $UGROUP_REGISTERED=2;
 $UGROUP_PROJECT_MEMBERS=3;
 $UGROUP_PROJECT_ADMINS=4;
-$UGROUP_DOCUMENT_EDITOR=10;
 $UGROUP_FILE_MANAGER_ADMIN=11;
+$UGROUP_DOCUMENT_TECH=12;
+$UGROUP_DOCUMENT_ADMIN=13;
 
 
 // Return members (user_id + user_name) of given user group
@@ -81,8 +82,11 @@ function ugroup_user_is_member($user_id, $ugroup_id, $group_id) {
     } else if ($ugroup_id==$GLOBALS['UGROUP_FILE_MANAGER_ADMIN']) {
         // File manager admins
         if (user_ismember($group_id,'R2')) { return true; }
-    } else if ($ugroup_id==$GLOBALS['UGROUP_DOCUMENT_EDITOR']) {
-        // Document editor
+    } else if ($ugroup_id==$GLOBALS['UGROUP_DOCUMENT_ADMIN']) {
+        // Document admin
+        if (user_ismember($group_id,'D2')) { return true; }
+    } else if ($ugroup_id==$GLOBALS['UGROUP_DOCUMENT_TECH']) {
+        // Document tech
         if (user_ismember($group_id,'D1')) { return true; }
     } else if ($ugroup_id==$GLOBALS['UGROUP_PROJECT_ADMINS']) {
         // Project admins

@@ -88,6 +88,8 @@ project_admin_editugroup	resource_name	Resource Name
 project_admin_editugroup	release	Release
 project_admin_editugroup	from_package	from package
 project_admin_editugroup	package	Package
+project_admin_editugroup	document	Document
+project_admin_editugroup	document_group	Document Group
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/grouptrove.php

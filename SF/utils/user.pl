@@ -82,7 +82,8 @@ sub user_is_member {
     if ($type eq 'F2') { $query .= ' AND forum_flags IN (2)'; last SWITCH; }
     if ($type eq 'S1') { $query .= ' AND support_flags IN (1,2)'; last SWITCH; }
     if ($type eq 'S2') { $query .= ' AND support_flags IN (2,3)'; last SWITCH; }
-    if ($type eq 'D1') { $query .= " AND doc_flags = '1'"; last SWITCH; }
+    if ($type eq 'D1') { $query .= " AND doc_flags IN (1,2)"; last SWITCH; }
+    if ($type eq 'D2') { $query .= " AND doc_flags IN (2,3)"; last SWITCH; }
     if ($type eq 'R2') { $query .= " AND file_flags = '2'"; last SWITCH; }
   }
 

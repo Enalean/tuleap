@@ -1719,21 +1719,15 @@ INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (1, "anonymou
 INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (2, "registered_users", "Registered CodeX Users", 100);
 INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (3, "project_members", "Project Members", 100);
 INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (4, "project_admins", "Project Administrators", 100);
-INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (10, "document_editor", "Document Editors", 100);
 INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (11, "file_manager_admin", "File Manager Administrators", 100);
+INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (12, "document_tech", "Document Manager Technicians", 100);
+INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (13, "document_admin", "Document Manager Administrators", 100);
+
 -- Not used yet
--- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (12, "forum_moderator", "Forum Moderators", 100);
--- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (13, "patch_tech", "Patch Technicians", 100);
--- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (14, "patch_admins", "Patch Administrators", 100);
--- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (15, "tracker_tech", "Tracker Technicians", 100);
--- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (16, "tracker_admins", "Tracker Administrators", 100);
+-- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (13, "forum_moderator", "Forum Moderators", 100);
+-- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (14, "tracker_tech", "Tracker Technicians", 100);
+-- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (15, "tracker_admins", "Tracker Administrators", 100);
 --
--- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (30, "legacy_sr_tech", "Support Request Technicians", 100);
--- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (31, "legacy_sr_admins", "Support Request Administrators", 100);
--- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (32, "legacy_task_tech", "Task Manager Technicians", 100);
--- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (33, "legacy_task_admins", "Task Manager Administrators", 100);
--- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (34, "legacy_bug_tech", "Bug Tracker Technicians", 100);
--- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (35, "legacy_bug_admins", "Bug Tracker Administrators", 100);
 
 
 
@@ -1754,18 +1748,28 @@ INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('RELEASE_READ
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('RELEASE_READ',4);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('RELEASE_READ',11);
 
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCGROUP_READ',100);
+INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('DOCGROUP_READ',1,1);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCGROUP_READ',2);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCGROUP_READ',3);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCGROUP_READ',4);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCGROUP_READ',10);
+
+-- No default value for DOCUMENT_READ -> use parent permissions
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_READ',100);
-INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('DOCUMENT_READ',1,1);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_READ',1);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_READ',2);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_READ',3);
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('RELEASE_READ',4);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_READ',4);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_READ',10);
 
-# ==============================
-# supported_languages table
-# ==============================
-# Create the list of supported languages for that site
-#
+
+--- 
+--- supported_languages table
+--- 
+
+--- Create the list of supported languages for that site
+
 INSERT INTO supported_languages VALUES \
 (1,'English','English_US.tab','en_US','ISO-8859-1',1);
 INSERT INTO supported_languages VALUES \

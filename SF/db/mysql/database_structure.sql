@@ -517,7 +517,6 @@ CREATE TABLE db_images (
 
 CREATE TABLE doc_data (
   docid int(11) NOT NULL auto_increment,
-  stateid int(11) NOT NULL default '0',
   title varchar(255) NOT NULL default '',
   data longblob NOT NULL,
   updatedate int(11) NOT NULL default '0',
@@ -526,7 +525,6 @@ CREATE TABLE doc_data (
   doc_group int(11) NOT NULL default '0',
   rank int(11) NOT NULL default '0',
   description text,
-  restricted_access INT UNSIGNED NOT NULL DEFAULT 0,
   filename text,
   filesize INT UNSIGNED NOT NULL DEFAULT 0,
   filetype text,
@@ -547,15 +545,6 @@ CREATE TABLE doc_groups (
   KEY idx_doc_groups_group (group_id)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'doc_states'
-#
-
-CREATE TABLE doc_states (
-  stateid int(11) NOT NULL auto_increment,
-  name varchar(255) NOT NULL default '',
-  PRIMARY KEY  (stateid)
-) TYPE=MyISAM;
 
 #
 # Table structure for table 'filedownload_log'

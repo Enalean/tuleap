@@ -18,6 +18,8 @@ if ($insert_group_name && $group_id && $rand_hash && $form_full_name && $form_un
 	/*
 		check for valid group name
 	*/
+    $form_unix_name=strtolower($form_unix_name);
+
 	if (!account_groupnamevalid($form_unix_name)) {
 		exit_error($Language->getText('register_license','invalid_g_name'),$register_error);
 	}
@@ -30,7 +32,7 @@ if ($insert_group_name && $group_id && $rand_hash && $form_full_name && $form_un
 	/*
 		Hash prevents them from updating a live, existing group account
 	*/
-	$sql="UPDATE groups SET unix_group_name='". strtolower($form_unix_name) ."', group_name='$form_full_name', ".
+	$sql="UPDATE groups SET unix_group_name='$form_unix_name', group_name='$form_full_name', ".
 		"http_domain='$form_unix_name.$GLOBALS[sys_default_domain]' ".
 		"WHERE group_id='$group_id' AND rand_hash='__$rand_hash'";
 	$result=db_query($sql);

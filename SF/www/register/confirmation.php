@@ -67,7 +67,7 @@ if ($show_confirm) {
 		. "2," // project flags
 		. "2," // patch flags
 		. "2," // support flags
-		. "1," // doc flags
+		. "2," // doc flags
 		. "2)"); // file_flags	
 	if (!$result) {
 		exit_error($Language->getText('global','error'),$Language->getText('register_confirmation','set_owner',array($GLOBALS['sys_email_admin'],db_error())));
@@ -105,6 +105,19 @@ if ($show_confirm) {
                 exit_error($Language->getText('global','error'),$Language->getText('register_confirmation','cant_create_service'));
             }
         }
+
+        // Create default document group
+        $query = "INSERT INTO doc_groups(groupname,group_id,group_rank) " 
+	."values ("
+	."'Documents',"
+	."'$group_id',"
+	."'10')";
+		
+        $result=db_query($query);
+        if (!$result) {
+            exit_error($Language->getText('global','error'),$Language->getText('register_confirmation','cant_create_docgroup'));
+        }
+
 
 	//Set up some mailing lists
 	//will be done at some point. needs to communicate with geocrawler

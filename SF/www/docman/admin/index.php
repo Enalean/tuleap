@@ -1,47 +1,44 @@
 <?php
-//
-// SourceForge: Breaking Down the Barriers to Open Source Development
-// Copyright 1999-2000 (c) The SourceForge Crew
-// http://sourceforge.net
-//
-//
-// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
-// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
-// http://codex.xerox.com
-//
-// $Id$
-//
-//	Originally written by Quentin Cregan, SourceForge 06/2000
-//	Modified by Laurent Julliard 2001-2004, CodeX Team, Xerox
+  //
+  // SourceForge: Breaking Down the Barriers to Open Source Development
+  // Copyright 1999-2000 (c) The SourceForge Crew
+  // http://sourceforge.net
+  //
+  //
+  // CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+  // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+  // http://codex.xerox.com
+  //
+  // $Id$
+  //
+  //	Originally written by Quentin Cregan, SourceForge 06/2000
+  //	Modified by Laurent Julliard 2001-2004, CodeX Team, Xerox
 
 require($DOCUMENT_ROOT.'/include/pre.php');
 require('../doc_utils.php');
+require($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
+require($DOCUMENT_ROOT.'/project/admin/permissions.php');
 
 if (!($group_id)) {
-	exit_no_group();
-}
+    exit_no_group();
+ }
 
 $Language->loadLanguageMsg('docman/docman');
 
-if (!(user_ismember($group_id,"D1"))) {
+if (!(user_ismember($group_id,"D2"))) {
     $feedback .= $Language->getText('docman_admin_index','error_perm');
     exit_permission_denied();
-}
+ }
 
 function main_page($group_id) {
     global $Language;
     docman_header_admin(array('title'=>$Language->getText('docman_admin_index','title'),
 			      'help'=>'DocumentAdministration.html'));
-    echo '<h3>'.$Language->getText('docman_admin_index','pending_doc').'</h3>  <p>';
-    display_docs('3',$group_id);
-    // doc_group 3 == pending
-    echo '<p>';
-    echo '<h3>'.$Language->getText('docman_admin_index','active_doc').'</h3>  <p>';
-    display_docs('1',$group_id);
-    //doc_group 1 == active
-    docman_footer($params);
-    
+    echo '<h2>'.$Language->getText('docman_admin_index','header_doc_mgt').'</h2>';
+    display_docs($group_id);
+    docman_footer($params);	
 }
+
 
 function group_main_page($group_id) {
     global $Language;
@@ -61,6 +58,20 @@ function group_main_page($group_id) {
 
 
 //begin to seek out what this page has been called to do.
+if ($func=='update_permissions') {
+    list ($return_code, $feedback) = permission_process_selection_form($_POST['group_id'], $_POST['permission_type'], $_POST['object_id'], $_POST['ugroups']);
+    if (!$return_code) exit_error('Error',$Language->getText('docman_admin_index','error_updating_perm').'<p>'.$feedback);
+ }
+
+if ($_POST['reset']) {
+    // Must reset access rights to defaults
+    if (permission_clear_all($group_id, $_POST['permission_type'], $_POST['object_id'])) {
+        $feedback=$Language->getText('docman_admin_index','perm_reset');
+    } else {
+        $feedback=$Language->getText('docman_admin_index','error_resetting perm');
+    }
+ }
+
 
 if (strstr($mode,"docedit")) {
     $query = "select * from doc_data,doc_groups "
@@ -71,122 +82,89 @@ if (strstr($mode,"docedit")) {
     $row = db_fetch_array($result);
     
     docman_header_admin(array('title'=>$Language->getText('docman_admin_index','title_edit'),
-			'help'=>'DocumentAdministration.html#DocumentPublication'));
+                              'help'=>'DocumentAdministration.html#DocumentUpdate'));
     
     echo '
 	
-	<form name="editdata" action="index.php?mode=docdoedit&group_id='.$group_id.'" method="POST"  enctype="multipart/form-data">
-      <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="'.$sys_max_size_upload.'">
-
-	  <table border="0" width="75%">
-
-	  <tr>
-	    <th>'.$Language->getText('docman_new','doc_title').':</th>
-	    <td><input type="text" name="title" size="60" maxlength="255" value="'.$row['title'].'"></td>
-
-	  </tr>
-	  <tr>
-	  </tr>
-	  <tr>
-	  <th>'.$Language->getText('docman_new','doc_desc').':</th>
-			       
-	  <td><textarea cols="60" rows="4"  wrap="virtual" name="description">'.$row['description'].'</textarea></td>
-
-	</tr>
-
-	<tr>
-	<th> <input type="checkbox" name="upload_instead" value="1"> <B>'.$Language->getText('docman_new','doc_upload').':</B></th>
-	<td> <input type="file" name="uploaded_data" size="50">
-            <br><span class="smaller"><i>'.$Language->getText('docman_new','max_size_msg',array(formatByteToMb($sys_max_size_upload))).'
-              </i></span>
+<form name="editdata" action="index.php?mode=docdoedit&group_id='.$group_id.'" method="POST"  enctype="multipart/form-data">
+  <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="'.$sys_max_size_upload.'">
+  <table border="0" width="75%">
+  <tr>
+      <th>'.$Language->getText('docman_new','doc_title').':</th>
+      <td><input type="text" name="title" size="60" maxlength="255" value="'.$row['title'].'"></td>
+  </tr>
+  <tr></tr>
+  <tr>
+      <th>'.$Language->getText('docman_new','doc_desc').':</th>
+      <td><textarea cols="60" rows="4"  wrap="virtual" name="description">'.$row['description'].'</textarea></td>
+  </tr>
+  <tr>
+       <th> <input type="checkbox" name="upload_instead" value="1"> <B>'.$Language->getText('docman_new','doc_upload').':</B></th>
+       <td> <input type="file" name="uploaded_data" size="50">
+         <br><span class="smaller"><i>'.$Language->getText('docman_new','max_size_msg',array(formatByteToMb($sys_max_size_upload))).'
+         </i></span>
 	</td>
-
-	</tr>';
-	// Display the content only for HTML and text documents that were not uploaded but copy/pasted
-	if ( ( ($row['filetype'] == 'text/html')||($row['filetype'] == 'text/plain') ) && ($row['filesize']==0) ){
-            echo '<tr>
+   </tr>';
+    // Display the content only for HTML and text documents that were not uploaded but copy/pasted
+    if ( ( ($row['filetype'] == 'text/html')||($row['filetype'] == 'text/plain') ) && ($row['filesize']==0) ){
+        echo '<tr>
 	<th valign="top"><br><br>'.$Language->getText('docman_admin_index','doc_edit').':</th>
 	<td><textarea cols="60" rows="20" wrap="virtual" name="data">';
-	    echo $row['data'];
-            echo '</textarea></td>
+        echo $row['data'];
+        echo '</textarea></td>
 	</tr>';
-        }
+    }
 
-	echo '<tr>
+    echo '<tr>
 	<th>'.$Language->getText('docman_new','doc_group').':</th>
         	<td>';
 
     display_groups_option($group_id,$row['doc_group']);
     
     echo '</td>
-	    </tr>
-
-	    <tr>
-	    <th>'.$Language->getText('docman_admin_index','doc_state').':</th>
-	    <td>';
-
-    $res_states=db_query("select * from doc_states;");
-    echo html_build_select_box ($res_states, 'stateid', $row['stateid']);
-
+    </tr>
+    <tr>
+        <th>'.$Language->getText('docman_doc_utils','rank_in_group').':</th>
+        <td><input type="text" size="3" maxlength="3" name="rank" value="'.$row['rank'].'"/>';
     echo '</td>
-	    </tr>
+   </tr>
+  </table>
 
-	    <tr>
-	    <th>'.$Language->getText('docman_doc_utils','rank_in_group').':</th>
-	    <td>
-              <input type="text" size="3" maxlength="3" name="rank" value="'.$row['rank'].'"/>';
-    
-    
-    
-    echo '</td>
-	    </tr>
+  <input type="hidden" name="docid" value="'.$row['docid'].'">
+  <input type="submit" value="'.$Language->getText('global','btn_submit').'">
 
-	    <tr>
-	    <th>'.$Language->getText('docman_admin_index','registered_only').':</th>
-		<td><input type="checkbox" name="restricted_access" value="1"';
-		if ( $row['restricted_access'] == 1 ) {
-		    print " checked";
-		}
-    echo '></td>
-	    </tr>
-
-                      </table>
-
-	   <input type="hidden" name="docid" value="'.$row['docid'].'">
-	   <input type="submit" value="'.$Language->getText('global','btn_submit').'">
-
-	   </form>';
+</form>';
 
     docman_footer($params);
 
-} elseif (strstr($mode,"groupdelete")) {
-    $query = "select docid "
-	."from doc_data "
-	."where doc_group = ".$doc_group."";
-    $result = db_query($query);
-    if (db_numrows($result) < 1) {
-	$query = "delete from doc_groups "
-	    ."where doc_group = '$doc_group' "
-	    ."and group_id = $group_id";
-	db_query($query);
-        $feedback .= $Language->getText('docman_admin_index','msg_group_del',array($doc_group));
-        group_main_page($group_id);	
-    } else {	
-	db_query($query);
-        $feedback .= $Language->getText('docman_admin_index','msg_group_del_fail');
-        group_main_page($group_id);
-    }
+ } elseif (strstr($mode,"groupdelete")) {
+     $query = "select docid "
+         ."from doc_data "
+         ."where doc_group = ".$doc_group."";
+     $result = db_query($query);
+     if (db_numrows($result) < 1) {
+         $query = "delete from doc_groups "
+             ."where doc_group = '$doc_group' "
+             ."and group_id = $group_id";
+         db_query($query);
+         $feedback .= $Language->getText('docman_admin_index','msg_group_del',array($doc_group));
+         group_main_page($group_id);	
+     } else {	
+         db_query($query);
+         $feedback .= $Language->getText('docman_admin_index','msg_group_del_fail');
+         group_main_page($group_id);
+     }
     
-} elseif (strstr($mode,"groupedit")) {
-    docman_header_admin(array('title'=>$Language->getText('docman_admin_index','title_group_edit'),
-			      'help'=>'DocumentAdministration.html#DocumentGroupManagement'));
-    $query = "select * "
-	."from doc_groups "
-	."where doc_group = '$doc_group' "
-	."and group_id=$group_id";
-    $result = db_query($query);
-    $row = db_fetch_array($result);
-    echo '
+ } elseif (strstr($mode,"groupedit")) {
+     docman_header_admin(array('title'=>$Language->getText('docman_admin_index','title_group_edit'),
+                               'help'=>'DocumentAdministration.html#DocumentGroupManagement'));
+     $query = "select * "
+         ."from doc_groups "
+         ."where doc_group = '$doc_group' "
+         ."and group_id=$group_id";
+     $result = db_query($query);
+     $row = db_fetch_array($result);
+     echo '
 			<h2>'.$Language->getText('docman_admin_index','header_group_edit').'</h2>
 
 			<form name="editgroup" action="index.php?mode=groupdoedit&group_id='.$group_id.'" method="POST">
@@ -197,154 +175,147 @@ if (strstr($mode,"docedit")) {
 			<tr><td> <input type="submit" name="submit" value="'.$Language->getText('global','btn_submit').'"></td></tr></table>	
 			</form>	
 			';
-    docman_footer($params);
+     docman_footer($params);
     
-} elseif (strstr($mode,"groupdoedit")) {
-    $query = "update doc_groups "
-	."set groupname='".htmlspecialchars($groupname)."', "
-        ."group_rank='".$group_rank."' "
-	."where doc_group='$doc_group' "
-	."and group_id = '$group_id'";
-    db_query($query);
-    $feedback .= $Language->getText('docman_admin_index','feedback_group_updated');
-    group_main_page($group_id);
+ } elseif (strstr($mode,"groupdoedit")) {
+     $query = "update doc_groups "
+         ."set groupname='".htmlspecialchars($groupname)."', "
+         ."group_rank='".$group_rank."' "
+         ."where doc_group='$doc_group' "
+         ."and group_id = '$group_id'";
+     db_query($query);
+     $feedback .= $Language->getText('docman_admin_index','feedback_group_updated');
+     group_main_page($group_id);
     
-} elseif (strstr($mode,"docdoedit")) {
+ } elseif (strstr($mode,"docdoedit")) {
     
-    // Check a number of things: group_id is correct, title and
-    // description are non empty
-    if (!$doc_group || $doc_group ==100) {
-    	//cannot add a doc unless an appropriate group is provided
-    	exit_error($Language->getText('global','error'),
-		   $Language->getText('docman_admin_index','error_nodocgroup'));
-    }
+     // Check a number of things: group_id is correct, title and
+     // description are non empty
+     if (!$doc_group || $doc_group ==100) {
+         //cannot add a doc unless an appropriate group is provided
+         exit_error($Language->getText('global','error'),
+                    $Language->getText('docman_admin_index','error_nodocgroup'));
+     }
     
-    if (!$title || !$description) { 
-    	exit_missing_param();
-    }
+     if (!$title || !$description) { 
+         exit_missing_param();
+     }
     
-    //Page security - checks someone isnt updating a doc
-    //that isnt theirs.
+     //Page security - checks someone isnt updating a doc
+     //that isnt theirs.
 
-    $query = "select dd.docid "
-	."from doc_data dd, doc_groups dg "
-	."where dd.doc_group = dg.doc_group "
-	."and dg.group_id = ".$group_id." "
-	."and dd.docid = '".$docid."'"; 
+     $query = "select dd.docid "
+         ."from doc_data dd, doc_groups dg "
+         ."where dd.doc_group = dg.doc_group "
+         ."and dg.group_id = ".$group_id." "
+         ."and dd.docid = '".$docid."'"; 
 		
-    $result = db_query($query);
+     $result = db_query($query);
 	
-    if (db_numrows($result) == 1) {
+     if (db_numrows($result) == 1) {
 
-	// Upload the document if needed
-	if ($upload_instead) {
-	    $data = addslashes(fread( fopen($uploaded_data, 'r'), filesize($uploaded_data)));
-	    if ((strlen($data) > 0) && (strlen($data) < $sys_max_size_upload)) {
-		//size is fine
-		$feedback .= $Language->getText('docman_admin_index','feedback_doc_uploaded');
-	    } else {
-		//too big or small
-		exit_error($Language->getText('global','error'),
-			   $Language->getText('docman_new','error_size',array($sys_max_size_upload)));
-	    }
-	}
+         // Upload the document if needed
+         if ($upload_instead) {
+             $data = addslashes(fread( fopen($uploaded_data, 'r'), filesize($uploaded_data)));
+             if ((strlen($data) > 0) && (strlen($data) < $sys_max_size_upload)) {
+                 //size is fine
+                 $feedback .= $Language->getText('docman_admin_index','feedback_doc_uploaded');
+             } else {
+                 //too big or small
+                 exit_error($Language->getText('global','error'),
+                            $Language->getText('docman_new','error_size',array($sys_max_size_upload)));
+             }
+         }
 
-	if ( !isset($restricted_access) ) {
-	    $restricted_access = 0;
-	}
-
-	if ($upload_instead) {
-	    // Upload file
-            $query = "update doc_data "
-                ."set title = '".htmlspecialchars($title)."', "
-                ."data = '".$data."', "
-                ."updatedate = '".time()."', "
-                ."doc_group = '".$doc_group."', "
-                ."stateid = '".$stateid."', " 
-                ."description = '".htmlspecialchars($description)."', "
-                ."restricted_access = '".$restricted_access."', "
-                ."filename = '".$uploaded_data_name."', "
-                ."filesize = '".$uploaded_data_size."', "
-                ."filetype = '".$uploaded_data_type."', "
-	        ."rank = '".$rank."' "
-                ."where docid = '".$docid."'"; 
-	} else {
-	    if ( strlen($data) > 0 ) {
-	        // Copy/paste data
-        	$query = "update doc_data "
-        	    ."set title = '".htmlspecialchars($title)."', "
-        	    ."data = '".htmlspecialchars($data)."', "
-        	    ."updatedate = '".time()."', "
-        	    ."doc_group = '".$doc_group."', "
-        	    ."stateid = '".$stateid."', " 
-        	    ."description = '".htmlspecialchars($description)."', "
-        	    ."restricted_access = '".$restricted_access."', "
-        	    ."filename = '', "
-        	    ."filesize = '0', "
-        	    ."filetype = 'text/html', "
-		    ."rank = '".$rank."' "
-        	    ."where docid = '".$docid."'"; 
-            } else {
-                // No new document - Just update the associated data
-        	$query = "update doc_data "
-        	    ."set title = '".htmlspecialchars($title)."', "
-        	    ."updatedate = '".time()."', "
-        	    ."doc_group = '".$doc_group."', "
-        	    ."stateid = '".$stateid."', " 
-        	    ."description = '".htmlspecialchars($description)."', "
-        	    ."restricted_access = '".$restricted_access."', "
-		    ."rank = '".$rank."' "
-        	    ."where docid = '".$docid."'"; 
-            }
-        }
+         if ($upload_instead) {
+             // Upload file
+             $query = "update doc_data "
+                 ."set title = '".htmlspecialchars($title)."', "
+                 ."data = '".$data."', "
+                 ."updatedate = '".time()."', "
+                 ."doc_group = '".$doc_group."', "
+                 ."description = '".htmlspecialchars($description)."', "
+                 ."filename = '".$uploaded_data_name."', "
+                 ."filesize = '".$uploaded_data_size."', "
+                 ."filetype = '".$uploaded_data_type."', "
+                 ."rank = '".$rank."' "
+                 ."where docid = '".$docid."'"; 
+         } else {
+             if ( strlen($data) > 0 ) {
+                 // Copy/paste data
+                 $query = "update doc_data "
+                     ."set title = '".htmlspecialchars($title)."', "
+                     ."data = '".htmlspecialchars($data)."', "
+                     ."updatedate = '".time()."', "
+                     ."doc_group = '".$doc_group."', "
+                     ."description = '".htmlspecialchars($description)."', "
+                     ."filename = '', "
+                     ."filesize = '0', "
+                     ."filetype = 'text/html', "
+                     ."rank = '".$rank."' "
+                     ."where docid = '".$docid."'"; 
+             } else {
+                 // No new document - Just update the associated data
+                 $query = "update doc_data "
+                     ."set title = '".htmlspecialchars($title)."', "
+                     ."updatedate = '".time()."', "
+                     ."doc_group = '".$doc_group."', "
+                     ."description = '".htmlspecialchars($description)."', "
+                     ."rank = '".$rank."' "
+                     ."where docid = '".$docid."'"; 
+             }
+         }
     		
-	$res_insert = db_query($query);
-	if (db_affected_rows($res_insert) < 1) {
-	    exit_error($Language->getText('global','error'),
-		       $Language->getText('docman_new','error_dbupdate', array(db_error())));
-	}
+         $res_insert = db_query($query);
+         if (db_affected_rows($res_insert) < 1) {
+             exit_error($Language->getText('global','error'),
+                        $Language->getText('docman_new','error_dbupdate', array(db_error())));
+         }
     
-	$feedback .= $Language->getText('docman_admin_index','feedback_doc_updated');
-	main_page($group_id);
+         $feedback .= $Language->getText('docman_admin_index','feedback_doc_updated');
+         main_page($group_id);
 
-    } else {
-	exit_error($Language->getText('global','error'),
-		   $Language->getText('docman_admin_index','error_nodoc'));
-    }
+     } else {
+         exit_error($Language->getText('global','error'),
+                    $Language->getText('docman_admin_index','error_nodoc'));
+     }
 
-} elseif (strstr($mode,"groupadd")) {
-    $query = "insert into doc_groups(groupname,group_id,group_rank) " 
-	."values ('"
-	."".htmlspecialchars($groupname)."',"
-	."'$group_id',"
-	."'$group_rank')";
+ } elseif (strstr($mode,"groupadd")) {
+     $query = "insert into doc_groups(groupname,group_id,group_rank) " 
+         ."values ('"
+         .htmlspecialchars($groupname)."',"
+         ."'$group_id',"
+         ."'$group_rank')";
 		
-    db_query($query);
-    $feedback .= $Language->getText('docman_admin_index','feedback_group_added');
-    group_main_page($group_id);
+     db_query($query);
+     $feedback .= $Language->getText('docman_admin_index','feedback_group_added');
+     group_main_page($group_id);
 	
-} elseif (strstr($mode,"editgroups")) {
-    group_main_page($group_id);
+ } elseif (strstr($mode,"editgroups")) {
+     group_main_page($group_id);
 
-} elseif (strstr($mode,"editdocs")) {
+ } elseif (strstr($mode,"docdelete")) {
+     // Get title
+     $query = "SELECT title FROM doc_data WHERE docid=$docid";
+     $result=db_query($query);
+     $row = db_fetch_array($result);
+     $title=$row['title'];
 
-    docman_header_admin(array('title'=>$Language->getText('docman_admin_index','title_doc_mgt'),
-			      'help'=>'DocumentAdministration.html'));
-    echo '<h2>'.$Language->getText('docman_admin_index','header_doc_mgt').'</h2>';
-    print "<p><b>".$Language->getText('docman_admin_index','active_doc').":</b><p>";	
-    display_docs('1',$group_id);
-    print "<p><b>".$Language->getText('docman_admin_index','pending_doc').":</b><p>";	
-    display_docs('3',$group_id);
-    print "<p><b>".$Language->getText('docman_admin_index','hidden_doc').":</b><p>";	
-    display_docs('4',$group_id);
-    print "<p><b>".$Language->getText('docman_admin_index','deleted_doc').":</b><p>";	
-    display_docs('2',$group_id);
-    print "<p><b>".$Language->getText('docman_admin_index','private_doc').":</b><p>";	
-    display_docs('5',$group_id);
-    docman_footer($params);	
+     $query = "DELETE FROM doc_data WHERE docid=$docid";
+     $result=db_query($query);
+     if (!$result) {
+         $feedback .= " ".$Language->getText('docman_admin_index','error_deleting_doc');
+         echo db_error();
+     } else {
+         $feedback .= " ".$Language->getText('docman_admin_index','doc_deleted');
+         // Log in project history
+         group_add_history($Language->getText('docman_admin_index','doc_deleted'),$title,$group_id);
+     }
 
-} else {
+     main_page($group_id);
+    
+ } else {
     main_page($group_id);
-} //end else
+ } //end else
 
 ?>

@@ -17,110 +17,113 @@ require('./doc_utils.php');
 
 $Language->loadLanguageMsg('docman/docman');
 
+if (!(user_ismember($group_id,"D1"))) {
+    $feedback .= $Language->getText('docman_admin_index','error_perm');
+    exit_permission_denied();
+}
+
 if($group_id) {
 
-	if ($mode == "add"){
+    if ($mode == "add"){
 
-		if (!$doc_group || $doc_group ==100) {
-			//cannot add a doc unless an appropriate group is provided
-		    exit_error($Language->getText('global','error'),
-			       $Language->getText('docman_new','error_noproj'));
-		}
+        if (!$doc_group || $doc_group ==100) {
+            //cannot add a doc unless an appropriate group is provided
+            exit_error($Language->getText('global','error'),
+                       $Language->getText('docman_new','error_noproj'));
+        }
 
-		if (!$title || !$description) { 
-			exit_missing_param();
-		}
 
-		if (!$upload_instead && !$data) {
-                    // Check if there is a link in the title
-                    if (!strstr($title,"href")) {
-                        exit_missing_param();
-                    }
-		}
+        if (!$title || !$description) { 
+            exit_missing_param();
+        }
 
-		if (!user_isloggedin()) {
-			$user=100;
-		} else {
-			$user=user_getid();
-		}
+        if (!$upload_instead && !$data) {
+            // Check if there is a link in the title
+            if (!strstr($title,"href")) {
+                exit_missing_param();
+            }
+        }
 
-		if ($upload_instead) {
-	        $data = addslashes(fread( fopen($uploaded_data, 'r'), filesize($uploaded_data)));
-    		if ((strlen($data) <= 0 ) || (strlen($data) >= $sys_max_size_upload)) {
-		    //too big or small
-		    exit_error($Language->getText('global','error'),
-			       $Language->getText('docman_new','error_size',array($sys_max_size_upload)));
-    		}
-		}
+        if (!user_isloggedin()) {
+            $user=100;
+        } else {
+            $user=user_getid();
+        }
 
-		docman_header(array('title'=>$Language->getText('docman_new','title_new'),
-				    'help'=>'DocumentSubmission.html'));
-		
-		if ($upload_instead) {
-		    // Upload file
-    		$query = "insert into doc_data(stateid,title,data,createdate,updatedate,created_by,doc_group,description,restricted_access,filename,filesize,filetype) "
-    		."values('3',"
-    		// state = 3 == pending
+        if ($upload_instead) { 
+            $data = addslashes(fread( fopen($uploaded_data, 'r'), filesize($uploaded_data)));
+            if ((strlen($data) <= 0 ) || (strlen($data) >= $sys_max_size_upload)) {
+                //too big or small
+                exit_error($Language->getText('global','error'),
+                           $Language->getText('docman_new','error_size',array($sys_max_size_upload)));
+            }
+        }
+        		
+        if ($upload_instead) {
+            // Upload file
+            $query = "insert into doc_data(title,data,createdate,updatedate,created_by,doc_group,description,filename,filesize,filetype) "
+    		."values("
     		."'".htmlspecialchars($title)."',"
     		."'".$data."',"
     		."'".time()."',"
     		."'".time()."',"
     		."'".$user."',"
-    		."'".$doc_group."',"			
-    		."'".htmlspecialchars($description)."',"		
-    		."'0',"
+    		."'".$doc_group."',"
+    		."'".htmlspecialchars($description)."',"
     		."'".$uploaded_data_name."',"
     		."'".$uploaded_data_size."',"
     		."'".$uploaded_data_type."')";
-		} else {
-		    // Copy/paste data
-    		$query = "insert into doc_data(stateid,title,data,createdate,updatedate,created_by,doc_group,description,restricted_access,filename,filesize,filetype) "
-    		."values('3',"
-    		// state = 3 == pending
+        } else {
+            // Copy/paste data
+            $query = "insert into doc_data(title,data,createdate,updatedate,created_by,doc_group,description,filename,filesize,filetype) "
+    		."values("
     		."'".htmlspecialchars($title)."',"
     		."'".htmlspecialchars($data)."',"
     		."'".time()."',"
     		."'".time()."',"
     		."'".$user."',"
-    		."'".$doc_group."',"			
-    		."'".htmlspecialchars($description)."',"		
-    		."'0','',0,'text/html')";
-    	}
+    		."'".$doc_group."',"
+    		."'".htmlspecialchars($description)."',"
+    		."'',0,'text/html')";
+        }
 	
-		$res_insert = db_query($query); 
-	    if (db_affected_rows($res_insert) < 1) {
-		echo '<p>'.$Language->getText('docman_new','error_dbinsert').':</p><h3><span class="feedback">'. db_error() .'</span></h3>';
-	    } else {
-		print "<p><b>".$Language->getText('docman_new','insert_ok')."</b> \n\n";
-		print "<p>\n <a href=\"/docman/index.php?group_id=".$group_id."\">".$Language->getText('global','back')."</a>"; 
+        $res_insert = db_query($query); 
+        if (db_affected_rows($res_insert) < 1) {
+            docman_header(array('title'=>$Language->getText('docman_new','title_new'),
+                                'help'=>'DocumentSubmission.html'));
+            echo '<p>'.$Language->getText('docman_new','error_dbinsert').':</p><h3><span class="feedback">'. db_error() .'</span></h3>';
+            docman_footer($params);
+        } else {
+            $feedback .= $Language->getText('docman_new','insert_ok');
+            session_redirect("/docman/?group_id=$group_id&feedback=$feedback");
+        }
+                
+    } else {
+        docman_header(array('title'=>$Language->getText('docman_new','title_add'),
+                            'help'=>'DocumentSubmission.html'));
+
+        echo '<h2>'.$Language->getText('docman_new','header_add').'</h2>';
+        if ($user == 100) {
+            print "<p>".$Language->getText('docman_new','not_logged')."<p>";
+        }
+        if (!groups_defined($group_id)) {
+            echo "<p>".$Language->getText('docman_new','title_add',array("/docman/admin/index.php?group_id=".$group_id))."<p>";
         }
         
-		docman_footer($params);
-
-	} else {
-		docman_header(array('title'=>$Language->getText('docman_new','title_add'),
-				    'help'=>'DocumentSubmission.html'));
-		echo '<h2>'.$Language->getText('docman_new','header_add').'</h2>';
-		if ($user == 100) {
-  			print "<p>".$Language->getText('docman_new','not_logged')."<p>";
-		}
-		if (!groups_defined($group_id)) {
-		    echo "<p>".$Language->getText('docman_new','title_add',array("/docman/admin/index.php?group_id=".$group_id))."<p>";
-		}
-
-		echo '
+        $star = '&nbsp;<span class="highlight"><big>*</big></span>';
+        echo '
 			<form name="adddata" action="new.php?mode=add&group_id='.$group_id.'" method="POST" enctype="multipart/form-data">
             <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="'.$sys_max_size_upload.'">
 
 			<table border="0" width="75%">
 
 			<tr>
-			<th>'.$Language->getText('docman_new','doc_title').':</th>
+			<th>'.$Language->getText('docman_new','doc_title').':'.$star.'</th>
 			<td><input type="text" name="title" size="60" maxlength="255"></td>
 
 			</tr>
 			<tr>
-			<th>'.$Language->getText('docman_new','doc_desc').'</th> 
+			<th>'.$Language->getText('docman_new','doc_desc').$star.'</th> 
 			<td><textarea cols="60" rows="4"  wrap="virtual" name="description"></textarea></td>			</tr>
 
 			<tr>
@@ -136,21 +139,22 @@ if($group_id) {
 			</tr>
 
 			<tr>
-			<th>'.$Language->getText('docman_new','doc_group').':</th>
+			<th>'.$Language->getText('docman_new','doc_group').':'.$star.'</th>
 			<td>';
 
-		display_groups_option($group_id);
+        display_groups_option($group_id);
 
-		echo '	</td> </tr>
+        echo '	</td> </tr>
 		
     	    </table>
-
+<p>';
+        print $Language->getText("docman_new", "mandatory", array($star));
+        echo '</p>
 			<input type="submit" value="'.$Language->getText('global','btn_submit').'">
-
-			</form> '; 
+	    </form> '; 
 	
-		docman_footer($params);
-	} // end else.
+        docman_footer($params);
+    }
 
 } else {
 	exit_no_group();

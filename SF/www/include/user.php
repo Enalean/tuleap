@@ -138,8 +138,13 @@ function user_ismember($group_id,$type=0) {
 			break;
 		}
 		case 'D1' : {
-			//document editor
-			$query .= " AND doc_flags = '1'";
+			//document tech
+			$query .= " AND doc_flags IN (1,2)";
+			break;
+		}
+		case 'D2' : {
+			//document admin
+			$query .= " AND doc_flags IN (2,3)";
 			break;
 		}
 		case 'R2' : {

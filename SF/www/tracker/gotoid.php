@@ -107,6 +107,13 @@ if ($atn == 'commit') {
     exit;
 }
 
+// Document link
+if ($atn == 'doc') {
+    $location .= "/docman/display_doc.php?docid=".$aid."&group_id=".$group_id;
+    header($location);
+    exit;
+}
+
 
 if ((!$sys_activate_tracker)) {
     // If generic trackers are not available, then use only legacy!
