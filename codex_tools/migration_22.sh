@@ -151,7 +151,7 @@ fi
 
 [ "$yn" != "y" ] && (echo "Bye now!"; exit 1;)
 
-rm -f $TODO_FILE
+$RM -f $TODO_FILE
 todo "WHAT TO DO TO FINISH THE CODEX MIGRATION (see $TODO_FILE)"
 
 ##############################################
@@ -445,13 +445,16 @@ $MV -f $INSTALL_DIR/site-content/custom /etc/codex/site-content
 $MV -f /etc/motd.inc /etc/codex/site-content/en_US/others/motd.txt
 $MV -f $INSTALL_DIR/SF/www/css/custom/* /etc/codex/themes/css
 $MV -f $INSTALL_DIR/SF/www/images/custom/* /etc/codex/themes/images
-$RM -rf $INSTALL_DIR/SF/www/css/custom $INSTALL_DIR/SF/www/images/custom
+$MV $INSTALL_DIR/SF/www/css/custom /tmp/custom/css       # for future manual deletion
+$MV $INSTALL_DIR/SF/www/images/custom /tmp/custom/images # for future manual deletion
 
 $MV -f $INSTALL_DIR/documentation/user_guide/xml/en_US/ParametersLocal.dtd /etc/codex/documentation/user_guide/xml/en_US/
 
 build_dir /etc/codex/site-content/en_US/others sourceforge sourceforge 755
+# First, copy default page, then overwrite if a custom one exists
+$CP $INSTALL_DIR/site-content/en_US/others/default_page.php /etc/codex/site-content/en_US/others
 $MV -f $INSTALL_DIR/SF/utils/custom/default_page.php /etc/codex/site-content/en_US/others
-$RM -rf $INSTALL_DIR/SF/utils/custom
+$MV $INSTALL_DIR/SF/utils/custom /tmp/custom/utils  # for future manual deletion
 
 
 ##############################################
@@ -468,6 +471,7 @@ $CHOWN -R sourceforge.sourceforge $INSTALL_DIR
 # copy some configuration files 
 make_backup /etc/httpd/conf/httpd.conf codex20
 $CP $INSTALL_DIR/SF/etc/httpd.conf.dist /etc/httpd/conf/httpd.conf
+$CP $INSTALL_DIR/SF/etc/mailman.conf.dist /etc/httpd/conf/mailman.conf
 $CP $INSTALL_DIR/SF/etc/ssl.conf.dist /etc/httpd/conf.d/ssl.conf
 $CP $INSTALL_DIR/SF/etc/php.conf.dist /etc/httpd/conf.d/php.conf
 $CP $INSTALL_DIR/SF/etc/subversion.conf.dist /etc/httpd/conf.d/subversion.conf
@@ -537,6 +541,12 @@ while [ $? -eq 0 ]; do
     mysqlshow --password=$old_passwd 2>&1 | grep password
 done
 [ "X$old_passwd" != "X" ] && pass_opt="--password=$old_passwd"
+
+# Update privilege table for MySQL 4.0
+echo "Updating privilege table: ignore errors"
+/usr/bin/mysql_fix_privilege_tables $old_passwd
+$SERVICE mysql restart
+
 
 $CAT <<EOF | $MYSQL $pass_opt sourceforge
 # delete foundry project type
@@ -873,11 +883,18 @@ dir_entry=`$LS -1d phpMyAdmin-*`
 $LN -sf ${dir_entry} phpMyAdmin
 $CHOWN -R sourceforge.sourceforge $INSTALL_DIR/phpMyAdmin*
 
-todo "Customize phpMyAdmin. Edit $INSTALL_DIR/phpMyAdmin/config.inc.php"
-todo "  - $cfg['PmaAbsoluteUri'] = 'http://$sys_default_domain/phpMyAdmin';"
-todo "  - $cfg['Servers'][$i]['auth_type']     = 'http'; "
-todo "  - $cfg['Servers'][$i]['user']          = 'sourceforge';"
-todo "  - $cfg['Servers'][$i]['only_db']       = 'sourceforge';";
+$PERL -i'.orig' -p <<'EOF'
+s/.*cfg[\'PmaAbsoluteUri\'] =.*/\$cfg[\'PmaAbsoluteUri\'] = \'http:\/\/$sys_default_domain\/phpMyAdmin\';/;
+s/(.*Servers.*'auth_type'.*')config('.*)$/$1http$2/g;
+s/(.*Servers.*'user'.*')root('.*)$/$1sourceforge$2/g;
+s/(.*Servers.*'only_db'.*').*('.*)$/$1sourceforge$2/g;
+EOF
+
+#todo "Customize phpMyAdmin. Edit $INSTALL_DIR/phpMyAdmin/config.inc.php"
+#todo "  - $cfg['PmaAbsoluteUri'] = 'http://$sys_default_domain/phpMyAdmin';"
+#todo "  - $cfg['Servers'][$i]['auth_type']     = 'http'; "
+#todo "  - $cfg['Servers'][$i]['user']          = 'sourceforge';"
+#todo "  - $cfg['Servers'][$i]['only_db']       = 'sourceforge';";
 
 ##############################################
 # Update Mailman from 2.0 to 2.1
@@ -909,7 +926,7 @@ $MAKE install
 
 $CHOWN -R mailman.mailman $MAILMAN_DIR
 $CHMOD a+rx,g+ws $MAILMAN_DIR
-$LN -sf $MAILMAN_DIR /usr/local/mailman
+$LN -sf $MAILMAN_DIR /usr/local/mailman # should not be necessary, but who knows...
 
 # make sure permissions are OK
 $MAILMAN_DIR/bin/check_perms -f
@@ -924,6 +941,28 @@ crontab -u mailman /tmp/mailman_cronfile
 todo "Check $MAILMAN_DIR/Mailman/mm_cfg.py: setup DEFAULT_HOST_NAME\n\
 and DEFAULT_URL variables, and insert add_virtualhost(DEFAULT_URL_HOST, DEFAULT_EMAIL_HOST).(overrides Defaults.py settings). Recompile with python -O mm_cfg.py"
 todo "Create a site-wide mailing list: in $MAILMAN_DIR, type 'bin/newlist mailman', then 'bin/config_list -i data/sitelist.cfg mailman', and don't forget to subscribe to this ML'."
+
+
+##############################################
+# Installing and configuring Sendmail
+# RHEL 3 comes with sendmail 8.12, and conf files have moved to /etc/mail
+echo "##############################################"
+echo "Installing sendmail shell wrappers and configuring sendmail..."
+cd /etc/smrsh
+$RM -f  gotohell mailman
+$LN -sf /usr/local/bin/gotohell
+$LN -sf $MAILMAN_DIR/mail/mailman
+
+$PERL -i'.orig' -p -e's:^O\s*AliasFile.*:O AliasFile=/etc/aliases,/etc/aliases.codex:' /etc/mail/sendmail.cf
+cat <<EOF >/etc/mail/local-host-names
+# local-host-names - include all aliases for your machine here.
+$sys_default_domain
+lists.$sys_default_domain
+users.$sys_default_domain
+EOF
+
+todo "Finish sendmail settings (see installation Guide)"
+
 
 ##############################################
 # Install and Configure Subversion
@@ -975,6 +1014,127 @@ fi
 # Remove useless files in logrotate.d that generate errors
 $RM -rf /etc/logrotate.d/*.nocodex /etc/logrotate.d/*.rpmnew
 
+
+##############################################
+#
+# A few updates that may not be necessary in case of a real OS upgrade
+# but that are useful in case of fresh install of OS.
+# In any case, you should run these updates
+#
+##############################################
+# CVS configuration
+#
+echo "Configuring the CVS server and CVS tracking tools..."
+$TOUCH /etc/cvs_root_allow
+$CHOWN sourceforge.sourceforge /etc/cvs_root_allow
+$CHMOD 644 /etc/cvs_root_allow
+
+make_backup "/etc/xinetd.d/cvs" codex20
+$CAT <<'EOF' >/etc/xinetd.d/cvs
+service cvspserver
+{
+        disable             = no
+        socket_type         = stream
+        protocol            = tcp
+        wait                = no
+        user                = root
+        server              = /usr/bin/cvs
+        server_args         = -f -z3 -T/home/large_tmp --allow-root-file=/etc/cvs_root_allow pserver
+}
+EOF
+
+cd $INSTALL_DIR/SF/utils/cvs1
+$CP log_accum /usr/local/bin
+$CP commit_prep /usr/local/bin
+cd /usr/local/bin
+$CHOWN sourceforge.sourceforge log_accum commit_prep
+$CHMOD 755 log_accum commit_prep
+$CHMOD u+s log_accum   # sets the uid bit (-rwsr-xr-x)
+
+
+##############################################
+# Make the system daily cronjob run at 23:58pm
+echo "Updating daily cron job in system crontab..."
+$PERL -i'.orig' -p -e's/\d+ \d+ (.*daily)/58 23 \1/g' /etc/crontab
+
+##############################################
+# FTP server configuration
+#
+make_backup "/etc/xinetd.d/wu-ftpd" codex20
+echo "Configuring FTP servers and directories..."
+$CAT <<EOF >/etc/xinetd.d/wu-ftpd
+service ftp
+{
+        disable = no
+        socket_type             = stream
+        wait                    = no
+        user                    = root
+        server                  = /usr/sbin/in.ftpd
+        server_args             = -l -a
+        log_on_success          += DURATION
+        nice                    = 10
+}
+EOF
+
+make_backup "/etc/ftpaccess"
+$CAT <<EOF >/etc/ftpaccess
+class   all   real,guest,anonymous  *
+class anonftp anonymous *
+
+upload /home/ftp * no
+upload /home/ftp /bin no
+upload /home/ftp /etc no
+upload /home/ftp /lib no
+noretrieve .notar
+upload /home/ftp /incoming yes ftpadmin ftpadmin 0644 nodirs
+noretrieve /home/ftp/incoming
+noretrieve /home/ftp/codex
+
+email root@localhost
+
+loginfails 5
+
+readme  README*    login
+readme  README*    cwd=*
+
+message /welcome.msg            login
+message .message                cwd=*
+
+compress        yes             all
+tar             yes             all
+chmod        no        guest,anonymous
+delete        no        guest,anonymous
+overwrite    no        guest,anonymous
+rename        no        guest,anonymous
+
+log transfers anonymous,real inbound,outbound
+
+shutdown /etc/shutmsg
+
+passwd-check rfc822 warn
+EOF
+
+##############################################
+# Make ISO latin characters the default charset for the
+# entire system instead of UTF-8
+#
+make_backup "/etc/sysconfig/i18n" codex20
+echo "Set ISO Latin as default system character set..."
+$CAT <<'EOF' >/etc/sysconfig/i18n
+LANG="en_US.iso885915"
+SUPPORTED="en_US.iso885915:en_US:en"
+SYSFONT="lat0-sun16"
+SYSFONTACM="iso15"
+EOF
+$CHOWN root.root /etc/sysconfig/i18n
+$CHMOD 644 /etc/sysconfig/i18n
+
+#
+#
+#
+
+
+
 ##############################################
 # Restarting some services before upgrading
 #
@@ -989,8 +1149,26 @@ $SERVICE sendmail start
 #
 echo "Updating the User Manual. This might take a few minutes."
 /home/httpd/SF/utils/generate_doc.sh -f
+todo "Edit utils/generate_doc.sh.to make sure that the CVS update is possible. Alternatively, add a '-f' flag in the 'sourceforge' crontab to force generation each night"
+
+##############################################
+# Make sure all major services are on
+#
+$CHKCONFIG named on
+$CHKCONFIG sshd on
+$CHKCONFIG httpd on
+$CHKCONFIG mysql on
+$CHKCONFIG cvs on
 
 
+##############################################
+# More things to do
+todo "Customize /etc/php.ini: "
+todo "  - register_globals = On"
+todo "  - memory_limit = 30M"
+todo "  - post_max_size = 20M"
+todo "  - upload_max_file_size = 20M"
+#todo "  - include_path = .:$INSTALL_DIR/SF/www/include:$INSTALL_DIR/SF/www/phpMyAdmin"
 
 # End of it
 echo "=============================================="

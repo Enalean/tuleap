@@ -14,7 +14,7 @@
 FORCE=0
 HELP=0
 VERBOSE=0
-LOCAL_CVSROOT=":pserver:sbouhet@cvs.codex.codex.xerox.com:/cvsroot/codex";
+LOCAL_CVSROOT=":pserver:guerin@cvs.codex.codex.xerox.com:/cvsroot/codex";
 
 # Check arguments
 while	((1))	# look for options

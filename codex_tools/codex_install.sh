@@ -271,7 +271,6 @@ build_dir /etc/codex/themes/images sourceforge sourceforge 755
 
 build_dir /var/run/log_accum root root 1777
 build_dir /cvsroot sourceforge sourceforge 755
-build_dir /cvsroot/.mysql_backup/old root root 775
 build_dir /svnroot sourceforge sourceforge 755
 
 $TOUCH /home/ftp/incoming/.delete_files
@@ -337,6 +336,7 @@ $CHKCONFIG mysql on
 
 # Now user mysql exists...
 build_dir /cvsroot/.mysql_backup mysql mysql 755
+build_dir /cvsroot/.mysql_backup/old root root 775
 
 # -> mysql module for Python
 echo "Removing RedHat MySQL module for Python..."
@@ -552,11 +552,8 @@ substitute '/var/named/codex.zone' '%dns_serial%' "$dns_serial"
 
 
 todo "Customize /etc/codex/conf/local.inc"
-todo "Customize /etc/httpd/conf/httpd.conf"
-#todo "Customize /etc/httpd/conf/cvsweb.conf. Edit %CVSROOT (if needed) and $logo"
-todo "Customize /etc/httpd/conf/mailman.conf"
-todo "Customize $INSTALL_DIR/documentation/user_guide/xml/en_US/ParametersLocal.dtd"
-todo "Customize /home/tools/backup_job"
+todo "Customize /etc/codex/documentation/user_guide/xml/en_US/ParametersLocal.dtd"
+todo "You may also want to customize /etc/httpd/conf/httpd.conf /etc/httpd/conf/mailman.conf and /home/tools/backup_job"
 
 ##############################################
 # Installing phpMyAdmin
@@ -569,11 +566,18 @@ dir_entry=`$LS -1d phpMyAdmin-*`
 $LN -sf ${dir_entry} phpMyAdmin
 $CHOWN -R sourceforge.sourceforge $INSTALL_DIR/phpMyAdmin*
 
-todo "Customize phpMyAdmin. Edit $INSTALL_DIR/phpMyAdmin/config.inc.php"
-todo "  - $cfg['PmaAbsoluteUri'] = 'http://$sys_default_domain/phpMyAdmin';"
-todo "  - $cfg['Servers'][$i]['auth_type']     = 'http'; "
-todo "  - $cfg['Servers'][$i]['user']          = 'sourceforge';"
-todo "  - $cfg['Servers'][$i]['only_db']       = 'sourceforge';";
+#todo "Customize phpMyAdmin. Edit $INSTALL_DIR/phpMyAdmin/config.inc.php"
+#todo "  - $cfg['PmaAbsoluteUri'] = 'http://$sys_default_domain/phpMyAdmin';"
+#todo "  - $cfg['Servers'][$i]['auth_type']     = 'http'; "
+#todo "  - $cfg['Servers'][$i]['user']          = 'sourceforge';"
+#todo "  - $cfg['Servers'][$i]['only_db']       = 'sourceforge';";
+
+$PERL -i'.orig' -p <<'EOF'
+s/.*cfg[\'PmaAbsoluteUri\'] =.*/\$cfg[\'PmaAbsoluteUri\'] = \'http:\/\/$sys_default_domain\/phpMyAdmin\';/;
+s/(.*Servers.*'auth_type'.*')config('.*)$/$1http$2/g;
+s/(.*Servers.*'user'.*')root('.*)$/$1sourceforge$2/g;
+s/(.*Servers.*'only_db'.*').*('.*)$/$1sourceforge$2/g;
+EOF
 
 ##############################################
 # Installing the CodeX database
