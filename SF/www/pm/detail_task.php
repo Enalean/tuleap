@@ -14,24 +14,58 @@ $sql="SELECT * FROM project_task ".
 $result=db_query($sql);
 
 ?>
-<H2>View A Task In <?php echo  pm_data_get_group_name($group_project_id); ?></H2>
+<H2>[ Task #<?php echo $project_task_id.'] '.db_result($result,0,'summary');?></H2>
 
-<TABLE BORDER="0" WIDTH="100%">
+<TABLE CELLPADDING="0" WIDTH="100%">
+      <TR><TD><B>Created by:</B>&nbsp;<?php echo user_getname(db_result($result,0,'created_by')); ?></TD>
+          <TD><B>Group:</B>&nbsp;<?php echo group_getname($group_id); ?></TD>
+      </TR>
+
+	  <TR><TD COLSPAN="2">&nbsp</TD></TR>
+
+	  <tr>
+	     <td colspan="2"><b>Subproject: </b>&nbsp;
+	     <?php echo pm_data_get_group_name($group_project_id);?></td>
+	  </tr>
+
 	<TR>
-		<TD><B>Percent Complete:</B>
-		<BR>
+		<TD><B>Percent Complete:</B>&nbsp;
 		<?php echo db_result($result,0,'percent_complete'); ?>%
 		</TD>
-
 		<TD><B>Priority:</B>
-		<BR>
+		&nbsp;
 		<?php echo db_result($result,0,'priority'); ?>
 		</TD>
 	</TR>
+	<TR>
+    		<TD><B>Start Date:</B>
+		&nbsp;
+		<?php echo date('Y-m-d', db_result($result,0,'start_date')); ?>
+		</TD>
+
+		<TD><B>End Date:</B>
+		&nbsp;
+		<?php echo date('Y-m-d', db_result($result,0,'end_date')); ?>
+		</TD>
+	</TR>
+	<TR>
+		<TD>
+		<B>Effort:</B>
+		<?php echo db_result($result,0,'hours'); ?>
+		</TD>
+
+		<TD>
+		<B>Status:</B>
+		<?php
+		echo pm_data_get_status_name(db_result($result,0,'status_id'));
+		?>
+		</TD>
+	</TR>
+
+	  <TR><TD COLSPAN="2">&nbsp</TD></TR>
 
   	<TR>
-		<TD COLSPAN="2"><B>Task Summary:</B>
-		<BR>
+		<TD COLSPAN="2"><B>Summary:</B>
 		<?php echo db_result($result,0,'summary'); ?>
 		</TD>
 	</TR>
@@ -39,24 +73,12 @@ $result=db_query($sql);
 	<TR>
 		<TD COLSPAN="2">
 		<B>Original Comment:</B>
-		<P>
+		<br>
 		<?php echo nl2br(db_result($result,0,'details')); ?>
 		</TD>
 	</TR>
 
-	<TR>
-    		<TD COLSPAN="2"><B>Start Date:</B>
-		<BR>
-		<?php echo date('Y-m-d', db_result($result,0,'start_date')); ?>
-		</TD>
-	</TR>
-
-	<TR>
-		<TD COLSPAN="2"><B>End Date:</B>
-		<BR>
-		<?php echo date('Y-m-d', db_result($result,0,'end_date')); ?>
-		</TD>
-	</TR>
+	  <TR><TD COLSPAN="2">&nbsp</TD></TR>
 
 	<TR>
 		<TD VALIGN="TOP">
@@ -80,22 +102,6 @@ $result=db_query($sql);
 		$result2=db_query("SELECT project_task.summary FROM project_dependencies,project_task ".
 			"WHERE is_dependent_on_task_id=project_task.project_task_id AND project_dependencies.project_task_id='$project_task_id'");
 		ShowResultSet($result2,'Dependent On Task');
-		?>
-		</TD>
-	</TR>
-
-	<TR>
-		<TD>
-		<B>Hours:</B>
-		<BR>
-		<?php echo db_result($result,0,'hours'); ?>
-		</TD>
-
-		<TD>
-		<B>Status:</B>
-		<BR>
-		<?php
-		echo pm_data_get_status_name(db_result($result,0,'status_id'));
 		?>
 		</TD>
 	</TR>

@@ -14,7 +14,7 @@ $sql="SELECT * FROM project_task ".
 $result=db_query($sql);
 
 ?>
-<H2>Modify A Task In <?php echo  pm_data_get_group_name($group_project_id); ?></H2>
+<H2>[ Task #<?php echo $project_task_id.'] '.db_result($result,0,'summary');?></H2>
 
 <FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">
 <INPUT TYPE="HIDDEN" NAME="func" VALUE="postmodtask">
