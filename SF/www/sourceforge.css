@@ -28,3 +28,9 @@ SPAN.alignright { text-align: right }
 SPAN.maintitlebar { font-size: 10pt; color: #FFFFFF }
 SPAN.titlebar { text-align: center; font-size: 10pt; color: #FFFFFF; font-weight: bold }
 TD.featurebox { font-size: small; }
+
+.figure { text-align: center; }
+.admonitiontitle { text-align: center; }
+.admonitionbody { font-size: x-small; }
+.example { text-align: center; }
+.table { text-align: center; }
