@@ -269,17 +269,16 @@ individual text files (CSV format) or in a project specific database that you ca
 		  	echo '
 		  <tr class="'.util_get_alt_row_color($iu).'"> 
 		    <td><b>Tracker: '.$at_arr[$j]->getName().'</b></td>
-		    <td align="center"> 
-		      <a href="'.$PHP_SELF.'?group_id=$group_id&atid='.$at_arr[$j]->getID().'">Export</a>
-		      <br><a href="'.$PHP_SELF.'?group_id=$group_id&atid='.$at_arr[$j]->getID().'">Show Format</a>
+		    <td align="center">Export
+		      <br>Show Format
 		    </td>
 		    <td align="center"> 
-		      <a href="'.$PHP_SELF.'?group_id=$group_id&atid='.$at_arr[$j]->getID().'">Export</a>
-		      <br><a href="'.$PHP_SELF.'?group_id=$group_id&atid='.$at_arr[$j]->getID().'">Show Format</a>
+		      Export
+		      <br>Show Format
 		    </td>
 		    <td align="center"> 
-		      <a href="'.$PHP_SELF.'?group_id=$group_id&atid='.$at_arr[$j]->getID().'">Export</a>
-		      <br><a href="'.$PHP_SELF.'?group_id=$group_id&atid='.$at_arr[$j]->getID().'">Show Format</a>
+		      Export
+		      <br>Show Format
 		    </td>
 		  </tr>';
 		}
