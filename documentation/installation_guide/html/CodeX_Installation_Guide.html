@@ -866,10 +866,11 @@ package is installed. Then you must either generate your own test
 certificate or you must get one from a certified company and install it
 in the right place. The RedHat Manual has excellent instructions on how
 to do that. See the section called 'Apache Secure Server
-Configuration'.
-In RedHat 7.3 manual it is at <a
+Configuration' in RHEL3 manual. It is at <a
  href="http://www.redhat.com/docs/manuals/enterprise/RHEL-3-Manual/sysadmin-guide/ch-httpd-secure-server.html">http://www.redhat.com/docs/manuals/enterprise/RHEL-3-Manual/sysadmin-guide/ch-httpd-secure-server.html</a>
 .
+And more precisely, it details how to <a href="http://www.redhat.com/docs/manuals/enterprise/RHEL-3-Manual/sysadmin-guide/s1-secureserver-generatingkey.html">generate a new key</a> and <a href="http://www.redhat.com/docs/manuals/enterprise/RHEL-3-Manual/sysadmin-guide/s1-secureserver-selfsigned.html"> a new certificate</a>.
+<p>
 Note: although RedHat recommends that you generate a password protected
 key for your certificate it has some serious implications. The most
 noticeable is that a system administrator must be physically present
@@ -1378,7 +1379,7 @@ the sshd daemon running will allow users to use this method. Things to
 pay attention to:<br>
 <ul>
   <li>If you want to disable the pserver access, make sure you edit
-/etc/xinetd.d/cvs, change the 'disable' parameter to 'yesy' and restart
+/etc/xinetd.d/cvs, change the 'disable' parameter to 'yes' and restart
 xinetd (service xinetd restart)</li>
   <li>On the client side, &nbsp;users must set the environment variable
 CVS_RSH to 'ssh'</li>
