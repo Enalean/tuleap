@@ -33,9 +33,12 @@ if ($func) {
 	/*
 	  add user to this project
 	*/
-	account_add_user_to_group ($group_id,$form_unix_name);
+	$res = account_add_user_to_group ($group_id,$form_unix_name);
 
-	group_add_history ('Added User',$form_unix_name,$group_id);
+	if ($res) {
+	    group_add_history ('Added User',$form_unix_name,$group_id);
+	}
+
     } else if ($func=='rmuser') {
 	/*
 	  remove a user from this portal

@@ -22,31 +22,44 @@ function account_pwvalid($pw) {
 
 function account_add_user_to_group ($group_id,$user_unix_name) {
 	global $feedback;
-	$res_newuser = db_query("SELECT user_id,unix_status,unix_uid FROM user WHERE user_name='$user_unix_name'");
+	
+	$ret = false;
+
+	$res_newuser = db_query("SELECT status,user_id,unix_status,unix_uid FROM user WHERE user_name='$user_unix_name'");
 
 	if (db_numrows($res_newuser) > 0) {
-		//user was found
+
+	    //user was found but if it's a pending account adding
+	    //is not allowed
+	    if (db_result($res_newuser,0,'status') == 'P') {
+		$feedback .= " Account '$user_unix_name' pending. Must first be confirmed by user. User not added.";
+		return false;
+	    }
+
 		$form_newuid = db_result($res_newuser,0,'user_id');
 
-		//if not already a member, add them
+		//if not already a member, add it
 		$res_member = db_query("SELECT user_id FROM user_group WHERE user_id='$form_newuid' AND group_id='$group_id'");
 		if (db_numrows($res_member) < 1) {
-			//not alread a member
+			//not already a member
 			db_query("INSERT INTO user_group (user_id,group_id) VALUES ('$form_newuid','$group_id')");
 
 			//if no unix account, give them a unix_uid
 			if ((db_result($res_newuser,0,'unix_status') == 'N') || (!db_result($res_newuser,0,'unix_uid') )) {
 				db_query("UPDATE user SET unix_status='A',unix_uid=" . account_nextuid() . " WHERE user_id=$form_newuid");
 			}
-			$feedback .= " User was added ";
+			$feedback .= " User added ";
+			$ret = true;
 		} else {
 			//user was a member
-			$feedback .= " User was already a member ";
+			$feedback .= " User is already a member ";
 		}
 	} else {
 		//user doesn't exist
-		$feedback .= "That user does not exist on CodeX";
+		$feedback .= "User does not exist on CodeX";
 	}
+
+	return $ret;
 }
 
 function account_namevalid($name) {

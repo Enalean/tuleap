@@ -17,8 +17,8 @@ $then=(time()-3600);
 $rel = $dbh->prepare("DELETE FROM groups WHERE status='I' and register_time < '$then'");
 $rel->execute();
 
-# one week ago for pending user accounts
-$then=(time()-604800);
+# two weeks ago for pending user accounts
+$then=(time()-3600*24*14);
 $rel = $dbh->prepare("DELETE FROM user WHERE status='P' and add_date < '$then'");
 $rel->execute();
 
