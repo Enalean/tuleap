@@ -49,7 +49,6 @@ if ($action=='remove_user_from_group') {
 
 	$result=db_query("UPDATE user SET shell='$form_shell', email='$email' WHERE user_id=$user_id");
 	if (!$result || db_affected_rows($result) < 1) {
-		$feedback .= ' Error Updating User ';
 		echo db_error();
 	} else {
 		$feedback .= ' Successfully updated user ';
@@ -65,7 +64,6 @@ if ($action=='remove_user_from_group') {
 		// now do update
 		$result=db_query("UPDATE user SET unix_status='$form_unixstatus' WHERE user_id=$user_id");	
 		if (!$result || db_affected_rows($result) < 1) {
-			$feedback .= ' Error Updating Unix ';
 			echo db_error();
 		} else {
 			$feedback .= 'Successfully updated unix ';
