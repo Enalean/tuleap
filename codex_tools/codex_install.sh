@@ -71,9 +71,13 @@ build_dir() {
 }
 
 make_backup() {
-    # $1: file name
+    # $1: file name, $2: extension for old file (optional)
     file="$1"
-    backup_file="$1.nocodex"
+    ext="$2"
+    if [ -z $ext ]; then
+	ext="nocodex"
+    fi
+    backup_file="$1.$ext"
     [ -e "$file" -a ! -e "$backup_file" ] && $CP "$file" "$backup_file"
 }
 
@@ -128,11 +132,13 @@ todo "WHAT TO DO TO FINISH THE CODEX INSTALLATION (see $TODO_FILE)"
 
 ##############################################
 # Check Required Stock RedHat RPMs are installed
+# (note: gcc is required to recompile mailman)
 #
 rpms_ok=1
 for rpm in openssh-server openssh openssh-clients openssh-askpass \
-   openssl openldap perl perl-DBI perl-CGI gd \
-   sendmail telnet bind ntp samba python php php-mysql php-ldap enscript
+   openssl openldap perl perl-DBI perl-CGI gd gcc \
+   sendmail telnet bind ntp samba python php php-mysql php-ldap enscript \
+   bind
 do
     $RPM -q $rpm  2>/dev/null 1>&2
     if [ $? -eq 1 ]; then
@@ -169,9 +175,8 @@ create_group mailman 106
 create_group ftpadmin 96
 create_group ftp 50
 
-# Ask for domain name
+# Ask for domain name and other installation parameters
 read -p "CodeX Domain name: " sys_default_domain
-# Ask for domain name
 read -p "Your Company short name (e.g. Xerox): " sys_org_name
 read -p "Your Company long name (e.g. Xerox Corporation): " sys_long_org_name
 read -p "Codex Server fully qualified machine name: " sys_fullname
@@ -255,6 +260,8 @@ build_dir /etc/codex/documentation sourceforge sourceforge 755
 build_dir /etc/codex/site-content sourceforge sourceforge 755
 build_dir /etc/codex/site-content/en_US sourceforge sourceforge 755
 build_dir /etc/codex/themes sourceforge sourceforge 755
+build_dir /etc/codex/themes/css sourceforge sourceforge 755
+build_dir /etc/codex/themes/images sourceforge sourceforge 755
 
 build_dir /var/run/log_accum root root 1777
 build_dir /cvsroot sourceforge sourceforge 755
@@ -501,7 +508,7 @@ todo "Customize /home/httpd/documentation/user_guide/xml/en_US/ParametersLocal.d
 todo "Customize /home/tools/backup_job"
 
 ##############################################
-# Installing the CodeX database
+# Installing phpMyAdmin
 #
 echo "Installing phpMyAdmin..."
 cd /home/httpd
@@ -610,12 +617,20 @@ todo "Edit $MAILMAN_DIR/Mailman/mm_cfg.py and setup DEFAULT_HOST_NAME\n\
 and DEFAULT_URL variables (overrides Defaults.py settings). Recompile with python -O mm_cfg.py"
 
 ##############################################
-# Installing Sendmail
+# Installing and configuring Sendmail
 #
-echo "Installing sendmail shell wrappers..."
+echo "Installing sendmail shell wrappers and configuring sendmail..."
 cd /etc/smrsh
 $LN -sf /usr/local/bin/gotohell
 $LN -sf $MAILMAN_DIR/mail/mailman
+
+$PERL -i'.orig' -p -e's:^O\s*AliasFile.*:O AliasFile=/etc/aliases,/etc/aliases.codex:' /etc/mail/sendmail.cf
+cat <<EOF >/etc/mail/local-host-names
+# local-host-names - include all aliases for your machine here.
+$sys_default_domain
+lists.$sys_default_domain
+users.$sys_default_domain
+EOF
 
 todo "Finish sendmail settings (see installation Guide) and create codex-contact and codex-admin aliases in /etc/aliases"
 
