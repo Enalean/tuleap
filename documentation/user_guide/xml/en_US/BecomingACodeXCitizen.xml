@@ -166,6 +166,16 @@
       </step>
     </procedure>
 
+    <tip>
+      <title>Tip: CodeX servers with LDAP authentication</title>
+
+      <para>Your CodeX server might be set up to use an external LDAP directory for 
+      authentication. In this case, the registration phase is even simpler: simply 
+      type your LDAP login and password, and the system will automatically extract
+      most of the required information from the LDAP directory: email 
+      address, real name, etc.</para>
+    </tip>
+
     <para>This 2-step registration process has been put in place for
       security reasons. Assuming people create their account with an alien
       e-mail address while they have access to the Intranet, they

@@ -209,6 +209,7 @@ admin_user_changepw	title_changed	Successfully Changed Password
 admin_user_changepw	header_changed	CodeX Change Confirmation
 admin_user_changepw	msg_changed	The user's password has been changed. This change is immediate on the web site, but will not take effect on the user's shell/cvs account until the next cron update, which will happen in <span class=\"highlight\"><b>$1 h $2 minutes</b></span> from now.
 admin_user_changepw	title	Change Password
+admin_user_changepw	ldap_warning	WARNING: Changing the password here won't change the LDAP password!
 admin_user_changepw	header	CodeX Password Change
 admin_user_changepw	new_passwd	New Password
 admin_user_changepw	new_passwd2	New Password (repeat)
@@ -234,6 +235,7 @@ admin_usergroup	header	User/Group Management for user
 admin_usergroup	account_info	Unix Account Information
 admin_usergroup	shell	Shell
 admin_usergroup	email	Email
+admin_usergroup	ldap_name	LDAP Login
 admin_usergroup	unix_status	Unix Account Status
 admin_usergroup	noaccount	No Unix Account
 admin_usergroup	active	Active

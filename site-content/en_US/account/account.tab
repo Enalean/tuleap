@@ -21,7 +21,8 @@ account_options	member_since	Member since
 account_options	view_developer_profile	View My Developer Profile
 account_options	edit_skills_profile	Edit My Skills Profile
 account_options	user_id	User Id
-account_options	login_name	Login Name
+account_options	login_name	CodeX Name
+account_options	ldap_name	LDAP Login
 account_options	change_password	Change Password
 account_options	real_name	Real Name
 account_options	change_real_name	Change Real Name
@@ -119,6 +120,7 @@ account_first	message	You are now a registered user on $1. As a registered user,
 # Script: SF/www/account/login.php
 #
 account_login	title	Site Login
+account_login	error_can_t_update_passwd	Internal error: Could not update passwords.
 account_login	pending_title	Pending Account
 account_login	pending_msg	Your account is currently pending your email confirmation. Visiting the link sent to you in this email will activate your account.<P>If you need this email resent, please click below and a confirmation email will be sent to the email address you provided in registration.Pending Account
 account_login	resend_btn	Resend Confirmation Email
@@ -189,9 +191,16 @@ account_register	err_passwd	Passwords do not match.
 account_register	err_notz	You must supply a timezone.
 account_register	err_nopurpose	You must explain the purpose of your registration.
 account_register	err_email	Invalid Email Address
+account_register	err_name	The login name is invalid
+account_register	err_invpasswd	The password is invalid
+account_register	err_no_ldap	The LDAP login is missing
 account_register	title_confirm	Registration Confirmation
 account_register	title	New Account Registration
 account_register	login	Login Name
+account_register	ldap_login	LDAP Login Name
+account_register	ldap_unix_login	CodeX Name <strong>(Lower case only, no spaces)</strong>
+account_register	ldap_email_help	<em><strong>Remark:</strong> This email address was retrieved from the directory. Please do not change it.</em>
+account_register	codex_login_help	This login was generated from your email address. You may change it if needed.
 account_register	login_directions	<strong>(Lower case only!)</strong>
 account_register	passwd	Password
 account_register	passwd_directions	(minimum 6 chars)	
@@ -209,6 +218,7 @@ account_register	communitymail	Receive additional community mailings. <I>(Low tr
 account_register	purpose	Purpose 
 account_register	purpose_directions	<em>Please explain why you are applying for registration on this site</em><br>
 account_register	btn_register	Register
+account_register	btn_next	Next Step
 account_register	msg_confirm	Congratulations. You have registered on $1. Your new user name is: $2</b><p>You are now being sent a confirmation email to verify your email  address. Visiting the link sent to you in this email will activate your account.</p>
 account_register	title_approval	New Account Registration - Ready For Approval
 account_register	msg_approval	Congratulations. Your registration request on $1 for user <b>$2</b> has been taken into account. <p>The site administrators are now going to review your request for approval. Once approved you will receive a confirmation email to verify your email address. Visiting the link sent to you in this email will activate your account.

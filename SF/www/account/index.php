@@ -48,8 +48,21 @@ $HTML->box1_top($Language->getText('account_options', 'title').": ".user_getreal
 <TR valign=top>
 <TD><?php echo $Language->getText('account_options', 'login_name'); ?>: </TD>
 <TD><B><?php print $row_user['user_name']; ?></B></td>
-<td><A href="change_pw.php">[Change Password]</A></TD>
+<td><?php if (($GLOBALS['sys_auth_type'] != 'ldap')||(!$row_user['ldap_name'])) {
+    echo '<A href="change_pw.php">['.$Language->getText('account_options', 'change_password').']</A></TD>';
+ } ?>
 </TR>
+
+<?php 
+if ($GLOBALS['sys_auth_type'] == 'ldap') {
+    echo '
+<TR valign=top>
+<TD>'.$Language->getText('account_options', 'ldap_name').': </TD>
+<TD><B>'.$row_user['ldap_name'].'</B></td>
+<td></TD>
+</TR>';
+}
+?>
 
 <TR valign=top>
 <TD><?php echo $Language->getText('account_options', 'timezone'); ?>: </TD>

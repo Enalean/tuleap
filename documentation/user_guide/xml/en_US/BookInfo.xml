@@ -441,7 +441,7 @@
         </revremark>
       </revision>
       <revision>
-        <revnumber>2.6.20</revnumber>
+        <revnumber>2.7</revnumber>
 
         <date>3-Mar-2005</date>
 
@@ -455,7 +455,27 @@
         </revremark>
       </revision>
       <revision>
-        <revnumber>2.6.21</revnumber>
+        <revnumber>2.7.1</revnumber>
+
+        <date>16-Mar-2005</date>
+
+        <authorinitials>Nicolas Guerin</authorinitials>
+
+        <revremark>Reworked document manager chapter after major update of this service.
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>2.7.2</revnumber>
+
+        <date>17-Mar-2005</date>
+
+        <authorinitials>Nicolas Guerin</authorinitials>
+
+        <revremark>Added information on document cross-referencing.
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>2.7.3</revnumber>
 
         <date>18-Mar-2005</date>
 
@@ -464,6 +484,16 @@
         <revremark> Tracker chapter: Add a tip for handling csv files under 
 	Excel corresponding to SR 162 on partners. Point from Project Administration
 	Chapter to this tip.
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>2.7.4</revnumber>
+
+        <date>30-Mar-2005</date>
+
+        <authorinitials>Nicolas Guerin</authorinitials>
+
+        <revremark>Registration phase: added tip for LDAP authentication.
         </revremark>
       </revision>
     </revhistory>

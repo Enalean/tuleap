@@ -1,0 +1,13 @@
+<?php
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+
+// The following script is used to make additional checks in the LDAP directory before creating a CodeX account.
+// It may be used to check that the account is not suspended, 
+
+?>

@@ -436,6 +436,14 @@ done
 
 $CAT <<EOF | $MYSQL $pass_opt sourceforge
 
+
+---
+--- LDAP support
+---
+ALTER TABLE user ADD ldap_name TEXT AFTER unix_box;
+
+
+
 ---
 --- DocManager update
 ---
@@ -838,6 +846,7 @@ todo "Customize /etc/php.ini: "
 todo "  - memory_limit = 30M"
 todo "  - post_max_size = 20M"
 todo "  - upload_max_file_size = 20M"
+todo "Customize LDAP parameters in local.inc "
 
 # End of it
 echo "=============================================="

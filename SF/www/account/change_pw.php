@@ -51,18 +51,20 @@ function register_valid()	{
 	}
 	
 	// if we got this far, it must be good
-	$res = db_query("UPDATE user SET user_pw='" . md5($GLOBALS['form_pw']) . "',"
-		. "unix_pw='" . account_genunixpw($GLOBALS['form_pw']) . "',"
-		. "windows_pw='" . account_genwinpw($GLOBALS['form_pw']) . "' WHERE "
-		. "user_id=" . user_getid());
-
-	if (! $res) {
-	  $GLOBALS['register_error'] = "Internal error: Could not update password.";
-	  return 0;
+        if (!account_set_password(user_getid(),$GLOBALS['form_pw']) ) {
+            $GLOBALS['register_error'] = "Internal error: Could not update password.";
+            return 0;
 	}
 
 	return 1;
 }
+
+if ($GLOBALS['sys_auth_type'] == 'ldap') {
+    // Don't send LDAP password!
+    // There should be no link to this page...
+    exit_permission_denied();
+}
+
 
 // ###### first check for valid login, if so, congratulate
 

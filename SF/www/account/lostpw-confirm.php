@@ -10,6 +10,12 @@ require_once('pre.php');
  
 $Language->loadLanguageMsg('account/account');
 
+if ($GLOBALS['sys_auth_type'] == 'ldap') {
+    // Don't send LDAP password!
+    // There should be no link to this page...
+    exit_permission_denied();
+ }
+
 $confirm_hash = md5($session_hash . strval(time()) . strval(rand()));
 
 $res_user = db_query("SELECT * FROM user WHERE user_name='$form_loginname'");

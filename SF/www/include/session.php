@@ -7,18 +7,54 @@
 // $Id$
 //
 
+require_once('common/include/LDAP.class');
+
 $G_SESSION=array();
 $G_USER=array();
 
 function session_login_valid($form_loginname,$form_pw,$allowpending=0)  {
-	global $session_hash,$feedback;
+    global $session_hash,$feedback;
+    $usr=null;
 
-	if (!$form_loginname || !$form_pw) {
-		$feedback = 'Missing Password Or User Name';
-		return array(false,'');
-	}
+    if (!$form_loginname || !$form_pw) {
+        $feedback = 'Missing Password Or User Name';
+        return array(false,'');
+    }
 
-	//get the user from the database using user_id and password
+    $use_ldap_auth=false;
+
+    // Only perform LDAP authentication if this is the default authentication mode AND if the ldap
+    // login exists. Otherwise, do a standard CodeX authentication.
+    // Why? transition phase between CodeX and LDAP authentication, and additionnaly,
+    // some users are not in the LDAP directory (e.g. 'admin')
+    if ($GLOBALS['sys_auth_type'] == 'ldap') {
+        // LDAP authentication
+        $res = db_query("SELECT user_id,user_name,status,user_pw FROM user WHERE "
+                        . "ldap_name='$form_loginname'");
+        if (!$res || db_numrows($res) < 1) {
+            //invalid user_name
+            //$feedback='Invalid LDAP User Name';
+            //return false;
+        } else {
+            $use_ldap_auth=true;
+        }
+    }
+
+    if ($use_ldap_auth) {
+        // LDAP authentication
+        $usr = db_fetch_array($res);
+        
+        // Perform LDAP authentication
+        $ldap = new LDAP();
+        if (!$ldap->authenticate($form_loginname,$form_pw)) {
+            // password is invalid or user does not exist
+            $feedback = $GLOBALS['sys_org_name'].' Directory Authentication: '.$ldap->getErrorMessage();
+            return array(false,$status);
+        }
+    } else {
+        // Standard CodeX authentication, based on password stored in DB
+
+        //get the user from the database using user_id and password
 	$res = db_query("SELECT user_id,status FROM user WHERE "
 		. "user_name='$form_loginname' "
 		. "AND user_pw='" . md5($form_pw) . "'");
@@ -26,44 +62,52 @@ function session_login_valid($form_loginname,$form_pw,$allowpending=0)  {
 		//invalid password or user_name
 		$feedback='Invalid Password Or User Name';
 		return array(false,'');
-	} else {
-		// check status of this user
-		$usr = db_fetch_array($res);
-		$status = $usr['status'];
+	} 
 
-		// if allowpending (for verify.php) then allow
-		if ($allowpending && ($status == 'P')) {
-			//1;
-		} else {
-			if ($status == 'S') { 
-				//acount suspended
-				$feedback = 'Account Suspended';
-				return array(false,$status);
-			}
-			if ($status == 'P') { 
-				//account pending
-				$feedback = 'Account Pending';
-				return array(false,$status);
-			} 
-			if ($status == 'D') { 
-				//account deleted
-				$feedback = 'Account Deleted';
-				return array(false,$status);
-			}
-			if (($usr['status'] != 'A')&&($usr['status'] != 'R')) {
-				//unacceptable account flag
-				$feedback = 'Account Not Active';
-				return array(false,$status);
-			}
-		}
-		//create a new session
-		session_set_new(db_result($res,0,'user_id'));
+        $usr = db_fetch_array($res);
 
-		//if we got this far, the name/pw must be ok
-		//db_query("UPDATE session SET user_id='" . db_result($res,0,'user_id') . "' WHERE session_hash='$session_hash'");
+        if (($GLOBALS['sys_auth_type'] == 'ldap')&&($usr['ldap_name'])) {
+            // The user MUST use his LDAP login if it exists
+            $feedback=' Please use your ldap login:'.$usr['ldap_name'];
+            return array(false,$status);
+        } 
+    }
+     
+            
+    // check status of this user
+    $status = $usr['status'];
+    // if allowpending (for verify.php) then allow
+    if ($allowpending && ($status == 'P')) {
+        //1;
+    } else {
+        if ($status == 'S') { 
+            //acount suspended
+            $feedback = 'Account Suspended';
+            return array(false,$status);
+        }
+        if ($status == 'P') { 
+            //account pending
+            $feedback = 'Account Pending';
+            return array(false,$status);
+        } 
+        if ($status == 'D') { 
+            //account deleted
+            $feedback = 'Account Deleted';
+            return array(false,$status);
+        }
+        if (($status != 'A')&&($status != 'R')) {
+            //unacceptable account flag
+            $feedback = 'Account Not Active';
+            return array(false,$status);
+        }
+    }
+    //create a new session
+    session_set_new(db_result($res,0,'user_id'));
 
-		return array(true,$status);
-	}
+    //if we got this far, the name/pw must be ok
+    //db_query("UPDATE session SET user_id='" . db_result($res,0,'user_id') . "' WHERE session_hash='$session_hash'");
+
+    return array(true,$status);
 }
 
 function session_checkip($oldip,$newip) {

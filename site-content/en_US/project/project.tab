@@ -176,7 +176,7 @@ project_admin_permissions	all_registered_users_added	All registered users added
 project_admin_permissions	cant_add_ug_reg_users	$1 - ERROR: Cannot add ugroup Registered Users
 project_admin_permissions	g_nobody_ignored	Group 'nobody' ignored since other groups where selected.
 project_admin_permissions	nobody_has_no_access	Please note that nobody has access to this object any longer!
-project_admin_permissions	cant_add_ug	$1 - ERROR: Cannot add ugroup $2. Are you a project administrator?
+project_admin_permissions	cant_add_ug	$1 - ERROR: Cannot add ugroup $2. Are you an administrator for this service?
 project_admin_permissions	def_val	(default values)
 project_admin_permissions	perm_update_success	$1 - Permissions successfully updated
 project_admin_permissions	reset_to_def	Reset To Defaults

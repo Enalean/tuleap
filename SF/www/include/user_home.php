@@ -101,67 +101,57 @@ if (!$res_user || db_numrows($res_user) < 1) {
 
 <?php
 // Some more information on the user from the LDAP server if available
-if ($sys_ldap_server) {
+if ($GLOBALS['sys_ldap_server']) {
     if (!$showdir) {
 	echo '<td colspan="2" align="center"><a href="'.$PHP_SELF.'/?showdir=1"><hr>[ More from the '.$GLOBALS['sys_org_name'].' Directory... ]</a><td>';
 	
     } else {
-	$ds=ldap_connect($sys_ldap_server);
-	if ($ds) {
-	    $r=ldap_bind($ds);
-	    include(util_get_content('include/user_home'));
-	    // Build the LDAP filter for the search
-	    if ($GLOBALS['sys_ldap_filter']) {
-		$ldap_filter = $GLOBALS['sys_ldap_filter'];
-	    } else {
-		$ldap_filter = "mail=%email%";
-	    }
-	    preg_match_all("/%([\w\d\-\_]+)%/", $ldap_filter, $match);
-	    while (list(,$v) = each($match[1])) {
-		$ldap_filter = str_replace("%$v%", db_result($res_user,0,$v),$ldap_filter);
-	    }
+        include(util_get_content('include/user_home'));
 
-	    // Now run the ldap search
-	    $sr=ldap_search($ds,$GLOBALS['sys_ldap_dn'],$ldap_filter);
-	    if ($sr) {
-		// Ideally we should only have one reply from the LDAP server
-		$info = ldap_get_entries($ds, $sr);
-		if ($info['count'] > 0) {
+        if ($GLOBALS['sys_ldap_filter']) {
+            $ldap_filter = $GLOBALS['sys_ldap_filter'];
+        } else {
+            $ldap_filter = "mail=%email%";
+        }
+        preg_match_all("/%([\w\d\-\_]+)%/", $ldap_filter, $match);
+        while (list(,$v) = each($match[1])) {
+            $ldap_filter = str_replace("%$v%", db_result($res_user,0,$v),$ldap_filter);
+        }
 
-		    // Format LDAP output based on templates given in user_home.txt
-		    if ( $my_html_ldap_format ) {
-			preg_match_all("/%([\w\d\-\_]+)%/", $my_html_ldap_format, $match);
-			$html = $my_html_ldap_format;
-			while (list(,$v) = each($match[1])) {
-			    $value = (isset($info[0][$v]) ? $info[0][$v][0] : "-");
-			    $value = $info[0][$v][0];
-			    $html = str_replace("%$v%", $value, $html);
-			}
-			print $html;
-		    } else {
-			// if no html template then produce a raw output
-			print '<td colspan="2" align="center"><hr><td>';
-			print '<tr valign="top"><td colspan="2">Total number of entries: '.$info["count"]."</td></tr>";
-
-			for ($i=0; $i<$info["count"]; $i++) {
-			    print '<tr valign="top"><td colspan="2"><b>Entry # '.$i."</b></td></tr>";
-			    print '<tr valign="top"><td>&nbsp;&nbsp;Entry dn </td><td>'.$info[$i]["dn"]."</td></tr>";
-			    print '<tr valign="top"><td>&nbsp;&nbsp;# attributes </td><td>'.$info[$i]["count"]."</td></tr>";
-			   
-			    for ($j=0; $j<$info[$i]["count"]; $j++) {
-				$attrib_name = $info[$i][$j];
-				$nb_values = $info[$i][$attrib_name]["count"];
-				unset($info[$i][$attrib_name]["count"]);
-				print '<tr valign="top"><td>&nbsp;&nbsp;'.$attrib_name.'</td><td>'.join('<br>',$info[$i][$attrib_name])."</td></tr>";
-			    }
-			}
-		    }
-		} else
-		    $feedback = $GLOBALS['sys_org_name']." Directory: unkown user";
-	    } else
-		$feedback = $GLOBALS['sys_org_name']." Directory: search failed";
-	} else
-	    $feedback = "LDAP server not responding";
+        $ldap = new LDAP();
+        $info = $ldap->search($GLOBALS['sys_ldap_dn'],$ldap_filter);
+        if (!$info) {
+            $feedback = $GLOBALS['sys_org_name'].' Directory: '.$ldap->getErrorMessage();
+        } else {
+            // Format LDAP output based on templates given in user_home.txt
+            if ( $my_html_ldap_format ) {
+                preg_match_all("/%([\w\d\-\_]+)%/", $my_html_ldap_format, $match);
+                $html = $my_html_ldap_format;
+                while (list(,$v) = each($match[1])) {
+                    $value = (isset($info[0][$v]) ? $info[0][$v][0] : "-");
+                    $value = $info[0][$v][0];
+                    $html = str_replace("%$v%", $value, $html);
+                }
+                print $html;
+            } else {
+                // if no html template then produce a raw output
+                print '<td colspan="2" align="center"><hr><td>';
+                print '<tr valign="top"><td colspan="2">Total number of entries: '.$info["count"]."</td></tr>";
+                
+                for ($i=0; $i<$info["count"]; $i++) {
+                    print '<tr valign="top"><td colspan="2"><b>Entry # '.$i."</b></td></tr>";
+                    print '<tr valign="top"><td>&nbsp;&nbsp;Entry dn </td><td>'.$info[$i]["dn"]."</td></tr>";
+                    print '<tr valign="top"><td>&nbsp;&nbsp;# attributes </td><td>'.$info[$i]["count"]."</td></tr>";
+                    
+                    for ($j=0; $j<$info[$i]["count"]; $j++) {
+                        $attrib_name = $info[$i][$j];
+                        $nb_values = $info[$i][$attrib_name]["count"];
+                        unset($info[$i][$attrib_name]["count"]);
+                        print '<tr valign="top"><td>&nbsp;&nbsp;'.$attrib_name.'</td><td>'.join('<br>',$info[$i][$attrib_name])."</td></tr>";
+                    }
+                }
+            }
+        }
 
 	if ($feedback)
 	    echo '<td colspan="2" align="center"><hr><b>'.$feedback.'</b></td>';

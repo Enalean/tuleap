@@ -49,10 +49,10 @@ if ($action=='remove_user_from_group') {
 	/*
 		Update the user
 	*/
-
-	$result=db_query("UPDATE user SET shell='$form_shell', email='$email' WHERE user_id=$user_id");
-	if (!$result || db_affected_rows($result) < 1) {
-		$feedback .= ' '.$Language->getText('admin_usergroup','error_upd_u');		echo db_error();
+        $result=db_query("UPDATE user SET shell='$form_shell', email='$email', ldap_name='".$HTTP_POST_VARS['ldap_name']."' WHERE user_id=$user_id");
+	if (!$result) {
+		$feedback .= ' '.$Language->getText('admin_usergroup','error_upd_u');
+                echo db_error();
 	} else {
 		$feedback .= ' '.$Language->getText('admin_usergroup','success_upd_u');
 	}
@@ -60,17 +60,17 @@ if ($action=='remove_user_from_group') {
 	if ($form_unixstatus != 'N') {
 		$res_uid = db_query("SELECT unix_uid FROM user WHERE user_id=$user_id");
 		$row_uid = db_fetch_array($res_uid);
-		if ($row_uid[unix_uid] == 0) {
+		if ($row_uid['unix_uid'] == 0) {
 			// need to create uid
 			db_query("UPDATE user SET unix_uid=" . account_nextuid() . " WHERE user_id=$user_id");
 		} 
 		// now do update
 		$result=db_query("UPDATE user SET unix_status='$form_unixstatus' WHERE user_id=$user_id");	
-		if (!$result || db_affected_rows($result) < 1) {
-		    $feedback .= ' '.$Language->getText('admin_usergroup','error_upd_ux');
+		if (!$result) {
+		    $feedback .= ' - '.$Language->getText('admin_usergroup','error_upd_ux');
 		    echo db_error();
 		} else {
-		    $feedback .= ' '.$Language->getText('admin_usergroup','success_upd_ux');
+		    $feedback .= ' - '.$Language->getText('admin_usergroup','success_upd_ux');
 		}
 
 	}
@@ -109,7 +109,7 @@ $row_user = db_fetch_array($res_user);
 
 ?>
 <h2>
-<?php echo $Language->getText('admin_usergroup','header').user_getname($user_id)." (ID ".$user_id.")"; ?></h2>
+<?php echo $Language->getText('admin_usergroup','header').": ".user_getname($user_id)." (ID ".$user_id.")"; ?></h2>
 <h3>
 <?php echo $Language->getText('admin_usergroup','account_info'); ?></h3>
 <FORM method="post" action="<?php echo $PHP_SELF; ?>">
@@ -125,21 +125,28 @@ $row_user = db_fetch_array($res_user);
 <P>
 <?php echo $Language->getText('admin_usergroup','unix_status'); ?>:
 <SELECT name="form_unixstatus">
-<OPTION <?php echo ($row_user[unix_status] == 'N') ? 'selected ' : ''; ?>value="N">
+<OPTION <?php echo ($row_user['unix_status'] == 'N') ? 'selected ' : ''; ?>value="N">
 <?php echo $Language->getText('admin_usergroup','no_account'); ?>
-<OPTION <?php echo ($row_user[unix_status] == 'A') ? 'selected ' : ''; ?>value="A">
+<OPTION <?php echo ($row_user['unix_status'] == 'A') ? 'selected ' : ''; ?>value="A">
 <?php echo $Language->getText('admin_usergroup','active'); ?>
-<OPTION <?php echo ($row_user[unix_status] == 'S') ? 'selected ' : ''; ?>value="S">
+<OPTION <?php echo ($row_user['unix_status'] == 'S') ? 'selected ' : ''; ?>value="S">
 <?php echo $Language->getText('admin_usergroup','suspended'); ?>
-<OPTION <?php echo ($row_user[unix_status] == 'D') ? 'selected ' : ''; ?>value="D">
+<OPTION <?php echo ($row_user['unix_status'] == 'D') ? 'selected ' : ''; ?>value="D">
 <?php echo $Language->getText('admin_usergroup','deleted'); ?>
 </SELECT>
 
 <P>
 <?php echo $Language->getText('admin_usergroup','email'); ?>:
-<INPUT TYPE="TEXT" NAME="email" VALUE="<?php echo $row_user[email]; ?>" SIZE="35" MAXLENGTH="55">
+<INPUT TYPE="TEXT" NAME="email" VALUE="<?php echo $row_user['email']; ?>" SIZE="35" MAXLENGTH="55">
 
 <P>
+<?php 
+if ($GLOBALS['sys_auth_type'] == 'ldap') {
+    echo $Language->getText('admin_usergroup','ldap_name').': <INPUT TYPE="TEXT" NAME="ldap_name" VALUE="'.$row_user['ldap_name'].'" SIZE="35" MAXLENGTH="55">
+<P>';
+}
+?>
+
 <INPUT type="submit" name="Update_Unix" value="<?php echo $Language->getText('global','btn_update'); ?>">
 </FORM>
 

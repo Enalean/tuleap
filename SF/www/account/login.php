@@ -10,7 +10,8 @@ Header( "Expires: Wed, 11 Nov 1998 11:11:11 GMT");
 Header( "Cache-Control: no-cache"); 
 Header( "Cache-Control: must-revalidate"); 
 
-require('../include/pre.php');
+require_once('pre.php');
+require_once('account.php');
 
 $Language->loadLanguageMsg('account/account');
 
@@ -24,6 +25,23 @@ if (!session_issecure() && ($GLOBALS['sys_https_host'] != "")) {
 if ($login) {
     list($success, $status) = session_login_valid($form_loginname,$form_pw);
     if ($success) {
+
+        if ($sys_auth_type == 'ldap') {
+            // If using LDAP authentication, check that local password is still synchronized;
+            // Otherwise, update it.
+         
+            $res = db_query("SELECT user_pw FROM user WHERE ldap_name='$form_loginname'");
+            $usr = db_fetch_array($res);
+            // Check that local password is the same as LDAP password.
+            // Otherwise, update it.
+            if ($usr['user_pw'] != md5($form_pw)) {
+                // LDAP password has changed, so synchronize other paswwords too
+                if (!account_set_password($usr['user_id'],$form_pw )) {
+                    $feedback= $Language->getText('account_login', 'error_can_t_update_passwd');
+                }
+            }
+        }
+
 	/*
 	  You can now optionally stay in SSL mode
 	*/
@@ -123,7 +141,11 @@ if ( $GLOBALS['sys_https_host'] != '' && $GLOBALS['sys_force_ssl'] == 0 &&
 <input type="submit" name="login" value="<?php echo $Language->getText('account_login', 'login_btn'); ?>">
 </form>
 <P>
-<?php echo $Language->getText('account_login', 'lost_pw',array($GLOBALS['sys_email_admin'],$GLOBALS['sys_name'])); ?>
+<?php 
+if ($GLOBALS['sys_auth_type'] == 'codex') {
+    echo $Language->getText('account_login', 'lost_pw',array($GLOBALS['sys_email_admin'],$GLOBALS['sys_name'])); 
+}
+?>
 <P>
 <?php echo $Language->getText('account_login', 'create_acct',array($GLOBALS['sys_name'],$GLOBALS['sys_org_name'])); ?>
 

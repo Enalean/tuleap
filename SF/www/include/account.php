@@ -20,6 +20,17 @@ function account_pwvalid($pw) {
 	return 1;
 }
 
+// Set user password (Unix, Web and Windows)
+function account_set_password($user_id,$password) {
+    $res = db_query("UPDATE user SET user_pw='" . md5($password) . "',"
+                    . "unix_pw='" . account_genunixpw($password) . "',"
+                    . "windows_pw='" . account_genwinpw($password) . "' WHERE "
+                    . "user_id=" . $user_id );          
+    if (! $res) {
+        return false;
+    }
+    return true;
+}
 
 // Add user to an existing project
 function account_add_user_to_group ($group_id,$user_unix_name) {
@@ -84,6 +95,17 @@ function account_send_add_user_to_group_email($group_id,$user_id) {
             mail($email_address, $GLOBALS['sys_name']." - Welcome to Project ".$group_name,$message,"From: noreply@".$host);
         }
     }
+}
+
+
+// Generate a valid Unix login name from the email address.
+function account_make_login_from_email($email) {
+    $pattern = "/^(.*)@.*$/";
+    $replacement = "$1";
+    $name=preg_replace($pattern, $replacement, $email);
+    $name = substr($name, 0, 32);
+    $name = strtr($name, ".:;,?%^*(){}[]<>+=$‡‚ÈËÍ˘˚Á", "___________________aaeeeuuc");
+    return strtolower($name);
 }
 
 
@@ -213,4 +235,3 @@ function account_shellselects($current) {
 		}
 	}
 }
-

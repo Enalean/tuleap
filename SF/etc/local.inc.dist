@@ -125,14 +125,52 @@ $sys_crondelay=2;
 $sys_news_group=46;
 
 //
-// LDAP server to query for more information on CodeX users
-// (leave blank to disable LDAP lookup). If LDAP is defined
-// then also define the distinguised name to use in LDAP queries
-// the ldap filter is the filter to use to query the LDAP directory
-// (%name% are substituted with the value from the user table)
+// Authentication scheme:
+// Should be either 'ldap' or 'codex'
+// WARNING: this is still experimental
+// DON'T USE LDAP ON A PRODUCTION SERVER YET
+$sys_auth_type = 'codex';
+
+//
+// LDAP server(s) to query for more information on CodeX users and 
+// for authentication.
+// You may use a comma-separated list if there are several servers available
+// (leave blank to disable LDAP lookup). 
+// To specify secure LDAP servers, use 'ldaps://servername' 
 $sys_ldap_server='%sys_ldap_server%';
+
+
+// To enable LDAP information on CodeX users, also define the DN 
+// (distinguised name) to use in LDAP queries.
+// The ldap filter is the filter to use to query the LDAP directory
+// (%name% are substituted with the value from the user table)
 $sys_ldap_dn='o=XEROX, c=US';
 $sys_ldap_filter='mail=%email%';
+
+// For LDAP systems that do not accept anonymous binding, define here
+// a valid DN and password:
+//$sys_ldap_bind_dn="ldapsearch";
+//$sys_ldap_bind_passwd="xxxxxxxxx";
+
+// LDAP authentication:
+// sys_ldap_auth_dn is used for binding to the LDAP server with the
+// ldap name and password.
+// sys_ldap_auth_filter is needed to retrieve user information when
+// creating the account, and during two-step authentication
+//
+// You should use '%ldap_name%' wherever the ldap login would appear.
+//
+// NOTE: if you need a two-step authentication (search, then bind),
+// don't specify any '%ldap_name%' in $sys_ldap_auth_dn
+// (in this case, you should probably have:
+//  $sys_ldap_auth_dn == $sys_ldap_dn )
+//
+// 1- Direct authentication:
+//$sys_ldap_auth_dn='dc=xerox, dc=com, cn=%ldap_name%';
+// 2- Two-step authentication (search, then bind):
+$sys_ldap_auth_dn='o=XEROX, c=US';
+$sys_ldap_auth_filter='uid=%ldap_name%';
+
 
 //
 // System name to be used in Web pages, documentation,etc.

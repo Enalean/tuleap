@@ -39,14 +39,9 @@ function register_valid()	{
   }
 	
   // if we got this far, it must be good
-  $res = db_query("UPDATE user SET user_pw='" . md5($GLOBALS['form_pw']) . "',"
-		  . "unix_pw='" . account_genunixpw($GLOBALS['form_pw']) . "',"
-		  . "windows_pw='" . account_genwinpw($GLOBALS['form_pw']) . "' WHERE "
-		  . "user_id=" . $GLOBALS['user_id']);
-
-  if (! $res) {
-    $GLOBALS['register_error'] = $Language->getText('admin_user_changepw','error_update');
-    return 0;
+  if (!account_set_password($GLOBALS['user_id'],$GLOBALS['form_pw']) ) {
+      $GLOBALS['register_error'] = $Language->getText('admin_user_changepw','error_update');
+      return 0;
   }
     
   return 1;
@@ -61,13 +56,16 @@ if (register_valid()) {
     $m= 60 - $d['minutes'];
 ?>
 <h3><?php echo $Language->getText('admin_user_changepw','header_changed'); ?></h3>
-									       <p><?php echo $Language->getText('admin_user_changepw','msg_changed',array($h,$m)); ?></h3>
+<p><?php echo $Language->getText('admin_user_changepw','msg_changed',array($h,$m)); ?></h3>
 
 <p><a href="/admin"><?php echo $Language->getText('global','back'); ?></a>.
 <?php
 } else { // not valid registration, or first time to page
     $HTML->header(array(title=>$Language->getText('admin_user_changepw','title')));
-
+    if ($GLOBALS['sys_auth_type'] == 'ldap') {
+        // Won't change the LDAP password!
+        echo "<p><b><span class=\"feedback\">".$Language->getText('admin_user_changepw','ldap_warning')."</span></b>";
+    }
 ?>
 <h3><?php echo $Language->getText('admin_user_changepw','header'); ?></h3>
 <?php if ($register_error) print "<p><span class=\"highlight\">$register_error</span>"; ?>

@@ -1806,21 +1806,25 @@ there<br>
   <li>edit the custom file it and customize it to your liking<br>
   </li>
 </ul>
-<h2>LDAP Directory</h2>
+<hr>
+<h1>LDAP Authentication and Querying</h1>
+<h2>LDAP information from the company directory</h2>
+<p>
 While visiting a user information page on CodeX, you have the ability
 to query the LDAP directory of your company to get more information
-about this user.&nbsp; The follwoing variables in the local.inc
+about this user.&nbsp; The following variables in the local.inc
 configuration file (see <a href="#System_configuration_file_local.inc">above</a>)
 allow you to customize the LDAP search:<br>
 <ul>
-  <li>$<span style="font-family: monospace;">sys_ldap_server</span>:
-the full name of your the LDAP server to query (ask your system
-administrator if you don't know of any around you)</li>
+  <li><span style="font-family: monospace;">$sys_ldap_server</span>:
+the full name of the LDAP server to query (ask your system
+administrator if you don't know of any around you). You may specify
+multiple directories or mirrors by using a comma separated list of servers.</li>
   <li><span style="font-family: monospace;">$sys_ldap_dn</span>: the
 distinguished name (DN) to use in the LDAP query (Remark: the LDAP
 query in CodeX uses the user email address as the search key)</li>
   <li><span style="font-family: monospace;">$sys_ldap_filter:</span>
-the search filter to use when a query is sent to the LDAP server . This
+the search filter to use when a query is sent to the LDAP server. This
 is the filter argument used in the ldap_search call. Any pattern of the
 form %name% in the search filter will be replaced with the
 corresponding value from the user table before ldap_search is called.
@@ -1828,6 +1832,7 @@ As an example <span style="font-family: monospace;">%email%</span>
 will be replaced by the user email, <span
  style="font-family: monospace;">%user_name%</span> means the user
 login name,etc...</li>
+<li><span style="font-family: monospace;">$sys_ldap_bind_dn</span> and <span style="font-family: monospace;">$sys_ldap_bind_passwd</span> need only to be defined if the LDAP server does not allow anonymous binding. In such a case, please specify an LDAP distinguished name (DN) and password to use when querying or searching the directory.
 </ul>
 It is also possible to customize the HTML output of the LDAP search
 when one accesses the information about a user on CodeX. You must edit
@@ -1835,6 +1840,46 @@ the script <span style="font-family: monospace;">site-content/<span
  style="font-style: italic;">LANG_COUNTRY</span>/include/user_home.txt</span>
 to customize the HTML output and save it in the corresponding custom
 directory (see <a href="#Site_content">Site Content</a> section above).<br>
+<h2>LDAP Authentication</h2>
+<p>
+CodeX also supports LDAP authentication: passwords are no longer CodeX specific, but are managed in an external LDAP directory (e.g. the company directory).
+<p><strong>Please note:</strong> as of CodeX 2.4, LDAP authentication is still experimental. <strong>Use with caution</strong>.
+<h3>Specifications</h3>
+<p>CodeX now supports LDAP authentication. In order to use this authentication scheme, set <span style="font-family: monospace;">$sys_auth_type</span> to 'ldap' and define the other variables in local.inc as specified below.
+<p>The LDAP login and the CodeX login might not be the same. The reason for this is that the LDAP logins might not be compatible with UNIX logins (e.g. they might contain spaces, accentuated characters, etc.). In this case, the users will have two logins.
+<ul><li> The web authentication login is the LDAP login: it is used to access the web-based user interface of CodeX. 
+<li>Some services need a unix-based authentication, namely: CVS (with pserver or SSH), Subversion, FTP and shell access, and thus rely on the CodeX login.
+</ul>
+<p>Note that both logins use the same password, i.e. the LDAP password.
+<h4>Registration</h4>
+The registration phase is made up of two phases:
+<ul><li>On the first screen, simply type your LDAP login and password.
+<li>If the information was correct, the second screen displays the final registration form. Most fields are already defined, based on the LDAP directory information: email address, real name, unix login (currently based on email address).
+</ul>
+Fill the remaining blank fields and press the submit button. Your account is created!
+<br> Note that if account creation needs approval, the account is not immediately available.
+<h4>Login</h4>
+<p>
+When logging on the CodeX web interface, simply enter your LDAP name and password. The system will dynamically check your password against the LDAP server.
+<p>If the LDAP password is different from the current CodeX password (used for Unix services: CVS, etc.), then the CodeX password is updated with the LDAP password. This is to ensure that the two logins always use the same password.
+<h3>LDAP authentication setup</h3>
+<p>In order to activate CodeX LDAP authentication, one only has to modify the local.inc configuration file (see <a href="#System_configuration_file_local.inc">above</a>).
+<ul><li><span style="font-family: monospace;">$sys_ldap_server</span> is the full name of the LDAP server(s). You may specify
+multiple directories or mirrors by using a comma separated list of servers. To specify secure LDAP servers, use 'ldaps://servername'. This variable is already defined above for querying LDAP information from the company directory.
+<li><span style="font-family: monospace;">$sys_ldap_bind_dn</span> and <span style="font-family: monospace;">$sys_ldap_bind_passwd</span> may also be necessary depending on your LDAP setup (see above).
+<li><span style="font-family: monospace;">$sys_auth_type</span> defines the authentication scheme to use. Its default value is 'codex' for CodeX specific login/passwords. In order to use LDAP authentication, set this variable to 'ldap'.
+<li><span style="font-family: monospace;">$sys_ldap_auth_dn</span> is the distinguished name (DN) used for checking the user LDAP name and password. 
+<ul><li>If you already know the correct DN to use for your LDAP repository, please use <span style="font-family: monospace;">'%ldap_name%'</span> wherever the user LDAP login should appear in this DN. It will automatically be replaced by the login name entered by the user. In order to test the user credentials, the system will perform an LDAP bind with this DN and the user entered password. 
+<br>Example: <span style="font-family: monospace;">$sys_ldap_auth_dn = 'dc=xerox, dc=com, cn=%ldap_name%'</span>.
+<li> If you don't know the DN to use, you probably need a two-step authentication: an initial LDAP query with the first DN defined here and the filter defined below (<span style="font-family: monospace;">$sys_ldap_auth_filter</span>) will return the actual DN to use for authentication. Then a bind with the correct DN will be performed to test the credentials of the user. In this latter case, the string <span style="font-family: monospace;">'%ldap_name%'</span> should <b>not</b> appear in this variable, and you should probably have: <span style="font-family: monospace;">$sys_ldap_auth_dn</span> == <span style="font-family: monospace;">$sys_ldap_dn</span>. 
+<br>Example: <span style="font-family: monospace;">$sys_ldap_auth_dn = 'o=XEROX, c=US'</span>.
+</ul>
+<li><span style="font-family: monospace;">$sys_ldap_auth_filter</span> defines the query filter to use for authentication-related LDAP queries. This variable <b>must</b> contain the <span style="font-family: monospace;">'%ldap_name%'</span> string, that will be replaced automatically by the user LDAP login. <br>Example: <span style="font-family: monospace;">$sys_ldap_auth_filter = 'uid=%ldap_name%'</span>.
+<br>It is used in two places:
+<ul><li>First, when a new user registers in CodeX, she needs to enter her LDAP login name. The system will then query the LDAP directory for additional information about this person (email address, real name, etc.). <span style="font-family: monospace;">$sys_ldap_auth_filter</span> is the filter used in this query.
+<li>When a two-step LDAP authentication is in place (see above), this filter is used in the initial LDAP query run to extract the user DN needed for the authentication.
+</ul>
+</ul>
 <hr>
 <h1><a name="Backend_Scripts"></a>Backend Scripts<br>
 </h1>
