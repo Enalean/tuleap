@@ -1,0 +1,30 @@
+BODY { background-color: #FFFFFF; font-family: arial,helvetica,sans-serif; }
+
+A { text-decoration: none; color #6666FF; }
+A:visited { text-decoration: none; color: #6666AA; }
+A:link { text-decoration: none; color: #6666AA; }
+A:active { text-decoration: none; color: #6666AA; }
+A:hover { text-decoration: none; color: #FF6666 }
+OL,UL,P,BODY,TD,TR,TH,FORM,SPAN { font-family: arial,helvetica,sans-serif;color: #333333 }
+H1,H2,H3,H4,H5,H6 { font-family: arial,helvetica,sans-serif }
+PRE,TT { font-family: courier,sans-serif }
+
+SPAN.center { text-align: center }
+SPAN.boxspace { font-size: 2pt; }
+
+A.maintitlebar { color: #FFFFFF }
+A.maintitlebar:visited { color: #FFFFFF }
+
+A.sortbutton { color: #FFFFFF; text-decoration: underline; }
+A.sortbutton:visited { color: #FFFFFF; text-decoration: underline; }
+
+A.menus { color: #000000; text-decoration: underline; }
+A.menus:visited { color: #000000; text-decoration: underline; }
+
+A.tabs { color: #000000; text-decoration: underline; }
+A.tabs:visited { color: #000000; text-decoration: underline; }
+
+SPAN.alignright { text-align: right }
+SPAN.maintitlebar { font-size: 10pt; color: #FFFFFF }
+SPAN.titlebar { text-align: center; font-size: 10pt; color: #FFFFFF; font-weight: bold }
+TD.featurebox { font-size: small; }

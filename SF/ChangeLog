@@ -1,0 +1,148 @@
+------------------------------------------------------------------------------
+Wed Sep 6, 3:30:30 PDT 2000
+
+2.0   
+	- To get help setting up your copy of SourceForge, 
+	  visit the "SF Offsite Talk" discussion boards at 
+	  http://sourceforge.net/forum/forum.php?forum_id=21304
+
+	- Foundry code now present and cleaned up.
+	  You can create new foundries simply by selecting that option in 
+	  the /admin/groupedit.php page (Tim)
+
+	- Theming support sitewide and html library cleanup. Sample themes 
+	  included in /www/themes/ (Geoff)
+
+	- Audit trail for projects. Now when site-admins and project-admins 
+	  change a project, certain events will cause an audit trail recording 
+	  (events like adding/removing users, updating permissions, etc) (Tim)
+
+	- File release system totally rewritten from the ground up to use a 
+	  more normalized database schema. There is an upgrade script in 
+	  /www/admin/ which should help you migrate data from the old 
+	  structure (Tim)
+
+	- Using some classes to "objectize" things like Groups, Projects, 
+	  and Foundries. Project and Foundry extend Group. See 
+	  /include/Group.class /include/Foundry.class and 
+	  /include/Project.class (Tim)
+
+	- Hundreds of misc. interface cleanups sitewide. More user feedback, 
+	  ordering of pop-up list boxes, submit buttons added to the tops of 
+	  many forms sitewide, etc etc (Tim, Geoff, Wallace Lee)
+
+	- Task manager can now move tasks among subprojects. (Wallace Lee)
+
+	- Sitewide stats project. Organizing daily stats for each project 
+	  into summary tables, graphing the results. (Matt Snelham)
+
+	- Groundwork for advogato-like system of peer ratings. Need to 
+	  finish user interface. New system goes beyond advogato, as each 
+	  user has a unique "importance factor" and overall ranking among 
+	  all users on the entire site. Only users that have achieved a 
+	  "trust" level will be able to successfully rate others. See 
+	  /www/admin/calculate_user_metric.php (Tim)
+
+	- Changed user home pages to /users/*user_name*/ using .htaccess 
+	  directive similar to /foundry/ and /project/ (Tim)
+
+------------------------------------------------------------------------------
+Thu Jul  13 10:45:26 PDT 2000
+
+1.5.0 
+
+        - To get help setting up your copy of SourceForge,           
+          visit the "SF Offsite Talk" discussion boards at
+          http://sourceforge.net/forum/forum.php?forum_id=21304
+
+	- Added a "portability" patch. Massive thanks to 
+	  William Hardeman and David HM Spector for this. SF deployers 
+	  everywhere will thank them
+
+	- Removed a lot of hard-coded references to SF.net everywhere, 
+	  including hard-coded user_id's of the SF core staff
+
+	- Wallace Lee continues to make numerous clean patches throughout 
+	  the site (naming forums/subprojects/mailing lists among others)
+
+	- Optimizations throughout the code base - added intelligence to the
+	  user.php and group.php library so database queries aren't wasted. 
+
+	- Tested under PHP4 and only one know issue was found and fixed.
+
+	- Starting the process of database portability. Changed the keyword 
+	  "public" in groups to "is_public". Changing the "user" table to 
+	  "users" is next in line, but it is a HUGE task.
+
+	- Tested some features on Postgres and found that LIMIT/OFFSET 
+	  syntax is incompatible. Postgres also cannot yet handle large 
+	  text fields that are > 8K in length (problem for the patch Mgr)
+
+	- Slick new "browse" options on the bug/task/support/project mgrs
+
+	- Changed project homepages to "/projects/*project_name*/" using 
+	  the .htaccess "files" directive. This is known to be problematic 
+	  on some other platforms.
+
+	- Laid groundwork for "portals" which are half-baked and considered 
+	  useless right now.
+
+	- Project Admin page modernized
+
+------------------------------------------------------------------------------
+Thu May  4 15:23:26 PDT 2000
+
+1.1.0 - Added Support Manager
+
+      - Added Help Wanted System
+
+      - Data abstraction in all modules
+
+      - TROVE catorgization
+
+      - Download Stats Rewrite
+
+      - eval() security fixes (muks)
+
+      - Custom Bug/Support Categories (wallace)
+
+      - Ability to remove yourself from project (wallace)
+
+      - Bundles of code cleanups
+
+      - Navigation Updates
+
+      - Hooks Added to sitewide help
+
+      - other fixes to numerous to list
+        
+------------------------------------------------------------------------------
+Sun Jan 30 09:22:39 PST 2000
+
+1.0.4 - Added docs/ Directory containing both and Installation Guide and a
+        Administration guide provided by the SF Docs Projects. Thanks to
+	the sfdocs people for contributing this. http://sfdocs.sourceforge.net
+
+      - Added etc/local.inc as a example for /etc/local.inc which contains
+        the database information need to run this application.
+
+      - Patch Manager
+
+      - Email notification of files and forums that are being monitored. 
+
+      - Sorting of columns via link through the bugtracker, patch managers,
+        and task manager.  - (loic@users.sourceforge.net) - Thanks!
+
+      - All file extensions allowed on file uploads.
+
+------------------------------------------------------------------------------
+
+Thu Jan 14 09:10:37 PST 2000
+
+1.0.3 - *** Initial Code Relase ***
+        Includes: Bugtracking, Project Management, Forums, Mailing Lists,
+	Surveys, Software Map, File Releases, Top Projects, Site Docs,
+	Project News, Site News, Snippet Library, Registration System, and
+	Individual Account Maitenance.
+
+------------------------------------------------------------------------------

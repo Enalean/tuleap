@@ -1,0 +1,58 @@
+CREATE TABLE patch (
+  patch_id int(11) DEFAULT '0' NOT NULL auto_increment,
+  group_id int(11) DEFAULT '0' NOT NULL,
+  patch_status_id int(11) DEFAULT '0' NOT NULL,
+  patch_category_id int(11) DEFAULT '0' NOT NULL,
+  submitted_by int(11) DEFAULT '0' NOT NULL,
+  assigned_to int(11) DEFAULT '0' NOT NULL,
+  open_date int(11) DEFAULT '0' NOT NULL,
+  summary text,
+  code mediumtext,
+  close_date int NOT NULL DEFAULT '0',
+  PRIMARY KEY (patch_id),
+  KEY idx_patch_group_id (group_id)
+);
+
+INSERT INTO patch (patch_id) VALUES ('100000');
+
+#
+# Table structure for table 'patch_status'
+#
+CREATE TABLE patch_status (
+  patch_status_id int(11) DEFAULT '0' NOT NULL auto_increment,
+  status_name text,
+  PRIMARY KEY (patch_status_id)
+);
+
+insert into patch_status values('1','Open');
+insert into patch_status values('2','Closed');
+insert into patch_status values('3','Deleted');
+insert into patch_status values('4','Postponed');
+
+#
+# Table structure for table 'patch_group'
+#
+CREATE TABLE patch_category (
+  patch_category_id int(11) DEFAULT '0' NOT NULL auto_increment,
+  group_id int(11) DEFAULT '0' NOT NULL,
+  category_name text NOT NULL,
+  PRIMARY KEY (patch_category_id),
+  KEY idx_patch_group_group_id (group_id)
+);
+
+insert into patch_category VALUES ('100','0','None');
+insert into patch_category VALUES ('10000','0','None');
+
+#
+# Table structure for table 'patch_history'
+#
+CREATE TABLE patch_history (
+  patch_history_id int(11) DEFAULT '0' NOT NULL auto_increment,
+  patch_id int(11) DEFAULT '0' NOT NULL,
+  field_name text NOT NULL,
+  old_value text NOT NULL,
+  mod_by int(11) DEFAULT '0' NOT NULL,
+  date int(11),
+  PRIMARY KEY (patch_history_id),
+  KEY idx_patch_history_patch_id (patch_id)
+);

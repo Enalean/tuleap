@@ -1,0 +1,83 @@
+<?php
+//
+// SourceForge: Breaking Down the Barriers to Open Source Development
+// Copyright 1999-2000 (c) The SourceForge Crew
+// http://sourceforge.net
+//
+// $Id$ 
+require('pre.php');
+require("graph_lib.php");
+require("project_stats_utils.php");
+
+
+//
+//  This is some of the ugliest code I've ever written. <sob>
+//
+
+if ( !$group_id ) {
+	$group_id = 0;
+}
+
+if ( !span ) {
+	$span = 30;
+}
+if ( $span < 4 ) { 
+	$span = 4; 
+}
+
+
+$today = localtime( time(), 1 );
+
+//
+// How does Uriah say it? PHEAR the date manipulation.
+//
+if ( $view == "monthly" ) {
+	$begin_time = gmmktime( 0, 0, 1, $today['tm_mon'] - $span + 2, 1, $year );
+} elseif ( $view == "weekly" ) {
+	$foo = gmmktime( 0, 0, 1, $today['tm_mon'] + 1, $today['tm_mday'] - (7 * $span), $year );
+	list( $begin_time, $bar ) = week_to_dates( gmstrftime("%U", $foo ) + 1, gmstrftime("%Y", $foo ) );
+} else {
+	$begin_time = gmmktime( 0, 0, 1, $today['tm_mon'] + 1, $today['tm_mday'] - $span, $year );
+}
+$year = gmdate("Y", $begin_time);
+$month = sprintf("%02d", gmdate("m", $begin_time) );
+$day = gmdate("d", $begin_time);
+
+
+$sql  = "SELECT month,day,downloads,(site_views + subdomain_views) as views ";
+$sql .= "FROM stats_project ";
+$sql .= "WHERE ( (( month = " . $year . $month . " AND day >= " . $day . " ) OR ";
+$sql .= "( month > " . $year . $month . " )) AND group_id = " . $group_id . " ) ";
+$sql .= "GROUP BY month,day ORDER BY month,day";
+
+$res = db_query( $sql );
+$i = 0;
+while ( $row = db_fetch_array($res) ) {
+        $xdata[$i]          = $i;
+        $xlabel[$i]         = (substr($row['month'],4) + 1 - 1) . "/" . $row['day'];
+        $ydata1[$i]         = $row["views"];
+        $ydata2[$i]         = $row["downloads"];
+        $i++;
+}
+
+$graph = new Graph(600, 350);
+
+$graph->addDebug( "We appended $i rows of data to the graphing set." );
+$graph->addDebug( "$begin_time" );
+$graph->addDebug( "$sql" );
+
+$data1 = $graph->AddData($xdata,$ydata1,$xlabel);
+$data2 = $graph->AddData($xdata,$ydata2,$xlabel);
+
+$graph->DrawGrid('gray');
+$graph->LineGraph( $data1, 'red' );
+$graph->LineGraph( $data2, 'blue' );
+$graph->SetTitle( "Sourceforge Statistics: " . group_getname($group_id) );
+$graph->SetSubTitle("Page Views (red) and Downloads (blue) for the past $i days");
+$graph->SetxTitle('Date');
+$graph->SetyTitle('Views (red) / Downloads (blue)');
+$graph->DrawAxis();
+//$graph->showDebug();
+$graph->ShowGraph('png');
+
+?>

@@ -1,0 +1,67 @@
+<?php
+//
+// SourceForge: Breaking Down the Barriers to Open Source Development
+// Copyright 1999-2000 (c) The SourceForge Crew
+// http://sourceforge.net
+//
+// $Id$
+
+require ('pre.php');
+require ('Foundry.class');
+
+$expl_pathinfo = explode('/',$REQUEST_URI);
+
+//portal name wasn't passed in the URL
+
+if (!$expl_pathinfo[2]) {
+	//redirect to a portal directory
+	exit_no_group();
+}
+
+//get the group_id based on the group_name in the URL
+
+$res_grp=db_query("SELECT group_id FROM groups WHERE unix_group_name='$expl_pathinfo[2]'");
+
+//group was not found
+
+if (db_numrows($res_grp) < 1) {
+
+	exit_error("Invalid Foundry","That foundry does not exist.");
+
+} else {
+
+	//set up the group_id
+	$group_id=db_result($res_grp,0,'group_id');
+
+	//set up a foundry object for reference all over the place
+	$foundry= foundry_get_object($group_id);
+
+	if (!$foundry->isFoundry() || $foundry->isError()) {
+		//not a foundry or some problem - show error
+		echo $foundry->isFoundry();
+		echo $foundry->getErrorMessage();
+		exit_error('Error','The id you provided is not a valid foundry id');
+	}
+
+	if ($expl_pathinfo[4]) {
+		//third subdirectory - must be admin page
+		if ($expl_pathinfo[4] == 'news') {
+			//foundry news admin
+			include ('foundry_news.php');
+		} else if ($expl_pathinfo[4] == 'html') {
+			//freeform HTML editor
+			include('foundry_html_admin.php');
+		} else {
+			//foundry admin
+			include ('foundry_admin.php');
+		}
+	} else if ($expl_pathinfo[3]) {
+		//root admin page
+		include ('foundry_admin.php');
+	} else {
+		//show the portal summary page
+		include ('foundry_home.php');
+	}
+}
+
+?>

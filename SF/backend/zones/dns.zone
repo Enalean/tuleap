@@ -1,0 +1,70 @@
+@    IN    SOA    ns1.varesearch.com. hostmaster.sourceforge.net. (
+			2000010701	; serial number, in date form
+			10800		; refresh 4 minutes
+			3600		; retry interval 2 minutes
+			604800		; expire
+			3600		; default ttl
+)
+
+;
+; Name Servers
+;
+                	IN      NS      ns1.varesearch.com.
+			IN      NS      ns2.varesearch.com.
+			IN	NS	ns1.sourceforge.net.
+
+mailhost		IN	A	127.0.0.1
+localhost		IN	A	127.0.0.1
+
+
+sourceforge.net.	IN      A       209.81.8.17
+	                IN      MX      10 mail1.sourceforge.net.
+			IN	MX	15 mail.urw.org.
+;
+; Host Names
+;
+
+beta			IN	CNAME	sourceforge.net.	
+www             	IN      CNAME   sourceforge.net.
+mail1            	IN      A	209.81.8.35
+users			IN	CNAME	sourceforge.net.
+images			IN	A	209.81.8.36
+blink182		IN	A	209.81.8.38
+webdev			IN	A	209.81.8.39
+download		IN	A	209.81.8.41
+
+shell1			IN	A	209.81.8.42
+			IN	MX	10 mail1.sourceforge.net.
+
+shell			IN	CNAME	shell1.sourceforge.net.
+cvs1	           	IN      A	209.81.8.43
+cvs			IN	CNAME	cvs1.sourceforge.net.
+mail1			IN	A	209.81.8.35
+			IN	MX	10 mail1.sourceforge.net.
+lists			IN	A	209.81.8.35
+			IN	MX	10 lists.sourceforge.net.
+ns1			IN	CNAME	mail1.sourceforge.net.
+
+;
+; Sourceforge Internal Servers (192.168.1.x)
+;
+backup.i		IN	A	192.168.1.12
+geocrawler.i		IN	A	192.168.1.45
+remission.i		IN	A	192.168.1.47
+underworld.i		IN	A	192.168.1.53
+web1.i			IN	A	192.168.1.100
+web2.i			IN	A	192.168.1.101
+fallover.i		IN	A	192.168.1.200
+police.i		IN	A	192.168.1.254
+
+;
+; Projects Internal Servers (192.168.4.x)
+moby.i			IN	A	192.168.4.11
+backup.proj.i		IN	A	192.168.4.12
+cvs1.i			IN	A	192.168.4.46
+shell1.i		IN	A	192.168.4.52
+police.proj.i		IN	A	192.168.4.254
+
+;
+; *** From here out is auto-generated ***
+;

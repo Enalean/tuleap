@@ -1,0 +1,101 @@
+create table people_skill (
+skill_id int not null primary key auto_increment,
+name text
+);
+
+INSERT INTO people_skill VALUES ('','3100 SQL');
+INSERT INTO people_skill VALUES ('','3110 C/C++');
+INSERT INTO people_skill VALUES ('','3120 Perl');
+INSERT INTO people_skill VALUES ('','3130 PHP');
+INSERT INTO people_skill VALUES ('','3140 Java');
+INSERT INTO people_skill VALUES ('','3900 Other Prog. Lang.');
+
+INSERT INTO people_skill VALUES ('','5100 Chinese');
+INSERT INTO people_skill VALUES ('','5110 Japanese');
+INSERT INTO people_skill VALUES ('','5120 Spanish');
+INSERT INTO people_skill VALUES ('','5130 French');
+INSERT INTO people_skill VALUES ('','5140 German');
+INSERT INTO people_skill VALUES ('','5900 Other Spoken Lang.');
+
+INSERT INTO people_skill VALUES ('','7100 UNIX Admin');
+INSERT INTO people_skill VALUES ('','7110 Networking');
+INSERT INTO people_skill VALUES ('','7120 Security');
+INSERT INTO people_skill VALUES ('','7130 Writing');
+INSERT INTO people_skill VALUES ('','7140 Editing');
+INSERT INTO people_skill VALUES ('','7150 Databases');
+INSERT INTO people_skill VALUES ('','7900 Other Skill Area');
+
+
+create table people_skill_year (
+skill_year_id int not null primary key auto_increment,
+name text
+);
+
+INSERT INTO people_skill_year VALUES ('','< 6 Months');
+INSERT INTO people_skill_year VALUES ('','6 Mo - 2 yr');
+INSERT INTO people_skill_year VALUES ('','2 yr - 5 yr');
+INSERT INTO people_skill_year VALUES ('','5 yr - 10 yr');
+INSERT INTO people_skill_year VALUES ('','> 10 years');
+
+create table people_skill_level (
+skill_level_id int not null primary key auto_increment,
+name text
+);
+
+INSERT INTO people_skill_level VALUES ('','Want to Learn');
+INSERT INTO people_skill_level VALUES ('','Competent');
+INSERT INTO people_skill_level VALUES ('','Wizard');
+INSERT INTO people_skill_level VALUES ('','Wrote The Book');
+INSERT INTO people_skill_level VALUES ('','Wrote It');
+
+create table people_skill_inventory (
+skill_inventory_id int not null primary key auto_increment,
+user_id int not null,
+skill_id int not null,
+skill_level_id int not null,
+skill_year_id int not null
+);
+
+create table people_job (
+job_id int not null primary key auto_increment,
+group_id int not null,
+created_by int not null,
+title text,
+description text,
+date int not null,
+status_id int not null,
+category_id int not null
+);
+
+create table people_job_category (
+category_id int not null primary key auto_increment,
+name text
+);
+
+INSERT INTO people_job_category VALUES ('','Developer');
+INSERT INTO people_job_category VALUES ('','Project Manager');
+INSERT INTO people_job_category VALUES ('','Unix Admin');
+INSERT INTO people_job_category VALUES ('','Doc Writer');
+INSERT INTO people_job_category VALUES ('','Tester');
+INSERT INTO people_job_category VALUES ('','Support Manager');
+INSERT INTO people_job_category VALUES ('','Graphic/Other Designer');
+
+create table people_job_status (
+status_id int not null primary key auto_increment,
+name text
+);
+
+INSERT INTO people_job_status VALUES ('1','Open');
+INSERT INTO people_job_status VALUES ('2','Filled');
+INSERT INTO people_job_status VALUES ('3','Deleted');
+
+create table people_job_inventory (
+job_inventory_id int not null primary key auto_increment,
+job_id int not null,
+skill_id int not null,
+skill_level_id int not null,
+skill_year_id int not null
+);
+
+alter table user add column people_view_skills int not null default '0';
+alter table user add column people_resume text not null;

@@ -1,0 +1,269 @@
+<?php   
+
+//
+// SourceForge: Breaking Down the Barriers to Open Source Development
+// Copyright 1999-2000 (c) The SourceForge Crew
+// http://sourceforge.net
+//	      
+// $Id$
+
+
+/*
+
+	Group object by Tim Perdue, August 28, 2000
+
+	Sets up database results and preferences for a group and abstracts this info
+
+	Foundry.class and Project.class call this.
+
+	Project.class contains all the deprecated API from the old group.php file
+
+
+
+	GENERALLY YOU SHOULD NEVER CALL THIS OBJECT
+	USE Project and Foundry instead
+	DIRECT CALLS TO THIS OBJECT ARE NOT SUPPORTED
+
+*/
+
+class Group extends Error {
+
+	//associative array of data from db
+	var $data_array;
+
+	var $group_id;
+
+	//database result set handle
+	var $db_result;
+
+	//permissions data row from db
+	var $perm_data_array;
+
+	//whether the use is an admin/super user of this project
+	var $is_admin;
+
+	function Group($id) {
+		$this->Error();
+		$this->group_id=$id;
+		$this->db_result=db_query("SELECT * FROM groups WHERE group_id='$id'");
+		if (db_numrows($this->db_result) < 1) {
+			//function in class we extended
+			$this->setError('Group Not Found');
+			$this->data_array=array();
+		} else {
+			//set up an associative array for use by other functions
+			$this->data_array=db_fetch_array($this->db_result);
+		}
+	}
+
+
+	/*
+		Return database result handle for direct access
+
+		Generall should NOT be used - here for supporting deprecated group.php
+	*/
+	function getData() {
+		return $this->db_result;
+	}
+
+
+	/*
+		Simply return the group_id for this object
+	*/
+	function getGroupId() {
+		return $this->group_id;
+	}
+
+
+	/*
+		Foundry, project, etc
+	*/
+	function getType() {
+		return $this->data_array['type'];
+	}
+
+
+	/*
+		Statuses include I,H,A,D
+	*/
+	function getStatus() {
+		return $this->data_array['status'];
+	}
+
+	/*
+		Simple boolean test to see if it's a foundry or not
+	*/
+	function isFoundry() {
+		if ($this->getType()==2) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/*
+		Simple boolean test to see if it's a project or not
+	*/
+	function isProject() {
+		if ($this->getType()==1) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+
+	/*
+		Simply returns the is_public flag from the database
+	*/
+	function isPublic() {
+		return $this->data_array['is_public'];
+	}
+
+
+	/*
+		Database field status of 'A' returns true
+	*/
+	function isActive() {
+		if ($this->getStatus()=='A') {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	function getUnixName() {
+		return strtolower($this->data_array['unix_group_name']);
+	}
+
+	function getPublicName() {
+		return $this->data_array['group_name'];
+	}
+
+	//short description as entered on the group admin page
+	function getDescription() {
+		return $this->data_array['short_description'];
+	}
+
+	//date the group was registered
+	function getStartDate() {
+		return $this->data_array['register_time'];
+	}
+
+	/*
+
+		Common Group preferences for tools
+
+	*/
+	//whether or not this group has opted to use mailing lists
+	function usesMail() {
+		return $this->data_array['use_mail'];
+	}
+
+	//whether or not this group has opted to use news
+	function usesNews() {
+		return $this->data_array['use_news'];
+	}
+
+	//whether or not this group has opted to use discussion forums
+	function usesForum() {
+		return $this->project_data_array['use_forum'];
+	}       
+
+	//whether or not this group has opted to use surveys
+	function usesSurvey() {
+		return $this->project_data_array['use_survey'];
+	}       
+
+	/*
+		The URL for this project's home page
+	*/
+	function getHomePage() {
+		return $this->data_array['homepage'];
+	}
+
+
+	/*
+
+		Basic user permissions that apply to all Groups
+
+	* /
+
+
+//not yet completed
+
+	/ *
+		Simple test to see if the current user is a member of this project
+	* /
+	function userIsMember($field='user_id',$value=0) {
+		if ($this->userIsAdmin()) {
+			//admins are tested first so that super-users can return true
+			//and admins of a project should always have full privileges 
+			//on their project
+			return true;
+		} else {
+			$arr=$this->getPermData();
+			if ($arr[$field] > $value) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
+
+	/ *
+		User is an admin of the project
+		or admin of the entire site
+	* /
+	function userIsAdmin() {
+		if (isset($this->is_admin)) {
+			//have already been through here and set the var
+		} else {
+			if (user_isloggedin()) {
+				//check to see if site super-user
+				$res=db_query("SELECT * FROM user_group WHERE user_id='". user_getid() ."' AND group_id='1' AND admin_flags='A'");
+				if ($res && db_numrows($res) > 0) {
+					$this->is_admin = true;
+				} else {
+					$arr=$this->getPermData();
+					if ($arr['admin_flags']=='A') {
+						$this->is_admin = true;
+					} else {
+						$this->is_admin = false;
+					}
+				}
+				db_free_result($res);
+			} else {
+				$this->is_admin = false;
+			}
+		}
+		return $this->is_admin;
+	}
+
+	/ *
+		Return an associative array of permissions for this group/user
+	* /
+	function getPermData(){
+		if ($this->$perm_data_array) {
+			//have already been through here and set up perms data
+		} else {
+			if (user_isloggedin()) {
+				$res=db_query("SELECT * FROM user_group WHERE user_id='".user_getid()."' and group_id='". $this->getGroupId() ."'");
+				if ($res && db_numrows($res) > 0) {
+					$this->$perm_data_array=db_fetch_array($res);
+				} else {
+					echo db_error();
+					$this->$perm_data_array=array();
+				}
+				db_free_result($res);
+			} else {
+				$this->$perm_data_array=array();
+			}
+		}
+		return $this->$perm_data_array;
+	}
+	*/
+
+}
+
+?>

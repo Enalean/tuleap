@@ -1,0 +1,158 @@
+<?php
+
+//
+// SourceForge: Breaking Down the Barriers to Open Source Development
+// Copyright 1999-2000 (c) The SourceForge Crew
+// http://sourceforge.net
+//
+// $Id$
+
+
+/*
+
+	An object wrapper for project (as opposed to foundry) data
+
+	Extends the base object, Group
+
+	Tim Perdue, August 28, 2000
+
+
+
+	Example of proper use:
+
+	//get a local handle for the object
+	$grp=project_get_object($group_id);
+
+	//now use the object to get the unix_name for the project
+	$grp->getUnixName();
+
+
+*/
+
+
+
+/*
+	associative array of group objects
+	helps prevent the same object from being created more than once
+	which would create unnecessary database calls
+*/
+$PROJECT_OBJ=array();
+
+function project_get_object($group_id) {
+	//create a common set of group objects
+	//saves a little wear on the database
+
+	global $PROJECT_OBJ;
+	if (!$PROJECT_OBJ["_".$group_id."_"]) {
+		$PROJECT_OBJ["_".$group_id."_"]= new Project($group_id);
+		return $PROJECT_OBJ["_".$group_id."_"];
+	} else {
+		return $PROJECT_OBJ["_".$group_id."_"];
+	}
+}
+
+
+
+class Project extends Group {
+
+	var $project_data_array;
+
+	/*
+		basically just call the parent to set up everything
+	*/
+	function Project($id) {
+		$this->Group($id);
+
+		//for right now, just point our prefs array at Group's data array
+		//this will change later when we split the project_data table off from groups table
+		$this->project_data_array=$this->data_array;
+	}
+
+
+	function usesCVS() {
+		return $this->project_data_array['use_cvs'];
+	}
+
+	function usesBugs() {
+		return $this->project_data_array['use_bugs'];
+	}
+
+	function usesSupport() {
+		return $this->project_data_array['use_support'];
+	}
+
+	function usesDocman() {
+		return $this->project_data_array['use_docman'];
+	}
+
+	function usesPatch() {
+		return $this->project_data_array['use_patch'];
+	}
+
+	function usesPm() {
+		return $this->project_data_array['use_pm'];
+	}
+
+
+	/*
+		email address to send new 
+		bugs/patches/support requests to
+	*/
+	function getNewBugAddress() {
+		return $this->project_data_array['new_bug_address'];
+	}
+
+	function getNewSupportAddress() {
+		return $this->project_data_array['new_support_address'];
+	}
+
+	function getNewPatchAddress() {
+		return $this->project_data_array['new_patch_address'];
+	}
+
+
+	/*
+
+		boolean flags to determine whether or not to send
+		an email on every bug/patch/support update
+
+	*/
+	function sendAllBugUpdates() {
+		return $this->project_data_array['send_all_bugs'];
+	}
+
+	function sendAllSupportUpdates() {
+		return $this->project_data_array['send_all_support'];
+	}
+
+	function sendAllPatchUpdates() {
+		return $this->project_data_array['send_all_patches'];
+	}
+
+}
+
+/*
+
+	Everything below here is deprecated
+
+*/
+
+//deprecated
+function group_getname ($group_id = 0) {
+	$grp = project_get_object($group_id);
+	return $grp->getPublicName();
+}
+
+//deprecated
+function group_getunixname ($group_id) {
+	$grp = project_get_object($group_id);
+	return $grp->getUnixName();
+}
+
+//deprecated - should be getting objects instead
+function group_get_result($group_id=0) {
+	$grp = project_get_object($group_id);
+	return $grp->getData();
+}       
+	
+?>

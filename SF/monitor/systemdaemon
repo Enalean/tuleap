@@ -1,0 +1,320 @@
+#!/usr/bin/perl -w
+#
+# System Monitor Scripts
+# 
+# $Id$
+#
+use IO::Socket;
+use Fcntl;
+use strict;
+use POSIX qw(setsid);
+use POSIX qw(strftime);
+
+my (%config, $waitedpid, @pingservers, @webservers, @pwebservers, @cvsservers, @mailservers, @mysqlservers, @pgsqlservers);
+
+#################
+# configuration #
+#################
+$config{'logfile'}	= '/home/precision/logfile';
+
+$config{'ipaddr'}       = '198.186.203.50';
+$config{'port'}	 	= '10000';
+$config{'username'}     = 'nobody';
+
+$SIG{'INT'}		= \&exit_nicely;
+$SIG{'TERM'}		= \&exit_nicely;
+
+@webservers = (
+	'bush.i',
+	'delerium.i',
+	'garbage.i',
+	'geocrawler.i',
+	'slayer.p',
+	'koil.p',
+	'mail1'
+);
+
+@pwebservers = (
+	'oakenfold.p',
+	'nirvana.p'
+);
+
+@cvsservers = (
+	'slayer.p',
+	'tokyojoe.p',
+	'bluemchen.p'
+);
+
+@mailservers = (
+	'mail1',
+	'toye.p',
+    'geocrawler.i'
+);
+
+@mysqlservers = (
+	'underworld.i'
+);
+
+@pgsqlservers = (
+	'geocrawler.i'
+);
+
+@pingservers = (
+	'mail1',
+	'police.i',
+	'underworld.i',
+	'geocrawler.i',
+	'garbage.i',
+	'bush.i',
+	'delerium.i',
+	'oakenfold.p',
+	'nirvana.p',
+	'koil.p',
+	'offspring.p',
+	'orbital.p',
+	'moby.p',
+	'slayer.p',
+	'poison.p',
+	'tokyojoe.p',
+	'bluemchen.p',
+	'toye'
+);
+
+#########################
+# background the daemon #
+#########################
+sub daemon {
+	my ($pid);
+	# setup the environment
+	chdir "/" || die "Couldn't chdir to /: $!\n";
+
+	defined ($pid = fork()) || die "Couldn't fork(): $!\n"; # fork ourselves into the background, duh!
+	if ($pid) {
+		print "SystemDaemon.pl backgrounded with process: $pid\n";
+		if ($config{'logfile'}) { print "Using Logfile $config{'logfile'}\n" }
+		exit;
+	}
+
+	if ($config{'logfile'}) { # open the logfile
+		open (Log, ">>$config{'logfile'}") || die "Couldn't Open Logfile: $!\n";
+		select (Log);
+		$| = 1;
+	}
+
+	setsid || die "Can't get a new session: $!\n";
+	umask 0;
+}
+
+##############################
+# log message to the logfile #
+##############################
+sub logme {
+	my $msg = shift (@_);
+	my $time = strftime "%Y-%m-%d - %T", localtime;
+	print "$time\t$msg\n";
+}
+
+###################
+# exit the server #
+###################
+sub exit_nicely {
+	&logme ("----- SystemDaemon.pl Ended -----\n");
+	close (Server);
+	close (Log);
+	exit 0;
+}
+
+##################
+# socket control #
+##################
+sub listen_for_request {
+	BEGIN { $ENV{PATH} = '/usr/bin:/usr/games:/bin' }
+
+	my ($port, $proto, $EOL, $iaddr, $paddr, $name, $user);
+
+	$user = getpwnam($config{'username'});
+
+	$SIG{'CHLD'} = \&child_handler;
+	$EOL = "\015\012";
+
+	$port = $config{'port'};
+	$proto = getprotobyname('tcp');
+	$port = $1 if $port =~ /(\d+)/; # untaint port number
+
+	socket (Server, PF_INET, SOCK_STREAM, $proto) || die "socket(): $!";
+	setsockopt (Server, SOL_SOCKET, SO_REUSEADDR, pack ("l", 1)) || die "setsockopt(): $!";
+	bind (Server, sockaddr_in ($port, inet_aton("$config{'ipaddr'}"))) || die "bind(): $!";
+
+	$> = $user;
+
+	listen (Server, SOMAXCONN) || die "listen(): $!";
+
+	&logme("----- SystemDaemon.pl Started on Port: $port -----");
+
+	$waitedpid = 0;
+
+	for ($waitedpid = 0; ($paddr = accept (Client,Server)) || $waitedpid; $waitedpid = 0, close Client) {
+		if ($waitedpid && !$paddr) { next; }
+		($port,$iaddr) = sockaddr_in ($paddr);
+		$name = gethostbyaddr ($iaddr, AF_INET);
+
+		&logme ("Connection From $name [". inet_ntoa($iaddr) ."] at Port $port");
+
+		&spawn_new_child;
+	}
+
+	#################
+	# child handler #
+	#################
+	sub child_handler {
+		$waitedpid = wait;
+	}
+
+	#########################
+	# spawn a child process #
+	#########################
+	sub spawn_new_child {
+		my ($pid, $cmd);
+		my $tmp;
+
+		if (!defined($pid = fork)) {
+			&logme("Cannot fork(): $!");
+			return;
+		} elsif ($pid) {
+			return; # I'm the parent
+		}
+
+		# else I'm the child -- go spawn
+		eval {
+			local $SIG{'ALRM'} = sub { select (Log); close(Data); die "Timeout\n"; };
+			alarm 15;
+			open (Data, ">>&Client") || die "Can't read/write to Client: $!\n";
+			select (Data);
+
+			&check_network;
+
+			select (Log);
+			close (Data);
+			alarm 0;
+		};
+
+		close (Client);
+		exit;
+	}
+}
+
+
+
+############################
+# Main Connection Function #
+############################
+sub check_service {
+	my ($host, $port, $label_str, $send_str, $search_str) = @_;
+
+	my ($bigbuf, $buf, $time);
+
+	printf("%-40s", $label_str);
+
+	my $sock = IO::Socket::INET->new( PeerAddr => "$host.sourceforge.net",
+                                      PeerPort => $port,
+                                      Proto    => 'tcp',
+                                      Timeout  => 5,
+                                      Type     => SOCK_STREAM() );
+
+	if (!$sock) {
+		print "[ FAILED ] Could Not Open Socket\n";
+		return;
+	}
+
+	fcntl($sock, F_SETFL(), fcntl($sock, F_GETFL(), 0) | O_NONBLOCK()) || die "Unable to make socket non-blocking: $!";
+
+	if ($sock->send($send_str, 0)) {
+		$time = time();
+
+		while ($time+5 > time()) { 
+			$sock->recv($buf, 2048, 0);
+			$bigbuf .= $buf;
+
+			if ($bigbuf =~ $search_str) {
+				print "[ OK ]\n";
+				$sock->close();
+				return;
+			}
+		}
+
+		$sock->close();
+	}
+	print "[ FAILED ] Could Not Send to Socket\n";
+
+	return;
+}
+
+
+####################################
+# check all the different machines #
+####################################
+sub check_network {
+	my $output;
+
+	print "\n       SourceForge Network Checker\n";
+
+	# Webservers
+	print "\n";
+	foreach (@webservers) {
+		&check_service($_, 80, "Checking HTTPD on $_ ", "HEAD HTTP/1.1 200 OK\n\n", "Server");
+	}
+
+	# Project WebServers
+	print "\n";
+	foreach (@pwebservers) {
+		&check_service($_, 80, "Checking HTTPD on $_ ", "GET / HTTP/1.1\nHost: phpsysinfo.sourceforge.net\n\n", "script that displays information");
+	}
+
+	# CVS
+	print "\n";
+	foreach $_ (@cvsservers) {
+		&check_service($_, 2401, "Checking CVS on $_ ", "hello\n", "cvs");
+	}
+
+	# Mail
+	print "\n";
+	foreach (@mailservers) {
+		&check_service($_, 25, "Checking Mail on $_ ", "\n", "ESMTP");
+	}
+
+	# mysql
+	print "\n";
+	foreach (@mysqlservers) {
+		if ($_ eq 'moby.p') {
+			&check_service("vhost2.p", 80, "Checking MySQL on moby.p ", "GET /pager.php3\n", "mysql-good");
+		} elsif ($_ eq 'underworld.i') {
+			&check_service("bush.i", 80, "Checking MySQL on underworld.i ", "GET /pager.php3\n", "mysql-good");
+		}
+	}
+
+	# pgsql
+	print "\n";
+	foreach (@pgsqlservers) {
+		&check_service($_, 80, "Checking PGSQL on $_ ", "GET /testdb.php3\n", "postgres-good");
+	}
+
+	# Ping Hosts
+	print "\n";
+	foreach (@pingservers) {
+		printf("%-40s", "Checking PING on $_ ");
+		$output = `/bin/ping -c 1 $_.sourceforge.net`;
+
+		if($output =~ /time=/){
+			print "[ OK ]\n";
+		} else {
+			print "[ FAILED ]\n";
+		}
+	}
+}
+
+
+################
+# Main Control #
+################
+&daemon;
+&listen_for_request;

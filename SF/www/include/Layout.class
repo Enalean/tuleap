@@ -1,0 +1,518 @@
+<?php   
+
+//
+// SourceForge: Breaking Down the Barriers to Open Source Development
+// Copyright 1999-2000 (c) The SourceForge Crew
+// http://sourceforge.net
+//              
+// $Id$
+
+
+/*
+
+	Extends the basic Error class to add HTML functions for displaying all site dependent HTML, while allowing extendibility/overriding by themes via the Theme class.
+
+	Make sure browser.php is included _before_ you create an instance of this object.
+
+	Geoffrey Herteg, August 29, 2000
+
+*/
+
+
+class Layout extends Error {
+
+	var $imgroot = '/themes/forged/images/';
+
+	// Color Constants
+        var $COLOR_CONTENT_BACK= '#FFFFFF';
+        var $COLOR_LTBACK1= '#EAECEF';
+        var $COLOR_LTBACK2= '#FAFAFA';
+        var $COLOR_HTMLBOX_TITLE = '#D1D5D7';
+        var $COLOR_HTMLBOX_BACK = '#EAECEF';
+
+	// Font Face Constants
+	var $FONT_CONTENT = 'Helvetica';
+	var $FONT_HTMLBOX_TITLE = 'Helvetica';
+
+	// Font Color Constants
+	var $FONTCOLOR_HTMLBOX_TITLE = '#333333';
+	var $FONTCOLOR_CONTENT = '#333333';
+
+	// Font Size Constants
+	var $FONTSIZE = 'small';
+	var $FONTSIZE_SMALLER='x-small';
+        var $FONTSIZE_SMALLEST='xx-small';
+	var $FONTSIZE_HTMLBOX_TITLE = 'small';
+
+	//Define all the icons for this theme
+	var $icons = array('Summary' => 'ic/anvil24.png',
+		'Homepage' => 'ic/home.png',
+		'Forums' => 'ic/notes.png',
+		'Bugs' => 'ic/bug.png',
+		'Support' => 'ic/support.png',
+		'Patches' => 'ic/patch.png',
+		'Lists' => 'ic/mail.png',
+		'Tasks' => 'ic/index.png',
+		'Docs' => 'ic/docman.png',
+		'Surveys' => 'ic/survey.png',
+		'News' => 'ic/news.png',
+		'CVS' => 'ic/convert.png',
+		'Files' => 'ic/save.png'
+		);
+
+	var $bgpri = array();
+
+	// Constuctor
+	function Layout() {
+		GLOBAL $bgpri;
+		// Constructor for parent class...
+		$this->Error();
+
+		/*
+	        Set up the priority color array one time only
+		*/
+		$bgpri[1] = '#dadada';
+		$bgpri[2] = '#dad0d0';
+		$bgpri[3] = '#dacaca';
+		$bgpri[4] = '#dac0c0';
+		$bgpri[5] = '#dababa';
+		$bgpri[6] = '#dab0b0';
+		$bgpri[7] = '#daaaaa';
+		$bgpri[8] = '#da9090';
+		$bgpri[9] = '#da8a8a';
+
+                //determine font for this platform
+                if (browser_is_windows() && browser_is_ie()) {
+
+                        //ie needs smaller fonts
+                        $this->FONTSIZE='x-small';
+                        $this->FONTSIZE_SMALLER='xx-small';
+                        $this->FONTSIZE_SMALLEST='7pt';
+
+                } else if (browser_is_windows()) {
+
+                        //netscape on wintel
+                        $this->FONTSIZE='small';
+                        $this->FONTSIZE_SMALLER='x-small';
+                        $this->FONTSIZE_SMALLEST='x-small';
+
+                } else if (browser_is_mac()){
+
+                        //mac users need bigger fonts
+                        $this->FONTSIZE='medium';
+                        $this->FONTSIZE_SMALLER='small';
+                        $this->FONTSIZE_SMALLEST='x-small';
+
+                } else {
+
+                        //linux and other users
+                        $this->FONTSIZE='small';
+                        $this->FONTSIZE_SMALLER='x-small';
+                        $this->FONTSIZE_SMALLEST='xx-small';
+
+                }
+
+		$this->FONTSIZE_HTMLBOX_TITLE = $this->FONTSIZE;
+	}
+
+	// Box Top, equivalent to html_box1_top()
+	function box1_top($title,$echoout=1,$bgcolor=''){
+	        if (!$bgcolor) {
+        	        $bgcolor=$this->COLOR_HTMLBOX_BACK;
+	        }
+        	$return = '<TABLE cellspacing="1" cellpadding="5" width="100%" border="0" bgcolor="'.$this->COLOR_HTMLBOX_BACK.'">
+                        <TR BGCOLOR="'.$this->COLOR_HTMLBOX_TITLE.'" BACKGROUND="'.$this->imgroot.'steel3.jpg" align="center">
+                                <TD colspan=2><SPAN class=titlebar>'.$title.'</SPAN></TD>
+                        </TR>
+                        <TR align=left bgcolor="'.$bgcolor.'">
+                                <TD colspan=2>';
+	        if ($echoout) {
+        	        print $return;
+	        } else {
+                	return $return;
+        	}
+	}
+
+	// Box Middle, equivalent to html_box1_middle()
+	function box1_middle($title,$bgcolor='') {
+	        if (!$bgcolor) {
+        	        $bgcolor=$this->COLOR_HTMLBOX_BACK;
+	        }
+        	return '
+                                </TD>
+                        </TR>
+                        <TR BGCOLOR="'.$this->COLOR_HTMLBOX_TITLE.'" align="center" background="'.$this->imgroot.'steel3.jpg">
+                                <TD colspan=2><SPAN class=titlebar>'.$title.'</SPAN></TD>
+                        </TR>
+                        <TR align=left bgcolor="'.$bgcolor.'">
+                                <TD colspan=2>';
+	}
+
+	// Box Bottom, equivalent to html_box1_bottom()
+	function box1_bottom($echoout=1) {
+        	$return = '
+                </TD>
+                        </TR>
+        </TABLE>
+';
+	        if ($echoout) {
+        	        print $return;
+	        } else {
+                	return $return;
+        	}
+	}
+
+	function generic_header_start($params) {
+
+        	global $G_USER, $G_SESSION;
+
+	        if (!$params['title']) {
+        	        $params['title'] = "SourceForge";
+	        } else {
+        	        $params['title'] = "SourceForge: " . $params['title'];
+	        }
+        	?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+        "http://www.w3.org/TR/REC-html40/loose.dtd">
+
+<html lang="en">
+  <head>
+    <TITLE><?php echo $params['title']; ?></TITLE>
+        <SCRIPT language="JavaScript">
+        <!--
+        function help_window(helpurl) {
+                HelpWin = window.open(helpurl,'HelpWindow','scrollbars=yes,resizable=yes,toolbar=no,height=400,width=400');
+        }
+        // -->
+        </SCRIPT>
+<?php
+	}
+
+	function generic_header_end($params) {
+	?>
+   </HEAD>
+<?php
+	}
+
+	function generic_footer($params) {
+
+	        global $IS_DEBUG,$QUERY_COUNT;
+        	if ($IS_DEBUG && user_ismember(1,'A')) {
+	                echo "<CENTER><B><FONT COLOR=RED>Query Count: $QUERY_COUNT</FONT
+></B></CENTER>";
+                	echo "<P>$GLOBALS[G_DEBUGQUERY]";
+        	}
+	        ?>
+<P class="footer">
+<font face="arial, helvetica" size="1" color="#cccccc">
+VA Linux Systems and SourceForge are trademarks of VA Linux Systems, Inc.  Linux
+ is a registered trademark of Linus Torvalds.  All other trademarks and copyrigh
+ts on this page are property of their respective owners. For information about o
+ther site Content ownership and sitewide terms of service, please see the <a href="/tos/tos.php" class="legallink">SourceForge Terms of Service</a>. For privacy
+ policy information, please see the <a href="/tos/privacy.php" class="legallink"
+>SourceForge Privacy Policy</a>. Content owned by VA Linux Systems is copyright 
+1999-2000 VA Linux Systems, Inc.  All rights reserved.
+</font>
+<BR>&nbsp;
+</body>
+</html>
+        <?php
+	}
+
+	function header($params) {
+	        $this->generic_header_start($params); 
+
+        	//themable someday?
+	        $site_fonts='verdana,arial,helvetica,sans-serif';
+
+        ?>
+
+                <style type="text/css">
+                        <!--
+        OL,UL,P,BODY,TD,TR,TH,FORM { font-family: <?php echo $this->FONT_CONTENT . ',' . $site_fonts; ?>; font-size:<?php echo $this->FONTSIZE; ?>; color: <?php echo $this->FONTCOLOR_CONTENT ?>; }
+
+        H1 { font-size: x-large; font-family: <?php echo $site_fonts; ?>; }
+        H2 { font-size: large; font-family: <?php echo $site_fonts; ?>; }
+        H3 { font-size: medium; font-family: <?php echo $site_fonts; ?>; }
+        H4 { font-size: small; font-family: <?php echo $site_fonts; ?>; }
+        H5 { font-size: x-small; font-family: <?php echo $site_fonts; ?>; }
+        H6 { font-size: xx-small; font-family: <?php echo $site_fonts; ?>; }
+
+        PRE,TT { font-family: courier,sans-serif }
+
+        SPAN.center { text-align: center }
+        SPAN.boxspace { font-size: 2pt; }
+        SPAN.osdn {font-size: <?php echo $this->FONTSIZE_SMALLER; ?>; font-family: <?php echo $site_fonts ?>;}
+        SPAN.search {font-size: <?php echo $this->FONTSIZE_SMALLER; ?>; font-family:  <?php echo $site_fonts ?>;}
+        SPAN.slogan {font-size: large; font-weight: bold; font-family: <?php echo $site_fonts; ?>;}
+        SPAN.footer {font-size: <?php echo $this->FONTSIZE_SMALLER; ?>; font-family: <?php echo $site_fonts; ?>;}
+
+        A.maintitlebar { color: #FFFFFF }
+        A.maintitlebar:visited { color: #FFFFFF }
+
+        A.sortbutton { color: #FFFFFF; text-decoration: underline; }
+        A.sortbutton:visited { color: #FFFFFF; text-decoration: underline; }
+
+        .menus { color: #6666aa; text-decoration: none; }
+        .menus:visited { color: #6666aa; text-decoration: none; }
+
+        A:link { text-decoration:none }
+        A:visited { text-decoration:none }
+        A:active { text-decoration:none }
+        A:hover { text-decoration:underline; color:#FF0000 }
+
+        .tabs { color: #000000; }
+        .tabs:visited { color: #000000; }
+        .tabs:hover { color:#FF0000; }
+        .tabselect { color: #000000; font-weight: bold; }
+        .tabselect:visited { font-weight: bold;}
+        .tabselect:hover { color:#FF0000; font-weight: bold; }
+
+        .titlebar { text-decoration:none; color:#000000; font-family: <?php echo $this->FONT_HTMLBOX_TITLE . ',' . $site_fonts; ?>; font-size: <?php echo $this->FONTSIZE_HTMLBOX_TITLE; ?>; font-weight: bold; }
+        .develtitle { color:#000000; font-weight: bold; }
+        .legallink { color:#000000; font-weight: bold; }
+                        -->
+                </style>
+
+ 	<?php
+        $this->generic_header_end($params); 
+?>
+<body text="#333333" link="#6666aa" alink="#aa6666" vlink="#6666aa" bgcolor="#6C7198" leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0" marginwidth="0" marginheight="0">
+
+<?php
+
+/*
+
+        OSDN NAV BAR
+
+*/
+
+osdn_print_navbar();
+
+echo html_blankimage(5,100);
+?>
+<br>
+<!-- start page body -->
+<CENTER>
+<table cellpadding="0" cellspacing="0" border="0" width="99%">
+        <tr>
+                <td background="<?php echo $this->imgroot; ?>tbar1.png" width="1%" height="17"><img src="<?php echo $this->imgroot; ?>tleft1.png" width="17" height="17" alt=" "></td>
+                <td background="<?php echo $this->imgroot; ?>tbar1.png" align="center" colspan="3" width="99%"><img src="<?php echo $this->imgroot; ?>tbar1.png" width="1" height="17" alt=" "></td>
+                <td><img src="<?php echo $this->imgroot; ?>tright1.png" width="17" height="17" alt=" "></td>
+        </tr>
+        <tr>
+                <td width="17" background="<?php echo $this->imgroot; ?>leftbar1.png" align="left" valign="bottom"><img src="<?php echo $this->imgroot; ?>leftbar1.png" width="17" height="25" alt=" "></td>
+                <td colspan="3" bgcolor="#ffffff">
+<!-- start main body cell -->
+
+        <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                        <td width="141" background="<?php echo $this->imgroot; ?>steel3.jpg" bgcolor="#cfd1d4" align="left" valign="top">
+
+        <!-- VA Linux Stats Counter -->
+        <?php
+        if (!session_issecure()) {
+                print '<IMG src="http://www2.valinux.com/clear.gif?id=105" width=140 height=1 alt="Counter"><BR>';
+        } else {
+                print html_blankimage(1,140) . '<br>';
+        }
+        ?>
+
+        <CENTER>
+        <a href="/"><IMG src="<?php echo $this->imgroot; ?>sflogo-hammer1.jpg" alt=" Source Forge " border="0" width="136" height="79"></A>
+        </CENTER>
+        <P>
+        <!-- menus -->
+        <?php
+        //html_blankimage(1,140);
+        menu_print_sidebar($params);
+        ?>
+        <P>
+        </TD>
+
+        <td width="20" background="<?php echo $this->imgroot; ?>fade1.png" nowrap>&nbsp;</td>
+        <td valign="top" bgcolor="<?php echo $this->COLOR_CONTENT_BACK; ?>" width="99%">
+        <BR>
+<?php
+	}
+
+	function footer($params) {
+        ?>
+        <!-- end content -->
+        <p>&nbsp;</p>
+        </td>
+        <td width="9" bgcolor="<?php echo $this->COLOR_CONTENT_BACK; ?>">&nbsp;
+        </td>
+
+        </tr>
+        </table>
+                </td>
+                <td width="17" background="<?php echo $this->imgroot; ?>rightbar1.png" align="right" valign="bottom"><img src="<?php echo $this->imgroot; ?>rightbar1.png" width="17" height="17" alt=" ">
+</td>
+        </tr>
+        <tr>
+                <td background="<?php echo $this->imgroot; ?>bbar1.png" height="17"><img src="<?php echo $this->imgroot; ?>bleft1.png" width="17" height="17" alt=" "></td>
+                <td background="<?php echo $this->imgroot; ?>bbar1.png" align="center" colspan="3"><img src="<?php echo $this->imgroot; ?>bbar1.png" width="1" height="17" alt=" "></td>
+                <td background="<?php echo $this->imgroot; ?>bbar1.png" bgcolor="#7c8188"><img src="<?php echo $this->imgroot; ?>bright1.png" width="17" height="17" alt=" "></td>
+        </tr>
+</table>
+
+<!-- themed page footer -->
+<?php 
+	$this->generic_footer($params);
+	}
+
+
+
+	function menuhtml_top($title) {
+        	/*
+                	Use only for the top most menu
+	        */
+        ?>
+<table cellpadding="0" cellspacing="0" border="0" width="140">
+        <tr>
+                <td align="left" valign="middle"><font face="arial, helvetica" size="2"><b><?php echo $title; ?></b></font><br></td>
+        </tr>
+        <tr>
+                <td align="right" valign="middle">
+        <?php
+	}
+
+
+	function menuhtml_bottom() {
+	        /*
+        	        End the table
+	        */
+        	print '
+                        <BR>
+                        </td>
+                </tr>
+        </table>
+';
+	}
+
+	function menu_entry($link, $title) {
+        	print "\t".'<font face="arial, helvetica" size="2"><A class="menus" href="'.$link.'">'.$title.'</A> &nbsp;<img src="'.$this->imgroot.'point1.png" alt=" " width="7" height="7"></font><br>';
+	}
+
+        /*!     @function tab_entry
+                @abstract Prints out the a themed tab, used by project_tabs
+                @param  $url is the URL to link to
+			$icon is the image to use (if the theme uses it)
+			$title is the title to use in the link tags
+			$selected is a boolean to test if the tab is 'selected'
+                @result text - echos HTML to the screen directly
+        */
+	function tab_entry($url='http://localhost/', $icon='', $title='Home', $selected=0) {
+        	print '
+                <A ';
+	        if ($selected){
+        	        print 'class=tabselect ';
+	        } else {
+        	        print 'class=tabs ';
+	        }
+        	print 'href="'. $url .'">' . $title . '</A>&nbsp;|&nbsp;';
+	}
+
+	/*!     @function project_tabs
+	        @abstract Prints out the project tabs, contained here in case
+			we want to allow it to be overriden
+	        @param 	$toptab is the tab currently selected
+			$group is the group we should look up get title info
+        	@result text - echos HTML to the screen directly
+	*/
+	function project_tabs($toptab,$group) {
+
+        	// get group info using the common result set
+	        $project=project_get_object($group);
+        	if ($project->isError()) {
+	                //wasn't found or some other problem
+                	return;
+        	}
+
+	        print '<H2>'. $project->getPublicName() .' - ';
+        	// specific to where we're at
+	        switch ($toptab) {
+                	case 'home': print 'Summary'; break;
+        	        case 'forums': print 'Forums'; break;
+	                case 'bugs': print 'Bugs'; break;
+                	case 'support': print 'Support'; break;
+        	        case 'mail': print 'Mailing Lists'; break;
+	                case 'pm': print 'Tasks'; break;
+                	case 'docman': print 'Documentation'; break;
+        	        case 'surveys': print 'Surveys'; break;
+	                case 'cvs': print 'CVS'; break;
+                	case 'downloads': print 'Downloads'; break;
+        	        case 'news': print 'News'; break;
+	                case 'patch': print 'Patches'; break;
+                	default: print 'Summary'; break;
+        	}
+        print '</H2>
+        <P>
+	<HR SIZE="1" NoShade>';
+
+        	// Summary
+	        $this->tab_entry('/projects/'. $project->getUnixName() .'/', $this->icons['Summary'], 'Main', $toptab == 'home');
+
+        	// Homepage
+	        $this->tab_entry('http://'. $project->getHomePage(), $this->icons['Homepage'], 'Homepage');
+
+        	// Forums
+	        if ($project->usesForum()) {
+        	        $this->tab_entry('/forum/?group_id='.$group, $this->icons['Forums'], 'Forums', $toptab == 'forums');
+	        }
+
+        	// Bug Tracking
+	        if ($project->usesBugs()) {
+        	        $this->tab_entry('/bugs/?group_id='.$group, $this->icons['Bugs'], 'Bugs', $toptab == 'bugs');
+	        }
+
+        	// Support Tracking
+	        if ($project->usesSupport()) {
+        	        $this->tab_entry('/support/?group_id='.$group, $this->icons['Support'], 'Support', $toptab == 'support');
+	        }
+
+        	// Patch Manager
+	        if ($project->usesPatch()) {
+        	        $this->tab_entry('/patch/?group_id='.$group, $this->icons['Patches'], 'Patches', $toptab == 'patch');
+	        }
+
+        	// Mailing Lists
+	        if ($project->usesMail()) {
+        	        $this->tab_entry('/mail/?group_id='.$group, $this->icons['Lists'], 'Lists', $toptab == 'mail');
+	        }
+
+        	// Project Manager
+	        if ($project->usesPm()) {
+        	        $this->tab_entry('/pm/?group_id='.$group, $this->icons['Tasks'], 'Tasks', $toptab == 'pm');
+	        }
+
+        	// Doc Manager
+	        if ($project->usesDocman()) {
+        	        $this->tab_entry('/docman/?group_id='.$group, $this->icons['Docs'], 'Docs', $toptab == 'docman');
+	        }
+
+        	// Surveys
+	        if ($project->usesSurvey()) {
+        	        $this->tab_entry('/survey/?group_id='.$group, $this->icons['Surveys'], 'Surveys', $toptab == 'surveys');
+	        }
+
+        	//newsbytes
+	        if ($project->usesNews()) {
+        	        $this->tab_entry('/news/?group_id='.$group, $this->icons['News'], 'News', $toptab == 'news');
+	        }
+
+        	// CVS
+	        if ($project->usesCVS()) {
+                	$this->tab_entry('/cvs/?group_id='.$group, $this->icons['CVS'], 'CVS', $toptab == 'cvs');
+        	}
+
+	        // Downloads
+	        $this->tab_entry('/project/filelist.php?group_id='.$group, $this->icons['Files'], 'Files', $toptab == 'downloads');
+
+        	print '<HR SIZE="1" NoShade><P>';
+	}
+
+
+}
+?>

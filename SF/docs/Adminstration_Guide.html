@@ -1,0 +1,67 @@
+<HTML>
+<HEAD>
+<TITLE>SourceForge Documentation Project: SourceForge-1.0.4 Administrator Guide</TITLE>
+</HEAD>
+<BODY bgcolor="#FFFFFF">
+
+<TABLE>
+<TR valign="bottom">
+<TD><A href="http://sourceforge.net"><IMG src="images/sflogo2-105a.png" border=0></A></TD>
+<TD><FONT size="+1" face="arial,helvetica">SourceForge Documentation Project</FONT>
+<BR><FONT face="arial,helvetica"><I>Maintained by SourceForge Volunteers</I>
+
+<P>Current Document: <B>SourceForge-1.0.4 Administrator Guide</B>
+
+<P>Go to: <A href="http://sfdocs.sourceforge.net/">[SFDocs Home]</A>
+<A href="http://sourceforge.net/project/?group_id=873">[SourceForge Project Page]</A>
+<A href="http://sourceforge.net/">[SourceForge.net]</A>
+
+</FONT>
+</TD></TABLE>
+<HR>
+<p>This is an administrator guide to the SourceForge software as found
+on <a href=http://sourceforge.net/project/?group_id=1>SourceForge</a>.
+It gives hints to successfully create a SourceForge service on a machine.
+It assumes that you've successfully installed the software as described
+in <a href="Install_Guide.html">SourceForge-1.0.4 Installation Guide</a>
+
+<pre>
+-------------------------------------------------------------------------------
+Create the admin user
+
+Before trying anything you must create a user named admin. This user will 
+automatically be assigned server wide administration permissions. On the
+home page a Site Administrator menu should appear.
+
+-------------------------------------------------------------------------------
+Create categories
+
+Unless some categories exist in the software map you won't be able to create
+a new project. Create one or two categories using the Site Administrator menu.
+
+-------------------------------------------------------------------------------
+Populate the project_status table
+
+This table lists the possible status of a task in the Task Manager. If it
+is not filled the status of a task will be assigned a random value and will
+therefore disapear from the task lists.
+
+insert into project_status (status_name) values ('Open');
+insert into project_status (status_name) values ('Closed');
+insert into project_status (status_name) values ('Deleted');
+
+-------------------------------------------------------------------------------
+Default IDs
+
+id=100 is used throughout the site as a default. user_id=100 is for a
+user named "none", which is referenced a lot. bug_group_id=100 is a
+default adefault as well. There are instances throughout the patch
+manager, surveys, bugs, and task manager where this is used, as an
+FYI. Also bug_status, patch_status, project_status are tables (maybe
+more), that we need to include default data for.
+
+</pre>
+
+<P><HR><P><pre><font size=-1>$Id$</font></pre><br>
+</BODY>
+</HTML>

@@ -1,0 +1,84 @@
+
+alter table user_group add column support_flags int not null default '1';
+alter table groups add column use_support int not null default '1';
+
+CREATE TABLE support (
+  support_id int(11) DEFAULT '0' NOT NULL auto_increment,
+  group_id int(11) DEFAULT '0' NOT NULL,
+  support_status_id int(11) DEFAULT '0' NOT NULL,
+  support_category_id int(11) DEFAULT '0' NOT NULL,
+  priority int not null default '0',
+  submitted_by int(11) DEFAULT '0' NOT NULL,
+  assigned_to int(11) DEFAULT '0' NOT NULL,
+  open_date int(11) DEFAULT '0' NOT NULL,
+  summary text,
+  close_date int NOT NULL DEFAULT '0',
+  PRIMARY KEY (support_id),
+  KEY idx_support_group_id (group_id)
+);
+
+INSERT INTO support (support_id) VALUES ('100000');
+
+create table support_messages (
+support_message_id int DEFAULT '0' NOT NULL auto_increment primary key,
+support_id int not null default '0',
+from_email text,
+date int not null default '0',
+body text
+);
+
+create index idx_support_messages_support_id on support_messages(support_id);
+
+INSERT INTO support_messages (support_message_id,support_id) VALUES ('100000','100000');
+
+CREATE TABLE support_canned_responses (
+  support_canned_id int(11) DEFAULT '0' NOT NULL auto_increment,
+  group_id int(11) DEFAULT '0' NOT NULL,
+  title text,
+  body text,
+  PRIMARY KEY (support_canned_id),
+  KEY idx_support_canned_response_group_id (group_id)
+);
+
+INSERT INTO support_canned_responses (support_canned_id) VALUES ('100000');
+
+#
+# Table structure for table 'support_status'
+#
+CREATE TABLE support_status (
+  support_status_id int(11) DEFAULT '0' NOT NULL auto_increment,
+  status_name text,
+  PRIMARY KEY (support_status_id)
+);
+
+insert into support_status values('1','Open');
+insert into support_status values('2','Closed');
+insert into support_status values('3','Deleted');
+
+#
+# Table structure for table 'support_group'
+#
+CREATE TABLE support_category (
+  support_category_id int(11) DEFAULT '0' NOT NULL auto_increment,
+  group_id int(11) DEFAULT '0' NOT NULL,
+  category_name text NOT NULL,
+  PRIMARY KEY (support_category_id),
+  KEY idx_support_group_group_id (group_id)
+);
+
+insert into support_category VALUES ('100','0','None');
+insert into support_category VALUES ('10000','0','None');
+
+#
+# Table structure for table 'support_history'
+#
+CREATE TABLE support_history (
+  support_history_id int(11) DEFAULT '0' NOT NULL auto_increment,
+  support_id int(11) DEFAULT '0' NOT NULL,
+  field_name text NOT NULL,
+  old_value text NOT NULL,
+  mod_by int(11) DEFAULT '0' NOT NULL,
+  date int(11),
+  PRIMARY KEY (support_history_id),
+  KEY idx_support_history_support_id (support_id)
+);
