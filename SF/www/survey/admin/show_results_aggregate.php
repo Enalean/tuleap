@@ -129,7 +129,7 @@ for ($i=0; $i<$count; $i++) {
 			echo "error";
 			echo db_error();
 		} else {
-			GraphResult($result2,stripslashes(db_result($result, 0, "question")));
+			GraphResult($result2,util_unconvert_htmlspecialchars(db_result($result, 0, "question")));
 		}
 
 	} else if ($question_type == "2") {
@@ -137,7 +137,7 @@ for ($i=0; $i<$count; $i++) {
 			This is a text-area question.
 		*/
 
-		echo db_result($result, 0, "question")."<BR>\n";
+		echo util_unconvert_htmlspecialchars(db_result($result, 0, "question"))."<BR>\n";
 
 		echo "<A HREF=\"show_results_comments.php?survey_id=$survey_id&question_id=$quest_array[$i]&group_id=$group_id\">View Comments</A>";
 
@@ -208,7 +208,7 @@ for ($i=0; $i<$count; $i++) {
 			$value_array[1]=db_result($result2, 0, "count");
 		}
 
-		GraphIt($name_array,$value_array,stripslashes(db_result($result, 0, "question")));
+		GraphIt($name_array,$value_array,util_unconvert_htmlspecialchars(db_result($result, 0, "question")));
 
 	} else if ($question_type == "4") {
 
@@ -216,7 +216,7 @@ for ($i=0; $i<$count; $i++) {
 			This is a comment only.
 		*/
 
-		echo "&nbsp;<P><B>".db_result($result, 0, "question")."</B>\n";
+		echo "&nbsp;<P><B>".util_unconvert_htmlspecialchars(db_result($result, 0, "question"))."</B>\n";
 		echo "<INPUT TYPE=\"HIDDEN\" NAME=\"_".$quest_array[$i]."\" VALUE=\"-666\">";
 
 	} else if ($question_type == "5") {
@@ -225,7 +225,7 @@ for ($i=0; $i<$count; $i++) {
 			This is a text-field question.
 		*/
 
-		echo db_result($result, 0, "question")."<BR>\n";
+		echo util_unconvert_htmlspecialchars(db_result($result, 0, "question"))."<BR>\n";
 
 		echo "<A HREF=\"show_results_comments.php?survey_id=$survey_id&question_id=$quest_array[$i]&group_id=$group_id\">View Comments</A>";
 

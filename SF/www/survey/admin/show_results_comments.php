@@ -54,7 +54,7 @@ Function  ShowResultComments($result) {
 
 $sql="SELECT question FROM survey_questions WHERE question_id='$question_id'";
 $result=db_query($sql);
-echo "<h2>Question: ".db_result($result,0,"question")."</H2>";
+echo "<h2>Question: ".util_unconvert_htmlspecialchars(db_result($result,0,"question"))."</H2>";
 echo "<P>";
 
 $sql="SELECT DISTINCT response FROM survey_responses WHERE survey_id='$survey_id' AND question_id='$question_id' AND group_id='$group_id'";
