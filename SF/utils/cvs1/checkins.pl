@@ -95,7 +95,8 @@ sub db_add_record {
  
   $fulldesc = join('\n', @desc);
   $fulldesc = join("&amp;",split("&", $fulldesc));
-  $fulldesc = join("&quot;",split("'", $fulldesc));
+  $fulldesc = join("&quot;",split("\"", $fulldesc));
+  $fulldesc = join("&#39;",split("'", $fulldesc));
   $fulldesc = join("&gt;",split(">", $fulldesc));
   $fulldesc = join("&lt;",split("<", $fulldesc));
   $repo_id = db_get_index('cvs_repositories','repository', $repo);
