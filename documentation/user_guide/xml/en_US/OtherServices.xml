@@ -84,13 +84,40 @@ newgrp projectname
       <section id="TheAnonymousFTPSpace">
         <title>The Anonymous FTP Space</title>
 
-        <para>The anonymous FTP space can be used by the project members to
-        upload any kind of documents or project data and deliverables they
-        want. It can be accessed by making an ftp connection to
-        <literal><emphasis>projectname</emphasis>.codex.xerox.com</literal>.
-        Anonymous users (login &#34;ftp&#34;) are granted read-only access
-        whereas project members using their CodeX login and password will be
-        granted read (download) and write (upload) access to this FTP area.</para>
+        <para>The anonymous FTP space can be used by the project
+        members to upload any kind of documents or project data and
+        deliverables they want. This storage will then be visible to
+        any CodeX users and all files placed in this directory can be
+        freely downloaded. So make sure that you use this storage
+        space for world readable files only.</para>
+
+        <itemizedlist mark="bullet" spacing="compact">
+          <listitem>
+            <para>Anonymous Users access: use an ftp client to connect
+            to <literal>download.codex.xerox.com</literal>. Use
+            &#34;ftp&#34; as login and your email address as the
+            password. Then <literal>cd
+            /pub/<emphasis>projectname</emphasis></literal> to access
+            the FTP Anonymous space.</para>
+          </listitem>
+
+          <listitem>
+            <para>Project Members access: use an ftp client to connect
+            to <literal>download.codex.xerox.com</literal>. Use CodeX
+            login and password and then type <literal>cd
+            /home/ftp/pub/<emphasis>projectname</emphasis></literal>
+            to access the FTP Anonymous space. From there project
+            members have both read and write access which means that
+            they can upload files.</para>
+
+	    <para>To point to this storage space in your Web pages or
+	    your email to other users simply use the following
+	    URL:</para>
+
+            <para><literal>ftp://<emphasis>projectname</emphasis>.codex.xerox.com:/pub/<emphasis>projectname</emphasis></literal></para>
+
+          </listitem>
+        </itemizedlist>
       </section>
 
       <section id="TheFileReleaseFTPSpace ">
