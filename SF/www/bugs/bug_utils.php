@@ -217,8 +217,10 @@ function bug_field_display($field_name, $group_id, $value='xyxy',
 
 	} else {
 	    
-	    // Only show the 'None" label if empty value is allowed
-	    if (bug_data_is_empty_ok($field_name)) {
+	    // Only show the 'None" label if empty value is allowed or
+	    // if value is already none (it can happen if the field was not used in
+	    // the bug submission form)
+	    if (bug_data_is_empty_ok($field_name) || $value==100) {
 		$show_none=true;
 		$text_none='None';
 	    }

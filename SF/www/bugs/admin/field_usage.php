@@ -139,8 +139,8 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
       }
       
       // Customize screen presence
-      if (!bug_data_is_required($field) && 
-	  !bug_data_is_special($field_name)) {
+      // It can be customized unless the field is special
+      if (!bug_data_is_special($field)) {
 	  
 	  $addm_html = '&nbsp;&nbsp;<INPUT TYPE="CHECKBOX" NAME="show_on_add_members" VALUE="1"'.
 	      (bug_data_is_showed_on_add_members($field)?' CHECKED':'').'>';
