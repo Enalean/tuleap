@@ -34,7 +34,7 @@ $headers = getallheaders();
       <A href="http://codex.xerox.com/"><IMG src="http://codex.xerox.com/images/codex_logo.gif" vspace="" hspace="7" border=0 alt="Xerox Code eXchange Site"></A>
     </TD>
     <TD width="99%"><!-- right of logo -->
-      <a href="http://www.xerox.com"><IMG src="http://bazaar.adoc.xerox.com/xerox/images/redx_medium_trans.gif" align="right" alt="Xerox" hspace="5" vspace="7" border=0 width="51" height="48"></A>
+      <a href="http://www.xerox.com"><IMG src="http://codex.xerox.com/images/redx_medium_trans.gif" align="right" alt="Xerox" hspace="5" vspace="7" border=0 width="51" height="48"></A>
     </TD><!-- right of logo -->
   </TR>
   <TR><TD bgcolor="#543a48" colspan=2><IMG src="http://codex.xerox.com/images/blank.gif" height=2 vspace=0></TD></TR>
