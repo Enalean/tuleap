@@ -222,8 +222,12 @@ echo html_blankimage(5,100);
         ?>
 
 
-        <BR><BR><BR><BR><BR>
+        <!-- Company Logo here -->
         <P>
+	<?php
+	print '<center><IMG src="'.util_get_image_theme("organization_logo.png").'" alt="'.$GLOBALS['sys_org_name'].' Logo"></center><BR>';
+	?>
+
         <!-- menus -->
         <?php
         // html_blankimage(1,140);
