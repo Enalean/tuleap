@@ -8,7 +8,7 @@
 
 require "pre.php";    
 session_require(array('group'=>'1','admin_flags'=>'A'));
-$HTML->header(array('title'=>'Alexandria: User List'));
+$HTML->header(array('title'=>'Admin - User List'));
 
 function show_users_list ($result) {
 	echo '<P>Key:
@@ -75,7 +75,7 @@ if ($action=='add_to_group') {
 /*
 	Show list of users
 */
-print "<p>Alexandria User List for Group: ";
+print "<p>User List for:  ";
 if (!$group_id) {
 	print "<b>All Groups</b>";
 	print "\n<p>";
@@ -90,7 +90,7 @@ if (!$group_id) {
 	/*
 		Show list for one group
 	*/
-	print "<b>" . group_getname($group_id) . "</b>";
+	print "<b>Group " . group_getname($group_id) . "</b>";
 	
 	print "\n<p>";
 

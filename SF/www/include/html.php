@@ -426,7 +426,7 @@ function site_project_header($params) {
 		session_require(array('group'=>$group_id));
 	}
 
-	//for dead projects must be member of alexandria project
+	//for dead projects must be member of admin project
 	if (!$project->isActive()) {
 		//only SF group can view non-active, non-holding groups
 		session_require(array('group'=>'1'));

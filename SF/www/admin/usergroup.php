@@ -10,7 +10,7 @@ require "pre.php";
 require "account.php";
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
-$HTML->header(array('title'=>'Alexandria: Admin: User Info'));
+$HTML->header(array('title'=>'Admin - User Info'));
 
 // user remove from group
 if ($action=='remove_user_from_group') {
@@ -92,7 +92,7 @@ $row_user = db_fetch_array($res_user);
 
 ?>
 <p>
-Alexandria User Group Edit for user: <b><?php print $user_id . ": " . user_getname($user_id); ?></b>
+User Group Edit for user: <b><?php print $user_id . ": " . user_getname($user_id); ?></b>
 <p>
 Unix Account Info:
 <FORM method="post" action="<?php echo $PHP_SELF; ?>">

@@ -8,7 +8,7 @@
 require "pre.php";
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
-$HTML->header(array('title'=>"Alexandria Admin"));
+$HTML->header(array('title'=>"Admin - Search Users/Groups"));
 
 ?>
 

@@ -33,10 +33,10 @@ function submit_valid()	{
 if (submit_valid()) {
 	session_redirect("/admin/index.php");
 } else { // not valid registration, or first time to page
-	$HTML->header(array('title'=>"Alexandria: Admin: New Group"));
+	$HTML->header(array('title'=>"Admin - New Group"));
 
 ?>
-<p><b>Alexandria New Group Creation</b>
+<p><b>New Group (Project) Creation</b>
 <?php if ($submit_error) print "<p>$submit_error"; ?>
 <form action="newgroup.php" method="post">
 <p>Group Name:
