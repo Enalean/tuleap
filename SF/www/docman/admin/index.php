@@ -72,7 +72,7 @@ function main_page($group_id) {
 
 			<tr>
 			        <th>Document Information (in html format):</th>
-			        <td><textarea cols="60" rows="10" name="data">'.$row['data'].'</textarea></td>
+			        <td><textarea cols="60" rows="10" wrap="virtual" name="data">'.$row['data'].'</textarea></td>
 			</tr>
 
 			<tr>
