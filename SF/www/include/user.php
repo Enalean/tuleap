@@ -234,6 +234,7 @@ function user_get_timezone() {
 }
 
 function user_set_preference($preference_name,$value) {
+	GLOBAL $user_pref;
 	if (user_isloggedin()) {
 		$preference_name=strtolower(trim($preference_name));
 		$result=db_query("UPDATE user_preferences SET preference_value='$value' ".
@@ -243,6 +244,12 @@ function user_set_preference($preference_name,$value) {
 			$result=db_query("INSERT INTO user_preferences (user_id,preference_name,preference_value) ".
 				"VALUES ('".user_getid()."','$preference_name','$value')");
 		}
+
+		// Update the Preference cache if it was setup by a user_get_preference
+		if (isset($user_pref)) { $user_pref[$preference_name] = $value; }
+
+		return true;
+
 	} else {
 		return false;
 	}
@@ -267,6 +274,7 @@ function user_get_preference($preference_name) {
 			//we haven't returned prefs - go to the db
 			$result=db_query("SELECT preference_name,preference_value FROM user_preferences ".
 				"WHERE user_id='".user_getid()."'");
+	
 			if (db_numrows($result) < 1) {
 				return false;
 			} else {
@@ -274,9 +282,9 @@ function user_get_preference($preference_name) {
 				for ($i=0; $i<db_numrows($result); $i++) {
 					$user_pref[db_result($result,$i,'preference_name')]=db_result($result,$i,'preference_value');
 				}
-				if ($user_pref["$preference_name"]) {
+				if (isset($user_pref["$preference_name"])) {
 					//we have fetched prefs - return part of array
-					return $user_pref["$preference_name"];
+			                return $user_pref["$preference_name"];
 				} else {
 					//we have fetched prefs, but this pref hasn't been set
 					return false;
