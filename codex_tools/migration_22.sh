@@ -29,7 +29,7 @@
 # ----------------------------
 #/etc/passwd
 #/etc/shadow
-#/etc/groups
+#/etc/group
 #
 # Data Directories (please restore before CodeX upgrade)
 # ----------------
@@ -236,7 +236,7 @@ rpms_ok=1
 for rpm in openssh-server openssh openssh-clients openssh-askpass \
    openssl openldap perl perl-DBI perl-CGI gd gcc \
    sendmail telnet bind ntp samba python php php-mysql php-ldap enscript \
-   bind python-devel rcs
+   bind python-devel rcs sendmail-cf
 do
     $RPM -q $rpm  2>/dev/null 1>&2
     if [ $? -eq 1 ]; then
@@ -395,7 +395,7 @@ $TOUCH /etc/httpd/conf/codex_svnhosts.conf
 
 # Restart Apache after subversion is installed
 # so that mod_dav_svn module is taken into account
-$SERVICE httpd start
+#$SERVICE httpd start
 
 # -> cvsgraph
 $RPM -e --nodeps cvsgraph 2>/dev/null
@@ -974,7 +974,7 @@ if [ -a /etc/my.cnf ]; then
      todo "Check that /etc/my.cnf is up to date"
 fi
 
-if [ install_my_cnf -eq 1 ]; then 
+if [ $install_my_cnf -eq 1 ]; then 
   $CAT <<'EOF' >/etc/my.cnf
 # The MySQL server
 [mysqld]
@@ -1044,8 +1044,8 @@ if [ -a $MAILMAN_DIR/Mailman/mm_cfg.py ]; then
    if [ $? -eq 0 ]; then
      install_mm_config=0;
      todo "Check $MAILMAN_DIR/Mailman/mm_cfg.py:\n\
-you may replace DEFAULT_EMAIL_HOST and DEFAULT_URL_HOST by DEFAULT_HOST_NAME\n\
-and DEFAULT_URL (see CodeX Installation Guide). Recompile with python -O mm_cfg.py"
+you may replace DEFAULT_HOST_NAME and DEFAULT_URL by DEFAULT_EMAIL_HOST\n\
+and DEFAULT_URL_HOST (see CodeX Installation Guide). Recompile with python -O mm_cfg.py"
    fi
 fi
 
@@ -1096,7 +1096,7 @@ sys_svn_host="svn.$sys_default_domain"
 
 $PERL -i'.orig' -p -e"s:(^\\\$sys_cvs_host.*):\1\n\n// Machine that hosts Subversion\n// Note that while this machine need not be the same as the CodeX host,\n// the \"viewcvs\" interface currently must run on the CodeX host system.\n// If this host is different from the CodeX host, then the CodeX host\n// will need to be able to access the CVS file tree via NFS.\n\\\$sys_svn_host = \"$sys_svn_host\";:" /etc/codex/conf/local.inc
 
-$PERL -i'.orig' -p -e"s:(^<\!ENTITY SYS_CVS_HOST.*):\1\n<\!ENTITY SYS_SVN_HOST \"$sys_svn_host\":" /etc/codex/documentation/user_guide/xml/en_US/ParametersLocal.dtd
+$PERL -i'.orig' -p -e"s:(^<\!ENTITY SYS_CVS_HOST.*):\1\n<\!ENTITY SYS_SVN_HOST \"$sys_svn_host\">:" /etc/codex/documentation/user_guide/xml/en_US/ParametersLocal.dtd
 
 ##############################################
 # replace all references to cvsweb.cgi to viewcvs.cgi in

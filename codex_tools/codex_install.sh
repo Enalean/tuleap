@@ -18,6 +18,9 @@
 #  delivered on a CD or by other means
 #
 
+# In order to keep a log of the installation, you may run the script with:
+# ./codex_install.sh 2>&1 | tee /tmp/codex_install.log
+
 progname=$0
 scriptdir=`dirname $progname`
 cd ${scriptdir};TOP_DIR=`pwd`;cd -
@@ -139,7 +142,7 @@ rpms_ok=1
 for rpm in openssh-server openssh openssh-clients openssh-askpass \
    openssl openldap perl perl-DBI perl-CGI gd gcc \
    sendmail telnet bind ntp samba python php php-mysql php-ldap enscript \
-   bind python-devel rcs
+   bind python-devel rcs sendmail-cf
 do
     $RPM -q $rpm  2>/dev/null 1>&2
     if [ $? -eq 1 ]; then
@@ -688,7 +691,7 @@ EOF
 $CP $MAILMAN_DIR/scripts/mailman /etc/init.d/mailman
 $CHKCONFIG --add mailman
 
-todo "Mailman: Create a site-wide mailing list: in $MAILMAN_DIR, type 'bin/newlist mailman', then 'bin/config_list -i data/sitelist.cfg mailman', and don't forget to subscribe to this ML."
+todo "Mailman: Create a site-wide mailing list: in $MAILMAN_DIR, type 'bin/newlist mailman', then 'bin/config_list -i data/sitelist.cfg mailman'. Update /etc/aliases as precised (remove existing mailman aliases!), and run newaliases. Last, don't forget to subscribe to this ML."
 
 ##############################################
 # Installing and configuring Sendmail
@@ -1135,7 +1138,10 @@ EOF
 #
 echo "Generating the User Manual. This might take a few minutes."
 /home/httpd/SF/utils/generate_doc.sh -f
+$CHOWN -R sourceforge.sourceforge $INSTALL_DIR/documentation
+
 todo "Documentation is currently forced to be re-generated each night. Make sure that the CVS update is possible in utils/generate_doc.sh. Do a cvs login on CVS server as user 'sourceforge'. After that, you may remove the '-f' flag in the 'sourceforge' crontab"
+
 
 ##############################################
 # Make sure all major services are on
@@ -1157,8 +1163,6 @@ todo "  - register_globals = On"
 todo "  - memory_limit = 30M"
 todo "  - post_max_size = 20M"
 todo "  - upload_max_file_size = 20M"
-todo "  - include_path = .:$INSTALL_DIR/SF/www/include:$INSTALL_DIR/SF/www/phpMyAdmin"
-
 # things to do by hand
 todo "Change the default login shell if needed in the database (/sbin/nologin or /usr/local/bin/cvssh, etc."
 
