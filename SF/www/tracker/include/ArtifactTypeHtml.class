@@ -1224,9 +1224,9 @@ class ArtifactTypeHtml extends ArtifactType {
 				<select name="status">';
 				if ( $status ) {
 					$selected = "";
-					if ( $status == "V" ) 
+					if ( $status == "A" ) 
 						$selected = " selected";
-					echo '<option value="V"'.$selected.'>Active</option>';
+					echo '<option value="A"'.$selected.'>Active</option>';
 		
 					$selected = "";
 					if ( $status == "H" ) 
@@ -1235,7 +1235,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		
 				} else {
 					echo '				
-				          <option value="V" selected>Active</option>
+				          <option value="A" selected>Active</option>
 				          <option value="H">Hidden</option>';
 				}
 				echo '
@@ -1290,7 +1290,7 @@ class ArtifactTypeHtml extends ArtifactType {
 			return;
 		}
 
-		$values = $field->getFieldValues ($this->getID(),"'V','P'");
+		$values = $field->getFieldValues ($this->getID(),"'A','P'");
 		$rows = db_numrows($values);
 		
 		if (!$values || ($rows == 0)) {
@@ -1572,7 +1572,7 @@ class ArtifactTypeHtml extends ArtifactType {
 
 		if ( $field->isSelectBox() || $field->isMultiSelectBox() ) {
 			echo 'Value: ';
-			echo html_build_select_box ($field->getFieldValues($this->getID(),"'V','P'"),"default_value",$default_value);
+			echo html_build_select_box ($field->getFieldValues($this->getID(),"'A','P'"),"default_value",$default_value);
 		} else {
 	      	echo 'Value: <INPUT TYPE="text" NAME="default_value" VALUE="'.$default_value.'">';
 		}
@@ -1593,7 +1593,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		switch ( $status ) {
 		case "P":
 			return "Permanent";
-		case "V":
+		case "A":
 			return "Active";
 		case "H":
 			return "Hidden";

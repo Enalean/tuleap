@@ -598,9 +598,9 @@ class ArtifactField extends Error {
 			// If only active field
 			if ($active_only) {
 			    if ($checked) {
-					$status_cond = "AND  (status IN ('V','P') OR value_id='".$checked."') ";
+					$status_cond = "AND  (status IN ('A','P') OR value_id='".$checked."') ";
 			    } else {
-					$status_cond = "AND  status IN ('V','P') ";
+					$status_cond = "AND  status IN ('A','P') ";
 			    }
 			}
 		
@@ -1403,7 +1403,7 @@ class ArtifactField extends Error {
 		
 		// Create the artifact_field_value_list
 		$sql = "INSERT INTO artifact_field_value_list VALUES (".
-				$this->getID().",".$group_artifact_id.",".$value_id.",'".addslashes($value)."','".addslashes($description)."',".$order_id.",'V')";
+				$this->getID().",".$group_artifact_id.",".$value_id.",'".addslashes($value)."','".addslashes($description)."',".$order_id.",'A')";
 				
 		//echo $sql;
 				

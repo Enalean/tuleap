@@ -4,8 +4,9 @@ use DBI;
 
 
 
-$root_path = $ENV{'SF_LOCAL_INC_PREFIX'} || "/home/";
-require $root_path."httpd/SF/utils/include.pl";
+#$root_path = $ENV{'SF_LOCAL_INC_PREFIX'} || "/home/";
+$root_path = "../../";
+require $root_path."utils/include.pl";
 
 &db_connect;
 
