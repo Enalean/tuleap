@@ -24,14 +24,21 @@ function send_new_project_email($group_id) {
 		echo ("Group [ $group_id ] does not seem to have any administrators.");
 	}
 
+	// Determine which protocol to use for URLs
+	if (session_issecure()) {
+	    $server = 'https://'.$GLOBALS['sys_https_host'];
+	} else {
+	    $server = 'http://'.$GLOBALS['sys_default_domain'];
+	}
+
 	// send one email per admin
-while ($row_admins = db_fetch_array($res_admins)) {
+	while ($row_admins = db_fetch_array($res_admins)) {
 	$message = 
 'Your project registration has been approved. 
 
 Project Full Name:    '.$row_grp['group_name'].'
 Project Unix Name:    '.$row_grp['unix_group_name'].'
-Project Summary Page: http://'.$GLOBALS['sys_default_domain'].'/projects/'.$row_grp['unix_group_name'].'
+Project Summary Page: '.$server.'/projects/'.$row_grp['unix_group_name'].'
 Project Web Server:   http://'.$row_grp['unix_group_name'].'.'.$GLOBALS['sys_default_domain'].'
 CVS Server:           cvs.'.$row_grp['unix_group_name'].'.'.$GLOBALS['sys_default_domain'].'
 Shell Server:         '.$row_grp['unix_group_name'].'.'.$GLOBALS['sys_default_domain'].'

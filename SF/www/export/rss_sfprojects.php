@@ -14,20 +14,27 @@ print '<?xml version="1.0"?>
 <rss version="0.91">
 ';
 
+// Determine which protocol to use for the server
+if (session_issecure()) {
+    $server = 'https://'.$GLOBALS['sys_https_host'];
+} else {
+    $server = 'http://'.$GLOBALS['sys_default_domain'];
+}
+
 // ## one time output
 print " <channel>\n";
 print "  <copyright>Copyright (c) 2001-2002 Xerox, Inc.".$GLOBALS['sys_name']." Team. All Rights Reserved.</copyright>\n";
 print "  <pubDate>".gmdate('D, d M Y g:i:s',time())." GMT</pubDate>\n";
 print "  <description>Full Project Listing</description>\n";
-print "  <link>http://$GLOBALS[sys_default_domain]</link>\n";
+print "  <link>$server</link>\n";
 print "  <title>Full Project Listing</title>\n";
-print "  <webMaster>webmaster@$GLOBALS[sys_default_domain]</webMaster>\n";
+print "  <webMaster>".$GLOBALS['sys_email_contact']."</webMaster>\n";
 print "  <language>en-us</language>\n";
 // ## item outputs
 while ($row = db_fetch_array($res)) {
 	print "  <item>\n";
 	print "   <title>".htmlspecialchars($row[group_name])."</title>\n";
-	print "   <link>http://$GLOBALS[sys_default_domain]/project/?group_id=$row[group_id]</link>\n";
+	print "   <link>$server/project/?group_id=$row[group_id]</link>\n";
 	print "   <description>";
 	print ereg_replace(" *\r*\n *"," ",rss_description($row[short_description]));
 	print "</description>\n";
@@ -94,8 +101,8 @@ print " </channel>\n";
 	print '"'.join(',',$os).'",';
 	print '"'.join(',',$devstate).'",';
 	
-	print "http://$GLOBALS[sys_default_domain]/project/showfiles.php?group_id=$row[group_id],";
-	print "http://$GLOBALS[sys_default_domain]/projects/$row[unix_group_name],";
+	print "$server/project/showfiles.php?group_id=$row[group_id],";
+	print "$server/projects/$row[unix_group_name],";
 	print '"'.join(',',$admins).'",';
 	
 	// Finally print whether this file is visisble in the Xerox eTTM Software Inventory

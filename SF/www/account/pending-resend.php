@@ -12,9 +12,14 @@ $res_user = db_query("SELECT * FROM user WHERE user_name='$form_user'");
 $row_user = db_fetch_array($res_user);
 
 // send mail
+if (session_issecure()) {
+    $server = 'https://'.$GLOBALS['sys_https_host'];
+} else {
+    $server = 'http://'.$GLOBALS['sys_default_domain'];
+}
 $message = "Thank you for registering on the ".$GLOBALS['sys_name']." web site. In order\n"
 	. "to complete your registration, visit the following url: \n\n"
-	. "http://$GLOBALS[sys_default_domain]/account/verify.php?confirm_hash=$row_user[confirm_hash]\n\n"
+	. "$server/account/verify.php?confirm_hash=$row_user[confirm_hash]\n\n"
 	. "Enjoy the site.\n\n"
 	. " -- The ".$GLOBALS['sys_name']." Team\n";
 

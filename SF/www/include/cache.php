@@ -60,7 +60,7 @@ function cache_display($name,$function,$time) {
 
 function cache_get_new_data($function) {
 	global $SERVER_PORT;
-	$furl=fopen("http://localhost:$SERVER_PORT/write_cache.php?sys_themeid=".$GLOBALS['sys_themeid']."&function=".urlencode($function),'r');
+	$furl=fopen("http://localhost:$SERVER_PORT/write_cache.php?sys_theme=".$GLOBALS['sys_theme']."&function=".urlencode($function),'r');
 	return stripslashes(fread($furl,200000));
 }
 ?>

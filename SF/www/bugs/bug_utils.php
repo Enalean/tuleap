@@ -1227,6 +1227,13 @@ function format_bug_attached_files ($bug_id,$group_id,$ascii=false) {
 	    (user_ismember($group_id,'B2') ? '<td align="center">%s</td>':'').'</tr>';
     }
 
+    // Determine which protocl to use for embedded URL in ASCII format
+    if (session_issecure()) {
+	$server = 'https://'.$GLOBALS['sys_https_host'];
+    } else {
+	$server = 'http://'.$GLOBALS['sys_default_domain'];
+    }
+
     // Loop throuh the attached files and format them
     for ($i=0; $i < $rows; $i++) {
 
@@ -1240,7 +1247,7 @@ function format_bug_attached_files ($bug_id,$group_id,$ascii=false) {
 			    intval(db_result($result, $i, 'filesize')/1024),
 			    db_result($result, $i, 'user_name'),
 			    db_result($result, $i, 'description'),
-			    'http://'.$GLOBALS['sys_default_domain'].$href);
+			    $server.$href);
 	} else {
 	    $out .= sprintf($fmt,
 			    util_get_alt_row_color($i),
@@ -1405,7 +1412,15 @@ function bug_attach_file($bug_id,$group_id,$input_file,$input_file_name,$input_f
 	$changes['attach']['description'] = $file_description;
 	$changes['attach']['name'] = $input_file_name;
 	$changes['attach']['size'] = $input_file_size;
-	$changes['attach']['href'] = 'http://'.$GLOBALS['sys_default_domain'].
+	
+	// Determine which protocol to use for the URL of the attachement
+	if (session_issecure()) {
+	    $server = 'https://'.$GLOBALS['sys_https_host'];
+	} else {
+	    $server = 'http://'.$GLOBALS['sys_default_domain'];
+	}
+
+	$changes['attach']['href'] = $server.
 	    "/bugs/download.php?group_id=$group_id&bug_id=$bug_id&bug_file_id=$file_id";
 	return true;
     }

@@ -75,14 +75,13 @@ while ($row_cvshist = db_fetch_array($res_cvshist)) {
 } // ### else no cvs history
 
 // ############################## CVS Browsing
-
 if ($row_grp['is_public']) {
 	print '<HR><B>Browse the CVS Tree</B>
 <P>Browsing the CVS tree gives you a great view into the current status
 of this project\'s code. You may also view the complete histories of any
 file in the repository.
 <UL>
-<LI><A href="http://'.$sys_cvs_host.'/cgi-bin/cvsweb.cgi?cvsroot='
+<LI><A href="http'.(session_issecure() ? 's':'').'://'.$sys_cvs_host.'/cgi-bin/cvsweb.cgi?cvsroot='
 .$row_grp['unix_group_name'].'"><B>Browse CVS Repository</B>';
 }
 

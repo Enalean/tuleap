@@ -43,13 +43,22 @@ if (user_isloggedin()) {
 	if($to) {
 		$to = substr($to,0,-1);
 	}
+
+	// Determine which protocol to use for the URL
+	if (session_issecure()) {
+	    $server = 'https://'.$GLOBALS['sys_https_host'];
+	} else {
+	    $server = 'http://'.$GLOBALS['sys_default_domain'];
+	}
+
+
 	$other = "From: noreply@$GLOBALS[sys_default_domain]";
-	$subject = "[SourceForge] $user_id has been removed from project $group_id";
+	$subject = "[".$GLOBALS['sys_default_domain']."] $user_id has been removed from project $group_id";
 	$body = "This message is being sent to notify the administrator(s) of".
 		"\nproject ID $group_id that user ID $user_id has chosen to".
 		"\nremove him/herself from the project.".
 		"\n\nFollow this link to see the current members of your project:".
-		"\nhttp://$GLOBALS[sys_default_domain]/project/memberlist.php?group_id=$group_id".
+		"\n$server/project/memberlist.php?group_id=$group_id".
 		"\n\n";
 
 	mail($to,$subject,$body,$other);

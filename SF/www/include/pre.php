@@ -24,13 +24,14 @@ if (($HTTP_HOST != $GLOBALS['sys_default_domain']) && ($SERVER_NAME != 'localhos
     }
 }
 
-if ($HTTPS != 'on' && $GLOBALS['sys_force_ssl'] == 1) {
+// Force SSL mode if required except if request comes from localhost
+// HTTP needed by fopen calls (e.g.  in www/include/cache.php)
+if ($HTTPS != 'on' && $GLOBALS['sys_force_ssl'] == 1 && ($SERVER_NAME != 'localhost')) {
     $location = "Location: https://".$GLOBALS['sys_https_host']."$REQUEST_URI";
 }
 
 if ($location) {
     header($location);
-    system ("echo $location >> /tmp/loc.out");
     exit;
 }   
 
@@ -97,9 +98,6 @@ if (!$conn) {
 //determine if they're logged in
 session_set();
 
-//set up the themes vars
-//theme_sysinit($sys_themeid);
-
 // OSDN functions and defs
 require('osdn.php');
 
@@ -119,11 +117,11 @@ if (user_isloggedin()) {
 	//just use pacific time as always
 }
 
-//theme functions 
+//Set up the vars and theme functions 
 require('theme.php');
 
 
-// Check 
+// Check if anonymous user is allowed to browse the site
 if ($GLOBALS['sys_allow_anon'] == 0 && !user_isloggedin() && $REQUEST_URI != '/account/login.php') {
     if ($GLOBALS['sys_force_ssl'] == 1 || $HTTPS == 'on')
 	header("Location: https://".$GLOBALS['sys_https_host']."/account/login.php");
