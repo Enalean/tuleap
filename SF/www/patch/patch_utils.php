@@ -179,7 +179,7 @@ function mail_followup($patch_id,$more_addresses=false) {
 
 	*/
 
-	$sql="SELECT patch.group_id,patch.patch_id,patch.summary,groups.unix_group_name,".
+	$sql="SELECT patch.group_id,patch.patch_id,patch.summary,groups.group_name,".
 		"patch_status.status_name,patch_category.category_name, ".
 		"user.email,user2.email AS assigned_to_email ".
 		"FROM patch,user,user user2,groups,patch_category,patch_status ".
@@ -187,6 +187,7 @@ function mail_followup($patch_id,$more_addresses=false) {
 		"AND patch.patch_status_id=patch_status.patch_status_id ".
 		"AND patch.patch_category_id=patch_category.patch_category_id ".
 		"AND user.user_id=patch.submitted_by ".
+	    "AND patch.group_id=groups.group_id ".
 		"AND patch.patch_id='$patch_id'";
 
 	$result=db_query($sql);
@@ -194,7 +195,7 @@ function mail_followup($patch_id,$more_addresses=false) {
 	if ($result && db_numrows($result) > 0) {
 
 		$body = "Patch #".db_result($result,0,"patch_id")." has been updated. ".
-			"\n\nProject: ".db_result($result,0,'project_name').
+			"\n\nProject: ".db_result($result,0,'group_name').
 			"\nCategory: ".db_result($result,0,'category_name').
 			"\nStatus: ".db_result($result,0,'status_name').
 			"\nSummary: ".util_unconvert_htmlspecialchars(db_result($result,0,'summary'));
