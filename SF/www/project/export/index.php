@@ -8,6 +8,8 @@
 require('pre.php');
 require('../admin/project_admin_utils.php');
 require('project_export_utils.php');
+require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');
+require($DOCUMENT_ROOT.'/../common/tracker/ArtifactTypeFactory.class');
 
 // Conditionally include the appropriate modules
 if (ereg('^bug',$export) || ($export == 'project_db') ) {
@@ -169,58 +171,170 @@ connection are as follows:
 <P> Your project data can either be exported in
 individual text files (CSV format) or in a project specific database that you can directly access from your desktop machine through an ODBC/JDBC connection. See <?php echo help_button('ProjectDataExport.html',false,'Online Help'); ?> for more information.
 
-<h3>Text File Export <?php echo help_button('ProjectDataExport.html#TextFileExport'); ?></h3>
-
-     <P>Click on the links below to generate a text file export (CSV format).
-<P>
-<ul>
 <?
-if ($project->usesBugs()&&$project->activateOldBug()) {
-    echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=bug\">Bug export</a></b><br>\n";
-	echo 'All bugs submitted to your project. Show <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_format">export format</a>.';
-    echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=bug_history\">Bug History export</a></b><br>"."\n";
-	echo 'A history of all the changes your project bugs have gone through. Show <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_history_format">export format</a>.';
-}
+		
+	// Show all the fields currently available in the system
 
-if ($project->usesPm()&&$project->activateOldTask()) {
-    echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=task\">Task export</a></b><br>"."\n";
-	echo 'All tasks created in your project. Show <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_format">export format</a>.';
-	echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=task_history\">Task History export</a></b><br>"."\n";
-	echo 'A history of all the changes your project tasks have gone through. Show <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_history_format">export format</a>.';
-}
-
-if ($project->usesSupport()&&$project->activateOldSR()) {
-    echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=support_request\">Support Request export</a></b><br>"."\n";
-	echo 'All support requests created in your project. Show <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=support_request_format">export format</a>.';
-}
-
-echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=survey_responses\">Survey Responses export</a></b><br>"."\n";
-?>
-A list of all the responses to all the surveys posted by your project. Show <a href="<?php echo $PHP_SELF; ?>?group_id=<?php echo
-$group_id;?>&export=survey_responses_format">export format</a>.
-
-
-</ul>
-
-<?
-if ( ($project->usesBugs()&&$project->activateOldBug())||($project->usesPm()&&$project->activateOldTask()) ) {
-	echo 'Optional data exports:';
-	echo '<ul>';
-	if ($project->usesBugs()&&$project->activateOldBug()) {
-	    echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=bug_bug_deps\">Bug-Bug Dependencies export</a></b><br>"."\n";
-		echo 'A list of all bug to bug dependencies. Show <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_bug_deps_format">export format</a>.';
-	    echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=bug_task_deps\">Bug-Task Dependencies export</a></b><br>"."\n";
-		echo 'A list of all bug to task dependencies. Show <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_task_deps_format">export format</a>.';
+	echo '<p><TABLE WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="2">';
+	echo '
+  <tr class="boxtable"> 
+    <td class="boxtitle">&nbsp;</td>
+    <td class="boxtitle" colspan="2"> 
+      <div align="center"><b>Artifacts Data</b></div>
+    </td>
+    <td class="boxtitle" colspan="2"> 
+      <div align="center"><b>History</b></div>
+    </td>
+    <td class="boxtitle" colspan="2"> 
+      <div align="center"><b>Dependencies</b></div>
+    </td>
+  </tr>';
+  	$iu = 0;
+  	echo '
+  <tr class="'.util_get_alt_row_color($iu).'"> 
+    <td rowspan="2"><b>Legacy Bug Tracker</b></td>
+    <td rowspan="2"> 
+      <div align="center"><a href="'.$PHP_SELF.'?group_id=$group_id&export=bug">Export</a></div>
+    </td>
+    <td rowspan="2"> 
+      <div align="center"><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_format">Show Format</a></div>
+    </td>
+    <td rowspan="2"> 
+      <div align="center"><a href="'.$PHP_SELF.'?group_id=$group_id&export=bug_history">Export</a></div>
+    </td>
+    <td rowspan="2"> 
+      <div align="center"><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_history_format">Show Format</a></div>
+    </td>
+    <td> 
+      <div align="center"><a href="'.$PHP_SELF.'?group_id=$group_id&export=bug_bug_deps">Export Bug-Bug</a></div>
+    </td>
+    <td> 
+      <div align="center"><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_bug_deps_format">Show Format</a></div>
+    </td>
+  </tr>';
+  	echo '
+  <tr class="'.util_get_alt_row_color($iu).'"> 
+    <td> 
+      <div align="center"><a href="'.$PHP_SELF.'?group_id=$group_id&export=bug_task_deps">Export Bug-Task</a></div>
+    </td>
+    <td> 
+      <div align="center"><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_task_deps_format">Show Format</a></div>
+    </td>
+  </tr>';
+  	$iu ++;
+  	echo '
+  <tr class="'.util_get_alt_row_color($iu).'"> 
+    <td><b>Legacy Task Manager</b></td>
+    <td> 
+      <div align="center"><a href="'.$PHP_SELF.'?group_id=$group_id&export=task">Export</a></div>
+    </td>
+    <td> 
+      <div align="center"><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_format">Show Format</a></div>
+    </td>
+    <td> 
+      <div align="center"><a href="'.$PHP_SELF.'?group_id=$group_id&export=task_history">Export</a></div>
+    </td>
+    <td> 
+      <div align="center"><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_history_format">Show Format</a></div>
+    </td>
+    <td> 
+      <div align="center"><a href="'.$PHP_SELF.'?group_id=$group_id&export=task_task_deps">Export</a></div>
+    </td>
+    <td> 
+      <div align="center"><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_task_deps_format">Show Format</a></div>
+    </td>
+  </tr>';
+  	$iu ++;
+  	echo '
+  <tr class="'.util_get_alt_row_color($iu).'"> 
+    <td><b>Legacy Support Request</b></td>
+    <td> 
+      <div align="center"><a href="'.$PHP_SELF.'?group_id=$group_id&export=support_request">Export</a></div>
+    </td>
+    <td> 
+      <div align="center"><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=support_request_format">Show Format</a></div>
+    </td>
+    <td> 
+      <div align="center">-</div>
+    </td>
+    <td> 
+      <div align="center">-</div>
+    </td>
+    <td> 
+      <div align="center">-</div>
+    </td>
+    <td> 
+      <div align="center">-</div>
+    </td>
+  </tr>';
+  	$iu ++;
+  	echo '
+  <tr class="'.util_get_alt_row_color($iu).'"> 
+    <td><b>Survey Responses</b></td>
+    <td> 
+      <div align="center"><a href="'.$PHP_SELF.'?group_id=$group_id&export=survey_responses">Export</a></div>
+    </td>
+    <td> 
+      <div align="center"><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=survey_responses_format">Show Format</a></div>
+    </td>
+    <td> 
+      <div align="center">-</div>
+    </td>
+    <td> 
+      <div align="center">-</div>
+    </td>
+    <td> 
+      <div align="center">-</div>
+    </td>
+    <td> 
+      <div align="center">-</div>
+    </td>
+  </tr>';		
+  
+	//	  
+	//  get the Group object
+	//	  
+	$group = group_get_object($group_id);
+	if (!$group || !is_object($group) || $group->isError()) {
+		exit_no_group();
+	}		   
+	$atf = new ArtifactTypeFactory($group);
+	if (!$group || !is_object($group) || $group->isError()) {
+		exit_error('Error','Could Not Get ArtifactTypeFactory');
 	}
 	
-	if ($project->usesPm()&&$project->activateOldTask()) {
-	    echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=task_task_deps\">Task-Task Dependencies export</a></b><br>"."\n";
-		echo 'A list of all task to task dependencies. Show <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_task_deps_format">export format</a>.';
-	    echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=task_assigned_to\">Task Assignees export</a></b><br>"."\n";
-		echo 'A list of tasks and the project members in charge. Show <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_assigned_to_format">export format</a>.';
+	// Get the artfact type list
+	$at_arr = $atf->getArtifactTypes();
+	
+	if ($at_arr && count($at_arr) >= 1) {
+		for ($j = 0; $j < count($at_arr); $j++) {
+		  	$iu ++;
+		  	echo '
+		  <tr class="'.util_get_alt_row_color($iu).'"> 
+		    <td><b>Tracker: '.$at_arr[$j]->getName().'</b></td>
+		    <td> 
+		      <div align="center"><a href="'.$PHP_SELF.'?group_id=$group_id&atid='.$at_arr[$j]->getID().'">Export</a></div>
+		    </td>
+		    <td> 
+		      <div align="center"><a href="'.$PHP_SELF.'?group_id=$group_id&atid='.$at_arr[$j]->getID().'">Show Format</a></div>
+		    </td>
+		    <td> 
+		      <div align="center"><a href="'.$PHP_SELF.'?group_id=$group_id&atid='.$at_arr[$j]->getID().'">Export</a></div>
+		    </td>
+		    <td> 
+		      <div align="center"><a href="'.$PHP_SELF.'?group_id=$group_id&atid='.$at_arr[$j]->getID().'">Show Format</a></div>
+		    </td>
+		    <td> 
+		      <div align="center"><a href="'.$PHP_SELF.'?group_id=$group_id&atid='.$at_arr[$j]->getID().'">Export</a></div>
+		    </td>
+		    <td> 
+		      <div align="center"><a href="'.$PHP_SELF.'?group_id=$group_id&atid='.$at_arr[$j]->getID().'">Show Format</a></div>
+		    </td>
+		  </tr>';
+		}
 	}
-	echo '</ul>';
-}
+
+	echo '</TABLE>';
 ?>
 
 <h3>Direct Database Access <?php echo help_button('ProjectDataExport.html#DirectDatabaseAccess'); ?></h3>
