@@ -9,11 +9,14 @@
 //	Originally written by Laurent Julliard 2001- 2003 CodeX Team, Xerox
 //
 
+
+$LANG->loadLanguageMsg('svn/svn');
+
 if (!$group_id) {
     exit_no_group(); // need a group_id !!!
 }
 
-svn_header(array ('title'=>'Subversion Information'));
+svn_header(array ('title'=>$LANG->getText('svn_intro','info')));
 
 // Table for summary info
 print '<TABLE width="100%"><TR valign="top"><TD width="65%">'."\n";
@@ -31,17 +34,15 @@ if ($row_grp['svn_preamble'] != '') {
 
 // Summary info
 print '</TD><TD width="25%">';
-print $HTML->box1_top("Repository History");
+print $HTML->box1_top($LANG->getText('svn_intro','history'));
 
 echo svn_utils_format_svn_history($group_id);
 
 // SVN Browsing Box
-print '<HR><B>Browse the Subversion Tree</B>
-<P>Browsing the Subversion tree gives you a great view into the current status
-of this project\'s code. You may also view the complete histories of any
-file in the repository.
+print '<HR><B>'.$LANG->getText('svn_intro','browse_tree').'</B>
+<P>'.$LANG->getText('svn_intro','browse_comment').'
 <UL>
-<LI><A HREF="/svn/viewcvs.php/?roottype=svn&root='.$row_grp['unix_group_name'].'"><B>Browse Subversion Tree</B></A></LI>';
+<LI><A HREF="/svn/viewcvs.php/?roottype=svn&root='.$row_grp['unix_group_name'].'"><B>'.$LANG->getText('svn_intro','browse_tree').'</B></A></LI>';
 
 print $HTML->box1_bottom();
 

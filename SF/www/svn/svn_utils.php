@@ -9,9 +9,10 @@
 //      Originally written by Laurent Julliard 2004 CodeX Team, Xerox
 //
 
+$LANG->loadLanguageMsg('svn/svn');
 
 function svn_header($params) {
-	global $group_id,$DOCUMENT_ROOT;
+	global $group_id,$DOCUMENT_ROOT,$LANG;
 
 	$params['toptab']='svn';
 	$params['group']=$group_id;
@@ -20,32 +21,32 @@ function svn_header($params) {
 	$project=project_get_object($group_id);
 
 	if (!$project->isProject()) {
-		exit_error('Error','Only Projects Can Use The Subversion Manager');
+		exit_error($LANG->getText('global','error'),$LANG->getText('svn_utils','proj_err'));
 	}
 	if (!$project->usesService('svn')) {
-	    exit_error('Error','This Project Has Turned Subversion Off');
+	    exit_error($LANG->getText('global','error'),$LANG->getText('svn_utils','svn_off'));
 	}
 	echo site_project_header($params);
 
-	echo '<P><B><A HREF="/svn/?func=info&group_id='.$group_id.'">Subversion Info</A>';
+	echo '<P><B><A HREF="/svn/?func=info&group_id='.$group_id.'">'.$LANG->getText('svn_utils','svn_info').'</A>';
 
 	if ($project->isPublic() || user_isloggedin()) {
-	  echo ' | <A HREF="/svn/viewcvs.php/?roottype=svn&root='.$project->getUnixName().'">Browse SVN Tree</A>';
+	  echo ' | <A HREF="/svn/viewcvs.php/?roottype=svn&root='.$project->getUnixName().'">'.$LANG->getText('svn_utils','browse_tree').'</A>';
 	}
 	if (user_isloggedin()) {
-	  echo ' | <A HREF="/svn/?func=browse&group_id='.$group_id.'&set=my">My SVN Commits</A>';
+	  echo ' | <A HREF="/svn/?func=browse&group_id='.$group_id.'&set=my">'.$LANG->getText('svn_utils','my_ci').'</A>';
 	}
-	echo ' | <A HREF="/svn/?func=browse&group_id='.$group_id.'">SVN Query</A>';
-	echo ' | <A HREF="/svn/admin/?group_id='.$group_id.'">SVN Admin</A>';	
+	echo ' | <A HREF="/svn/?func=browse&group_id='.$group_id.'">'.$LANG->getText('svn_utils','svn_query').'</A>';
+	echo ' | <A HREF="/svn/admin/?group_id='.$group_id.'">'.$LANG->getText('svn_utils','svn_admin').'</A>';	
 	if (!$params['help']) { $params['help'] = "VersionControlWithSubversion.html";}
-	echo ' | '.help_button($params['help'],false,'Help');
+	echo ' | '.help_button($params['help'],false,$LANG->getText('global','help'));
 
 	echo '</B>';
 	echo ' <hr width="300" size="1" align="left" noshade>';
 }
 
 function svn_header_admin($params) {
-    global $group_id,$DOCUMENT_ROOT;
+    global $group_id,$DOCUMENT_ROOT,$LANG;
     
     //required params for site_project_header();
     $params['group']=$group_id;
@@ -55,19 +56,19 @@ function svn_header_admin($params) {
     
     //only projects can use the svn manager, and only if they have it turned on
     if (!$project->isProject()) {
-	exit_error('Error','Only Projects Can Use The Commits Browser');
+	exit_error($LANG->getText('global','error'),$LANG->getText('svn_utils','browse_err'));
     }
     if (!$project->usesService('svn')) {
-	exit_error('Error','This Project Has Turned Off The Subversion Browser');
+	exit_error($LANG->getText('global','error'),$LANG->getText('svn_utils','browse_off'));
     }
     echo site_project_header($params);
-    echo '<P><B><A HREF="/svn/admin/?group_id='.$group_id.'">Admin</A></B>';
-    echo ' | <B><A HREF="/svn/admin/?func=general_settings&group_id='.$group_id.'">General Settings</A></B>';
-    echo ' | <b><A HREF="/svn/admin/?func=access_control&group_id='.$group_id.'">Access Control</A></b>';
-    echo ' | <B><A HREF="/svn/admin/?func=notification&group_id='.$group_id.'">Email Notification</A></B>';    
+    echo '<P><B><A HREF="/svn/admin/?group_id='.$group_id.'">'.$LANG->getText('svn_utils','admin').'</A></B>';
+    echo ' | <B><A HREF="/svn/admin/?func=general_settings&group_id='.$group_id.'">'.$LANG->getText('svn_admin_index','gen_sett').'</A></B>';
+    echo ' | <b><A HREF="/svn/admin/?func=access_control&group_id='.$group_id.'">'.$LANG->getText('svn_admin_index','access').'</A></b>';
+    echo ' | <B><A HREF="/svn/admin/?func=notification&group_id='.$group_id.'">'.$LANG->getText('svn_utils','notif').'</A></B>';    
 
     if (!$params['help']) { $params['help'] = "SubversionAdministrationInterface.html";}
-    echo ' | <b>'.help_button($params['help'],false,'Help').'</b>';
+    echo ' | <b>'.help_button($params['help'],false,$LANG->getText('global','help')).'</b>';
     echo ' <hr width="300" size="1" align="left" noshade>';
 }
 
@@ -78,8 +79,9 @@ function svn_footer($params) {
 
 
 function svn_utils_technician_box($group_id,$name='_commiter',$checked='xzxz',$text_100='None') {
+  global $LANG;
 	if (!$group_id) {
-		return 'ERROR - no group_id';
+		return $LANG->getText('svn_utils','g_id_err');
 	} else {
 		$result=svn_data_get_technicians($group_id);
 		return html_build_select_box($result,$name,$checked,true,$text_100);
@@ -88,7 +90,7 @@ function svn_utils_technician_box($group_id,$name='_commiter',$checked='xzxz',$t
 
 
 function svn_utils_show_revision_list ($result,$offset,$total_rows,$set='any', $commiter='100', $path='', $chunksz=15, $morder='', $msort=0) {
-	global $sys_datefmt,$group_id;
+	global $sys_datefmt,$group_id,$LANG;
 	/*
 		Accepts a result set from the svn_commits table. Should include all columns from
 		the table, and it should be joined to USER to get the user_name.
@@ -102,52 +104,49 @@ function svn_utils_show_revision_list ($result,$offset,$total_rows,$set='any', $
     $url .= "&morder=$morder";
 
 	if ($morder != '') {
-	  $orderstr = ' sorted by '.svn_utils_criteria_list_to_text($morder, $url_nomorder);
+	  $orderstr = $LANG->getText('svn_utils','sorted_by').' '.svn_utils_criteria_list_to_text($morder, $url_nomorder);
 	} else {
 	  $orderstr = '';
 	}
 	echo '<A name="results"></A>';  
-	echo '<h3>'.$total_rows.' matching commit'.($total_rows>1 ? 's':'').$orderstr.'</h3>';
+	echo '<h3>'.$LANG->getText('svn_utils','match_ci',$total_rows).' '.$orderstr.'</h3>';
 
     $nav_bar ='<table width= "100%"><tr>';
     $nav_bar .= '<td width="20%" align ="left">';
 
 
-    echo '<P>Click a column heading to sort results (up or down), '.
-      'or <A HREF="'.$url.'&order=#results"><b>Reset sort</b></a>. ';
+    echo '<P>'.$LANG->getText('svn_utils','sort',$url.'&order=#results').' ';
 
     if ($msort) { 
 	$url_alternate_sort = str_replace('msort=1','msort=0',$url).
 	    '&order=#results';
-	$text = 'Deactivate';
+	$text = $LANG->getText('svn_utils','deacti');
     } else {    
 	$url_alternate_sort = str_replace('msort=0','msort=1',$url).
 	    '&order=#results';
-	$text = 'Activate';
+	$text = $LANG->getText('svn_utils','acti');
     }
 
-    echo 'You can also <a href="'.$url_alternate_sort.'"><b> '.$text.
-      ' multicolumn sort</b></a>'."\n";
+    echo $LANG->getText('svn_utils','multi_sort',array($url_alternate_sort,$text))."\n";
 
     // If all bugs on screen so no prev/begin pointer at all
     if ($total_rows > $chunksz) {
 	if ($offset > 0) {
 	    $nav_bar .=
-	    '<A HREF="'.$url.'&offset=0#results"><B><< Begin</B></A>'.
+	    '<A HREF="'.$url.'&offset=0#results"><B><< '.$LANG->getText('global','begin').'</B></A>'.
 	    '&nbsp;&nbsp;&nbsp;&nbsp;'.
 	    '<A HREF="'.$url.'&offset='.($offset-$chunksz).
-	    '#results"><B>< Previous '.$chunksz.'</B></A></td>';
+	    '#results"><B>< '.$LANG->getText('global','prev').' '.$chunksz.'</B></A></td>';
 	} else {
 	    $nav_bar .=
-		'<span class="disable">&lt;&lt; Begin&nbsp;&nbsp;&lt; Previous '.$chunksz.'</span>';
+		'<span class="disable">&lt;&lt; '.$LANG->getText('global','begin').'&nbsp;&nbsp;&lt; '.$LANG->getText('global','prev').' '.$chunksz.'</span>';
 	}
     }
 
     $nav_bar .= '</td>';
     
     $offset_last = min($offset+$chunksz-1, $total_rows-1);
-    $nav_bar .= '<td width= "60% " align = "center" class="small">Items '.($offset+1).' - '.
-	($offset_last+1)."</td>\n";
+    $nav_bar .= '<td width= "60% " align = "center" class="small">'.$LANG->getText('svn_utils','items',array(($offset+1),($offset_last+1)))."</td>\n";
 
     $nav_bar .= '<td width="20%" align ="right">';
 
@@ -160,14 +159,14 @@ function svn_utils_show_revision_list ($result,$offset,$total_rows,$set='any', $
 
 	    $nav_bar .= 
 		'<A HREF="'.$url.'&offset='.($offset+$chunksz).
-		'#results" class="small"><B>Next '.$chunksz.' &gt;</B></A>'.
+		'#results" class="small"><B>'.$LANG->getText('global','next').' '.$chunksz.' &gt;</B></A>'.
 		'&nbsp;&nbsp;&nbsp;&nbsp;'.
 		'<A HREF="'.$url.'&offset='.($offset_end).
-		'#results" class="small"><B>End &gt;&gt;</B></A></td>';
+		'#results" class="small"><B>'.$LANG->getText('global','end').' &gt;&gt;</B></A></td>';
 	} else {
 	    $nav_bar .= 
-		'<span class="disable">Next '.$chunksz.
-		' &gt;&nbsp;&nbsp;End &gt;&gt;</span>';
+		'<span class="disable">'.$LANG->getText('global','next').' '.$chunksz.
+		' &gt;&nbsp;&nbsp;'.$LANG->getText('global','end').' &gt;&gt;</span>';
 	}
     }
     $nav_bar .= '</td>';
@@ -188,10 +187,10 @@ function svn_utils_show_revision_list ($result,$offset,$total_rows,$set='any', $
 	$rows=db_numrows($result);
 	$url .= "&order=";
 	$title_arr=array();
-	$title_arr[]='Revision';
-	$title_arr[]='Description';
-	$title_arr[]='Date';
-	$title_arr[]='Commiter';
+	$title_arr[]=$LANG->getText('svn_browse_revision','rev');
+	$title_arr[]=$LANG->getText('svn_utils','desc');
+	$title_arr[]=$LANG->getText('svn_utils','date');
+	$title_arr[]=$LANG->getText('svn_browse_revision','commiter');
 
 	$links_arr=array();
 	$links_arr[]=$url.'revision#results';
@@ -304,21 +303,22 @@ function svn_utils_criteria_list_to_text($criteria_list, $url){
 }
 
 function svn_utils_field_get_label($sortField) {
+  global $LANG;
   if ($sortField == "id") {
-    return "Revision";
+    return $LANG->getText('svn_browse_revision','rev');
   }
   else if ($sortField == "date") {
-    return "Date";
+    return $LANG->getText('svn_utils','date');
   }
   else if ($sortField == "who") {
-    return "Commiter";
+    return $LANG->getText('svn_browse_revision','commiter');
   }
   return $sortField;
   }
 
 
 function svn_utils_show_revision_detail($result,$group_id,$group_name,$commit_id) {
-    global $sys_datefmt;
+    global $sys_datefmt,$LANG;
     /*
       Accepts a result set from the svn_checkins table. Should include all columns from
       the table, and it should be joined to USER to get the user_name.
@@ -328,15 +328,15 @@ function svn_utils_show_revision_detail($result,$group_id,$group_name,$commit_id
     $url = "/svn/?func=detailrevision&commit_id=$commit_id&group_id=$group_id&order=";
     $list_log = '<pre>'.util_make_links(util_line_wrap(db_result($result, 0, 'description')), $group_id).'</pre>';
     $revision = db_result($result, 0, 'revision');
-    $hdr = '[Revision #'.$revision.'] - ';
+    $hdr = '['.$LANG->getText('svn_browse_revision','rev').' #'.$revision.'] - ';
 
     echo '<h2>'.$hdr.format_date($sys_datefmt, db_result($result, 0, 'date')).'</h2></h2>';
     echo '<table WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="2"><tr class="'. util_get_alt_row_color(0).'"><td>'.$list_log.'</td></tr></table>';
-    echo '<h3> List of impacted files</h3>';
+    echo '<h3> '.$LANG->getText('svn_utils','impacted_files').'</h3>';
     $title_arr=array();
-    $title_arr[]= 'File';
-    $title_arr[]='Revision';
-    $title_arr[]='Type';
+    $title_arr[]= $LANG->getText('svn_utils','file');
+    $title_arr[]=$LANG->getText('svn_browse_revision','rev');
+    $title_arr[]=$LANG->getText('svn_utils','type');
     //$title_arr[]='AddedLines'; To be implemented
     //$title_arr[]='RemovedLines'; To be implemented
 
@@ -365,14 +365,14 @@ function svn_utils_show_revision_detail($result,$group_id,$group_name,$commit_id
 	    $viewrev_url = svn_utils_make_viewlink($group_name, $fullpath, $revision, "&rev=$revision");
 	}
 
-	if ($type == 'Change') {	    
+	if ($type == $LANG->getText('svn_utils','change')) {	    
 
 	    $viewtype_url = svn_utils_make_viewlink($group_name, $fullpath, $type,
 					   "&r1=text&tr1=$revision&r2=text&tr2=".($revision-1)."&diff_format=h");
 
-	} else if ($type == 'Add') {
+	} else if ($type == $LANG->getText('svn_utils','add')) {
 	    $viewtype_url = $type;
-	} else if ($type == 'Delete') {
+	} else if ($type == $LANG->getText('svn_utils','delete')) {
 	    $viewtype_url = $type;
 	}
 
@@ -391,11 +391,12 @@ function svn_utils_show_revision_detail($result,$group_id,$group_name,$commit_id
 
 // Is there anything in the svn history table ?
 function svn_utils_format_svn_history($group_id) {
+  global $LANG;
 
     $res_svnfullhist = svn_data_get_svn_history($group_id);
 
     if (!$res_svnfullhist || db_numrows($res_svnfullhist) < 1) {
-        print '<P>This project has no Subversion history.';
+        print '<P>'.$LANG->getText('svn_utils','no_hist');
     } else {
 	$svnhist = array();
 	while ($row_svnfullhist = db_fetch_array($res_svnfullhist)) {
@@ -412,7 +413,7 @@ function svn_utils_format_svn_history($group_id) {
     
 
         // Format output 
-        $output = '<P><b>Developer Commits (Last 7 days/Total)</b><BR>&nbsp;';
+        $output = '<P><b>'.$LANG->getText('svn_utils','ci_week').'</b><BR>&nbsp;';
         reset($svnhist);
         while (list($user, ) = each($svnhist)) {
             $output .= '<BR>'.$user.' ('.$svnhist[$user]['last'].'/'
@@ -445,13 +446,13 @@ function svn_utils_read_svn_access_file_defaults($gname) {
 // read permission access file. The project specific part.
 function svn_utils_read_svn_access_file($gname) {
 
-    global $feedback;
+    global $feedback,$LANG;
 
     $filename = "/svnroot/$gname/.SVNAccessFile";
 
     $fd = @fopen("$filename", "r");
     if (!$fd) {
-	$feedback .= "Error: Can't open file $filename";
+	$feedback .= $LANG->getText('svn_utils','file_err',$filename);
     }
 
     $in_settings = false;
@@ -468,19 +469,19 @@ function svn_utils_read_svn_access_file($gname) {
 
 function svn_utils_write_svn_access_file($gname, $contents) {
 
-    global $feedback;
+    global $feedback,$LANG;
 
     $filename = "/svnroot/$gname/.SVNAccessFile";
     $fd = fopen("$filename", "w+");
     if ($fd) {
 	if (fwrite($fd, $contents) === false) {
-	    $feedback .= "Error: Can't write to file $filename";
+	    $feedback .= $LANG->getText('svn_utils','write_err',$filename);
 	    $ret = false;
 	} else {
 	    $ret = true;
 	}
     } else {
-	$feedback .= "Error: Can't open to file $filename";
+	$feedback .= $LANG->getText('svn_utils','file_err',$filename);
 	$ret = false;
     }
     fclose($fd);
@@ -496,7 +497,7 @@ $SVNACCESS = "None";
 $SVNGROUPS = "None";
 
 function svn_utils_parse_access_file($gname) {
-  global $SVNACCESS, $SVNGROUPS;
+  global $SVNACCESS, $SVNGROUPS,$LANG;
   $filename = "/svnroot/$gname/.SVNAccessFile";
   $SVNACCESS = array();
   $SVNGROUPS = array();
@@ -504,7 +505,7 @@ function svn_utils_parse_access_file($gname) {
 
   $f = fopen($filename, "rb");
   if ($f === false) {
-    exit_error("Can't open $filename: I/O error");
+    exit_error($LANG->getText('global','error'),$LANG->getText('svn_utils','file_err',$filename));
   } else {
     $path_pat    = '/^\s*\[(.*)\]/'; // assume no repo name 'repo:'
     $perm_pat    = '/^\s*([^ ]*)\s*=\s*(.*)$/';
