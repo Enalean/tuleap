@@ -100,7 +100,7 @@ if ($type=='snippet') {
 
 	    echo '<P> '.db_result($result,0,'filename').
 		' ('.sprintf('%d', db_result($result,0,'filesize')/1024).' KB)'.
-		'&nbsp;&nbsp;<a href="/snippet/download.php?type=snippet&id='.$id.'"><b>[View Code Snippet]</b></a>';
+		'&nbsp;&nbsp;<a href="/snippet/download.php?type=snippet&id='.$newest_version.'"><b>[View Code Snippet]</b></a>';
 
 	} else {
 	    echo '<P>
