@@ -235,7 +235,7 @@ function show_thread($thread_id,$et=0) {
 			$total_rows++;
 			$ret_val .= '<TR BGCOLOR="'. util_get_alt_row_color($total_rows) .'"><TD>'. 
 				(($current_message != db_result($result, $i, 'msg_id'))?'<A HREF="/forum/message.php?msg_id='.db_result($result, $i, 'msg_id').'">':'').
-				'<IMG SRC="/images/msg.gif" BORDER=0 HEIGHT=12 WIDTH=10> ';
+				'<IMG SRC="/images/msg.png" BORDER=0 HEIGHT=12 WIDTH=10> ';
 			/*
 				See if this message is new or not
 			*/
@@ -299,7 +299,7 @@ function show_submessages($thread_id, $msg_id, $level,$et=0) {
 			*/
 			$ret_val .= (($current_message != db_result($result, $i, 'msg_id'))?
 				'<A HREF="/forum/message.php?msg_id='.db_result($result, $i, 'msg_id').'">':'').
-				'<IMG SRC="/images/msg.gif" BORDER=0 HEIGHT=12 WIDTH=10> ';
+				'<IMG SRC="/images/msg.png" BORDER=0 HEIGHT=12 WIDTH=10> ';
 			/*
 				See if this message is new or not
 			*/

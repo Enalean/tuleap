@@ -36,7 +36,7 @@ function forum_show_a_nested_message ($result,$row=0) {
 					' ( ' .db_result($result, $row, 'realname') . ' ) '.
 					'<BR><A HREF="/forum/message.php?msg_id='.
 					db_result($result, $row, 'msg_id') .'">'.
-					'<IMG SRC="/images/msg.gif" BORDER=0 HEIGHT=12 WIDTH=10> '.
+					'<IMG SRC="/images/msg.png" BORDER=0 HEIGHT=12 WIDTH=10> '.
 					db_result($result, $row, 'subject') .' [ reply ]</A> &nbsp; '.
 					'<BR>'. format_date($sys_datefmt,db_result($result,$row,'date')) .'
 				</TD>
@@ -295,7 +295,7 @@ if ($forum_id) {
 				$ret_val .= '
 					<TR BGCOLOR="'. util_get_alt_row_color($total_rows) .'"><TD><A HREF="/forum/message.php?msg_id='.
 					db_result($result, $i, 'msg_id').'">'.
-					'<IMG SRC="/images/msg.gif" BORDER=0 HEIGHT=12 WIDTH=10> ';
+					'<IMG SRC="/images/msg.png" BORDER=0 HEIGHT=12 WIDTH=10> ';
 				/*
 
 					See if this message is new or not
@@ -341,7 +341,7 @@ if ($forum_id) {
 		if ($offset != 0) {
 			$ret_val .= '<FONT face="Arial, Helvetica" SIZE="3" STYLE="text-decoration: none"><B>
 				<A HREF="javascript:history.back()">
-				<B><IMG SRC="/images/t2.gif" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE> Previous Messages</A></B></FONT>';
+				<B><IMG SRC="/images/t2.png" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE> Previous Messages</A></B></FONT>';
 		} else {
 			$ret_val .= '&nbsp;';
 		}
@@ -350,7 +350,7 @@ if ($forum_id) {
 		if (db_numrows($result) > $i) {
 			$ret_val .= '<FONT face="Arial, Helvetica" SIZE=3 STYLE="text-decoration: none"><B>
 				<A HREF="/forum/forum.php?max_rows='.$max_rows.'&style='.$style.'&offset='.($offset+$i).'&forum_id='.$forum_id.'">
-				<B>Next Messages <IMG SRC="/images/t.gif" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE></A>';
+				<B>Next Messages <IMG SRC="/images/t.png" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE></A>';
 		} else {
 			$ret_val .= '&nbsp;';
 		}

@@ -189,7 +189,7 @@ class Theme extends Layout {
         </TD><!-- right of logo -->
         </TR>
 
-        <TR><TD bgcolor="#543a48" colspan=2><IMG src="/images/blank.gif" height=2 vspace=0></TD></TR>
+        <TR><TD bgcolor="#543a48" colspan=2><IMG src="/images/blank.png" height=2 vspace=0></TD></TR>
 
         </TABLE>
         <!-- end top title table -->

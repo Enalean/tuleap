@@ -302,16 +302,16 @@ echo html_blankimage(5,100);
 
 <!-- First line with borders and corners -->
            <tr>
-               <td background="<?php echo $this->imgroot; ?>upper_left_corner.gif" width="1%" height="26"><img src="<?php echo $this->imgroot; ?>upper_left_corner.gif" width="16" height="26" alt=" "></td>
-                <td background="<?php echo $this->imgroot; ?>top_border.gif" align="left" colspan="3" width="99%"><a href="/"><img src="<?php echo $this->imgroot; ?>codex_banner_lc.gif" border="0" alt="CodeX Banner"></a></td>
-                <td><img src="<?php echo $this->imgroot; ?>upper_right_corner.gif" width="16" height="26" alt=" "></td>
+               <td background="<?php echo $this->imgroot; ?>upper_left_corner.png" width="1%" height="26"><img src="<?php echo $this->imgroot; ?>upper_left_corner.png" width="16" height="26" alt=" "></td>
+                <td background="<?php echo $this->imgroot; ?>top_border.png" align="left" colspan="3" width="99%"><a href="/"><img src="<?php echo $this->imgroot; ?>codex_banner_lc.png" border="0" alt="CodeX Banner"></a></td>
+                <td><img src="<?php echo $this->imgroot; ?>upper_right_corner.png" width="16" height="26" alt=" "></td>
         </tr>
 
 
 <!-- Second line with menus and content -->
         <tr>
 
-                <td background="<?php echo $this->imgroot; ?>left_border.gif" align="left" valign="bottom" alt=""><img src="<?php echo $this->imgroot; ?>bottom_left_corner.gif" width="16" height="16" alt=""></td>
+                <td background="<?php echo $this->imgroot; ?>left_border.png" align="left" valign="bottom" alt=""><img src="<?php echo $this->imgroot; ?>bottom_left_corner.png" width="16" height="16" alt=""></td>
 
                 <td colspan="3" bgcolor="#ffffff">
 <!-- start main body cell -->
@@ -326,7 +326,7 @@ echo html_blankimage(5,100);
         <?php
         if (!session_issecure()) {
                //(LJ) print '<IMG src="http://www2.valinux.com/clear.gif?id=105" width=140 height=1 alt="Counter"><BR>';
-                print '<IMG src="/images/clear.gif?id=105" width=140 height=1 alt="Counter"><BR>';
+                print '<IMG src="/images/clear.png?id=105" width=140 height=1 alt="Counter"><BR>';
         } else {
                 print html_blankimage(1,140) . '<br>';
         }
@@ -365,12 +365,12 @@ echo html_blankimage(5,100);
 
         </tr>
 <!-- New row added for the thin black line at the bottom of the array -->
-<tr><td background="<?php echo $this->imgroot; ?>black.gif" colspan="4" align="center"><img src="<?php echo $this->imgroot; ?>clear.gif" width="2" height="2" alt=" "></td> </tr>
+<tr><td background="<?php echo $this->imgroot; ?>black.gif" colspan="4" align="center"><img src="<?php echo $this->imgroot; ?>clear.png" width="2" height="2" alt=" "></td> </tr>
         </table>
 
                 </td>
 
-                <td background="<?php echo $this->imgroot; ?>right_border.gif" valign="bottom"><img src="<?php echo $this->imgroot; ?>bottom_right_corner.gif" width="16" height="16" alt=" "></td>
+                <td background="<?php echo $this->imgroot; ?>right_border.png" valign="bottom"><img src="<?php echo $this->imgroot; ?>bottom_right_corner.png" width="16" height="16" alt=" "></td>
         </tr>
 
 </table>

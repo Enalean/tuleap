@@ -23,7 +23,7 @@ function osdn_nav_dropdown() {
 	<!-- OSDN navdropdown -->
         <form name=form1>
         <font size=-1>
-        <a href="<?php print 'http://'.$GLOBALS['sys_default_domain']; ?>"><?php echo html_image("codex_logo.gif",array("width"=>"135", "height"=>"33", "hspace"=>"10", "alt"=>$GLOBALS['sys_default_domain'], "border"=>"0")); ?></A><br>
+        <a href="<?php print 'http://'.$GLOBALS['sys_default_domain']; ?>"><?php echo html_image("codex_logo.png",array("width"=>"135", "height"=>"33", "hspace"=>"10", "alt"=>$GLOBALS['sys_default_domain'], "border"=>"0")); ?></A><br>
         <select name=navbar onChange="window.location=this.options[selectedIndex].value">
         <option value="<?php print $GLOBALS['sys_default_domain']; ?>/gallery.html">Network Gallery</option>
         <option>------------</option>
@@ -39,7 +39,7 @@ function osdn_nav_dropdown() {
         </form>
 
         <noscript>
-        <a href="<?php print $GLOBALS['sys_default_domain']; ?>"><img src="/images/codex_logo.gif" width="135" height="33" hspace="10" alt="<?php print $GLOBALS['sys_default_domain']; ?>"  border="0"></A><br>
+        <a href="<?php print $GLOBALS['sys_default_domain']; ?>"><img src="/images/codex_logo.png" width="135" height="33" hspace="10" alt="<?php print $GLOBALS['sys_default_domain']; ?>"  border="0"></A><br>
         </noscript>
 	<!-- end OSDN navdropdown -->
 <?php

@@ -25,7 +25,7 @@ function html_a_group($grp) {
 }
 
 function html_blankimage($height,$width) {
-	return html_image('blank.gif',array('height'=>$height,'width'=>$width,'alt'=>' '));
+	return html_image('blank.png',array('height'=>$height,'width'=>$width,'alt'=>' '));
 }
 
 function html_image($src,$args,$display=1) {
