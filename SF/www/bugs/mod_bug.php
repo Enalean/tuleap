@@ -83,17 +83,18 @@ if (db_numrows($result) > 0) {
 		  $value = util_make_links(bug_field_display($field_name,$group_id,$field_value,false,false,true));
 	      else
 		  $value = bug_field_display($field_name,$group_id,$field_value,false,false);
+	      $star = (bug_data_is_empty_ok($field_name) ? '':'<font color="red"><big>*</big></b></font>');
 
 	      if ($sz > $max_size) {
 		  echo "\n<TR>".
-		      '<TD valign="middle">'.$label.'</td>'.
+		      '<TD valign="middle">'.$label.$star.'</td>'.
 		      '<TD valign="middle" colspan="'.(2*$fields_per_line-1).'">'.
 		      $value.'</TD>'.		      
 		      "\n</TR>";
 		  $i=0;
 	      } else {
 		  echo ($i % $fields_per_line ? '':"\n<TR>");
-		  echo '<TD valign="middle">'.$label.'</td>'.
+		  echo '<TD valign="middle">'.$label.$star.'</td>'.
 		      '<TD valign="middle">'.$value.'</TD>';
 		  $i++;
 		  echo ($i % $fields_per_line ? '':"\n</TR>");

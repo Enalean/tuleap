@@ -31,68 +31,68 @@ INSERT INTO bug_field \
 INSERT INTO bug_field \
   VALUES (91,'group_id','TF','','Group ID','Unique project identifier','S',1,0,0,1,0);
 INSERT INTO bug_field \
-  VALUES (92,'submitted_by','SB','','Submitted by','User who originally submitted the bug','S',1,0,0,1,0);
+  VALUES (92,'submitted_by','SB','','Submitted by','User who originally submitted the bug','S',1,1,0,1,0);
 INSERT INTO bug_field \
   VALUES (93,'date','DF','10/15','Submitted on','Date and time for the initial bug submission','S',1,0,0,1,0);
 INSERT INTO bug_field \
-  VALUES (94,'close_date','DF','10/15','Closed on','Date and time when the bug status was changed to ''Closed''','S',1,0,0,1,0);
+  VALUES (94,'close_date','DF','10/15','Closed on','Date and time when the bug status was changed to ''Closed''','S',1,1,0,1,0);
 INSERT INTO bug_field \
   VALUES (101,'status_id','SB','','Status','Bug Status','P',1,0,1,0,0);
 INSERT INTO bug_field \
   VALUES (102,'severity','SB','','Severity','Impact of the bug on the system (Critical, Major,...)','S',1,0,1,0,0);
 INSERT INTO bug_field \
-  VALUES (103,'category_id','SB','','Category','Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)','P',0,0,1,0,0);
+  VALUES (103,'category_id','SB','','Category','Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)','P',0,1,1,0,0);
 INSERT INTO bug_field \
-  VALUES (104,'assigned_to','SB','','Assigned to','Who is in charge of solving the bug','S',1,0,1,0,0);
+  VALUES (104,'assigned_to','SB','','Assigned to','Who is in charge of solving the bug','S',1,1,1,0,0);
 INSERT INTO bug_field \
   VALUES (105,'summary','TF','60/120','Summary','One line description of the bug','S',1,0,1,1,0);
 INSERT INTO bug_field \
   VALUES (106,'details','TA','60/7','Original Submission','A full description of the bug','S',1,1,1,1,0);
 INSERT INTO bug_field \
-  VALUES (107,'bug_group_id','SB','','Bug Group','Characterizes the nature of the bug (e.g. Feature Request, Action Request, Crash Error, Documentation Typo, Installation Problem,...','P',0,0,1,0,0);
+  VALUES (107,'bug_group_id','SB','','Bug Group','Characterizes the nature of the bug (e.g. Feature Request, Action Request, Crash Error, Documentation Typo, Installation Problem,...','P',0,1,1,0,0);
 INSERT INTO bug_field \
-  VALUES (108,'resolution_id','SB','','Resolution','How you have decided to fix the bug (Fixed, Work for me, Duplicate,..)','S',1,0,1,0,0);
+  VALUES (108,'resolution_id','SB','','Resolution','How you have decided to fix the bug (Fixed, Work for me, Duplicate,..)','S',1,1,1,0,0);
 #
 # -----------------------------
 #
 # New Extension fields second
 #
 INSERT INTO bug_field \
-  VALUES (200,'category_version_id','SB','','Component Version','The version of the System Component (aka Bug Category) impacted by the bug','P',0,0,1,0,0);
+  VALUES (200,'category_version_id','SB','','Component Version','The version of the System Component (aka Bug Category) impacted by the bug','P',0,1,1,0,0);
 INSERT INTO bug_field \
-  VALUES (201,'platform_version_id','SB','','Platform Version','The name and version of the platform your software was running on when the bug occured (e.g. Solaris 2.8, Linux 2.4, Windows NT4 SP2,...)','P',0,0,1,0,0);
+  VALUES (201,'platform_version_id','SB','','Platform Version','The name and version of the platform your software was running on when the bug occured (e.g. Solaris 2.8, Linux 2.4, Windows NT4 SP2,...)','P',0,1,1,0,0);
 INSERT INTO bug_field \
   VALUES (202,'reproducibility_id','SB','','Reproducibility','How easy is it to reproduce the bug','S',0,0,1,0,0);
 INSERT INTO bug_field \
-  VALUES (203,'size_id','SB','','Size (loc)','The size of the code you need to develop or rework in order to fix the bug','S',0,0,1,0,0);
+  VALUES (203,'size_id','SB','','Size (loc)','The size of the code you need to develop or rework in order to fix the bug','S',0,1,1,0,0);
 INSERT INTO bug_field \
-  VALUES (204,'fix_release_id','SB','','Fixed Release','The release in which the bug was actually fixed','P',0,0,1,0,0);
+  VALUES (204,'fix_release_id','SB','','Fixed Release','The release in which the bug was actually fixed','P',0,1,1,0,0);
 INSERT INTO bug_field \
-  VALUES (205,'comment_type_id','SB','','Comment Type','Specify the nature of the  follow up comment attached to this bug (Workaround, Test Case, Impacted Files,...)','P',1,0,0,1,0);
+  VALUES (205,'comment_type_id','SB','','Comment Type','Specify the nature of the  follow up comment attached to this bug (Workaround, Test Case, Impacted Files,...)','P',1,1,0,1,0);
 INSERT INTO bug_field \
-  VALUES (206,'hours','TF','5/5','Effort','Number of hours of work needed to fix the bug (including testing)','S',0,0,1,0,0);
+  VALUES (206,'hours','TF','5/5','Effort','Number of hours of work needed to fix the bug (including testing)','S',0,1,1,0,0);
 INSERT INTO bug_field \
-  VALUES (207,'plan_release_id','SB','','Planned Release','The release in which you initially planned the bug to be fixed','P',0,0,1,0,0);
+  VALUES (207,'plan_release_id','SB','','Planned Release','The release in which you initially planned the bug to be fixed','P',0,1,1,0,0);
 INSERT INTO bug_field \
-  VALUES (208,'component_version','TF','10/40','Component Version','Version of the system component (or work product) impacted by the bug. Same as the other Component Version field <u>except</u> this one is free text.','S',0,0,1,0,0);
+  VALUES (208,'component_version','TF','10/40','Component Version','Version of the system component (or work product) impacted by the bug. Same as the other Component Version field <u>except</u> this one is free text.','S',0,1,1,0,0);
 INSERT INTO bug_field \
-  VALUES (209,'fix_release','TF','10/40','Fixed Release','The release in which the bug was actually fixed. Same as the other Fixed Release field <u>except</u> this one is free text.','S',0,0,1,0,0);
+  VALUES (209,'fix_release','TF','10/40','Fixed Release','The release in which the bug was actually fixed. Same as the other Fixed Release field <u>except</u> this one is free text.','S',0,1,1,0,0);
 INSERT INTO bug_field \
-  VALUES (210,'plan_release','TF','10/40','Planned Release','The release in which you initially planned the bug to be fixed. Same as the other Planned Release field <u>except</u> this one is free text.','S',0,0,1,0,0);
+  VALUES (210,'plan_release','TF','10/40','Planned Release','The release in which you initially planned the bug to be fixed. Same as the other Planned Release field <u>except</u> this one is free text.','S',0,1,1,0,0);
 INSERT INTO bug_field \
-  VALUES (211,'priority','SB','','Priority','How quickly the bug must be fixed (Immediate, Normal, Low, Later,...)','S',0,0,1,0,0);
+  VALUES (211,'priority','SB','','Priority','How quickly the bug must be fixed (Immediate, Normal, Low, Later,...)','S',0,1,1,0,0);
 INSERT INTO bug_field \
-  VALUES (212,'keywords','TF','60/120','Keywords','A list of comma separated keywords associated with a bug','S',0,0,1,0,0);
+  VALUES (212,'keywords','TF','60/120','Keywords','A list of comma separated keywords associated with a bug','S',0,1,1,0,0);
 INSERT INTO bug_field \
-  VALUES (213,'release_id','SB','','Release','The release (global version number) impacted by the bug','P',0,0,1,0,0);
+  VALUES (213,'release_id','SB','','Release','The release (global version number) impacted by the bug','P',0,1,1,0,0);
 INSERT INTO bug_field \
-  VALUES (214,'release','TF','10/40','Release','The release (global version number) impacted by the bug. Same as the other Release field <u>except</u> this one is free text.','S',0,0,1,0,0);
+  VALUES (214,'release','TF','10/40','Release','The release (global version number) impacted by the bug. Same as the other Release field <u>except</u> this one is free text.','S',0,1,1,0,0);
 INSERT INTO bug_field \
-  VALUES (215,'originator_name','TF','20/40','Originator Name','The name of the person who reported the bug (if different from the submitter field)','S',0,0,1,0,0);
+  VALUES (215,'originator_name','TF','20/40','Originator Name','The name of the person who reported the bug (if different from the submitter field)','S',0,1,1,0,0);
 INSERT INTO bug_field \
-  VALUES (216,'originator_email','TF','20/40','Originator Email','Email address of the person who reported the bug. Automatically included in the bug email notification process.','S',0,0,1,0,0);
+  VALUES (216,'originator_email','TF','20/40','Originator Email','Email address of the person who reported the bug. Automatically included in the bug email notification process.','S',0,1,1,0,0);
 INSERT INTO bug_field \
-  VALUES (217,'originator_phone','TF','10/40','Originator Phone','Phone number of the person who reported the bug','S',0,0,1,0,0);
+  VALUES (217,'originator_phone','TF','10/40','Originator Phone','Phone number of the person who reported the bug','S',0,1,1,0,0);
 
 #
 # Customizable text fields 
@@ -144,38 +144,38 @@ INSERT INTO bug_field \
 # Customizable select boxes
 #
 INSERT INTO bug_field \
-  VALUES (500,'custom_sb1','SB','','Custom Select Box #1','Customizable Select Box (pull down menu with predefined values)','P',0,0,1,0,1);
+  VALUES (500,'custom_sb1','SB','','Custom Select Box #1','Customizable Select Box (pull down menu with predefined values)','P',0,1,1,0,1);
 INSERT INTO bug_field \
-  VALUES (501,'custom_sb2','SB','','Custom Select Box #2','Customizable Select Box (pull down menu with predefined values)','P',0,0,1,0,1);
+  VALUES (501,'custom_sb2','SB','','Custom Select Box #2','Customizable Select Box (pull down menu with predefined values)','P',0,1,1,0,1);
 INSERT INTO bug_field \
-  VALUES (502,'custom_sb3','SB','','Custom Select Box #3','Customizable Select Box (pull down menu with predefined values)','P',0,0,1,0,1);
+  VALUES (502,'custom_sb3','SB','','Custom Select Box #3','Customizable Select Box (pull down menu with predefined values)','P',0,1,1,0,1);
 INSERT INTO bug_field \
-  VALUES (503,'custom_sb4','SB','','Custom Select Box #4','Customizable Select Box (pull down menu with predefined values)','P',0,0,1,0,1);
+  VALUES (503,'custom_sb4','SB','','Custom Select Box #4','Customizable Select Box (pull down menu with predefined values)','P',0,1,1,0,1);
 INSERT INTO bug_field \
-  VALUES (504,'custom_sb5','SB','','Custom Select Box #5','Customizable Select Box (pull down menu with predefined values)','P',0,0,1,0,1);
+  VALUES (504,'custom_sb5','SB','','Custom Select Box #5','Customizable Select Box (pull down menu with predefined values)','P',0,1,1,0,1);
 INSERT INTO bug_field \
-  VALUES (505,'custom_sb6','SB','','Custom Select Box #6','Customizable Select Box (pull down menu with predefined values)','P',0,0,1,0,1);
+  VALUES (505,'custom_sb6','SB','','Custom Select Box #6','Customizable Select Box (pull down menu with predefined values)','P',0,1,1,0,1);
 INSERT INTO bug_field \
-  VALUES (506,'custom_sb7','SB','','Custom Select Box #7','Customizable Select Box (pull down menu with predefined values)','P',0,0,1,0,1);
+  VALUES (506,'custom_sb7','SB','','Custom Select Box #7','Customizable Select Box (pull down menu with predefined values)','P',0,1,1,0,1);
 INSERT INTO bug_field \
-  VALUES (507,'custom_sb8','SB','','Custom Select Box #8','Customizable Select Box (pull down menu with predefined values)','P',0,0,1,0,1);
+  VALUES (507,'custom_sb8','SB','','Custom Select Box #8','Customizable Select Box (pull down menu with predefined values)','P',0,1,1,0,1);
 INSERT INTO bug_field \
-  VALUES (508,'custom_sb9','SB','','Custom Select Box #9','Customizable Select Box (pull down menu with predefined values)','P',0,0,1,0,1);
+  VALUES (508,'custom_sb9','SB','','Custom Select Box #9','Customizable Select Box (pull down menu with predefined values)','P',0,1,1,0,1);
 INSERT INTO bug_field \
-  VALUES (509,'custom_sb10','SB','','Custom Select Box #10','Customizable Select Box (pull down menu with predefined values)','P',0,0,1,0,1);
+  VALUES (509,'custom_sb10','SB','','Custom Select Box #10','Customizable Select Box (pull down menu with predefined values)','P',0,1,1,0,1);
 #
 # Customizable date fields
 #
 INSERT INTO bug_field \
-  VALUES (600,'custom_df1','DF','10/10','Custom Date Field #1','Customizable Date Field','P',0,0,1,0,1);
+  VALUES (600,'custom_df1','DF','10/10','Custom Date Field #1','Customizable Date Field','P',0,1,1,0,1);
 INSERT INTO bug_field \
-  VALUES (601,'custom_df2','DF','10/10','Custom Date Field #2','Customizable Date Field','P',0,0,1,0,1);
+  VALUES (601,'custom_df2','DF','10/10','Custom Date Field #2','Customizable Date Field','P',0,1,1,0,1);
 INSERT INTO bug_field \
-  VALUES (602,'custom_df3','DF','10/10','Custom Date Field #3','Customizable Date Field','P',0,0,1,0,1);
+  VALUES (602,'custom_df3','DF','10/10','Custom Date Field #3','Customizable Date Field','P',0,1,1,0,1);
 INSERT INTO bug_field \
-  VALUES (603,'custom_df4','DF','10/10','Custom Date Field #4','Customizable Date Field','P',0,0,1,0,1);
+  VALUES (603,'custom_df4','DF','10/10','Custom Date Field #4','Customizable Date Field','P',0,1,1,0,1);
 INSERT INTO bug_field \
-  VALUES (604,'custom_df5','DF','10/10','Custom Date Field #5','Customizable Date Field','P',0,0,1,0,1);
+  VALUES (604,'custom_df5','DF','10/10','Custom Date Field #5','Customizable Date Field','P',0,1,1,0,1);
 
 # ==============================
 # Bug field value table

@@ -687,15 +687,15 @@ function bug_data_reset_usage($field_name,$group_id)
     $field_id = bug_data_get_field_id($field_name);
 
     // if it's a custom field then take label into account else store NULL
-    if (bug_data_is_custom($field_name)) {
-	$lbl = "'$label'";
-	$desc = "'$description'";
-	$disp_size = "'$display_size'";
-	$empty = "'$empty_ok'";
-	$keep_hist = "'$keep_history'";
-    } else {
-	$lbl = $desc = $disp_size = $empty = $keep_hist = "NULL";
-    }
+    //    if (bug_data_is_custom($field_name)) {
+	$lbl = isset($label) ? "'$label'" : 'NULL';
+	$desc = isset($description) ? "'$description'" : 'NULL';
+	$disp_size = isset($display_size) ? "'$display_size'" : 'NULL';
+	$empty = isset($empty_ok) ? "'$empty_ok'" : 'NULL';
+	$keep_hist = isset($keep_history) ? "'$keep_history'" : 'NULL';
+	//    } else {
+	//	$lbl = $desc = $disp_size = $empty = $keep_hist = "NULL";
+	//    }
 
     // See if this field usage exists in the table for this project
     $sql = 'SELECT bug_field_id FROM bug_field_usage '.
@@ -884,9 +884,9 @@ function bug_data_handle_update ($group_id,$bug_id,$dependent_on_task,
       Update a bug. Rk: vfl is an variable list of fields, Vary from one project to another
       return true if bug updated, false if nothing changed or DB update failed
     */
-
-    if (!$group_id || !$bug_id || !$canned_response) {
-	//force inclusion of parameters
+    // make sure  required fields are not empty
+    if (!$group_id || !$bug_id || !$canned_response || 
+	(bug_check_empty_fields($vfl) == false) ) {
 	exit_missing_param();
     }
 
@@ -1130,8 +1130,8 @@ function bug_data_create_bug($group_id,$vfl) {
 	$user=user_getid();
     }
 
-    // make sure minimally required params are not empty
-    if (!$group_id || !$vfl['summary'] || !$vfl['details']) {
+    // make sure  required fields are not empty
+    if (bug_check_empty_fields($vfl) == false) {
 	exit_missing_param();
     }
 
@@ -1139,7 +1139,7 @@ function bug_data_create_bug($group_id,$vfl) {
     $res=db_query("SELECT * FROM bug WHERE submitted_by='$user' AND summary='".$vfl['summary']);
     if ($res && db_numrows($res) > 0) {
 	$feedback = ' ERROR - DOUBLE SUBMISSION. You have already submitted a bug with the same summary. Please don\'t do that ';
-	return 0;		
+	return;		
     }
 
     // Finally, create the bug itself

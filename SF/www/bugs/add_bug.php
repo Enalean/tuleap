@@ -50,16 +50,18 @@ while ( $field_name = bug_list_all_fields() ) {
 	    list($sz,) = bug_data_get_display_size($field_name);
 	    $label = bug_field_label_display($field_name,$group_id,false,false);
 	    $value = bug_field_display($field_name,$group_id,$field_value,false,false);
+	    $star = (bug_data_is_empty_ok($field_name) ? '':'<font color="red"><big>*</big></b></font>');
+
 	    if ($sz > $max_size) {
 		echo "\n<TR>".
-		    '<TD valign="middle">'.$label.'</td>'.
+		    '<TD valign="middle">'.$label.$star.'</td>'.
 		    '<TD valign="middle" colspan="'.(2*$fields_per_line-1).'">'.
 		    $value.'</TD>'.		      
 		    "\n</TR>";
 		$i=0;
 	    } else {
 		echo ($i % $fields_per_line ? '':"\n<TR>");
-		  echo '<TD valign="middle">'.$label.'</td>'.
+		  echo '<TD valign="middle">'.$label.$star.'</td>'.
 		      '<TD valign="middle">'.$value.'</TD>';
 		$i++;
 		echo ($i % $fields_per_line ? '':"\n</TR>");

@@ -15,22 +15,24 @@ function exit_error($title,$text) {
 }
 
 function exit_permission_denied() {
-	exit_error('Permission Denied','This project\'s administrator will have to grant you permission to view this page.');
+	exit_error('Permission Denied','This project\'s administrator will have to grant you permission to view this page.<p>'.$feedback);
 }
 
 function exit_not_logged_in() {
-	global $REQUEST_URI;
-	//instead of a simple error page, now take them to the login page
-	header ("Location: /account/login.php?return_to=".urlencode($REQUEST_URI));
-	//exit_error('Not Logged In','Sorry, you have to be <A HREF="/account/login.php">logged in</A> to view this page.');
+    global $REQUEST_URI;
+    //instead of a simple error page, now take them to the login page
+    header ("Location: /account/login.php?return_to=".urlencode($REQUEST_URI));
+    //exit_error('Not Logged In','Sorry, you have to be <A HREF="/account/login.php">logged in</A> to view this page.');
 }
 
 function exit_no_group() {
-	exit_error('Error - Choose a Group','ERROR - No group_id was chosen.');
+    global $feedback;
+    exit_error('Error - Choose a Project','ERROR - No group_id was chosen.<p>'.$feedback);
 }
 
 function exit_missing_param() {
-	exit_error('Error - Missing Params','ERROR - Missing Required Parameteres.');
+    global $feedback;
+    exit_error('Error - Missing Parameters','<p>'.$feedback);
 }
 
 ?>

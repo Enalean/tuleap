@@ -222,11 +222,16 @@ CREATE TABLE bug_field_value (
 #                   members with appropriate rigths, 0 do not show it.
 # place           : A value indicating in which order the fields appear on
 #                   the bug submission screen (lowest first)
-# custom_label    : Label of the custom field as defined by the user. NULL if 
-#                   the field is not a customizable one
-#
-# custom_description : Description of the custom field as defined by the user. NULL if 
-#                   the field is not customizable one
+# custom_label    : custom field label as defined by the user. NULL if 
+#                   it uses the system default label.
+# custom_description : custom description as defined by the user.
+#                   NULL if it uses the system default description
+# custom_display_size : custom size as defined by the user. NULL if it 
+#                   uses the system default display size.
+# custom_empty_ok : 1 if empty value are allowed for this field. 0 if it
+#                   is not. NULL if it uses the system default.
+# custom_keep_history : 1 if field changes must be kept in the bug history
+#                   table. 0 otherwise. NULL if it uses the system default.
 #
 # Remark: for all fields declared in bug_field table there must be a
 # corresponding entry here (group_id = 100) to define default usage rules.

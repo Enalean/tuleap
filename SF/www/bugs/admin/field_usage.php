@@ -27,6 +27,18 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 	    if (isset($n1) && isset($n2)) {
 		$display_size = "$n1/$n2";
 	    }
+
+	    // these are checkboxes so make sure they have value 0 if needed.
+	    // 0 and 'not in the form' doesn't mean the same thing. if it is not set
+	    // but is in the form it means value 0, if it is not set and not in the form
+	    // it means use the system default.
+	    if (!isset($keep_history) && $keep_history_here) {
+		$keep_history = 0;
+	    }
+	    if (!isset($empty_ok) && $empty_ok_here) {
+		$empty_ok = 0;
+	    }
+
 	    bug_data_update_usage($field,$group_id,$label,$description,
 				  $status,$place,$display_size,$empty_ok,$keep_history,
 				  $show_on_add_members,$show_on_add);
@@ -62,7 +74,8 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
       <P><h3>Field Label: 
 
 <?php
-										     // If it is a custom field let the user change the label, description...
+
+     // If it is a custom field let the user change the label and description
      if (bug_data_is_custom($field)) {
 	 echo '<INPUT TYPE="TEXT" NAME="label" VALUE="'.bug_data_get_label($field).
 	 '" SIZE="20" MAXLENGTH="40"></h3>';
@@ -72,7 +85,6 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
      } else {
 	 echo bug_data_get_label($field)."</h3>\n";
      }
-
 
       echo '<B>Rank on screen:</B>';
       
@@ -90,68 +102,64 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
       </SELECT>';
       }
 
-     if (bug_data_is_custom($field)) {
-	 $display_type = bug_data_get_display_type($field);
-	 if ($display_type == 'TF') {
-	     list($size,$maxlength) = bug_data_get_display_size($field);
-	     echo '<P><b>Field Size...</b> (in characters)<ul>';
-	     echo '<li>Visible Field Size: ';
-	     echo '<INPUT TYPE="TEXT" NAME="n1" VALUE="'.$size.
-		 '" SIZE="3" MAXLENGTH="3">&nbsp;&nbsp;';
-	     echo '<li>Maximum length: ';
-	     echo '<INPUT TYPE="TEXT" NAME="n2" VALUE="'.$maxlength.
-		 '" SIZE="3" MAXLENGTH="3">&nbsp;&nbsp; (up to  255)</ul>';
-	 } else if ($display_type == 'TA') {
-	     list($rows,$cols) = bug_data_get_display_size($field);
-	     echo '<P><b>Field Size...</b><ul>';
-	     echo '<li>Number of rows&nbsp;&nbsp;: ';
-	     echo '<INPUT TYPE="TEXT" NAME="n1" VALUE="'.$rows.
-		 '" SIZE="3" MAXLENGTH="3">&nbsp;&nbsp;';
-	     echo '<li>Number of columns: ';
-	     echo '<INPUT TYPE="TEXT" NAME="n2" VALUE="'.$cols.
-		 '" SIZE="3" MAXLENGTH="3"></ul>';
-         }else if ($display_type == 'DF') {
-	     // Date fields have a fixed size that cannot be changed
-	     list($size,$maxlength) = bug_data_get_display_size($field);
-	     echo '<INPUT TYPE="hidden" NAME="n1" VALUE="'.$size."\">\n";
-	     echo '<INPUT TYPE="hidden" NAME="n2" VALUE="'.$maxlength."\">\n";
-	 }
-	 
-	 if (bug_data_is_text_field($field) || bug_data_is_text_area($field) ||
-	     bug_data_is_date_field($field)) {
-	     echo '<P><b>Properties...</b><ul>';
-	     echo '<li>Allow Empty Value: ';
-	     echo '<INPUT TYPE="CHECKBOX" NAME="empty_ok" VALUE="1" '.
-	     (bug_data_is_empty_ok($field)?' CHECKED':'').'>&nbsp;&nbsp;';
-	     echo '<li>Keep Change History: ';
-	     echo '<INPUT TYPE="CHECKBOX" NAME="keep_history" VALUE="1" '.
-	     (bug_data_do_keep_history($field)?' CHECKED':'').'></ul>';
-	 }
-     }
+      // Customize field size only for text fields and text areas. 
+      if (bug_data_is_text_field($field)) {
+	  list($size,$maxlength) = bug_data_get_display_size($field);
+	  echo '<P><b>Field Size...</b> (in characters)<ul>';
+	  echo '<li>Visible Field Size: ';
+	  echo '<INPUT TYPE="TEXT" NAME="n1" VALUE="'.$size.
+	      '" SIZE="3" MAXLENGTH="3">&nbsp;&nbsp;';
+	  echo '<li>Maximum length: ';
+	  echo '<INPUT TYPE="TEXT" NAME="n2" VALUE="'.$maxlength.
+	      '" SIZE="3" MAXLENGTH="3">&nbsp;&nbsp; (up to  255)</ul>';
+      } else if (bug_data_is_text_area($field)) {
+	  list($rows,$cols) = bug_data_get_display_size($field);
+	  echo '<P><b>Field Size...</b><ul>';
+	  echo '<li>Number of rows&nbsp;&nbsp;: ';
+	  echo '<INPUT TYPE="TEXT" NAME="n1" VALUE="'.$rows.
+	      '" SIZE="3" MAXLENGTH="3">&nbsp;&nbsp;';
+	  echo '<li>Number of columns: ';
+	  echo '<INPUT TYPE="TEXT" NAME="n2" VALUE="'.$cols.
+	      '" SIZE="3" MAXLENGTH="3"></ul>';
+      }
+      // Remark: Date fields have a fixed size that cannot be changed
+      
 
-
-	 if (!bug_data_is_required($field) && 
-	     !bug_data_is_special($field_name)) {
-
-	     $addm_html = '&nbsp;&nbsp;<INPUT TYPE="CHECKBOX" NAME="show_on_add_members" VALUE="1"'.
-		 (bug_data_is_showed_on_add_members($field)?' CHECKED':'').'>';
-
-	     $add_html = '&nbsp;&nbsp;<INPUT TYPE="CHECKBOX" NAME="show_on_add" VALUE="1"'.
-		 (bug_data_is_showed_on_add($field)?' CHECKED':'').'>';
-
-     } else {
-
-	 // Do not let the user change these field settings but put them in the
-	 // form to preserve the existing setting or use the default values
-	 // imposed at the system level
-	 $addm_html = '<INPUT TYPE="HIDDEN" NAME="show_on_add_members" '.
-	     'VALUE="'.(bug_data_is_showed_on_add_members($field)? 1:0).'">'.
-	     (bug_data_is_showed_on_add_members($field)? ': Always':': Never');
-	 $add_html = '<INPUT TYPE="HIDDEN" NAME="show_on_add" '.
-	     'VALUE="'.(bug_data_is_showed_on_add($field)? 1:0).'">'.
-	     (bug_data_is_showed_on_add($field)? ': Always':': Never');
-	 
-     }
+      // Customize Properties
+      if (!bug_data_is_special($field)) { 
+	  echo '<P><b>Properties...</b><ul>';
+	  echo '<li>Allow Empty Value: ';
+	  echo '<INPUT TYPE="CHECKBOX" NAME="empty_ok" VALUE="1" '.
+	      (bug_data_is_empty_ok($field)?' CHECKED':'').'>&nbsp;&nbsp;';
+	  echo '<INPUT TYPE="HIDDEN" NAME="empty_ok_here" VALUE="1">';
+	  echo '<li>Keep Change History: ';
+	  echo '<INPUT TYPE="CHECKBOX" NAME="keep_history" VALUE="1" '.
+	      (bug_data_do_keep_history($field)?' CHECKED':'').'></ul>';
+	  echo '<INPUT TYPE="HIDDEN" NAME="keep_history_here" VALUE="1">';
+      }
+      
+      // Customize screen presence
+      if (!bug_data_is_required($field) && 
+	  !bug_data_is_special($field_name)) {
+	  
+	  $addm_html = '&nbsp;&nbsp;<INPUT TYPE="CHECKBOX" NAME="show_on_add_members" VALUE="1"'.
+	      (bug_data_is_showed_on_add_members($field)?' CHECKED':'').'>';
+	  
+	  $add_html = '&nbsp;&nbsp;<INPUT TYPE="CHECKBOX" NAME="show_on_add" VALUE="1"'.
+	      (bug_data_is_showed_on_add($field)?' CHECKED':'').'>';
+	  
+      } else {
+	  
+	  // Do not let the user change these field settings but put them in the
+	  // form to preserve the existing setting or use the default values
+	  // imposed at the system level
+	  $addm_html = '<INPUT TYPE="HIDDEN" NAME="show_on_add_members" '.
+	      'VALUE="'.(bug_data_is_showed_on_add_members($field)? 1:0).'">'.
+	      (bug_data_is_showed_on_add_members($field)? ': Always':': Never');
+	  $add_html = '<INPUT TYPE="HIDDEN" NAME="show_on_add" '.
+	      'VALUE="'.(bug_data_is_showed_on_add($field)? 1:0).'">'.
+	      (bug_data_is_showed_on_add($field)? ': Always':': Never');
+      }
 
      echo '<P><b>Display this field...</b><ul>';
      echo '<li>On the submission form used by project members'.$addm_html;
@@ -201,12 +209,15 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 	$iu=$in=$inc=0;
 	while ( $field_name = bug_list_all_fields() ) {
 
-	    // Do not show some special fields any way
-	    if (bug_data_is_special($field_name)) { 
-		if ( ($field_name == 'group_id') ||
-		     ($field_name == 'comment_type_id') )
-		    { continue; }
-	    }
+	    // Do not show some special fields any way in the list
+	    // because there is nothing to customize in them
+	    if (($field_name == 'group_id') ||
+		($field_name == 'comment_type_id') || 
+		($field_name == 'bug_id') || 
+		($field_name == 'date') || 
+		($field_name == 'close_date') || 
+		($field_name == 'submitted_by') )
+		{ continue; }
 
 	    // Show Used, Unused and Required fields on separate lists
 	    // SHow Unused Custom field in a separate list at the very end

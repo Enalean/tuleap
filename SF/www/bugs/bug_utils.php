@@ -430,16 +430,24 @@ function bug_check_empty_fields($field_array) {
       */
     global $feedback;
 
-    $ret=1;
+    $bad_fields = array();
     reset($field_array);
     while ( list($key, $val) = each($field_array)) {
-	if ( ($val == '') && !bug_data_is_empty_ok($key)) {
-	    $ret=0;
-	    $feedback .= "<BR>'".bug_data_get_label($key)."' field must not be empty";
+	$is_empty = (bug_data_is_select_box($key) ? ($val==100) : ($val==''));
+	if ( $is_empty && !bug_data_is_empty_ok($key)) {
+	    $bad_fields[] = bug_data_get_label($key);
 	}
     }
 
-    return($ret);
+    if (count($bad_fields) > 0) {
+	$feedback = 'Missing fields: '.join(', ',$bad_fields).
+	    '<p>Empty values for the above listed field(s) are not allowed. Click on the'.
+	    'Back arrow of your browser and try again';
+	return false;
+    } else {
+	return true;
+    }
+
 }
 
 function bug_canned_response_box ($group_id,$name='canned_response') {
