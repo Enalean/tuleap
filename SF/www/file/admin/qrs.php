@@ -249,7 +249,7 @@ if( $submit ) {
 	<TABLE BORDER="0" CELLPADDING="2" CELLSPACING="2">
 	<TR>
 		<TD>
-			<B>Package ID:</B>
+			<B>Package Name:</B>
 		</TD>
 		<TD>
 <?php
@@ -257,7 +257,7 @@ if( $submit ) {
 	$res=db_query($sql);
 	$rows=db_numrows($res);
 	if (!$res || $rows < 1) {
-		echo '<H4>No File Types Available</H4>';
+		echo '<p class="highlight">No Package Available</p>';
 	} else {
 		echo '<SELECT NAME="package_id">';
 		for ($i=0; $i<$rows; $i++) {
@@ -266,7 +266,7 @@ if( $submit ) {
 		echo '</SELECT>';
 	}
 ?>
-			&nbsp;&nbsp;Or, <a href="editpackages.php?group_id=<?php echo $group_id; ?>">create a new package</a>.
+	    &nbsp;&nbsp;(<a href="editpackages.php?group_id=<?php echo $group_id; ?>">create a new package)</a>.
 		</TD>
 	</TR>
 	<TR>
