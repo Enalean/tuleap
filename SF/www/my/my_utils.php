@@ -43,35 +43,35 @@ function my_hide_url ($svc, $db_item_id, $item_id, $count, $hide) {
     if ($old_hide == false) { $old_hide = 0; }
 
     if ($item_id == $db_item_id) {
-	if (isset($hide)) {
-	    $pref_value = "$hide|$count";
-	} else {
-	    $pref_value = "$old_hide|$count";
-	    $hide = $old_hide;
-	}
+		if (isset($hide)) {
+		    $pref_value = "$hide|$count";
+		} else {
+		    $pref_value = "$old_hide|$count";
+		    $hide = $old_hide;
+		}
     } else {
-	if ($old_hide) {
-	    // if items are hidden keep the old count and keep pref as is
-	    $pref_value = $old_pref_value;
-	} else {
-	    // only update the item count if the items are visible
-	    // if they are hidden keep reporting the old count
-	    $pref_value = "$old_hide|$count";
-	}
-	$hide = $old_hide;
+		if ($old_hide) {
+		    // if items are hidden keep the old count and keep pref as is
+		    $pref_value = $old_pref_value;
+		} else {
+		    // only update the item count if the items are visible
+		    // if they are hidden keep reporting the old count
+		    $pref_value = "$old_hide|$count";
+		}
+		$hide = $old_hide;
     }
 
     // Update pref value if needed
     if ($old_pref_value != $pref_value) {
-	user_set_preference($pref_name, $pref_value);
+		user_set_preference($pref_name, $pref_value);
     }
 
     if ($hide) {
-	$hide_url= '<a href="'.$PHP_SELF.'?hide_'.$svc.'=0&hide_item_id='.$db_item_id.'"><img src="'.util_get_image_theme("pointer_right.png").'" align="middle" border="0" alt="Collapse"></a>&nbsp;';
-	$hide_now = true;
+		$hide_url= '<a href="'.$PHP_SELF.'?hide_'.$svc.'=0&hide_item_id='.$db_item_id.'"><img src="'.util_get_image_theme("pointer_right.png").'" align="middle" border="0" alt="Collapse"></a>&nbsp;';
+		$hide_now = true;
     } else {		
-	$hide_url= '<a href="'.$PHP_SELF.'?hide_'.$svc.'=1&hide_item_id='.$db_item_id.'"><img src="'.util_get_image_theme("pointer_down.png").'" align="middle" border="0" alt="Expand"></a>&nbsp;';
-	$hide_now = false;
+		$hide_url= '<a href="'.$PHP_SELF.'?hide_'.$svc.'=1&hide_item_id='.$db_item_id.'"><img src="'.util_get_image_theme("pointer_down.png").'" align="middle" border="0" alt="Expand"></a>&nbsp;';
+		$hide_now = false;
     }
 
     return array($hide_now, $count-$old_count, $hide_url);
@@ -91,7 +91,7 @@ function my_format_as_flag($assigned_to, $submitted_by) {
 }
 
 function my_item_count($total, $new) {
-    return '['.$total.($new ? ", <b>$new new</b>)" : ']');
+    return '['.$total.($new ? ", <b>$new new</b>]" : ']');
 }
 
 ?>

@@ -9,6 +9,11 @@
 require ('pre.php');
 require ('vote_function.php');
 require ('./my_utils.php');
+require($DOCUMENT_ROOT.'/../common/tracker/Artifact.class');
+require($DOCUMENT_ROOT.'/../common/tracker/ArtifactFactory.class');
+require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');
+require($DOCUMENT_ROOT.'/../common/tracker/ArtifactTypeFactory.class');
+
 if (user_isloggedin()) {
 
         // Make sure this page is not cached because
@@ -28,6 +33,11 @@ if (user_isloggedin()) {
 	<TR><TD VALIGN="TOP" WIDTH="50%">
 	<?php
 
+	$atf = new ArtifactTypeFactory(false);
+	if ( !$atf ) {
+		exit_error("Error","Fail to create ArtifactTypeFactory");
+	}
+
 	/*
 		Bugs assigned to or submitted by this person
 	*/
@@ -41,6 +51,7 @@ if (user_isloggedin()) {
 
 	$result=db_query($sql);
 	$rows=db_numrows($result);
+	
 	if (!$result || $rows < 1) {
 	    echo '
 			<B>No Open Bugs are assigned to you or were submitted by you</B>';
@@ -48,45 +59,44 @@ if (user_isloggedin()) {
 
 	    for ($j=0; $j<$rows; $j++) {
 
-		$group_id = db_result($result,$j,'group_id');
-
-		$sql2='SELECT bug_id,severity,assigned_to,submitted_by,date AS open_date,summary '.
-		'FROM bug '.
-		'WHERE group_id='.$group_id.' AND status_id <> 3 '.
-		'AND (assigned_to='.user_getid().
-		' OR submitted_by='.user_getid().') LIMIT 100';
-
-		$result2 = db_query($sql2);
-		$rows2 = db_numrows($result2);
-
-		list($hide_now,$count_diff,$hide_url) = 
-		    my_hide_url('bug',$group_id,$hide_item_id,$rows2,$hide_bug);
-		$html_hdr = ($j ? '<tr class="boxitem"><td colspan="2">' : '').
-		    $hide_url.'<A HREF="/bugs/?group_id='.$group_id.'"><B>'.
-		    group_getname($group_id).'</B></A>&nbsp;&nbsp;&nbsp;&nbsp;';
-		$html = '';
-		$count_new = max(0, $count_diff);
-		for ($i=0; $i<$rows2; $i++) {
-
-		    if (!$hide_now) {
-			// Form the 'Submitted by/Assigned to flag' for marking
-			$AS_flag = my_format_as_flag(db_result($result2,$i,'assigned_to'), db_result($result2,$i,'submitted_by'));
-
-			$html .= '
-			
-			<TR class="'.get_priority_color(db_result($result2,$i,'severity')).
-			'"><TD class="small"><A HREF="/bugs/?func=detailbug&group_id='.
-			$group_id.'&bug_id='.db_result($result2,$i,'bug_id').
-			'">'.db_result($result2,$i,'bug_id').'</A></TD>'.
-			'<TD class="small">'.stripslashes(db_result($result2,$i,'summary')).'&nbsp;'.$AS_flag.'</TD></TR>';
-
-		    }
-		}
-
-		$html_hdr .= my_item_count($rows2,$count_new).'</td></tr>';
-		echo $html_hdr.$html;
+			$group_id = db_result($result,$j,'group_id');
+	
+			$sql2='SELECT bug_id,severity,assigned_to,submitted_by,date AS open_date,summary '.
+			'FROM bug '.
+			'WHERE group_id='.$group_id.' AND status_id <> 3 '.
+			'AND (assigned_to='.user_getid().
+			' OR submitted_by='.user_getid().') LIMIT 100';
+	
+			$result2 = db_query($sql2);
+			$rows2 = db_numrows($result2);
+	
+			list($hide_now,$count_diff,$hide_url) = 
+			    my_hide_url('bug',$group_id,$hide_item_id,$rows2,$hide_bug);
+			$html_hdr = ($j ? '<tr class="boxitem"><td colspan="2">' : '').
+			    $hide_url.'<A HREF="/bugs/?group_id='.$group_id.'"><B>'.
+			    group_getname($group_id).'</B></A>&nbsp;&nbsp;&nbsp;&nbsp;';
+			$html = '';
+			$count_new = max(0, $count_diff);
+			for ($i=0; $i<$rows2; $i++) {
+	
+			    if (!$hide_now) {
+					// Form the 'Submitted by/Assigned to flag' for marking
+					$AS_flag = my_format_as_flag(db_result($result2,$i,'assigned_to'), db_result($result2,$i,'submitted_by'));
+		
+					$html .= '
+					
+					<TR class="'.get_priority_color(db_result($result2,$i,'severity')).
+					'"><TD class="small"><A HREF="/bugs/?func=detailbug&group_id='.
+					$group_id.'&bug_id='.db_result($result2,$i,'bug_id').
+					'">'.db_result($result2,$i,'bug_id').'</A></TD>'.
+					'<TD class="small">'.stripslashes(db_result($result2,$i,'summary')).'&nbsp;'.$AS_flag.'</TD></TR>';
+	
+			    }
+			}
+	
+			$html_hdr .= my_item_count($rows2,$count_new).'</td></tr>';
+			echo $html_hdr.$html;
 	    }
-
 
 	    echo '<TR><TD COLSPAN="2">&nbsp;</TD></TR>';
 
@@ -341,6 +351,7 @@ if (user_isloggedin()) {
 		    "AND project_group_list.is_public!='9' ".
 		   "AND project_group_list.group_project_id= $group_project_id LIMIT 100";
 
+
 		$result2 = db_query($sql2);
 		$rows2 = db_numrows($result2);
 
@@ -376,6 +387,86 @@ if (user_isloggedin()) {
 
 
 	    echo '<TR><TD COLSPAN="3">&nbsp;</TD></TR>';
+	}
+	echo $HTML->box1_bottom();
+
+
+	/*
+		Artifact assigned to or submitted by this person
+	*/
+	echo $HTML->box1_top('My Artifacts');
+
+	// Trackers
+	$uid = user_getid();
+	$list_trackers = $atf->getPatternTrackers($uid,"");
+	
+	if (count($list_trackers) <= 0) {
+	    echo '
+			<B>No Open Artifacts are assigned to you or were submitted by you</B>';
+	} else {
+
+		reset($list_trackers);
+	
+		while (list($key,$count) = each($list_trackers) ) {
+			
+			list($group_id,$atid) = explode("-",$key);
+
+			//
+			//	get the Group object
+			//
+			$group = group_get_object($group_id);
+			if (!$group || !is_object($group) || $group->isError()) {
+				exit_no_group();
+			}
+			//
+			//	Create the ArtifactType object
+			//
+			$at = new ArtifactType($group,$atid);
+			if (!$at || !is_object($at)) {
+				exit_error('Error','ArtifactType could not be created');
+			}
+			if ($at->isError()) {
+				exit_error('Error',$at->getErrorMessage());
+			}
+
+			$af = new ArtifactFactory($at);
+			
+			$artifact_list = $af->getMyArtifacts(user_getid());
+			
+			$rows = count($artifact_list);
+			
+			list($hide_now,$count_diff,$hide_url) = 
+			    my_hide_url('artifact',$atid,$hide_item_id,$rows,$hide_artifact);
+			$html_hdr = ($j ? '<tr class="boxitem"><td colspan="2">' : '').
+			    $hide_url.'<A HREF="/tracker/?group_id='.$group_id.'&atid='.$atid.'"><B>'.
+			    $group->getPublicName()." - ".$at->getName().'</B></A>&nbsp;&nbsp;&nbsp;&nbsp;';
+			$html = '';
+			$count_new = max(0, $count_diff);
+
+			while (list(,$artifact) = each($artifact_list) ) {
+
+			    if (!$hide_now) {
+					// Form the 'Submitted by/Assigned to flag' for marking
+					$AS_flag = my_format_as_flag($artifact->getGenericValue('assigned_to'), $artifact->getSubmittedBy() );
+		
+					$html .= '
+					
+					<TR class="'.get_priority_color($artifact->getSeverity()).
+					'"><TD class="small"><A HREF="/tracker/?func=detail&group_id='.
+					$group_id.'&aid='.$artifact->getID().'&atid='.$atid.
+					'">'.$artifact->getID().'</A></TD>'.
+					'<TD class="small">'.stripslashes($artifact->getSummary()).'&nbsp;'.$AS_flag.'</TD></TR>';
+	
+			    }
+			}
+	
+			$html_hdr .= my_item_count($rows,$count_new).'</td></tr>';
+			echo $html_hdr.$html;
+		
+		}
+
+	    echo '<TR><TD COLSPAN="2">&nbsp;</TD></TR>';
+
 	}
 	echo $HTML->box1_bottom();
 

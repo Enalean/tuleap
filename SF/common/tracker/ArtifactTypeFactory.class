@@ -35,18 +35,16 @@ class ArtifactTypeFactory extends Error {
 	 *	@param	object	The Group object to which this ArtifactTypeFactory is associated
 	 *	@return	boolean	success.
 	 */
-	function ArtifactTypeFactory(&$Group) {
+	function ArtifactTypeFactory($Group) {
 		$this->Error();
-		if (!$Group || !is_object($Group)) {
-			$this->setError('Forum:: No Valid Group Object');
-			return false;
+		if ( $Group ) {
+			if ($Group->isError()) {
+				$this->setError('ArtifactTypeFactory:: '.$Group->getErrorMessage());
+				return false;
+			}
+			$this->Group = $Group;
 		}
-		if ($Group->isError()) {
-			$this->setError('Forum:: '.$Group->getErrorMessage());
-			return false;
-		}
-		$this->Group = $Group;
-
+		
 		return true;
 	}
 
@@ -294,6 +292,61 @@ class ArtifactTypeFactory extends Error {
 		return true;
 	}
 	
+	
+	/**
+	 *	Retrieve a list of trackers where a user is a submitter or has some artifacts assigned
+	 *  and which have a tracker name 
+	 *
+	 *  @param user_id: the user id
+	 *  @param pattern: the pattern
+	 *
+	 *	@return	array
+	 */
+	function getPatternTrackers($user_id,$pattern) {
+		$result_trackers = array();
+
+		// List of trackers - Check on assigned_to or multi_assigned_to or submitted by
+		$sql = "SELECT agl.group_artifact_id,agl.group_id,count(*) as count FROM artifact_group_list agl, artifact a, artifact_field af, artifact_field_value afv, groups g WHERE ".
+			   "a.group_artifact_id = agl.group_artifact_id AND af.group_artifact_id = agl.group_artifact_id AND ".
+			   "(af.field_name = 'assigned_to' OR af.field_name = 'multi_assigned_to') AND af.field_id = afv.field_id AND a.artifact_id = afv.artifact_id AND ".
+			   "(afv.valueInt=".$user_id." OR a.submitted_by=".$user_id.") AND agl.name like '%".$pattern."%' AND agl.status = 'A' AND ".
+			   "agl.group_id = g.group_id AND a.status_id <> 3 ".
+			   "GROUP BY agl.group_artifact_id,agl.group_id ORDER BY g.group_name,agl.name";
+
+		//echo $sql;
+		
+	    $res = db_query($sql);
+	
+	    while ($trackers_array = db_fetch_array($res)) {
+	    	$atid = $trackers_array['group_artifact_id'];
+	    	$group_id = $trackers_array['group_id'];
+	    	$result_trackers[$group_id."-".$atid] = $trackers_array['count'];
+	    }
+	    
+	    if ( count($result_trackers) > 0 ) {
+	    	return $result_trackers;
+	    }
+	    
+		// List of trackers - Check only on submitted_by
+		$sql = "SELECT agl.group_artifact_id,agl.group_id,count(*) as count FROM artifact_group_list agl, artifact a, groups g WHERE ".
+			   "a.group_artifact_id = agl.group_artifact_id AND ".
+			   "a.submitted_by=".$user_id." AND agl.name like '%".$pattern."%' AND agl.status = 'A' AND ".
+			   "agl.group_id = g.group_id AND a.status_id <> 3 ".
+			   "GROUP BY agl.group_artifact_id,agl.group_id ORDER BY g.group_name,agl.name";
+
+		//echo $sql;
+		
+	    $res = db_query($sql);
+	
+	    while ($trackers_array = db_fetch_array($res)) {
+	    	$atid = $trackers_array['group_artifact_id'];
+	    	$group_id = $trackers_array['group_id'];
+	    	$result_trackers[$group_id."-".$atid] = $trackers_array['count'];
+	    }
+
+	    return $result_trackers;
+	}
+
 }
 
 ?>

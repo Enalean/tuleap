@@ -119,6 +119,15 @@ class Artifact extends Error {
 	}
 	
 	/**
+	 *	getGenericValue - get a value for this artifact.
+	 *
+	 *	@return	value
+	 */
+	function getGenericValue($name) {
+		return $this->data_array[$name];
+	}
+
+	/**
 	 *	getID - get this ArtifactID.
 	 *
 	 *	@return	int	The artifact_id #.
@@ -316,8 +325,8 @@ class Artifact extends Error {
 	    } // while
 
 	    // Add all special fields that were not handled in the previous block
-	    $fixed_cols = 'open_date,close_date,group_artifact_id,submitted_by';
-	    $fixed_values = "'".time()."','0','$group_artifact_id','$user'";
+	    $fixed_cols = 'open_date,group_artifact_id,submitted_by';
+	    $fixed_values = "'".time()."','$group_artifact_id','$user'";
 		
 	    //
 	    //  Finally, build the full SQL query and insert the artifact itself 
@@ -327,14 +336,14 @@ class Artifact extends Error {
 	    //echo "DBG - SQL insert artifact: $sql";
 	    $result=db_query($sql);
 	    $artifact_id=db_insertid($result);
-	    
+
 	    // 
 	    // Reload values
 	    //
 	    $this->fetchData($artifact_id);
 	
 	    if (!$artifact_id) {
-			$this->setError('INSERT new bug failed. Report to the Administrator<br>'.
+			$this->setError('INSERT new artifact failed. Report to the Administrator<br>'.
 			    'SQL statement:<br>'.$sql.'<br>');
 			return false;
 	    } else {
