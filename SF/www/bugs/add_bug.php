@@ -31,7 +31,7 @@ echo '<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data" N
 // Now display the variable part of the field list (depend on the project)
 
 $i=0;
-$is_bugadmin = user_ismember($group_id,'B2');
+$is_member = user_ismember($group_id);
 
 while ( $field_name = bug_list_all_fields() ) {
 
@@ -41,8 +41,8 @@ while ( $field_name = bug_list_all_fields() ) {
     if ( (!bug_data_is_special($field_name) || $field_name=='summary' || $field_name=='details') &&
 	 bug_data_is_used($field_name) ) {
 
-	if  (($is_bugadmin && bug_data_is_showed_on_add_members($field_name)) ||
-	     (!$is_bugadmin && bug_data_is_showed_on_add($field_name)) ) {
+	if  (($is_member && bug_data_is_showed_on_add_members($field_name)) ||
+	     (!$is_member && bug_data_is_showed_on_add($field_name)) ) {
 	    
 	    // display the bug field with its default value
 	    // if field size is greatest than max_size chars then force it to
