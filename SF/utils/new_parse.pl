@@ -217,7 +217,7 @@ while ($ln = pop(@groupdump_array)) {
 	  close(WRITERS);
 	}
 	## cvs backend
-	if ($cvs_tracker) {
+	if (($cvs_tracker) && ($gstatus eq 'A')){
 	  # hook for commit tracking in cvs loginfo file
 	  $cvs_dir = "$cvs_prefix/$gname";
 	  # if $cvs_dir/CVSROOT/loginfo contains block break;
