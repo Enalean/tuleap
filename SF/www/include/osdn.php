@@ -60,21 +60,28 @@ function osdn_print_randpick($sitear, $num_sites = 1) {
 }
 
 function osdn_print_navbar() {
-	print '
-<!-- OSDN navbar -->
-<table width="100%" cellpadding="2" cellspacing="0" border="0" bgcolor="#bcbcad">
-	<tr> 
-		<td valign="middle" align="left">
-		<SPAN class="osdn">
-<!-- LJ			<font face="arial,geneva,helvetica,verdana,sans-serif" size="-2" color="#ffffff">&nbsp;&nbsp;&nbsp;<b><a href="http://osdn.com/" style="text-decoration:none"><font color="#ffffff">O&nbsp;<font color="#9b9b9b">|</font>&nbsp;S&nbsp;<font color="#9b9b9b">|</font>&nbsp;D&nbsp;<font color="#9b9b9b">|</font>&nbsp;N</font></a>&nbsp;:&nbsp;
--->
-<font color="#ffffff">Network Gallery&nbsp;:&nbsp;</font>';
+    print '
+           <!-- OSDN navbar -->
+           <table width="100%" cellpadding="2" cellspacing="0" border="0" bgcolor="#bcbcad">
+           <tr> 
+	    <td valign="middle" align="left">
+';
 
+    $motd = getenv('SF_LOCAL_INC_PREFIX').'/etc/motd.inc';
+    if (file_exists($motd) && filesize($motd)>0 ) {
+	$fp = fopen($motd,"r");
+	$output = fread($fp,200000);
+	echo $output;
+	fclose($fp);
+    } else {
+	print '	    <SPAN class="osdn">
+                                       <font color="#ffffff">Network Gallery&nbsp;:&nbsp;</font>';
 	osdn_print_randpick($GLOBALS['osdn_sites'], 5);
+	print '	</SPAN>';
+    }
 
 // LJ
-print '		</SPAN>
-		</td>';
+print '	     </td>';
 
 /* LJ	print '
 		</SPAN>
