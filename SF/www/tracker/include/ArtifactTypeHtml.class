@@ -1120,7 +1120,7 @@ class ArtifactTypeHtml extends ArtifactType {
 				$selected = "";
 				if ( $status == "V" ) 
 					$selected = " selected";
-				echo '<option value="V"'.$selected.'>Visible</option>';
+				echo '<option value="V"'.$selected.'>Active</option>';
 	
 				$selected = "";
 				if ( $status == "H" ) 
@@ -1129,7 +1129,7 @@ class ArtifactTypeHtml extends ArtifactType {
 	
 			} else {
 				echo '				
-			          <option value="V" selected>Visible</option>
+			          <option value="V" selected>Active</option>
 			          <option value="H">Hidden</option>';
 			}
 			echo '
@@ -1182,10 +1182,18 @@ class ArtifactTypeHtml extends ArtifactType {
 		if ( !$field ) {
 			return;
 		}
-					
-		echo '<h3>Exisiting values</h3>';
-		echo '<p>(Click to modify)';
+
+		$values = $field->getFieldValues ($this->getID(),'V');
+		$rows = db_numrows($values);
 		
+		if (!$values || ($rows == 0)) {
+		    echo "\n<H3>No values defined yet</H3>";
+		    return;
+		} else {
+		    echo '<h3>Existing values</h3>';
+		    echo '<p>(Click to modify)';
+		}
+
 		
 		// Show all the fields currently available in the system
 		$i=0;
@@ -1199,9 +1207,8 @@ class ArtifactTypeHtml extends ArtifactType {
 		
 		// Build HTML ouput for  Used fields
 		$iu=0;
-		$values = $field->getFieldValues ($this->getID(),'V');
 		$html = "";
-		
+
 		while ($row = db_fetch_array($values)) {
 		
 		    $rank = $row['order_id']?$row['order_id']:"-";
@@ -1223,9 +1230,9 @@ class ArtifactTypeHtml extends ArtifactType {
 		
 		// Now print the HTML table
 		if ($iu == 0) {
-		    echo '<tr><td colspan="4"><center><b>---- No value visible. Choose one below ----</b></center></tr>'.$html;  
+		    echo '<tr><td colspan="4"><center><b>---- NO ACTIVE VALUES ----</b></center></tr>'.$html;  
 		} else {
-		    echo '<tr><td colspan="4"><center><b>---- VISIBLE VALUES ----</b></center></tr>'.$html;  
+		    echo '<tr><td colspan="4"><center><b>---- ACTIVE VALUES ----</b></center></tr>'.$html;  
 		}
 
 		// Build HTML ouput for Unused fields
@@ -1254,7 +1261,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		
 		// Now print the HTML table
 		if ($iu == 0) {
-		    echo '<tr><td colspan="4"><center><b>---- NO HIDDEN VALUES ----</b></center></tr>'.$html;  
+		    echo '<tr><td colspan="4"><center><b>---- NO HIDDEN VALUES ----</b></center></tr>'.$html;
 		} else {
 		    echo '<tr><td colspan="4"><center><b>---- HIDDEN VALUES ----</b></center></tr>'.$html;  
 		}

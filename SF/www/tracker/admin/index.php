@@ -401,7 +401,7 @@ if ($group_id && !$atid) {
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
 			$ath->adminHeader(array('title'=>'Tracker Administration - Field Values Administration','help' => 'HELP_FIXME.html'));
-			echo "<H2>Tracker '".$ath->getName()."' - Field '".$field->getLabel()."'<br>Field Values Administration</H2>";
+			echo "<H2>Tracker '".$ath->getName()."' - Manage Field Values for '".$field->getLabel()."'</H2>";
 			$value_array = $field->getFieldValue($atid,$value_id);
 			$ath->displayFieldValueForm("value_update",$field_id,$value_array['value_id'],$value_array['value'],$value_array['order_id'],$value_array['status'],$value_array['description']);
 			
