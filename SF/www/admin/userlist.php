@@ -46,8 +46,8 @@ function show_users_list ($result) {
 	Set this user to delete
 */
 if ($action=='delete') {
-	db_query("UPDATE user SET status='D' WHERE user_id='$user_id'");
-	echo '<H2>User Updated to DELETE Status</H2>';
+	db_query("UPDATE user SET status='D',unix_status='D'  WHERE user_id='$user_id'");
+	echo '<H2>User Updated to DELETE Status - UNIX account scheduled for deletion</H2>';
 }
 
 /*
