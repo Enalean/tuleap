@@ -247,14 +247,13 @@ $sql='SELECT project_task.priority,project_task.group_project_id,project_task.pr
 	" LIMIT $offset,50";
 
 // Also get all tasks that depend on other tasks
-$sql_taskdeps = 'SELECT project_dependencies.project_task_id, is_dependent_on_task_id,project_task.group_project_id '.
-        'FROM project_task, project_dependencies, project_group_list '.
+$sql_taskdeps = 'SELECT project_dependencies.project_task_id, project_task.group_project_id,is_dependent_on_task_id,project_task2.group_project_id AS dep_task_group_project_id '.
+        'FROM project_task, project_task project_task2, project_dependencies, project_group_list '.
         'WHERE '.$subproj_where. 
-        ' project_dependencies.project_task_id=project_task.project_task_id '.
+        ' project_dependencies.is_dependent_on_task_id=project_task2.project_task_id '.
+        ' AND project_dependencies.project_task_id=project_task.project_task_id '.
         ' AND project_dependencies.is_dependent_on_task_id <> 100';
 
-
-//echo "DBG -- $sql <BR>";
 $result=db_query($sql);
 $result_taskdeps = db_query($sql_taskdeps);
 

@@ -334,7 +334,7 @@ function pm_format_tasklist ($result,$result_taskdeps,$offset,$url,&$count) {
 
 	    $task_url = '<a href="'.$PHP_SELF.'?func=detailtask&project_task_id='.
 		$a_row['is_dependent_on_task_id'].'&group_id='.$group_id.
-		'&group_project_id='.$a_row['group_project_id'].'" target="_blank">'.
+		'&group_project_id='.$a_row['dep_task_group_project_id'].'" target="_blank">'.
 		$a_row['is_dependent_on_task_id'].'</a>';
 
 	    if ( isset($all_rows[$tid]['task_deps']) ) {
