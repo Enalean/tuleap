@@ -62,9 +62,9 @@ if ($group_id && user_ismember($group_id,'P2')) {
 			Show categories and blank row
 		*/
 
-		pm_header(array ('title'=>'Add Projects'));
+		pm_header_admin(array ('title'=>'Add Projects'));
 
-		echo '<H1>Add Subprojects to the Project/Task Manager</H1>';
+		echo '<H2>Add Subprojects to the Project/Task Manager</H2>';
 
 		/*
 			List of possible categories for this group
@@ -75,11 +75,11 @@ if ($group_id && user_ismember($group_id,'P2')) {
 		if ($result && db_numrows($result) > 0) {
 			ShowResultSet($result,"Existing Subprojects");
 		} else {
-			echo "\n<H1>No Subprojects in this group</H1>";
+			echo "\n<H2>No Subprojects in this group</H2>";
 		}
 		?>
 		<P>
-		Add a new project to the Project/Task Manager. <B>This is different than
+		Add a new subproject to the Project/Task Manager. <B>This is different than
 		 adding a task to a project.</B>
 		<P>
 		<FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">
@@ -87,16 +87,16 @@ if ($group_id && user_ismember($group_id,'P2')) {
 		<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">
 		<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 		<P>
-		<B>Is Public?</B><BR>
-		<INPUT TYPE="RADIO" NAME="is_public" VALUE="1" CHECKED> Yes<BR>
-		<INPUT TYPE="RADIO" NAME="is_public" VALUE="0"> No<P>
-		<P>
 		<H3>New Project Name:</H3>
 		<P>
-		<INPUT TYPE="TEXT" NAME="project_name" VALUE="" SIZE="15" MAXLENGTH="30">
+		<INPUT TYPE="TEXT" NAME="project_name" VALUE="" SIZE="30" MAXLENGTH="60">
 		<P>
 		<B>Description:</B><BR>
-		<INPUT TYPE="TEXT" NAME="description" VALUE="" SIZE="40" MAXLENGTH="80">
+		<INPUT TYPE="TEXT" NAME="description" VALUE="" SIZE="60" MAXLENGTH="100">
+		<P>
+		<B>Is Public?</B><BR>
+		     <INPUT TYPE="RADIO" NAME="is_public" VALUE="1" CHECKED> Yes&nbsp;&nbsp;&nbsp;
+		<INPUT TYPE="RADIO" NAME="is_public" VALUE="0"> No<P>
 		<P>
 		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
 		</FORM>
@@ -107,7 +107,7 @@ if ($group_id && user_ismember($group_id,'P2')) {
 		/*
 			Change a project to public/private
 		*/
-		pm_header(array('title'=>'Change Project/Task Manager Status'));
+		pm_header_admin(array('title'=>'Change Project/Task Manager Status'));
 
 		$sql="SELECT project_name,group_project_id,is_public,description ".
 			"FROM project_group_list ".
@@ -150,7 +150,7 @@ if ($group_id && user_ismember($group_id,'P2')) {
 						<INPUT TYPE="RADIO" NAME="is_public" VALUE="0"'.((db_result($result,$i,'is_public')=='0')?' CHECKED':'').'> No<BR>
 						<INPUT TYPE="RADIO" NAME="is_public" VALUE="9"'.((db_result($result,$i,'is_public')=='9')?' CHECKED':'').'> Deleted<BR>
 					</TD><TD>
-						<INPUT TYPE="TEXT" NAME="project_name" VALUE="'. db_result($result, $i, 'project_name') .'">
+						<INPUT TYPE="TEXT" NAME="project_name" VALUE="'. db_result($result, $i, 'project_name') .'"SIZE="30" MAXLENGTH="60">
 					</TD><TD>
 						<FONT SIZE="-1">
 						<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Update">
@@ -158,7 +158,7 @@ if ($group_id && user_ismember($group_id,'P2')) {
 					<TR BGCOLOR="'.util_get_alt_row_color($i) .'"><TD COLSPAN="3">
 						<B>Description:</B><BR>
 						<INPUT TYPE="TEXT" NAME="description" VALUE="'.
-						db_result($result,$i,'description') .'" SIZE="40" MAXLENGTH="80"><BR>
+						db_result($result,$i,'description') .'" SIZE="60" MAXLENGTH="100"><BR>
 					</TD></TR>
 					</FORM>';
 			}
@@ -172,15 +172,15 @@ if ($group_id && user_ismember($group_id,'P2')) {
 		/*
 			Show main page
 		*/
-		pm_header(array('title'=>'Project/Task Manager Administration'));
+		pm_header_admin(array('title'=>'Project/Task Manager Administration'));
 
 		echo '
 			<H2>Project/Task Manager Administration</H2>
 			<P>
-			<A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&projects=1">Add A Subproject</A><BR>
+			<A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&projects=1"><h3>Add a Subproject</h3></A>
 			Add a project, which can contain a set of tasks. This is different than creating a new task.
 			<BR>
-			<A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&change_status=1">Update Information</A><BR>
+			<A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&change_status=1"><h3>Update Subprojects</h3></A>
 			Determine whether non-project-members can view Subprojects in the Project/Task Manager, update name and description';
 
 		pm_footer(array());

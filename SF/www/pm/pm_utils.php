@@ -77,6 +77,33 @@ function pm_header($params) {
 
 }
 
+function pm_header_admin($params) {
+    global $group_id,$is_pm_page,$DOCUMENT_ROOT;
+
+    //used so the search box will add the necessary element to the pop-up box
+    $is_pm_page=1;
+    
+    //required params for site_project_header();
+    $params['group']=$group_id;
+    $params['toptab']='pm';
+    
+    $project=project_get_object($group_id);
+    
+    //only projects can use the bug tracker, and only if they have it turned on
+    if (!$project->isProject()) {
+	exit_error('Error','Only Projects Can Use The Task Manager');
+    }
+    if (!$project->usesBugs()) {
+	exit_error('Error','This Project Has Turned Off The Task Manager');
+    }
+    echo site_project_header($params);
+    echo '<P><B><A HREF="/pm/admin/?group_id='.$group_id.'">Admin</A></B>';
+    echo ' | <B><A HREF="/pm/admin/index.php?projects=1&group_id='.$group_id.'">Add Subproject</A></B>';
+    echo ' | <b><A HREF="/pm/admin/index.php?change_status=1&group_id='.$group_id.'">Update Subprojects</A></b>';
+     echo ' <hr width="300" size="1" align="left" noshade>';
+}
+
+
 function pm_footer($params) {
 	site_project_footer($params);
 }
