@@ -107,7 +107,7 @@ if ($group_id && user_ismember($group_id,'A')) {
 		/*
 			Show the form for adding forums
 		*/
-		mail_header(array('title'=>'Add a Mailing List'));
+		mail_header_admin(array('title'=>'Add a Mailing List'));
 
 		echo '
 			<H3>Add a Mailing List</H3>
@@ -134,7 +134,7 @@ if ($group_id && user_ismember($group_id,'A')) {
 		// if the user is super user then he has the right to choose the 
 		// full mailing list name
 		if (user_is_super_user()) {
-		    echo '<INPUT TYPE="TEXT" NAME="list_name" VALUE="xxxx-'.group_getunixname($group_id).'" SIZE="15" MAXLENGTH="20">@'.$GLOBALS['sys_lists_host'].'</B><BR>';
+		    echo '<INPUT TYPE="TEXT" NAME="list_name" VALUE="'.group_getunixname($group_id).'-xxxxx" SIZE="15" MAXLENGTH="20">@'.$GLOBALS['sys_lists_host'].'</B><BR>';
 		} else {
 		    echo '<B>'.group_getunixname($group_id).'-<INPUT TYPE="TEXT" NAME="list_name" VALUE="" SIZE="15" MAXLENGTH="20">@'.$GLOBALS['sys_lists_host'].'</B><BR>';
 		}
@@ -157,7 +157,7 @@ if ($group_id && user_ismember($group_id,'A')) {
 		/*
 			Change a forum to public/private
 		*/
-		mail_header(array('title'=>'Update Mailing Lists'));
+		mail_header_admin(array('title'=>'Update Mailing Lists'));
 
 		$sql="SELECT list_name,group_list_id,is_public,description ".
 			"FROM mail_group_list ".
@@ -224,13 +224,15 @@ if ($group_id && user_ismember($group_id,'A')) {
 			Show main page for choosing 
 			either moderotor or delete
 		*/
-		mail_header(array('title'=>'Mailing List Administration'));
+		mail_header_admin(array('title'=>'Mailing List Administration'));
 
 		echo '
 			<H2>Mailing List Administration</H2>
-			<P>
-			<A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&add_list=1">Add Mailing List</A><BR>
-			<A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&change_status=1">Administrate/Update Lists</A>';
+			<h3>
+			<A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&add_list=1">Add Mailing List</A></h3>
+                                                      <p>Create new mailing lists
+			<h3><A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&change_status=1">Administrate/Update Lists</A></h3>
+                                                      <p>Manage existing mailing (change description, privacy...)';
 		mail_footer(array());
 	}
 
