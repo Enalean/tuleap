@@ -853,7 +853,7 @@ class ArtifactType extends Error {
 	 */
 	function updateNotificationSettings($email_all,$email_address,$user_id, $watchees) {
 
-		if ($email_address && !validate_email($email_address)) {
+		if ($email_address && !validate_emails($email_address)) {
 			$email_address='';
 		}
 		if ($email_all && !$email_address) {
