@@ -435,17 +435,23 @@ class ArtifactReport extends Error {
 			// Only select box criteria to where clause if argument is not ANY
 			return " AND ".$field_name." IN (".implode(",",$prefs[$field->getName()]).") ";
 	
-	    } else if ( $field->isDateField() && $prefs[$field->getName()][0]) {
+	    } else if ( $field->isDateField() && ($prefs[$field->getName()][0] || $prefs[$field->getName().'_end'][0])) {
 			// transform a date field into a unix time and use <, > or =
 			list($time,$ok) = util_date_to_unixtime($prefs[$field->getName()][0]);
 		
 			if ($advsrch) {
 			    list($time_end,$ok_end) = util_date_to_unixtime($prefs[$field->getName().'_end'][0]);
-			    if ($ok)
-					$where .= " AND ".$field_name." >= ".$time;
-		
-			    if ($ok_end)
-					$where .= " AND ". $field_name." <= ".$time_end;
+			    if ($ok) {
+					list($year,$month,$day) = util_date_explode($prefs[$field->getName()][0]);
+					$time_after = mktime(0, 0, 0, $month, $day, $year);
+					$where .= " AND ".$field_name." >= ".$time_after;
+				}
+				
+			    if ($ok_end) {
+					list($year,$month,$day) = util_date_explode($prefs[$field->getName().'_end'][0]);
+					$time_before = mktime(23, 59, 59, $month, $day, $year);
+					$where .= " AND ". $field_name." <= ".$time_before;
+				}
 		
 		
 			} else {
