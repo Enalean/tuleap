@@ -517,7 +517,7 @@ if ($result && $numrows > 0) {
     if (!$pv) {
 	echo 'You can also <a href="'.$url_alternate_sort.'"><b> '.$text.
 	    ' multicolumn sort</b></a>.&nbsp;&nbsp;&nbsp;&nbsp;'.
-	    '(<a href="'.$url.'&pv=1"> <img src="/images/msg.gif" border="0">'.
+	    '(<a href="'.$url.'&pv=1"> <img src="/images/msg.png" border="0">'.
 	    '&nbsp;Printer version</a>)'."\n";
     }
 
