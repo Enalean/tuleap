@@ -71,7 +71,7 @@ if (db_numrows($result) > 0) {
 		<B>Submitted Patch:</B><BR>
 		<?php
 		echo '
-			<A HREF="/patch/download.php?id='.$patch_id.'"><B>View Raw Patch</B></A>
+			<A HREF="/patch/download.php/Patch'.$patch_id.'.txt?id='.$patch_id.'"><B>View Raw Patch</B></A>
 			<P>
 			<INPUT TYPE="CHECKBOX" NAME="upload_new" VALUE="1"> <B>Upload Revised Patch (overwrite old)</B>
 			<P>
