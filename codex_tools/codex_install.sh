@@ -222,7 +222,7 @@ echo "All requested RedHat RPMS installed... good!"
 #
 # -> mysql
 echo "Removing RedHat MySQL..."
-service mysql stop
+service mysql stop; mysqladmin shutdown; sleep 5
 $RPM -e --nodeps mysql mysql-devel mysql-server 2>/dev/null
 echo "Installing MySQL RPMs for CodeX...."
 cd ${RPMS_DIR}/mysql
@@ -379,22 +379,28 @@ echo "Creating the CodeX database..."
 
 yn="-"
 freshdb=0
-[ -d "/var/lib/mysql/sourceforge" ] && read -p "CodeX Database already exists. Overwrite? [y|n]:" yn
+pass_opt=""
+if [ -d "/var/lib/mysql/sourceforge" ]; then
+    read -p "CodeX Database already exists. Overwrite? [y|n]:" yn
+fi
 
+# See if MySQL root account is password protected
+mysqlshow 2>&1 | grep password
+while [ $? -eq 0 ]; do
+    read -p "Existing CodeX DB is password protected. What is the Mysql root password?: " old_passwd
+    mysqlshow --password=$old_passwd 2>&1 | grep password
+done
+[ "X$old_passwd" != "X" ] && pass_opt="--password=$old_passwd"
+
+# Delete the CodeX DB if asked for
 if [ "$yn" = "y" ]; then
-    # try with and without password to cover all cases...
-    $MYSQL -u root --password=$rt_passwd -e "drop database sourceforge" 2>/dev/null
-    [ $? -eq 1 ] && $MYSQL -u root -e "drop database sourceforge"
-    while [ $? -eq 1 ]; do
-	read -p "I need MySQL root password to delete the sourceforge DB: " old_passwd
-	$MYSQL -u root --password=$old_passwd -e "drop database sourceforge"
-    done
+    $MYSQL -u root $pass_opt -e "drop database sourceforge"
 fi
 
 if [ ! -d "/var/lib/mysql/sourceforge" ]; then
     freshdb=1
-    $MYSQL -e "create database sourceforge"
-    $CAT <<EOF | $MYSQL mysql
+    $MYSQL -u root $pass_opt -e "create database sourceforge"
+    $CAT <<EOF | $MYSQL -u root mysql $pass_opt
 GRANT ALL PRIVILEGES on sourceforge.* to sourceforge@localhost identified by '$sf_passwd';
 GRANT ALL PRIVILEGES on *.* to root@localhost identified by '$rt_passwd';
 FLUSH PRIVILEGES;
