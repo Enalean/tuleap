@@ -671,11 +671,15 @@ class ArtifactReportHtml extends ArtifactReport {
                 while ($arr = db_fetch_array($reports)) {
                     
                     echo '<TR class="'. util_get_alt_row_color($i) .'"><TD>';
-                    
-                    echo '<A HREF="/tracker/admin/?func=report&group_id='.$group_id.
+
+                    if ( $arr['scope'] == 'S' || (!$ath->userIsAdmin()&&($arr['scope'] == 'P')) ) {
+		      echo $arr['report_id'];
+		    } else {
+		      echo '<A HREF="/tracker/admin/?func=report&group_id='.$group_id.
                             '&show_report=1&report_id='.$arr['report_id'].'&group_id='.$group_id.'&atid='.$ath->getID().'">'.
                             $arr['report_id'].'</A>';
-                    
+                    }
+
                     echo "</td>\n<td>".$arr['name'].'</td>'.
                         "\n<td>".$arr['description'].'</td>'.
                         "\n<td align=\"center\">".$this->getScopeLabel($arr['scope']).'</td>'.
