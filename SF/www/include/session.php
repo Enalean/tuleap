@@ -85,7 +85,7 @@ function session_cookie($n,$v, $expire = 0) {
     // Make sure there isn't a port number in the default domain name
     // or the setcookie for the entire domain won't work
     list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
-    setcookie($n,$v,$expire,'/','.'.$host,0);
+    setcookie($n,$v,$expire,'/',$host,0);
 }
 
 function session_redirect($loc) {
