@@ -205,6 +205,11 @@ INSERT INTO survey_question_types (id, type) VALUES (4,'Comment Only');
 INSERT INTO survey_question_types (id, type) VALUES (5,'Text Field');
 INSERT INTO survey_question_types (id, type) VALUES (100,'None');
 
+#
+# Developer survey attached to project #1, default status is inactive
+#
+INSERT INTO surveys (survey_id, group_id, survey_title, is_active) VALUES (1,1,'Developer Survey',0);
+ 
 
 #
 # Default data for Software Map
