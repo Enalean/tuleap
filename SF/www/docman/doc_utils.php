@@ -29,6 +29,20 @@ function display_groups_option($group_id=false,$checkedval='xyxy') {
 } //end display_groups_option
 
 
+function groups_defined($group_id) {
+	// return true if a group other than None is defined
+	$query = "select * "
+		."from doc_groups "
+		."where group_id = '$group_id'";
+	$result = db_query($query);
+	
+	if (db_numrows($result) < 1) {
+	  return false;
+	}
+	return true;
+}
+
+
 function display_groups($group_id) {
 	// show list of groups to edit.
 	$query = "select * "

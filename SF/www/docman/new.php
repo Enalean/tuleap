@@ -100,6 +100,9 @@ if($group_id) {
 		if ($user == 100) {
   			print "<p>You are not logged in, and will not be given credit for this.<p>";
 		}
+		if (!groups_defined($group_id)) {
+		  echo "<p>You have to specify document groups before submitting a new document. Click on <a href=\"/docman/admin/index.php?group_id=".$group_id."\">Admin</a></b> and edit the projects document groups. <p>";
+		}
 
 		echo '
 			<form name="adddata" action="new.php?mode=add&group_id='.$group_id.'" method="POST" enctype="multipart/form-data">
