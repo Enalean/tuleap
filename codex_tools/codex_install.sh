@@ -666,9 +666,17 @@ $CHMOD a+rx,g+ws $MAILMAN_DIR
 $MAILMAN_DIR/bin/check_perms -f
 $MAILMAN_DIR/bin/mmsitepass $mm_passwd
 $LN -sf $MAILMAN_DIR /usr/local/mailman
-todo "Edit $MAILMAN_DIR/Mailman/mm_cfg.py and setup DEFAULT_HOST_NAME\n\
-and DEFAULT_URL variables, and insert add_virtualhost(DEFAULT_URL_HOST, DEFAULT_EMAIL_HOST).(overrides Defaults.py settings). Recompile with python -O mm_cfg.py"
-todo "Create a site-wide mailing list: in $MAILMAN_DIR, type 'bin/newlist mailman', then 'bin/config_list -i data/sitelist.cfg mailman', and don't forget to subscribe to this ML'."
+
+# Update Mailman config
+$CAT <<EOF >> $MAILMAN_DIR/Mailman/mm_cfg.py
+DEFAULT_EMAIL_HOST = 'lists.$sys_default_domain'
+DEFAULT_URL_HOST = 'lists.$sys_default_domain'
+add_virtualhost(DEFAULT_URL_HOST, DEFAULT_EMAIL_HOST)
+EOF
+# Compile file
+`python -O $MAILMAN_DIR/Mailman/mm_cfg.py`
+
+todo "Mailman: Create a site-wide mailing list: in $MAILMAN_DIR, type 'bin/newlist mailman', then 'bin/config_list -i data/sitelist.cfg mailman', and don't forget to subscribe to this ML'."
 
 ##############################################
 # Installing and configuring Sendmail

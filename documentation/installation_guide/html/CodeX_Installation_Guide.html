@@ -1096,11 +1096,11 @@ CodeX uses sendmail as Mail transfer agent but it is possible to use
 any other MTA like Postfix, Exim or other. You need to setup <br>
 <br>
 <h2>Sendmail settings</h2>
-<u>In /etc/sendmail.cf:</u><br>
+<u>In /etc/mail/sendmail.cf:</u><br>
 <ul>
   <li>Set Cw to codex.xerox.com (or change the domain name to your own)</li>
   <li>Set DM to codex.xerox.com (this is what we masquerade as)</li>
-  <li>Aliases files are:<br>
+  <li>Aliases files should have been automatically set up. They are:<br>
     <pre>O AliasFile=/etc/aliases,/etc/aliases.codex</pre>
   </li>
 </ul>
@@ -1173,11 +1173,11 @@ Create a "site-wide" mailing list.  This is the one that password reminders will
 </pre>
 Be sure to subscribe yourself to the site list with the web admin interface.
 <br>
-You must also override some Mailman variable settings, most notably the
-DEFAULT_EMAIL_HOST and&nbsp; DEFAULT_URL_HOST. Look at their original
+You must also override some Mailman variable settings, most notably set the
+DEFAULT_EMAIL_HOST and&nbsp; DEFAULT_URL_HOST to lists.codex.xerox.com. Look at their original
 definition in <span style="font-family: monospace;">/home/mailman/Mailman/Defaults.py</span>
 and redefine them in <span style="font-family: monospace;">/home/mailman/Mailman/mm_cfg.py.</span>
-If you change either variable in your mm_cfg.py, then be sure to also include the following:
+When you change either variable in your mm_cfg.py, then be sure to also include the following:
 <pre>
      add_virtualhost(DEFAULT_URL_HOST, DEFAULT_EMAIL_HOST)
 </pre>

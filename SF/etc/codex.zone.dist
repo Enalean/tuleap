@@ -86,7 +86,7 @@ localhost       IN      A       127.0.0.1
 %sys_shortname%                      	IN	A	%sys_ip_address%
 
 %sys_default_domain%.		IN	MX	0	%sys_fullname%.
-%sys_default_domain%.		IN	MX	10	%%referral. ; e.g. 'mailhost.grenoble.xrce.xerox.com.'
+;%sys_default_domain%.		IN	MX	10	%%referral. ; uncomment if needed. e.g. 'mailhost.grenoble.xrce.xerox.com.'
 ;
 www                             IN      CNAME   %sys_shortname%
 cvs                             IN      CNAME   %sys_shortname%
@@ -99,7 +99,7 @@ shell1                          IN      CNAME   %sys_shortname%
 users                           IN      CNAME   %sys_shortname%
 lists                           IN      A   %sys_ip_address%
 				IN	MX	0	lists.%sys_default_domain%.
-				IN	MX	10	%%referral. ; e.g. 'mailhost.grenoble.xrce.xerox.com.'
+;				IN	MX	10	%%referral. ; uncomment if needed e.g. 'mailhost.grenoble.xrce.xerox.com.'
 
 ;
 ; *** From here out is auto-generated ***
