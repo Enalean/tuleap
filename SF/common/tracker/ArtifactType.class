@@ -340,7 +340,8 @@ class ArtifactType extends Error {
 	 *	  @return	int	The count.
 	 */
 	function getOpenCount() {
-		return $this->data_array['open_count'];
+            $count=$this->data_array['open_count'];
+            return ($count?$count:0);
 	}
 
 	/**
@@ -349,7 +350,8 @@ class ArtifactType extends Error {
 	 *	  @return	int	The total count.
 	 */
 	function getTotalCount() {
-		return $this->data_array['count'];
+            $count=$this->data_array['count'];
+            return ($count?$count:0);
 	}
 
 	/**
