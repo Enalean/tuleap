@@ -706,7 +706,7 @@ Once upload is completed check the boxes of the files that goes into your new pr
 	<INPUT TYPE="TEXT" NAME="release_name" VALUE="" SIZE="20" MAXLENGTH="25">
 	<P>
 	<B>New Release of Which Package:</B>
-	'. frs_show_package_popup ($group_id,'package_id') .'
+	'. frs_show_package_popup ($group_id,'package_id',$package_id) .'
 	<P>
 	<INPUT TYPE="SUBMIT" NAME="submit" VALUE="Create This Release">
 	</FORM>';
