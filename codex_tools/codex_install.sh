@@ -684,6 +684,10 @@ $CAT <<EOF >> $MAILMAN_DIR/Mailman/mm_cfg.py
 DEFAULT_EMAIL_HOST = 'lists.$sys_default_domain'
 DEFAULT_URL_HOST = 'lists.$sys_default_domain'
 add_virtualhost(DEFAULT_URL_HOST, DEFAULT_EMAIL_HOST)
+
+# Remove images from Mailman pages (GNU, Python and Mailman logos)
+IMAGE_LOGOS = 0
+
 EOF
 # Compile file
 `python -O $MAILMAN_DIR/Mailman/mm_cfg.py`
