@@ -1172,6 +1172,7 @@ todo "  - register_globals = On"
 todo "  - memory_limit = 30M"
 todo "  - post_max_size = 20M"
 todo "  - upload_max_file_size = 20M"
+todo "  - include_path = /home/httpd/SF/www/include"
 # things to do by hand
 todo "Change the default login shell if needed in the database (/sbin/nologin or /usr/local/bin/cvssh, etc."
 

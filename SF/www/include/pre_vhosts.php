@@ -15,25 +15,25 @@
 require(getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/conf/local.inc');
 
 //library to determine browser settings
-require($DOCUMENT_ROOT.'/include/browser.php');
+require('browser.php');
 
 //base error library for new objects
-require($DOCUMENT_ROOT.'/../common/include/Error.class');
+require('../../common/include/Error.class');
 
 //database abstraction
-require($DOCUMENT_ROOT.'/include/database.php');
+require('database.php');
 
 //security library
-require($DOCUMENT_ROOT.'/include/session.php');
+require('session.php');
 
 //user functions like get_name, logged_in, etc
-require($DOCUMENT_ROOT.'/include/user.php');
+require('user.php');
 
 //group functions like get_name, etc
-require($DOCUMENT_ROOT.'/include/Group.class');
+require('Group.class');
 
 //Project extends Group and includes preference accessors
-require($DOCUMENT_ROOT.'/include/Project.class');
+require('Project.class');
 
 // #### Connect to db
 
