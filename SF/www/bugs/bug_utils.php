@@ -560,7 +560,7 @@ function show_buglist ($result,$offset,$total_rows,$field_arr,$title_arr,
 		if ($nolink)
 		    echo "<TD $width>$value</TD>\n";
 		else
-		    echo "<TD $width><A HREF=\"/users/$value\">$value</A></TD>\n";
+		    echo "<TD $width>".util_user_link($value)."</TD>\n";
 		
 	    } else if (bug_data_is_select_box($field_arr[$j])) {
 		echo "<TD $width>". bug_data_get_cached_field_value($field_arr[$j], $group_id, $value) .'</TD>'."\n";
@@ -926,7 +926,7 @@ function show_attached_files ($bug_id,$group_id) {
 		db_result($result, $i, 'filename').'</a></td>'.
 		'<td>'.db_result($result, $i, 'description').'</td>'.
 		'<td align="center">'.intval(db_result($result, $i, 'filesize')/1024).' KB</td>'.
-		'<td align="center"><a href="/users/'.$submitted_by.'">'.$submitted_by.'</a></td>'.
+		'<td align="center">'.util_user_link($submitted_by).'</td>'.
 		'<td align="center">'.date($sys_datefmt,db_result($result, $i, 'date')).'</td>';
 
 	    if (user_ismember($group_id,'B2')) {
