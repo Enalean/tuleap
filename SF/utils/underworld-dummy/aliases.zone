@@ -10,9 +10,8 @@
 
 # Codex wide aliases
 
-codex-admin:          Laurent.Julliard@xrce.xerox.com,tuttle@wrc.xerox.com,salexander@crt.xerox.com,ghudson@crt.xerox.com,PEarnshaw@crt.xerox.com,FWelker@crt.xerox.com
+codex-contact:         codex-admin 
 
-codex-contact:		codex-admin
 sourceforge:		codex-admin
 noreply:		"|gotohell"
 webmaster:		codex-admin
