@@ -189,7 +189,7 @@ class ArtifactTypeHtml extends ArtifactType {
 					    $arr['name'],
 					    '<input type="text" name="delay_date" value="'.date("Y-m-d",$arr['deletion_date']).'"><a href="javascript:show_calendar(\'document.cal.delay_date\',document.cal.delay_date.value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');"><img src="'.util_get_image_theme("calendar/cal.png").'"  border="0"></a>',
 					    '<a href="javascript: var delay = document.cal.delay_date.value; document.location=\'/tracker/admin/restore.php?func=delay&group_id='.$arr['group_id'].'&atid='.$arr['group_artifact_id'].'&delay_date=\'+delay;"><img src="'.util_get_image_theme("ic/save16b.png").'" border="0" onClick="return confirm(\''.$Language->getText('tracker_include_type','delay_deletion').'\')"></a>',
-					    "<a href=\"/tracker/admin/restore.php?func=restore&group_id=".$arr['group_id']."&atid=".$arr['group_artifact_id']."\"><img src=\"".util_get_image_theme("ic/convert.png")."\" border=\"0\" onClick=\"return confirm('".$Language->getText('tracker_include_type','restore')."')\"></a>",
+					    "<a href=\"/tracker/admin/restore.php?func=restore&group_id=".$arr['group_id']."&atid=".$arr['group_artifact_id']."\"><img src=\"".util_get_image_theme("ic/convert.png")."\" border=\"0\" onClick=\"return confirm('".$Language->getText('tracker_include_type','restore_tracker')."')\"></a>",
 					    "<a href=\"/tracker/admin/restore.php?func=delete&group_id=".$arr['group_id']."&atid=".$arr['group_artifact_id']."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('".$Language->getText('tracker_include_type','warning')."')\"></a>" );
 			$i=0;
 			}
@@ -2040,7 +2040,7 @@ class ArtifactTypeHtml extends ArtifactType {
                 <P>';
                 if ( !$ro ) {
                         echo '
-                        <B>'.$Language->getText('tracker_include_artifact','aid').'</B>&nbsp;
+                        <B>'.$Language->getText('tracker_include_artifact','aids').'</B>&nbsp;
                         <input type="text" name="artifact_id_dependent" size="20" maxlength="255">
                         &nbsp;<i>'.$Language->getText('tracker_include_artifact','fill').'</i><p>';
                 }
@@ -2202,7 +2202,7 @@ class ArtifactTypeHtml extends ArtifactType {
               	$title_arr[]=$Language->getText('tracker_include_artifact','artifact');
                 $title_arr[]=$Language->getText('tracker_include_artifact','summary');
                 $title_arr[]=$Language->getText('tracker_import_admin','tracker');
-                $title_arr[]=$Language->getText('tracker_import_admin','group');
+                $title_arr[]=$Language->getText('tracker_include_artifact','group');
                 $title_arr[]=$Language->getText('tracker_include_type','occurrence');
                 $title_arr[]=$Language->getText('tracker_include_canned','delete');
                 $out .= html_build_list_table_top ($title_arr);

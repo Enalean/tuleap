@@ -9,15 +9,17 @@
 
 require_once('common/include/LDAP.class');
 
+//$Language->loadLanguageMsg('include/include');
+
 $G_SESSION=array();
 $G_USER=array();
 
 function session_login_valid($form_loginname,$form_pw,$allowpending=0)  {
-    global $session_hash,$feedback;
+  global $session_hash,$feedback,$Language;
     $usr=null;
 
     if (!$form_loginname || !$form_pw) {
-        $feedback = 'Missing Password Or User Name';
+        $feedback = $Language->getText('include_session','missing_pwd');
         return array(false,'');
     }
 
@@ -33,7 +35,7 @@ function session_login_valid($form_loginname,$form_pw,$allowpending=0)  {
                         . "ldap_name='$form_loginname'");
         if (!$res || db_numrows($res) < 1) {
             //invalid user_name
-            //$feedback='Invalid LDAP User Name';
+            //$feedback=$Language->getText('include_session','invalid_ldap_name');
             //return false;
         } else {
             $use_ldap_auth=true;
@@ -48,7 +50,7 @@ function session_login_valid($form_loginname,$form_pw,$allowpending=0)  {
         $ldap = new LDAP();
         if (!$ldap->authenticate($form_loginname,$form_pw)) {
             // password is invalid or user does not exist
-            $feedback = $GLOBALS['sys_org_name'].' Directory Authentication: '.$ldap->getErrorMessage();
+            $feedback = $GLOBALS['sys_org_name'].' '.$Language->getText('include_session','dir_authent').': '.$ldap->getErrorMessage();
             return array(false,$status);
         }
     } else {
@@ -60,7 +62,7 @@ function session_login_valid($form_loginname,$form_pw,$allowpending=0)  {
 		. "AND user_pw='" . md5($form_pw) . "'");
 	if (!$res || db_numrows($res) < 1) {
 		//invalid password or user_name
-		$feedback='Invalid Password Or User Name';
+		$feedback=$Language->getText('include_session','missing_pwd');
 		return array(false,'');
 	} 
 
@@ -68,7 +70,7 @@ function session_login_valid($form_loginname,$form_pw,$allowpending=0)  {
 
         if (($GLOBALS['sys_auth_type'] == 'ldap')&&($usr['ldap_name'])) {
             // The user MUST use his LDAP login if it exists
-            $feedback=' Please use your ldap login:'.$usr['ldap_name'];
+            $feedback=' '.$Language->getText('include_session','use_ldap_login').':'.$usr['ldap_name'];
             return array(false,$status);
         } 
     }
@@ -82,22 +84,22 @@ function session_login_valid($form_loginname,$form_pw,$allowpending=0)  {
     } else {
         if ($status == 'S') { 
             //acount suspended
-            $feedback = 'Account Suspended';
+            $feedback = $Language->getText('include_session','account_suspended');
             return array(false,$status);
         }
         if ($status == 'P') { 
             //account pending
-            $feedback = 'Account Pending';
+            $feedback = $Language->getText('include_session','account_pending');
             return array(false,$status);
         } 
         if ($status == 'D') { 
             //account deleted
-            $feedback = 'Account Deleted';
+            $feedback = $Language->getText('include_session','account_deleted');
             return array(false,$status);
         }
         if (($status != 'A')&&($status != 'R')) {
             //unacceptable account flag
-            $feedback = 'Account Not Active';
+            $feedback = $Language->getText('include_session','account_not_active');
             return array(false,$status);
         }
     }
@@ -149,6 +151,7 @@ function session_redirect($loc) {
 }
 
 function session_require($req) {
+  global $Language;
 	/*
 		SF admins always return true
 	*/
@@ -164,25 +167,20 @@ function session_require($req) {
 		}
  
 		if ((db_numrows(db_query($query)) < 1) || !$req['group']) {
-			exit_error("Insufficient Group Access","You do not have permission to "
-				. "view this page.");
+			exit_error($Language->getText('include_session','insufficient_g_access'),$Language->getText('include_session','no_perm_to_view'));
 		}
 	}
 	elseif ($req['user']) {
 		if (user_getid() != $req['user']) {	
-			exit_error("Insufficient User Access","You do not have permission to "
-				. "view this page.");
+			exit_error($Language->getText('include_session','insufficient_u_access'),$Language->getText('include_session','no_perm_to_view'));
 		}
 	}
 	elseif ($req['isloggedin']) {
 		if (!user_isloggedin()) {
-			exit_error("Required Login","In order to view this page, you must "
-				. "be logged in.");
+			exit_error($Language->getText('include_session','required_login'),$Language->getText('include_session','login'));
 		}
 	} else {
-		exit_error("Insufficient Access","Probably by mangling a URL, you have attempted "
-			. "to reach a part of the site for which you do not have access. This can "
-			. "probably be fixed by properly navigating through the site.");
+		exit_error($Language->getText('include_session','insufficient_access'),$Language->getText('include_session','no_access'));
 	}
 }
 
@@ -206,7 +204,7 @@ function session_setglobals($user_id) {
 }
 
 function session_set_new($user_id) {
-	global $G_SESSION;
+  global $G_SESSION,$Language;
 	$lifetime = 3600*24*183; // about 6 months
 
 //	unset($G_SESSION);
@@ -240,7 +238,7 @@ function session_set_new($user_id) {
 	$res=db_query("SELECT * FROM session WHERE session_hash='$GLOBALS[session_hash]'");
 	if (db_numrows($res) > 1) {
 		db_query("DELETE FROM session WHERE session_hash='$GLOBALS[session_hash]'");
-		exit_error("ERROR","ERROR - two people had the same hash - backarrow and re-login. It should never happen again");
+		exit_error($Language->getText('global','error'),$Language->getText('include_session','hash_err'));
 	} else {
 		$G_SESSION = db_fetch_array($res);
 		session_setglobals($G_SESSION['user_id']);

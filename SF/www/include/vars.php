@@ -6,22 +6,24 @@
 //
 // $Id$
 
+require_once('pre.php');
 
 $LICENSE = array();
-$LICENSE['xrx'] = $GLOBALS['sys_org_name'].' Code eXchange Policy';
-$LICENSE['website'] = 'WebSite Only';
-$LICENSE['other'] = 'Other';
-$LICENSE['---'] = '--- For COMIP approved Open Source projects ---';
-$LICENSE['gpl'] = 'GNU General Public License (GPL)';
-$LICENSE['lgpl'] = 'GNU Library Public License (LGPL)';
-$LICENSE['bsd'] = 'BSD License';
-$LICENSE['mit'] = 'MIT/X Consortium License';
-$LICENSE['artistic'] = 'Artistic License';
-$LICENSE['mpl'] = 'Mozilla Public License';
-//$LICENSE['qpl'] = 'Qt Public License';
-//$LICENSE['ibm'] = 'IBM Public License';
-//$LICENSE['python'] = 'Python License';
-$LICENSE['public'] = 'Public Domain';
+$LICENSE['xrx'] = $Language->getText('include_vars','policy',$GLOBALS['sys_org_name']);
+$LICENSE['website'] = $Language->getText('include_vars','website_only');
+$LICENSE['other'] = $Language->getText('include_vars','other');
+$LICENSE['---'] = '--- '.$Language->getText('include_vars','comip').' ---';
+$LICENSE['gpl'] = $Language->getText('include_vars','gpl');
+$LICENSE['lgpl'] = $Language->getText('include_vars','lgpl');
+$LICENSE['bsd'] = $Language->getText('include_vars','bsdl');
+$LICENSE['mit'] = $Language->getText('include_vars','mitxl');
+$LICENSE['artistic'] = $Language->getText('include_vars','artistic_l');
+$LICENSE['mpl'] = $Language->getText('include_vars','moz_l');
+//$LICENSE['qpl'] = $Language->getText('include_vars','qtp_l');
+//$LICENSE['ibm'] = $Language->getText('include_vars','ibm_l');
+//$LICENSE['python'] = $Language->getText('include_vars','p_l');
+$LICENSE['public'] = $Language->getText('include_vars','public_domain');
+
 
 /*
 
@@ -30,17 +32,17 @@ $LICENSE['public'] = 'Public Domain';
 //
 
 $SOFTENV = array();
-$SOFTENV[1] = 'Other Environment';
+$SOFTENV[1] = $Language->getText('include_vars','other_env');
 $SOFTENV[2] = 'Linux/Unix Console';
 $SOFTENV[3] = 'Linux/Unix X/Graphical';
 $SOFTENV[4] = 'Windows';
-$SOFTENV[5] = 'Web Environment';
+$SOFTENV[5] = $Language->getText('include_vars','web_env');
 $SOFTENV[6] = 'MacOS';
 $SOFTENV[7] = 'PalmOS';
 $SOFTENV[8] = 'BeOS';
 
 $SOFTLANG = array();
-$SOFTLANG[1] = 'Other Language';
+$SOFTLANG[1] = $Language->getText('include_vars','other_lang');
 $SOFTLANG[2] = 'C';
 $SOFTLANG[3] = 'C++';
 $SOFTLANG[4] = 'Perl';

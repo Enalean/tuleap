@@ -19,7 +19,7 @@ $Language->loadLanguageMsg('svn/svn');
 if ($post_changes) {
     $ret = svn_data_update_notification($group_id,$form_mailing_list,$form_mailing_header);
     if ($ret) {
-	$feedback = $Language->getText('svn_admin_notification','upd_succ');
+	$feedback = $Language->getText('svn_admin_notification','upd_success');
     } else {
 	$feedback = $Language->getText('svn_admin_notification','upd_fail',db_error());
     }

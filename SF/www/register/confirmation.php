@@ -70,7 +70,7 @@ if ($show_confirm) {
 		. "2," // doc flags
 		. "2)"); // file_flags	
 	if (!$result) {
-		exit_error($Language->getText('global','error'),$Language->getText('register_confirmation','set_owner',array($GLOBALS['sys_email_admin'],db_error())));
+		exit_error($Language->getText('global','error'),$Language->getText('register_confirmation','set_owner_fail',array($GLOBALS['sys_email_admin'],db_error())));
 	}
 
 	//Add a couple of forums for this group and make the project creator 

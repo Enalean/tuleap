@@ -8,30 +8,30 @@
 
 
 function show_features_boxes() {
-	GLOBAL $HTML;
-	$return .= $HTML->box1_top($GLOBALS['sys_name'].' Statistics',0);
+  GLOBAL $HTML,$Language;
+	$return .= $HTML->box1_top($GLOBALS['sys_name'].' '.$Language->getText('include_features_boxes','stats'),0);
 	$return .= show_sitestats();
-	$return .= $HTML->box1_middle('Top Downloads Yesterday');
+	$return .= $HTML->box1_middle($Language->getText('include_features_boxes','top_download_yesterday'));
 	$return .= show_top_downloads();
-	$return .= $HTML->box1_middle('Newest Releases <A href="/export/rss_sfnewreleases.php" title="Newest Releases - RSS Format">[XML]</A>');
+	$return .= $HTML->box1_middle($Language->getText('include_features_boxes','newest_releases').' <A href="/export/rss_sfnewreleases.php" title="'.$Language->getText('include_features_boxes','newest_releases').' '.$Language->getText('include_features_boxes','rss_format').'">['.$Language->getText('include_features_boxes','xml').']</A>');
 	$return .= show_newest_releases();
-	$return .= $HTML->box1_middle('Newest Projects <A href="/export/rss_sfprojects.php?type=rss&option=newest" title="Newest Projects - RSS Format">[XML]</A>');
+	$return .= $HTML->box1_middle($Language->getText('include_features_boxes','newest_projects').' <A href="/export/rss_sfprojects.php?type=rss&option=newest" title="'.$Language->getText('include_features_boxes','newest_projects').' '.$Language->getText('include_features_boxes','rss_format').'">['.$Language->getText('include_features_boxes','xml').']</A>');
 	$return .= show_newest_projects();
-	$return .= $HTML->box1_middle('Most Active This Week');
+	$return .= $HTML->box1_middle($Language->getText('include_features_boxes','most_active_week'));
 	$return .= show_highest_ranked_projects();
 	$return .= $HTML->box1_bottom(0);
 	return $return;
 }
 
 function foundry_features_boxes($group_id) {
-	GLOBAL $HTML;
+  GLOBAL $HTML,$Language;
 	$comma_sep_groups=$GLOBALS['foundry']->getProjectsCommaSep();
 
-	$return .= $HTML->box1_top('Most Active',0);
+	$return .= $HTML->box1_top($Language->getText('include_features_boxes','most_active'),0);
 	$return .= foundry_active_projects($comma_sep_groups);
-	$return .= $HTML->box1_middle('Top Downloads');
+	$return .= $HTML->box1_middle($Language->getText('include_features_boxes','top_downloads'));
 	$return .= foundry_top_downloads($comma_sep_groups);
-	$return .= $HTML->box1_middle('Featured Projects');
+	$return .= $HTML->box1_middle($Language->getText('include_features_boxes','featured_projects'));
 	$return .= foundry_featured_projects($group_id);
 	$return .= $HTML->box1_bottom(0);
 	return $return;
@@ -60,6 +60,7 @@ function foundry_active_projects($comma_sep_groups) {
 }
 
 function foundry_featured_projects($group_id) {
+  global $Language;
 	$sql="SELECT groups.group_name,groups.unix_group_name,".
 		"groups.group_id,foundry_preferred_projects.rank ".
 		"FROM groups,foundry_preferred_projects ".
@@ -71,7 +72,7 @@ function foundry_featured_projects($group_id) {
 	$rows=db_numrows($res_grp);
 
 	if (!$res_grp || $rows < 1) {
-		$return .= 'No Projects';
+		$return .= $Language->getText('include_features_boxes','no_projects');
 //		$return .= db_error();
 	} else {
 		for ($i=0; $i<$rows; $i++) {
@@ -84,8 +85,8 @@ function foundry_featured_projects($group_id) {
 }
 
 function foundry_top_downloads($comma_sep_groups) {
-
-	$return .= "<B>Downloads Yesterday:</B>\n";
+  global $Language;
+	$return .= "<B>".$Language->getText('include_features_boxes','downloads_yesterday').":</B>\n";
 	
 	#get yesterdays day
 	$yesterday = date("Ymd",time()-(3600*24));
@@ -111,14 +112,14 @@ function foundry_top_downloads($comma_sep_groups) {
 				. "$row_topdown[group_name]</A> ($row_topdown[downloads])\n";
 		}
 	}
-	//$return .= '<P align="center"><A href="/top/">[ More ]</A>';
+	//$return .= '<P align="center"><A href="/top/">[ '.$Language->getText('include_features_boxes','more').' ]</A>';
 	
 	return $return; 
 
 }
 
 function show_top_downloads() {
-
+  global $Language;
 	// Get time for today and yesterday at midnight
 	$end_time = mktime(0,0,0);
 	$start_time = $end_time - 86400;
@@ -144,14 +145,14 @@ function show_top_downloads() {
 			$return .= "($row_topdown[downloads]) <A href=\"/projects/$row_topdown[unix_group_name]/\">"
 			. "$row_topdown[group_name]</A><BR>\n";
 	}
-	$return .= '<center><A href="/top/">[ More ]</A></center>';
+	$return .= '<center><A href="/top/">[ '.$Language->getText('include_features_boxes','more').' ]</A></center>';
 	
 	return $return;
 
 }
 
 function show_newest_releases() {
-
+  global $Language;
     // Fetch releases that are no more than 3 months old
     $query	= "SELECT groups.group_name AS group_name,"
 	. "groups.group_id AS group_id,"
@@ -183,7 +184,7 @@ function show_newest_releases() {
 	$DONE[$row_newrel[group_id]] = true;
     }
 
-    $return .= '<center><A href="/new/?func=releases">[ More ]</A></center>';
+    $return .= '<center><A href="/new/?func=releases">[ '.$Language->getText('include_features_boxes','more').' ]</A></center>';
 	
     return $return;
 
@@ -240,14 +241,16 @@ function stats_downloads_total() {
 }
 
 function show_sitestats() {
-	$return .= 'Hosted Projects: <B>'.number_format(stats_getprojects_active()).'</B>';
-	$return .= '<BR>Registered Users: <B>'.number_format(stats_getusers()).'</B>';
-	$return .= '<BR>Files Downloaded: <B>'.number_format(stats_downloads_total()).'</B>';
-	$return .= '<BR>Pages Viewed: <B>'.number_format(stats_getpageviews_total()).'</B>&nbsp;';
+  global $Language;
+	$return .= $Language->getText('include_features_boxes','hosted_projects').': <B>'.number_format(stats_getprojects_active()).'</B>';
+	$return .= '<BR>'.$Language->getText('include_features_boxes','registered_users').': <B>'.number_format(stats_getusers()).'</B>';
+	$return .= '<BR>'.$Language->getText('include_features_boxes','files_download').': <B>'.number_format(stats_downloads_total()).'</B>';
+	$return .= '<BR>'.$Language->getText('include_features_boxes','pages_viewed').': <B>'.number_format(stats_getpageviews_total()).'</B>&nbsp;';
 	return $return;
 }
 
 function show_newest_projects() {
+  global $Language;
 	$sql =	"SELECT group_id,unix_group_name,group_name,register_time FROM groups " .
 		"WHERE is_public=1 AND status='A' AND type=1 " .
 		"AND register_time < " . strval(time()-(24*3600)) . " " . 
@@ -264,12 +267,13 @@ function show_newest_projects() {
 				. "$row_newproj[group_name]</A><BR>\n";
 			}
 		}
-		$return .= '<CENTER><A href="/new/?func=projects">[ More ]</A></CENTER>';
+		$return .= '<CENTER><A href="/new/?func=projects">[ '.$Language->getText('include_features_boxes','more').' ]</A></CENTER>';
 	}
 	return $return;
 }
 
 function show_highest_ranked_projects() {
+  global $Language;
 	$sql="SELECT groups.group_name,groups.unix_group_name,groups.group_id,".
 		"project_weekly_metric.ranking,project_weekly_metric.percentile ".
 		"FROM groups,project_weekly_metric ".
@@ -285,7 +289,7 @@ function show_highest_ranked_projects() {
 				.' <A HREF="/projects/'.$row['unix_group_name'].
 			'/">'.$row['group_name'].'</A><BR>';
 		}
-		$return .= '<CENTER><A href="/top/mostactive.php?type=week">[ More ]</A></CENTER>';
+		$return .= '<CENTER><A href="/top/mostactive.php?type=week">[ '.$Language->getText('include_features_boxes','more').' ]</A></CENTER>';
 	}
 	return $return;
 }

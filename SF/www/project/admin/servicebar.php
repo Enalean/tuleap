@@ -207,7 +207,7 @@ if ($func=='do_update') {
     if (!$result) {
         exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','cant_update_s',db_error()));
     } else {
-        $feedback .= ' '.$Language->getText('project_admin_editservice','s_update_success').' ';
+        $feedback .= ' '.$Language->getText('project_admin_servicebar','s_update_success').' ';
     }
 
 }

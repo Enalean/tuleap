@@ -297,7 +297,7 @@ function ugroup_delete($group_id, $ugroup_id) {
         
     $result=db_query($sql);
     if (!$result || db_affected_rows($result) < 1) {
-        $feedback .= ' '.$Language->getText('project_admin_ugroup_utils','upd_fail',(db_error() ? db_error() : ' ' ));
+        $feedback .= ' '.$Language->getText('project_admin_editgroupinfo','upd_fail',(db_error() ? db_error() : ' ' ));
          return false;           
     }
     $feedback .= ' '.$Language->getText('project_admin_ugroup_utils','g_del').' ';

@@ -8,6 +8,8 @@
 
 require_once('www/project/admin/project_admin_utils.php');
 
+$Language->loadLanguageMsg('include/include');
+
 //we know $foundry is already set up from the root /foundry/ page
 
 
@@ -40,9 +42,9 @@ if (user_ismember($group_id,'A')) {
 				$result=db_query($sql);
 				if (!$result || db_affected_rows($result) < 1) {
 					echo db_error();
-					$feedback .= ' ERROR doing update ';
+					$feedback .= ' '.$Language->getText('include_foundry_news','upd_err').' ';
 				} else {
-					$feedback .= ' NewsByte Updated. ';
+					$feedback .= ' '.$Language->getText('include_foundry_news','newsbyte_upd').' ';
 				}
 			}
 
@@ -54,7 +56,7 @@ if (user_ismember($group_id,'A')) {
 		}
 	}
 
-	project_admin_header (array('title'=>'NewsBytes','group'=>$group_id));
+	project_admin_header (array('title'=>$Language->getText('include_foundry_news','newsbyte'),'group'=>$group_id));
 
 	if ($approve) {
 		/*
@@ -64,24 +66,24 @@ if (user_ismember($group_id,'A')) {
 		$sql="SELECT * FROM news_bytes WHERE id='$id'";
 		$result=db_query($sql);
 		if (db_numrows($result) < 1) {
-			exit_error('Error','Error - not found');
+			exit_error($Language->getText('global','error'),$Language->getText('include_foundry_news','not_found_err'));
 		}
 
 		echo '
-		<H3>Approve a NewsByte</H3>
+		<H3>'.$Language->getText('include_foundry_news','approve_newsbyte').'</H3>
 		<P>
 		<FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
 		<INPUT TYPE="HIDDEN" NAME="news_id" VALUE="'.db_result($result,0,'id').'">
-		<B>Submitted for Project:</B> '.group_getname(db_result($result,0,'group_id')).'<BR>
-		<B>Submitted by:</B> '.user_getname(db_result($result,0,'submitted_by')).'<BR>
+		<B>'.$Language->getText('include_foundry_news','submitted_for_proj').':</B> '.group_getname(db_result($result,0,'group_id')).'<BR>
+		<B>'.$Language->getText('include_foundry_news','submitted_by').':</B> '.user_getname(db_result($result,0,'submitted_by')).'<BR>
 		<INPUT TYPE="HIDDEN" NAME="approve" VALUE="y">
 		<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
-		<INPUT TYPE="RADIO" NAME="status" VALUE="1"> Approve For Foundry Page<BR>
-		<INPUT TYPE="RADIO" NAME="status" VALUE="0"> Unapprove<BR>
+		<INPUT TYPE="RADIO" NAME="status" VALUE="1"> '.$Language->getText('include_foundry_news','approve_for_foundry').'<BR>
+		<INPUT TYPE="RADIO" NAME="status" VALUE="0"> '.$Language->getText('include_foundry_news','unapprove').'<BR>
 		<INPUT TYPE="RADIO" NAME="status" VALUE="2" CHECKED> Delete<BR>
-		<B>Subject:</B><BR>
+		<B>'.$Language->getText('include_foundry_news','subject').':</B><BR>
 		'.db_result($result,0,'summary').'<BR>
-		<B>Details:</B><BR>
+		<B>'.$Language->getText('include_foundry_news','details').':</B><BR>
 		'. nl2br( db_result($result,0,'details') ) .'
 		<P>
 		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
@@ -146,10 +148,10 @@ if (user_ismember($group_id,'A')) {
 		if ($rows < 1) {
 			echo db_error();
 			echo '
-			<H4>No Queued Items Found</H1>';
+			<H4>'.$Language->getText('include_foundry_news','no_queued_items_found').'</H1>';
 		} else {
 			echo '
-			<H4>These items need to be approved</H4>
+			<H4>'.$Language->getText('include_foundry_news','items_need_approve').'</H4>
 			<P>';
 			for ($i=0; $i<$rows; $i++) {
 				echo '
@@ -168,10 +170,10 @@ if (user_ismember($group_id,'A')) {
 			if ($rows < 1) {
 				echo db_error();
 				echo '
-				<H4>No deleted items found for this week</H4>';
+				<H4>'.$Language->getText('include_foundry_news','no_deleted_items_this_week').'</H4>';
 			} else {
 				echo '
-				<H4>These items were deleted this past week</H4>
+				<H4>'.$Language->getText('include_foundry_news','items_deleted_past_week').'</H4>
 				<P>';
 				for ($i=0; $i<$rows; $i++) {
 					echo '
@@ -180,7 +182,7 @@ if (user_ismember($group_id,'A')) {
 			}
 		} else {
 			echo '
-			<H4>No deleted items found for this week</H4>';
+			<H4>'.$Language->getText('include_foundry_news','no_deleted_items_this_week').'</H4>';
 		}
 
 
@@ -194,10 +196,10 @@ if (user_ismember($group_id,'A')) {
 			if ($rows < 1) {
 				echo db_error();
 				echo '
-				<H4>No approved items found for this week</H4>';
+				<H4>'.$Language->getText('include_foundry_news','no_approved_items_this_week').'</H4>';
 			} else {
 				echo '
-				<H4>These items were approved this past week</H4>
+				<H4>'.$Language->getText('include_foundry_news','items_approved_past_week').'</H4>
 				<P>';
 				for ($i=0; $i<$rows; $i++) {
 					echo '
@@ -206,7 +208,7 @@ if (user_ismember($group_id,'A')) {
 			}
 		} else {
 			echo '
-			<H4>No approved items found for this week</H4>';
+			<H4>'.$Language->getText('include_foundry_news','no_approved_items_this_week').'</H4>';
 		}
 
 	}
@@ -214,7 +216,7 @@ if (user_ismember($group_id,'A')) {
 
 } else {
 
-	exit_error('Permission Denied.','Permission Denied. You have to be an admin on the project you are editing or a member of the SourceForge News team.');
+	exit_error($Language->getText('include_exit','perm_denied'),$Language->getText('include_foundry_news','need_to_be_proj_admin'));
 
 }
 

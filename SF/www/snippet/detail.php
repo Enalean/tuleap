@@ -155,7 +155,7 @@ if ($type=='snippet') {
             if ($snippet_category==100) {
 		$feedback .= ' '.$Language->getText('snippet_details','select_category').' ';
             } else if ($snippet_language==100) {
-		$feedback .= ' '.$Language->getText('snippet_details','select_language').' ';
+		$feedback .= ' '.$Language->getText('snippet_details','select_lang').' ';
             } else {
                 $sql="UPDATE snippet_package SET category=$snippet_category, language=$snippet_language, name='".
                     htmlspecialchars($snippet_name)."', description='".
@@ -281,7 +281,7 @@ if ($type=='snippet') {
 		Show a specific version of a package and its specific snippet versions
 	*/
 	
-	snippet_header(array('title'=>$Language->getText('snippet_browse','library')));
+	snippet_header(array('title'=>$Language->getText('snippet_browse','s_library')));
 
 	snippet_show_package_details($id);
 

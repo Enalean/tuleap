@@ -15,7 +15,7 @@ survey_header(array('title'=>$Language->getText('survey_s','s'),
 		    'help'=>'SurveyManager.html#PublishingaSurvey'));
 
 if (!$survey_id || !$group_id) {
-	echo "<H1>".$Language->getText('survey_s','g_id_err')."</H1>";
+	echo "<H1>".$Language->getText('survey_index','g_id_err')."</H1>";
 } else {
 
     // select this survey from the database

@@ -8,8 +8,10 @@
 
 require_once('HTML_Graphs.php');
 
+$Language->loadLanguageMsg('include/include');
+
 function stats_sf_stats() {
-	global $sys_datefmt;
+  global $sys_datefmt,$Language;
 /*
 	pages/day
 */
@@ -19,7 +21,7 @@ function stats_sf_stats() {
 	$rows = db_numrows($result);
 
 	if (!$result || $rows < 1) {
-		echo '<H1>Stats Problem</H1>';
+		echo '<H1>'.$Language->getText('include_stats_function','stats_problem').'</H1>';
 		echo db_error();
 	} else {
 		$j=0;
@@ -39,7 +41,7 @@ function stats_sf_stats() {
 		$j++;
 		$vals[$j]='';
 		$name_string[$j]='';
-		GraphIt($name_string,$vals,'Page Views By Week');
+		GraphIt($name_string,$vals,$Language->getText('include_stats_function','view_by_week'));
 	}
 
 	echo '<P>';
@@ -53,10 +55,10 @@ function stats_sf_stats() {
 	$rows = db_numrows($result);
 
 	if (!$result || $rows < 1) {
-		echo '<H1>Stats Problem</H1>';
+		echo '<H1>'.$Language->getText('include_stats_function','stats_problem').'</H1>';
 		echo db_error();
 	} else {
-		GraphResult($result,'Page Views By Hour');
+		GraphResult($result,$Language->getText('include_stats_function','view_by_hour'));
 	}
 	echo '<P>';
 */
@@ -69,7 +71,7 @@ function stats_sf_stats() {
 	$rows = db_numrows($result);
 
 	if (!$result || $rows < 1) {
-		echo '<H1>Stats Problem</H1>';
+		echo '<H1>'.$Language->getText('include_stats_function','stats_problem').'</H1>';
 		echo db_error();
 	} else {
 		$count=array();
@@ -80,7 +82,7 @@ function stats_sf_stats() {
 			//convert the dates and add to an array
 			$dates[$i]=format_date($sys_datefmt,db_result($result,$i,0));
 		}
-		GraphIt($dates,$count,'New Projects Added Each Week');
+		GraphIt($dates,$count,$Language->getText('include_stats_function','new_proj_added'));
 	}
 	echo '<P>';
 
@@ -92,7 +94,7 @@ function stats_sf_stats() {
 	$rows = db_numrows($result);
 
 	if (!$result || $rows < 1) {
-		echo '<H1>Stats Problem</H1>';
+		echo '<H1>'.$Language->getText('include_stats_function','stats_problem').'</H1>';
 		echo db_error();
 	} else {
 		$count=array();
@@ -103,7 +105,7 @@ function stats_sf_stats() {
 			//convert the dates and add to an array
 			$dates[$i]=format_date($sys_datefmt,db_result($result,$i,0));
 		}
-		GraphIt($dates,$count,'New Users Added Each Week');
+		GraphIt($dates,$count,$Language->getText('include_stats_function','new_user_added'));
 	}
 	echo '<P>';
 
@@ -111,6 +113,7 @@ function stats_sf_stats() {
 
 
 function stats_project_stats() {
+  global $Language;
 /*
 	logo impressions/day
 */
@@ -120,10 +123,10 @@ function stats_project_stats() {
 	$rows = db_numrows($result);
 
 	if (!$result || $rows < 1) {
-		echo '<H1>Stats Problem</H1>';
+		echo '<H1>'.$Language->getText('include_stats_function','stats_problem').'</H1>';
 		echo db_error();
 	} else {
-		GraphResult($result,'Logo Showings By Day');
+		GraphResult($result,$Language->getText('include_stats_function','logo_by_day'));
 	}
 
 	echo '<P>';
@@ -137,10 +140,10 @@ function stats_project_stats() {
 	$rows = db_numrows($result);
 
 	if (!$result || $rows < 1) {
-		echo '<H1>Stats Problem</H1>';
+		echo '<H1>'.$Language->getText('include_stats_function','stats_problem').'</H1>';
 		echo db_error();
 	} else {
-		GraphResult($result,'Logo Showings By Project');
+		GraphResult($result,$Language->getText('include_stats_function','logo_by_proj'));
 	}
 
 	echo '<P>';
@@ -149,6 +152,7 @@ function stats_project_stats() {
 
 
 function stats_browser_stats() {
+  global $Language;
 /*
 	Browser
 */
@@ -158,10 +162,10 @@ function stats_browser_stats() {
 	$rows = db_numrows($result);
 
 	if (!$result || $rows < 1) {
-		echo '<H1>Stats Problem</H1>';
+		echo '<H1>'.$Language->getText('include_stats_function','stats_problem').'</H1>';
 		echo db_error();
 	} else {
-		GraphResult($result,'Page Views By Browser');
+		GraphResult($result,$Language->getText('include_stats_function','view_by_browser'));
 	}
 	echo '<P>';
 
@@ -174,10 +178,10 @@ function stats_browser_stats() {
 	$rows = db_numrows($result);
 
 	if (!$result || $rows < 1) {
-		echo '<H1>Stats Problem</H1>';
+		echo '<H1>'.$Language->getText('include_stats_function','stats_problem').'</H1>';
 		echo db_error();
 	} else {
-		GraphResult($result,'Page Views By Platform');
+		GraphResult($result,$Language->getText('include_stats_function','view_by_platform'));
 	}
 	echo '<P>';
 
@@ -190,10 +194,10 @@ function stats_browser_stats() {
 	$rows = db_numrows($result);
 
 	if (!$result || $rows < 1) {
-		echo '<H1>Stats Problem</H1>';
+		echo '<H1>'.$Language->getText('include_stats_function','stats_problem').'</H1>';
 		echo db_error();
 	} else {
-		ShowResultSet($result,'Page Views By Platform/Browser Version');
+		ShowResultSet($result,$Language->getText('include_stats_function','view_by_platform_browser'));
 	}
 	echo '<P>';
 }

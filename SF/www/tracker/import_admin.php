@@ -44,7 +44,7 @@ if ($group_id && $mode == "admin") {
 
   $project=project_get_object($group_id);
   if (! $project->usesTracker()) {
-      echo '<P>'.$Language->getText('tracker_import_admin','disabled');
+      echo '<P> '.$Language->getText('tracker_import_admin','disabled');
       project_admin_footer(array());
   } else {
 

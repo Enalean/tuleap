@@ -31,7 +31,7 @@ db_query("UPDATE user SET "
 	. "email_new='" . $row_user['email'] . "' WHERE "
 	. "confirm_hash='$confirm_hash'");
 
-$HTML->header(array('title'=>$Language->getText('account_change_email-complete', 'title_complete')));
+$HTML->header(array('title'=>$Language->getText('account_change_email-complete', 'title')));
 ?>
 <p><b><?php echo $Language->getText('account_change_email-complete', 'title'); ?></b>
 <P><?php echo $Language->getText('account_change_email-complete', 'message',

@@ -44,13 +44,12 @@ if (register_valid()) {
 	$date = getdate(time());
 	$hoursleft = ($sys_crondelay - 1) - ($date[hours] % $sys_crondelay);
 	$minutesleft = 60 - $date[minutes];
-        echo $Language->getText('account_editsshkeys', 'important', array($hoursleft, $minutesleft));
+        echo "\n".$Language->getText('account_editsshkeys', 'important', array($hoursleft, $minutesleft));
 
 ?>
 
 <?php if ($register_error) print "<p>$register_error"; ?>
 <form action="editsshkeys.php" method="post">
-<p><?php echo $Language->getText('account_editsshkeys', 'title'); ?>
 <p><?php echo $Language->getText('account_editsshkeys', 'keys'); ?>
 <br><TEXTAREA rows=10 cols=60 name="form_authorized_keys">
 <?php

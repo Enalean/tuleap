@@ -12,6 +12,8 @@
 $FILE_ACCEPTED = getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/CODEX_LICENSE_ACCEPTED';
 $FILE_DECLINED = getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/CODEX_LICENSE_DECLINED';
 
+$Language->loadLanguageMsg('include/include');
+
 /**
  * Says whether the license terms have already been displayed or not
  *
@@ -46,14 +48,14 @@ function license_accepted() {
     $fp = @fopen($FILE_ACCEPTED,'a+');
 
     if (!$fp) {
-	exit_error('ERROR',"Cannot open license acceptance in file: $FILE_ACCEPTED");
+      exit_error($Language->getText('global','error'),$Language->getText('include_license','cannot_open_acc',$FILE_ACCEPTED));
     }
 
     // Write Date in file
-    $msg = "CodeX Core Software License accepted on ".format_date($sys_datefmt,time()).$sys_lf;
+    $msg = $Language->getText('include_license','license_accepted').' '.format_date($sys_datefmt,time()).$sys_lf;
 
     if (fwrite($fp, $msg) == FALSE) {
-       exit_error('ERROR',"Cannot write license acceptance in file: $FILE_ACCEPTED");
+      exit_error($Language->getText('global','error'),$Language->getText('include_license','cannot_write_acc',$FILE_ACCEPTED));
    }
 
    fclose($fp);
@@ -73,7 +75,7 @@ function license_declined() {
     $fp = @fopen($FILE_DECLINED,'a+');
 
     if (!$fp) {
-	exit_error('ERROR',"Cannot open license declination file: $FILE_DECLINED");
+      exit_error($Language->getText('global','error'),$Language->getText('include_license','cannot_open_decl',$FILE_DECLINED));
     }
 
     // Write Date in file
@@ -81,7 +83,7 @@ function license_declined() {
 	format_date($sys_datefmt,time()).$sys_lf;
 
     if (fwrite($fp, $msg) == FALSE) {
-       exit_error('ERROR',"Cannot write license declination in file: $FILE_DECLINED");
+      exit_error($Language->getText('global','error'),$Language->getText('include_license','cannot_write_decl',$FILE_DECLINED));
    }
    fclose($fp);
 
@@ -89,14 +91,11 @@ function license_declined() {
 }
 
 function license_msg_accepted() {
-    return 'Thanks for accepting the terms and conditions of the CodeX
-        license. You can now enjoy the CodeX site';
+    return $Language->getText('include_license','msg_accept');
 }
 
 function license_msg_declined() {
-    return 'You have chosen to decline the terms and conditions of the
-        CodeX Software License. You must return all the CodeX Software and
-        Documentation to Xerox and remove it from all your machines';
+    return $Language->getText('include_license','msg_declined');
 }
 
 ?>

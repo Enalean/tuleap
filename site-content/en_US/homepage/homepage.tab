@@ -14,7 +14,6 @@
 # Script: SF/www/contact.php
 #
 contact	title	Contact Us
-contact	message	<UL><li><b>Assistance and Support Request</b>: all support questions, request for help, new feature requests... related to $1 use should be submitted through the $1 <A HREF="/tracker/?func=add&group_id=1&atid=XXX">[ Support Manager ]</A>.<br><br><li><b>Defects (aka Bugs)</b>:If you feel you are encountering a bug or an unusual error of any kind, please <A HREF="/tracker/?func=add&group_id=1&atid=YYY">[ Submit a bug ]</A>.<br><br><li><b>Technical Questions</b>: all questions on software development tools and techniques (version control, programming, algorithms,...) should be directed to the appropriate <A HREF="/mail/?group_id=1">[ Developers Channel ]</a> whenever possible.<br><br><li><b>Other Requests</b>: all other inquiries should be directed to the <A href="mailto:$2">[ $1 contact ]</A>.<br><br></ul>
 #
 #-----------------------------------------------
 # Script: SF/www/404.php

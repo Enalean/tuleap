@@ -136,7 +136,7 @@ function check_values($row,&$data,$used_fields,$parsed_labels,$predefined_values
 	  } else if ($field_name == 'submitted_by' && 
 		     (($val == $Language->getText('global','none') && $ath->allowsAnon()) ||
 		     $val == "" ||
-		     user_getemail_from_unix($val) != $Language->getText('include','not_found'))) {
+		     user_getemail_from_unix($val) != $Language->getText('include_user','not_found'))) {
 	    //accept anonymous user, use importing user as 'submitted by', or simply make sure that user is a known user
 	  } else {
 	    $errors .= $Language->getText('tracker_import_utils','not_a_predefined_value',array($row+1,implode(",",$data),$val,$label,implode(",",array_keys($predef_vals))));
@@ -769,7 +769,7 @@ function parse_legacy_details($details,&$parsed_details,&$errors,$for_parse_repo
       else $comment_type = 100;
     } else {
       $comment = substr($comment, 6);
-      $by_position = strpos($comment,$Language->getText('tracker_import_utils','by').": ");
+      $by_position = strpos($comment,$Language->getText('global','by').": ");
       if ($by_position === false) {
 	$errors .= $Language->getText('tracker_import_utils','specify_originator',array($i-1,$comment));
 	return false;
@@ -786,7 +786,7 @@ function parse_legacy_details($details,&$parsed_details,&$errors,$for_parse_repo
     }
 
     // By:
-    $by_position = strpos($comment,$Language->getText('tracker_import_utils','by').": ");
+    $by_position = strpos($comment,$Language->getText('global','by').": ");
     if ($by_position === false) {
       $errors .= $Language->getText('tracker_import_utils','specify_originator',array($i-1,$comment));
       return false;

@@ -36,7 +36,7 @@ $lbl_list = array('project_task_id' => $Language->getText('project_export_task_a
 		  'start_date' => $Language->getText('project_export_task_export','start_date'),
 		  'end_date' => $Language->getText('project_export_task_export','end_date'),
 		  'created_by' => $Language->getText('project_export_task_export','created_by'),
-		  'status' => $Language->getText('project_export_support_request_export','status'),
+		  'status' => $Language->getText('project_admin_servicebar','status'),
 		  'assigned_to' => $Language->getText('project_export_support_request_export','assigned_to'),
 		  'follow_ups' => $Language->getText('project_export_artifact_export','follow_up_comments'),
 		  'is_dependent_on_task_id'=> $Language->getText('project_export_task_export','depend_on_task'));
@@ -85,11 +85,11 @@ if ($export == 'task') {
 
 	project_admin_header(array('title'=>$pg_title));
 
-	echo '<h3>'.$Language->getText('project_export_artifact_deps_export','bug_deps_export','Task').'</h3>';
+	echo '<h3>'.$Language->getText('project_export_bug_deps_export','bug_deps_export','Task').'</h3>';
 	if ($result) {
-	    echo '<P>'.$Language->getText('project_export_artifact_deps_export','no_bug_deps_found','task');
+	    echo '<P>'.$Language->getText('project_export_bug_deps_export','no_bug_deps_found','task');
 	} else {
-	    echo '<P>'.$Language->getText('project_export_artifact_deps_export','db_access_err',array('task',$GLOBALS['sys_name']));
+	    echo '<P>'.$Language->getText('project_export_bug_deps_export','db_access_err',array('task',$GLOBALS['sys_name']));
 	    echo '<br>'.db_error();
 	}
 	site_project_footer( array() );
@@ -98,7 +98,7 @@ if ($export == 'task') {
 
 } else if ($export == "task_format") {
 
-    echo $Language->getText('project_export_artifact_deps_export','bug_deps_export_format',' Task');
+    echo $Language->getText('project_export_bug_deps_export','bug_deps_export_format',' Task');
 
     $record = pick_a_record_at_random($result, $rows, $col_list);
     prepare_task_record($group_id,$record);   

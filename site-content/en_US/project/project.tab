@@ -361,7 +361,7 @@ project_export_bug_deps_export	bug_id	Bug ID
 project_export_bug_deps_export	depend_on_bug	Depend on Bug
 project_export_bug_deps_export	bug_id_desc	Unique bug identifier
 project_export_bug_deps_export	g_id_desc	Unique project identifier
-project_export_bug_deps_export	depend_on_bug_desc	Depend on Bug
+#project_export_bug_deps_export	depend_on_bug_desc	Depend on Bug
 project_export_bug_deps_export	bug_deps_export	$1 Export
 project_export_bug_deps_export	no_bug_deps_found	No $1 found. Could not generate an export.
 project_export_bug_deps_export	db_access_err	Error while accessing your $1 database. Please report the error to the $2 Administrator

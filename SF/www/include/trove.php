@@ -13,6 +13,7 @@ $TROVE_BROWSELIMIT = 20;
 $TROVE_HARDQUERYLIMIT = 300;
 
 // ##################################
+$Language->loadLanguageMsg('include/include');
 
 // regenerates full path entries for $node and all subnodes
 function trove_genfullpaths($mynode,$myfullpath,$myfullpathids) {
@@ -124,8 +125,9 @@ function trove_getallroots() {
 
 // returns full select output for a particular root
 function trove_catselectfull($node,$selected,$name) {
+  global $Language;
 	print "<BR><SELECT name=\"$name\">";
-	print '  <OPTION value="0">None Selected'."\n";
+	print '  <OPTION value="0">'.$Language->getText('include_trove','none_selected')."\n";
 	$res_cat = db_query('SELECT trove_cat_id,fullpath FROM trove_cat WHERE '
 		.'root_parent='.$node.' ORDER BY fullpath');
 	while ($row_cat = db_fetch_array($res_cat)) {
@@ -143,6 +145,7 @@ function trove_getcatlisting($group_id,$a_filter,$a_cats) {
 	global $discrim_url;
 	global $expl_discrim;
 	global $form_cat;
+	global $Language;
 
 	$res_trovecat = db_query('SELECT trove_cat.fullpath AS fullpath,'
 		.'trove_cat.fullpath_ids AS fullpath_ids,'
@@ -156,9 +159,7 @@ function trove_getcatlisting($group_id,$a_filter,$a_cats) {
 // LJ in case the project is not yet categorized
 
 	if (db_numrows($res_trovecat) < 1) {
-		print 'This project has not yet categorized itself in the '
-			.'<A href="/softwaremap/trove_list.php">Trove '
-			.'Software Map</A>.You can <a href=/project/admin/group_trove.php?group_id='.$group_id.'>categorize it</a> now.';
+	  print $Language->getText('include_trove','not_categorized_yet',array('/softwaremap/trove_list.php',"/project/admin/group_trove.php?group_id=$group_id"));
 	}
 
 	// first unset the vars were using here
@@ -192,7 +193,7 @@ function trove_getcatlisting($group_id,$a_filter,$a_cats) {
 
 			if ($a_filter) {
 				if ($filterisalreadyapplied) {
-					print ' (Now Filtering) ';
+					print ' ('.$Language->getText('include_trove','now_filter').') ';
 				} else {
 					print ' <A href="/softwaremap/trove_list.php?form_cat='
 						.$form_cat;
@@ -201,7 +202,7 @@ function trove_getcatlisting($group_id,$a_filter,$a_cats) {
 					} else {
 						print '&discrim='.$folders_ids[$folders_len-1];
 					}
-					print '">[Filter]</A> ';
+					print '">['.$Language->getText('include_trove','filter').']</A> ';
 				}
 			}
 		$proj_discrim_used[$folders_ids[0]] = 1;

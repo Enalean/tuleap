@@ -21,7 +21,7 @@ if (user_isloggedin()) {
             if ($category==100) {
                 $feedback .= ' '.$Language->getText('snippet_details','select_category').' ';
             } else if ($language==100) {
-                $feedback .= ' '.$Language->getText('snippet_details','select_language').' ';
+                $feedback .= ' '.$Language->getText('snippet_details','select_lang').' ';
             } else {
                 /*
 				Create the new package
@@ -49,7 +49,7 @@ if (user_isloggedin()) {
                     $result=db_query($sql);
                     if (!$result) {
                         //error in database
-                        $feedback .= ' '.$Language->getText('snippet_addversion','errir_insert').' ';
+                        $feedback .= ' '.$Language->getText('snippet_addversion','error_insert').' ';
                         snippet_header(array('title'=>$Language->getText('snippet_addversion','submit_p')));
                         echo db_error();
                         snippet_footer(array());

@@ -8,22 +8,25 @@
 
 /* The correct theme.php must be included by this point -- Geoffrey */
 
+  //$Language->loadLanguageMsg('include/include');
+
 // Menu entry  for all admin tasks when logged as site administor
 function menu_site_admin() {
+  global $Language;
     
     GLOBAL $HTML;
-    $HTML->menuhtml_top('Site Administration'); 
-    $HTML->menu_entry('/admin/','Main Page');
-    $HTML->menu_entry('/admin/grouplist.php','Group Admin');
-    $HTML->menu_entry('/admin/userlist.php','User Admin');
-    $HTML->menu_entry('/admin/approve-pending.php','Pending Projects');
+    $HTML->menuhtml_top($Language->getText('include_menu','site_admin')); 
+    $HTML->menu_entry('/admin/',$Language->getText('include_menu','main_page'));
+    $HTML->menu_entry('/admin/grouplist.php',$Language->getText('include_menu','group_admin'));
+    $HTML->menu_entry('/admin/userlist.php',$Language->getText('include_menu','user_admin'));
+    $HTML->menu_entry('/admin/approve-pending.php',$Language->getText('include_menu','pending_projects'));
     if ($GLOBALS['sys_user_approval']) {
-	$HTML->menu_entry('/admin/approve_pending_users.php','Pending Users');
+	$HTML->menu_entry('/admin/approve_pending_users.php',$Language->getText('include_menu','pending_users'));
     }
-    $HTML->menu_entry('/news/admin','Site News Approval');
-    $HTML->menu_entry('/admin/massmail.php','Mass Mail');
-    $HTML->menu_entry('/admin/trove/trove_cat_list.php','Trove Cat. List');
-    $HTML->menu_entry('/admin/trove/trove_cat_add.php','Trove Cat. Add');
+    $HTML->menu_entry('/news/admin',$Language->getText('include_menu','site_news_approve'));
+    $HTML->menu_entry('/admin/massmail.php',$Language->getText('include_menu','mass_mail'));
+    $HTML->menu_entry('/admin/trove/trove_cat_list.php',$Language->getText('include_menu','trove_cat_list'));
+    $HTML->menu_entry('/admin/trove/trove_cat_add.php',$Language->getText('include_menu','trove_cat_add'));
     $HTML->menu_entry('/people/admin','People Skills');
     $HTML->menuhtml_bottom();
 
@@ -32,7 +35,7 @@ function menu_site_admin() {
 
 
 function menu_show_search_box() {
-    global $words,$forum_id,$group_id,$is_bug_page,$is_support_page,
+  global $words,$forum_id,$group_id,$is_bug_page,$is_support_page,$Language,
 	$is_pm_page,$is_snippet_page,$exact,$type_of_search,$atid;
 
     // if there is no search currently, set the default
@@ -45,24 +48,24 @@ function menu_show_search_box() {
 
     print "\t<SELECT name=\"type_of_search\">\n";
     if ($is_bug_page && $group_id) {
-	print "\t<OPTION value=\"bugs\"".( $type_of_search == "bugs" ? " SELECTED" : "" ).">Bugs</OPTION>\n";
+	print "\t<OPTION value=\"bugs\"".( $type_of_search == "bugs" ? " SELECTED" : "" ).">".$Language->getText('include_menu','bugs')."</OPTION>\n";
     } else if ($is_pm_page && $group_id) {
-	print "\t<OPTION value=\"tasks\"".( $type_of_search == "tasks" ? " SELECTED" : "" ).">Tasks</OPTION>\n";
+	print "\t<OPTION value=\"tasks\"".( $type_of_search == "tasks" ? " SELECTED" : "" ).">".$Language->getText('include_menu','tasks')."</OPTION>\n";
     } else if ($is_support_page && $group_id) {
-	print "\t<OPTION value=\"support\"".( $type_of_search == "support" ? " SELECTED" : "" ).">Support Requests</OPTION>\n";
+	print "\t<OPTION value=\"support\"".( $type_of_search == "support" ? " SELECTED" : "" ).">".$Language->getText('include_menu','supp_requ')."</OPTION>\n";
     } else if ($group_id && $forum_id) {
-	print "\t<OPTION value=\"forums\"".( $type_of_search == "forums" ? " SELECTED" : "" ).">This Forum</OPTION>\n";
+	print "\t<OPTION value=\"forums\"".( $type_of_search == "forums" ? " SELECTED" : "" ).">".$Language->getText('include_menu','this_forum')."</OPTION>\n";
     } else if ($group_id && $atid) {
-	print "\t<OPTION value=\"tracker\"".( $type_of_search == "tracker" ? " SELECTED" : "" ).">This Tracker</OPTION>\n";
+	print "\t<OPTION value=\"tracker\"".( $type_of_search == "tracker" ? " SELECTED" : "" ).">".$Language->getText('include_menu','this_tracker')."</OPTION>\n";
     }
 
-    print "\t<OPTION value=\"soft\"".( $type_of_search == "soft" ? " SELECTED" : "" ).">Software Projects</OPTION>\n";
-    print "\t<OPTION value=\"snippets\"".( ($type_of_search == "snippets" || $is_snippet_page) ? " SELECTED" : "" ).">Code Snippets</OPTION>\n";
-    print "\t<OPTION value=\"people\"".( $type_of_search == "people" ? " SELECTED" : "" ).">People</OPTION>\n";
+    print "\t<OPTION value=\"soft\"".( $type_of_search == "soft" ? " SELECTED" : "" ).">".$Language->getText('include_menu','software_proj')."</OPTION>\n";
+    print "\t<OPTION value=\"snippets\"".( ($type_of_search == "snippets" || $is_snippet_page) ? " SELECTED" : "" ).">".$Language->getText('include_menu','code_snippets')."</OPTION>\n";
+    print "\t<OPTION value=\"people\"".( $type_of_search == "people" ? " SELECTED" : "" ).">".$Language->getText('include_menu','people')."</OPTION>\n";
     print "\t</SELECT>\n";
 
     print "\t<BR>\n";
-    print "\t<INPUT TYPE=\"CHECKBOX\" NAME=\"exact\" VALUE=\"1\"".( $exact ? " CHECKED" : " UNCHECKED" )."> Require All Words \n";
+    print "\t<INPUT TYPE=\"CHECKBOX\" NAME=\"exact\" VALUE=\"1\"".( $exact ? " CHECKED" : " UNCHECKED" )."> ".$Language->getText('include_menu','require_all_words')." \n";
 
     print "\t<BR>\n";
     if ( isset($atid) ) {
@@ -89,7 +92,7 @@ function menu_show_search_box() {
 
     print "\t<INPUT TYPE=\"text\" SIZE=\"16\" NAME=\"words\" VALUE=\"$words\">\n";
     print "\t<BR>\n";
-    print "\t<INPUT TYPE=\"submit\" NAME=\"Search\" VALUE=\"Search\">\n";
+    print "\t<INPUT TYPE=\"submit\" NAME=\"Search\" VALUE=\"".$Language->getText('include_menu','search')."\">\n";
     print "\t</FORM>\n";
     print "\t</CENTER>\n";
 }
@@ -108,73 +111,73 @@ function menuhtml_bottom() {
 }
 
 function menu_software() {
-    GLOBAL $HTML;
-    $HTML->menuhtml_top('Software'); 
-    $HTML->menu_entry('/softwaremap/','Software Map');
-    $HTML->menu_entry('/new/','New Releases');
-    // LJ No mirror		$HTML->menu_entry('/mirrors/','Other Site Mirrors');
-    $HTML->menu_entry('/snippet/','Code Snippet Library');
+  GLOBAL $HTML,$Language;
+    $HTML->menuhtml_top($Language->getText('include_menu','software')); 
+    $HTML->menu_entry('/softwaremap/',$Language->getText('include_menu','software_map'));
+    $HTML->menu_entry('/new/',$Language->getText('include_menu','new_releases'));
+    // LJ No mirror		$HTML->menu_entry('/mirrors/',$Language->getText('include_menu','other_site_mirrors'));
+    $HTML->menu_entry('/snippet/',$Language->getText('include_menu','code_snippet_lib'));
     $HTML->menuhtml_bottom();
 }
 
 function menu_site() {
-    GLOBAL $HTML;
+  GLOBAL $HTML,$Language;
     $HTML->menuhtml_top($GLOBALS['sys_name']);
-    $HTML->menu_entry('/documentation/user_guide/html/en_US/','<b>Help Index</b>');
-    $HTML->menu_entry('/docs/site/','Site Documentation');
-    $HTML->menu_entry('/mail/?group_id=1','Developers Channels');
-    $HTML->menu_entry('/forum/?group_id=1','Discussion Forums');
+    $HTML->menu_entry('/documentation/user_guide/html/en_US/','<b>'.$Language->getText('include_menu','help_index').'</b>');
+    $HTML->menu_entry('/docs/site/',$Language->getText('include_menu','site_doc'));
+    $HTML->menu_entry('/mail/?group_id=1',$Language->getText('include_menu','dev_channel'));
+    $HTML->menu_entry('/forum/?group_id=1',$Language->getText('include_menu','discussion_forum'));
     print '<P>';
     print '<P>';
-    $HTML->menu_entry('/contact.php','Contact Us');
+    $HTML->menu_entry('/contact.php',$Language->getText('include_menu','contact_us'));
     $HTML->menuhtml_bottom();
 }
 
 function menu_foundry_links() {
-    GLOBAL $HTML;
-    $HTML->menuhtml_top('Sourceforge Foundries');
-    $HTML->menu_entry('/about_foundries.php', 'About Foundries');
+  GLOBAL $HTML,$Language;
+    $HTML->menuhtml_top($Language->getText('include_menu','sf_foundries'));
+    $HTML->menu_entry('/about_foundries.php', $Language->getText('include_menu','about_foudries'));
     echo '<P>
 ';
     $HTML->menu_entry('/foundry/'. strtolower(group_getunixname(6771)), '3D');
-    $HTML->menu_entry('/foundry/'. strtolower(group_getunixname(6772)), 'Games');
+    $HTML->menu_entry('/foundry/'. strtolower(group_getunixname(6772)), $Language->getText('include_menu','games'));
     $HTML->menu_entry('/foundry/'. strtolower(group_getunixname(6770)), 'Java');
-    $HTML->menu_entry('/foundry/'. strtolower(group_getunixname(1872)), 'Printing');
+    $HTML->menu_entry('/foundry/'. strtolower(group_getunixname(1872)), $Language->getText('include_menu','printing'));
     $HTML->menuhtml_bottom();
 }
 
 function menu_search() {
-    GLOBAL $HTML;
-    $HTML->menuhtml_top('Search');
+  GLOBAL $HTML,$Language;
+    $HTML->menuhtml_top($Language->getText('include_menu','search'));
     menu_show_search_box();
     $HTML->menuhtml_bottom();
 }
 
 function menu_project($grp) {
-    GLOBAL $HTML;
+  GLOBAL $HTML,$Language;
     $HTML->menuhtml_top('Project: ' . group_getname($grp));
-    $HTML->menu_entry('/projects/'. group_getunixname($grp) .'/','Project Summary');
+    $HTML->menu_entry('/projects/'. group_getunixname($grp) .'/',$Language->getText('include_menu','proj_summary'));
     print '<P>';
-    $HTML->menu_entry('/project/admin/?group_id='.$grp,'Project Admin');
+    $HTML->menu_entry('/project/admin/?group_id='.$grp,$Language->getText('include_menu','proj_admin'));
     $HTML->menuhtml_bottom();
 }
 
 function menu_foundry($grp) {
-    GLOBAL $HTML;
+  GLOBAL $HTML,$Language;
     $unix_name=strtolower(group_getunixname($grp));
-    $HTML->menuhtml_top('Foundry: ' . group_getname($grp));
-    $HTML->menu_entry('/foundry/'. $unix_name .'/','Summary Page');
+    $HTML->menuhtml_top($Language->getText('include_menu','foundry').': ' . group_getname($grp));
+    $HTML->menu_entry('/foundry/'. $unix_name .'/',$Language->getText('include_menu','summary_page'));
     print '<P>';
-    $HTML->menu_entry('/foundry/'. $unix_name .'/admin/', 'Foundry Admin');
+    $HTML->menu_entry('/foundry/'. $unix_name .'/admin/', $Language->getText('include_menu','foundry_admin'));
     $HTML->menuhtml_bottom();
 }
 
 function menu_foundry_guides($grp) {
-    GLOBAL $HTML;
+  GLOBAL $HTML,$Language;
     /*
       Show list of projects in this portal
     */
-    $HTML->menuhtml_top('Foundry Guides');
+    $HTML->menuhtml_top($Language->getText('include_menu','foundry_guides'));
 
     $sql="SELECT db_images.width,db_images.height,db_images.id ".
 	"FROM db_images,foundry_data ".
@@ -184,7 +187,7 @@ function menu_foundry_guides($grp) {
     $rows=db_numrows($result);
 	
     if (!$result || $rows < 1) {
-	//		echo 'No Projects';
+	//		echo $Language->getText('include_features_boxes','no_projects');
 	echo db_error();
     } else {
 	echo '<IMG SRC="/dbimage.php?id='.db_result($result,$i,'id').'" HEIGHT="'.db_result($result,$i,'height').'" WIDTH="'.db_result($result,$i,'width').'"><BR>';
@@ -202,7 +205,7 @@ function menu_foundry_guides($grp) {
     $rows=db_numrows($result);
 
     if (!$result || $rows < 1) {
-	echo 'No Projects';
+	echo $Language->getText('include_features_boxes','no_projects');
 	echo db_error();
     } else {
 	for ($i=0; $i<$rows; $i++) {
@@ -214,32 +217,32 @@ function menu_foundry_guides($grp) {
 }
 
 function menu_loggedin($page_title) {
-    GLOBAL $HTML;
+  GLOBAL $HTML,$Language;
     /*
       Show links appropriate for someone logged in, like account maintenance, etc
     */
-    $HTML->menuhtml_top('Logged In: '.user_getname());
-    $HTML->menu_entry('/account/logout.php','Logout');
-    $HTML->menu_entry('/register/','Register New Project');
-    $HTML->menu_entry('/account/','Account Maintenance');
+    $HTML->menuhtml_top($Language->getText('include_menu','logged_in').': '.user_getname());
+    $HTML->menu_entry('/account/logout.php',$Language->getText('include_menu','logout'));
+    $HTML->menu_entry('/register/',$Language->getText('include_menu','register_new_proj'));
+    $HTML->menu_entry('/account/',$Language->getText('include_menu','account_maintenance'));
     print '<P>';
     //LJ No theme		$HTML->menu_entry('/themes/','Change My Theme');
-    $HTML->menu_entry('/my/','My Personal Page');
+    $HTML->menu_entry('/my/',$Language->getText('include_menu','my_perso_page'));
 
     if (!$GLOBALS['HTTP_POST_VARS']) {
 	$bookmark_title = urlencode( str_replace($GLOBALS['sys_name'].': ', '', $page_title));
 	print '<P>';
-	$HTML->menu_entry('/my/bookmark_add.php?bookmark_url='.urlencode($GLOBALS['REQUEST_URI']).'&bookmark_title='.$bookmark_title,'Bookmark This Page');
+	$HTML->menu_entry('/my/bookmark_add.php?bookmark_url='.urlencode($GLOBALS['REQUEST_URI']).'&bookmark_title='.$bookmark_title,$Language->getText('include_menu','bookmark_this_page'));
     }
     $HTML->menuhtml_bottom();
 }
 
 function menu_notloggedin() {
-    GLOBAL $HTML;
-    $HTML->menuhtml_top('Status:');
-    echo '<h4><span class="highlight">NOT LOGGED IN</span></h4>';
-    $HTML->menu_entry('/account/login.php','Login');
-    $HTML->menu_entry('/account/register.php','New User');
+  GLOBAL $HTML,$Language;
+    $HTML->menuhtml_top($Language->getText('include_menu','status').':');
+    echo '<h4><span class="highlight">'.$Language->getText('include_menu','not_logged_in').'</span></h4>';
+    $HTML->menu_entry('/account/login.php',$Language->getText('include_menu','login'));
+    $HTML->menu_entry('/account/register.php',$Language->getText('include_menu','new_user'));
     $HTML->menuhtml_bottom();
 }
 

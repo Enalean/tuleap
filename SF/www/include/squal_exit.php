@@ -1,24 +1,30 @@
 <?php
+$Language->loadLanguageMsg('include/include');
 
 function exit_error($title,$text) {
-	print 'ERROR - '.$text;
+  global $Language;
+	print $Language->getText('include_squal_exit','err').' - '.$text;
 	exit;
 }
 
 function exit_permission_denied() {
-	exit_error('','PERMISSION DENIED');
+  global $Language;
+	exit_error('',$Language->getText('include_squal_exit','perm_denied'));
 }
 
 function exit_not_logged_in() {
-	exit_error('','NOT LOGGED IN');
+  global $Language;
+	exit_error('',$Language->getText('include_menu','not_logged_in'));
 }
 
 function exit_no_group() {
-	exit_error('','CHOOSE A PROJECT/GROUP');
+  global $Language;
+	exit_error('',$Language->getText('include_squal_exit','choose_proj'));
 }
 
 function exit_missing_param() {
-	exit_error('','MISSING REQUIRED PARAMETERS');
+  global $Language;
+	exit_error('',$Language->getText('include_squal_exit','missing_param'));
 }
 
 ?>

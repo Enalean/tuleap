@@ -145,7 +145,7 @@ function stats_project_daily( $group_id, $span = 7 ) {
         print '</TABLE>';
         
     } else {
-        echo $Language->getText('project_export_artifact_deps_export','proj_not_exist_on_date');
+        echo $Language->getText('project_stats_index','proj_not_exist_on_date');
     }
     
 }

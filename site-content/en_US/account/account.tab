@@ -38,7 +38,6 @@ account_options	font_size_small	Small
 account_options	font_size_normal	Normal
 account_options	font_size_large	Large
 account_options	theme	Theme/Color Scheme
-account_options	language	Language
 account_options	shell_account_title	Shell Account Information
 account_options	shell_box	Shell Box
 account_options	shell_shared_keys	SSH Shared Keys
@@ -72,10 +71,7 @@ account_change_email-complete	message	Welcome, $1.<P>Your email change is comple
 # Script: SF/www/account/change_pw.php
 #
 account_change_pw	title_success	Successfully Changed Password
-account_change_pw	message	Congratulations. You have changed your $1 password. This change is immediate on the web site, but will not take
-effect on your shell/cvs account until the backend update,
-which will happen in <span class=\"highlight\"><b> $2&nbsp;h&nbsp;$3&nbsp;minutes</b></span> from now.
-account_change_pw
+account_change_pw	message	Congratulations. You have changed your $1 password. This change is immediate on the web site, but will not take\neffect on your shell/cvs account until the backend update, \nwhich will happen in <span class=\"highlight\"><b> $2&nbsp;h&nbsp;$3&nbsp;minutes</b></span> from now.
 account_change_pw	title	Password Change
 account_change_pw	old_password	Old Password
 account_change_pw	new_password	New Password
@@ -89,10 +85,10 @@ account_change_realname	title	Real Name Change
 account_change_realname	new_name	New Real Name
 #
 #-----------------------------------------------
-# Script: SF/www/account/change_realname.php
+# Script: SF/www/account/change_timezone.php
 #
 account_change_timezone	title	Change Timezone
-account_change_timezone	message	Now, no matter where you live, you can see all dates and times throughout $1 as if it were in your neighborhood.
+#account_change_timezone	message	Now, no matter where you live, you can see all dates and times throughout $1 as if it were in your neighborhood.
 account_change_timezone	no_update	Nothing Updated
 account_change_timezone	choose_tz	Please choose a timezone other than none
 #
@@ -107,7 +103,7 @@ account_deleted	message	Your account has been deleted. If you have questions reg
 #
 account_editsshkeys	title	Change Authorized SSH Keys
 account_editsshkeys	message	To avoid having to type your password every time for your SSH developer account, you may upload your public key(s) here and they will be placed on the server in your ~/.ssh/authorized_keys file.<P>To generate a public key, run the program 'ssh-keygen' (or ssh-keygen1) on your desktop machine.Then look at the file '~/.ssh/identity.pub' where the generated public key has been stored. Read the ssh documentation for further information on sharing keys.
-account_editsshkeys	important	<b>IMPORTANT:</b>SSH Shared Keys Updates will be reflected in the next cron update in approximately <B>$1</B> hours, <B>$2</B> minutes from now	
+account_editsshkeys	important	<P><b>IMPORTANT:</b>SSH Shared Keys Updates will be reflected in the next cron update in approximately <B>$1</B> hours, <B>$2</B> minutes from now	
 account_editsshkeys	keys	Authorized keys:<BR><I>Important: Make sure there are no line breaks except between keys. After submitting, verify that the number of keys in your file is what you expected.</I>
 #
 #-----------------------------------------------
@@ -156,9 +152,7 @@ account_lostpw-confirm	msg_confirm	<B>Confirmation mailed</B><P>An email has bee
 # Script: SF/www/account/lostpw.php
 #
 account_lostpw	title	Lost Account Password
-account_lostpw	message	<B>Lost your password?</B><P>Hey... losing your password is serious business. It compromises the security of your account, your projects, and this site.<P>Clicking on the button below will email a URL to the email address we have on file for you. In this URL is a 128-bit confirmation
-hash key for your account. Visiting the URL will allow you to change
-your password online and login.
+account_lostpw	message	<B>Lost your password?</B><P>Hey... losing your password is serious business. It compromises the security of your account, your projects, and this site.<P>Clicking on the button below will email a URL to the email address we have on file for you. In this URL is a 128-bit confirmation hash key for your account. Visiting the URL will allow you to change your password online and login.
 account_lostpw	send_hash	Send Lost Password Hash
 #
 #-----------------------------------------------

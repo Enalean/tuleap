@@ -59,11 +59,11 @@ if ($export == 'survey_responses') {
 
 	project_admin_header(array('title'=>$pg_title));
 
-	echo '<h3>'.$Language->getText('project_export_artifact_deps_export','bug_deps_export','Survey Responses').'</h3>';
+	echo '<h3>'.$Language->getText('project_export_bug_deps_export','bug_deps_export','Survey Responses').'</h3>';
 	if ($result) {
-	    echo '<P>'.$Language->getText('project_export_artifact_deps_export','no_bug_deps_found','survey responses');
+	    echo '<P>'.$Language->getText('project_export_bug_deps_export','no_bug_deps_found','survey responses');
 	} else {
-	    echo '<P>'.$Language->getText('project_export_artifact_deps_export','db_access_err',array('response',$GLOBALS['sys_name']));
+	    echo '<P>'.$Language->getText('project_export_bug_deps_export','db_access_err',array('response',$GLOBALS['sys_name']));
 	    echo '<br>'.db_error();
 	}
 	site_project_footer( array() );

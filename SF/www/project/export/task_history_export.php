@@ -60,11 +60,11 @@ if ($export == 'task_history') {
 
 	project_admin_header(array('title'=>$pg_title));
 
-	echo '<h3>'.$Language->getText('project_export_artifact_deps_export','bug_deps_export','Task History').'</h3>';
+	echo '<h3>'.$Language->getText('project_export_bug_deps_export','bug_deps_export','Task History').'</h3>';
 	if ($result) {
-	    echo '<P>'.$Language->getText('project_export_artifact_deps_export','no_bug_deps_found','task history');
+	    echo '<P>'.$Language->getText('project_export_bug_deps_export','no_bug_deps_found','task history');
 	} else {
-	    echo '<P>'.$Language->getText('project_export_artifact_deps_export','db_access_err',array('task history',$GLOBALS['sys_name']));
+	    echo '<P>'.$Language->getText('project_export_bug_deps_export','db_access_err',array('task history',$GLOBALS['sys_name']));
 	    echo '<br>'.db_error();
 	}
 	site_project_footer( array() );
@@ -73,7 +73,7 @@ if ($export == 'task_history') {
 
 } else if ($export == 'task_history_format') {
 
-    echo $Language->getText('project_export_artifact_deps_export','bug_deps_export_format',' Task History');
+    echo $Language->getText('project_export_bug_deps_export','bug_deps_export_format',' Task History');
 
     $record = pick_a_record_at_random($result, $rows, $col_list);
     prepare_task_history_record($record);    

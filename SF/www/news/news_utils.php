@@ -70,7 +70,7 @@ function news_show_latest($group_id='',$limit=10,$show_summaries=true,$allow_sub
     $rows=db_numrows($result);
 
     if (!$result || $rows < 1) {
-	$return .= '<H3>'.$Language->getText('news_utils','no_news_items_found').'</H3>';
+	$return .= '<H3>'.$Language->getText('news_utils','no_news_item_found').'</H3>';
 	$return .= db_error();
     } else {
 	echo '
@@ -182,7 +182,7 @@ function news_foundry_latest($group_id=0,$limit=5,$show_summaries=true) {
 	$rows=db_numrows($result);
 
 	if (!$result || $rows < 1) {
-		$return .= '<H3>'.$Language->getText('news_utils','no_news_items_found').'</H3>';
+		$return .= '<H3>'.$Language->getText('news_utils','no_news_item_found').'</H3>';
 		$return .= db_error();
 	} else {
 		for ($i=0; $i<$rows; $i++) {

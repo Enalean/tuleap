@@ -24,7 +24,7 @@ my_index	my_forums	Monitored Forums
 my_index	my_forums_msg	<b>You are not monitoring any forums</b><P>If you monitor forums, you will be sent new posts in the form of an email, with a link to the new message.<P>You can monitor forums by clicking &quot;Monitor Forum&quot; in any given discussion forum.<BR>&nbsp;
 my_index	stop_forum	Stop monitoring this Forum?
 my_index	my_files	Monitored File Packages
-my_index	my_files_msg	<b>You are not monitoring any files</b><P>If you monitor files, you will be sent new release notices via email, with a link to the new file on our download server.<P>You can monitor files by visiting a project\'s &quot;Summary Page&quot; and clicking on the check box in the files section.<BR>&nbsp;
+my_index	my_files_msg	<b>You are not monitoring any files</b><P>If you monitor files, you will be sent new release notices via email, with a link to the new file on our download server.<P>You can monitor files by visiting a project's &quot;Summary Page&quot; and clicking on the check box in the files section.<BR>&nbsp;
 my_index	stop_file	Stop Monitoring this Package?	
 my_index	stop_monitor	STOP MONITORING
 my_index	my_tasks	My Tasks

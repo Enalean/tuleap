@@ -14,7 +14,7 @@ $HTML->header(array('title'=>$Language->getText('contact', 'title')));
 
 echo '<h2>'.$Language->getText('contact', 'title')."</h2>\n";
 
-echo $Language->getText('contact', 'message', array($GLOBALS['sys_name'],$GLOBALS['sys_email_contact']));
+include(util_get_content('contact/contact'));
 
 $HTML->footer(array());
 ?>

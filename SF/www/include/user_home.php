@@ -20,90 +20,95 @@
 
 */
 
-$HTML->header(array('title'=>'Developer Profile'));
+$Language->loadLanguageMsg('include/include');
+
+$HTML->header(array('title'=>$Language->getText('include_user_home','devel_profile')));
 
 if (!$res_user || db_numrows($res_user) < 1) {
-	exit_error('No Such User','No Such User');
+	exit_error($Language->getText('include_user_home','no_such_user'),$Language->getText('include_user_home','no_such_user'));
 }
 
-?>
 
-<H3>Developer Profile</H3>
+echo '
+<H3>'.$Language->getText('include_user_home','devel_profile').'</H3>
 <P>
 <TABLE width=100% cellpadding=2 cellspacing=2 border=0><TR valign=top>
-<TD width=50%>
+<TD width=50%>';
 
-<?php $HTML->box1_top("Personal Information"); ?>
+$HTML->box1_top($Language->getText('include_user_home','perso_info'));
+
+echo '
 &nbsp;
 <BR>
 <TABLE width=100% cellpadding=0 cellspacing=0 border=0>
 <TR valign=top>
-	<TD>User ID: </TD>
-	<TD><B><?php print db_result($res_user,0,'user_id'); ?></B></TD>
+	<TD>'.$Language->getText('include_user_home','user_id').': </TD>
+	<TD><B>'.db_result($res_user,0,'user_id').'</B></TD>
 </TR>
 <TR valign=top>
-	<TD>Login Name: </TD>
-	<TD><B><?php print db_result($res_user,0,'user_name'); ?></B></TD>
+	<TD>'.$Language->getText('include_user_home','login_name').': </TD>
+	<TD><B>'.db_result($res_user,0,'user_name').'</B></TD>
 </TR>
 <TR valign=top>
-	<TD>Real Name: </TD>
-	<TD><B><?php print db_result($res_user,0,'realname'); ?></B></TD>
+	<TD>'.$Language->getText('include_user_home','real_name').': </TD>
+	<TD><B>'.db_result($res_user,0,'realname').'</B></TD>
 </TR>
 <TR valign=top>
-	<TD>Email Addr: </TD>
+	<TD>'.$Language->getText('include_user_home','email_addr').': </TD>
 	<TD>
 	<B>
-	<A HREF="/sendmessage.php?touser=<?php print db_result($res_user,0,'user_id'); ?>">
-	<?php print db_result($res_user,0,'email'); ?>	
+	<A HREF="/sendmessage.php?touser='.db_result($res_user,0,'user_id').'">
+	'.db_result($res_user,0,'email').'	
 	</A></B>
 	</TD>
 </TR>
 <TR valign=top>
-	<TD>User Profile: </TD>
+	<TD'.$Language->getText('include_user_home','user_prof').': </TD>
         <TD>
-        <A HREF="/people/viewprofile.php?user_id=<?php print db_result($res_user,0,'user_id'); ?>"><B>See Skills Profile</B></A></TD>
+        <A HREF="/people/viewprofile.php?user_id='.db_result($res_user,0,'user_id').'"><B>'.$Language->getText('include_user_home','see_skills').'</B></A></TD>
 </TR>
 
 <TR>
 	<TD>
-	Site Member Since: 
+	'.$Language->getText('include_user_home','member_since').': 
 	</TD>
-	<TD><B><?php print date("M d, Y",db_result($res_user,0,'add_date')); ?></B></TD>
+	<TD><B>'.date("M d, Y",db_result($res_user,0,'add_date')).'</B></TD>
 
 <TR>
 	<TD>
-	User Status: 
+	'.$Language->getText('include_user_home','user_status').': 
 	</TD>
-	<TD><B><?php 
+	<TD><B>';
         switch(db_result($res_user,0,'status')) {
         case 'A':
-            echo "Active";
+            echo $Language->getText('include_user_home','active');
             break;
         case 'R':
-            echo "Restricted";
+            echo $Language->getText('include_user_home','restricted');
             break;
         case 'P':
-            echo "Pending";
+            echo $Language->getText('include_user_home','pending');
             break;
         case 'D':
-            echo "Deleted";
+            echo $Language->getText('include_user_home','deleted');
             break;
         case 'S':
-            echo "Suspended";
+            echo $Language->getText('include_user_home','suspended');
             break;
         default:
-            echo "Unknown";
+            echo $Language->getText('include_user_home','unkown');
         }
-?></B></TD>
-
-</TR>
 
 
-<?php
+echo '</B></TD>
+
+</TR>';
+
+
 // Some more information on the user from the LDAP server if available
 if ($GLOBALS['sys_ldap_server']) {
     if (!$showdir) {
-	echo '<td colspan="2" align="center"><a href="'.$PHP_SELF.'/?showdir=1"><hr>[ More from the '.$GLOBALS['sys_org_name'].' Directory... ]</a><td>';
+      echo '<td colspan="2" align="center"><a href="'.$PHP_SELF.'/?showdir=1"><hr>[ '.$Language->getText('include_user_home','more_from_directory',$GLOBALS['sys_org_name']).'... ]</a><td>';
 	
     } else {
         include(util_get_content('include/user_home'));
@@ -121,7 +126,7 @@ if ($GLOBALS['sys_ldap_server']) {
         $ldap = new LDAP();
         $info = $ldap->search($GLOBALS['sys_ldap_dn'],$ldap_filter);
         if (!$info) {
-            $feedback = $GLOBALS['sys_org_name'].' Directory: '.$ldap->getErrorMessage();
+            $feedback = $GLOBALS['sys_org_name'].' '.$Language->getText('include_user_home','directory').': '.$ldap->getErrorMessage();
         } else {
             // Format LDAP output based on templates given in user_home.txt
             if ( $my_html_ldap_format ) {
@@ -136,12 +141,12 @@ if ($GLOBALS['sys_ldap_server']) {
             } else {
                 // if no html template then produce a raw output
                 print '<td colspan="2" align="center"><hr><td>';
-                print '<tr valign="top"><td colspan="2">Total number of entries: '.$info["count"]."</td></tr>";
+                print '<tr valign="top"><td colspan="2">'.$Language->getText('include_user_home','total_entries').': '.$info["count"]."</td></tr>";
                 
                 for ($i=0; $i<$info["count"]; $i++) {
-                    print '<tr valign="top"><td colspan="2"><b>Entry # '.$i."</b></td></tr>";
-                    print '<tr valign="top"><td>&nbsp;&nbsp;Entry dn </td><td>'.$info[$i]["dn"]."</td></tr>";
-                    print '<tr valign="top"><td>&nbsp;&nbsp;# attributes </td><td>'.$info[$i]["count"]."</td></tr>";
+                    print '<tr valign="top"><td colspan="2"><b>'.$Language->getText('include_user_home','entry_#').' '.$i."</b></td></tr>";
+                    print '<tr valign="top"><td>&nbsp;&nbsp;'.$Language->getText('include_user_home','entry_dn').' </td><td>'.$info[$i]["dn"]."</td></tr>";
+                    print '<tr valign="top"><td>&nbsp;&nbsp;# '.$Language->getText('include_user_home','attributes').' </td><td>'.$info[$i]["count"]."</td></tr>";
                     
                     for ($j=0; $j<$info[$i]["count"]; $j++) {
                         $attrib_name = $info[$i][$j];
@@ -167,7 +172,7 @@ if ($GLOBALS['sys_ldap_server']) {
 </TD>
 <TD>&nbsp;</TD>
 <TD width=50%>
-<?php $HTML->box1_top("Project Info"); 
+<?php $HTML->box1_top($Language->getText('include_user_home','proj_info')); 
 // now get listing of groups for that user
 $res_cat = db_query("SELECT groups.group_name, "
 	. "groups.unix_group_name, "
@@ -179,11 +184,10 @@ $res_cat = db_query("SELECT groups.group_name, "
 
 // see if there were any groups
 if (db_numrows($res_cat) < 1) {
-	?>
-	<p>This developer is not a member of any projects.
-	<?php
+	echo '
+	<p>'.$Language->getText('include_user_home','not_member');
 } else { // endif no groups
-	print "<p>This developer is a member of the following projects:<BR>&nbsp;";
+	print '<p>'.$Language->getText('include_user_home','is_member').":<BR>&nbsp;";
 	while ($row_cat = db_fetch_array($res_cat)) {
 		print ("<BR>" . "<A href=\"/projects/$row_cat[unix_group_name]/\">$row_cat[group_name]</A>\n");
 	}
@@ -199,47 +203,49 @@ $HTML->box1_bottom(); ?>
 
 if (user_isloggedin()) {
 
-	?>
+	echo '
 	&nbsp;
 	<P>
-	<H3>Send a Message to <?php echo db_result($res_user,0,'realname'); ?></H3>
+	<H3>'.$Language->getText('include_user_home','send_message_to').' '.db_result($res_user,0,'realname').'</H3>
 	<P>
 	<FORM ACTION="/sendmessage.php" METHOD="POST">
-	<INPUT TYPE="HIDDEN" NAME="touser" VALUE="<?php echo $user_id; ?>">
+	<INPUT TYPE="HIDDEN" NAME="touser" VALUE="'.$user_id.'">
 
 
 
-	<B>Your Email Address:</B><!-- LJ<BR> -->
-	<B><?php $my_email=user_getemail(user_getid());
-	         echo $my_email; ?></B>
+	<B>'.$Language->getText('include_user_home','your_address').':</B><!-- LJ<BR> -->
+	<B>';
+	$my_email=user_getemail(user_getid());
 
-        <? // LJ echo user_getname().'@'.$GLOBALS['sys_users_host']; ?></B>
-	<!-- LJ INPUT TYPE="HIDDEN" NAME="email" VALUE="<?php echo user_getname().'@'.$GLOBALS['sys_users_host']; ?>" -->
+	echo $my_email.'</B>
 
-        <INPUT TYPE="HIDDEN" NAME="email" VALUE="<?php echo $my_email; ?>">	<P>
-	<B>Your Name:</B><!-- <BR> -->
-	<B><?php 
+        </B>
+	
+
+        <INPUT TYPE="HIDDEN" NAME="email" VALUE="'.$my_email.'">	<P>
+	<B>'.$Language->getText('include_user_home','your_name').':</B><!-- <BR> -->
+	<B>',
 
 	$my_name=user_getrealname(user_getid());
 
-	echo $my_name; ?></B>
-	<INPUT TYPE="HIDDEN" NAME="name" VALUE="<?php echo $my_name; ?>">
+	echo $my_name.'</B>
+	<INPUT TYPE="HIDDEN" NAME="name" VALUE="'.$my_name.'">
 	<P>
-	<B>Subject:</B><BR>
+	<B>'.$Language->getText('include_user_home','subject').':</B><BR>
 	<INPUT TYPE="TEXT" NAME="subject" SIZE="30" MAXLENGTH="40" VALUE="">
 	<P>
-	<B>Message:</B><BR>
+	<B>'.$Language->getText('include_user_home','message').':</B><BR>
 	<TEXTAREA NAME="body" ROWS="15" COLS="60" WRAP="HARD"></TEXTAREA>
 	<P>
 	<CENTER>
-	<INPUT TYPE="SUBMIT" NAME="send_mail" VALUE="Send Message">
+	<INPUT TYPE="SUBMIT" NAME="send_mail" VALUE="'.$Language->getText('include_user_home','send_message').'">
 	</CENTER>
-	</FORM>
-	<?php
+	</FORM>';
+	
 
 } else {
 
-	echo '<H3>You Could Send a Message if you were logged in</H3>';
+	echo '<H3>'.$Language->getText('include_user_home','send_message_if_logged').'</H3>';
 
 }
 

@@ -1,9 +1,11 @@
 <?php
 
+  //$Language->loadLanguageMsg('include/include');
+
 include(util_get_content('layout/osdn_sites'));
 
 function osdn_nav_dropdown() {
-    GLOBAL $osdn_sites;
+  GLOBAL $osdn_sites, $Language;
 
 ?>
 	<!-- OSDN navdropdown -->
@@ -18,7 +20,7 @@ function osdn_nav_dropdown() {
 
         <a href="<?php echo get_server_url();?>"><?php echo html_image("codex_logo.png",array("width"=>"135", "height"=>"33", "hspace"=>"10", "alt"=>$GLOBALS['sys_default_domain'], "border"=>"0")); ?></A><br>
         <select name=navbar onChange="handle_navbar(selectedIndex,this)">
-        <option>Network Gallery</option>
+																									    <option><?php echo $Language->getText('include_osdn','network_gallery'); ?></option>
         <option>------------</option>
 <?php
         reset ($osdn_sites);
@@ -52,6 +54,7 @@ function osdn_print_randpick($sitear, $num_sites = 1) {
 }
 
 function osdn_print_navbar() {
+  global $Language;
     print '
            <!-- OSDN navbar -->
            <table width="100%" cellpadding="2" cellspacing="0" border="0">
@@ -63,7 +66,7 @@ function osdn_print_navbar() {
     if (!strpos($motd,"empty.txt")) { # empty.txt returned when no motd file found
         include($motd);
     } else {
-	print '<span class="osdn">Network Gallery&nbsp;:&nbsp;';
+	print '<span class="osdn">'.$Language->getText('include_osdn','network_gallery').'&nbsp;:&nbsp;';
 	osdn_print_randpick($GLOBALS['osdn_sites'], 5);
 	print '</span>';
     }

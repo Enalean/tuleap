@@ -122,7 +122,7 @@ admin_groupedit	public	Public?
 admin_groupedit	license	License
 admin_groupedit	home_box	Home Box
 admin_groupedit	http_domain	HTTP Domain
-admin_groupedit	license_other	Other
+admin_groupedit	other	Other
 admin_groupedit	license_na	N/A
 admin_groupedit	send_email	Send New Project Instruction Email
 admin_groupedit	other_info	Other Information
@@ -237,7 +237,7 @@ admin_usergroup	shell	Shell
 admin_usergroup	email	Email
 admin_usergroup	ldap_name	LDAP Login
 admin_usergroup	unix_status	Unix Account Status
-admin_usergroup	noaccount	No Unix Account
+admin_usergroup	no_account	No Unix Account
 admin_usergroup	active	Active
 admin_usergroup	suspended	Suspended
 admin_usergroup	deleted	Deleted

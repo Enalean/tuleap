@@ -160,7 +160,7 @@ echo '
 <td><input type="text" name="description" size="70" maxlength="255"></td></tr>';
 if (($group_id==100)&&($su)) {
 echo '
-<tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','s_scop').'">'.$Language->getText('project_admin_editservice','scope').':</a></td>
+<tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','s_scope').'">'.$Language->getText('project_admin_editservice','scope').':</a></td>
 <td><FONT size="-1"><SELECT name="scope">
         <option value="system" selected>'.$Language->getText('project_admin_editservice','system').'</option>
         <option value="project">'.$Language->getText('project_admin_editservice','project').'</option>
@@ -196,7 +196,7 @@ echo '
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 $project=project_get_object($group_id);
 
-project_admin_header(array('title'=>$Language->getText('project_admin_editservice','ecit_s'),'group'=>$group_id,
+project_admin_header(array('title'=>$Language->getText('project_admin_editservice','edit_s'),'group'=>$group_id,
 			   'help' => 'ServiceConfiguration.html'));
 
 // $func is either: 

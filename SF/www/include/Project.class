@@ -78,7 +78,7 @@ class Project extends Group {
         $rows=db_numrows($db_res); 
         if ($rows < 1) {
             //function in class we extended
-            $this->setError('Services not found for this group');
+            $this->setError($Language->getText('include_project','services_not_found'));
             $this->service_data_array=array();
         } else {
             for ($j = 0; $j < $rows; $j++) { 

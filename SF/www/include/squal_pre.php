@@ -14,6 +14,8 @@ require_once('utils.php');
 require_once('squal_exit.php');
 require_once('browser.php');
 
+$Language->loadLanguageMsg('include/include');
+
 $sys_datefmt = "m/d/y H:i";
 
 // #### Connect to db
@@ -21,7 +23,7 @@ $sys_datefmt = "m/d/y H:i";
 db_connect();
 
 if (!$conn) {
-	exit_error("Could Not Connect to Database",db_error());
+	exit_error($Language->getText('include_squal_pre','not_connect_db'),db_error());
 }
 
 //require_once('logger.php');

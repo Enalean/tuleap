@@ -43,7 +43,7 @@ tracker_gotoid	invalid_art_nb	Invalid artifact number: $1.
 #
 tracker_group_selection	project_sel	Project Selection
 tracker_group_selection	my_proj	my projects
-tracker_group_selection	my_proj	all projects
+tracker_group_selection	all_proj	all projects
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/import_admin.php
@@ -57,7 +57,7 @@ tracker_import_admin	import_format	Import Format
 tracker_import_admin	import	Import
 tracker_import_admin	show_format	Show Format
 tracker_import_admin	tracker	Tracker
-tracker_import_admin	disabled	Trackers have been disabled for this project
+tracker_import_admin	disabled	Trackers have been disabled in this project.
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/import.php
@@ -267,7 +267,7 @@ tracker_include_artifact	fill_cc_list	<br>Fill your list using comma or semi-col
 tracker_include_artifact	attachment	Attachments
 tracker_include_artifact	upload	<B>Check to Upload&hellip;  <input type="checkbox" name="add_file" VALUE="1">&nbsp;&hellip;&amp; Attach File:</B><input type="file" name="input_file" size="40"><br><span class="small"><i>(The maximum upload file size is $1 Mb - <u>Please compress your files</u>)</i></span><P><B>File Description:</B>&nbsp;<input type="text" name="file_description" size="60" maxlength="255"><P>
 tracker_include_artifact	dependencies	Dependencies	
-tracker_include_artifact	aid	Artifact IDs:
+tracker_include_artifact	aids	Artifact IDs:
 tracker_include_artifact	fill	(Fill your list using the comma as separator)
 tracker_include_artifact	dependent_on	Is Dependent on:
 tracker_include_artifact	change_history	Change History:
@@ -276,7 +276,7 @@ tracker_include_artifact	old_val	Old Value
 tracker_include_artifact	new_val	New Value
 tracker_include_artifact	no_changes	No Changes Have Been Made to This $1	
 tracker_include_artifact	no_file_attached	No files currently attached	
-tracker_include_artifact	file_attachement	File Attachments
+tracker_include_artifact	file_attachment	File Attachments
 tracker_include_artifact	name	Name
 tracker_include_artifact	desc	Description
 tracker_include_artifact	size_kb	Size (KB)	
@@ -385,7 +385,7 @@ tracker_include_type	deletion_date	Deletion date
 tracker_include_type	delay	Delay?
 tracker_include_type	restore	Restore?
 tracker_include_type	delay_deletion	Delay deletion for this tracker?
-tracker_include_type	restore	Restore this tracker?
+tracker_include_type	restore_tracker	Restore this tracker?
 tracker_include_type	warning	** WARNING!! ** Delete this tracker and all its dependencies (no possible restore operation)?
 tracker_include_type	no_accessible	No Accessible Trackers Found
 tracker_include_type	create_from_scratch	Create a new tracker from scratch or from an existing tracker
@@ -580,7 +580,6 @@ tracker_common_field_factory	use_ins_err	Error during inserting artifact_field_u
 tracker_common_field_factory	vl_ins_err	Error during inserting artifact_field_value_list ($1-$2): $3
 tracker_common_field_factory	label_requ	Field label, data type or display type are required.
 tracker_common_field_factory	ins_err	Error during inserting artifact_field ($1-$2): $3
-tracker_common_field_factory	use_ins_err	Error during inserting artifact_field_usage ($1-$2): $3
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactFile.class
@@ -664,4 +663,4 @@ tracker_common_types	fr	Feature Requests
 tracker_common_types	fr_desc	Feature Request Tracking System
 tracker_common_types	fr_ex1	Interface Improvements (example)
 tracker_common_types	fr_ex2	Next Release (example)
-tracker_common_types	fail_fr	Failed to create reature request tracker: $1
+tracker_common_types	fail_fr	Failed to create feature request tracker: $1

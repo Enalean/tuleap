@@ -10,6 +10,8 @@
 
 require_once('common/include/Error.class');
 
+//$Language->loadLanguageMsg('include/include');
+
 /*
 
 	Extends the basic Error class to add HTML functions for displaying all site dependent HTML, while allowing extendibility/overriding by themes via the Theme class.
@@ -109,7 +111,7 @@ class Layout extends Error {
 
 	function generic_header_start($params) {
 
-            global $G_USER, $G_SESSION,$group_id;
+            global $G_USER, $G_SESSION,$group_id,$Language;
 
 	        if (!$params['title']) {
         	        $params['title'] = $GLOBALS['sys_name'];
@@ -136,14 +138,14 @@ class Layout extends Error {
         </SCRIPT>
         <link rel="stylesheet" type="text/css" href="<? echo util_get_css_theme(); ?>">
         <link rel="SHORTCUT ICON" href="<? echo util_get_image_theme("favicon.ico"); ?>">
-        <link rel="alternate" title="<? echo $GLOBALS['sys_name']; ?> Latest News RSS" href="<? echo $sys_url; ?>/export/rss_sfnews.php" type="application/rss+xml">
-        <link rel="alternate" title="<? echo $GLOBALS['sys_name']; ?> Newest Releases RSS" href="<? echo $sys_url; ?>/export/rss_sfnewreleases.php" type="application/rss+xml">
-        <link rel="alternate" title="<? echo $GLOBALS['sys_name']; ?> Newest Projects RSS" href="<? echo $sys_url; ?>/export/rss_sfprojects.php?type=rss&option=newest" type="application/rss+xml">
+        <link rel="alternate" title="<? echo $GLOBALS['sys_name'].$Language->getText('include_layout','latest_news_rss'); ?>" href="<? echo $sys_url; ?>/export/rss_sfnews.php" type="application/rss+xml">
+        <link rel="alternate" title="<? echo $GLOBALS['sys_name'].$Language->getText('include_layout','newest_releases_rss'); ?>" href="<? echo $sys_url; ?>/export/rss_sfnewreleases.php" type="application/rss+xml">
+        <link rel="alternate" title="<? echo $GLOBALS['sys_name'].$Language->getText('include_layout','newest_projects_rss'); ?>" href="<? echo $sys_url; ?>/export/rss_sfprojects.php?type=rss&option=newest" type="application/rss+xml">
 <?php
                 // If in a project page, add a project news feed
                 if ($GLOBALS['group_id']) {
                     $project=project_get_object($GLOBALS['group_id']);
-                    $project_feed='        <link rel="alternate" title="'.$project->getPublicName().' Latest News RSS" href="'.$sys_url.'/export/rss_sfnews.php?group_id='.$GLOBALS['group_id'].'" type="application/rss+xml">';
+                    $project_feed='        <link rel="alternate" title="'.$project->getPublicName().' '.$Language->getText('include_layout','latest_news_rss').'" href="'.$sys_url.'/export/rss_sfnews.php?group_id='.$GLOBALS['group_id'].'" type="application/rss+xml">';
                 }
                 echo $project_feed;
 	}
@@ -156,9 +158,9 @@ class Layout extends Error {
 
 	function generic_footer($params) {
 
-	        global $IS_DEBUG,$QUERY_COUNT;
+	        global $IS_DEBUG,$QUERY_COUNT,$Language;
         	if ($IS_DEBUG && user_ismember(1,'A')) {
-	                echo "<CENTER><B><span class=\"highlight\">Query Count: $QUERY_COUNT</span></B></CENTER>";
+	                echo "<CENTER><B><span class=\"highlight\">'.$Language->getText('include_layout','query_count').': $QUERY_COUNT</span></B></CENTER>";
                 	echo "<P>$GLOBALS[G_DEBUGQUERY]";
         	}
 	        ?>
@@ -192,6 +194,7 @@ class Layout extends Error {
 
 
 	function header($params) {
+	global $Language;
 	
 	        $this->generic_header_start($params); 
 
@@ -225,7 +228,7 @@ echo html_blankimage(5,100);
 <!-- First line with borders and corners -->
            <tr>
                <td background="<? echo util_get_image_theme("upper_left_corner.png"); ?>" width="1%" height="26"><img src="<? echo util_get_image_theme("upper_left_corner.png"); ?>" width="16" height="26" alt=" "></td>
-                <td background="<? echo util_get_image_theme("top_border.png"); ?>" align="left" colspan="3" width="99%"><a href="/"><img src="<? echo util_get_image_theme("codex_banner_lc.png"); ?>" border="0" alt="<?php echo $GLOBALS['sys_name']; ?> Banner"></a></td>
+                <td background="<? echo util_get_image_theme("top_border.png"); ?>" align="left" colspan="3" width="99%"><a href="/"><img src="<? echo util_get_image_theme("codex_banner_lc.png"); ?>" border="0" alt="<?php echo $GLOBALS['sys_name'].' '.$Language->getText('include_layout','banner'); ?>"></a></td>
                 <td><img src="<? echo util_get_image_theme("upper_right_corner.png"); ?>" width="16" height="26" alt=" "></td>
         </tr>
 
@@ -248,7 +251,7 @@ echo html_blankimage(5,100);
         <!-- VA Linux Stats Counter -->
         <?php
         if (!session_issecure()) {
-                print '<IMG src="'.util_get_image_theme("clear.png").'" width=140 height=1 alt="Counter"><BR>';
+                print '<IMG src="'.util_get_image_theme("clear.png").'" width=140 height=1 alt="'.$Language->getText('include_layout','counter').'"><BR>';
         } else {
                 print html_blankimage(1,140) . '<br>';
         }
@@ -258,7 +261,7 @@ echo html_blankimage(5,100);
         <!-- Company Logo here -->
         <P>
 	<?php
-	print '<center><IMG src="'.util_get_image_theme("organization_logo.png").'" alt="'.$GLOBALS['sys_org_name'].' Logo"></center><BR>';
+	print '<center><IMG src="'.util_get_image_theme("organization_logo.png").'" alt="'.$GLOBALS['sys_org_name'].' '.$Language->getText('include_layout','logo').'"></center><BR>';
 	?>
 
         <!-- menus -->

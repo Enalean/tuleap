@@ -2,6 +2,8 @@
 
 require_once('www/project/admin/project_admin_utils.php');
 
+$Language->loadLanguageMsg('include/include');
+
 //must be a project admin
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
@@ -11,22 +13,22 @@ if ($update) {
 	echo db_error();
 }
 
-project_admin_header(array('title'=>"Project Admin: ".group_getname($group_id),'group'=>$group_id));
+project_admin_header(array('title'=>$Language->getText('include_foundry_admin','proj_admin',group_getname($group_id)),'group'=>$group_id));
 
 if (!$field) {
 
-	?>
-	<H3>Choose A Field To Edit</H3>
+	echo '
+	<H3>'.$Language->getText('include_foundry_html_admin','choose_field').'</H3>
 	<P>
-	<A HREF="/foundry/<?php echo $expl_pathinfo[2]; ?>/admin/html/?field=freeform1_html">Top Freeform HTML</A><BR>
-	<A HREF="/foundry/<?php echo $expl_pathinfo[2]; ?>/admin/html/?field=freeform2_html">Bottom Freeform HTML</A><BR>
-	<A HREF="/foundry/<?php echo $expl_pathinfo[2]; ?>/admin/html/?field=sponsor1_html">Sponsor HTML</A><BR>
-	<?php
+	<A HREF="/foundry/'.$expl_pathinfo[2].'/admin/html/?field=freeform1_html">'.$Language->getText('include_foundry_html_admin','top_freeform').'</A><BR>
+	<A HREF="/foundry/'.$expl_pathinfo[2].'/admin/html/?field=freeform2_html">'.$Language->getText('include_foundry_html_admin','bottom_freeform').'</A><BR>
+	<A HREF="/foundry/'.$expl_pathinfo[2].'/admin/html/?field=sponsor1_html">'.$Language->getText('include_foundry_html_admin','sponsor').'</A><BR>
+	';
 
 } else {
 
 	echo '
-	<H3>Preview</H3>
+	<H3>'.$Language->getText('include_foundry_html_admin','preview').'</H3>
 	<P>
 	<TABLE WIDTH=75%><TR><TD>';
 
@@ -45,9 +47,9 @@ if (!$field) {
 	<INPUT TYPE="HIDDEN" NAME="field" VALUE="'. $field .'">
 	<TEXTAREA NAME="freeform_html" ROWS="25" COLS="70" WRAP="SOFT">'. htmlspecialchars($freeform_html) .'</TEXTAREA>
 	<P>
-	<INPUT TYPE="SUBMIT" NAME="preview" VALUE="Preview">
+	<INPUT TYPE="SUBMIT" NAME="preview" VALUE="'.$Language->getText('include_foundry_html_admin','preview').'">
 
-	<INPUT TYPE="SUBMIT" NAME="update" VALUE="Save Changes"> 
+	<INPUT TYPE="SUBMIT" NAME="update" VALUE="'.$Language->getText('include_foundry_html_admin','save_changes').'"> 
 	</FORM>';
 
 }

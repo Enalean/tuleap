@@ -17,6 +17,7 @@ conf	default_font	verdana,arial,helvetica,sans-serif
 conf	language_code	en
 conf	language_id	1
 global	perm_denied	Permission Denied
+global	error_perm_denied	Error - Permission Denied
 global	back_home	Back to Home Page
 global	back	Back
 global	btn_delete	Delete

@@ -91,7 +91,7 @@ if (user_ismember(1,'A')) {
 		}
 		echo '
 		<P>
-		<H3>'.$Language->getText('people_editprofile','add_new_skill').':</H3>
+		<H3>'.$Language->getText('people_utils','add_new_skill').':</H3>
 		<P>
 		<FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
 		<INPUT TYPE="HIDDEN" NAME="people_skills" VALUE="y">

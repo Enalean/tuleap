@@ -122,7 +122,7 @@ echo show_project_type_box($row_grp['project_type']);
 <P><B><?php echo $Language->getText('admin_groupedit','license'); ?></B>
 <SELECT name="form_license">
 <OPTION value="none"><?php echo $Language->getText('admin_groupedit','license_na'); ?>
-<OPTION value="other"><?php echo $Language->getText('admin_groupedit','license_other'); ?>
+<OPTION value="other"><?php echo $Language->getText('admin_groupedit','other'); ?>
 <?php
 	while (list($k,$v) = each($LICENSE)) {
 		print "<OPTION value=\"$k\"";

@@ -152,9 +152,7 @@ $Language->loadLanguageMsg('include/include');
 // so stop all accesses to the site
 require_once('license.php');
 if (license_already_declined()) {
-   exit_error('ERROR','Your site administrator declined the CodeX Software License. 
-The CodeX site has been shut down. For more information contact your  
-<a href="mailto:'.$GLOBALS['sys_email_admin'].'">Site Administrator</a>.');
+  exit_error($Language->getText('global','error'),$Language->getText('include_pre','site_admin_declines_license',$GLOBALS['sys_email_admin']));
 }
 
 // Check if anonymous user is allowed to browse the site

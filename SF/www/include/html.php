@@ -78,6 +78,7 @@ function html_get_timezone_popup ($title='timezone',$selected='xzxzxzx') {
  * @param		string	Which element of the box is to be selected
  */
 function html_get_language_popup ($Language,$title='language_id',$selected='xzxzxz') {
+  global $Language;
 	$res=$Language->getLanguages();
 	return html_build_select_box ($res,$title,$selected,false);
 }
@@ -372,17 +373,18 @@ function html_buildpriority_select_box ($name='priority', $checked_val='5') {
 		Return a select box of standard priorities.
 		The name of this select box is optional and so is the default checked value
 	*/
+  global $Language;
 	?>
 	<SELECT NAME="<?php echo $name; ?>">
-	<OPTION VALUE="1"<?php if ($checked_val=="1") {echo " SELECTED";} ?>>1 - Lowest</OPTION>
+    <OPTION VALUE="1"<?php if ($checked_val=="1") {echo " SELECTED";} ?>>1 - <?php echo $Language->getText('include_html','lowest'); ?></OPTION>
 	<OPTION VALUE="2"<?php if ($checked_val=="2") {echo " SELECTED";} ?>>2</OPTION>
 	<OPTION VALUE="3"<?php if ($checked_val=="3") {echo " SELECTED";} ?>>3</OPTION>
 	<OPTION VALUE="4"<?php if ($checked_val=="4") {echo " SELECTED";} ?>>4</OPTION>
-	<OPTION VALUE="5"<?php if ($checked_val=="5") {echo " SELECTED";} ?>>5 - Medium</OPTION>
+	<OPTION VALUE="5"<?php if ($checked_val=="5") {echo " SELECTED";} ?>>5 - <?php echo $Language->getText('include_html','medium'); ?></OPTION>
 	<OPTION VALUE="6"<?php if ($checked_val=="6") {echo " SELECTED";} ?>>6</OPTION>
 	<OPTION VALUE="7"<?php if ($checked_val=="7") {echo " SELECTED";} ?>>7</OPTION>
 	<OPTION VALUE="8"<?php if ($checked_val=="8") {echo " SELECTED";} ?>>8</OPTION>
-	<OPTION VALUE="9"<?php if ($checked_val=="9") {echo " SELECTED";} ?>>9 - Highest</OPTION>
+	<OPTION VALUE="9"<?php if ($checked_val=="9") {echo " SELECTED";} ?>>9 - <?php echo $Language->getText('include_html','highest'); ?></OPTION>
 	</SELECT>
 <?php
 
@@ -433,7 +435,7 @@ function site_footer($params) {
 	@result text - echos HTML to the screen directly
 */
 function site_project_header($params) {
-	GLOBAL $HTML;
+  GLOBAL $HTML, $Language;
 
 	/*
 		Check to see if active
@@ -448,7 +450,7 @@ function site_project_header($params) {
 
 	//group doesn't exist
 	if ($project->isError()) {
-		exit_error("Invalid Group","That group does not exist.");
+		exit_error($Language->getText('include_html','invalid_g'),$Language->getText('include_html','g_not_exist'));
 	}
 
 	//group is private

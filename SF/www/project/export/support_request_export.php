@@ -32,7 +32,7 @@ $lbl_list = array('support_id' => $Language->getText('project_export_support_req
 		  'assigned_to' => $Language->getText('project_export_support_request_export','assigned_to'),
 		  'open_date' => $Language->getText('project_export_support_request_export','open_date'),
 		  'close_date' => $Language->getText('project_export_support_request_export','close_date'),
-		  'status' => $Language->getText('project_export_support_request_export','status'),
+		  'status' => $Language->getText('project_admin_servicebar','status'),
 		  'follow_ups' => $Language->getText('project_export_artifact_export','follow_up_comments'));
 $dsc_list = array('support_id' => $Language->getText('project_export_support_request_export','support_id_desc'),
 		  'group_id' => $Language->getText('project_export_bug_deps_export','g_id_desc'),
@@ -73,11 +73,11 @@ if ($export == 'support_request') {
 
 	project_admin_header(array('title'=>$pg_title));
 
-	echo '<h3>'.$Language->getText('project_export_artifact_deps_export','bug_deps_export','Support Request').'</h3>';
+	echo '<h3>'.$Language->getText('project_export_bug_deps_export','bug_deps_export','Support Request').'</h3>';
 	if ($result) {
-	    echo '<P>'.$Language->getText('project_export_artifact_deps_export','no_bug_deps_found','support request');
+	    echo '<P>'.$Language->getText('project_export_bug_deps_export','no_bug_deps_found','support request');
 	} else {
-	    echo '<P>'.$Language->getText('project_export_artifact_deps_export','db_access_err',array('support request',$GLOBALS['sys_name']));
+	    echo '<P>'.$Language->getText('project_export_bug_deps_export','db_access_err',array('support request',$GLOBALS['sys_name']));
 	    echo '<br>'.db_error();
 	}
 	site_project_footer( array() );
@@ -86,7 +86,7 @@ if ($export == 'support_request') {
 
 } else if ($export == "support_request_format") {
 
-    echo $Language->getText('project_export_artifact_deps_export','bug_deps_export_format',' Support Request');
+    echo $Language->getText('project_export_bug_deps_export','bug_deps_export_format',' Support Request');
 
     $record = pick_a_record_at_random($result, $rows, $col_list);
     prepare_support_request_record($group_id,$record);   

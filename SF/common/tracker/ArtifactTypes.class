@@ -98,7 +98,7 @@ class ArtifactTypes extends Error {
 
 		$at=new ArtifactType($this->Group);
 		if (!$at || !is_object($at)) {
-			$this->setError($Language->getText('tracker_common_types','err_create'));
+			$this->setError($Language->getText('tracker_common_types','err_bugs'));
 			return false;
 		} else {
 			if ($at->create($Language->getText('tracker_common_types','bugs'),$Language->getText('tracker_common_types','bug_desc'),1,1,0,'',30,1,'','',1)) {

@@ -300,7 +300,7 @@ if (user_isloggedin()) {
 			    db_result($result2,$i,'filemodule_id').
 			    '" onClick="return confirm(\''.$Language->getText('my_index', 'stop_file').'\')">'.
 			    '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" '.
-			    'BORDER=0" ALT="'.$Language->getText('my_index', 'stop_monitoring').'"></A></TD></TR>';
+			    'BORDER=0" ALT="'.$Language->getText('my_index', 'stop_monitor').'"></A></TD></TR>';
 		    }
 		}
 		

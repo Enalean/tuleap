@@ -37,7 +37,7 @@ if ($by=='lang') {
 		"FROM snippet_package,user ".
 		"WHERE user.user_id=snippet_package.created_by AND snippet_package.category='$cat'";
 
-	echo '<H3>'.$Language->getText('snippet_browse','s_cat',snippet_data_get_category_from_id($cat)).'</H3>';
+	echo '<H3>'.$Language->getText('snippet_browse','s_category',snippet_data_get_category_from_id($cat)).'</H3>';
 
 } else {
 

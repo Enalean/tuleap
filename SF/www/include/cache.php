@@ -10,6 +10,7 @@
 // #################################### function cache_display
 
 function cache_display($name,$function,$time) {
+  global $Language;
 	$filename = $GLOBALS['sf_cache_dir']."/sfcache_".$GLOBALS['sys_user_theme']."_$name.sf";
 
 	while ((@filesize($filename)<=1) || ((time() - filectime($filename)) > $time)) {
@@ -25,7 +26,7 @@ function cache_display($name,$function,$time) {
 			if(flock($rfh,2)) { 
 				// open file for writing. if this does not work, something is broken.
 				if (!$wfh = @fopen($filename,'w')) {
-					return "Unable to open cache file for writing after obtaining lock.";
+					return $Language->getText('include_cache','unable_open_cache');
 				}
 				// have successful locks and opens now
 				$return=cache_get_new_data($function);

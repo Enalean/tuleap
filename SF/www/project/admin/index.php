@@ -78,7 +78,7 @@ if ($func) {
             
             // Remove user from ugroups attached to this project
             if (!ugroup_delete_user_from_project_ugroups($group_id,$rm_id)) {
-                $feedback .= ' '.$Language->getText('project_admin_index','el_user_from_ug_fail').' ';
+                $feedback .= ' '.$Language->getText('project_admin_index','del_user_from_ug_fail').' ';
             }
 
             $feedback .= ' '.$Language->getText('project_admin_index','user_removed').' ';
@@ -214,7 +214,7 @@ echo '</TD></TR>
 	Links to Services administration pages
 */
 
-$HTML->box1_top('Services Administration&nbsp;'.help_button('ServicesAdministration.html'));
+$HTML->box1_top($Language->getText('project_admin_index','s_admin').'&nbsp;'.help_button('ServicesAdministration.html'));
 
 
 echo '
@@ -222,7 +222,7 @@ echo '
 if ($project->usesForum()) {
     echo '	<A HREF="/forum/admin/?group_id='.$group_id.'">'.$Language->getText('project_admin_index','forum_admin').'</A><BR>';
 }
-if ($project->usesBugs())) {
+if ($project->usesBugs()) {
     echo '	<A HREF="/bugs/admin/?group_id='.$group_id.'">'.$Language->getText('project_admin_index','bug_admin').'</A><BR>';
 }
 if ($project->usesSupport()) {

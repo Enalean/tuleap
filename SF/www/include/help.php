@@ -6,6 +6,9 @@
 //
 // $Id$
 
+
+  //$Language->loadLanguageMsg('include/include');
+
 /**
 * help_button() - Show a help button.
 *
@@ -36,6 +39,7 @@ function help_button($type,$helpid=false,$prompt='[?]') {
 * @param        string    Header title
 */
 function help_header($title, $help_banner=true) {
+  global $Language;
 ?>
 <HTML>
 <HEAD>
@@ -43,7 +47,7 @@ function help_header($title, $help_banner=true) {
 <LINK rel="stylesheet" href="<? echo util_get_css_theme(); ?>" type="text/css">
 </HEAD>
 <BODY class="bg_help">
-<?php print ($help_banner ? '<H4>'.$GLOBALS['sys_name'].' Site Help System</H4>' : ''); ?>
+<?php print ($help_banner ? '<H4>'.$GLOBALS['sys_name'].' '.$Language->getText('include_help','site_help_sys').'</H4>' : ''); ?>
 <H2><?php print $title; ?></H2>
 <HR>
 <?php

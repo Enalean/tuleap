@@ -10,6 +10,8 @@
 //require_once('common/include/Error.class');
 //require_once('common/include/Permission.class');
 
+//$Language->loadLanguageMsg('include/include');
+
 /*
 
 	Group object by Tim Perdue, August 28, 2000
@@ -107,12 +109,13 @@ class Group extends Error {
 	var $is_admin;
 
 	function Group($id) {
+	global $Language;
 		$this->Error();
 		$this->group_id=$id;
 		$this->db_result=db_query("SELECT * FROM groups WHERE group_id='$id'");
 		if (db_numrows($this->db_result) < 1) {
 			//function in class we extended
-			$this->setError('Group Not Found');
+			$this->setError($Language->getText('include_group','g_not_found'));
 			$this->data_array=array();
 		} else {
 			//set up an associative array for use by other functions

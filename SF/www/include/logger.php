@@ -10,6 +10,8 @@
 	Determine group
 */
 
+  //$Language->loadLanguageMsg('include/include');
+
 if ($group_id) {
 	$log_group=$group_id;
 } else if ($form_grp) {
@@ -27,7 +29,7 @@ $sql =	"INSERT INTO activity_log "
 $res_logger = db_query ( $sql );
 
 if (!$res_logger) {
-	echo "An error occured in the logger.\n";
+	echo $Language->getText('include_logger','log_err');
 	echo db_error();
 	exit;
 }

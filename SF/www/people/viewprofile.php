@@ -13,7 +13,7 @@ $Language->loadLanguageMsg('people/people');
 
 if ($user_id) {
 
-	people_header(array('title'=>$Language->getText('people_userprofile','title')));
+	people_header(array('title'=>$Language->getText('people_viewprofile','title')));
 
 	//for security, include group_id
 	$sql="SELECT * FROM user WHERE user_id='$user_id'";

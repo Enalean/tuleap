@@ -271,7 +271,7 @@ if ($group_id && !$atid) {
 					   'help' => 'TrackerAdministration.html#TrackerCannedResponses'));
 			$aci = $ach->fetchData($artifact_canned_id);
 			if (!$aci) {
-			  exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','not_found_canned_item',$artifact_canned_id));
+			  exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','not_found_canneditem',$artifact_canned_id));
 			}
 			$ach->displayUpdateForm();
 		} else {

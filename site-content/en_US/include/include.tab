@@ -11,14 +11,459 @@
 #  */
 #
 #-----------------------------------------------
-# Script: SF/www/include/exit.php
+# Script: SF/www/include/account.php
 #
+include_account	pwd_length_err	Password must be at least 6 characters.
+include_account	account_pending	Account '$1' pending. Must first be confirmed by user. User not added.
+include_account	user_added	User added
+include_account	user_already_member	User is already a member
+include_account	user_not_exist	User does not exist
+include_account	welcome	$1 - Welcome to Project $2
+include_account	login_err	There cannot be any spaces in the login name.
+include_account	char_err	There must be at least one character.
+include_account	illegal_char	Illegal character in name.
+include_account	name_too_short	Name is too short. It must be at least 3 characters.
+include_account	name_too_long	Name is too long. It must be less than 32 characters.
+include_account	reserved	Name is reserved.
+include_account	reserved_cvs	Name is reserved for CVS.
+include_account	reserved_dns	Name is reserved for DNS purposes.
+include_account	dns_error	Group name cannot contain underscore for DNS reasons.
+#
+#-----------------------------------------------
+# Script: SF/www/include/account.php
+#
+include_cache	unable_open_cache	Unable to open cache file for writing after obtaining lock.
+#
+#-----------------------------------------------
+# Script: SF/www/include/exit.php
+#   
 include_exit	error	Error
 include_exit	info	Information
 include_exit	warn	Warning
+include_exit	perm_denied	Permission Denied
+include_exit	exit_error	Exiting with Error
+include_exit	no_perm	You are not granted sufficient permission to perform this operation.
+include_exit	not_logged_in	Not Logged In
+include_exit	need_to_login	Sorry, you have to be <A HREF="/account/login.php">logged in</A> to view this page.
+include_exit	choose_proj_err	Error - Choose a Project
+include_exit	no_gid_err	ERROR - No group_id was chosen.
+include_exit	missing_param_err	Error - Missing Parameters
+#
+#-----------------------------------------------
+# Script: SF/www/include/features_boxes.php
+#   
+include_features_boxes	stats	Statistics
+include_features_boxes	top_download_yesterday	Top Downloads Yesterday
+include_features_boxes	newest_releases	Newest Releases
+include_features_boxes	rss_format	- RSS Format
+include_features_boxes	xml	XML
+include_features_boxes	newest_projects	Newest Projects
+include_features_boxes	most_active_week	Most Active This Week
+include_features_boxes	most_active	Most Active
+include_features_boxes	top_downloads	Top Downloads
+include_features_boxes	featured_projects	Featured Projects
+include_features_boxes	more	More
+include_features_boxes	no_projects	No Projects
+include_features_boxes	downloads_yesterday	Downloads Yesterday
+include_features_boxes	hosted_projects	Hosted Projects
+include_features_boxes	registered_users	Registered Users
+include_features_boxes	files_download	Files Downloaded
+include_features_boxes	pages_viewed	Pages Viewed
+#
+#-----------------------------------------------
+# Script: SF/www/include/foundry_admin.php
+#
+include_foundry_admin	removed_proj	Removed a Project
+include_foundry_admin	user_not_removed	User Not Removed - You cannot remove admins from a project.\nYou must first turn off their admin flag and/or find another admin for the project
+include_foundry_admin	user_removed	Removed a User
+include_foundry_admin	proj_added	Project was added
+include_foundry_admin	proj_already_member	Project was already a featured member
+include_foundry_admin	proj_not_exist	That project does not exist on SourceForge
+include_foundry_admin	upd_fail	Update failed
+include_foundry_admin	data_updated	Data Updated
+include_foundry_admin	proj_admin	Project Admin: $1
+include_foundry_admin	featured_proj	Featured Projects
+include_foundry_admin	no_proj	No Projects
+include_foundry_admin	g_members	Group Members
+include_foundry_admin	edit_perm	Edit Member Permissions
+include_foundry_admin	submit_news	Submit Your News
+include_foundry_admin	foundry_news_admin	Foundry-wide News Admin
+include_foundry_admin	forum_admin	Forum Admin
+include_foundry_admin	edit_freeform	Edit FreeForm HTML
+include_foundry_admin	tool_admin	Tool Admin
+include_foundry_admin	guide_img	Guide Image
+include_foundry_admin	logo_img	Logo Image
+include_foundry_admin	trove_cat	Trove Categories
+include_foundry_admin	must_separate	must comma separate
+include_foundry_admin	add_proj_users	Add Projects/Users
+include_foundry_admin	add_proj	Add Project
+include_foundry_admin	add_user	Add User
+include_foundry_admin	unix_name	Unix Name
+include_foundry_admin	rank	Rank (for projects)
+include_foundry_admin	add	Add
+#
+#-----------------------------------------------
+# Script: SF/www/include/foundry_home.php
+#  
+include_foundry_home	title	$1 - Foundry
+include_foundry_home	foundry_news	Foundry News
+include_foundry_home	discussion_forums	Discussion Forums
+include_foundry_home	no_forums_found	No forums found for $1
+#
+#-----------------------------------------------
+# Script: SF/www/include/foundry_html_admin.php
+#
+include_foundry_html_admin	choose_field	Choose A Field To Edit
+include_foundry_html_admin	top_freeform	Top Freeform HTML
+include_foundry_html_admin	bottom_freeform	Bottom Freeform HTML
+include_foundry_html_admin	sponsor	Sponsor HTML
+include_foundry_html_admin	preview	Preview
+include_foundry_html_admin	save_changes	Save Changes
+#
+#-----------------------------------------------
+# Script: SF/www/include/foundry_news.php
+#
+include_foundry_news	upd_err	ERROR doing update
+include_foundry_news	newsbyte_upd	NewsByte Updated.
+include_foundry_news	newsbyte	NewsBytes
+include_foundry_news	not_found_err	Error - not found
+include_foundry_news	approve_newsbyte	Approve a NewsByte
+include_foundry_news	submitted_for_proj	Submitted for Project
+include_foundry_news	submitted_by	Submitted by
+include_foundry_news	approve_for_foundry	Approve For Foundry Page
+include_foundry_news	unapprove	Unapprove
+include_foundry_news	delete	Delete
+include_foundry_news	subject	Subject
+include_foundry_news	details	Details
+include_foundry_news	no_queued_items_found	No Queued Items Found
+include_foundry_news	items_need_approve	These items need to be approved
+include_foundry_news	no_deleted_items_this_week	No deleted items found for this week	
+include_foundry_news	items_deleted_past_week	These items were deleted this past week
+include_foundry_news	no_approved_items_this_week	No approved items found for this week
+include_foundry_news	items_approved_past_week	These items were approved this past week
+include_foundry_news	need_to_be_proj_admin	Permission Denied. You have to be an admin on the project you are editing or a member of the SourceForge News team.
+#
+#-----------------------------------------------
+# Script: SF/www/include/group.php
+#
+include_group	g_not_found	Group Not Found
+#
+#-----------------------------------------------
+# Script: SF/www/include/help.php
+#
+include_help	site_help_sys	Site Help System
+#
+#-----------------------------------------------
+# Script: SF/www/include/html.php
+#
+include_html	lowest	Lowest
+include_html	medium	Medium
+include_html	highest	Highest
+include_html	g_not_exist	That group does not exist.
+include_html	invalid_g	Invalid Group
+#
+#-----------------------------------------------
+# Script: SF/www/include/layout.php
+#
+include_layout	latest_news_rss	Latest News RSS
+include_layout	newest_releases_rss	Newest Releases RSS
+include_layout	newest_projects_rss	Newest Projects RSS
+include_layout	query_count	Query Count
+include_layout	banner	Banner
+include_layout	logo	Logo
+include_layout	counter	Counter
+#
+#-----------------------------------------------
+# Script: SF/www/include/license.php
+#
+include_license	cannot_open_acc	Cannot open license acceptance in file: $1 
+include_license	license_accepted	CodeX Core Software License accepted on 
+include_license	cannot_write_acc	Cannot write license acceptance in file: $1
+include_license	cannot_open_decl	Cannot open license declination file: $1
+include_license	license_declined	CodeX Core Software License declined on 
+include_license	cannot_write_decl	Cannot write license declination in file: $1
+include_license	msg_accept	Thanks for accepting the terms and conditions of the CodeX \nlicense. You can now enjoy the CodeX site
+include_license	msg_declined	You have chosen to decline the terms and conditions of the \nCodeX Software License. You must return all the CodeX Software and \nDocumentation to Xerox and remove it from all your machines
+#
+#-----------------------------------------------
+# Script: SF/www/include/logger.php
+#
+include_logger	log_err	An error occured in the logger.\n
+#
+#-----------------------------------------------
+# Script: SF/www/include/menu.php
+#
+include_menu	site_admin	Administration
+include_menu	main_page	Main Page
+include_menu	user_admin	User Admin
+include_menu	group_admin	Group Admin
+include_menu	pending_projects	Pending Projects
+include_menu	pending_users	Pending Users
+include_menu	site_news_approve	Site News Approval
+include_menu	mass_mail	Mass Mail
+include_menu	trove_cat_list	Trove Cat. List
+include_menu	trove_cat_add	Trove Cat. Add
+include_menu	people_skill	People Skills
+include_menu	bugs	Bugs
+include_menu	tasks	Tasks
+include_menu	supp_requ	Support Requests
+include_menu	this_forum	This Forum
+include_menu	this_tracker	This Tracker
+include_menu	software_proj	Software Projects
+include_menu	code_snippets	Code Snippets 
+include_menu	people	People
+include_menu	require_all_words	Require All Words
+include_menu	search	Search
+include_menu	software_map	Software Map
+include_menu	software	Software
+include_menu	new_releases	New Releases
+include_menu	other_site_mirrors	Other Site Mirrors
+include_menu	code_snippet_lib	Code Snippet Library
+include_menu	help_index	Help Index
+include_menu	site_doc	Site Documentation
+include_menu	dev_channel	Developers Channels
+include_menu	discussion_forum	Discussion Forums
+include_menu	contact_us	Contact Us
+include_menu	sf_foundries	Sourceforge Foundries
+include_menu	about_foudries	About Foundries
+include_menu	games	Games
+include_menu	printing	Printing
+include_menu	proj	Project
+include_menu	proj_summary	Project Summary
+include_menu	proj_admin	Project Admin
+include_menu	summary_page	Summary Page
+include_menu	foundry_admin	Foundry Admin
+include_menu	foundry_guides	Foundry Guides
+include_menu	foundry	Foundry
+include_menu	logged_in	Logged In
+include_menu	logout	Logout
+include_menu	register_new_proj	Register New Project
+include_menu	account_maintenance	Account Maintenance
+include_menu	my_perso_page	My Personal Page
+include_menu	bookmark_this_page	Bookmark This Page
+include_menu	status	Status
+include_menu	not_logged_in	NOT LOGGED IN
+include_menu	login	Login
+include_menu	new_user	New User
+#
+#-----------------------------------------------
+# Script: SF/www/include/osdn.php
+#
+include_osdn	network_gallery	Network Gallery
+#
+#-----------------------------------------------
+# Script: SF/www/include/pre.php
+#
+include_pre	site_admin_declines_license	Your site administrator declined the CodeX Software License. \nThe CodeX site has been shut down. For more information contact your  \n<a href="mailto:$1">Site Administrator</a>.
+#
+#-----------------------------------------------
+# Script: SF/www/include/project.php
+#
+include_project	services_not_found	Services not found for this group
+#
+#-----------------------------------------------
+# Script: SF/www/include/project_home.php
+#  
+include_project_home	proj_info	Project Info
+include_project_home	not_official_site	<P>NOTE: This project entry is maintained by the $1 staff. We are not \nthe official site for this product. Additional copyright information may be found on this project's homepage.\n
+include_project_home	more_info	More information
+include_project_home	no_short_desc	This project has not yet submitted a short description.You can <a href="$1"> submit it</a> now.
+include_project_home	other_info	Other information
+include_project_home	view_proj_activity	View project activity <a href="$1">statistics</a>
+include_project_home	devel_info	Developer Info
+include_project_home	proj_admins	Project Admins
+include_project_home	devels	Developers
+include_project_home	view_members	View Members
+include_project_home	latest_file_releases	Latest File Releases
+include_project_home	package	Package
+include_project_home	version	Version
+include_project_home	notes	Notes / Monitor
+include_project_home	download	Download
+include_project_home	no_files_released	This Project Has Not Released Any Files
+include_project_home	release_notes	Release Notes
+include_project_home	monitor_pack	Monitor This Package
+include_project_home	view_all_files	View ALL Project Files
+include_project_home	public_areas	Public Areas
+include_project_home	homepage	Homepage
+include_project_home	proj_home	Project Homepage
+include_project_home	public_forums	Public Forums
+include_project_home	msg	<B>$1</B> messages in
+include_project_home	forums	<B>$1</B> forums
+include_project_home	bug_track	Bug Tracking
+include_project_home	open_bugs	open bugs
+include_project_home	supp_manager	Support Manager
+include_project_home	open_requ	<B>$1</B> open requests
+include_project_home	tech_supp_manager	Tech Support Manager
+include_project_home	doc	Documentation
+include_project_home	doc_man	DocManager: Project Documentation
+include_project_home	patch_manager	Patch Manager
+include_project_home	open_patches	<B>$1</B> open patches
+include_project_home	mail_lists	Mailing Lists
+include_project_home	public_mail_lists	<B>$1</B> public mailing lists
+include_project_home	total	<B>$1</B> total
+include_project_home	task_manager	Task Manager
+include_project_home	proj_task_man	Project/Task Manager
+include_project_home	no_public_proj	There are no public projects available
+include_project_home	survey	Survey
+include_project_home	surveys	Surveys
+include_project_home	nb_surveys	<B>$1</B> surveys
+include_project_home	cvs_repo	CVS Repository
+include_project_home	commits	<B>$1</B> commits
+include_project_home	adds	<B>$1</B> adds
+include_project_home	co	<B>$1</B> checkouts
+include_project_home	browse_cvs	Browse CVS
+include_project_home	svn_repo	Subversion Repository
+include_project_home	browse_svn	Browse Subversion
+include_project_home	accesses	<B>$1</B> accesses
+include_project_home	files	Files
+include_project_home	file_releases	File Releases
+include_project_home	packages	<B>$1</B> packages
+include_project_home	trackers	Trackers
+include_project_home	no_arttypefact	Could Not Get ArtifactTypeFactory
+include_project_home	no_trackers_accessible	No Accessible Trackers Found
+include_project_home	anon_ftp_space	Anonymous FTP Space
+include_project_home	latest_news	Latest News
+#
+#-----------------------------------------------
+# Script: SF/www/include/proj_email.php
+#
+include_proj_email	g_not_exist	Group [ $1 ] does not exist. Shame on you, sysadmin.
+include_proj_email	no_admin	Group [ $1 ] does not seem to have any administrators.
+include_proj_email	proj_type	Project Type
+include_proj_email	proj_approve	Project $1 Approved
+include_proj_email	account_register	$1 Account Registration
+#
+#-----------------------------------------------
+# Script: SF/www/include/session.php
+#
+include_session	missing_pwd	Missing Password Or User Name
+include_session	invalid_ldap_name	Invalid LDAP User Name
+include_session	dir_authent	Directory Authentication
+include_session	use_ldap_login	Please use your ldap login
+include_session	account_suspended	Account Suspended
+include_session	account_pending	Account Pending
+include_session	account_deleted	Account Deleted
+include_session	account_not_active	Account Not Active
+include_session	insufficient_g_access	Insufficient Group Access
+include_session	no_perm_to_view	You do not have permission to view this page
+include_session	insufficient_u_access	Insufficient User Access
+include_session	required_login	Required Login
+include_session	login	In order to view this page, you must be logged in.
+include_session	insufficient_access	Insufficient Access
+include_session	no_access	Probably by mangling a URL, you have attempted to reach a part of the site for which you do not have access. This can probably be fixed by properly navigating through the site.
+include_session	hash_err	ERROR - two people had the same hash - backarrow and re-login. It should never happen again
+#
+#-----------------------------------------------
+# Script: SF/www/include/snippet_caching.php
+#
+include_snippet_caching	browse_snippet	Browse Snippets
+include_snippet_caching	browse_explain	You can browse the snippet library quickly by language or category. You can also search code snippets by keywords using the Search box in the left menu pane.
+include_snippet_caching	count_update	Counts last updated $1
+include_snippet_caching	browse_lang	Browse by Language
+include_snippet_caching	browse_cat	Browse by Category
+#
+#-----------------------------------------------
+# Script: SF/www/include/squal_exit.php
+#
+include_squal_exit	err	ERROR
+include_squal_exit	perm_denied	PERMISSION DENIED
+include_squal_exit	choose_proj	CHOOSE A PROJECT/GROUP
+include_squal_exit	missing_param	MISSING REQUIRED PARAMETERS
+#
+#-----------------------------------------------
+# Script: SF/www/include/squal_pre.php
+#
+include_squal_pre	not_connect_db	Could Not Connect to Database
+#
+#-----------------------------------------------
+# Script: SF/www/include/stats_function.php
+#
+include_stats_function	stats_problem	Stats Problem
+include_stats_function	view_by_week	Page Views By Week
+include_stats_function	view_by_hour	Page Views By Hour
+include_stats_function	new_proj_added	New Projects Added Each Week
+include_stats_function	new_user_added	New Users Added Each Week
+include_stats_function	logo_by_day	Logo Showings By Day
+include_stats_function	logo_by_proj	Logo Showings By Project
+include_stats_function	view_by_browser	Page Views By Browser
+include_stats_function	view_by_platform	Page Views By Platform
+include_stats_function	view_by_platform_browser	Page Views By Platform/Browser Version
+#
+#-----------------------------------------------
+# Script: SF/www/include/trove.php
+#
+include_trove	none_selected	None Selected
+include_trove	not_categorized_yet	This project has not yet categorized itself in the <A href="$1">Trove Software Map</A>.You can <a href=$2>categorize it</a> now.
+include_trove	now_filter	Now Filtering
+include_trove	filter	Filter
+#
+#-----------------------------------------------
+# Script: SF/www/include/user_home.php
+#
+include_user_home	devel_profile	Developer Profile
+include_user_home	no_such_user	No such User
+include_user_home	perso_info	Personal Information
+include_user_home	user_id	User ID
+include_user_home	login_name	Login Name
+include_user_home	real_name	Real Name
+include_user_home	email_addr	Email Addr
+include_user_home	user_prof	User Profile
+include_user_home	see_skills	See Skills Profile
+include_user_home	member_since	Site Member Since
+include_user_home	user_status	User Status
+include_user_home	active	Active
+include_user_home	restricted	Restricted
+include_user_home	pending	Pending
+include_user_home	deleted	 Deleted
+include_user_home	suspended	Suspended
+include_user_home	unkown	Unkown
+include_user_home	more_from_directory	More from the $1 Directory
+include_user_home	directory	Directory
+include_user_home	total_entries	Total number of entries
+include_user_home	entry_#	Entry #
+include_user_home	entry_dn	Entry dn
+include_user_home	attributes	attributes
+include_user_home	proj_info	Project info
+include_user_home	is_member	This developer is a member of the following projects
+include_user_home	not_member	This developer is not a member of any projects.
+include_user_home	send_message_to	Send a Message to 
+include_user_home	your_address	Your Email Address
+include_user_home	your_name	Your Name
+include_user_home	send_message	Send Message
+include_user_home	send_message_if_logged	You Could Send a Message if you were logged in
+include_user_home	subject	Subject
+include_user_home	message	Message
 #
 #-----------------------------------------------
 # Script: SF/www/include/user.php
 #
 include_user	not_found	Error - Not Found
-
+include_user	invalid_u_id	Invalid User ID
+#
+#-----------------------------------------------
+# Script: SF/www/include/utils.php
+#
+include_utils	prio_colors	Priority Colors
+include_utils	address_problem	There are problems with the following addresses
+include_utils	email_explain	Email addresses must either be valid CodeX user names (e.g., 'jdoe') or fully qualified email addresses (e.g., 'jill.doe@somewhere.xerox.com'). Lists of email addresses may be separated by either commas or semicolons.
+#
+#-----------------------------------------------
+# Script: SF/www/include/vars.php
+#
+include_vars	policy	$1 Code eXchange Policy
+include_vars	website_only	WebSite Only
+include_vars	other	Other
+include_vars	comip	For COMIP approved Open Source projects
+include_vars	gpl	GNU General Public License (GPL)
+include_vars	lgpl	GNU Library Public License (LGPL)
+include_vars	bsdl	BSD License
+include_vars	mitxl	MIT/X Consortium License
+include_vars	artistic_l	Artistic License
+include_vars	moz_l	Mozilla Public License
+include_vars	qtp_l	Qt Public License
+include_vars	ibm_l	IBM Public License
+include_vars	p_l	Python License
+include_vars	public_domain	Public Domain
+include_vars	other_env	Other Environment
+include_vars	web_env	Web Environment
+include_vars	other_lang	Other Language

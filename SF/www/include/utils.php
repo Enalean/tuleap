@@ -6,6 +6,8 @@
 //
 // $Id$
 
+  //$Language->loadLanguageMsg('include/include');
+
 // This function returns a string of the date $value with the format $format and
 // if this date is not set, return the default value $default_value
 function format_date($format,$value,$default_value = '-') {
@@ -314,7 +316,8 @@ function util_make_links ($data='',$group_id = 0, $group_artifact_id = 0) {
 }
 
 function util_user_link ($username) {
-    if ( $username == 'None' || empty($username)) { return $username; }
+  global $Language;
+    if ( $username == $Language->getText('global','none') || empty($username)) { return $username; }
     return '<a href="/users/'.$username.'">'.$username.'</a>';
 }
 
@@ -358,8 +361,9 @@ function util_double_diff_array($arr1, $arr2) {
 }
 
 function show_priority_colors_key($msg='') {
+  global $Language;
 
-	echo '<P class="small"><B>'.($msg ? $msg : 'Priority Colors:').'</B><BR>
+	echo '<P class="small"><B>'.($msg ? $msg : $Language->getText('include_utils','prio_colors').':').'</B><BR>
 
 		<TABLE BORDER=0><TR>';
 
@@ -386,17 +390,18 @@ function build_priority_select_box ($name='priority', $checked_val='5') {
 		Return a select box of standard priorities.
 		The name of this select box is optional and so is the default checked value
 	*/
+  global $Language;
 	?>
 	<SELECT NAME="<?php echo $name; ?>">
-	<OPTION VALUE="1"<?php if ($checked_val=="1") {echo " SELECTED";} ?>>1 - Lowest</OPTION>
+    <OPTION VALUE="1"<?php if ($checked_val=="1") {echo " SELECTED";} ?>>1 - <?php echo $Language->getText('include_html','lowest'); ?></OPTION>
 	<OPTION VALUE="2"<?php if ($checked_val=="2") {echo " SELECTED";} ?>>2</OPTION>
 	<OPTION VALUE="3"<?php if ($checked_val=="3") {echo " SELECTED";} ?>>3</OPTION>
 	<OPTION VALUE="4"<?php if ($checked_val=="4") {echo " SELECTED";} ?>>4</OPTION>
-	<OPTION VALUE="5"<?php if ($checked_val=="5") {echo " SELECTED";} ?>>5 - Medium</OPTION>
+	<OPTION VALUE="5"<?php if ($checked_val=="5") {echo " SELECTED";} ?>>5 - <?php echo $Language->getText('include_html','medium'); ?></OPTION>
 	<OPTION VALUE="6"<?php if ($checked_val=="6") {echo " SELECTED";} ?>>6</OPTION>
 	<OPTION VALUE="7"<?php if ($checked_val=="7") {echo " SELECTED";} ?>>7</OPTION>
 	<OPTION VALUE="8"<?php if ($checked_val=="8") {echo " SELECTED";} ?>>8</OPTION>
-	<OPTION VALUE="9"<?php if ($checked_val=="9") {echo " SELECTED";} ?>>9 - Highest</OPTION>
+	<OPTION VALUE="9"<?php if ($checked_val=="9") {echo " SELECTED";} ?>>9 - <?php echo $Language->getText('include_html','highest'); ?></OPTION>
 	</SELECT>
 <?php
 
@@ -657,6 +662,7 @@ function validate_emails ($addresses) {
      * @return boolean
      */
     function util_validateCCList($arr_email, &$message) {
+      global $Language;
         $valid = true;
         $message = "";
         
@@ -674,14 +680,9 @@ function validate_emails ($addresses) {
         }
         
         if (! $valid) {
-            $message = "There are problems with the following addresses:"
+            $message = $Language->getText('include_utils','address_problem').":"
                 . "<blockquote>$message</blockquote>"
-                . "Email addresses must either be valid "
-                . "CodeX user names (e.g., 'jdoe') or fully qualified "
-                . "email addresses (e.g., 'jill.doe@somewhere.xerox.com'). "
-                . "Lists of email addresses may be separated by either "
-                . "commas or semicolons."
-                ;
+                . $Language->getText('include_utils','email_explain');
         }
         
         return $valid;

@@ -3,9 +3,11 @@
 require_once('www/news/news_utils.php');
 require_once('features_boxes.php');
 
+$Language->loadLanguageMsg('include/include');
+
 //we already know $foundry is set up from the master page
 
-$HTML->header(array('title'=>$foundry->getUnixName().' - Foundry','group'=>$group_id));
+$HTML->header(array('title'=>$Language->getText('include_foundry_home','title',$foundry->getUnixName()),'group'=>$group_id));
 
 echo'	<TABLE cellspacing="0" cellpadding="10" border="0" width="100%">
 	      <TR>
@@ -20,7 +22,7 @@ $result=db_query($sql);
 $rows=db_numrows($result);
 
 if (!$result || $rows < 1) {
-//	echo 'No Projects';
+//	echo $Language->getText('include_foundry_admin','no_proj');
 	echo db_error();
 } else {
 	echo '<IMG SRC="/dbimage.php?id='.db_result($result,$i,'id').'" HEIGHT="'.db_result($result,$i,'height').'" WIDTH="'.db_result($result,$i,'width').'">';
@@ -47,7 +49,7 @@ echo '
 
 */
 
-$HTML->box1_top('Foundry News', '#f4f5f7');
+$HTML->box1_top($Language->getText('include_foundry_home','foundry_news'), '#f4f5f7');
 echo news_foundry_latest($group_id);
 $HTML->box1_bottom();
 
@@ -60,7 +62,7 @@ $HTML->box1_bottom();
 echo '<P>
 ';
 
-$HTML->box1_top('Discussion Forums');
+$HTML->box1_top($Language->getText('include_foundry_home','discussion_forums'));
 
 $sql="SELECT * FROM forum_group_list WHERE group_id='$group_id' AND is_public='1';";
 
@@ -70,7 +72,7 @@ $rows = db_numrows($result);
 
 if (!$result || $rows < 1) {
 
-	echo '<H1>No forums found for '. $foundry->getUnixName() .'</H1>';
+  echo '<H1>'.$Language->getText('include_foundry_home','no_forums_found',$foundry->getUnixName()).'</H1>';
 
 } else {
 

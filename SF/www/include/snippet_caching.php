@@ -8,13 +8,16 @@
 require_once('www/snippet/snippet_utils.php');
 
 function snippet_mainpage() {
-	?>
-    <? include(util_get_content('snippet/homepage')); ?>
-	<H3>Browse Snippets</H3>
+  global $Language;
+
+    include(util_get_content('snippet/homepage'));
+
+    echo '
+	<H3>'.$Language->getText('include_snippet_caching','browse_snippet').'</H3>
 	<P>
-	You can browse the snippet library quickly by language or category. You can also search code snippets by keywords using the Search box in the left menu pane.
+	'.$Language->getText('include_snippet_caching','browse_explain').'
 	<BR>
-             (Counts last updated <?php echo date("H:i:s l, F dS, Y") ?>)
+             ('.$Language->getText('include_snippet_caching','count_update',date("H:i:s l, F dS, Y")).')
 	<P>
 	<TABLE WIDTH="100%" BORDER="0">
 	<TR><TD>
@@ -22,9 +25,8 @@ function snippet_mainpage() {
 	</TD></TR>
 
 	<TR valign="top"><TD>
-	<B>Browse by Language:</B>
-	<P>
-	<?php
+	<B>'.$Language->getText('include_snippet_caching','browse_lang').':</B>
+	<P>';
 
          // List is sorted in alphabetical order
          $sql="SELECT * FROM snippet_language WHERE language_id!=100 ORDER BY language_name";// We don't want 'None' to appear
@@ -40,12 +42,11 @@ function snippet_mainpage() {
          }
 
 
-	?>
+	 echo '
 	</TD>
 	<TD>
-	<B>Browse by Category:</B>
-	<P>
-	<?php
+	<B>'.$Language->getText('include_snippet_caching','browse_cat').':</B>
+	<P>';
 
 
          // List is sorted in alphabetical order

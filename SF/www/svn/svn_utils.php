@@ -372,7 +372,7 @@ function svn_utils_show_revision_detail($result,$group_id,$group_name,$commit_id
 
 	} else if ($type == $Language->getText('svn_utils','add')) {
 	    $viewtype_url = $type;
-	} else if ($type == $Language->getText('svn_utils','delete')) {
+	} else if ($type == $Language->getText('svn_utils','del')) {
 	    $viewtype_url = $type;
 	}
 

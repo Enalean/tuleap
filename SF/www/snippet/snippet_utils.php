@@ -151,7 +151,7 @@ function snippet_show_snippet_details($id) {
 
 	<TR><TD><B>'.$Language->getText('snippet_utils','license').'</B><BR>
 		'.snippet_data_get_license_from_id(db_result($result,0,'license')).'</TD>
-	<TD><B>'.$Language->getText('snippet_utils','language').'</B><BR>
+	<TD><B>'.$Language->getText('snippet_package','language').'</B><BR>
 		'.snippet_data_get_language_from_id(db_result($result,0,'language')).'
 	</TD></TR>
 

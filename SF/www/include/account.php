@@ -12,9 +12,12 @@
 // ***** function account_pwvalid()
 // ***** check for valid password
 
+$Language->loadLanguageMsg('include/include');
+
 function account_pwvalid($pw) {
+  global $Language;
 	if (strlen($pw) < 6) {
-		$GLOBALS['register_error'] = "Password must be at least 6 characters.";
+		$GLOBALS['register_error'] = $Language->getText('include_account','pwd_length_err');
 		return 0;
 	}
 	return 1;
@@ -34,7 +37,7 @@ function account_set_password($user_id,$password) {
 
 // Add user to an existing project
 function account_add_user_to_group ($group_id,$user_unix_name) {
-	global $feedback;
+  global $feedback,$Language;
 	
 	$ret = false;
 
@@ -45,7 +48,7 @@ function account_add_user_to_group ($group_id,$user_unix_name) {
 	    //user was found but if it's a pending account adding
 	    //is not allowed
 	    if (db_result($res_newuser,0,'status') == 'P') {
-		$feedback .= " Account '$user_unix_name' pending. Must first be confirmed by user. User not added.";
+	      $feedback .= $Language->getText('include_account','account_pending',$user_unix_name);
 		return false;
 	    }
 
@@ -61,16 +64,16 @@ function account_add_user_to_group ($group_id,$user_unix_name) {
 			if ((db_result($res_newuser,0,'unix_status') == 'N') || (!db_result($res_newuser,0,'unix_uid') )) {
 				db_query("UPDATE user SET unix_status='A',unix_uid=" . account_nextuid() . " WHERE user_id=$form_newuid");
 			}
-			$feedback .= " User added ";
+			$feedback .= ' '.$Language->getText('include_account','user_added').' ';
                         account_send_add_user_to_group_email($group_id,$form_newuid);
 			$ret = true;
 		} else {
 			//user was a member
-			$feedback .= " User is already a member ";
+			$feedback .= ' '.$Language->getText('include_account','user_already_member').' ';
 		}
 	} else {
 		//user doesn't exist
-		$feedback .= "User does not exist";
+		$feedback .= $Language->getText('include_account','user_not_exist');
 	}
 
 	return $ret;
@@ -78,6 +81,7 @@ function account_add_user_to_group ($group_id,$user_unix_name) {
 
 // Warn user she has been added to a project
 function account_send_add_user_to_group_email($group_id,$user_id) {
+  global $Language;
     $base_url = get_server_url();
 
     // Get email address
@@ -92,7 +96,7 @@ function account_send_add_user_to_group_email($group_id,$user_id) {
             include(util_get_content('include/add_user_to_group_email'));
             
             list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
-            mail($email_address, $GLOBALS['sys_name']." - Welcome to Project ".$group_name,$message,"From: noreply@".$host);
+            mail($email_address, $Language->getText('include_account','welcome',array($GLOBALS['sys_name'],$group_name)) ,$message,"From: noreply@".$host);
         }
     }
 }
@@ -110,15 +114,16 @@ function account_make_login_from_email($email) {
 
 
 function account_namevalid($name) {
+  global $Language;
 	// no spaces
 	if (strrpos($name,' ') > 0) {
-		$GLOBALS['register_error'] = "There cannot be any spaces in the login name.";	
+		$GLOBALS['register_error'] = $Language->getText('include_account','login_err');	
 		return 0;
 	}
 
 	// must have at least one character
 	if (strspn($name,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ") == 0) {
-		$GLOBALS['register_error'] = "There must be at least one character.";
+		$GLOBALS['register_error'] = $Language->getText('include_account','char_err');
 		return 0;
 	}
 
@@ -126,17 +131,17 @@ function account_namevalid($name) {
 	//if (strspn($name,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#\$%^&*()-_\\/{}[]<>+=|;:?.,`~")
 	if (strspn($name,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_")
 		!= strlen($name)) {
-		$GLOBALS['register_error'] = "Illegal character in name.";
+		$GLOBALS['register_error'] = $Language->getText('include_account','illegal_char');
 		return 0;
 	}
 
 	// min and max length
 	if (strlen($name) < 3) {
-		$GLOBALS['register_error'] = "Name is too short. It must be at least 3 characters.";
+		$GLOBALS['register_error'] = $Language->getText('include_account','name_too_short');
 		return 0;
 	}
 	if (strlen($name) > 32) {
-		$GLOBALS['register_error'] = "Name is too long. It must be less than 32 characters.";
+		$GLOBALS['register_error'] = $Language->getText('include_account','name_too_long');
 		return 0;
 	}
 
@@ -144,11 +149,11 @@ function account_namevalid($name) {
 	if (eregi("^((root)|(bin)|(daemon)|(adm)|(lp)|(sync)|(shutdown)|(halt)|(mail)|(news)"
 		. "|(uucp)|(operator)|(games)|(mysql)|(httpd)|(nobody)|(dummy)"
 		. "|(www)|(cvs)|(shell)|(ftp)|(irc)|(debian)|(ns)|(download))$",$name)) {
-		$GLOBALS['register_error'] = "Name is reserved.";
+		$GLOBALS['register_error'] = $Language->getText('include_account','reserved');
 		return 0;
 	}
 	if (eregi("^(anoncvs_)",$name)) {
-		$GLOBALS['register_error'] = "Name is reserved for CVS.";
+		$GLOBALS['register_error'] = $Language->getText('include_account','reserved_cvs');
 		return 0;
 	}
 		
@@ -156,18 +161,19 @@ function account_namevalid($name) {
 }
 
 function account_groupnamevalid($name) {
+  global $Language;
 	if (!account_namevalid($name)) return 0;
 	
 	// illegal names
 	if (eregi("^((www[0-9]?)|(cvs[0-9]?)|(shell[0-9]?)|(ftp[0-9]?)|(irc[0-9]?)|(news[0-9]?)"
 		. "|(mail[0-9]?)|(ns[0-9]?)|(download[0-9]?)|(pub)|(users)|(compile)|(lists)"
 		. "|(slayer)|(orbital)|(tokyojoe)|(webdev)|(projects)|(cvs)|(slayer)|(monitor)|(mirrors?))$",$name)) {
-		$GLOBALS['register_error'] = "Name is reserved for DNS purposes.";
+		$GLOBALS['register_error'] = $Language->getText('include_account','reserved_dns');
 		return 0;
 	}
 
 	if (eregi("_",$name)) {
-		$GLOBALS['register_error'] = "Group name cannot contain underscore for DNS reasons.";
+		$GLOBALS['register_error'] = $Language->getText('include_account','dns_error');
 		return 0;
 	}
 

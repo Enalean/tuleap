@@ -6,6 +6,8 @@
 //
 // $Id$
 
+  //$Language->loadLanguageMsg('include/include');
+
 unset($USER_IS_SUPER_USER);
 $USER_RES=array();
 
@@ -193,7 +195,7 @@ function user_getname($user_id = 0) {
 				return $USER_NAMES["user_$user_id"];
 			} else {
 				//invalid user - store and return
-				$USER_NAMES["user_$user_id"]="<B>Invalid User ID</B>";
+				$USER_NAMES["user_$user_id"]="<B>".$Language->getText('include_user','invalid_u_id')."</B>";
 				return $USER_NAMES["user_$user_id"];
 			}
 		}
@@ -206,7 +208,7 @@ function user_getrealname($user_id) {
 	if ($result && db_numrows($result) > 0) {
 		return db_result($result,0,"realname");
 	} else {
-		return 'Error - Not Found';
+		return $Language->getText('include_user','not_found');
 	}
 }
 
@@ -217,7 +219,7 @@ function user_getemail($user_id) {
 	if ($result && db_numrows($result) > 0) {
 		return db_result($result,0,"email");
 	} else {
-		return 'Error - Not Found';
+		return $Language->getText('include_user','not_found');
 	}
 }
 
@@ -226,7 +228,7 @@ function user_getemail_from_unix($user_name) {
 	if ($result && db_numrows($result) > 0) {
 		return db_result($result,0,"email");
 	} else {
-		return 'Error - Not Found';
+		return $Language->getText('include_user','not_found');
 	}
 }
 
