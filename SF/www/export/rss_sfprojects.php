@@ -74,20 +74,20 @@ print " </channel>\n";
 	}
 
 	// Get Project admin as contacts
-	$res_admin = db_query("SELECT user.user_id AS user_id,user.user_name AS user_name, user.realname AS realname "
+	$res_admin = db_query("SELECT user.user_id AS user_id,user.user_name AS user_name, user.realname AS realname, user.email AS email "
 			      . "FROM user,user_group "
 			      . "WHERE user_group.user_id=user.user_id AND user_group.group_id=".$row[group_id]." AND "
 			      . "user_group.admin_flags = 'A'");
 
 	$admins = array();
 	while ($row_admin = db_fetch_array($res_admin)) {
-	    $admins[] = $row_admin[realname];
+	    $admins[] = $row_admin['realname'].' <'.$row_admin['email'].'>';
 	}
 	
 	print "$row[group_id],";
 	print "$row[unix_group_name],";
 	print "\"$row[group_name]\",";
-	print '"'.ereg_replace(" *\r*\n *"," ",$row[short_description]).'",';
+	print '"'.ereg_replace(" *\r*\n *"," ",$row['short_description']).'",';
 	print '"'.join(',',$lang).'",';
 	print '"'.join(',',$os).'",';
 	print '"'.join(',',$devstate).'",';
