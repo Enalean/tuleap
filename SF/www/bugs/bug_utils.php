@@ -903,6 +903,9 @@ function bug_mail_followup($bug_id,$more_addresses=false,$changes=false) {
 	// Then output the history of bug details from newest to oldest
 	$body .= "\n\n".format_bug_details($bug_id, true);
 
+	// Then output the CC list
+	$body .= "\n\n".format_bug_cc_list($bug_id, $group_id, true);
+
 	// Then output the history of bug details from newest to oldest
 	$body .= "\n\n".format_bug_attached_files($bug_id, $group_id, true);
 
@@ -1170,7 +1173,7 @@ function format_bug_attached_files ($bug_id,$group_id,$ascii=false) {
     // No file attached -> return now
     if ($rows <= 0) {
 	if ($ascii)
-	    $out = "\n\nNo files currently attached\n";
+	    $out = "No files currently attached\n";
 	else
 	    $out = '<H4>No files currently attached</H4>';
 	return $out;
@@ -1256,63 +1259,73 @@ function format_bug_cc_list ($bug_id,$group_id, $ascii=false) {
     // No file attached -> return now
     if ($rows <= 0) {
 	if ($ascii)
-	    $out = "\n\nCC list is empty\n";
+	    $out = "CC list is empty\n";
 	else
 	    $out = '<H4>CC list is empty</H4>';
 	return $out;
     }
 
-    // Header first
+    // Header first an determine what the print out format is
+    // based on output type (Ascii, HTML)
     if ($ascii) {
-	$out .= "CC list\n****************";
+	$out .= "CC List\n*******\n\n";
+	$fmt = "%-35s | %s\n";
+	$out .= sprintf($fmt, 'CC Address', 'Comment');
+	$out .= "------------------------------------+-----------------------------\n";
     } else {	
 
 	$title_arr=array();
-	$title_arr[]='CC address';
+	$title_arr[]='CC Address';
 	$title_arr[]='Comment';
 	$title_arr[]='Added by';
 	$title_arr[]='On';
-	if (user_ismember($group_id,'B2')) {
-	    $title_arr[]='Delete?';
-	}
-
+	$title_arr[]='Delete?';
 	$out .= html_build_list_table_top ($title_arr);
+
+	$fmt = "\n".'<TR BGCOLOR="%s"><td>%s</td><td>%s</td><td align="center">%s</td>'.
+	    '<td align="center">%s</td><td align="center">%s</td></tr>';
     }
 
-    // Determine what the print out format is based on output type (Ascii, HTML)
-    if ($ascii) {
-	$fmt = "\n\n-------------------------------------------------------\n".
-	    "Date: %s  Name: %s  Size: %dKB   By: %s\n%s\n%s";
-    } else {
-	$fmt = "\n".'<TR BGCOLOR="%s"><td>%s</td><td>%s</td><td align="center">%s</td><td align="center">%s</td>'.
-	    (user_ismember($group_id,'B2') ? '<td align="center">%s</td>':'').'</tr>';
-    }
-
-    // Loop throuh the cc and format them
+    // Loop through the cc and format them
     for ($i=0; $i < $rows; $i++) {
 
 	$email = db_result($result, $i, 'email');
 	$bug_cc_id = db_result($result, $i, 'bug_cc_id');
-	$href = "mailto:".util_normalize_email($email);
+
+	// if the CC is a user point to its user page else build a mailto: URL
+	$res_username = user_get_result_set_from_unix($email);
+	if ($res_username && (db_numrows($res_username) == 1))
+	    $href_cc = util_user_link($email);
+	else
+	    $href_cc = '<a href="mailto:'.util_normalize_email($email).'">'.$email.'</a>';
 
 	if ($ascii) {
-	    $out .= sprintf($fmt,
-			    format_date($sys_datefmt,db_result($result, $i, 'date')),
-			    db_result($result, $i, 'filename'),
-			    intval(db_result($result, $i, 'filesize')/1024),
-			    db_result($result, $i, 'user_name'),
-			    db_result($result, $i, 'description'),
-			    'http://'.$GLOBALS['sys_default_domain'].$href);
+	    $out .= sprintf($fmt, $email, db_result($result, $i, 'comment'));
 	} else {
+
+	    // show CC delete icon if one of the condition is met:
+	    // a) current user is a bug admin
+	    // b) then CC name is the current user 
+	    // c) the CC email address matches the one of the current user
+	    // d) the current user is the person who added a gieven name in CC list
+	    if ( user_ismember($group_id,'B2') ||
+		(user_getname(user_getid()) == $email) ||  
+		(user_getemail(user_getid()) == $email) ||
+		(user_getname(user_getid()) == db_result($result, $i, 'user_name') )) {
+		$html_delete = "<a href=\"$PHP_SELF?func=delete_cc&group_id=$group_id&bug_id=$bug_id&bug_cc_id=$bug_cc_id\" ".
+		'" onClick="return confirm(\'Delete this CC address?\')">'.
+		'<IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A>';
+	    } else {
+		$html_delete = '-';
+	    }
+
 	    $out .= sprintf($fmt,
 			    util_get_alt_row_color($i),
-			    "<a href=\"$href\">".$email.'</a>',
+			    $href_cc,
 			    db_result($result, $i, 'comment'),
 			    util_user_link(db_result($result, $i, 'user_name')),
 			    format_date($sys_datefmt,db_result($result, $i, 'date')),
-			    "<a href=\"$PHP_SELF?func=delete_cc&group_id=$group_id&bug_id=$bug_id&bug_cc_id=$bug_cc_id\" ".
-			    '" onClick="return confirm(\'Delete this CC address?\')">'.
-			    '<IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A>');
+			    $html_delete);
 	}
     }
 
