@@ -474,6 +474,7 @@ of groups that you are a member of.
 		  echo '
 			       <TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD colspan="2">'.
 		      '(*) <em>Private projects</em></td></tr>';
+		}
 	}
 	echo $HTML->box1_bottom();
 
