@@ -551,4 +551,11 @@ function util_get_dir_image_theme(){
 
     return "/images/".$theme.".theme/";
 }
+
+// Format a size in byte into a size in Mb
+function formatByteToMb($size_byte) {
+    return intval($size_byte/(1024*1024));
+}
+
 ?>
+

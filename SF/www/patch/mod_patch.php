@@ -87,7 +87,7 @@ if (db_numrows($result) > 0) {
 			 <B>You can also upload a revised version of the Patch (overwrite old)</B>
 			<P>
 			<input type="file" name="uploaded_data"  size="40">
-            <br><span class="smaller"><i>(The maximum upload file size is 2 Mo)</i></span>
+            <br><span class="smaller"><i>(The maximum upload file size is 2 Mb)</i></span>
 			<P>';
 
 			//comments submitted about this patch

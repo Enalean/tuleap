@@ -36,7 +36,7 @@ echo'		<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data">
 	 <br><B>Upload the Patch (binary or text format)</B>
 		<P>
 		<input type="file" name="uploaded_data"  size="40">
-        <br><span class="smaller"><i>(The maximum upload file size is 2 Mo)</i></span>
+        <br><span class="smaller"><i>(The maximum upload file size is 2 Mb)</i></span>
 		<P>
 		<B>OR Paste the patch here (text only), instead of uploading it:</B>
 		<P>

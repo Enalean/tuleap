@@ -98,7 +98,7 @@ if($group_id) {
 			<tr>
 			<th> <input type="checkbox" name="upload_instead" value="1"> <B>Upload HTML File:</B></th>
 			<td> <input type="file" name="uploaded_data" size="50">
-                 <br><span class="smaller"><i>(The maximum upload file size is 2 Mo)</i></span>
+                 <br><span class="smaller"><i>(The maximum upload file size is 2 Mb)</i></span>
 			</td>
 			</tr>
 

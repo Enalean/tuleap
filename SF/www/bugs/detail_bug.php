@@ -119,7 +119,7 @@ if (db_numrows($result) > 0) {
         <B>Check to Upload &amp; Attach File:</B> <input type="checkbox" name="add_file" VALUE="1">
       &nbsp;&nbsp;&nbsp;
         <input type="file" name="input_file" size="40">
-        <br><span class="smaller"><i>(The maximum upload file size is 2 Mo)</i></span>
+        <br><span class="smaller"><i>(The maximum upload file size is 2 Mb)</i></span>
         <P>
         <B>File Description:</B>&nbsp;
         <input type="text" name="file_description" size="60" maxlength="255">

@@ -451,8 +451,8 @@ if ($release_id) {
 		<P>
 		<input type="file" name="uploaded_data"  size="30">
         <br><span class="smaller"><i>(The maximum upload file size is ';
-    echo $sys_max_size_upload;
-    echo ' bytes)</i></span>
+    echo formatByteToMb($sys_max_size_upload);
+    echo ' Mb)</i></span>
 		<P>
 		<B>Release Notes:</B><BR>
 		<TEXTAREA NAME="notes" ROWS="10" COLS="60" WRAP="SOFT">'. htmlspecialchars(db_result($result,0,'notes')) .'</TEXTAREA>

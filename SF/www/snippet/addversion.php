@@ -97,7 +97,7 @@ if (user_isloggedin()) {
 	         <br><B>Upload the Snippet (binary or source code)</B>
 		<P>
 		<input type="file" name="uploaded_data"  size="40">
-        <br><span class="smaller"><i>(The maximum upload file size is 2 Mo)</i></span>
+        <br><span class="smaller"><i>(The maximum upload file size is 2 Mb)</i></span>
 		<P>
 		 <B>Or paste snippet source code here:</B><BR>
 			<TEXTAREA NAME="code" ROWS="30" COLS="85" WRAP="SOFT"></TEXTAREA>
