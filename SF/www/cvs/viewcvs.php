@@ -22,7 +22,7 @@ if (user_isloggedin()) {
   $row_grp = db_fetch_array($res_grp);
   $group_id = $row_grp['group_id'];
 
-  track_cvs_browse($group_id);
+  viewcvs_utils_track_browsing($group_id,'cvs');
 
   $display_header_footer = viewcvs_utils_display_header();
 
@@ -41,27 +41,4 @@ if (user_isloggedin()) {
 }
 
 
-function track_cvs_browse($group_id) {
-  $query_string = getStringFromServer('QUERY_STRING');
-  $request_uri = getStringFromServer('REQUEST_URI');
-
-  if (strpos($query_string,"view=markup") !== FALSE ||
-      strpos($request_uri,"*checkout*") !== FALSE ||
-      strpos($query_string,"annotate=") !== FALSE) {
-
-    $user_id = user_getid();
-    $year   = strftime("%Y");
-    $mon    = strftime("%m");
-    $day    = strftime("%d");
-    $db_day = $year.$mon.$day;
-
-    $sql = "SELECT cvs_browse FROM group_cvs_full_history WHERE group_id = $group_id AND user_id = $user_id AND day = '$db_day'";
-    $res = db_query($sql);
-    if (db_numrows($res) > 0) {
-	db_query("UPDATE group_cvs_full_history SET cvs_browse=cvs_browse+1 WHERE group_id = $group_id AND user_id = $user_id AND day = '$db_day'");
-    } else {
-	db_query("INSERT INTO group_cvs_full_history (group_id,user_id,day,cvs_browse) VALUES ($group_id,$user_id,'$db_day',1)");
-    }
-  }
-}
 ?>

@@ -896,7 +896,7 @@
 
 
     <section id="SourceCodeAccessLogs">
-      <title>Source Code &amp; Document Access Logs</title>
+      <title>Access Logs</title>
 
       <para><emphasis>Location: Project Administration Menu</emphasis></para>
 
@@ -914,7 +914,7 @@
       their community of users are and who is interested in their
       software.</para>
 
-      <para>The Source Code Access Logs provide project members with
+      <para>The Access Logs provide project members with
       the following information:</para>
 
       <itemizedlist mark="bullet">
@@ -928,12 +928,13 @@
         <listitem>
           <para>The second list is about CodeX users who used CVS to
           checkout or update the sources on their local desktop
-          machine.</para>
+          machine or who browsed source code via viewCVS.</para>
         </listitem>
 
         <listitem>
           <para>The third list shows the list of users who accessed
-          the source code through the Subversion repository.</para>
+          the source code through the Subversion repository or who
+          browsed source code via viewCVS.</para>
         </listitem>
 
         <listitem>
@@ -951,7 +952,7 @@
       less access log history.</para>
 
       <figure id="FigureSourceCodeAccessLogsForACodeXProject">
-        <title>Sample Source Code &amp; Document Access Log</title>
+        <title>Sample Access Log</title>
 
         <mediaobject>
           <imageobject>

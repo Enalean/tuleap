@@ -852,9 +852,6 @@ UPDATE service SET link='/file/showfiles.php?group_id=$group_id' where short_nam
 
 
 
---- this is really for 2.4 !!
---- add column for tracking cvs access via viewcvs
-ALTER TABLE group_cvs_full_history ADD COLUMN cvs_browse int(11) NOT NULL default '0' AFTER cvs_checkouts;
 EOF
 
 # Update 'file' service for each project
@@ -1512,9 +1509,4 @@ When migrating a 2.2 site to 2.4 here are the things that must be done:
   * homepage/staff.txt, homepage/thanks.txt, homepage/welcome_intro.txt: see homepage/homepage.tab
   * my/intro.txt: see my/my.tab
 
-- copy new viewcvs RPM viewcvs-1.0-0.20040628.2codex.noarch.rpm 
-  (on http://codex.codex.xerox.com/packages-rhel3/RPMS_CodeX/viewcvs/viewcvs-1.0-dev/ )
-  * remove old rpm (rpm -ev viewcvs)
-  * install new rpm (rpm -ivh viewcvs-1.0-0.20040628.2codex.noarch.rpm)
-  * change httpd.conf (add lines from SF/etc/httpd.conf.dist related to rewrite rules)
 EOF

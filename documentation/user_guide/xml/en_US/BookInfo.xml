@@ -389,6 +389,18 @@
 
         <revremark>Minor correction on codex-contact and codex-admin email parameters</revremark>
       </revision>
+      <revision>
+        <revnumber>2.6.15</revnumber>
+
+        <date>06-Jan-2005</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>In the Project Administration chapter:
+        Changed "Source Code Access Log" into "Access Log" (SR 109 on Partners).
+        Added a few words on logging accesses with viewCVS (SR 96 on Partners).
+        Updated sample picture.</revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--

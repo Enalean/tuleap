@@ -51,24 +51,23 @@ my %svn_access_by_group = ();
 
 &db_connect;
 
+
 if ( $ARGV[0] && $ARGV[1] && $ARGV[2] ) {
-  ## Set params manually, so we can run
-  ## regressive log parses.
-  $year = $ARGV[0];
-  $month = $ARGV[1];
-  $day = $ARGV[2];
+  $day_begin = timegm( 0, 0, 0, $ARGV[2], $ARGV[1] - 1, $ARGV[0] - 1900 );
 } else {
-  ## Otherwise, we just parse the logs for yesterday.
-  ($day, $month, $year) = (gmtime(timegm( 0, 0, 0, (gmtime( time() - 86400 ))[3,4,5] )))[3,4,5];
-  $year += 1900;
-  $month += 1;
+  ## go until midnight yesterday.
+  $day_begin = timegm( 0, 0, 0, (gmtime( time() - 86400 ))[3,4,5] );
 }
+
+## Preformat the important date strings.
+$year     = strftime("%Y", gmtime( $day_begin ) );
+$month    = strftime("%m", gmtime( $day_begin ) );
+$day      = strftime("%d", gmtime( $day_begin ) );
 
 # Day YYYYMMDD used in the group_svn_full_history table
 $day_date = "$year$month$day";
 
-$file = "$chronolog_basedir/$year/" . sprintf("%02d",$month) . "/http_combined_$year" 
-	. sprintf("%02d%02d", $month, $day) . ".log";
+$file = "$chronolog_basedir/$year/$month/http_combined_$year$month$day.log";
 
 print "Running year $year, month $month, day $day from \'$file\'\n" if $verbose;
 print "Beginning Subversion access parsing logfile \'$file\'...\n" if $verbose;			
@@ -82,8 +81,10 @@ if ( -f $file ) {
 # Now that open was succesful make sure that we delete all the rows
 # in the group_svn_full_history for that day so that his day is not 
 # twice in the table in case of a rerun.
-$sql_del = "DELETE FROM group_svn_full_history WHERE day='$day_date'";
-$res_del = $dbh->do($sql_del);
+# Now that there exist a new column svn_browse that is not filled by
+# this script we need to be a bit more delicate not deleting it.
+#$sql_del = "DELETE FROM group_svn_full_history WHERE day='$day_date'";
+#$res_del = $dbh->do($sql_del);
 
 
 ## Now, we will pull all of the project ID's and names into a *massive*
@@ -167,9 +168,20 @@ for my $g ( keys %svn_access ) {
 
   for my $u ( keys %{$svn_access{$g}} ) {
     #print "\t$u\n";
-    $sql = "INSERT INTO group_svn_full_history (group_id,user_id,day,svn_access_count)
+
+    ## test first if we have already a row for group_id, user_id, day_date that contains
+    ## info on svn browsing activity.
+    $sql_search = "SELECT * FROM group_svn_full_history WHERE group_id=$g AND user_id=$u AND day='$day_date'";
+    $search_res = $dbh->prepare($sql_search);
+    $search_res->execute();
+    if ($search_res->rows > 0) {
+      $sql = "UPDATE group_svn_full_history SET svn_access_count='$svn_access{$g}{$u}' WHERE group_id=$g AND user_id=$u AND day='$day_date'";
+      $dbh->do($sql);
+    } else {
+      $sql = "INSERT INTO group_svn_full_history (group_id,user_id,day,svn_access_count)
 			VALUES ('$g', '$u', '$day_date','$svn_access{$g}{$u}')";
-    $dbh->do($sql)|| warn "SQL error in $sql: $!";
+      $dbh->do($sql)|| warn "SQL error in $sql: $!";
+    }
     #print "SQL -> $sql\n";
   }
 }

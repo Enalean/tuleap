@@ -18,6 +18,9 @@ if (user_isloggedin()) {
   $res_grp = db_query("SELECT * FROM groups WHERE unix_group_name='".$root."'");
   $row_grp = db_fetch_array($res_grp);
   $group_id = $row_grp['group_id'];
+
+  viewcvs_utils_track_browsing($group_id,'svn');
+
   $display_header_footer = viewcvs_utils_display_header();
 
   if ($display_header_footer) {

@@ -30,7 +30,7 @@ function project_admin_header($params) {
 	<A HREF="/project/export/index.php?group_id='.$group_id.'">Project Data Export</A> |
 	<A HREF="/tracker/import_admin.php?group_id='.$group_id.'&mode=admin">Tracker Import</A> |
 	<A HREF="/project/admin/history.php?group_id='.$group_id.'">Project History</A> |
-        <A HREF="/project/stats/source_code_access.php/?group_id='.$group_id.'">Source Code Access Logs</A>';
+        <A HREF="/project/stats/source_code_access.php/?group_id='.$group_id.'">Access Logs</A>';
 
 	//<A HREF="/project/admin/?group_id='.$group_id.'&func=import">Tracker Import</A>
 

@@ -11,6 +11,16 @@
 // filedownload_logs_daily
 function filedownload_logs_daily($project, $span = 7, $who="allusers") {
 
+
+	// check first if service is used by this project
+	// if service not used return immediately
+	$q = "SELECT is_used FROM service WHERE short_name='file' AND group_id=".$project->getGroupId();
+	$res = db_query($q);
+	if (db_result($res,0,0) == 0) {
+		print '<P><B><U>File Download Service Disabled</U></B>';
+		return;
+	}
+
 	if (! $span ) { 
 		$span = 7;
 	}
@@ -90,6 +100,17 @@ function filedownload_logs_daily($project, $span = 7, $who="allusers") {
 }
 
 function cvsaccess_logs_daily($project, $span = 7, $who="allusers") {
+
+
+	// check first if service is used by this project
+        // if service not used return immediately
+        $q = "SELECT is_used FROM service WHERE short_name='cvs' AND group_id=".$project->getGroupId();
+        $res = db_query($q);
+        if (db_result($res,0,0) == 0) {
+                print '<P><B><U>CVS Service Disabled</U></B>';
+		return;
+	}
+
 
 	if (! $span ) { 
 		$span = 7;
@@ -173,6 +194,15 @@ function cvsaccess_logs_daily($project, $span = 7, $who="allusers") {
 
 function svnaccess_logs_daily($project, $span = 7, $who="allusers") {
 
+	// check first if service is used by this project
+        // if service not used return immediately
+        $q = "SELECT is_used FROM service WHERE short_name='svn' AND group_id=".$project->getGroupId();
+        $res = db_query($q);
+        if (db_result($res,0,0) == 0) {
+                print '<P><B><U>Subversion Service Disabled</U></B>';
+		return;
+	}
+	
 	if (! $span ) { 
 		$span = 7;
 	}
@@ -209,7 +239,7 @@ function svnaccess_logs_daily($project, $span = 7, $who="allusers") {
 
 	// We do not show Co/up/del/add svn counters for now because
 	// they are at 0 in the DB 
-	$sql  = "SELECT group_svn_full_history.day AS day, user.user_name AS user_name, user.realname AS realname, user.email AS email "
+	$sql  = "SELECT group_svn_full_history.day, user.user_name, user.realname, user.email, svn_access_count, svn_browse "
 	."FROM group_svn_full_history, user "
 	."WHERE group_svn_full_history.user_id=user.user_id ".$cond
 	."AND group_svn_full_history.group_id=".$project->getGroupId()." "
@@ -229,14 +259,18 @@ function svnaccess_logs_daily($project, $span = 7, $who="allusers") {
 			. '<TD><B>Date</B></TD>'
 			. '<TD><B>User</B></TD>'
 			. '<TD><B>E-mail</B></TD>'
+			. '<TD><B>Accesses</B></TD>'
+			. '<TD><B>Browsing</B></TD>'
 			. '</TR>' . "\n";
 		
 		while ( $row = db_fetch_array($res) ) {
 			$i++;
 			print	'<TR class="' . util_get_alt_row_color($i) . '">'
 				. '<TD>' . substr($row["day"],6,2) .' '. $month_name[substr($row["day"],4,2) - 1] .' '. substr($row["day"],0,4) .'</TD>'
-			    . '<TD>' . $row["realname"] .' ('.util_user_link($row["user_name"]).')</TD>'
+			        . '<TD>' . $row["realname"] .' ('.util_user_link($row["user_name"]).')</TD>'
 				. '<TD>' . $row["email"] . '</TD>'
+				. '<TD>' . $row["svn_access_count"] . '</TD>'
+				. '<TD>' . $row["svn_browse"] . '</TD>'
 				. '</TR>' . "\n";
 		}
 
@@ -252,6 +286,15 @@ function svnaccess_logs_daily($project, $span = 7, $who="allusers") {
 
 // doc_logs_daily
 function doc_logs_daily($project, $span = 7, $who="allusers") {
+
+	// check first if service is used by this project
+        // if service not used return immediately
+        $q = "SELECT is_used FROM service WHERE short_name='doc' AND group_id=".$project->getGroupId();
+        $res = db_query($q);
+        if (db_result($res,0,0) == 0) {
+                print '<P><B><U>Docs Service Disabled</U></B>';
+		return;
+	}
 
 	// Get information about the date $span days ago 
 	// Start at midnight $span days ago

@@ -39,7 +39,7 @@ if ( !$view ) {
 	$view = "daily";
 }
 
-echo '<h2>Source Code & Document Access Log</h2>';
+echo '<h2>Access Logs</h2>';
 
 ?>
 <FORM action="<?php echo $PHP_SELF; ?>" method="get">

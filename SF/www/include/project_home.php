@@ -373,21 +373,14 @@ if ($project->usesService('svn')) {
 	print '<HR SIZE="1" NoShade><A href="/svn/?group_id='.$group_id.'">';
 	html_image("ic/svn16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>'Subversion'));
 	print " Subversion Repository</A>";
-	$sql = "SELECT SUM(svn_commits) AS commits, SUM(svn_adds) AS adds, SUM(svn_deletes) AS deletes, SUM(svn_checkouts) AS checkouts from stats_project where group_id='$group_id'";
+	$sql = "SELECT SUM(svn_access_count) AS accesses from group_svn_full_history where group_id='$group_id'";
 	$result = db_query($sql);
-        $svn_commit_num = db_result($result,0,0);
-        $svn_add_num = db_result($result,0,1);
-        $svn_del_num = db_result($result,0,2);
-        $svn_co_num = db_result($result,0,3);
-        if (!$svn_commit_num) $svn_commit_num=0;
-        if (!$svn_add_num) $svn_add_num=0;
-        if (!$svn_del_num) $svn_del_num=0;
-        if (!$svn_co_num) $svn_co_num=0;
-	$uri = session_make_url('/cgi-bin/viewcvs.cgi/?root='.$project->getUnixName().'&roottype=svn');
+        $svn_accesses = db_result($result,0,0);
+        if (!$svn_accesses) $svn_accesses=0;
 
-        echo ' ( <B>'.$svn_commit_num.'</B> commits, <B>'.$svn_add_num.'</B> adds, <B>'.$svn_del_num.'</B> deletes, <B>'.$svn_co_num.'</B> checkouts )';
-        if ($svn_commit_num || $svn_add_num || $svn_del_num || $svn_co_num) {
-
+        echo ' ( <B>'.$svn_accesses.'</B> accesses )';
+        if ($svn_accesses) {
+	    $uri = session_make_url('/cgi-bin/viewcvs.cgi/?root='.$project->getUnixName().'&roottype=svn');
             echo '<br> &nbsp; - <a href="'.$uri.'">Browse Subversion</a>';
         }
 }

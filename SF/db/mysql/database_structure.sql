@@ -953,6 +953,7 @@ CREATE TABLE group_svn_full_history (
   svn_deletes int(11) NOT NULL default '0',
   svn_checkouts int(11) NOT NULL default '0',
   svn_access_count int(11) NOT NULL default '0',
+  svn_browse int(11) NOT NULL default '0',
   UNIQUE accessid (group_id,user_id,day),
   KEY group_id_idx (group_id),
   KEY user_id_idx (user_id),

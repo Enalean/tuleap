@@ -69,7 +69,6 @@ global $DOCUMENT_ROOT;
   }
   
 
-  ob_start();
   $command = 'HTTP_COOKIE="'.getStringFromServer('HTTP_COOKIE').'" '.
            'REMOTE_ADDR="'.getStringFromServer('REMOTE_ADDR').'" '.
            'QUERY_STRING="'.$query_string.'" '.
@@ -84,6 +83,8 @@ global $DOCUMENT_ROOT;
            'DOCUMENT_ROOT="'.$DOCUMENT_ROOT.'" '.
            'SF_LOCAL_INC_PREFIX="'.getStringFromServer('SF_LOCAL_INC_PREFIX').'" '. 
            $DOCUMENT_ROOT.'/../../cgi-bin/viewcvs.cgi 2>&1';
+
+  ob_start();
   passthru($command);
 
   $content = ob_get_contents();
@@ -135,4 +136,38 @@ global $DOCUMENT_ROOT;
 
   }
 }
+
+
+function viewcvs_utils_track_browsing($group_id, $type) {
+  $query_string = getStringFromServer('QUERY_STRING');
+  $request_uri = getStringFromServer('REQUEST_URI');
+
+  if (strpos($query_string,"view=markup") !== FALSE ||
+      strpos($request_uri,"*checkout*") !== FALSE ||
+      strpos($query_string,"annotate=") !== FALSE) {
+
+    if ($type == 'svn') {
+      $browse_column = 'svn_browse';
+      $table = 'group_svn_full_history';
+    } else if ($type == 'cvs') {
+      $browse_column = 'cvs_browse';
+      $table = 'group_cvs_full_history';
+    } 
+
+    $user_id = user_getid();
+    $year   = strftime("%Y");
+    $mon    = strftime("%m");
+    $day    = strftime("%d");
+    $db_day = $year.$mon.$day;
+
+    $sql = "SELECT $browse_column FROM $table WHERE group_id = $group_id AND user_id = $user_id AND day = '$db_day'";
+    $res = db_query($sql);
+    if (db_numrows($res) > 0) {
+        db_query("UPDATE $table SET $browse_column=$browse_column+1 WHERE group_id = $group_id AND user_id = $user_id AND day = '$db_day'");
+    } else {
+        db_query("INSERT INTO $table (group_id,user_id,day,$browse_column) VALUES ($group_id,$user_id,'$db_day',1)");
+    }
+  }
+}
+
 ?>
