@@ -1,0 +1,25 @@
+<?php
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2004. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+
+echo '
+<P>
+To attach your files to this release you must first upload them to the '.$GLOBALS['sys_name'].' server. To do so use FTP  to ';
+
+echo "<b>$sys_download_host</b> (login ftp / password is your email address)";
+
+echo ' and put your files in the <B>/incoming</B> directory. When you 
+are done uploading, hit the "Refresh File List" button right below to see
+the uploaded release files.
+<P>
+Then check the boxes next to the files belonging to your new project release and click on the "Attach Marked Files" button below. 
+<P>
+<b>**CAUTION**</b> This file upload area is shared by all projects so make sure you select ONLY YOUR files!
+<p>
+';
+?>

@@ -496,19 +496,11 @@ if ($release_id) {
 		<HR NOSHADE>
 		<H2>Step 2</H2>
 		<P>
-		<H3>Attach Files To This Release</H3>
+		<H3>Attach Files To This Release</H3>';
 		
-		<P>
-		To attach your files to this release you must first upload them to the '.$GLOBALS['sys_name'].' server. To do so
-                            use FTP  to ';
-echo "<b>$sys_download_host</b> (login ftp / password is your email address)";
-echo ' and put your files in the <B>/incoming</B> directory. When you 
-		are done uploading, hit the "Refresh File List" button right below to see the uploaded release files.
-		<P>
-Then check the boxes next to the files belonging to your new project release and click on the "Attach Marked Files" button below. 
-
-<P>
-		<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data">
+	include(util_get_content('project/editrelease_attach_file'));
+	
+	echo '<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data">
 		<INPUT TYPE="HIDDEN" NAME="func" VALUE="add_files">
 		<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 		<INPUT TYPE="HIDDEN" NAME="release_id" VALUE="'.$release_id.'">';
@@ -533,9 +525,6 @@ Then check the boxes next to the files belonging to your new project release and
 	    echo '<P>
 	                 <INPUT TYPE="SUBMIT" NAME="refresh" VALUE="Refresh File List">';
 	} else {
-	    print '<P><B>Choose ONLY YOUR files.</B> The /incoming directory 
-                                is a space shared by all projects. If you choose someone else\'s files, 
-		    they will not be able to access them and they will be rightfully upset.';
 	    print '<P>
 	                   <INPUT TYPE="SUBMIT" NAME="refresh" VALUE="Refresh File List">
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
