@@ -49,7 +49,7 @@ Thanks... and enjoy the site.
 <P>
 <?php
 $HTML->box1_top('Latest News');
-echo news_show_latest($GLOBALS['sys_news_group'],5,true);
+echo news_show_latest($GLOBALS['sys_news_group'],5,true,false,false,5);
 $HTML->box1_bottom();
 ?>
 
