@@ -143,25 +143,25 @@ if (db_numrows($result) > 0) {
 		if ($question_type == '4') {
 			/*
 				Don't show question number if it's just a comment
+				and show the comment as bold by default
 			*/
 
 			echo '
 				<TR><TD VALIGN=TOP>&nbsp;</TD><TD>';
+
+			echo '<b>'.util_unconvert_htmlspecialchars(stripslashes(db_result($result, 0, 'question'))).'</b><br>';
 
 		} else {
 			echo '
 				<TR><TD VALIGN=TOP><B>';
 			echo $q_num.'&nbsp;&nbsp;-&nbsp;&nbsp;</B></TD><TD>';
 			$q_num++;
-		}
+			echo util_unconvert_htmlspecialchars(stripslashes(db_result($result, 0, 'question'))).'</br>';		}
 
 		if ($question_type == "1") {
 			/*
 				This is a rædio-button question. Values 1-5.
 			*/
-
-		    echo stripslashes(db_result($result, 0, 'question'));
-		    echo '<BR>';
 		    echo "<b>1</b>";
 		    for ($j=1; $j<=5; $j++) {
 			echo '
@@ -173,8 +173,6 @@ if (db_numrows($result) > 0) {
 			/*
 				This is a text-area question.
 			*/
-
-			echo stripslashes(db_result($result, 0, 'question')).'<BR>';
 			echo '
 				<textarea name="_'.$quest_array[$i].'" rows=5 cols=60 wrap="soft"></textarea>';
 
@@ -182,9 +180,6 @@ if (db_numrows($result) > 0) {
 			/*
 				This is a Yes/No question.
 			*/
-
-			echo stripslashes(db_result($result, 0, 'question'));
-			echo '<br>';
 			echo '
 				<b>Yes</b> <INPUT TYPE="RADIO" NAME="_'.$quest_array[$i].'" VALUE="1">';
 			echo '&nbsp;&nbsp;';
@@ -193,10 +188,8 @@ if (db_numrows($result) > 0) {
 
 		} else if ($question_type == '4') {
 			/*
-				This is a comment only. Bold by default
+				This is a comment only.
 			*/
-
-			echo '<B>'.stripslashes(db_result($result, 0, 'question')).'</B>';
 			echo '
 				<INPUT TYPE="HIDDEN" NAME="_'.$quest_array[$i].'" VALUE="-666">';
 
@@ -204,8 +197,6 @@ if (db_numrows($result) > 0) {
 			/*
 				This is a text-field question.
 			*/
-
-			echo stripslashes(db_result($result, 0, 'question')).'<BR>';
 			echo '
 				<INPUT TYPE="TEXT" name="_'.$quest_array[$i].'" SIZE=30 MAXLENGTH=100>';
 
