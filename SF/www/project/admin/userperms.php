@@ -42,11 +42,27 @@ if ($submit) {
 	$res_dev = db_query("SELECT user_id FROM user_group WHERE group_id=$group_id");
 	while ($row_dev = db_fetch_array($res_dev)) {
 		//
-		// cannot turn off their own admin flag -- set it back to 'A'
+		// cannot turn off their own admin flag if no other admin in project -- set it back to 'A'
 		//
 		if (user_getid() == $row_dev['user_id']) {
-			$admin_flags="admin_user_$row_dev[user_id]";
-			$$admin_flags='A';
+                    $admin_flags="admin_user_$row_dev[user_id]";
+                    if ($$admin_flags != 'A') {
+                        // Check that there is still at least one admin
+                        $res_dev2 = db_query("SELECT user_id FROM user_group WHERE group_id=$group_id");
+                        $other_admin_exists=false;
+                        while ($row_dev2 = db_fetch_array($res_dev2)) {
+                            // Go through all users and see if there is at least one with admin flag.
+                            $flag_var="admin_user_$row_dev2[user_id]";
+                            if ($$flag_var=='A') {
+                                $other_admin_exists=true;
+                                break;
+                            }
+                        }
+                        if (!$other_admin_exists) {
+                            $feedback .= ' Cannot remove your admin status: project needs at least one admin! ';
+                            $$admin_flags='A';
+                        }
+                    }
 		} else {
 			$admin_flags="admin_user_$row_dev[user_id]";
 		}
