@@ -229,7 +229,7 @@ if ($submit) {
 }
 		}
 
-	} else if ($func=='add_files' && $file_list) {
+	} else if ($func=='add_files' && $file_list && !$refresh) {
 		/*
 
 			Add a file to this release
@@ -472,17 +472,16 @@ if ($release_id) {
 		<HR NOSHADE>
 		<H2>Step 2</H2>
 		<P>
-		<H3>Add Files To This Release</H3>
+		<H3>Attach Files To This Release</H3>
+		
 		<P>
-		Choose your files from the list below. Choose <B>ONLY YOUR files.</B> If you choose someone else\'s files, 
-		they will not be able to access them and they will be rightfully upset.
-		<P>
-		To upload your files use Anonymous FTP (login "ftp") access to ';
-echo "<b>$sys_download_host</b>";
+		To attach your files to this release you must first upload them to the CodeX server. To do so
+                            use FTP  to ';
+echo "<b>$sys_download_host</b> (login ftp / password is your email address)";
 echo ' and put your files in the <B>/incoming</B> directory. When you 
-		are done uploading, just hit the "Refresh View" button right below to see the uploaded release files.
+		are done uploading, hit the "Refresh File List" button right below to see the uploaded release files.
 		<P>
-Once upload is completed check the boxes of the files that goes into your new project release and click on the "Add Marked Files" button below.
+Then check the boxes next to the files belonging to your new project release and click on the "Attach Marked Files" button below. 
 
 <P>
 		<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data">
@@ -498,20 +497,27 @@ Once upload is completed check the boxes of the files that goes into your new pr
 	       //file doesn't start with a .
 			$atleastone = 1;
 			print '
-				<INPUT TYPE="CHECKBOX" NAME="file_list[]" value="'.$file.'">'.$file.'<BR>';
+				<INPUT TYPE="CHECKBOX" NAME="file_list[]" value="'.$file.'">&nbsp;'.$file.'<BR>';
 		}
 	}
 
-	echo '<P>
-	<INPUT TYPE="SUBMIT" NAME="submit" VALUE="Add Marked Files or Refresh View">
-	</FORM>';
+
 	if (!$atleastone) {
-		print '<h3>No available files</H3>
-			<P>
-			Please upload files as explained above, then hit <B>Refresh View</B>.';
+	    print '<h3>No available files</H3>
+		     <P>
+		     Please upload files as explained above, then hit <B>Refresh File List</B>.';
+	    echo '<P>
+	                 <INPUT TYPE="SUBMIT" NAME="refresh" VALUE="Refresh File List">';
+	} else {
+	    print '<P><B>Choose ONLY YOUR files.</B> The /incoming directory 
+                                is a space shared by all projects. If you choose someone else\'s files, 
+		    they will not be able to access them and they will be rightfully upset.';
+	    print '<P>
+	                   <INPUT TYPE="SUBMIT" NAME="refresh" VALUE="Refresh File List">
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	                  <INPUT TYPE="SUBMIT" NAME="submit" VALUE="Attach Marked Files">';
 	}
-
-
+	echo '</FORM>';
 ?><?php
 
 /*
@@ -539,9 +545,9 @@ Once upload is completed check the boxes of the files that goes into your new pr
 	$res=db_query($sql);
 	$rows=db_numrows($res);
 	if (!$res || $rows < 1) {
-		echo '<H4>No Files In This Release</H4>
+		echo '<H4>No Files attached to this Release</H4>
 			<P>
-			You can add files using the box below';
+			You can attach files using Step 2 above';
 	} else {
 		$title_arr=array();
 		$title_arr[]='Filename<BR>Release';
