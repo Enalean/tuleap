@@ -13,7 +13,7 @@ Originally written by Laurent Julliard and Stéphane Bouhet 2002, CodeX Team, Xer
 
 
 <!-- Special character from Wrod for ... : replace this replace in the XML file by ... -->
-…
+&hellip;
 
 <!-- Cross referencing an item -->
 <xref linkend="" />
@@ -69,8 +69,7 @@ Originally written by Laurent Julliard and Stéphane Bouhet 2002, CodeX Team, Xer
 <ulink url="http://">http://</ulink>
 
 <!-- A bulleted list -->
-<itemizedlist mark="bullet"
-            spacing="compact">
+<itemizedlist mark="bullet" spacing="compact">
     <listitem>
       <para><emphasis role="bold"></emphasis></para>
     </listitem>
