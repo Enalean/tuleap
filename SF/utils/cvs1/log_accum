@@ -393,7 +393,7 @@ sub read_logfile {
 
 sub build_header {
     local($header);
-    local($sec,$min,$hour,$mday,$mon,$year) = localtime(time);
+    local($sec,$min,$hour,$mday,$mon,$year,$wday,$yday) = localtime(time);
     local($timezone);
 
     # Compute timezone
