@@ -461,7 +461,7 @@ INSERT INTO artifact_field VALUES (5,1,'summary',1,'TF','60/150','Summary','One 
 INSERT INTO artifact_field VALUES (1,1,'artifact_id',2,'TF','6/10','Artifact ID','Unique artifact identifier','',0,0,0,1,NULL,'');
 INSERT INTO artifact_field VALUES (4,1,'assigned_to',5,'SB','','Assigned to','Who is in charge of solving the artifact','',0,1,1,0,'artifact_technicians','100');
 INSERT INTO artifact_field VALUES (3,1,'category_id',2,'SB','','Category','Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)','',0,1,1,0,NULL,'100');
-INSERT INTO artifact_field VALUES (2,1,'status_id',2,'SB','2','Status','Artifact Status','',0,0,1,0,NULL,'20');
+INSERT INTO artifact_field VALUES (2,1,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'20');
 INSERT INTO artifact_field VALUES (8,1,'severity',2,'SB','','Severity','Impact of the artifact on the system (Critical, Major,...)','',0,0,1,0,NULL,'5');
 INSERT INTO artifact_field VALUES (10,1,'comment_type_id',2,'SB','','Comment Type','Specify the nature of the  follow up comment attached to this artifact (Workaround, Test Case, Impacted Files,...)','',0,1,0,1,NULL,'100');
 INSERT INTO artifact_field VALUES (9,1,'details',1,'TA','60/7','Original Submission','A full description of the artifact','',0,1,1,0,NULL,'');
@@ -474,14 +474,14 @@ INSERT INTO artifact_field VALUES (5,2,'start_date',4,'DF','','Start Date','Star
 INSERT INTO artifact_field VALUES (6,2,'close_date',4,'DF','','End Date','End Date','',0,0,0,0,NULL,'');
 INSERT INTO artifact_field VALUES (7,2,'summary',1,'TF','60/150','Summary','One line description of the artifact','',0,0,1,0,NULL,'');
 INSERT INTO artifact_field VALUES (8,2,'details',1,'TA','60/7','Original Submission','A full description of the artifact','',0,1,1,0,NULL,'');
-INSERT INTO artifact_field VALUES (11,2,'status_id',2,'SB','2','Status','Artifact Status','',0,0,1,0,NULL,'20');
+INSERT INTO artifact_field VALUES (11,2,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'20');
 INSERT INTO artifact_field VALUES (1,2,'artifact_id',2,'TF','6/10','Artifact ID','Unique artifact identifier','',0,0,0,1,NULL,'');
 INSERT INTO artifact_field VALUES (10,2,'open_date',4,'DF','','Submitted on','Date and time for the initial artifact submission','',0,0,0,1,'','');
 INSERT INTO artifact_field VALUES (9,2,'multi_assigned_to',5,'MB','','Assigned to (multiple)','Who is in charge of this artifact','',0,1,1,0,'artifact_technicians','');
-INSERT INTO artifact_field VALUES (12,2,'subproject_id',2,'SB','1','Subproject','Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)','',0,1,1,0,NULL,'100');
+INSERT INTO artifact_field VALUES (12,2,'subproject_id',2,'SB','','Subproject','Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)','',0,1,1,0,NULL,'100');
 INSERT INTO artifact_field VALUES (9,3,'submitted_by',5,'SB','','Submitted by','User who originally submitted the artifact','',0,1,0,1,'group_members','');
 INSERT INTO artifact_field VALUES (8,3,'priority',2,'SB','','Priority','How quickly the artifact must be fixed (Immediate, Normal, Low, Later,...)','',0,0,1,0,NULL,'180');
-INSERT INTO artifact_field VALUES (7,3,'status_id',2,'SB','2','Status','Artifact Status','',0,0,1,0,NULL,'20');
+INSERT INTO artifact_field VALUES (7,3,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'20');
 INSERT INTO artifact_field VALUES (6,3,'assigned_to',5,'SB','','Assigned to','Who is in charge of solving the artifact','',0,1,1,0,'artifact_technicians','100');
 INSERT INTO artifact_field VALUES (5,3,'category_id',2,'SB','','Category','Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)','',0,1,1,0,NULL,'100');
 INSERT INTO artifact_field VALUES (4,3,'open_date',4,'DF','','Submitted on','Date and time for the initial artifact submission','',0,0,0,1,'','');
@@ -516,7 +516,7 @@ INSERT INTO artifact_field VALUES (2,4,'open_date',4,'DF','','Submitted on','Dat
 INSERT INTO artifact_field VALUES (3,4,'close_date',4,'DF','','End Date','End Date','',0,0,0,0,NULL,'');
 INSERT INTO artifact_field VALUES (4,4,'summary',1,'TF','60/150','Summary','One line description of the artifact','',0,0,1,0,NULL,'');
 INSERT INTO artifact_field VALUES (5,4,'artifact_id',2,'TF','6/10','Artifact ID','Unique artifact identifier','',0,0,0,1,NULL,'');
-INSERT INTO artifact_field VALUES (6,4,'status_id',2,'SB','2','Status','Artifact Status','',0,0,1,0,NULL,'20');
+INSERT INTO artifact_field VALUES (6,4,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'20');
 INSERT INTO artifact_field VALUES (7,4,'severity',2,'SB','','Severity','Impact of the artifact on the system (Critical, Major,...)','',0,0,1,0,NULL,'5');
 INSERT INTO artifact_field VALUES (8,4,'details',1,'TA','60/7','Original Submission','A full description of the artifact','',0,1,1,0,NULL,'');
 
