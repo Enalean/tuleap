@@ -11,6 +11,7 @@ require('project_export_utils.php');
 require($DOCUMENT_ROOT.'/../common/tracker/Artifact.class');
 require($DOCUMENT_ROOT.'/tracker/include/ArtifactHtml.class');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');
+require($DOCUMENT_ROOT.'/tracker/include/ArtifactTypeHtml.class');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactTypeFactory.class');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactField.class');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactFieldFactory.class');

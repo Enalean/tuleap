@@ -28,6 +28,7 @@ if ( $atid ) {
 	if ( !$at->isValid() ) {
 		exit_error('Error',"This tracker is no longer valid.");
 	}
+
 	
 	// Create field factory
 	$art_field_fact = new ArtifactFieldFactory($at);
@@ -131,6 +132,18 @@ The artifact export provides you with the following artifact fields. The sample 
 					break;
 				}
 				
+                                //
+                                //      Create the ArtifactTypeHtml object - needed in ArtifactField.getFieldPredefinedValues() 
+                                //
+                                $ath = new ArtifactTypeHtml($group,$atid);
+                                if (!$ath || !is_object($ath)) {
+                                    exit_error('Error','ArtifactTypeHtml could not be created');
+                                }
+                                if ($ath->isError()) {
+                                    exit_error('Error',$ath->getErrorMessage());
+                                }
+
+
 				// Create field factory
 				$art_field_fact = new ArtifactFieldFactory($at);
 				if ($art_field_fact->isError()) {
