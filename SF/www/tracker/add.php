@@ -12,7 +12,7 @@
 
 // Check if a user can submit a new without loggin
 if ( !user_isloggedin() && !$ath->allowsAnon() ) {
-	exit_permission_denied();
+	exit_not_logged_in();
 	return;
 }
 

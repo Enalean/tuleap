@@ -903,7 +903,7 @@ class ArtifactTypeHtml extends ArtifactType {
 			    echo '<input type="text" name="display_size" size="5" maxlength="5" value="'.$display_size.'">';
 			}
 		} else {
-			if ( $display_type == "SB" ) {
+			if ( $display_type == "SB" || $display_type == "DF" ) {
 		    	echo '<input type="text" name="display_size" size="5" maxlength="5" value="N/A">';
 			} else {
 		    	echo '<input type="text" name="display_size" size="5" maxlength="5">';
@@ -1123,7 +1123,7 @@ class ArtifactTypeHtml extends ArtifactType {
 			if ( $value_function == "artifact_submitters" ) {
 				$selected = " selected";
 			}
-			echo '<option value="artifact_submitters"'.$selected.'>Group members</option>';
+			echo '<option value="artifact_submitters"'.$selected.'>Artifact submitters</option>';
 
 			$selected = "";
 			if ( $value_function == "artifact_technicians" ) {
@@ -1172,6 +1172,13 @@ class ArtifactTypeHtml extends ArtifactType {
 	      <INPUT TYPE="HIDDEN" NAME="field_id" VALUE="'.$field_id.'">
 	      <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$this->Group->getID().'">
 	      <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$this->getID().'">';
+
+		if ( $status == "P" ) {
+			echo '<p><i><b>**IMPORTANT NOTE**</b> You are editing a permanent field value. Permanent 
+			field values often have a <b>very</b> specific meaning to the CodeX 
+			system and we strongly advise you not to change its label and 
+			description unless they have a similar meaning.</i></p>';
+		}
 
 		if ( $func == "value_create" ) {
 		    if ( $value_id ) {

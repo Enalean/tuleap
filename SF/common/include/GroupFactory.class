@@ -43,7 +43,7 @@ class GroupFactory extends Error {
 		}
 
 		$sql="SELECT group_id,group_name FROM groups
-			WHERE group_id > 100
+			WHERE group_id <> 100 AND status = 'A'
 			AND is_public IN ($public_flag)
 			ORDER BY group_name ASC";
 
@@ -74,7 +74,7 @@ class GroupFactory extends Error {
 
 		$sql="SELECT g.group_id,g.group_name ".
 			 "FROM groups g, user_group ug ".
-			 "WHERE g.group_id > 100 AND g.group_id = ug.group_id ".
+			 "WHERE g.group_id <> 100 AND g.status = 'A' AND g.group_id = ug.group_id ".
 			 "AND ug.user_id=".user_getid()." ".
 			 "ORDER BY g.group_name ASC";
 

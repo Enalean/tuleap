@@ -194,11 +194,9 @@ class ArtifactFieldHtml extends ArtifactField {
 	    if ($ro)
 			$html = $value;
 	    else {
-			if (!$size || !$maxlength)
-			    list($size, $maxlength) = $this->getGlobalDisplaySize();
 	
 			$html = '<INPUT TYPE="text" name="'.$this->field_name.
-			'" size="'.$size.'" MAXLENGTH="'.$maxlength.'" VALUE="'.$value.'">'.
+			'" size="10" MAXLENGTH="10" VALUE="'.$value.'">'.
 			'<a href="javascript:show_calendar(\'document.artifact_form.'.$this->field_name.'\', document.artifact_form.'.$this->field_name.'.value,\''.$theme.'\',\''.getFontsizeName($font_size).'\');">'.
 			'<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="Click Here to Pick up a date"></a>';
 	    }

@@ -327,8 +327,8 @@ if ($group_id && $atid) {
 		} else {
 			
 			// Check if users can browse anonymously
-			if ( $ath->allowsAnon() == 0 ) {
-				exit_error('ERROR',"This tracker has requested that users be logged in before browsing items");
+			if ( !user_isloggedin()&&$ath->allowsAnon() == 0 ) {
+				exit_not_logged_in();
 				return;
 			}
 			
@@ -340,7 +340,7 @@ if ($group_id && $atid) {
 		}
 		break;
 	}
-	
+		
 	default : {
 		include './browse.php';
 		break;
@@ -402,6 +402,26 @@ if ($group_id && $atid) {
 	}
 	echo site_project_footer(array());
 } else {
-	exit_no_group();
+	
+	if ( $func == 'gotoid' ) {
+		// Direct access to an artifact
+
+		// Retrieve with the aid the group_artifact_id and the group_id
+		if ( !util_get_ids_from_aid($aid,$group_id,$atid) ) {
+			exit_error('ERROR','Invalid Artifact ID');
+		} else {
+		    if ($HTTPS == 'on'|| $GLOBALS['sys_force_ssl'] == 1) {
+				$location = "Location: https://".$GLOBALS['sys_https_host'];
+		    } else {
+				$location = "Location: http://".$GLOBALS['sys_default_domain'];
+			}
+			$location .= "/tracker/?func=detail&aid=".$aid."&group_id=".$group_id."&atid=".$atid;
+			header($location);
+			exit;
+		}
+		
+	} else {
+		exit_no_group();
+	}
 }
 ?>

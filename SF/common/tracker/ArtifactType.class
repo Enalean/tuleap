@@ -139,6 +139,42 @@ class ArtifactType extends Error {
 	}
 
 	/**
+	 *	Create user permissions: Tech Only for group members and Tech & Admin for group admin
+	 *
+	 *	@param	atid: the artfact type id 
+	 *
+	 *	@return boolean
+	 */
+	function createUserPerms($atid) {
+		
+		$sql = "SELECT "
+			. "user.user_id AS user_id, "
+			. "user_group.admin_flags "
+			. "FROM user,user_group WHERE "
+			. "user.user_id=user_group.user_id AND user_group.group_id=".$this->Group->getID();
+		$res = db_query($sql);
+		
+		while ($row = db_fetch_array($res)) {
+			if ( $row['admin_flags'] == "A" ) {
+				// Admin user
+				$perm = 2;
+					
+			} else {
+				// Standard user
+				$perm = 1;
+			}
+
+			if ( !$this->addUser($row['user_id'],$perm) ) {
+				$this->setError("Fail to create user permission:".$this->getErrorMessage());
+				return false;
+			}
+		}
+		
+		return true;
+
+	}
+
+	/**
 	 *	create - use this to create a new ArtifactType in the database.
 	 *
 	 *  @param  group_id: the group id of the new tracker
@@ -216,6 +252,11 @@ class ArtifactType extends Error {
 					return false;
 				}
 				if ( !$this->copyNotificationRole($id) ) {
+					return false;
+				}
+				
+				// Create user permissions: Tech Only for group members and Tech & Admin for group admin
+				if ( !$this->createUserPerms($id) ) {
 					return false;
 				}
 		

@@ -112,7 +112,7 @@ class ArtifactHtml extends Artifact {
 					$field_value = db_result($results,0,$field->getName());
 				}
 				
-				list($sz,) = $field->getDisplaySize();
+				list($sz,) = explode("/",$field->getDisplaySize());
 				$label = $field_html->labelDisplay(false,false);
 				// original submission field must be displayed read-only
 				if ($field->getName()=='details') {
@@ -839,7 +839,6 @@ class ArtifactHtml extends Artifact {
 		}
 		
 		// Beginning of the submission form with fixed fields
-//		echo '<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" NAME="artifact_form">
 		echo '<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data" NAME="artifact_form">
 		    <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="2000000">
 			<INPUT TYPE="HIDDEN" NAME="func" VALUE="postadd">
@@ -880,7 +879,7 @@ class ArtifactHtml extends Artifact {
 				    $label = $field_html->labelDisplay(false,false);
 				    $value = $field_html->display($group_artifact_id,$field_value,false,false);
 				    $star = ($field->isEmptyOk() ? '':'<span class="highlight"><big>*</big></b></span>');
-			
+
 				    if ( ($sz > $max_size) || ($field->getName()=='details') ) {
 						echo "\n<TR>".
 						    '<TD valign="middle">'.$label.$star.'</td>'.
@@ -980,13 +979,13 @@ class ArtifactHtml extends Artifact {
 		// Generate the message preamble with all required
 		// artifact fields - Changes first if there are some.
 		if ($changes) {
-		    $body = "$sys_lf=============   ARTIFACT #".$this->getID().
+		    $body = "$sys_lf=============   ".strtoupper($this->ArtifactType->getName())." #".$this->getID().
 			": LATEST MODIFICATIONS   =============$sys_lf".$artifact_href."$sys_lf$sys_lf".
 			$this->formatChanges($changes)."$sys_lf$sys_lf$sys_lf$sys_lf";
 		}
 	
-		$body .= "=============   ARTIFACT #".$this->getID().
-		    ": FULL ARTIFACT SNAPSHOT   =============$sys_lf".
+		$body .= "=============   ".strtoupper($this->ArtifactType->getName())." #".$this->getID().
+		    ": FULL ".strtoupper($this->ArtifactType->getName())." SNAPSHOT   =============$sys_lf".
 		    ($changes ? '':$artifact_href)."$sys_lf$sys_lf";
 	    
 		// Some special field first (group, submitted by/on)
@@ -1082,7 +1081,7 @@ class ArtifactHtml extends Artifact {
 		//echo "DBG Sending email to: $to<br>";
 	
 		$more='From: noreply@'.$GLOBALS['sys_default_domain'];
-	    $subject='[Artifact #'.$this->getID().'] '.util_unconvert_htmlspecialchars(db_result($result,0,'summary'));
+	    $subject='['.$this->ArtifactType->getCapsItemName().' #'.$this->getID().'] '.util_unconvert_htmlspecialchars(db_result($result,0,'summary'));
 
 		//echo "DBG: body:".$body."<br>";
 		mail($to,$subject,$body,$more);

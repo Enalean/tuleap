@@ -171,10 +171,8 @@ function util_make_links ($data='',$group_id = 0, $group_artifact_id = 0) {
 		    $text = eregi_replace("patch[ ]?#([0-9]+)", "<a href=\"/patch/?func=detailpatch&patch_id=\\1&group_id=$group_id\">Patch #\\1</a>", $text);
 		    $text = eregi_replace("commit[ ]?#([0-9]+)", "<a href=\"/cvs/?func=detailcommit&commit_id=\\1&group_id=$group_id\">Commit #\\1</a>", $text);
 		}
-		// If $group_artifact_id and $group_id is assigned then we can replace the pattern: art #id
-		if ( $group_artifact_id && $group_id ) {
-		    $text = eregi_replace("art[ ]?#([0-9]+)", "<a href=\"/tracker/?func=detail&aid=\\1&atid=$group_artifact_id&group_id=$group_id\">Artifact #\\1</a>", $text);
-		}
+		// Tracker pattern: we can replace the pattern: art #id
+		$text = eregi_replace("art[ ]?#([0-9]+)", "<a href=\"/tracker/?func=gotoid&aid=\\1\">Artifact #\\1</a>", $text);
 	
 		$lines[$key] = $text;
 	}
@@ -661,6 +659,37 @@ function util_check_fileupload($filename) {
 		return false;
 	}
 	return true;
+}
+
+/**
+ * Retrieve the group_id and the group_artifact_id using the artifact id
+ *
+ * @param aid: the artifact id
+ * @param group_id: the group id (OUT)
+ * @param group_artifact_id: the tracker id (OUT)
+ *
+ * @return boolean
+ */
+function util_get_ids_from_aid($aid,&$group_id,&$atid) {
+	$sql = "SELECT group_artifact_id FROM artifact WHERE artifact_id = ".$aid;
+
+	$result = db_query($sql);
+    if ($result && db_numrows($result) > 0) {
+    	$atid = db_result($result,0,0);
+    	
+		$sql = "SELECT group_id FROM artifact_group_list WHERE group_artifact_id = ".$atid;
+	
+		$result = db_query($sql);
+	    if ($result && db_numrows($result) > 0) {
+	    	$group_id = db_result($result,0,0);
+	    	return true;
+	    } else {
+	    	return false;
+	    }
+	} else {
+		return false;
+	}
+	
 }
 
 ?>
