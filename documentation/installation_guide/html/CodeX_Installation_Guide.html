@@ -1206,9 +1206,9 @@ follows:<br>
 The log_accum script in requires the
 sourceforge group ownership to execute properly. <b><font
  color="#ff0000">**HIGHLY CRITICAL**</font></b>
-<pre>	# cd /usr/local/bin<br>	# chown sourceforge.sourceforge log_accum prep_commit<br>	# chmod 755 log_accum prep_commit<br>	# chmod u+s log_accum   # sets the uid bit (-rwsr-xr-x)<br></pre>
+<pre>	# cd /usr/local/bin<br>	# chown sourceforge.sourceforge log_accum commit_prep<br>	# chmod 755 log_accum commit_prep<br>	# chmod u+s log_accum   # sets the uid bit (-rwsr-xr-x)<br></pre>
 Be careful that you must set the uid bit again whenever the log_accum
-script is updated from CVSanc opied again into the /usr/local/bin
+script is updated from CVS and copied again into the /usr/local/bin
 directory.<br>
 <tt><br>
 </tt>
