@@ -27,7 +27,43 @@ License
 </center>
 <br>
 &nbsp;
-<h1>Administration Tasks</h1>
+<h2>Table of Content</h2>
+
+<dl><dt><a href="#AdministrationTasks">Administration Tasks</a></dt>
+<dt><a href="#CodeXFilePermissions">CodeX File Permissions</a></dt>
+<dt><a href="#CodeXFileStructure">CodeX File Structure</a></dt>
+<dt><a href="#CodeX_Databases">CodeX Databases</a></dt>
+<dt><a href="#Apache">Apache</a></dt>
+<dt><a href="#FTP">FTP</a></dt>
+<dt><a href="#CVS">CVS</a></dt>
+<dt><a href="#DNS">DNS</a></dt>
+<dt><a href="#SSH">SSH</a></dt>
+<dt><a href="#Sendmail">Sendmail</a></dt>
+<dt><a href="#Samba">Samba</a></dt>
+<dt><a href="#Mailman">Mailman</a></dt>
+<dt><a href="#BackgroundDaemons">Background Daemons</a></dt>
+<dt><a href="#Log_Files">Log Files</a></dt>
+<dt><a href="#CodeX_Code_Update">CodeX Code Update</a></dt>
+<dt><a href="#CodeXTestingEnvironment">CodeX Testing Environment</a></dt>
+<dt><a href="#CodeX_HowTo">CodeX HowTo</a></dt>
+<dd><dl>
+<dt><a href="#HowTo_Import">Importing an existing CVS repository in CodeX</a></dt>
+<dt><a href="#HowTo_Regenerate_CVS">Regenerating a fresh CVS repository for a CodeX project</a></dt>
+<dt><a href="#HowTo_Change_User_Name">Changing a User Name on CodeX</a></dt>
+<dt><a href="#HowTo_Change_Project_Name">Changing a Project Short Name on CodeX</a></dt>
+<dt><a href="#HowTo_Email_pb">New user registration problems - email address errors</a></dt>
+<dt><a href="#HowTo_Block_Client">Blocking a Client from Accessing CodeX</a></dt>
+<dt><a href="#HowTo_Suspend_User">How to suspend/delete a CodeX user</a></dt>
+<dt><a href="#HowTo_Recompile_RPM">Recompiling a CodeX specific RPM</a></dt>
+<dt><a href="#HowTo_Change_PW">Change privileged account passwords</a></dt>
+<dt><a href="#HowTo_Delete_Bug">Delete a bug from the CodeX database</a></dt>
+<dt><a href="#HowTo_"></a></dt>
+</dl></dd>
+</dl>
+<p></p>
+<p>
+
+<h1><a name="AdministrationTasks"></a>Administration Tasks</h1>
 To access the CodeX Administration interface you must use an account
 with administration privileges. When CodeX is first installed a
 privileged account named <span style="font-weight: bold;">'</span>admin<span
@@ -284,7 +320,7 @@ does not contain any question.<br>
 <br>
 </p>
 <hr width="100%" size="2">
-<h1> CodeX File Permissions</h1>
+<h1><a name="CodeXFilePermissions"></a> CodeX File Permissions</h1>
 The CodeX Web interface use the paradigm of project and project members
 to
 manage access permissions to the various project data. CodeX
@@ -413,7 +449,7 @@ under <span style="font-family: monospace;">/home/httpd</span>.</li>
   <li><span style="font-weight: bold;">mailman:</span> group owner of
 all the Mailman directories (<span style="font-family: monospace;">/home/mailman</span>)</li>
 </ul>
-<h1> CodeX File Structure</h1>
+<h1> <a name="CodeXFileStructure"></a>CodeX File Structure</h1>
 <h2> Web site</h2>
 The CodeX Web front end files are all under <b><span
  style="font-family: monospace;">/home/httpd</span>.</b> Except
@@ -1174,7 +1210,7 @@ name and password. <br>
 &nbsp; </p>
 <p> </p>
 <hr width="100%" size="2">
-<h1> Apache</h1>
+<h1><a name="Apache"></a> Apache</h1>
 The Apache master configuration file is in <span
  style="font-family: monospace;">/etc/httpd/conf/httpd.conf</span>. The
 master file also includes specific configuration files located at /<span
@@ -1226,7 +1262,7 @@ ready to install Apache RPMs when needed.<br>
 <p> </p>
 <h1>
 <hr width="100%"></h1>
-<h1> FTP</h1>
+<h1><a name="FTP"></a>FTP</h1>
 The FTP server configuration file is in <span
  style="font-family: monospace;">/etc/ftpaccess</span> and it has been
 configured
@@ -1242,7 +1278,7 @@ FrontPage and many other Web editing environment<br>
 <br>
 <p> </p>
 <hr width="100%" size="2">
-<h1> CVS</h1>
+<h1><a name="CVS"></a>CVS</h1>
 <h2> Using CVS on CodeX</h2>
 This document is not a tutorial on CVS. For an introduction to CVS
 refer
@@ -1294,7 +1330,7 @@ for
 the command line used to run the cvs server.
 <p> </p>
 <hr width="100%" size="2">
-<h1> DNS</h1>
+<h1><a name="DNS"></a>DNS</h1>
 CodeX has its own internal domain : codex.xerox.com. And the codex
 machine is the name server for this domain. The DNS configuration files
 are
@@ -1382,7 +1418,7 @@ the URL is not yet working tell him/her to be patient ;-)<br>
 <p><br>
 </p>
 <hr width="100%" size="2">
-<h1> SSH</h1>
+<h1><a name="SSH"></a>SSH</h1>
 The Secure Shell service is available on CodeX. All registered user
 with
 an active account can use it to login into CodeX in a secure way. To
@@ -1422,7 +1458,7 @@ log file who used a privileged user account in case there are multiple
 CodeX site administrators.</font>
 <p> </p>
 <hr width="100%" size="2">
-<h1> Sendmail</h1>
+<h1><a name="Sendmail"></a>Sendmail</h1>
 By default CodeX uses sendmail as its mail transport agent of choice to
 handle incoming and outgoing mail messages. The critical files for the
 sendmail configuration are: <br>
@@ -1460,7 +1496,7 @@ must not be modified.<br>
 &nbsp;
 <p> </p>
 <hr width="100%" size="2">
-<h1> Samba</h1>
+<h1><a name="Samba"></a>Samba</h1>
 Samab allows Windows users to access a number of CodeX shared resources
 (see below). The Samba password file
 <span style="font-family: monospace;">/etc/smbpasswd</span> is
@@ -1485,7 +1521,7 @@ to the project home directory.<br>
   </li>
 </ul>
 <hr width="100%" size="2">
-<h1> Mailman</h1>
+<h1><a name="Mailman"></a>Mailman</h1>
 The Mailman mailing lists manager requires little attention from the
 CodeX administrators. The configuration is done at installation time
 and mailing list are entirely managed by the end users
@@ -1497,7 +1533,7 @@ Mailman is installed in <span style="font-family: monospace;">/home/mailman</spa
 <br>
 <br>
 <hr width="100%" size="2">
-<h1> Background daemons</h1>
+<h1><a name="BackgroundDaemons"></a>Background daemons</h1>
 <h2>The root crontab</h2>
 <p>The root user on CodeX has a number of script defined in the
 crontab.
@@ -1975,7 +2011,7 @@ is:
 </table>
 </p>
 <hr width="100%" size="2">
-<h1> CodeX Testing Environment</h1>
+<h1><a name="CodeXTestingEnvironment"></a>CodeX Testing Environment</h1>
 The CodeX source code has been modified so that multiple instances of
 the
 CodeX software ca run on the same physical machine. The goal here is to
@@ -1990,6 +2026,678 @@ the
 CodeX Configuration Management Plan.<br>
 &nbsp;
 <p> </p>
+<h1><a name="CodeX_HowTo"></a>CodeX HowTo</h1>
+<hr>
+<h2><a name="HowTo_Import"></a>Importing an existing CVS repository in CodeX</h2>
+<p>
+How to properly install a project team's existing CVS repository into the CodeX project specific repository
+<h3>Preamble</h3>
+<P>The main thing to understand about CodeX is *each* project has its own CVS repository. This root dir is created and initialized by CodeX whenever a new
+project is registered. Its name is "/cvsroot/projectname" 
+
+<P>I insist on this point because most of the time in many organizations there is
+one single CVS repository where all projects are stored. The problem with this
+typical organization is that the directory named "CVSROOT" which contains CVS
+config and admin files is unique and global to all projects managed by CVS. The
+directory named "CVSROOT" contains files such as "modules" to declare module
+name aliases, or commitinfo,rcsinfo and loginfo to trigger specific actions
+when commit happens (such as e-mail notification to certain people,etc.), or
+taginfo to put constraints on the TAG formats, or readers and writers which are
+2 files to allow/deny access to the CVS repo.
+
+<P>If we had one single CVS repository on CodeX then the unique and global
+"CVSROOT" directory would rapidly become a big mess and it would be extremelly
+difficult to maintain all the project specific configurations in this single
+"CVSROOT" directory. Hence the decision to have one CVS repository per project
+on CodeX.
+
+<h3>The real work</h3>
+
+<ol>
+<li>Register the project. CodeX Admin must approve it and wait for the 2 hours cron
+update to create a fresh /cvsroot/projectname CVS repository with a fresh
+CVSROOT directory in it. If you are in a hurry you can force the cron update by hand.
+
+<li>Ideally the tar file provided by the team should provide both the CVS top
+directories <b>*PLUS*</b> the "CVSROOT" directory from the original CVS repository. 
+
+<li>Having the CVSROOT in the tarball is not  mandatory but if the project had
+any specific settings in any of the CVS administration file (see above) then
+there is no chance that the CodeX admin can rebuilt the same environment on
+CodeX. In practive very few projects actually use these admin files but you
+can't never know hence the request for the CVSROOT directory to be included in
+the tarball. One file that is always used though is the CVSROOT/history file
+where all the actions like commit, add, checkout, etc. are automatically logged
+by CVS. If the team wants this file to be preseved then again the CVSROOT has
+to be provided
+
+<li>Create a temporary directory: <tt><br>cd /tmp
+<br>mkdir projectname<br>cd projectname</tt>
+<li> Unpack the cvs tarball provided by the project team in this temporary directory:
+<br><tt> tar xvfz projectname_cvstarball.tgz</tt>
+
+<li>Assuming that the structure is now as follows
+<pre>
+/tmp/projectname
+   - CVSROOT
+       - history  (as well as ,v files)
+       - modules
+       - commitinfo
+       - .....
+   - top_level_dir1 
+   - top_level_dir2 
+   - ....
+   - top_level_dirN
+</pre>
+
+<li>Move all top project dir to the project specific repo: <br><tt>mv top_level_dir*  /cvsroot/projectname/</tt>
+<br><b>Caution!!</b> Leave the CVSROOT directory in place for the moment
+
+<li>Go to the project CVS repo: <br><tt>cd /cvsroot/projectname</tt>
+<li>Change the ownership of the entire CVS repo: 
+<br><tt>chown -R projectadminname.<i>projectname</i> top_level_dir*</tt>
+<br>where projectadminname is the CodeX login of the project administrator
+<li>The CVS admin files in the CVSROOT directory must be examined one by
+one and the project specific instructions must be merged with the files by the
+same name in the CVSROOT directory created by CodeX.
+<ul>
+<li><b>**Never touch**</b> the CVSROOT/readers, writers, passwd and config files created by CodeX
+<li>Be carefull not to overwrite what is already in the CVSROOT/loginfo and val-tags file. Append the content of these given files at the end of the corresponding ones generated by CodeX.
+<li>For the history file : extract the lines belonging to the hosted project from the history file provided by the project team (remember it is very likely that
+this file is global to many projects) and update the content (especially the
+name of the directories and path listed in the history file if they are not the
+same on CodeX)
+<li>For all the other files, look at them one by one and see if there are project specific settings in it. If so append the settings at the end of the corresponding CodeX files.
+</ul>
+<li> Delete the temporary directory: <tt>rm -rf /tmp/projectname</tt>
+<li>Ask the project team to perform a checkout as explained on their CVS project page to check that everything is working fine.
+</ol>
+
+That's all folks!
+
+<hr>
+<h2><a name="HowTo_Regenerate_CVS"></a>Regenerating a fresh CVS repository for a CodeX project</h2>
+<em>When the first import goes wrong or the project team screwed up everything and want to start again from scratch</em>
+<p>
+The fastest and safest way (where xxx is the project name):
+<ul>
+<li>Log as root
+<li>cd /cvsroot
+<li>Make a backup copy of the current CVS tree in /tmp just in case...:
+<br><tt>tar cvfz /tmp/xxx_cvs.tgz ./xxx   </tt>
+<li>Delete the CVS tree: <br><tt>rm -rf  xxx</tt>
+<li>Force the cron update process to run now:
+<pre>
+$ cd ~sourceforge/utils
+$./xerox_crontab.sh
+</pre>
+</ul>
+Now you have a fresh CVS repository and the team can start the import again.
+<hr>
+<h2><a name="HowTo_Change_User_Name"></a>Changing a User Name on CodeX</h2>
+<em>How a CodeX administrator can change a user's login name</em>
+<UL>
+<LI> First log as root on the codex server</LI>
+
+<LI> Edit the following files and change the old user name with the new one
+<BR>  /etc/passwd (2 occurences on the same line: login and home directory)
+<BR>  /etc/shadow (1 occurence)
+<BR>  /etc/group (1 occurence for the user's own group plus as many
+occurences as projects the user is a member of - take note of these
+project for re-use later in this howto)</LI>
+
+<LI> cd /home/users</LI>
+<LI> rename the user's directory to the new name (mv old_name new_name)</LI>
+
+<LI> Edit each of the CVS writers file for the projects the user belong to and modify the name. You can find all the relevant writers file by typing the following Unix command:<br>
+<tt>grep -rsl old_name /cvsroot/*/CVSROOT/writers</tt>
+</LI>
+
+<LI> Edit Subversion permission files for the projects the user belong to and modify the name. You can find all the relevant files by typing the following Unix command:<br>
+<tt>grep -rsl old_name /svnroot/*/.SVNAccessFile</tt>
+</LI>
+
+<LI> Use phpMyAdmin, browse the "user" table, look for the row corresponding to the user, edit the row and modify the name.<br>
+Alternatively you can start the MySQL shell and type the following SQL statement:<br>
+<tt>update user set user_name='new_name' where user_name='old_name';</tt></LI>
+
+<LI>Do the same for the from_email column in the support messages table. Or use the following SQL statement:<br>
+<tt>update support_messages set from_email='new_name' where from_email='old_name';</tt></LI>
+
+<LI>Do the same for the email column in the bug_cc table. Or use the following SQL statement:<br>
+<tt>update bug_cc set email='new_name' where email='old_name';</tt></LI>
+
+<LI>Do the same for the email column in the project_cc table. Or use the following SQL statement:<br>
+<tt>update project_cc set email='new_name' where email='old_name';</tt></LI>
+
+<LI>Do the same for the email column in the artifact_cc table. Or use the following SQL statement:<br>
+<tt>update artifact_cc set email='new_name' where email='old_name';</tt></LI>
+
+</UL>
+<p>
+Remark: if the user has already committed changes in the cvs repository,
+then the old name will still appear in the CVSROOT/history file and the
+various *,v files (CVS version files). Changing the various "history"
+files is possible but changing the *,v files is perilous and frankly
+it is is not necessary.
+
+<hr>
+
+<h2><a name="HowTo_Change_Project_Name"></a>Changing a Project Short Name on CodeX</h2>
+<p>
+<em>How a CodeX administrator can change a project short name. </em>
+
+<P>The project short name is defined a registration time. It is also known
+as group name because it each project has a Unix group of the same name
+on the CodeX server. Here is the procedure to follow to change a group name (assuming the old project name is 'xxx'):
+
+<P><b>**IMPORTANT NOTE**</b> Before you start the procedure below make sure you have enough time to complete the task before the next cron job runs.
+
+<ul>
+<li> First log as root
+<li>Change the old project name 'xxx' in the following directories:
+<ul><tt>
+<li>/home/ftp/pub 
+<li>/home/ftp/codex 
+<li>/home/groups 
+<li>/cvsroot
+<li>/svnroot
+</tt></ul>
+<li>Edit <tt>/etc/cvs_root_allow</tt> and change project name
+<li>Edit <tt>/etc/passwd</tt> and change the project name in the <tt>anoncvs_xxx</tt> entry (3 occurences on one line)
+<li>Edit <tt>/etc/group</tt> and change the project name (1 occurence on one line)
+
+<br>Comment: the last 3 would be done automatically at the next cron update but doing it by hand keep everything consistent with the next step<br>
+
+<li>Edit the <tt>/cvsroot/xxx/CVSROOT/config</tt> file and change the group name in
+the <tt>LockDir</tt> parameter at the end of the file
+
+<li>Edit the 'groups' table of the SourceForge DB with phpMyAdmin and change
+the name (2 occurences in 2 columns: <tt>unix_group_name,
+http_domain</tt>). Then edit the 'service' table, and change the link to the 'Project Summary' and potentially to the 'Project Home Page'. All other fields can be changed by the project admin via the Web interface.
+
+- Updating the DNS aliases does not seem to be that urgent and we can
+wait for the next cron update. If this is really urgent run the cron job by hand
+like this
+<br><tt>
+$ cd ~sourceforge/utils<br>
+$ ./xerox_crontab.sh
+</tt>
+
+</ul>
+
+<p><b>Remark</b>: If there are mailing lists with existing content in the archive it is
+not clear for the moment how to rename the mailing list. So in this case it
+probably means creating new (empty) mailing lists for the new project.
+Of course one can still keep the ones with old project names in it. This is
+no problem.
+<br>See additionnal hints there:<a href="https://www-s.acm.uiuc.edu/wiki/space/Rename+Mailman+lists">https://www-s.acm.uiuc.edu/wiki/space/Rename+Mailman+lists</a>.
+
+And voil&agrave;!
+
+<hr>
+
+<h2><a name="HowTo_Email_pb"></a>New user registration problems - email address errors</h2>
+<p><em>What to do when you get a message from postmaster with an attached new user registration confirmation message</em>
+<p>
+It is fairly common for a new CodeX user to enter the wrong email address
+when registering.  When CodeX sends the
+registration confirmation message to the new user, the message bounces at
+whatever mail server owns the non-existant address, and a message is sent
+back to the originator (aliased to the CodeX administrators) saying that the
+message could not be delivered, with the registration confirmation message
+attached.  What we then need to do is forward this to the user who is trying
+to register on CodeX, with an explanation of what happened and what the user
+needs to do next (complete the registration by following the link in the
+attachment).  We may also decide to fix the email address for the user, if
+we know what it should be.<P>
+
+But first you have to track down the user.  (You can't just send mail to
+the address in the message.  I mean, it didn't work :-).)  Your main sources
+of information are the Xerox Outlook/Exchange Address Book and CodeX itself.<P>
+<UL>
+<LI>The mistake most users make is on the part of the mail address after the
+'@'.  Since our Outlook mail addresses are always of the form
+firstname.lastname@<I>something</I>.xerox.com, it is usually easy to look up
+'lastname, firstname' in the Outlook Address Book.  Opening the entry brings
+up a dialog box with an E-mail Addresses tab.  Selecting this tab will show
+all of the smtp addresses for the user.</LI>
+
+<LI>In order to fix the address on CodeX, you must find the new user.  As an
+administrator, the way to do this is to follow the User Admin link from the
+Site Administration list in the column on the left.  (You can't see this
+list unless you are a site administrator.)  The User Admin page,
+<A HREF=http://codex.xerox.com/admin/userlist.php>http://codex.xerox.com/admin/userlist.php</A>, displays an alphabetical list of
+CodeX/Unix user name links.  Each user name begins a row of links, including
+DevProfile, Activate, Delete, and Suspend.  We are interested here in the
+user name link itself and the DevProfile link.</LI>
+
+<LI>You have to guess what the user's CodeX user name is, based on the user's
+real name, which is hopefully in their mail address.  Most people are
+accustomed to using their last names, the first letter of their first name
+followed by their last name, their first name followed by the initial of
+their last name, their first name only, etc.  John Smith is probably smith,
+jsmith, johns, or john.  User names for which registration is incomplete are
+shown in non-boldface with a preceding asterisk.  If you see a "*jsmith"
+entry in the user list, you have probably found the user, in our example.
+If John Smith has decided to make his user name 'gandalf' (because there is
+already a jsmith), then you have a problem.  Worst case is that you need to
+process the user list, looking at all of the names preceded by an asterisk,
+as described below.</LI>
+
+<LI>In order to look at the attributes of a user name, just follow the link.
+You'll see a page with the user's shell (/bin/bash by default), Unix account
+status, and email address.   If you have found the right user, the email
+address is the one that failed, same as in the postmaster message sent to
+you.  You could fix it now, if you know the right address, but note that
+many people in Xerox, particularly in XR&T, have multiple SMTP addresses,
+and preferences for one over another.  If you have any doubt about what to
+do, turn the problem over to the user, by explaining in your note to the
+user how to change his/her address.  (Follow the Account Maintenance link in
+the left column and then follow Change Email Addr.)</LI>
+
+<LI>Sometimes you want to follow the DevProfile link from the user list, in
+order to verify the user's real name.</LI>
+</UL>
+You could also just Activate the user now, instead of requiring them to
+follow the link in their account registration confirmation message, but it
+seems better to engage them.  The mail address has to be fixed, and they
+should be aware that it was wrong and either correct it or consciously agree
+to the fixed version.  I once 'helped' someone by fixing the address, and
+they changed it back to its original form, and complained that the CodeX
+mail service should have been able to find it.  (True.  There was a problem
+with CodeX mail at that time.)<P>
+<BR>
+John Stidd
+
+<hr>
+
+<h2><a name="HowTo_Block_Client"></a>Blocking a Client from Accessing CodeX</h2>
+<p><em>How to block a client from accessing http or other services on CodeX</em>
+<p>
+It is possible that a client could continuously try accessing CodeX, causing unwanted activity.
+This could cause the /var/log/httpd/error_log or access_log to continually grow with errors,
+which in turn can fill up the root partition.  There is a way to block the client from accessing
+CodeX until the owner can be contacted or the cause of the continual access can be cleared up.
+<BR></P>
+
+<H3>To deny http access to a client:</H3></P>
+1)  Modify /etc/httpd/conf/httpd.conf:</A>
+</P>
+     <DD>&nbsp; Example of how to deny http access to 13.0.33.210:<BR>
+     <DD>&nbsp; Look for the section of httpd.conf that contains the first 4 lines shown below and add line 5:
+ 
+                  <DD>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # Controls who can get stuff from this server.
+                  <DD>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; #
+                  <DD>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Order allow,deny<BR>
+                  <DD>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Allow from all<BR>
+                  <DD>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Deny from 13.0.33.210 &nbsp; &nbsp; &nbsp; &nbsp; &#9;<I>(line to be added)</I></P>
+
+2)  /etc/rc.d/init.d/httpd restart</H3></A>
+
+<H3>To deny access to everything in inetd.conf (like ftp):</H3></P>
+1)  Modify /etc/hosts.deny:</A>
+</P>
+     <DD>Example of how to deny access to 13.0.33.210:
+                   <DD>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ALL: &nbsp; &nbsp; &nbsp; &nbsp;  13.0.33.210 &nbsp; &nbsp; &nbsp; &nbsp; &#9;<I>(line to be added)</I></P>
+</P>
+Vicki Tuttle
+
+
+<hr>
+
+<h2><a name="HowTo_Suspend_User"></a>How to suspend/delete a CodeX user</h2>
+<p><em>What to do with users who left the company or whose e-mail address is no longer valid</em>
+<p>
+CodeX is a system where any Xerox employee can register. When an
+employee leaves the company the account remains valid and the CodeX
+administrators discover that the user is no longer with the company
+when the mass mail engine is used to send an annoucement to all
+users.
+
+<P>The goal of this document is to document what to do with these
+invalid accounts.
+
+<h3>How to delete a user</h3>
+
+<h4>Project member</h4>
+
+<P>If the user was part of a project then do the following:
+
+<ul>
+<li>Set the Web status to 'Deleted'
+<li>Set the Unix Status to 'Suspended'
+</ul>
+
+<p>See below for more information on how to change these status values.
+
+<p>To determine whether a user is a project member. Use the "Search
+People" box using the user e-mail or name then click on the
+appropriate result and see if any project is listed on the upper right corner of the screen.
+
+<p>By doing so, the Unix account is inhibited which is what we want for
+security reasons but it is still here so all the files on the CodeX
+server marked with this user uid will still appear as being owned by
+this user. On top of that it is perfectly ok to supend a Unix account
+as soon as we have an e-mail error for sbdy and if this person comes
+back to us complaining that his/her account is no longer accessible we
+can restore the account very quickly with no data loss at all (and ask
+him/her to update her e-mail address)
+
+<P>In case of doubt or if you are in a hurry and don't have time to
+check whether a user is a project member then always use this
+scenarion. <u>Actually we should probably always use this scenario to
+start with and then once in a year change the Unix status to 'Deleted'
+when we have no news from the user</u>
+
+Before you suspend a user account have a look in the Xerox directory
+and see if the person has a new e-mail. If so then you might want to
+update the e-mail or send him/her a reminder to do it via the "Account
+Maintenance" page on CodeX.
+
+
+<h4>Non project members</h4>
+
+<P>If a user is not a project member <b>and</b> we are sure s/he left the
+company (permanent e-mail error returned not transient) then do the
+following:
+
+<ul>
+<li>Set the Web status to 'Deleted'
+<li>Set the Unix Status to 'Deleted'
+</ul>
+
+<P>The Unix account is deleted for real, the user home directory is
+deleted as well. 
+
+
+
+<h3>A bit of background</h3>
+
+<P>There are 2 different statuses associated with a CodeX user:
+
+<ol>
+<li> The "status" field in the user table contains the user status from
+the point of view of the Web interface.
+
+<ul>
+<li>Valid values are 'A' for active, 'D' for deleted and 'S' for
+suspended).
+
+<li>From the point of view of the Web interface there is not much
+difference between 'S' and 'D': in both cases the effect is that the
+user can non longer login and in both cases they are not counted in the
+number of active users (upper right corner of the front page). In any
+case a user will never disappear from the MySQL database. 
+
+<li>To modify this field one has to go either to the User Admin page (left
+menu pane) but it generates a huge page with all users. So a better
+choice is to choose "Admin Page" and then search for the use or select
+the first letter of the name. Then you can change the Web status.
+</ul>
+
+<li> The "unix_status" field in the user table governs the status of the
+Unix account.
+
+<ul>
+<li>It is completely independent from the Web 'status' field above
+<li>Valid values are
+<ul>
+<li>'N' for No Unix account: this one has an effect
+    only when a user is created with this unix status upfront.
+    In this case the Unix crontab daemon simply ignores it and
+    doesn't create a Unix account for this user
+<li>'A' for Active: A Unix account is created for this user (including
+     a home directory in /home/users/user_name)
+<li>'R' for Restricted: A Unix account is created for this user (including
+     a home directory in /home/users/user_name)
+<li>'S' for Suspended: the Unix password is replaced by "!!"
+     meaning the user account is preserved although no longer
+     usable (Can not login but home directory remains untouched
+     and assignment to Unix group is safe as well).Going back
+     to status 'A' will reactivate the account with the initial
+     password.
+<li>'D' for Deleted: the entry in /etc/passwd is deleted
+    for this user and the home directory is archived in /tmp
+    (and therefore automatically cleaned up after 7 days) for
+    the moment and then removed from /home/users. Assignment to
+    Unix groups is revoked as well of course.
+</ul>
+
+<li> To modify the Unix status do the same as for status but click on the
+user name. Then you are given access to the Unix status of the user.
+Change it to whatever value is appropriate.
+</ul>
+</ol>
+
+<p>If there is only a couple of accounts to suspend/delete then going through the Web interface is the best way. If there are many users do the following:
+
+<ol>
+<li>Have a CodeX Web page ready and open on the Search people box. Type part of people's name in the box and determine the login name from the result list
+<li>Have a terminal session open on the CodeX server and connect to the database with:<br><br>
+<tt>mysql -u sourceforge sourceforge -p</tt><br><br>
+then use the following SQL statement for Suspend/Delete scenario: <br><br>
+
+<tt> update user set unix_status='S',status='D' where user_name='fmarcus';</tt>
+<br><br>
+or for the Delete/Delete scenario use: <br><br>
+
+<tt> update user set unix_status='D',status='D' where user_name='fmarcus';</tt>
+</ol>
+<br>
+
+
+<hr>
+
+<h2><a name="HowTo_Recompile_RPM"></a>Recompiling a CodeX specific RPM</h2>
+<p><em>Explain how to regenerate a CodeX specific RPM from the standard RPM</em>
+<p>
+<ol>
+  <li>Log as root on a test server</li>
+  <li>Go to /usr/src/redhat/SPECS</li>
+  <li>Install the previous codex specific RPM in source form if
+necessary to get the specific patches and also the specific spec file</li>
+  <li>Install the new version&nbsp; of the standard source RPM</li>
+  <li>Make a diff between the old codex specific spec file and the new
+standard spec file to see what are the changes.</li>
+  <li>Merge the changes you made in the old codex specific spec file in
+the new spec file</li>
+  <li>Don't forgfet to append the 'codex' suffix to the release name in
+the new spec file.</li>
+  <li>Also change the name of the new spec file to reflect the version
+number and the codex prefix (e.g. cvs-1.11.1p1-8.7.spec)</li>
+  <li>Recompile the package (rpm -ba ... to generate both the source
+and the binary package</li>
+  <li>Install the new modified binary RPM package on the test server
+and make sure it works ok<br>
+  </li>
+  <li>Publish the new packages (both source and binary) in the package
+release space (/home/groups/codex/htdocs/packages/RPMS_CodeX)</li>
+  <li>Send an email to the codex-devel mailing list to announce the
+availability of the new codex specific package and point them to the
+RPM release space ( <a href="http://codex.codex.xerox.com/packages/">http://codex.codex.xerox.com/packages/</a>
+...)</li>
+</ol>
+
+
+<hr>
+
+<h2><a name="HowTo_Change_PW"></a>Change privileged account passwords</h2>
+<p><em>Steps to change privileged account passwords</em>
+<p>Some companies have specific policies regarding passwords.
+<p>For instance, the Xerox Electronic Standards Security Guide (v3.0) states that all
+privileged account passwords must be changed at least every 30 days.
+</p>
+<p>See http://taweb.mc.xerox.com/Get/File-84236/ESS.doc, Section 4.3.2
+Passwords, for details. (Intranet)
+
+</p>
+<p>At Xerox, passwords will be changed the first Monday of each month.
+</p>
+<p>1) Change the passwords for the following accounts:
+<br>
+<b>root</b>
+<br>
+<b>sourceforge</b>
+<br>
+<b>admin</b>
+<br>
+<b>mailman</b>
+<br>
+
+2) Change the sourceforge password in /etc/local.inc. (Restarting
+services is not necessary.)
+<br>
+3) Send note to codex-admin@lists.codex.xerox.com
+stating passwords have been changed.
+<br>
+4) All CodeX admins need to change the password on
+their privileged personal account.
+</p>
+<p><b>root</b> account:
+<br>
+1) Change <i>unix</i> password from <b>root </b>account:
+<br>
+
+- password (cr)
+<br>
+[enter new password]
+<br>
+[retype new password to confirm]
+<br>
+2) Change <i>mysql</i> password:
+<br>
+- mysqladmin - -user=root -p password [enter new password]
+<br>
+enter password: [enter old password]
+</p>
+<p><b>sourceforge</b> account:
+
+<br>
+1) Change <i>unix</i> password from <b>sourceforge</b>
+account:
+<br>
+- password (cr)
+<br>
+[enter new password]
+<br>
+[retype new password to confirm]
+<br>
+2) Change <i>mysql </i>password:
+
+<br>
+- mysqladmin - -user=sourceforge -p password [enter new password]
+<br>
+enter password: [enter old password]
+<br>
+3) Modify /etc/local.inc - change <b>sourceforge</b>
+password<br>
+4) Modify htpasswd for phpMyAdmin:<br>
+/usr/bin/htpasswd -c /etc/httpd/conf/passwd sourceforge<br>
+</p>
+<p><b>admin</b> account:
+
+<br>
+- The "admin" account is the first user that is created when a new
+CodeX site is created.
+<br>
+- The "admin" account is used as an "administrator" for orphaned
+projects.
+<br>
+- The "admin" <i>unix</i> account is not a privileged account.
+<br>
+1) Change <i>unix</i> and <i>mysql</i> password for
+
+<b>admin</b>
+from CodeX website:
+<br>
+- Go to
+http://codex.xerox.com
+<br>
+- Log
+in as <b>admin</b>
+<br>
+<b> - </b>Click
+"Account Maintenance" in left bar
+<br>
+- Click
+"[Change Password]"
+<br>
+- Follow
+directions for changing password
+
+</p>
+<p><b>mailman</b> account:
+<br>
+- The "mailman" account has the universal password
+for mailing lists.
+<br>
+1) su -
+<br>
+2) su mailman
+<br>
+3) cd /usr/local/mailman/bin
+<br>
+4) <b>.</b>/mmsitepass
+<br>
+
+[enter new password when prompted]
+<br>
+5) Change <i>unix</i> password from <b>root</b> account:
+<br>
+- password
+mailman
+<br>
+[enter new password when prompted]
+<br>
+[retype new password to confirm]
+<br>
+- To test the mailman account:
+
+<br>
+- Go to
+http://lists.codex.xerox.com/mailman/admin
+<br>
+- Click
+on any mailing list
+<br>
+- Type
+new global admin password
+<br>
+If you see the admin page
+of the selected mailing list, then it is OK.
+</p>
+
+
+<hr>
+
+<h2><a name="HowTo_Delete_Bug"></a>Delete a bug from the CodeX database</h2>
+<p><em>Delete a bug with its given bug_id from all concernced DB tables.</em>
+
+<p>Some projects might ask to delete submitted bugs from CodeX because of sensitive data that the bug information contains. While the functionality "delete bug" is not integrated into CodeX you can use this little sql script to do the work by hand.</p>
+
+<p><tt>
+	SET @bug_id = <i>your_bug_id</i>;<br><br>
+
+	DELETE FROM bug WHERE bug_id=@bug_id;<br><br>
+	
+	DELETE FROM bug_bug_dependencies WHERE bug_id=@bug_id;<br>
+	DELETE FROM bug_bug_dependencies WHERE is_dependent_on_bug_id=@bug_id;<br><br>
+	
+	DELETE FROM bug_task_dependencies WHERE bug_id=@bug_id;<br><br>
+	
+	DELETE FROM bug_cc WHERE bug_id=@bug_id;<br><br>
+	
+	DELETE FROM bug_file WHERE bug_id=@bug_id;<br><br>
+	
+	DELETE FROM bug_history WHERE bug_id=@bug_id;<br><br>
+      </tt>
+    </p>
+
+<p>Save this script for instance as <tt>del_bug.sql</tt> and launch it with <br>
+      <tt>mysql -u sourceforge -v -v -v -p sourceforge &lt; del_bug.sql &gt; out</tt>
+</p>
+
 <hr width="100%" size="2" noshade="noshade"> End of Document<br>
 <br>
 </body>
