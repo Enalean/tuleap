@@ -26,11 +26,14 @@ function project_admin_header($params) {
 	<A HREF="/project/admin/editgroupinfo.php?group_id='.$group_id.'">Edit Public Info</A> |
 	<A HREF="/project/admin/history.php?group_id='.$group_id.'">Project History</A>
 	<BR>
-	<A HREF="/project/admin/editpackages.php?group_id='.$group_id.'">Edit/Release Files</A> | 
+	<A HREF="/project/admin/editpackages.php?group_id='.$group_id.'">Edit/Release Files</A> |
 	<A HREF="/people/createjob.php?group_id='.$group_id.'">Post Jobs</A> | 
-	<A HREF="/people/?group_id='.$group_id.'">Edit Jobs</A> |
-	<A HREF="/project/admin/editimages.php?group_id='.$group_id.'">Edit Screenshots</A>
-	</B>
+	<A HREF="/people/?group_id='.$group_id.'">Edit Jobs</A> | '.
+// LJ A new section to see who accessed the code when - CodeX Specific 
+	'<A HREF="/project/stats/source_code_access.php/?group_id='.$group_id.'">Source Code Access Logs</A>'.
+// LJ No screenshots on CodeX
+// <A HREF="/project/admin/editimages.php?group_id='.$group_id.'">Edit Screenshots</A>
+	'</B>
 	<P>';
 }
 
@@ -69,6 +72,7 @@ function frs_show_status_popup ($name='status_id', $checked_val="xzxz") {
 		$FRS_STATUS_RES=db_query("SELECT * FROM frs_status");
 	}
 	return html_build_select_box ($FRS_STATUS_RES,$name,$checked_val,false);
+
 }
 
 /*
@@ -83,7 +87,9 @@ function frs_show_filetype_popup ($name='type_id', $checked_val="xzxz") {
 	*/
 	global $FRS_FILETYPE_RES;
 	if (!isset($FRS_FILETYPE_RES)) {
-		$FRS_FILETYPE_RES=db_query("SELECT * FROM frs_filetype");
+// LJ Sort by type_id added so that new extensions goes
+// LJ in the right place in the menu box
+		$FRS_FILETYPE_RES=db_query("SELECT * FROM frs_filetype ORDER BY type_id");
 	}
 	return html_build_select_box ($FRS_FILETYPE_RES,$name,$checked_val,true,'Must Choose One');
 }

@@ -7,19 +7,35 @@ use POSIX qw(strftime);
 
 require("../include.pl");  # Include all the predefined functions
 
+# LJ
+$dns_master_file = "/usr/local/domain/data/primary/codex.zone";
+
 &db_connect;
 
-@dns_zone = open_array_file("dns.zone");
+#LJ @dns_zone = open_array_file("dns.zone");
+@dns_zone = open_array_file($dns_master_file);
 
 #
 # Update the Serial Number
 #
-$date_line = $dns_zone[1];
 
-$date_line =~ s/\t\t\t/\t/;
-        
-($blah,$date_str,$comments) = split("	", $date_line);
+#LJ instead of hardcoding the line number where the serial number is
+#LJ let's look for the keyword Serial in the comment field
+#LJ $date_line = $dns_zone[1];
 
+my $i=0;
+foreach (@dns_zone) {
+   last if /Serial/;
+   $i++;
+}
+$date_line = $dns_zone[$i];
+
+#LJ The way the serial number was extracted was really
+#LJ not robust enough.
+#LJ $date_line =~ s/\t\t\t/\t/;
+#LJ ($blah,$date_str,$comments) = split("	", $date_line);
+
+($blah,$date_str,$comments) = ($date_line =~ /^(\s*)(\d+)(.*)/);
 $date = $date_str;
 
 $serial = substr($date, 8, 2);
@@ -34,9 +50,10 @@ if ($old_day != $new_day) { $serial = "01"; }
 
 $new_serial = $now_string.$serial;
 
-$dns_zone[1] = "		$blah	$new_serial	$comments";
+#LJ $dns_zone[1] = "		$blah	$new_serial	$comments";
+$dns_zone[$i] = "$blah"."$new_serial"."$comments"."\n";
 
-write_array_file("dns.zone", @dns_zone);
+write_array_file($dns_master_file, @dns_zone);
 
 #
 # grab Table information
@@ -47,13 +64,18 @@ $c->execute();
 
 while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow()) {
 
-	($name, $aliases, $addrtype, $length, @addrs) = gethostbyname("$unix_box.sourceforge.net");
+	($name, $aliases, $addrtype, $length, @addrs) = gethostbyname("$unix_box.codex.xerox.com");
 	@blah = unpack('C4', $addrs[0]);
 	$ip = join(".", @blah);
 
-	push @dns_zone, sprintf("%-24s%-16s",$unix_group_name,"IN\tA\t" . "$ip\n");
-	push @dns_zone, sprintf("%-24s%-28s","", "IN\tMX\t" . "mail1.sourceforge.net.\n");
-	push @dns_zone, sprintf("%-24s%-30s","cvs.".$unix_group_name,"IN\tCNAME\t" . "cvs1.sourceforge.net."."\n\n");
+# LJ In the Source Forge version each project had its own IN A record
+# and MX record so that sending mail to john.doe@myproject.codex.xerox.com
+# was actually valid. On CodeX we do not want that. Just Web and CVS IP address
+
+# LJ	push @dns_zone, sprintf("%-24s%-16s",$unix_group_name,"IN\tA\t" . "$ip\n");
+# LJ	push @dns_zone, sprintf("%-24s%-28s","", "IN\tMX\t" . "mail1.codex.xerox.com.\n");
+	push @dns_zone, sprintf("%-24s%-16s",$unix_group_name,"IN\tCNAME\t" . "atlas.codex.xerox.com."."\n");
+	push @dns_zone, sprintf("%-24s%-30s","cvs.".$unix_group_name,"IN\tCNAME\t" . "cvs1.codex.xerox.com."."\n\n");
 }
 
-write_array_file("/home/dummy/dumps/dns.sourceforge.net", @dns_zone);
+write_array_file("/home/dummy/dumps/dns.codex.xerox.com", @dns_zone);

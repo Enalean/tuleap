@@ -96,7 +96,7 @@ if ($row_user['unix_status'] == 'A') {
 	$HTML->box1_top("Shell Account Information"); 
 	print '&nbsp;
 <BR>Shell box: <b>'.$row_user['unix_box'].'</b>
-<BR>CVS/SSH Shared Keys: <B>';
+<BR>SSH Shared Keys: <B>';
 	// get shared key count from db
 	$expl_keys = explode("###",$row_user['authorized_keys']);
 	if ($expl_keys[0]) {

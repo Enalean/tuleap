@@ -30,11 +30,11 @@ db_query("UPDATE user SET "
 $HTML->header(array('title'=>"Email Change Complete"));
 ?>
 <p><b>Email Change Complete</b>
-<P>Welcome, <?php print $row_user[user_name]; ?>. Your email
-change is complete. Your new email address on file is 
+<P>Welcome, <?php print $row_user['realname'] ?>.<BR>
+ Your email change is complete. Your new email address on file is 
 <B><?php print $row_user[email_new]; ?></B>. Mail sent to
-<?php print $row_user['user_name']; ?>@<?php print $GLOBALS['sys_users_host']; ?> will now
-be forwarded to this account.
+CodeX user <?php print $row_user['realname'] ?> (<?php print $row_user['user_name']; ?>) <!-- LJ @ --><?php //LJ print $GLOBALS['sys_users_host']; ?>
+will now be forwarded to this new email.
 
 <P><A href="/">[Return to SourceForge]</A>
 

@@ -72,12 +72,17 @@ $data2 = $graph->AddData($xdata,$ydata2,$xlabel);
 $graph->DrawGrid('gray');
 $graph->LineGraph( $data1, 'red' );
 $graph->LineGraph( $data2, 'blue' );
-$graph->SetTitle( "Sourceforge Statistics: " . group_getname($group_id) );
+//LJ $graph->SetTitle( "Sourceforge Statistics: " . group_getname($group_id) );
+$graph->SetTitle( "CodeX Statistics: " . group_getname($group_id) );
 $graph->SetSubTitle("Page Views (red) and Downloads (blue) for the past $i days");
 $graph->SetxTitle('Date');
 $graph->SetyTitle('Views (red) / Downloads (blue)');
 $graph->DrawAxis();
 //$graph->showDebug();
-$graph->ShowGraph('png');
+// LJ The libgd we use (1.3) and the PHP3 gd extension
+// only support GIF image (PNG comes with version 1.8 of gd)
+// so force generation of a GIF image
+// $graph->ShowGraph('png');
+$graph->ShowGraph('gif');
 
 ?>

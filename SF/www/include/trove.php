@@ -145,10 +145,13 @@ function trove_getcatlisting($group_id,$a_filter,$a_cats) {
 		.$group_id.' '
 		.'ORDER BY trove_cat.fullpath');
 
+// LJ Added a link to the categorization admin page
+// LJ in case the project is not yet categorized
+
 	if (db_numrows($res_trovecat) < 1) {
 		print 'This project has not yet categorized itself in the '
 			.'<A href="/softwaremap/trove_list.php">Trove '
-			.'Software Map</A>.';
+			.'Software Map</A>.You can <a href=/project/admin/group_trove.php?group_id='.$group_id.'>categorize it</a> now.';
 	}
 
 	// first unset the vars were using here

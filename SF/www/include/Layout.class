@@ -21,13 +21,15 @@
 
 class Layout extends Error {
 
-	var $imgroot = '/themes/forged/images/';
+	var $imgroot = '/themes/codex/images/';
 
 	// Color Constants
-        var $COLOR_CONTENT_BACK= '#FFFFFF';
+// LJ        var $COLOR_CONTENT_BACK= '#FFFFFF';
+        var $COLOR_CONTENT_BACK= '#F7F4F2';
         var $COLOR_LTBACK1= '#EAECEF';
         var $COLOR_LTBACK2= '#FAFAFA';
-        var $COLOR_HTMLBOX_TITLE = '#D1D5D7';
+//LJ        var $COLOR_HTMLBOX_TITLE = '#D1D5D7';
+        var $COLOR_HTMLBOX_TITLE = '#E0DDD2';
         var $COLOR_HTMLBOX_BACK = '#EAECEF';
 
 	// Font Face Constants
@@ -121,7 +123,8 @@ class Layout extends Error {
         	        $bgcolor=$this->COLOR_HTMLBOX_BACK;
 	        }
         	$return = '<TABLE cellspacing="1" cellpadding="5" width="100%" border="0" bgcolor="'.$this->COLOR_HTMLBOX_BACK.'">
-                        <TR BGCOLOR="'.$this->COLOR_HTMLBOX_TITLE.'" BACKGROUND="'.$this->imgroot.'steel3.jpg" align="center">
+                        <!-- LJTR BGCOLOR="'.$this->COLOR_HTMLBOX_TITLE.'" BACKGROUND="'.$this->imgroot.'steel3.jpg" align="center"-->
+                        <TR BGCOLOR="'.$this->COLOR_HTMLBOX_TITLE.'" align="center">
                                 <TD colspan=2><SPAN class=titlebar>'.$title.'</SPAN></TD>
                         </TR>
                         <TR align=left bgcolor="'.$bgcolor.'">
@@ -141,7 +144,9 @@ class Layout extends Error {
         	return '
                                 </TD>
                         </TR>
-                        <TR BGCOLOR="'.$this->COLOR_HTMLBOX_TITLE.'" align="center" background="'.$this->imgroot.'steel3.jpg">
+
+                        <!-- LJ TR BGCOLOR="'.$this->COLOR_HTMLBOX_TITLE.'" align="center" background="'.$this->imgroot.'steel3.jpg"-->
+<TR BGCOLOR="'.$this->COLOR_HTMLBOX_TITLE.'" align="center">
                                 <TD colspan=2><SPAN class=titlebar>'.$title.'</SPAN></TD>
                         </TR>
                         <TR align=left bgcolor="'.$bgcolor.'">
@@ -167,11 +172,12 @@ class Layout extends Error {
         	global $G_USER, $G_SESSION;
 
 	        if (!$params['title']) {
-        	        $params['title'] = "SourceForge";
+        	        $params['title'] = "CodeX";
 	        } else {
-        	        $params['title'] = "SourceForge: " . $params['title'];
+        	        $params['title'] = "CodeX: " . $params['title'];
 	        }
         	?>
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
         "http://www.w3.org/TR/REC-html40/loose.dtd">
 
@@ -203,16 +209,15 @@ class Layout extends Error {
                 	echo "<P>$GLOBALS[G_DEBUGQUERY]";
         	}
 	        ?>
+<center>
 <P class="footer">
-<font face="arial, helvetica" size="1" color="#cccccc">
-VA Linux Systems and SourceForge are trademarks of VA Linux Systems, Inc.  Linux
- is a registered trademark of Linus Torvalds.  All other trademarks and copyrigh
-ts on this page are property of their respective owners. For information about o
-ther site Content ownership and sitewide terms of service, please see the <a href="/tos/tos.php" class="legallink">SourceForge Terms of Service</a>. For privacy
- policy information, please see the <a href="/tos/privacy.php" class="legallink"
->SourceForge Privacy Policy</a>. Content owned by VA Linux Systems is copyright 
-1999-2000 VA Linux Systems, Inc.  All rights reserved.
+<font face="arial, helvetica" size="1" color="#FFFFFF">
+The CodeX Website is a Xerox internal Web site. For the Internal Software Sharing Policy see the <a href="/docs/licenses/xrx.php" class="legallink">Xerox Code eXchange Policy</a>. For site wide terms of service, please see the <a href="/tos/tos.php" class="legallink">CodeX Terms of Service</a>. For privacy policy  
+information, please see the <a href="/tos/privacy.php" class="legallink">Codex Privacy Policy</a>. The CodeX Web site heavily relies on the Open Source software developed by VA Linux Systems for their SourceForge Web site. The Web Front end owned by VA Linux Systems is copyright 
+1999-2000 VA Linux Systems, Inc.  All rights reserved.<BR>
+The design of the Web pages is derived from the graphics design of the <a href="http://www.ximian.com">Ximian</a> (formerly Helix Code) Web Site.
 </font>
+</center>
 <BR>&nbsp;
 </body>
 </html>
@@ -242,7 +247,7 @@ ther site Content ownership and sitewide terms of service, please see the <a hre
 
         SPAN.center { text-align: center }
         SPAN.boxspace { font-size: 2pt; }
-        SPAN.osdn {font-size: <?php echo $this->FONTSIZE_SMALLER; ?>; font-family: <?php echo $site_fonts ?>;}
+        SPAN.osdn {font-size: <?php echo $this->FONTSIZE; ?>; font-family: <?php echo $site_fonts ?>;font-weight: bold;}
         SPAN.search {font-size: <?php echo $this->FONTSIZE_SMALLER; ?>; font-family:  <?php echo $site_fonts ?>;}
         SPAN.slogan {font-size: large; font-weight: bold; font-family: <?php echo $site_fonts; ?>;}
         SPAN.footer {font-size: <?php echo $this->FONTSIZE_SMALLER; ?>; font-family: <?php echo $site_fonts; ?>;}
@@ -253,8 +258,8 @@ ther site Content ownership and sitewide terms of service, please see the <a hre
         A.sortbutton { color: #FFFFFF; text-decoration: underline; }
         A.sortbutton:visited { color: #FFFFFF; text-decoration: underline; }
 
-        .menus { color: #6666aa; text-decoration: none; }
-        .menus:visited { color: #6666aa; text-decoration: none; }
+        .menus { color: #9b4020; text-decoration: none; }
+        .menus:visited { color: #9b4020; text-decoration: none; }
 
         A:link { text-decoration:none }
         A:visited { text-decoration:none }
@@ -277,8 +282,11 @@ ther site Content ownership and sitewide terms of service, please see the <a hre
  	<?php
         $this->generic_header_end($params); 
 ?>
-<body text="#333333" link="#6666aa" alink="#aa6666" vlink="#6666aa" bgcolor="#6C7198" leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0" marginwidth="0" marginheight="0">
 
+<!-- LJ <body text="#333333" link="#6666aa" alink="#aa6666" vlink="#6666aa" bgcolor="#6C7198" leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0" marginwidth="0" marginheight="0">
+-->
+<!-- LJ vlink was #5b3010 but not very readable so set them like links -->
+<body text="#333333" link="#8b4020" alink="#000000" vlink="#8b4020" bgcolor="#bcbcad" leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0" marginwidth="0" marginheight="0">
 <?php
 
 /*
@@ -286,7 +294,6 @@ ther site Content ownership and sitewide terms of service, please see the <a hre
         OSDN NAV BAR
 
 */
-
 osdn_print_navbar();
 
 echo html_blankimage(5,100);
@@ -294,44 +301,65 @@ echo html_blankimage(5,100);
 <br>
 <!-- start page body -->
 <CENTER>
-<table cellpadding="0" cellspacing="0" border="0" width="99%">
-        <tr>
-                <td background="<?php echo $this->imgroot; ?>tbar1.png" width="1%" height="17"><img src="<?php echo $this->imgroot; ?>tleft1.png" width="17" height="17" alt=" "></td>
-                <td background="<?php echo $this->imgroot; ?>tbar1.png" align="center" colspan="3" width="99%"><img src="<?php echo $this->imgroot; ?>tbar1.png" width="1" height="17" alt=" "></td>
-                <td><img src="<?php echo $this->imgroot; ?>tright1.png" width="17" height="17" alt=" "></td>
+<table cellpadding="0" cellspacing="0" border="0" width="97%">
+<!-- LJ      <tr> -->
+<!-- LJ               <td background="<?php echo $this->imgroot; ?>tbar1.png" width="1%" height="17"><img src="<?php echo $this->imgroot; ?>tleft1.png" width="17" height="17" alt=" "></td> -->
+<!--                <td background="<?php echo $this->imgroot; ?>tbar1.png" align="center" colspan="3" width="99%"><img src="<?php echo $this->imgroot; ?>tbar1.png" width="1" height="17" alt=" "></td> -->
+<!--                <td><img src="<?php echo $this->imgroot; ?>tright1.png" width="17" height="17" alt=" "></td>-->
+<!-- LJ        </tr> -->
+
+<!-- LJ new version -->
+<!-- First line with borders and corners -->
+           <tr>
+               <td background="<?php echo $this->imgroot; ?>upper_left_corner.gif" width="1%" height="26"><img src="<?php echo $this->imgroot; ?>upper_left_corner.gif" width="16" height="26" alt=" "></td>
+                <!-- LJ activate if we want logo on top td background="<?php echo $this->imgroot; ?>top.gif" align="left" colspan="2"><img src="<?php echo $this->imgroot; ?>codex_logo.gif" width="300" height="26" alt="">&nbsp;</td> -->
+                <td background="<?php echo $this->imgroot; ?>top_border.gif" align="left" colspan="3" width="99%"><a href="/"><img src="<?php echo $this->imgroot; ?>codex_banner_lc.gif" border="0" alt="CodeX Banner"></a></td>
+                <td><img src="<?php echo $this->imgroot; ?>upper_right_corner.gif" width="16" height="26" alt=" "></td>
         </tr>
+
+<!-- LJ new version -->
+<!-- Second line with menus and content -->
         <tr>
-                <td width="17" background="<?php echo $this->imgroot; ?>leftbar1.png" align="left" valign="bottom"><img src="<?php echo $this->imgroot; ?>leftbar1.png" width="17" height="25" alt=" "></td>
+<!-- LJ                <td width="17" background="<?php echo $this->imgroot; ?>leftbar1.png" align="left" valign="bottom"><img src="<?php echo $this->imgroot; ?>leftbar1.png" width="17" height="25" alt=" "></td> -->
+<!-- LJ new version -->
+                <td background="<?php echo $this->imgroot; ?>left_border.gif" align="left" valign="bottom" alt=""><img src="<?php echo $this->imgroot; ?>bottom_left_corner.gif" width="16" height="16" alt=""></td>
+
                 <td colspan="3" bgcolor="#ffffff">
 <!-- start main body cell -->
 
-        <table cellpadding="0" cellspacing="0" border="0" width="100%">
+
+        <table style=menus cellpadding="0" cellspacing="0" border="0" width="100%">
+
                 <tr>
-                        <td width="141" background="<?php echo $this->imgroot; ?>steel3.jpg" bgcolor="#cfd1d4" align="left" valign="top">
+                    <td width="60" bgcolor="#ece9e5" align="left" valign="top">
 
         <!-- VA Linux Stats Counter -->
         <?php
         if (!session_issecure()) {
-                print '<IMG src="http://www2.valinux.com/clear.gif?id=105" width=140 height=1 alt="Counter"><BR>';
+               //(LJ) print '<IMG src="http://www2.valinux.com/clear.gif?id=105" width=140 height=1 alt="Counter"><BR>';
+                print '<IMG src="/images/clear.gif?id=105" width=140 height=1 alt="Counter"><BR>';
         } else {
                 print html_blankimage(1,140) . '<br>';
         }
         ?>
 
-        <CENTER>
-        <a href="/"><IMG src="<?php echo $this->imgroot; ?>sflogo-hammer1.jpg" alt=" Source Forge " border="0" width="136" height="79"></A>
+  <CENTER>
+<!-- LJ the logo is now in the First row -->
+<BR><BR><BR><BR><BR>
+        <!-- LJ a href="/"><IMG src="<?php echo $this->imgroot; ?>codex_logo2.gif" alt=" Code eXchange " border="0" width="123" height="54"></A>-->
         </CENTER>
         <P>
         <!-- menus -->
         <?php
-        //html_blankimage(1,140);
+        // html_blankimage(1,140);
         menu_print_sidebar($params);
         ?>
         <P>
         </TD>
 
-        <td width="20" background="<?php echo $this->imgroot; ?>fade1.png" nowrap>&nbsp;</td>
-        <td valign="top" bgcolor="<?php echo $this->COLOR_CONTENT_BACK; ?>" width="99%">
+        <td width="15" background="<?php echo $this->imgroot; ?>fade.png" nowrap>&nbsp;</td>
+        <!-- LJ td valign="top" bgcolor="<?php echo $this->COLOR_CONTENT_BACK; ?>" width="99%"> -->
+        <td valign="top" bgcolor="<?php echo $this->COLOR_CONTENT_BACK; ?>">
         <BR>
 <?php
 	}
@@ -345,17 +373,29 @@ echo html_blankimage(5,100);
         </td>
 
         </tr>
+<!-- New row added for the thin black line at the bottom of the array -->
+<tr><td background="<?php echo $this->imgroot; ?>black.gif" colspan="4" align="center"><img src="<?php echo $this->imgroot; ?>clear.gif" width="2" height="2" alt=" "></td> </tr>
         </table>
+
                 </td>
-                <td width="17" background="<?php echo $this->imgroot; ?>rightbar1.png" align="right" valign="bottom"><img src="<?php echo $this->imgroot; ?>rightbar1.png" width="17" height="17" alt=" ">
-</td>
+                <!-- td width="17" background="<?php echo $this->imgroot; ?>rightbar1.png" align="right" valign="bottom"><img src="<?php echo $this->imgroot; ?>rightbar1.png" width="17" height="17" alt=" ">  -->
+                <td background="<?php echo $this->imgroot; ?>right_border.gif" valign="bottom"><img src="<?php echo $this->imgroot; ?>bottom_right_corner.gif" width="16" height="16" alt=" "></td>
         </tr>
         <tr>
+
+<!-- LJ
                 <td background="<?php echo $this->imgroot; ?>bbar1.png" height="17"><img src="<?php echo $this->imgroot; ?>bleft1.png" width="17" height="17" alt=" "></td>
                 <td background="<?php echo $this->imgroot; ?>bbar1.png" align="center" colspan="3"><img src="<?php echo $this->imgroot; ?>bbar1.png" width="1" height="17" alt=" "></td>
                 <td background="<?php echo $this->imgroot; ?>bbar1.png" bgcolor="#7c8188"><img src="<?php echo $this->imgroot; ?>bright1.png" width="17" height="17" alt=" "></td>
+-->
+<!-- LJ new version -->
+                <!-- LJ <td background="<?php echo $this->imgroot; ?>bottom_left_corner.gif" height="16"><img src="<?php echo $this->imgroot; ?>bottom_left_corner.gif" width="16" height="16" alt=" "></td> -->
+                <!--td background="<?php echo $this->imgroot; ?>black.gif" colspan="5" align="center"><img src="<?php echo $this->imgroot; ?>bottom_border.gif" width="1" heigth="26" alt=" "></td>-->
+                <!--td background="<?php echo $this->imgroot; ?>bottom_right_corner.gif"><img src="<?php echo $this->imgroot; ?>bottom_right_corner.gif" width="16" height="16" alt=" "></td>-->
+
         </tr>
 </table>
+</center>
 
 <!-- themed page footer -->
 <?php 

@@ -11,7 +11,7 @@ require($DOCUMENT_ROOT.'/admin/admin_utils.php');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
-site_admin_header(array('title'=>"Alexandria Admin"));
+site_admin_header(array('title'=>"CodeX Admin"));
 
 $abc_array = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','0','1','2','3','4','5','6','7','8','9');
 
@@ -73,11 +73,12 @@ Search (groupid,groupunixname,groupname):
 <P><B>Statistics</B>
 <ul>
 <li><a href="lastlogins.php">View Most Recent Logins</A>
+<li><a href="/stats/">Generate Site/Projects/Users Statistics</A>
 </ul>
 
 <P><B>Site Utilities</B>
 <UL>
-<LI><A href="massmail.php">Mail Engine for SourceForge Subscribers (MESS)</A>
+<LI><A href="massmail.php">Mail Engine for CodeX Subscribers (MESS)</A>
 </UL>
 
 <P><B>Site Stats</B>

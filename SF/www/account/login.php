@@ -16,10 +16,13 @@ require ('pre.php');
 
 if (!session_issecure()) {
 	//force use of SSL for login
-	header('Location: https://'.$HTTP_HOST.'/account/login.php');
+	header('Location: http://'.$HTTP_HOST.'/account/login.php');
 }
 
 */
+//(LJ) we DO NOT use SSL on this site so always disable SSL
+$stay_in_ssl=0;
+
 
 // ###### first check for valid login, if so, redirect
 
@@ -35,7 +38,11 @@ if ($login) {
 			$ssl_='';
 		}
 		if ($return_to) {
-			header ("Location: http".$ssl_."://". $sys_default_domain . $return_to);
+// LJ Do not add http://... because this is sometimes
+// LJ explicitely given by the callee when on a different
+// LJ server.
+// LJ header ("Location: http".$ssl_."://". $sys_default_domain . $return_to);
+			header("Location: $return_to");
 			exit;
 		} else {
 			header ("Location: http".$ssl_."://". $sys_default_domain ."/my/");
@@ -77,6 +84,9 @@ if ($login && !$success) {
 
 }
 
+/* LJ This tests are commented out because it has to do
+   with the use of Secured HTTP which we do not use on Codex as opposed
+   SourceForge
 if (browser_is_windows() && browser_is_ie() && browser_get_version() < '5.1') {
 	echo '<H2><FONT COLOR="RED">Internet Explorer users need to
 	upgrade to IE 5.01 or higher, preferably with 128-bit SSL or use Netscape 4.7 or higher</FONT></H2>';
@@ -87,15 +97,16 @@ if (browser_is_ie() && browser_is_mac()) {
 	is not supported currently. Use Netscape 4.7 or higher</FONT></H2>';
 }
 
+*/
 
 ?>
 	
 <p>
-<b>SourceForge Site Login</b>
+<h2>CodeX Site Login</h2>
 <p>
 <font color="red"><B>Cookies must be enabled past this point.</B></font>
 <P>
-<form action="https://<?php echo $sys_default_domain; ?>/account/login.php" method="post">
+<form action="http://<?php echo $sys_default_domain; ?>/account/login.php" method="post">
 <INPUT TYPE="HIDDEN" NAME="return_to" VALUE="<?php echo $return_to; ?>">
 <p>
 Login Name:
@@ -104,6 +115,7 @@ Login Name:
 Password:
 <br><input type="password" name="form_pw">
 <P>
+<!-- (LJ) Comment the stay in SSL checkbox. We do not use SSL
 <INPUT TYPE="CHECKBOX" NAME="stay_in_ssl" VALUE="1" <?php echo ((browser_is_ie() && browser_get_version() < '5.5')?'':'CHECKED') ?>> Stay in SSL mode after login
 <p>
 You will be connected with an SSL server and your password will not be visible to other users. 
@@ -112,12 +124,15 @@ You will be connected with an SSL server and your password will not be visible t
 after login. Netscape users should stay in SSL mode permanently for maximum security.
 Visit <A HREF="http://www.microsoft.com/">Microsoft</A> for more information about this known problem.
 <P>
+-->
 <input type="submit" name="login" value="Login">
 </form>
 <P>
-<A href="lostpw.php">[Lost your password?]</A>
+<b><A href="lostpw.php">[Lost your password?]</A></b><BR>
+If you have lost your password please do not create another account but follow us and we'll help you <a href="lostpw.php">remember your lost password</a>. If it fails then contact the <a href="mailto:codex-admin@codex.xerox.com"><b>CodeX</b> administrator</a>.
 <P>
-<A HREF="register.php">[New Account]</A>
+<b><A HREF="register.php">[Create a new Account]</A></b><BR>
+If it's your first time on the <b>CodeX</b> site you can become a member right now ! The creation of a <a href="register.php">new account</a> takes a few seconds and you can take advantage of the services offered by the CodeX site to all Xerox developers.
 
 <?php
 

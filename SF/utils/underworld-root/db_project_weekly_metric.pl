@@ -20,7 +20,7 @@ $this_week = timegm( 0, 0, 0, (gmtime(time()))[3,4,5] );
 $this_day = strftime("%Y%m%d", gmtime($this_week) );
 
 print "\nlast_week: $last_week $last_day ";
-print "\n\nthis_week: $this_week $this_day";
+print "\n\nthis_week: $this_week $this_day\n";
 
 $sql="DROP TABLE IF EXISTS project_counts_weekly_tmp";
 $rel = $dbh->prepare($sql);
@@ -116,6 +116,14 @@ SELECT group_id,'cvs',log(sum(cvs_commits_wk)) AS count
 FROM group_cvs_history 
 GROUP BY group_id";
 
+# LJ New SQL statement 
+# LJ TODO: must compute month*100+day start and end value TODO
+#$sql="INSERT INTO project_counts_weekly_tmp
+#SELECT group_id,'cvs',log(sum(cvs_commits) + sum(cvs_adds)) AS count
+#FROM stats_project
+#WHERE ((month*100+day) >= 20001200 and (month*100+day) <= 20010104)
+#GROUP BY group_id";
+
 #print "\n\n".$sql;
 
 $rel = $dbh->prepare($sql);
@@ -164,13 +172,22 @@ $rel->execute();
 
 
 #insert the rows into the table in order, adding a sequential rank #
+# LJ
+# LJ Same modification than db_project_metric.pl. Do not use 
+# survey as a ponderation factor (see db_project_metric.pl for more
+# information
+# $sql="INSERT INTO project_metric_weekly_tmp1 (group_id,value) 
+# SELECT project_counts_weekly_tmp.group_id,(survey_rating_aggregate.response * sum(project_counts_weekly_tmp.count)) AS value 
+# FROM project_counts_weekly_tmp,survey_rating_aggregate 
+# WHERE survey_rating_aggregate.id=project_counts_weekly_tmp.group_id 
+# AND survey_rating_aggregate.type=1 
+# AND survey_rating_aggregate.response > 0
+# AND project_counts_weekly_tmp.count > 0
+# GROUP BY group_id ORDER BY value DESC";
+
 $sql="INSERT INTO project_metric_weekly_tmp1 (group_id,value) 
-SELECT project_counts_weekly_tmp.group_id,(survey_rating_aggregate.response * sum(project_counts_weekly_tmp.count)) AS value 
-FROM project_counts_weekly_tmp,survey_rating_aggregate 
-WHERE survey_rating_aggregate.id=project_counts_weekly_tmp.group_id 
-AND survey_rating_aggregate.type=1 
-AND survey_rating_aggregate.response > 0
-AND project_counts_weekly_tmp.count > 0
+SELECT project_counts_weekly_tmp.group_id,(sum(project_counts_weekly_tmp.count)) AS value 
+FROM project_counts_weekly_tmp
 GROUP BY group_id ORDER BY value DESC";
 $rel = $dbh->prepare($sql);
 $rel->execute();

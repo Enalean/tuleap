@@ -45,7 +45,7 @@ function account_add_user_to_group ($group_id,$user_unix_name) {
 		}
 	} else {
 		//user doesn't exist
-		$feedback .= "That user does not exist on SourceForge";
+		$feedback .= "That user does not exist on CodeX";
 	}
 }
 
@@ -131,6 +131,9 @@ function account_gensalt(){
 
 	$a = genchr(); 
 	$b = genchr();
+// (LJ) Adding $1$ at the beginning of the salt
+// forces the MD5 encryption so the system has to
+// have MD5 pam module installed for Unix passwd file.
 	$salt = "$1$" . "$a$b";
 	return $salt;	
 }

@@ -181,7 +181,8 @@ class Theme extends Layout {
         <!-- VA Linux Stats Counter -->
         <?php
         	if (!session_issecure()) {
-                	print '<IMG src="http://www2.valinux.com/clear.gif?id=105" width=1 height=1 alt="Counter">';
+//(LJ)                	print '<IMG src="http://www2.valinux.com/clear.gif?id=105" width=1 height=1 alt="Counter">';
+                	print '<IMG src="/images/clear.gif?id=105" width=1 height=1 alt="Counter">';
 	        }
         ?>
 

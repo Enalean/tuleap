@@ -12,16 +12,21 @@
         by Quentin Cregan, SourceForge 06/2000
 */
 
-
-require('doc_utils.php');
 require('pre.php');
+require('doc_utils.php');
+
+$usermem = user_ismember($group_id);
 
 if ($docid) {
 	$query = "select * "
 		."from doc_data "
-		."where docid = $docid "
-		."and stateid = '1'";
+		."where (docid = $docid "
+		."and stateid = '1')";
 		// stateid = 1 == active
+                if ($usermem == true) {
+			$query  .= " or (docid =$docid and stateid = '5')";
+			              } //state 5 == 'private' 
+
 	$result = db_query($query);
 	
 	if (db_numrows($result) < 1) {
@@ -31,8 +36,11 @@ if ($docid) {
 	}
 	
 	docman_header($row['title'],$row['title']);
+
 	//print '<pre>'.$row['data'].'</pre>';
-	print util_unconvert_htmlspecialchars($row['data']);
+	// LJ Document data can now contain HTML tags and php code
+	// so unescape HTML chars and evaluate the text.
+	eval('?>'.util_unconvert_htmlspecialchars($row['data']));
 	docman_footer($params);
 
 } else {

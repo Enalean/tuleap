@@ -66,14 +66,20 @@ print "Begining processing for logfile \'$file\'..." if $verbose;
 while (<LOGFILE>) {
 	## This commented out line, and the one below for $filepath, are for dates prior to 20000717
 	## if ( $_ =~ m/\/u7\/ftp\/pub\/sourceforge/ ) {
-	if ( $_ =~ m/\/home\/ftp\/mounts\/u3\/sourceforge/ ) {
-
+# LJ Not the right path for CodeX
+# LJ	if ( $_ =~ m/\/home\/ftp\/mounts\/u3\/sourceforge/ ) {
+# LJ now a constant in include.pl
+#	if ( $_ =~ m/\/home\/ftp\/pub\/codex/ ) {
+	  if ( $_ =~ m/$ftp_frs_dir_prefix/ ) {
 		$_ =~ m/^(\w+) (\w+)\s+(\d+) (\d\d):(\d\d):(\d\d) (\d\d\d\d) (\d+) ([^\s]+) (\d+) ([^\s]+) /;
 		$bytes = $10;
 		$filepath = $11;
 
 		## $filepath =~ m/^(\/home\/ftp\/mounts\/u3\/sourceforge\/)([^\/]+)\//;
-		$filepath =~ m/^(\/home\/ftp\/mounts\/u3\/sourceforge\/)([^\/]+)\//;
+# LJ Update for Codex
+#		$filepath =~ m/^(\/home\/ftp\/mounts\/u3\/sourceforge\/)([^\/]+)\//;
+
+		$filepath =~ m/^($ftp_frs_dir_prefix)([^\/]+)\//;
 		$group_name = $2;
 
 		$filepath =~ m/\/([^\/]+)$/;

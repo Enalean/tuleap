@@ -57,7 +57,7 @@ function main_page($group_id) {
 
 			<tr>
 			        <th>Document Title:</th>
-			        <td><input type="text" name="title" size="40" maxlength="255" value="'.$row['title'].'"></td>
+			        <td><input type="text" name="title" size="60" maxlength="255" value="'.$row['title'].'"></td>
 			        <td class="example">(e.g. How to use the download server)</td>
 
 			</tr>
@@ -65,8 +65,8 @@ function main_page($group_id) {
 			</tr>
 			<tr>
 			        <th>Short Description:</td>
-			        <td><input type="text" name="description" size="20" maxlength="255" value="'.$row['description'].'"></td>
-			        <td class="example">(e.g. http://www.linux.com/)</td>
+			        <!-- td><input type="text" name="description" size="20" maxlength="255" value="'.$row['description'].'"></td -->
+				<td><textarea cols="60" rows="4"  wrap="virtual" name="description">'.$row['description'].'</textarea></td>			        <td class="example">(e.g. Instructions on how to download files for newbies)</td>
 
 			</tr>
 

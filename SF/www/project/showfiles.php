@@ -6,7 +6,10 @@
 //
 // $Id$
 
-require ('pre.php');    
+require ('pre.php');
+
+// LJ Now only for registered users on CodeX
+if (user_isloggedin()) {
 
 $sql = "SELECT * FROM frs_package WHERE group_id='$group_id' AND status_id='1'";
 $res_package = db_query( $sql );
@@ -69,7 +72,8 @@ for ( $p = 0; $p < $num_packages; $p++ ) {
 				. date( $sys_datefmt, $package_release['release_date'] ) .'</TD></TR>'."\n";
 
 			   // get the files in this release....
-			$sql = "SELECT frs_file.filename AS filename,"
+			$sql = "SELECT frs_file.file_id AS file_id,"
+				. "frs_file.filename AS filename,"
 				. "frs_file.file_size AS file_size,"
 				. "frs_file.release_time AS release_time,"
 				. "frs_filetype.name AS type,"
@@ -93,7 +97,11 @@ for ( $p = 0; $p < $num_packages; $p++ ) {
 					$file_release = db_fetch_array( $res_file );
 					print "\t\t" . '<TR bgcolor="' . $bgcolor .'">'
 						. '<TD COLSPAN=2>&nbsp;</TD>'
-						. '<TD><B><A HREF="http://'.$sys_download_host.'/'.$group_unix_name.'/'.$file_release['filename'].'">'
+// LJ we now go through a download script for access
+// LJ control and accounting purposes
+// LJ						. '<TD><B><A HREF="http://'.$sys_download_host.'/'.$group_unix_name.'/'.$file_release['filename'].'?group_id='.$group_id.'&file_id='.$file_release['file_id'].'">'
+						. '<TD><B><A HREF="/project/download.php?group_id='.$group_id.'&file_id='.$file_release['file_id'].'">'
+
 						. $file_release['filename'] .'</A></B></TD>'
 						. '<TD>'. $file_release['file_size'] .'</TD>'
 						. '<TD>'. ($file_release['downloads'] ? $file_release['downloads'] : '0') .'</TD>'
@@ -124,5 +132,13 @@ if ( $proj_stats['size'] ) {
 print "</TABLE>\n\n";
 
 site_project_footer(array());
+
+} else {
+
+ /*
+    Not logged in
+  */
+  exit_not_logged_in();
+}
 
 ?>

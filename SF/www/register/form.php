@@ -11,7 +11,7 @@ $HTML->header(array(title=>"New Project Registration"));
 ?>
 
 <p>
-<h1>SourceForge New Project Registration Form</h1>
+<h1>CodeX New Project Registration Form</h1>
 </p>
 
 
@@ -21,7 +21,7 @@ $HTML->header(array(title=>"New Project Registration"));
                         <td>
                         <hr size=2><p>
                         <font face="helvetica, arial">
-                                Simply fill out this form to request an account on SourceForge.org. Fields with an asterisk (*) are required.
+                                Simply fill out this form to request an account on CodeX. Fields with an asterisk (*) are required.
                                 <p>
                         <form method="POST" action="">
                         <table cellpadding=2 cellspacing=0 border=0>

@@ -27,7 +27,7 @@ Login Name:
 <INPUT type="submit" name="Send Lost PW Hash" value="Send Lost PW Hash">
 </FORM>
 
-<P><A href="/">[Return to SourceForge]</A>
+<P><A href="/">[Return to CodeX]</A>
 
 <?php
 $HTML->footer(array());

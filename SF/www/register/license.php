@@ -41,33 +41,32 @@ if ($insert_group_name && $group_id && $rand_hash && $form_full_name && $form_un
 $HTML->header(array('title'=>'License'));
 ?>
 
-<H2>Step 5: License</H2>
+<H2>Step 5: Software Policy</H2>
 
-<P><B><I>If you are applying for a website-only project, please
-select "website-only" from the choices below and proceed.</I></B>
 
-<P>SourceForge was created to advance Open Source software development.
-To keep things simple, we are relying on the outstanding work
-of the <A href="http://www.opensource.org">Open Source Initiative</A>
-for our licensing choices.
 
-<P>We realize, however that there may be other licenses out there
-that may better fit your needs. If you wish to use a license that is 
-not OSI Certified, please let us know why you wish to use another
-license.
+<P>CodeX was created to promote code sharing of Xerox internally developed software and to have one single place where to shop for pieces of source code.
+To keep things simple, the Xerox Open Source Committee and the Xerox Intellectual Property Law Dept have put together a default <a href="/docs/licenses/xrx.php" target="side_window">Xerox Code eXchange Policy</a> that defines the terms and conditions under which source code can be shared inside Xerox.
 
-<P>Choosing a license is a serious decision. Please take some time
-to read the text (and our explanations) of several licenses before
-making a choice abour your project.
+<P>We think that this policy serves well the purpose of code sharing while offering a good level of protection. However if this default policy doesn't fit your needs select the item "Other" in the menu below and let us know why you wish to use another policy. Your new policy will be reviewed by the Xerox Intellectual Property Law Dept and the Xerox Open Source Committee for approval.
 
-<P>For many legal reasons, 
-you may not change a project's license once it has been set. If you
+<P>Choosing a new policy is a serious decision. Please take some time
+to read the <a href="/docs/licenses/xrx.php" target="side_window">default policy</a> before making a choice about your project. CodeX is not responsible for legal discrepencies regarding your own software policy.
+
+<P>
+Two important remarks:
+<ul>
+<li>If you are applying for a website hosting-only project and do not expect to host any source code (why ? :-) on CodeX, please
+select "website-only" from the choices below and proceed.</LI>
+<LI>If your software has already been approved by the COMIP for external Open Source then choose the Open Source license that covers your Xerox code. It will help other Xerox teams to decide whether they can/want to re-use your code in there own Xerox owned software.
+</UL>
+<!-- LJ
+<P>For many legal reasons, you may not change a project's license once it has been set. If you
 feel that you have a special case and legal capability to do this,
 we will work with you on a case-by-case basis.
+-->
 
-<P>SourceForge is not responsible for legal discrepencies regarding 
-your license.
-
+<!-- LJ
 <P><B>Licenses</B>
 
 <UL>
@@ -85,15 +84,16 @@ your license.
 <LI><A href="http://www.opensource.org/licenses/zlib-license.html" target="_blank">zlib/libpng License</A>
 <LI><A href="http://www.sourceforge.net/register/publicdomain.txt" target="_blank">Public Domain</A>
 </UL>
+-->
 
-<P><B>License for This Project</B>
+<P><B>Policy for This Project</B>
 
 <FONT size=-1>
 <FORM action="category.php" method="post">
 <INPUT TYPE="HIDDEN" NAME="insert_license" VALUE="y">
 <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">
 <INPUT TYPE="HIDDEN" NAME="rand_hash" VALUE="<?php echo $rand_hash; ?>">
-<B>Your License:</B><BR>
+<!-- LJ <B>Your License:</B><BR> -->
 <?php
 	echo '<SELECT NAME="form_license">';
 	while (list($k,$v) = each($LICENSE)) {

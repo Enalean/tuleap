@@ -78,6 +78,10 @@ if ($Update) {
 		."group_name='$form_group_name',"
 		."homepage='$form_homepage',"
 		."short_description='$form_shortdesc',"
+		."register_purpose='".htmlspecialchars($form_purpose)."', "
+		."required_software='".htmlspecialchars($form_required_sw)."', "
+		."patents_ips='".htmlspecialchars($form_patents)."', "
+		."other_comments='".htmlspecialchars($form_comments)."', "
 		."use_bugs='$use_bugs',"
 		."use_mail='$use_mail',"
 		."use_survey='$use_survey',"
@@ -112,7 +116,7 @@ $row_grp = db_fetch_array($res_grp);
 
 project_admin_header(array('title'=>'Editing Group Info','group'=>$group_id));
 
-print '<P>Editing group info for: <B>'.$row_grp['group_name'].'</B>';
+print '<P><h3>Editing group info for: <B>'.$row_grp['group_name'].'</B></h3>';
 
 print '
 <P>
@@ -120,18 +124,32 @@ print '
 <INPUT type="hidden" name="group_id" value="'.$group_id.'">
 
 <P>Descriptive Group Name:
-<BR><INPUT type="text" name="form_group_name" value="'.$row_grp['group_name'].'">
+<BR><INPUT type="text" size="40" maxlen="40" name="form_group_name" value="'.$row_grp['group_name'].'">
 
-<P>Short Description (255 Character Max, HTML will be stripped from this description):
-<BR><TEXTAREA cols=80 rows=3 wrap="virtual" name="form_shortdesc">
+<P>Short Description (255 Character Max):
+<BR><TEXTAREA cols="70" rows="3" wrap="virtual" name="form_shortdesc">
 '.$row_grp['short_description'].'</TEXTAREA>
 
 <P>Homepage Link:
-<BR>http://<INPUT type="text" name="form_homepage" value="'.$row_grp['homepage'].'">
+<BR>http://<INPUT type="text" name="form_homepage" size="40" value="'.$row_grp['homepage'].'">
 
+<P>Long Description:
+<BR><TEXTAREA cols="70" rows="10" wrap="virtual" name="form_purpose">
+'.$row_grp['register_purpose'].'</TEXTAREA>
+
+<P>Patents and Invention Proposals (IPs)
+<BR><TEXTAREA cols="70" rows="6" wrap="virtual" name="form_patents">
+'.$row_grp['patents_ips'].'</TEXTAREA>
+
+<P>Other Software Required
+<BR><TEXTAREA cols="70" rows="6"wrap="virtual" name="form_required_sw">
+'.$row_grp['required_software'].'</TEXTAREA>
+
+<P>Other Comments:<BR>
+<TEXTAREA name="form_comments" wrap="virtual" cols="70" rows="4">'.$row_grp['other_comments'].'</TEXTAREA>
 <HR>
 
-<H3>Active Features:</H3>
+<H3>Active Services:</H3>
 <P>
 ';
 /*
@@ -151,11 +169,11 @@ echo '
 	<B>Use Support:</B> <INPUT TYPE="CHECKBOX" NAME="use_support" VALUE="1"'.( ($row_grp['use_support']==1) ? ' CHECKED' : '' ).'>';
 echo '
 	<P><B>If you wish, you can provide default email addresses to which new submissions will be sent.</B><BR>
-	<B>New Bugs:</B><BR><INPUT TYPE="TEXT" NAME="new_bug_address" VALUE="'.$row_grp['new_bug_address'].'" SIZE="25" MAXLENGTH="40"> 
+	<B>New Bugs:</B><BR><INPUT TYPE="TEXT" NAME="new_bug_address" VALUE="'.$row_grp['new_bug_address'].'" SIZE="35" MAXLENGTH="40"> 
 	(send on all updates) <INPUT TYPE="CHECKBOX" NAME="send_all_bugs" VALUE="1" '. (($row_grp['send_all_bugs'])?'CHECKED':'') .'><BR>
-	<B>New Patches:</B><BR><INPUT TYPE="TEXT" NAME="new_patch_address" VALUE="'.$row_grp['new_patch_address'].'" SIZE="25" MAXLENGTH="40">
+	<B>New Patches:</B><BR><INPUT TYPE="TEXT" NAME="new_patch_address" VALUE="'.$row_grp['new_patch_address'].'" SIZE="35" MAXLENGTH="40">
 	(send on all updates) <INPUT TYPE="CHECKBOX" NAME="send_all_patches" VALUE="1" '. (($row_grp['send_all_patches'])?'CHECKED':'') .'><BR>
-	<B>New Support Requests:</B><BR><INPUT TYPE="TEXT" NAME="new_support_address" VALUE="'.$row_grp['new_support_address'].'" SIZE="25" MAXLENGTH="40">
+	<B>New Support Requests:</B><BR><INPUT TYPE="TEXT" NAME="new_support_address" VALUE="'.$row_grp['new_support_address'].'" SIZE="35" MAXLENGTH="40">
 	(send on all updates) <INPUT TYPE="CHECKBOX" NAME="send_all_support" VALUE="1" '. (($row_grp['send_all_support'])?'CHECKED':'') .'><BR>';
 
 echo '

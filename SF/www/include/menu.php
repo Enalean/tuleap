@@ -8,8 +8,28 @@
 
 /* The correct theme.php must be included by this point -- Geoffrey */
 
+// LJ Added to create a menu entry 
+// for all admin tasks
+function menu_site_admin() {
+
+	GLOBAL $HTML;
+	$HTML->menuhtml_top('Site Administration'); 
+		$HTML->menu_entry('/admin/','Main Page');
+		$HTML->menu_entry('/admin/grouplist.php','Group Admin');
+		$HTML->menu_entry('/admin/userlist.php','User Admin');
+		$HTML->menu_entry('/admin/approve-pending.php','Pending Projects');
+		$HTML->menu_entry('/news/admin','Site News Approval');
+		$HTML->menu_entry('/admin/massmail.php','Mass Mail');
+		$HTML->menu_entry('/admin/trove/trove_cat_list.php','Trove Cat. List');
+		$HTML->menu_entry('/admin/trove/trove_cat_add.php','Trove Cat. Add');
+	$HTML->menuhtml_bottom();
+
+}
+
+
+
 function menu_show_search_box() {
-	global $words,$forum_id,$group_id,$is_bug_page,$exact,$type_of_search;
+	global $words,$forum_id,$group_id,$is_bug_page,$is_snippet_page,$exact,$type_of_search;
 
 	  // if there is no search currently, set the default
 	if ( ! isset($type_of_search) ) {
@@ -26,7 +46,9 @@ function menu_show_search_box() {
 	} else if ($group_id && $forum_id) {
 		print "\t<OPTION value=\"forums\"".( $type_of_search == "forums" ? " SELECTED" : "" ).">This Forum</OPTION>\n";
 	}
-	print "\t<OPTION value=\"soft\"".( $type_of_search == "soft" ? " SELECTED" : "" ).">Software/Group</OPTION>\n";
+
+	print "\t<OPTION value=\"soft\"".( $type_of_search == "soft" ? " SELECTED" : "" ).">Software Projects</OPTION>\n";
+	print "\t<OPTION value=\"snippets\"".( ($type_of_search == "snippets" || $is_snippet_page) ? " SELECTED" : "" ).">Code Snippets</OPTION>\n";
 	print "\t<OPTION value=\"people\"".( $type_of_search == "people" ? " SELECTED" : "" ).">People</OPTION>\n";
 	print "\t</SELECT>\n";
 
@@ -40,14 +62,19 @@ function menu_show_search_box() {
 	if ( isset($is_bug_page) ) {
 		print "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$is_bug_page\" NAME=\"is_bug_page\">\n";
 	}
+	if ( isset($is_snippet_page) ) {
+		print "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$is_snippet_page\" NAME=\"is_snippet_page\">\n";
+	}
 	if ( isset($group_id) ) {
 		print "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$group_id\" NAME=\"group_id\">\n";
 	}
 
-	print "\t<INPUT TYPE=\"text\" SIZE=\"12\" NAME=\"words\" VALUE=\"$words\">\n";
+	print "\t<INPUT TYPE=\"text\" SIZE=\"16\" NAME=\"words\" VALUE=\"$words\">\n";
 	print "\t<BR>\n";
 	print "\t<INPUT TYPE=\"submit\" NAME=\"Search\" VALUE=\"Search\">\n";
 	print "\t</FORM>\n";
+	print "\t</FONT>\n";
+	print "\t</CENTER>\n";
 }
 
 //depricated - theme wrapper
@@ -68,19 +95,19 @@ function menu_software() {
 	$HTML->menuhtml_top('Software'); 
 		$HTML->menu_entry('/softwaremap/','Software Map');
 		$HTML->menu_entry('/new/','New Releases');
-		$HTML->menu_entry('/mirrors/','Other Site Mirrors');
+// LJ No mirror		$HTML->menu_entry('/mirrors/','Other Site Mirrors');
 		$HTML->menu_entry('/snippet/','Code Snippet Library');
 	$HTML->menuhtml_bottom();
 }
 
 function menu_sourceforge() {
 	GLOBAL $HTML;
-	$HTML->menuhtml_top('SourceForge');
+	$HTML->menuhtml_top('CodeX');
 		$HTML->menu_entry('/docs/site/','Site Documentation');
 		$HTML->menu_entry('/forum/?group_id=1','Discussion Forums');
 		$HTML->menu_entry('/people/','Project Help Wanted');
 		print '<P>';
-		$HTML->menu_entry('/compilefarm/','Compile Farm');
+// LJ No compile farm		$HTML->menu_entry('/compilefarm/','Compile Farm');
 		print '<P>';
 		$HTML->menu_entry('/contact.php','Contact Us');
 	$HTML->menuhtml_bottom();
@@ -179,13 +206,13 @@ function menu_loggedin($page_title) {
 		$HTML->menu_entry('/register/','Register New Project');
 		$HTML->menu_entry('/account/','Account Maintenance');
 		print '<P>';
-		$HTML->menu_entry('/themes/','Change My Theme');
+//LJ No theme		$HTML->menu_entry('/themes/','Change My Theme');
 		$HTML->menu_entry('/my/','My Personal Page');
 
 		if (!$GLOBALS['HTTP_POST_VARS']) {
-			$bookmark_title = urlencode( str_replace('SourceForge: ', '', $page_title));
+			$bookmark_title = urlencode( str_replace('CodeX: ', '', $page_title));
 			print '<P>';
-			$HTML->menu_entry('/my/bookmark_add.php?bookmark_url='.urlencode($GLOBALS['REQUEST_URI']).'&bookmark_title='.$bookmark_title,'Bookmark Page');
+			$HTML->menu_entry('/my/bookmark_add.php?bookmark_url='.urlencode($GLOBALS['REQUEST_URI']).'&bookmark_title='.$bookmark_title,'Bookmark This Page');
 		}
 	$HTML->menuhtml_bottom();
 }
@@ -193,9 +220,9 @@ function menu_loggedin($page_title) {
 function menu_notloggedin() {
 	GLOBAL $HTML;
 	$HTML->menuhtml_top('Status:');
-		echo '<h4><FONT COLOR="#990000">NOT LOGGED IN</h4>';
-		$HTML->menu_entry('/account/login.php','Login via SSL');
-		$HTML->menu_entry('/account/register.php','New User via SSL');
+		echo '<h4><font color="#990000">NOT LOGGED IN</font></h4>';
+		$HTML->menu_entry('/account/login.php','Login');
+		$HTML->menu_entry('/account/register.php','New User');
 	$HTML->menuhtml_bottom();
 }
 
@@ -208,6 +235,11 @@ function menu_print_sidebar($params) {
 		echo menu_notloggedin();
 	} else {
 		echo menu_loggedin($params['title']);
+	}
+	
+	// LJ Site Admin menu added here
+	if (user_is_super_user()) {
+		echo menu_site_admin();
 	}
 
 	$grp=project_get_object($params['group']);
@@ -228,7 +260,8 @@ function menu_print_sidebar($params) {
 	}
 
 	//Foundry Links
-	echo menu_foundry_links();
+//(LJ) We do not want the foundry stuff
+//(LJ)	echo menu_foundry_links();
 
 	//search menu
 	echo menu_search();

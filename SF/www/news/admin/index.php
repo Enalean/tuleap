@@ -11,7 +11,7 @@ require('pre.php');
 //common forum tools which are used during the creation/editing of news items
 require($DOCUMENT_ROOT.'/forum/forum_utils.php');
 
-if ($group_id && $group_id != 714 && user_ismember($group_id,'A')) {
+if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group_id,'A')) {
 	/*
 
 		Per-project admin pages.
@@ -84,7 +84,7 @@ if ($group_id && $group_id != 714 && user_ismember($group_id,'A')) {
 		<INPUT TYPE="TEXT" NAME="summary" VALUE="'.db_result($result,0,'summary').'" SIZE="30" MAXLENGTH="60"><BR>
 		<B>Details:</B><BR>
 		<TEXTAREA NAME="details" ROWS="5" COLS="50" WRAP="SOFT">'.db_result($result,0,'details').'</TEXTAREA><P>
-		<B>If this item is on the SourceForge home page and you edit it, it will be removed from the home page.</B><BR>
+		<B>If this item is on the CodeX home page and you edit it, it will be removed from the home page.</B><BR>
 		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
 		</FORM>';
 
@@ -114,14 +114,13 @@ if ($group_id && $group_id != 714 && user_ismember($group_id,'A')) {
 	}
 	news_footer(array());
 
-} else if (user_ismember(714,'A')) {
+} else if (user_ismember($GLOBALS['sys_news_group'],'A')) {
 	/*
 
 		News uber-user admin pages
-
 		Show all waiting news items except those already rejected.
-
-		Admin members of project #714 (news project) can edit/change/approve news items
+		Admin members of project #$sys_news_group (news project)
+                can edit/change/approve news items
 
 	*/
 	if ($post_changes) {
@@ -262,7 +261,7 @@ if ($group_id && $group_id != 714 && user_ismember($group_id,'A')) {
 
 } else {
 
-	exit_error('Permission Denied.','Permission Denied. You have to be an admin on the project you are editing or a member of the SourceForge News team.');
+	exit_error('Permission Denied.','Permission Denied. You have to be an admin on the project you are editing or a member of the CodeX News team.');
 
 }
 ?>

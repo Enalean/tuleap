@@ -30,7 +30,7 @@ function forum_header($params) {
 		Show icon bar unless it's a news forum
 
 	*/
-	if ($group_id == 714) {
+	if ($group_id == $GLOBALS['sys_news_group']) {
 		//this is a news item, not a regular forum
 		if ($forum_id) {
 			/*
@@ -42,14 +42,14 @@ function forum_header($params) {
 
 			//backwards shim for all "generic news" that used to be submitted
 			//as of may, "generic news" is not permitted - only project-specific news
-	       		if (db_result($result,0,'group_id') != 714) {
+	       		if (db_result($result,0,'group_id') != $GLOBALS['sys_news_group']) {
 				$params['group']=db_result($result,0,'group_id');
         			$params['toptab']='news';
 				site_project_header($params);
 			} else {
 				$HTML->header($params);
 				echo '
-					<H2>SourceForge <A HREF="/news/">News</A></H2><P>';
+					<H2>CodeX <A HREF="/news/">News</A></H2><P>';
 			}
 
 
@@ -69,7 +69,7 @@ function forum_header($params) {
 			}
 			echo '</TD><TD VALIGN="TOP" WIDTH="35%">';
 			echo $HTML->box1_top('Latest News',0,$GLOBALS['COLOR_LTBACK2']);
-			echo news_show_latest(714,5,false);
+			echo news_show_latest($GLOBALS['sys_news_group'],5,false);
 			echo $HTML->box1_bottom();
 			echo '</TD></TR></TABLE>';
 		}
@@ -106,7 +106,7 @@ function forum_footer($params) {
 	*/
 
 	//backwards compatibility for "general news" which is no longer permitted to be submitted
-	if ($group_id == 714) {
+	if ($group_id == $GLOBALS['sys_news_group']) {
 		$HTML->footer($params);
 	} else {
 		site_project_footer($params);
@@ -480,7 +480,7 @@ function handle_monitoring($forum_id,$msg_id) {
 				"\n\n" . util_unconvert_htmlspecialchars(db_result($result,0, 'body')).
 				"\n\n______________________________________________________________________".
 				"\nYou are receiving this email because you elected to monitor this forum.".
-				"\nTo stop monitoring this forum, login to SourceForge and visit: ".
+				"\nTo stop monitoring this forum, login to CodeX and visit: ".
 				"\nhttp://$GLOBALS[sys_default_domain]/forum/monitor.php?forum_id=$forum_id";
 
 			exec ("/bin/echo \"". util_prep_string_for_sendmail($body) ."\" | /usr/sbin/sendmail -fnoreply@$GLOBALS[HTTP_HOST] -t -i &");

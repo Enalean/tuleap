@@ -31,15 +31,17 @@ print '<TABLE width="100%"><TR valign="top"><TD width="65%">'."\n";
 
 // ######################## anonymous CVS instructions
 
-if ($row_grp['is_public']) {
+// LJ No anonymous access anymore on CodeX
+// LJ if ($row_grp['is_public']) {
+if (0) {
 	print '<P><B>Anonymous CVS Access</B>
-<P>This project\'s SourceForge CVS repository can be checked out through anonymous
+<P>This project\'s CodeX CVS repository can be checked out through anonymous
 (pserver) CVS with the following instruction set. The module you wish
 to check out must be specified as the <I>modulename</I>. When prompted
 for a password for <I>anonymous</I>, simply press the Enter key.
 
 <P><FONT size="-1" face="courier">cvs -d:pserver:anonymous@cvs.'.$row_grp['http_domain'].':/cvsroot/'.$row_grp['unix_group_name'].' login
-<BR>&nbsp;<BR>cvs -z3 -d:pserver:anonymous@cvs.'.$row_grp['http_domain'].':/cvsroot/'.$row_grp['unix_group_name'].' co <I>modulename</I>
+<BR>&nbsp;<BR>cvs -d:pserver:anonymous@cvs.'.$row_grp['http_domain'].':/cvsroot/'.$row_grp['unix_group_name'].' co <I>modulename</I>
 </FONT>
 
 <P>Updates from within the module\'s directory do not need the -d parameter.';
@@ -47,15 +49,22 @@ for a password for <I>anonymous</I>, simply press the Enter key.
 
 // ############################ developer access
 
-print '<P><B>Developer CVS Access via SSH</B>
-<P>Only project developers can access the CVS tree via this method. SSH1 must
-be installed on your client machine. Substitute <I>modulename</I> and
-<I>developername</I> with the proper values. Enter your site password when
+print '<P><B>CVS Access</B>
+<P>CVS read-only  access is granted to all CodeX registered users. Anonymous users do not have access to the CVS tree, because many CodeX projects want to know who is in their community of users. Users desiring read access to project 
+CVS trees should register on CodeX. 
+<P>Any registered and logged-in CodeX user has read access to the CVS tree.  Project members (the developers who are part of the core team) are granted read (checkout) and write (commit) access to the CVS tree. Below are the typical commands you would use to login into the CVS server and checkout the source code of this project. In the command below substitute <I>modulename</I> and
+<I>username</I> with the proper values. Enter your site password when
 prompted.
 
-<P><FONT size="-1" face="courier">export CVS_RSH=ssh
+<P><FONT size="-1" face="courier">cvs -d:pserver:username@cvs.'.$row_grp['http_domain'].':/cvsroot/'.$row_grp['unix_group_name'].' login
+<BR>&nbsp;<BR>cvs -d:pserver:username@cvs.'.$row_grp['http_domain'].':/cvsroot/'.$row_grp['unix_group_name'].' co <I>modulename</I>
+
+<!-- LJ no ssh access here
+</FONT><P><FONT size="-1" face="courier">export CVS_RSH=ssh
 <BR>&nbsp;<BR>cvs -z3 -d<I>developername</I>@cvs.'.$row_grp['http_domain'].':/cvsroot/'.$row_grp['unix_group_name'].' co <I>modulename</I>
-</FONT>';
+</FONT>-->';
+
+print '<P><a href="/docman/display_doc.php?docid=36&group_id=1">[More on how to use CVS...]</a><P>';
 
 // ################## summary info
 
@@ -69,7 +78,8 @@ if (db_numrows($res_cvshist) < 1) {
 	print '<P>This project has no CVS history.';
 } else {
 
-print '<P><B>Developer (30 day/Commits) (30 day/Adds)</B><BR>&nbsp;';
+// LJ Change formatting and it is not 30 but 7 day
+print '<P><b>Developer (Commits) (Adds) 7day/Total</b><BR>&nbsp;';
 
 while ($row_cvshist = db_fetch_array($res_cvshist)) {
 	print '<BR>'.$row_cvshist['user_name'].' ('.$row_cvshist['cvs_commits_wk'].'/'
@@ -87,9 +97,10 @@ if ($row_grp['is_public']) {
 of this project\'s code. You may also view the complete histories of any
 file in the repository.
 <UL>
-<LI><A href="http://cvs.sourceforge.net/cgi-bin/cvsweb.cgi?cvsroot='
+<LI><A href="http://'.$sys_cvs_host.'/cgi-bin/cvsweb.cgi?cvsroot='
 .$row_grp['unix_group_name'].'"><B>Browse CVS Repository</B>';
 }
+
 
 print $HTML->box1_bottom();
 

@@ -17,8 +17,8 @@ use POSIX qw( strftime );
 
 my ($year, $month, $day, $day_begin, $day_end);
 my ($group, $histline, $daily_log_file, $key, $verbose);
-my $verbose = 0;
-my $base_log_dir = "/usr/local/boa/htdocs/cvslogs";
+my $verbose = 1;
+my $base_log_dir = "/home/log/cvslogs";
 
 $|=0 if $verbose;
 
@@ -70,9 +70,11 @@ print "Running tree at /cvsroot/\n";
 chdir( "/cvsroot" ) || die("Unable to make /cvsroot the working directory.\n");
 foreach $group ( glob("*") ) {
 	
-	next if ( ! -d "$group" );
+	next if ( ! -d "$group" || $group eq 'lost+found' );
 
-	my ($cvs_co, $cvs_commit, $cvs_add, %usr_commit, %usr_add );
+	my ($cvs_co, $cvs_commit, $cvs_add, %usr_commit, %usr_add);
+	# LJ New variable to keep track of users and number of checkouts
+	my (%usr_names, %usr_co);
 
 	open(HISTORY, "< /cvsroot/$group/CVSROOT/history") or print "E::Unable to open history for $group\n";
 	while ( <HISTORY> ) {
@@ -92,6 +94,7 @@ foreach $group ( glob("*") ) {
 			if ( $type eq "M" ) {
 				$cvs_commit++;
 				$usr_commit{$user}++;
+				$usr_names{$user}=1;
 				next;
 			}
 
@@ -99,6 +102,7 @@ foreach $group ( glob("*") ) {
 			if ( $type eq "A" ) {
 				$cvs_add++;
 				$usr_add{$user}++;
+				$usr_names{$user}=1;
 				next;
 			}
 
@@ -107,6 +111,9 @@ foreach $group ( glob("*") ) {
 				$cvs_co++;
 				## we don't care about checkouts on a per-user
 				## most of them will be anon anyhow.
+				## LJ Actually we do care on CodeX
+				$usr_co{$user}++;
+				$usr_names{$user}=1;
 				next;
 			}
 		
@@ -129,10 +136,13 @@ foreach $group ( glob("*") ) {
 		print DAYS_LOG "G::" . $group . ":: ::" . ($cvs_co?$cvs_co:"0") . "::"
 			. ($cvs_commit?$cvs_commit:"0") . "::" . ($cvs_add?$cvs_add:"0") . "\n";
 	
-		foreach $key ( keys %usr_commit ) {
+		foreach $key ( keys %usr_names ) {
 	
-			print DAYS_LOG "U::" . $group . "::" . $key . "::0::" . ($usr_commit{$key}?$usr_commit{$key}:"0") 
-				. "::" . ($usr_add{$key}?$usr_add{$key}:"0") . "\n";
+			print DAYS_LOG "U::" . $group . "::" . $key
+			  . "::" . ($usr_co{$key}?$usr_co{$key}:"0") 
+			  . "::" . ($usr_commit{$key}?$usr_commit{$key}:"0") 
+			  . "::" . ($usr_add{$key}?$usr_add{$key}:"0")
+			  . "\n";
 		}
 	}
 }

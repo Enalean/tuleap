@@ -34,7 +34,7 @@ if ($group_id) {
 		exit;
 	}
 
-	echo "<P>Mailing lists provided via a SourceForge version of "
+	echo "<P>Mailing lists provided via a CodeX version of "
 		. "<A href=\"http://www.list.org\">GNU Mailman</A>. "
 		. "Thanks to the Mailman and <A href=\"http://www.python.org\">Python</A> "
 		. "crews for excellent software.";
@@ -48,7 +48,7 @@ if ($group_id) {
 		"<TR><TD VALIGN=\"TOP\">\n"; 
 
 	for ($j = 0; $j < $rows; $j++) {
-		echo '<A HREF="http://www.geocrawler.com/redir-sf.php3?list='.
+		echo '<A HREF="http://codex.xerox.com/pipermail/'.
 			db_result($result, $j, 'list_name').'"><IMG SRC="/images/ic/cfolder15.png" HEIGHT=13 WIDTH=15 BORDER=0> &nbsp; '.db_result($result, $j, 'list_name').' Archives</A>'; 
 		echo ' (go to <A HREF="http://'.$GLOBALS['sys_lists_host'].'/mailman/listinfo/'.
 			db_result($result, $j, 'list_name').'">Subscribe/Unsubscribe/Preferences</A>)<BR>';

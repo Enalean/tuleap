@@ -27,7 +27,7 @@ if (!$res_logger) {
 }
 
 // output image
-header("Content-Type: image/png");
+header("Content-Type: image/gif");
 header("Cache-Control: no-cache, must-revalidate");
 header("Pragma: no-cache");
 
@@ -36,10 +36,11 @@ if (!$group_id) {
 	exit;
 }
 
+// LJ updated with the CodeX logo image
 if ($type == 1) {
-	echo readfile ($sys_urlroot.'images/sflogo-88-1.png');
+	echo readfile ($sys_urlroot.'images/codex_logo.gif');
 }  else { // default
-	echo readfile ($sys_urlroot.'images/sflogo-88-1.png');
+	echo readfile ($sys_urlroot.'images/codex_logo.gif');
 } 
 
 ?>

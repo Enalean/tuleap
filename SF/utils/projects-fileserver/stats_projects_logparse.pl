@@ -11,8 +11,8 @@ require("../include.pl");  # Include all the predefined functions
 ##  CONF VARS
 
 	my $verbose = 1;
-	my $chronolog_basedir = "/home/logs";
-	my @webservers = ("nirvana","oakenfold");
+	my $chronolog_basedir = "/home/log";
+	my @webservers = ("atlas");
 
 ##
 #######################
@@ -34,6 +34,7 @@ if ( $ARGV[0] && $ARGV[1] && $ARGV[2] ) {
 	$month += 1;
 }
 
+print "----- Starting $0 ------\n";
 print "Running year $year, month $month, day $day.\n" if $verbose;
 
    ## It's makes things a whole lot faster for us if we cache the filerelease/group info beforehand.
@@ -48,7 +49,11 @@ print " done.\n" if $verbose;
 
 foreach $server ( @webservers ) {
 
-	$file = "$chronolog_basedir/$server/$year/" . sprintf("%02d",$month) . "/" . sprintf("%02d",$day) . "/access_log"; 
+# LJ Make the file naming and directory structure consistent with the 
+# LJ stats script in the utils/downloads/ subdir
+# LJ	$file = "$chronolog_basedir/$server/$year/" . sprintf("%02d",$month) . "/" . sprintf("%02d",$day) . "/access_log"; 
+
+	$file = "$chronolog_basedir/$server/$year/" . sprintf("%02d",$month) ."/vhosts-access_$year". sprintf("%02d%02d", $month, $day) .".log"; 
 
 	if ( -f $file ) {
 		open(LOGFILE, "< $file" ) || die "Cannot open $file";

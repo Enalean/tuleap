@@ -44,8 +44,8 @@ int legal_string (char* test_string) {
 int main (int argc, char** argv) {
 
   /* edit me */
-  char* src_dir   = "/nfs/garbage/incoming/";
-  char* dest_dir  = "/nfs/garbage/sourceforge/";
+  char* src_dir   = "/home/ftp/incoming/";
+  char* dest_dir  = "/home/ftp/codex/";
 
   /* don't edit me (unless mv isn't in /bin) */
   char* move_path = "/bin/mv";

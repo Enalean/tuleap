@@ -12,8 +12,8 @@
         by Quentin Cregan, SourceForge 06/2000
 */
 
-require('doc_utils.php');
 require('pre.php');
+require('doc_utils.php');
 
 if ($group_id) {
 
@@ -47,8 +47,15 @@ if ($group_id) {
 			if (!(db_numrows($subresult) < 1)) {
 				print "<p><b>".$row['groupname']."</b>\n<ul>\n";
 				while ($subrow = db_fetch_array($subresult)) {
-					print "<li><a href=\"display_doc.php?docid=".$subrow['docid']."&group_id=".$group_id."\">".$subrow['title']."</a>".
-					"<BR><i>Description:</i> ".$subrow['description']; 
+// LJ We want the title and the description to
+// possibly contain HTML and php code so unconvert
+// the initially encoded HTML chars and eval the text
+					print "<li><a href=\"display_doc.php?docid=".$subrow['docid']."&group_id=".$group_id."\">";
+					eval('?>'.util_unconvert_htmlspecialchars($subrow['title']));
+					print "</a>";
+					print "<BR><i>Description:</i> ";
+					eval('?>'.util_unconvert_htmlspecialchars($subrow['description'])); 
+
 				}
 				print "</ul>\n\n";
 

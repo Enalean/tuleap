@@ -21,9 +21,9 @@ while(my ($list_name) = $c->fetchrow()) {
 		$list_name =~ tr/A-Z/a-z/;
 		$list_name =~ s/ //g;
 
-		push @alias_array, sprintf("%-50s%-10s","$list_name\@lists.sourceforge.net:", "\"|/usr/local/mailman/mail/wrapper post $list_name\"\n");
-		push @alias_array, sprintf("%-50s%-10s","$list_name-admin\@lists.sourceforge.net:", "\"|/usr/local/mailman/mail/wrapper mailowner $list_name\"\n");
-		push @alias_array, sprintf("%-50s%-10s","$list_name-request\@lists.sourceforge.net:", "\"|/usr/local/mailman/mail/wrapper mailcmd $list_name\"\n");
+		push @alias_array, sprintf("%-50s%-10s","$list_name\@lists.codex.xerox.com:", "\"|/usr/local/mailman/mail/wrapper post $list_name\"\n");
+		push @alias_array, sprintf("%-50s%-10s","$list_name-admin\@lists.codex.xerox.com:", "\"|/usr/local/mailman/mail/wrapper mailowner $list_name\"\n");
+		push @alias_array, sprintf("%-50s%-10s","$list_name-request\@lists.codex.xerox.com:", "\"|/usr/local/mailman/mail/wrapper mailcmd $list_name\"\n");
 }
 
 

@@ -11,6 +11,13 @@ require ('vote_function.php');
 
 if (user_isloggedin()) {
 
+        // LJ Make sure this page is not cached because
+        // LJ it uses the exact same URL for all user's
+        // LJ personal page
+        header("Cache-Control: no-cache, must-revalidate"); // for HTTP 1.1
+        header("Pragma: no-cache");  // for HTTP 1.0
+  
+
 	$HTML->header(array('title'=>'My Personal Page'));
 	?>
 

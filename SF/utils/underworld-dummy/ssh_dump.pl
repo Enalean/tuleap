@@ -13,7 +13,10 @@ my $ssh_array = ();
 &db_connect;
 
 # Dump the Table information
-$query = "SELECT user_name,authorized_keys FROM user WHERE authorized_keys != \"\"";
+# This query is too lax - we must strip out all null values
+# and also none unix active  users
+#$query = "SELECT user_name,authorized_keys FROM user WHERE authorized_keys != \"\"";
+$query = "SELECT user_name,authorized_keys FROM user WHERE unix_status = \"A\" and authorized_keys != \"\" and authorized_keys IS NOT NULL";
 $c = $dbh->prepare($query);
 $c->execute();
 while(my ($username, $ssh_key) = $c->fetchrow()) {

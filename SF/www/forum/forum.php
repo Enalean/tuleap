@@ -210,7 +210,7 @@ if ($forum_id) {
 		} else {
 			$public_flag='1';
 		}
-		if ($group_id==714) {
+		if ($group_id==$GLOBALS['sys_news_group']) {
 			echo '<INPUT TYPE="HIDDEN" NAME="forum_id" VALUE="'.$forum_id.'">';
 		} else {
 			$res=db_query("SELECT group_forum_id,forum_name ".

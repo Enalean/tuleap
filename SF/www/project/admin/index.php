@@ -189,11 +189,12 @@ echo '</TD>
 $HTML->box1_top("File Releases"); ?>
 	&nbsp;<BR>
 	<CENTER>
-	<A href="editpackages.php?group_id=<?php print $group_id; ?>"><B>[Edit/Add File Releases]</B></A>
+	<A href="editpackages.php?group_id=<?php print $group_id; ?>"><B>[Edit/Add File Releases]</B></A><BR> or... <BR>
+	<A href="qrs.php?group_id=<?php print $group_id; ?>"><B>[Quick Add File Release]</B></A><BR>if you know what you're doing and have only one file to release.
 	</CENTER>
 
 	<HR>
-	<B>Packages:</B> <A href="/docs/site/modules.php">Documentation</A> (Very Important!)
+	<B>Packages:</B> <A href="/docman/display_doc.php?docid=46&group_id=1">Documentation</A> (Very Important!)
 
 	<P><?php
 

@@ -28,7 +28,7 @@ if ($Submit) {
 	session_redirect("/admin/groupedit.php?group_id=$newid");
 } 
 
-site_admin_header(array('title'=>"Welcome to Project Alexandria"));
+site_admin_header(array('title'=>"Welcome to Project CodeX"));
 ?>
 
 <form action="groupedit-add.php" method="post">

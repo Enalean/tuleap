@@ -15,17 +15,16 @@ $SCRIPT_CATEGORY=array();
 $SCRIPT_CATEGORY[0]='Choose One';
 $SCRIPT_CATEGORY[1]='UNIX Admin';
 $SCRIPT_CATEGORY[2]='HTML Manipulation';
-$SCRIPT_CATEGORY[3]='BBS Systems';
-$SCRIPT_CATEGORY[4]='Auctions';
+$SCRIPT_CATEGORY[3]='Text Processing';
+$SCRIPT_CATEGORY[4]='Print Processing';
 $SCRIPT_CATEGORY[5]='Calendars';
-$SCRIPT_CATEGORY[6]='Database Manipulation';
-$SCRIPT_CATEGORY[7]='Searching';
+$SCRIPT_CATEGORY[6]='Database';
+$SCRIPT_CATEGORY[7]='Data Structure Manipulation';
 $SCRIPT_CATEGORY[8]='File Management';
-$SCRIPT_CATEGORY[9]='Games';
-$SCRIPT_CATEGORY[10]='Voting';
-$SCRIPT_CATEGORY[11]='Shopping Carts';
+$SCRIPT_CATEGORY[9]='Scientific Computation';
+$SCRIPT_CATEGORY[10]='Office Utilities';
+$SCRIPT_CATEGORY[11]='User Interface';
 $SCRIPT_CATEGORY[12]='Other';
-$SCRIPT_CATEGORY[13]='Math Functions';
 
 $SCRIPT_TYPE[0]='Choose One';
 $SCRIPT_TYPE[1]='Function';
@@ -33,26 +32,26 @@ $SCRIPT_TYPE[2]='Full Script';
 $SCRIPT_TYPE[3]='Sample Code (HOWTO)';
 $SCRIPT_TYPE[4]='README';
 $SCRIPT_TYPE[5]='Class';
+$SCRIPT_TYPE[6]='Macros';
 
 $SCRIPT_LICENSE = array();
-$SCRIPT_LICENSE[0] = 'GNU General Public License';
-$SCRIPT_LICENSE[1] = 'GNU Library Public License';
-$SCRIPT_LICENSE[2] = 'BSD License';
-$SCRIPT_LICENSE[3] = 'MIT/X Consortium License';
-$SCRIPT_LICENSE[4] = 'Artistic License';
-$SCRIPT_LICENSE[5] = 'Mozilla Public License';
-$SCRIPT_LICENSE[6] = 'Qt Public License';
-$SCRIPT_LICENSE[7] = 'IBM Public License';
-$SCRIPT_LICENSE[8] = 'Collaborative Virtual Workspace License';
-$SCRIPT_LICENSE[9] = 'Ricoh Source Code Public License';
-$SCRIPT_LICENSE[10] = 'Python License';
-$SCRIPT_LICENSE[11] = 'zlib/libpng License';
-$SCRIPT_LICENSE[12] = 'WebSite Only';
-$SCRIPT_LICENSE[13] = 'Other';
+$SCRIPT_LICENSE[0] = 'Xerox Code eXchange Policy';
+$SCRIPT_LICENSE[1] = 'Other';
+$SCRIPT_LICENSE[2] = '--- For COMIP approved Open Source projects ---';
+$SCRIPT_LICENSE[3] = 'GNU General Public License';
+$SCRIPT_LICENSE[4] = 'GNU Library Public License';
+$SCRIPT_LICENSE[5] = 'BSD License';
+$SCRIPT_LICENSE[6] = 'MIT/X Consortium License';
+$SCRIPT_LICENSE[7] = 'Artistic License';
+$SCRIPT_LICENSE[8] = 'Mozilla Public License';
+$SCRIPT_LICENSE[9] = 'Qt Public License';
+$SCRIPT_LICENSE[10] = 'IBM Public License';
+$SCRIPT_LICENSE[11] = 'Python License';
+$SCRIPT_LICENSE[12] = 'Public Domain (Sure ?!)';
 
 $SCRIPT_LANGUAGE = array();
 $SCRIPT_LANGUAGE[0] = 'Choose One';
-$SCRIPT_LANGUAGE[1] = 'Other Language';
+$SCRIPT_LANGUAGE[1] = 'Awk';
 $SCRIPT_LANGUAGE[2] = 'C';
 $SCRIPT_LANGUAGE[3] = 'C++';
 $SCRIPT_LANGUAGE[4] = 'Perl';
@@ -67,9 +66,17 @@ $SCRIPT_LANGUAGE[12] = 'Lisp';
 $SCRIPT_LANGUAGE[13] = 'Mixed';
 $SCRIPT_LANGUAGE[14] = 'JavaScript';
 $SCRIPT_LANGUAGE[15] = 'SQL';
+$SCRIPT_LANGUAGE[16] = 'MatLab';
+$SCRIPT_LANGUAGE[17] = 'Other Language';
+$SCRIPT_LANGUAGE[18] = 'LabView';
 
 function snippet_header($params) {
-	global $DOCUMENT_ROOT,$HTML;
+	global $is_snippet_page,$DOCUMENT_ROOT,$HTML;
+
+	// LJ used so the search box will add the necessary element to the pop-up box
+	// CodeX Specific
+	$is_snippet_page=1;
+
 
 	$HTML->header($params);
 	/*

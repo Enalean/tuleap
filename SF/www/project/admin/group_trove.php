@@ -35,14 +35,24 @@ if ($GLOBALS['Submit'] && $root1) {
 
 project_admin_header(array('title'=>'Group Trove Information','group'=>$group_id));
 
-print '<P>Select up to three locations for this project in each of the
-Trove root categories. If the project does not require any or all of these
-locations, simply select "None Selected".
+// LJ New message added to explain that if a Topic category is not there
+// LJ put the project unclassified and the CodeX team will create the
+// Lj new entry
+//
+print '<P>Please select up to three classifications for this
+project in each of the Trove root categories. This will help potential
+developers and users to find your project and engage. If the project does not require any or all of these classification, simply select "None Selected".
 
-<P>IMPORTANT: Projects should be categorized in the most specific locations
-available in the map. Simulteneous categorization in a specific category
+<P>IMPORTANT REMARKS: 
+<ul>
+<li>Projects should be categorized in the most specific locations
+available in the map.</li>
+<li>Simultaneous categorization in a specific category
 AND a parent category will result in only the more specific categorization
-being accepted.
+being accepted.</li>
+<li><em><b>Topic Trove only</b></em>: If your project does
+  not seem to fit into any of the categories or sub-categories, simply select "Other/Non Listed Topics". As new projects are submitted the CodeX team will refine the Topic Trove by defining 2nd and possibly 3rd level subcategories.  We welcome any suggestions on this. You can change the trove categories for this project at any time.</li> 
+</ul>
 ';
 
 print "\n<FORM method=\"post\">";

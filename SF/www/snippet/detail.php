@@ -66,8 +66,9 @@ if ($type=='snippet') {
 				'</TD><TD><A HREF="/snippet/download.php?type=snippet&id='.
 				db_result($result,$i,'snippet_version_id').'"><B>'.
 				db_result($result,$i,'version').'</B></A></TD><TD>'. 
-				date($sys_datefmt,db_result($result,$i,'date')).'</TD><TD>'.
-				db_result($result,$i,'user_name').'</TD><TD ALIGN="MIDDLE"><A HREF="/snippet/delete.php?type=snippet&snippet_version_id='.
+				date($sys_datefmt,db_result($result,$i,'date')).'</TD><TD align="middle">'.
+				'<a href="/users/'.db_result($result,$i,'user_name').'"><b>'.
+				db_result($result,$i,'user_name').'</b></a></TD><TD ALIGN="MIDDLE"><A HREF="/snippet/delete.php?type=snippet&snippet_version_id='.
 				db_result($result,$i,'snippet_version_id').
 				'"><IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" BORDER="0"></A></TD></TR>';
 
@@ -160,9 +161,10 @@ if ($type=='snippet') {
 			<TR BGCOLOR="'. html_get_alt_row_color($i) .'"><TD><A HREF="/snippet/detail.php?type=packagever&id='.
 				db_result($result,$i,'snippet_package_version_id').'"><B>'.
 				db_result($result,$i,'version').'</B></A></TD><TD>'.
-				date($sys_datefmt,db_result($result,$i,'date')).'</TD><TD>'.
+				date($sys_datefmt,db_result($result,$i,'date')).'</TD><TD align="middle">'.
+				'<a href="/users/'.db_result($result,$i,'user_name').'"><b>'.
 				db_result($result,$i,'user_name').
-				'</TD><TD ALIGN="MIDDLE"><A HREF="/snippet/add_snippet_to_package.php?snippet_package_version_id='.
+				'</b></a></TD><TD ALIGN="MIDDLE"><A HREF="/snippet/add_snippet_to_package.php?snippet_package_version_id='.
 				db_result($result,$i,'snippet_package_version_id').
 				'"><IMG SRC="/images/ic/pencil.png" HEIGHT="25" WIDTH="20" BORDER="0"></A>
 				&nbsp; &nbsp; &nbsp; <A HREF="/snippet/delete.php?type=package&snippet_package_version_id='.

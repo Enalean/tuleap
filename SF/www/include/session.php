@@ -82,7 +82,10 @@ function session_issecure() {
 }
 
 function session_cookie($n,$v) {
-	setcookie($n,$v,0,'/','',0);
+// LJ We need to specify the domain name in the cookie for CodeX
+// LJ because the CVS Web server needs it as well
+// LJ	setcookie($n,$v,0,'/','',0);
+	setcookie($n,$v,0,'/',$GLOBALS['sys_default_domain'],0);
 }
 
 function session_redirect($loc) {

@@ -6,6 +6,30 @@
 //
 // $Id$
 
+
+//LJ The localtime function does not exist in PHP3
+//LJ here is a way to mimic the function. Probably twice
+//LJ the size it should be but at least it works !
+function localtime( $time, $is_associative) {
+
+	$tm_sec= date("s", $time);
+	$tm_min= date("i", $time);
+	$tm_hour= date("H", $time);
+	$tm_mday= date("d", $time);
+	$tm_mon= date("m", $time) - 1;
+	$tm_year=date("Y", $time) - 1900;
+	$tm_wday=date("w", $time);
+	$tm_yday=date("z", $time);
+	$tm_isdst=date("I", $time);
+
+	if ($is_associative) {
+		return array("tm_sec" => $tm_sec, "tm_min" => $tm_min, "tm_hour" => $tm_hour, "tm_mday" => $tm_mday, "tm_mon" => $tm_mon, "tm_year" => $tm_year, "tm_wday" => $tm_wday, "tm_yday" => $tm_yday, "tm_isdst" => $tm_isdst);
+	} else {
+		return array($tm_sec, $tm_min, $tm_hour, $tm_mday, $tm_mon, $tm_year, $tm_wday, $tm_yday, $tm_isdst);
+	}
+
+}
+
 function util_prep_string_for_sendmail($body) {
 	$body=str_replace("\\","\\\\",$body);
 	$body=str_replace("\"","\\\"",$body);

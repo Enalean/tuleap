@@ -1,9 +1,9 @@
 <Files views_graph.png>
-ForceType application/x-httpd-php
+ForceType application/x-httpd-php3
 </Files>
 <Files users_graph.png>
-ForceType application/x-httpd-php
+ForceType application/x-httpd-php3
 </Files>
 <Files weekly_views.png>
-ForceType application/x-httpd-php
+ForceType application/x-httpd-php3
 </Files>

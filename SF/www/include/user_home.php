@@ -52,13 +52,21 @@ if (!$res_user || db_numrows($res_user) < 1) {
 <TR valign=top>
 	<TD>Email Addr: </TD>
 	<TD>
-	<B><A HREF="/sendmessage.php?touser=<?php print db_result($res_user,0,'user_id'); 
-		?>"><?php print db_result($res_user,0,'user_name'); ?> at <?php print $GLOBALS['sys_users_host']; ?></A></B>
+	<B>
+	<!-- LJ A HREF="/sendmessage.php?touser=<?php print db_result($res_user,0,'user_id'); ?>"--> 
+	<?php //LJ print db_result($res_user,0,'user_name'); ?>
+	<!-- LJ at --> 
+	<?php // LJ print $GLOBALS['sys_users_host']; ?>
+	<!-- LJ Direct e-mail. No alias -->
+	<A HREF="/sendmessage.php?touser=<?php print db_result($res_user,0,'user_id'); ?>">
+	<?php print db_result($res_user,0,'email'); ?>	
+	</A></B>
 	</TD>
 </TR>
 <TR valign=top>
-        <TD COLSPAN="2">
-        <A HREF="/people/viewprofile.php?user_id=<?php print db_result($res_user,0,'user_id'); ?>"><B>Skills Profile</B></A></TD>
+	<TD>User Profile: </TD>
+        <TD>
+        <A HREF="/people/viewprofile.php?user_id=<?php print db_result($res_user,0,'user_id'); ?>"><B>See Skills Profile</B></A></TD>
 </TR>
 
 <TR>
@@ -124,11 +132,17 @@ if (user_isloggedin()) {
 	<FORM ACTION="/sendmessage.php" METHOD="POST">
 	<INPUT TYPE="HIDDEN" NAME="touser" VALUE="<?php echo $user_id; ?>">
 
-	<B>Your Email Address:</B><BR>
-	<B><?php echo user_getname().'@'.$GLOBALS['sys_users_host']; ?></B>
-	<INPUT TYPE="HIDDEN" NAME="email" VALUE="<?php echo user_getname().'@'.$GLOBALS['sys_users_host']; ?>">
-	<P>
-	<B>Your Name:</B><BR>
+
+
+	<B>Your Email Address:</B><!-- LJ<BR> -->
+	<B><?php $my_email=user_getemail(user_getid());
+	         echo $my_email; ?></B>
+
+        <? // LJ echo user_getname().'@'.$GLOBALS['sys_users_host']; ?></B>
+	<!-- LJ INPUT TYPE="HIDDEN" NAME="email" VALUE="<?php echo user_getname().'@'.$GLOBALS['sys_users_host']; ?>" -->
+
+        <INPUT TYPE="HIDDEN" NAME="email" VALUE="<?php echo $my_email; ?>">	<P>
+	<B>Your Name:</B><!-- <BR> -->
 	<B><?php 
 
 	$my_name=user_getrealname(user_getid());

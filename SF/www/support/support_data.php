@@ -123,12 +123,14 @@ function support_data_create_support ($group_id,$support_category_id,$user_email
 		$user=100;
 		if (!$user_email) {
 			//force them to fill in user_email if they aren't logged in
-			exit_error('ERROR','Go Back and fill in the user_email address or login');
+			exit_error('ERROR','Go Back and fill in the user_email address or login so that we know what your email address is.');
 		}
 	} else {
 		$user=user_getid();
 		//use their user_name if they are logged in
-		$user_email=user_getname().'@'.$GLOBALS['sys_users_host'];
+		// LJ No alias on CodeX. Use real e-mail
+		// LJ $user_email=user_getname().'@'.$GLOBALS['sys_users_host'];
+		$user_email=user_getemail($user);
 	}
 
 	if (!$group_id || !$summary || !$details) {
@@ -185,6 +187,23 @@ function support_data_handle_update ($group_id,$support_id,$priority,$support_st
 	if (!((db_numrows($result) > 0) && (user_ismember(db_result($result,0,'group_id'),'S2')))) {
 		exit_permission_denied();
 	}
+
+	// LJ Added to use the real e-mail address instead
+	// of the SF alias
+
+	if (!user_isloggedin()) {
+		$user=100;
+		if (!$user_email) {
+			//force them to fill in user_email if they aren't logged in
+			exit_error('ERROR','Go Back and fill in the user_email address or login so that we know what your email address is.');
+		}
+	} else {
+		$user=user_getid();
+		$user_email=user_getemail($user);
+	}
+
+
+
 	/*
 		See which fields changed during the modification
 	*/
@@ -207,7 +226,8 @@ function support_data_handle_update ($group_id,$support_id,$priority,$support_st
 		$sql="SELECT * FROM support_canned_responses WHERE support_canned_id='$canned_response'";
 		$result2=db_query($sql);
 		if ($result2 && db_numrows($result2) > 0) {
-			support_data_create_message(util_unconvert_htmlspecialchars(db_result($result2,0,'body')),$support_id,user_getname().'@'.$GLOBALS['sys_users_host']);
+// LJ No email aliases on CodeX - Use real one 		support_data_create_message(util_unconvert_htmlspecialchars(db_result($result2,0,'body')),$support_id,user_getname().'@'.$GLOBALS['sys_users_host']);
+			support_data_create_message(util_unconvert_htmlspecialchars(db_result($result2,0,'body')),$support_id,$user_email);
 			$feedback .= ' Canned Response Used ';
 		} else {
 			$feedback .= ' Unable to Use Canned Response ';

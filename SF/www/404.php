@@ -15,9 +15,14 @@ if (session_issecure()) {
 	echo "<a href=\"http://$GLOBALS[sys_default_domain]\">";
 }
 
-echo "<CENTER><H1>PAGE NOT FOUND</H1></CENTER>";
+if (strpos($REQUEST_URI, "pipermail")) {
+  echo "<CENTER><H1>No messages archived</H1></CENTER><P>";
+}
+else {
+  echo "<CENTER><H1>PAGE NOT FOUND</H1></CENTER>";
 
-echo "<P>";
+  echo "<P>";
+}
 
 $HTML->box1_top('Search');
 menu_show_search_box();

@@ -7,36 +7,34 @@
 // $Id$
 
 require "pre.php";    
-$HTML->header(array(title=>"About SourceForge"));
+$HTML->header(array(title=>"About CodeX"));
 ?>
 
 <P>
-<h2>About SourceForge</h2>
+<h2>About CodeX</h2>
 
 <B>Mission Statement</b><br>
-SourceForge's mission is to enrich the Open Source community by providing 
-a centralized place for Open Source Developers to control and
-manage Open Source Software Development.
+CodeX' mission is to enrich the Xerox Inner Source community by providing 
+a centralized place for Xerox Developers to share, control and
+manage Xerox internally developed software.
 <br><br>
 
 <B>People</b><br>
-The SourceForge <a href="staff.php">staff</a> has worked hard to make 
-SourceForge a reality, here's your chance to meet the people behind the site.
+Based on the work done by the world famous SourceForge.net site, the CodeX <a href="staff.php">staff</a> has worked hard to make 
+CodeX a reality, here's your chance to meet the people behind the site.
 <br><br>
 
 <b>Thanks</b><br>
 We owe a lot of thanks to the people that wrote 
-the <a href="/docs/site/software.php">Software</a> that runs SourceForge.
+the <a href="/docman/display_doc.php?docid=27&group_id=1">Software</a> that runs CodeX.
 We'd also like to give <a href="thanks.php">Kudos</a> to the following people and organizations
-for helping make SourceForge happen.
+for helping make CodeX happen.
 <br><br>
 
 <b>More Information</b><br>
 If you have further questions, they might be answered in our
-<a href="/docs/site/">site documentation</A>, <A href="/docs/site/hardware.php">hardware list</A>,
-or <A href="/docs/site/faq.php">frequently asked questions</A>. You might also look at
-<A href="/docs/site/awards.php">awards we've won</A> or <B><A href="/docs/site/news.php">SourceForge
-in the News</A></B>.
+<a href="/docs/site/">Site Documentation</A>, <A href="/docman/display_doc.php?docid=26&group_id=1">Hardware list</A>,
+or <A href="/docman/display_doc.php?docid=17&group_id=1">Frequently Asked Questions</A>. 
 
 <?php
 $HTML->footer(array());

@@ -93,17 +93,18 @@ if (db_numrows($result) > 0) {
 			?>" MAXLENGTH="60">
 	</TD></TR>
 
+<?php // LJ modify wording and layout for Canned Response versus
+// LJ one shot comment ?>
+
 	<TR><TD COLSPAN="2"><B>Use a Canned Response:</B><BR>
 		<?php
 		echo bug_canned_response_box ($group_id,'canned_response');
-		echo '
-			<P>
-			<A HREF="/bugs/admin/index.php?group_id='.$group_id.'&create_canned=1">Define Custom Responses</A>';
+		echo '<BR><A HREF="/bugs/admin/index.php?group_id='.$group_id.'&create_canned=1">Or define a new Canned Response</A><P>';
 		?>
 	</TD></TR>
 
 
-	<TR><TD COLSPAN="2"><B>Add Comment:</B><BR>
+	<TR><TD COLSPAN="2"><P><B>Alternatively you can send a specific commentin your repsonse:</B><BR>
 		<TEXTAREA NAME="details" ROWS="7" COLS="60" WRAP="SOFT"></TEXTAREA>
 		<P>
 		<B>Original Submission:</B><BR>

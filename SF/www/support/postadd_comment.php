@@ -13,7 +13,9 @@ if (!user_isloggedin()) {
 	}
 } else {
 	//use their user_name if they are logged in
-	$user_email=user_getname().'@'.$GLOBALS['sys_users_host'];
+	// LJ No alias on CodeX $user_email=user_getname().'@'.$GLOBALS['sys_users_host'];
+	$user=user_getid();
+	$user_email=user_getemail($user);
 }
 
 if ($details != '') {

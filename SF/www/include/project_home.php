@@ -38,16 +38,21 @@ $res_admin = db_query("SELECT user.user_id AS user_id,user.user_name AS user_nam
 	. "user_group.admin_flags = 'A'");
 
 if ($project->getStatus() == 'H') {
-	print "<P>NOTE: This project entry is maintained by the SourceForge staff. We are not "
+	print "<P>NOTE: This project entry is maintained by the CodeX staff. We are not "
 		. "the official site "
 		. "for this product. Additional copyright information may be found on this project's homepage.\n";
 }
 
+// LJ Pointer to more detailed description added
 if ($project->getDescription()) {
 	print "<P>" . $project->getDescription();
+	$details_prompt = '[More information...]';
 } else {
-	print "<P>This project has not yet submitted a description.";
+	print '<P>This project has not yet submitted a short description.You can <a href="/project/admin/editgroupinfo.php?group_id='.$group_id.'"> submit it</a> now.';
+	$details_prompt = '[Other information...]';
 }
+
+print '<a href="/project/showdetails.php?group_id='.$group_id.'"> '. $details_prompt .'</a>';
 
 // trove info
 print '<BR>&nbsp;<BR>';
@@ -326,16 +331,35 @@ if ($project->usesCVS()) {
 	print '<HR SIZE="1" NoShade><A href="/cvs/?group_id='.$group_id.'">';
 	html_image("ic/cvs16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>'CVS'));
 	print " CVS Repository</A>";
-	$sql = "SELECT SUM(cvs_commits) AS commits,SUM(cvs_adds) AS adds from stats_project where group_id='$group_id'";
+// LJ Cvs checkouts added 
+	$sql = "SELECT SUM(cvs_commits) AS commits, SUM(cvs_adds) AS adds, SUM(cvs_checkouts) AS checkouts from stats_project where group_id='$group_id'";
 	$result = db_query($sql);
-	echo ' ( <B>'.db_result($result,0,0).'</B> commits, <B>'.db_result($result,0,1).'</B> adds )';
+        $cvs_commit_num=db_result($result,0,0);
+        $cvs_add_num=db_result($result,0,1);
+        $cvs_co_num=db_result($result,0,2);
+        if (!$cvs_commit_num) $cvs_commit_num=0;
+        if (!$cvs_add_num) $cvs_add_num=0;
+        if (!$cvs_co_num) $cvs_co_num=0;
+
+        echo ' ( <B>'.$cvs_commit_num.'</B> commits, <B>'.$cvs_add_num.'</B> adds, <B>'.$cvs_co_num.'</B> checkouts )';
+        if ($cvs_commit_num || $cvs_add_num || $cvs_co_num) {
+            echo '<br> &nbsp; - <a href="http://'.$sys_cvs_host
+            .'/cgi-bin/cvsweb.cgi?cvsroot='.$project->getUnixName()
+            .'">Browse CVS</a>';
+        }
 }
+
+
 
 // ######################## AnonFTP (only for Active)
 
 if ($project->isActive()) {
 	print '<HR SIZE="1" NoShade>';
-	print "<A href=\"ftp://" . $project->getUnixName() . ".sourceforge.net/pub/". $project->getUnixName() ."/\">";
+// LJ replace the hardcoded 'sourceforge.net' with the real domain name
+// LJ	print "<A href=\"ftp://" . $project->getUnixName() . ".sourceforge.net/pub/". $project->getUnixName() ."/\">";
+// LJ
+
+	print "<A href=\"ftp://" . $project->getUnixName() . "." . $sys_default_domain ."/pub/". $project->getUnixName() ."/\">";
 	print html_image("ic/ftp16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>'Anonymous FTP Space'));
 	print "Anonymous FTP Space</A>";
 }

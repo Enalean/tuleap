@@ -74,7 +74,7 @@ if ($type_of_search == "soft") {
 		echo "<H3>Search results for $words</H3><P>\n\n";
 
 		$title_arr = array();
-		$title_arr[] = 'Group Name';
+		$title_arr[] = 'Project Name';
 		$title_arr[] = 'Description';
 
 		echo html_build_list_table_top($title_arr);
@@ -227,6 +227,53 @@ if ($type_of_search == "soft") {
 		}
 		echo "</TABLE>\n";
 	}
+} else if ($type_of_search == 'snippets') {
+
+	/*
+		If multiple words, separate them and put LIKE in between
+	*/
+	$array=explode(" ",$words);
+	$words1=implode($array,"%' $crit name LIKE '%");
+	$words2=implode($array,"%' $crit description LIKE '%");
+
+	/*
+		Query to find software
+	*/
+	$sql = "SELECT name,snippet_id,description ".
+		"FROM snippet ".
+		"WHERE ((name LIKE '%$words1%') OR (description LIKE '%$words2%')) LIMIT $offset,26";
+	$result = db_query($sql);
+	$rows = $rows_returned = db_numrows($result);
+
+	if (!$result || $rows < 1) {
+		$no_rows = 1;
+		echo "<H2>No matches found for $words</H2>";
+		echo db_error();
+//		echo $sql;
+	} else {
+
+		if ( $rows_returned > 25) {
+			$rows = 25;
+		}
+
+		echo "<H3>Search results for $words</H3><P>\n\n";
+
+		$title_arr = array();
+		$title_arr[] = 'Snippet Name';
+		$title_arr[] = 'Description';
+
+		echo html_build_list_table_top($title_arr);
+
+		echo "\n";
+
+		for ( $i = 0; $i < $rows; $i++ ) {
+			print	"<TR BGCOLOR=\"". html_get_alt_row_color($i)."\"><TD><A HREF=\"/snippet/detail.php?type=snippet&id=".db_result($result, $i, 'snippet_id')."\">"
+				. "<IMG SRC=\"/images/msg.gif\" BORDER=0 HEIGHT=12 WIDTH=10> ".db_result($result, $i, 'name')."</A></TD>"
+				. "<TD>".db_result($result,$i,'description')."</TD></TR>\n";
+		}
+		echo "</TABLE>\n";
+	}
+
 } else {
 
 	echo "<H1>Invalid Search - ERROR!!!!</H1>";

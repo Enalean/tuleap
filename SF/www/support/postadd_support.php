@@ -14,12 +14,13 @@ if (!user_isloggedin()) {
 	$user=100;
 	if (!$user_email) {
 		//force them to fill in user_email if they aren't logged in
-		exit_error('ERROR','Go Back and fill in the user_email address or login');
+		exit_error('ERROR','Go Back and fill in the user_email address or login so that we know what your email is');
 	}
 } else {
 	$user=user_getid();
 	//use their user_name if they are logged in
-	$user_email=user_getname().'@'.$GLOBALS['sys_users_host'];
+	// LJ No alias on CodeX $user_email=user_getname().'@'.$GLOBALS['sys_users_host'];
+	$user_email=user_getemail($user);
 }
 
 if (!$group_id || !$summary || !$details) {

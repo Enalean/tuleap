@@ -27,9 +27,18 @@ if ($show_confirm) {
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 	<INPUT TYPE="HIDDEN" NAME="rand_hash" VALUE="'.$rand_hash.'">
 	<B>Description:</B><BR>
-	<TEXTAREA name="form_purpose" wrap="virtual" cols="70" rows="15">'.db_result($result,0,'register_purpose').'</TEXTAREA>
+	<TEXTAREA name="form_purpose" wrap="virtual" cols="70" rows="12">'.db_result($result,0,'register_purpose').'</TEXTAREA>
 	<P>
-	<B>Full Name:</B><BR>
+	<B>Intellectual Property:</B><BR>
+	<TEXTAREA name="form_patents" wrap="virtual" cols="70" rows="6">'.db_result($result,0,'patents_ips').'</TEXTAREA>
+	<P>
+	<B>Other Software Required:</B><BR>
+	<TEXTAREA name="form_required_sw" wrap="virtual" cols="70" rows="6">'.db_result($result,0,'required_software').'</TEXTAREA>
+	<P>
+	<B>Other Comments:</B><BR>
+	<TEXTAREA name="form_comments" wrap="virtual" cols="70" rows="4">'.db_result($result,0,'other_comments').'</TEXTAREA>
+
+	<P>	<B>Full Name:</B><BR>
 	<INPUT size="40" maxlength="40" type="text" name="form_full_name" VALUE="'.db_result($result,0,'group_name').'">
 	<P>
 	<B>Unix Name:</B><BR>
@@ -68,6 +77,9 @@ if ($show_confirm) {
 
 	$result=db_query("UPDATE groups SET status='P', ".
 		"register_purpose='".htmlspecialchars($form_purpose)."', ".
+		"required_software='".htmlspecialchars($form_required_sw)."', ".
+		"patents_ips='".htmlspecialchars($form_patents)."', ".
+		"other_comments='".htmlspecialchars($form_comments)."', ".
 		"group_name='$form_full_name', license='$form_license', ".
 		"license_other='".htmlspecialchars($form_license_other)."' ".
 		"WHERE group_id='$group_id' AND rand_hash='__$rand_hash'");

@@ -21,7 +21,7 @@ function help_header($title) {
 <LINK rel="stylesheet" href="/sourceforge.css" type="text/css">
 </HEAD>
 <BODY bgcolor="#FFFFFF">
-<H4>SourceForge Site Help System:</H4>
+<H4>CodeX Site Help System:</H4>
 <H2><?php print $title; ?></H2>
 <HR>
 <?php

@@ -142,14 +142,20 @@ if ($submit) {
 				unset($editrelease);
 			} else {
 				//release was there's and they have the right to update it
-				if ($status_id != 1) {
+
+// LJ Why? It is very conveninet sometimes to hide a
+// without having to delete all attached files
+// Beside we have already modified editpackages.php
+// so that you can hide a package if all attached
+// released are hidden.
+// 				if ($status_id != 1) {
 					//if hiding a package, refuse if it has files under it
-					$res=db_query("SELECT * FROM frs_file WHERE release_id='$release_id'");
-					if (db_numrows($res) > 0) {
-						$feedback .= ' | Sorry - you cannot delete a release that still contains files ';
-						$status_id=1;
-					}
-				}
+//					$res=db_query("SELECT * FROM frs_file WHERE release_id='$release_id'");
+//					if (db_numrows($res) > 0) {
+//						$feedback .= ' | Sorry - you cannot delete a release that still contains files ';
+//						$status_id=1;
+//					}
+// LJ				}
 
 				//now update the file entry
 				if (!ereg("[0-9]{4}-[0-9]{2}-[0-9]{2}",$release_date)) {
@@ -241,7 +247,7 @@ if ($submit) {
 
 		*/
 		$group_unix_name=group_getunixname($group_id);
-		$project_files_dir=$FTPFILES_DIR.$group_unix_name;
+		$project_files_dir=$FTPFILES_DIR.'/'.$group_unix_name;
 
 		$count=count($file_list);
 		if ($count > 0) {
@@ -348,17 +354,17 @@ if ($submit) {
 			$array_emails=result_column_to_array($result);
 			$list=implode($array_emails,', ');
 		
-			$subject='SourceForge File Release Notice';
+			$subject='CodeX File Release Notice';
 		
 			$body = "To: noreply@$GLOBALS[HTTP_HOST]".
 				"\nBCC: $list".
 				"\nSubject: $subject".
 				"\n\nA new version of ". db_result($result,0,'name')." has been released. ".
-				"\nYou can download it from SourceForge by following this link: ".
+				"\nYou can download it from CodeX by following this link: ".
 				"\n\n<http://".$GLOBALS['HTTP_HOST']."/project/showfiles.php?group_id=$group_id&release_id=$release_id> ".
 				"\n\nYou requested to be notified when new versions of this file ".
 				"\nwere released. If you don't wish to be notified in the ".
-				"\nfuture, please login to SourceForge and click this link: ".
+				"\nfuture, please login to CodeX and click this link: ".
 				"\n<http://$GLOBALS[HTTP_HOST]/project/filemodule_monitor.php?filemodule_id=$package_id> ";
 			
 			exec ("/bin/echo \"$body\" | /usr/sbin/sendmail -fnoreply@$GLOBALS[HTTP_HOST] -t");
@@ -471,9 +477,14 @@ if ($release_id) {
 		Choose your files from the list below. Choose <B>ONLY YOUR files.</B> If you choose someone else\'s files, 
 		they will not be able to access them and they will be rightfully upset.
 		<P>
-		You can upload new files using FTP to <B>download.sourceforge.net</B> in the <B>incoming</B> directory. When you 
-		are done uploading, just hit the refresh button to see the new files.
+		To upload your files use Anonymous FTP (login "ftp") access to ';
+echo "<b>$sys_download_host</b>";
+echo ' and put your files in the <B>/incoming</B> directory. When you 
+		are done uploading, just hit the "Refresh View" button right below to see the uploaded release files.
 		<P>
+Once upload is completed check the boxes of the files that goes into your new project release and click on the "Add Marked Files" button below.
+
+<P>
 		<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data">
 		<INPUT TYPE="HIDDEN" NAME="func" VALUE="add_files">
 		<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
@@ -492,13 +503,12 @@ if ($release_id) {
 	}
 
 	echo '<P>
-	<INPUT TYPE="SUBMIT" NAME="submit" VALUE="Add Files and/or Refresh View">
+	<INPUT TYPE="SUBMIT" NAME="submit" VALUE="Add Marked Files or Refresh View">
 	</FORM>';
 	if (!$atleastone) {
 		print '<h3>No available files</H3>
 			<P>
-			You can upload files using FTP to <B>download.sourceforge.net</B> 
-			in the <B>/incoming</B> directory, then hit <B>Refresh View</B>.';
+			Please upload files as explained above, then hit <B>Refresh View</B>.';
 	}
 
 

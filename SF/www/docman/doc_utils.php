@@ -130,8 +130,9 @@ function docman_header($title,$pagehead,$style='xyz') {
 		"<a href=\"/docman/admin/index.php?mode=editgroups&group_id=".$group_id." \">Edit Document Groups</a></b>";
 
 	} 
-	print "<p>";
-	print "<h3>$pagehead</h3>\n<P>\n";
+	print "<p><h3>";
+	eval('?>'.util_unconvert_htmlspecialchars($pagehead));
+	print "</h3>\n<p>\n";
 
 }
 

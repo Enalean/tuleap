@@ -20,42 +20,36 @@ $HTML->header(array('title'=>'Welcome'));
 	<hr width="100%" size="1" noshade>
 	<span class="slogan">
 	<div align="center">
-        <font face="arial, helvetica" size="5">"Breaking Down The Barriers to Open Source Development."</font><br>
+        <font face="arial, helvetica" size="5">"Breaking Down The Barriers to Code Sharing inside Xerox."</font><br>
 	</div>
 	</span>
         <hr width="100%" size="1" noshade>
 	&nbsp;<br>
+CodeX is a <B>service to
+all Xerox software development teams</B> who want to share their project source code with others <b>inside</b> Xerox. <A href="/docs/site/about_codex.php"><font size="-1">[&nbsp;More about CodeX&nbsp;]</font></A><P>
+CodeX offers an easy access to a full featured and totally web-based project management environment. Using CodeX project teams can better focus on software development while making their community of users and developers grow. <A href="/doc/sites/"><font size="-1">[&nbsp;More on CodeX Services&nbsp;]</font></A>
+<A href="/docman/display_doc.php?docid=17&group_id=1"><font size="-1">[&nbsp;FAQ&nbsp;]</font></A>
 <P>
-SourceForge is a <B>free service to
-<A href="http://www.opensource.org">Open Source</A> developers</B> offering
-easy access to the best in CVS, mailing lists, bug tracking, message boards/forums,
-task management, site hosting, permanent file archival, full backups,
-and total web-based administration. <A href="/docs/site/services.php"><font size="-1">[ more ]</font></A>
-<A href="/docs/site/faq.php"><font size="-1">[ FAQ ]</font></A>
+<u><B>Site Participation</B></u>
 <BR>
-&nbsp;
+In order to get the most out of CodeX, you should
+ <A href="/account/register.php">register as a
+site user</A>. It's easy and fast and it allows you to participate fully in all we have to offer. Also make sure you read the <b><A href="/docman/display_doc.php?docid=16&group_id=1">Xerox Code eXchange Policy</a></b> before using this site.
+<!--You may of course browse the site without registering, but will
+not have access to participate fully. -->
 <P>
-<B>Site Feedback and Participation</B>
-<P>
-In order to get the most out of SourceForge, you'll need
-to <A href="/account/register.php">register as a
-site user</A>. This will allow you to participate fully in all we have to
-offer. You may of course browse the site without registering, but will
-not have access to participate fully.
-<P>
-&nbsp;
+
+<u><B>Set Up Your Own Project</B></u>
 <BR>
-<B>Set Up Your Own Project</B>
-<P>
-<A href="/account/register.php">Register as a site user</A>,
+If you want other Xerox developers to know what you are doing first <A href="/account/register.php">Register as a site user</A>,
 then <A HREF="/account/login.php">Login</A> and finally,
-<A HREF="/register/">Register Your Project.</A>
+<A HREF="/register/">Register Your Project.</A> It only takes a couple of minutes to get a fully working environment to share your code.
 <P>
 Thanks... and enjoy the site.
 <P>
 <?php
 $HTML->box1_top('Latest News');
-echo news_show_latest(714,5,true);
+echo news_show_latest($GLOBALS['sys_news_group'],5,true);
 $HTML->box1_bottom();
 ?>
 
@@ -69,7 +63,11 @@ echo cache_display('show_features_boxes','0',1800);
 
 ?>
 
-</TD></TR></TABLE>
+</TD></TR>
+<!-- LJ end of the main page body -->
+</TABLE>
+<!-- LJ Added a missing end center -->
+</CENTER>
 
 <?php
 

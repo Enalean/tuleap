@@ -15,7 +15,7 @@ if ($GLOBALS[type] == 'downloads_week') {
 }
 else if ($GLOBALS[type] == 'pageviews_proj') {
 	$rankfield = 'pageviews_proj';
-	$title = 'Top Weekly Project Pageviews at *.'.$GLOBALS['sys_default_domain'].' (from impressions of SF logo)';
+	$title = 'Top Weekly Project Pageviews at *.'.$GLOBALS['sys_default_domain'].' (from impressions of CodeX logo)';
 	$column1 = 'Pageviews';
 }
 else if ($GLOBALS[type] == 'forumposts_week') {

@@ -42,6 +42,10 @@ $graph->SetxTitle('Date');
 $graph->SetyTitle('Views (RED)');
 $graph->DrawAxis();
 //$graph->showDebug();
-$graph->ShowGraph('png');
+// LJ The libgd we use (1.3) and the PHP3 gd extension
+// only support GIF image (PNG comes with version 1.8 of gd)
+// so force generation of a GIF image
+// $graph->ShowGraph('png');
+$graph->ShowGraph('gif');
 
 ?>

@@ -11,47 +11,52 @@ require('../forum/forum_utils.php');
 
 if ($group_id) {
 
-	forum_header(array('title'=>'Forums for '.group_getname($group_id)));
+  forum_header(array('title'=>'Forums for '.group_getname($group_id)));
 
-	if (user_isloggedin() && user_ismember($group_id)) {
-		$public_flag='0,1';
-	} else {
-		$public_flag='1';
-	}
+  if (user_isloggedin() && user_ismember($group_id)) {
+    $public_flag='<3';
+  } else {
+    $public_flag='=1';
+  }
 
-	$sql="SELECT * FROM forum_group_list WHERE group_id='$group_id' AND is_public IN ($public_flag);";
+  $sql="SELECT g.group_forum_id,g.forum_name, g.description, famc.count as total
+    FROM forum_group_list g
+    LEFT JOIN forum_agg_msg_count famc USING (group_forum_id)
+    WHERE g.group_id='$group_id' AND g.is_public $public_flag;";
 
-	$result = db_query ($sql);
+  $result = db_query ($sql);
 
-	$rows = db_numrows($result); 
+  $rows = db_numrows($result); 
 
-	if (!$result || $rows < 1) {
-		echo '<H1>No forums found for '.group_getname($group_id).'</H1>';
-		forum_footer(array());
-		exit;
-	}
+  if (!$result || $rows < 1) {
+    echo '<H1>No forums found for '. group_getname($group_id) .'</H1>';
+    echo db_error();
+    forum_footer(array());
+    exit;
+  }
 
-	echo '<H3>Discussion Forums</H3>
-		<P>Choose a forum and you can browse, search, and post messages.<P>';
+  echo '<H3>Discussion Forums</H3>
+                                    <P>Choose a forum and you can browse, search, and post messages.<P>';
 
-	/*
-		Put the result set (list of forums for this group) into a column with folders
-	*/
+                                /*
+				  Put the result set (list of forums for this group) into a column with folders
+                                */
 
-	for ($j = 0; $j < $rows; $j++) { 
-		echo '<A HREF="forum.php?forum_id='.db_result($result, $j, 'group_forum_id').'">'.
-			'<IMG SRC="/images/ic/cfolder15.png" HEIGHT=13 WIDTH=15 BORDER=0> &nbsp;'.
-			db_result($result, $j, 'forum_name').'</A> ';
-		//message count
-		echo '('.db_result(db_query("SELECT count(*) FROM forum WHERE group_forum_id='".db_result($result, $j, 'group_forum_id')."'"),0,0).' msgs)';
-		echo "<BR>\n";
-		echo db_result($result,$j,'description').'<P>';
-	}
-	forum_footer(array());
+  for ($j = 0; $j < $rows; $j++) { 
+    echo '<A HREF="forum.php?forum_id='. db_result($result, $j, 'group_forum_id') .'">'.
+      html_image("ic/cfolder15.png",array("border"=>"0")) . 
+      '&nbsp;' .
+      db_result($result, $j, 'forum_name').'</A> ';
+    //message count
+    echo '('. ((db_result($result, $j, 'total'))?db_result($result, $j, 'total'):'0') .' msgs)';
+    echo "<BR>\n";
+    echo db_result($result,$j,'description').'<P>';
+  }
+  forum_footer(array());
 
 } else {
 
-	exit_no_group();
+  exit_no_group();
 
 }
 

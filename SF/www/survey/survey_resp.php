@@ -38,7 +38,7 @@ Thank you for taking time to complete this survey.
 <P>
 Regards,
 <P>
-<B>The SourceForge Crew</B>
+<B>The CodeX Team</B>
 <P>
 <?php
 /*

@@ -1,43 +1,43 @@
 <?php
-$osdn_sites[0] = array('Freshmeat' => 'http://www.freshmeat.net/');
-$osdn_sites[1] = array('Geocrawler' => 'http://www.geocrawler.com/');
-$osdn_sites[2] = array('Linux.Com' => 'http://www.linux.com/');
-$osdn_sites[3] = array('NewsForge' => 'http://www.newsforge.com/');
-$osdn_sites[4] = array("Open Magazine" => 'http://www.openmagazine.net/');
-$osdn_sites[5] = array('Question Exchange' => 'http://www.questionexchange.com/');
+$osdn_sites[0] = array('XRCE' => 'http://www.xrce.xerox.com/');
+$osdn_sites[1] = array('PARC' => 'http://parcweb.parc.xerox.com/');
+$osdn_sites[2] = array('XR&amp;T' => 'http://www.research.xerox.com/');
+$osdn_sites[3] = array('Open Source at Xerox' => 'http://bazaar.adoc.xerox.com/');
+$osdn_sites[4] = array('Linux at Xerox' => 'http://xww.linux.world.xerox.com/');
+$osdn_sites[5] = array('WRC' => 'http://www.wrc.xerox.com/');
 $osdn_sites[6] = array('Slashdot.Org' => 'http://www.slashdot.com/');
-$osdn_sites[7] = array('Themes.Org' => 'http://www.themes.org/');
-$osdn_sites[8] = array('Thinkgeek' => 'http://www.thinkgeek.com/');
+$osdn_sites[7] = array('SourceForge' => 'http://www.sourceforge.net/');
+$osdn_sites[8] = array('Freshmeat' => 'http://www.freshmeat.net/');
+$osdn_sites[9] = array('XAC' => 'http://xww.xac.world.xerox.com/');
+$osdn_sites[10] = array('Xerox eTTM' => 'http://ettm.wrc.xerox.com/');
 
 function osdn_nav_dropdown() {
 	GLOBAL $osdn_sites;
+// LJ write the FORM directly instead of using
+// document.write because Netscape 4.x gets crazy
+// and doesn't know how to redraw the page when 
+// window is resized.
 ?>
 	<!-- OSDN navdropdown -->
-        <script language="JavaScript">
-        <!--
-        document.write('<form name=form1>\n'+
-        '<font size=-1>\n'+
-        '<a href=\"http://www.osdn.com\"><img src=\"/images/osdn_logo_grey.png\" width=\"135\" height=\"33\" hspace=\"10\" alt=\" OSDN - Open Source Development Network \" border=\"0\"></A><br>\n'+
-        '<select name=navbar onChange=\"window.location=this.options[selectedIndex].value\">\n'+
-        '<option value=\"http://www.osdn.com/gallery.html\">Network Gallery</option>\n'+
-        '<option>------------</option>\n'+
+        <form name=form1>
+        <font size=-1>
+        <a href="http://codex.xerox.com"><?php echo html_image("codex_logo.gif",array("width"=>"135", "height"=>"33", "hspace"=>"10", "alt"=>"CodeX - The Xerox Code eXchange Network", "border"=>"0")); ?></A><br>
+        <select name=navbar onChange="window.location=this.options[selectedIndex].value">
+        <option value="http://codex.xerox.com/gallery.html">Network Gallery</option>
+        <option>------------</option>
 <?php
         reset ($osdn_sites);
         while (list ($key, $val) = each ($osdn_sites)) {
         	list ($key, $val) = each ($val);
-		print "\t";
-		print "'<option value=\"$val\">$key</option>\\n'+";
-		print "\n";
+		print "\n   <option value=\"$val\">$key</option>";
         }
 ?>
-        '</select>\n'+
-        '</form>\n')
-        //-->
-        </script>
+        </select>
+	</font>
+        </form>
 
         <noscript>
-        <a href="http://www.osdn.com"><img src="/images/osdn_logo_grey.png" width="135" height="33" hspace="10" alt=" OSDN - Open Source Development Network " border="0"></A><br>
-        <a href="http://www.osdn.com/gallery.html"><font size="2" color="#fefefe" face="arial, helvetica">Network Gallery</font></a>
+        <a href="http://codex.xerox.com"><img src="/images/codex_logo.gif" width="135" height="33" hspace="10" alt=" CodeX - The Xerox Code eXchange Network "  border="0"></A><br>
         </noscript>
 	<!-- end OSDN navdropdown -->
 <?php
@@ -60,25 +60,36 @@ function osdn_print_randpick($sitear, $num_sites = 1) {
 function osdn_print_navbar() {
 	print '
 <!-- OSDN navbar -->
-<table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#CCCCCC">
+<table width="100%" cellpadding="2" cellspacing="0" border="0" bgcolor="#bcbcad">
 	<tr> 
-		<td valign="middle" align="left" bgcolor="#6C7198">
+		<td valign="middle" align="left">
 		<SPAN class="osdn">
-			<font face="arial,geneva,helvetica,verdana,sans-serif" size="-2" color="#ffffff">&nbsp;&nbsp;&nbsp;<b><a href="http://osdn.com/" style="text-decoration:none"><font color="#ffffff">O&nbsp;<font color="#9b9b9b">|</font>&nbsp;S&nbsp;<font color="#9b9b9b">|</font>&nbsp;D&nbsp;<font color="#9b9b9b">|</font>&nbsp;N</font></a>&nbsp;:&nbsp;
-';
-	osdn_print_randpick($GLOBALS['osdn_sites'], 3);
-	print '
+<!-- LJ			<font face="arial,geneva,helvetica,verdana,sans-serif" size="-2" color="#ffffff">&nbsp;&nbsp;&nbsp;<b><a href="http://osdn.com/" style="text-decoration:none"><font color="#ffffff">O&nbsp;<font color="#9b9b9b">|</font>&nbsp;S&nbsp;<font color="#9b9b9b">|</font>&nbsp;D&nbsp;<font color="#9b9b9b">|</font>&nbsp;N</font></a>&nbsp;:&nbsp;
+-->
+<font color="#ffffff">Network Gallery&nbsp;:&nbsp;</font>';
+
+	osdn_print_randpick($GLOBALS['osdn_sites'], 5);
+
+// LJ
+print '		</SPAN>
+		</td>';
+
+/* LJ	print '
 		</SPAN>
 		</td>
 		<td valign="middle" align="right" bgcolor="#6C7198">
 		<SPAN class="osdn">
 			<b><a href="http://www.osdn.com/index.pl?indexpage=myosdn" style="text-decoration:none"><font color="#ffffff">My OSDN</font></a>&nbsp;&middot;&nbsp;
 ';
+LJ */
+
+
 /*
 		<a href="" style="text-decoration:none"><font color="#ffffff">JOBS</font></a>&nbsp;&middot;&nbsp;
 */
-	print '
-		<a href="http://www.osdn.com/partner_programs.shtml" style="text-decoration:none"><font color="#ffffff">PARTNERS</font></a>&nbsp;&middot;&nbsp; 
+
+/* LJ	print '
+	<a href="http://www.osdn.com/partner_programs.shtml" style="text-decoration:none"><font color="#ffffff">PARTNERS</font></a>&nbsp;&middot;&nbsp; 
 		<a href="http://www.osdn.com/gallery.pl?type=community" style="text-decoration:none"><font color="#ffffff">AFFILIATES</font></a>&nbsp;</b></font>
 		</SPAN>
 		</td>
@@ -89,7 +100,9 @@ function osdn_print_navbar() {
 	<tbody> 
 	<tr> 
 		<td valign="center" align="center" width="100%" bgcolor="#d5d7d9" background="/images/steel3.jpg">
-';
+'; 
+LJ */
+
 
 	srand((double)microtime()*1000000);
         $random_num=rand(0,100000);
@@ -99,12 +112,14 @@ function osdn_print_navbar() {
 	} else {
 		$_SSL='';
 	}
-	print '<a href="http'.$_SSL.'://www2.valinux.com/adbouncer.phtml?f_s=468x60&f_p=1&f_RzXx='.$random_num.'"><img src="http'.$_SSL.'://www2.valinux.com/adserver.phtml?f_s=468x60&f_p=1&f_RzXx='.$random_num.'" width="468" height="60" border="0" alt=" Advertisement "></a></td>
-		<td valign="center" align="left" bgcolor="#d5d7d9" background="/images/steel3.jpg"><a href="http://www.osdn.com"><img src="/images/OSDN-lc.gif" width="100" height="40" hspace="10" border="0" alt=" OSDN - Open Source Development Network "></a>
-	</td>
+//(LJ)	print '<a href="http'.$_SSL.'://www2.valinux.com/adbouncer.phtml?f_s=468x60&f_p=1&f_RzXx='.$random_num.'"><img src="http'.$_SSL.'://www2.valinux.com/adserver.phtml?f_s=468x60&f_p=1&f_RzXx='.$random_num.'" width="468" height="60" border="0" alt=" Advertisement "></a></td>
+	print '
+<!-- LJ <td valign="center" align="left" bgcolor="#d5d7d9" background="/images/steel3.jpg"><a href="http://www.osdn.com"><img src="/images/OSDN-lc.gif" width="100" height="40" hspace="10" border="0" alt=" OSDN - Open Source Development Network "></a> -->
+	<!--LJ/td-->
 	</tr>
-	</tbody> 
+	<!--/tbody--> 
 </table>
+
 <!-- End OSDN NavBar -->
 ';
 }

@@ -44,7 +44,9 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 
 			} else {
 				bug_header(array ('title'=>'Add/Remove Administrators'));
-				echo '<H1>No members in this group</H1>';
+// LJ				echo '<H1>No members in this group</H1>';
+				echo '<H2>No members in this group</H2>';
+
 				bug_footer(array());
 				exit;
 			}
@@ -125,7 +127,8 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 		*/
 		bug_header(array ('title'=>'Add/Change Categories'));
 
-		echo "<H1>Add Bug Categories</H1>";
+//LJ		echo "<H1>Add Bug Categories</H1>";
+		echo "<H2>Add Bug Categories</H2>";
 
 		/*
 			List of possible categories for this group
@@ -136,7 +139,8 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 		if ($result && db_numrows($result) > 0) {
 			ShowResultSet($result,"Existing Categories","bug_cat");
 		} else {
-			echo "\n<H1>No bug categories in this group</H1>";
+//LJ			echo "\n<H1>No bug categories in this group</H1>";
+			echo "\n<H2>No bug categories in this group</H2>";
 		}
 		?>
 		<P>
@@ -163,7 +167,8 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 		*/
 		bug_header(array ('title'=>'Add/Change Groups'));
 
-		echo '<H1>Add Bug Groups</H1>';
+// LJ		echo '<H1>Add Bug Groups</H1>';
+		echo '<H2>Add Bug Groups</H2>';
 
 		/*
 			List of possible bug_groups for this group
@@ -174,7 +179,8 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 		if ($result && db_numrows($result) > 0) {
 			ShowResultSet($result,"Existing Bug Groups","bug_group");
 		} else {
-			echo "\n<H1>No bug groups in this project group</H1>";
+//LJ			echo "\n<H1>No bug groups in this project group</H1>";
+			echo "\n<H2>No bug groups in this project group</H2>";
 		}
 		?>
 		<P>
@@ -201,7 +207,8 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 		*/
 		bug_header(array ('title'=>'Modify A Bug Category'));
 
-		echo '<H1>Modify A Bug Category</H1>';
+//LJ		echo '<H1>Modify A Bug Category</H1>';
+		echo '<H2>Modify A Bug Category</H2>';
 
 		$sql="SELECT bug_category_id, category_name FROM bug_category WHERE bug_category_id='$bug_cat_id' AND group_id='$group_id'";
 		$result=db_query($sql);
@@ -228,8 +235,9 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 			</FORM>
 			<?php
 		} else {
+//LJ			<H1>The bug category that you requested a change on was not found.</H1>';
 			echo '
-			<H1>The bug category that you requested a change on was not found.</H1>';
+			<H2>The bug category that you requested a change on was not found.</H2>';
 			echo db_error();
 		}
 
@@ -241,7 +249,8 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 		*/
 		bug_header(array ('title'=>'Add/Change Groups'));
 
-		echo '<H1>Modify A Bug Group</H1>';
+//LJ		echo '<H1>Modify A Bug Group</H1>';
+		echo '<H2>Modify A Bug Group</H2>';
 
 		$sql="SELECT bug_group_id,group_name FROM bug_group WHERE bug_group_id='$bug_group_id' AND group_id='$group_id'";
 		$result=db_query($sql);
@@ -268,8 +277,9 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 			</FORM>
 			<?php
 		} else {
+//LJ			<H1>The bug group that you requested a change on was not found</H1>';
 			echo '
-			<H1>The bug group that you requested a change on was not found</H1>';
+			<H2>The bug group that you requested a change on was not found</H2>';
 			echo db_error();
 		}
 
@@ -281,7 +291,8 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 		*/
 		bug_header(array ('title'=>'Create/Modify Canned Responses'));
 
-		echo "<H1>Create/Modify Canned Responses</H1>";
+//LJ		echo "<H1>Create/Modify Canned Responses</H1>";
+		echo "<H2>Create/Modify Canned Responses</H2>";
 
 		$sql="SELECT bug_canned_id,title FROM bug_canned_responses WHERE group_id='$group_id'";
 		$result=db_query($sql);
@@ -312,7 +323,8 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 			echo '</TABLE>';
 
 		} else {
-			echo "\n<H1>No canned bug responses set up yet</H1>";
+//LJ			echo "\n<H1>No canned bug responses set up yet</H1>";
+			echo "\n<H2>No canned bug responses set up yet</H2>";
 		}
 		/*
 			Escape to print the add response form
@@ -343,7 +355,8 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 		*/
 		bug_header(array ('title'=>'Modify Canned Response'));
 
-		echo "<H1>Modify Canned Response</H1>";
+//LJ		echo "<H1>Modify Canned Response</H1>";
+		echo "<H2>Modify Canned Response</H2>";
 
 		$sql="SELECT bug_canned_id,title,body FROM bug_canned_responses WHERE ".
 		"group_id='$group_id' AND bug_canned_id='$bug_canned_id'";
@@ -351,7 +364,8 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 		$result=db_query($sql);
 		echo "<P>";
 		if (!$result || db_numrows($result) < 1) {
-			echo "\n<H1>No such response!</H1>";
+//LJ			echo "\n<H1>No such response!</H1>";
+			echo "\n<H2>No such response!</H2>";
 		} else {
 			/*
 				Escape to print update form
@@ -386,16 +400,16 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 
 		bug_header(array ('title'=>'Bug Administration'));
 
-		echo '
-			<H1>Bug Administration</H1>';
+//LJ			<H1>Bug Administration</H1>';
+		echo '<H2>Bug Administration</H2>';
 
 		echo '<P>
 			<A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&bug_cat=1">Add Bug Categories</A><BR>';
-		echo "\nAdd categories of bugs like, 'mail module','gant chart module','interface', etc<P>";
+		echo "\nBug Categories generally correspond to high level modules or functionalities of your software. You can add/define categories of bugs like, 'User interface','Configuration Manager','Programming Interface', etc. <P>";
 		echo "\n<A HREF=\"$PHP_SELF?group_id=$group_id&bug_group=1\">Add Bug Groups</A><BR>";
-		echo "\nAdd Groups of bugs like 'future requests','unreproducible', etc<P>";
+		echo "\nBug groups can help the bug submitter to characterize the nature of the bug. You can add Groups of bugs like 'Feature Request','Crash Error', 'Documentation Typos', 'Installation Problem, etc.<P>";
 		echo "\n<A HREF=\"$PHP_SELF?group_id=$group_id&create_canned=1\">Add Canned Responses</A><BR>";
-		echo "\nCreate or Change generic quick response messages for the bug tracking tool.<P>";
+		echo "\nCreate or Change generic quick response messages for the bug tracking tool. This pre-written messages can then be used to quickly reply to bug submission. <P>";
 
 		bug_footer(array());
 	}

@@ -64,7 +64,11 @@ $rel->execute();
 #
 # drop the old table
 #
-$query = "DROP TABLE forum_agg_msg_count2;";
+# LJ there is a bug here. It's not the count2 but the existing
+# count table that must be dropped. other wise the next
+# ALTER statement fails
+#$query = "DROP TABLE forum_agg_msg_count2;";
+$query = "DROP TABLE forum_agg_msg_count;";
 $rel = $dbh->prepare($query);
 $rel->execute();
 #

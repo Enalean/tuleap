@@ -35,9 +35,13 @@ if ($submit) {
 	} else if ($func=='update_package' && $package_id && $package_name && $status_id) {
 		if ($status_id != 1) {
 			//if hiding a package, refuse if it has releases under it
-			$res=db_query("SELECT * FROM frs_release WHERE package_id='$package_id'");
+// LJ Wrong SQL statement. It should only check for the existence of
+// LJ active packages. If only hidden releases are in this package
+// LJ then we can safely hide it.
+// LJ $res=db_query("SELECT * FROM frs_release WHERE package_id='$package_id'");
+			$res=db_query("SELECT * FROM frs_release WHERE package_id='$package_id' AND status_id=1");
 			if (db_numrows($res) > 0) {
-				$feedback .= ' Sorry - you cannot delete a package that still contains file releases ';
+				$feedback .= ' Sorry - you cannot hide a package that still contains active releases. Hide attached releases first ';
 				$status_id=1;
 			}
 		}
@@ -55,31 +59,20 @@ project_admin_header(array('title'=>'Release/Edit File Releases','group'=>$group
 
 echo '<H3>Packages</H3>
 <P>
-You can use packages to group different file releases together, or use them however you like. 
+You can use packages to group different file releases together. A package is a consistent set of source files that can be put together and deliver a working part of your bigger project.
+<P>For instance, assuming you work on a multi-platform Database engine you could create the following packages:
 <P>
-<H4>An example of packages:</h4>
+<B>DB-win</B> the sources for the Windows version of the DB engine<BR>
+<B>DB-unix</B> the sources for the Unix version  of the DB engine<BR>
+<B>DB-odbc</B> the ODBC driver for both platforms
 <P>
-<B>Mysql-win</B><BR>
-<B>Mysql-unix</B><BR>
-<B>Mysql-odbc</B>
+You must first define your packages by naming them.
 <P>
-<h4>Your Packages:</H4>
-<P>
-Start by defining your packages, then you can upload files with FTP to the <B>incoming</B> directory on 
-<B>download.sourceforge.net</B>. Once you have the files uploaded, you can then <B>create releases</B> 
-of your packages.
-<P>
-Once you have have packages defined, you can start creating new <B>releases of packages.</B>
+Once you have packages defined, you can start creating new <B>releases of packages.</B>
 <P>
 <H3>Releases of Packages</H3>
 <P>
-A release of a package can contain multiple files.
-<P>
-<H4>Examples of Releases</h4>
-<P>
-<B>3.22.1</B><BR>
-<B>3.22.2</B><BR>
-<B>3.22.3</B><BR>
+A release of a package can contain multiple files. A release is generally identified with a version number. Examples of possible release names are:<B>3.22.1</B>, <b>3.22.2</B>, <B>3.22.3</B>,...
 <P>
 You can create new releases of packages by clicking on <B>Add/Edit Releases</B> next to your package name.
 <P>';
@@ -92,7 +85,10 @@ You can create new releases of packages by clicking on <B>Add/Edit Releases</B> 
 
 */
 
-$res=db_query("SELECT package_id,name AS package_name FROM frs_package WHERE group_id='$group_id'");
+// LJ status_id field was missing from the select statement
+// LJ Causing the displayed status of packages to be wrong
+// LJ $res=db_query("SELECT package_id,name AS package_name FROM frs_packag
+$res=db_query("SELECT status_id,package_id,name AS package_name FROM frs_package WHERE group_id='$group_id'");
 $rows=db_numrows($res);
 if (!$res || $rows < 1) {
 	echo '<h4>You Have No Packges Defined</h4>';

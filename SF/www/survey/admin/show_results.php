@@ -31,16 +31,16 @@ Function  ShowResultsSurvey($result) {
 	echo "<tr BGCOLOR=\"$GLOBALS[COLOR_MENUBARBACK]\">\n";
 
 	for($i  =  0;  $i  <  $cols;  $i++)  {
-		printf( "<th><FONT COLOR=\"WHITE\"><B>%s</th>\n",  db_fieldname($result,$i));
+		printf( "<th><FONT COLOR=\"$GLOBALS[FONTCOLOR_HTMLBOX_TITLE]\"><B>%s</th>\n",  db_fieldname($result,$i));
 	}
 	echo "</tr>";
 
 	for($j  =  0;  $j  <  $rows;  $j++)  {
 
 		if ($j%2==0) {
-			$row_bg="#FFFFFF";
-		} else {
 			$row_bg="$GLOBALS[COLOR_LTBACK1]";
+		} else {
+			$row_bg="$GLOBALS[COLOR_LTBACK2]";
 		}
 
 		echo "<tr BGCOLOR=\"$row_bg\">\n";
@@ -68,16 +68,16 @@ Function  ShowResultsAggregate($result) {
 	echo "<tr BGCOLOR=\"$GLOBALS[COLOR_MENUBARBACK]\">\n";
 
 	for($i  =  0;  $i  <  $cols;  $i++)  {
-		printf( "<th><FONT COLOR=\"WHITE\"><B>%s</th>\n",  db_fieldname($result,$i));
+		printf( "<th><FONT COLOR=\"$GLOBALS[FONTCOLOR_HTMLBOX_TITLE]\"><B>%s</th>\n",  db_fieldname($result,$i));
 	}
 	echo "</tr>";
 
 	for($j  =  0;  $j  <  $rows;  $j++)  {
 
 		if ($j%2==0) {
-			$row_bg="#FFFFFF";
-		} else {
 			$row_bg="$GLOBALS[COLOR_LTBACK1]";
+		} else {
+			$row_bg="$GLOBALS[COLOR_LTBACK2]";
 		}
 
 		echo "<tr BGCOLOR=\"$row_bg\">\n";
@@ -106,16 +106,16 @@ Function  ShowResultsCustomer($result) {
 	echo "<tr BGCOLOR=\"$GLOBALS[COLOR_MENUBARBACK]\">\n";
 
 	for($i  =  0;  $i  <  $cols;  $i++)  {
-		printf( "<th><FONT COLOR=\"WHITE\"><B>%s</th>\n",  db_fieldname($result,$i));
+		printf( "<th><FONT COLOR=\"$GLOBALS[FONTCOLOR_HTMLBOX_TITLE]\"><B>%s</th>\n",  db_fieldname($result,$i));
 	}
 	echo "</tr>";
 
 	for($j  =  0;  $j  <  $rows;  $j++)  {
 
 		if ($j%2==0) {
-			$row_bg="#FFFFFF";
-		} else {
 			$row_bg="$GLOBALS[COLOR_LTBACK1]";
+		} else {
+			$row_bg="$GLOBALS[COLOR_LTBACK2]";
 		}
 
 		echo "<tr BGCOLOR=\"$row_bg\">\n";

@@ -11,7 +11,7 @@ require($DOCUMENT_ROOT.'/admin/admin_utils.php');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
-site_admin_header(array('title'=>"Alexandria: Group List"));
+site_admin_header(array('title'=>"CodeX: Group List"));
 
 // start from root if root not passed in
 if (!$form_catroot) {
@@ -19,7 +19,7 @@ if (!$form_catroot) {
 }
 
 print "<br><a href=\"groupedit-add.php\">[Add Group]</a>";
-print "<p>Alexandria Group List for Category: ";
+print "<p>CodeX Group List for Category: ";
 
 if ($form_catroot == 1) {
 

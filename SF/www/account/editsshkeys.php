@@ -35,14 +35,24 @@ if (register_valid()) {
 	$HTML->header(array(title=>"Change Authorized Keys"));
 
 ?>
-<p><b>CVS/SSH Shared Keys</b>
-<P>To avoid having to type your password every time for your CVS/SSH
+
+<h2>SSH Shared Keys</h2>
+<P>To avoid having to type your password every time for your SSH
 developer account, you may upload your public key(s) here and they
-will be placed on the CVS server in your ~/.ssh/authorized_keys file.
-<P>To generate a public key, run the program 'ssh-keygen' (or ssh-keygen1).
-The public key will be placed at '~/.ssh/identity.pub'. Read the ssh
+will be placed on the server in your ~/.ssh/authorized_keys file.
+<P>To generate a public key, run the program 'ssh-keygen' (or ssh-keygen1) on your desktop machine.
+Then look at the file '~/.ssh/identity.pub' where the generated public key has been stored. Read the ssh
 documentation for further information on sharing keys.
-<P>Updates will be reflected in the next 6 hour cron job.
+
+<?php
+	// LJ modified. Cron delay now in /etc/local.inc.
+	// No longer hardcoded
+	$date = getdate(time());
+	$hoursleft = ($sys_crondelay - 1) - ($date[hours] % $sys_crondelay);
+	$minutesleft = 60 - $date[minutes];
+?>
+<P><b>IMPORTANT:</b>SSH Shared Keys Updates will be reflected in the next cron update in approximately <B><?php print $hoursleft.'</B> hours, <B>'.$minutesleft.'</B> minutes from now'; ?>. 
+
 <?php if ($register_error) print "<p>$register_error"; ?>
 <form action="editsshkeys.php" method="post">
 <p>Authorized keys:

@@ -9,7 +9,7 @@
 
 function show_features_boxes() {
 	GLOBAL $HTML;
-	$return .= $HTML->box1_top('SF Statistics',0);
+	$return .= $HTML->box1_top('CodeX Statistics',0);
 	$return .= '<font face="arial, helvetica" size="2">';
 	$return .= show_sitestats();
 	$return .= '</font>';
@@ -209,8 +209,8 @@ function stats_downloads_total() {
 function show_sitestats() {
 	$return .= 'Hosted Projects: <B>'.number_format(stats_getprojects_active()).'</B>';
 	$return .= '<BR>Registered Users: <B>'.number_format(stats_getusers()).'</B>';
-//	$return .= '<BR>Files Downloaded: <B>'.number_format(stats_downloads_total()).'</B>';
-//	$return .= '<BR>Pages Viewed: <B>'.number_format(stats_getpageviews_total()).'</B><BR>&nbsp;';
+	$return .= '<BR>Files Downloaded: <B>'.number_format(stats_downloads_total()).'</B>';
+	$return .= '<BR>Pages Viewed: <B>'.number_format(stats_getpageviews_total()).'</B><BR>&nbsp;';
 	return $return;
 }
 

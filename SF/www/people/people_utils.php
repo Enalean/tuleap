@@ -40,7 +40,7 @@ function people_skill_box($name='skill_id',$checked='xyxy') {
 	global $PEOPLE_SKILL;
 	if (!$PEOPLE_SKILL) {
 		//will be used many times potentially on a single page
-		$sql="SELECT * FROM people_skill ORDER BY name ASC";
+		$sql="SELECT * FROM people_skill ORDER BY skill_id ASC";
 		$PEOPLE_SKILL=db_query($sql);
 	}
 	return html_build_select_box ($PEOPLE_SKILL,$name,$checked);

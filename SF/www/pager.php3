@@ -7,7 +7,7 @@ if (!$conn) {
 	exit;
 }
 
-$query = "SELECT COUNT(*) FROM alexandria.user";
+$query = "SELECT COUNT(*) FROM sourceforge.themes";
 $result = @mysql_query($query);
 if (!$result || db_numrows($result) < 1) {
 	echo 'mysql-bad';

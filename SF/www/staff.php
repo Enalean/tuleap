@@ -7,87 +7,75 @@
 // $Id$
 
 require ('pre.php');    
-$HTML->header(array('title'=>'SorceForge Staff'));
+$HTML->header(array('title'=>'Codex Staff'));
 
 ?>
 <P>
-<h2>SourceForge Staff</h2>
+<h2>CodeX Staff</h2>
 <P>
 <table border=0 cellspacing=2 cellpadding=2 bgcolor="">
 
 <tr valign=top>
-<td><a href="/sendmessage.php?toaddress=dlb_maillink_users.sourceforge.net">Dan Bressler</a></td>
-<td>(dlb)</td>
+<td><a href="/sendmessage.php?touser=103">Laurent Julliard</a></td>
+<td>LJ</td>
 <td>
-Dan is the new "Product Manager" for SourceForge. We're not sure what that means, only that he
-likes timelines and handles business development issues.
+Member of the Xerox Open Source team along with John Stidd (See below). Hacked the SourceForge front-end and back end (especially CVS, Web design and user/group permissions) to build the Xerox CodeX Site.
+<BR>
+Laurent founded <A HREF="http://xww.linux.world.xerox.com/">Linux@Xerox</A> and the <A HREF="http://bazaar.adoc.xerox.com/">Xerox Open Source</A> Web Site. He is also the author of 2 Xerox white papers, one about Linux and another one about the Open Source phenomenon. Both documents are available in the <a href="http://bazaar.adoc.xerox.com/xerox/resources.html">Resources section</a> of the internal Xerox Open Source Web Site.
 </td>
 </tr>
 
 <tr valign=top>
-<td><a href="/sendmessage.php?toaddress=bigdisk_maillink_users.sourceforge.net">Tim Perdue</a></td>
-<td>(bigdisk)</td>
-<td>Tim is the technical lead on SourceForge and is from Iowa. Yes Iowa. Not Idaho and not Ohio. 
-Iowa. When he's not working you can locate him fairly easy as he has the only BMW Z3 in Iowa.
+<td><a href="/sendmessage.php?touser=101">John Stidd</a></td>
+<td>JS</td>
+<td>Member of the Xerox Open Source team with Laurent Julliard (See above).  Hacked the SourceForge front-end and back end (especially the mailman stuff to build the Xerox CodeX.
 <P>
-Tim founded <A HREF="http://www.phpbuilder.com/">PHPBuilder.com</A> and <A HREF="http://www.geocrawler.com/">Geocrawler.com</A>.
+John founded the <A HREF="http://bazaar.adoc.xerox.com/">Xerox Open Source</A> Web Site with Laurent.
 </td>
 </tr>
 
 <tr valign=top>
-<td><a href="/sendmessage.php?toaddress=precision_maillink_users.sourceforge.net">Uriah Welcome</a></td>
-<td>(Precision)</td>
-<td>Uriah is a system adminsitrator/developer from the frosty regions of Minnesota.  When he's not shoveling his driveway or
-defrosting his car you'll find him locked away in a dark room somewhere in front of a computer.</td>
+<td><a href="/sendmessage.php?touser=102">Vicki Tuttle</a></td>
+<td>Vicki</td>
+<td>Vicki is a Unix system administrator at the Wilson Research Center where the <a href="display_doc.php?docid=26&group_id=1">CodeX hardware</a> is physically located. She is responsible for the configuration, installation and backup of the CodeX site.</td>
 </tr>
 
-<tr valign=top>
-<td><a href="/sendmessage.php?toaddress=aphzen_maillink_users.sourceforge.net">Quentin Cregan</a></td>
-<td>(aphzen)</td>
-<td>Quentin handles most of the zillions of tech support inquiries that come into SourceForge, usually 
-with a smile on his face. He works from Australia.
-</td>
-</tr>
-
-<tr valign=top>
-<td><a href="/sendmessage.php?toaddress=kingdon_maillink_users.sourceforge.net">Jim Kingdon</a></td>
-<td>(kingdon)</td>
-<td>Jim is our "content and community relations manager".  And yes, we
- realize that is a long title.  Contact him concerning projects
- which are considering moving to sourceforge and foundries and the like.
-</td>
-</tr> 
 
 <TR><TD COLSPAN="2"><B>Founders:</B></TD></TR>
 
 <tr valign=top>
-<td><a href="/sendmessage.php?toaddress=fusion94_maillink_users.sourceforge.net">Tony Guntharp</a></td>
+<td><a href="/sendmessage.php?touser=103">Laurent Julliard</a></td>
 </tr>
 
 
 <tr valign=top>
-<td><a href="/sendmessage.php?toaddress=dtype_maillink_users.sourceforge.net">Drew Streib</a></td>
+<td><a href="/sendmessage.php?touser=101">John Stidd</a></td>
 </tr>
 
 
 <tr valign=top>
-<td><a href="/sendmessage.php?toaddress=bigdisk_maillink_users.sourceforge.net">Tim Perdue</a></td>
+<td><a href="/sendmessage.php?touser=102">Vicki Tuttle</a></td>
 </TR>
 
 
 <tr valign=top>
-<td><a href="/sendmessage.php?toaddress=precision_maillink_users.sourceforge.net">Uriah Welcome</a></td></TR>
+<td COLSPAN="4"><strong>And of course our CodeX site would not exist without the remarkable work of the world famous <a href="http://sourceforge.net/">SourceForge.net</a> Web site created by the <a href="http://sourceforge.net/staff.php">SourceForge staff and founders</a>. Many thanks for their work.</strong></td></TR>
 
 
-<TR><TD COLSPAN="2">&nbsp;<P><B>Signicant Outside Contributors:</B></TD></TR>
+<TR><TD COLSPAN="3">&nbsp;<P><B>Significant Outside Contributors:</B></TD></TR>
 
 <tr valign=top>
-<td><a href="/sendmessage.php?toaddress=wallace_maillink_users.sourceforge.net">Wallace Lee</a></td>
-<td>(wallace)</td>
-<td>Wallace has contributed significant tweaks and improvements to the SourceForge core code base. We appreciate 
-his efforts, as do the users who benefit from his contributions.
+<td COLSPAN="4">The hall of fame is wide open ! We are impatiently waiting for your contributions. If you want to help please <a href="contact.php">contact us</a>
 </td>
+<!--
+</tr><tr valign=top>
+<td><a href="/sendmessage.php?toaddress=tbd">TBD</a></td>
+<td>(tbd)</td>
+<td>bla,bla,bla....
+</td>
+-->
 </tr>
+
 
 </table>
 

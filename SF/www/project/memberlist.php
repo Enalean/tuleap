@@ -17,8 +17,10 @@ print '<P>If you would like to contribute to this project by becoming a develope
 contact one of the project admins, designated in bold text below.<br><br>';
 
 // list members
+// LJ email column added 
 $query =  "SELECT user.user_name AS user_name,user.user_id AS user_id,"
 	. "user.realname AS realname, user.add_date AS add_date, "
+	. "user.email AS email, "
 	. "user_group.admin_flags AS admin_flags "
 	. "FROM user,user_group "
 	. "WHERE user.user_id=user_group.user_id AND user_group.group_id=$group_id "
@@ -43,8 +45,15 @@ while ( $row_memb=db_fetch_array($res_memb) ) {
 		print "\t\t<td>$row_memb[realname]</td>\n";
 	}
 	print "\t\t<td align=\"middle\"><A href=\"/users/$row_memb[user_name]/\">$row_memb[user_name]</A></td>\n";
-	print "\t\t<td align=\"middle\"><A href=\"/sendmessage.php?touser=".$row_memb['user_id'].
-		"\">".$row_memb['user_name']." at ".$GLOBALS['sys_users_host']."</td>\n";
+
+/* LJ new version below
+print "\t\t<td align=\"middle\">
+<A href=\"/sendmessage.php?touser=".$row_memb['user_id']."\">".$row_memb['user_name']." at ".$GLOBALS['sys_users_host']."</td>\n";
+LJ */
+
+	print "\t\t<td align=\"middle\"><A href=\"/sendmessage.php?touser=".$row_memb['user_id']."\">".$row_memb['email']."</A></td>\n";
+
+
 	print "\t\t<td align=\"middle\"><A href=\"/people/viewprofile.php?user_id=".
 		$row_memb['user_id']."\">View Skills</a></td>\n";
 	print "\t<tr>\n";

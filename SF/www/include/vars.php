@@ -8,20 +8,19 @@
 
 
 $LICENSE = array();
-$LICENSE['gpl'] = 'GNU General Public License';
-$LICENSE['lgpl'] = 'GNU Library Public License';
+$LICENSE['xrx'] = 'Xerox Code eXchange Policy';
+$LICENSE['website'] = 'WebSite Only';
+$LICENSE['other'] = 'Other';
+$LICENSE['---'] = '--- For COMIP approved Open Source projects ---';
+$LICENSE['gpl'] = 'GNU General Public License (GPL)';
+$LICENSE['lgpl'] = 'GNU Library Public License (LGPL)';
 $LICENSE['bsd'] = 'BSD License';
 $LICENSE['mit'] = 'MIT/X Consortium License';
 $LICENSE['artistic'] = 'Artistic License';
 $LICENSE['mpl'] = 'Mozilla Public License';
-$LICENSE['qpl'] = 'Qt Public License';
-$LICENSE['ibm'] = 'IBM Public License';
-$LICENSE['cvw'] = 'Collaborative Virtual Workspace License';
-$LICENSE['rscpl'] = 'Ricoh Source Code Public License';
-$LICENSE['python'] = 'Python License';
-$LICENSE['zlib'] = 'zlib/libpng License';
-$LICENSE['website'] = 'WebSite Only';
-$LICENSE['other'] = 'Other';
+//$LICENSE['qpl'] = 'Qt Public License';
+//$LICENSE['ibm'] = 'IBM Public License';
+//$LICENSE['python'] = 'Python License';
 $LICENSE['public'] = 'Public Domain';
 
 /*

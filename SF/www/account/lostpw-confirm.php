@@ -16,15 +16,15 @@ $row_user = db_fetch_array($res_user);
 
 db_query("UPDATE user SET confirm_hash='$confirm_hash' WHERE user_id=$row_user[user_id]");
 
-$message = "Someone (presumably you) on the SourceForge site requested a\n"
+$message = "Someone (presumably you) on the CodeX site requested a\n"
 	. "password change through email verification. If this was not you,\n"
 	. "ignore this message and nothing will happen.\n\n"
 	. "If you requested this verification, visit the following URL\n"
 	. "to change your password:\n\n"
-	. "<https://$GLOBALS[HTTP_HOST]/account/lostlogin.php?confirm_hash=$confirm_hash\n\n>"
-	. " -- the SourceForge staff\n";
+	. "<http://$GLOBALS[HTTP_HOST]/account/lostlogin.php?confirm_hash=$confirm_hash\n\n>"
+	. " -- the CodeX staff\n";
 
-mail ($row_user['email'],"SourceForge Verification",$message,"From: noreply@$GLOBALS[HTTP_HOST]");
+mail ($row_user['email'],"CodeX Verification",$message,"From: noreply@$GLOBALS[HTTP_HOST]");
 
 $HTML->header(array('title'=>"Lost Password Confirmation"));
 

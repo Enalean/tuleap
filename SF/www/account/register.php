@@ -61,13 +61,13 @@ function register_valid()	{
 		$GLOBALS['newuserid'] = db_insertid($result);
 
 		// send mail
-		$message = "Thank you for registering on the SourceForge web site. In order\n"
-			. "to complete your registration, visit the following url: \n\n"
-			. "<https://". $GLOBALS['HTTP_HOST'] ."/account/verify.php?confirm_hash=$confirm_hash>\n\n"
+		$message = "Thank you for registering on the CodeX web site. In order\n"
+			. "to confirm your registration you must visit the following url: \n\n"
+			. "<http://". $GLOBALS['HTTP_HOST'] ."/account/verify.php?confirm_hash=$confirm_hash>\n\n"
 			. "Enjoy the site.\n\n"
-			. " -- the SourceForge staff\n";
+			. " -- the CodeX Team\n";
 
-		mail($GLOBALS['form_email'],"SourceForge Account Registration",$message,"From: noreply@".$GLOBALS['HTTP_HOST']);
+		mail($GLOBALS['form_email'],"CodeX Account Registration",$message,"From: noreply@".$GLOBALS['HTTP_HOST']);
 
 		return 1;
 	}
@@ -79,8 +79,8 @@ if ($Register && register_valid()) {
 
 	$HTML->header(array('title'=>'Register Confirmation'));
 	?>
-	<p><b>SourceForge: New Account Registration Confirmation</b>
-	<p>Congratulations. You have registered on SourceForge.
+	<p><b>CodeX: New Account Registration Confirmation</b>
+	<p>Congratulations. You have registered on CodeX.
 	Your new username is: <b><?php print user_getname($newuserid); ?></b>
 
 	<p>You are now being sent a confirmation email to verify your email 
@@ -91,11 +91,12 @@ if ($Register && register_valid()) {
 
 } else { // not valid registration, or first time to page
 
-	$HTML->header(array('title'=>'SourceForge: Register'));
+	$HTML->header(array('title'=>'CodeX: Register'));
 
 	if (browser_is_windows() && browser_is_ie() && browser_get_version() < '5.1') {
-		echo '<H2><FONT COLOR="RED">Internet Explorer users need to 
-		upgrade to IE 5.01 or higher, preferably with 128-bit SSL or use Netscape 4.7 or higher</FONT></H2>';	
+// LJ not needed on CodeX. We do not use SSL
+// LJ		echo '<H2><FONT COLOR="RED">Internet Explorer users need to 
+// LJ		upgrade to IE 5.01 or higher, preferably with 128-bit SSL or use Netscape 4.7 or higher</FONT></H2>';	
 	}
 	if (browser_is_ie() && browser_is_mac()) {
 		echo '<H2><FONT COLOR="RED">Internet Explorer on the Macintosh
@@ -104,14 +105,14 @@ if ($Register && register_valid()) {
 
 
 	?>
-	<p><b>SourceForge New Account Registration</b>
+	<h2>CodeX New Account Registration</h2>
 	<?php 
 	if ($register_error) {
 		print "<p><FONT color=#FF0000>$register_error</FONT>";
 	} ?>
-	<form action="https://<?php echo $HTTP_HOST; ?>/account/register.php" method="post">
+	<form action="http://<?php echo $HTTP_HOST; ?>/account/register.php" method="post">
 	<p>Login Name:
-	<br><input type="text" name="form_loginname" value="<?php print($form_loginname); ?>">
+	<br><input type="text" name="form_loginname" value="<?php print($form_loginname); ?>">&nbsp;&nbsp;<font color="red"><b>( Lower case only! )</b></font>
 	<p>Password:
 	<br><input type="password" name="form_pw" value="<?php print($form_pw); ?>">
 	<p>Password (repeat):

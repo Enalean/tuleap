@@ -30,7 +30,7 @@ Function  ShowResultComments($result) {
 	echo "<tr BGCOLOR=\"$GLOBALS[COLOR_MENUBARBACK]\">\n";
 
 	for($i  =  0;  $i  <  $cols;  $i++)  {
-		printf( "<th><FONT COLOR=\"WHITE\"><B>%s</th>\n",  db_fieldname($result,$i));
+		printf( "<th><FONT COLOR=\"$GLOBALS[FONTCOLOR_HTMLBOX_TITLE]\"><B>%s</th>\n",  db_fieldname($result,$i));
 	}
 	echo "</tr>";
 

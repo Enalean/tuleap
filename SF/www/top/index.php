@@ -10,9 +10,9 @@ require ('pre.php');
 $HTML->header(array('title'=>'Top Project Listings'));
 ?>
 
-<P><B>Top SourceForge Projects</B></P>
+<P><B>Top CodeX Projects</B></P>
 
-<P>We track many project usage statistics on SourceForge, and display here
+<P>We track many project usage statistics on CodeX, and display here
 the top ranked projects in several categories.
 
 <UL>
@@ -23,7 +23,7 @@ the top ranked projects in several categories.
 <LI><A href="toplist.php?type=downloads_week">Top Downloads (Past 7 Days)</A>
 <BR>&nbsp;
 <LI><A href="toplist.php?type=pageviews_proj">Top Project Pageviews</A> -
-Measured by impressions of the SourceForge 'button' logo
+Measured by impressions of the Codex 'button' logo
 <BR>&nbsp;
 <LI><A href="toplist.php?type=forumposts_week">Top Forum Post Counts</A>
 </UL>

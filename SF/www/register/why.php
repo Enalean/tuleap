@@ -11,17 +11,12 @@ $HTML->header(array(title=>"Why Register?"));
 ?>
 
 <p>
-SourceForge would like to extend an invitation to any Open Source project to be hosted for no price and
-no catch. This is our token of appreciation to the people who help make Open Source a reality.
+CodeX would like to extend an invitation to any Xerox internally developed project (so called Inner Source project) to be hosted for no price and no catch. The Xerox Open Source team has been formed in July 2000. One of our goal was to transpose the success of the external Open Source phenomenon and culture <b>inside</b> our Corporate environment. CodeX is our contribution to the community of developers inside Xerox.
 </p>
 
 <p>
 <i>Why are we doing this ?</i><br>
-A lot of opensource projects were being hosted out of personal ISP accounts, and that was causing a sort
-of a growth problem with some projects. They were victims of their own success. When their software or
-web site got too popular, they might have to shut it down due to lack of resources. Most people are not
-doing this for money, but for other reasons. We have the ability and opportunity to give back to the
-community, and we would like to use this opportunity to do so in some way. 
+A lot of Xerox projects are being hosted all over the place in Xerox and not only is it difficult to know who is working on what but it also implies that each Xerox development team is re-creating the same kind os development environment again and again. So, building on the experience and software designed by the <a href="http://sourceforge.net">SourceForge.net</a> people, we have decided to transpose this concept internally in Xerox and provide all Xerox development team with a series of tools and services that will make their life much easier, save time, allow them to concetrate on their code while letting the rest of the Xerox World know about their work.
 </p>
 
 <p>
@@ -30,12 +25,12 @@ community, and we would like to use this opportunity to do so in some way.
 <li>E-mail Lists (Public & Private)
 <li>CVS support (both anonymous read & secure write)
 <li>FTP Server
-<li>Project Management Software
+<li>Light weight Project Management Software
 <li>Bug-Tracking System (Public & Private)
 <li>Discussion Forums (Public & Private)
-<li>Press Releases
-<li>Package Server/Build Server (tarballs, RPMs, DEBs)
-<li>Subdomain hosting -- i.e., yourproject.sourceforge.org
+<!--<li>Press Releases-->
+<!--<li>Package Server/Build Server (tarballs, RPMs, DEBs)-->
+<li>Subdomain hosting -- i.e., yourproject.<?php echo $sys_default_domain; ?>
 <li>There are no hard quotas. However, should your directory exceed 150 megabytes, we will check to
 see if the space your using is well justified. This policy will change over time as more resources are
 acquired and allocated for this project.
@@ -43,16 +38,15 @@ acquired and allocated for this project.
 </p>                           
            
 <p>
-<li>We will not require that you place any banner or even reference to SourceForge on your page. 
-<li>account acceptance is at our discretion and is based on the following criteria: relevance (Open
-Source sofware projects only), legitimacy (your project must have a specific goal), and
-appropriateness (no adult or otherwise publicly inacceptable material). Furthermore, SourceForge
+<li>We will not require that you place any banner or even reference to CodeX on your page. 
+<li>account acceptance is at our discretion and is based on the following criteria: relevance (Xerox internally developed sofware projects only), legitimacy (your project must have a specific goal), and
+appropriateness (source code and documentation only). Furthermore, CodeX
 reserves the right to revoke an existing account without notice if there is due cause. 
 </p>
 
 <p>    
-We realize we may be presenting a few technical restrictions. However, if this project receives sufficient
-interest from the community, we will obtain more computers for the project.  
+We realize we may be presenting a few technical restrictions here and there. However, if this project receives sufficient
+interest from the Xerox developers community, we will obtain more computers and more disk space  for the project.  
 </p>
 
 <p>

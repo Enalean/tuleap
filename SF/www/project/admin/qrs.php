@@ -20,7 +20,7 @@ project_admin_header(array('title'=>'Release New File Version','group'=>$group_i
 
 if( $submit ) {
 	if (!$release_name) {
-		$feedback .= ' Must must define a release name. ';
+		$feedback .= ' Must define a release name. ';
 		echo db_error();
 	} else {
 		//create a new release of this package
@@ -58,7 +58,7 @@ if( $submit ) {
 			Fifth insert it into the database
 		*/
 		$group_unix_name=group_getunixname($group_id);
-		$project_files_dir=$FTPFILES_DIR.$group_unix_name;
+		$project_files_dir=$FTPFILES_DIR.'/'.$group_unix_name;
 
 		if ($file_name) {
 			// Check to see if the user uploaded a file instead of selecting an existing one.
@@ -205,7 +205,7 @@ if( $submit ) {
 	if (!$atleastone) {
 		print '<h3>No available files</H3>
 			<P>
-			You can upload files using FTP to <B>download.sourceforge.net</B> 
+			You can upload files using Anonymous FTP access (login "ftp")to <B>'."$sys_download_host".'</B> 
 			in the <B>/incoming</B> directory, then hit <B>Refresh View</B>.';
 	}
 ?>

@@ -22,7 +22,7 @@ if (user_isloggedin()) {
 				if one isn't already there
 			*/
 
-			$new_id=forum_create_forum(714,$summary,1,0);
+			$new_id=forum_create_forum($GLOBALS['sys_news_group'],$summary,1,0);
 			$sql="INSERT INTO news_bytes (group_id,submitted_by,is_approved,date,forum_id,summary,details) ".
 				" VALUES ('$group_id','".user_getid()."','0','".time()."','$new_id','".htmlspecialchars($summary)."','".htmlspecialchars($details)."')";
 			$result=db_query($sql);
@@ -55,7 +55,7 @@ if (user_isloggedin()) {
 		All posts <B>for your project</B> will appear instantly on your project 
 		summary page. Posts that are of special interest to the community will 
 		have to be approved by a member of the news team before they will appear 
-		on the SourceForge home page.
+		on the CodeX home page.
 		<P>
 		You may include URLs, but not HTML in your submissions.
 		<P>

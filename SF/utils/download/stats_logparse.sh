@@ -1,6 +1,6 @@
 #!/bin/sh
 
-cd /root/bin/alexandria/utils/download
+cd /home/httpd/SF/utils/download
 
 ## parse each logfile set 
 ./stats_ftp_logparse.pl $*

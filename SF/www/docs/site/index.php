@@ -1,48 +1,67 @@
 <?php
+
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+//
 
-require "pre.php";    
-$HTML->header(array(title=>"Welcome to Project Alexandria"));
-?>
+/*
+        Docmentation Manager
+        by Quentin Cregan, SourceForge 06/2000
+*/
+// GLOBAL $HTML
+require('pre.php');
 
-<p><B>SourceForge Site Documentation</B>
+$group_id = 1;
 
-<UL>
-<LI><A href="faq.php">Frequently Asked Questions (FAQ)</A>
-<LI><A href="services.php">SourceForge Services</A> aka. What do I get?
-<LI><A href="/tos/tos.php">Terms of Service Agreement</A> aka. The legal stuff.
-<LI><A href="hardware.php">The Hardware Behind SourceForge</A>
-<LI><A href="delay.php">The 6 hour cron delay</A> (Important)
-</UL>
+$usermem = user_ismember($group_id);
 
-<?php
-	$date = getdate(time());
-	$hoursleft = 5 - ($date[hours] % 6);
-	$minutesleft = 60 - $date[minutes];
-?>
+echo $HTML->header(array('title'=>"CodeX Site Documentation"));
 
-<P>The next cron update is in approximately <B><?php print $hoursleft.'</B> hours, <B>'.$minutesleft.'</B> minutes'; ?>.
+echo "<H2>CodeX Site Documentation</H2>";
 
-<P><B>The SourceForge Documentation Project</B>
+//get a list of group numbers that this project owns
+$query = "select * "
+	."from doc_groups "
+	."where group_id = $group_id "
+	."order by groupname";
+$result = db_query($query); 
 
-<P>We have a SourceForge project setup for our own documentation. This
-project is maintained by some of our staff members as well as several volunteers.
-This allows us to document in several languages and across several platforms.
+//otherwise, throw up an error
+if (db_numrows($result) < 1) {
+	print "<b>This project has no categorized data.</b><p>";
+} else { 
+	// get the groupings and display them with their members.
+	while ($row = db_fetch_array($result)) {
+		$query = "select description, docid, title, doc_group "
+			."from doc_data "
+			."where doc_group = '".$row['doc_group']."' "
+			."and stateid ='1'";
+			//state 1 == 'active'
+			
+		$subresult = db_query($query); 
 
-<P>If you would like to volunteer to help with this project, please contact
-one of the project administrators.
+		if (!(db_numrows($subresult) < 1)) {
+			print "<p><H3>".$row['groupname']."</H3>\n<ul>\n";
+			while ($subrow = db_fetch_array($subresult)) {
+// LJ We want the title and the description to
+// possibly contain HTML and php code so unconvert
+// the initially encoded HTML chars and eval the text
+				print "<li><a href=\"../../docman/display_doc.php?docid=".$subrow['docid']."&group_id=".$group_id."\">";
+				eval('?>'.util_unconvert_htmlspecialchars($subrow['title']));
+				print "</a>";
+				print "<BR><i>Description:</i> ";
+				eval('?>'.util_unconvert_htmlspecialchars($subrow['description'])); 
 
-<UL>
-<LI><A href="http://sfdocs.sourceforge.net"><B>The SourceForge Documentation Project</B> (http://sfdocs.sourceforge.net)</A>
-<LI><A href="/project/?group_id=873"><B>SFDocs Project Page</B></A>
-</UL>
+			}
+			print "</ul>\n\n";
 
-<?php
+		}
+	}
+}
+
 $HTML->footer(array());
 
 ?>

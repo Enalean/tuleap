@@ -239,13 +239,14 @@ function show_buglist ($result,$offset,$set='open') {
 function mail_followup($bug_id,$more_addresses=false) {
 	global $sys_datefmt,$feedback;
 	/*
-		Send a message to the person who opened this bug and the person it is assigned to
+		Send a message to the person who opened this bug and the person it is assigned to - modified by jstidd on 1/30/01 to eliminate default user assigned to
 	*/
 
 	$sql="SELECT bug.date,bug.details,bug.group_id,bug.priority,bug.bug_id,bug.summary,bug_resolution.resolution_name,bug_group.group_name,".
-		"bug.date,bug_category.category_name,bug_status.status_name,user.user_name,user.email,user2.email AS assigned_to_email, groups.group_name AS project_name ".
+		"bug.date,bug_category.category_name,bug_status.status_name,user.user_name,user.email,user2.email AS assigned_to_email, groups.group_name AS project_name,bug.assigned_to ".
 		"FROM bug,user,user user2,bug_category,bug_status,bug_group,bug_resolution,groups ".
-		"WHERE user2.user_id=bug.assigned_to AND bug.status_id=bug_status.status_id ".
+		"WHERE user2.user_id=bug.assigned_to ".
+                "AND bug.status_id=bug_status.status_id ".
 		"AND bug_resolution.resolution_id=bug.resolution_id AND bug_group.bug_group_id=bug.bug_group_id ".
 		"AND bug.category_id=bug_category.bug_category_id AND user.user_id=bug.submitted_by AND bug.bug_id='$bug_id' AND groups.group_id = bug.group_id";
 
@@ -288,7 +289,11 @@ function mail_followup($bug_id,$more_addresses=false) {
 
 		$subject='[Bug #'.db_result($result,0,'bug_id').'] '.util_unconvert_htmlspecialchars(db_result($result,0,'summary'));
 
-		$to=db_result($result,0,'email').','.db_result($result,0,'assigned_to_email');
+           if (db_result($result,0,'assigned_to') != 100) {
+		 $to=db_result($result,0,'email').','.db_result($result,0,'assigned_to_email');
+           } else {
+             $to=db_result($result,0,'email');
+           }
 
 		if ($more_addresses) {
 			$to .= ','.$more_addresses;

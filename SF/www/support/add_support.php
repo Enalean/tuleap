@@ -14,8 +14,12 @@ support_header(array ('title'=>'Submit a Support Request'));
 	<P>
 	<B>Fill out the form below.</B> Fill in complete information and make sure 
 	you include enough info that someone will be able to help you.
-	<P>
-	If you are requesting something that could affect security, <B>YOU MUST BE LOGGED IN</B>.
+	<P>';
+	
+	// LJ NO need for this remark. Related to https protocol 
+        // LJ echo 'If you are requesting something that could affect security, <B>YOU MUST BE LOGGED IN</B>.';
+
+	echo '
 	<P>
 	<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data">
 	<INPUT TYPE="HIDDEN" NAME="func" VALUE="postaddsupport">

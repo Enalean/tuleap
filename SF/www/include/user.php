@@ -187,6 +187,17 @@ function user_getrealname($user_id) {
 	}
 }
 
+// LJ - Added here because we use the real e-mail addresse
+// on CodeX - No e-mail aliases like on SF
+function user_getemail($user_id) {
+	$result = user_get_result_set($user_id); 
+	if ($result && db_numrows($result) > 0) {
+		return db_result($result,0,"email");
+	} else {
+		return 'Error - Not Found';
+	}
+}
+
 function user_get_result_set($user_id) {
 	//create a common set of user result sets,
 	//so it doesn't have to be fetched each time

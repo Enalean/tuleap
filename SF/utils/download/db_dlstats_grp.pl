@@ -15,7 +15,7 @@ $rel->execute();
 
 # for each day
 while(my ($day) = $rel->fetchrow()) {
-	print "Proecessing day $day...\n";
+	print "Processing day $day...\n";
 	undef(%daydl);
 
 	my $query = "SELECT (frs_dlstats_agg.downloads_http + frs_dlstats_agg.downloads_ftp) "

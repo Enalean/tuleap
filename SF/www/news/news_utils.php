@@ -20,12 +20,12 @@ function news_header($params) {
 	/*
 		Show horizontal links
 	*/
-	if ($group_id && ($group_id != 714)) {
+	if ($group_id && ($group_id != $GLOBALS['sys_news_group'])) {
 		site_project_header($params);
 	} else {
 		$HTML->header($params);
 		echo '
-			<H2>SourceForge <A HREF="/news/">News</A></H2>';
+			<H2>CodeX <A HREF="/news/">News</A></H2>';
 	}
 	echo '<P><B>';
 	echo '<A HREF="/news/submit.php?group_id='.$group_id.'">Submit</A> | <A HREF="/news/admin/?group_id='.$group_id.'">Admin</A></B>';
@@ -37,13 +37,18 @@ function news_footer($params) {
 	$HTML->footer($params);
 }
 
-function news_show_latest($group_id=714,$limit=10,$show_summaries=true) {
+function news_show_latest($group_id='',$limit=10,$show_summaries=true) {
 	global $sys_datefmt;
+	if (!$group_id) {
+	    $group_id=$GLOBALS['sys_news_group'];
+        }
+
 	/*
 		Show a simple list of the latest news items with a link to the forum
 	*/
 
-	if ($group_id != 714) {
+
+	if ($group_id != $GLOBALS['sys_news_group']) {
 		$wclause="news_bytes.group_id='$group_id' AND news_bytes.is_approved <> '4'";
 	} else {
 		$wclause='news_bytes.is_approved=1';
@@ -88,7 +93,7 @@ function news_show_latest($group_id=714,$limit=10,$show_summaries=true) {
 				'. $summ_txt .'<HR width="100%" size="1" noshade>';
 		}
 	}
-	if ($group_id != 714) {
+	if ($group_id != $GLOBALS['sys_news_group']) {
 		//you can only submit news from a project now
 		//you used to be able to submit general news
 		$return .= '<div align="center"><A HREF="/news/submit.php?group_id='.$group_id.'"><FONT SIZE="-1">[Submit News]</FONT></A></center>';

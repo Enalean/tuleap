@@ -10,14 +10,9 @@ require "pre.php";
 require "vote_function.php";
 $HTML->header(array("title"=>"New File Releases"));
 
-if ( !$offset || $offset < 0 ) {
-	$offset = 0;
-}
 
-// For expediancy, list only the filereleases in the past three days.
-$start_time = time() - (7 * 86400);
-
-$query	= "SELECT groups.group_name AS group_name,"
+function build_new_release_query ($start_time, $offset) {
+	$query	= "SELECT groups.group_name AS group_name,"
 	. "groups.group_id AS group_id,"
 	. "groups.unix_group_name AS unix_group_name,"
 	. "groups.short_description AS short_description,"
@@ -39,12 +34,43 @@ $query	= "SELECT groups.group_name AS group_name,"
 	. "AND frs_release.status_id=1 ) "
 	. "GROUP BY frs_release.release_id "
 	. "ORDER BY frs_release.release_date DESC LIMIT $offset,21";
+
+	return($query);
+}
+
+if ( !$offset || $offset < 0 ) {
+	$offset = 0;
+}
+
+// For expediancy, list only the filereleases in the past three days.
+//LJ $start_time = time() - (7 * 86400);
+$start_time = time() - (14 * 86400);
+
+$query = build_new_release_query($start_time, 0);
 $res_new = db_query( $query );
 
+
+// LJ In case there is less than 4 releases in the last N days
+// LJ then display the last ones regardless of how old they are
+// LJ We don't want an empty list when CodeX started and there
+// is little activity.
+if (!$res_new || db_numrows($res_new) < 4) {
+	$start_time = 0;
+	$query = build_new_release_query(0, 0);
+	$res_new = db_query( $query );
+}
+
+//LJ Modified by LJ. If there is exactly 0 no new
+//LJ release then it's not an error
+//LJ
 if (!$res_new || db_numrows($res_new) < 1) {
-	echo $query . "<BR><BR>";
-	echo db_error();
-	echo "<H1>No new releases found. </H1>";
+	if (!$res_new) {
+		echo $query . "<BR><BR>"	;
+		echo db_error();
+		echo "<H2>No new releases found. DB error.</H2>";
+	} else {
+		echo "<H2>No new releases found. </H2>";
+	}
 } else {
 
 	if ( db_numrows($res_new) > 20 ) {

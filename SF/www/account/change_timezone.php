@@ -29,7 +29,7 @@ $HTML->header(array('title'=>"Change Timezone"));
 ?>
 <H3>Timezone Change</h3>
 <P>
-Now, no matter where you live, you can see all dates and times throughout SourceForge 
+Now, no matter where you live, you can see all dates and times throughout CodeX 
 as if it were in your neighborhood.
 <P>
 <FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">

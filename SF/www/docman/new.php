@@ -12,7 +12,6 @@
 	by Quentin Cregan, SourceForge 06/2000
 */
 
-
 require('doc_utils.php');
 require('pre.php');
 
@@ -46,7 +45,7 @@ if($group_id) {
                 		$feedback .= ' Document Uploaded ';
         		} else {
                 		//too big or small
-                		$feedback .= ' ERROR - patch must be > 20 chars and < 512000 chars in length ';
+                		$feedback .= ' ERROR - document must be > 20 chars and < 512000 chars in length ';
                 		exit_error('Missing Info',$feedback.' - Please click back and fix the error.');
         		}
 		}
@@ -82,7 +81,7 @@ if($group_id) {
 
 			<b> Document Title: </b> Refers to the relatively brief title of the document (e.g. How to use the download server)
 			<br>
-			<b> Description: </b> A brief description to be placed just under the title.<br>
+			<b> Description: </b> A brief description to be placed just under the title. 255 characters maximum. Use of HTML tags is possible<br>
 
 			<form name="adddata" action="new.php?mode=add&group_id='.$group_id.'" method="POST" enctype="multipart/form-data">
 
@@ -90,21 +89,21 @@ if($group_id) {
 
 			<tr>
 			<th>Document Title:</th>
-			<td><input type="text" name="title" size="40" maxlength="255"></td>
+			<td><input type="text" name="title" size="60" maxlength="255"></td>
 
 			</tr>
 			<tr>
 			<th>Description:</th> 
-			<td><input type="text" name="description" size="50" maxlength="255"></td>
+			<!-- LJ td><input type="text" name="description" size="50" maxlength="255"></td -->
+			<td><textarea cols="60" rows="4"  wrap="virtual" name="description"></textarea></td>			</tr>
+
+			<tr>
+			<th> <input type="checkbox" name="upload_instead" value="1"> <B>Upload HTML File:</B></th>
+			<td> <input type="file" name="uploaded_data" size="50"></td>
 			</tr>
 
 			<tr>
-			<th> <input type="checkbox" name="upload_instead" value="1"> <B>Upload Text File:</B></th>
-			<td> <input type="file" name="uploaded_data" size="30"></td>
-			</tr>
-
-			<tr>
-			<th>OR Paste Document (in html format):</th>
+			<th>OR Paste Document (in HTML format):</th>
 			<td><textarea cols="60" rows="10" name="data"></textarea></td>
 			</tr>
 

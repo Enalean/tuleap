@@ -7,7 +7,7 @@
 // $Id$
 
 require "pre.php";    
-$HTML->header(array(title=>"Welcome to SourceForge"));
+$HTML->header(array(title=>"Welcome to CodeX"));
 
 print "<p>Page Information";
 print "<p>Page Information";
