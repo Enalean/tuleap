@@ -50,6 +50,7 @@ if( $submit ) {
       project_admin_footer(array());
       exit;
     }
+  }
       
     //create a new release of this package
       
@@ -239,7 +240,6 @@ if( $submit ) {
       $feedback .= " | FileName Invalid Or Does Not Exist: $file_name ";
     }
     
-  } // end if file_name == qrs_newfile
   
 } else {
 ?>
