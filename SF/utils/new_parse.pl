@@ -2,11 +2,12 @@
 #
 # $Id$
 #
-# new_parse.pl - new script to parse out the database dumps and create/update/delete user
-#		 accounts on the client machines
-use Sys::Hostname;
+# new_parse.pl - new script to parse out the database dumps and
+# create/update/delete user accounts on the client machines
 #
-# added by LJ
+
+
+use Sys::Hostname;
 use Carp;
 
 $hostname = hostname();
@@ -23,8 +24,12 @@ require("include.pl");  # Include all the predefined functions and variables
 
 my $user_file = $file_dir . "user_dump";
 my $group_file = $file_dir . "group_dump";
-my ($uid, $status, $username, $shell, $passwd, $realname);
+my ($uid, $status, $username, $shell, $passwd, $win_passwd, $winnt_passwd, $realname);
 my ($gname, $gstatus, $gid, $userlist);
+
+# Win accounts are activated if /etc/smbpasswd exists.
+my $winaccount_on = -f "/etc/smbpasswd";
+my $winempty_passwd = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
 
 # Open up all the files that we need.
 @userdump_array = open_array_file($user_file);
@@ -32,6 +37,7 @@ my ($gname, $gstatus, $gid, $userlist);
 @passwd_array = open_array_file("/etc/passwd");
 @shadow_array = open_array_file("/etc/shadow");
 @group_array = open_array_file("/etc/group");
+@smbpasswd_array = open_array_file("/etc/smbpasswd") if ($winaccount_on);
 
 #LJ The file containing all allowed root for CVS server
 #
@@ -44,7 +50,13 @@ my $cvs_root_allow_file = "/etc/cvs_root_allow";
 print ("\n\n	Processing Users\n\n");
 while ($ln = pop(@userdump_array)) {
 	chop($ln);
-	($uid, $status, $username, $shell, $passwd, $realname) = split(":", $ln);
+	($uid, $status, $username, $shell, $passwd, $win_passwd, $winnt_passwd, $realname) = split(":", $ln);
+
+	# if win passwords are empty in the SQL database then it means
+	# that it's a user that was created before Win Account were put in place
+	# Force it to the "X....X" real empty password
+	$win_passwd = $winempty_passwd if ($win_passwd eq "");
+	$winnt_passwd = $winempty_passwd if ($winnt_passwd eq "");
 
 # LJ commented out because it's all on the same machine for the moment
 # The SF site has  a cvs server which names start with cvs. We don't
@@ -61,18 +73,22 @@ while ($ln = pop(@userdump_array)) {
 	
 	if ($status eq 'A' && $user_exists) {
 		update_user($uid, $username, $realname, $shell, $passwd);
+		update_winuser($uid, $username, $realname, $win_passwd, $winnt_passwd);
 	
 	} elsif ($status eq 'A' && !$user_exists) {
 		add_user($uid, $username, $realname, $shell, $passwd);
+		add_winuser($uid, $username, $realname, $win_passwd, $winnt_passwd);
 	
 	} elsif ($status eq 'D' && $user_exists) {
 		delete_user($username);
+		delete_winuser($username);
 	
 	} elsif ($status eq 'D' && !$user_exists) {
 		print("Error trying to delete user: $username\n");
 		
 	} elsif ($status eq 'S' && $user_exists) {
 		suspend_user($username);
+		suspend_winuser($username);
 		
 	} elsif ($status eq 'S' && !$user_exists) {
 		print("Error trying to suspend user: $username\n");
@@ -183,6 +199,7 @@ while ($ln = pop(@groupdump_array)) {
 write_array_file("/etc/passwd", @passwd_array);
 write_array_file("/etc/shadow", @shadow_array);
 write_array_file("/etc/group", @group_array);
+write_array_file("/etc/smbpasswd", @smbpasswd_array) if ($winaccount_on);
 
 # LJ and write the CVS root file
 write_array_file($cvs_root_allow_file, @cvs_root_allow_array);
@@ -216,6 +233,17 @@ sub add_user {
 	system("chown -R $uid.$uid $home_dir");
 }
 
+sub add_winuser {  
+	my ($uid, $username, $realname, $win_passwd, $winnt_passwd) = @_;
+	
+	return if (!$winaccount_on);
+
+	$win_date = sprintf("%08X", time());
+		
+	push @smbpasswd_array, "$username:$uid:$win_passwd:$winnt_passwd:[U          ]:LCT-$win_date:$realname\n";
+
+}
+
 #############################
 # User Add Function
 #############################
@@ -235,6 +263,7 @@ sub update_user {
 			} elsif ($shell ne $p_shell) {
 				$passwd_array[$counter] = "$username:x:$uid:$uid:$p_realname:$p_homedir:$p_shell";
 			}
+			last;
 		}
 		$counter++;
 	}
@@ -247,10 +276,39 @@ sub update_user {
 			if ($passwd ne $s_passwd) {
 				$shadow_array[$counter] = "$username:$passwd:$s_date:$s_min:$s_max:$s_inact:$s_expire:$s_flag:$s_resv";
 			}
+			last;
 		}
 		$counter++;
 	}
 }
+
+sub update_winuser {
+  ($uid, $username, $realname, $win_passwd, $winnt_passwd) = @_;
+  
+  my ($p_username, $p_uid, $p_win_passwd, $p_winnt_passwd,$p_account_bits,
+      $p_last_set_time, $p_realname);
+	
+  return if (!$winaccount_on);
+
+  my $counter = 0;
+  foreach (@smbpasswd_array) {
+    ($p_username, $p_uid, $p_win_passwd, $p_winnt_passwd,$p_account_bits,
+     $p_last_set_time, $p_realname) = split(":", $_);
+    
+    if ($uid == $p_uid) {
+      $win_date = sprintf("%08X", time());
+      
+      if ($win_passwd ne $p_win_passwd) {
+	$smbpasswd_array[$counter] = "$username:$uid:$win_passwd:$winnt_passwd:[U          ]:LCT-$win_date:$realname\n";
+      }
+      last;
+    }
+    $counter++;
+  }
+	
+}
+
+
 
 #############################
 # User Deletion Function
@@ -272,6 +330,25 @@ sub delete_user {
 	system("rm -fr $homedir_prefix/$username");
 }
 
+sub delete_winuser {
+	my $this_user = shift(@_);
+	my ($username, $uid, $win_passwd, $winnt_passwd,$account_bits,
+	    $last_set_time, $realname);
+	
+	return if (!$winaccount_on);
+
+	foreach (@smbpasswd_array) {
+	  ($username, $uid, $win_passwd, $winnt_passwd,$account_bits,
+	    $last_set_time, $realname) = split(":", $_);
+
+	  if ($this_user eq $username) {
+	    $smbpasswd_array[$counter] = '';
+	  }
+	  $counter++;
+	}
+	
+}
+
 #############################
 # User Suspension Function
 #############################
@@ -279,17 +356,44 @@ sub suspend_user {
 	my $this_user = shift(@_);
 	my ($s_username, $s_passwd, $s_date, $s_min, $s_max, $s_inact, $s_expire, $s_flag, $s_resv, $counter);
 	
-	my $new_pass = "!!" . $s_passwd;
-	
+        $counter =0;	
 	foreach (@shadow_array) {
-		($s_username, $s_passwd, $s_date, $s_min, $s_max, $s_inact, $s_expire, $s_flag, $s_resv) = split(":", $_);
-		if ($username eq $s_username) {
-		       $shadow_array[$counter] = "$s_username:$new_pass:$s_date:$s_min:$s_max:$s_inact:$s_expire:$s_flag:$s_resv";
-		}
-		$counter++;
+	  ($s_username, $s_passwd, $s_date, $s_min, $s_max, $s_inact, $s_expire, $s_flag, $s_resv) = split(":", $_);
+	  if ($this_user eq $s_username) {
+	    # if already suspended then give up
+	    if ($s_passwd =~ /^!!/) {
+		last;
+	    } else {
+	        my $new_passwd = "!!" . $s_passwd;
+	        $shadow_array[$counter] = "$s_username:$new_passwd:$s_date:$s_min:$s_max:$s_inact:$s_expire:$s_flag:$s_resv";
+	    }
+	  }
+	  $counter++;
 	}
 }
 
+sub suspend_winuser {
+	my $this_user = shift(@_);
+	my ($username, $uid, $win_passwd, $winnt_passwd,$account_bits,
+	    $last_set_time, $realname);
+	
+	return if (!$winaccount_on);
+
+	my $counter = 0;
+	my $new_account_bits = "[DU         ]"; # D flag for suspended
+	foreach (@smbpasswd_array) {
+	  ($username, $uid, $win_passwd, $winnt_passwd,$account_bits,
+	    $last_set_time, $realname) = split(":", $_);
+
+	  if ($this_user eq $username) {
+	    # if already suspended then give up
+	    last if ($account_bits =~ /DU/);
+	    $smbpasswd_array[$counter] = "$username:$uid:$win_passwd:$winnt_passwd:$new_account_bits:$last_set_time:$realname";
+	  }
+	  $counter++;
+	}
+
+}
 
 #############################
 # Group Add Function
