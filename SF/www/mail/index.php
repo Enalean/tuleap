@@ -48,11 +48,16 @@ if ($group_id) {
 		"<TR><TD VALIGN=\"TOP\">\n"; 
 
 	for ($j = 0; $j < $rows; $j++) {
-		echo '<A HREF="http://codex.xerox.com/pipermail/'.
-			db_result($result, $j, 'list_name').'"><IMG SRC="/images/ic/cfolder15.png" HEIGHT=13 WIDTH=15 BORDER=0> &nbsp; '.db_result($result, $j, 'list_name').' Archives</A>'; 
-		echo ' (go to <A HREF="http://'.$GLOBALS['sys_lists_host'].'/mailman/listinfo/'.
-			db_result($result, $j, 'list_name').'">Subscribe/Unsubscribe/Preferences</A>)<BR>';
-		echo '&nbsp;'.  db_result($result, $j, 'description') .'<P>';
+
+	    $list_name = db_result($result, $j, 'list_name');
+
+	    echo '<IMG SRC="/images/ic/cfolder15.png" HEIGHT="13" WIDTH="15" BORDER="0">&nbsp;<b>'.$list_name.'</b> ['.
+		' <A HREF="http://'.$GLOBALS['sys_lists_host'].'/pipermail/'.$list_name.'">Archives</A>';
+	  
+		echo ' | <A HREF="http://'.$GLOBALS['sys_lists_host'].'/mailman/listinfo/'.$list_name.'">(Un)Subscribe/Preferences</A>)';
+		echo ' | <A HREF="http://'.$GLOBALS['sys_lists_host'].'/mailman/admin/'.$list_name.'">ML Administration</A> ]';
+		
+		echo '<br>&nbsp;'.  db_result($result, $j, 'description') .'<P>';
 	}
 	echo '</TD></TR></TABLE>';
 
