@@ -18,12 +18,15 @@ function printnode ($nodeid,$text,$delete_ok=false) {
 	for ($i=0;$i<$GLOBALS[depth];$i++) { print "&nbsp; &nbsp; "; }
 	html_image('ic/cfolder15.png',array());
 	print ('&nbsp; '.$text." ");
-	print ('&nbsp; <A href="trove_cat_edit.php?trove_cat_id='.$nodeid.'">[Edit]</A> ');
+	if ($text!="root") {
+	  print ('&nbsp; <A href="trove_cat_edit.php?trove_cat_id='.$nodeid.'">[Edit]</A> ');
+	}
 	if ($delete_ok) {
 	    print ('&nbsp; <A href="trove_cat_delete.php?trove_cat_id='.$nodeid.'">[Delete]</A> ');
 	}
-	print ('&nbsp;'.help_button('trove_cat',$nodeid)."\n");
-
+	if ($text!="root") {
+	  print ('&nbsp;'.help_button('trove_cat',$nodeid)."\n");
+	}
 	$GLOBALS["depth"]++;
 	$res_child = db_query("SELECT trove_cat_id,fullname,parent FROM trove_cat "
 		."WHERE parent='$nodeid'");

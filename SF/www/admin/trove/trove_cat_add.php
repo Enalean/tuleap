@@ -46,6 +46,8 @@ $HTML->header(array(title=>"Trove - Add Node"));
 <br><SELECT name="form_parent">
 <?php
 // generate list of possible parents
+// add root which is not in db
+print ('<OPTION value="0">Root'."\n");
 $res_cat = db_query("SELECT shortname,fullname,trove_cat_id FROM trove_cat");
 while ($row_cat = db_fetch_array($res_cat)) {
 	print ('<OPTION value="'.$row_cat["trove_cat_id"].'">'.$row_cat["fullname"]."\n");
