@@ -144,7 +144,7 @@ if ( $func == 'gotoid' ) {
 
                                 // send an email to notify the user of the artifact update
                                 $ah->mailFollowup($ath->getEmailAddress(),$null);
-                                $feedback .= ' Item Successfully Created ';
+                                $feedback .= '- Item Successfully Created (#'.$ah->getID().')';
                             require('./browse.php');
                         }
                 }
