@@ -108,7 +108,9 @@ for ($i=0; $i<$quest_count; $i++) {
 		*/
 
 		if ($answers_cnt > 0) {
-		    $sql="SELECT avg(response) AS avg FROM survey_responses WHERE survey_id='$survey_id' AND question_id='$quest_array[$i]' AND group_id='$group_id'";
+		    $sql='SELECT avg(response) AS avg FROM survey_responses '.
+			"WHERE survey_id='$survey_id' AND question_id='$quest_array[$i]' ".
+			"AND response IN (1,2,3,4,5)  AND group_id='$group_id'";
 
 		    $result2=db_query($sql);
 		    if (!$result2 || db_numrows($result2) < 1) {
@@ -174,7 +176,9 @@ for ($i=0; $i<$quest_count; $i++) {
 		*/
 		if ($answers_cnt > 0) {
 
-		    $sql="SELECT avg(response) AS avg FROM survey_responses WHERE survey_id='$survey_id' AND question_id='$quest_array[$i]' AND group_id='$group_id'";
+		    $sql='SELECT avg(response) AS avg FROM survey_responses '.
+			"WHERE survey_id='$survey_id' AND question_id='$quest_array[$i]' ".
+			"AND response IN (1,5) AND group_id='$group_id'";
 
 		    $result2=db_query($sql);
 		    if (!$result2 || db_numrows($result2) < 1) {
