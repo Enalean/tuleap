@@ -109,9 +109,9 @@ class ArtifactFile extends Error {
 		} else {
 			$this->clearError();
 
-			$changes['attach']['description'] = $file_description;
-			$changes['attach']['name'] = $input_file_name;
-			$changes['attach']['size'] = $input_file_size;
+			$changes['attach']['description'] = $description;
+			$changes['attach']['name'] = $filename;
+			$changes['attach']['size'] = $filesize;
 
 			// Determine which protocol to use for the URL of the attachement
 			if (session_issecure()) {
