@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
-# Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2003. All Rights Reserved
+# Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2004. All Rights Reserved
 # This file is licensed under the CodeX Component Software License
 # http://codex.xerox.com
 #
@@ -11,7 +11,7 @@
 #
 #  $Id$
 #
-#      Originally written by Laurent Julliard 2003, CodeX Team, Xerox
+#      Originally written by Laurent Julliard 2004, CodeX Team, Xerox
 #
 #  This file is part of the CodeX software and must be place at the same
 #  level as the CodeX, RPMS_CodeX and nonRPMS_CodeX directory when
@@ -26,6 +26,7 @@ nonRPMS_DIR=${TOP_DIR}/nonRPMS_CodeX
 CodeX_DIR=${TOP_DIR}/CodeX
 TODO_FILE=/tmp/todo_codex.txt
 CODEX_TOPDIRS="SF site-content documentation cgi-bin codex_tools"
+INSTALL_DIR="/home/httpd"
 
 # path to command line tools
 GROUPADD='/usr/sbin/groupadd'
@@ -67,7 +68,7 @@ create_group() {
 
 build_dir() {
     # $1: dir path, $2: user, $3: group, $4: permission
-    $MKDIR -p "$1" 2>/dev/null; chown "$2.$3" "$1";chmod "$4" "$1";
+    $MKDIR -p "$1" 2>/dev/null; $CHOWN "$2.$3" "$1";$CHMOD "$4" "$1";
 }
 
 make_backup() {
@@ -109,11 +110,11 @@ do
 done
 
 ##############################################
-# Check we are running on RH 7.3
+# Check we are running on RHEL 3 ES
 #
 RH_RELEASE="3ES"
 yn="y"
-rpm -q redhat-release-${RH_RELEASE} 2>/dev/null 1>&2
+$RPM -q redhat-release-${RH_RELEASE} 2>/dev/null 1>&2
 if [ $? -eq 1 ]; then
     cat <<EOF
 This machine is not running RedHat Enterprise Linux ${RH_RELEASE}. Executing this install
@@ -230,7 +231,7 @@ $USERADD -c 'Dummy CodeX User' -M -d '/home/dummy' -u 103 -g 103 dummy
 
 # Build file structure
 
-build_dir /home/httpd sourceforge sourceforge 775
+build_dir $INSTALL_DIR sourceforge sourceforge 775
 build_dir /home/users sourceforge sourceforge 775
 build_dir /home/groups sourceforge sourceforge 775
 
@@ -258,8 +259,12 @@ build_dir /etc/skel_codex root root 755
 build_dir /etc/codex sourceforge sourceforge 755
 build_dir /etc/codex/conf sourceforge sourceforge 755
 build_dir /etc/codex/documentation sourceforge sourceforge 755
+build_dir /etc/codex/documentation/user_guide sourceforge sourceforge 755
+build_dir /etc/codex/documentation/user_guide/xml sourceforge sourceforge 755
+build_dir /etc/codex/documentation/user_guide/xml/en_US sourceforge sourceforge 755
 build_dir /etc/codex/site-content sourceforge sourceforge 755
 build_dir /etc/codex/site-content/en_US sourceforge sourceforge 755
+build_dir /etc/codex/site-content/en_US/others sourceforge sourceforge 755
 build_dir /etc/codex/themes sourceforge sourceforge 755
 build_dir /etc/codex/themes/css sourceforge sourceforge 755
 build_dir /etc/codex/themes/images sourceforge sourceforge 755
@@ -269,6 +274,15 @@ build_dir /cvsroot sourceforge sourceforge 755
 build_dir /cvsroot/.mysql_backup/old root root 775
 build_dir /svnroot sourceforge sourceforge 755
 
+$TOUCH /home/ftp/incoming/.delete_files
+$CHOWN sourceforge.ftpadmin /home/ftp/incoming/.delete_files
+$CHMOD 755 /home/ftp/incoming/.delete_files
+$TOUCH /home/ftp/incoming/.delete_files.work
+$CHOWN sourceforge.ftpadmin /home/ftp/incoming/.delete_files.work
+$CHMOD 755 /home/ftp/incoming/.delete_files.work
+build_dir /home/ftp/codex/DELETED sourceforge sourceforge 755
+
+
 ######
 # Now install CodeX specific RPMS (and remove RedHat RPMs)
 #
@@ -276,6 +290,8 @@ build_dir /svnroot sourceforge sourceforge 755
 # -> wu-ftpd
 echo "Removing Redhat vsftp daemon.."
 $RPM -e --nodeps vsftpd 2>/dev/null
+echo "Removing existing wu-ftp daemon.."
+$RPM -e --nodeps wu-ftpd 2>/dev/null
 echo "Installing wu-ftpd..."
 cd ${RPMS_DIR}/wu-ftpd
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
@@ -463,11 +479,11 @@ $CHMOD u+s /usr/local/bin/tmpfilemove
 # Install the CodeX software 
 #
 echo "Installing the CodeX software..."
-cd /home/httpd
+cd $INSTALL_DIR
 $TAR xfz ${CodeX_DIR}/codex*.tgz
-$CHOWN -R sourceforge.sourceforge /home/httpd
-$FIND /home/httpd -type f -exec $CHMOD u+rw,g+rw,o-w+r, {} \;
-$FIND /home/httpd -type d -exec $CHMOD 775 {} \;
+$CHOWN -R sourceforge.sourceforge $INSTALL_DIR
+$FIND $INSTALL_DIR -type f -exec $CHMOD u+rw,g+rw,o-w+r, {} \;
+$FIND $INSTALL_DIR -type d -exec $CHMOD 775 {} \;
 
 make_backup /etc/httpd/conf/httpd.conf
 for f in /etc/httpd/conf/httpd.conf \
@@ -480,7 +496,7 @@ for f in /etc/httpd/conf/httpd.conf \
 
     if [ "$yn" = "y" ]; then
 	$CP -f $f $f.orig
-	$CP -f /home/httpd/SF/etc/$fn.dist $f
+	$CP -f $INSTALL_DIR/SF/etc/$fn.dist $f
     fi
 
     $CHOWN sourceforge.sourceforge $f
@@ -494,14 +510,14 @@ done
 #
 $MKDIR -p  /etc/codex/documentation/user_guide/xml/en_US
 $CHOWN -R sourceforge.sourceforge /etc/codex/documentation
-$CP /home/httpd/documentation/user_guide/xml/en_US/ParametersLocal.dtd /etc/codex/documentation/user_guide/xml/en_US
-$MKDIR -p  /home/httpd/documentation/user_guide/html/en_US
-$CHOWN -R sourceforge.sourceforge /home/httpd/documentation/user_guide/html/en_US
-$MKDIR -p  /home/httpd/documentation/user_guide/pdf/en_US
-$CHOWN -R sourceforge.sourceforge /home/httpd/documentation/user_guide/pdf/en_US
+$CP $INSTALL_DIR/documentation/user_guide/xml/en_US/ParametersLocal.dtd /etc/codex/documentation/user_guide/xml/en_US
+$MKDIR -p  $INSTALL_DIR/documentation/user_guide/html/en_US
+$CHOWN -R sourceforge.sourceforge $INSTALL_DIR/documentation/user_guide/html/en_US
+$MKDIR -p  $INSTALL_DIR/documentation/user_guide/pdf/en_US
+$CHOWN -R sourceforge.sourceforge $INSTALL_DIR/documentation/user_guide/pdf/en_US
 $TOUCH /etc/httpd/conf/codex_vhosts.conf
 $TOUCH /etc/httpd/conf/codex_svnhosts.conf
-$CP /home/httpd/codex_tools/backup_job /home/tools
+$CP $INSTALL_DIR/codex_tools/backup_job /home/tools
 $CHOWN root.root /home/tools/backup_job
 $CHMOD 740 /home/tools/backup_job
 
@@ -526,21 +542,21 @@ todo "Customize /etc/codex/conf/local.inc"
 todo "Customize /etc/httpd/conf/httpd.conf"
 #todo "Customize /etc/httpd/conf/cvsweb.conf. Edit %CVSROOT (if needed) and $logo"
 todo "Customize /etc/httpd/conf/mailman.conf"
-todo "Customize /home/httpd/documentation/user_guide/xml/en_US/ParametersLocal.dtd"
+todo "Customize $INSTALL_DIR/documentation/user_guide/xml/en_US/ParametersLocal.dtd"
 todo "Customize /home/tools/backup_job"
 
 ##############################################
 # Installing phpMyAdmin
 #
 echo "Installing phpMyAdmin..."
-cd /home/httpd
+cd $INSTALL_DIR
 $RM -rf phpMyAdmin*
 $TAR xfj ${nonRPMS_DIR}/phpMyAdmin/phpMyAdmin-*
 dir_entry=`$LS -1d phpMyAdmin-*`
 $LN -sf ${dir_entry} phpMyAdmin
-$CHOWN -R sourceforge.sourceforge /home/httpd/phpMyAdmin*
+$CHOWN -R sourceforge.sourceforge $INSTALL_DIR/phpMyAdmin*
 
-todo "Customize phpMyAdmin. Edit /home/httpd/phpMyAdmin/config.inc.php"
+todo "Customize phpMyAdmin. Edit $INSTALL_DIR/phpMyAdmin/config.inc.php"
 todo "  - $cfg['PmaAbsoluteUri'] = 'http://$sys_default_domain/phpMyAdmin';"
 todo "  - $cfg['Servers'][$i]['auth_type']     = 'http'; "
 todo "  - $cfg['Servers'][$i]['user']          = 'sourceforge';"
@@ -583,7 +599,7 @@ fi
 
 if [ $freshdb -eq 1 ]; then
 echo "Populating the CodeX database..."
-cd /home/httpd/SF/db/mysql/
+cd $INSTALL_DIR/SF/db/mysql/
 $MYSQL -u sourceforge sourceforge --password=$sf_passwd < database_structure.sql   # create the DB
 cp database_initvalues.sql /tmp/database_initvalues.sql
 substitute '/tmp/database_initvalues.sql' '_DOMAIN_NAME_' "$sys_default_domain"
@@ -679,7 +695,7 @@ service cvspserver
 }
 EOF
 
-cd /home/httpd/SF/utils/cvs1
+cd $INSTALL_DIR/SF/utils/cvs1
 $CP log_accum /usr/local/bin
 $CP commit_prep /usr/local/bin
 cd /usr/local/bin
@@ -687,7 +703,7 @@ $CHOWN sourceforge.sourceforge log_accum commit_prep
 $CHMOD 755 log_accum commit_prep
 $CHMOD u+s log_accum   # sets the uid bit (-rwsr-xr-x)
 
-cd /home/httpd/SF/etc
+cd $INSTALL_DIR/SF/etc
 #$CP cvsweb.conf.dist /etc/httpd/conf/cvsweb.conf
 #$CHOWN root.root /etc/httpd/conf/cvsweb.conf
 #$CHMOD 644 /etc/httpd/conf/cvsweb.conf
@@ -696,7 +712,7 @@ cd /home/httpd/SF/etc
 # Samba configuration
 #
 cd /usr/local/bin
-$CP /home/httpd/SF/utils/gensmbpasswd.pl gensmbpasswd
+$CP $INSTALL_DIR/SF/utils/gensmbpasswd.pl gensmbpasswd
 $CHOWN sourceforge.sourceforge gensmbpasswd
 $CHMOD 755 gensmbpasswd
 
@@ -704,7 +720,7 @@ $CHMOD 755 gensmbpasswd
 # Subversion configuration
 #
 echo "Configuring the Subversion server and tracking tools..."
-cd /home/httpd/SF/utils/svn
+cd $INSTALL_DIR/SF/utils/svn
 $CP commit-email.pl /usr/local/bin
 cd /usr/local/bin
 $CHOWN sourceforge.sourceforge commit-email.pl
@@ -783,7 +799,7 @@ yn="y"
 if [ "$yn" = "y" ]; then
     $MKDIR -p /etc/codex/site-content/en_US/others
     $CHOWN sourceforge.sourceforge /etc/codex/site-content/en_US/others
-    $CP /home/httpd/site-content/en_US/others/default_page.php /etc/codex/site-content/en_US/others/default_page.php
+    $CP $INSTALL_DIR/site-content/en_US/others/default_page.php /etc/codex/site-content/en_US/others/default_page.php
 fi
 todo "Customize /etc/codex/site-content/en_US/others/default_page.php (project web site default home page)"
 
@@ -885,7 +901,7 @@ $CHMOD 644 /etc/sysconfig/i18n
 ##############################################
 # Log Files rotation configuration
 #
-make_backup "/etc/logrotate.d/httpd"
+#make_backup "/etc/logrotate.d/httpd" # don't make backup, or both backup and original will be used.
 echo "Installing log files rotation..."
 $CAT <<'EOF' >/etc/logrotate.d/httpd
 /var/log/httpd/access_log {
@@ -969,7 +985,7 @@ $CHOWN root.root /etc/logrotate.d/httpd
 $CHMOD 644 /etc/logrotate.d/httpd
 
 
-make_backup "/etc/logrotate.d/ftpd"
+#make_backup "/etc/logrotate.d/ftpd" # don't make backup, or both backup and original will be used.
 $CAT <<'EOF' >/etc/logrotate.d/ftpd
 /var/log/xferlog {
     # ftpd doesn't handle SIGHUP properly
@@ -1065,7 +1081,7 @@ todo "  - register_globals = On"
 todo "  - memory_limit = 30M"
 todo "  - post_max_size = 20M"
 todo "  - upload_max_file_size = 20M"
-todo "  - include_path = .:/home/httpd/SF/www/include:/home/httpd/SF/www/phpMyAdmin"
+todo "  - include_path = .:$INSTALL_DIR/SF/www/include:$INSTALL_DIR/SF/www/phpMyAdmin"
 
 # things to do by hand
 todo "Change the default login shell if needed in the database (/sbin/nologin or /usr/local/bin/cvssh, etc."

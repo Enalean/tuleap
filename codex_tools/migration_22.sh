@@ -13,9 +13,11 @@
 #
 #      Originally written by Laurent Julliard 2004, CodeX Team, Xerox
 #
+#  This file is part of the CodeX software and must be place at the same
+#  level as the CodeX, RPMS_CodeX and nonRPMS_CodeX directory when
+#  delivered on a CD or by other means
 #
-# This file will eventually become the script that migrates a 
-# a site running CodeX 2.0 to CodeX 2.2
+#  This script migrates a site running CodeX 2.0 to CodeX 2.2
 #
 
 progname=$0
@@ -26,7 +28,7 @@ nonRPMS_DIR=${TOP_DIR}/nonRPMS_CodeX
 CodeX_DIR=${TOP_DIR}/CodeX
 TODO_FILE=/tmp/todo_codex_migration.txt
 CODEX_TOPDIRS="SF site-content documentation cgi-bin codex_tools"
-INSTALL_DIR="/home/httpd/"
+INSTALL_DIR="/home/httpd"
 
 # path to command line tools
 GROUPADD='/usr/sbin/groupadd'
@@ -60,6 +62,12 @@ MKDIR RPM CHOWN CHMOD FIND TOUCH CAT MAKE TAIL GREP CHKCONFIG \
 SERVICE PERL"
 
 # Functions
+create_group() {
+    # $1: groupname, $2: groupid
+    $GROUPDEL "$1" 2>/dev/null
+    $GROUPADD -g "$2" "$1"
+}
+
 build_dir() {
     # $1: dir path, $2: user, $3: group, $4: permission
     $MKDIR -p "$1" 2>/dev/null; $CHOWN "$2.$3" "$1";$CHMOD "$4" "$1";
@@ -88,7 +96,7 @@ die() {
 
 substitute() {
   # $1: filename, $2: string to match, $3: replacement string
-  $PERL -pi -e 's/$2/$3/g' $1
+  $PERL -pi -e "s/$2/$3/g" $1
 }
 
 ##############################################
@@ -161,7 +169,7 @@ rpms_ok=1
 for rpm in openssh-server openssh openssh-clients openssh-askpass \
    openssl openldap perl perl-DBI perl-CGI gd gcc \
    sendmail telnet bind ntp samba python php php-mysql php-ldap enscript \
-   bind
+   bind python-devel rcs
 do
     $RPM -q $rpm  2>/dev/null 1>&2
     if [ $? -eq 1 ]; then
@@ -189,8 +197,9 @@ read -p "Codex Server IP address: " sys_ip_address
 # CodeX 2.2/RHEL ES 3
 #
 mailman_id=`id mailman`
-if [ $mailman_id -eq 105 ]; then
+if [ $mailman_id -eq 105 ]; then  
    
+# XXXXXXXXXXXX NEED TO DO SOMETHING?
 
 ##############################################
 # Create new directory structure for configuration and
@@ -212,6 +221,8 @@ build_dir /etc/codex/themes/css sourceforge sourceforge 755
 build_dir /etc/codex/themes/images sourceforge sourceforge 755
 build_dir /svnroot sourceforge sourceforge 755
 
+build_dir /home/ftp/codex/DELETED sourceforge sourceforge 755
+
 # Move configuration file
 $MV /etc/local.inc /etc/codex/conf/local.inc
 
@@ -227,15 +238,17 @@ todo "- Customize the sys_win_domain parameter in /etc/codex/conf/local.inc"
 echo "Removing existing wu-ftp daemon.."
 $RPM -e --nodeps wu-ftpd 2>/dev/null
 echo "Installing wu-ftpd..."
-cd ${RPMS_DIR}/others
-$RPM -Uvh --force wu-ftpd*.i386.rpm
+cd ${RPMS_DIR}/wu-ftpd
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh --force ${newest_rpm}/wu-ftpd*.i386.rpm
 
 # -> perlsuid
 echo "Removing Perl suid if any..."
-$RPM -e --nodeps perlsuid-perl 2>/dev/null
+$RPM -e --nodeps perl-suidperl 2>/dev/null
 echo "Installing Perl suid..."
-cd ${RPMS_DIR}/others
-$RPM -Uvh --force perl-suidperl*.i386.rpm
+cd ${RPMS_DIR}/perl-suidperl
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh --force ${newest_rpm}/perl-suidperl*.i386.rpm
 
 # -> Perl DBD for MySQL
 echo "Removing Redhat Perl DBD MySQL if any..."
@@ -251,7 +264,7 @@ $SERVICE mysql stop 2>/dev/null
 sleep 2
 [ -e /usr/bin/mysqladmin ] && /usr/bin/mysqladmin shutdown 2>/dev/null
 sleep 2
-$RPM -e --nodeps MySQL MySQL-client MySQL-shared mysql-bench MySQL-bench MySQL-devel 2>/dev/null
+$RPM -e --nodeps MySQL MySQL-client MySQL-shared mysql-bench MySQL-bench MySQL-devel MySQL-server 2>/dev/null
 echo "Installing MySQL RPMs for CodeX...."
 cd ${RPMS_DIR}/mysql
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
@@ -271,10 +284,13 @@ $RPM -Uvh --force ${newest_rpm}/MySQL-python-*.i386.rpm
 echo "Removing existing Apache..."
 $SERVICE httpd stop
 $RPM -e --nodeps apache apache-devel apache-manual httpd httpd-devel httpd-manual 2>/dev/null
+$RPM -e --nodeps 'apr*' apr-util mod_ssl db4-devel db4-utils 2>/dev/null
 echo "Installing Apache RPMs for CodeX...."
 cd ${RPMS_DIR}/apache
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --force ${newest_rpm}/httpd-*.i386.rpm
+$RPM -Uvh --force ${newest_rpm}/db42-4.*.i386.rpm ${newest_rpm}/db42-utils*.i386.rpm
+$RPM -Uvh --force ${newest_rpm}/apr-0.*.i386.rpm ${newest_rpm}/apr-util-0.*.i386.rpm
+$RPM -Uvh --force ${newest_rpm}/httpd-2*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/mod_ssl-*.i386.rpm
 $CHKCONFIG httpd on
 # restart Apache after subversion installation - see below
@@ -285,9 +301,9 @@ $RPM -e --nodeps jre j2re 2>/dev/null
 echo "Installing Java JRE RPMs for CodeX...."
 cd ${RPMS_DIR}/jre
 newest_rpm=`$LS -1 -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --force ${newest_rpm}/j2re-*.i?86.rpm
+$RPM -Uvh --force ${newest_rpm}/j2re-*i?86.rpm
 cd /usr/java
-newest_jre=`$LS -1d jre* | $TAIL -1`
+newest_jre=`$LS -1d j2re* | $TAIL -1`
 $LN -sf $newest_jre jre
 
 # -> cvs
@@ -300,15 +316,13 @@ $RPM -Uvh --force ${newest_rpm}/cvs-*.i386.rpm
 
 # -> subversion
 echo "Removing existing subversion .."
-$RPM -e --nodeps `rpm -qa 'subversion*' 'apr*' 'neon*' 'rapidsvn*'` 2>/dev/null
-$RPM -e --nodeps db4-devel db4-utils 2>/dev/null
+$RPM -e --nodeps `rpm -qa 'subversion*' 'swig*' 'neon*' 'rapidsvn*'` 2>/dev/null
 echo "Installing Subversion RPMs for CodeX...."
 cd ${RPMS_DIR}/subversion
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --force ${newest_rpm}/db42-4.*.i386.rpm ${newest_rpm}/db42-utils*.i386.rpm
-$RPM -Uvh --force ${newest_rpm}/neon.*.i386.rpm
-$RPM -Uvh --force ${newest_rpm}/apr-0.*.i386.rpm ${newest_rpm}/apr-util*.i386.rpm
-$RPM -Uvh --force ${newest_rpm}/subversion-1.*.i386.rpm \
+$RPM -Uvh --force ${newest_rpm}/neon-0*.i386.rpm
+$RPM -Uvh --force ${newest_rpm}/swig-1*.i386.rpm
+$RPM -Uvh --force ${newest_rpm}/subversion-1.*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/subversion-server*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/subversion-python*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/subversion-tools*.i386.rpm
@@ -316,6 +330,13 @@ $RPM -Uvh --force ${newest_rpm}/subversion-tools*.i386.rpm
 # Restart Apache after subversion is installed
 # so that mod_dav_svn module is taken into account
 $SERVICE httpd restart
+
+# -> cvsgraph
+$RPM -e --nodeps cvsgraph 2>/dev/null
+echo "Installing cvsgraph RPM for CodeX...."
+cd ${RPMS_DIR}/cvsgraph
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh --force ${newest_rpm}/cvsgraph-*i?86.rpm
 
 # -> viewcvs 
 echo "Removing installed viewcvs if any .."
@@ -334,11 +355,13 @@ $CHMOD 775 /etc/httpd/conf/codex_htpasswd
 echo "Removing existing perl-Crypt-SmbHash..."
 $RPM -e --nodeps perl-Crypt-SmbHash 2>/dev/null
 echo "Installing perl-Crypt-SmbHash..."
-cd ${RPMS_DIR}/others
-$RPM -Uvh --force perl-Crypt-SmbHash*.noarch.rpm
+cd ${RPMS_DIR}/perl-Crypt-SmbHash
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh --force ${newest_rpm}/perl-Crypt-SmbHash*.noarch.rpm
+
 cd /usr/local/bin
 $RM -f gensmbpasswd
-$CP /home/httpd/SF/utils/gensmbpasswd.pl gensmbpasswd
+$CP $INSTALL_DIR/SF/utils/gensmbpasswd.pl gensmbpasswd
 $CHOWN sourceforge.sourceforge gensmbpasswd
 $CHMOD 755 gensmbpasswd
 
@@ -790,7 +813,7 @@ $MV httpd httpd_20
 $MKDIR httpd;
 cd httpd
 $TAR xfz ${CodeX_DIR}/codex*.tgz
-$CHOWN -R sourceforge.sourceforge /home/httpd
+$CHOWN -R sourceforge.sourceforge $INSTALL_DIR
 
 # copy some configuration files 
 make_backup /etc/httpd/conf/httpd.conf codex20
@@ -816,14 +839,14 @@ todo "Edit the new /etc/httpd/conf.d/subversion.conf file and update it if neede
 # Installing phpMyAdmin
 #
 echo "Installing phpMyAdmin..."
-cd /home/httpd
+cd $INSTALL_DIR
 $RM -rf phpMyAdmin*
 $TAR xfj ${nonRPMS_DIR}/phpMyAdmin/phpMyAdmin-*
 dir_entry=`$LS -1d phpMyAdmin-*`
 $LN -sf ${dir_entry} phpMyAdmin
-$CHOWN -R sourceforge.sourceforge /home/httpd/phpMyAdmin*
+$CHOWN -R sourceforge.sourceforge $INSTALL_DIR/phpMyAdmin*
 
-todo "Customize phpMyAdmin. Edit /home/httpd/phpMyAdmin/config.inc.php"
+todo "Customize phpMyAdmin. Edit $INSTALL_DIR/phpMyAdmin/config.inc.php"
 todo "  - $cfg['PmaAbsoluteUri'] = 'http://$sys_default_domain/phpMyAdmin';"
 todo "  - $cfg['Servers'][$i]['auth_type']     = 'http'; "
 todo "  - $cfg['Servers'][$i]['user']          = 'sourceforge';"
@@ -933,14 +956,14 @@ When migrating a 2.0 site to 2.2 here are the things that must be done:
 - DONE - change mailman crontab cron/qrunner becomes bin/qrunner -o -r All
 - DONE - move codex.zone and codex_full.zone from /usr/local/domain/data/primary/ into /var/named
 - DONE - Add an svn and svn1 alias in the /var/named/codex.zone file
-- DONE - if /home/httpd/site-content/custom exists then move all files (and subdir) into /etc/codex/site-documentation
+- DONE - if $INSTALL_DIR/site-content/custom exists then move all files (and subdir) into /etc/codex/site-documentation
 - DONE - if /etc/motd.inc exists move it into /etc/codex/site-content/en_US/others/motd.txt
-- DONE - if /home/httpd/SF/www/css/custom exist then move all subdirs in /etc/codex/themes/css
-- DONE - if /home/httpd/SF/www/images/custom exist then move all subdirs in /etc/codex/themes/images
+- DONE - if $INSTALL_DIR/SF/www/css/custom exist then move all subdirs in /etc/codex/themes/css
+- DONE - if $INSTALL_DIR/SF/www/images/custom exist then move all subdirs in /etc/codex/themes/images
 - DONE - Copy SF/etc/httpd.conf.dist in /etc/httpd/conf/httpd.conf and make the necessary changes
 - DONE - Copy SF/etc/ssl.conf.dist in /etc/httpd/conf.d/ssl.conf and make the necessary changes
 - DONE - Copy SF/etc/php.conf.dist in /etc/httpd/conf.d/php.conf and make the necessary changes
-- DONE - Copy /home/httpd/documentation/user_guide/xml/en_US/ParametersLocal.dtd to /etc/codex/documentation/user_guide/xml/en_US/ParametersLocal.dtd (do a mkdir -p to create full path first)
+- DONE - Copy $INSTALL_DIR/documentation/user_guide/xml/en_US/ParametersLocal.dtd to /etc/codex/documentation/user_guide/xml/en_US/ParametersLocal.dtd (do a mkdir -p to create full path first)
 - DONE - if SF/utils/custom/default_page.php exist then copy it to /etc/codex/site-content/en_US/others
 - Faire un diff sur database_structure.sql and database_initvalues.sql avec la v 2.0 pour reverifier tous les chagement dans la base et les mettre dans le script d'upgrade.
 - DONE - delete Foundry (type=2) from the group_type table
@@ -956,7 +979,7 @@ Server: remove with nodeps db4-devel, db4-utils (db42-utils conflicts with nativ
 install in one go httpd, mod_ssl, apr, apr-util
 - DONE - create the /svnroot directory with perm and mod sourceforge.sourceforge 755
 - DONE - touch /etc/httpd/conf/codex_htpasswd
-- DONE - copy /home/httpd/SF/utils/svn/commit-email.pl to /usr/local/bin/ mod sourceforge.sourceforge 755
+- DONE - copy $INSTALL_DIR/SF/utils/svn/commit-email.pl to /usr/local/bin/ mod sourceforge.sourceforge 755
 - DONE - ALTER groups table and create new fields in the group database use_svn, svn_box, svn_tracker svn_events_mailing_list svn_events_mailing_header svn_preamble
   ALTER TABLE groups ADD COLUMN svn_box VARCHAR(20) NOT NULL DEFAULT 'svn1' AFTER cvs_box;
   ALTER TABLE groups ADD COLUMN use_svn int(11) NOT NULL DEFAULT '1' AFTER use_cvs;
@@ -978,11 +1001,11 @@ TODO in install script:
 - DONE - Put %..% patterns in all *.dist files and change them at installation time
 - DONE - Change AliasFile in /etc/mail/sendmail.cf at installation time
 - DONE - Create /etc/mail/local-host-names at installation time
-- DONE - change /home/httpd/SF/utils/underworld-dummy/mail_aliases.pl (wrapper is now called mailman - Installation file already updated)
+- DONE - change $INSTALL_DIR/SF/utils/underworld-dummy/mail_aliases.pl (wrapper is now called mailman - Installation file already updated)
 - DONE - Substitute _DOMAIN_NAME_ in the database init file with the domain name before creating the database
 - DONE - Update installation script with subversion installation (see upgrade notes above for installation)
 - DONE touch /etc/httpd/conf/codex_htpasswd
-- DONE copy /home/httpd/SF/utils/svn/commit-email.pl to /usr/local/bin/ mod sourceforge.sourceforge 755
+- DONE copy $INSTALL_DIR/SF/utils/svn/commit-email.pl to /usr/local/bin/ mod sourceforge.sourceforge 755
 - DONE Create new fields in the group database use_svn, svn_box, svn_tracker svn_events_mailing_list svn_events_mailing_header svn_preamble 
 
 TODO
@@ -1007,7 +1030,7 @@ Notes:
  . cvs checkout viewcvs 1.0-dev cvs -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/viewcvs co -d viewcvs-1.0 viewcvs
  . viewcvs-install and force a return on the install dir question
  . chown -R sourceforge.sourceforge /usr/local/viewcvs-*
- . cp -a /usr/local/viewcvs-x.y.z/cgi/viewcvs.cgi /home/httpd/cgi-bin/
+ . cp -a /usr/local/viewcvs-x.y.z/cgi/viewcvs.cgi $INSTALL_DIR/cgi-bin/
  . Must install swig and subversion python binding 
 rpm -Uvh ~/packages-rhel3/RPMS_CodeX/subversion/subversion-1.0.1/subversion-python-1.0.1-1.wbel3.i386.rpm ~/packages-rhel3/RPMS_CodeX/subversion/subversion-1.0.1/swig-1.3.19-2.i386.rpm
  . install enscript (make sure it is in the list of mandatory RedHat RPMs at insntallation - DONE)
