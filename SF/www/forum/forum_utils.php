@@ -45,6 +45,7 @@ function forum_header($params) {
 	       		if (db_result($result,0,'group_id') != $GLOBALS['sys_news_group']) {
 				$params['group']=db_result($result,0,'group_id');
         			$params['toptab']='news';
+				$group_id = db_result($result,0,'group_id');
 				site_project_header($params);
 			} else {
 				$HTML->header($params);
