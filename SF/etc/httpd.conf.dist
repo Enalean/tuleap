@@ -1078,7 +1078,7 @@ Include conf/mailman.conf
 Include conf/codex_vhosts.conf
                                                                                 
 #
-# On the production server the local.inc file is in /etc
+# On the production server the local.inc file is in /etc/codex/conf
 # because it contains sensitive data
 #
 SetEnv SF_LOCAL_INC_PREFIX ""

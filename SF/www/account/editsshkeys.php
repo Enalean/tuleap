@@ -45,8 +45,6 @@ Then look at the file '~/.ssh/identity.pub' where the generated public key has b
 documentation for further information on sharing keys.
 
 <?php
-	// LJ modified. Cron delay now in /etc/local.inc.
-	// No longer hardcoded
 	$date = getdate(time());
 	$hoursleft = ($sys_crondelay - 1) - ($date[hours] % $sys_crondelay);
 	$minutesleft = 60 - $date[minutes];

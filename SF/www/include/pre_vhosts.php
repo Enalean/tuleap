@@ -11,9 +11,8 @@
 // It gives access to user and group information, opens up a db connection
 // and sets the time zone.
 
-// Defines all of the Source Forge hosts, databases, etc.
-// This needs to be loaded first becuase the lines below depend upon it.
-require (getenv('SF_LOCAL_INC_PREFIX').'/etc/local.inc');
+// Defines all of the CodeX settings first (hosts, databases, etc.)
+require (getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/conf/local.inc');
 
 //library to determine browser settings
 require('browser.php');

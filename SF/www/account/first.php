@@ -16,8 +16,6 @@ $HTML->header(array(title=>"Welcome to Codex"));
 of the <?php print $GLOBALS['sys_name']; ?> Web Site. You may use forums, subscribe to mailing lists, browse through the list of hosted projects, or even start your own project.
 
 <?php
-	// LJ modified. Cron delay now in /etc/local.inc.
-	// No longer hardcoded
 	$date = getdate(time());
 	$hoursleft = ($sys_crondelay - 1) - ($date[hours] % $sys_crondelay);
 	$minutesleft = 60 - $date[minutes];

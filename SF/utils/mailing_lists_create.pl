@@ -12,7 +12,7 @@ my ($list_name, $list_admin, $list_admin_email, $list_password, $list_is_public,
 
 my $list_dir;
 
-# load local.inc variables
+# load CodeX config file
 &load_local_config();
 
 # Open up all the files that we need.

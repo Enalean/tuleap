@@ -10,10 +10,8 @@
 	redirect to proper hostname to get around certificate problem on IE 5
 */
 
-// Defines all of the Source Forge hosts, databases, etc.
-// This needs to be loaded first becuase the lines below depend upon it.
-
-require (getenv('SF_LOCAL_INC_PREFIX').'/etc/local.inc');
+// Defines all of the CodeX settings first (hosts, databases, etc.)
+require (getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/conf/local.inc');
 
 // Check URL for valid hostname and valid protocol
 if (($HTTP_HOST != $GLOBALS['sys_default_domain']) && ($SERVER_NAME != 'localhost') && ($HTTP_HOST != $GLOBALS['sys_https_host'])) {

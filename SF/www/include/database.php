@@ -6,7 +6,7 @@
 //
 // $Id$
 //
-// /etc/local.inc includes the machine specific database connect info
+//
 
 function db_connect() {
 	global $sys_dbhost,$sys_dbuser,$sys_dbpasswd,$conn;

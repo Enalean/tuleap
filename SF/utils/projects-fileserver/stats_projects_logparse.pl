@@ -19,9 +19,10 @@ require("../include.pl");  # Include all the predefined functions
 
 my ( $filerel, $query, $rel, %groups, %filerelease, $bytes, $filepath, $group_name, $filename, $files );
 
+# Note that db_connect triggered the reading of the CodeX config file
 &db_connect;
 
-# Now that db_connect triggered the reading of local.inc, get the host name
+# get the host name
 ($hostname) = split(/\./,$sys_fullname);
 push @webservers, $hostname;
 
