@@ -155,5 +155,9 @@ $sys_stay_in_ssl = 0;
 // ('savannah' is another possible value)
 $sys_themedefault = 'default';
 
+//
+// Max upload size
+$sys_max_size_upload = 20000000;
+
 // End of customizations -- place nothing after the closing PHP tag!
 ?>
