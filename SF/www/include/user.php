@@ -198,6 +198,15 @@ function user_getemail($user_id) {
 	}
 }
 
+function user_getemail_from_unix($user_name) {
+	$result = user_get_result_set_from_unix($user_name); 
+	if ($result && db_numrows($result) > 0) {
+		return db_result($result,0,"email");
+	} else {
+		return 'Error - Not Found';
+	}
+}
+
 function user_get_result_set($user_id) {
 	//create a common set of user result sets,
 	//so it doesn't have to be fetched each time

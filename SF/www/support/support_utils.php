@@ -240,9 +240,21 @@ function sr_utils_mail_followup($support_id,$more_addresses=false,$changes=false
 	    $rows=db_numrows($email_res);
 	    if ($email_res && $rows > 0) {
 		$mail_arr=result_column_to_array($email_res,0);
-		$to=implode($mail_arr,', ');
+                $not_first=false;
+                while (list(,$user_mail) = each($mail_arr)) {
+                    // The list may contain email adresses and unix names
+                    // We need to convert the unix names to the corresponding email adresses.
+                    if ($not_first) $to .= ', ';
+                    $not_first=true;
+                    if (strstr($user_mail,'@')) {
+                        // already email adress
+                        $to .= $user_mail;
+                    } else {
+                        // Unix name
+                        $to .= user_getemail_from_unix($user_mail);
+                    }
+                }
 	    }
-
 	    // Add the assignee and the submitter for email notification
 	    $user_id = db_result($result,0,'assigned_to');
 	    if ($user_id != 100) {
