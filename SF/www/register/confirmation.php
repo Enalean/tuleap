@@ -17,9 +17,11 @@ require($DOCUMENT_ROOT.'/../common/tracker/ArtifactField.class');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactReport.class');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactReportFactory.class');
 
+$LANG->loadLanguageMsg('register/register');
+
 if ($show_confirm) {
 
-    $HTML->header(array('title'=>'Registration Complete'));
+    $HTML->header(array('title'=>$LANG->getText('register_confirmation','registration_complete')));
 
     include(util_get_content('register/confirmation'));
 
@@ -44,14 +46,14 @@ if ($show_confirm) {
 		"WHERE group_id='$group_id' AND rand_hash='__$rand_hash'");
 
 	if (db_affected_rows($result) < 1) {
-		exit_error('Error','UDPATING TO ACTIVE FAILED. <B>PLEASE</B> report to '.$GLOBALS['sys_email_admin'].' '.db_error());
+		exit_error($LANG->getText('global','error'),$LANG->getText('register_confirmation','upd_fail',array($GLOBALS['sys_email_admin'],db_error())));
 	}
 
 	// define a module
 	$result=db_query("INSERT INTO filemodule (group_id,module_name) VALUES ('$group_id','".group_getunixname($group_id)."')");
 	if (!$result) {
             list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
-            exit_error('Error','INSERTING FILEMODULE FAILED. <B>PLEASE</B> report to admin@'.$host.' '.db_error());
+            exit_error($LANG->getText('global','error'),$LANG->getText('register_confirmation','ins_file_fail',array($host,db_error())));
 	}
 
 	// make the current user a project admin ad well as admin
@@ -68,17 +70,17 @@ if ($show_confirm) {
 		. "1," // doc flags
 		. "2)"); // file_flags	
 	if (!$result) {
-		exit_error('Error','SETTING YOU AS OWNER FAILED. <B>PLEASE</B> report to '.$GLOBALS['sys_email_admin'].' '.db_error());
+		exit_error($LANG->getText('global','error'),$LANG->getText('register_confirmation','set_owner',array($GLOBALS['sys_email_admin'],db_error())));
 	}
 
 	//Add a couple of forums for this group and make the project creator 
 	// (current user) monitor these forums
-	$fid = forum_create_forum($group_id,'Open Discussion',1,1,'General Discussion');
+	$fid = forum_create_forum($group_id,$LANG->getText('register_confirmation','open_discussion'),1,1,$LANG->getText('register_confirmation','general_discussion'));
 	forum_add_monitor($fid, user_getid());
 
-	$fid = forum_create_forum($group_id,'Help',1,1,'Get Help');
+	$fid = forum_create_forum($group_id,$LANG->getText('global','help'),1,1,$LANG->getText('register_confirmation','get_help'));
 	forum_add_monitor($fid, user_getid());
-	$fid = forum_create_forum($group_id,'Developers',0,1,'Project Developer Discussion');
+	$fid = forum_create_forum($group_id,$LANG->getText('register_confirmation','developers'),0,1,$LANG->getText('register_confirmation','proj_dev_discussion'));
 	forum_add_monitor($fid, user_getid());
 
         // Instanciate all services from group 100 that are 'active'
@@ -100,7 +102,7 @@ if ($show_confirm) {
             $result2=db_query($sql2);
             
             if (!$result2) {
-                exit_error("ERROR",'ERROR - Can not create service');
+                exit_error($LANG->getText('global','error'),$LANG->getText('register_confirmation','cant_create_service'));
             }
         }
 
@@ -135,7 +137,7 @@ if ($show_confirm) {
 	
 	// Show the final registration complete message and send email
 	// notification (it's all in the content part)
-	$HTML->header(array('title'=>'Registration Complete'));
+	$HTML->header(array('title'=>$LANG->getText('register_confirmation','registration_complete')));
 
 	include(util_get_content('register/complete'));
     
@@ -143,20 +145,18 @@ if ($show_confirm) {
 
 } else if ($i_disagree && $group_id && $rand_hash) {
 
-	$HTML->header(array('title'=>'Registration Deleted'));
+	$HTML->header(array('title'=>$LANG->getText('register_confirmation','registration_deleted')));
 	$result=db_query("DELETE FROM groups ".
 		"WHERE group_id='$group_id' AND rand_hash='__$rand_hash'");
 
 	echo '
-		<H2>Project Deleted</H2>
+		<H2>'.$LANG->getText('register_confirmation','project_deleted').'</H2>
 		<P>
-		<B>Please try again in the future.</B>';
+		<B>'.$LANG->getText('register_confirmation','try_again').'</B>';
 	$HTML->footer(array());
 
 } else {
-	exit_error('Error','This is an invalid state. Some form variables were missing.
-		If you are certain you entered everything, <B>PLEASE</B> report to '.$GLOBALS['sys_email_admin'].' and
-		include info on your browser and platform configuration');
+	exit_error($LANG->getText('global','error'),$LANG->getText('register_category','var_missing',$GLOBALS['sys_email_admin']));
 
 }
 

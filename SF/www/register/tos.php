@@ -7,20 +7,19 @@
 // $Id$
 
 require($DOCUMENT_ROOT.'/include/pre.php');    // Initial db and session library, opens session
+
+$LANG->loadLanguageMsg('register/register');
+
 session_require( array( isloggedin=>1 ) );
 
-$HTML->header(array(title=>"Terms of Service"));
+$HTML->header(array(title=>$LANG->getText('register_tos','tos')));
 
-echo '<p><h2>Step 2: Terms of Service Agreement</h2></p>';
+echo '<p><h2>'.$LANG->getText('register_tos','tos_agreement').'</h2></p>';
 include(util_get_content('register/tos'));
 
 echo '<BR><HR><BR>
 
-<P align=center>By clicking below, you acknowledge that you have read 
-and understand the Terms of Service agreement. Clicking "I AGREE" will
-constitute your legal signature on this document.
-<P><H3 align=center><A href="basicinfo.php">[I AGREE]</A>
-&nbsp;&nbsp;<A href="/">[I DISAGREE]</A></H3>';
+<P align=center>'.$LANG->getText('register_tos','tos_agree','basicinfo.php');
 
 $HTML->footer(array());
 

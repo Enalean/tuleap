@@ -11,6 +11,8 @@ require($DOCUMENT_ROOT.'/include/vars.php');
 session_require(array('isloggedin'=>'1'));
 require($DOCUMENT_ROOT.'/include/account.php');
 
+$LANG->loadLanguageMsg('register/register');
+
 if ($group_id && $insert_license && $rand_hash && $form_license) {
 	/*
 		Hash prevents them from updating a live, existing group account
@@ -19,16 +21,14 @@ if ($group_id && $insert_license && $rand_hash && $form_license) {
 		"WHERE group_id='$group_id' AND rand_hash='__$rand_hash'";
 	$result=db_query($sql);
 	if (db_affected_rows($result) < 1) {
-		exit_error('Error','This is an invalid state. Update query failed. <B>PLEASE</B> report to '.$GLOBALS['sys_email_admin']);
+		exit_error($LANG->getText('global','error'),$LANG->getText('register_category','upd_query_fail',$GLOBALS['sys_email_admin']));
 	}
 
 } else {
-	exit_error('Error','This is an invalid state. Some form variables were missing.
-		If you are certain you entered everything, <B>PLEASE</B> report to '.$GLOBALS['sys_email_admin'].' and
-		include info on your browser and platform configuration');
+	exit_error($LANG->getText('global','error'),$LANG->getText('register_category','var_missing',$GLOBALS['sys_email_admin']));
 }
 
-$HTML->header(array('title'=>'Project Category'));
+$HTML->header(array('title'=>$LANG->getText('register_category','project_category')));
 
 include(util_get_content('register/category'));
 

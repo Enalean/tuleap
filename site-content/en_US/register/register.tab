@@ -1,0 +1,82 @@
+#/**
+#  *
+#  * Include scripts message catalog (English)
+#  *
+#  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
+#  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
+#  * http://codex.xrce.xerox.com
+#  *
+#  * @version   $Id$
+#  *
+#  */
+#
+#-----------------------------------------------
+# Script: SF/www/register/category.php
+#
+register_category	upd_query_fail	This is an invalid state. Update query failed. <B>PLEASE</B> report to $1
+register_category	var_missing	This is an invalid state. Some form variables were missing. If you are certain you entered everything, <B>PLEASE</B> report to $1 and include info on your browser and platform configuration
+register_category	project_category	Project Category
+#
+#-----------------------------------------------
+# Script: SF/www/register/confirmation.php
+#
+register_confirmation	registration_complete	Registration Complete
+register_confirmation	upd_fail	UDPATING TO ACTIVE FAILED. <B>PLEASE</B> report to $1 $2
+register_confirmation	ins_file_fail	INSERTING FILEMODULE FAILED. <B>PLEASE</B> report to admin@$1 $2
+register_confirmation	set_owner_fail	SETTING YOU AS OWNER FAILED. <B>PLEASE</B> report to $1 $2
+register_confirmation	open_discussion	Open Discussion
+register_confirmation	general_discussion	General Discussion
+register_confirmation	get_help	Get Help
+register_confirmation	developers	Developers
+register_confirmation	proj_dev_discussion	Project Developer Discussion
+register_confirmation	cant_create_service	ERROR - Can not create service
+register_confirmation	registration_deleted	Registration Deleted
+register_confirmation	project_deleted	Please try again in the future.
+register_confirmation	try_again	Please try again in the future.
+#
+#-----------------------------------------------
+# Script: SF/www/register/form.php
+#
+register_form	new_project_registration	New Project Registration
+register_form	register_form	New Project Registration Form
+register_form	fill_form	Simply fill out this form to request an account on $1. Fields with an asterisk (*) are required.
+register_form	first_name	First Name
+register_form	last_name	Last Name
+register_form	email	Email
+register_form	project_name	Project Name
+register_form	proj_description	Brief Description<br>of Project:
+register_form	desired_subdomain	Desired Subdomain:<br>(e.g. 
+register_form	passwd	Desired Password:<br>(enter twice)
+register_form	comments	Comments/Questions:
+register_form	clear_form	Clear Form
+#
+#-----------------------------------------------
+# Script: SF/www/register/index.php
+#
+register_index	project_registration	Project Registration
+#
+#-----------------------------------------------
+# Script: SF/www/register/license.php
+#
+register_license	invalid_g_name	Invalid Group Name
+register_license	g_name_taken	Group Name Taken
+register_license	g_name_exist	That group name already exists.
+register_license	license	License
+#
+#-----------------------------------------------
+# Script: SF/www/register/projectname.php
+#
+register_projectname	ins_query_fail	INSERT QUERY FAILED. Please notify $1
+register_projectname	info_missed	Missing Information. <B>PLEASE</B> fill in all required information.
+#
+#-----------------------------------------------
+# Script: SF/www/register/tos.php
+#
+register_tos	tos	Terms of Service
+register_tos	tos_agreement	Step 2: Terms of Service Agreement
+register_tos	tos_agree	By clicking below, you acknowledge that you have read and understand the Terms of Service agreement. Clicking "I AGREE" will constitute your legal signature on this document.<P><H3 align=center><A href="$1">[I AGREE]</A>&nbsp;&nbsp;<A href="/">[I DISAGREE]</A></H3>
+#
+#-----------------------------------------------
+# Script: SF/www/register/why.php
+#
+register_why	why_register	Why Register?

@@ -7,8 +7,11 @@
 // $Id$
 
 require($DOCUMENT_ROOT.'/include/pre.php');    // Initial db and session library, opens session
+
+$LANG->loadLanguageMsg('register/register');
+
 session_require(array(isloggedin=>1));
-$HTML->header(array(title=>"Project Registration"));
+$HTML->header(array(title=>$LANG->getText('register_index','project_registration')));
 
 include(util_get_content('register/intro'));
 

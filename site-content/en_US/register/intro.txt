@@ -18,7 +18,7 @@ The <?php print $GLOBALS['sys_name']; ?> Team would like to extend an invitation
 <p><B>The Process</B>
 
 <P>Registering a project with <?php print $GLOBALS['sys_name']; ?> is an easy process, but we do require
-a some information in order to automate things as much as possible. The entire
+some information in order to automate things as much as possible. The entire
 process should take about 5 to 10 minutes.
 
 <P>During signup, we will present you with some legal documents 

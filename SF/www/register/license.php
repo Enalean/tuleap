@@ -9,6 +9,9 @@
 require($DOCUMENT_ROOT.'/include/pre.php');    // Initial db and session library, opens session
 require($DOCUMENT_ROOT.'/include/vars.php');
 require($DOCUMENT_ROOT.'/include/account.php');
+
+$LANG->loadLanguageMsg('register/register');
+
 session_require(array('isloggedin'=>'1'));
 
 if ($insert_group_name && $group_id && $rand_hash && $form_full_name && $form_unix_name) {
@@ -16,13 +19,13 @@ if ($insert_group_name && $group_id && $rand_hash && $form_full_name && $form_un
 		check for valid group name
 	*/
 	if (!account_groupnamevalid($form_unix_name)) {
-		exit_error("Invalid Group Name",$register_error);
+		exit_error($LANG->getText('register_license','invalid_g_name'),$register_error);
 	}
 	/*
 		See if it's taken already
 	*/
 	if (db_numrows(db_query("SELECT group_id FROM groups WHERE unix_group_name LIKE '$form_unix_name'")) > 0) {
-		exit_error("Group Name Taken","That group name already exists.");
+		exit_error($LANG->getText('register_license','g_name_taken'),$LANG->getText('register_license','g_name_exist'));
 	}
 	/*
 		Hash prevents them from updating a live, existing group account
@@ -33,12 +36,10 @@ if ($insert_group_name && $group_id && $rand_hash && $form_full_name && $form_un
 	$result=db_query($sql);
 
 } else {
-	exit_error('Error','Missing Info Or Invalid State. Some form variables were missing. 
-		If you are certain you entered everything, <B>PLEASE</B> report to '. $GLOBALS['sys_email_admin'].' and
-		include info on your browser and platform configuration');
+	exit_error($LANG->getText('global','error'),$LANG->getText('register_category','var_missing',$GLOBALS['sys_email_admin']));
 }
 
-$HTML->header(array('title'=>'License'));
+$HTML->header(array('title'=>$LANG->getText('register_license','license')));
 
 include(util_get_content('register/license'));
 

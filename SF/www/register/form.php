@@ -7,11 +7,14 @@
 // $Id$
 
 require($DOCUMENT_ROOT.'/include/pre.php');    // Initial db and session library, opens session
-$HTML->header(array(title=>"New Project Registration"));
-?>
 
+$LANG->loadLanguageMsg('register/register');
+
+$HTML->header(array(title=>$LANG->getText('register_form','new_project_registration')));
+
+echo '
 <p>
-<h1>New Project Registration Form</h1>
+<h1>'.$LANG->getText('register_form','register_form').'</h1>
 </p>
 
 
@@ -20,55 +23,52 @@ $HTML->header(array(title=>"New Project Registration"));
                         <td width=15></td>
                         <td>
                         <hr size=2><p>
-                                Simply fill out this form to request an account on <?php print $GLOBALS['sys_name']; ?>. Fields with an asterisk (*) are required.
+                                '.$LANG->getText('register_form','fill_form',$GLOBALS['sys_name']).'
                                 <p>
                         <form method="POST" action="">
                         <table cellpadding=2 cellspacing=0 border=0>
                         <tr>
-                                <td align="right">* First Name:</td>
+                                <td align="right">* '.$LANG->getText('register_form','first_name').'</td>
                                 <td><input size=30 type="text" name="firstname"></td>
                         </tr>
                         <tr>
-                                <td align="right">* Last Name:</td>
+                                <td align="right">* '.$LANG->getText('register_form','last_name').'</td>
                                 <td><input size=30 type="text" name="lastname"></td>
 
                         <tr>
-                                <td align="right">* Email:</td>
+                                <td align="right">* '.$LANG->getText('register_form','email').'</td>
                                 <td><input size=35 type="text" name="email"></td>
                         </tr>
                         <tr>
-                                <td align="right">* Project Name:</td>
+                                <td align="right">* '.$LANG->getText('register_form','project_name').'</td>
                                 <td><input size=35 type="text" name="projectname"></td>
                         </tr>
                         <tr>
-                                <td align="right">* Brief Description<br>of Project:</td>
+                                <td align="right">* '.$LANG->getText('register_form','proj_description').'</td>
                                 <td><textarea wrap="physical" name="project_description" cols=40 rows=4></textarea></td>
                         </tr>
                         <tr>
-                                <td align="right">* Desired Subdomain:<br>(e.g. <i><span class="subdomain">myproject</span>.<?php echo get_server_url(); ?> )</td>
+                                <td align="right">* '.$LANG->getText('register_form','desired_subdomain').' <i><span class="subdomain">myproject</span>.'.get_server_url().')</td>
                                 <td><input size=35 type="text" name="subdomain"></td>
                         </tr>
                         <tr>
-                                <td align="right">* Desired Password:<br>(enter twice)</td>
+                                <td align="right">* '.$LANG->getText('register_form','passwd').'</td>
                                 <td><input size=12 type="text" name="requested_password">&nbsp;&nbsp;<input size=12 type="text" name="requested_password_confirm"></td>
                                 
                         <tr>
-                                <td align="right">Comments/Questions:</td>
+                                <td align="right">'.$LANG->getText('register_form','comments').'</td>
                                 <td><textarea wrap="physical" name="comments" cols=35 rows=5></textarea></td>
                         </tr>
                         <tr>
                         <td></td>
                         <td>
-                        <input type="submit" value="Submit">
-                        <input type="reset" value="Clear Form">
+                        <input type="submit" value="'.$LANG->getText('global','btn_submit').'">
+                        <input type="reset" value="'.$LANG->getText('register_form','clear_form').'">
                                 </td>   </tr> </form>
                         </table>                                      </table>
-                        <input type="hidden" name="required" value="firstname,lastname,email,projectname,project_description,subdomain,requested_password">
-
-  
+                        <input type="hidden" name="required" value="firstname,lastname,email,projectname,project_description,subdomain,requested_password">';
 
 
-<?php
 $HTML->footer(array());
 
 ?>

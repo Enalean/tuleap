@@ -10,6 +10,8 @@ require($DOCUMENT_ROOT.'/include/pre.php');    // Initial db and session library
 session_require(array('isloggedin'=>'1'));
 require($DOCUMENT_ROOT.'/include/account.php');
 
+$LANG->loadLanguageMsg('register/register');
+
 // push received vars
 if ($insert_purpose && $form_purpose && $form_short_description) { 
 
@@ -43,16 +45,16 @@ if ($insert_purpose && $form_purpose && $form_short_description) {
 		. "'__$random_num','__".md5($random_num)."')");
 
 	if (!$result) {
-		exit_error('ERROR','INSERT QUERY FAILED. Please notify '.$GLOBALS['sys_email_admin']);
+		exit_error($LANG->getText('global','error'),$LANG->getText('register_projectname','ins_query_fail',$GLOBALS['sys_email_admin']));
 	} else {
 		$group_id=db_insertid($result);
 	}
 
 } else {
-	exit_error('Error','Missing Information. <B>PLEASE</B> fill in all required information.');
+	exit_error($LANG->getText('global','error'),$LANG->getText('register_projectname','info_missed'));
 }
 
-$HTML->header(array('title'=>'Project Name'));
+$HTML->header(array('title'=>$LANG->getText('register_form','project_name')));
 
 include(util_get_content('register/projectname'));
 
