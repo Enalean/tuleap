@@ -204,6 +204,10 @@ if ($group_id && !$atid) {
 			     !$ath->userIsAdmin() ) {
 				exit_permission_denied();
 			}
+			if ( ($arh->scope == 'S') && 
+			     !user_is_super_user() ) {
+				exit_permission_denied();
+			}
 			$arh->showReportForm();
 		} else {
 			// Front page
