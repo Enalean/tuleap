@@ -23,8 +23,9 @@ if (user_isloggedin()) {
 
 	<H3>Personal Page for: <?php print user_getname(); ?></H3>
 	<P>
-	Your personal page contains lists of bugs and tasks that 
-	you are assigned, plus a list of groups that you are a member of.
+	Your personal page contains lists of bugs [<b>A</b>]ssigned to or 
+  [<b>S</b>]ubmitted by you, tasks that you are assigned, monitored forums and packages plus a list
+of groups that you are a member of.
 	<P>
 	<TABLE width="100%" border="0">
 	<TR><TD VALIGN="TOP" WIDTH="50%">
@@ -126,7 +127,7 @@ if (user_isloggedin()) {
 		Filemodules that are actively monitored
 	*/
 	$last_group=0;
-	echo $HTML->box1_middle('Monitored FileModules');
+	echo $HTML->box1_middle('Monitored File Packages');
 	$sql="SELECT groups.group_name,groups.group_id,frs_package.name,filemodule_monitor.filemodule_id ".
 		"FROM groups,filemodule_monitor,frs_package ".
 		"WHERE groups.group_id=frs_package.group_id ".
