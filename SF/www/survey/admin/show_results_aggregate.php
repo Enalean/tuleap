@@ -139,7 +139,7 @@ for ($i=0; $i<$count; $i++) {
 
 		echo util_unconvert_htmlspecialchars(db_result($result, 0, "question"))."<BR>\n";
 
-		echo "<A HREF=\"show_results_comments.php?survey_id=$survey_id&question_id=$quest_array[$i]&group_id=$group_id\">View Comments</A>";
+		echo "<A HREF=\"show_results_comments.php?survey_id=$survey_id&question_id=$quest_array[$i]&question_num=$q_num&group_id=$group_id\">View Comments</A>";
 
 	} else if ($question_type == "3") {
 		/*
@@ -227,7 +227,7 @@ for ($i=0; $i<$count; $i++) {
 
 		echo util_unconvert_htmlspecialchars(db_result($result, 0, "question"))."<BR>\n";
 
-		echo "<A HREF=\"show_results_comments.php?survey_id=$survey_id&question_id=$quest_array[$i]&group_id=$group_id\">View Comments</A>";
+		echo "<A HREF=\"show_results_comments.php?survey_id=$survey_id&question_id=$quest_array[$i]&question_num=$q_num&group_id=$group_id\">View Comments</A>";
 
 	}
 
