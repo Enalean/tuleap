@@ -299,9 +299,11 @@ function pm_show_tasklist ($result,$result_taskdeps,$offset,$url) {
 		if ( isset($all_rows[$tid]) ) {
 			// if this task id entry already exists then
 			// it means there is an additional "assigned to" user
-			$all_rows[$tid]['user_name'] .= ','.$a_row['user_name'];	
+			$all_rows[$tid]['user_name'] .= ','.util_user_link($a_row['user_name']);	
 		} else {
+			$a_row['user_name'] = util_user_link($a_row['user_name']);
 			$all_rows[$tid] = $a_row;
+
 		}
 	}
 

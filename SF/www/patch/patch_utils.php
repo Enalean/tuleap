@@ -155,8 +155,8 @@ function show_patchlist ($result,$offset,$set='open') {
 			'<TD>'.db_result($result, $i, 'summary').'</TD>'.
 			'<TD>'.$patch_url.'</TD>'.
 			'<TD>'.date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
-			'<TD>'.db_result($result, $i, 'assigned_to_user').'</TD>'.
-			'<TD>'.db_result($result, $i, 'submitted_by').'</TD></TR>';
+			'<TD>'.util_user_link(db_result($result,$i,'assigned_to_user')).'</TD>'.
+			'<TD>'.util_user_link(db_result($result,$i,'submitted_by')).'</TD></TR>';
 
 	}
 

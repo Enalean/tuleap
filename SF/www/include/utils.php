@@ -137,9 +137,14 @@ function util_make_links ($data='') {
 		$line = eregi_replace("([ \t]|^)www\."," http://www.",$line);
 		$text = eregi_replace("([[:alnum:]]+)://([^[:space:]]*)([[:alnum:]>#?/&=])", "<a href=\"\\1://\\2\\3\" target=\"_blank\" target=\"_new\">\\1://\\2\\3</a>", $line);
 		$text = eregi_replace("(([a-z0-9_]|\\-|\\.)+@([^[:space:]]*)([[:alnum:]-]))", "<a href=\"mailto:\\1\" target=\"_new\">\\1</a>", $text);
-		$newText .= $text;
+		$lines[$key] = $text;
 	}
-	return $newText;
+	return join("\n", $lines);
+}
+
+function util_user_link ($username) {
+    if ( $username == 'None' || empty($username)) { return $username; }
+    return '<a href="/users/'.$username.'">'.$username.'</a>';
 }
 
 function util_double_diff_array($arr1, $arr2) {

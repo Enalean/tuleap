@@ -138,14 +138,15 @@ function show_supportlist ($result,$offset,$set='open') {
 	$then=(time()-1296000);
 	$rows=db_numrows($result);
 	for ($i=0; $i < $rows; $i++) {
+
 		echo '
 			<TR BGCOLOR="'. get_priority_color(db_result($result, $i, 'priority')) .'">'.
 			'<TD><A HREF="'.$PHP_SELF.'?func=detailsupport&support_id='. db_result($result, $i, 'support_id').
 			'&group_id='. db_result($result, $i, 'group_id').'">'. db_result($result, $i, 'support_id') .'</A></TD>'.
 			'<TD>'. db_result($result, $i, 'summary') .'</TD>'.
 			'<TD>'. (($set != 'closed' && db_result($result, $i, 'date') < $then)?'<B>* ':'&nbsp; ') . date($sys_datefmt,db_result($result, $i, 'date')) .'</TD>'.
-			'<TD>'. db_result($result, $i, 'assigned_to_user') .'</TD>'.
-			'<TD>'. db_result($result, $i, 'submitted_by') .'</TD></TR>';
+			'<TD>'.util_user_link(db_result($result,$i,'assigned_to_user')).'</TD>'.
+			'<TD>'.util_user_link(db_result($result,$i,'submitted_by')).'</TD></TR>';
 
 	}
 
@@ -277,8 +278,8 @@ function show_support_details ($support_id) {
 			$email_arr=explode('@',db_result($result,$i,'from_email'));
 			echo '<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD><PRE>
 Date: '. date($sys_datefmt,db_result($result, $i, 'date')) .'
-Sender: '. $email_arr[0] . '
-'. util_line_wrap ( db_result($result, $i, 'body'),85,"\n"). '</PRE></TD></TR>';
+Sender: <a href="mailto:'. $email_arr[0].'@'.$email_arr[1].'">'.$email_arr[0].'</a>'.'
+'.util_make_links(util_line_wrap ( db_result($result, $i, 'body'),85,"\n")). '</PRE></TD></TR>';
 		}
 		echo '</TABLE>';
 	} else {
