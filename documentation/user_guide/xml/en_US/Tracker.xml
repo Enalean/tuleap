@@ -19,34 +19,33 @@
   track certain types of predefined artifacts like defects (bugs),
   support requests or tasks. It soon appeared that there was a need
   not only to expand the type of artifacts that one can track in a
-  project but also to be able to instantiate the Tracker service as
+  project, but also to be able to instantiate the Tracker service as
   many times as necessary in the context of a single project.</para>
 
-  <para>Beside defects, tasks and support requests project teams may
-  want to track other artifacts like requirements, action requests,
-  etc. This is precisely what the CodeX Tracker allows you to
-  do. Beside the usual trackers (defects, tasks, support requests)
-  that come standards in the Tracker service, other type of trackers can
-  be created at any time and in any numbers under the same CodeX
-  project. All trackers can be fully customized, including the
-  predefined ones. </para>
+  <para>Beside defects, tasks and support requests, project teams may
+  want to track other artifacts such as requirements or action requests.
+  This is now possible using the CodeX Tracker. Beside the usual trackers 
+  (defects, tasks, support requests) that come standard in the Tracker 
+  service, other type of trackers can be created at any time and in 
+  unlimited numbers under the same CodeX project. 
+  All trackers, including the predefined ones, can be fully customized. </para>
 
   <section id="CodeXTrackerPrinciples">
     <title>CodeX Tracker Terminology</title>
 
     <para>Before we explain the features of the tracker service, it's
     worth spending some time on the terminology used in the tracker
-    service as well as some of the features that are shared by all
+    service as well as on some of the features that are shared by all
     trackers.</para>
 
     <para>As the Tracker Service is meant to track virtually any kind
-    of items, the generic term 'artifact' will be used throughout this
-    document to designate items that are being tracked be it bug,
-    task, support request or others.</para>
+    of item, the generic term &#34;artifact&#34; will be used throughout this
+    document to designate items that are being tracked - be it bug,
+    task, support request or other such type.</para>
 
-    <para>Defining a tracker is just a matter of giving it a name,
-    choose the fields that are going to be used in this particular
-    tracker and what values will be allowed in those fields.</para>
+    <para>Defining a tracker is just a matter of assigning it a name,
+    choosing the fields that are going to be used in the tracker,
+    and what values will be allowed in those fields.</para>
 
     <para>In addition to the project definable fields and field values there
     are other fields that are permanently attached to a tracker
@@ -70,7 +69,7 @@
 
       <listitem>
 	<para><emphasis role="bold">CC list</emphasis>: any number
-	    of users can be notified of modification happening to an
+	    of users can be notified of modification to an
 	    artifact by including their CodeX user name or email
 	    address in the CC list.</para>
       </listitem>
@@ -128,7 +127,7 @@
 	/>).</para>
 
     <figure id="ArtifactSubmissionScreenFromTheCodeXProject">
-      <title>A sample artifact submission screen (the artifact is of type 'bug' here)</title>
+      <title>A sample artifact submission screen (the artifact is of type &#34;bug&#34; here)</title>
 
       <mediaobject>
 	<imageobject>
@@ -148,14 +147,14 @@
 
     <para>In the example provided on <xref
 	linkend="ArtifactSubmissionScreenFromTheCodeXProject" /> the
-    artifact type is a bug (also know as 'defect' in corporate
+    artifact type is a bug (also know as &#34;defect&#34; in corporate
     language). The user is asked to choose a bug Category, a bug
     Group, a Priority and an Assignee from a series of pull down
     menus. Then comes a one-line description for the bug and a longer
-    piece of text where you can fully characterize the bug.</para>
+    text entry field where you can fully characterize the bug.</para>
 
     <para>When submitting a new artifact, make the Summary and the
-    detailled description as explicit as possible.  Do not use a
+    detailed description as explicit as possible.  Do not use a
     clueless summary like: &#34;Service X doesn&#39;t work&#34; or
     &#34;Blocking problem in Document Mgr&#34;. Explain the nature of
     the bug. Giving an explicit Summary and Description is immensely
@@ -223,34 +222,34 @@
 	<para>A select box field can take its value in a set of
 	predefined values. If you are using the simple search
 	interface only one value can be selected at a time. If you
-	want to select multiple values at once use the Advanced Search
+	want to select multiple values at once, use the Advanced Search
 	facility.</para>
 
 	<para>There might be 2 specific values in the list of choices:
-	'Any' matches any value in the list and 'None' matches the
+	&#34;Any&#34; matches any value in the list and &#34;None&#34; matches the
 	items where no value has been assigned yet</para>
       </section>
 
       <section id="ArtifactMultipleSelectBoxField">
 	<title>Multiple Select Box Field</title>
 
-	<para>A multiple select box field take its value in a set of
-	predefined values. While the select box fiel introduced above
+	<para>A multiple select box field takes it's value from a set of
+	predefined values. While the select box field introduced above
 	only allows one to select only a single field value, the
 	multiple select box field allows the user to select multiple
 	values for the same field. If you are using the simple search
 	interface only one value can be selected at a time. If you
-	want to select multiple values at once use the Advanced Search
+	want to select multiple values at once, use the Advanced Search
 	facility.</para>
 
 	<para>There might be 2 specific values in the list of choices:
-	'Any' matches any value in the list and 'None' matches the
+	&#34;Any&#34; matches any value in the list and &#34;None&#34; matches the
 	items where no value has been assigned yet</para>
       </section>
 
       <section id="ArtifactTextField">
 	<title>Text Field</title> <para>A Text field can contain any
-	kind of text. There are two ways to query an text
+	kind of text. There are two ways to query a text
 	field:</para>
 
 
@@ -275,10 +274,10 @@
 	    <itemizedlist mark="dash" spacing="compact">
 	      <listitem>
 		<para>/^[Aa]ddition/ : matches any text field starting
-		with either 'addition'or 'Addition'</para>
+		with either &#34;addition&#34;or &#34;Addition&#34;</para>
 	      </listitem>
 	      <listitem>
-		<para>/foo|bar|dim/ : matches text fields containing the string 'foo', 'bar' or 'dim'</para>
+		<para>/foo|bar|dim/ : matches text fields containing the string &#34;foo&#34;, &#34;bar&#34; or &#34;dim&#34;</para>
 	      </listitem>
 	    </itemizedlist>
 	  </listitem>
@@ -317,13 +316,13 @@
 	  </listitem>
 	  <listitem>
 	    <para><emphasis role="underline">Inequality</emphasis>: if
-	    you use &gt;, &lt;, &ge; or &le; followed by an integer
+	    you use &gt;, &lt;, &gt;= or =&lt; followed by an integer
 	    the search will look for integer values which are greater,
 	    lesser, greater or equal, lesser or equal to the integer
 	    value (e.g. &gt; 120 , &lt; -30)</para>
 	  </listitem>
 	  <listitem><para><emphasis role="underline">Range</emphasis>:
-	  if you use the 'integer1-integer2' notation the search
+	  if you use the &#34;integer1-integer2&#34; notation the search
 	  engine will look for all values greater or equal to integer1
 	  and lesser or equal to integer2 (e.g. 800 - 900 for integers
 	  between 800 and 900, -45 - 12 for integers between -45 and
@@ -334,7 +333,7 @@
 	  url="http://www.mysql.com/doc/P/a/Pattern_matching.html">MySQL
 	  Extended Regular Expression</ulink> can also be used as a
 	  matching criteria (e.g. /^4.*8$/ will look for all integer
-	  values starting with a '4', ending with an '8' with any
+	  values starting with a &#34;4&#34;, ending with an &#34;8&#34; with any
 	  number of digits in between.</para>
 	  </listitem>
 	</itemizedlist>
@@ -360,13 +359,13 @@
 	  </listitem>
 	  <listitem>
 	    <para><emphasis role="underline">Inequality</emphasis>: if
-	    you use &gt;, &lt;, &ge; or &le; followed by a number
+	    you use &gt;, &lt;, &gt;= or =&lt; followed by a number
 	    the search will look for all values which are greater,
 	    lesser, greater or equal, lesser or equal to the integer
 	    value (e.g. &gt; 120.3 , &lt; -3.3456E-2)</para>
 	  </listitem>
 	  <listitem><para><emphasis role="underline">Range</emphasis>:
-	  if you use the 'number1-number2' notation the search
+	  if you use the &#34;number1-number2&#34; notation the search
 	  engine will look for all values greater or equal to integer1
 	  and lesser or equal to integer2 (e.g. -1.2 - 4.5 for integers greater than or equal to -1.2 and lesser than or equal to 4.5)</para>
 	  </listitem>
@@ -375,7 +374,7 @@
 	  url="http://www.mysql.com/doc/P/a/Pattern_matching.html">MySQL
 	  Extended Regular Expression</ulink> can also be usedas a
 	  matching criteria (e.g. /^4.*8$/ will look for all integer
-	  values starting with a '4', ending with an '8' with any
+	  values starting with a &#34;4&#34;, ending with an &#34;8&#34; with any
 	  number of characters in between including the decimal point.</para>
 	  </listitem>
 	</itemizedlist>
@@ -413,7 +412,7 @@
 	</listitem>
       </itemizedlist>
 
-      <para>Also notice that CodeX always keeps track of the last ran
+      <para>Also notice that CodeX always keeps track of the last run
       query. Next time you enter the tracker welcome screen, CodeX will
       use the same set of selection criteria in the selection fields
       and display the list of matching artifacts accordingly.</para>
@@ -433,8 +432,8 @@
       <title>Tracker Search Results</title> 
       
       <para>Based on your selection of search riteria, CodeX runs a
-      query against the tracker database, select the matching
-      artifacts and displays them right below the selection
+      query against the tracker database, selects the matching
+      artifacts, and displays them right below the selection
       criteria. Columns displayed in the artifact list are entirely
       configurable by the project team (see <xref
 	  linkend="TrackerReports" />). Therefore, the artifact browsing
@@ -442,7 +441,7 @@
       <xref linkend="FigureASampleTrackerBrowsingScreen" />.</para>
 
       <figure id="FigureASampleTrackerBrowsingScreen">
-	<title>A sample Tracker browsing screen (the artifact is of type 'bug')</title>
+	<title>A sample Tracker browsing screen (the artifact is of type &#34;bug&#34;)</title>
 
 	<mediaobject>
 	  <imageobject>
@@ -454,7 +453,7 @@
 
       <para>Artifact severity is color coded. Colors associated with
       severity levels may vary from one CodeX site to another and it
-      is therefore show at the bottom of the list of results generated
+      is therefore shown at the bottom of the list of results generated
       by the search.  Finally, results are listed by chunks of N
       artifacts where N is user-definable. If more than N artifacts
       are retrieved from the tracker database you are invited to click
@@ -473,9 +472,9 @@
 
 	<para>The list of artifacts can be sorted by any of the
 	columns displayed on the screen by clicking on the column
-	heading. Clicking twice on the same heading reverses the sort
-	order from ascending to descending and vice-versa.  The
-	sorting direction is shown by a small up or down arrow next to
+	heading. Clicking twice on the same heading toggles the sort
+	order beween ascending to descending.  The currently displayed
+        sorting direction is shown by a small up or down arrow next to
 	the sort criteria right above the artifact list. One exception
 	to this rule is for sorting by Severity. Severity being shown
 	as a color code and not as a column per se, there is a special
@@ -483,9 +482,9 @@
 	by Severity.</para>
 
 	<para>For more sophisticated sorting you can also activate the
-	multi-column sort.  In this mode sort criteria cumulates as
+	multi-column sort.  In this mode sort criteria acccumulates as
 	you click on column headings.  So you can for instance click
-	'Severity' first and 'Assigned To' second to see who in the
+	&#34;Severity&#34; first and &#34;Assigned To&#34; second to see who in the
 	team is assigned critical bugs and how many.At any point in
 	the multi-column sort process, a click on one of the sort
 	criteria displayed in the list (criteria 1 > criteria 2 >
@@ -609,7 +608,7 @@
       artifact submitter can actually be considered as the first
       follow-up comment in the life of an artifact.</para>
 
-      <para>Follow-up comments have a couple of interesting capabilities and extensions:</para>
+      <para>Follow-up comments have several of interesting capabilities and extensions:</para>
 
       <itemizedlist mark="bullet">
 	<listitem>
@@ -659,7 +658,7 @@
 	  text pattern to refer to other artifacts or CVS commits
 	  (check-ins). These pattern while be automatically displayed
 	  as hyperlinks when the follow-up comment is displayed on the
-	  screen. See <xref linkend="ArtifactCrossReferecing" /> for
+	  screen. See <xref linkend="ArtifactCrossReferencing" /> for
 	  more details about the cross-referencing mechanism.</para>
 	</listitem>
 
@@ -711,8 +710,8 @@
             when the person you want involve in the notification
             process has a CodeX account use it in place of her email
             address. Using the CodeX login name give to the recipient
-            the ability to customize the kind of update events she
-            wants to receive. For more information on how to customize
+            the ability to customize the kind of update events they
+            want to receive. For more information on how to customize
             notification preferences for a given project see <xref
 		linkend="TrackerEmailNotificationSettings" />.</para>
           </listitem>
@@ -733,7 +732,7 @@
         <title>Adding and Deleting CC Names</title>
 
         <para>Several CC names can be added at once by separating them
-        with commas or semi-column in the 'Add CC' field. Using the
+        with commas or semi-column in the &#34;Add CC&#34; field. Using the
         comment field, one can also explain why these CC names were
         added and/or who they are.</para>
 
@@ -755,7 +754,7 @@
             delete CC entries that were either added by themselves or
             entries where the CC name matches their own name or email
             address in any CodeX projects. In other words a CodeX user
-            has the right to undo what she has done or remove herself
+            has the right to undo what they have done or remove themself
             from a CC list in any project. </para>
           </listitem>
         </itemizedlist>
@@ -866,7 +865,7 @@
       comment.</para>
 
       <para>When typing a follow-up comment, any text that follows the
-      pattern 'art #XXX' will be interpreted as a reference to the
+      pattern &#34;art #XXX&#34; will be interpreted as a reference to the
       artifact XXX where XXX is the unique artifact ID. Each time
       CodeX displays a piece of text that follows this pattern it will
       automagically create an hyperlink to the web page showing all
@@ -883,7 +882,7 @@
 
       <itemizedlist mark="bullet" spacing="compact">
 	<listitem>
-	  <para>You can also use the pattern 'commit #XXX' in a
+	  <para>You can also use the pattern &#34;commit #XXX&#34; in a
 	  follow-up comment to refer to the commit with ID number XXX
 	  has listed in your CVS tracking database. This is very
 	  useful for instance when you want to close a defect or a
@@ -898,8 +897,8 @@
 	<listitem>
 	  <para>If a project uses one of the legacy bug tracking
 	  system, task manager or support request manager, it is also
-	  possible to refer to one of those by using the patterns 'bug
-	  #XXX', 'task #XXX' or 'sr #XXX'.</para>
+	  possible to refer to one of those by using the patterns &#34;bug
+	  #XXX&#34;, &#34;task #XXX&#34; or &#34;sr #XXX&#34;.</para>
 	</listitem>
 
       </itemizedlist>
@@ -915,10 +914,10 @@
       occurred on all artifact fields since the creation of the
       artifact.</para>
 
-      <para>The artifact history shows what fields changed, what was
-      the old value before the change took place, who changed it and
+      <para>The artifact history shows what fields changed, what the old value 
+      was before the change took place, who changed it and
       when. Since the artifact history only shows the old value of a 
-      field it requires a bit of exercise to determine what the new
+      field it requires a bit of work to determine what the new
       value was right after the change took place.</para>
 
       <para>Let&#39;s take an example: <xref
@@ -930,7 +929,7 @@
       visible in the artifact form. What the sample change history
       tells us when you start reading it from the top is that the
       Severity field was modified on Oct 10th, 2003 at 11:01am by user
-      'ljulliar' and the previous Severity level was
+      &#34;ljulliar&#34; and the previous Severity level was
       &#34;5-Major&#34;. As there is no other Severity item in the
       history list you can safely assume that &#34;5-Major&#34; was
       the Severity value assigned to the artifact when it was first
@@ -1139,7 +1138,7 @@
 
     <para>Before one can define what fields and field values to use
       in a tracker it must first be created. Tracker creation can be
-      accessed from the 'Create a New Tracker' menu item available in
+      accessed from the &#34;Create a New Tracker&#34; menu item available in
       the Tracker Administration section.</para>
 
     <para><tip><title>Tip: Use the predefined trackers
@@ -1161,7 +1160,7 @@
 	  name of your tracker. A tracker is typically named after the
 	  type of artifact it is going to manage. This name will be
 	  used by CodeX in the title of the various screens of the
-	  trackers. Typical example of tracker names are: Action
+	  trackers. Typical examples of tracker names are: Action
 	  Requests, Support Requests, Requirements, Defects,
 	  Bugs&hellip;</para>
       </listitem>
@@ -1205,7 +1204,7 @@
     <para><emphasis role="bold">Remark</emphasis>: using a template
       doesn't mean you have to stick to the list of fields and field
       values defined in this template. You can always add or remove
-      fields or tune the field settings afterwards.</para>
+      fields or fine-tune the field settings afterwards.</para>
 
     <itemizedlist mark="bullet" spacing="compact">
       <listitem id="TrackerCreationFromCodeXTemplate">
@@ -1217,7 +1216,7 @@
 	  make developers' life easier. The list of available
 	  templates may vary from one CodeX site to another but you
 	  will typically find templates for Bugs, Tasks, etc. A
-	  specific tracker called 'Empty' allows you to create a
+	  specific tracker called &#34;Empty&#34; allows you to create a
 	  virgin tracker with no predefined fields other than the
 	  minimal set of required fields.</para>
       </listitem>
@@ -1246,7 +1245,7 @@
     <para>As we went through the description of the CodeX Tracker
     features, we referred several times to the flexibility of this
     system and how easy it is to customize your own tracker. This can
-    be done through the Tracker Administration module unvailable under
+    be done through the Tracker Administration module available under
     the &#34;All Trackers Admin&#34; menu item in the Tracker Menu
     bar.</para>
 
@@ -1379,10 +1378,10 @@
     <section id="TrackerCannedResponses">
       <title>Canned Responses</title>
 
-      <para>It is not infrequent to see the project members in
-	charge of the artifact classification and dispatch process to
-	post the same follow-up comments again and again. Typical
-	examples of repeatedly posted comments are: a thank you
+      <para>One frequently sees project members in
+	charge of the artifact classification and dispatch process
+	posting the same follow-up comments repeatedly. Typical
+	examples of repeated posted comments are: a thank you
 	message to the originator, a request for the originator to
 	provide commonly missing information like version numbers or
 	type of machine used, etc. (see <xref
@@ -1466,18 +1465,18 @@
 	Box, Multi-Select Box, Text Area, Text Field, Integer Field,
 	Float Field and Date Field.</para>
 
-	<para>Find below a detailled description of each type:</para>
+	<para>Find below a detailed description of each type:</para>
 
 	<itemizedlist mark="dash" spacing="compact">
 	  <listitem>
 	    <para><emphasis role="underline">Select Box</emphasis>: a
-	    'Select Box' field takes its value from a predefined list
+	    &#34;Select Box&#34; field takes its value from a predefined list
 	    of values defined by the Project Administrator. Depending
 	    on the browser you use it may be displayed slightly
 	    differently but it is generally shown as a pull-down menu
 	    with the list of values that you have defined. At any
 	    given time this type of field can only be assigned one
-	    single value. An example of such a field is the 'Category'
+	    single value. An example of such a field is the &#34;Category&#34;
 	    field int he bug template.</para>
 	  </listitem>
 
@@ -1487,17 +1486,17 @@
 	    this field takes its value from a predefined list of
 	    values. As opposed to the Select Box field, the
 	    Multi-Select Box can be given multiple values at once by
-	    the end user. An example of such a field is the 'Assigned
-	    To' field of the task manager where a task can be assigned
+	    the end user. An example of such a field is the &#34;Assigned
+	    To&#34; field of the task manager where a task can be assigned
 	    to multiple project members at once.</para>
 	  </listitem>
 
 	  <listitem>
 	    <para> <emphasis role="underline">Text Area</emphasis>:
 	    allows the user to enter free text in a multi-line text
-	    area. The field 'Original Submission' that is used to describe in
-	    details a defect, a task, etc. is of type 'Text
-	    Area.</para>
+	    area. The field &#34;Original Submission&#34; that is used to describe in
+	    details a defect, a task, etc. is of type &#34;Text
+	    Area&#34;.</para>
 	  </listitem>
 
 	  <listitem>
@@ -1602,7 +1601,7 @@
 	      <listitem>
 		<para><emphasis role="underline">Unused</emphasis>:
 		the field is not used by your project. Not that an
-		unused field is just a 'hidden' field. if you change
+		unused field is just a &#34;hidden&#34; field. if you change
 		the status of a field from used to unused all the data
 		associated with this field are preserved.</para>
 	      </listitem>
@@ -1685,11 +1684,11 @@
 	  </listitem>
 
 	  <listitem>
-	    <para><emphasis role="bold">Display Size</emphasis>:
-	      this property allows you to define how much space a
-	      field is going to take on the screen. It has a different
-	      meaning and a different format depending on the field
-	      type.</para>
+	    <para id="FieldDisplaySize" xreflabel="Field Display
+	    Size"><emphasis role="bold">Display Size</emphasis>: this
+	    property allows you to define how much space a field is
+	    going to take on the screen. It has a different meaning
+	    and a different format depending on the field type.</para>
 
 
 	    <itemizedlist mark="dash" spacing="compact">
@@ -1709,16 +1708,16 @@
 	      </listitem>
 	      <listitem>
 		<para><emphasis role="underline">Text Field, Integer
-		Field, Float Field</emphasis>: for all one-line text
-		fields, the display size follows the pattern 'V/M'
+		Field, Float Field</emphasis>: for all one-line 
+		fields, the display size follows the pattern &#34;V/M&#34;
 		where V is the number of character visible at once in
 		the field display window and M is the maximum number
 		of characters that can be typed for this field. If
 		V is less than M then the text will shift in the
-		visible window has more text is entered. The maximum
+		visible window as more text is entered. The maximum
 		value of M is 255.</para>
 
-		<para>A display size of '10/40' means a field that
+		<para>A display size of &#34;10/40&#34; means a field that
 		  accepts 40 characters maximum and the field display
 		  is 10 characters in width. </para>
 	      </listitem>
@@ -1732,7 +1731,7 @@
 	      <listitem>
 		<para><emphasis role="underline">Text
 		  Area</emphasis>: for text areas, the display size
-		  follows the pattern 'C/R' where C is the number of
+		  follows the pattern &#34;C/R&#34; where C is the number of
 		  columns in the text area (the width in number of
 		  characters) and R is the number of rows or lines of
 		  text. Note that the number of lines is not limited
@@ -1766,15 +1765,15 @@
 	    members and non project members. In general non project
 	    members are given access to restricted set of fields when
 	    they submit a bug. As an example they are not supposed to
-	    know how critical a bug is ('Severity' field), how to
-	    prioritize it ('Priority' field) (or whom a bug should be
-	    assigned to ('Assigned To' field). Therefore these fields
+	    know how critical a bug is (&#34;Severity&#34; field), how to
+	    prioritize it (&#34;Priority&#34; field) (or whom a bug should be
+	    assigned to (&#34;Assigned To&#34; field). Therefore these fields
 	    should probably not appear on non project members submission
 	    form.</para>
 
 	    <para>Finally, some fields have fixed display settings and
 	    they always or never appear on the submission form. For
-	    instance the 'Artifact ID' field never appears on the bug
+	    instance the &#34;Artifact ID&#34; field never appears on the bug
 	    submission form because by definition a bug not yet
 	    submitted has no Artifact ID.</para>
 	    
@@ -1805,14 +1804,17 @@
 	  </listitem>
 	  
 	  <listitem>
-	    <para><emphasis role="bold">Status</emphasis>: Used or
-	      Unused.  Changing the status in either direction can be
-	      done at any time in the life of the project without
-	      negative impact on the existing artifacts. Newly used
-	      fields will appear with value &#34;None&#34; in existing
-	      artifacts and fields becoming unused will simply be
-	      hidden from the user view but are still present in the
-	      bug database.</para>
+	    <para><emphasis role="bold">Use this field</emphasis>:
+	    This checkbox only appears on the field usage modification
+	    screen. When first created a field is automatically given
+	    the status &#34;Used&#34; (checkbox marked). Fields becoming
+	    unused will simply be hidden from the user view but all
+	    data attached to this field in the artifact database
+	    remains untouched. In other words, returning a field from
+	    unused to used will also restore the field data as they
+	    were before. Only the actual deletion of a field destroys
+	    the field data (see <xref linkend="TrackerFieldList"
+	    />. </para>
 	  </listitem>
 	</itemizedlist>
       </section>
@@ -1824,7 +1826,7 @@
 
       <para>Once fields have been defined for your tracker, the next
 	step is to define a set of values for your fields. This mostly
-	applies to 'Select Box' and 'Multi-Select Box' type of fields
+	applies to &#34;Select Box&#34; and &#34;Multi-Select Box&#34; type of fields
 	where the list of values you are going to choose will show up
 	in the pull-down menus when an artifact is submitted or
 	updated. Other field types are simply one-line fields with no
@@ -1872,7 +1874,7 @@
 
 	<para>A click on any of the fields listed in the Field Value
 	  Management screen (see <xref
-	    linkend="TrackerFieldValuesManagement" /> brings you to the
+	    linkend="TrackerFieldValuesManagement" />) brings you to the
 	  list of existing values for this field (see <xref
 	    linkend="FigureListOfValuesForTrackerFieldStatus"
 	    />).</para>
@@ -1884,19 +1886,19 @@
 	  <!--
 	  <listitem>
 	  <para><emphasis role="bold">ID</emphasis> (optional): the
-	  ID column is only shown for fields which have a 'System'
+	  ID column is only shown for fields which have a &#34;System&#34;
 	  scope. For this type of field the ID often carry a
 	  semantic meaning and if you redefine the label of a value
 	  associated with a given ID it is important that you know
 	  about the ID.(FIXME - A cause de severity - est-ce qu'on
 	  le maintient?)</para>
 
-	  <para>As an example the 'Severity' field has 9 possible
+	  <para>As an example the &#34;Severity&#34; field has 9 possible
 	  values and the bugs with the highest ID are always
 	  considered as the most critical bug by the system. So it
 	  would be a bad idea to redefine the value label for ID 9
-	  to something like 'Very Minor' :-) but it is ok to
-	  redefine it as 'Fatal'</para>
+	  to something like &#34;Very Minor&#34; :-) but it is ok to
+	  redefine it as &#34;Fatal&#34;</para>
 	</listitem>
 	  -->
 	  <listitem>
@@ -1949,9 +1951,9 @@
 	
 	<para><xref linkend="FigureListOfValuesForTrackerFieldStatus"
 	    /> shows the list of available values for the Status field of
-	tracker managing 'Bugs' artifacts. The Status field was chosen
+	tracker managing &#34;Bugs&#34; artifacts. The Status field was chosen
 	on purpose. Not only is the Status field a required field of
-	the 'Bugs' template, but it also comes with set of predefined values
+	the &#34;Bugs&#34; template, but it also comes with set of predefined values
 	that are available to all CodeX projects. By default only
 	&#34;Open&#34; and &#34;Closed&#34; values are active (and
 	permanent in this case) but there is a series of 7 other
@@ -1967,7 +1969,7 @@
 	values as much as you can before creating new ones.</para>
 
 	<figure id="FigureListOfValuesForTrackerFieldStatus">
-	  <title>List of values for the 'Status' field</title>
+	  <title>List of values for the &#34;Status&#34; field</title>
 	  
 	  <mediaobject>
 	    <imageobject>
@@ -2006,7 +2008,7 @@
       <section id="TrackerBindingFieldToValueList">
 	<title>Binding a Field to a List of Values</title>
 	
-	<para>Not only does the CodeX Tracker allows you to create a
+	<para>Not only does the CodeX Tracker allow you to create a
 	list of values for a select box but it also offers the ability
 	to associate a select box with a list of predefined values
 	that is actually dynamically generated by the CodeX system. A
@@ -2149,7 +2151,7 @@
       <section id="TrackerReportBrowsing">
 	<title>Browsing Tracker Reports</title>
 
-	<para>Clicking on the 'Manage Reports' item in the Tracker
+	<para>Clicking on the &#34;Manage Reports&#34; item in the Tracker
 	Administration menu bar at the top of the page displays the
 	list of available reports (see <xref
 	    linkend="FigureTrackerReportBrowsing" />) with the following
@@ -2337,8 +2339,8 @@
 	artifacts (and optionally artifact updates) will be
 	systematically sent. Note that in this case notifications will
 	be sent to users regardless of their personal preferences
-	defined (see section '<xref
-	linkend="TrackerEventRoleBasedEmailNotification" />'
+	defined (see section &#34;<xref
+	linkend="TrackerEventRoleBasedEmailNotification" />&#34;
 	below).</para>
 
 	<para>This feature is typically used to send submissions of
@@ -2415,7 +2417,7 @@
 
 	<para>This is the most sophisticated part of the customization
 	process. It allows any user to specify what types of events
-	she wants to be notified by email. Note that these settings
+	they wants to be notified of by email. Note that these settings
 	are project and user specific so you can tune your own email
 	notification preferences for each project you are involved
 	with.</para>
@@ -2470,28 +2472,28 @@
 	<itemizedlist>
 	  <listitem><para>First let's look at the Commenter
 	  column. The Commenter column says that this user has decided
-	  that if she was involved in an artifact as a Commenter (she just
-	  posted a follow-up comment at some point in time) then she
-	  is only interested in receiving email notification when the
-	  status of the artifact goes to 'Closed' or when any of the fields
+	  that if they were involved in an artifact as a Commenter (they just
+	  posted a follow-up comment at some point in time) then they
+	  are only interested in receiving email notification when the
+	  status of the artifact goes to &#34;Closed&#34; or when any of the fields
 	  Priority, Status and Severity is modified. All other events
 	  will be ignored by the CodeX tracker and no notification
 	  will be sent to this user.</para></listitem>
 
 	  <listitem><para>Second, looking at the matrix by row, one can see
-	  that the user said that when she makes a modification to an artifact 
-	  herself (Event 'I am the author of the change') she doesn't
-	  want to receive any email notification whatever her role 
+	  that the user said that when they make a modification to an artifact 
+	  themself (Event &#34;I am the author of the change&#34;) they don't
+	  want to receive any email notification whatever their role 
 	  in this artifact is.</para></listitem>
 
 	  <listitem><para>Finally, the user also said that when a new
 	  artifact is submitted to the project and is immediately assigned
-	  to her (Assignee role) she wants to be notified. However if
-	  she is the submitter of the new artifact then she is not
+	  to her (Assignee role), they want to be notified. However if
+	  they are the submitter of the new artifact then they are not
 	  interested in receiving the notification.</para>
 
 	    <para>Note that the Commenter role is meaningless for
-	      the event 'A new artifact has been submitted' because
+	      the event &#34;A new artifact has been submitted&#34; because
 	      follow-up comments can only be added in update time not
 	      at creation time.</para>
 	  </listitem>
