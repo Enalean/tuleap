@@ -59,7 +59,7 @@ function patch_header_admin($params) {
     if (!$project->isProject()) {
 	exit_error('Error','Only Projects Can Use The Patch Manager');
     }
-    if (!$project->usesBugs()) {
+    if (!$project->usesPatch()) {
 	exit_error('Error','This Project Has Turned Off The Patch Manager');
     }
     echo site_project_header($params);
