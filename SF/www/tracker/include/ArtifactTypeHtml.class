@@ -1059,9 +1059,8 @@ class ArtifactTypeHtml extends ArtifactType {
 		
 		while (list($field_name,$field) = each($fields)) {
 		
-			// Special case for submitted_by field
-			// We don't display this field
-			if ( $field->getName() == "submitted_by" ) {
+			// Special case for special fields (excluded comment_type_id)
+			if ( ($field->getName() != "comment_type_id")&&($field->isSpecial()) ) {
 				continue;
 			}
 			
