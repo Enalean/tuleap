@@ -116,7 +116,7 @@ your account.
 
 <?php 
 if ($register_error) {
-    print "<p><blink><b><span class="feedback">$register_error</span></b></blink>";
+    print "<p><blink><b><span class=\"feedback\">$register_error</span></b></blink>";
 } ?>
 
 <form action="/account/register.php" method="post">
