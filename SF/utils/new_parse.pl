@@ -24,7 +24,7 @@ require("include.pl");  # Include all the predefined functions and variables
 
 my $user_file = $file_dir . "user_dump";
 my $group_file = $file_dir . "group_dump";
-my ($uid, $status, $username, $shell, $passwd, $win_passwd, $winnt_passwd, $realname);
+my ($uid, $status, $username, $shell, $passwd, $win_passwd, $winnt_passwd, $email, $realname);
 my ($gname, $gstatus, $gid, $userlist);
 
 # Win accounts are activated if /etc/smbpasswd exists.
@@ -56,7 +56,7 @@ my $cvs_root_allow_file = "/etc/cvs_root_allow";
 print ("\n\n	Processing Users\n\n");
 while ($ln = pop(@userdump_array)) {
 	chop($ln);
-	($uid, $status, $username, $shell, $passwd, $win_passwd, $winnt_passwd, $realname) = split(":", $ln);
+	($uid, $status, $username, $shell, $passwd, $win_passwd, $winnt_passwd, $email, $realname) = split(":", $ln);
 
 	# if win passwords are empty in the SQL database then it means
 	# that it's a user that was created before Win Account were put in place
@@ -78,11 +78,11 @@ while ($ln = pop(@userdump_array)) {
 	$user_exists = getpwnam($username);
 	
 	if ($status eq 'A' && $user_exists) {
-		update_user($uid, $username, $realname, $shell, $passwd);
+		update_user($uid, $username, $realname, $shell, $passwd, $email);
 		update_winuser($uid, $username, $realname, $win_passwd, $winnt_passwd);
 	
 	} elsif ($status eq 'A' && !$user_exists) {
-		add_user($uid, $username, $realname, $shell, $passwd);
+		add_user($uid, $username, $realname, $shell, $passwd, $email);
 		add_winuser($uid, $username, $realname, $win_passwd, $winnt_passwd);
 	
 	} elsif ($status eq 'D') {
@@ -252,14 +252,14 @@ write_array_file($cvs_root_allow_file, @cvs_root_allow_array);
 # User Add Function
 #############################
 sub add_user {  
-	my ($uid, $username, $realname, $shell, $passwd) = @_;
+	my ($uid, $username, $realname, $shell, $passwd, $email) = @_;
 	my $skel_array = ();
 	
 	$home_dir = $homedir_prefix.$username;
 
 	print("Making a User Account for : $username\n");
 		
-	push @passwd_array, "$username:x:$uid:$uid:$realname:$home_dir:$shell\n";
+	push @passwd_array, "$username:x:$uid:$uid:$realname <$email>:$home_dir:$shell\n";
 	push @shadow_array, "$username:$passwd:$date:0:99999:7:::\n";
 	push @group_array, "$username:x:$uid:\n";
 
@@ -287,21 +287,17 @@ sub add_winuser {
 # User Add Function
 #############################
 sub update_user {
-	my ($uid, $username, $realname, $shell, $passwd) = @_;
+	my ($uid, $username, $realname, $shell, $passwd, $email) = @_;
 	my ($p_username, $p_junk, $p_uid, $p_gid, $p_realname, $p_homedir, $p_shell);
 	my ($s_username, $s_passwd, $s_date, $s_min, $s_max, $s_inact, $s_expire, $s_flag, $s_resv, $counter);
 	
 	print("Updating Account for: $username\n");
 	
 	foreach (@passwd_array) {
-		($p_username, $p_junk, $p_uid, $p_gid, $p_realname, $p_homedir, $p_shell) = split(":", $_);
+		($p_username, $p_junk, $p_uid, $p_gid, $p_realname_email, $p_homedir, $p_shell) = split(":", $_);
 		
 		if ($uid == $p_uid) {
-			if ($realname ne $p_realname) {
-				$passwd_array[$counter] = "$username:x:$uid:$uid:$realname:$p_homedir:$shell\n";
-			} elsif ($shell ne $p_shell) {
-				$passwd_array[$counter] = "$username:x:$uid:$uid:$p_realname:$p_homedir:$p_shell";
-			}
+		  $passwd_array[$counter] = "$username:x:$uid:$uid:$realname <$email>:$p_homedir:$shell\n";
 			last;
 		}
 		$counter++;
