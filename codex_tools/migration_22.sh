@@ -467,8 +467,10 @@ fi
 
 
 #############################################
-# Copy new icon in all custom themes
+# Copy new icons in all custom themes
 $CP  $INSTALL_DIR/SF/www/images/codex.theme/ic/lock.png /etc/codex/themes/images/*/ic/
+$CP  $INSTALL_DIR/SF/www/images/codex.theme/ic/svn16b.png /etc/codex/themes/images/*/ic/
+$CP  $INSTALL_DIR/SF/www/images/codex.theme/ic/file.png /etc/codex/themes/images/*/ic/
 
 
 ##############################################
@@ -839,6 +841,10 @@ todo "Edit the new /etc/httpd/conf/httpd.conf file and update it"
 todo "Edit the new /etc/httpd/conf.d/ssl.conf file and update it if needed"
 todo "Edit the new /etc/httpd/conf.d/php.conf file and update it if needed"
 todo "Edit the new /etc/httpd/conf.d/subversion.conf file and update it if needed"
+
+# needed by newparse.pl
+$TOUCH /etc/httpd/conf/htpasswd
+$CHMOD 644 /etc/httpd/conf/htpasswd
 
 ##############################################
 # Installing phpMyAdmin

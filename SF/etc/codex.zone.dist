@@ -1,0 +1,107 @@
+$TTL 3600
+@		IN	SOA	%sys_fullname%. %%dnssupport. (   ; e.g. 'dnssupport\.xrce.xerox.com.'
+					%dns_serial%	; Serial
+					3600	; Refresh 1 hour
+					900	; Retry 15 minutes
+					604800	; Expire in 7 days
+					3600 )	; Minimum TTL 1 hours
+		IN	NS	%sys_fullname%.
+		IN	NS	%%forwarder. ; you may list several forwarders (one per line) e.g. 'meije.grenoble.xrce.xerox.com.'
+localhost       IN      A       127.0.0.1
+; File: codex.zone.special
+;
+; This data file is for special manually included DNS database records.
+; It is directly inserted into the BIND database for this zone.
+;
+; IMPORTANT: Carefully read the format details below (esp. first 2).
+;
+;   > *** All full domain names MUST terminate with a period (".") ***
+;       (eg. "parc.xerox.com." instead of "parc.xerox.com")
+;        Names without termination are assumed to end in 
+;       (eg. the name "parc.xerox.com" would result in the incorrect
+;        name "parc.xerox.com.parc.xerox.com" in the parc zone file.)
+;
+;   >  Data must start at first character of a line (no leading white space)
+;
+;   >  Semicolon is the comment character in this type of data file.
+;   >  Names on right side of record should not be aliases.
+;
+;
+; The DNS record types below are fully documented in the Sun network 
+; administration  manual "Adminstering Domain Name Service", or in 
+; RFC 1033 "Domain Operations Guide, and the latter can be found in 
+; the doc subdirectory. 
+
+; The following CNAME records are aliases for remote hosts we want to 
+; treat as local. Such aliases should be avoided if possible, since
+; these aliases are difficult to keep properly updated when names change.
+;
+;spectrum		IN	CNAME		spectrum.
+;
+;
+; The following MX records are for SMTP mail forwarding mail support.
+; If you plan to support SMTP mail to your domain, copy the following 
+; 2 lines below to data section, uncomment them, and change "yourmailserver"
+; to be the name of the SMTP mail gateway for your domain.
+;
+;.              IN     MX     0  yourmailserver.wrc.xerox.com.
+;.              IN     MX     10  alpha.xerox.com.
+;
+;
+; The following NS and "glue" A records are delegations to a leaf domain
+; which need to be added at a twig level server (in <twig>.zone.special)
+; They do NOT need to be added at the leaf level in <leaf>.zone.special, 
+; since the NS records at that level are automatically created from 
+; <leaf>.servers.
+;
+; Change "leaf", "twig", "thisprimaryserver", and  "secondaryserver" to the 
+; correct names, and place correct server IP addresses in glue records.
+;
+; The 2 address "glue records" below are only required on the twig server
+; if the twig server is not a non-local secondary for the leaf domain.  
+; Do NOT add these glue records if you can make this server a "non-local"
+; secondary for the twig to avoid the requirement of maintaining these
+; records manually if servers change.
+;
+; Two example glue A records follow
+; primary.leaf.twig.xerox.com. IN  A   13.1.2.3
+; secondary.leaf.twig.xerox.com. IN A  13.1.2.4
+;
+; Delegation NS records (pointers to servers for leaf domain)
+; leaf.twig.xerox.com.     IN     NS    primary.leaf.twig.xerox.com.
+; leaf.twig.xerox.com.     IN     NS    secondary.leaf.twig.xerox.com.
+; 
+; A specific example;
+;
+; primary.cp10.es.xerox.com.   IN  A  13.1.2.3
+; secondary.cp10.es.xerox.com.  IN  A  13.1.2.4
+; cp10.es.xerox.com.     IN     NS    primary.cp10.es.xerox.com.
+; cp10.es.xerox.com.     IN     NS    secondary.cp10.es.xerox.com.
+;
+;
+; Put data after this line
+;----------------------------------------------------------------------
+
+%sys_default_domain%.    	IN      A       %sys_ip_address%
+%sys_shortname%                      	IN	A	%sys_ip_address%
+
+%sys_default_domain%.		IN	MX	0	%sys_fullname%.
+%sys_default_domain%.		IN	MX	10	%%referral. ; e.g. 'mailhost.grenoble.xrce.xerox.com.'
+;
+www                             IN      CNAME   %sys_shortname%
+cvs                             IN      CNAME   %sys_shortname%
+cvs1                            IN      CNAME   %sys_shortname%
+svn                             IN      CNAME   %sys_shortname%
+svn1                            IN      CNAME   %sys_shortname%
+download                        IN      CNAME   %sys_shortname%
+shell                           IN      CNAME   %sys_shortname%
+shell1                          IN      CNAME   %sys_shortname%
+users                           IN      CNAME   %sys_shortname%
+lists                           IN      A   %sys_ip_address%
+				IN	MX	0	lists.%sys_default_domain%.
+				IN	MX	10	%%referral. ; e.g. 'mailhost.grenoble.xrce.xerox.com.'
+
+;
+; *** From here out is auto-generated ***
+;
+

@@ -414,8 +414,7 @@ $RPM -Uvh --force ${newest_rpm}/viewcvs-*.noarch.rpm
 
 # Create an http password file
 $TOUCH /etc/httpd/conf/codex_htpasswd
-$CHOWN sourceforge.sourceforge /etc/httpd/conf/codex_htpasswd
-$CHMOD 775 /etc/httpd/conf/codex_htpasswd
+$CHMOD 644 /etc/httpd/conf/codex_htpasswd
 
 ######
 # Now install the non RPMs stuff 
@@ -486,7 +485,7 @@ $FIND $INSTALL_DIR -type f -exec $CHMOD u+rw,g+rw,o-w+r, {} \;
 $FIND $INSTALL_DIR -type d -exec $CHMOD 775 {} \;
 
 make_backup /etc/httpd/conf/httpd.conf
-for f in /etc/httpd/conf/httpd.conf \
+for f in /etc/httpd/conf/httpd.conf /var/named/codex.zone \
 /etc/httpd/conf/mailman.conf /etc/httpd/conf.d/ssl.conf \
 /etc/httpd/conf.d/php.conf /etc/httpd/conf.d/subversion.conf \
 /etc/codex/conf/local.inc; do
@@ -520,6 +519,10 @@ $TOUCH /etc/httpd/conf/codex_svnhosts.conf
 $CP $INSTALL_DIR/codex_tools/backup_job /home/tools
 $CHOWN root.root /home/tools/backup_job
 $CHMOD 740 /home/tools/backup_job
+# needed by newparse.pl
+$TOUCH /etc/httpd/conf/htpasswd
+$CHMOD 644 /etc/httpd/conf/htpasswd
+
 
 # replace string patterns in local.inc
 substitute '/etc/codex/conf/local.inc' '%sys_default_domain%' "$sys_default_domain" 
@@ -537,6 +540,16 @@ substitute '/etc/httpd/conf/httpd.conf' '%sys_ip_address%' "$sys_ip_address"
 # replace string patterns in ssl.conf
 substitute '/etc/httpd/conf.d/ssl.conf' '%sys_default_domain%' "$sys_default_domain"
 substitute '/etc/httpd/conf.d/ssl.conf' '%sys_ip_address%' "$sys_ip_address"
+
+# replace string patterns in codex.zone
+sys_shortname=`echo $sys_fullname | $PERL -pe 's/\.(.*)//'`
+dns_serial=`date +%Y%m%d`01
+substitute '/var/named/codex.zone' '%sys_default_domain%' "$sys_default_domain" 
+substitute '/var/named/codex.zone' '%sys_fullname%' "$sys_fullname"
+substitute '/var/named/codex.zone' '%sys_ip_address%' "$sys_ip_address"
+substitute '/var/named/codex.zone' '%sys_shortname%' "$sys_shortname"
+substitute '/var/named/codex.zone' '%dns_serial%' "$dns_serial"
+
 
 todo "Customize /etc/codex/conf/local.inc"
 todo "Customize /etc/httpd/conf/httpd.conf"
@@ -730,7 +743,7 @@ $CHMOD u+s commit-email.pl   # sets the uid bit (-rwsr-xr-x)
 ##############################################
 # Make the system daily cronjob run at 23:58pm
 echo "Updating daily cron job in system crontab..."
-perl -i'.orig' -p -e's/\d+ \d+ (.*daily)/58 23 \1/g' /etc/crontab
+$PERL -i'.orig' -p -e's/\d+ \d+ (.*daily)/58 23 \1/g' /etc/crontab
 
 ##############################################
 # FTP server configuration
@@ -806,13 +819,29 @@ todo "Customize /etc/codex/site-content/en_US/others/default_page.php (project w
 ##############################################
 # Shell Access configuration
 #
-echo "Shell access configuration defaulted to 'No shell account'..."
-$MYSQL -u sourceforge sourceforge --password=$sf_passwd -e "ALTER TABLE user ALTER COLUMN shell SET DEFAULT '/bin/false'"
+yn="-"
+read -p "Activate user shell accounts? [y|n]:" yn
+
+if [ "$yn" = "n" ]; then
+    echo "Shell access configuration defaulted to 'No shell account'..."
+    $MYSQL -u sourceforge sourceforge --password=$sf_passwd -e "ALTER TABLE user ALTER COLUMN shell SET DEFAULT '/sbin/nologin'"
+fi
 
 ##############################################
 # DNS Configuration
 #
-todo "Create the DNS configuration files as explained in the CodeX Installation Guide"
+todo "Create the DNS configuration files as explained in the CodeX Installation Guide:"
+todo "- update /var/named/codex.zone - replace all words starting with %%"
+todo "- cp /var/named/codex.zone /var/named/codex_full.zone"
+todo "- edit /etc/named.conf :"
+todo "   - add DNS forwarders"
+todo "   - make sure the dns cache file exists (or 'touch' it)"
+todo "   - add at the end of the file (before the include):"
+todo "zone \"$sys_default_domain\" {"
+todo "          type master;"
+todo "          file \"codex_full.zone\";"
+todo "};"
+todo "- start 'named' service (or reboot)"
 
 ##############################################
 # Crontab configuration
@@ -853,7 +882,7 @@ crontab -u root /tmp/cronfile
 echo "Installing  sourceforge user crontab..."
 $CAT <<'EOF' >/tmp/cronfile
 # Re-generate the CodeX User Guide on a daily basis
-00 03 * * * /home/httpd/SF/utils/generate_doc.sh
+00 03 * * * /home/httpd/SF/utils/generate_doc.sh -f
 EOF
 crontab -u sourceforge /tmp/cronfile
 
@@ -1075,6 +1104,26 @@ and responsibilities.
 EOM
 EOF
 
+
+##############################################
+# Generate Documentation
+#
+echo "Generating the User Manual. This might take a few minutes."
+/home/httpd/SF/utils/generate_doc.sh -f
+
+##############################################
+# Make sure all major services are on
+#
+/sbin/chkconfig named on
+/sbin/chkconfig sshd on
+/sbin/chkconfig httpd on
+/sbin/chkconfig mysql on
+/sbin/chkconfig cvs on
+
+
+##############################################
+# End of installation
+#
 todo "Create the shell login files for CodeX users in /etc/skel_codex"
 todo "Customize /etc/php.ini: "
 todo "  - register_globals = On"
