@@ -77,10 +77,17 @@ function my_hide_url ($svc, $db_item_id, $item_id, $count, $hide) {
     return array($hide_now, $count-$old_count, $hide_url);
 }
 
-function my_format_as_flag($assigned_to, $submitted_by) {
+function my_format_as_flag($assigned_to, $submitted_by, $multi_assigned_to=null) {
     $AS_flag = '';
     if ($assigned_to == user_getid()) {
 	$AS_flag = 'A';
+    } else if ($multi_assigned_to) {
+     // For multiple assigned to
+       for ($i=0; $i<count($multi_assigned_to); $i++) {
+            if ($multi_assigned_to[$i]==user_getid()) {
+                $AS_flag = 'A';
+            }
+        }
     }
     if ($submitted_by == user_getid()) {
 	$AS_flag .= 'S';

@@ -154,6 +154,26 @@ class Artifact extends Error {
         return $this->data_array[$name];
     }
 
+
+    /**
+     *  getMultiAssignedTo - get the value for the 'multi_assigned_to' field
+     *  This function is needed because getValue() won't return an array.
+     *
+     *  @return array
+     */
+    function getMultiAssignedTo() {
+        $aid=$this->getID();
+        if (!$aid) return;
+
+        $sql="SELECT afv.valueInt FROM artifact_field_value afv, artifact a, artifact_field af WHERE a.artifact_id=$aid AND afv.artifact_id=$aid AND a.group_artifact_id=af.group_artifact_id AND afv.field_id=af.field_id AND af.field_name='multi_assigned_to'";
+        $res=db_query($sql);
+        $i=0;
+        while($resrow = db_fetch_array($result)) {
+            $return_val[$i++]=$resrow['valueInt'];
+        }
+        return $return_val;
+    }
+
     /**
      *  getID - get this ArtifactID.
      *

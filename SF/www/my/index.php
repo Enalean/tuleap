@@ -454,8 +454,12 @@ if (user_isloggedin()) {
 			    if (!$hide_now) {
 			    	
 				// Form the 'Submitted by/Assigned to flag' for marking
-				$AS_flag = my_format_as_flag($artifact->getValue('assigned_to'), $artifact->getSubmittedBy() );
-
+                                if ($assigned_to == user_getid()) {
+                                    //if the artifact is assigned to the user, don't need to compute the costly $artifact->getMultiAssignedTo()
+                                    $AS_flag = my_format_as_flag($artifact->getValue('assigned_to'), $artifact->getSubmittedBy());
+                                } else {
+                                    $AS_flag = my_format_as_flag($artifact->getValue('assigned_to'), $artifact->getSubmittedBy(),$artifact->getMultiAssignedTo() );
+                                }
 				if ( $artifact->getValue('percent_complete') ) {
 				    $field = $art_field_fact->getFieldFromName('percent_complete');
 				    $percent_complete = $field->getValue($at->getID(),$artifact->getValue('percent_complete'));
