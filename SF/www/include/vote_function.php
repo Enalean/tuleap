@@ -239,7 +239,7 @@ if (db_numrows($result) > 0) {
 
 	<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
 	<BR>
-	<A HREF="/survey/privacy.php">Survey Privacy</A>
+	<A HREF="/survey/privacy.php?group_id=<?php echo $group_id; ?>&survey_id=<?php echo $survey_id; ?>">Survey Privacy</A>
 	</TD></TR>
 	</FORM>
 	</TABLE>
