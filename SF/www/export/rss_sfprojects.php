@@ -3,8 +3,14 @@
 include "pre.php";
 include "rss_utils.inc";
 
-$res = db_query('SELECT group_id,unix_group_name,group_name,homepage,short_description, xrx_export_ettm FROM groups '
-	.'WHERE is_public=1 AND status=\'A\' ORDER BY group_id'.($limit?" LIMIT $limit":""));
+if ($option == "newest") {
+  $res = db_query('SELECT group_id,unix_group_name,group_name,short_description, xrx_export_ettm FROM groups '
+		  .'WHERE is_public=1 AND status=\'A\' AND type=1 ' 
+		  .'ORDER BY register_time DESC'.($limit?" LIMIT $limit":" LIMIT 10"));
+} else {
+  $res = db_query('SELECT group_id,unix_group_name,group_name,short_description, xrx_export_ettm FROM groups '
+		  .'WHERE is_public=1 AND status=\'A\' ORDER BY group_id'.($limit?" LIMIT $limit":""));
+}
 
 if ($type == "rss") {
 
@@ -27,7 +33,11 @@ print "  <copyright>Copyright (c) ".$GLOBALS['sys_long_org_name'].", ".$GLOBALS[
 print "  <pubDate>".gmdate('D, d M Y g:i:s',time())." GMT</pubDate>\n";
 print "  <description>".$GLOBALS['sys_name']." Full Project Listing</description>\n";
 print "  <link>$server</link>\n";
+if ($option == "newest") {
+print "  <title>".$GLOBALS['sys_name']." New Projects</title>\n";
+} else {
 print "  <title>".$GLOBALS['sys_name']." Full Project Listing</title>\n";
+}
 print "  <webMaster>".$GLOBALS['sys_email_contact']."</webMaster>\n";
 print "  <language>en-us</language>\n";
 // ## item outputs
@@ -47,7 +57,11 @@ print " </channel>\n";
 } else if ($type == "csv") {
 
     header('Content-Type: text/csv');
-    header ('Content-Disposition: filename=all_projects.csv');
+    if ($option == "newest") {
+      header ('Content-Disposition: filename=new_projects.csv');
+    } else {
+      header ('Content-Disposition: filename=all_projects.csv');
+    }
 
     // ## one time output. List of Exported fields
     print 'Project ID, Short Name, Name, Description, Language, OS Runtime Support,'.

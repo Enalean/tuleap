@@ -18,7 +18,7 @@ $HTML->header(array('title'=>'Welcome'));
 <TR><TD width="65%" VALIGN="TOP">
 <? include(util_get_content('homepage/welcome_intro')); ?>
 <?php
-$HTML->box1_top('Latest News');
+$HTML->box1_top('Latest News <A href="/export/rss_sfnews.php" title="Latest News - RSS Format">[XML]</A>');
 echo news_show_latest($GLOBALS['sys_news_group'],5,true,false,false,5);
 $HTML->box1_bottom();
 ?>

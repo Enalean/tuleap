@@ -13,9 +13,9 @@ function show_features_boxes() {
 	$return .= show_sitestats();
 	$return .= $HTML->box1_middle('Top Downloads Yesterday');
 	$return .= show_top_downloads();
-	$return .= $HTML->box1_middle('Newest Releases');
+	$return .= $HTML->box1_middle('Newest Releases <A href="/export/rss_sfnewreleases.php" title="Newest Releases - RSS Format">[XML]</A>');
 	$return .= show_newest_releases();
-	$return .= $HTML->box1_middle('Newest Projects');
+	$return .= $HTML->box1_middle('Newest Projects <A href="/export/rss_sfprojects.php?type=rss&option=newest" title="Newest Projects - RSS Format">[XML]</A>');
 	$return .= show_newest_projects();
 	$return .= $HTML->box1_middle('Most Active This Week');
 	$return .= show_highest_ranked_projects();
@@ -183,7 +183,7 @@ function show_newest_releases() {
 	$DONE[$row_newrel[group_id]] = true;
     }
 
-    $return .= '<center><A href="/new/">[ More ]</A></center>';
+    $return .= '<center><A href="/new/?func=releases">[ More ]</A></center>';
 	
     return $return;
 
@@ -264,7 +264,7 @@ function show_newest_projects() {
 				. "$row_newproj[group_name]</A><BR>\n";
 			}
 		}
-		$return .= '<CENTER><A href="/new/">[ More ]</A></CENTER>';
+		$return .= '<CENTER><A href="/new/?func=projects">[ More ]</A></CENTER>';
 	}
 	return $return;
 }
