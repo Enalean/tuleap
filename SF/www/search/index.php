@@ -239,14 +239,20 @@ if ($type_of_search == "soft") {
 
 	$array=explode(" ",$words);
 	$words1=implode($array,"%' $crit support.summary LIKE '%");
+	$words3=implode($array,"%' $crit support_messages.body LIKE '%");
 
 	$sql =	"SELECT support.support_id,support.summary,support.open_date,user.user_name "
-		. "FROM support,user "
-		. "WHERE user.user_id=support.submitted_by AND (support.summary LIKE '%$words1%') "
-		. " AND support.group_id='$group_id' "
-		.  "GROUP BY support_id,summary,open_date,user_name LIMIT $offset,26";
+		. "FROM support "
+		. "    INNER JOIN user ON user.user_id=support.submitted_by "
+		. "    LEFT JOIN support_messages ON support_messages.support_id=support.support_id "
+		. "WHERE "
+		. "    support.group_id='$group_id' "
+		. "    AND ((support.summary LIKE '%$words1%') "
+		. "      OR (support_messages.body LIKE '%$words3%')) "
+		. "GROUP BY support_id,summary,open_date,user_name LIMIT $offset,26";
+	$array=explode(" ",$words);
+	$words1=implode($array,"%' $crit support.summary LIKE '%");
 
-	//echo "DBG: $sql<br>";
 	$result = db_query($sql);
 	$rows = $rows_returned = db_numrows($result);
 
@@ -276,7 +282,7 @@ if ($type_of_search == "soft") {
 				. db_result($result, $i, "support_id")."\"><IMG SRC=\"".util_get_image_theme('msg.png')."\" BORDER=0 HEIGHT=12 WIDTH=10> "
 				. db_result($result, $i, "summary")."</A></TD>"
 				. "<TD>".db_result($result, $i, "user_name")."</TD>"
-				. "<TD>".format_date($sys_datefmt,db_result($result,$i,"date"))."</TD></TR>";
+				. "<TD>".format_date($sys_datefmt,db_result($result,$i,"open_date"))."</TD></TR>";
 		}
 		echo "</TABLE>\n";
 	}
