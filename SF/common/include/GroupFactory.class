@@ -1,0 +1,96 @@
+<?php
+//
+// Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
+//
+// $Id$
+//
+//
+//  Written for CodeX by Stephane Bouhet
+//
+
+//require($DOCUMENT_ROOT.'/../common/include/Error.class');
+//require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');
+
+class GroupFactory extends Error {
+
+	/**
+	 *  Constructor.
+	 *
+	 *	@return	boolean	success.
+	 */
+	function ArtifactTypeFactory() {
+		$this->Error();
+		return true;
+	}
+
+	/**
+	 *	return a resultset of Group
+	 *
+	 *	@return	resultset
+	 */
+	function getAllGroups() {
+
+		if (user_isloggedin()) {
+			// For  surperuser), we can see all the trackers (both public and non public)
+			if ( user_is_super_user ) {
+				$public_flag='0,1';
+			} else {
+				$public_flag='1';
+			}
+		} else {
+			$this->setError('Permission denied.');
+			return false;
+		}
+
+		$sql="SELECT group_id,group_name FROM groups
+			WHERE group_id > 100
+			AND is_public IN ($public_flag)
+			ORDER BY group_name ASC";
+
+		//echo $sql;
+		
+		$result = db_query ($sql);
+
+		$rows = db_numrows($result);
+
+		if (!$result || $rows < 1) {
+			$this->setError('None Found '.db_error());
+			return false;
+		}
+		return $result;
+	}
+
+	/**
+	 *	return a resultset of Group for the current user
+	 *
+	 *	@return	resultset
+	 */
+	function getMemberGroups() {
+
+		if (!user_isloggedin()) {
+			$this->setError('Permission denied.');
+			return false;
+		}
+
+		$sql="SELECT g.group_id,g.group_name ".
+			 "FROM groups g, user_group ug ".
+			 "WHERE g.group_id > 100 AND g.group_id = ug.group_id ".
+			 "AND ug.user_id=".user_getid()." ".
+			 "ORDER BY g.group_name ASC";
+
+		//echo $sql;
+		
+		$result = db_query ($sql);
+
+		$rows = db_numrows($result);
+
+		if (!$result || $rows < 1) {
+			$this->setError('None Found '.db_error());
+			return false;
+		}
+		return $result;
+	}
+
+}
+
+?>
