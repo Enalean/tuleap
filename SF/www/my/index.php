@@ -10,9 +10,17 @@ require ('pre.php');
 require ('vote_function.php');
 require ('./my_utils.php');
 require($DOCUMENT_ROOT.'/../common/tracker/Artifact.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactFactory.class');
+require($DOCUMENT_ROOT.'/../common/tracker/ArtifactFile.class');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');
+require($DOCUMENT_ROOT.'/../common/tracker/ArtifactGroup.class');
+require($DOCUMENT_ROOT.'/../common/tracker/ArtifactCanned.class');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactTypeFactory.class');
+require($DOCUMENT_ROOT.'/../common/tracker/ArtifactField.class');
+require($DOCUMENT_ROOT.'/../common/tracker/ArtifactFieldFactory.class');
+require($DOCUMENT_ROOT.'/../common/tracker/ArtifactReportFactory.class');
+require($DOCUMENT_ROOT.'/../common/tracker/ArtifactReport.class');
+require($DOCUMENT_ROOT.'/../common/tracker/ArtifactReportField.class');
+require($DOCUMENT_ROOT.'/../common/tracker/ArtifactFactory.class');
 
 if (user_isloggedin()) {
 
@@ -394,7 +402,7 @@ if (user_isloggedin()) {
 	/*
 		Artifact assigned to or submitted by this person
 	*/
-	echo $HTML->box1_top('My Artifacts');
+	echo $HTML->box1_top('My Artifacts',1,'',3);
 
 	// Trackers
 	$uid = user_getid();
@@ -429,6 +437,9 @@ if (user_isloggedin()) {
 				exit_error('Error',$at->getErrorMessage());
 			}
 
+			// Create field factory
+			$art_field_fact = new ArtifactFieldFactory($at);
+
 			$af = new ArtifactFactory($at);
 			
 			$artifact_list = $af->getMyArtifacts(user_getid());
@@ -437,7 +448,7 @@ if (user_isloggedin()) {
 			
 			list($hide_now,$count_diff,$hide_url) = 
 			    my_hide_url('artifact',$atid,$hide_item_id,$rows,$hide_artifact);
-			$html_hdr = ($j ? '<tr class="boxitem"><td colspan="2">' : '').
+			$html_hdr = ($j ? '<tr class="boxitem"><td colspan="3">' : '').
 			    $hide_url.'<A HREF="/tracker/?group_id='.$group_id.'&atid='.$atid.'"><B>'.
 			    $group->getPublicName()." - ".$at->getName().'</B></A>&nbsp;&nbsp;&nbsp;&nbsp;';
 			$html = '';
@@ -446,16 +457,31 @@ if (user_isloggedin()) {
 			while (list(,$artifact) = each($artifact_list) ) {
 
 			    if (!$hide_now) {
+			    	// Retrieve all fields values
+			    	$result_field = $artifact->getFieldsValues();
+			    	
 					// Form the 'Submitted by/Assigned to flag' for marking
-					$AS_flag = my_format_as_flag($artifact->getGenericValue('assigned_to'), $artifact->getSubmittedBy() );
-		
-					$html .= '
-					
-					<TR class="'.get_priority_color($artifact->getSeverity()).
-					'"><TD class="small"><A HREF="/tracker/?func=detail&group_id='.
-					$group_id.'&aid='.$artifact->getID().'&atid='.$atid.
-					'">'.$artifact->getID().'</A></TD>'.
-					'<TD class="small">'.stripslashes($artifact->getSummary()).'&nbsp;'.$AS_flag.'</TD></TR>';
+					$AS_flag = my_format_as_flag(db_result($result_field,0,'assigned_to'), $artifact->getSubmittedBy() );
+
+					if ( db_result($result_field,0,'percent_complete') ) {
+						$field = $art_field_fact->getFieldFromName('percent_complete');
+						$percent_complete = $field->getValue($at->getID(),db_result($result_field,0,'percent_complete'));
+						
+						$html .= '
+						<TR class="'.get_priority_color($artifact->getSeverity()).
+						'"><TD class="small"><A HREF="/tracker/?func=detail&group_id='.
+						$group_id.'&aid='.$artifact->getID().'&atid='.$atid.
+						'">'.$artifact->getID().'</A></TD>'.
+						'<TD class="small">'.stripslashes($artifact->getSummary()).'&nbsp;'.$AS_flag.'</TD>'.
+						'<TD class="small">'.$percent_complete.'</TD></TR>';
+					} else {
+						$html .= '
+						<TR class="'.get_priority_color($artifact->getSeverity()).
+						'"><TD class="small"><A HREF="/tracker/?func=detail&group_id='.
+						$group_id.'&aid='.$artifact->getID().'&atid='.$atid.
+						'">'.$artifact->getID().'</A></TD>'.
+						'<TD class="small" colspan="2">'.stripslashes($artifact->getSummary()).'&nbsp;'.$AS_flag.'</TD></TR>';
+					}
 	
 			    }
 			}
@@ -465,7 +491,7 @@ if (user_isloggedin()) {
 		
 		}
 
-	    echo '<TR><TD COLSPAN="2">&nbsp;</TD></TR>';
+	    echo '<TR><TD COLSPAN="3">&nbsp;</TD></TR>';
 
 	}
 	echo $HTML->box1_bottom();
