@@ -17,7 +17,7 @@
 
 sub exit_not_logged_in {
 
-  my $redirect = "http://$sys_default_domain/account/login.php?return_to=".urlencode("http://".$ENV{'HTTP_HOST'}.$ENV{'REQUEST_URI'});
+  my $redirect = "/account/login.php?return_to=".urlencode($ENV{'REQUEST_URI'});
   print "Content-type: text/html\n"; 
   print "Location: $redirect\n";
   print "\n";

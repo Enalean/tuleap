@@ -343,8 +343,8 @@ if ($project->usesCVS()) {
 
         echo ' ( <B>'.$cvs_commit_num.'</B> commits, <B>'.$cvs_add_num.'</B> adds, <B>'.$cvs_co_num.'</B> checkouts )';
         if ($cvs_commit_num || $cvs_add_num || $cvs_co_num) {
-            echo '<br> &nbsp; - <a href="http://'.$sys_cvs_host
-            .'/cgi-bin/cvsweb.cgi?cvsroot='.$project->getUnixName()
+            echo '<br> &nbsp; - <a href="http://'.$sys_default_domain
+            .'/cgi-bin/cvsweb.cgi/?cvsroot='.$project->getUnixName()
             .'">Browse CVS</a>';
         }
 }

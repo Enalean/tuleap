@@ -81,7 +81,7 @@ if ($row_grp['is_public']) {
 of this project\'s code. You may also view the complete histories of any
 file in the repository.
 <UL>
-<LI><A href="http'.(session_issecure() ? 's':'').'://'.$sys_cvs_host.'/cgi-bin/cvsweb.cgi?cvsroot='
+<LI><A href="http'.(session_issecure() ? 's':'').'://'.$sys_default_domain.'/cgi-bin/cvsweb.cgi/?cvsroot='
 .$row_grp['unix_group_name'].'"><B>Browse CVS Repository</B>';
 }
 

@@ -33,7 +33,7 @@ if ($login) {
 	if ($return_to) {
 	    // if return_to URL start with a protocol name then take as is
 	    // otherwise prepend the proper http protocol
-	    if (preg_match("/^\s*\w:\/\//", $return_to)) {
+	    if (preg_match("/^\s*\w*:\/\//", $return_to)) {
 		header("Location: $return_to");
 	    } else {
 		if ($stay_in_ssl) {
@@ -93,7 +93,7 @@ if ($GLOBALS['sys_https_host']) {
     $form_url = "http://".$GLOBALS['sys_default_domain'];
 }
 ?>
-	
+
 <p>
 <h2><?php print $GLOBALS['sys_name']; ?> Site Login
 <?php print ($GLOBALS['sys_https_host'] != "" ? ' (Secure)':''); ?>
