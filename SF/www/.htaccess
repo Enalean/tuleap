@@ -1,4 +1,4 @@
-<IfModule mod_php.c>
+<IfModule mod_php3.c>
 <Files projects>
 ForceType application/x-httpd-php3
 </Files>

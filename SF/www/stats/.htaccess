@@ -1,3 +1,4 @@
+<IfModule mod_php3.c>
 <Files views_graph.png>
 ForceType application/x-httpd-php3
 </Files>
@@ -7,3 +8,15 @@ ForceType application/x-httpd-php3
 <Files weekly_views.png>
 ForceType application/x-httpd-php3
 </Files>
+</IfModule>
+
+<IfModule mod_php4.c><Files views_graph.png>
+ForceType application/x-httpd-php
+</Files>
+<Files users_graph.png>
+ForceType application/x-httpd-php
+</Files>
+<Files weekly_views.png>
+ForceType application/x-httpd-php
+</Files>
+</IfModule>
