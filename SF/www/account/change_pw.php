@@ -14,40 +14,51 @@ require "account.php";
 
 function register_valid()	{
 
-	if (!$GLOBALS["Update"]) {
+	if (!$GLOBALS['Update']) {
 		return 0;
 	}
 	
 	// check against old pw
-	db_query("SELECT user_pw, status FROM user WHERE user_id=" . user_getid());
+	$res = db_query("SELECT user_pw, status FROM user WHERE user_id=" . user_getid());
+	if (! $res) {
+	  $GLOBALS['register_error'] = "Internal error: Cannot locate user in database.";
+	  return 0;
+	}
+	
 	$row_pw = db_fetch_array();
-	if ($row_pw[user_pw] != md5($GLOBALS[form_oldpw])) {
-		$GLOBALS[register_error] = "Old password is incorrect.";
+	if ($row_pw[user_pw] != md5($GLOBALS['form_oldpw'])) {
+		$GLOBALS['register_error'] = "Old password is incorrect.";
 		return 0;
 	}
 
 	if ($row_pw[status] != 'A') {
-		$GLOBALS[register_error] = "Account must be active to change password.";
+		$GLOBALS['register_error'] = "Account must be active to change password.";
 		return 0;
 	}
 
-	if (!$GLOBALS[form_pw]) {
-		$GLOBALS[register_error] = "You must supply a password.";
+	if (!$GLOBALS['form_pw']) {
+		$GLOBALS['register_error'] = "You must supply a password.";
 		return 0;
 	}
-	if ($GLOBALS[form_pw] != $GLOBALS[form_pw2]) {
-		$GLOBALS[register_error] = "Passwords do not match.";
+	if ($GLOBALS['form_pw'] != $GLOBALS['form_pw2']) {
+		$GLOBALS['register_error'] = "Passwords do not match.";
 		return 0;
 	}
-	if (!account_pwvalid($GLOBALS[form_pw])) {
+	if (!account_pwvalid($GLOBALS['form_pw'])) {
 		return 0;
 	}
 	
 	// if we got this far, it must be good
-	db_query("UPDATE user SET user_pw='" . md5($GLOBALS[form_pw]) . "',"
-		. "unix_pw='" . account_genunixpw($GLOBALS[form_pw]) . "',"
-		. "windows_pw='" . account_genwinpw($GLOBALS[form_pw]) . "' WHERE "
+	$res = db_query("UPDATE user SET user_pw='" . md5($GLOBALS['form_pw']) . "',"
+		. "unix_pw='" . account_genunixpw($GLOBALS['form_pw']) . "',"
+		. "windows_pw='" . account_genwinpw($GLOBALS['form_pw']) . "' WHERE "
 		. "user_id=" . user_getid());
+
+	if (! $res) {
+	  $GLOBALS['register_error'] = "Internal error: Could not update password.";
+	  return 0;
+	}
+
 	return 1;
 }
 
@@ -56,7 +67,7 @@ function register_valid()	{
 if (register_valid()) {
 	$HTML->header(array(title=>"Successfully Changed Password"));
 ?>
-<p><b>SourceForge Change Confirmation</b>
+<p><b>CodeX Change Confirmation</b>
 <p>Congratulations. You have changed your password.
 This change is immediate on the web site, but will not take
 effect on your shell/cvs account until the next cron update,
@@ -75,7 +86,7 @@ which will happen in
 	$HTML->header(array(title=>"Change Password"));
 
 ?>
-<p><b>SourceForge Password Change</b>
+<p><b>CodeX Password Change</b>
 <?php if ($register_error) print "<p><span class=\"highlight\"><b>$register_error</b></span>"; ?>
 <form action="change_pw.php" method="post">
 <p>Old Password:
