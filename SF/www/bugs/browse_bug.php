@@ -246,8 +246,6 @@ $statement .= db_numrows($result).' bugs matching';
 
 if ($result && db_numrows($result) > 0) {
 
-    echo '<hr size="1" noshade>
-';
     echo "<h3>$statement $order_statement</h3>";
 
     //create a new $set string to be used for next/prev button
@@ -255,12 +253,12 @@ if ($result && db_numrows($result) > 0) {
 	$set .= $pref_stg;
     }
 
+    $url = "/bugs/?group_id=$group_id&set=$set&order=";
+    echo '<P>Click a column heading to sort by that column, or <A HREF="'.$url.'priority"><b>Sort by Priority</b></A><p>';
+
     show_buglist($result,$offset,$col_list,$lbl_list,$set);
     echo '<P>* Denotes Bugs > 30 Days Old';
     show_priority_colors_key();
-
-    $url = "/bugs/?group_id=$group_id&set=$set&order=";
-    echo '<P>Click a column heading to sort by that column, or <A HREF="'.$url.'priority">Sort by Priority</A>';
 
 } else {
 

@@ -170,7 +170,6 @@ if ($result && db_numrows($result) > 0) {
 		<P>
 		<h3>'.$statement.'</H3>
 		<P>
-		<HR NoShade SIZE="1">
 		<B>You can use the Support Manager to coordinate tech support</B>
 		<P>';
 
@@ -179,13 +178,12 @@ if ($result && db_numrows($result) > 0) {
 		$set .= '&_assigned_to='.$_assigned_to.'&_status='.$_status.'&_category='.$_category;
 	}
 
-	show_supportlist($result,$offset,$set);
-
-	echo '* Denotes Requests > 15 Days Old';
-	show_priority_colors_key();
-
 	$url = "/support/?group_id=$group_id&set=$set&order=";
-	echo '<P>Click a column heading to sort by that column, or <A HREF="'.$url.'priority">Sort by Priority</A>';
+	echo '<P>Click a column heading to sort by that column, or <A HREF="'.$url.'priority"><b>Sort by Priority</b></A><p>';
+
+	show_supportlist($result,$offset,$set);
+	echo '<P>* Denotes Requests > 15 Days Old';
+	show_priority_colors_key();
 
 } else {
 

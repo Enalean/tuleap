@@ -250,11 +250,13 @@ if (db_numrows($result) < 1) {
 	echo '
 		<br>
 		<H3>'.$message.' In '. ($group_project_id ? pm_data_get_group_name($group_project_id) : 'Any Sub-project') .'</H3>';
+
+	$url = "/pm/task.php?group_id=$group_id&group_project_id=$group_project_id&func=browse&set=$set&order=";
+	echo '<P>Click a column heading to sort by that column, or <A HREF="'.$url.'priority"><b>Sort by Priority</b></A><p>';
+
 	pm_show_tasklist($result,$result_taskdeps,$offset,$set);
 	echo '<P><b>* Denotes overdue tasks</b>';
 	show_priority_colors_key();
-	$url = "/pm/task.php?group_id=$group_id&group_project_id=$group_project_id&func=browse&set=$set&order=";
-	echo '<P>Click a column heading to sort by that column, or <A HREF="'.$url.'priority">Sort by Priority</A>';
 
 }
 
