@@ -678,7 +678,7 @@ if ( $func == 'gotoid' ) {
         echo "</strong><p>";
         
         if (!$at_arr || count($at_arr) < 1) {
-	  echo $LANG-getText('tracker_index','no_accessible_trackers',"/tracker/admin/?group_id=$group_id");
+	  echo $LANG->getText('tracker_index','no_accessible_trackers',"/tracker/admin/?group_id=$group_id");
         } else {
             echo "<p>".$LANG->getText('tracker_index','choose_tracker');
             if (!$pv) {

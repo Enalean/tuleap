@@ -18,7 +18,7 @@ $gf = new GroupFactory();
 ?>
 <html>
 <head>
-<title><? $LANG-getText('tracker_group_selection','project_sel'); ?></title>
+<title><? $LANG->getText('tracker_group_selection','project_sel'); ?></title>
 <link rel="stylesheet" type="text/css" href="<? echo util_get_css_theme(); ?>">
 <script language="JavaScript">
 
@@ -60,8 +60,8 @@ function onChangeAllFilter() {
     </td>
   </tr>
   <tr>  
-    <td><input type="radio" name="radiobutton" value="radiobutton"<? if ( $filter == "member" ) echo " checked"; ?> onClick="onChangeMemberFilter()"> <? $LANG-getText('tracker_group_selection','my_proj'); ?></td>
-    <td><input type="radio" name="radiobutton" value="radiobutton"<? if ( $filter == "all" ) echo " checked"; ?> onClick="onChangeAllFilter()"> <? $LANG-getText('tracker_group_selection','all_proj'); ?></td>
+    <td><input type="radio" name="radiobutton" value="radiobutton"<? if ( $filter == "member" ) echo " checked"; ?> onClick="onChangeMemberFilter()"> <? $LANG->getText('tracker_group_selection','my_proj'); ?></td>
+    <td><input type="radio" name="radiobutton" value="radiobutton"<? if ( $filter == "all" ) echo " checked"; ?> onClick="onChangeAllFilter()"> <? $LANG->getText('tracker_group_selection','all_proj'); ?></td>
   </tr>
   <tr>
     <td colspan="2">

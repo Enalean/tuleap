@@ -470,7 +470,7 @@ function parse($csv_filename,$group_id,$is_tmp,
       //verify whether this row contains enough values
       $num = count($data);
       if ($num != $num_columns) { 
-	$errors .= $LANG('tracker_import_utils','column_mismatch',$row+1,implode(",",$data),$num,$num_columns);
+	$errors .= $LANG->getText('tracker_import_utils','column_mismatch',$row+1,implode(",",$data),$num,$num_columns);
 	return FALSE;
       }
       
