@@ -105,7 +105,7 @@ if (db_numrows($result) > 0) {
       <B>File Description:</B>&nbsp;
       <input type="text" name="file_description" size="60" maxlength="255">
       <P>
-      <?php echo show_attached_files($bug_id,$group_id); ?>
+      <?php echo show_bug_attached_files($bug_id,$group_id); ?>
       <HR>
       </TD></TR>
 

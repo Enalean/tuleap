@@ -596,13 +596,13 @@ function mail_followup($bug_id,$more_addresses=false,$changes=false) {
 	// Generate the message preamble with all required
 	// bug fields - Changes first if there are some.
 	if ($changes) {
-	    $body = "\n=================== Bug #".$bug_id.
-		": Latest Modifications ==================\n".$bug_href."\n\n".
+	    $body = "\n=================== BUG #".$bug_id.
+		": LATEST MODIFICATIONS ==================\n".$bug_href."\n\n".
 		format_bug_changes($changes)."\n\n\n\n";
 	}
 
-	$body .= "=================== Bug #".$bug_id.
-	    ": Full Bug Snapshot ===================\n".
+	$body .= "=================== BUG #".$bug_id.
+	    ": FULL BUG SNAPSHOT ===================\n".
 	    ($changes ? '':$bug_href)."\n\n";
     
 	// Some special field first (group, submitted by/on)
@@ -641,6 +641,9 @@ function mail_followup($bug_id,$more_addresses=false,$changes=false) {
 
 	// Then output the history of bug details from newest to oldest
 	$body .= "\n\n".format_bug_details($bug_id, true);
+
+	// Then output the history of bug details from newest to oldest
+	$body .= "\n\n".format_bug_attached_files($bug_id, $group_id, true);
 
 	// Finally output the message trailer
 	$body .= "\n\nFor detailed info, follow this link:";
@@ -814,8 +817,8 @@ function format_bug_changes($changes) {
     if ($changes['attach']) {
 	$out_att = "\n\n------------------ Additional Bug Attachment  ----------------------------\n";
 	$out_att .= sprintf("File name: %-30s Size:%d KB\n",$changes['attach']['name'],
-			 $changes['attach']['size']/1024);
-	$out_att .= $changes['attach']['description'];
+			 intval($changes['attach']['size']/1024) );
+	$out_att .= $changes['attach']['description']."\n".$changes['attach']['href'];
 	unset($changes['attach']);
     }
 
@@ -891,7 +894,7 @@ function show_bughistory ($bug_id,$group_id) {
 }
 
 
-function show_attached_files ($bug_id,$group_id) {
+function format_bug_attached_files ($bug_id,$group_id,$ascii=false) {
 
     global $sys_datefmt;
 
@@ -902,8 +905,21 @@ function show_attached_files ($bug_id,$group_id) {
     $result=bug_data_get_attached_files($bug_id);
     $rows=db_numrows($result);
 
-    if ($rows > 0) {
+    // No file attached -> return now
+    if ($rows <= 0) {
+	if ($ascii)
+	    $out = "\n\nNo files currently attached\n";
+	else
+	    $out = '<H4>No files currently attached</H4>';
+	return $out;
+    }
 
+    // Header first
+    if ($ascii) {
+	$out .= "File Attachments\n****************";
+    } else {	
+	$out .= "\n<H3>File Attachments</H3><P>";
+	
 	$title_arr=array();
 	$title_arr[]='Name';
 	$title_arr[]='Description';
@@ -914,33 +930,55 @@ function show_attached_files ($bug_id,$group_id) {
 	    $title_arr[]='Delete?';
 	}
 
-	echo html_build_list_table_top ($title_arr);
-
-	for ($i=0; $i < $rows; $i++) {
-
-	    $bug_file_id = db_result($result, $i, 'bug_file_id');
-	    $submitted_by = db_result($result, $i, 'user_name');
-
-	    echo "\n".'<TR BGCOLOR="'. util_get_alt_row_color($i).'">'.
-		"<td><a href=\"/bugs/download.php?group_id=$group_id&bug_id=$bug_id&bug_file_id=$bug_file_id\">".
-		db_result($result, $i, 'filename').'</a></td>'.
-		'<td>'.db_result($result, $i, 'description').'</td>'.
-		'<td align="center">'.intval(db_result($result, $i, 'filesize')/1024).' KB</td>'.
-		'<td align="center">'.util_user_link($submitted_by).'</td>'.
-		'<td align="center">'.date($sys_datefmt,db_result($result, $i, 'date')).'</td>';
-
-	    if (user_ismember($group_id,'B2')) {
-	    echo "<td align=\"center\"><a href=\"$PHP_SELF?func=delete_file&group_id=$group_id&bug_id=$bug_id&bug_file_id=$bug_file_id\" ".
-		'" onClick="return confirm(\'Delete this attachment?\')">'.
-		'<IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A></td></tr>';
-	    }
-	    
-	}
-        echo '</TABLE>';
-    
-    } else {
-        echo "\n".'<H4>No files currently attached</H4>';
+	$out .= html_build_list_table_top ($title_arr);
     }
+
+    // Determine what the print out format is based on output type (Ascii, HTML
+    if ($ascii) {
+	$fmt = "\n\n-------------------------------------------------------\n".
+	    "Date: %s  Name: %s  Size: %dKB   By: %s\n%s\n%s";
+    } else {
+	$fmt = "\n".'<TR BGCOLOR="%s"><td>%s</td><td>%s</td><td align="center">%s</td><td align="center">%s</td><td align="center">%s</td>'.
+	    (user_ismember($group_id,'B2') ? '<td align="center">%s</td>':'').'</tr>';
+    }
+
+    // Loop throuh the attached files and format them
+    for ($i=0; $i < $rows; $i++) {
+
+	$bug_file_id = db_result($result, $i, 'bug_file_id');
+	$href = "/bugs/download.php?group_id=$group_id&bug_id=$bug_id&bug_file_id=$bug_file_id";
+
+	if ($ascii) {
+	    $out .= sprintf($fmt,
+			    date($sys_datefmt,db_result($result, $i, 'date')),
+			    db_result($result, $i, 'filename'),
+			    intval(db_result($result, $i, 'filesize')/1024),
+			    db_result($result, $i, 'user_name'),
+			    db_result($result, $i, 'description'),
+			    'http://'.$GLOBALS['sys_default_domain'].$href);
+	} else {
+	    $out .= sprintf($fmt,
+			    util_get_alt_row_color($i),
+			    "<a href=\"$href\">". db_result($result, $i, 'filename').'</a>',
+			    db_result($result, $i, 'description'),
+			    intval(db_result($result, $i, 'filesize')/1024),
+			    util_user_link(db_result($result, $i, 'user_name')),
+			    date($sys_datefmt,db_result($result, $i, 'date')),
+			    "<a href=\"$PHP_SELF?func=delete_file&group_id=$group_id&bug_id=$bug_id&bug_file_id=$bug_file_id\" ".
+			    '" onClick="return confirm(\'Delete this attachment?\')">'.
+			    '<IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A>');
+	}
+    }
+
+    // final touch...
+    $out .= ($ascii ? "\n" : "</TABLE>");
+
+    return($out);
+
+}
+
+function show_bug_attached_files ($bug_id,$group_id, $ascii=false) {
+    echo format_bug_attached_files ($bug_id,$group_id, $ascii);
 }
 
 function bug_delete_file($group_id=false,$bug_id=false,$bug_file_id=false) {
@@ -961,7 +999,7 @@ function bug_delete_file($group_id=false,$bug_id=false,$bug_file_id=false) {
     }
 }
 
-function bug_attach_file($bug_id,$input_file,$input_file_name,$input_file_type,$input_file_size,$file_description, &$changes) {
+function bug_attach_file($bug_id,$group_id,$input_file,$input_file_name,$input_file_type,$input_file_size,$file_description, &$changes) {
     global $feedback;
 
     $user_id = (user_isloggedin() ? user_getid(): 100);
@@ -982,10 +1020,13 @@ function bug_attach_file($bug_id,$input_file,$input_file_name,$input_file_type,$
 	$feedback .= ' - Error while attaching file: '.db_error($res);
 	return false;
     } else {
-	$feedback .= '- File succesfully attached';
+	$file_id = db_insertid($res);
+	$feedback .= " - File succesfully attached (ID $file_id) ";
 	$changes['attach']['description'] = $file_description;
 	$changes['attach']['name'] = $input_file_name;
 	$changes['attach']['size'] = $input_file_size;
+	$changes['attach']['href'] = 'http://'.$GLOBALS['sys_default_domain'].
+	    "/bugs/download.php?group_id=$group_id&bug_id=$bug_id&bug_file_id=$file_id";
 	return true;
     }
 }

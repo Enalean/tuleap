@@ -33,7 +33,8 @@ if ($group_id) {
 
 	// Attach new file if there is one
 	if ($add_file && $input_file) {
-	    bug_attach_file($bug_id,$input_file,$input_file_name,$input_file_type,$input_file_size,$file_description);
+	    bug_attach_file($bug_id,$group_id,$input_file,$input_file_name,
+			    $input_file_type,$input_file_size,$file_description);
 	}
 
 	if ($bug_id) {
@@ -61,7 +62,10 @@ if ($group_id) {
 
 	// Attach new file if there is one
 	if ($add_file && $input_file) {
-	    $changed |= bug_attach_file($bug_id,$input_file,$input_file_name,$input_file_type,$input_file_size,$file_description, $changes);
+	    $changed |= bug_attach_file($bug_id,$group_id,$input_file,
+					$input_file_name,$input_file_type,
+					$input_file_size,$file_description,
+					$changes);
 	}
 
 	if ($changed) {

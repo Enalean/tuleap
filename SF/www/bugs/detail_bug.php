@@ -106,7 +106,7 @@ if (db_numrows($result) > 0) {
 
      <TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
         <hr><h3>Bug Attachments</h3>
-        <?php echo show_attached_files($bug_id,$group_id); ?>
+        <?php echo show_bug_attached_files($bug_id,$group_id); ?>
      </TD></TR>
 
      <TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
