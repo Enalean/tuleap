@@ -327,8 +327,24 @@ while ($ln = pop(@groupdump_array)) {
 	my $svnaccess_file = "$svn_prefix/$gname/.SVNAccessFile";
 	if ($group_modified || 
 	    ($gstatus eq 'A' && !(-e "$svnaccess_file")) ) {
+          my $custom_perm=0;
+          my $custom_lines;
 	  my $public_svn = $gis_public && ! -e "$svn_prefix/$gname/.CODEX_PRIVATE";
-	  open(SVNACCESS,"+>$svnaccess_file")
+
+          # Retrieve custom permissions, if any
+          if (-e "$svnaccess_file") {
+            open(SVNACCESS,"$svnaccess_file");
+            while (<SVNACCESS>) {
+              if ($custom_perm) {
+                $custom_lines.=$_;
+              } else {
+                if (m/END CODEX DEFAULT SETTINGS/) {$custom_perm=1;}
+              }
+            }
+            close(SVNACCESS);
+          }
+     
+          open(SVNACCESS,">$svnaccess_file")
 	    or croak "Can't open Subversion access file $svnaccess_file: $!";
 	  # if you change these block markers also change them in
 	  # SF/www/svn/svn_utils.php
@@ -340,6 +356,7 @@ while ($ln = pop(@groupdump_array)) {
 	  if ($public_svn) { print SVNACCESS "* = r\n"; }
 	  print SVNACCESS "\@\members = rw\n";
 	  print SVNACCESS "# END CODEX DEFAULT SETTINGS\n";
+          if ($custom_perm) { print SVNACCESS $custom_lines;}
 	  close(SVNACCESS);
 
 	  # set group ownership, codex user as owner so that
@@ -753,7 +770,7 @@ sub update_group {
 	
 	foreach (@group_array) {
 		($p_gname, $p_junk, $p_gid, $p_userlist) = split(":", $_);
-		
+		chomp $p_userlist;
 		if ($gid == $p_gid) {
 			if ($userlist ne $p_userlist) {
 				$group_array[$counter] = "$gname:x:$gid:$userlist\n";
