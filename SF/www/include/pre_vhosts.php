@@ -18,7 +18,7 @@ require(getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/conf/local.inc');
 require('browser.php');
 
 //base error library for new objects
-require('../../common/include/Error.class');
+require('common/include/Error.class');
 
 //database abstraction
 require('database.php');
