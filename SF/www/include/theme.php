@@ -17,18 +17,20 @@ if (isset($HTTP_COOKIE_VARS["SF_THEME"])&&(user_getid() == (int)(substr($HTTP_CO
     // Read the user preferences
     $res_user = db_query("SELECT * FROM user WHERE user_id=" . user_getid());
     $row_user = db_fetch_array($res_user);
-    if ( $row_user['theme'] <> "" ) {
-	$theme = $row_user['theme'];
-    } else {
+    if ( $row_user['theme'] == "" || $row_user['theme'] == "default") {
 	// Use the defaut theme
 	$theme = $sys_themedefault;
+    } else {
+	$theme = $row_user['theme'];
     }
     // Define the cookie to improve the performance for the next access
     setcookie("SF_THEME", sprintf("%06d%s",user_getid(),$theme), time() + 60*60*24*365, "/");
 }
-// Initialize the global sys_theme variable
-$GLOBALS['sys_theme'] = $theme;
+// Initialize the global sys_user_theme variable
+$GLOBALS['sys_user_theme'] = $theme;
 
+// Find where the path is located
+$GLOBALS['sys_is_theme_custom'] = is_dir($GLOBALS['sys_urlroot']."/css/custom/".$theme);
 
 // define the font size cookie for performance
 if ( (isset($HTTP_COOKIE_VARS["SF_FONTSIZE"]))&&(user_getid() == (int)(substr($HTTP_COOKIE_VARS["SF_FONTSIZE"],0,6))) ) {
@@ -64,5 +66,7 @@ if ( (isset($HTTP_COOKIE_VARS["SF_FONTSIZE"]))&&(user_getid() == (int)(substr($H
     // Define the cookie to improve the performance for the next access
     setcookie("SF_FONTSIZE", sprintf("%06d%d",user_getid(),$font_size), time() + 60*60*24*365, "/");      
     }
+// Initialize the global sys_user_font_size variable
+$GLOBALS['sys_user_font_size'] = $font_size;
 
 ?>

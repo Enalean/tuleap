@@ -10,5 +10,5 @@
 
     require ('pre.php');
     
-    session_redirect("/css/".$theme."/".$theme.getFontsizeName($font_size).".css");
+    session_redirect(util_get_css_theme());
 ?>

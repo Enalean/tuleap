@@ -103,22 +103,44 @@ $HTML->box1_top("Preferences"); ?>
 ?>>Large</option>
 </select>
     
-&nbsp;&nbsp;Theme / Color scheme: <select name="user_theme">
+&nbsp;&nbsp;Theme / Color scheme: 
 <?php
-     $dir = opendir($sys_urlroot."/css");
-     while ($file = readdir($dir)) {
-      if ($file != "." && $file != ".." && $file != "CVS" && $file != ".cvsignore" && $file != "Makefile" && $file != "Makefile.in") {
-        $theme_list = ereg_replace(".css", "", $file);
-        print '<option value="'.$theme_list.'"';
-        if ($theme_list==$row_user['theme']){ print ' selected'; }
-        print '>'.$theme_list;
-        if ($theme_list==$sys_themedefault){ print ' (default)'; }
-        print '</option>';
-        }
-     }
-     closedir($dir);
+// see what current user them is
+if ($row_user['theme'] == "" || $row_user['theme'] == "default") {
+    $user_theme = $GLOBALS['sys_themedefault'];
+} else {
+    $user_theme = $row_user['theme'];
+}
+
+// Build the theme select box from directories in css and css/custom
+$dir = opendir($GLOBALS['sys_urlroot']."/css");
+$theme_list = array();
+$theme_dirs = array($GLOBALS['sys_urlroot']."/css", $GLOBALS['sys_urlroot']."/css/custom");
+while (list(,$dirname) = each($theme_dirs)) {
+    // before scanning the directory make sure it exists to avoid warning messages
+    if (is_dir($dirname)) {
+	$dir = opendir($dirname);
+	while ($file = readdir($dir)) {
+	    if (is_dir("$dirname/$file") && $file != "." && $file != ".." && 
+		$file != "CVS" && $file != "custom") {
+		$theme_list[] = $file;
+	    }
+	}
+	closedir($dir);
+    }
+}
+
+print '<select name="user_theme">'."\n";
+while (list(,$theme) = each($theme_list)) {
+    print '<option value="'.$theme.'"';
+    if ($theme==$user_theme){ print ' selected'; }
+    print '>'.$theme;
+    if ($theme==$GLOBALS['sys_themedefault']){ print ' (default)'; }
+    print "</option>\n";
+}
+print "</select>\n";
+
 ?>
-</select>
 
 <P align=center><CENTER><INPUT type="submit" name="Update" value="Update"></CENTER>
 </FORM>

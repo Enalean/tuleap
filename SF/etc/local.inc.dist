@@ -195,8 +195,7 @@ $sys_user_approval = 0;
 
 //
 // Default theme
-// ('savannah' is another possible value)
-$sys_themedefault = 'default';
+$sys_themedefault = 'codex';
 
 //
 // Max upload size

@@ -10,9 +10,9 @@
 // #################################### function cache_display
 
 function cache_display($name,$function,$time) {
-	$filename = $GLOBALS['sf_cache_dir']."/sfcache_".$GLOBALS['sys_theme']."_$name.sf";
+	$filename = $GLOBALS['sf_cache_dir']."/sfcache_".$GLOBALS['sys_user_theme']."_$name.sf";
 
-	while ((filesize($filename)<=1) || ((time() - filectime($filename)) > $time)) {
+	while ((@filesize($filename)<=1) || ((time() - filectime($filename)) > $time)) {
 		// file is non-existant or expired, must redo, or wait for someone else to
 
 		if (!file_exists($filename)) {
@@ -59,7 +59,7 @@ function cache_display($name,$function,$time) {
 }
 
 function cache_get_new_data($function) {
-	$furl=fopen(make_local_url("write_cache.php?sys_theme=".$GLOBALS['sys_theme']."&function=".urlencode($function)),'r');
+	$furl=fopen(make_local_url("write_cache.php?sys_theme=".$GLOBALS['sys_user_theme']."&function=".urlencode($function)),'r');
 	return stripslashes(fread($furl,200000));
 }
 ?>

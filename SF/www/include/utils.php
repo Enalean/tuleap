@@ -242,7 +242,7 @@ function show_priority_colors_key($msg='') {
 function get_priority_color ($index) {
 	/*
 		Return the color value for the index that was passed in
-		(defined in $sys_urlroot/themes/<selected theme>/theme.php)
+		(defined in $sys_urlroot/css/<selected theme>)
 	*/
 	global $bgpri;
 	
@@ -606,11 +606,20 @@ function getFontsizeName($value) {
 }
 
 // this function get the css file for the theme
-// Requirement: $theme and $font_size are already set (done by theme.php in pre.php)
+// Requirement: $sys_user_theme and $sys_user_font_size are already
+// set (done by theme.php in pre.php)
+//
 function util_get_css_theme(){
-    global $theme,$font_size;
 
-    return "/css/".$theme."/".$theme.getFontsizeName($font_size).".css";
+    $path = $GLOBALS['sys_user_theme']."/".$GLOBALS['sys_user_theme'].
+	getFontsizeName($GLOBALS['sys_user_font_size']).".css";
+
+    if ($GLOBALS['sys_is_theme_custom'])
+	$path = "/css/custom/".$path;
+    else
+	$path = "/css/".$path;
+
+    return $path;
 }
 
 // This function get the image file for the theme.
@@ -620,28 +629,28 @@ function util_get_css_theme(){
 // otherwise it is relative to $sys_urlroot.
 function util_get_image_theme($fn, $the_theme=false, $absolute=false){
 
-    global $theme;
-    global $sys_urlroot;
-
-    if (! $the_theme) {
-      $the_theme = $theme;
-    }
-
-    $path = '/images/'.$the_theme.'.theme/'.$fn;
-    
+    $path = util_get_dir_image_theme($the_theme);
     if ($absolute) {
-      $path = $sys_urlroot . $path;
+      $path = $GLOBALS['sys_urlroot'] . $path;
     }
 
-    return $path;
+    return $path.$fn;
 }
 
 // this function get the image directory for the theme
-function util_get_dir_image_theme(){
+// (either given or current theme)
+function util_get_dir_image_theme($the_theme=false){
 
-    global $theme;
+    if (! $the_theme) {
+      $the_theme = $GLOBALS['sys_user_theme'];
+    }
 
-    return "/images/".$theme.".theme/";
+    if ($GLOBALS['sys_is_theme_custom'])
+	$path = '/images/custom/'.$the_theme.'.theme/';
+    else
+	$path = '/images/'.$the_theme.'.theme/';
+
+    return $path;
 }
 
 // Format a size in byte into a size in Mb
