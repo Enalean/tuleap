@@ -99,7 +99,7 @@ if (db_numrows($result) > 0) {
 
      <TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
          <h3>Follow-up Comments</h3>
-        <?php echo show_bug_details($bug_id,false,$group_id); ?>
+        <?php echo show_bug_details($bug_id,$group_id); ?>
      </TD></TR>
 
      <?php if (user_isloggedin()) {

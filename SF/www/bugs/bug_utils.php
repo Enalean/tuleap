@@ -915,7 +915,7 @@ function bug_mail_followup($bug_id,$more_addresses=false,$changes=false) {
 			   db_result($result,0,'details'),false,true,true,true);
 
 	// Then output the history of bug details from newest to oldest
-	$body .= "\n\n".format_bug_details($bug_id, true, $group_id);
+	$body .= "\n\n".format_bug_details($bug_id, $group_id, true);
 
 	// Then output the CC list
 	$body .= "\n\n".format_bug_cc_list($bug_id, $group_id, true);
@@ -988,7 +988,7 @@ function show_dependent_bugs ($bug_id,$group_id) {
 	}
 }
 
-function format_bug_details ($bug_id, $ascii=false, $group_id=-1) {
+function format_bug_details ($bug_id, $group_id, $ascii=false) {
 
     /*
       Format the details rows from bug_history
@@ -1062,8 +1062,8 @@ function format_bug_details ($bug_id, $ascii=false, $group_id=-1) {
     return($out);
 }
 
-function show_bug_details ($bug_id, $ascii=false,$group_id) {
-    echo format_bug_details($bug_id, $ascii,$group_id);
+function show_bug_details ($bug_id,$group_id, $ascii=false) {
+    echo format_bug_details($bug_id, $group_id, $ascii);
 }
 
 function format_bug_changes($changes) {

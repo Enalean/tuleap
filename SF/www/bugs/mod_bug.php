@@ -124,7 +124,7 @@ if (db_numrows($result) > 0) {
       <?php
       echo bug_field_textarea('details',''); 
       echo '<p>';
-      echo show_bug_details($bug_id,false,$group_id);
+      echo show_bug_details($bug_id,$group_id);
       ?>
       </td></tr>
 

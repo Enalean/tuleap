@@ -86,7 +86,7 @@ if (db_numrows($result) > 0) {
 
 		<TR><TD COLSPAN="2"><hr>';
 
-	echo show_support_details($support_id, false,$group_id);
+	echo show_support_details($support_id,$group_id);
 
 	?>
 

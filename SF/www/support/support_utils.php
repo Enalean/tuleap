@@ -225,7 +225,7 @@ function sr_utils_mail_followup($support_id,$more_addresses=false,$changes=false
 	    $body .= "Original submission:\n".db_result($odq,0,'body')."\n\n";
 
 	    // Include all follow-up comments
-	    $body .= format_support_details($support_id,true,$group_id);
+	    $body .= format_support_details($support_id,$group_id,true);
 
 	    /*
 	                  get all the email addresses that have dealt with this request
@@ -267,7 +267,7 @@ function sr_utils_mail_followup($support_id,$more_addresses=false,$changes=false
 	}
 }
 
-function format_support_details ($support_id, $ascii=false, $group_id) {
+function format_support_details ($support_id, $group_id, $ascii=false) {
     /*
            Show the details rows from support_history
           */
@@ -340,8 +340,8 @@ function format_support_details ($support_id, $ascii=false, $group_id) {
     return($out);
 }
 
-function show_support_details ($support_id, $ascii=false, $group_id) {
-    echo format_support_details($support_id, $ascii, $group_id);
+function show_support_details ($support_id, $group_id, $ascii=false) {
+    echo format_support_details($support_id, $group_id, $ascii);
 }
 
 

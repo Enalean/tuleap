@@ -128,7 +128,7 @@ function util_line_wrap ($text, $wrap = 80, $break = "\n") {
 	return implode($break, $result);
 }
 
-function util_make_links ($data='',$group_id=-1) {
+function util_make_links ($data='',$group_id = 0) {
 	if(empty($data)) { return $data; }
 
 	$lines = split("\n",$data);
@@ -138,11 +138,11 @@ function util_make_links ($data='',$group_id=-1) {
 		$text = eregi_replace("(([a-z0-9_]|\\-|\\.)+@([^[:space:]&>]*)([[:alnum:]-]))", "<a href=\"mailto:\\1\" target=\"_new\">\\1</a>", $text);
 		$text = eregi_replace("(([bug:space:]|\\-|\\.)+@([^[:space:]&>]*)([[:alnum:]-]))", "<a href=\"mailto:\\1\" target=\"_new\">\\1</a>", $text);
 		// If $group_id is assigned then we can replace the pattern: bug #id task #id sr #id
-		if ( $group_id != -1 ) {
-            $text = eregi_replace("bug[ ]?#([0-9]+)", "<a href=\"/bugs/?func=detailbug&bug_id=\\1&group_id=$group_id\">Bug #\\1</a>", $text);
-            $text = eregi_replace("task[ ]?#([0-9]+)", "<a href=\"/pm/task.php?func=detailtask&project_task_id=\\1&group_id=$group_id\">Task #\\1</a>", $text);
-            $text = eregi_replace("sr[ ]?#([0-9]+)", "<a href=\"/support/index.php?func=detailsupport&support_id=\\1&group_id=$group_id\">Sr #\\1</a>", $text);
-            $text = eregi_replace("patch[ ]?#([0-9]+)", "<a href=\"/patch/?func=detailpatch&patch_id=\\1&group_id=$group_id\">Patch #\\1</a>", $text);
+		if ( $group_id ) {
+		    $text = eregi_replace("bug[ ]?#([0-9]+)", "<a href=\"/bugs/?func=detailbug&bug_id=\\1&group_id=$group_id\">Bug #\\1</a>", $text);
+		    $text = eregi_replace("task[ ]?#([0-9]+)", "<a href=\"/pm/task.php?func=detailtask&project_task_id=\\1&group_id=$group_id\">Task #\\1</a>", $text);
+		    $text = eregi_replace("sr[ ]?#([0-9]+)", "<a href=\"/support/index.php?func=detailsupport&support_id=\\1&group_id=$group_id\">Sr #\\1</a>", $text);
+		    $text = eregi_replace("patch[ ]?#([0-9]+)", "<a href=\"/patch/?func=detailpatch&patch_id=\\1&group_id=$group_id\">Patch #\\1</a>", $text);
 		}
 		$lines[$key] = $text;
 	}
