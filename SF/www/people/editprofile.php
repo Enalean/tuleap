@@ -9,7 +9,10 @@
 require($DOCUMENT_ROOT.'/include/pre.php');
 require('../people/people_utils.php');
 
+$Language->loadLanguageMsg('people/people');
+
 if (user_isloggedin()) {
+
 
 	if ($update_profile) {
 		/*
@@ -17,17 +20,17 @@ if (user_isloggedin()) {
 		*/
 		if (!$people_resume) {
 			//required info
-			exit_error('error - missing info','Fill in all required fields');
+			exit_error($Language->getText('people_editjob','error_missing'),$Language->getText('people_editjob','fill_in'));
 		}
 
 		$sql="UPDATE user SET people_view_skills='$people_view_skills',people_resume='$people_resume' ".
 			"WHERE user_id='".user_getid()."'";
 		$result=db_query($sql);
 		if (!$result || db_affected_rows($result) < 1) {
-			$feedback .= ' User update FAILED ';
+			$feedback .= ' '.$Language->getText('people_editprofile','update_failed').' ';
 			echo db_error();
 		} else {
-			$feedback .= ' User updated successfully ';
+			$feedback .= ' '.$Language->getText('people_editprofile','update_ok').' ';
 		}
 
 	} else if ($add_to_skill_inventory) {
@@ -36,7 +39,7 @@ if (user_isloggedin()) {
 		*/
 		if ($skill_id==100 || $skill_level_id==100 || $skill_year_id==100) {
 			//required info
-			exit_error('error - missing info','Fill in all required fields');
+			exit_error($Language->getText('people_editjob','error_missing'),$Language->getText('people_editjob','fill_in'));
 		}
 		people_add_to_skill_inventory($skill_id,$skill_level_id,$skill_year_id);
 
@@ -46,17 +49,17 @@ if (user_isloggedin()) {
 		*/
 		if ($skill_level_id==100 || $skill_year_id==100  || !$skill_inventory_id) {
 			//required info
-			exit_error('error - missing info','Fill in all required fields');
+			exit_error($Language->getText('people_editjob','error_missing'),$Language->getText('people_editjob','fill_in'));
 		}
 
 		$sql="UPDATE people_skill_inventory SET skill_level_id='$skill_level_id',skill_year_id='$skill_year_id' ".
 			"WHERE user_id='". user_getid() ."' AND skill_inventory_id='$skill_inventory_id'";
 		$result=db_query($sql);
 		if (!$result || db_affected_rows($result) < 1) {
-			$feedback .= ' User Skill update FAILED ';
+			$feedback .= ' '.$Language->getText('people_editprofile','skill_update_failed').' ';
 			echo db_error();
 		} else {
-			$feedback .= ' User Skill updated successfully ';
+			$feedback .= ' '.$Language->getText('people_editprofile','skill_update_ok').' ';
 		}
 
 	} else if ($delete_from_skill_inventory) {
@@ -65,16 +68,16 @@ if (user_isloggedin()) {
 		*/
 		if (!$skill_inventory_id) {
 			//required info
-			exit_error('error - missing info','Fill in all required fields');
+			exit_error($Language->getText('people_editjob','error_missing'),$Language->getText('people_editjob','fill_in'));
 		}
 
 		$sql="DELETE FROM people_skill_inventory WHERE user_id='". user_getid() ."' AND skill_inventory_id='$skill_inventory_id'";
 		$result=db_query($sql);
 		if (!$result || db_affected_rows($result) < 1) {
-			$feedback .= ' User Skill Delete FAILED ';
+			$feedback .= ' '.$Language->getText('people_editprofile','skill_delete_failed').' ';
 			echo db_error();
 		} else {
-			$feedback .= ' User Skill Deleted successfully ';
+			$feedback .= ' '.$Language->getText('people_editprofile','skill_delete_ok').' ';
 		}
 
 	}
@@ -82,45 +85,42 @@ if (user_isloggedin()) {
 	/*
 		Fill in the info to create a job
 	*/
-	people_header(array('title'=>'Edit Your Profile'));
+	people_header(array('title'=>$Language->getText('people_editprofile','edit_your_profile')));
 
 	//for security, include group_id
 	$sql="SELECT * FROM user WHERE user_id='". user_getid() ."'";
 	$result=db_query($sql);
 	if (!$result || db_numrows($result) < 1) {
 		echo db_error();
-		$feedback .= ' User fetch FAILED ';
-		echo '<H2>No Such User</H2>';
+		$feedback .= ' '.$Language->getText('people_editprofile','user_fetch_failed').' ';
+		echo '<H2>'.$Language->getText('people_editprofile','no_such_user').'</H2>';
 	} else {
 
 		echo '
-		<H2>Edit Your Profile</H2>
+		<H2>'.$Language->getText('people_editprofile','edit_your_profile').'</H2>
 		<P>
-		Now you can edit/change the list of your skills and your resume. 
-		The list of skills can then be matched with the list of jobs in 
-		our system. 
+		'.$Language->getText('people_editprofile','skill_explain').'
 		<P>
 		<FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
 		<P>
-		The following option determines if others can see your resume online. If they can\'t, you
-		can still enter your skills, and search for matching jobs.
+		'.$Language->getText('people_editprofile','public_view_explain').'
 		<P>
-		<B>Publicly Viewable:</B><BR>
-		<INPUT TYPE="RADIO" NAME="people_view_skills" VALUE="0" '. ((db_result($result,0,'people_view_skills')==0)?'CHECKED':'') .'> <B>No</B><BR>
-		<INPUT TYPE="RADIO" NAME="people_view_skills" VALUE="1" '. ((db_result($result,0,'people_view_skills')==1)?'CHECKED':'') .'> <B>Yes</B><BR>
+		<B>'.$Language->getText('people_editprofile','publicly_viewable').':</B><BR>
+		<INPUT TYPE="RADIO" NAME="people_view_skills" VALUE="0" '. ((db_result($result,0,'people_view_skills')==0)?'CHECKED':'') .'> <B>'.$Language->getText('global','no').'</B><BR>
+		<INPUT TYPE="RADIO" NAME="people_view_skills" VALUE="1" '. ((db_result($result,0,'people_view_skills')==1)?'CHECKED':'') .'> <B>'.$Language->getText('global','yes').'</B><BR>
 		<P>
-		Give us some information, either a resume, or an explanation of your experience.
+		'.$Language->getText('people_editprofile','give_us_info').'
 		<P>
-		<B>Resume / Description of Experience:</B><BR>
+		<B>'.$Language->getText('people_editprofile','resume').':</B><BR>
 		<TEXTAREA NAME="people_resume" ROWS="15" COLS="60" WRAP="SOFT">'. db_result($result,0,'people_resume') .'</TEXTAREA>
 		<P>
-		<INPUT TYPE="SUBMIT" NAME="update_profile" VALUE="Update Profile">
+		<INPUT TYPE="SUBMIT" NAME="update_profile" VALUE="'.$Language->getText('people_editprofile','update_profile').'">
 		</FORM>';
 
 		//now show the list of desired skills
 		echo '<P>'.people_edit_skill_inventory( user_getid() );
 
-		echo '<P><FORM ACTION="/account/" METHOD="POST"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Finished"></FORM>'; 
+		echo '<P><FORM ACTION="/account/" METHOD="POST"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('people_editjob','finished').'"></FORM>'; 
 	}
 
 	people_footer(array());

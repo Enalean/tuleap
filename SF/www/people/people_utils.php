@@ -12,16 +12,18 @@
 	Simplified by Laurent Julliard, Xerox Corporation, June 2004 (no job posting)
 */
 
+$Language->loadLanguageMsg('people/people');
+
 function people_header($params) {
-    global $group_id,$DOCUMENT_ROOT,$HTML;
+    global $group_id,$DOCUMENT_ROOT,$HTML,$Language;
 
     echo $HTML->header($params);
     echo '
-	   <H2>'.$GLOBALS['sys_name'].' - People Skills</H2>
+	   <H2>'.$GLOBALS['sys_name'].' - '.$Language->getText('people_utils','people_skills').'</H2>
 		<P><B>
-	<A HREF="/people/admin/">Admin</A>';
+	<A HREF="/people/admin/">'.$Language->getText('people_utils','admin').'</A>';
     if ($params['help']) {
-	echo ' | '.help_button($params['help'],false,'Help');
+	echo ' | '.help_button($params['help'],false,$Language->getText('global','help'));
     }
     echo '</B>';
     echo '<HR NoShade SIZE="1" SIZE="90%">';
@@ -65,7 +67,7 @@ function people_skill_year_box($name='skill_year_id',$checked='xyxy') {
 }
 
 function people_add_to_skill_inventory($skill_id,$skill_level_id,$skill_year_id) {
-	global $feedback;
+	global $feedback,$Language;
 	if (user_isloggedin()) {
 		//check if they've already added this skill
 		$sql="SELECT * FROM people_skill_inventory WHERE user_id='". user_getid() ."' AND skill_id='$skill_id'";
@@ -76,20 +78,21 @@ function people_add_to_skill_inventory($skill_id,$skill_level_id,$skill_year_id)
 				"VALUES ('". user_getid() ."','$skill_id','$skill_level_id','$skill_year_id')";
 			$result=db_query($sql);
 			if (!$result || db_affected_rows($result) < 1) {
-				$feedback .= ' ERROR inserting into skill inventory ';
+				$feedback .= ' '.$Language->getText('people_utils','error_inserting').' ';
 				echo db_error();
 			} else {
-				$feedback .= ' Added to skill inventory ';
+				$feedback .= ' '.$Language->getText('people_utils','added_skill').' ';
 			}
 		} else {
-			$feedback .= ' ERROR - skill already in your inventory ';
+			$feedback .= ' '.$Language->getText('people_utils','error_skill_already').' ';
 		}
 	} else {
-		echo '<H1>You must be logged in first</H1>';
+		echo '<H1>'.$Language->getText('people_utils','must_be_loggin').'</H1>';
 	}
 }
 
 function people_show_skill_inventory($user_id) {
+	global $Language;
 	$sql="SELECT people_skill.name AS skill_name, people_skill_level.name AS level_name, people_skill_year.name AS year_name ".
 		"FROM people_skill_year,people_skill_level,people_skill,people_skill_inventory ".
 		"WHERE people_skill_year.skill_year_id=people_skill_inventory.skill_year_id ".
@@ -99,16 +102,16 @@ function people_show_skill_inventory($user_id) {
 	$result=db_query($sql);
 
 	$title_arr=array();
-	$title_arr[]='Skill';
-	$title_arr[]='Level';
-	$title_arr[]='Experience';
+	$title_arr[]=$Language->getText('people_utils','skill');
+	$title_arr[]=$Language->getText('people_utils','level');
+	$title_arr[]=$Language->getText('people_utils','experience');
 
 	echo html_build_list_table_top ($title_arr);
 
 	$rows=db_numrows($result);
 	if (!$result || $rows < 1) {
 		echo '
-			<H2>No Skill Inventory Set Up</H2>';
+			<H2>'.$Language->getText('people_utils','no_skill_inventory_setup_up').'</H2>';
 		echo db_error();
 	} else {
 		for ($i=0; $i < $rows; $i++) {
@@ -125,22 +128,22 @@ function people_show_skill_inventory($user_id) {
 }
 
 function people_edit_skill_inventory($user_id) {
-	global $PHP_SELF;
+	global $PHP_SELF,$Language;
 	$sql="SELECT * FROM people_skill_inventory WHERE user_id='$user_id'";
 	$result=db_query($sql);
 
 	$title_arr=array();
-	$title_arr[]='Skill';
-	$title_arr[]='Level';
-	$title_arr[]='Experience';
-	$title_arr[]='Action';
+	$title_arr[]=$Language->getText('people_utils','skill');
+	$title_arr[]=$Language->getText('people_utils','level');
+	$title_arr[]=$Language->getText('people_utils','experience');
+	$title_arr[]=$Language->getText('people_utils','action');
 
 	echo html_build_list_table_top ($title_arr);
 
 	$rows=db_numrows($result);
 	if (!$result || $rows < 1) {
 		echo '
-			<TR><TD COLSPAN="4"><H2>No Skill Inventory Set Up</H2></TD></TR>';
+			<TR><TD COLSPAN="4"><H2>'.$Language->getText('people_utils','no_skill_inventory_setup_up').'</H2></TD></TR>';
 		echo db_error();
 	} else {
 		for ($i=0; $i < $rows; $i++) {
@@ -151,8 +154,8 @@ function people_edit_skill_inventory($user_id) {
 				<TD><FONT SIZE="-1">'. people_get_skill_name(db_result($result,$i,'skill_id')) .'</TD>
 				<TD><FONT SIZE="-1">'. people_skill_level_box('skill_level_id',db_result($result,$i,'skill_level_id')). '</TD>
 				<TD><FONT SIZE="-1">'. people_skill_year_box('skill_year_id',db_result($result,$i,'skill_year_id')). '</TD>
-				<TD NOWRAP><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="update_skill_inventory" VALUE="Update"> &nbsp; 
-					<INPUT TYPE="SUBMIT" NAME="delete_from_skill_inventory" VALUE="Delete"></TD>
+				<TD NOWRAP><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="update_skill_inventory" VALUE="'.$Language->getText('people_utils','update').'"> &nbsp; 
+					<INPUT TYPE="SUBMIT" NAME="delete_from_skill_inventory" VALUE="'.$Language->getText('people_utils','delete').'"></TD>
 				</TR></FORM>';
 		}
 
@@ -161,13 +164,13 @@ function people_edit_skill_inventory($user_id) {
 	$i++; //for row coloring
 	
 	echo '
-	<TR><TD COLSPAN="4"><H3>Add A New Skill</H3></TD></TR>
+	<TR><TD COLSPAN="4"><H3>'.$Language->getText('people_utils','add_new_skill').'</H3></TD></TR>
 	<FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
 	<TR class="'. util_get_alt_row_color($i) .'">
 		<TD><FONT SIZE="-1">'. people_skill_box('skill_id'). '</TD>
 		<TD><FONT SIZE="-1">'. people_skill_level_box('skill_level_id'). '</TD>
 		<TD><FONT SIZE="-1">'. people_skill_year_box('skill_year_id'). '</TD>
-		<TD NOWRAP><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="add_to_skill_inventory" VALUE="Add Skill"></TD>
+		<TD NOWRAP><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="add_to_skill_inventory" VALUE="'.$Language->getText('people_utils','add_skill').'"></TD>
 	</TR></FORM>';
 
 	echo '
@@ -175,10 +178,11 @@ function people_edit_skill_inventory($user_id) {
 }
 
 function people_get_skill_name($skill_id) {
+	global $Language;
 	$sql="SELECT name FROM people_skill WHERE skill_id='$skill_id'";
 	$result=db_query($sql);
 	if (!$result || db_numrows($result) < 1) {
-		return 'Invalid ID';
+		return $Language->getText('people_utils','invalid_id');
 	} else {
 		return db_result($result,0,'name');
 	}

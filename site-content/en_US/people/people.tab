@@ -1,0 +1,81 @@
+#/**
+#  *
+#  * Include scripts message catalog (English)
+#  *
+#  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
+#  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
+#  * http://codex.xrce.xerox.com
+#  *
+#  * @version   $Id$
+#  *
+#  */
+#
+#-----------------------------------------------
+# Script: SF/www/people/admin/index.php
+#
+people_admin_index	insert_error	Error inserting value
+people_admin_index	category_inserted	Category Inserted
+people_admin_index	skill_inserted	Skill Inserted
+people_admin_index	bug_cat_modif_error	Error modifying bug category
+people_admin_index	bug_cat_modified	Bug Category Modified
+people_admin_index	add_people_skills	Add/Change People Skills
+people_admin_index	existing_skills	Existing Skills
+people_admin_index	no_skills_found	No Skills Found
+people_admin_index	new_skill_name	New Skill Name
+people_admin_index	once_added_no_delete	Once you add a skill, it cannot be deleted
+people_admin_index	people_skills_admin	People Skills Administration
+people_admin_index	add_skills	Add Skills
+people_admin_index	add_new_skill_to_list	Add a new skill to the skill list.
+people_admin_people_skills	title	Add Job Skills
+#
+#-----------------------------------------------
+# Script: SF/www/people/editprofile.php
+#
+people_editprofile	update_failed	User update FAILED
+people_editprofile	update_ok	User updated successfully
+people_editjob	error_missing	error - missing info
+people_editjob	fill_in	Fill in all required fields
+people_editprofile	skill_update_failed	User Skill update FAILED
+people_editprofile	skill_update_ok	User Skill updated successfully
+people_editprofile	skill_delete_failed	User Skill Delete FAILED
+people_editprofile	skill_delete_ok	User Skill Deleted successfully
+people_editprofile	edit_your_profile	Edit Your Profile
+people_editprofile	user_fetch_failed	User fetch FAILED
+people_editprofile	no_such_user	No Such User
+people_editprofile	skill_explain	Now you can edit/change the list of your skills and your resume. The list of skills can then be matched with the list of jobs in  our system.
+people_editprofile	public_view_explain	The following option determines if others can see your resume online. If they can't, you can still enter your skills, and search for matching jobs.
+people_editprofile	publicly_viewable	Publicly Viewable
+people_editprofile	give_us_info	Give us some information, either a resume, or an explanation of your experience.
+people_editprofile	resume	Resume / Description of Experience
+people_editjob	finished	Finished
+people_editprofile	update_profile	Update Profile
+#
+#-----------------------------------------------
+# Script: SF/www/people/people_utils.php
+#
+people_utils	people_skills	People Skills
+people_utils	admin	Admin
+people_utils	added_skill	Added to skill inventory
+people_utils	error_inserting	ERROR inserting into skill inventory
+people_utils	error_skill_already	ERROR - skill already in your inventory
+people_utils	must_be_loggin	You must be logged in first
+people_utils	level	Level
+people_utils	skill	Skill
+people_utils	experience	Experience
+people_utils	no_skill_inventory_setup_up	No Skill Inventory Set Up
+people_utils	action	Action
+people_utils	update	Update
+people_utils	delete	Delete
+people_utils	add_new_skill	Add A New Skill
+people_utils	add_skill	Add Skill
+people_utils	invalid_id	Invalid ID
+#
+#-----------------------------------------------
+# Script: SF/www/people/viewprofile.php
+#
+people_viewprofile	title	View a User Profile
+people_viewprofile	set_private	This User Has Set His/Her Profile to Private
+people_viewprofile	user_name	User Name
+people_viewprofile	resume	Resume
+people_viewprofile	skill_inventory	Skill Inventory
+people_viewprofile	user_id_not_found	user_id not found.

@@ -16,7 +16,7 @@ function exit_error($title,$text) {
 
 function exit_permission_denied() {
     global $feedback;
-    exit_error('Permission Denied','This project\'s administrator will have to grant you permission to perform this operation.<p>'.$feedback);
+    exit_error('Permission Denied','You are not granted sufficient permission to perform this operation.<p>'.$feedback);
 }
 
 function exit_not_logged_in() {

@@ -9,42 +9,44 @@
 require($DOCUMENT_ROOT.'/include/pre.php');
 require('../people/people_utils.php');
 
+$Language->loadLanguageMsg('people/people');
+
 if ($user_id) {
 
-	people_header(array('title'=>'View a User Profile'));
+	people_header(array('title'=>$Language->getText('people_userprofile','title')));
 
 	//for security, include group_id
 	$sql="SELECT * FROM user WHERE user_id='$user_id'";
 	$result=db_query($sql);
 	if (!$result || db_numrows($result) < 1) {
 		echo db_error();
-		$feedback .= ' User fetch FAILED ';
-		echo '<H2>No Such User</H2>';
+		$feedback .= ' '.$Language->getText('people_editprofile','edit_your_profile').' ';
+		echo '<H2>'.$Language->getText('people_editprofile','no_such_user').'</H2>';
 	} else {
 
 		/*
 			profile set private
 		*/
 		if (db_result($result,0,'people_view_skills') != 1) {
-			echo '<H2>This User Has Set His/Her Profile to Private</H2>';
+			echo '<H2>'.$Language->getText('people_viewprofile','set_private').'</H2>';
 			people_footer(array());
 			exit;
 		}
 
 		echo '
-		<H3>View A User Profile</H3>
+		<H3>'.$Language->getText('people_viewprofile','title').'</H3>
 		<P>
 		<TABLE BORDER="0" WIDTH="100%">
 		<TR><TD>
-			<B>User Name:</B><BR>
+			<B>'.$Language->getText('people_viewprofile','user_name').':</B><BR>
 			'. db_result($result,0,'user_name') .'
 		</TD></TR>
 		<TR><TD>
-			<B>Resume:</B><BR>
+			<B>'.$Language->getText('people_viewprofile','resume').':</B><BR>
 			'. nl2br(db_result($result,0,'people_resume')) .'
 		</TD></TR>
 		<TR><TD>
-		<H2>Skill Inventory</H2>';
+		<H2>'.$Language->getText('people_viewprofile','skill_inventory').'</H2>';
 
 		//now show the list of  skills for this person
 		echo '<P>'.people_show_skill_inventory($user_id);
@@ -57,7 +59,7 @@ if ($user_id) {
 	/*
 		Not logged in or insufficient privileges
 	*/
-	exit_error('Error','user_id not found.');
+	exit_error($Language->getText('global','error'),$Language->getText('people_viewprofile','user_id_not_found'));
 }
 
 ?>
