@@ -23,7 +23,8 @@ your account.
 $href_approval = 'http'.(session_issecure() ? 's':'').'://'.
 	       $GLOBALS['sys_default_domain'].'/admin/approve_pending_users.php';
 $to = $GLOBALS['sys_email_admin'];
-$hdrs = 'From: noreply@'.$GLOBALS['sys_default_domain']."\n";
+list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
+$hdrs = 'From: noreply@'.$host."\n";
 
 
 // subject and body can be customized to your liking

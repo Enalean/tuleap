@@ -9,6 +9,7 @@
 
 
 // Message preamble with Web pointers and server names
+list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
 $message = 
 'Your project registration has been approved. 
 
@@ -16,8 +17,8 @@ Project Full Name:    '.$row_grp['group_name'].'
 Project Unix Name:    '.$row_grp['unix_group_name'].'
 Project Summary Page: '.$server.'/projects/'.$row_grp['unix_group_name'].'
 Project Web Server:   http://'.$row_grp['unix_group_name'].'.'.$GLOBALS['sys_default_domain'].'
-CVS Server:           cvs.'.$row_grp['unix_group_name'].'.'.$GLOBALS['sys_default_domain'].'
-Shell Server:         '.$row_grp['unix_group_name'].'.'.$GLOBALS['sys_default_domain'].
+CVS Server:           cvs.'.$row_grp['unix_group_name'].'.'.$host.'
+Shell Server:         '.$row_grp['unix_group_name'].'.'.$host.
 $message_project_type; // defined at upper level
 
 // Directions for project administrators on what to do next
