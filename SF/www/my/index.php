@@ -210,12 +210,12 @@ of groups that you are a member of.
 
 		    if (!$hide_now) {
 
+			$group_forum_id = db_result($result2,$i,'group_forum_id');
 			$html .= '
 			<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD WIDTH="99%">'.
 			    '&nbsp;&nbsp;&nbsp;-&nbsp;<A HREF="/forum/forum.php?forum_id='.$group_forum_id.'">'.
 			    stripslashes(db_result($result2,$i,'forum_name')).'</A></TD>'.
-			    '<TD ALIGN="MIDDLE"><A HREF="/forum/monitor.php?forum_id='.
-			    db_result($result2,$i,'group_forum_id').
+			    '<TD ALIGN="MIDDLE"><A HREF="/forum/monitor.php?forum_id='.$group_forum_id.
 			    '" onClick="return confirm(\'Stop monitoring this Forum?\')">'.
 			    '<IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" '.
 			    'BORDER=0 ALT="STOP MONITORING""></A></TD></TR>';
@@ -283,8 +283,7 @@ of groups that you are a member of.
 
 			$html .='
 			<TR BGCOLOR="'. util_get_alt_row_color($i) .'">'.
-			    '<TD WIDTH="99%">-&nbsp;&nbsp;<A HREF="/project/filelist.php?group_id='.
-			    db_result($result2,$i,'group_id').'">'.
+			    '<TD WIDTH="99%">-&nbsp;&nbsp;<A HREF="/project/filelist.php?group_id='.$group_id.'">'.
 			    db_result($result2,$i,'name').'</A></TD>'.
 			    '<TD><A HREF="/project/filemodule_monitor.php?filemodule_id='.
 			    db_result($result2,$i,'filemodule_id').
