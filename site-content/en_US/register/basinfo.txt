@@ -1,3 +1,12 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+-->
 <H2>Step 3: Project Registration</H2>
 
 <p>We now need to know a little bit more about your project. All information typed here will be accessible to <?php print $GLOBALS['sys_name']; ?> users once your project is registered. So please be as accurate as possible.

@@ -1,1 +1,10 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+-->
 <em><strong>Remark:</strong> This email address will be verified before account activation. Please use a Xerox internal e-mail address or an address from a Xerox approved extranet (XISS, GSN, FX,...). Do <b>not</b> use e-mail address hosted by Internet e-mail forwarders (hotmail, caramail,...)</em>
