@@ -7,7 +7,7 @@
 // $Id$
 
 require ('pre.php');    
-require ($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
+require ($DOCUMENT_ROOT.'/file/file_utils.php');
 
 /*
 	Quick file release system , Darrell Brogdon, SourceForge, Aug, 2000
@@ -15,22 +15,22 @@ require ($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
 	With much code horked from editreleases.php
 */
 
-session_require(array('group'=>$group_id,'admin_flags'=>'A'));
-project_admin_header(array('title'=>'Release New File Version',
-			   'group'=>$group_id,
-			   'help' => 'QuickFileRelease.html'));
+if (!user_ismember($group_id,'R2')) {
+    exit_permission_denied();
+}
+file_utils_admin_header(array('title'=>'Release New File Version', 'help' => 'QuickFileRelease.html'));
 
 if( $submit ) {
   if (!$release_name) {
     $feedback .= ' Must define a release name. ';
     echo db_error();
-    project_admin_footer(array());
+    file_utils_footer(array());
     exit;
   } 
   
   if (!$file_name) {
     $feedback .= ' No Files Selected ';
-    project_admin_footer(array());
+    file_utils_footer(array());
     exit;
   }
 	
@@ -40,14 +40,14 @@ if( $submit ) {
   if( $file_name == "qrs_newfile" ) {
     if (!$userfile_name) {
       $feedback .= ' No Files Selected ';
-      project_admin_footer(array());
+      file_utils_footer(array());
       exit;
     }
     $file_name = $userfile_name;
       
     if (!util_is_valid_filename ($file_name)) {
       $feedback .= " Illegal FileName: $file_name ";
-      project_admin_footer(array());
+      file_utils_footer(array());
       exit;
     }
   }
@@ -59,19 +59,19 @@ if( $submit ) {
     if (!$res1 || db_numrows($res1) < 1) {
       $feedback .= ' | Package Doesn\'t Exist Or Isn\'t Yours ';
       echo db_error();
-      project_admin_footer(array());
+      file_utils_footer(array());
       exit;
     } 
 
     if ($processor_id == 100) {
       $feedback .= ' Please choose Processor Type ';
-      project_admin_footer(array());
+      file_utils_footer(array());
       exit;
     }
 
     if ($type_id == 100) {
       $feedback .= ' Please choose File Type ';
-      project_admin_footer(array());
+      file_utils_footer(array());
       exit;
     }
 
@@ -147,7 +147,7 @@ if( $submit ) {
     if (!$res1 || db_numrows($res1) < 1) {
       //release not found for this project
       $feedback .= " | Not Your Release Or Release Doesn't Exist ";
-      project_admin_footer(array());
+      file_utils_footer(array());
       exit;
     }
 	 
@@ -164,7 +164,7 @@ if( $submit ) {
     
     if ($res1 && db_numrows($res1) > 0) {
       $feedback .= " | FileName Already Exists For This Project: $file_name ";
-      project_admin_footer(array());
+      file_utils_footer(array());
       exit;
     }
 	
@@ -191,7 +191,7 @@ if( $submit ) {
       if (!$res) {
 	$feedback .= " | Couldn't Add FileName: $file_name ";
 	echo db_error();
-	project_admin_footer(array());
+	file_utils_footer(array());
 	exit;
       } 
       $feedback .= " | $file_name added successfuly";
@@ -200,7 +200,7 @@ if( $submit ) {
       // that the package is active (not hidden)
       if (!frs_package_is_active($status_id)) {
 	$feedback .= '| no email sent: release is hidden ';
-	project_admin_footer(array());
+	file_utils_footer(array());
 	exit;
       }
       
@@ -225,11 +225,11 @@ if( $submit ) {
 	  "Subject: $subject".$GLOBALS['sys_lf'].$GLOBALS['sys_lf'].
 	  "\n\nA new version of ". db_result($result,0,'name')." has been released. ".
 	  "\nYou can download it at: ".
-	  "\n\n<http://".$GLOBALS['sys_default_domain']."/project/showfiles.php?group_id=$group_id&release_id=$release_id> ".
+	  "\n\n<http://".$GLOBALS['sys_default_domain']."/file/showfiles.php?group_id=$group_id&release_id=$release_id> ".
 	  "\n\nYou requested to be notified when new versions of this file ".
 	  "\nwere released. If you don't wish to be notified in the ".
 	  "\nfuture, please login to ".$GLOBALS['sys_name']." and click this link: ".
-	  "\n<http://".$GLOBALS['sys_default_domain']."/project/filemodule_monitor.php?filemodule_id=$package_id> ";
+	  "\n<http://".$GLOBALS['sys_default_domain']."/file/filemodule_monitor.php?filemodule_id=$package_id> ";
 	exec ("/bin/echo \"$body\" | /usr/sbin/sendmail -fnoreply@".$host." -t -i &");
 	$feedback .= '| email sent to '. db_numrows($result) .' users monitoring this package ';
       }
@@ -372,5 +372,5 @@ if( $submit ) {
 <?php
 }
 
-project_admin_footer(array());
+file_utils_footer(array());
 ?>

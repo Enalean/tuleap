@@ -70,7 +70,7 @@ function html_get_timezone_popup ($title='timezone',$selected='xzxzxzx') {
     return html_build_select_box_from_arrays ($TZs,$TZs,$title,$selected,false);
 }
 
-function html_build_list_table_top ($title_arr,$links_arr=false,$mass_change=false) {
+function html_build_list_table_top ($title_arr,$links_arr=false,$mass_change=false,$full_width=true) {
 	/*
 		Takes an array of titles and builds
 		The first row of a new table
@@ -78,9 +78,10 @@ function html_build_list_table_top ($title_arr,$links_arr=false,$mass_change=fal
 		Optionally takes a second array of links for the titles
 	*/
 	GLOBAL $HTML;
-
 	$return = '
-	<TABLE WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="2">
+       <TABLE ';
+        if ($full_width) $return.='WIDTH="100%" ';
+	$return .= 'BORDER="0" CELLSPACING="1" CELLPADDING="2">
 		<TR class="boxtable">';
 
 	if ($mass_change) $return .= '<TD class="boxtitle">Select?</TD>';

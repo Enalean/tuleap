@@ -1082,18 +1082,6 @@ CREATE TABLE mail_group_list (
   KEY idx_mail_group_list_group (group_id)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'mailaliases'
-#
-
-CREATE TABLE mailaliases (
-  mailaliases_id int(11) NOT NULL auto_increment,
-  group_id int(11) NOT NULL default '0',
-  domain varchar(80) default NULL,
-  user_name varchar(20) default NULL,
-  email_forward varchar(255) default NULL,
-  PRIMARY KEY  (mailaliases_id)
-) TYPE=MyISAM;
 
 #
 # Table structure for table 'news_bytes'
@@ -2080,6 +2068,7 @@ CREATE TABLE user_group (
   patch_flags int(11) NOT NULL default '1',
   support_flags int(11) NOT NULL default '1',
   doc_flags int(11) NOT NULL default '0',
+  file_flags int(11) NOT NULL default '0',
   PRIMARY KEY  (user_group_id),
   KEY idx_user_group_user_id (user_id),
   KEY idx_user_group_group_id (group_id),
@@ -3007,9 +2996,9 @@ CREATE TABLE snippet_language (
 
 
 
-#
-# Service table
-#
+--
+-- Service table
+--
 CREATE TABLE service (
 	service_id int(11) NOT NULL auto_increment,
 	group_id int(11) NOT NULL,
@@ -3024,6 +3013,54 @@ CREATE TABLE service (
 	primary key (service_id),
         key idx_group_id(group_id)
 );
+
+
+
+--
+-- ugroup table, used to store the description of groups of users (see also ugroup_user table)
+--
+CREATE TABLE ugroup (  
+  ugroup_id int(11) NOT NULL auto_increment,
+  name text NOT NULL,
+  description text NOT NULL,
+  group_id int(11) NOT NULL,
+  PRIMARY KEY  (ugroup_id)
+);
+
+
+--
+-- ugroup_user table
+-- Contains the ugroup members (users)
+--
+CREATE TABLE ugroup_user (
+  ugroup_id int(11) NOT NULL,
+  user_id int(11) NOT NULL
+);
+
+
+--
+-- permissions table, used to store specific access rights (for packages, releases, documentation, etc.)
+--
+CREATE TABLE permissions (
+  permission_type text NOT NULL,
+  object_id text NOT NULL,
+  ugroup_id int(11) NOT NULL
+);
+
+
+--
+-- permissions_values table, used to store the list of default ugroups available by permission_type.
+-- ugroups are selected from the special ugroups, so their ID should be less than 100.
+--
+CREATE TABLE permissions_values (
+  permission_type text NOT NULL,
+  ugroup_id int(11) NOT NULL,
+  is_default int(11) NOT NULL default '0'
+);
+
+
+
+
 
 
 #

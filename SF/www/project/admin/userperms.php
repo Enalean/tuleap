@@ -7,9 +7,10 @@
 // $Id$
 
 require "pre.php";    
-require ($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
+require($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactTypeFactory.class');
+require($DOCUMENT_ROOT.'/project/admin/ugroup_utils.php');
 
 //	  
 //  get the Group object
@@ -78,6 +79,7 @@ if ($submit) {
 		$patch_flags="patch_user_$row_dev[user_id]";
 		$support_flags="support_user_$row_dev[user_id]";
 		$doc_flags="doc_user_$row_dev[user_id]";
+		$file_flags="file_user_$row_dev[user_id]";
 
 		$res = db_query('UPDATE user_group SET ' 
 			."admin_flags='".$$admin_flags."',"
@@ -85,6 +87,7 @@ if ($submit) {
 			."forum_flags='".$$forum_flags."',"
 			."project_flags='".$$project_flags."', "
 			."doc_flags='".$$doc_flags."', "
+			."file_flags='".$$file_flags."', "
 			."patch_flags='".$$patch_flags."', "
 			."support_flags='".$$support_flags."' "
 			."WHERE user_id='$row_dev[user_id]' AND group_id='$group_id'");
@@ -125,6 +128,7 @@ $res_dev = db_query("SELECT user.user_name AS user_name,"
 	. "user_group.project_flags, "
 	. "user_group.patch_flags, "
 	. "user_group.doc_flags, "
+	. "user_group.file_flags, "
 	. "user_group.support_flags "
 	. "FROM user,user_group WHERE "
 	. "user.user_id=user_group.user_id AND user_group.group_id=$group_id "
@@ -148,120 +152,161 @@ if ($project->isError()) {
 <TABLE width="100%" cellspacing=0 cellpadding=3 border=0>
 <TR><TD><B>Developer Name</B></TD>
 <TD><B>Project<BR>Admin</B></TD>
-<TD><B>CVS Write</B></TD>
 <?
+if ($project->usesCVS()) {
+    print '<TD><B>CVS Write</B></TD>';
+}
 if ($project->usesBugs() && !($sys_activate_tracker && !$project->activateOldBug())) {
 	print '<TD><B>Bug Tracking</B></TD>';
 }
-?>
-<TD><B>Forums</B></TD>
-<?
+if ($project->usesForum()) {
+    print '<TD><B>Forums</B></TD>';
+}
 if ($project->usesPm() && !($sys_activate_tracker && !$project->activateOldTask())) {
 	print '<TD><B>Task Manager</B></TD>';
 }
-?>
-<TD><B>Patch Manager</B></TD>
-<?
+
+if ($project->usesPatch()) {
+    print '<TD><B>Patch Manager</B></TD>';
+}
 if ($project->usesSupport() && !($sys_activate_tracker && !$project->activateOldSR())) {
 	print '<TD><B>Support Manager</B></TD>';
 }
-?>
-<TD><B>Doc. Manager</B></TD>
-<?
+
+if ($project->usesDocman()) {
+    print '<TD><B>Doc. Manager</B></TD>';
+}
+
+if ($project->usesFile()) {
+    print '<TD><B>File Manager</B></TD>';
+}
+
 if ( $project->usesTracker()&&$sys_activate_tracker&&$at_arr ) {
 	for ($j = 0; $j < count($at_arr); $j++) {
 		echo '<TD><B>Tracker:<br>'.$at_arr[$j]->getName().'</B></TD>';
 	}
 }
+print '<TD><B>User Groups</B></TD>';
+
 ?>
 </TR>
 
 <?php
 
 if (!$res_dev || db_numrows($res_dev) < 1) {
-	echo '<H2>No Users Found</H2>';
+    echo '<H2>No Users Found</H2>';
 } else {
 
-	while ($row_dev = db_fetch_array($res_dev)) {
-		$i++;
-		print '<TR class="'. util_get_alt_row_color($i) .'"><TD>'.$row_dev['user_name'].'</TD>';
-		print '
+    while ($row_dev = db_fetch_array($res_dev)) {
+        $i++;
+        print '<TR class="'. util_get_alt_row_color($i) .'"><TD>'.$row_dev['user_name'].'</TD>';
+        print '
 			<TD>
 			<INPUT TYPE="RADIO" NAME="admin_user_'.$row_dev['user_id'].'" VALUE="A" '.(($row_dev['admin_flags']=='A')?'CHECKED':'').'>&nbsp;Yes<BR>
 			<INPUT TYPE="RADIO" NAME="admin_user_'.$row_dev['user_id'].'" VALUE="" '.(($row_dev['admin_flags']=='')?'CHECKED':'').'>&nbsp;No
 			</TD>';
-		print '<TD>Yes</TD>';
-		// bug selects
+        if ($project->usesCVS()) { print '<TD>Yes</TD>'; }
+        // bug selects
         if ($project->usesBugs() && !($sys_activate_tracker && !$project->activateOldBug())) {
-			print '<TD><FONT size="-1"><SELECT name="bugs_user_'.$row_dev['user_id'].'">';
-			print '<OPTION value="0"'.(($row_dev['bug_flags']==0)?" selected":"").'>None';
-			print '<OPTION value="1"'.(($row_dev['bug_flags']==1)?" selected":"").'>Tech Only';
-			print '<OPTION value="2"'.(($row_dev['bug_flags']==2)?" selected":"").'>Tech & Admin';
-			print '<OPTION value="3"'.(($row_dev['bug_flags']==3)?" selected":"").'>Admin Only';
-			print '</SELECT></FONT></TD>';
-		} else {
-			print '<input type="Hidden" name="bugs_user_'.$row_dev['user_id'].'" value="'.$row_dev['bug_flags'].'">';
-		}
-		// forums
-		print '<TD><FONT size="-1"><SELECT name="forums_user_'.$row_dev['user_id'].'">';
-		print '<OPTION value="0"'.(($row_dev['forum_flags']==0)?" selected":"").'>None';
-		print '<OPTION value="2"'.(($row_dev['forum_flags']==2)?" selected":"").'>Moderator';
-		print '</SELECT></FONT></TD>';
-		
-		// project selects
+            print '<TD><FONT size="-1"><SELECT name="bugs_user_'.$row_dev['user_id'].'">';
+            print '<OPTION value="0"'.(($row_dev['bug_flags']==0)?" selected":"").'>None';
+            print '<OPTION value="1"'.(($row_dev['bug_flags']==1)?" selected":"").'>Tech Only';
+            print '<OPTION value="2"'.(($row_dev['bug_flags']==2)?" selected":"").'>Tech & Admin';
+            print '<OPTION value="3"'.(($row_dev['bug_flags']==3)?" selected":"").'>Admin Only';
+            print '</SELECT></FONT></TD>';
+        } else {
+            print '<input type="Hidden" name="bugs_user_'.$row_dev['user_id'].'" value="'.$row_dev['bug_flags'].'">';
+        }
+        // forums
+        if ($project->usesForum()) {
+            print '<TD><FONT size="-1"><SELECT name="forums_user_'.$row_dev['user_id'].'">';
+            print '<OPTION value="0"'.(($row_dev['forum_flags']==0)?" selected":"").'>None';
+            print '<OPTION value="2"'.(($row_dev['forum_flags']==2)?" selected":"").'>Moderator';
+            print '</SELECT></FONT></TD>';
+        }
+        // project selects
         if ($project->usesPm() && !($sys_activate_tracker && !$project->activateOldTask())) {
-			print '<TD><FONT size="-1"><SELECT name="projects_user_'.$row_dev['user_id'].'">';
-			print '<OPTION value="0"'.(($row_dev['project_flags']==0)?" selected":"").'>None';
-			print '<OPTION value="1"'.(($row_dev['project_flags']==1)?" selected":"").'>Tech Only';
-			print '<OPTION value="2"'.(($row_dev['project_flags']==2)?" selected":"").'>Tech & Admin';
-			print '<OPTION value="3"'.(($row_dev['project_flags']==3)?" selected":"").'>Admin Only';
-			print '</SELECT></FONT></TD>';
-		} else {
-			print '<input type="Hidden" name="projects_user_'.$row_dev['user_id'].'" value="'.$row_dev['project_flags'].'">';
-		}
+            print '<TD><FONT size="-1"><SELECT name="projects_user_'.$row_dev['user_id'].'">';
+            print '<OPTION value="0"'.(($row_dev['project_flags']==0)?" selected":"").'>None';
+            print '<OPTION value="1"'.(($row_dev['project_flags']==1)?" selected":"").'>Tech Only';
+            print '<OPTION value="2"'.(($row_dev['project_flags']==2)?" selected":"").'>Tech & Admin';
+            print '<OPTION value="3"'.(($row_dev['project_flags']==3)?" selected":"").'>Admin Only';
+            print '</SELECT></FONT></TD>';
+        } else {
+            print '<input type="Hidden" name="projects_user_'.$row_dev['user_id'].'" value="'.$row_dev['project_flags'].'">';
+        }
 		
-	    // patch selects
+        // patch selects
+        if ($project->usesPatch()) {
 	    print '<TD><FONT size="-1"><SELECT name="patch_user_'.$row_dev['user_id'].'">';
 	    print '<OPTION value="0"'.(($row_dev['patch_flags']==0)?" selected":"").'>None';
 	    print '<OPTION value="1"'.(($row_dev['patch_flags']==1)?" selected":"").'>Tech Only';
 	    print '<OPTION value="2"'.(($row_dev['patch_flags']==2)?" selected":"").'>Tech & Admin';
 	    print '<OPTION value="3"'.(($row_dev['patch_flags']==3)?" selected":"").'>Admin Only';
 	    print '</SELECT></FONT></TD>';
-	
-		// support selects
+	}
+
+        // support selects
         if ($project->usesSupport() && !($sys_activate_tracker && !$project->activateOldSR())) {
-			print '<TD><FONT size="-1"><SELECT name="support_user_'.$row_dev['user_id'].'">';
-			print '<OPTION value="0"'.(($row_dev['support_flags']==0)?" selected":"").'>None';
-			print '<OPTION value="1"'.(($row_dev['support_flags']==1)?" selected":"").'>Tech Only';
-			print '<OPTION value="2"'.(($row_dev['support_flags']==2)?" selected":"").'>Tech & Admin';
-			print '<OPTION value="3"'.(($row_dev['support_flags']==3)?" selected":"").'>Admin Only';
-			print '</SELECT></FONT></TD>';
-		} else {
-			print '<input type="Hidden" name="support_user_'.$row_dev['user_id'].'" value="'.$row_dev['support_flags'].'">';
-		}
+            print '<TD><FONT size="-1"><SELECT name="support_user_'.$row_dev['user_id'].'">';
+            print '<OPTION value="0"'.(($row_dev['support_flags']==0)?" selected":"").'>None';
+            print '<OPTION value="1"'.(($row_dev['support_flags']==1)?" selected":"").'>Tech Only';
+            print '<OPTION value="2"'.(($row_dev['support_flags']==2)?" selected":"").'>Tech & Admin';
+            print '<OPTION value="3"'.(($row_dev['support_flags']==3)?" selected":"").'>Admin Only';
+            print '</SELECT></FONT></TD>';
+        } else {
+            print '<input type="Hidden" name="support_user_'.$row_dev['user_id'].'" value="'.$row_dev['support_flags'].'">';
+        }
 	
-		//documenation states - nothing or editor	
-		print '<TD><FONT size="-1"><SELECT name="doc_user_'.$row_dev['user_id'].'">';
-		print '<OPTION value="0"'.(($row_dev['doc_flags']==0)?" selected":"").'>None';
-		print '<OPTION value="1"'.(($row_dev['doc_flags']==1)?" selected":"").'>Editor';
-		print '</SELECT></FONT></TD>
+        //documentation states - nothing or editor	
+        if ($project->usesDocman()) {
+            print '<TD><FONT size="-1"><SELECT name="doc_user_'.$row_dev['user_id'].'">';
+            print '<OPTION value="0"'.(($row_dev['doc_flags']==0)?" selected":"").'>None';
+            print '<OPTION value="1"'.(($row_dev['doc_flags']==1)?" selected":"").'>Editor';
+            print '</SELECT></FONT></TD>';
+        }
+        
+        // File release manager: nothing or admin
+        if ($project->usesFile()) {
+            print '<TD><FONT size="-1"><SELECT name="file_user_'.$row_dev['user_id'].'">';
+            print '<OPTION value="0"'.(($row_dev['file_flags']==0)?" selected":"").'>None';
+            print '<OPTION value="2"'.(($row_dev['file_flags']==2)?" selected":"").'>Admin';
+            print '</SELECT></FONT></TD>
 	';
+        }
+           
 	
-		if ( $project->usesTracker()&&$sys_activate_tracker&&$at_arr ) {
-			// Loop on tracker
-			for ($j = 0; $j < count($at_arr); $j++) {
-				$perm = $at_arr[$j]->getUserPerm($row_dev['user_id']);
-				print '<TD><FONT size="-1"><SELECT name="tracker_user_'.$row_dev['user_id'].'_'.$at_arr[$j]->getID().'">';
-				print '<OPTION value="0"'.(($perm==0)?" selected":"").'>None';
-				print '<OPTION value="1"'.(($perm==1)?" selected":"").'>Tech Only';
-				print '<OPTION value="2"'.(($perm==2)?" selected":"").'>Tech & Admin';
-				print '<OPTION value="3"'.(($perm==3)?" selected":"").'>Admin Only';
-				print '</SELECT></FONT></TD>';
-			}
-		}
-		print '</TR>
+        if ( $project->usesTracker()&&$sys_activate_tracker&&$at_arr ) {
+            // Loop on tracker
+            for ($j = 0; $j < count($at_arr); $j++) {
+                $perm = $at_arr[$j]->getUserPerm($row_dev['user_id']);
+                print '<TD><FONT size="-1"><SELECT name="tracker_user_'.$row_dev['user_id'].'_'.$at_arr[$j]->getID().'">';
+                print '<OPTION value="0"'.(($perm==0)?" selected":"").'>None';
+                print '<OPTION value="1"'.(($perm==1)?" selected":"").'>Tech Only';
+                print '<OPTION value="2"'.(($perm==2)?" selected":"").'>Tech & Admin';
+                print '<OPTION value="3"'.(($perm==3)?" selected":"").'>Admin Only';
+                print '</SELECT></FONT></TD>';
+            }
+        }
+        
+        print '<TD><FONT size="-1">';
+        $res_ugroups=ugroup_db_list_all_ugroups_for_user($group_id,$row_dev['user_id']);
+        $is_first=true;
+        if (db_numrows($res_ugroups)<1) {
+            print '-';
+        } else {
+            while ($row = db_fetch_array($res_ugroups)) {
+                if (!$is_first) { print ', '; }
+                print '<a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$row['ugroup_id'].'&func=edit">'.
+                    $row['name'].'</a>';
+                $is_first=false;
+            }
+        }
+        print '</FONT></TD>';
+
+        print '</TR>
 	';
-	} // while
+    } // while
 
 }
 ?>

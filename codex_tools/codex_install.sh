@@ -575,9 +575,9 @@ $CAT <<'EOF' >/etc/my.cnf
 [mysqld]
 log-bin=/cvsroot/.mysql_backup/codex-bin
 skip-innodb
-# file attachment can be 2M in size so take a bit of slack
+# file attachment can be 16M in size so take a bit of slack
 # on the mysql packet size
-set-variable = max_allowed_packet=3M
+set-variable = max_allowed_packet=24M
 
 [safe_mysqld]
 err-log=/var/log/mysqld.log

@@ -54,7 +54,7 @@ function display_service_row($group_id, $service_id, $label, $short_name, $descr
     } else {
         echo '<TD align="center">-</TD>';
     }
-    echo '<TR>';
+    echo '</TR>';
     $row_num++;
 }
 
@@ -153,7 +153,7 @@ if ($func=='do_create') {
     $result=db_query($sql);
 
     if (!$result) {
-        exit_error("ERROR",'ERROR - Can not create service');
+        exit_error("ERROR",'ERROR - Can not create service: '.db_error());
     } else {
         $feedback .= " Successfully Created Service ";
     }
@@ -195,9 +195,7 @@ if ($func=='do_update') {
     $result=db_query($sql);
 
     if (!$result) {
-        $feedback .= 'ERROR - Can not update service';
-        project_admin_footer(array());
-        exit;
+        exit_error("ERROR",'ERROR - Can not update service: '.db_error());
     } else {
         $feedback .= " Successfully Updated Service ";
     }

@@ -8,6 +8,7 @@
 
 require "pre.php";    
 require "account.php";
+require ($DOCUMENT_ROOT.'/project/admin/ugroup_utils.php');
 session_require(array('group'=>'1','admin_flags'=>'A'));
 $HTML->header(array('title'=>'Admin - User List'));
 
@@ -47,6 +48,7 @@ function show_users_list ($result) {
 */
 if ($action=='delete') {
 	db_query("UPDATE user SET status='D',unix_status='D'  WHERE user_id='$user_id'");
+        ugroup_delete_user_from_all_ugroups($user_id);
 	echo '<H2>User Updated to DELETE Status - UNIX account scheduled for deletion</H2>';
 }
 

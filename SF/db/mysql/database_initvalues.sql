@@ -171,7 +171,7 @@ INSERT INTO groups SET \
 # Make the 'admin' user part of the default Admin Project so that he
 # becomes a super user
 
-INSERT INTO user_group VALUES (1, 101, 1, 'A', 2, 2, 2, 2, 2, 1);
+INSERT INTO user_group VALUES (1, 101, 1, 'A', 2, 2, 2, 2, 2, 1, 2);
 
 #
 # Default bug (None)
@@ -1608,7 +1608,7 @@ insert into service (service_id, group_id, label, description, short_name, link,
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (11, 100, 'Surveys', 'Project Surveys', 'survey', '/survey/?group_id=$group_id', 1, 1, 'system', 110);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (12, 100, 'News', 'Project News', 'news', '/news/?group_id=$group_id', 1, 1, 'system', 120);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (13, 100, 'CVS', 'CVS Access', 'cvs', '/cvs/?group_id=$group_id', 1, 1, 'system', 130);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (14, 100, 'Files', 'File Releases', 'file', '/project/filelist.php?group_id=$group_id', 1, 1, 'system', 140);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (14, 100, 'Files', 'File Releases', 'file', '/file/showfiles.php?group_id=$group_id', 1, 1, 'system', 140);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (15, 100, 'Trackers', 'Project Trackers', 'tracker', '/tracker/index.php?group_id=$group_id', 1, 1, 'system', 150);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (16, 100, 'Subversion', 'Subversion Access', 'svn', '/svn/?group_id=$group_id', 1, 1, 'system', 135);
 
@@ -1623,7 +1623,7 @@ insert into service (service_id, group_id, label, description, short_name, link,
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (38, 1, 'Surveys', 'Project Surveys', 'survey', '/survey/?group_id=1', 1, 1, 'system', 110);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (39, 1, 'News', 'Project News', 'news', '/news/?group_id=1', 1, 1, 'system', 120);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (40, 1, 'CVS', 'CVS Access', 'cvs', '/cvs/?group_id=1', 1, 1, 'system', 130);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (41, 1, 'Files', 'File Releases', 'file', '/project/filelist.php?group_id=1', 1, 1, 'system', 140);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (41, 1, 'Files', 'File Releases', 'file', '/file/showfiles.php?group_id=1', 1, 1, 'system', 140);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (42, 1, 'Trackers', 'Project Trackers', 'tracker', '/tracker/index.php?group_id=1', 1, 1, 'system', 150);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (43, 1, 'Subversion', 'Subversion Access', 'svn', '/svn/?group_id=1', 1, 1, 'system', 135);
 
@@ -1633,7 +1633,7 @@ insert into service (service_id, group_id, label, description, short_name, link,
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (53, 46, 'Home Page', 'Project Home Page', 'homepage', 'http://sitenews._DOMAIN_NAME_', 1, 1, 'system', 30);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (54, 46, 'Forums', 'Project Forums', 'forum', '/forum/?group_id=46', 1, 1, 'system', 40);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (55, 46, 'News', 'Project News', 'news', '/news/?group_id=46', 1, 1, 'system', 120);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (56, 46, 'Files', 'File Releases', 'file', '/project/filelist.php?group_id=46', 1, 1, 'system', 140);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (56, 46, 'Files', 'File Releases', 'file', '/file/showfiles.php?group_id=46', 1, 1, 'system', 140);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (57, 46, 'Trackers', 'Project Trackers', 'tracker', '/tracker/index.php?group_id=46', 1, 1, 'system', 150);
 
 --
@@ -1643,5 +1643,60 @@ insert into service (service_id, group_id, label, description, short_name, link,
 --
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (100, 0, 'None', 'None', '', '', 0, 0, 'project', 0);
 
+
+
+--
+-- Insert special ugroup values
+--
+-- Apart from the mandatory 'nobody', 'anonymous_users', 'registered_users', 'project_members' and  
+-- 'project_admins', the table lists all possible roles in the 'User Permissions' matrix.
+-- If you modify anything here, check also www/project/admin/ugroup_utils.php
+
+INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (100, "nobody", "Empty Group", 100);
+INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (1, "anonymous_users", "Anonymous Users", 100);
+INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (2, "registered_users", "Registered CodeX Users", 100);
+INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (3, "project_members", "Project Members", 100);
+INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (4, "project_admins", "Project Administrators", 100);
+INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (10, "document_editor", "Document Editors", 100);
+INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (11, "file_manager_admin", "File Manager Administrators", 100);
+-- Not used yet
+-- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (12, "forum_moderator", "Forum Moderators", 100);
+-- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (13, "patch_tech", "Patch Technicians", 100);
+-- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (14, "patch_admins", "Patch Administrators", 100);
+-- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (15, "tracker_tech", "Tracker Technicians", 100);
+-- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (16, "tracker_admins", "Tracker Administrators", 100);
+--
+-- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (30, "legacy_sr_tech", "Support Request Technicians", 100);
+-- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (31, "legacy_sr_admins", "Support Request Administrators", 100);
+-- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (32, "legacy_task_tech", "Task Manager Technicians", 100);
+-- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (33, "legacy_task_admins", "Task Manager Administrators", 100);
+-- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (34, "legacy_bug_tech", "Bug Tracker Technicians", 100);
+-- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (35, "legacy_bug_admins", "Bug Tracker Administrators", 100);
+
+
+
+---
+--- Set permissions_values entries. These should normally be set at installation time only.
+-- ugroup_id should always be lower than 100.
+---
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PACKAGE_READ',100);
+INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('PACKAGE_READ',2,1);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PACKAGE_READ',3);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PACKAGE_READ',4);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PACKAGE_READ',11);
+
+-- No default value for RELEASE_READ -> use parent permissions
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('RELEASE_READ',100);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('RELEASE_READ',2);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('RELEASE_READ',3);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('RELEASE_READ',4);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('RELEASE_READ',11);
+
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_READ',100);
+INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('DOCUMENT_READ',1,1);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_READ',2);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_READ',3);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('RELEASE_READ',4);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_READ',10);
 
 

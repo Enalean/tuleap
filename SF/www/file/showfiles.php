@@ -7,40 +7,79 @@
 // $Id$
 
 require ('pre.php');
+require ('permissions.php');
+require ($DOCUMENT_ROOT.'/file/file_utils.php');
 
 // LJ Now only for registered users on CodeX
-if (user_isloggedin()) {
+if (!user_isloggedin()) {
+    /*
+    Not logged in
+    */
+    exit_not_logged_in();
+}
 
-    $sql = "SELECT * FROM frs_package WHERE group_id='$group_id' AND status_id='1'";
-    $res_package = db_query( $sql );
-    $num_packages = db_numrows( $res_package );
-
-    if ( $num_packages < 1) {
-	exit_error("No File Packages","There are no file packages defined for this project.");
+$num_packages=0;
+$sql = "SELECT * FROM frs_package WHERE group_id='$group_id' AND status_id='1'";
+$res = db_query( $sql );
+// Retain only packages the user is authorized to access, or packages containing releases the user is authorized to access...
+if (db_numrows($res)>0) {
+    while ($row = db_fetch_array($res)) {
+        $authorized=false;
+        if (permission_is_authorized('PACKAGE_READ',$row['package_id'],user_getid())) {
+            $authorized=true;
+        } else {
+            // Get corresponding releases and check access. 
+            // When set, the release permission overwrite package permission
+            $sql2= "SELECT * FROM frs_release WHERE status_id='1' AND package_id=".$row['package_id'];
+            $res2=db_query( $sql2 );
+            if (db_numrows($res2)>0) {
+                while ($row2 = db_fetch_array($res2)) {
+                    if (permission_exist('RELEASE_READ', $row2['release_id'])) {
+                        if (permission_is_authorized('RELEASE_READ',$row2['release_id'],user_getid())) {
+                            $authorized=true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        
+        if ($authorized) {
+            $res_package[$row['package_id']]=$row['name'];
+            $num_packages++;
+        }
     }
+}
 
-    site_project_header(array('title'=>'Project Filelist','group'=>$group_id,'toptab'=>'file'));
+file_utils_header(array('title'=>'Project Filelist'));
 
-    echo '<h3>Package Releases '. help_button('FileReleaseJargon.html').'</h3>';
-    echo '<p>Select Release to see Release Notes and Change Log, &nbsp;';
-    echo 'Select File to request file download.</p>';
-    
-    if (session_issecure()) {
-	$url = "https://".$GLOBALS['sys_https_host'];
-    } else {
-	$url = "http://".$GLOBALS['sys_default_domain'];
-    }
+if ( $num_packages < 1) {
+    echo '<h3>No File Packages</h3><p>There are no file packages available';
+    file_utils_footer(array());
+    exit;
+}
+
+
+echo '<h3>Package Releases '. help_button('FileReleaseJargon.html').'</h3>';
+echo '<p>Select Release to see Release Notes and Change Log, &nbsp;';
+echo 'Select File to request file download.</p>';
+
+if (session_issecure()) {
+    $url = "https://".$GLOBALS['sys_https_host'];
+} else {
+    $url = "http://".$GLOBALS['sys_default_domain'];
+}
 ?>
 <SCRIPT language="JavaScript">
 <!--
 function showConfirmDownload(group_id,file_id,filename) {
-    url = "<?php echo $url; ?>/project/confirm_download.php?group_id=" + group_id + "&file_id=" + file_id + "&filename=" + filename;
+    url = "<?php echo $url; ?>/file/confirm_download.php?group_id=" + group_id + "&file_id=" + file_id + "&filename=" + filename;
     wConfirm = window.open(url,"confirm","width=450,height=360,resizable=1,scrollbars=1");
     wConfirm.focus();
 }
 
 function download(group_id,file_id,filename) {
-    url = "<?php echo $url; ?>/project/download.php/" + group_id + "/" + file_id +"/"+filename;
+    url = "<?php echo $url; ?>/file/download.php/" + group_id + "/" + file_id +"/"+filename;
     wConfirm.close();
     self.location = url;
     
@@ -48,33 +87,33 @@ function download(group_id,file_id,filename) {
 -->
 </SCRIPT>
 <?
-$title_arr = array();
-$title_arr[] = 'Package';
-$title_arr[] = 'Release<BR>&amp; Notes';
-$title_arr[] = 'Filename';
-$title_arr[] = 'Size';
-$title_arr[] = 'D/L';
-$title_arr[] = 'Arch.';
-$title_arr[] = 'Type';
-$title_arr[] = 'Date';
+    $title_arr = array();
+    $title_arr[] = 'Package';
+    $title_arr[] = 'Release<BR>&amp; Notes';
+    $title_arr[] = 'Filename';
+    $title_arr[] = 'Size';
+    $title_arr[] = 'D/L';
+    $title_arr[] = 'Arch.';
+    $title_arr[] = 'Type';
+    $title_arr[] = 'Date';
 
-   // get unix group name for path
-$group_unix_name=group_getunixname($group_id);
+    // get unix group name for path
+    $group_unix_name=group_getunixname($group_id);
 
-   // print the header row
-echo html_build_list_table_top($title_arr) . "\n";
+    // print the header row
+    echo html_build_list_table_top($title_arr) . "\n";
 
-$proj_stats['packages'] = $num_packages;
+    $proj_stats['packages'] = $num_packages;
 
-   // Iterate and show the packages
-for ( $p = 0; $p < $num_packages; $p++ ) {
+    // Iterate and show the packages
+    while (list($package_id, $package_name) = each($res_package)) {
 
-	print '<TR><TD><B>'.db_result($res_package,$p,'name').'</B></TD><TD COLSPAN="7">&nbsp;</TD></TR>'."\n";
+	print '<TR><TD><B>'.$package_name.'</B></TD><TD COLSPAN="7">&nbsp;</TD></TR>'."\n";
 
 	// get the releases of the package
 	// Order by release_date and release_id in case two releases
 	// are published the same day
-	$sql	= "SELECT * FROM frs_release WHERE package_id='". db_result($res_package,$p,'package_id') . "' "
+	$sql	= "SELECT * FROM frs_release WHERE package_id='". $package_id . "' "
 		. "AND status_id=1 ORDER BY release_date DESC, release_id DESC";
 	$res_release = db_query( $sql );
 	$num_releases = db_numrows( $res_release );
@@ -87,6 +126,17 @@ for ( $p = 0; $p < $num_packages; $p++ ) {
 		   // iterate and show the releases of the package
 		for ( $r = 0; $r < $num_releases; $r++ ) {
 			$package_release = db_fetch_array( $res_release );
+
+                        // Check permissions for release, then package
+                        if (permission_exist('RELEASE_READ', $package_release['release_id'])) {
+                            if (!permission_is_authorized('RELEASE_READ',$package_release['release_id'],user_getid())) {
+                                // Skip this release
+                                continue;
+                            } // else OK, display the release
+                        } else if (!permission_is_authorized('PACKAGE_READ',$package_id,user_getid())) {
+                                // Skip this release
+                                continue;
+                        } // else OK, display the release
 
 			   // Highlight the release if one was chosen
 			if ( $release_id == $package_release['release_id'] ) {
@@ -169,14 +219,7 @@ if ( $proj_stats['size'] ) {
 
 print "</TABLE>\n\n";
 
-site_project_footer(array());
+file_utils_footer(array());
 
-} else {
-
- /*
-    Not logged in
-  */
-  exit_not_logged_in();
-}
 
 ?>

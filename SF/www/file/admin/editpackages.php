@@ -7,9 +7,13 @@
 // $Id$
 
 require ('pre.php');    
-require ($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
+require ('permissions.php');    
+require ($DOCUMENT_ROOT.'/file/file_utils.php');
 
-session_require(array('group'=>$group_id,'admin_flags'=>'A'));
+
+if (!user_ismember($group_id,'R2')) {
+    exit_permission_denied();
+}
 
 /*
 
@@ -20,11 +24,10 @@ session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 */
 
 if ($submit) {
-	/*
-
+    /*
 		make updates to the database
 
-	*/
+    */
 	if ($func=='add_package' && $package_name) {
 
 	  //make sure that the package_name does not already exist
@@ -56,14 +59,22 @@ if ($submit) {
 			"WHERE package_id='$package_id' AND group_id='$group_id'");
 		$feedback .= ' Updated Package ';
 
-	}
-
+	} else if ($func=='update_permissions') {
+            list ($return_code, $feedback) = permission_process_selection_form($_POST['group_id'], $_POST['permission_type'], $_POST['object_id'], $_POST['ugroups']);
+            if (!$return_code) exit_error('Error','ERROR: could not update permissions: <p>'.$feedback);
+        }
+}
+if ($_POST['reset']) {
+    // Must reset access rights to defaults
+    if (permission_clear_all($group_id, $_POST['permission_type'], $_POST['object_id'])) {
+        $feedback="Permissions reset to default";
+    } else {
+        $feedback="Error: cannot reset permissions to default";
+    }
 }
 
+file_utils_admin_header(array('title'=>'Release/Edit File Releases', 'help' => 'FileReleaseDelivery.html'));
 
-project_admin_header(array('title'=>'Release/Edit File Releases',
-			   'group'=>$group_id,
-			   'help' => 'FileReleaseDelivery.html'));
 
 echo '<H3>Packages</H3>
 <P>
@@ -102,10 +113,11 @@ if (!$res || $rows < 1) {
 	echo '<h4>You Have No Packages Defined</h4>';
 } else {
 	$title_arr=array();
-	$title_arr[]='Releases';
 	$title_arr[]='Package Name';
 	$title_arr[]='Status';
 	$title_arr[]='Update';
+	$title_arr[]='Releases';
+	$title_arr[]='Permissions';
 
 	echo html_build_list_table_top ($title_arr);
 
@@ -116,12 +128,18 @@ if (!$res || $rows < 1) {
 		<INPUT TYPE="HIDDEN" NAME="func" VALUE="update_package">
 		<INPUT TYPE="HIDDEN" NAME="package_id" VALUE="'. db_result($res,$i,'package_id') .'">
 		<TR class="'. util_get_alt_row_color($i) .'">
-			<TD NOWRAP><FONT SIZE="-1"><A HREF="editreleases.php?package_id='. 
-				db_result($res,$i,'package_id') .'&group_id='. $group_id .'"><B>[Add/Edit Releases]</B></A></TD>
 			<TD><FONT SIZE="-1"><INPUT TYPE="TEXT" NAME="package_name" VALUE="'. 
 				db_result($res,$i,'package_name') .'" SIZE="20" MAXLENGTH="30"></TD>
-			<TD><FONT SIZE="-1">'. frs_show_status_popup ('status_id', db_result($res,$i,'status_id')) .'</TD>
-			<TD><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="submit" VALUE="Update"></TD>
+			<TD align="center"><FONT SIZE="-1">'. frs_show_status_popup ('status_id', db_result($res,$i,'status_id')) .'</TD>
+			<TD align="center"><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="submit" VALUE="Update"></TD>
+			<TD  align="center" NOWRAP><FONT SIZE="-1"><A HREF="editreleases.php?package_id='. 
+				db_result($res,$i,'package_id') .'&group_id='. $group_id .'"><B>[Add/Edit Releases]</B></A></TD>
+			<TD  align="center" NOWRAP><FONT SIZE="-1"><A HREF="editpackagepermissions.php?package_id='. 
+				db_result($res,$i,'package_id') .'&group_id='. $group_id .'"><B>['; 
+                if (permission_exist('PACKAGE_READ',db_result($res,$i,'package_id'))) {
+                    echo 'Edit';
+                } else echo 'Define';
+                echo ' Permissions]</B></A></TD>
 		</TR></FORM>';
 	}
 	echo '</TABLE>';
@@ -145,6 +163,6 @@ echo '<P>
 <INPUT TYPE="SUBMIT" NAME="submit" VALUE="Create This Package">
 </FORM>';
 
-project_admin_footer(array());
+file_utils_footer(array());
 
 ?>

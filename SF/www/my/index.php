@@ -301,9 +301,9 @@ if (user_isloggedin()) {
 
 			$html .='
 			<TR class="'. util_get_alt_row_color($i) .'">'.
-			    '<TD WIDTH="99%">-&nbsp;&nbsp;<A HREF="/project/filelist.php?group_id='.$group_id.'">'.
+			    '<TD WIDTH="99%">-&nbsp;&nbsp;<A HREF="/file/showfiles.php?group_id='.$group_id.'">'.
 			    db_result($result2,$i,'name').'</A></TD>'.
-			    '<TD><A HREF="/project/filemodule_monitor.php?filemodule_id='.
+			    '<TD><A HREF="/file/filemodule_monitor.php?filemodule_id='.
 			    db_result($result2,$i,'filemodule_id').
 			    '" onClick="return confirm(\'Stop Monitoring this Package?\')">'.
 			    '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" '.

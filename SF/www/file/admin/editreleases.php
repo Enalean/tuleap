@@ -7,7 +7,8 @@
 // $Id$
 
 require ('pre.php');    
-require ($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
+require ('permissions.php');    
+require ($DOCUMENT_ROOT.'/file/file_utils.php');
 
 
 
@@ -129,7 +130,9 @@ function delete_release ($group_id,$release_id) {
 }
 
 
-session_require(array('group'=>$group_id,'admin_flags'=>'A'));
+if (!user_ismember($group_id,'R2')) {
+    exit_permission_denied();
+}
 
 if ($submit) {
 	/*
@@ -495,17 +498,29 @@ if ($submit) {
 				"Subject: $subject".$GLOBALS['sys_lf'].$GLOBALS['sys_lf'].
 				"\n\nA new version of ". db_result($result,0,'name')." has been released. ".
 				"\nYou can download it at: ".
-				"\n\n<http://".$GLOBALS['sys_default_domain']."/project/showfiles.php?group_id=$group_id&release_id=$release_id> ".
+				"\n\n<http://".$GLOBALS['sys_default_domain']."/file/showfiles.php?group_id=$group_id&release_id=$release_id> ".
 				"\n\nYou requested to be notified when new versions of this file ".
 				"\nwere released. If you don't wish to be notified in the ".
 				"\nfuture, please login to ".$GLOBALS['sys_name']." and click this link: ".
-				"\n<http://".$GLOBALS['sys_default_domain']."/project/filemodule_monitor.php?filemodule_id=$package_id> ";
+				"\n<http://".$GLOBALS['sys_default_domain']."/file/filemodule_monitor.php?filemodule_id=$package_id> ";
 			
 			exec ("/bin/echo \"$body\" | /usr/sbin/sendmail -fnoreply@".$host." -t -i &");
 			$feedback .= ' email sent - '. db_numrows($result) .' users tracking ';
 		}
-	}
+	} else  if ($func=='update_permissions') {
+            list ($return_code, $feedback) = permission_process_selection_form($_POST['group_id'], $_POST['permission_type'], $_POST['object_id'], $_POST['ugroups']);
+            if (!$return_code) exit_error('Error','ERROR: could not update permissions: <p>'.$feedback);
+        }
 }
+if ($_POST['reset']) {
+    // Must reset access rights to defaults
+    if (permission_clear_all($group_id, $_POST['permission_type'], $_POST['object_id'])) {
+        $feedback="Permissions reset to default";
+    } else {
+        $feedback="Error: cannot reset permissions to default";
+    }
+}
+
 
 ?><?php
 
@@ -536,8 +551,7 @@ if ($release_id && $func != 'delete_release') {
 		exit_error('ERROR','That release ID was not found in the database');
 	}
 
-	project_admin_header(array('title'=>'Release New File Version',
-				   'group'=>$group_id,
+        file_utils_admin_header(array('title'=>'Release New File Version',
 				   'help' => 'FileReleaseDelivery.html#ReleaseConfigurationandValidation'));
 
 
@@ -776,8 +790,7 @@ if ($release_id && $func != 'delete_release') {
 		Show existing releases and a form to create a new release
 
 	*/
-	project_admin_header(array('title'=>'Release New File Version',
-				   'group'=>$group_id,
+  file_utils_admin_header(array('title'=>'Release New File Version',
 				   'help' => 'FileReleaseDelivery.html#ReleaseCreation'));
 
 	echo '<H3>Define a New Release of a Package</H3>
@@ -822,6 +835,7 @@ if ($release_id && $func != 'delete_release') {
 		$title_arr[]='Release Name';
 		$title_arr[]='Package Name';
 		$title_arr[]='Status';
+		$title_arr[]='Permissions';
 		$title_arr[]='Delete?';
 
 		echo html_build_list_table_top ($title_arr);
@@ -835,11 +849,17 @@ if ($release_id && $func != 'delete_release') {
 		    $group_id.'" title="Edit This Package">'. 
 		    db_result($res,$i,'package_name') 
 		    .' </TD>'.
-		    '<TD><FONT SIZE="-1">'. db_result($res,$i,'status_name') .'</TD>'.
+                      '<TD><FONT SIZE="-1">'. db_result($res,$i,'status_name') .'</TD>
+                      <TD  align="center" NOWRAP><FONT SIZE="-1"><A HREF="editreleasepermissions.php?release_id='. 
+				db_result($res,$i,'release_id') .'&group_id='. $group_id.'&package_id='.$package_id .'">['; 
+                  if (permission_exist('RELEASE_READ',db_result($res,$i,'release_id'))) {
+                      echo 'Edit';
+                  } else echo 'Define';
+                  echo ' Permissions]</A></TD>'.
 		    '<TD align="center"><FONT SIZE="-1">'. 
-		    '<a href="/project/admin/editreleases.php?func=delete_release&group_id='. $group_id .'&release_id='.db_result($res,$i,'release_id').'&package_id='.$package_id.'">'.
+		    '<a href="/file/admin/editreleases.php?func=delete_release&group_id='. $group_id .'&release_id='.db_result($res,$i,'release_id').'&package_id='.$package_id.'">'.
 		    '<img src="'.util_get_image_theme("ic/trash.png").'" border="0" onClick="return confirm(\'** WARNING!! ** Delete this release and all its files (no possible restore operation)?\')"></a>'.'</TD>'.
-		    '</TR></FORM>';
+		    '</TR>       ';
 		}
 		echo '</TABLE>';
 	}
@@ -868,7 +888,7 @@ if ($release_id && $func != 'delete_release') {
 
 }
 
-project_admin_footer(array());
+file_utils_footer(array());
 
 
 

@@ -117,11 +117,11 @@ if (!$res_new || db_numrows($res_new) < 1) {
 
 			print '<TR><TD colspan=3>';
 			// link to whole file list for downloads
-			print "&nbsp;<BR><A href=\"/project/showfiles.php?group_id=$row_new[group_id]&release_id=$row_new[release_id]\">";
+			print "&nbsp;<BR><A href=\"/file/showfiles.php?group_id=$row_new[group_id]&release_id=$row_new[release_id]\">";
 			print "Download</A> ";
 			print '(Project Total: '.$row_new[downloads].') | ';
 			// notes for this release
-			print "<A href=\"/project/shownotes.php?release_id=".$row_new[release_id]."\">";
+			print "<A href=\"/file/shownotes.php?release_id=".$row_new[release_id]."\">";
 			print "Notes & Changes</A>";
 			print '<HR></TD></TR>';
 

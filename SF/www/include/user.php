@@ -129,6 +129,11 @@ function user_ismember($group_id,$type=0) {
 			$query .= " AND doc_flags = '1'";
 			break;
 		}
+		case 'R2' : {
+			//file release admin
+			$query .= " AND file_flags = '2'";
+			break;
+		}
 		default : {
 			//fubar request
 			return false;

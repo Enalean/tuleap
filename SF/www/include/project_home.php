@@ -11,6 +11,7 @@ require ($DOCUMENT_ROOT.'/news/news_utils.php');
 require ('trove.php');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactTypeFactory.class');
+require($DOCUMENT_ROOT.'/include/permissions.php');
 
 //make sure this project is NOT a foundry
 if (!$project->isProject()) {
@@ -107,9 +108,9 @@ print '
 // ############################# File Releases
 
 echo $HTML->box1_top('Latest File Releases'); 
-	$unix_group_name = $project->getUnixName();
+$unix_group_name = $project->getUnixName();
 
-	echo '
+echo '
 	<TABLE cellspacing="1" cellpadding="5" width="100%" border="0">
 		<TR class="boxitem">
 		<TD align="left"">
@@ -126,51 +127,65 @@ echo $HTML->box1_top('Latest File Releases');
 		</td>
 		</TR>';
 
-		$sql="SELECT frs_package.package_id,frs_package.name AS package_name,frs_release.name AS release_name,frs_release.release_id AS release_id,frs_release.release_date AS release_date ".
-			"FROM frs_package,frs_release ".
-			"WHERE frs_package.package_id=frs_release.package_id ".
-			"AND frs_package.group_id='$group_id' ".
-			"AND frs_release.status_id=1 ".
-			"ORDER BY frs_package.package_id,frs_release.release_date DESC, frs_release.release_id DESC";
+$sql="SELECT frs_package.package_id,frs_package.name AS package_name,frs_release.name AS release_name,frs_release.release_id AS release_id,frs_release.release_date AS release_date ".
+"FROM frs_package,frs_release ".
+"WHERE frs_package.package_id=frs_release.package_id ".
+"AND frs_package.group_id='$group_id' ".
+"AND frs_release.status_id=1 ".
+"ORDER BY frs_package.package_id,frs_release.release_date DESC, frs_release.release_id DESC";
 
-		$res_files = db_query($sql);
-		$rows_files=db_numrows($res_files);
-		if (!$res_files || $rows_files < 1) {
-			echo db_error();
-			// No releases
-			echo '<TR class="boxitem"><TD COLSPAN="4"><B>This Project Has Not Released Any Files</B></TD></TR>';
+$res_files = db_query($sql);
+$rows_files=db_numrows($res_files);
+if (!$res_files || $rows_files < 1) {
+    echo db_error();
+    // No releases
+    echo '<TR class="boxitem"><TD COLSPAN="4"><B>This Project Has Not Released Any Files</B></TD></TR>';
+    
+} else {
+    /*
+       This query actually contains ALL releases of all packages
+       We will test each row and make sure the package has changed before printing the row
+    */
+    for ($f=0; $f<$rows_files; $f++) {
+        $package_id=db_result($res_files,$f,'package_id');
+        $release_id=db_result($res_files,$f,'release_id');
 
-		} else {
-			/*
-				This query actually contains ALL releases of all packages
-				We will test each row and make sure the package has changed before printing the row
-			*/
-			for ($f=0; $f<$rows_files; $f++) {
-				if (db_result($res_files,$f,'package_id')==db_result($res_files,($f-1),'package_id')) {
-					//same package as last iteration - don't show this release
-				} else {
-					echo '
-					<TR class="boxitem" ALIGN="center">
-					<TD ALIGN="left">
-					<B>' . db_result($res_files,$f,'package_name'). '</B></TD>';
-					// Releases to display
-					print '<TD>'.db_result($res_files,$f,'release_name') .'
-					</TD>
-					<TD><A href="/project/shownotes.php?group_id=' . $group_id . '&release_id=' . db_result($res_files,$f,'release_id') . '">';
-					echo	html_image("ic/manual16c.png",array('width'=>'15', 'height'=>'15', 'alt'=>'Release Notes'));
-					echo '</A> - <A HREF="/project/filemodule_monitor.php?filemodule_id=' .	db_result($res_files,$f,'package_id') . '">';
-					echo html_image("ic/mail16d.png",array('width'=>'15', 'height'=>'15', 'alt'=>'Monitor This Package'));
-					echo '</A>
-					</TD>
-					<TD><A HREF="/project/showfiles.php?group_id=' . $group_id . '&release_id=' . db_result($res_files,$f,'release_id') . '">Download</A></TD></TR>';
-				}
-			}
-
-		}
-		?></TABLE>
-	<div align="center">
-	<a href="/project/showfiles.php?group_id=<?php print $group_id; ?>">[View ALL Project Files]</A>
-	</div>
+        if ($package_displayed[$package_id]) {
+            //if ($package_id==db_result($res_files,($f-1),'package_id')) {
+            //same package as last iteration - don't show this release
+        } else {
+            $authorized=false;
+            // check access.
+            if (permission_exist('RELEASE_READ', $release_id)) {
+                $authorized=permission_is_authorized('RELEASE_READ',$release_id ,user_getid());
+            } else {  
+                $authorized=permission_is_authorized('PACKAGE_READ',$package_id ,user_getid());
+            }
+            if ($authorized) {
+                echo '
+                  <TR class="boxitem" ALIGN="center">
+                  <TD ALIGN="left">
+                  <B>' . db_result($res_files,$f,'package_name'). '</B></TD>';
+                // Releases to display
+                print '<TD>'.db_result($res_files,$f,'release_name') .'
+                  </TD>
+                  <TD align="center"><A href="/file/shownotes.php?group_id=' . $group_id . '&release_id=' . $release_id . '">';
+                echo	html_image("ic/manual16c.png",array('width'=>'15', 'height'=>'15', 'alt'=>'Release Notes'));
+                echo '</A> - <A HREF="/file/filemodule_monitor.php?filemodule_id=' .	$package_id . '">';
+                echo html_image("ic/mail16d.png",array('width'=>'15', 'height'=>'15', 'alt'=>'Monitor This Package'));
+                echo '</A>
+                  </TD>
+                  <TD align="center"><A HREF="/file/showfiles.php?group_id=' . $group_id . '&release_id=' . $release_id . '">Download</A></TD></TR>';
+                $package_displayed[$package_id]=true;
+            }
+        }
+    }
+    
+}
+?></TABLE>
+<div align="center">
+<a href="/file/showfiles.php?group_id=<?php print $group_id; ?>">[View ALL Project Files]</A>
+</div>
 <?php
 	echo $HTML->box1_bottom();
 

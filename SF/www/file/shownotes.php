@@ -7,6 +7,7 @@
 // $Id$
 
 require ('pre.php');
+require ($DOCUMENT_ROOT.'/file/file_utils.php');
 
 $result=db_query("SELECT frs_release.notes,frs_release.changes,frs_release.preformatted,frs_release.name,frs_package.group_id ".
 		"FROM frs_release,frs_package ".
@@ -19,7 +20,7 @@ if (!$result || db_numrows($result) < 1) {
 
 	$group_id=db_result($result,0,'group_id');
 
-	site_project_header(array('title'=>"File Release Notes and Changelog",'group'=>$group_id,'toptab'=>'file'));
+	file_utils_header(array('title'=>"File Release Notes and Changelog",'group'=>$group_id));
 
 	$HTML->box1_top('Notes');
 
@@ -49,7 +50,7 @@ if (!$result || db_numrows($result) < 1) {
 
 	$HTML->box1_bottom();
 
-	site_project_footer(array());
+	file_utils_footer(array());
 
 }
 

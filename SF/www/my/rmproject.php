@@ -13,6 +13,7 @@
 */
 
 require ('pre.php');
+require ($DOCUMENT_ROOT.'/project/admin/ugroup_utils.php');
 
 if (user_isloggedin()) {
 	$user_id = user_getid();
@@ -30,6 +31,10 @@ if (user_isloggedin()) {
 	} 
        
 	db_query("DELETE FROM user_group WHERE user_id='$user_id' AND group_id='$group_id'");
+
+        // Remove user from all ugroups attached to this project
+        ugroup_delete_user_from_project_ugroups($group_id,$user_id);
+
 	session_redirect("/my/");
 
 	/********* mail the changes so the admins know what happened *********/

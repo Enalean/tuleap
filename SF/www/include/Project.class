@@ -132,6 +132,10 @@ class Project extends Group {
         return $this->use_service['patch'];
     }
 
+    function usesFile() {
+        return $this->use_service['file'];
+    }
+
     function usesPm() {
         return $this->use_service['task'];
     }

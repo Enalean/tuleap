@@ -6,6 +6,7 @@
 //
 // $Id$
 require ('pre.php');
+require ('permissions.php');
 
 
 if (user_isloggedin()) {
@@ -18,13 +19,14 @@ if (user_isloggedin()) {
     exit_missing_param();
   }
 
-
   // Now make an innerjoin on the 4 tables to be sure
   // that the file_id we have belongs to the given group_id
 
   $sql = "SELECT frs_file.filename AS filename,"
     ."frs_file.file_id AS file_id, "
-    ."frs_package.group_id AS group_id "
+    ."frs_package.group_id AS group_id, "
+    ."frs_package.package_id AS package_id, "
+    ."frs_release.release_id AS release_id "
     ."FROM frs_file,frs_release,frs_package "
     ."WHERE frs_package.group_id=$group_id AND "
     ."frs_release.package_id=frs_package.package_id AND "
@@ -39,6 +41,18 @@ if (user_isloggedin()) {
     exit_error('Incorrect File Release ID or Group ID', 'Please report the error to the '.$GLOBALS['sys_name'].' Administrator using the <i>Contact Us</i> link in the main menu');
   }
   $file_release = db_fetch_array( $res_file );
+
+
+  // Check permissions for release, then package
+  if (permission_exist('RELEASE_READ', $file_release['release_id'])) {
+      if (!permission_is_authorized('RELEASE_READ',$file_release['release_id'],user_getid())) {
+          exit_error('Access Denied', 'You are not authorized to access this file. Please contact a Project Administrator.');
+      } 
+  } else if (!permission_is_authorized('PACKAGE_READ',$file_release['package_id'],user_getid())) {
+      exit_error('Access Denied', 'You are not authorized to access this file. Please contact a Project Administrator.');
+  } 
+
+
 
   //Build the URL to download the file
   $group_unix_name=group_getunixname($group_id);

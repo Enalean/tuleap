@@ -423,6 +423,12 @@ $MV -f $INSTALL_DIR/documentation/user_guide/xml/en_US/ParametersLocal.dtd /etc/
 $MV -f $INSTALL_DIR/SF/utils/custom/default_page.php /etc/codex/site-content/en_US/others
 $RM -rf $INSTALL_DIR/SF/utils/custom
 
+#############################################
+# Because of directory structure change, specifically move one site-content file if it exists
+if [ -d /etc/codex/site-content/en_US/project/ ]; then
+    build_dir /etc/codex/site-content/en_US/file sourceforge sourceforge 755
+    $MV -f /etc/codex/site-content/en_US/project/editrelease_attach_file.txt /etc/codex/site-content/en_US/file/
+fi
 
 ##############################################
 # Database Structure and initvalues upgrade
@@ -539,7 +545,169 @@ CREATE TABLE svn_tracks (
   artifact_id int(11) NOT NULL, 
   commit_id int(11) NOT NULL
 ); 
+
+--
+-- ugroup table, used to store the description of groups of users (see also ugroup_user table)
+--
+CREATE TABLE ugroup (  
+  ugroup_id int(11) NOT NULL auto_increment,
+  name text NOT NULL,
+  description text NOT NULL,
+  group_id int(11) NOT NULL,
+  PRIMARY KEY  (ugroup_id)
+);
+
+--
+-- Insert special ugroup values
+--
+-- Apart from the mandatory 'nobody', 'anonymous_users', 'registered_users', 'project_members' and  
+-- 'project_admins', the table lists all possible roles in the 'User Permissions' matrix.
+
+INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (100, "nobody", "Empty Group", 100);
+INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (1, "anonymous_users", "Anonymous Users", 100);
+INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (2, "registered_users", "Registered CodeX Users", 100);
+INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (3, "project_members", "Project Members", 100);
+INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (4, "project_admins", "Project Administrators", 100);
+INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (10, "document_editor", "Document Editors", 100);
+INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (11, "file_manager_admin", "File Manager Administrators", 100);
+--
+-- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (12, "forum_moderator", "Forum Moderators", 100);
+-- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (13, "patch_tech", "Patch Technicians", 100);
+-- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (14, "patch_admins", "Patch Administrators", 100);
+-- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (15, "tracker_tech", "Tracker Technicians", 100);
+-- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (16, "tracker_admins", "Tracker Administrators", 100);
+--
+-- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (30, "legacy_sr_tech", "Support Request Technicians", 100);
+-- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (31, "legacy_sr_admins", "Support Request Administrators", 100);
+-- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (32, "legacy_task_tech", "Task Manager Technicians", 100);
+-- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (33, "legacy_task_admins", "Task Manager Administrators", 100);
+-- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (34, "legacy_bug_tech", "Bug Tracker Technicians", 100);
+-- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (35, "legacy_bug_admins", "Bug Tracker Administrators", 100);
+
+
+--
+-- ugroup_user table
+-- Contains the ugroup members (users)
+--
+CREATE TABLE ugroup_user (
+  ugroup_id int(11) NOT NULL,
+  user_id int(11) NOT NULL
+);
+
+
+--
+-- permissions table, used to store specific access rights (for packages, releases, documentation, etc.)
+--
+CREATE TABLE permissions (
+  permission_type text NOT NULL,
+  object_id text NOT NULL,
+  ugroup_id int(11) NOT NULL
+);
+
+
+--
+-- permissions_values table, used to store the list of default ugroups available by permission_type.
+-- ugroups are selected from the special ugroups, so their ID should be less than 100.
+--
+CREATE TABLE permissions_values (
+  permission_type text NOT NULL,
+  ugroup_id int(11) NOT NULL,
+  is_default int(11) NOT NULL default '0'
+);
+
+
+---
+--- Set permissions_values entries. These should normally be set at installation time only.
+---
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PACKAGE_READ',100);
+INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('PACKAGE_READ',2,1);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PACKAGE_READ',3);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PACKAGE_READ',4);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PACKAGE_READ',11);
+
+-- No default value for RELEASE_READ -> use parent permissions
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('RELEASE_READ',100);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('RELEASE_READ',2);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('RELEASE_READ',3);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('RELEASE_READ',4);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('RELEASE_READ',11);
+
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_READ',100);
+INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('DOCUMENT_READ',1,1);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_READ',2);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_READ',3);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('RELEASE_READ',4);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_READ',10);
+
+
+
+
+---
+--- Add File Release Admin role in the user_group table
+---
+ALTER TABLE user_group ADD file_flags int(11) NOT NULL default '0';
+
+-- And update existing project admins to File Release admins
+UPDATE user_group SET file_flags='2' WHERE admin_flags='A';
+
+
+---
+--- Suppress useless table
+---
+DROP TABLE mailaliases;
+
+
+
+
+--- NOT APPLIED YET
+--- File service for future project should point to the new script
+UPDATE service SET link='/file/showfiles.php?group_id=$group_id' where short_name='file';
+
+--- !!!!!!!!! NEED TO UPGRADE all files services in perl script!
+
+
 EOF
+
+# Update 'file' service for each project
+$PERL <<'EOF'
+use DBI;
+require "/home/httpd/SF/utils/include.pl";
+
+## load local.inc variables
+&load_local_config();
+
+&db_connect;
+
+sub updateFileService {
+  my ($group_id,$url) = @_;
+  $sql= "UPDATE service SET link='$url' WHERE group_id='$group_id' AND short_name='file'";
+  $sth = $dbh->prepare($sql);
+  $res = $sth->execute();
+
+  if (!$res) {
+    print "Could not update service 'file' for group_id ". $group_id."\n";
+    print "Please contact your CodeX support representative\n";
+  }
+}
+
+## get existing values from the group table
+$query = "select group_id FROM groups";
+$c = $dbh->prepare($query);
+$c->execute();
+
+while (my ($group_id) = $c->fetchrow()) {
+    if ($group_id == 100) {
+	$url = "/file/showfiles.php?group_id=\$group_id";
+    } else {
+        $url = "/file/showfiles.php?group_id=$group_id";
+    }
+    updateFileService($group_id, $url);
+}
+
+exit;
+EOF
+
+
 
 # Add svn service entry for each project
 $PERL <<'EOF'

@@ -11,12 +11,13 @@ require ($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
 require ('account.php');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactTypeFactory.class');
+require ($DOCUMENT_ROOT.'/project/admin/ugroup_utils.php');
 
 // get current information
 $res_grp = group_get_result($group_id);
 
 if (db_numrows($res_grp) < 1) {
-    exit_error("Invalid Group","That group could not be found.");
+    exit_error("Invalid Project","That project could not be found.");
 }
 
 //if the project isn't active, require you to be a member of the super-admin group
@@ -32,53 +33,57 @@ if ($func) {
       updating the database
     */
     if ($func=='adduser') {
-		/*
-		  add user to this project
-		*/
-		$res = account_add_user_to_group ($group_id,$form_unix_name);
+        /*
+	    add user to this project
+        */
+        $res = account_add_user_to_group ($group_id,$form_unix_name);
 	
-		if ($res) {
-		    group_add_history ('Added User',$form_unix_name,$group_id);
-		}
+        if ($res) {
+            group_add_history ('Added User',$form_unix_name,$group_id);
+        }
 
     } else if ($func=='rmuser') {
-		/*
-		  remove a user from this portal
-		*/
-		$res=db_query("DELETE FROM user_group WHERE group_id='$group_id' AND user_id='$rm_id' AND admin_flags <> 'A'");
-		if (!$res || db_affected_rows($res) < 1) {
-		    $feedback .= ' User Not Removed - You cannot remove admins from a project. 
+        /*
+	  remove a user from this portal
+        */
+        $res=db_query("DELETE FROM user_group WHERE group_id='$group_id' AND user_id='$rm_id' AND admin_flags <> 'A'");
+        if (!$res || db_affected_rows($res) < 1) {
+            $feedback .= ' User Not Removed - You cannot remove admins from a project. 
 				You must first turn off their admin flag and/or find another admin for the project ';
-		} else {
+        } else {
+            
+            //	  
+            //  get the Group object
+            //	  
+            $group = group_get_object($group_id);
+            if (!$group || !is_object($group) || $group->isError()) {
+                exit_no_group();
+            }		   
+            $atf = new ArtifactTypeFactory($group);
+            if (!$group || !is_object($group) || $group->isError()) {
+                $feedback .= 'Could Not Get ArtifactTypeFactory';
+            }
+            
+            // Get the artfact type list
+            $at_arr = $atf->getArtifactTypes();
+            
+            if ($at_arr && count($at_arr) > 0) {
+                for ($j = 0; $j < count($at_arr); $j++) {
+                    if ( !$at_arr[$j]->deleteUser($rm_id) ) {
+                        $feedback .= " Failed to delete tracker permission (".$at_arr[$j]->getName().") ";
+                    }
+                }
+            }
+            
+            // Remove user from ugroups attached to this project
+            if (!ugroup_delete_user_from_project_ugroups($group_id,$rm_id)) {
+                $feedback .= " Failed to delete user from ugroups ";
+            }
 
-			//	  
-			//  get the Group object
-			//	  
-			$group = group_get_object($group_id);
-			if (!$group || !is_object($group) || $group->isError()) {
-				exit_no_group();
-			}		   
-			$atf = new ArtifactTypeFactory($group);
-			if (!$group || !is_object($group) || $group->isError()) {
-				$feedback .= 'Could Not Get ArtifactTypeFactory';
-			}
-
-			// Get the artfact type list
-			$at_arr = $atf->getArtifactTypes();
-			
-			if ($at_arr && count($at_arr) > 0) {
-				for ($j = 0; $j < count($at_arr); $j++) {
-					if ( !$at_arr[$j]->deleteUser($rm_id) ) {
-						$feedback .= " Failed to delete tracker permission (".$at_arr[$j]->getName().") ";
-					}
-				}
-			}
-						
-		    $feedback .= ' Removed a User ';
-		    group_add_history ('removed user',$rm_id,$group_id);
-		}
+            $feedback .= ' Removed a User ';
+            group_add_history ('removed user',$rm_id,$group_id);
+        }
     }
-
 }
 
 project_admin_header(array('title'=>"Project Admin: ".group_getname($group_id),'group'=>$group_id,
@@ -91,7 +96,7 @@ project_admin_header(array('title'=>"Project Admin: ".group_getname($group_id),'
 echo '<TABLE width=100% cellpadding=2 cellspacing=2 border=0>
 <TR valign=top><TD width=50%>';
 
-$HTML->box1_top("Group Edit: " . group_getname($group_id)); 
+$HTML->box1_top("Project Edit: " . group_getname($group_id)); 
 
 
 $project=new Project($group_id);
@@ -106,7 +111,7 @@ Short Description: '. db_result($res_grp,0,'short_description') .'
 <A HREF="http://'.$GLOBALS['sys_cvs_host'].'/cvstarballs/'. db_result($res_grp,0,'unix_group_name') .'-cvsroot.tar.gz">[ Download Your Nightly CVS Tree Tarball ]</A>
 -->
 <P>
-<B>Trove Categorization Info</B> - This group is in the following Trove categories:
+<B>Trove Categorization Info</B> - This project is in the following Trove categories:
 
 <UL>';
 
@@ -134,7 +139,7 @@ echo '
 </TD><TD>&nbsp;</TD><TD width=50%>';
 
 
-$HTML->box1_top("Group Members");
+$HTML->box1_top("Project Members");
 
 /*
 
@@ -224,6 +229,9 @@ if ($project->usesNews()) {
 if ($project->usesCVS()) {
     echo '	<A HREF="/cvs/?func=admin&group_id='.$group_id.'">CVS Admin</A><BR>';
 }
+if ($project->usesFile()) {
+    echo '	<A HREF="/file/admin/?group_id='.$group_id.'">File Manager Admin</A><BR>';
+}
 if ( $project->usesTracker()&&$sys_activate_tracker ) {
     echo '	<A HREF="/tracker/admin/?group_id='.$group_id.'">Tracker Admin</A>';
     //	  
@@ -272,8 +280,8 @@ echo '</TD>
 $HTML->box1_top("File Releases"); ?>
 	&nbsp;<BR>
 	<CENTER>
-	<A href="editpackages.php?group_id=<?php print $group_id; ?>"><B>[Edit/Add File Releases]</B></A><BR> or... <BR>
-	<A href="qrs.php?group_id=<?php print $group_id; ?>"><B>[Quick Add File Release]</B></A><BR>if you know what you're doing and have only one file to release.
+	<A href="/file/admin/editpackages.php?group_id=<?php print $group_id; ?>"><B>[Edit/Add File Releases]</B></A><BR> or... <BR>
+	<A href="/file/admin/qrs.php?group_id=<?php print $group_id; ?>"><B>[Quick Add File Release]</B></A><BR>if you know what you're doing and have only one file to release.
 	</CENTER>
 
 	<HR>

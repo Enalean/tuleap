@@ -58,7 +58,7 @@ while ($row = db_fetch_array($res)) {
 	if (!$G_RELEASE["$row[group_id]"]) {
 		print "  <item>\n";
 		print "   <title>".htmlspecialchars($row[group_name]." ". $row[release_version])."</title>\n";
-		print "   <link>http://".$GLOBALS['sys_default_domain']."/project/filelist.php?group_id=$row[group_id]</link>\n";
+		print "   <link>http://".$GLOBALS['sys_default_domain']."/file/showfiles.php?group_id=$row[group_id]</link>\n";
 		print "   <description>".rss_description($row['short_description'])."</description>\n";
 		print "  </item>\n";
 		$outputtotal++;

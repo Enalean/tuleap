@@ -115,7 +115,7 @@ print " </channel>\n";
 	print '"'.join(',',$os).'",';
 	print '"'.join(',',$devstate).'",';
 	
-	print "$server/project/showfiles.php?group_id=$row[group_id],";
+	print "$server/file/showfiles.php?group_id=$row[group_id],";
 	print "$server/projects/$row[unix_group_name],";
 	print '"'.join(',',$admins).'",';
 	
