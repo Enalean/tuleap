@@ -18,24 +18,44 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 		*/
 
 		if ($delete) {
-			/*
-				Deleting messages or threads
-			*/
+                    /*
+                     Deleting messages or threads
+                    */
+                    
+                    // First, check if the message exists
+                    $sql="SELECT forum_group_list.group_id, forum.group_forum_id FROM forum,forum_group_list ".
+                        "WHERE forum.group_forum_id=forum_group_list.group_forum_id AND forum.msg_id='$msg_id'";
 
-			/*
-				Get this forum_id, checking to make sure this forum is in this group
-			*/
-			$sql="SELECT forum.group_forum_id FROM forum,forum_group_list WHERE forum.group_forum_id=forum_group_list.group_forum_id ".
-				"AND forum_group_list.group_id='$group_id' AND forum.msg_id='$msg_id'";
+                    $result=db_query($sql);
 
-			$result=db_query($sql);
+                    if (db_numrows($result) > 0) {
+                        $message_group_id=db_result($result,0,'group_id');
+                        $forum_id =  db_result($result,0,'group_forum_id');
+                        
+                        $authorized_to_delete_message=false;
 
-			if (db_numrows($result) > 0) {
-				$feedback .= recursive_delete($msg_id,db_result($result,0,'group_forum_id'))." messages deleted ";
-			} else {
-				$feedback .= " Message not found or message is not in your group ";
-			}
+                        // Then, check if the message belongs to a news or a forum
+                        if ($message_group_id == $GLOBALS['sys_news_group']) {
+                            // This message belongs to a news item.
+                            // Check that the news belongs to the same project
+                            $gr = db_query("SELECT group_id FROM news_bytes WHERE forum_id='$forum_id'");
+                            if (db_result($gr,0,'group_id')==$group_id) {
+                                // authorized to delete the message
+                                $authorized_to_delete_message=true;
+                            }
+                        } else if ($message_group_id == $group_id) {
+                            // the message belongs to this group's forums
+                            $authorized_to_delete_message=true;
+                        }
 
+                        if ($authorized_to_delete_message) {
+                            $feedback .= recursive_delete($msg_id,$forum_id)." messages deleted ";
+                        } else {
+                            $feedback .= " Message is not in your group ";
+                        }
+                    } else {
+                        $feedback .= " Message not found ";
+                    }
 		} else if ($add_forum) {
 			/*
 				Adding forums to this group
