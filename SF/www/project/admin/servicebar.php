@@ -219,7 +219,7 @@ if ($group_id==100) {
 print '
 <P>
 <H3>New Service</H3>
-<a href="/project/admin/editservice?func=create&group_id='.$group_id.'">Create a new service.</a>
+<a href="/project/admin/editservice.php?func=create&group_id='.$group_id.'">Create a new service.</a>
 <p>
 
 
