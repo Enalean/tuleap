@@ -97,8 +97,7 @@ if ((!$result || $rows < 1) && (!$result2 || $rows2 < 1)) {
 			'<a href="/users/'.db_result($result,$i,'user_name').'"><b>'.
 			db_result($result,$i,'user_name').'</b></a></TD></TR>';
 		echo '
-			<TR class="'. util_get_alt_row_color($i) .'"><TD COLSPAN="2">'.util_make_links(nl2br(db_result($result,$i,'description'))).'</TD></TR>
-			<TR class="'. util_get_alt_row_color($i) .'"><TD COLSPAN="2">'.nl2br(db_result($result,$i,'description')).'</TD></TR>';
+			<TR class="'. util_get_alt_row_color($i) .'"><TD COLSPAN="2">'.util_make_links(nl2br(db_result($result,$i,'description'))).'</TD></TR>';
 	}
 
 	echo '

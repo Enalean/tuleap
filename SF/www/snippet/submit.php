@@ -104,14 +104,10 @@ if (user_isloggedin()) {
 	<TR>
 	<TD><B>Language:</B>&nbsp;
 		<?php echo html_build_select_box (snippet_data_get_all_languages(),'language'); ?>
-		<BR>
-		<A HREF="/support/?func=addsupport&group_id=1">Suggest a Language</A>
 	</TD>
 
 	<TD><B>Category:</B>&nbsp;
 		<?php echo html_build_select_box (snippet_data_get_all_categories(),'category'); ?>
-                <BR>
-                <A HREF="/support/?func=addsupport&group_id=1">Suggest a Category</A>
 	</TD>
 	</TR>
  

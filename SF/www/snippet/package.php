@@ -132,14 +132,10 @@ then add them using the new window link shown above.
 	<TR>
 	<TD><B>Language:</B><BR>
 		<?php echo html_build_select_box (snippet_data_get_all_languages(),'language'); ?>
-		<BR>
-		<A HREF="/support/?func=addsupport&group_id=1">Suggest a Language</A>
 	</TD>
 
 	<TD><B>Category:</B><BR>
 		<?php echo html_build_select_box (snippet_data_get_all_categories(),'category'); ?>
-		<BR>
-		<A HREF="/support/?func=addsupport&group_id=1">Suggest a Category</A>
 	</TD>
 	</TR>
  

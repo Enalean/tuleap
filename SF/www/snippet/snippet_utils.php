@@ -12,7 +12,7 @@
 */
 
 
-require ('snippet_data.php');
+require ("$DOCUMENT_ROOT/snippet/snippet_data.php");
 
 
 

@@ -14,7 +14,7 @@ function snippet_mainpage() {
 	<P>
 	You can browse the snippet library quickly by language or category. You can also search code snippets by keywords using the Search box in the left menu pane.
 	<BR>
-	(Counts last updated <?php echo date("H:i:s l, F dS, Y") ?>
+             (Counts last updated <?php echo date("H:i:s l, F dS, Y") ?>)
 	<P>
 	<TABLE WIDTH="100%" BORDER="0">
 	<TR><TD>
