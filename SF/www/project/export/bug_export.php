@@ -134,21 +134,17 @@ The Bug export provides you with the following bug fields. The sample values ind
 		       $col == 'is_dependent_on_bug_id') {
 		$type = 'VARCHAR(255)';
 
-	    } else if (bug_data_is_select_box($col)) {
-		$type = 'INTEGER';
-		
-	    } else if (bug_data_is_text_field($col)) {
-		$type = 'VARCHAR(255)';
-
-	    } else if (bug_data_is_text_area($col)) {
+	    } else if (bug_data_is_text_area($col) ||
+		       $col == 'follow_ups') {
 		$type = 'TEXT';
 
 	    } else if (bug_data_is_date_field($col)) {
 		$type = 'DATETIME';
 
 	    } else {
-		// We should not get there... But just in case default
-		// to a varchar type which is sort of safe
+		// For all other fields (select box and text fields)
+		// export as VARCHAR(255) because we use their 
+		// textual representation anyway
 		$type = 'VARCHAR(255)';
 	    }
 
