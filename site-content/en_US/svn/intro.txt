@@ -13,19 +13,17 @@ if (user_isloggedin()) {
 print '<h2>Subversion Access '.help_button('VersionControlWithSubversion.html').'</h2>
 <P>Subversion read-only  access is granted to all '.$GLOBALS['sys_name'].' registered users. Anonymous users do not have access to the Subversion repository, because many '.$GLOBALS['sys_name'].' projects want to know who is in their community of users. Users desiring read access to the project 
 Subversion repository should register on '.$GLOBALS['sys_name'].'. 
-<P>Any registered and logged-in '.$GLOBALS['sys_name'].' user has read access to the Subversion repository.  Project members (the developers who are part of the core team) are granted read (checkout) and write (commit) access to the Subversion repository. Below are the typical commands you would use to checkout the source code of this project. In the command below substitute <I>/path/to/file</I> ';
-if (user_isloggedin()) {
-  print 'with the proper value.';
-} else {
-  print ' and <I>username</I> with the proper values.';
+<P>Any registered and logged-in '.$GLOBALS['sys_name'].' user has read access to the Subversion repository.  Project members (the developers who are part of the core team) are granted read (checkout) and write (commit) access to the Subversion repository. Below is a typical command you would use to checkout the source code of this project.';
+if (!user_isloggedin()) {
+  print ' In the command below substitute <I>username</I> with the proper value.';
 }
 print ' Enter your site password when
 prompted.';
 
 if ($GLOBALS['sys_force_ssl']) {
-   echo '<P><span class="command">svn checkout --username '.$username.' https://'.$GLOBALS['sys_default_domain'].'/svnroot/'.$row_grp['unix_group_name'].' /path/to/file</span>';
+   echo '<P><span class="command">svn checkout --username '.$username.' https://'.$GLOBALS['sys_default_domain'].'/svnroot/'.$row_grp['unix_group_name'].'</span>';
 } else {
-   echo '<P><span class="command">svn checkout --username '.$username.' http://svn.'.$row_grp['http_domain'].'/svnroot/'.$row_grp['unix_group_name'].' /path/to/file</span>';
+   echo '<P><span class="command">svn checkout --username '.$username.' http://svn.'.$row_grp['http_domain'].'/svnroot/'.$row_grp['unix_group_name'].'</span>';
 }
 
 print '<P>'.help_button('VersionControlWithSubversion.html',false,'[More on how to use Subversion &hellip;]');
