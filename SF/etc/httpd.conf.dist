@@ -1080,6 +1080,7 @@ Include conf/mailman.conf
 Include conf/codex_vhosts.conf
 
 # Include per project Subversion repository (automatically generated)
+# A second file is included in ssl.conf for secure Subversion servers.
 Include conf/codex_svnhosts.conf
                                              
 #

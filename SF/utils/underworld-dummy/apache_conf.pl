@@ -70,6 +70,8 @@ while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow())
 
 	  # Determine whether the virtual host can be accessed through
 	  # HTTP and/or HTTPS
+          # Virtual hosts with HTTPS are incompatible with Subversion, so remove
+          # virtual hosts in this case.
 	  if ($sys_https_host eq "") {
 	    $vhost = "$ip:80";
 	  } else {
@@ -95,19 +97,34 @@ while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow())
 	      "</VirtualHost>\n\n");
 
 	  # Project Subversion repository
-	  push @subversion_zone,
-	    ( "<VirtualHost $vhost>\n",
-	      "  ServerName svn.$codex_domain\n",
-	      "  <Location /svnroot/$unix_group_name>\n",
-	      "    DAV svn\n",
-	      "    SVNPath /svnroot/$unix_group_name\n",
-	      "    AuthzSVNAccessFile /svnroot/$unix_group_name/.SVNAccessFile\n",
-	      "    Require valid-user\n",
-	      "    AuthType Basic\n",
-	      "    AuthName \"Subversion Authorization ($group_name)\n",
-	      "    AuthUserFile /etc/httpd/conf/htpasswd\n",
-	      "  </Location>\n",
-	      "</VirtualHost>\n\n");
+          if ($sys_force_ssl != 1) {
+            push @subversion_zone,
+              ( "<VirtualHost $ip:80>\n",
+                "  ServerName svn.$codex_domain\n",
+                "  <Location /svnroot/$unix_group_name>\n",
+                "    DAV svn\n",
+                "    SVNPath /svnroot/$unix_group_name\n",
+                "    AuthzSVNAccessFile /svnroot/$unix_group_name/.SVNAccessFile\n",
+                "    Require valid-user\n",
+                "    AuthType Basic\n",
+                "    AuthName \"Subversion Authorization ($group_name)\n",
+                "    AuthUserFile /etc/httpd/conf/htpasswd\n",
+                "  </Location>\n",
+                "</VirtualHost>\n\n");
+          }
+          if ($sys_https_host ne "") {
+            # For https, allow access without virtual host because they are not supported
+            push @subversion_ssl_zone,
+	      ( "<Location /svnroot/$unix_group_name>\n",
+                "    DAV svn\n",
+                "    SVNPath /svnroot/$unix_group_name\n",
+                "    AuthzSVNAccessFile /svnroot/$unix_group_name/.SVNAccessFile\n",
+                "    Require valid-user\n",
+                "    AuthType Basic\n",
+                "    AuthName \"Subversion Authorization ($group_name)\n",
+                "    AuthUserFile /etc/httpd/conf/htpasswd\n",
+                "</Location>\n\n");
+          }
 	}
 }
 
@@ -116,3 +133,4 @@ while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow())
 
 write_array_file("$dir/dumps/apache_dump", @apache_zone);
 write_array_file("$dir/dumps/subversion_dump", @subversion_zone);
+write_array_file("$dir/dumps/subversion_ssl_dump", @subversion_ssl_zone);

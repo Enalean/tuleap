@@ -260,5 +260,8 @@ SetEnvIf User-Agent ".*MSIE.*" \
 CustomLog logs/ssl_request_log \
           "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
 
+# Include per project secure Subversion repository (automatically generated)
+Include conf/codex_svnhosts_ssl.conf
+
 </VirtualHost>                                  
 

@@ -97,7 +97,7 @@
 
       <listitem>
 	<para><emphasis role="bold">Versioned metadata</emphasis>: Subversion can
-	attached any number of properties (in the form of kay/value
+	attach any number of properties (in the form of key/value
 	pairs) to files and directories. Properties are themselves
 	versioned like the files and directories they are attached
 	to.</para>
@@ -105,7 +105,7 @@
 
       <listitem>
 	<para><emphasis role="bold">Various access protocols</emphasis>:
-	Like CVS Subversion offers a choice of network protocols to
+	Like CVS, Subversion offers a choice of network protocols to
 	access a subversion repository. It can be a local file system
 	access or a network access through the Subversion own's
 	lightweight protocol (svnserve) or a secured remote access
@@ -153,7 +153,7 @@
 	processing at the various stage of a commit operation
 	(pre-check, post-check,etc.). Unlike CVS, Subversion comes
 	with well documented library APIs with bindings available for
-	several languages like C/C++, Python and Perl.</para>
+	several languages like C/C++, Java, Python and Perl.</para>
       </listitem>
     </itemizedlist>
 
@@ -243,7 +243,7 @@
 	  <para>Create a new bookmark for your Subversion repository:
 	  <literal>Bookmarks->Add Repository...</literal></para>
 	  <para>When prompted enter the URL to your repository:
-	  <literal>http://svn.projectname.&SYS_DEFAULT_DOMAIN;:/svnroot/projectname</literal></para>
+	  <literal>http://svn.projectname.&SYS_DEFAULT_DOMAIN;/svnroot/projectname</literal></para>
         </listitem>
 
         <listitem>
@@ -810,7 +810,7 @@ members = member1,member2,...,memberN
 	  <listitem>
 	    <para><emphasis role="bold">Email addresses</emphasis>: a
 	    comma separated list of email addresses of people to whom
-	    the email notification must be sent can be given. If your
+	    the email notification must be sent can be given. If you
 	    want to notify a large group of people then we strongly
 	    advise you to create a mailing list first (see
 	    below).</para>
@@ -901,7 +901,7 @@ members = member1,member2,...,memberN
 
       <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 svn --username loginname import . 
-http://svn.projectname.&SYS_DEFAULT_DOMAIN;:/svnroot/projectname 
+http://svn.projectname.&SYS_DEFAULT_DOMAIN;/svnroot/projectname 
 --message "Initial repository layout"
         </programlisting>
 
@@ -921,6 +921,11 @@ http://svn.projectname.&SYS_DEFAULT_DOMAIN;:/svnroot/projectname
 	</listitem>
 
       </itemizedlist>
+
+      <note><para>If your Subversion server is configured in secure mode, note that you should use 
+      <literal>https://&SYS_DEFAULT_DOMAIN;/svnroot/projectname</literal> instead of 
+      <literal>http://svn.projectname.&SYS_DEFAULT_DOMAIN;/svnroot/projectname</literal> 
+      in all the examples given on these pages.</para></note>
 
       <para><tip><title>Tip: made a mistake while importing your
       source code?</title><para>It is not unusual to make a mistake
@@ -978,7 +983,7 @@ http://svn.projectname.&SYS_DEFAULT_DOMAIN;:/svnroot/projectname
       following command:</para>
 
       <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-svn checkout http://svn.projectname.&SYS_DEFAULT_DOMAIN;:/svnroot/projectname
+svn checkout http://svn.projectname.&SYS_DEFAULT_DOMAIN;/svnroot/projectname
 </programlisting>
 
       <para>Where:</para>
@@ -1241,8 +1246,8 @@ svn update
 
 	  <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 svn copy
-http://svn.projectname.&SYS_DEFAULT_DOMAIN;:/svnroot/projectname/trunk
-http://svn.projectname.&SYS_DEFAULT_DOMAIN;:/svnroot/projectname/tags/myproject-1.4
+http://svn.projectname.&SYS_DEFAULT_DOMAIN;/svnroot/projectname/trunk
+http://svn.projectname.&SYS_DEFAULT_DOMAIN;/svnroot/projectname/tags/myproject-1.4
 -m "Tagging the 1.4 release"
 </programlisting>
           <para></para>
@@ -1255,7 +1260,7 @@ http://svn.projectname.&SYS_DEFAULT_DOMAIN;:/svnroot/projectname/tags/myproject-
 
 	  <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 svn export
-http://svn.projectname.&SYS_DEFAULT_DOMAIN;:/svnroot/projectname/tags/myproject-1.4
+http://svn.projectname.&SYS_DEFAULT_DOMAIN;/svnroot/projectname/tags/myproject-1.4
 </programlisting>
           <para></para>
 	</step>

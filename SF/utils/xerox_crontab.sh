@@ -83,6 +83,8 @@ cp -f /etc/httpd/conf/codex_vhosts.conf /etc/httpd/conf/codex_vhosts.conf.backup
 cp -f ~dummy/dumps/apache_dump /etc/httpd/conf/codex_vhosts.conf
 cp -f /etc/httpd/conf/codex_svnhosts.conf /etc/httpd/conf/codex_svnhosts.conf.backup
 cp -f ~dummy/dumps/subversion_dump /etc/httpd/conf/codex_svnhosts.conf
+cp -f /etc/httpd/conf/codex_svnhosts_ssl.conf /etc/httpd/conf/codex_svnhosts_ssl.conf.backup
+cp -f ~dummy/dumps/subversion_ssl_dump /etc/httpd/conf/codex_svnhosts_ssl.conf
 /usr/sbin/apachectl graceful
 
 # update authorized SSH keys in home dir

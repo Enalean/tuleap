@@ -519,6 +519,7 @@ $MKDIR -p  $INSTALL_DIR/documentation/user_guide/pdf/en_US
 $CHOWN -R sourceforge.sourceforge $INSTALL_DIR/documentation/user_guide/pdf/en_US
 $TOUCH /etc/httpd/conf/codex_vhosts.conf
 $TOUCH /etc/httpd/conf/codex_svnhosts.conf
+$TOUCH /etc/httpd/conf/codex_svnhosts_ssl.conf
 $CP $INSTALL_DIR/codex_tools/backup_job /home/tools
 $CHOWN root.root /home/tools/backup_job
 $CHMOD 740 /home/tools/backup_job
