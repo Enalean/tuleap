@@ -1,0 +1,83 @@
+#/**
+#  *
+#  * Include scripts message catalog (English)
+#  *
+#  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
+#  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
+#  * http://codex.xrce.xerox.com
+#  *
+#  * @version   $Id$
+#  *
+#  */
+#
+#-----------------------------------------------
+# Script: SF/www/mail/admin/index.php
+#
+mail_admin_index	provide_correct_list_name	Must Provide List Name That Is 4 or More Characters Long
+mail_admin_index	list_exists_err	ERROR - List Already Exists
+mail_admin_index	add_list_err	Error Adding List
+mail_admin_index	list_added	List Added
+mail_admin_index	invalid_userid	Invalid userid
+mail_admin_index	does_not_compute	Does not compute.
+mail_admin_index	list_create_explain	A mailing list will be created on $1 in less than $2 hours\nand you are the list administrator.\n\nThis list is: $3 \n\nYour mailing list info is at:\n$4 \n\nList administration can be found at: \n$5\n\nYour list password is: $6\nYou are encouraged to change this password as soon as possible.\n\nThank you for registering your project with $1 \n\n -- The $1 Team\n
+mail_admin_index	new_mail_list	New Mailing List
+mail_admin_index	mail_sent_to	Email sent with details to: $1
+mail_admin_index	invalid_list_name	Invalid List Name
+mail_admin_index	upate_status_err	Error Updating Status
+mail_admin_index	status_update_success	Status Updated Successfully
+mail_admin_index	add_a_mail_list	Add a Mailing List
+mail_admin_index	existing_mail_list	Existing Mailing Lists
+mail_admin_index	mail_list_name	Mailing List Name
+mail_admin_index	is_public	Is Public?
+mail_admin_index	public_explain	(Public means subscription right is granted to any user)
+mail_admin_index	desc	Description
+mail_admin_index	add_this_list	Add This List
+mail_admin_index	update_mail_list	Update Mailing Lists
+mail_admin_index	no_list_found	No Lists Found
+mail_admin_index	none_found_for_project	None found for this project
+mail_admin_index	admin_lists_here	You can administrate lists from here. Please note that private lists can still be viewed by members of your project, but are not listed on $1
+mail_admin_index	list	List
+mail_admin_index	status	Status
+mail_admin_index	update	Update
+mail_admin_index	list_admin	List Admin
+mail_admin_index	public	Public
+mail_admin_index	private	Private
+mail_admin_index	delete	Deleted
+mail_admin_index	admin_in_gnu	Administrate this list in GNU Mailman
+mail_admin_index	mail_list_admin	Mailing List Administration
+mail_admin_index	add_mail_list	Add Mailing List
+mail_admin_index	create_new_mail_lists	Create new mailing lists
+mail_admin_index	admin_update_lists	Administrate/Update Lists
+mail_admin_index	manage_mail	Manage existing mailing (change description, privacy...)
+#
+#-----------------------------------------------
+# Script: SF/www/mail/index.php
+#
+mail_index	mail_list_for	Mailing Lists for $1
+mail_index	no_list_found_for	No Lists found for $1
+mail_index	proj_amdin_use_admin_link	Project administrators use the admin link to request mailing lists.
+mail_index	mail_list_via_gnu	Mailing lists provided via a <A href="http://www.list.org">GNU Mailman</A>. Thanks to the Mailman and <A href="http://www.python.org">Python</A> crews for excellent software.
+mail_index	choose_and_browse	Choose a list to browse, search, and post messages.
+mail_index	archive	Archives
+mail_index	public	public
+mail_index	private	private
+mail_index	unsubscribe	(Un)Subscribe/Preferences
+mail_index	ml_admin	ML Administration
+mail_index	choose_group_first	Choose a Group First
+mail_index	group_err	Error - choose a group first
+mail_index	pv	Printer version
+#
+#-----------------------------------------------
+# Script: SF/www/mail/mail_nav.php
+#	
+mail_nav	home_page	Home Page
+mail_nav	mail_list	Mailing Lists
+mail_nav	admin	Administration
+#
+#-----------------------------------------------
+# Script: SF/www/mail/mail_utils.php
+#
+mail_utils	mail_turned_off	This Project Has Turned Off Mailing Lists
+mail_utils	admin	Admin
+mail_utils	add_list	Add List
+mail_utils	update_list	Update List

@@ -94,7 +94,7 @@ class BaseLanguage {
 				$this->loadLanguageFile($dir."/".$matches[1].".tab");
 			} else {
 				$line = explode("\t", $ary[$i], 3);
-				$this->text_array[$line[0]][$line[1]] = chop($line[2]);
+				$this->text_array[$line[0]][$line[1]] = chop(str_replace('\n', "\n", ($line[2])));
 				//echo "Reading msg :".$line[0]."<b> | </b>".$line[1]."<b> | </b>".$this->text_array[$line[0]][$line[1]]."<br>";
 			}
 		}
@@ -145,7 +145,7 @@ class BaseLanguage {
 		if (!$tstring) {
 		    $tstring = "*** Unkown msg $pagename - $category ***";
 		}
-		return $tstring;
+		return "$tstring";
 	}
 
 	//result set handle for supported langauges

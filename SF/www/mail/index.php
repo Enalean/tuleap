@@ -9,11 +9,13 @@
 require_once('pre.php');
 require('../mail/mail_utils.php');
 
+$Language->loadLanguageMsg('mail/mail');
+
 if ($group_id) {
 
     $list_server = get_list_server_url();
 
-    $params=array('title'=>'Mailing Lists for '.group_getname($group_id),
+    $params=array('title'=>$Language->getText('mail_index','mail_list_for').group_getname($group_id),
               'help'=>'CommunicationServices.html#MailingLists',
               'pv'   => $pv);
     mail_header($params);
@@ -33,25 +35,22 @@ if ($group_id) {
 
 	if (!$result || $rows < 1) {
 		echo '
-			<H1>No Lists found for '.group_getname($group_id).'</H1>';
+			<H1>'.$Language->getText('mail_index','no_list_found_for').group_getname($group_id).'</H1>';
 		echo '
-			<P>Project administrators use the admin link to request mailing lists.';
+			<P>'.$Language->getText('mail_index','proj_amdin_use_admin_link');
                 mail_footer(array('pv'   => $pv)); 
 		exit;
 	}
 
-	echo "<P>Mailing lists provided via a "
-		. "<A href=\"http://www.list.org\">GNU Mailman</A>. "
-		. "Thanks to the Mailman and <A href=\"http://www.python.org\">Python</A> "
-		. "crews for excellent software.";
+	echo '<P>'.$Language->getText('mail_index','mail_list_via_gnu');
 
         if ($pv) {
-            echo "<P>Choose a list to browse, search, and post messages.<P>\n";
+            echo "<P>".$Language->getText('mail_index','choose_and_browse')."<P>\n";
         } else {
             echo "<TABLE width='100%'><TR><TD>";
-            echo "<P>Choose a list to browse, search, and post messages.<P>\n";
+            echo "<P>".$Language->getText('mail_index','choose_and_browse')."<P>\n";
             echo "</TD>";
-            echo "<TD align='left'> ( <A HREF='".$PHP_SELF."?group_id=$group_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;Printer version</A> ) </TD>";
+            echo "<TD align='left'> ( <A HREF='".$PHP_SELF."?group_id=$group_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('mail_index','pv')."</A> ) </TD>";
             echo "</TR></TABLE>";
         }
 
@@ -69,26 +68,26 @@ if ($group_id) {
 
 	    echo '<IMG SRC="'.util_get_image_theme("ic/cfolder15.png").'" HEIGHT="13" WIDTH="15" BORDER="0">&nbsp;<b>'.$list_name.'</b> [';
                 if ($list_is_public) {
-                    echo ' <A HREF="'.$list_server.'/pipermail/'.$list_name.'">Archives</A>';
+                    echo ' <A HREF="'.$list_server.'/pipermail/'.$list_name.'">'.$Language->getText('mail_index','archive').'</A>';
                 } else {
-                    echo ' Archives: <A HREF="'.$list_server.'/pipermail/'.$list_name.'">public</A>/<A HREF="'.$list_server.'/mailman/private/'.$list_name.'">private</A>';
+                    echo ' '.$Language->getText('mail_index','archive').': <A HREF="'.$list_server.'/pipermail/'.$list_name.'">'.$Language->getText('mail_index','public').'</A>/<A HREF="'.$list_server.'/mailman/private/'.$list_name.'">'.$Language->getText('mail_index','private').'</A>';
                 }
 	  
-		echo ' | <A HREF="'.$list_server.'/mailman/listinfo/'.$list_name.'">(Un)Subscribe/Preferences</A>)';
-		echo ' | <A HREF="'.$list_server.'/mailman/admin/'.$list_name.'">ML Administration</A> ]';
+		echo ' | <A HREF="'.$list_server.'/mailman/listinfo/'.$list_name.'">'.$Language->getText('mail_index','unsubscribe').'</A>)';
+		echo ' | <A HREF="'.$list_server.'/mailman/admin/'.$list_name.'">'.$Language->getText('mail_index','ml_admin').'</A> ]';
 		
 		echo '<br>&nbsp;'.  db_result($result, $j, 'description') .'<P>';
 	}
 	echo '</TD></TR></TABLE>';
 
 } else {
-    $params=array('title'=>'Choose a Group First',
+    $params=array('title'=>$Language->getText('mail_index','choose_group_first'),
                   'help'=>'CommunicationServices.html#MailingLists',
                   'pv'   => $pv);
     mail_header($params);
     require('../mail/mail_nav.php');
     echo '
-		<H1>Error - choose a group first</H1>';
+		<H1>'.$Language->getText('mail_index','group_err').'</H1>';
 }
 mail_footer(array('pv'   => $pv)); 
 

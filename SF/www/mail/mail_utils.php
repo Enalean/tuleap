@@ -6,8 +6,10 @@
 //
 // $Id$
 
+$Language->loadLanguageMsg('mail/mail');
+
 function mail_header($params) {
-	global $group_id;
+  global $group_id, $Language;
 
 	//required for site_project_header
 	$params['group']=$group_id;
@@ -16,20 +18,20 @@ function mail_header($params) {
 	$project=project_get_object($group_id);
 
 	if (!$project->usesMail()) {
-		exit_error('Error','This Project Has Turned Off Mailing Lists');
+		exit_error($Language->getText('global','error'),$Language->getText('mail_nav','mail_turned_off'));
 	}
 
 
 	site_project_header($params);
 	echo '
-		<P><B><A HREF="/mail/admin/?group_id='.$group_id.'">Admin</A>';
+		<P><B><A HREF="/mail/admin/?group_id='.$group_id.'">'.$Language->getText('mail_nav','admin').'</A>';
 	if ($params['help']) {
-	    echo ' | '.help_button($params['help'],false,'Help');
+	    echo ' | '.help_button($params['help'],false,$Language->getText('global','help'));
 	}
 	echo '</B><P>';
 }
 function mail_header_admin($params) {
-	global $group_id;
+	global $group_id, $Language;
 
 	//required for site_project_header
 	$params['group']=$group_id;
@@ -38,18 +40,18 @@ function mail_header_admin($params) {
 	$project=project_get_object($group_id);
 
 	if (!$project->usesMail()) {
-		exit_error('Error','This Project Has Turned Off Mailing Lists');
+		exit_error($Language->getText('global','error'),$Language->getText('mail_nav','mail_turned_off'));
 	}
 
 
 	site_project_header($params);
 	echo '
-		<P><B><A HREF="/mail/admin/?group_id='.$group_id.'">Admin</A></B>
- | <B><A HREF="/mail/admin/?group_id='.$group_id.'&add_list=1">Add List</A></B>
- | <B><A HREF="/mail/admin/?group_id='.$group_id.'&change_status=1">Update List</A></B>
+		<P><B><A HREF="/mail/admin/?group_id='.$group_id.'">'.$Language->getText('mail_nav','admin').'</A></B>
+ | <B><A HREF="/mail/admin/?group_id='.$group_id.'&add_list=1">'.$Language->getText('mail_nav','add_list').'</A></B>
+ | <B><A HREF="/mail/admin/?group_id='.$group_id.'&change_status=1">'.$Language->getText('mail_nav','update_list').'</A></B>
 ';
 	if ($params['help']) {
-	    echo ' | <B>'.help_button($params['help'],false,'Help').'</B>';
+	    echo ' | <B>'.help_button($params['help'],false,$Language->getText('global','help')).'</B>';
 	}
 
 }
