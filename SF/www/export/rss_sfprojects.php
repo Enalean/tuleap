@@ -23,11 +23,11 @@ if (session_issecure()) {
 
 // ## one time output
 print " <channel>\n";
-print "  <copyright>Copyright (c) 2001-2002 Xerox, Inc.".$GLOBALS['sys_name']." Team. All Rights Reserved.</copyright>\n";
+print "  <copyright>Copyright (c) 2001-".date('Y',time())." Xerox, Inc.".$GLOBALS['sys_name']." Team. All Rights Reserved.</copyright>\n";
 print "  <pubDate>".gmdate('D, d M Y g:i:s',time())." GMT</pubDate>\n";
-print "  <description>Full Project Listing</description>\n";
+print "  <description>".$GLOBALS['sys_name']." Full Project Listing</description>\n";
 print "  <link>$server</link>\n";
-print "  <title>Full Project Listing</title>\n";
+print "  <title>".$GLOBALS['sys_name']." Full Project Listing</title>\n";
 print "  <webMaster>".$GLOBALS['sys_email_contact']."</webMaster>\n";
 print "  <language>en-us</language>\n";
 // ## item outputs
@@ -36,7 +36,7 @@ while ($row = db_fetch_array($res)) {
 	print "   <title>".htmlspecialchars($row[group_name])."</title>\n";
 	print "   <link>$server/project/?group_id=$row[group_id]</link>\n";
 	print "   <description>";
-	print ereg_replace(" *\r*\n *"," ",rss_description($row[short_description]));
+	print ereg_replace(" *\r*\n *"," ",rss_description($row['short_description']));
 	print "</description>\n";
 	print "  </item>\n";
 }

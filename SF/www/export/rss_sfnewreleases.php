@@ -46,10 +46,10 @@ $res=db_query($query);
 print " <channel>\n";
 print "  <copyright>Copyright (c) Xerox Corporation, ".$GLOBALS['sys_name']." Team, 2001-2002. All Rights Reserved</copyright>\n";
 print "  <pubDate>".gmdate('D, d M Y g:i:s',time())." GMT</pubDate>\n";
-print "  <description>New Releases</description>\n";
-print "  <link>http://$GLOBALS[sys_default_domain]</link>\n";
-print "  <title>New Releases</title>\n";
-print "  <webMaster>webmaster@$GLOBALS[sys_default_domain]</webMaster>\n";
+print "  <description>".$GLOBALS['sys_name']." New Releases</description>\n";
+print "  <link>http://".$GLOBALS['sys_default_domain']."</link>\n";
+print "  <title>".$GLOBALS['sys_name']." New Releases</title>\n";
+print "  <webMaster>webmaster@".$GLOBALS['sys_default_domain']."</webMaster>\n";
 print "  <language>en-us</language>\n";
 // ## item outputs
 $outputtotal = 0;
@@ -57,13 +57,13 @@ while ($row = db_fetch_array($res)) {
 	if (!$G_RELEASE["$row[group_id]"]) {
 		print "  <item>\n";
 		print "   <title>".htmlspecialchars($row[group_name]." ". $row[release_version])."</title>\n";
-		print "   <link>http://$GLOBALS[sys_default_domain]/project/filelist.php?group_id=$row[group_id]</link>\n";
-		print "   <description>".rss_description($row[short_description])."</description>\n";
+		print "   <link>http://".$GLOBALS['sys_default_domain']."/project/filelist.php?group_id=$row[group_id]</link>\n";
+		print "   <description>".rss_description($row['short_description'])."</description>\n";
 		print "  </item>\n";
 		$outputtotal++;
 	}
 	// ## eliminate dupes, only do $limit of these
-	$G_RELEASE["$row[group_id]"] = 1;
+	$G_RELEASE[$row['group_id']] = 1;
 	if ($outputtotal >= $limit) break;
 }
 // ## end output
