@@ -239,7 +239,7 @@ if ($type_of_search == "soft") {
 		. " AND support.group_id='$group_id' "
 		.  "GROUP BY support_id,summary,open_date,user_name LIMIT $offset,26";
 
-	echo "DBG: $sql<br>";
+	//echo "DBG: $sql<br>";
 	$result = db_query($sql);
 	$rows = $rows_returned = db_numrows($result);
 
