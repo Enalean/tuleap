@@ -38,8 +38,8 @@ INSERT INTO user VALUES (101, 'admin', '', \
 # Default Data for 'groups'
 #
 
-INSERT INTO groups VALUES (1, 'Admin Project', '', 1, 'A',
-'adminproj', 'shell1', 'adminproj._DOMAIN_NAME_', 'Admin Project',
+INSERT INTO groups VALUES (1, 'CodeX Administration Project', '', 1, 'A',
+'codex', 'shell1', 'codex._DOMAIN_NAME_', 'CodeX Administration Project',
 'cvs1', '', '', '', '', '', '', 940000000, 1, '', 1, 1, 1, 1, 1, 1, 1,
 1, '', '', '', 1, 1, 1, 1, 1, '', '', '', '', 1,0,1,0,'','',1,0,0,0);
 
