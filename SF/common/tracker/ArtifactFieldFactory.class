@@ -427,6 +427,8 @@ class ArtifactFieldFactory extends Error {
 			return false;
 		}
 		
+		$af = new ArtifactField($this->ArtifactType->getID(),"");
+		
 		// Default values
 		$empty_ok = ($empty_ok?$empty_ok:0);
 		$keep_history = ($keep_history?$keep_history:0);
@@ -477,24 +479,25 @@ class ArtifactFieldFactory extends Error {
 			$values = $field_id.",".$id.",";
 			
 			switch ( $data_type ) {
-			case 1:
+			case $af->DATATYPE_TEXT:
 				$name = "valueText";
 				$values .= "'$default_value'";
 				break;
 				
-			case 2:
+			case $af->DATATYPE_INT:
+			case $af->DATATYPE_USER:
 				$name = "valueInt";
-				$values .= $default_value;
+				$values .= ($default_value?$default_value:'0');
 				break;
 				
-			case 3:
+			case $af->DATATYPE_FLOAT:
 				$name = "valueFloat";
-				$values .= $default_value;
+				$values .= ($default_value?$default_value:'0.0');
 				break;
 				
-			case 4:
+			case $af->DATATYPE_DATE:
 				$name = "valueDate";
-				$values .= $default_value;
+				$values .= ($default_value?$default_value:'0');
 				break;
 			} // switch
 			
@@ -502,9 +505,7 @@ class ArtifactFieldFactory extends Error {
 			
 			$result=db_query($sql);
 			//echo $sql."<br>";
-			
-	    	db_query($sql);
-	    	
+				    	
 		} // while
 
 		// Reload the fields

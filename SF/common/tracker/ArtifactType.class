@@ -141,20 +141,16 @@ class ArtifactType extends Error {
 	/**
 	 *	create - use this to create a new ArtifactType in the database.
 	 *
-	 *	@param	group_id_template
-	 *	@param	atid_template
-	 *	@param	name
-	 *	@param	description
-	 *	@param	itemname
+	 *  @param  group_id: the group id of the new tracker
+	 *	@param	group_id_template: the template group id (used for the copy)
+	 *	@param	atid_template: the template artfact type id 
+	 *	@param	name: the name of the new tracker
+	 *	@param	description: the description of the new tracker
+	 *	@param	itemname: the itemname of the new tracker
 	 *	@return id on success, false on failure.
 	 */
 	function create($group_id,$group_id_template,$atid_template,$name,$description,$itemname) {
-		global $feedback,$atf;
-
-		if (!$this->userIsAdmin()) {
-			$this->setError('ArtifactType: Permission Denied');
-			return false;
-		}
+		global $feedback,$ath;
 
 		if (!$name || !$description || !$itemname || trim($name) == "" || trim($description) == "" || trim($itemname) == ""  ) {
 			$this->setError('ArtifactType: Name, Description, and Short Name are required and not empty.');

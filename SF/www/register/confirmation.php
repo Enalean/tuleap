@@ -11,6 +11,11 @@ session_require(array('isloggedin'=>'1'));
 require 'vars.php';
 require('../forum/forum_utils.php');
 require($DOCUMENT_ROOT.'/admin/admin_utils.php');
+require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');
+require($DOCUMENT_ROOT.'/../common/tracker/ArtifactFieldFactory.class');
+require($DOCUMENT_ROOT.'/../common/tracker/ArtifactField.class');
+require($DOCUMENT_ROOT.'/../common/tracker/ArtifactReport.class');
+require($DOCUMENT_ROOT.'/../common/tracker/ArtifactReportFactory.class');
 
 if ($show_confirm) {
 
@@ -71,13 +76,44 @@ if ($show_confirm) {
 	//Set up some mailing lists
 	//will be done at some point. needs to communicate with geocrawler
 	// TBD
+	
+	if ( $sys_activate_tracker ) {
+		// Generic Trackers Creation
+		$group_100 = group_get_object(100);
+		if (!$group_100 || !is_object($group_100) || $group_100->isError()) {
+			exit_no_group();
+		}
+		$group = group_get_object($group_id);
+		if (!$group || !is_object($group) || $group->isError()) {
+			exit_no_group();
+		}
+		
+		$ath = new ArtifactType($group);
 
+		$tracker_error = "";
+		// Tracker: Bug
+		$ath_bug = new ArtifactType($group_100,1);
+		if ( !$ath->create($group_id,100,$ath_bug->getID(),$ath_bug->getName(),$ath_bug->getDescription(),$ath_bug->getItemName()) ) {
+			$tracker_error .= $ath->getErrorMessage()."<br>";
+		}
+		// Tracker: Task
+		$ath_task = new ArtifactType($group_100,2);
+		if ( !$ath->create($group_id,100,$ath_task->getID(),$ath_task->getName(),$ath_task->getDescription(),$ath_task->getItemName()) ) {
+			$tracker_error .= $ath->getErrorMessage()."<br>";
+		}
+		// Tracker: SR
+		$ath_sr = new ArtifactType($group_100,3);
+		if ( !$ath->create($group_id,100,$ath_sr->getID(),$ath_sr->getName(),$ath_sr->getDescription(),$ath_sr->getItemName()) ) {
+			$tracker_error .= $ath->getErrorMessage()."<br>";
+		}	 
+	}
+	
 	// Show the final registration complete message and send email
 	// notification (it's all in the content part)
 	$HTML->header(array('title'=>'Registration Complete'));
 
 	util_get_content('register/complete', 
-			 array('group_name' => $form_full_name));
+			 array('group_name' => $form_full_name, 'tracker_error' => $tracker_error));
     
 	$HTML->footer(array());
 

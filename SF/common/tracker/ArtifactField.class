@@ -20,7 +20,7 @@ class ArtifactField extends Error {
 	// The field name
 	var $field_name;
 	
-	// The data_type: 1: text, 2: int, 3: float, 4: date - See constants $DATATYPE_xx
+	// The data_type: 1: text, 2: int, 3: float, 4: date, 5: user - See constants $DATATYPE_xx
 	var $data_type;
 	
 	// Display type: SB: selectbox, TF: text field, DF: date field, TA: text area
@@ -73,6 +73,7 @@ class ArtifactField extends Error {
 	var $DATATYPE_INT = 2;
 	var $DATATYPE_FLOAT = 3;
 	var $DATATYPE_DATE = 4;	
+	var $DATATYPE_USER = 5;	
 	
 
 	/**
@@ -694,10 +695,9 @@ class ArtifactField extends Error {
 	 * @return boolean
 	 */
 	function isUsername() {
-		global $sys_user_fields;
 		
-	    return ( in_array($this->getName(),$sys_user_fields) );
-	
+		return ($this->data_type == $this->DATATYPE_USER);
+		
 	}
 
 	/**
@@ -714,6 +714,7 @@ class ArtifactField extends Error {
 			break;
 			
 		case $this->DATATYPE_INT:
+		case $this->DATATYPE_USER:
 			return "valueInt";
 			break;
 			
@@ -744,6 +745,7 @@ class ArtifactField extends Error {
 			break;
 			
 		case $this->DATATYPE_INT:
+		case $this->DATATYPE_USER:
 			$sql .= "valueInt=$value";
 			break;
 			
@@ -848,6 +850,7 @@ class ArtifactField extends Error {
 			break;
 			
 		case $this->DATATYPE_INT:
+		case $this->DATATYPE_USER:
 			$name = "valueInt";
 			$values .= ($value?"$value":"0");
 			break;
@@ -907,6 +910,7 @@ class ArtifactField extends Error {
 			break;
 	
 	    case $this->DATATYPE_INT :
+	    case $this->DATATYPE_USER :
 	
 			// If it is sourrounded by /.../ the assume a regexp
 			// else assume an equality
@@ -1003,6 +1007,7 @@ class ArtifactField extends Error {
 			break;
 			
 		case $this->DATATYPE_INT:
+		case $this->DATATYPE_USER:
 			$name = "valueInt";
 			break;
 			
@@ -1161,7 +1166,7 @@ class ArtifactField extends Error {
 	}
 
 	/**
-	 *  Update the value_function attribute
+	 *  Update the value_function attribute and set the data_type to user
 	 *
 	 *  @param group_artifact_id: the group artifact id
 	 *  @param value_function: the value function
@@ -1172,7 +1177,8 @@ class ArtifactField extends Error {
 						 	
 		// Update the artifact_field
 		$sql = "UPDATE artifact_field SET ".
-			   "value_function='".$value_function."' ".
+			   "value_function='".$value_function."', ".
+			   "data_type=". $this->DATATYPE_USER." ".
 			   "WHERE group_artifact_id=".$group_artifact_id." AND field_id=".$this->field_id;
 				
 		//echo $sql;
@@ -1182,6 +1188,9 @@ class ArtifactField extends Error {
 			$this->setError("Error during updating artifact_field (".$field_id."-".$group_artifact_id."): ".db_error());
 			return false;
 		}
+		
+		// Set the data type to user
+		$this->data_type = $this->DATATYPE_USER;
 		
 		// Reload the field
 		$this->fetchData($group_artifact_id,$field_name);

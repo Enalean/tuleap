@@ -610,6 +610,126 @@ class ArtifactTypeHtml extends ArtifactType {
 	}
 	
 	/**
+	 *  Display the field type select box
+	 *
+	 *  @param data_type: the field data type (string, int, flat or date)
+	 *  @param display_type: the field display type (select box, text field, ...)
+	 *  @param form_name: the HTTP form name
+	 *
+	 *  @return void
+	 */
+	function displayFieldType($data_type,$display_type,$form_name) {
+		
+		$af = new ArtifactField($this->getID(),"");
+		
+		echo '<script language="JavaScript">
+
+			  function onChangeFieldType(form) {
+			  		switch ( form.field_type.value ) {
+			  		// Select Box
+			  		case "1":
+			  			form.data_type.value = '.$af->DATATYPE_INT.';
+					  	form.display_type.value = "SB";
+					  	break;
+			  		// Multi Select Box
+			  		case "2":
+			  			form.data_type.value = '.$af->DATATYPE_INT.';
+					  	form.display_type.value = "MB";
+					  	break;
+			  		// TextField
+			  		case "3":
+			  			form.data_type.value = '.$af->DATATYPE_TEXT.';
+					  	form.display_type.value = "TF";
+					  	break;
+			  		// TextArea
+			  		case "4":
+			  			form.data_type.value = '.$af->DATATYPE_TEXT.';
+					  	form.display_type.value = "TA";
+					  	break;
+			  		// DateField
+			  		case "5":
+			  			form.data_type.value = '.$af->DATATYPE_DATE.';
+					  	form.display_type.value = "DF";
+					  	break;
+			  		// FloatField
+			  		case "6":
+			  			form.data_type.value = '.$af->DATATYPE_FLOAT.';
+					  	form.display_type.value = "TF";
+					  	break;
+			  		// IntegerField
+			  		case "7":
+			  			form.data_type.value = '.$af->DATATYPE_INT.';
+					  	form.display_type.value = "TF";
+					  	break;
+					default:
+						alert("Unknow field type!");
+						break;
+			  		}
+			  }
+
+			  </script>
+			 ';
+
+        echo '<select name="field_type" onChange="onChangeFieldType('.$form_name.')">';
+		if ( $data_type&&$display_type ) {
+			$selected = "";
+			if ( ($data_type == $af->DATATYPE_INT || $data_type == $af->DATATYPE_USER)
+				 &&($display_type == "SB") ) 
+				$selected = " selected";
+			echo '<option value="1"'.$selected.'>Select Box</option>';
+			
+			$selected = "";
+			if ( ($data_type == $af->DATATYPE_INT || $data_type == $af->DATATYPE_USER)
+				 &&($display_type == "MB") ) 
+				$selected = " selected";
+			echo '<option value="2"'.$selected.'>Multi Select Box</option>';
+			
+			$selected = "";
+			if ( ($data_type == $af->DATATYPE_TEXT)
+				 &&($display_type == "TF") ) 
+				$selected = " selected";
+			echo '<option value="3"'.$selected.'>TextField</option>';
+			
+			$selected = "";
+			if ( ($data_type == $af->DATATYPE_TEXT)
+				 &&($display_type == "TA") ) 
+				$selected = " selected";
+			echo '<option value="4"'.$selected.'>TextArea</option>';
+
+			$selected = "";
+			if ( ($data_type == $af->DATATYPE_DATE)
+				 &&($display_type == "DF") ) 
+				$selected = " selected";
+			echo '<option value="5"'.$selected.'>DateField</option>';
+
+			$selected = "";
+			if ( ($data_type == $af->DATATYPE_FLOAT)
+				 &&($display_type == "TF") ) {
+				$selected = " selected";
+				echo 'xxx';
+			}
+			echo '<option value="6"'.$selected.'>FloatField</option>';
+
+			$selected = "";
+			if ( ($data_type == $af->DATATYPE_INT)
+				 &&($display_type == "TF") ) 
+				$selected = " selected";
+			echo '<option value="7"'.$selected.'>IntegerField</option>';
+
+		} else {
+			echo '
+			<option value="1">Select Box</option>
+			<option value="2">Multi Select Box</option>
+			<option value="3">TextField</option>
+			<option value="4">TextArea</option>
+			<option value="5">DateField</option>
+			<option value="6">FloatField</option>
+			<option value="7">IntegerField</option>';
+		}
+        echo '</select>';
+	}
+
+	/**
 	 *  Display the field usage add or update form
 	 *
 	 *  @param func: field_create or field_update
@@ -636,6 +756,8 @@ class ArtifactTypeHtml extends ArtifactType {
 								   $display_size=false,$rank_on_screen=false,$show_on_add=false,$show_on_add_members=false,
 								   $empty_ok=false,$keep_history=false,$special=false,$use_it=false,$show_use=false) {
 
+		$af = new ArtifactField($this->getID(),"");
+
 		if ( $func == "field_create" ) {
 			echo '<h3>Create a new field</h3>';
 			echo '
@@ -644,7 +766,9 @@ class ArtifactTypeHtml extends ArtifactType {
 			  <input type="hidden" name="group_id" value="'.$this->Group->getID().'">
 			  <input type="hidden" name="atid" value="'.$this->getID().'">
 			  <input type="hidden" name="field_id" value="'.$this->getNextFieldID().'">
-			  <input type="hidden" name="field_name" value="'.$this->buildFieldName($this->getNextFieldID()).'">';
+			  <input type="hidden" name="field_name" value="'.$this->buildFieldName($this->getNextFieldID()).'">
+			  <input type="hidden" name="data_type" value="'.$af->DATATYPE_INT.'">
+			  <input type="hidden" name="display_type" value="SB">';
 		} else {
 			echo '<h3>Update a field</h3>';
 			echo '
@@ -653,7 +777,9 @@ class ArtifactTypeHtml extends ArtifactType {
 			  <input type="hidden" name="group_id" value="'.$this->Group->getID().'">
 			  <input type="hidden" name="atid" value="'.$this->getID().'">
 			  <input type="hidden" name="field_id" value="'.$field_id.'">
-			  <input type="hidden" name="field_name" value="'.$field_name.'">';
+			  <input type="hidden" name="field_name" value="'.$field_name.'">
+			  <input type="hidden" name="data_type" value="'.$data_type.'">
+			  <input type="hidden" name="display_type" value="'.$display_type.'">';
 		}
 		
 		echo '
@@ -669,49 +795,20 @@ class ArtifactTypeHtml extends ArtifactType {
 		echo '<p>Description: ';
 		            
 		if ( $description ) {
-		    echo '<input type=text name="description" size="70" maxlength="255" value="'.$description.'">';
+		    echo '<input type=text name="description" size="100" maxlength="255" value="'.$description.'">';
 		} else {
-		    echo '<input type=text name="description" size="70" maxlength="255" value="'.$description.'">';
+		    echo '<input type=text name="description" size="100" maxlength="255" value="'.$description.'">';
 		}
 		
 		echo '
 		  <p><b>Field type:</b><br>
 		  <table width="100%" border="0" cellpadding="5">
 		    <tr> 
-		      <td width="30%">Data Type: <font color="red">*</font>&nbsp;
-		        <select name="data_type">';
+		      <td width="30%">Type: <font color="red">*</font>&nbsp;';
 		
-		if ( $data_type ) {
-			$selected = "";
-			if ( $data_type == 1 ) 
-				$selected = " selected";
-			echo '<option value="1"'.$selected.'>String</option>';
-			
-			$selected = "";
-			if ( $data_type == 2 ) 
-				$selected = " selected";
-			echo '<option value="2"'.$selected.'>Integer</option>';
-			
-			$selected = "";
-			if ( $data_type == 3 ) 
-				$selected = " selected";
-			echo '<option value="3"'.$selected.'>Float</option>';
-			
-			$selected = "";
-			if ( $data_type == 4 ) 
-				$selected = " selected";
-			echo '<option value="4"'.$selected.'>Date</option>';
-
-		} else {
-			echo '
-			<option value="1">String</option>
-			<option value="2">Integer</option>
-			<option value="3">Float</option>
-			<option value="4">Date</option>';
-		}
+		$this->displayFieldType($data_type,$display_type,"form_create");
 		
 		echo '			
-		        </select>
 		      </td>
 		      <td width="70%">Default Value:&nbsp;';
 		      
@@ -728,70 +825,17 @@ class ArtifactTypeHtml extends ArtifactType {
 		  <b>Display informations:</b><br>
 		  <table width="100%" border="0" cellpadding="5" cellspacing="0">
 		    <tr> 
-		      <td width="30%">Display Type: <font color="red">*</font>&nbsp;
-		        <select name="display_type">';
-		        
-		if ( $display_type ) {
-			$selected = "";
-			if ( $display_type == "SB" ) 
-				$selected = " selected";
-			echo '<option value="SB"'.$selected.'>Select Box</option>';
-
-			$selected = "";
-			if ( $display_type == "TF" ) 
-				$selected = " selected";
-			echo '<option value="TF"'.$selected.'>Text Field</option>';
-
-			$selected = "";
-			if ( $display_type == "TA" ) 
-				$selected = " selected";
-			echo '<option value="TA"'.$selected.'>Text Area</option>';
-
-			$selected = "";
-			if ( $display_type == "MB" ) 
-				$selected = " selected";
-			echo '<option value="MB"'.$selected.'>Multi Select Box</option>';
-
-			$selected = "";
-			if ( $display_type == "DF" ) 
-				$selected = " selected";
-			echo '<option value="DF"'.$selected.'>Date Field</option>';
-
-		} else {
-			echo '				
-		          <option value="SB" selected>Select Box</option>
-		          <option value="TF">Text Field</option>
-		          <option value="TA">Text Area</option>
-		          <option value="MB">Multi Select Box</option>
-		          <option value="DF">Date Field</option>';
-		}
-		
-		echo '
-		        </select>
-		      </td>
-		      <td width="30%">Display Size:&nbsp;';
+		      <td>Display Size:&nbsp;';
 		      
 		if ( $display_size ) {
 		    echo '<input type="text" name="display_size" size="5" maxlength="5" value="'.$display_size.'">';
 		} else {
 		    echo '<input type="text" name="display_size" size="5" maxlength="5">';
 		}
-		
-		echo '
-		      </td>
-		    </tr>
-		    <tr> 
-		      <td width="30%">Rank on screen:&nbsp;';
-		      
-		if ( $rank_on_screen ) {
-	        echo '<input type="text" name="rank_on_screen" size="5" maxlength="5" value="'.$rank_on_screen.'">';
-	    } else {
-	        echo '<input type="text" name="rank_on_screen" size="5" maxlength="5">';
-	    }
-	    
+			    
 	    echo '
 		      </td>
-		      <td width="70%">Display this field...<br>
+		      <td rowspan="2">Display this field...<br>
                                     <ul>
 		        <li>On the submission form used by project members ';
 		        
@@ -813,6 +857,18 @@ class ArtifactTypeHtml extends ArtifactType {
 		
 		echo '
 		        </li></ul>
+		      </td>
+		    </tr>
+		    <tr> 
+		      <td>Rank on screen:&nbsp;';
+		      
+		if ( $rank_on_screen ) {
+	        echo '<input type="text" name="rank_on_screen" size="5" maxlength="5" value="'.$rank_on_screen.'">';
+	    } else {
+	        echo '<input type="text" name="rank_on_screen" size="5" maxlength="5">';
+	    }
+	    
+	    echo '
 		      </td>
 		    </tr>
 		  </table>

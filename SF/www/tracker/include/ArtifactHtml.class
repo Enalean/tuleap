@@ -61,8 +61,6 @@ class ArtifactHtml extends Artifact {
 	    	echo "<TD align='right'><A HREF='?func=detail&aid=".$this->getID()."&group_id=".$group_id."&atid=".$group_artifact_id."&pv=true' target='_blank'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;Printer version</A></TD>";
 	    echo "</TR></TABLE>";
 	
-//		echo '
-//	    <FORM ACTION="'.$PHP_SELF.'" METHOD="POST" NAME="artifact_form">
 		echo '
 	    <FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data" NAME="artifact_form">
 	    <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="2000000">';

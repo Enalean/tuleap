@@ -70,6 +70,11 @@ if ($group_id && !$atid) {
 		break;
 		
 	case 'docreate':
+		if (!$this->userIsAdmin()) {
+			$this->setError('ArtifactType: Permission Denied');
+			return false;
+		}
+
 		if ( !$ath->create($group_id,$group_id_chosen,$atid_chosen,$name,$description,$itemname) ) {
 			exit_error('Error',$ath->getErrorMessage());
 		} else {
