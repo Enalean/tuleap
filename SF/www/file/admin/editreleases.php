@@ -634,7 +634,7 @@ if ($release_id && $func != 'delete_release') {
 		<P>
 		<H3>Attach Files To This Release</H3>';
 		
-	include(util_get_content('project/editrelease_attach_file'));
+	include(util_get_content('file/editrelease_attach_file'));
 	
 	echo '<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data">
 		<INPUT TYPE="HIDDEN" NAME="func" VALUE="add_files">
