@@ -25,12 +25,12 @@ L. Julliard<br>
 <br>
 &nbsp;
 <br>
-<h1>Preamble</h1>
-Before or while you read the CodeX Installation Guide westrongly
-recommend that you also have a llok at the CodeX Administration Guide
+<h1>Preamblep</h1>
+Before or while you read the CodeX Installation Guide we strongly
+recommend that you also have a look at the CodeX Administration Guide
 at <a
  href="http://codex.codex.xerox.com/documents/CodeX_Administration_Guide.html">http://codex.codex.xerox.com/documents/CodeX_Administration_Guide.html</a>.
-The CodeX Adminstration Guide give a lot more explanation about the
+The CodeX Administration Guide give a lot more explanation about the
 services and files role on a typical CodeX server. It is an excellent
 companion document to the CodeX Installation Guide.<br>
 <br>
@@ -570,6 +570,8 @@ openssh-askpass</li>
         <li>openldap</li>
         <li>perl, perl-DBI, perl-DBD-MySQL, perl-Digest-MD5,
 perl-suidperl, perl-CGI</li>
+        <li>python (for mailman)<br>
+        </li>
         <li>sendmail (8.9.x)</li>
         <li>wu-ftpd, telnet, named, bind, ntp</li>
         <li>samba (if you want to activate windows connectivity to the
@@ -930,7 +932,21 @@ name as $sys_default_domain. Set it to an empty string ($sys_https_host
 <ul>
   <li>Change the include_path variable in /etc/httpd/php3.ini to the
 following value:<br>
-    <pre>&nbsp; &nbsp; &nbsp; include_path&nbsp;&nbsp;&nbsp; = .:/home/httpd/SF/www/include:/home/httpd/SF/www/phpMyAdmin<br></pre>
+    <pre>&nbsp; &nbsp; &nbsp; include_path&nbsp;&nbsp;&nbsp; = .:/home/httpd/SF/www/include:/home/httpd/SF/www/phpMyAdmin</pre>
+  </li>
+  <li>Also set/tune some additional variable for upload size:<br>
+    <br>
+    <div style="margin-left: 40px; font-family: monospace;">upload_max_filesize
+= 20971520 ; 20 Meg default limit on file uploads (CodeX)<br>
+post_max_size = 20971520&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; 20 Meg
+byte limit on post size (CodeX)<br>
+memory_limit&nbsp; = 31457280&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; 30
+Meg byte limit on memory limit (CodeX)<br>
+    <br>
+    </div>
+  </li>
+  <li>And load the following extensions only: <span
+ style="font-family: monospace;">gd.so, ldap.so, mysql.so</span><br>
   </li>
 </ul>
 <hr width="100%" size="2">
@@ -1691,6 +1707,196 @@ your backup procedure or something similar.<br>
   <tt>00 03 * * * /home/httpd/SF/utils/generate_doc.sh</tt><br>
   <br>
 </blockquote>
+<br>
+<hr>
+<h1>Log Files Rotation</h1>
+In order to maintain statistics on http and ftp traffic the CodeX
+server must be instructed to rotate the apache and ftp log files on a
+daily basis.<br>
+<h2>Apache Log File Rotation</h2>
+<span style="font-family: monospace;">/etc/logrotate.d/apache </span>looks
+like this:<br>
+<br>
+<span style="font-family: monospace;">/var/log/httpd/access_log {</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; missingok</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; # LJ</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; daily</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; rotate 4</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; postrotate</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/usr/bin/killall -HUP httpd 2&gt; /dev/null || true</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+# LJ Added for Codex archiving</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
+year=`date +%Y`</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
+month=`date +%m`</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
+day=`date +%d`</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
+destdir="/home/log/$year/$month"</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
+destfile="http_combined_$year$month$day.log"</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp; mkdir -p
+$destdir</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp; cp
+/var/log/httpd/access_log.1 $destdir/$destfile</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; endscript</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">}</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">/var/log/httpd/vhosts-access_log {</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; missingok</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; # LJ</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; daily</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; rotate 4</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; postrotate</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/usr/bin/killall -HUP httpd 2&gt; /dev/null || true</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+# LJ Added for Codex archiving</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
+year=`date +%Y`</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
+month=`date +%m`</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
+day=`date +%d`</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
+server=`hostname`</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
+destdir="/home/log/$server/$year/$month"</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
+destfile="vhosts-access_$year$month$day.log"</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp; mkdir -p
+$destdir</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp; cp
+/var/log/httpd/vhosts-access_log.1 $destdir/$destfile</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; endscript</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">}</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">/var/log/httpd/agent_log {</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; missingok</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; # LJ</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; daily</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; rotate 4</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; postrotate</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/usr/bin/killall -HUP httpd 2&gt; /dev/null || true</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; endscript</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">}</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">/var/log/httpd/error_log {</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; missingok</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; # LJ</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; daily</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; rotate 4</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; postrotate</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/usr/bin/killall -HUP httpd 2&gt; /dev/null || true</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; endscript</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">}</span><br
+ style="font-family: monospace;">
+<br style="font-family: monospace;">
+<span style="font-family: monospace;">/var/log/httpd/referer_log {</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; missingok</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; # LJ</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; daily</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; rotate 4</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; postrotate</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/usr/bin/killall -HUP httpd 2&gt; /dev/null || true</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; endscript</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">}</span><br>
+<br>
+<h2>FTP log file rotation</h2>
+<span style="font-family: monospace;">/etc/logrotate.d/ftpd </span>looks
+like this:<br>
+<br>
+/<span style="font-family: monospace;">var/log/xferlog {</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; # ftpd doesn't
+handle SIGHUP properly</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; nocompress</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; # LJ Modified
+for codex</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; daily</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; postrotate</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
+year=`date +%Y`</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
+month=`date +%m`</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
+day=`date +%d`</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
+destdir="/home/log/$year/$month"</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
+destfile="ftp_xferlog_$year$month$day.log"</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp; mkdir -p
+$destdir</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp; cp
+/var/log/xferlog.1 $destdir/$destfile</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; endscript</span><span
+ style="font-family: monospace;"></span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">}</span><br>
+<br>
 <br>
 <hr>
 <h1>Installing phpMyAdmin</h1>
