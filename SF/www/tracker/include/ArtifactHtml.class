@@ -72,8 +72,8 @@ class ArtifactHtml extends Artifact {
             
                 echo '
             <TABLE cellpadding="0">
-              <TR><TD><B>Submitted By:</B>&nbsp;</td><td>'.user_getname($this->getValue('submitted_by')).'</TD>
-                  <TD><B>Group:</B>&nbsp;</td><td>'.group_getname($group_id).'</TD>
+              <TR><TD><B>Submitted By:</B>&nbsp;</td><td>'.util_user_link(user_getname($this->getValue('submitted_by'))).'</a></TD>
+                  <TD><B>Project:</B>&nbsp;</td><td>'.group_getname($group_id).'</TD>
               </TR>
               <TR><TD><B>Submitted on:</B>&nbsp;</td><td>'.format_date($sys_datefmt,$this->getValue('open_date')).'</TD>';
             
