@@ -1,5 +1,149 @@
+2002-09-11 14:41  ljulliar
+
+	* www/bugs/postadd_comment.php: Take CC names into account when bug
+	update form is submitted. (task #2225)
+
+2002-09-11 14:41  ljulliar
+
+	* www/bugs/index.php: Remove permission check on CC deletion. This
+	is done elsewhere in mod_bug.php and detail_bug.php (task #2225)
+
+2002-09-11 14:40  ljulliar
+
+	* www/bugs/detail_bug.php: CC list shown to users logged in even if
+	they are not project members.  (task #2225)
+
+2002-09-11 14:39  ljulliar
+
+	* www/bugs/bug_utils.php: - bug_cc_list: delete CC icon shown only
+	if permission ok, ASCII output in email notification was wrong, CC
+	name now point either to mailto: URL or CodeX USer page if CodeX
+	login.
+	
+	- bug_mail_followup: CC list sent in email notification (Task
+	#2225)
+
+2002-09-11 14:38  ljulliar
+
+	* www/bugs/mod_bug.php: Minor typo
+
+2002-09-10 14:55  ljulliar
+
+	* www/project/export/bug_history_export.php: Forgot to modify
+	prepare_bug_history_record calls (2 parameters missing) in 2
+	places. (bug #8739, originates from bug #8437)
+
+2002-09-08 10:35  ljulliar
+
+	* www/bugs/: bug_data.php, admin/field_usage.php: keep bug field
+	history was not properly handled. Create a test function and use it
+	(task #2224)
+
+2002-09-08 10:24  ljulliar
+
+	* www/bugs/admin/field_usage.php: Date fields have a fixed size and
+	maxlength. Must be forced as hidden values in the form (task #2224)
+
+2002-09-08 09:54  ljulliar
+
+	* db/bug_fields_changes.sql, db/bug_fields_defaults.sql,
+	www/bugs/add_bug.php, www/bugs/browse_bug.php,
+	www/bugs/bug_data.php, www/bugs/bug_utils.php,
+	www/bugs/detail_bug.php, www/bugs/index.php, www/bugs/mod_bug.php,
+	www/bugs/admin/field_usage.php, www/bugs/admin/index.php,
+	www/bugs/admin/notification_settings.php,
+	www/bugs/admin/other_settings.php: Task #2224, Task #2225, Task
+	#2226
+	
+	- 3 new fields were added to the set of standard fields offered by
+	the bug tracking system: Originator Name, Originator Email and
+	Originator Phone.
+	
+	- A list of new custom fields have been added to the Bug tracker:
+	project adminstrators now have a set of 10 text areas, 10 text
+	fields, 10 date fields and 10 select boxes that they can fully
+	customize including the label, display size.
+	
+	- The bug modification form has a new section called 'CC list'
+	which allows the bug technicians to add any email address or any
+	CodeX user in the list of person notified on bug updates. This is a
+	very convenient way to keep certain people aware of events in the
+	life of a bug even if they do not play a role in this bug.
+	
+	- Each CodeX user can now customize the kind of events notification
+	s/he wants to receive whenever a bug is updated. The list of events
+	notification can also vary according to the role you play for a
+	given bug (assignee, submitter, CC list member, Commenter).
+	
+	- A bug technician can also ask to receive the notifications sent
+	to some other users.
+
+2002-09-03 14:55  ljulliar
+
+	* www/include/utils.php: PHP4 like functions moved to
+	utils_php4.php and some functions added
+
+2002-09-03 14:44  ljulliar
+
+	* www/include/pre.php: Now includes PHP4-like functions if running
+	PHP3
+
+2002-09-03 14:37  ljulliar
+
+	* www/include/utils_php4.php: Initial revision
+
+2002-08-30 10:03  ljulliar
+
+	* www/project/export/: bug_history_export.php,
+	project_export_utils.php: prepare_bug_history_record function was
+	missing 2 parameters (group ID and column list) causing the field
+	value lookup to fail. Also changed the value lookup to use the
+	function with cache. (bug #8437)
+
+2002-08-29 10:54  ljulliar
+
+	* www/my/index.php: %age completion now showing in the task list
+	(task #2214)
+
+2002-08-29 10:50  ljulliar
+
+	* www/include/Layout.class: box1_top and box1_middle now accept a
+	new parameter for the number of columns in the box (was hardcoded
+	to 2 before) (task #2214)
+
+2002-08-28 14:15  ljulliar
+
+	* www/pm/: browse_task.php, pm_utils.php: Retrieve the correct
+	project_group_id for the "depend on" tasks instead of the one from
+	the dependent task (bug #8348)
+
+2002-08-23 18:40  ljulliar
+
+	* www/include/user.php: The function user_get_result_set_from_unix
+	was buggy and did not set the Useri ID cache properly
+
+2002-08-22 09:45  ljulliar
+
+	* www/pm/task.php: reset subproject id to avoid interference with
+	browsing selection criteria (bug #6621)
+
+2002-08-22 09:17  ljulliar
+
+	* www/bugs/admin/reports.php: fixed wrong pointer on help for bug
+	report creation (bug #8183)
+
+2002-08-19 10:32  ljulliar
+
+	* www/project/export/survey_responses_export.php: List survey
+	results in order: by survey id then block of answers and finally by
+	question_id. This makes the export clearer (bug #8049)
+
 ------------------------------------------------------------------------------
 CODEX 1.5 (tag: CX_1_5) - 2002-08-13
+
+2002-08-13 15:43  ljulliar
+
+	* ChangeLog: Prepared for release 1.5
 
 2002-08-13 12:38  ljulliar
 
