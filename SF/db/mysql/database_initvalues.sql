@@ -125,6 +125,7 @@ INSERT INTO frs_filetype VALUES ('3001','Binary .bz2');
 INSERT INTO frs_filetype VALUES ('3002','Binary .gz');
 INSERT INTO frs_filetype VALUES ('3020','Binary .tar.gz, .tgz');
 INSERT INTO frs_filetype VALUES ('3100','Binary .jar');
+INSERT INTO frs_filetype VALUES ('3150','Binary installer');
 INSERT INTO frs_filetype VALUES ('3900','Other Binary File');
 INSERT INTO frs_filetype VALUES ('4000','Source .rpm');
 INSERT INTO frs_filetype VALUES ('5000','Source .zip');
