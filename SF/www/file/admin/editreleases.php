@@ -197,7 +197,9 @@ if ($submit) {
 		*/
 		$feedback .= ' Updating Release ';
 		if ($upload_instead) {
+		  if ($uploaded_data) {
 			$code = addslashes(fread( fopen($uploaded_data, 'r'), filesize($uploaded_data)));
+		  }
 			if ((strlen($code) > 0) && (strlen($code) < $sys_max_size_upload)) {
 				//size is fine
 				$feedback .= ' | Data Uploaded ';
