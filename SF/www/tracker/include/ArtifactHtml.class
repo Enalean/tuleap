@@ -223,8 +223,8 @@ class ArtifactHtml extends Artifact {
 		<TR><TD colspan="2">
 		<h3>Attachments '.help_button('ArtifactUpdate.html#ArtifactAttachments').'</h3>';
 		
-		if ( !$ro ) {
-			echo '
+
+		echo '
 			<B>Check to Upload&hellip;  <input type="checkbox" name="add_file" VALUE="1">
 			&nbsp;&hellip;&amp; Attach File:</B>
 			<input type="file" name="input_file" size="40">
@@ -233,7 +233,6 @@ class ArtifactHtml extends Artifact {
 			<B>File Description:</B>&nbsp;
 			<input type="text" name="file_description" size="60" maxlength="255">
 			<P>';
-		}
 				
 		echo $this->showAttachedFiles($group_id,$group_artifact_id);
 		
