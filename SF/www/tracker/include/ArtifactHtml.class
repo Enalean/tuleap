@@ -169,7 +169,7 @@ class ArtifactHtml extends Artifact {
                         <TR><TD colspan="2">';
                         
                         $field = $art_field_fact->getFieldFromName('comment_type_id');
-                        if ( $field ) {
+                        if ( $field && $field->isUsed()) {
                                 $field_html = new ArtifactFieldHtml( $field );
                                 echo '<P><B>Comment Type:</B>'.
                                      $field_html->fieldBox('',$group_artifact_id,$field->getDefaultValue(),true,'None').'<BR>';
