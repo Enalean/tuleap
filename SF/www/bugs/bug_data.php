@@ -1247,8 +1247,8 @@ function bug_data_create_bug($group_id,$vfl) {
     }    
 
     // Add all special fields that were not handled in the previous block
-    $fixed_cols = 'close_date,group_id,status_id,submitted_by,date,summary,details';
-    $fixed_values = "'0','$group_id','1','$user','".time()."','".
+    $fixed_cols = 'close_date,group_id,submitted_by,date,summary,details';
+    $fixed_values = "'0','$group_id','$user','".time()."','".
 	htmlspecialchars($vfl['summary'])."','".htmlspecialchars($vfl['details'])."'";
 
 
