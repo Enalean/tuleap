@@ -87,21 +87,6 @@ if ($login && !$success) {
 
 }
 
-/* LJ This tests are commented out because it has to do
-   with the use of Secured HTTP which we do not use on Codex as opposed
-   SourceForge
-if (browser_is_windows() && browser_is_ie() && browser_get_version() < '5.1') {
-	echo '<H2><span class="highlight">Internet Explorer users need to
-	upgrade to IE 5.01 or higher, preferably with 128-bit SSL or use Netscape 4.7 or higher</span></H2>';
-}
-
-if (browser_is_ie() && browser_is_mac()) {
-	echo '<H2><span class="highlight">Internet Explorer on the Macintosh 
-	is not supported currently. Use Netscape 4.7 or higher</span></H2>';
-}
-
-*/
-
 if ($GLOBALS['sys_https_host']) {
     $form_url = "https://".$GLOBALS['sys_https_host'];
 } else {
@@ -110,7 +95,9 @@ if ($GLOBALS['sys_https_host']) {
 ?>
 	
 <p>
-<h2><?php print $GLOBALS['sys_name']; ?> Site Login</h2>
+<h2><?php print $GLOBALS['sys_name']; ?> Site Login
+<?php print ($GLOBALS['sys_https_host'] != "" ? ' (Secure)':''); ?>
+</h2>
 <p>
 <span class="highlight"><B>Cookies must be enabled past this point.</B></span>
 <P>
@@ -125,9 +112,9 @@ Password:
 <P>
 <?php
 // Only show the stay in SSL mode if the server is SSL enabled
-if ($sys_https_host) {
+if ($GLOBALS['sys_https_host'] != '') {
     echo '<INPUT TYPE="CHECKBOX" NAME="stay_in_ssl" VALUE="1" '.
-    (((browser_is_ie() && browser_get_version() < '5.5') || ($GLOBALS['sys_stay_in_ssl'] == 0)) ?'':'CHECKED').'>'.
+    (((browser_is_ie() && browser_get_version() < '5.1') || ($HTTPS != 'on')) ?'':'CHECKED').'>'.
     'Stay in secure connection mode after login';
     echo '<br><em>
 &nbsp;&nbsp;&nbsp;(You will be connected with a secure Web server and all your web pages will travel encrypted over the network).

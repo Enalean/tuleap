@@ -146,9 +146,25 @@ $sys_incdir='/home/httpd/site-content/';
 $sys_lang='en_US';
 
 //
-// If set to one then the users are offered to stay in SSL mode
-// after login (checkbox checked).
+// If set to 1 (one) the user can choose between
+// secure and unsecure connection after login
+// (checkbox on login page). If 0 she cannot choose.
+// 
 $sys_stay_in_ssl = 0;
+
+//
+// If set to 1 (one) it forces the server to operate
+// HTTPS (SSL connection). HTTP request are redirected
+// to HTTPS requests.
+//
+$sys_force_ssl = 0;
+
+//
+// If set to 1 (one) anonymous users can browse the
+// public part of the site without logging in. If 0
+// user must first login before going further.
+//
+$sys_allow_anon = 1;
 
 //
 // Default theme

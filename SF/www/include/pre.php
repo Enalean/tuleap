@@ -15,14 +15,25 @@
 
 require (getenv('SF_LOCAL_INC_PREFIX').'/etc/local.inc');
 
-if (($HTTP_HOST != $GLOBALS['sys_default_domain']) && ($SERVER_NAME != 'localhost') && ($HTTP_HOST != $GLOBALS['sys_https_host']) ) {
-    if ($HTTPS == 'on') {
-	header ("Location: https://".$GLOBALS['sys_https_host']."$REQUEST_URI");
+// Check URL for valid hostname and valid protocol
+if (($HTTP_HOST != $GLOBALS['sys_default_domain']) && ($SERVER_NAME != 'localhost') && ($HTTP_HOST != $GLOBALS['sys_https_host'])) {
+    if ($HTTPS == 'on'|| $GLOBALS['sys_force_ssl'] == 1) {
+	$location = "Location: https://".$GLOBALS['sys_https_host']."$REQUEST_URI";
     } else {
-	header ("Location: http://".$GLOBALS['sys_default_domain']."$REQUEST_URI");
+	$location = "Location: http://".$GLOBALS['sys_default_domain']."$REQUEST_URI";
     }
-    exit;
 }
+
+if ($HTTPS != 'on' && $GLOBALS['sys_force_ssl'] == 1) {
+    $location = "Location: https://".$GLOBALS['sys_https_host']."$REQUEST_URI";
+}
+
+if ($location) {
+    header($location);
+    system ("echo $location >> /tmp/loc.out");
+    exit;
+}   
+
 
 //library to determine browser settings
 require('browser.php');
@@ -111,4 +122,13 @@ if (user_isloggedin()) {
 //theme functions 
 require('theme.php');
 
+
+// Check 
+if ($GLOBALS['sys_allow_anon'] == 0 && !user_isloggedin() && $REQUEST_URI != '/account/login.php') {
+    if ($GLOBALS['sys_force_ssl'] == 1 || $HTTPS == 'on')
+	header("Location: https://".$GLOBALS['sys_https_host']."/account/login.php");
+    else
+	header("Location: http://".$GLOBALS['sys_default_domain']."/account/login.php");
+    exit;
+}
 ?>
