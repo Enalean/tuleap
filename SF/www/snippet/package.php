@@ -11,53 +11,58 @@ require ('../snippet/snippet_utils.php');
 
 if (user_isloggedin()) {
 
-	if ($post_changes) {
-		/*
+    if ($post_changes) {
+        /*
 			Create a new snippet entry, then create a new snippet version entry
-		*/
-		if ($name && $description && $language != 0 && $category != 0 && $version) {
-			/*
+        */
+        if ($name && $description && $language != 0 && $category != 0 && $version) {
+            if ($category==100) {
+                $feedback .= ' ERROR: Please select a category ';
+            } else if ($language==100) {
+                $feedback .= ' ERROR: Please select a language ';
+            } else {
+                /*
 				Create the new package
-			*/
-			$sql="INSERT INTO snippet_package (category,created_by,name,description,language) ".
-				"VALUES ('$category','".user_getid()."','".htmlspecialchars($name)."','".htmlspecialchars($description)."','$language')";
-			$result=db_query($sql);
-			if (!$result) {
-				//error in database
-				$feedback .= ' ERROR DOING SNIPPET PACKAGE INSERT! ';
-				snippet_header(array('title'=>'Submit A New Snippet Package'));
-				echo db_error();
-				snippet_footer(array());
-				exit;
-			} else {
-				$feedback .= ' Snippet Package Added Successfully. ';
-				$snippet_package_id=db_insertid($result);
-				/*
+                */
+                $sql="INSERT INTO snippet_package (category,created_by,name,description,language) ".
+                    "VALUES ('$category','".user_getid()."','".htmlspecialchars($name)."','".htmlspecialchars($description)."','$language')";
+                $result=db_query($sql);
+                if (!$result) {
+                    //error in database
+                    $feedback .= ' ERROR DOING SNIPPET PACKAGE INSERT! ';
+                    snippet_header(array('title'=>'Submit A New Snippet Package'));
+                    echo db_error();
+                    snippet_footer(array());
+                    exit;
+                } else {
+                    $feedback .= ' Snippet Package Added Successfully. ';
+                    $snippet_package_id=db_insertid($result);
+                    /*
 					create the snippet package version
-				*/
-				$sql="INSERT INTO snippet_package_version ".
-					"(snippet_package_id,changes,version,submitted_by,date) ".
-					"VALUES ('$snippet_package_id','".htmlspecialchars($changes)."','".
-						htmlspecialchars($version)."','".user_getid()."','".time()."')";
-				$result=db_query($sql);
-				if (!$result) {
-					//error in database
-					$feedback .= ' ERROR DOING SNIPPET PACKAGE VERSION INSERT! ';
-					snippet_header(array('title'=>'Submit A New Snippet Package'));
-					echo db_error();
-					snippet_footer(array());
-					exit;
-				} else {
-					//so far so good - now add snippets to the package
-					$feedback .= ' Snippet Package Version Added Successfully. ';
+                    */
+                    $sql="INSERT INTO snippet_package_version ".
+                        "(snippet_package_id,changes,version,submitted_by,date) ".
+                        "VALUES ('$snippet_package_id','".htmlspecialchars($changes)."','".
+                        htmlspecialchars($version)."','".user_getid()."','".time()."')";
+                    $result=db_query($sql);
+                    if (!$result) {
+                        //error in database
+                        $feedback .= ' ERROR DOING SNIPPET PACKAGE VERSION INSERT! ';
+                        snippet_header(array('title'=>'Submit A New Snippet Package'));
+                        echo db_error();
+                        snippet_footer(array());
+                        exit;
+                    } else {
+                        //so far so good - now add snippets to the package
+                        $feedback .= ' Snippet Package Version Added Successfully. ';
 
-					//id for this snippet_package_version
-					$snippet_package_version_id=db_insertid($result);
-					snippet_header(array('title'=>'Add Snippets to Package'));
+                        //id for this snippet_package_version
+                        $snippet_package_version_id=db_insertid($result);
+                        snippet_header(array('title'=>'Add Snippets to Package'));
 
-/*
-	This raw HTML allows the user to add snippets to the package
-*/
+                        /*
+                        This raw HTML allows the user to add snippets to the package
+                        */
 
 					?>
 
@@ -87,16 +92,17 @@ then add them using the new window link shown above.
 
 					<?php
 
-					snippet_footer(array());
-					exit;
-				}
-			}
-		} else {
-			exit_error('Error','Error - Go back and fill in all the information');
-		}
+                        snippet_footer(array());
+                        exit;
+                    }
+                }
+            }
+        } else {
+            exit_error('Error','Error - Go back and fill in all the information');
+        }
 
-	}
-	snippet_header(array('title'=>'Submit A New Snippet Package',
+    }
+    snippet_header(array('title'=>'Submit A New Snippet Package',
 			     'header'=>'Create a New Snippet Package',
 			     'help' => 'TheCodeXMainMenu.html#GroupingCodeSnippets'));
 

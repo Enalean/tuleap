@@ -28,34 +28,44 @@ if (user_isloggedin()) {
 	/*
 	  Create a new snippet entry, then create a new snippet version entry
 	*/
-	if ($name && $description && $language != 0 && $category != 0 && $type != 0 && $version && $code && $license != 100) {
-
-	    $sql="INSERT INTO snippet (category,created_by,name,description,type,language,license) ".
-		"VALUES ('$category','". user_getid() ."','". htmlspecialchars($name)."','".
-		htmlspecialchars($description)."','$type','$language','$license')";
-	    $result=db_query($sql);
-	    if (!$result) {
-		$feedback .= ' ERROR DOING SNIPPET INSERT! ';
-		echo db_error();
-	    } else {
-		$feedback .= ' Snippet Added Successfully. ';
-		$snippet_id=db_insertid($result);
-		/*
-		  create the snippet version
-		*/
-		$sql="INSERT INTO snippet_version (snippet_id,changes,version,submitted_by,date,code,filename,filesize,filetype) ".
+        if ($name && $description && $language != 0 && $category != 0 && $type != 0 && $version && $code) {
+            if ($license==100) {
+                // No license!
+		$feedback .= ' ERROR: Please select a license ';
+            } else if ($category==100) {
+		$feedback .= ' ERROR: Please select a category ';
+            } else if ($type==100) {
+		$feedback .= ' ERROR: Please select a type ';
+            } else if ($language==100) {
+		$feedback .= ' ERROR: Please select a language ';
+            } else {
+                $sql="INSERT INTO snippet (category,created_by,name,description,type,language,license) ".
+                    "VALUES ('$category','". user_getid() ."','". htmlspecialchars($name)."','".
+                    htmlspecialchars($description)."','$type','$language','$license')";
+                $result=db_query($sql);
+                if (!$result) {
+                    $feedback .= ' ERROR DOING SNIPPET INSERT! ';
+                    echo db_error();
+                } else {
+                    $feedback .= ' Snippet Added Successfully. ';
+                    $snippet_id=db_insertid($result);
+                    /*
+		     create the snippet version
+                    */
+                    $sql="INSERT INTO snippet_version (snippet_id,changes,version,submitted_by,date,code,filename,filesize,filetype) ".
 		    "VALUES ('$snippet_id','".htmlspecialchars($changes)."','".
-		    htmlspecialchars($version)."','".user_getid()."','".
-		    time()."','".
-		    ($uploaded_data ? $code : htmlspecialchars($code))."',".
-		    "'$uploaded_data_name','$uploaded_data_size','$uploaded_data_type')";
-		$result=db_query($sql);
-		if (!$result) {
-		    $feedback .= ' ERROR DOING SNIPPET VERSION INSERT! ';
-		    echo db_error();
-		} else {
-		    $feedback .= ' Snippet Version Added Successfully. ';
-		}
+                        htmlspecialchars($version)."','".user_getid()."','".
+                        time()."','".
+                        ($uploaded_data ? $code : htmlspecialchars($code))."',".
+                        "'$uploaded_data_name','$uploaded_data_size','$uploaded_data_type')";
+                    $result=db_query($sql);
+                    if (!$result) {
+                        $feedback .= ' ERROR DOING SNIPPET VERSION INSERT! ';
+                        echo db_error();
+                    } else {
+                        $feedback .= ' Snippet Version Added Successfully. ';
+                    }
+                }
 	    }
 	} else {
 	    exit_error('Error','Error - Go back and fill in all the information');
