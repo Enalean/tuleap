@@ -1741,7 +1741,7 @@ CREATE TABLE user_group (
 CREATE TABLE user_preferences (
   user_id int(11) DEFAULT '0' NOT NULL,
   preference_name varchar(20),
-  preference_value varchar(20),
+  preference_value text,
   KEY idx_user_pref_user_id (user_id)
 );
 
