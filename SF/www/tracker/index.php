@@ -365,7 +365,7 @@ if ($group_id && $atid) {
 
 	case 'reporting': {
 
-	  if (!user_ismember($group_id,"B2")) {
+	  if (!user_ismember($group_id,"B2") && !user_ismember($group_id,"A") ) {
 	      exit_permission_denied();
 	    }
 
