@@ -170,6 +170,11 @@ $sys_force_ssl = 0;
 $sys_allow_anon = 1;
 
 //
+// If set to 1 (one) the user registration must be approved by site 
+// admin. If 0 user can register by themselves
+$sys_user_approval = 0;
+
+//
 // Default theme
 // ('savannah' is another possible value)
 $sys_themedefault = 'default';

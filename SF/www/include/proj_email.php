@@ -99,6 +99,28 @@ Let us know if there is anything we can do to help you.
 
 }
 
+//
+// send mail notification to new registered user
+//
+function send_new_user_email($to,$confirm_hash)
+{
+    // if the HTTP server has SSL enabled then favor confirmation through SSL
+    if ($GLOBALS['sys_https_host'] != "") {
+	$base_url = "https://".$GLOBALS['sys_https_host'];
+    } else {
+	$base_url = "http://".$GLOBALS['sys_default_domain'];
+    }
+
+    $message = "Thank you for registering on the ".$GLOBALS['sys_name']." web site. In order\n"
+	. "to confirm your registration you must visit the following url: \n\n"
+	. "<". $base_url ."/account/verify.php?confirm_hash=$confirm_hash>\n\n"
+	. "Enjoy the site.\n\n"
+	. " -- The ".$GLOBALS['sys_name']." Team\n";
+    
+    mail($to, $GLOBALS['sys_name']." Account Registration",$message,"From: noreply@".$GLOBALS['sys_default_domain']);
+
+}
+
 // LJ To test the new e-mail message content and format
 // LJ uncomment the code below and above and invoke 
 // LJ http://codex.xerox.com/include/proj_email.php
@@ -107,5 +129,6 @@ Let us know if there is anything we can do to help you.
 //require("pre.php");
 //echo "<PRE>";
 //send_new_project_email(4);
+//send_new_project_email("julliard@xrce.xerox.com");
 //echo "</PRE>";
 ?>

@@ -17,6 +17,9 @@ function menu_site_admin() {
     $HTML->menu_entry('/admin/grouplist.php','Group Admin');
     $HTML->menu_entry('/admin/userlist.php','User Admin');
     $HTML->menu_entry('/admin/approve-pending.php','Pending Projects');
+    if ($GLOBALS['sys_user_approval']) {
+	$HTML->menu_entry('/admin/approve_pending_users.php','Pending Users');
+    }
     $HTML->menu_entry('/news/admin','Site News Approval');
     $HTML->menu_entry('/admin/massmail.php','Mass Mail');
     $HTML->menu_entry('/admin/trove/trove_cat_list.php','Trove Cat. List');

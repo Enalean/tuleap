@@ -6,14 +6,15 @@
 //
 // $Id$
 
-require "pre.php";    
+require "pre.php";
+require "proj_email.php";
 require "account.php";
 require "timezones.php";
 
 // ###### function register_valid()
 // ###### checks for valid register from form post
 
-function register_valid()	{
+function register_valid($confirm_hash)	{
     global $HTTP_POST_VARS, $G_USER;
 
     if (db_numrows(db_query("SELECT user_id FROM user WHERE "
@@ -33,7 +34,11 @@ function register_valid()	{
 	$GLOBALS['register_error'] = "Passwords do not match.";
 	return 0;
     }
-    if (!account_pwvalid($HTTP_POST_VARS['form_pw'])) {
+    if (!$HTTP_POST_VARS['form_register_purpose'] && $GLOBALS['sys_user_approval']) {
+	$GLOBALS['register_error'] = "You must explain the purpose of your registration.";
+	return 0;
+    }
+        if (!account_pwvalid($HTTP_POST_VARS['form_pw'])) {
 	return 0;
     }
     if (!account_namevalid($HTTP_POST_VARS['form_loginname'])) {
@@ -43,71 +48,74 @@ function register_valid()	{
 	$GLOBALS['register_error'] = ' Invalid Email Address ';
 	return 0;
     }
-	
-    // if we got this far, it must be good
-    $confirm_hash = substr(md5($session_hash . $HTTP_POST_VARS['form_pw'] . time()),0,16);
 
-    $result=db_query("INSERT INTO user (user_name,user_pw,unix_pw,windows_pw,realname,email,add_date,"
+    $result=db_query("INSERT INTO user (user_name,user_pw,unix_pw,windows_pw,realname,register_purpose,email,add_date,"
 		     . "status,confirm_hash,mail_siteupdates,mail_va,timezone) "
 		     . "VALUES ('$HTTP_POST_VARS[form_loginname]','"
 		     . md5($HTTP_POST_VARS['form_pw']) . "','"
 		     . account_genunixpw($HTTP_POST_VARS['form_pw']) . "','"
-		     . account_genwinpw($HTTP_POST_VARS['form_pw']) . "','"
-		     . "$GLOBALS[form_realname]','$GLOBALS[form_email]'," . time() . ","
-		     . "'P','" // status
+		     . account_genwinpw($HTTP_POST_VARS['form_pw']) . "',"
+		     . "'".$GLOBALS[form_realname]."',"
+		     . "'".$GLOBALS[form_register_purpose]."',"
+		     . "'".$GLOBALS[form_email]."',"
+		     . time() . ","
+		     . "'P','" // status pending
 		     . $confirm_hash
-		     . "',"
-		     . ($GLOBALS['form_mail_site']?"1":"0") . ","
-		     . ($GLOBALS['form_mail_va']?"1":"0") . ","
-		     . "'".$GLOBALS['timezone']."')");
+		     . "',".($GLOBALS['form_mail_site']?"1":"0")
+		     . ",".($GLOBALS['form_mail_va']?"1":"0")
+		     . ",'".$GLOBALS['timezone']."')");
 
     if (!$result) {
 	exit_error('error',db_error());
+	return 0;
     } else {
-
-	$GLOBALS['newuserid'] = db_insertid($result);
-
-	// send mail
-	$message = "Thank you for registering on the ".$GLOBALS['sys_name']." web site. In order\n"
-	    . "to confirm your registration you must visit the following url: \n\n"
-	    . "<http://". $GLOBALS['sys_default_domain'] ."/account/verify.php?confirm_hash=$confirm_hash>\n\n"
-	    . "Enjoy the site.\n\n"
-	    . " -- The ".$GLOBALS['sys_name']." Team\n";
-
-	mail($GLOBALS['form_email'], $GLOBALS['sys_name']." Account Registration",$message,"From: noreply@".$GLOBALS['sys_default_domain']);
-
-	return 1;
+	return db_insertid($result);
     }
 }
 
+
 // ###### first check for valid login, if so, congratulate
 
-if ($Register && register_valid()) {
+if ($Register) {
 
-    $HTML->header(array('title'=>'Register Confirmation'));
-?>
+    $confirm_hash = substr(md5($session_hash . $HTTP_POST_VARS['form_pw'] . time()),0,16);
 
-<p><b><?php print $GLOBALS['sys_name']; ?>: New Account Registration Confirmation</b>
-<p>Congratulations. You have registered on <?php print $GLOBALS['sys_name']; ?>.
-Your new username is: <b><?php print user_getname($newuserid); ?></b>
+    if ($new_userid = register_valid($confirm_hash)) {
+    
+	$HTML->header(array('title'=>'Register Confirmation'));
 
-<p>You are now being sent a confirmation email to verify your email 
-address. Visiting the link sent to you in this email will activate
-your account.
+	if ($GLOBALS['sys_user_approval'] == 0) {
+	    send_new_user_email($GLOBALS['form_email'], $confirm_hash);
+	    echo '
+            <p><b>'.$GLOBALS['sys_name'].' New Account Registration - Confirmation</b>
+            <p>Congratulations. You have registered on '.$GLOBALS['sys_name'].'
+            Your new user name is: <b>'.user_getname($new_userid).'</b>
 
-<?php
+            <p>You are now being sent a confirmation email to verify your email 
+            address. Visiting the link sent to you in this email will activate
+            your account.';
 
-} else { // not valid registration, or first time to page
+	} else {
 
-    $HTML->header(array('title'=> $GLOBALS['sys_name'].': Register'));
+           echo '
+            <p><b>'.$GLOBALS['sys_name'].' New Account Registration - Ready For Approval</b>
+            <p>Congratulations. Your registration request on '.$GLOBALS['sys_name'].'
+            for user \''.user_getname($new_userid).'\' has been taken into account.</b>
 
-    if (browser_is_windows() && browser_is_ie() && browser_get_version() < '5.1') {
+            <p>The '.$GLOBALS['sys_name'].' Administrators are now going to review your request for approval. Once
+            approved you will receive a confirmation email to verify your email 
+            address. Visiting the link sent to you in this email will activate
+            your account.';
+	}
+	$HTML->footer(array());
+	exit;
     }
-    if (browser_is_ie() && browser_is_mac()) {
-	echo '<H2><span class="highlight">Internet Explorer on the Macintosh
-		is not supported currently. Use Netscape 4.7 or higher</span></H2>';
-    }
+}
 
+//
+// not valid registration, or first time to page
+//
+$HTML->header(array('title'=> $GLOBALS['sys_name'].': Register'));
 
 ?>
     
@@ -117,22 +125,24 @@ your account.
 <?php 
 if ($register_error) {
     print "<p><blink><b><span class=\"feedback\">$register_error</span></b></blink>";
-} ?>
+}
+$star = '<span class="highlight"><big>*</big></span>';
+?>
 
 <form action="/account/register.php" method="post">
-<p>Login Name <strong>(Lower case only!)</strong> *:<br>
+<p>Login Name <strong>(Lower case only!)</strong> <? echo $star; ?>:<br>
 <input type="text" name="form_loginname" value="<?php print($form_loginname); ?>">
 
-<p>Password (min. 6 chars) *:<br>
+<p>Password (min. 6 chars) <? echo $star; ?>:<br>
 <input type="password" name="form_pw" value="<?php print($form_pw); ?>">
 
-<p>Password (repeat) *:<br>
+<p>Password (repeat) <? echo $star; ?>:<br>
 <input type="password" name="form_pw2" value="<?php print($form_pw2); ?>">
 
-<P>Full/Real Name *:<br>
+<P>Full/Real Name <? echo $star; ?>:<br>
 <INPUT size=40 type="text" name="form_realname" value="<?php print($form_realname); ?>">
 
-<P>Email Address *:<BR>
+<P>Email Address <? echo $star; ?>:<BR>
 <INPUT size=40 type="text" name="form_email" value="<?php print($form_email); ?>"><BR>
 <? util_get_content('account/register_email'); ?>
 <P>Timezone:<BR>
@@ -146,14 +156,20 @@ security notices. Highly Recommended.)</I>
 <P><INPUT type="checkbox" name="form_mail_va" value="1">
 Receive additional community mailings. <I>(Low traffic.)</I>
 
+<?php
+if ($GLOBALS['sys_user_approval'] == 1) {
+    util_get_content('account/register_purpose');
+    echo '<textarea" wrap="virtual" rows="5" cols="70" name="form_register_purpose"></textarea><BR>';
+}
+?>
+
 <p>
-Fields marked with * are mandatory.
+Fields marked with <? echo $star; ?> are mandatory.
 </p>
 <p><input type="submit" name="Register" value="Register">
 
 </form>
 <?php
- }
 
 $HTML->footer(array());
 ?>
