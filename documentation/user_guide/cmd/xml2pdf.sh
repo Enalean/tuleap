@@ -6,15 +6,24 @@ then
     exit 2
 fi 
 
+# Determine the script location
+progname=$0
+scriptdir=`dirname $progname`
+
+xmldir=`dirname $1`
+xmlfilename=`basename $1`
+
 echo "Transforming XML file '$1' to PDF file '$2' ..."
 tmpfile="/tmp/docbook-$$"
-xml2fo.sh $1 $tmpfile.fo
+
+cd $xmldir
+$scriptdir/xml2fo.sh $xmlfilename $tmpfile.fo
 if [ $? != 0 ]
 then
         echo "Failed!"
         exit 1
 fi
-fo2pdf.sh $tmpfile.fo $2
+$scriptdir/fo2pdf.sh $tmpfile.fo $2
 if [ $? != 0 ]
 then
         echo "Failed!"
