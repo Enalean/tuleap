@@ -11,8 +11,10 @@ require('../mail/mail_utils.php');
 
 if ($group_id) {
 
-	mail_header(array('title'=>'Mailing Lists for '.group_getname($group_id),
-			  'help'=>'CommunicationServices.html#MailingLists'));
+    $params=array('title'=>'Mailing Lists for '.group_getname($group_id),
+              'help'=>'CommunicationServices.html#MailingLists',
+              'pv'   => $pv);
+    mail_header($params);
 	
 	if (user_isloggedin() && user_ismember($group_id)) {
 		$public_flag='0,1';
@@ -26,12 +28,13 @@ if ($group_id) {
 
 	$rows = db_numrows($result); 
 
+
 	if (!$result || $rows < 1) {
 		echo '
 			<H1>No Lists found for '.group_getname($group_id).'</H1>';
 		echo '
 			<P>Project administrators use the admin link to request mailing lists.';
-		$HTML->footer(array());
+                mail_footer(array('pv'   => $pv)); 
 		exit;
 	}
 
@@ -39,7 +42,16 @@ if ($group_id) {
 		. "<A href=\"http://www.list.org\">GNU Mailman</A>. "
 		. "Thanks to the Mailman and <A href=\"http://www.python.org\">Python</A> "
 		. "crews for excellent software.";
-	echo "<P>Choose a list to browse, search, and post messages.<P>\n";
+
+        if ($pv) {
+            echo "<P>Choose a list to browse, search, and post messages.<P>\n";
+        } else {
+            echo "<TABLE width='100%'><TR><TD>";
+            echo "<P>Choose a list to browse, search, and post messages.<P>\n";
+            echo "</TD>";
+            echo "<TD align='left'> ( <A HREF='".$PHP_SELF."?group_id=$group_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;Printer version</A> ) </TD>";
+            echo "</TR></TABLE>";
+        }
 
 	/*
 		Put the result set (list of mailing lists for this group) into a column with folders
@@ -68,12 +80,14 @@ if ($group_id) {
 	echo '</TD></TR></TABLE>';
 
 } else {
-	mail_header(array('title'=>'Choose a Group First',
-			  'help'=>'CommunicationServices.html#MailingLists'));
-	require('../mail/mail_nav.php');
-	echo '
+    $params=array('title'=>'Choose a Group First',
+                  'help'=>'CommunicationServices.html#MailingLists',
+                  'pv'   => $pv);
+    mail_header($params);
+    require('../mail/mail_nav.php');
+    echo '
 		<H1>Error - choose a group first</H1>';
 }
-mail_footer(array()); 
+mail_footer(array('pv'   => $pv)); 
 
 ?>
