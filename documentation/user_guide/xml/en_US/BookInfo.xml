@@ -29,6 +29,8 @@
 
       <year>2002</year>
 
+      <year>2003</year>
+
       <holder>The Document Company - Xerox. All rights reserved.</holder>
     </copyright>
 
@@ -227,6 +229,15 @@
         <authorinitials>Stephane Bouhet</authorinitials>
 
         <revremark>Add the Email notification mechanism for the Task Manager.</revremark>
+      </revision>
+      <revision>
+        <revnumber>2.4</revnumber>
+
+        <date>22-May-2003</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>CVS chapter revamped to include the new CVS Web interface (CVS query and Administration)</revremark>
       </revision>
      </revhistory>
   </bookinfo>
