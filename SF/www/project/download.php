@@ -10,6 +10,8 @@ require ('pre.php');
 
 if (user_isloggedin()) {
 
+  list(,$group_id, $file_id) = explode('/', $PATH_INFO);
+
   // Must have a group_id and file_id otherwise
   // we cannot do much
   if (!$file_id || !$group_id) {
@@ -54,7 +56,7 @@ if (user_isloggedin()) {
       // Now transfer the file to the client
       // Make sure this URL is not cached anywhere otherwise download
       //  would be wrong
-      header("Cache-Control: no-cache");  // HTTP 1.1
+      header("Cache-Control: no-cache");  // HTTP 1.1 - must be on 2 lines or IE 5.0 error
       header("Cache-Control: must-revalidate");  // HTTP 1.1
       header("Pragma: no-cache");  // HTTP 1.0
       header("Content-Type: application/octet-stream");
@@ -63,10 +65,11 @@ if (user_isloggedin()) {
       } else {
 	  header("Content-Disposition: attachment; filename=$basename");
       }
-      header("Content-Length:	$size");
+      header("Content-Length:  $size");
       header("Content-Transfer-Encoding: binary\n");
       fpassthru($fp);
       fclose($fp);
+
   
   } else {
       // Can't open the file for download. There is a problem here !!
@@ -79,5 +82,4 @@ if (user_isloggedin()) {
   */
   exit_not_logged_in();
 }
-
-
+?>

@@ -48,7 +48,7 @@ the agreement.<br>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr> 
     <td> 
-      <div align="center"><a href="javascript:opener.download(<? echo $group_id ?>,<? echo $file_id ?>);"><b>I AGREE</b></a></div>
+      <div align="center"><a href="javascript:opener.download(<?php echo "$group_id,$file_id,'$filename'"; ?>);"><b>I AGREE</b></a></div>
     </td>
     <td> 
       <div align="center"><a href="javascript:window.close();"><b>I DECLINE</b></a></div>

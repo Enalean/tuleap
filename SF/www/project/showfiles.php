@@ -25,14 +25,14 @@ echo '<h3>Package Releases '. help_button('FileReleaseJargon.html').'</h3>';
 ?>
 <SCRIPT language="JavaScript">
 <!--
-function showConfirmDownload(group_id,file_id) {
-    url = "http://<? echo $sys_default_domain ?>/project/confirm_download.php?group_id=" + group_id + "&file_id=" + file_id;
+function showConfirmDownload(group_id,file_id,filename) {
+    url = "http://<? echo $sys_default_domain ?>/project/confirm_download.php?group_id=" + group_id + "&file_id=" + file_id + "&filename=" + filename;
     wConfirm = window.open(url,"confirm","width=450,height=360,resizable=1,scrollbars=1");
     wConfirm.focus();
 }
 
-function download(group_id,file_id) {
-    url = "http://<? echo $sys_default_domain ?>/project/download.php?group_id=" + group_id + "&file_id=" + file_id;
+function download(group_id,file_id,filename) {
+    url = "http://<? echo $sys_default_domain ?>/project/download.php/" + group_id + "/" + file_id +"/"+filename;
     wConfirm.close();
     self.location = url;
     
@@ -116,7 +116,7 @@ for ( $p = 0; $p < $num_packages; $p++ ) {
 					$file_release = db_fetch_array( $res_file );
 					print "\t\t" . '<TR bgcolor="' . $bgcolor .'">'
 						. '<TD COLSPAN=2>&nbsp;</TD>'
-						. '<TD><B><A HREF="javascript:showConfirmDownload('.$group_id.','.$file_release['file_id'].')">'
+						. '<TD><B><A HREF="javascript:showConfirmDownload('.$group_id.','.$file_release['file_id'].',\''.$file_release['filename'].'\')">'
 
 						. $file_release['filename'] .'</A></B></TD>'
 						. '<TD>'. $file_release['file_size'] .'</TD>'
