@@ -10,7 +10,8 @@ ForceType application/x-httpd-php3
 </Files>
 </IfModule>
 
-<IfModule mod_php4.c><Files views_graph.png>
+<IfModule mod_php4.c>
+<Files views_graph.png>
 ForceType application/x-httpd-php
 </Files>
 <Files users_graph.png>
