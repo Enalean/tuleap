@@ -31,6 +31,13 @@
 #	Configurable options
 #
 
+# Codex specific
+#
+# Make sure that log_accum has the s flag and owned by sourceforge.sourceforge
+# Like this:
+# -rwsrwxr-x  sourcefo sourcefo
+#
+
 $TMPDIR = "/var/run/log_accum";
 
 # Set this to something that takes "-s".
