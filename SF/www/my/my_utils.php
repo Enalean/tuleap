@@ -77,6 +77,27 @@ function my_hide_url ($svc, $db_item_id, $item_id, $count, $hide) {
     return array($hide_now, $count-$old_count, $hide_url);
 }
 
+function my_hide($svc, $db_item_id, $item_id, $hide) {
+
+    global $PHP_SELF;
+
+    $pref_name = 'my_hide_'.$svc.$db_item_id;
+    $old_pref_value = user_get_preference($pref_name);
+    list($old_hide,$old_count) = explode('|', $old_pref_value);
+
+    // Make sure they are both 0 if never set before
+    if ($old_hide == false) { $old_hide = 0; }
+  
+    if ($item_id == $db_item_id) {
+		if (!isset($hide)) {
+		    $hide = $old_hide;
+		}
+    } else {
+		$hide = $old_hide;
+    }
+    return $hide;
+}
+
 function my_format_as_flag($assigned_to, $submitted_by, $multi_assigned_to=null) {
     $AS_flag = '';
     if ($assigned_to == user_getid()) {
@@ -93,6 +114,19 @@ function my_format_as_flag($assigned_to, $submitted_by, $multi_assigned_to=null)
 	$AS_flag .= 'S';
     }
     if ($AS_flag) { $AS_flag = '[<b>'.$AS_flag.'</b>]'; }
+
+    return $AS_flag;
+}
+
+
+/* second case */
+function my_format_as_flag2($assignee, $submitter) {
+    $AS_flag = '';
+    if ($assignee) $AS_flag = 'A';
+    
+    if ($submitter) $AS_flag .= 'S';
+
+    if ($AS_flag != '') $AS_flag = '[<b>'.$AS_flag.'</b>]';
 
     return $AS_flag;
 }

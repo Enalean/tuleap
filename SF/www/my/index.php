@@ -396,93 +396,17 @@ if (user_isloggedin()) {
 
 	// Trackers
 	$uid = user_getid();
-	$list_trackers = $atf->getPatternTrackers($uid,"");
+	$list_group_trackers = $atf->getGroupTrackers($uid);
+	$list_non_group_trackers = $atf->getNonGroupTrackers($uid);
 	
-	if (count($list_trackers) > 0) {
+	if (db_numrows($list_group_trackers) > 0 || db_numrows($list_non_group_trackers) > 0) {
 
-		$html_my_artifacts .= $HTML->box1_top($LANG->getText('my_index', 'my_arts'),0,'',3);
-		reset($list_trackers);
-	
-		while (list($key,$count) = each($list_trackers) ) {
-			
-			list($group_id,$atid) = explode("-",$key);
-
-			//
-			//	get the Group object
-			//
-			$group = group_get_object($group_id);
-			if (!$group || !is_object($group) || $group->isError()) {
-				exit_no_group();
-			}
-			//
-			//	Create the ArtifactType object
-			//
-			$at = new ArtifactType($group,$atid);
-			if (!$at || !is_object($at)) {
-				exit_error($LANG->getText('include_exit', 'error'),
-					   $LANG->getText('my_index', 'err_artt'));
-			}
-			if ($at->isError()) {
-				exit_error($LANG->getText('include_exit', 'error'),
-					   $at->getErrorMessage());
-			}
-
-			// Create field factory
-			$art_field_fact = new ArtifactFieldFactory($at);
-
-			$af = new ArtifactFactory($at);
-			
-			$artifact_list = $af->getMyArtifacts(user_getid());
-			
-			$rows = count($artifact_list);
-			
-			list($hide_now,$count_diff,$hide_url) = 
-			    my_hide_url('artifact',$atid,$hide_item_id,$rows,$hide_artifact);
-			$html_hdr = ($j ? '<tr class="boxitem"><td colspan="3">' : '').
-			    $hide_url.'<A HREF="/tracker/?group_id='.$group_id.'&atid='.$atid.'"><B>'.
-			    $group->getPublicName()." - ".$at->getName().'</B></A>&nbsp;&nbsp;&nbsp;&nbsp;';
-			$html = '';
-			$count_new = max(0, $count_diff);
-
-			while (list(,$artifact) = each($artifact_list) ) {
-
-			    if (!$hide_now) {
-			    	
-				// Form the 'Submitted by/Assigned to flag' for marking
-                                if ($assigned_to == user_getid()) {
-                                    //if the artifact is assigned to the user, don't need to compute the costly $artifact->getMultiAssignedTo()
-                                    $AS_flag = my_format_as_flag($artifact->getValue('assigned_to'), $artifact->getSubmittedBy());
-                                } else {
-                                    $AS_flag = my_format_as_flag($artifact->getValue('assigned_to'), $artifact->getSubmittedBy(),$artifact->getMultiAssignedTo() );
-                                }
-				if ( $artifact->getValue('percent_complete') ) {
-				    $field = $art_field_fact->getFieldFromName('percent_complete');
-				    $percent_complete = $field->getValue($at->getID(),$artifact->getValue('percent_complete'));
-				    $html .= '
-		<TR class="'.get_priority_color($artifact->getSeverity()).
-					'"><TD class="small"><A HREF="/tracker/?func=detail&group_id='.
-					$group_id.'&aid='.$artifact->getID().'&atid='.$atid.
-					'">'.$artifact->getID().'</A></TD>'.
-					'<TD class="small">'.stripslashes($artifact->getSummary()).'&nbsp;'.$AS_flag.'</TD>'.
-					'<TD class="small">'.$percent_complete.'</TD></TR>';
-				} else {
-				    $html .= '
-						<TR class="'.get_priority_color($artifact->getSeverity()).
-					'"><TD class="small"><A HREF="/tracker/?func=detail&group_id='.
-					$group_id.'&aid='.$artifact->getID().'&atid='.$atid.
-					'">'.$artifact->getID().'</A></TD>'.
-					'<TD class="small" colspan="2">'.stripslashes($artifact->getSummary()).'&nbsp;'.$AS_flag.'</TD></TR>';
-				}
-			    }
-			}
-	
-			$html_hdr .= my_item_count($rows,$count_new).'</td></tr>';
-			$html_my_artifacts .= $html_hdr.$html;
-		
-		}
-
-	    $html_my_artifacts .= '<TR><TD COLSPAN="3">&nbsp;</TD></TR>';
-		$html_my_artifacts .= $HTML->box1_bottom(0);
+	  $html_my_artifacts .= $HTML->box1_top($LANG->getText('my_index', 'my_arts'),0,'',3);
+	  
+	  $html_my_artifacts .= display_artifacts($list_group_trackers, 0);
+	  $html_my_artifacts .= display_artifacts($list_non_group_trackers, (db_numrows($list_group_trackers) > 0));
+	  $html_my_artifacts .= '<TR><TD COLSPAN="3">&nbsp;</TD></TR>';
+	  $html_my_artifacts .= $HTML->box1_bottom(0);
 	}
 
 
@@ -640,5 +564,103 @@ if (user_isloggedin()) {
 	exit_not_logged_in();
 
 }
+
+
+function display_artifacts($list_trackers, $print_box_begin) {
+  global $hide_item_id, $hide_artifact;
+  $j = $print_box_begin;
+  $html_my_artifacts = "";
+  $html = "";
+  $html_hdr = "";
+
+  $atid_old = 0;
+  $group_id_old = 0;
+  $count_aids = 0;
+  $group_name = "";
+  $tracker_name = "";
+  
+  while ($trackers_array = db_fetch_array($list_trackers)) {
+    $atid = $trackers_array['group_artifact_id'];
+    $group_id = $trackers_array['group_id'];
+    
+    
+    //work on the tracker of the last round if there was one
+    if ($atid != $atid_old && $count_aids != 0) {
+      list($hide_now,$count_diff,$hide_url) = 
+	my_hide_url('artifact',$atid_old,$hide_item_id,$count_aids,$hide_artifact);
+      $html_hdr = ($j ? '<tr class="boxitem"><td colspan="3">' : '').
+	$hide_url.'<A HREF="/tracker/?group_id='.$group_id_old.'&atid='.$atid_old.'"><B>'.
+	$group_name." - ".$tracker_name.'</B></A>&nbsp;&nbsp;&nbsp;&nbsp;';
+      $count_new = max(0, $count_diff);
+	      
+      $html_hdr .= my_item_count($count_aids,$count_new).'</td></tr>';
+      $html_my_artifacts .= $html_hdr.$html;
+      
+      $count_aids = 0;
+      $html = '';
+      $j++;
+      
+    } 
+    
+    if ($count_aids == 0) {
+      //have to call it to get at least the hide_now even if count_aids is false at this point
+      $hide_now = my_hide('artifact',$atid,$hide_item_id,$hide_artifact);
+    }
+    
+    $count_aids++;
+    $group_name = $trackers_array['group_name'];
+    $tracker_name = $trackers_array['name'];
+    $aid = $trackers_array['artifact_id'];
+    $summary = $trackers_array['summary'];
+    $atid_old = $atid;
+    $group_id_old = $group_id;
+    
+    if (!$hide_now) {
+      
+      // Form the 'Submitted by/Assigned to flag' for marking
+      $AS_flag = my_format_as_flag2($trackers_array['assignee'],$trackers_array['submitter']);
+      
+      //get percent_complete if this field is used in the tracker
+      unset($percent_complete);
+      $sql = 
+	"SELECT afvl.value ".
+	"FROM artifact_field_value afv,artifact_field af, artifact_field_value_list afvl, artifact_field_usage afu ".
+	"WHERE af.field_id = afv.field_id AND af.field_name = 'percent_complete' ".
+	"AND afv.artifact_id = $aid ".
+	"AND afvl.group_artifact_id = $atid AND af.group_artifact_id = $atid ".
+	"AND afu.group_artifact_id = $atid AND afu.field_id = af.field_id AND afu.use_it = 1 ".
+	"AND afvl.field_id = af.field_id AND afvl.value_id = afv.valueInt";
+      $res = db_query($sql);
+      if (db_numrows($res) > 0) {
+	$percent_complete = '<TD class="small">'.db_result($res,0,'value').'</TD>';
+      }
+      $html .= '
+		<TR class="'.get_priority_color($trackers_array['severity']).
+	'"><TD class="small"><A HREF="/tracker/?func=detail&group_id='.
+	$group_id.'&aid='.$aid.'&atid='.$atid.
+	'">'.$aid.'</A></TD>'.
+	'<TD class="small"'.($percent_complete ? '>': ' colspan="2">').stripslashes($summary).'&nbsp;'.$AS_flag.'</TD>'.
+	$percent_complete.'</TR>';
+      
+    }
+  }	
+  
+  //work on the tracker of the last round if there was one
+  if ($atid_old != 0 && $count_aids != 0) {
+    list($hide_now,$count_diff,$hide_url) = 
+      my_hide_url('artifact',$atid_old,$hide_item_id,$count_aids,$hide_artifact);
+    $html_hdr = ($j ? '<tr class="boxitem"><td colspan="3">' : '').
+      $hide_url.'<A HREF="/tracker/?group_id='.$group_id_old.'&atid='.$atid_old.'"><B>'.
+      $group_name." - ".$tracker_name.'</B></A>&nbsp;&nbsp;&nbsp;&nbsp;';
+    $count_new = max(0, $count_diff);
+    
+    $html_hdr .= my_item_count($count_aids,$count_new).'</td></tr>';
+    $html_my_artifacts .= $html_hdr.$html;
+  }
+
+  return $html_my_artifacts;
+  
+}
+
 
 ?>

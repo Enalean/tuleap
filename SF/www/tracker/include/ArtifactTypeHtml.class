@@ -1094,7 +1094,9 @@ class ArtifactTypeHtml extends ArtifactType {
 		while (list($field_name,$field) = each($fields)) {
 		
 			// Special case for special fields (excluded comment_type_id)
-			if ( ($field->getName() != "comment_type_id")&&($field->isSpecial()) ) {
+		        // as well as assigned_to and multi_assigned_to
+			if ( (($field->getName() != "comment_type_id")&&($field->isSpecial())) ||
+			     $field->getName() == "assigned_to" || $field->getName() == "multi_assigned_to") {
 				continue;
 			}
 			
