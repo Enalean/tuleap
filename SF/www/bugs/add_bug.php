@@ -26,7 +26,7 @@ if (!user_isloggedin() && db_result($res,0,'bug_allow_anon') == 0) {
     exit;
 }
 
-echo util_unconvert_htmlspecialchars(db_result($res_preamble,0,'bug_preamble'));
+echo util_unconvert_htmlspecialchars(db_result($res,0,'bug_preamble'));
 
 // Beginning of the submission form with fixed fields
 echo '<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data" NAME="bug_form">
