@@ -57,9 +57,7 @@ $dsc_list = array('project_task_id' => 'Unique task identifier',
 
 $tbl_name = 'task';
 
-// Determine which end of line sequence to use in the CSV output
-// depending on the browser platform
-$eol = (browser_is_windows() ? "\r\n":"\n");
+$eol = "\n";
 
 //echo "DBG -- $sql<br>";
 

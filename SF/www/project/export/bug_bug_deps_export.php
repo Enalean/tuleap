@@ -26,9 +26,7 @@ $dsc_list = array('bug_id' => 'Unique bug identifier',
 
 $tbl_name = 'bug_bug_dependencies';
 
-// Determine which end of line sequence to use in the CSV output
-// depending on the browser platform
-$eol = (browser_is_windows() ? "\r\n":"\n");
+$eol = "\n";
 
 //echo "DBG -- $sql<br>";
 

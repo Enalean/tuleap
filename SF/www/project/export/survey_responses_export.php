@@ -30,9 +30,7 @@ $dsc_list = array( 'group_id' => 'Unique project identifier',
 
 $tbl_name = 'survey_responses';
 
-// Determine which end of line sequence to use in the CSV output
-// depending on the browser platform
-$eol = (browser_is_windows() ? "\r\n":"\n");
+$eol = "\n";
 
 //echo "DBG -- $sql<br>";
 

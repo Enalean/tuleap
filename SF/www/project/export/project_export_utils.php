@@ -10,6 +10,7 @@ $datetime_fmt = 'Y-m-d H:i:s';
 $datetime_msg = 'yyyy-mm-dd hh:mm:ss';
 
 
+
 function tocsv($string) {
 
     // Escape the double quote character by doubling it
@@ -108,7 +109,7 @@ function pick_a_record_at_random($result, $numrows, $col_list) {
 function prepare_textarea($textarea) {
     // Turn all HTML entities in ASCII and remove all \r characters
     // because even MS Office apps don't like it in text cells (Excel)
-    return( str_replace("\r\n","\n",util_unconvert_htmlspecialchars($textarea)) );
+    return( str_replace(chr(13),"",util_unconvert_htmlspecialchars($textarea)) );
 }
 
 function prepare_bug_record($group_id, &$col_list, &$record) {

@@ -75,9 +75,7 @@ $dsc_list['is_dependent_on_bug_id'] = 'List of  bugs this bug depends on';
 
 $tbl_name = 'bug';
 
-// Determine which end of line sequence to use in the CSV output
-// depending on the browser platform
-$eol = (browser_is_windows() ? "\r\n":"\n");
+$eol = "\n";
     
 $sql = "$select $from $where";
 //echo "DBG -- $sql<br>";

@@ -27,9 +27,7 @@ $dsc_list = array('project_task_id' => 'Unique task identifier',
 		  'is_dependent_on_task_id' => 'Task  the project task depends on');
 $tbl_name = 'task_task_dependencies';
 
-// Determine which end of line sequence to use in the CSV output
-// depending on the browser platform
-$eol = (browser_is_windows() ? "\r\n":"\n");
+$eol = "\n";
 
 //echo "DBG -- $sql<br>";
 

@@ -43,10 +43,7 @@ $dsc_list['group_id'] = bug_data_get_description('group_id');
 
 $tbl_name = 'bug_history';
 
-// Determine which end of line sequence to use in the CSV output
-// depending on the browser platform
-$eol = (browser_is_windows() ? "\r\n":"\n");
-
+$eol = "\n";
 
 //echo "DBG -- $sql<br>";
 

@@ -27,9 +27,7 @@ $dsc_list = array('project_task_id' => 'Unique task identifier',
 		  'assigned_to' => 'Project members the task  is assigned to');
 $tbl_name = 'task_assigned_to';
 
-// Determine which end of line sequence to use in the CSV output
-// depending on the browser platform
-$eol = (browser_is_windows() ? "\r\n":"\n");
+$eol = "\n";
 
 //echo "DBG -- $sql<br>";
 
