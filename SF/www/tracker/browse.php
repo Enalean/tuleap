@@ -275,7 +275,7 @@ if ( !$pv ) {
 		'atid'=>$ath->getID(),'sectionvals'=>array($group->getPublicName()),
 		'help' => 'ArtifactBrowsing.html'));
 } else {
-    help_header('Tracker Search Report - '.format_date($sys_datefmt,time()),false);
+    help_header($group->getPublicName().': \''.$ath->getName().'\' Search Report - '.format_date($sys_datefmt,time()),false);
 }	
 
 // Display the artifact items according to all the parameters
