@@ -103,7 +103,7 @@ if (! user_isloggedin() ) {
 ##### Start of Configuration Area ########
 # == EDIT this == 
 # User configuration is stored in
-$config = $ENV{'CVSWEB_CONFIG'} || '/etc/httpd/conf/cvsweb.conf';
+$config = $ENV{'CVSWEB_CONFIG'} || $ENV{'SF_LOCAL_INC_PREFIX'}.'/etc/httpd/conf/cvsweb.conf';
 
 # == Configuration defaults ==
 # Defaults for configuration variables that shouldn't need
@@ -133,6 +133,7 @@ $tabstop = $use_moddate = $moddate = undef;
 
 use Time::Local;
 use IPC::Open2;
+use Fcntl ':mode';
 
 $verbose = $v;
 $checkoutMagic = "~checkout~";
@@ -333,19 +334,25 @@ if ($allow_compress && $maycompress) {
 }
 
 
-#### Check that user is project member for private project  #####
+#### Check that user is project member for any project that is not world readable #####
+#    This test ensures that private projects or projects that have disabled world
+#    CVS access are not accessible through CVSWEB.
 #     LJ - This is CodeX specific
 #     If not then deny access
 my $group_id = set_group_info_from_name($cvstree);
+my $mode = (stat($cvsroot))[2];
 
-#my $debug = sprintf("<br>cvstree = %s<br>group_id = %d<br>user_id = %d<br>isGroupPublic = %d<br>user_is_member() = %d",	  $cvstree,$group_id,user_getid(),isGroupPublic(), user_is_member($group_id, '0'));
-#system("echo \'$debug\' > /tmp/titi.log");
+#my $debug = sprintf("<br>cvstree = %s\n<br>group_id = %d\n<br>user_id = %d\n<br>isGroupPublic = %d\n<br>user_is_member() = %d\n<br>cvsroot = %s\n<br>defined(mode) = %d\n<br>mode = 0%8o\n", $cvstree,$group_id,user_getid(),isGroupPublic(), user_is_member($group_id, '0'), $cvsroot, defined($mode), $mode);
+#system("echo \'$debug\' >> /tmp/titi.log");
 
-if ($group_id && !isGroupPublic() && !user_is_member($group_id, '0')) {
+if (!defined($mode) || !S_ISDIR($mode)) {
+    &fatal("500 Internal Error",'$CVSROOT not found!<P>The server on which the CVS tree lives is probably down.  Please try again in a few minutes.');
+}
+
+if ($group_id && ($mode & S_IROTH) == 0 && !user_is_member($group_id, '0')) {
   &fatal("403 Forbidden",
 	 'You are not allowed to browse the source code of this project');
 }
-
 
 if (-d $fullname) {
     #
@@ -360,10 +367,6 @@ if (-d $fullname) {
 	$where .= '/';
 	$scriptwhere .= '/';
     }
-}
-
-if (!-d $cvsroot) {
-    &fatal("500 Internal Error",'$CVSROOT not found!<P>The server on which the CVS tree lives is probably down.  Please try again in a few minutes.');
 }
 
 #
