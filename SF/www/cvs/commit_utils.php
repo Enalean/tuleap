@@ -520,7 +520,7 @@ function show_commit_details ($result) {
 		    }
 		    $previous = join('.', $new_prev);
 		  }
-		  $type = makeCvsLink($group_id, $filename.'.diff', $type_text, '', '&r1=text&tr1='.$previous.'&r2=text&tr2='.$revision);
+		  $type = makeCvsLink($group_id, $filename, $type_text, '', '&r1=text&tr1='.$previous.'&r2=text&tr2='.$revision);
 		}
 
 		$rev_text = makeCvsLink($group_id, $filename, $revision, $revision, '&content-type=text/x-cvsweb-markup');
