@@ -80,7 +80,7 @@ $tbl_name = 'bug';
 $eol = (browser_is_windows() ? "\r\n":"\n");
     
 $sql = "$select $from $where";
-//    echo "DBG -- $sql<br>;
+//echo "DBG -- $sql<br>";
 
 $result=db_query($sql);
 $rows = db_numrows($result);    
