@@ -35,35 +35,24 @@ if (user_isloggedin()) {
 		echo '
 			<H2>Monitor a Forum</H2>';
 
-		$sql="SELECT * FROM forum_monitored_forums WHERE user_id='".user_getid()."' AND forum_id='$forum_id';";
+		if (forum_is_monitored($forum_id, user_getid())) {
 
-		$result = db_query($sql);
-
-		if (!$result || db_numrows($result) < 1) {
-			/*
-				User is not already monitoring thread, so 
-				insert a row so monitoring can begin
-			*/
-			$sql="INSERT INTO forum_monitored_forums (forum_id,user_id) VALUES ('$forum_id','".user_getid()."')";
-
-			$result = db_query($sql);
-
-			if (!$result) {
-				echo "<FONT COLOR=\"RED\">Error inserting into forum_monitoring</FONT>";
-			} else {
-				echo "<FONT COLOR=\"RED\"><H3>Forum is now being monitored</H3></FONT>";
-				echo "<P>You will now be emailed followups to this entire forum.";
-				echo "<P>To turn off monitoring, simply click the <B>Monitor Forum</B> link again.";
-			}
-
+		    // If already monitored then stop monitoring
+		    forum_delete_monitor ($forum_id, user_getid());
+		    echo "<FONT COLOR=\"RED\"><H3>Monitoring has been turned off</H3></FONT>";
+		    echo "<P>You will not receive any more emails from this forum.";
 		} else {
-
-			$sql="DELETE FROM forum_monitored_forums WHERE user_id='".user_getid()."' AND forum_id='$forum_id';";
-			$result = db_query($sql);
-			echo "<FONT COLOR=\"RED\"><H3>Monitoring has been turned off</H3></FONT>";
-			echo "<P>You will not receive any more emails from this forum.";
+		    // Not yet monitored so add it
+		    if (forum_add_monitor ($forum_id, user_getid()) ) {
+			echo "<FONT COLOR=\"RED\"><H3>Forum is now being monitored</H3></FONT>";
+			echo "<P>You will now be emailed followups to this entire forum.";
+			echo "<P>To turn off monitoring, simply click the <B>Monitor Forum</B> link again.";	
+		    } else {
+			echo "<FONT COLOR=\"RED\">Error inserting into forum_monitoring</FONT>";
+		    }
 		}
 		forum_footer(array());
+
 	} else {
 		forum_header(array('title'=>'Choose a forum First'));
 		echo '

@@ -105,10 +105,15 @@ if ($show_confirm) {
 		exit_error('Error','SETTING YOU AS OWNER FAILED. <B>PLEASE</B> report to '.$GLOBALS['sys_email_admin'].' '.db_error());
 	}
 
-	//Add a couple of forums for this group
-	forum_create_forum($group_id,'Open Discussion',1,'General Discussion');
-	forum_create_forum($group_id,'Help',1,'Get Help');
-	forum_create_forum($group_id,'Developers',0,'Project Developer Discussion');
+	//Add a couple of forums for this group and make the project creator 
+	// (current user) monitor these forums
+	$fid = forum_create_forum($group_id,'Open Discussion',1,'General Discussion');
+	forum_add_monitor($fid, user_getid());
+
+	$fid = forum_create_forum($group_id,'Help',1,'Get Help');
+	forum_add_monitor($fid, user_getid());
+	$fid = forum_create_forum($group_id,'Developers',0,'Project Developer Discussion');
+	forum_add_monitor($fid, user_getid());
 
 	//Set up some mailing lists
 	//will be done at some point. needs to communicate with geocrawler

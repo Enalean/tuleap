@@ -87,8 +87,13 @@ function forum_header($params) {
 	echo '<P><B>';
 
 	if ($forum_id && user_isloggedin() ) {
+	    if (forum_is_monitored($forum_id,user_getid()) )
+		$msg = "Stop Monitoring Forum";
+	    else 
+		$msg = "Monitor Forum";
+		    
 		echo '<A HREF="/forum/monitor.php?forum_id='.$forum_id.'">' . 
-			html_image("ic/check.png",array()).' Monitor Forum</A> | '.
+			html_image("ic/check.png",array()).' '.$msg.' | '.
 			'<A HREF="/forum/save.php?forum_id='.$forum_id.'">';
 		echo  html_image("ic/save.png",array()) .' Save Place</A> | ';
 	}
@@ -111,6 +116,37 @@ function forum_footer($params) {
 	} else {
 		site_project_footer($params);
 	}
+}
+
+function forum_is_monitored ($forum_id, $user_id) {
+    $sql="SELECT * FROM forum_monitored_forums WHERE user_id='".$user_id."' AND forum_id='$forum_id';";
+    $result = db_query($sql);
+    return ($result && db_numrows($result) >= 1);
+}
+
+function forum_add_monitor ($forum_id, $user_id) {
+    global $feedback;
+
+    if (forum_is_monitored($forum_id, $user_id)) {
+	$feedback .= "Forum already monitored";
+    } else {
+	// Not already monitoring so add it.
+	$sql="INSERT INTO forum_monitored_forums (forum_id,user_id) VALUES ('$forum_id','".$user_id."')";
+	$result = db_query($sql);
+
+	if (!$result) {
+	    $feedback .= "Error inserting into forum_monitoring";
+	    return false;
+	}
+    } 
+    return true;
+}
+
+function forum_delete_monitor ($forum_id, $user_id) {
+    global $feedback;
+    $sql="DELETE FROM forum_monitored_forums WHERE user_id='".$user_id."' AND forum_id='$forum_id';";
+    $result = db_query($sql);
+    return true;
 }
 
 function forum_create_forum($group_id,$forum_name,$is_public=1,$create_default_message=1,$description='') {
