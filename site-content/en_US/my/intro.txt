@@ -1,0 +1,5 @@
+	<P>
+	Your personal page contains lists of bugs [<b>A</b>]ssigned to or 
+  [<b>S</b>]ubmitted by you, tasks assigned with percentage completion, monitored forums and packages plus a list
+of groups that you are a member of.
+	<P>
