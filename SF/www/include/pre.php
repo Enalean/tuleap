@@ -38,6 +38,11 @@ $HTML = new Layout();
 //various html utilities
 require('utils.php');
 
+//PHP4-like functions - only if running php3
+if (substr(phpversion(),0,1) == "3") {
+    require('utils_php4.php');
+}
+
 //database abstraction
 require('database.php');
 
