@@ -24,7 +24,7 @@ use Net::SMTP;
 use MIME::QuotedPrint;
 use DBI;
 use DB_File;
-use Fcntl;
+use Fcntl qw(:DEFAULT :flock);
 use Getopt::Long;
 
 #
@@ -33,6 +33,7 @@ use Getopt::Long;
 my $codex = "";
 my $config = "";
 my $schema_db_file = "";
+my $message_file = "";
 my $from_address = "";
 my $admin_address = "";
 my $override_address = "";
@@ -48,6 +49,7 @@ GetOptions("codex=s" => \$codex,
 	   "config=s" => \$config,
 	   "cvs=s" => \$cvs_prefix,
 	   "database=s" => \$schema_db_file,
+	   "message=s" => \$message_file,
 	   "from=s" => \$from_address,
 	   "admin=s" => \$admin_address,
 	   "override=s" => \$override_address,
@@ -68,6 +70,7 @@ GetOptions("codex=s" => \$codex,
 $codex = '/home' unless $codex;
 $cvs_prefix = '/cvsroot' unless $cvs_prefix;
 $schema_db_file = "$codex/var/codex_schemas.db" unless $schema_db_file;
+$message_file = "$codex/var/codex_schemas.html" unless $message_file;
 $from_address = 'noreply@codex.xerox.com' unless $from_address;
 $mailhost = 'mailhost.wrc.xerox.com' unless $mailhost;
 $resend_interval = (365 / 2) * 24 * 60 * 60 unless $resend_interval;
@@ -90,12 +93,15 @@ unless ($config) {
 #
 
 my $utils = "$codex/httpd/SF/utils";
+my $schema_lock_file = $schema_db_file . ".lock";
 
 if ($debug) {
     print "codex = $codex\n";
     print "config = $config\n";
     print "cvs_prefix = $cvs_prefix\n";
     print "schema_db_file = $schema_db_file\n";
+    print "schema_lock_file = $schema_lock_file\n";
+    print "message_file = $message_file\n";
     print "from_address = $from_address\n";
     print "admin_address = $admin_address\n";
     print "override_address = $admin_address\n";
@@ -154,13 +160,15 @@ Options are:
                      CodeX config file.
     cvs=path         The root of the CodeX CVS tree.
     database         Where find_schemas should keep its data.
+    message          The html body fragment that will be sent
+                     to each project leader.
     from=email       The mail address to stick in the 'from' field.
     admin=email      The address to send summary info to (optional).
     override=email   Send mail here instead of project admins.
     mailhost=dns     The SMTP server to connect to to send mail.
     import=txtfile   Import the database from the text file and quit.
     export=txtfile   Export the database to the text file and quit.
-    target_suffix=s  Debugging: use s instead of '.xsd' when
+    target=s         Debugging: use s instead of '.xsd' when
                      searching for files.
     resend_seconds=s How long to wait (in seconds) before
                      resending notifications.
@@ -430,28 +438,13 @@ sub compose_project_email {
     push(@message, "<meta http-equiv=\"content-type\" content=\"text/html; charset=ISO-8859-1\">\n");
     push(@message, "</head>\n");
     push(@message, "<body>\n");
-    push(@message, "<p>\n");
-    push(@message, "To the administrators of the $project project:\n");
-    push(@message, "</p>\n");
-    push(@message, "<p>\n");
-    push(@message, "An automatic scan of the CodeX CVS repository\n");
-    push(@message, "indicates that the ", $project, " project includes one or more '$target_suffix'\n");
-    push(@message, "files.  This note is being sent to all of the administrators\n");
-    push(@message, "of the ", $project, " project to let you know about the Xerox XML Schema\n");
-    push(@message, "registry.\n");
-    push(@message, "</p>\n");
-    push(@message, "<p>\n");
-    push(@message, "[[Information about the XML Schema registry.]]\n");
-    push(@message, "<p>\n");
-    push(@message, "This message is generated the first time that a '$target_suffix'\n");
-    push(@message, "file is discovered in a project, and every six months\n");
-    push(@message, "thereafter.  If you have any questions about this\n");
-    push(@message, "mailing, please contact ");
-    push(@message, "<a href='mailto:rrizzo@crt.xerox.com'>Ron Rizzo</a>\n");
-    push(@message, "or the ");
-    push(@message, "<a href='mailto:codex-contact@codex.xerox.com'>CodeX team</a>.\n");
-    push(@message, "</p>\n");
 
+    open MESSAGE, "<$message_file"
+	|| die "Could not open message text file: $message_file";
+
+    while (<MESSAGE>) {
+	push(@message, $_);
+    }
 
     push(@message, "<h1>List of Schema files</h1>\n");
     foreach (@{compose_file_list("h2", 1, $paths_ref)}) {
@@ -579,6 +572,12 @@ sub export_database {
 # Get the old list of files and email message times.
 # Handle --import and --export here.
 #
+
+sysopen(LOCKFILE, $schema_lock_file, O_CREAT|O_RDWR)
+    || die "Could not open lock file: $schema_lock_file";
+
+flock(LOCKFILE, LOCK_EX|LOCK_NB)
+    || die "Could not get lock on lock file: $schema_lock_file";
 
 $DB = tie(%info, 'DB_File', $schema_db_file, O_CREAT|O_RDWR|($import?O_TRUNC:0), 0600);
 unless ($DB) {
