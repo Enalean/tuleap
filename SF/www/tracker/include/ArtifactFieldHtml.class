@@ -322,9 +322,9 @@ class ArtifactFieldHtml extends ArtifactField {
 		break; 
 	
 	    case 'MB':
+                $arr = ( is_array($value) ? $value : array($value));
 		if ($ro) {
 		    // if multiple selected values return a list of , separated values
-		    $arr = ( is_array($value) ? $value : array($value));
 		    for ($i=0;$i < count($arr); $i++) {
 				if ($arr[$i] == 0 )
 				    $arr[$i] = $text_any;
@@ -341,7 +341,7 @@ class ArtifactFieldHtml extends ArtifactField {
 		    // Only show the 'None" label if empty value is allowed or
 		    // if value is already none (it can happen if the field was not used in
 		    // the artifact submission form)
-		    if ($this->isEmptyOk() || (implode(",",$value)=="100") ) {
+		    if ($this->isEmptyOk() || (implode(",",$arr)=="100") ) {
 				$show_none=true;
 				$text_none='None';
 		    }
