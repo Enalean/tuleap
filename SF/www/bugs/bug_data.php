@@ -841,6 +841,7 @@ function bug_data_handle_update ($group_id,$bug_id,$dependent_on_task,
 	    if ($is_text) {
 		$upd_list .= "$field='".htmlspecialchars($value)."',";
 		bug_data_add_history($field,addslashes($old_value),$bug_id);
+		$value = stripslashes($value);
 	    } else {
 		$upd_list .= "$field='$value',";
 		bug_data_add_history($field,$old_value,$bug_id);
@@ -855,7 +856,7 @@ function bug_data_handle_update ($group_id,$bug_id,$dependent_on_task,
     }
 
     // Details field history is handled a little differently. Followup comments
-    // are added in the bug history along with thecomment type.
+    // are added in the bug history along with the comment type.
     // 
     // If a canned response is given it overrides anything typed in the followup
     // comment text area (aka details area). 
@@ -878,7 +879,7 @@ function bug_data_handle_update ($group_id,$bug_id,$dependent_on_task,
     if ($details != '') {
 	bug_data_add_history ('details',htmlspecialchars($details)
 			      ,$bug_id, $vfl['comment_type_id']);
-	$changes['details']['add'] = $details;
+	$changes['details']['add'] = stripslashes($details);
 	$changes['details']['type'] =
 	    bug_data_get_value('comment_type_id',$group_id, $vfl['comment_type_id']);
     }
@@ -952,57 +953,6 @@ function bug_data_handle_update ($group_id,$bug_id,$dependent_on_task,
 	$feedback .= " Successfully Updated Bug ";
 	return true;
     }
-
-}
-
-function bug_data_format_changes($changes) {
-
-    global $sys_datefmt;
-
-    reset($changes);
-    $fmt = "%20s | %-25s | %s\n";
-
-    $user_id = user_getid();
-
-    $out_hdr = 'Changes by: '.user_getrealname($user_id).' <'.user_getemail($user_id).">\n".
-	'Date: '.date($sys_datefmt,time()).' ('.user_get_timezone().')';
-
-    //Process special cases first: follow-up comment
-    if ($changes['details']) {
-	$out_com = "\n\n------------------ Additional Follow-up Comments ----------------------------\n";
-	if ($changes['details']['type'] != 'None') {
-	    $out_com .= 'Comment: ['.$changes['details']['type']."]\n";
-	}
-	$out_com .= $changes['details']['add'];
-	unset($changes['details']);
-    }
-
-    //Process special cases first: bug file attachment
-    if ($changes['attach']) {
-	$out_att = "\n\n------------------ Additional Bug Attachment  ----------------------------\n";
-	$out_att .= sprintf("File name: %-30s Size:%d KB\n",$changes['attach']['name'],
-			 $changes['attach']['size']/1024);
-	$out_att .= $changes['attach']['description'];
-	unset($changes['attach']);
-    }
-
-    // All the rest of the fields now
-    reset($changes);
-    while ( list($field,$h) = each($changes)) {
-
-	// If both removed and added items are empty skip - Sanity check
-	if (!$h['del'] && !$h['add']) { continue; }
-
-	$label = bug_data_get_label($field);
-	if (!$label) { $label = $field; }
-	$out .= sprintf($fmt, $label, $h['del'],$h['add']);
-    }
-    if ($out) {
-	$out = "\n\n".sprintf($fmt,'What    ','Removed','Added').
-	"---------------------------------------------------------------------------\n".$out;
-    }
-
-    return($out_hdr.$out.$out_com.$out_att);
 
 }
 

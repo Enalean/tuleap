@@ -31,20 +31,21 @@ if ($group_id) {
 	//data control layer
 	$bug_id=bug_data_create_bug($group_id,$vfl);
 
+	// Attach new file if there is one
+	if ($add_file && $input_file) {
+	    bug_attach_file($bug_id,$input_file,$input_file_name,$input_file_type,$input_file_size,$file_description);
+	}
+
 	if ($bug_id) {
 	    // send an email to notify the user and 
 	    // let the project know the bug was submitted
-	    mail_followup($bug_id,$project->getNewBugAddress(),array());
+	    mail_followup($bug_id,$project->getNewBugAddress());
 	    include '../bugs/browse_bug.php';
 	} else {
 	    //some error occurred
 	    exit_error('ERROR',$feedback);
 	}
 
-	// Attach new file if there is one
-	if ($add_file && $input_file) {
-	    bug_attach_file($bug_id,$input_file,$input_file_name,$input_file_type,$input_file_size,$file_description);
-	}
 	break;
     }
 

@@ -576,7 +576,7 @@ function show_buglist ($result,$offset,$total_rows,$field_arr,$title_arr,
     echo $nav_bar;
 }
 
-function mail_followup($bug_id,$more_addresses=false,$changes) {
+function mail_followup($bug_id,$more_addresses=false,$changes=false) {
     global $sys_datefmt,$feedback;
     /*
       Send a message to the person who opened this bug and the person it is assigned to - modified by jstidd on 1/30/01 to eliminate default user assigned to
@@ -590,16 +590,28 @@ function mail_followup($bug_id,$more_addresses=false,$changes) {
     if ($result && db_numrows($result) > 0) {
 			
 	$group_id = db_result($result,0,'group_id');
+	$fmt = "%-40s";
 
-	// Generate the message preamble with all required
 	// bug fields
-	$body = "\n=================== Bug #".$bug_id.
-	    ": Latest Modifications ==================\n".$bug_href."\n\n".
-	    bug_data_format_changes($changes)."\n\n\n\n".
-	    "\n=================== Bug #".$bug_id.
-	    ": Full Bug Snapshot ===================".
-	    "\n\nProject: ".group_getname($group_id);
+	// Generate the message preamble with all required
+	// bug fields - Changes first if there are some.
+	if ($changes) {
+	    $body = "\n=================== Bug #".$bug_id.
+		": Latest Modifications ==================\n".$bug_href."\n\n".
+		format_bug_changes($changes)."\n\n\n\n";
+	}
 
+	$body .= "=================== Bug #".$bug_id.
+	    ": Full Bug Snapshot ===================\n".
+	    ($changes ? '':$bug_href)."\n\n";
+    
+	// Some special field first (group, submitted by/on)
+	$body .= sprintf($fmt.$fmt."\n", 
+			 'Submitted by: '.user_getname(db_result($result,0,'submitted_by')),
+			 'Project: '.group_getname($group_id) );
+	$body .= 'Submitted on: '.date($sys_datefmt,db_result($result,0,'date'))."\n";
+
+	// All other regular fields now		 
 	$i=0;
 	while ( $field_name = bug_list_all_fields() ) {
 
@@ -609,10 +621,13 @@ function mail_followup($bug_id,$more_addresses=false,$changes) {
 		 bug_data_is_used($field_name) ) {
 
 		$field_value = db_result($result,0,$field_name);
-		$body .= "\n".bug_field_display($field_name, $group_id,
-					  $field_value,false,true,true,true);
-		}
+		$body .= sprintf($fmt,bug_field_display($field_name, $group_id,
+					  $field_value,false,true,true,true));
+		$i++;
+		$body .= ($i % 2 ? '':"\n");
+	    }
 	}
+	$body .= ($i % 2 ? "\n":'');
 
 	// Now display other special fields
 	
@@ -625,32 +640,7 @@ function mail_followup($bug_id,$more_addresses=false,$changes) {
 			   db_result($result,0,'details'),false,true,true,true);
 
 	// Then output the history of bug details from newest to oldest
-	$sql="SELECT user.email,user.user_name,bug_history.date,bug_history.old_value,bug_history.type ".
-	    "FROM bug_history,user ".
-	    "WHERE user.user_id=bug_history.mod_by ".
-	    "AND bug_history.field_name='details' ".
-	    "AND bug_history.bug_id='$bug_id' ORDER BY date DESC ";
-	$result2=db_query($sql);
-	$rows=db_numrows($result2);
-	if ($result2 && $rows > 0) {
-	    $body .= "\n\nFollow-Ups:";
-	    $body .= "\n**********";
-	    for ($i=0; $i<$rows;$i++) {
-		$comment_type = db_result($result2,$i,'type');
-		$body .= "\n\n-------------------------------------------------------";
-		$body .= "\nDate: ".date($sys_datefmt,db_result($result2,$i,'date'));
-		$body .= "\nBy: ".db_result($result2,$i,'user_name');
-		$body .= "\n\nComment:";
-		if ($comment_type != 100 ) {
-		    $body .= ' ['.bug_data_get_value('comment_type_id',
-			     $group_id, $comment_type)."]\n";
-		} else {
-		    $body .="\n";
-		}
-		$body .= util_unconvert_htmlspecialchars(db_result($result2,$i,'old_value'));
-
-	    }
-	}
+	$body .= "\n\n".format_bug_details($bug_id, true);
 
 	// Finally output the message trailer
 	$body .= "\n\nFor detailed info, follow this link:";
@@ -717,43 +707,138 @@ function show_dependent_bugs ($bug_id,$group_id) {
 	}
 }
 
-function show_bug_details ($bug_id) {
-	/*
-		Show the details rows from bug_history
-	*/
-	global $sys_datefmt;
-	$result=bug_data_get_followups ($bug_id);
-	$rows=db_numrows($result);
+function format_bug_details ($bug_id, $ascii=false) {
 
-	if ($rows > 0) {
-		echo '
-			<H3>Followups</H3>
-			<P>';
+    /*
+      Format the details rows from bug_history
+      */
+    global $sys_datefmt;
+    $result=bug_data_get_followups ($bug_id);
+    $rows=db_numrows($result);
 
-		$title_arr=array();
-		$title_arr[]='Comment';
-		$title_arr[]='Date';
-		$title_arr[]='By';
+    // No followup comment -> return now
+    if ($rows <= 0) {
+	if ($ascii)
+	    $out = '\n\nNo Followups Have Been Posted\n';
+	else
+	    $out = '<H4>No Followups Have Been Posted</H4>';
+	return $out;
+    }
+
+
+    // Header first
+    if ($ascii) {
+	$out .= "Follow-up Comments\n*******************";
+    } else {
 	
-		echo html_build_list_table_top ($title_arr);
-
-		for ($i=0; $i < $rows; $i++) {
-		    $comment_type = db_result($result, $i, 'comment_type');
-		    echo '<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD>';
-		    if ($comment_type != 'None') {
-			echo '<B> [ '.$comment_type.' ]</B><BR>';
-		    }
-		    echo util_make_links(nl2br(db_result($result, $i, 'old_value'))).'</TD>'.
-			'</TD>'.
-			'<TD VALIGN="TOP">'.date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
-			'<TD VALIGN="TOP">'.db_result($result, $i, 'user_name').'</TD></TR>';
-		}
-		echo '</TABLE>';
+	$out .= "\n<H3>Follow-up Comments</H3><P>";
+	
+	$title_arr=array();
+	$title_arr[]='Comment';
+	$title_arr[]='Date';
+	$title_arr[]='By';
+	
+	$out .= html_build_list_table_top ($title_arr);
+    }
+    
+    // Loop throuh the follow-up comments and format them
+    for ($i=0; $i < $rows; $i++) {
+	
+	$comment_type = db_result($result, $i, 'comment_type');
+	if ($comment_type == 'None') 
+	    $comment_type = '';
+	else
+	    $comment_type = '['.$comment_type.']';
+	
+	if ($ascii) {
+	    $fmt = "\n\n-------------------------------------------------------\n".
+		"Date: %-30sBy: %s\n".
+		($comment_type ? "%s\n%s" : '%s%s');
 	} else {
-		echo '
-			<H4>No Followups Have Been Posted</H4>';
+	    $fmt = "\n".'<tr BGCOLOR="%s"><td><b>%s</b><BR>%s</td>'.
+		'<td valign="top">%s</td><td valign="top">%s</td></tr>';
 	}
+	
+	// I wish we had sprintf argument swapping in PHP3 but
+	// we don't so do it the ugly way...
+	if ($ascii) {
+	    $out .= sprintf($fmt,
+			    date($sys_datefmt,db_result($result, $i, 'date')),
+			    db_result($result, $i, 'user_name'),
+			    $comment_type,
+			    util_unconvert_htmlspecialchars(db_result($result, $i, 'old_value'))
+			    );
+	} else {
+	    $out .= sprintf($fmt,
+			    util_get_alt_row_color($i),
+			    $comment_type,
+			    util_make_links(nl2br(db_result($result, $i, 'old_value'))),
+			    date($sys_datefmt,db_result($result, $i, 'date')),
+			    db_result($result, $i, 'user_name'));
+	}
+    }
+
+    // final touch...
+    $out .= ($ascii ? "\n" : "</TABLE>");
+
+    return($out);
 }
+
+function show_bug_details ($bug_id, $ascii=false) {
+    echo format_bug_details($bug_id, $ascii);
+}
+
+function format_bug_changes($changes) {
+
+    global $sys_datefmt;
+
+    reset($changes);
+    $fmt = "%20s | %-25s | %s\n";
+
+    $user_id = user_getid();
+
+    $out_hdr = 'Changes by: '.user_getrealname($user_id).' <'.user_getemail($user_id).">\n".
+	'Date: '.date($sys_datefmt,time()).' ('.user_get_timezone().')';
+
+    //Process special cases first: follow-up comment
+    if ($changes['details']) {
+	$out_com = "\n\n------------------ Additional Follow-up Comments ----------------------------\n";
+	if ($changes['details']['type'] != 'None') {
+	    $out_com .= '['.$changes['details']['type']."]\n";
+	}
+	$out_com .= util_unconvert_htmlspecialchars($changes['details']['add']);
+	unset($changes['details']);
+    }
+
+    //Process special cases first: bug file attachment
+    if ($changes['attach']) {
+	$out_att = "\n\n------------------ Additional Bug Attachment  ----------------------------\n";
+	$out_att .= sprintf("File name: %-30s Size:%d KB\n",$changes['attach']['name'],
+			 $changes['attach']['size']/1024);
+	$out_att .= $changes['attach']['description'];
+	unset($changes['attach']);
+    }
+
+    // All the rest of the fields now
+    reset($changes);
+    while ( list($field,$h) = each($changes)) {
+
+	// If both removed and added items are empty skip - Sanity check
+	if (!$h['del'] && !$h['add']) { continue; }
+
+	$label = bug_data_get_label($field);
+	if (!$label) { $label = $field; }
+	$out .= sprintf($fmt, $label, $h['del'],$h['add']);
+    }
+    if ($out) {
+	$out = "\n\n".sprintf($fmt,'What    ','Removed','Added').
+	"---------------------------------------------------------------------------\n".$out;
+    }
+
+    return($out_hdr.$out.$out_com.$out_att);
+
+}
+
 
 function show_bughistory ($bug_id,$group_id) {
     /*
