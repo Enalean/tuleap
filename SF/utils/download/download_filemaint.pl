@@ -38,15 +38,26 @@ while (<WAITING_FILES>) {
 		print "$ftp_frs_dir_prefix$project/$file doesn't exist\n";
 		next FILE
 	} else {
-	  print "deleting file $project/$file\n";
 	  my (@subdirs, $endfile, $dirs);
 	  @subdirs = split("/", $file);
 	  $endfile = pop(@subdirs);
 	  $" = '/';
           $dirs = "@subdirs";
           print `/bin/mkdir -p $delete_dir/$project/$dirs`;
+	  
+	  $filename = "$ftp_frs_dir_prefix$project/$file";
+	  $last_modified = (stat($filename))[9];
+	  $last_accessed = (stat($filename))[8];
+	  $last_ctime = (stat($filename))[10];
 
-	  print `/bin/mv -f $ftp_frs_dir_prefix$project/$file $delete_dir/$project/$file-$time` ;
+	  #make sure that since the deletion of the file nobody has submitted a new file with 
+	  #the same filename
+	  if (($last_modified >= $time) || ($last_accessed >= $time) || ($last_ctime >= $time)) {
+	    print "don't delete file $project/$file (modified since deletion)\n";
+	  } else {
+	    print "deleting file $project/$file\n";
+	    print `/bin/mv -f $ftp_frs_dir_prefix$project/$file $delete_dir/$project/$file-$time` ;
+	  } 
 	}
 }
 close(WAITING_FILES);

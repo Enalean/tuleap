@@ -105,14 +105,11 @@ for ( $p = 0; $p < $num_packages; $p++ ) {
 				. "frs_file.filename AS filename,"
 				. "frs_file.file_size AS file_size,"
 				. "frs_file.release_time AS release_time,"
-				. "frs_filetype.name AS type,"
-				. "frs_processor.name AS processor,"
+				. "frs_file.type_id AS type,"
+				. "frs_file.processor_id AS processor,"
 				. "frs_dlstats_filetotal_agg.downloads AS downloads "
-				. "FROM frs_filetype,frs_processor,"
-				. "frs_file LEFT JOIN frs_dlstats_filetotal_agg ON frs_dlstats_filetotal_agg.file_id=frs_file.file_id "
-				. "WHERE release_id='". $package_release['release_id'] ."' "
-				. "AND frs_filetype.type_id=frs_file.type_id "
-				. "AND frs_processor.processor_id=frs_file.processor_id ";
+				. "FROM frs_file LEFT JOIN frs_dlstats_filetotal_agg ON frs_dlstats_filetotal_agg.file_id=frs_file.file_id "
+				. "WHERE release_id='". $package_release['release_id']."'";
 			$res_file = db_query( $sql );
 			$num_files = db_numrows( $res_file );
 
@@ -121,6 +118,19 @@ for ( $p = 0; $p < $num_packages; $p++ ) {
 			if ( !$res_file || $num_files < 1 ) {
 				print '<TR><TD COLSPAN=2>&nbsp;</TD><TD><B>No Files</B></TD><TD COLSPAN="5">&nbsp;</TD></TR>'."\n";
 			} else {
+                                //get the file_type and processor type
+                                $q = "select * from frs_filetype";
+                                $res_filetype = db_query($q);
+                                while ($resrow = db_fetch_array($res_filetype)) {
+                                   $file_type[$resrow['type_id']] = $resrow['name'];
+                                }
+
+                                $q = "select * from frs_processor";
+			        $res_processor = db_query($q);
+				while ($resrow = db_fetch_array($res_processor)) {
+				  $processor[$resrow['processor_id']] = $resrow['name'];
+				}
+                                
 				   // now iterate and show the files in this release....
 				for ( $f = 0; $f < $num_files; $f++ ) {
 					$file_release = db_fetch_array( $res_file );
@@ -133,8 +143,8 @@ for ( $p = 0; $p < $num_packages; $p++ ) {
 						. $fname .'</A></B></TD>'
 						. '<TD>'. $file_release['file_size'] .'</TD>'
 						. '<TD>'. ($file_release['downloads'] ? $file_release['downloads'] : '0') .'</TD>'
-						. '<TD>'. $file_release['processor'] .'</TD>'
-						. '<TD>'. $file_release['type'] .'</TD>'
+						. '<TD>'. $processor[$file_release['processor']] .'</TD>'
+						. '<TD>'. $file_type[$file_release['type']] .'</TD>'
 						. '<TD>'. format_date( "Y-m-d", $file_release['release_time'] ) .'</TD>'
 						. '</TR>' . "\n";
 
