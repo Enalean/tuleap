@@ -163,7 +163,7 @@ if ($group_id) {
     }
 
     case 'detailbug' : {
-	if (user_ismember($group_id,'B2')) {
+	if (user_ismember($group_id,'B1')) {
 	    include '../bugs/mod_bug.php';
 	} else {
 	    include '../bugs/detail_bug.php';
