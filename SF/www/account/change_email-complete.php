@@ -36,7 +36,7 @@ $HTML->header(array('title'=>"Email Change Complete"));
 CodeX user <?php print $row_user['realname'] ?> (<?php print $row_user['user_name']; ?>) <!-- LJ @ --><?php //LJ print $GLOBALS['sys_users_host']; ?>
 will now be forwarded to this new email.
 
-<P><A href="/">[Return to SourceForge]</A>
+<P><A href="/">[Return to CodeX]</A>
 
 <?php
 $HTML->footer(array());
