@@ -339,7 +339,7 @@ Function GraphIt($name_string,$value_string,$title) {
 	$bars=array();
 
 	for ($i = 0; $i < $counter; $i++) {
-		$bars[$i]='';
+		$bars[$i]=util_get_image_theme('bargraph.png');
 	}
 
 	$counter=count($value_string);
