@@ -31,17 +31,17 @@ if ($group_id && $insert_license && $rand_hash && $form_license) {
 $HTML->header(array('title'=>'Project Category'));
 ?>
 
-<H2>Step 6: Category</H2>
+<H2>Step 6: Categories</H2>
 
 
-<P><B>Project Category</B>
+<P><B>Project Categories</B>
 
 <P>So that visitors to the site can find your project, you should select
-categories that is most appropriate to your project's purpose.
+categories that are most appropriate to your project's purpose.
 
 <P>Your project will not be visible in the Trove software map until
 (1) it is approved and (2) you have manually categorized your project in
-your project administration screens.
+your Project Administration page.
 
 <P>After project approval, please immediately categorize your project
 following the instructions in the email you will receive.
