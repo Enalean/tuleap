@@ -955,7 +955,7 @@ class Artifact extends Error {
 	if (count($deleted_values) == 0 && count($added_values) == 0) return true;
 
 	if (!$this->deleteAllCC()) {
-		$feedback = $Language->getText('tracker_common_artifact','prob_cc_list',$this-getID());
+		$feedback = $Language->getText('tracker_common_artifact','prob_cc_list',$this->getID());
 		$ok = false;
 	}
 	
