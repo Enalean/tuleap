@@ -12,7 +12,7 @@ require("../include.pl");  # Include all the predefined functions
 
 	my $verbose = 1;
 	my $chronolog_basedir = "/home/log";
-	my @webservers = ("atlas");
+	my @webservers = ();
 
 ##
 #######################
@@ -20,6 +20,10 @@ require("../include.pl");  # Include all the predefined functions
 my ( $filerel, $query, $rel, %groups, %filerelease, $bytes, $filepath, $group_name, $filename, $files );
 
 &db_connect;
+
+# Now that db_connect triggered the reading of local.inc, get the host name
+($hostname) = split(/\./,$sys_fullname);
+push @webservers, $hostname;
 
 if ( $ARGV[0] && $ARGV[1] && $ARGV[2] ) {
 	   ## Set params manually, so we can run
