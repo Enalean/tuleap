@@ -83,7 +83,10 @@ INSERT INTO bug_field \
   VALUES (211,'priority','SB','','Priority','How quickly the bug must be fixed (Immediate, Normal, Low, Later,...)','S',0,0,1,0);
 INSERT INTO bug_field \
   VALUES (212,'keywords','TF','60/120','Keywords','A list of comma separated keywords associated with a bug','S',0,0,1,0);
-
+INSERT INTO bug_field \
+  VALUES (213,'release_id','SB','','Release','The release (global version number) impacted by the bug','P',0,0,1,0);
+INSERT INTO bug_field \
+  VALUES (214,'release','TF','10/40','Release','The release (global version number) impacted by the bug. Same as the other Release field <u>except</u> this one is free text.','S',0,0,1,0);
 
 # ==============================
 # Bug field value table
@@ -192,6 +195,11 @@ INSERT INTO bug_field_value VALUES (292,211,100,230,'High++','',130,'H');
 INSERT INTO bug_field_value VALUES (293,211,100,240,'Immediate','',140,'A');
 INSERT INTO bug_field_value VALUES (294,211,100,250,'Immediate+','',150,'H');
 INSERT INTO bug_field_value VALUES (295,211,100,260,'Immediate++','',160,'H');
+
+# Release (bug_field_id = 213)
+#
+INSERT INTO bug_field_value VALUES (300,213,100,100,'None','',10,'P');
+
 
 # ==============================
 # Bug field usage table
@@ -309,6 +317,15 @@ INSERT INTO bug_field_usage VALUES (211,100,0,0,0,250);
 # Keywords (bug_field_id = 212)
 #
 INSERT INTO bug_field_usage VALUES (212,100,0,0,0,3000);
+
+# release id (bug_field_id = 213)
+#
+INSERT INTO bug_field_usage VALUES (213,100,0,0,0,800);
+
+# release (bug_field_id = 214)
+#
+INSERT INTO bug_field_usage VALUES (214,100,0,0,0,800);
+
 
 #**********************************
 # TRANSFER LEGACY FIELD VALUES
