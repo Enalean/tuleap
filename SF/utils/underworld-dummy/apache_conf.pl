@@ -107,7 +107,7 @@ while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow())
                 "    AuthzSVNAccessFile /svnroot/$unix_group_name/.SVNAccessFile\n",
                 "    Require valid-user\n",
                 "    AuthType Basic\n",
-                "    AuthName \"Subversion Authorization ($group_name)\n",
+                "    AuthName \"Subversion Authorization ($group_name)\"\n",
                 "    AuthUserFile /etc/httpd/conf/htpasswd\n",
                 "  </Location>\n",
                 "</VirtualHost>\n\n");
