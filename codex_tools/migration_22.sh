@@ -674,7 +674,12 @@ UPDATE user_group SET file_flags='2' WHERE admin_flags='A';
 ---
 DROP TABLE mailaliases;
 
-
+---
+--- Fix SR 97 on Partners 
+--- (in tracker reports: in Submitted by field look after 
+--- artifact_submitters instead of group_members)
+--- 
+UPDATE artifact_field SET value_function = 'artifact_submitters' WHERE field_name = 'submitted_by';
 
 
 --- NOT APPLIED YET
