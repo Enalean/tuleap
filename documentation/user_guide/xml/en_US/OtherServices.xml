@@ -81,7 +81,7 @@ newgrp projectname
       <para>Each project receives its own FTP storage which is made of 2
       distinct zones. The Anonymous FTP Space and the File Release FTP space.</para>
 
-      <section id="TheAnonymousFTPSpace ">
+      <section id="TheAnonymousFTPSpace">
         <title>The Anonymous FTP Space</title>
 
         <para>The anonymous FTP space can be used by the project members to
