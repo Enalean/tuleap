@@ -574,7 +574,6 @@ class ArtifactField extends Error {
 	    $sql="SELECT * FROM artifact_field_value_list ".
 		"WHERE  field_id='$this->field_id' AND group_artifact_id='$group_artifact_id' ".
 		"AND value_id='$value_id'";
-		//echo "sql=$sql<br>";
 	    $result=db_query($sql);
 	    if ($result && db_numrows($result) > 0) {
 			return db_result($result,0,'value');
@@ -646,10 +645,8 @@ class ArtifactField extends Error {
 				$res_value = db_query($sql);
 			}
 			
-			//echo $sql;
 			$rows=db_numrows($res_value);
-			
-			//echo "sql=".$sql." - rows=".$rows."<br>";
+
 	    }
 	
 	    return($res_value);
@@ -695,7 +692,6 @@ class ArtifactField extends Error {
 			    "AND status IN (".$status.") ".
 			    "ORDER BY order_id ASC";
 			$res_value = db_query($sql);
-			//echo $sql."<br>";
 	    }
 	
 	    return($res_value);
@@ -719,7 +715,6 @@ class ArtifactField extends Error {
 			    "WHERE group_artifact_id=".$group_artifact_id." AND field_id= ".$this->field_id." ".
 			    "AND value_id ='".$value_id."'";
 			$res_value = db_query($sql);
-			//echo $sql."<br>";
 	    }
 	
 	    return(db_fetch_array($res_value));
@@ -798,7 +793,6 @@ class ArtifactField extends Error {
 		$sql .= " where artifact_id = $artifact_id and field_id = ".$this->getID();
 		
 		$result=db_query($sql);
-		//echo $sql;
 		
 		if ( !$result ) {
 			return false;
@@ -820,7 +814,6 @@ class ArtifactField extends Error {
 	
 		// First delete the items
 		$sql = "DELETE FROM artifact_field_value WHERE artifact_id=".$artifact_id." AND field_id=".$this->getID();
-		//echo $sql;
 		$result=db_query($sql);
 		
 		if ( !$result ) {
@@ -906,15 +899,70 @@ class ArtifactField extends Error {
 		$sql .= $name . ") VALUES (" . $values . ")";
 		
 		$result=db_query($sql);
-		//echo "insert=$sql<br>";
 		
 		if ( !$result ) {
-			return false;
+                    // This might happen if the submitted type is incorrect.
+                    // In this case, insert the default value, and return false.
+                    $this->insertDefaultValue($artifact_id);
+                    return false;
 		} else {
-			return true;
+                    return true;
 		}
 		 		
 	}
+
+	/**
+	 * Insert the default field value for a specific artifact_id for a single value
+	 * 
+	 * @param artifact_id: the artifact
+	 *
+	 * @return boolean
+	 */
+	function insertDefaultValue($artifact_id) {
+	
+            // We could simply call insertSingleValue($artifact_id,$this->getDefaultValue()) but
+            // it might end up in an infinite loop since insertSingleValue() might call this
+            // function.
+
+            $value=$this->getDefaultValue();
+            $sql = "INSERT INTO artifact_field_value (field_id,artifact_id,";
+            $values = $this->getID().",$artifact_id,";
+		
+            switch ( $this->getDataType() ) {
+            case $this->DATATYPE_TEXT:
+                $name = "valueText";
+                $values .= "'$value'";
+                break;
+                
+            case $this->DATATYPE_INT:
+            case $this->DATATYPE_USER:
+                $name = "valueInt";
+                $values .= ($value?"$value":"0");
+                break;
+                
+            case $this->DATATYPE_FLOAT:
+                $name = "valueFloat";
+                $values .= ($value?"$value":"0.0");
+                break;
+			
+            case $this->DATATYPE_DATE:
+                $name = "valueDate";
+                $values .= ($value?"$value":"0");
+                break;
+            } // switch
+		
+            $sql .= $name . ") VALUES (" . $values . ")";
+            
+            $result=db_query($sql);
+		
+            if ( !$result ) {
+                return false;
+            } else {
+                return true;
+            }
+		 		
+	}
+
 
 	/**
 	 *  Return the value used for the where clause
@@ -1274,9 +1322,7 @@ class ArtifactField extends Error {
 			   "value_function='".$value_function."', ".
 			   "data_type=". $dtype." ".
 			   "WHERE group_artifact_id=".$group_artifact_id." AND field_id=".$this->field_id;
-				
-		//echo $sql;
-				
+								
 		$res = db_query($sql);
 		if (!$res) {
 			$this->setError("Error during updating artifact_field (".$field_id."-".$group_artifact_id."): ".db_error());
@@ -1316,9 +1362,7 @@ class ArtifactField extends Error {
 		$sql = "UPDATE artifact_field SET ".
 			   "default_value='".$value."' ".
 			   "WHERE group_artifact_id=".$group_artifact_id." AND field_id=".$this->field_id;
-				
-		//echo $sql;
-				
+
 		$res = db_query($sql);
 		if (!$res) {
 			$this->setError("Error during updating artifact_field (".$field_id."-".$group_artifact_id."): ".db_error());
@@ -1344,9 +1388,7 @@ class ArtifactField extends Error {
 		// First delete the artifact_field
 		$sql = "DELETE FROM artifact_field ".
 			   "WHERE group_artifact_id=".$group_artifact_id." AND field_id=".$this->field_id;
-				
-		//echo $sql;
-				
+
 		$res = db_query($sql);
 		if (!$res) {
 			$this->setError("Error during deleting artifact_field (".$field_id."-".$group_artifact_id."): ".db_error());
@@ -1378,8 +1420,6 @@ class ArtifactField extends Error {
 		'FROM artifact '.
 		'WHERE group_artifact_id='. $group_artifact_id;
 		
-		//echo $sql_artifacts;
-		
 	    $res = db_query($sql_artifacts);
 	
 	    while ($artifacts_array = db_fetch_array($res)) {
@@ -1387,7 +1427,6 @@ class ArtifactField extends Error {
 
 			// Delete artifact_field_value records	    	
 	    	$sql = "DELETE FROM artifact_field_value WHERE artifact_id = ".$id." AND field_id = ".$this->getID();
-	    	//echo $sql;
 	    	
 	    	db_query($sql);
 	    	
@@ -1462,8 +1501,6 @@ class ArtifactField extends Error {
 		$sql = "INSERT INTO artifact_field_value_list VALUES (".
 				$this->getID().",".$group_artifact_id.",".$value_id.",'".addslashes($value)."','".addslashes($description)."',".$order_id.",'A')";
 				
-		//echo $sql;
-				
 		$res_insert = db_query($sql);
 		if (!$res_insert || db_affected_rows($res_insert) <= 0) {
 			$this->setError("Error during inserting artifact_field_value_list (".$this->getID()."-".$group_artifact_id."-".$value_id."): ".db_error());
@@ -1504,8 +1541,6 @@ class ArtifactField extends Error {
 		       "status='".$status."' ".
 			   "WHERE field_id=".$this->getID()." AND group_artifact_id=".$group_artifact_id." AND value_id=".$value_id;
 				
-		//echo $sql;
-				
 		$res = db_query($sql);
 		if (!$res) {
 			$this->setError("Error during updating artifact_field_value_list (".$this->getID()."-".$group_artifact_id."-".$value_id."): ".db_error());
@@ -1529,8 +1564,6 @@ class ArtifactField extends Error {
 		// Delete the artifact_field_value_list
 		$sql = "DELETE FROM artifact_field_value_list ".
 			   "WHERE field_id=".$this->getID()." AND group_artifact_id=".$group_artifact_id." AND value_id=".$value_id;
-				
-		//echo $sql;
 				
 		$res = db_query($sql);
 		if (!$res) {

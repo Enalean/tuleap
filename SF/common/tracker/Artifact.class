@@ -424,8 +424,9 @@ class Artifact extends Error {
         
                     // Insert the field value
                     if ( !$field->insertValue($artifact_id,$value) ) {
-                        $error_message .= " Fail to insert the field value - ".$field->getName();
+                        $error_message .= " Artifact created, but failed to insert the field value - ".$field->getName()." : ".$value;
                         $was_error = true;
+                        $ath->setError($error_message);
                     }
                                     
                 } else {
@@ -435,8 +436,9 @@ class Artifact extends Error {
                     // empty record (we must use join and not left join for performance reasons).
                                         
                     if ( !$field->insertValue($artifact_id,$field->getDefaultValue()) ) {
-                        $error_message .= " Fail to insert the default field value - ".$field->getName();
+                        $error_message .= " Artifact created, but failed to insert the default field value - ".$field->getName()." : ".$field->getDefaultValue();
                         $was_error = true;
+                        $ath->setError($error_message);
                     }
                                         
                 }
