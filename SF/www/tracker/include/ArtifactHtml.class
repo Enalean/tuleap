@@ -1070,10 +1070,10 @@ class ArtifactHtml extends Artifact {
 		//echo "DBG Sending email to: $to<br>";
 	
 		$more='From: noreply@'.$GLOBALS['sys_default_domain'];
-	    $subject='['.$this->ArtifactType->getCapsItemName().' #'.$this->getID().'] '.util_unconvert_htmlspecialchars(db_result($result,0,'summary'));
+	    	$subject='['.$this->ArtifactType->getCapsItemName().' #'.$this->getID().'] '.util_unconvert_htmlspecialchars(db_result($result,0,'summary'));
 
 		//echo "DBG: body:".$body."<br>";
-		mail($to,$subject,$body,$more);
+		if ($to) { mail($to,$subject,$body,$more); }
 	
 		$feedback .= ' Artifact Update Sent '; //to '.$to;
 	
