@@ -11,6 +11,7 @@
 function db_connect() {
 	global $sys_dbhost,$sys_dbuser,$sys_dbpasswd,$conn;
 	$conn = @mysql_connect($sys_dbhost,$sys_dbuser,$sys_dbpasswd);
+        unset($sys_dbpasswd);
 	#return $conn;
 }
 
