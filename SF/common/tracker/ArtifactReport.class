@@ -355,20 +355,25 @@ class ArtifactReport extends Error {
 	}
 
 	/**
+	 *
+	 * @param aids: the list (array) of artifact ids that match the query given in $prefs
 	 * Returns the number of rows for the current query
+	 * 
 	 *
 	 * @return int
 	 */
-	function getReportItemsCount($prefs,$morder,$advsrch) {
+	function getReportItemsCount($prefs,$morder,$advsrch,&$aids) {
 
-		$this->getQueryElements($prefs,$morder,$advsrch,true,$select,$from,$where,$order_by);
+		$this->getQueryElements($prefs,$advsrch,$from,$where);
 		
 		// Final query
-		$sql = "select count(*) ".$from." ".$where." group by a.artifact_id";
+		$sql = "select a.artifact_id ".$from." ".$where." group by a.artifact_id";
 		//echo "<DBG> query count=".$sql."<br>";
 		
-		$result_count = db_query($sql);
-		$totalrows = db_numrows($result_count);
+		$res = db_query($sql);
+		$totalrows = db_numrows($res);
+
+		$aids = result_column_to_array($res,0);
 			   
 		return $totalrows;
 	
@@ -379,9 +384,9 @@ class ArtifactReport extends Error {
 	 *
 	 * @return string
 	 */
-	function createQueryReport($prefs,$morder,$advsrch,$offset,$chunksz) {
+	function createQueryReport($prefs,$morder,$advsrch,$offset,$chunksz,$aids) {
 
-		$this->getQueryElements($prefs,$morder,$advsrch,false,$select,$from,$where,$order_by);
+		$this->getResultQueryElements($prefs,$morder,$advsrch,$aids,$select,$from,$where,$order_by);
 		
 		// Final query
 		$limit = " LIMIT $offset,$chunksz";
@@ -527,6 +532,10 @@ class ArtifactReport extends Error {
 	 *                   queried artifacts. If we only want to count, we don't need to
 	 *                   build a huge join for fields that are not determining the serach 
 	 *                   result
+	 * @param aids: the artifact ids that have been calculated in a former select and that
+	 *              correspond to the query given in prefs. By using the aids we do not need
+	 *              to use the query constraints on the different artifact fields => lesser
+	 *              tables to JOIN
 	 * @param select: the select value
 	 * @param from: the from value
 	 * @param where: the where value
@@ -534,14 +543,92 @@ class ArtifactReport extends Error {
 	 *
 	 * @return void
 	 */
-	function getQueryElements($prefs,$morder,$advsrch,$countonly,&$select,&$from,&$where,&$order_by) {
+	function getQueryElements($prefs,$advsrch,&$from,&$where) {
 		
 	  //
 	  // NOTICE
 	  //
 	  // Use left join because of the performance.
-	  // Performance should not really be an issue here because standard reports 
-	  // do not contain as much fields.
+	  // Take care: Big organisations (like FT) adore having many, many fields in their trackers
+	  // So the restriction to this: all fields used in the query must have a value.
+	  // That involves artifact creation or artifact admin (add a field) must create
+	  // empty records with default values for fields which haven't a value (from the user).
+	  //
+	  /* The query must be something like this :
+			FROM artifact a 
+                             LEFT JOIN artifact_field_value v1 ON (v1.artifact_id=a.artifact_id)
+                             LEFT JOIN artifact_field_value v2 ON (v2.artifact_id=a.artifact_id)
+                             LEFT JOIN artifact_field_value v3 ON (v2.artifact_id=a.artifact_id)
+                             LEFT JOIN user u3 ON (v3.valueInt = u3.user_id)
+                             LEFT JOIN user u
+			WHERE a.group_artifact_id = 100 and 
+			v1.field_id=101 and
+			v2.field_id=103 and
+			v3.field_id=104 and
+			a.submitted_by = u.user_id
+
+	  */
+
+	  // Get the fields sorted by the result order
+	  $fields = $this->getSortedFields();
+	  
+	  $count = 1;
+	  
+	  $from = "FROM artifact a";
+	  $where = "WHERE a.group_artifact_id = ".$this->group_artifact_id;
+	  
+	  
+	  if ( count($fields) == 0 )
+	    return;
+	  
+	  while (list($key,$field) = each($fields) ) {
+	    
+	    //echo $field->getName()."-".$field->getID()."<br>";
+	    
+	    if ($field->isShowOnQuery()) {
+	      // If the field is a standard field ie the value is stored directly into the artifact table (severity, artifact_id, ...)
+	      if ( $field->isStandardField()) {
+		$where .= $this->getValuesWhereClause($field,$prefs,"a.".$field->getName(),$advsrch,$notany);
+	      } else {
+		
+		// The field value is stored into the artifact_field_value table
+		// So we need to add a new join
+		
+		$where_cond = $this->getValuesWhereClause($field,$prefs,"v".$count.".".$field->getValueFieldName(),$advsrch,$notany);
+		
+		if ($notany) {
+		  $from .= " LEFT JOIN artifact_field_value v".$count." ON (v".$count.".artifact_id=a.artifact_id".
+		    " and v".$count.".field_id=".$field->getID().$where_cond.")";
+		  
+		  $count++;
+		}
+	      }
+	    }
+	  }
+	}
+
+
+	/**
+	 * Return the different elements for building the current query
+	 *
+	 * @param aids: the artifact ids that have been calculated in a former select and that
+	 *              correspond to the query given in prefs. By using the aids we do not need
+	 *              to use the query constraints on the different artifact fields => lesser
+	 *              tables to JOIN
+	 * @param select: the select value
+	 * @param from: the from value
+	 * @param where: the where value
+	 * @param order_by: the order by value
+	 *
+	 * @return void
+	 */
+	function getResultQueryElements($prefs,$morder,$advsrch,$aids=false,&$select,&$from,&$where,&$order_by) {
+		
+	  //
+	  // NOTICE
+	  //
+	  // Use left join because of the performance.
+	  // Take care: Big organisations (like FT) adore having many, many fields in their trackers
 	  // So the restriction to this: all fields used in the query must have a value.
 	  // That involves artifact creation or artifact admin (add a field) must create
 	  // empty records with default values for fields which haven't a value (from the user).
@@ -563,145 +650,146 @@ class ArtifactReport extends Error {
 			order by v3.valueText,v1.valueInt
 	  */
 
-		// Get the fields sorted by the result order
-		$fields = $this->getSortedFields();
-		
-		$count = 1;
-		
-		$select = "SELECT a.severity as severity_id, a.artifact_id as artifact_id, ";
-		$from = "FROM artifact a";
-		$where = "WHERE a.group_artifact_id = ".$this->group_artifact_id; 
-		$order_by = "ORDER BY ";
-		
-		// Get the order fields
-		$fields_order = $this->getFieldsOrder($morder);
-		
-		$fields_order_result = array();
-		
-		$order_by_count = 0;
-		$select_count = 0;
-		
-		if ( count($fields) == 0 )
-			return;
-
-		while (list($key,$field) = each($fields) ) {
-			
-			//echo $field->getName()."-".$field->getID()."<br>";
-			
-			// If the field is a standard field ie the value is stored directly into the artifact table (severity, artifact_id, ...)
-			if ( $field->isStandardField() ) {
-
-			        // Build the where
-			        if ( $field->isShowOnQuery() ) {
-			          $where .= $this->getValuesWhereClause($field,$prefs,"a.".$field->getName(),$advsrch,$notany);
-			        }
-
-				if ( ($field->isShowOnResult()) || ($field->getName() == "severity") ) {
-					if ( $select_count != 0 ) {
-						$select .= ",";
-						$select_count ++;
-					} else {
-						$select_count = 1;
-					}
-	
-					// Special case for fields which are user name
-					if ( ($field->isUsername())&&(!$field->isSelectBox())&&(!$field->isMultiSelectBox()) ) {
-						$select .= " u.user_name as ".$field->getName();
-						
-						if (!$countonly) {
-						  $from .= " LEFT JOIN user u ON (u.user_id=a.".$field->getName().")";
-						}
-
-					} else {
-						$select .= " a.".$field->getName();
-					}
-				}
-				
-				
-
-				// Set the fields_order_result array to	build the order_by			
-				if ( $fields_order[$field->getName()] ) {
-				        $order_by_count ++;
-
-					if ( ($field->isUsername())&&(!$field->isSelectBox())&&(!$field->isMultiSelectBox()) ) {
-						$fields_order_result[$field->getName()] = "u.user_name";
-					} else {
-						$fields_order_result[$field->getName()] = "a.".$field->getName();
-					}						
-				}
-			
-			} else {
-				
-				// The field value is stored into the artifact_field_value table
-				// So we need to add a new join
-
-			        // Build the where
-				if ( $field->isShowOnQuery() ) {
-					$where .= $this->getValuesWhereClause($field,$prefs,"v".$count.".".$field->getValueFieldName(),$advsrch,$notany);
-				}
-
-				if ((!$countonly && ($field->isShowOnResult() || ($field->isShowOnQuery() && $notany))) ||
-			      	    ($countonly && $field->isShowOnQuery() && $notany)) {
-				  $from .= " LEFT JOIN artifact_field_value v".$count." ON (v".$count.".artifact_id=a.artifact_id)";
-				  $where .= " and v".$count.".field_id=".$field->getID();
-				}
-
-				if ( $field->isShowOnResult() ) {
-					if ( $select_count != 0 ) {
-						$select .= ",";
-						$select_count ++;
-					} else {
-						$select_count = 1;
-					}
-
-					// Special case for fields which are user name
-					if ( ($field->isUsername())&&(!$field->isSelectBox())&&(!$field->isMultiSelectBox()) ) {
-						$select .= " u".$count.".user_name as ".$field->getName();
-
-						if (!$countonly) {
-						  $from .= " LEFT JOIN user u".$count." ON (v".$count.".".$field->getValueFieldName()." = u".$count.".user_id)";
-						}
-					} else {
-						$select .= " v".$count.".".$field->getValueFieldName()." as ".$field->getName();
-					}
-				}
-				
-					
-				
-
-				// Set the fields_order_result array to	build the order_by			
-				if ( $fields_order[$field->getName()] ) {
-					$order_by_count ++;
-
-					if ( ($field->isUsername())&&(!$field->isSelectBox())&&(!$field->isMultiSelectBox()) ) {
-						$fields_order_result[$field->getName()] = "u".$count.".user_name";
-					} else {
-						$fields_order_result[$field->getName()] = "v".$count.".".$field->getValueFieldName();
-					}
-				}
-			
-				$count ++;
-			}
-
-		}
-		
-
-		// Build the order_by using the fields_order_result array
-		if ( $order_by_count > 0 ) {
-			$i = 1;
-			while (list($key,$field) = each($fields_order) ) {
-				if ( $i > 1 ) {
-					$order_by .= ", ";
-				}
-				$order_by .= $fields_order_result[$key]." ".$fields_order[$key];
-				
-				$i ++;
-			}
+	  // Get the fields sorted by the result order
+	  $fields = $this->getSortedFields();
+	  
+	  $count = 1;
+	  
+	  $select = "SELECT a.severity as severity_id, a.artifact_id as artifact_id, ";
+	  $from = "FROM artifact a";
+	  $where = "WHERE a.group_artifact_id = ".$this->group_artifact_id;
+	  
+	  //add directly the aids concerned by the query given in prefs
+	  if ($aids) {
+	    $where .= " AND a.artifact_id IN (".implode(",",$aids).")";
+	  }
+	  
+	  $order_by = "ORDER BY ";
+	  
+	  // Get the order fields
+	  $fields_order = $this->getFieldsOrder($morder);
+	  
+	  $fields_order_result = array();
+	  
+	  $order_by_count = 0;
+	  $select_count = 0;
+	  
+	  if ( count($fields) == 0 )
+	    return;
+	  
+	  while (list($key,$field) = each($fields) ) {
+	    
+	    //echo $field->getName()."-".$field->getID()."<br>";
+	    
+	    // If the field is a standard field ie the value is stored directly into the artifact table (severity, artifact_id, ...)
+	    if ( $field->isStandardField() ) {
+	      
+	      // Build the where
+	      // if we now already the affected aids we do not need to integrate the query constraints into the SQL query
+	      if ( $field->isShowOnQuery() && !$aids) {
+		$where .= $this->getValuesWhereClause($field,$prefs,"a.".$field->getName(),$advsrch,$notany);
+	      }
+	      
+	      if ( ($field->isShowOnResult()) || ($field->getName() == "severity") ) {
+		if ( $select_count != 0 ) {
+		  $select .= ",";
+		  $select_count ++;
 		} else {
-			$order_by = "";
+		  $select_count = 1;
 		}
-	}
+		
+		// Special case for fields which are user name
+		if ( ($field->isUsername())&&(!$field->isSelectBox())&&(!$field->isMultiSelectBox()) ) {
+		  $select .= " u.user_name as ".$field->getName();
+		  $from .= " LEFT JOIN user u ON (u.user_id=a.".$field->getName().")";
+		} else {
+		  $select .= " a.".$field->getName();
+		}
+	      }
+	      
+	      
+	      
+	      // Set the fields_order_result array to	build the order_by			
+	      if ( $fields_order[$field->getName()] ) {
+		$order_by_count ++;
+		
+		if ( ($field->isUsername())&&(!$field->isSelectBox())&&(!$field->isMultiSelectBox()) ) {
+		  $fields_order_result[$field->getName()] = "u.user_name";
+		} else {
+		  $fields_order_result[$field->getName()] = "a.".$field->getName();
+		}						
+	      }
+	      
+	    } else {
+	      
+	      // The field value is stored into the artifact_field_value table
+	      // So we need to add a new join
+	      
+	      // Build the where
+	      if ( $field->isShowOnQuery() && !$aids) {
+		$where_cond = $this->getValuesWhereClause($field,$prefs,"v".$count.".".$field->getValueFieldName(),$advsrch,$notany);
+	      }
+	      
+	      if ($field->isShowOnResult() || 
+		  ($field->isShowOnQuery() && !$aids && $notany)) {
+		$from .= " LEFT JOIN artifact_field_value v".$count." ON (v".$count.".artifact_id=a.artifact_id".
+		  " and v".$count.".field_id=".$field->getID().
+		  $where_cond.")";
+		//$where .= " and v".$count.".field_id=".$field->getID();
 
+	      }
+	      
+	      if ( $field->isShowOnResult() ) {
+		if ( $select_count != 0 ) {
+		  $select .= ",";
+		  $select_count ++;
+		} else {
+		  $select_count = 1;
+		}
+		
+		// Special case for fields which are user name
+		if ( ($field->isUsername())&&(!$field->isSelectBox())&&(!$field->isMultiSelectBox()) ) {
+		  $select .= " u".$count.".user_name as ".$field->getName();
+		  $from .= " LEFT JOIN user u".$count." ON (v".$count.".".$field->getValueFieldName()." = u".$count.".user_id)";
+		} else {
+		  $select .= " v".$count.".".$field->getValueFieldName()." as ".$field->getName();
+		}
+	      }
+	      
+	      $count++;
+
+	      // Set the fields_order_result array to	build the order_by			
+	      if ( $fields_order[$field->getName()] ) {
+		$order_by_count ++;
+		
+		if ( ($field->isUsername())&&(!$field->isSelectBox())&&(!$field->isMultiSelectBox()) ) {
+		  $fields_order_result[$field->getName()] = "u".$count.".user_name";
+		} else {
+		  $fields_order_result[$field->getName()] = "v".$count.".".$field->getValueFieldName();
+		}
+	      }
+	      
+	    }
+	    
+	  }
+	  
+	  
+	  // Build the order_by using the fields_order_result array
+	  if ( $order_by_count > 0 ) {
+	    $i = 1;
+	    while (list($key,$field) = each($fields_order) ) {
+	      if ( $i > 1 ) {
+		$order_by .= ", ";
+	      }
+	      $order_by .= $fields_order_result[$key]." ".$fields_order[$key];
+	      
+	      $i ++;
+	    }
+	  } else {
+	    $order_by = "";
+	  }
+	}
+	
 
 	/**
 	 * Return the query result in a multi array

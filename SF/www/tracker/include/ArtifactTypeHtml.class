@@ -1822,7 +1822,7 @@ class ArtifactTypeHtml extends ArtifactType {
             $group_id = $group->getGroupId();
 
 	    if ($query) {
-		$art_report_html->getQueryElements($query,$morder,$advsrch,true,$select,$from,$where,$order_by);
+		$art_report_html->getQueryElements($query,$advsrch,$from,$where);
 	  	$sql = "select distinct a.artifact_id ".$from." ".$where;
 	  	$result = db_query($sql);
 		while ($row = db_fetch_array($result)) {

@@ -1577,8 +1577,9 @@ class ArtifactType extends Error {
 					}
 	
 					// Special case for fields which are user name
-					$from .= " LEFT JOIN artifact_field_value v".$count." ON (v".$count.".artifact_id=a.artifact_id)";
-					$where .= " and v".$count.".field_id=".$field->getID();
+					$from .= " LEFT JOIN artifact_field_value v".$count." ON (v".$count.".artifact_id=a.artifact_id".
+					  " and v".$count.".field_id=".$field->getID().")";
+					//$where .= " and v".$count.".field_id=".$field->getID();
 					if ( ($field->isUsername())&&(!$field->isSelectBox())&&(!$field->isMultiSelectBox()) ) {
 						$select .= " u".$count.".user_name as ".$field->getName();
 						$from .= " LEFT JOIN user u".$count." ON (v".$count.".".$field->getValueFieldName()." = u".$count.".user_id)";

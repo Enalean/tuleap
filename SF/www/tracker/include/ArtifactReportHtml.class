@@ -265,7 +265,7 @@ class ArtifactReportHtml extends ArtifactReport {
          *      @return string
          *
          */
-        function showResult ($group_id,$prefs,$offset,$total_rows,$url,$nolink,$chunksz,$morder,$advsrch,$chunksz,$masschange=false) {
+        function showResult ($group_id,$prefs,$offset,$total_rows,$url,$nolink,$chunksz,$morder,$advsrch,$chunksz,$aids,$masschange=false) {
             global $PHP_SELF;
             global $ath;
 
@@ -288,7 +288,7 @@ class ArtifactReportHtml extends ArtifactReport {
                 $width_arr[$field->getName()] = $field->getColWidth();
             }
 
-            $query = $this->createQueryReport($prefs,$morder,$advsrch,$offset,$chunksz);
+            $query = $this->createQueryReport($prefs,$morder,$advsrch,$offset,$chunksz,$aids);
             $result = $this->getResultQueryReport($query);
             $rows = count($result);
                     
@@ -560,7 +560,7 @@ class ArtifactReportHtml extends ArtifactReport {
                 // Finally display the result table
                 // 
                 
-                $totalrows = $this->getReportItemsCount($prefs,$morder,$advsrch);
+                $totalrows = $this->getReportItemsCount($prefs,$morder,$advsrch,$aids);
 
                 if ($totalrows > 0) {
                 
@@ -603,7 +603,7 @@ class ArtifactReportHtml extends ArtifactReport {
                     }
                 
                     if ($pv) { $chunksz = 100000; }
-                    $html_result .= $this->showResult($group_id,$prefs,$offset,$totalrows,($pv ? '' : $url), ($pv ? true:false) ,$chunksz ,$morder,$advsrch,$chunksz,$masschange);
+                    $html_result .= $this->showResult($group_id,$prefs,$offset,$totalrows,($pv ? '' : $url), ($pv ? true:false) ,$chunksz ,$morder,$advsrch,$chunksz,$aids,$masschange);
                     $html_result .= $this->showPriorityColorsKey('Severity colors:');
                 
                 } else {
