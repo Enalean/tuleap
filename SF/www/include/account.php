@@ -22,7 +22,7 @@ function account_pwvalid($pw) {
 
 function account_add_user_to_group ($group_id,$user_unix_name) {
 	global $feedback;
-	$res_newuser = db_query("SELECT user_id FROM user WHERE user_name='$user_unix_name'");
+	$res_newuser = db_query("SELECT user_id,unix_status FROM user WHERE user_name='$user_unix_name'");
 
 	if (db_numrows($res_newuser) > 0) {
 		//user was found
