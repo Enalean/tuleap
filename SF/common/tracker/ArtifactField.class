@@ -188,31 +188,36 @@ class ArtifactField extends Error {
 	 * @return string
 	 */
 	function getLabelDisplayType() {
-		switch ( $this->display_type ) {
-		case 'SB':
-			return "Select Box";
-			break;
-			
-		case 'TF':
-			return "Text Field";
-			break;
-			
-		case 'TA':
-			return "Text Area";
-			break;
-			
-		case 'MB':
-			return "Multi Select Box";
-			break;
-		
-		case 'DF':
-			return "Date";
-			break;
 
-		default:
-			return "Unknow display type";
-			break;
-		}
+		if ( ($this->data_type == $this->DATATYPE_INT || $this->data_type == $this->DATATYPE_USER)
+			 &&($this->display_type == "SB") ) 
+			return "Select Box";
+		
+		if ( ($this->data_type == $this->DATATYPE_INT || $this->data_type == $this->DATATYPE_USER)
+			 &&($this->display_type == "MB") ) 
+			return "Multi Select Box";
+		
+		if ( ($this->data_type == $this->DATATYPE_TEXT)
+			 &&($this->display_type == "TF") ) 
+			return "Text Field";
+		
+		if ( ($this->data_type == $this->DATATYPE_TEXT)
+			 &&($this->display_type == "TA") ) 
+			return "Text Area";
+
+		if ( ($this->data_type == $this->DATATYPE_DATE)
+			 &&($this->display_type == "DF") ) 
+			return "Date Field";
+
+		if ( ($this->data_type == $this->DATATYPE_FLOAT)
+			 &&($this->display_type == "TF") )
+			return "Float Field";
+
+		if ( ($this->data_type == $this->DATATYPE_INT)
+			 &&($this->display_type == "TF") ) 
+			return "Integer Field";
+
+		return "Unknow display type";
 	}
 
 	/**
@@ -593,9 +598,9 @@ class ArtifactField extends Error {
 			// If only active field
 			if ($active_only) {
 			    if ($checked) {
-					$status_cond = "AND  (status IN ('V') OR value_id='".$checked."') ";
+					$status_cond = "AND  (status IN ('V','P') OR value_id='".$checked."') ";
 			    } else {
-					$status_cond = "AND  status IN ('V') ";
+					$status_cond = "AND  status IN ('V','P') ";
 			    }
 			}
 		
@@ -655,7 +660,7 @@ class ArtifactField extends Error {
 			$sql="SELECT value_id,value,field_id,group_artifact_id,description,order_id,status ".
 			    "FROM artifact_field_value_list ".
 			    "WHERE group_artifact_id=".$group_artifact_id." AND field_id= ".$this->field_id." ".
-			    "AND status ='".$status."' ".
+			    "AND status IN (".$status.") ".
 			    "ORDER BY order_id ASC";
 			$res_value = db_query($sql);
 			//echo $sql."<br>";
@@ -1088,7 +1093,6 @@ class ArtifactField extends Error {
 	 *  @param description: the field description
 	 *  @param label: the field label
 	 *  @param data_type: the field data type (string, int, flat or date)
-	 *  @param default_value: the default value
 	 *  @param display_type: the field display type (select box, text field, ...)
 	 *  @param display_size: the field display size
 	 *  @param rank_on_screen: rank on screen
@@ -1101,7 +1105,7 @@ class ArtifactField extends Error {
 	 *
 	 *  @return boolean - succeed or failed
 	 */
-	function update($group_artifact_id,$field_name,$description,$label,$data_type,$default_value,$display_type,
+	function update($group_artifact_id,$field_name,$description,$label,$data_type,$display_type,
 						 $display_size,$rank_on_screen,$show_on_add,$show_on_add_members,
 						 $empty_ok,$keep_history,$special,$use_it) {
 						 	
@@ -1130,8 +1134,7 @@ class ArtifactField extends Error {
 			   "description='".$description."',".
 			   "empty_ok=".$empty_ok.",".
 			   "keep_history=".$keep_history.",".
-			   "special=".$special.",".
-			   "default_value='".$default_value."' ".
+			   "special=".$special." ".
 			   "WHERE group_artifact_id=".$group_artifact_id." AND field_id=".$this->field_id;
 				
 		//echo $sql;
@@ -1191,6 +1194,36 @@ class ArtifactField extends Error {
 		
 		// Set the data type to user
 		$this->data_type = $this->DATATYPE_USER;
+		
+		// Reload the field
+		$this->fetchData($group_artifact_id,$field_name);
+
+		return true;
+		
+	}
+
+	/**
+	 *  Update the default_value attribute
+	 *
+	 *  @param group_artifact_id: the group artifact id
+	 *  @param default_value: the default value
+	 *
+	 *  @return boolean - succeed or failed
+	 */
+	function updateDefaultValue($group_artifact_id,$default_value) {
+						 	
+		// Update the artifact_field
+		$sql = "UPDATE artifact_field SET ".
+			   "default_value='".$default_value."' ".
+			   "WHERE group_artifact_id=".$group_artifact_id." AND field_id=".$this->field_id;
+				
+		//echo $sql;
+				
+		$res = db_query($sql);
+		if (!$res) {
+			$this->setError("Error during updating artifact_field (".$field_id."-".$group_artifact_id."): ".db_error());
+			return false;
+		}
 		
 		// Reload the field
 		$this->fetchData($group_artifact_id,$field_name);

@@ -70,7 +70,7 @@ if ($group_id && !$atid) {
 		break;
 		
 	case 'docreate':
-		if (!$this->userIsAdmin()) {
+		if (!$ath->userIsAdmin()) {
 			$this->setError('ArtifactType: Permission Denied');
 			return false;
 		}
@@ -363,7 +363,19 @@ if ($group_id && !$atid) {
 		}
 		include './field_values.php';
 		break;
-		
+				
+	case 'update_default_value':
+		$field = $art_field_fact->getFieldFromId($field_id);
+		if ( $field ) {
+			if ( !$field->updateDefaultValue($atid,$default_value) ) {
+				exit_error('Error',$art_field_fact->getErrorMessage());
+			} else {
+				$feedback = "Field values updated";
+			}
+		}
+		include './field_values.php';
+		break;
+
 	case 'display_field_values':
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
@@ -424,7 +436,7 @@ if ($group_id && !$atid) {
 		break;
 		
 	case 'field_create':
-		if ( !$art_field_fact->createField($field_id,$field_name,$description,$label,$data_type,$default_value,$display_type,
+		if ( !$art_field_fact->createField($field_id,$field_name,$description,$label,$data_type,$display_type,
 						 $display_size,$rank_on_screen,$show_on_add,$show_on_add_members,
 						 $empty_ok,$keep_history,$special,$use_it) ) {
 			exit_error('Error',$art_field_fact->getErrorMessage());
@@ -437,8 +449,8 @@ if ($group_id && !$atid) {
 	case 'field_update':
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
-			if ( !$field->update($atid,$field_name,$description,$label,$data_type,$default_value,$display_type,
-							 $display_size,$rank_on_screen,$show_on_add,$show_on_add_members,
+			if ( !$field->update($atid,$field_name,$description,$label,$data_type,$display_type,
+							 ($display_size=="N/A"?"":$display_size),$rank_on_screen,$show_on_add,$show_on_add_members,
 							 $empty_ok,$keep_history,$special,$use_it) ) {
 				exit_error('Error',$field->getErrorMessage());
 			} else {
@@ -489,12 +501,11 @@ if ($group_id && !$atid) {
 		  $feedback = "Tracker '".$ath->getName()."' - Deletion Failed - ";
 		} else {
 		  $feedback = "Tracker '".$ath->getName()."' - Successfully Deleted";
-		  echo "<H2>Tracker '".$ath->getName()."' - Deleted</H2> <h3>In case you have inadvertently deleted this tracker and want it to be 
-restored,</H3><p> please contact the <a href=\"mailto:".$GLOBALS['sys_email_admin']."\">Codex Administrator</A>  within the next 10 days.</p>"; 
-
+		  echo "<H2>Tracker '".$ath->getName()."' - Deleted</H2> <h3>In case you have inadvertently deleted this tracker and want it to be restored,</H3><p> please contact the <a href=\"mailto:".$GLOBALS['sys_email_admin']."\">Codex Administrator</A>  within the next 10 days.</p>";
 		} 
 		$ath->footer(array());
 	  break;
+	  
 	default:    
 		if ( !user_isloggedin() ) {
 			exit_not_logged_in();

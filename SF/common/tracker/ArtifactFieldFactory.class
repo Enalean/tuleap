@@ -395,6 +395,50 @@ class ArtifactFieldFactory extends Error {
 	    }
 			
 	}	
+	
+	/**
+	 *  Compute the default value given a data type and a display type
+	 *
+	 *  @param data_type: the field data type (string, int, flat or date)
+	 *  @param display_size: the field display size
+	 *
+	 *  @return string
+	 */
+	function getDefaultValue($data_type,$display_type) {
+		
+		$af = new ArtifactField();
+		
+		if ( ($data_type == $af->DATATYPE_INT || $data_type == $af->DATATYPE_USER)
+			 &&($display_type == "SB") ) 
+			return "100";
+		
+		if ( ($data_type == $this->DATATYPE_INT || $data_type == $af->DATATYPE_USER)
+			 &&($display_type == "MB") ) 
+			return "100";
+		
+		if ( ($data_type == $af->DATATYPE_TEXT)
+			 &&($display_type == "TF") ) 
+			return "";
+		
+		if ( ($this->data_type == $af->DATATYPE_TEXT)
+			 &&($display_type == "TA") ) 
+			return "";
+
+		if ( ($data_type == $af->DATATYPE_DATE)
+			 &&($display_type == "DF") ) 
+			return "";
+
+		if ( ($data_type == $af->DATATYPE_FLOAT)
+			 &&($display_type == "TF") )
+			return "0.0";
+
+		if ( ($data_type == $af->DATATYPE_INT)
+			 &&($display_type == "TF") ) 
+			return "0";
+
+		return "";
+		
+	}
 
 	/**
 	 *  Create a new field
@@ -404,7 +448,6 @@ class ArtifactFieldFactory extends Error {
 	 *  @param description: the field description
 	 *  @param label: the field label
 	 *  @param data_type: the field data type (string, int, flat or date)
-	 *  @param default_value: the default value
 	 *  @param display_type: the field display type (select box, text field, ...)
 	 *  @param display_size: the field display size
 	 *  @param rank_on_screen: rank on screen
@@ -417,7 +460,7 @@ class ArtifactFieldFactory extends Error {
 	 *
 	 *  @return boolean - succeed or failed
 	 */
-	function createField($field_id,$field_name,$description,$label,$data_type,$default_value,$display_type,
+	function createField($field_id,$field_name,$description,$label,$data_type,$display_type,
 						 $display_size,$rank_on_screen,$show_on_add,$show_on_add_members,
 						 $empty_ok,$keep_history,$special,$use_it) {
 						 	
@@ -437,10 +480,12 @@ class ArtifactFieldFactory extends Error {
 		$show_on_add_members = ($show_on_add_members?$show_on_add_members:0);
 		$special = ($special?$special:0);
 		
+		$default_value = $this->getDefaultValue($data_type,$display_type);
+		
 		// First create the artifact_field
 		$sql = "INSERT INTO artifact_field VALUES (".
 				$field_id.",".$this->ArtifactType->getID().",'".addslashes($field_name)."',".$data_type.",'".$display_type."','".$display_size."','".
-				addslashes($label)."','".addslashes($description)."','',0,".$empty_ok.",".$keep_history.",".$special.",'','".addslashes($default_value)."')";
+				addslashes($label)."','".addslashes($description)."','',0,".$empty_ok.",".$keep_history.",".$special.",'','".$default_value."')";
 				
 		//echo $sql;
 				
@@ -476,28 +521,24 @@ class ArtifactFieldFactory extends Error {
 
 			// Insert artifact_field_value record
 			$sql = "INSERT INTO artifact_field_value (field_id,artifact_id,";
-			$values = $field_id.",".$id.",";
+			$values = $field_id.",".$id.",".$default_value;
 			
 			switch ( $data_type ) {
 			case $af->DATATYPE_TEXT:
 				$name = "valueText";
-				$values .= "'$default_value'";
 				break;
 				
 			case $af->DATATYPE_INT:
 			case $af->DATATYPE_USER:
 				$name = "valueInt";
-				$values .= ($default_value?$default_value:'0');
 				break;
 				
 			case $af->DATATYPE_FLOAT:
 				$name = "valueFloat";
-				$values .= ($default_value?$default_value:'0.0');
 				break;
 				
 			case $af->DATATYPE_DATE:
 				$name = "valueDate";
-				$values .= ($default_value?$default_value:'0');
 				break;
 			} // switch
 			
@@ -507,7 +548,14 @@ class ArtifactFieldFactory extends Error {
 			//echo $sql."<br>";
 				    	
 		} // while
-
+		
+		// If select box or multi select box, we need to create the None value
+		if ( $display_type == "SB" || $display_type == "MB" ) {
+			$sql = "INSERT INTO artifact_field_value_list VALUES ( ".$field_id.",".$this->ArtifactType->getID().
+				   ",100,'None','',10,'P')";
+			$result=db_query($sql);
+		}
+		
 		// Reload the fields
 		$this->fetchData($this->ArtifactType->getID());
 

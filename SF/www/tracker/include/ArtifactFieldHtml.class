@@ -78,7 +78,7 @@ class ArtifactFieldHtml extends ArtifactField {
 			if ($box_name == '') {
 			    $box_name = $this->field_name.'[]';
 			}
-			return html_build_multiple_select_box($result,$box_name,$checked,6,$show_none,$text_none, $show_any,$text_any,$show_value);
+			return html_build_multiple_select_box($result,$box_name,$checked,($this->getDisplaySize()!=""?$this->getDisplaySize():"6"),$show_none,$text_none, $show_any,$text_any,$show_value);
 	    }
 	}
 	

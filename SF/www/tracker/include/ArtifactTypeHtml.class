@@ -584,6 +584,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		$title_arr[]='Type';
 		$title_arr[]='Description';
 		$title_arr[]='Rank<br>on screen';
+		$title_arr[]='Status';
 		$title_arr[]='Delete?';
 		
 		echo html_build_list_table_top ($title_arr);
@@ -596,6 +597,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		while (list($field_name,$field) = each($fields)) {
 		
 		    $rank = ($field->getPlace()?$field->getPlace():"-");
+		    $status = ($field->getUseIt()?"Used":"Unused");
 		
 			$html .= '<TR class="'. 
 			    util_get_alt_row_color($iu) .'">';
@@ -606,7 +608,14 @@ class ArtifactTypeHtml extends ArtifactType {
 			"\n<td>".$field->getLabelDisplayType().'</td>'.
 			"\n<td>".$field->getDescription().'</td>'.
 			"\n<td align =\"center\">".$rank.'</td>'.
-		    "\n<td align =\"center\"><a href=\"/tracker/admin/?func=field_delete&group_id=".$this->Group->getID()."&atid=".$this->getID()."&field_id=".$field->getID()."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('** CAUTION!! ** If you delete this field, you will lost ALL the associated data. Continue?')\"></a>";
+			"\n<td align =\"center\">".$status.'</td>';
+			
+			if ( $field->isStandardField() ) {
+				// For standard, we can't delete them - Only unused them
+		    	$html .= "\n<td align =\"center\">-</td>";
+			} else {
+		    	$html .= "\n<td align =\"center\"><a href=\"/tracker/admin/?func=field_delete&group_id=".$this->Group->getID()."&atid=".$this->getID()."&field_id=".$field->getID()."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('** WARNING!! ** If you delete this field, you will lost ALL the associated data. You can also set to UNUSED this field. Continue?')\"></a></td>";
+		    }
 		
 			$html .= "<TR>";
 					    			
@@ -628,6 +637,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		while (list($field_name,$field) = each($fields)) {
 		
 		    $rank = ($field->getPlace()?$field->getPlace():"-");
+		    $status = ($field->getUseIt()?"Used":"Unused");
 		
 			$html .= '<TR class="'. 
 			    util_get_alt_row_color($iu) .'">';
@@ -638,7 +648,13 @@ class ArtifactTypeHtml extends ArtifactType {
 			"\n<td>".$field->getLabelDisplayType().'</td>'.
 			"\n<td>".$field->getDescription().'</td>'.
 			"\n<td align =\"center\">".$rank.'</td>'.
-		    "\n<td align =\"center\"><a href=\"/tracker/admin/?func=field_delete&group_id=".$this->Group->getID()."&atid=".$this->getID()."&field_id=".$field->getID()."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('** CAUTION!! ** If you delete this field, you will lost ALL the associated data. Continue?')\"></a>";
+			"\n<td align =\"center\">".$status.'</td>';
+			if ( $field->isStandardField() ) {
+				// For standard, we can't delete them - Only unused them
+		    	$html .= "\n<td align =\"center\">-</td>";
+			} else {
+			    $html .= "\n<td align =\"center\"><a href=\"/tracker/admin/?func=field_delete&group_id=".$this->Group->getID()."&atid=".$this->getID()."&field_id=".$field->getID()."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('** CAUTION!! ** If you delete this field, you will lost ALL the associated data. Continue?')\"></a></td>";
+			}
 		
 			$html .= "<TR>";
 					    			
@@ -668,7 +684,7 @@ class ArtifactTypeHtml extends ArtifactType {
 	 */
 	function displayFieldType($data_type,$display_type,$form_name) {
 		
-		$af = new ArtifactField($this->getID(),"");
+		$af = new ArtifactField();
 		
 		echo '<script language="JavaScript">
 
@@ -678,36 +694,43 @@ class ArtifactTypeHtml extends ArtifactType {
 			  		case "1":
 			  			form.data_type.value = '.$af->DATATYPE_INT.';
 					  	form.display_type.value = "SB";
+					  	form.display_size.value = "N/A";
 					  	break;
 			  		// Multi Select Box
 			  		case "2":
 			  			form.data_type.value = '.$af->DATATYPE_INT.';
 					  	form.display_type.value = "MB";
+					  	form.display_size.value = "";
 					  	break;
 			  		// TextField
 			  		case "3":
 			  			form.data_type.value = '.$af->DATATYPE_TEXT.';
 					  	form.display_type.value = "TF";
+					  	form.display_size.value = "";
 					  	break;
 			  		// TextArea
 			  		case "4":
 			  			form.data_type.value = '.$af->DATATYPE_TEXT.';
 					  	form.display_type.value = "TA";
+					  	form.display_size.value = "";
 					  	break;
 			  		// DateField
 			  		case "5":
 			  			form.data_type.value = '.$af->DATATYPE_DATE.';
 					  	form.display_type.value = "DF";
+					  	form.display_size.value = "";
 					  	break;
 			  		// FloatField
 			  		case "6":
 			  			form.data_type.value = '.$af->DATATYPE_FLOAT.';
 					  	form.display_type.value = "TF";
+					  	form.display_size.value = "";
 					  	break;
 			  		// IntegerField
 			  		case "7":
 			  			form.data_type.value = '.$af->DATATYPE_INT.';
 					  	form.display_type.value = "TF";
+					  	form.display_size.value = "";
 					  	break;
 					default:
 						alert("Unknow field type!");
@@ -736,43 +759,42 @@ class ArtifactTypeHtml extends ArtifactType {
 			if ( ($data_type == $af->DATATYPE_TEXT)
 				 &&($display_type == "TF") ) 
 				$selected = " selected";
-			echo '<option value="3"'.$selected.'>TextField</option>';
+			echo '<option value="3"'.$selected.'>Text Field</option>';
 			
 			$selected = "";
 			if ( ($data_type == $af->DATATYPE_TEXT)
 				 &&($display_type == "TA") ) 
 				$selected = " selected";
-			echo '<option value="4"'.$selected.'>TextArea</option>';
+			echo '<option value="4"'.$selected.'>Text Area</option>';
 
 			$selected = "";
 			if ( ($data_type == $af->DATATYPE_DATE)
 				 &&($display_type == "DF") ) 
 				$selected = " selected";
-			echo '<option value="5"'.$selected.'>DateField</option>';
+			echo '<option value="5"'.$selected.'>Date Field</option>';
 
 			$selected = "";
 			if ( ($data_type == $af->DATATYPE_FLOAT)
 				 &&($display_type == "TF") ) {
 				$selected = " selected";
-				echo 'xxx';
 			}
-			echo '<option value="6"'.$selected.'>FloatField</option>';
+			echo '<option value="6"'.$selected.'>Float Field</option>';
 
 			$selected = "";
 			if ( ($data_type == $af->DATATYPE_INT)
 				 &&($display_type == "TF") ) 
 				$selected = " selected";
-			echo '<option value="7"'.$selected.'>IntegerField</option>';
+			echo '<option value="7"'.$selected.'>Integer Field</option>';
 
 		} else {
 			echo '
 			<option value="1">Select Box</option>
 			<option value="2">Multi Select Box</option>
-			<option value="3">TextField</option>
-			<option value="4">TextArea</option>
-			<option value="5">DateField</option>
-			<option value="6">FloatField</option>
-			<option value="7">IntegerField</option>';
+			<option value="3">Text Field</option>
+			<option value="4">Text Area</option>
+			<option value="5">Date Field</option>
+			<option value="6">Float Field</option>
+			<option value="7">Integer Field</option>';
 		}
         echo '</select>';
 	}
@@ -803,8 +825,11 @@ class ArtifactTypeHtml extends ArtifactType {
 	function displayFieldUsageForm($func="field_create",$field_id=false,$field_name=false,$description=false,$label=false,$data_type=false,$default_value=false,$display_type=false,
 								   $display_size=false,$rank_on_screen=false,$show_on_add=false,$show_on_add_members=false,
 								   $empty_ok=false,$keep_history=false,$special=false,$use_it=false,$show_use=false) {
+		global $art_field_fact;
+		
+		$field = $art_field_fact->getFieldFromId($field_id);
 
-		$af = new ArtifactField($this->getID(),"");
+		$af = new ArtifactField();
 
 		if ( $func == "field_create" ) {
 			echo '<h3>Create a new field</h3>';
@@ -830,9 +855,16 @@ class ArtifactTypeHtml extends ArtifactType {
 			  <input type="hidden" name="display_type" value="'.$display_type.'">';
 		}
 		
+		if ( $field && $field->isStandardField() ) {
+			echo '<p><i><b>** IMPORTANT NOTE **</b> \''.$label.'\' is a standard field of the CodeX 
+				Tracker. Its purpose is global to all trackers and we strongly advise 
+				you not to change its label and description unless they have a similar 
+				meaning which preserves the role of the field.</i></p>';
+		}
+	
 		echo '
 		  <b>Field identification and description:</b><br>
-                              <p>Field Label: <font color="red">*</font> ';
+          <p>Field Label: <font color="red">*</font> ';
 		      
 		if ( $label ) {
 			echo '<input type="text" name="label" size="30" maxlength="40" value="'.$label.'">';
@@ -849,36 +881,33 @@ class ArtifactTypeHtml extends ArtifactType {
 		}
 		
 		echo '
-		  <p><b>Field type:</b><br>
-		  <table width="100%" border="0" cellpadding="5">
-		    <tr> 
-		      <td width="30%">Type: <font color="red">*</font>&nbsp;';
+		  <p>Field type: <font color="red">*</font>&nbsp;';
 		
-		$this->displayFieldType($data_type,$display_type,"form_create");
-		
-		echo '			
-		      </td>
-		      <td width="70%">Default Value:&nbsp;';
-		      
-		if ( $default_value ) {
-			echo '<input type="text" name="default_value" value="'.$default_value.'">';
+		if ( $field && $field->isStandardField() ) {
+			echo $field->getLabelDisplayType();
 		} else {
-			echo '<input type="text" name="default_value">';
+			$this->displayFieldType($data_type,$display_type,"form_create");
 		}
 		
-		echo '<br><br>
-		      </td>
-		    </tr>
-		  </table>
-		  <b>Display informations:</b><br>
+		echo '			
+		  <p><b>Display informations:</b><br>
 		  <table width="100%" border="0" cellpadding="5" cellspacing="0">
 		    <tr> 
 		      <td>Display Size:&nbsp;';
 		      
 		if ( $display_size ) {
-		    echo '<input type="text" name="display_size" size="5" maxlength="5" value="'.$display_size.'">';
+			if ( $field && $field->isStandardField() ) {
+				echo $display_size;
+			    echo '<input type="hidden" name="display_size" value="'.$display_size.'">';
+			} else {
+			    echo '<input type="text" name="display_size" size="5" maxlength="5" value="'.$display_size.'">';
+			}
 		} else {
-		    echo '<input type="text" name="display_size" size="5" maxlength="5">';
+			if ( $display_type == "SB" ) {
+		    	echo '<input type="text" name="display_size" size="5" maxlength="5" value="N/A">';
+			} else {
+		    	echo '<input type="text" name="display_size" size="5" maxlength="5">';
+		    }
 		}
 			    
 	    echo '
@@ -925,21 +954,41 @@ class ArtifactTypeHtml extends ArtifactType {
 		    <tr> 
 		      <td width="30%">Allow Empty Value: ';
 		
-		if ( $empty_ok ) {
-			echo '<input type="checkbox" name="empty_ok" value="1" checked>';
+		if ( $field && $field->isStandardField() ) {
+			if ( $empty_ok ) {
+				echo 'Yes';
+			    echo '<input type="hidden" name="empty_ok" value="1" checked>';
+			} else {
+				echo 'No';
+			    echo '<input type="hidden" name="empty_ok" value="1">';
+			}
 		} else {
-			echo '<input type="checkbox" name="empty_ok" value="1">';
+			if ( $empty_ok ) {
+				echo '<input type="checkbox" name="empty_ok" value="1" checked>';
+			} else {
+				echo '<input type="checkbox" name="empty_ok" value="1">';
+			}
 		}
-		
+				
 		echo '
 		        </td><td>Keep Change History: ';
 		
-		if ( $keep_history ) {
-			echo '<input type="checkbox" name="keep_history" value="1" checked>';
+		if ( $field && $field->isStandardField() ) {
+			if ( $keep_history ) {
+				echo 'Yes';
+			    echo '<input type="hidden" name="keep_history" value="1" checked>';
+			} else {
+				echo 'No';
+			    echo '<input type="hidden" name="keep_history" value="1">';
+			}
 		} else {
-			echo '<input type="checkbox" name="keep_history" value="1">';
+			if ( $keep_history ) {
+				echo '<input type="checkbox" name="keep_history" value="1" checked>';
+			} else {
+				echo '<input type="checkbox" name="keep_history" value="1">';
+			}
 		}
-		
+				
 		echo '
 		      </td></tr>';
 		      
@@ -1005,11 +1054,8 @@ class ArtifactTypeHtml extends ArtifactType {
 		
 		while (list($field_name,$field) = each($fields)) {
 		
-			if ( !$field->isSelectBox() && !$field->isMultiSelectBox() ) {
-				continue;
-			}
-			
 			// Special case for submitted_by field
+			// We don't display this field
 			if ( $field->getName() == "submitted_by" ) {
 				continue;
 			}
@@ -1162,26 +1208,31 @@ class ArtifactTypeHtml extends ArtifactType {
 		      <td width="30%">';
 	       
 		if ( $func == "value_update" ) {
-			echo 'Status:&nbsp;
-			<select name="status">';
-			if ( $status ) {
-				$selected = "";
-				if ( $status == "V" ) 
-					$selected = " selected";
-				echo '<option value="V"'.$selected.'>Active</option>';
-	
-				$selected = "";
-				if ( $status == "H" ) 
-					$selected = " selected";
-				echo '<option value="H"'.$selected.'>Hidden</option>';
-	
+			if ( $status == "P" ) {
+				echo 'Status: Permanent';
+				echo '<input type="hidden" name="status" value="P">';
 			} else {
-				echo '				
-			          <option value="V" selected>Active</option>
-			          <option value="H">Hidden</option>';
+				echo 'Status:&nbsp;
+				<select name="status">';
+				if ( $status ) {
+					$selected = "";
+					if ( $status == "V" ) 
+						$selected = " selected";
+					echo '<option value="V"'.$selected.'>Active</option>';
+		
+					$selected = "";
+					if ( $status == "H" ) 
+						$selected = " selected";
+					echo '<option value="H"'.$selected.'>Hidden</option>';
+		
+				} else {
+					echo '				
+				          <option value="V" selected>Active</option>
+				          <option value="H">Hidden</option>';
+				}
+				echo '
+				</select> ';
 			}
-			echo '
-			</select> ';
 		} else {
 			echo '&nbsp;</td>';
 		}
@@ -1231,7 +1282,7 @@ class ArtifactTypeHtml extends ArtifactType {
 			return;
 		}
 
-		$values = $field->getFieldValues ($this->getID(),'V');
+		$values = $field->getFieldValues ($this->getID(),"'V','P'");
 		$rows = db_numrows($values);
 		
 		if (!$values || ($rows == 0)) {
@@ -1249,6 +1300,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		$title_arr[]='Value Label';
 		$title_arr[]='Description';
 		$title_arr[]='Rank';
+		$title_arr[]='Status';
 		$title_arr[]='Delete?';
 		
 		echo html_build_list_table_top ($title_arr);
@@ -1260,6 +1312,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		while ($row = db_fetch_array($values)) {
 		
 		    $rank = $row['order_id']?$row['order_id']:"-";
+		    $status = $this->getLabelValueStatus($row['status']);
 		
 			$html .= '<TR class="'. 
 			    util_get_alt_row_color($iu) .'">';
@@ -1269,7 +1322,14 @@ class ArtifactTypeHtml extends ArtifactType {
 			$row['value'].'</A></td>'.
 			"\n<td>".$row['description'].'</td>'.
 			"\n<td align =\"center\">".$rank.'</td>'.
-		    "\n<td align =\"center\"><a href=\"/tracker/admin/?func=value_delete&group_id=".$this->Group->getID()."&atid=".$this->getID()."&field_id=".$field->getID()."&value_id=".$row['value_id']."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('Delete this field value?')\"></a>";
+			"\n<td align =\"center\">".$status.'</td>';
+			
+			if ( $row['status'] == "P" ) {
+				// Unable to delete Permanent values
+		    	$html .= "\n<td align =\"center\">-</td>";
+			} else {
+		    	$html .= "\n<td align =\"center\"><a href=\"/tracker/admin/?func=value_delete&group_id=".$this->Group->getID()."&atid=".$this->getID()."&field_id=".$field->getID()."&value_id=".$row['value_id']."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('Delete this field value?')\"></a></td>";
+		    }
 		
 			$html .= "<TR>";
 					    			
@@ -1285,12 +1345,13 @@ class ArtifactTypeHtml extends ArtifactType {
 
 		// Build HTML ouput for Unused fields
 		$iu=0;
-		$values = $field->getFieldValues ($this->getID(),'H');
+		$values = $field->getFieldValues ($this->getID(),"'H'");
 		$html = "";
 		
 		while ($row = db_fetch_array($values)) {
 		
 		    $rank = $row['order_id']?$row['order_id']:"-";
+		    $status = $this->getLabelValueStatus($row['status']);
 		
 			$html .= '<TR class="'. 
 			    util_get_alt_row_color($iu) .'">';
@@ -1300,7 +1361,14 @@ class ArtifactTypeHtml extends ArtifactType {
 			$row['value'].'</A></td>'.
 			"\n<td>".$row['description'].'</td>'.
 			"\n<td align =\"center\">".$rank.'</td>'.
-		    "\n<td align =\"center\"><a href=\"/tracker/admin/?func=value_delete&group_id=".$this->Group->getID()."&atid=".$this->getID()."&field_id=".$field->getID()."&value_id=".$row['value_id']."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('Delete this field value?')\"></a>";
+			"\n<td align =\"center\">".$status.'</td>';
+
+			if ( $row['status'] == "P" ) {
+				// Unable to delete Permanent values
+		    	$html .= "\n<td align =\"center\">-</td>";
+			} else {
+		    	$html .= "\n<td align =\"center\"><a href=\"/tracker/admin/?func=value_delete&group_id=".$this->Group->getID()."&atid=".$this->getID()."&field_id=".$field->getID()."&value_id=".$row['value_id']."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('Delete this field value?')\"></a>";
+		    }
 		
 			$html .= "<TR>";
 					    			
@@ -1468,6 +1536,64 @@ class ArtifactTypeHtml extends ArtifactType {
 			
 		
 	}
+
+	/**
+	 *  Display the default value form
+	 *
+	 *  @param field_id: the field id to edit
+	 *  @param default_value: the default value
+	 *
+	 *  @return void
+	 */
+	function displayDefaultValueForm($field_id,$default_value) {
+		global $ath,$art_field_fact,$PHP_SELF;
+		
+		$field = $art_field_fact->getFieldFromId($field_id);
+		if ( !$field ) {
+			return;
+		}
+
+		echo '<h3>Define Default Value</h3>';
+					
+		echo '
+	      <FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
+	      <INPUT TYPE="HIDDEN" NAME="func" VALUE="update_default_value">
+	      <INPUT TYPE="HIDDEN" NAME="field_id" VALUE="'.$field_id.'">
+	      <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$this->Group->getID().'">
+	      <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$this->getID().'">';
+
+		if ( $field->isSelectBox() || $field->isMultiSelectBox() ) {
+			echo 'Value: ';
+			echo html_build_select_box ($field->getFieldValues($this->getID(),"'V','P'"),"default_value",$default_value);
+		} else {
+	      	echo 'Value: <INPUT TYPE="text" NAME="default_value" VALUE="'.$default_value.'">';
+		}
+
+		echo '
+		<INPUT type="submit" name="submit" value="Update">
+		</form>';
+	}
+
+	/**
+	 *  Get tha label for a code status
+	 *
+	 *  @param status: the code status
+	 *
+	 *  @return string
+	 */
+	function getLabelValueStatus($status) {
+		switch ( $status ) {
+		case "P":
+			return "Permanent";
+		case "V":
+			return "Active";
+		case "H":
+			return "Hidden";
+		default:
+			return "Unknow status:".$status;
+		}
+	}
+
 }
 
 ?>

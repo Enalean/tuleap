@@ -203,10 +203,6 @@ $sys_show_project_type = 0;
 $sys_lf = "\n";
 
 //
-// Fields which are users fields
-$sys_user_fields = array("assigned_to","submitted_by","multi_assigned_to");
-
-//
 // Use or not generic trackers
 $sys_activate_tracker = 0;
 
