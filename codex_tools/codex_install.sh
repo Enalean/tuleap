@@ -52,9 +52,11 @@ TAIL='/usr/bin/tail'
 GREP='/bin/grep'
 CHKCONFIG='/sbin/chkconfig'
 SERVICE='/sbin/service'
+PERL='/usr/bin/perl'
+
 CMD_LIST="GROUPADD GROUDEL USERADD USERDEL USERMOD MV CP LN LS RM TAR \
-MKDIR RPM CHOWN CHMOD FIND MYSQL TOUCH CAT MAKE TAIL GREP CHKCONFIG \
-SERVICE"
+MKDIR RPM CHOWN CHMOD FIND TOUCH CAT MAKE TAIL GREP CHKCONFIG \
+SERVICE PERL"
 
 # Functions
 create_group() {
@@ -85,6 +87,11 @@ die() {
   echo -e "**ERROR** $1"; exit 1
 }
 
+substitute() {
+  # $1: filename, $2: string to match, $3: replacement string
+  $PERL -pi -e 's/$2/$3/g' $1
+}
+
 ##############################################
 # CodeX installation
 ##############################################
@@ -100,12 +107,12 @@ done
 ##############################################
 # Check we are running on RH 7.3
 #
-RH_RELEASE="7.3"
+RH_RELEASE="3ES"
 yn="y"
 rpm -q redhat-release-${RH_RELEASE} 2>/dev/null 1>&2
 if [ $? -eq 1 ]; then
     cat <<EOF
-This machine is not running RedHat ${RH_RELEASE}. Executing this install
+This machine is not running RedHat Enterprise Linux ${RH_RELEASE}. Executing this install
 script may cause data loss or corruption.
 EOF
 read -p "Continue? [yn]: " yn
@@ -123,10 +130,9 @@ todo "WHAT TO DO TO FINISH THE CODEX INSTALLATION (see $TODO_FILE)"
 # Check Required Stock RedHat RPMs are installed
 #
 rpms_ok=1
-for rpm in mm mm-devel openssh-server openssh openssh-clients openssh-askpass \
-   openssl openldap perl perl-DBI perl-DBD-MySQL perl-Digest-MD5 perl-suidperl perl-CGI \
-   sendmail wu-ftpd telnet bind ntp samba \
-   compat-libstdc++ compat-glibc python
+for rpm in openssh-server openssh openssh-clients openssh-askpass \
+   openssl openldap perl perl-DBI perl-CGI \
+   sendmail telnet bind ntp samba python php php-mysql php-ldap
 do
     $RPM -q $rpm  2>/dev/null 1>&2
     if [ $? -eq 1 ]; then
@@ -159,9 +165,19 @@ done
 # Create Groups
 create_group sourceforge 104
 create_group dummy 103
-create_group mailman 105
+create_group mailman 106
 create_group ftpadmin 96
 create_group ftp 50
+
+# Ask for domain name
+read -p "CodeX Domain name: " sys_default_domain
+# Ask for domain name
+read -p "Your Company short name (e.g. Xerox): " sys_org_name
+read -p "Your Company long name (e.g. Xerox Corporation): " sys_long_org_name
+read -p "Codex Server fully qualified machine name: " sys_fullname
+read -p "Codex Server IP address: " sys_ip_address
+read -p "LDAP server name: " sys_ldap_server
+read -p "Windows domain (Samba): " sys_win_domain
 
 # Ask for user passwords
 rt_passwd="a"; rt_passwd2="b";
@@ -196,7 +212,7 @@ $USERDEL sourceforge 2>/dev/null 1>&2
 $USERADD -c 'Owner of CodeX directories' -M -d '/home/httpd' -p "$sf_encpasswd" -u 104 -g 104 -s '/bin/bash' -G ftpadmin sourceforge
 
 $USERDEL mailman 2>/dev/null 1>&2
-$USERADD -c 'Owner of Mailman directories' -M -d '/home/mailman' -p "$mm_encpasswd" -u 105 -g 105 -s '/bin/bash' mailman
+$USERADD -c 'Owner of Mailman directories' -M -d '/home/mailman' -p "$mm_encpasswd" -u 106 -g 106 -s '/bin/bash' mailman
 
 $USERDEL ftpadmin 2>/dev/null 1>&2
 $USERADD -c 'FTP Administrator' -M -d '/home/ftp' -u 96 -g 96 ftpadmin
@@ -234,15 +250,44 @@ build_dir /home/var/lib root root 755
 #build_dir /home/var/lib/mysql mysql bin 755 # see CodeX DB installation
 build_dir /etc/skel_codex root root 755
 build_dir /etc/codex sourceforge sourceforge 755
+build_dir /etc/codex/conf sourceforge sourceforge 755
+build_dir /etc/codex/site-content sourceforge sourceforge 755
+build_dir /etc/codex/site-content/en_US sourceforge sourceforge 755
+build_dir /etc/codex/themes sourceforge sourceforge 755
 
 build_dir /var/run/log_accum root root 1777
 build_dir /cvsroot sourceforge sourceforge 755
 build_dir /cvsroot/.mysql_backup mysql mysql 755
 build_dir /cvsroot/.mysql_backup/old root root 775
 
+
+
 ######
 # Now install CodeX specific RPMS (and remove RedHat RPMs)
 #
+
+# wu-ftpd
+echo "Removing Redhat vsftp daemon.."
+$RPM -e --nodeps vsftpd 2>/dev/null
+echo "Installing wu-ftpd..."
+cd ${RPMS_DIR}/others
+$RPM -Uvh --force wu-ftpd*.i386.rpm
+
+# -> perlsuid
+echo "Removing Perl suid if any..."
+$RPM -e --nodeps perlsuid-perl 2>/dev/null
+echo "Installing Perl suid..."
+cd ${RPMS_DIR}/others
+$RPM -Uvh --force perl-suidperl*.i386.rpm
+
+# -> Perl DBD for MySQL
+echo "Removing Redhat Perl DBD MySQL if any..."
+$RPM -e --nodeps perl-DBD-MySQL 2>/dev/null
+echo "Installing Perl DBD MySQL..."
+cd ${RPMS_DIR}/perl-dbd-mysql
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh --force ${newest_rpm}/perl-DBD-MySQL-*.i386.rpm
+
 # -> mysql
 echo "Removing RedHat MySQL..."
 $SERVICE mysql stop 2>/dev/null
@@ -260,21 +305,21 @@ $CHKCONFIG mysql on
 # -> apache
 echo "Removing RedHat Apache..."
 $SERVICE httpd stop
-$RPM -e --nodeps apache apache-devel apache-manual 2>/dev/null
+$RPM -e --nodeps httpd httpd-devel httpd-manual 2>/dev/null
 echo "Installing Apache RPMs for CodeX...."
 cd ${RPMS_DIR}/apache
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --force ${newest_rpm}/apache-*.i386.rpm
+$RPM -Uvh --force ${newest_rpm}/httpd-*.i386.rpm
 $CHKCONFIG httpd on
 # restart Apache after PHP installation - see below
 
 # -> jre
 echo "Removing RedHat Java JRE..."
-$RPM -e --nodeps jre 2>/dev/null
+$RPM -e --nodeps jre j2re 2>/dev/null
 echo "Installing Java JRE RPMs for CodeX...."
 cd ${RPMS_DIR}/jre
 newest_rpm=`$LS -1 -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --force ${newest_rpm}/jre-*.i386.rpm
+$RPM -Uvh --force ${newest_rpm}/j2re-*.i?86.rpm
 cd /usr/java
 newest_jre=`$LS -1d jre* | $TAIL -1`
 $LN -sf $newest_jre jre
@@ -286,24 +331,6 @@ echo "Installing CVS RPMs for CodeX...."
 cd ${RPMS_DIR}/cvs
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh --force ${newest_rpm}/cvs-*.i386.rpm
-
-# -> gd 1.3 (needed by php3)
-echo "Removing RedHat GD library .."
-$RPM -e --nodeps gd gd-devel 2>/dev/null
-echo "Installing GD library for CodeX...."
-cd ${RPMS_DIR}/gd
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --force ${newest_rpm}/gd-*.i386.rpm
-
-# -> php
-echo "Removing RedHat PHP .."
-$RPM -e --nodeps php php-dbg php-devel php-imap php-ldap php-manual php-mysql php-odbc php-pgsql php-snmp 2>/dev/null
-echo "Installing PHP RPMs for CodeX...."
-cd ${RPMS_DIR}/php
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --force ${newest_rpm}/php-*.i386.rpm
-phpini_file=`rpm -ql php | grep .ini`
-todo "Customize file $phpini_file"
 
 # Restart Apache after PHP is installed
 $SERVICE httpd restart
@@ -355,7 +382,12 @@ $LN -sf ${dir_entry} docbook-xsl
 ##############################################
 # Now install various precompiled utilities
 #
-$CP -a ${nonRPMS_DIR}/utilities/* /usr/local/bin
+cd ${nonRPMS_DIR}/utilities
+for f in *
+do
+  $CP -a $f /usr/local/bin
+  $CHOWN sourceforge.sourceforge /usr/local/bin/$f
+done
 $CHOWN root.root /usr/local/bin/fileforge
 $CHMOD u+s /usr/local/bin/fileforge
 $CHOWN root.root /usr/local/bin/tmpfilemove
@@ -372,7 +404,9 @@ $FIND /home/httpd -type f -exec $CHMOD u+rw,g+rw,o-w+r, {} \;
 $FIND /home/httpd -type d -exec $CHMOD 775 {} \;
 
 make_backup /etc/httpd/conf/httpd.conf
-for f in /etc/httpd/conf/cvsweb.conf /etc/httpd/conf/httpd.conf /etc/local.inc /etc/httpd/conf/mailman.conf; do
+for f in /etc/httpd/conf/cvsweb.conf /etc/httpd/conf/httpd.conf \
+/etc/httpd/conf/mailman.conf /etc/httpd/conf.d/ssl.conf \
+/etc/httpd/conf.d/php.conf /etc/codex/conf/local.inc; do
     yn="y"
     fn=`basename $f`
     [ -f "$f" ] && read -p "$f already exist. Overwrite? [y|n]:" yn
@@ -395,13 +429,46 @@ $CP /home/httpd/codex_tools/backup_job /home/tools
 $CHOWN root.root /home/tools/backup_job
 $CHMOD 740 /home/tools/backup_job
 
-todo "Customize /etc/local.inc"
+# replace string patterns in local.inc
+substitute '/etc/codex/conf/local.inc' '%sys_default_domain%' "$sys_default_domain" 
+substitute '/etc/codex/conf/local.inc' '%sys_dbpasswd%' "$sf_passwd" 
+substitute '/etc/codex/conf/local.inc' '%sys_ldap_server%' "$sys_ldap_server" 
+substitute '/etc/codex/conf/local.inc' '%sys_org_name%' "$sys_org_name" 
+substitute '/etc/codex/conf/local.inc' '%sys_long_org_name%' "$sys_long_org_name" 
+substitute '/etc/codex/conf/local.inc' '%sys_fullname%' "$sys_fullname" 
+substitute '/etc/codex/conf/local.inc' '%sys_win_domain%' "$sys_win_domain" 
+
+# replace string patterns in httpd.conf
+substitute '/etc/httpd/conf/httpd.conf' '%sys_default_domain%' "$sys_default_domain"
+substitute '/etc/httpd/conf/httpd.conf' '%sys_ip_address%' "$sys_ip_address"
+
+# replace string patterns in ssl.conf
+substitute '/etc/httpd/conf.d/ssl.conf' '%sys_default_domain%' "$sys_default_domain"
+substitute '/etc/httpd/conf.d/ssl.conf' '%sys_ip_address%' "$sys_ip_address"
+
+todo "Customize /etc/codex/conf/local.inc"
 todo "Customize /etc/httpd/conf/httpd.conf"
 todo "Customize /etc/httpd/conf/cvsweb.conf. Edit %CVSROOT (if needed) and $logo"
 todo "Customize /etc/httpd/conf/mailman.conf"
 todo "Customize /home/httpd/documentation/user_guide/xml/en_US/ParametersLocal.dtd"
 todo "Customize /home/tools/backup_job"
 
+##############################################
+# Installing the CodeX database
+#
+echo "Installing phpMyAdmin..."
+cd /home/httpd
+$RM -rf phpMyAdmin*
+$TAR xfj ${nonRPMS_DIR}/phpMyAdmin/phpMyAdmin-*
+dir_entry=`$LS -1d phpMyAdmin-*`
+$LN -sf ${dir_entry} phpMyAdmin
+$CHOWN -R sourceforge.sourceforge /home/httpd/phpMyAdmin*
+
+todo "Customize phpMyAdmin. Edit /home/httpd/phpMyAdmin/config.inc.php"
+todo "  - $cfg['PmaAbsoluteUri'] = 'http://$sys_default_domain/phpMyAdmin';"
+todo "  - $cfg['Servers'][$i]['auth_type']     = 'http'; "
+todo "  - $cfg['Servers'][$i]['user']          = 'sourceforge';"
+todo "  - $cfg['Servers'][$i]['only_db']       = 'sourceforge';";
 
 ##############################################
 # Installing the CodeX database
@@ -462,16 +529,6 @@ EOF
 todo "You may want to move /var/lib/mysql to a larger file system (e.g. /home/var/lib/mysql) and create a symbolic link"
 
 ##############################################
-# Installing Sendmail
-#
-echo "Installing sendmail shell wrappers..."
-cd /etc/smrsh
-$LN -sf /usr/local/bin/gotohell
-$LN -sf /home/mailman/mail/wrapper
-
-todo "Finish sendmail settings (see installation Guide) and create codex-contact and codex-admin aliases in /etc/aliases"
-
-##############################################
 # Mailman installation
 #
 MAILMAN_DIR="/home/mailman"
@@ -491,10 +548,21 @@ if [ "$yn" = "y" -o "$yn" = "-" ]; then
     $MAKE install
 fi
 $CHOWN -R mailman.mailman $MAILMAN_DIR
+$CHMOD a+rx,g+ws $MAILMAN_DIR
 $MAILMAN_DIR/bin/mmsitepass $mm_passwd
 $LN -sf $MAILMAN_DIR /usr/local/mailman
 todo "Edit $MAILMAN_DIR/Mailman/mm_cfg.py and setup DEFAULT_HOST_NAME\n\
 and DEFAULT_URL variables (overrides Defaults.py settings). Recompile with python -O mm_cfg.py"
+
+##############################################
+# Installing Sendmail
+#
+echo "Installing sendmail shell wrappers..."
+cd /etc/smrsh
+$LN -sf /usr/local/bin/gotohell
+$LN -sf $MAILMAN_DIR/mail/mailman
+
+todo "Finish sendmail settings (see installation Guide) and create codex-contact and codex-admin aliases in /etc/aliases"
 
 ##############################################
 # CVS configuration
@@ -669,8 +737,8 @@ $CAT <<'EOF' >/tmp/cronfile
 # or want to exclusively use a callback strategy instead of polling.
 #0,5,10,15,20,25,30,35,40,45,50,55 * * * * /usr/bin/python /home/mailman/cron/gate_news
 #
-# Every minute flush the outgoing mail queue.
-* * * * * /usr/bin/python /home/mailman/cron/qrunner
+# Every minute flush the all  queues only once.
+* * * * * /usr/bin/python /home/mailman/bin/qrunner -o -r All
 #
 # At 3:27am every night, regenerate the gzip'd archive file.  Only
 # turn this on if the internal archiver is used and
@@ -679,13 +747,27 @@ $CAT <<'EOF' >/tmp/cronfile
 EOF
 crontab -u mailman /tmp/cronfile
 
+##############################################
+# Make ISO latin characters the default charset for the
+# entire system instead of UTF-8
+#
+make_backup "/etc/sysconfig/i18n"
+echo "Set ISO Latin as default system character set..."
+$CAT <<'EOF' >/etc/sysconfig/i18n
+LANG="en_US.iso885915"
+SUPPORTED="en_US.iso885915:en_US:en"
+SYSFONT="lat0-sun16"
+SYSFONTACM="iso15"
+EOF
+$CHOWN root.root /etc/sysconfig/i18n
+$CHMOD 644 /etc/sysconfig/i18n
 
 ##############################################
 # Log Files rotation configuration
 #
-make_backup "/etc/logrotate.d/apache"
+make_backup "/etc/logrotate.d/httpd"
 echo "Installing log files rotation..."
-$CAT <<'EOF' >/etc/logrotate.d/apache
+$CAT <<'EOF' >/etc/logrotate.d/httpd
 /var/log/httpd/access_log {
     missingok
     # LJ
@@ -744,6 +826,16 @@ $CAT <<'EOF' >/etc/logrotate.d/apache
 }
 
 /var/log/httpd/referer_log {
+    missingok
+    # LJ
+    daily
+    rotate 4
+    postrotate
+        /usr/bin/killall -HUP httpd 2> /dev/null || true
+    endscript
+}
+                                                                               
+/var/log/httpd/suexec_log {
     missingok
     # LJ
     daily
@@ -848,6 +940,12 @@ EOM
 EOF
 
 todo "Create the shell login files for CodeX users in /etc/skel_codex"
+todo "Customize /etc/php.ini: "
+todo "  - register_globals = On"
+todo "  - memory_limit = 30M"
+todo "  - post_max_size = 20M"
+todo "  - upload_max_file_size = 20M"
+todo "  - include_path = .:/home/httpd/SF/www/include:/home/httpd/SF/www/phpMyAdmin"
 
 # things to do by hand
 todo "Change the default login shell if needed in the database (/sbin/nologin or /usr/local/bin/cvssh, etc."
