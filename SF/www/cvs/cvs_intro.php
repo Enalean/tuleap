@@ -23,7 +23,11 @@ $res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
 $row_grp = db_fetch_array($res_grp);
 
 // Show CVS access information
-include(util_get_content('cvs/intro'));
+if ($row_grp['cvs_preamble']!='') {
+    echo util_unconvert_htmlspecialchars($row_grp['cvs_preamble']);
+} else {
+    include(util_get_content('cvs/intro'));
+}
 
 // Summary info
 print '</TD><TD width="25%">';

@@ -48,7 +48,7 @@ switch ($func) {
      }
    }
    $feedback = $feedback.$status;
-   $query = 'update groups set cvs_tracker="'.$tracked.'", cvs_events_mailing_list="'.$mailing_list.'", cvs_events_mailing_header="'.$mailing_header.'" where group_id='.$group_id;
+   $query = 'update groups set cvs_tracker="'.$tracked.'", cvs_events_mailing_list="'.$mailing_list.'", cvs_events_mailing_header="'.$mailing_header.'", cvs_preamble="'.htmlspecialchars($form_preamble).'" where group_id='.$group_id;
    $result=db_query($query);
    include '../cvs/admin_commit.php';
    break;

@@ -1018,6 +1018,7 @@ CREATE TABLE groups (
   activate_old_bug int(11) NOT NULL default '0',
   activate_old_task int(11) NOT NULL default '0',
   activate_old_sr int(11) NOT NULL default '0',
+  cvs_preamble text NOT NULL,
   PRIMARY KEY  (group_id),
   KEY idx_groups_status (status),
   KEY idx_groups_public (is_public),

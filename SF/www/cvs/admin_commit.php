@@ -22,13 +22,14 @@ commits_header(array ('title'=>'CVS Administration',
 		      'help' => 'CVSWebInterface.html#CVSAdministration'));
 
 // get project name
-$sql = "SELECT unix_group_name, cvs_tracker, cvs_events_mailing_list, cvs_events_mailing_header from groups where group_id=$group_id";
+$sql = "SELECT unix_group_name, cvs_tracker, cvs_events_mailing_list, cvs_events_mailing_header, cvs_preamble from groups where group_id=$group_id";
 
 $result = db_query($sql);
 $projectname = db_result($result, 0, 'unix_group_name');
 $cvs_tracked = db_result($result, 0, 'cvs_tracker');
 $cvs_mailing_list = db_result($result, 0, 'cvs_events_mailing_list');
 $cvs_mailing_header = db_result($result, 0, 'cvs_events_mailing_header');
+$cvs_preamble = db_result($result, 0, 'cvs_preamble');
 
 if ($cvs_mailing_list == 'NULL') {
   $cvs_mailing_list = '';
@@ -60,8 +61,16 @@ removal) are registered in the '.$GLOBALS['sys_name'].' database so that they ca
 recipients or mailing lists (comma separated). A specific subject header for the email message can also be specified.</I></p>'.
         '<P><b>Mail to</b></p><p><INPUT TYPE="TEXT" SIZE="70" NAME="mailing_list" VALUE="'.$cvs_mailing_list.'"></p>'.
         '<p><b>Subject header</b>'.
-        '</p><p><INPUT TYPE="TEXT" SIZE="20" NAME="custom_mailing_header" VALUE="'.$custom_mailing_header.'"></p>'.
-        '</p><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit"></p></FORM>';
+        '</p><p><INPUT TYPE="TEXT" SIZE="20" NAME="custom_mailing_header" VALUE="'.$custom_mailing_header.'"></p>
+
+<h3>CVS Preamble</h3>
+<P>Introductory message displayed in project <a href="/cvs/?func=info&group_id='.$group_id.'">CVS welcome page</a>.<br>
+This message should expain how to access the project CVS repository.<br>
+<u>Note</u>: <i>specifying a CVS preamble here will replace the default "CVS Access" message. <br>
+The default message should be OK for most projects hosted on '.$GLOBALS['sys_name'].'.</i>
+<br>(HTML tags allowed)<br>
+<BR><TEXTAREA cols="70" rows="8" wrap="virtual" name="form_preamble">'.$cvs_preamble.'</TEXTAREA>';
+echo '</p><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit"></p></FORM>';
 }
 
 commits_footer(array()); 

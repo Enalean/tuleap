@@ -41,19 +41,19 @@ INSERT INTO user VALUES (101, 'admin', '', \
 INSERT INTO groups VALUES (1, 'CodeX Administration Project', '', 1, 'A',
 'codex', 'shell1', 'codex._DOMAIN_NAME_', 'CodeX Administration Project',
 'cvs1', '', '', '', '', '', '', 940000000, 1, '', 1, 1, 1, 1, 1, 1, 1,
-1, '', '', '', 1, 1, 1, 1, 1, '', '', '', '', 1,0,1,0,'','',1,0,0,0);
+1, '', '', '', 1, 1, 1, 1, 1, '', '', '', '', 1,0,1,0,'','',1,0,0,0,'');
 
 INSERT INTO groups VALUES (46, 'Site News', 'sitenews._DOMAIN_NAME_', \
 0, 'A', 'sitenews', 'shell1', 'sitenews._DOMAIN_NAME_', \
 'Site News Private Project. All Site News should be posted from this project', \
 'cvs1', 'xrx', 'Site News Private Project\r\n\r\n', NULL, NULL, NULL, \
 '', 940000000, 0, '', 0, 0, 0, 1, 0, \
-0, 1, 0, '', '', '', 1, 0, 0, 0, 0, '', '', '', '', 0,0,1,0,'','',1,0,0,0);
+0, 1, 0, '', '', '', 1, 0, 0, 0, 0, '', '', '', '', 0,0,1,0,'','',1,0,0,0,'');
 
 INSERT INTO groups VALUES (100, 'none', '', 0, 'S', 'none', 'shell1', \
 '', 'Reserved project with group_id = 100 (None)', '', '', '', '', '', \
 '', '', 940000000, 0, '', 0, 0, 0, 0, 0, 0, 0, 0, '', '', '', 1, 0, 0, \
-0, 0, '', '', '', '', 0,0,1,0,'','',1,0,0,0);
+0, 0, '', '', '', '', 0,0,1,0,'','',1,0,0,0,'');
 
 #
 # Default Data for 'user_group'
