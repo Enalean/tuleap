@@ -12,11 +12,14 @@
 //   Please replace this file with your own website
 
 $headers = getallheaders();
+$pieces = explode('.', $headers[Host]);
+$project_name = array_shift($pieces);
+$default_domain = join('.',$pieces);
 ?>
 <HTML>
 <HEAD>
 <TITLE>CodeX: Welcome</TITLE>
-<LINK rel="stylesheet" href="http://codex.xerox.com/codex.css" type="text/css" >
+<LINK rel="stylesheet" href="http://<? echo $default_domain; ?>/codex.css" type="text/css" >
 </HEAD>
 
 <BODY bgcolor="#BCBCAD" link="#8b4020" vlink="#8b4020" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" marginheight="0" marginwidth="0">
@@ -25,10 +28,10 @@ $headers = getallheaders();
 <TABLE width="100%" border=0 cellspacing=0 cellpadding=2 bgcolor="#BCBCAD">
   <TR>
     <TD><SPAN class=maintitlebar>&nbsp;&nbsp;
-      <A class=maintitlebar href="http://codex.xerox.com/"><B>Home</B></A> | 
-      <A class=maintitlebar href="http://codex.xerox.com/docs/site/about_codex.php"><B>About</B></A> | 
-      <A class=maintitlebar href="http://codex.xerox.com/contact.php"><B>Contact Us</B></A> |
-      <A class=maintitlebar href="http://codex.xerox.com/account/logout.php"><B>Logout</B></A></SPAN>
+      <A class=maintitlebar href="http://<? echo $default_domain; ?>/"><B>Home</B></A> | 
+      <A class=maintitlebar href="http://<? echo $default_domain; ?>/docs/site/about_codex.php"><B>About</B></A> | 
+      <A class=maintitlebar href="http://<? echo $default_domain; ?>/contact.php"><B>Contact Us</B></A> |
+      <A class=maintitlebar href="http://<? echo $default_domain; ?>/account/logout.php"><B>Logout</B></A></SPAN>
     </TD>
   </TR>
 </TABLE>
@@ -38,13 +41,13 @@ $headers = getallheaders();
 <TABLE width="100%" border=0 cellspacing=0 cellpadding=0 bgcolor="" valign="center">
   <TR valign="top" bgcolor="#ece9e5">
     <TD valign="center">
-      <A href="http://codex.xerox.com/"><IMG src="http://codex.xerox.com/images/codex_logo.gif" vspace="" hspace="7" border=0 alt="Xerox Code eXchange Site"></A>
+      <A href="http://<? echo $default_domain; ?>/"><IMG src="http://<? echo $default_domain; ?>/images/codex.theme/codex_logo.png" vspace="" hspace="7" border=0 alt="Xerox Code eXchange Site"></A>
     </TD>
     <TD width="99%"><!-- right of logo -->
-      <a href="http://www.xerox.com"><IMG src="http://codex.xerox.com/images/redx_medium_trans.gif" align="right" alt="Xerox" hspace="5" vspace="7" border=0 width="51" height="48"></A>
+      <a href="http://www.xerox.com"><IMG src="http://<? echo $default_domain; ?>/images/codex.theme/organization_logo.png" align="right" alt="Xerox" hspace="5" vspace="7" border=0 width="51" height="48"></A>
     </TD><!-- right of logo -->
   </TR>
-  <TR><TD bgcolor="#543a48" colspan=2><IMG src="http://codex.xerox.com/images/blank.gif" height=2 vspace=0></TD></TR>
+  <TR><TD bgcolor="#543a48" colspan=2><IMG src="http://<? echo $default_domain; ?>/images/codex.theme/blank.png" height=2 vspace=0></TD></TR>
 </TABLE>
 <!-- end top title table -->
 
@@ -54,12 +57,8 @@ $headers = getallheaders();
     <TD>
       <CENTER><BR>
       <H2>Welcome to http://<?php print $headers[Host]; ?>/</H2>
-<?php
-$pieces = explode('.', $headers[Host]);
-$project_name = $pieces[0];
-?>
       <h3>This Project hasn't yet set up it's personal web site.<BR>
-      Please check back soon for updates or visit the <A href="http://codex.xerox.com/projects/<?php echo $project_name; ?>">Project Summary</a> page on CodeX<BR></h3>
+      Please check back soon for updates or visit the <A href="http://<? echo $default_domain; ?>/projects/<?php echo $project_name; ?>">Project Summary</a> page on CodeX<BR></h3>
       </CENTER>
     </TD>
   </TR>
