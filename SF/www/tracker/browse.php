@@ -261,14 +261,6 @@ if ($set=='my') {
    as well as all the arguments that serves as selection criteria
    If not defined then defaults to ANY (0)
   ================================================== */
-/*while ($field = bug_list_all_fields()) {
-    // the select boxes for the bug DB search first
-    if (bug_data_is_showed_on_query($field) &&
-	bug_data_is_select_box($field) ) {
-		if (!isset($prefs[$field])) $prefs[$field][] = 0;
-    }
-}
-*/
 
 if ( !$pv ) {
 	// Display the menus
@@ -283,10 +275,10 @@ if ( !$pv ) {
 $art_report_html->displayReport($prefs,$group_id,$report_id,$set,$advsrch,$msort,$morder,$order,$pref_stg,$offset,$chunksz,$pv);
 
 if ( !$pv ) {
-	// Display footer page
-	$ath->footer(array());
+    // Display footer page
+    $ath->footer(array());
 } else {
-     help_footer();
+    help_footer();
 }	
 
 ?>
