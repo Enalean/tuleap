@@ -11,7 +11,12 @@ require('../pm/pm_utils.php');
 
 if ($group_id) {
 
-	pm_header(array('title'=>'Projects for '.group_getname($group_id)));
+	/* if no sub project id given then it defaults to ANY (0) */
+	if (!isset($group_project_id)) {
+	    $group_project_id = 0;
+	}
+
+	pm_header(array('title'=>'Subprojects for '.group_getname($group_id)));
 
 	if (user_isloggedin() && user_ismember($group_id)) {
 		$public_flag='0,1';

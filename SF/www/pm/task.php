@@ -27,9 +27,9 @@ if ($group_id ) {
 		$func='browse';
 	}
 
-	/* if no sub project id given then it defaults to any (0) */
+	/* if no sub project id given then it defaults to ANY (0) */
 	if (!isset($group_project_id)) {
-		$group_project_id = 0; 
+	    $group_project_id = 0; 
 	}
 
 	/*
@@ -38,12 +38,21 @@ if ($group_id ) {
 		for this group so don't make any verification
 	*/
 	
-	if ($group_project_id) {
+	if (!pm_isvarany($group_project_id)) {
+
+	    if (is_array($group_project_id)) 
+		$gpid_arr = $group_project_id;
+	    else
+		$gpid_arr[] = $group_project_id;
+
+	    reset($gpid_arr);
+	    while (list(,$v) = each($gpid_arr)) {
 		$result=db_query("SELECT * FROM project_group_list ".
-			"WHERE group_project_id='$group_project_id' AND group_id='$group_id' AND is_public IN ($public_flag)");
+			"WHERE group_project_id='$v' AND group_id='$group_id' AND is_public IN ($public_flag)");
 		if (db_numrows($result) < 1) {
 			exit_permission_denied();
 		}
+	    }
 	}
 
 	/*
@@ -52,7 +61,7 @@ if ($group_id ) {
 
 	switch ($func) {
 
-		case 'addtask' : {
+	       case 'addtask' : {
 			if (user_ismember($group_id,'P2')) {
 				include '../pm/add_task.php';
 			} else {

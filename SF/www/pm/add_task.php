@@ -9,7 +9,7 @@
 pm_header(array('title'=>'Add a New Task'));
 
 ?>
-<H2>Add A Task To <?php echo  pm_data_get_group_name($group_project_id); ?></H2>
+<H2>Add A Task</H2>
 
 <FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">
 <INPUT TYPE="HIDDEN" NAME="func" VALUE="postaddtask">
@@ -18,14 +18,18 @@ pm_header(array('title'=>'Add a New Task'));
 
 <TABLE BORDER="0" WIDTH="100%">
 	<TR>
+		<TD colspan ="2">
+			<B>Subproject:&nbsp;</B>
+			<?php echo pm_subprojects_box('group_project_id',$group_id,$group_project_id,false,'',true,'*** Select One ***');?>
+		</TD>
+	</TR>
+	<TR>
 		<TD>
-			<B>Percent Complete:</B>
-			<BR>
+			<B>Percent Complete:&nbsp;</B>
 			<?php echo pm_show_percent_complete_box(); ?>
 		</TD>
 		<TD>
-			<B>Priority:</B>
-			<BR>
+			<B>Priority:&nbsp;</B>
 			<?php echo build_priority_select_box(); ?>
 		</td>
 	</TR>
@@ -43,7 +47,6 @@ pm_header(array('title'=>'Add a New Task'));
 	</TR>
 	<TR>
     		<TD COLSPAN="2"><B>Start Date:</B>
-		<BR>
 		<?php
 		echo pm_show_month_box ('start_month',date('m', time()));
 		echo pm_show_day_box ('start_day',date('d', time()));
@@ -55,7 +58,6 @@ pm_header(array('title'=>'Add a New Task'));
 	</TR>
 	<TR>
 		<TD COLSPAN="2"><B>End Date:</B>
-		<BR>
 		<?php
 		echo pm_show_month_box ('end_month',date('m', time()));
 		echo pm_show_day_box ('end_day',date('d', time()));

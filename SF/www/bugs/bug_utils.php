@@ -14,8 +14,22 @@
 
 */
 
+/* Generate URL arguments from a variable wether scalar or array */
+function bug_convert_to_url_arg($varname, $var) {
+
+    if (is_array($var)) {
+	reset($var);
+	while (list(,$v) = each($var)) {
+	    $ret .= '&'.$varname.'[]='.$v;
+	}
+    } else {
+	$ret .= '&'.$varname.'='.$var;
+    }
+    return $ret;
+}
+
 function bug_header($params) {
-	global $group_id,$is_bug_page,$DOCUMENT_ROOT;
+	global $group_id,$is_bug_page,$DOCUMENT_ROOT,$advsrch;
 
 	//used so the search box will add the necessary element to the pop-up box
 	$is_bug_page=1;
@@ -36,9 +50,13 @@ function bug_header($params) {
 	echo site_project_header($params);
 
 	echo '<P><B><A HREF="/bugs/?func=addbug&group_id='.$group_id.'">Submit A Bug</A>
-	 | <A HREF="/bugs/?func=browse&group_id='.$group_id.'&set=open">Open Bugs</A>';
+	 | <A HREF="/bugs/?func=browse&group_id='.$group_id.
+	    '&set=open&advsrch='.(isset($advsrch)?$advsrch:0).
+	    '">Open Bugs</A>';
 	if (user_isloggedin()) {
-		echo ' | <A HREF="/bugs/?func=browse&group_id='.$group_id.'&set=my">My Bugs</A>';
+		echo ' | <A HREF="/bugs/?func=browse&group_id='.$group_id.
+		    '&set=my&advsrch='.(isset($advsrch)?$advsrch:0).
+		    '">My Bugs</A>';
 		// Inhibited in new version of bug tracking system because
 		// not very intuitive and not used very much. Might be reactivated
 		// later with a different face (like predefined custom queries)
@@ -212,6 +230,25 @@ function bug_field_box($field_name,$box_name='',$group_id,$checked=false,$show_n
     }
 }
 
+function bug_multiple_field_box($field_name,$box_name='',$group_id,$checked=false,$show_none=false,$text_none='None',$show_any=false, $text_any='Any',$show_value=false) {
+
+    /*
+      Returns a multiplt select box populated with field values for this project
+      if box_name is given then impose this name in the select box
+      of the  HTML form otherwise use the field_name)
+    */
+    if (!$group_id) {
+	return 'ERROR - no group_id';
+    } else {
+	$result = bug_data_get_field_predefined_values($field_name,$group_id,$checked);
+
+	if ($box_name == '') {
+	    $box_name = $field_name.'[]';
+	}
+	return html_build_multiple_select_box($result,$box_name,$checked,6,$show_none,$text_none, $show_any,$text_any,$show_value);
+    }
+}
+
 function bug_extract_field_list($post_method=true) {
 
     global $HTTP_GET_VARS, $HTTP_POST_VARS, $BF_USAGE_BY_NAME;
@@ -300,7 +337,7 @@ function bug_multiple_bug_depend_box ($name='dependent_on_bug[]',$group_id=false
 	}
 }
 
-function show_buglist ($result,$offset,$field_arr,$title_arr,$set='open') {
+function show_buglist ($result,$offset,$field_arr,$title_arr,$url) {
     global $sys_datefmt,$group_id,$PHP_SELF;
     /*
       Accepts a result set from the bugs table. Should include all columns from
@@ -308,16 +345,30 @@ function show_buglist ($result,$offset,$field_arr,$title_arr,$set='open') {
     */
 
     $rows=db_numrows($result);
-    $url = "/bugs/?group_id=$group_id&set=$set&order=";
 
     // Build the list of fields to be shown on the result list
     // First the special fields coming first, then the variable fields
     $links_arr = array();
     $nb_of_fields=0;
     while (list(,$field) = each($field_arr)) {
-	$links_arr[] = $url.$field;
+	$links_arr[] = $url.'&order='.$field;
 	$nb_of_fields++;
     }
+
+   /*
+      Show extra rows for <-- Prev / Next -->
+    */
+    
+    if ($offset > 0) {
+	echo '<A HREF="'.$url.'&offset='.($offset-50).'"><B><<< Previous 50</B></A>';
+    }
+    if (($offset > 0) && ($rows >= 50)) {
+	echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+    }	
+    if ($rows >= 50) {
+	echo '<A HREF="'.$url.'&offset='.($offset+50).'"><B>Next 50 >>></B></A>';
+    }
+
     echo html_build_list_table_top ($title_arr,$links_arr);
 
     //see if the bugs are too old - so we can highlight them
@@ -346,27 +397,7 @@ function show_buglist ($result,$offset,$field_arr,$title_arr,$set='open') {
 	echo "</tr>\n";
     }
 
-    /*
-      Show extra rows for <-- Prev / Next -->
-    */
-    echo '
-		<TR><TD COLSPAN="2">';
-    if ($offset > 0) {
-	echo '<A HREF="'.$PHP_SELF.'?func=browse&group_id='.$group_id.'&set='.$set.'&offset='.($offset-50).'"><B><-- Previous 50</B></A>';
-    } else {
-	echo '&nbsp;';
-    }
-    echo '</TD><TD>&nbsp;</TD><TD COLSPAN="2">';
-	
-    if ($rows >= 50) {
-	echo '<A HREF="'.$PHP_SELF.'?func=browse&group_id='.$group_id.'&set='.$set.'&offset='.($offset+50).'"><B>Next 50 --></B></A>';
-    } else {
-	echo '&nbsp;';
-    }
-    echo '</TD></TR>';
-
     echo '</TABLE>';
-
 }
 
 function mail_followup($bug_id,$more_addresses=false) {
@@ -592,6 +623,24 @@ function show_bughistory ($bug_id,$group_id) {
     } else {
         echo "\n".'<H3>No Changes Have Been Made to This Bug</H3>';
     }
+}
+
+/* 
+   The ANY value is 0 in CodeX. The simple fact that
+   ANY (0) is one of the value means it is Any even if there are
+   other non zero values in the  array
+*/
+function bug_isvarany($var) {
+    if (is_array($var)) {
+	reset($var);
+	while (list(,$v) = each($var)) {
+	    if ($v == 0) { return true; }
+	}
+	return false;
+    } else {
+	return ($var == 0);
+    }
+
 }
 
 ?>

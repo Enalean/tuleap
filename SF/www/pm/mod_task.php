@@ -26,7 +26,7 @@ $result=db_query($sql);
 	<TR>    
                 <TD><B>Subproject:</B>
                 &nbsp;
-		<?php echo pm_show_subprojects_box('new_group_project_id',$group_id,$group_project_id); ?>
+		<?php echo pm_subprojects_box('new_group_project_id',$group_id,$group_project_id); ?>
 		</TD>
 
 		

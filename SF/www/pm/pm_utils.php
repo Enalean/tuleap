@@ -14,8 +14,22 @@
 
 */
 
+/* Generate URL arguments from a variable wether scalar or array */
+function pm_convert_to_url_arg($varname, $var) {
+
+    if (is_array($var)) {
+	reset($var);
+	while (list(,$v) = each($var)) {
+	    $ret .= '&'.$varname.'[]='.$v;
+	}
+    } else {
+	$ret .= '&'.$varname.'='.$var;
+    }
+    return $ret;
+}
+
 function pm_header($params) {
-	global $group_id,$is_pm_page,$words,$group_project_id,$DOCUMENT_ROOT,$order;
+	global $group_id,$is_pm_page,$words,$group_project_id,$DOCUMENT_ROOT,$order,$advsrch;
 
 	//required by site_project_header
 	$params['group']=$group_id;
@@ -35,17 +49,26 @@ function pm_header($params) {
 
 	echo "<P><B>";
 
-	if (isset($group_project_id)) {
-		echo "<A HREF=\"/pm/?group_id=$group_id\">Subproject List</A>";
-		if (user_isloggedin()) {
-			if ($group_project_id) {
-				// No Add if a no subproject specified
-				echo " | <A HREF=\"/pm/task.php?group_id=$group_id&group_project_id=$group_project_id&func=addtask\">Add Task</A>";
-			}
-			echo " | <A HREF=\"/pm/task.php?group_id=$group_id&group_project_id=$group_project_id&func=browse&set=my\">My Tasks</A>";
-		}
-		echo " | <A HREF=\"/pm/task.php?group_id=$group_id&group_project_id=$group_project_id&func=browse&set=open\">Browse Open Tasks</A> | ";
+	echo "<A HREF=\"/pm/?group_id=$group_id\">Subproject List</A>";
+	if (user_isloggedin()) {
+	    
+	    // For Add Task there must be only one subproject
+	    echo' | <A HREF="/pm/task.php?group_id='.$group_id.
+		'&group_project_id='.
+		(is_array($group_project_id) ? $group_project_id[0] : $group_project_id).
+		'&func=addtask">Add Task</A>';
+	    
+	    echo ' | <A HREF="/pm/task.php?group_id='.$group_id.
+		pm_convert_to_url_arg('group_project_id',$group_project_id).
+		'&func=browse&advsrch='.(isset($advsrch)?$advsrch:0).
+		'&set=my">My Tasks</A>';
 	}
+	
+	echo ' | <A HREF="/pm/task.php?group_id='.$group_id.
+	    pm_convert_to_url_arg('group_project_id',$group_project_id).
+	    '&func=browse&advsrch='.(isset($advsrch)?$advsrch:0)
+	    .'&set=open">Open Tasks</A> |';
+	
 	echo " <A HREF=\"/pm/admin/?group_id=$group_id\">Admin</A></B>";
 	echo ' <hr width="300" size="1" align="left" noshade>';
 
@@ -55,17 +78,33 @@ function pm_footer($params) {
 	site_project_footer($params);
 }
 
-function pm_status_box($name='status_id',$checked='xyxy',$none=true,$text_none='None',$any=false,$text_any='Any') {
-	$result=pm_data_get_statuses();
-	return html_build_select_box($result,$name,$checked,$none,$text_none,$any,$text_any);
+
+function pm_multiple_status_box($name='status[]',$checked,$show_none=true,$text_none='None',$show_any=false,$text_any='Any') {
+    $result=pm_data_get_statuses();
+    return html_build_multiple_select_box($result,$name,$checked,6,$show_none,$text_none,$show_any,$text_any,false);
+  
 }
 
-function pm_tech_select_box($name='assigned_to',$group_id=false,$checked='xzxz') {
+function pm_status_box($name='status_id',$checked='xyxy',$show_none=true,$text_none='None',$show_any=false,$text_any='Any') {
+	$result=pm_data_get_statuses();
+	return html_build_select_box($result,$name,$checked,$show_none,$text_none,$show_any,$text_any);
+}
+
+function pm_multiple_tech_box($name='assigned_to[]',$group_id=false,$checked,$show_none=true,$text_none='None',$show_any=false,$text_any='Any') {
+	if (!$group_id) {
+		return 'ERROR - no group_id specified';
+	} else {
+	    $result=pm_data_get_technicians($group_id);
+	    return html_build_multiple_select_box($result,$name,$checked,6,$show_none,$text_none, $show_any,$text_any,false);
+	}
+}
+
+function pm_tech_box($name='assigned_to',$group_id=false,$checked='xzxz',$show_none=true,$text_none='None',$show_any=false,$text_any='Any') {
 	if (!$group_id) {
 		return 'ERROR - no group_id';
 	} else {
 		$result=pm_data_get_technicians ($group_id);
-		return html_build_select_box($result,$name,$checked);
+		return html_build_select_box($result,$name,$checked,$show_none,$text_none,$show_any,$text_any);
 	}
 }
 
@@ -85,28 +124,37 @@ function pm_multiple_task_depend_box ($name='dependent_on[]',$group_id=false,$gr
 	}
 }
 
-function pm_show_subprojects_box($name='group_project_id',$group_id=false,$group_project_id=false) {
-	if (!$group_id || !$group_project_id) {
-		return 'ERROR - no group_id defined';
+function pm_multiple_subprojects_box($name='group_project_id[]',$group_id=false,$checked,$show_none=true,$text_none='None',$show_any=false,$text_any='Any') {
+	if (!$group_id) {
+		return 'ERROR - no group_id specified';
+	} else {
+	    $result=pm_data_get_subprojects($group_id);
+	    return html_build_multiple_select_box($result,$name,$checked,6,$show_none,$text_none,$show_any,$text_any,false);
+	}
+}
+
+function pm_subprojects_box($name='group_project_id',$group_id=false,$group_project_id=-1,$show_none=false,$text_none='None',$show_any=false,$text_any='Any') {
+	if (!$group_id || ($group_project_id == -1) ) {
+		return 'ERROR - no group_id or subproject_id defined';
 	} else {
 		$result=pm_data_get_subprojects($group_id);
-		return html_build_select_box($result,$name,$group_project_id,false);
-	}       
+		return html_build_select_box($result,$name,$group_project_id,$show_none,$text_none,$show_any,$text_any);
+	}
 }
 
 function pm_multiple_assigned_box ($name='assigned_to[]',$group_id=false,$project_task_id=false) {
-	if (!$group_id) {
-		return 'ERROR - no group_id';
-	} else {
-		$result=pm_data_get_technicians ($group_id);
-		if ($project_task_id) {
-			//get the data so we can mark items as SELECTED
-			$result2=pm_data_get_assigned_to ($project_task_id);
-			return html_build_multiple_select_box ($result,$name,util_result_column_to_array($result2),6);
-		} else {
-			return html_build_multiple_select_box ($result,$name,array(),6);
-		}
-	}
+        if (!$group_id) {
+                return 'ERROR - no group_id';
+        } else {
+                $result=pm_data_get_technicians ($group_id);
+                if ($project_task_id) {
+                        //get the data so we can mark items as SELECTED
+                        $result2=pm_data_get_assigned_to ($project_task_id);
+                        return html_build_multiple_select_box ($result,$name,util_result_column_to_array($result2),6,true,'None',false,'',false);
+                } else {
+                        return html_build_multiple_select_box ($result,$name,array(),6);
+                }
+        }
 }
 
 function pm_show_percent_complete_box($name='percent_complete',$selected=0) {
@@ -193,7 +241,7 @@ function pm_show_year_box($name,$year=1) {
 
 }
 
-function pm_show_tasklist ($result,$result_taskdeps,$offset,$set='open') {
+function pm_show_tasklist ($result,$result_taskdeps,$offset,$url) {
 	global $sys_datefmt,$group_id,$group_project_id,$_status,$PHP_SELF;
 	/*
 		Accepts a result set from the bugs table. Should include all columns from
@@ -251,8 +299,6 @@ function pm_show_tasklist ($result,$result_taskdeps,$offset,$set='open') {
 	    }
 	}
 
-	$url = "/pm/task.php?group_id=$group_id&group_project_id=$group_project_id&func=browse&set=$set&order=";
-
 	$title_arr=array();
 	$title_arr[]='Task ID';
 	$title_arr[]='Summary';
@@ -265,15 +311,30 @@ function pm_show_tasklist ($result,$result_taskdeps,$offset,$set='open') {
 	$title_arr[]='Status';
 
 	$links_arr=array();
-	$links_arr[]=$url.'project_task_id';
-	$links_arr[]=$url.'summary';
-	$links_arr[]=$url.'project_name';
-	$links_arr[]=$url.'start_date';
-	$links_arr[]=$url.'end_date';
-	$links_arr[]=$url.'user_name';
-	$links_arr[]=$url.'percent_complete';
+	$links_arr[]=$url.'&order=project_task_id';
+	$links_arr[]=$url.'&order=summary';
+	$links_arr[]=$url.'&order=project_name';
+	$links_arr[]=$url.'&order=start_date';
+	$links_arr[]=$url.'&order=end_date';
+	$links_arr[]=$url.'&order=user_name';
+	$links_arr[]=$url.'&order=percent_complete';
 	$links_arr[]='#'; /* no sort on task deps */
-	$links_arr[]=$url.'status_name';
+	$links_arr[]=$url.'&order=status_name';
+
+	/*
+		Show extra rows for <-- Prev / Next -->
+	*/
+	if ($offset > 0) {
+		echo '<A HREF="'.$url.'&offset='.($offset-50).'">
+			<B><<< Previous 50</B></A>';
+	}
+	if (($offset > 0) && ($rows >= 50)) {
+	    echo '&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;';
+	}
+	if ($rows >= 50) {
+		echo '<A HREF="'.$url.'&offset='.($offset+50).
+			'"><B>Next 50 >>></B></A>';
+	}
 
 	echo html_build_list_table_top ($title_arr,$links_arr);
 
@@ -301,27 +362,7 @@ function pm_show_tasklist ($result,$result_taskdeps,$offset,$set='open') {
 
 	}
 
-	/*
-		Show extra rows for <-- Prev / Next -->
-	*/
-	echo '<TR><TD COLSPAN="2">';
-	if ($offset > 0) {
-		echo '<A HREF="'.$PHP_SELF.'?func=browse&group_project_id='.
-			$group_project_id.'&set='.$set.'&group_id='.$group_id.'&offset='.($offset-50).'">
-			<B><-- Previous 50</B></A>';
-	} else {
-		echo '&nbsp;';
-	}
-	echo '</TD><TD>&nbsp;</TD><TD COLSPAN="2">';
-	
-	if ($rows==50) {
-		echo '<A HREF="'.$PHP_SELF.'?func=browse&group_project_id='.
-			$group_project_id.'&set='.$set.'&group_id='.$group_id.'&offset='.($offset+50).
-			'"><B>Next 50 --></B></A>';
-	} else {
-		echo '&nbsp;';
-	}
-	echo '</TD></TR></TABLE>';
+	echo '</TABLE>';
 }
 
 function pm_show_dependent_tasks ($project_task_id,$group_id,$group_project_id) {
@@ -497,6 +538,24 @@ function pm_show_task_history ($project_task_id) {
 		echo '
 			<H3>No Changes Have Been Made</H3>';
 	}
+}
+
+/* 
+   The ANY value is 0 in CodeX. The simple fact that
+   ANY (0) is one of the value means it is Any even if there are
+   other non zero values in the  array
+*/
+function pm_isvarany($var) {
+    if (is_array($var)) {
+	reset($var);
+	while (list(,$v) = each($var)) {
+	    if ($v == 0) { return true; }
+	}
+	return false;
+    } else {
+	return ($var == 0);
+    }
+
 }
 
 ?>
