@@ -552,7 +552,7 @@ if (user_isloggedin()) {
 		. "FROM groups,user_group "
 		. "WHERE groups.group_id=user_group.group_id "
 		. "AND user_group.user_id='". user_getid() ."' "
-		. "AND groups.type='1' AND groups.status='A'");
+		. "AND groups.type='1' AND groups.status='A' ORDER BY group_name");
 	$rows=db_numrows($result);
 	if (!$result || $rows < 1) {
 		$html_my_projects .= "You're not a member of any public projects";
