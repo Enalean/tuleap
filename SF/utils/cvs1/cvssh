@@ -1,0 +1,69 @@
+#! /bin/sh
+# cvssh - Login shell for people who should only have CVS access
+# Gordon Matzigkeit <gord@fig.org>, 1999-12-02
+#
+# Modified by L. Julliard for the CodeX project, dec 2002
+
+PATH=/usr/local/bin:/bin:/usr/bin
+export CVSEDITOR=/bin/false
+
+valid=no
+status=1
+if test $# -eq 2 && test "X$1" = X-c; then
+ case "X$2" in
+ 'Xcvs server')
+  # Actually run it.
+  valid=yes
+  $2
+  ;;
+
+ 'Xscp '*'-t /upload/'*)
+  # Actually run it.
+  valid=yes
+  $2
+  ;;
+
+ 'X/usr/lib/sftp-server')
+  valid=yes
+  /usr/local/bin/savannah-sftp
+  ;;
+
+ 'Xrsync --server --sender '*)
+  dir=`echo "$2" | sed -e 's/^.*[ 	]//'`
+  case "$dir" in
+  *..* | *CVSROOT*) ;;
+  /cvs/* | /home/cvs/* | /cvsroot/* | /upload/* )
+   # Actually run the command.
+   valid=yes
+   $2
+   ;;
+  esac
+  ;;
+
+ 'Xrsync --server '*)
+  dir=`echo "$2" | sed -e 's/^.*[ 	]//'`
+  case "$dir" in
+  *..* | *CVSROOT*) ;;
+  /upload/* | /audio-video/* )
+   # Actually run the command.
+   valid=yes
+   $2
+   ;;
+  esac
+  ;;
+ esac
+ status=$?
+fi
+
+if test $valid = no; then
+ echo "You tried to execute: \`$0${1+ $@}'." 1>&2
+ echo "Sorry, you are only allowed to execute : " 1>&2 
+ echo "CVS_RSH=ssh cvs commands" 1>&2 
+ echo "rsync from /cvsroot or /upload." 1>&2
+ echo "rsync to /upload." 1>&2
+ echo "sftp to and from /upload." 1>&2
+fi
+
+# This sleep is necessary to allow krshd to close the connection properly.
+sleep 2
+exit $status
