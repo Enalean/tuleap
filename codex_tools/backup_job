@@ -33,6 +33,6 @@ sleep 5
 /bin/mv /cvsroot/.mysql_backup/sqldump* /cvsroot/.mysql_backup/old/`date +%m%d%y`
 
 # back up mysql datafiles to disk
-/sbin/dump 0f /cvsroot/.mysql_backup/sqldump.`date +%m%d%y.%H%M` -M /home/var/lib/mysql
+/sbin/dump 0f /cvsroot/.mysql_backup/sqldump.`date +%m%d%y.%H%M` -M /var/lib/mysql
 
 /etc/init.d/mysql start

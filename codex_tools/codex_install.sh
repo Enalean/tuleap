@@ -1121,6 +1121,7 @@ EOF
 #
 echo "Generating the User Manual. This might take a few minutes."
 /home/httpd/SF/utils/generate_doc.sh -f
+todo "Documentation is currently forced to be re-generated each night. Make sure that the CVS update is possible in utils/generate_doc.sh. After that, you may remove the '-f' flag in the 'sourceforge' crontab"
 
 ##############################################
 # Make sure all major services are on
