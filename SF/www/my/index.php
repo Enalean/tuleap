@@ -62,10 +62,11 @@ of groups that you are a member of.
 		    if ($AS_flag) { $AS_flag = '[<b>'.$AS_flag.'</b>]'; }
 
 			if (db_result($result,$i,'group_id') != $last_group) {
+			    echo ($i ? '<TR><TD colspan ="2">' : '');
 				echo '
-				<TR><TD COLSPAN="2"><B><A HREF="/bugs/?group_id='.
+				<B><A HREF="/bugs/?group_id='.
 					db_result($result,$i,'group_id').'">'.
-					group_getname(db_result($result,$i,'group_id')).'</A></TD></TR>';
+					group_getname(db_result($result,$i,'group_id')).'</A>';
 			}
 			echo '
 			<TR BGCOLOR="'.get_priority_color(db_result($result,$i,'priority')).'"><TD><A HREF="/bugs/?func=detailbug&group_id='.
@@ -77,12 +78,13 @@ of groups that you are a member of.
 		}
 		echo '<TR><TD COLSPAN="2" BGCOLOR="'.$HTML->COLOR_CONTENT_BACK.'">&nbsp;</TD></TR>';
 	}
+	echo $HTML->box1_bottom();
 
 	/*
 		Forums that are actively monitored
 	*/
 	$last_group=0;
-	echo $HTML->box1_middle('Monitored Forums');
+	echo $HTML->box1_top('Monitored Forums');
 	$sql="SELECT groups.group_name,groups.group_id,forum_group_list.group_forum_id,forum_group_list.forum_name ".
 		"FROM groups,forum_group_list,forum_monitored_forums ".
 		"WHERE groups.group_id=forum_group_list.group_id ".
@@ -102,32 +104,36 @@ of groups that you are a member of.
 			<BR>&nbsp;';
 		echo db_error();
 	} else {
-		echo '&nbsp;</TD></TR>';
 		for ($i=0; $i<$rows; $i++) {
 			if (db_result($result,$i,'group_id') != $last_group) {
-				echo '
-				<TR bgcolor="'. util_get_alt_row_color($i) .'"><TD COLSPAN="2"><B><A HREF="/forum/?group_id='.
+			    echo ($i ? '<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD colspan ="2">' : '');
+			    echo '
+				<B><A HREF="/forum/?group_id='.
 					db_result($result,$i,'group_id').'">'.
 					db_result($result,$i,'group_name').'</A></TD></TR>';
 			}
 			echo '
-			<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD ALIGN="MIDDLE"><A HREF="/forum/monitor.php?forum_id='.
-				db_result($result,$i,'group_forum_id').
-				'"><IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" '.
-				'BORDER=0 ALT="STOP MONITORING""></A></TD><TD WIDTH="99%"><A HREF="/forum/forum.php?forum_id='.
+			<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD WIDTH="99%">'.
+			'-&nbsp;&nbsp;<A HREF="/forum/forum.php?forum_id='.
 				db_result($result,$i,'group_forum_id').'">'.
-				stripslashes(db_result($result,$i,'forum_name')).'</A></TD></TR>';
+				stripslashes(db_result($result,$i,'forum_name')).'</A></TD>'.
+			    '<TD ALIGN="MIDDLE"><A HREF="/forum/monitor.php?forum_id='.
+			    db_result($result,$i,'group_forum_id').
+			    '" onClick="return confirm(\'Stop monitoring this Forum?\')">'.
+				'<IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" '.
+				'BORDER=0 ALT="STOP MONITORING""></A></TD></TR>';
 
 			$last_group=db_result($result,$i,'group_id');
 		}
 		echo '<TR bgcolor="'.$HTML->COLOR_CONTENT_BACK.'"><TD COLSPAN="2">&nbsp;</TD></TR>';
 	}
+	echo $HTML->box1_bottom();
 
 	/*
 		Filemodules that are actively monitored
 	*/
 	$last_group=0;
-	echo $HTML->box1_middle('Monitored File Packages');
+	echo $HTML->box1_top('Monitored File Packages');
 	$sql="SELECT groups.group_name,groups.group_id,frs_package.name,filemodule_monitor.filemodule_id ".
 		"FROM groups,filemodule_monitor,frs_package ".
 		"WHERE groups.group_id=frs_package.group_id ".
@@ -147,22 +153,25 @@ of groups that you are a member of.
 			<BR>&nbsp;';
 		echo db_error();
 	} else {
-		echo '&nbsp;</TD></TR>
-';
+		
 		for ($i=0; $i<$rows; $i++) {
 			if (db_result($result,$i,'group_id') != $last_group) {
-				echo '
-				<TR bgcolor="'. util_get_alt_row_color($i) .'"><TD COLSPAN="2"><B><A HREF="/project/?group_id='.
+			    echo ($i ? '<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD colspan ="2">' : '');
+			    echo '
+				<B><A HREF="/project/?group_id='.
 					db_result($result,$i,'group_id').'">'.
 					db_result($result,$i,'group_name').'</A></TD></TR>';
 			}
 			echo '
-			<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD ALIGN="MIDDLE"><A HREF="/project/filemodule_monitor.php?filemodule_id='.
-				db_result($result,$i,'filemodule_id').
-				'"><IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" '.
-				'BORDER=0" ALT="STOP MONITORING"></A></TD><TD WIDTH="99%"><A HREF="/project/filelist.php?group_id='.
-				db_result($result,$i,'group_id').'">'.
-				db_result($result,$i,'name').'</A></TD></TR>';
+			<TR BGCOLOR="'. util_get_alt_row_color($i) .'">'.
+			    '<TD WIDTH="99%">-&nbsp;&nbsp;<A HREF="/project/filelist.php?group_id='.
+			    db_result($result,$i,'group_id').'">'.
+			    db_result($result,$i,'name').'</A></TD>'.
+			    '<TD><A HREF="/project/filemodule_monitor.php?filemodule_id='.
+			    db_result($result,$i,'filemodule_id').
+			    '" onClick="return confirm(\'Stop Monitoring this Package?\')">'.
+			    '<IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" '.
+			    'BORDER=0" ALT="STOP MONITORING"></A></TD></TR>';
 
 			$last_group=db_result($result,$i,'group_id');
 		}
@@ -191,12 +200,13 @@ of groups that you are a member of.
 	$rows=db_numrows($result);
 
 	if ($rows > 0) {
-		echo'&nbsp;</TD></TR>
-';
+
 		for ($i=0; $i < $rows; $i++) {
 			if (db_result($result,$i,'group_project_id') != $last_group) {
+			    echo ($i ? '<TR><TD colspan ="2">' : '');
+
 				echo '
-				<TR><TD COLSPAN="2"><B><A HREF="/pm/task.php?group_id='.
+				<B><A HREF="/pm/task.php?group_id='.
 					db_result($result,$i,'group_id').'&group_project_id='.
 					db_result($result,$i,'group_project_id').'">'.
 					db_result($result,$i,'group_name').' - '.
@@ -219,6 +229,7 @@ of groups that you are a member of.
 			You have no open tasks assigned to you';
 		echo db_error();
 	}
+	echo $HTML->box1_bottom();
 
 	/*
 		DEVELOPER SURVEYS
@@ -231,7 +242,7 @@ of groups that you are a member of.
 
 	$result=db_query($sql);
 
-	echo $HTML->box1_middle('Quick Survey');
+	echo $HTML->box1_top('Quick Survey');
 
 	if (db_numrows($result) < 1) {
 		show_survey(1,1);
@@ -240,10 +251,13 @@ of groups that you are a member of.
 	}
 	echo '<TR align=left bgcolor="'.$HTML->COLOR_CONTENT_BACK.'"><TD COLSPAN="2">&nbsp;</TD></TR>
 ';
+	echo $HTML->box1_bottom();
+
+
 	/*
 	       Personal bookmarks
 	*/
-	echo $HTML->box1_middle('My Bookmarks');
+	echo $HTML->box1_top('My Bookmarks');
 
 	$result = db_query("SELECT bookmark_url, bookmark_title, bookmark_id from user_bookmarks where ".
 		"user_id='". user_getid() ."' ORDER BY bookmark_title");
@@ -253,26 +267,27 @@ of groups that you are a member of.
 			<H3>You currently do not have any bookmarks saved</H3>';
 		echo db_error();
 	} else {
-		echo'&nbsp;</TD></TR>
-';
+
 		for ($i=0; $i<$rows; $i++) {
-			echo '
-				<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD ALIGN="MIDDLE">
-				<A HREF="/my/bookmark_delete.php?bookmark_id='. db_result($result,$i,'bookmark_id') .'">
-				<IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A></TD>
-				<TD><B><A HREF="'. db_result($result,$i,'bookmark_url') .'">'.
-				db_result($result,$i,'bookmark_title') .'</A></B> &nbsp;
-				<SMALL><A HREF="/my/bookmark_edit.php?bookmark_id='. db_result($result,$i,'bookmark_id') .'">[Edit]</A></SMALL></TD</TR>';
-		}
+		    echo '<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD>';
+		    echo '
+                                           <B><A HREF="'. db_result($result,$i,'bookmark_url') .'">'.
+			db_result($result,$i,'bookmark_title') .'</A></B> '.
+			'<SMALL><A HREF="/my/bookmark_edit.php?bookmark_id='. db_result($result,$i,'bookmark_id') .'">[Edit]</A></SMALL></TD>'.
+			'<td><A HREF="/my/bookmark_delete.php?bookmark_id='. db_result($result,$i,'bookmark_id') .
+			'" onClick="return confirm(\'Delete this bookmark?\')">'.
+			'<IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A>	</td></tr>';
+			}
 	}
 	echo '<TR align=left bgcolor="'.$HTML->COLOR_CONTENT_BACK.'"><TD COLSPAN="2">&nbsp;</TD></TR>
 ';
+	echo $HTML->box1_bottom();
 
 	/*
 		PROJECT LIST
 	*/
 
-	echo $HTML->box1_middle('My Projects');
+	echo $HTML->box1_top('My Projects');
 	$result = db_query("SELECT groups.group_name,"
 		. "groups.group_id,"
 		. "groups.unix_group_name,"
@@ -287,13 +302,15 @@ of groups that you are a member of.
 		echo "You're not a member of any public projects";
 		echo db_error();
 	} else {
-		echo '&nbsp;</TD></TR>
-';
+
 		for ($i=0; $i<$rows; $i++) {
 			echo '
-				<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD ALIGN="MIDDLE">
-				<A href="rmproject.php?group_id='. db_result($result,$i,'group_id') .'"><IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" BORDER="0"  ALT="REMOVE ME"></A></TD>
-				<TD><A href="/projects/'. db_result($result,$i,'unix_group_name') .'/">'. db_result($result,$i,'group_name') .'</A></TD></TR>';
+				<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD WIDTH="99%">'.
+			    '<A href="/projects/'. db_result($result,$i,'unix_group_name') .'/"><b>'.
+			    db_result($result,$i,'group_name') .'</b></A></TD>'.
+			    '<td><A href="rmproject.php?group_id='. db_result($result,$i,'group_id').
+			    '" onClick="return confirm(\'Quit this project?\')">'.
+			    '<IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" BORDER="0"></A></TD></TR>';
 		}
 	}
 	echo $HTML->box1_bottom();
