@@ -1,13 +1,15 @@
 <?php
 //
 // CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
-// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001. All Rights Reserved
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2004. All Rights Reserved
 // http://codex.xerox.com
 //
 // $Id$ 
+//
 
-   // filedownload_logs_daily
-function filedownload_logs_daily( $group_id, $span = 7 ) {
+
+// filedownload_logs_daily
+function filedownload_logs_daily($project, $span = 7, $who="allusers") {
 
 	if (! $span ) { 
 		$span = 7;
@@ -29,10 +31,21 @@ function filedownload_logs_daily( $group_id, $span = 7 ) {
 	// print join(" ",localtime($begin_date,0))."<BR>";
 	// print "begin_date: $begin_date<BR>";
 
+	if ($who == "allusers") {
+	    $cond = "";
+	} else {
+	    $users = implode(',',$project->getMembersId());
+	    if ($who == "members") {
+		$cond = " AND user.user_id IN ($users) ";
+	    } else {
+		$cond = " AND user.user_id NOT IN ($users) ";
+	    }
+	}
+
 	$sql  = "SELECT filedownload_log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, frs_file.filename AS filename "
 	."FROM filedownload_log, user, frs_file, frs_release, frs_package "
-	."WHERE filedownload_log.user_id=user.user_id "
-	."AND frs_package.group_id=$group_id "
+	."WHERE filedownload_log.user_id=user.user_id ".$cond
+	."AND frs_package.group_id=".$project->getGroupId()." "
         ."AND filedownload_log.filerelease_id=frs_file.file_id "
         ."AND frs_release.release_id=frs_file.release_id "
         ."AND frs_package.package_id=frs_release.package_id "
@@ -40,7 +53,7 @@ function filedownload_logs_daily( $group_id, $span = 7 ) {
 	."ORDER BY time ASC";
 	
 	// Executions will continue until morale improves.
-	$res = db_query( $sql );
+	$res = db_query( $sql);
 
 	print '<P><B><U>File Download for the past ' . $span. ' days</U></B>';
 
@@ -76,7 +89,7 @@ function filedownload_logs_daily( $group_id, $span = 7 ) {
 
 }
 
-function cvsaccess_logs_daily( $group_id, $span = 7 ) {
+function cvsaccess_logs_daily($project, $span = 7, $who="allusers") {
 
 	if (! $span ) { 
 		$span = 7;
@@ -101,10 +114,21 @@ function cvsaccess_logs_daily( $group_id, $span = 7 ) {
 	// print join(" ",localtime($begin_date,0))."<BR>";
 	// print "begin_day: $begin_day<BR>";
 
+	if ($who == "allusers") {
+	    $cond = "";
+	} else {
+	    $users = implode(',',$project->getMembersId());
+	    if ($who == "members") {
+		$cond = " AND user.user_id IN ($users) ";
+	    } else {
+		$cond = " AND user.user_id NOT IN ($users) ";
+	    }
+	}
+
 	$sql  = "SELECT group_cvs_full_history.day AS day, user.user_name AS user_name, user.realname AS realname, user.email AS email, group_cvs_full_history.cvs_checkouts AS cvs_checkouts "
 	."FROM group_cvs_full_history, user "
-	."WHERE group_cvs_full_history.user_id=user.user_id "
-	."AND group_cvs_full_history.group_id=$group_id "
+	."WHERE group_cvs_full_history.user_id=user.user_id ".$cond
+	."AND group_cvs_full_history.group_id=".$project->getGroupId()." "
 	."AND group_cvs_full_history.day >= $begin_day "
 	."AND group_cvs_full_history.cvs_checkouts != 0 "
 	."ORDER BY day ASC";
@@ -146,7 +170,7 @@ function cvsaccess_logs_daily( $group_id, $span = 7 ) {
 }
 
 // doc_logs_daily
-function doc_logs_daily( $group_id, $span = 7 ) {
+function doc_logs_daily($project, $span = 7, $who="allusers") {
 
 	// Get information about the date $span days ago 
 	// Start at midnight $span days ago
@@ -164,14 +188,25 @@ function doc_logs_daily( $group_id, $span = 7 ) {
 	// print join(" ",localtime($begin_date,0))."<BR>";
 	// print "begin_date: $begin_date<BR>";
 
+	if ($who == "allusers") {
+	    $cond = "";
+	} else {
+	    $users = implode(',',$project->getMembersId());
+	    if ($who == "members") {
+		$cond = " AND user.user_id IN ($users) ";
+	    } else {
+		$cond = " AND user.user_id NOT IN ($users) ";
+	    }
+	}
+
 	$sql  = "SELECT doc_log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, doc_data.title AS title "
-	."FROM doc_log, user, doc_data, doc_groups "
-	."WHERE doc_log.user_id=user.user_id "
-	."AND doc_groups.group_id=$group_id "
-    ."AND doc_groups.doc_group = doc_data.doc_group "
-    ."AND doc_data.docid = doc_log.docid "
-	."AND doc_log.time >= $begin_date "
-	."ORDER BY time ASC";
+	    ."FROM doc_log, user, doc_data, doc_groups "
+	    ."WHERE doc_log.user_id=user.user_id ".$cond
+	    ."AND doc_groups.group_id=".$project->getGroupId()." "
+	    ."AND doc_groups.doc_group = doc_data.doc_group "
+	    ."AND doc_data.docid = doc_log.docid "
+	    ."AND doc_log.time >= $begin_date "
+	    ."ORDER BY time ASC";
 	
 	// Executions will continue until morale improves.
 	$res = db_query( $sql );

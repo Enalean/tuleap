@@ -15,6 +15,7 @@ session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 if ( !$group_id ) {
 	exit_error("Invalid Group","That group could not be found.");
 }
+$project=new Project($group_id);
 
 project_admin_header(array('title'=>"Project Admin: ".group_getname($group_id),
 			   'group'=>$group_id,
@@ -26,6 +27,10 @@ project_admin_header(array('title'=>"Project Admin: ".group_getname($group_id),
 
 echo "\n\n";
 
+if ( !$who ) {
+    $who = "nonmembers";
+}
+
 if ( !$span ) {
 	$span = 14;
 }
@@ -34,47 +39,20 @@ if ( !$view ) {
 	$view = "daily";
 }
 
-echo '<h2>Source Code Access Log</h2>';
-
-if ( $view == 'daily' ) {
-
-	print '<P>';
-	filedownload_logs_daily( $group_id, $span );
-	cvsaccess_logs_daily( $group_id, $span );
-	doc_logs_daily( $group_id, $span );
-
-} elseif ( $view == 'weekly' ) {
-
-	print '<P>';
-	filedownload_logs_daily( $group_id, $span*7 );
-	cvsaccess_logs_daily( $group_id, $span*7 );
-	doc_logs_daily( $group_id, $span*7 );
-
-} elseif ( $view == 'monthly' ) {
-
-	print '<P>';
-	filedownload_logs_daily( $group_id, $span*30.5 );
-	cvsaccess_logs_daily( $group_id, $span*30.5 );
-	doc_logs_daily( $group_id, $span*30.5 );
-
-} else {
-
-	// default stats display, DAILY
-	print '<P>';
-	filedownload_logs_daily( $group_id, $span );
-	cvsaccess_logs_daily( $group_id, $span );
-	doc_logs_daily( $group_id, $span );
-
-}
-
-print '<BR><P>';
-//LJ stats_site_agregate( $group_id );
+echo '<h2>Source Code & Document Access Log</h2>';
 
 ?>
-
-<DIV ALIGN="center">
 <FORM action="<?php echo $PHP_SELF; ?>" method="get">
-View the Last <SELECT NAME="span">
+<TABLE BORDER="0" WIDTH="80%">
+<tr><td><b>Access Log From</b></td><td><b>For Last...</b></td><td> </td></tr>
+<tr><td>
+<SELECT NAME="who">
+<OPTION VALUE="nonmembers" <?php if ($who == "nonmembers") {echo 'SELECTED';} ?>>Non Project Members</OPTION>
+<OPTION VALUE="members" <?php if ($who == "members") {echo 'SELECTED';} ?>>Project Members</OPTION>
+<OPTION VALUE="allusers" <?php if ($who == "allusers") {echo 'SELECTED';} ?>>All Users</OPTION>
+</SELECT></td>
+<td> 
+<SELECT NAME="span">
 <OPTION VALUE="4" <?php if ($span == 4) {echo 'SELECTED';} ?>>4</OPTION>
 <OPTION VALUE="7" <?php if ($span == 7 || !isset($span) ) {echo 'SELECTED';} ?>>7</OPTION>
 <OPTION VALUE="12" <?php if ($span == 12) {echo 'SELECTED';} ?>>12</OPTION>
@@ -88,14 +66,51 @@ View the Last <SELECT NAME="span">
 <OPTION VALUE="weekly" <?php if ($view == "weekly") {echo 'SELECTED';} ?>>Weeks</OPTION>
 <OPTION VALUE="daily" <?php if ($view == "daily" || !isset($view) ) {echo 'SELECTED';} ?>>Days</OPTION>
 </SELECT>
+</td>
+<td>
 &nbsp; 
-<INPUT type="submit" value="Change Logs View">
+<INPUT type="submit" value="Browse">
 <INPUT type="hidden" name="group_id" value="<?php echo $group_id; ?>">
+</td>
+</tr>
+</table>
 </FORM>
-</DIV>
-
 
 <?php
+if ( $view == 'daily' ) {
+
+	print '<P>';
+	filedownload_logs_daily( $project, $span, $who);
+	cvsaccess_logs_daily( $project, $span, $who);
+	doc_logs_daily( $project, $span, $who);
+
+} elseif ( $view == 'weekly' ) {
+
+	print '<P>';
+	filedownload_logs_daily( $project, $span*7, $who);
+	cvsaccess_logs_daily( $project, $span*7, $who);
+	doc_logs_daily( $project, $span*7, $who);
+
+} elseif ( $view == 'monthly' ) {
+
+	print '<P>';
+	filedownload_logs_daily( $project, $span*30.5, $who);
+	cvsaccess_logs_daily( $project, $span*30.5, $who);
+	doc_logs_daily( $project, $span*30.5, $who);
+
+} else {
+
+	// default stats display, DAILY
+	print '<P>';
+	filedownload_logs_daily( $project, $span, $who);
+	cvsaccess_logs_daily( $project, $span, $who);
+	doc_logs_daily( $project, $span, $who);
+
+}
+
+print '<BR><P>';
+//LJ stats_site_agregate( $group_id );
+
 //
 // END PAGE CONTENT CODE
 //

@@ -94,7 +94,10 @@ class Group extends Error {
 	//permissions data row from db
 	var $perm_data_array;
 
-	//whether the use is an admin/super user of this project
+	//membership data row from db
+	var $members_data_array;
+
+	//whether the user is an admin/super user of this project
 	var $is_admin;
 
 	function Group($id) {
@@ -268,86 +271,108 @@ class Group extends Error {
 		return $this->data_array['group_id'];
 	}
 
+	/**
+	 *	getMembersId - Return an array of user ids of group members
+	 *
+	 *	@return int group_id.
+	 */
+	function getMembersId() {
+	    if ($this->members_data_array) {
+		//list of members already built
+	    } else {
+		$res=db_query("SELECT user_id FROM user_group WHERE group_id='". $this->getGroupId() ."'");
+		if ($res && db_numrows($res) > 0) {
+		    $mb_array = array();
+		    while ($row = db_fetch_array($res)) {
+			$mb_array[] = $row[0];
+		    }
+		    $this->members_data_array = $mb_array;
+		} else {
+		    echo db_error();
+		    $this->members_data_array=array();
+		}
+		db_free_result($res);
+	    }
+	    return $this->members_data_array;
+	}
+
 	/*
 
 		Basic user permissions that apply to all Groups
 
-	* /
+	*/
 
 
-//not yet completed
-
-	/ *
+	/*
 		Simple test to see if the current user is a member of this project
-	* /
+	*/
 	function userIsMember($field='user_id',$value=0) {
-		if ($this->userIsAdmin()) {
-			//admins are tested first so that super-users can return true
-			//and admins of a project should always have full privileges 
-			//on their project
-			return true;
+	    if ($this->userIsAdmin()) {
+		//admins are tested first so that super-users can return true
+		//and admins of a project should always have full privileges 
+		//on their project
+		return true;
+	    } else {
+		$arr=$this->getPermData();
+		if ($arr[$field] > $value) {
+		    return true;
 		} else {
-			$arr=$this->getPermData();
-			if ($arr[$field] > $value) {
-				return true;
-			} else {
-				return false;
-			}
+		    return false;
 		}
+	    }
 	}
 
-	/ *
+	/*
 		User is an admin of the project
 		or admin of the entire site
-	* /
+	*/
 	function userIsAdmin() {
-		if (isset($this->is_admin)) {
-			//have already been through here and set the var
-		} else {
-			if (user_isloggedin()) {
-				//check to see if site super-user
-				$res=db_query("SELECT * FROM user_group WHERE user_id='". user_getid() ."' AND group_id='1' AND admin_flags='A'");
-				if ($res && db_numrows($res) > 0) {
-					$this->is_admin = true;
-				} else {
-					$arr=$this->getPermData();
-					if ($arr['admin_flags']=='A') {
-						$this->is_admin = true;
-					} else {
-						$this->is_admin = false;
-					}
-				}
-				db_free_result($res);
+	    if (isset($this->is_admin)) {
+		//have already been through here and set the var
+	    } else {
+		if (user_isloggedin()) {
+		    //check to see if site super-user
+		    $res=db_query("SELECT * FROM user_group WHERE user_id='". user_getid() ."' AND group_id='1' AND admin_flags='A'");
+		    if ($res && db_numrows($res) > 0) {
+			$this->is_admin = true;
+		    } else {
+			$arr=$this->getPermData();
+			if ($arr['admin_flags']=='A') {
+			    $this->is_admin = true;
 			} else {
-				$this->is_admin = false;
+			    $this->is_admin = false;
 			}
+		    }
+		    db_free_result($res);
+		} else {
+		    $this->is_admin = false;
 		}
-		return $this->is_admin;
+	    }
+	    return $this->is_admin;
 	}
 
-	/ *
+	/*
 		Return an associative array of permissions for this group/user
-	* /
-	function getPermData(){
-		if ($this->$perm_data_array) {
-			//have already been through here and set up perms data
-		} else {
-			if (user_isloggedin()) {
-				$res=db_query("SELECT * FROM user_group WHERE user_id='".user_getid()."' and group_id='". $this->getGroupId() ."'");
-				if ($res && db_numrows($res) > 0) {
-					$this->$perm_data_array=db_fetch_array($res);
-				} else {
-					echo db_error();
-					$this->$perm_data_array=array();
-				}
-				db_free_result($res);
-			} else {
-				$this->$perm_data_array=array();
-			}
-		}
-		return $this->$perm_data_array;
-	}
 	*/
+	function getPermData(){
+	    if ($this->perm_data_array) {
+		//have already been through here and set up perms data
+	    } else {
+		if (user_isloggedin()) {
+		    $res=db_query("SELECT * FROM user_group WHERE user_id='".user_getid()."' and group_id='". $this->getGroupId() ."'");
+		    if ($res && db_numrows($res) > 0) {
+			$this->perm_data_array=db_fetch_array($res);
+		    } else {
+			echo db_error();
+			$this->perm_data_array=array();
+		    }
+		    db_free_result($res);
+		} else {
+		    $this->perm_data_array=array();
+		}
+	    }
+	    return $this->perm_data_array;
+	}
 
 }
 

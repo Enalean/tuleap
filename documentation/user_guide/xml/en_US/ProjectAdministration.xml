@@ -694,24 +694,26 @@
     </section>
 
     <section id="SourceCodeAccessLogs">
-      <title>Source Code Access Logs</title>
+      <title>Source Code &amp; Document Access Logs</title>
 
       <para><emphasis>Location: Project Administration Menu</emphasis></para>
 
-      <para>CodeX is about Software Sharing inside &SYS_ORG_NAME;. Its goal is to make
-      software re-use part of the enterprise culture. To this end, Source code
-      access and file release download is granted to all registered users
-      <footnote><para>Anonymous users are not granted access to the Source
-      code. They must create their own account and identify themselves with
-      CodeX before they can do so.</para></footnote> on CodeX. Beside that we
-      also wanted the ability for project leaders to see who downloaded their
-      software. The CodeX Team implemented this feature upon request of
-      several project administrators shortly after the site was launched. The
-      intent for the project leaders is not to construct barriers to source
-      code sharing but rather to know who their community of users are and who
-      is interested in their software.</para>
+      <para>CodeX is about Software Sharing inside &SYS_ORG_NAME;. Its
+      goal is to make software re-use part of the enterprise
+      culture. To this end, Source code access and file release
+      download is granted to all registered users
+      <footnote><para>Anonymous users are not granted access to the
+      Source code. They must create their own account and identify
+      themselves with CodeX before they can do so.</para></footnote>
+      on CodeX. CodeX also provides the ability for project leaders to
+      see who downloaded their project deliverables whether software
+      or documents. The intent for the project leaders is not to
+      establish barriers to source code sharing but rather to know who
+      their community of users are and who is interested in their
+      software.</para>
 
-      <para>The Source Code Access Logs provide project members with 2 lists:</para>
+      <para>The Source Code Access Logs provide project members with
+      the following information:</para>
 
       <itemizedlist mark="bullet">
         <listitem>
@@ -726,14 +728,19 @@
           or update the sources on their local desktop machine.</para>
         </listitem>
         <listitem>
-          <para>The third list (not shown on the figure) inform the project administrators
+          <para>The third list inform the project administrators
           about the CodeX users who downloaded documents marked as being accessible to registered
           users only in your Document Manager (see <xref linkend="DocumentAdministration"/>).</para>
         </listitem>
       </itemizedlist>
 
+      <para>Access Logs can be filtered out by users to show accesses 
+      from all users, project members or non project members
+      (default). The time window can also be adjusted to show more or
+      less access log history.</para>
+
       <figure id="FigureSourceCodeAccessLogsForACodeXProject">
-        <title>Source Code Access Logs for a CodeX project</title>
+        <title>Sample Source Code &amp; Document Access Log</title>
 
         <mediaobject>
           <imageobject>

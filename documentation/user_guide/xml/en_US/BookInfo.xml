@@ -303,6 +303,15 @@
 
         <revremark>Updated instructions to make cross-references with pattern 'xxx #nnn'</revremark>
       </revision>
+      <revision>
+        <revnumber>2.6.6</revnumber>
+
+        <date>23-Mar-2004</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>Source Code access logs can be filtered by users</revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--
