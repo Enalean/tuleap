@@ -86,7 +86,7 @@ if ($new_report) {
 
     bug_header_admin(array ('title'=>'Create A New Bug Report'));
     
-    echo '<H2>Create a New Bug Report '.help_button('bug_admin_define_report',false).'</H2>';
+    echo '<H2>Create a New Bug Report '.help_button('bug_admin_report_settings',false).'</H2>';
   
     // display the table of all fields that can be included in the report
     $title_arr=array();
