@@ -18,7 +18,7 @@ class GroupFactory extends Error {
 	 *
 	 *	@return	boolean	success.
 	 */
-	function ArtifactTypeFactory() {
+	function GroupFactory() {
 		$this->Error();
 		return true;
 	}
