@@ -113,33 +113,29 @@ if ($group_id) {
     }
 
     case 'delete_cc' : {
-	if (user_ismember($group_id,'B2')) {
-
-	    $changed = bug_delete_cc($group_id,$bug_id,$bug_cc_id,$changes);
-
-	    if ($changed) {
-		/*
-		  see if we're supposed to send all modifications to an address
-		*/
-		if ($project->sendAllBugUpdates()) {
-		    $address=$project->getNewBugAddress();
-		}
-		
-		/*
-		  now send the email
-		  it's no longer optional due to the group-level notification address
-		*/
-		bug_mail_followup($bug_id,$address,$changes);
+	$changed = bug_delete_cc($group_id,$bug_id,$bug_cc_id,$changes);
+	
+	if ($changed) {
+	    /*
+	      see if we're supposed to send all modifications to an address
+	    */
+	    if ($project->sendAllBugUpdates()) {
+		$address=$project->getNewBugAddress();
 	    }
-
-	    // unsent bug_id var to make sure that it doesn;t
-	    // impact the next bug query.
-	    unset($bug_id);
-	    unset($HTTP_GET_VARS['bug_id']);
-	    include '../bugs/browse_bug.php';
-	} else {
-	    exit_permission_denied();
-	}	
+	    
+	    /*
+	      now send the email
+	      it's no longer optional due to the group-level notification address
+	    */
+	    bug_mail_followup($bug_id,$address,$changes);
+	}
+	
+	// unsent bug_id var to make sure that it doesn;t
+	// impact the next bug query.
+	unset($bug_id);
+	unset($HTTP_GET_VARS['bug_id']);
+	include '../bugs/browse_bug.php';
+	
 	break;	    
     }
 
