@@ -1176,9 +1176,8 @@ class Artifact extends Error {
         $field = $art_field_fact->getFieldFromName("multi_assigned_to");
         if ( $field ) {
             $field_value = $field->getValues($this->getID());
-            if ($field_value && (db_numrows($field_value) > 0)) {
-                while ($row = db_fetch_array($field_value)) {
-                    $user_id = db_result($field_value,0,'assigned_to');
+            if ($field_value && (count($field_value) > 0) ) {
+                while (list (,$user_id)=each ($field_value)) {
                     if ( ($user_id) && ($user_id != 100) ) {
                         if (!$user_ids[$user_id] && $this->ArtifactType->checkNotification($user_id, 'ASSIGNEE', $changes)) {
                             //echo "DBG - ASSIGNEE - user=$user_id<br>";
