@@ -56,7 +56,7 @@ function commits_header($params) {
 	echo ' | <A HREF="/cvs/?func=browse&group_id='.$group_id.'">'.$LANG->getText('cvs_commit_utils', 'menu_query').'</A>';
 	echo ' | <A HREF="/cvs/?func=admin&group_id='.$group_id.'">'.$LANG->getText('cvs_commit_utils', 'menu_admin').'</A>';	
 	if (!$params['help']) { $params['help'] = "VersionControlWithCVS.html";}
-	echo ' | '.help_button($params['help'],false,'Help');
+	echo ' | '.help_button($params['help'],false,$LANG->getText('global', 'help'));
 
 	echo '</B>';
 	echo ' <hr width="300" size="1" align="left" noshade>';
@@ -558,6 +558,68 @@ function show_commit_details ($result) {
 	}
 	echo '</TD></TR></TABLE>';
 }
+
+
+// Are there any commits in the cvs history ?
+function format_cvs_history($group_id) {
+  global $LANG;
+ 
+  $res_cvsfullhist = get_cvs_history($group_id);
+  
+  if (!$res_cvsfullhist || db_numrows($res_cvsfullhist) < 1) {
+   print '<P>'.$LANG->getText('cvs_intro', 'no_history');  
+} else {
+    $cvshist = array();
+    while ($row_cvsfullhist = db_fetch_array($res_cvsfullhist)) {
+      $cvshist[$row_cvsfullhist['user_name']]['full'] = $row_cvsfullhist['commits'];
+      $cvshist[$row_cvsfullhist['user_name']]['last'] = 0;
+    }
+    
+    // Now over the last 7 days
+    $res_cvslasthist = get_cvs_history($group_id,7*24*3600);
+    
+    while ($row_cvslasthist = db_fetch_array($res_cvslasthist)) {
+      $cvshist[$row_cvslasthist['user_name']]['last'] = $row_cvslasthist['commits'];
+    }
+    
+    
+    // Format output 
+    $output = '<P><b>'.$LANG->getText('cvs_intro', 'nb_commits').'</b><BR>&nbsp;';
+    reset($cvshist);
+    while (list($user, ) = each($cvshist)) {
+      $output .= '<BR>'.$user.' ('.$cvshist[$user]['last'].'/'
+	.$cvshist[$user]['full'].')';
+    }
+  }
+  return $output;
+}
+
+
+// list the number of commits by user either since the beginning of
+// history if the period argument is not given or if it is given then
+// over the last "period" of time.
+// period is expressed in seconds
+function get_cvs_history($group_id, $period=false) {
+  
+  $group = group_get_object($group_id);
+  
+  if ($period) {
+    // All times in cvs tables are stored in UTC ???
+    $date_clause = "AND co.comm_when >= ".date("YmdHis",(gmdate('U')-$period))." ";
+  }
+  $query = "SELECT u.user_name, count(co.id) as commits ".
+    "FROM cvs_commits co, user u, cvs_repositories repo, cvs_checkins ci ".
+    "WHERE co.whoid=u.user_id ".
+    "AND repo.repository='/cvsroot/".$group->getUnixName()."' ".
+    "AND ci.repositoryid=repo.id ".
+    "AND ci.whoid=co.whoid ".
+    "AND ci.commitid=co.id ".
+    $date_clause.
+    "GROUP BY co.whoid ORDER BY user_name";
+  $result = db_query($query);
+  return($result);
+}
+
 
 function check_cvs_access($username, $group_name, $cvspath) {
  

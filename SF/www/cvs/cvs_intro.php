@@ -34,29 +34,15 @@ if ($row_grp['cvs_preamble']!='') {
 // Summary info
 print '</TD><TD width="25%">';
 print $HTML->box1_top($LANG->getText('cvs_intro', 'repo_history'));
+echo format_cvs_history($group_id);
 
-// Is there anything in the cvs history table ?
-$res_cvshist = db_query("SELECT * FROM group_cvs_history WHERE group_id='$group_id'");
-if (db_numrows($res_cvshist) < 1) {
-    print '<P>'.$LANG->getText('cvs_intro', 'no_history');
-} else {
-
-    print '<P><b>'.$LANG->getText('cvs_intro', 'nb_commits').'</b><BR>&nbsp;';
-
-    while ($row_cvshist = db_fetch_array($res_cvshist)) {
-        print '<BR>'.$row_cvshist['user_name'].' ('.$row_cvshist['cvs_commits_wk'].'/'
-	    .$row_cvshist['cvs_commits'].') ('.$row_cvshist['cvs_adds_wk'].'/'
-	    .$row_cvshist['cvs_adds'].')';
-    }
-
-}
 
 // CVS Browsing Box
 $uri = session_make_url('/cvs/viewcvs.php/?root='.$row_grp['unix_group_name'].'&roottype=cvs');
 print '<HR><B>'.$LANG->getText('cvs_intro', 'browse_title').'</B>
 <P>'.$LANG->getText('cvs_intro', 'browse_msg').'
 <UL>
-<LI><A href="'.$uri.'"><B>Browse CVS Tree</B></A></LI>';
+<LI><A href="'.$uri.'"><B>'.$LANG->getText('cvs_commit_utils', 'menu_browse').'</B></A></LI>';
 
 print $HTML->box1_bottom();
 

@@ -41,7 +41,7 @@ cvs_admin_commit	preamble_msg	Introductory message to replace the default one on
 cvs_intro	title	CVS Information
 cvs_intro	repo_history	Repository History
 cvs_intro	no_history	This project has no CVS history.
-cvs_intro	nb_commits	Developer (Commits) (Adds) 7day/Total
+cvs_intro	nb_commits	Developer Commits (Last 7 days/Total)
 cvs_intro	browse_title	Browse the CVS Tree
 cvs_intro	browse_msg	Browsing the CVS tree gives you a great view into the current status of this project's code. You may also view the complete histories of any file in the repository.
 #
