@@ -66,12 +66,12 @@ if ($show_confirm) {
 
 	//Add a couple of forums for this group and make the project creator 
 	// (current user) monitor these forums
-	$fid = forum_create_forum($group_id,'Open Discussion',1,'General Discussion');
+	$fid = forum_create_forum($group_id,'Open Discussion',1,1,'General Discussion');
 	forum_add_monitor($fid, user_getid());
 
-	$fid = forum_create_forum($group_id,'Help',1,'Get Help');
+	$fid = forum_create_forum($group_id,'Help',1,1,'Get Help');
 	forum_add_monitor($fid, user_getid());
-	$fid = forum_create_forum($group_id,'Developers',0,'Project Developer Discussion');
+	$fid = forum_create_forum($group_id,'Developers',0,1,'Project Developer Discussion');
 	forum_add_monitor($fid, user_getid());
 
 	//Set up some mailing lists
