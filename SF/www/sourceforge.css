@@ -1,11 +1,11 @@
-BODY { background-color: #FFFFFF; font-family: arial,helvetica,sans-serif; }
+BODY { background-color: #F7F4F2; font-family: arial,helvetica,sans-serif; }
 
-A { text-decoration: none; color #6666FF; }
-A:visited { text-decoration: none; color: #6666AA; }
-A:link { text-decoration: none; color: #6666AA; }
-A:active { text-decoration: none; color: #6666AA; }
+A { text-decoration: none; color #8b4020; }
+A:visited { text-decoration: none; color: #8b4020; }
+A:link { text-decoration: none; color: #8b4020; }
+A:active { text-decoration: none; color: #8b4020; }
 A:hover { text-decoration: none; color: #FF6666 }
-OL,UL,P,BODY,TD,TR,TH,FORM,SPAN { font-family: arial,helvetica,sans-serif;color: #333333 }
+OL,UL,P,BODY,TD,TR,TH,FORM,SPAN { font-family: arial,helvetica,sans-serif;color: #333333; font-size: small;}
 H1,H2,H3,H4,H5,H6 { font-family: arial,helvetica,sans-serif }
 PRE,TT { font-family: courier,sans-serif }
 
