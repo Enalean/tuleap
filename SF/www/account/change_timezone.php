@@ -37,7 +37,7 @@ as if it were in your neighborhood.
 
 echo '<H4>'.$feedback.'</H4>';
 
-echo html_build_select_box_from_arrays ($TZs,$TZs,'timezone',user_get_timezone());
+echo html_get_timezone_popup ('timezone',user_get_timezone());
 
 ?>
 <input type="submit" name="submit" value="Update">
