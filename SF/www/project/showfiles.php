@@ -98,7 +98,7 @@ for ( $p = 0; $p < $num_packages; $p++ ) {
 			print "\t" . '<TR class="'. $bgcolor .'"><TD>&nbsp;</TD><TD><B>'
 				. '<A HREF="shownotes.php?release_id='.$package_release['release_id'].'">'
 				. $package_release['name'] .'</A></B></TD><TD COLSPAN="5">&nbsp;</TD><TD>'
-				. format_date( $sys_datefmt, $package_release['release_date'] ) .'</TD></TR>'."\n";
+				. format_date("Y-m-d", $package_release['release_date'] ) .'</TD></TR>'."\n";
 
 			   // get the files in this release....
 			$sql = "SELECT frs_file.file_id AS file_id,"
@@ -135,7 +135,7 @@ for ( $p = 0; $p < $num_packages; $p++ ) {
 						. '<TD>'. ($file_release['downloads'] ? $file_release['downloads'] : '0') .'</TD>'
 						. '<TD>'. $file_release['processor'] .'</TD>'
 						. '<TD>'. $file_release['type'] .'</TD>'
-						. '<TD>'. format_date( $sys_datefmt, $file_release['release_time'] ) .'</TD>'
+						. '<TD>'. format_date( "Y-m-d", $file_release['release_time'] ) .'</TD>'
 						. '</TR>' . "\n";
 
 					$proj_stats['size'] += $file_release['file_size'];
