@@ -1236,7 +1236,7 @@ function format_bug_attached_files ($bug_id,$group_id,$ascii=false,$pv=false) {
 	$title_arr[]='Size';
 	$title_arr[]='By';
 	$title_arr[]='On';
-	if (user_ismember($group_id,'B2') && !$pv) {
+	if (!$pv) {
 	    $title_arr[]='Delete?';
 	}
 
@@ -1249,7 +1249,7 @@ function format_bug_attached_files ($bug_id,$group_id,$ascii=false,$pv=false) {
 	    "Date: %s  Name: %s  Size: %dKB   By: %s\n%s\n%s";
     } else {
 	$fmt = "\n".'<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td><td align="center">%s</td><td align="center">%s</td>'.
-	    (user_ismember($group_id,'B2') && !$pv ? '<td align="center">%s</td>':'').'</tr>';
+	    (!$pv ? '<td align="center">%s</td>':'').'</tr>';
     }
 
     // Determine which protocl to use for embedded URL in ASCII format
@@ -1274,16 +1274,25 @@ function format_bug_attached_files ($bug_id,$group_id,$ascii=false,$pv=false) {
 			    db_result($result, $i, 'description'),
 			    $server.$href);
 	} else {
+	    // show File attachment delete icon if one of the condition is met:
+	    // (a) current user is a bug tech
+	    // (b) the current user is the person who added a given name in File Attachment list
+	    if ( user_ismember($group_id,'B1') ||
+		(user_getname(user_getid()) == db_result($result, $i, 'user_name') )) {
+			$html_delete = "<a href=\"$PHP_SELF?func=delete_file&group_id=$group_id&bug_id=$bug_id&bug_file_id=$bug_file_id\" ".
+			    '" onClick="return confirm(\'Delete this attachment?\')">'.
+			    '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A>';
+	    } else {
+			$html_delete = '-';
+	    }
+
 	    $out .= sprintf($fmt,
 			    util_get_alt_row_color($i),
 			    "<a href=\"$href\">". db_result($result, $i, 'filename').'</a>',
 			    db_result($result, $i, 'description'),
 			    intval(db_result($result, $i, 'filesize')/1024),
 			    util_user_link(db_result($result, $i, 'user_name')),
-			    format_date($sys_datefmt,db_result($result, $i, 'date')),
-			    "<a href=\"$PHP_SELF?func=delete_file&group_id=$group_id&bug_id=$bug_id&bug_file_id=$bug_file_id\" ".
-			    '" onClick="return confirm(\'Delete this attachment?\')">'.
-			    '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A>');
+			    format_date($sys_datefmt,db_result($result, $i, 'date')),$html_delete);
 	}
     }
 
@@ -1360,11 +1369,11 @@ function format_bug_cc_list ($bug_id,$group_id,$ascii=false,$pv=false) {
 	} else {
 
 	    // show CC delete icon if one of the condition is met:
-	    // a) current user is a bug admin
+	    // a) current user is a bug tech
 	    // b) then CC name is the current user 
 	    // c) the CC email address matches the one of the current user
 	    // d) the current user is the person who added a gieven name in CC list
-	    if ( user_ismember($group_id,'B2') ||
+	    if ( user_ismember($group_id,'B1') ||
 		(user_getname(user_getid()) == $email) ||  
 		(user_getemail(user_getid()) == $email) ||
 		(user_getname(user_getid()) == db_result($result, $i, 'user_name') )) {
