@@ -1,17 +1,18 @@
 <?php
-
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
 //
-
-/*
-        Docmentation Manager
-        by Quentin Cregan, SourceForge 06/2000
-*/
-
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+//	Originally written by Quentin Cregan, SourceForge 06/2000
+//	Modified by Laurent Julliard 2001-2004, CodeX Team, Xerox
 
 require('../doc_utils.php');
 require('pre.php');
@@ -49,7 +50,7 @@ if (strstr($mode,"docedit")) {
     $row = db_fetch_array($result);
     
     docman_header_admin(array('title'=>'Edit Document',
-			'help'=>'DocumentPublication.html'));
+			'help'=>'DocumentAdministration.html#DocumentPublication'));
     
     echo '
 	
@@ -61,7 +62,7 @@ if (strstr($mode,"docedit")) {
 	  <tr>
 	    <th>Document Title:</th>
 	    <td><input type="text" name="title" size="60" maxlength="255" value="'.$row['title'].'"></td>
-	    <td class="example">(e.g. How to use the download server)</td>
+	    <!-- td class="example">(e.g. How to use the download server)</td -->
 
 	  </tr>
 	  <tr>
@@ -70,7 +71,7 @@ if (strstr($mode,"docedit")) {
 	  <th>Description:</th>
 			       
 	  <td><textarea cols="60" rows="4"  wrap="virtual" name="description">'.$row['description'].'</textarea></td>
-	  <td class="example">(e.g. Instructions on how to download files for newbies)</td>
+	  <!-- td class="example">(e.g. Instructions on how to download files for newbies)</td -->
 
 	</tr>
 
@@ -81,7 +82,7 @@ if (strstr($mode,"docedit")) {
     echo formatByteToMb($sys_max_size_upload);
     echo ' Mb)</i></span>
 	</td>
-	<td> (HTML file) </td>
+	<!-- td> (HTML file) </td -->
 
 	</tr>
 	<tr>
@@ -114,7 +115,7 @@ if (strstr($mode,"docedit")) {
 	    </tr>
 
 	    <tr>
-	    <th>Access to register user only:</th>
+	    <th>Access to registered user only:</th>
 		<td><input type="checkbox" name="restricted_access" value="1"';
 		if ( $row['restricted_access'] == 1 ) {
 		    print " checked";
