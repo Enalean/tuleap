@@ -304,13 +304,13 @@ sub init_trackers_db {
      ## print stderr $query, "\n";
 
     if ($activate_srs == 0) {
-      create_tracker($group_id, 'Supports', 'SR', 'Support Requests', '1', '1');
+      create_tracker($group_id, 'Support Requests', 'SR', 'Support Requests Tracker', '1', '1');
     }
     if ($activate_bugs == 0) {
       create_tracker($group_id, 'Bugs', 'bug', 'Bugs Tracker', '1', '0');
     }
     if ($activate_tasks == 0) {
-      create_tracker($group_id, 'Tasks', 'task', 'Tasks Manager', '1', '0');
+      create_tracker($group_id, 'Tasks', 'task', 'Tasks Tracker', '1', '0');
     }
   }
 }
