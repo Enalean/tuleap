@@ -30,6 +30,10 @@ while ($ln = pop(@listfile_array)) {
 
 		system("$mailman_dir/bin/newlist $list_name $list_admin_email $list_password >/dev/null 2>&1");
 
+		# Deactivate monthly reminders by default
+		system("echo \"send_reminders = 0\n\" > /tmp/send_reminders.in");
+		system("$mailman_dir/bin/config_list -i /tmp/send_reminders.in $list_name");
+
 #		system("echo \"archiver\@db.geocrawler.com\" | $mailman_dir/bin/add_members --welcome-msg=n --non-digest-members-file - $listname >/dev/null 2>&1");
 
 #		system("cd ~/logs ; /usr/bin/wget http://www.geocrawler.com/addsourceforge.php3?addlist=$listname&status=$status >/dev/null 2>&1");
