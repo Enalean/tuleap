@@ -591,10 +591,10 @@ if (user_isloggedin()) {
 	<TR><TD VALIGN="TOP" WIDTH="50%">
 <?
 	echo $html_my_projects;
+	echo $html_my_bookmarks;
 	echo $html_my_monitored_forums;
 	echo $html_my_monitored_fp;
 	echo $html_my_survey;
-	echo $html_my_bookmarks;
 ?>
 	</TD><TD VALIGN="TOP" WIDTH="50%">
 <?
