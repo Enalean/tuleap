@@ -23,7 +23,7 @@ if ($pv) {
     echo "<TABLE width='100%'><TR><TD>";
     echo '<H3>'.$Language->getText('news_index','news').'</H3>';
     echo "</TD>";
-    echo "<TD align='left'> ( <A HREF='".$PHP_SELF."?group_id=$group_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;'.$Language->getText('news_index','pv').'</A> ) </TD>";
+    echo "<TD align='left'> ( <A HREF='".$PHP_SELF."?group_id=$group_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('news_index','pv')."</A> ) </TD>";
     echo "</TR></TABLE>";    
 }
 
