@@ -24,7 +24,7 @@
 # it a member of the group_id 1 later on so that he as a super user status
 # for the entire site
 
-INSERT INTO user VALUES (100, 'None', 'noreply@codex.xerox.com', \
+INSERT INTO user VALUES (100, 'None', 'noreply@_DOMAIN_NAME_', \
 '*********34343', '0', 'S', '0', '0', '0', 0, '0', 940000000, NULL, 1, \
 0, 0, NULL, NULL, 0, '', 'GMT', '');
 
@@ -39,12 +39,12 @@ INSERT INTO user VALUES (101, 'admin', '', \
 #
 
 INSERT INTO groups VALUES (1, 'Admin Project', '', 1, 'A',
-'adminproj', 'shell1', 'adminproj.codex.xerox.com', 'Admin Project',
+'adminproj', 'shell1', 'adminproj._DOMAIN_NAME_', 'Admin Project',
 'cvs1', '', '', '', '', '', '', 940000000, 1, '', 1, 1, 1, 1, 1, 1, 1,
 1, '', '', '', 1, 1, 1, 1, 1, '', '', '', '', 1);
 
-INSERT INTO groups VALUES (46, 'Site News', 'sitenews.codex.xerox.com', \
-0, 'A', 'sitenews', 'shell1', 'sitenews.codex.xerox.com', \
+INSERT INTO groups VALUES (46, 'Site News', 'sitenews._DOMAIN_NAME_', \
+0, 'A', 'sitenews', 'shell1', 'sitenews._DOMAIN_NAME_', \
 'Site News Private Project. All Site News should be posted from this project', \
 'cvs1', 'xrx', 'Site News Private Project\r\n\r\n', NULL, NULL, NULL, \
 '', 940000000, 0, '', 0, 0, 0, 1, 0, \
