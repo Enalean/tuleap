@@ -237,7 +237,7 @@ if ($group_id && $atid) {
 			}
 		
 			// Add new dependency if any
-			if ($artifact_id_depend) {
+			if ($artifact_id_dependent) {
 			    $changed |= $ah->addDependencies($artifact_id_dependent,$changes);
 			}
 
@@ -325,6 +325,13 @@ if ($group_id && $atid) {
 		} else if ($ah->isError()) {
 			exit_error('ERROR',$ah->getErrorMessage());
 		} else {
+			
+			// Check if users can browse anonymously
+			if ( $ath->allowsAnon() == 0 ) {
+				exit_error('ERROR',"This tracker has requested that users be logged in before browsing items");
+				return;
+			}
+			
 			if ( $ah->ArtifactType->userIsTech() ) {
 				include './mod.php';
 			} else {
@@ -362,11 +369,17 @@ if ($group_id && $atid) {
 	$params['pagename']='trackers';
 	$params['title']='Trackers';
 	$params['sectionvals']=array($group->getPublicName());
+	$params['help']='HELP_FIXME.html';
 	
 	echo site_project_header($params);
 	echo '<strong>'
-		 .'<a href="/tracker/admin/?group_id='.$group_id.'">Admin Trackers</a>'
-		 .'</strong><p>';
+		 .'<a href="/tracker/admin/?group_id='.$group_id.'">Admin Trackers</a>';
+	echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&func=create">Create a New Tracker</a>';
+	if ($params['help']) {
+	    echo ' | '.help_button($params['help'],false,'Help');
+	}
+	echo "</strong><p>";
+	
 	if (!$at_arr || count($at_arr) < 1) {
 		echo "<h1>No Accessible Trackers Found</h1>";
 		echo "<p>

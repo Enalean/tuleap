@@ -104,7 +104,7 @@ class ArtifactField extends Error {
 		" and afu.group_artifact_id=".$group_artifact_id.
 		" and af.group_artifact_id=".$group_artifact_id;
 		
-		if ( $display_debug ) echo "<DBG:ArtifactField.fetchData>sql=".$sql."<br>";
+		//echo "<DBG:ArtifactField.fetchData>sql=".$sql."<br>";
 	    $res = db_query($sql);
 	
 		$field_array = db_fetch_array($res);
@@ -181,6 +181,39 @@ class ArtifactField extends Error {
 		return $this->display_type;
 	}
 	
+	/**
+	 *  Get the label of the display_type 
+	 *
+	 * @return string
+	 */
+	function getLabelDisplayType() {
+		switch ( $this->display_type ) {
+		case 'SB':
+			return "Select Box";
+			break;
+			
+		case 'TF':
+			return "Text Field";
+			break;
+			
+		case 'TA':
+			return "Text Area";
+			break;
+			
+		case 'MB':
+			return "Multi Select Box";
+			break;
+		
+		case 'DF':
+			return "Date";
+			break;
+
+		default:
+			return "Unknow display type";
+			break;
+		}
+	}
+
 	/**
 	 *  Get the display_size attribute value
 	 *
@@ -559,9 +592,9 @@ class ArtifactField extends Error {
 			// If only active field
 			if ($active_only) {
 			    if ($checked) {
-					$status_cond = "AND  (status IN ('A','P') OR value_id='".$checked."') ";
+					$status_cond = "AND  (status IN ('V') OR value_id='".$checked."') ";
 			    } else {
-					$status_cond = "AND  status IN ('A','P') ";
+					$status_cond = "AND  status IN ('V') ";
 			    }
 			}
 		
@@ -582,6 +615,76 @@ class ArtifactField extends Error {
 	    }
 	
 	    return($res_value);
+	
+	}
+
+	/**
+     * Check if a value exists in the predefined values list
+     * 
+     * @param group_artifact_id: the group artifact id
+     * @param value: the value
+	 *
+	 * @return array
+	 */
+	function checkValueInPredefinedValues ($group_artifact_id,$value) {
+	
+	    $res = $this->getFieldPredefinedValues ($group_artifact_id);
+	    while ($res_array = db_fetch_array($res)) {
+	    	if ( $res_array[0] == $value ) {
+	    		return true;
+	    	}
+		} // while
+	    
+		return false;
+	}
+
+
+	/**
+     * Return all the values for a select box field for a specified status (exclude binding values)
+     * 
+     * @param group_artifact_id: the group artifact id
+     * @param status: the status
+	 *
+	 * @return array
+	 */
+	function getFieldValues ($group_artifact_id,$status) {
+	
+	    if (!$this->getGlobalValueFunction()) {
+
+			$sql="SELECT value_id,value,field_id,group_artifact_id,description,order_id,status ".
+			    "FROM artifact_field_value_list ".
+			    "WHERE group_artifact_id=".$group_artifact_id." AND field_id= ".$this->field_id." ".
+			    "AND status ='".$status."' ".
+			    "ORDER BY order_id ASC";
+			$res_value = db_query($sql);
+			//echo $sql."<br>";
+	    }
+	
+	    return($res_value);
+	
+	}
+
+	/**
+     * Return the value informations
+     * 
+     * @param group_artifact_id: the group artifact id
+     * @param value_id: the value id
+	 *
+	 * @return array
+	 */
+	function getFieldValue ($group_artifact_id,$value_id) {
+	
+	    if (!$this->getGlobalValueFunction()) {
+
+			$sql="SELECT value_id,value,field_id,group_artifact_id,description,order_id,status ".
+			    "FROM artifact_field_value_list ".
+			    "WHERE group_artifact_id=".$group_artifact_id." AND field_id= ".$this->field_id." ".
+			    "AND value_id ='".$value_id."'";
+			$res_value = db_query($sql);
+			//echo $sql."<br>";
+	    }
+	
+	    return(db_fetch_array($res_value));
 	
 	}
 
@@ -934,7 +1037,13 @@ class ArtifactField extends Error {
 		
 		$hash_values = array();
 		// Retrieve the full list (id+label)
-		$all_values = $this->getFieldPredefinedValues($group_artifact_id);		
+		if ( $this->isUserName() ) {
+			// For user fields, we need to retrieve all users because for
+			// tracker which allows anonymous submission
+			$all_values = $this->getUsersList();
+		} else {
+			$all_values = $this->getFieldPredefinedValues($group_artifact_id);		
+		}
 		// Create an hash table with the id as key
 		for($i=0;$i<db_numrows($all_values);$i++) {
 			$hash_values[db_result($all_values,$i,0)] = db_result($all_values,$i,1);
@@ -951,6 +1060,334 @@ class ArtifactField extends Error {
 		
 		return $label_values;
 	}
+
+	/**
+	 *  Retrieve the users list
+	 *
+	 *  @return array
+	 */
+	function getUsersList() {
+		
+		$sql="SELECT user_id,user_name ".
+		    "FROM user";
+		$res_value = db_query($sql);
+		
+		return $res_value;
+	}
+
+	/**
+	 *  Update the field
+	 *
+	 *  @param group_artifact_id: the group artifact id
+	 *  @param field_name: the field name
+	 *  @param description: the field description
+	 *  @param label: the field label
+	 *  @param data_type: the field data type (string, int, flat or date)
+	 *  @param default_value: the default value
+	 *  @param display_type: the field display type (select box, text field, ...)
+	 *  @param display_size: the field display size
+	 *  @param rank_on_screen: rank on screen
+	 *  @param show_on_add: display this field on the submission form used by project members  
+	 *  @param show_on_add_members: display this field on the submission form used by other users 
+	 *  @param empty_ok: allow empty fill
+	 *  @param keep_history: keep in the history
+	 *  @param special: is the field has special process
+	 *  @param use_it: this field is used or not
+	 *
+	 *  @return boolean - succeed or failed
+	 */
+	function update($group_artifact_id,$field_name,$description,$label,$data_type,$default_value,$display_type,
+						 $display_size,$rank_on_screen,$show_on_add,$show_on_add_members,
+						 $empty_ok,$keep_history,$special,$use_it) {
+						 	
+		// Check arguments
+		if ( $field_name=="" || $data_type=="" || $display_type=="" ) {
+			$this->setError("Field name, data type or display type are required.");
+			return false;
+		}
+		
+		// Default values
+		$empty_ok = ($empty_ok?$empty_ok:0);
+		$keep_history = ($keep_history?$keep_history:0);
+		$use_it = ($use_it?$use_it:0);
+		$show_on_add = ($show_on_add?$show_on_add:0);
+		$show_on_add_members = ($show_on_add_members?$show_on_add_members:0);
+		$special = ($special?$special:0);
+		$rank_on_screen = ($rank_on_screen?$rank_on_screen:"''");
+		
+		// First update the artifact_field
+		$sql = "UPDATE artifact_field SET ".
+			   "field_name='".$field_name."',".
+			   "data_type=".$data_type.",".
+			   "display_type='".$display_type."',".
+			   "display_size='".$display_size."',".
+			   "label='".$label."',".
+			   "description='".$description."',".
+			   "empty_ok=".$empty_ok.",".
+			   "keep_history=".$keep_history.",".
+			   "special=".$special.",".
+			   "default_value='".$default_value."' ".
+			   "WHERE group_artifact_id=".$group_artifact_id." AND field_id=".$this->field_id;
+				
+		//echo $sql;
+				
+		$res = db_query($sql);
+		if (!$res) {
+			$this->setError("Error during updating artifact_field (".$field_id."-".$group_artifact_id."): ".db_error());
+			return false;
+		}
+		
+		// Then, update the artifact_field_usage
+		$sql = "UPDATE artifact_field_usage SET ".
+			   "use_it=".$use_it.",".
+			   "show_on_add=".$show_on_add.",".
+			   "show_on_add_members=".$show_on_add_members.",".
+			   "place=".$rank_on_screen." ".
+			   "WHERE group_artifact_id=".$group_artifact_id." AND field_id=".$this->field_id;
+		
+		//echo $sql;
+				
+		$res = db_query($sql);
+		if (!$res) {
+			$this->setError("Error during updating artifact_field_usage (".$field_id."-".$group_artifact_id."): ".db_error());
+			return false;
+		}
+		
+		// Reload the field
+		$this->fetchData($group_artifact_id,$field_name);
+
+		return true;
+		
+	}
+
+	/**
+	 *  Update the value_function attribute
+	 *
+	 *  @param group_artifact_id: the group artifact id
+	 *  @param value_function: the value function
+	 *
+	 *  @return boolean - succeed or failed
+	 */
+	function updateValueFunction($group_artifact_id,$value_function) {
+						 	
+		// Update the artifact_field
+		$sql = "UPDATE artifact_field SET ".
+			   "value_function='".$value_function."' ".
+			   "WHERE group_artifact_id=".$group_artifact_id." AND field_id=".$this->field_id;
+				
+		//echo $sql;
+				
+		$res = db_query($sql);
+		if (!$res) {
+			$this->setError("Error during updating artifact_field (".$field_id."-".$group_artifact_id."): ".db_error());
+			return false;
+		}
+		
+		// Reload the field
+		$this->fetchData($group_artifact_id,$field_name);
+
+		return true;
+		
+	}
+
+	/**
+	 *  Delete the field and all its dependencies
+	 *
+	 *  @param group_artifact_id: the group artifact id
+	 *
+	 *  @return boolean - succeed or failed
+	 */
+	function delete($group_artifact_id) {
+						 	
+		// First delete the artifact_field
+		$sql = "DELETE FROM artifact_field ".
+			   "WHERE group_artifact_id=".$group_artifact_id." AND field_id=".$this->field_id;
+				
+		//echo $sql;
+				
+		$res = db_query($sql);
+		if (!$res) {
+			$this->setError("Error during deleting artifact_field (".$field_id."-".$group_artifact_id."): ".db_error());
+			return false;
+		}
+		
+		// Delete the artifact_field_usage
+		$sql = "DELETE FROM artifact_field_usage ".
+			   "WHERE group_artifact_id=".$group_artifact_id." AND field_id=".$this->field_id;
+				
+		$res = db_query($sql);
+		if (!$res) {
+			$this->setError("Error during deleting artifact_field_usage (".$field_id."-".$group_artifact_id."): ".db_error());
+			return false;
+		}
+		
+		// Then, delete the artifact_field_value_list
+		$sql = "DELETE FROM artifact_field_value_list ".
+			   "WHERE group_artifact_id=".$group_artifact_id." AND field_id=".$this->field_id;
+				
+		$res = db_query($sql);
+		if (!$res) {
+			$this->setError("Error during deleting artifact_field_value_list (".$field_id."-".$group_artifact_id."): ".db_error());
+			return false;
+		}
+
+		// Delete all records linked to artifact_id for this field
+	    $sql_artifacts='SELECT artifact_id '.
+		'FROM artifact '.
+		'WHERE group_artifact_id='. $group_artifact_id;
+		
+		//echo $sql_artifacts;
+		
+	    $res = db_query($sql_artifacts);
+	
+	    while ($artifacts_array = db_fetch_array($res)) {
+			$id = $artifacts_array["artifact_id"];
+
+			// Delete artifact_field_value records	    	
+	    	$sql = "DELETE FROM artifact_field_value WHERE artifact_id = ".$id." AND field_id = ".$this->getID();
+	    	//echo $sql;
+	    	
+	    	db_query($sql);
+	    	
+		} // while
+
+		return true;
+		
+	}
+	
+	/**
+	 *  Check if a field value id already exists
+	 *
+	 *  @param group_artifact_id: the group artifact id
+	 *  @param field_id: the field id
+	 *  @param value_id: the value id
+	 *
+	 *  @return boolean - exist or not
+	 */
+	function existValueId($group_artifact_id,$value_id) {
+		$sql = "SELECT * FROM artifact_field_values_list WHERE group_artifact_id=".$group_artifact_id.
+			   " AND field_id=".$this->getID()." AND value_id=".$value_id;
+			   
+		$result = db_query($sql);
+	    if ($result && db_numrows($result) > 0) {
+	    	return true;
+	    } else {
+	    	return false;
+	    }
+			
+	}	
+
+	/**
+	 *  Create a new field value for select box field
+	 *
+	 *  @param group_artifact_id: the group artifact id
+	 *  @param value_id: the value id
+	 *  @param value: the value
+	 *  @param description: the value description
+	 *  @param order_id: the rank
+	 *
+	 *  @return boolean - exist or not
+	 */
+	function createValueList($group_artifact_id,$value_id,$value,$description,$order_id) {
+		// Check arguments
+		if ( $value_id=="" || $value=="" ) {
+			$this->setError("Value id and value name are required.");
+			return false;
+		}
+		
+		// Check if a field value id already exists
+		if ( $this->existValueId($group_artifact_id,$value_id) ) {
+			$this->setError("This value id already exists.");
+			return false;
+		}
+		
+		// Default values
+		$order_id = ($order_id?$order_id:0);
+		
+		// Create the artifact_field_value_list
+		$sql = "INSERT INTO artifact_field_value_list VALUES (".
+				$this->getID().",".$group_artifact_id.",".$value_id.",'".addslashes($value)."','".addslashes($description)."',".$order_id.",'V')";
+				
+		//echo $sql;
+				
+		$res_insert = db_query($sql);
+		if (!$res_insert || db_affected_rows($res_insert) <= 0) {
+			$this->setError("Error during inserting artifact_field_value_list (".$this->getID()."-".$group_artifact_id."-".$value_id."): ".db_error());
+			return false;
+		}
+		
+		return true;
+		
+	}
+	
+	/**
+	 *  Update a field value for select box field
+	 *
+	 *  @param group_artifact_id: the group artifact id
+	 *  @param value_id: the value id
+	 *  @param value: the value
+	 *  @param description: the value description
+	 *  @param order_id: the rank
+	 *  @param status: the value status (V,H)
+	 *
+	 *  @return boolean - exist or not
+	 */
+	function updateValueList($group_artifact_id,$value_id,$value,$description,$order_id,$status) {
+		// Check arguments
+		if ( $value_id=="" || $value=="" ) {
+			$this->setError("Value id and value name are required.");
+			return false;
+		}
+		
+		// Default values
+		$order_id = ($order_id?$order_id:0);
+		
+		// Update the artifact_field_value_list
+		$sql = "UPDATE artifact_field_value_list SET ".
+		       "value='".addslashes($value)."',".
+		       "description='".addslashes($description)."',".
+		       "order_id=".$order_id.",".
+		       "status='".$status."' ".
+			   "WHERE field_id=".$this->getID()." AND group_artifact_id=".$group_artifact_id." AND value_id=".$value_id;
+				
+		//echo $sql;
+				
+		$res = db_query($sql);
+		if (!$res) {
+			$this->setError("Error during updating artifact_field_value_list (".$this->getID()."-".$group_artifact_id."-".$value_id."): ".db_error());
+			return false;
+		}
+		
+		return true;
+		
+	}
+	
+	/**
+	 *  Delete a field value for select box field
+	 *
+	 *  @param group_artifact_id: the group artifact id
+	 *  @param value_id: the value id
+	 *
+	 *  @return boolean - exist or not
+	 */
+	function deleteValueList($group_artifact_id,$value_id) {
+		
+		// Delete the artifact_field_value_list
+		$sql = "DELETE FROM artifact_field_value_list ".
+			   "WHERE field_id=".$this->getID()." AND group_artifact_id=".$group_artifact_id." AND value_id=".$value_id;
+				
+		//echo $sql;
+				
+		$res = db_query($sql);
+		if (!$res) {
+			$this->setError("Error during deleting artifact_field_value_list (".$this->getID()."-".$group_artifact_id."-".$value_id."): ".db_error());
+			return false;
+		}
+		
+		return true;
+		
+	}
+	
 
 }
 

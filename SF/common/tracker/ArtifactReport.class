@@ -84,37 +84,35 @@ class ArtifactReport extends Error {
 	 *	@return true on success, false on failure.
 	 */
 	function recreate($user_id,$name,$description,$scope) {
-	global $ath;
-	/* 
-	$perm = $ath->Group->getPermissionFromId( $user_id);
-
-		if (!$perm || !is_object($perm) || !$perm->isArtifactAdmin()) {
-			$this->setError('ArtifactReport: Permission Denied');
-			return false;
-		}
-*/	
-
-	if (!$name || !$description ||!$scope) {
-			$this->setError('ArtifactReport: Name, Description and scope are required');
-			echo 'ArtifactReport: Name, Description and scope are required';
-			return false;
-		}
-
-	$group_id = $ath->Group->getID();
+		global $ath;
+		/* 
+		$perm = $ath->Group->getPermissionFromId( $user_id);
 	
-
-	//db_begin();
-	// first delete any report field entries for this report
-	$res = db_query("DELETE FROM artifact_report_field WHERE report_id=".$this->report_id);
-
-	$res = db_query("UPDATE artifact_report SET name='$name', description='$description',scope='$scope' WHERE report_id=".$this->report_id);
-
-	$this->name = $name;
-	$this->description = $description;
-	$this->scope = $scope;
-	$this->fields = array();
-	//db_commit();
-	return true;
+			if (!$perm || !is_object($perm) || !$perm->isArtifactAdmin()) {
+				$this->setError('ArtifactReport: Permission Denied');
+				return false;
+			}
+	*/	
+	
+		if (!$name || !$description ||!$scope) {
+				$this->setError('ArtifactReport: Name, Description and scope are required');
+				echo 'ArtifactReport: Name, Description and scope are required';
+				return false;
+		}
+	
+		$group_id = $ath->Group->getID();
+		
+	
+		// first delete any report field entries for this report
+		$res = db_query("DELETE FROM artifact_report_field WHERE report_id=".$this->report_id);
+	
+		$res = db_query("UPDATE artifact_report SET name='$name', description='$description',scope='$scope' WHERE report_id=".$this->report_id);
+	
+		$this->name = $name;
+		$this->description = $description;
+		$this->scope = $scope;
+		$this->fields = array();
+		return true;
 	}
 
 	/**
@@ -123,21 +121,19 @@ class ArtifactReport extends Error {
 	 *	@return true on success, false on failure.
 	 */
 	function delete() {
-	global $ath;
-
-	//db_begin();
-	// first delete any report field entries for this report
-	$res = db_query("DELETE FROM artifact_report_field WHERE report_id=".$this->report_id);
-
-// then delete the report entry item
-	$res = db_query("DELETE FROM artifact_report WHERE report_id=".$this->report_id);
-
-	$this->name = '';
-	$this->description = '';
-	$this->scope = '';
-	$this->fields = array();
-	//db_commit();
-	return true;
+		global $ath;
+	
+		// first delete any report field entries for this report
+		$res = db_query("DELETE FROM artifact_report_field WHERE report_id=".$this->report_id);
+	
+		// then delete the report entry item
+		$res = db_query("DELETE FROM artifact_report WHERE report_id=".$this->report_id);
+	
+		$this->name = '';
+		$this->description = '';
+		$this->scope = '';
+		$this->fields = array();
+		return true;
 	}
 
 	/**
@@ -148,27 +144,26 @@ class ArtifactReport extends Error {
 	 *	@return id on success, false on failure.
 	 */
 	function create($user_id,$name,$description,$scope) {
-	global $ath;
-	/*$perm = $ath->Group->getPermissionFromId( $user_id);
-
-		if (!$perm || !is_object($perm) || !$perm->isArtifactAdmin()) {
-			$this->setError('ArtifactReport: Permission Denied');
-			return false;
-		}
-*/
-	if (!$name || !$description ||!$scope) {
-			$this->setError('ArtifactReport: Name, Description and scope are required');
-			return false;
-		}
-
-	$group_id = $ath->Group->getID();
-	$atid=$ath->getID();
-
-	//db_begin();
-	$sql = 'INSERT INTO artifact_report (group_artifact_id,user_id,name,description,scope) '.
-			"VALUES ('".$atid."','".$user_id."','$name',".
-			"'$description','$scope')";
-	//echo $sql;
+		global $ath;
+		/*$perm = $ath->Group->getPermissionFromId( $user_id);
+	
+			if (!$perm || !is_object($perm) || !$perm->isArtifactAdmin()) {
+				$this->setError('ArtifactReport: Permission Denied');
+				return false;
+			}
+	*/
+		if (!$name || !$description ||!$scope) {
+				$this->setError('ArtifactReport: Name, Description and scope are required');
+				return false;
+			}
+	
+		$group_id = $ath->Group->getID();
+		$atid=$ath->getID();
+	
+		$sql = 'INSERT INTO artifact_report (group_artifact_id,user_id,name,description,scope) '.
+				"VALUES ('".$atid."','".$user_id."','$name',".
+				"'$description','$scope')";
+		//echo $sql;
 
 		$res = db_query($sql);
 
@@ -176,7 +171,6 @@ class ArtifactReport extends Error {
 		
 		if (!$res || !$report_id) {
 			$this->setError('ArtifactReport: '.db_error());
-			//db_rollback();
 			return false;
 		} else {
 			$this->report_id = $report_id;
@@ -184,24 +178,23 @@ class ArtifactReport extends Error {
 			$this->name = $name;
 			$this->scope = $scope;
 			$this->fields = array();
-			//	db_commit();
 			return true;
 		}
 	}
 
-        function add_report_field($field_name,$show_on_query,$show_on_result,$place_query,$place_result,$col_width) {
+    function add_report_field($field_name,$show_on_query,$show_on_result,$place_query,$place_result,$col_width) {
 		$sql = 'INSERT INTO artifact_report_field (report_id, field_name,'.
 		'show_on_query,show_on_result,place_query,place_result,col_width) VALUES ';
 	
 		$sql .= "('$this->report_id','$field_name',$show_on_query,$show_on_result,".
 			"$place_query,$place_result,$col_width)";
-		echo $sql.'<br>';
+		//echo $sql.'<br>';
 		$res = db_query($sql);
 		if ($res) {
 	   		return true;
-        	} else {
-           		return false;
-        	}
+    	} else {
+       		return false;
+    	}
 	}
 
 	/**

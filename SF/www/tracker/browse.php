@@ -66,6 +66,24 @@ if (!$offset || $offset < 0) { $offset=0; }
 if (($advsrch != 0) && ($advsrch != 1)) { $advsrch = 0; }
 if (($msort != 0) && ($msort != 1)) { $msort = 0; }
 
+/* ==================================================
+  If the report type is not defined then get it from the user preferences.
+  If it is set then update the user preference.  Also initialize the
+  bug report structures.
+  ================================================== */
+if (user_isloggedin()) {
+    if (!isset($report_id)) {
+		$report_id = user_get_preference('artifact_browse_report'.$atid);
+    } else {
+		if ($report_id != user_get_preference('artifact_browse_report'.$atid))
+		    user_set_preference('artifact_browse_report'.$atid, $report_id);
+    }
+}
+
+// If still not defined then force it to system 'Default' report
+if (!$report_id) { $report_id=100; }
+
+
 // Create factories
 $report_fact = new ArtifactReportFactory();
 
@@ -143,23 +161,6 @@ if (isset($morder)) {
 //echo "<BR> DBG Order by = $morder";
 
 
-/* ==================================================
-  If the report type is not defined then get it from the user preferences.
-  If it is set then update the user preference.  Also initialize the
-  bug report structures.
-  ================================================== */
-if (user_isloggedin()) {
-    if (!isset($report_id)) {
-		$report_id = user_get_preference('artifact_browse_report'.$atid);
-    } else {
-		if ($report_id != user_get_preference('artifact_browse_report'.$atid))
-		    user_set_preference('artifact_browse_report'.$atid, $report_id);
-    }
-}
-
-// If still not defined then force it to system 'Default' report
-if (!$report_id) { $report_id=100; }
-
 
 /* ==================================================
   Now see what type of bug set is requested (set is one of none, 
@@ -212,7 +213,14 @@ if ($set=='my') {
       My bugs - backwards compat can be removed 9/10
     */
     $prefs['status_id'][]=1; // Open status
-    $prefs['assigned_to'][]=user_getid();
+    // Check if the current user is in the assigned_to list
+	$field_object = $art_field_fact->getFieldFromName('assigned_to');
+    if ( ($field_object)&&($field_object->checkValueInPredefinedValues($atid,user_getid())) ) {
+	    $prefs['assigned_to'][]=user_getid();
+	} else {
+		// Any value
+	    $prefs['assigned_to'][]=0;
+	}		
 
 } else if ($set=='custom') {
 
@@ -262,14 +270,22 @@ if ($set=='my') {
 }
 */
 
-// Display the menus
-$ath->header(array('title'=>'Browse Trackers','titlevals'=>array($ath->getName()),'pagename'=>'tracker_browse',
-	'atid'=>$ath->getID(),'sectionvals'=>array($group->getPublicName())));
+if ( !$pv ) {
+	// Display the menus
+	$ath->header(array('title'=>'Browse Trackers','titlevals'=>array($ath->getName()),'pagename'=>'tracker_browse',
+		'atid'=>$ath->getID(),'sectionvals'=>array($group->getPublicName()),'help' => 'HELP_FIXME.html'));
+} else {
+    help_header('Tracker Search Report - '.format_date($sys_datefmt,time()),false);
+}	
 
 // Display the artifact items according to all the parameters
 $art_report_html->displayReport($prefs,$group_id,$report_id,$set,$advsrch,$msort,$morder,$order,$pref_stg,$offset,$chunksz,$pv);
 
-// Display footer page
-$ath->footer(array());
+if ( !$pv ) {
+	// Display footer page
+	$ath->footer(array());
+} else {
+     help_footer();
+}	
 
 ?>

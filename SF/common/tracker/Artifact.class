@@ -385,11 +385,6 @@ class Artifact extends Error {
 				
 		    } // while
 
-			if ( $was_error ) {
-				$this->setError($error_message);
-				$feedback .= " Successfully Inserted Artifact ";
-			}
-			
 			return !$was_error;
 	    }
 	}
@@ -616,7 +611,7 @@ class Artifact extends Error {
 	    }
 	
 	    //
-	    //  DELETE THEN Insert the list of dependencies 
+	    //  Insert the list of dependencies 
 	    //
 	
 		$this->addDependencies($artifact_id_dependent,&$changes);		
@@ -814,6 +809,7 @@ class Artifact extends Error {
 	function insertDependency($id) {
 	    $sql = "INSERT INTO artifact_dependencies (artifact_id,is_dependent_on_artifact_id) ".
 		"VALUES (".$this->getID().",$id)";
+		//echo $sql;
 	    $res = db_query($sql);
 	    return ($res);
 	
@@ -1095,6 +1091,23 @@ class Artifact extends Error {
 	}
 
 	/**
+	 * Return the artifact inverse dependencies values
+	 *
+	 * @return array
+	 */
+	function getInverseDependencies() {
+		
+	    $sql="SELECT d.artifact_id, a.summary, ag.name, g.group_name ".
+		     "FROM artifact_dependencies d, artifact_group_list ag, groups g, artifact a ".
+		     "WHERE d.artifact_id = a.artifact_id AND ".
+		     "a.group_artifact_id = ag.group_artifact_id AND ".
+		     "d.is_dependent_on_artifact_id = ".$this->getID()." AND ".
+		     "ag.group_id = g.group_id ORDER BY a.artifact_id";
+		//echo "sql=$sql<br>";
+	    return db_query($sql);
+	}
+
+	/**
 	 * Return the attached files
 	 *
 	 * @return array
@@ -1109,30 +1122,135 @@ class Artifact extends Error {
 	}
 
 	/**
-	 * Retrieve the matrix role/event=notify from the db
+	 * Build an array of email using the changes array
 	 *
-	 * @param user_id: the user id
+	 * @param changes: array of changes
 	 *
 	 * @return array
 	 */
-	function getNotificationWithLabels($user_id) {
+	function buildNotificationList($changes) {
 		
-		$group = $this->ArtifactType->getGroup();
-		$group_artifact_id = $this->ArtifactType->getID();
-		
-	    $sql = "SELECT role_label,event_label,notify FROM artifact_notification_role r, artifact_notification_event e,artifact_notification n ".
-		"WHERE n.group_artifact_id=$group_artifact_id AND n.user_id=$user_id AND ".
-		"n.role_id=r.role_id AND r.group_artifact_id=$group_artifact_id AND ".
-		"n.event_id=e.event_id AND e.group_artifact_id=$group_artifact_id";
+		global $art_field_fact;
+	
+	    // Rk: we store email addresses in a hash to make sure they are only
+	    // stored once. Normally if an email is repeated several times sendmail
+	    // would take care of it but I prefer taking care of it now.
+	    // Same for user ids.
+	    // We also use the user_ids hash to check if a user has already been selected for 
+	    // notification. If so it is not necessary to check it again in another role.
+	    $addresses = array();
+	    $user_ids = array();
 
-/*
-	$sql = "SELECT role_label,event_label,notify FROM artifact_notification_role_default r, artifact_notification_event_default e,artifact_notification n ".
-		"WHERE n.user_id=$user_id AND ".
-		"n.role_id=r.role_id AND ".
-		"n.event_id=e.event_id";
-*/
-	    //echo $sql."<br>";
-	    return db_query($sql);
+		// Retrieve field values for the assigned_to value
+		$result = $this->getFieldsValues();
+	
+	    // check submitter notification preferences
+	    $user_id = $this->getSubmittedBy();
+	    if ($user_id != 100) {
+			if ($this->ArtifactType->checkNotification($user_id, 'SUBMITTER', $changes)) {
+				//echo "DBG - SUBMITTER - user=$user_id<br>";
+			    $user_ids[$user_id] = true;
+			}
+	    }
+	
+	    // check assignee  notification preferences
+	    // Never notify user 'none' (id #100)
+	    // Check for field 'assigned_to' (SelectBox)
+	    $user_id = db_result($result,0,'assigned_to');
+		if ( ($user_id) && ($user_id != 100) ) {
+			if (!$user_ids[$user_id] && $this->ArtifactType->checkNotification($user_id, 'ASSIGNEE', $changes)) {
+				//echo "DBG - ASSIGNEE - user=$user_id<br>";
+			    $user_ids[$user_id] = true;
+			}
+	    }
+	
+	    // check assignee  notification preferences
+	    // Never notify user 'none' (id #100)
+	    // Check for field 'multi_assigned_to' (MultiBox)
+	    $field = $art_field_fact->getFieldFromName("multi_assigned_to");
+		if ( $field ) {
+			$field_value = $field->getValues($this->getID());
+	    	if ($field_value && (db_numrows($field_value) > 0)) {
+				while ($row = db_fetch_array($field_value)) {
+				    $user_id = db_result($field_value,0,'assigned_to');
+					if ( ($user_id) && ($user_id != 100) ) {
+						if (!$user_ids[$user_id] && $this->ArtifactType->checkNotification($user_id, 'ASSIGNEE', $changes)) {
+							//echo "DBG - ASSIGNEE - user=$user_id<br>";
+						    $user_ids[$user_id] = true;
+						}
+				    }
+				}
+	    	}
+	    }
+
+	    // check old assignee  notification preferences if assignee was just changed
+	    // Never notify user 'none' (id #100)
+	    $user_name = $changes['assigned_to']['del'];
+	    if ($user_name) {
+			$res_oa = user_get_result_set_from_unix($user_name);
+			$user_id = db_result($res_oa,0,'user_id');
+			if ($user_id != 100 && !$user_ids[$user_id] && $this->ArtifactType->checkNotification($user_id, 'ASSIGNEE', $changes)) {
+				//echo "DBG - ASSIGNEE OLD - user=$user_id<br>";
+			    $user_ids[$user_id] = true;
+			}
+	    }
+	    
+	    // check all CC 
+	    // (a) check all the people in the current CC list
+	    // (b) check the CC that has just been removed if any and see if she
+	    // wants to be notified as well
+	    // if the CC indentifier is an email address then notify in any case
+	    // because this user has no personal setting
+	    $res_cc = $this->getCCList();
+	    $arr_cc = array();
+	    if ($res_cc && (db_numrows($res_cc) > 0)) {
+			while ($row = db_fetch_array($res_cc)) {
+			    $arr_cc[] = $row['email'];
+			}
+	    }
+	    if ( $changes['CC']['del'] ) {
+		    // Only one CC can be deleted at once so just append it to the list....
+		    $arr_cc[] = $changes['CC']['del'];
+		}
+			
+	    while (list(,$cc) = each($arr_cc)) {
+	    	//echo "DBG - CC=$cc<br>";
+			if (validate_email($cc)) {
+				//echo "DBG - CC email - email=".util_normalize_email($cc)."<br>";
+			    $addresses[util_normalize_email($cc)] = true;
+			} else {
+			    $res = user_get_result_set_from_unix($cc);
+			    $user_id = db_result($res,0,'user_id');
+			    if (!$user_ids[$user_id] && $this->ArtifactType->checkNotification($user_id, 'CC', $changes)) {
+					//echo "DBG - CC - user=$user_id<br>";
+					$user_ids[$user_id] = true;
+			    }
+			}
+	    } // while
+	
+	
+	    // check all commenters
+	    $res_com = $this->getCommenters();
+	    if (db_numrows($res_com) > 0) {
+			while ($row = db_fetch_array($res_com)) {
+			    $user_id = $row['mod_by'];
+			    if (!$user_ids[$user_id] && $this->ArtifactType->checkNotification($user_id, 'COMMENTER', $changes)) {
+					//echo "DBG - COMMENTERS - user=$user_id<br>";
+					$user_ids[$user_id] = true;
+			    }
+			}
+	    }
+	
+	    // build the final list of email addresses
+	    reset($user_ids);
+	    while (list($user_id,) = each($user_ids)) {
+			//echo "DBG - final list - user=$user_id<br>";
+			$addresses[user_getemail($user_id)] = true;
+	    }
+	
+	    // return an array with all the email addresses the notification must be sent to
+	    return (array_keys($addresses));
+	
 	}
 
 		

@@ -72,7 +72,7 @@ class ArtifactFieldFactory extends Error {
 	    $sql='SELECT af.field_id, field_name, display_type, data_type, '.
 		'display_size,label, description,scope,required,empty_ok,keep_history,special, '.
 		'value_function,'.
-		'af.group_artifact_id, use_it,show_on_add,show_on_add_members, place '.
+		'af.group_artifact_id, use_it,show_on_add,show_on_add_members, place, default_value '.
 		'FROM artifact_field_usage afu, artifact_field af '.
 		'WHERE afu.group_artifact_id='.$group_artifact_id.' '.
 		'AND afu.field_id=af.field_id AND af.group_artifact_id='.$group_artifact_id;
@@ -135,6 +135,27 @@ class ArtifactFieldFactory extends Error {
 	
 		while (list($key,$field) = each($this->USAGE_BY_NAME) ) {
 			if ( $field->getUseIt() == 1 ) {
+				$result_fields[$key] = $field;
+			}
+		}
+		
+		uasort($result_fields,cmp_place);
+		return $result_fields;
+
+	}
+
+	/**
+	 *  Return all the fields unused
+	 *
+	 *	@return	array
+	 */
+	function getAllUnusedFields() {
+
+		$result_fields = array();
+		reset($this->USAGE_BY_NAME);
+	
+		while (list($key,$field) = each($this->USAGE_BY_NAME) ) {
+			if ( $field->getUseIt() == 0 ) {
 				$result_fields[$key] = $field;
 			}
 		}
@@ -217,6 +238,288 @@ class ArtifactFieldFactory extends Error {
 	    }
 	
 	}
+
+	/**
+     * 
+	 *  Copy all the fields informations from a tracker to another.
+	 *
+	 *  @param atid_source: source tracker
+	 *  @param atid_dest: destination tracker
+	 *
+	 *	@return	boolean
+	 */
+	function copyFields($atid_source,$atid_dest) {
+		
+		//
+		// Copy artifact_field records
+		//
+	    $sql='SELECT field_id,field_name,data_type,display_type,display_size,label,description,scope,required,empty_ok,keep_history,special,value_function,default_value '.
+		'FROM artifact_field '.
+		'WHERE group_artifact_id='.$atid_source;
+		
+		//echo $sql;
+		
+	    $res = db_query($sql);
+	
+	    while ($field_array = db_fetch_array($res)) {
+	    	$sql_insert = 'INSERT INTO artifact_field VALUES ('.$field_array["field_id"].','.$atid_dest.',"'.$field_array["field_name"].'",'.$field_array["data_type"].
+	    				  ',"'.$field_array["display_type"].'","'.$field_array["display_size"].'","'.addslashes($field_array["label"]).
+	    				  '","'.addslashes($field_array["description"]).'","'.$field_array["scope"].'",'.$field_array["required"].
+	    				  ','.$field_array["empty_ok"].','.$field_array["keep_history"].','.$field_array["special"].
+	    				  ',"'.$field_array["value_function"].'","'.$field_array["default_value"].'")';
+	    				  
+			$res_insert = db_query($sql_insert);
+			//echo $sql_insert;
+			if (!$res_insert || db_affected_rows($res_insert) <= 0) {
+				$this->setError("Error during inserting artifact_field (".$field_array["field_id"]."-".$atid_dest."): ".db_error());
+				return false;
+			}
+		} // while
+	
+		//
+		// Copy artifact_field_usage records
+		//
+	    $sql='SELECT field_id,use_it,show_on_add,show_on_add_members,place '.
+		'FROM artifact_field_usage '.
+		'WHERE group_artifact_id='.$atid_source;
+		
+		//echo $sql;
+		
+	    $res = db_query($sql);
+	
+	    while ($field_array = db_fetch_array($res)) {
+	    	$place = ($field_array["place"] == ""?"null":$field_array["place"]);
+	    	$sql_insert = 'INSERT INTO artifact_field_usage VALUES ('.$field_array["field_id"].','.$atid_dest.','.$field_array["use_it"].
+	    				  ','.$field_array["show_on_add"].','.$field_array["show_on_add_members"].','.$place.')';
+	    				  
+			//echo $sql_insert;
+			$res_insert = db_query($sql_insert);
+			if (!$res_insert || db_affected_rows($res_insert) <= 0) {
+				$this->setError("Error during inserting artifact_field_usage (".$field_array["field_id"]."-".$atid_dest."): ".db_error());
+				return false;
+			}
+		} // while
+		
+		//
+		// Copy artifact_field_value_list records
+		//
+	    $sql='SELECT field_id,value_id,value,description,order_id,status '.
+		'FROM artifact_field_value_list '.
+		'WHERE group_artifact_id='.$atid_source;
+		
+		//echo $sql;
+		
+	    $res = db_query($sql);
+	
+	    while ($field_array = db_fetch_array($res)) {
+	    	$sql_insert = 'INSERT INTO artifact_field_value_list VALUES ('.$field_array["field_id"].','.$atid_dest.','.$field_array["value_id"].
+	    				  ',"'.$field_array["value"].'","'.addslashes($field_array["description"]).'",'.$field_array["order_id"].
+	    				  ',"'.$field_array["status"].'")';
+	    				  
+			//echo $sql_insert;
+			$res_insert = db_query($sql_insert);
+			if (!$res_insert || db_affected_rows($res_insert) <= 0) {
+				$this->setError("Error during inserting artifact_field_value_list (".$field_array["field_id"]."-".$atid_dest."): ".db_error());
+				return false;
+			}
+		} // while
+		
+		return true;
+
+	}
+
+
+	/**
+     * 
+	 *  Delete all the fields informations for a tracker
+	 *
+	 *  @param atid: the tracker id
+	 *
+	 *	@return	boolean
+	 */
+	function deleteFields($atid) {
+		
+		//
+		// Delete artifact_field records
+		//
+	    $sql='DELETE '.
+		'FROM artifact_field '.
+		'WHERE group_artifact_id='.$atid;
+		
+		//echo $sql;
+		
+	    $res = db_query($sql);
+	
+		//
+		// Delete artifact_field_usage records
+		//
+	    $sql='DELETE '.
+		'FROM artifact_field_usage '.
+		'WHERE group_artifact_id='.$atid;
+		
+		//echo $sql;
+		
+	    $res = db_query($sql);
+			
+		//
+		// Delete artifact_field_value_list records
+		//
+	    $sql='DELETE '.
+		'FROM artifact_field_value_list '.
+		'WHERE group_artifact_id='.$atid;
+		
+		//echo $sql;
+		
+	    $res = db_query($sql);
+			
+		return true;
+
+	}
+
+	/**
+	 *  Check if a field id already exist for an artifact type
+	 *
+	 *  @param field_id: the field id
+	 *
+	 *  @return boolean - exist or not
+	 */
+	function existFieldId($field_id) {
+		$sql = "SELECT * FROM artifact_field WHERE group_artifact_id=".$this->ArtifactType->getID().
+			   " AND field_id=".$field_id;
+			   
+		$result = db_query($sql);
+	    if ($result && db_numrows($result) > 0) {
+	    	return true;
+	    } else {
+	    	return false;
+	    }
+			
+	}	
+
+	/**
+	 *  Create a new field
+	 *
+	 *  @param field_id: the field id
+	 *  @param field_name: the field name
+	 *  @param description: the field description
+	 *  @param label: the field label
+	 *  @param data_type: the field data type (string, int, flat or date)
+	 *  @param default_value: the default value
+	 *  @param display_type: the field display type (select box, text field, ...)
+	 *  @param display_size: the field display size
+	 *  @param rank_on_screen: rank on screen
+	 *  @param show_on_add: display this field on the submission form used by project members  
+	 *  @param show_on_add_members: display this field on the submission form used by other users 
+	 *  @param empty_ok: allow empty fill
+	 *  @param keep_history: keep in the history
+	 *  @param special: is the field has special process
+	 *  @param use_it: this field is used or not
+	 *
+	 *  @return boolean - succeed or failed
+	 */
+	function createField($field_id,$field_name,$description,$label,$data_type,$default_value,$display_type,
+						 $display_size,$rank_on_screen,$show_on_add,$show_on_add_members,
+						 $empty_ok,$keep_history,$special,$use_it) {
+						 	
+		// Check arguments
+		if ( $field_id=="" || $field_name=="" || $data_type=="" || $display_type=="" ) {
+			$this->setError("Field id, field name, data type or display type are required.");
+			return false;
+		}
+		
+		// Check if a field id already exists
+		if ( $this->existFieldId($field_id) ) {
+			$this->setError("This field id already exists.");
+			return false;
+		}
+		
+		// Default values
+		$empty_ok = ($empty_ok?$empty_ok:0);
+		$keep_history = ($keep_history?$keep_history:0);
+		$use_it = ($use_it?$use_it:0);
+		$show_on_add = ($show_on_add?$show_on_add:0);
+		$show_on_add_members = ($show_on_add_members?$show_on_add_members:0);
+		$special = ($special?$special:0);
+		
+		// First create the artifact_field
+		$sql = "INSERT INTO artifact_field VALUES (".
+				$field_id.",".$this->ArtifactType->getID().",'".addslashes($field_name)."',".$data_type.",'".$display_type."','".$display_size."','".
+				addslashes($label)."','".addslashes($description)."','',0,".$empty_ok.",".$keep_history.",".$special.",'','".addslashes($default_value)."')";
+				
+		//echo $sql;
+				
+		$res_insert = db_query($sql);
+		if (!$res_insert || db_affected_rows($res_insert) <= 0) {
+			$this->setError("Error during inserting artifact_field (".$field_id."-".$this->ArtifactType->getID()."): ".db_error());
+			return false;
+		}
+		
+		// Then, insert the artifact_field_usage
+		$sql = "INSERT INTO artifact_field_usage VALUES (".
+				$field_id.",".$this->ArtifactType->getID().",".$use_it.",".$show_on_add.",".$show_on_add_members.",'".
+				$rank_on_screen."')";
+				
+		$res_insert = db_query($sql);
+		if (!$res_insert || db_affected_rows($res_insert) <= 0) {
+			$this->setError("Error during inserting artifact_field_usage (".$field_id."-".$this->ArtifactType->getID()."): ".db_error());
+			return false;
+		}
+		
+		// We need to insert with the default value, records in artifact_field_value table
+		// for the new field
+	    $sql_artifacts='SELECT artifact_id '.
+		'FROM artifact '.
+		'WHERE group_artifact_id='. $this->ArtifactType->getID();
+		
+		//echo $sql_artifacts;
+		
+	    $res = db_query($sql_artifacts);
+	
+	    while ($artifacts_array = db_fetch_array($res)) {
+			$id = $artifacts_array["artifact_id"];
+
+			// Insert artifact_field_value record
+			$sql = "INSERT INTO artifact_field_value (field_id,artifact_id,";
+			$values = $field_id.",".$id.",";
+			
+			switch ( $data_type ) {
+			case 1:
+				$name = "valueText";
+				$values .= "'$default_value'";
+				break;
+				
+			case 2:
+				$name = "valueInt";
+				$values .= $default_value;
+				break;
+				
+			case 3:
+				$name = "valueFloat";
+				$values .= $default_value;
+				break;
+				
+			case 4:
+				$name = "valueDate";
+				$values .= $default_value;
+				break;
+			} // switch
+			
+			$sql .= $name . ") VALUES (" . $values . ")";
+			
+			$result=db_query($sql);
+			//echo $sql."<br>";
+			
+	    	db_query($sql);
+	    	
+		} // while
+
+		// Reload the fields
+		$this->fetchData($this->ArtifactType->getID());
+
+		return true;
+		
+	}
+						 	
 	
 }
 

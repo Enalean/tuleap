@@ -98,18 +98,18 @@ class ArtifactType extends Error {
 		
 		$this->Group = $Group;
 		if ($artifact_type_id) {
-			$res_events = $this->get_notification_events($artifact_type_id);
+			$res_events = $this->getNotificationEvents($artifact_type_id);
 			$this->num_events = db_numrows($res_events);
 			$i=0;
-			while ($arr = db_fetch_array($res_events)) {
-    				$this->arr_events[$i] = $arr; $i++;
+			while ($arr_events = db_fetch_array($res_events)) {
+    				$this->arr_events[$i] = $arr_events; $i++;
 			}
 
-			$res_roles = $this->get_notification_roles($artifact_type_id);
+			$res_roles = $this->getNotificationRoles($artifact_type_id);
 			$this->num_roles = db_numrows($res_roles);
 			$i=0;
-			while ($arr = db_fetch_array($res_roles)) {
-    				$this->arr_roles[$i] = $arr; $i++;
+			while ($arr_roles = db_fetch_array($res_roles)) {
+    				$this->arr_roles[$i] = $arr_roles; $i++;
 			}
 
 			if (!$arr || !is_array($arr)) {
@@ -125,8 +125,7 @@ class ArtifactType extends Error {
 				}
 			}
 			if (!$this->isPublic()) {
-	                $perm = $this->Group->getPermissionFromId( session_get_userid() );
-			        if (!$perm || !is_object($perm) || !$perm->isMember()) {
+			        if ( (!$this->userIsAdmin()) || (!$this->userIsTech()) ) {
 	                		$this->setError('Permission Denied');
 					$this->data_array = null;
 	                		return false;
@@ -142,96 +141,86 @@ class ArtifactType extends Error {
 	/**
 	 *	create - use this to create a new ArtifactType in the database.
 	 *
-	 *	@param	string	The type name.
-	 *	@param	string	The type description.
-	 *	@param	bool	(1) true (0) false - viewable by general public.
-	 *	@param	bool	(1) true (0) false - whether non-logged-in users can submit.
-	 *	@param	bool	(1) true (0) false - whether to email on all updates.
-	 *	@param	string	The address to send new entries and updates to.
-	 *	@param	int		Days before this item is considered overdue.
-	 *	@param	bool	(1) trye (0) false - whether the resolution box should be shown.
-	 *	@param	string	Free-form string that project admins can place on the submit page.
-	 *	@param	string	Free-form string that project admins can place on the browse page.
-	 *	@param	int		(1) bug tracker, (2) Support Tracker, (3) Patch Tracker, (4) features (0) other.
+	 *	@param	atid_template
+	 *	@param	name
+	 *	@param	description
+	 *	@param	itemname
 	 *	@return id on success, false on failure.
 	 */
-	function create($name,$description,$is_public,$allow_anon,$email_all,$email_address,
-		$due_period,$use_resolution,$submit_instructions,$browse_instructions,$datatype=0) {
+	function create($group_id,$atid_template,$name,$description,$itemname) {
+		global $feedback,$atf,$group;
 
-		$perm = $this->Group->getPermission( session_get_user() );
-
-		if (!$perm || !is_object($perm) || !$perm->isArtifactAdmin()) {
+		if (!$this->userIsAdmin()) {
 			$this->setError('ArtifactType: Permission Denied');
 			return false;
 		}
 
-		if (!$name || !$description || !$due_period) {
-			$this->setError('ArtifactType: Name, Description, and Due Period are required');
+		if (!$name || !$description || !$itemname) {
+			$this->setError('ArtifactType: Name, Description, and Short Name are required');
 			return false;
 		}
 
-		if ($email_address && !validate_email($email_address)) {
-			$email_address='';
-		}
-		if ($email_all && !$email_address) {
-			$email_all=0;
-		}
-
-                $use_resolution = ((!$use_resolution) ? 0 : $use_resolution);
-                $is_public = ((!$is_public) ? 0 : $is_public);
-                $allow_anon = ((!$allow_anon) ? 0 : $allow_anon);
-                $email_all = ((!$email_all) ? 0 : $email_all);
-
-
+		// We retrieve public and anonymous submission from the template
+		$at_template = new ArtifactTypeHtml($group,$atid_template);
+		
+		// First, we create a new ArtifactType into artifact_group_list
+		
 		$sql="INSERT INTO 
 			artifact_group_list 
 			(group_id,
 			name,
 			description,
+			item_name,
 			is_public,
-			allow_anon,
-			email_all_updates,
-			email_address,
-			due_period,
-			status_timeout,
-			use_resolution,
-			submit_instructions,
-			browse_instructions,
-			datatype) 
+			allow_anon) 
 			VALUES 
-			('". $this->Group->getID() ."',
-			'". htmlspecialchars($name) ."',
-			'". htmlspecialchars($description) ."',
-			'$is_public',
-			'$allow_anon',
-			'$email_all',
-			'$email_address',
-			'". ($due_period*(60*60*24)) ."',
-			'1209600',
-			'$use_resolution',
-			'$submit_instructions',
-			'$browse_instructions',
-			'$datatype')";
-		//echo $sql;
+			('". $group_id ."',
+			'". addslashes($name) ."',
+			'". addslashes($description) ."',
+			'". addslashes($itemname) ."',
+			".$at_template->isPublic().",".$at_template->allowsAnon().")";
+		echo $sql;
 		$res = db_query($sql);
-
-		db_begin();
-		$id = db_insertid($res,'artifact_group_list','group_artifact_id');
-		
-		if (!$res || !$id) {
+		if (!$res || db_affected_rows($res) <= 0) {
 			$this->setError('ArtifactType: '.db_error());
-			db_rollback();
 			return false;
 		} else {
+			$id = db_insertid($res,'artifact_group_list','group_artifact_id');
 			if (!$this->fetchData($id)) {
-				db_rollback();
+				$this->setError('ArtifactType: failed to load the new tracker');
 				return false;
 			} else {
-				db_commit();
+				// Create field factory
+				$art_field_fact = new ArtifactFieldFactory($ath);
+
+				// Then copy all the fields informations
+				if ( !$art_field_fact->copyFields($atid_template,$id) ) {
+					$this->setError('ArtifactType: '.$art_field_fact->getErrorMessage());
+					return false;
+				}
+				
+				// Then copy all the reports informations
+				// Create field factory
+				$art_report_fact = new ArtifactReportFactory();
+
+				if ( !$art_report_fact->copyReports($atid_template,$id) ) {
+					$this->setError('ArtifactType: '.$art_report_fact->getErrorMessage());
+					return false;
+				}
+
+				// Copy artifact_notification_event and artifact_notification_role
+				if ( !$this->copyNotificationEvent($id) ) {
+					return false;
+				}
+				if ( !$this->copyNotificationRole($id) ) {
+					return false;
+				}
+		
 				return $id;
 			}
 		}
 	}
+	
 
 	/**
 	 *  fetch the notification roles for this ArtifactType from the database.
@@ -239,7 +228,7 @@ class ArtifactType extends Error {
 	 *  @param	int		The artifact type ID.
 	 *  @return query result.
 	 */
-	function get_notification_roles($artifact_type_id) {
+	function getNotificationRoles($artifact_type_id) {
 	    $sql = 'SELECT * FROM artifact_notification_role WHERE group_artifact_id='.$artifact_type_id.' ORDER BY rank ASC;';
 	    //$sql = 'SELECT * FROM artifact_notification_role_default ORDER BY rank ASC;';
 	    //echo $sql.'<br>';
@@ -252,11 +241,11 @@ class ArtifactType extends Error {
 	 *  @param	int		The artifact type ID.
 	 *  @return query result.
 	 */
-	function get_notification_events($artifact_type_id) {
+	function getNotificationEvents($artifact_type_id) {
 	    $sql = 'SELECT * FROM artifact_notification_event WHERE group_artifact_id='.$artifact_type_id.' ORDER BY rank ASC;';
 	    //$sql = 'SELECT * FROM artifact_notification_event_default ORDER BY rank ASC;';
 	    //echo $sql.'<br>';
-	return db_query($sql);
+		return db_query($sql);
 	}
 
 	/**
@@ -597,7 +586,7 @@ class ArtifactType extends Error {
 			if (!user_isloggedin()) {
 				return false;
 			} else {
-				return ( $this->getCurrentUserPerm() != 0 );
+				return ( ($this->getCurrentUserPerm() != 0)||(user_is_super_user) );
 			}
 		}
 	}
@@ -657,8 +646,6 @@ class ArtifactType extends Error {
 	 *  @param	string	The item description.
 	 *  @param	bool	(1) true (0) false - viewable by general public.
 	 *  @param	bool	(1) true (0) false - whether non-logged-in users can submit.
-	 *  @param	bool	(1) true (0) false - whether to email on all updates.
-	 *  @param	string	The address to send new entries and updates to.
 	 *  @param	int		Days before this item is considered overdue.
 	 *  @param	int		Days before stale items time out.
 	 *  @param	bool	(1) true (0) false - whether the resolution box should be shown.
@@ -666,10 +653,10 @@ class ArtifactType extends Error {
 	 *  @param	string	Free-form string that project admins can place on the browse page.
 	 *  @return true on success, false on failure.
 	 */
-	function update($name,$description,$itemname,$is_public,$allow_anon,$email_all,$email_address,
+	function update($name,$description,$itemname,$is_public,$allow_anon,
 		            $submit_instructions,$browse_instructions) {
 
-		if ( !$this->userIsAdmin() || $this->userIsTech() ) {
+		if ( !$this->userIsAdmin() ) {
 			$this->setError('ArtifactType: Permission Denied');
 			return false;
 		}
@@ -679,14 +666,6 @@ class ArtifactType extends Error {
 			return false;
 		}
 		
-		if ($email_address && !validate_email($email_address)) {
-			$email_address='';
-		}
-		if ($email_all && !$email_address) {
-			$email_all=0;
-		}
-
-		$email_all = ((!$email_all) ? 0 : $email_all); 
 		$allow_anon = ((!$allow_anon) ? 0 : $allow_anon); 
 		$is_public = ((!$is_public) ? 0 : $is_public); 
 
@@ -696,16 +675,16 @@ class ArtifactType extends Error {
 			item_name='$itemname',
 			is_public='$is_public',
 			allow_anon='$allow_anon',
-			email_all_updates='$email_all',
-			email_address='$email_address',
 			submit_instructions='$submit_instructions',
 			browse_instructions='$browse_instructions'
 			WHERE 
 			group_artifact_id='". $this->getID() ."' 
 			AND group_id='". $this->Group->getID() ."'";
 
+		//echo $sql;
+		
 		$res=db_query($sql);
-		if (!$res || db_affected_rows($res) < 1) {
+		if (!$res) {
 			$this->setError('ArtifactType::Update(): '.db_error());
 			return false;
 		} else {
@@ -753,28 +732,28 @@ class ArtifactType extends Error {
 			return false;
 		} else {
 			// set watchees 
-			$this->set_watchees($user_id, $watchees);
+			$this->setWatchees($user_id, $watchees);
 			
 			$this->fetchData($this->getID());
 			return true;
 		}
 	}
 
-	function delete_watchees($user_id) {
+	function deleteWatchees($user_id) {
 
     		$sql = "DELETE FROM artifact_watcher WHERE user_id='$user_id' AND artifact_group_id='".$this->getID()."'";
 		//echo $sql."<br>";
     		return db_query($sql);
 	}
 	
-	function get_watchees($user_id) {
+	function getWatchees($user_id) {
 	    $sql = "SELECT watchee_id FROM artifact_watcher WHERE user_id='$user_id' AND artifact_group_id=".$this->getID();
 		//echo $sql."<br>";
 	    return db_query($sql);    
 	}
 	
-	function set_watchees($user_id, $watchees) {
-		//echo "set_watchees($user_id, $watchees)<br>";
+	function setWatchees($user_id, $watchees) {
+		//echo "setWatchees($user_id, $watchees)<br>";
 		if ($watchees) {
 			//echo "watchees";
    			$res_watch = true;
@@ -796,7 +775,7 @@ class ArtifactType extends Error {
 			}
 			
 			if ($res_watch) {
-			    $this->delete_watchees($user_id); 
+			    $this->deleteWatchees($user_id); 
 			    $arr_watchees = array_keys($arr_user_ids);
 			    $sql = 'INSERT INTO artifact_watcher (artifact_group_id, user_id,watchee_id) VALUES ';
     			    $num_watchees = count($arr_watchees);
@@ -809,34 +788,34 @@ class ArtifactType extends Error {
 
 			}   
 		} else 
-			$this->delete_watchees($user_id);	
+			$this->deleteWatchees($user_id);	
 	}
 	
-	function get_watchers($user_id) {
+	function getWatchers($user_id) {
 	    $sql = "SELECT user_id FROM artifact_watcher WHERE watchee_id='$user_id' AND artifact_group_id='$this->getID()'";
 	    return db_query($sql);    
 	}
 	
-function delete_notification($user_id) {
-    $sql = "DELETE FROM artifact_notification WHERE user_id='$user_id' AND group_artifact_id='".$this->getID()."'";
-    //echo $sql."<br>";
-    return db_query($sql);
-}
+	function deleteNotification($user_id) {
+	    $sql = "DELETE FROM artifact_notification WHERE user_id='$user_id' AND group_artifact_id='".$this->getID()."'";
+	    //echo $sql."<br>";
+	    return db_query($sql);
+	}
 
-function set_notification($user_id,$arr_notification) {
-    $sql = 'INSERT INTO artifact_notification (group_artifact_id, user_id,role_id,event_id,notify) VALUES ';
-
-    for ($i=0; $i<$this->num_roles; $i++) {
-	$role_id = $this->arr_roles[$i]['role_id'];
- 	for ($j=0; $j<$this->num_events; $j++) { 
-	    $event_id = $this->arr_events[$j]['event_id'];
- 	    $sql .= "('".$this->getID()."','$user_id','$role_id','$event_id','".$arr_notification[$role_id][$event_id]."'),"; 
- 	} 
-     } 
-     $sql = substr($sql,0,-1); // remove extra comma at the end 
-     //echo $sql."<br>";
-     return db_query($sql); 
-}
+	function setNotification($user_id,$arr_notification) {
+	    $sql = 'INSERT INTO artifact_notification (group_artifact_id, user_id,role_id,event_id,notify) VALUES ';
+	
+	    for ($i=0; $i<$this->num_roles; $i++) {
+			$role_id = $this->arr_roles[$i]['role_id'];
+			for ($j=0; $j<$this->num_events; $j++) { 
+			$event_id = $this->arr_events[$j]['event_id'];
+			$sql .= "('".$this->getID()."','$user_id','$role_id','$event_id','".$arr_notification[$role_id][$event_id]."'),"; 
+			} 
+		} 
+		$sql = substr($sql,0,-1); // remove extra comma at the end 
+		//echo $sql."<br>";
+		return db_query($sql); 
+	}
 	
 	//
 	// People who are project members
@@ -882,6 +861,246 @@ function set_notification($user_id,$arr_notification) {
 		//echo $sql;
 		return db_query($sql);
 	}
+
+	/**
+	 * Copy notification event from default
+	 *
+	 * @param group_artifact_id: the destination artifact type id
+	 *
+	 * @return boolean
+	 */
+	function copyNotificationEvent($group_artifact_id) {
+		$sql = "insert into artifact_notification_event ".
+			   "select event_id,".$group_artifact_id.",event_label ,short_description,description,rank ".
+			   "from artifact_notification_event_default";
+			   
+		$res_insert = db_query($sql);
+		
+		if (!$res_insert || db_affected_rows($res_insert) <= 0) {
+			$this->setError("Fail to copy notification event");
+			return false;
+		}
+		
+		return true;
+	}
+
+	/**
+	 * Copy notification role from default
+	 *
+	 * @param group_artifact_id: the destination artifact type id
+	 *
+	 * @return boolean
+	 */
+	function copyNotificationRole($group_artifact_id) {
+		$sql = "insert into artifact_notification_role ".
+			   "select role_id,".$group_artifact_id.",role_label  ,short_description,description,rank ".
+			   "from artifact_notification_role_default";
+			   
+		$res_insert = db_query($sql);
+		
+		if (!$res_insert || db_affected_rows($res_insert) <= 0) {
+			$this->setError("Fail to copy notification role");
+			return false;
+		}
+		
+		return true;
+	}
+
+	/**
+	 * Check if for a user and for role, there is a changement
+	 *
+	 * @param user_id: the user id
+	 * @param role: the role
+	 * @param changes: array of changes
+	 *
+	 * @return boolean
+	 */
+	function checkNotification($user_id, $role, $changes=false) {
+	
+	    $send = false;
+	    $arr_notif = $this->buildNotificationMatrix($user_id);
+	    if (!$arr_notif) { return true; }
+	
+	    // echo "==== DBG Checking Notif. for $user_id (role=$role)<br>";
+	    $user_name = user_getname($user_id);
+	
+	    //----------------------------------------------------------
+	    // If it's a new bug only (changes is false) check the NEW_BUG event and
+	    // ignore all other events
+	    if ($changes==false) {
+			if ($arr_notif[$role]['NEW_ARTIFACT']) {
+			    // echo "DBG NEW_ARTIFACT notified<br>";
+			    return true;
+			} else {
+			    // echo "DBG No notification<br>";
+			    return false;
+			}
+	    }
+	
+	    //----------------------------------------------------------
+	    //Check: I_MADE_IT  (I am the author of the change )
+	    // Check this one first because if the user said no she doesn't want to be 
+	    // aware of any of her change in this role and we can return immediately.
+	    if (($user_id == user_getid()) && !$arr_notif[$role]['I_MADE_IT']) {
+			// echo "DBG Dont want to receive my own changes<br>";
+			return false;
+	    }
+	    
+	    //----------------------------------------------------------
+	    // Check :  NEW_COMMENT  A new followup comment is added 
+	    if ($arr_notif[$role]['NEW_COMMENT'] && isset($changes['details'])) {
+			// echo "DBG NEW_COMMENT notified<br>";
+			return true;
+	    }
+	
+	    //----------------------------------------------------------
+	    //Check: NEW_FILE  (A new file attachment is added)
+	    if ($arr_notif[$role]['NEW_FILE'] && isset($changes['attach'])) {
+			// echo "DBG NEW_FILE notified<br>";
+			return true;
+	    }
+	  
+	    //----------------------------------------------------------
+	    //Check: CLOSED  (The bug is closed)
+	    // Rk: this one has precedence over PSS_CHANGE. So notify even if PSS_CHANGE
+	    // says no.
+	    if ($arr_notif[$role]['CLOSED'] && ($changes['status_id']['add'] == 'Closed')) {
+			// echo "DBG CLOSED bug notified<br>";
+			return true;
+	    }
+	
+	    //----------------------------------------------------------
+	    //Check: PSS_CHANGE  (Priority,Status,Severity changes)
+	    if ($arr_notif[$role]['PSS_CHANGE'] && 
+		(isset($changes['priority']) || isset($changes['status_id']) || isset($changes['severity'])) ) {
+			// echo "DBG PSS_CHANGE notified<br>";
+			return true;
+	    }
+	
+	
+	    //----------------------------------------------------------
+	    // Check :  ROLE_CHANGE (I'm added to or removed from this role)
+	    // Rk: This event is meanningless for Commenters. It also is for submitter but may be
+	    // one day the submitter will be changeable by the project admin so test it.
+	    // Rk #2: check this one at the end because it is the most CPU intensive and this
+	    // event seldomly happens
+	    if ($arr_notif['SUBMITTER']['ROLE_CHANGE'] &&
+		(($changes['submitted_by']['add'] == $user_name) || ($changes['submitted_by']['del'] == $user_name)) &&
+		($role == 'SUBMITTER') ) {
+			// echo "DBG ROLE_CHANGE for submitter notified<br>";
+			return true;
+	    }
+	
+	    if ($arr_notif['ASSIGNEE']['ROLE_CHANGE'] &&
+		(($changes['assigned_to']['add'] == $user_name) || ($changes['assigned_to']['del'] == $user_name)) &&
+		($role == 'ASSIGNEE') ) {
+			// echo "DBG ROLE_CHANGE for role assignee notified<br>";
+			return true;
+	    }
+	
+	    $arr_cc_changes = array();
+	    if (isset($changes['CC']['add']))
+			$arr_cc_changes = split('[,;]',$changes['CC']['add']);
+	    $arr_cc_changes[] = $changes['CC']['del'];
+	    $is_user_in_cc_changes = in_array($user_name,$arr_cc_changes);    
+	    $are_anyother_user_in_cc_changes =
+		(!$is_user_in_cc_changes || count($arr_cc_changes)>1);    
+	
+	    if ($arr_notif['CC']['ROLE_CHANGE'] && ($role == 'CC')) {
+			if ($is_user_in_cc_changes) {
+			    // echo "DBG ROLE_CHANGE for cc notified<br>";
+			    return true;
+			}
+	    }
+	    
+	    //----------------------------------------------------------
+	    //Check: CC_CHANGE  (CC_CHANGE is added or removed)
+	    // check this right after because  role cahange for cc can contradict
+	    // thee cc_change notification. If the role change on cc says no notification
+	    // then it has precedence over a cc_change
+	    if ($arr_notif[$role]['CC_CHANGE'] && isset($changes['CC'])) {
+			// it's enough to test role against 'CC' because if we are at that point
+			// it means that the role_change for CC was false or that role is not CC
+			// So if role is 'CC' and we are here it means that the user asked to not be
+			// notified on role_change as CC, unless other users are listed in the cc changes
+			if (($role != 'CC') || (($role == 'CC') && $are_anyother_user_in_cc_changes)) {
+			    // echo "DBG CC_CHANGE notified<br>";
+			    return true; 
+			}
+	    }
+	
+	
+	    //----------------------------------------------------------
+	    //Check: CHANGE_OTHER  (Any changes not mentioned above)
+	    // *** THIS ONE MUST ALWAYS BE TESTED LAST
+	    
+	    // Delete all tested fields from the $changes array. If any remains then it
+	    // means a notification must be sent
+	    unset($changes['details']);
+	    unset($changes['attach']);
+	    unset($changes['priority']);
+	    unset($changes['severity']);
+	    unset($changes['status_id']);
+	    unset($changes['CC']);
+	    unset($changes['assigned_to']);
+	    unset($changes['submitted_by']);
+	    if ($arr_notif[$role]['ANY_OTHER_CHANGE'] && count($changes)) {
+			// echo "DBG ANY_OTHER_CHANGE notified<br>";
+			return true;
+	    }
+	
+	    // Sorry, no notification...
+	    // echo "DBG No notification!!<br>";
+	    return false;
+	}
+
+	/**
+	 * Build the matrix role/event=notify
+	 *
+	 * @param user_id: the user id
+	 *
+	 * @return array
+	 */
+	function buildNotificationMatrix($user_id) {
+	
+	    // Build the notif matrix indexed with roles and events labels (not id)
+	    $res_notif = $this->getNotificationWithLabels($user_id);
+	    while ($arr = db_fetch_array($res_notif)) {
+			//echo "<br>".$arr['role_label']." ".$arr['event_label']." ".$arr['notify'];
+			$arr_notif[$arr['role_label']][$arr['event_label']] = $arr['notify'];
+	    }
+	    return $arr_notif;
+	}
+
+	/**
+	 * Retrieve the matrix role/event=notify from the db
+	 *
+	 * @param user_id: the user id
+	 *
+	 * @return array
+	 */
+	function getNotificationWithLabels($user_id) {
+		
+		$group = $this->getGroup();
+		$group_artifact_id = $this->getID();
+		
+	    $sql = "SELECT role_label,event_label,notify FROM artifact_notification_role r, artifact_notification_event e,artifact_notification n ".
+		"WHERE n.group_artifact_id=$group_artifact_id AND n.user_id=$user_id AND ".
+		"n.role_id=r.role_id AND r.group_artifact_id=$group_artifact_id AND ".
+		"n.event_id=e.event_id AND e.group_artifact_id=$group_artifact_id";
+
+/*
+	$sql = "SELECT role_label,event_label,notify FROM artifact_notification_role_default r, artifact_notification_event_default e,artifact_notification n ".
+		"WHERE n.user_id=$user_id AND ".
+		"n.role_id=r.role_id AND ".
+		"n.event_id=e.event_id";
+*/
+	    //echo $sql."<br>";
+	    return db_query($sql);
+	    
+	    
+	}
+
 
 }
 

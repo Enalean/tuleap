@@ -32,7 +32,7 @@ function menu_site_admin() {
 
 function menu_show_search_box() {
     global $words,$forum_id,$group_id,$is_bug_page,$is_support_page,
-	$is_pm_page,$is_snippet_page,$exact,$type_of_search;
+	$is_pm_page,$is_snippet_page,$exact,$type_of_search,$atid;
 
     // if there is no search currently, set the default
     if ( ! isset($type_of_search) ) {
@@ -51,6 +51,8 @@ function menu_show_search_box() {
 	print "\t<OPTION value=\"support\"".( $type_of_search == "support" ? " SELECTED" : "" ).">Support Requests</OPTION>\n";
     } else if ($group_id && $forum_id) {
 	print "\t<OPTION value=\"forums\"".( $type_of_search == "forums" ? " SELECTED" : "" ).">This Forum</OPTION>\n";
+    } else if ($group_id && $atid) {
+	print "\t<OPTION value=\"tracker\"".( $type_of_search == "tracker" ? " SELECTED" : "" ).">This Tracker</OPTION>\n";
     }
 
     print "\t<OPTION value=\"soft\"".( $type_of_search == "soft" ? " SELECTED" : "" ).">Software Projects</OPTION>\n";
@@ -62,6 +64,9 @@ function menu_show_search_box() {
     print "\t<INPUT TYPE=\"CHECKBOX\" NAME=\"exact\" VALUE=\"1\"".( $exact ? " CHECKED" : " UNCHECKED" )."> Require All Words \n";
 
     print "\t<BR>\n";
+    if ( isset($atid) ) {
+	print "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$atid\" NAME=\"atid\">\n";
+    } 
     if ( isset($forum_id) ) {
 	print "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$forum_id\" NAME=\"forum_id\">\n";
     } 

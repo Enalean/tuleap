@@ -179,7 +179,7 @@ class ArtifactReportHtml extends ArtifactReport {
 		    }
 		
 		    $labels .= '<td class="small"><b>'.$field->getLabel().'&nbsp;'.
-			help_button('browse_bug_query_field',$field->getName()).
+			help_button('HELP_FIXME',$field->getName()).
 			'</b></td>';
 		
 		    $boxes .= '<TD><FONT SIZE="-1">';
@@ -407,6 +407,12 @@ class ArtifactReportHtml extends ArtifactReport {
 		global $ath,$art_field_fact;
 		
     	$html_result = "<script language=\"JavaScript\" src=\"/include/calendar.js\"></script>\n";
+
+		// Display browse informations if any
+		if ( $ath->getBrowseInstructions() ) {
+			$html_result .= $ath->getBrowseInstructions();
+		}
+		
 		$html_result .= '<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="5">
 		          <FORM ACTION="/tracker" METHOD="GET" NAME="artifact_form">
 		          <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$this->group_artifact_id.'">
@@ -423,7 +429,7 @@ class ArtifactReportHtml extends ArtifactReport {
 		    $box_name = 'report_id" onChange="document.artifact_form.go_report.click()';
 
 			$html_result .= ' using report '.
-				html_build_select_box($res_report,$box_name,$report_id,true,'Default').
+				html_build_select_box($res_report,$box_name,$report_id,false).
 				'<input VALUE="Go" NAME="go_report" type="submit">';
 		}
 		
@@ -474,7 +480,7 @@ class ArtifactReportHtml extends ArtifactReport {
 		
 		    // Build the sorting header messages
 		    if ( $morder ) {
-				$order_statement = 'sorted by '.($pv ? '':help_button('BugBrowsing.html#BugListSorting',false)).
+				$order_statement = 'sorted by '.($pv ? '':help_button('HELP_FIXME.html#HELP_FIXME',false)).
 				    ' : '.$this->criteriaListToText($morder, $url_nomorder);
 		    } else {
 				$order_statement ='';
@@ -526,255 +532,263 @@ class ArtifactReportHtml extends ArtifactReport {
 		//return $html_result;
 	}
 
-///// FROM here admin functions to create, list and modify reports
 
    	/**
-	 * showAvailableReports()
+	 * Display the report list
 	 *
 	 * param : $reports      the list the reports within an artifact to display
 	 *
 	 * @return void
 	 */
 	function showAvailableReports($reports) {
-	global $ath;
+		global $ath;
+		
+		$ath->adminHeader(array ('title'=>'Artifact Administration - Tracker Report Management',
+				    'help' => 'HELP_FIXME.html#HELP_FIXME'));
+		$trackerName = $ath->getName();
 	
-	  $ath->adminHeader(array ('title'=>'Artifact Administration - Tracker Report Management',
-			    'help' => 'BTSAdministration.html#ArtifactReportManagement'));
-	$trackerName = $ath->getName();
-
-	 echo '<H2>Reports administration for '.$trackerName.' tracker</H2>';
+		 echo '<H2>Reports administration for '.$trackerName.' tracker</H2>';
+		
+	   	 if ($reports) {
+		// Loop through the list of all artifact report
+		$title_arr=array();
+		$title_arr[]='ID';
+		$title_arr[]='Report name';
+		$title_arr[]='Description';
+		$title_arr[]='Scope';
+		$title_arr[]='Delete?';
+		
+		echo '<p>(Click to modify)';
+		echo html_build_list_table_top ($title_arr);
+		$i=0;
+		$g = $ath->getGroup();
+		$group_id = $g->getID();
+		while ($arr = db_fetch_array($reports)) {
+		    
+		    echo '<TR class="'. util_get_alt_row_color($i) .'"><TD>';
+		    
+			echo '<A HREF="/tracker/admin/?func=report&group_id='.$group_id.
+			    '&show_report=1&report_id='.$arr['report_id'].'&group_id='.$group_id.'&atid='.$ath->getID().'">'.
+			    $arr['report_id'].'</A>';
+		    
+		    echo "</td>\n<td>".$arr['name'].'</td>'.
+			"\n<td>".$arr['description'].'</td>'.
+			"\n<td align=\"center\">".(($arr['scope']=='P') ? 'Project':'Personal').'</td>'.
+			"\n<td align=\"center\">";
+		    
+			$atid = $ath->getID();
+			$name = $arr['name'];
 	
-   	 if ($reports) {
-	// Loop through the list of all artifact report
-	$title_arr=array();
-	$title_arr[]='ID';
-	$title_arr[]='Report name';
-	$title_arr[]='Description';
-	$title_arr[]='Scope';
-	$title_arr[]='Delete?';
+			echo '<A HREF="/tracker/admin/?func=report&group_id='.$group_id.
+			'&atid='.$atid.'&delete_report=1&report_id='.$arr['report_id'].
+			'" onClick="return confirm(\'Delete this Report : '.$name.'  ?\')">'.
+			    '<img src="'.util_get_image_theme("ic/trash.png").'" border="0"></A>';
 	
-	echo '<p>(Click to modify)';
-	echo html_build_list_table_top ($title_arr);
-	$i=0;
-	$g = $ath->getGroup();
-	$group_id = $g->getID();
-	while ($arr = db_fetch_array($reports)) {
-	    
-	    echo '<TR class="'. util_get_alt_row_color($i) .'"><TD>';
-	    
-		echo '<A HREF="/tracker/admin/?func=report&group_id='.$group_id.
-		    '&show_report=1&report_id='.$arr['report_id'].'&group_id='.$group_id.'&atid='.$ath->getID().'">'.
-		    $arr['report_id'].'</A>';
-	    
-	    echo "</td>\n<td>".$arr['name'].'</td>'.
-		"\n<td>".$arr['description'].'</td>'.
-		"\n<td align=\"center\">".(($arr['scope']=='P') ? 'Project':'Personal').'</td>'.
-		"\n<td align=\"center\">";
-	    
-		$atid = $ath->getID();
-		$name = $arr['name'];
-
-		echo '<A HREF="/tracker/admin/?func=report&group_id='.$group_id.
-		'&atid='.$atid.'&delete_report=1&report_id='.$arr['report_id'].
-		'" onClick="return confirm(\'Delete this Report : '.$name.'  ?\')">'.
-		    '<img src="'.util_get_image_theme("ic/trash.png").'" border="0"></A>';
-
-	    echo '</td></tr>';
-	    $i++;
-	} 
-	echo '</TABLE>';
-    } else {
-	echo '<p><h3>No artifact report defined yet.</h3>';
-    }
-
-    echo '<P> You can <A HREF="/tracker/admin/?func=report&group_id='.$group_id.
-	'&atid='.$atid.'&new_report=1"><b>Create a New Tracker Report</b></A>.';
+		    echo '</td></tr>';
+		    $i++;
+		} 
+		echo '</TABLE>';
+	    } else {
+		echo '<p><h3>No artifact report defined yet.</h3>';
+	    }
+	
+	    echo '<P> You can <A HREF="/tracker/admin/?func=report&group_id='.$group_id.
+		'&atid='.$atid.'&new_report=1"><b>Create a New Tracker Report</b></A>.';
 	}
 
+	/**
+	 *  Display the report form
+	 *
+	 *  @return void
+	 */
 	function createReportForm() {
-	global $ath;
-	$ath->adminHeader(array ('title'=>'Create A New Tracker Report',
-			    'help' => 'BTSAdministration.html#BugReportSetting'));
-    
-    echo '<H2>Create a New Report for '.$ath->getName().' Tracker</H2>';
- 
-    // display the table of all fields that can be included in the report
-    $title_arr=array();
-    $title_arr[]='Field Label';
-    $title_arr[]='Description';
-    $title_arr[]='Use as a Search Criteria';
-    $title_arr[]='Rank on Search';
-    $title_arr[]='Use as a Report Column';
-    $title_arr[]='Rank on Report';	
-    $title_arr[]='Column width (optional)';	
-
-	$g = $ath->getGroup();
-	$group_id = $g->getID();
-	$atid = $ath->getID();
-    echo'	
-	<FORM ACTION="/tracker/admin/" METHOD="POST">
-	   <INPUT TYPE="HIDDEN" NAME="func" VALUE="report">
-	   <INPUT TYPE="HIDDEN" NAME="create_report" VALUE="y">
-	   <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
-	   <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$atid.'">
-	   <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
-	   <B>Name:</B>
-	   <INPUT TYPE="TEXT" NAME="rep_name" VALUE="" SIZE="20" MAXLENGTH="20">
-	   &nbsp;&nbsp;&nbsp;&nbsp;<B>Scope: </B>';
-    
-    if (user_ismember($group_id,'A'))
-	echo '<SELECT NAME="rep_scope">
-                        <OPTION VALUE="I">Personal</OPTION>
-                        <OPTION VALUE="P">Project</OPTION>
-                        </SELECT>';
-    else
-	echo 'Personal <INPUT TYPE="HIDDEN" NAME="rep_scope" VALUE="I">';
-
-
-    echo ' <P>
-	    <B>Description: </B>
-	     <INPUT TYPE="TEXT" NAME="rep_desc" VALUE="" SIZE="50" MAXLENGTH="120">
-                  <P>';
-
-    echo html_build_list_table_top ($title_arr);
-    $i=0;
-    $aff = new ArtifactFieldFactory($ath);
-    $fields = $aff->getAllUsedFields();
-    while ( list($key, $field) = each($fields)) {
-
-	// Do not show fields not used by the project
-	if ( !$field->isUsed()) { continue; }
-
-	// Do not show some special fields any way 
-	if ($field->isSpecial()) { 
-	    if ( ($field->getName() == 'group_id') ||
-		 ($field->getName() == 'comment_type_id') )
-		{ continue; }
-	}
-
-	$cb_search = 'CBSRCH_'.$field->getName();
-	$cb_report = 'CBREP_'.$field->getName();
-	$tf_search = 'TFSRCH_'.$field->getName();
-	$tf_report = 'TFREP_'.$field->getName();
-	$tf_colwidth = 'TFCW_'.$field->getName();
-	echo '<TR class="'. util_get_alt_row_color($i) .'">';
-	
-	echo "\n<td>".$field->label.'</td>'.
-	    "\n<td>".$field->description.'</td>'.
-	    "\n<td align=\"center\">".'<input type="checkbox" name="'.$cb_search.'" value="1"></td>'.
-	    "\n<td align=\"center\">".'<input type="text" name="'.$tf_search.'" value="" size="5" maxlen="5"></td>'.	    
-	    "\n<td align=\"center\">".'<input type="checkbox" name="'.$cb_report.'" value="1"></td>'.
-	    "\n<td align=\"center\">".'<input type="text" name="'.$tf_report.'" value="" size="5" maxlen="5"></td>'.	    
-	    "\n<td align=\"center\">".'<input type="text" name="'.$tf_colwidth.'" value="" size="5" maxlen="5"></td>'.	    
-	    '</tr>';
-	$i++;
-    }
-    echo '</TABLE>'.
-	'<P><CENTER><INPUT TYPE="SUBMIT" NAME="submit" VALUE="SUBMIT"></CENTER>'.
-	'</FORM>';
-
-	}
-
-	function showReportForm() {
-	global $ath;
-    	$ath->adminHeader(array ('title'=>'Modify '.$this->name.' Report for '.$ath->getName().' Tracker ',
-			    'help' => 'BTSAdministration.html#ArtifactReportSetting'));
-    
-    
-    	echo '<H2>Modify '.$this->name.' Report for '.$ath->getName().' Tracker</H2>';
-
+		global $ath;
+		$ath->adminHeader(array ('title'=>'Create A New Tracker Report',
+				    'help' => 'HELP_FIXME.html#HELP_FIXME'));
 	    
-    // display the table of all fields that can be included in the report
-    // along with their current state in this report
-    $title_arr=array();
-    $title_arr[]='Field Label';
-    $title_arr[]='Description';
-    $title_arr[]='Use as a Search Criteria';
-    $title_arr[]='Rank on Search';
-    $title_arr[]='Use as a Report Column';
-    $title_arr[]='Rank on Report';	
-    $title_arr[]='Column width (optional)';	
+	    echo '<H2>Create a New Report for '.$ath->getName().' Tracker</H2>';
+	 
+	    // display the table of all fields that can be included in the report
+	    $title_arr=array();
+	    $title_arr[]='Field Label';
+	    $title_arr[]='Description';
+	    $title_arr[]='Use as a Search Criteria';
+	    $title_arr[]='Rank on Search';
+	    $title_arr[]='Use as a Report Column';
+	    $title_arr[]='Rank on Report';	
+	    $title_arr[]='Column width (optional)';	
 	
-	$g = $ath->getGroup();
-	$group_id = $g->getID();
-	$atid = $ath->getID();
-    echo '<FORM ACTION="/tracker/admin/" METHOD="POST">
-	   <INPUT TYPE="HIDDEN" NAME="func" VALUE="report">
-	   <INPUT TYPE="HIDDEN" NAME="update_report" VALUE="y">
-	   <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$atid.'">
-	   <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
-	   <INPUT TYPE="HIDDEN" NAME="report_id" VALUE="'.$this->report_id.'">
-	   <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
-	   <B>Name: </B>
-	   <INPUT TYPE="TEXT" NAME="rep_name" VALUE="'.$this->name.'" SIZE="20" MAXLENGTH="20">
-                 &nbsp;&nbsp;&nbsp;&nbsp;<B>Scope: </B>';
-    $scope = $this->scope;
-    if (user_ismember($group_id,'A'))
-	echo '<SELECT NAME="rep_scope">
-                        <OPTION VALUE="I"'.($scope=='I' ? 'SELECTED':'').'>Personal</OPTION>
-                        <OPTION VALUE="P"'.($scope=='P' ? 'SELECTED':'').'>Project</OPTION>
-                        </SELECT>';
-    else
-	echo ($scope=='P' ? 'Project':'Personal').
-	    '<INPUT TYPE="HIDDEN" NAME="rep_scope" VALUE="'.$scope.'">';
-
-    echo '
-	    <P>
-	    <B>Description:</B>
-	    <INPUT TYPE="TEXT" NAME="rep_desc" VALUE="'.$this->description.'" SIZE="50" MAXLENGTH="120">
-                  <P>';
-
-    echo html_build_list_table_top ($title_arr);
-    $i=0;
-    $aff = new ArtifactFieldFactory($ath);
-    $fields = $aff->getAllUsedFields();
-    while ( list($key, $field) = each($fields) ) {
-
-	// Do not show fields not used by the project
-	if ( !$field->isUsed()) { continue; }
-
-	// Do not show some special fields any way 
-	if ($field->isSpecial()) { 
-	    if ( ($field->getName() == 'group_id') ||
-		 ($field->getName() == 'comment_type_id') )
-		{ continue; }
+		$g = $ath->getGroup();
+		$group_id = $g->getID();
+		$atid = $ath->getID();
+	    echo'	
+		<FORM ACTION="/tracker/admin/" METHOD="POST">
+		   <INPUT TYPE="HIDDEN" NAME="func" VALUE="report">
+		   <INPUT TYPE="HIDDEN" NAME="create_report" VALUE="y">
+		   <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
+		   <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$atid.'">
+		   <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
+		   <B>Name:</B>
+		   <INPUT TYPE="TEXT" NAME="rep_name" VALUE="" SIZE="20" MAXLENGTH="20">
+		   &nbsp;&nbsp;&nbsp;&nbsp;<B>Scope: </B>';
+	    
+	    if ($ath->userIsAdmin())
+			echo '<SELECT NAME="rep_scope">
+		                        <OPTION VALUE="I">Personal</OPTION>
+		                        <OPTION VALUE="P">Project</OPTION>
+		                        </SELECT>';
+	    else
+			echo 'Personal <INPUT TYPE="HIDDEN" NAME="rep_scope" VALUE="I">';
+	
+	
+	    echo ' <P>
+		    <B>Description: </B>
+		     <INPUT TYPE="TEXT" NAME="rep_desc" VALUE="" SIZE="50" MAXLENGTH="120">
+	                  <P>';
+	
+	    echo html_build_list_table_top ($title_arr);
+	    $i=0;
+	    $aff = new ArtifactFieldFactory($ath);
+	    $fields = $aff->getAllUsedFields();
+	    while ( list($key, $field) = each($fields)) {
+	
+		// Do not show fields not used by the project
+		if ( !$field->isUsed()) { continue; }
+	
+		// Do not show some special fields any way 
+		if ($field->isSpecial()) { 
+		    if ( ($field->getName() == 'group_id') ||
+			 ($field->getName() == 'comment_type_id') )
+			{ continue; }
+		}
+	
+		$cb_search = 'CBSRCH_'.$field->getName();
+		$cb_report = 'CBREP_'.$field->getName();
+		$tf_search = 'TFSRCH_'.$field->getName();
+		$tf_report = 'TFREP_'.$field->getName();
+		$tf_colwidth = 'TFCW_'.$field->getName();
+		echo '<TR class="'. util_get_alt_row_color($i) .'">';
+		
+		echo "\n<td>".$field->label.'</td>'.
+		    "\n<td>".$field->description.'</td>'.
+		    "\n<td align=\"center\">".'<input type="checkbox" name="'.$cb_search.'" value="1"></td>'.
+		    "\n<td align=\"center\">".'<input type="text" name="'.$tf_search.'" value="" size="5" maxlen="5"></td>'.	    
+		    "\n<td align=\"center\">".'<input type="checkbox" name="'.$cb_report.'" value="1"></td>'.
+		    "\n<td align=\"center\">".'<input type="text" name="'.$tf_report.'" value="" size="5" maxlen="5"></td>'.	    
+		    "\n<td align=\"center\">".'<input type="text" name="'.$tf_colwidth.'" value="" size="5" maxlen="5"></td>'.	    
+		    '</tr>';
+		$i++;
+	    }
+	    echo '</TABLE>'.
+		'<P><CENTER><INPUT TYPE="SUBMIT" NAME="submit" VALUE="SUBMIT"></CENTER>'.
+		'</FORM>';
+	
 	}
 
-	$cb_search = 'CBSRCH_'.$field->getName();
-	$cb_report = 'CBREP_'.$field->getName();
-	$tf_search = 'TFSRCH_'.$field->getName();
-	$tf_report = 'TFREP_'.$field->getName();
-	$tf_colwidth = 'TFCW_'.$field->getName();
+	/**
+	 *  Display detail report form
+	 *
+	 *  @return void
+	 */
+	function showReportForm() {
+		global $ath;
+	    	$ath->adminHeader(array ('title'=>'Modify '.$this->name.' Report for '.$ath->getName().' Tracker ',
+				    'help' => 'HELP_FIXME.html#HELP_FIXME'));
+	    
+	    
+	    	echo '<H2>Modify '.$this->name.' Report for '.$ath->getName().' Tracker</H2>';
 	
-	$rep_field = $this->fields[$field->getName()];
-	if (!$rep_field) {
-	  $rep_field = new ArtifactReportField();
-	}	
-
-	$cb_search_chk = ($rep_field->isShowOnQuery() ? 'CHECKED':'');
-	$cb_report_chk = ($rep_field->isShowOnResult() ? 'CHECKED':'');
-	$tf_search_val = $rep_field->getPlaceQuery();
-	$tf_report_val = $rep_field->getPlaceResult();
-	$tf_colwidth_val = $rep_field->getColWidth();
-
-	echo '<TR class="'. util_get_alt_row_color($i) .'">';
+		    
+	    // display the table of all fields that can be included in the report
+	    // along with their current state in this report
+	    $title_arr=array();
+	    $title_arr[]='Field Label';
+	    $title_arr[]='Description';
+	    $title_arr[]='Use as a Search Criteria';
+	    $title_arr[]='Rank on Search';
+	    $title_arr[]='Use as a Report Column';
+	    $title_arr[]='Rank on Report';	
+	    $title_arr[]='Column width (optional)';	
+		
+		$g = $ath->getGroup();
+		$group_id = $g->getID();
+		$atid = $ath->getID();
+	    echo '<FORM ACTION="/tracker/admin/" METHOD="POST">
+		   <INPUT TYPE="HIDDEN" NAME="func" VALUE="report">
+		   <INPUT TYPE="HIDDEN" NAME="update_report" VALUE="y">
+		   <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$atid.'">
+		   <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
+		   <INPUT TYPE="HIDDEN" NAME="report_id" VALUE="'.$this->report_id.'">
+		   <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
+		   <B>Name: </B>
+		   <INPUT TYPE="TEXT" NAME="rep_name" VALUE="'.$this->name.'" SIZE="20" MAXLENGTH="20">
+	                 &nbsp;&nbsp;&nbsp;&nbsp;<B>Scope: </B>';
+	    $scope = $this->scope;
+	    if ($ath->userIsAdmin())
+			echo '<SELECT NAME="rep_scope">
+		                        <OPTION VALUE="I"'.($scope=='I' ? 'SELECTED':'').'>Personal</OPTION>
+		                        <OPTION VALUE="P"'.($scope=='P' ? 'SELECTED':'').'>Project</OPTION>
+		                        </SELECT>';
+	    else
+			echo ($scope=='P' ? 'Project':'Personal').
+			    '<INPUT TYPE="HIDDEN" NAME="rep_scope" VALUE="'.$scope.'">';
 	
-	echo "\n<td>".$field->getLabel().'</td>'.
-	    "\n<td>".$field->getDescription().'</td>'.
-	    "\n<td align=\"center\">".'<input type="checkbox" name="'.$cb_search.'" value="1" '.$cb_search_chk.' ></td>'.
-	    "\n<td align=\"center\">".'<input type="text" name="'.$tf_search.'" value="'.$tf_search_val.'" size="5" maxlen="5"></td>'.	    
-	    "\n<td align=\"center\">".'<input type="checkbox" name="'.$cb_report.'" value="1" '.$cb_report_chk.' ></td>'.
-	    "\n<td align=\"center\">".'<input type="text" name="'.$tf_report.'" value="'.$tf_report_val.'" size="5" maxlen="5"></td>'.	    
-	    "\n<td align=\"center\">".'<input type="text" name="'.$tf_colwidth.'" value="'.$tf_colwidth_val.'" size="5" maxlen="5"></td>'.	    
-	    '</tr>';
-	$i++;
-    }
-    echo '</TABLE>'.
-	'<P><CENTER><INPUT TYPE="SUBMIT" NAME="submit" VALUE="SUBMIT"></CENTER>'.
-	'</FORM>';
+	    echo '
+		    <P>
+		    <B>Description:</B>
+		    <INPUT TYPE="TEXT" NAME="rep_desc" VALUE="'.$this->description.'" SIZE="50" MAXLENGTH="120">
+	                  <P>';
+	
+	    echo html_build_list_table_top ($title_arr);
+	    $i=0;
+	    $aff = new ArtifactFieldFactory($ath);
+	    $fields = $aff->getAllUsedFields();
+	    while ( list($key, $field) = each($fields) ) {
+	
+		// Do not show fields not used by the project
+		if ( !$field->isUsed()) { continue; }
+	
+		// Do not show some special fields any way 
+		if ($field->isSpecial()) { 
+		    if ( ($field->getName() == 'group_id') ||
+			 ($field->getName() == 'comment_type_id') )
+			{ continue; }
+		}
+	
+		$cb_search = 'CBSRCH_'.$field->getName();
+		$cb_report = 'CBREP_'.$field->getName();
+		$tf_search = 'TFSRCH_'.$field->getName();
+		$tf_report = 'TFREP_'.$field->getName();
+		$tf_colwidth = 'TFCW_'.$field->getName();
+		
+		$rep_field = $this->fields[$field->getName()];
+		if (!$rep_field) {
+		  $rep_field = new ArtifactReportField();
+		}	
+	
+		$cb_search_chk = ($rep_field->isShowOnQuery() ? 'CHECKED':'');
+		$cb_report_chk = ($rep_field->isShowOnResult() ? 'CHECKED':'');
+		$tf_search_val = $rep_field->getPlaceQuery();
+		$tf_report_val = $rep_field->getPlaceResult();
+		$tf_colwidth_val = $rep_field->getColWidth();
+	
+		echo '<TR class="'. util_get_alt_row_color($i) .'">';
+		
+		echo "\n<td>".$field->getLabel().'</td>'.
+		    "\n<td>".$field->getDescription().'</td>'.
+		    "\n<td align=\"center\">".'<input type="checkbox" name="'.$cb_search.'" value="1" '.$cb_search_chk.' ></td>'.
+		    "\n<td align=\"center\">".'<input type="text" name="'.$tf_search.'" value="'.$tf_search_val.'" size="5" maxlen="5"></td>'.	    
+		    "\n<td align=\"center\">".'<input type="checkbox" name="'.$cb_report.'" value="1" '.$cb_report_chk.' ></td>'.
+		    "\n<td align=\"center\">".'<input type="text" name="'.$tf_report.'" value="'.$tf_report_val.'" size="5" maxlen="5"></td>'.	    
+		    "\n<td align=\"center\">".'<input type="text" name="'.$tf_colwidth.'" value="'.$tf_colwidth_val.'" size="5" maxlen="5"></td>'.	    
+		    '</tr>';
+		$i++;
+	    }
+	    echo '</TABLE>'.
+		'<P><CENTER><INPUT TYPE="SUBMIT" NAME="submit" VALUE="SUBMIT"></CENTER>'.
+		'</FORM>';
 
 	}
 }
 
 ?>
-

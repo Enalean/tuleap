@@ -36,10 +36,11 @@ class ArtifactHtml extends Artifact {
 	 *
 	 * @param results: field values
 	 * @param ro: read only parameter - Display mode or update mode
+	 * @param pv: printer version
 	 *
 	 * @return void
 	 */
-	function display($results,$ro) {
+	function display($results,$ro,$pv) {
 		global $art_field_fact,$sys_datefmt;
 		
 		$fields_per_line=2;
@@ -53,8 +54,15 @@ class ArtifactHtml extends Artifact {
 		
     	$summary = db_result($results,0,'summary');
 	    
+	    echo "<TABLE width='100%'><TR><TD>";
 	    echo "<H2>[ ".$this->ArtifactType->getItemName()." #".$this->getID()." ] ".$summary."</H2>";
+	    echo "</TD>";
+	    if ( !$pv ) 
+	    	echo "<TD align='right'><A HREF='?func=detail&aid=".$this->getID()."&group_id=".$group_id."&atid=".$group_artifact_id."&pv=true' target='_blank'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;Printer version</A></TD>";
+	    echo "</TR></TABLE>";
 	
+//		echo '
+//	    <FORM ACTION="'.$PHP_SELF.'" METHOD="POST" NAME="artifact_form">
 		echo '
 	    <FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data" NAME="artifact_form">
 	    <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="2000000">';
@@ -73,9 +81,12 @@ class ArtifactHtml extends Artifact {
 	      <TR><TD><B>Submitted By:</B>&nbsp;</td><td>'.user_getname(db_result($results,0,'submitted_by')).'</TD>
 	          <TD><B>Group:</B>&nbsp;</td><td>'.group_getname($group_id).'</TD>
 	      </TR>
-	      <TR><TD><B>Submitted on:</B>&nbsp;</td><td>'.format_date($sys_datefmt,db_result($results,0,'open_date')).'</TD>
-	          <TD colspan="2"><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit Changes"></TD>
-	      </TR>
+	      <TR><TD><B>Submitted on:</B>&nbsp;</td><td>'.format_date($sys_datefmt,db_result($results,0,'open_date')).'</TD>';
+	    
+	    if (!$pv) echo '<TD colspan="2"><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit Changes"></TD>';
+	    
+	    echo '
+	    </TR>
 	      <TR><TD COLSPAN="'.($fields_per_line*2).'">&nbsp</TD></TR>
 	      <script language="JavaScript" src="/include/calendar.js"></script>';
 	
@@ -139,11 +150,11 @@ class ArtifactHtml extends Artifact {
 		//
 		// Followups comments
 		//
+		echo '<TR><TD colspan="2" align="top"><HR></td></TR>';
 		if ( !$ro ) {
-			echo '<TR><TD colspan="2" align="top"><HR></td></TR>';
 			echo '
 			<TR><TD>
-			<h3>Follow-up Comments '.help_button('BugUpdate.html#BugComments').'</h3></td>
+			<h3>Follow-up Comments '.help_button('HELP_FIXME.html#HELP_FIXME').'</h3></td>
 			<TD>
 			<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit Changes">
 			</td></tr>';
@@ -162,19 +173,20 @@ class ArtifactHtml extends Artifact {
 			<TR><TD colspan="2">';
 			
 			$field = $art_field_fact->getFieldFromName('comment_type_id');
-			$field_html = new ArtifactFieldHtml( $field );
 			if ( $field ) {
+				$field_html = new ArtifactFieldHtml( $field );
 				echo '<P><B>Comment Type:</B>'.
 				     $field_html->fieldBox('',$group_artifact_id,'',true,'None').'<BR>';
 			}
+			echo '<TEXTAREA NAME="details" ROWS="7" COLS="60" WRAP="SOFT"></TEXTAREA><p>';
 		} else {
-			echo '<br><TR><TD COLSPAN="2"><B>Add A Comment:</B><BR>';
+			if (!$pv) {
+				echo '<br><TR><TD COLSPAN="2"><B>Add A Comment:</B><BR>
+			    <TEXTAREA NAME="details" ROWS="7" COLS="60" WRAP="SOFT"></TEXTAREA><p>';
+			}
 		}
 				
-		echo '
-	    <TEXTAREA NAME="details" ROWS="7" COLS="60" WRAP="SOFT"></TEXTAREA><p>';
-
-		if (!user_isloggedin()) {
+		if (!user_isloggedin()&&!$pv) {
 			echo '<B><span class="highlight"><H2>You Are NOT Logged In</H2><P>Please <A HREF="/account/login.php?return_to='.
 			urlencode($REQUEST_URI).
 			'">log in,</A> so followups can be emailed to you.</span></B><P>';
@@ -188,38 +200,43 @@ class ArtifactHtml extends Artifact {
 		//
 		// CC List
 		//
+		echo '		
+		<TR><TD colspan="2"><hr></td></tr>
+		
+		<TR><TD colspan="2">
+		<h3>CC List '.help_button('HELP_FIXME.html#HELP_FIXME').'</h3>';
+		
 		if ( !$ro ) {
-			echo '		
-			<TR><TD colspan="2"><hr></td></tr>
-			
-			<TR><TD colspan="2">
-			<h3>CC List '.help_button('BugUpdate.html#BugCCList').'</h3>
-			<b><u>Note:</b></u> for CodeX users use their login name rather than their email addresses.<p>
+			echo '
+			<b><u>Note:</b></u> for CodeX users use their login name rather than their email addresses.<br>Fill your list using comma or semi-column as separator.<p>
 			<B>Add CC:&nbsp;</b><input type="text" name="add_cc" size="30">&nbsp;&nbsp;&nbsp;
 			<B>Comment:&nbsp;</b><input type="text" name="cc_comment" size="40" maxlength="255"><p>';
-			
-			echo $this->showCCList($group_id,$group_artifact_id);
-			
-			echo '</TD></TR>';
-			
 		}
-	
+			
+		echo $this->showCCList($group_id,$group_artifact_id);
+			
+		echo '</TD></TR>';
+			
 		//
 		// File attachments
 		//
 		echo '
 		<TR><TD colspan="2"><hr></td></tr>
 		<TR><TD colspan="2">
-		<h3>Attachments '.help_button('BugUpdate.html#BugAttachments').'</h3>
-		<B>Check to Upload&hellip;  <input type="checkbox" name="add_file" VALUE="1">
-		&nbsp;&hellip;&amp; Attach File:</B>
-		<input type="file" name="input_file" size="40">
-		<br><span class="small"><i>(The maximum upload file size is 2 Mb - <u>Please compress your files</u>)</i></span>
-		<P>
-		<B>File Description:</B>&nbsp;
-		<input type="text" name="file_description" size="60" maxlength="255">
-		<P>';
+		<h3>Attachments '.help_button('HELP_FIXME.html#HELP_FIXME').'</h3>';
 		
+		if ( !$ro ) {
+			echo '
+			<B>Check to Upload&hellip;  <input type="checkbox" name="add_file" VALUE="1">
+			&nbsp;&hellip;&amp; Attach File:</B>
+			<input type="file" name="input_file" size="40">
+			<br><span class="small"><i>(The maximum upload file size is 2 Mb - <u>Please compress your files</u>)</i></span>
+			<P>
+			<B>File Description:</B>&nbsp;
+			<input type="text" name="file_description" size="60" maxlength="255">
+			<P>';
+		}
+				
 		echo $this->showAttachedFiles($group_id,$group_artifact_id);
 		
 		echo '</TD></TR>';
@@ -231,7 +248,7 @@ class ArtifactHtml extends Artifact {
 		<TR><TD colspan="2"><hr></td></tr>
 		<TR ><TD colspan="2">';
 		
-		echo '<h3>Dependencies '.help_button('BugUpdate.html#BugDependencies').'</h3>
+		echo '<h3>Dependencies '.help_button('HELP_FIXME.html#HELP_FIXME').'</h3>
 		<B>Dependent on:</B><BR>
 		<P>';
 		if ( !$ro ) {
@@ -242,6 +259,11 @@ class ArtifactHtml extends Artifact {
 		}
 		echo $this->showDependencies($group_id,$group_artifact_id);
 		
+		echo '
+		<P><B>Is Dependent on:</B><BR>
+		<P>';
+		echo $this->showInverseDependencies($group_id,$group_artifact_id);
+		
 		echo '</TD></TR>';
         echo '<TR><TD colspan="2"><hr></td></tr>';
         
@@ -251,18 +273,20 @@ class ArtifactHtml extends Artifact {
         echo '
 		<TR><TD colspan="2" >';
 		
-		echo '<H3>Change History '.help_button('BugUpdate.html#BugHistory').'</H3>';
+		echo '<H3>Change History '.help_button('HELP_FIXME.html#HELP_FIXME').'</H3>';
 		echo $this->showHistory($group_id,$group_artifact_id);
 		
 		// 
 		// Final submit button
 		//
-		echo '</TD></TR>		
-		<TR><TD colspan="2" ALIGN="center">
-			<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit Changes">
-			</FORM>
-		</TD></TR>';
-
+		if ( !$pv ) {
+			echo '</TD></TR>		
+			<TR><TD colspan="2" ALIGN="center">
+				<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit Changes">
+				</FORM>
+			</TD></TR>';
+		}
+		
 		echo '</table>';
 	}
 	
@@ -621,6 +645,84 @@ class ArtifactHtml extends Artifact {
 	}
 
 	/**
+	 * Display the artifact inverse dependencies list
+	 *
+	 * @param group_id: the group id
+	 * @param group_artifact_id: the artifact type ID
+	 * @param ascii: ascii mode
+	 *
+	 * @return void
+	 */
+	function showInverseDependencies ($group_id, $group_artifact_id, $ascii=false) {
+	
+	    global $sys_datefmt,$sys_lf;
+	
+	    //
+	    //      format the dependencies list for this artifact
+	    //
+	
+	    $result=$this->getInverseDependencies();
+	    $rows=db_numrows($result);
+	
+	    // Nobody in the dependencies list -> return now
+	    if ($rows <= 0) {
+			if ($ascii)
+			    $out = "No other artifacts are dependent on this artifact$sys_lf";
+			else
+			    $out = '<H4>No other artifacts are dependent on this artifact</H4>';
+			return $out;
+	    }
+	
+	    // Header first an determine what the print out format is
+	    // based on output type (Ascii, HTML)
+	    if ($ascii) {
+			$out .= "Dependencies List$sys_lf*****************$sys_lf$sys_lf";
+			$fmt = "%-15s | %s$sys_lf";
+			$out .= sprintf($fmt, 'Artifact', 'Summary');
+			$out .= "------------------------------------------------------------------$sys_lf";
+	    } else {	
+	
+			$title_arr=array();
+			$title_arr[]='Artifact';
+			$title_arr[]='Summary';
+			$title_arr[]='Tracker';
+			$title_arr[]='Group';
+			$out .= html_build_list_table_top ($title_arr);
+		
+			$fmt = "\n".'<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td>'.
+			    '<td align="center">%s</td></tr>';
+		}
+		
+	    // Loop through the denpendencies and format them
+	    for ($i=0; $i < $rows; $i++) {
+	
+			$dependent_on_artifact_id = db_result($result, $i, 'artifact_id');
+			$summary = db_result($result, $i, 'summary');
+			$tracker_label = db_result($result, $i, 'name');
+			$group_label = db_result($result, $i, 'group_name');
+		
+			if ($ascii) {
+			    $out .= sprintf($fmt, $dependent_on_artifact_id, $summary);
+			} else {
+		
+			    $out .= sprintf($fmt,
+					    util_get_alt_row_color($i),
+					    "<a href=\"/tracker/?func=detail&aid=$dependent_on_artifact_id&atid=$group_artifact_id&group_id=$group_id\">$dependent_on_artifact_id</a>",
+					    $summary,
+					    $tracker_label,
+					    $group_label);
+			
+			} // for
+	    }
+	
+	    // final touch...
+	    $out .= ($ascii ? "$sys_lf" : "</TABLE>");
+	
+	    return($out);
+	
+	}
+
+	/**
 	 * Display the follow ups comments
 	 *
 	 * @param group_id: the group id
@@ -733,10 +835,13 @@ class ArtifactHtml extends Artifact {
 		$group_artifact_id = $this->ArtifactType->getID();
 		$group_id = $group->getGroupId();
 
-		// First display the message preamble
-		echo util_unconvert_htmlspecialchars($this->ArtifactType->getSubmitInstructions());
+		// Display submit informations if any
+		if ( $this->ArtifactType->getSubmitInstructions() ) {
+			echo util_unconvert_htmlspecialchars($this->ArtifactType->getSubmitInstructions());
+		}
 		
 		// Beginning of the submission form with fixed fields
+//		echo '<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" NAME="artifact_form">
 		echo '<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data" NAME="artifact_form">
 		    <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="2000000">
 			<INPUT TYPE="HIDDEN" NAME="func" VALUE="postadd">
@@ -806,7 +911,7 @@ class ArtifactHtml extends Artifact {
 		<TR><TD colspan="'.(2*$fields_per_line).'"><hr></td></tr>
 		
 		<TR><TD colspan="'.(2*$fields_per_line).'">
-		<h3>CC List '.help_button('BugUpdate.html#BugCCList').'</h3>
+		<h3>CC List '.help_button('HELP_FIXME.html#HELP_FIXME').'</h3>
 		<b><u>Note:</b></u> for CodeX users use their login name rather than their email addresses.<p>
 		<B>Add CC:&nbsp;</b><input type="text" name="add_cc" size="30">&nbsp;&nbsp;&nbsp;
 		<B>Comment:&nbsp;</b><input type="text" name="cc_comment" size="40" maxlength="255"><p>';
@@ -819,7 +924,7 @@ class ArtifactHtml extends Artifact {
 		echo '
 		<TR><TD colspan="'.(2*$fields_per_line).'"><hr></td></tr>
 		<TR><TD colspan="'.(2*$fields_per_line).'">
-		<h3>Attachments '.help_button('BugUpdate.html#BugAttachments').'</h3>
+		<h3>Attachments '.help_button('HELP_FIXME.html#HELP_FIXME').'</h3>
 		<B>Check to Upload&hellip;  <input type="checkbox" name="add_file" VALUE="1">
 		&nbsp;&hellip;&amp; Attach File:</B>
 		<input type="file" name="input_file" size="40">
@@ -937,20 +1042,18 @@ class ArtifactHtml extends Artifact {
 		
 		// Summary first. It is a special field because it is both displayed in the
 		// title of the artifact form and here as a text field
-	
 		$field = $art_field_fact->getFieldFromName('summary');
-		$field_html = new ArtifactFieldHtml( $field );
-		if ( $field_html ) {
+		if ( $field ) {
+			$field_html = new ArtifactFieldHtml( $field );
 			$body .= "$sys_lf".$field_html->display($group_artifact_id,
 				      util_unconvert_htmlspecialchars(db_result($result,0,'summary')),false,true,true,true);
 		}
 		$field = $art_field_fact->getFieldFromName('details');
-		$field_html = new ArtifactFieldHtml( $field );
-		if ( $field_html ) {
+		if ( $field ) {
+			$field_html = new ArtifactFieldHtml( $field );
 			$body .= "$sys_lf$sys_lf".$field_html->display($group_artifact_id,
 				      util_unconvert_htmlspecialchars(db_result($result,0,'details')),false,true,true,true);
 		}
-				
 		// Then output the history of bug details from newest to oldest
 		$body .= "$sys_lf$sys_lf".$this->showDetails($group_id, true);
 	
@@ -1057,455 +1160,6 @@ class ArtifactHtml extends Artifact {
 	
 	}
 
-	/**
-	 * Build an array of email using the changes array
-	 *
-	 * @param changes: array of changes
-	 *
-	 * @return array
-	 */
-	function buildNotificationList($changes) {
-		
-		global $art_field_fact;
-	
-	    // Rk: we store email addresses in a hash to make sure they are only
-	    // stored once. Normally if an email is repeated several times sendmail
-	    // would take care of it but I prefer taking care of it now.
-	    // Same for user ids.
-	    // We also use the user_ids hash to check if a user has already been selected for 
-	    // notification. If so it is not necessary to check it again in another role.
-	    $addresses = array();
-	    $user_ids = array();
-
-		// Retrieve field values for the assigned_to value
-		$result = $this->getFieldsValues();
-	
-	    // check submitter notification preferences
-	    $user_id = $this->getSubmittedBy();
-	    if ($user_id != 100) {
-			if ($this->checkNotification($user_id, 'SUBMITTER', $changes)) {
-				//echo "DBG - SUBMITTER - user=$user_id<br>";
-			    $user_ids[$user_id] = true;
-			}
-	    }
-	
-	    // check assignee  notification preferences
-	    // Never notify user 'none' (id #100)
-	    // Check for field 'assigned_to' (SelectBox)
-	    $user_id = db_result($result,0,'assigned_to');
-		if ( ($user_id) && ($user_id != 100) ) {
-			if (!$user_ids[$user_id] && $this->checkNotification($user_id, 'ASSIGNEE', $changes)) {
-				//echo "DBG - ASSIGNEE - user=$user_id<br>";
-			    $user_ids[$user_id] = true;
-			}
-	    }
-	
-	    // check assignee  notification preferences
-	    // Never notify user 'none' (id #100)
-	    // Check for field 'multi_assigned_to' (MultiBox)
-	    $field = $art_field_fact->getFieldFromName("multi_assigned_to");
-		if ( $field ) {
-			$field_value = $field->getValues($this->getID());
-	    	if ($field_value && (db_numrows($field_value) > 0)) {
-				while ($row = db_fetch_array($field_value)) {
-				    $user_id = db_result($field_value,0,'assigned_to');
-					if ( ($user_id) && ($user_id != 100) ) {
-						if (!$user_ids[$user_id] && $this->checkNotification($user_id, 'ASSIGNEE', $changes)) {
-							//echo "DBG - ASSIGNEE - user=$user_id<br>";
-						    $user_ids[$user_id] = true;
-						}
-				    }
-				}
-	    	}
-	    }
-
-	    // check old assignee  notification preferences if assignee was just changed
-	    // Never notify user 'none' (id #100)
-	    $user_name = $changes['assigned_to']['del'];
-	    if ($user_name) {
-			$res_oa = user_get_result_set_from_unix($user_name);
-			$user_id = db_result($res_oa,0,'user_id');
-			if ($user_id != 100 && !$user_ids[$user_id] && $this->checkNotification($user_id, 'ASSIGNEE', $changes)) {
-				//echo "DBG - ASSIGNEE OLD - user=$user_id<br>";
-			    $user_ids[$user_id] = true;
-			}
-	    }
-	    
-	    // check all CC 
-	    // (a) check all the people in the current CC list
-	    // (b) check the CC that has just been removed if any and see if she
-	    // wants to be notified as well
-	    // if the CC indentifier is an email address then notify in any case
-	    // because this user has no personal setting
-	    $res_cc = $this->getCCList();
-	    $arr_cc = array();
-	    if ($res_cc && (db_numrows($res_cc) > 0)) {
-			while ($row = db_fetch_array($res_cc)) {
-			    $arr_cc[] = $row['email'];
-			}
-	    }
-	    if ( $changes['CC']['del'] ) {
-		    // Only one CC can be deleted at once so just append it to the list....
-		    $arr_cc[] = $changes['CC']['del'];
-		}
-			
-	    while (list(,$cc) = each($arr_cc)) {
-	    	//echo "DBG - CC=$cc<br>";
-			if (validate_email($cc)) {
-				//echo "DBG - CC email - email=".util_normalize_email($cc)."<br>";
-			    $addresses[util_normalize_email($cc)] = true;
-			} else {
-			    $res = user_get_result_set_from_unix($cc);
-			    $user_id = db_result($res,0,'user_id');
-			    if (!$user_ids[$user_id] && $this->checkNotification($user_id, 'CC', $changes)) {
-					//echo "DBG - CC - user=$user_id<br>";
-					$user_ids[$user_id] = true;
-			    }
-			}
-	    } // while
-	
-	
-	    // check all commenters
-	    $res_com = $this->getCommenters();
-	    if (db_numrows($res_com) > 0) {
-			while ($row = db_fetch_array($res_com)) {
-			    $user_id = $row['mod_by'];
-			    if (!$user_ids[$user_id] && $this->checkNotification($user_id, 'COMMENTER', $changes)) {
-					//echo "DBG - COMMENTERS - user=$user_id<br>";
-					$user_ids[$user_id] = true;
-			    }
-			}
-	    }
-	
-	    // build the final list of email addresses
-	    reset($user_ids);
-	    while (list($user_id,) = each($user_ids)) {
-			//echo "DBG - final list - user=$user_id<br>";
-			$addresses[user_getemail($user_id)] = true;
-	    }
-	
-	    // return an array with all the email addresses the notification must be sent to
-	    return (array_keys($addresses));
-	
-	}
-
-	/**
-	 * Check if for a user and for role, there is a changement
-	 *
-	 * @param user_id: the user id
-	 * @param role: the role
-	 * @param changes: array of changes
-	 *
-	 * @return boolean
-	 */
-	function checkNotification($user_id, $role, $changes=false) {
-	
-	    $send = false;
-	    $arr_notif = $this->buildNotificationMatrix($user_id);
-	    if (!$arr_notif) { return true; }
-	
-	    // echo "==== DBG Checking Notif. for $user_id (role=$role)<br>";
-	    $user_name = user_getname($user_id);
-	
-	    //----------------------------------------------------------
-	    // If it's a new bug only (changes is false) check the NEW_BUG event and
-	    // ignore all other events
-	    if ($changes==false) {
-			if ($arr_notif[$role]['NEW_ARTIFACT']) {
-			    // echo "DBG NEW_ARTIFACT notified<br>";
-			    return true;
-			} else {
-			    // echo "DBG No notification<br>";
-			    return false;
-			}
-	    }
-	
-	    //----------------------------------------------------------
-	    //Check: I_MADE_IT  (I am the author of the change )
-	    // Check this one first because if the user said no she doesn't want to be 
-	    // aware of any of her change in this role and we can return immediately.
-	    if (($user_id == user_getid()) && !$arr_notif[$role]['I_MADE_IT']) {
-			// echo "DBG Dont want to receive my own changes<br>";
-			return false;
-	    }
-	    
-	    //----------------------------------------------------------
-	    // Check :  NEW_COMMENT  A new followup comment is added 
-	    if ($arr_notif[$role]['NEW_COMMENT'] && isset($changes['details'])) {
-			// echo "DBG NEW_COMMENT notified<br>";
-			return true;
-	    }
-	
-	    //----------------------------------------------------------
-	    //Check: NEW_FILE  (A new file attachment is added)
-	    if ($arr_notif[$role]['NEW_FILE'] && isset($changes['attach'])) {
-			// echo "DBG NEW_FILE notified<br>";
-			return true;
-	    }
-	  
-	    //----------------------------------------------------------
-	    //Check: CLOSED  (The bug is closed)
-	    // Rk: this one has precedence over PSS_CHANGE. So notify even if PSS_CHANGE
-	    // says no.
-	    if ($arr_notif[$role]['CLOSED'] && ($changes['status_id']['add'] == 'Closed')) {
-			// echo "DBG CLOSED bug notified<br>";
-			return true;
-	    }
-	
-	    //----------------------------------------------------------
-	    //Check: PSS_CHANGE  (Priority,Status,Severity changes)
-	    if ($arr_notif[$role]['PSS_CHANGE'] && 
-		(isset($changes['priority']) || isset($changes['status_id']) || isset($changes['severity'])) ) {
-			// echo "DBG PSS_CHANGE notified<br>";
-			return true;
-	    }
-	
-	
-	    //----------------------------------------------------------
-	    // Check :  ROLE_CHANGE (I'm added to or removed from this role)
-	    // Rk: This event is meanningless for Commenters. It also is for submitter but may be
-	    // one day the submitter will be changeable by the project admin so test it.
-	    // Rk #2: check this one at the end because it is the most CPU intensive and this
-	    // event seldomly happens
-	    if ($arr_notif['SUBMITTER']['ROLE_CHANGE'] &&
-		(($changes['submitted_by']['add'] == $user_name) || ($changes['submitted_by']['del'] == $user_name)) &&
-		($role == 'SUBMITTER') ) {
-			// echo "DBG ROLE_CHANGE for submitter notified<br>";
-			return true;
-	    }
-	
-	    if ($arr_notif['ASSIGNEE']['ROLE_CHANGE'] &&
-		(($changes['assigned_to']['add'] == $user_name) || ($changes['assigned_to']['del'] == $user_name)) &&
-		($role == 'ASSIGNEE') ) {
-			// echo "DBG ROLE_CHANGE for role assignee notified<br>";
-			return true;
-	    }
-	
-	    $arr_cc_changes = array();
-	    if (isset($changes['CC']['add']))
-			$arr_cc_changes = split('[,;]',$changes['CC']['add']);
-	    $arr_cc_changes[] = $changes['CC']['del'];
-	    $is_user_in_cc_changes = in_array($user_name,$arr_cc_changes);    
-	    $are_anyother_user_in_cc_changes =
-		(!$is_user_in_cc_changes || count($arr_cc_changes)>1);    
-	
-	    if ($arr_notif['CC']['ROLE_CHANGE'] && ($role == 'CC')) {
-			if ($is_user_in_cc_changes) {
-			    // echo "DBG ROLE_CHANGE for cc notified<br>";
-			    return true;
-			}
-	    }
-	    
-	    //----------------------------------------------------------
-	    //Check: CC_CHANGE  (CC_CHANGE is added or removed)
-	    // check this right after because  role cahange for cc can contradict
-	    // thee cc_change notification. If the role change on cc says no notification
-	    // then it has precedence over a cc_change
-	    if ($arr_notif[$role]['CC_CHANGE'] && isset($changes['CC'])) {
-			// it's enough to test role against 'CC' because if we are at that point
-			// it means that the role_change for CC was false or that role is not CC
-			// So if role is 'CC' and we are here it means that the user asked to not be
-			// notified on role_change as CC, unless other users are listed in the cc changes
-			if (($role != 'CC') || (($role == 'CC') && $are_anyother_user_in_cc_changes)) {
-			    // echo "DBG CC_CHANGE notified<br>";
-			    return true; 
-			}
-	    }
-	
-	
-	    //----------------------------------------------------------
-	    //Check: CHANGE_OTHER  (Any changes not mentioned above)
-	    // *** THIS ONE MUST ALWAYS BE TESTED LAST
-	    
-	    // Delete all tested fields from the $changes array. If any remains then it
-	    // means a notification must be sent
-	    unset($changes['details']);
-	    unset($changes['attach']);
-	    unset($changes['priority']);
-	    unset($changes['severity']);
-	    unset($changes['status_id']);
-	    unset($changes['CC']);
-	    unset($changes['assigned_to']);
-	    unset($changes['submitted_by']);
-	    if ($arr_notif[$role]['ANY_OTHER_CHANGE'] && count($changes)) {
-			// echo "DBG ANY_OTHER_CHANGE notified<br>";
-			return true;
-	    }
-	
-	    // Sorry, no notification...
-	    // echo "DBG No notification!!<br>";
-	    return false;
-	}
-
-	/**
-	 * Build the matrix role/event=notify
-	 *
-	 * @param user_id: the user id
-	 *
-	 * @return array
-	 */
-	function buildNotificationMatrix($user_id) {
-	
-	    // Build the notif matrix indexed with roles and events labels (not id)
-	    $res_notif = $this->getNotificationWithLabels($user_id);
-	    while ($arr = db_fetch_array($res_notif)) {
-		//echo "<br>".$arr['role_label']." ".$arr['event_label']." ".$arr['notify'];
-		$arr_notif[$arr['role_label']][$arr['event_label']] = $arr['notify'];
-	    }
-	    return $arr_notif;
-	}
-
-///   hereafter the notification admin stuff
-
-
-	/* 
-	 *
-	 * displayNotificationForm
-	 *
-	 * return void
-	 *
-	 *
-	 *
-	 */
-
-	function displayNotificationForm($user_id) {
-
-	// By default it's all 'yes'
-	for ($i=0; $i<$this->ArtifactType->num_roles; $i++) {
-	    $role_label = $this->ArtifactType->arr_roles[$i]['role_label'];
-	    for ($j=0; $j<$this->ArtifactType->num_events; $j++) {
-		$event_label = $this->ArtifactType->arr_events[$j]['event_label'];
-		$arr_notif[$role_label][$event_label] = 1;
-		//echo "[$role_label][$event_label] = 1<br>";
-	    }
-	}
-
-	$res_notif = $this->getNotificationWithLabels($user_id);
-	while ($arr = db_fetch_array($res_notif)) {
-	    $arr_notif[$arr['role_label']][$arr['event_label']] = $arr['notify'];
-	}
-	
-
-	echo '<H2>Email Notification Settings</h2>';
-	$group = $this->ArtifactType->getGroup();
-	$group_artifact_id = $this->ArtifactType->getID();
-	$group_id = $group->getGroupId();
-	// Build Wachees UI
-	$res = $this->ArtifactType->get_watchees($user_id);
-	$arr_watchees = array();
-	while ($row_watchee = db_fetch_array($res)) {
-	    $arr_watchees[] = user_getname($row_watchee['watchee_id']);
-	}
-	$watchees = join(',',$arr_watchees);
-
-	echo '
-	<FORM action="/tracker/admin" method="get">
-	<INPUT type="hidden" name="func" value="notification">
-	<INPUT type="hidden" name="atid" value="'.$this->ArtifactType->getID().'">
-	<INPUT type="hidden" name="group_id" value="'.$group_id.'">';
-	
-	echo '<h3><a name="GlobalEmailNotification"></a>Global Email Notification '.
-	help_button('BTSAdministration.html#ArtifactGlobalEmailNotification').'</h3>';
-	
-	if (user_ismember($group_id,'A')) {
-	    echo '
-	              <P><B>As a project administrator</B> you can provide email addresses (comma separated) to which new Artifact submissions (and possibly updates) will be systematically sent.<BR>
-		<BR><INPUT TYPE="TEXT" NAME="new_artifact_address" VALUE="'.$this->ArtifactType->getEmailAddress().'" SIZE="55" MAXLENGTH="255"> 
-		&nbsp;&nbsp;&nbsp;(send on all updates) <INPUT TYPE="CHECKBOX" NAME="send_all_artifacts" VALUE="1" '. (($this->ArtifactType->emailAll())?'CHECKED':'') .'><BR><br>';
-	} else {
-	    if ($this->ArtifactType->getEmailAddress())
-		echo '
-	              <P>The project administrator have configured the following email addresses to receive
-	notification of new artifact submission (and possibly updates).<P><u>Recipients</u>: '.
-		    $this->ArtifactType->getEmailAddress().'
-		&nbsp;&nbsp;&nbsp; (Send on all updates: '.(($this->ArtifactType->emailAll())?'Yes':'No').')<p>';
-	    else
-		echo '
-	                <P>The project administrator hasn\'t yet specified email addresses that will systematically receive
-	 email notification of new artifacts.<P>';
-	}
-	 
-	
-	echo '<h3>Personal Email Notification</h3>';
-	  
-	if (user_ismember($group_id,'B1') || user_ismember($group_id,'B2') ||user_ismember($group_id,'A')) {
-	    // To watch other users you must have at least tech rights on the BTS
-	    echo'
-	<h4>Users To Watch '.
-	help_button('BTSAdministration.html#ArtifactWatchers').'</h4>
-	<P>If you want to be the backup of someone when they\'re away from the office, or if you need to do the QA to all their artifacts. '.$GLOBALS['sys_name'].' can send their email notification to you also. List the login name of any user you wish to watch, separated by commas.</b>
-	<p><INPUT TYPE="TEXT" NAME="watchees" VALUE="'.$watchees.'" SIZE="55" MAXLENGTH="255"><br></p>
-	';
-	
-	    $res = $this->ArtifactType->get_watchers($user_id);
-	    $arr_watchers = array();
-	    while ($row_watcher = db_fetch_array($res)) {
-		$watcher_name = user_getname($row_watcher['user_id']);
-		$watchers .= '<a href="/users/'.$watcher_name.'">'.$watcher_name.'</a>,';
-	    }
-	    $watchers = substr($watchers,0,-1); // remove extra comma at the end
-	    
-	    if ($watchers) {
-		echo "<p>For your information your own artifact notifications are currently watched by: <u>$watchers</u>";
-	    } else {
-		echo "<p>For your information <u>nobody</u> is currently watching your own artifact notifications ";
-	    }
-	    echo '<br><br>';
-	}
-	
-	// Build Role/Event table 
-	// Rk: Can't use html_build_list_table_top because of the specific layout
-	echo '<h4>Event/Role Specific Settings '.
-	help_button('BTSAdministration.html#ArtifactEventRoleBasedEmailNotification').'</h4>
-	              <P>You can tune your notification settings and decide what artifact changes you
-	want to be aware of depending on your role. <p>
-	<b><u>Note</u></b>: Notification of *new* artifact submission to people other than the assignee
-	 or the submitter can be configured by the project administrator in the <a href="#GlobalEmailNotification">Global Email Notification section</a> above.<p>';
-	
-	echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	<table BORDER="0" CELLSPACING="1" CELLPADDING="2" class="small">
-	<tr class="boxtitle">
-	    <td colspan="'.$this->ArtifactType->num_roles.'" align="center" width="50%"><b>If my role in a artifact is:</b></td>
-	    <td rowspan="2" width="50%"><b>&nbsp;&nbsp;&nbsp;I want to be notified when:</b></td>
-	</tr>';
-	
-	for ($i=0; $i<$this->ArtifactType->num_roles; $i++) {
-	    echo '<td align="center" width="10%"><b>'.$this->ArtifactType->arr_roles[$i]['short_description']."</b></td>\n";
-	}
-	echo "</tr>\n";
-	
-	for ($j=0; $j<$this->ArtifactType->num_events; $j++) {
-	    $event_id = $this->ArtifactType->arr_events[$j]['event_id'];
-	    $event_label = $this->ArtifactType->arr_events[$j]['event_label'];
-	    echo "<tr class=\"".util_get_alt_row_color($j)."\">\n";
-	    for ($i=0; $i<$this->ArtifactType->num_roles; $i++) {
-		$role_id = $this->ArtifactType->arr_roles[$i]['role_id'];
-		$role_label = $this->ArtifactType->arr_roles[$i]['role_label'];
-		$cbox_name = 'cb-'.$role_id.'-'.$event_id;
-		//echo "<BR>$role_label $role_id $event_label $event_id ".$arr_notif['$role_label']['$event_label'];
-		if ( (($role_label == 'ASSIGNEE') && !user_ismember($group_id)) ||
-		     (($event_label == 'NEW_ARTIFACT') && ($role_label != 'ASSIGNEE') && ($role_label != 'SUBMITTER')) ) {
-		    // if the user is not a member then the ASSIGNEE column cannot
-		    // be set. If it's not an assignee or a submitter the new_artifact event is meaningless
-		    echo '   <td align="center"><input type="hidden" name="'.$cbox_name.'" value="1">-</td>'."\n";
-		} else {
-		    echo '   <td align="center"><input type="checkbox" name="'.$cbox_name.'" value="1" '.
-			($arr_notif[$role_label][$event_label] ? 'checked':'')."></td>\n";
-		}
-	    }
-	    echo '   <td>&nbsp;&nbsp;&nbsp;'.$this->ArtifactType->arr_events[$j]['description']."</td>\n";
-	    echo "</tr>\n";
-	}
-	
-	echo'
-	</table>
-	
-	<HR>
-	<P align="center"><INPUT type="submit" name="submit" value="Submit Changes">
-	</FORM>';
-			
-		
-	}
 
 }
 

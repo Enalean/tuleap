@@ -17,7 +17,7 @@ class ArtifactFieldHtml extends ArtifactField {
      *  Copy constructor
 	 *
 	 */
-	function ArtifactFieldHtml(&$art_field) {
+	function ArtifactFieldHtml($art_field) {
 		$this->field_id = $art_field->field_id;
 		$this->field_name = $art_field->field_name;
 		$this->display_type = $art_field->display_type;
@@ -389,11 +389,12 @@ class ArtifactFieldHtml extends ArtifactField {
 		break;
 	
 	    default:
-			$output .= 'UNKNOW ARTIFACT FIELD DISPLAY TYPE';
+			$output .= $this->getName().': UNKNOW ARTIFACT FIELD DISPLAY TYPE';
 	    }
 	
 	    return($output);
 	}
+
 	
 }
 

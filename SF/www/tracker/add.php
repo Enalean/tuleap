@@ -10,16 +10,22 @@
 
 //require_once($DOCUMENT_ROOT.'/../common/tracker/ArtifactFactory.class');
 
+// Check if a user can submit a new without loggin
+if ( !user_isloggedin() && !$ath->allowsAnon() ) {
+	exit_permission_denied();
+	return;
+}
+
 //
-//  make sure this person has permission to view artifacts
+//  make sure this person has permission to add artifacts
 //
-if (!$ath->userCanView()) {
+if (!$ath->userIsTech() && !$ath->allowsAnon() ) {
 	exit_permission_denied();
 }
 
 // Display the menus
 $ath->header(array('title'=>'Add a '.$ath->getItemName(),'titlevals'=>array($ath->getName()),'pagename'=>'tracker_browse',
-	'atid'=>$ath->getID(),'sectionvals'=>array($group->getPublicName())));
+	'atid'=>$ath->getID(),'sectionvals'=>array($group->getPublicName()),'help' => 'HELP_FIXME.html'));
 
 // Display the artifact items according to all the parameters
 $ah->displayAdd();

@@ -91,9 +91,7 @@ class ArtifactTypeFactory extends Error {
 	}		
 
 	/**
-	 *	getArtifactTypes - return an array of ArtifactType objects.
-	 *
-	 *  @aparam group_id: the group id
+	 *	getArtifactTypes - return an array of ArtifactType objects of the current 
 	 *
 	 *	@return	array	The array of ArtifactType objects.
 	 */
@@ -115,7 +113,7 @@ class ArtifactTypeFactory extends Error {
 		$sql="SELECT *, 0 as open_count, 0 as count FROM artifact_group_list
 			WHERE group_id='". $this->Group->getID() ."'
 			AND is_public IN ($public_flag)
-			ORDER BY group_artifact_id ASC";
+			ORDER BY name ASC";
 
 		$result = db_query ($sql);
 
@@ -139,6 +137,135 @@ class ArtifactTypeFactory extends Error {
 		return $this->ArtifactTypes;
 	}
 
+	/**
+	 *	getArtifactTypesFromId - return an array of ArtifactType objects of a group
+	 *
+	 *  @aparam group_id: the group id
+	 *
+	 *	@return	resultSet
+	 */
+	function getArtifactTypesFromId($group_id) {
+		if ($this->ArtifactTypes) {
+			return $this->ArtifactTypes;
+		}
+		if (user_isloggedin()) {
+			// For project admin user (adn surperuser), we can see all the trackers (both public and non public)
+			if ( user_ismember($group_id,'A') ) {
+				$public_flag='0,1';
+			} else {
+				$public_flag='1';
+			}
+		} else {
+			$public_flag='1';
+		}
+
+		$sql="SELECT group_artifact_id,name FROM artifact_group_list
+			WHERE group_id='". $group_id ."'
+			AND is_public IN ($public_flag)
+			ORDER BY group_artifact_id ASC";
+
+		//echo $sql;
+		
+		$result = db_query ($sql);
+
+		$rows = db_numrows($result);
+
+		if (!$result || $rows < 1) {
+			$this->setError('None Found '.db_error());
+			return false;
+		}
+
+		return $result;
+	}
+	
+	/**
+	 *	Delete a tracker
+	 *
+	 *  @aparam atid: the artifact type id
+	 *
+	 *	@return	boolean
+	 */
+	function deleteArtifactType($atid) {
+		
+		// Delete artifact_canned_responses 
+		$sql = "DELETE FROM artifact_canned_responses 
+			    WHERE group_artifact_id=". $atid;
+		db_query ($sql);
+
+		// Delete artifact_notification  
+		$sql = "DELETE FROM artifact_notification  
+			    WHERE group_artifact_id=". $atid;
+		db_query ($sql);
+
+		// Delete artifact_notification_event   
+		$sql = "DELETE FROM artifact_notification_event   
+			    WHERE group_artifact_id=". $atid;
+		db_query ($sql);
+		
+		// Delete artifact_notification_role   
+		$sql = "DELETE FROM artifact_notification_role   
+			    WHERE group_artifact_id=". $atid;
+		db_query ($sql);
+
+		// Delete artifact_perm   
+		$sql = "DELETE FROM artifact_perm   
+			    WHERE group_artifact_id=". $atid;
+		db_query ($sql);
+		
+		// Delete all records linked to artifact_id
+	    $sql_artifacts='SELECT artifact_id '.
+		'FROM artifact '.
+		'WHERE group_artifact_id='. $atid;
+		
+		//echo $sql_artifacts;
+		
+	    $res = db_query($sql_artifacts);
+	
+	    while ($artifacts_array = db_fetch_array($res)) {
+			$id = $artifacts_array["artifact_id"];
+
+			// Delete artifact_cc records	    	
+	    	$sql = "DELETE FROM artifact_cc WHERE artifact_id = ".$id;
+	    	db_query($sql);
+	    	
+			// Delete artifact_dependencies records	    	
+	    	$sql = "DELETE FROM artifact_dependencies WHERE artifact_id = ".$id;
+	    	db_query($sql);
+
+			// Delete artifact_field_value records	    	
+	    	$sql = "DELETE FROM artifact_field_value WHERE artifact_id = ".$id;
+	    	db_query($sql);
+	    	
+			// Delete artifact_file records	    	
+	    	$sql = "DELETE FROM artifact_file WHERE artifact_id = ".$id;
+	    	db_query($sql);
+
+			// Delete artifact_history records	    	
+	    	$sql = "DELETE FROM artifact_history WHERE artifact_id = ".$id;
+	    	db_query($sql);
+
+			// Delete artifact records	    	
+	    	$sql = "DELETE FROM artifact WHERE artifact_id = ".$id;
+	    	db_query($sql);
+
+		} // while
+		
+
+		// Delete artifact_group_list
+		$sql = "DELETE FROM artifact_group_list
+			    WHERE group_artifact_id=". $atid;
+		//echo $sql;
+		
+		$result = db_query ($sql);
+
+		if (!$result || db_affected_rows($result) <= 0) {
+			$this->setError('Error: deleteArtifactType '.db_error());
+			return false;
+		}
+		
+		return true;
+	}
+	
 }
 
 ?>

@@ -35,6 +35,124 @@ class ArtifactReportFactory extends Error {
 		return new ArtifactReportHtml($report_id,$atid);
 	}
 
+	/**
+     * 
+	 *  Copy all the reports informations from a tracker to another.
+	 *
+	 *  @param atid_source: source tracker
+	 *  @param atid_dest: destination tracker
+	 *
+	 *	@return	boolean
+	 */
+	function copyReports($atid_source,$atid_dest) {
+		
+		//
+		// Copy artifact_report records
+		//
+	    $sql='SELECT report_id,user_id,name,description,scope '.
+		'FROM artifact_report '.
+		'WHERE group_artifact_id='.$atid_source;
+		
+		//echo $sql;
+		
+	    $res = db_query($sql);
+	
+	    while ($report_array = db_fetch_array($res)) {
+	    	$sql_insert = 'INSERT INTO artifact_report (group_artifact_id,user_id,name,description,scope) VALUES ('.$atid_dest.','.$report_array["user_id"].
+	    				  ',"'.addslashes($report_array["name"]).'","'.addslashes($report_array["description"]).'","'.$report_array["scope"].'")';
+	    				  
+			$res_insert = db_query($sql_insert);
+			if (!$res_insert || db_affected_rows($res_insert) <= 0) {
+				$this->setError("Error during inserting artifact_report (".$report_array["report_id"]."-".$atid_dest."): ".db_error());
+				return false;
+			}
+			
+			$report_id = db_insertid($res_insert,'artifact_report','report_id');
+
+			//
+			// Copy artifact_report_field records
+			//
+		    $sql_fields='SELECT field_name,show_on_query,show_on_result,place_query,place_result,col_width '.
+			'FROM artifact_report_field '.
+			'WHERE report_id='.$report_array["report_id"];
+			
+			//echo $sql_fields;
+			
+		    $res_fields = db_query($sql_fields);
+		
+		    while ($field_array = db_fetch_array($res_fields)) {
+		    	$show_on_query = ($field_array["show_on_query"] == ""?"null":$field_array["show_on_query"]);
+		    	$show_on_result = ($field_array["show_on_result"] == ""?"null":$field_array["show_on_result"]);
+		    	$place_query = ($field_array["place_query"] == ""?"null":$field_array["place_query"]);
+		    	$place_result = ($field_array["place_result"] == ""?"null":$field_array["place_result"]);
+		    	$col_width = ($field_array["col_width"] == ""?"null":$field_array["col_width"]);
+
+		    	$sql_insert = 'INSERT INTO artifact_report_field VALUES ('.$report_id.',"'.$field_array["field_name"].
+		    				  '",'.$show_on_query.','.$show_on_result.','.$place_query.
+		    				  ','.$place_result.','.$col_width.')';
+		    				  
+		    	//echo $sql_insert;
+				$res_insert = db_query($sql_insert);
+				if (!$res_insert || db_affected_rows($res_insert) <= 0) {
+					$this->setError("Error during inserting artifact_report_field (".$report_array["report_id"]."-".$field_array["field_name"]."): ".db_error());
+					return false;
+				}
+			} // while
+
+		} // while
+			
+		return true;
+
+	}
+
+	/**
+     * 
+	 *  Delete all the reports informations for a tracker
+	 *
+	 *  @param atid: the tracker id
+	 *
+	 *	@return	boolean
+	 */
+	function deleteReports($atid) {
+		global $feedback;
+		
+		//
+		// Delete artifact_report_field records
+		//
+	    $sql='SELECT report_id '.
+		'FROM artifact_report '.
+		'WHERE group_artifact_id='.$atid;
+		
+		//echo $sql;
+		
+	    $res = db_query($sql);
+	
+	    while ($report_array = db_fetch_array($res)) {
+
+		    $sql_fields='DELETE '.
+			'FROM artifact_report_field '.
+			'WHERE report_id='.$report_array["report_id"];
+			
+			//echo $sql_fields;
+			
+		    $res_fields = db_query($sql_fields);
+		
+		} // while
+					
+		//
+		// Delete artifact_report records
+		//
+	    $sql='DELETE '.
+		'FROM artifact_report '.
+		'WHERE group_artifact_id='.$atid;
+		
+		//echo $sql;
+		
+	    $res = db_query($sql);
+	
+		return true;
+
+	}
 }
 
 ?>

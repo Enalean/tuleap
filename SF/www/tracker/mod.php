@@ -19,12 +19,28 @@
 // Create factories
 $art_field_fact = new ArtifactFieldFactory($ath);
 
-$ath->header(array ('title'=>'Modify: '.$ah->getID(). ' - ' . $ah->getSummary(),'pagename'=>'tracker','atid'=>$ath->getID(),'sectionvals'=>array($group->getPublicName()) ));
+// Printer version ?
+if ( !isset($pv) ) {
+	$pv = false;
+	$ro = false;
+} else {
+	if ( $pv ) $ro = true;
+}
+
+if ($pv) {
+    help_header('Artifact detail '.format_date($sys_datefmt,time()),false);	
+} else {
+	$ath->header(array ('title'=>'Modify: '.$ah->getID(). ' - ' . $ah->getSummary(),'pagename'=>'tracker','atid'=>$ath->getID(),'sectionvals'=>array($group->getPublicName()),'help' => 'HELP_FIXME.html' ));
+}
 
 $res = $ah->getFieldsValues();
-$ah->display($res,false);
+$ah->display($res,$ro,$pv);
 
 // Display footer page
-$ath->footer(array());
+if ( $pv ) {
+     help_footer();
+} else {
+	$ath->footer(array());
+}
 
 ?>

@@ -48,6 +48,9 @@ class ArtifactTypeHtml extends ArtifactType {
 		echo ' | <a href="/tracker/?func=browse&set=my&group_id='.$group_id.'&atid='. $this->getID() .'">My '.$this->getItemName().'s </a>';
 		echo ' | <a href="/tracker/?func=browse&set=open&group_id='.$group_id.'&atid='. $this->getID() .'">Open '.$this->getItemName().'s </a>';
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='.$this->getID().'">Admin</a>';
+		if ($params['help']) {
+		    echo ' | '.help_button($params['help'],false,'Help');
+		}
 
 		echo '</strong><br>';
 		echo '<HR NoShade SIZE="1" SIZE="90%">';
@@ -85,10 +88,13 @@ class ArtifactTypeHtml extends ArtifactType {
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'">Admin</a>';
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=editoptions">Edit Options</a>';
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=permissions">Users Permissions</a>';
-		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=fieldusage">Manage Field Usage</a>';
-		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=fieldvalues">Manage Field Values</a>';
+		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=field_usage">Manage Field Usage</a>';
+		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=field_values">Manage Field Values</a>';
 		echo ' | <a href="/tracker/admin/?func=report&group_id='.$group_id.'&atid='. $this->getID() .'">Manage Reports</a>';
 		echo ' | <a href="/tracker/admin/?func=notification&group_id='.$group_id.'&atid='. $this->getID() .'&func=notification">Email Notification Settings</a>';
+		if ($params['help']) {
+		    echo ' | '.help_button($params['help'],false,'Help');
+		}
 		echo '</strong><hr>';
 	}
 
@@ -111,7 +117,9 @@ class ArtifactTypeHtml extends ArtifactType {
 
 		echo '<strong><a href="/tracker/admin/?group_id='.$group_id.'">Admin Trackers</a>';
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&func=create">Create a New Tracker</a>';
-		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&func=canned">Manage Canned Responses</a>';
+		if ($params['help']) {
+		    echo ' | '.help_button($params['help'],false,'Help');
+		}
 		echo '</strong><hr>';
 	}
 
@@ -147,7 +155,7 @@ class ArtifactTypeHtml extends ArtifactType {
 				"will have to set up data types using the <a href=\"/tracker/admin/?group_id=$group_id\">admin page</a></FONT></strong>";
 		} else {
 		    echo '<H2>Trackers Administration</H2>';
-			echo '<H3><a href="/tracker/admin/?group_id='.$group_id.'&func=create">Create A New Tracker</a></H3>';
+			echo '<H3><a href="/tracker/admin/?group_id='.$this->Group->getID().'&func=create">Create A New Tracker</a></H3>';
 			echo 'Create a new tracker from scratch or from an existing tracker.';
 			echo '<H3>Manage the trackers</H3>';
 			echo 'Administrate or delete a tracker.<p>';
@@ -168,7 +176,7 @@ class ArtifactTypeHtml extends ArtifactType {
 					    "<a href=\"/tracker/?group_id=".$this->Group->getID()."&atid=".$at_arr[$i]->getID()."\">".$at_arr[$i]->getID()."</a>",
 					    $at_arr[$i]->getName(),
 					    "<a href=\"/tracker/admin/?group_id=".$this->Group->getID()."&atid=".$at_arr[$i]->getID()."\"><img src=\"".util_get_image_theme("ic/admin.png")."\" border=\"0\"></a>",
-					    "<a href=\"/tracker/admin/?group_id=".$this->Group->getID()."&atid=".$at_arr[$i]->getID()."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('Delete this tracker?')\"></a>" );
+					    "<a href=\"/tracker/admin/?func=delete_tracker&group_id=".$this->Group->getID()."&atid=".$at_arr[$i]->getID()."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('Delete this tracker and all its dependencies?')\"></a>" );
 
 			}
 		    // final touch...
@@ -183,22 +191,19 @@ class ArtifactTypeHtml extends ArtifactType {
 	 */
 	function displayAdminTracker($group_id,$atid) {
 		
-	    echo '<H2>Tracker Administration</H2>';
+	    echo '<H2>'.$this->getName().' Tracker Administration</H2>';
 	
-		echo '<H3><a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=editoptions">Edit Options</a></H3>';
-		echo 'Define the title, the description, etc of this tracker.<P>';
-		echo '<H3><a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=permissions">Users Permissions</a></H3>';
-		echo 'Add a user, change a permission or delete a user from the authorized users list.<P>';
-	    if (user_ismember($group_id,'B2') || user_ismember($group_id,'A')) {
+	    if ( $this->userIsAdmin() ) {
+			echo '<H3><a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=editoptions">General Settings</a></H3>';
+			echo 'Define the title, the description, etc of this tracker.<P>';
+			echo '<H3><a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=permissions">Users Permissions</a></H3>';
+			echo 'Add a user, change a permission or delete a user from the authorized users list.<P>';
 			echo '<H3><a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=canned">Manage the canned responses</a></H3>';
 			echo 'Add, update or delete the canned responses.';
-			echo '<H3><a href="/tracker/admin/field_usage.php?group_id='.$group_id.'&atid='.$atid.'">Manage Field Usage</a></H3>';
+			echo '<H3><a href="/tracker/admin/?func=field_usage&group_id='.$group_id.'&atid='.$atid.'">Manage Field Usage</a></H3>';
 			echo 'Define what tracker fields you want to use in this tracker (remark: some of the fields like status, assignee, severity&hellip; are mandatory and cannot be removed).<P>';
-			echo '<H3><a href="/tracker/admin/field_values.php?group_id='.$group_id.'&atid='.$atid.'">Manage Field Values</a></H3>';
+			echo '<H3><a href="/tracker/admin/?func=field_values&group_id='.$group_id.'&atid='.$atid.'">Manage Field Values</a></H3>';
 			echo 'Define the set of values for the tracker fields you have decided to use in your tracker. <P>';
-	    }
-	
-	    if (user_isloggedin()) {
 			echo '<H3><a href="/tracker/admin/?func=report&group_id='.$group_id.'&atid='.$atid.'">Manage Reports</a></H3>';
 			echo 'Define personal or project-wide tracker reports: what search criteria to use and what tracker fields to show in the tracker report table&hellip;';
 		
@@ -261,6 +266,25 @@ class ArtifactTypeHtml extends ArtifactType {
 	}
 	
 	/**
+	 *  Display a selectbox for the user members
+	 *
+	 *  @return void
+	 */
+	function displayGroupUsers() {
+	    $result=$this->getGroupMembers();
+	    $rows=db_numrows($result);
+	
+		echo '<SELECT name="user_id">';
+		for ($i=0; $i < $rows; $i++) {
+			$user_id = db_result($result, $i, 'user_id');
+		    $user_name = db_result($result, $i, 'user_name');
+			echo '<OPTION value="'.$user_id.'">'.$user_name.'</OPTION>';
+		}
+		echo '</SELECT>';
+
+	}
+	
+	/**
 	 *  Display the differents options for this tracker
 	 *
 	 *  @return void
@@ -298,42 +322,30 @@ class ArtifactTypeHtml extends ArtifactType {
 		if ( $this->isPublic() ) {
 			echo '<input type="checkbox" name="is_public" value="1" checked>';
 		} else {
-			echo '<input type="checkbox" name="is_public" value="0">';
+			echo '<input type="checkbox" name="is_public" value="1">';
 		}
 		echo '			
 		      </td>
 		    </tr>
 		    <tr> 
-		      <td width="21%"><b>Allow anonymous access:</b></td>
+		      <td width="21%"><b>Allow anonymous submission:</b></td>
 		      <td width="79%">';
 		if ( $this->allowsAnon() ) {
 			echo '<input type="checkbox" name="allow_anon" value="1" checked>';
 		} else {
-			echo '<input type="checkbox" name="allow_anon" value="0">';
+			echo '<input type="checkbox" name="allow_anon" value="1">';
 		}
 		echo '	
 		      </td>
 		    </tr>
 		    <tr> 
-		      <td width="21%"><b>Email update:</b></td>
-		      <td width="79%">';
-		if ( $this->emailAll() ) {
-			echo '<input type="checkbox" name="email_all" value="1" checked>';
-		} else {
-			echo '<input type="checkbox" name="email_all" value="0">';
-		}
-		echo '
-		        <input type="text" name="email_address" value="'.$this->getEmailAddress().'" size="50">
-		      </td>
-		    </tr>
-		    <tr> 
-		      <td width="21%"><b>Submit instructions</b>:</td>
+		      <td width="21%"><b>Submit instructions</b>:<br><i>(Displayed before the submission form)</i></td>
 		      <td width="79%"> 
 		        <textarea name="submit_instructions" rows="3" cols="50">'.$this->getSubmitInstructions().'</textarea>
 		      </td>
 		    </tr>
 		    <tr> 
-		      <td width="21%"><b>Browse instructions</b>:</td>
+		      <td width="21%"><b>Browse instructions</b>:<br><i>(Displayed before the Report form)</i></td>
 		      <td width="79%"> 
 		        <textarea name="browse_instructions" rows="3" cols="50">'.$this->getBrowseInstructions().'</textarea>
 		      </td>
@@ -343,6 +355,1030 @@ class ArtifactTypeHtml extends ArtifactType {
 		</form>';
 	}
 
+
+	/**
+	 *  Display a select box for the tracker list for a group
+	 *
+	 *  @param group_id: the project id
+	 *  @param name: the select box name
+	 *  @param checked: the default value
+	 * 
+	 *  @return void
+	 */
+	function trackersSelectBox ($group_id,$name,$checked='xzxz') {
+		global $atf;
+		
+		return html_build_select_box ($atf->getArtifactTypesFromId($group_id),$name,$checked);
+	}
+
+	/**
+	 *  Display the create tracker form
+	 *
+	 *  @param group_id: the group id
+	 *  @param codex_template: the artifact type id chosen for a CodeX template
+	 *  @param group_id_template: the group id chosen for an existing tracker
+	 *  @param atid_template: the artifact type id chosen for an existing tracker
+	 *  @param name: the name chosen
+	 *  @param description: the description chosen
+	 *  @param itemname: the short name chosen
+	 *  @param feedback: the error or info message
+	 *
+	 *  @return void
+	 */
+	function displayCreateTracker($group_id,$codex_template,$group_id_template,$atid_template,$name,$description,$itemname,$feedback) {
+		echo '<script language="JavaScript">
+			  function onChangeGroup() {
+			  	form_create.func.value = "create";
+			  	form_create.submit();
+			  }
+			  
+			  function checkValues() {
+			  	if ( form_create.name.value == "" ) {
+		  			form_create.feedback.value = "Please, fill the tracker name.";
+		  			return false;
+				}
+			  	if ( form_create.description.value == "" ) {
+		  			form_create.feedback.value = "Please, fill the tracker description.";
+		  			return false;
+				}
+			  	if ( form_create.itemname.value == "" ) {
+		  			form_create.feedback.value = "Please, fill the tracker short name.";
+		  			return false;
+				}
+	  			return true;
+				
+			  }
+			
+			  function onSubmitCreateTemplate() {
+			  	if ( checkValues() ) {
+			  		if ( (form_create.group_id_template.value == 100)||(form_create.atid_template.value == 100) ) {
+			  			form_create.feedback.value = "Please, choose a project and a tracker first.";
+					  	form_create.func.value = "create";
+			  		}
+			  		form_create.atid_chosen.value = form_create.atid_template.value;
+				} else {
+				  	form_create.func.value = "create";
+				}
+			  	form_create.submit();
+			  }
+
+			  function onSubmitCreateCodeXTemplate() {
+			  	if ( checkValues() ) {
+			  		if ( form_create.codex_template.value == 100 ) {
+			  			form_create.feedback.value = "Please, choose a template first.";
+					  	form_create.func.value = "create";
+			  		}
+			  		form_create.atid_chosen.value = form_create.codex_template.value;
+				} else {
+				  	form_create.func.value = "create";
+				}
+			  	form_create.submit();
+			  }
+
+			  function showGroupSelection() {
+			  	win=window.open("","group_id_selection","height=45,width=200,toolbar=no,location=no,resizable=yes,left=200,top=200");
+				win.location = "/tracker/group_selection.php?opener_form=form_create&opener_field=group_id_template";
+			  }
+
+			  function showTrackerSelection() {
+			  	if ( form_create.group_id_template.value == "" ) {
+			  		alert("Please, select a project first!");
+			  		return;
+			  	}
+			  	win=window.open("","artifact_group_id_selection","height=45,width=200,toolbar=no,location=no,resizable=yes,left=200,top=200");
+				win.location = "/tracker/tracker_selection.php?group_id=" + form_create.group_id_template.value + "&opener_form=form_create&opener_field=atid_template";
+			  }
+
+			  </script>
+			 ';
+		echo '<h2>Create a new tracker:</h2>
+		<p>Please, fill the name, description and short name of this new tracker:</p>';
+		echo '<form name="form_create" >
+		  <input type="hidden" name="group_id" value="'.$group_id.'">
+		  <input type="hidden" name="func" value="docreate">
+		  <input type="hidden" name="atid_chosen" value="">
+		  <input type="hidden" name="feedback" value="">
+		  <table width="100%" border="0" cellpadding="5">
+		    <tr> 
+		      <td width="21%"><b>Name</b>:</td>
+		      <td width="79%"> 
+		        <input type="text" name="name" value="'.$name.'">
+		      </td>
+		    </tr>
+		    <tr> 
+		      <td width="21%"><b>Description</b>:</td>
+		      <td width="79%"> 
+		        <textarea name="description" rows="3" cols="50">'.$description.'</textarea>
+		      </td>
+		    </tr>
+		    <tr> 
+		      <td width="21%"><b>Short name</b>:</td>
+		      <td width="79%"> 
+		        <input type="text" name="itemname" value="'.$itemname.'">
+		      </td>
+		    </tr>';
+		echo '</table>';
+		echo '<p>Choose a creation method:</p>';
+		echo '<table>
+			  <tr valign="top">
+			     <td width="300"><li><b>From a CodeX template:</b></li></td>
+			     <td colspan="2">';
+		echo $this->trackersSelectBox(100,"codex_template");
+		echo '	 &nbsp;<input type="button" name="CreateCodeXTemplate" value="Create" onClick="onSubmitCreateCodeXTemplate()"><br><br></td>
+			  <tr valign="top">    
+			     <td width="300"><li><b>From an existing tracker:</b><br><i>(Choose a project first and then a tracker of this project or fill directly a tracker ID)</i></li></td>
+			     
+			     <td>
+			     	<table>
+			     	  <tr>
+			     	  	<td>Project ID:</td>
+			     		<td><input name="group_id_template" value=""><a href="javascript:showGroupSelection()"><img src="'.util_get_image_theme("button_choose.png").'" align="absmiddle" border="0"></a></td>
+			     	  </tr>
+			     	  <tr>
+				        <td>Tracker ID:</td>
+			     		<td><input name="atid_template" value=""><a href="javascript:showTrackerSelection()"><img src="'.util_get_image_theme("button_choose.png").'" align="absmiddle" border="0"></a></td>
+					  <tr>
+					</table>
+				 </td>			     		
+		         <td><input type="button" name="CreateTemplate" value="Create" onClick="onSubmitCreateTemplate()"></td>
+		      <tr>';
+
+	    echo '</form>
+			  </table>';
+		
+	}
+
+	/**
+	 *  Display the field usage list
+	 *
+	 *  @return void
+	 */
+	function displayFieldUsageList() {
+		global $ath,$art_field_fact,$PHP_SELF;
+		
+		echo '<h3>List of all Available Fields</h3>';
+		echo '<p>(Click to modify)';
+		
+		
+		// Show all the fields currently available in the system
+		$i=0;
+		$title_arr=array();
+		$title_arr[]='Field Label';
+		$title_arr[]='Type';
+		$title_arr[]='Description';
+		$title_arr[]='Rank<br>on screen';
+		$title_arr[]='Delete?';
+		
+		echo html_build_list_table_top ($title_arr);
+		
+		// Build HTML ouput for  Used fields
+		$iu=0;
+		$fields = $art_field_fact->getAllUsedFields();
+		$html = "";
+		
+		while (list($field_name,$field) = each($fields)) {
+		
+		    $rank = ($field->getPlace()?$field->getPlace():"-");
+		
+			$html .= '<TR class="'. 
+			    util_get_alt_row_color($iu) .'">';
+		
+		    $html .= '<TD><A HREF="'.$PHP_SELF.'?group_id='.$this->Group->getID()."&atid=".$this->getID().
+			'&func=display_field_update&field_id='.$field->getID().'">'.
+			$field->getLabel().'</A></td>'.
+			"\n<td>".$field->getLabelDisplayType().'</td>'.
+			"\n<td>".$field->getDescription().'</td>'.
+			"\n<td align =\"center\">".$rank.'</td>'.
+		    "\n<td align =\"center\"><a href=\"/tracker/admin/?func=field_delete&group_id=".$this->Group->getID()."&atid=".$this->getID()."&field_id=".$field->getID()."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('Delete this field and all its dependencies?')\"></a>";
+		
+			$html .= "<TR>";
+					    			
+			$iu++;
+		}
+		
+		// Now print the HTML table
+		if ($iu == 0) {
+		    echo '<tr><td colspan="4"><center><b>---- No field in use. Choose one below ----</b></center></tr>'.$html;  
+		} else {
+		    echo '<tr><td colspan="4"><center><b>---- USED FIELDS ----</b></center></tr>'.$html;  
+		}
+
+		// Build HTML ouput for Unused fields
+		$iu=0;
+		$fields = $art_field_fact->getAllUnusedFields();
+		$html = "";
+		
+		while (list($field_name,$field) = each($fields)) {
+		
+		    $rank = ($field->getPlace()?$field->getPlace():"-");
+		
+			$html .= '<TR class="'. 
+			    util_get_alt_row_color($iu) .'">';
+		
+		    $html .= '<TD><A HREF="'.$PHP_SELF.'?group_id='.$this->Group->getID()."&atid=".$this->getID().
+			'&func=display_field_update&field_id='.$field->getID().'">'.
+			$field->getLabel().'</A></td>'.
+			"\n<td>".$field->getLabelDisplayType().'</td>'.
+			"\n<td>".$field->getDescription().'</td>'.
+			"\n<td align =\"center\">".$rank.'</td>'.
+		    "\n<td align =\"center\"><a href=\"/tracker/admin/?func=field_delete&group_id=".$this->Group->getID()."&atid=".$this->getID()."&field_id=".$field->getID()."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('Delete this field and all its dependencies?')\"></a>";
+		
+			$html .= "<TR>";
+					    			
+			$iu++;
+		}
+		
+		// Now print the HTML table
+		if ($iu == 0) {
+		    echo '<tr><td colspan="4"><center><b>---- No unsed field ----</b></center></tr>'.$html;  
+		} else {
+		    echo '<tr><td colspan="4"><center><b>---- UNUSED FIELDS ----</b></center></tr>'.$html;  
+		}
+
+		echo '</TABLE>';
+		echo '<hr>';
+		
+	}
+	
+	/**
+	 *  Display the field usage add or update form
+	 *
+	 *  @param func: field_create or field_update
+	 *  @param field_id: the field id
+	 *  @param field_name: the field name
+	 *  @param description: the field description
+	 *  @param label: the field label
+	 *  @param data_type: the field data type (string, int, flat or date)
+	 *  @param default_value: the default value
+	 *  @param display_type: the field display type (select box, text field, ...)
+	 *  @param display_size: the field display size
+	 *  @param rank_on_screen: rank on screen
+	 *  @param show_on_add: display this field on the submission form used by project members  
+	 *  @param show_on_add_members: display this field on the submission form used by other users 
+	 *  @param empty_ok: allow empty fill
+	 *  @param keep_history: keep in the history
+	 *  @param special: is the field has special process
+	 *  @param use_it: this field is used or not
+	 *  @param show_use: boolean - display the checkbox for using or not this field
+	 *
+	 *  @return void
+	 */
+	function displayFieldUsageForm($func="field_create",$field_id=false,$field_name=false,$description=false,$label=false,$data_type=false,$default_value=false,$display_type=false,
+								   $display_size=false,$rank_on_screen=false,$show_on_add=false,$show_on_add_members=false,
+								   $empty_ok=false,$keep_history=false,$special=false,$use_it=false,$show_use=false) {
+
+		if ( $func == "field_create" ) {
+			echo '<h3>Create a new field</h3>';
+		} else {
+			echo '<h3>Update a field</h3>';
+		}
+		
+		echo '
+		  <form name="form_create" method="/tracker/admin/index.php">
+		  <input type="hidden" name="func" value="'.$func.'">
+		  <input type="hidden" name="group_id" value="'.$this->Group->getID().'">
+		  <input type="hidden" name="atid" value="'.$this->getID().'">
+		  <b>Field identification and description:</b><br>
+		  <table width="100%" border="0" cellpadding="5">
+		    <tr> 
+		      <td>Field ID: <font color="red">*</font><br>';
+		      
+		if ( $field_id ) {
+			if ( $func == "field_create" ) {
+				echo '<input type="text" name="field_id" size="3" maxlength="3" value="'.$field_id.'">';
+			} else {
+				echo '<input type="hidden" name="field_id" value="'.$field_id.'">'.$field_id;
+			}
+		} else {
+			echo '<input type="text" name="field_id" size="3" maxlength="3">';
+		}
+		
+		echo '		
+		      </td>
+		      <td>Field Name: <font color="red">*</font><br>';
+		
+		if ( $field_name ) {
+			echo '<input type="text" name="field_name" value="'.$field_name.'">';
+		} else {
+			echo '<input type="text" name="field_name">';
+		}
+		
+		echo '
+		      </td>
+		      <td colspan="2" rowspan="2" valign="top"> 
+		        <table width="100%" border="0">
+		          <tr> 
+		            <td valign="top">Description: </td>
+		            <td>';
+		            
+		if ( $description ) {
+			echo '<textarea name="description" rows="5" cols="40">'.$description.'</textarea>';
+		} else {
+			echo '<textarea name="description" rows="5" cols="40"></textarea>';
+		}
+		
+		echo '
+		              </td>
+		          </tr>
+		        </table>
+		      </td>
+		    </tr>
+		    <tr> 
+		      <td colspan="2"> Label: <font color="red">*</font><br>';
+		      
+		if ( $label ) {
+			echo '<input type="text" name="label" size="30" maxlength="40" value="'.$label.'">';
+		} else {
+			echo '<input type="text" name="label" size="30" maxlength="40">';
+		}
+		
+		echo '			
+		        <br>
+		         </td>
+		    </tr>
+		  </table>
+		  <b>Field type:</b><br>
+		  <table width="100%" border="0" cellpadding="5">
+		    <tr> 
+		      <td width="30%">Data Type: <font color="red">*</font><br>
+		        <select name="data_type">';
+		
+		if ( $data_type ) {
+			$selected = "";
+			if ( $data_type == 1 ) 
+				$selected = " selected";
+			echo '<option value="1"'.$selected.'>String</option>';
+			
+			$selected = "";
+			if ( $data_type == 2 ) 
+				$selected = " selected";
+			echo '<option value="2"'.$selected.'>Integer</option>';
+			
+			$selected = "";
+			if ( $data_type == 3 ) 
+				$selected = " selected";
+			echo '<option value="3"'.$selected.'>Float</option>';
+			
+			$selected = "";
+			if ( $data_type == 4 ) 
+				$selected = " selected";
+			echo '<option value="4"'.$selected.'>Date</option>';
+
+		} else {
+			echo '
+			<option value="1">String</option>
+			<option value="2">Integer</option>
+			<option value="3">Float</option>
+			<option value="4">Date</option>';
+		}
+		
+		echo '			
+		        </select>
+		      </td>
+		      <td width="70%">Default Value: <br>';
+		      
+		if ( $default_value ) {
+			echo '<input type="text" name="default_value" value="'.$default_value.'">';
+		} else {
+			echo '<input type="text" name="default_value">';
+		}
+		
+		echo '	
+		      </td>
+		    </tr>
+		  </table>
+		  <b>Display informations:</b><br>
+		  <table width="100%" border="0" cellpadding="5" cellspacing="0">
+		    <tr> 
+		      <td width="30%">Display Type: <font color="red">*</font><br>
+		        <select name="display_type">';
+		        
+		if ( $display_type ) {
+			$selected = "";
+			if ( $display_type == "SB" ) 
+				$selected = " selected";
+			echo '<option value="SB"'.$selected.'>Select Box</option>';
+
+			$selected = "";
+			if ( $display_type == "TF" ) 
+				$selected = " selected";
+			echo '<option value="TF"'.$selected.'>Text Field</option>';
+
+			$selected = "";
+			if ( $display_type == "TA" ) 
+				$selected = " selected";
+			echo '<option value="TA"'.$selected.'>Text Area</option>';
+
+			$selected = "";
+			if ( $display_type == "MB" ) 
+				$selected = " selected";
+			echo '<option value="MB"'.$selected.'>Multi Select Box</option>';
+
+			$selected = "";
+			if ( $display_type == "DF" ) 
+				$selected = " selected";
+			echo '<option value="DF"'.$selected.'>Date Field</option>';
+
+		} else {
+			echo '				
+		          <option value="SB" selected>Select Box</option>
+		          <option value="TF">Text Field</option>
+		          <option value="TA">Text Area</option>
+		          <option value="MB">Multi Select Box</option>
+		          <option value="DF">Date Field</option>';
+		}
+		
+		echo '
+		        </select>
+		      </td>
+		      <td width="70%">Display Size: <br>';
+		      
+		if ( $display_size ) {
+			echo '<input type="text" name="display_size" size="5" maxlength="5" value="'.$display_size.'">';
+		} else {
+		    echo '<input type="text" name="display_size" size="5" maxlength="5">';
+		}
+		
+		echo '
+		      </td>
+		    </tr>
+		    <tr> 
+		      <td width="30%">Rank on screen:<br>';
+		      
+		if ( $rank_on_screen ) {
+	        echo '<input type="text" name="rank_on_screen" size="5" maxlength="5" value="'.$rank_on_screen.'">';
+	    } else {
+	        echo '<input type="text" name="rank_on_screen" size="5" maxlength="5">';
+	    }
+	    
+	    echo '
+		      </td>
+		      <td width="70%">Display this field...<br>
+		        <li>On the submission form used by project members ';
+		        
+		if ( $show_on_add ) {
+			echo '<input type="checkbox" name="show_on_add" value="1" checked>';
+		} else {
+			echo '<input type="checkbox" name="show_on_add" value="1">';
+		}
+		
+		echo '
+		        </li>
+		        <br>
+		        <li>On the submission form used by other users';
+		        
+		if ( $show_on_add_members ) {
+			echo '<input type="checkbox" name="show_on_add_members" value="1" checked>';
+		} else {
+			echo '<input type="checkbox" name="show_on_add_members" value="1">';
+		}		
+		
+		echo '
+		        </li>
+		      </td>
+		    </tr>
+		  </table>
+		  <b>Miscellaneous:</b><br>
+		  <table width="100%" border="0" cellpadding="5" cellspacing="0">
+		    <tr> 
+		      <td width="30%">Allow empty: ';
+		
+		if ( $empty_ok ) {
+			echo '<input type="checkbox" name="empty_ok" value="1" checked>';
+		} else {
+			echo '<input type="checkbox" name="empty_ok" value="1">';
+		}
+		
+		echo '
+		        <br>
+		        Keep history: ';
+		
+		if ( $keep_history ) {
+			echo '<input type="checkbox" name="keep_history" value="1" checked>';
+		} else {
+			echo '<input type="checkbox" name="keep_history" value="1">';
+		}
+		
+		echo '
+		      </td>
+		      <td>Special: ';
+		      
+		if ( $special ) {
+			echo '<input type="checkbox" name="special" value="1" checked>';
+		} else {
+			echo '<input type="checkbox" name="special" value="1">';
+		}
+		
+
+		if ( $show_use ) {
+			echo '<br>';
+			if ( $use_it == 1 ) {
+				echo 'Use this field: <input type="checkbox" name="use_it" value="1" checked>';
+			} else {
+				echo 'Use this field: <input type="checkbox" name="use_it" value="1">';
+			}
+		} else {
+			echo '<input type="hidden" name="use_it" value="1">';
+		}
+		
+		echo '
+		      </td>
+		    </tr>
+		  </table>
+		  <p>';
+		  
+		if ( $func == "field_create" ) {
+			echo '<input type="submit" name="Submit" value="Create">';
+		} else {
+			echo '<input type="submit" name="Submit" value="Update">';
+		}
+		
+		echo '    
+		  </p>
+		</form>
+		<p><font color="red">*</font>: fields required</p>';
+		
+	}
+
+	/**
+	 *  Display the field values list for editing the values
+	 *
+	 *  @return void
+	 */
+	function displayFieldValuesEditList() {
+		global $ath,$art_field_fact;
+		
+		echo '<p>(Click to modify)';
+		
+		
+		// Show all the fields currently available in the system
+		$i=0;
+		$title_arr=array();
+		$title_arr[]='Field Label';
+		$title_arr[]='Description';
+		
+		echo html_build_list_table_top ($title_arr);
+		
+		// Build HTML ouput for  Used fields
+		$iu=0;
+		$fields = $art_field_fact->getAllUsedFields();
+		$html = "";
+		
+		while (list($field_name,$field) = each($fields)) {
+		
+			if ( !$field->isSelectBox() && !$field->isMultiSelectBox() ) {
+				continue;
+			}
+			
+			$html .= '<TR class="'. 
+			    util_get_alt_row_color($iu) .'">';
+		
+		    $html .= '<TD><A HREF="'.$PHP_SELF.'?group_id='.$this->Group->getID()."&atid=".$this->getID().
+			'&func=display_field_values&field_id='.$field->getID().'">'.
+			$field->getLabel().'</A></td>'.
+			"\n<td>".$field->getDescription().'</td>';
+		
+			$html .= "<TR>";
+
+			$iu++;
+		}
+		
+		// Now print the HTML table
+		if ($iu == 0) {
+		    echo '<tr><td colspan="4"><center><b>---- No used field ----</b></center></tr>';
+		} else {
+			echo $html;
+		}
+
+		echo '</TABLE>';
+		echo '<hr>';
+		
+	}
+
+	/**
+	 *  Display the value function form
+	 *
+	 *  @param field_id: the field id to edit
+	 *  @param value_function: the value function to bind to
+	 *  @param or_label: display an additionnal label to display "Or ..."
+	 *
+	 *  @return void
+	 */
+	function displayValueFunctionForm($field_id,$value_function="",$or_label="") {
+	    
+	    if ( $or_label ) {
+	    	echo '<h3>'.$or_label.' Bind the field to a list of values</h3>';
+	    } else {
+	    	echo '<h3>Bind the field to a list of values</h3>';
+		}
+	
+	    echo '
+	      <FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
+	      <INPUT TYPE="HIDDEN" NAME="func" VALUE="update_binding">
+	      <INPUT TYPE="HIDDEN" NAME="field_id" VALUE="'.$field_id.'">
+	      <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$this->Group->getID().'">
+	      <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$this->getID().'">
+	      Bind To: &nbsp; 
+	      <select name="value_function">
+	          <option value="">None</option>';
+		        
+		if ( $value_function ) {
+			$selected = "";
+			if ( $value_function == "group_members" ) {
+				$selected = " selected";
+			}
+			echo '<option value="group_members"'.$selected.'>Group members</option>';
+			
+			$selected = "";
+			if ( $value_function == "artifact_submitters" ) {
+				$selected = " selected";
+			}
+			echo '<option value="artifact_submitters"'.$selected.'>Group members</option>';
+
+			$selected = "";
+			if ( $value_function == "artifact_technicians" ) {
+				$selected = " selected";
+			}
+			echo '<option value="artifact_technicians"'.$selected.'>Artifact technicians</option>';
+		} else {
+			echo '
+		          <option value="group_members">Group members</option>
+		          <option value="artifact_submitters">Artifact submitters</option>
+		          <option value="artifact_technicians">Artifact technicians</option>';
+		}
+		
+		echo '
+		        </select>
+	      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Bind">
+	      </FORM>';
+		
+	}
+	
+	/**
+	 *  Display the field value form
+	 *
+	 *  @param $func: value_create or value_update
+	 *  @param field_id: the field id to edit
+	 *  @param value_id: the value id
+	 *  @param value: the value 
+	 *  @param order_id: rank
+	 *  @param status: the field value status (Visible or Hidden)
+	 *  @param description: the field value description
+	 *
+	 *  @return void
+	 */
+	function displayFieldValueForm($func,$field_id,$value_id=false,$value=false,$order_id=false,$status=false,$description=false) {
+		global $PHP_SELF;
+		
+		if ( $func == "value_create" ) {
+			echo '<h3>Create a new field value</h3>';
+		} else {
+			echo '<h3>Update the field value</h3>';
+		}
+					
+		echo '
+	      <FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
+	      <INPUT TYPE="HIDDEN" NAME="func" VALUE="'.$func.'">
+	      <INPUT TYPE="HIDDEN" NAME="field_id" VALUE="'.$field_id.'">
+	      <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$this->Group->getID().'">
+	      <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$this->getID().'">
+		  <table width="100%" border="0" cellpadding="5" cellspacing="0">
+		    <tr> 
+		      <td width="10%">Value ID: <font color="red">*</font><br>';
+	      
+		if ( $func == "value_create" ) {
+		    if ( $value_id ) {
+		      	echo '<INPUT TYPE="TEXT" NAME="value_id" VALUE="'.$value_id.'" SIZE="5" MAXLENGTH="10">';
+		    } else {
+		      	echo '<INPUT TYPE="TEXT" NAME="value_id" VALUE="" SIZE="5" MAXLENGTH="10">';
+		    }
+		} else {
+	      	echo '<INPUT TYPE="hidden" NAME="value_id" VALUE="'.$value_id.'">'.$value_id;
+		}
+		
+	    echo '
+	    	  </td>
+		      <td width="35%">Value: <font color="red">*</font><br>';
+
+	    if ( $value ) {
+	      	echo '<INPUT TYPE="TEXT" NAME="value" VALUE="'.$value.'" SIZE="30" MAXLENGTH="60">';
+	    } else {
+	      	echo '<INPUT TYPE="TEXT" NAME="value" VALUE="" SIZE="30" MAXLENGTH="60">';
+	    }
+	    
+	    echo '
+	    	  </td>
+		      <td width="25%">Rank:<br>';
+	      
+	    if ( $order_id ) {
+	    	echo '<INPUT TYPE="TEXT" NAME="order_id" VALUE="'.$order_id.'" SIZE="6" MAXLENGTH="6">';
+		} else {
+	    	echo '<INPUT TYPE="TEXT" NAME="order_id" VALUE="" SIZE="6" MAXLENGTH="6">';
+		}
+	    
+	    echo '</td>
+		      <td width="30%">';
+	       
+		if ( $func == "value_update" ) {
+			echo 'Status:<br>
+			<select name="status">';
+			if ( $status ) {
+				$selected = "";
+				if ( $status == "V" ) 
+					$selected = " selected";
+				echo '<option value="V"'.$selected.'>Visible</option>';
+	
+				$selected = "";
+				if ( $status == "H" ) 
+					$selected = " selected";
+				echo '<option value="H"'.$selected.'>Hidden</option>';
+	
+			} else {
+				echo '				
+			          <option value="V" selected>Visible</option>
+			          <option value="H">Hidden</option>';
+			}
+			echo '
+			</select> ';
+		} else {
+			echo '&nbsp;</td>';
+		}
+	
+		     
+		echo '
+		  </tr>
+		  <tr>
+		     <td colspan="4">Description:<BR>';
+	     
+	    if ( $description ) {
+	    	echo '<textarea name="description" rows="2" cols="65">'.$description.'</textarea>';
+	   	} else {
+	    	echo '<textarea name="description" rows="2" cols="65"></textarea>';
+		}
+	
+		echo '</td>
+			</tr>
+			</table>
+			<p>';
+	      
+		if ( $func == "value_create" ) {
+			echo '<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Create">';
+		} else {
+			echo '<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Update">';
+		}
+
+		echo '    
+		  </p>
+		</form>
+		<p><font color="red">*</font>: fields required</p>';
+	}
+	
+	/**
+	 *  Display the field values list for a field
+	 *
+	 *  @param field_id: the field id
+	 *
+	 *  @return void
+	 */
+	function displayFieldValuesList($field_id) {
+		global $ath,$art_field_fact,$PHP_SELF;
+		
+		
+		$field = $art_field_fact->getFieldFromId($field_id);
+		if ( !$field ) {
+			return;
+		}
+					
+		echo '<h3>Exisiting values</h3>';
+		echo '<p>(Click to modify)';
+		
+		
+		// Show all the fields currently available in the system
+		$i=0;
+		$title_arr=array();
+		$title_arr[]='Value Label';
+		$title_arr[]='Description';
+		$title_arr[]='Rank';
+		$title_arr[]='Delete?';
+		
+		echo html_build_list_table_top ($title_arr);
+		
+		// Build HTML ouput for  Used fields
+		$iu=0;
+		$values = $field->getFieldValues ($this->getID(),'V');
+		$html = "";
+		
+		while ($row = db_fetch_array($values)) {
+		
+		    $rank = $row['order_id']?$row['order_id']:"-";
+		
+			$html .= '<TR class="'. 
+			    util_get_alt_row_color($iu) .'">';
+		
+		    $html .= '<TD><A HREF="'.$PHP_SELF.'?group_id='.$this->Group->getID()."&atid=".$this->getID().
+			'&func=display_field_value&field_id='.$field->getID().'&value_id='.$row['value_id'].'">'.
+			$row['value'].'</A></td>'.
+			"\n<td>".$row['description'].'</td>'.
+			"\n<td align =\"center\">".$rank.'</td>'.
+		    "\n<td align =\"center\"><a href=\"/tracker/admin/?func=value_delete&group_id=".$this->Group->getID()."&atid=".$this->getID()."&field_id=".$field->getID()."&value_id=".$row['value_id']."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('Delete this field value?')\"></a>";
+		
+			$html .= "<TR>";
+					    			
+			$iu++;
+		}
+		
+		// Now print the HTML table
+		if ($iu == 0) {
+		    echo '<tr><td colspan="4"><center><b>---- No value visible. Choose one below ----</b></center></tr>'.$html;  
+		} else {
+		    echo '<tr><td colspan="4"><center><b>---- VISIBLE VALUES ----</b></center></tr>'.$html;  
+		}
+
+		// Build HTML ouput for Unused fields
+		$iu=0;
+		$values = $field->getFieldValues ($this->getID(),'H');
+		$html = "";
+		
+		while ($row = db_fetch_array($values)) {
+		
+		    $rank = $row['order_id']?$row['order_id']:"-";
+		
+			$html .= '<TR class="'. 
+			    util_get_alt_row_color($iu) .'">';
+		
+		    $html .= '<TD><A HREF="'.$PHP_SELF.'?group_id='.$this->Group->getID()."&atid=".$this->getID().
+			'&func=display_field_value&field_id='.$field->getID().'&value_id='.$row['value_id'].'">'.
+			$row['value'].'</A></td>'.
+			"\n<td>".$row['description'].'</td>'.
+			"\n<td align =\"center\">".$rank.'</td>'.
+		    "\n<td align =\"center\"><a href=\"/tracker/admin/?func=value_delete&group_id=".$this->Group->getID()."&atid=".$this->getID()."&field_id=".$field->getID()."&value_id=".$row['value_id']."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('Delete this field value?')\"></a>";
+		
+			$html .= "<TR>";
+					    			
+			$iu++;
+		}
+		
+		// Now print the HTML table
+		if ($iu == 0) {
+		    echo '<tr><td colspan="4"><center><b>---- No hidden values ----</b></center></tr>'.$html;  
+		} else {
+		    echo '<tr><td colspan="4"><center><b>---- HIDDEN VALUES ----</b></center></tr>'.$html;  
+		}
+
+		echo '</TABLE>';
+		echo '<hr>';
+		
+	}
+
+
+	/* 
+	 *
+	 * displayNotificationForm
+	 *
+	 * return void
+	 *
+	 *
+	 *
+	 */
+	
+	function displayNotificationForm($user_id) {
+	
+		// By default it's all 'yes'
+		for ($i=0; $i<$this->num_roles; $i++) {
+		    $role_label = $this->arr_roles[$i]['role_label'];
+		    for ($j=0; $j<$this->num_events; $j++) {
+				$event_label = $this->arr_events[$j]['event_label'];
+				$arr_notif[$role_label][$event_label] = 1;
+				//echo "[$role_label][$event_label] = 1<br>";
+		    }
+		}
+		
+		$res_notif = $this->getNotificationWithLabels($user_id);
+		while ($arr = db_fetch_array($res_notif)) {
+		    $arr_notif[$arr['role_label']][$arr['event_label']] = $arr['notify'];
+		}
+		
+		
+		echo '<H2>Email Notification Settings</h2>';
+		$group = $this->getGroup();
+		$group_artifact_id = $this->getID();
+		$group_id = $group->getGroupId();
+		// Build Wachees UI
+		$res = $this->getWatchees($user_id);
+		$arr_watchees = array();
+		while ($row_watchee = db_fetch_array($res)) {
+		    $arr_watchees[] = user_getname($row_watchee['watchee_id']);
+		}
+		$watchees = join(',',$arr_watchees);
+		
+		echo '
+		<FORM action="/tracker/admin" method="get">
+		<INPUT type="hidden" name="func" value="notification">
+		<INPUT type="hidden" name="atid" value="'.$this->getID().'">
+		<INPUT type="hidden" name="group_id" value="'.$group_id.'">';
+		
+		echo '<h3><a name="GlobalEmailNotification"></a>Global Email Notification '.
+		help_button('BTSAdministration.html#ArtifactGlobalEmailNotification').'</h3>';
+		
+		if ($this->userIsAdmin()) {
+		    echo '
+		              <P><B>As a project administrator</B> you can provide email addresses (comma separated) to which new Artifact submissions (and possibly updates) will be systematically sent.<BR>
+			<BR><INPUT TYPE="TEXT" NAME="new_artifact_address" VALUE="'.$this->getEmailAddress().'" SIZE="55" MAXLENGTH="255"> 
+			&nbsp;&nbsp;&nbsp;(send on all updates) <INPUT TYPE="CHECKBOX" NAME="send_all_artifacts" VALUE="1" '. (($this->emailAll())?'CHECKED':'') .'><BR><br>';
+		} else {
+		    if ($this->getEmailAddress())
+				echo '
+			              <P>The project administrator have configured the following email addresses to receive
+			notification of new artifact submission (and possibly updates).<P><u>Recipients</u>: '.
+				    $this->getEmailAddress().'
+				&nbsp;&nbsp;&nbsp; (Send on all updates: '.(($this->emailAll())?'Yes':'No').')<p>';
+		    else
+				echo '
+			                <P>The project administrator hasn\'t yet specified email addresses that will systematically receive
+			 email notification of new artifacts.<P>';
+		}
+		 
+		
+		echo '<h3>Personal Email Notification</h3>';
+		  
+		if ($this->userIsTech()) {
+		    // To watch other users you must have at least tech rights on the tracker
+		    echo'
+		<h4>Users To Watch '.
+		help_button('BTSAdministration.html#ArtifactWatchers').'</h4>
+		<P>If you want to be the backup of someone when they\'re away from the office, or if you need to do the QA to all their artifacts. '.$GLOBALS['sys_name'].' can send their email notification to you also. List the login name of any user you wish to watch, separated by commas.</b>
+		<p><INPUT TYPE="TEXT" NAME="watchees" VALUE="'.$watchees.'" SIZE="55" MAXLENGTH="255"><br></p>
+		';
+		
+		    $res = $this->getWatchers($user_id);
+		    $arr_watchers = array();
+		    while ($row_watcher = db_fetch_array($res)) {
+				$watcher_name = user_getname($row_watcher['user_id']);
+				$watchers .= '<a href="/users/'.$watcher_name.'">'.$watcher_name.'</a>,';
+		    }
+		    $watchers = substr($watchers,0,-1); // remove extra comma at the end
+		    
+		    if ($watchers) {
+				echo "<p>For your information your own artifact notifications are currently watched by: <u>$watchers</u>";
+		    } else {
+				echo "<p>For your information <u>nobody</u> is currently watching your own artifact notifications ";
+		    }
+		    echo '<br><br>';
+		}
+		
+		// Build Role/Event table 
+		// Rk: Can't use html_build_list_table_top because of the specific layout
+		echo '<h4>Event/Role Specific Settings '.
+		help_button('BTSAdministration.html#ArtifactEventRoleBasedEmailNotification').'</h4>
+		              <P>You can tune your notification settings and decide what artifact changes you
+		want to be aware of depending on your role. <p>
+		<b><u>Note</u></b>: Notification of *new* artifact submission to people other than the assignee
+		 or the submitter can be configured by the project administrator in the <a href="#GlobalEmailNotification">Global Email Notification section</a> above.<p>';
+		
+		echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<table BORDER="0" CELLSPACING="1" CELLPADDING="2" class="small">
+		<tr class="boxtitle">
+		    <td colspan="'.$this->num_roles.'" align="center" width="50%"><b>If my role in a artifact is:</b></td>
+		    <td rowspan="2" width="50%"><b>&nbsp;&nbsp;&nbsp;I want to be notified when:</b></td>
+		</tr>';
+		
+		for ($i=0; $i<$this->num_roles; $i++) {
+		    echo '<td align="center" width="10%"><b>'.$this->arr_roles[$i]['short_description']."</b></td>\n";
+		}
+		echo "</tr>\n";
+		
+		for ($j=0; $j<$this->num_events; $j++) {
+		    $event_id = $this->arr_events[$j]['event_id'];
+		    $event_label = $this->arr_events[$j]['event_label'];
+		    echo "<tr class=\"".util_get_alt_row_color($j)."\">\n";
+		    for ($i=0; $i<$this->num_roles; $i++) {
+				$role_id = $this->arr_roles[$i]['role_id'];
+				$role_label = $this->arr_roles[$i]['role_label'];
+				$cbox_name = 'cb_'.$role_id.'_'.$event_id;
+				//echo "<BR>$role_label $role_id $event_label $event_id ".$arr_notif['$role_label']['$event_label'];
+				if ( (($role_label == 'ASSIGNEE') && !user_ismember($group_id)) ||
+				     (($event_label == 'NEW_ARTIFACT') && ($role_label != 'ASSIGNEE') && ($role_label != 'SUBMITTER')) ) {
+				    // if the user is not a member then the ASSIGNEE column cannot
+				    // be set. If it's not an assignee or a submitter the new_artifact event is meaningless
+				    echo '   <td align="center"><input type="hidden" name="'.$cbox_name.'" value="1">-</td>'."\n";
+				} else {
+				    echo '   <td align="center"><input type="checkbox" name="'.$cbox_name.'" value="1" '.
+					($arr_notif[$role_label][$event_label] ? 'checked':'')."></td>\n";
+				}
+		    }
+		    echo '   <td>&nbsp;&nbsp;&nbsp;'.$this->arr_events[$j]['description']."</td>\n";
+		    echo "</tr>\n";
+		}
+		
+		echo'
+		</table>
+		
+		<HR>
+		<P align="center"><INPUT type="submit" name="submit" value="Submit Changes">
+		</FORM>';
+			
+		
+	}
 }
 
 ?>

@@ -386,6 +386,59 @@ if ($type_of_search == "soft") {
 		echo "</TABLE>\n";
 	}
 
+} else if ($type_of_search == 'tracker') {
+
+	$array=explode(" ",$words);
+	$words1=implode($array,"%' $crit artifact.details LIKE '%");
+	$words2=implode($array,"%' $crit artifact.summary LIKE '%");
+	$words3=implode($array,"%' $crit artifact_history.old_value LIKE '%");
+
+	$sql =	"SELECT artifact.artifact_id,artifact.summary,artifact.open_date,user.user_name "
+		. "FROM artifact "
+		. "    INNER JOIN user ON user.user_id=artifact.submitted_by "
+		. "    LEFT JOIN artifact_history ON artifact_history.artifact_id=artifact.artifact_id "
+		. "WHERE "
+		. "    artifact.group_artifact_id='$atid' "
+		. "    AND ((artifact.details LIKE '%$words1%') "
+		. "      OR (artifact.summary LIKE '%$words2%') "
+		. "      OR (artifact_history.field_name='details' "
+		. "          AND (artifact_history.old_value LIKE '%$words3%'))) "
+		. "GROUP BY artifact_id,summary,open_date,user_name LIMIT $offset,26";
+
+	//echo "DBG: $sql<br>";
+	$result = db_query($sql);
+	$rows = $rows_returned = db_numrows($result);
+
+	if ( !$result || $rows < 1) {
+		$no_rows = 1;
+		echo "<H2>No matches found for $words</H2>";
+		echo db_error();
+	} else {
+
+		if ( $rows_returned > 25) {
+			$rows = 25;
+		}
+
+		echo "<H3>Search results for $words</H3><P>\n";
+
+		$title_arr = array();
+		$title_arr[] = 'Artifact Summary';
+		$title_arr[] = 'Submitted By';
+		$title_arr[] = 'Date';
+
+		echo html_build_list_table_top ($title_arr);
+
+		echo "\n";
+
+		for ( $i = 0; $i < $rows; $i++ ) {
+			print	"\n<TR class=\"". html_get_alt_row_color($i) ."\"><TD><A HREF=\"/tracker/?group_id=$group_id&func=detail&atid=$atid&aid="
+				. db_result($result, $i, "artifact_id")."\"><IMG SRC=\"".util_get_image_theme('msg.png')."\" BORDER=0 HEIGHT=12 WIDTH=10> "
+				. db_result($result, $i, "summary")."</A></TD>"
+				. "<TD>".db_result($result, $i, "user_name")."</TD>"
+				. "<TD>".format_date($sys_datefmt,db_result($result,$i,"open_date"))."</TD></TR>";
+		}
+		echo "</TABLE>\n";
+	}
 } else {
 
 	echo "<H1>Invalid Search - ERROR!!!!</H1>";
