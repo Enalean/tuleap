@@ -287,7 +287,7 @@ if ($group_id && user_ismember($group_id,'S2')) {
 		}
 		$row_grp = db_fetch_array($res_grp);
 
-		echo '<H2>Other Settings</h2>';
+		echo '<H2>Other Configuration Settings</h2>';
 
 		echo '<FORM action="'.$PHP_SELF.'" method="post">
 <INPUT type="hidden" name="group_id" value="'.$group_id.'">
