@@ -15,6 +15,12 @@ function bookmark_add ($bookmark_url, $bookmark_title="") {
 	if (!$result) {
 		echo db_error();
 	}
+        // Return bookmark ID
+        $result = db_query("SELECT bookmark_id from user_bookmarks where user_id=".user_getid().
+                           " AND bookmark_url='$bookmark_url' AND bookmark_title='$bookmark_title'");
+        return db_result($result, 0, "bookmark_id");
+
+
 }
 
 function bookmark_edit ($bookmark_id, $bookmark_url, $bookmark_title) {

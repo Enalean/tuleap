@@ -8,13 +8,15 @@
 require($DOCUMENT_ROOT.'/include/pre.php');
 require($DOCUMENT_ROOT.'/include/bookmarks.php');
 
-$HTML->header(array("title"=>"Edit Bookmark"));
-
-print "<H3>Edit Bookmark</H3>";
 
 if ($bookmark_url && $bookmark_title) {
 	bookmark_edit($bookmark_id, $bookmark_url, $bookmark_title);
+        header ("Location: /my/");
 }
+
+$HTML->header(array("title"=>"Edit Bookmark"));
+
+print "<H3>Edit Bookmark</H3>";
 
 $result = db_query("SELECT * from user_bookmarks where "
 	. "bookmark_id='".$bookmark_id."' and user_id='".user_getid()."'");
