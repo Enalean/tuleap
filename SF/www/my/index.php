@@ -114,7 +114,7 @@ of groups that you are a member of.
 			<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD ALIGN="MIDDLE"><A HREF="/forum/monitor.php?forum_id='.
 				db_result($result,$i,'group_forum_id').
 				'"><IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" '.
-				'BORDER=0"></A></TD><TD WIDTH="99%"><A HREF="/forum/forum.php?forum_id='.
+				'BORDER=0 ALT="STOP MONITORING""></A></TD><TD WIDTH="99%"><A HREF="/forum/forum.php?forum_id='.
 				db_result($result,$i,'group_forum_id').'">'.
 				stripslashes(db_result($result,$i,'forum_name')).'</A></TD></TR>';
 
@@ -160,7 +160,7 @@ of groups that you are a member of.
 			<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD ALIGN="MIDDLE"><A HREF="/project/filemodule_monitor.php?filemodule_id='.
 				db_result($result,$i,'filemodule_id').
 				'"><IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" '.
-				'BORDER=0"></A></TD><TD WIDTH="99%"><A HREF="/project/filelist.php?group_id='.
+				'BORDER=0" ALT="STOP MONITORING"></A></TD><TD WIDTH="99%"><A HREF="/project/filelist.php?group_id='.
 				db_result($result,$i,'group_id').'">'.
 				db_result($result,$i,'name').'</A></TD></TR>';
 
@@ -259,7 +259,7 @@ of groups that you are a member of.
 			echo '
 				<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD ALIGN="MIDDLE">
 				<A HREF="/my/bookmark_delete.php?bookmark_id='. db_result($result,$i,'bookmark_id') .'">
-				<IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" BORDER="0"></A></TD>
+				<IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A></TD>
 				<TD><B><A HREF="'. db_result($result,$i,'bookmark_url') .'">'.
 				db_result($result,$i,'bookmark_title') .'</A></B> &nbsp;
 				<SMALL><A HREF="/my/bookmark_edit.php?bookmark_id='. db_result($result,$i,'bookmark_id') .'">[Edit]</A></SMALL></TD</TR>';
@@ -292,7 +292,7 @@ of groups that you are a member of.
 		for ($i=0; $i<$rows; $i++) {
 			echo '
 				<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD ALIGN="MIDDLE">
-				<A href="rmproject.php?group_id='. db_result($result,$i,'group_id') .'"><IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" BORDER="0"></A></TD>
+				<A href="rmproject.php?group_id='. db_result($result,$i,'group_id') .'"><IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" BORDER="0"  ALT="REMOVE ME"></A></TD>
 				<TD><A href="/projects/'. db_result($result,$i,'unix_group_name') .'/">'. db_result($result,$i,'group_name') .'</A></TD></TR>';
 		}
 	}
