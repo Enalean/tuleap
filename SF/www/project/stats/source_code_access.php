@@ -34,7 +34,7 @@ if ( !$view ) {
 	$view = "daily";
 }
 
-echo '<h2>Source Code Access Log</2>';
+echo '<h2>Source Code Access Log</h2>';
 
 if ( $view == 'daily' ) {
 
