@@ -283,7 +283,8 @@ while (list($field,$value_id) = each($prefs)) {
 	// Always exclude undefined dates (0)
 	$where .= ' AND bug.'.$field." <> 0 ";
 
-    } else if (bug_data_is_text_field($field) && $prefs[$field][0]) {
+    } else if ( (bug_data_is_text_field($field) || bug_data_is_text_area($field))
+		 && $prefs[$field][0]) {
 
 	// It's a text field accept. Process INT or TEXT,VARCHAR fields differently
 	$where .= ' AND '.bug_build_match_expression($field, $prefs[$field][0]);
