@@ -242,10 +242,20 @@ function sr_utils_mail_followup($support_id,$more_addresses=false,$changes=false
 		$mail_arr=result_column_to_array($email_res,0);
 		$to=implode($mail_arr,', ');
 	    }
-	    
-	    if ( ($assigned_to_email = db_result($result,0,'assigned_to_email')) ) {
-		$to .= ','.$assigned_to_email;
+
+	    // Add the assignee and the submitter for email notification
+	    $user_id = db_result($result,0,'assigned_to');
+	    if ($user_id != 100) {
+		$user_email = user_getemail($user_id);
+		if ($user_email) { $to .= ','.$user_email; }
 	    }
+	    $user_id = db_result($result,0,'submitted_by');
+	    if ($user_id != 100) {
+		$user_email = user_getemail($user_id);
+		if ($user_email) { $to .= ','.$user_email; }
+	    }
+	    
+	    // global email address for notification
 	    if ($more_addresses) {
 		$to .= ','.$more_addresses;
 	    }
