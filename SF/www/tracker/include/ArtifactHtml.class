@@ -41,18 +41,18 @@ class ArtifactHtml extends Artifact {
 	 * @return void
 	 */
 	function display($results,$ro,$pv) {
-		global $art_field_fact,$sys_datefmt;
-		
-		$fields_per_line=2;
-		$max_size=40;
-
-		$group = $this->ArtifactType->getGroup();
-		$group_artifact_id = $this->ArtifactType->getID();
-		$group_id = $group->getGroupId();
+            global $art_field_fact,$sys_datefmt,$sys_max_size_attachment;
+            
+            $fields_per_line=2;
+            $max_size=40;
+            
+            $group = $this->ArtifactType->getGroup();
+            $group_artifact_id = $this->ArtifactType->getID();
+            $group_id = $group->getGroupId();
 		
 	    // First display some  internal fields - Cannot be modified by the user
 		
-    	$summary = db_result($results,0,'summary');
+            $summary = db_result($results,0,'summary');
 	    
 	    echo "<TABLE width='100%'><TR><TD>";
 	    echo "<H2>[ ".$this->ArtifactType->getItemName()." #".$this->getID()." ] ".$summary."</H2>";
@@ -63,7 +63,7 @@ class ArtifactHtml extends Artifact {
 	
 		echo '
 	    <FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data" NAME="artifact_form">
-	    <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="2000000">';
+	    <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="'.$sys_max_size_attachment.'">';
 	    if ( $ro ) {
 	    	echo '<INPUT TYPE="HIDDEN" NAME="func" VALUE="postaddcomment">';
 	    } else {
@@ -228,7 +228,7 @@ class ArtifactHtml extends Artifact {
 			<B>Check to Upload&hellip;  <input type="checkbox" name="add_file" VALUE="1">
 			&nbsp;&hellip;&amp; Attach File:</B>
 			<input type="file" name="input_file" size="40">
-			<br><span class="small"><i>(The maximum upload file size is 2 Mb - <u>Please compress your files</u>)</i></span>
+			<br><span class="small"><i>(The maximum upload file size is '.formatByteToMb($sys_max_size_attachment).' Mb - <u>Please compress your files</u>)</i></span>
 			<P>
 			<B>File Description:</B>&nbsp;
 			<input type="text" name="file_description" size="60" maxlength="255">
@@ -827,7 +827,7 @@ class ArtifactHtml extends Artifact {
 	}
 	
 	function displayAdd() {
-		global $art_field_fact,$sys_datefmt;
+		global $art_field_fact,$sys_datefmt,$sys_max_size_attachment;
 	
 		$fields_per_line=2;
 		$max_size = 40;
@@ -843,7 +843,7 @@ class ArtifactHtml extends Artifact {
 		
 		// Beginning of the submission form with fixed fields
 		echo '<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data" NAME="artifact_form">
-		    <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="2000000">
+		    <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="'.$sys_max_size_attachment.'">
 			<INPUT TYPE="HIDDEN" NAME="func" VALUE="postadd">
 			<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 		    <INPUT TYPE="HIDDEN" NAME="group_artifact_id" VALUE="'.$group_artifact_id.'">
@@ -928,7 +928,7 @@ class ArtifactHtml extends Artifact {
 		<B>Check to Upload&hellip;  <input type="checkbox" name="add_file" VALUE="1">
 		&nbsp;&hellip;&amp; Attach File:</B>
 		<input type="file" name="input_file" size="40">
-		<br><span class="small"><i>(The maximum upload file size is 2 Mb - <u>Please compress your files</u>)</i></span>
+		<br><span class="small"><i>(The maximum upload file size is '.formatByteToMb($sys_max_size_attachment).' Mb - <u>Please compress your files</u>)</i></span>
 		<P>
 		<B>File Description:</B>&nbsp;
 		<input type="text" name="file_description" size="60" maxlength="255">

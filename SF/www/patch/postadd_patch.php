@@ -13,12 +13,12 @@ if (!$patch_category_id) {
 
 if ($uploaded_data) {
 	$code = addslashes(fread( fopen($uploaded_data, 'r'), filesize($uploaded_data)));
-	if ((strlen($code) > 20) && (strlen($code) < 512000)) {
+	if ((strlen($code) > 0) && (strlen($code) < $sys_max_size_upload)) {
 		//size is fine
 		$feedback .= ' Patch Uploaded ';
 	} else {
 		//too big or small
-		$feedback .= ' ERROR - patch must be > 20 bytes and < 512000 bytrs in length ';
+	        $feedback .= ' ERROR - patch must be non null and < '.$sys_max_size_upload.' bytes in length ';
 		$code='';
 	}
 }

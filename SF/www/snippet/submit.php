@@ -14,12 +14,12 @@ if (user_isloggedin()) {
     // check if the code snippet is uploaded
     if ($uploaded_data) {
 	$code = addslashes(fread( fopen($uploaded_data, 'r'), filesize($uploaded_data)));
-	if ((strlen($code) > 20) && (strlen($code) < 512000)) {
+	if ((strlen($code) > 0) && (strlen($code) < $sys_max_size_upload)) {
 	    //size is fine
 	    $feedback .= ' Code Snippet Uploaded ';
 	} else {
 	    //too big or small
-	    $feedback .= ' ERROR - patch must be > 20 bytes and < 512000 bytrs in length ';
+	    $feedback .= ' ERROR - patch must be non null and < '.$sys_max_size_upload.' bytes in length ';
 	    $code='';
 	}
     }
@@ -77,7 +77,7 @@ if (user_isloggedin()) {
 	entirely new script or function.
 	<P>
 	<FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST" enctype="multipart/form-data">
-    <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="2000000">
+    <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="<? echo $sys_max_size_upload; ?>">
 	<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 	<INPUT TYPE="HIDDEN" NAME="changes" VALUE="First Posted Version">
 
@@ -123,7 +123,7 @@ if (user_isloggedin()) {
 	 <br><B>Upload the Snippet (binary or source code)</B>
 		<P>
 		<input type="file" name="uploaded_data"  size="40">
-        <br><span class="smaller"><i>(The maximum upload file size is 2 Mb)</i></span>
+        <br><span class="smaller"><i>(The maximum upload file size is <?php echo formatByteToMb($sys_max_size_upload); ?> Mb)</i></span>
 		<P>
                 <B>OR paste the snippet source code here:</B><BR>
 		<TEXTAREA NAME="code" ROWS="20" COLS="85" WRAP="SOFT"></TEXTAREA>

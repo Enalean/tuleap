@@ -99,12 +99,12 @@ if ($submit) {
 		$feedback .= ' Updating Release ';
 		if ($upload_instead) {
 			$code = addslashes(fread( fopen($uploaded_data, 'r'), filesize($uploaded_data)));
-			if ((strlen($code) > 20) && (strlen($code) < 256000)) {
+			if ((strlen($code) > 0) && (strlen($code) < $sys_max_size_upload)) {
 				//size is fine
 				$feedback .= ' | Data Uploaded ';
 			} else {
 				//too big or small
-				$feedback .= ' | ERROR - uploaded data must be > 20 chars and < 256k in length ';
+				$feedback .= ' | ERROR - uploaded data must be non null and < '.$sys_max_size_upload.' in length ';
 				$code='';
 			}
 			if ($upload_instead == 1) {

@@ -47,7 +47,7 @@ if (db_numrows($result) > 0) {
 
 	echo '
 		<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data">
-        <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="2000000">
+        <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="'.$sys_max_size_upload.'">
 
 		<TR><TD COLSPAN="2">
 			<B>Only the original submittor can upload a new version on this page.</B>
@@ -55,7 +55,9 @@ if (db_numrows($result) > 0) {
 			<INPUT TYPE="CHECKBOX" NAME="upload_new" VALUE="1"> <B>Upload Revised Patch (overwrite old)</B>
 			<P>
 			<input type="file" name="uploaded_data"  size="30">
-            <br><span class="smaller"><i>(The maximum upload file size is 2 Mb)</i></span>
+            <br><span class="smaller"><i>(The maximum upload file size is ';
+        echo formatByteToMb($sys_max_size_upload);
+        echo ' Mb - <u>Please compress your files</u>)</i></span>
 			<INPUT TYPE="HIDDEN" NAME="func" VALUE="postaddcomment">
 			<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 			<INPUT TYPE="HIDDEN" NAME="patch_id" VALUE="'.$patch_id.'">

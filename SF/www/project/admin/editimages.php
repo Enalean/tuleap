@@ -23,7 +23,7 @@ if ($submit) {
 			$height=$dimensions[1];
 			//$input_file_name
 			//$input_file_type
-			if (($size > 20) && ($size < 256000)) {
+			if (($size > 0) && ($size < $sys_max_size_upload)) {
 				//size is fine
 				$feedback .= ' Document Uploaded ';
 				$res=db_query("INSERT INTO db_images (group_id,description,bin_data,filename,filesize,filetype,width,height) VALUES ".
@@ -31,7 +31,7 @@ if ($submit) {
 				echo db_error();
 			} else {
 				//too big or small
-				$feedback .= ' ERROR - image must be > 20 bytes and < 256000 bytes in length ';
+				$feedback .= ' ERROR - image must be > 0 bytes and < '.$sys_max_size_upload'. bytes in length ';
 			}
 		} else {
 			$feedback .= ' Sorry - you are over your 1MB image quota ';
@@ -52,10 +52,10 @@ echo '<H3>Edit Your Project\'s Images</H3>
 	<H4>Add Image</H4>
 	<P>
 	<FORM ACTION="'. $PHP_SELF .'" METHOD="POST" enctype="multipart/form-data">
-    <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="1000000">
+    <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="'.$sys_max_size_upload.'">
 	<input type="hidden" name="group_id" VALUE="'.$group_id.'">
 	<input type="file" name="input_file" size="30">
-    <br><span class="smaller"><i>(The maximum upload file size is 2 Mb)</i></span>
+    <br><span class="smaller"><i>(The maximum upload file size is '.formatByteToMb($sys_max_size_upload).' Mb)</i></span>
 	<P>
 	<B>Description:</B><BR>
 	<input type="text" name="description" size="40" maxlength="255"><P>

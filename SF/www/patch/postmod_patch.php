@@ -18,13 +18,13 @@ if ((db_numrows($result) > 0) && (user_ismember($group_id,'C2'))) {
 
 	if ($uploaded_data) {
 		$code = addslashes(fread( fopen($uploaded_data, 'r'), filesize($uploaded_data)));
-		if ((strlen($code) > 20) && (strlen($code) < 512000)) {
+		if ((strlen($code) > 0) && (strlen($code) < $sys_max_size_upload)) {
 			$codesql=", code='$code', filename='$uploaded_data_name',".
 			    "filesize='$uploaded_data_size',".
 			    "filetype='$uploaded_data_type'";
 			 patch_history_create('Patch Code','Modified - New Version',$patch_id);
 		} else {
-			$feedback .= ' Patch not changed - patch must be > 20 chars and < 512000 chars in length ';
+			$feedback .= ' Patch not changed - patch must be non null and < '.$sys_max_size_upload.' chars in length ';
 			$codesql='';
 		}
 	} else {

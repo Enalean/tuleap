@@ -40,9 +40,9 @@ if($group_id) {
 
 		if ($upload_instead) {
 	        $data = addslashes(fread( fopen($uploaded_data, 'r'), filesize($uploaded_data)));
-    		if ((strlen($data) <= 20) || (strlen($data) >= 2000000)) {
+    		if ((strlen($data) <= 0 ) || (strlen($data) >= $sys_max_size_upload)) {
         		//too big or small
-        		$feedback .= ' ERROR - document must be > 20 chars and < 2000000 chars in length ';
+        		$feedback .= ' ERROR - document must be non null and < '.$sys_max_size_upload.' chars in length ';
         		exit_error('Missing Info',$feedback.' - Please click back and fix the error.');
     		}
 		}
@@ -100,7 +100,7 @@ if($group_id) {
 
 		echo '
 			<form name="adddata" action="new.php?mode=add&group_id='.$group_id.'" method="POST" enctype="multipart/form-data">
-            <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="2000000">
+            <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="'.$sys_max_size_upload.'">
 
 			<table border="0" width="75%">
 
@@ -117,7 +117,7 @@ if($group_id) {
 			<tr>
 			<th> <input type="checkbox" name="upload_instead" value="1"> <B>Upload File:</B></th>
 			<td> <input type="file" name="uploaded_data" size="50">
-                 <br><span class="smaller"><i>(The maximum upload file size is 2 Mb)</i></span>
+                 <br><span class="smaller"><i>(The maximum upload file size is '.formatByteToMb($sys_max_size_upload).' Mb)</i></span>
 			</td>
 			</tr>
 

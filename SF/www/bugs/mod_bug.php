@@ -56,7 +56,7 @@ if (db_numrows($result) > 0) {
     </TABLE>
 
     <FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST" enctype="multipart/form-data" NAME="bug_form">
-    <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="2000000">
+    <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="<? echo $sys_max_size_attachment; ?>">
     <INPUT TYPE="HIDDEN" NAME="func" VALUE="postmodbug">
     <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id;; ?>">
     <INPUT TYPE="HIDDEN" NAME="bug_id" VALUE="<?php echo $bug_id; ?>">
@@ -160,7 +160,7 @@ if (db_numrows($result) > 0) {
        <B>Check to Upload&hellip;  <input type="checkbox" name="add_file" VALUE="1">
       &nbsp;&hellip;&amp; Attach File:</B>
       <input type="file" name="input_file" size="40">
-      <br><span class="small"><i>(The maximum upload file size is 2 Mb - <u>Please compress your files</u>)</i></span>
+      <br><span class="small"><i>(The maximum upload file size is <?php echo formatByteToMb($sys_max_size_attachment); ?> Mb - <u>Please compress your files</u>)</i></span>
       <P>
       <B>File Description:</B>&nbsp;
       <input type="text" name="file_description" size="60" maxlength="255">

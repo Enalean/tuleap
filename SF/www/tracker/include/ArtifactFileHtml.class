@@ -35,17 +35,18 @@ class ArtifactFileHtml extends ArtifactFile {
 	 * @return boolean
 	 */
 	function upload($input_file,$input_file_name,$input_file_type,$description,&$changes) {
-		if (!util_check_fileupload($input_file)) {
-			$this->setError('ArtifactFile: Invalid filename');
-			return false;
-		}
-		$size = @filesize($input_file);
-		$input_data = addslashes(fread(fopen($input_file, 'r'), $size));
-	    if ((strlen($input_data) < 20) || (strlen($input_data) > 2*1024*1024)) {
-			$this->setError("File not attached: File size must be less than 2 Mbytes");
-			return false;
-		}
-		return $this->create($input_file_name,$input_file_type,$size,$input_data,$description,$changes);
+            global $sys_max_size_attachment;
+            if (!util_check_fileupload($input_file)) {
+                $this->setError('ArtifactFile: Invalid filename');
+                return false;
+            }
+            $size = @filesize($input_file);
+            $input_data = addslashes(fread(fopen($input_file, 'r'), $size));
+	    if ((strlen($input_data) < 1) || (strlen($input_data) > $sys_max_size_attachment)) {
+                $this->setError("File not attached: File size must be less than ".formatByteToMb($sys_max_size_attachment)." Mbytes");
+                return false;
+            }
+            return $this->create($input_file_name,$input_file_type,$size,$input_data,$description,$changes);
 	}
 
 }

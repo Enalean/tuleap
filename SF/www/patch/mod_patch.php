@@ -20,7 +20,7 @@ if (db_numrows($result) > 0) {
 
 	echo '
 	<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data">
-    <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="2000000">
+    <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="'.$sys_max_size_upload.'">
 	<INPUT TYPE="HIDDEN" NAME="func" VALUE="postmodpatch">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 	<INPUT TYPE="HIDDEN" NAME="patch_id" VALUE="'.$patch_id.'">
@@ -87,7 +87,9 @@ if (db_numrows($result) > 0) {
 			 <B>You can also upload a revised version of the Patch (overwrite old)</B>
 			<P>
 			<input type="file" name="uploaded_data"  size="40">
-            <br><span class="smaller"><i>(The maximum upload file size is 2 Mb)</i></span>
+            <br><span class="smaller"><i>(The maximum upload file size is ';
+                echo formatByteToMb($sys_max_size_upload);
+                echo ' Mb - <u>Please compress your files</u>)</i></span>
 			<P>';
 
 			//comments submitted about this patch

@@ -1577,13 +1577,13 @@ function pm_get_assigned_to_list_name($assigned_to) {
 }
 
 function pm_attach_file($project_task_id,$group_id,$input_file,$input_file_name,$input_file_type,$input_file_size,$file_description, &$changes) {
-    global $feedback;
+    global $feedback,$sys_max_size_attachment;
 
     $user_id = (user_isloggedin() ? user_getid(): 100);
 
     $data = addslashes(fread( fopen($input_file, 'r'), filesize($input_file)));
-    if ((strlen($data) < 20) || (strlen($data) > 2*1024*1024)) {
-	$feedback .= " - File not attached: File size must be less than 2 Mbytes";
+    if ((strlen($data) < 1) || (strlen($data) > $sys_max_size_attachment)) {
+	$feedback .= " - File not attached: File size must be less than ".formatByteToMb($sys_max_size_attachment)." Mbytes";
     	return false;
     }
 

@@ -29,8 +29,7 @@ if ($upload_new && user_isloggedin()) {
 		//patch for this user was found, so update it now
 
 		$code = addslashes(fread( fopen($uploaded_data, 'r'), filesize($uploaded_data)));
-		if ((strlen($code) > 20) && (strlen($code) < 512000)) {
-			//new patch must be > 20 bytes
+		if ((strlen($code) > 0) && (strlen($code) < $sys_max_size_upload)) {
 
 			$result=db_query("UPDATE patch SET code='".htmlspecialchars($code)."' WHERE submitted_by='".user_getid()."' AND patch_id='$patch_id'");
 
@@ -43,7 +42,7 @@ if ($upload_new && user_isloggedin()) {
 				$feedback .= ' Patch Code Updated ';
 			}
 		} else {
-			exit_error('ERROR','Patch not changed - patch must be > 20 chars and < 512000 chars in length');
+			exit_error('ERROR','Patch not changed - patch must be non null and < '.$sys_max_size_upload.' chars in length');
 		}
 	}
 } else if ($upload_new) {

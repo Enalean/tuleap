@@ -27,7 +27,7 @@ $result=db_query($sql);
 <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">
 <INPUT TYPE="HIDDEN" NAME="old_group_project_id" VALUE="<?php echo $group_project_id; ?>">
 <INPUT TYPE="HIDDEN" NAME="project_task_id" VALUE="<?php echo $project_task_id; ?>">
-<INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="2000000">
+<INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="<? echo $sys_max_size_attachment; ?>">
 <script language="JavaScript" src="/include/calendar.js"></script>
 
 <TABLE BORDER="0" CELLPADDING="0" WIDTH="100%">
@@ -160,7 +160,7 @@ $result=db_query($sql);
        <B>Check to Upload&hellip;  <input type="checkbox" name="add_file" VALUE="1">
       &nbsp;&hellip;&amp; Attach File:</B>
       <input type="file" name="input_file" size="40">
-      <br><span class="smaller"><i>(The maximum upload file size is 2 Mb - <u>Please compress your files</u>)</i></span>
+      <br><span class="smaller"><i>(The maximum upload file size is <?php echo formatByteToMb($sys_max_size_attachment); ?> Mb - <u>Please compress your files</u>)</i></span>
       <P>
       <B>File Description:</B>&nbsp;
       <input type="text" name="file_description" size="60" maxlength="255">

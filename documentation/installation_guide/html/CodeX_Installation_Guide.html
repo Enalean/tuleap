@@ -953,6 +953,28 @@ Meg byte limit on memory limit (CodeX)<br>
  style="font-family: monospace;">gd.so, ldap.so, mysql.so</span><br>
   </li>
 </ul>
+<h2>Modifying maximum size of uploaded files</h2>
+<p>
+By default, the maximum size of an artifact attachment is 2 MB, and the maximum size of a project document is 16 MB.
+Still, it is possible to modify these default values by modifying two parameters in local.inc:
+<br>
+<ul>
+      <li><span style="font-weight: bold;">sys_max_size_attachment</span>: 
+this is the maximum size of an attachment, either for a bug, a task or 
+any artifact. The default value is 2MB (2 x 1024 x 1024 = 2,097,152 bytes).
+      <li><span style="font-weight: bold;">sys_max_size_upload</span>: 
+this is the maximum size of a document, a patch, a code snippet or a quick 
+file release. The default value is 16MB.
+</ul>
+If you wish to go over 16MB you might also have to modify the following files:
+<ul>
+<li>/etc/httpd/php3.ini as described above
+<li>/etc/my.cnf i.e. the MySQL configuration file. Specify a <span
+ style="font-family: monospace;">max_allowed_packet</span> value above
+ the maximum size you chose.
+</ul>
+
+
 <hr width="100%" size="2">
 <h1>Installing the CodeX Database</h1>
 As user root go through the following steps:<br>
@@ -1007,12 +1029,12 @@ time.&nbsp; Right now the configuration file looks like this<br>
  style="font-family: monospace;">
 <span style="font-family: monospace;">skip-innodb</span><br
  style="font-family: monospace;">
-<span style="font-family: monospace;"># file attachment can be 2M in
+<span style="font-family: monospace;"># uploaded file can be 16M in
 size so take a bit of slack</span><br style="font-family: monospace;">
 <span style="font-family: monospace;"># on the mysql packet size</span><br
  style="font-family: monospace;">
 <span style="font-family: monospace;">set-variable =
-max_allowed_packet=3M</span><br style="font-family: monospace;">
+max_allowed_packet=24M</span><br style="font-family: monospace;">
 <br style="font-family: monospace;">
 <span style="font-family: monospace;">[safe_mysqld]</span><br
  style="font-family: monospace;">
@@ -1022,8 +1044,8 @@ max_allowed_packet=3M</span><br style="font-family: monospace;">
 <p>The max_allowed_packet parameter is really important because the
 file attachment size for bug tracker and task manager has been
 increased
-to 2 Mbytes and we must have a bit of slack when issuing an SQL insert
-statement with a large blob. Hence the 3M argument (3 Mbytes).</p>
+to 16 Mbytes and we must have a bit of slack when issuing an SQL insert
+statement with a large blob. Hence the 24M argument (24 Mbytes).</p>
 <hr>
 <h1>Mail Configuration</h1>
 CodeX uses sendmail as Mail transfer agent but it is possible to use
