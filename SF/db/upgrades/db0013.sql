@@ -440,9 +440,9 @@ CREATE TABLE artifact_watcher (
 --
 
 INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, is_public, allow_anon, email_all_updates, email_address, submit_instructions, browse_instructions) VALUES (1, 100, 'Bugs', 'Bugs Tracker', 'bug', 1, 0, 0, '', NULL, NULL);
-INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, is_public, allow_anon, email_all_updates, email_address, submit_instructions, browse_instructions) VALUES (2, 100, 'Tasks', 'Tasks Manager', 'task', 1, 0, 0, '', NULL, NULL);
-INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, is_public, allow_anon, email_all_updates, email_address, submit_instructions, browse_instructions) VALUES (3, 100, 'Support Requests', 'Support Requests', 'SR', 1, 1, 0, '', NULL, NULL);
-INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, is_public, allow_anon, email_all_updates, email_address, submit_instructions, browse_instructions) VALUES (4, 100, 'Empty', 'Empty tracker', '', 1, 0, 0, '', NULL, NULL);
+INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, is_public, allow_anon, email_all_updates, email_address, submit_instructions, browse_instructions) VALUES (2, 100, 'Tasks', 'Tasks Tracker', 'task', 1, 0, 0, '', NULL, NULL);
+INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, is_public, allow_anon, email_all_updates, email_address, submit_instructions, browse_instructions) VALUES (3, 100, 'Support Requests', 'Support Requests Tracker', 'SR', 1, 1, 0, '', NULL, NULL);
+INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, is_public, allow_anon, email_all_updates, email_address, submit_instructions, browse_instructions) VALUES (4, 100, 'Empty', 'Empty Tracker', '', 1, 0, 0, '', NULL, NULL);
 
 --
 -- This tracker has the id 100 to force the next id to be greater than 100
