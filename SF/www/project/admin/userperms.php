@@ -68,7 +68,7 @@ if ($submit) {
 			."WHERE user_id='$row_dev[user_id]' AND group_id='$group_id'");
 
 		$tracker_error = false;
-		if ( $row_grp['use_trackers']&&$sys_activate_tracker ) {
+		if ( $row_grp['use_trackers']&&$sys_activate_tracker&&$at_arr ) {
 			for ($j = 0; $j < count($at_arr); $j++) {
 				$atid = $at_arr[$j]->getID();
 				$perm_level = "tracker_user_$row_dev[user_id]_$atid";
@@ -126,7 +126,7 @@ project_admin_header(array('title'=>'User Permissions','group'=>$group_id,
 <TD><B>Support Manager</B></TD>
 <TD><B>Doc. Manager</B></TD>
 <?
-if ( $row_grp['use_trackers']&&$sys_activate_tracker ) {
+if ( $row_grp['use_trackers']&&$sys_activate_tracker&&$at_arr ) {
 	for ($j = 0; $j < count($at_arr); $j++) {
 		echo '<TD><B>Tracker:<br>'.$at_arr[$j]->getName().'</B></TD>';
 	}
@@ -196,7 +196,7 @@ if (!$res_dev || db_numrows($res_dev) < 1) {
 		print '</SELECT></FONT></TD>
 	';
 	
-		if ( $row_grp['use_trackers']&&$sys_activate_tracker ) {
+		if ( $row_grp['use_trackers']&&$sys_activate_tracker&&$at_arr ) {
 			// Loop on tracker
 			for ($j = 0; $j < count($at_arr); $j++) {
 				$perm = $at_arr[$j]->getUserPerm($row_dev['user_id']);
