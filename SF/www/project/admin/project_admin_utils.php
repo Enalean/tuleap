@@ -61,6 +61,11 @@ function project_admin_footer($params) {
 */
 
 
+// Is the package active, so that we can display it and send notifications when it is updated?
+function frs_package_is_active($status_id) {
+    return (($status_id==1)?true:false);
+}
+
 /*
 
 	pop-up box of supported frs statuses
