@@ -131,10 +131,6 @@ if ($group_id && !$atid) {
 	$art_field_fact = new ArtifactFieldFactory($ath);
 
 	switch ( $func ) {
-	case 'permissions':
-		include './browse_perm.php';
-		break;
-		
 	case 'report':
 		$arh = new ArtifactReportHtml($report_id, $atid);
 		if (!$arh) {
@@ -297,36 +293,6 @@ if ($group_id && !$atid) {
 		$ath->footer(array());
 		break;
 	  
-	case 'adduser':
-		$user_name = user_getname($user_id);
-
-		if ( $ath->existUser($user_id) ) {
-			exit_error('Error','The user \''.$user_name.'\' is already is the tracker permissions.');
-		}
-		if ( !$ath->addUser($user_id,0) ) {
-			exit_error('Error',$ath->getErrorMessage());
-		}
-
-		include './browse_perm.php';
-		break;
-		
-	case 'deleteuser':
-
-		if ( !$ath->deleteUser($user_id) ) {
-			exit_error('Error',$ath->getErrorMessage());
-		}
-
-		include './browse_perm.php';
-		break;
-		
-	case 'updateperm':
-		if ( !$ath->updateUsers($atid,$user_name) ) {
-			exit_error('Error',$ath->getErrorMessage());
-		}
-
-		include './browse_perm.php';
-		break;
-		
 	case 'editoptions':
 		if ( $update ) {
 			if ( !$ath->update($name,$description,$itemname,$is_public,$allow_anon,
@@ -396,7 +362,7 @@ if ($group_id && !$atid) {
 	case 'value_create':
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
-			if ( !$field->createValueList($atid,$value_id,$value,$description,$order_id) ) {
+			if ( !$field->createValueList($atid,$value,$description,$order_id) ) {
 				exit_error('Error',$field->getErrorMessage());
 			} else {
 				$feedback = "Field value created";
@@ -434,7 +400,7 @@ if ($group_id && !$atid) {
 		break;
 		
 	case 'field_create':
-		if ( !$art_field_fact->createField($field_id,$field_name,$description,$label,$data_type,$display_type,
+		if ( !$art_field_fact->createField($description,$label,$data_type,$display_type,
 						 $display_size,$rank_on_screen,$show_on_add,$show_on_add_members,
 						 $empty_ok,$keep_history,$special,$use_it) ) {
 			exit_error('Error',$art_field_fact->getErrorMessage());

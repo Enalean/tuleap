@@ -95,9 +95,10 @@ echo ")</b>";?>
 <LI>Groups in <a href="grouplist.php?status=D"><B>D</B> (deleted) Status</A>
 </ul>
 </ul>
-<h3>Trackers Deletion</h3>
+<h3>Trackers Administration</h3>
 <ul>
 <li><a href="/tracker/admin/restore.php">Pending Tracker Removals</A>
+<li><a href="/tracker/admin/?group_id=100">Configuration of predefined CodeX templates</A>
 </ul>
 
 <h3>Statistics</h3>

@@ -583,7 +583,7 @@ class ArtifactReportHtml extends ArtifactReport {
                     
                     echo '<TR class="'. util_get_alt_row_color($i) .'"><TD>';
                     
-                        echo '<A HREF="/tracker/admin/?func=report&group_id='.$group_id.
+                    echo '<A HREF="/tracker/admin/?func=report&group_id='.$group_id.
                             '&show_report=1&report_id='.$arr['report_id'].'&group_id='.$group_id.'&atid='.$ath->getID().'">'.
                             $arr['report_id'].'</A>';
                     
@@ -594,11 +594,15 @@ class ArtifactReportHtml extends ArtifactReport {
                     
                         $name = $arr['name'];
         
-                        echo '<A HREF="/tracker/admin/?func=report&group_id='.$group_id.
-                        '&atid='.$atid.'&delete_report=1&report_id='.$arr['report_id'].
-                        '" onClick="return confirm(\'Delete this Report : '.$name.'  ?\')">'.
-                            '<img src="'.util_get_image_theme("ic/trash.png").'" border="0"></A>';
-        
+        			if ( $arr['scope'] == 'S' ) {
+	                    echo '-';
+        			} else {
+	                    echo '<A HREF="/tracker/admin/?func=report&group_id='.$group_id.
+	                        '&atid='.$atid.'&delete_report=1&report_id='.$arr['report_id'].
+	                        '" onClick="return confirm(\'Delete this Report : '.$name.'  ?\')">'.
+	                            '<img src="'.util_get_image_theme("ic/trash.png").'" border="0"></A>';
+					}
+					        
                     echo '</td></tr>';
                     $i++;
                 } 

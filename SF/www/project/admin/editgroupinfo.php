@@ -148,7 +148,7 @@ print '
 */
 
 if ( $row_grp['activate_old_bug'] ) {
-	echo '<B>Use Bug Tracker:</B> <INPUT TYPE="CHECKBOX" NAME="use_bugs" VALUE="1"'.( ($row_grp['use_bugs']==1) ? ' CHECKED' : '' ).'><BR>';
+	echo '<B>Use Legacy Bug Tracker:</B> <INPUT TYPE="CHECKBOX" NAME="use_bugs" VALUE="1"'.( ($row_grp['use_bugs']==1) ? ' CHECKED' : '' ).'><BR>';
 }
 echo '
 	<B>Use Mailing Lists:</B> <INPUT TYPE="CHECKBOX" NAME="use_mail" VALUE="1"'.( ($row_grp['use_mail']==1) ? ' CHECKED' : '' ).'><BR>
@@ -156,14 +156,14 @@ echo '
 	<B>Use Patch Manager:</B> <INPUT TYPE="CHECKBOX" NAME="use_patch" VALUE="1"'.( ($row_grp['use_patch']==1) ? ' CHECKED' : '' ).'><BR>
 	<B>Use Forums:</B> <INPUT TYPE="CHECKBOX" NAME="use_forum" VALUE="1"'.( ($row_grp['use_forum']==1) ? ' CHECKED' : '' ).'><BR>';
 if ( $row_grp['activate_old_task'] ) {
-	echo '<B>Use Project/Task Manager:</B> <INPUT TYPE="CHECKBOX" NAME="use_pm" VALUE="1"'.( ($row_grp['use_pm']==1) ? ' CHECKED' : '' ).'><BR>';
+	echo '<B>Use Legacy Project/Task Manager:</B> <INPUT TYPE="CHECKBOX" NAME="use_pm" VALUE="1"'.( ($row_grp['use_pm']==1) ? ' CHECKED' : '' ).'><BR>';
 }
 echo '
 	<B>Use CVS:</B> <INPUT TYPE="CHECKBOX" NAME="use_cvs" VALUE="1"'.( ($row_grp['use_cvs']==1) ? ' CHECKED' : '' ).'><BR>
 	<B>Use News:</B> <INPUT TYPE="CHECKBOX" NAME="use_news" VALUE="1"'.( ($row_grp['use_news']==1) ? ' CHECKED' : '' ).'><BR>
 	<B>Use Doc Mgr:</B> <INPUT TYPE="CHECKBOX" NAME="use_docman" VALUE="1"'.( ($row_grp['use_docman']==1) ? ' CHECKED' : '' ).'><BR>';
 if ( $row_grp['activate_old_sr'] ) {
-	echo '<B>Use Support:</B> <INPUT TYPE="CHECKBOX" NAME="use_support" VALUE="1"'.( ($row_grp['use_support']==1) ? ' CHECKED' : '' ).'><BR>';
+	echo '<B>Use Legacy Support:</B> <INPUT TYPE="CHECKBOX" NAME="use_support" VALUE="1"'.( ($row_grp['use_support']==1) ? ' CHECKED' : '' ).'><BR>';
 }	
 if ( $sys_activate_tracker ) {
 	echo '<B>Use Trackers:</B> <INPUT TYPE="CHECKBOX" NAME="use_trackers" VALUE="1"'.( ($row_grp['use_trackers']==1) ? ' CHECKED' : '' ).'><BR>';

@@ -443,8 +443,6 @@ class ArtifactFieldFactory extends Error {
 	/**
 	 *  Create a new field
 	 *
-	 *  @param field_id: the field id
-	 *  @param field_name: the field name
 	 *  @param description: the field description
 	 *  @param label: the field label
 	 *  @param data_type: the field data type (string, int, flat or date)
@@ -460,15 +458,18 @@ class ArtifactFieldFactory extends Error {
 	 *
 	 *  @return boolean - succeed or failed
 	 */
-	function createField($field_id,$field_name,$description,$label,$data_type,$display_type,
+	function createField($description,$label,$data_type,$display_type,
 						 $display_size,$rank_on_screen,$show_on_add,$show_on_add_members,
 						 $empty_ok,$keep_history,$special,$use_it) {
 						 	
 		// Check arguments
-		if ( $field_id=="" || $field_name=="" || $data_type=="" || $display_type=="" || $label=="" ) {
-			$this->setError("Field id, field name, field label, data type or display type are required.");
+		if ( $data_type=="" || $display_type=="" || $label=="" ) {
+			$this->setError("Field label, data type or display type are required.");
 			return false;
 		}
+
+		$field_id = $this->ArtifactType->getNextFieldID();
+		$field_name = $this->ArtifactType->buildFieldName($this->ArtifactType->getNextFieldID());
 		
 		$af = new ArtifactField($this->ArtifactType->getID(),"");
 		

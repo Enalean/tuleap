@@ -1457,25 +1457,6 @@ class ArtifactType extends Error {
 		return "field_".$id;
 	}
 
-	/**
-	 * Retrieve the next free value id (computed by max(id)+1)
-	 *
-	 * @param field_id: the field id
-	 *
-	 * @return int
-	 */
-	function getNextValueID($field_id) {
-		$sql = "SELECT max(value_id)+1 FROM artifact_field_value_list WHERE ".
-			   "field_id=".$field_id." AND group_artifact_id=".$this->getID()." ".
-			   "GROUP BY field_id,group_artifact_id";
-			   
-		$result = db_query($sql);
-	    if ($result && db_numrows($result) > 0) {
-	    	return db_result($result, 0, 0);
-	    } else {
-	    	return -1;
-	    }
-	}
 }
 
 ?>

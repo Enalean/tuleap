@@ -10,6 +10,8 @@ require ('vote_function.php');
 require ('vars.php');
 require ($DOCUMENT_ROOT.'/news/news_utils.php');
 require ('trove.php');
+require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');
+require($DOCUMENT_ROOT.'/../common/tracker/ArtifactTypeFactory.class');
 
 //make sure this project is NOT a foundry
 if (!$project->isProject()) {
@@ -354,6 +356,31 @@ if ( $project->usesTracker()&&$sys_activate_tracker ) {
 	print '<HR SIZE="1" NoShade><A href="/tracker/?group_id='.$group_id.'">';
 	html_image("ic/tracker20w.png",array('width'=>'20', 'height'=>'20', 'alt'=>'Trackers'));
 	print " Trackers</A>";
+	//	  
+	//  get the Group object
+	//	  
+	$group = group_get_object($group_id);
+	if (!$group || !is_object($group) || $group->isError()) {
+		exit_no_group();
+	}		   
+	$atf = new ArtifactTypeFactory($group);
+	if (!$group || !is_object($group) || $group->isError()) {
+		exit_error('Error','Could Not Get ArtifactTypeFactory');
+	}
+	
+	// Get the artfact type list
+	$at_arr = $atf->getArtifactTypes();
+	
+	if (!$at_arr || count($at_arr) < 1) {
+		echo "<br><i>No Accessible Trackers Found</i>";
+	} else {
+		for ($j = 0; $j < count($at_arr); $j++) {
+			echo '<br><i>-&nbsp;
+			<a href="/tracker/?atid='. $at_arr[$j]->getID() .
+			'&group_id='.$group_id.'&func=browse">' .
+			$at_arr[$j]->getName() .'</a></i>';
+		}
+	}
 }
 
 

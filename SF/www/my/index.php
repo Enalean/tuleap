@@ -37,8 +37,6 @@ if (user_isloggedin()) {
 	<H3>Personal Page for: <?php print user_getname(); ?>
 	     <?php echo help_button('LoginAndPersonalPage.html'); ?></H3>
     <? util_get_content('my/intro'); ?>
-	<TABLE width="100%" border="0">
-	<TR><TD VALIGN="TOP" WIDTH="50%">
 	<?php
 
 	$atf = new ArtifactTypeFactory(false);
@@ -49,8 +47,9 @@ if (user_isloggedin()) {
 	/*
 		Bugs assigned to or submitted by this person
 	*/
-	echo $HTML->box1_top('My Bugs');
-
+	
+	$html_my_bugs = "";
+	
 	$sql='SELECT group_id,COUNT(bug_id) '.
 		'FROM bug '.
 		'WHERE status_id <> 3 '.
@@ -60,10 +59,9 @@ if (user_isloggedin()) {
 	$result=db_query($sql);
 	$rows=db_numrows($result);
 	
-	if (!$result || $rows < 1) {
-	    echo '
-			<B>No Open Bugs are assigned to you or were submitted by you</B>';
-	} else {
+	if ($result && $rows >= 1) {
+
+		$html_my_bugs .= $HTML->box1_top('My Bugs',0);
 
 	    for ($j=0; $j<$rows; $j++) {
 
@@ -103,18 +101,17 @@ if (user_isloggedin()) {
 			}
 	
 			$html_hdr .= my_item_count($rows2,$count_new).'</td></tr>';
-			echo $html_hdr.$html;
+			$html_my_bugs .= $html_hdr.$html;
 	    }
 
-	    echo '<TR><TD COLSPAN="2">&nbsp;</TD></TR>';
-
+	    $html_my_bugs .= '<TR><TD COLSPAN="2">&nbsp;</TD></TR>';
+		$html_my_bugs .= $HTML->box1_bottom(0);
 	}
-	echo $HTML->box1_bottom();
 
 	/*
 		SRs assigned to or submitted by this person
 	*/
-	echo $HTML->box1_top('My Support Requests');
+	$html_my_srs = "";
 
 	$sql='SELECT group_id FROM support '.
 	    'WHERE support_status_id = 1 '.
@@ -123,60 +120,58 @@ if (user_isloggedin()) {
 
 	$result=db_query($sql);
 	$rows=db_numrows($result);
-	if (!$result || $rows < 1) {
-	    echo '
-			<B>No Open SR are assigned to you or were submitted by you</B>';
-	} else {
+	if ($result && $rows >= 1) {
 
+		$html_my_srs .= $HTML->box1_top('My Support Requests',0);
 	    for ($j=0; $j<$rows; $j++) {
 
-		$group_id = db_result($result,$j,'group_id');
-
-		$sql2="SELECT support_id,priority,assigned_to,submitted_by,open_date,summary ".
-		    "FROM support ".
-		    "WHERE group_id='$group_id' AND support_status_id <> '2' ".
-		    "AND (assigned_to='".user_getid()."' ".
-		    "OR submitted_by='".user_getid()."') LIMIT 100";
-		    
-		$result2 = db_query($sql2);
-		$rows2 = db_numrows($result2);
-
-		list($hide_now,$count_diff,$hide_url) = 
-		    my_hide_url('sr',$group_id,$hide_item_id,$rows2,$hide_sr);
-
-		$html_hdr = ($j ? '<tr class="boxitem"><td colspan="2">' : '').
-		    $hide_url.'<A HREF="/support/?group_id='.$group_id.'"><B>'.
-		    group_getname($group_id).'</B></A>&nbsp;&nbsp;&nbsp;&nbsp;';
-
-		$html = ''; $count_new = max(0, $count_diff);
-		for ($i=0; $i<$rows2; $i++) {
-			
-		    if (!$hide_now) {
-			// Form the 'Submitted by/Assigned to flag' for marking
-			$AS_flag = my_format_as_flag(db_result($result2,$i,'assigned_to'), db_result($result2,$i,'submitted_by'));
-
-			$html .= '
-			<TR class="'.get_priority_color(db_result($result2,$i,'priority')).
-			'"><TD class="small"><A HREF="/support/?func=detailsupport&group_id='.
-			$group_id.'&support_id='.db_result($result2,$i,'support_id').
-			'">'.db_result($result2,$i,'support_id').'</A></TD>'.
-			'<TD class="small">'.stripslashes(db_result($result2,$i,'summary')).'&nbsp;'.$AS_flag.'</TD></TR>';
-		    }
-		}
-
-		$html_hdr .= my_item_count($rows2,$count_new).'</td></tr>';
-		echo $html_hdr.$html;
+			$group_id = db_result($result,$j,'group_id');
+	
+			$sql2="SELECT support_id,priority,assigned_to,submitted_by,open_date,summary ".
+			    "FROM support ".
+			    "WHERE group_id='$group_id' AND support_status_id <> '2' ".
+			    "AND (assigned_to='".user_getid()."' ".
+			    "OR submitted_by='".user_getid()."') LIMIT 100";
+			    
+			$result2 = db_query($sql2);
+			$rows2 = db_numrows($result2);
+	
+			list($hide_now,$count_diff,$hide_url) = 
+			    my_hide_url('sr',$group_id,$hide_item_id,$rows2,$hide_sr);
+	
+			$html_hdr = ($j ? '<tr class="boxitem"><td colspan="2">' : '').
+			    $hide_url.'<A HREF="/support/?group_id='.$group_id.'"><B>'.
+			    group_getname($group_id).'</B></A>&nbsp;&nbsp;&nbsp;&nbsp;';
+	
+			$html = ''; $count_new = max(0, $count_diff);
+			for ($i=0; $i<$rows2; $i++) {
+				
+			    if (!$hide_now) {
+				// Form the 'Submitted by/Assigned to flag' for marking
+				$AS_flag = my_format_as_flag(db_result($result2,$i,'assigned_to'), db_result($result2,$i,'submitted_by'));
+	
+				$html .= '
+				<TR class="'.get_priority_color(db_result($result2,$i,'priority')).
+				'"><TD class="small"><A HREF="/support/?func=detailsupport&group_id='.
+				$group_id.'&support_id='.db_result($result2,$i,'support_id').
+				'">'.db_result($result2,$i,'support_id').'</A></TD>'.
+				'<TD class="small">'.stripslashes(db_result($result2,$i,'summary')).'&nbsp;'.$AS_flag.'</TD></TR>';
+			    }
+			}
+	
+			$html_hdr .= my_item_count($rows2,$count_new).'</td></tr>';
+			$html_my_srs .= $html_hdr.$html;
 	    }
 
-
-	    echo '<TR><TD COLSPAN="2">&nbsp;</TD></TR>';
+	    $html_my_srs .= '<TR><TD COLSPAN="2">&nbsp;</TD></TR>';
+		$html_my_srs .= $HTML->box1_bottom(0);
 	}
-	echo $HTML->box1_bottom();
 
 	/*
 		Forums that are actively monitored
 	*/
-	echo $HTML->box1_top('Monitored Forums');
+	$html_my_monitored_forums = "";
+	$html_my_monitored_forums .= $HTML->box1_top('Monitored Forums',0);
 
 	$sql="SELECT groups.group_id, groups.group_name ".
 		"FROM groups,forum_group_list,forum_monitored_forums ".
@@ -187,7 +182,7 @@ if (user_isloggedin()) {
 	$result=db_query($sql);
 	$rows=db_numrows($result);
 	if (!$result || $rows < 1) {
-		echo '
+		$html_my_monitored_forums .= '
 			<b>You are not monitoring any forums</b>
 			<P>
 			If you monitor forums, you will be sent new posts in 
@@ -196,7 +191,7 @@ if (user_isloggedin()) {
 			You can monitor forums by clicking &quot;Monitor Forum&quot; in 
 			any given discussion forum.
 			<BR>&nbsp;';
-		echo db_error();
+		$html_my_monitored_forums .= db_error();
 	} else {
 
 	    for ($j=0; $j<$rows; $j++) {
@@ -239,18 +234,19 @@ if (user_isloggedin()) {
 		}
 
 		$html_hdr .= my_item_count($rows2,$count_new).'</td></tr>';
-		echo $html_hdr.$html;
+		$html_my_monitored_forums .= $html_hdr.$html;
 	    }
 
-	    echo '<TR><TD COLSPAN="2">&nbsp;</TD></TR>';
 	}
-	echo $HTML->box1_bottom();
+    $html_my_monitored_forums .= '<TR><TD COLSPAN="2">&nbsp;</TD></TR>';
+	$html_my_monitored_forums .= $HTML->box1_bottom(0);
 
 	/*
 		Filemodules that are actively monitored
 	*/
 
-	echo $HTML->box1_top('Monitored File Packages');
+	$html_my_monitored_fp = "";
+	$html_my_monitored_fp .= $HTML->box1_top('Monitored File Packages',0);
 	$sql="SELECT groups.group_name,groups.group_id ".
 		"FROM groups,filemodule_monitor,frs_package ".
 		"WHERE groups.group_id=frs_package.group_id ".
@@ -260,7 +256,7 @@ if (user_isloggedin()) {
 	$result=db_query($sql);
 	$rows=db_numrows($result);
 	if (!$result || $rows < 1) {
-		echo '
+		$html_my_monitored_fp .= '
 			<b>You are not monitoring any files</b>
 			<P>
 			If you monitor files, you will be sent new release notices via
@@ -269,7 +265,7 @@ if (user_isloggedin()) {
 			You can monitor files by visiting a project\'s &quot;Summary Page&quot; 
 			and clicking on the check box in the files section.
 			<BR>&nbsp;';
-		echo db_error();
+		$html_my_monitored_fp .= db_error();
 	} else {
 	    for ($j=0; $j<$rows; $j++) {
 
@@ -310,21 +306,18 @@ if (user_isloggedin()) {
 		}
 		
 		$html_hdr .= my_item_count($rows2,$count_new).'</td></tr>';
-		echo $html_hdr.$html;
+		$html_my_monitored_fp .= $html_hdr.$html;
 	    }
 
-	    echo '<TR><TD COLSPAN="2">&nbsp;</TD></TR>';
 	}
-	echo $HTML->box1_bottom();
+    $html_my_monitored_fp .= '<TR><TD COLSPAN="2">&nbsp;</TD></TR>';
+	$html_my_monitored_fp .= $HTML->box1_bottom(0);
 
-	?>
-	</TD><TD VALIGN="TOP" WIDTH="50%">
-	<?php
 	/*
 		Tasks assigned to me
 	*/
+	$html_my_tasks = "";
 	$last_group=0;
-	echo $HTML->box1_top('My Tasks',1,'',3);
 
 	$sql = 'SELECT groups.group_id, groups.group_name, project_group_list.group_project_id, project_group_list.project_name '.
 	    'FROM groups,project_group_list,project_task,project_assigned_to '.
@@ -338,12 +331,10 @@ if (user_isloggedin()) {
 	$result=db_query($sql);
 	$rows=db_numrows($result);
 
-	if (!$result || $rows < 1) {
-	    echo '
-			<b>You have no open tasks assigned to you</b>';
-		echo db_error();
-	} else {
+	if ($result && $rows >= 1) {
 
+		$html_my_tasks .= $HTML->box1_top('My Tasks',0,'',3);
+	
 	    for ($j=0; $j<$rows; $j++) {
 
 		$group_id = db_result($result,$j,'group_id');
@@ -390,29 +381,27 @@ if (user_isloggedin()) {
 		}
 
 		$html_hdr .= my_item_count($rows2,$count_new).'</td></tr>';
-		echo $html_hdr.$html;
+		$html_my_tasks .= $html_hdr.$html;
 	    }
 
 
-	    echo '<TR><TD COLSPAN="3">&nbsp;</TD></TR>';
+	    $html_my_tasks .= '<TR><TD COLSPAN="3">&nbsp;</TD></TR>';
+		$html_my_tasks .= $HTML->box1_bottom(0);
 	}
-	echo $HTML->box1_bottom();
 
 
 	/*
 		Artifact assigned to or submitted by this person
 	*/
-	echo $HTML->box1_top('My Artifacts',1,'',3);
+	$html_my_artifacts = "";
 
 	// Trackers
 	$uid = user_getid();
 	$list_trackers = $atf->getPatternTrackers($uid,"");
 	
-	if (count($list_trackers) <= 0) {
-	    echo '
-			<B>No Open Artifacts are assigned to you or were submitted by you</B>';
-	} else {
+	if (count($list_trackers) > 0) {
 
+		$html_my_artifacts .= $HTML->box1_top('My Artifacts',0,'',3);
 		reset($list_trackers);
 	
 		while (list($key,$count) = each($list_trackers) ) {
@@ -487,14 +476,13 @@ if (user_isloggedin()) {
 			}
 	
 			$html_hdr .= my_item_count($rows,$count_new).'</td></tr>';
-			echo $html_hdr.$html;
+			$html_my_artifacts .= $html_hdr.$html;
 		
 		}
 
-	    echo '<TR><TD COLSPAN="3">&nbsp;</TD></TR>';
-
+	    $html_my_artifacts .= '<TR><TD COLSPAN="3">&nbsp;</TD></TR>';
+		$html_my_artifacts .= $HTML->box1_bottom(0);
 	}
-	echo $HTML->box1_bottom();
 
 
 	/*
@@ -508,35 +496,36 @@ if (user_isloggedin()) {
 
 	$result=db_query($sql);
 
-	echo $HTML->box1_top('Quick Survey');
+	$html_my_survey = "";
+	$html_my_survey .= $HTML->box1_top('Quick Survey',0);
 
 	if (db_numrows($result) < 1) {
-		show_survey(1,1);
+		$html_my_survey .= show_survey(1,1,0);
 	} else {
-		echo 'You have taken your developer survey';
+		$html_my_survey .= 'You have taken your developer survey';
 	}
-	echo '<TR align=left><TD COLSPAN="2">&nbsp;</TD></TR>
-';
-	echo $HTML->box1_bottom();
+	$html_my_survey .= '<TR align=left><TD COLSPAN="2">&nbsp;</TD></TR>';
+	$html_my_survey .= $HTML->box1_bottom(0);
 
 
 	/*
 	       Personal bookmarks
 	*/
-	echo $HTML->box1_top('My Bookmarks');
+	$html_my_bookmarks = "";
+	$html_my_bookmarks .= $HTML->box1_top('My Bookmarks',0);
 
 	$result = db_query("SELECT bookmark_url, bookmark_title, bookmark_id from user_bookmarks where ".
 		"user_id='". user_getid() ."' ORDER BY bookmark_title");
 	$rows=db_numrows($result);
 	if (!$result || $rows < 1) {
-		echo '
+		$html_my_bookmarks .= '
 			<H3>You currently do not have any bookmarks saved</H3>';
-		echo db_error();
+		$html_my_bookmarks .= db_error();
 	} else {
 
 		for ($i=0; $i<$rows; $i++) {
-		    echo '<TR class="'. util_get_alt_row_color($i) .'"><TD>';
-		    echo '
+		    $html_my_bookmarks .= '<TR class="'. util_get_alt_row_color($i) .'"><TD>';
+		    $html_my_bookmarks .= '
                                            <B><A HREF="'. db_result($result,$i,'bookmark_url') .'">'.
 			db_result($result,$i,'bookmark_title') .'</A></B> '.
 			'<SMALL><A HREF="/my/bookmark_edit.php?bookmark_id='. db_result($result,$i,'bookmark_id') .'">[Edit]</A></SMALL></TD>'.
@@ -545,15 +534,15 @@ if (user_isloggedin()) {
 			'<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A>	</td></tr>';
 			}
 	}
-	echo '<TR align=left><TD COLSPAN="2">&nbsp;</TD></TR>
-';
-	echo $HTML->box1_bottom();
+	$html_my_bookmarks .= '<TR align=left><TD COLSPAN="2">&nbsp;</TD></TR>';
+	$html_my_bookmarks .= $HTML->box1_bottom(0);
 
 	/*
 		PROJECT LIST
 	*/
 
-	echo $HTML->box1_top('My Projects');
+	$html_my_projects = "";
+	$html_my_projects .= $HTML->box1_top('My Projects',0);
 	$result = db_query("SELECT groups.group_name,"
 		. "groups.group_id,"
 		. "groups.unix_group_name,"
@@ -566,45 +555,64 @@ if (user_isloggedin()) {
 		. "AND groups.type='1' AND groups.status='A'");
 	$rows=db_numrows($result);
 	if (!$result || $rows < 1) {
-		echo "You're not a member of any public projects";
-		echo db_error();
+		$html_my_projects .= "You're not a member of any public projects";
+		$html_my_projects .= db_error();
 	} else {
 
 		for ($i=0; $i<$rows; $i++) {
-			echo '
+			$html_my_projects .= '
 			       <TR class="'. util_get_alt_row_color($i) .'"><TD WIDTH="99%">'.
 			    '<A href="/projects/'. db_result($result,$i,'unix_group_name') .'/"><b>'.
 			    db_result($result,$i,'group_name') .'</b></A>';
 			if ( db_result($result,$i,'admin_flags') == 'A' ) {
-			    echo ' <small><A HREF="/project/admin/?group_id='.db_result($result,$i,'group_id').'">[Admin]</A></small>';
+			    $html_my_projects .= ' <small><A HREF="/project/admin/?group_id='.db_result($result,$i,'group_id').'">[Admin]</A></small>';
 			}
 			if ( db_result($result,$i,'is_public') == 0 ) {
-			    echo ' (*)';
+			    $html_my_projects .= ' (*)';
 			    $private_shown = true;
 			}
-			echo '</TD>'.
+			$html_my_projects .= '</TD>'.
 			    '<td><A href="rmproject.php?group_id='. db_result($result,$i,'group_id').
 			    '" onClick="return confirm(\'Quit this project?\')">'.
 			    '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0"></A></TD></TR>';
 		}
 		
 		if ($private_shown) {
-		  echo '
+		  $html_my_projects .= '
 			       <TR class="'. util_get_alt_row_color($i) .'"><TD colspan="2" class="small">'.
 		      '(*) <em>Private projects</em></td></tr>';
 		}
 	}
-	echo $HTML->box1_bottom();
-
-	echo '</TD></TR><TR><TD COLSPAN=2>';
-
+    $html_my_projects .= '<TR><TD COLSPAN="2">&nbsp;</TD></TR>';
+	$html_my_projects .= $HTML->box1_bottom(0);
+	?>
+	
+	<TABLE width="100%" border="0">
+	<TR><TD VALIGN="TOP" WIDTH="50%">
+<?
+	echo $html_my_projects;
+	echo $html_my_monitored_forums;
+	echo $html_my_monitored_fp;
+	echo $html_my_survey;
+	echo $html_my_bookmarks;
+?>
+	</TD><TD VALIGN="TOP" WIDTH="50%">
+<?
+	echo $html_my_artifacts;
+	echo $html_my_bugs;
+	echo $html_my_tasks;
+	echo $html_my_srs;
+?>
+	</TD></TR><TR><TD COLSPAN=2>
+	<?
 	echo show_priority_colors_key();
-
 	?>
 	</TD></TR>
+	
 	</TABLE>
 	</span>
-	<?php
+	
+<?php
 	$HTML->footer(array());
 
 } else {

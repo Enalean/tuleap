@@ -101,13 +101,11 @@ function vote_show_release_radios ($vote_on_id,$flag) {
 
 */
 
-function show_survey ($group_id,$survey_id) {
+function show_survey ($group_id,$survey_id,$echoout=1) {
 
-?>
-<FORM ACTION="/survey/survey_resp.php" METHOD="POST">
-<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">
-<INPUT TYPE="HIDDEN" NAME="survey_id" VALUE="<?php echo $survey_id; ?>">
-<?php
+$return = '<FORM ACTION="/survey/survey_resp.php" METHOD="POST">
+<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
+<INPUT TYPE="HIDDEN" NAME="survey_id" VALUE="'.$survey_id.'">';
 
 /*
 	Select this survey from the database
@@ -118,7 +116,7 @@ $sql="SELECT * FROM surveys WHERE survey_id='$survey_id'";
 $result=db_query($sql);
 
 if (db_numrows($result) > 0) {
-	echo '
+	$return .= '
 		<H3>'.db_result($result, 0, 'survey_title').'</H3>';
 	/*
 		Select the questions for this survey
@@ -127,7 +125,7 @@ if (db_numrows($result) > 0) {
 	$questions=db_result($result, 0, 'survey_questions');
 	$quest_array=explode(',', $questions);
 	$count=count($quest_array);
-	echo '
+	$return .= '
 		<TABLE BORDER=0>';
 	$q_num=1;
 
@@ -146,80 +144,85 @@ if (db_numrows($result) > 0) {
 				and show the comment as bold by default
 			*/
 
-			echo '
+			$return .= '
 				<TR><TD VALIGN=TOP>&nbsp;</TD><TD>';
 
-			echo '<b>'.util_unconvert_htmlspecialchars(stripslashes(db_result($result, 0, 'question'))).'</b><br>';
+			$return .= '<b>'.util_unconvert_htmlspecialchars(stripslashes(db_result($result, 0, 'question'))).'</b><br>';
 
 		} else {
-			echo '
+			$return .= '
 				<TR><TD VALIGN=TOP><B>';
-			echo $q_num.'&nbsp;&nbsp;-&nbsp;&nbsp;</B></TD><TD>';
+			$return .= $q_num.'&nbsp;&nbsp;-&nbsp;&nbsp;</B></TD><TD>';
 			$q_num++;
-			echo util_unconvert_htmlspecialchars(stripslashes(db_result($result, 0, 'question'))).'<br>';
+			$return .= util_unconvert_htmlspecialchars(stripslashes(db_result($result, 0, 'question'))).'<br>';
 		}
 
 		if ($question_type == "1") {
 			/*
 				This is a rædio-button question. Values 1-5.
 			*/
-		    echo "<b>1</b>";
+		    $return .= "<b>1</b>";
 		    for ($j=1; $j<=5; $j++) {
-			echo '
+			$return .= '
 					<INPUT TYPE="RADIO" NAME="_'.$quest_array[$i].'" VALUE="'.$j.'">';
 		    }
-		    echo "&nbsp;&nbsp;<b>5</b>";
+		    $return .= "&nbsp;&nbsp;<b>5</b>";
 
 		} else if ($question_type == '2') {
 			/*
 				This is a text-area question.
 			*/
-			echo '
+			$return .= '
 				<textarea name="_'.$quest_array[$i].'" rows=5 cols=60 wrap="soft"></textarea>';
 
 		} else if ($question_type == '3') {
 			/*
 				This is a Yes/No question.
 			*/
-			echo '
+			$return .= '
 				<b>Yes</b> <INPUT TYPE="RADIO" NAME="_'.$quest_array[$i].'" VALUE="1">';
-			echo '&nbsp;&nbsp;';
-			echo '
+			$return .= '&nbsp;&nbsp;';
+			$return .= '
 				 <b>No</b><INPUT TYPE="RADIO" NAME="_'.$quest_array[$i].'" VALUE="5">';
 
 		} else if ($question_type == '4') {
 			/*
 				This is a comment only.
 			*/
-			echo '
+			$return .= '
 				<INPUT TYPE="HIDDEN" NAME="_'.$quest_array[$i].'" VALUE="-666">';
 
 		} else if ($question_type == '5') {
 			/*
 				This is a text-field question.
 			*/
-			echo '
+			$return .= '
 				<INPUT TYPE="TEXT" name="_'.$quest_array[$i].'" SIZE=30 MAXLENGTH=100>';
 
 		}
-		echo '</TD></TR>';
+		$return .= '</TD></TR>';
 
 		$last_question_type=$question_type;
 	}
 
-	?>
+	$return .= '
 	<TR><TD ALIGN="center" COLSPAN="2">
 
 	<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
 	<BR>
-	<A HREF="/survey/privacy.php?group_id=<?php echo $group_id; ?>&survey_id=<?php echo $survey_id; ?>">Survey Privacy</A>
+	<A HREF="/survey/privacy.php?group_id='.$group_id.'&survey_id='.$survey_id.'">Survey Privacy</A>
 	</TD></TR>
 	</FORM>
-	</TABLE>
-	<?php
+	</TABLE>';
 
 } else {
-	echo "<H3>Survey Not Found</H3>";
+	$return .= "<H3>Survey Not Found</H3>";
+}
+
+if ( $echoout ) {
+	echo $return;
+} else {
+	return $return;
 }
 
 }

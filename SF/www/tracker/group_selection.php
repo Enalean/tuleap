@@ -41,7 +41,7 @@ function onChangeAllFilter() {
 <form name="form_selection">
 <table border="0" cellspacing="0" cellpadding="5">
   <tr valign="center">
-    <td>
+    <td colspan="2">
 <select name="group_id" size="8">
 <?
 	if ( $filter == "member" ) {
@@ -56,20 +56,15 @@ function onChangeAllFilter() {
 ?>
 </select>
     </td>
-    <td valign="top"> 
-      <table cellspacing="0" cellpadding="0" class="small">
-      	<tr>
-      	  <td>Display:</td>
-      	</tr>
-      	<tr>
-          <td><input type="radio" name="radiobutton" value="radiobutton"<? if ( $filter == "member" ) echo " checked"; ?> onClick="onChangeMemberFilter()"> only my projects</td>
-        </tr>
-        <tr>
-          <td><input type="radio" name="radiobutton" value="radiobutton"<? if ( $filter == "all" ) echo " checked"; ?> onClick="onChangeAllFilter()"> all projects</td>
-        </tr>
-      </table><br>
-      <input type="button" name="selection" value="Select" onClick="doSelection(form_selection)">
-      </td>
+  </tr>
+  <tr>  
+    <td><input type="radio" name="radiobutton" value="radiobutton"<? if ( $filter == "member" ) echo " checked"; ?> onClick="onChangeMemberFilter()"> my projects</td>
+    <td><input type="radio" name="radiobutton" value="radiobutton"<? if ( $filter == "all" ) echo " checked"; ?> onClick="onChangeAllFilter()"> all projects</td>
+  </tr>
+  <tr>
+    <td colspan="2">
+    	<input type="button" name="selection" value="Select" onClick="doSelection(form_selection)">
+    </td>
   </tr>
 </table>
 
