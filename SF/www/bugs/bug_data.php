@@ -1254,7 +1254,7 @@ function bug_data_create_bug($group_id,$vfl) {
 
     $sql="INSERT INTO bug ($fixed_cols $vfl_cols) VALUES ($fixed_values $vfl_values)";
     //echo "DBG - SQL insert bug: $sql";
-    $result=db_query($sql,1);
+    $result=db_query($sql);
     $bug_id=db_insertid($result);
 
     if (!$bug_id) {
