@@ -32,8 +32,9 @@ while ( $field_name = bug_list_all_fields() ) {
 	if  (($is_bugadmin && bug_data_is_showed_on_add_members($field_name)) ||
 	     (!$is_bugadmin && bug_data_is_showed_on_add($field_name)) ) {
 	    
-	    // display the bug field
-	    $field_value = db_result($result,0,$field_name);
+	    // display the bug field with its default value
+	    $field_value = bug_data_get_default_value($field_name);
+
 	    echo ($i % $fields_per_line ? '':"\n<TR>");
 	    echo '<TD valign="top">'.bug_field_display($field_name,$group_id,$field_value).'</TD>';
 	    $i++;

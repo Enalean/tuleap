@@ -251,6 +251,21 @@ function bug_data_get_display_size($field, $by_field_id=false) {
     }
 }
 
+function bug_data_get_default_value($field,  $by_field_id=false) {
+    global $BF_USAGE_BY_FIELD,$BF_USAGE_BY_NAME;
+    /*
+      Return the default value associated to a field_name as defined in the
+      bug table (SQL definition)
+      */
+    if ($by_field_id) {
+	$field = bug_data_get_field_name($field);
+    }
+
+    $result = db_query('describe bug '.$field);
+    return (db_result($result,0,'Default'));
+ 
+}
+
 function bug_data_get_max_value_id($field, $group_id, $by_field_id=false) {
  
     /*
@@ -858,7 +873,7 @@ function bug_data_create_bug($group_id,$vfl) {
 	    bug_data_is_text_field($field)) {
 	    $value = htmlspecialchars($value);
 	}
-	$vfl_values .= ','.$value;
+	$vfl_values .= ',\''.$value.'\'';
     }    
 
     // Add all special fields that were not handled in the previous block
@@ -868,9 +883,14 @@ function bug_data_create_bug($group_id,$vfl) {
 
 
     $sql="INSERT INTO bug ($fixed_cols $vfl_cols) VALUES ($fixed_values $vfl_values)";
-    // echo "DBG - SQL insert bug: $sql";
+    //echo "DBG - SQL insert bug: $sql";
     $result=db_query($sql);
     $bug_id=db_insertid($result);
+
+    if (!$bug_id) {
+	$feedback = 'INSERT new bug failed. Report to the Administrator<br>'.
+	    'SQL statement:<br>'.$sql.'<br>';
+    }
 
     /*
       set up the default rows in the dependency table
