@@ -5,42 +5,45 @@
 #
 # $Id$
 #
-#
-# SourceForge: Breaking Down the Barriers to Open Source Development
-# Copyright 1999-2000 (c) The SourceForge Crew
-# http://sourceforge.net
-#
 
+CodeX is the Xerox solution for enterprise-wide software sharing and
+reuse. CodeX has been patiently crafted by the Xerox CodeX Team and
+has been constantly improved since January 2001 when the CodeX
+initiative was launched internally at Xerox. CodeX offers an easy and
+fully integrated access to the best in CVS, mailing lists, bug
+tracking, message boards/forums, task management, site hosting,
+permanent file archival, full backups, and total web-based
+administration.
 
+For more information on CodeX please visit our websites:
 
-*************************************************************************
-*  WARNING  *  WARNING  *  WARNING  *  WARNING  *  WARNING  *  WARNING  *
+- For Xerox internal users visit http://codex.xerox.com and especially
+our Site Documentation corner at http://codex.xerox.com/docs/site
 
-	Although this code has been in use in Xerox for months
-	and has demonstrated a remarkable stability it may still
-	contain bugs. Use at your own risk.  This code might not even
-	install so there is no guarantee. We have released this code
-	primarily for educational purposes and to make it easier for
-	the community to contribute back to the code.
+- For Xerox customers using the CodeX platform please visit
+http://codex.partners.xrce.xerox.com/
 
-*  WARNING  *  WARNING  *  WARNING  *  WARNING  *  WARNING  *  WARNING  *
-************************************************************************
+LICENSE
+=======
+All files contained in this archive are licensed as stated in the
+COPYING file.  Please check out the AUTHORS file to see who helped
+make this possible.
 
-CodeX is a free service to Xerox software development teams offering
-easy access to the best in CVS, mailing lists, bug tracking, message
-boards/forums, task management, site hosting, permanent file archival,
-full backups, and total web-based administration.
+LICENSE
+=======
+We want to draw your attention on the fact that the CodeX software is
+made of both Open Source software components (mostly under the GNU
+Public License - see the COPYING file) and Xerox Owned Extensions.
 
-For more information on CodeX please visit our website at
-http://codex.xerox.com and especially our Site Documentation corner at
-http://codex.xerox.com/docs/site
-
+The Xerox owned extensions can only be used if you have acquired the
+proper license from Xerox. If you have not acquired such a license
+from Xerox then you are only allowed to use the Open Source software
+components.
 
 INSTALLATION
 ============
-
-For information on how to install this package please read the INSTALL
-file.
+For information on how to install this package please read the CodeX
+Installation Guide provided as part of the Xerox Owned Extensions.
 
 If you need assistance use our support request manager at
 http://codex.xerox.com/support/?group_id=1. Or contact us at
@@ -50,33 +53,43 @@ NOTE: This is not a commitment to provide you with 24x7 support :-)
 We'll do our best to answer your questions given our resources
 constraints
 
+SUPPORT
+=======
+If you need assistance or want to ask questions about the CodeX software:
+
+- Xerox internal users use our support request manager at
+http://codex.xerox.com/support/?group_id=1. Or contact us at
+codex-contact@codex.xerox.com.
+
+- Xerox customers using the CodeX platform must visit
+http://codex.partners.xrce.xerox.com/ and follow the instructions.
+
+
 BUG REPORT
 ==========
-If you find any bugs please feel free use our bugtracker located at:
-http://codex.xerox.com/bugs/?group_id=1
+If you find any bugs please feel free use our bug tracker.
+
+- Xerox internal users use our support request manager at
+http://codex.xerox.com/bugs/?group_id=1. 
+
+- Xerox customers using the CodeX platform must visit
+http://codex.partners.xrce.xerox.com/ and follow the instructions.
+
 
 FUTURE RELEASES
 ===============
-Future versions of this code can be downloaded from:
+
+- Xerox internal users can download future versions of this code from
 http://codex.xerox.com/project/filelist.php?group_id=1
 
-You can also get the very latest version of the CodeX software from
-our CVS repository. For this you'll need CVS installed on your
-computer. To checkout a CVS working copy of the CodeX code follow the
-instructions at http://codex.xerox.com/project/filelist.php?group_id=1
+- Xerox customers using the CodeX platform will be delivered new versions of CodeX according to the terms defined in their contract.
+
 
 CONTRIBUTING CODE
 =================
 See the CONTRIBUTING file.
 
-LICENSE
-=======
-All files contained in this archive are licensed as stated in the
-COPYING file.  Please check out the AUTHORS file to see who helped
-make this possible.
 
-
-Thanks for taking the time to download this code.  If you have any questions
-please feel free to contact us.
+If you have any questions please feel free to contact us.
 
 - The CodeX Team <codex-contact@codex.xerox.com>
