@@ -116,16 +116,16 @@ class Layout extends Error {
 	}
 
 	// Box Top, equivalent to html_box1_top()
-	function box1_top($title,$echoout=1,$bgcolor=''){
+	function box1_top($title,$echoout=1,$bgcolor='',$cols=2){
 	        if (!$bgcolor) {
         	        $bgcolor=$this->COLOR_HTMLBOX_BACK;
 	        }
         	$return = '<TABLE cellspacing="1" cellpadding="5" width="100%" border="0" bgcolor="'.$this->COLOR_HTMLBOX_BACK.'">
                         <TR BGCOLOR="'.$this->COLOR_HTMLBOX_TITLE.'" align="center">
-                                <TD colspan=2><SPAN class=titlebar>'.$title.'</SPAN></TD>
+                                <TD colspan="'.$cols.'"><SPAN class=titlebar>'.$title.'</SPAN></TD>
                         </TR>
                         <TR align=left bgcolor="'.$bgcolor.'">
-                                <TD colspan=2>';
+                                <TD colspan="'.$cols.'">';
 	        if ($echoout) {
         	        print $return;
 	        } else {
@@ -134,7 +134,7 @@ class Layout extends Error {
 	}
 
 	// Box Middle, equivalent to html_box1_middle()
-	function box1_middle($title,$bgcolor='') {
+	function box1_middle($title,$bgcolor='',$cols=2) {
 	        if (!$bgcolor) {
         	        $bgcolor=$this->COLOR_HTMLBOX_BACK;
 	        }
@@ -143,10 +143,10 @@ class Layout extends Error {
                         </TR>
 
 <TR BGCOLOR="'.$this->COLOR_HTMLBOX_TITLE.'" align="center">
-                                <TD colspan=2><SPAN class=titlebar>'.$title.'</SPAN></TD>
+                                <TD colspan="'.$cols.'"><SPAN class=titlebar>'.$title.'</SPAN></TD>
                         </TR>
                         <TR align=left bgcolor="'.$bgcolor.'">
-                                <TD colspan=2>';
+                                <TD colspan="'.$cols.'">';
 	}
 
 	// Box Bottom, equivalent to html_box1_bottom()
