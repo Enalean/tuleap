@@ -34,6 +34,10 @@ my ($gname, $gstatus, $gid, $userlist);
 my $winaccount_on = -f "/etc/smbpasswd";
 my $winempty_passwd = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
 
+# file templates
+my $MARKER_BEGIN = "# !!! CodeX Specific !!! DO NOT REMOVE (NEEDED CODEX MARKER)";
+my $MARKER_END   = "# END OF NEEDED CODEX BLOCK";
+
 # See under which user this script is running. It is the user that is
 # also going to be used to run cvsweb.cgi. And we need to make it the
 # owner of all CVS root directories so the CGI script can browse all
@@ -238,27 +242,13 @@ while ($ln = pop(@groupdump_array)) {
 	  close(FD);
 	  $blockispresent = 0;
 	  foreach (@file_array) {
-	    $blockispresent = $blockispresent || ($_ eq "# !!! CodeX Specific !!! DO NOT REMOVE (NEEDED CODEX MARKER)\n");
+	    $blockispresent = $blockispresent || ($_ eq "$MARKER_BEGIN\n");
 	  }
 	  if (! $blockispresent)
 	    {
-	      system("echo \"# !!! CodeX Specific !!! DO NOT REMOVE (NEEDED CODEX MARKER)\n# the following block is regularly added when not present\n# But keeping the block will prevent you from this automatic add if you need some manual modification to the active line within the block\" >> $cvs_dir/CVSROOT/loginfo");
-	      system("echo \"# Usage: log_accum.pl [-d] [-nodb] [-s] [-M module] [[-m mailto] ...] [-f logfile]\" >> $cvs_dir/CVSROOT/loginfo");
-	      system("echo \"#	-d		- turn on debugging\" >> $cvs_dir/CVSROOT/loginfo");
-	      system("echo \"#       -G database     - interface to Gnats\" >> $cvs_dir/CVSROOT/loginfo");
-	      system("echo \"#       -nodb           - suppress default codex database commit tracking\" >> $cvs_dir/CVSROOT/loginfo");
-	      system("echo \"#	-m mailto	- send mail to \"mailto\" (multiple)\" >> $cvs_dir/CVSROOT/loginfo");
-	      system("echo \"#	-M modulename	- set module name to \"modulename\"\" >> $cvs_dir/CVSROOT/loginfo");
-	      system("echo \"#	-f logfile	- write commit messages to logfile too\" >> $cvs_dir/CVSROOT/loginfo");
-	      system("echo \"#	-s		- *don't* run \"cvs status -v\" for each file\" >> $cvs_dir/CVSROOT/loginfo");
-	      system("echo \"#       -T text         - use TEXT in temp file names.\" >> $cvs_dir/CVSROOT/loginfo");
-	      system("echo \"#       -C [reponame]   - Generate cvsweb URLS; must be run using %{sVv}\" >> $cvs_dir/CVSROOT/loginfo");
-	      system("echo \"#                         format string.\" >> $cvs_dir/CVSROOT/loginfo");
-	      system("echo \"#       -U URL          - Base URL for cvsweb if -C option (above) is used.\" >> $cvs_dir/CVSROOT/loginfo");
-	      system("echo \"#       -D              - generate diffs as part of the notification mail\" >> $cvs_dir/CVSROOT/loginfo");
-
+	      system("echo \"$MARKER_BEGIN\" >> $cvs_dir/CVSROOT/loginfo");
 	      system("echo \"ALL (/usr/local/bin/log_accum -T $gname -C $gname -U http://$sys_default_domain/cgi-bin/cvsweb.cgi/ -s %{sVv})>/dev/null 2>&1\" >> $cvs_dir/CVSROOT/loginfo");	 
-	      system("echo \"# END OF NEEDED CODEX BLOCK\" >> $cvs_dir/CVSROOT/loginfo");
+	      system("echo \"$MARKER_END\" >> $cvs_dir/CVSROOT/loginfo");
 	      system("cd $cvs_dir/CVSROOT; rcs -q -l loginfo; ci -q -m\"CodeX modifications: entering log_accum from group fields (cvs_tracker/cvs_events)\" loginfo; co -q loginfo");
 	    }
 
@@ -271,13 +261,13 @@ while ($ln = pop(@groupdump_array)) {
 	  close(FD);
 	  $blockispresent = 0;
 	  foreach (@file_array) {
-	    $blockispresent = $blockispresent || ($_ eq "# !!! CodeX Specific !!! DO NOT REMOVE (NEEDED CODEX MARKER)\n");
+	    $blockispresent = $blockispresent || ($_ eq "$MARKER_BEGIN\n");
 	  }
 	  if (! $blockispresent)
 	    {
-	      system("echo \"# !!! CodeX Specific !!! DO NOT REMOVE (NEEDED CODEX MARKER)\n# the following block is regularly added when not present\n# But keeping the block will prevent you from this automatic add if you need some manual modification to the active line within the block\" >> $cvs_dir/CVSROOT/commitinfo");
-	      system("echo \"ALL /usr/local/bin/commit_prep -T $gname -r\" >> $cvs_dir/CVSROOT/commitinfo");	 
-	      system("echo \"# END OF NEEDED CODEX BLOCK\" >> $cvs_dir/CVSROOT/commitinfo");
+	      system("echo \"$MARKER_BEGIN\" >> $cvs_dir/CVSROOT/commitinfo");
+	      system("echo \"ALL /usr/local/bin/commit_prep -T $gname -r\" >> $cvs_dir/CVSROOT/commitinfo");
+	      system("echo \"$MARKER_END\" >> $cvs_dir/CVSROOT/commitinfo");
 	      system("cd $cvs_dir/CVSROOT; rcs -q -l commitinfo; ci -q -m\"CodeX modifications: entering commit_prep from group fields (cvs_tracker/cvs_events)\" commitinfo; co -q commitinfo");
 	    }
 	}
@@ -315,12 +305,11 @@ while ($ln = pop(@groupdump_array)) {
         }
 
 	# Create Subversion repository if needed
+	$svn_dir = "$svn_prefix/$gname";
 	if ( $gstatus eq 'A' && !(-e "$svn_prefix/$gname")) {
 	  print("Creating a Subversion Repository for: $gname\n");
 
 	  # Let's create a subversion repository for this group
-	  $svn_dir = "$svn_prefix/$gname";
-
 	  mkdir $svn_dir, 0775;
 	  system("/usr/bin/svnadmin create $svn_dir");
 	  $group_modified = 1;
@@ -347,6 +336,27 @@ while ($ln = pop(@groupdump_array)) {
 	  close(SVNACCESS);
 	}
 
+
+	# Put in place the svn post-commit hook for email notification
+	# if not present (if the file does not exist it is created)
+	$postcommit_file = "$svn_dir/hooks/post-commit";
+	if ($gstatus eq 'A') {
+	  open (FD, "+>>$postcommit_file") ;
+	  $blockispresent = 0;
+	  while (<FD>) {
+	    if ($_ eq "$MARKER_BEGIN\n") { $blockispresent = 1; break; }
+	  }
+	  if (! $blockispresent) {
+	    print FD "#!/bin/sh\n";
+	    print FD "$MARKER_BEGIN\n";
+	    print FD "REPOS=\"\$1\";REV=\"\$2\"\n";
+	    print FD "/usr/local/bin/commit-email.pl \"\$REPOS\" \"\$REV\"\n";
+	    print FD "$MARKER_END\n";
+	    system("chown -R $cxname:$gid $postcommit_file");
+	    system("chmod 775 $postcommit_file");
+	  }
+	  close(FD);
+	}
       }
 
 #

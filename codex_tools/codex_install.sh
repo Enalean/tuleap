@@ -131,8 +131,8 @@ todo "WHAT TO DO TO FINISH THE CODEX INSTALLATION (see $TODO_FILE)"
 #
 rpms_ok=1
 for rpm in openssh-server openssh openssh-clients openssh-askpass \
-   openssl openldap perl perl-DBI perl-CGI \
-   sendmail telnet bind ntp samba python php php-mysql php-ldap
+   openssl openldap perl perl-DBI perl-CGI gd \
+   sendmail telnet bind ntp samba python php php-mysql php-ldap enscript
 do
     $RPM -q $rpm  2>/dev/null 1>&2
     if [ $? -eq 1 ]; then
@@ -302,6 +302,14 @@ $RPM -Uvh --force ${newest_rpm}/MySQL-*.i386.rpm
 $SERVICE mysql start
 $CHKCONFIG mysql on
 
+# -> mysql module for Python
+echo "Removing RedHat MySQL module for Python..."
+$RPM -e --nodeps MySQL-python 2>/dev/null
+echo "Installing Python MySQL module RPM for CodeX...."
+cd ${RPMS_DIR}/mysql-python
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh --force ${newest_rpm}/MySQL-python-*.i386.rpm
+
 # -> apache
 echo "Removing RedHat Apache..."
 $SERVICE httpd stop
@@ -312,7 +320,7 @@ newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh --force ${newest_rpm}/httpd-*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/mod_ssl-*.i386.rpm
 $CHKCONFIG httpd on
-# restart Apache after PHP installation - see below
+# restart Apache after subversion installation - see below
 
 # -> jre
 echo "Removing RedHat Java JRE..."
@@ -345,9 +353,20 @@ $RPM -Uvh --force ${newest_rpm}/neon.*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/apr-0.*.i386.rpm ${newest_rpm}/apr-util*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/subversion-1.*.i386.rpm \
 $RPM -Uvh --force ${newest_rpm}/subversion-server*.i386.rpm
+$RPM -Uvh --force ${newest_rpm}/subversion-python*.i386.rpm
+$RPM -Uvh --force ${newest_rpm}/subversion-tools*.i386.rpm
 
-# Restart Apache after PHP is installed
+# Restart Apache after subversion is installed
+# so that mod_dav_svn module is taken into account
 $SERVICE httpd restart
+
+# -> viewcvs 
+echo "Removing installed viewcvs if any .."
+$RPM -e --nodeps viewcvs 2>/dev/null
+echo "Installing viewcvs RPM for CodeX...."
+cd ${RPMS_DIR}/viewcvs
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh --force ${newest_rpm}/viewcvs-*.noarch.rpm
 
 # Create an http password file
 $TOUCH /etc/httpd/conf/codex_htpasswd
@@ -629,6 +648,18 @@ cd /home/httpd/SF/etc
 $CP cvsweb.conf.dist /etc/httpd/conf/cvsweb.conf
 $CHOWN root.root /etc/httpd/conf/cvsweb.conf
 $CHMOD 644 /etc/httpd/conf/cvsweb.conf
+
+##############################################
+# Subversion configuration
+#
+echo "Configuring the Subversion server and tracking tools..."
+cd /home/httpd/SF/utils/svn
+$CP commit-email.pl /usr/local/bin
+cd /usr/local/bin
+$CHOWN sourceforge.sourceforge commit-email.pl
+$CHMOD 755 commit-email.pl
+$CHMOD u+s commit-email.pl   # sets the uid bit (-rwsr-xr-x)
+
 
 ##############################################
 # FTP server configuration

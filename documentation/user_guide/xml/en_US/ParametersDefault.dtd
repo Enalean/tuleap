@@ -20,6 +20,7 @@ redefine your entities there. If this file doesn't exist create it.-->
 
 <!ENTITY SYS_DEFAULT_DOMAIN "codex.xerox.com">
 <!ENTITY SYS_CVS_HOST "cvs.codex.xerox.com">
+<!ENTITY SYS_SVN_HOST "svn.codex.xerox.com">
 <!ENTITY SYS_DOWNLOAD_HOST "download.codex.xerox.com">
 <!ENTITY SYS_SHELL_HOST "shell.codex.xerox.com">
 <!ENTITY SYS_LISTS_HOST "lists.codex.xerox.com">

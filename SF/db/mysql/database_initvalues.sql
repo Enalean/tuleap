@@ -38,24 +38,132 @@ INSERT INTO user VALUES (101, 'admin', '', \
 # Default Data for 'groups'
 #
 
-INSERT INTO groups VALUES (1, 'CodeX Administration Project', 1, 'A',
-'codex', 'shell1', 'codex._DOMAIN_NAME_', 'CodeX Administration Project',
-'cvs1', '', '', '', '', '', '',
-940000000, '', '', '', '', 1, 1, 1, 1, '',
-'', '', '', 1,0,1,0,'','','');
+INSERT INTO groups SET \
+  group_id = '1', \
+  group_name = 'CodeX Administration Project', \
+  is_public = '1', \
+  status = 'A', \
+  unix_group_name = 'codex', \
+  unix_box = 'shell1', \
+  http_domain = 'codex._DOMAIN_NAME_', \
+  short_description = 'CodeX Administration Project', \
+  cvs_box = 'cvs1', \
+  svn_box = 'svn1', \
+  license = 'xrx', \
+  register_purpose = '', \
+  required_software = '', \
+  patents_ips = '', \
+  other_comments = '', \
+  license_other = '', \
+  register_time = 940000000, \
+  rand_hash = '', \
+  new_bug_address = 'codex-admin@_DOMAIN_NAME_', \
+  new_patch_address = 'codex-admin@_DOMAIN_NAME_', \
+  new_support_address = 'codex-admin@_DOMAIN_NAME_', \
+  type = '1', \
+  send_all_bugs = '1', \
+  send_all_patches = '1', \
+  send_all_support = '1', \
+  bug_preamble = '', \
+  support_preamble = '', \
+  patch_preamble = '', \
+  pm_preamble = '', \
+  xrx_export_ettm = '0', \
+  project_type = '0', \
+  bug_allow_anon = '1', \
+  cvs_tracker = '1', \
+  cvs_events_mailing_list = '', \
+  cvs_events_mailing_header = '', \
+  cvs_preamble = '', \
+  svn_tracker = '1', \
+  svn_events_mailing_list = '', \
+  svn_events_mailing_header = '', \
+  svn_preamble = '' ;
+
+INSERT INTO groups SET \
+  group_id = '46', \
+  group_name = 'Site News', \
+  is_public = '0', \
+  status = 'A', \
+  unix_group_name = 'sitenews', \
+  unix_box = 'shell1', \
+  http_domain = 'sitenews._DOMAIN_NAME_', \
+  short_description = 'Site News Private Project. All Site News should be posted from this project', \
+  cvs_box = 'cvs1', \
+  svn_box = 'svn1', \
+  license = 'xrx', \
+  register_purpose = 'Site News Private Project\r\n\r\n', \
+  required_software = '', \
+  patents_ips = '', \
+  other_comments = '', \
+  license_other = '', \
+  register_time = 940000000, \
+  rand_hash = '', \
+  new_bug_address = '', \
+  new_patch_address = '', \
+  new_support_address = '', \
+  type = '1', \
+  send_all_bugs = '0', \
+  send_all_patches = '0', \
+  send_all_support = '0', \
+  bug_preamble = '', \
+  support_preamble = '', \
+  patch_preamble = '', \
+  pm_preamble = '', \
+  xrx_export_ettm = '0', \
+  project_type = '0', \
+  bug_allow_anon = '1', \
+  cvs_tracker = '0', \
+  cvs_events_mailing_list = '', \
+  cvs_events_mailing_header = '', \
+  cvs_preamble = '', \
+  svn_tracker = '0', \
+  svn_events_mailing_list = '', \
+  svn_events_mailing_header = '', \
+  svn_preamble = '' ;
 
 
-INSERT INTO groups VALUES (46, 'Site News', 0, 'A',
-'sitenews', 'shell1', 'sitenews._DOMAIN_NAME_', 'Site News Private Project. All Site News should be posted from this project', \
-'cvs1', 'xrx', 'Site News Private Project\r\n\r\n', NULL, NULL, NULL, '',
-940000000, '', '', '', '', 1, 0, 0, 0, '',
-'', '', '', 0,0,1,0,'','','');
-
-INSERT INTO groups VALUES (100, 'none', 0, 'S',
-'none', 'shell1', '', 'Reserved project with group_id = 100 (None)',
-'', '', '', '', '', '', '', 
-940000000, '', '', '', '', 1, 0, 0, 0, '', 
-'', '', '', 0,0,1,0,'','','');
+INSERT INTO groups SET \
+  group_id = '100', \
+  group_name = 'none', \
+  is_public = '0', \
+  status = 's', \
+  unix_group_name = 'none', \
+  unix_box = 'shell1', \
+  http_domain = '', \
+  short_description = 'Reserved project with group_id = 100 (None)', \
+  cvs_box = '', \
+  svn_box = '', \
+  license = '', \
+  register_purpose = '', \
+  required_software = '', \
+  patents_ips = '', \
+  other_comments = '', \
+  license_other = '', \
+  register_time = 940000000, \
+  rand_hash = '', \
+  new_bug_address = '', \
+  new_patch_address = '', \
+  new_support_address = '', \
+  type = '1', \
+  send_all_bugs = '0', \
+  send_all_patches = '0', \
+  send_all_support = '0', \
+  bug_preamble = '', \
+  support_preamble = '', \
+  patch_preamble = '', \
+  pm_preamble = '', \
+  xrx_export_ettm = '0', \
+  project_type = '0', \
+  bug_allow_anon = '1', \
+  cvs_tracker = '0', \
+  cvs_events_mailing_list = '', \
+  cvs_events_mailing_header = '', \
+  cvs_preamble = '', \
+  svn_tracker = '0', \
+  svn_events_mailing_list = '', \
+  svn_events_mailing_header = '', \
+  svn_preamble = '' ;
 
 #
 # Default Data for 'user_group'
@@ -1492,6 +1600,7 @@ insert into service (service_id, group_id, label, description, short_name, link,
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (13, 100, 'CVS', 'CVS Access', 'cvs', '/cvs/?group_id=$group_id', 1, 1, 'system', 130);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (14, 100, 'Files', 'File Releases', 'file', '/project/filelist.php?group_id=$group_id', 1, 1, 'system', 140);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (15, 100, 'Trackers', 'Project Trackers', 'tracker', '/tracker/index.php?group_id=$group_id', 1, 1, 'system', 150);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (16, 100, 'Subversion', 'Subversion Access', 'svn', '/svn/?group_id=$group_id', 1, 1, 'system', 135);
 
 -- Group 1
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (31, 1, 'Summary', 'Project Summary', 'summary', '/projects/$projectname/', 1, 1, 'system', 10);
@@ -1506,6 +1615,7 @@ insert into service (service_id, group_id, label, description, short_name, link,
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (40, 1, 'CVS', 'CVS Access', 'cvs', '/cvs/?group_id=$group_id', 1, 1, 'system', 130);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (41, 1, 'Files', 'File Releases', 'file', '/project/filelist.php?group_id=$group_id', 1, 1, 'system', 140);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (42, 1, 'Trackers', 'Project Trackers', 'tracker', '/tracker/index.php?group_id=$group_id', 1, 1, 'system', 150);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (43, 1, 'Subversion', 'Subversion Access', 'svn', '/svn/?group_id=$group_id', 1, 1, 'system', 135);
 
 -- Group 46 - SiteNews
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (51, 46, 'Summary', 'Project Summary', 'summary', '/projects/$projectname/', 1, 1, 'system', 10);
@@ -1515,6 +1625,7 @@ insert into service (service_id, group_id, label, description, short_name, link,
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (55, 46, 'News', 'Project News', 'news', '/news/?group_id=$group_id', 1, 1, 'system', 120);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (56, 46, 'Files', 'File Releases', 'file', '/project/filelist.php?group_id=$group_id', 1, 1, 'system', 140);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (57, 46, 'Trackers', 'Project Trackers', 'tracker', '/tracker/index.php?group_id=$group_id', 1, 1, 'system', 150);
+
 --
 --
 -- This service has the id 100 to force the next id to be greater than 100
