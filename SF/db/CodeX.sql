@@ -94,5 +94,5 @@ ALTER TABLE snippet_version ADD filetype VARCHAR(50) NOT NULL;
 # and  user_id+preference_name index must be unique
 #
 
-ALTER TABLE user_preferences CHANGE preference_name preference_name VARCHAR(255)NOT NULL;
-ALTER TABLE user_preferences DROP INDEX `idx_user_pref_user_id`, ADD PRIMARY KEY (`user_id`,`preference_name`)
+ALTER TABLE user_preferences CHANGE preference_name preference_name VARCHAR(255) NOT NULL;
+ALTER TABLE user_preferences DROP INDEX `idx_user_pref_user_id`, ADD PRIMARY KEY (`user_id`,`preference_name`);
