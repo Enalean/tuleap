@@ -125,11 +125,20 @@ require('theme.php');
 // Bypass the test for:
 // a) all scripts where you are not logged in by definition
 // b) if it is a local access from localhost 
+
+/*
+print "<p>DBG: SERVER_NAME = ".$SERVER_NAME;
+print "<p>DBG: sys_allow_anon= ".$GLOBALS['sys_allow_anon'];
+print "<p>DBG: user_isloggedin= ".user_isloggedin();
+print "<p>DBG: SCRIPT_NAME = ".$SCRIPT_NAME";
+*/
+
 if ($SERVER_NAME != 'localhost' && 
     $GLOBALS['sys_allow_anon'] == 0 && !user_isloggedin() &&
     $SCRIPT_NAME != '/account/login.php'  && 
     $SCRIPT_NAME != '/account/register.php'&& 
     $SCRIPT_NAME != '/account/lostpw.php' &&
+    $SCRIPT_NAME != '/account/lostlogin.php' &&
     $SCRIPT_NAME != '/account/lostpw-confirm.php' &&
     $SCRIPT_NAME != '/account/verify.php' ) {
     if ($GLOBALS['sys_force_ssl'] == 1 || $HTTPS == 'on')
