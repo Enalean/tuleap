@@ -1383,7 +1383,9 @@ function pm_build_notification_list($project_task_id, $group_id, $changes) {
     	}
     }
     // Only one CC can be deleted at once so just append it to the list....
-    $arr_cc[] = $changes['CC']['del'];
+    if ($changes['CC']['del']) {
+      $arr_cc[] = $changes['CC']['del'];
+    }
 
     while (list(,$cc) = each($arr_cc)) {
     	if (validate_email($cc)) {
