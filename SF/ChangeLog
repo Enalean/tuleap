@@ -1,3 +1,10 @@
+------------------------------------------------------------------------------
+CODEX 2.0 (tag: CX_2_0) - 2003-11-25 - 6:25am EST
+
+2003-11-25 14:23  ljulliar
+
+	* ChangeLog: Updating Changelog before tagging version 2.0
+
 2003-11-25 14:15  ljulliar
 
 	* www/VERSION: Initial revision for CodeX 2.0
@@ -1079,6 +1086,9 @@
 
 	* ChangeLog: Updating Changelog before tagging version 1.6
 	installed at ST Microelectronics
+
+------------------------------------------------------------------------------
+CODEX 1.6 (tag: CX_1_6) - 2003-07-08 - 6:00am EST
 
 2003-07-07 18:52  ljulliar
 
@@ -2994,6 +3004,9 @@
 	results in order: by survey id then block of answers and finally by
 	question_id. This makes the export clearer (bug #8049)
 
+------------------------------------------------------------------------------
+CODEX 1.5 (tag: CX_1_5) - 2002-08-13
+
 2002-08-13 15:43  ljulliar
 
 	* ChangeLog: Prepared for release 1.5
@@ -3019,6 +3032,9 @@
 	* www/bugs/index.php: An empty array is now passsed as an argument
 	to receive changes even if it not applicable when a bug is first
 	created. We need it in the parameter list (bug #7554)
+	
+------------------------------------------------------------------------------
+CODEX 1.4 (tag: CX_1_4) - 2002-08-03
 
 2002-07-29 10:07  ljulliar
 
@@ -3089,11 +3105,37 @@
 	images/codex_logo.png, images/msg.gif, images/msg.png,
 	images/pointer_down.png, images/pointer_left.png,
 	images/pointer_right.png, images/pointer_up.png, images/t.gif,
-	images/t.png, images/t2.gif, images/t2.png, include/Layout.class,
-	include/Theme.class, include/html.php, include/osdn.php,
-	new/index.php, search/index.php: Remove all the GIF files used in
-	the CodeX project and convert it in PNG. Recreate some PNG files
-	with a real transparency (Task # 1910)
+	images/t.png, images/t2.gif, images/t2.png,
+	images/calendar/next.png, images/calendar/next_year.png,
+	images/calendar/prev.png, images/calendar/prev_year.png,
+	images/ic/bug16b.png, images/ic/cfolder15.png, images/ic/check.png,
+	images/ic/check16b.png, images/ic/cvs16b.png,
+	images/ic/docman16b.png, images/ic/ftp16b.png,
+	images/ic/home16.png, images/ic/home16b.png, images/ic/mail16b.png,
+	images/ic/manual16b.png, images/ic/monitor16b.png,
+	images/ic/ofolder15.png, images/ic/save.png, images/ic/save16b.png,
+	images/ic/survey16b.png, images/ic/taskman16b.png,
+	include/Layout.class, include/Theme.class, include/html.php,
+	include/osdn.php, new/index.php, search/index.php,
+	themes/classic/Theme.class, themes/classic/theme.php,
+	themes/codex/images/bottom_left_corner.gif,
+	themes/codex/images/bottom_left_corner.png,
+	themes/codex/images/bottom_right_corner.gif,
+	themes/codex/images/bottom_right_corner.png,
+	themes/codex/images/clear.gif, themes/codex/images/clear.png,
+	themes/codex/images/codex_banner_lc.png,
+	themes/codex/images/left_border.gif,
+	themes/codex/images/left_border.png,
+	themes/codex/images/right_border.gif,
+	themes/codex/images/right_border.png,
+	themes/codex/images/top_border.gif,
+	themes/codex/images/top_border.png,
+	themes/codex/images/upper_left_corner.gif,
+	themes/codex/images/upper_left_corner.png,
+	themes/codex/images/upper_right_corner.gif,
+	themes/codex/images/upper_right_corner.png: Remove all the GIF
+	files used in the CodeX project and convert it in PNG. Recreate
+	some PNG files with a real transparency (Task # 1910)
 
 2002-06-24 14:46  ljulliar
 
@@ -3347,7 +3389,7 @@
 
 2002-05-28 15:41  ljulliar
 
-	* etc/local.inc.dist, www/contact.php, www/account/login.php,
+	* etc/local.inc, www/contact.php, www/account/login.php,
 	www/account/pending-resend.php, www/admin/massmail.php,
 	www/mail/admin/index.php, www/project/admin/editaliases-new.php,
 	www/register/category.php, www/register/confirmation.php,
@@ -3357,8 +3399,8 @@
 
 2002-05-24 11:06  ljulliar
 
-	* etc/local.inc.dist, www/about.php, www/contact.php,
-	www/index.php, www/staff.php, www/thanks.php,
+	* etc/local.inc, www/about.php, www/contact.php, www/index.php,
+	www/staff.php, www/thanks.php,
 	www/account/change_email-complete.php,
 	www/account/change_email-confirm.php, www/account/change_email.php,
 	www/account/change_timezone.php, www/account/first.php,
@@ -3464,7 +3506,7 @@
 
 2002-04-29 10:35  ljulliar
 
-	* etc/local.inc.dist: Version with no sensitive information in it
+	* etc/local.inc: Version with no sensitive information in it
 
 2002-04-29 09:56  ljulliar
 
@@ -3645,9 +3687,12 @@
 	* www/images/: dn_arrow.png, up_arrow.png: Initial revision (task
 	#1527)
 
-2002-03-25 15:47  ljulliar
+2002-03-25 15:45  ljulliar
 
-	* www/include/calendar.js: Initial revision (task #1526)
+	* www/: images/calendar/cal.png, images/calendar/next.png,
+	images/calendar/next_year.png, images/calendar/prev.png,
+	images/calendar/prev_year.png, include/calendar.js: Initial
+	revision (task #1526)
 
 2002-03-25 15:41  ljulliar
 
@@ -3734,11 +3779,11 @@
 
 2002-02-22 14:44  ljulliar
 
-	* www/include/utils.php: Validate comma separated emails
+	* www/bugs/admin/other_settings.php: Some code cleanup
 
 2002-02-22 14:44  ljulliar
 
-	* www/bugs/admin/other_settings.php: Some code cleanup
+	* www/include/utils.php: Validate comma separated emails
 
 2002-02-22 12:04  ljulliar
 
@@ -4316,6 +4361,9 @@
 
 	* www/patch/add_patch.php: Return To URL added if user not logged
 	in.
+	
+------------------------------------------------------------------------------
+CODEX 1.3 (tag: CX_1_3) - 2001-05-18
 
 2001-05-18 15:56  ljulliar
 
@@ -4336,6 +4384,10 @@
 
 	* www/bugs/bug_utils.php: Next 50 pointer was not showing at the
 	end of the bug page when number of bugs were greatest than 50
+
+
+------------------------------------------------------------------------------
+CODEX 1.2 (tag: CX_1_2) - 2001-05-12
 
 2001-05-11 10:29  ljulliar
 
@@ -4430,6 +4482,9 @@
 	page instead of just the CodeX home page. Removed pointer to
 	partners at the top of the page
 
+------------------------------------------------------------------------------
+CODEX 1.1 (tag: CX_1_1) - 2001-03-22
+	
 2001-03-22 18:21  ljulliar
 
 	* www/include/user_home.php: Connection to Company LDAP server in
@@ -4578,6 +4633,11 @@
 	* www/people/people_utils.php: Skill levels now sorted by asc.
 	order (bug #64)
 
+2001-03-06 12:27  ljulliar
+
+	* www/themes/codex/images/steel3.jpg.backup: File Removed.
+	Forgotten in the CodeX cleanup
+
 2001-03-06 12:09  ljulliar
 
 	* utils/default_page.php, utils/fileforge.c, utils/include.pl,
@@ -4653,6 +4713,25 @@
 	www/top/toplist.php, www/tos/privacy.php, www/tos/tos_text.php:
 	File changed since SourceForge 2.0
 
+2001-03-06 12:01  ljulliar
+
+	* www/themes/codex/: images/codex_banner_2lines.xcf,
+	images/fade.png, images/codex_banner_uc.xcf, images/black.gif,
+	images/clear.gif, images/codex_banner_lc.xcf,
+	images/codex_banner_lc.gif, images/codex_banner_uc.gif, theme.php,
+	Theme.class: File added in CodeX
+
+2001-03-06 11:58  ljulliar
+
+	* www/themes/codex/images/: point1.png, point2.png, rateit.png,
+	rightbar1.png, sf-bar2.png, sflogo-hammer1.jpg, steel3.jpg,
+	tbar1.png, tleft1.png, tright1.png, valogo5.jpg, codex_logo.gif,
+	codex_banner_2lines.gif, fade.xcf, steel3.jpg.backup,
+	bottom_left_corner.gif, bottom_right_corner.gif, hx_logo.gif,
+	left_border.gif, top_border.gif, tablebg.gif, fade.gif,
+	upper_left_corner.gif, upper_right_corner.gif, right_border.gif,
+	bottom_border.gif, point1.gif: File added in CodeX
+
 2001-03-06 11:55  ljulliar
 
 	* backend/zones/README, db/CodeX.sql, utils/compile_fileforge.sh,
@@ -4665,7 +4744,12 @@
 	www/include/tos_text.php, www/info.php, www/info.php3,
 	www/project/download.php, www/project/showdetails.php,
 	www/project/stats/source_code_access.php,
-	www/project/stats/source_code_access_utils.php: File added in CodeX
+	www/project/stats/source_code_access_utils.php,
+	www/themes/codex/images/bbar1.png,
+	www/themes/codex/images/bleft1.png,
+	www/themes/codex/images/bright1.png,
+	www/themes/codex/images/fade1.png,
+	www/themes/codex/images/leftbar1.png: File added in CodeX
 
 2001-03-06 11:33  ljulliar
 
@@ -4674,6 +4758,9 @@
 	project-adminusers.php, services-cvs.php, services-web.php,
 	services.php, software.php: removed files now in CodeX Doc Mgr
 
+------------------------------------------------------------------------------
+CODEX 1.0 (tag: CX_1_0) - 2001-03-06
+	
 2001-03-06 11:03  root
 
 	* docs/Adminstration_Guide.html, docs/Contributor_Guide.html,
@@ -4850,16 +4937,19 @@
 	www/survey/admin/show_results_aggregate.php,
 	www/survey/admin/show_results_comments.php,
 	www/survey/admin/show_results_csv.php,
-	www/survey/admin/show_results_individual.php, www/top/index.php,
-	www/top/mostactive.php, www/top/toplist.php, www/tos/privacy.php,
-	www/tos/tos.php, www/tos/tos_text.php, db/DefaultValues.sql,
-	db/SQL_diff_1.5_to_2.0.sql, db/SourceForge.sql, db/db-image.sql,
-	db/filerelease-changes.sql, db/foundry.sql,
-	db/statistics_tables.sql, db/themes.sql, db/trove_defaults.sql,
-	db/user_rating.sql, docs/images/sflogo2-105a.png, utils/cvs.txt,
-	utils/sffingerd.c, utils/cvs1/cvscreate.sh,
-	utils/cvs1/cvstar_genlist.pl, utils/cvs1/cvstar_superscript.pl,
-	utils/cvs1/run_span.pl, utils/download/stats_logparse.sh,
+	www/survey/admin/show_results_individual.php, www/themes/index.php,
+	www/themes/classic/Theme.class, www/themes/classic/theme.php,
+	www/themes/forged/Theme.class, www/themes/forged/theme.php,
+	www/top/index.php, www/top/mostactive.php, www/top/toplist.php,
+	www/tos/privacy.php, www/tos/tos.php, www/tos/tos_text.php,
+	db/DefaultValues.sql, db/SQL_diff_1.5_to_2.0.sql,
+	db/SourceForge.sql, db/db-image.sql, db/filerelease-changes.sql,
+	db/foundry.sql, db/statistics_tables.sql, db/themes.sql,
+	db/trove_defaults.sql, db/user_rating.sql,
+	docs/images/sflogo2-105a.png, utils/cvs.txt, utils/sffingerd.c,
+	utils/cvs1/cvscreate.sh, utils/cvs1/cvstar_genlist.pl,
+	utils/cvs1/cvstar_superscript.pl, utils/cvs1/run_span.pl,
+	utils/download/stats_logparse.sh,
 	utils/underworld-dummy/aliases.zone,
 	utils/underworld-root/db_jobs_close.pl,
 	utils/underworld-root/db_stats_cvs_history.pl,
@@ -4873,12 +4963,42 @@
 	www/images/bg-blue1-rt.gif, www/images/bg-blue1.gif,
 	www/images/binary-code.gif, www/images/blackdot.gif,
 	www/images/blank.gif, www/images/bug.png, www/images/cfolder.gif,
-	www/images/msg.gif, www/patch/patch-er-diagram.sda,
+	www/images/msg.gif, www/images/docs/developerperms.png,
+	www/images/docs/groupmembers.png, www/images/ic/anvil24.png,
+	www/images/ic/bug-poo.png, www/images/ic/bug.png,
+	www/images/ic/bug16b.png, www/images/ic/caret.png,
+	www/images/ic/cfolder.png, www/images/ic/cfolder1.png,
+	www/images/ic/cfolder15.png, www/images/ic/check.png,
+	www/images/ic/check16b.png, www/images/ic/convert.png,
+	www/images/ic/cvs16b.png, www/images/ic/docman.png,
+	www/images/ic/docman16b.png, www/images/ic/env-be.png,
+	www/images/ic/env-mac.png, www/images/ic/env-oth.png,
+	www/images/ic/env-palm.png, www/images/ic/env-tux.png,
+	www/images/ic/env-web1.png, www/images/ic/env-win.png,
+	www/images/ic/env-x.png, www/images/ic/forge9.png,
+	www/images/ic/ftp16b.png, www/images/ic/halfcheck.png,
+	www/images/ic/home.png, www/images/ic/home16.png,
+	www/images/ic/home16b.png, www/images/ic/index.png,
+	www/images/ic/mail.png, www/images/ic/mail16b.png,
+	www/images/ic/mail16c.png, www/images/ic/mail16d.png,
+	www/images/ic/manual16b.png, www/images/ic/manual16c.png,
+	www/images/ic/manual16d.png, www/images/ic/monitor16b.png,
+	www/images/ic/news.png, www/images/ic/notes.png,
+	www/images/ic/notes16.png, www/images/ic/ofolder.png,
+	www/images/ic/ofolder1.png, www/images/ic/ofolder15.png,
+	www/images/ic/paper16-p.png, www/images/ic/paper16.png,
+	www/images/ic/patch.png, www/images/ic/pencil.png,
+	www/images/ic/save.png, www/images/ic/save16.png,
+	www/images/ic/save16b.png, www/images/ic/scissors.png,
+	www/images/ic/search.png, www/images/ic/support.png,
+	www/images/ic/support16b.jpg, www/images/ic/survey.png,
+	www/images/ic/survey16b.png, www/images/ic/taskman16b.png,
+	www/images/ic/trash.png, www/patch/patch-er-diagram.sda,
 	www/patch/patch-plan.txt, www/stats/.htaccess, AUTHORS,
 	CONTRIBUTING, COPYING, ChangeLog, INSTALL, README,
 	backend/shell/apache.sh, backend/zones/aliases.zone,
 	backend/zones/dns.zone, backend/zones/httpd.conf.zone,
-	backend/zones/sendmail.cw.zone, etc/local.inc.dist, www/.htaccess,
+	backend/zones/sendmail.cw.zone, etc/local.inc, www/.htaccess,
 	www/dbimage.php, www/pager.php3, www/compilefarm/index.php,
 	www/docman/display_doc.php, www/docman/doc_utils.php,
 	www/docman/index.php, www/docman/new.php,
@@ -4906,9 +5026,21 @@
 	www/images/tab-summary.png, www/images/tab-surveys-lo.png,
 	www/images/tab-surveys.png, www/images/va-btn-small-light.png,
 	www/images/valogo3.png, www/images/vatop-100x100.png,
-	www/images/vatop-75x75.png, www/include/bookmarks.php,
-	www/include/foundry_home.php, www/include/foundry_html_admin.php,
-	www/include/graph_lib.php, www/include/group-model-er-diagram.sda,
+	www/images/vatop-75x75.png, www/images/foundry/1872admin.png,
+	www/images/foundry/1872logo.png, www/images/foundry/6770admin.png,
+	www/images/foundry/6770logo.png, www/images/foundry/6771admin.png,
+	www/images/foundry/6771logo.png, www/images/foundry/6772admin.png,
+	www/images/foundry/6772logo.png, www/images/foundry/9571admin.png,
+	www/images/foundry/9571logo.png, www/images/foundry/9572admin.png,
+	www/images/foundry/9572logo.png,
+	www/images/foundry/powered_by_va.png,
+	www/images/foundry/sflogo4-steel.png,
+	www/images/others/cosource142x31.gif,
+	www/images/others/dmoz-cool1.gif, www/images/others/gnome1.png,
+	www/images/others/kde-logotp3.png, www/images/others/suse_g_sm.png,
+	www/include/bookmarks.php, www/include/foundry_home.php,
+	www/include/foundry_html_admin.php, www/include/graph_lib.php,
+	www/include/group-model-er-diagram.sda,
 	www/include/multi-threads.php, www/include/osdn.php,
 	www/include/squal_exit.php, www/include/timezones.php,
 	www/my/bookmark_add.php, www/my/bookmark_delete.php,
@@ -4920,6 +5052,172 @@
 	www/register/publicdomain.txt, www/snippet/snippet-er-diagram.sda,
 	www/snippet/snippet-plan.txt, www/support/support-er-diagram.sda,
 	www/support/support-plan.txt, www/support/support_data.php,
-	www/survey/survey-er-diagram.sda, www/survey/admin/survey.sql:
-	Original SourceForge 2.0
+	www/survey/survey-er-diagram.sda, www/survey/admin/survey.sql,
+	www/themes/classic/sourceforge.css,
+	www/themes/forged/images/bbar1.png,
+	www/themes/forged/images/bleft1.png,
+	www/themes/forged/images/bright1.png,
+	www/themes/forged/images/fade1.png,
+	www/themes/forged/images/leftbar1.png,
+	www/themes/forged/images/point1.png,
+	www/themes/forged/images/point2.png,
+	www/themes/forged/images/rateit.png,
+	www/themes/forged/images/rightbar1.png,
+	www/themes/forged/images/sf-bar2.png,
+	www/themes/forged/images/sflogo-hammer1.jpg,
+	www/themes/forged/images/steel3.jpg,
+	www/themes/forged/images/tbar1.png,
+	www/themes/forged/images/tleft1.png,
+	www/themes/forged/images/tright1.png,
+	www/themes/forged/images/valogo5.jpg: Original SourceForge 2.0
 
+------------------------------------------------------------------------------
+Wed Sep 6, 3:30:30 PDT 2000
+
+SOURCEFORGE 2.0   
+	- To get help setting up your copy of SourceForge, 
+	  visit the "SF Offsite Talk" discussion boards at 
+	  http://sourceforge.net/forum/forum.php?forum_id=21304
+
+	- Foundry code now present and cleaned up.
+	  You can create new foundries simply by selecting that option in 
+	  the /admin/groupedit.php page (Tim)
+
+	- Theming support sitewide and html library cleanup. Sample themes 
+	  included in /www/themes/ (Geoff)
+
+	- Audit trail for projects. Now when site-admins and project-admins 
+	  change a project, certain events will cause an audit trail recording 
+	  (events like adding/removing users, updating permissions, etc) (Tim)
+
+	- File release system totally rewritten from the ground up to use a 
+	  more normalized database schema. There is an upgrade script in 
+	  /www/admin/ which should help you migrate data from the old 
+	  structure (Tim)
+
+	- Using some classes to "objectize" things like Groups, Projects, 
+	  and Foundries. Project and Foundry extend Group. See 
+	  /include/Group.class /include/Foundry.class and 
+	  /include/Project.class (Tim)
+
+	- Hundreds of misc. interface cleanups sitewide. More user feedback, 
+	  ordering of pop-up list boxes, submit buttons added to the tops of 
+	  many forms sitewide, etc etc (Tim, Geoff, Wallace Lee)
+
+	- Task manager can now move tasks among subprojects. (Wallace Lee)
+
+	- Sitewide stats project. Organizing daily stats for each project 
+	  into summary tables, graphing the results. (Matt Snelham)
+
+	- Groundwork for advogato-like system of peer ratings. Need to 
+	  finish user interface. New system goes beyond advogato, as each 
+	  user has a unique "importance factor" and overall ranking among 
+	  all users on the entire site. Only users that have achieved a 
+	  "trust" level will be able to successfully rate others. See 
+	  /www/admin/calculate_user_metric.php (Tim)
+
+	- Changed user home pages to /users/*user_name*/ using .htaccess 
+	  directive similar to /foundry/ and /project/ (Tim)
+
+------------------------------------------------------------------------------
+Thu Jul  13 10:45:26 PDT 2000
+
+SOURCEFORGE 1.5.0 
+
+        - To get help setting up your copy of SourceForge,           
+          visit the "SF Offsite Talk" discussion boards at
+          http://sourceforge.net/forum/forum.php?forum_id=21304
+
+	- Added a "portability" patch. Massive thanks to 
+	  William Hardeman and David HM Spector for this. SF deployers 
+	  everywhere will thank them
+
+	- Removed a lot of hard-coded references to SF.net everywhere, 
+	  including hard-coded user_id's of the SF core staff
+
+	- Wallace Lee continues to make numerous clean patches throughout 
+	  the site (naming forums/subprojects/mailing lists among others)
+
+	- Optimizations throughout the code base - added intelligence to the
+	  user.php and group.php library so database queries aren't wasted. 
+
+	- Tested under PHP4 and only one know issue was found and fixed.
+
+	- Starting the process of database portability. Changed the keyword 
+	  "public" in groups to "is_public". Changing the "user" table to 
+	  "users" is next in line, but it is a HUGE task.
+
+	- Tested some features on Postgres and found that LIMIT/OFFSET 
+	  syntax is incompatible. Postgres also cannot yet handle large 
+	  text fields that are > 8K in length (problem for the patch Mgr)
+
+	- Slick new "browse" options on the bug/task/support/project mgrs
+
+	- Changed project homepages to "/projects/*project_name*/" using 
+	  the .htaccess "files" directive. This is known to be problematic 
+	  on some other platforms.
+
+	- Laid groundwork for "portals" which are half-baked and considered 
+	  useless right now.
+
+	- Project Admin page modernized
+
+------------------------------------------------------------------------------
+Thu May  4 15:23:26 PDT 2000
+
+SOURCEFORGE 1.1.0 - Added Support Manager
+
+      - Added Help Wanted System
+
+      - Data abstraction in all modules
+
+      - TROVE catorgization
+
+      - Download Stats Rewrite
+
+      - eval() security fixes (muks)
+
+      - Custom Bug/Support Categories (wallace)
+
+      - Ability to remove yourself from project (wallace)
+
+      - Bundles of code cleanups
+
+      - Navigation Updates
+
+      - Hooks Added to sitewide help
+
+      - other fixes to numerous to list
+        
+------------------------------------------------------------------------------
+Sun Jan 30 09:22:39 PST 2000
+
+SOURCEFORGE 1.0.4
+      - Added docs/ Directory containing both and Installation Guide and a
+        Administration guide provided by the SF Docs Projects. Thanks to
+	the sfdocs people for contributing this. http://sfdocs.sourceforge.net
+
+      - Added etc/local.inc as a example for /etc/local.inc which contains
+        the database information need to run this application.
+
+      - Patch Manager
+
+      - Email notification of files and forums that are being monitored. 
+
+      - Sorting of columns via link through the bugtracker, patch managers,
+        and task manager.  - (loic@users.sourceforge.net) - Thanks!
+
+      - All file extensions allowed on file uploads.
+
+------------------------------------------------------------------------------
+
+Thu Jan 14 09:10:37 PST 2000
+
+SOURCEFORGE 1.0.3
+      - *** Initial Code Relase ***
+        Includes: Bugtracking, Project Management, Forums, Mailing Lists,
+	Surveys, Software Map, File Releases, Top Projects, Site Docs,
+	Project News, Site News, Snippet Library, Registration System, and
+	Individual Account Maitenance.
+
+------------------------------------------------------------------------------
