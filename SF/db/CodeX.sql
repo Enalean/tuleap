@@ -70,6 +70,7 @@ ALTER TABLE surveys ADD is_anonymous INTEGER DEFAULT '0' NOT NULL AFTER is_activ
 ALTER TABLE groups ADD bug_preamble TEXT NOT NULL;
 ALTER TABLE groups ADD support_preamble TEXT NOT NULL;
 ALTER TABLE groups ADD patch_preamble TEXT NOT NULL;
+ALTER TABLE groups ADD pm_preamble TEXT NOT NULL;
 
 #
 # Modify patch table to hold uploaded file information
