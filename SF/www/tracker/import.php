@@ -60,8 +60,8 @@ if($group_id && $atid && $user_id) {
   } else if ($mode == "import") {  
     
     for ($i=0; $i < $count_artifacts; $i++) {
-      for ($c=0; $c < count($parsed_fields); $c++) {
-	$label = $parsed_fields[$c];
+      for ($c=0; $c < count($parsed_labels); $c++) {
+	$label = $parsed_labels[$c];
 	$var_name = "artifacts_data_".$i."_".$c;
 	$data[$label] = $$var_name;
 	//echo "insert $label,".$$var_name." into data<br>";
@@ -69,7 +69,7 @@ if($group_id && $atid && $user_id) {
       $artifacts_data[] = $data;
     }
     
-    $ok = update_db($parsed_fields,$artifacts_data,$aid_column,$errors);
+    $ok = update_db($parsed_labels,$artifacts_data,$aid_column,$errors);
     
     if ($ok) $feedback = "$count_artifacts Artifact(s) Successfully Imported ";
     else $feedback = $errors;

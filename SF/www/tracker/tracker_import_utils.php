@@ -16,7 +16,7 @@
  * @param $used_fields (IN): array containing all the fields that are used in this tracker
  * @param $ath (IN): the tracker
  * @param $num_columns (OUT): number of columns in the data array
- * @param $parsed_fields (OUT): array of the form (column_number => field_label) containing
+ * @param $parsed_labels (OUT): array of the form (column_number => field_label) containing
  *                              all the fields parsed from $data
  * @param $predefined_values (OUT): array of the form (column_number => array of field predefined values)
  * @param $aid_column (OUT): the column in the csv file that contains the arifact id (-1 if not given)
@@ -24,7 +24,7 @@
  * @return true if parse ok, false if errors occurred
  */ 
 function parse_field_names($data,$used_fields,$ath,
-			   &$num_columns,&$parsed_fields,&$predefined_values,
+			   &$num_columns,&$parsed_labels,&$predefined_values,
 			   &$aid_column,&$submitted_by_column,&$submitted_on_column,
 			   &$errors) {
   $aid_column = -1;
@@ -39,19 +39,21 @@ function parse_field_names($data,$used_fields,$ath,
       return false;
     }
     
-    if ($field_label == "Artifact ID") $aid_column = $c; 
-    if ($field_label == "Submitted by") $submitted_by_column = $c;
-    if ($field_label == "Submitted on") $submitted_on_column = $c;
-    
-    $parsed_fields[$c] = $field_label;
-    $curr_field = $used_fields[$field_label];
+    $field = $used_fields[$field_label];
+    if ($field != "") {
+      $field_name = $field->getName();
+      if ($field_name == "artifact_id") $aid_column = $c; 
+      if ($field_name == "submitted_by") $submitted_by_column = $c;
+      if ($field_name == "open_date") $submitted_on_column = $c;
+    }
+    $parsed_labels[$c] = $field_label;
 
     //get already the predefined values of this field (if applicable)
-    if ($curr_field != "" && 
-	($curr_field->getDisplayType() == "SB" || $curr_field->getDisplayType() == "MB")) {
+    if ($field != "" && 
+	($field->getDisplayType() == "SB" || $field->getDisplayType() == "MB")) {
 
       //special case for submitted by
-      if ($curr_field->getLabel() == "Submitted by") {
+      if ($field_name == "submitted_by") {
 	if ($ath->allowsAnon()) {
 	  //$predefined_values[$c] = array();
 	} else {
@@ -68,7 +70,7 @@ function parse_field_names($data,$used_fields,$ath,
       } else {
 
 
-	$predef_val = $curr_field->getFieldPredefinedValues($ath->getID());
+	$predef_val = $field->getFieldPredefinedValues($ath->getID());
 	$count = db_numrows($predef_val);
 	unset($values);
 	for ($i=0;$i<$count;$i++) {
@@ -84,14 +86,15 @@ function parse_field_names($data,$used_fields,$ath,
     reset($used_fields);
     while (list($label,$field) = each($used_fields)) {
       //echo $label.",";
-      if ($label != "Artifact ID" &&
-	  $label != "Submitted on" &&
-	  $label != "Submitted by" &&
+      if ($field) $field_name = $field->getName();
+      if ($field_name != "artifact_id" &&
+	  $field_name != "open_date" &&
+	  $field_name != "submitted_by" &&
 	  $label != "Follow-up Comments" &&
 	  $label != "Depend on" &&
 	  $label != "CC List" &&
 	  $label != "CC Comment" &&
-	  !$field->isEmptyOk() && !in_array($label,$parsed_fields)) {
+	  !$field->isEmptyOk() && !in_array($label,$parsed_labels)) {
 	
 	$errors .= "\"$label\" is a mandatory field in tracker ".$ath->getName().". Please specify it in your csv file. ";
 	return false;
@@ -111,12 +114,13 @@ function parse_field_names($data,$used_fields,$ath,
  * @param from_update: take into account special case where column artifact_id is specified but
  *                      for this concrete artifact no aid is given
  */
-function check_values($row,&$data,$used_fields,$parsed_fields,$predefined_values,&$errors,$insert,$from_update=false) {
+function check_values($row,&$data,$used_fields,$parsed_labels,$predefined_values,&$errors,$insert,$from_update=false) {
   global $ath;
-  for ($c=0; $c < count($parsed_fields); $c++) {
-    $label = $parsed_fields[$c];
+  for ($c=0; $c < count($parsed_labels); $c++) {
+    $label = $parsed_labels[$c];
     $val = $data[$c];
-    $field = $used_fields[$label]; 
+    $field = $used_fields[$label];
+    if ($field != "") $field_name = $field->getName();
 
     // check if val in predefined vals (if applicable)
     $predef_vals = $predefined_values[$c];
@@ -131,11 +135,11 @@ function check_values($row,&$data,$used_fields,$parsed_fields,$predefined_values
 	}
       } else {
 	if (!array_key_exists($val,$predef_vals) && $val != 'None') {
-	  if (($label == 'Severity' || $label == 'Priority') &&
+	  if (($field_name == 'severity') &&
 	      (strcasecmp($val,'1') == 0 || strcasecmp($val,'5') == 0 || strcasecmp($val,9) == 0)) {
 	    //accept simple ints for Severity fields instead of 1 - Ordinary,5 - Major,9 - Critical
 	    //accept simple ints for Priority fields instead of 1 - Lowest,5 - Medium,9 - Highest
-	  } else if ($label == 'Submitted by' && ($val == '' || $ath->allowsAnon())) {
+	  } else if ($field_name == 'submitted_by' && ($val == '' || $ath->allowsAnon())) {
 	    //accept anonymous user or use importing user as 'submitted by'
 	  } else {
 	    $errors .= "<b>Line ".($row+1)." [</b>".implode(",",$data)."<b>]</b>:<br>value \"$val\" is not one of the predefined values of field \"$label\" (".implode(",",array_keys($predef_vals)).")";
@@ -147,9 +151,9 @@ function check_values($row,&$data,$used_fields,$parsed_fields,$predefined_values
     
     // check whether we specify None for a field which is mandatory
     if ($field != "" && !$field->isEmptyOk() &&
-	$label != "Artifact ID") {
-      if ($label == "Submitted by" ||
-	   $label == "Submitted on") {
+	$field_name != "artifact_id") {
+      if ($field_name == "submitted_by" ||
+	   $field_name == "open_date") {
 	//submitted on and submitted by are accepted as "" on inserts and
 	//we put time() importing user as default
       } else {
@@ -169,15 +173,21 @@ function check_values($row,&$data,$used_fields,$parsed_fields,$predefined_values
 
     // for date fields: check format
     if ($field != "" && $field->isDateField()) {
-      if ($label == "Submitted on" && $val == "") {
+      if ($field_name == "open_date" && $val == "") {
 	//is ok.
       } else {
-	list($unix_time,$ok) = util_date_to_unixtime($val);
-	if (!ok) {
-	  $errors .= "<b>Line ".($row+1)." [</b>".implode(",",$data)."<b>]</b>:<br>Date \"$val\" is not in correct format (Y-m-d)."; 
+	
+	if ($val == "-" || $val == "") {
+	  //ok. transform it by hand into 0 before updating db
+	  $data[$c] = "";
+	} else {
+	  list($unix_time,$ok) = util_date_to_unixtime($val);
+	  if (!ok) {
+	    $errors .= "<b>Line ".($row+1)." [</b>".implode(",",$data)."<b>]</b>:<br>Date \"$val\" is not in correct format (Y-m-d)."; 
+	  }
+	  $date = format_date("Y-m-d",$unix_time);
+	  $data[$c] = $date;
 	}
-	$date = format_date("Y-m-d",$unix_time);
-	$data[$c] = $date;
       }
     }
 
@@ -187,14 +197,15 @@ function check_values($row,&$data,$used_fields,$parsed_fields,$predefined_values
   // we have to check whether all mandatory fields are specified and not empty
   if ($from_update) {
     while (list($label,$field) = each($used_fields)) {
-      if ($label != "Artifact ID" &&
-	  $label != "Submitted on" &&
-	  $label != "Submitted by" &&
+      if ($field != "") $field_name = $field->getName();
+      if ($field_name != "artifact_id" &&
+	  $field_name != "open_date" &&
+	  $field_name != "submitted_by" &&
 	  $label != "Follow-up Comments" &&
 	  $label != "Depend on" &&
 	  $label != "CC List" &&
 	  $label != "CC Comment" &&
-	  !$field->isEmptyOk() && !in_array($label,$parsed_fields)) {
+	  !$field->isEmptyOk() && !in_array($label,$parsed_labels)) {
 
 	  $errors .= "<b>Line ".($row+1)." [</b>".implode(",",$data)."<b>]</b>:<br>\"$label\" is a mandatory field in tracker ".$ath->getName().". Please specify it in your csv file. ";
 	  return false;
@@ -210,12 +221,19 @@ function check_values($row,&$data,$used_fields,$parsed_fields,$predefined_values
  * @param $from_update: take into account special case where column artifact_id is specified but
  *                      for this concrete artifact no aid is given
  */
-function check_insert_artifact($row,&$data,$used_fields,$parsed_fields,$predefined_values,&$errors,$from_update=false) {
+function check_insert_artifact($row,&$data,$used_fields,$parsed_labels,$predefined_values,&$errors,$from_update=false) {
+  global $art_field_fact,$ath;
   // first make sure this isn't double-submitted
   
-  $field = $used_fields["Summary"];
-  $summary_col = array_search("Summary",$parsed_fields);
-  $submitted_by_col = array_search("Submitted by",$parsed_fields);
+  //$field = $used_fields["Summary"];
+  $summary_field = $art_field_fact->getFieldFromName('summary');
+  $summary_label = $summary_field->getLabel();
+  $summary_col = array_search($summary_label,$parsed_labels);
+
+  $submitted_by_field = $art_field_fact->getFieldFromName('submitted_by');
+  $submitted_by_label = $submitted_by_field->getLabel();
+  $submitted_by_col = array_search($submitted_by_label,$parsed_labels);
+
   $summary = $data[$summary_col];
   if ($submitted_by_col) {
     $sub_user_name = $data[$submitted_by_col];
@@ -227,21 +245,21 @@ function check_insert_artifact($row,&$data,$used_fields,$parsed_fields,$predefin
   }
   
   
-  if ( $field && $field->isUsed() ) {
+  if ( $summary_field && $summary_field->isUsed() ) {
     $res=db_query("SELECT * FROM artifact WHERE submitted_by=$sub_user_id AND summary=\"$summary\"");
     if ($res && db_numrows($res) > 0) {
-      $errors .= "<b>Line ".($row+1)." [</b>".implode(",",$data)."<b>]</b>:<br>User $sub_user_name has already submitted a bug with the same summary. Please don't try to import it again.";
+      $errors .= "<b>Line ".($row+1)." [</b>".implode(",",$data)."<b>]</b>:<br>User $sub_user_name has already submitted a artifact with the same summary. Please don't try to import it again.";
       return false;           
     }
   }
   
-  return check_values($row,$data,$used_fields,$parsed_fields,$predefined_values,$errors,true,$from_update);
+  return check_values($row,$data,$used_fields,$parsed_labels,$predefined_values,$errors,true,$from_update);
 }
 
 
 
 /** check if all the values correspond to predefined values of the corresponding fields */
-function check_update_artifact($row,&$data,$aid,$used_fields,$parsed_fields,$predefined_values,&$errors) {
+function check_update_artifact($row,&$data,$aid,$used_fields,$parsed_labels,$predefined_values,&$errors) {
   global $ath;
   
   $sql = "SELECT artifact_id FROM artifact WHERE artifact_id = $aid and group_artifact_id = ".$ath->getID();
@@ -251,7 +269,7 @@ function check_update_artifact($row,&$data,$aid,$used_fields,$parsed_fields,$pre
     return false;
   }
   
-  return check_values($row,$data,$used_fields,$parsed_fields,$predefined_values,$errors,false);
+  return check_values($row,$data,$used_fields,$parsed_labels,$predefined_values,$errors,false);
 }
 
 
@@ -259,15 +277,15 @@ function check_update_artifact($row,&$data,$aid,$used_fields,$parsed_fields,$pre
 /**
  * create the html output to visualize what has been parsed
  * @param $used_fields: array containing all the fields that are used in this tracker
- * @param $parsed_fields: array of the form (column_number => field_label) containing
+ * @param $parsed_labels: array of the form (column_number => field_label) containing
  *                        all the fields parsed from $data
  * @param $artifacts_data: array containing the records for each artifact to be imported
  * @param $aid_column: the column in the csv file that contains the arifact id (-1 if not given)
  * @param $submitted_by_column: the column in the csv file that contains the Submitter (-1 if not given)
  * @param $submitted_on_column: the column in the csv file that contains the artifact creation date (-1 if not given)
  */
-function show_parse_results($used_fields,$parsed_fields,$artifacts_data,$aid_column,$submitted_by_column,$submitted_on_column,$group_id) {
-  global $ath,$PHP_SELF,$sys_datefmt;
+function show_parse_results($used_fields,$parsed_labels,$artifacts_data,$aid_column,$submitted_by_column,$submitted_on_column,$group_id) {
+  global $art_field_fact,$ath,$PHP_SELF,$sys_datefmt;
   get_import_user($sub_user_id,$sub_user_name);
   $sub_on = format_date("Y-m-d",time());
 
@@ -276,13 +294,15 @@ function show_parse_results($used_fields,$parsed_fields,$artifacts_data,$aid_col
   //artifact_id is not given otherwise the artifacts should
   //only be updated and we don't need to touch sub_on and sub_by
   if ($aid_column == -1 && $submitted_by_column == -1) {
-    $new_sub_by_col = count($parsed_fields);
-    $parsed_fields[] = "Submitted by";
+    $new_sub_by_col = count($parsed_labels);
+    $submitted_by_field = $art_field_fact->getFieldFromName('submitted_by');
+    $parsed_labels[] = $submitted_by_field->getLabel();
   }
 
   if ($aid_column == -1 && $submitted_on_column == -1) {
-    $new_sub_on_col = count($parsed_fields);
-    $parsed_fields[] = "Submitted on";
+    $new_sub_on_col = count($parsed_labels);
+    $open_date_field = $art_field_fact->getFieldFromName('open_date');
+    $parsed_labels[] = $open_date_field->getLabel();
   }
 
   echo '
@@ -290,7 +310,7 @@ function show_parse_results($used_fields,$parsed_fields,$artifacts_data,$aid_col
         <p align="left"><INPUT TYPE="SUBMIT" NAME="submit" VALUE="IMPORT"></p>';
 
 
-  echo html_build_list_table_top ($parsed_fields);
+  echo html_build_list_table_top ($parsed_labels);
 
   
   for ($i=0; $i < count($artifacts_data) ; $i++) {
@@ -300,7 +320,7 @@ function show_parse_results($used_fields,$parsed_fields,$artifacts_data,$aid_col
 
     echo '<TR class="'.util_get_alt_row_color($i).'">'."\n";
     
-    for ($c=0; $c < count($parsed_fields); $c++) {
+    for ($c=0; $c < count($parsed_labels); $c++) {
       
       $value = $data[$c];
       $width = ' class="small"';
@@ -308,7 +328,7 @@ function show_parse_results($used_fields,$parsed_fields,$artifacts_data,$aid_col
 
       if ($value != "") {
 	//FOLLOW_UP COMMENTS
-	if ($parsed_fields[$c] == "Follow-up Comments") {
+	if ($parsed_labels[$c] == "Follow-up Comments") {
 	  unset($parsed_details);
 	  unset($parse_error);
 	  if (parse_details($data[$c],$parsed_details,$parse_error,true)) {
@@ -336,20 +356,24 @@ function show_parse_results($used_fields,$parsed_fields,$artifacts_data,$aid_col
 
 
       } else {
+	
+	$submitted_by_field = $art_field_fact->getFieldFromName('submitted_by');
+	$open_date_field = $art_field_fact->getFieldFromName('open_date');
+	$aid_field = $art_field_fact->getFieldFromName('artifact_id');
 
 	//SUBMITTED_ON
-	if ($parsed_fields[$c] == "Submitted on") {
+	if ($parsed_labels[$c] == $open_date_field->getLabel()) {
 	  //if insert show default value
 	  if ($aid_column == -1 || $aid == "") echo "<TD $width><I>$sub_on</I></TD>\n";
 	  else echo "<TD $width valign=\"top\"><I>Unchanged</I></TD>\n";
 
 	  //SUBMITTED_BY
-	} else if ($parsed_fields[$c] == "Submitted by") {
+	} else if ($parsed_labels[$c] == $submitted_by_field->getLabel()) {
 	  if ($aid_column == -1 || $aid == "") echo "<TD $width><I>$sub_user_name</I></TD>\n";
 	  else echo "<TD $width valign=\"top\"><I>Unchanged</I></TD>\n";
 
 	  //ARTIFACT_ID
-	} else if ($parsed_fields[$c] == "Artifact ID") {
+	} else if ($parsed_labels[$c] == $aid_field->getLabel()) {
 	  echo "<TD $width valign=\"top\"><I>NEW</I></TD>\n";
 
 	  //DEFAULT
@@ -371,9 +395,9 @@ function show_parse_results($used_fields,$parsed_fields,$artifacts_data,$aid_col
         <INPUT TYPE="HIDDEN" NAME="aid_column" VALUE="'.$aid_column.'">
         <INPUT TYPE="HIDDEN" NAME="count_artifacts" VALUE="'.count($artifacts_data).'">';
   
-  while (list(,$label) = each($parsed_fields)) {
+  while (list(,$label) = each($parsed_labels)) {
     echo '
-        <INPUT TYPE="HIDDEN" NAME="parsed_fields[]" VALUE="'.$label.'">';
+        <INPUT TYPE="HIDDEN" NAME="parsed_labels[]" VALUE="'.$label.'">';
   }
   
 
@@ -400,14 +424,14 @@ function show_parse_results($used_fields,$parsed_fields,$artifacts_data,$aid_col
  *                      after parsing
  * @param $used_fields (OUT): the fields used in tracker $atid
  *                            array of the form (label => field)
- * @param $parsed_fields (OUT): the field labels parsed in the csv file
+ * @param $parsed_labels (OUT): the field labels parsed in the csv file
  *                              array of the form (column_number => field_label)
  * @param $artifacts (OUT): the artifacts with their field values parsed from the csv file
  * @param $errors (OUT): string containing explanation what error occurred
  * @return true if parse ok, false if errors occurred
  */
 function parse($csv_filename,$group_id,$is_tmp,
-	       &$used_fields,&$parsed_fields,&$artifacts_data,
+	       &$used_fields,&$parsed_labels,&$artifacts_data,
 	       &$aid_column,&$submitted_by_column,&$submitted_on_column,
 	       &$number_inserts,&$number_updates,
 	       &$errors) {
@@ -438,7 +462,7 @@ function parse($csv_filename,$group_id,$is_tmp,
     
     //parse the first line with all the field names
     if ($row == 0) {
-      $ok = parse_field_names($data,$used_fields,$ath,$num_columns,$parsed_fields,$predefined_values,
+      $ok = parse_field_names($data,$used_fields,$ath,$num_columns,$parsed_labels,$predefined_values,
 			      $aid_column,$submitted_by_column,$submitted_on_column,
 			      $errors);
       
@@ -458,19 +482,19 @@ function parse($csv_filename,$group_id,$is_tmp,
       
       // if no artifact_id given, create new artifacts	
       if ($aid_column == -1) {
-	$ok = check_insert_artifact($row,$data,$used_fields,$parsed_fields,$predefined_values,$errors);
+	$ok = check_insert_artifact($row,$data,$used_fields,$parsed_labels,$predefined_values,$errors);
 	$number_inserts++;
 	// if artifact_id given, verify if it exists already 
 	//else send error
       } else {
 	$aid = $data[$aid_column];
 	if ($aid != "") {
-	  $ok = check_update_artifact($row,$data,$aid,$used_fields,$parsed_fields,$predefined_values,$errors);
+	  $ok = check_update_artifact($row,$data,$aid,$used_fields,$parsed_labels,$predefined_values,$errors);
 	  $number_updates++;
 	  
 	} else {
 	  // have to create artifact from scratch
-	  $ok = check_insert_artifact($row,$data,$used_fields,$parsed_fields,$predefined_values,$errors,true);
+	  $ok = check_insert_artifact($row,$data,$used_fields,$parsed_labels,$predefined_values,$errors,true);
 	  $number_inserts++;
 	}	  
       }
@@ -506,7 +530,7 @@ function mandatory_fields($ath) {
 }
 
 function getUsedFields() {
-  global $ath;
+  global $ath,$art_field_fact;
   $art_field_fact = new ArtifactFieldFactory($ath);
   $fields =  $art_field_fact->getAllUsedFields();
   while (list(,$field) = each($fields) ) {
@@ -520,12 +544,16 @@ function getUsedFields() {
   $used_fields["CC List"] = "";
   $used_fields["CC Comment"] = "";
 
+  $submitted_by_field = $art_field_fact->getFieldFromName('submitted_by');
+  $submitted_by_label = $submitted_by_field->getLabel();
   //special cases for submitted by and submitted on that can be set
   //"unused" by the user but that will nevertheless be used by CodeX
-  if (array_search("Submitted by", $used_fields) === false)
-    $used_fields["Submitted by"] = $art_field_fact->getFieldFromName("submitted_by");
-  if (array_search("Submitted on", $used_fields) === false)
-    $used_fields["Submitted on"] = $art_field_fact->getFieldFromName("open_date");
+  if (array_key_exists($submitted_by_label, $used_fields) === false)
+    $used_fields[$submitted_by_label] = $submitted_by_field;
+  $open_date_field = $art_field_fact->getFieldFromName("open_date");
+  $open_date_label = $open_date_field->getLabel();
+  if (array_key_exists($open_date_label, $used_fields) === false)
+    $used_fields[$open_date_label] = $open_date_field; 
 
   return $used_fields;
 }
@@ -550,21 +578,21 @@ function get_import_user(&$sub_user_id,&$sub_user_name) {
 
 /** get already the predefined values of this field (if applicable) 
  * @param $used_fields: array containing all the fields that are used in this tracker
- * @param $parsed_fields (OUT): array of the form (column_number => field_label) containing
+ * @param $parsed_labels (OUT): array of the form (column_number => field_label) containing
  *                              all the fields parsed from $data
  * @return $predefined_values: array of the form (column_number => array of field predefined values)
 */
-function getPredefinedValues($used_fields,$parsed_fields) {
+function getPredefinedValues($used_fields,$parsed_labels) {
   global $ath;
 
-  for ($c=0; $c < count($parsed_fields); $c++) {
-    $field_label = $parsed_fields[$c];
+  for ($c=0; $c < count($parsed_labels); $c++) {
+    $field_label = $parsed_labels[$c];
     $curr_field = $used_fields[$field_label];
     if ($curr_field != "" && 
 	($curr_field->getDisplayType() == "SB" || $curr_field->getDisplayType() == "MB")) {
 
       //special case for submitted by
-      if ($curr_field->getLabel() == "Submitted by") {
+      if ($curr_field->getName() == "submitted_by") {
 	if ($ath->allowsAnon()) {
 	  //$predefined_values[$c] = array();
 	} else {
@@ -708,17 +736,17 @@ function parse_details($details,&$parsed_details,&$errors,$for_parse_report=fals
  * prepare our $data record so that we can use standard artifact methods to create, update, ...
  * the imported artifact
  */
-function prepare_vfl($data,$used_fields,$parsed_fields,$predefined_values,&$artifact_depend_id,&$add_cc,&$cc_comment,&$details) {
+function prepare_vfl($data,$used_fields,$parsed_labels,$predefined_values,&$artifact_depend_id,&$add_cc,&$cc_comment,&$details) {
   for ($c=0; $c < count($data); $c++) {
-    $label = $parsed_fields[$c];
+    $label = $parsed_labels[$c];
     if ($label == "Follow-up Comments") {
       $field_name = "details";
       if ($data[$label] != "" && trim($data[$label]) != "No Followups Have Been Posted") {
 	$details = $data[$label];
       }
       continue;
-    } else if ($label == "Original Submission") {
-      $field_name = "original_submission";
+      //} else if ($label == "Original Submission") {
+      //$field_name = "original_submission";
     } else if ($label == "Depend on") {
       $depends = $data[$label];
       if ($depends != "None" && $depends != "") {
@@ -761,7 +789,7 @@ function prepare_vfl($data,$used_fields,$parsed_fields,$predefined_values,&$arti
 	// 1 instead of "1 - Ordinary"
 	// 5 instead of "5 - Major"
 	// 9 intead of "9 - Critical"
-	if ($label == "Severity" &&
+	if ($field_name == "severity" &&
 	    (strcasecmp($imported_value,'1') == 0 ||
 	     strcasecmp($imported_value,'5') == 0 ||
 	     strcasecmp($imported_value,'9') == 0)) {
@@ -772,7 +800,7 @@ function prepare_vfl($data,$used_fields,$parsed_fields,$predefined_values,&$arti
 
     } else {
 
-      if ($label == "Submitted by") {
+      if ($field_name == "submitted_by") {
 	$sub_user_name = $data[$label];
 	if ($sub_user_name && $sub_user_name != "") {
 	  $res = user_get_result_set_from_unix($sub_user_name);
@@ -790,7 +818,7 @@ function prepare_vfl($data,$used_fields,$parsed_fields,$predefined_values,&$arti
 
 
 /** check if all the values correspond to predefined values of the corresponding fields */
-function insert_artifact($row,$data,$used_fields,$parsed_fields,$predefined_values,&$errors) {
+function insert_artifact($row,$data,$used_fields,$parsed_labels,$predefined_values,&$errors) {
   global $ath;
   
   //prepare everything to be able to call the artifacts create method
@@ -811,7 +839,7 @@ function insert_artifact($row,$data,$used_fields,$parsed_fields,$predefined_valu
       exit_permission_denied();
     }
     
-    $vfl = prepare_vfl($data,$used_fields,$parsed_fields,$predefined_values,$artifact_depend_id,$add_cc,$cc_comment,$details);
+    $vfl = prepare_vfl($data,$used_fields,$parsed_labels,$predefined_values,$artifact_depend_id,$add_cc,$cc_comment,$details);
    
 
     // Artifact creation                
@@ -848,7 +876,7 @@ function insert_artifact($row,$data,$used_fields,$parsed_fields,$predefined_valu
 
 
 
-function update_artifact($row,$data,$aid,$used_fields,$parsed_fields,$predefined_values,$errors) {
+function update_artifact($row,$data,$aid,$used_fields,$parsed_labels,$predefined_values,$errors) {
   global $ath, $feedback;
 
   $ah=new ArtifactHtml($ath,$aid);
@@ -868,7 +896,7 @@ function update_artifact($row,$data,$aid,$used_fields,$parsed_fields,$predefined
       return;
     }
     
-    $vfl = prepare_vfl($data,$used_fields,$parsed_fields,$predefined_values,$artifact_depend_id,$add_cc,$cc_comment,$details);
+    $vfl = prepare_vfl($data,$used_fields,$parsed_labels,$predefined_values,$artifact_depend_id,$add_cc,$cc_comment,$details);
 
     //data control layer
     if (!$ah->handleUpdate($artifact_depend_id,100,$changes,false,$vfl,true)) {
@@ -897,34 +925,36 @@ function update_artifact($row,$data,$aid,$used_fields,$parsed_fields,$predefined
 
 /**
  * Insert or update the imported artifacts into the db
- * @param parsed_fields: array of the form (column_number => field_label) containing
+ * @param parsed_labels: array of the form (column_number => field_label) containing
  *                              all the fields parsed from $data
  * @param artifacts_data: all artifacts in an array. artifacts are in the form array(field_label => value) 
  * @param $aid_column: the column in the csv file that contains the arifact id (-1 if not given)
  * @param $errors (OUT): string containing explanation what error occurred
  * @return true if parse ok, false if errors occurred
  */
-function update_db($parsed_fields,$artifacts_data,$aid_column,&$errors) {
-  global $ath;
+function update_db($parsed_labels,$artifacts_data,$aid_column,&$errors) {
+  global $ath,$art_field_fact;
   
   $used_fields = getUsedFields();
-  $predefined_values = getPredefinedValues($used_fields,$parsed_fields);
+  $predefined_values = getPredefinedValues($used_fields,$parsed_labels);
   
   for ($i=0; $i < count($artifacts_data); $i++) {
     $data = $artifacts_data[$i];
     if ($aid_column == -1) {
-      $ok = insert_artifact($row,$data,$used_fields,$parsed_fields,$predefined_values,$errors);
+      $ok = insert_artifact($row,$data,$used_fields,$parsed_labels,$predefined_values,$errors);
       
       // if artifact_id given, verify if it exists already 
       //else send error
     } else {
-      $aid = $data['Artifact ID'];
+      $aid_field = $art_field_fact->getFieldFromName('artifact_id');
+      $aid_label = $aid_field->getLabel();
+      $aid = $data[$aid_label];
       if ($aid != "") {
-	$ok = update_artifact($row,$data,$aid,$used_fields,$parsed_fields,$predefined_values,$errors);
+	$ok = update_artifact($row,$data,$aid,$used_fields,$parsed_labels,$predefined_values,$errors);
 	
       } else {
 	// have to create artifact from scratch
-	$ok = insert_artifact($row,$data,$used_fields,$parsed_fields,$predefined_values,$errors);
+	$ok = insert_artifact($row,$data,$used_fields,$parsed_labels,$predefined_values,$errors);
       }	  
     }
     if (!$ok) return false;
