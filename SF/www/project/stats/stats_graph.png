@@ -54,10 +54,30 @@ $res = db_query( $sql );
 $i = 0;
 while ( $row = db_fetch_array($res) ) {
         $xdata[$i]          = $i;
-        $xlabel[$i]         = (substr($row['month'],4) + 1 - 1) . "/" . $row['day'];
+        $xlabel[$i]         = (substr($row['month'],4) + 1 - 1) . "-" . sprintf("%02d",$row['day']);
         $ydata1[$i]         = $row["views"];
         $ydata2[$i]         = $row["downloads"];
         $i++;
+}
+
+if ($i==1) {
+    /*    // In case there's nothing to graph, show query trace
+	  echo "No data to graph";
+	  site_project_footer(array());
+	  exit;*/
+    
+    // In case there is no data set or just 1 record then
+    // simulate 2 records. otherwise it Graph_lib crashes
+    $xdata[$i]=$i;
+    $xlabel[$i]         = $month . "-" . $day;
+    $ydata1[$i]         = 0;
+    $ydata2[$i]         = 0;
+    $i=1;
+    $xdata[$i]=$i;
+    $xlabel[$i]         = $month . "-" . $day+1;
+    $ydata1[$i]         = 0;
+    $ydata2[$i]         = 0;
+    $i=2;
 }
 
 $graph = new Graph(600, 350);
@@ -72,7 +92,6 @@ $data2 = $graph->AddData($xdata,$ydata2,$xlabel);
 $graph->DrawGrid('gray');
 $graph->LineGraph( $data1, 'red' );
 $graph->LineGraph( $data2, 'blue' );
-//LJ $graph->SetTitle( "Sourceforge Statistics: " . group_getname($group_id) );
 $graph->SetTitle( "CodeX Statistics: " . group_getname($group_id) );
 $graph->SetSubTitle("Page Views (red) and Downloads (blue) for the past $i days");
 $graph->SetxTitle('Date');
