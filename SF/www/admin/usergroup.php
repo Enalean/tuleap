@@ -74,16 +74,31 @@ if ($action=='remove_user_from_group') {
 	}
 
 } else if ($action=='add_user_to_group') {
-	/*
+    /*
 		Add this user to a group
-	*/
-	$result=db_query("INSERT INTO user_group (user_id,group_id) VALUES ($user_id,$group_id)");
-	if (!$result || db_affected_rows($result) < 1) {
+    */
+    // Check that user_id is not null, and that the user does not already belong to the group
+    if (!$user_id) {
+        $feedback .= ' User ID is missing! ';
+    } else if (!$group_id) {
+        $feedback .= ' Group ID is missing! ';
+    } else {
+	$query = "SELECT user_id FROM user_group "
+		. "WHERE user_id='$user_id' AND group_id='$group_id'";
+	$res = db_query($query);
+	if (!$res || db_numrows($res) < 1) {
+            // User does not already belong to this group
+            $result=db_query("INSERT INTO user_group (user_id,group_id) VALUES ($user_id,$group_id)");
+            if (!$result || db_affected_rows($result) < 1) {
 		$feedback .= ' Error adding User to group ';
 		echo db_error();
-	} else {
+            } else {
 		$feedback .= ' Successfully added user to group ';
+            }
+	} else {
+            $feedback .= " User is already a member of group $group_id";
 	}
+    }
 }
 
 // get user info
