@@ -27,7 +27,7 @@ $HTML->header(array('title'=>'Welcome'));
 	&nbsp;<br>
 CodeX is a <B>service to
 all Xerox software development teams</B> who want to share their project source code with others <b>inside</b> Xerox. <A href="/docs/site/about_codex.php"><font size="-1">[&nbsp;More about CodeX&nbsp;]</font></A><P>
-CodeX offers an easy access to a full featured and totally web-based project management environment. Using CodeX project teams can better focus on software development while making their community of users and developers grow. <A href="/doc/sites/"><font size="-1">[&nbsp;More on CodeX Services&nbsp;]</font></A>
+CodeX offers an easy access to a full featured and totally web-based project management environment. Using CodeX project teams can better focus on software development while making their community of users and developers grow. <A href="/docs/site/"><font size="-1">[&nbsp;More on CodeX Services&nbsp;]</font></A>
 <A href="/docman/display_doc.php?docid=17&group_id=1"><font size="-1">[&nbsp;FAQ&nbsp;]</font></A>
 <P>
 <u><B>Site Participation</B></u>
