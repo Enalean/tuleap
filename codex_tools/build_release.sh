@@ -127,8 +127,11 @@ http://codex.xerox.com
 - cd into the directory where the codex_install.sh script is located
 (probably /mnt/cdrom if you received the CodeX software on a CDROM)
 - For a fresh CodeX installation run the installation script with ./codex_install.sh
-- For an update from 2.0 to 2.2 run the migration script ./migration_22.sh
-- Follow the instructions
+- For an update from 2.0 to 2.2  you must first backup your CodeX 2.0
+configuration and data files (see a list of those files in the migration_22.sh
+script), upgrade your OS from RedHat 7.3 to RHEL ES 3, restore the CodeX
+2.0 software and data and finally run the migration script ./migration_22.sh 
+- Follow the instructions of the migration script
 
 -- The CodeX Team
    <info@codex.xerox.com>
