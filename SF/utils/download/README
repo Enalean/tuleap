@@ -1,54 +1,98 @@
-LJ 2000-11-29
--------------
-
-Describe how stats scripts works and where input come from and where output goes.
+#
+# CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+# Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001. All Rights Reserved
+# http://codex.xerox.com
+#
+# $Id$
+#
+#  License:
+#    This file is subject to the terms and conditions of the GNU General Public
+#    license. See the file COPYING in the main directory of this archive for
+#    more details.
+#
+# Purpose:
+#    Explain how the download statistics script work, where input come
+#    from and where output goes.
+#
 
 stats_ftp_logparse.pl
 ---------------------
-Parse daily log files of the FTP daemon (they are in /home/log)
+Parse daily log files of the FTP daemon (they are in
+/home/log). Normally all downloads go through PHP now so there is
+nothing in the log but we keep it in case we reactivate ftp downloads
+some day.
+
 Input: ftp daemon daily log file
 Output: stats_ftp_downloads table
 
+
 stats_http_logparse.pl
 ---------------------
-Parse daily log files of the HTTP daemon (they are in /home/log)
+Parse daily log files of the HTTP daemon (they are in
+/home/log). Normally all downloads go through PHP now so there is
+nothing in the log but we keep it in case we reactivate ftp downloads
+some day.
+
 Input: http daemon daily log file
 Output: stats_http_downloads table
 
+
 stats_agr_filerelease.pl
 ------------------------
-Aggregates the HTTP and FTP downloads of Codex released file and generate the total number of downloads by group (project) for all times (frs_dlstats_grouptotal_agg) and by file release for all times as well (frs_dlstats_filetotal_agg)
-Input: stats_http_downloads, stats_ftp_downloads tables
+Aggregates downloads of released file and generate the total number of
+downloads by group (project) for all times
+(frs_dlstats_grouptotal_agg) and by file release for all times as well
+(frs_dlstats_filetotal_agg)
+
+Input: filedownload_log table
 Output: frs_dlstats_grouptotal_agg, frs_dlstats_filetotal_agg tables
+
 
 stats_nightly_filerelease.pl
 ----------------------------
-Aggregates the HTTP and FTP downloads of Codex released file and generate the total number of downloads per day by group (project) (frs_dlstats_group_agg) and by file release per day as well (frs_dlstats_file_agg)
-Input: stats_http_downloads, stats_ftp_downloads tables
+Aggregates downloads of released file and generate the total number of
+downloads per day by group (project) (frs_dlstats_group_agg) and by
+file release per day as well (frs_dlstats_file_agg)
+
+Input: filedownload_log table
 Output:  frs_dlstats_group_agg, frs_dlstats_file_agg tables
 
 
-db_dlstats_grouptotal.pl
+db_dlstats_grouptotal.pl (** NOT USED AND OUTDATED **)
 ------------------------
-Sum downloads by group and by day and aggregate them into the global table. It is somehow similar to stats_agr_filerelease.pl combined with stats_nightly_filerelease.pl but the input is from other DB tables. It should give exactly the same result.
+Sum downloads by group and by day and aggregate them into the global
+table. It is somehow similar to stats_agr_filerelease.pl combined with
+stats_nightly_filerelease.pl but the input is from other DB tables. It
+should give exactly the same result.
+
 Input:  frs_dlstats_group_agg table
 Output: frs_dlstats_grouptotal_agg table
 
-db_dlstats_filetotal.pl
+db_dlstats_filetotal.pl (** NOT USED AND OUTDATED **)
 -----------------------
 Same as above but this time it counts the number of downloads by CodeX released file. SAm observation as above
 Input:  frs_dlstats_file_agg table
 Output: frs_dlstats_filetotal_agg table
+(** NOT USED AND OUTDATED **)
 
-db_dlstats_allagg.pl
------------------------
+db_dlstats_allagg.pl (** NOT USED AND OUTDATED **)
+--------------------
 Rescan all HTTP log files from the log dir (/home/log) and recompute the total number of HTTP downloads for each file release and for each day
 Input: HTTP log files
 Output: frs_dlstats_agg
 
-db_dlstats_grp.pl
+
+db_dlstats_grp.pl (** NOT USED AND OUTDATED **)
 -----------------
 Recompute the number of downloads of released file for all days from the frs_dlstats_agg and store it into frs_dlstats_group_agg. It is equivalent to stats_nightly_filerelease.pl but it does it for all log file at once. It is a way of regenerating
 Input: frs_dlstats_agg
 Output: frs_dlstats_group_agg
 
+remission_filemaint.pl (** NOT USED AND OUTDATED **)
+----------------------
+Never looked into it.
+
+download_filemaint.pl (** NOT USED AND OUTDATED **)
+----------------------
+Seems to do some clean up in the FTP release space. Would probably be
+good to look into it and reactivate it.

@@ -2,6 +2,9 @@
 #
 # $Id$
 #
+# Accumulate file download counts by project (group_id) for the day
+# specified on the command line. If not specified it is for the day before.
+#
 use DBI;
 use Time::Local;
 require("../include.pl");  # Include all the predefined functions
@@ -39,6 +42,10 @@ print "Running year $year, month $month, day $day.\n" if $verbose;
 ## POPULATE THE frs_dlstats_group_agg TABLE.
 ##
 
+# Normally on CodeX all downloads go through a PHP script and no longer
+# through ftp or Http. So the 2 next queries are useless but we keep them
+# if one day we revert to the initial download process.
+#
 # Count all the downloads through direct HTTP access (group by project)
 $sql	= "SELECT group_id,SUM(downloads) FROM stats_http_downloads "
 	. "WHERE ( day = '$today' ) GROUP BY group_id";
@@ -92,7 +99,11 @@ $total_xfers = 0;
 ## POPULATE THE frs_dlstats_file_agg TABLE.
 ##
 
-# Count all the downloads through direct HTTP access (group by file)
+# Normally on CodeX all downloads go through a PHP script and no longer
+# through ftp or Http. So the 2 next queries are useless but we keep them
+# if one day we revert to the initial download process.
+
+## Count all the downloads through direct HTTP access (group by file)
 $sql	= "SELECT filerelease_id,SUM(downloads) FROM stats_http_downloads "
 	. "WHERE ( day = '$today' ) GROUP BY filerelease_id";
 $rel = $dbh->prepare($sql) || die "SQL parse error: $!";

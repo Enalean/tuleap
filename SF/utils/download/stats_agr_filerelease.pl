@@ -2,6 +2,10 @@
 #
 # $Id$
 #
+# Accumulate file downloads for all time :
+#   - by project (group_id) in frs_dlstats_grouptotal_agg
+#   - by file release (filerelease_id) in frs_dlstats_filetotal_agg
+#
 use DBI;
 require("../include.pl");  # Include all the predefined functions
 
@@ -40,18 +44,32 @@ $sql	= "CREATE TABLE frs_dlstats_grouptotal_agg_tmp ( "
 	. ")";
 $rel = $dbh->do($sql) || die "SQL parse error: $!";
 
-$sql	= "SELECT group_id,SUM(downloads) FROM stats_http_downloads GROUP BY group_id";
-$rel = $dbh->prepare($sql) || die "SQL parse error: $!";
-$rel->execute() || die "SQL execute error: $!";
-while ( @tmp_ar = $rel->fetchrow_array() ) {
-	$downloads{ $tmp_ar[0] } += $tmp_ar[1]; 
-}
+# On CodeX - All file downloads are now now tracked directly at the
+# PHP level and an audit trail goes in the filedownload_log table.
+# Downloads no longer go though http or ftp
+#$sql	= "SELECT group_id,SUM(downloads) FROM stats_http_downloads GROUP BY group_id";
+#$rel = $dbh->prepare($sql) || die "SQL parse error: $!";
+#$rel->execute() || die "SQL execute error: $!";
+#while ( @tmp_ar = $rel->fetchrow_array() ) {
+#	$downloads{ $tmp_ar[0] } += $tmp_ar[1]; 
+#}
 
-$sql	= "SELECT group_id,SUM(downloads) FROM stats_ftp_downloads GROUP BY group_id";
+#$sql	= "SELECT group_id,SUM(downloads) FROM stats_ftp_downloads GROUP BY group_id";
+#$rel = $dbh->prepare($sql) || die "SQL parse error: $!";
+#$rel->execute() || die "SQL execute error: $!";
+#while ( @tmp_ar = $rel->fetchrow_array() ) {
+#	$downloads{ $tmp_ar[0] } += $tmp_ar[1]; 
+#}
+
+$sql = "SELECT frs_package.group_id AS group_id, COUNT(*) AS downloads "
+        ."FROM filedownload_log,frs_file,frs_release,frs_package "
+	."WHERE frs_file.file_id=filedownload_log.filerelease_id AND "
+        ."frs_file.release_id=frs_release.release_id AND "
+        ."frs_release.package_id=frs_package.package_id GROUP BY group_id";
 $rel = $dbh->prepare($sql) || die "SQL parse error: $!";
 $rel->execute() || die "SQL execute error: $!";
-while ( @tmp_ar = $rel->fetchrow_array() ) {
-	$downloads{ $tmp_ar[0] } += $tmp_ar[1]; 
+while(@tmp_ar = $rel->fetchrow_array()) {
+	$downloads{ $tmp_ar[0] } += $tmp_ar[1];
 }
 
 foreach $group_id ( @groups ) {
@@ -84,18 +102,29 @@ $sql	= "CREATE TABLE frs_dlstats_filetotal_agg_tmp ( "
 	. ")";
 $rel = $dbh->do($sql) || die "SQL parse error: $!";
 
-$sql	= "SELECT filerelease_id,SUM(downloads) FROM stats_http_downloads GROUP BY filerelease_id";
-$rel = $dbh->prepare($sql) || die "SQL parse error: $!";
-$rel->execute() || die "SQL execute error: $!";
-while ( @tmp_ar = $rel->fetchrow_array() ) {
-	$downloads{ $tmp_ar[0] } += $tmp_ar[1]; 
-}
+# On CodeX - All file downloads are now tracked directly at the
+# PHP level and an audit trail goes in the filedownload_log table.
+# Downloads no longer go though http or ftp
+#$sql	= "SELECT filerelease_id,SUM(downloads) FROM stats_http_downloads GROUP BY filerelease_id";
+#$rel = $dbh->prepare($sql) || die "SQL parse error: $!";
+#$rel->execute() || die "SQL execute error: $!";
+#while ( @tmp_ar = $rel->fetchrow_array() ) {
+#	$downloads{ $tmp_ar[0] } += $tmp_ar[1]; 
+#}
 
-$sql	= "SELECT filerelease_id,SUM(downloads) FROM stats_ftp_downloads GROUP BY filerelease_id";
-$rel = $dbh->prepare($sql) || die "SQL parse error: $!";
-$rel->execute() || die "SQL execute error: $!";
-while ( @tmp_ar = $rel->fetchrow_array() ) {
-	$downloads{ $tmp_ar[0] } += $tmp_ar[1]; 
+#$sql	= "SELECT filerelease_id,SUM(downloads) FROM stats_ftp_downloads GROUP BY filerelease_id";
+#$rel = $dbh->prepare($sql) || die "SQL parse error: $!";
+#$rel->execute() || die "SQL execute error: $!";
+#while ( @tmp_ar = $rel->fetchrow_array() ) {
+#	$downloads{ $tmp_ar[0] } += $tmp_ar[1]; 
+#}
+
+my $sql = "SELECT filerelease_id, COUNT(*) "
+	."FROM filedownload_log GROUP BY filerelease_id";
+my $rel = $dbh->prepare($sql);
+$rel->execute();
+while( @tmp_ar = $rel->fetchrow_array() ) {
+  $downloads{$tmp_ar[0]} += $tmp_ar[1];
 }
 
 foreach $file_id ( keys %downloads ) {
