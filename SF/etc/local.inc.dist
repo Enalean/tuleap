@@ -86,8 +86,6 @@ $sys_urlroot="/home/httpd/SF/www/";
 // Cache location -- this is needed by include/cache.php
 // This directory must be world reachable, but writable only by the web-server
 $sf_cache_dir = "/home/sfcache";
-// Name of the system as a whole (needed by various utils and titles)
-$sys_name="atlas";
  
  
 // Part III - GUI modifications (menu colors, etc.)
