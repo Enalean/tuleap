@@ -92,12 +92,25 @@ while ($row_grp = db_fetch_array($res_grp)) {
 	<A href="userlist.php?group_id=<?php print $row_grp['group_id']; ?>"><H3>[View/Edit Project Members]</H3></A>
 
 	<p>
+        <TABLE WIDTH="70%">
+        <TR>
+        <TD>
+	<FORM action="<?php echo $PHP_SELF; ?>" method="POST">
+	<INPUT TYPE="HIDDEN" NAME="action" VALUE="activate">
+	<INPUT TYPE="HIDDEN" NAME="list_of_groups" VALUE="<?php print $row_grp['group_id']; ?>">
+	<INPUT type="submit" name="submit" value="Approve Project">
+	</FORM>
+ 	</TD>
+
+        <TD> 
 	<FORM action="<?php echo $PHP_SELF; ?>" method="POST">
 	<INPUT TYPE="HIDDEN" NAME="action" VALUE="delete">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php print $row_grp['group_id']; ?>">
 	<INPUT type="submit" name="submit" value="Delete Project">
 	</FORM>
-
+        </TD>
+        </TR>
+        </TABLE>
 	<P>
 	<B>License: <?php echo $row_grp['license']; ?></B>
 
