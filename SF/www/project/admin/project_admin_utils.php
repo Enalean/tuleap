@@ -15,7 +15,7 @@
 function project_admin_header($params) {
 	global $DOCUMENT_ROOT,$group_id,$feedback;
 
-	$params['toptab']='home';
+	$params['toptab']='admin';
 	$params['group']=$group_id;
 	site_project_header($params);
 
@@ -24,7 +24,8 @@ function project_admin_header($params) {
 	<A HREF="/project/admin/?group_id='.$group_id.'">Admin</A> | 
 	<A HREF="/project/admin/userperms.php?group_id='.$group_id.'">User Permissions</A> | 
 	<A HREF="/project/admin/editgroupinfo.php?group_id='.$group_id.'">Edit Public Info</A> |
-	<A HREF="/project/admin/history.php?group_id='.$group_id.'">Project History</A>
+	<A HREF="/project/admin/history.php?group_id='.$group_id.'">Project History</A> |
+	<A HREF="/project/export/index.php?group_id='.$group_id.'">Project Data Export</A>
 	<BR>
 	<A HREF="/project/admin/editpackages.php?group_id='.$group_id.'">Edit/Release Files</A> |
 	<A HREF="/people/createjob.php?group_id='.$group_id.'">Post Jobs</A> | 
