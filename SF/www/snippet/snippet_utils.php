@@ -52,6 +52,8 @@ $SCRIPT_LICENSE[10] = 'IBM Public License';
 $SCRIPT_LICENSE[11] = 'Python License';
 $SCRIPT_LICENSE[12] = 'Public Domain (Sure ?!)';
 
+// **NEVER EVER** change the description of an item. the index of the 
+// array is used as a language id in the DB. Add new languages at the end
 $SCRIPT_LANGUAGE = array();
 $SCRIPT_LANGUAGE[0] = 'Choose One';
 $SCRIPT_LANGUAGE[1] = 'Awk';
@@ -72,6 +74,7 @@ $SCRIPT_LANGUAGE[15] = 'SQL';
 $SCRIPT_LANGUAGE[16] = 'MatLab';
 $SCRIPT_LANGUAGE[17] = 'Other Language';
 $SCRIPT_LANGUAGE[18] = 'LabView';
+$SCRIPT_LANGUAGE[19] = 'C#';
 
 function snippet_header($params) {
 	global $is_snippet_page,$DOCUMENT_ROOT,$HTML,$feedback;
