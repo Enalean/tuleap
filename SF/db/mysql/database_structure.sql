@@ -2552,6 +2552,7 @@ CREATE TABLE artifact_group_list (
 	browse_instructions text,
 	status char(1) DEFAULT 'A' NOT NULL,
 	deletion_date int(11) NULL,
+        instantiate_for_new_projects int(11) NOT NULL default '0',
 	primary key (group_artifact_id),
 	key idx_fk_group_id (group_id)
 );

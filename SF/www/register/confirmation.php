@@ -92,21 +92,15 @@ if ($show_confirm) {
 		$ath = new ArtifactType($group);
 
 		$tracker_error = "";
-		// Tracker: Bug
-		$ath_bug = new ArtifactType($group_100,1);
-		if ( !$ath->create($group_id,100,$ath_bug->getID(),$ath_bug->getName(),$ath_bug->getDescription(),$ath_bug->getItemName()) ) {
+                
+                // Add all trackers from project 100 (tracker templates) that need to be instanciated for new trackers.
+                $res = $ath->getTrackerTemplatesForNewProjects();
+		while ($arr_template = db_fetch_array($res)) {
+		    $ath_new = new ArtifactType($group_100,$arr_template['group_artifact_id']);
+		    if ( !$ath->create($group_id,100,$ath_new->getID(),$ath_new->getName(),$ath_new->getDescription(),$ath_new->getItemName()) ) {
 			$tracker_error .= $ath->getErrorMessage()."<br>";
+		    }
 		}
-		// Tracker: Task
-		$ath_task = new ArtifactType($group_100,2);
-		if ( !$ath->create($group_id,100,$ath_task->getID(),$ath_task->getName(),$ath_task->getDescription(),$ath_task->getItemName()) ) {
-			$tracker_error .= $ath->getErrorMessage()."<br>";
-		}
-		// Tracker: SR
-		$ath_sr = new ArtifactType($group_100,3);
-		if ( !$ath->create($group_id,100,$ath_sr->getID(),$ath_sr->getName(),$ath_sr->getDescription(),$ath_sr->getItemName()) ) {
-			$tracker_error .= $ath->getErrorMessage()."<br>";
-		}	 
 	}
 	
 	// Show the final registration complete message and send email

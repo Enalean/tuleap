@@ -212,20 +212,37 @@ class ArtifactTypeHtml extends ArtifactType {
 			$title_arr[]='ID';
 			$title_arr[]='Tracker';
 			$title_arr[]='Description';
+                        if ($this->Group->getID()==100) 
+			        $title_arr[]='Instantiate for new projects?';
 			$title_arr[]='Delete?';
 			echo html_build_list_table_top ($title_arr);
 		
-			$fmt = "\n".'<TR class="%s"><td>%s</td><td>%s</td><td>%s</td>'.
+                        if ($this->Group->getID()==100) {
+                            // Add an additional column 'Instantiate for new projects'
+			    $fmt = "\n".'<TR class="%s"><td>%s</td><td>%s</td><td>%s</td><td align="center">%s</td>'.
 			    '<td align="center">%s</td></tr>';
-
+                        } else {
+			    $fmt = "\n".'<TR class="%s"><td>%s</td><td>%s</td><td>%s</td>'.
+			    '<td align="center">%s</td></tr>';
+                        }
 			for ($i = 0; $i < count($at_arr); $i++) {
-			    echo sprintf($fmt,
+                            if ($this->Group->getID()==100) {
+			       echo sprintf($fmt,
+					    util_get_alt_row_color($i),
+					    "<a href=\"/tracker/admin/?group_id=".$this->Group->getID()."&atid=".$at_arr[$i]->getID()."\">".$at_arr[$i]->getID()."</a>",
+					    $at_arr[$i]->getName(),
+					    $at_arr[$i]->getDescription().'&nbsp;',
+                                            ($at_arr[$i]->isInstantiatedForNewProjects()?'Yes':'No'),
+					    "<a href=\"/tracker/admin/?func=delete_tracker&group_id=".$this->Group->getID()."&atid=".$at_arr[$i]->getID()."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('** WARNING!! ** Delete this tracker and all its dependencies?')\"></a>" );
+
+			    } else {
+                                echo sprintf($fmt,
 					    util_get_alt_row_color($i),
 					    "<a href=\"/tracker/admin/?group_id=".$this->Group->getID()."&atid=".$at_arr[$i]->getID()."\">".$at_arr[$i]->getID()."</a>",
 					    $at_arr[$i]->getName(),
 					    $at_arr[$i]->getDescription().'&nbsp;',
 					    "<a href=\"/tracker/admin/?func=delete_tracker&group_id=".$this->Group->getID()."&atid=".$at_arr[$i]->getID()."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('** WARNING!! ** Delete this tracker and all its dependencies?')\"></a>" );
-
+                            }
 			}
 		    // final touch...
 		    echo "</TABLE>";
@@ -385,6 +402,25 @@ class ArtifactTypeHtml extends ArtifactType {
 		echo '	
 		      </td>
 		    </tr>
+		    <tr>';
+
+		if ( $this->Group->getID()==100 ) { // Template group
+		echo '	
+		    <tr> 
+		      <td width="21%"><b>Instantiate for new projects:</b></td>
+		      <td width="79%">';
+		if ( $this->isInstantiatedForNewProjects() ) {
+			echo '<input type="checkbox" name="instantiate_for_new_projects" value="1" checked>';
+		} else {
+			echo '<input type="checkbox" name="instantiate_for_new_projects" value="1">';
+		}
+		echo '	
+		      </td>
+		    </tr>';
+                } else {
+                    echo '<input type="hidden" name="instantiate_for_new_projects" value="0">';
+                }
+		echo '	
 		    <tr> 
 		      <td width="21%"><b>Submit instructions</b>:<br><i>(HTML tags allowed)</i></td>
 		      <td width="79%"> 

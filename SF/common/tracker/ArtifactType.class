@@ -267,6 +267,17 @@ class ArtifactType extends Error {
 	
 
 	/**
+	 *  fetch all tracker templates that need to be instantiated for new projects.
+	 *
+	 *  @return query result.
+	 */
+	function getTrackerTemplatesForNewProjects() {
+	    $sql = 'SELECT group_artifact_id FROM artifact_group_list WHERE group_id=100 AND instantiate_for_new_projects=1;';
+	    return db_query($sql);
+	}
+
+
+	/**
 	 *  fetch the notification roles for this ArtifactType from the database.
 	 *
 	 *  @param	int		The artifact type ID.
@@ -346,6 +357,15 @@ class ArtifactType extends Error {
 	 */
 	function getTotalCount() {
 		return $this->data_array['count'];
+	}
+
+	/**
+	 *	  isInstantiatedForNewProjects
+	 *
+	 *	  @return	boolean - true if the tracker is instantiated for new projects (tracker templates).
+	 */
+	function isInstantiatedForNewProjects() {
+		return $this->data_array['instantiate_for_new_projects'];
 	}
 
 	/**
@@ -800,10 +820,11 @@ class ArtifactType extends Error {
 	 *  @param	bool	(1) true (0) false - whether the resolution box should be shown.
 	 *  @param	string	Free-form string that project admins can place on the submit page.
 	 *  @param	string	Free-form string that project admins can place on the browse page.
+	 *  @param	bool	instantiate_for_new_projects (1) true (0) false - instantiate this tracker template for new projects
 	 *  @return true on success, false on failure.
 	 */
 	function update($name,$description,$itemname,$is_public,$allow_anon,
-		            $submit_instructions,$browse_instructions) {
+		            $submit_instructions,$browse_instructions,$instantiate_for_new_projects) {
 
 		if ( !$this->userIsAdmin() ) {
 			$this->setError('ArtifactType: Permission Denied');
@@ -817,6 +838,7 @@ class ArtifactType extends Error {
 		
 		$allow_anon = ((!$allow_anon) ? 0 : $allow_anon); 
 		$is_public = ((!$is_public) ? 0 : $is_public); 
+                $instantiate_for_new_projects = ((!$instantiate_for_new_projects) ? 0 : $instantiate_for_new_projects); 
 
 		$sql="UPDATE artifact_group_list SET 
 			name='$name',
@@ -825,7 +847,8 @@ class ArtifactType extends Error {
 			is_public='$is_public',
 			allow_anon='$allow_anon',
 			submit_instructions='$submit_instructions',
-			browse_instructions='$browse_instructions'
+			browse_instructions='$browse_instructions',
+                        instantiate_for_new_projects='$instantiate_for_new_projects'
 			WHERE 
 			group_artifact_id='". $this->getID() ."' 
 			AND group_id='". $this->Group->getID() ."'";

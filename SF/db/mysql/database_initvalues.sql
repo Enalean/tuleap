@@ -1024,9 +1024,9 @@ INSERT INTO project_type VALUES (100,'None','None');
 -- Dumping data for table 'artifact_group_list'
 --
 
-INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, is_public, allow_anon, email_all_updates, email_address, submit_instructions, browse_instructions) VALUES (1, 100, 'Bugs', 'Bugs Tracker', 'bug', 1, 0, 0, '', NULL, NULL);
-INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, is_public, allow_anon, email_all_updates, email_address, submit_instructions, browse_instructions) VALUES (2, 100, 'Tasks', 'Tasks Tracker', 'task', 1, 0, 0, '', NULL, NULL);
-INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, is_public, allow_anon, email_all_updates, email_address, submit_instructions, browse_instructions) VALUES (3, 100, 'Support Requests', 'Support Requests Tracker', 'SR', 1, 1, 0, '', NULL, NULL);
+INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, is_public, allow_anon, email_all_updates, email_address, submit_instructions, browse_instructions, instantiate_for_new_projects) VALUES (1, 100, 'Bugs', 'Bugs Tracker', 'bug', 1, 0, 0, '', NULL, NULL, 1);
+INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, is_public, allow_anon, email_all_updates, email_address, submit_instructions, browse_instructions, instantiate_for_new_projects) VALUES (2, 100, 'Tasks', 'Tasks Tracker', 'task', 1, 0, 0, '', NULL, NULL, 1);
+INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, is_public, allow_anon, email_all_updates, email_address, submit_instructions, browse_instructions, instantiate_for_new_projects) VALUES (3, 100, 'Support Requests', 'Support Requests Tracker', 'SR', 1, 1, 0, '', NULL, NULL, 1);
 INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, is_public, allow_anon, email_all_updates, email_address, submit_instructions, browse_instructions) VALUES (4, 100, 'Empty', 'Empty Tracker', '', 1, 0, 0, '', NULL, NULL);
 
 --

@@ -68,7 +68,6 @@ class ArtifactTypeFactory extends Error {
 		$count_array=array();
 		$sql="select status_id,count(*) from artifact where group_artifact_id = ".$group_artifact_id.
 			 " group by status_id";
-		//echo $sql;
 		$result = db_query ($sql);
 
 		$rows = db_numrows($result);

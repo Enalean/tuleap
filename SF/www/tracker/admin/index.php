@@ -331,7 +331,7 @@ if ($group_id && !$atid) {
 		
 		if ( $update ) {
 			if ( !$ath->update($name,$description,$itemname,$is_public,$allow_anon,
-							   $submit_instructions,$browse_instructions) ) {
+                                           $submit_instructions,$browse_instructions,$instantiate_for_new_projects) ) {
 				exit_error('Error',$ath->getErrorMessage());
 			} else {
 				$succeed = true;
