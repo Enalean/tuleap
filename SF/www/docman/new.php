@@ -55,9 +55,6 @@ if($group_id) {
 		
 		if ($upload_instead) {
 		    // Upload file
-                    if ($uploaded_data_type=='text/html') {
-                        $data=htmlspecialchars($data);
-                    }
     		$query = "insert into doc_data(stateid,title,data,createdate,updatedate,created_by,doc_group,description,restricted_access,filename,filesize,filetype) "
     		."values('3',"
     		// state = 3 == pending

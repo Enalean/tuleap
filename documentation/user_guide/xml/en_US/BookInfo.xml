@@ -321,6 +321,15 @@
 
         <revremark>Added Service Configuration section in Project Administration chapter</revremark>
       </revision>
+      <revision>
+        <revnumber>2.6.8</revnumber>
+
+        <date>26-May-2004</date>
+
+        <authorinitials>Nicolas Guerin</authorinitials>
+
+        <revremark>Added Document Manager tip about copy-pasting vs. uploading documents</revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--

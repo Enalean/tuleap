@@ -98,8 +98,8 @@
 
     <para>Following the CodeX philosophy, any CodeX user can submit a
       document to a project team. To submit a new document, click on the
-      &#34;Submit New Documentation&#34; link in the Document Manager menu (<xref
-										  linkend="FigureASampleDocumentManagerWelcome" />). Then provide the
+      &#34;Submit New Documentation&#34; link in the Document Manager menu 
+      (<xref linkend="FigureASampleDocumentManagerWelcome" />). Then provide the
       Document Title, the document description and the body of the text.</para>
 
     <para>The document itself can either be copy-pasted directly in the
@@ -107,6 +107,19 @@
       button and the &#34;Upload&#34; checkbox. Then select a document group
       from the pull-down menu and click on the &#34;Submit Information&#34;
       button.</para>
+
+    <para><tip><title>Tip: Copy-pasted vs. uploaded documents</title>
+    <para>A copy-pasted document will be embedded in a CodeX page, so its 
+      appearance will be modified, and some tags like HTML, TITLE, or HEAD
+      will be ignored. An uploaded document, on the opposite, will be displayed
+      "as-is" in the browser window. Another difference is that a copy-pasted
+      document can be edited online, whereas an uploaded document can only be 
+      updated by uploading a new version.</para>
+    </tip></para>
+
+    <para>The document title and summary can contain HTML tags. So you can
+      use all sorts of typographic effects as well as pointers to other
+      locations, etc.</para>
 
     <para><tip><title>Tip: Referencing external documents</title>
     <para>It is sometime convenient to create placeholder documents
@@ -118,9 +131,6 @@
     linkend="FigureTheDocumentManagerAdministrationScreen" />)</para>
     </tip></para>
 
-    <para>The document title and summary can contain HTML tags. So you can
-      use all sorts of typographic effects as well as pointers to other
-      locations, etc.</para>
   </section>
 
   <section id="DocumentAdministration">

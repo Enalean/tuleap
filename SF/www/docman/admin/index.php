@@ -76,7 +76,7 @@ if (strstr($mode,"docedit")) {
 	</tr>
 
 	<tr>
-	<th> <input type="checkbox" name="upload_instead" value="1"> <B>Upload File:</B></th>
+	<th> <input type="checkbox" name="upload_instead" value="1"> <B>Upload New File:</B></th>
 	<td> <input type="file" name="uploaded_data" size="50">
       <br><span class="smaller"><i>(The maximum upload file size is ';
     echo formatByteToMb($sys_max_size_upload);
@@ -84,18 +84,18 @@ if (strstr($mode,"docedit")) {
 	</td>
 	<!-- td> (HTML file) </td -->
 
-	</tr>
-	<tr>
-	<th valign="top"><br><br>or Edit Document in place (only for HTML format):</th>
+	</tr>';
+	// Display the content only for HTML and text documents that were not uploaded but copy/pasted
+	if ( ( ($row['filetype'] == 'text/html')||($row['filetype'] == 'text/plain') ) && ($row['filesize']==0) ){
+            echo '<tr>
+	<th valign="top"><br><br>or Edit Document in place:</th>
 	<td><textarea cols="60" rows="20" wrap="virtual" name="data">';
-	// Display the content only HTML and text documents
-	if ( ($row['filetype'] == 'text/html')||($row['filetype'] == 'text/plain') ) {
 	    echo $row['data'];
-	}
-	echo '</textarea></td>
-	</tr>
+            echo '</textarea></td>
+	</tr>';
+        }
 
-	<tr>
+	echo '<tr>
 	<th>Group doc belongs in:</th>
         	<td>';
 
@@ -231,10 +231,6 @@ if (strstr($mode,"docedit")) {
 
 	if ($upload_instead) {
 	    // Upload file
-            if ($uploaded_data_type=='text/html') {
-                $data=htmlspecialchars($data);
-            }
-
             $query = "update doc_data "
                 ."set title = '".htmlspecialchars($title)."', "
                 ."data = '".$data."', "

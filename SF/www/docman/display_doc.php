@@ -45,7 +45,9 @@ if ($docid) {
             $res_insert = db_query( $sql );
         }
 
-        if ( ($row['filetype'] == 'text/html')||($row['filetype'] == 'text/plain') ) {
+        // HTML or text files that were copy/pasted are displayed in a CodeX-formatted page.
+        // Uploaded files are always displayed as-is.
+        if ( (($row['filetype'] == 'text/html')||($row['filetype'] == 'text/plain') )&&($row['filesize']==0)) {
         	docman_header(array('title'=>$row['title']));
         	// Document data can now contain HTML tags and php code
         	// so unescape HTML chars and evaluate the text.
