@@ -66,7 +66,7 @@ function support_header_admin($params) {
     if (!$project->isProject()) {
 	exit_error('Error','Only Projects Can Use The Support Request Manager');
     }
-    if (!$project->usesBugs()) {
+    if (!$project->usesSupport()) {
 	exit_error('Error','This Project Has Turned Off The Support Request Manager');
     }
     echo site_project_header($params);
