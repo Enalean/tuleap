@@ -200,17 +200,17 @@ individual text files (CSV format) or in a project specific database that you ca
   <tr class="'.util_get_alt_row_color($iu).'"> 
     <td><b>'.$legacy.' Bug Tracker</b></td>
     <td align="center"> 
-      <a href="'.$PHP_SELF.'?group_id=$group_id&export=bug">Export</a>
+      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug">Export</a>
       <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_format">Show Format</a>
     </td>
     <td align="center"> 
-      <a href="'.$PHP_SELF.'?group_id=$group_id&export=bug_history">Export</a>
+      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_history">Export</a>
       <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_history_format">Show Format</a>
     </td>
     <td align="center"> 
-      <a href="'.$PHP_SELF.'?group_id=$group_id&export=bug_bug_deps">Export Bug-Bug Deps</a>
+      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_bug_deps">Export Bug-Bug Deps</a>
       - <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_bug_deps_format">Show Format</a>
-      <br><a href="'.$PHP_SELF.'?group_id=$group_id&export=bug_task_deps">Export Bug-Task Deps</a>
+      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_task_deps">Export Bug-Task Deps</a>
       - <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_task_deps_format">Show Format</a>
     </td>
   </tr>';
@@ -219,15 +219,15 @@ individual text files (CSV format) or in a project specific database that you ca
   <tr class="'.util_get_alt_row_color($iu).'"> 
     <td><b>'.$legacy.' Task Manager</b></td>
     <td align="center"> 
-      <a href="'.$PHP_SELF.'?group_id=$group_id&export=task">Export</a>
+      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task">Export</a>
 	  <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_format">Show Format</a>
     </td>
     <td align="center"> 
-      <a href="'.$PHP_SELF.'?group_id=$group_id&export=task_history">Export</a>
+      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_history">Export</a>
       <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_history_format">Show Format</a>
     </td>
     <td align="center"> 
-      <a href="'.$PHP_SELF.'?group_id=$group_id&export=task_task_deps">Export</a>
+      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_task_deps">Export</a>
       <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_task_deps_format">Show Format</a>
     </td>
   </tr>';
@@ -236,7 +236,7 @@ individual text files (CSV format) or in a project specific database that you ca
   <tr class="'.util_get_alt_row_color($iu).'"> 
     <td><b>'.$legacy.' Support Request</b></td>
     <td align="center"> 
-      <a href="'.$PHP_SELF.'?group_id=$group_id&export=support_request">Export</a>
+      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=support_request">Export</a>
       <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=support_request_format">Show Format</a>
     </td>
     <td align="center">-<br>-</td>
@@ -247,7 +247,7 @@ individual text files (CSV format) or in a project specific database that you ca
   <tr class="'.util_get_alt_row_color($iu).'"> 
     <td><b>Survey Responses</b></td>
     <td align="center"> 
-      <a href="'.$PHP_SELF.'?group_id=$group_id&export=survey_responses">Export</a>
+      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=survey_responses">Export</a>
       <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=survey_responses_format">Show Format</a>
     </td>
     <td align="center">-<br>-</td>
