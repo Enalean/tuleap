@@ -54,7 +54,7 @@ function commits_header($params) {
 	}
 	echo ' | <A HREF="/cvs/?func=browse&group_id='.$group_id.'">CVS Query</A>';
 	echo ' | <A HREF="/cvs/?func=admin&group_id='.$group_id.'">CVS Admin</A>';	
-	echo ' | '.help_button("/help/show_help.php?section=VersionControlWithCVS.html",false,'Help');
+	echo ' | '.help_button("VersionControlWithCVS.html",false,'Help');
 
 	echo '</B>';
 	echo ' <hr width="300" size="1" align="left" noshade>';
