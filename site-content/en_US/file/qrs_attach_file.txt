@@ -1,0 +1,18 @@
+<?php
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2004. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+
+$username=strtolower(user_getname());
+echo '
+You can upload files either by
+<ul><li>using Anonymous FTP access (login "ftp") to <B>'."$sys_download_host".'</B> 
+			in the <B>/incoming</B> directory, then hit <B>Refresh View</B>.
+<li>or by using scp: "scp your_file '.$username.'@'.$sys_download_host.':'.$GLOBALS['FTPINCOMING_DIR'].'/"
+</ul>
+';
+?>

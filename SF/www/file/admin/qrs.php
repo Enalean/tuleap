@@ -316,9 +316,8 @@ if( $submit ) {
     echo ' Mb)</i></span>';
 	if (!$atleastone) {
 		print '<h3>No available files</H3>
-			<P>
-			You can upload files using Anonymous FTP access (login "ftp")to <B>'."$sys_download_host".'</B> 
-			in the <B>/incoming</B> directory, then hit <B>Refresh View</B>.';
+			<P>';
+	include(util_get_content('file/qrs_attach_file'));
 
 	}
         echo '<P>

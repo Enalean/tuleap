@@ -7,13 +7,18 @@
 // $Id$
 //
 
+$username=strtolower(user_getname());
 echo '
 <P>
-To attach your files to this release you must first upload them to the '.$GLOBALS['sys_name'].' server. To do so use FTP  to ';
-
-echo "<b>$sys_download_host</b> (login ftp / password is your email address)";
-
-echo ' and put your files in the <B>/incoming</B> directory. When you 
+To attach your files to this release you must first upload them to the '.$GLOBALS['sys_name'].' server. To do so use either "ftp" or "scp":
+<ul>
+<li><b>ftp</b>: with an ftp client, log on to <b>'.$sys_download_host.'</b> (login "ftp" / password is your email address) and put your files in the <B>/incoming</B> directory
+<li><b>scp</b>: simply type:
+<pre>
+scp your_file '.$username.'@'.$sys_download_host.':'.$GLOBALS['FTPINCOMING_DIR'].'
+</pre>
+</ul>
+When you 
 are done uploading, hit the "Refresh File List" button right below to see
 the uploaded release files.
 <P>
