@@ -440,11 +440,12 @@ of groups that you are a member of.
 		. "groups.group_id,"
 		. "groups.unix_group_name,"
 		. "groups.status,"
+		. "groups.is_public,"
 		. "user_group.admin_flags "
 		. "FROM groups,user_group "
 		. "WHERE groups.group_id=user_group.group_id "
 		. "AND user_group.user_id='". user_getid() ."' "
-		. "AND groups.type='1' AND groups.status='A' AND groups.is_public=1");
+		. "AND groups.type='1' AND groups.status='A'");
 	$rows=db_numrows($result);
 	if (!$result || $rows < 1) {
 		echo "You're not a member of any public projects";
@@ -459,11 +460,20 @@ of groups that you are a member of.
 			if ( db_result($result,$i,'admin_flags') == 'A' ) {
 			    echo ' <small><A HREF="/project/admin/?group_id='.db_result($result,$i,'group_id').'">[Admin]</A></small>';
 			}
+			if ( db_result($result,$i,'is_public') == 0 ) {
+			    echo ' (*)';
+			    $private_shown = true;
+			}
 			echo '</TD>'.
 			    '<td><A href="rmproject.php?group_id='. db_result($result,$i,'group_id').
 			    '" onClick="return confirm(\'Quit this project?\')">'.
 			    '<IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" BORDER="0"></A></TD></TR>';
 		}
+		
+		if ($private_shown) {
+		  echo '
+			       <TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD colspan="2">'.
+		      '(*) <em>Private projects</em></td></tr>';
 	}
 	echo $HTML->box1_bottom();
 
