@@ -847,6 +847,14 @@ ALTER TABLE groups CHANGE cvs_events_mailing_list cvs_events_mailing_list text N
 --- File service for future project should point to the new script
 UPDATE service SET link='/file/showfiles.php?group_id=$group_id' where short_name='file';
 
+
+
+
+
+
+--- this is really for 2.4 !!
+--- add column for tracking cvs access via viewcvs
+ALTER TABLE group_cvs_full_history ADD COLUMN cvs_browse int(11) NOT NULL default '0' AFTER cvs_checkouts;
 EOF
 
 # Update 'file' service for each project

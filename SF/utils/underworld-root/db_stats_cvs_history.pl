@@ -95,8 +95,11 @@ open( LOGFILE, $logfile ) or die "Cannot open $logfile";
 # LJ Now that open was succesful make sure that we delete all the rows
 # in the group_cvs_full_history for that day so that his day is not 
 # twice in the table in case of a rerun.
-$sql_del = "DELETE FROM group_cvs_full_history WHERE day='$day_date'";
-$res_del = $dbh->do($sql_del);
+#
+# Now that there exist a new column cvs_browse that is not filled by
+# this script we need to be a bit more delicate not deleting it.
+#$sql_del = "DELETE FROM group_cvs_full_history WHERE day='$day_date'";
+#$res_del = $dbh->do($sql_del);
 
 while(<LOGFILE>) {
   chomp($_);
@@ -148,11 +151,21 @@ while(<LOGFILE>) {
 	    print STDERR "db_cvs_history.pl: bad user_name \'$user\' \n";
 	  }
 
-	  $sql = "INSERT INTO group_cvs_full_history
+
+	  ## test first if we have already a row for group_id, user_id, day_date that contains
+          ## info on cvs browsing activity.
+	  $sql_search = "SELECT * FROM group_cvs_full_history WHERE group_id=$group_id AND user_id=$user_id AND day='$day_date'";
+          $search_res = $dbh->prepare($sql_search);
+	  $search_res->execute();
+          if ($search_res->rows > 0) {
+            $sql = "UPDATE group_cvs_full_history SET cvs_commits='$commits',cvs_adds='$adds',cvs_checkouts='$checkouts' WHERE group_id=$group_id AND user_id=$user_id AND day='$day_date'";
+            $dbh->do($sql);
+	  } else {
+	    $sql = "INSERT INTO group_cvs_full_history
 			(group_id,user_id,day,cvs_commits,cvs_adds,cvs_checkouts)
 			VALUES ('$group_id', '$user_id', '$day_date', '$commits', '$adds', '$checkouts ')";
-	  $dbh->do($sql);
-
+	    $dbh->do($sql);
+          }
 
 	} elsif ( $_ =~ /^E::/ ) {
 		$errors++;

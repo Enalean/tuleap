@@ -919,6 +919,7 @@ CREATE TABLE group_cvs_full_history (
   cvs_commits int(11) NOT NULL default '0',
   cvs_adds int(11) NOT NULL default '0',
   cvs_checkouts int(11) NOT NULL default '0',
+  cvs_browse int(11) NOT NULL default '0',
   KEY group_id_idx (group_id),
   KEY user_id_idx (user_id),
   KEY day_idx (day)

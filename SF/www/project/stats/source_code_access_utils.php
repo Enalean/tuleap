@@ -125,12 +125,12 @@ function cvsaccess_logs_daily($project, $span = 7, $who="allusers") {
 	    }
 	}
 
-	$sql  = "SELECT group_cvs_full_history.day AS day, user.user_name AS user_name, user.realname AS realname, user.email AS email, group_cvs_full_history.cvs_checkouts AS cvs_checkouts "
-	."FROM group_cvs_full_history, user "
-	."WHERE group_cvs_full_history.user_id=user.user_id ".$cond
-	."AND group_cvs_full_history.group_id=".$project->getGroupId()." "
-	."AND group_cvs_full_history.day >= $begin_day "
-	."AND group_cvs_full_history.cvs_checkouts != 0 "
+	$sql  = "SELECT history.day, user.user_name, user.realname, user.email, history.cvs_checkouts, history.cvs_browse "
+	."FROM group_cvs_full_history as history, user "
+	."WHERE history.user_id=user.user_id ".$cond
+	."AND history.group_id=".$project->getGroupId()." "
+	."AND history.day >= $begin_day "
+	."AND (history.cvs_checkouts != 0 OR history.cvs_browse != 0)"
 	."ORDER BY day ASC";
 	
 	// Executions will continue until morale improves.
@@ -147,6 +147,7 @@ function cvsaccess_logs_daily($project, $span = 7, $who="allusers") {
 			. '<TD><B>User</B></TD>'
 			. '<TD><B>E-mail</B></TD>'
 			. '<TD align><B>Checkouts/Update</B></TD>'
+			. '<TD align><B>Browsing</B></TD>'
 			. '</TR>' . "\n";
 		
 		while ( $row = db_fetch_array($res) ) {
@@ -156,6 +157,7 @@ function cvsaccess_logs_daily($project, $span = 7, $who="allusers") {
 			    . '<TD>' . $row["realname"] .' ('.util_user_link($row["user_name"]).')</TD>'
 				. '<TD>' . $row["email"] . '</TD>'
 				. '<TD>' . $row["cvs_checkouts"] . '</TD>'
+				. '<TD>' . $row["cvs_browse"] . '</TD>'
 				. '</TR>' . "\n";
 		}
 
