@@ -464,6 +464,16 @@
         <revremark>Reworked document manager chapter after major update of this service.
         </revremark>
       </revision>
+      <revision>
+        <revnumber>2.7.2</revnumber>
+
+        <date>17-Mar-2005</date>
+
+        <authorinitials>Nicolas Guerin</authorinitials>
+
+        <revremark>Added information on document cross-referencing.
+        </revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--

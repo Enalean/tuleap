@@ -245,7 +245,7 @@ if ($sys_force_ssl) {
 
 my $mod_url = $codex_srv."/svn/viewcvs.php/%s?r1=text&tr1=%s&r2=text&tr2=%s&roottype=svn&root=$gname&diff_format=h";
 my $add_url  = $codex_srv."/svn/viewcvs.php/%s?rev=$rev&view=markup&roottype=svn&root=$gname";
-my $patch_url = $codex_srv."/patch/?func=detailpatch&patch_id=%s&group_id=$group_id";
+my $doc_url = $codex_srv."/docman/display_doc.php?docid=%s&group_id=$group_id";
 my $commit_url = $codex_srv."/cvs/?func=detailcommit&commit_id=%s&group_id=$group_id";
 my $revision_url = $codex_srv."/cvs/?func=detailrevision&rev_id=%s&group_id=$group_id";
 my $artifact_url = $codex_srv."/tracker/?func=gotoid%s&aid=%s&atn=%s";
@@ -255,7 +255,7 @@ my $no_diff = 1; # no inline diff for CodeX
 # arrays to store all artifact ref.
 my %artifacts;
 my %artifact_names;
-my %patches;
+my %docs;
 my %commits;
 my %branches;
 
@@ -762,15 +762,15 @@ sub extract_xrefs {
     my (@log) = @_;
 
     # Compile regexp for efficiency
-    my $patch_reg = qr/patch[ ]?#([0-9]+)/i;
+    my $doc_reg = qr/doc[ ]?#([0-9]+)/i;
     my $commit_reg = qr/commit[ ]?#([0-9]+)/i;
     my $rev_reg = qr/rev[ ]?#([0-9]+)/i;
     my $art_reg = qr|([^\s()\$&!;~\#\|{}%,\?=\+\"\.\':/<>]+)[ ]?#([0-9]+)|i;
 
     foreach $line (@log) {
-      # store the patch ref
-      while ($line =~ /$patch_reg/g) {
-	$patches{$1} = $1;
+      # store the document ref
+      while ($line =~ /$doc_reg/g) {
+	$docs{$1} = $1;
       }
 
       # store the CVS commit ref
@@ -786,7 +786,7 @@ sub extract_xrefs {
       while ($line =~ m|$art_reg|g) {
 	next if (lc($1) eq 'commit');
 	next if (lc($1) eq 'rev');
-	next if (lc($1) eq 'patch');
+	next if (lc($1) eq 'doc');
 	$artifacts{"$1_$2"} = $2;
 	$artifact_names{"$1_$2"} = $1;
       }
@@ -796,15 +796,15 @@ sub extract_xrefs {
 
 sub format_xref {
 
-    @keys = keys %patches;
+    @keys = keys %docs;
     if ( $#keys >= 0 ) {
     	push (@text, "");
-        push (@text, "Patch references:");
-        foreach $patch (keys %patches) {
-            push (@text, sprintf("Patch #%s: $patch_url",$patch,$patch));
+        push (@text, "Document references:");
+        foreach $doc (keys %docs) {
+            push (@text, sprintf("Document #%s: $doc_url",$doc,$doc));
         }
 	if ($db_track) {
-	  &db_add_ref('patch', $commit_id, $patch);
+	  &db_add_ref('document', $commit_id, $doc);
 	}
     }
 

@@ -18,7 +18,7 @@
     provides a specific service to manage your project documents.</para>
 
   <para>The CodeX Document Manager is very basic and cannot compare
-    in any way with specialized document repository like DocuShare. It
+    in any way with specialized document repositories like DocuShare. It
     is however very handy to publish documents that are critical to
     your community of users. Examples are: Installation, Adminstration
     or User Guide, API documentation, Frequently Asked Questions,
@@ -51,8 +51,11 @@
 
   </itemizedlist>
 
-  <section id="DocumentBrowsing">
-    <title>Document Browsing</title>
+  <section id="DocumentAccess">
+    <title>Access to Documents</title>
+
+    <section id="DocumentBrowsing">
+      <title>Document Browsing</title>
 
     <para>To access the Document Manager select the &#34;Docs&#34; item from
       the Project Menu at the top of the screen of the Project Summary page.
@@ -71,16 +74,32 @@
 	</imageobject>
       </mediaobject>
     </figure>
+    </section>
+
+    <section id="DocumentCrossReference">
+      <title>Cross-Referencing documents</title>
+
+      <para>Like artifacts (see <xref linkend="ArtifactCrossReferencing" />),
+      CVS commits (<xref linkend="Cross-Referencing CVS Commits" />) and 
+      Subversion revision numbers (<xref linkend="Cross-ReferencingSubversionCommits" />),
+      documents may be referenced in artifact comments or commit messages.
+      Simply type the "doc #NNN" pattern to automatically create
+      a link to the document with ID number NNN. Document IDs are
+      visible in the 'Docs' main page by hovering over a document title
+      with the mouse pointer.</para>
+
+    </section>
   </section>
 
   <section id="DocumentSubmission">
     <title>Document Submission</title>
 
     <para>Only project members with the 'Technician' role in the 'User Permissions'
-      matrix can submit documentation.  To submit a new document, click on the
+      matrix (see <xref linkend="UserPermissions" />) can submit documentation.
+      To submit a new document, click on the
       &#34;Submit New Documentation&#34; link in the Document Manager menu 
       (<xref linkend="FigureASampleDocumentManagerWelcome" />). Then provide the
-      Document Title, the document description and the body of the text.</para>
+      document title, the document description and the body of the text.</para>
 
     <para>The document itself can either be copy-pasted directly in the
       document text area or uploaded with the help of the &#34;Browse&#34;
@@ -90,7 +109,7 @@
 
     <para>A document has to be attached to a group in any case. This is why
       CodeX provides a default group called 'Documents' to each project. 
-      This default group may renamed without any problem.</para>
+      This default group may be renamed.</para>
 
     <para><tip><title>Tip: Copy-pasted vs. uploaded documents</title>
     <para>A copy-pasted document will be embedded in a CodeX page, so its 
@@ -106,13 +125,11 @@
       locations, etc.</para>
 
     <para><tip><title>Tip: Referencing external documents</title>
-    <para>It is sometime convenient to create placeholder documents
+    <para>It is sometimes convenient to create placeholder documents
     that actually point to an external location like a DocuShare
     collection or a DocuShare file for instance. To do this, simply
     surround the document title with an HREF tag (hyperlink) pointing
-    to the real location elsewhere on the Intranet (an example
-    is given with Document #15 in <xref
-    linkend="FigureTheDocumentManagerAdministrationScreen" />)</para>
+    to the real location elsewhere on the Intranet</para>
     </tip></para>
 
   </section>
@@ -121,7 +138,7 @@
     <title>Document Administration</title>
 
     <para>The Document Manager provides a number of administration functions
-      like changing a document access permissions, display position or group,
+      like changing the document access permissions, display position or group,
       creating new document groups, etc.</para>
 
     <figure id="FigureTheDocumentManagerAdministrationScreen">
@@ -156,15 +173,15 @@
 		    spacing="compact">
 	<listitem>
 	  <para>The title, description and document body can be modified. In
-            this case you update the document content</para>
+            this case you update the document content.</para>
 	</listitem>
 
 	<listitem>
-	  <para>You can change the group (or folder) a document belong to</para>
+	  <para>You can change the group (or folder) a document belongs to.</para>
 	</listitem>
 
 	<listitem>
-	  <para>You can change the document display rank in the document group</para>
+	  <para>You can change the document display rank in the document group.</para>
 	</listitem>
 
       </itemizedlist>
@@ -287,8 +304,7 @@
         for the corresponding object.
       </para></tip></para>
     </section>
-    
-  </section>
+      </section>
 </chapter>
 <!--
 Local Variables:

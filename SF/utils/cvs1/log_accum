@@ -66,7 +66,7 @@ $STATE_LOG     = 4;
 # arrays to store all artifact ref.
 my %artifacts;
 my %artifact_names;
-my %patches;
+my %docs;
 my %commits;
 my %branches;
 
@@ -360,9 +360,9 @@ sub read_logfile {
 	chop;
 	$line = $leader.$_;
 
-        # store the patch ref
-        while ($line =~ /patch[ ]?#([0-9]+)/gi) {
-               $patches{$1} = $1;
+        # store the document ref
+        while ($line =~ /doc[ ]?#([0-9]+)/gi) {
+               $docs{$1} = $1;
         }
         # store the commit ref
         while ($line =~ /commit[ ]?#([0-9]+)/gi) {
@@ -370,7 +370,7 @@ sub read_logfile {
         }
         while ($line =~ m|([^\s()\$&!;~\#\|{}%,\?=\+\"\.\':/<>]+)[ ]?#([0-9]+)|gi) {
                next if (lc($1) eq 'commit');
-               next if (lc($1) eq 'patch');
+               next if (lc($1) eq 'doc');
                $artifacts{"$1_$2"} = $2;
                $artifact_names{"$1_$2"} = $1;
         }
@@ -1110,15 +1110,15 @@ for ($i = 0; ; $i++) {
     }
     
 
-    @keys = keys %patches;
+    @keys = keys %docs;
     if ( $#keys >= 0 ) {
     	push (@text, "");
-        push (@text, "Patch references:");
-        foreach $patch (keys %patches) {
-            push (@text, "Patch #$patch: $server_url/patch/?func=detailpatch&patch_id=$patch&group_id=$group_id");
+        push (@text, "Document references:");
+        foreach $doc (keys %docs) {
+            push (@text, "Document #$doc: $server_url/docman/display_doc.php?docid=$doc&group_id=$group_id");
         }
 	    if ($db_track) {
-	      &db_add_ref('patch', $commit_id, $patch);
+	      &db_add_ref('document', $commit_id, $doc);
 	    }
     }
 

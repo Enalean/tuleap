@@ -16,7 +16,7 @@
 #
 docman_index	title		Documentation for $1
 docman_index	header		Project Documentation
-docman_index	nodoc		This project has not published any documentation.
+docman_index	nodoc		No documentation published yet.
 docman_index	description	Description
 #
 #-----------------------------------------------
@@ -113,8 +113,6 @@ docman_admin_index	error_resetting perm	Error: cannot reset permissions to defau
 # Script: SF/www/docs/site/index.php
 #
 docs_site_index	title	Site Documentation
-docs_site_index	header	Site Documentation
-docs_site_index	nodoc	No site documentation available.
 #
 #-----------------------------------------------
 # Script: SF/www/docs/site/about_codex.php

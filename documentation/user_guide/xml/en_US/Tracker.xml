@@ -658,7 +658,7 @@
 	<listitem>
 	  <para><emphasis role="bold">Cross-References</emphasis>:
 	  While typing a follow-up comment, you can use some special
-	  text pattern to refer to other artifacts or CVS commits
+	  text pattern to refer to other artifacts, documents, or CVS and Subversion commits
 	  (check-ins). These pattern while be automatically displayed
 	  as hyperlinks when the follow-up comment is displayed on the
 	  screen. See <xref linkend="ArtifactCrossReferencing" /> for
@@ -864,7 +864,7 @@
       <para>In addition to the rather formal way of expressing a
       depency between two artifacts presented in
       <xref linkend="ArtifactDependencies"/>, CodeX offers the ability to
-      cross-reference any artifact from within a follow-up
+      cross-reference any artifact, document, or commit from within a follow-up
       comment.</para>
 
       <para>When typing a follow-up comment, any text that follows the
@@ -891,15 +891,26 @@
 	<listitem>
 	  <para>You can also use the pattern &#34;commit #NNN&#34; in a
 	  follow-up comment to refer to the commit with ID number NNN
-	  as listed in your CVS tracking database. This is very
+	  as listed in your CVS or Subversion tracking database. This is very
 	  useful for instance when you want to close a defect or a
 	  task artifact with a reference to the corresponding source
 	  code modifications. Conversely your commit message can also
 	  contain a reference to the originating artifact therefore
 	  ensuring a two directional cross-reference between source
-	  code modifications and the related artifact. For more
-	  details about the CVS tracking database see <xref
-	      linkend="CVSWebInterface"/>.</para>
+	  code modifications and the related artifact. You may also
+          refer to a Subversion revision  using the "revision #NNN"
+          pattern. For more
+	  details about the CVS and Subversion tracking databases see 
+          <xref linkend="CVSWebInterface"/> and 
+          <xref linkend="SubversionBrowsingInterface"/> .</para>
+	</listitem>
+	<listitem>
+	  <para>Documents stored in the CodeX Document Manager may 
+          also be referenced with this mechanism:
+          simply type the "doc #NNN" pattern to automatically create
+          a link to the document with ID number NNN. Document IDs are
+          visible in the 'Docs' main page by hovering over a document title
+          with the mouse pointer.</para>
 	</listitem>
 	<listitem>
 	  <para>If the referenced artifact belongs to another project, or if
