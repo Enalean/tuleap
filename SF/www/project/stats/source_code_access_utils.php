@@ -42,7 +42,7 @@ function filedownload_logs_daily( $group_id, $span = 7 ) {
 	// Executions will continue until morale improves.
 	$res = db_query( $sql );
 
-	print '<P><B><U>File Download for the past ' . $span. ' days</U>';
+	print '<P><B><U>File Download for the past ' . $span. ' days</U></B>';
 
 	// if there are any days, we have valid data.
 	if ( ($nb_downloads = db_numrows( $res )) >= 1 ) {
