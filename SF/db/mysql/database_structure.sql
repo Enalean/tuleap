@@ -1008,6 +1008,7 @@ CREATE TABLE groups (
   patch_preamble text NOT NULL,
   pm_preamble text NOT NULL,
   xrx_export_ettm int(11) NOT NULL default '0',
+  project_type int(11) NOT NULL default '0',
   PRIMARY KEY  (group_id),
   KEY idx_groups_status (status),
   KEY idx_groups_public (is_public),
