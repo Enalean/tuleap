@@ -572,7 +572,8 @@ class ArtifactTypeHtml extends ArtifactType {
 		      <td width="79%"> 
 		        <input type="text" name="itemname" value="'.$itemname.'">
 		      </td>
-		    </tr>';
+		    </tr>
+                    <tr><td colspan=2><i>Please avoid spaces and punctuation in short names, or you won\'t be able to automatically cross-reference artifacts</i>'.help_button('ArtifactUpdate.html#ArtifactCrossReferencing').'</td></tr>';
 		echo '</table>';
 		echo '<p>Choose a creation method:</p>';
 		echo '<table>
@@ -582,7 +583,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		echo $this->trackersSelectBox(100,"codex_template");
 		echo '	 &nbsp;<input type="button" name="CreateCodeXTemplate" value="Create" onClick="onSubmitCreateCodeXTemplate()"><br><br></td>
 			  <tr valign="top">    
-			     <td width="300"><li><b>From an existing tracker:</b><br><i>(Choose a project first and then a tracker of this project or fill directly a tracker ID)</i></li></td>
+			     <td width="300"><li><b>From an existing tracker:</b><br><i>(Choose a project first and then a tracker of this project)</i></li></td>
 			     
 			     <td>
 			     	<table>
