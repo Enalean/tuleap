@@ -73,11 +73,11 @@ if ($group_id && $atid) {
 			// First check parameters
 			
 			// CC
-		    if (! $ah->validateCCList(util_split_emails($add_cc), $message)) {
+		    if ($add_cc && !$ah->validateCCList(util_split_emails($add_cc), $message)) {
 		        exit_error("Error - The CC list is invalid", $message);
 		    }
 		    // Files
-			if (!util_check_fileupload($input_file)) {
+			if ($add_file && !util_check_fileupload($input_file)) {
 				exit_error("Error","Invalid filename");
 			}
 
@@ -221,11 +221,11 @@ if ($group_id && $atid) {
 			// First check parameters
 			
 			// CC
-		    if (! $ah->validateCCList(util_split_emails($add_cc), $message)) {
+		    if ($add_cc && !$ah->validateCCList(util_split_emails($add_cc), $message)) {
 		        exit_error("Error - The CC list is invalid", $message);
 		    }
 		    // Files
-			if (!util_check_fileupload($input_file)) {
+			if ($add_file && !util_check_fileupload($input_file)) {
 				exit_error("Error","Invalid filename");
 			}
 

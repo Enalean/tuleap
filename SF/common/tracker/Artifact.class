@@ -834,6 +834,9 @@ class Artifact extends Error {
 	function addDependencies($artifact_id_dependent,&$changes) {
 	    global $feedback;
 	
+		if ( !$artifact_id_dependent ) 
+			return;
+			
 		$ok = true;
 		$ids = explode(",",$artifact_id_dependent);
 		
