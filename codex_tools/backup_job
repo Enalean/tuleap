@@ -1,0 +1,37 @@
+#!/bin/sh
+#
+# CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+# Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2001-2003. All Rights Reserved
+# http://codex.xerox.com
+#
+# THIS FILE IS THE PROPERTY OF XEROX AND IS ONLY DISTRIBUTED WITH A
+# COMMERCIAL LICENSE OF CODEX. IT IS *NOT* DISTRIBUTED UNDER THE GNU
+# PUBLIC LICENSE.
+#
+#  $Id$
+#
+# /home/tools/backup_job
+#
+#      Originally written by Vicki Tuttle 2001- 2003, CodeX Team, Xerox
+#      This job shuts down mysql and copies mysql database files to
+#      /cvsroot/.mysql_backup
+#      It then starts mysql and backs up all filesystems to tape
+#
+#     For this backup strategy to work properly the mysql log facility
+#     must be activated in /etc/my.cnf and this job must be run
+#     before the full system takes place.
+#
+
+/etc/init.d/mysql stop
+sleep 5
+
+/bin/mkdir /cvsroot/.mysql_backup/old/`date +%m%d%y`
+
+/bin/mv /cvsroot/.mysql_backup/atlas-bin.* /cvsroot/.mysql_backup/old/`date +%m%d%y`
+
+/bin/mv /cvsroot/.mysql_backup/sqldump* /cvsroot/.mysql_backup/old/`date +%m%d%y`
+
+# back up mysql datafiles to disk
+/sbin/dump 0f /cvsroot/.mysql_backup/sqldump.`date +%m%d%y.%H%M` -M /home/var/lib/mysql
+
+/etc/init.d/mysql start
