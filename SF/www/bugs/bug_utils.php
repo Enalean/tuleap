@@ -576,7 +576,7 @@ function show_buglist ($result,$offset,$total_rows,$field_arr,$title_arr,
     echo $nav_bar;
 }
 
-function mail_followup($bug_id,$more_addresses=false) {
+function mail_followup($bug_id,$more_addresses=false,$changes) {
     global $sys_datefmt,$feedback;
     /*
       Send a message to the person who opened this bug and the person it is assigned to - modified by jstidd on 1/30/01 to eliminate default user assigned to
@@ -585,6 +585,7 @@ function mail_followup($bug_id,$more_addresses=false) {
     $sql="SELECT * from bug WHERE bug_id='$bug_id'";
 
     $result=db_query($sql);
+    $bug_href = "http://$GLOBALS[sys_default_domain]/bugs/?func=detailbug&bug_id=$bug_id&group_id=".db_result($result,0,'group_id');
 
     if ($result && db_numrows($result) > 0) {
 			
@@ -592,8 +593,11 @@ function mail_followup($bug_id,$more_addresses=false) {
 
 	// Generate the message preamble with all required
 	// bug fields
-	$body = 'Bug #'.$bug_id.', was updated on '.date($sys_datefmt,db_result($result,0,'date')).
-	    "\nHere is a current snapshot of the bug.".
+	$body = "\n=================== Bug #".$bug_id.
+	    ": Latest Modifications ==================\n".$bug_href."\n\n".
+	    bug_data_format_changes($changes)."\n\n\n\n".
+	    "\n=================== Bug #".$bug_id.
+	    ": Full Bug Snapshot ===================".
 	    "\n\nProject: ".group_getname($group_id);
 
 	$i=0;
@@ -650,7 +654,7 @@ function mail_followup($bug_id,$more_addresses=false) {
 
 	// Finally output the message trailer
 	$body .= "\n\nFor detailed info, follow this link:";
-	$body .= "\nhttp://$GLOBALS[sys_default_domain]/bugs/?func=detailbug&bug_id=$bug_id&group_id=".db_result($result,0,'group_id');
+	$body .= "\n".$bug_href;
 
 
 	// And send it to the submitter and the assignee (if any)
@@ -872,7 +876,7 @@ function bug_delete_file($group_id=false,$bug_id=false,$bug_file_id=false) {
     }
 }
 
-function bug_attach_file($bug_id,$input_file,$input_file_name,$input_file_type,$input_file_size,$file_description) {
+function bug_attach_file($bug_id,$input_file,$input_file_name,$input_file_type,$input_file_size,$file_description, &$changes) {
     global $feedback;
 
     $user_id = (user_isloggedin() ? user_getid(): 100);
@@ -880,7 +884,7 @@ function bug_attach_file($bug_id,$input_file,$input_file_name,$input_file_type,$
     $data = addslashes(fread( fopen($input_file, 'r'), filesize($input_file)));
     if ((strlen($data) < 20) && (strlen($data) > 512000)) {
 	$feedback .= " - File not attached: must be > 20 chars and < 512000 chars in length";
-	return;
+	return false;
     }
 
     $sql = 'INSERT into bug_file (bug_id,submitted_by,date,description, file,filename,filesize,filetype) '.
@@ -891,8 +895,13 @@ function bug_attach_file($bug_id,$input_file,$input_file_name,$input_file_type,$
 
     if (!$res) {
 	$feedback .= ' - Error while attaching file: '.db_error($res);
+	return false;
     } else {
 	$feedback .= '- File succesfully attached';
+	$changes['attach']['description'] = $file_description;
+	$changes['attach']['name'] = $input_file_name;
+	$changes['attach']['size'] = $input_file_size;
+	return true;
     }
 }
 

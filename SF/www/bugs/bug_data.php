@@ -683,7 +683,6 @@ function bug_data_get_submitters ($group_id=false) {
 	return db_query($sql);
 }
 
-
 function bug_data_get_tasks ($group_id=false) {
 	/*
 		Get the tasks for this project
@@ -696,11 +695,14 @@ function bug_data_get_tasks ($group_id=false) {
 	return db_query($sql);
 }
 
-function bug_data_get_dependent_tasks ($bug_id=false) {
+function bug_data_get_dependent_tasks ($bug_id=false, $notin=false) {
 	/*
 		Get the list of ids this is dependent on
 	*/
 	$sql="SELECT is_dependent_on_task_id FROM bug_task_dependencies WHERE bug_id='$bug_id'";
+	if ($notin) {
+	    $sql .= ' AND is_dependent_on_task_id NOT IN ('. join(',',$notin).')';
+	}
 	return db_query($sql);
 }
 
@@ -712,11 +714,14 @@ function bug_data_get_valid_bugs ($group_id=false,$bug_id='') {
 	return db_query($sql);
 }
 
-function bug_data_get_dependent_bugs ($bug_id=false) {
+function bug_data_get_dependent_bugs ($bug_id=false, $notin=false) {
 	/*
 		Get the list of ids this is dependent on
 	*/
 	$sql="SELECT is_dependent_on_bug_id FROM bug_bug_dependencies WHERE bug_id='$bug_id'";
+	if ($notin) {
+	    $sql .= ' AND is_dependent_on_bug_id NOT IN ('. join(',',$notin).')';
+	}
 	return db_query($sql);
 }
 
@@ -786,7 +791,9 @@ function bug_data_add_history ($field_name,$old_value,$bug_id,$type=false) {
 //       Handles security
 //
 function bug_data_handle_update ($group_id,$bug_id,$dependent_on_task,
-				 $dependent_on_bug,$canned_response,$vfl) {
+				 $dependent_on_bug,$canned_response,$vfl,
+				 &$changes)
+{
     global $feedback;
 
     /*
@@ -813,6 +820,7 @@ function bug_data_handle_update ($group_id,$bug_id,$dependent_on_task,
       and if we must keep history then do it. Also add them to the update
       statement
     */
+    $changes = array();
     reset($vfl);
     while (list($field,$value) = each($vfl)) {
 	
@@ -837,6 +845,12 @@ function bug_data_handle_update ($group_id,$bug_id,$dependent_on_task,
 		$upd_list .= "$field='$value',";
 		bug_data_add_history($field,$old_value,$bug_id);
 	    }
+
+	    // Keep track of the change
+	    $changes[$field]['del']=
+		bug_field_display($field,$group_id,$old_value,false,false,true,true);
+	    $changes[$field]['add']=
+		bug_field_display($field,$group_id,$value,false,false,true,true);
 	}
     }
 
@@ -860,11 +874,14 @@ function bug_data_handle_update ($group_id,$bug_id,$dependent_on_task,
     }
 
     // Details field history is handled a little differently. Followup comments
-    // are added in the bug history along with thecomment type.
+    // are added in the bug history along with the comment type.
     if ($details != '') {
 	bug_data_add_history ('details',htmlspecialchars($details)
-			      ,$bug_id, $vfl['comment_type_id']);    }
-
+			      ,$bug_id, $vfl['comment_type_id']);
+	$changes['details']['add'] = $details;
+	$changes['details']['type'] =
+	    bug_data_get_value('comment_type_id',$group_id, $vfl['comment_type_id']);
+    }
     /*
       Enter the timestamp if we are changing to closed or declined
     */
@@ -875,15 +892,41 @@ function bug_data_handle_update ($group_id,$bug_id,$dependent_on_task,
     }
 
     /*
-      DELETE THEN Insert the list of task dependencies
+      DELETE THEN Insert the list of task dependencies 
+      Also compute the task added and removed - Never mention the 'None' item
     */
+
+    $old_dep_on_task = util_result_column_to_array (bug_data_get_dependent_tasks($bug_id));
+
     bug_data_update_dependent_tasks($dependent_on_task,$bug_id);
+
+    // Add None in both lists to make sure it is never taken into account
+    // in the diffs
+    $old_dep_on_task[] = 100;
+    $dependent_on_task[] = 100;
+    list($deleted_tasks,$added_tasks) = util_double_diff_array($old_dep_on_task,$dependent_on_task);
+
+    $changes['Dependent Tasks']['del'] = join(',',$deleted_tasks);
+    $changes['Dependent Tasks']['add'] = join(',',$added_tasks);
+
 
     /*
       DELETE THEN Insert the list of bug dependencies
+      Also compute the bugs added and removed - Never mention the 'None' item
     */
+    
+    $old_dep_on_bug = util_result_column_to_array (bug_data_get_dependent_bugs($bug_id));
 
     bug_data_update_dependent_bugs($dependent_on_bug,$bug_id);
+    
+    // Add None in both lists to make sure it is never taken into account
+    // in the diffs
+    $dependent_on_bug[] = 100;
+    $old_dep_on_bug[] = 100;
+    list($deleted_bugs, $added_bugs) = util_double_diff_array($old_dep_on_bug, $dependent_on_bug);
+
+    $changes['Dependent Bugs']['del'] = join(',',$deleted_bugs);
+    $changes['Dependent Bugs']['add'] = join(',',$added_bugs);
 
 
     /*
@@ -909,6 +952,56 @@ function bug_data_handle_update ($group_id,$bug_id,$dependent_on_task,
 	$feedback .= " Successfully Updated Bug ";
 	return true;
     }
+
+}
+
+function bug_data_format_changes($changes) {
+
+    global $sys_datefmt;
+
+    reset($changes);
+    $fmt = "%20s | %-25s | %s\n";
+
+    $user_id = user_getid();
+
+    $out_hdr = 'Changes by: '.user_getrealname($user_id).' <'.user_getemail($user_id).'> - '.date($sys_datefmt,time());
+
+    //Process special cases first: follow-up comment
+    if ($changes['details']) {
+	$out_com = "\n\n------------------ Additional Follow-up Comments ----------------------------\n";
+	if ($changes['details']['type'] != 'None') {
+	    $out_com .= 'Comment: ['.$changes['details']['type']."]\n";
+	}
+	$out_com .= $changes['details']['add'];
+	unset($changes['details']);
+    }
+
+    //Process special cases first: bug file attachment
+    if ($changes['attach']) {
+	$out_att = "\n\n------------------ Additional Bug Attachment  ----------------------------\n";
+	$out_att .= sprintf("File name: %-30s Size:%d KB\n",$changes['attach']['name'],
+			 $changes['attach']['size']/1024);
+	$out_att .= $changes['attach']['description'];
+	unset($changes['attach']);
+    }
+
+    // All the rest of the fields now
+    reset($changes);
+    while ( list($field,$h) = each($changes)) {
+
+	// If both removed and added items are empty skip - Sanity check
+	if (!$h['del'] && !$h['add']) { continue; }
+
+	$label = bug_data_get_label($field);
+	if (!$label) { $label = $field; }
+	$out .= sprintf($fmt, $label, $h['del'],$h['add']);
+    }
+    if ($out) {
+	$out = "\n\n".sprintf($fmt,'What    ','Removed','Added').
+	"---------------------------------------------------------------------------\n".$out;
+    }
+
+    return($out_hdr.$out.$out_com.$out_att);
 
 }
 

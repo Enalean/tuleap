@@ -34,7 +34,7 @@ if ($group_id) {
 	if ($bug_id) {
 	    // send an email to notify the user and 
 	    // let the project know the bug was submitted
-	    mail_followup($bug_id,$project->getNewBugAddress());
+	    mail_followup($bug_id,$project->getNewBugAddress(),array());
 	    include '../bugs/browse_bug.php';
 	} else {
 	    //some error occurred
@@ -54,8 +54,14 @@ if ($group_id) {
 	$vfl = bug_extract_field_list();
 
 	//data control layer
+	$changes = array();
 	$changed = bug_data_handle_update($group_id,$bug_id,$dependent_on_task,
-				$dependent_on_bug,$canned_response,$vfl);
+					  $dependent_on_bug,$canned_response,$vfl, $changes);
+
+	// Attach new file if there is one
+	if ($add_file && $input_file) {
+	    $changed |= bug_attach_file($bug_id,$input_file,$input_file_name,$input_file_type,$input_file_size,$file_description, $changes);
+	}
 
 	if ($changed) {
 	    /*
@@ -69,13 +75,10 @@ if ($group_id) {
 	      now send the email
 	      it's no longer optional due to the group-level notification address
 	    */
-	    mail_followup($bug_id,$address);
+	    mail_followup($bug_id,$address,$changes);
 	}
 
-	// Attach new file if there is one
-	if ($add_file && $input_file) {
-	    bug_attach_file($bug_id,$input_file,$input_file_name,$input_file_type,$input_file_size,$file_description);
-	}
+
 
 	include '../bugs/browse_bug.php';
 	break;
