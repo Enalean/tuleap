@@ -272,29 +272,29 @@ $result_taskdeps = db_query($sql_taskdeps);
 reset($group_project_id);
 while (list(,$v) = each($group_project_id)) {
     if ($v == 0) { 
-	$subhdr = ''; break;
+	$subhdr = 'All Subprojects'; break;
     } else {
-	$subhdr .= pm_data_get_group_name($group_project_id).' ';
+	$subhdr .= pm_data_get_group_name($v).' ';
     }
 }
 $hdr .= ' In: '.$subhdr;
 
-reset($_assigned_to);
+reset($_assigned_to); $subhdr = '';
 while (list(,$v) = each($_assigned_to)) {
     if ($v == 0) { 
-	$subhdr = ''; break;
+	$subhdr = 'Anybody'; break;
     } else {
-	$subhdr .= user_getname($_assigned_to).' ';
+	$subhdr .= user_getname($v).' ';
     }
 }
 $hdr .= ' For: '.$subhdr;
 
-reset($_status);
+reset($_status); $subhdr = '';
 while (list(,$v) = each($_status)) {
     if ($v == 0) { 
-	$subhdr = ''; break;
+	$subhdr = 'Any'; break;
     } else {
-	$subhdr .= pm_data_get_status_name($_status).' ';
+	$subhdr .= pm_data_get_status_name($v).' ';
     }
 }
 $hdr .= ' Status: '.$subhdr;
@@ -303,7 +303,7 @@ if ($order) {
     $hdr .= ' Sorted by: '.$order_lbl;
 }
 
-// Build the selection box for the various criteria
+// Build the selection boxes for the various criteria
 if ($advsrch) {
     // These are mutliple selection boxes
     $subproj_box = pm_multiple_subprojects_box('group_project_id[]',$group_id,$group_project_id,false,'',true,'Any');
