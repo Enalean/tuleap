@@ -113,15 +113,6 @@ function commits_branches_box($group_id,$name='branch',$checked='xzxz', $text_10
 }
 
 function commits_data_get_technicians($group_id) {
-	$sql1="SELECT distinct user.user_name, user.user_name ".
-		"FROM user,user_group, cvs_checkins, cvs_repositories".
-		"WHERE (user_group.group_id='$group_id' ".
-		"AND user.user_id=user_group.user_id) ".
-	        "OR (cvs_repositories.repository='/cvsroot/".$projectname."' ".
-		"AND cvs_checkins.repositoryid=cvs_repositories.id ".
-                "AND cvs_checkins.whoid=user.user_id) ". 
-		"ORDER BY user.user_name ASC";
-	$res1 = db_query($sql1);
 	$sql="SELECT distinct user.user_name, user.user_name ".
 		"FROM user, user_group, cvs_checkins, cvs_repositories ".
 		"WHERE (user_group.group_id='$group_id' ".
