@@ -275,6 +275,15 @@
 
         <revremark>Tried to clarify the Event/Role based Notification Settings related to bug #33791. Corrected the corresponding figure to match the explanation.</revremark>
       </revision>
+      <revision>
+        <revnumber>2.6.3</revnumber>
+
+        <date>2-Mar-2004</date>
+
+        <authorinitials>Nicolas Guerin</authorinitials>
+
+        <revremark>Added information about the CVS preamble customization.</revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--

@@ -281,7 +281,8 @@
 	service gives you all the information you need to access the
 	CVS repository from your CVS client. Among other things it
 	tells you what the CVS root path is and how to log in and
-	checkout the source code.</para>
+	checkout the source code. This page may also be customized for 
+        specific needs (see CVS Administration below).</para>
       </listitem>
       <listitem>
 	<para><emphasis role="bold">Browsing the CVS
@@ -298,9 +299,9 @@
       </listitem>
       <listitem>
 	<para><emphasis role="bold">CVS Administration </emphasis>:
-	this service allos you to activate the CVS tracking for your
-	porject and also to activate email notification for all CVS
-	events.</para>
+	this service allows you to activate the CVS tracking for your
+	project, to activate email notification for all CVS
+	events, and to customize the CVS welcome page (CVS Preamble).</para>
       </listitem>
     </itemizedlist>
 
@@ -490,6 +491,16 @@
 	the list of impacted files and pointers to the CVS repository
 	showing what changes were made.	</para>
 	</listitem>
+
+	<listitem>
+	  <para><emphasis role="bold">CVS Preamble</emphasis>: 
+        In some cases (e.g. for existing projects), the project CVS repository 
+        might not be hosted by the CodeX server. In this case, the CVS 
+        information displayed in the welcome page of the CodeX CVS service is
+        incorrect. Fortunately, the project administrator can customize the
+        CVS preamble here.</para>
+	</listitem>
+
       </itemizedlist>
 
       <para><tip><title>Tip: create a specific mailing list for CVS
@@ -1068,6 +1079,7 @@ export project-1.2
         please refer to the CVS material listed in the CVS References section (see
         <xref linkend="CVSReferences" />).</para>
     </section>
+
   </section>
   </chapter>
 <!--
