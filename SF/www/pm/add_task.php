@@ -17,11 +17,13 @@ $res_preamble  = db_query("SELECT pm_preamble FROM groups WHERE group_id=$group_
 echo util_unconvert_htmlspecialchars(db_result($res_preamble,0,'pm_preamble'));
 ?>
 
-<FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">
+<FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST" name="task_form" enctype="multipart/form-data">
 <INPUT TYPE="HIDDEN" NAME="func" VALUE="postaddtask">
+<INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="2000000">
 <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">
 <INPUT TYPE="HIDDEN" NAME="group_project_id" VALUE="<?php echo $group_project_id; ?>">
 <INPUT TYPE="HIDDEN" NAME="bug_id" VALUE="<?php echo $bug_id; ?>">
+<script language="JavaScript" src="/include/calendar.js"></script>
 
 <TABLE BORDER="0" WIDTH="100%">
 	<TR>
@@ -33,53 +35,52 @@ echo util_unconvert_htmlspecialchars(db_result($res_preamble,0,'pm_preamble'));
 	<TR>
 		<TD>
 			<B>Percent Complete:&nbsp;</B>
-			<?php echo pm_show_percent_complete_box(); ?>
+    	    <? 
+    	        $field_name = "percent_complete";
+                $field_value = pm_data_get_default_value($field_name);
+                echo pm_field_display($field_name,$group_id,$field_value,false,false); ?>
 		</TD>
 		<TD>
 			<B>Priority:&nbsp;</B>
-			<?php echo build_priority_select_box(); ?>
+    	    <? 
+    	        $field_name = "priority";
+                $field_value = pm_data_get_default_value($field_name);
+                echo pm_field_display($field_name,$group_id,$field_value,false,false); ?>
 		</td>
 	</TR>
 
   	<TR>
 		<TD COLSPAN="2"><B>Task Summary:</B>
 		<BR>
-		<INPUT TYPE="text" name="summary" size="60" MAXLENGTH="100" value="<? echo stripslashes($summary) ?>">
+    	    <? 
+    	        $field_name = "summary";
+                $field_value = pm_data_get_default_value($field_name);
+                echo pm_field_display($field_name,$group_id,$field_value,false,false); ?>
 		</td>
 	</TR>
 	<TR>
 		<TD COLSPAN="2"><B>Task Details:</B>
 		<BR>
-		<TEXTAREA NAME="details" ROWS="5" COLS="60" WRAP="SOFT"><? echo stripslashes($details) ?></TEXTAREA></td>
+    	    <? 
+    	        $field_name = "details";
+                $field_value = pm_data_get_default_value($field_name);
+                echo pm_field_display($field_name,$group_id,$field_value,false,false); ?>
 	</TR>
 	<TR>
     		<TD COLSPAN="2"><B>Start Date:</B>
-		<?php
-
-		$pref_date = user_get_preference('pm_pref_date'.$group_id);
-                if ($pref_date == 1) {
-                    $day = $month = $year = 0;
-                } else {
-                    list(,,,$day,$month,$year) = localtime(time());
-		    $month += 1;
-		    $year +=1900;
-		}
-
-		echo pm_show_month_box ('start_month',$month);
-		echo pm_show_day_box ('start_day',$day);
-		echo pm_show_year_box ('start_year',$year);
-		?>
-			<BR><a href="calendar.php">View Calendar</a>
+    	    <? 
+    	        $field_name = "start_date";
+                $field_value = pm_data_get_default_value($field_name);
+                echo pm_field_display($field_name,$group_id,$field_value,false,false); ?>
 		 </td>
 
 	</TR>
 	<TR>
 		<TD COLSPAN="2"><B>End Date:</B>
-		<?php
-		echo pm_show_month_box ('end_month',$month);
-		echo pm_show_day_box ('end_day',$day);
-		echo pm_show_year_box ('end_year',$year);
-		?>
+    	    <? 
+    	        $field_name = "end_date";
+                $field_value = pm_data_get_default_value($field_name);
+                echo pm_field_display($field_name,$group_id,$field_value,false,false); ?>
 		</td>
 
 	</TR>
@@ -107,11 +108,26 @@ echo util_unconvert_htmlspecialchars(db_result($res_preamble,0,'pm_preamble'));
 	<TR>
 		<TD COLSPAN="2"><B>Hours:</B>
 		<BR>
-		<INPUT TYPE="text" name="hours" size="5" value="<? echo $hours ?>">
+    	    <? 
+    	        $field_name = "hours";
+                $field_value = pm_data_get_default_value($field_name);
+                echo pm_field_display($field_name,$group_id,$field_value,false,false); ?>
 		</td>
 	</TR>
 	<TR>
-		<TD COLSPAN="2">
+      <TD COLSPAN="2">
+      <hr><h3>Task Attachments <?php echo help_button('TaskUpdate.html#TaskAttachments'); ?></h3>
+       <p>Optionally, you may also attach a file (e.g. a screenshot, a log file,...)</p>
+      <B>Check to Upload &amp; Attach File:</B> <input type="checkbox" name="add_file" VALUE="1">
+      &nbsp;&nbsp;&nbsp;
+      <input type="file" name="input_file" size="40">
+      <br><span class="smaller"><i>(The maximum upload file size is 2 Mb)</i></span>
+      <P>
+      <B>File Description:</B>&nbsp;
+      <input type="text" name="file_description" size="60" maxlength="255">
+    </TR></TD>
+	<TR>
+		<TD COLSPAN="2" align="center"><hr>
 		<INPUT TYPE="submit" value="Submit" name="submit">
 		</td>
 		</form>

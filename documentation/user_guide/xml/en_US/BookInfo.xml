@@ -218,6 +218,16 @@
 
         <revremark>Document Mgr updated with access to registered users only.</revremark>
       </revision>
+
+      <revision>
+        <revnumber>2.3</revnumber>
+
+        <date>06-Feb-2003</date>
+
+        <authorinitials>Stephane Bouhet</authorinitials>
+
+        <revremark>Add the Email notification mechanism for the Task Manager.</revremark>
+      </revision>
      </revhistory>
   </bookinfo>
 <!--

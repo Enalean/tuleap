@@ -3,5 +3,5 @@
 # database because it can last a long time
 # (L. Julliard 2002-03-13)
 #
-php3_max_execution_time "1800"
+#php3_max_execution_time "1800"
 

@@ -22,17 +22,19 @@ $result=db_query($sql);
 ?>
 <H2>[ Task #<?php echo $project_task_id.'] '.db_result($result,0,'summary');?></H2>
 
-<FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">
+<FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST" name="task_form" enctype="multipart/form-data">
 <INPUT TYPE="HIDDEN" NAME="func" VALUE="postmodtask">
 <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">
-<INPUT TYPE="HIDDEN" NAME="group_project_id" VALUE="<?php echo $group_project_id; ?>">
+<INPUT TYPE="HIDDEN" NAME="old_group_project_id" VALUE="<?php echo $group_project_id; ?>">
 <INPUT TYPE="HIDDEN" NAME="project_task_id" VALUE="<?php echo $project_task_id; ?>">
+<INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="2000000">
+<script language="JavaScript" src="/include/calendar.js"></script>
 
 <TABLE BORDER="0" CELLPADDING="0" WIDTH="100%">
 	<TR>    
                 <TD><B>Subproject:</B>
                 &nbsp;
-		<?php echo pm_subprojects_box('new_group_project_id',$group_id,$group_project_id); ?>
+		<?php echo pm_subprojects_box('group_project_id',$group_id,$group_project_id); ?>
 		</TD>
 
 		<TD>
@@ -47,12 +49,16 @@ $result=db_query($sql);
 	<TR>
 		<TD><B>Percent Complete:</B>
 		&nbsp;
-		<?php echo pm_show_percent_complete_box('percent_complete',db_result($result,0,'percent_complete')); ?>
+		<?php
+            echo pm_field_display("percent_complete",$group_id,db_result($result,0,'percent_complete'),false,false);
+		?>
 		</TD>
 
 		<TD><B>Priority:</B>
 		&nbsp;
-		<?php echo build_priority_select_box('priority',db_result($result,0,'priority')); ?>
+		<?php
+            echo pm_field_display("priority",$group_id,db_result($result,0,'priority'),false,false);
+		?>
 		</TD>
 	</TR>
 
@@ -60,36 +66,26 @@ $result=db_query($sql);
 		<TD>
 		<B>Effort:</B>
 		&nbsp;
-		<INPUT TYPE="text" name="hours" size="5" VALUE="<?php echo db_result($result,0,'hours'); ?>">
+		<?php
+            echo pm_field_display("hours",$group_id,db_result($result,0,'hours'),false,false);
+		?>
 		</TD>
 
 		<TD>
 		<B>Status:</B>
 		&nbsp;
 		<?php
-		echo pm_status_box ('status_id',db_result($result,0,'status_id'),
-				    true,'None',false);
+            echo pm_field_display("status_id",$group_id,db_result($result,0,'status_id'),false,false);
 		?>
 		</TD>
 	</TR>
 
 	<TR>
     		<TD><B>Start Date:</B>
-		<BR><FONT SIZE="-1">
+		<BR>
 		<?php
-                $start_date = db_result($result,0,'start_date');
-                if ($start_date == 0) {
-                   $day = $month = $year = 0;
-                } else {
-	           list(,,,$day,$month,$year) = localtime($start_date);
-	           $month += 1;
-	           $year +=1900;
-                }
-		echo pm_show_month_box ('start_month',$month);
-		echo pm_show_day_box ('start_day',$day);
-		echo pm_show_year_box ('start_year',$year);
-		?></FONT>
-		<br><a href="calendar.php">View Calendar</a>
+            echo pm_field_display("start_date",$group_id,db_result($result,0,'start_date'),false,false);
+		?>
 		</TD>
 
 		<TD rowspan="2">
@@ -105,20 +101,10 @@ $result=db_query($sql);
         </tr>
 	<tr>
 		<TD><B>End Date:</B>
-		<BR><FONT SIZE="-1">
+		<BR>
 		<?php
-		$end_date = db_result($result,0,'end_date');
-                if ($end_date == 0) {
-                   $day = $month = $year = 0;
-                } else {
-	           list(,,,$day,$month,$year) = localtime($end_date);
-	           $month += 1;
-	           $year +=1900;
-                }
-                echo pm_show_month_box ('end_month',$month);
-		echo pm_show_day_box ('end_day',$day);
-		echo pm_show_year_box ('end_year',$year);
-		?></FONT>
+            echo pm_field_display("end_date",$group_id,db_result($result,0,'end_date'),false,false);
+		?>
 		</TD>
 	</TR>
 
@@ -129,27 +115,20 @@ $result=db_query($sql);
 		</TD>
 	</TR>
 
+  	<TR>
+		<TD COLSPAN="2">
+		<B>Original Comment:</B><BR>
+		<?php
+			echo util_make_links(nl2br(db_result($result,0,'details')), $group_id);
+		?>
+		</TD>
+	</TR>
+
 	<TR><TD colspan="2" align="top"><HR></td></TR>
 
 	<TR>
 		<TD COLSPAN="2">
-		<B>Original Comment:</B>
-		<?php
-		if (!$_eoc) {
-			// Add a pointer to switch to editable comment field
-			echo "<a href=\"$PHP_SELF?func=detailtask&project_task_id=$project_task_id&group_id=$group_id&group_project_id=$group_project_id&_eoc=1\"> [Edit]</a>";
-			echo '<P>'.util_make_links(nl2br(db_result($result,0,'details')), $group_id);
-		} else {
-			// If _eoc flag is set then put the original comment
-			// in a editable text area
-			echo '<P><TEXTAREA NAME="original_comment" ROWS="5" COLS="60" WRAP="SOFT">'.db_result($result,0,'details').'</TEXTAREA>';
-
-		}
-		?>
-
-		<P>
-		<B>Add a Followup Comment:</B>
-		<BR>
+    	<H3>Follow-up Comments <? echo help_button('TaskUpdate.html#TaskCommentS'); ?></H3>
 		<TEXTAREA NAME="details" ROWS="5" COLS="60" WRAP="SOFT"></TEXTAREA>
 		</TD>
 	</TR>
@@ -160,12 +139,40 @@ $result=db_query($sql);
 		</TD>
 	</TR>
 
-	<TR>
-		<TD colspan="2"><HR NoShade></td>
-	</TR>
+    <TR><TD colspan="2"><hr></td></tr>
+
+     <?php 
+	 echo '<TR><TD COLSPAN="2">
+                     <h3>CC List '.help_button('TaskUpdate.html#TaskCCList').'</h3>
+	   <b><u>Note:</b></u> for CodeX users use their login name rather than their email addresses.<p>
+	   <B>Add CC:&nbsp;</b><input type="text" name="add_cc" size="30">&nbsp;&nbsp;&nbsp;
+	   <B>Comment:&nbsp;</b><input type="text" name="cc_comment" size="40" maxlength="255"><p>';
+	  show_task_cc_list($project_task_id, $group_id);
+	  echo "</TD></TR>\n";
+     
+     ?>
+
+      <TR><TD colspan="2"><hr></td></tr>
+
+      <TR><TD colspan="2">
+
+      <h3>Task Attachments <?php echo help_button('TaskUpdate.html#TaskAttachments'); ?></h3>
+       <B>Check to Upload&hellip;  <input type="checkbox" name="add_file" VALUE="1">
+      &nbsp;&hellip;&amp; Attach File:</B>
+      <input type="file" name="input_file" size="40">
+      <br><span class="smaller"><i>(The maximum upload file size is 2 Mb)</i></span>
+      <P>
+      <B>File Description:</B>&nbsp;
+      <input type="text" name="file_description" size="60" maxlength="255">
+      <P>
+      <?php show_pm_attached_files($project_task_id,$group_id); ?>
+      </TD></TR>
+
+    <TR><TD colspan="2"><hr></td></tr>
 
 	<TR>
 		<TD colspan="2">
+    	<H3>Task dependencies <?php echo help_button('TaskUpdate.html#TaskDependencies'); ?></H3>
 		<B>Dependent On Task:</B>
 		<BR>
 		<?php
@@ -179,11 +186,15 @@ $result=db_query($sql);
 		</TD>
 	</TR>
 
+    <TR><TD colspan="2"><hr></td></tr>
+
 	<TR>
 		<TD COLSPAN="2">
 			<?php echo pm_show_dependent_tasks ($project_task_id,$group_id,$group_project_id); ?>
 		</TD>
 	</TR>
+
+    <TR><TD colspan="2"><hr></td></tr>
 
 	<TR>
 		<TD COLSPAN="2">
@@ -191,8 +202,11 @@ $result=db_query($sql);
 		</TD>
 	</TR>
 
+    <TR><TD colspan="2"><hr></td></tr>
+
 	<TR>
 		<TD COLSPAN="2">
+    	<H3>Task change history <?php echo help_button('TaskUpdate.html#TaskHistory'); ?></H3>
 			<?php echo pm_show_task_history ($project_task_id); ?>
 		</TD>
 	</TR>

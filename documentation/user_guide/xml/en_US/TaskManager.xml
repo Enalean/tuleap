@@ -402,7 +402,7 @@
         </itemizedlist>
       </section>
 
-      <section id="TaskBugComments">
+      <section id="TaskComments">
         <title>Comments</title>
 
         <para>As many follow-up comments as needed can be attached to any
@@ -431,6 +431,23 @@
             </imageobject>
           </mediaobject>
         </figure>
+      </section>
+
+      <section id="TaskCCList">
+	      <title>CC List</title>
+	
+	      <para>As the CodeX BTS, the Task Manager offers the same powerful email 
+	      notification system (refer to the BTS for more details <xref
+	      linkend="BugCCList" />).</para>
+      </section>
+	
+      <section id="TaskAttachments">
+        <title>Task Attachments</title>
+
+        <para>In addition to comments, the Task Manager
+      allows you to attach virtually any piece of information to a task
+      in the form of a file. The mechanism is same as the BTS one (see <xref linkend="BugAttachments" />.</para>
+
       </section>
 
       <section id="TaskDependencies">
@@ -510,11 +527,9 @@
     <section id="TaskEmailNotification">
       <title>Email Notification</title>
 
-      <para>As of today, the CodeX Task Manager has no e-mail notification
-      system available. We welcome the feedback of CodeX users on this
-      (possibly missing) feature. The CodeX Team is interested in knowing what
-      kind of notification, if any, you&#39;d like to have in the Task
-      Manager.</para>
+    <para>The Task Manager is equipped with a powerful and flexible
+    e-mail notification system. This system works as the BTS one (see <xref
+        linkend="BugEmailNotification" />.</para>
     </section>
 
     <section id="TaskManagerAdministration">
@@ -578,6 +593,15 @@
       </itemizedlist>
 
     </section>
+
+    <section id="TaskEmailNotificationSettings">
+      <title>Email Notification Settings</title> 
+      <para>The Task Manager comes with a predefined set of rules to keep people involved in task
+      management aware of the task life. The mechanism is the same as the BTS one (see 
+      <xref linkend="BugEmailNotificationSettings" />)</para>
+
+    </section>
+
 
     <section id="TaskManagerOtherConfigurationSettings">
       <title>Other Configuration Settings</title>

@@ -366,6 +366,10 @@ function prepare_task_history_record(&$record) {
 	$record['old_value'] = pm_data_get_group_name($record['old_value']);
 	break;
 
+    case 'percent_complete':
+	$record['old_value'] = ($record['old_value']-1000);
+    break;
+    
     default:
 	break;
     }
@@ -400,6 +404,8 @@ function prepare_task_record($group_id, &$record) {
     $record['assigned_to'] = pe_utils_format_task_assignees ($group_id,$task_id);
     $record['follow_ups'] = pe_utils_format_task_followups ($group_id,$task_id);
     $record['is_dependent_on_task_id'] = pe_utils_format_task_dependencies($group_id,$task_id);
+    
+    $record['percent_complete'] = ($record['percent_complete']-1000);
 
 }
 

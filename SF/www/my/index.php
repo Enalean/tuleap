@@ -365,7 +365,7 @@ if (user_isloggedin()) {
 			    $group_id.'&group_project_id='.$group_project_id.
 			    '">'.db_result($result2,$i,'project_task_id').'</A></TD>'.
 			    '<TD class="small">'.stripslashes(db_result($result2,$i,'summary')).'</TD>'.
-			    '<TD class="small">'.db_result($result2,$i,'percent_complete').'%</TD></TR>';
+			    '<TD class="small">'.(db_result($result2,$i,'percent_complete')-1000).'%</TD></TR>';
 
 		    }
 		}

@@ -110,6 +110,9 @@ class Project extends Group {
 		return $this->project_data_array['new_patch_address'];
 	}
 
+	function getNewTaskAddress() {
+		return $this->project_data_array['new_task_address'];
+	}
 
 	/*
 
@@ -129,6 +132,9 @@ class Project extends Group {
 		return $this->project_data_array['send_all_patches'];
 	}
 
+	function sendAllTaskUpdates() {
+		return $this->project_data_array['send_all_tasks'];
+	}
 }
 
 /*

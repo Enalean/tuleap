@@ -2201,5 +2201,226 @@ CREATE TABLE doc_log (
 ) TYPE=MyISAM;
 
 #
+# Table structure for table 'project_cc' for carbon-copied people
+# on task email notification
+#
+
+CREATE TABLE project_cc (
+  project_cc_id int(11) NOT NULL auto_increment,
+  project_task_id int(11) NOT NULL default '0',
+  email varchar(255) NOT NULL default '',
+  added_by int(11) NOT NULL default '0',
+  comment text NOT NULL,
+  date int(11) NOT NULL default '0',
+  PRIMARY KEY  (project_cc_id),
+  KEY project_id_idx (project_task_id)
+) TYPE=MyISAM;
+
+#
+# Table structure for table 'project_watcher'
+# Allow a user to receive the same notification as a list
+# of other people
+#
+
+CREATE TABLE project_watcher (
+  user_id int(11) NOT NULL default '0',
+  watchee_id int(11) NOT NULL default '0',
+  KEY user_id_idx (user_id),
+  KEY watchee_id_idx (watchee_id)
+) TYPE=MyISAM;
+
+#
+# Table structure for table 'project_notification'
+# Says which user want to receive email notification depending on her role
+# and task update events
+#
+
+CREATE TABLE project_notification (
+  user_id int(11) NOT NULL default '0',
+  role_id int(11) NOT NULL default '0',
+  event_id int(11) NOT NULL default '0',
+  notify int(11) NOT NULL default '1',
+  KEY user_id_idx (user_id)
+) TYPE=MyISAM;
+
+#
+# Table structure for table 'project_notification_event'
+#  Rk: rank is an integer which allows to present the information
+#     in a given order on the screen.
+#
+
+CREATE TABLE project_notification_event (
+  event_id int(11) NOT NULL default '0',
+  event_label varchar(255) default NULL,
+  short_description varchar(40) default NULL,
+  description varchar(255) default NULL,
+  rank int(11) NOT NULL default '0',
+  KEY event_id_idx (event_id)
+) TYPE=MyISAM;
+
+#
+# Table structure for table 'project_notification_role'
+#
+
+CREATE TABLE project_notification_role (
+  role_id int(11) NOT NULL default '0',
+  role_label varchar(255) default NULL,
+  short_description varchar(40) default NULL,
+  description varchar(255) default NULL,
+  rank int(11) NOT NULL default '0',
+  KEY role_id_idx (role_id)
+) TYPE=MyISAM;
+
+#
+# Table structure for table 'project_file' for task attachments
+#
+
+CREATE TABLE project_file (
+  project_file_id int(11) NOT NULL auto_increment,
+  project_task_id int(11) NOT NULL default '0',
+  submitted_by int(11) NOT NULL default '0',
+  date int(11) NOT NULL default '0',
+  description text NOT NULL,
+  file longblob NOT NULL,
+  filename text NOT NULL,
+  filesize int(11) NOT NULL default '0',
+  filetype text NOT NULL,
+  PRIMARY KEY  (project_file_id),
+  KEY project_task_id_idx (project_task_id)
+) TYPE=MyISAM;
+
+#
+# Table structure for table 'project_field'
+#
+# field_name  : the name of the field (must be indentical to the
+#               column name in the task table
+# display_type: TF= text field, TA=text area, SB=Select Box, NA=Not Applicable
+# display_size: format X/Y
+#               For TF X=visible field size, Y max length size
+#               For TA X=number of columns, Y=number of rows
+#               For SB Not applicable
+# label       : short name (used on the HTML form)
+# description : longer description of this field
+# scope       : S if predefined values are for the entire Codex,
+#               P if values can be re-defined at the project level
+# required    : 0 a project can decide not to use this task field
+#               1 all projects have to use this task field
+# empty_ok    : 0 this field must always be assigned a value
+#               1 empty value (null) is ok
+# keep_history: 0 do not keep old field values in the project_history table
+#               1 yes keep the old values in the history table
+# special     : 0 process this field as usual
+#               1 this field require some special processing
+# custom      : 0 this is a CodeX field which semantic (label) cannot be customized
+#               1 this field is a custom field which label can be user defined
+#
+CREATE TABLE project_field (
+  project_field_id int(11) NOT NULL auto_increment,
+  field_name varchar(255) NOT NULL default '',
+  display_type varchar(255) NOT NULL default '',
+  display_size varchar(255) NOT NULL default '',
+  label varchar(255) NOT NULL default '',
+  description text NOT NULL,
+  scope char(1) NOT NULL default '',
+  required int(11) NOT NULL default '0',
+  empty_ok int(11) NOT NULL default '0',
+  keep_history int(11) NOT NULL default '0',
+  special int(11) NOT NULL default '0',
+  custom int(11) NOT NULL default '0',
+  PRIMARY KEY  (project_field_id),
+  KEY idx_project_field_name (field_name)
+) TYPE=MyISAM;
+
+#
+# Table structure for table 'project_field_usage'
+#
+#
+# project_field_id    : reference to the field id in project_field
+# group_id        : group id this field usage belongs to (if 100 then
+#                   this is either a system wide value
+#                   or it is the default value for a project field if no
+#                   project specific values are specified
+# use_it          : 1 the project uses this field, 0 do not use it
+# show_on_add     : 1 show this field on the task add form for non project
+#                   members, 0 do not show it.
+# show_on_add_members : 1 show this field on the task add form for project
+#                   members with appropriate rigths, 0 do not show it.
+# place           : A value indicating in which order the fields appear on
+#                   the task submission screen (lowest first)
+# custom_label    : custom field label as defined by the user. NULL if 
+#                   it uses the system default label.
+# custom_description : custom description as defined by the user.
+#                   NULL if it uses the system default description
+# custom_display_size : custom size as defined by the user. NULL if it 
+#                   uses the system default display size.
+# custom_empty_ok : 1 if empty value are allowed for this field. 0 if it
+#                   is not. NULL if it uses the system default.
+# custom_keep_history : 1 if field changes must be kept in the task history
+#                   table. 0 otherwise. NULL if it uses the system default.
+#
+# Remark: for all fields declared in project_field table there must be a
+# corresponding entry here (group_id = 100) to define default usage rules.
+# For all other groups (real projects) only the fields actually used
+# (or once used and then set back to unused) will be stored.
+#
+CREATE TABLE project_field_usage (
+  project_field_id int(11) NOT NULL default '0',
+  group_id int(11) NOT NULL default '0',
+  use_it int(11) NOT NULL default '0',
+  show_on_add int(11) NOT NULL default '0',
+  show_on_add_members int(11) NOT NULL default '0',
+  place int(11) default NULL,
+  custom_label varchar(255) default NULL,
+  custom_description varchar(255) default NULL,
+  custom_display_size varchar(255) default NULL,
+  custom_empty_ok int(11) default NULL,
+  custom_keep_history int(11) default NULL,
+  KEY idx_project_fu_field_id (project_field_id),
+  KEY idx_project_fu_group_id (group_id)
+) TYPE=MyISAM;
+
+#
+# Table structure for table 'project_field_value'
+#
+#
+# project_field_id: reference to the field id in project_field
+# group_id        : group id this field value belongs to (if 100 then
+#                   this is either a system wide value (see scope above)
+#                   or it is the default value for a project field if no
+#                   project specific values are specified
+# value_id        : the id of the value
+#                   0 is reserved for 'Any' and must *never* be stored here
+#                   100 is reserved for 'None' and must be stored here
+# value           : the text value
+# description     : An explanation of the value (not used a lot but...)
+# order_id        : number telling at which place in the select box
+#                   a value must appear
+# status          : A the value is active. It displays in select boxes
+#                   H the value is hidden (not shown in select boxes but
+#                   it's still here for old tasks using it
+#                   P the value is permanent. It means that it is active and
+#                   it cannot be changed to hidden by the project even if 
+#                   task field has a 'project' scope (very useful to force
+#                   some commonly accepted values to appear in the select
+#                   box. The 'None' values are good examples of that)
+#
+#
+CREATE TABLE project_field_value (
+  project_fv_id int(11) NOT NULL auto_increment,
+  project_field_id int(11) NOT NULL default '0',
+  group_id int(11) NOT NULL default '0',
+  value_id int(11) NOT NULL default '0',
+  value text NOT NULL,
+  description text NOT NULL,
+  order_id int(11) NOT NULL default '0',
+  status char(1) NOT NULL default 'A',
+  PRIMARY KEY  (project_fv_id),
+  KEY idx_project_fv_field_id (project_fv_id),
+  KEY idx_project_fv_group_id (group_id),
+  KEY idx_project_fv_value_id (value_id),
+  KEY idx_project_fv_status (status)
+) TYPE=MyISAM;
+
+#
 # EOF
 #
