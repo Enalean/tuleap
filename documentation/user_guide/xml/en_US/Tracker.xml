@@ -1709,16 +1709,16 @@
 	      </listitem>
 	      <listitem>
 		<para><emphasis role="underline">Text Field, Integer
-		  Field, Float Field</emphasis>: for all one-line
-		  text fields, the display size follows the pattern
-		  'M/V' where M is the maximum number of characters
-		  that can be typed in this field and V is the number
-		  of character visible at once in the field display
-		  window. If V is less than M then the text will shift
-		  in the visible window has more text is entered. The
-		  maximum value of M is 255.</para>
+		Field, Float Field</emphasis>: for all one-line text
+		fields, the display size follows the pattern 'V/M'
+		where V is the number of character visible at once in
+		the field display window and M is the maximum number
+		of characters that can be typed for this field. If
+		V is less than M then the text will shift in the
+		visible window has more text is entered. The maximum
+		value of M is 255.</para>
 
-		<para>A display size of '40/10' means a field that
+		<para>A display size of '10/40' means a field that
 		  accepts 40 characters maximum and the field display
 		  is 10 characters in width. </para>
 	      </listitem>
