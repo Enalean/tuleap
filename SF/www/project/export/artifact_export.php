@@ -64,8 +64,9 @@ if ($export == 'artifact') {
     // Send the result in CSV format
     if ($result && $rows > 0) {
 	
+	        $tbl_name = str_replace(' ','_','artifact_'.$at->getName());
 		header ('Content-Type: text/csv');
-		header ('Content-Disposition: filename=artifact_'.$dbname.'.csv');
+		header ('Content-Disposition: filename='.$tbl_name.'_'.$dbname.'.csv');
 	
 		echo build_csv_header($col_list, $lbl_list).$eol;
 		
@@ -113,6 +114,7 @@ The artifact export provides you with the following artifact fields. The sample 
 			for ($j = 0; $j < count($at_arr); $j++) {
 
 				$tbl_name = "artifact_".$at_arr[$j]->getName();
+				$tbl_name = str_replace(' ','_',$tbl_name);
 				$atid = $at_arr[$j]->getID();
 				
 				//	Create the ArtifactType object

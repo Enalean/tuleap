@@ -36,7 +36,6 @@ if ( $atid ) {
 		exit_error('Error',$art_field_fact->getErrorMessage());
 	}
 
-	$tbl_name = 'artifact_'.$at->getName().'_history';
 }
 
 // This is the SQL query to retrieve all the bugs which depends on another bug
@@ -65,6 +64,7 @@ if ($export == 'artifact_deps') {
     // Send the result in CSV format
     if ($result && $rows > 0) {
 	
+	        $tbl_name = str_replace(' ','_','artifact_deps_'.$at->getName());
 		header ('Content-Type: text/csv');
 		header ('Content-Disposition: filename='.$tbl_name.'_'.$dbname.'.csv');
 		
@@ -112,6 +112,8 @@ values indicate what the field data types are. <p>';
 			for ($j = 0; $j < count($at_arr); $j++) {
 
 				$tbl_name = "artifact_deps_".$at_arr[$j]->getName();
+				$tbl_name = str_replace(' ','_',$tbl_name);
+
 				$atid = $at_arr[$j]->getID();
 				
 				//	Create the ArtifactType object

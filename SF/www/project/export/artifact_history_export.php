@@ -35,7 +35,6 @@ if ( $atid ) {
 		exit_error('Error',$art_field_fact->getErrorMessage());
 	}
 
-	$tbl_name = 'artifact_'.$at->getName().'_history';
 }
 
 // This is the SQL query to retrieve all the artifact history for this group
@@ -75,9 +74,9 @@ if ($export == 'artifact_history') {
     // Send the result in CSV format
     if ($result && $rows > 0) {
 	
+	$tbl_name = str_replace(' ','_','artifact_history_'.$at->getName());
 	header ('Content-Type: text/csv');
-	header ('Content-Disposition: filename=artifact_history_'.$dbname.'.csv');
-	
+	header ('Content-Disposition: filename='.$tbl_name.'_'.$dbname.'.csv');	
 	echo build_csv_header($col_list, $lbl_list).$eol;
 
 	while ($arr = db_fetch_array($result)) {
@@ -124,6 +123,8 @@ indicate what the field data types are.<p>';
 			for ($j = 0; $j < count($at_arr); $j++) {
 
 				$tbl_name = "artifact_history_".$at_arr[$j]->getName();
+				$tbl_name = str_replace(' ','_',$tbl_name);
+
 				$atid = $at_arr[$j]->getID();
 				
 				//	Create the ArtifactType object
