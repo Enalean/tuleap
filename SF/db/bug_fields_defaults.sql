@@ -206,103 +206,103 @@ INSERT INTO bug_field_value VALUES (295,211,100,260,'Immediate++','',160,'H');
 
 # Bug ID (bug_field_id = 90)
 #
-INSERT INTO bug_field_usage VALUES (90,100,1,0,1,0,0,10,10,10);
+INSERT INTO bug_field_usage VALUES (90,100,1,0,0,10);
 
 # Group ID (bug_field_id = 91)
 #
-INSERT INTO bug_field_usage VALUES (91,100,1,0,0,1,1,30,30,30);
+INSERT INTO bug_field_usage VALUES (91,100,1,1,1,30);
 
 # Submitted by (bug_field_id = 92)
 #
-INSERT INTO bug_field_usage VALUES (92,100,1,0,1,0,0,20,20,20);
+INSERT INTO bug_field_usage VALUES (92,100,1,0,0,20);
 
 # Submitted on (bug_field_id = 93)
 #
-INSERT INTO bug_field_usage VALUES (93,100,1,0,1,0,0,40,40,40);
+INSERT INTO bug_field_usage VALUES (93,100,1,0,0,40);
 
 # Close Date (bug_field_id = 94)
 #
-INSERT INTO bug_field_usage VALUES (94,100,1,0,0,0,0,50,50,50);
+INSERT INTO bug_field_usage VALUES (94,100,1,0,0,50);
 
 # Status (bug_field_id = 101)
 #
-INSERT INTO bug_field_usage VALUES (101,100,1,1,0,0,0,600,600,600);
+INSERT INTO bug_field_usage VALUES (101,100,1,0,0,600);
 
 # Severity (bug_field_id = 102)
 #
-INSERT INTO bug_field_usage VALUES (102,100,1,0,0,0,1,200,200,200);
+INSERT INTO bug_field_usage VALUES (102,100,1,0,1,200);
 
 # Category (bug_field_id = 103)
 #
-INSERT INTO bug_field_usage VALUES (103,100,1,1,0,1,1,100,100,100);
+INSERT INTO bug_field_usage VALUES (103,100,1,1,1,100);
 
 # Assigned_to (bug_field_id = 104)
 #
-INSERT INTO bug_field_usage VALUES (104,100,1,1,1,0,1,500,500,500);
+INSERT INTO bug_field_usage VALUES (104,100,1,0,1,500);
 
 # Summary (bug_field_id = 105)
 #
-INSERT INTO bug_field_usage VALUES (105,100,1,0,1,1,1,700000,700000,700000);
+INSERT INTO bug_field_usage VALUES (105,100,1,1,1,700000);
 
 # Details (bug_field_id = 106)
 #
-INSERT INTO bug_field_usage VALUES (106,100,1,0,0,1,1,700001,700001,15);
+INSERT INTO bug_field_usage VALUES (106,100,1,1,1,700001);
 
 # Group - bug group (bug_field_id = 107)
 #
-INSERT INTO bug_field_usage VALUES (107,100,1,1,0,1,1,300,300,300);
+INSERT INTO bug_field_usage VALUES (107,100,1,1,1,300);
 
 # Resolution (bug_field_id = 108)
 #
-INSERT INTO bug_field_usage VALUES (108,100,1,0,0,0,0,400,400,400);
+INSERT INTO bug_field_usage VALUES (108,100,1,0,0,400);
 
 # category version id (bug_field_id = 200)
 #
-INSERT INTO bug_field_usage VALUES (200,100,0,0,0,0,0,1000,1000,1000);
+INSERT INTO bug_field_usage VALUES (200,100,0,0,0,1000);
 
 # platform version (bug_field_id = 201)
 #
-INSERT INTO bug_field_usage VALUES (201,100,0,0,0,0,0,1100,1100,1100);
+INSERT INTO bug_field_usage VALUES (201,100,0,0,0,1100);
 
 # reproducibility (bug_field_id = 202)
 #
-INSERT INTO bug_field_usage VALUES (202,100,0,0,0,0,0,1200,1200,1200);
+INSERT INTO bug_field_usage VALUES (202,100,0,0,0,1200);
 
 # size (bug_field_id = 203)
 #
-INSERT INTO bug_field_usage VALUES (203,100,0,0,0,0,0,1300,1300,1300);
+INSERT INTO bug_field_usage VALUES (203,100,0,0,0,1300);
 
 # fixed release (bug_field_id = 204)
 #
-INSERT INTO bug_field_usage VALUES (204,100,0,0,0,0,0,1400,1400,1400);
+INSERT INTO bug_field_usage VALUES (204,100,0,0,0,1400);
 
 # comment type (bug_field_id = 205)
 #
-INSERT INTO bug_field_usage VALUES (205,100,1,0,0,0,0,1500,1500,1500);
+INSERT INTO bug_field_usage VALUES (205,100,1,0,0,1500);
 
 # hours (bug_field_id = 206)
 #
-INSERT INTO bug_field_usage VALUES (206,100,0,0,0,0,0,1700,1700,1700);
+INSERT INTO bug_field_usage VALUES (206,100,0,0,0,1700);
 
 # planned release (bug_field_id = 207)
 #
-INSERT INTO bug_field_usage VALUES (207,100,0,0,0,0,0,1600,1600,1600);
+INSERT INTO bug_field_usage VALUES (207,100,0,0,0,1600);
 
 # component version string (bug_field_id = 208)
 #
-INSERT INTO bug_field_usage VALUES (208,100,0,0,0,0,0,1800,1800,1800);
+INSERT INTO bug_field_usage VALUES (208,100,0,0,0,1800);
 
 # fixed release string (bug_field_id = 209)
 #
-INSERT INTO bug_field_usage VALUES (209,100,0,0,0,0,0,1900,1900,1900);
+INSERT INTO bug_field_usage VALUES (209,100,0,0,0,1900);
 
 # planned release string (bug_field_id = 210)
 #
-INSERT INTO bug_field_usage VALUES (210,100,0,0,0,0,0,2000,2000,2000);
+INSERT INTO bug_field_usage VALUES (210,100,0,0,0,2000);
 
 # priority (bug_field_id = 211)
 #
-INSERT INTO bug_field_usage VALUES (211,100,0,0,0,0,0,250,250,250);
+INSERT INTO bug_field_usage VALUES (211,100,0,0,0,250);
 
 #**********************************
 # TRANSFER LEGACY FIELD VALUES
@@ -361,7 +361,7 @@ DROP TABLE IF EXISTS bug_group, bug_category, bug_resolution, bug_status;
 #
 
 INSERT INTO bug_report VALUES \
-(100,100,100,'Default','The CodeX default bug report','S');
+(100,100,100,'Default','The system default bug report','S');
 
 # ==============================
 # Bug_report_field table

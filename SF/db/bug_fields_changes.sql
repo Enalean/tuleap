@@ -157,20 +157,12 @@ CREATE TABLE bug_field_value (
 #                   or it is the default value for a project field if no
 #                   project specific values are specified
 # use_it          : 1 the project uses this field, 0 do not use it
-# show_on_query   : 1 show this field on the bug query form as a selection
-#                   criteria.
-# show_on_result  : 1 show this field on the bug query form as a column in
-#                   the result list, 0 do not show it.
 # show_on_add     : 1 show this field on the bug add form for non project
 #                   members, 0 do not show it.
 # show_on_add_members : 1 show this field on the bug add form for project
 #                   members with appropriate rigths, 0 do not show it.
-# place_add       : A value indicating in which order the fields appear on
+# place           : A value indicating in which order the fields appear on
 #                   the bug submission screen (lowest first)
-# place_query     : A value indicating in which order the fields appear on
-#                   the bug search criteria (lowest first)
-# place_result    : A value indicating in which order the fields appear on
-#                   the bug search results table (lowest first)
 #
 # Remark: for all fields declared in bug_field table there must be a
 # corresponding entry here (group_id = 100) to define default usage rules.
@@ -181,13 +173,9 @@ CREATE TABLE bug_field_usage (
   bug_field_id int(11)  NOT NULL,
   group_id int(11) DEFAULT '0' NOT NULL,
   use_it int(11) DEFAULT '0' NOT NULL,
-  show_on_query int(11) DEFAULT '0' NOT NULL,
-  show_on_result int(11) DEFAULT '0' NOT NULL,
   show_on_add int(11) DEFAULT '0' NOT NULL,
   show_on_add_members int(11) DEFAULT '0' NOT NULL,
-  place_add int(11) DEFAULT '0' NOT NULL,
-  place_query int(11) DEFAULT '0' NOT NULL,
-  place_result int(11) DEFAULT '0' NOT NULL,
+  place int(11) DEFAULT '0' NOT NULL,
   KEY idx_bug_fu_field_id (bug_field_id),
   KEY idx_bug_fu_group_id (group_id)
 );
@@ -221,7 +209,19 @@ CREATE TABLE bug_report (
 #
 # Table structure for table 'bug_report_field'
 #
-
+# field_name      : name of the field used in this report (as defined in
+#                   the 'field_name' column of bug_field table
+# show_on_query   : 1 show this field on the bug query form as a selection
+#                   criteria.
+# show_on_result  : 1 show this field on the bug query form as a column in
+#                   the result list, 0 do not show it.
+# place_query     : A value indicating in which order the fields appear on
+#                   the bug search criteria (lowest first)
+# place_result    : A value indicating in which order the fields appear on
+#                   the bug search results table (lowest first)
+# col_width       : A %age of the total window size that defines the width
+#                   of the column in the report.
+#
 CREATE TABLE bug_report_field (
   report_id int(11) DEFAULT '100' NOT NULL,
   field_name VARCHAR(255),
@@ -230,7 +230,7 @@ CREATE TABLE bug_report_field (
   place_query int(11),
   place_result int(11),
   col_width int(11),
-  KEY report_id_idx (profile_id)
+  KEY report_id_idx (report_id)
 );
 
 #
