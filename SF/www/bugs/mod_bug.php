@@ -170,32 +170,50 @@ if (db_numrows($result) > 0) {
 
       <TR><TD colspan="2"><hr></td></tr>
 
-      <TR ><TD colspan="2" valign="top">
+      <TR ><TD colspan="2"">
       <h3>Bug Dependencies <?php echo help_button('BugUpdate.html#BugDependencies'); ?></h3>
       </td></TR>
 
-	<TR><TD VALIGN="TOP">
-	<B>Dependent on Task:</B><BR>
+	<TR><TD colspan="2">
+		<table width="100%" border="0" cellspacing="0" cellpadding="2">
+		<tr><td>
+			<B>Dependent on Task:</B>
+		</td><td>
+			<B>Dependent on Bug:</B>
+		</td></tr>
+		<tr><td valign="top">
 	<?php 
 	/*
 		Dependent on Task........
 	*/
 
-	echo bug_multiple_task_depend_box ('dependent_on_task[]',$group_id,$bug_id);
+	echo bug_show_task_dependencies ($group_id,$bug_id);
 
 	?>
-	</TD><TD VALIGN="TOP">
-	<B>Dependent on Bug:</B><BR>
+		</td>
+		<td valign="top">
 	<?php
 	/*
 		Dependent on Bug........
 	*/
-	echo bug_multiple_bug_depend_box ('dependent_on_bug[]',$group_id,$bug_id)
+	echo bug_show_bug_dependencies ($group_id,$bug_id);
 
 	?>
-	</TD></TR>
-
+		</td><tr>
+		<tr><td>
+			<B>Add Task ID:</B>&nbsp;
+			<input type="text" name="task_id_dependent" size="20" maxlength="255">
+			<br><i>(Fill your list using the comma as separator)</i>
+		</TD>
+		<TD>
+			<B>Add Bug ID:</B>&nbsp;
+			<input type="text" name="bug_id_dependent" size="20" maxlength="255">
+			<br><i>(Fill your list using the comma as separator)</i>
+		</TD></TR>
+	</table>
+	
 	<TR><TD colspan="2" >
+		<br>
 		<?php echo show_dependent_bugs($bug_id,$group_id); ?>
 	</TD></TR>
 

@@ -266,7 +266,7 @@ function pm_data_create_task ($group_project_id,$group_id,$dependent_on,$assigne
 		if ($bug_id) {
 		    $dep_tasks = util_result_column_to_array (bug_data_get_dependent_tasks($bug_id));
 		    $dep_tasks[] = $project_task_id;
-		    bug_data_update_dependent_tasks($dep_tasks,$bug_id);
+		    bug_data_update_dependent_tasks($group_id,$dep_tasks,$bug_id);
 		}
     
 		pm_data_insert_assigned_to($assigned_to,$project_task_id);

@@ -170,19 +170,19 @@ if (db_numrows($result) > 0) {
 
          <TR><TD VALIGN="TOP">
 	<?php
-		$result2=db_query("SELECT bug.summary ".
-			"FROM bug,bug_bug_dependencies ".
-			"WHERE bug.bug_id=bug_bug_dependencies.is_dependent_on_bug_id ".
-			"AND bug_bug_dependencies.bug_id='$bug_id'");
-		ShowResultSet($result2,'Dependent on Bug');
-	?>
-	</TD><TD VALIGN="TOP">
-	<?php
 		$result2=db_query("SELECT project_task.summary ".
 			"FROM project_task,bug_task_dependencies ".
 			"WHERE project_task.project_task_id=bug_task_dependencies.is_dependent_on_task_id ".
 			"AND bug_task_dependencies.bug_id='$bug_id'");
 		ShowResultSet($result2,'Dependent on Task');
+	?>
+	</TD><TD VALIGN="TOP">
+	<?php
+		$result2=db_query("SELECT bug.summary ".
+			"FROM bug,bug_bug_dependencies ".
+			"WHERE bug.bug_id=bug_bug_dependencies.is_dependent_on_bug_id ".
+			"AND bug_bug_dependencies.bug_id='$bug_id'");
+		ShowResultSet($result2,'Dependent on Bug');
 	?>
 	</TD></TR>
 

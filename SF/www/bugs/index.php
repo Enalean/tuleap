@@ -65,8 +65,8 @@ if ($group_id) {
 	$vfl = bug_extract_field_list();
 
 	//data control layer
-	$changed = bug_data_handle_update($group_id,$bug_id,$dependent_on_task,
-					  $dependent_on_bug,$canned_response,$vfl,
+	$changed = bug_data_handle_update($group_id,$bug_id,$task_id_dependent,
+					  $bug_id_dependent,$canned_response,$vfl,
 					  $changes);
 
 	// Attach new file if there is one
@@ -99,6 +99,38 @@ if ($group_id) {
 
 	include '../bugs/browse_bug.php';
 	break;
+    }
+
+    case 'delete_dependent_task' : {
+	if (user_ismember($group_id,'B1')) {
+
+	    bug_data_delete_dependent_task($bug_id,$is_dependent_on_task_id);
+
+	    // unsent bug_id var to make sure that it doesn;t
+	    // impact the next bug query.
+	    unset($bug_id);
+	    unset($HTTP_GET_VARS['bug_id']);
+	    include '../bugs/browse_bug.php';
+	} else {
+	    exit_permission_denied();
+	}	
+	break;	    
+    }
+
+    case 'delete_dependent_bug' : {
+	if (user_ismember($group_id,'B1')) {
+
+	    bug_data_delete_dependent_bug($bug_id,$is_dependent_on_bug_id);
+
+	    // unsent bug_id var to make sure that it doesn;t
+	    // impact the next bug query.
+	    unset($bug_id);
+	    unset($HTTP_GET_VARS['bug_id']);
+	    include '../bugs/browse_bug.php';
+	} else {
+	    exit_permission_denied();
+	}	
+	break;	    
     }
 
     case 'delete_file' : {

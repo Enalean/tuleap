@@ -461,6 +461,137 @@ function bug_canned_response_box ($group_id,$name='canned_response') {
 	}
 }
 
+/**
+ * Display the artifact dependencies list
+ *
+ * @param group_id: the group id
+ * @param group_artifact_id: the artifact type ID
+ * @param ascii: ascii mode
+ *
+ * @return void
+ */
+function bug_show_task_dependencies ($group_id, $bug_id, $ro=false) {
+
+    global $sys_datefmt,$sys_lf;
+
+    //
+    //      format the dependencies list for this artifact
+    //
+
+    $result = bug_data_get_dependent_tasks($bug_id);
+    $rows = db_numrows($result);
+
+    // Nobody in the dependencies list -> return now
+    if ($rows <= 0) {
+	    $out = '<p>Dependency list is empty</p>';
+		return $out;
+    }
+
+    // Header first an determine what the print out format is
+    // based on output type (Ascii, HTML)
+	$title_arr=array();
+	$title_arr[]='Task ID';
+	$title_arr[]='Summary';
+	$title_arr[]='Delete?';
+	$out .= html_build_list_table_top ($title_arr);
+
+	$fmt = "\n".'<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td></tr>';
+	
+    // Loop through the denpendencies and format them
+    for ($i=0; $i < $rows; $i++) {
+
+		$task_id = db_result($result, $i, 'is_dependent_on_task_id');
+		$group_project_id = db_result($result, $i, 'group_project_id');
+		$summary = db_result($result, $i, 'summary');
+	
+	    if ( !$ro ) {
+			$html_delete = "<a href=\"$PHP_SELF?func=delete_dependent_task&group_id=".$group_id."&bug_id=".$bug_id."&is_dependent_on_task_id=".$task_id."\" ".
+			" onClick=\"return confirm('Delete this dependency?')\">".
+			'<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A>';
+	    } else {
+			$html_delete = '-';
+	    }
+
+	    $out .= sprintf($fmt,
+			    util_get_alt_row_color($i),
+			    "<a href=\"/pm/task.php?func=detailtask&project_task_id=".$task_id."&group_id=".$group_id."&group_project_id=".$group_project_id."\">$task_id</a>",
+			    $summary,
+			    $html_delete);
+	
+	} // for
+
+    // final touch...
+    $out .= "</TABLE>";
+
+    return($out);
+
+}
+
+/**
+ * Display the artifact dependencies list
+ *
+ * @param group_id: the group id
+ * @param group_artifact_id: the artifact type ID
+ * @param ascii: ascii mode
+ *
+ * @return void
+ */
+function bug_show_bug_dependencies ($group_id, $bug_id, $ro=false) {
+
+    global $sys_datefmt,$sys_lf;
+
+    //
+    //      format the dependencies list for this artifact
+    //
+
+    $result = bug_data_get_dependent_bugs($bug_id);
+    $rows = db_numrows($result);
+
+    // Nobody in the dependencies list -> return now
+    if ($rows <= 0) {
+	    $out = '<p>Dependency list is empty</p>';
+		return $out;
+    }
+
+    // Header first an determine what the print out format is
+    // based on output type (Ascii, HTML)
+	$title_arr=array();
+	$title_arr[]='Bug ID';
+	$title_arr[]='Summary';
+	$title_arr[]='Delete?';
+	$out .= html_build_list_table_top ($title_arr);
+
+	$fmt = "\n".'<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td></tr>';
+	
+    // Loop through the denpendencies and format them
+    for ($i=0; $i < $rows; $i++) {
+
+		$is_dependent_on_bug_id = db_result($result, $i, 'is_dependent_on_bug_id');
+		$summary = db_result($result, $i, 'summary');
+	
+	    if ( !$ro ) {
+			$html_delete = "<a href=\"$PHP_SELF?func=delete_dependent_bug&group_id=".$group_id."&bug_id=".$bug_id."&is_dependent_on_bug_id=".$is_dependent_on_bug_id."\" ".
+			" onClick=\"return confirm('Delete this dependency?')\">".
+			'<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A>';
+	    } else {
+			$html_delete = '-';
+	    }
+
+	    $out .= sprintf($fmt,
+			    util_get_alt_row_color($i),
+			    "<a href=\"/bugs/?func=detailbug&bug_id=".$is_dependent_on_bug_id."&group_id=".$group_id."\">$is_dependent_on_bug_id</a>",
+			    $summary,
+			    $html_delete);
+	
+	} // for
+
+    // final touch...
+    $out .= "</TABLE>";
+
+    return($out);
+
+}
+
 function bug_multiple_task_depend_box ($name='dependent_on_task[]',$group_id=false,$bug_id=false) {
 	if (!$group_id) {
 		return 'ERROR - no group_id';

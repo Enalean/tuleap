@@ -859,7 +859,7 @@ function bug_data_get_dependent_tasks ($bug_id=false, $notin=false) {
 	/*
 		Get the list of ids this is dependent on
 	*/
-	$sql="SELECT is_dependent_on_task_id FROM bug_task_dependencies WHERE bug_id='$bug_id'";
+	$sql="SELECT btd.is_dependent_on_task_id,pt.summary,pt.group_project_id FROM bug_task_dependencies btd, project_task pt WHERE btd.bug_id='$bug_id' AND btd.is_dependent_on_task_id!=100 AND btd.is_dependent_on_task_id = pt.project_task_id";
 	if ($notin) {
 	    $sql .= ' AND is_dependent_on_task_id NOT IN ('. join(',',$notin).')';
 	}
@@ -878,7 +878,7 @@ function bug_data_get_dependent_bugs ($bug_id=false, $notin=false) {
 	/*
 		Get the list of ids this is dependent on
 	*/
-	$sql="SELECT is_dependent_on_bug_id FROM bug_bug_dependencies WHERE bug_id='$bug_id'";
+	$sql="SELECT bbd.is_dependent_on_bug_id,b.summary FROM bug_bug_dependencies bbd, bug b WHERE bbd.bug_id='$bug_id' AND bbd.is_dependent_on_bug_id = b.bug_id AND bbd.is_dependent_on_bug_id != 100";
 	if ($notin) {
 	    $sql .= ' AND is_dependent_on_bug_id NOT IN ('. join(',',$notin).')';
 	}
@@ -1076,46 +1076,30 @@ function bug_data_handle_update ($group_id,$bug_id,$dependent_on_task,
     }
 
     /*
-      DELETE THEN Insert the list of task dependencies 
-      Also compute the task added and removed - Never mention the 'None' item
+      Insert the list of task dependencies 
+      Also compute the task added - Never mention the 'None' item
     */
 
-    $old_dep_on_task = util_result_column_to_array (bug_data_get_dependent_tasks($bug_id));
-
-    bug_data_update_dependent_tasks($dependent_on_task,$bug_id);
-
-    // Add None in both lists to make sure it is never taken into account
-    // in the diffs
-    $old_dep_on_task[] = 100;
-    $dependent_on_task[] = 100;
-    list($deleted_tasks,$added_tasks) = util_double_diff_array($old_dep_on_task,$dependent_on_task);
-
-    if (count($deleted_tasks))
-	$changes['Dependent Tasks']['del'] = join(',',$deleted_tasks);
-    if (count($added_tasks))
-	$changes['Dependent Tasks']['add'] = join(',',$added_tasks);
-
-
+	if ( $dependent_on_task != "" ) {
+		$added_tasks = explode(",",$dependent_on_task);
+	    if (count($added_tasks)>0) {
+			bug_data_insert_dependent_tasks($group_id,$added_tasks,$bug_id);
+			$changes['Dependent Tasks']['add'] = join(',',$added_tasks);
+		}
+	}
+	
     /*
-      DELETE THEN Insert the list of bug dependencies
-      Also compute the bugs added and removed - Never mention the 'None' item
+      Insert the list of bug dependencies
+      Also compute the bugs added - Never mention the 'None' item
     */
     
-    $old_dep_on_bug = util_result_column_to_array (bug_data_get_dependent_bugs($bug_id));
-
-    bug_data_update_dependent_bugs($dependent_on_bug,$bug_id);
-    
-    // Add None in both lists to make sure it is never taken into account
-    // in the diffs
-    $dependent_on_bug[] = 100;
-    $old_dep_on_bug[] = 100;
-    list($deleted_bugs, $added_bugs) = util_double_diff_array($old_dep_on_bug, $dependent_on_bug);
-
-    if (count($deleted_bugs))
-	$changes['Dependent Bugs']['del'] = join(',',$deleted_bugs);
-    if (count($added_bugs))
-	$changes['Dependent Bugs']['add'] = join(',',$added_bugs);
-
+	if ( $dependent_on_bug != "" ) {
+		$added_bugs = explode(",",$dependent_on_bug);
+	    if (count($added_bugs)>0) {
+			bug_data_insert_dependent_bugs($group_id,$added_bugs,$bug_id);
+			$changes['Dependent Bugs']['add'] = join(',',$added_bugs);
+		}
+	}
 
     /*
       Finally, build the full SQL query and update the bug itself (if need be)
@@ -1143,76 +1127,90 @@ function bug_data_handle_update ($group_id,$bug_id,$dependent_on_task,
 
 }
 
-function bug_data_insert_dependent_bugs($array,$bug_id) {
+function bug_data_insert_dependent_bugs($group_id,$array,$bug_id) {
     global $feedback;
 	/*
 		Insert the list of dependencies
 	*/
     $depend_count=count($array);
     if ($depend_count < 1) {
-	//if no tasks selected, insert task "none"
-	$sql="INSERT INTO bug_bug_dependencies VALUES ('','$bug_id','100')";
-	$result=db_query($sql);
-    } else {
-	for ($i=0; $i<$depend_count; $i++) {
-	    if (($depend_count > 1) && ($array[$i]==100)) {
-		//don't insert the row if there's more
-		//than 1 item selected and this item is the "none task"
-	    } else {
-		$sql="INSERT INTO bug_bug_dependencies VALUES ('','$bug_id','$array[$i]')";
-		//echo "\n$sql";
+		//if no tasks selected, insert task "none"
+		$sql="INSERT INTO bug_bug_dependencies VALUES ('','$bug_id','100')";
 		$result=db_query($sql);
-
-		if (!$result) {
-		    $feedback .= ' ERROR inserting dependent_bugs '.db_error();
+    } else {
+		for ($i=0; $i<$depend_count; $i++) {
+		    if (($depend_count > 1) && ($array[$i]==100)) {
+				//don't insert the row if there's more
+				//than 1 item selected and this item is the "none task"
+			} else {
+				// Check if bug_id/bug id already exists
+				$sql = "SELECT * FROM bug_bug_dependencies WHERE bug_id='$bug_id' AND is_dependent_on_bug_id='$array[$i]'";
+				$result=db_query($sql);
+				if (db_numrows($result) <= 0) {
+					// Check if bug id is from the current group_id 
+					$sql = "SELECT * FROM bug WHERE bug_id='$array[$i]' AND group_id='$group_id'";
+					$result=db_query($sql);
+					if ($result && db_numrows($result) > 0) {
+						$sql="INSERT INTO bug_bug_dependencies VALUES ('','$bug_id','$array[$i]')";
+						//echo "\n$sql";
+						$result=db_query($sql);
+						if (!$result) {
+						    $feedback .= ' ERROR inserting dependent_bugs '.db_error();
+						}
+					} else {
+						$feedback .= " ERROR during inserting dependencies  - Bug #'$array[$i]' is not part of this project";
+					}
+				}
+			}
 		}
-	    }
-	}
     }
 }
 
-function bug_data_update_dependent_bugs($array,$bug_id) {
-    /*
-      DELETE THEN Insert the list of dependencies
-    */
-    $toss=db_query("DELETE FROM bug_bug_dependencies WHERE bug_id='$bug_id'");
-    bug_data_insert_dependent_bugs($array,$bug_id);
-}
-
-function bug_data_insert_dependent_tasks($array,$bug_id) {
+function bug_data_insert_dependent_tasks($group_id,$array,$bug_id) {
     global $feedback;
     /*
       Insert the list of dependencies
     */
     $depend_count=count($array);
     if ($depend_count < 1) {
-	//if no tasks selected, insert task "none"
-	$sql="INSERT INTO bug_task_dependencies VALUES ('','$bug_id','100')";
-	$result=db_query($sql);
-    } else {
-	for ($i=0; $i<$depend_count; $i++) {
-	    if (($depend_count > 1) && ($array[$i]==100)) {
-		//don't insert the row if there's more
-		//than 1 item selected and this item is the "none task"
-	    } else {
-		$sql="INSERT INTO bug_task_dependencies VALUES ('','$bug_id','$array[$i]')";
-		//echo "\n$sql";
+		//if no tasks selected, insert task "none"
+		$sql="INSERT INTO bug_task_dependencies VALUES ('','$bug_id','100')";
 		$result=db_query($sql);
-
-		if (!$result) {
-		    $feedback .= ' ERROR inserting dependent_tasks '.db_error();
+    } else {
+		for ($i=0; $i<$depend_count; $i++) {
+		    if (($depend_count > 1) && ($array[$i]==100)) {
+			//don't insert the row if there's more
+			//than 1 item selected and this item is the "none task"
+			} else {
+				// Check if bug_id/task id already exists
+				$sql = "SELECT * FROM bug_task_dependencies WHERE bug_id='$bug_id' AND is_dependent_on_task_id='$array[$i]'";
+				$result=db_query($sql);
+				if (db_numrows($result) <= 0) {
+					// Check if task id is from the current group_id 
+					$sql = "SELECT * FROM project_task pt, project_group_list pgl WHERE pt.project_task_id='$array[$i]' AND pt.group_project_id=pgl.group_project_id AND pgl.group_id='$group_id'";
+					$result=db_query($sql);
+					if ($result && db_numrows($result) > 0) {
+						$sql="INSERT INTO bug_task_dependencies VALUES ('','$bug_id','$array[$i]')";
+						//echo "\n$sql";
+						$result=db_query($sql);
+						if (!$result) {
+						    $feedback .= ' ERROR inserting dependent_tasks '.db_error();
+						}
+					} else {
+						$feedback .= " ERROR during inserting dependencies - Task #'$array[$i]' is not part of this project";
+					}
+				}
+		    }
 		}
-	    }
-	}
     }
 }
 
-function bug_data_update_dependent_tasks($array,$bug_id) {
+function bug_data_update_dependent_tasks($group_id,$array,$bug_id) {
     /*
       DELETE THEN Insert the list of dependencies
     */
     $toss=db_query("DELETE FROM bug_task_dependencies WHERE bug_id='$bug_id'");
-    bug_data_insert_dependent_tasks($array,$bug_id);
+    bug_data_insert_dependent_tasks($group_id,$array,$bug_id);
 }
 
 function bug_data_create_bug($group_id,$vfl) {
@@ -1271,13 +1269,6 @@ function bug_data_create_bug($group_id,$vfl) {
 	$feedback = 'INSERT new bug failed. Report to the Administrator<br>'.
 	    'SQL statement:<br>'.$sql.'<br>';
     }
-
-    /*
-      set up the default rows in the dependency table
-      both rows will be dependent on id=100
-    */
-    bug_data_insert_dependent_bugs($array,$bug_id);
-    bug_data_insert_dependent_tasks($array,$bug_id);
 
     //now return the bug_id
     return $bug_id;
@@ -1425,6 +1416,30 @@ function bug_data_insert_watchees($user_id, $arr_watchees) {
 function bug_data_delete_watchees($user_id) {
     $sql = "DELETE FROM bug_watcher WHERE user_id='$user_id'";
     return db_query($sql);
+}
+
+function bug_data_delete_dependent_task($bug_id=false,$is_dependent_on_task_id=false) {
+	global $feedback;
+	
+    // Delete the dependency
+    $res = db_query("DELETE FROM bug_task_dependencies WHERE bug_id=$bug_id AND is_dependent_on_task_id=$is_dependent_on_task_id");
+    if (db_affected_rows($res) <= 0) {
+		$feedback .= "Error deleting dependency : ".db_error($res);
+    } else {
+		$feedback .= "Dependency successfully deleted";
+    }
+}
+
+function bug_data_delete_dependent_bug($bug_id=false,$is_dependent_on_bug_id=false) {
+	global $feedback;
+
+    // Delete the dependency
+    $res = db_query("DELETE FROM bug_bug_dependencies WHERE bug_id=$bug_id AND is_dependent_on_bug_id=$is_dependent_on_bug_id");
+    if (db_affected_rows($res) <= 0) {
+		$feedback .= "Error deleting dependency : ".db_error($res);
+    } else {
+		$feedback .= "Dependency successfully deleted";
+    }
 }
 
 ?>
