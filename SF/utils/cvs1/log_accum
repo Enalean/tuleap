@@ -1233,7 +1233,7 @@ for ($i = 0; ; $i++) {
     }
 }
 
-if (debug) {
+if ($debug) {
   print STDERR "mailto: ", $mailto, "\n";
 }
 if ($mailto) {
