@@ -98,7 +98,7 @@ sub user_is_member {
 
 
 sub user_getid {
-  return ($G_USER?$G_USER{'user_id'}:0);
+  return (user_isloggedin()?$G_USER{'user_id'}:0);
 }
 
 
