@@ -48,12 +48,6 @@ if (user_isloggedin()) {
 <title>CodeX download agreement</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link rel="stylesheet" type="text/css" href="<? echo util_get_css_theme(); ?>">
-<style type="text/css">
-<!--
-.small { font-size: <? echo $font_size ?>; }
-.normal { font-size: <? echo $font_size_normal ?>; }
--->
-</style>
 </head>
 
 <body>

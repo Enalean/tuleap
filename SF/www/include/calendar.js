@@ -13,7 +13,7 @@
 // Modified by Laurent Julliard for CodeX project
 // $Id$
 
-function show_calendar(str_target, str_datetime, css_theme) {
+function show_calendar(str_target, str_datetime, css_theme, font_size) {
         var arr_months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
                 "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         var week_days = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
@@ -61,7 +61,7 @@ function show_calendar(str_target, str_datetime, css_theme) {
                 "<html>\n"+
                 "<head>\n"+
                 "        <title>Calendar</title>\n"+
-                "<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/"+css_theme+"\">\n"+
+                "<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/"+css_theme+"/"+css_theme+font_size+"\">\n"+
                 "</head>\n"+
                 "<body>\n"+
                 "<table class=\"clsOTable\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n"+
@@ -70,12 +70,12 @@ function show_calendar(str_target, str_datetime, css_theme) {
                 "<tr>\n"+
                 "        <td class=\"calendar_month\"><a href=\"javascript:window.opener.show_calendar('"+
                 //str_target+"', '"+dt2dtstr(dt_prev_year)+"'+document.cal.time.value);\">"+
-                str_target+"', '"+dt2dtstr(dt_prev_year)+"','"+css_theme+"');\">"+
+                str_target+"', '"+dt2dtstr(dt_prev_year)+"','"+css_theme+"','"+font_size+"');\">"+
 		"<img src=\"/images/"+css_theme+".theme/calendar/prev_year.png\" width=\"16\" height=\"16\" border=\"0\""+
                 " alt=\"previous year\"></a></td>\n"+
                 "        <td class=\"calendar_month\"><a href=\"javascript:window.opener.show_calendar('"+
                 //str_target+"', '"+ dt2dtstr(dt_prev_month)+"'+document.cal.time.value);\">"+
-		str_target+"', '"+ dt2dtstr(dt_prev_month)+"','"+css_theme+"');\">"+
+		str_target+"', '"+ dt2dtstr(dt_prev_month)+"','"+css_theme+"','"+font_size+"');\">"+
                 "<img src=\"/images/"+css_theme+".theme/calendar/prev.png\" width=\"16\" height=\"16\" border=\"0\""+
                 " alt=\"previous month\"></a></td>\n"+
 
@@ -85,12 +85,12 @@ function show_calendar(str_target, str_datetime, css_theme) {
 
                 "        <td class=\"calendar_month\" align=\"right\"><a href=\"javascript:window.opener.show_calendar('"
                 //+str_target+"', '"+dt2dtstr(dt_next_month)+"'+document.cal.time.value);\">"+
-                +str_target+"', '"+dt2dtstr(dt_next_month)+"','"+css_theme+"');\">"+
+                +str_target+"', '"+dt2dtstr(dt_next_month)+"','"+css_theme+"','"+font_size+"');\">"+
                 "<img src=\"/images/"+css_theme+".theme/calendar/next.png\" width=\"16\" height=\"16\" border=\"0\""+
                 " alt=\"next month\"></a></td>\n"+
                 "        <td class=\"calendar_month\" align=\"right\"><a href=\"javascript:window.opener.show_calendar('"
                 //+str_target+"', '"+dt2dtstr(dt_next_year)+"'+document.cal.time.value);\">"+
-		+str_target+"', '"+dt2dtstr(dt_next_year)+"','"+css_theme+"');\">"+
+		+str_target+"', '"+dt2dtstr(dt_next_year)+"','"+css_theme+"','"+font_size+"');\">"+
                 "<img src=\"/images/"+css_theme+".theme/calendar/next_year.png\" width=\"16\" height=\"16\" border=\"0\""+
                 " alt=\"next year\"></a></td>\n"+
                 "</tr>\n");

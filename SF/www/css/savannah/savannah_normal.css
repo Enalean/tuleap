@@ -43,7 +43,7 @@ a:active { text-decoration:none; color: #000000}
 .top_down { color: #CC0000; }
 .command { font-family: courier,sans-serif; font-size: small;}
 .subdomain { color: green; }
-.bg_confirmdownload { background-color: #F7F7F7; }
+.bg_confirmdownload { background-color: #FFFFFF; }
 
 PRE,TT { font-family: courier,sans-serif; }
 
