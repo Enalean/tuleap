@@ -19,7 +19,7 @@ if (db_numrows($result) > 0) {
 ?>
     <H2>[ Bug #<?php echo $bug_id.' ] '.db_result($result,0,'summary');?></H2>
 
-    <FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">
+    <FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST" enctype="multipart/form-data">
     <INPUT TYPE="HIDDEN" NAME="func" VALUE="postmodbug">
     <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id;; ?>">
     <INPUT TYPE="HIDDEN" NAME="bug_id" VALUE="<?php echo $bug_id; ?>">
@@ -71,7 +71,7 @@ if (db_numrows($result) > 0) {
 
 
       <TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
-      <P><B>Or post a followup comment of any given type:</B>
+      <P><B>Post a followup comment of type:</B>
       <?php echo bug_field_box('comment_type_id','',$group_id,'',true,'None'); ?><BR>
       <?php echo bug_field_textarea('details',''); ?>
       <P>
@@ -81,8 +81,24 @@ if (db_numrows($result) > 0) {
       echo "<P>";
       echo show_bug_details($bug_id); 
       ?>
+      <P><HR>
+      <TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
+      <h3>Bug attachments</h3>
+      <A href="javascript:help_window('/help/mod_bug.php?helpname=attach_file')"><b>(?)</b></a>
+       <B>Check to Upload &amp; Attach File:</B> <input type="checkbox" name="add_file" VALUE="1">
+      &nbsp;&nbsp;&nbsp;
+      <input type="file" name="input_file" size="40">
+      <P>
+      <B>File Description:</B>&nbsp;
+      <input type="text" name="file_description" size="60" maxlength="255">
+      <P>
+      <?php echo show_attached_files($bug_id,$group_id); ?>
+      <HR>
       </TD></TR>
-      <TR><TD colspan="<?php echo $fields_per_line; ?>"><HR NoShade></td></TR>
+
+      <TR ><TD  valign="top" colspan="<?php echo $fields_per_line; ?>">
+      <h3>Bug Dependencies</h3>
+      </td></TR>
 
 	<TR><TD VALIGN="TOP">
 	<B>Dependent on Task:</B><BR>
@@ -107,7 +123,7 @@ if (db_numrows($result) > 0) {
 
 	<TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
 		<?php echo show_dependent_bugs($bug_id,$group_id); ?>
-	</TD></TR>
+	<HR></TD></TR>
 
 	<TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
 		<?php echo show_bughistory($bug_id,$group_id); ?>

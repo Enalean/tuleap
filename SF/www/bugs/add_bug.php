@@ -15,7 +15,7 @@ $res_preamble  = db_query("SELECT bug_preamble FROM groups WHERE group_id=$group
 echo util_unconvert_htmlspecialchars(db_result($res_preamble,0,'bug_preamble'));
 
 // Beginning of the submission form with fixed fields
-echo '<FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
+echo '<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data">
 	<INPUT TYPE="HIDDEN" NAME="func" VALUE="postaddbug">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 	<TABLE>
@@ -60,6 +60,15 @@ while ( $field_name = bug_list_all_fields() ) {
       <TR><TD colspan="<?php echo $fields_per_line; ?>">
 <?php echo bug_field_display('details',$group_id,'',true); ?></td></tr>
 
+      <TR><TD colspan="<?php echo $fields_per_line; ?>">
+      <hr><h4>Optionally, you may also attach a file (e.g. a screenshot, a log file,...)</h4>
+      <B>Check to Upload &amp; Attach File:</B> <input type="checkbox" name="add_file" VALUE="1">
+      &nbsp;&nbsp;&nbsp;
+      <input type="file" name="input_file" size="40">
+      <P>
+      <B>File Description:</B>&nbsp;
+      <input type="text" name="file_description" size="60" maxlength="255">
+      </TR></TD>
 
 <TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
 	<?php
@@ -73,7 +82,8 @@ while ( $field_name = bug_list_all_fields() ) {
 	?>
 
 	<P>
-	<B><FONT COLOR="RED">Did you check to see if this has already been submitted?</FONT></b> (use the search box in the left menu pane)
+	<hr>
+	<B><FONT COLOR="RED">Did you check to see if this bug has already been submitted?</FONT></b> (use the search box in the left menu pane)
 	<P>
 	<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
 	<P>

@@ -234,5 +234,23 @@ CREATE TABLE bug_report_field (
 );
 
 #
+# Table structure for table 'bug_attachment'
+#
+
+CREATE TABLE bug_file (
+  bug_file_id int(11) NOT NULL auto_increment,
+  bug_id int(11) NOT NULL,
+  submitted_by int(11) DEFAULT '0' NOT NULL,
+  date int(11) DEFAULT '0' NOT NULL,
+  description text DEFAULT '' NOT NULL,	
+  attachment longblob DEFAULT '' NOT NULL,
+  filename text DEFAULT '' NOT NULL,
+  filesize int(11) DEFAULT '0' NOT NULL,
+  filetype text DEFAULT '' NOT NULL,
+  PRIMARY KEY (bug_file_id),
+  KEY bug_id_idx (bug_id)
+);
+
+#
 # EOF
 #

@@ -708,7 +708,7 @@ function show_dependent_bugs ($bug_id,$group_id) {
 		echo '</TABLE>';
 	} else {
 		echo '
-			<H3>No Other Bugs are Dependent on This Bug</H3>';
+			<H4>No Other Bugs are Dependent on This Bug</H4>';
 		echo db_error();
 	}
 }
@@ -747,7 +747,7 @@ function show_bug_details ($bug_id) {
 		echo '</TABLE>';
 	} else {
 		echo '
-			<H3>No Followups Have Been Posted</H3>';
+			<H4>No Followups Have Been Posted</H4>';
 	}
 }
 
@@ -797,7 +797,102 @@ function show_bughistory ($bug_id,$group_id) {
         echo '</TABLE>';
     
     } else {
-        echo "\n".'<H3>No Changes Have Been Made to This Bug</H3>';
+        echo "\n".'<H4>No Changes Have Been Made to This Bug</H4>';
+    }
+}
+
+
+function show_attached_files ($bug_id,$group_id) {
+
+    global $sys_datefmt;
+
+    /*
+          show the files attached to this bug
+       */
+
+    $result=bug_data_get_attached_files($bug_id);
+    $rows=db_numrows($result);
+
+    if ($rows > 0) {
+
+	$title_arr=array();
+	$title_arr[]='Name';
+	$title_arr[]='Description';
+	$title_arr[]='Size';
+	$title_arr[]='By';
+	$title_arr[]='On';
+	if (user_ismember($group_id,'B2')) {
+	    $title_arr[]='Delete?';
+	}
+
+	echo html_build_list_table_top ($title_arr);
+
+	for ($i=0; $i < $rows; $i++) {
+
+	    $bug_file_id = db_result($result, $i, 'bug_file_id');
+	    $submitted_by = db_result($result, $i, 'user_name');
+
+	    echo "\n".'<TR BGCOLOR="'. util_get_alt_row_color($i).'">'.
+		"<td><a href=\"/bugs/download.php?group_id=$group_id&bug_id=$bug_id&bug_file_id=$bug_file_id\">".
+		db_result($result, $i, 'filename').'</a></td>'.
+		'<td>'.db_result($result, $i, 'description').'</td>'.
+		'<td align="center">'.intval(db_result($result, $i, 'filesize')/1024).' KB</td>'.
+		'<td align="center"><a href="/users/'.$submitted_by.'">'.$submitted_by.'</a></td>'.
+		'<td align="center">'.date($sys_datefmt,db_result($result, $i, 'date')).'</td>';
+
+	    if (user_ismember($group_id,'B2')) {
+	    echo "<td align=\"center\"><a href=\"$PHP_SELF?func=delete_file&group_id=$group_id&bug_id=$bug_id&bug_file_id=$bug_file_id\" ".
+		'" onClick="return confirm(\'Delete this attachment?\')">'.
+		'<IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A></td></tr>';
+	    }
+	    
+	}
+        echo '</TABLE>';
+    
+    } else {
+        echo "\n".'<H4>No files currently attached</H4>';
+    }
+}
+
+function bug_delete_file($group_id=false,$bug_id=false,$bug_file_id=false) {
+
+    // Make sure the attachment belongs to the group
+    $res = db_query("SELECT bug_id from bug WHERE bug_id=$bug_id AND group_id=$group_id");
+    if (db_numrows($res) <= 0) {
+	$feedback .= "Bug #$bug_id doesn't belong to project";
+	return;
+    }
+
+    // Now delete the attachment
+    $res = db_query("DELETE FROM bug_file WHERE bug_id=$bug_id AND bug_file_id=$bug_file_id");
+    if (db_numrows($res) <= 0) {
+	$feedback .= "Error deleting attachment #$bug_file_id: ".db_error($res);
+    } else {
+	$feedback .= "File successfully deleted";
+    }
+}
+
+function bug_attach_file($bug_id,$input_file,$input_file_name,$input_file_type,$input_file_size,$file_description) {
+    global $feedback;
+
+    $user_id = (user_isloggedin() ? user_getid(): 100);
+
+    $data = addslashes(fread( fopen($input_file, 'r'), filesize($input_file)));
+    if ((strlen($data) < 20) && (strlen($data) > 512000)) {
+	$feedback .= " - File not attached: must be > 20 chars and < 512000 chars in length";
+	return;
+    }
+
+    $sql = 'INSERT into bug_file (bug_id,submitted_by,date,description, file,filename,filesize,filetype) '.
+    "VALUES ($bug_id,$user_id,'".time()."','".htmlspecialchars($file_description).
+    "','$data','$input_file_name','$input_file_size','$input_file_type')";
+    
+    $res = db_query($sql);
+
+    if (!$res) {
+	$feedback .= ' - Error while attaching file: '.db_error($res);
+    } else {
+	$feedback .= '- File succesfully attached';
     }
 }
 

@@ -89,6 +89,16 @@ if (db_numrows($result) > 0) {
 
      <TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
         <?php echo show_bug_details($bug_id); ?>
+     </TD></TR>
+
+     <TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
+        <hr><h3>Bug Attachments</h3>
+        <?php echo show_attached_files($bug_id,$group_id); ?>
+     </TD></TR>
+
+     <TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
+        <hr><h3>Bug Dependencies</h3>
+     </TD></TR>
 
          <TR><TD VALIGN="TOP">
 	<?php
@@ -113,7 +123,7 @@ if (db_numrows($result) > 0) {
 	</TD></TR>
  
 	<TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
-	<?php
+	<hr><?php
 
 	show_bughistory($bug_id,$group_id);
 

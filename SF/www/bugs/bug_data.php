@@ -745,6 +745,14 @@ function bug_data_get_history ($bug_id=false) {
 	return db_query($sql);
 }
 
+function bug_data_get_attached_files ($bug_id=false) {
+	$sql="SELECT bug_file_id,filename,filesize,description,date,user.user_name ".
+		"FROM bug_file,user ".
+		"WHERE submitted_by=user.user_id ".
+		"AND bug_id='$bug_id' ORDER BY date DESC";
+	return db_query($sql);
+}
+
 function bug_data_add_history ($field_name,$old_value,$bug_id,$type=false) {
 	/*
 		handle the insertion of history for these parameters

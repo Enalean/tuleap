@@ -40,6 +40,11 @@ if ($group_id) {
 	    //some error occurred
 	    exit_error('ERROR',$feedback);
 	}
+
+	// Attach new file if there is one
+	if ($add_file && $input_file) {
+	    bug_attach_file($bug_id,$input_file,$input_file_name,$input_file_type,$input_file_size,$file_description);
+	}
 	break;
     }
 
@@ -66,8 +71,30 @@ if ($group_id) {
 	    */
 	    mail_followup($bug_id,$address);
 	}
+
+	// Attach new file if there is one
+	if ($add_file && $input_file) {
+	    bug_attach_file($bug_id,$input_file,$input_file_name,$input_file_type,$input_file_size,$file_description);
+	}
+
 	include '../bugs/browse_bug.php';
 	break;
+    }
+
+    case 'delete_file' : {
+	if (user_ismember($group_id,'B2')) {
+
+	    bug_delete_file($group_id,$bug_id,$bug_file_id);
+
+	    // unsent bug_id var to make sure that it doesn;t
+	    // impact the next bug query.
+	    unset($bug_id);
+	    unset($HTTP_GET_VARS['bug_id']);
+	    include '../bugs/browse_bug.php';
+	} else {
+	    exit_permission_denied();
+	}	
+	break;	    
     }
 
     case 'postaddcomment' : {
