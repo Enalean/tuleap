@@ -19,8 +19,8 @@ function snippet_data_can_modify_snippet($snippet_id) {
     } else {
         $sql="SELECT submitted_by FROM snippet_version WHERE  snippet_id='$snippet_id'";
         $result=db_query($sql);
-        while($author = db_fetch_array($result)) {
-            if ($author==user_getid()) {
+        while($resrow = db_fetch_array($result)) {
+            if ($resrow['submitted_by']==user_getid()) {
                 return true;
                 break;
             }
@@ -37,8 +37,8 @@ function snippet_data_can_modify_snippet_package($snippet_id) {
     } else {
         $sql="SELECT submitted_by FROM snippet_package_version WHERE snippet_package_id='$snippet_package_id'";
         $result=db_query($sql);
-        while($author = db_fetch_array($result)) {
-            if ($author==user_getid()) {
+        while($resrow = db_fetch_array($result)) {
+            if ($resrow['submitted_by']==user_getid()) {
                 return true;
                 break;
             }
