@@ -341,7 +341,7 @@ class ArtifactFieldHtml extends ArtifactField {
 		    // Only show the 'None" label if empty value is allowed or
 		    // if value is already none (it can happen if the field was not used in
 		    // the artifact submission form)
-		    if ($this->isEmptyOk() || $value==100) {
+		    if ($this->isEmptyOk() || (implode(",",$value)=="100") ) {
 				$show_none=true;
 				$text_none='None';
 		    }

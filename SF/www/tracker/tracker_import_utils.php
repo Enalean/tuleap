@@ -131,7 +131,12 @@ function check_values($row,&$data,$used_fields,$parsed_fields,$predefined_values
 	//submitted on and submitted by are accepted as "" on inserts and
 	//we put time() importing user as default
       } else {
-	$is_empty = ($field->isSelectBox() ? ($val=='None') : ($val==''));
+	
+	if ($field->isMultiSelectBox()) {
+	  $is_empty = (implode(",",$val)=="100");
+	} else {
+	  $is_empty = ( ($field->isSelectBox()) ? ($val=='None') : ($val==''));
+	}
 	if ($is_empty) {
 	  $errors .= "<b>Line ".($row+1)." [</b>".implode(",",$data)."<b>]</b>:<br>\"$label\" is a mandatory field in tracker ".$ath->getName().". Please specify it in your csv file. ";
 	  return false;

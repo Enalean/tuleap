@@ -196,7 +196,7 @@ class ArtifactFieldFactory extends Error {
 					$vfl[$key] = $val;
 					//echo "Accepted key = ".$key." val = $val<BR>";
 			    	} else {
-					//echo "Rejected key = ".$key." val = $val<BR>";
+				  //echo "Rejected key = ".$key." val = $val<BR>";
 			    	}
 			    }
 			}
@@ -230,19 +230,24 @@ class ArtifactFieldFactory extends Error {
 	    $bad_fields = array();
 	    reset($field_array);
 	    while ( list($key, $val) = each($field_array)) {
-	    	
+
 	    	$field = $this->getFieldFromName($key);
 	    	if ( $field ) {
-				$is_empty = ($field->isSelectBox() ? ($val==100) : ($val==''));
-				if ( $is_empty && !$field->isEmptyOk()) {
-				    $bad_fields[] = $field->getLabel();
-				}
-			}
+
+		  if ($field->isMultiSelectBox()) {
+		    $is_empty = (implode(",",$val)=="100");
+		  } else {
+		    $is_empty = ( ($field->isSelectBox()) ? ($val==100) : ($val==''));
+		  }
+		  if ( $is_empty && !$field->isEmptyOk()) {
+		    $bad_fields[] = $field->getLabel();
+		  }
+		}
 	    }
 	
 	    if (count($bad_fields) > 0) {
 			$feedback = 'Missing fields: '.join(', ',$bad_fields).
-			    '<p>Empty values for the above listed field(s) are not allowed. Click on the'.
+			    '<p>Empty values for the above listed field(s) are not allowed. Click on the '.
 			    'Back arrow of your browser and try again';
 			return false;
 	    } else {
@@ -451,7 +456,7 @@ class ArtifactFieldFactory extends Error {
 			 &&($display_type == "SB") ) 
 			return "100";
 		
-		if ( ($data_type == $this->DATATYPE_INT || $data_type == $af->DATATYPE_USER)
+		if ( ($data_type == $af->DATATYPE_INT || $data_type == $af->DATATYPE_USER)
 			 &&($display_type == "MB") ) 
 			return "100";
 		
@@ -546,47 +551,47 @@ class ArtifactFieldFactory extends Error {
 		
 		// We need to insert with the default value, records in artifact_field_value table
 		// for the new field
-	    $sql_artifacts='SELECT artifact_id '.
-		'FROM artifact '.
-		'WHERE group_artifact_id='. $this->ArtifactType->getID();
+		$sql_artifacts='SELECT artifact_id '.
+		  'FROM artifact '.
+		  'WHERE group_artifact_id='. $this->ArtifactType->getID();
 		
 		//echo $sql_artifacts;
 		
-	    $res = db_query($sql_artifacts);
-	
-	    while ($artifacts_array = db_fetch_array($res)) {
-			$id = $artifacts_array["artifact_id"];
-
-			// Insert artifact_field_value record
-			$sql = "INSERT INTO artifact_field_value (field_id,artifact_id,";
-			$values = $field_id.",".$id.",'".$default_value."'";
-			
-			switch ( $data_type ) {
-			case $af->DATATYPE_TEXT:
-				$name = "valueText";
-				break;
-				
-			case $af->DATATYPE_INT:
-			case $af->DATATYPE_USER:
-				$name = "valueInt";
-				break;
-				
-			case $af->DATATYPE_FLOAT:
-				$name = "valueFloat";
-				break;
-				
-			case $af->DATATYPE_DATE:
-				$name = "valueDate";
-				break;
-			} // switch
-			
-			$sql .= $name . ") VALUES (" . $values . ")";
-			
-			$result=db_query($sql);
-			//echo $sql."<br>";
-				    	
-		} // while
+		$res = db_query($sql_artifacts);
 		
+		
+		// Insert artifact_field_value record
+		switch ( $data_type ) {
+		case $af->DATATYPE_TEXT:
+		  $name = "valueText";
+		  break;
+		  
+		case $af->DATATYPE_INT:
+		case $af->DATATYPE_USER:
+		  $name = "valueInt";
+		  break;
+		  
+		case $af->DATATYPE_FLOAT:
+		  $name = "valueFloat";
+		  break;
+		  
+		case $af->DATATYPE_DATE:
+		  $name = "valueDate";
+		  break;
+		} // switch
+		
+		$sql = "INSERT INTO artifact_field_value (field_id,artifact_id,$name) VALUES ";
+		
+		$count = db_numrows($res);
+		for ($i=0; $i<$count; $i++) {
+		  $id = db_result($res,$i,"artifact_id");
+		  if ($i > 0) $sql .= ",";
+		  $sql .= "($field_id,$id,$default_value)";
+		}
+		
+		$result=db_query($sql);
+
+
 		// If select box or multi select box, we need to create the None value
 		if ( $display_type == "SB" || $display_type == "MB" ) {
 			$sql = "INSERT INTO artifact_field_value_list VALUES ( ".$field_id.",".$this->ArtifactType->getID().
