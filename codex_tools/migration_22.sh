@@ -20,6 +20,70 @@
 #  This script migrates a site running CodeX 2.0 to CodeX 2.2
 #
 
+
+#############################################
+# List of files to restore from an existing CodeX 2.0 installation
+#
+
+# System files for user/groups (please restore before CodeX upgrade, then reboot)
+# ----------------------------
+#/etc/passwd
+#/etc/shadow
+#/etc/groups
+#
+# Data Directories (please restore before CodeX upgrade)
+# ----------------
+#/home/httpd /home/users /home/groups /home/dummy /home/ftp /home/large_tmp /home/log /home/mailman /home/sfcache /home/tools /home/var /home/mailman (may link to /usr/local/mailman)
+# ...You may simply restore /home/* !
+#/cvsroot 
+#/var/lib/mysql (may link to /home/var/lib/mysql)
+#
+# Check that Mailman is in /home/mailman, and that there is a directory, or a link, at /var/lib/mysql
+#
+# Other files to restore systematically (CodeX specific)
+# -------------------------------------
+#/etc/aliases.codex
+#/etc/cvs_root_allow
+#/etc/motd.inc
+#/etc/profile_codex
+#/etc/skel_codex 
+#/etc/smrsh/
+#/etc/local.inc
+#/usr/local/domain/data/primary/
+#
+#Files to restore carefully by hand before upgrade:
+#--------------------------------------------------
+#/etc/named.conf
+#/etc/aliases
+#
+
+#############################################
+# Other files that _don't need_ to be restored
+#
+# No need to restore (but not overwritten)
+# ------------------
+#/var/spool/cron/
+#/etc/my.cnf
+#/usr/local/bin/*
+#/etc/httpd/conf/httpd.conf (backed up)
+#/etc/profile
+#
+#Overwritten (and backed up) by upgrade script: (no need to restore)
+#----------------------------------------------
+#/etc/ftpaccess
+#/etc/smrsh/gotohell
+#/etc/smrsh/mailman
+#/etc/sysconfig/i18n
+#/etc/xinetd.d/cvs
+#/etc/xinetd.d/wu-ftpd
+#
+#Deprecated files (please delete... or move to a backup dir :-)
+#----------------
+#/etc/sendmail.cf
+#/etc/sendmail.cw
+
+
+
 progname=$0
 if [ -z "$scriptdir" ]; then 
     scriptdir=`dirname $progname`
@@ -432,19 +496,20 @@ fi
 if [ -e /etc/named.conf ]; then
     $PERL -i'.orig' -p -e's:/usr/local/domain/data/primary:/var/named:' /etc/named.conf
 fi
-todo "- Make sure that the directory defined in /etc/named.conf contains the codex.zone file"
+todo "- Make sure that the directory defined in /etc/named.conf (/var/named?) contains the codex.zone file and the DNS cache file"
 
 
 
 ##############################################
 # Move custom and config files to new places
 #
-echo "Move custom and configuration files to /etc/codex/ directory..."
+echo "Move custom and configuration files to /etc/codex/ directory. Some files may not exist."
 
 $MV -f $INSTALL_DIR/site-content/custom /etc/codex/site-content
 $MV -f /etc/motd.inc /etc/codex/site-content/en_US/others/motd.txt
 $MV -f $INSTALL_DIR/SF/www/css/custom/* /etc/codex/themes/css
 $MV -f $INSTALL_DIR/SF/www/images/custom/* /etc/codex/themes/images
+build_dir /tmp/custom root root 755
 $MV $INSTALL_DIR/SF/www/css/custom /tmp/custom/css       # for future manual deletion
 $MV $INSTALL_DIR/SF/www/images/custom /tmp/custom/images # for future manual deletion
 
@@ -546,7 +611,7 @@ done
 echo "Updating privilege table: ignore errors"
 /usr/bin/mysql_fix_privilege_tables $old_passwd
 $SERVICE mysql restart
-
+sleep 5 # wait a bit...
 
 $CAT <<EOF | $MYSQL $pass_opt sourceforge
 # delete foundry project type
@@ -883,18 +948,46 @@ dir_entry=`$LS -1d phpMyAdmin-*`
 $LN -sf ${dir_entry} phpMyAdmin
 $CHOWN -R sourceforge.sourceforge $INSTALL_DIR/phpMyAdmin*
 
-$PERL -i'.orig' -p <<'EOF'
-s/.*cfg[\'PmaAbsoluteUri\'] =.*/\$cfg[\'PmaAbsoluteUri\'] = \'http:\/\/$sys_default_domain\/phpMyAdmin\';/;
+export sys_default_domain
+$PERL -i'.orig' -p - $INSTALL_DIR/phpMyAdmin/config.inc.php <<'EOF'
+s/.*cfg\['PmaAbsoluteUri'\] =.*/\$cfg\['PmaAbsoluteUri'\] = 'http:\/\/$ENV{'sys_default_domain'}\/phpMyAdmin';/;
 s/(.*Servers.*'auth_type'.*')config('.*)$/$1http$2/g;
 s/(.*Servers.*'user'.*')root('.*)$/$1sourceforge$2/g;
 s/(.*Servers.*'only_db'.*').*('.*)$/$1sourceforge$2/g;
 EOF
+
 
 #todo "Customize phpMyAdmin. Edit $INSTALL_DIR/phpMyAdmin/config.inc.php"
 #todo "  - $cfg['PmaAbsoluteUri'] = 'http://$sys_default_domain/phpMyAdmin';"
 #todo "  - $cfg['Servers'][$i]['auth_type']     = 'http'; "
 #todo "  - $cfg['Servers'][$i]['user']          = 'sourceforge';"
 #todo "  - $cfg['Servers'][$i]['only_db']       = 'sourceforge';";
+
+
+##############################################
+# Create my.cnf if missing
+echo "Creating MySQL conf file..."
+
+install_my_cnf=1;
+if [ -a /etc/my.cnf ]; then
+     install_my_cnf =0;
+     todo "Check that /etc/my.cnf is up to date"
+fi
+
+if [ install_my_cnf -eq 1 ]; then 
+  $CAT <<'EOF' >/etc/my.cnf
+# The MySQL server
+[mysqld]
+log-bin=/cvsroot/.mysql_backup/codex-bin
+skip-innodb
+# file attachment can be 16M in size so take a bit of slack
+# on the mysql packet size
+set-variable = max_allowed_packet=24M
+
+[safe_mysqld]
+err-log=/var/log/mysqld.log
+EOF
+fi
 
 ##############################################
 # Update Mailman from 2.0 to 2.1
@@ -930,17 +1023,43 @@ $LN -sf $MAILMAN_DIR /usr/local/mailman # should not be necessary, but who knows
 
 # make sure permissions are OK
 $MAILMAN_DIR/bin/check_perms -f
+#... a second time!
+$MAILMAN_DIR/bin/check_perms -f
 
 # modify mailman crontab for mailman 2.1
-crontab -u mailman -l > /tmp/mailman_cronfile
-$PERL -i'.orig' -p -e's:(^.*mailman)/cron/qrunner\s*$:\1/bin/qrunner -o -r -All\n:' /tmp/mailman_cronfile
+#crontab -u mailman -l > /tmp/mailman_cronfile
+#$PERL -i'.orig' -p -e's:(^.*mailman)/cron/qrunner\s*$:\1/bin/qrunner -o -r All\n:' /tmp/mailman_cronfile
 # Mailman used to be in /local/mailman
-$PERL -i'.orig2' -p -e's:/usr/local/mailman:/home/mailman:' /tmp/mailman_cronfile
+#$PERL -i'.orig2' -p -e's:/usr/local/mailman:/home/mailman:' /tmp/mailman_cronfile
+#crontab -u mailman /tmp/mailman_cronfile
 
-crontab -u mailman /tmp/mailman_cronfile
-todo "Check $MAILMAN_DIR/Mailman/mm_cfg.py: setup DEFAULT_HOST_NAME\n\
-and DEFAULT_URL variables, and insert add_virtualhost(DEFAULT_URL_HOST, DEFAULT_EMAIL_HOST).(overrides Defaults.py settings). Recompile with python -O mm_cfg.py"
-todo "Create a site-wide mailing list: in $MAILMAN_DIR, type 'bin/newlist mailman', then 'bin/config_list -i data/sitelist.cfg mailman', and don't forget to subscribe to this ML'."
+# install service
+$CP $MAILMAN_DIR/scripts/mailman /etc/init.d/mailman
+$CHKCONFIG --add mailman
+
+# Update Mailman config
+install_mm_config=1;
+if [ -a $MAILMAN_DIR/Mailman/mm_cfg.py ]; then
+   grep DEFAULT_HOST_NAME $MAILMAN_DIR/Mailman/mm_cfg.py > /dev/null
+   if [ $? -eq 0 ]; then
+     install_mm_config =0;
+     todo "Check $MAILMAN_DIR/Mailman/mm_cfg.py:\n\
+you may replace DEFAULT_EMAIL_HOST and DEFAULT_URL_HOST by DEFAULT_HOST_NAME\n\
+and DEFAULT_URL (see CodeX Installation Guide). Recompile with python -O mm_cfg.py"
+   fi
+fi
+
+if [ $install_mm_config -eq 1 ]; then 
+  $CAT <<EOF >> $MAILMAN_DIR/Mailman/mm_cfg.py
+DEFAULT_EMAIL_HOST = 'lists.$sys_default_domain'
+DEFAULT_URL_HOST = 'lists.$sys_default_domain'
+add_virtualhost(DEFAULT_URL_HOST, DEFAULT_EMAIL_HOST)
+EOF
+  # Compile file
+  `python -O $MAILMAN_DIR/Mailman/mm_cfg.py`
+fi
+
+todo "Create a site-wide mailing list: in $MAILMAN_DIR, type 'bin/newlist mailman', then 'bin/config_list -i data/sitelist.cfg mailman', and don't forget to subscribe to this ML."
 
 
 ##############################################
@@ -961,8 +1080,8 @@ lists.$sys_default_domain
 users.$sys_default_domain
 EOF
 
-todo "Finish sendmail settings (see installation Guide)"
-
+todo "Finish sendmail settings (see installation Guide). "
+todo "Check that codex-contact and codex-admin aliases are defined in /etc/aliases"
 
 ##############################################
 # Install and Configure Subversion
@@ -987,32 +1106,6 @@ for f in /cvsroot/*/CVSROOT/loginfo
 do
     $PERL -i -p -e"s/cvsweb.cgi/viewcvs.cgi/g" $f
 done
-
-##############################################
-# Upgrading logrotate files
-#
-echo "Upgrading logrotate files..."
-$MV -f /etc/logrotate.d/apache /etc/logrotate.d/httpd
-
-grep -q suexec_log /etc/logrotate.d/httpd
-if [ $? -eq 1 ]; then
-cat <<EOF >/etc/logrotate.d/httpd
-
-/var/log/httpd/suexec_log {
-    missingok
-    # LJ
-    daily
-    rotate 4
-    postrotate
-	/usr/bin/killall -HUP httpd 2> /dev/null || true
-    endscript
-}
-
-EOF
-fi
-
-# Remove useless files in logrotate.d that generate errors
-$RM -rf /etc/logrotate.d/*.nocodex /etc/logrotate.d/*.rpmnew
 
 
 ##############################################
@@ -1115,10 +1208,109 @@ passwd-check rfc822 warn
 EOF
 
 ##############################################
+# Crontab configuration
+#
+
+# Install root crontab if it is not set
+install_root_crontab=1;
+if [ -a /var/spool/cron/root ]; then
+   grep xerox_crontab /var/spool/cron/root > /dev/null
+   if [ $? -eq 0 ]; then
+     install_root_crontab=0;
+     echo "root user crontab seems up to date..."
+   fi
+fi
+
+if [ $install_root_crontab -eq 1 ]; then 
+  echo "Installing root user crontab..."
+  $CAT <<'EOF' >/tmp/cronfile
+# run the Codex crontab script once every 2 hours
+# this script synchronizes user, groups, cvs repo,
+# directories, mailing lists, etc...
+0 0-23/2 * * * /home/httpd/SF/utils/xerox_crontab.sh
+#
+# run the daily statistics script just a little bit after
+# midnight so that it computes stats for the day before
+# Run at 0:30 am
+30 0 * * * /home/httpd/SF/utils/xerox_all_daily_stats.sh
+#
+# run the weekly stats for projects. Run it on Monday morning so that
+# it computes the stats for the week before
+# Run on Monday at 1am
+0 1 * * Mon (cd /home/httpd/SF/utils/underworld-root; ./db_project_weekly_metric.pl)
+#
+# weekly backup preparation (mysql shutdown, file dump and restart)
+45 0 * * Sun /home/tools/backup_job
+#
+# Delete all files in FTP incoming that are older than 2 weeks (336 hours)
+#
+0 3 * * * /usr/sbin/tmpwatch -m -f 336 /home/ftp/incoming
+#
+# It looks like we have memory leaks in Apache in some versions so restart it
+# on Sunday. Do it while the DB is down for backup
+50 0 * * Sun /etc/rc.d/init.d/httpd restart
+#
+# Once a minute make sure that the setuid bit is set on some critical files
+* * * * * (cd /usr/local/bin; /bin/chmod u+s commit-email.pl log_accum tmpfilemove fileforge)
+EOF
+  crontab -u root /tmp/cronfile
+fi
+
+
+# Install sourceforge crontab if needed
+install_sourceforge_crontab=1;
+if [ -a /var/spool/cron/sourceforge ]; then
+   grep generate_doc /var/spool/cron/sourceforge > /dev/null
+   if [ $? -eq 0 ]; then
+     install_sourceforge_crontab=0;
+     echo "sourceforge user crontab seems up to date..."
+   fi
+fi
+
+if [ $install_sourceforge_crontab -eq 1 ]; then 
+  echo "Installing sourceforge user crontab..."
+  $CAT <<'EOF' >/tmp/cronfile
+# Re-generate the CodeX User Guide on a daily basis
+00 03 * * * /home/httpd/SF/utils/generate_doc.sh -f
+EOF
+  crontab -u sourceforge /tmp/cronfile
+fi
+
+
+echo "Installing  mailman user crontab..."
+$CAT <<'EOF' >/tmp/cronfile
+# At 8AM every day, mail reminders to admins as to pending requests.
+# They are less likely to ignore these reminders if they're mailed
+# early in the morning, but of course, this is local time... ;)
+0 8 * * * /usr/bin/python -S /home/mailman/cron/checkdbs
+#
+# At 9AM, send notifications to disabled members that are due to be
+# reminded to re-enable their accounts.
+0 9 * * * /usr/bin/python -S /home/mailman/cron/disabled
+#
+# Noon, mail digests for lists that do periodic as well as threshhold delivery.
+0 12 * * * /usr/bin/python -S /home/mailman/cron/senddigests
+#
+# 5 AM on the first of each month, mail out password reminders.
+0 5 1 * * /usr/bin/python -S /home/mailman/cron/mailpasswds
+#
+# Every 5 mins, try to gate news to mail.  You can comment this one out
+# if you don't want to allow gating, or don't have any going on right now,
+# or want to exclusively use a callback strategy instead of polling.
+#0,5,10,15,20,25,30,35,40,45,50,55 * * * * /usr/bin/python -S /home/mailman/cron/gate_news
+#
+# At 3:27am every night, regenerate the gzip'd archive file.  Only
+# turn this on if the internal archiver is used and
+# GZIP_ARCHIVE_TXT_FILES is false in mm_cfg.py
+27 3 * * * /usr/bin/python -S /home/mailman/cron/nightly_gzip
+EOF
+crontab -u mailman /tmp/cronfile
+
+##############################################
 # Make ISO latin characters the default charset for the
 # entire system instead of UTF-8
 #
-make_backup "/etc/sysconfig/i18n" codex20
+make_backup "/etc/sysconfig/i18n"
 echo "Set ISO Latin as default system character set..."
 $CAT <<'EOF' >/etc/sysconfig/i18n
 LANG="en_US.iso885915"
@@ -1129,10 +1321,132 @@ EOF
 $CHOWN root.root /etc/sysconfig/i18n
 $CHMOD 644 /etc/sysconfig/i18n
 
+##############################################
+# Log Files rotation configuration
 #
-#
-#
+echo "Installing log files rotation..."
+$RM -f /etc/logrotate.d/apache # v1.3 from RH7.3
 
+$CAT <<'EOF' >/etc/logrotate.d/httpd
+/var/log/httpd/access_log {
+    missingok
+    # LJ
+    daily
+    rotate 4
+    postrotate
+        /usr/bin/killall -HUP httpd 2> /dev/null || true
+        # LJ Added for Codex archiving
+     year=`date +%Y`
+     month=`date +%m`
+     day=`date +%d`
+     destdir="/home/log/$year/$month"
+     destfile="http_combined_$year$month$day.log"
+     mkdir -p $destdir
+     cp /var/log/httpd/access_log.1 $destdir/$destfile
+    endscript
+}
+ 
+/var/log/httpd/vhosts-access_log {
+    missingok
+    # LJ
+    daily
+    rotate 4
+    postrotate
+        /usr/bin/killall -HUP httpd 2> /dev/null || true
+        # LJ Added for Codex archiving
+     year=`date +%Y`
+     month=`date +%m`
+     day=`date +%d`
+     server=`hostname`
+     destdir="/home/log/$server/$year/$month"
+     destfile="vhosts-access_$year$month$day.log"
+     mkdir -p $destdir
+     cp /var/log/httpd/vhosts-access_log.1 $destdir/$destfile
+    endscript
+}
+                                                                              
+/var/log/httpd/agent_log {
+    missingok
+    # LJ
+    daily
+    rotate 4
+    postrotate
+        /usr/bin/killall -HUP httpd 2> /dev/null || true
+    endscript
+}
+                                                                              
+/var/log/httpd/error_log {
+    missingok
+    # LJ
+    daily
+    rotate 4
+    postrotate
+        /usr/bin/killall -HUP httpd 2> /dev/null || true
+    endscript
+}
+
+/var/log/httpd/referer_log {
+    missingok
+    # LJ
+    daily
+    rotate 4
+    postrotate
+        /usr/bin/killall -HUP httpd 2> /dev/null || true
+    endscript
+}
+                                                                               
+/var/log/httpd/suexec_log {
+    missingok
+    # LJ
+    daily
+    rotate 4
+    postrotate
+        /usr/bin/killall -HUP httpd 2> /dev/null || true
+    endscript
+}
+EOF
+$CHOWN root.root /etc/logrotate.d/httpd
+$CHMOD 644 /etc/logrotate.d/httpd
+
+
+$CAT <<'EOF' >/etc/logrotate.d/ftpd
+/var/log/xferlog {
+    # ftpd doesn't handle SIGHUP properly
+    nocompress
+    # LJ Modified for codex
+    daily
+    postrotate
+     year=`date +%Y`
+     month=`date +%m`
+     day=`date +%d`
+     destdir="/home/log/$year/$month"
+     destfile="ftp_xferlog_$year$month$day.log"
+     mkdir -p $destdir
+     cp /var/log/xferlog.1 $destdir/$destfile
+    endscript
+}
+EOF
+$CHOWN root.root /etc/logrotate.d/ftpd
+$CHMOD 644 /etc/logrotate.d/ftpd
+
+
+# Remove useless files in logrotate.d that generate errors
+$RM -rf /etc/logrotate.d/*.nocodex /etc/logrotate.d/*.rpmnew
+
+
+#############################################
+# Profile
+
+# customize the global profile 
+$GREP profile_codex /etc/profile 1>/dev/null
+[ $? -ne 0 ] && \
+    cat <<'EOF' >>/etc/profile
+# LJ Now the Part specific to CodeX users
+#
+if [ `id -u` -gt 20000 -a `id -u` -lt 50000 ]; then
+        . /etc/profile_codex
+fi
+EOF
 
 
 ##############################################
@@ -1149,7 +1463,7 @@ $SERVICE sendmail start
 #
 echo "Updating the User Manual. This might take a few minutes."
 /home/httpd/SF/utils/generate_doc.sh -f
-todo "Edit utils/generate_doc.sh.to make sure that the CVS update is possible. Alternatively, add a '-f' flag in the 'sourceforge' crontab to force generation each night"
+todo "Edit utils/generate_doc.sh to make sure that the CVS update is possible. Do a cvs login on CVS server as user 'sourceforge'. Alternatively, add a '-f' flag in the 'sourceforge' crontab to force generation each night"
 
 ##############################################
 # Make sure all major services are on
@@ -1159,6 +1473,7 @@ $CHKCONFIG sshd on
 $CHKCONFIG httpd on
 $CHKCONFIG mysql on
 $CHKCONFIG cvs on
+$CHKCONFIG mailman on
 
 
 ##############################################

@@ -572,12 +572,14 @@ $CHOWN -R sourceforge.sourceforge $INSTALL_DIR/phpMyAdmin*
 #todo "  - $cfg['Servers'][$i]['user']          = 'sourceforge';"
 #todo "  - $cfg['Servers'][$i]['only_db']       = 'sourceforge';";
 
-$PERL -i'.orig' -p <<'EOF'
-s/.*cfg[\'PmaAbsoluteUri\'] =.*/\$cfg[\'PmaAbsoluteUri\'] = \'http:\/\/$sys_default_domain\/phpMyAdmin\';/;
+export sys_default_domain
+$PERL -i'.orig' -p - $INSTALL_DIR/phpMyAdmin/config.inc.php <<'EOF'
+s/.*cfg\['PmaAbsoluteUri'\] =.*/\$cfg\['PmaAbsoluteUri'\] = 'http:\/\/$ENV{'sys_default_domain'}\/phpMyAdmin';/;
 s/(.*Servers.*'auth_type'.*')config('.*)$/$1http$2/g;
 s/(.*Servers.*'user'.*')root('.*)$/$1sourceforge$2/g;
 s/(.*Servers.*'only_db'.*').*('.*)$/$1sourceforge$2/g;
 EOF
+
 
 ##############################################
 # Installing the CodeX database
@@ -668,6 +670,8 @@ $CHOWN -R mailman.mailman $MAILMAN_DIR
 $CHMOD a+rx,g+ws $MAILMAN_DIR
 # make sure permissions are OK
 $MAILMAN_DIR/bin/check_perms -f
+#... a second time!
+$MAILMAN_DIR/bin/check_perms -f
 $MAILMAN_DIR/bin/mmsitepass $mm_passwd
 $LN -sf $MAILMAN_DIR /usr/local/mailman
 
@@ -680,7 +684,11 @@ EOF
 # Compile file
 `python -O $MAILMAN_DIR/Mailman/mm_cfg.py`
 
-todo "Mailman: Create a site-wide mailing list: in $MAILMAN_DIR, type 'bin/newlist mailman', then 'bin/config_list -i data/sitelist.cfg mailman', and don't forget to subscribe to this ML'."
+# install service
+$CP $MAILMAN_DIR/scripts/mailman /etc/init.d/mailman
+$CHKCONFIG --add mailman
+
+todo "Mailman: Create a site-wide mailing list: in $MAILMAN_DIR, type 'bin/newlist mailman', then 'bin/config_list -i data/sitelist.cfg mailman', and don't forget to subscribe to this ML."
 
 ##############################################
 # Installing and configuring Sendmail
@@ -903,8 +911,14 @@ crontab -u sourceforge /tmp/cronfile
 
 echo "Installing  mailman user crontab..."
 $CAT <<'EOF' >/tmp/cronfile
-# At 5PM every day, mail reminders to admins as to pending requests
-0 17 * * * /usr/bin/python -S /home/mailman/cron/checkdbs
+# At 8AM every day, mail reminders to admins as to pending requests.
+# They are less likely to ignore these reminders if they're mailed
+# early in the morning, but of course, this is local time... ;)
+0 8 * * * /usr/bin/python -S /home/mailman/cron/checkdbs
+#
+# At 9AM, send notifications to disabled members that are due to be
+# reminded to re-enable their accounts.
+0 9 * * * /usr/bin/python -S /home/mailman/cron/disabled
 #
 # Noon, mail digests for lists that do periodic as well as threshhold delivery.
 0 12 * * * /usr/bin/python -S /home/mailman/cron/senddigests
@@ -915,15 +929,12 @@ $CAT <<'EOF' >/tmp/cronfile
 # Every 5 mins, try to gate news to mail.  You can comment this one out
 # if you don't want to allow gating, or don't have any going on right now,
 # or want to exclusively use a callback strategy instead of polling.
-#0,5,10,15,20,25,30,35,40,45,50,55 * * * * /usr/bin/python /home/mailman/cron/gate_news
-#
-# Every minute flush the all  queues only once.
-* * * * * /usr/bin/python /home/mailman/bin/qrunner -o -r All
+#0,5,10,15,20,25,30,35,40,45,50,55 * * * * /usr/bin/python -S /home/mailman/cron/gate_news
 #
 # At 3:27am every night, regenerate the gzip'd archive file.  Only
 # turn this on if the internal archiver is used and
 # GZIP_ARCHIVE_TXT_FILES is false in mm_cfg.py
-27 3 * * * /usr/bin/python /home/mailman/cron/nightly_gzip
+27 3 * * * /usr/bin/python -S /home/mailman/cron/nightly_gzip
 EOF
 crontab -u mailman /tmp/cronfile
 
@@ -945,7 +956,6 @@ $CHMOD 644 /etc/sysconfig/i18n
 ##############################################
 # Log Files rotation configuration
 #
-#make_backup "/etc/logrotate.d/httpd" # don't make backup, or both backup and original will be used.
 echo "Installing log files rotation..."
 $CAT <<'EOF' >/etc/logrotate.d/httpd
 /var/log/httpd/access_log {
@@ -1125,16 +1135,17 @@ EOF
 #
 echo "Generating the User Manual. This might take a few minutes."
 /home/httpd/SF/utils/generate_doc.sh -f
-todo "Documentation is currently forced to be re-generated each night. Make sure that the CVS update is possible in utils/generate_doc.sh. After that, you may remove the '-f' flag in the 'sourceforge' crontab"
+todo "Documentation is currently forced to be re-generated each night. Make sure that the CVS update is possible in utils/generate_doc.sh. Do a cvs login on CVS server as user 'sourceforge'. After that, you may remove the '-f' flag in the 'sourceforge' crontab"
 
 ##############################################
 # Make sure all major services are on
 #
-/sbin/chkconfig named on
-/sbin/chkconfig sshd on
-/sbin/chkconfig httpd on
-/sbin/chkconfig mysql on
-/sbin/chkconfig cvs on
+$CHKCONFIG named on
+$CHKCONFIG sshd on
+$CHKCONFIG httpd on
+$CHKCONFIG mysql on
+$CHKCONFIG cvs on
+$CHKCONFIG mailman on
 
 
 ##############################################
