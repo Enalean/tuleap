@@ -14,3 +14,23 @@
 	<P>
 	Thank you for using <?php print $GLOBALS['sys_name']; ?>.
 	<P>
+
+<!-- Assumes that $group_name is defined in the master file -->
+
+<?php
+// Do not touch this URL, to and From unless you know what you are doing
+$href_approval = 'http'.(session_issecure() ? 's':'').'://'.
+	       $GLOBALS['sys_default_domain'].'/admin/approve-pending.php';
+$to = $GLOBALS['sys_email_admin'];
+$hdrs = 'From: noreply@'.$GLOBALS['sys_default_domain']."\n";
+
+// subject and body can be customized to your liking
+$subject = "New Project Registered: ".$args['group_name'];
+$body = "A new project has just been registered on ".$GLOBALS['sys_name']."\n\n".
+"Project Name: ".$args['group_name']."\n\n".
+"Please click on the following URL to approve the registration:\n".
+$href_approval."\n";
+
+// Send a notification message to the Site administrator
+mail($to,$subject,$body,$hdrs);
+?>

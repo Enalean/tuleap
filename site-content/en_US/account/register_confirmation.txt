@@ -1,0 +1,18 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+-->
+<!-- Piece of text shown when user registration is completed
+ and an email has been sent for confirmation to the user  -->
+<p><b><?php echo $GLOBALS['sys_name']; ?> New Account Registration - Confirmation</b>
+<p>Congratulations. You have registered on <?php echo $GLOBALS['sys_name'];?>
+Your new user name is: <?php echo $args['user_name'];?></b>
+
+<p>You are now being sent a confirmation email to verify your email 
+address. Visiting the link sent to you in this email will activate
+your account.</p>

@@ -14,11 +14,11 @@ require($DOCUMENT_ROOT.'/admin/admin_utils.php');
 
 if ($show_confirm) {
 
-	$HTML->header(array('title'=>'Registration Complete'));
+    $HTML->header(array('title'=>'Registration Complete'));
 
     util_get_content('register/confirmation');
 
-	$HTML->footer(array());
+    $HTML->footer(array());
 
 } else if ($i_agree && $group_id && $rand_hash) {
 	/*
@@ -70,11 +70,14 @@ if ($show_confirm) {
 
 	//Set up some mailing lists
 	//will be done at some point. needs to communicate with geocrawler
+	// TBD
 
-	//
+	// Show the final registration complete message and send email
+	// notification (it's all in the content part)
 	$HTML->header(array('title'=>'Registration Complete'));
-	
-    util_get_content('register/complete');
+
+	util_get_content('register/complete', 
+			 array('group_name' => $form_full_name));
     
 	$HTML->footer(array());
 

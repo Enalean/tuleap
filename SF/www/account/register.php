@@ -86,26 +86,11 @@ if ($Register) {
 
 	if ($GLOBALS['sys_user_approval'] == 0) {
 	    send_new_user_email($GLOBALS['form_email'], $confirm_hash);
-	    echo '
-            <p><b>'.$GLOBALS['sys_name'].' New Account Registration - Confirmation</b>
-            <p>Congratulations. You have registered on '.$GLOBALS['sys_name'].'
-            Your new user name is: <b>'.user_getname($new_userid).'</b>
-
-            <p>You are now being sent a confirmation email to verify your email 
-            address. Visiting the link sent to you in this email will activate
-            your account.';
-
+	    util_get_content('account/register_confirmation',
+			     array('user_name' => user_getname($new_userid)));
 	} else {
-
-           echo '
-            <p><b>'.$GLOBALS['sys_name'].' New Account Registration - Ready For Approval</b>
-            <p>Congratulations. Your registration request on '.$GLOBALS['sys_name'].'
-            for user \''.user_getname($new_userid).'\' has been taken into account.</b>
-
-            <p>The '.$GLOBALS['sys_name'].' Administrators are now going to review your request for approval. Once
-            approved you will receive a confirmation email to verify your email 
-            address. Visiting the link sent to you in this email will activate
-            your account.';
+	    util_get_content('account/register_needs_approval',
+			     array('user_name' => user_getname($new_userid)));
 	}
 	$HTML->footer(array());
 	exit;
