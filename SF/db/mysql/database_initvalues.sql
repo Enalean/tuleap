@@ -182,7 +182,7 @@ INSERT INTO bug VALUES (100, 100, 3, 1, 100, 100, 100, 1058260700, 'None', '', 0
 #  Default data for group_type
 #
 INSERT INTO group_type VALUES ('1','Project');
-INSERT INTO group_type VALUES ('2','Foundry');
+#INSERT INTO group_type VALUES ('2','Foundry');
 
 #
 # Default data for Support Request Manager
