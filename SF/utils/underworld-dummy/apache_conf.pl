@@ -20,7 +20,7 @@ my $c = $dbh->prepare($query);
 $c->execute();
 
 # Determine Apache version installed
-$output = `httpd -v`;
+$output = `/usr/sbin/httpd -v`;
 ($apache_version) = ($output =~ /version:.*\/(\d)\.\d+\.\d+/);
 
 while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow()) {
