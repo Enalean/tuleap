@@ -597,7 +597,7 @@ class ArtifactField extends Error {
 	 *
 	 * @return array
 	 */
-	function getFieldPredefinedValues ($group_artifact_id=false, $checked=false,$by_field_id=false,$active_only=true,$use_cache=false) {
+	function getFieldPredefinedValues ($group_artifact_id, $checked=false,$by_field_id=false,$active_only=true,$use_cache=false) {
 	
 		// ArtifactTypeHtml object created in index.php
 		global $ath, $RES_CACHE;
@@ -816,29 +816,15 @@ class ArtifactField extends Error {
 	
 		// First delete the items
 		$sql = "DELETE FROM artifact_field_value WHERE artifact_id=".$artifact_id." AND field_id=".$this->getID();
+		
 		$result=db_query($sql);
 		
 		if ( !$result ) {
 			return false;
 		}
-		
-		if ( is_array($values) ) {
-			$rc_update = true;
-			for($i=0;$i<count($values);$i++) {
-				if ((count($values) > 1) && ($values[$i]==100)) {
-					//don't insert the row if there's more 
-					//than 1 item selected and this item is the "none user"
-				} else {
-					if ( !$this->insertValue($artifact_id,$values[$i]) ) {
-						$rc_update = false;
-					}
-				}
-			}
-			
-			return $rc_update;
-		} else {
-			return $this->insertValue($artifact_id,$values);
-		}		 		
+
+
+		return $this->insertValue($artifact_id,$values);
 	}
 
 	/**
@@ -852,11 +838,17 @@ class ArtifactField extends Error {
 	function insertValue($artifact_id,$value) {
 	
 		if ( is_array($value) ) {
+			$rc_update = true;
 			for ($i=0;$i<count($value);$i++) {
-				if ( !$this->insertSingleValue($artifact_id,$value[$i]) ) 
-					return false;
+				if ((count($value) > 1) && ($value[$i]==100)) {
+					//don't insert the row if there's more 
+					//than 1 item selected and this item is None
+				} else {
+					if ( !$this->insertSingleValue($artifact_id,$value[$i]) ) 
+						$rc_update = false;
+				}
 			}
-			return true;
+			return $rc_update;
 		} else {
 			return $this->insertSingleValue($artifact_id,$value);
 		}		 		
@@ -954,7 +946,7 @@ class ArtifactField extends Error {
             } // switch
 		
             $sql .= $name . ") VALUES (" . $values . ")";
-            
+
             $result=db_query($sql);
 		
             if ( !$result ) {
@@ -1108,7 +1100,6 @@ class ArtifactField extends Error {
 		} // switch
 		
 		$sql = "SELECT ".$name." FROM artifact_field_value WHERE artifact_id=".$artifact_id." AND field_id=".$this->field_id;
-		//echo $sql;
 		$result=db_query($sql);
 		
 		return util_result_column_to_array($result);
@@ -1142,11 +1133,13 @@ class ArtifactField extends Error {
 		}
 		
 		// Build the label values using the id values
-		for($i=0;$i<count($values);$i++) {
-			if ( $values[$i] == 100 ) {
+		while (list(,$v) = each($values)) {
+			if ( $v == 100 ) {
 				$label_values[] = "None";
+			} else if ($v == 0) {
+				$label_values[] = "Any";
 			} else {
-				$label_values[] = $hash_values[$values[$i]];
+				$label_values[] = $hash_values[$v];
 			}
 		}
 		
@@ -1219,8 +1212,6 @@ class ArtifactField extends Error {
 			   "special=".$special." ".
 			   "WHERE group_artifact_id=".$group_artifact_id." AND field_id=".$this->field_id;
 				
-		//echo $sql;
-				
 		$res = db_query($sql);
 		if (!$res) {
 			$this->setError("Error during updating artifact_field (".$field_id."-".$group_artifact_id."): ".db_error());
@@ -1235,8 +1226,6 @@ class ArtifactField extends Error {
 			   "place=".$rank_on_screen." ".
 			   "WHERE group_artifact_id=".$group_artifact_id." AND field_id=".$this->field_id;
 		
-		//echo $sql;
-				
 		$res = db_query($sql);
 		if (!$res) {
 			$this->setError("Error during updating artifact_field_usage (".$field_id."-".$group_artifact_id."): ".db_error());
@@ -1250,8 +1239,6 @@ class ArtifactField extends Error {
 		    $sql_artifacts='SELECT artifact_id '.
 			'FROM artifact '.
 			'WHERE group_artifact_id='. $group_artifact_id;
-			
-			//echo $sql_artifacts;
 			
 		    $res = db_query($sql_artifacts);
 		
@@ -1290,7 +1277,6 @@ class ArtifactField extends Error {
 					$sql .= $name . ") VALUES (" . $values . ")";
 					
 					$result=db_query($sql);
-					//echo $sql."<br>";
 				}
 									    	
 			} // while
@@ -1592,9 +1578,13 @@ class ArtifactField extends Error {
 			   
 		$result = db_query($sql);
 	    if ($result && db_numrows($result) > 0) {
-	    	return db_result($result, 0, 0);
+	    	$id = db_result($result, 0, 0);
+		// do not get into conflict with None
+		if ($id == 100) return ($id+1);
+		else return $id;
 	    } else {
-	    	return -1;
+		// do not get into conflict with Any
+	    	return 1;
 	    }
 	}
 

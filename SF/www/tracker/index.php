@@ -359,7 +359,8 @@ if ( $func == 'gotoid' ) {
                             //  now send the email
                             //  it's no longer optional due to the group-level notification address
                             //
-                            $ah->mailFollowup($address,$changes);
+			    if ($changes)
+			      $ah->mailFollowup($address,$changes);
                         }
 
         

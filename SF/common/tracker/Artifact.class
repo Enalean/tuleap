@@ -553,13 +553,27 @@ class Artifact extends Error {
 			}
                         // The field is a multi values field and it has multi assigned values
                         $values = $value;
+
+			//don't take into account the none value if there are several values selected
+			if (count($values) > 1) {
+				$temp = array();
+				while (list($i,$v) = each($values)) {
+					if ($v == 100) {
+						unset($values[$i]);
+						$unset = true;
+					} else {
+						$temp[] = $v;
+					}
+				}
+				if ($unset) $values = $temp;
+			}
+
                         $old_values = $field->getValues($this->getID());
                         
                         list($deleted_values,$added_values) = util_double_diff_array($old_values,$values);
 
                         // Check if there are some differences
-                        if ( ((count($deleted_values) > 0)||(count($added_values) > 0)) && 
-                             ((count($added_values) != 1)||($added_values[0]!=100)||(count($values) == 1)) ) {
+                        if ((count($deleted_values) > 0) || (count($added_values) > 0)) {
 
                             // Add values in the history
                             $a = $field->getLabelValues($this->ArtifactType->getID(),$old_values);
@@ -1224,26 +1238,54 @@ class Artifact extends Error {
         // Check for field 'assigned_to' (SelectBox)
 	// assigned to can also be a multi_select_box
 	$field = $art_field_fact->getFieldFromName($field_name);
-        if ( $field  && $field->getDisplayType() == "MB") {
-            	$field_value = $field->getValues($this->getID());
-		if ($field_value && (count($field_value) > 0) ) {
-                	while (list (,$user_id)=each ($field_value)) {
-                    		if ( ($user_id) && ($user_id != 100) ) {
-                        		if (!$user_ids[$user_id] && $this->ArtifactType->checkNotification($user_id, 'ASSIGNEE', $changes)) {
-                            			//echo "DBG - ASSIGNEE - user=$user_id<br>";
-                            			$user_ids[$user_id] = true;
-                        		}
-                    		}
-                	}
-            	}
-	} else {
-        	$user_id = $result[$field_name];
-        	if ( ($user_id) && ($user_id != 100) ) {
-            		if (!$user_ids[$user_id] && $this->ArtifactType->checkNotification($user_id, 'ASSIGNEE', $changes)) {
-                		//echo "DBG - ASSIGNEE - user=$user_id<br>";
-                		$user_ids[$user_id] = true;
+        if ( $field ) {
+		if ($field->getDisplayType() == "MB") {
+            		$field_value = $field->getValues($this->getID());
+			if ($field_value && (count($field_value) > 0) ) {
+				if ($field->getValueFunction() != "") {
+                			while (list (,$user_id)=each ($field_value)) {
+                    				if ( ($user_id) && ($user_id != 100) ) {
+                        				if (!$user_ids[$user_id] && $this->ArtifactType->checkNotification($user_id, 'ASSIGNEE', $changes)) {
+                            					//echo "DBG - ASSIGNEE - user=$user_id<br>";
+                            					$user_ids[$user_id] = true;
+                        				}
+						}
+                    			}
+                		} else {
+					// we handle now also the case that the assigned_to field is NOT BOUND to a predefined value list
+					// we accept only names that correspond to codex user names
+					while (list (,$value_id)=each ($field_value)) {
+						$user_name = $field->getValue($this->ArtifactType->getID(),$value_id);
+						$res_u = user_get_result_set_from_unix($user_name);
+						$user_id = db_result($res_u,0,'user_id');
+                    				if ( ($user_id) && ($user_id != 100) ) {
+                        				if (!$user_ids[$user_id] && $this->ArtifactType->checkNotification($user_id, 'ASSIGNEE', $changes)) {
+                            					//echo "DBG - ASSIGNEE - user=$user_id<br>";
+                            					$user_ids[$user_id] = true;
+                        				}
+                    				}
+					}	
+				}
             		}
-        	}
+		} else {
+			// display type is SB
+        		$user_id = $result[$field_name];
+			if ($field->getValueFunction() == "") {
+				// we handle now also the case that the assigned_to field is NOT BOUND to a predefined value list
+				// we accept only names that correspond to codex user names
+				// so: this user_id is not a user_id but a value_id
+				$user_name = $field->getValue($this->ArtifactType->getID(),$user_id);
+				$res = user_get_result_set_from_unix($user_name);
+				$user_id = db_result($res,0,'user_id');
+			}
+        		if ( ($user_id) && ($user_id != 100) ) {
+            			if (!$user_ids[$user_id] && $this->ArtifactType->checkNotification($user_id, 'ASSIGNEE', $changes)) {
+                			//echo "DBG - ASSIGNEE - user=$user_id<br>";
+                			$user_ids[$user_id] = true;
+            			}
+        		}
+
+		}
 	}
         
 
@@ -1353,7 +1395,10 @@ class Artifact extends Error {
         reset($user_ids);
         while (list($user_id,) = each($user_ids)) {
             //echo "DBG - final list - user=$user_id<br>";
-            $addresses[user_getemail($user_id)] = true;
+	    $mail_addr = user_getemail($user_id);
+	    if ($mail_addr != "Error - Not Found") {	
+            	$addresses[$mail_addr] = true;
+	    }	
         }
         
         // return an array with all the email addresses the notification must be sent to
