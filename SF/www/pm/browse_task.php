@@ -166,9 +166,18 @@ $sql='SELECT project_task.priority,project_task.group_project_id,project_task.pr
 	$order_by .
 	" LIMIT $offset,50";
 
+// Also get all tasks that depend on other tasks
+$sql_taskdeps = 'SELECT project_dependencies.project_task_id, is_dependent_on_task_id,project_task.group_project_id '.
+        'FROM project_task, project_dependencies, project_group_list '.
+        'WHERE '.$subproj_where. 
+        ' project_dependencies.project_task_id=project_task.project_task_id '.
+        ' AND project_dependencies.is_dependent_on_task_id <> 100';
+
+
 $message="Browsing Custom Task List";
 //echo "DBG -- $sql <BR>";
 $result=db_query($sql);
+$result_taskdeps = db_query($sql_taskdeps);
 
 /*
         creating a custom technician box which includes "any" and "unassigned"
@@ -241,7 +250,7 @@ if (db_numrows($result) < 1) {
 	echo '
 		<br>
 		<H3>'.$message.' In '. ($group_project_id ? pm_data_get_group_name($group_project_id) : 'Any Sub-project') .'</H3>';
-	pm_show_tasklist($result,$offset,$set);
+	pm_show_tasklist($result,$result_taskdeps,$offset,$set);
 	echo '<P><b>* Denotes overdue tasks</b>';
 	show_priority_colors_key();
 	$url = "/pm/task.php?group_id=$group_id&group_project_id=$group_project_id&func=browse&set=$set&order=";

@@ -193,7 +193,7 @@ function pm_show_year_box($name,$year=1) {
 
 }
 
-function pm_show_tasklist ($result,$offset,$set='open') {
+function pm_show_tasklist ($result,$result_taskdeps,$offset,$set='open') {
 	global $sys_datefmt,$group_id,$group_project_id,$_status,$PHP_SELF;
 	/*
 		Accepts a result set from the bugs table. Should include all columns from
@@ -227,6 +227,29 @@ function pm_show_tasklist ($result,$offset,$set='open') {
 		}
 	}
 
+	/* Add the list of task dependencies in the form of 
+	   comma separated list, each task being an hyperlink */
+	while ( $a_row = db_fetch_array($result_taskdeps)) {
+
+	    // if the task is not in the result set then we must add it
+	    // in the selected task list
+	    $tid = $a_row['project_task_id'];
+	    if ( !isset($all_rows[$tid]) )
+		break;
+
+	    $task_url = '<a href="'.$PHP_SELF.'?func=detailtask&project_task_id='.
+		$a_row['is_dependent_on_task_id'].'&group_id='.$group_id.
+		'&group_project_id='.$a_row['group_project_id'].'" target="_blank">'.
+		$a_row['is_dependent_on_task_id'].'</a>';
+
+	    if ( isset($all_rows[$tid]['task_deps']) ) {
+		// if there is already an entry it means it's
+		// an additional task in the task dependency list
+		$all_rows[$tid]['task_deps'] .= ','.$task_url;
+	    } else {
+		$all_rows[$tid]['task_deps'] = $task_url;		
+	    }
+	}
 
 	$url = "/pm/task.php?group_id=$group_id&group_project_id=$group_project_id&func=browse&set=$set&order=";
 
@@ -238,6 +261,7 @@ function pm_show_tasklist ($result,$offset,$set='open') {
 	$title_arr[]='End Date';
 	$title_arr[]='Assigned To';
 	$title_arr[]='% Complete';
+	$title_arr[]='Depend On';
 	$title_arr[]='Status';
 
 	$links_arr=array();
@@ -248,6 +272,7 @@ function pm_show_tasklist ($result,$offset,$set='open') {
 	$links_arr[]=$url.'end_date';
 	$links_arr[]=$url.'user_name';
 	$links_arr[]=$url.'percent_complete';
+	$links_arr[]='#'; /* no sort on task deps */
 	$links_arr[]=$url.'status_name';
 
 	echo html_build_list_table_top ($title_arr,$links_arr);
@@ -270,6 +295,7 @@ function pm_show_tasklist ($result,$offset,$set='open') {
 			'<TD>'. (($now>$row['end_date'])?'<B>* ':'&nbsp; ') . date('Y-m-d',$row['end_date']).'</TD>'.
 			'<TD>'.$row['user_name'].'</TD>'.
 			'<TD>'.$row['percent_complete'].'%</TD>'.
+			'<TD>&nbsp;'.$row['task_deps'].'</TD>'.
 		        '<TD>'.$row['status_name'].'</TD>'.
 		        '</TR>';
 
