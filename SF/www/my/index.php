@@ -313,7 +313,8 @@ if (user_isloggedin()) {
 	    'WHERE project_task.project_task_id=project_assigned_to.project_task_id '.
 	    'AND project_assigned_to.assigned_to_id='.user_getid().
 	    ' AND project_task.status_id=1 AND project_group_list.group_id=groups.group_id '.
-	    'AND project_group_list.group_project_id=project_task.group_project_id GROUP BY group_id,group_project_id';
+	    "AND project_group_list.is_public!='9' ".
+	  'AND project_group_list.group_project_id=project_task.group_project_id GROUP BY group_id,group_project_id';
 
 
 	$result=db_query($sql);
@@ -337,7 +338,8 @@ if (user_isloggedin()) {
 		    'AND project_group_list.group_id=groups.group_id '.
 		    "AND groups.group_id=$group_id ".
 		    'AND project_group_list.group_project_id=project_task.group_project_id '.
-		    "AND project_group_list.group_project_id= $group_project_id LIMIT 100";
+		    "AND project_group_list.is_public!='9' ".
+		   "AND project_group_list.group_project_id= $group_project_id LIMIT 100";
 
 		$result2 = db_query($sql2);
 		$rows2 = db_numrows($result2);
