@@ -3,6 +3,9 @@
 # Gordon Matzigkeit <gord@fig.org>, 1999-12-02
 #
 # Modified by L. Julliard for the CodeX project, dec 2002
+#
+# $Id$
+#
 
 PATH=/usr/local/bin:/bin:/usr/bin
 export CVSEDITOR=/bin/false
@@ -17,40 +20,8 @@ if test $# -eq 2 && test "X$1" = X-c; then
   $2
   ;;
 
- 'Xscp '*'-t /upload/'*)
-  # Actually run it.
-  valid=yes
-  $2
-  ;;
-
- 'X/usr/lib/sftp-server')
-  valid=yes
-  /usr/local/bin/savannah-sftp
-  ;;
-
- 'Xrsync --server --sender '*)
-  dir=`echo "$2" | sed -e 's/^.*[ 	]//'`
-  case "$dir" in
-  *..* | *CVSROOT*) ;;
-  /cvs/* | /home/cvs/* | /cvsroot/* | /upload/* )
-   # Actually run the command.
-   valid=yes
-   $2
-   ;;
-  esac
-  ;;
-
- 'Xrsync --server '*)
-  dir=`echo "$2" | sed -e 's/^.*[ 	]//'`
-  case "$dir" in
-  *..* | *CVSROOT*) ;;
-  /upload/* | /audio-video/* )
-   # Actually run the command.
-   valid=yes
-   $2
-   ;;
-  esac
-  ;;
+ ## Add other commands as needed
+ # ...
  esac
  status=$?
 fi
@@ -58,12 +29,9 @@ fi
 if test $valid = no; then
  echo "You tried to execute: \`$0${1+ $@}'." 1>&2
  echo "Sorry, you are only allowed to execute : " 1>&2 
- echo "CVS_RSH=ssh cvs commands" 1>&2 
- echo "rsync from /cvsroot or /upload." 1>&2
- echo "rsync to /upload." 1>&2
- echo "sftp to and from /upload." 1>&2
+ echo "CVS_RSH=ssh; cvs commands" 1>&2 
 fi
 
-# This sleep is necessary to allow krshd to close the connection properly.
+# This sleep is necessary to allow sshd to close the connection properly.
 sleep 2
 exit $status
