@@ -10,6 +10,8 @@ require($DOCUMENT_ROOT.'/include/pre.php');
 require($DOCUMENT_ROOT.'/include/account.php');
 session_require(array(isloggedin=>1));
 
+$LANG->loadLanguageMsg('account/account');
+
 // ###### function register_valid()
 // ###### checks for valid register from form post
 
@@ -32,30 +34,24 @@ function register_valid()	{
 if (register_valid()) {
 	session_redirect("/account/");
 } else { // not valid registration, or first time to page
-	$HTML->header(array(title=>"Change Authorized Keys"));
+	$HTML->header(array(title=>$LANG->getText('account_editsshkeys', 'title')));
 
 ?>
 
-<h2>SSH Shared Keys <?php echo help_button('OtherServices.html#ShellAccount'); ?></h2>
-<P>To avoid having to type your password every time for your SSH
-developer account, you may upload your public key(s) here and they
-will be placed on the server in your ~/.ssh/authorized_keys file.
-<P>To generate a public key, run the program 'ssh-keygen' (or ssh-keygen1) on your desktop machine.
-Then look at the file '~/.ssh/identity.pub' where the generated public key has been stored. Read the ssh
-documentation for further information on sharing keys.
-
+<h2><?php echo $LANG->getText('account_editsshkeys', 'title').' '.help_button('OtherServices.html#ShellAccount'); ?></h2>
 <?php
+        echo $LANG->getText('account_editsshkeys', 'message');
 	$date = getdate(time());
 	$hoursleft = ($sys_crondelay - 1) - ($date[hours] % $sys_crondelay);
 	$minutesleft = 60 - $date[minutes];
+        echo $LANG->getText('account_editsshkeys', 'important', array($hoursleft, $minutesleft));
+
 ?>
-<P><b>IMPORTANT:</b>SSH Shared Keys Updates will be reflected in the next cron update in approximately <B><?php print $hoursleft.'</B> hours, <B>'.$minutesleft.'</B> minutes from now'; ?>. 
 
 <?php if ($register_error) print "<p>$register_error"; ?>
 <form action="editsshkeys.php" method="post">
-<p>Authorized keys:
-<BR><I>Important: Make sure there are no line breaks except between keys.
-After submitting, verify that the number of keys in your file is what you expected.</I>
+<p><?php echo $LANG->getText('account_editsshkeys', 'title'); ?>
+<p><?php echo $LANG->getText('account_editsshkeys', 'keys'); ?>
 <br><TEXTAREA rows=10 cols=60 name="form_authorized_keys">
 <?php
 	$res_keys = db_query("SELECT authorized_keys FROM user WHERE user_id=".user_getid());
@@ -64,7 +60,7 @@ After submitting, verify that the number of keys in your file is what you expect
 	print $authorized_keys;
 ?>
 </TEXTAREA>
-<p><input type="submit" name="Update" value="Update">
+<p><input type="submit" name="Update" value="<?php echo $LANG->getText('global', 'btn_update'); ?>">
 </form>
 
 <?php

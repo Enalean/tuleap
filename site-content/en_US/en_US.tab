@@ -1,0 +1,22 @@
+#/**
+#  *
+#  * Default message catalog (English)
+#  *
+#  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
+#  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
+#  * http://codex.xrce.xerox.com
+#  *
+#  * @version   $Id$
+#  *
+#  */
+system	locale	en_US
+system	strftimefmt	%Y %B %e  %H:%M
+system	datefmt	Y-m-d H:i
+conf	content_encoding	iso-8859-1
+conf	default_font	verdana,arial,helvetica,sans-serif
+conf	language_code	en
+conf	language_id	1
+global	back_home	Back to Home Page
+global	btn_update	Update
+global	btn_submit	Submit
+

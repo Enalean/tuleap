@@ -6,18 +6,14 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/pre.php');    
-$HTML->header(array(title=>"Suspended Account"));
-list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
-?>
+require($DOCUMENT_ROOT.'/include/pre.php');
+   
+$LANG->loadLanguageMsg('account/account');
 
-<P><B>Suspended Account</B>
+$HTML->header(array(title=>$LANG->getText('account_suspended', 'title')));
+	
+echo '<P>'.$LANG->getText('account_suspended', 'message', array($GLOBALS['sys_email_contact']));
 
-<P>Your account has been suspended. If you have questions regarding your suspension,
-please email <A href="mailto:staff@<?php echo $host; ?>">staff@<?php echo $host; ?></A>.
-Inquiries through other channels will be directed to this address.
-
-<?php
-$HTML->footer(array());
+echo $HTML->footer(array());
 
 ?>

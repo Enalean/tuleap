@@ -7,6 +7,8 @@
 // $Id$
 
 require($DOCUMENT_ROOT.'/include/pre.php');    
+ 
+$LANG->loadLanguageMsg('account/account');
 
 $confirm_hash = md5($session_hash . strval(time()) . strval(rand()));
 
@@ -24,29 +26,23 @@ if (session_issecure()) {
 
 list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
 
-$message = "Someone (presumably you) on the ".$GLOBALS['sys_name']." site requested a\n"
-	. "password change through email verification. If this was not you,\n"
-	. "ignore this message and nothing will happen.\n\n"
-	. "If you requested this verification, visit the following URL\n"
-	. "to change your password:\n\n"
-	. "$server/account/lostlogin.php?confirm_hash=$confirm_hash\n\n"
-	. " -- The ".$GLOBALS['sys_name']." Team\n";
+$message = stripcslashes($LANG->getText('account_lostpw-confirm', 'mail_body',
+	      array($GLOBALS['sys_name'], 
+		    "$server/account/lostlogin.php?confirm_hash=$confirm_hash")));
 
 $hdrs = "From: noreply@".$host.$GLOBALS['sys_lf'];
 $hdrs .='Content-type: text/plain; charset=iso-8859-1'.$GLOBALS['sys_lf'];
 
-mail ($row_user['email'],$GLOBALS['sys_name']." Password Verification",$message,$hdrs);
+mail($row_user['email'],
+     $LANG->getText('account_lostpw-confirm', 'mail_subject', array($GLOBALS['sys_name'])),$message,$hdrs);
 
-$HTML->header(array('title'=>"Lost Password Confirmation"));
+$HTML->header(array('title'=>$LANG->getText('account_lostpw-confirm', 'title')));
 
 ?>
 
-<P><B>Confirmation mailed</B>
+	      <P><?php echo $LANG->getText('account_lostpw-confirm', 'msg_confirm'); ?>
 
-<P>An email has been sent to the address you have on file. Follow
-the instructions in the email to change your account password.
-
-<P><A href="/">[ Return to <?php print $GLOBALS['sys_name']; ?> ]</A>
+<P><A href="/">[<?php echo $LANG->getText('global', 'back_home'); ?>]</A>
 
 <?php
 $HTML->footer(array());

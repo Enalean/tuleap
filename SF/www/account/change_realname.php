@@ -9,6 +9,8 @@
 require($DOCUMENT_ROOT.'/include/pre.php');    
 require($DOCUMENT_ROOT.'/include/account.php');
 
+$LANG->loadLanguageMsg('account/account');
+
 // ###### function register_valid()
 // ###### checks for valid register from form post
 
@@ -19,7 +21,7 @@ function register_valid()	{
 	}
 	
 	if (!$GLOBALS[form_realname]) {
-		$GLOBALS[register_error] = "You must supply a new real name.";
+		$GLOBALS[register_error] = $LANG->getText('account_change_realname', 'error');
 		return 0;
 	}
 	
@@ -33,15 +35,15 @@ function register_valid()	{
 if (register_valid()) {
 	session_redirect("/account/");
 } else { // not valid registration, or first time to page
-	$HTML->header(array(title=>"Change RealName"));
+	$HTML->header(array(title=>$LANG->getText('account_change_realname', 'title')));
 
 ?>
-<p><b>RealName Change</b>
+<p><b><?php $LANG->getText('account_change_realname', 'title'); ?></b>
 <?php if ($register_error) print "<p>$register_error"; ?>
 <form action="change_realname.php" method="post">
-<p>New Real Name:
+<p><?php $LANG->getText('account_change_realname', 'new_name'); ?>:
 <br><input type="text" name="form_realname">
-<p><input type="submit" name="Update" value="Update">
+<p><input type="submit" name="Update" value="<?php echo $LANG->getText('global', 'btn_update'); ?>">
 </form>
 
 <?php

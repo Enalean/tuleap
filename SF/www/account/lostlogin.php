@@ -8,16 +8,20 @@
 
 require($DOCUMENT_ROOT.'/include/pre.php');    
 require($DOCUMENT_ROOT.'/include/account.php');
+ 
+$LANG->loadLanguageMsg('account/account');
 
 // ###### function register_valid()
 // ###### checks for valid register from form post
 
 $res_lostuser = db_query("SELECT * FROM user WHERE confirm_hash='$confirm_hash'");
 if (db_numrows($res_lostuser) > 1) {
-	exit_error("Error","This confirm hash exists more than once.");
+    exit_error($LANG->getText('include_exit', 'error'),
+	       $LANG->getText('account_lostlogin', 'duplicate_hash'));
 }
 if (db_numrows($res_lostuser) < 1) {
-	exit_error("Error","Invalid confirmation hash.");
+	exit_error($LANG->getText('include_exit', 'error'),
+		   $LANG->getText('account_lostlogin', 'invalid_hash'));
 }
 $row_lostuser = db_fetch_array($res_lostuser);
 
@@ -31,19 +35,18 @@ if ($Update && $form_pw && !strcmp($form_pw,$form_pw2)) {
 	session_redirect("/");
 }
 
-$HTML->header(array('title'=>"Lost Password Login"));
+$HTML->header(array('title'=>$LANG->getText('account_lostlogin', 'title')));
 ?>
-<p><b>Lost Password Login</b>
-<P>Welcome, <?php print $row_lostuser['user_name']; ?>. You may now
-change your password.
+<p><b><?php echo $LANG->getText('account_lostlogin', 'title'); ?></b>
+<P><?php echo $LANG->getText('account_lostlogin', 'message', array($row_lostuser['realname'])); ?>.
 
 <FORM action="lostlogin.php">
-<p>New Password:
+<p><?php echo $LANG->getText('account_lostlogin', 'newpasswd'); ?>:
 <br><input type="password" name="form_pw">
-<p>New Password (repeat):
+<p><?php echo $LANG->getText('account_lostlogin', 'newpasswd2'); ?>:
 <br><input type="password" name="form_pw2">
 <input type="hidden" name="confirm_hash" value="<?php print $confirm_hash; ?>">
-<p><input type="submit" name="Update" value="Update">
+<p><input type="submit" name="Update" value="<?php echo $LANG->getText('global', 'btn_update'); ?>">
 </form>
 
 <?php

@@ -9,6 +9,8 @@
 require($DOCUMENT_ROOT.'/include/pre.php');    
 require($DOCUMENT_ROOT.'/include/account.php');
 
+$LANG->loadLanguageMsg('account/account');
+
 // ###### function register_valid()
 // ###### checks for valid register from form post
 
@@ -65,37 +67,30 @@ function register_valid()	{
 // ###### first check for valid login, if so, congratulate
 
 if (register_valid()) {
-	$HTML->header(array(title=>"Successfully Changed Password"));
+    $HTML->header(array(title=>$LANG->getText('account_change_pw', 'title_success')));
+    $d = getdate(time());
+    $h = ($sys_crondelay - 1) - ($d[hours] % $sys_crondelay);
+    $m= 60 - $d[minutes];
 ?>
-<p><b>CodeX Change Confirmation</b>
-<p>Congratulations. You have changed your password.
-This change is immediate on the web site, but will not take
-effect on your shell/cvs account until the next cron update,
-which will happen in
-<?php
-     $d = getdate(time());
-     $h = ($sys_crondelay - 1) - ($d[hours] % $sys_crondelay);
-     $m= 60 - $d[minutes];
-     print "<span class=\"highlight\"><b> $h&nbsp;h&nbsp;$m&nbsp;minutes</b></span>";
-?>
- from now.
+<p><b><? echo $LANG->getText('account_change_pw', 'title_success'); ?></b>
+<p><? echo $LANG->getText('account_change_pw', 'message', array($GLOBALS['sys_name'],$h,$m)); ?
 
-<p>You should now <a href="/account/">Return to UserPrefs</a>.
+<p>[ <? echo $LANG->getText('global', 'back_home');?> ]
 <?php
 } else { // not valid registration, or first time to page
-	$HTML->header(array(title=>"Change Password"));
+	$HTML->header(array(title=>));
 
 ?>
-<p><b>CodeX Password Change</b>
+<p><b><? echo $LANG->getText('account_change_pw', 'title'); ?></b>
 <?php if ($register_error) print "<p><span class=\"highlight\"><b>$register_error</b></span>"; ?>
 <form action="change_pw.php" method="post">
-<p>Old Password:
+<p><? echo $LANG->getText('account_change_pw', 'old_password'); ?>:
 <br><input type="password" name="form_oldpw">
-<p>New Password:
+<p><? echo $LANG->getText('account_change_pw', 'new_password'); ?>:
 <br><input type="password" name="form_pw">
-<p>New Password (repeat):
+<p><? echo $LANG->getText('account_change_pw', 'new_password2'); ?>:
 <br><input type="password" name="form_pw2">
-<p><input type="submit" name="Update" value="Update">
+<p><input type="submit" name="Update" value="<? echo $LANG->getText('global', 'btn_update'); ?>">
 </form>
 
 <?php

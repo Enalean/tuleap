@@ -6,33 +6,27 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/pre.php');    
+require($DOCUMENT_ROOT.'/include/pre.php');
+
 session_require(array(isloggedin=>1));
-$HTML->header(array(title=>"Change Email Address"));
+
+$LANG->loadLanguageMsg('account/account');
+
+$HTML->header(array(title=> $LANG->getText('account_change_email', 'title')));
 ?>
 
-<P><B>Change Email Address</B>
+<P><B><?php echo $LANG->getText('account_change_email', 'title'); ?></B>
 
-<P>Changing your email address will require confirmation from your 
-new email address, so that we can ensure we have a good email address
-on file.
-
-<P>We need to maintain an accurate email address for each user due
-to the level of access we grant via this account. If we need to reach a user
-for issues arriving from a shell or project account, it is important that
-we be able to do so.
-
-<P>Submitting the form below will mail a confirmation URL to the new
-email address. Visiting this link will complete the email change.
+<?php echo $LANG->getText('account_change_email', 'message'); ?>
 
 <FORM action="change_email-confirm.php" method="post">
 <P><INPUT type="hidden" name="form_user" value="<?php print user_getid(); ?>">
-New Email Address:
-<INPUT type="text" name="form_newemail">
-<INPUT type="submit" name="Send Confirmation to New Address" value="Send Confirmation to New Address">
+<?php echo $LANG->getText('account_change_email', 'label_new'); ?>:
+<INPUT type="text" size="30" name="form_newemail">
+<INPUT type="submit" name="Send Confirmation to New Address" value="<?php echo $LANG->getText('account_change_email', 'send_new'); ?>">
 </FORM>
 
-<P><A href="/">[Return to <?php print $GLOBALS['sys_name']; ?>]</A>
+<P><A href="/">[<?php echo $LANG->getText('global', 'back_home'); ?>]</A>
 
 <?php
 $HTML->footer(array());

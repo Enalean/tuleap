@@ -6,7 +6,9 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/pre.php');    
+require($DOCUMENT_ROOT.'/include/pre.php');   
+ 
+$LANG->loadLanguageMsg('account/account');
 
 $confirm_hash = substr(md5($session_hash . time()),0,16);
 
@@ -24,25 +26,20 @@ if (session_issecure()) {
 } else {
     $server = 'http://'.$GLOBALS['sys_default_domain'];
 }
-$message = "You have requested a change of email address on ".$GLOBALS['sys_name']."\n"
-	. "Please visit the following URL to complete the email change:\n\n"
-	. "$server/account/change_email-complete.php?confirm_hash=$confirm_hash\n\n"
-	. " -- The ".$GLOBALS['sys_name']." Team\n";
+$message = stripcslashes($LANG->getText('account_change_email-confirm', 'message', array($GLOBALS['sys_name'], "$server/account/change_email-complete.php?confirm_hash=$confirm_hash")));
 
 $hdrs = "From: noreply@".$host.$GLOBALS['sys_lf'];
 $hdrs .='Content-type: text/plain; charset=iso-8859-1'.$GLOBALS['sys_lf'];
 
-mail ($form_newemail,$GLOBALS['sys_name']." Email Verification",$message,$hdrs);
+mail($form_newemail,$GLOBALS['sys_name'].': '.$LANG->getText('account_change_email-confirm', 'title'),$message,$hdrs);
 
-$HTML->header(array('title'=>"Email Change Confirmation"));
-?>
+$HTML->header(array('title'=>$LANG->getText('account_change_email-confirm', 'title'))); ?>
 
-<P><B>Confirmation mailed</B>
+<P><B><?php echo $LANG->getText('account_change_email-confirm', 'title'); ?></B>
 
-<P>An email has been sent to the new address. Follow
-the instructions in the email to complete the email change.
+<P><?php echo $LANG->getText('account_change_email-confirm', 'mailsent'); ?>.
 
-<P><A href="/">[ Home ]</A>
+<P><A href="/">[ <?php echo $LANG->getText('global', 'back_home'); ?> ]</A>
 
 <?php
 $HTML->footer(array());

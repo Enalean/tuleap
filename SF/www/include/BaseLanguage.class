@@ -1,0 +1,254 @@
+<?php
+//
+// SourceForge: Breaking Down the Barriers to Open Source Development
+// Copyright 1999-2000 (c) The SourceForge Crew
+// http://sourceforge.net
+//
+// Copyright 2004-2005 (c) The CodeX Team, Xerox. All rights reserved
+//
+// $Id$
+
+
+/*
+
+	Tim Perdue, September 7, 2000
+	Laurent Julliard, Jan 14, 2004
+
+
+	Base class for adding multilingual support to CodeX
+
+	Contains variables which can be overridden optionally by other
+	language files.
+
+	Base language is english - an english class will extend this one,
+	but won't override anything
+
+	As new languages are added, they can override what they wish, and
+	as we extend our class, other languages can follow suit
+	as they are translated without holding up our progress
+
+	A global language file is loaded first and then each php script
+	loads its won scripts (site-local customized versions are also
+	loaded if they do exist)
+
+*/
+
+class BaseLanguage {
+
+	//array to hold the string values
+	var $text_array ;
+	var $lang, $name, $id, $code ;
+
+	function BaseLanguage() {
+		$this->loadLanguage('en_US');
+	}
+
+	/**
+	 * loadLanguageMsg($fname)
+	 * Load an individual language file. This is used by indivudual
+	 * php scripts to use their specific message catalog. fname is relative
+	 * $sys_incdir with no .tab extension at the end
+	 *
+	 * @param		string	path of language file to load
+	 */
+	function loadLanguageMsg($fname) {
+	    global $sys_user_theme;
+
+	    // load message file
+	    $fname = $GLOBALS['sys_incdir'].'/'.$this->lang.'/'.$fname.'.tab' ;
+	    $this->loadLanguageFile($fname) ;
+
+	    // load site-local customizations
+	    $fname = '/etc/codex/site-content/'.'/'.$this->lang.'/'.$fname.'.tab' ;
+	    if (file_exists ($fname)) {
+		$this->loadLanguageFile($fname) ;
+	    }
+
+	    // load customization by theme
+	    $ftname = '../themes/'.$sys_user_theme.'/'.$this->lang.'/'.$fname.'.tab' ;
+	    if (file_exists ($ftname)) {
+		$this->loadLanguageFile($ftname) ;
+	    }
+
+	    //load site-local customizations by theme
+	    $ftname = '/etc/codex/themes/messages/'.$sys_user_theme.'/'.$this->lang.'/'.$fname.'.tab' ;
+	    if (file_exists ($ftname)) {
+		$this->loadLanguageFile($ftname) ;
+	    }
+	}
+
+	function loadLanguageFile($fname) {
+		$ary = @file($fname,1);
+		for( $i=0; $i<sizeof($ary); $i++) {
+			if (substr($ary[$i], 0, 1) == '#') {
+				continue;
+			}
+			// Language files can include others for defaults.
+			// e.g. an English-Canada.tab file might "include English" first,
+			// then override all those whacky American spellings.
+			if (preg_match("/^include ([a-zA-Z]+)/", $ary[$i], $matches)) {
+				$dir = dirname($fname);
+				$this->loadLanguageFile($dir."/".$matches[1].".tab");
+			} else {
+				$line = explode("\t", $ary[$i], 3);
+				$this->text_array[$line[0]][$line[1]] = chop($line[2]);
+				//echo "Reading msg :".$line[0]."<b> | </b>".$line[1]."<b> | </b>".$this->text_array[$line[0]][$line[1]]."<br>";
+			}
+		}
+	}
+
+	function loadLanguageID($language_id) {
+		$res=db_query("SELECT * FROM supported_languages WHERE language_id='$language_id'");
+		$this->loadLanguage(db_result($res,0,'language_code'));
+	}
+
+	// Load the global language file (this is a global message catalog
+	// that is loaded for all scripts from pre.php
+	function loadLanguage($lang) {
+		global $sys_user_theme;
+		if ($this->lang == $lang) { return; }
+		$fname = $GLOBALS['sys_incdir'].'/'.$lang.'/'.$lang.'.tab' ;
+		$this->loadLanguageFile($fname) ;
+		// Site-local customizations
+		$fname = '/etc/codex/site-content/'.$lang.'/'.$lang.'.tab' ;
+		if (file_exists ($fname)) {
+			$this->loadLanguageFile($fname) ;
+		}
+		//Customization by theme
+		$ftname = '../themes/'.$sys_user_theme.'/'.$lang.'/'.$lang.'.tab' ;
+		if (file_exists ($ftname)) {
+			$this->loadLanguageFile($ftname) ;
+		}
+		$this->lang = $lang ;
+	}
+
+	function getText($pagename, $category, $args="") {
+		/*
+			args is an array which will replace the $1, $2, etc
+			in the text_array string before it is returned
+		*/
+		if ($args) {
+		    //$tstring = sprintf($this->text_array[$pagename][$category],$args);
+			for ($i=1; $i<=sizeof($args)+1; $i++) {
+				$patterns[] = '/\$'.$i.'/';
+			}
+			$tstring = preg_replace($patterns, $args, $this->text_array[$pagename][$category]);
+		} else {
+			$tstring = $this->text_array[$pagename][$category];
+		}
+		if (!$tstring) {
+		    $tstring = "*** Unkown msg $pagename - $category ***";
+		}
+		return $tstring;
+	}
+
+	//result set handle for supported langauges
+	var $language_res;
+
+	/*
+		returns database result
+		of supported languages
+	*/
+	function getLanguages() {
+		if (!$this->text_array['conf']['language_res']) {
+			$this->text_array['conf']['language_res']=db_query("SELECT * FROM supported_languages WHERE active=1 ORDER BY name ASC");
+		}
+		return $this->text_array['conf']['language_res'];
+	}
+
+	function getLanguageId() {
+		if (!$this->id) {
+			$this->id = db_result(db_query("SELECT language_id FROM supported_languages WHERE language_code='".$this->lang."'"), 0, 0) ;
+		}
+		return $this->id ;
+	}
+
+	function getLanguageName() {
+		if (!$this->name) {
+			$id = $this->getLanguageId () ;
+			$this->name = db_result(db_query("SELECT name FROM supported_languages WHERE language_id='$id'"), 0, 0) ;
+		}
+		return $this->name ;
+	}
+
+	function getLanguageCode() {
+		if (!$this->code) {
+			$id = $this->getLanguageId () ;
+			$this->code = db_result(db_query("SELECT language_code FROM supported_languages WHERE language_id='$id'"), 0, 0) ;
+		}
+		return $this->code ;
+	}
+
+	function getEncoding() {
+		return $this->text_array['conf']['content_encoding'];
+	}
+
+	function getFont() {
+		return $this->text_array['conf']['default_font'];
+	}
+}
+
+function language_code_to_result($alang) {
+	global $cookie_language_id;
+
+	/*
+
+
+		Determine which language file to use
+
+		It depends on whether the user has set a cookie or not using
+		the account page or the left-hand nav or how their browser is
+		set or whether they are logged in or not
+
+		if logged in, use language from users table
+		else check for cookie and use that value if valid
+		if no cookie check browser preference and use that language if valid
+		else just use system default language
+
+	*/
+
+	if ($cookie_language_id) {
+		$lang=$cookie_language_id;
+		$res=db_query("select * from supported_languages where language_id='$lang'");
+		if (!$res || db_numrows($res) < 1) {
+			return db_query("select * from supported_languages where language_id='1'"); // default to english
+		} else {
+			return $res;
+		}
+	} else {
+		$ary = explode(',', str_replace(' ', '', $alang)); // delete space and split
+		for( $i=0; $i<sizeof($ary); $i++){
+			$lang_code = ereg_replace(';.*', '', $ary[$i]); // remove ;q=0.x
+			$res = db_query("select * from supported_languages where language_code = '$lang_code'");
+			if (db_numrows($res) > 0) {
+				return $res;
+			}
+			// If that didn't work, then substitute - with _ as the database
+			// uses en_US and not en-us as Mozilla and IE do
+			$lang_code = str_replace($lang_code,'-','_');
+
+			// If that didn't work:
+			// - First substitute - with _ as the database
+			// uses en_US and not en-us as Mozilla and IE do
+			// - Second check if we have sublanguage specifier
+			// If so, try to strip it and look for main language only
+			if (strstr($lang_code, '-')) {
+
+			    $lang_code = str_replace($lang_code,'-','_');
+			    $res = db_query("select * from supported_languages where language_code = '$lang_code'");
+			    if (db_numrows($res) > 0) {
+				return $res;
+			    }
+			    
+			    $lang_code = substr($lang_code, 0, 2);
+			    $res = db_query("select * from supported_languages where language_code = '$lang_code'");
+			    if (db_numrows($res) > 0) {
+				return $res;
+			    }
+			}
+		}
+		return db_query("select * from supported_languages where language_code='".$GLOBALS['sys_lang']."'"); // default to system default
+	}
+}
+
+?>

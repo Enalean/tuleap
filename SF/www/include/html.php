@@ -70,7 +70,21 @@ function html_get_timezone_popup ($title='timezone',$selected='xzxzxzx') {
     return html_build_select_box_from_arrays ($TZs,$TZs,$title,$selected,false);
 }
 
+/**
+ * html_get_language_popup() - Pop up box of supported languages
+ *
+ * @param		object	BaseLanguage object
+ * @param		string	The title of the popup box
+ * @param		string	Which element of the box is to be selected
+ */
+function html_get_language_popup ($Language,$title='language_id',$selected='xzxzxz') {
+	$res=$Language->getLanguages();
+	return html_build_select_box ($res,$title,$selected,false);
+}
+
+
 function html_build_list_table_top ($title_arr,$links_arr=false,$mass_change=false,$full_width=true) {
+
 	/*
 		Takes an array of titles and builds
 		The first row of a new table

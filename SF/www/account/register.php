@@ -10,36 +10,38 @@ require($DOCUMENT_ROOT.'/include/pre.php');
 require($DOCUMENT_ROOT.'/include/proj_email.php');
 require($DOCUMENT_ROOT.'/include/account.php');
 require($DOCUMENT_ROOT.'/include/timezones.php');
+   
+$LANG->loadLanguageMsg('account/account');
 
 // ###### function register_valid()
 // ###### checks for valid register from form post
 
 function register_valid($confirm_hash)	{
-    global $HTTP_POST_VARS, $G_USER;
+    global $HTTP_POST_VARS, $G_USER, $LANG;
 
     if (db_numrows(db_query("SELECT user_id FROM user WHERE "
 			    . "user_name LIKE '$HTTP_POST_VARS[form_loginname]'")) > 0) {
-	$GLOBALS['register_error'] = "That username already exists.";
+	$GLOBALS['register_error'] = $LANG->getText('account_register', 'err_exist');
 	return 0;
     }
     if (!$HTTP_POST_VARS['form_loginname']) {
-	$GLOBALS['register_error'] = "You must supply a username.";
+	$GLOBALS['register_error'] = $LANG->getText('account_register', 'err_nouser');
 	return 0;
     }
     if (!$HTTP_POST_VARS['form_pw']) {
-	$GLOBALS['register_error'] = "You must supply a password.";
+	$GLOBALS['register_error'] = $LANG->getText('account_register', 'err_nopasswd');
 	return 0;
     }
     if ($HTTP_POST_VARS['form_pw'] != $HTTP_POST_VARS['form_pw2']) {
-	$GLOBALS['register_error'] = "Passwords do not match.";
+	$GLOBALS['register_error'] = $LANG->getText('account_register', 'err_passwd');
 	return 0;
     }
     if ($HTTP_POST_VARS['timezone'] == 'None') {
-	$GLOBALS['register_error'] = "You must supply a timezone.";
+	$GLOBALS['register_error'] = $LANG->getText('account_register', 'err_notz');
 	return 0;
     }
     if (!$HTTP_POST_VARS['form_register_purpose'] && $GLOBALS['sys_user_approval']) {
-	$GLOBALS['register_error'] = "You must explain the purpose of your registration.";
+	$GLOBALS['register_error'] = $LANG->getText('account_register', 'err_nopurpose');
 	return 0;
     }
         if (!account_pwvalid($HTTP_POST_VARS['form_pw'])) {
@@ -49,7 +51,7 @@ function register_valid($confirm_hash)	{
 	return 0;
     }
     if (!validate_email($HTTP_POST_VARS['form_email'])) {
-	$GLOBALS['register_error'] = ' Invalid Email Address ';
+	$GLOBALS['register_error'] = $LANG->getText('account_register', 'err_email');
 	return 0;
     }
 
@@ -70,7 +72,7 @@ function register_valid($confirm_hash)	{
 		     . ",'".$GLOBALS['timezone']."')");
 
     if (!$result) {
-	exit_error('error',db_error());
+	exit_error($LANG->getText('include_exit', 'error'),db_error());
 	return 0;
     } else {
 	return db_insertid($result);
@@ -86,14 +88,30 @@ if ($Register) {
 
     if ($new_userid = register_valid($confirm_hash)) {
     
-	$HTML->header(array('title'=>'Register Confirmation'));
+	$HTML->header(array('title'=>$LANG->getText('account_register', 'title_confirm')));
 
 	$user_name = user_getname($new_userid);
 	if ($GLOBALS['sys_user_approval'] == 0) {
 	    send_new_user_email($GLOBALS['form_email'], $confirm_hash);
-	    include(util_get_content('account/register_confirmation'));
+	    echo '<p><b>'.$LANG->getText('account_register', 'title_confirm').'</b>';
+	    echo '<p>'.$LANG->getText('account_register', 'msg_confirm', array($GLOBALS['sys_name'],$user_name));
 	} else {
-	    include(util_get_content('account/register_needs_approval'));
+	    // Registration requires approval - send a mail to site admin and
+	    // inform the user that approval is required
+	    $href_approval = 'http'.(session_issecure() ? 's':'').'://'.
+		$GLOBALS['sys_default_domain'].'/admin/approve_pending_users.php';
+
+	    echo '<p><b>'.$LANG->getText('account_register', 'title_approval').'</b>';
+	    echo '<p>'.$LANG->getText('account_register', 'msg_approval', array($GLOBALS['sys_name'],$user_name,$href_approval));
+
+	    // Send a notification message to the Site administrator
+	    list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
+	    $hdrs = 'From: noreply@'.$host."\n";
+	    $to = $GLOBALS['sys_email_admin'];
+	    $subject = $LANG->getText('account_register', 'mail_approval_subject', array($user_name));
+	    $body = stripcslashes($LANG->getText('account_register', 'mail_approval_body', array($GLOBALS['sys_name'], $user_name, $href_approval)));
+	    mail($to,$subject,$body,$hdrs);
+	    
 	}
 	$HTML->footer(array());
 	exit;
@@ -103,12 +121,11 @@ if ($Register) {
 //
 // not valid registration, or first time to page
 //
-$HTML->header(array('title'=> $GLOBALS['sys_name'].': Register'));
+$HTML->header(array('title'=>$LANG->getText('account_register', 'title') ));
 
 ?>
     
-<h2><?php print $GLOBALS['sys_name']; ?> New Account Registration 
-<?php echo help_button('UserRegistration.html');?></h2>
+<h2><?php print $LANG->getText('account_register', 'title').' '.help_button('UserRegistration.html');?></h2>
 
 <?php 
 if ($register_error) {
@@ -118,46 +135,53 @@ $star = '<span class="highlight"><big>*</big></span>';
 ?>
 
 <form action="/account/register.php" method="post">
-<p>Login Name <strong>(Lower case only!)</strong> <? echo $star; ?>:<br>
+<p><?php print $LANG->getText('account_register', 'login').'&nbsp;'.$star; ?>:<br>
 <input type="text" name="form_loginname" value="<?php print stripslashes($form_loginname); ?>">
-<? include(util_get_content('account/register_login')); ?>
+<?php print $LANG->getText('account_register', 'login_directions'); ?>
 
-<p>Password (min. 6 chars) <? echo $star; ?>:<br>
+<p><?php print $LANG->getText('account_register', 'passwd').'&nbsp;'.$star; ?>:<br>
 <input type="password" name="form_pw" value="<?php print stripslashes($form_pw); ?>">
+<?php print $LANG->getText('account_register', 'passwd_directions'); ?>
 
-<p>Password (repeat) <? echo $star; ?>:<br>
+<p><?php print $LANG->getText('account_register', 'passwd2').'&nbsp;'.$star; ?>:<br>
 <input type="password" name="form_pw2" value="<?php print stripslashes($form_pw2); ?>">
+<?php print $LANG->getText('account_register', 'passwd2_directions'); ?>
 
-<P>Full/Real Name <? echo $star; ?>:<br>
+<P><?php print $LANG->getText('account_register', 'realname').'&nbsp;'.$star; ?>:<br>
 <INPUT size=40 type="text" name="form_realname" value="<?php print stripslashes($form_realname); ?>">
+<?php print $LANG->getText('account_register', 'realname_directions'); ?>
 
-<P>Email Address <? echo $star; ?>:<BR>
+<P><?php print $LANG->getText('account_register', 'email').'&nbsp;'.$star; ?>:<BR>
 <INPUT size=40 type="text" name="form_email" value="<?php print stripslashes($form_email); ?>"><BR>
-<? include(util_get_content('account/register_email')); ?>
-<P>Timezone <? echo $star; ?>:<BR>
+<?php print $LANG->getText('account_register', 'email_directions'); ?>
+
+
+<P><?php print $LANG->getText('account_register', 'tz').'&nbsp;'.$star; ?>:<BR>
 <?php 
 $timezone = ($timezone?stripslashes($timezone):'None');
 echo html_get_timezone_popup ('timezone',$timezone); ?>
+<?php print $LANG->getText('account_register', 'tz_directions'); ?>
 <P>
 
 <P><INPUT type="checkbox" name="form_mail_site" value="1" checked>
-Receive Email about Site Updates <I>(Very low traffic and includes
-security notices. Highly Recommended.)</I>
+<?php print $LANG->getText('account_register', 'siteupdate'); ?>
 
 <P><INPUT type="checkbox" name="form_mail_va" value="1">
-Receive additional community mailings. <I>(Low traffic.)</I>
+<?php print $LANG->getText('account_register', 'communitymail'); ?>
 
+<P>
 <?php
 if ($GLOBALS['sys_user_approval'] == 1) {
-    include(util_get_content('account/register_purpose'));
+    print $LANG->getText('account_register', 'purpose').'&nbsp;'.$star.":<br>";
+    print $LANG->getText('account_register', 'purpose_directions');
     echo '<textarea wrap="virtual" rows="5" cols="70" name="form_register_purpose"></textarea></p>';
 }
 ?>
 
 <p>
-Fields marked with <? echo $star; ?> are mandatory.
+<?php print $LANG->getText('account_register', 'mandatory', array($star)); ?>
 </p>
-<p><input type="submit" name="Register" value="Register">
+<p><input type="submit" name="Register" value="<?php print $LANG->getText('account_register', 'btn_register'); ?>">
 
 </form>
 <?php

@@ -15,7 +15,7 @@ function session_login_valid($form_loginname,$form_pw,$allowpending=0)  {
 
 	if (!$form_loginname || !$form_pw) {
 		$feedback = 'Missing Password Or User Name';
-		return false;
+		return array(false,'');
 	}
 
 	//get the user from the database using user_id and password
@@ -25,34 +25,35 @@ function session_login_valid($form_loginname,$form_pw,$allowpending=0)  {
 	if (!$res || db_numrows($res) < 1) {
 		//invalid password or user_name
 		$feedback='Invalid Password Or User Name';
-		return false;
+		return array(false,'');
 	} else {
 		// check status of this user
 		$usr = db_fetch_array($res);
+		$status = $usr['status'];
 
 		// if allowpending (for verify.php) then allow
-		if ($allowpending && ($usr['status'] == 'P')) {
+		if ($allowpending && ($status == 'P')) {
 			//1;
 		} else {
-			if ($usr['status'] == 'S') { 
+			if ($status == 'S') { 
 				//acount suspended
 				$feedback = 'Account Suspended';
-				return false;
+				return array(false,$status);
 			}
-			if ($usr['status'] == 'P') { 
+			if ($status == 'P') { 
 				//account pending
 				$feedback = 'Account Pending';
-				return false;
+				return array(false,$status);
 			} 
-			if ($usr['status'] == 'D') { 
+			if ($status == 'D') { 
 				//account deleted
 				$feedback = 'Account Deleted';
-				return false;
+				return array(false,$status);
 			}
-			if ($usr['status'] != 'A') {
+			if ($status != 'A') {
 				//unacceptable account flag
 				$feedback = 'Account Not Active';
-				return false;
+				return array(false,$status);
 			}
 		}
 		//create a new session
@@ -61,7 +62,7 @@ function session_login_valid($form_loginname,$form_pw,$allowpending=0)  {
 		//if we got this far, the name/pw must be ok
 		//db_query("UPDATE session SET user_id='" . db_result($res,0,'user_id') . "' WHERE session_hash='$session_hash'");
 
-		return true;
+		return array(true,$status);
 	}
 }
 

@@ -1518,7 +1518,6 @@ INSERT INTO artifact_notification_event_default VALUES (7,'ANY_OTHER_CHANGE','An
 INSERT INTO artifact_notification_event_default VALUES (8,'I_MADE_IT','I did it','I am the author of the change',80);
 INSERT INTO artifact_notification_event_default VALUES (9,'NEW_ARTIFACT','New artifact','A new artifact has been submitted',90);
 
-
 #
 # Snippet category table
 #
@@ -1588,8 +1587,6 @@ INSERT INTO snippet_language VALUES (17,'Other Language');
 INSERT INTO snippet_language VALUES (18,'LabView');
 INSERT INTO snippet_language VALUES (19,'C#');
 INSERT INTO snippet_language VALUES (20,'Postscript');
-
-
 
 
 --
@@ -1713,4 +1710,13 @@ INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_REA
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('RELEASE_READ',4);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_READ',10);
 
+# ==============================
+# supported_languages table
+# ==============================
+# Create the list of supported languages for that site
+#
+INSERT INTO supported_languages VALUES \
+(1,'English','English_US.tab','en_US','ISO-8859-1',1);
+INSERT INTO supported_languages VALUES \
+(2,'French','French_FR.tab','fr_FR','ISO-8859-1',1);
 

@@ -7,15 +7,16 @@
 // $Id$
 
 require($DOCUMENT_ROOT.'/include/pre.php');    
-$HTML->header(array(title=>"Deleted Account"));
+
+$LANG->loadLanguageMsg('account/account');
+
+$HTML->header(array(title=>$LANG->getText('account_deleted', 'title')));
 list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
 ?>
 
-<P><B>Deleted Account</B>
+<P><B><?php echo $LANG->getText('account_deleted', 'title'); ?></B>
 
-<P>Your account has been deleted. If you have questions regarding your deletion,
-please email <A HREF="mailto:staff@<?php echo $host; ?>">staff@<?php echo $host; ?></A>.
-Inquiries through other channels will be directed to this address.
+<P><?php echo $LANG->getText('account_deleted', 'message', array($GLOBALS['sys_email_contact'], $GLOBALS['sys_email_contact'])); ?>
 
 <?php
 $HTML->footer(array());

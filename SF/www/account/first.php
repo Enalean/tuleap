@@ -7,36 +7,23 @@
 // $Id$
 
 require($DOCUMENT_ROOT.'/include/pre.php');    
-$HTML->header(array(title=>"Welcome to Codex"));
+
+$LANG->loadLanguageMsg('account/account');
+
+$HTML->header(array(title=>$LANG->getText('account_first', 'title', array($GLOBALS['sys_name']))));
 ?>
 
-<P><h2>Welcome to <?php print $GLOBALS['sys_name']; ?>!</h2>
+<P><h2><?php echo $LANG->getText('account_first', 'title', array($GLOBALS['sys_name'])); ?></h2>
 
-<P>You are now a registered user on <?php print $GLOBALS['sys_name']; ?>. As a registered user, you can now fully participate in the activities
-of the <?php print $GLOBALS['sys_name']; ?> Web Site. You may use forums, subscribe to mailing lists, browse through the list of hosted projects, or even start your own project.
+<P>
+<?php 
 
-<?php
-	$date = getdate(time());
-	$hoursleft = ($sys_crondelay - 1) - ($date[hours] % $sys_crondelay);
-	$minutesleft = 60 - $date[minutes];
-?>
+$date = getdate(time());
+$hoursleft = ($sys_crondelay - 1) - ($date[hours] % $sys_crondelay);
+$minutesleft = 60 - $date[minutes];
 
-<P><center><b><span class="highlight">** IMPORTANT REMARKS **</span></b></center>
-<BR>While your Web account is available right now, it takes some time for <?php print $GLOBALS['sys_name']; ?> to create your <u>Shell account</u>. Some features like CVS access depend on it. Your Shell account will be activated in about 
+echo $LANG->getText('account_first', 'message', array($GLOBALS['sys_name'],$hoursleft,$minutesleft));
 
-<?php print "<b> $hoursleft</B> hour <B>$minutesleft</B> minutes"; ?> from now.
-
-<P>In the meantime we highly recommend that you browse through the site, read the 
-<A href="/docs/site/">Site Documentation</A> and finalize the setup of your <a href="/account/">User Profile</a> (Choose your Time Zone, define your skills profile,etc.)
-
-<P><center><b><span class="highlight">*-*-*-*</span></b></center>
-
-<P>Enjoy the site, provide us with feedback on ways
-that we can improve <?php print $GLOBALS['sys_name']; ?> and speak of <?php print $GLOBALS['sys_name']; ?> around you.
-
-<P>-- The <?php print $GLOBALS['sys_name']; ?> Team
-
-<?php
 $HTML->footer(array());
 
 ?>

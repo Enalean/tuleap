@@ -10,21 +10,26 @@ require($DOCUMENT_ROOT.'/include/pre.php');
 
 session_require(array('isloggedin'=>'1'));
 
-$HTML->header(array('title'=>"Account Maintenance"));
+$LANG->loadLanguageMsg('account/account');
+
+$HTML->header(array('title'=>$LANG->getText('account_options', 'title')));
 
 // get global user vars
 $res_user = db_query("SELECT * FROM user WHERE user_id=" . user_getid());
 $row_user = db_fetch_array($res_user);
 
-$HTML->box1_top("Account Maintenance: " . user_getname()); ?>
+$HTML->box1_top($LANG->getText('account_options', 'title').": ".user_getrealname(user_getid()));
+?>
 
-<p>Welcome, <b><?php print user_getname(); ?></b>. 
-<p>You can view or change all of your account features from here. You may also wish
-to view your developer/consultant profiles and ratings.
+<p><?php echo $LANG->getText('account_options', 'welcome'); ?>,
+    <b><?php echo user_getrealname(user_getid()); ?></b>
+
+<p><?php echo $LANG->getText('account_options', 'welcome_intro'); ?>
 
 <UL>
-<LI><A href="/users/<?php print $row_user['user_name']; ?>/"><B>View My Developer Profile</B></A>
-<LI><A HREF="/people/editprofile.php"><B>Edit My Skills Profile</B></A>
+<LI><A href="/users/<?php print $row_user['user_name']; ?>/">
+<B><?php echo $LANG->getText('account_options', 'view_developer_profile'); ?></B></A>
+<LI><A HREF="/people/editprofile.php"><B><?php echo $LANG->getText('account_options', 'edit_skills_profile'); ?></B></A>
 </UL>
 <?php $HTML->box1_bottom(); ?>
 
@@ -32,37 +37,37 @@ to view your developer/consultant profiles and ratings.
 <TABLE width=100% border=0>
 
 <TR valign=top>
-<TD>Member Since: </TD>
+<TD><?php echo $LANG->getText('account_options', 'member_since'); ?>: </TD>
 <TD colspan="2"><B><?php print format_date($sys_datefmt,$row_user['add_date']); ?></B></TD>
 </TR>
 <TR valign=top>
-<TD>User ID: </TD>
+<TD><?php echo $LANG->getText('account_options', 'user_id'); ?>: </TD>
 <TD colspan="2"><B><?php print $row_user['user_id']; ?></B></TD>
 </TR>
 
 <TR valign=top>
-<TD>Login Name: </TD>
+<TD><?php echo $LANG->getText('account_options', 'login_name'); ?>: </TD>
 <TD><B><?php print $row_user['user_name']; ?></B></td>
 <td><A href="change_pw.php">[Change Password]</A></TD>
 </TR>
 
 <TR valign=top>
-<TD>Timezone: </TD>
+<TD><?php echo $LANG->getText('account_options', 'timezone'); ?>: </TD>
 <TD><B><?php print $row_user['timezone']; ?></B></td>
-<td><A href="change_timezone.php">[Change Timezone]</A></TD>
+<td><A href="change_timezone.php">[<?php echo $LANG->getText('account_options', 'change_timezone'); ?>]</A></TD>
 </TR>
 
 
 <TR valign=top>
-<TD>Real Name: </TD>
+<TD><?php echo $LANG->getText('account_options', 'real_name'); ?>: </TD>
 <TD><B><?php print $row_user['realname']; ?></B></td>
-<td><A href="change_realname.php">[Change Real Name]</A></TD>
+<td><A href="change_realname.php">[<?php echo $LANG->getText('account_options', 'change_real_name'); ?>]</A></TD>
 </TR>
 
 <TR valign=top>
-<TD>Email Addr: </TD>
+<TD><?php echo $LANG->getText('account_options', 'email_address'); ?>: </TD>
 <TD><B><?php print $row_user['email']; ?></B></td>
-<td><A href="change_email.php">[Change Email Addr]</A>
+<td><A href="change_email.php">[<?php echo $LANG->getText('account_options', 'change_email_address'); ?>]</A>
 </TD>
 </TR>
 
@@ -74,36 +79,47 @@ to view your developer/consultant profiles and ratings.
 <TD COLSPAN=3>
 <?php 
 // ############################# Preferences
-$HTML->box1_top("Preferences"); ?>
+$HTML->box1_top($LANG->getText('account_options', 'preferences')); ?>
 <FORM action="updateprefs.php" method="post">
 
-<INPUT type="checkbox" name="form_mail_site" value="1"<?php 
-	if ($row_user['mail_siteupdates']) print " checked"; ?>> Receive Email for Site Updates
-<I>(Low traffic. Includes security notices, major site news. Highly recommended.)</I>
+<INPUT type="checkbox" name="form_mail_site" value="1" 
+<?php 
+if ($row_user['mail_siteupdates']) print " checked"; 
+echo '>'.$LANG->getText('account_register', 'siteupdate');
+?>
 
-<P><INPUT type="checkbox"  name="form_mail_va" value="1"<?php
-	if ($row_user['mail_va']) print " checked"; ?>> Receive additional community mailings. 
-<I>(Low traffic.)</I>
+<P><INPUT type="checkbox"  name="form_mail_va" value="1" 
+<?php
+if ($row_user['mail_va']) print " checked";
+echo '>'.$LANG->getText('account_register', 'communitymail');
+?>
 
-<P><INPUT type="checkbox"  name="form_sticky_login" value="1"<?php
-	if ($row_user['sticky_login']) print " checked"; ?>> Remember my login/password <I>(<?php print $GLOBALS['sys_name']; ?> remembers your login/password. . Not recommended. <u>If you change this preference make sure to logout and login again</u>)</I>
+<P><INPUT type="checkbox"  name="form_sticky_login" value="1" 
+<?php
+if ($row_user['sticky_login']) print " checked";
+echo '>'.$LANG->getText('account_options', 'remember_me', $GLOBALS['sys_name']);
+?>
 
 <P>Font size: <select name="user_fontsize">
 <option value="0" <?
-    if ( $row_user['fontsize'] == 0 ) print "selected";
-?>>Browser default</option>
+if ( $row_user['fontsize'] == 0 ) print "selected";
+echo '>'.$LANG->getText('account_options', 'font_size_browser');
+?></option>
 <option value="1" <?
-    if ( $row_user['fontsize'] == 1 ) print "selected";
-?>>Small</option>
+if ( $row_user['fontsize'] == 1 ) print "selected";
+echo '>'.$LANG->getText('account_options', 'font_size_small');
+?></option>
 <option value="2" <?
-    if ( $row_user['fontsize'] == 2 ) print "selected";
-?>>Normal</option>
+if ( $row_user['fontsize'] == 2 ) print "selected";
+echo '>'.$LANG->getText('account_options', 'font_size_normal');
+?></option>
 <option value="3" <?
-    if ( $row_user['fontsize'] == 3 ) print "selected";
-?>>Large</option>
+if ( $row_user['fontsize'] == 3 ) print "selected";
+echo '>'.$LANG->getText('account_options', 'font_size_large');
+?></option>
 </select>
     
-&nbsp;&nbsp;Theme / Color scheme: 
+&nbsp;&nbsp;<?php echo $LANG->getText('account_options', 'theme'); ?>: 
 <?php
 // see what current user them is
 if ($row_user['theme'] == "" || $row_user['theme'] == "default") {
@@ -142,6 +158,12 @@ print "</select>\n";
 
 ?>
 
+&nbsp;&nbsp;<?php echo $LANG->getText('account_options', 'language'); ?>: 
+<?php
+// display supported languages
+echo html_get_language_popup($LANG,'language_id',$LANG->getLanguageId());
+?>
+
 <P align=center><CENTER><INPUT type="submit" name="Update" value="Update"></CENTER>
 </FORM>
 <?php $HTML->box1_bottom(); 
@@ -149,10 +171,10 @@ print "</select>\n";
 // ############################### Shell Account
 
 if ($row_user['unix_status'] == 'A') {
-	$HTML->box1_top("Shell Account Information ".help_button('OtherServices.html#ShellAccount')); 
+	$HTML->box1_top($LANG->getText('account_options', 'shell_account_title').' '.help_button('OtherServices.html#ShellAccount')); 
 	print '&nbsp;
-<BR>Shell box: <b>'.$row_user['unix_box'].'</b>
-<BR>SSH Shared Keys: <B>';
+<BR>'.$LANG->getText('account_options', 'shell_box').': <b>'.$row_user['unix_box'].'</b>
+<BR>'.$LANG->getText('account_options', 'shell_shared_keys').': <B>';
 	// get shared key count from db
 	$expl_keys = explode("###",$row_user['authorized_keys']);
 	if ($expl_keys[0]) {
@@ -160,7 +182,7 @@ if ($row_user['unix_status'] == 'A') {
 	} else {
 		print '0';
 	}
-	print '</B> <A href="editsshkeys.php">[Edit Keys]</A>';
+	print '</B> <A href="editsshkeys.php">['.$LANG->getText('account_options', 'shell_edit_keys').']</A>';
 	$HTML->box1_bottom(); 
 } 
 ?>

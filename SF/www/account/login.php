@@ -12,6 +12,8 @@ Header( "Cache-Control: must-revalidate");
 
 require('../include/pre.php');
 
+$LANG->loadLanguageMsg('account/account');
+
 if (!session_issecure() && ($GLOBALS['sys_https_host'] != "")) {
     //force use of SSL for login
     header('Location: https://'.$GLOBALS['sys_https_host'].'/account/login.php');
@@ -20,7 +22,7 @@ if (!session_issecure() && ($GLOBALS['sys_https_host'] != "")) {
 // ###### first check for valid login, if so, redirect
 
 if ($login) {
-    $success=session_login_valid($form_loginname,$form_pw);
+    list($success, $status) = session_login_valid($form_loginname,$form_pw);
     if ($success) {
 	/*
 	  You can now optionally stay in SSL mode
@@ -60,33 +62,21 @@ if ($session_hash) {
 	session_cookie('session_hash','');
 	db_query("DELETE FROM session WHERE session_hash='$session_hash'");
 }
-$HTML->header(array('title'=>'Login'));
+$HTML->header(array('title'=>$LANG->getText('account_login', 'title')));
 
 if ($login && !$success) {
-		
-	if ($feedback == "Account Pending") {
 
-		?>
-		<P><B>Pending Account</B>
-
-		<P>Your account is currently pending your email confirmation.
-		Visiting the link sent to you in this email will activate your account.
-
-		<P>If you need this email resent, please click below and a confirmation
-		email will be sent to the email address you provided in registration.
-
-		<P><A href="pending-resend.php?form_user=<?php print $form_loginname; ?>">[Resend Confirmation Email]</A>
-
-		<br><hr>
-		<p>
-
-
-		<?php
-	} else {
-		
-		echo '<h2><span class="feedback">'. $feedback .'</span></H2>';
-	} //end else
-
+    if ($status == 'P') {
+	echo "<P><B>".$LANG->getText('account_login', 'pending_title')."</B>";
+	echo "<P>".$LANG->getText('account_login', 'pending_msg');
+	echo "<P><A href=\"pending-resend.php?form_user=$form_loginname; \">[".$LANG->getText('account_login', 'resend_btn')."]</A><br><hr><p>";
+    } else if ($status == 'S') {
+	echo "<P><B>".$LANG->getText('account_suspended', 'title')."</B>";
+	echo "<P>".$LANG->getText('account_suspended', 'message', array($GLOBALS['sys_email_contact']));
+	echo "<br><hr><p>";
+    } else {
+	echo '<h2><span class="feedback">'. $feedback .'</span></H2>';
+    } //end else
 }
 
 if ($GLOBALS['sys_https_host']) {
@@ -97,19 +87,19 @@ if ($GLOBALS['sys_https_host']) {
 ?>
 
 <p>
-<h2><?php print $GLOBALS['sys_name']; ?> Site Login
+<h2><?php print $LANG->getText('account_login', 'title', array($GLOBALS['sys_Name'])); ?>
 <?php print ($GLOBALS['sys_https_host'] != "" ? ' (Secure)':''); ?>
 </h2>
 <p>
-<span class="highlight"><B>Cookies must be enabled past this point.</B></span>
+<span class="highlight"><B><?php print $LANG->getText('account_login', 'cookies'); ?>.</B></span>
 <P>
 <form action="<?php echo $form_url; ?>/account/login.php" method="post" name="form_login">
 <INPUT TYPE="HIDDEN" NAME="return_to" VALUE="<?php echo $return_to; ?>">
 <p>
-Login Name:
+<?php print $LANG->getText('account_login', 'name'); ?>:
 <br><input type="text" name="form_loginname" VALUE="<?php echo $form_loginname; ?>">
 <p>
-Password:
+<?php print $LANG->getText('account_login', 'password'); ?>:
 <br><input type="password" name="form_pw">
 <P>
 <?php
@@ -120,37 +110,22 @@ if ( $GLOBALS['sys_https_host'] != '' && $GLOBALS['sys_force_ssl'] == 0 &&
      $GLOBALS['sys_stay_in_ssl'] == 1 ) {
     echo '<INPUT TYPE="CHECKBOX" NAME="stay_in_ssl" VALUE="1" '.
     (((browser_is_ie() && browser_get_version() < '5.1') || !session_issecure()) ?'':'CHECKED').'>'.
-    'Stay in secure connection mode after login';
-    echo '<br><em>
-&nbsp;&nbsp;&nbsp;(You will be connected with a secure Web server and all your web pages will travel encrypted over the network).
-</em>
+    $LANG->getText('account_login', 'name').'
 <p>
 ';
 
     if  (browser_is_ie() && browser_get_version() < '5.1') {
-	echo '<B>Internet Explorer </B> users (prior to 5.1) will have intermittent SSL problems,
-so they should leave SSL after login. Visit <A HREF="http://www.microsoft.com/">Microsoft</A>
-for more information about this known problem.';
+	echo $LANG->getText('account_login', 'msie_pb');
     }
 }
 ?>
 <p>
-<input type="submit" name="login" value="Login">
+<input type="submit" name="login" value="<?php echo $LANG->getText('account_login', 'login_btn'); ?>">
 </form>
 <P>
-<b><A href="lostpw.php">[Lost your password?]</A></b><BR> If you have
-lost your password please do not create another account but follow us
-and we'll help you <a href="lostpw.php">remember your lost
-password</a>. If it fails then contact the <a
-href="mailto:<?php print $GLOBALS['sys_email_admin']; ?>"><b><?php print $GLOBALS['sys_name']; ?></b>
-site administrators</a>.
+<?php echo $LANG->getText('account_login', 'lost_pw',array($GLOBALS['sys_email_admin'],$GLOBALS['sys_name'])); ?>
 <P>
-<b><A HREF="register.php">[Create a new Account]</A></b><BR> If it's
-your first time on the <b><?php print $GLOBALS['sys_name']; ?></b>
-site you can become a member right now ! The creation of a <a
-href="register.php">new account</a> takes a few seconds and you can
-take advantage of the services offered by the <?php print
-$GLOBALS['sys_name']; ?> site to all <?php print $GLOBALS['sys_org_name']; ?> developers.
+<?php echo $LANG->getText('account_login', 'create_acct',array($GLOBALS['sys_name'],$GLOBALS['sys_org_name'])); ?>
 
 <SCRIPT language="JavaScript"> <!-- 
     document.form_login.form_loginname.focus();

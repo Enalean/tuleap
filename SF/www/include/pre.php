@@ -114,6 +114,40 @@ if (user_isloggedin()) {
 //Set up the vars and theme functions 
 require($DOCUMENT_ROOT.'/include/theme.php');
 
+
+/*
+
+	Now figure out what language file to instantiate
+
+*/
+
+require('BaseLanguage.class');
+
+if (!$GLOBALS['sys_lang']) {
+	$GLOBALS['sys_lang']="en_US";
+}
+if (user_isloggedin()) {
+    $LANG = new BaseLanguage();
+    $LANG->loadLanguageID(user_get_language());
+} else {
+    //if you aren't logged in, check your browser settings 
+    //and see if we support that language
+    //if we don't support it, just use system default
+    if ($HTTP_ACCEPT_LANGUAGE) {
+	$res = language_code_to_result ($HTTP_ACCEPT_LANGUAGE);
+	$lang_code=db_result($res,0,'language_code');
+    }
+    if (!$lang_code) { $lang_code = $GLOBALS['sys_lang']; }
+    $LANG = new BaseLanguage();
+    $LANG->loadLanguage($lang_code);
+}
+
+setlocale (LC_TIME, $LANG->getText('system','locale'));
+$sys_strftimefmt = $LANG->getText('system','strftimefmt');
+$sys_datefmt = $LANG->getText('system','datefmt');
+
+$LANG->loadLanguageMsg('include/include');
+
 // If the CodeX Software license was declined by the site admin
 // so stop all accesses to the site
 require($DOCUMENT_ROOT.'/include/license.php');

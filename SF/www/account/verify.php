@@ -8,12 +8,14 @@
 
 require($DOCUMENT_ROOT.'/include/pre.php');
 require($DOCUMENT_ROOT.'/include/account.php');  // LJ needed to create unix account
+   
+$LANG->loadLanguageMsg('account/account');
 
 // ###### function login_valid()
 // ###### checks for valid login from form post
 
 function verify_login_valid()	{
-	global $HTTP_POST_VARS;
+    global $HTTP_POST_VARS, $LANG;
 
 	if (!$GLOBALS['form_loginname']) return 0;
 
@@ -22,13 +24,13 @@ function verify_login_valid()	{
 		.'user_name=\''.$GLOBALS['form_loginname'].'\'');
 
 	if (db_numrows($res) < 1) {
-		$GLOBALS['error_msg'] = 'Invalid username.';
+		$GLOBALS['error_msg'] = $LANG->getText('account_verify', 'err_user');
 		return 0;
 	}
 	$usr = db_fetch_array($res);
 
 	if (strcmp($GLOBALS['confirm_hash'],$usr['confirm_hash'])) {
-		$GLOBALS['error_msg'] = 'Invalid confirmation hash.';
+		$GLOBALS['error_msg'] = $LANG->getText('account_verify', 'err_hash');
 		return 0;
 	}
 
@@ -59,13 +61,14 @@ if ($Login){
 	}
 }
 
-$HTML->header(array('title'=>'Login'));
+$HTML->header(array('title'=>$LANG->getText('account_verify', 'title')));
 
 ?>
-<p><h2><?php print $GLOBALS['sys_name']; ?> Account Verification</h2>
-<P>In order to complete your registration, login now. Your account will
-then be activated for normal logins.
-<?php 
+<p><h2><?php echo $LANG->getText('account_verify', 'title'); ?></h2>
+<P>
+<?php
+echo '<p>'.$LANG->getText('account_verify', 'message');
+
 if ($GLOBALS['error_msg']) {
 	print '<P><span class="feedback">'.$GLOBALS['error_msg'].'</span>';
 }
@@ -74,12 +77,12 @@ if ($Login && !$success) {
 }
 ?>
 <form action="verify.php" method="post">
-<p>Login Name:
+<p><?php echo $LANG->getText('account_login', 'name'); ?>:
 <br><input type="text" name="form_loginname">
-<p>Password:
+<p><?php echo $LANG->getText('account_login', 'password'); ?>:
 <br><input type="password" name="form_pw">
 <INPUT type="hidden" name="confirm_hash" value="<?php print $confirm_hash; ?>">
-<p><input type="submit" name="Login" value="Login">
+<p><input type="submit" name="Login" value="<?php echo $LANG->getText('account_login', 'login_btn'); ?>">
 </form>
 
 <?php

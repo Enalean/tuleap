@@ -245,6 +245,17 @@ function user_get_timezone() {
 	}
 }
 
+// Get user prefered language from the database
+// if language not defined then return system default
+function user_get_language() {
+    if (user_isloggedin()) {
+	$result=user_get_result_set(user_getid());
+	$lang_id = db_result($result,0,'language_id');
+    }
+    if (!$lang_id) { $lang_id = $GLOBALS['sys_lang']; }
+    return $lang_id;
+}
+
 function user_set_preference($preference_name,$value) {
 	GLOBAL $user_pref;
 	if (user_isloggedin()) {

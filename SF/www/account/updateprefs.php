@@ -15,7 +15,8 @@ db_query("UPDATE user SET "
 	. "mail_va=" . ($form_mail_va?"1":"0") . ","
 	. "fontsize=" . $user_fontsize . ","
 	. "theme='" . $user_theme . "',"
-	. "sticky_login=" . ($form_sticky_login?"1":"0") . " WHERE "
+	. "sticky_login=" . ($form_sticky_login?"1":"0") . ","
+	. "language_id=" . $language_id . " WHERE "
 	. "user_id=" . user_getid());
 
 setcookie("SF_THEME", sprintf("%06d%s",user_getid(),$user_theme), time() + 60*60*24*365, "/");

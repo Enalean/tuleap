@@ -10,15 +10,17 @@ require($DOCUMENT_ROOT.'/include/pre.php');
 require($DOCUMENT_ROOT.'/include/account.php');
 require($DOCUMENT_ROOT.'/include/timezones.php');
 
+$LANG->loadLanguageMsg('account/account');
+
 if (!user_isloggedin()) {
 	exit_not_logged_in();
 }
 
 if ($submit) {	
 	if (!$timezone) {
-		$feedback .= ' Nothing Updated ';
+		$feedback .= ' '.$LANG->getText('account_change_timezone', 'no_update').' ';
 	} else if ($timezone == 'None') {
-		$feedback .= ' Please choose a timezone other than none. ';
+		$feedback .= ' '.$LANG->getText('account_change_timezone', 'choose_tz').' ';
 	  
 	} else {
 		// if we got this far, it must be good
@@ -27,13 +29,12 @@ if ($submit) {
 	}
 }
 
-$HTML->header(array('title'=>"Change Timezone"));
+$HTML->header(array('title'=>$LANG->getText('account_change_timezone', 'title')));
 
 ?>
-<H3>Timezone Change</h3>
+<H3><?php echo $LANG->getText('account_change_timezone', 'title'); ?></h3>
 <P>
-Now, no matter where you live, you can see all dates and times throughout <?php print $GLOBALS['sys_name']; ?>  
-as if it were in your neighborhood.
+<?php echo $LANG->getText('account_change_timezone', 'title', array($GLOBALS['sys_name']); ?>
 <P>
 <FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">
 <?php
@@ -43,7 +44,7 @@ echo '<H4><span class="feedback">'.$feedback.'</span></H4>';
 echo html_get_timezone_popup ('timezone',user_get_timezone());
 
 ?>
-<input type="submit" name="submit" value="Update">
+<input type="submit" name="submit" value="<?php echo $LANG->getText('global', 'btn_update'); ?>">
 </form>
 
 <?php

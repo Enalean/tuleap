@@ -6,20 +6,17 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/pre.php');    
-$HTML->header(array(title=>"Suspended Account"));
+require($DOCUMENT_ROOT.'/include/pre.php'); 
+   
+$LANG->loadLanguageMsg('account/account');
+
+$HTML->header(array(title=>$LANG->getText('account_pending', 'title')));
 ?>
 
-<P><B>Pending Account</B>
+<P><?php echo $LANG->getText('account_pending', 'message'); ?>
 
-<P>Your account is currently pending your email confirmation.
-Visiting the link sent to you in this email will activate your account.
-
-<P>If you need this email resent, please click below and a confirmation
-email will be sent to the email address you provided in registration.
-
-<P><A href="pending-resend.php?form_user=<?php print $form_user; ?>">[Resend Confirmation Email]</A>
-<BR><A href="/">[Return to SourceForge]</A>
+<P><A href="pending-resend.php?form_user=<?php print $form_user; ?>">[<?php echo $LANG->getText('account_pending', 'btn_resend'); ?>]</A>
+<BR><A href="/">[<?php echo $LANG->getText('global', 'back_home'); ?>]</A>
  
 <?php
 $HTML->footer(array());
