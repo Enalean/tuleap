@@ -730,35 +730,37 @@ if ($debug) {
   print STDERR "group_id: ", $group_id, "\n";
 }
 
-$cvsmailto = &cvsGroup_mailto();
+if ($codexdb) {
+  $cvsmailto = &cvsGroup_mailto();
 
-$cvsmailheader = &cvsGroup_mail_header();
+  $cvsmailheader = &cvsGroup_mail_header();
 
-if ($debug) {
-  print STDERR "\n header in db: ", $cvsmailheader, "\n";
-}
-if ($cvsmailheader eq 'NULL') {
-  ##$cvsmailheader = "[cvs-".$gname."]";
-  $cvsmailheader = "";
-}
-
-if ($debug) {
-  print STDERR "mailto: ", $mailto, "\n";
-  print STDERR "cvsmailto: ", $cvsmailto, "\n";
-}
-
-if ($cvsmailto ne 'NULL') {
   if ($debug) {
-    print STDERR "update mailto with database controled mail\n";
+    print STDERR "\n header in db: ", $cvsmailheader, "\n";
   }
-  if ($mailto) {
-    $mailto = "$mailto , $cvsmailto";
-  } else {
-    $mailto = $cvsmailto;
+  if ($cvsmailheader eq 'NULL') {
+    ##$cvsmailheader = "[cvs-".$gname."]";
+    $cvsmailheader = "";
   }
-}
-if ($debug) {
-  print STDERR "mailto: ", $mailto, "\n";
+
+  if ($debug) {
+    print STDERR "mailto: ", $mailto, "\n";
+    print STDERR "cvsmailto: ", $cvsmailto, "\n";
+  }
+
+  if ($cvsmailto ne 'NULL') {
+    if ($debug) {
+      print STDERR "update mailto with database controled mail\n";
+    }
+    if ($mailto) {
+      $mailto = "$mailto , $cvsmailto";
+    } else {
+      $mailto = $cvsmailto;
+    }
+  }
+  if ($debug) {
+    print STDERR "mailto: ", $mailto, "\n";
+  }
 }
 
 
@@ -783,6 +785,25 @@ if ($files[2] =~ /New/ && $files[3] =~ /directory/) {
 	push(@text, $_);
     }
 
+    ## track in cvs database
+    $db_track = 0;
+    if ($codexdb) {
+      $db_track = &isGroupCvsTracked();
+      if ($debug) {
+	print STDERR "tracking: ", $db_track, "\n";
+      }
+    }
+    if ($db_track) {
+      $commit_id = db_get_commit($debug);
+      if ($debug) {
+	
+	print STDERR "desc: ", join ('\n', @text), "\n";
+      }
+      @descs = split("\n", "\tDirectory\n\n".$files[0]."\n\n\tadded to repository.");
+      
+      &db_add_record($commit_id, $ENV{'USER'}, $cvsroot, '', $files[0], '.', 'a', '', '', 'NULL', 'NULL', @descs);
+    }
+
     if ($mailto) {
       &mail_notification($mailto, $cvsmailheader.$files[0], @text);
     }
@@ -790,6 +811,7 @@ if ($files[2] =~ /New/ && $files[3] =~ /directory/) {
     if ($commitlog) {
 	&write_commitlog($commitlog, @text);
     }
+
 
     exit 0;
 }
