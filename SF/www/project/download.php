@@ -66,11 +66,12 @@ if (user_isloggedin()) {
 	  header("Cache-Control: must-revalidate");  // HTTP 1.1
 	  header("Pragma: no-cache");  // HTTP 1.0
       }
+      $bn = basename($basename);
       header("Content-Type: application/octet-stream");
       if (browser_is_ie()) {
-	  header("Content-Disposition: filename=$basename");  
+	  header("Content-Disposition: filename=$bn");  
       } else {
-	  header("Content-Disposition: attachment; filename=$basename");
+	  header("Content-Disposition: attachment; filename=$bn");
       }
       header("Content-Length:  $size");
       header("Content-Transfer-Encoding: binary\n");
