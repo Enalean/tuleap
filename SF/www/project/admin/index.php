@@ -155,7 +155,7 @@ echo '
 </TD><TD>&nbsp;</TD><TD width=50%>';
 
 
-$HTML->box1_top("Project Members");
+$HTML->box1_top("Project Members&nbsp;".help_button('UserPermissions.html'));
 
 /*
 
@@ -207,10 +207,10 @@ echo '</TD></TR>
 	<TR valign=top><TD width=50%>';
 
 /*
-	Tool admin pages
+	Links to Services administration pages
 */
 
-$HTML->box1_top('Tool Admin');
+$HTML->box1_top('Services Administration&nbsp;'.help_button('ServicesAdministration.html'));
 
 
 echo '
@@ -293,23 +293,26 @@ echo '</TD>
 	Show filerelease info
 */
 
-$HTML->box1_top("File Releases"); ?>
+$HTML->box1_top("File Releases&nbsp;".help_button('FileRelease.html')); ?>
 	&nbsp;<BR>
 	<CENTER>
 	<A href="/file/admin/editpackages.php?group_id=<?php print $group_id; ?>"><B>[Edit/Add File Releases]</B></A><BR> or... <BR>
-	<A href="/file/admin/qrs.php?group_id=<?php print $group_id; ?>"><B>[Quick Add File Release]</B></A><BR>if you know what you're doing and have only one file to release.
+	<A href="/file/admin/qrs.php?group_id=<?php print $group_id; ?>"><B>[Quick Add File Release]</B></A><BR>if you have only one file to release.
 	</CENTER>
 
 	<HR>
-	<B>Packages:</B> <?php echo help_button('FileRelease.html',false,'Documentation'); ?> (Very Important!)
+	<B>Package(s) currently available:</B>
 
      <P><?php
 
 	$res_module = db_query("SELECT * FROM frs_package WHERE group_id=$group_id");
-while ($row_module = db_fetch_array($res_module)) {
-print "$row_module[name]<BR>";
+if (db_numrows($res_module) <= 0) {
+    echo "None<br>";
+} else {
+    while ($row_module = db_fetch_array($res_module)) {
+	print "$row_module[name]<BR>";
+    }
 }
-
 echo $HTML->box1_bottom(); ?>
 </TD>
 </TR>

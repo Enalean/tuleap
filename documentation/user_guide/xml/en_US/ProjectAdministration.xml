@@ -735,8 +735,6 @@
     </section>
 
 
-
-
   <section id="UserGroups">
     <title>User Groups</title>
     
@@ -957,16 +955,20 @@
       </figure>
     </section>
 
-    <section id="ToolsAdmin">
-      <title>Tools Admin</title>
+    <section id="ServicesAdministration">
+      <title>Services Administration</title>
 
-      <para><emphasis>Location: Page Admin Content</emphasis></para>
+      <para><emphasis>Location: Project Admin page</emphasis></para>
 
-      <para>Finally, you&#39;ll find here a direct link to the administration
-      function of all your project services in the lower left corner of the
-      Project Admin page. Only project members with Tool Administration
-      permission are allowed to access the CodeX services administration
-      pages.</para>
+      <para>The project administration page gives direct access to the
+      administration of all services that have been activated for a
+      given project. This is available in the form of a series of
+      pointers located on the lower left part of the project
+      administration page. Only project members with appropriate
+      permission are allowed to access the CodeX services
+      administration pages (see <xref linkend="UserPermissions"
+      />).</para>
+
     </section>
 
     <section id="TrackerImport">
