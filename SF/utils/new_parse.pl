@@ -31,6 +31,12 @@ my ($gname, $gstatus, $gid, $userlist);
 my $winaccount_on = -f "/etc/smbpasswd";
 my $winempty_passwd = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
 
+# See under which user this script is running. It is the user that is
+# also going to be used to run cvsweb.cgi. And we need to make it part
+# of all groups so that the CGI script can browse all CVS roots including
+# private ones (cvsweb.cgi then make the control)
+my ($cxname) = get_codex_user();
+
 # Open up all the files that we need.
 @userdump_array = open_array_file($user_file);
 @groupdump_array = open_array_file($group_file);
@@ -104,11 +110,18 @@ while ($ln = pop(@userdump_array)) {
 print ("\n\n	Processing Groups\n\n");
 while ($ln = pop(@groupdump_array)) {
 	chop($ln);
-	($gname, $gstatus, $gid, $userlist) = split(":", $ln);
+	($gname, $gstatus, $gis_public, $gid, $userlist) = split(":", $ln);
 	
 	$cvs_id = $gid + 50000;
 	$gid += $gid_add;
+
+	# make all user names lower case and add the user 
+	# name under which the Apache CGI scripts run if this
+	# is a private project (for CVS browsing)
 	$userlist =~ tr/A-Z/a-z/;
+	if (!$gis_public) {
+	  $userlist .=($cxname ? ",$cxname" : "");
+	}
 
 	$group_exists = getgrnam($gname);
 
@@ -191,7 +204,24 @@ while ($ln = pop(@groupdump_array)) {
 	  print WRITERS join("\n",split(",",$userlist)),"\n";
 	  close(WRITERS);
 	}
-}
+
+	# Align directory permissions with public/private flag
+	# (chmod o-rwx for project home and cvs root if private)
+	if ($gstatus eq 'A') {
+	  ($d,$d,$mode) = stat("$cvs_prefix/$gname");
+	  if ($gis_public) {
+	    $newmode = ($mode | 0005) ;
+	  } else {
+	    $newmode = ($mode & ~0007);
+	  }	
+	  
+	  if ($mode != $newmode) {
+	    chmod $newmode, "$cvs_prefix/$gname";
+	    chmod $newmode, "$grpdir_prefix/$gname";
+	  }
+        }
+
+      }
 
 #
 # Now write out the new files
