@@ -25,7 +25,7 @@ if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 */
 
 $sql="SELECT * FROM surveys WHERE survey_id='$survey_id' AND group_id='$group_id'";
-$result=db_query($sql,1);
+$result=db_query($sql);
 
 echo "<H2>".db_result($result, 0, "survey_title")."</H2><P>";
 
