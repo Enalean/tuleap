@@ -44,7 +44,7 @@ switch ($func) {
    } else {
      if (!validate_emails ($mailing_list)) {
        $mailing_list = 'NULL';
-       $status = 'partly<br> Email Address Appeared Invalid, e-mail notification is off. ';
+       $status = 'partly<br> Email Address Appears Invalid, e-mail notification is off. ';
      }
    }
    $feedback = $feedback.$status;

@@ -10,9 +10,6 @@ if (!$group_id) {
     exit_no_group(); // need a group_id !!!
 }
 
-commits_header(array ('title'=>'CVS Commit '.$commit_id.' - Details',
-		      'help' => 'CVSWebInterface.html#QueryingCVS'));
-
 $order_str = "";
 
 if ($order) {
@@ -53,13 +50,12 @@ $sql="SELECT distinct repository, IF (cvs_checkins.commitid > 0, cvs_commits.com
 $result=db_query($sql);
 
 if (db_numrows($result) > 0) {
-    echo show_commit_details($result);
+    commits_header(array ('title'=>'CVS Commit '.$commit_id.' - Details',
+			  'help' => 'CVSWebInterface.html#QueryingCVS'));
+    show_commit_details($result);
+    commits_footer(array());
 } else {
-	echo '
-		<H1>Commit details not found for '.$commit_id.' ID</H1>
-        ';
+    exit_error('Error','Commit #'.$commit_id.' not found in this project');
 }
-
-commits_footer(array());
 
 ?>
