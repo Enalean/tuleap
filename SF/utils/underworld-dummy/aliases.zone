@@ -14,7 +14,7 @@ codex-admin:          Laurent.Julliard@xrce.xerox.com,tuttle@wrc.xerox.com,salex
 
 codex-contact:		codex-admin
 sourceforge:		codex-admin
-noreply:		"| cat > /dev/null"
+noreply:		"|gotohell"
 webmaster:		codex-admin
 
 #
