@@ -176,12 +176,12 @@ while ($ln = pop(@groupdump_array)) {
 		system("echo '# without having write permission on the entire cvs tree.' >> $cvs_dir/CVSROOT/config");
 		system("echo 'LockDir=$cvs_dir/.lockdir' >> $cvs_dir/CVSROOT/config");
 		# commit changes to config file (directly with RCS)
-		system("cd $cvs_dir/CVSROOT; rcs -l config; ci -m\"CodeX modifications\" config; co config");
+		system("cd $cvs_dir/CVSROOT; rcs -q -l config; ci -q -m\"CodeX modifications\" config; co -q config");
 
 		# setup loginfo to make group ownership every commit
 		# commit changes to config file (directly with RCS)
 		system("echo \"ALL (cat;chgrp -R $gname $cvs_dir)>/dev/null 2>&1\" > $cvs_dir/CVSROOT/loginfo");
-		system("cd $cvs_dir/CVSROOT; rcs -l loginfo; ci -m\"CodeX modifications\" loginfo; co loginfo");
+		system("cd $cvs_dir/CVSROOT; rcs -q -l loginfo; ci -q -m\"CodeX modifications\" loginfo; co -q loginfo");
 
 		# put an empty line in in the valid tag cache (means no tag yet)
 		# (this file is not under version control so don't check it in)
