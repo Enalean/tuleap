@@ -1045,6 +1045,195 @@ class ArtifactType extends Error {
 		
 		return true;
 	}
+ 
+	/**
+	 *
+	 * Get artifacts by age
+	 *
+	 **/
+
+	function get_open_artifacts_by_age() {
+	  $time_now=time();
+	    //			echo $time_now."<P>";
+
+	  for ($counter=1; $counter<=8; $counter++) {
+
+	    $start=($time_now-($counter*604800));
+	    $end=($time_now-(($counter-1)*604800));
+
+	    $sql="SELECT count(*) FROM artifact WHERE open_date >= $start AND open_date <= $end AND status_id = '1' AND group_artifact_id='".$this->getID()."'";
+
+		$result = db_query($sql);
+
+		$names[$counter-1]=format_date("m/d/y",($start))." to ".format_date("m/d/y",($end));
+		if (db_numrows($result) > 0) {
+		  $values[$counter-1]=db_result($result, 0,0);
+		} else {
+		  $values[$counter-1]='0';
+		}
+	    }
+
+	  $results['names'] = $names;
+	  $results['values'] = $values;
+	
+	return $results;
+	
+	}
+	
+	/**
+	 *
+	 * Get artifacts by age
+	 *
+	 **/
+
+	function get_artifacts_by_age() {
+	  $time_now=time();
+	    //			echo $time_now."<P>";
+
+	  for ($counter=1; $counter<=8; $counter++) {
+
+	    $start=($time_now-($counter*604800));
+	    $end=($time_now-(($counter-1)*604800));
+
+	    $sql="SELECT avg((close_date-open_date)/86400) FROM artifact WHERE close_date > 0 AND (open_date >= $start AND open_date <= $end) AND status_id <> '1' AND group_artifact_id='".$this->getID()."'";
+
+		$result = db_query($sql);
+		$names[$counter-1]=format_date("m/d/y",($start))." to ".format_date("m/d/y",($end));		
+		if (db_numrows($result) > 0) {
+		  $values[$counter-1]=db_result($result, 0,0);
+		} else {
+		  $values[$counter-1]='0';
+		}
+	    }
+
+	  $results['names'] = $names;
+	  $results['values'] = $values;
+	
+	return $results;
+	
+	}
+	
+	/**
+	 *
+	 * Get artifacts grouped by standard field
+	 *
+	 **/
+
+	function get_artifacts_by($value_field) {
+	
+	$sql="SELECT $value_field, count(*) AS Count FROM artifact ".
+		    " WHERE  artifact.group_artifact_id=".$this->getID().
+		    " GROUP BY $value_field";
+
+		$result=db_query($sql);
+		if ($result && db_numrows($result) > 0) {
+		    for ($j=0; $j<db_numrows($result); $j++) {
+			$names[$j]= db_result($result, $j, 0);
+			$values[$j]= db_result($result, $j, 1);
+		    }
+		}
+		
+	  $results['names'] = $names;
+	  $results['values'] = $values;
+	
+	return $results;
+	}
+	
+	/**
+	 *
+	 * Get open artifacts grouped by standard field
+	 *
+	 **/
+
+	function get_open_artifacts_by($value_field) {
+	
+	$sql="SELECT $value_field, count(*) AS Count FROM artifact ".
+		    " WHERE artifact.group_artifact_id='".$this->getID()."' ".
+		    " AND artifact.status_id=1".
+		    " GROUP BY $value_field";
+
+	$result = db_query($sql);
+		if ($result && db_numrows($result) > 0) {
+		    for ($j=0; $j<db_numrows($result); $j++) {
+			$names[$j]= db_result($result, $j, 0);
+			$values[$j]= db_result($result, $j, 1);
+		    }
+		}
+		
+	  $results['names'] = $names;
+	  $results['values'] = $values;
+	
+	return $results;
+	}
+	
+
+
+	/**
+	 *
+	 * Get artifacts grouped by field
+	 *
+	 **/
+
+	function get_artifacts_by_field($field) {
+	
+	$sql="SELECT ".$field->getValueFieldName().", count(*) AS Count FROM artifact_field_value, artifact ".
+		    " WHERE  artifact.group_artifact_id='".$this->getID()."' ".
+		    " AND artifact_field_value.artifact_id=artifact.artifact_id".
+		    " AND artifact_field_value.field_id=".$field->getID().
+		    " GROUP BY ".$field->getValueFieldName();
+
+	$result = db_query($sql);
+	if ($result && db_numrows($result) > 0) {
+	  for ($j=0; $j<db_numrows($result); $j++) {
+	    $labelValue = $field->getLabelValues($this->getID(), array(db_result($result, $j, 0)));
+	    if (sizeof($labelValue) > 0)
+	      $names[$j] = $labelValue[0];
+	    else
+	      $names[$j] = db_result($result, $j, 0);
+
+	    $values[$j]= db_result($result, $j, 1);
+	  }
+	  $results['names'] = $names;
+	  $results['values'] = $values;
+	
+	}
+	return $results;
+	}
+	
+	/**
+	 *
+	 * Get open artifacts grouped by field
+	 *
+	 **/
+
+	function get_open_artifacts_by_field($field) {
+	
+	$sql="SELECT ".$field->getValueFieldName().", count(*) AS Count FROM artifact_field_value, artifact ".
+		    " WHERE  artifact.group_artifact_id='".$this->getID()."' ".
+		    " AND artifact_field_value.artifact_id=artifact.artifact_id".
+		    " AND artifact_field_value.field_id=".$field->getID().
+		    " AND artifact.status_id=1".  
+		    " GROUP BY ".$field->getValueFieldName();
+
+	$result = db_query($sql);
+	if ($result && db_numrows($result) > 0) {
+	  for ($j=0; $j<db_numrows($result); $j++) {
+	    $labelValue = $field->getLabelValues($this->getID(), array(db_result($result, $j, 0)));
+	    if (sizeof($labelValue) > 0)
+	      $names[$j] = $labelValue[0];
+	    else
+	      $names[$j] = db_result($result, $j, 0);
+
+	    $values[$j]= db_result($result, $j, 1);
+	  }
+	  $results['names'] = $names;
+	  $results['values'] = $values;
+	
+	}
+	return $results;
+	}
+	
+
 
 	/**
 	 * Check if for a user and for role, there is a changement

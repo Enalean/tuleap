@@ -342,7 +342,27 @@ if ($group_id && $atid) {
 		}
 		break;
 	}
+
+	case 'reporting': {
+
+	  if (!user_ismember($group_id,"B2")) {
+	      exit_permission_denied();
+	    }
+
+	    if ($field) {
+	      if ($field == 'aging') {
+		$ath->reportingByAge();
+	      } else {
+		// It's any of the select box field. 
+		$ath->reportingByField($field);
+	      }
 		
+	    } else {
+	      $ath->reportingMainPage();
+	    }
+	    break;
+	}
+	
 	default : {
 		include './browse.php';
 		break;
