@@ -135,7 +135,7 @@ function util_make_links ($data='') {
 	$lines = split("\n",$data);
 	while ( list ($key,$line) = each ($lines)) {
 		$line = eregi_replace("([ \t]|^)www\."," http://www.",$line);
-		$text = eregi_replace("([[:alnum:]]+)://([^[:space:]&]*)([[:alnum:]>#?/&=])", "<a href=\"\\1://\\2\\3\" target=\"_blank\" target=\"_new\">\\1://\\2\\3</a>", $line);
+		$text = eregi_replace("([[:alnum:]]+)://([^[:space:]]*)([[:alnum:]>#?/&=])", "<a href=\"\\1://\\2\\3\" target=\"_blank\" target=\"_new\">\\1://\\2\\3</a>", $line);
 		$text = eregi_replace("(([a-z0-9_]|\\-|\\.)+@([^[:space:]&>]*)([[:alnum:]-]))", "<a href=\"mailto:\\1\" target=\"_new\">\\1</a>", $text);
 		$lines[$key] = $text;
 	}
