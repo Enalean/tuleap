@@ -298,7 +298,7 @@ if (user_isloggedin()) {
 
 		$html = '';
 		$count_new = max(0, $count_diff);		
-		for ($i=0; $i<$rows; $i++) {
+		for ($i=0; $i<$rows2; $i++) {
 
 		    if (!$hide_now) {
 
