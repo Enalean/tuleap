@@ -27,6 +27,23 @@ sub check_old_used {
 
 }
 
+# Add a requestor to any group if none
+## first update all the groups and users acl_ids to 0
+
+sub check_old_tasks {
+  my ($group_id) = @_;
+  $query = "SELECT project_task_id from project_group_list, project_task where project_group_list.group_id = $group_id and project_group_list.group_project_id = project_task.group_project_id" ;
+  $a = $dbh->prepare($query);
+  $a->execute();
+  if ($a->rows == 0) {
+    return 0;
+  } else {
+    return 1;
+  }
+  
+
+}
+
 
 sub copyFields {
   my ($atid_dest, $tracker_name)= @_;
@@ -279,7 +296,7 @@ sub init_trackers_db {
     ## look if activate_old_bugs is needed
     $activate_bugs = check_old_used($group_id, 'bug', 'group_id');
     $activate_srs = check_old_used($group_id, 'support', 'group_id');
-    $activate_tasks = check_old_used($group_id, 'project_task', 'group_project_id');
+    $activate_tasks = check_old_tasks($group_id);
  
      $query = "UPDATE groups SET activate_old_bug=$activate_bugs, activate_old_task=$activate_tasks, activate_old_sr=$activate_srs, use_trackers='1' WHERE group_id=".$group_id;
       $c2 = $dbh->prepare($query);
