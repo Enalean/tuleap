@@ -1000,7 +1000,7 @@ class ArtifactHtml extends Artifact {
 		// All other regular fields now		 
 		$left = 1;
 	    $result_fields = $art_field_fact->getAllUsedFields();
-		$result = $this->getFieldsValues();
+		$result = $this->getNewFieldsValues();
     	while ( list($key, $field) = each($result_fields) ) {
 	
 			$field_name = $field->getName();

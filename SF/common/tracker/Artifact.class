@@ -1022,6 +1022,23 @@ class Artifact extends Error {
 	}
 	
 	/**
+	 * Return all the field values, but do not use cached values
+	 *
+	 * @return array
+	 */
+	function getNewFieldsValues() {
+
+            $this->getQueryElements($select,$from,$where);		
+            
+            $sql = $select." ".$from." ".$where;
+			
+            $this->data_fields = db_query($sql);
+	     
+
+            return $this->data_fields;
+	}
+	
+	/**
 	 * Return the follow ups 
 	 *
 	 * @return array
