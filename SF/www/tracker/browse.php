@@ -56,7 +56,7 @@ if (user_isloggedin()) {
     }
 }
 
-// Number of bugs displayed on screen in one chunk.
+// Number of artifacts displayed on screen in one chunk.
 // Default 50
 if (!$chunksz) { $chunksz = 50; }
 
@@ -69,7 +69,7 @@ if (($msort != 0) && ($msort != 1)) { $msort = 0; }
 /* ==================================================
   If the report type is not defined then get it from the user preferences.
   If it is set then update the user preference.  Also initialize the
-  bug report structures.
+  tracker report structures.
   ================================================== */
 if (user_isloggedin()) {
     if (!isset($report_id)) {
@@ -163,7 +163,7 @@ if (isset($morder)) {
 
 
 /* ==================================================
-  Now see what type of bug set is requested (set is one of none, 
+  Now see what type of artifact set is requested (set is one of none, 
   'my', 'open', 'custom'). 
     - if no set is passed in, see if a preference was set ('custom' set).
     - if no preference and logged in then use 'my' set
@@ -210,7 +210,7 @@ if (!$set) {
 
 if ($set=='my') {
     /*
-      My bugs - backwards compat can be removed 9/10
+      My artifacts - backwards compat can be removed 9/10
     */
     $prefs['status_id'][]=1; // Open status
     // Check if the current user is in the assigned_to list
@@ -224,7 +224,7 @@ if ($set=='my') {
 
 } else if ($set=='custom') {
 
-    // Get the list of bug fields used in the form (they are in the URL - GET method)
+    // Get the list of artifact fields used in the form (they are in the URL - GET method)
     // and then build the preferences array accordingly
     // Exclude the group_id parameter
     reset($prefs);
@@ -251,7 +251,7 @@ if ($set=='my') {
     }
 
 } else {
-    // Open bugs - backwards compat can be removed 9/10
+    // Open artifacts - backwards compat can be removed 9/10
     $prefs['status_id'][]=1;
 }
 
