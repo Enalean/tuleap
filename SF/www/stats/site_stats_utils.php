@@ -3,6 +3,7 @@
 // $Id$
 //
 
+$LANG->loadLanguageMsg('stats/stats');
 
    // week_to_dates
 function week_to_dates( $week, $year = 0 ) {
@@ -33,13 +34,14 @@ function stats_util_sum_array( $sum, $add ) {
 
 
 function stats_generate_trove_pulldown( $selected_id = 0 ) {
-	
+  global $LANG;
+
 	$sql = "SELECT trove_cat_id,fullpath FROM trove_cat ORDER BY fullpath";
 	$res = db_query( $sql );
 	
 	print '<SELECT name="trovecatid">' . "\n";
-	print "\t<OPTION value=\"0\"> ALL PROJECTS </OPTION>\n";
-	print "\t<OPTION value=\"-1\"" . ( $selected_id == -1 ? " SELECTED" : "" ) . "> SPECIAL LIST </OPTION>\n";
+	print "\t<OPTION value=\"0\"> ".$LANG->getText('stats_site_stats_utils','all_proj')." </OPTION>\n";
+	print "\t<OPTION value=\"-1\"" . ( $selected_id == -1 ? " SELECTED" : "" ) . "> ".$LANG->getText('stats_site_stats_utils','special_list')." </OPTION>\n";
 	while ( $row = db_fetch_array($res) ) {
 		print	"\t<OPTION value=\"" . $row["trove_cat_id"] . "\""
 			. ( $selected_id == $row["trove_cat_id"] ? " SELECTED" : "" )
@@ -50,13 +52,14 @@ function stats_generate_trove_pulldown( $selected_id = 0 ) {
 
 
 function stats_trove_cat_to_name( $trovecatid ) {
+  global $LANG;
 
 	$sql = "SELECT fullpath FROM trove_cat WHERE trove_cat_id = $trovecatid";
 	$res = db_query( $sql );
 	if ( $row = db_fetch_array($res) ) {
 		return $row["fullpath"];
 	} else { 
-		return " ( $trovecatid returned no category name ) ";
+		return " ".$LANG->getText('stats_site_stats_utils','no_cat',$trovecatid)." ";
 	}
 }
 
@@ -79,24 +82,25 @@ function stats_generate_trove_grouplist( $trovecatid ) {
 
 
 function stats_site_projects_form( $span = 21, $orderby = "downloads", $offset = 0, $projects = 0, $trovecat = 0 ) {
-	
+  global $LANG;
+
 	print '<FORM action="projects.php" method="get">' . "\n";
 	print '<table width="100%" cellpadding="0" cellspacing="0" class="boxitem">' . "\n";
 
-	print '<tr><td><b>Project Type: </b></td><td>';
+	print '<tr><td><b>'.$LANG->getText('stats_site_stats_utils','proj_type').' </b></td><td>';
 	stats_generate_trove_pulldown( $trovecat );
 	print '</td></tr>';
 
-	print '<tr><td><b>Special Project List: </b></td>';
+	print '<tr><td><b>'.$LANG->getText('stats_site_stats_utils','special_proj_list').' </b></td>';
 	print '<td> <INPUT type="text" width="100" name="projects" value="' . ($projects ? $projects : "") . '">';
 	print '  (space separated group_id\'s) </td></tr>';
 
-	print '<tr><td><b>Days Spanned: </b></td><td>';
-	$span_vals = array(7,14,21,30,60,90,120,180,"All");
+	print '<tr><td><b>'.$LANG->getText('stats_site_stats_utils','days_spanned').' </b></td><td>';
+	$span_vals = array(7,14,21,30,60,90,120,180,$LANG->getText('stats_site_stats_utils','all'));
 	print html_build_select_box_from_array( $span_vals, "span", $span, 1 );
 	print ' days </td></tr>';
 
-	print '<tr><td><b>View By: </b></td><td>';
+	print '<tr><td><b>'.$LANG->getText('stats_site_stats_utils','view_by').' </b></td><td>';
 	$orderby_vals = array(	"ranking",
 				"downloads",
 				"site_views",
@@ -117,7 +121,7 @@ function stats_site_projects_form( $span = 21, $orderby = "downloads", $offset =
 	print html_build_select_box_from_array( $orderby_vals, "orderby", $orderby, 1 );
 	print '</td></tr>';
 
-	print '<tr><td colspan="2" align="center"> <INPUT type="submit" value="Generate Report"> </td></tr>';
+	print '<tr><td colspan="2" align="center"> <INPUT type="submit" value="'.$LANG->getText('stats_site_stats_utils','generate_report').'"> </td></tr>';
 
 	print '</table>' . "\n";
 	print '</FORM>' . "\n";
@@ -127,6 +131,7 @@ function stats_site_projects_form( $span = 21, $orderby = "downloads", $offset =
 
    // stats_site_projects
 function stats_site_projects( $span = 7, $orderby = "ranking", $offset = 0, $projects = 0, $trove_cat = 0 ) {
+  global $LANG;
 
 	$sql	= "SELECT s.month AS month, s.week AS week, s.day AS day, s.group_id AS group_id, "
 		. "g.group_name AS group_name, m.ranking AS ranking, m.percentile AS percentile, SUM(s.downloads) AS downloads, "
@@ -183,34 +188,34 @@ function stats_site_projects( $span = 7, $orderby = "ranking", $offset = 0, $pro
 	   // if there are any rows, we have valid data (or close enough).
 	if ( ($valid_days = db_numrows( $res )) > 1 ) {
 
-		print "<P><B>Project Statistics for ";
-		if ( $span == "All" ) {
-			print "All Time";
+		print "<P><B>".$LANG->getText('stats_site_stats_utils','proj_stats_for')." ";
+		if ( $span == $LANG->getText('stats_site_stats_utils','all')) {
+			print $LANG->getText('stats_site_stats_utils','all_time');
 		} else {
-			print "the past $span days";
+			print $LANG->getText('stats_site_stats_utils','past_x_days',$span);
 		}
-		print " sorted by $orderby";
+		print " ".$LANG->getText('stats_site_stats_utils','sorted_by',$orderby);
 		if ( $trove_cat > 0 ) {
-			print " within the " . stats_trove_cat_to_name( $trove_cat ) . " category";
+			print " ".$LANG->getText('stats_site_stats_utils','within_cat',stats_trove_cat_to_name( $trove_cat ));
 		}
 		if ( is_array($projects) && $trove_cat <= 0 ) {
-			print "<br> for the groups " . implode( ", ", $projects );
+			print "<br> ".$LANG->getText('stats_site_stats_utils','for_group',implode( ", ", $projects ));
 		}
 		print ". </B></P><BR>";
 
 		print	'<P><TABLE width="100%" cellpadding=0 cellspacing=0 border=0>';
 
 		print	'<TR valign="top" class="boxitem">'
-			. '<TD><B>Project Name</B></TD>'
-			. '<TD align="right"><B>Ranking</B></TD>'
-			. '<TD align="right" COLSPAN="2"><B>Page Views</B></TD>'
-			. '<TD align="right"><B>Downloads</B></TD>'
-			. '<TD align="center" COLSPAN="2"><B>Bugs</B></TD>'
-			. '<TD align="center" COLSPAN="2"><B>Support</B></TD>'
-			. '<TD align="center" COLSPAN="2"><B>Patches</B></TD>'
-			. '<TD align="center" COLSPAN="2"><B>Tasks</B></TD>'
-			. '<TD align="center" COLSPAN="3"><B>CVS</B></TD>'
-			. '<TD align="center" COLSPAN="3"><B>SVN</B></TD>'
+			. '<TD><B>'.$LANG->getText('stats_site_stats_utils','proj_name').'</B></TD>'
+			. '<TD align="right"><B>'.$LANG->getText('stats_site_stats_utils','ranking').'</B></TD>'
+			. '<TD align="right" COLSPAN="2"><B>'.$LANG->getText('stats_site_stats_utils','page_views').'</B></TD>'
+			. '<TD align="right"><B>'.$LANG->getText('stats_site_stats_utils','downl').'</B></TD>'
+			. '<TD align="center" COLSPAN="2"><B>'.$LANG->getText('stats_site_stats_utils','bugs').'</B></TD>'
+			. '<TD align="center" COLSPAN="2"><B>'.$LANG->getText('stats_site_stats_utils','support').'</B></TD>'
+			. '<TD align="center" COLSPAN="2"><B>'.$LANG->getText('stats_site_stats_utils','patches').'</B></TD>'
+			. '<TD align="center" COLSPAN="2"><B>'.$LANG->getText('stats_site_stats_utils','tasks').'</B></TD>'
+			. '<TD align="center" COLSPAN="3"><B>'.$LANG->getText('stats_site_stats_utils','cvs').'</B></TD>'
+			. '<TD align="center" COLSPAN="3"><B>'.$LANG->getText('stats_site_stats_utils','svn').'</B></TD>'
 			. '</TR>' . "\n";
 
 		   // Build the query string to resort results.
@@ -225,22 +230,22 @@ function stats_site_projects( $span = 7, $orderby = "ranking", $offset = 0, $pro
 
 		print	'<TR valign="top" class="boxitem">'
 			. '<TD align="right">&nbsp;</TD>'
-			. '<TD align="right"><A HREF="' . $uri_string .'ranking">Rank</A></TD>'
-			. '<TD align="right"><A HREF="' . $uri_string .'site_views">Site</A></TD>'
-			. '<TD align="right"><A HREF="' . $uri_string .'subdomain_views">Subdomain</TD>'
-			. '<TD align="right"><A HREF="' . $uri_string .'downloads">Total</TD>'
-			. '<TD align="right"><A HREF="' . $uri_string .'bugs_opened">Opn</TD>'
-			. '<TD align="right"><A HREF="' . $uri_string .'bugs_closed">Cls</TD>'
-			. '<TD align="right"><A HREF="' . $uri_string .'support_opened">Opn</TD>'
-			. '<TD align="right"><A HREF="' . $uri_string .'support_closed">Cls</TD>'
-			. '<TD align="right"><A HREF="' . $uri_string .'patches_opened">Opn</TD>'
-			. '<TD align="right"><A HREF="' . $uri_string .'patches_closed">Cls</TD>'
-			. '<TD align="right"><A HREF="' . $uri_string .'tasks_opened">Opn</TD>'
-			. '<TD align="right"><A HREF="' . $uri_string .'tasks_closed">Cls</TD>'
-			. '<TD align="right"><A HREF="' . $uri_string .'cvs_checkouts">CO\'s</TD>'
-			. '<TD align="right"><A HREF="' . $uri_string .'cvs_commits">Comm\'s</TD>'
-			. '<TD align="right"><A HREF="' . $uri_string .'cvs_adds">Adds</TD>'
-			. '<TD align="right"><A HREF="' . $uri_string .'svn_access_count">Access cnt</TD>'
+			. '<TD align="right"><A HREF="' . $uri_string .'ranking">'.$LANG->getText('stats_site_stats_utils','rank').'</A></TD>'
+			. '<TD align="right"><A HREF="' . $uri_string .'site_views">'.$LANG->getText('stats_site_stats_utils','site').'</A></TD>'
+			. '<TD align="right"><A HREF="' . $uri_string .'subdomain_views">'.$LANG->getText('stats_site_stats_utils','subdomain').'</TD>'
+			. '<TD align="right"><A HREF="' . $uri_string .'downloads">'.$LANG->getText('stats_site_stats_utils','total').'</TD>'
+			. '<TD align="right"><A HREF="' . $uri_string .'bugs_opened">'.$LANG->getText('stats_site_stats_utils','opn').'</TD>'
+			. '<TD align="right"><A HREF="' . $uri_string .'bugs_closed">'.$LANG->getText('stats_site_stats_utils','cls').'</TD>'
+			. '<TD align="right"><A HREF="' . $uri_string .'support_opened">'.$LANG->getText('stats_site_stats_utils','opn').'</TD>'
+			. '<TD align="right"><A HREF="' . $uri_string .'support_closed">'.$LANG->getText('stats_site_stats_utils','cls').'</TD>'
+			. '<TD align="right"><A HREF="' . $uri_string .'patches_opened">'.$LANG->getText('stats_site_stats_utils','opn').'</TD>'
+			. '<TD align="right"><A HREF="' . $uri_string .'patches_closed">'.$LANG->getText('stats_site_stats_utils','cls').'</TD>'
+			. '<TD align="right"><A HREF="' . $uri_string .'tasks_opened">'.$LANG->getText('stats_site_stats_utils','opn').'</TD>'
+			. '<TD align="right"><A HREF="' . $uri_string .'tasks_closed">'.$LANG->getText('stats_site_stats_utils','cls').'</TD>'
+			. '<TD align="right"><A HREF="' . $uri_string .'cvs_checkouts">'.$LANG->getText('stats_site_stats_utils','co').'</TD>'
+			. '<TD align="right"><A HREF="' . $uri_string .'cvs_commits">'.$LANG->getText('stats_site_stats_utils','comms').'</TD>'
+			. '<TD align="right"><A HREF="' . $uri_string .'cvs_adds">'.$LANG->getText('stats_site_stats_utils','adds').'</TD>'
+			. '<TD align="right"><A HREF="' . $uri_string .'svn_access_count">'.$LANG->getText('stats_site_stats_utils','access_cnt').'</TD>'
 			. '</TR>' . "\n";
 	
 		$i = $offset;	
@@ -272,7 +277,7 @@ function stats_site_projects( $span = 7, $orderby = "ranking", $offset = 0, $pro
 			print '<TR><TD COLSPAN="16">&nbsp;</TD></TR>' . "\n";
 			print '<TR><TD COLSPAN="16" align="center"></TD></TR>' . "\n";
 			print	'<TR class="' . util_get_alt_row_color($i) . '">'
-				. '<TD><B>Totals:</B></TD>'
+				. '<TD><B>'.$LANG->getText('stats_site_stats_utils','totals').'</B></TD>'
 				. '<TD>&nbsp;</TD>'
 				. '<TD align="right">&nbsp;&nbsp;' . number_format( $sum["site_views"] ) . '</TD>'
 				. '<TD align="right">&nbsp;&nbsp;' . number_format( $sum["subdomain_views"] ) . '</TD>'
@@ -295,7 +300,7 @@ function stats_site_projects( $span = 7, $orderby = "ranking", $offset = 0, $pro
 		print '</TABLE>';
 
 	} else {
-		echo "Query returned no valid data.\n";
+		echo $LANG->getText('stats_site_stats_utils','no_valid_data')."\n";
 		echo "<BR><HR><BR>\n $sql \n<BR><HR><BR>\n\n";
 	}
 
@@ -304,6 +309,7 @@ function stats_site_projects( $span = 7, $orderby = "ranking", $offset = 0, $pro
 
    // stats_site_projects_daily
 function stats_site_projects_daily( $span = 14 ) {
+  global $LANG;
 
 	if (! $span ) { 
 		$span = 14;
@@ -337,20 +343,20 @@ function stats_site_projects_daily( $span = 14 ) {
 	   // if there are any weeks, we have valid data.
 	if ( ($valid_days = db_numrows( $res )) > 1 ) {
 
-		print '<P><B>Statistics for the past ' . $valid_days . ' days.</B></P>';
+		print '<P><B>'.$LANG->getText('stats_site_stats_utils','stats_for_past_x_days',$valid_days).'</B></P>';
 
 		print	'<P><TABLE width="100%" cellpadding=0 cellspacing=0 border=0>'
 			. '<TR valign="top">'
-			. '<TD><B>Day</B></TD>'
-			. '<TD align="right"><B>Site Views</B></TD>'
-			. '<TD align="right"><B>Subdomain Views</B></TD>'
-			. '<TD align="right"><B>Downloads</B></TD>'
-			. '<TD align="right"><B>Bugs</B></TD>'
-			. '<TD align="right"><B>Support</B></TD>'
-			. '<TD align="right"><B>Patches</B></TD>'
-			. '<TD align="right"><B>Tasks</B></TD>'
-			. '<TD align="right"><B>CVS</B></TD>'
-			. '<TD align="right"><B>SVN</B></TD>'
+			. '<TD><B>'.$LANG->getText('stats_site_stats_utils','day').'</B></TD>'
+			. '<TD align="right"><B>'.$LANG->getText('stats_site_stats_utils','site_views').'</B></TD>'
+			. '<TD align="right"><B>'.$LANG->getText('stats_site_stats_utils','subdomain_views').'</B></TD>'
+			. '<TD align="right"><B>'.$LANG->getText('stats_site_stats_utils','downl').'</B></TD>'
+			. '<TD align="right"><B>'.$LANG->getText('stats_site_stats_utils','bugs').'</B></TD>'
+			. '<TD align="right"><B>'.$LANG->getText('stats_site_stats_utils','support').'</B></TD>'
+			. '<TD align="right"><B>'.$LANG->getText('stats_site_stats_utils','patches').'</B></TD>'
+			. '<TD align="right"><B>'.$LANG->getText('stats_site_stats_utils','tasks').'</B></TD>'
+			. '<TD align="right"><B>'.$LANG->getText('stats_site_stats_utils','cvs').'</B></TD>'
+			. '<TD align="right"><B>'.$LANG->getText('stats_site_stats_utils','svn').'</B></TD>'
 			. '</TR>' . "\n";
 
 		while ( $row = db_fetch_array($res) ) {
@@ -373,13 +379,14 @@ function stats_site_projects_daily( $span = 14 ) {
 		print '</TABLE>';
 
 	} else {
-		echo "Project did not exist on this date.";
+		echo $LANG->getText('stats_site_stats_utils','proj_not_exist');
 	}
 }
 
 
    // stats_site_projects_weeky
 function stats_site_projects_weekly( $span = 14 ) {
+  global $LANG;
 
 	if (! $span ) { 
 		$span = 14;
@@ -408,19 +415,19 @@ function stats_site_projects_weekly( $span = 14 ) {
 	   // if there are any weeks, we have valid data.
 	if ( ($valid_days = db_numrows( $res )) > 1 ) {
 
-		print '<P><B>Statistics for the past ' . $valid_days . ' days.</B></P>';
+		print '<P><B>'.$LANG->getText('stats_site_stats_utils','stats_for_past_x_days',$valid_days).'</B></P>';
 
 		print	'<P><TABLE width="100%" cellpadding=0 cellspacing=0 border=0>'
 			. '<TR valign="top">'
-			. '<TD><B>Day</B></TD>'
-			. '<TD align="right"><B>Site Views</B></TD>'
-			. '<TD align="right"><B>Subdomain Views</B></TD>'
-			. '<TD align="right"><B>Downloads</B></TD>'
-			. '<TD align="right"><B>Bugs</B></TD>'
-			. '<TD align="right"><B>Support</B></TD>'
-			. '<TD align="right"><B>Patches</B></TD>'
-			. '<TD align="right"><B>Tasks</B></TD>'
-			. '<TD align="right"><B>CVS</B></TD>'
+			. '<TD><B>'.$LANG->getText('stats_site_stats_utils','day').'</B></TD>'
+			. '<TD align="right"><B>'.$LANG->getText('stats_site_stats_utils','site_views').'</B></TD>'
+			. '<TD align="right"><B>'.$LANG->getText('stats_site_stats_utils','subdomain_views').'</B></TD>'
+			. '<TD align="right"><B>'.$LANG->getText('stats_site_stats_utils','downl').'</B></TD>'
+			. '<TD align="right"><B>'.$LANG->getText('stats_site_stats_utils','bugs').'</B></TD>'
+			. '<TD align="right"><B>'.$LANG->getText('stats_site_stats_utils','support').'</B></TD>'
+			. '<TD align="right"><B>'.$LANG->getText('stats_site_stats_utils','patches').'</B></TD>'
+			. '<TD align="right"><B>'.$LANG->getText('stats_site_stats_utils','tasks').'</B></TD>'
+			. '<TD align="right"><B>'.$LANG->getText('stats_site_stats_utils','cvs').'</B></TD>'
 			. '</TR>' . "\n";
 
 		while ( $row = db_fetch_array($res) ) {
@@ -442,13 +449,14 @@ function stats_site_projects_weekly( $span = 14 ) {
 		print '</TABLE>';
 
 	} else {
-		echo "Project did not exist on this date.";
+		echo $LANG->getText('stats_site_stats_utils','proj_not_exist');
 	}
 }
 
 
    // stats_site_agregate
 function stats_site_agregate( $group_id ) {
+  global $LANG;
 
 	$sql	= "SELECT COUNT(day) AS days,SUM(site_views) AS site_views,"
 		. "SUM(subdomain_views) AS subdomain_views,SUM(downloads) AS downloads "
@@ -466,20 +474,20 @@ function stats_site_agregate( $group_id ) {
 	
 
 	print "\n\n";
-	print '<P><B>Current Agregate Statistics for All Time</B></P>' . "\n";
+	print '<P><B>'.$LANG->getText('stats_site_stats_utils','curr_agg_stats').'</B></P>' . "\n";
 
 	print	'<P><TABLE width="100%" cellpadding=0 cellspacing=0 border=0>' . "\n";
 	print	'<TR valign="top">'
-		. '<TD><B>Lifespan</B></TD>'
-		. '<TD><B>Site Views</B></TD>'
-		. '<TD><B>Subdomain Views</B></TD>'
-		. '<TD><B>Downloads</B></TD>'
-		. '<TD><B>Developers</B></TD>'
-		. '<TD><B>Projects</B></TD>'
+		. '<TD><B>'.$LANG->getText('stats_site_stats_utils','lifespan').'</B></TD>'
+		. '<TD><B>'.$LANG->getText('stats_site_stats_utils','site_views').'</B></TD>'
+		. '<TD><B>'.$LANG->getText('stats_site_stats_utils','subdomain_views').'</B></TD>'
+		. '<TD><B>'.$LANG->getText('stats_site_stats_utils','downl').'</B></TD>'
+		. '<TD><B>'.$LANG->getText('stats_site_stats_utils','developers').'</B></TD>'
+		. '<TD><B>'.$LANG->getText('stats_site_stats_utils','projs').'</B></TD>'
 		. '</TR>' . "\n";
 
 	print	'<TR>'
-		. '<TD>' . $site_totals["days"] . ' days </TD>'
+		. '<TD>' . $site_totals["days"] . ' '.$LANG->getText('stats_site_stats_utils','days').' </TD>'
 		. '<TD>' . number_format( $site_totals["site_views"] ) . '</TD>'
 		. '<TD>' . number_format( $site_totals["subdomain_views"] ) . '</TD>'
 		. '<TD>' . number_format( $site_totals["downloads"] ) . '</TD>'
