@@ -75,7 +75,7 @@ function filedownload_logs_daily($project, $span = 7, $who="allusers") {
 			$i++;
 			print	'<TR class="' . util_get_alt_row_color($i) . '">'
 				. '<TD>' . gmstrftime("%e %b %Y", $row["time"] ) . '</TD>'
-				. '<TD>' . $row["realname"] .' ('.$row["user_name"].')</TD>'
+			    . '<TD>' . $row["realname"] .' ('.util_user_link($row["user_name"]).')</TD>'
 				. '<TD>' . $row["email"] . '</TD>'
 				. '<TD>' . $row["filename"] . '</TD>'				. '<TD align="right">' . gmstrftime("%H:%M", $row["time"]). '</TD>'
 				. '</TR>' . "\n";
@@ -153,7 +153,7 @@ function cvsaccess_logs_daily($project, $span = 7, $who="allusers") {
 			$i++;
 			print	'<TR class="' . util_get_alt_row_color($i) . '">'
 				. '<TD>' . substr($row["day"],6,2) .' '. $month_name[substr($row["day"],4,2) - 1] .' '. substr($row["day"],0,4) .'</TD>'
-				. '<TD>' . $row["realname"] .' ('.$row["user_name"].')</TD>'
+			    . '<TD>' . $row["realname"] .' ('.util_user_link($row["user_name"]).')</TD>'
 				. '<TD>' . $row["email"] . '</TD>'
 				. '<TD>' . $row["cvs_checkouts"] . '</TD>'
 				. '</TR>' . "\n";
@@ -163,6 +163,85 @@ function cvsaccess_logs_daily($project, $span = 7, $who="allusers") {
 
 	} else {
 		echo "<P>No CVS access for this period.";
+	}
+
+
+
+}
+
+function svnaccess_logs_daily($project, $span = 7, $who="allusers") {
+
+	if (! $span ) { 
+		$span = 7;
+	}
+
+	$month_name = array('Jan','Feb','Mar','Apr','May','June','Jul','Aug', 'Sep','Oct','Nov','Dec');
+
+	// Get information about the date $span days ago 
+	// Start at midnight $span days ago
+	$time_back = localtime( (time() - ($span * 86400)), 1);
+
+	// This for debug
+	// print "time_back= ". $time_back['tm_hour'].":".$time_back['tm_min'].":".$time_back['tm_sec']." on ".$time_back['tm_mday']." ".$time_back['tm_mon']." ".$time_back['tm_year']."<BR>";
+
+	// Adjust to midnight this day
+	$time_back["tm_sec"] = $time_back["tm_min"] = $time_back["tm_hour"] = 0;
+	$begin_date = mktime($time_back["tm_hour"], $time_back["tm_min"], $time_back["tm_sec"], $time_back["tm_mon"]+1, $time_back["tm_mday"], $time_back["tm_year"]+1900);
+
+	$begin_day = strftime("%Y%m%d", $begin_date);
+
+	// For Debug
+	// print join(" ",localtime($begin_date,0))."<BR>";
+	// print "begin_day: $begin_day<BR>";
+
+	if ($who == "allusers") {
+	    $cond = "";
+	} else {
+	    $users = implode(',',$project->getMembersId());
+	    if ($who == "members") {
+		$cond = " AND user.user_id IN ($users) ";
+	    } else {
+		$cond = " AND user.user_id NOT IN ($users) ";
+	    }
+	}
+
+	// We do not show Co/up/del/add svn counters for now because
+	// they are at 0 in the DB 
+	$sql  = "SELECT group_svn_full_history.day AS day, user.user_name AS user_name, user.realname AS realname, user.email AS email "
+	."FROM group_svn_full_history, user "
+	."WHERE group_svn_full_history.user_id=user.user_id ".$cond
+	."AND group_svn_full_history.group_id=".$project->getGroupId()." "
+	."AND group_svn_full_history.day >= $begin_day "
+	."ORDER BY day ASC";
+	
+	// Executions will continue until morale improves.
+	$res = db_query( $sql );
+
+	print '<P><U><B>Subversion accesses for the past ' . $span. ' days </B></U></P>';
+
+	// if there are any days, we have valid data.
+	if ( ($nb_downloads = db_numrows( $res )) >= 1 ) {
+
+		print	'<P><TABLE width="100%" cellpadding=2 cellspacing=0 border=0>'
+			. '<TR valign="top">'
+			. '<TD><B>Date</B></TD>'
+			. '<TD><B>User</B></TD>'
+			. '<TD><B>E-mail</B></TD>'
+			. '</TR>' . "\n";
+		
+		while ( $row = db_fetch_array($res) ) {
+			$i++;
+			print	'<TR class="' . util_get_alt_row_color($i) . '">'
+				. '<TD>' . substr($row["day"],6,2) .' '. $month_name[substr($row["day"],4,2) - 1] .' '. substr($row["day"],0,4) .'</TD>'
+			    . '<TD>' . $row["realname"] .' ('.util_user_link($row["user_name"]).')</TD>'
+				. '<TD>' . $row["email"] . '</TD>'
+				. '</TR>' . "\n";
+		}
+
+		print '</TABLE>';
+
+	} else {
+		echo "<P>No Subversion access for this period.";
 	}
 
 
@@ -231,7 +310,7 @@ function doc_logs_daily($project, $span = 7, $who="allusers") {
 			$i++;
 			print	'<TR class="' . util_get_alt_row_color($i) . '">'
 				. '<TD>' . gmstrftime("%e %b %Y", $row["time"] ) . '</TD>'
-				. '<TD>' . $row["realname"] .' ('.$row["user_name"].')</TD>'
+			    . '<TD>' . $row["realname"] .' ('.util_user_link($row["user_name"]).')</TD>'
 				. '<TD>' . $row["email"] . '</TD>'
 				. '<TD>' . $row["title"] . '</TD>'				. '<TD align="right">' . gmstrftime("%H:%M", $row["time"]). '</TD>'
 				. '</TR>' . "\n";

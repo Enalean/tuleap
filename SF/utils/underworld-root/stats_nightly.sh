@@ -60,6 +60,11 @@ cd /home/httpd/SF/utils/underworld-root/
 #
 ./db_stats_cvs_history.pl $*
 
+# Feed the database with Subversion statistics extracted
+# from daily Subversion log files
+#
+./db_stats_svn_history.pl $*
+
 ./db_stats_projects_nightly.pl $*
 
 ##

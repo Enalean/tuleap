@@ -82,6 +82,7 @@ if ( $view == 'daily' ) {
 	print '<P>';
 	filedownload_logs_daily( $project, $span, $who);
 	cvsaccess_logs_daily( $project, $span, $who);
+	svnaccess_logs_daily( $project, $span, $who);
 	doc_logs_daily( $project, $span, $who);
 
 } elseif ( $view == 'weekly' ) {
@@ -89,6 +90,7 @@ if ( $view == 'daily' ) {
 	print '<P>';
 	filedownload_logs_daily( $project, $span*7, $who);
 	cvsaccess_logs_daily( $project, $span*7, $who);
+	svnaccess_logs_daily( $project, $span*7, $who);
 	doc_logs_daily( $project, $span*7, $who);
 
 } elseif ( $view == 'monthly' ) {
@@ -96,6 +98,7 @@ if ( $view == 'daily' ) {
 	print '<P>';
 	filedownload_logs_daily( $project, $span*30.5, $who);
 	cvsaccess_logs_daily( $project, $span*30.5, $who);
+	svnaccess_logs_daily( $project, $span*30.5, $who);
 	doc_logs_daily( $project, $span*30.5, $who);
 
 } else {
@@ -104,6 +107,7 @@ if ( $view == 'daily' ) {
 	print '<P>';
 	filedownload_logs_daily( $project, $span, $who);
 	cvsaccess_logs_daily( $project, $span, $who);
+	svnaccess_logs_daily( $project, $span, $who);
 	doc_logs_daily( $project, $span, $who);
 
 }

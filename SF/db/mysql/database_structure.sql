@@ -940,6 +940,24 @@ CREATE TABLE group_cvs_history (
 ) TYPE=MyISAM;
 
 #
+# Table structure for table 'group_svn_full_history'
+#
+
+CREATE TABLE group_svn_full_history (
+  group_id int(11) NOT NULL default '0',
+  user_id int(11) NOT NULL default '0',
+  day int(11) NOT NULL default '0',
+  svn_commits int(11) NOT NULL default '0',
+  svn_adds int(11) NOT NULL default '0',
+  svn_deletes int(11) NOT NULL default '0',
+  svn_checkouts int(11) NOT NULL default '0',
+  UNIQUE accessid (group_id,user_id,day),
+  KEY group_id_idx (group_id),
+  KEY user_id_idx (user_id),
+  KEY day_idx (day)
+) TYPE=MyISAM;
+
+#
 # Table structure for table 'group_history'
 #
 
