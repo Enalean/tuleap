@@ -60,7 +60,7 @@ $result=db_query($sql);
 		if (!$_eoc) {
 			// Add a pointer to switch to editable comment field
 			echo "<a href=\"$PHP_SELF?func=detailtask&project_task_id=$project_task_id&group_id=$group_id&group_project_id=$group_project_id&_eoc=1\"> [Edit]</a>";
-			echo '<P>'.nl2br(db_result($result,0,'details'));
+			echo '<P>'.util_make_links(nl2br(db_result($result,0,'details')));
 		} else {
 			// If _eoc flag is set then put the original comment
 			// in a editable text area

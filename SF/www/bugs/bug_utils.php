@@ -532,7 +532,7 @@ function show_bug_details ($bug_id) {
 		    if ($comment_type != 'None') {
 			echo '<B> [ '.$comment_type.' ]</B><BR>';
 		    }
-		    echo nl2br(db_result($result, $i, 'old_value')).'</TD>'.
+		    echo util_make_links(nl2br(db_result($result, $i, 'old_value'))).'</TD>'.
 			'</TD>'.
 			'<TD VALIGN="TOP">'.date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
 			'<TD VALIGN="TOP">'.db_result($result, $i, 'user_name').'</TD></TR>';

@@ -60,7 +60,7 @@ if (db_numrows($result) > 0) {
 
      <TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
 <?php echo bug_field_display('details',$group_id,
-			nl2br(db_result($result,0,'details')),true,true); ?>
+			util_make_links(nl2br(db_result($result,0,'details'))),true,true); ?>
      </TD></TR>
 
      <FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">

@@ -77,7 +77,7 @@ if (db_numrows($result) > 0) {
       <P>
       <B>Original Submission:</B><BR>
       <?php
-      echo nl2br(db_result($result,0,'details'));
+      echo util_make_links(nl2br(db_result($result,0,'details')));
       echo "<P>";
       echo show_bug_details($bug_id); 
       ?>

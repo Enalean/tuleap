@@ -74,7 +74,7 @@ $result=db_query($sql);
 		<TD COLSPAN="2">
 		<B>Original Comment:</B>
 		<br>
-		<?php echo nl2br(db_result($result,0,'details')); ?>
+		<?php echo util_make_links(nl2br(db_result($result,0,'details'))); ?>
 		</TD>
 	</TR>
 
