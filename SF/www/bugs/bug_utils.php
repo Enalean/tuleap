@@ -798,10 +798,13 @@ function format_bug_changes($changes) {
     reset($changes);
     $fmt = "%20s | %-25s | %s\n";
 
-    $user_id = user_getid();
-
-    $out_hdr = 'Changes by: '.user_getrealname($user_id).' <'.user_getemail($user_id).">\n".
-	'Date: '.date($sys_datefmt,time()).' ('.user_get_timezone().')';
+    if (user_isloggedin()) {
+	$user_id = user_getid();
+	$out_hdr = 'Changes by: '.user_getrealname($user_id).' <'.user_getemail($user_id).">\n";
+	$out_hdr .= 'Date: '.date($sys_datefmt,time()).' ('.user_get_timezone().')';
+    } else {
+	$out_hdr = 'Changes by: Anonymous user        Date: '.date($sys_datefmt,time());
+    }
 
     //Process special cases first: follow-up comment
     if ($changes['details']) {

@@ -109,8 +109,11 @@ if ($group_id) {
 	include '../bugs/postadd_comment.php';
 	if ($project->sendAllBugUpdates()) {
 	    $address=$project->getNewBugAddress();
-	}       
-	mail_followup($bug_id,$address);
+	}
+
+	if ($changed) {
+	    mail_followup($bug_id,$address,$changes);
+	}
 	include '../bugs/browse_bug.php';
 	break;
     }

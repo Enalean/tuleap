@@ -74,6 +74,17 @@ while ( $field_name = bug_list_all_fields() ) {
 <?php echo bug_field_display('details',$group_id,'',true); ?></td></tr>
 
       <TR><TD colspan="<?php echo $fields_per_line; ?>">
+
+	<?php
+	if (!user_isloggedin()) {
+		echo '
+		<B><h2><FONT COLOR="RED">You Are NOT logged in.</H2>
+		<P> Please <A HREF="/account/login.php?return_to='.
+		urlencode($REQUEST_URI).
+		'">log in,</A> so followups can be emailed to you.</FONT></B>';
+	}
+	?>
+
       <hr><h4>Optionally, you may also attach a file (e.g. a screenshot, a log file,...)</h4>
       <B>Check to Upload &amp; Attach File:</B> <input type="checkbox" name="add_file" VALUE="1">
       &nbsp;&nbsp;&nbsp;
@@ -84,16 +95,6 @@ while ( $field_name = bug_list_all_fields() ) {
       </TR></TD>
 
 <TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
-	<?php
-	if (!user_isloggedin()) {
-		echo '
-		<h3><FONT COLOR="RED">You Are NOT logged in.</H3>
-		<P> Please <A HREF="/account/login.php?return_to='.
-		urlencode($REQUEST_URI).
-		'">log in,</A> so followups can be emailed to you.</FONT></B>';
-	}
-	?>
-
 	<P>
 	<hr>
 	<B><FONT COLOR="RED">Did you check to see if this bug has already been submitted?</FONT></b> (use the search box in the left menu pane)

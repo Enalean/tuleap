@@ -19,6 +19,12 @@ if (db_numrows($result) > 0) {
 ?>
     <H2>[ Bug #<?php echo $bug_id.' ] '.db_result($result,0,'summary');?></H2>
 
+    <FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST" enctype="multipart/form-data">
+ 
+    <INPUT TYPE="HIDDEN" NAME="func" VALUE="postaddcomment">
+    <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">
+    <INPUT TYPE="HIDDEN" NAME="bug_id" VALUE="<?php echo $bug_id; ?>">
+
     <TABLE CELLPADDING="0" WIDTH="100%">
       <TR><TD><B>Submitted By:</B>&nbsp;<?php echo user_getname(db_result($result,0,'submitted_by')); ?></TD>
           <TD><B>Group:</B>&nbsp;<?php echo group_getname($group_id); ?></TD>
@@ -76,11 +82,6 @@ if (db_numrows($result) > 0) {
 			util_make_links(nl2br(db_result($result,0,'details'))),true,true,true); ?>
      </TD></TR>
 
-     <FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">
-         <INPUT TYPE="HIDDEN" NAME="func" VALUE="postaddcomment">
-         <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">
-         <INPUT TYPE="HIDDEN" NAME="bug_id" VALUE="<?php echo $bug_id; ?>">
-
          <TR><TD COLSPAN="<?php echo $fields_per_line; ?>"><B>Add A Comment:</B><BR>
      <?php echo bug_field_textarea('details',''); ?>
          </TD></TR>
@@ -95,8 +96,6 @@ if (db_numrows($result) > 0) {
 	}
 ?>
 
-     <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
-     </FORM>
      </TD></TR>
      <P>
 
@@ -106,6 +105,14 @@ if (db_numrows($result) > 0) {
 
      <TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
         <hr><h3>Bug Attachments</h3>
+	<A href="javascript:help_window('/help/mod_bug.php?helpname=attach_file')"><b>(?)</b></a>
+        <B>Check to Upload &amp; Attach File:</B> <input type="checkbox" name="add_file" VALUE="1">
+      &nbsp;&nbsp;&nbsp;
+        <input type="file" name="input_file" size="40">
+        <P>
+        <B>File Description:</B>&nbsp;
+        <input type="text" name="file_description" size="60" maxlength="255">
+        <P>
         <?php echo show_bug_attached_files($bug_id,$group_id); ?>
      </TD></TR>
 
@@ -141,7 +148,14 @@ if (db_numrows($result) > 0) {
 	show_bughistory($bug_id,$group_id);
 
 	?>
-	</TD></TR></TABLE>
+	</TD></TR>
+
+	<TR><TD COLSPAN="<?php echo $fields_per_line; ?>" ALIGN="MIDDLE">
+	  <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit Changes">
+	  </FORM>
+	</TD></TR>
+
+	</TABLE>
 	<?php
 
 } else {
