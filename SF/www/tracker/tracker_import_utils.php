@@ -179,7 +179,7 @@ function check_values($row,&$data,$used_fields,$parsed_labels,$predefined_values
 	  //ok. transform it by hand into 0 before updating db
 	  $data[$c] = "";
 	} else {
-	  list($unix_time,$ok) = util_date_to_unixtime($val);
+	  list($unix_time,$ok) = util_importdatefmt_to_unixtime($val);
 	  if (!ok) {
 	    $errors .= $LANG->getText('tracker_import_utils','incorrect_date',array($row+1,implode(",",$data),$val));
 	  }
@@ -653,7 +653,7 @@ function parse_details($details,&$parsed_details,&$errors,$for_parse_report=fals
       }
     }
 
-    // heres starts reel parsing
+    // here starts reel parsing
     $comment = substr($comment, 6);
     $by_position = strpos($comment,$LANG->getText('global','by').": ");
     if ($by_position === false) {
@@ -663,7 +663,7 @@ function parse_details($details,&$parsed_details,&$errors,$for_parse_report=fals
     $date_str = trim(substr($comment, 0, $by_position));
     //echo "$date_str<br>";
     if ($for_parse_report) $date = $date_str;
-    else list($date,$ok) = util_sysdatefmt_to_unixtime($date_str);
+    else list($date,$ok) = util_importdatefmt_to_unixtime($date_str);
     //echo "$date<br>";
     //skip "By: "
     $comment = substr($comment, ($by_position + 4));
@@ -814,7 +814,7 @@ function parse_legacy_details($details,&$parsed_details,&$errors,$for_parse_repo
     $comment = substr($comment, ($on_position+4));
     $on = strtok($comment,"\n\t\r\0\x0B");
     $comment = trim(substr($comment,strlen($on)));
-    if (!$for_parse_report) list($on,$ok) = util_sysdatefmt_to_unixtime($on);
+    if (!$for_parse_report) list($on,$ok) = util_importdatefmt_to_unixtime($on);
     
     
     $arr["date"] = $on;

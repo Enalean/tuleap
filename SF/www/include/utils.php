@@ -16,6 +16,54 @@ function format_date($format,$value,$default_value = '-') {
     }
 }
 
+
+// Convert a date in sys_datefmt (Y-M-d H:i ex: 2004-Feb-03 16:13)
+// into a Unix time. if string is empty return 0 (Epoch time)
+// Returns a list with two values: the unix time and a boolean saying whether the conversion
+// went well (true) or bad (false)
+function util_importdatefmt_to_unixtime($date) {
+    $time = 0;
+    if (!$date||$date=="") {
+    	return array($time,false);
+    }
+
+    if (strstr($date,"/") !== false) {
+      list($year,$month,$day,$hour,$minute) = util_xlsdatefmt_explode($date);
+      $time = mktime($hour, $minute, 0, $month, $day, $year);
+      return array($time,true);
+    }
+    
+    if (strstr($date,"-") !== false) {
+      list($year,$month,$day,$hour,$minute) = util_sysdatefmt_explode($date);
+      $time = mktime($hour, $minute, 0, $month, $day, $year);
+      return array($time,true);
+    }
+
+    return array($time,false);
+}
+
+// Explode a date in the form of (n/j/Y H:i) into its a list of 5 parts (YYYY,MM,DD,H,i)
+// if DD and MM are not defined then default them to 1
+function util_xlsdatefmt_explode($date) {
+
+  $res = preg_match("/\s*(\d+)\/(\d+)\/(\d+) (\d+):(\d+)/",$date,$match);
+  if ($res == 0) { 
+    //if it doesn't work try (n/j/Y) only
+    $res = preg_match("/\s*(\d+)\/(\d+)\/(\d+)/",$date,$match);
+    if ($res == 0) { 
+      // nothing is valid return Epoch time
+      $year = '1970'; $month='1'; $day='1'; $hour='0'; $minute='0';
+    } else {
+      list(,$month,$day,$year) = $match; $hour='0'; $minute='0';
+    }
+  } else {
+    list(,$month,$day,$year,$hour,$minute) = $match;
+  }
+
+  return array($year,$month,$day,$hour,$minute);
+}
+
+
 // Convert a date as used in the bug tracking system and other services (YYYY-MM-DD)
 // into a Unix time. if string is empty return 0 (Epoch time)
 // Returns a list with two values: the unix time and a boolean saying whether the conversion
