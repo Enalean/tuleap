@@ -41,7 +41,7 @@ class ArtifactFileHtml extends ArtifactFile {
                 return false;
             }
             $size = @filesize($input_file);
-            $input_data = addslashes(fread(fopen($input_file, 'r'), $size));
+            $input_data = addslashes(@fread(@fopen($input_file, 'r'), $size));
 	    if ((strlen($input_data) < 1) || (strlen($input_data) > $sys_max_size_attachment)) {
                 $this->setError("File not attached: File size must be less than ".formatByteToMb($sys_max_size_attachment)." Mbytes");
                 return false;
