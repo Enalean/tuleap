@@ -65,7 +65,7 @@ function  survey_utils_show_surveys($result, $show_delete=true) {
     for ($j=0; $j<$rows; $j++)  {
 	
 	$survey_id = db_result($result,$j,'survey_id');
-	echo '<tr BGCOLOR="'.html_get_alt_row_color($j).'">';
+	echo '<tr class="'.html_get_alt_row_color($j).'">';
 	
 	echo "<TD><A HREF=\"/survey/admin/edit_survey.php?func=update_survey&group_id=$group_id&survey_id=$survey_id\">$survey_id</A></TD>".
 	    '<TD>'.db_result($result,$j,'survey_title')."</TD>\n".
@@ -78,7 +78,7 @@ function  survey_utils_show_surveys($result, $show_delete=true) {
 	    echo '<TD align=center>'.
 		"<a href=\"/survey/admin/edit_survey.php?func=delete_survey&group_id=$group_id&survey_id=$survey_id\" ".
 		'" onClick="return confirm(\'Delete this survey?\n\n** Important **\nIf you delete a survey, all associated responses will be lost.\')">'.
-		'<IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A></TD>';
+		'<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A></TD>';
 	}
 	echo "</tr>";
     }
@@ -99,7 +99,7 @@ function  survey_utils_show_surveys_for_results($result) {
     for ($j=0; $j<$rows; $j++)  {
 	
 	$survey_id = db_result($result,$j,'survey_id');
-	echo '<tr BGCOLOR="'.html_get_alt_row_color($j).'">';
+	echo '<tr class="'.html_get_alt_row_color($j).'">';
 	
 	echo "<TD><A HREF=\"/survey/admin/show_results_aggregate.php?group_id=$group_id&survey_id=$survey_id\">$survey_id</A></TD>".
 	    '<TD width="90%">'.db_result($result,$j,'survey_title')."</TD>\n<tr>";
@@ -126,7 +126,7 @@ function  survey_utils_show_questions($result, $show_delete=true) {
     for($j=0; $j<$rows; $j++)  {
 
 	$question_id = db_result($result,$j,'question_id');
-	echo "<tr BGCOLOR=\"". html_get_alt_row_color($j) ."\">\n";
+	echo "<tr class=\"". html_get_alt_row_color($j) ."\">\n";
 
 	echo "<TD><A HREF=\"/survey/admin/edit_question.php?func=update_question&group_id=$group_id&question_id=$question_id\">$question_id</A></TD>\n".
 	    '<TD>'.db_result($result,$j,'question')."</TD>\n".
@@ -136,7 +136,7 @@ function  survey_utils_show_questions($result, $show_delete=true) {
 	    echo '<TD align=center>'.
 		"<a href=\"/survey/admin/edit_question.php?func=delete_question&group_id=$group_id&question_id=$question_id\" ".
 		'" onClick="return confirm(\'Delete this question?\n\n** Important **\nIf you delete a question, all associated responses in all surveys using this question will be lost.\')">'.
-		'<IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A></TD>';
+		'<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A></TD>';
 	}
 
 	echo "</tr>";
@@ -160,7 +160,7 @@ function  survey_utils_show_comments($result) {
 
 	if ($resp == '') { $resp = '- BLANK RESPONSES -'; }
 	
-	$out .= '<tr BGCOLOR="'.html_get_alt_row_color($j).'">';
+	$out .= '<tr class="'.html_get_alt_row_color($j).'">';
 	
 	$out .= "<TD width=\"90%\">$resp</TD>\n".
 	    '<TD >'.$count."</TD><tr>\n";

@@ -81,7 +81,7 @@ function stats_generate_trove_grouplist( $trovecatid ) {
 function stats_site_projects_form( $span = 21, $orderby = "downloads", $offset = 0, $projects = 0, $trovecat = 0 ) {
 	
 	print '<FORM action="projects.php" method="get">' . "\n";
-	print '<table width="100%" cellpadding="0" cellspacing="0" bgcolor="#eeeeee">' . "\n";
+	print '<table width="100%" cellpadding="0" cellspacing="0" class="boxitem">' . "\n";
 
 	print '<tr><td><b>Project Type: </b></td><td>';
 	stats_generate_trove_pulldown( $trovecat );
@@ -198,7 +198,7 @@ function stats_site_projects( $span = 7, $orderby = "ranking", $offset = 0, $pro
 
 		print	'<P><TABLE width="100%" cellpadding=0 cellspacing=0 border=0>';
 
-		print	'<TR valign="top" bgcolor="#eeeeee">'
+		print	'<TR valign="top" class="boxitem">'
 			. '<TD><B>Group Name</B></TD>'
 			. '<TD align="right"><B>Ranking</B></TD>'
 			. '<TD align="right" COLSPAN="2"><B>Page Views</B></TD>'
@@ -220,7 +220,7 @@ function stats_site_projects( $span = 7, $orderby = "ranking", $offset = 0, $pro
 		}
 		$uri_string .= "&orderby=";
 
-		print	'<TR valign="top" bgcolor="#eeeeee">'
+		print	'<TR valign="top" class="boxitem">'
 			. '<TD align="right">&nbsp;</TD>'
 			. '<TD align="right"><A HREF="' . $uri_string .'ranking">Rank</A></TD>'
 			. '<TD align="right"><A HREF="' . $uri_string .'site_views">Site</A></TD>'
@@ -241,7 +241,7 @@ function stats_site_projects( $span = 7, $orderby = "ranking", $offset = 0, $pro
 	
 		$i = $offset;	
 		while ( $row = db_fetch_array($res) ) {
-			print	'<TR bgcolor="' . util_get_alt_row_color($i) . '">'
+			print	'<TR class="' . util_get_alt_row_color($i) . '">'
 				. '<TD>' . ($i + 1) . '. <A HREF="/project/stats/?group_id=' . $row["group_id"] . '">' . $row["group_name"] . '</A></TD>'
 				. '<TD align="right">&nbsp;&nbsp;' . number_format( $row["ranking"] ) . ' (' . $row["percentile"] . '%) </TD>'
 				. '<TD align="right">&nbsp;&nbsp;' . number_format( $row["site_views"] ) . '</TD>'
@@ -266,7 +266,7 @@ function stats_site_projects( $span = 7, $orderby = "ranking", $offset = 0, $pro
 		if ( $trove_cat == -1 ) {
 			print '<TR><TD COLSPAN="16">&nbsp;</TD></TR>' . "\n";
 			print '<TR><TD COLSPAN="16" align="center"></TD></TR>' . "\n";
-			print	'<TR bgcolor="' . util_get_alt_row_color($i) . '">'
+			print	'<TR class="' . util_get_alt_row_color($i) . '">'
 				. '<TD><B>Totals:</B></TD>'
 				. '<TD>&nbsp;</TD>'
 				. '<TD align="right">&nbsp;&nbsp;' . number_format( $sum["site_views"] ) . '</TD>'
@@ -348,7 +348,7 @@ function stats_site_projects_daily( $span = 14 ) {
 		while ( $row = db_fetch_array($res) ) {
 			$i++;
 
-			print	'<TR bgcolor="' . util_get_alt_row_color($i) . '">'
+			print	'<TR class="' . util_get_alt_row_color($i) . '">'
 				. '<TD>' . gmstrftime("%d %b %Y", mktime(0,0,1,substr($row["month"],4,2),$row["day"],substr($row["month"],0,4)) ) . '</TD>'
 				. '<TD align="right">' . number_format( $row["site_views"] ) . '</TD>'
 				. '<TD align="right">' . number_format( $row["subdomain_views"] ) . '</TD>'
@@ -417,7 +417,7 @@ function stats_site_projects_weekly( $span = 14 ) {
 		while ( $row = db_fetch_array($res) ) {
 			$i++;
 
-			print	'<TR bgcolor="' . util_get_alt_row_color($i) . '">'
+			print	'<TR class="' . util_get_alt_row_color($i) . '">'
 				. '<TD>' . gmstrftime("%d %b %Y", mktime(0,0,1,substr($row["month"],4,2),$row["day"],substr($row["month"],0,4)) ) . '</TD>'
 				. '<TD align="right">' . number_format( $row["SUM(site_views)"] ) . '</TD>'
 				. '<TD align="right">' . number_format( $row["SUM(subdomain_views)"] ) . '</TD>'

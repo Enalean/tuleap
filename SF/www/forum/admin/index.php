@@ -72,8 +72,8 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 		echo '
 			<H2>Delete a message</H2>
 
-			<FONT COLOR="RED" SIZE="3">WARNING! You are about to permanently delete a 
-			message and all of its followups!!</FONT>
+			<h2><span class="highlight">WARNING! You are about to permanently delete a 
+			message and all of its followups!!</span></h2>
 			<FORM METHOD="POST" ACTION="'.$PHP_SELF.'">
 			<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 			<INPUT TYPE="HIDDEN" NAME="delete" VALUE="y">
@@ -117,7 +117,7 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 			<INPUT TYPE="RADIO" NAME="is_monitored" VALUE="1" CHECKED> Yes &nbsp;&nbsp;&nbsp;&nbsp;
 			<INPUT TYPE="RADIO" NAME="is_monitored" VALUE="0"> No<P>
 			<P>
-			<B><FONT COLOR="RED">Once you add a forum, it cannot be modified or deleted!</FONT></B>
+			<B><span class="highlight">Once you add a forum, it cannot be modified or deleted!</span></B>
 			<P>
 			<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Add This Forum">
 			</FORM>';
@@ -156,7 +156,7 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 
 			for ($i=0; $i<$rows; $i++) {
 				echo '
-					<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD>'.db_result($result,$i,'forum_name').'</TD>';
+					<TR class="'. util_get_alt_row_color($i) .'"><TD>'.db_result($result,$i,'forum_name').'</TD>';
 				echo '
 					<FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
 					<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
@@ -173,7 +173,7 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 						<FONT SIZE="-1">
 						<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Update Status">
 					</TD></TR>
-					<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD COLSPAN="3">
+					<TR class="'. util_get_alt_row_color($i) .'"><TD COLSPAN="3">
 						<B>Forum Name:</B><BR>
 						<INPUT TYPE="TEXT" NAME="forum_name" VALUE="'. db_result($result,$i,'forum_name').'" SIZE="30" MAXLENGTH="50"><BR>
 						<B>Description:</B><BR>

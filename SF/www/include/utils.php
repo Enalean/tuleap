@@ -176,13 +176,13 @@ function util_double_diff_array($arr1, $arr2) {
 
 function show_priority_colors_key($msg='') {
 
-	echo '<P><B>'.($msg ? $msg : 'Priority Colors:').'</B><BR>
+	echo '<P class="small"><B>'.($msg ? $msg : 'Priority Colors:').'</B><BR>
 
 		<TABLE BORDER=0><TR>';
 
 	for ($i=1; $i<10; $i++) {
 		echo '
-			<TD BGCOLOR="'.get_priority_color($i).'">'.$i.'</TD>';
+			<TD class="'.get_priority_color($i).'">'.$i.'</TD>';
 	}
 	echo '</tr></table>';
 }
@@ -290,7 +290,7 @@ Function GraphIt($name_string,$value_string,$title) {
 	$bars=array();
 
 	for ($i = 0; $i < $counter; $i++) {
-		$bars[$i]=$GLOBALS['COLOR_LTBACK1'];
+		$bars[$i]='';
 	}
 
 	$counter=count($value_string);
@@ -384,8 +384,8 @@ Function  ShowResultSet($result,$title="Untitled",$linkify=false)  {
 		/*  Create the title  */
 
 		echo '
-		<TR BGCOLOR="'.$HTML->COLOR_HTMLBOX_TITLE.'">
-		<TD COLSPAN="'.$cols.'"><B><FONT COLOR="'. $HTML->FONTCOLOR_HTMLBOX_TITLE .'">'.$title.'</B></TD></TR>';
+		<TR class="boxtitle">
+		<TD COLSPAN="'.$cols.'" class="boxitem"><B>'.$title.'</B></TD></TR>';
 
 		/*  Create  the  headers  */
 		echo '
@@ -397,7 +397,7 @@ Function  ShowResultSet($result,$title="Untitled",$linkify=false)  {
 
 		/*  Create the rows  */
 		for ($j = 0; $j < $rows; $j++) {
-			echo '<TR BGCOLOR="'. html_get_alt_row_color($j) .'">';
+			echo '<TR class="'. html_get_alt_row_color($j) .'">';
 			for ($i = 0; $i < $cols; $i++) {
 				if ($linkify && $i == 0) {
 					$link = '<A HREF="'.$PHP_SELF.'?';
@@ -507,4 +507,45 @@ function util_get_content($file){
     }
 }
 
+// this function get the css file for the theme
+function util_get_css_theme(){
+    global $theme;
+
+    //determine font for this platform
+    if (browser_is_windows() && browser_is_ie()) {
+
+        return "/css/".$theme."/".$theme."_small.css";
+
+    } else if (browser_is_windows()) {
+
+        //netscape on wintel
+        return "/css/".$theme."/".$theme."_small.css";
+
+    } else if (browser_is_mac()){
+
+        //mac users need bigger fonts
+        return "/css/".$theme."/".$theme."_small.css";
+
+    } else {
+
+        return "/css/".$theme."/".$theme."_small.css";
+
+    }
+}
+
+// this function get the image file for the theme
+function util_get_image_theme($fn){
+
+    global $theme;
+
+    return "/images/".$theme.".theme/".$fn;
+}
+
+// this function get the image directory for the theme
+function util_get_dir_image_theme(){
+
+    global $theme;
+
+    return "/images/".$theme.".theme/";
+}
 ?>

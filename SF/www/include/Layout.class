@@ -19,30 +19,10 @@
 */
 
 
+
 class Layout extends Error {
 
-	var $imgroot = '/themes/codex/images/';
-
-	// Color Constants
-        var $COLOR_CONTENT_BACK= '#F7F4F2';
-        var $COLOR_LTBACK1= '#EAECEF';
-        var $COLOR_LTBACK2= '#FAFAFA';
-        var $COLOR_HTMLBOX_TITLE = '#E0DDD2';
-        var $COLOR_HTMLBOX_BACK = '#EAECEF';
-
-	// Font Face Constants
-	var $FONT_CONTENT = 'Helvetica';
-	var $FONT_HTMLBOX_TITLE = 'Helvetica';
-
-	// Font Color Constants
-	var $FONTCOLOR_HTMLBOX_TITLE = '#333333';
-	var $FONTCOLOR_CONTENT = '#333333';
-
-	// Font Size Constants
-	var $FONTSIZE = 'small';
-	var $FONTSIZE_SMALLER='x-small';
-        var $FONTSIZE_SMALLEST='xx-small';
-	var $FONTSIZE_HTMLBOX_TITLE = 'small';
+	var $imgroot = '/images/'.util_get_dir_image_theme();
 
 	//Define all the icons for this theme
 	var $icons = array('Summary' => 'ic/anvil24.png',
@@ -65,66 +45,32 @@ class Layout extends Error {
 	// Constuctor
 	function Layout() {
 		GLOBAL $bgpri;
+
 		// Constructor for parent class...
 		$this->Error();
 
 		/*
 	        Set up the priority color array one time only
 		*/
-		$bgpri[1] = '#dadada';
-		$bgpri[2] = '#dad0d0';
-		$bgpri[3] = '#dacaca';
-		$bgpri[4] = '#dac0c0';
-		$bgpri[5] = '#dababa';
-		$bgpri[6] = '#dab0b0';
-		$bgpri[7] = '#daaaaa';
-		$bgpri[8] = '#da9090';
-		$bgpri[9] = '#da8a8a';
+		$bgpri[1] = 'priora';
+		$bgpri[2] = 'priorb';
+		$bgpri[3] = 'priorc';
+		$bgpri[4] = 'priord';
+		$bgpri[5] = 'priore';
+		$bgpri[6] = 'priorf';
+		$bgpri[7] = 'priorg';
+		$bgpri[8] = 'priorh';
+		$bgpri[9] = 'priori';
 
-                //determine font for this platform
-                if (browser_is_windows() && browser_is_ie()) {
-
-                        //ie needs smaller fonts
-                        $this->FONTSIZE='x-small';
-                        $this->FONTSIZE_SMALLER='xx-small';
-                        $this->FONTSIZE_SMALLEST='7pt';
-
-                } else if (browser_is_windows()) {
-
-                        //netscape on wintel
-                        $this->FONTSIZE='small';
-                        $this->FONTSIZE_SMALLER='x-small';
-                        $this->FONTSIZE_SMALLEST='x-small';
-
-                } else if (browser_is_mac()){
-
-                        //mac users need bigger fonts
-                        $this->FONTSIZE='medium';
-                        $this->FONTSIZE_SMALLER='small';
-                        $this->FONTSIZE_SMALLEST='x-small';
-
-                } else {
-
-                        //linux and other users
-                        $this->FONTSIZE='small';
-                        $this->FONTSIZE_SMALLER='x-small';
-                        $this->FONTSIZE_SMALLEST='xx-small';
-
-                }
-
-		$this->FONTSIZE_HTMLBOX_TITLE = $this->FONTSIZE;
 	}
 
 	// Box Top, equivalent to html_box1_top()
 	function box1_top($title,$echoout=1,$bgcolor='',$cols=2){
-	        if (!$bgcolor) {
-        	        $bgcolor=$this->COLOR_HTMLBOX_BACK;
-	        }
-        	$return = '<TABLE cellspacing="1" cellpadding="5" width="100%" border="0" bgcolor="'.$this->COLOR_HTMLBOX_BACK.'">
-                        <TR BGCOLOR="'.$this->COLOR_HTMLBOX_TITLE.'" align="center">
+        	$return = '<TABLE class="boxtable" cellspacing="1" cellpadding="5" width="100%" border="0">
+                        <TR class="boxtitle" align="center">
                                 <TD colspan="'.$cols.'"><SPAN class=titlebar>'.$title.'</SPAN></TD>
                         </TR>
-                        <TR align=left bgcolor="'.$bgcolor.'">
+                        <TR class="boxitem">
                                 <TD colspan="'.$cols.'">';
 	        if ($echoout) {
         	        print $return;
@@ -135,17 +81,14 @@ class Layout extends Error {
 
 	// Box Middle, equivalent to html_box1_middle()
 	function box1_middle($title,$bgcolor='',$cols=2) {
-	        if (!$bgcolor) {
-        	        $bgcolor=$this->COLOR_HTMLBOX_BACK;
-	        }
         	return '
                                 </TD>
                         </TR>
-
-<TR BGCOLOR="'.$this->COLOR_HTMLBOX_TITLE.'" align="center">
+    
+                        <TR class="boxtitle">
                                 <TD colspan="'.$cols.'"><SPAN class=titlebar>'.$title.'</SPAN></TD>
                         </TR>
-                        <TR align=left bgcolor="'.$bgcolor.'">
+                        <TR class="boxitem">
                                 <TD colspan="'.$cols.'">';
 	}
 
@@ -165,7 +108,7 @@ class Layout extends Error {
 
 	function generic_header_start($params) {
 
-        	global $G_USER, $G_SESSION;
+            global $G_USER, $G_SESSION;
 
 	        if (!$params['title']) {
         	        $params['title'] = $GLOBALS['sys_name'];
@@ -174,7 +117,7 @@ class Layout extends Error {
 	        }
         	?>
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
         "http://www.w3.org/TR/REC-html40/loose.dtd">
 
 <html lang="en">
@@ -188,7 +131,8 @@ class Layout extends Error {
         }
         // -->
         </SCRIPT>
-	<link rel="SHORTCUT ICON" href="/images/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="<? echo util_get_css_theme(); ?>">
+	<link rel="SHORTCUT ICON" href="<? echo util_get_image_theme("favicon.ico"); ?>">
 
 <?php
 	}
@@ -203,8 +147,7 @@ class Layout extends Error {
 
 	        global $IS_DEBUG,$QUERY_COUNT;
         	if ($IS_DEBUG && user_ismember(1,'A')) {
-	                echo "<CENTER><B><FONT COLOR=RED>Query Count: $QUERY_COUNT</FONT
-></B></CENTER>";
+	                echo "<CENTER><B><span class=\"highlight\">Query Count: $QUERY_COUNT</span></B></CENTER>";
                 	echo "<P>$GLOBALS[G_DEBUGQUERY]";
         	}
 	        ?>
@@ -215,6 +158,7 @@ class Layout extends Error {
 	}
 
 	function header($params) {
+	
 	        $this->generic_header_start($params); 
 
         	//themable someday?
@@ -222,60 +166,13 @@ class Layout extends Error {
 
         ?>
 
-                <style type="text/css">
-                        <!--
-        OL,UL,P,BODY,TD,TR,TH,FORM { font-family: <?php echo $this->FONT_CONTENT . ',' . $site_fonts; ?>; font-size:<?php echo $this->FONTSIZE; ?>; color: <?php echo $this->FONTCOLOR_CONTENT ?>; }
-
-        H1 { font-size: x-large; font-family: <?php echo $site_fonts; ?>; }
-        H2 { font-size: large; font-family: <?php echo $site_fonts; ?>; }
-        H3 { font-size: medium; font-family: <?php echo $site_fonts; ?>; }
-        H4 { font-size: small; font-family: <?php echo $site_fonts; ?>; }
-        H5 { font-size: x-small; font-family: <?php echo $site_fonts; ?>; }
-        H6 { font-size: xx-small; font-family: <?php echo $site_fonts; ?>; }
-
-        PRE,TT { font-family: courier,sans-serif }
-
-        SPAN.center { text-align: center }
-        SPAN.boxspace { font-size: 2pt; }
-        SPAN.osdn {font-size: <?php echo $this->FONTSIZE; ?>; font-family: <?php echo $site_fonts ?>;font-weight: bold;}
-        SPAN.search {font-size: <?php echo $this->FONTSIZE_SMALLER; ?>; font-family:  <?php echo $site_fonts ?>;}
-        SPAN.slogan {font-size: large; font-weight: bold; font-family: <?php echo $site_fonts; ?>;}
-        SPAN.footer {font-size: <?php echo $this->FONTSIZE_SMALLER; ?>; font-family: <?php echo $site_fonts; ?>;}
-
-        A.maintitlebar { color: #FFFFFF }
-        A.maintitlebar:visited { color: #FFFFFF }
-
-        A.sortbutton { color: #FFFFFF; text-decoration: underline; }
-        A.sortbutton:visited { color: #FFFFFF; text-decoration: underline; }
-
-        .menus { color: #9b4020; text-decoration: none; }
-        .menus:visited { color: #9b4020; text-decoration: none; }
-
-        A:link { text-decoration:none }
-        A:visited { text-decoration:none }
-        A:active { text-decoration:none }
-        A:hover { text-decoration:underline; color:#FF0000 }
-
-        .tabs { color: #000000; }
-        .tabs:visited { color: #000000; }
-        .tabs:hover { color:#FF0000; }
-        .tabselect { color: #000000; font-weight: bold; }
-        .tabselect:visited { font-weight: bold;}
-        .tabselect:hover { color:#FF0000; font-weight: bold; }
-
-        .titlebar { text-decoration:none; color:#000000; font-family: <?php echo $this->FONT_HTMLBOX_TITLE . ',' . $site_fonts; ?>; font-size: <?php echo $this->FONTSIZE_HTMLBOX_TITLE; ?>; font-weight: bold; }
-        .develtitle { color:#000000; font-weight: bold; }
-        .legallink { color:#000000; font-weight: bold; }
-                        -->
-                </style>
-
  	<?php
         $this->generic_header_end($params); 
 ?>
 
-<!-- LJ vlink was #5b3010 but not very readable so set them like links -->
-<body text="#333333" link="#8b4020" alink="#000000" vlink="#8b4020" bgcolor="#bcbcad" leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0" marginwidth="0" marginheight="0">
+<body leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0" marginwidth="0" marginheight="0">
 <?php
+
 
 /*
 
@@ -293,41 +190,36 @@ echo html_blankimage(5,100);
 
 <!-- First line with borders and corners -->
            <tr>
-               <td background="<?php echo $this->imgroot; ?>upper_left_corner.png" width="1%" height="26"><img src="<?php echo $this->imgroot; ?>upper_left_corner.png" width="16" height="26" alt=" "></td>
-                <td background="<?php echo $this->imgroot; ?>top_border.png" align="left" colspan="3" width="99%"><a href="/"><img src="<?php echo $this->imgroot; ?>codex_banner_lc.png" border="0" alt="<?php echo $GLOBALS['sys_name']; ?> Banner"></a></td>
-                <td><img src="<?php echo $this->imgroot; ?>upper_right_corner.png" width="16" height="26" alt=" "></td>
+               <td background="<? echo util_get_image_theme("upper_left_corner.png"); ?>" width="1%" height="26"><img src="<? echo util_get_image_theme("upper_left_corner.png"); ?>" width="16" height="26" alt=" "></td>
+                <td background="<? echo util_get_image_theme("top_border.png"); ?>" align="left" colspan="3" width="99%"><a href="/"><img src="<? echo util_get_image_theme("codex_banner_lc.png"); ?>" border="0" alt="<?php echo $GLOBALS['sys_name']; ?> Banner"></a></td>
+                <td><img src="<? echo util_get_image_theme("upper_right_corner.png"); ?>" width="16" height="26" alt=" "></td>
         </tr>
 
 
 <!-- Second line with menus and content -->
         <tr>
 
-                <td background="<?php echo $this->imgroot; ?>left_border.png" align="left" valign="bottom" alt=""><img src="<?php echo $this->imgroot; ?>bottom_left_corner.png" width="16" height="16" alt=""></td>
+                <td background="<? echo util_get_image_theme("left_border.png"); ?>" align="left" valign="bottom" alt=""><img src="<? echo util_get_image_theme("bottom_left_corner.png"); ?>" width="16" height="16" alt=""></td>
 
-                <td colspan="3" bgcolor="#ffffff">
+                <td colspan="3" >
 <!-- start main body cell -->
 
 
         <table style=menus cellpadding="0" cellspacing="0" border="0" width="100%">
 
                 <tr>
-                    <td width="60" bgcolor="#ece9e5" align="left" valign="top">
+                    <td class="menuframe">
 
         <!-- VA Linux Stats Counter -->
         <?php
         if (!session_issecure()) {
                //(LJ) print '<IMG src="http://www2.valinux.com/clear.gif?id=105" width=140 height=1 alt="Counter"><BR>';
-                print '<IMG src="/images/clear.png?id=105" width=140 height=1 alt="Counter"><BR>';
+                print '<IMG src="'.util_get_image_theme("clear.png").'" width=140 height=1 alt="Counter"><BR>';
         } else {
                 print html_blankimage(1,140) . '<br>';
         }
         ?>
 
-
-<!-- LJ the logo is now in the First row -->
-        <!--CENTER-->
-        <!-- LJ a href="/"><IMG src="<?php echo $this->imgroot; ?>codex_logo2.gif" alt=" Code eXchange " border="0" width="123" height="54"></A>-->
-        <!--/CENTER-->
 
         <BR><BR><BR><BR><BR>
         <P>
@@ -339,9 +231,9 @@ echo html_blankimage(5,100);
         <P>
         </TD>
 
-        <td width="15" background="<?php echo $this->imgroot; ?>fade.png" nowrap>&nbsp;</td>
+        <td width="15" background="<? echo util_get_image_theme("fade.png"); ?>" nowrap>&nbsp;</td>
     
-        <td valign="top" bgcolor="<?php echo $this->COLOR_CONTENT_BACK; ?>">
+        <td class="contenttable">
         <BR>
 <?php
 	}
@@ -349,19 +241,14 @@ echo html_blankimage(5,100);
 	function footer($params) {
         ?>
         <!-- end content -->
-        <p>&nbsp;</p>
-        </td>
-        <td width="9" bgcolor="<?php echo $this->COLOR_CONTENT_BACK; ?>">&nbsp;
-        </td>
-
         </tr>
 <!-- New row added for the thin black line at the bottom of the array -->
-<tr><td background="<?php echo $this->imgroot; ?>black.gif" colspan="4" align="center"><img src="<?php echo $this->imgroot; ?>clear.png" width="2" height="2" alt=" "></td> </tr>
+<tr><td background="<? echo util_get_image_theme("black.png"); ?>" colspan="4" align="center"><img src="<?php echo $this->imgroot; ?>clear.png" width="2" height="2" alt=" "></td> </tr>
         </table>
 
                 </td>
 
-                <td background="<?php echo $this->imgroot; ?>right_border.png" valign="bottom"><img src="<?php echo $this->imgroot; ?>bottom_right_corner.png" width="16" height="16" alt=" "></td>
+                <td background="<? echo util_get_image_theme("right_border.png"); ?>" valign="bottom"><img src="<? echo util_get_image_theme("bottom_right_corner.png"); ?>" width="16" height="16" alt=" "></td>
         </tr>
 
 </table>
@@ -378,12 +265,12 @@ echo html_blankimage(5,100);
                 	Use only for the top most menu
 	        */
         ?>
-<table cellpadding="0" cellspacing="0" border="0" width="140">
+<table class="menutable">
         <tr>
-                <td align="left" valign="middle"><font face="arial, helvetica" size="2"><b><?php echo $title; ?></b></font><br></td>
+                <td class="menutitle"><?php echo $title; ?><br></td>
         </tr>
         <tr>
-                <td align="right" valign="middle">
+                <td class="menuitem">
         <?php
 	}
 
@@ -401,7 +288,7 @@ echo html_blankimage(5,100);
 	}
 
 	function menu_entry($link, $title) {
-        	print "\t".'<font face="arial, helvetica" size="2"><A class="menus" href="'.$link.'">'.$title.'</A> &nbsp;<img src="'.$this->imgroot.'point1.png" alt=" " width="7" height="7"></font><br>';
+        	print "\t".'<A class="menus" href="'.$link.'">'.$title.'</A> &nbsp;<img src="'.util_get_image_theme("point1.png").'" alt=" " width="7" height="7"><br>';
 	}
 
         /*!     @function tab_entry

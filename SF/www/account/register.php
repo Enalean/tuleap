@@ -102,13 +102,10 @@ your account.
     $HTML->header(array('title'=> $GLOBALS['sys_name'].': Register'));
 
     if (browser_is_windows() && browser_is_ie() && browser_get_version() < '5.1') {
-	// LJ not needed on CodeX. We do not use SSL
-	// LJ		echo '<H2><FONT COLOR="RED">Internet Explorer users need to 
-	// LJ		upgrade to IE 5.01 or higher, preferably with 128-bit SSL or use Netscape 4.7 or higher</FONT></H2>';	
     }
     if (browser_is_ie() && browser_is_mac()) {
-	echo '<H2><FONT COLOR="RED">Internet Explorer on the Macintosh
-		is not supported currently. Use Netscape 4.7 or higher</FONT></H2>';
+	echo '<H2><span class="highlight">Internet Explorer on the Macintosh
+		is not supported currently. Use Netscape 4.7 or higher</span></H2>';
     }
 
 
@@ -119,7 +116,7 @@ your account.
 
 <?php 
 if ($register_error) {
-    print "<p><blink><b><FONT color=#FF0000>$register_error</FONT></b></blink>";
+    print "<p><blink><b><span class="feedback">$register_error</span></b></blink>";
 } ?>
 
 <form action="http://<?php echo $HTTP_HOST; ?>/account/register.php" method="post">

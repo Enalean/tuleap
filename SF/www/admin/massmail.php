@@ -35,7 +35,7 @@ $count_sfadmin = $row_count[count];
 
 print '<P><B>Mail Engine for '.$GLOBALS['sys_name'].' Subscribers (MESS)</B>
 
-<P>Be <FONT color=#FF0000><B>VERY</B></FONT> careful with this form,
+<P>Be <span class="highlight"><B>VERY</B></span> careful with this form,
 because sutmitting it WILL send email to lots of users.
 
 <FORM action="massmail_execute.php">

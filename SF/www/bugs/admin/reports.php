@@ -141,7 +141,7 @@ if ($new_report) {
 	$tf_search = 'TFSRCH_'.$field;
 	$tf_report = 'TFREP_'.$field;
 	$tf_colwidth = 'TFCW_'.$field;
-	echo '<TR BGCOLOR="'. util_get_alt_row_color($i) .'">';
+	echo '<TR class="'. util_get_alt_row_color($i) .'">';
 	
 	echo "\n<td>".bug_data_get_label($field).'</td>'.
 	    "\n<td>".bug_data_get_description($field).'</td>'.
@@ -248,7 +248,7 @@ if ($new_report) {
 	$tf_report_val = $fld[$field]['place_result'];
 	$tf_colwidth_val = $fld[$field]['col_width'];
 
-	echo '<TR BGCOLOR="'. util_get_alt_row_color($i) .'">';
+	echo '<TR class="'. util_get_alt_row_color($i) .'">';
 	
 	echo "\n<td>".bug_data_get_label($field).'</td>'.
 	    "\n<td>".bug_data_get_description($field).'</td>'.
@@ -292,7 +292,7 @@ if ($new_report) {
 	$i=0;
 	while ($arr = db_fetch_array($res)) {
 	    
-	    echo '<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD>';
+	    echo '<TR class="'. util_get_alt_row_color($i) .'"><TD>';
 	    
 	    if ( ($arr['scope']=='P') && !user_ismember($group_id,'A') )
 		echo $arr['report_id'];
@@ -312,7 +312,7 @@ if ($new_report) {
 		echo '<A HREF="'.$PHP_SELF.'?group_id='.$group_id.
 		'&delete_report=1&report_id='.$arr['report_id'].
 		'" onClick="return confirm(\'Delete this Report?\')">'.
-		    '<img src="/images/ic/trash.png" border="0"></A>';
+		    '<img src="'.util_get_image_theme("ic/trash.png").'" border="0"></A>';
 
 	    echo '</td></tr>';
 	    $i++;

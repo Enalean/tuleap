@@ -23,7 +23,7 @@ of the <?php print $GLOBALS['sys_name']; ?> Web Site. You may use forums, subscr
 	$minutesleft = 60 - $date[minutes];
 ?>
 
-<P><center><b><font color="red">** IMPORTANT REMARKS **</font></b></center>
+<P><center><b><span class="highlight">** IMPORTANT REMARKS **</span></b></center>
 <BR>While your Web account is available right now, it takes some time for <?php print $GLOBALS['sys_name']; ?> to create your <u>Shell account</u> (same user name, same password). Some features like CVS access depend on it. Your Shell account will be activated in about 
 
 <?php print "<b> $hoursleft</B> hour <B>$minutesleft</B> minutes"; ?> from now.
@@ -31,7 +31,7 @@ of the <?php print $GLOBALS['sys_name']; ?> Web Site. You may use forums, subscr
 <P>In the meantime we highly recommend that you browse through the site, read the 
 <A href="/docs/site/">Site Documentation</A> (e.g. the Xerox Code eXchange Policy) and finalize the setup of your <a href="/account/">User Profile</a> (Choose your Time Zone, define your skills profile,etc.)
 
-<P><center><b><font color="red">*-*-*-*</font></b></center>
+<P><center><b><span class="highlight">*-*-*-*</span></b></center>
 
 <P>Enjoy the site, provide us with feedback on ways
 that we can improve <?php print $GLOBALS['sys_name']; ?> and speak of <?php print $GLOBALS['sys_name']; ?> around you.

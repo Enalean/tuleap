@@ -13,7 +13,7 @@
 // Modified by Laurent Julliard for CodeX project
 // $Id$
 
-function show_calendar(str_target, str_datetime) {
+function show_calendar(str_target, str_datetime, css_theme) {
         var arr_months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
                 "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         var week_days = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
@@ -61,45 +61,46 @@ function show_calendar(str_target, str_datetime) {
                 "<html>\n"+
                 "<head>\n"+
                 "        <title>Calendar</title>\n"+
+                "<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/"+css_theme+"\">\n"+
                 "</head>\n"+
-                "<body bgcolor=\"#BCBCAD\">\n"+
+                "<body>\n"+
                 "<table class=\"clsOTable\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n"+
-                "<tr><td bgcolor=\"#E0DDD2\">\n"+
+                "<tr><td class=\"calendar_month\">\n"+
                 "<table cellspacing=\"1\" cellpadding=\"3\" border=\"0\" width=\"100%\">\n"+
                 "<tr>\n"+
-                "        <td bgcolor=\"#E0DDD2\"><a href=\"javascript:window.opener.show_calendar('"+
+                "        <td class=\"calendar_month\"><a href=\"javascript:window.opener.show_calendar('"+
                 //str_target+"', '"+dt2dtstr(dt_prev_year)+"'+document.cal.time.value);\">"+
-                str_target+"', '"+dt2dtstr(dt_prev_year)+"');\">"+
-		"<img src=\"/images/calendar/prev_year.png\" width=\"16\" height=\"16\" border=\"0\""+
+                str_target+"', '"+dt2dtstr(dt_prev_year)+"','"+css_theme+"');\">"+
+		"<img src=\"/images/"+css_theme+".theme/calendar/prev_year.png\" width=\"16\" height=\"16\" border=\"0\""+
                 " alt=\"previous year\"></a></td>\n"+
-                "        <td bgcolor=\"#E0DDD2\"><a href=\"javascript:window.opener.show_calendar('"+
+                "        <td class=\"calendar_month\"><a href=\"javascript:window.opener.show_calendar('"+
                 //str_target+"', '"+ dt2dtstr(dt_prev_month)+"'+document.cal.time.value);\">"+
-		str_target+"', '"+ dt2dtstr(dt_prev_month)+"');\">"+
-                "<img src=\"/images/calendar/prev.png\" width=\"16\" height=\"16\" border=\"0\""+
+		str_target+"', '"+ dt2dtstr(dt_prev_month)+"','"+css_theme+"');\">"+
+                "<img src=\"/images/"+css_theme+".theme/calendar/prev.png\" width=\"16\" height=\"16\" border=\"0\""+
                 " alt=\"previous month\"></a></td>\n"+
 
-                "        <td bgcolor=\"#E0DDD2\" colspan=\"3\" align=\"middle\">"+
-                "<font size=\"2\">"
-                +arr_months[dt_datetime.getMonth()]+" "+dt_datetime.getFullYear()+"</font></td>\n"+
+                "        <td class=\"calendar_month\" colspan=\"3\" align=\"middle\">"+
+                "<span class=\"calendar_font_month\">"
+                +arr_months[dt_datetime.getMonth()]+" "+dt_datetime.getFullYear()+"</span></td>\n"+
 
-                "        <td bgcolor=\"#E0DDD2\" align=\"right\"><a href=\"javascript:window.opener.show_calendar('"
+                "        <td class=\"calendar_month\" align=\"right\"><a href=\"javascript:window.opener.show_calendar('"
                 //+str_target+"', '"+dt2dtstr(dt_next_month)+"'+document.cal.time.value);\">"+
-                +str_target+"', '"+dt2dtstr(dt_next_month)+"');\">"+
-                "<img src=\"/images/calendar/next.png\" width=\"16\" height=\"16\" border=\"0\""+
+                +str_target+"', '"+dt2dtstr(dt_next_month)+"','"+css_theme+"');\">"+
+                "<img src=\"/images/"+css_theme+".theme/calendar/next.png\" width=\"16\" height=\"16\" border=\"0\""+
                 " alt=\"next month\"></a></td>\n"+
-                "        <td bgcolor=\"#E0DDD2\" align=\"right\"><a href=\"javascript:window.opener.show_calendar('"
+                "        <td class=\"calendar_month\" align=\"right\"><a href=\"javascript:window.opener.show_calendar('"
                 //+str_target+"', '"+dt2dtstr(dt_next_year)+"'+document.cal.time.value);\">"+
-		+str_target+"', '"+dt2dtstr(dt_next_year)+"');\">"+
-                "<img src=\"/images/calendar/next_year.png\" width=\"16\" height=\"16\" border=\"0\""+
+		+str_target+"', '"+dt2dtstr(dt_next_year)+"','"+css_theme+"');\">"+
+                "<img src=\"/images/"+css_theme+".theme/calendar/next_year.png\" width=\"16\" height=\"16\" border=\"0\""+
                 " alt=\"next year\"></a></td>\n"+
                 "</tr>\n");
         var dt_current_day = new Date(dt_firstday);
         // print weekdays titles
         str_buffer += "<tr>\n";
         for (var n=0; n<7; n++)
-                str_buffer += "        <td bgcolor=\"#FFE6B5\">"+
-                "<font  size=\"2\">"+
-                week_days[(n_weekstart+n)%7]+"</font></td>\n";
+                str_buffer += "        <td class=\"calendar_day\">"+
+                "<span  class=\"calendar_font_day\">"+
+                week_days[(n_weekstart+n)%7]+"</span></td>\n";
         // print calendar table
         str_buffer += "</tr>\n";
         while (dt_current_day.getMonth() == dt_datetime.getMonth() ||
@@ -110,38 +111,33 @@ function show_calendar(str_target, str_datetime) {
                                 if (dt_current_day.getDate() == dt_datetime.getDate() &&
                                         dt_current_day.getMonth() == dt_datetime.getMonth())
                                         // print current date
-                                        str_buffer += "        <td bgcolor=\"#FFFFA3\" align=\"right\">";
+                                        str_buffer += "        <td class=\"calendar_currentday\" align=\"right\">";
                                 else if (dt_current_day.getDay() == 0 || dt_current_day.getDay() == 6)
                                         // weekend days
-                                        str_buffer += "        <td bgcolor=\"#DBEAF5\" align=\"right\">";
+                                        str_buffer += "        <td class=\"calendar_nextmonth\" align=\"right\">";
                                 else
                                         // print working days of current month
-                                        str_buffer += "        <td bgcolor=\"white\" align=\"right\">";
+                                        str_buffer += "        <td class=\"calendar_daymonth\" align=\"right\">";
 
                                 if (dt_current_day.getMonth() == dt_datetime.getMonth())
                                         // print days of current month
                                         str_buffer += "<a href=\"javascript:window.opener."+str_target+
 					    //".value='"+dt2dtstr(dt_current_day)+"'+document.cal.time.value; window.close();\">"+
                                         ".value='"+dt2dtstr(dt_current_day)+"'; window.close();\">"+
-                                        "<font color=\"black\"  size=\"2\">";
+                                        "<span class=\"calendar_font\">";
                                 else
                                         // print days of other months
                                         str_buffer += "<a href=\"javascript:window.opener."+str_target+
 					    //".value='"+dt2dtstr(dt_current_day)+"'+document.cal.time.value; window.close();\">"+
                                         ".value='"+dt2dtstr(dt_current_day)+"'; window.close();\">"+
-                                        "<font color=\"gray\"  size=\"2\">";
-                                str_buffer += dt_current_day.getDate()+"</font></a></td>\n";
+                                        "<span class=\"calendar_font_othermonth\">";
+                                str_buffer += dt_current_day.getDate()+"</span></a></td>\n";
                                 dt_current_day.setDate(dt_current_day.getDate()+1);
                 }
                 // print row footer
                 str_buffer += "</tr>\n";
         }
         // print calendar footer
-        /*str_buffer +=
-                  "<form name=\"cal\">\n<tr><td colspan=\"7\" bgcolor=\"#FFE6B5\">"+
-                  "<font  size=\"2\">"+
-                  "Time:<input type=\"text\" name=\"time\" value=\""+dt2tmstr(dt_datetime)+
-                  "\" size=\"5\" maxlength=\"5\">(hh:mm 24 hrs)</font></td></tr>\n</form>\n" +*/
 
           str_buffer +=
 	         "</table>\n" +
@@ -151,7 +147,7 @@ function show_calendar(str_target, str_datetime) {
 
 
         var vWinCal = window.open("", "Calendar",
-                "width=200,height=200,status=no,resizable=yes,top=200,left=200");
+                "width=200,height=187,status=no,resizable=yes,top=200,left=200");
         vWinCal.opener = self;
         vWinCal.focus();
         var calc_doc = vWinCal.document;

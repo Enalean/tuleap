@@ -269,6 +269,8 @@ function bug_field_display($field_name, $group_id, $value='xyxy',
 
 function bug_field_date($field_name,$value='',$size=0,$maxlength=0,$ro=false) {
 
+    global $theme;
+
     // CAUTION!!!! The Javascript below assumes that the date always appear
     // in a form called 'bug_form'
     if ($ro)
@@ -279,14 +281,16 @@ function bug_field_date($field_name,$value='',$size=0,$maxlength=0,$ro=false) {
 
 	$html = '<INPUT TYPE="text" name="'.$field_name.
 	'" size="'.$size.'" MAXLENGTH="'.$maxlength.'" VALUE="'.$value.'">'.
-	'<a href="javascript:show_calendar(\'document.bug_form.'.$field_name.'\', document.bug_form.'.$field_name.'.value);">'.
-	'<img src="/images/calendar/cal.png" width="16" height="16" border="0" alt="Click Here to Pick up a date"></a>';
+	'<a href="javascript:show_calendar(\'document.bug_form.'.$field_name.'\', document.bug_form.'.$field_name.'.value,\''.$theme.'\');">'.
+	'<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="Click Here to Pick up a date"></a>';
     }
     return($html);
 
 }
 
 function bug_multiple_field_date($field_name,$date_begin='',$date_end='',$size=0,$maxlength=0,$ro=false) {
+
+    global $theme;
 
     // CAUTION!!!! The Javascript below assumes that the date always appear
     // in a field called 'bug_form'
@@ -302,12 +306,12 @@ function bug_multiple_field_date($field_name,$date_begin='',$date_end='',$size=0
 
 	$html = 'Start:<INPUT TYPE="text" name="'.$field_name.
 	'" size="'.$size.'" MAXLENGTH="'.$maxlength.'" VALUE="'.$date_begin.'">'.
-	'<a href="javascript:show_calendar(\'document.bug_form.'.$field_name.'\', document.bug_form.'.$field_name.'.value);">'.
-	'<img src="/images/calendar/cal.png" width="16" height="16" border="0" alt="Click Here to Pick up start date"></a><br>'.
+	'<a href="javascript:show_calendar(\'document.bug_form.'.$field_name.'\', document.bug_form.'.$field_name.'.value,\''.$theme.'\');">'.
+	'<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="Click Here to Pick up start date"></a><br>'.
 	'End :<INPUT TYPE="text" name="'.$field_name.'_end'.
 	'" size="'.$size.'" MAXLENGTH="'.$maxlength.'" VALUE="'.$date_end.'">'.
-	'<a href="javascript:show_calendar(\'document.bug_form.'.$field_name.'_end\', document.bug_form.'.$field_name.'_end.value);">'.
-	'<img src="/images/calendar/cal.png" width="16" height="16" border="0" alt="Click Here to Pick up end date"></a>';
+	'<a href="javascript:show_calendar(\'document.bug_form.'.$field_name.'_end\', document.bug_form.'.$field_name.'_end.value,\''.$theme.'\');">'.
+	'<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="Click Here to Pick up end date"></a>';
     }
 
     return($html);
@@ -519,7 +523,7 @@ function show_buglist ($result,$offset,$total_rows,$field_arr,$title_arr,
 	    '#results"><B>< Previous '.$chunksz.'</B></A></td>';
 	} else {
 	    $nav_bar .=
-		'<font color="Gray">&lt;&lt; Begin&nbsp;&nbsp;&lt; Previous '.$chunksz.'</font>';
+		'<span class="disable">&lt;&lt; Begin&nbsp;&nbsp;&lt; Previous '.$chunksz.'</span>';
 	}
     }
 
@@ -527,7 +531,7 @@ function show_buglist ($result,$offset,$total_rows,$field_arr,$title_arr,
     
     $offset_last = min($offset+$chunksz-1, $total_rows-1);
 
-    $nav_bar .= '<td width= "60% " align = "center">Items '.($offset+1).' - '.
+    $nav_bar .= '<td width= "60% " align = "center" class="small">Items '.($offset+1).' - '.
 	($offset_last+1)."</td>\n";
 
     $nav_bar .= '<td width="20%" align ="right">';
@@ -541,14 +545,14 @@ function show_buglist ($result,$offset,$total_rows,$field_arr,$title_arr,
 
 	    $nav_bar .= 
 		'<A HREF="'.$url.'&offset='.($offset+$chunksz).
-		'#results"><B>Next '.$chunksz.' &gt;</B></A>'.
+		'#results" class="small"><B>Next '.$chunksz.' &gt;</B></A>'.
 		'&nbsp;&nbsp;&nbsp;&nbsp;'.
 		'<A HREF="'.$url.'&offset='.($offset_end).
-		'#results"><B>End &gt;&gt;</B></A></td>';
+		'#results" class="small"><B>End &gt;&gt;</B></A></td>';
 	} else {
 	    $nav_bar .= 
-		'<font color="Gray">Next '.$chunksz.
-		' &gt;&nbsp;&nbsp;End &gt;&gt;</font>';
+		'<span class="disable">Next '.$chunksz.
+		' &gt;&nbsp;&nbsp;End &gt;&gt;</span>';
 	}
     }
     $nav_bar .= '</td>';
@@ -562,7 +566,7 @@ function show_buglist ($result,$offset,$total_rows,$field_arr,$title_arr,
 
     for ($i=0; $i < $rows ; $i++) {
 
-	echo '<TR BGCOLOR="'.get_priority_color(db_result($result, $i, 'severity')) .'">'."\n";
+	echo '<TR class="'.get_priority_color(db_result($result, $i, 'severity')) .'">'."\n";
 
 	for ($j=0; $j<$nb_of_fields; $j++) {
 	    
@@ -572,6 +576,7 @@ function show_buglist ($result,$offset,$total_rows,$field_arr,$title_arr,
 	    } else {
 		$width = '';
 	    }
+	    $width .= ' class="small"';
 
 	    if (bug_data_is_date_field($field_arr[$j]) ) {
 		if ($value)
@@ -974,7 +979,7 @@ function show_dependent_bugs ($bug_id,$group_id) {
 
 		for ($i=0; $i < $rows; $i++) {
 			echo '
-			<TR BGCOLOR="'. util_get_alt_row_color($i) .'">
+			<TR class="'. util_get_alt_row_color($i) .'">
 				<TD><A HREF="/bugs/?func=detailbug&bug_id='.
 				db_result($result, $i, 'bug_id').
 				'&group_id='.$group_id.'">'.db_result($result, $i, 'bug_id').'</A></TD>
@@ -1033,7 +1038,7 @@ function format_bug_details ($bug_id, $group_id, $ascii=false) {
 		"Date: %-30sBy: %s\n".
 		($comment_type ? "%s\n%s" : '%s%s');
 	} else {
-	    $fmt = "\n".'<tr BGCOLOR="%s"><td><b>%s</b><BR>%s</td>'.
+	    $fmt = "\n".'<tr class="%s"><td><b>%s</b><BR>%s</td>'.
 		'<td valign="top">%s</td><td valign="top">%s</td></tr>';
 	}
 	
@@ -1143,7 +1148,7 @@ function show_bughistory ($bug_id,$group_id) {
 	    $field = db_result($result, $i, 'field_name');
 	    $value_id =  db_result($result, $i, 'old_value');
 
-	    echo "\n".'<TR BGCOLOR="'. util_get_alt_row_color($i) .
+	    echo "\n".'<TR class="'. util_get_alt_row_color($i) .
 		'"><TD>'.bug_data_get_label($field).'</TD><TD>';
 
 	    if (bug_data_is_select_box($field)) {
@@ -1212,7 +1217,7 @@ function format_bug_attached_files ($bug_id,$group_id,$ascii=false) {
 	$fmt = "\n\n-------------------------------------------------------\n".
 	    "Date: %s  Name: %s  Size: %dKB   By: %s\n%s\n%s";
     } else {
-	$fmt = "\n".'<TR BGCOLOR="%s"><td>%s</td><td>%s</td><td align="center">%s</td><td align="center">%s</td><td align="center">%s</td>'.
+	$fmt = "\n".'<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td><td align="center">%s</td><td align="center">%s</td>'.
 	    (user_ismember($group_id,'B2') ? '<td align="center">%s</td>':'').'</tr>';
     }
 
@@ -1240,7 +1245,7 @@ function format_bug_attached_files ($bug_id,$group_id,$ascii=false) {
 			    format_date($sys_datefmt,db_result($result, $i, 'date')),
 			    "<a href=\"$PHP_SELF?func=delete_file&group_id=$group_id&bug_id=$bug_id&bug_file_id=$bug_file_id\" ".
 			    '" onClick="return confirm(\'Delete this attachment?\')">'.
-			    '<IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A>');
+			    '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A>');
 	}
     }
 
@@ -1292,7 +1297,7 @@ function format_bug_cc_list ($bug_id,$group_id, $ascii=false) {
 	$title_arr[]='Delete?';
 	$out .= html_build_list_table_top ($title_arr);
 
-	$fmt = "\n".'<TR BGCOLOR="%s"><td>%s</td><td>%s</td><td align="center">%s</td>'.
+	$fmt = "\n".'<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td>'.
 	    '<td align="center">%s</td><td align="center">%s</td></tr>';
     }
 
@@ -1324,7 +1329,7 @@ function format_bug_cc_list ($bug_id,$group_id, $ascii=false) {
 		(user_getname(user_getid()) == db_result($result, $i, 'user_name') )) {
 		$html_delete = "<a href=\"$PHP_SELF?func=delete_cc&group_id=$group_id&bug_id=$bug_id&bug_cc_id=$bug_cc_id\" ".
 		'" onClick="return confirm(\'Delete this CC address?\')">'.
-		'<IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A>';
+		'<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A>';
 	    } else {
 		$html_delete = '-';
 	    }
@@ -1554,7 +1559,7 @@ function bug_criteria_list_to_text($criteria_list, $url)
 	    $attr = str_replace('<','',$attr);
 
 	    $arr_text[] = '<a href="'.$url.'&morder='.$morder.'#results">'.
-		bug_data_get_label($attr).'</a><img src="/images/'.
+		bug_data_get_label($attr).'</a><img src="'.util_get_dir_image_theme().
 		((substr($crit, -1) == '<') ? 'dn' : 'up').
 		'_arrow.png" border="0">';
 	}

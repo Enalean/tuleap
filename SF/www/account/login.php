@@ -79,7 +79,7 @@ if ($login && !$success) {
 		<?php
 	} else {
 		
-		echo '<h2><FONT COLOR="RED">'. $feedback .'</FONT></H2>';
+		echo '<h2><span class="feedback">'. $feedback .'</span></H2>';
 	} //end else
 
 }
@@ -88,13 +88,13 @@ if ($login && !$success) {
    with the use of Secured HTTP which we do not use on Codex as opposed
    SourceForge
 if (browser_is_windows() && browser_is_ie() && browser_get_version() < '5.1') {
-	echo '<H2><FONT COLOR="RED">Internet Explorer users need to
-	upgrade to IE 5.01 or higher, preferably with 128-bit SSL or use Netscape 4.7 or higher</FONT></H2>';
+	echo '<H2><span class="highlight">Internet Explorer users need to
+	upgrade to IE 5.01 or higher, preferably with 128-bit SSL or use Netscape 4.7 or higher</span></H2>';
 }
 
 if (browser_is_ie() && browser_is_mac()) {
-	echo '<H2><FONT COLOR="RED">Internet Explorer on the Macintosh 
-	is not supported currently. Use Netscape 4.7 or higher</FONT></H2>';
+	echo '<H2><span class="highlight">Internet Explorer on the Macintosh 
+	is not supported currently. Use Netscape 4.7 or higher</span></H2>';
 }
 
 */
@@ -104,7 +104,7 @@ if (browser_is_ie() && browser_is_mac()) {
 <p>
 <h2><?php print $GLOBALS['sys_name']; ?> Site Login</h2>
 <p>
-<font color="red"><B>Cookies must be enabled past this point.</B></font>
+<span class="highlight"><B>Cookies must be enabled past this point.</B></span>
 <P>
 <form action="http://<?php echo $sys_default_domain; ?>/account/login.php" method="post" name="form_login">
 <INPUT TYPE="HIDDEN" NAME="return_to" VALUE="<?php echo $return_to; ?>">

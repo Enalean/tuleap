@@ -30,7 +30,7 @@ Function  ShowResultsSubProjects($result) {
 
 	for($j=0; $j<$rows; $j++)  {
 
-		echo "<tr BGCOLOR=\"". html_get_alt_row_color($j) ."\">\n";
+		echo "<tr class=\"". html_get_alt_row_color($j) ."\">\n";
 
 		for ($i=0; $i<$cols; $i++)  {
 			printf("<TD>%s</TD>\n",db_result($result,$j,$i));
@@ -187,7 +187,7 @@ if ($group_id && user_ismember($group_id,'P2')) {
 					<INPUT TYPE="HIDDEN" NAME="group_project_id" VALUE="'.db_result($result,$i,'group_project_id').'">
 					<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">';
 				echo '
-					<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD>
+					<TR class="'. util_get_alt_row_color($i) .'"><TD>
 						<FONT SIZE="-1">
 						<B>Is Public?</B><BR>
 						<INPUT TYPE="RADIO" NAME="is_public" VALUE="1"'.((db_result($result,$i,'is_public')=='1')?' CHECKED':'').'> Yes<BR>
@@ -201,7 +201,7 @@ if ($group_id && user_ismember($group_id,'P2')) {
 						<FONT SIZE="-1">
 						<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Update">
 					</TD></TR>
-					<TR BGCOLOR="'.util_get_alt_row_color($i) .'">
+					<TR class="'.util_get_alt_row_color($i) .'">
 					  <TD COLSPAN="4">
 						<B>Description:</B>&nbsp;
 						<INPUT TYPE="TEXT" NAME="description" VALUE="'.

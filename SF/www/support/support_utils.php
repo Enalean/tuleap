@@ -145,13 +145,13 @@ function show_supportlist ($result,$offset,$set='open') {
 	for ($i=0; $i < $rows; $i++) {
 
 		echo '
-			<TR BGCOLOR="'. get_priority_color(db_result($result, $i, 'priority')) .'">'.
-			'<TD><A HREF="'.$PHP_SELF.'?func=detailsupport&support_id='. db_result($result, $i, 'support_id').
+			<TR class="'. get_priority_color(db_result($result, $i, 'priority')) .'">'.
+			'<TD class="small"><A HREF="'.$PHP_SELF.'?func=detailsupport&support_id='. db_result($result, $i, 'support_id').
 			'&group_id='. db_result($result, $i, 'group_id').'">'. db_result($result, $i, 'support_id') .'</A></TD>'.
-			'<TD>'. db_result($result, $i, 'summary') .'</TD>'.
-			'<TD>'. (($set != 'closed' && db_result($result, $i, 'date') < $then)?'<B>* ':'&nbsp; ') . format_date($sys_datefmt,db_result($result, $i, 'date')) .'</TD>'.
-			'<TD>'.util_user_link(db_result($result,$i,'assigned_to_user')).'</TD>'.
-			'<TD>'.util_user_link(db_result($result,$i,'submitted_by')).'</TD></TR>';
+			'<TD class="small">'. db_result($result, $i, 'summary') .'</TD>'.
+			'<TD class="small">'. (($set != 'closed' && db_result($result, $i, 'date') < $then)?'<B>* ':'&nbsp; ') . format_date($sys_datefmt,db_result($result, $i, 'date')) .'</TD>'.
+			'<TD class="small">'.util_user_link(db_result($result,$i,'assigned_to_user')).'</TD>'.
+			'<TD class="small">'.util_user_link(db_result($result,$i,'submitted_by')).'</TD></TR>';
 
 	}
 
@@ -159,13 +159,13 @@ function show_supportlist ($result,$offset,$set='open') {
 		Show extra rows for <-- Prev / Next -->
 	*/
 	echo '
-		<TR><TD COLSPAN="2">';
+		<TR><TD COLSPAN="2" class="small">';
 	if ($offset > 0) {
 		echo '<A HREF="'.$PHP_SELF.'?func=browse&group_id='.$group_id.'&set='.$set.'&offset='.($offset-50).'"><B><-- Previous 50</B></A>';
 	} else {
 		echo '&nbsp;';
 	}
-	echo '</TD><TD>&nbsp;</TD><TD COLSPAN="2">';
+	echo '</TD><TD>&nbsp;</TD><TD COLSPAN="2" class="small">';
 	
 	if ($rows==50) {
 		echo '<A HREF="'.$PHP_SELF.'?func=browse&group_id='.$group_id.'&set='.$set.'&offset='.($offset+50).'"><B>Next 50 --></B></A>';
@@ -300,7 +300,7 @@ function format_support_details ($support_id, $group_id, $ascii=false) {
 	
 	$out .= html_build_list_table_top ($title_arr);
 	
-	$fmt = "\n".'<tr BGCOLOR="%s"><td>%s</td>'.
+	$fmt = "\n".'<tr class="%s"><td>%s</td>'.
 	    '<td valign="top">%s</td><td valign="top">%s</td></tr>';
 	
     }
@@ -419,7 +419,7 @@ function show_supporthistory ($support_id) {
 		for ($i=0; $i < $rows; $i++) {
 			$field=db_result($result, $i, 'field_name');
 			echo '
-			<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD>'.$field.'</TD><TD>';
+			<TR class="'. util_get_alt_row_color($i) .'"><TD>'.$field.'</TD><TD>';
 
 			if ($field == 'support_status_id') {
 

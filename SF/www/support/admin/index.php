@@ -126,7 +126,7 @@ if ($group_id && user_ismember($group_id,'S2')) {
 		<P>
 		<INPUT TYPE="TEXT" NAME="cat_name" VALUE="" SIZE="15" MAXLENGTH="30"><BR>
 		<P>
-		<B><FONT COLOR="RED">Once you add a support category, it cannot be deleted or modified</FONT></B>
+		<B><span class="highlight">Once you add a support category, it cannot be deleted or modified</span></B>
 		<P>
 		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
 		</FORM>
@@ -163,7 +163,7 @@ if ($group_id && user_ismember($group_id,'S2')) {
 			echo html_build_list_table_top ($title_arr);
 
 			for ($i=0; $i < $rows; $i++) {
-				echo '<TR BGCOLOR="'. html_get_alt_row_color($i) .'">'.
+				echo '<TR class="'. html_get_alt_row_color($i) .'">'.
 					'<TD>'.db_result($result, $i, 'support_canned_id').'</TD>'.
 					'<TD><A HREF="'.$PHP_SELF.'?update_canned=1&support_canned_id='.
 						db_result($result, $i, 'support_canned_id').'&group_id='.$group_id.'">'.
@@ -269,7 +269,7 @@ if ($group_id && user_ismember($group_id,'S2')) {
 			<INPUT TYPE="TEXT" NAME="support_cat_name" VALUE="<?php 
 				echo db_result($result, 0, 'category_name'); ?>">
 			<P>
-			<B><FONT COLOR="RED">It is not recommended that you change the support category name because other things are dependent upon it.</FONT></B>
+			<B><span class="highlight">It is not recommended that you change the support category name because other things are dependent upon it.</span></B>
 			<P>
 			<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
 			</FORM>

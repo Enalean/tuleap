@@ -171,7 +171,7 @@ function show_add_snippet_box() {
 
 <H2>Now add snippets to your package</H2>
 <P>
-<FONT COLOR="RED"><B>IMPORTANT!</B></FONT>
+<span class="highlight"><B>IMPORTANT!</B></span>
 <P>
 If a new window opened, use it to add snippets to your package.
 If a new window did not open, use the following link to add to your package BEFORE you leave this page.

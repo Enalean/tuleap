@@ -37,7 +37,6 @@ function menu_show_search_box() {
     }
 
     print "\t<CENTER>\n";
-    print "\t<FONT SIZE=\"2\">\n";
     print "\t<FORM action=\"/search/\" method=\"post\">\n";
 
     print "\t<SELECT name=\"type_of_search\">\n";
@@ -83,7 +82,6 @@ function menu_show_search_box() {
     print "\t<BR>\n";
     print "\t<INPUT TYPE=\"submit\" NAME=\"Search\" VALUE=\"Search\">\n";
     print "\t</FORM>\n";
-    print "\t</FONT>\n";
     print "\t</CENTER>\n";
 }
 
@@ -232,7 +230,7 @@ function menu_loggedin($page_title) {
 function menu_notloggedin() {
     GLOBAL $HTML;
     $HTML->menuhtml_top('Status:');
-    echo '<h4><font color="#990000">NOT LOGGED IN</font></h4>';
+    echo '<h4><span class="highlight">NOT LOGGED IN</span></h4>';
     $HTML->menu_entry('/account/login.php','Login');
     $HTML->menu_entry('/account/register.php','New User');
     $HTML->menuhtml_bottom();

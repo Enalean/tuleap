@@ -47,7 +47,7 @@ echo'		<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data">
 		<P>
 	<?php 
 	if (!user_isloggedin()) {
-		echo '<h3><FONT COLOR="RED">You Are NOT Logged In</font></H3><P><b>Please <A HREF="/account/login.php?return_to='.
+		echo '<h3><span class="highlight">You Are NOT Logged In</span></H3><P><b>Please <A HREF="/account/login.php?return_to='.
 		urlencode($REQUEST_URI).
 		'">log in,</A> so followups can be emailed to you.</B>';
 	} 

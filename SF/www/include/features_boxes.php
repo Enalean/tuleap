@@ -10,25 +10,15 @@
 function show_features_boxes() {
 	GLOBAL $HTML;
 	$return .= $HTML->box1_top($GLOBALS['sys_name'].' Statistics',0);
-	$return .= '<font face="arial, helvetica" size="2">';
 	$return .= show_sitestats();
-	$return .= '</font>';
 	$return .= $HTML->box1_middle('Top Downloads Yesterday');
-	$return .= '<font face="arial, helvetica" size="2">';
 	$return .= show_top_downloads();
-	$return .= '</font>';
 	$return .= $HTML->box1_middle('Newest Releases');
-	$return .= '<font face="arial, helvetica" size="2">';
 	$return .= show_newest_releases();
-	$return .= '</font>';
 	$return .= $HTML->box1_middle('Newest Projects');
-	$return .= '<font face="arial, helvetica" size="2">';
 	$return .= show_newest_projects();
-	$return .= '</font>';
 	$return .= $HTML->box1_middle('Most Active This Week');
-	$return .= '<font face="arial, helvetica" size="2">';
 	$return .= show_highest_ranked_projects();
-	$return .= '</font>';
 	$return .= $HTML->box1_bottom(0);
 	return $return;
 }
@@ -38,17 +28,11 @@ function foundry_features_boxes($group_id) {
 	$comma_sep_groups=$GLOBALS['foundry']->getProjectsCommaSep();
 
 	$return .= $HTML->box1_top('Most Active',0);
-	$return .= '<font face="arial, helvetica" size="2">';
 	$return .= foundry_active_projects($comma_sep_groups);
-	$return .= '</font>';
 	$return .= $HTML->box1_middle('Top Downloads');
-	$return .= '<font face="arial, helvetica" size="2">';
 	$return .= foundry_top_downloads($comma_sep_groups);
-	$return .= '</font>';
 	$return .= $HTML->box1_middle('Featured Projects');
-	$return .= '<font face="arial, helvetica" size="2">';
 	$return .= foundry_featured_projects($group_id);
-	$return .= '</font>';
 	$return .= $HTML->box1_bottom(0);
 	return $return;
 }

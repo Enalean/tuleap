@@ -67,10 +67,10 @@ function my_hide_url ($svc, $db_item_id, $item_id, $count, $hide) {
     }
 
     if ($hide) {
-	$hide_url= '<a href="'.$PHP_SELF.'?hide_'.$svc.'=0&hide_item_id='.$db_item_id.'"><img src="/images/pointer_right.png" align="middle" border="0" alt="Collapse"></a>&nbsp;';
+	$hide_url= '<a href="'.$PHP_SELF.'?hide_'.$svc.'=0&hide_item_id='.$db_item_id.'"><img src="'.util_get_image_theme("pointer_right.png").'" align="middle" border="0" alt="Collapse"></a>&nbsp;';
 	$hide_now = true;
     } else {		
-	$hide_url= '<a href="'.$PHP_SELF.'?hide_'.$svc.'=1&hide_item_id='.$db_item_id.'"><img src="/images/pointer_down.png" align="middle" border="0" alt="Expand"></a>&nbsp;';
+	$hide_url= '<a href="'.$PHP_SELF.'?hide_'.$svc.'=1&hide_item_id='.$db_item_id.'"><img src="'.util_get_image_theme("pointer_down.png").'" align="middle" border="0" alt="Expand"></a>&nbsp;';
 	$hide_now = false;
     }
 

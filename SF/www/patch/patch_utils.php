@@ -154,14 +154,14 @@ function show_patchlist ($result,$offset,$set='open') {
 	    $patch_url = '<A HREF="/patch/download.php/Patch'.$patch_id.'.txt?patch_id='.$patch_id.'">'.$filename.'</a>';
 	    
 		echo '
-			<TR BGCOLOR="'. util_get_alt_row_color($i) .'">'.
-			'<TD><b><A HREF="'.$PHP_SELF.'?func=detailpatch&patch_id='.db_result($result, $i, 'patch_id').
+			<TR class="'. util_get_alt_row_color($i) .'">'.
+			'<TD class="small"><b><A HREF="'.$PHP_SELF.'?func=detailpatch&patch_id='.db_result($result, $i, 'patch_id').
 			'&group_id='.db_result($result, $i, 'group_id').'">'.db_result($result, $i, 'patch_id').'</b></A></TD>'.
-			'<TD>'.db_result($result, $i, 'summary').'</TD>'.
-			'<TD>'.$patch_url.'</TD>'.
-			'<TD>'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
-			'<TD>'.util_user_link(db_result($result,$i,'assigned_to_user')).'</TD>'.
-			'<TD>'.util_user_link(db_result($result,$i,'submitted_by')).'</TD></TR>';
+			'<TD class="small">'.db_result($result, $i, 'summary').'</TD>'.
+			'<TD class="small">'.$patch_url.'</TD>'.
+			'<TD class="small">'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
+			'<TD class="small">'.util_user_link(db_result($result,$i,'assigned_to_user')).'</TD>'.
+			'<TD class="small">'.util_user_link(db_result($result,$i,'submitted_by')).'</TD></TR>';
 
 	}
 
@@ -169,13 +169,13 @@ function show_patchlist ($result,$offset,$set='open') {
 		Show extra rows for <-- Prev / Next -->
 	*/
 	echo '
-		<TR><TD COLSPAN="2">';
+		<TR><TD COLSPAN="2" class="small">';
 	if ($offset > 0) {
 		echo '<A HREF="'.$PHP_SELF.'?func=browse&group_id='.$group_id.'&set='.$set.'&offset='.($offset-50).'"><B><-- Previous 50</B></A>';
 	} else {
 		echo '&nbsp;';
 	}
-	echo '</TD><TD>&nbsp;</TD><TD COLSPAN="2">';
+	echo '</TD><TD>&nbsp;</TD><TD COLSPAN="2" class="small">';
 	
 	if ($rows==50) {
 		echo '<A HREF="'.$PHP_SELF.'?func=browse&group_id='.$group_id.'&set='.$set.'&offset='.($offset+50).'"><B>Next 50 --></B></A>';
@@ -315,7 +315,7 @@ function show_patch_details ($patch_id) {
 		echo html_build_list_table_top ($title_arr);
 
 		for ($i=0; $i < $rows; $i++) {
-			echo '<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD>'.
+			echo '<TR class="'. util_get_alt_row_color($i) .'"><TD>'.
 				nl2br( db_result($result, $i, 'old_value') ) .'</TD>'.
 				'</TD>'.
 				'<TD VALIGN="TOP">'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
@@ -357,7 +357,7 @@ function show_patchhistory ($patch_id) {
 		for ($i=0; $i < $rows; $i++) {
 			$field=db_result($result, $i, 'field_name');
 			echo '
-				<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD>'.$field.'</TD><TD>';
+				<TR class="'. util_get_alt_row_color($i) .'"><TD>'.$field.'</TD><TD>';
 
 			if ($field == 'patch_status_id') {
 

@@ -80,12 +80,12 @@ for ( $p = 0; $p < $num_packages; $p++ ) {
 
 			   // Highlight the release if one was chosen
 			if ( $release_id == $package_release['release_id'] ) {
-				$bgcolor = $HTML->COLOR_LTBACK1;
+				$bgcolor = 'boxitemalt';
 			} else {
-				$bgcolor = '#ffffff';
+				$bgcolor = 'boxitem';
 			}
 
-			print "\t" . '<TR BGCOLOR="'. $bgcolor .'"><TD>&nbsp;</TD><TD><B>'
+			print "\t" . '<TR class="'. $bgcolor .'"><TD>&nbsp;</TD><TD><B>'
 				. '<A HREF="shownotes.php?release_id='.$package_release['release_id'].'">'
 				. $package_release['name'] .'</A></B></TD><TD COLSPAN="5">&nbsp;</TD><TD>'
 				. format_date( $sys_datefmt, $package_release['release_date'] ) .'</TD></TR>'."\n";
@@ -114,7 +114,7 @@ for ( $p = 0; $p < $num_packages; $p++ ) {
 				   // now iterate and show the files in this release....
 				for ( $f = 0; $f < $num_files; $f++ ) {
 					$file_release = db_fetch_array( $res_file );
-					print "\t\t" . '<TR bgcolor="' . $bgcolor .'">'
+					print "\t\t" . '<TR class="' . $bgcolor .'">'
 						. '<TD COLSPAN=2>&nbsp;</TD>'
 						. '<TD><B><A HREF="javascript:showConfirmDownload('.$group_id.','.$file_release['file_id'].',\''.$file_release['filename'].'\')">'
 

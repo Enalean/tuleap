@@ -32,8 +32,8 @@ if ($group_id) {
 	if (!$result || $rows < 1) {
 		echo "<H1>No Subprojects Found</H1>";
 		echo "<P>
-			<B>No subprojects have been set up, or you cannot view them.<P><FONT COLOR=RED>The Admin for this project ".
-			"will have to set up projects using the admin page</FONT></B>";
+			<B>No subprojects have been set up, or you cannot view them.<P><span class=\"highlight\">The Admin for this project ".
+			"will have to set up projects using the admin page</span></B>";
 		pm_footer(array());
 		exit;
 	}
@@ -51,7 +51,7 @@ if ($group_id) {
 	for ($j = 0; $j < $rows; $j++) { 
 		echo '
 		<A HREF="/pm/task.php?group_project_id='.db_result($result, $j, 'group_project_id').
-		'&group_id='.$group_id.'&func=browse"><IMG SRC="/images/ic/index.png" HEIGHT=13 WIDTH=15 BORDER=0> &nbsp;'.
+		'&group_id='.$group_id.'&func=browse"><IMG SRC="'.util_get_image_theme("ic/index.png").'" HEIGHT=13 WIDTH=15 BORDER=0> &nbsp;'.
 		db_result($result, $j, 'project_name').'</A><BR>'.
 		db_result($result, $j, 'description').'<P>';
 	}
@@ -61,7 +61,7 @@ if ($group_id) {
 	if ($rows > 1) {
 		echo '
 		<A HREF="/pm/task.php?group_project_id=0'.
-		'&group_id='.$group_id.'&func=browse"><IMG SRC="/images/ic/index.png" HEIGHT=13 WIDTH=15 BORDER=0> &nbsp;'.
+		'&group_id='.$group_id.'&func=browse"><IMG SRC="'.util_get_image_theme("ic/index.png").'" HEIGHT=13 WIDTH=15 BORDER=0> &nbsp;'.
 		'All tasks in all subprojects</A><BR>'.
 		'See all the tasks regardless of the sub-project they belong to.<P>';
 	}

@@ -23,7 +23,6 @@ function snippet_mainpage() {
 	</TD></TR>
 
 	<TR valign="top"><TD>
-	<FONT face="arial, helvetica">
 	<B>Browse by Language:</B>
 	<P>
 	<?php
@@ -46,7 +45,6 @@ function snippet_mainpage() {
 	?>
 	</TD>
 	<TD>
-	<FONT face="arial, helvetica">
 	<B>Browse by Category:</B>
 	<P>
 	<?php

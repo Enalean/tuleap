@@ -65,7 +65,7 @@ if (db_numrows($result) > 0) {
 		<TR><TD COLSPAN="2">';
 
 	if (!user_isloggedin()) {
-		echo '<BR><B><FONT COLOR="RED"><H3>You Are NOT Logged In</H3><P>Please <A HREF="/account/login.php">log in,</A> so followups can be emailed to you.</FONT></B><P>';
+		echo '<BR><B><span class="highlight"><H3>You Are NOT Logged In</H3><P>Please <A HREF="/account/login.php">log in,</A> so followups can be emailed to you.</span></B><P>';
 	}
 
 	echo '

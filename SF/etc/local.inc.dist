@@ -133,5 +133,10 @@ $sys_incdir='/home/httpd/site-content/';
 // Default language for the system
 $sys_lang='en_US';
 
+//
+// Default theme
+$sys_themedefault = 'default';
+//$sys_themedefault = 'savannah';
+
 // End of customizations -- place nothing after the closing PHP tag!
 ?>

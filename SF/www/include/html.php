@@ -10,14 +10,14 @@ function html_feedback_top($feedback) {
 	if (!$feedback) 
 		return '';
 	print '
-		<H3><FONT COLOR="RED">'.$feedback.'</FONT></H3>';
+		<H3><span class="feedback">'.$feedback.'</span></H3>';
 }
 
 function html_feedback_bottom($feedback) {
 	if (!$feedback) 
 		return '';
 	print '
-		<H3><FONT COLOR="RED">'.$feedback.'</FONT></H3>';
+		<H3><span class="feedback">'.$feedback.'</span></H3>';
 }
 
 function html_a_group($grp) {
@@ -30,7 +30,7 @@ function html_blankimage($height,$width) {
 
 function html_image($src,$args,$display=1) {
 	GLOBAL $img_size;
-	$return = ('<IMG src="/images/'.$src.'"');
+	$return = ('<IMG src="'.util_get_dir_image_theme().$src.'"');
 	reset($args);
 	while(list($k,$v) = each($args)) {
 		$return .= ' '.$k.'="'.$v.'"';
@@ -43,12 +43,12 @@ function html_image($src,$args,$display=1) {
 	if (!$args['height'] && !$args['width']) {
 		/* Check to see if we've already fetched the image data */
 		if($img_size){
-			if(!$img_size[$src] && is_file($GLOBALS['sys_urlroot'].'images/'.$src)){
-				$img_size[$src] = @getimagesize($GLOBALS['sys_urlroot'].'images/'.$src);
+			if(!$img_size[$src] && is_file($GLOBALS['sys_urlroot'].util_get_dir_image_theme().$src)){
+				$img_size[$src] = @getimagesize($GLOBALS['sys_urlroot'].util_get_dir_image_theme().$src);
 			}
 		} else {
-			if(is_file($GLOBALS['sys_urlroot'].'images/'.$src)){		
-				$img_size[$src] = @getimagesize($GLOBALS['sys_urlroot'].'images/'.$src);
+			if(is_file($GLOBALS['sys_urlroot'].util_get_dir_image_theme().$src)){		
+				$img_size[$src] = @getimagesize($GLOBALS['sys_urlroot'].util_get_dir_image_theme().$src);
 			}
 		}
 		$return .= ' ' . $img_size[$src];
@@ -81,20 +81,18 @@ function html_build_list_table_top ($title_arr,$links_arr=false) {
 
 	$return = '
 	<TABLE WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="2">
-		<TR BGCOLOR="'. $HTML->COLOR_HTMLBOX_TITLE .'">';
+		<TR class="boxtable">';
 
 	$count=count($title_arr);
 	if ($links_arr) {
 		for ($i=0; $i<$count; $i++) {
 			$return .= '
-			<TD ALIGN="MIDDLE"><a class=sortbutton href="'.$links_arr[$i].'"><FONT COLOR="'.
-			$HTML->FONTCOLOR_HTMLBOX_TITLE.'"><B>'.$title_arr[$i].'</B></FONT></A></TD>';
+			<TD class="boxtitle"><a class=sortbutton href="'.$links_arr[$i].'">'.$title_arr[$i].'</A></TD>';
 		}
 	} else {
 		for ($i=0; $i<$count; $i++) {
 			$return .= '
-			<TD ALIGN="MIDDLE"><FONT COLOR="'.
-			$HTML->FONTCOLOR_HTMLBOX_TITLE.'"><B>'.$title_arr[$i].'</B></FONT></TD>';
+			<TD class="boxtitle">'.$title_arr[$i].'</TD>';
 		}
 	}
 	return $return.'</TR>';
@@ -109,9 +107,9 @@ function util_get_alt_row_color ($i) {
 function html_get_alt_row_color ($i) {
 	GLOBAL $HTML;
 	if ($i % 2 == 0) {
-		return '#FFFFFF';
+		return 'boxitem';
 	} else {
-		return $HTML->COLOR_LTBACK1;
+		return 'boxitemalt';
 	}
 }
 

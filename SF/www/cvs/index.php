@@ -40,9 +40,9 @@ if (0) {
 to check out must be specified as the <I>modulename</I>. When prompted
 for a password for <I>anonymous</I>, simply press the Enter key.
 
-<P><FONT size="-1" face="courier">cvs -d:pserver:anonymous@cvs.'.$row_grp['http_domain'].':/cvsroot/'.$row_grp['unix_group_name'].' login
+<P><span class="command">cvs -d:pserver:anonymous@cvs.'.$row_grp['http_domain'].':/cvsroot/'.$row_grp['unix_group_name'].' login
 <BR>&nbsp;<BR>cvs -d:pserver:anonymous@cvs.'.$row_grp['http_domain'].':/cvsroot/'.$row_grp['unix_group_name'].' co <I>modulename</I>
-</FONT>
+</span>
 
 <P>Updates from within the module\'s directory do not need the -d parameter.';
 }

@@ -30,6 +30,9 @@ require('browser.php');
 //base error library for new objects
 require('Error.class');
 
+//theme functions 
+require('theme.php');
+
 //various html utilities
 require('utils.php');
 
@@ -72,9 +75,6 @@ require('html.php');
 //left-hand nav library, themable
 require('menu.php');
 
-//theme functions like get_themename, etc
-require('theme.php');
-
 $sys_datefmt = "Y-M-d H:i";
 
 // #### Connect to db
@@ -90,7 +90,7 @@ if (!$conn) {
 session_set();
 
 //set up the themes vars
-theme_sysinit($sys_themeid);
+//theme_sysinit($sys_themeid);
 
 // OSDN functions and defs
 require('osdn.php');

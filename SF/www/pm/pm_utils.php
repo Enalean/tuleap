@@ -406,19 +406,19 @@ function pm_format_tasklist ($result,$result_taskdeps,$offset,$url,&$count) {
 		    '&group_project_id='.$row['group_project_id'];
 
 		$out .= '
-			<TR BGCOLOR="'.get_priority_color($row['priority']).'">'.
-			'<TD><A HREF="'.$task_url.'">'.
+			<TR class="'.get_priority_color($row['priority']).'">'.
+			'<TD class="small"><A HREF="'.$task_url.'">'.
 			$row['project_task_id'].'</A></TD>'.
-			'<TD><A HREF="'.$task_url.'">'.
+			'<TD class="small"><A HREF="'.$task_url.'">'.
 		        $row['summary'].'</A></TD>'.
-			'<TD>'.$row['project_name'].'</TD>'.
-			'<TD>'.format_date('Y-m-d',$row['start_date']).'</TD>'.
-			'<TD>'. (($now>$row['end_date'])?'<B>* ':'&nbsp; ') . format_date('Y-m-d',$row['end_date']).'</TD>'.
-			'<TD>'.$row['user_name'].'</TD>'.
-			'<TD>'.sprintf("%10.2f",$row['hours']).'</TD>'.
-			'<TD>'.$row['percent_complete'].'%</TD>'.
-			'<TD>&nbsp;'.$row['task_deps'].'</TD>'.
-		        '<TD>'.$row['status_name'].'</TD>'.
+			'<TD class="small">'.$row['project_name'].'</TD>'.
+			'<TD class="small">'.format_date('Y-m-d',$row['start_date']).'</TD>'.
+			'<TD class="small">'. (($now>$row['end_date'])?'<B>* ':'&nbsp; ') . format_date('Y-m-d',$row['end_date']).'</TD>'.
+			'<TD class="small">'.$row['user_name'].'</TD>'.
+			'<TD class="small">'.sprintf("%10.2f",$row['hours']).'</TD>'.
+			'<TD class="small">'.$row['percent_complete'].'%</TD>'.
+			'<TD class="small">&nbsp;'.$row['task_deps'].'</TD>'.
+		        '<TD class="small">'.$row['status_name'].'</TD>'.
 		        '</TR>';
 
 	}
@@ -458,7 +458,7 @@ function pm_show_dependent_tasks ($project_task_id,$group_id,$group_project_id) 
 
 		for ($i=0; $i < $rows; $i++) {
 			echo '
-			<TR BGCOLOR="'. util_get_alt_row_color ($i) .'">
+			<TR class="'. util_get_alt_row_color ($i) .'">
 				<TD><A HREF="/pm/task.php?func=detailtask&project_task_id='.
 				db_result($result, $i, 'project_task_id').
 				'&group_id='.$group_id.
@@ -494,7 +494,7 @@ function pm_show_dependent_bugs ($project_task_id,$group_id,$group_project_id) {
 
 		for ($i=0; $i < $rows; $i++) {
 			echo '
-			<TR BGCOLOR="'. util_get_alt_row_color ($i) .'">
+			<TR class="'. util_get_alt_row_color ($i) .'">
 				<TD><A HREF="/bugs/?func=detailbug&bug_id='.
 				db_result($result, $i, 'bug_id').
 				'&group_id='.$group_id.'">'.db_result($result, $i, 'bug_id').'</A></TD>
@@ -535,7 +535,7 @@ function pm_show_task_details ($project_task_id, $group_id) {
 
 		for ($i=0; $i < $rows; $i++) {
 			echo '
-			<TR BGCOLOR="'. util_get_alt_row_color ($i) .'">
+			<TR class="'. util_get_alt_row_color ($i) .'">
 				<TD>'. util_make_links(nl2br(db_result($result, $i, 'old_value')), $group_id).'</TD>
 				<TD VALIGN="TOP">'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</TD>
 				<TD VALIGN="TOP">'.db_result($result, $i, 'user_name').'</TD></TR>';
@@ -579,7 +579,7 @@ function pm_show_task_history ($project_task_id) {
 			$field=db_result($result, $i, 'field_name');
 
 			echo '
-				<TR BGCOLOR="'. util_get_alt_row_color ($i) .'"><TD>'.$field.'</TD><TD>';
+				<TR class="'. util_get_alt_row_color ($i) .'"><TD>'.$field.'</TD><TD>';
 
 			if ($field == 'status_id') {
 

@@ -74,7 +74,7 @@ function show_add_snippet_box() {
 
 <H2>Now add snippets to your package</H2>
 <P>
-<FONT COLOR="RED"><B>IMPORTANT!</B></FONT>
+<span class="highlight"><B>IMPORTANT!</B></span>
 <P>
 If a new window opened, use it to add snippets to your package. 
 If a new window did not open, use the following link to add to your package BEFORE you leave this page.
@@ -111,7 +111,7 @@ then add them using the new window link shown above.
 	<LI><B>Then</B> use the "Add Snippets to Package" link to add files to your package.
 	</OL>
 	<P>
-	<FONT COLOR="RED"><B>Note:</B></FONT> You can submit a new version of an existing package by 
+	<span class="highlight"><B>Note:</B></span> You can submit a new version of an existing package by 
 	browsing the library and using the link on the existing package. You should only use this 
 	page if you are submitting an entirely new package.
 	<P>

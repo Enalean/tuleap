@@ -42,7 +42,7 @@ function show_questions() {
 
 <H2>Edit a Question #<?php echo $question_id; ?></H2>
 
-<H3><FONT COLOR="RED">WARNING! It is a bad idea to change a question after responses to it have been submitted</FONT></H2> 
+<H3><span class="highlight">WARNING! It is a bad idea to change a question after responses to it have been submitted</span></H2> 
 <P>
 If you change a question after responses have been posted, your results pages may be misleading.
 <P>

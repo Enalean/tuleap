@@ -126,18 +126,18 @@ if (!$res_new || db_numrows($res_new) < 1) {
 		}
 	}
 
-	echo "<TR BGCOLOR=\"#EEEEEE\"><TD>";
+	echo "<TR class=\"newproject\"><TD>";
         if ($offset != 0) {
-		echo "<FONT face=\"Arial, Helvetica\" SIZE=3 STYLE=\"text-decoration: none\"><B>";
-        	echo "<A HREF=\"/new/?offset=".($offset-20)."\"><B><IMG SRC=\"/images/t2.png\" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE> Newer Releases</A></B></FONT>";
+		echo "<B>";
+        	echo "<A HREF=\"/new/?offset=".($offset-20)."\"><B><IMG SRC=\"".util_get_image_theme("t2.png")."\" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE> Newer Releases</A></B>";
         } else {
         	echo "&nbsp;";
         }
 
 	echo "</TD><TD COLSPAN=\"2\" ALIGN=\"RIGHT\">";
 	if (db_numrows($res_new)>$rows) {
-		echo "<FONT face=\"Arial, Helvetica\" SIZE=3 STYLE=\"text-decoration: none\"><B>";
-		echo "<A HREF=\"/new/?offset=".($offset+20)."\"><B>Older Releases <IMG SRC=\"/images/t.png\" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE></A></B></FONT>";
+		echo "<B>";
+		echo "<A HREF=\"/new/?offset=".($offset+20)."\"><B>Older Releases <IMG SRC=\"".util_get_image_theme("t.png")."\" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE></A></B>";
 	} else {
 		echo "&nbsp;";
 	}

@@ -52,7 +52,7 @@ if ($group_id) {
 
 	    $list_name = db_result($result, $j, 'list_name');
 
-	    echo '<IMG SRC="/images/ic/cfolder15.png" HEIGHT="13" WIDTH="15" BORDER="0">&nbsp;<b>'.$list_name.'</b> ['.
+	    echo '<IMG SRC="'.util_get_image_theme("ic/cfolder15.png").'" HEIGHT="13" WIDTH="15" BORDER="0">&nbsp;<b>'.$list_name.'</b> ['.
 		' <A HREF="http://'.$GLOBALS['sys_lists_host'].'/pipermail/'.$list_name.'">Archives</A>';
 	  
 		echo ' | <A HREF="http://'.$GLOBALS['sys_lists_host'].'/mailman/listinfo/'.$list_name.'">(Un)Subscribe/Preferences</A>)';

@@ -24,7 +24,7 @@ if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 <P>
 You may use any of these questions on your surveys.
 <P>
-<B><FONT COLOR="RED">NOTE: use these question_id's when you create a new survey.</FONT></B>
+<B><span class="highlight">NOTE: use these question_id's when you create a new survey.</span></B>
 <P> 
 <?php
 

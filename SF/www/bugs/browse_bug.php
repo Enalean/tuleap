@@ -310,7 +310,7 @@ while ( $field = bug_list_all_fields(cmp_place_query)) {
 	$boxes .= "\n".'<TR align="'.$align.'" valign="top">';
     }
 
-    $labels .= '<td><b>'.bug_data_get_label($field).'&nbsp;'.
+    $labels .= '<td class="small"><b>'.bug_data_get_label($field).'&nbsp;'.
 	($pv ? '':help_button('browse_bug_query_field',$field)).
 	'</b></td>';
 
@@ -508,7 +508,7 @@ if ($result && $numrows > 0) {
     if (!$pv) {
 	echo 'You can also <a href="'.$url_alternate_sort.'"><b> '.$text.
 	    ' multicolumn sort</b></a>.&nbsp;&nbsp;&nbsp;&nbsp;'.
-	    '(<a href="'.$url.'&pv=1"> <img src="/images/msg.png" border="0">'.
+	    '(<a href="'.$url.'&pv=1"> <img src="'.util_get_image_theme("msg.png").'" border="0">'.
 	    '&nbsp;Printer version</a>)'."\n";
     }
 

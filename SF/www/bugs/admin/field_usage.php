@@ -242,18 +242,18 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 		"\n<td align =\"center\">".$status_label.'</td>';
 	    
 	    if ($is_used) {
-		$html = '<TR BGCOLOR="'. 
+		$html = '<TR class="'. 
 		    util_get_alt_row_color($iu) .'">'.$html.'</tr>';
 		$iu++;
 		$hu .= $html;
 	    } else {
 		if ($is_custom) {
-		    $html = '<TR BGCOLOR="'. 
+		    $html = '<TR class="'. 
 			util_get_alt_row_color($inc) .'">'.$html.'</tr>';
 		    $inc++;
 		    $hnc .= $html;
 		} else {
-		    $html = '<TR BGCOLOR="'. 
+		    $html = '<TR class="'. 
 			util_get_alt_row_color($in) .'">'.$html.'</tr>';
 		    $in++;
 		    $hn .= $html;

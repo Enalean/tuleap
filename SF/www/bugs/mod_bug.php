@@ -50,7 +50,6 @@ if (db_numrows($result) > 0) {
     <INPUT TYPE="HIDDEN" NAME="func" VALUE="postmodbug">
     <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id;; ?>">
     <INPUT TYPE="HIDDEN" NAME="bug_id" VALUE="<?php echo $bug_id; ?>">
-
     <TABLE cellpadding="0">
       <TR><TD><B>Submitted By:</B>&nbsp;</td><td><?php echo user_getname(db_result($result,0,'submitted_by')); ?></TD>
           <TD><B>Group:</B>&nbsp;</td><td><?php echo group_getname($group_id); ?></TD>
@@ -83,7 +82,7 @@ if (db_numrows($result) > 0) {
 		  $value = util_make_links(bug_field_display($field_name,$group_id,$field_value,false,false,true),$group_id);
 	      else
 		  $value = bug_field_display($field_name,$group_id,$field_value,false,false);
-	      $star = (bug_data_is_empty_ok($field_name) ? '':'<font color="red"><big>*</big></b></font>');
+	      $star = (bug_data_is_empty_ok($field_name) ? '':'<span class="highlight"><big>*</big></b></span>');
 
 	      if ($sz > $max_size) {
 		  echo "\n<TR>".

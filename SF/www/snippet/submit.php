@@ -72,7 +72,7 @@ if (user_isloggedin()) {
 	Just fill in this information. <B>Give a good description</B> and <B>comment your code</B> 
 	     so others can read and understand it. Preferably copy-paste the source code of the snippet so that it is directly visible in the Code Snippet Library. Upload it only if it is big or it is made of several files or the format is not human readable.
 	<P>
-	<FONT COLOR="RED"><B>Note:</B></FONT> You can submit a new version of an existing snippet by 
+	<span class="highlight"><B>Note:</B></span> You can submit a new version of an existing snippet by 
 	browsing the library. You should only use this page if you are submitting an 
 	entirely new script or function.
 	<P>

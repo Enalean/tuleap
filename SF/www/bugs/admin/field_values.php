@@ -152,12 +152,12 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 			'<TD align="center">'.$status_stg[$status].'</TD>';
 
 		    if ($status == 'A' || $status == 'P') {
-			$html = '<TR BGCOLOR="'. 
+			$html = '<TR class="'. 
 			util_get_alt_row_color($ia) .'">'.$html.'</tr>';
 			$ia++;
 			$ha .= $html;
 		    } else {
-			$html = '<TR BGCOLOR="'. 
+			$html = '<TR class="'. 
 			util_get_alt_row_color($ih) .'">'.$html.'</tr>';
 			$ih++;
 			$hh .= $html;
@@ -289,7 +289,7 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 	    echo html_build_list_table_top ($title_arr);
 
 	    for ($i=0; $i < $rows; $i++) {
-		echo '<TR BGCOLOR="'. util_get_alt_row_color($i) .'">'.
+		echo '<TR class="'. util_get_alt_row_color($i) .'">'.
 		    '<TD><A HREF="'.$PHP_SELF.'?update_canned=1&bug_canned_id='.
 		    db_result($result, $i, 'bug_canned_id').'&group_id='.$group_id.'">'.
 		    db_result($result, $i, 'title').'</A></TD>'.
@@ -389,7 +389,7 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 		$scope_label  = (bug_data_is_project_scope($field_name)?
 				 'Project':'System');
 
-		echo '<TR BGCOLOR="'. util_get_alt_row_color($i) .'">'.
+		echo '<TR class="'. util_get_alt_row_color($i) .'">'.
 		    '<TD><A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&list_value=1&field='.$field_name.'">'.bug_data_get_label($field_name).'</A></td>'.
 		    "\n<td>".bug_data_get_description($field_name).'</td>'.
 		    "\n<td>".$scope_label.'</td>'.
@@ -399,7 +399,7 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 	}
 
 	// Now the special canned response field
-	echo '<TR BGCOLOR="'. util_get_alt_row_color($i) .'">';
+	echo '<TR class="'. util_get_alt_row_color($i) .'">';
 	echo "<td><A HREF=\"$PHP_SELF?group_id=$group_id&create_canned=1\">Canned Responses</A></td>";
 	echo "\n<td>Create or Change generic quick response messages for the bug tracking tool. Theses pre-written messages can then be used to quickly reply to bug submission. </td>";
 	echo "\n<td>Project</td></tr>";

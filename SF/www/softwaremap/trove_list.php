@@ -85,9 +85,9 @@ if ($discrim) {
 
 	// build text for top of page on what viewier is seeing
 	$discrim_desc = '<FONT size="-1">
-<FONT color="#FF0000">
+<span class="highlight">
 Now limiting view to projects in the following categories:
-</FONT>';
+</span>';
 	
 	for ($i=0;$i<sizeof($expl_discrim);$i++) {
 		$discrim_desc .= '<BR> &nbsp; &nbsp; &nbsp; '
@@ -106,7 +106,7 @@ print '<P>'.$discrim_desc;
 // ######## two column table for key on right
 // first print all parent cats and current cat
 print '<TABLE width=100% border="0" cellspacing="0" cellpadding="0">
-<TR valign="top"><TD><FONT face="arial, helvetica" size="3">';
+<TR valign="top"><TD>';
 $folders = explode(" :: ",$row_trove_cat['fullpath']);
 $folders_ids = explode(" :: ",$row_trove_cat['fullpath_ids']);
 $folders_len = count($folders);
@@ -152,7 +152,7 @@ while ($row_sub = db_fetch_array($res_sub)) {
 		.' projects)</I><BR>');
 }
 // ########### right column: root level
-print '</TD><TD><FONT face="arial, helvetica" size="3">';
+print '</TD><TD>';
 // here we print list of root level categories, and use open folder for current
 $res_rootcat = db_query('SELECT trove_cat_id,fullname FROM trove_cat WHERE '
 	.'parent=0 ORDER BY fullname');
@@ -263,7 +263,7 @@ for ($i_proj=1;$i_proj<=$querytotalcount;$i_proj++) {
 	}	
 
 	if ($row_grp && $viewthisrow) {
-		print '<TABLE border="0" cellpadding="0" width="100%"><TR valign="top"><TD colspan="2"><FONT face="arial, helvetica" size="3">';
+		print '<TABLE border="0" cellpadding="0" width="100%"><TR valign="top"><TD colspan="2">';
 		print "$i_proj. <a href=\"/projects/". strtolower($row_grp['unix_group_name']) ."/\"><B>"
 			.htmlspecialchars($row_grp['group_name'])."</B></a> ";
 		if ($row_grp['short_description']) {
@@ -272,11 +272,11 @@ for ($i_proj=1;$i_proj<=$querytotalcount;$i_proj++) {
 
 		print '<BR>&nbsp;';
 		// extra description
-		print '</TD></TR><TR valign="top"><TD><FONT face="arial, helvetica" size="3">';
+		print '</TD></TR><TR valign="top"><TD>';
 		// list all trove categories
 		trove_getcatlisting($row_grp['group_id'],1,0);
 
-		print '</TD>'."\n".'<TD align="right"><FONT face="arial, helvetica" size="3">'; // now the right side of the display
+		print '</TD>'."\n".'<TD align="right">'; // now the right side of the display
 		print 'Activity Percentile: <B>'.$row_grp['percentile'].'</B>';
 		print '<BR>Activity Ranking: <B>'.$row_grp['ranking'].'</B>';
 		print '<BR>Register Date: <B>'.format_date($sys_datefmt,$row_grp['register_time']).'</B>';

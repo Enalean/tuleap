@@ -17,11 +17,11 @@ function vote_number_to_stars($raw) {
 	$count=intval($raw/2);
 	for ($i=0; $i<$count; $i++) {
 		$return .= '
-				<IMG SRC="/images/ic/check.png" HEIGHT=15 WIDTH=16>';
+				<IMG SRC="'.util_get_image_theme("ic/check.png").'" HEIGHT=15 WIDTH=16>';
 	}
 	if ($show_half==1) {
 		$return .= '
-				<IMG SRC="/images/ic/halfcheck.png" HEIGHT=15 WIDTH=16>';
+				<IMG SRC="'.util_get_image_theme("ic/halfcheck.png").'" HEIGHT=15 WIDTH=16>';
 	}
 	return $return;
 }
@@ -70,16 +70,16 @@ function vote_show_release_radios ($vote_on_id,$flag) {
 	
 	global $REQUEST_URI;
 	?>
-	<FONT SIZE="-2">
+	<FONT SIZE="-1">
 	<FORM ACTION="/survey/rating_resp.php" METHOD="POST">
 	<INPUT TYPE="HIDDEN" NAME="vote_on_id" VALUE="<?php echo $vote_on_id; ?>">
 	<INPUT TYPE="HIDDEN" NAME="redirect_to" VALUE="<?php echo urlencode($REQUEST_URI); ?>">
 	<INPUT TYPE="HIDDEN" NAME="flag" VALUE="<?php echo $flag; ?>">
 	<CENTER>
-	<IMG SRC="/images/rateit.png" HEIGHT=9 WIDTH=100>
+	<IMG SRC="<? echo util_get_image_theme("rateit.png"); ?>" HEIGHT=9 WIDTH=100>
 	<BR>
 	<?php html_blankimage(1,$rating); ?>
-	<IMG SRC="/images/ic/caret.png" HEIGHT=6 WIDTH=9>
+	<IMG SRC="<? util_get_image_theme("ic/caret.png"); ?>" HEIGHT=6 WIDTH=9>
 	<BR>
 	<INPUT TYPE="RADIO" NAME="response" VALUE=1>
 	<INPUT TYPE="RADIO" NAME="response" VALUE=2>

@@ -219,8 +219,8 @@ want to be aware of depending on your role. <p>
  or the submitter can be configured by the project administrator in the <a href="#GlobalEmailNotification">Global Email Notification section</a> above.<p>';
 
 echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<table BORDER="0" CELLSPACING="1" CELLPADDING="2">
-<tr BGCOLOR="'. $HTML->COLOR_HTMLBOX_TITLE .'">
+<table BORDER="0" CELLSPACING="1" CELLPADDING="2" class="small">
+<tr class="boxtitle">
     <td colspan="'.$num_roles.'" align="center" width="50%"><b>If my role in a bug is:</b></td>
     <td rowspan="2" width="50%"><b>&nbsp;&nbsp;&nbsp;I want to be notified when:</b></td>
 </tr>';
@@ -233,7 +233,7 @@ echo "</tr>\n";
 for ($j=0; $j<$num_events; $j++) {
     $event_id = $arr_events[$j]['event_id'];
     $event_label = $arr_events[$j]['event_label'];
-    echo '<tr bgcolor="'.util_get_alt_row_color($j)."\">\n";
+    echo '<tr class="'.util_get_alt_row_color($j)."\">\n";
     for ($i=0; $i<$num_roles; $i++) {
 	$role_id = $arr_roles[$i]['role_id'];
 	$role_label = $arr_roles[$i]['role_label'];

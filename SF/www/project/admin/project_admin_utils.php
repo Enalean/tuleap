@@ -223,7 +223,7 @@ function show_grouphistory ($group_id) {
 		for ($i=0; $i < $rows; $i++) { 
 			$field=db_result($result, $i, 'field_name');
 			echo '
-			<TR BGCOLOR="'. html_get_alt_row_color($i) .'"><TD>'.$field.'</TD><TD>';
+			<TR class="'. html_get_alt_row_color($i) .'"><TD>'.$field.'</TD><TD>';
 			
 			if ($field=='removed user') {
 				echo user_getname(db_result($result, $i, 'old_value'));

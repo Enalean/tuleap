@@ -119,7 +119,7 @@ if ($group_id && user_ismember($group_id,'A')) {
 <li><b>'.group_getunixname($group_id).'-devel</b>: for developement questions and debates.
 <li><b>'.group_getunixname($group_id).'-announce</b>: for annoucement of new releases or any new event in the life of the project.
 </ul>
-			<P>It will take <B><FONT COLOR="RED">'.$GLOBALS['sys_crondelay'].' Hours</FONT></B>  maximum for your list(s)
+			<P>It will take <B><span class="highlight">'.$GLOBALS['sys_crondelay'].' Hours</span></B>  maximum for your list(s)
 			to be created.
 			<P>';
 		$result=db_query("SELECT list_name FROM mail_group_list WHERE group_id='$group_id'");
@@ -146,8 +146,8 @@ if ($group_id && user_ismember($group_id,'A')) {
 			<B>Description:</B><BR>
 			<INPUT TYPE="TEXT" NAME="description" VALUE="" SIZE="60" MAXLENGTH="160"><BR>
 			<P>
-			<B><FONT COLOR="RED">Once created, this list will ALWAYS be attached to your project 
-			and cannot be deleted!</FONT></B>
+			<B><span class="highlight">Once created, this list will ALWAYS be attached to your project 
+			and cannot be deleted!</span></B>
 			<P>
 			<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Add This List">
 			</FORM>';
@@ -190,7 +190,7 @@ if ($group_id && user_ismember($group_id,'A')) {
 
 			for ($i=0; $i<$rows; $i++) {
 				echo '
-					<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD><B>'.db_result($result,$i,'list_name').'</B></TD>';
+					<TR class="'. util_get_alt_row_color($i) .'"><TD><B>'.db_result($result,$i,'list_name').'</B></TD>';
 				echo '
 					<FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
 					<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
@@ -209,7 +209,7 @@ if ($group_id && user_ismember($group_id,'A')) {
 					<TD><A href="http://'. $GLOBALS['sys_lists_host'] .'/mailman/admin/'
 					.db_result($result,$i,'list_name').'">[Administrate this list in GNU Mailman]</A>
 				       </TD></TR>
-				       <TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD COLSPAN="4">
+				       <TR class="'. util_get_alt_row_color($i) .'"><TD COLSPAN="4">
 				       		Description: 
 						<INPUT TYPE="TEXT" NAME="description" VALUE="'.
 						db_result($result,$i,'description') .'" SIZE="70" MAXLENGTH="160"><BR>

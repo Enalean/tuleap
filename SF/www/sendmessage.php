@@ -79,10 +79,10 @@ In an attempt to reduce spam, we are using this form to send email.
 <p>
 Fill it out accurately and completely or the receiver may not be able to respond.
 <P>
-<FONT COLOR="RED"><B>IF YOU ARE WRITING FOR HELP:</B> Did you read the site 
+<span class="highlight"><B>IF YOU ARE WRITING FOR HELP:</B> Did you read the site 
 documentation? Did you include your <B>user_id</B> and <B>user_name?</B> If you are writing 
 about a project, include your <B>project id</B> (<B>group_id</B>) and <B>Project Name</B>.
-</FONT>
+</span>
 <P>
 <FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">
 <INPUT TYPE="HIDDEN" NAME="toaddress" VALUE="<?php echo $toaddress; ?>">

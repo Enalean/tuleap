@@ -28,10 +28,10 @@ if (!user_isloggedin() && !db_result($result_survey, 0, "is_anonymous")) {
 	/*
 		Tell them they need to be logged in
 	*/
-	echo '<h3><FONT COLOR="RED">You Are NOT logged in.</font></H3>
+	echo '<h3><span class="highlight">You Are NOT logged in.</span></H3>
                         <P>Unfortunately, you have to be logged in to participate in surveys.<BR>
                         <P> Please <A HREF="/account/login.php?return_to='.
-	      urlencode($REQUEST_URI).'">log in </A> first.</FONT></B>';
+	      urlencode($REQUEST_URI).'">log in </A> first.</B>';
 	survey_footer(array());
 	exit;
 }

@@ -100,7 +100,7 @@ if ($group_id && user_ismember($group_id,'C2')) {
 		<H3>New Category Name:</H3>
 		<INPUT TYPE="TEXT" NAME="cat_name" VALUE="" SIZE="15" MAXLENGTH="30"><BR>
 		<P>
-		<B><FONT COLOR="RED">Once you add a patch category, it cannot be deleted</FONT></B>
+		<B><span class="highlight">Once you add a patch category, it cannot be deleted</span></B>
 		<P>
 		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
 		</FORM>
@@ -136,7 +136,7 @@ if ($group_id && user_ismember($group_id,'C2')) {
 			<INPUT TYPE="TEXT" NAME="cat_name" VALUE="<?php 
 				echo db_result($result, 0, 'category_name'); ?>">
 			<P>
-			<B><FONT COLOR="RED">It is not recommended that you change the category name because other things are dependant upon it.</FONT></B>
+			<B><span class="highlight">It is not recommended that you change the category name because other things are dependant upon it.</span></B>
 			<P>
 			<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
 			</FORM>

@@ -39,16 +39,16 @@ if (user_isloggedin()) {
 
 		    // If already monitored then stop monitoring
 		    forum_delete_monitor ($forum_id, user_getid());
-		    echo "<FONT COLOR=\"RED\"><H3>Monitoring has been turned off</H3></FONT>";
+		    echo "<span class=\"highlight\"><H3>Monitoring has been turned off</H3></span>";
 		    echo "<P>You will not receive any more emails from this forum.";
 		} else {
 		    // Not yet monitored so add it
 		    if (forum_add_monitor ($forum_id, user_getid()) ) {
-			echo "<FONT COLOR=\"RED\"><H3>Forum is now being monitored</H3></FONT>";
+			echo "<span class=\"highlight\"><H3>Forum is now being monitored</H3></span>";
 			echo "<P>You will now be emailed followups to this entire forum.";
 			echo "<P>To turn off monitoring, simply click the <B>Monitor Forum</B> link again.";	
 		    } else {
-			echo "<FONT COLOR=\"RED\">Error inserting into forum_monitoring</FONT>";
+			echo "<span class=\"highlight\">Error inserting into forum_monitoring</span>";
 		    }
 		}
 		forum_footer(array());

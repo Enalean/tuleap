@@ -30,13 +30,13 @@ function forum_show_a_nested_message ($result,$row=0) {
 	$ret_val = '
 		<TABLE BORDER="0">
 			<TR>
-				<TD BGCOLOR="#DDDDDD" NOWRAP>By: <A HREF="/users/'.
+				<TD class="thread" NOWRAP>By: <A HREF="/users/'.
 					db_result($result, $row, 'user_name') .'/">'. 
 					db_result($result, $row, 'user_name') .'</A>'.
 					' ( ' .db_result($result, $row, 'realname') . ' ) '.
 					'<BR><A HREF="/forum/message.php?msg_id='.
 					db_result($result, $row, 'msg_id') .'">'.
-					'<IMG SRC="/images/msg.png" BORDER=0 HEIGHT=12 WIDTH=10> '.
+					'<IMG SRC="'.util_get_image_theme("msg.png").'" BORDER=0 HEIGHT=12 WIDTH=10> '.
 					db_result($result, $row, 'subject') .' [ reply ]</A> &nbsp; '.
 					'<BR>'. format_date($sys_datefmt,db_result($result,$row,'date')) .'
 				</TD>
@@ -293,9 +293,9 @@ if ($forum_id) {
 				*/
 
 				$ret_val .= '
-					<TR BGCOLOR="'. util_get_alt_row_color($total_rows) .'"><TD><A HREF="/forum/message.php?msg_id='.
+					<TR class="'. util_get_alt_row_color($total_rows) .'"><TD><A HREF="/forum/message.php?msg_id='.
 					db_result($result, $i, 'msg_id').'">'.
-					'<IMG SRC="/images/msg.png" BORDER=0 HEIGHT=12 WIDTH=10> ';
+					'<IMG SRC="'.util_get_image_theme("msg.png").'" BORDER=0 HEIGHT=12 WIDTH=10> ';
 				/*
 
 					See if this message is new or not
@@ -337,20 +337,20 @@ if ($forum_id) {
 			$ret_val .= '<TABLE WIDTH="100%" BORDER="0">';
 		}
 		$ret_val .= '
-				<TR BGCOLOR="#EEEEEE"><TD WIDTH="50%">';
+				<TR class="threadbody"><TD WIDTH="50%">';
 		if ($offset != 0) {
-			$ret_val .= '<FONT face="Arial, Helvetica" SIZE="3" STYLE="text-decoration: none"><B>
+			$ret_val .= '<B><span class="normal">
 				<A HREF="javascript:history.back()">
-				<B><IMG SRC="/images/t2.png" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE> Previous Messages</A></B></FONT>';
+				<B><IMG SRC="'.util_get_image_theme("t2.png").'" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE> Previous Messages</A></B></span>';
 		} else {
 			$ret_val .= '&nbsp;';
 		}
 
 		$ret_val .= '</TD><TD>&nbsp;</TD><TD ALIGN="RIGHT" WIDTH="50%">';
 		if (db_numrows($result) > $i) {
-			$ret_val .= '<FONT face="Arial, Helvetica" SIZE=3 STYLE="text-decoration: none"><B>
+			$ret_val .= '<B><span class="normal">
 				<A HREF="/forum/forum.php?max_rows='.$max_rows.'&style='.$style.'&offset='.($offset+$i).'&forum_id='.$forum_id.'">
-				<B>Next Messages <IMG SRC="/images/t.png" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE></A>';
+				<B>Next Messages <IMG SRC="'.util_get_image_theme("t.png").'" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE></A></span>';
 		} else {
 			$ret_val .= '&nbsp;';
 		}

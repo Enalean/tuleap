@@ -20,7 +20,6 @@ $HTML->header(array(title=>"New Project Registration"));
                         <td width=15></td>
                         <td>
                         <hr size=2><p>
-                        <font face="helvetica, arial">
                                 Simply fill out this form to request an account on <?php print $GLOBALS['sys_name']; ?>. Fields with an asterisk (*) are required.
                                 <p>
                         <form method="POST" action="">
@@ -46,7 +45,7 @@ $HTML->header(array(title=>"New Project Registration"));
                                 <td><textarea wrap="physical" name="project_description" cols=40 rows=4></textarea></td>
                         </tr>
                         <tr>
-                                <td align="right">* Desired Subdomain:<br>(e.g. <i>http://<font color="green">myproject</font>.<?php echo $GLOBALS['sys_default_domain']; ?> )</td>
+                                <td align="right">* Desired Subdomain:<br>(e.g. <i>http://<span class="subdomain">myproject</span>.<?php echo $GLOBALS['sys_default_domain']; ?> )</td>
                                 <td><input size=35 type="text" name="subdomain"></td>
                         </tr>
                         <tr>

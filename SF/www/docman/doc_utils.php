@@ -49,7 +49,7 @@ function display_groups($group_id) {
 
 		$i = 0;
 		while ($row = db_fetch_array($result)) {
-			$output = "<tr bgcolor=\"".util_get_alt_row_color($i)."\">".
+			$output = "<tr class=\"".util_get_alt_row_color($i)."\">".
 				"<td>".$row['doc_group']."</td>\n".
 				"<td>".$row['groupname']."</td>\n".
 				"<td>[ <a href=\"index.php?mode=groupdelete&doc_group=".$row['doc_group']."&group_id=".$group_id."\">Delete</A> ] [ <a href=\"index.php?mode=groupedit&doc_group=".$row['doc_group']."&group_id=".$group_id."\">Change Name</a> ]\n</td>".
@@ -95,7 +95,7 @@ function display_docs($style,$group_id) {
 
 		$i = 0;
 		while ($row = db_fetch_array($result)) {
-			print 	"<tr bgcolor=\"".util_get_alt_row_color($i)."\">"
+			print 	"<tr class=\"".util_get_alt_row_color($i)."\">"
 				."<td>".$row['docid']."</td>"
 				."<td><a href=\"index.php?docid=".$row['docid']."&mode=docedit&group_id=".$group_id."\">".$row['title']."</a></td>"
 				."<td>".format_date($sys_datefmt,$row['createdate'])."</td></tr>";

@@ -65,7 +65,7 @@ which will happen in
      $d = getdate(time());
      $h = ($sys_crondelay - 1) - ($d[hours] % $sys_crondelay);
      $m= 60 - $d[minutes];
-     print "<font color=\"red\"><b> $h&nbsp;h&nbsp;$m&nbsp;minutes</b></font>";
+     print "<span class=\"highlight\"><b> $h&nbsp;h&nbsp;$m&nbsp;minutes</b></span>";
 ?>
  from now.
 
@@ -76,7 +76,7 @@ which will happen in
 
 ?>
 <p><b>SourceForge Password Change</b>
-<?php if ($register_error) print "<p><font color=\"red\"><b>$register_error</b></font>"; ?>
+<?php if ($register_error) print "<p><span class=\"highlight\"><b>$register_error</b></span>"; ?>
 <form action="change_pw.php" method="post">
 <p>Old Password:
 <br><input type="password" name="form_oldpw">

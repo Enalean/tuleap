@@ -50,7 +50,7 @@ while ( $field_name = bug_list_all_fields() ) {
 	    list($sz,) = bug_data_get_display_size($field_name);
 	    $label = bug_field_label_display($field_name,$group_id,false,false);
 	    $value = bug_field_display($field_name,$group_id,$field_value,false,false);
-	    $star = (bug_data_is_empty_ok($field_name) ? '':'<font color="red"><big>*</big></b></font>');
+	    $star = (bug_data_is_empty_ok($field_name) ? '':'<span class="highlight"><big>*</big></b></span>');
 
 	    if ($sz > $max_size) {
 		echo "\n<TR>".
@@ -79,10 +79,10 @@ while ( $field_name = bug_list_all_fields() ) {
 	<?php
 	if (!user_isloggedin()) {
 		echo '
-		<B><h2><FONT COLOR="RED">You Are NOT logged in.</H2>
+		<B><h2><span class="highlight">You Are NOT logged in.</H2>
 		<P> Please <A HREF="/account/login.php?return_to='.
 		urlencode($REQUEST_URI).
-		'">log in,</A> so followups can be emailed to you.</FONT></B>';
+		'">log in,</A> so followups can be emailed to you.</span></B>';
 	}
 	?>
 
@@ -99,7 +99,7 @@ while ( $field_name = bug_list_all_fields() ) {
 <TR><TD COLSPAN="<?php echo 2*$fields_per_line; ?>">
 	<P>
 	<hr>
-	<B><FONT COLOR="RED">Did you check to see if this bug has already been submitted?</FONT></b> (use the search box in the left menu pane)
+	<B><span class="highlight">Did you check to see if this bug has already been submitted?</span></b> (use the search box in the left menu pane)
 	<P><center>
 	<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
 	</center>

@@ -63,7 +63,7 @@ if ($type=='snippet') {
 
 		for ($i=0; $i<$rows; $i++) {
 			echo '
-				<TR BGCOLOR="'. html_get_alt_row_color($i) .'"><TD>'.db_result($result,$i,'snippet_version_id').
+				<TR class="'. html_get_alt_row_color($i) .'"><TD>'.db_result($result,$i,'snippet_version_id').
 				'</TD><TD><A HREF="/snippet/download.php?type=snippet&id='.
 				db_result($result,$i,'snippet_version_id').'"><B><center>'.
 				db_result($result,$i,'version').'</center></B></A></TD><TD>'. 
@@ -72,7 +72,7 @@ if ($type=='snippet') {
 				'<a href="/users/'.db_result($result,$i,'user_name').'"><b>'.
 				db_result($result,$i,'user_name').'</b></a></TD><TD ALIGN="MIDDLE"><A HREF="/snippet/delete.php?type=snippet&snippet_version_id='.
 				db_result($result,$i,'snippet_version_id').
-				'"><IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" BORDER="0"></A></TD></TR>';
+				'"><IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0"></A></TD></TR>';
 
 		}
 		echo '</TABLE>';
@@ -168,7 +168,7 @@ if ($type=='snippet') {
 		    }
 
 			echo '
-			<TR BGCOLOR="'. html_get_alt_row_color($i) .'"><TD><A HREF="/snippet/detail.php?type=packagever&id='.
+			<TR class="'. html_get_alt_row_color($i) .'"><TD><A HREF="/snippet/detail.php?type=packagever&id='.
 				db_result($result,$i,'snippet_package_version_id').'"><B><center>'.
 				db_result($result,$i,'version').'</center></B></A></TD>'.
 				$changes_output.'<td align="middle">'.
@@ -178,10 +178,10 @@ if ($type=='snippet') {
 				'</b></a></TD><TD ALIGN="MIDDLE">'.
 			        '<A HREF="/snippet/add_snippet_to_package.php?snippet_package_version_id='.
 				db_result($result,$i,'snippet_package_version_id').
-				'"><IMG SRC="/images/ic/notes.png" BORDER="0"></A></TD><TD ALIGN="MIDDLE">'.
+				'"><IMG SRC="'.util_get_image_theme("ic/notes.png").'" BORDER="0"></A></TD><TD ALIGN="MIDDLE">'.
 				'<A HREF="/snippet/delete.php?type=package&snippet_package_version_id='.
 				db_result($result,$i,'snippet_package_version_id').
-				'"><IMG SRC="/images/ic/trash.png" BORDER="0"></A></TD></TR>';
+				'"><IMG SRC="'.util_get_image_theme("ic/trash.png").'" BORDER="0"></A></TD></TR>';
 		}
 		echo '</TABLE>';
 

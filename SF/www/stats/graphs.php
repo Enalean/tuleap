@@ -21,7 +21,7 @@ session_require(array('group'=>'1','admin_flags'=>'A'));
 echo "\n\n";
 
 print '<DIV ALIGN="CENTER">' . "\n";
-print '<font size="+1"><b>Sitewide Statistics Graphs</b></font><BR>' . "\n";
+print '<span class="normal"><b>Sitewide Statistics Graphs</b></span><BR>' . "\n";
 ?>
 
 <HR>

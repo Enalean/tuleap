@@ -76,7 +76,7 @@ function display_exported_fields($col_list,$lbl_list,$dsc_list,$sample_val){
     echo html_build_list_table_top ($title_arr);
     reset($col_list);
     while (list(,$col) = each($col_list)) {
-	echo '<tr bgcolor="'.util_get_alt_row_color($cnt++).'">'.
+	echo '<tr class="'.util_get_alt_row_color($cnt++).'">'.
 	    '<td><b>'.$col.'</b></td><td>'.$lbl_list[$col].
 	    '</td><td>'.nl2br($sample_val[$col]).'</td><td>'.$dsc_list[$col].'</td></tr>';
     }

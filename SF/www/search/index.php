@@ -82,8 +82,8 @@ if ($type_of_search == "soft") {
 		echo "\n";
 
 		for ( $i = 0; $i < $rows; $i++ ) {
-			print	"<TR BGCOLOR=\"". html_get_alt_row_color($i)."\"><TD><A HREF=\"/projects/".db_result($result, $i, 'unix_group_name')."/\">"
-				. "<IMG SRC=\"/images/msg.png\" BORDER=0 HEIGHT=12 WIDTH=10> ".db_result($result, $i, 'group_name')."</A></TD>"
+			print	"<TR class=\"". html_get_alt_row_color($i)."\"><TD><A HREF=\"/projects/".db_result($result, $i, 'unix_group_name')."/\">"
+				. "<IMG SRC=\"".util_get_image_theme('msg.png')."\" BORDER=0 HEIGHT=12 WIDTH=10> ".db_result($result, $i, 'group_name')."</A></TD>"
 				. "<TD>".db_result($result,$i,'short_description')."</TD></TR>\n";
 		}
 		echo "</TABLE>\n";
@@ -129,8 +129,8 @@ if ($type_of_search == "soft") {
 		echo "\n";
 
 		for ( $i = 0; $i < $rows; $i++ ) {
-			print	"<TR BGCOLOR=\"". html_get_alt_row_color($i) ."\"><TD><A HREF=\"/users/".db_result($result, $i, 'user_name')."/\">"
-				. "<IMG SRC=\"/images/msg.png\" BORDER=0 HEIGHT=12 WIDTH=10> ".db_result($result, $i, 'user_name')."</A></TD>"
+			print	"<TR class=\"". html_get_alt_row_color($i) ."\"><TD><A HREF=\"/users/".db_result($result, $i, 'user_name')."/\">"
+				. "<IMG SRC=\"".util_get_image_theme('msg.png')."\" BORDER=0 HEIGHT=12 WIDTH=10> ".db_result($result, $i, 'user_name')."</A></TD>"
 				. "<TD>".db_result($result,$i,'realname')."</TD></TR>\n";
 		}
 		echo "</TABLE>\n";
@@ -173,8 +173,8 @@ if ($type_of_search == "soft") {
 		echo "\n";
 
 		for ( $i = 0; $i < $rows; $i++ ) {
-			print	"<TR BGCOLOR=\"". html_get_alt_row_color($i) ."\"><TD><A HREF=\"/forum/message.php?msg_id="
-				. db_result($result, $i, "msg_id")."\"><IMG SRC=\"/images/msg.png\" BORDER=0 HEIGHT=12 WIDTH=10> "
+			print	"<TR class=\"". html_get_alt_row_color($i) ."\"><TD><A HREF=\"/forum/message.php?msg_id="
+				. db_result($result, $i, "msg_id")."\"><IMG SRC=\"".util_get_image_theme('msg.png')."\" BORDER=0 HEIGHT=12 WIDTH=10> "
 				. db_result($result, $i, "subject")."</A></TD>"
 				. "<TD>".db_result($result, $i, "user_name")."</TD>"
 				. "<TD>".format_date($sys_datefmt,db_result($result,$i,"date"))."</TD></TR>\n";
@@ -220,8 +220,8 @@ if ($type_of_search == "soft") {
 		echo "\n";
 
 		for ( $i = 0; $i < $rows; $i++ ) {
-			print	"\n<TR BGCOLOR=\"". html_get_alt_row_color($i) ."\"><TD><A HREF=\"/bugs/?group_id=$group_id&func=detailbug&bug_id="
-				. db_result($result, $i, "bug_id")."\"><IMG SRC=\"/images/msg.png\" BORDER=0 HEIGHT=12 WIDTH=10> "
+			print	"\n<TR class=\"". html_get_alt_row_color($i) ."\"><TD><A HREF=\"/bugs/?group_id=$group_id&func=detailbug&bug_id="
+				. db_result($result, $i, "bug_id")."\"><IMG SRC=\"".util_get_image_theme('msg.png')."\" BORDER=0 HEIGHT=12 WIDTH=10> "
 				. db_result($result, $i, "summary")."</A></TD>"
 				. "<TD>".db_result($result, $i, "user_name")."</TD>"
 				. "<TD>".format_date($sys_datefmt,db_result($result,$i,"date"))."</TD></TR>";
@@ -265,8 +265,8 @@ if ($type_of_search == "soft") {
 		echo "\n";
 
 		for ( $i = 0; $i < $rows; $i++ ) {
-			print	"\n<TR BGCOLOR=\"". html_get_alt_row_color($i) ."\"><TD><A HREF=\"/support/?group_id=$group_id&func=detailsupport&support_id="
-				. db_result($result, $i, "support_id")."\"><IMG SRC=\"/images/msg.png\" BORDER=0 HEIGHT=12 WIDTH=10> "
+			print	"\n<TR class=\"". html_get_alt_row_color($i) ."\"><TD><A HREF=\"/support/?group_id=$group_id&func=detailsupport&support_id="
+				. db_result($result, $i, "support_id")."\"><IMG SRC=\"".util_get_image_theme('msg.png')."\" BORDER=0 HEIGHT=12 WIDTH=10> "
 				. db_result($result, $i, "summary")."</A></TD>"
 				. "<TD>".db_result($result, $i, "user_name")."</TD>"
 				. "<TD>".format_date($sys_datefmt,db_result($result,$i,"date"))."</TD></TR>";
@@ -315,9 +315,9 @@ if ($type_of_search == "soft") {
 		echo "\n";
 
 		for ( $i = 0; $i < $rows; $i++ ) {
-			print	"\n<TR BGCOLOR=\"". html_get_alt_row_color($i) ."\"><TD><A HREF=\"/pm/task.php?group_id=$group_id&func=detailtask&project_task_id="
-				. db_result($result, $i, "project_task_id").
-			    "&group_project_id=".db_result($result, $i, "group_project_id")."\"><IMG SRC=\"/images/msg.png\" BORDER=0 HEIGHT=12 WIDTH=10> "
+			print	"\n<TR class=\"". html_get_alt_row_color($i) ."\"><TD><A HREF=\"/pm/task.php?group_id=$group_id&func=detailtask&project_task_id="
+				. db_result($result, $i, "project_task_id")
+			    ."&group_project_id=".db_result($result, $i, "group_project_id")."\"><IMG SRC=\"".util_get_image_theme('msg.png')."\" BORDER=0 HEIGHT=12 WIDTH=10> "
 				. db_result($result, $i, "summary")."</A></TD>"
 				. "<TD>".db_result($result, $i, "user_name")."</TD>"
 			        . "<TD>".format_date($sys_datefmt,db_result($result, $i, "start_date"))."</TD>"
@@ -366,8 +366,8 @@ if ($type_of_search == "soft") {
 		echo "\n";
 
 		for ( $i = 0; $i < $rows; $i++ ) {
-			print	"<TR BGCOLOR=\"". html_get_alt_row_color($i)."\"><TD><A HREF=\"/snippet/detail.php?type=snippet&id=".db_result($result, $i, 'snippet_id')."\">"
-				. "<IMG SRC=\"/images/msg.png\" BORDER=0 HEIGHT=12 WIDTH=10> ".db_result($result, $i, 'name')."</A></TD>"
+			print	"<TR class=\"". html_get_alt_row_color($i)."\"><TD><A HREF=\"/snippet/detail.php?type=snippet&id=".db_result($result, $i, 'snippet_id')."\">"
+				. "<IMG SRC=\"".util_get_image_theme('msg.png')."\" BORDER=0 HEIGHT=12 WIDTH=10> ".db_result($result, $i, 'name')."</A></TD>"
 				. "<TD>".db_result($result,$i,'description')."</TD></TR>\n";
 		}
 		echo "</TABLE>\n";
@@ -384,18 +384,18 @@ if ( !$no_rows && ( ($rows_returned > $rows) || ($offset != 0) ) ) {
 
 	echo "<BR>\n";
 
-	echo "<TABLE BGCOLOR=\"#EEEEEE\" WIDTH=\"100%\" CELLPADDING=\"5\" CELLSPACING=\"0\">\n";
+	echo "<TABLE class=\"boxitem\" WIDTH=\"100%\" CELLPADDING=\"5\" CELLSPACING=\"0\">\n";
 	echo "<TR>\n";
 	echo "\t<TD ALIGN=\"left\">";
 	if ($offset != 0) {
-		echo "<FONT face=\"Arial, Helvetica\" SIZE=3 STYLE=\"text-decoration: none\"><B>";
-		echo "<A HREF=\"javascript:history.back()\"><B><IMG SRC=\"/images/t2.png\" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE> Previous Results </A></B></FONT>";
+		echo "<span class=\"normal\"><B>";
+		echo "<A HREF=\"javascript:history.back()\"><B><IMG SRC=\"".util_get_image_theme('t2.png')."\" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE> Previous Results </A></B></span>";
 	} else {
 		echo "&nbsp;";
 	}
 	echo "</TD>\n\t<TD ALIGN=\"right\">";
 	if ( $rows_returned > $rows) {
-		echo "<FONT face=\"Arial, Helvetica\" SIZE=3 STYLE=\"text-decoration: none\"><B>";
+		echo "<span class=\"normal\"><B>";
 		echo "<A HREF=\"/search/?type_of_search=$type_of_search&words=".urlencode($words)."&offset=".($offset+25);
 		if ( $type_of_search == 'bugs' ) {
 			echo "&group_id=$group_id&is_bug_page=1";
@@ -403,7 +403,7 @@ if ( !$no_rows && ( ($rows_returned > $rows) || ($offset != 0) ) ) {
 		if ( $type_of_search == 'forums' ) {
 			echo "&forum_id=$forum_id&is_forum_page=1";
 		}
-		echo "\"><B>Next Results <IMG SRC=\"/images/t.png\" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE></A></B></FONT>";
+		echo "\"><B>Next Results <IMG SRC=\"".util_get_image_theme('t.png')."\" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE></A></B></span>";
 	} else {
 		echo "&nbsp;";
 	}

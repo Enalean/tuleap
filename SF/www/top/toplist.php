@@ -58,7 +58,7 @@ echo db_error();
 
 while ($row_top = db_fetch_array($res_top)) {
 	$i++;
-	print '<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD>&nbsp;&nbsp;'.$row_top["rank_$rankfield"]
+	print '<TR class="'. util_get_alt_row_color($i) .'"><TD>&nbsp;&nbsp;'.$row_top["rank_$rankfield"]
 		.'</TD><TD><A href="/projects/'. strtolower($row_top['unix_group_name']) .'/">'
 		.stripslashes($row_top['group_name'])."</A>"
 		.'</TD><TD align="right">'.$row_top["$rankfield"]
@@ -75,10 +75,10 @@ while ($row_top = db_fetch_array($res_top)) {
 		print "Same";
 	}
 	else if ($diff > 0) {
-		print "<FONT color=\"#009900\">Up $diff</FONT>";
+		print "<span class=\"top_up\">Up $diff</span>";
 	}
 	else if ($diff < 0) {
-		print "<FONT color=\"#CC0000\">Down ".(0-$diff)."</FONT>";
+		print "<span class=\"top_down\">Down ".(0-$diff)."</span>";
 	}
 
 	print '&nbsp;&nbsp;&nbsp;</TD></TR>

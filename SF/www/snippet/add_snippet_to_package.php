@@ -25,8 +25,7 @@ if (user_isloggedin()) {
 	if ($suppress_nav) {
 		echo '
 		<HTML>
-		<LINK rel="stylesheet" href="/sourceforge.css" type="text/css">
-		<BODY BGCOLOR="#FFFFFF">';
+		<BODY>';
 	} else {
 		snippet_header(array('title'=>'Submit A New Snippet'));
 	}
@@ -149,11 +148,11 @@ if (user_isloggedin()) {
 		$HTML->box1_top('Snippets In This Package');
 		for ($i=0; $i<$rows; $i++) {
 			echo '
-			<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD ALIGN="MIDDLE">
+			<TR class="'. util_get_alt_row_color($i) .'"><TD ALIGN="MIDDLE">
 				<A HREF="/snippet/delete.php?type=frompackage&snippet_version_id='.
 				db_result($result,$i,'snippet_version_id').
 				'&snippet_package_version_id='.$snippet_package_version_id.
-				'"><IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" BORDER="0"></A></TD><TD WIDTH="99%">'.
+				'"><IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0"></A></TD><TD WIDTH="99%">'.
 				db_result($result,$i,'name').' '.db_result($result,$i,'version')."</TD></TR>";
 
 			$last_group=db_result($result,$i,'group_id');
@@ -162,7 +161,7 @@ if (user_isloggedin()) {
 	}
 	echo '
 	<P>
-	<H2><FONT COLOR="RED">'.$feedback.'</FONT></H2>';
+	<H2><span class="feedback">'.$feedback.'</span></H2>';
 
 	handle_add_exit();
 

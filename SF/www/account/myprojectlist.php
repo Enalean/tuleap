@@ -21,7 +21,7 @@ $res_proj = db_query("SELECT groups.group_name AS group_name,"
 <P>Group List for: <B><?php print user_getname(); ?></B>
 
 <P>
-<TABLE width=100% cellpadding=0 cellspacing=0 border=0>
+<TABLE width=100% cellpadding=0 cellspacing=0 border=0 class="small">
 <?php
 while ($row_proj = db_fetch_array($res_proj)) {
 	print "<TR>\n";

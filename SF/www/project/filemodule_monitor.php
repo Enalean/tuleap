@@ -41,10 +41,10 @@ if (user_isloggedin()) {
 
 			if (!$result) {
 				echo '
-					<FONT COLOR="RED">Error inserting into filemodule_monitor</FONT>';
+					<span class="highlight">Error inserting into filemodule_monitor</span>';
 			} else {
 				echo '
-					<FONT COLOR="RED"><H3>Package is now being monitored</H3></FONT>
+					<span class="highlight"><H3>Package is now being monitored</H3></span>
 					<P>
 					You will now be emailed when new files are released.
 					<P>
@@ -56,7 +56,7 @@ if (user_isloggedin()) {
 			$sql="DELETE FROM filemodule_monitor WHERE user_id='".user_getid()."' AND filemodule_id='$filemodule_id';";
 			$result = db_query($sql);
 			echo '
-				<FONT COLOR="RED"><H3>Monitoring has been turned off</H3></FONT>
+				<span class="highlight"><H3>Monitoring has been turned off</H3></span>
 				<P>
 				You will not receive any more emails from this package.';
 

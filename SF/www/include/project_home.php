@@ -110,7 +110,7 @@ echo $HTML->box1_top('Latest File Releases');
 
 	echo '
 	<TABLE cellspacing="1" cellpadding="5" width="100%" border="0">
-		<TR bgcolor="'.$GLOBALS['COLOR_LTBACK1'].'">
+		<TR class="boxitem">
 		<TD align="left"">
 			Package
 		</td>
@@ -137,7 +137,7 @@ echo $HTML->box1_top('Latest File Releases');
 		if (!$res_files || $rows_files < 1) {
 			echo db_error();
 			// No releases
-			echo '<TR BGCOLOR="'.$GLOBALS['COLOR_LTBACK1'].'"><TD COLSPAN="4"><B>This Project Has Not Released Any Files</B></TD></TR>';
+			echo '<TR class="boxitem"><TD COLSPAN="4"><B>This Project Has Not Released Any Files</B></TD></TR>';
 
 		} else {
 			/*
@@ -149,7 +149,7 @@ echo $HTML->box1_top('Latest File Releases');
 					//same package as last iteration - don't show this release
 				} else {
 					echo '
-					<TR BGCOLOR="'.$GLOBALS['COLOR_LTBACK1'].'" ALIGN="center">
+					<TR class="boxitem" ALIGN="center">
 					<TD ALIGN="left">
 					<B>' . db_result($res_files,$f,'package_name'). '</B></TD>';
 					// Releases to display

@@ -21,13 +21,12 @@ session_require(array('group'=>'1','admin_flags'=>'A'));
 echo "\n\n";
 
 print '<DIV ALIGN="CENTER">' . "\n";
-print '<font size="+1"><b>Project Statistical Comparisons</b></font><BR>' . "\n";
-print '</DIV>' . "\n";
+print '<span class="normal"><b>Project Statistical Comparisons</b></span><BR>' . "\n";
+print '</DIV>'."\n";
 
 ?>
 
 <HR>
-
 <table width="100%" cellpadding="0" cellspacing="0" border="0">
 <tr>
 <td align="center"><a href="index.php">OVERVIEW STATS</a></td>

@@ -29,7 +29,7 @@ function show_filters ($group_id) {
 			<INPUT TYPE="HIDDEN" NAME="filter_id" VALUE="<?php
 				echo db_result($result,$i,"filter_id");
 			?>">
-			<TR BGCOLOR="<?php echo util_get_alt_row_color($i); ?>">
+			<TR class="<?php echo util_get_alt_row_color($i); ?>">
 				<TD>
 					<FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="delete_filter" VALUE="Delete"><BR>
 					<INPUT TYPE="SUBMIT" NAME="submit" VALUE="Modify/Activate">
@@ -54,7 +54,7 @@ function show_filters ($group_id) {
 	<INPUT TYPE="HIDDEN" NAME="func" VALUE="postmodfilters">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">
 	<INPUT TYPE="HIDDEN" NAME="subfunc" VALUE="add">
-	<TR BGCOLOR="<?php echo util_get_alt_row_color($i); ?>">
+	<TR class="<?php echo util_get_alt_row_color($i); ?>">
 		<TD><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Add"></TD>
 		<TD NOWRAP><FONT SIZE="-1">SELECT * FROM bug WHERE<BR>bug.group_id='<?php echo $group_id; ?>' AND (</TD>
 		<TD NOWRAP><FONT SIZE="-1"><INPUT TYPE="TEXT" SIZE="60" MAXLENGTH="250" NAME="sql_clause" VALUE="bug.status_id IN (1,2,3) OR bug.severity > 0 OR bug.bug_group_id IN (1,2,3,4) OR bug.resolution_id IN (1,2,3) OR bug.assigned_to IN (1,2,3,4,5,6) OR bug.category_id IN (1,2,3)"></TD>

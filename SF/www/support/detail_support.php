@@ -70,10 +70,10 @@ if (db_numrows($result) > 0) {
 			<H3>DO NOT enter passwords in your message!</H3>';
 
 	if (!user_isloggedin()) {
-		echo '<B><FONT COLOR="RED"><H2>You Are NOT Logged In</H2>
+		echo '<B><span class="highlight"><H2>You Are NOT Logged In</H2>
                                                <P>Please <A HREF="/account/login.php?return_to='.
 		    urlencode($REQUEST_URI).
-		    '">log in,</A> so followups can be emailed to you.</FONT></B><P>';
+		    '">log in,</A> so followups can be emailed to you.</span></B><P>';
 
 		echo '
                                                  If you <B>cannot</B> login, then enter your email address here:<P>

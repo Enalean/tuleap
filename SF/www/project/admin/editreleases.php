@@ -405,7 +405,7 @@ if ($release_id) {
 				   'group'=>$group_id,
 				   'help' => 'FileReleaseDelivery.html#ReleaseConfigurationandValidation'));
 
-	echo '<TABLE BORDER="0" WIDTH="100%">
+	echo '<TABLE BORDER="0" WIDTH="100%" class="small">
 		<TR><TD>
 		<H2>Step 1</H2>
 		<P>
@@ -571,12 +571,12 @@ Then check the boxes next to the files belonging to your new project release and
 			<INPUT TYPE="HIDDEN" NAME="release_id" VALUE="'.$release_id.'">
 			<INPUT TYPE="HIDDEN" NAME="func" VALUE="update_file">
 			<INPUT TYPE="HIDDEN" NAME="file_id" VALUE="'. db_result($res,$i,'file_id') .'">
-			<TR BGCOLOR="'. util_get_alt_row_color($i) .'">
+			<TR class="'. util_get_alt_row_color($i) .'">
 				<TD NOWRAP><FONT SIZE="-1">'. db_result($res,$i,'filename') .'</TD>
 				<TD><FONT SIZE="-1">'. frs_show_processor_popup ('processor_id', db_result($res,$i,'processor_id')) .'</TD>
 				<TD><FONT SIZE="-1">'. frs_show_filetype_popup ('type_id', db_result($res,$i,'type_id')) .'</TD>
 			</TR>
-			<TR BGCOLOR="'. util_get_alt_row_color($i) .'">
+			<TR class="'. util_get_alt_row_color($i) .'">
 				<TD><FONT SIZE="-1">'. 
 					frs_show_release_popup ($group_id, $name='new_release_id',db_result($res,$i,'release_id')) .'</TD>
 				<TD><FONT SIZE="-1"><INPUT TYPE="TEXT" NAME="release_time" VALUE="'. format_date('Y-m-d',db_result($res,$i,'release_time')) .'" SIZE="10" MAXLENGTH="10"></TD>
@@ -587,7 +587,7 @@ Then check the boxes next to the files belonging to your new project release and
 			<INPUT TYPE="HIDDEN" NAME="release_id" VALUE="'.$release_id.'">
 			<INPUT TYPE="HIDDEN" NAME="func" VALUE="delete_file">
 			<INPUT TYPE="HIDDEN" NAME="file_id" VALUE="'. db_result($res,$i,'file_id') .'">
-			<TR BGCOLOR="'. util_get_alt_row_color($i) .'">
+			<TR class="'. util_get_alt_row_color($i) .'">
 				<TD><FONT SIZE="-1">&nbsp;</TD>
 				<TD><FONT SIZE="-1">&nbsp;</TD>
 				<TD><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="submit" VALUE="Delete File"> <INPUT TYPE="checkbox" NAME="im_sure" VALUE="1"> I\'m Sure </TD>
@@ -678,7 +678,7 @@ Then check the boxes next to the files belonging to your new project release and
 
 		for ($i=0; $i<$rows; $i++) {
 			echo '
-			<TR BGCOLOR="'. util_get_alt_row_color($i) .'">
+			<TR class="'. util_get_alt_row_color($i) .'">
 				<TD><FONT SIZE="-1">'. db_result($res,$i,'release_name') 
 					.' <A HREF="editreleases.php?release_id='. 
 					db_result($res,$i,'release_id') .'&group_id='. 

@@ -20,7 +20,7 @@ $HTML->header(array(title=>"SourceForge Site Statistics "));
 echo "\n\n";
 
 print '<DIV ALIGN="CENTER">' . "\n";
-print '<font size="+1"><b>Sitewide Agregate Statistics </b></font><BR>' . "\n";
+print '<span class="normal"><b>Sitewide Agregate Statistics </b></span><BR>' . "\n";
 ?>
 
 <HR>

@@ -65,18 +65,18 @@ if ((!$result || $rows < 1) && (!$result2 || $rows2 < 1)) {
 	*/
 	if ($rows2 > 0) {
 		echo '
-			<TR BGCOLOR="EFEFEF"><TD COLSPAN="3"><B>Packages Of Snippets</B></TD>';
+			<TR><TD COLSPAN="3"><B>Packages Of Snippets</B></TD>';
 	}
 	for ($i=0; $i<$rows2; $i++) {
 		echo '
-			<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD ROWSPAN="2"><A HREF="/snippet/detail.php?type=package&id='.
+			<TR class="'. util_get_alt_row_color($i) .'"><TD ROWSPAN="2"><A HREF="/snippet/detail.php?type=package&id='.
 			db_result($result2,$i,'snippet_package_id').'"><B>'.
 			db_result($result2,$i,'snippet_package_id').'</B></A></TD><TD><B>'.
 			db_result($result2,$i,'name').'</TD><TD>'.
 			'<a href="/users/'.db_result($result2,$i,'user_name').'"><b>'.
 			db_result($result2,$i,'user_name').'</b></a></TD></TR>';
 		echo '
-			<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD COLSPAN="2">'.util_make_links(nl2br(db_result($result2,$i,'description'))).'</TD></TR>';
+			<TR class="'. util_get_alt_row_color($i) .'"><TD COLSPAN="2">'.util_make_links(nl2br(db_result($result2,$i,'description'))).'</TD></TR>';
 	}
 
 
@@ -86,18 +86,18 @@ if ((!$result || $rows < 1) && (!$result2 || $rows2 < 1)) {
 
 	if ($rows > 0) {
 		echo '
-			<TR BGCOLOR="EFEFEF"><TD COLSPAN="3"><B>Snippets</B></TD>';
+			<TR><TD COLSPAN="3"><B>Snippets</B></TD>';
 	}
 	for ($i=0; $i<$rows; $i++) {
 		echo '
-			<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD ROWSPAN="2"><A HREF="/snippet/detail.php?type=snippet&id='.
+			<TR class="'. util_get_alt_row_color($i) .'"><TD ROWSPAN="2"><A HREF="/snippet/detail.php?type=snippet&id='.
 			db_result($result,$i,'snippet_id').'"><B>'.
 			db_result($result,$i,'snippet_id').'</B></A></TD><TD><B>'.
 			db_result($result,$i,'name').'</TD><TD>'.
 			'<a href="/users/'.db_result($result,$i,'user_name').'"><b>'.
 			db_result($result,$i,'user_name').'</b></a></TD></TR>';
 		echo '
-			<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD COLSPAN="2">'.util_make_links(nl2br(db_result($result,$i,'description'))).'</TD></TR>';
+			<TR class="'. util_get_alt_row_color($i) .'"><TD COLSPAN="2">'.util_make_links(nl2br(db_result($result,$i,'description'))).'</TD></TR>';
 	}
 
 	echo '

@@ -49,10 +49,10 @@ if (user_isloggedin()) {
 			$result = db_query($sql);
 
 			if (!$result) {
-				echo "<FONT COLOR=\"RED\">Error inserting into forum_saved_place</FONT>";
+				echo "<span class=\"highlight\">Error inserting into forum_saved_place</span>";
 				echo db_error();
 			} else {
-				echo "<FONT COLOR=\"RED\"><H3>Your place was saved</H3></FONT>";
+				echo "<span class=\"highlight\"><H3>Your place was saved</H3></span>";
 				echo "<P>New messages will be highlighted when you return.";
 			}
 
@@ -61,10 +61,10 @@ if (user_isloggedin()) {
 			$result = db_query($sql);
 
 			if (!$result) {
-				echo "<FONT COLOR=\"RED\">Error updating time in forum_saved_place</FONT>";
+				echo "<span class=\"highlight\">Error updating time in forum_saved_place</span>";
 				echo db_error();
 			} else {
-				echo "<FONT COLOR=\"RED\"><H3>Your place was saved</H3></FONT>";
+				echo "<span class=\"highlight\"><H3>Your place was saved</H3></span>";
 				echo "<P>New messages will be highlighted when you return.";
 			}
 		} 

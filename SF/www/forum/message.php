@@ -44,7 +44,7 @@ if ($msg_id) {
 
 	echo html_build_list_table_top ($title_arr);
 
-	echo "<TR><TD BGCOLOR=\"E3E3E3\">\n";
+	echo "<TR><TD class=\"threadmsg\">\n";
 	echo "BY: ".db_result($result,0, "user_name")."<BR>";
 	echo "DATE: ".format_date($sys_datefmt,db_result($result,0, "date"))."<BR>";
 	echo "SUBJECT: ". db_result($result,0, "subject")."<P>";

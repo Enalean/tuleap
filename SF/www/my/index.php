@@ -9,7 +9,6 @@
 require ('pre.php');
 require ('vote_function.php');
 require ('./my_utils.php');
-
 if (user_isloggedin()) {
 
         // Make sure this page is not cached because
@@ -21,6 +20,7 @@ if (user_isloggedin()) {
 	$HTML->header(array('title'=>'My Personal Page'));
 	?>
 
+    <span class="small">
 	<H3>Personal Page for: <?php print user_getname(); ?>
 	     <?php echo help_button('LoginAndPersonalPage.html'); ?></H3>
     <? util_get_content('my/intro'); ?>
@@ -61,7 +61,7 @@ if (user_isloggedin()) {
 
 		list($hide_now,$count_diff,$hide_url) = 
 		    my_hide_url('bug',$group_id,$hide_item_id,$rows2,$hide_bug);
-		$html_hdr = ($j ? '<td colspan="2">' : '').
+		$html_hdr = ($j ? '<tr class="boxitem"><td colspan="2">' : '').
 		    $hide_url.'<A HREF="/bugs/?group_id='.$group_id.'"><B>'.
 		    group_getname($group_id).'</B></A>&nbsp;&nbsp;&nbsp;&nbsp;';
 		$html = '';
@@ -73,11 +73,12 @@ if (user_isloggedin()) {
 			$AS_flag = my_format_as_flag(db_result($result2,$i,'assigned_to'), db_result($result2,$i,'submitted_by'));
 
 			$html .= '
-			<TR BGCOLOR="'.get_priority_color(db_result($result2,$i,'severity')).
-			'"><TD><A HREF="/bugs/?func=detailbug&group_id='.
+			
+			<TR class="'.get_priority_color(db_result($result2,$i,'severity')).
+			'"><TD class="small"><A HREF="/bugs/?func=detailbug&group_id='.
 			$group_id.'&bug_id='.db_result($result2,$i,'bug_id').
 			'">'.db_result($result2,$i,'bug_id').'</A></TD>'.
-			'<TD>'.stripslashes(db_result($result2,$i,'summary')).'&nbsp;'.$AS_flag.'</TD></TR>';
+			'<TD class="small">'.stripslashes(db_result($result2,$i,'summary')).'&nbsp;'.$AS_flag.'</TD></TR>';
 
 		    }
 		}
@@ -87,7 +88,7 @@ if (user_isloggedin()) {
 	    }
 
 
-	    echo '<TR><TD COLSPAN="2" BGCOLOR="'.$HTML->COLOR_CONTENT_BACK.'">&nbsp;</TD></TR>';
+	    echo '<TR><TD COLSPAN="2">&nbsp;</TD></TR>';
 
 	}
 	echo $HTML->box1_bottom();
@@ -125,7 +126,7 @@ if (user_isloggedin()) {
 		list($hide_now,$count_diff,$hide_url) = 
 		    my_hide_url('sr',$group_id,$hide_item_id,$rows2,$hide_sr);
 
-		$html_hdr = ($j ? '<td colspan="2">' : '').
+		$html_hdr = ($j ? '<tr class="boxitem"><td colspan="2">' : '').
 		    $hide_url.'<A HREF="/support/?group_id='.$group_id.'"><B>'.
 		    group_getname($group_id).'</B></A>&nbsp;&nbsp;&nbsp;&nbsp;';
 
@@ -137,11 +138,11 @@ if (user_isloggedin()) {
 			$AS_flag = my_format_as_flag(db_result($result2,$i,'assigned_to'), db_result($result2,$i,'submitted_by'));
 
 			$html .= '
-			<TR BGCOLOR="'.get_priority_color(db_result($result2,$i,'priority')).
-			'"><TD><A HREF="/support/?func=detailsupport&group_id='.
+			<TR class="'.get_priority_color(db_result($result2,$i,'priority')).
+			'"><TD class="small"><A HREF="/support/?func=detailsupport&group_id='.
 			$group_id.'&support_id='.db_result($result2,$i,'support_id').
 			'">'.db_result($result2,$i,'support_id').'</A></TD>'.
-			'<TD>'.stripslashes(db_result($result2,$i,'summary')).'&nbsp;'.$AS_flag.'</TD></TR>';
+			'<TD class="small">'.stripslashes(db_result($result2,$i,'summary')).'&nbsp;'.$AS_flag.'</TD></TR>';
 		    }
 		}
 
@@ -150,7 +151,7 @@ if (user_isloggedin()) {
 	    }
 
 
-	    echo '<TR><TD COLSPAN="2" BGCOLOR="'.$HTML->COLOR_CONTENT_BACK.'">&nbsp;</TD></TR>';
+	    echo '<TR><TD COLSPAN="2">&nbsp;</TD></TR>';
 	}
 	echo $HTML->box1_bottom();
 
@@ -197,7 +198,7 @@ if (user_isloggedin()) {
 		list($hide_now,$count_diff,$hide_url) = 
 		    my_hide_url('forum',$group_id,$hide_item_id,$rows2,$hide_forum);
 
-		$html_hdr = ($j ? '<td colspan="2">' : '').
+		$html_hdr = ($j ? '<tr class="boxitem"><td colspan="2">' : '').
 		    $hide_url.'<A HREF="/forum/?group_id='.$group_id.'"><B>'.
 		    db_result($result,$j,'group_name').'</B></A>&nbsp;&nbsp;&nbsp;&nbsp;';
 
@@ -209,12 +210,12 @@ if (user_isloggedin()) {
 
 			$group_forum_id = db_result($result2,$i,'group_forum_id');
 			$html .= '
-			<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD WIDTH="99%">'.
+			<TR class="'. util_get_alt_row_color($i) .'"><TD WIDTH="99%">'.
 			    '&nbsp;&nbsp;&nbsp;-&nbsp;<A HREF="/forum/forum.php?forum_id='.$group_forum_id.'">'.
 			    stripslashes(db_result($result2,$i,'forum_name')).'</A></TD>'.
 			    '<TD ALIGN="MIDDLE"><A HREF="/forum/monitor.php?forum_id='.$group_forum_id.
 			    '" onClick="return confirm(\'Stop monitoring this Forum?\')">'.
-			    '<IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" '.
+			    '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" '.
 			    'BORDER=0 ALT="STOP MONITORING""></A></TD></TR>';
 		    }
 		}
@@ -223,7 +224,7 @@ if (user_isloggedin()) {
 		echo $html_hdr.$html;
 	    }
 
-	    echo '<TR bgcolor="'.$HTML->COLOR_CONTENT_BACK.'"><TD COLSPAN="2">&nbsp;</TD></TR>';
+	    echo '<TR><TD COLSPAN="2">&nbsp;</TD></TR>';
 	}
 	echo $HTML->box1_bottom();
 
@@ -268,7 +269,7 @@ if (user_isloggedin()) {
 		list($hide_now,$count_diff,$hide_url) = 
 		    my_hide_url('frs',$group_id,$hide_item_id,$rows2,$hide_frs);
 
-		$html_hdr = ($j ? '<td colspan="2">' : '').
+		$html_hdr = ($j ? '<tr class="boxitem"><td colspan="2">' : '').
 		    $hide_url.'<A HREF="/project/?group_id='.$group_id.'"><B>'.
 		    db_result($result,$j,'group_name').'</B></A>&nbsp;&nbsp;&nbsp;&nbsp;';
 
@@ -279,13 +280,13 @@ if (user_isloggedin()) {
 		    if (!$hide_now) {
 
 			$html .='
-			<TR BGCOLOR="'. util_get_alt_row_color($i) .'">'.
+			<TR class="'. util_get_alt_row_color($i) .'">'.
 			    '<TD WIDTH="99%">-&nbsp;&nbsp;<A HREF="/project/filelist.php?group_id='.$group_id.'">'.
 			    db_result($result2,$i,'name').'</A></TD>'.
 			    '<TD><A HREF="/project/filemodule_monitor.php?filemodule_id='.
 			    db_result($result2,$i,'filemodule_id').
 			    '" onClick="return confirm(\'Stop Monitoring this Package?\')">'.
-			    '<IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" '.
+			    '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" '.
 			    'BORDER=0" ALT="STOP MONITORING"></A></TD></TR>';
 		    }
 		}
@@ -294,7 +295,7 @@ if (user_isloggedin()) {
 		echo $html_hdr.$html;
 	    }
 
-	    echo '<TR bgcolor="'.$HTML->COLOR_CONTENT_BACK.'"><TD COLSPAN="2">&nbsp;</TD></TR>';
+	    echo '<TR><TD COLSPAN="2">&nbsp;</TD></TR>';
 	}
 	echo $HTML->box1_bottom();
 
@@ -344,7 +345,7 @@ if (user_isloggedin()) {
 		list($hide_now,$count_diff,$hide_url) = 
 		    my_hide_url('pm',$group_project_id,$hide_item_id,$rows2,$hide_pm);
 
-		$html_hdr = ($j ? '<td colspan="3">' : '').
+		$html_hdr = ($j ? '<tr class="boxitem"><td colspan="3">' : '').
 		    $hide_url.'<A HREF="/pm/task.php?group_id='.$group_id.
 		    '&group_project_id='.$group_project_id.'"><B>'.
 		    db_result($result,$j,'group_name').' - '.
@@ -356,13 +357,13 @@ if (user_isloggedin()) {
 		    if (!$hide_now) {
 
 			$html .= '
-			<TR BGCOLOR="'.get_priority_color(db_result($result2,$i,'priority')).
-			    '"><TD><A HREF="/pm/task.php/?func=detailtask&project_task_id='.
+			<TR class="'.get_priority_color(db_result($result2,$i,'priority')).
+			    '"><TD class="small"><A HREF="/pm/task.php/?func=detailtask&project_task_id='.
 			    db_result($result2, $i, 'project_task_id').'&group_id='.
 			    $group_id.'&group_project_id='.$group_project_id.
 			    '">'.db_result($result2,$i,'project_task_id').'</A></TD>'.
-			    '<TD>'.stripslashes(db_result($result2,$i,'summary')).'</TD>'.
-			    '<TD>'.db_result($result2,$i,'percent_complete').'%</TD></TR>';
+			    '<TD class="small">'.stripslashes(db_result($result2,$i,'summary')).'</TD>'.
+			    '<TD class="small">'.db_result($result2,$i,'percent_complete').'%</TD></TR>';
 
 		    }
 		}
@@ -372,7 +373,7 @@ if (user_isloggedin()) {
 	    }
 
 
-	    echo '<TR><TD COLSPAN="3" BGCOLOR="'.$HTML->COLOR_CONTENT_BACK.'">&nbsp;</TD></TR>';
+	    echo '<TR><TD COLSPAN="3">&nbsp;</TD></TR>';
 	}
 	echo $HTML->box1_bottom();
 
@@ -395,7 +396,7 @@ if (user_isloggedin()) {
 	} else {
 		echo 'You have taken your developer survey';
 	}
-	echo '<TR align=left bgcolor="'.$HTML->COLOR_CONTENT_BACK.'"><TD COLSPAN="2">&nbsp;</TD></TR>
+	echo '<TR align=left><TD COLSPAN="2">&nbsp;</TD></TR>
 ';
 	echo $HTML->box1_bottom();
 
@@ -415,17 +416,17 @@ if (user_isloggedin()) {
 	} else {
 
 		for ($i=0; $i<$rows; $i++) {
-		    echo '<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD>';
+		    echo '<TR class="'. util_get_alt_row_color($i) .'"><TD>';
 		    echo '
                                            <B><A HREF="'. db_result($result,$i,'bookmark_url') .'">'.
 			db_result($result,$i,'bookmark_title') .'</A></B> '.
 			'<SMALL><A HREF="/my/bookmark_edit.php?bookmark_id='. db_result($result,$i,'bookmark_id') .'">[Edit]</A></SMALL></TD>'.
 			'<td><A HREF="/my/bookmark_delete.php?bookmark_id='. db_result($result,$i,'bookmark_id') .
 			'" onClick="return confirm(\'Delete this bookmark?\')">'.
-			'<IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A>	</td></tr>';
+			'<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A>	</td></tr>';
 			}
 	}
-	echo '<TR align=left bgcolor="'.$HTML->COLOR_CONTENT_BACK.'"><TD COLSPAN="2">&nbsp;</TD></TR>
+	echo '<TR align=left><TD COLSPAN="2">&nbsp;</TD></TR>
 ';
 	echo $HTML->box1_bottom();
 
@@ -452,7 +453,7 @@ if (user_isloggedin()) {
 
 		for ($i=0; $i<$rows; $i++) {
 			echo '
-			       <TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD WIDTH="99%">'.
+			       <TR class="'. util_get_alt_row_color($i) .'"><TD WIDTH="99%">'.
 			    '<A href="/projects/'. db_result($result,$i,'unix_group_name') .'/"><b>'.
 			    db_result($result,$i,'group_name') .'</b></A>';
 			if ( db_result($result,$i,'admin_flags') == 'A' ) {
@@ -465,12 +466,12 @@ if (user_isloggedin()) {
 			echo '</TD>'.
 			    '<td><A href="rmproject.php?group_id='. db_result($result,$i,'group_id').
 			    '" onClick="return confirm(\'Quit this project?\')">'.
-			    '<IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" BORDER="0"></A></TD></TR>';
+			    '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0"></A></TD></TR>';
 		}
 		
 		if ($private_shown) {
 		  echo '
-			       <TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD colspan="2">'.
+			       <TR class="'. util_get_alt_row_color($i) .'"><TD colspan="2" class="small">'.
 		      '(*) <em>Private projects</em></td></tr>';
 		}
 	}
@@ -483,6 +484,7 @@ if (user_isloggedin()) {
 	?>
 	</TD></TR>
 	</TABLE>
+	</span>
 	<?php
 	$HTML->footer(array());
 

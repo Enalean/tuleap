@@ -9,7 +9,7 @@
 function exit_error($title,$text) {
 	GLOBAL $HTML;
 	$HTML->header(array('title'=>'Exiting with Error'));
-	print '<H2><font color="#FF3333">'.$title.'</font></H2><P>'.$text;
+	print '<H2><span class="feedback">'.$title.'</span></H2><P>'.$text;
 	$HTML->footer(array());
 	exit;
 }

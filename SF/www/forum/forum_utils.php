@@ -68,7 +68,7 @@ function forum_header($params) {
 				echo '<P>';
 			}
 			echo '</TD><TD VALIGN="TOP" WIDTH="35%">';
-			echo $HTML->box1_top('Project Latest News',0,$GLOBALS['COLOR_LTBACK2']);
+			echo $HTML->box1_top('Project Latest News',0);
 			echo news_show_latest(db_result($result,0,'group_id'),5,false);
 			echo $HTML->box1_bottom();
 			echo '</TD></TR></TABLE>';
@@ -236,9 +236,9 @@ function show_thread($thread_id,$et=0) {
 */
 		for ($i=0; $i<$rows; $i++) {
 			$total_rows++;
-			$ret_val .= '<TR BGCOLOR="'. util_get_alt_row_color($total_rows) .'"><TD>'. 
+			$ret_val .= '<TR class="'. util_get_alt_row_color($total_rows) .'"><TD>'. 
 				(($current_message != db_result($result, $i, 'msg_id'))?'<A HREF="/forum/message.php?msg_id='.db_result($result, $i, 'msg_id').'">':'').
-				'<IMG SRC="/images/msg.png" BORDER=0 HEIGHT=12 WIDTH=10> ';
+				'<IMG SRC="'.util_get_image_theme("msg.png").'" BORDER=0 HEIGHT=12 WIDTH=10> ';
 			/*
 				See if this message is new or not
 			*/
@@ -252,7 +252,7 @@ function show_thread($thread_id,$et=0) {
 			*/
 			if ($et == 1) {
 				$ret_val .= '
-				<TR BGCOLOR="'. util_get_alt_row_color($total_rows) .'"><TD>&nbsp;</TD><TD COLSPAN=2>'.
+				<TR class="'. util_get_alt_row_color($total_rows) .'"><TD>&nbsp;</TD><TD COLSPAN=2>'.
 				nl2br(db_result($result, $i, 'body')).'</TD><TR>';
 			}
 
@@ -289,7 +289,7 @@ function show_submessages($thread_id, $msg_id, $level,$et=0) {
 			$total_rows++;
 
 			$ret_val .= '
-				<TR BGCOLOR="'. util_get_alt_row_color($total_rows) .'"><TD NOWRAP>';
+				<TR class="'. util_get_alt_row_color($total_rows) .'"><TD NOWRAP>';
 			/*
 				How far should it indent?
 			*/
@@ -302,7 +302,7 @@ function show_submessages($thread_id, $msg_id, $level,$et=0) {
 			*/
 			$ret_val .= (($current_message != db_result($result, $i, 'msg_id'))?
 				'<A HREF="/forum/message.php?msg_id='.db_result($result, $i, 'msg_id').'">':'').
-				'<IMG SRC="/images/msg.png" BORDER=0 HEIGHT=12 WIDTH=10> ';
+				'<IMG SRC="'.util_get_image_theme("msg.png").'" BORDER=0 HEIGHT=12 WIDTH=10> ';
 			/*
 				See if this message is new or not
 			*/
@@ -317,7 +317,7 @@ function show_submessages($thread_id, $msg_id, $level,$et=0) {
 			*/
 			if ($et == 1) {
 				$ret_val .= '
-					<TR BGCOLOR="'. util_get_alt_row_color($total_rows) .'"><TD>&nbsp;</TD><TD COLSPAN=2>'.
+					<TR class="'. util_get_alt_row_color($total_rows) .'"><TD>&nbsp;</TD><TD COLSPAN=2>'.
 					nl2br(db_result($result, $i, 'body')).'</TD><TR>';
 			}
 
@@ -467,7 +467,7 @@ function show_post_form($forum_id, $thread_id=0, $is_followup_to=0, $subject="")
 		<TEXTAREA NAME="body" VALUE="" ROWS="10" COLS="60" WRAP="SOFT"></TEXTAREA>
 		</TD></TR>
 		<TR><TD COLSPAN="2" ALIGN="MIDDLE">
-		<B><FONT COLOR="RED">HTML tags will display in your post as text</FONT></B>
+		<B><span class="highlight">HTML tags will display in your post as text</span></B>
 		<BR>
 		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Post Comment">
 		</TD></TR></TABLE>
@@ -478,7 +478,7 @@ function show_post_form($forum_id, $thread_id=0, $is_followup_to=0, $subject="")
 	} else {
 		echo "<CENTER>";
 		echo "\n\n<H3><A HREF=\"/account/login.php?return_to=".urlencode($REQUEST_URI).
-		"\"><u>Log in first</u></A><FONT COLOR=\"RED\"> to post messages</FONT></H3>";
+		"\"><u>Log in first</u></A><span class=\"highlight\"> to post messages</span></H3>";
 		echo "</CENTER>";
 	}
 

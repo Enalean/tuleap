@@ -109,7 +109,7 @@ if (!$res || $rows < 1) {
 		<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 		<INPUT TYPE="HIDDEN" NAME="func" VALUE="update_package">
 		<INPUT TYPE="HIDDEN" NAME="package_id" VALUE="'. db_result($res,$i,'package_id') .'">
-		<TR BGCOLOR="'. util_get_alt_row_color($i) .'">
+		<TR class="'. util_get_alt_row_color($i) .'">
 			<TD NOWRAP><FONT SIZE="-1"><A HREF="editreleases.php?package_id='. 
 				db_result($res,$i,'package_id') .'&group_id='. $group_id .'"><B>[Add/Edit Releases]</B></A></TD>
 			<TD><FONT SIZE="-1"><INPUT TYPE="TEXT" NAME="package_name" VALUE="'. 

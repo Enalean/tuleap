@@ -65,7 +65,7 @@ function stats_project_daily( $group_id, $span = 7 ) {
 		
 		while ( $row = db_fetch_array($res) ) {
 			$i++;
-			print	'<TR bgcolor="' . util_get_alt_row_color($i) . '">'
+			print	'<TR class="' . util_get_alt_row_color($i) . '">'
 				. '<TD>' . gmstrftime("%e %b %Y", gmmktime(0,0,0,substr($row["month"],4,2),$row["day"],substr($row["month"],0,4)) ) . '</TD>'
 				//. '<TD>' . $row["month"] . " " . $row["day"] . '</TD>'
 				. '<TD>' . sprintf("%d", $row["AVG(group_ranking)"]) . " ( " . sprintf("%0.2f", $row["AVG(group_metric)"]) . ' ) </TD>'
@@ -143,7 +143,7 @@ function stats_project_weekly( $group_id, $span = 8 ) {
 			//	$w_end = $today;
 			//}
 
-			print	'<TR bgcolor="' . util_get_alt_row_color($i) . '">'
+			print	'<TR class="' . util_get_alt_row_color($i) . '">'
 				. '<TD>' . $row["week"] . "&nbsp;(" . gmstrftime("%D", $w_begin) . " -> " . strftime("%D", $w_end) . ') </TD>'
 				. '<TD>' . sprintf("%d", $row["AVG(group_ranking)"]) . " ( " . sprintf("%0.2f", $row["AVG(group_metric)"]) . ' ) </TD>'
 				. '<TD align="right">' . number_format( $row["SUM(site_views + subdomain_views)"] ) . '</TD>'
@@ -213,7 +213,7 @@ function stats_project_monthly( $group_id, $span = 4 ) {
 		while ( $row = db_fetch_array($res) ) {
 			$i++;
 
-			print	'<TR bgcolor="' . util_get_alt_row_color($i) . '">'
+			print	'<TR class="' . util_get_alt_row_color($i) . '">'
 				. '<TD>' . gmstrftime("%B %Y", mktime(0,0,1,substr($row["month"],4,2),1,substr($row["month"],0,4)) ) . '</TD>'
 				. '<TD>' . sprintf("%d", $row["AVG(group_ranking)"]) . " ( " . sprintf("%0.2f", $row["AVG(group_metric)"]) . ' ) </TD>'
 				. '<TD align="right">' . number_format( $row["SUM(site_views + subdomain_views)"] ) . '</TD>'
@@ -271,7 +271,7 @@ function stats_site_agregate( $group_id ) {
 			. '<TD align="right"><B>CVS</B></TD>'
 			. '</TR>' . "\n";
 
-		print	'<TR bgcolor="' . util_get_alt_row_color(1) . '">'
+		print	'<TR class="' . util_get_alt_row_color(1) . '">'
 			. '<TD>' . $row["COUNT(day)"] . ' days </TD>'
 			. '<TD>' . sprintf("%d", $row["AVG(group_ranking)"]) . " ( " . sprintf("%0.2f", $row["AVG(group_metric)"]) . ' ) </TD>'
 			. '<TD align="right">' . number_format( $row["SUM(site_views + subdomain_views)"] ) . '</TD>'

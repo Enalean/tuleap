@@ -67,10 +67,10 @@ $HTML->header(array('title'=>'Login'));
 then be activated for normal logins.
 <?php 
 if ($GLOBALS['error_msg']) {
-	print '<P><FONT color="#FF0000">'.$GLOBALS['error_msg'].'</FONT>';
+	print '<P><span class="feedback">'.$GLOBALS['error_msg'].'</span>';
 }
 if ($Login && !$success) {
-	echo '<h2><FONT COLOR="RED">'. $feedback .'</FONT></H2>';
+	echo '<h2><span class="feedback">'. $feedback .'</span></H2>';
 }
 ?>
 <form action="verify.php" method="post">

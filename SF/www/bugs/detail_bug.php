@@ -86,9 +86,9 @@ if (db_numrows($result) > 0) {
 
 <?php
 	if (!user_isloggedin()) {
-		echo '<BR><B><FONT COLOR="RED"><H2>You Are NOT Logged In</H2><P>Please <A HREF="/account/login.php?return_to='.
+		echo '<BR><B><span class="highlight"><H2>You Are NOT Logged In</H2><P>Please <A HREF="/account/login.php?return_to='.
 		urlencode($REQUEST_URI).
-		'">log in,</A> so followups can be emailed to you.</FONT></B><P>';
+		'">log in,</A> so followups can be emailed to you.</span></B><P>';
 	}
 ?>
 

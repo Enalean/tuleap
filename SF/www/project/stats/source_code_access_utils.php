@@ -60,7 +60,7 @@ function filedownload_logs_daily( $group_id, $span = 7 ) {
 		
 		while ( $row = db_fetch_array($res) ) {
 			$i++;
-			print	'<TR bgcolor="' . util_get_alt_row_color($i) . '">'
+			print	'<TR class="' . util_get_alt_row_color($i) . '">'
 				. '<TD>' . gmstrftime("%e %b %Y", $row["time"] ) . '</TD>'
 				. '<TD>' . $row["realname"] .' ('.$row["user_name"].')</TD>'
 				. '<TD>' . $row["email"] . '</TD>'
@@ -127,7 +127,7 @@ function cvsaccess_logs_daily( $group_id, $span = 7 ) {
 		
 		while ( $row = db_fetch_array($res) ) {
 			$i++;
-			print	'<TR bgcolor="' . util_get_alt_row_color($i) . '">'
+			print	'<TR class="' . util_get_alt_row_color($i) . '">'
 				. '<TD>' . substr($row["day"],6,2) .' '. $month_name[substr($row["day"],4,2) - 1] .' '. substr($row["day"],0,4) .'</TD>'
 				. '<TD>' . $row["realname"] .' ('.$row["user_name"].')</TD>'
 				. '<TD>' . $row["email"] . '</TD>'

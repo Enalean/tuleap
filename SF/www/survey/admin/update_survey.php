@@ -47,7 +47,7 @@ if ($survey_id) {
 ?>
 <H2>Edit a Survey</H2><P>
 
-<H3><FONT COLOR="RED">WARNING! It is a bad idea to edit a survey after responses have been posted</FONT></H3>
+<H3><span class="highlight">WARNING! It is a bad idea to edit a survey after responses have been posted</span></H3>
 <P>
 If you change a survey after you already have responses, your results pages could be misleading or messed up.
 <P>

@@ -98,7 +98,7 @@ if (user_ismember(1,'A')) {
 		<H4>New Category Name:</H4>
 		<INPUT TYPE="TEXT" NAME="cat_name" VALUE="" SIZE="15" MAXLENGTH="30"><BR>
 		<P>
-		<B><FONT COLOR="RED">Once you add a category, it cannot be deleted</FONT></B>
+		<B><span class="highlight">Once you add a category, it cannot be deleted</span></B>
 		<P>
 		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
 		</FORM>
@@ -136,7 +136,7 @@ if (user_ismember(1,'A')) {
 		<H4>New Skill Name:</H4>
 		<INPUT TYPE="TEXT" NAME="skill_name" VALUE="" SIZE="15" MAXLENGTH="30"><BR>
 		<P>
-		<B><FONT COLOR="RED">Once you add a skill, it cannot be deleted</FONT></B>
+		<B><span class="highlight">Once you add a skill, it cannot be deleted</span></B>
 		<P>
 		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
 		</FORM>

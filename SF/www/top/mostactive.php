@@ -48,13 +48,13 @@ $res_top=db_query($sql);
 
 while ($row_top = db_fetch_array($res_top)) {
 	$i++;
-	print '<TR BGCOLOR="'. util_get_alt_row_color($i) .'"><TD>&nbsp;&nbsp;'.$row_top['ranking']
+	print '<TR class="'. util_get_alt_row_color($i) .'"><TD>&nbsp;&nbsp;'.$row_top['ranking']
 		.'</TD><TD><A href="/projects/'. strtolower($row_top['unix_group_name']) .'/">'
 		.$row_top['group_name']."</A>"
 		.'</TD><TD align="right">'.$row_top['percentile'].'</TD></TR>';
 }
 
-print '<TR BGCOLOR="'.$HTML->COLOR_LTBACK2.'"><TD>'.(($offset>0)?'<A HREF="mostactive.php?type='.$type.'&offset='.($offset-50).'"><B><-- More</B></A>':'&nbsp;').'</TD>
+print '<TR class="'.$HTML->COLOR_LTBACK2.'"><TD>'.(($offset>0)?'<A HREF="mostactive.php?type='.$type.'&offset='.($offset-50).'"><B><-- More</B></A>':'&nbsp;').'</TD>
 	<TD>&nbsp;</TD>
 	<TD ALIGN="RIGHT"><A HREF="mostactive.php?type='.$type.'&offset='.($offset+50).'"><B>More --></B></A></TD></TR>';
 

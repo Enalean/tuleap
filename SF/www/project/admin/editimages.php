@@ -74,10 +74,10 @@ echo html_build_list_table_top($arr);
 $rows=db_numrows($result);
 for ($i=0; $i<$rows; $i++) {
 	echo '	  
-	<TR BGCOLOR="'. html_get_alt_row_color($i) .'"><TD ALIGN="MIDDLE">'.
+	<TR class="'. html_get_alt_row_color($i) .'"><TD ALIGN="MIDDLE">'.
 	'<A HREF="'. $PHP_SELF .'?submit=1&group_id='.$group_id.'&remove_image=1&id='.
 	db_result($result,$i,'id').
-	'"><IMG SRC="/images/ic/trash.png" HEIGHT="16" WIDTH="16" '.
+	'"><IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" '.
 	'BORDER=0"></A></TD><TD>'.
 	db_result($result,$i,'id').'</TD><TD>'.
 	stripslashes(db_result($result,$i,'filename')).'</TD></TR>';
