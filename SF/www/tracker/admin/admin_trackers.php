@@ -8,6 +8,16 @@
 //  Written for CodeX by Stephane Bouhet
 //
 
+if ( !user_isloggedin() ) {
+	exit_not_logged_in();
+	return;
+}
+
+if ( !user_ismember($group_id,'A') ) {
+	exit_permission_denied();
+	return;
+}
+
 $ath->adminTrackersHeader(array('title'=>'All Trackers Administration','help' => 'TrackerAdministration.html'));
 echo $ath->displayAdminTrackers();
 $ath->footer(array());

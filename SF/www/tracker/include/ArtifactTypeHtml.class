@@ -249,12 +249,13 @@ class ArtifactTypeHtml extends ArtifactType {
 			echo 'Define the set of values for the tracker fields you have decided to use in your tracker. <P>';
 			echo '<H3><a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=canned">Manage Canned Responses</a></H3>';
 			echo 'Add, update or delete the canned responses.';
-			echo '<H3><a href="/tracker/admin/?func=report&group_id='.$group_id.'&atid='.$atid.'">Manage Tracker Reports</a></H3>';
-			echo 'Define personal or project-wide tracker reports: what search criteria to use and what tracker fields to show in the tracker report table&hellip;';
-		
-			echo '<H3><a href="/tracker/admin?func=notification&group_id='.$group_id.'&atid='.$atid.'">Email Notification Settings</a></H3>';
-			echo 'Users can define when they want to be notified of a tracker update via email. Project Administrators can also define global email notification rules.<P>';
-	    }
+		}
+
+		echo '<H3><a href="/tracker/admin/?func=report&group_id='.$group_id.'&atid='.$atid.'">Manage Tracker Reports</a></H3>';
+		echo 'Define personal or project-wide tracker reports: what search criteria to use and what tracker fields to show in the tracker report table&hellip;';
+				
+		echo '<H3><a href="/tracker/admin?func=notification&group_id='.$group_id.'&atid='.$atid.'">Email Notification Settings</a></H3>';
+		echo 'Users can define when they want to be notified of a tracker update via email. Project Administrators can also define global email notification rules.<P>';
 	}
 
 	/**

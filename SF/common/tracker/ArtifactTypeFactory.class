@@ -89,7 +89,7 @@ class ArtifactTypeFactory extends Error {
 	}		
 
 	/**
-	 *	getArtifactTypes - return an array of ArtifactType objects of the current 
+	 *	getArtifactTypes - return an array of ArtifactType objects of the current group
 	 *
 	 *	@return	array	The array of ArtifactType objects.
 	 */

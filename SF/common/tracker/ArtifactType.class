@@ -585,11 +585,11 @@ class ArtifactType extends Error {
 	}
 
 	/**
-	 *	pre_delete - Mark this for deletion.
+	 *	preDelete - Mark this for deletion.
 	 *
 	 *	@return boolean	success.
 	 */
-	function pre_delete() {
+	function preDelete() {
 		if (!$this->userIsAdmin()) {
 			$this->setError('Permission Denied');
 			return false;
@@ -718,13 +718,13 @@ class ArtifactType extends Error {
 	}
 
 	/**
-	 *	userIsAdmin - see if the logged-in user's perms are >= 2 or SU.
+	 *	userIsAdmin - see if the logged-in user's perms are >= 2 or project admin.
 	 *
 	 *	@return boolean
 	 */
 	function userIsAdmin() { 
 
-		if ( ($this->getCurrentUserPerm() >= 2) || (user_is_super_user()) ) {
+		if ( ($this->getCurrentUserPerm() >= 2) || (user_ismember($this->Group->getID(),'A')) ) {
 			return true;
 		} else {
 			return false;
@@ -732,12 +732,12 @@ class ArtifactType extends Error {
 	}
 
 	/**
-	 *	userIsTech - see if the logged-in user's perms are 1,2 or SU.
+	 *	userIsTech - see if the logged-in user's perms are 1,2 or project admin.
 	 *
 	 *	@return boolean
 	 */
 	function userIsTech() { 
-		if ( ($this->getCurrentUserPerm() == 1) || ($this->getCurrentUserPerm() == 2) || (user_is_super_user()) ) {
+		if ( ($this->getCurrentUserPerm() == 1) || ($this->getCurrentUserPerm() == 2) || (user_ismember($this->Group->getID(),'A')) ) {
 			return true;
 		} else {
 			return false;
@@ -844,12 +844,6 @@ class ArtifactType extends Error {
 	 */
 	function updateNotificationSettings($email_all,$email_address,$user_id, $watchees) {
 
-		if ( !$this->userIsAdmin()) {
-			$this->setError('ArtifactType: Permission Denied');
-			return false;
-		}
-		
-	
 		if ($email_address && !validate_email($email_address)) {
 			$email_address='';
 		}

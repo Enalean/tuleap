@@ -68,9 +68,14 @@ if ($group_id && !$atid) {
 		break;
 		
 	case 'docreate':
-		if (!$ath->userIsAdmin()) {
-			$this->setError('ArtifactType: Permission Denied');
-			return false;
+		if ( !user_isloggedin() ) {
+			exit_not_logged_in();
+			return;
+		}
+		
+	    if ( !user_ismember($group_id,'A') ) {
+			exit_permission_denied();
+			return;
 		}
 
 		if ( !$ath->create($group_id,$group_id_chosen,$atid_chosen,$name,$description,$itemname) ) {
@@ -82,15 +87,6 @@ if ($group_id && !$atid) {
 		break;
 
 	default:
-		if ( !user_isloggedin() ) {
-			exit_not_logged_in();
-			return;
-		}
-		
-		if ( !user_ismember($group_id,'A') ) {
-			exit_permission_denied();
-			return;
-		}
 		include './admin_trackers.php';
 
 	}
@@ -132,6 +128,11 @@ if ($group_id && !$atid) {
 
 	switch ( $func ) {
 	case 'report':
+		if ( !user_isloggedin() ) {
+			exit_not_logged_in();
+			return;
+		}
+		
 		$arh = new ArtifactReportHtml($report_id, $atid);
 		if (!$arh) {
 			exit_error('Error','ArtifactReport could not be retrieved :'.$arh->getErrorMessage());
@@ -209,6 +210,16 @@ if ($group_id && !$atid) {
 		break;
 	
     case 'canned':
+		if ( !user_isloggedin() ) {
+			exit_not_logged_in();
+			return;
+		}
+		
+	    if ( !$ath->userIsAdmin() ) {
+			exit_permission_denied();
+			return;
+		}
+		
 	    if ($post_changes) {
 			if ($create_canned) {
 				$aci = $ach->create($title, $body);
@@ -259,6 +270,11 @@ if ($group_id && !$atid) {
 		break;
 
 	case 'notification':
+		if ( !user_isloggedin() ) {
+			exit_not_logged_in();
+			return;
+		}
+
 		$ath->adminHeader(
 		array ('title'=>'Artifact Administration - Personal Email Notification Settings',
 		   'help' => 'TrackerAdministration.html#TrackerEmailNotificationSettings'));
@@ -294,6 +310,16 @@ if ($group_id && !$atid) {
 		break;
 	  
 	case 'editoptions':
+		if ( !user_isloggedin() ) {
+			exit_not_logged_in();
+			return;
+		}
+		
+	    if ( !$ath->userIsAdmin() ) {
+			exit_permission_denied();
+			return;
+		}
+		
 		if ( $update ) {
 			if ( !$ath->update($name,$description,$itemname,$is_public,$allow_anon,
 							   $submit_instructions,$browse_instructions) ) {
@@ -317,6 +343,16 @@ if ($group_id && !$atid) {
 		break;
 		
 	case 'update_binding':
+		if ( !user_isloggedin() ) {
+			exit_not_logged_in();
+			return;
+		}
+		
+	    if ( !$ath->userIsAdmin() ) {
+			exit_permission_denied();
+			return;
+		}
+		
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
 			if ( !$field->updateValueFunction($atid,$value_function) ) {
@@ -329,6 +365,16 @@ if ($group_id && !$atid) {
 		break;
 				
 	case 'update_default_value':
+		if ( !user_isloggedin() ) {
+			exit_not_logged_in();
+			return;
+		}
+		
+	    if ( !$ath->userIsAdmin() ) {
+			exit_permission_denied();
+			return;
+		}
+		
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
 			if ( !$field->updateDefaultValue($atid,$default_value) ) {
@@ -341,6 +387,16 @@ if ($group_id && !$atid) {
 		break;
 
 	case 'display_field_values':
+		if ( !user_isloggedin() ) {
+			exit_not_logged_in();
+			return;
+		}
+		
+	    if ( !$ath->userIsAdmin() ) {
+			exit_permission_denied();
+			return;
+		}
+		
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
 		    include './field_values_details.php';
@@ -348,6 +404,16 @@ if ($group_id && !$atid) {
 		break;
 		
 	case 'display_field_value':
+		if ( !user_isloggedin() ) {
+			exit_not_logged_in();
+			return;
+		}
+		
+	    if ( !$ath->userIsAdmin() ) {
+			exit_permission_denied();
+			return;
+		}
+		
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
 			$ath->adminHeader(array('title'=>'Tracker Administration - Field Values Administration','help' => 'TrackerAdministration.html#TrackerUpdatingaTrackerFieldValue'));
@@ -360,6 +426,16 @@ if ($group_id && !$atid) {
 		break;
 		
 	case 'value_create':
+		if ( !user_isloggedin() ) {
+			exit_not_logged_in();
+			return;
+		}
+		
+	    if ( !$ath->userIsAdmin() ) {
+			exit_permission_denied();
+			return;
+		}
+		
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
 			if ( !$field->createValueList($atid,$value,$description,$order_id) ) {
@@ -372,6 +448,16 @@ if ($group_id && !$atid) {
 		break;
 			
 	case 'value_update':
+		if ( !user_isloggedin() ) {
+			exit_not_logged_in();
+			return;
+		}
+		
+	    if ( !$ath->userIsAdmin() ) {
+			exit_permission_denied();
+			return;
+		}
+		
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
 			if ( !$field->updateValueList($atid,$value_id,$value,$description,$order_id,$status) ) {
@@ -384,6 +470,16 @@ if ($group_id && !$atid) {
 		break;
 
 	case 'value_delete':
+		if ( !user_isloggedin() ) {
+			exit_not_logged_in();
+			return;
+		}
+		
+	    if ( !$ath->userIsAdmin() ) {
+			exit_permission_denied();
+			return;
+		}
+		
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
 			if ( !$field->deleteValueList($atid,$value_id) ) {
@@ -400,6 +496,16 @@ if ($group_id && !$atid) {
 		break;
 		
 	case 'field_create':
+		if ( !user_isloggedin() ) {
+			exit_not_logged_in();
+			return;
+		}
+		
+	    if ( !$ath->userIsAdmin() ) {
+			exit_permission_denied();
+			return;
+		}
+		
 		if ( !$art_field_fact->createField($description,$label,$data_type,$display_type,
 						 $display_size,$rank_on_screen,$show_on_add,$show_on_add_members,
 						 $empty_ok,$keep_history,$special,$use_it) ) {
@@ -411,6 +517,16 @@ if ($group_id && !$atid) {
 		break;
 
 	case 'field_update':
+		if ( !user_isloggedin() ) {
+			exit_not_logged_in();
+			return;
+		}
+		
+	    if ( !$ath->userIsAdmin() ) {
+			exit_permission_denied();
+			return;
+		}
+		
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
 			if ( !$field->update($atid,$field_name,$description,$label,$data_type,$display_type,
@@ -428,6 +544,16 @@ if ($group_id && !$atid) {
 		break;
 
 	case 'field_delete':
+		if ( !user_isloggedin() ) {
+			exit_not_logged_in();
+			return;
+		}
+		
+	    if ( !$ath->userIsAdmin() ) {
+			exit_permission_denied();
+			return;
+		}
+		
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
 			if ( !$field->delete($atid) ) {
@@ -443,6 +569,16 @@ if ($group_id && !$atid) {
 		break;
 
 	case 'display_field_update':
+		if ( !user_isloggedin() ) {
+			exit_not_logged_in();
+			return;
+		}
+		
+	    if ( !$ath->userIsAdmin() ) {
+			exit_permission_denied();
+			return;
+		}
+		
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
 			$ath->adminHeader(array('title'=>'Tracker Administration - Modify Field Usage','help' => 'TrackerAdministration.html#CreationandModificationofaTrackerField'));
@@ -460,8 +596,13 @@ if ($group_id && !$atid) {
 			return;
 		}
 	
+	    if ( !user_ismember($group_id,'A') ) {
+			exit_permission_denied();
+			return;
+		}
+
 		$ath->adminHeader(array('title'=>$ath->getName().' Tracker Administration','help' => 'TrackerAdministration.html'));
-		if (!$ath->pre_delete()) {
+		if (!$ath->preDelete()) {
 		  $feedback = "Tracker '".$ath->getName()."' - Deletion Failed - ";
 		} else {
 		  $feedback = "Tracker '".$ath->getName()."' - Successfully Deleted";
@@ -476,11 +617,6 @@ if ($group_id && !$atid) {
 			return;
 		}
 		
-	    if ( !$ath->userIsAdmin() ) {
-			exit_permission_denied();
-			return;
-		}
-	
 		$ath->adminHeader(array('title'=>$ath->getName().' Tracker Administration','help' => 'TrackerAdministration.html'));
 		$ath->displayAdminTracker($group_id,$atid);
 		$ath->footer(array());

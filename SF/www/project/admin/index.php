@@ -9,6 +9,8 @@
 require ('pre.php');    
 require ($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
 require ('account.php');
+require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');
+require($DOCUMENT_ROOT.'/../common/tracker/ArtifactTypeFactory.class');
 
 // get current information
 $res_grp = group_get_result($group_id);
@@ -30,27 +32,51 @@ if ($func) {
       updating the database
     */
     if ($func=='adduser') {
-	/*
-	  add user to this project
-	*/
-	$res = account_add_user_to_group ($group_id,$form_unix_name);
-
-	if ($res) {
-	    group_add_history ('Added User',$form_unix_name,$group_id);
-	}
+		/*
+		  add user to this project
+		*/
+		$res = account_add_user_to_group ($group_id,$form_unix_name);
+	
+		if ($res) {
+		    group_add_history ('Added User',$form_unix_name,$group_id);
+		}
 
     } else if ($func=='rmuser') {
-	/*
-	  remove a user from this portal
-	*/
-	$res=db_query("DELETE FROM user_group WHERE group_id='$group_id' AND user_id='$rm_id' AND admin_flags <> 'A'");
-	if (!$res || db_affected_rows($res) < 1) {
-	    $feedback .= ' User Not Removed - You cannot remove admins from a project. 
-			You must first turn off their admin flag and/or find another admin for the project ';
-	} else {
-	    $feedback .= ' Removed a User ';
-	    group_add_history ('removed user',$rm_id,$group_id);
-	}
+		/*
+		  remove a user from this portal
+		*/
+		$res=db_query("DELETE FROM user_group WHERE group_id='$group_id' AND user_id='$rm_id' AND admin_flags <> 'A'");
+		if (!$res || db_affected_rows($res) < 1) {
+		    $feedback .= ' User Not Removed - You cannot remove admins from a project. 
+				You must first turn off their admin flag and/or find another admin for the project ';
+		} else {
+
+			//	  
+			//  get the Group object
+			//	  
+			$group = group_get_object($group_id);
+			if (!$group || !is_object($group) || $group->isError()) {
+				exit_no_group();
+			}		   
+			$atf = new ArtifactTypeFactory($group);
+			if (!$group || !is_object($group) || $group->isError()) {
+				$feedback .= 'Could Not Get ArtifactTypeFactory';
+			}
+
+			// Get the artfact type list
+			$at_arr = $atf->getArtifactTypes();
+			
+			if ($at_arr && count($at_arr) > 0) {
+				for ($j = 0; $j < count($at_arr); $j++) {
+					if ( !$at_arr[$j]->deleteUser($rm_id) ) {
+						$feedback .= " Failed to delete tracker permission (".$at_arr[$j]->getName().") ";
+					}
+				}
+			}
+						
+		    $feedback .= ' Removed a User ';
+		    group_add_history ('removed user',$rm_id,$group_id);
+		}
     }
 
 }
