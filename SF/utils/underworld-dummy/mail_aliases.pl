@@ -28,12 +28,19 @@ $query = "SELECT list_name from mail_group_list where is_public IN (0,1)";
 $c = $dbh->prepare($query);
 $c->execute();
 while(my ($list_name) = $c->fetchrow()) {
-		$list_name =~ tr/A-Z/a-z/;
-		$list_name =~ s/ //g;
-
-		push @alias_array, sprintf("%-50s%-10s","$list_name:", "\"|/usr/local/mailman/mail/wrapper post $list_name\"\n");
-		push @alias_array, sprintf("%-50s%-10s","$list_name-admin:", "\"|/usr/local/mailman/mail/wrapper mailowner $list_name\"\n");
-		push @alias_array, sprintf("%-50s%-10s","$list_name-request:", "\"|/usr/local/mailman/mail/wrapper mailcmd $list_name\"\n");
+  $list_name =~ tr/A-Z/a-z/;
+  $list_name =~ s/ //g;
+  # Mailman 2.1 aliases
+  push @alias_array, sprintf("%-50s%-10s","$list_name:", "\"|$mm_wrapper post $list_name\"\n");
+  push @alias_array, sprintf("%-50s%-10s","$list_name-admin:", "\"|$mm_wrapper admin $list_name\"\n");
+  push @alias_array, sprintf("%-50s%-10s","$list_name-bounces:", "\"|$mm_wrapper bounces $list_name\"\n");
+  push @alias_array, sprintf("%-50s%-10s","$list_name-confirm:", "\"|$mm_wrapper confirm $list_name\"\n");
+  push @alias_array, sprintf("%-50s%-10s","$list_name-join:", "\"|$mm_wrapper join $list_name\"\n");
+  push @alias_array, sprintf("%-50s%-10s","$list_name-leave:", "\"|$mm_wrapper leave $list_name\"\n");
+  push @alias_array, sprintf("%-50s%-10s","$list_name-owner:", "\"|$mm_wrapper owner $list_name\"\n");
+  push @alias_array, sprintf("%-50s%-10s","$list_name-request:", "\"|$mm_wrapper request $list_name\"\n");
+  push @alias_array, sprintf("%-50s%-10s","$list_name-subscribe:", "\"|$mm_wrapper subscribe $list_name\"\n");
+  push @alias_array, sprintf("%-50s%-10s","$list_name-unsubscribe:", "\"|$mm_wrapper unsubscribe $list_name\"\n");
 }
 
 

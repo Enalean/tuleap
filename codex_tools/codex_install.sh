@@ -662,6 +662,8 @@ if [ "$yn" = "y" -o "$yn" = "-" ]; then
 fi
 $CHOWN -R mailman.mailman $MAILMAN_DIR
 $CHMOD a+rx,g+ws $MAILMAN_DIR
+# make sure permissions are OK
+$MAILMAN_DIR/bin/check_perms -f
 $MAILMAN_DIR/bin/mmsitepass $mm_passwd
 $LN -sf $MAILMAN_DIR /usr/local/mailman
 todo "Edit $MAILMAN_DIR/Mailman/mm_cfg.py and setup DEFAULT_HOST_NAME\n\

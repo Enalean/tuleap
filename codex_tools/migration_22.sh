@@ -21,7 +21,9 @@
 #
 
 progname=$0
-scriptdir=`dirname $progname`
+if [ -z "$scriptdir" ]; then 
+    scriptdir=`dirname $progname`
+fi
 cd ${scriptdir};TOP_DIR=`pwd`;cd -
 RPMS_DIR=${TOP_DIR}/RPMS_CodeX
 nonRPMS_DIR=${TOP_DIR}/nonRPMS_CodeX
@@ -108,6 +110,7 @@ substitute() {
 # Check the machine is running CodeX 2.0
 #
 OLD_CX_RELEASE='2.0'
+yn="y"
 $GREP -q "$OLD_CX_RELEASE" $INSTALL_DIR/SF/www/VERSION
 if [ $? -eq 1 ]; then
     cat <<EOF
@@ -154,7 +157,7 @@ todo "WHAT TO DO TO FINISH THE CODEX MIGRATION (see $TODO_FILE)"
 ##############################################
 # Stop some services before upgrading
 #
-echo "Stopping crond and apache..."
+echo "Stopping crond, apache and httpd, sendmail, and postfix ..."
 $SERVICE crond stop
 $SERVICE apache stop
 $SERVICE httpd stop
@@ -196,10 +199,7 @@ read -p "Codex Server IP address: " sys_ip_address
 # CodeX 2.0/RH 7.3 but it collides with mysql user on 
 # CodeX 2.2/RHEL ES 3
 #
-mailman_id=`id mailman`
-if [ $mailman_id -eq 105 ]; then  
-   
-# XXXXXXXXXXXX NEED TO DO SOMETHING?
+todo "- Check user id for mailman and mysql (mailman used to be 105, but it collides with mysql user on RHES3). It might not be a problem though!"
 
 ##############################################
 # Create new directory structure for configuration and
@@ -213,9 +213,6 @@ build_dir /etc/codex/documentation sourceforge sourceforge 755
 build_dir /etc/codex/documentation/user_guide sourceforge sourceforge 755
 build_dir /etc/codex/documentation/user_guide/xml sourceforge sourceforge 755
 build_dir /etc/codex/documentation/user_guide/xml/en_US sourceforge sourceforge 755
-build_dir /etc/codex/site-content sourceforge sourceforge 755
-build_dir /etc/codex/site-content/en_US sourceforge sourceforge 755
-build_dir /etc/codex/site-content/en_US/others sourceforge sourceforge 755
 build_dir /etc/codex/themes sourceforge sourceforge 755
 build_dir /etc/codex/themes/css sourceforge sourceforge 755
 build_dir /etc/codex/themes/images sourceforge sourceforge 755
@@ -229,6 +226,8 @@ $MV /etc/local.inc /etc/codex/conf/local.inc
 # Add $sys_win_domain to configuration file
 $PERL -i'.orig' -p -e's:(// Part II.*paths$):// Windows Workgroup CodeX belog to (Samba)\n\$sys_win_domain = "YOURDOMAIN";\n\n\1:' /etc/codex/conf/local.inc
 todo "- Customize the sys_win_domain parameter in /etc/codex/conf/local.inc"
+# Update one line that is not compatible with Python
+$PERL -i'.orig2' -p -e's:(sys_themeroot.*)\$.*(themes):\1"/home/httpd/SF/www/\2:' /etc/codex/conf/local.inc
 
 ######
 # Now install CodeX specific RPMS (and remove RedHat RPMs)
@@ -282,7 +281,7 @@ $RPM -Uvh --force ${newest_rpm}/MySQL-python-*.i386.rpm
 
 # -> apache
 echo "Removing existing Apache..."
-$SERVICE httpd stop
+#$SERVICE httpd stop
 $RPM -e --nodeps apache apache-devel apache-manual httpd httpd-devel httpd-manual 2>/dev/null
 $RPM -e --nodeps 'apr*' apr-util mod_ssl db4-devel db4-utils 2>/dev/null
 echo "Installing Apache RPMs for CodeX...."
@@ -327,9 +326,12 @@ $RPM -Uvh --force ${newest_rpm}/subversion-server*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/subversion-python*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/subversion-tools*.i386.rpm
 
+# Create an empty codex_svnhosts.conf file
+$TOUCH /etc/httpd/conf/codex_svnhosts.conf
+
 # Restart Apache after subversion is installed
 # so that mod_dav_svn module is taken into account
-$SERVICE httpd restart
+$SERVICE httpd start
 
 # -> cvsgraph
 $RPM -e --nodeps cvsgraph 2>/dev/null
@@ -337,14 +339,6 @@ echo "Installing cvsgraph RPM for CodeX...."
 cd ${RPMS_DIR}/cvsgraph
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh --force ${newest_rpm}/cvsgraph-*i?86.rpm
-
-# -> viewcvs 
-echo "Removing installed viewcvs if any .."
-$RPM -e --nodeps viewcvs 2>/dev/null
-echo "Installing viewcvs RPM for CodeX...."
-cd ${RPMS_DIR}/viewcvs
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --force ${newest_rpm}/viewcvs-*.noarch.rpm
 
 # Create an http password file
 $TOUCH /etc/httpd/conf/codex_htpasswd
@@ -358,12 +352,6 @@ echo "Installing perl-Crypt-SmbHash..."
 cd ${RPMS_DIR}/perl-Crypt-SmbHash
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh --force ${newest_rpm}/perl-Crypt-SmbHash*.noarch.rpm
-
-cd /usr/local/bin
-$RM -f gensmbpasswd
-$CP $INSTALL_DIR/SF/utils/gensmbpasswd.pl gensmbpasswd
-$CHOWN sourceforge.sourceforge gensmbpasswd
-$CHMOD 755 gensmbpasswd
 
 ######
 # Now install the non RPMs stuff 
@@ -441,6 +429,12 @@ else
     todo "- Could not find codex.zone DNS file. Please move files by hand to /var/named"
     todo "  Also insert svn and svn1 aliases in the codex.zone file"
 fi
+if [ -e /etc/named.conf ]; then
+    $PERL -i'.orig' -p -e's:/usr/local/domain/data/primary:/var/named:' /etc/named.conf
+fi
+todo "- Make sure that the directory defined in /etc/named.conf contains the codex.zone file"
+
+
 
 ##############################################
 # Move custom and config files to new places
@@ -455,8 +449,65 @@ $RM -rf $INSTALL_DIR/SF/www/css/custom $INSTALL_DIR/SF/www/images/custom
 
 $MV -f $INSTALL_DIR/documentation/user_guide/xml/en_US/ParametersLocal.dtd /etc/codex/documentation/user_guide/xml/en_US/
 
+build_dir /etc/codex/site-content/en_US/others sourceforge sourceforge 755
 $MV -f $INSTALL_DIR/SF/utils/custom/default_page.php /etc/codex/site-content/en_US/others
 $RM -rf $INSTALL_DIR/SF/utils/custom
+
+
+##############################################
+# Update the CodeX software
+
+echo "Installing the CodeX software..."
+cd /home
+$MV httpd httpd_20
+$MKDIR httpd;
+cd httpd
+$TAR xfz ${CodeX_DIR}/codex*.tgz
+$CHOWN -R sourceforge.sourceforge $INSTALL_DIR
+
+# copy some configuration files 
+make_backup /etc/httpd/conf/httpd.conf codex20
+$CP $INSTALL_DIR/SF/etc/httpd.conf.dist /etc/httpd/conf/httpd.conf
+$CP $INSTALL_DIR/SF/etc/ssl.conf.dist /etc/httpd/conf.d/ssl.conf
+$CP $INSTALL_DIR/SF/etc/php.conf.dist /etc/httpd/conf.d/php.conf
+$CP $INSTALL_DIR/SF/etc/subversion.conf.dist /etc/httpd/conf.d/subversion.conf
+
+# replace string patterns in httpd.conf
+substitute '/etc/httpd/conf/httpd.conf' '%sys_default_domain%' "$sys_default_domain"
+substitute '/etc/httpd/conf/httpd.conf' '%sys_ip_address%' "$sys_ip_address"
+
+# replace string patterns in ssl.conf
+substitute '/etc/httpd/conf.d/ssl.conf' '%sys_default_domain%' "$sys_default_domain"
+substitute '/etc/httpd/conf.d/ssl.conf' '%sys_ip_address%' "$sys_ip_address"
+
+todo "Edit the new /etc/httpd/conf/httpd.conf file and update it"
+todo "Edit the new /etc/httpd/conf.d/ssl.conf file and update it if needed"
+todo "Edit the new /etc/httpd/conf.d/php.conf file and update it if needed"
+todo "Edit the new /etc/httpd/conf.d/subversion.conf file and update it if needed"
+
+# needed by newparse.pl
+$TOUCH /etc/httpd/conf/htpasswd
+$CHMOD 644 /etc/httpd/conf/htpasswd
+
+
+
+##############################################
+# replace gensmbpasswd with perl script
+#
+cd /usr/local/bin
+$RM -f gensmbpasswd
+$CP $INSTALL_DIR/SF/utils/gensmbpasswd.pl gensmbpasswd
+$CHOWN sourceforge.sourceforge gensmbpasswd
+$CHMOD 755 gensmbpasswd
+
+##############################################
+# Install viewcvs now that the /home/httpd directory will not move
+echo "Removing installed viewcvs if any .."
+$RPM -e --nodeps viewcvs 2>/dev/null
+echo "Installing viewcvs RPM for CodeX...."
+cd ${RPMS_DIR}/viewcvs
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh --force ${newest_rpm}/viewcvs-*.noarch.rpm
 
 #############################################
 # Because of directory structure change, specifically move one site-content file if it exists
@@ -487,7 +538,7 @@ while [ $? -eq 0 ]; do
 done
 [ "X$old_passwd" != "X" ] && pass_opt="--password=$old_passwd"
 
-$CAT <<EOF | $MYSQL -u sourceforge sourceforge --password=$sf_passwd
+$CAT <<EOF | $MYSQL $pass_opt sourceforge
 # delete foundry project type
 DELETE FROM group_type where type_id=2;
 
@@ -499,7 +550,6 @@ ALTER TABLE stats_project_tmp DROP COLUMN help_requests;
 
 # add Subversion tables and fields
 ALTER TABLE groups ADD COLUMN svn_box VARCHAR(20) NOT NULL DEFAULT 'svn1' AFTER cvs_box;
-ALTER TABLE groups ADD COLUMN use_svn int(11) NOT NULL DEFAULT '1' AFTER use_cvs;
 ALTER TABLE groups ADD COLUMN svn_tracker INT(11) NOT NULL DEFAULT '1';
 ALTER TABLE groups ADD COLUMN svn_events_mailing_list VARCHAR(64) binary DEFAULT NULL;
 ALTER TABLE groups ADD COLUMN svn_events_mailing_header VARCHAR(64) binary DEFAULT NULL;
@@ -811,40 +861,6 @@ while (my ($group_id) = $c->fetchrow()) {
 exit;
 EOF
 
-##############################################
-# Update the CodeX software
-
-echo "Installing the CodeX software..."
-cd /home
-$MV httpd httpd_20
-$MKDIR httpd;
-cd httpd
-$TAR xfz ${CodeX_DIR}/codex*.tgz
-$CHOWN -R sourceforge.sourceforge $INSTALL_DIR
-
-# copy some configuration files 
-make_backup /etc/httpd/conf/httpd.conf codex20
-$CP $INSTALL_DIR/SF/etc/httpd.conf.dist /etc/httpd/conf/httpd.conf
-$CP $INSTALL_DIR/SF/etc/ssl.conf.dist /etc/httpd/conf.d/ssl.conf
-$CP $INSTALL_DIR/SF/etc/php.conf.dist /etc/httpd/conf.d/php.conf
-$CP $INSTALL_DIR/SF/etc/subversion.conf.dist /etc/httpd/conf.d/subversion.conf
-
-# replace string patterns in httpd.conf
-substitute '/etc/httpd/conf/httpd.conf' '%sys_default_domain%' "$sys_default_domain"
-substitute '/etc/httpd/conf/httpd.conf' '%sys_ip_address%' "$sys_ip_address"
-
-# replace string patterns in ssl.conf
-substitute '/etc/httpd/conf.d/ssl.conf' '%sys_default_domain%' "$sys_default_domain"
-substitute '/etc/httpd/conf.d/ssl.conf' '%sys_ip_address%' "$sys_ip_address"
-
-todo "Edit the new /etc/httpd/conf/httpd.conf file and update it"
-todo "Edit the new /etc/httpd/conf.d/ssl.conf file and update it if needed"
-todo "Edit the new /etc/httpd/conf.d/php.conf file and update it if needed"
-todo "Edit the new /etc/httpd/conf.d/subversion.conf file and update it if needed"
-
-# needed by newparse.pl
-$TOUCH /etc/httpd/conf/htpasswd
-$CHMOD 644 /etc/httpd/conf/htpasswd
 
 ##############################################
 # Installing phpMyAdmin
@@ -872,28 +888,30 @@ $RPM -e --nodeps mailman 2>/dev/null
 MAILMAN_DIR="/home/mailman"
 echo "Updating mailman in $MAILMAN_DIR..."
 if [ ! -d $MAILMAN_DIR"_20" ]; then
-    $CP -a /home/mailman $MV /home/mailman_20
+    $CP -a /home/mailman /home/mailman_20
 fi
 build_dir /home/mailman mailman mailman 2775
 
 # compile and install
 $RM -rf /tmp/mailman; $MKDIR -p /tmp/mailman; cd /tmp/mailman;
-$RM -rf $MAILMAN_DIR/*
-$TAR xvfz $nonRPMS_DIR/mailman/mailman-*.tgz
+#$RM -rf $MAILMAN_DIR/* Keep existing ML!
+$TAR xfz $nonRPMS_DIR/mailman/mailman-*.tgz
 newest_ver=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 cd $newest_ver
 mail_gid=`id -g mail`
 cgi_gid=`id -g sourceforge`
 ./configure --prefix=$MAILMAN_DIR --with-mail-gid=$mail_gid --with-cgi-gid=$cgi_gid
-$MAKE update
+$MAKE install
+# migration of existing mailing lists is done during install
 
 $CHOWN -R mailman.mailman $MAILMAN_DIR
 $CHMOD a+rx,g+ws $MAILMAN_DIR
 $LN -sf $MAILMAN_DIR /usr/local/mailman
 
-# migrating existing mailing lists
+# make sure permissions are OK
+$MAILMAN_DIR/bin/check_perms -f
 
-# modify mailman crontab
+# modify mailman crontab for mailman 2.1
 crontab -u mailman -l > /tmp/mailman_cronfile
 $PERL -i'.orig' -p -e's:(^.*mailman)/cron/qrunner\s*$:\1/bin/qrunner -o -r -All\n:' /tmp/mailman_cronfile
 crontab -u mailman /tmp/mailman_cronfile
@@ -909,7 +927,7 @@ $CHMOD 775 /usr/local/bin/commit-email.pl
 # and Documentation parameter file (ParametersLocal.dtd)
 sys_svn_host="svn.$sys_default_domain"
 
-$PERL -i'.orig' -p -e"s:(^\\\$sys_cvs_host.*):\1\n\n// Machine that hosts Subversion\n// Note that while this machine need not be the same as the CodeX host,\n// the \"viewcvs\" interface currently must run on the CodeX host system.\n// If this host is different from the CodeX host, then the CodeX host\n// will need to be able to access the CVS file tree via NFS.\n\\\$sys_svn_host = \"$sys_svn_host\":" /etc/codex/conf/local.inc
+$PERL -i'.orig' -p -e"s:(^\\\$sys_cvs_host.*):\1\n\n// Machine that hosts Subversion\n// Note that while this machine need not be the same as the CodeX host,\n// the \"viewcvs\" interface currently must run on the CodeX host system.\n// If this host is different from the CodeX host, then the CodeX host\n// will need to be able to access the CVS file tree via NFS.\n\\\$sys_svn_host = \"$sys_svn_host\";:" /etc/codex/conf/local.inc
 
 $PERL -i'.orig' -p -e"s:(^<\!ENTITY SYS_CVS_HOST.*):\1\n<\!ENTITY SYS_SVN_HOST \"$sys_svn_host\":" /etc/codex/documentation/user_guide/xml/en_US/ParametersLocal.dtd
 
@@ -952,6 +970,20 @@ echo "Starting crond and apache..."
 $SERVICE crond start
 $SERVICE httpd restart
 $SERVICE sendmail start
+
+
+##############################################
+# Generate Documentation
+#
+echo "Updating the User Manual. This might take a few minutes."
+/home/httpd/SF/utils/generate_doc.sh -f
+
+
+
+# End of it
+echo "=============================================="
+echo "Installation completed succesfully!"
+$CAT $TODO_FILE
 
 exit 1;
 
