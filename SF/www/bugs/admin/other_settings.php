@@ -66,7 +66,7 @@ $row_grp['bug_preamble'].'</TEXTAREA>';
 echo '<h3>Email Notification Rules</h3>
               <P><B>If you wish, you can provide email addresses (separated by a comma) to which new Bug submissions will be sent .</B><BR>
               (Remark: Bug submission and updates are always sent to the Bug submitter and the bug assignee)<br>
-	<BR><INPUT TYPE="TEXT" NAME="email_addresses" VALUE="'.$row_grp['new_bug_address'].'" SIZE="45" MAXLENGTH="80"> 
+	<BR><INPUT TYPE="TEXT" NAME="email_addresses" VALUE="'.$row_grp['new_bug_address'].'" SIZE="55" MAXLENGTH="255"> 
 	&nbsp;&nbsp;&nbsp;(send on all updates) <INPUT TYPE="CHECKBOX" NAME="send_all_bugs" VALUE="1" '. (($row_grp['send_all_bugs'])?'CHECKED':'') .'><BR>';
 
 echo '
