@@ -22,7 +22,8 @@ if (!($group_id)) {
 }
 
 if (!(user_ismember($group_id,"D1"))) {
-	exit_permission_denied();
+    $feedback.="You need Document Editor permissions to access this page.";
+    exit_permission_denied();
 }
 
 function main_page($group_id) {
