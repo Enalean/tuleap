@@ -962,6 +962,110 @@
     </section>
   </section>
 
+
+
+  <section id="ArtifactMassChange">
+    <title>Artifact Mass Change</title>
+  
+    <para>Codex provides project administrators with the possibility to
+    update several artificats in one step: delete/add the same CC 
+    name entry or file attachment to a set of artifacts, assign a list of 
+    artifacts to a person, etc... A typical application of the 
+    mass update feature is when a person leaves a project and all the 
+    artifacts that are assigned to her have to be reaffected to another 
+    person.</para>
+
+      <section id="MassChangeSelectionCriteria">
+        <title>Selection Criteria</title>
+
+        <para>The artifacts to be updated can be selected according
+        to a set of criteria. These criteria are the same as for artifact
+        browsing. For fine-grained control you may also select individually 
+        all artifacts concerned by the mass change. Please see the
+        <xref linkend="AccessingAProjectSummaryPage" />
+        for more detail on how to fill out the selection criteria.</para>
+	<para>In the sample screen in <xref linkend="MassChangeSelection" /> 
+	hitting the left button "Mass Change Selected Items" will select
+	the three items checked individually, hitting the right button
+	"Mass Change All Items" will select all nine items corresponding to
+	the selection criteria. </para>
+
+        <figure id="MassChangeSelection">
+    <title>Artifact Selection screen for the artifact mass
+change</title>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata format="PNG"
+              fileref="../../screenshots/en_US/sc_masschangeselection.png"
+width="14.5cm" />
+      </imageobject>
+    </mediaobject>
+        </figure>
+      </section>
+
+      <section id="Update">
+        <title>Update</title>
+    
+        <para>Once you have selected all the artifacts to be updated you can
+        now proceed to affect these changes via the Update screen. The Update 
+        screen for the Mass Change is very similar to the normal Artifact 
+        Update screen. It is divided into the following parts: Header, Comments, 
+        CC List, Artifact Attachments, and Dependencies.</para>
+
+	<figure id="MassChangeUpdateHeader">
+    <title>Header of Artifact Update screen for the artifact mass change</title>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata format="PNG"
+              fileref="../../screenshots/en_US/sc_masschangeupdate_header.png"
+width="14.5cm" />
+      </imageobject>
+    </mediaobject>
+        </figure>
+
+
+        <para>In the Header zone you find all the fields associated to the
+        artifact. Only those that are changed from Unchanged to a defined
+        value will be taken into account for the update. In our example in
+	<xref linkend="MassChangeUpdateHeader" /> only the "Assigned to" field
+	of the three artifacts will be updated to a new value. All other
+        fields remain unchanged. </para>
+
+	<figure id="MassChangeUpdateCC">
+    <title>CC list of Artifact Update screen for the artifact mass change</title>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata format="PNG"
+              fileref="../../screenshots/en_US/sc_masschangeupdate_cc.png"
+width="14.5cm" />
+      </imageobject>
+    </mediaobject>
+        </figure>
+
+        <para>The CC List zone differs from the normal Artifact CC List zone
+        in that it contains all the CC names of the selected artifacts
+        with the information of in how many artifacts a CC name is used. If
+	you add a CC Name it will be added to all the three artifacts. In our
+	example in <xref linkend="MassChangeUpdateCC" />, there is one CC 
+	Name used in one of the three selected artifacts.
+	By checking the "Delete?" box, the given CC Name will be deleted from 
+	this artifact.</para>
+
+        <para>Equally, the Attachment zone contains any files attached
+        to the selected artifacts with the information as to how many of those
+        artifacts each file is attached to. The Dependencies zone is 
+        structured in the same manner.</para>
+
+	<para>Each mass change is tracked in the project history 
+	(<xref linkend="ProjectHistory" />). On the other
+	hand, no e-mail notification is sent in response to the mass change.</para>
+      </section>
+    </section>
+  
+
   <section id="TrackerEmailNotification">
     <title>E-mail Notification</title>
 
@@ -1089,6 +1193,11 @@
 	    <entry><link linkend="ArtifactUpdate">Artifact
 	      Update</link></entry> <entry>Same as New Artifact
 	      Submission (see above).</entry>
+	  </row>
+	  <row>
+	    <entry><link linkend="MassChange">Mass Update of Artifacts
+	      </link></entry> <entry>Only available to project
+	      administrators.</entry>
 	  </row>
 	  <row>
 	    <entry><link

@@ -330,6 +330,15 @@
 
         <revremark>Added Document Manager tip about copy-pasting vs. uploading documents</revremark>
       </revision>
+      <revision>
+        <revnumber>2.6.9</revnumber>
+
+        <date>30-Aug-2004</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Added Artifact Mass Change section in Tracker chapter</revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--
