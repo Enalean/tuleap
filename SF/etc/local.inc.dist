@@ -1,6 +1,11 @@
 <?php
 // SourceForge Universal Site Modifications
-// by David HM Spector <spector@zeitgeist.com>
+// Originally by David HM Spector <spector@zeitgeist.com>
+// Modified by the CodeX Team at Xerox
+//
+// Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
+//
+// $Id$
 //
 // Really Important Safety Tip: --> DO NOT LEAVE ANY WHITE
 // SPACE AFTER THE CLOSING PHP TAG AT THE END OF THIS FILE!
@@ -208,6 +213,10 @@ $sys_lf = "\n";
 //
 // Use or not generic trackers
 $sys_activate_tracker = 1;
+
+//
+// Project default privacy status (1 is public, 0 is private) 
+$sys_is_project_public = 1;
 
 // End of customizations -- place nothing after the closing PHP tag!
 ?>

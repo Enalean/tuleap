@@ -16,12 +16,18 @@ if ($insert_purpose && $form_purpose && $form_short_description) {
 	srand((double)microtime()*1000000);
 	$random_num=rand(0,1000000);
 
+	// Make sure default project privacy status is defined. If not
+	// then default to "public"
+	if (!isset($sys_is_project_public)) {
+	    $sys_is_project_public = 1;
+	}
+
 	// make group entry
 	$result = db_query("INSERT INTO groups (group_name,is_public,unix_group_name,http_domain,homepage,status,"
 		. "unix_box,cvs_box,license,short_description,register_purpose,"
                 . "required_software,patents_ips,other_comments,register_time,license_other,rand_hash) VALUES ("
 		. "'__$random_num',"
-		. "1," // public
+		. "$sys_is_project_public," // privacy 
 		. "'__$random_num',"
 		. "'__$random_num',"
 		. "'__$random_num',"
