@@ -38,6 +38,9 @@ When migrating a 2.0 site to 2.2 here are the things that must be done:
 - Copy /home/httpd/documentation/user_guide/xml/en_US/ParametersLocal.dtd to /etc/codex/documentation/user_guide/xml/en_US/ParametersLocal.dtd (do a mkdir -p to create full path first)
 - if SF/utils/custom/default_page.php exist then copy it to /etc/codex/site-content/en_US/others
 - Faire un diff sur database_structure.sql and database_initvalues.sql avec la v 2.0 pour reverifier tous les chagement dans la base et les mettre dans le script d'upgrade.
+- delete Foundry (type=2) from the group_type table
+- delete tables people_job, people_job_category, people_job_inventory, people_job_status
+- delete field help_requests from table stats_agr_project, stats_project, stats_project_tmp
 
 
 -> FOR Subversion
