@@ -41,7 +41,11 @@ $sys_default_domain = "codex.xerox.com";
 // to indicate a specific port for the https traffic (default 443)
 $sys_https_host = "codex.xerox.com";
 
-// Machine that hosts CVS
+// Machine that hosts CVS.
+// Note that while this machine need not be the same as the CodeX host,
+// the "cvsweb" interface currently must run on the CodeX host system.
+// If this host is different from the CodeX host, then the CodeX host
+// will need to be able to access the CVS file tree via NFS.
 $sys_cvs_host = "cvs.codex.xerox.com";
  
 // Machine used for downloading sources/packages
