@@ -153,7 +153,7 @@ function stats_project_daily( $group_id, $span = 7 ) {
 
 // stats_project_weekly
 function stats_project_weekly( $group_id, $span = 8 ) {
-    global $sys_activate_tracker,$Language;
+    global $Language;
 
     $grp=project_get_object($group_id);
 
@@ -215,7 +215,7 @@ function stats_project_weekly( $group_id, $span = 8 ) {
 
 // stats_project_monthly
 function stats_project_monthly( $group_id, $span = 4 ) {
-    global $sys_activate_tracker,$Language;
+    global $Language;
 
     $grp=project_get_object($group_id);
 
@@ -269,7 +269,7 @@ function stats_project_monthly( $group_id, $span = 4 ) {
 
 // stats_site_alltime
 function stats_site_agregate( $group_id ) {
-    global $sys_activate_tracker,$Language;
+    global $Language;
 
     $grp=project_get_object($group_id);
 

@@ -61,7 +61,6 @@ class Project extends Group {
     // All data concerning services for this project
     var $service_data_array;
     var $use_service;
-    var $active_service;
     
     /*
 		basically just call the parent to set up everything
@@ -89,7 +88,6 @@ class Project extends Group {
                 $this->service_data_array[$short_name] = $res_row;
                 if ($short_name) {
                     $this->use_service[$short_name]= $res_row['is_used'];
-                    $this->active_service[$short_name]= $res_row['is_active'];
                 }
             }
         }
@@ -110,22 +108,6 @@ class Project extends Group {
 
     function usesTracker() {
         return $this->use_service['tracker'];
-    }
-
-    function activateOldBug() {
-        return $this->active_service['bugs'];
-    }
-
-    function activateOldTask() {
-        return $this->active_service['task'];
-    }
-
-    function activateOldPatch() {
-        return $this->active_service['patch'];
-    }
-
-    function activateOldSR() {
-        return $this->active_service['support'];
     }
 
     function usesCVS() {
@@ -188,11 +170,6 @@ class Project extends Group {
     function usesService($service_short_name) {
         return $this->use_service[$service_short_name];
     }
-
-    function activeService($service_short_name) {
-        return $this->active_service[$service_short_name];
-    }
-
 
 
     /*

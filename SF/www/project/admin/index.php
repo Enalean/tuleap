@@ -222,10 +222,10 @@ echo '
 if ($project->usesForum()) {
     echo '	<A HREF="/forum/admin/?group_id='.$group_id.'">'.$Language->getText('project_admin_index','forum_admin').'</A><BR>';
 }
-if ($project->usesBugs() && !($sys_activate_tracker && !$project->activateOldBug())) {
+if ($project->usesBugs())) {
     echo '	<A HREF="/bugs/admin/?group_id='.$group_id.'">'.$Language->getText('project_admin_index','bug_admin').'</A><BR>';
 }
-if ($project->usesSupport() && !($sys_activate_tracker && !$project->activateOldSR())) {
+if ($project->usesSupport()) {
     echo '	<A HREF="/support/admin/?group_id='.$group_id.'">'.$Language->getText('project_admin_index','support_admin').'</A><BR>';
 }
 if ($project->usesPatch()) {
@@ -234,7 +234,7 @@ if ($project->usesPatch()) {
 if ($project->usesMail()) {
     echo '	<A HREF="/mail/admin/?group_id='.$group_id.'">'.$Language->getText('project_admin_index','lists_admin').'</A><BR>';
 }
-if ($project->usesPm() && !($sys_activate_tracker && !$project->activateOldTask())) {
+if ($project->usesPm()) {
     echo '	<A HREF="/pm/admin/?group_id='.$group_id.'">'.$Language->getText('project_admin_index','task_admin').'</A><BR>';
 }
 if ($project->usesDocman()) {
@@ -255,7 +255,7 @@ if ($project->usesSVN()) {
 if ($project->usesFile()) {
     echo '	<A HREF="/file/admin/?group_id='.$group_id.'">'.$Language->getText('project_admin_index','file_admin').'</A><BR>';
 }
-if ( $project->usesTracker()&&$sys_activate_tracker ) {
+if ( $project->usesTracker()) {
     echo '	<A HREF="/tracker/admin/?group_id='.$group_id.'">'.$Language->getText('project_admin_index','tracker_admin').'</A>';
     //	  
     //  get the Group object

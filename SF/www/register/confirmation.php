@@ -123,30 +123,28 @@ if ($show_confirm) {
 	//will be done at some point. needs to communicate with geocrawler
 	// TBD
 	
-	if ( $sys_activate_tracker ) {
-		// Generic Trackers Creation
-		$group_100 = group_get_object(100);
-		if (!$group_100 || !is_object($group_100) || $group_100->isError()) {
-			exit_no_group();
-		}
-		$group = group_get_object($group_id);
-		if (!$group || !is_object($group) || $group->isError()) {
-			exit_no_group();
-		}
-		
-		$ath = new ArtifactType($group);
-
-		$tracker_error = "";
-                
-                // Add all trackers from project 100 (tracker templates) that need to be instanciated for new trackers.
-                $res = $ath->getTrackerTemplatesForNewProjects();
-		while ($arr_template = db_fetch_array($res)) {
-		    $ath_new = new ArtifactType($group_100,$arr_template['group_artifact_id']);
-		    if ( !$ath->create($group_id,100,$ath_new->getID(),$ath_new->getName(),$ath_new->getDescription(),$ath_new->getItemName()) ) {
-			$tracker_error .= $ath->getErrorMessage()."<br>";
-		    }
-		}
-	}
+        // Generic Trackers Creation
+        $group_100 = group_get_object(100);
+        if (!$group_100 || !is_object($group_100) || $group_100->isError()) {
+            exit_no_group();
+        }
+        $group = group_get_object($group_id);
+        if (!$group || !is_object($group) || $group->isError()) {
+            exit_no_group();
+        }
+	
+        $ath = new ArtifactType($group);
+        
+        $tracker_error = "";
+        
+        // Add all trackers from project 100 (tracker templates) that need to be instanciated for new trackers.
+        $res = $ath->getTrackerTemplatesForNewProjects();
+        while ($arr_template = db_fetch_array($res)) {
+            $ath_new = new ArtifactType($group_100,$arr_template['group_artifact_id']);
+            if ( !$ath->create($group_id,100,$ath_new->getID(),$ath_new->getName(),$ath_new->getDescription(),$ath_new->getItemName()) ) {
+                $tracker_error .= $ath->getErrorMessage()."<br>";
+            }
+        }
 	
 	// Show the final registration complete message and send email
 	// notification (it's all in the content part)

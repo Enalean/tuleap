@@ -95,7 +95,7 @@ if ($submit) {
 			."WHERE user_id='$row_dev[user_id]' AND group_id='$group_id'");
 
 		$tracker_error = false;
-		if ( $project->usesTracker()&&$sys_activate_tracker&&$at_arr ) {
+		if ( $project->usesTracker()&&$at_arr ) {
 			for ($j = 0; $j < count($at_arr); $j++) {
 				$atid = $at_arr[$j]->getID();
 				$perm_level = "tracker_user_$row_dev[user_id]_$atid";
@@ -158,20 +158,20 @@ echo '
 if ($project->usesCVS()) {
     print '<TD><B>'.$Language->getText('project_admin_userperms','cvs_write').'</B></TD>';
 }
-if ($project->usesBugs() && !($sys_activate_tracker && !$project->activateOldBug())) {
+if ($project->usesBugs()) {
 	print '<TD><B>'.$Language->getText('project_admin_userperms','bug_track').'</B></TD>';
 }
 if ($project->usesForum()) {
     print '<TD><B>'.$Language->getText('project_admin_userperms','forums').'</B></TD>';
 }
-if ($project->usesPm() && !($sys_activate_tracker && !$project->activateOldTask())) {
+if ($project->usesPm()) {
 	print '<TD><B>'.$Language->getText('project_admin_userperms','task_man').'</B></TD>';
 }
 
 if ($project->usesPatch()) {
     print '<TD><B>'.$Language->getText('project_admin_userperms','patch_man').'</B></TD>';
 }
-if ($project->usesSupport() && !($sys_activate_tracker && !$project->activateOldSR())) {
+if ($project->usesSupport()) {
 	print '<TD><B>'.$Language->getText('project_admin_userperms','supp_man').'</B></TD>';
 }
 
@@ -183,7 +183,7 @@ if ($project->usesFile()) {
     print '<TD><B>'.$Language->getText('project_admin_userperms','file_man').'</B></TD>';
 }
 
-if ( $project->usesTracker()&&$sys_activate_tracker&&$at_arr ) {
+if ( $project->usesTracker()&&$at_arr ) {
 	for ($j = 0; $j < count($at_arr); $j++) {
 		echo '<TD><B>'.$Language->getText('project_admin_userperms','tracker',$at_arr[$j]->getName()).'</B></TD>';
 	}
@@ -209,7 +209,7 @@ if (!$res_dev || db_numrows($res_dev) < 1) {
 			</TD>';
         if ($project->usesCVS()) { print '<TD>'.$Language->getText('global','yes').'</TD>'; }
         // bug selects
-        if ($project->usesBugs() && !($sys_activate_tracker && !$project->activateOldBug())) {
+        if ($project->usesBugs()) {
             print '<TD><FONT size="-1"><SELECT name="bugs_user_'.$row_dev['user_id'].'">';
             print '<OPTION value="0"'.(($row_dev['bug_flags']==0)?" selected":"").'>'.$Language->getText('global','none');
             print '<OPTION value="1"'.(($row_dev['bug_flags']==1)?" selected":"").'>'.$Language->getText('project_admin_userperms','tech_only');
@@ -227,7 +227,7 @@ if (!$res_dev || db_numrows($res_dev) < 1) {
             print '</SELECT></FONT></TD>';
         }
         // project selects
-        if ($project->usesPm() && !($sys_activate_tracker && !$project->activateOldTask())) {
+        if ($project->usesPm()) {
             print '<TD><FONT size="-1"><SELECT name="projects_user_'.$row_dev['user_id'].'">';
             print '<OPTION value="0"'.(($row_dev['project_flags']==0)?" selected":"").'>'.$Language->getText('global','none');
             print '<OPTION value="1"'.(($row_dev['project_flags']==1)?" selected":"").'>'.$Language->getText('project_admin_userperms','tech_only');
@@ -249,7 +249,7 @@ if (!$res_dev || db_numrows($res_dev) < 1) {
 	}
 
         // support selects
-        if ($project->usesSupport() && !($sys_activate_tracker && !$project->activateOldSR())) {
+        if ($project->usesSupport()) {
             print '<TD><FONT size="-1"><SELECT name="support_user_'.$row_dev['user_id'].'">';
             print '<OPTION value="0"'.(($row_dev['support_flags']==0)?" selected":"").'>'.$Language->getText('global','none');
             print '<OPTION value="1"'.(($row_dev['support_flags']==1)?" selected":"").'>'.$Language->getText('project_admin_userperms','tech_only');
@@ -280,7 +280,7 @@ if (!$res_dev || db_numrows($res_dev) < 1) {
         }
            
 	
-        if ( $project->usesTracker()&&$sys_activate_tracker&&$at_arr ) {
+        if ( $project->usesTracker()&&$at_arr ) {
             // Loop on tracker
             for ($j = 0; $j < count($at_arr); $j++) {
                 $perm = $at_arr[$j]->getUserPerm($row_dev['user_id']);

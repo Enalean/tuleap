@@ -157,9 +157,9 @@ print "<br><u>".$Language->getText('admin_groupedit','license_other')."</u>: <br
 	
 if ( $GLOBALS['sys_show_project_type'] ) {
     print "<br><u>".$Language->getText('admin_groupedit','project_type')."</u>: ";
-    $res_type = db_query("SELECT * FROM project_type WHERE project_type_id = ". $row_grp[project_type]);
+    $res_type = db_query("SELECT * FROM project_type WHERE project_type_id = ". $row_grp['project_type']);
     $row_type = db_fetch_array($res_type);
-    print $row_type[description];
+    print $row_type['description'];
  }	
 
 	echo "<P><HR><P>";

@@ -365,7 +365,7 @@ echo html_blankimage(5,100);
 	*/
 	function project_tabs($toptab,$group_id) {
 		
-            global $sys_activate_tracker, $sys_default_domain;
+            global $sys_default_domain;
             
             // get group info using the common result set
             $project=project_get_object($group_id);

@@ -115,12 +115,6 @@ if ($atn == 'doc') {
 }
 
 
-if ((!$sys_activate_tracker)) {
-    // If generic trackers are not available, then use only legacy!
-    legacy_redirect($location,$aid,$group_id,$atn);
-    exit_error($Language->getText('global','error'),$Language->getText('tracker_gotoid', 'invalid_tracker_vb',$atn));
-}
-
 // Should we remove this one?
 if (!$group_id) {
     // group_id is necessary for legacy trackers -> link to generic tracker
@@ -142,10 +136,10 @@ if (($atn == 'bug')||($atn == 'task')||($atn == 'sr')||($atn == 'patch')) {
     }
     // Are the legacy trackers activated for this project? 
     $grp=project_get_object($group_id);
-    if ((($atn == 'bug')&&(!$grp->activateOldBug()))
-        ||(($atn == 'sr')&&(!$grp->activateOldSR()))
-        ||(($atn == 'task')&&(!$grp->activateOldTask()))
-||(($atn == 'patch')&&(!$grp->activateOldPatch()))) {
+    if ((($atn == 'bug')&&(!$grp->usesBugs()))
+        ||(($atn == 'sr')&&(!$grp->usesSupport()))
+        ||(($atn == 'task')&&(!$grp->usesPm()))
+        ||(($atn == 'patch')&&(!$grp->usesPatch()))) {
         // Legacy tracker is not activated -> this is a generic one
         generic_redirect($location,$aid,$group_id,$art_group_id,$atid,$atn,$art_name);
     }

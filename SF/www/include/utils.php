@@ -296,7 +296,6 @@ function util_line_wrap ($text, $wrap = 80, $break = "\n") {
 }
 
 function util_make_links ($data='',$group_id = 0, $group_artifact_id = 0) {
-    global $sys_activate_tracker;
     if(empty($data)) { return $data; }
     
     // www.yahoo.com => http://www.yahoo.com
@@ -308,19 +307,8 @@ function util_make_links ($data='',$group_id = 0, $group_artifact_id = 0) {
     // john.doe@yahoo.com => <a href="mailto:...">...</a>
     $data = eregi_replace("(([a-z0-9_]|\\-|\\.)+@([^[:space:]<&>]*)([[:alnum:]-]))", "<a href=\"mailto:\\1\" target=\"_new\">\\1</a>", $data);
 
-    if (!$sys_activate_tracker) {
-        // If legacy trackers only, then make links for well-known artifacts
-        if ( $group_id ) {
-            $data = eregi_replace("patch[ ]?#([0-9]+)", "<a href=\"/patch/?func=detailpatch&patch_id=\\1&group_id=$group_id\">Patch #\\1</a>", $data);
-            $data = eregi_replace("commit[ ]?#([0-9]+)", "<a href=\"/cvs/?func=detailcommit&commit_id=\\1&group_id=$group_id\">Commit #\\1</a>", $data);
-            $data = eregi_replace("bug[ ]?#([0-9]+)", "<a href=\"/bugs/?func=detailbug&bug_id=\\1&group_id=$group_id\">Bug #\\1</a>", $data);
-            $data = eregi_replace("task[ ]?#([0-9]+)", "<a href=\"/pm/task.php?func=detailtask&project_task_id=\\1&group_id=$group_id\">Task #\\1</a>", $data);
-            $data = eregi_replace("sr[ ]?#([0-9]+)", "<a href=\"/support/index.php?func=detailsupport&support_id=\\1&group_id=$group_id\">SR #\\1</a>", $data);
-        }
-    } else {
-        if ($group_id) { $group_param="&group_id=$group_id";}
-        $data = eregi_replace("([^[:blank:]()\$\&\!\;\~\#\|\{\}\%\,\?\=\+\'\"\.\:\/\>]+)[ ]?#([0-9]+)", "<a href=\"/tracker/?func=gotoid$group_param&aid=\\2&atn=\\1\">\\1 #\\2</a>", $data);
-    }
+    if ($group_id) { $group_param="&group_id=$group_id";}
+    $data = eregi_replace("([^[:blank:]()\$\&\!\;\~\#\|\{\}\%\,\?\=\+\'\"\.\:\/\>]+)[ ]?#([0-9]+)", "<a href=\"/tracker/?func=gotoid$group_param&aid=\\2&atn=\\1\">\\1 #\\2</a>", $data);
 
     return $data;
 }

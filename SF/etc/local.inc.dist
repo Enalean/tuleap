@@ -218,10 +218,6 @@ $sys_show_project_type = 0;
 $sys_lf = "\n";
 
 //
-// Use or not generic trackers
-$sys_activate_tracker = 1;
-
-//
 // Project default privacy status (1 is public, 0 is private) 
 $sys_is_project_public = 1;
 
