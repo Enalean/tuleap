@@ -86,8 +86,12 @@ function session_cookie($n,$v, $expire = 0) {
     // Make sure there isn't a port number in the default domain name
     // or the setcookie for the entire domain won't work
     list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
-    //setcookie($n,$v,$expire,'/',$host,0); Modified for PHP5 or for 'localhost' ?
-    setcookie($n,$v,$expire,'/',".".$host);
+    if (browser_is_netscape4()) {
+        $cookie_host=$host;
+    } else {
+        $cookie_host=".".$host;
+    }
+    setcookie($n,$v,$expire,'/',$cookie_host);
 }
 
 function session_make_url($loc) {
