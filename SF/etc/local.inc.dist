@@ -13,10 +13,10 @@
 // so white space is meaningful!
 //
 //
-// PART I - SourceForge hostnames
+// PART I - CodeX hostnames
 //
 // Hostnames should be fully qualified domain names (FQDNs); using short names
-// would be prettier but would stop you from distributing your SourceForge
+// would be prettier but would stop you from distributing your CodeX
 // implementation across multiple domains.
 //
 // Of course, if you have a lot of machines serving a particular purpose
@@ -24,8 +24,8 @@
 // reality an addr_list of machines that is serviced by a round-robin
 // mechanism or something fancy like a local-director.
 //
-// The default SourceForge domain
-// this is used where ever the "naked" form of the SourceForge domain
+// The default CodeX domain
+// this is used where ever the "naked" form of the CodeX domain
 // might be used.  E.g., "mailto:admin@sourceforge.net"
 $sys_default_domain = "codex.xerox.com";
  
