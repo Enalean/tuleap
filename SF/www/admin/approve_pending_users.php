@@ -25,7 +25,7 @@ if (($action=='activate') || ($action=='activate_restricted')) {
 
     // update the user status flag to active
     db_query("UPDATE user SET status='".$newstatus."'".$shell.
-	     . " WHERE user_id IN ($list_of_users)");
+	     " WHERE user_id IN ($list_of_users)");
 
     // Now send the user verification emails
     $res_user = db_query("SELECT email, confirm_hash FROM user "
