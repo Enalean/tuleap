@@ -143,6 +143,17 @@ function account_genunixpw($plainpw) {
 	return crypt($plainpw,account_gensalt());
 }
 
+// generate the 2 windows passwords (win_passwd:winNT_passwd)
+function account_genwinpw($plainpw) {
+    $command = "/usr/local/bin/gensmbpasswd";
+    $output = array();
+    if (is_executable($command)) {
+	$command .= ' "'.escapeshellcmd($plainpw).'"';
+	exec($command, $output, $ret);
+    }
+    return rtrim($output[0]);
+}
+
 // returns next userid
 function account_nextuid() {
 	db_query("SELECT max(unix_uid) AS maxid FROM user");
