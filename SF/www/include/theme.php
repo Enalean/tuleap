@@ -10,7 +10,7 @@
 
     // define the theme
     if (isset($HTTP_COOKIE_VARS["SF_THEME"])&&(user_getid() == (int)(substr($HTTP_COOKIE_VARS["SF_THEME"],0,6))) ) {
-        // the user selected a theme
+        // define the global var $theme
         $theme = substr($HTTP_COOKIE_VARS["SF_THEME"],6);
     } else {
         // No cookie defined
@@ -28,7 +28,10 @@
     }
 
     // define the font size cookie for performance
-    if ( (!isset($HTTP_COOKIE_VARS["SF_FONTSIZE"]))||(user_getid() != (int)(substr($HTTP_COOKIE_VARS["SF_FONTSIZE"],0,6))) ) {
+    if ( (isset($HTTP_COOKIE_VARS["SF_FONTSIZE"]))&&(user_getid() == (int)(substr($HTTP_COOKIE_VARS["SF_FONTSIZE"],0,6))) ) {
+        // define the global var $font_size
+        $font_size = (int)(substr($HTTP_COOKIE_VARS["SF_FONTSIZE"],6));
+    } else {
         // No cookie defined
         // Read the user preferences
         
@@ -44,15 +47,15 @@
             // Use the defaut fontsize
             //determine font for this platform
             if (browser_is_windows() && browser_is_ie()) {
-                $font_size = 1;
+                $font_size = 2;
             } else if (browser_is_windows()) {
                 //netscape on wintel
-                $font_size = 1;
+                $font_size = 2;
             } else if (browser_is_mac()){
                 //mac users need bigger fonts
-                $font_size = 1;
+                $font_size = 2;
             } else {
-                $font_size = 1;
+                $font_size = 2;
             }
         }
         // Define the cookie to improve the performance for the next access

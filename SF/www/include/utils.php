@@ -511,7 +511,7 @@ function util_get_content($file){
 function getFontsizeName($value) {
     switch ( $value ) {
     case 1:
-        // Normal
+        // Small
         return "_small";
         break;
     case 2:
@@ -519,7 +519,7 @@ function getFontsizeName($value) {
         return "_normal";
         break;
     case 3:
-        // Normal
+        // Large
         return "_large";
         break;
     default:
@@ -529,37 +529,11 @@ function getFontsizeName($value) {
 }
 
 // this function get the css file for the theme
+// Requirement: $theme and $font_size are already set (done by theme.php in pre.php)
 function util_get_css_theme(){
-    global $theme;
+    global $theme,$font_size;
 
-    if ( (isset($HTTP_COOKIE_VARS["SF_FONTSIZE"]))&&(user_getid() == (int)(substr($HTTP_COOKIE_VARS["SF_FONTSIZE"],0,6))) ) {
-        // the user selected a fontsize
-        return "/css/".$theme."/".$theme.getFontsizeName((int)(substr($HTTP_COOKIE_VARS["SF_FONTSIZE"],6))).".css";
-    } else {
-        // No cookie defined
-        // Read the user preferences
-        $res_user = db_query("SELECT * FROM user WHERE user_id=" . user_getid());
-        $row_user = db_fetch_array($res_user);
-        if ( $row_user['fontsize'] <> 0 ) {
-            $css = "/css/".$theme."/".$theme.getFontsizeName($row_user['fontsize']).".css";
-        } else {
-            // Use the defaut fontsize
-            //determine font for this platform
-            if (browser_is_windows() && browser_is_ie()) {
-                $css = "/css/".$theme."/".$theme."_normal.css";
-            } else if (browser_is_windows()) {
-                //netscape on wintel
-                $css = "/css/".$theme."/".$theme."_normal.css";
-            } else if (browser_is_mac()){
-                //mac users need bigger fonts
-                $css = "/css/".$theme."/".$theme."_normal.css";
-            } else {
-                $css = "/css/".$theme."/".$theme."_normal.css";
-            }
-        }
-        return $css;
-    }
-
+    return "/css/".$theme."/".$theme.getFontsizeName($font_size).".css";
 }
 
 // this function get the image file for the theme
