@@ -28,7 +28,7 @@ function doSelection(form) {
 
 </script>
 </head>
-<body>
+<body class="bg_help">
 <form name="form_selection">
 <table>
 <tr valign="center"><td>

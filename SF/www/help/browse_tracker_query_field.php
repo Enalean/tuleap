@@ -84,7 +84,7 @@ if ($field_info) {
 
     // Show the artifact field info in the top frame
     help_header("Artifact Search -  Selection Criteria");
-    print '<TABLE width="70%"cellpadding="0" cellspacing="0" border="0">'."\n";
+    print '<TABLE class="contenttable" cellpadding="0" cellspacing="0" border="0">'."\n";
     print '<TR><TD width="20%">Field Name:</TD><TD><B>'.$field->getLabel()."</B></TD>\n";
     print '<TR><TD width="20%">Field Type:</TD><TD><B>'.$field->getLabelFieldType()."</B></TD>\n";
     print "</TABLE>\n"; 

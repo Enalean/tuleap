@@ -37,7 +37,7 @@ function onChangeAllFilter() {
 
 </script>
 </head>
-<body>
+<body class="bg_help">
 <form name="form_selection">
 <table border="0" cellspacing="0" cellpadding="5">
   <tr valign="center">

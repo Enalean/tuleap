@@ -57,7 +57,7 @@ if ($bug_info) {
 
     // Show the bug field info in the top frame
     help_header("Bug Search -  Selection Criteria");
-    print '<TABLE width="70%"cellpadding="0" cellspacing="0" border="0">'."\n";
+    print '<TABLE class="contenttable" cellpadding="0" cellspacing="0" border="0">'."\n";
     print '<TR><TD width="20%">Field Name:</TD><TD><B>'.bug_data_get_label($field)."</B></TD>\n";
     print '<TR><TD width="20%">Field Type:</TD><TD><B>'.$fld_type."</B></TD>\n";
     print "</TABLE>\n"; 

@@ -42,7 +42,7 @@ function help_header($title, $help_banner=true) {
 <TITLE><?php print $title; ?></TITLE>
 <LINK rel="stylesheet" href="<? echo util_get_css_theme(); ?>" type="text/css">
 </HEAD>
-<BODY bgcolor="#bcbcad">
+<BODY class="bg_help">
 <?php print ($help_banner ? '<H4>'.$GLOBALS['sys_name'].' Site Help System</H4>' : ''); ?>
 <H2><?php print $title; ?></H2>
 <HR>
