@@ -112,6 +112,16 @@ switch ($export) {
      site_project_footer( array() );
      break;
 
+ case 'survey_responses':
+     include('./survey_responses_export.php');
+     break;
+
+ case 'survey_responses_format':
+     project_admin_header(array('title'=>$pg_title));
+     include('./survey_responses_export.php');
+     site_project_footer( array() );
+     break;
+
  case 'project_db':
      project_admin_header(array('title'=>$pg_title));
      include('./bug_export.php');
@@ -122,6 +132,7 @@ switch ($export) {
      include('./task_history_export.php');
      include('./task_task_deps_export.php');
      include('./task_assigned_to_export.php');
+     include('./survey_responses_export.php');
 ?>
    <P>Your project database has been succesfully generated. You can now use 
 your favorite desktop application and access your project database through 
@@ -180,6 +191,13 @@ A history of all the changes your project tasks have gone
 through. Exported task history fields as well as their format and
 meaning are <a href="<?php echo $PHP_SELF; ?>?group_id=<?php echo
 $group_id;?>&export=task_history_format">available</a>.
+
+<?php
+    echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=survey_responses\">Survey Responses export</a></b><br>"."\n";
+?>
+A list of all the responses to all the surveys posted by your project. Exported survey response fields as well as their format and
+meaning are <a href="<?php echo $PHP_SELF; ?>?group_id=<?php echo
+$group_id;?>&export=survey_responses_format">available</a>.
 
 
 </ul>

@@ -372,6 +372,21 @@ function prepare_task_record($group_id, &$record) {
     $record['follow_ups'] = get_task_followups ($group_id,$task_id);
     $record['is_dependent_on_task_id'] = get_task_dependencies($group_id,$task_id);
 
+}
+
+function prepare_survey_responses_record($group_id, &$record) {
+
+    global $datetime_fmt;
+
+    /*
+           Prepare the column values in the task  record
+           Input: a row from the project_task table (passed by
+                   reference.
+          Output: the same row with values transformed for database export
+       */
+
+    $record['date'] = date($datetime_fmt,$record['date']);
+    $record['reponse'] = util_unconvert_htmlspecialchars($record['response']);
  
 }
 
