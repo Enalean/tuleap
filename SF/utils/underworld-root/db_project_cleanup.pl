@@ -12,17 +12,19 @@ require("../include.pl");  # Include all the predefined functions
 
 &db_connect;
 
-#one hour ago for projects
+#one hour ago for invalid projects
 $then=(time()-3600);
 $rel = $dbh->prepare("DELETE FROM groups WHERE status='I' and register_time < '$then'");
 $rel->execute();
 
-#one week ago for users
+# one week ago for pending user accounts
 $then=(time()-604800);
 $rel = $dbh->prepare("DELETE FROM user WHERE status='P' and add_date < '$then'");
 $rel->execute();
 
-#one week ago for sessions
-$then=(time()-604800);
+# 6 months ago for sessions  (this is for permanent login)
+# Caution!! Lifetime value must also be changed in
+# www/include/session.pl (function session_set_new)
+$then=(time()-3600*24*183);
 $rel = $dbh->prepare("DELETE FROM session WHERE time < '$then'");
 $rel->execute();
