@@ -606,9 +606,9 @@ ServerSignature On
 # require it to be present in the URL.  So "/icons" isn't aliased in this
 # example, only "/icons/"..
 #
-Alias /icons/ "/home/httpd/icons/"
+Alias /icons/ "/var/www/icons/"
 
-<Directory "/home/httpd/icons">
+<Directory "/var/www/icons">
     Options Indexes MultiViews
     AllowOverride None
     Order allow,deny
