@@ -10,7 +10,7 @@
 
 $ath->adminHeader(array('title'=>'Tracker Administration - Field Usage Administration','help' => 'HELP_FIXME.html'));
 
-echo '<H2>Tracker \'<a href="/tracker?group_id='.$group_id.'&atid='.$atid.'">'.$ath->getName().'</a>\' - Field Values Administration</H2>';
+echo '<H2>Tracker \'<a href="/tracker?group_id='.$group_id.'&atid='.$atid.'">'.$ath->getName().'</a>\' - Field Usage Administration</H2>';
 $ath->displayFieldUsageList();
 $ath->displayFieldUsageForm();
 

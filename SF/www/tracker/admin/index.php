@@ -496,7 +496,7 @@ if ($group_id && !$atid) {
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
 			$ath->adminHeader(array('title'=>'Tracker Administration - Field Usage Administration','help' => 'HELP_FIXME.html'));
-			echo "<H2>Tracker '<a href=\"/tracker?group_id=".$group_id."&atid=".$atid."\">".$ath->getName()."</a>' - Field '<a href=\"/tracker/admin/?group_id=".$group_id."&atid=".$atid."&func=display_field_update&field_id=".$field->getID()."\">".$field->getLabel()."</a>'<br>Field Usage Administration</H2>";
+			echo "<H2>Tracker '<a href=\"/tracker?group_id=".$group_id."&atid=".$atid."\">".$ath->getName()."</a>' - Field Usage Administration</H2>";
 			$ath->displayFieldUsageForm("field_update",$field->getID(),$field->getName(),$field->getDescription(),$field->getLabel(),$field->getDataType(),$field->getDefaultValue(),$field->getDisplayType(),
 									   $field->getDisplaySize(),$field->getPlace(),$field->getShowOnAdd(),$field->getShowOnAddMembers(),
 									   $field->getEmptyOk(),$field->getKeepHistory(),$field->isSpecial(),$field->getUseIt(),true);

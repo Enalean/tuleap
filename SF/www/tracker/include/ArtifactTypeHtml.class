@@ -770,7 +770,7 @@ class ArtifactTypeHtml extends ArtifactType {
 			  <input type="hidden" name="data_type" value="'.$af->DATATYPE_INT.'">
 			  <input type="hidden" name="display_type" value="SB">';
 		} else {
-			echo '<h3>Update a field</h3>';
+			echo "<h3>Update Field '$label'</h3>";
 			echo '
 			  <form name="form_create" method="/tracker/admin/index.php">
 			  <input type="hidden" name="func" value="'.$func.'">
@@ -795,9 +795,9 @@ class ArtifactTypeHtml extends ArtifactType {
 		echo '<p>Description: ';
 		            
 		if ( $description ) {
-		    echo '<input type=text name="description" size="100" maxlength="255" value="'.$description.'">';
+		    echo '<input type=text name="description" size="70" maxlength="255" value="'.$description.'">';
 		} else {
-		    echo '<input type=text name="description" size="100" maxlength="255" value="'.$description.'">';
+		    echo '<input type=text name="description" size="70" maxlength="255" value="'.$description.'">';
 		}
 		
 		echo '
@@ -873,7 +873,9 @@ class ArtifactTypeHtml extends ArtifactType {
 		    </tr>
 		  </table>
 		  <b>Miscellaneous:</b>
-		  <p>Allow Empty Value: ';
+		  <table width="100%" border="0" cellpadding="5" cellspacing="0">
+		    <tr> 
+		      <td width="30%">Allow Empty Value: ';
 		
 		if ( $empty_ok ) {
 			echo '<input type="checkbox" name="empty_ok" value="1" checked>';
@@ -882,7 +884,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		}
 		
 		echo '
-		        <br>Keep Change History: ';
+		        </td><td>Keep Change History: ';
 		
 		if ( $keep_history ) {
 			echo '<input type="checkbox" name="keep_history" value="1" checked>';
@@ -891,14 +893,18 @@ class ArtifactTypeHtml extends ArtifactType {
 		}
 		
 		echo '
-		      <p>';
+		      </td></tr>';
 		      
 		if ( $show_use ) {
+		    echo  '
+		      <tr><td>';
 			if ( $use_it == 1 ) {
 				echo 'Use this field: <input type="checkbox" name="use_it" value="1" checked>';
 			} else {
 				echo 'Use this field: <input type="checkbox" name="use_it" value="1">';
 			}
+		    echo  '
+		      </tr></td>';
 		} else {
 			echo '<input type="hidden" name="use_it" value="1">';
 		}
@@ -910,7 +916,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		}
 		
 		echo '
-		  <p>';
+		  </table><p>';
 		  
 		if ( $func == "field_create" ) {
 			echo '<input type="submit" name="Submit" value="Create">';
