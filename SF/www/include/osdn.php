@@ -64,11 +64,8 @@ function osdn_print_navbar() {
 ';
 
     $motd = util_get_content('others/motd');
-    if (file_exists($motd) && filesize($motd)>0 ) {
-	$fp = fopen($motd,"r");
-	$output = fread($fp,200000);
-	echo $output;
-	fclose($fp);
+    if (!strpos($motd,"empty.txt")) { # empty.txt returned when no motd file found
+        include($motd);
     } else {
 	print '<span class="osdn">Network Gallery&nbsp;:&nbsp;';
 	osdn_print_randpick($GLOBALS['osdn_sites'], 5);
