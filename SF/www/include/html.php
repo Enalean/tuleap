@@ -150,7 +150,7 @@ function html_build_select_box_from_array ($vals,$select_name,$checked_val='xzxz
 	return $return;
 }
 
-function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_val='xzxz',$show_100=true,$text_100='None') {
+function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_val='xzxz',$show_100=true,$text_100='None', $show_any=false,$text_any='Any') {
 	/*
 
 		The infamous '100 row' has to do with the
@@ -159,6 +159,11 @@ function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_v
 			row is 100, so almost every pop-up box has 100 as the default
 		Most tables in the database should therefore have a row with an id of 100 in it
 			so that joins are successful
+
+		There is now another infamous row called the Any row. It is not
+		in any table as opposed to 100. it's just here as a convenience mostly
+		when using select boxes in queries (bug, task,...). The 0 value is reserved
+		for Any and must not be used in any table.
 
 		Params:
 
@@ -172,15 +177,24 @@ function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_v
 		The fifth parameter is an optional boolean - whether or not to show the '100 row'
 
 		The sixth parameter is optional - what to call the '100 row' defaults to none
-	*/
+		The 7th parameter is an optional boolean - whether or not to show the 'Any row'
+
+		The 8th parameter is optional - what to call the 'Any row' defaults to nAny	*/
 
 	$return .= '
 		<SELECT NAME="'.$select_name.'">';
 
+
+	//we don't always want the default any  row shown
+	if ($show_any) {
+	    $selected = ( $checked_val == 0 ? 'SELECTED':'');
+	    $return .= "\n<OPTION VALUE=\"0\" $selected>$text_any </OPTION>";
+	}
+
 	//we don't always want the default 100 row shown
 	if ($show_100) {
-		$return .= '
-		<OPTION VALUE="100">'. $text_100 .'</OPTION>';
+	    $selected = ( $checked_val == 100 ? 'SELECTED':'');
+	    $return .= "\n<OPTION VALUE=\"100\" $selected>$text_100 </OPTION>";
 	}
 
 	$rows=count($vals);
@@ -189,9 +203,11 @@ function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_v
 	}
 
 	for ($i=0; $i<$rows; $i++) {
-		//  uggh - sorry - don't show the 100 row
-		//  if it was shown above, otherwise do show it
-		if (($vals[$i] != '100') || ($vals[$i] == '100' && !$show_100)) {
+	    //  uggh - sorry - don't show the 100 row and Any row
+	    //  if it was shown above, otherwise do show it
+	    if ( (($vals[$i] != '100') && ($vals[$i] != '0')) || 
+		 ($vals[$i] == '100' && !$show_100) ||
+		 ($vals[$i] == '0' && !$show_any) ) {
 			$return .= '
 				<OPTION VALUE="'.$vals[$i].'"';
 			if ($vals[$i] == $checked_val) {
@@ -199,13 +215,14 @@ function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_v
 			}
 			$return .= '>'.$texts[$i].'</OPTION>';
 		}
+		
 	}
 	$return .= '
 		</SELECT>';
 	return $return;
 }
 
-function html_build_select_box ($result, $name, $checked_val="xzxz",$show_100=true,$text_100='None') {
+function html_build_select_box ($result, $name, $checked_val="xzxz",$show_100=true,$text_100='None',$show_any=false,$text_any='Any') {
 	/*
 		Takes a result set, with the first column being the "id" or value
 		and the second column being the text you want displayed
@@ -219,7 +236,7 @@ function html_build_select_box ($result, $name, $checked_val="xzxz",$show_100=tr
 		The fifth parameter is optional - what to call the '100 row' defaults to none
 	*/
 
-	return html_build_select_box_from_arrays (util_result_column_to_array($result,0),util_result_column_to_array($result,1),$name,$checked_val,$show_100,$text_100);
+	return html_build_select_box_from_arrays (util_result_column_to_array($result,0),util_result_column_to_array($result,1),$name,$checked_val,$show_100,$text_100,$show_any,$text_any);
 }
 
 function html_build_multiple_select_box ($result,$name,$checked_array,$size='8') {
