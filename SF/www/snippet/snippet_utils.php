@@ -173,7 +173,7 @@ function snippet_edit_package_details($id) {
 
 	<TR><TD COLSPAN="2">
 	<B>Title:</B><BR>
-        <INPUT TYPE="TEXT" NAME="snippet_name" SIZE="45" MAXLENGTH="60" VALUE='.db_result($result,0,'name').'>
+        <INPUT TYPE="TEXT" NAME="snippet_name" SIZE="45" MAXLENGTH="60" VALUE="'.db_result($result,0,'name').'">
 	</TD></TR>
 
 	<TR>
@@ -215,7 +215,7 @@ function snippet_edit_snippet_details($id) {
 
 	<TR><TD COLSPAN="2">
         <B>Title:</B>&nbsp;
-	<INPUT TYPE="TEXT" NAME="snippet_name" SIZE="45" MAXLENGTH="60" VALUE='.db_result($result,0,'name').'>
+	<INPUT TYPE="TEXT" NAME="snippet_name" SIZE="45" MAXLENGTH="60" VALUE="'.db_result($result,0,'name').'">
 	</TD></TR>
 
 	<TR><TD><B>Type:</B><BR>
