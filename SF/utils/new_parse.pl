@@ -88,6 +88,7 @@ while ($ln = pop(@userdump_array)) {
 	
 	if ($status eq 'A' && $user_exists) {
 		update_user($uid, $username, $realname, $shell, $passwd, $email);
+                update_user_group($uid, $username);
 		update_winuser($uid, $username, $realname, $win_passwd, $winnt_passwd);
 		update_httpuser($username, $passwd);
 
@@ -114,6 +115,8 @@ while ($ln = pop(@userdump_array)) {
 	} elsif ($status eq 'S' && !$user_exists) {
 		print("Error trying to suspend user: $username\n");
 		
+	} elsif ($username eq 'none') {
+		# simply ignore: this is a dummy user
 	} else {
 		print("Unknown Status Flag: $username\n");
 	}
@@ -426,6 +429,7 @@ sub add_httpuser {
 	push @htpasswd_array, "$username:$passwd\n";
 }
 
+
 #############################
 # User Add Function
 #############################
@@ -459,6 +463,16 @@ sub update_user {
 		$counter++;
 	}
 }
+
+# synchronize passwd and group files (one group for each user)
+sub update_user_group {
+        my ($uid, $username) = @_;
+        # Check that corresponding group exists (useful after a crash...)
+        if (!getgrnam($username)) {
+          push @group_array, "$username:x:$uid:\n";
+        }
+}
+
 
 sub update_winuser {
   ($uid, $username, $realname, $win_passwd, $winnt_passwd) = @_;
