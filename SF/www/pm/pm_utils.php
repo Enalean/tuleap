@@ -272,6 +272,10 @@ function pm_show_year_box($name,$year=1) {
 }
 
 function pm_show_tasklist ($result,$result_taskdeps,$offset,$url) {
+    echo pm_format_tasklist ($result,$result_taskdeps,$offset,$url,$count);
+}
+
+function pm_format_tasklist ($result,$result_taskdeps,$offset,$url,&$count) {
 	global $sys_datefmt,$group_id,$group_project_id,$_status,$PHP_SELF;
 	/*
 		Accepts a result set from the bugs table. Should include all columns from
@@ -359,25 +363,26 @@ function pm_show_tasklist ($result,$result_taskdeps,$offset,$url) {
 		Show extra rows for <-- Prev / Next -->
 	*/
 	if ($offset > 0) {
-		echo '<A HREF="'.$url.'&offset='.($offset-50).'">
+		$out .= '<A HREF="'.$url.'&offset='.($offset-50).'">
 			<B><<< Previous 50</B></A>';
 	}
 	if (($offset > 0) && ($rows >= 50)) {
-	    echo '&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;';
+	    $out .= '&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;';
 	}
 	if ($rows >= 50) {
-		echo '<A HREF="'.$url.'&offset='.($offset+50).
+		$out .= '<A HREF="'.$url.'&offset='.($offset+50).
 			'"><B>Next 50 >>></B></A>';
 	}
 
-	echo html_build_list_table_top ($title_arr,$links_arr);
+	$out .= html_build_list_table_top ($title_arr,$links_arr);
 
 	$now=time();
+	$count = count($all_rows);
 
 	reset($all_rows);
 	while (list($k,$row) = each($all_rows)) {
 
-		echo '
+		$out .= '
 			<TR BGCOLOR="'.get_priority_color($row['priority']).'">'.
 			'<TD><A HREF="'.$PHP_SELF.'?func=detailtask'.
 			'&project_task_id='.$row['project_task_id'].
@@ -397,7 +402,8 @@ function pm_show_tasklist ($result,$result_taskdeps,$offset,$url) {
 
 	}
 
-	echo '</TABLE>';
+	$out .= '</TABLE>';
+	return($out);
 }
 
 function pm_show_dependent_tasks ($project_task_id,$group_id,$group_project_id) {

@@ -378,15 +378,17 @@ if (db_numrows($result) < 1) {
 	/*
 		Now display the tasks in a table with priority colors
 	*/
+	
+	$out = pm_format_tasklist($result,$result_taskdeps,$offset,$url, $count);
 
 	echo '
 	       <br>
-	       <H3>'.db_numrows($result).' matching tasks'.
+	       <H3>'.$count.' matching tasks'.
 	    (isset($order_lbl)?' sorted by '.$order_lbl:'').'</H3>';
 
 	echo '<P>Click a column heading to sort by that column, or <A HREF="'.$url.'&order=priority"><b>Sort by Priority</b></A><p>';
 
-	pm_show_tasklist($result,$result_taskdeps,$offset,$url);
+	echo $out;
 	echo '<P><b>* Denotes overdue tasks</b>';
 	show_priority_colors_key();
 
