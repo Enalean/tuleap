@@ -69,6 +69,10 @@ if ( $func == 'gotoid' ) {
 
         switch ($func) {
         case 'add' : {
+            if (browser_is_netscape4()) {
+                exit_error('Error','Sorry, your browser (Netscape 4.x) is not supported. In order to create an artifact, please use a different browser');
+                return;
+            }
                 $ah=new ArtifactHtml($ath);
                 if (!$ah || !is_object($ah)) {
                         exit_error('ERROR','Artifact Could Not Be Created');
@@ -577,6 +581,9 @@ if ( $func == 'gotoid' ) {
                             exit_not_logged_in();
                         }
                         
+                        if (browser_is_netscape4()) {
+                            $feedback .= 'Warning: your browser (Netscape 4.x) is not supported. In order to edit or create an artifact, please use a different browser';
+                        }
                         if ( $ah->ArtifactType->userIsTech() ) {
                                 include './mod.php';
                         } else {

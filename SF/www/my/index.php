@@ -36,7 +36,10 @@ if (user_isloggedin()) {
         header("Cache-Control: no-cache, must-revalidate"); // for HTTP 1.1
         header("Pragma: no-cache");  // for HTTP 1.0
 	
-	$HTML->header(array('title'=>'My Personal Page'));
+        if (browser_is_netscape4()) {
+            $feedback.='Warning: your browser (Netscape 4.x) is not supported. Some functionalities will not be available (artifact creation and edition, tracker creation, etc.).';
+        }
+        site_header(array('title'=>'My Personal Page'));
 	?>
 
     <span class="small">

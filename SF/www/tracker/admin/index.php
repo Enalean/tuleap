@@ -62,6 +62,11 @@ if ($group_id && !$atid) {
 			return;
 		}
 	
+            if (browser_is_netscape4()) {
+                exit_error('Error','Sorry, your browser (Netscape 4.x) is not supported. In order to create a tracker, please use a different browser');
+                return;
+            }
+
 		$ath->adminTrackersHeader(array('title'=>'Tracker Administration - Create tracker','help' => 'TrackerCreation.html'));
 		$ath->displayCreateTracker($group_id,$codex_template,$group_id_template,$atid_template,$name,$description,$itemname,$feedback);
 		$ath->footer(array());

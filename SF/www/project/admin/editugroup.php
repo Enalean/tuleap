@@ -38,6 +38,10 @@ function display_name_and_desc_form($ugroup_name,$ugroup_description) {
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
 
+if (browser_is_netscape4()) {
+    exit_error('Error','Sorry, your browser (Netscape 4.x) is not supported. In order to edit or create a user group, please use a different browser');
+    return;
+}
 
 if (!$func) $func='create';
 

@@ -57,6 +57,13 @@ function browser_is_netscape() {
 		return false;
 	}
 }
+function browser_is_netscape4() {
+	if (browser_get_agent()=='NETSCAPE4') {
+		return true;
+	} else {
+		return false;
+	}
+}
 
 
 /*
@@ -72,7 +79,11 @@ if (ereg( 'MSIE ([0-9].[0-9]{1,2})',$HTTP_USER_AGENT,$log_version)) {
 	$BROWSER_AGENT='OPERA';
 } elseif (ereg( 'Mozilla/([0-9].[0-9]{1,2})',$HTTP_USER_AGENT,$log_version)) {
 	$BROWSER_VER=$log_version[1];
-	$BROWSER_AGENT='MOZILLA';
+        if (preg_match( '/^4/',$BROWSER_VER)) {
+         	$BROWSER_AGENT='NETSCAPE4';
+        } else {
+            $BROWSER_AGENT='MOZILLA';
+        }
 } else {
 	$BROWSER_VER=0;
 	$BROWSER_AGENT='OTHER';
