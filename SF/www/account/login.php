@@ -25,18 +25,20 @@ if ($login) {
 	/*
 	  You can now optionally stay in SSL mode
 	*/
-	if ($stay_in_ssl) {
-	    $ssl_='s';
-	} else {
-	    $ssl_='';
-	}
+	$use_ssl = session_issecure()
+		&& $GLOBALS['sys_https_host'] != ""
+		&& ($GLOBALS['sys_force_ssl']
+		    || !$GLOBALS['sys_stay_in_ssl']
+		    || $HTTP_POST_VARS['stay_in_ssl']
+		    );
+
 	if ($return_to) {
 	    // if return_to URL start with a protocol name then take as is
 	    // otherwise prepend the proper http protocol
 	    if (preg_match("/^\s*\w*:\/\//", $return_to)) {
 		header("Location: $return_to");
 	    } else {
-		if ($stay_in_ssl) {
+		if ($use_ssl) {
 		    header("Location: https://".$GLOBALS['sys_https_host'].$return_to);
 		} else {
 		    header("Location: http://".$GLOBALS['sys_default_domain'].$return_to);
@@ -44,7 +46,7 @@ if ($login) {
 	    }
 	    exit;
 	} else {
-	    if ($stay_in_ssl) {
+	    if ($use_ssl) {
 		header("Location: https://".$GLOBALS['sys_https_host']."/my/");
 	    } else {
 		header("Location: http://".$GLOBALS['sys_default_domain']."/my/");
