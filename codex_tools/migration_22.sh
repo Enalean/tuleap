@@ -970,7 +970,7 @@ echo "Creating MySQL conf file..."
 
 install_my_cnf=1;
 if [ -a /etc/my.cnf ]; then
-     install_my_cnf =0;
+     install_my_cnf=0;
      todo "Check that /etc/my.cnf is up to date"
 fi
 
@@ -1042,7 +1042,7 @@ install_mm_config=1;
 if [ -a $MAILMAN_DIR/Mailman/mm_cfg.py ]; then
    grep DEFAULT_HOST_NAME $MAILMAN_DIR/Mailman/mm_cfg.py > /dev/null
    if [ $? -eq 0 ]; then
-     install_mm_config =0;
+     install_mm_config=0;
      todo "Check $MAILMAN_DIR/Mailman/mm_cfg.py:\n\
 you may replace DEFAULT_EMAIL_HOST and DEFAULT_URL_HOST by DEFAULT_HOST_NAME\n\
 and DEFAULT_URL (see CodeX Installation Guide). Recompile with python -O mm_cfg.py"
