@@ -119,11 +119,11 @@ if ($show_confirm) {
 	?>
 
 	<H1>Registration Complete!</H1>
-	<P>Your project has been submitted to the SourceForge admininstrators. 
+	<P>Your project has been submitted to the CodeX administrators. 
 	Within 24 hours, you will receive decision notification and further 
 	instructions.
 	<P>
-	Thank you for choosing SourceForge.
+	Thank you for using CodeX.
 	<P>
 
 	<?php
