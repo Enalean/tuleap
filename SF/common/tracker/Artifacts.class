@@ -13,6 +13,8 @@
 //require($DOCUMENT_ROOT.'/../common/include/Error.class');
 //require($DOCUMENT_ROOT.'/../common/tracker/Artifact.class');
 
+$LANG->loadLanguageMsg('tracker/tracker');
+
 class Artifacts extends Error {
 
 	/**
@@ -46,13 +48,15 @@ class Artifacts extends Error {
 	 *  @return	boolean	success.
 	 */
 	function Artifacts(&$ArtifactType) {
+	  global $LANG;
+
 		$this->Error(); 
 
 		$this->ArtifactType =& $ArtifactType;
 
 		//was ArtifactType legit?
 		if (!$ArtifactType || !is_object($ArtifactType)) {
-			$this->setError('Artifact: No Valid ArtifactType');
+			$this->setError('Artifact: '.$LANG->getText('tracker_common_canned','not_valid'));
 			return false;
 		}
 		//did ArtifactType have an error?
@@ -72,6 +76,8 @@ class Artifacts extends Error {
 	 *  @return an array of artifact objects on success / false on failure.
 	 */
 	function &getArtifacts($offset=false) {
+	  global $LANG;
+
 		if (!$offset) {
 			$offset = 0;
 		}
@@ -86,7 +92,7 @@ class Artifacts extends Error {
 		$res = db_query($sql,500,$offset);
 
 		if (!$res) {
-			$this->setError('Could not get artifacts: ' . db_error());
+			$this->setError($LANG->getText('tracker_common_artifacts','not_get',db_error()));
 			return false;
 		} else {
 			while ($rows = db_fetch_array($res)) {

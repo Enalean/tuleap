@@ -12,6 +12,8 @@
 require('./tracker_import_utils.php');
 require($DOCUMENT_ROOT.'/project/export/project_export_utils.php');
 
+$LANG->loadLanguageMsg('tracker/tracker');
+
 if($group_id && $atid && $user_id) {
 
   //   parse the CSV file and show the parse report *****************************************************
@@ -41,15 +43,15 @@ if($group_id && $atid && $user_id) {
 		$number_inserts,$number_updates,
 		$errors);
 
-    $ath->header(array ('title'=>'Tracker Artifact Import: '.$ath->getID(). ' - ' . $ath->getName(),'pagename'=>'tracker',
+    $ath->header(array ('title'=>$LANG->getText('tracker_import','art_import').$ath->getID(). ' - ' . $ath->getName(),'pagename'=>'tracker',
 			'atid'=>$ath->getID(),'sectionvals'=>array($group->getPublicName()),
 			'help' => 'ArtifactImport.html'));
 
-    echo '<h2>Artifact Parsing Report</h2>';
+    echo '<h2>'.$LANG->getText('tracker_import','parse_report').'</h2>';
     if (!$ok) {
       show_errors($errors);
     } else {
-      echo "Ready to import ".($number_inserts+$number_updates)." artifact(s): $number_inserts insert(s), $number_updates update(s) in database<br><br>\n";
+      echo $LANG->getText('tracker_import','ready',array(($number_inserts+$number_updates),$number_inserts, $number_updates))."<br><br>\n";
       show_parse_results($used_fields,$fields,$artifacts_data,$aid_column,$submitted_by_column,$submitted_on_column,$group_id);
     }
 
@@ -71,11 +73,11 @@ if($group_id && $atid && $user_id) {
     
     $ok = update_db($parsed_labels,$artifacts_data,$aid_column,$errors);
     
-    if ($ok) $feedback = "$count_artifacts Artifact(s) Successfully Imported ";
+    if ($ok) $feedback = $LANG->getText('tracker_import','success_import',$count_artifacts)." ";
     else $feedback = $errors;
 
     //update group history
-    group_add_history("Import",$ath->getName(),$group_id);
+    group_add_history($LANG->getText('tracker_import_admin','import'),array($ath->getName(),$group_id));
 
     require('./browse.php');
     
@@ -85,7 +87,7 @@ if($group_id && $atid && $user_id) {
 
     // project_export_utils is using $at instead of $ath
     $at = $ath;
-    $ath->header(array ('title'=>'Tracker Artifact Import: '.$ath->getID(). ' - ' . $ath->getName(),'pagename'=>'tracker',
+    $ath->header(array ('title'=>$LANG->getText('tracker_import','art_import').' '.$ath->getID(). ' - ' . $ath->getName(),'pagename'=>'tracker',
 			'atid'=>$ath->getID(),'sectionvals'=>array($group->getPublicName()),
 			'help' => 'ArtifactImport.html'));
     $sql = $ath->buildExportQuery($fields,$col_list,$lbl_list,$dsc_list);
@@ -105,23 +107,22 @@ if($group_id && $atid && $user_id) {
     $col_list[] = 'add_cc';
     $col_list[] = 'cc_comment';
     
-    $lbl_list['follow_ups'] = 'Follow-up Comments';
-    $lbl_list['is_dependent_on'] = 'Depend on';
-    $lbl_list['add_cc'] = 'CC List';
-    $lbl_list['cc_comment'] = 'CC Comment';
+    $lbl_list['follow_ups'] = $LANG->getText('tracker_import','follow_ups');
+    $lbl_list['is_dependent_on'] = $LANG->getText('tracker_import','depend_on');
+    $lbl_list['add_cc'] = $LANG->getText('tracker_import','cc_list');
+    $lbl_list['cc_comment'] = $LANG->getText('tracker_import','cc_comment');
     
-    $dsc_list['follow_ups'] = 'All follow-up comments in one chunck of text';
-    $dsc_list['is_dependent_on'] = 'List of artifacts this artifact depends on';
-    $dsc_list['add_cc'] = 'List of persons to receive a carbon-copy (CC) of the email notifications (in addition to submitter, assignees, and commenters)';
-    $dsc_list['cc_comment'] = 'Explain why these CC names were added and/or who they are';
+    $dsc_list['follow_ups'] = $LANG->getText('tracker_import','follow_ups_desc');
+    $dsc_list['is_dependent_on'] = $LANG->getText('tracker_import','depend_on_desc');
+    $dsc_list['add_cc'] = $LANG->getText('tracker_import','cc_list_desc');
+    $dsc_list['cc_comment'] = $LANG->getText('tracker_import','cc_comment_desc');
     
     $eol = "\n";
     
     $result=db_query($sql);
     $rows = db_numrows($result); 
 
-    echo '<h3>Tracker Artifact Import Format</h3>
-To import artifacts from a CSV file you need to provide the following artifact fields. The sample values indicate what the field data types are. <br>To <b>create</b> new artifacts you need to provide at least the mandatory fields marked with <span class="highlight"><big>*</big></b></span>. All other fields can be omitted in your CSV file and will be initialized with the default values. <br>To <b>update</b> artifacts you only need to specify the fields that you want to update. All fields not specified in the CSV file will remain unchanged.<p> ';
+    echo $LANG->getText('tracker_import','format_desc');
 
     if ($rows > 0) { 
       $record = pick_a_record_at_random($result, $rows, $col_list);
@@ -131,7 +132,7 @@ To import artifacts from a CSV file you need to provide the following artifact f
     prepare_artifact_record($at,$fields,$atid,$record);
     display_exported_fields($col_list,$lbl_list,$dsc_list,$record,$mand_list);
     
-    echo '<br><br><h4>Sample CSV file:</h4>';
+    echo '<br><br><h4>'.$LANG->getText('tracker_import','sample_cvs_file').'</h4>';
     echo build_csv_header($col_list,$lbl_list);
     echo '<br>';
     echo build_csv_record($col_list,$record);
@@ -140,13 +141,13 @@ To import artifacts from a CSV file you need to provide the following artifact f
     //   screen accepting the CSV file to be parsed **************************************************************
   } else {
     
-    $ath->header(array ('title'=>'Tracker Artifact Import: '.$ath->getID(). ' - ' . $ath->getName(),'pagename'=>'tracker',
+    $ath->header(array ('title'=>$LANG->getText('tracker_import','art_import').' '.$ath->getID(). ' - ' . $ath->getName(),'pagename'=>'tracker',
 			'atid'=>$ath->getID(),'sectionvals'=>array($group->getPublicName()),
 			'help' => 'ArtifactImport.html'));
-    echo '<h3>Import New Artifacts '.help_button('ArtifactImport.html').'</h3> 
-You can import artifacts into this tracker by specifying a CSV file or putting your artifact data directly into the text area. <br>See the <a href="/tracker/index.php?group_id='.$group_id.'&atid='.$atid.'&user_id='.$user_id.'&mode=showformat&func=import">CSV Import Format</a> for more details.<p>';
+
+    echo '<h3>'.$LANG->getText('tracker_import','import_new', array(help_button('ArtifactImport.html'),'/tracker/index.php?group_id='.$group_id.'&atid='.$atid.'&user_id='.$user_id.'&mode=showformat&func=import'));
     if ($user == 100) {
-      print "<p>You are not logged in, and will not be given credit for this.<p>";
+      print $LANG->getText('tracker_import','not_logged');
     }
     
     echo '
@@ -159,9 +160,9 @@ You can import artifacts into this tracker by specifying a CSV file or putting y
 			<table border="0" width="75%">
 			<tr>
 			<th> ';//<input type="checkbox" name="file_upload" value="1"> 
-    echo '<B>Upload File:</B></th>
+    echo '<B>'.$LANG->getText('tracker_import','upload_file').'</B></th>
 			<td> <input type="file" name="csv_filename" size="50">
-                 <br><span class="smaller"><i>(The maximum upload file size is '.formatByteToMb($sys_max_size_upload).' Mb)</i></span>
+                 <br><span class="smaller"><i>'.$LANG->getText('tracker_import','max_upload_size',formatByteToMb($sys_max_size_upload)).'</i></span>
 			</td>
 			</tr>';
 
@@ -172,7 +173,7 @@ You can import artifacts into this tracker by specifying a CSV file or putting y
     echo '
                         </table>
 
-			<input type="submit" value="Submit Information">
+			<input type="submit" value="'.$LANG->getText('tracker_import','submit_info').'">
 
 	    </FORM> '; 
     $ath->footer(array());

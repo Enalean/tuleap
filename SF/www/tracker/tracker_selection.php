@@ -12,10 +12,11 @@
 require($DOCUMENT_ROOT.'/include/pre.php');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactTypeFactory.class');
 
+$LANG->loadLanguageMsg('tracker/tracker');
 ?>
 <html>
 <head>
-<title>Tracker Selection</title>
+<title><? $LANG->getText('tracker_selection','tracker_sel') ?></title>
 <link rel="stylesheet" type="text/css" href="<? echo util_get_css_theme(); ?>">
 <script language="JavaScript">
 
@@ -61,8 +62,8 @@ function doSelection(form) {
 <td>
 <input type="button" name="selection" value="Select" onClick="doSelection(form_selection)">
 <? } else { ?>
-<b>No tracker available for this project!</b>
-<br><br><input type="button" value="Close" onClick="window.close()">
+<b><? $LANG->getText('tracker_selection','no_tracker_available')?></b>
+<br><br><input type="button" value="<? $LANG->getText('global','btn_close') ?>" onClick="window.close()">
 </td>
 <td>
 <? } ?>

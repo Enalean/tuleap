@@ -10,6 +10,8 @@
 
 //require($DOCUMENT_ROOT.'/../common/include/Error.class');
 
+$LANG->loadLanguageMsg('tracker/tracker');
+
 class ArtifactFromID extends Error {
 
 //artifact_vw
@@ -19,9 +21,11 @@ class ArtifactFromID extends Error {
 	var $Artifact;
 
 	function ArtifactFromID($id) {
+	  global $LANG;
+
 		$res=db_query("SELECT * FROM artifact_vw WHERE artifact_id='$id'");
 		if (!$res || db_numrows($res) < 1) {
-			$this->setError("Invalid Artifact ID");
+			$this->setError($LANG->getText('tracker_common_artifact','invalid_id'));
 			return false;
 		} else {
 			$art_arr =& db_fetch_array($res);
@@ -36,7 +40,7 @@ class ArtifactFromID extends Error {
 
 			$at = new ArtifactType($g,$art_arr['group_artifact_id'],$typ_arr);
 			if (!$at || !is_object($at)) {
-				$this->setError("Could Not Create ArtifactType");
+				$this->setError($LANG->getText('tracker_common_fromid','not_create'));
 				return false;
 			} elseif ($at->isError()) {
 				$this->setError($at->getErrorMessage());
@@ -46,7 +50,7 @@ class ArtifactFromID extends Error {
 
 			$a = new Artifact($at,$id,$art_arr);
 			if (!$a || !is_object($a)) {
-				$this->setError("Could Not Create Artifact");
+				$this->setError($LANG->getText('tracker_common_fromid','not_create_a'));
 				return false;
 			} elseif ($a->isError()) {
 				$this->setError($a->getErrorMessage());

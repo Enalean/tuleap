@@ -12,6 +12,8 @@
 
 //require($DOCUMENT_ROOT.'/../common/tracker/ArtifactCanned.class');
 
+$LANG->loadLanguageMsg('tracker/tracker');
+
 class ArtifactCannedHtml extends ArtifactCanned {
 
 	/**
@@ -29,12 +31,14 @@ class ArtifactCannedHtml extends ArtifactCanned {
 	 *  @return void
 	 */
 	function displayCreateForm(){
-	echo "<h3>Create a new response</h3>";
-	$atid = $this->ArtifactType->getID();
-	$g = $this->ArtifactType->getGroup();
-	$group_id = $g->getID();
+	  global $LANG;
+
+	  echo $LANG->getText('tracker_include_canned','create_response');
+	  $atid = $this->ArtifactType->getID();
+	  $g = $this->ArtifactType->getGroup();
+	  $group_id = $g->getID();
      echo '<P>';
-     echo 'Creating generic quick responses can save a lot of time when giving common responses.';
+     echo $LANG->getText('tracker_include_canned','save_time');
      echo '<P>';
      echo '<FORM ACTION="/tracker/admin/" METHOD="POST">';
      echo '<INPUT TYPE="HIDDEN" NAME="func" VALUE="canned">';
@@ -42,10 +46,10 @@ class ArtifactCannedHtml extends ArtifactCanned {
      echo '<INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$atid.'">';
      echo '<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">';
      echo '<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">';
-     echo '<B>Title:</B><BR>';
+     echo '<B>'.$LANG->getText('tracker_include_canned','title').':</B><BR>';
      echo '<INPUT TYPE="TEXT" NAME="title" VALUE="" SIZE="50" MAXLENGTH="50">';
      echo '<P>';
-     echo '<B>Message Body:</B><BR>';
+     echo '<B>'.$LANG->getText('tracker_include_canned','message_body').'</B><BR>';
      echo '<TEXTAREA NAME="body" ROWS="20" COLS="65" WRAP="HARD"></TEXTAREA>';
      echo '<P>';
      echo '<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">';
@@ -59,14 +63,15 @@ class ArtifactCannedHtml extends ArtifactCanned {
 	 *
 	 *  @return void
 	 */
-	function displayUpdateForm(){
-		echo "<P>";
-      	$atid = $this->ArtifactType->getID();
-	$id = 
-	$g = $this->ArtifactType->getGroup();
-	$group_id = $g->getID();
-	$id = $this->getID();
-      echo 'Creating generic messages can save you a lot of time when giving common responses.';
+	function displayUpdateForm() {
+	  global $LANG;
+	  echo "<P>";
+	  $atid = $this->ArtifactType->getID();
+	  $id = 
+	    $g = $this->ArtifactType->getGroup();
+	  $group_id = $g->getID();
+	  $id = $this->getID();
+      echo $LANG->getText('tracker_include_canned','save_time');
       echo '<P>';
       echo '<FORM ACTION="/tracker/admin/" METHOD="POST">';
       echo '<INPUT TYPE="HIDDEN" NAME="func" VALUE="canned">';
@@ -75,10 +80,10 @@ class ArtifactCannedHtml extends ArtifactCanned {
       echo '<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">';
       echo '<INPUT TYPE="HIDDEN" NAME="artifact_canned_id" VALUE="'.$id.'">';
       echo '<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">';
-      echo '<B>Title:</B><BR>';
+      echo '<B>'.$LANG->getText('tracker_include_canned','title').':</B><BR>';
       echo '<INPUT TYPE="TEXT" NAME="title" VALUE="'.$this->getTitle().'" SIZE="50" MAXLENGTH="50">';
       echo '<P>';
-      echo '<B>Message Body:</B><BR>';
+      echo '<B>'.$LANG->getText('tracker_include_canned','message_body').'</B><BR>';
       echo '<TEXTAREA NAME="body" ROWS="20" COLS="65" WRAP="HARD">'.$this->getBody().'</TEXTAREA>';
       echo '<P>';
       echo '<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">';
@@ -94,10 +99,13 @@ class ArtifactCannedHtml extends ArtifactCanned {
 	 *  @return void
 	 */
 	function displayCannedResponses() {
+	  global $LANG;
 	$group_id = $this->ArtifactType->Group->getID();
 	$atid = $this->ArtifactType->getID();
 
-	  echo '<H2>Tracker \'<a href="/tracker?group_id='.$group_id.'&atid='.$atid.'">'.$this->ArtifactType->getName().'</a>\' - Create/Modify Canned Responses</a></H2>';
+	  echo '<H2>'.$LANG->getText('tracker_import_admin','tracker').
+	    ' \'<a href="/tracker?group_id='.$group_id.'&atid='.$atid.'">'.$this->ArtifactType->getName().'</a>\' - '.
+	    $LANG->getText('tracker_admin_index','create_modify_cannedresponse').'</a></H2>';
 	  $result = $this->ArtifactType->getCannedResponses();
 	  $rows=db_numrows($result);
 	  echo "<P>";
@@ -106,12 +114,12 @@ class ArtifactCannedHtml extends ArtifactCanned {
 	    /*
   	    Links to update pages
   	    */
-  	    echo "\n<H3>Existing Responses:</H3><P>";
+  	    echo "\n<H3>".$LANG->getText('tracker_include_canned','existing_responses')."</H3><P>";
   	    
   	    $title_arr=array();
-  	    $title_arr[]='Title';
-  	    $title_arr[]='Body (extract)';
- 	    $title_arr[]='Delete?';
+  	    $title_arr[]=$LANG->getText('tracker_include_canned','title');
+  	    $title_arr[]=$LANG->getText('tracker_include_canned','body_extract');
+ 	    $title_arr[]=$LANG->getText('tracker_include_canned','delete');
  	    
   	    echo html_build_list_table_top ($title_arr);
   	    $atid = $this->ArtifactType->getID();
@@ -125,13 +133,14 @@ class ArtifactCannedHtml extends ArtifactCanned {
 	      '<TD>'.substr(db_result($result, $i, 'body'),0,160).
 	      '<b>...</b></TD>'.
 	      '<td align="center"><A HREF="/tracker/admin/?func=canned&delete_canned=1&artifact_canned_id='.
-	      db_result($result, $i, 'artifact_canned_id').'&atid='.$atid.'&group_id='.$group_id.'" onClick="return confirm(\'Delete this Canned Response : '.db_result($result, $i, 'title').'  ?\')">'.
-			    '<img src="'.util_get_image_theme("ic/trash.png").'" border="0"></A></td></TR>';
+	      db_result($result, $i, 'artifact_canned_id').'&atid='.$atid.'&group_id='.$group_id.
+		'" onClick="return confirm(\''.$LANG->getText('tracker_include_canned','delete_canned',db_result($result, $i, 'title')).'\')">'.
+		'<img src="'.util_get_image_theme("ic/trash.png").'" border="0"></A></td></TR>';
 	    }
 	    echo '</TABLE>';
 	  
 	  } else {
-	    echo "\n<H3>No canned responses set up yet for this tracker</H3>";
+	    echo "\n<H3>".$LANG->getText('tracker_include_canned','no_canned_response')."</H3>";
 	  }
 	}
 }

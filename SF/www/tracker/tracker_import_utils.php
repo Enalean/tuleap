@@ -9,6 +9,8 @@
 //  Written for CodeX by Marie-Luise Schneider
 //
 
+$LANG->loadLanguageMsg('tracker/tracker');
+$LANG->loadLanguageMsg('include/include');
 
 /** parse the first line of the csv file containing all the labels of the fields that are
  * used in the following of the file
@@ -27,6 +29,8 @@ function parse_field_names($data,$used_fields,$ath,
 			   &$num_columns,&$parsed_labels,&$predefined_values,
 			   &$aid_column,&$submitted_by_column,&$submitted_on_column,
 			   &$errors) {
+  global $LANG;
+
   $aid_column = -1;
   $submitted_by_column = -1;
   $submitted_on_column = -1;
@@ -35,7 +39,7 @@ function parse_field_names($data,$used_fields,$ath,
   for ($c=0; $c < $num_columns; $c++) {
     $field_label = $data[$c];
     if (!array_key_exists($field_label,$used_fields)) {
-      $errors .= "\"$field_label\" is not a known field in tracker ".$ath->getName();
+      $errors .= $LANG->getText('tracker_import_utils','field_not_known',array($field_label,$ath->getName()));
       return false;
     }
     
@@ -81,13 +85,13 @@ function parse_field_names($data,$used_fields,$ath,
       if ($field_name != "artifact_id" &&
 	  $field_name != "open_date" &&
 	  $field_name != "submitted_by" &&
-	  $label != "Follow-up Comments" &&
-	  $label != "Depend on" &&
-	  $label != "CC List" &&
-	  $label != "CC Comment" &&
+	  $label != $LANG->getText('tracker_import','follow_ups') &&
+	  $label != $LANG->getText('tracker_import','depend_on') &&
+	  $label != $LANG->getText('tracker_import','cc_list') &&
+	  $label != $LANG->getText('tracker_import','cc_comment') &&
 	  !$field->isEmptyOk() && !in_array($label,$parsed_labels)) {
 	
-	$errors .= "\"$label\" is a mandatory field in tracker ".$ath->getName().". Please specify it in your csv file. ";
+	$errors .= $LANG->getText('tracker_import_utils','field_mandatory',array($label,$ath->getName())).' ';
 	return false;
       }
     }
@@ -106,7 +110,7 @@ function parse_field_names($data,$used_fields,$ath,
  *                      for this concrete artifact no aid is given
  */
 function check_values($row,&$data,$used_fields,$parsed_labels,$predefined_values,&$errors,$insert,$from_update=false) {
-  global $ath;
+  global $ath,$LANG;
   for ($c=0; $c < count($parsed_labels); $c++) {
     $label = $parsed_labels[$c];
     $val = $data[$c];
@@ -119,24 +123,24 @@ function check_values($row,&$data,$used_fields,$parsed_labels,$predefined_values
       if ($field->getDisplayType() == "MB") {
 	$val_arr = explode(",",$val);
 	while (list(,$name) = each($val_arr)) {
-	  if (!array_key_exists($name,$predef_vals) && $name != 'None') {
-	    $errors .= "<b>Line ".($row+1)." [</b>".implode(",",$data)."<b>]</b>:<br>value \"$name\" is not one of the predefined values of field \"$label\" (".implode(",",array_keys($predef_vals)).")";
+	  if (!array_key_exists($name,$predef_vals) && $name != $LANG->getText('global','none')) {
+	    $errors .= $LANG->getText('tracker_import_utils','not_a_predefined_value',array($row+1,implode(",",$data),$name,$label,implode(",",array_keys($predef_vals))));
 	    return false;
 	  }
 	}
       } else {
-	if (!array_key_exists($val,$predef_vals) && $val != 'None') {
+	if (!array_key_exists($val,$predef_vals) && $val != $LANG->getText('global','none')) {
 	  if (($field_name == 'severity') &&
 	      (strcasecmp($val,'1') == 0 || strcasecmp($val,'5') == 0 || strcasecmp($val,9) == 0)) {
 	    //accept simple ints for Severity fields instead of 1 - Ordinary,5 - Major,9 - Critical
 	    //accept simple ints for Priority fields instead of 1 - Lowest,5 - Medium,9 - Highest
 	  } else if ($field_name == 'submitted_by' && 
-		     (($val == 'None' && $ath->allowsAnon()) ||
+		     (($val == $LANG->getText('global','none') && $ath->allowsAnon()) ||
 		     $val == "" ||
-		     user_getemail_from_unix($val) != "Error - Not Found")) {
+		     user_getemail_from_unix($val) != $LANG->getText('include','not_found'))) {
 	    //accept anonymous user, use importing user as 'submitted by', or simply make sure that user is a known user
 	  } else {
-	    $errors .= "<b>Line ".($row+1)." [</b>".implode(",",$data)."<b>]</b>:<br>value \"$val\" is not one of the predefined values of field \"$label\" (".implode(",",array_keys($predef_vals)).")";
+	    $errors .= $LANG->getText('tracker_import_utils','not_a_predefined_value',array($row+1,implode(",",$data),$val,$label,implode(",",array_keys($predef_vals))));
 	    return false;
 	  }
 	}
@@ -155,11 +159,11 @@ function check_values($row,&$data,$used_fields,$parsed_labels,$predefined_values
 	if ($field->isMultiSelectBox()) {
 	  $is_empty = (implode(",",$val)=="100");
 	} else {
-	  $is_empty = ( ($field->isSelectBox()) ? ($val=='None') : ($val==''));
+	  $is_empty = ( ($field->isSelectBox()) ? ($val==$LANG->getText('global','none')) : ($val==''));
 	}
 
 	if ($is_empty) {
-	  $errors .= "<b>Line ".($row+1)." [</b>".implode(",",$data)."<b>]</b>:<br>\"$label\" is a mandatory field in tracker ".$ath->getName().". Please specify it in your csv file (Current val is \"$val\"). ";
+	  $errors .= $LANG->getText('tracker_import_utils','field_mandatory_and_current',array($row+1,implode(",",$data),$label,$ath->getName(),$val));
 	  return false;
 	}
       }
@@ -177,7 +181,7 @@ function check_values($row,&$data,$used_fields,$parsed_labels,$predefined_values
 	} else {
 	  list($unix_time,$ok) = util_date_to_unixtime($val);
 	  if (!ok) {
-	    $errors .= "<b>Line ".($row+1)." [</b>".implode(",",$data)."<b>]</b>:<br>Date \"$val\" is not in correct format (Y-m-d)."; 
+	    $errors .= $LANG->getText('tracker_import_utils','incorrect_date',array($row+1,implode(",",$data),$val));
 	  }
 	  $date = format_date("Y-m-d",$unix_time);
 	  $data[$c] = $date;
@@ -195,13 +199,13 @@ function check_values($row,&$data,$used_fields,$parsed_labels,$predefined_values
       if ($field_name != "artifact_id" &&
 	  $field_name != "open_date" &&
 	  $field_name != "submitted_by" &&
-	  $label != "Follow-up Comments" &&
-	  $label != "Depend on" &&
-	  $label != "CC List" &&
-	  $label != "CC Comment" &&
+	  $label != $LANG->getText('tracker_import','follow_ups') &&
+	  $label != $LANG->getText('tracker_import','depend_on') &&
+	  $label != $LANG->getText('tracker_import','cc_list') &&
+	  $label != $LANG->getText('tracker_import','cc_comment') &&
 	  !$field->isEmptyOk() && !in_array($label,$parsed_labels)) {
 
-	  $errors .= "<b>Line ".($row+1)." [</b>".implode(",",$data)."<b>]</b>:<br>\"$label\" is a mandatory field in tracker ".$ath->getName().". Please specify it in your csv file. ";
+	$errors .= $LANG->getText('tracker_import_utils','field_mandatory_and_line',array($row+1,implode(",",$data),$label,$ath->getName()));
 	  return false;
       } 
     }
@@ -216,7 +220,7 @@ function check_values($row,&$data,$used_fields,$parsed_labels,$predefined_values
  *                      for this concrete artifact no aid is given
  */
 function check_insert_artifact($row,&$data,$used_fields,$parsed_labels,$predefined_values,&$errors,$from_update=false) {
-  global $art_field_fact,$ath;
+  global $art_field_fact,$ath,$LANG;
   // first make sure this isn't double-submitted
   
   //$field = $used_fields["Summary"];
@@ -242,7 +246,7 @@ function check_insert_artifact($row,&$data,$used_fields,$parsed_labels,$predefin
     $res=db_query("SELECT * FROM artifact WHERE group_artifact_id = ".$ath->getID().
 		  "AND submitted_by=$sub_user_id AND summary=\"$summary\"");
     if ($res && db_numrows($res) > 0) {
-      $errors .= "<b>Line ".($row+1)." [</b>".implode(",",$data)."<b>]</b>:<br>User $sub_user_name has already submitted a artifact with the same summary (\"$summary\"). Please don't try to import it again.";
+      $errors .= $LANG->getText('tracker_import_utils','already_submitted',array($row+1,implode(",",$data),$sub_user_name,$summary));
       return false;           
     }
   }
@@ -254,12 +258,12 @@ function check_insert_artifact($row,&$data,$used_fields,$parsed_labels,$predefin
 
 /** check if all the values correspond to predefined values of the corresponding fields */
 function check_update_artifact($row,&$data,$aid,$used_fields,$parsed_labels,$predefined_values,&$errors) {
-  global $ath;
+  global $ath,$LANG;
   
   $sql = "SELECT artifact_id FROM artifact WHERE artifact_id = $aid and group_artifact_id = ".$ath->getID();
   $result = db_query($sql);
   if (db_numrows($result) == 0) {
-    $errors .= "<b>Line ".($row+1)." [</b>".implode(",",$data)."<b>]</b>:<br>the specified artifact (id=$aid) does not exist in tracker ".$ath->getName();
+    $errors .= $LANG->getText('tracker_import_utils','art_not_exists',array($row+1,implode(",",$data),$aid,$ath->getName()));
     return false;
   }
   
@@ -279,7 +283,7 @@ function check_update_artifact($row,&$data,$aid,$used_fields,$parsed_labels,$pre
  * @param $submitted_on_column: the column in the csv file that contains the artifact creation date (-1 if not given)
  */
 function show_parse_results($used_fields,$parsed_labels,$artifacts_data,$aid_column,$submitted_by_column,$submitted_on_column,$group_id) {
-  global $art_field_fact,$ath,$PHP_SELF,$sys_datefmt;
+  global $art_field_fact,$ath,$PHP_SELF,$sys_datefmt,$LANG;
   get_import_user($sub_user_id,$sub_user_name);
   $sub_on = format_date("Y-m-d",time());
 
@@ -301,7 +305,7 @@ function show_parse_results($used_fields,$parsed_labels,$artifacts_data,$aid_col
 
   echo '
         <FORM NAME="acceptimportdata" action="'.$PHP_SELF.'" method="POST" enctype="multipart/form-data">
-        <p align="left"><INPUT TYPE="SUBMIT" NAME="submit" VALUE="IMPORT"></p>';
+        <p align="left"><INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$LANG->getText('tracker_import_admin','import').'"></p>';
 
 
   echo html_build_list_table_top ($parsed_labels);
@@ -321,13 +325,13 @@ function show_parse_results($used_fields,$parsed_labels,$artifacts_data,$aid_col
 
       if ($value != "") {
 	//FOLLOW_UP COMMENTS
-	if ($parsed_labels[$c] == "Follow-up Comments") {
+	if ($parsed_labels[$c] == $LANG->getText('tracker_import','follow_ups')) {
 	  unset($parsed_details);
 	  unset($parse_error);
 	  if (parse_details($data[$c],$parsed_details,$parse_error,true)) {
 	    if (count($parsed_details) > 0) {
 	      echo '<TD $width valign="top"><TABLE>';
-	      echo '<TR class ="boxtable"><TD class="boxtitle">Date</TD><TD class="boxtitle">By</TD><TD class="boxtitle">type</TD><TD class="boxtitle">comment</TD></TR>';
+	      echo '<TR class ="boxtable"><TD class="boxtitle">'.$LANG->getText('tracker_import_utils','date').'</TD><TD class="boxtitle">'.$LANG->getText('global','by').'</TD><TD class="boxtitle">'.$LANG->getText('tracker_import_utils','type').'</TD><TD class="boxtitle">'.$LANG->getText('tracker_import_utils','comment').'</TD></TR>';
 	      for ($d=0; $d < count($parsed_details); $d++) {
 		$arr = $parsed_details[$d];
 		echo '<TR class="'.util_get_alt_row_color($d).'">';
@@ -339,7 +343,7 @@ function show_parse_results($used_fields,$parsed_labels,$artifacts_data,$aid_col
 	      echo "<TD $width align=\"center\">-</TD>\n";
 	    }
 	  } else {
-	    echo "<TD $width><I>$parse_error Won't insert any follow-up comments for this artifact.</I></TD>\n";
+	    echo "<TD $width><I>".$LANG->getText('tracker_import_utils','comment_parse_error',$parse_error)."</I></TD>\n";
 	  }
 	  
 	  //DEFAULT
@@ -358,16 +362,16 @@ function show_parse_results($used_fields,$parsed_labels,$artifacts_data,$aid_col
 	if ($parsed_labels[$c] == $open_date_field->getLabel()) {
 	  //if insert show default value
 	  if ($aid_column == -1 || $aid == "") echo "<TD $width valign=\"top\"><I>$sub_on</I></TD>\n";
-	  else echo "<TD $width valign=\"top\"><I>Unchanged</I></TD>\n";
+	  else echo "<TD $width valign=\"top\"><I>".$LANG->getText('tracker_import_utils','unchanged')."</I></TD>\n";
 
 	  //SUBMITTED_BY
 	} else if ($parsed_labels[$c] == $submitted_by_field->getLabel()) {
 	  if ($aid_column == -1 || $aid == "") echo "<TD $width valign=\"top\"><I>$sub_user_name</I></TD>\n";
-	  else echo "<TD $width valign=\"top\"><I>Unchanged</I></TD>\n";
+	  else echo "<TD $width valign=\"top\"><I>".$LANG->getText('tracker_import_utils','unchanged')."</I></TD>\n";
 
 	  //ARTIFACT_ID
 	} else if ($parsed_labels[$c] == $aid_field->getLabel()) {
-	  echo "<TD $width valign=\"top\"><I>NEW</I></TD>\n";
+	  echo "<TD $width valign=\"top\"><I>".$LANG->getText('tracker_import_utils','new')."</I></TD>\n";
 
 	  //DEFAULT
 	} else {
@@ -428,7 +432,7 @@ function parse($csv_filename,$group_id,$is_tmp,
 	       &$aid_column,&$submitted_by_column,&$submitted_on_column,
 	       &$number_inserts,&$number_updates,
 	       &$errors) {
-  global $ath;
+  global $ath,$LANG;
 
   $number_inserts = 0;
   $number_updates = 0;
@@ -467,8 +471,7 @@ function parse($csv_filename,$group_id,$is_tmp,
       //verify whether this row contains enough values
       $num = count($data);
       if ($num != $num_columns) { 
-	$errors .= "<b>Line ".($row+1)." [</b>".implode(",",$data)."<b>]</b>:<br>the number of values ($num) does not match the number of fields ($num_columns).";
-	$errors .= "<br>";
+	$errors .= $LANG('tracker_import_utils','column_mismatch',$row+1,implode(",",$data),$num,$num_columns);
 	return FALSE;
       }
       
@@ -523,7 +526,7 @@ function mandatory_fields($ath) {
 }
 
 function getUsedFields() {
-  global $ath,$art_field_fact;
+  global $ath,$art_field_fact,$LANG;
   $art_field_fact = new ArtifactFieldFactory($ath);
   $fields =  $art_field_fact->getAllUsedFields();
   while (list(,$field) = each($fields) ) {
@@ -532,10 +535,10 @@ function getUsedFields() {
     }
   }
 
-  $used_fields["Follow-up Comments"] = "";
-  $used_fields["Depend on"] = "";
-  $used_fields["CC List"] = "";
-  $used_fields["CC Comment"] = "";
+  $used_fields[$LANG->getText('tracker_import','follow_ups')] = "";
+  $used_fields[$LANG->getText('tracker_import','depend_on')] = "";
+  $used_fields[$LANG->getText('tracker_import','cc_list')] = "";
+  $used_fields[$LANG->getText('tracker_import','cc_comment')] = "";
 
   $submitted_by_field = $art_field_fact->getFieldFromName('submitted_by');
   $submitted_by_label = $submitted_by_field->getLabel();
@@ -609,7 +612,7 @@ function getPredefinedValues($used_fields,$parsed_labels) {
  *                               for users and comment-types
  */
 function parse_details($details,&$parsed_details,&$errors,$for_parse_report=false) {
-  global $sys_lf, $art_field_fact, $ath, $sys_datefmt,$user_id;
+  global $sys_lf, $art_field_fact, $ath, $sys_datefmt,$user_id,$LANG;
 
   //echo "<br>\n";
   $comments = split("------------------------------------------------------------------",$details);
@@ -619,14 +622,14 @@ function parse_details($details,&$parsed_details,&$errors,$for_parse_report=fals
     $i++;
     if (($i == 1) && 
 	( (count($comments) > 1) || 
-	  (trim($comment) == "No Followups Have Been Posted") ) ) {
+	  (trim($comment) == $LANG->getText('tracker_import_utils','no_followups')) ) ) {
       //skip first line
       continue;
     }
     $comment = trim($comment);
     
     //skip the "Date: "
-    if (strpos($comment, "Date:") === false) {
+    if (strpos($comment, $LANG->getText('tracker_import_utils','date').":") === false) {
       //if no date given, consider this whole string as the comment
 
       //try nevertheless if we can apply legacy Bug and Task export format
@@ -638,7 +641,7 @@ function parse_details($details,&$parsed_details,&$errors,$for_parse_report=fals
 	  get_import_user($sub_user_id,$sub_user_name);
 	  $arr["date"] = "<I>$date</I>";
 	  $arr["by"] = "<I>$sub_user_name</I>";
-	  $arr["type"] = "<I>None</I>";
+	  $arr["type"] = "<I>".$LANG->getText('global','none')."</I>";
 	} else {
 	  $arr["date"] = time();
 	  $arr["by"] = $user_id;
@@ -652,9 +655,9 @@ function parse_details($details,&$parsed_details,&$errors,$for_parse_report=fals
 
     // heres starts reel parsing
     $comment = substr($comment, 6);
-    $by_position = strpos($comment,"By: ");
+    $by_position = strpos($comment,$LANG->getText('global','by').": ");
     if ($by_position === false) {
-      $errors .= "You must specify an originator for follow-up comment #".($i-1)." ($comment).";
+      $errors .= $LANG->getText('tracker_import_utils','specify_originator',array($i-1,$comment));
       return false;
     }
     $date_str = trim(substr($comment, 0, $by_position));
@@ -668,8 +671,8 @@ function parse_details($details,&$parsed_details,&$errors,$for_parse_report=fals
     $by = strtok($comment," \n\t\r\0\x0B");
     $comment = trim(substr($comment,strlen($by)));
 
-    if ($by == "None") {
-      $errors .= "\"None\" is not a valid originator of a follow-up comment. Please specify a user name or a valid email address for comment #".($i-1)." .";
+    if ($by == $LANG->getText('global','none')) {
+      $errors .= $LANG->getText('tracker_import_utils','specify_valid_user',$i-1);
       return false;
     }
     if (!$for_parse_report) {
@@ -679,7 +682,7 @@ function parse_details($details,&$parsed_details,&$errors,$for_parse_report=fals
       } else if (validate_email($by)) {
 	//ok, $by remains what it is
       } else {
-	$errors .= "\"$by\" specified as originator of follow-up comment #".($i-1)." is neither a user name nor a valid email address.";
+	$errors .= $LANG->getText('tracker_import_utils','not_a_user',array($by,$i-1));
 	return false;
       }
     }
@@ -695,7 +698,7 @@ function parse_details($details,&$parsed_details,&$errors,$for_parse_report=fals
     }
 
     if ($comment_type_id === false) {
-      if ($for_parse_report) $comment_type_id = 'None';
+      if ($for_parse_report) $comment_type_id = $LANG->getText('global','none');
       else $comment_type_id = 100;
     } else if ($for_parse_report) {
       $comment_type_id = $comment_type;
@@ -749,7 +752,7 @@ function check_comment_type($type) {
  *                               for users and comment-types
  */
 function parse_legacy_details($details,&$parsed_details,&$errors,$for_parse_report=false) {
-  global $sys_lf, $art_field_fact, $ath, $sys_datefmt,$user_id;
+  global $sys_lf, $art_field_fact, $ath, $sys_datefmt,$user_id,$LANG;
 
   $comments = split("==================================================",$details);
 
@@ -761,21 +764,21 @@ function parse_legacy_details($details,&$parsed_details,&$errors,$for_parse_repo
 
     $comment = trim($comment);
     //skip the "Type: "
-    if (strpos($comment, "Type: ") === false) {
+    if (strpos($comment, $LANG->getText('tracker_import_utils','type').": ") === false) {
       //if no type given, consider this whole string as the comment
-      if ($for_parse_report) $comment_type = "None";
+      if ($for_parse_report) $comment_type = $LANG->getText('global','none');
       else $comment_type = 100;
     } else {
       $comment = substr($comment, 6);
-      $by_position = strpos($comment,"By: ");
+      $by_position = strpos($comment,$LANG->getText('tracker_import_utils','by').": ");
       if ($by_position === false) {
-	$errors .= "You must specify an originator for follow-up comment #".($i-1)." ($comment).";
+	$errors .= $LANG->getText('tracker_import_utils','specify_originator',array($i-1,$comment));
 	return false;
       }
       $type = trim(substr($comment,0,$by_position));
       $comment_type_id = check_comment_type($type);
       if ($comment_type_id === false) {
-	if ($for_parse_report) $comment_type = "None";
+	if ($for_parse_report) $comment_type = $LANG->getText('global','none');
 	else $comment_type = 100;
       } else {
 	if ($for_parse_report) $comment_type = $type;
@@ -784,14 +787,14 @@ function parse_legacy_details($details,&$parsed_details,&$errors,$for_parse_repo
     }
 
     // By:
-    $by_position = strpos($comment,"By: ");
+    $by_position = strpos($comment,$LANG->getText('tracker_import_utils','by').": ");
     if ($by_position === false) {
-      $errors .= "You must specify an originator for follow-up comment #".($i-1)." ($comment).";
+      $errors .= $LANG->getText('tracker_import_utils','specify_originator',array($i-1,$comment));
       return false;
     }
     
     $comment = substr($comment, ($by_position + 4));
-    $on_position = strpos($comment, "On: ");
+    $on_position = strpos($comment, $LANG->getText('global','on').": ");
     $by = trim(substr($comment, 0, $on_position));
 
 
@@ -802,7 +805,7 @@ function parse_legacy_details($details,&$parsed_details,&$errors,$for_parse_repo
       } else if (validate_email($by)) {
 	//ok, $by remains what it is
       } else {
-	$errors .= "\"$by\" specified as originator of follow-up comment #".($i-1)." is neither a user name nor a valid email address.";
+	$errors .= $LANG->getText('tracker_import_utils','not_a_user',array($by,$i-1));
 	return false;
       }
     }
@@ -831,6 +834,7 @@ function parse_legacy_details($details,&$parsed_details,&$errors,$for_parse_repo
  * the imported artifact
  */
 function prepare_vfl($data,$used_fields,$parsed_labels,$predefined_values,&$artifact_depend_id,&$add_cc,&$cc_comment,&$details) {
+  global $LANG;
   for ($c=0; $c < count($data); $c++) {
     $label = $parsed_labels[$c];
     $field = $used_fields[$label];
@@ -838,33 +842,33 @@ function prepare_vfl($data,$used_fields,$parsed_labels,$predefined_values,&$arti
     $imported_value = $data[$label];
 
     // FOLLOW-UP COMMENTS
-    if ($label == "Follow-up Comments") {
+    if ($label == $LANG->getText('tracker_import','follow_ups')) {
       $field_name = "details";
-      if ($data[$label] != "" && trim($data[$label]) != "No Followups Have Been Posted") {
+      if ($data[$label] != "" && trim($data[$label]) != $LANG->getText('tracker_import_utils','no_followups')) {
 	$details = $data[$label];
       }
       continue;
       
     // DEPEND ON
-    } else if ($label == "Depend on") {
+    } else if ($label == $LANG->getText('tracker_import','depend_on')) {
       $depends = $data[$label];
-      if ($depends != "None" && $depends != "") {
+      if ($depends != $LANG->getText('global','none') && $depends != "") {
 	$artifact_depend_id = $depends;
       } else {
 	//we have to delete artifact_depend_ids if nothing has been specified
-	$artifact_depend_id = "None";
+	$artifact_depend_id = $LANG->getText('global','none');
       }
       continue;
     
     // CC LIST
-    } else if ($label == "CC List") {
-      if ($data[$label] != "" && $data[$label] != "None")
+    } else if ($label == $LANG->getText('tracker_import','cc_list')) {
+      if ($data[$label] != "" && $data[$label] != $LANG->getText('global','none'))
       $add_cc = $data[$label];
       else $add_cc = "";
       continue;
 
     // CC COMMENT
-    } else if ($label == "CC Comment") {
+    } else if ($label == $LANG->getText('tracker_import','cc_comment')) {
       $cc_comment = $data[$label];
       continue;
 
@@ -899,12 +903,12 @@ function prepare_vfl($data,$used_fields,$parsed_labels,$predefined_values,&$arti
       if ($field && $field->getDisplayType() == "MB") {
 	$val_arr = explode(",",$imported_value);
 	while (list(,$name) = each($val_arr)) {
-	  if ($name == 'None') $value[] = 100;
+	  if ($name == $LANG->getText('global','none')) $value[] = 100;
 	  else $value[] = $predef_vals[$name];
 	}
       } else {
 
-	if ($imported_value == 'None') $value = 100;
+	if ($imported_value == $LANG->getText('global','none')) $value = 100;
 	else $value = $predef_vals[$imported_value];
 
 	//special case for severity where we allow to specify
@@ -934,12 +938,12 @@ function prepare_vfl($data,$used_fields,$parsed_labels,$predefined_values,&$arti
 
 /** check if all the values correspond to predefined values of the corresponding fields */
 function insert_artifact($row,$data,$used_fields,$parsed_labels,$predefined_values,&$errors) {
-  global $ath;
+  global $ath,$LANG;
   
   //prepare everything to be able to call the artifacts create method
   $ah=new ArtifactHtml($ath);
   if (!$ah || !is_object($ah)) {
-    exit_error('ERROR','Artifact Could Not Be Created');
+    exit_error($LANG->getText('global','error'),$LANG->getText('tracker_index','not_create_art'));
   } else {
     // Check if a user can submit a new without loggin
     if ( !user_isloggedin() && !$ath->allowsAnon() ) {
@@ -959,25 +963,25 @@ function insert_artifact($row,$data,$used_fields,$parsed_labels,$predefined_valu
 
     // Artifact creation                
     if (!$ah->create($vfl,true,$row)) {
-      exit_error('ERROR',$ah->getErrorMessage());
+      exit_error($LANG->getText('global','error'),$ah->getErrorMessage());
     }
     //handle dependencies and such stuff ...
     if ($artifact_depend_id) {
       if (!$ah->addDependencies($artifact_depend_id,$changes,false)) {
-	$errors .= "Problem inserting dependent artifacts (artifact id =".$ah->getID().").<br> ";
+	$errors .= $LANG->getText('tracker_import_utils','problem_insert_dependent',$ah->getID())." ";
 	//return false;
       }
     }
     if ($add_cc) {
       if (!$ah->addCC($add_cc,$cc_comment,$changes)) {
-	$errors .= "Problem adding CC List (artifact id=".$ah->getID().").<br> ";
+	$errors .= $LANG->getText('tracker_import_utils','problem_add_cc',$ah->getID())." ";
       }
     }
 
     if ($details) {
       if (parse_details($details,$parsed_details,$errors)) {
 	if (!$ah->addDetails($parsed_details)) {
-	  $errors .= "Problem inserting follow_up comments (artifact id=".$ah->getID().").<br> ";
+	  $errors .= $LANG->getText('tracker_import_utils','problem_insert_followup',$ah->getID())." ";
 	  return false;
 	}
       } else {
@@ -992,13 +996,13 @@ function insert_artifact($row,$data,$used_fields,$parsed_labels,$predefined_valu
 
 
 function update_artifact($row,$data,$aid,$used_fields,$parsed_labels,$predefined_values,$errors) {
-  global $ath, $feedback;
+  global $ath, $feedback,$LANG;
 
   $ah=new ArtifactHtml($ath,$aid);
   if (!$ah || !is_object($ah)) {
-    exit_error('ERROR','Artifact Could Not Be Created');
+    exit_error($LANG->getText('global','error'),$LANG->getText('tracker_index','not_create_art'));
   } else if ($ah->isError()) {
-    exit_error('ERROR',$ah->getErrorMessage());
+    exit_error($LANG->getText('global','error'),$ah->getErrorMessage());
   } else {
     
     // Check if users can update anonymously
@@ -1015,18 +1019,18 @@ function update_artifact($row,$data,$aid,$used_fields,$parsed_labels,$predefined
 
     //data control layer
     if (!$ah->handleUpdate($artifact_depend_id,100,$changes,false,$vfl,true)) {
-      exit_error('ERROR',$feedback);
+      exit_error($LANG->getText('global','error'),$feedback);
     }
     if ($add_cc) {
       if (!$ah->updateCC($add_cc,$cc_comment)) {
-	$errors .= "Problem adding CC List (artifact id=".$ah->getID(). ").<br> ";
+	$errors .= $LANG->getText('tracker_import_utils','problem_add_cc',$ah->getID())." ";
       }
     }
 
     if ($details) {
       if (parse_details($details,$parsed_details,$errors)) {
 	if (!$ah->addDetails($parsed_details)) {
-	  $errors .= "Problem inserting follow_up comments (artifact id=".$ah->getID(). ").<br> ";
+	  $errors .= $LANG->getText('tracker_import_utils','problem_insert_followup',$ah->getID())." ";
 	  return false;
 	}
       } else {

@@ -9,6 +9,8 @@
 
 //require($DOCUMENT_ROOT.'/../common/include/Error.class');
 
+$LANG->loadLanguageMsg('tracker/tracker');
+
 //
 // The artifact field object
 //
@@ -189,36 +191,37 @@ class ArtifactField extends Error {
 	 * @return string
 	 */
 	function getLabelFieldType() {
+	  global $LANG;
 
 		if ( ($this->data_type == $this->DATATYPE_INT || $this->data_type == $this->DATATYPE_USER)
 			 &&($this->display_type == "SB") ) 
-			return "Select Box";
+			return $LANG->getText('tracker_include_type','sb');
 		
 		if ( ($this->data_type == $this->DATATYPE_INT || $this->data_type == $this->DATATYPE_USER)
 			 &&($this->display_type == "MB") ) 
-			return "Multi Select Box";
+			return $LANG->getText('tracker_include_type','mb');
 		
 		if ( ($this->data_type == $this->DATATYPE_TEXT)
 			 &&($this->display_type == "TF") ) 
-			return "Text Field";
+			return $LANG->getText('tracker_include_type','tf');
 		
 		if ( ($this->data_type == $this->DATATYPE_TEXT)
 			 &&($this->display_type == "TA") ) 
-			return "Text Area";
+			return $LANG->getText('tracker_include_type','ta');
 
 		if ( ($this->data_type == $this->DATATYPE_DATE)
 			 &&($this->display_type == "DF") ) 
-			return "Date Field";
+			return $LANG->getText('tracker_include_type','df');
 
 		if ( ($this->data_type == $this->DATATYPE_FLOAT)
 			 &&($this->display_type == "TF") )
-			return "Float Field";
+			return $LANG->getText('tracker_include_type','ff');
 
 		if ( ($this->data_type == $this->DATATYPE_INT)
 			 &&($this->display_type == "TF") ) 
-			return "Integer Field";
+			return $LANG->getText('tracker_include_type','if');
 
-		return "Unknow display type";
+		return $LANG->getText('tracker_common_field','unkown');
 	}
 
 	/**
@@ -561,6 +564,7 @@ class ArtifactField extends Error {
 	 * @return boolean
 	 */
 	function getValue($group_artifact_id,$value_id,$by_field_id=false) {
+	  global $LANG;
 
 	    // close_date and assigned_to fields are special select box fields
 	    if ( $value_func = $this->getGlobalValueFunction() ) {
@@ -583,10 +587,10 @@ class ArtifactField extends Error {
 	
 	    // check here if value is 100
 	    if ($value_id == 100) {
-		return "None";
+		return $LANG->getText('global','none');
 	    }
 	    // No value found for this value id !!!
-	    return $value_id.'(Error - Not Found)';
+	    return $value_id.$LANG->getText('tracker_common_field','not_found');
 	
 	}
 
@@ -1117,7 +1121,8 @@ class ArtifactField extends Error {
 	 * @return array
 	 */
 	function getLabelValues($group_artifact_id,$values) {
-		
+	  global $LANG;
+
 		$label_values = array();
 		
 		$hash_values = array();
@@ -1137,9 +1142,9 @@ class ArtifactField extends Error {
 		// Build the label values using the id values
 		while (list(,$v) = each($values)) {
 			if ( $v == 100 ) {
-				$label_values[] = "None";
+				$label_values[] = $LANG->getText('global','none');
 			} else if ($v == 0) {
-				$label_values[] = "Any";
+				$label_values[] = $LANG->getText('global','any');
 			} else {
 				$label_values[] = $hash_values[$v];
 			}
@@ -1185,10 +1190,11 @@ class ArtifactField extends Error {
 	function update($group_artifact_id,$field_name,$description,$label,$data_type,$display_type,
 						 $display_size,$rank_on_screen,$show_on_add,$show_on_add_members,
 						 $empty_ok,$keep_history,$special,$use_it) {
-						 	
+	  global $LANG;
+	 	
 		// Check arguments
 		if ( $field_name=="" || $data_type=="" || $display_type=="" ) {
-			$this->setError("Field name, data type or display type are required.");
+			$this->setError($LANG->getText('tracker_common_field','name_requ'));
 			return false;
 		}
 		
@@ -1216,7 +1222,7 @@ class ArtifactField extends Error {
 				
 		$res = db_query($sql);
 		if (!$res) {
-			$this->setError("Error during updating artifact_field (".$this->field_id."-".$group_artifact_id."): ".db_error());
+			$this->setError($LANG->getText('tracker_common_field','upd_err',array($this->field_id,$group_artifact_id,db_error())));
 			return false;
 		}
 		
@@ -1230,7 +1236,7 @@ class ArtifactField extends Error {
 		
 		$res = db_query($sql);
 		if (!$res) {
-			$this->setError("Error during updating artifact_field_usage (".$field_id."-".$group_artifact_id."): ".db_error());
+			$this->setError($LANG->getText('tracker_common_field','use_err',array($field_id,$group_artifact_id,db_error())));
 			return false;
 		}
 		
@@ -1301,7 +1307,8 @@ class ArtifactField extends Error {
 	 *  @return boolean - succeed or failed
 	 */
 	function updateValueFunction($group_artifact_id,$value_function) {
-				
+	  global $LANG;
+
 		if ($value_function == '') {
 			$dtype = $this->DATATYPE_INT;
 		} else {
@@ -1315,7 +1322,7 @@ class ArtifactField extends Error {
 								
 		$res = db_query($sql);
 		if (!$res) {
-			$this->setError("Error during updating artifact_field (".$field_id."-".$group_artifact_id."): ".db_error());
+			$this->setError($LANG->getText('tracker_common_field','upd_err',array($field_id,$group_artifact_id,db_error())));
 			return false;
 		}
 		
@@ -1338,7 +1345,8 @@ class ArtifactField extends Error {
 	 *  @return boolean - succeed or failed
 	 */
 	function updateDefaultValue($group_artifact_id,$default_value) {
-						 	
+	  global $LANG;
+
 		if ( $this->isDateField() ) {
 			list($value,$ok) = util_date_to_unixtime($default_value);
 		} else if (($this->data_type == $this->DATATYPE_INT || $this->data_type == $this->DATATYPE_USER) &&
@@ -1355,7 +1363,7 @@ class ArtifactField extends Error {
 
 		$res = db_query($sql);
 		if (!$res) {
-			$this->setError("Error during updating artifact_field (".$field_id."-".$group_artifact_id."): ".db_error());
+			$this->setError($LANG->getText('tracker_common_field','upd_err',array($field_id,$group_artifact_id,db_error())));
 			return false;
 		}
 		
@@ -1374,14 +1382,15 @@ class ArtifactField extends Error {
 	 *  @return boolean - succeed or failed
 	 */
 	function delete($group_artifact_id) {
-						 	
+	  global $LANG;
+				 	
 		// First delete the artifact_field
 		$sql = "DELETE FROM artifact_field ".
 			   "WHERE group_artifact_id=".$group_artifact_id." AND field_id=".$this->field_id;
 
 		$res = db_query($sql);
 		if (!$res) {
-			$this->setError("Error during deleting artifact_field (".$field_id."-".$group_artifact_id."): ".db_error());
+			$this->setError($LANG->getText('tracker_common_field','del_err',array($field_id,$group_artifact_id,db_error())));
 			return false;
 		}
 		
@@ -1391,7 +1400,7 @@ class ArtifactField extends Error {
 				
 		$res = db_query($sql);
 		if (!$res) {
-			$this->setError("Error during deleting artifact_field_usage (".$field_id."-".$group_artifact_id."): ".db_error());
+			$this->setError($LANG->getText('tracker_common_field','use_del_err',array($field_id,$group_artifact_id,db_error())));
 			return false;
 		}
 		
@@ -1401,7 +1410,7 @@ class ArtifactField extends Error {
 				
 		$res = db_query($sql);
 		if (!$res) {
-			$this->setError("Error during deleting artifact_field_value_list (".$field_id."-".$group_artifact_id."): ".db_error());
+			$this->setError($LANG->getText('tracker_common_field','del_err',array($field_id,$group_artifact_id,db_error())));
 			return false;
 		}
 
@@ -1470,9 +1479,11 @@ class ArtifactField extends Error {
 	 *  @return boolean - exist or not
 	 */
 	function createValueList($group_artifact_id,$value,$description,$order_id) {
+	  global $LANG;
+
 		// Check arguments
 		if ($value=="" ) {
-			$this->setError("Value name is required.");
+			$this->setError($LANG->getText('tracker_common_field','val_requ'));
 			return false;
 		}
 		
@@ -1480,7 +1491,7 @@ class ArtifactField extends Error {
 		
 		// Check if a field value id already exists
 		if ( $this->existValue($group_artifact_id,$value_id,$value) ) {
-			$this->setError("This value id already exists.");
+			$this->setError($LANG->getText('tracker_common_field','val_exist'));
 			return false;
 		}
 		
@@ -1493,7 +1504,7 @@ class ArtifactField extends Error {
 				
 		$res_insert = db_query($sql);
 		if (!$res_insert || db_affected_rows($res_insert) <= 0) {
-			$this->setError("Error during inserting artifact_field_value_list (".$this->getID()."-".$group_artifact_id."-".$value_id."): ".db_error());
+			$this->setError($LANG->getText('tracker_common_field','vl_ins_err',array($this->getID(),$group_artifact_id,$value_id,db_error())));
 			return false;
 		}
 		
@@ -1514,9 +1525,11 @@ class ArtifactField extends Error {
 	 *  @return boolean - exist or not
 	 */
 	function updateValueList($group_artifact_id,$value_id,$value,$description,$order_id,$status) {
+	  global $LANG;
+
 		// Check arguments
 		if ( $value_id=="" || $value=="" ) {
-			$this->setError("Value id and value name are required.");
+			$this->setError($LANG->getText('tracker_common_field','val_id_requ'));
 			return false;
 		}
 		
@@ -1533,7 +1546,7 @@ class ArtifactField extends Error {
 				
 		$res = db_query($sql);
 		if (!$res) {
-			$this->setError("Error during updating artifact_field_value_list (".$this->getID()."-".$group_artifact_id."-".$value_id."): ".db_error());
+			$this->setError($LANG->getText('tracker_common_field','vl_upd_err',array($this->getID(),$group_artifact_id,$value_id,db_error())));
 			return false;
 		}
 		
@@ -1550,14 +1563,15 @@ class ArtifactField extends Error {
 	 *  @return boolean - exist or not
 	 */
 	function deleteValueList($group_artifact_id,$value_id) {
-		
+	  global $LANG;
+
 		// Delete the artifact_field_value_list
 		$sql = "DELETE FROM artifact_field_value_list ".
 			   "WHERE field_id=".$this->getID()." AND group_artifact_id=".$group_artifact_id." AND value_id=".$value_id;
 				
 		$res = db_query($sql);
 		if (!$res) {
-			$this->setError("Error during deleting artifact_field_value_list (".$this->getID()."-".$group_artifact_id."-".$value_id."): ".db_error());
+			$this->setError($LANG->getText('tracker_common_field','vl_del_err',array($this->getID(),$group_artifact_id,$value_id,db_error())));
 			return false;
 		}
 		

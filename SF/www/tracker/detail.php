@@ -16,9 +16,11 @@
 //require_once('include/ArtifactFieldHtml.class');
 //require_once($DOCUMENT_ROOT.'/../common/tracker/ArtifactFieldFactory.class');
 
+$LANG->loadLanguageMsg('tracker/tracker');
+
 // Check if this tracker is valid (not deleted)
 if ( !$ath->isValid() ) {
-	exit_error('Error',"This tracker is no longer valid.");
+	exit_error($LANG->getText('global', 'error'),$LANG->getText('tracker_add', 'invalid'));
 }
 
 // Create factories

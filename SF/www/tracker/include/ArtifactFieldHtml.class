@@ -11,6 +11,8 @@
 
 //require($DOCUMENT_ROOT.'/../common/tracker/ArtifactField.class');
 
+$LANG->loadLanguageMsg('tracker/tracker');
+
 class ArtifactFieldHtml extends ArtifactField {
 
 	/**
@@ -74,10 +76,15 @@ class ArtifactFieldHtml extends ArtifactField {
      *
 	 *	@return	string
 	 */
-	function multipleFieldBox($box_name='',$group_artifact_id,$checked=false,$show_none=false,$text_none='None',$show_any=false, $text_any='Any',$show_unchanged=false,$text_unchanged='Unchanged',$show_value=false) {
-	
+	function multipleFieldBox($box_name='',$group_artifact_id,$checked=false,$show_none=false,$text_none=0,$show_any=false, $text_any=0,$show_unchanged=false,$text_unchanged=0,$show_value=false) {
+	  global $LANG;
+
+	  if (!$text_none) $text_none=$LANG->getText('global','none');
+	  if (!$text_any) $text_any=$LANG->getText('global','any');
+	  if (!$text_unchanged) $text_unchanged=$LANG->getText('global','unchanged');
+
 	    if (!$group_artifact_id) {
-			return 'ERROR - no group_artifact_id';
+			return $LANG->getText('tracker_include_field','error_no_atid');
 	    } else {
 			$result = $this->getFieldPredefinedValues($group_artifact_id,$checked);
 		
@@ -100,10 +107,15 @@ class ArtifactFieldHtml extends ArtifactField {
      *
 	 *	@return	string
 	 */
-	function fieldBox($box_name='',$group_artifact_id,$checked=false,$show_none=false,$text_none='None',$show_any=false,$text_any='Any',$show_unchanged=false,$text_unchanged='Unchanged') {
-	
+	function fieldBox($box_name='',$group_artifact_id,$checked=false,$show_none=false,$text_none=0,$show_any=false,$text_any=0,$show_unchanged=false,$text_unchanged=0) {
+	  global $LANG;
+
+	  if (!$text_none) $text_none=$LANG->getText('global','none');
+	  if (!$text_any) $text_any=$LANG->getText('global','any');
+	  if (!$text_unchanged) $text_unchanged=$LANG->getText('global','unchanged');
+
 	    if (!$group_artifact_id) {
-			return 'ERROR - no group_artifact_id';
+			return $LANG->getText('tracker_include_field','error_no_atid');
 	    } else {
 			$result = $this->getFieldPredefinedValues($group_artifact_id,$checked);
 	
@@ -127,27 +139,28 @@ class ArtifactFieldHtml extends ArtifactField {
 	 *	@return	string
 	 */
 	function multipleFieldDate($date_begin='',$date_end='',$size=0,$maxlength=0,$ro=false) {
-	
+	  global $LANG;
+
 	    // CAUTION!!!! The Javascript below assumes that the date always appear
 	    // in a field called 'artifact_form'
 	
 	    if ($ro)
 			if ($date_begin || $date_end) {
-			    $html = "Start:&nbsp;$date_begin<br>End:&nbsp;$date_end";
+			    $html = $LANG->getText('tracker_include_field','start')."&nbsp;$date_begin<br>".$LANG->getText('tracker_include_field','end')."&nbsp;$date_end";
 			} else {
-			    $html = 'Any time';
+			    $html = $LANG->getText('tracker_include_field','any_time');
 		    } else {
 				if (!$size || !$maxlength)
 				    list($size, $maxlength) = $this->getGlobalDisplaySize();
 		
-				$html = 'Start:<INPUT TYPE="text" name="'.$this->getName().
+				$html = $LANG->getText('tracker_include_field','start').'<INPUT TYPE="text" name="'.$this->getName().
 				'" size="'.$size.'" MAXLENGTH="'.$maxlength.'" VALUE="'.$date_begin.'">'.
 				'<a href="javascript:show_calendar(\'document.artifact_form.'.$this->getName().'\', document.artifact_form.'.$this->getName().'.value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
 				'<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="Click Here to Pick up start date"></a><br>'.
-				'End :<INPUT TYPE="text" name="'.$this->getName().'_end'.
+				$LANG->getText('tracker_include_field','end').'<INPUT TYPE="text" name="'.$this->getName().'_end'.
 				'" size="'.$size.'" MAXLENGTH="'.$maxlength.'" VALUE="'.$date_end.'">'.
 				'<a href="javascript:show_calendar(\'document.artifact_form.'.$this->getName().'_end\', document.artifact_form.'.$this->getName().'_end.value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
-				'<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="Click Here to Pick up end date"></a>';
+				'<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="'.$LANG->getText('tracker_include_field','pick_end').'"></a>';
 		    }
 	
 	    return($html);
@@ -164,14 +177,15 @@ class ArtifactFieldHtml extends ArtifactField {
 	 *	@return	string
 	 */
 	function fieldDateOperator($value='',$ro=false) {
-	
+	  global $LANG;
+
 	    if ($ro) {
 			$html = htmlspecialchars($value);
 		} else {
 			$html = '<SELECT name="'.$this->field_name.'_op">'.
-			'<OPTION VALUE=">"'.(($value == '>') ? ' SELECTED':'').'>&gt;</OPTION>'.
-			'<OPTION VALUE="="'.(($value == '=') ? ' SELECTED':'').'>=</OPTION>'.
-			'<OPTION VALUE="<"'.(($value == '<') ? ' SELECTED':'').'>&lt;</OPTION>'.
+			'<OPTION VALUE=">"'.(($value == '>') ? $LANG->getText('tracker_include_field','selected'):'').'>&gt;</OPTION>'.
+			'<OPTION VALUE="="'.(($value == '=') ? $LANG->getText('tracker_include_field','selected'):'').'>=</OPTION>'.
+			'<OPTION VALUE="<"'.(($value == '<') ? $LANG->getText('tracker_include_field','selected'):'').'>&lt;</OPTION>'.
 			'</SELECT>';
 		}
 	    return($html);
@@ -190,6 +204,8 @@ class ArtifactFieldHtml extends ArtifactField {
 	 *	@return	string
 	 */
 	function fieldDate($value='',$ro=false,$size='10',$maxlength='10',$form_name='artifact_form',$today=false) {
+	  global $LANG;
+
 	    if ($ro)
 			$html = $value;
 	    else {
@@ -198,7 +214,7 @@ class ArtifactFieldHtml extends ArtifactField {
 		$html = '<INPUT TYPE="text" name="'.$this->field_name.
 		'" size="'.$size.'" MAXLENGTH="'.$maxlength.'" VALUE="'.$value.'">'.
 		'<a href="javascript:show_calendar(\'document.'.$form_name.'.'.$this->field_name.'\','.$timeval.',\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
-		'<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="Click Here to Pick up a date"></a>';
+		'<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="'.$LANG->getText('tracker_include_field','pick_date').'"></a>';
 	    }
 	    return($html);
 	
@@ -272,11 +288,15 @@ class ArtifactFieldHtml extends ArtifactField {
 	 */
 	function display($group_artifact_id, $value='xyxy',
 				   $break=false, $label=true, $ro=false, $ascii=false, 
-				   $show_none=false, $text_none='None',
-				   $show_any=false, $text_any='Any',
-				   $show_unchanged=false,$text_unchanged='Unchanged') {
-	    global $sys_datefmt;
+				   $show_none=false, $text_none=0,
+				   $show_any=false, $text_any=0,
+				   $show_unchanged=false,$text_unchanged=0) {
+	    global $sys_datefmt,$LANG;
 	
+	    if (!$text_none) $text_none=$LANG->getText('global','none');
+	    if (!$text_any) $text_any=$LANG->getText('global','any');
+	    if (!$text_unchanged) $text_unchanged=$LANG->getText('global','unchanged');
+	    
 	    if ($label) {
 			$output = $this->labelDisplay($break,$ascii,!$ro);
 	    }
@@ -306,7 +326,7 @@ class ArtifactFieldHtml extends ArtifactField {
 		    // the artifact submission form)
 		    if ($this->isEmptyOk() || $value==100) {
 				$show_none=true;
-				$text_none='None';
+				$text_none=$LANG->getText('global','none');
 		    }
 		
 		    if (is_array($value))
@@ -343,7 +363,7 @@ class ArtifactFieldHtml extends ArtifactField {
 		    // the artifact submission form)
 		    if ($this->isEmptyOk() || (implode(",",$arr)=="100") ) {
 				$show_none=true;
-				$text_none='None';
+				$text_none=$LANG->getText('global','none');
 		    }
 		
 		    //if (is_array($value))
@@ -359,9 +379,9 @@ class ArtifactFieldHtml extends ArtifactField {
 		break; 
 
 	    case 'DF':
-		if ($value == 'Unchanged') {
+		if ($value == $LANG->getText('global','unchanged')) {
 			//$value = 'Unchanged (e.g. '.format_date("Y-m-j",time()).')';
-			$value = 'Unchanged';
+			$value = $LANG->getText('global','unchanged');
 			$output .= $this->fieldDate($value,false,(strlen($value)+1),(strlen($value)+1),'masschange_form',true);
 		} else {
 	    	   	// Default value
@@ -384,7 +404,7 @@ class ArtifactFieldHtml extends ArtifactField {
 	
 	    case 'TF':
 	    if ( $this->getDataType() == $this->DATATYPE_FLOAT ) {
-		if ($value == 'Unchanged') {
+		if ($value == $LANG->getText('global','unchanged')) {
 			//$value = 'Unchanged (e.g. '.number_format($value,2).')';
 			$output .= $this->fieldText($value,(strlen($value)+1),(strlen($value)+1));
 			break;
@@ -406,7 +426,7 @@ class ArtifactFieldHtml extends ArtifactField {
 		break;
 	
 	    default:
-			$output .= $this->getName().': UNKNOW ARTIFACT FIELD DISPLAY TYPE';
+	      $output .= $LANG->getText('tracker_include_field','unknown_display_type',$this->getName());
 	    }
 	
 	    return($output);

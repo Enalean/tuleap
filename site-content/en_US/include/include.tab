@@ -16,5 +16,9 @@
 include_exit	error	Error
 include_exit	info	Information
 include_exit	warn	Warning
-
+#
+#-----------------------------------------------
+# Script: SF/www/include/user.php
+#
+include_user	not_found	Error - Not Found
 

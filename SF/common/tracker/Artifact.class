@@ -14,6 +14,9 @@
  */
 //require($DOCUMENT_ROOT.'/../common/include/Error.class');
 
+$LANG->loadLanguageMsg('tracker/tracker');
+$LANG->loadLanguageMsg('include/include');
+
 class Artifact extends Error {
 
     /**
@@ -40,13 +43,14 @@ class Artifact extends Error {
      *  @return boolean success.
      */
     function Artifact(&$ArtifactType, $data=false) {
+      global $LANG;
         $this->Error(); 
 
         $this->ArtifactType = $ArtifactType;
 
         //was ArtifactType legit?
         if (!$ArtifactType || !is_object($ArtifactType)) {
-            $this->setError('Artifact: No Valid ArtifactType');
+            $this->setError('Artifact: '.$LANG->getText('tracker_common_canned','not_valid'));
             return false;
         }
         //did ArtifactType have an error?
@@ -59,7 +63,7 @@ class Artifact extends Error {
         //      make sure this person has permission to view artifacts
         //
         if (!$this->ArtifactType->userCanView()) {
-            $this->setError('Artifact: Only Group Members Can View Private ArtifactTypes');
+            $this->setError('Artifact: '.$LANG->getText('tracker_common_artifact','view_private'));
             return false;
         }
 
@@ -92,13 +96,13 @@ class Artifact extends Error {
      */
     function fetchData($artifact_id) {
 
-        global $art_field_fact;
+        global $art_field_fact,$LANG;
 
         // first fetch values of standard fields
         $sql = "SELECT * FROM artifact WHERE artifact_id='$artifact_id' AND group_artifact_id='".$this->ArtifactType->getID()."'";
         $res=db_query($sql);
         if (!$res || db_numrows($res) < 1) {
-            $this->setError('Artifact: Invalid ArtifactID');
+            $this->setError('Artifact: '.$LANG->getText('tracker_common_artifact','invalid_id'));
             return false;
         }
         $this->data_array = db_fetch_array($res);
@@ -317,11 +321,11 @@ class Artifact extends Error {
      *  @return boolean
      */
     function create($vfl=false,$import=false,$row=0) {
-        global $feedback,$ath,$art_field_fact;
+        global $feedback,$ath,$art_field_fact,$LANG;
         
         $group = $ath->getGroup();
         $group_artifact_id = $ath->getID();
-	$error_message = ($import ? "Row $row:" : "");
+	$error_message = ($import ? $LANG->getText('tracker_common_artifact','row',$row) : "");
 
         // Retrieve HTTP GET variables and store them in $vfl array
         if (!$vfl) {
@@ -363,7 +367,7 @@ class Artifact extends Error {
 	if ( $field && $field->isUsed()) {
 	  $res=db_query("SELECT * FROM artifact WHERE group_artifact_id = ".$ath->getID()." AND submitted_by=$user AND summary=\"".$vfl['summary']."\"");
 	  if ($res && db_numrows($res) > 0) {
-	    $this->setError(' ERROR - DOUBLE SUBMISSION. You have already submitted an artifact (id='.db_result($res,0,'artifact_id').') with the same summary. Please don\'t do that. ');
+	    $this->setError($LANG->getText('tracker_common_artifact','double_subm',db_result($res,0,'artifact_id')));
 	    return false;           
 	  }
 	}
@@ -432,8 +436,7 @@ class Artifact extends Error {
         
 	$was_error = false;
         if (!$artifact_id) {
-            $this->setError($error_prefix.'INSERT new artifact failed. Report to the Administrator<br>'.
-                            'SQL statement:<br>'.$sql.'<br>');
+            $this->setError($error_prefix.$LANG->getText('tracker_common_artifact','insert_err',$sql));
             $was_error = true;
         } else {
                         
@@ -463,7 +466,7 @@ class Artifact extends Error {
         
                     // Insert the field value
                     if ( !$field->insertValue($artifact_id,$value) ) {
-                        $error_message .= " Artifact created, but failed to insert the field value - ".$field->getName()." : ".$value;
+                        $error_message .= $LANG->getText('tracker_common_artifact','field_err',array($field->getName(),$value));
                         $was_error = true;
                         $this->setError($error_message);
                     }
@@ -475,7 +478,7 @@ class Artifact extends Error {
                     // empty record (we must use join and not left join for performance reasons).
                                         
                     if ( !$field->insertValue($artifact_id,$field->getDefaultValue()) ) {
-                        $error_message .= " Artifact created, but failed to insert the default field value - ".$field->getName()." : ".$field->getDefaultValue();
+                        $error_message .= $LANG->getText('tracker_common_artifact','def_err',array($field->getName(),$field->getDefaultValue()));
                         $was_error = true;
                         $this->setError($error_message);
                     }
@@ -504,7 +507,7 @@ class Artifact extends Error {
      */
     function addComment($details,$email=false,&$changes) {
                         
-        global $feedback,$art_field_fact;
+        global $feedback,$art_field_fact,$LANG;
 
         // Add a new comment if there is one
         if ($details != '') {
@@ -516,7 +519,7 @@ class Artifact extends Error {
                     if ( $email ) {
                         $this->addHistory($field,htmlspecialchars($details), "", 100, $email);
                     } else {
-                        $feedback .= ' You need to enter an email!';
+		      $feedback .= $LANG->getText('tracker_common_artifact','enter_email');
                         return false;
                     }
                 } else {
@@ -525,7 +528,7 @@ class Artifact extends Error {
                 $changes['details']['add'] = stripslashes($details);
                 $changes['details']['type'] = 'None';
                         
-                $feedback .= ' Comment added to artifact ';
+                $feedback .= $LANG->getText('tracker_common_artifact','add_comment');
             }               
             return true;
                         
@@ -542,13 +545,14 @@ class Artifact extends Error {
      *  @return boolean
      */
     function addDetails($parsed_details) {
+      global $LANG;
 
         while (list(,$arr) = each($parsed_details)) {        
 	    $by = $arr['by'];
 	    if ($by == "100") {
 	      //this case should not exist in new trackers but
 	      //can appear if we parse legacy bugs or tasks
-	      $email = "None";
+	      $email = $LANG->getText('global','none');
 	      $user_id = 100;
 	    } else if (user_getname($by)) {
 		$user_id = $by;
@@ -582,7 +586,7 @@ class Artifact extends Error {
      */
     function handleUpdate ($artifact_id_dependent,$canned_response,&$changes,$masschange=false,$vfl=false,$import=false)
         {
-            global $feedback,$art_field_fact,$HTTP_POST_VARS;
+            global $feedback,$art_field_fact,$HTTP_POST_VARS,$LANG;
 
 	    //verify permissions - Must have Tech permission
             if (!$this->ArtifactType->userIsTech()) exit_permission_denied();
@@ -624,7 +628,7 @@ class Artifact extends Error {
                         
                     if ( ($field->isMultiSelectBox())&&(is_array($value)) ) {
 
-			if ($masschange && (in_array('Unchanged',$value))) {
+			if ($masschange && (in_array($LANG->getText('global','unchanged'),$value))) {
 				continue;
 			}
                         // The field is a multi values field and it has multi assigned values
@@ -660,7 +664,7 @@ class Artifact extends Error {
                                 
                             // Update the field value
                             if ( !$field->updateValues($this->getID(),$values) ) {
-                                $feedback .= "Fail to update the field value ".$field->getName();
+                                $feedback .= $LANG->getText('tracker_common_artifact','field_upd_fail',$field->getName());
                             }
                                     
                             // Keep track of the change
@@ -676,7 +680,7 @@ class Artifact extends Error {
                         }
                                         
                     } else {
-	        	if ($masschange && ($value=='Unchanged')) {
+	        	if ($masschange && ($value==$LANG->getText('global','unchanged'))) {
 				continue;
 			}	
        
@@ -723,7 +727,7 @@ class Artifact extends Error {
                             // Update the field value
                             if ( !$field->isStandardField() ) {
                                 if ( !$field->updateValue($this->getID(),$update_value) ) {
-                                    $feedback .= " Fail to update the field value ".$field->getName();
+                                    $feedback .= $LANG->getText('tracker_common_artifact','field_upd_fail',$field->getName());
                                 }
                             }
                                     
@@ -742,7 +746,7 @@ class Artifact extends Error {
 	    if ($masschange) {
 		reset($HTTP_POST_VARS);
 		while ( list($key, $val) = each($HTTP_POST_VARS)) {
-			if ($key == 'submitted_by' && $val != 'Unchanged') {
+			if ($key == 'submitted_by' && $val != $LANG->getText('global','unchanged')) {
 				$sql = "UPDATE artifact SET submitted_by=$val WHERE artifact_id = ".$this->getID();
 				$res = db_query($sql);
 				$field = $art_field_fact->getFieldFromName('submitted_by');
@@ -765,9 +769,9 @@ class Artifact extends Error {
                 
                 if ($res3 && db_numrows($res3) > 0) {
                     $details = addslashes(util_unconvert_htmlspecialchars(db_result($res3,0,'body')));
-                    $feedback .= ' Canned Response Used ';
+                    $feedback .= $LANG->getText('tracker_common_artifact','canned_used');
                 } else {
-                    $feedback .= ' Unable to use Canned Response ';
+                    $feedback .= $LANG->getText('tracker_common_artifact','unable_canned');
                     $feedback .= ' - '.db_error();
                 }
             }
@@ -805,7 +809,7 @@ class Artifact extends Error {
         
 	    if ($import && $artifact_id_dependent) {
 		if (!$this->deleteAllDependencies()) return false;
-		if ($artifact_id_dependent == "None") unset($artifact_id_dependent);
+		if ($artifact_id_dependent == $LANG->getText('global','none')) unset($artifact_id_dependent);
 	    }
             if (!$this->addDependencies($artifact_id_dependent,&$changes,$masschange)) {
                 return false;
@@ -827,10 +831,10 @@ class Artifact extends Error {
             }
         
             if (!$res_upd) {
-                exit_error('UPDATE FAILED: '.$sql,'UPDATE FAILED');
+                exit_error($LANG->getText('tracker_common_artifact','upd_fail').': '.$sql,$LANG->getText('tracker_common_artifact','upd_fail'));
                 return false;
             } else {
-                if (!masschange) $feedback .= " Successfully Updated Artifact ";
+                if (!masschange) $feedback .= $LANG->getText('tracker_common_artifact','upd_success');
                 return true;
             }
 
@@ -880,7 +884,7 @@ class Artifact extends Error {
      * @return boolean
      */
     function addCC($email,$comment,&$changes,$masschange=false) {
-        global $feedback;
+        global $feedback,$LANG;
         
         $user_id = (user_isloggedin() ? user_getid(): 100);
         
@@ -890,7 +894,7 @@ class Artifact extends Error {
         $changed = false;
         
         if (! util_validateCCList($arr_email, $message)) {
-            exit_error("Error - The CC list is invalid", $message);
+            exit_error($LANG->getText('tracker_index','cc_list_invalid'), $message);
         }
 	
 	//calculate old_values to put into artifact_history
@@ -912,9 +916,9 @@ class Artifact extends Error {
 	}
 
         if (!$ok) {
-            $feedback .= ' - CC addition failed';
+            $feedback .= ' - '.$LANG->getText('tracker_common_artifact','cc_add_fail');
         } else {
-            if (!masschange) $feedback .= '- CC Added';
+            if (!masschange) $feedback .= '- '.$LANG->getText('tracker_common_artifact','cc_added');
 	    $this->addHistory('cc',$old_value,$new_value);
             $changes['CC']['add'] = join(',', $arr_email);
         }
@@ -930,7 +934,7 @@ class Artifact extends Error {
      * @return boolean
      */
     function updateCC($email,$comment) {
-        global $feedback;
+        global $feedback,$LANG;
         
         $user_id = (user_isloggedin() ? user_getid(): 100);
         
@@ -940,7 +944,7 @@ class Artifact extends Error {
         $changed = false;
         
         if (! util_validateCCList($arr_email, $message)) {
-            exit_error("Error - The CC list is invalid", $message);
+            exit_error($LANG->getText('tracker_index','cc_list_invalid'), $message);
         }
 	
 	//calculate old_values to put into artifact_history
@@ -952,7 +956,7 @@ class Artifact extends Error {
 	if (count($deleted_values) == 0 && count($added_values) == 0) return true;
 
 	if (!$this->deleteAllCC()) {
-		$feedback = "problem deleting old CC List (aid=".$this-getID(). "). ";
+		$feedback = $LANG->getText('tracker_common_artifact','prob_cc_list',$this-getID());
 		$ok = false;
 	}
 	
@@ -963,7 +967,7 @@ class Artifact extends Error {
         }
 
         if (!$ok) {
-            $feedback .= ' - CC addition failed';
+            $feedback .= ' - '.$LANG->getText('tracker_common_artifact','cc_add_fail');
         } else {
 	    $this->addHistory('cc',$old_value,$new_value);
         }
@@ -981,14 +985,14 @@ class Artifact extends Error {
      * @return boolean
      */
     function deleteCC($artifact_cc_id=false,&$changes,$masschange=false) {
-        global $feedback;
+        global $feedback,$LANG;
         
         // If both bug_id and bug_cc_id are given make sure the cc belongs 
         // to this bug (it's a bit paranoid but...)
         $sql = "SELECT artifact_id,email from artifact_cc WHERE artifact_cc_id='$artifact_cc_id'";
         $res1 = db_query($sql);
         if ((db_numrows($res1) <= 0) || (db_result($res1,0,'artifact_id') != $this->getID()) ) {
-            $feedback .= " - Error CC ID $artifact_cc_id doesn't belong to artifact ID";
+            $feedback .= " - ".$LANG->getText('tracker_common_artifact','err_cc_id',$artifact_cc_id);
             return false;
         }
         	
@@ -998,10 +1002,10 @@ class Artifact extends Error {
 	// Now delete the CC address
         $res2 = db_query("DELETE FROM artifact_cc WHERE artifact_cc_id='$artifact_cc_id'");
         if (!$res2) {
-            $feedback .= " - Error deleting CC ID $artifact_cc_id: ".db_error($res2);
+            $feedback .= " - ".$LANG->getText('tracker_common_artifact','err_del_cc',array($artifact_cc_id,db_error($res2)));
             return false;
         } else {
-            if (!$masschange) $feedback .= " - CC Removed";
+            if (!$masschange) $feedback .= " - ".$LANG->getText('tracker_common_artifact','cc_remove');
 	    $new_value=$this->getCCEmails();
 	    $this->addHistory('cc',$old_value,$new_value);
             $changes['CC']['del'] = db_result($res1,0,'email');
@@ -1105,7 +1109,7 @@ class Artifact extends Error {
      * @return boolean
      */
     function addDependencies($artifact_id_dependent,&$changes,$masschange) {
-        global $feedback;
+        global $feedback,$LANG;
         
         if ( !$artifact_id_dependent ) 
             return true;
@@ -1119,7 +1123,7 @@ class Artifact extends Error {
             // Check existance
             if (!$this->validArtifact($id)) {
                 $ok = false;
-                $feedback .= " Invalid artifact #".$id;
+                $feedback .= $LANG->getText('tracker_common_artifact','invalid_art',$id);
             }
             if ($ok && ($id != $this->getID()) && !$this->existDependency($id)) {
                 $res = $this->insertDependency($id);
@@ -1128,9 +1132,9 @@ class Artifact extends Error {
         }
         
         if (!$ok) {
-            $feedback .= ' - Dependencies addition for artifact #'.$this->getID().' failed';
+            $feedback .= ' - '.$LANG->getText('tracker_common_artifact','depend_add_fail',$this->getID());
         } else {
-            if (!masschange) $feedback .= '- Dependencies Added';
+            if (!$masschange) $feedback .= '- '.$LANG->getText('tracker_common_artifact','depend_add');
             $changes['Dependencies']['add'] = $artifact_id_dependent;
         }
         return $ok;
@@ -1145,7 +1149,7 @@ class Artifact extends Error {
      * @return boolean
      */
     function deleteDependency($dependent_on_artifact_id,&$changes) {
-        global $feedback;
+        global $feedback,$LANG;
         
         // Delete the dependency
         $sql = "DELETE FROM artifact_dependencies WHERE is_dependent_on_artifact_id=$dependent_on_artifact_id AND artifact_id=".$this->getID();
@@ -1154,7 +1158,7 @@ class Artifact extends Error {
             $feedback .= " - Error deleting dependency $dependent_on_artifact_id: ".db_error($res2);
             return false;
         } else {
-            $feedback .= " - Dependency Removed";
+            $feedback .= " - ".$LANG->getText('tracker_common_artifact','depend_removed');
             $changes['Dependencies']['del'] = $dependent_on_artifact_id;
             return true;
         }
@@ -1485,7 +1489,7 @@ class Artifact extends Error {
      */
     function buildNotificationList($changes) {
                 
-        global $art_field_fact;
+        global $art_field_fact,$LANG;
         
         // Rk: we store email addresses in a hash to make sure they are only
         // stored once. Normally if an email is repeated several times sendmail
@@ -1564,7 +1568,7 @@ class Artifact extends Error {
         while (list($user_id,) = each($user_ids)) {
             //echo "DBG - final list - user=$user_id<br>";
 	    $mail_addr = user_getemail($user_id);
-	    if ($mail_addr != "Error - Not Found") {	
+	    if ($mail_addr != $LANG->getText('include_user','not_found')) {	
             	$addresses[$mail_addr] = true;
 	    }	
         }

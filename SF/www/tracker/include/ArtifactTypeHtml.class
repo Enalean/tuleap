@@ -14,6 +14,8 @@
 require($DOCUMENT_ROOT.'/include/HTML_Graphs.php');
 require($DOCUMENT_ROOT.'/project/admin/ugroup_utils.php');
 
+$LANG->loadLanguageMsg('tracker/tracker');
+
 class ArtifactTypeHtml extends ArtifactType {
 
 	/**
@@ -34,7 +36,7 @@ class ArtifactTypeHtml extends ArtifactType {
 	 *  @return void
 	 */
 	function header($params) {
-		global $DOCUMENT_ROOT;
+		global $DOCUMENT_ROOT,$LANG;
 
 		$group_id= $this->Group->getID();
 
@@ -45,19 +47,19 @@ class ArtifactTypeHtml extends ArtifactType {
 
 		site_project_header($params);
                 if (!$params['pv']) {
-                    echo '<h3>Tracker: <a href="/tracker/?group_id='.$group_id.'&atid='.$this->getID().'">'.$this->getName().'</a></h3><p>';
+                    echo '<h3>'.$LANG->getText('tracker_import_admin','tracker').': <a href="/tracker/?group_id='.$group_id.'&atid='.$this->getID().'">'.$this->getName().'</a></h3><p>';
 
-                    echo '<strong><a href="/tracker/?func=add&group_id='.$group_id.'&atid='. $this->getID() .'">Submit A New '.$this->getCapsItemName().'</a>';
-                    echo ' | <a href="/tracker/?func=browse&set=my&group_id='.$group_id.'&atid='. $this->getID() .'">My '.$this->getCapsItemName().'s </a>';
-                    echo ' | <a href="/tracker/?func=browse&set=open&group_id='.$group_id.'&atid='. $this->getID() .'">Open '.$this->getCapsItemName().'s </a>';
+                    echo '<strong><a href="/tracker/?func=add&group_id='.$group_id.'&atid='. $this->getID() .'">'.$LANG->getText('tracker_include_type','submit_new',$this->getCapsItemName()).'</a>';
+                    echo ' | <a href="/tracker/?func=browse&set=my&group_id='.$group_id.'&atid='. $this->getID() .'">'.$LANG->getText('tracker_include_type','my',$this->getCapsItemName()).'s </a>';
+                    echo ' | <a href="/tracker/?func=browse&set=open&group_id='.$group_id.'&atid='. $this->getID() .'">'.$LANG->getText('tracker_include_type','open',$this->getCapsItemName()).'s </a>';
                     if ($this->userIsAdmin()) {
-			echo ' | <a href="/tracker/?func=masschange&group_id='.$group_id.'&atid='. $this->getID() .'">Mass Change </a>';
-			echo ' | <a href="/tracker/?func=import&group_id='.$group_id.'&atid='. $this->getID() .'">Import </a>';
+			echo ' | <a href="/tracker/?func=masschange&group_id='.$group_id.'&atid='. $this->getID() .'">'.$LANG->getText('tracker_index','mass_change').' </a>';
+			echo ' | <a href="/tracker/?func=import&group_id='.$group_id.'&atid='. $this->getID() .'">'.$LANG->getText('tracker_import_admin','import').' </a>';
                     }
-                    echo ' | <a href="/tracker/?func=reporting&group_id='.$group_id.'&atid='.$this->getID().'">Reporting</a>';
-                    echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='.$this->getID().'">Admin</a>';
+                    echo ' | <a href="/tracker/?func=reporting&group_id='.$group_id.'&atid='.$this->getID().'">'.$LANG->getText('tracker_include_type','reporting').'</a>';
+                    echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='.$this->getID().'">'.$LANG->getText('tracker_include_type','admin').'</a>';
                     if ($params['help']) {
-                        echo ' | '.help_button($params['help'],false,'Help');
+                        echo ' | '.help_button($params['help'],false,$LANG->getText('global','help'));
                     }
                     
                     echo '</strong><br>';
@@ -84,6 +86,8 @@ class ArtifactTypeHtml extends ArtifactType {
 	 *  @return void
 	 */
 	function adminHeader($params) {
+	  global $LANG;
+
 		$group_id= $this->Group->getID();
 
 		//required by new site_project_header
@@ -93,15 +97,15 @@ class ArtifactTypeHtml extends ArtifactType {
 
 		site_project_header($params);
 
-		echo '<strong><a href="/tracker/admin/?group_id='.$group_id.'">Admin All Trackers</a>';
-		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'">Admin</a>';
-		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=editoptions">General Settings</a>';
-		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=field_usage">Field Usage</a>';
-		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=field_values">Field Values</a>';
-		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=canned">Canned Responses</a>';
-		echo ' | <a href="/tracker/admin/?func=report&group_id='.$group_id.'&atid='. $this->getID() .'">Tracker Reports</a>';
-		echo ' | <a href="/tracker/admin/?func=notification&group_id='.$group_id.'&atid='. $this->getID() .'&func=notification">Email Notification Settings</a>';
-	    echo ' | '.help_button($params['help'],false,'Help');
+		echo '<strong><a href="/tracker/admin/?group_id='.$group_id.'">'.$LANG->getText('tracker_index','admin_all_trackers').'</a>';
+		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'">'.$LANG->getText('tracker_include_type','admin').'</a>';
+		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=editoptions">'.$LANG->getText('tracker_include_type','settings').'</a>';
+		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=field_usage">'.$LANG->getText('tracker_include_type','field_usage').'</a>';
+		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=field_values">'.$LANG->getText('tracker_include_type','field_values').'</a>';
+		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=canned">'.$LANG->getText('tracker_include_type','canned_resp').'</a>';
+		echo ' | <a href="/tracker/admin/?func=report&group_id='.$group_id.'&atid='. $this->getID() .'">'.$LANG->getText('tracker_include_type','reports').'</a>';
+		echo ' | <a href="/tracker/admin/?func=notification&group_id='.$group_id.'&atid='. $this->getID() .'&func=notification">'.$LANG->getText('tracker_include_type','mail_notif').'</a>';
+	    echo ' | '.help_button($params['help'],false,$LANG->getText('global','help'));
 		echo '</strong><hr>';
 	}
 
@@ -113,6 +117,8 @@ class ArtifactTypeHtml extends ArtifactType {
 	 *  @return void
 	 */
 	function adminTrackersHeader($params) {
+	  global $LANG;
+
 		$group_id= $this->Group->getID();
 
 		//required by new site_project_header
@@ -122,10 +128,10 @@ class ArtifactTypeHtml extends ArtifactType {
 
 		site_project_header($params);
 
-		echo '<strong><a href="/tracker/admin/?group_id='.$group_id.'">Admin All Trackers</a>';
-		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&func=create">Create a New Tracker</a>';
+		echo '<strong><a href="/tracker/admin/?group_id='.$group_id.'">'.$LANG->getText('tracker_index','admin_all_trackers').'</a>';
+		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&func=create">'.$LANG->getText('tracker_index','create_new_tracker').'</a>';
 		if ($params['help']) {
-		    echo ' | '.help_button($params['help'],false,'Help');
+		    echo ' | '.help_button($params['help'],false,$LANG->getText('global','help'));
 		}
 		echo '</strong><hr>';
 	}
@@ -150,26 +156,26 @@ class ArtifactTypeHtml extends ArtifactType {
 	 *  @return void
 	 */
 	function displayPendingTrackers() {
-		global $atf;
+		global $atf,$LANG;
 		
 
 		echo "<form name=\"cal\"><script language=\"JavaScript\" src=\"/include/calendar.js\"></script>";		
 		// Get the artfact type list
 		$at_arr = $atf->getPendingArtifactTypes();
-		echo '<H2>Pending Trackers Removals</H2>';
+		echo '<H2>'.$LANG->getText('tracker_include_type','pending_removal').'</H2>';
 		if (!$at_arr) {
-			echo "<h3>No Tracker pending for Deletion</h3>";
+			echo '<h3>'.$LANG->getText('tracker_include_type','no_pending').'</h3>';
 		} else {
-		    echo '<H3>Trackers Pending for Deletion</H3>';
+		    echo '<H3>'.$LANG->getText('tracker_include_type','pending_deletion').'</H3>';
 
 			$title_arr=array();
-			$title_arr[]='ID';
-			$title_arr[]='Project';
-			$title_arr[]='Tracker';
-			$title_arr[]='Deletion date';
-			$title_arr[]='Delay?';
-			$title_arr[]='Restore?';
-			$title_arr[]='Delete?';
+			$title_arr[]=$LANG->getText('tracker_include_report','id');
+			$title_arr[]=$LANG->getText('tracker_include_report','project');
+			$title_arr[]=$LANG->getText('tracker_import_admin','tracker');
+			$title_arr[]=$LANG->getText('tracker_include_type','deletion_date');
+			$title_arr[]=$LANG->getText('tracker_include_type','delay');
+			$title_arr[]=$LANG->getText('tracker_include_type','restore');
+			$title_arr[]=$LANG->getText('tracker_include_canned','delete');
 			echo html_build_list_table_top ($title_arr);
 		
 			$fmt = "\n".'<TR class="%s"><td>%s</td><td>%s</td><td>%s</td><td>%s</td>'.
@@ -182,9 +188,9 @@ class ArtifactTypeHtml extends ArtifactType {
 					    $arr['project_name'],
 					    $arr['name'],
 					    '<input type="text" name="delay_date" value="'.date("Y-m-d",$arr['deletion_date']).'"><a href="javascript:show_calendar(\'document.cal.delay_date\',document.cal.delay_date.value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');"><img src="'.util_get_image_theme("calendar/cal.png").'"  border="0"></a>',
-					    '<a href="javascript: var delay = document.cal.delay_date.value; document.location=\'/tracker/admin/restore.php?func=delay&group_id='.$arr['group_id'].'&atid='.$arr['group_artifact_id'].'&delay_date=\'+delay;"><img src="'.util_get_image_theme("ic/save16b.png").'" border="0" onClick="return confirm(\'Delay deletion for this tracker?\')"></a>',
-					    "<a href=\"/tracker/admin/restore.php?func=restore&group_id=".$arr['group_id']."&atid=".$arr['group_artifact_id']."\"><img src=\"".util_get_image_theme("ic/convert.png")."\" border=\"0\" onClick=\"return confirm('Restore this tracker?')\"></a>",
-					    "<a href=\"/tracker/admin/restore.php?func=delete&group_id=".$arr['group_id']."&atid=".$arr['group_artifact_id']."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('** WARNING!! ** Delete this tracker and all its dependencies (no possible restore operation)?')\"></a>" );
+					    '<a href="javascript: var delay = document.cal.delay_date.value; document.location=\'/tracker/admin/restore.php?func=delay&group_id='.$arr['group_id'].'&atid='.$arr['group_artifact_id'].'&delay_date=\'+delay;"><img src="'.util_get_image_theme("ic/save16b.png").'" border="0" onClick="return confirm(\''.$LANG->getText('tracker_include_type','delay_deletion').'\')"></a>',
+					    "<a href=\"/tracker/admin/restore.php?func=restore&group_id=".$arr['group_id']."&atid=".$arr['group_artifact_id']."\"><img src=\"".util_get_image_theme("ic/convert.png")."\" border=\"0\" onClick=\"return confirm('".$LANG->getText('tracker_include_type','restore')."')\"></a>",
+					    "<a href=\"/tracker/admin/restore.php?func=delete&group_id=".$arr['group_id']."&atid=".$arr['group_artifact_id']."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('".$LANG->getText('tracker_include_type','warning')."')\"></a>" );
 			$i=0;
 			}
 		    // final touch...
@@ -198,30 +204,27 @@ class ArtifactTypeHtml extends ArtifactType {
 	 *  @return void
 	 */
 	function displayAdminTrackers() {
-		global $atf;
+		global $atf,$LANG;
 				
 		// Get the artfact type list
 		$at_arr = $atf->getArtifactTypes();
 		
 		if (!$at_arr || count($at_arr) < 1) {
-			echo "<h1>No Accessible Trackers Found</h1>";
-			echo "<p>
-				<strong>No trackers have been set up, or you cannot view them.<p><FONT COLOR=RED>The Admin for this project ".
-				"will have to set up data types using the <a href=\"/tracker/admin/?group_id=$group_id\">admin page</a></FONT></strong>";
+			echo $LANG->getText('tracker_index','no_accessible_trackers',"/tracker/admin/?group_id=$group_id");
 		} else {
-		    echo '<H2>All Trackers Administration</H2>';
-			echo '<H3><a href="/tracker/admin/?group_id='.$this->Group->getID().'&func=create">Create A New Tracker</a></H3>';
-			echo 'Create a new tracker from scratch or from an existing tracker.';
-			echo '<H3>Manage Trackers</H3>';
-			echo 'Administrate or delete a tracker.<p>';
+		    echo '<H2>'.$LANG->getText('tracker_admin_trackers','all_admin').'</H2>';
+			echo '<H3><a href="/tracker/admin/?group_id='.$this->Group->getID().'&func=create">'.$LANG->getText('tracker_index','create_new_tracker').'</a></H3>';
+			echo $LANG->getText('tracker_include_type','create_from_scratch');
+			echo '<H3>'.$LANG->getText('tracker_include_type','manage').'</H3>';
+			echo $LANG->getText('tracker_include_type','admin_or_del').'<p>';
 
 			$title_arr=array();
-			$title_arr[]='ID';
-			$title_arr[]='Tracker';
-			$title_arr[]='Description';
+			$title_arr[]=$LANG->getText('tracker_include_report','id');
+			$title_arr[]=$LANG->getText('tracker_import_admin','tracker');
+			$title_arr[]=$LANG->getText('tracker_include_artifact','desc');
                         if ($this->Group->getID()==100) 
-			        $title_arr[]='Instantiate for new projects?';
-			$title_arr[]='Delete?';
+			        $title_arr[]=$LANG->getText('tracker_include_type','instantiate').'?';
+			$title_arr[]=$LANG->getText('tracker_include_canned','delete');
 			echo html_build_list_table_top ($title_arr);
 		
                         if ($this->Group->getID()==100) {
@@ -240,7 +243,7 @@ class ArtifactTypeHtml extends ArtifactType {
 					    $at_arr[$i]->getName(),
 					    $at_arr[$i]->getDescription().'&nbsp;',
                                             ($at_arr[$i]->isInstantiatedForNewProjects()?'Yes':'No'),
-					    "<a href=\"/tracker/admin/?func=delete_tracker&group_id=".$this->Group->getID()."&atid=".$at_arr[$i]->getID()."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('** WARNING!! ** Delete this tracker and all its dependencies?')\"></a>" );
+					    "<a href=\"/tracker/admin/?func=delete_tracker&group_id=".$this->Group->getID()."&atid=".$at_arr[$i]->getID()."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('".$LANG->getText('tracker_include_type','warning')."')\"></a>" );
 
 			    } else {
                                 echo sprintf($fmt,
@@ -248,7 +251,7 @@ class ArtifactTypeHtml extends ArtifactType {
 					    "<a href=\"/tracker/admin/?group_id=".$this->Group->getID()."&atid=".$at_arr[$i]->getID()."\">".$at_arr[$i]->getID()."</a>",
 					    $at_arr[$i]->getName(),
 					    $at_arr[$i]->getDescription().'&nbsp;',
-					    "<a href=\"/tracker/admin/?func=delete_tracker&group_id=".$this->Group->getID()."&atid=".$at_arr[$i]->getID()."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('** WARNING!! ** Delete this tracker and all its dependencies?')\"></a>" );
+					    "<a href=\"/tracker/admin/?func=delete_tracker&group_id=".$this->Group->getID()."&atid=".$at_arr[$i]->getID()."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('".$LANG->getText('tracker_include_type','warning')."')\"></a>" );
                             }
 			}
 		    // final touch...
@@ -262,25 +265,25 @@ class ArtifactTypeHtml extends ArtifactType {
 	 *  @return void
 	 */
 	function displayAdminTracker($group_id,$atid) {
-		
-	    echo '<H2>Tracker \'<a href="/tracker/?group_id='.$group_id.'&atid='.$atid.'&func=browse">'.$this->getName().'</a>\' - Administration</H2>';
+	  global $LANG;
+	    echo '<H2>'.$LANG->getText('tracker_import_admin','tracker').' \'<a href="/tracker/?group_id='.$group_id.'&atid='.$atid.'&func=browse">'.$this->getName().'</a>\''.$LANG->getText('tracker_include_type','administration').'</H2>';
 
 	    if ( $this->userIsAdmin() ) {
-			echo '<H3><a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=editoptions">General Settings</a></H3>';
-			echo 'Define the title, the description, etc of this tracker.<P>';
-			echo '<H3><a href="/tracker/admin/?func=field_usage&group_id='.$group_id.'&atid='.$atid.'">Manage Field Usage</a></H3>';
-			echo 'Define what tracker fields you want to use in this tracker (remark: some of the fields like status, assignee, severity&hellip; are mandatory and cannot be removed).<P>';
-			echo '<H3><a href="/tracker/admin/?func=field_values&group_id='.$group_id.'&atid='.$atid.'">Manage Field Values</a></H3>';
-			echo 'Define the set of values for the tracker fields you have decided to use in your tracker. <P>';
-			echo '<H3><a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=canned">Manage Canned Responses</a></H3>';
-			echo 'Add, update or delete the canned responses.';
+			echo '<H3><a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=editoptions">'.$LANG->getText('tracker_include_type','settings').'</a></H3>';
+			echo $LANG->getText('tracker_include_type','define_title');
+			echo '<H3><a href="/tracker/admin/?func=field_usage&group_id='.$group_id.'&atid='.$atid.'">'.$LANG->getText('tracker_include_type','mng_field_usage').'</a></H3>';
+			echo $LANG->getText('tracker_include_type','define_use');
+			echo '<H3><a href="/tracker/admin/?func=field_values&group_id='.$group_id.'&atid='.$atid.'">'.$LANG->getText('tracker_include_type','mng_field_values').'</a></H3>';
+			echo $LANG->getText('tracker_include_type','define_values');
+			echo '<H3><a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=canned">'.$LANG->getText('tracker_include_type','mng_response').'</a></H3>';
+			echo $LANG->getText('tracker_include_type','add_del_resp');
 		}
 
-		echo '<H3><a href="/tracker/admin/?func=report&group_id='.$group_id.'&atid='.$atid.'">Manage Tracker Reports</a></H3>';
-		echo 'Define personal or project-wide tracker reports: what search criteria to use and what tracker fields to show in the tracker report table&hellip;';
+		echo '<H3><a href="/tracker/admin/?func=report&group_id='.$group_id.'&atid='.$atid.'">'.$LANG->getText('tracker_include_type','mng_reports').'</a></H3>';
+		echo $LANG->getText('tracker_include_type','define_reports');
 				
-		echo '<H3><a href="/tracker/admin?func=notification&group_id='.$group_id.'&atid='.$atid.'">Email Notification Settings</a></H3>';
-		echo 'Users can define when they want to be notified of a tracker update via email. Project Administrators can also define global email notification rules.<P>';
+		echo '<H3><a href="/tracker/admin?func=notification&group_id='.$group_id.'&atid='.$atid.'">'.$LANG->getText('tracker_include_type','mail_notif').'</a></H3>';
+		echo $LANG->getText('tracker_include_type','define_notif');
 	}
 
 	/**
@@ -289,11 +292,13 @@ class ArtifactTypeHtml extends ArtifactType {
 	 *  @return void
 	 */
 	function displayPermValues($i,$perm_level) {
+	  global $LANG;
+
 		$out = '<FONT size="-1"><SELECT name="user_name['.$i.']">';
-		$out .= '<OPTION value="0"'.(($perm_level==0)?" selected":"").'>None';
-		$out .= '<OPTION value="1"'.(($perm_level==1)?" selected":"").'>Tech Only';
-		$out .= '<OPTION value="2"'.(($perm_level==2)?" selected":"").'>Tech & Admin';
-		$out .= '<OPTION value="3"'.(($perm_level==3)?" selected":"").'>Admin Only';
+		$out .= '<OPTION value="0"'.(($perm_level==0)?" selected":"").'>'.$LANG->getText('global','none');
+		$out .= '<OPTION value="1"'.(($perm_level==1)?" selected":"").'>'.$LANG->getText('tracker_include_type','tech_only');
+		$out .= '<OPTION value="2"'.(($perm_level==2)?" selected":"").'>'.$LANG->getText('tracker_include_type','tech_admin');
+		$out .= '<OPTION value="3"'.(($perm_level==3)?" selected":"").'>'.$LANG->getText('tracker_include_type','admin_only');
 		$out .= '</SELECT></FONT>';
 		
 		return $out;
@@ -306,15 +311,17 @@ class ArtifactTypeHtml extends ArtifactType {
 	 */
 	function displayUsersPerm() {
 		
+	  global $LANG;
+
 	    $result=$this->getUsersPerm($this->getID());
 	    $rows=db_numrows($result);
 	
 	    if ($rows > 0) {
 	
 			$title_arr=array();
-			$title_arr[]='User';
-			$title_arr[]='Permissions';
-			$title_arr[]='Delete?';
+			$title_arr[]=$LANG->getText('tracker_include_type','user');
+			$title_arr[]=$LANG->getText('tracker_include_type','perm');
+			$title_arr[]=$LANG->getText('tracker_include_canned','delete');
 					
 			echo html_build_list_table_top ($title_arr);
 		
@@ -326,12 +333,12 @@ class ArtifactTypeHtml extends ArtifactType {
 			    echo '<TR class="'. util_get_alt_row_color($i).'">'.
 			    	 '<TD>'.util_user_link($user_name).'</TD>';
 				echo '<TD align="center">'.$this->displayPermValues($i,$perm_level).'</TD>';
-				echo '<TD align="center"><a href="/tracker/admin/?group_id='.$this->Group->getID().'&atid='.$this->getID().'&func=deleteuser&user_id='.$user_id.'"><img src="'.util_get_image_theme("ic/trash.png").'" border="0" onClick="return confirm(\'Delete this user?\')"></a></TD>';
+				echo '<TD align="center"><a href="/tracker/admin/?group_id='.$this->Group->getID().'&atid='.$this->getID().'&func=deleteuser&user_id='.$user_id.'"><img src="'.util_get_image_theme("ic/trash.png").'" border="0" onClick="return confirm(\''.$LANG->getText('tracker_include_type','del_user').'\')"></a></TD>';
 				echo '</TR>';
 			}
 			echo '</TABLE>';
 		} else {
-			echo '<H3>No users for this tracker.</H3>';
+			echo '<H3>'.$LANG->getText('tracker_include_type','no_user').'</H3>';
 		}
 		
 	}
@@ -361,8 +368,9 @@ class ArtifactTypeHtml extends ArtifactType {
 	 *  @return void
 	 */
 	function displayOptions($group_id,$atid) {
-		
-		echo '<H2>Tracker \'<a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'">'.$this->getName().'</a>\' - General Settings</H2>';
+	  global $LANG;
+
+		echo '<H2>'.$LANG->getText('tracker_import_admin','tracker').' \'<a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'">'.$this->getName().'</a>\' - '.$LANG->getText('tracker_include_type','settings').'</H2>';
 		echo '<form name="form1" >
 		  <input type="hidden" name="update" value="1">
 		  <input type="hidden" name="group_id" value="'.$group_id.'">
@@ -370,25 +378,25 @@ class ArtifactTypeHtml extends ArtifactType {
 		  <input type="hidden" name="func" value="editoptions">
 		  <table width="100%" border="0" cellpadding="5">
 		    <tr> 
-		      <td width="21%"><b>Name</b> <font color="red">*</font>:</td>
+		      <td width="21%"><b>'.$LANG->getText('tracker_include_artifact','name').'</b> <font color="red">*</font>:</td>
 		      <td width="79%"> 
 		        <input type="text" name="name" value="'.$this->getName().'">
 		      </td>
 		    </tr>
 		    <tr> 
-		      <td width="21%"><b>Description</b>: <font color="red">*</font></td>
+		      <td width="21%"><b>'.$LANG->getText('tracker_include_artifact','desc').'</b>: <font color="red">*</font></td>
 		      <td width="79%"> 
 		        <textarea name="description" rows="3" cols="50">'.$this->getDescription().'</textarea>
 		      </td>
 		    </tr>
 		    <tr> 
-		      <td width="21%"><b>Short name</b>: <font color="red">*</font></td>
+		      <td width="21%"><b>'.$LANG->getText('tracker_include_type','short_name').'</b>: <font color="red">*</font></td>
 		      <td width="79%"> 
 		        <input type="text" name="itemname" value="'.$this->getItemName().'">
 		      </td>
 		    </tr>
 		    <tr> 
-		      <td width="21%"><b> Public tracker:</b></td>
+		      <td width="21%"><b> '.$LANG->getText('tracker_include_type','public_tracker').'</b></td>
 		      <td width="79%"> ';
 		if ( $this->isPublic() ) {
 			echo '<input type="checkbox" name="is_public" value="1" checked>';
@@ -399,7 +407,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		      </td>
 		    </tr>
 		    <tr> 
-		      <td width="21%"><b>Allow anonymous submission:</b></td>
+		      <td width="21%"><b>'.$LANG->getText('tracker_include_type','allow_anon').'</b></td>
 		      <td width="79%">';
 		if ( $this->allowsAnon() ) {
 			echo '<input type="checkbox" name="allow_anon" value="1" checked>';
@@ -414,7 +422,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		if ( $this->Group->getID()==100 ) { // Template group
 		echo '	
 		    <tr> 
-		      <td width="21%"><b>Instantiate for new projects:</b></td>
+		      <td width="21%"><b>'.$LANG->getText('tracker_include_type','instantiate').':</b></td>
 		      <td width="79%">';
 		if ( $this->isInstantiatedForNewProjects() ) {
 			echo '<input type="checkbox" name="instantiate_for_new_projects" value="1" checked>';
@@ -429,19 +437,19 @@ class ArtifactTypeHtml extends ArtifactType {
                 }
 		echo '	
 		    <tr> 
-		      <td width="21%"><b>Submit instructions</b>:<br><i>(HTML tags allowed)</i></td>
+		      <td width="21%">'.$LANG->getText('tracker_include_type','submit_instr').'</td>
 		      <td width="79%"> 
 		        <textarea name="submit_instructions" rows="3" cols="50">'.$this->getSubmitInstructions().'</textarea>
 		      </td>
 		    </tr>
 		    <tr> 
-		      <td width="21%"><b>Browse instructions</b>:<br><i>(HTML tags allowed)</i></td>
+		      <td width="21%">'.$LANG->getText('tracker_include_type','browse_instr').'</td>
 		      <td width="79%"> 
 		        <textarea name="browse_instructions" rows="3" cols="50">'.$this->getBrowseInstructions().'</textarea>
 		      </td>
 		    </tr>
 		  </table>
-		  <p align="center"><input type="submit" value="Submit"></p>
+		  <p align="center"><input type="submit" value="'.$LANG->getText('global','btn_submit').'"></p>
 		</form>';
 	}
 
@@ -476,6 +484,8 @@ class ArtifactTypeHtml extends ArtifactType {
 	 *  @return void
 	 */
 	function displayCreateTracker($group_id,$codex_template,$group_id_template,$atid_template,$name,$description,$itemname,$feedback) {
+	  global $LANG;
+
 		echo '<script language="JavaScript">
 		      function trimStr(value) {
 		      	trimValue = "";
@@ -494,15 +504,15 @@ class ArtifactTypeHtml extends ArtifactType {
 			  
 			  function checkValues() {
 			  	if ( trimStr(document.form_create.name.value) == "" ) {
-		  			document.form_create.feedback.value = "Please, fill the tracker name.";
+		  			document.form_create.feedback.value = "'.$LANG->getText('tracker_include_type','fill_name').'";
 		  			return false;
 				}
 			  	if ( trimStr(document.form_create.description.value) == "" ) {
-		  			document.form_create.feedback.value = "Please, fill the tracker description.";
+		  			document.form_create.feedback.value = "'.$LANG->getText('tracker_include_type','fill_desc').'";
 		  			return false;
 				}
 			  	if ( trimStr(document.form_create.itemname.value) == "" ) {
-		  			document.form_create.feedback.value = "Please, fill the tracker short name.";
+		  			document.form_create.feedback.value = "'.$LANG->getText('tracker_include_type','fill_short').'";
 		  			return false;
 				}
 	  			return true;
@@ -512,7 +522,7 @@ class ArtifactTypeHtml extends ArtifactType {
 			  function onSubmitCreateTemplate() {
 			  	if ( checkValues() ) {
 			  		if ( (document.form_create.group_id_template.value == "")||(document.form_create.atid_template.value == "") ) {
-			  			document.form_create.feedback.value = "Please, choose a project and a tracker first.";
+			  			document.form_create.feedback.value = "'.$LANG->getText('tracker_include_type','choose_proj').'";
 					  	document.form_create.func.value = "create";
 			  		}
 			  		document.form_create.atid_chosen.value = document.form_create.atid_template.value;
@@ -526,7 +536,7 @@ class ArtifactTypeHtml extends ArtifactType {
 			  function onSubmitCreateCodeXTemplate() {
 			  	if ( checkValues() ) {
 			  		if ( document.form_create.codex_template.value == 100 ) {
-			  			document.form_create.feedback.value = "Please, choose a template first.";
+			  			document.form_create.feedback.value = "'.$LANG->getText('tracker_include_type','choose_tmpl').'";
 					  	document.form_create.func.value = "create";
 			  		}
 			  		document.form_create.atid_chosen.value = document.form_create.codex_template.value;
@@ -544,7 +554,7 @@ class ArtifactTypeHtml extends ArtifactType {
 
 			  function showTrackerSelection() {
 			  	if ( document.form_create.group_id_template.value == "" ) {
-			  		alert("Please, select a project first!");
+			  		alert("'.$LANG->getText('tracker_include_type','select_proj').'");
 			  		return;
 			  	}
 			  	win=window.open("","artifact_group_id_selection","height=45,width=200,toolbar=no,location=no,resizable=yes,left=200,top=200");
@@ -553,8 +563,7 @@ class ArtifactTypeHtml extends ArtifactType {
 
 			  </script>
 			 ';
-		echo '<h2>Create a new tracker:</h2>
-		<p>Please, fill the name, description and short name of this new tracker:</p>';
+		echo $LANG->getText('tracker_include_type','create_tracker');
 		echo '<form name="form_create" >
 		  <input type="hidden" name="group_id" value="'.$group_id.'">
 		  <input type="hidden" name="func" value="docreate">
@@ -563,13 +572,13 @@ class ArtifactTypeHtml extends ArtifactType {
 		  <input type="hidden" name="feedback" value="">
 		  <table width="100%" border="0" cellpadding="5">
 		    <tr> 
-		      <td width="21%"><b>Name</b>: <font color="red">*</font></td>
+		      <td width="21%"><b>'.$LANG->getText('tracker_include_artifact','name').'</b>: <font color="red">*</font></td>
 		      <td width="79%"> 
 		        <input type="text" name="name" value="'.$name.'">
 		      </td>
 		    </tr>
 		    <tr> 
-		      <td width="21%"><b>Description</b>: <font color="red">*</font></td>
+		      <td width="21%"><b>'.$LANG->getText('tracker_include_artifact','desc').'</b>: <font color="red">*</font></td>
 		      <td width="79%"> 
 		        <textarea name="description" rows="3" cols="50">'.$description.'</textarea>
 		      </td>
@@ -580,31 +589,31 @@ class ArtifactTypeHtml extends ArtifactType {
 		        <input type="text" name="itemname" value="'.$itemname.'">
 		      </td>
 		    </tr>
-                    <tr><td colspan=2><i>Please avoid spaces and punctuation in short names, or you won\'t be able to automatically cross-reference artifacts</i>'.help_button('ArtifactUpdate.html#ArtifactCrossReferencing').'</td></tr>';
+                    <tr><td colspan=2><i>'.$LANG->getText('tracker_include_type','avoid_spaces').'</i>'.help_button('ArtifactUpdate.html#ArtifactCrossReferencing').'</td></tr>';
 		echo '</table>';
-		echo '<p>Choose a creation method:</p>';
+		echo '<p>'.$LANG->getText('tracker_include_type','choose_creation').'</p>';
 		echo '<table>
 			  <tr valign="top">
-			     <td width="300"><li><b>From a predefined CodeX template:</b></li></td>
+			     <td width="300"><li><b>'.$LANG->getText('tracker_include_type','from_tmpl').'</b></li></td>
 			     <td colspan="2">';
 		echo $this->trackersSelectBox(100,"codex_template");
-		echo '	 &nbsp;<input type="button" name="CreateCodeXTemplate" value="Create" onClick="onSubmitCreateCodeXTemplate()"><br><br></td>
+		echo '	 &nbsp;<input type="button" name="CreateCodeXTemplate" value="'.$LANG->getText('global','btn_create').'" onClick="onSubmitCreateCodeXTemplate()"><br><br></td>
 			  <tr valign="top">    
-			     <td width="300"><li><b>From an existing tracker:</b><br><i>(Choose a project first and then a tracker of this project)</i></li></td>
+			     <td width="300"><li>'.$LANG->getText('tracker_include_type','from_exist').'</li></td>
 			     
 			     <td>
 			     	<table>
 			     	  <tr>
-			     	  	<td>Project ID:</td>
+			     	  	<td>'.$LANG->getText('tracker_include_type','proj_id').'</td>
 			     		<td><input name="group_id_template" value=""><a href="javascript:showGroupSelection()"><img src="'.util_get_image_theme("button_choose.png").'" align="absmiddle" border="0"></a></td>
 			     	  </tr>
 			     	  <tr>
-				        <td>Tracker ID:</td>
+				        <td>'.$LANG->getText('tracker_include_type','tracker_id').'</td>
 			     		<td><input name="atid_template" value=""><a href="javascript:showTrackerSelection()"><img src="'.util_get_image_theme("button_choose.png").'" align="absmiddle" border="0"></a></td>
 					  <tr>
 					</table>
 				 </td>			     		
-		         <td><input type="button" name="CreateTemplate" value="Create" onClick="onSubmitCreateTemplate()"></td>
+		         <td><input type="button" name="CreateTemplate" value="'.$LANG->getText('global','btn_create').'" onClick="onSubmitCreateTemplate()"></td>
 		      <tr>';
 
 	    echo '</form>
@@ -618,21 +627,21 @@ class ArtifactTypeHtml extends ArtifactType {
 	 *  @return void
 	 */
 	function displayFieldUsageList() {
-		global $ath,$art_field_fact,$PHP_SELF;
+		global $ath,$art_field_fact,$PHP_SELF,$LANG;
 		
-		echo '<h3>List of all Available Fields</h3>';
-		echo '<p>(Click to modify)';
+		echo '<h3>'.$LANG->getText('tracker_include_type','list_all_fields').'</h3>';
+		echo '<p>'.$LANG->getText('tracker_include_report','mod');
 		
 		
 		// Show all the fields currently available in the system
 		$i=0;
 		$title_arr=array();
-		$title_arr[]='Field Label';
-		$title_arr[]='Type';
-		$title_arr[]='Description';
-		$title_arr[]='Rank<br>on screen';
-		$title_arr[]='Status';
-		$title_arr[]='Delete?';
+		$title_arr[]=$LANG->getText('tracker_include_report','field_label');
+		$title_arr[]=$LANG->getText('tracker_include_type','type');
+		$title_arr[]=$LANG->getText('tracker_include_artifact','desc');
+		$title_arr[]=$LANG->getText('tracker_include_type','rank_screen');
+		$title_arr[]=$LANG->getText('tracker_include_type','status');
+		$title_arr[]=$LANG->getText('tracker_include_canned','delete');
 		
 		echo html_build_list_table_top ($title_arr);
 		
@@ -644,7 +653,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		while (list($field_name,$field) = each($fields)) {
 		
 		    $rank = ($field->getPlace()?$field->getPlace():"-");
-		    $status = ($field->getUseIt()?"Used":"Unused");
+		    $status = ($field->getUseIt()?$LANG->getText('tracker_include_type','used'):$LANG->getText('tracker_include_type','unused'));
 		
 			$html .= '<TR class="'. 
 			    util_get_alt_row_color($iu) .'">';
@@ -661,7 +670,7 @@ class ArtifactTypeHtml extends ArtifactType {
 				// For standard, we can't delete them - Only unused them
 		    	$html .= "\n<td align =\"center\">-</td>";
 			} else {
-		    	$html .= "\n<td align =\"center\"><a href=\"/tracker/admin/?func=field_delete&group_id=".$this->Group->getID()."&atid=".$this->getID()."&field_id=".$field->getID()."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('** WARNING!! ** If you delete this field, you will lost ALL the associated data. You can also set to UNUSED this field. Continue?')\"></a></td>";
+		    	$html .= "\n<td align =\"center\"><a href=\"/tracker/admin/?func=field_delete&group_id=".$this->Group->getID()."&atid=".$this->getID()."&field_id=".$field->getID()."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('".$LANG->getText('tracker_include_type','warning_loose_data')."')\"></a></td>";
 		    }
 		
 			$html .= "<TR>";
@@ -671,9 +680,9 @@ class ArtifactTypeHtml extends ArtifactType {
 		
 		// Now print the HTML table
 		if ($iu == 0) {
-		    echo '<tr><td colspan="4"><center><b>---- No field in use. Choose one below ----</b></center></tr>'.$html;  
+		    echo '<tr><td colspan="4"><center><b>'.$LANG->getText('tracker_include_type','no_field_in_use').'</b></center></tr>'.$html;  
 		} else {
-		    echo '<tr><td colspan="4"><center><b>---- USED FIELDS ----</b></center></tr>'.$html;  
+		    echo '<tr><td colspan="4"><center><b>'.$LANG->getText('tracker_include_type','used_field').'</b></center></tr>'.$html;  
 		}
 
 		// Build HTML ouput for Unused fields
@@ -684,7 +693,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		while (list($field_name,$field) = each($fields)) {
 		
 		    $rank = ($field->getPlace()?$field->getPlace():"-");
-		    $status = ($field->getUseIt()?"Used":"Unused");
+		    $status = ($field->getUseIt()?$LANG->getText('tracker_include_type','used'):$LANG->getText('tracker_include_type','unused'));
 		
 			$html .= '<TR class="'. 
 			    util_get_alt_row_color($iu) .'">';
@@ -700,7 +709,7 @@ class ArtifactTypeHtml extends ArtifactType {
 				// For standard, we can't delete them - Only unused them
 		    	$html .= "\n<td align =\"center\">-</td>";
 			} else {
-			    $html .= "\n<td align =\"center\"><a href=\"/tracker/admin/?func=field_delete&group_id=".$this->Group->getID()."&atid=".$this->getID()."&field_id=".$field->getID()."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('** CAUTION!! ** If you delete this field, you will lost ALL the associated data. Continue?')\"></a></td>";
+			    $html .= "\n<td align =\"center\"><a href=\"/tracker/admin/?func=field_delete&group_id=".$this->Group->getID()."&atid=".$this->getID()."&field_id=".$field->getID()."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('".$LANG->getText('tracker_include_type','warning_loose_data')."')\"></a></td>";
 			}
 		
 			$html .= "<TR>";
@@ -710,9 +719,9 @@ class ArtifactTypeHtml extends ArtifactType {
 		
 		// Now print the HTML table
 		if ($iu == 0) {
-		    echo '<tr><td colspan="4"><center><b>---- NO UNUSED FIELD ----</b></center></tr>'.$html;  
+		    echo '<tr><td colspan="4"><center><b>'.$LANG->getText('tracker_include_type','no_unused_field').'</b></center></tr>'.$html;  
 		} else {
-		    echo '<tr><td colspan="4"><center><b>---- UNUSED FIELDS ----</b></center></tr>'.$html;  
+		    echo '<tr><td colspan="4"><center><b>'.$LANG->getText('tracker_include_type','unused_field').'</b></center></tr>'.$html;  
 		}
 
 		echo '</TABLE>';
@@ -730,6 +739,7 @@ class ArtifactTypeHtml extends ArtifactType {
 	 *  @return void
 	 */
 	function displayFieldType($data_type,$display_type,$form_name) {
+	  global $LANG;
 		
 		$af = new ArtifactField();
 		
@@ -794,54 +804,54 @@ class ArtifactTypeHtml extends ArtifactType {
 			if ( ($data_type == $af->DATATYPE_INT || $data_type == $af->DATATYPE_USER)
 				 &&($display_type == "SB") ) 
 				$selected = " selected";
-			echo '<option value="1"'.$selected.'>Select Box</option>';
+			echo '<option value="1"'.$selected.'>'.$LANG->getText('tracker_include_type','sb').'</option>';
 			
 			$selected = "";
 			if ( ($data_type == $af->DATATYPE_INT || $data_type == $af->DATATYPE_USER)
 				 &&($display_type == "MB") ) 
 				$selected = " selected";
-			echo '<option value="2"'.$selected.'>Multi Select Box</option>';
+			echo '<option value="2"'.$selected.'>'.$LANG->getText('tracker_include_type','mb').'</option>';
 			
 			$selected = "";
 			if ( ($data_type == $af->DATATYPE_TEXT)
 				 &&($display_type == "TF") ) 
 				$selected = " selected";
-			echo '<option value="3"'.$selected.'>Text Field</option>';
+			echo '<option value="3"'.$selected.'>'.$LANG->getText('tracker_include_type','tf').'</option>';
 			
 			$selected = "";
 			if ( ($data_type == $af->DATATYPE_TEXT)
 				 &&($display_type == "TA") ) 
 				$selected = " selected";
-			echo '<option value="4"'.$selected.'>Text Area</option>';
+			echo '<option value="4"'.$selected.'>'.$LANG->getText('tracker_include_type','ta').'</option>';
 
 			$selected = "";
 			if ( ($data_type == $af->DATATYPE_DATE)
 				 &&($display_type == "DF") ) 
 				$selected = " selected";
-			echo '<option value="5"'.$selected.'>Date Field</option>';
+			echo '<option value="5"'.$selected.'>'.$LANG->getText('tracker_include_type','df').'</option>';
 
 			$selected = "";
 			if ( ($data_type == $af->DATATYPE_FLOAT)
 				 &&($display_type == "TF") ) {
 				$selected = " selected";
 			}
-			echo '<option value="6"'.$selected.'>Float Field</option>';
+			echo '<option value="6"'.$selected.'>'.$LANG->getText('tracker_include_type','ff').'</option>';
 
 			$selected = "";
 			if ( ($data_type == $af->DATATYPE_INT)
 				 &&($display_type == "TF") ) 
 				$selected = " selected";
-			echo '<option value="7"'.$selected.'>Integer Field</option>';
+			echo '<option value="7"'.$selected.'>'.$LANG->getText('tracker_include_type','if').'</option>';
 
 		} else {
 			echo '
-			<option value="1">Select Box</option>
-			<option value="2">Multi Select Box</option>
-			<option value="3">Text Field</option>
-			<option value="4">Text Area</option>
-			<option value="5">Date Field</option>
-			<option value="6">Float Field</option>
-			<option value="7">Integer Field</option>';
+			<option value="1">'.$LANG->getText('tracker_include_type','sb').'</option>
+			<option value="2">'.$LANG->getText('tracker_include_type','mb').'</option>
+			<option value="3">'.$LANG->getText('tracker_include_type','tf').'</option>
+			<option value="4">'.$LANG->getText('tracker_include_type','ta').'</option>
+			<option value="5">'.$LANG->getText('tracker_include_type','df').'</option>
+			<option value="6">'.$LANG->getText('tracker_include_type','ff').'</option>
+			<option value="7">'.$LANG->getText('tracker_include_type','if').'</option>';
 		}
         echo '</select>';
 	}
@@ -872,14 +882,14 @@ class ArtifactTypeHtml extends ArtifactType {
 	function displayFieldUsageForm($func="field_create",$field_id=false,$field_name=false,$description=false,$label=false,$data_type=false,$default_value=false,$display_type=false,
 								   $display_size=false,$rank_on_screen=false,$show_on_add=false,$show_on_add_members=false,
 								   $empty_ok=false,$keep_history=false,$special=false,$use_it=false,$show_use=false) {
-		global $art_field_fact;
+		global $art_field_fact,$LANG;
 		
 		$field = $art_field_fact->getFieldFromId($field_id);
 
 		$af = new ArtifactField();
 
 		if ( $func == "field_create" ) {
-			echo '<h3>Create a new field</h3>';
+			echo '<h3>'.$LANG->getText('tracker_include_type','create_field').'</h3>';
 			echo '
 			  <form name="form_create" method="/tracker/admin/index.php">
 			  <input type="hidden" name="func" value="'.$func.'">
@@ -890,7 +900,7 @@ class ArtifactTypeHtml extends ArtifactType {
 			  <input type="hidden" name="data_type" value="'.$af->DATATYPE_INT.'">
 			  <input type="hidden" name="display_type" value="SB">';
 		} else {
-			echo "<h3>Update Field '$label'</h3>";
+			echo "<h3>".$LANG->getText('tracker_include_type','upd_label',$label)."</h3>";
 			echo '
 			  <form name="form_create" method="/tracker/admin/index.php">
 			  <input type="hidden" name="func" value="'.$func.'">
@@ -903,17 +913,14 @@ class ArtifactTypeHtml extends ArtifactType {
 		}
 		
 		if ( $field && $field->isStandardField() ) {
-			echo '<p><i><b>** IMPORTANT NOTE **</b> \''.$label.'\' is a standard field of the CodeX 
-				Tracker. Its purpose is global to all trackers and we strongly advise 
-				you not to change its label and description unless they have a similar 
-				meaning which preserves the role of the field.</i></p>';
+			echo '<p><i>'.$LANG->getText('tracker_include_type','imp_note',$field->getLabel()).'</i></p>';
 		}
 	
 		echo '
-		  <b>Field Identification and Description</b> ';
+		  <b>'.$LANG->getText('tracker_include_type','field_ident').'</b> ';
 		echo  help_button('TrackerAdministration.html#CreationandModificationofaTrackerField');
 		echo '
-                              <p>Field Label: <font color="red">*</font> ';
+                              <p>'.$LANG->getText('tracker_include_report','field_label').': <font color="red">*</font> ';
 		      
 		if ( $label ) {
 			echo '<input type="text" name="label" size="30" maxlength="40" value="'.$label.'">';
@@ -921,13 +928,13 @@ class ArtifactTypeHtml extends ArtifactType {
 			echo '<input type="text" name="label" size="30" maxlength="40">';
 		}
 		
-		echo '<p>Description: ';
+		echo '<p>'.$LANG->getText('tracker_include_artifact','desc').': ';
 		            
 		echo '<input type=text name="description" size="70" maxlength="255" value="'.$description.'">';
 
 		
 		echo '
-		  <p>Field type: <font color="red">*</font>&nbsp;';
+		  <p>'.$LANG->getText('tracker_include_type','field_type').': <font color="red">*</font>&nbsp;';
 		
 		if ( $field && $field->isStandardField() ) {
 			echo $field->getLabelFieldType();
@@ -936,12 +943,12 @@ class ArtifactTypeHtml extends ArtifactType {
 		}
 		
 		echo '			
-		  <p><b>Display informations </b>';
+		  <p><b>'.$LANG->getText('tracker_include_type','display_info').' </b>';
 		echo  help_button('TrackerAdministration.html#CreationandModificationofaTrackerField');
 		echo'
                                 <table width="100%" border="0" cellpadding="5" cellspacing="0">
 		    <tr> 
-		      <td>Display Size:&nbsp;';
+		      <td>'.$LANG->getText('tracker_include_type','display_size').':&nbsp;';
 		      
 		if ( $display_size ) {
 		  echo '<input type="text" name="display_size" size="7" maxlength="7" value="'.$display_size.'">';
@@ -951,9 +958,9 @@ class ArtifactTypeHtml extends ArtifactType {
 			    
 	    echo '
 		      </td>
-		      <td rowspan="2">Display this field...<br>
+		      <td rowspan="2">'.$LANG->getText('tracker_include_type','display_field').'<br>
                                     <ul>
-		        <li>On the submission form used by project members ';
+		        <li>'.$LANG->getText('tracker_include_type','sub_form_proj').' ';
 		        
 		if ( $show_on_add_members ) {
 			echo '<input type="checkbox" name="show_on_add_members" value="1" checked>';
@@ -963,7 +970,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		
 		echo '
 		        </li>
-		        <li>On the submission form used by other users';
+		        <li>'.$LANG->getText('tracker_include_type','sub_form_other');
 		        
 		if ( $show_on_add ) {
 			echo '<input type="checkbox" name="show_on_add" value="1" checked>';
@@ -976,7 +983,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		      </td>
 		    </tr>
 		    <tr> 
-		      <td>Rank on screen:&nbsp;';
+		      <td>'.$LANG->getText('tracker_include_type','rank_screen').':&nbsp;';
 		      
 		if ( $rank_on_screen ) {
 	        echo '<input type="text" name="rank_on_screen" size="5" maxlength="5" value="'.$rank_on_screen.'">';
@@ -988,17 +995,17 @@ class ArtifactTypeHtml extends ArtifactType {
 		      </td>
 		    </tr>
 		  </table>
-		  <b>Miscellaneous:</b>
+		  <b>'.$LANG->getText('tracker_include_type','misc').'</b>
 		  <table width="100%" border="0" cellpadding="5" cellspacing="0">
 		    <tr> 
-		      <td width="30%">Allow Empty Value: ';
+		      <td width="30%">'.$LANG->getText('tracker_include_type','allow_empty').': ';
 		
 		if ( $field && $field->isStandardField() ) {
 			if ( $empty_ok ) {
-				echo 'Yes';
+				echo ;
 			    echo '<input type="hidden" name="empty_ok" value="1">';
 			} else {
-				echo 'No';
+				echo $LANG->getText('global','no');
 			    echo '<input type="hidden" name="empty_ok" value="0">';
 			}
 		} else {
@@ -1014,10 +1021,10 @@ class ArtifactTypeHtml extends ArtifactType {
 		
 		if ( $field && $field->isStandardField() ) {
 			if ( $keep_history ) {
-				echo 'Yes';
+				echo $LANG->getText('global','yes');
 			    echo '<input type="hidden" name="keep_history" value="1">';
 			} else {
-				echo 'No';
+				echo $LANG->getText('global','no');
 			    echo '<input type="hidden" name="keep_history" value="0">';
 			}
 		} else {
@@ -1035,9 +1042,9 @@ class ArtifactTypeHtml extends ArtifactType {
 		    echo  '
 		      <tr><td>';
 			if ( $use_it == 1 ) {
-				echo 'Use this field: <input type="checkbox" name="use_it" value="1" checked>';
+				echo $LANG->getText('tracker_include_type','use_field').': <input type="checkbox" name="use_it" value="1" checked>';
 			} else {
-				echo 'Use this field: <input type="checkbox" name="use_it" value="1">';
+				echo $LANG->getText('tracker_include_type','use_field').': <input type="checkbox" name="use_it" value="1">';
 			}
 		    echo  '
 		      </tr></td>';
@@ -1055,15 +1062,15 @@ class ArtifactTypeHtml extends ArtifactType {
 		  </table><p>';
 		  
 		if ( $func == "field_create" ) {
-			echo '<input type="submit" name="Submit" value="Create">';
+			echo '<input type="submit" name="Submit" value="'.$LANG->getText('global','btn_create').'">';
 		} else {
-			echo '<input type="submit" name="Submit" value="Update">';
+			echo '<input type="submit" name="Submit" value="'.$LANG->getText('global','btn_update').'">';
 		}
 		
 		echo '    
 		  </p>
 		</form>
-		<p><font color="red">*</font>: fields required</p>';
+		<p><font color="red">*</font>: '.$LANG->getText('tracker_include_type','fields_requ').'</p>';
 		
 	}
 
@@ -1073,16 +1080,16 @@ class ArtifactTypeHtml extends ArtifactType {
 	 *  @return void
 	 */
 	function displayFieldValuesEditList() {
-		global $ath,$art_field_fact;
+		global $ath,$art_field_fact,$LANG;
 		
-		echo '<p>(Click to modify)';
+		echo '<p>'.$LANG->getText('tracker_include_report','mod');
 		
 		
 		// Show all the fields currently available in the system
 		$i=0;
 		$title_arr=array();
-		$title_arr[]='Field Label';
-		$title_arr[]='Description';
+		$title_arr[]=$LANG->getText('tracker_include_report','field_label');
+		$title_arr[]=$LANG->getText('tracker_include_artifact','desc');
 		
 		echo html_build_list_table_top ($title_arr);
 		
@@ -1115,7 +1122,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		
 		// Now print the HTML table
 		if ($iu == 0) {
-		    echo '<tr><td colspan="4"><center><b>---- No used field ----</b></center></tr>';
+		    echo '<tr><td colspan="4"><center><b>'.$LANG->getText('tracker_include_type','no_used_field').'</b></center></tr>';
 		} else {
 			echo $html;
 		}
@@ -1135,11 +1142,12 @@ class ArtifactTypeHtml extends ArtifactType {
 	 *  @return void
 	 */
 	function displayValueFunctionForm($field_id,$value_function="",$or_label="") {
-	    
+	  global $LANG;
+
 	    if ( $or_label ) {
-	    	echo '<h3>'.$or_label.' Bind the field to a list of values ';
+	    	echo '<h3>'.$or_label.' '.$LANG->getText('tracker_include_type','bind_to_list').' ';
 	    } else {
-	    	echo '<h3>Bind the field to a list of values ';
+	    	echo '<h3>'.$LANG->getText('tracker_include_type','bind_to_list').' ';
 	    }
 	    echo  help_button('TrackerAdministration.html#TrackerBindingFieldToValueList').'</h3>';
 	
@@ -1149,28 +1157,28 @@ class ArtifactTypeHtml extends ArtifactType {
 	      <INPUT TYPE="HIDDEN" NAME="field_id" VALUE="'.$field_id.'">
 	      <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$this->Group->getID().'">
 	      <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$this->getID().'">
-	      Bind To: &nbsp; 
+	      '.$LANG->getText('tracker_include_type','bind_to').': &nbsp; 
 	      <select name="value_function">
-	          <option value="">None</option>';
+	          <option value="">'.$LANG->getText('global','none').'</option>';
 		        
 		if ( $value_function ) {
 			$selected = "";
 			if ( $value_function == "group_members" ) {
 				$selected = " selected";
 			}
-			echo '<option value="group_members"'.$selected.'>Group members</option>';
+			echo '<option value="group_members"'.$selected.'>'.$LANG->getText('tracker_include_type','group_members').'</option>';
 			
 			$selected = "";
 			if ( $value_function == "artifact_submitters" ) {
 				$selected = " selected";
 			}
-			echo '<option value="artifact_submitters"'.$selected.'>Artifact submitters</option>';
+			echo '<option value="artifact_submitters"'.$selected.'>'.$LANG->getText('tracker_include_type','submitters').'</option>';
 
 			$selected = "";
 			if ( $value_function == "artifact_technicians" ) {
 				$selected = " selected";
 			}
-			echo '<option value="artifact_technicians"'.$selected.'>Artifact technicians</option>';
+			echo '<option value="artifact_technicians"'.$selected.'>'.$LANG->getText('tracker_include_type','techicians').'</option>';
 
 			/*
 			 * @author: Manuel VACELET
@@ -1189,9 +1197,9 @@ class ArtifactTypeHtml extends ArtifactType {
 
 		} else {
 			echo '
-		          <option value="group_members">Group members</option>
-		          <option value="artifact_submitters">Artifact submitters</option>
-		          <option value="artifact_technicians">Artifact technicians</option>';
+		          <option value="group_members">'.$LANG->getText('tracker_include_type','group_members').'</option>
+		          <option value="artifact_submitters">'.$LANG->getText('tracker_include_type','submitters').'</option>
+		          <option value="artifact_technicians">'.$LANG->getText('tracker_include_type','techicians').'</option>';
 			$ugroup_res = ugroup_db_get_existing_ugroups($this->Group->getID());
 			$rows = db_numrows($ugroup_res);
 			for($i=0;$i<$rows;$i++) {
@@ -1201,7 +1209,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		
 		echo '
 		        </select>
-	      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Bind">
+	      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$LANG->getText('tracker_include_type','bind').'">
 	      </FORM>';
 		
 	}
@@ -1220,12 +1228,12 @@ class ArtifactTypeHtml extends ArtifactType {
 	 *  @return void
 	 */
 	function displayFieldValueForm($func,$field_id,$value_id=false,$value=false,$order_id=false,$status=false,$description=false) {
-		global $PHP_SELF;
+		global $PHP_SELF,$LANG;
 		
 		if ( $func == "value_create" ) {
-			echo '<h3>Create a new field value '.help_button('TrackerAdministration.html#TrackerCreatingaTrackerFieldValue').'</h3>';
+			echo '<h3>'.$LANG->getText('tracker_include_type','create_value').' '.help_button('TrackerAdministration.html#TrackerCreatingaTrackerFieldValue').'</h3>';
 		} else {
-			echo '<h3>Update the field value '.help_button('TrackerAdministration.html#TrackerUpdatingaTrackerFieldValue').'</h3>';
+			echo '<h3>'.$LANG->getText('tracker_include_type','update_value').' '.help_button('TrackerAdministration.html#TrackerUpdatingaTrackerFieldValue').'</h3>';
 		}
 					
 		echo '
@@ -1236,10 +1244,7 @@ class ArtifactTypeHtml extends ArtifactType {
 	      <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$this->getID().'">';
 
 		if ( $status == "P" ) {
-			echo '<p><i><b>**IMPORTANT NOTE**</b> You are editing a permanent field value. Permanent 
-			field values often have a <b>very</b> specific meaning to the CodeX 
-			system and we strongly advise you not to change its label and 
-			description unless they have a similar meaning.</i></p>';
+			echo '<p><i>'.$LANG->getText('tracker_include_type','note_standard').'</i></p>';
 		}
 
 		if ( $func == "value_create" ) {
@@ -1279,36 +1284,36 @@ class ArtifactTypeHtml extends ArtifactType {
 		if ( $func == "value_update" ) {
 			if (( $status == "P" ) && ( $this->Group->getID() != 100 ) ) {
                             // Can't change 'Permanent' status unless you're working on the tracker templates (group 100)
-                            echo 'Status: Permanent';
+                            echo $LANG->getText('tracker_include_type','status').': '.$LANG->getText('tracker_include_type','permanent');
                             echo '<input type="hidden" name="status" value="P">';
 			} else {
-				echo 'Status:&nbsp;
+				echo $LANG->getText('tracker_include_type','status').':&nbsp;
 				<select name="status">';
 				if ( $status ) {
 					$selected = "";
 					if ( $status == "A" ) 
 						$selected = " selected";
-					echo '<option value="A"'.$selected.'>Active</option>';
+					echo '<option value="A"'.$selected.'>'.$LANG->getText('tracker_include_type','active').'</option>';
 		
 					$selected = "";
 					if ( $status == "H" ) 
 						$selected = " selected";
-					echo '<option value="H"'.$selected.'>Hidden</option>';
+					echo '<option value="H"'.$selected.'>'.$LANG->getText('tracker_include_type','hidden').'</option>';
 
                                         if ($this->Group->getID() == 100 ) {
                                             $selected = "";
                                             if ( $status == "P" ) 
 						$selected = " selected";
-                                            echo '<option value="P"'.$selected.'>Permanent</option>';
+                                            echo '<option value="P"'.$selected.'>'.$LANG->getText('tracker_include_type','permanent').'</option>';
                                         }
 		
 				} else {
 					echo '				
-				          <option value="A" selected>Active</option>
-				          <option value="H">Hidden</option>;';
+				          <option value="A" selected>'.$LANG->getText('tracker_include_type','active').'</option>
+				          <option value="H">'.$LANG->getText('tracker_include_type','hidden').'</option>;';
                                         if ($this->Group->getID() == 100 ) {
                                             echo '				
-				          <option value="P">Permanent</option>';
+				          <option value="P">'.$LANG->getText('tracker_include_type','permanent').'</option>';
                                         }
 				}
 				echo '
@@ -1322,7 +1327,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		echo '
 		  </tr>
 		  <tr>
-		     <td colspan="4">Description:<BR>';
+		     <td colspan="4">'.$LANG->getText('tracker_include_artifact','desc').':<BR>';
 	     
 	    if ( $description ) {
 	    	echo '<textarea name="description" rows="2" cols="65">'.$description.'</textarea>';
@@ -1336,15 +1341,15 @@ class ArtifactTypeHtml extends ArtifactType {
 			<p>';
 	      
 		if ( $func == "value_create" ) {
-			echo '<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Create">';
+			echo '<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$LANG->getText('global','btn_create').'">';
 		} else {
-			echo '<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Update">';
+			echo '<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$LANG->getText('global','btn_update').'">';
 		}
 
 		echo '    
 		  </p>
 		</form>
-		<p><font color="red">*</font>: fields required</p>';
+		<p><font color="red">*</font>: '.$LANG->getText('tracker_include_type','fields_requ').'</p>';
 	}
 	
 	/**
@@ -1355,7 +1360,7 @@ class ArtifactTypeHtml extends ArtifactType {
 	 *  @return void
 	 */
 	function displayFieldValuesList($field_id) {
-		global $ath,$art_field_fact,$PHP_SELF;
+		global $ath,$art_field_fact,$PHP_SELF,$LANG;
 		
 		
 		$field = $art_field_fact->getFieldFromId($field_id);
@@ -1367,11 +1372,11 @@ class ArtifactTypeHtml extends ArtifactType {
 		$rows = db_numrows($values);
 		
 		if (!$values || ($rows == 0)) {
-		    echo "\n<H3>No values defined yet</H3>";
+		    echo "\n<H3>".$LANG->getText('tracker_include_type','no_values')."</H3>";
 		    return;
 		} else {
-		    echo '<h3>Existing values</h3>';
-		    echo '<p>(Click to modify)';
+		    echo '<h3>'.$LANG->getText('tracker_include_type','exist_values').'</h3>';
+		    echo '<p>'.$LANG->getText('tracker_include_report','mod');
 		}
 
 		
@@ -1379,13 +1384,13 @@ class ArtifactTypeHtml extends ArtifactType {
 		$i=0;
 		$title_arr=array();
 		if ( $field->getName() == "severity" ) {
-			$title_arr[]='ID';
+			$title_arr[]=$LANG->getText('tracker_include_report','id');
 		}
-		$title_arr[]='Value Label';
-		$title_arr[]='Description';
-		$title_arr[]='Rank';
-		$title_arr[]='Status';
-		$title_arr[]='Delete?';
+		$title_arr[]=$LANG->getText('tracker_include_type','value_label');
+		$title_arr[]=$LANG->getText('tracker_include_artifact','desc');
+		$title_arr[]=$LANG->getText('tracker_include_type','rank');
+		$title_arr[]=$LANG->getText('tracker_include_type','status');
+		$title_arr[]=$LANG->getText('tracker_include_canned','delete');
 		
 		echo html_build_list_table_top ($title_arr);
 		
@@ -1416,7 +1421,7 @@ class ArtifactTypeHtml extends ArtifactType {
 				// Unable to delete Permanent values, except for values in the tracker templates (for CodeX admins)
 		    	$html .= "\n<td align =\"center\">-</td>";
 			} else {
-		    	$html .= "\n<td align =\"center\"><a href=\"/tracker/admin/?func=value_delete&group_id=".$this->Group->getID()."&atid=".$this->getID()."&field_id=".$field->getID()."&value_id=".$row['value_id']."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('Delete this field value?')\"></a></td>";
+		    	$html .= "\n<td align =\"center\"><a href=\"/tracker/admin/?func=value_delete&group_id=".$this->Group->getID()."&atid=".$this->getID()."&field_id=".$field->getID()."&value_id=".$row['value_id']."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('".$LANG->getText('tracker_include_type','del_value')."')\"></a></td>";
 		    }
 		
 			$html .= "<TR>";
@@ -1426,9 +1431,9 @@ class ArtifactTypeHtml extends ArtifactType {
 		
 		// Now print the HTML table
 		if ($iu == 0) {
-		    echo '<tr><td colspan="4"><center><b>---- NO ACTIVE VALUES ----</b></center></tr>'.$html;  
+		    echo '<tr><td colspan="4"><center><b>'.$LANG->getText('tracker_include_type','no_active_val').'</b></center></tr>'.$html;  
 		} else {
-		    echo '<tr><td colspan="4"><center><b>---- ACTIVE VALUES ----</b></center></tr>'.$html;  
+		    echo '<tr><td colspan="4"><center><b>'.$LANG->getText('tracker_include_type','active_val').'</b></center></tr>'.$html;  
 		}
 
 		// Build HTML ouput for Unused fields
@@ -1459,7 +1464,7 @@ class ArtifactTypeHtml extends ArtifactType {
 				// Unable to delete Permanent values
 		    	$html .= "\n<td align =\"center\">-</td>";
 			} else {
-		    	$html .= "\n<td align =\"center\"><a href=\"/tracker/admin/?func=value_delete&group_id=".$this->Group->getID()."&atid=".$this->getID()."&field_id=".$field->getID()."&value_id=".$row['value_id']."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('Delete this field value?')\"></a>";
+		    	$html .= "\n<td align =\"center\"><a href=\"/tracker/admin/?func=value_delete&group_id=".$this->Group->getID()."&atid=".$this->getID()."&field_id=".$field->getID()."&value_id=".$row['value_id']."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('".$LANG->getText('tracker_include_type','del_value')."')\"></a>";
 		    }
 		
 			$html .= "<TR>";
@@ -1469,9 +1474,9 @@ class ArtifactTypeHtml extends ArtifactType {
 		
 		// Now print the HTML table
 		if ($iu == 0) {
-		    echo '<tr><td colspan="4"><center><b>---- NO HIDDEN VALUES ----</b></center></tr>'.$html;
+		    echo '<tr><td colspan="4"><center><b>'.$LANG->getText('tracker_include_type','no_hidden_val').'</b></center></tr>'.$html;
 		} else {
-		    echo '<tr><td colspan="4"><center><b>---- HIDDEN VALUES ----</b></center></tr>'.$html;  
+		    echo '<tr><td colspan="4"><center><b>'.$LANG->getText('tracker_include_type','hidden_val').'</b></center></tr>'.$html;  
 		}
 
 		echo '</TABLE>';
@@ -1491,7 +1496,8 @@ class ArtifactTypeHtml extends ArtifactType {
 	 */
 	
 	function displayNotificationForm($user_id) {
-	
+	  global $LANG;
+
 		// By default it's all 'yes'
 		for ($i=0; $i<$this->num_roles; $i++) {
 		    $role_label = $this->arr_roles[$i]['role_label'];
@@ -1511,7 +1517,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		$group_artifact_id = $this->getID();
 		$group_id = $group->getGroupId();
 
-		echo '<H2>Tracker \'<a href="/tracker/admin/?group_id='.$group_id.'&atid='.$group_artifact_id.'">'.$this->getName().'</a>\' - Email Notification Settings</h2>';
+		echo '<H2>'.$LANG->getText('tracker_import_admin','tracker').' \'<a href="/tracker/admin/?group_id='.$group_id.'&atid='.$group_artifact_id.'">'.$this->getName().'</a>\' - '.$LANG->getText('tracker_include_type','mail_notif').'</h2>';
 		// Build Wachees UI
 		$res = $this->getWatchees($user_id);
 		$arr_watchees = array();
@@ -1526,36 +1532,34 @@ class ArtifactTypeHtml extends ArtifactType {
 		<INPUT type="hidden" name="atid" value="'.$this->getID().'">
 		<INPUT type="hidden" name="group_id" value="'.$group_id.'">';
 		
-		echo '<h3><a name="GlobalEmailNotification"></a>Global Email Notification '.
+		echo '<h3><a name="GlobalEmailNotification"></a>'.$LANG->getText('tracker_include_type','global_mail_notif').' '.
 		help_button('TrackerAdministration.html#TrackerGlobalEmailNotification').'</h3>';
 		
 		if ($this->userIsAdmin()) {
 		    echo '
-		              <P><B>As a project administrator</B> you can provide email addresses (comma separated) to which new Artifact submissions (and possibly updates) will be systematically sent.<BR>
+		              <P>'.$LANG->getText('tracker_include_type','admin_note').'<BR>
 			<BR><INPUT TYPE="TEXT" NAME="new_artifact_address" VALUE="'.$this->getEmailAddress().'" SIZE="55" MAXLENGTH="255"> 
-			&nbsp;&nbsp;&nbsp;(send on all updates) <INPUT TYPE="CHECKBOX" NAME="send_all_artifacts" VALUE="1" '. (($this->emailAll())?'CHECKED':'') .'><BR><br>';
+			&nbsp;&nbsp;&nbsp;'.$LANG->getText('tracker_include_type','send_all').' <INPUT TYPE="CHECKBOX" NAME="send_all_artifacts" VALUE="1" '. (($this->emailAll())?'CHECKED':'') .'><BR><br>';
 		} else {
 		    if ($this->getEmailAddress())
 				echo '
-			              <P>The project administrator have configured the following email addresses to receive
-			notification of new artifact submission (and possibly updates).<P><u>Recipients</u>: '.
+			              '.$LANG->getText('tracker_include_type','admin_conf').' '.
 				    $this->getEmailAddress().'
-				&nbsp;&nbsp;&nbsp; (Send on all updates: '.(($this->emailAll())?'Yes':'No').')<p>';
+				&nbsp;&nbsp;&nbsp; '.$LANG->getText('tracker_include_type','send_all_or_not',($this->emailAll()?$LANG->getText('global','yes'):$LANG->getText('global','no'))).'<p>';
 		    else
 				echo '
-			                <P>The project administrator hasn\'t yet specified email addresses that will systematically receive
-			 email notification of new artifacts.<P>';
+			                '.$LANG->getText('tracker_include_type','admin_not_conf');
 		}
 		 
 		
-		echo '<h3>Personal Email Notification</h3>';
+		echo '<h3>'.$LANG->getText('tracker_include_type','perso_mail_notif').'</h3>';
 		  
 		if ($this->userIsTech()) {
 		    // To watch other users you must have at least tech rights on the tracker
 		    echo'
-		<h4>Users To Watch '.
+		<h4>'.$LANG->getText('tracker_include_type','users_to_watch').' '.
 		help_button('TrackerAdministration.html#TrackerWatchers').'</h4>
-		<P>If you want to be the backup of someone when they\'re away from the office, or if you need to do the QA to all their artifacts. '.$GLOBALS['sys_name'].' can send their email notification to you also. List the login name of any user you wish to watch, separated by commas.</b>
+		<P>'.$LANG->getText('tracker_include_type','backup_person',$GLOBALS['sys_name']).'
 		<p><INPUT TYPE="TEXT" NAME="watchees" VALUE="'.$watchees.'" SIZE="55" MAXLENGTH="255"><br></p>
 		';
 		
@@ -1568,27 +1572,24 @@ class ArtifactTypeHtml extends ArtifactType {
 		    $watchers = substr($watchers,0,-1); // remove extra comma at the end
 		    
 		    if ($watchers) {
-				echo "<p>For your information your own artifact notifications are currently watched by: <u>$watchers</u>";
+				echo "<p>".$LANG->getText('tracker_include_type','watchers',$watchers);
 		    } else {
-				echo "<p>For your information <u>nobody</u> is currently watching your own artifact notifications ";
+				echo "<p>".$LANG->getText('tracker_include_type','no_watcher');
 		    }
 		    echo '<br><br>';
 		}
 		
 		// Build Role/Event table 
 		// Rk: Can't use html_build_list_table_top because of the specific layout
-		echo '<h4>Event/Role Specific Settings '.
+		echo '<h4>'.$LANG->getText('tracker_include_type','event_settings').' '.
 		help_button('TrackerAdministration.html#TrackerEventRoleBasedEmailNotification').'</h4>
-		              <P>You can tune your notification settings and decide what artifact changes you
-		want to be aware of depending on your role. <p>
-		<b><u>Note</u></b>: Notification of *new* artifact submission to people other than the assignee
-		 or the submitter can be configured by the project administrator in the <a href="#GlobalEmailNotification">Global Email Notification section</a> above.<p>';
+		              <P>'.$LANG->getText('tracker_include_type','tune_settings').'<p>';
 		
 		echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		<table BORDER="0" CELLSPACING="1" CELLPADDING="2" class="small">
 		<tr class="boxtitle">
-		    <td colspan="'.$this->num_roles.'" align="center" width="50%"><b>If my role in an artifact is:</b></td>
-		    <td rowspan="2" width="50%"><b>&nbsp;&nbsp;&nbsp;I want to be notified when:</b></td>
+		    <td colspan="'.$this->num_roles.'" align="center" width="50%"><b>'.$LANG->getText('tracker_include_type','role_is').'</b></td>
+		    <td rowspan="2" width="50%"><b>&nbsp;&nbsp;&nbsp;'.$LANG->getText('tracker_include_type','nofify_me').'</b></td>
 		</tr>';
 		
 		for ($i=0; $i<$this->num_roles; $i++) {
@@ -1624,7 +1625,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		</table>
 		
 		<HR>
-		<P align="center"><INPUT type="submit" name="submit" value="Submit Changes">
+		<P align="center"><INPUT type="submit" name="submit" value="'.$LANG->getText('tracker_include_artifact','submit').'">
 		</FORM>';
 			
 		
@@ -1639,14 +1640,14 @@ class ArtifactTypeHtml extends ArtifactType {
 	 *  @return void
 	 */
 	function displayDefaultValueForm($field_id,$default_value) {
-		global $ath,$art_field_fact,$PHP_SELF;
+		global $ath,$art_field_fact,$PHP_SELF,$LANG;
 		
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( !$field ) {
 			return;
 		}
 
-		echo '<h3>Define Default Value '.help_button('TrackerAdministration.html#TrackerDefiningaDefaultFieldValue').'</h3>';
+		echo '<h3>'.$LANG->getText('tracker_include_type','def_default').' '.help_button('TrackerAdministration.html#TrackerDefiningaDefaultFieldValue').'</h3>';
 					
 		echo '
 	      <FORM ACTION="'.$PHP_SELF.'" METHOD="POST" name="artifact_form">
@@ -1657,19 +1658,19 @@ class ArtifactTypeHtml extends ArtifactType {
 		  <script language="JavaScript" src="/include/calendar.js"></script>';
 
 		if ( $field->isSelectBox() || $field->isMultiSelectBox() ) {
-			echo 'Value: ';
+			echo $LANG->getText('tracker_include_type','val').': ';
 			echo html_build_select_box ($field->getFieldValues($this->getID(),"'A','P'"),"default_value",$default_value);
 		} else if ( $field->isDateField() ) {
-			echo 'Value: <INPUT TYPE="text" name="default_value"'.
+			echo $LANG->getText('tracker_include_type','val').': <INPUT TYPE="text" name="default_value"'.
 			' size="10" MAXLENGTH="10" VALUE="'.($default_value?format_date("Y-m-j",$default_value,''):'').'">'.
 			'<a href="javascript:show_calendar(\'document.artifact_form.default_value\', document.artifact_form.default_value.value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
 			'<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="Click Here to Pick up a date"></a>';
 		} else {
-	      	echo 'Value: <INPUT TYPE="text" NAME="default_value" VALUE="'.$default_value.'">';
+	      	echo $LANG->getText('tracker_include_type','val').': <INPUT TYPE="text" NAME="default_value" VALUE="'.$default_value.'">';
 		}
 
 		echo '
-		<INPUT type="submit" name="submit" value="Update">
+		<INPUT type="submit" name="submit" value="'.$LANG->getText('global','btn_update').'">
 		</form><hr>';
 	}
 
@@ -1682,15 +1683,18 @@ class ArtifactTypeHtml extends ArtifactType {
 	 *
 	 *  @return void
 	 */
-	function displayDefaultValueFunctionForm($field_id,$default_value,$show_none=true,$text_none='None',$show_any=false,$text_any='Any',$show_value=false) {
-		global $ath,$art_field_fact,$PHP_SELF;
+	function displayDefaultValueFunctionForm($field_id,$default_value,$show_none=true,$text_none=false,$show_any=false,$text_any=false,$show_value=false) {
+		global $ath,$art_field_fact,$PHP_SELF,$LANG;
 		
+		if (!$text_any) $text_any=$LANG->getText('global','any');
+		if (!$text_none) $text_none=$LANG->getText('global','none');
+
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( !$field ) {
 			return;
 		}
 
-		echo '<h3>Define Default Value '.help_button('TrackerAdministration.html#TrackerDefiningaDefaultFieldValue').'</h3>';
+		echo '<h3>'.$LANG->getText('tracker_include_type','def_default').' '.help_button('TrackerAdministration.html#TrackerDefiningaDefaultFieldValue').'</h3>';
 					
 		echo '
 	      <FORM ACTION="'.$PHP_SELF.'" METHOD="POST" name="artifact_form">
@@ -1714,7 +1718,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		}
 
 		echo '
-		 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <INPUT type="submit" name="submit" value="Update">
+		 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <INPUT type="submit" name="submit" value="'.$LANG->getText('global','btn_update').'">
 		</form><hr>';
 	}
 
@@ -1726,15 +1730,17 @@ class ArtifactTypeHtml extends ArtifactType {
 	 *  @return string
 	 */
 	function getLabelValueStatus($status) {
+	  global $LANG;
+
 		switch ( $status ) {
 		case "P":
-			return "Permanent";
+			return $LANG->getText('tracker_include_type','permanent');
 		case "A":
-			return "Active";
+			return $LANG->getText('tracker_include_type','active');
 		case "H":
-			return "Hidden";
+			return $LANG->getText('tracker_include_type','hidden');
 		default:
-			return "Unknow status:".$status;
+			return $LANG->getText('tracker_include_type','unknown_stat').":".$status;
 		}
 	}
 
@@ -1744,14 +1750,14 @@ class ArtifactTypeHtml extends ArtifactType {
 	 *  @return void
 	 */
 	function reportingMainPage() {
-		global $art_field_fact;
+		global $art_field_fact,$LANG;
 	
-		$this->header(array("title"=>"Tracker '".$this->getName()."' - Reporting System",
+		$this->header(array("title"=>$LANG->getText('tracker_import_admin','tracker')." '".$this->getName()."' - ".$LANG->getText('tracker_include_type','report_system'),
 				  'help' => 'TrackerReporting.html'));
 	
-		echo '<H2>Tracker Reporting System</H2>';
+		echo '<H2>'.$LANG->getText('tracker_include_type','tracker_report_syst').'</H2>';
 		echo "\n<P>";
-		echo "\n<A HREF=\"/tracker?func=reporting&group_id=".$this->Group->getID()."&atid=".$this->getID()."&field=aging\">Aging Report</A><BR>";
+		echo "\n<A HREF=\"/tracker?func=reporting&group_id=".$this->Group->getID()."&atid=".$this->getID()."&field=aging\">".$LANG->getText('tracker_include_type','aging_rep')."</A><BR>";
 	
 		$fields = $art_field_fact->getAllUsedFields();
 	
@@ -1774,23 +1780,23 @@ class ArtifactTypeHtml extends ArtifactType {
 	 *  @return void
 	 */
 	function reportingByAge() {
-		global $DOCUMENT_ROOT;
+		global $DOCUMENT_ROOT,$LANG;
 	
-		$this->header(array("title"=>"Tracker '".$this->getName()."' - Aging Report",
+		$this->header(array("title"=>$LANG->getText('tracker_import_admin','tracker')." '".$this->getName()."' - ".$LANG->getText('tracker_include_type','aging_rep'),
 				  'help' => 'TrackerReporting.html'));
 	
 		
 		$closedItems = $this->getArtifactsByAge();
 	
 	
-		echo '<H2>Tracker Aging Report</H2>';
+		echo '<H2>'.$LANG->getText('tracker_include_type','tracker_aging_rep').'</H2>';
 	
-		GraphIt($closedItems['names'], $closedItems['values'],"Average Turnaround Time For Closed ".$this->getItemName()."s");
+		GraphIt($closedItems['names'], $closedItems['values'],$LANG->getText('tracker_include_type','avg_time',$this->getItemName()."s"));
 		echo "<P>";
 	
 		$openItems = $this->getOpenArtifactsByAge();
 		
-		GraphIt($openItems['names'], $openItems['values'],"Number of Opened ".$this->getItemName()."s");
+		GraphIt($openItems['names'], $openItems['values'],$LANG->getText('tracker_include_type','nb_open',$this->getItemName()."s"));
 		$this->footer(array());
 	}
 	
@@ -1800,11 +1806,11 @@ class ArtifactTypeHtml extends ArtifactType {
 	 *  @return void
 	 */
 	function reportingByField($field_id) {
-		global $art_field_fact, $DOCUMENT_ROOT;
+		global $art_field_fact, $DOCUMENT_ROOT,$LANG;
 	
 		$field = $art_field_fact->getFieldFromId($field_id);
 	
-		$this->header(array("title"=>"Tracker '".$this->getName()."' - Reporting on field '".$field->getLabel()."'",
+		$this->header(array("title"=>$LANG->getText('tracker_import_admin','tracker')." '".$this->getName()."' - ".$LANG->getText('tracker_include_type','rep_field')." '".$field->getLabel()."'",
 				  'help' => 'TrackerReporting.html'));
 	
 		if ($field->isStandardField()) {
@@ -1815,12 +1821,12 @@ class ArtifactTypeHtml extends ArtifactType {
 			$allItems = $this->getArtifactsByField($field);
 		}
 	
-		echo '<H3>Open \'<a href="/tracker?group_id='.$this->Group->getID().'&atid='.$this->getID().'">'.$this->getName().'</a>\' by '.$field->getLabel().'</H3>';
+		echo '<H3>'.$LANG->getText('tracker_include_type','open_by',array('\'<a href="/tracker?group_id='.$this->Group->getID().'&atid='.$this->getID().'">'.$this->getName().'</a>\'',$field->getLabel())).'</H3>';
 	
-		GraphIt($openItems['names'], $openItems['values'],"Open ".$this->getItemName()." By ".$field->getLabel());
-		echo '<H3>All \'<a href="/tracker?group_id='.$this->Group->getID().'&atid='.$this->getID().'">'.$this->getName().'</a>\' by '.$field->getLabel().'</H3>';
+		GraphIt($openItems['names'], $openItems['values'],$LANG->getText('tracker_include_type','open_by',array($this->getItemName(),$field->getLabel())));
+		echo '<H3>'.$LANG->getText('tracker_include_type','all_by',array('\'<a href="/tracker?group_id='.$this->Group->getID().'&atid='.$this->getID().'">'.$this->getName().'</a>\'',$field->getLabel())).'</H3>';
 	
-		GraphIt($allItems['names'], $allItems['values'],"All ".$this->getItemName()." By ".$field->getLabel());
+		GraphIt($allItems['names'], $allItems['values'],$LANG->getText('tracker_include_type','all_by',array($this->getItemName(),$field->getLabel())));
 		$this->footer(array());
 	
 	}
@@ -1838,7 +1844,7 @@ class ArtifactTypeHtml extends ArtifactType {
          * @return void
          */
         function displayMassChange($mass_change_ids=null,$query=null,$art_report_html=null) {
-            global $PHP_SELF,$art_field_fact,$sys_datefmt,$sys_max_size_attachment;
+            global $PHP_SELF,$art_field_fact,$sys_datefmt,$sys_max_size_attachment,$LANG;
             
             $fields_per_line=2;
             $max_size=40;
@@ -1857,7 +1863,7 @@ class ArtifactTypeHtml extends ArtifactType {
 	    }
             
 	    //if ($mass_change_ids) {
-            	echo "<H2>Changing ".count($mass_change_ids)." selected item(s): </H2>";
+            	echo '<H2>'.$LANG->getText('tracker_include_type','changing_items',count($mass_change_ids)).' </H2>';
 		reset($mass_change_ids);
 		while ( list($key, $val) = each($mass_change_ids)) {
 			if ($key == 0) echo "<a href=\"/tracker/?func=detail&group_id=$group_id&aid=$val&atid=$atid\">".$this->getItemName()." #$val</a>";
@@ -1887,18 +1893,18 @@ class ArtifactTypeHtml extends ArtifactType {
 		//first special case for submitted_by
 		$field = $art_field_fact->getFieldFromName('submitted_by');
 		$field_html = new ArtifactFieldHtml($field);
-		$field_value = "Unchanged";
+		$field_value = $LANG->getText('global','unchanged');
                                 
                 list($sz,) = explode("/",$field->getDisplaySize());
                 $label = $field_html->labelDisplay(false,false,!$ro);
                 // original submission field must be displayed read-only
-                $value = $field_html->display($this->getID(),$field_value,false,false,$ro,false,false,'None',false,'Any',true,'Unchanged');
+                $value = $field_html->display($this->getID(),$field_value,false,false,$ro,false,false,$LANG->getText('global','none'),false,'Any',true,'Unchanged');
 
                 echo "\n<TR>";
                 echo '
 	    <TD valign="middle">'.$label.'&nbsp;</TD>
             <TD valign="middle">'.$value.'&nbsp;</TD>
-            <TD colspan="2"><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit Mass Changes"></TD>';
+            <TD colspan="2"><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$LANG->getText('tracker_include_type','submit_mass_change').'"></TD>';
             	echo '
             </TR>
             <TR><TD COLSPAN="'.($fields_per_line*2).'">&nbsp</TD></TR>
@@ -1921,11 +1927,11 @@ class ArtifactTypeHtml extends ArtifactType {
                                 // if field size is greatest than max_size chars then force it to
                                 // appear alone on a new line or it won't fit in the page
                                 
-                                $field_value = "Unchanged";
+                                $field_value = $LANG->getText('global','unchanged');
                                 
                                 list($sz,) = explode("/",$field->getDisplaySize());
                                 $label = $field_html->labelDisplay(false,false,!$ro);
-                                $value = $field_html->display($this->getID(),$field_value,false,false,$ro,false,false,'None',false,'Any',true,'Unchanged');
+                                $value = $field_html->display($this->getID(),$field_value,false,false,$ro,false,false,$LANG->getText('global','none'),false,$LANG->getText('global','any'),true,$LANG->getText('global','unchanged'));
 
                                         
                                 // Details field must be on one row
@@ -1957,19 +1963,19 @@ class ArtifactTypeHtml extends ArtifactType {
                 echo '
 	    <TR><TD colspan="2" align="top"><HR></td></TR>
 	    <TR><TD>
-            <h3>Follow-up Comments '.help_button('ArtifactUpdate.html#ArtifactComments').'</h3></td>
+            <h3>'.$LANG->getText('tracker_import','follow_ups').' '.help_button('ArtifactUpdate.html#ArtifactComments').'</h3></td>
             <TD>
-            <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit Mass Changes">
+            <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$LANG->getText('tracker_include_type','submit_mass_change').'">
             </td></tr>';
 
                 echo '
             <tr><TD colspan="2" align="top">
-            <B>Use a Canned Response:</B>&nbsp;';
+            <B>'.$LANG->getText('tracker_include_artifact','use_canned').'</B>&nbsp;';
                         
                 echo $this->cannedResponseBox ();
                         
                 echo '
-            &nbsp;&nbsp;&nbsp;<A HREF="/tracker/admin/?func=canned&atid='.$atid.'&group_id='.$group_id.'&create_canned=1">Or define a new Canned Response</A>
+            &nbsp;&nbsp;&nbsp;<A HREF="/tracker/admin/?func=canned&atid='.$atid.'&group_id='.$group_id.'&create_canned=1">'.$LANG->getText('tracker_include_artifact','define_canned').'</A>
             </TD></TR>';
                         
                 echo '
@@ -1978,8 +1984,8 @@ class ArtifactTypeHtml extends ArtifactType {
                 $field = $art_field_fact->getFieldFromName('comment_type_id');
                 if ( $field ) {
                      $field_html = new ArtifactFieldHtml( $field );
-                     echo '<P><B>Comment Type:</B>'.
-                          $field_html->fieldBox('',$atid,$field->getDefaultValue(),true,'None').'<BR>';
+                     echo '<P><B>'.$LANG->getText('tracker_include_artifact','comment_type').'</B>'.
+                          $field_html->fieldBox('',$atid,$field->getDefaultValue(),true,$LANG->getText('global','none')).'<BR>';
                 }
                 echo '<TEXTAREA NAME="details" ROWS="7" COLS="60" WRAP="SOFT"></TEXTAREA><p>';
                                 
@@ -1993,13 +1999,11 @@ class ArtifactTypeHtml extends ArtifactType {
                 <TR><TD colspan="2"><hr></td></tr>
                 
                 <TR><TD colspan="2">
-                <h3>CC List '.help_button('ArtifactUpdate.html#ArtifactCCList').'</h3>';
+                <h3>'.$LANG->getText('tracker_import','cc_list').' '.help_button('ArtifactUpdate.html#ArtifactCCList').'</h3>';
                 
                 if ( !$ro ) {
                         echo '
-                        <b><u>Note:</b></u> for CodeX users use their login name rather than their email addresses.<br>Fill your list using comma or semi-column as separator.<p>
-                        <B>Add CC:&nbsp;</b><input type="text" name="add_cc" size="30">&nbsp;&nbsp;&nbsp;
-                        <B>Comment:&nbsp;</b><input type="text" name="cc_comment" size="40" maxlength="255"><p>';
+                        '.$LANG->getText('tracker_include_artifact','codex_user').$LANG->getText('tracker_include_artifact','fill_cc_list');
                 }
                 
 	
@@ -2015,18 +2019,10 @@ class ArtifactTypeHtml extends ArtifactType {
                 echo '
                 <TR><TD colspan="2"><hr></td></tr>
                 <TR><TD colspan="2">
-                <h3>Attachments '.help_button('ArtifactUpdate.html#ArtifactAttachments').'</h3>';
+                <h3>'.$LANG->getText('tracker_include_artifact','attachment').' '.help_button('ArtifactUpdate.html#ArtifactAttachments').'</h3>';
                 
 
-                echo '
-                        <B>Check to Upload&hellip;  <input type="checkbox" name="add_file" VALUE="1">
-                        &nbsp;&hellip;&amp; Attach File:</B>
-                        <input type="file" name="input_file" size="40">
-                        <br><span class="small"><i>(The maximum upload file size is '.formatByteToMb($sys_max_size_attachment).' Mb - <u>Please compress your files</u>)</i></span>
-                        <P>
-                        <B>File Description:</B>&nbsp;
-                        <input type="text" name="file_description" size="60" maxlength="255">
-                        <P>';
+                echo $LANG->getText('tracker_include_artifact','upload',formatByteToMb($sys_max_size_attachment));
                                 
 		reset($mass_change_ids);
                 echo $this->showAttachedFiles($mass_change_ids);
@@ -2039,14 +2035,14 @@ class ArtifactTypeHtml extends ArtifactType {
                 <TR><TD colspan="2"><hr></td></tr>
                 <TR ><TD colspan="2">';
                 
-                echo '<h3>Dependencies '.help_button('ArtifactUpdate.html#ArtifactDependencies').'</h3>
-                <B>Dependent on:</B><BR>
+                echo '<h3>'.$LANG->getText('tracker_include_artifact','dependencies').' '.help_button('ArtifactUpdate.html#ArtifactDependencies').'</h3>
+                <B>'.$LANG->getText('tracker_include_artifact','dependent_on').'</B><BR>
                 <P>';
                 if ( !$ro ) {
                         echo '
-                        <B>Artifact IDs:</B>&nbsp;
+                        <B>'.$LANG->getText('tracker_include_artifact','aid').'</B>&nbsp;
                         <input type="text" name="artifact_id_dependent" size="20" maxlength="255">
-                        &nbsp;<i>(Fill your list using the comma as separator)</i><p>';
+                        &nbsp;<i>'.$LANG->getText('tracker_include_artifact','fill').'</i><p>';
                 }
 		echo $this->showDependencies($mass_change_ids);
 
@@ -2054,7 +2050,7 @@ class ArtifactTypeHtml extends ArtifactType {
         	echo '<TR><TD colspan="2"><hr></td></tr>';                        
 		echo '</TD></TR>                
                         <TR><TD colspan="2" ALIGN="center">
-                                <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit Mass Changes">
+                                <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$LANG->getText('tracker_include_type','submit_mass_change').'">
                                 </FORM>
                         </TD></TR>';
                 
@@ -2069,15 +2065,16 @@ class ArtifactTypeHtml extends ArtifactType {
 	* @param change_ids: all the ids of the artifacts affected
 	*/
 	function showCCList($change_ids) {
+	  global $LANG;
 		$out = "";
 			
 		$result = $this->getCC($change_ids);			
 		
 		if (db_numrows($result) > 0) {
 			$title_arr=array();
-                        $title_arr[]='CC Address';
-                        $title_arr[]='Occurrence';
-                        $title_arr[]='Delete?';
+                        $title_arr[]=$LANG->getText('tracker_include_artifact','cc_address');
+                        $title_arr[]=$LANG->getText('tracker_include_type','occurrence');
+                        $title_arr[]=$LANG->getText('tracker_include_canned','delete');
                         $out .= html_build_list_table_top ($title_arr);
                 
                         $fmt = "\n".'<TR class="%s"><td>%s</td><td align="center">%s</td><td align="center">%s</td></tr>';				
@@ -2132,15 +2129,16 @@ class ArtifactTypeHtml extends ArtifactType {
 	* @param change_ids: all the ids of the artifacts affected
 	*/
 	function showAttachedFiles($change_ids) {
+	  global $LANG;
 		$out = "";
 		$result = $this->getAttachedFiles($change_ids);		
 	
 		if (db_numrows($result) > 0) {
 			$title_arr=array();
-                	$title_arr[]='Name';
-                	$title_arr[]='Size (KB)';
-                	$title_arr[]='Occurrence';
-            		$title_arr[]='Delete?';
+                	$title_arr[]=$LANG->getText('tracker_include_artifact','name');
+                	$title_arr[]=$LANG->getText('tracker_include_artifact','size_kb');
+                	$title_arr[]=$LANG->getText('tracker_include_type','occurrence');
+            		$title_arr[]=$LANG->getText('tracker_include_canned','delete');
         
                 	$out .= html_build_list_table_top ($title_arr);
 
@@ -2194,18 +2192,19 @@ class ArtifactTypeHtml extends ArtifactType {
          * @return string
          */
         function showDependencies ($change_ids) {
+	  global $LANG;
             $result=$this->getDependencies($change_ids);
             $rows=db_numrows($result);
         
             // Nobody in the dependencies list -> return now
             if ($rows > 0) {
             	$title_arr=array();
-              	$title_arr[]='Artifact';
-                $title_arr[]='Summary';
-                $title_arr[]='Tracker';
-                $title_arr[]='Group';
-                $title_arr[]='Occurrence';
-                $title_arr[]='Delete?';
+              	$title_arr[]=$LANG->getText('tracker_include_artifact','artifact');
+                $title_arr[]=$LANG->getText('tracker_include_artifact','summary');
+                $title_arr[]=$LANG->getText('tracker_import_admin','tracker');
+                $title_arr[]=$LANG->getText('tracker_import_admin','group');
+                $title_arr[]=$LANG->getText('tracker_include_type','occurrence');
+                $title_arr[]=$LANG->getText('tracker_include_canned','delete');
                 $out .= html_build_list_table_top ($title_arr);
                 
                 $fmt = "\n".'<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td>'.

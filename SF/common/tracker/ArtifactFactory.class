@@ -13,6 +13,8 @@
 //require($DOCUMENT_ROOT.'/../common/include/Error.class');
 //require($DOCUMENT_ROOT.'/../common/tracker/Artifact.class');
 
+$LANG->loadLanguageMsg('tracker/tracker');
+
 class ArtifactFactory extends Error {
 
 	/**
@@ -29,9 +31,11 @@ class ArtifactFactory extends Error {
 	 *	@return	boolean	success.
 	 */
 	function ArtifactFactory(&$ArtifactType) {
+	  global $LANG;
+
 		$this->Error();
 		if (!$ArtifactType || !is_object($ArtifactType)) {
-			$this->setError('ArtifactFactory:: No Valid ArtifactType Object');
+			$this->setError('ArtifactFactory:: '.$LANG->getText('tracker_common_canned','not_valid'));
 			return false;
 		}
 		if ($ArtifactType->isError()) {
@@ -51,6 +55,7 @@ class ArtifactFactory extends Error {
 	 *	@return	array	The array of Artifact objects.
 	 */
 	function getMyArtifacts($user_id) {
+	  global $LANG;
 
 		$artifacts = array();
 
@@ -65,7 +70,7 @@ class ArtifactFactory extends Error {
 		$rows = db_numrows($result);
 		$this->fetched_rows=$rows;
 		if (db_error()) {
-			$this->setError('Database Error: '.db_error());
+			$this->setError($LANG->getText('tracker_common_factory','db_err').': '.db_error());
 			return false;
 		} else {
 			while ($arr = db_fetch_array($result)) {
@@ -86,7 +91,7 @@ class ArtifactFactory extends Error {
 		$rows = db_numrows($result);
 		$this->fetched_rows=$rows;
 		if (db_error()) {
-			$this->setError('Database Error: '.db_error());
+			$this->setError($LANG->getText('tracker_common_factory','db_err').': '.db_error());
 			return false;
 		} else {
 			while ($arr = db_fetch_array($result)) {

@@ -10,6 +10,8 @@
 //require($DOCUMENT_ROOT.'/../common/include/Error.class');
 //require($DOCUMENT_ROOT.'/../common/tracker/ArtifactReport.class');
 
+$LANG->loadLanguageMsg('tracker/tracker');
+
 class ArtifactReportFactory extends Error {
 
 	/**
@@ -45,7 +47,8 @@ class ArtifactReportFactory extends Error {
 	 *	@return	boolean
 	 */
 	function copyReports($atid_source,$atid_dest) {
-		
+	  global $LANG;
+
 		//
 		// Copy artifact_report records
 		//
@@ -63,7 +66,7 @@ class ArtifactReportFactory extends Error {
 	    				  
 			$res_insert = db_query($sql_insert);
 			if (!$res_insert || db_affected_rows($res_insert) <= 0) {
-				$this->setError("Error during inserting artifact_report (".$report_array["report_id"]."-".$atid_dest."): ".db_error());
+				$this->setError($LANG->getText('tracker_common_reportfactory','ins_err',array($report_array["report_id"],$atid_dest,db_error())));
 				return false;
 			}
 			
@@ -94,7 +97,7 @@ class ArtifactReportFactory extends Error {
 		    	//echo $sql_insert;
 				$res_insert = db_query($sql_insert);
 				if (!$res_insert || db_affected_rows($res_insert) <= 0) {
-					$this->setError("Error during inserting artifact_report_field (".$report_array["report_id"]."-".$field_array["field_name"]."): ".db_error());
+					$this->setError($LANG->getText('tracker_common_reportfactory','f_ind_err',array($report_array["report_id"],$field_array["field_name"],db_error())));
 					return false;
 				}
 			} // while

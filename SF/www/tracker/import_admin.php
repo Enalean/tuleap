@@ -14,6 +14,8 @@ require($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactTypeFactory.class');
 
+$LANG->loadLanguageMsg('tracker/tracker');
+
 if ($group_id && $mode == "admin") {
 
 
@@ -30,24 +32,17 @@ if ($group_id && $mode == "admin") {
   }		   
   $atf = new ArtifactTypeFactory($group);
   if (!$group || !is_object($group) || $group->isError()) {
-	exit_error('Error','Could Not Get ArtifactTypeFactory');
+    exit_error($LANG->getText('global','error'),$LANG->getText('tracker_import_admin','not_get_atf'));
   }
 
 
-  $pg_title = 'Tracker Artifact Import '.$groupname;
+  $pg_title = $LANG->getText('tracker_import_admin','art_import', $groupname);
   
   
   project_admin_header(array('title'=>$pg_title,
 			     'help' => 'ArtifactImport.html'));
   // Display the welcome screen
-  echo '
-    <P> You can import artifacts into a specific tracker from
-    a text file (CSV format).
-																			 
-    <h3>Tracker Artifact Import</h3>
-										
-    <P>Click on the links below to import artifacts (insert of new artifacts or update of existing ones) or to see the CSV import format.
-    <P>';
+  echo $LANG->getText('tracker_import_admin','welcome');
 		
   // Show all the fields currently available in the system
   echo '<p><TABLE WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="2">';
@@ -55,10 +50,10 @@ if ($group_id && $mode == "admin") {
   <tr class="boxtable"> 
     <td class="boxtitle">&nbsp;</td>
     <td class="boxtitle"> 
-      <div align="center"><b>Artifacts Data Import</b></div>
+      <div align="center"><b>'.$LANG->getText('tracker_import_admin','art_data_import').'</b></div>
     </td>
     <td class="boxtitle"> 
-      <div align="center"><b>Import Format</b></div>
+      <div align="center"><b>'.$LANG->getText('tracker_import_admin','import_format').'</b></div>
     </td>
  </tr>';
   
@@ -69,12 +64,12 @@ if ($group_id && $mode == "admin") {
     for ($j = 0; $j < count($at_arr); $j++) {
       echo '
 		  <tr class="'.util_get_alt_row_color($j).'"> 
-		    <td><b>Tracker: '.$at_arr[$j]->getName().'</b></td>
+		    <td><b>'.$LANG->getText('tracker_import_admin','tracker').': '.$at_arr[$j]->getName().'</b></td>
 		    <td align="center">
-                      <a href="/tracker/index.php?group_id='.$group_id.'&atid='.$at_arr[$j]->getID().'&user_id='.user_getid().'&func=import">Import</a>
+                      <a href="/tracker/index.php?group_id='.$group_id.'&atid='.$at_arr[$j]->getID().'&user_id='.user_getid().'&func=import">'.$LANG->getText('tracker_import_admin','import').'</a>
 		    </td>
 		    <td align="center"> 
-		      <a href="/tracker/index.php?group_id='.$group_id.'&atid='.$at_arr[$j]->getID().'&user_id='.user_getid().'&mode=showformat&func=import">Show Format</a>
+		      <a href="/tracker/index.php?group_id='.$group_id.'&atid='.$at_arr[$j]->getID().'&user_id='.user_getid().'&mode=showformat&func=import">'.$LANG->getText('tracker_import_admin','show_format').'</a>
 		    </td>
 		  </tr>';
     }

@@ -10,6 +10,8 @@
 //require($DOCUMENT_ROOT.'/../common/include/Error.class');
 //require($DOCUMENT_ROOT.'/../common/tracker/ArtifactReportField.class');
 
+$LANG->loadLanguageMsg('tracker/tracker');
+
 //
 // Sort functions - Must be outside the classes
 //
@@ -84,7 +86,7 @@ class ArtifactReport extends Error {
 	 *	@return true on success, false on failure.
 	 */
 	function recreate($user_id,$name,$description,$scope) {
-		global $ath;
+		global $ath,$LANG;
 		/* 
 		$perm = $ath->Group->getPermissionFromId( $user_id);
 	
@@ -95,8 +97,8 @@ class ArtifactReport extends Error {
 	*/	
 	
 		if (!$name || !$description ||!$scope) {
-				$this->setError('ArtifactReport: Name, Description and scope are required');
-				echo 'ArtifactReport: Name, Description and scope are required';
+				$this->setError('ArtifactReport: '.$LANG->getText('tracker_common_report','name_requ'));
+				echo 'ArtifactReport: '.$LANG->getText('tracker_common_report','name_requ');
 				return false;
 		}
 	
@@ -144,7 +146,7 @@ class ArtifactReport extends Error {
 	 *	@return id on success, false on failure.
 	 */
 	function create($user_id,$name,$description,$scope) {
-		global $ath;
+		global $ath,$LANG;
 		/*$perm = $ath->Group->getPermissionFromId( $user_id);
 	
 			if (!$perm || !is_object($perm) || !$perm->isArtifactAdmin()) {
@@ -153,7 +155,7 @@ class ArtifactReport extends Error {
 			}
 	*/
 		if (!$name || !$description ||!$scope) {
-				$this->setError('ArtifactReport: Name, Description and scope are required');
+				$this->setError('ArtifactReport: '.$LANG->getText('tracker_common_report','name_requ'));
 				return false;
 			}
 	
@@ -177,25 +179,26 @@ class ArtifactReport extends Error {
 			$this->description = $description;
 			$this->name = $name;
 			$this->scope = $scope;
+
 			$this->fields = array();
 			return true;
 		}
 	}
 
     function add_report_field($field_name,$show_on_query,$show_on_result,$place_query,$place_result,$col_width) {
-		$sql = 'INSERT INTO artifact_report_field (report_id, field_name,'.
-		'show_on_query,show_on_result,place_query,place_result,col_width) VALUES ';
-	
-		$sql .= "('$this->report_id','$field_name',$show_on_query,$show_on_result,".
-			"$place_query,$place_result,$col_width)";
-		//echo $sql.'<br>';
-		$res = db_query($sql);
-		if ($res) {
-	   		return true;
-    	} else {
-       		return false;
-    	}
-	}
+      $sql = 'INSERT INTO artifact_report_field (report_id, field_name,'.
+	'show_on_query,show_on_result,place_query,place_result,col_width) VALUES ';
+      
+      $sql .= "('$this->report_id','$field_name',$show_on_query,$show_on_result,".
+	"$place_query,$place_result,$col_width)";
+      //echo $sql.'<br>';
+      $res = db_query($sql);
+      if ($res) {
+	return true;
+      } else {
+	return false;
+      }
+    }
 
 	/**
 	 *	fetchData - re-fetch the data for this ArtifactReport from the database.
@@ -204,6 +207,7 @@ class ArtifactReport extends Error {
 	 *	@return	boolean	success.
 	 */
 	function fetchData($report_id) {
+	  global $LANG;
 		
 		// Read the report infos
 		$sql = "SELECT * FROM artifact_report ".
@@ -211,7 +215,7 @@ class ArtifactReport extends Error {
 		//echo $sql.'<br>';
 		$res=db_query($sql);
 		if (!$res || db_numrows($res) < 1) {
-			$this->setError('ArtifactReport:fetchData unfound report');
+			$this->setError('ArtifactReport: '.$LANG->getText('tracker_common_report','not_found'));
 			return false;
 		}
 		$data_array = db_fetch_array($res);
@@ -317,6 +321,7 @@ class ArtifactReport extends Error {
 	 * @return array
 	 */
 	function getSortedFields() {
+	  global $group;
 		$result_fields = array();
 
 		if ( count($this->fields) == 0 ) return $query_fields;
@@ -328,7 +333,7 @@ class ArtifactReport extends Error {
 				$result_fields[$key] = $field;
 			}
 		}
-		
+
 		uasort($result_fields,cmp_place_result);
 		return $result_fields;
 	}
@@ -668,10 +673,10 @@ class ArtifactReport extends Error {
 	  
 	  // Get the order fields
 	  $fields_order = $this->getFieldsOrder($morder);
+	  //echo "morder=$morder, fields_order: ".implode(",",array_keys($fields_order))."<br>\n";
 	  
 	  $fields_order_result = array();
 	  
-	  $order_by_count = 0;
 	  $select_count = 0;
 	  
 	  if ( count($fields) == 0 )
@@ -711,7 +716,6 @@ class ArtifactReport extends Error {
 	      
 	      // Set the fields_order_result array to	build the order_by			
 	      if ( $fields_order[$field->getName()] ) {
-		$order_by_count ++;
 		
 		if ( ($field->isUsername())&&(!$field->isSelectBox())&&(!$field->isMultiSelectBox()) ) {
 		  $fields_order_result[$field->getName()] = "u.user_name";
@@ -755,7 +759,6 @@ class ArtifactReport extends Error {
 	      
 	      // Set the fields_order_result array to	build the order_by			
 	      if ( $fields_order[$field->getName()] ) {
-		$order_by_count ++;
 		
 		if ( ($field->isUsername())&&(!$field->isSelectBox())&&(!$field->isMultiSelectBox()) ) {
 		  $fields_order_result[$field->getName()] = "u".$count.".user_name";
@@ -772,14 +775,20 @@ class ArtifactReport extends Error {
 	  
 	  
 	  // Build the order_by using the fields_order_result array
-	  if ( $order_by_count > 0 ) {
+	  if ( count($fields_order) > 0 ) {
 	    $i = 1;
 	    while (list($key,$field) = each($fields_order) ) {
 	      if ( $i > 1 ) {
 		$order_by .= ", ";
 	      }
-	      $order_by .= $fields_order_result[$key]." ".$fields_order[$key];
-	      
+
+	      //little special case for severity that is not always in the queryable fields of a report
+	      //but that should be there on default ...
+	      if ($key == 'severity') {
+		$order_by .= "a.severity ".$fields_order[$key];
+	      } else {
+		$order_by .= $fields_order_result[$key]." ".$fields_order[$key];
+	      }
 	      $i ++;
 	    }
 	  } else {

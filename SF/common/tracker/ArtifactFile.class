@@ -11,6 +11,8 @@
  */
 //require($DOCUMENT_ROOT.'/../common/include/Error.class');
 
+$LANG->loadLanguageMsg('tracker/tracker');
+
 class ArtifactFile extends Error {
 
 	/** 
@@ -35,11 +37,13 @@ class ArtifactFile extends Error {
 	 *  @return	boolean	success.
 	 */
 	function ArtifactFile(&$Artifact, $data=false) {
+	  global $LANG;
+
 		$this->Error(); 
 
 		//was Artifact legit?
 		if (!$Artifact || !is_object($Artifact)) {
-			$this->setError('ArtifactFile: No Valid Artifact');
+			$this->setError('ArtifactFile: '.$LANG->getText('tracker_common_file','invalid'));
 			return false;
 		}
 		//did ArtifactType have an error?
@@ -72,8 +76,10 @@ class ArtifactFile extends Error {
 	 *	@param	string	Item description.
 	 *  @return id on success / false on failure.
 	 */
-	function create($filename, $filetype, $filesize, $bin_data, $description='None',&$changes) {
+	function create($filename, $filetype, $filesize, $bin_data, $description=false,&$changes) {
+	  global $LANG;
 
+	  if (!$description) $description=$LANG->getText('global','none');
 		$old_value = $this->Artifact->getAttachedFileNames();
 
 		// Some browsers don't supply mime type if they don't know it
@@ -87,7 +93,7 @@ class ArtifactFile extends Error {
 		//
 		if (!$filename || !$filetype || !$filesize || !$bin_data) {
 			//echo '<P>|'.$filename.'|'.$filetype.'|'.$filesize.'|'.$bin_data.'|';
-			$this->setError('ArtifactFile: File name, type, size, and data are Required');
+			$this->setError('ArtifactFile: '.$LANG->getText('tracker_common_file','name_requ'));
 			return false;
 		}
 
@@ -135,12 +141,14 @@ class ArtifactFile extends Error {
 	 *	@return	boolean	success.
 	 */
 	function delete() {
+	  global $LANG;
+ 
 		$old_value = $this->Artifact->getAttachedFileNames();
 		$sql = "DELETE FROM artifact_file WHERE id=".$this->getID();
 		//echo "sql=$sql<br>";
 		$res=db_query($sql);
 		if (!$res || db_affected_rows($res) < 1) {
-			$this->setError('ArtifactFile: Unable to Delete');
+			$this->setError('ArtifactFile: '.$LANG->getText('tracker_common_file','del_err'));
 			return false;
 		} else {
 			$new_value = $this->Artifact->getAttachedFileNames();
@@ -156,11 +164,13 @@ class ArtifactFile extends Error {
 	 *	@return	boolean	success.
 	 */
 	function fetchData($id) {
+	  global $LANG;
+
 		$sql = "SELECT af.id, af.artifact_id, af.description, af.bin_data, af.filename, af.filesize, af.filetype, af.adddate, af.submitted_by, user.user_name, user.realname FROM artifact_file af, user WHERE (af.submitted_by = user.user_id) and af.id=$id";
 		//echo $sql;
 		$res=db_query($sql);
 		if (!$res || db_numrows($res) < 1) {
-			$this->setError('ArtifactFile: Invalid ArtifactFile ID');
+			$this->setError('ArtifactFile: '.$LANG->getText('tracker_common_file','invalid_id'));
 			return false;
 		}
 		$this->data_array = db_fetch_array($res);

@@ -31,6 +31,9 @@
 // $pv = printable version (=1)
 //
 
+
+$LANG->loadLanguageMsg('tracker/tracker');
+
 //
 //  make sure this person has permission to view artifacts
 //
@@ -40,7 +43,7 @@ if (!$ath->userCanView()) {
 
 // Check if this tracker is valid (not deleted)
 if ( !$ath->isValid() ) {
-	exit_error('Error',"This tracker is no longer valid.");
+	exit_error($LANG->getText('global', 'error'),$LANG->getText('tracker_add', 'invalid'));
 }
 
 //
@@ -241,7 +244,7 @@ if ($set=='my') {
 		// build part of the HTML title of this page for more friendly bookmarking
 		// Do not add the criteria in the header if value is "Any"
 		if ($value_id != 0) {
-		    $hdr .= ' By '.$field->getLabel().': '.
+		    $hdr .= $LANG->getText('global', 'by').$field->getLabel().': '.
 			$field->getValue($group_id,$value_id);
 		}
     }
@@ -269,7 +272,7 @@ if ($set=='my') {
    If not defined then defaults to ANY (0)
   ================================================== */
 
-$params=array('title'=>$group->getPublicName().': \''.$ath->getName().'\' Search Report',
+$params=array('title'=>$group->getPublicName().': \''.$ath->getName().'\' '.$LANG->getText('tracker_browse', 'search_report'),
               'titlevals'=>array($ath->getName()),
               'pagename'=>'tracker_browse',
               'atid'=>$ath->getID(),

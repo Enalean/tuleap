@@ -12,11 +12,13 @@
 require($DOCUMENT_ROOT.'/include/pre.php');
 require($DOCUMENT_ROOT.'/../common/include/GroupFactory.class');
 
+$LANG->loadLanguageMsg('tracker/tracker');
+
 $gf = new GroupFactory();
 ?>
 <html>
 <head>
-<title>Project Selection</title>
+<title><? $LANG-getText('tracker_group_selection','project_sel'); ?></title>
 <link rel="stylesheet" type="text/css" href="<? echo util_get_css_theme(); ?>">
 <script language="JavaScript">
 
@@ -58,12 +60,12 @@ function onChangeAllFilter() {
     </td>
   </tr>
   <tr>  
-    <td><input type="radio" name="radiobutton" value="radiobutton"<? if ( $filter == "member" ) echo " checked"; ?> onClick="onChangeMemberFilter()"> my projects</td>
-    <td><input type="radio" name="radiobutton" value="radiobutton"<? if ( $filter == "all" ) echo " checked"; ?> onClick="onChangeAllFilter()"> all projects</td>
+    <td><input type="radio" name="radiobutton" value="radiobutton"<? if ( $filter == "member" ) echo " checked"; ?> onClick="onChangeMemberFilter()"> <? $LANG-getText('tracker_group_selection','my_proj'); ?></td>
+    <td><input type="radio" name="radiobutton" value="radiobutton"<? if ( $filter == "all" ) echo " checked"; ?> onClick="onChangeAllFilter()"> <? $LANG-getText('tracker_group_selection','all_proj'); ?></td>
   </tr>
   <tr>
     <td colspan="2">
-    	<input type="button" name="selection" value="Select" onClick="doSelection(form_selection)">
+    	<input type="button" name="selection" value="<? $LANG-getText('global','select'); ?>" onClick="doSelection(form_selection)">
     </td>
   </tr>
 </table>

@@ -11,6 +11,8 @@
  */
 //require($DOCUMENT_ROOT.'/../common/include/Error.class');
 
+$LANG->loadLanguageMsg('tracker/tracker');
+
 class ArtifactCanned extends Error {
 
 	/** 
@@ -36,6 +38,8 @@ class ArtifactCanned extends Error {
 	 *  @return	boolean	success.
 	 */
 	function ArtifactCanned(&$ArtifactType, $data=false) {
+	  global $LANG;
+
 		$this->Error(); 
 
 		//was ArtifactType legit?
@@ -44,7 +48,7 @@ class ArtifactCanned extends Error {
 			return false;
 		}
 		if ( !is_object($ArtifactType)) {
-			$this->setError('ArtifactCanned: No Valid ArtifactType object');
+			$this->setError('ArtifactCanned: '.$LANG->getText('tracker_common_canned','not_valid'));
 			return false;
 		}
 		//did ArtifactType have an error?
@@ -77,15 +81,17 @@ class ArtifactCanned extends Error {
 	 *  @return id on success / false on failure.
 	 */
 	function create($title, $body) {
+	  global $LANG;
+
 		//
 		//	data validation
 		//
 		if (!$title || !$body) {
-			$this->setError('ArtifactCanned: name and assignee are Required');
+			$this->setError('ArtifactCanned: '.$LANG->getText('tracker_common_canned','name_requ'));
 			return false;
 		}
 		if (!$this->ArtifactType->userIsAdmin()) {
-			$this->setError('Permission Denied');
+			$this->setError($LANG->getText('tracker_common_canned','perm_denied'));
 			return false;
 		}
 
@@ -120,9 +126,11 @@ class ArtifactCanned extends Error {
 	 *	@return	boolean	success.
 	 */
 	function fetchData($id) {
+	  global $LANG;
+
 		$res=db_query("SELECT * FROM artifact_canned_responses WHERE artifact_canned_id='$id' AND group_artifact_id='$this->atid'");
 		if (!$res || db_numrows($res) < 1) {
-			$this->setError('ArtifactCanned: Invalid ArtifactCanned ID');
+			$this->setError('ArtifactCanned: '.$LANG->getText('tracker_common_canned','invalid_id'));
 			return false;
 		}
 		$this->data_array = db_fetch_array($res);
@@ -174,8 +182,10 @@ class ArtifactCanned extends Error {
 	 *  @return	boolean	success.
 	 */
 	function delete($artifact_canned_id) {
+	  global $LANG;
+
 		if (!$this->ArtifactType->userIsAdmin()) {
-			$this->setError('Permission Denied');
+			$this->setError($LANG->getText('tracker_common_canned','perm_denied'));
 			return false;
 		}   
 
@@ -202,12 +212,14 @@ class ArtifactCanned extends Error {
 	 *  @return	boolean	success.
 	 */
 	function update($title,$body) {
+	  global $LANG;
+
 		if (!$this->ArtifactType->userIsAdmin()) {
-			$this->setError('Permission Denied');
+			$this->setError($LANG->getText('tracker_common_canned','perm_denied'));
 			return false;
 		}   
 		if (!$title || !$body) {
-			$this->setError('Missing Params');
+			$this->setError($LANG->getText('tracker_common_canned','missing_param'));
 			return false;
 		}   
 
