@@ -299,7 +299,7 @@ class Artifact extends Error {
         } else {
             // No comment type specified for a followup comment
             // so force it to None (100)
-            if ($field_name == 'details') {
+            if ($name == 'details') {
                 $fld_type = ',type'; $val_type = ",'100'";
             }
         }             
@@ -1203,18 +1203,17 @@ class Artifact extends Error {
         $field = $art_field_fact->getFieldFromName('comment_type_id');
         if ( $field ) {
             // Look for project specific values first
-            $sql="SELECT DISTINCT artifact_history.artifact_history_id,artifact_history.field_name,artifact_history.old_value,artifact_history.date,user.user_name,artifact_history.mod_by,artifact_history.email,artifact_field_value_list.value AS comment_type ".
-                "FROM artifact_history,artifact_field_value_list,artifact_field,artifact,user ".
-                "WHERE artifact_history.artifact_id=".$this->getID()." ".
-                "AND artifact_history.field_name = 'details' ".
-                "AND artifact_history.mod_by=user.user_id ".
-                "AND artifact_history.artifact_id=artifact.artifact_id ".
-                "AND artifact_history.type = artifact_field_value_list.value_id ".
-                "AND artifact_field_value_list.field_id = artifact_field.field_id ".
-                "AND artifact_field_value_list.group_artifact_id = artifact.group_artifact_id ".
-                "AND artifact_field.group_artifact_id = artifact.group_artifact_id ".
-                "AND artifact_field.field_name = 'comment_type_id' ".
-                "ORDER BY artifact_history.date DESC";
+	  $sql="SELECT DISTINCT artifact_history.artifact_history_id,artifact_history.field_name,artifact_history.old_value,artifact_history.date,user.user_name,artifact_history.mod_by,artifact_history.email,artifact_field_value_list.value AS comment_type ".
+	      "FROM artifact_history,artifact_field_value_list,artifact_field,user ".
+	      "WHERE artifact_history.artifact_id=".$this->getID()." ".
+	      "AND artifact_history.field_name = 'details' ".
+	      "AND artifact_history.mod_by=user.user_id ".
+	      "AND artifact_history.type = artifact_field_value_list.value_id ".
+	      "AND artifact_field_value_list.field_id = artifact_field.field_id ".
+	      "AND artifact_field_value_list.group_artifact_id = artifact_field.group_artifact_id ".
+	      "AND artifact_field.group_artifact_id =".$this->ArtifactType->getID()." ".
+	      "AND artifact_field.field_name = 'comment_type_id' ".
+	      "ORDER BY artifact_history.date DESC";
             //echo $sql;
             $res_value = db_query($sql);
             $rows=db_numrows($res_value);
