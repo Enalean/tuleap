@@ -489,20 +489,6 @@
         <para></para>
       </section>
 
-      <section id="ProjectHelpWanted">
-        <title>Project Help Wanted</title>
-
-        <para>As you will see later in this document, each CodeX project has
-        the ability to post jobs. This minimal job posting system is
-        particularly well suited to publish call for expertise. By clicking on
-        this item you&#39;ll see all job posting requests awaiting help from
-        the community. Visit this section on a regular basis if you want
-        to help others in the corporation solve their technical problems.</para>
-
-        <para>For more details on how to post jobs see <xref
-        linkend="Post-EditJobs" />.</para>
-      </section>
-
       <section id="ContactUs">
         <title>Contact Us</title>
 

@@ -76,12 +76,6 @@ cd /home/httpd/SF/utils/underworld-root/
 # DO SOME CLEAN UP
 #################
 
-# Mark jobs older than 2 weeks as closed 
-# We do not use job offering for the moment
-# on Codex so do not clean up anything
-#
-#./db_jobs_close.pl
-
 #Clean up projects that have status at INCOMPLETE
 # that are older than one hour, user registration PENDING
 # older than a week and user session older than a week

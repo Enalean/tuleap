@@ -205,6 +205,28 @@ insert into support_category VALUES ('100','100','None');
 # Default data for Help Wanted System
 #
 
+INSERT INTO people_skill VALUES ('','3100 SQL');
+INSERT INTO people_skill VALUES ('','3110 C/C++');
+INSERT INTO people_skill VALUES ('','3120 Perl');
+INSERT INTO people_skill VALUES ('','3130 PHP');
+INSERT INTO people_skill VALUES ('','3140 Java');
+INSERT INTO people_skill VALUES ('','3900 Other Prog. Lang.');
+ 
+INSERT INTO people_skill VALUES ('','5100 Chinese');
+INSERT INTO people_skill VALUES ('','5110 Japanese');
+INSERT INTO people_skill VALUES ('','5120 Spanish');
+INSERT INTO people_skill VALUES ('','5130 French');
+INSERT INTO people_skill VALUES ('','5140 German');
+INSERT INTO people_skill VALUES ('','5900 Other Spoken Lang.');
+ 
+INSERT INTO people_skill VALUES ('','7100 UNIX Admin');
+INSERT INTO people_skill VALUES ('','7110 Networking');
+INSERT INTO people_skill VALUES ('','7120 Security');
+INSERT INTO people_skill VALUES ('','7130 Writing');
+INSERT INTO people_skill VALUES ('','7140 Editing');
+INSERT INTO people_skill VALUES ('','7150 Databases');
+INSERT INTO people_skill VALUES ('','7900 Other Skill Area');
+
 INSERT INTO people_skill_year VALUES ('','< 6 Months');
 INSERT INTO people_skill_year VALUES ('','6 Mo - 2 yr');
 INSERT INTO people_skill_year VALUES ('','2 yr - 5 yr');
@@ -217,18 +239,6 @@ INSERT INTO people_skill_level VALUES ('30','Competent');
 INSERT INTO people_skill_level VALUES ('40','Wizard');
 INSERT INTO people_skill_level VALUES ('50','Wrote The Book');
 INSERT INTO people_skill_level VALUES ('60','Wrote It');
-
-INSERT INTO people_job_category VALUES ('','Developer');
-INSERT INTO people_job_category VALUES ('','Project Manager');
-INSERT INTO people_job_category VALUES ('','Unix Admin');
-INSERT INTO people_job_category VALUES ('','Doc Writer');
-INSERT INTO people_job_category VALUES ('','Tester');
-INSERT INTO people_job_category VALUES ('','Support Manager');
-INSERT INTO people_job_category VALUES ('','Graphic/Other Designer');
-
-INSERT INTO people_job_status VALUES ('1','Open');
-INSERT INTO people_job_status VALUES ('2','Filled');
-INSERT INTO people_job_status VALUES ('3','Deleted');
 
 #
 #  Default data for new filerelease system

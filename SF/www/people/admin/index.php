@@ -67,46 +67,7 @@ if (user_ismember(1,'A')) {
 		Show UI forms
 	*/
 
-	if ($people_cat) {
-		/*
-			Show categories and blank row
-		*/
-		people_header(array ('title'=>'Add/Change Categories'));
-
-		echo "<H2>Add Job Categories</H2>";
-
-		/*
-			List of possible categories for this group
-		*/
-		$sql="select category_id,name from people_job_category";
-		$result=db_query($sql);
-		echo "<P>";
-		if ($result && db_numrows($result) > 0) {
-			ShowResultSet($result,'Existing Categories','people_cat');
-		} else {
-			echo '
-				<H1>No job categories</H1>';
-			echo db_error();
-		}
-		?>
-		<P>
-		<H3>Add a new job category:</H3>
-		<P>
-		<FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">
-		<INPUT TYPE="HIDDEN" NAME="people_cat" VALUE="y">
-		<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
-		<H4>New Category Name:</H4>
-		<INPUT TYPE="TEXT" NAME="cat_name" VALUE="" SIZE="15" MAXLENGTH="30"><BR>
-		<P>
-		<B><span class="highlight">Once you add a category, it cannot be deleted</span></B>
-		<P>
-		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
-		</FORM>
-		<?php
-
-		people_footer(array());
-
-	} else if ($people_skills) {
+	 if ($people_skills) {
 		/*
 			Show people_groups and blank row
 		*/
@@ -149,18 +110,13 @@ if (user_ismember(1,'A')) {
 			Show main page
 		*/
 
-		people_header(array ('title'=>'People Administration'));
+		people_header(array ('title'=>'People Skills Administration'));
 
 		echo '
-			<H2>Help Wanted Administration</H2>';
+			<H2>People Skills Administration</H2>';
 
-		echo '<P>
-			<A HREF="'.$PHP_SELF.'?people_cat=1">Add Job Categories</A><BR>';
-	//	echo "\nAdd categories of bugs like, 'mail module','gant chart module','interface', etc<P>";
-
-		echo "\n<A HREF=\"$PHP_SELF?people_skills=1\">Add Job Skills</A><BR>";
-	//	echo "\nAdd Groups of bugs like 'future requests','unreproducible', etc<P>";
-
+		echo "\n<h3><A HREF=\"$PHP_SELF?people_skills=1\">Add Skills</A></h3>";
+		echo "<p>Add a new skill to the skill list.</p>";
 		people_footer(array());
 	}
 

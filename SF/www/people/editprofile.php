@@ -120,7 +120,7 @@ if (user_isloggedin()) {
 		//now show the list of desired skills
 		echo '<P>'.people_edit_skill_inventory( user_getid() );
 
-		echo '<P><FORM ACTION="/people/" METHOD="POST"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Finished"></FORM>'; 
+		echo '<P><FORM ACTION="/people/admin" METHOD="POST"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Finished"></FORM>'; 
 	}
 
 	people_footer(array());

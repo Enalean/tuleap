@@ -29,15 +29,11 @@ function project_admin_header($params) {
 	<BR>
 	<A HREF="/project/admin/servicebar.php?group_id='.$group_id.'">Service Configuration</A> |
 	<A HREF="/project/admin/editpackages.php?group_id='.$group_id.'">Edit/Release Files</A> |
-	<A HREF="/people/createjob.php?group_id='.$group_id.'">Post Jobs</A> | 
-	<A HREF="/people/?group_id='.$group_id.'">Edit Jobs</A> | '.
-	    '<A HREF="/project/stats/source_code_access.php/?group_id='.$group_id.'">Source Code Access Logs</A>';
+              <A HREF="/project/stats/source_code_access.php/?group_id='.$group_id.'">Source Code Access Logs</A>';
 
 	if ($params['help']) {
 	    echo ' | '.help_button($params['help'],false,'Help');
 	}
-// LJ No screenshots on CodeX
-// <A HREF="/project/admin/editimages.php?group_id='.$group_id.'">Edit Screenshots</A>
 	echo '</B>
 	<P>';
 }

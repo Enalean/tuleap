@@ -763,31 +763,6 @@
       the description of the File Release Service.</para>
     </section>
 
-    <section id="Post-EditJobs">
-      <title>Post/Edit Jobs</title>
-
-      <para><emphasis>Location: Project Administration Menu</emphasis></para>
-
-      <para>CodeX offers a minimal job posting system to your project. When
-      you publish a job it instantly appears under the &#34;Project Help
-      Wanted&#34; section on the CodeX Main Menu and is visible to all CodeX
-      users including those who are not registered users. It is an excellent
-      way of calling for help either on a specific topic or to sub-contract a
-      part of your work.</para>
-
-      <important>
-        <title>Important Note on Job Posting</title>
-
-        <para>It is not the intent of the CodeX Job Posting system to replace
-        existing job posting system already in place. The CodeX Job Posting system is intended to call for
-        expertise or short mission request. One of the possible uses of the
-        CodeX Job Posting system is for Projects to post 3 to 6 months jobs
-        that can be sub-contracted to other organizations.
-        It can also be a request for the opinion of an expert that would take
-        no longer than a couple of days even a couple of hours.</para>
-      </important>
-    </section>
-
     <section id="SourceCodeAccessLogs">
       <title>Source Code &amp; Document Access Logs</title>
 

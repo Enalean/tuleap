@@ -24,6 +24,7 @@ function menu_site_admin() {
     $HTML->menu_entry('/admin/massmail.php','Mass Mail');
     $HTML->menu_entry('/admin/trove/trove_cat_list.php','Trove Cat. List');
     $HTML->menu_entry('/admin/trove/trove_cat_add.php','Trove Cat. Add');
+    $HTML->menu_entry('/people/admin','People Skills');
     $HTML->menuhtml_bottom();
 
 }
@@ -116,14 +117,13 @@ function menu_software() {
     $HTML->menuhtml_bottom();
 }
 
-function menu_sourceforge() {
+function menu_site() {
     GLOBAL $HTML;
     $HTML->menuhtml_top($GLOBALS['sys_name']);
     $HTML->menu_entry('/documentation/user_guide/html/en_US/','<b>Help Index</b>');
     $HTML->menu_entry('/docs/site/','Site Documentation');
     $HTML->menu_entry('/mail/?group_id=1','Developers Channels');
     $HTML->menu_entry('/forum/?group_id=1','Discussion Forums');
-    $HTML->menu_entry('/people/','Project Help Wanted');
     print '<P>';
     print '<P>';
     $HTML->menu_entry('/contact.php','Contact Us');
@@ -267,14 +267,14 @@ function menu_print_sidebar($params) {
 	//sf global choices
 	echo menu_project ($params['group']);
 	echo menu_software();
-	echo menu_sourceforge();
+	echo menu_site();
     } else if ($params['group']) {
 	//this is a foundry page
 	echo menu_foundry_guides($params['group']);
 	echo menu_foundry($params['group']);
     } else {
 	echo menu_software();
-	echo menu_sourceforge();
+	echo menu_site();
     }
 
     //Foundry Links

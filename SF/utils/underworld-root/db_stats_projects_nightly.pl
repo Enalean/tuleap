@@ -224,16 +224,6 @@ $sql = "INSERT INTO stats_project_build_tmp
 $rel = $dbh->prepare($sql)->execute();
 print "Insert artifacts_closed from project_task...\n" if $verbose;
 
-## help_requests
-$sql = "INSERT INTO stats_project_build_tmp
-	SELECT group_id,'help_requests',
-		COUNT(job_id) 
-	FROM people_job
-	WHERE ( date > $day_begin AND date < $day_end )
-	GROUP BY group_id";
-$rel = $dbh->prepare($sql)->execute();
-print "Insert help_requests from people_job...\n" if $verbose;
-
 ##
 ## Create the daily tmp table for the update.
 ##
@@ -263,7 +253,6 @@ $sql = "CREATE TABLE stats_project_tmp (
         patches_closed  smallint(6) DEFAULT '0' NOT NULL,
         tasks_opened    smallint(6) DEFAULT '0' NOT NULL,
         tasks_closed    smallint(6) DEFAULT '0' NOT NULL,
-        help_requests   smallint(6) DEFAULT '0' NOT NULL,
         cvs_checkouts   smallint(6) DEFAULT '0' NOT NULL,
         cvs_commits     smallint(6) DEFAULT '0' NOT NULL,
         cvs_adds        smallint(6) DEFAULT '0' NOT NULL,

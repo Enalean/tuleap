@@ -1173,55 +1173,6 @@ CREATE TABLE patch_status (
 ) TYPE=MyISAM;
 
 #
-# Table structure for table 'people_job'
-#
-
-CREATE TABLE people_job (
-  job_id int(11) NOT NULL auto_increment,
-  group_id int(11) NOT NULL default '0',
-  created_by int(11) NOT NULL default '0',
-  title text,
-  description text,
-  date int(11) NOT NULL default '0',
-  status_id int(11) NOT NULL default '0',
-  category_id int(11) NOT NULL default '0',
-  PRIMARY KEY  (job_id)
-) TYPE=MyISAM;
-
-#
-# Table structure for table 'people_job_category'
-#
-
-CREATE TABLE people_job_category (
-  category_id int(11) NOT NULL auto_increment,
-  name text,
-  PRIMARY KEY  (category_id)
-) TYPE=MyISAM;
-
-#
-# Table structure for table 'people_job_inventory'
-#
-
-CREATE TABLE people_job_inventory (
-  job_inventory_id int(11) NOT NULL auto_increment,
-  job_id int(11) NOT NULL default '0',
-  skill_id int(11) NOT NULL default '0',
-  skill_level_id int(11) NOT NULL default '0',
-  skill_year_id int(11) NOT NULL default '0',
-  PRIMARY KEY  (job_inventory_id)
-) TYPE=MyISAM;
-
-#
-# Table structure for table 'people_job_status'
-#
-
-CREATE TABLE people_job_status (
-  status_id int(11) NOT NULL auto_increment,
-  name text,
-  PRIMARY KEY  (status_id)
-) TYPE=MyISAM;
-
-#
 # Table structure for table 'people_skill'
 #
 
@@ -1612,7 +1563,6 @@ CREATE TABLE stats_agr_project (
   patches_closed smallint(6) NOT NULL default '0',
   tasks_opened smallint(6) NOT NULL default '0',
   tasks_closed smallint(6) NOT NULL default '0',
-  help_requests smallint(6) NOT NULL default '0',
   cvs_checkouts smallint(6) NOT NULL default '0',
   cvs_commits smallint(6) NOT NULL default '0',
   cvs_adds smallint(6) NOT NULL default '0',
@@ -1673,7 +1623,6 @@ CREATE TABLE stats_project (
   patches_closed smallint(6) NOT NULL default '0',
   tasks_opened smallint(6) NOT NULL default '0',
   tasks_closed smallint(6) NOT NULL default '0',
-  help_requests smallint(6) NOT NULL default '0',
   cvs_checkouts smallint(6) NOT NULL default '0',
   cvs_commits smallint(6) NOT NULL default '0',
   cvs_adds smallint(6) NOT NULL default '0',
@@ -1712,7 +1661,6 @@ CREATE TABLE stats_project_tmp (
   patches_closed smallint(6) NOT NULL default '0',
   tasks_opened smallint(6) NOT NULL default '0',
   tasks_closed smallint(6) NOT NULL default '0',
-  help_requests smallint(6) NOT NULL default '0',
   cvs_checkouts smallint(6) NOT NULL default '0',
   cvs_commits smallint(6) NOT NULL default '0',
   cvs_adds smallint(6) NOT NULL default '0',

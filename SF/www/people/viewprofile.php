@@ -11,9 +11,6 @@ require('../people/people_utils.php');
 
 if ($user_id) {
 
-	/*
-		Fill in the info to create a job
-	*/
 	people_header(array('title'=>'View a User Profile'));
 
 	//for security, include group_id
@@ -49,7 +46,7 @@ if ($user_id) {
 		<TR><TD>
 		<H2>Skill Inventory</H2>';
 
-		//now show the list of desired skills
+		//now show the list of  skills for this person
 		echo '<P>'.people_show_skill_inventory($user_id);
 		echo '</TD></TR></TABLE>';
 	}
