@@ -111,7 +111,7 @@ class ArtifactHtml extends Artifact {
                                 }
                                 
                                 list($sz,) = explode("/",$field->getDisplaySize());
-                                $label = $field_html->labelDisplay(false,false);
+                                $label = $field_html->labelDisplay(false,false,!$ro);
                                 // original submission field must be displayed read-only
                                 if ($field->getName()=='details') {
                                         $value = util_make_links($field_html->display($this->ArtifactType->getID(),$field_value,false,false,true),$group_id,$group_artifact_id);
@@ -876,20 +876,20 @@ class ArtifactHtml extends Artifact {
 
                                     $field_value = $field->getDefaultValue();
                                     list($sz,) = $field->getGlobalDisplaySize();
-                                    $label = $field_html->labelDisplay(false,false);
+                                    $label = $field_html->labelDisplay(false,false,true);
                                     $value = $field_html->display($group_artifact_id,$field_value,false,false);
                                     $star = ($field->isEmptyOk() ? '':'<span class="highlight"><big>*</big></b></span>');
 
                                     if ( ($sz > $max_size) || ($field->getName()=='details') ) {
                                                 echo "\n<TR>".
-                                                    '<TD valign="middle">'.$label.$star.'</td>'.
+                                                    '<TD valign="middle"><a class="tooltip" href="#" title="'.$field->getDescription().'">'.$label.$star.'</a></td>'.
                                                     '<TD valign="middle" colspan="'.(2*$fields_per_line-1).'">'.
                                                     $value.'</TD>'.                   
                                                     "\n</TR>";
                                                 $i=0;
                                     } else {
                                                 echo ($i % $fields_per_line ? '':"\n<TR>");
-                                                  echo '<TD valign="middle">'.$label.$star.'</td>'.
+                                                  echo '<TD valign="middle"><a class="tooltip" href="#" title="'.$field->getDescription().'">'.$label.$star.'</a></td>'.
                                                       '<TD valign="middle">'.$value.'</TD>';
                                                 $i++;
                                                 echo ($i % $fields_per_line ? '':"\n</TR>");
@@ -940,7 +940,7 @@ class ArtifactHtml extends Artifact {
                 <TR><TD COLSPAN="'.(2*$fields_per_line).'">
                         <P>
                         <hr>
-                        <B><span class="highlight">Did you check to see if this '.$this->ArtifactType->getItemName().' already been submitted?</span></b> (use the search box in the left menu pane)
+                        <B><span class="highlight">Did you check if this '.$this->ArtifactType->getItemName().' has not already been submitted?</span></b> (use the search box in the left menu pane)
                         <P><center>
                         <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
                         </center>

@@ -134,3 +134,8 @@ PRE,TT { font-family: courier,sans-serif; }
 .vspace-bottom { margin-bottom: 2ex; }
 .vspace-top { margin-top: 2ex; }
 .vspace-both { margin-top: 2ex; margin-bottom: 2ex; }
+
+/* text with tooltips (e.g. artifact fields) */
+.tooltip { text-decoration:none; color: #000000}
+.tooltip:hover { text-decoration:none; color: #ff0000}
+

@@ -47,10 +47,14 @@ class ArtifactFieldHtml extends ArtifactField {
      *
 	 *	@return	string
 	 */
-	function labelDisplay($break=false,$ascii=false) {
+	function labelDisplay($break=false,$ascii=false,$tooltip=false) {
 	    $output = $this->getLabel().': ';
-	    if (!$ascii) 
-			$output = '<B>'.$output.'</B>';
+	    if (!$ascii) {
+                if ($tooltip) {
+                    $output = '<a class="tooltip" href="#" title="'.$this->description.'">'.$output.'</a>';
+                }
+                $output = '<B>'.$output.'</B>';
+            }
 	    if ($break) 
 			$output .= ($ascii?"\n":'<BR>');
 	    else
@@ -275,7 +279,7 @@ class ArtifactFieldHtml extends ArtifactField {
 	    global $sys_datefmt;
 	
 	    if ($label) {
-			$output = $this->labelDisplay($break,$ascii);
+			$output = $this->labelDisplay($break,$ascii,!$ro);
 	    }
 	    // display depends upon display type of this field
 	    switch ( $this->getDisplayType() ) {

@@ -169,3 +169,8 @@ textarea {
 .vspace-bottom { margin-bottom: 3ex; }
 .vspace-top { margin-top: 3ex; }
 .vspace-both { margin-top: 3ex; margin-bottom: 3ex; }
+
+/* text with tooltips (e.g. artifact fields) */
+.tooltip { text-decoration:none; color: #000000}
+.tooltip:hover { text-decoration:none; color: #ff0000}
+
