@@ -105,4 +105,15 @@ docman_admin_index	pending_doc	Pending Documents
 docman_admin_index	hidden_doc	Hidden Documents
 docman_admin_index	deleted_doc	Deleted Documents	
 docman_admin_index	private_doc	Private Documents
-
+#
+#-----------------------------------------------
+# Script: SF/www/docs/site/index.php
+#
+docs_site_index	title	Site Documentation
+docs_site_index	header	Site Documentation
+docs_site_index	nodoc	No site documentation available.
+#
+#-----------------------------------------------
+# Script: SF/www/docs/site/about_codex.php
+#
+docs_site_about	title	About the $1 Site
