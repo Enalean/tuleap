@@ -186,7 +186,8 @@ function util_make_links ($data='',$group_id = 0, $group_artifact_id = 0) {
 	$lines = split("\n",$data);
 	while ( list ($key,$line) = each ($lines)) {
 		$line = eregi_replace("([ \t]|^)www\."," http://www.",$line);
-		$text = eregi_replace("([[:alnum:]]+)://([^[:space:]]*)([[:alnum:]>#?/&=])", "<a href=\"\\1://\\2\\3\" target=\"_blank\" target=\"_new\">\\1://\\2\\3</a>", $line);
+                // newlines are transformed to "<br />" in php4. This '^<' below avoids matching 'http://codex<br' in 'http://codex<br />'
+		$text = eregi_replace("([[:alnum:]]+)://([^[:space:]^<]*)([[:alnum:]>#?/&=])", "<a href=\"\\1://\\2\\3\" target=\"_blank\" target=\"_new\">\\1://\\2\\3</a>", $line);
 		$text = eregi_replace("(([a-z0-9_]|\\-|\\.)+@([^[:space:]&>]*)([[:alnum:]-]))", "<a href=\"mailto:\\1\" target=\"_new\">\\1</a>", $text);
 		// If $group_id is assigned then we can replace the pattern: bug #id task #id sr #id
 		if ( $group_id ) {
@@ -198,6 +199,7 @@ function util_make_links ($data='',$group_id = 0, $group_artifact_id = 0) {
 		}
 		// Tracker pattern: we can replace the pattern: art #id
 		$text = eregi_replace("art[ ]?#([0-9]+)", "<a href=\"/tracker/?func=gotoid&aid=\\1\">Artifact #\\1</a>", $text);
+		$text = eregi_replace("artifact[ ]?#([0-9]+)", "<a href=\"/tracker/?func=gotoid&aid=\\1\">Artifact #\\1</a>", $text);
 	
 		$lines[$key] = $text;
 	}
