@@ -194,7 +194,7 @@ if ($group_id && user_ismember($group_id,'P2')) {
 					</TD><TD>
 						<INPUT TYPE="TEXT" NAME="project_name" VALUE="'. db_result($result, $i, 'project_name') .'"SIZE="30" MAXLENGTH="60">
 					</TD><TD>
-						<INPUT TYPE="TEXT" NAME="place" VALUE="10" SIZE="6" MAXLENGTH="6">
+						<INPUT TYPE="TEXT" NAME="place" VALUE="'. db_result($result, $i, 'order_id') .'" SIZE="6" MAXLENGTH="6">
 					</TD><TD>
 						<FONT SIZE="-1">
 						<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Update">
