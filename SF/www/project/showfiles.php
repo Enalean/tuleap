@@ -20,7 +20,24 @@ if ( $num_packages < 1) {
 }
 
 site_project_header(array('title'=>'Project Filelist','group'=>$group_id,'toptab'=>'downloads'));
+?>
+<SCRIPT language="JavaScript">
+<!--
+function showConfirmDownload(group_id,file_id) {
+    url = "http://<? echo $sys_default_domain ?>/project/confirm_download.php?group_id=" + group_id + "&file_id=" + file_id;
+    wConfirm = window.open(url,"confirm","width=450,height=360,resizable=1,scrollbars=1");
+    wConfirm.focus();
+}
 
+function download(group_id,file_id) {
+    url = "http://<? echo $sys_default_domain ?>/project/download.php?group_id=" + group_id + "&file_id=" + file_id;
+    wConfirm.close();
+    self.location = url;
+    
+}
+-->
+</SCRIPT>
+<?
 $title_arr = array();
 $title_arr[] = 'Package';
 $title_arr[] = 'Release<BR>&amp; Notes';
@@ -97,10 +114,7 @@ for ( $p = 0; $p < $num_packages; $p++ ) {
 					$file_release = db_fetch_array( $res_file );
 					print "\t\t" . '<TR bgcolor="' . $bgcolor .'">'
 						. '<TD COLSPAN=2>&nbsp;</TD>'
-// LJ we now go through a download script for access
-// LJ control and accounting purposes
-// LJ						. '<TD><B><A HREF="http://'.$sys_download_host.'/'.$group_unix_name.'/'.$file_release['filename'].'?group_id='.$group_id.'&file_id='.$file_release['file_id'].'">'
-						. '<TD><B><A HREF="/project/download.php?group_id='.$group_id.'&file_id='.$file_release['file_id'].'">'
+						. '<TD><B><A HREF="javascript:showConfirmDownload('.$group_id.','.$file_release['file_id'].')">'
 
 						. $file_release['filename'] .'</A></B></TD>'
 						. '<TD>'. $file_release['file_size'] .'</TD>'
