@@ -22,7 +22,7 @@
 
 class Layout extends Error {
 
-	var $imgroot = '/images/'.util_get_dir_image_theme();
+	var $imgroot = util_get_dir_image_theme();
 
 	//Define all the icons for this theme
 	var $icons = array('Summary' => 'ic/anvil24.png',
