@@ -391,7 +391,7 @@ function show_buglist ($result,$offset,$field_arr,$title_arr,$url) {
 		    '&group_id='.$group_id.'">'. 
 		    db_result($result, $i, 'bug_id') .'</A></TD>'."\n";
 	    } else {
-		echo '<TD>'. db_result($result, $i, $field_arr[$j]) .'</TD>'."\n";
+		echo '<TD>'. db_result($result, $i, $field_arr[$j]) .'&nbsp;</TD>'."\n";
 	    }
 	}
 	echo "</tr>\n";
