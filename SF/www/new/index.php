@@ -9,6 +9,9 @@
 require "pre.php";    
 require "vote_function.php";
 
+# By default, display releases
+if (!$func) $func='releases';
+
 switch ($func) {
 
  case 'releases':
