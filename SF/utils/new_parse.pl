@@ -29,6 +29,12 @@ my $user_file = $file_dir . "user_dump";
 my $group_file = $file_dir . "group_dump";
 my ($uid, $status, $username, $shell, $passwd, $win_passwd, $winnt_passwd, $email, $realname);
 my ($gname, $gstatus, $gid, $userlist);
+my $server_url;
+if ($sys_force_ssl) {
+  $server_url="https://$sys_https_host";
+} else {
+  $server_url="http://$sys_default_domain";
+}
 
 # Win accounts are activated if /etc/smbpasswd exists.
 my $winaccount_on = -f "/etc/smbpasswd";
@@ -250,7 +256,7 @@ while ($ln = pop(@groupdump_array)) {
 	  if (! $blockispresent)
 	    {
 	      system("echo \"$MARKER_BEGIN\" >> $cvs_dir/CVSROOT/loginfo");
-	      system("echo \"ALL (/usr/local/bin/log_accum -T $gname -C $gname -U http://$sys_default_domain/cvs/viewcvs.php/ -s %{sVv})>/dev/null 2>&1\" >> $cvs_dir/CVSROOT/loginfo");	 
+	      system("echo \"ALL (/usr/local/bin/log_accum -T $gname -C $gname -U $server_url/cvs/viewcvs.php/ -s %{sVv})>/dev/null 2>&1\" >> $cvs_dir/CVSROOT/loginfo");	 
 	      system("echo \"$MARKER_END\" >> $cvs_dir/CVSROOT/loginfo");
 	      system("cd $cvs_dir/CVSROOT; rcs -q -l loginfo; ci -q -m\"CodeX modifications: entering log_accum from group fields (cvs_tracker/cvs_events)\" loginfo; co -q loginfo");
 	    }

@@ -1461,12 +1461,7 @@ function pm_mail_followup($project_task_id,$more_addresses=false,$changes=false)
 
     $result=db_query($sql);
 
-    if (session_issecure())
-	    $task_href = "https://".$GLOBALS['sys_https_host'];
-    else
-	    $task_href = "http://".$GLOBALS['sys_default_domain'];
-
-    $task_href .= "/pm/task.php?func=detailtask&project_task_id=$project_task_id&group_id=".db_result($result,0,'group_id')."&group_project_id=".db_result($result,0,'group_project_id');
+    $task_href = get_server_url()."/pm/task.php?func=detailtask&project_task_id=$project_task_id&group_id=".db_result($result,0,'group_id')."&group_project_id=".db_result($result,0,'group_project_id');
 
     if ($result && db_numrows($result) > 0) {
 
@@ -1606,7 +1601,7 @@ function pm_attach_file($project_task_id,$group_id,$input_file,$input_file_name,
     	$changes['attach']['description'] = $file_description;
     	$changes['attach']['name'] = $input_file_name;
     	$changes['attach']['size'] = $input_file_size;
-    	$changes['attach']['href'] = 'http://'.$GLOBALS['sys_default_domain'].
+    	$changes['attach']['href'] = get_server_url().
     	    "/pm/download.php?group_id=$group_id&project_task_id=$project_task_id&project_file_id=$file_id";
     	return true;
     }
@@ -1676,7 +1671,7 @@ function format_pm_attached_files ($project_task_id,$group_id,$ascii=false) {
     			    intval(db_result($result, $i, 'filesize')/1024),
     			    db_result($result, $i, 'user_name'),
     			    db_result($result, $i, 'description'),
-    			    'http://'.$GLOBALS['sys_default_domain'].$href);
+    			    get_server_url().$href);
     	} else {
     	    $out .= sprintf($fmt,
     			    util_get_alt_row_color($i),

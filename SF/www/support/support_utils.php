@@ -190,7 +190,7 @@ function sr_utils_mail_followup($support_id,$more_addresses=false,$changes=false
 	"AND support.support_id='$support_id'";
 
 	$result=db_query($sql);
-	$sr_href = "http://$GLOBALS[sys_default_domain]/support/?func=detailsupport&support_id=$support_id&group_id=".db_result($result,0,'group_id');
+	$sr_href = get_server_url()."/support/?func=detailsupport&support_id=$support_id&group_id=".db_result($result,0,'group_id');
 
 	if ($result && db_numrows($result) > 0) {
 

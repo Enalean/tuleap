@@ -55,9 +55,6 @@ $GNATS_MAIL_FORMAT = "%s-gnats\@sourceware.cygnus.com";
 # from -G option.
 $GNATS_ROOT_FORMAT = "/sourceware/gnats/%s-db";
 
-# Base name of viewcvs specification.
-$CVSWEB_URL = "http://$sys_default_domain/cvs/viewcvs.php/";
-
 # Constants (don't change these!)
 #
 $STATE_NONE    = 0;
@@ -735,6 +732,16 @@ require $root_path."httpd/SF/utils/cvs1/checkins.pl";
 &db_connect;
 # &cvs_db_connect; now work on sourceforge dn, no more ViewCVS
 
+if ($sys_force_ssl) {
+  $server_url="https://$sys_https_host";
+} else {
+  $server_url="http://$sys_default_domain";
+}
+# Base name of viewcvs specification.
+$CVSWEB_URL = "$server_url/cvs/viewcvs.php/";
+
+
+
 # retrieve the group_id
 ($rootnull, $root, $gname) = split ('/', $cvsroot);
 $group_id = &set_group_info_from_name($gname);
@@ -1108,7 +1115,7 @@ for ($i = 0; ; $i++) {
     	push (@text, "");
         push (@text, "Patch references:");
         foreach $patch (keys %patches) {
-            push (@text, "Patch #$patch: http://$sys_default_domain/patch/?func=detailpatch&patch_id=$patch&group_id=$group_id");
+            push (@text, "Patch #$patch: $server_url/patch/?func=detailpatch&patch_id=$patch&group_id=$group_id");
         }
 	    if ($db_track) {
 	      &db_add_ref('patch', $commit_id, $patch);
@@ -1120,7 +1127,7 @@ for ($i = 0; ; $i++) {
     	push (@text, "");
         push (@text, "Commit references:");
         foreach $comm (keys %commits) {
-            push (@text, "commit #$comm: http://$sys_cvs_host/cvs/?func=detailcommit&commit_id=$comm&group_id=$group_id");
+            push (@text, "commit #$comm: $server_url/cvs/?func=detailcommit&commit_id=$comm&group_id=$group_id");
         }
 	    if ($db_track) {
 	      &db_add_ref('commit', $commit_id, $comm);
@@ -1138,7 +1145,7 @@ for ($i = 0; ; $i++) {
           if ($group_id) {
             $group_param="&group_id=$group_id";
           }
-          push (@text, "$art_name #$art: http://$sys_default_domain/tracker/?func=gotoid$group_param&aid=$art&atn=$art_name");
+          push (@text, "$art_name #$art: $server_url/tracker/?func=gotoid$group_param&aid=$art&atn=$art_name");
         }
         if ($db_track) {
           &db_add_ref('artifact', $commit_id, $art);

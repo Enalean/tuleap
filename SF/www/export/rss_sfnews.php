@@ -29,11 +29,11 @@ print "  <pubDate>".gmdate('D, d M Y G:i:s',time())." GMT</pubDate>\n";
 
 if ($group_id) {
     print "  <description>".$GLOBALS['sys_name']." Project News Highlights - ".$project->getPublicName()."</description>\n";
-    print "  <link>http://".$GLOBALS['sys_default_domain']."/project/?group_id=$group_id</link>\n";
+    print "  <link>".get_server_url()."/project/?group_id=$group_id</link>\n";
     print "  <title>".$GLOBALS['sys_name']." News - ".$project->getPublicName()."</title>\n";
 } else {
     print "  <description>".$GLOBALS['sys_name']." Project News Highlights</description>\n";
-    print "  <link>http://".$GLOBALS['sys_default_domain']."</link>\n";
+    print "  <link>".get_server_url()."</link>\n";
     print "  <title>".$GLOBALS['sys_name']." News</title>\n";
 }
 list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
@@ -45,9 +45,9 @@ while ($row = db_fetch_array($res)) {
 	print "   <title>".htmlspecialchars($row[summary])."</title>\n";
 	// if news group, link is main page
 	if ($row[group_id] != $GLOBALS['sys_news_group']) {
-		print "   <link>http://".$GLOBALS['sys_default_domain']."/forum/forum.php?forum_id=$row[forum_id]</link>\n";
+		print "   <link>".get_server_url()."/forum/forum.php?forum_id=$row[forum_id]</link>\n";
 	} else {
-		print "   <link>http://".$GLOBALS['sys_default_domain']."/</link>\n";
+		print "   <link>".get_server_url()."/</link>\n";
 	}
 	print "   <description>".rss_description($row['details'])."</description>\n";
 	print "  </item>\n";

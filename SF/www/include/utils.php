@@ -757,6 +757,28 @@ function make_local_url($path) {
     return "http://localhost" . $port . "/" . $path;
 }
 
+// Return server URL
+// Used e.g. when inserting links in emails
+function get_server_url() {
+    if (session_issecure()) {
+        return "https://".$GLOBALS['sys_https_host'];
+    } else {
+        return "http://".$GLOBALS['sys_default_domain'];
+    }
+}
+
+
+// Return mailing list server URL
+// Used e.g. when inserting links in emails
+function get_list_server_url() {
+    if (session_issecure()) {
+        return "https://".$GLOBALS['sys_lists_host'];
+    } else {
+        return "http://".$GLOBALS['sys_lists_host'];
+    }
+}
+
+
 /**
  * util_check_fileupload() - determines if a filename is appropriate for upload
  *

@@ -18,17 +18,11 @@ $row_user = db_fetch_array($res_user);
 
 db_query("UPDATE user SET confirm_hash='$confirm_hash' WHERE user_id=$row_user[user_id]");
 
-if (session_issecure()) {
-    $server = 'https://'.$GLOBALS['sys_https_host'];
-} else {
-    $server = 'http://'.$GLOBALS['sys_default_domain'];
-}
-
 list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
 
 $message = stripcslashes($LANG->getText('account_lostpw-confirm', 'mail_body',
 	      array($GLOBALS['sys_name'], 
-		    "$server/account/lostlogin.php?confirm_hash=$confirm_hash")));
+		    get_server_url()."/account/lostlogin.php?confirm_hash=$confirm_hash")));
 
 $hdrs = "From: noreply@".$host.$GLOBALS['sys_lf'];
 $hdrs .='Content-type: text/plain; charset=iso-8859-1'.$GLOBALS['sys_lf'];

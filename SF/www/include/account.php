@@ -67,12 +67,7 @@ function account_add_user_to_group ($group_id,$user_unix_name) {
 
 // Warn user she has been added to a project
 function account_send_add_user_to_group_email($group_id,$user_id) {
-    // if the HTTP server has SSL enabled then favor confirmation through SSL
-    if ($GLOBALS['sys_https_host'] != "") {
-	$base_url = "https://".$GLOBALS['sys_https_host'];
-    } else {
-	$base_url = "http://".$GLOBALS['sys_default_domain'];
-    }
+    $base_url = get_server_url();
 
     // Get email address
     $res = db_query("SELECT email FROM user WHERE user_id=$user_id");

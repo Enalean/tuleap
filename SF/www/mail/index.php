@@ -11,10 +11,7 @@ require('../mail/mail_utils.php');
 
 if ($group_id) {
 
-    if (session_issecure()) 
-	$list_server = 'https://'.$GLOBALS['sys_lists_host'];
-    else
-	$list_server = 'http://'.$GLOBALS['sys_lists_host'];
+    $list_server = get_list_server_url();
 
     $params=array('title'=>'Mailing Lists for '.group_getname($group_id),
               'help'=>'CommunicationServices.html#MailingLists',
@@ -74,7 +71,7 @@ if ($group_id) {
                 if ($list_is_public) {
                     echo ' <A HREF="'.$list_server.'/pipermail/'.$list_name.'">Archives</A>';
                 } else {
-                    echo ' Archives: <A HREF="http://'.$GLOBALS['sys_lists_host'].'/pipermail/'.$list_name.'">public</A>/<A HREF="http://'.$GLOBALS['sys_lists_host'].'/mailman/private/'.$list_name.'">private</A>';
+                    echo ' Archives: <A HREF="'.$list_server.'/pipermail/'.$list_name.'">public</A>/<A HREF="'.$list_server.'/mailman/private/'.$list_name.'">private</A>';
                 }
 	  
 		echo ' | <A HREF="'.$list_server.'/mailman/listinfo/'.$list_name.'">(Un)Subscribe/Preferences</A>)';

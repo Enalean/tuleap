@@ -21,12 +21,7 @@ db_query("UPDATE user SET confirm_hash='$confirm_hash',email_new='$form_newemail
 
 list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
 
-if (session_issecure()) {
-    $server = 'https://'.$GLOBALS['sys_https_host'];
-} else {
-    $server = 'http://'.$GLOBALS['sys_default_domain'];
-}
-$message = stripcslashes($LANG->getText('account_change_email-confirm', 'message', array($GLOBALS['sys_name'], "$server/account/change_email-complete.php?confirm_hash=$confirm_hash")));
+$message = stripcslashes($LANG->getText('account_change_email-confirm', 'message', array($GLOBALS['sys_name'], get_server_url()."/account/change_email-complete.php?confirm_hash=$confirm_hash")));
 
 $hdrs = "From: noreply@".$host.$GLOBALS['sys_lf'];
 $hdrs .='Content-type: text/plain; charset=iso-8859-1'.$GLOBALS['sys_lf'];

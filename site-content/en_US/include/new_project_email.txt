@@ -32,7 +32,7 @@ Guide) is available under the "Site documentation" link on the left
 hand side menu of the '.$GLOBALS['sys_name'].' Home page.
 
 We now invite you to visit the Public Summary page of your project at
-http://'.$GLOBALS['sys_default_domain'].'/projects/'.$row_grp['unix_group_name'].',
+'.get_server_url().'/projects/'.$row_grp['unix_group_name'].',
 create a short public description for your project and categorize it
 in the Software Map. This will be immensely helpful to the '.$GLOBALS['sys_name'].' visitors.
 

@@ -13,15 +13,8 @@ if (db_numrows($res_grp) < 1) {
 	$row_grp = db_fetch_array($res_grp);
 }
 
-// Determine which protocol to use for the server
-if (session_issecure()) {
-    $server = 'https://'.$GLOBALS['sys_https_host'];
-} else {
-    $server = 'http://'.$GLOBALS['sys_default_domain'];
-}
-
 print '<?xml version="1.0"?>
-<!DOCTYPE sf_forum SYSTEM "'.$server.'/exports/sf_forum_0.1.dtd">
+<!DOCTYPE sf_forum SYSTEM "'.get_server_url().'/exports/sf_forum_0.1.dtd">
 ';
 print "<group name=\"$row_grp[group_name]\">";
 

@@ -78,11 +78,7 @@ if ($pv) {
     echo 'Select File to request file download.</p>';
 }
 
-if (session_issecure()) {
-    $url = "https://".$GLOBALS['sys_https_host'];
-} else {
-    $url = "http://".$GLOBALS['sys_default_domain'];
-}
+$url = get_server_url();
 ?>
 <SCRIPT language="JavaScript">
 <!--

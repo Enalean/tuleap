@@ -45,7 +45,7 @@ $HTML->header(array(title=>"New Project Registration"));
                                 <td><textarea wrap="physical" name="project_description" cols=40 rows=4></textarea></td>
                         </tr>
                         <tr>
-                                <td align="right">* Desired Subdomain:<br>(e.g. <i>http://<span class="subdomain">myproject</span>.<?php echo $GLOBALS['sys_default_domain']; ?> )</td>
+                                <td align="right">* Desired Subdomain:<br>(e.g. <i><span class="subdomain">myproject</span>.<?php echo get_server_url(); ?> )</td>
                                 <td><input size=35 type="text" name="subdomain"></td>
                         </tr>
                         <tr>

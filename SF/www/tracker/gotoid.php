@@ -59,12 +59,7 @@ function generic_redirect($location,$aid,$group_id,$art_group_id,$atid,$atn,$art
 
 // Start of main code
 
-
-if ($HTTPS == 'on'|| $GLOBALS['sys_force_ssl'] == 1) {
-    $location = "Location: https://".$GLOBALS['sys_https_host'];
-} else {
-    $location = "Location: http://".$GLOBALS['sys_default_domain'];
-}
+$location = "Location: ".get_server_url();
 
 // $atn is the "artifact type name" i.e. the tracker short name detected in the text
 // Detected: 'xxx #nnn', transformed to  '$atn #$aid'

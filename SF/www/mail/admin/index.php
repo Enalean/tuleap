@@ -11,10 +11,7 @@ require('../mail_utils.php');
 
 if ($group_id && user_ismember($group_id,'A')) {
 
-    if (session_issecure()) 
-	$list_server = 'https://'.$GLOBALS['sys_lists_host'];
-    else
-	$list_server = 'http://'.$GLOBALS['sys_lists_host'];
+    $list_server = get_list_server_url();
 
     if ($post_changes) {
 		/*

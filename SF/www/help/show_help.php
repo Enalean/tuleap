@@ -22,12 +22,7 @@ if ( !isset($section) ) {
     $section = "index.html";
 }
 
-if (session_issecure())
-    $help_url = "https://".$GLOBALS['sys_https_host'];
-else
-    $help_url = "http://".$GLOBALS['sys_default_domain'];
-
-$help_url .= '/documentation/user_guide/html/'.$lang."/".$section;
+$help_url = get_server_url().'/documentation/user_guide/html/'.$lang."/".$section;
 
 // Check if the file exist - Don't use fopen because it doesn't
 // understand the https protocol

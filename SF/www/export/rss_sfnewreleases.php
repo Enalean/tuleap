@@ -47,7 +47,7 @@ print " <channel>\n";
 print "  <copyright>Copyright (c) ".$GLOBALS['sys_long_org_name'].", ".$GLOBALS['sys_name']." Team, 2001-".date('Y',time()).". All Rights Reserved</copyright>\n";
 print "  <pubDate>".gmdate('D, d M Y g:i:s',time())." GMT</pubDate>\n";
 print "  <description>".$GLOBALS['sys_name']." New Releases</description>\n";
-print "  <link>http://".$GLOBALS['sys_default_domain']."</link>\n";
+print "  <link>".get_server_url()."</link>\n";
 print "  <title>".$GLOBALS['sys_name']." New Releases</title>\n";
 list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
 print "  <webMaster>webmaster@".$host."</webMaster>\n";
@@ -58,7 +58,7 @@ while ($row = db_fetch_array($res)) {
 	if (!$G_RELEASE["$row[group_id]"]) {
 		print "  <item>\n";
 		print "   <title>".htmlspecialchars($row[group_name]." ". $row[release_version])."</title>\n";
-		print "   <link>http://".$GLOBALS['sys_default_domain']."/file/showfiles.php?group_id=$row[group_id]</link>\n";
+		print "   <link>".get_server_url()."/file/showfiles.php?group_id=$row[group_id]</link>\n";
 		print "   <description>".rss_description($row['short_description'])."</description>\n";
 		print "  </item>\n";
 		$outputtotal++;

@@ -525,13 +525,13 @@ function handle_monitoring($forum_id,$msg_id) {
 		    $body .= "Subject: [" .db_result($result,0,'unix_group_name'). " - " . db_result($result,0,'forum_name')."] " . 
 			util_unconvert_htmlspecialchars(db_result($result,0,'subject')).
 			"\n\nRead and respond to this message at: ".
-			"\nhttp://".$GLOBALS['sys_default_domain']."/forum/message.php?msg_id=".$msg_id.
+			"\n".get_server_url()."/forum/message.php?msg_id=".$msg_id.
 			"\nBy: " . db_result($result,0, 'user_name') .
 			"\n\n" . util_unconvert_htmlspecialchars(db_result($result,0, 'body')).
 			"\n\n______________________________________________________________________".
 			"\nYou are receiving this email because you elected to monitor this forum.".
 			"\nTo stop monitoring this forum, login and visit: ".
-			"\nhttp://".$GLOBALS['sys_default_domain']."/forum/monitor.php?forum_id=$forum_id";
+			"\n".get_server_url()."/forum/monitor.php?forum_id=$forum_id";
 
 			exec ("/bin/echo \"". util_prep_string_for_sendmail($body) ."\" | /usr/sbin/sendmail -fnoreply@".$host." -t -i &");
 

@@ -266,7 +266,7 @@ function mail_followup($patch_id,$more_addresses=false) {
 
 		$body .= "\n\n-------------------------------------------------------".
 			"\nFor more info, visit:".
-			"\n\nhttp://$GLOBALS[sys_default_domain]/patch/?func=detailpatch&patch_id=". $patch_id.'&group_id='. db_result($result,0,'group_id');
+			"\n\n".get_server_url()."/patch/?func=detailpatch&patch_id=". $patch_id.'&group_id='. db_result($result,0,'group_id');
 
 		$subject="[Patch #".$patch_id.'] '.util_unconvert_htmlspecialchars(db_result($result,0,'summary'));
 

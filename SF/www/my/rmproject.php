@@ -47,18 +47,11 @@ if (user_isloggedin()) {
 		$to = substr($to,0,-1);
 	}
 
-	// Determine which protocol to use for the URL
-	if (session_issecure()) {
-	    $server = 'https://'.$GLOBALS['sys_https_host'];
-	} else {
-	    $server = 'http://'.$GLOBALS['sys_default_domain'];
-	}
-
 	$project=new Project($group_id);
 	$project_name = $project->getPublicName();
 
         list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
-	$link_members = "$server/project/memberlist.php?group_id=$group_id";
+	$link_members = get_server_url()."/project/memberlist.php?group_id=$group_id";
 	$hdrs = "From: noreply@".$host.$GLOBALS['sys_lf'];
 	$hdrs .='Content-type: text/plain; charset=iso-8859-1'.$GLOBALS['sys_lf'];
 	$subject = $LANG->getText('bookmark_rmproject', 'mail_subject', array($GLOBALS['sys_name'],user_getname($user_id),$project_name));

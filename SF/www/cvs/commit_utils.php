@@ -46,8 +46,6 @@ function commits_header($params) {
 
 	echo '<P><B><A HREF="/cvs/?func=info&group_id='.$group_id.'">'.$LANG->getText('cvs_commit_utils', 'menu_info').'</A>';
 
-	$sys_cvs_host = $GLOBALS['sys_cvs_host'];
-
 	if ($project->isPublic() || user_isloggedin()) {
 	    $uri = session_make_url('/cvs/viewcvs.php/?root='.$project->getUnixName().'&roottype=cvs');
 	    echo ' | <A HREF="'.$uri.'">'.$LANG->getText('cvs_commit_utils', 'menu_browse').'</A>';

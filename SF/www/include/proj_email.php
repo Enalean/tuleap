@@ -25,13 +25,6 @@ function send_new_project_email($group_id) {
 		echo ("Group [ $group_id ] does not seem to have any administrators.");
 	}
 
-	// Determine which protocol to use for URLs
-	if (session_issecure()) {
-	    $server = 'https://'.$GLOBALS['sys_https_host'];
-	} else {
-	    $server = 'http://'.$GLOBALS['sys_default_domain'];
-	}
-
 	// send one email per admin
 	while ($row_admins = db_fetch_array($res_admins)) {
 
@@ -41,6 +34,7 @@ function send_new_project_email($group_id) {
 		$message_project_type = "\nProject Type:         ".$row_type[description];
 	}
 
+        $server = get_server_url();
 	// $message is defined in the content file
 	include(util_get_content('include/new_project_email'));
 
@@ -60,12 +54,7 @@ function send_new_project_email($group_id) {
 //
 function send_new_user_email($to,$confirm_hash)
 {
-    // if the HTTP server has SSL enabled then favor confirmation through SSL
-    if ($GLOBALS['sys_https_host'] != "") {
-	$base_url = "https://".$GLOBALS['sys_https_host'];
-    } else {
-	$base_url = "http://".$GLOBALS['sys_default_domain'];
-    }
+    $base_url = get_server_url();
 
     // $message is defined in the content file
     include(util_get_content('include/new_user_email'));

@@ -20,12 +20,7 @@ print '<?xml version="1.0"?>
 <rss version="0.91">
 ';
 
-// Determine which protocol to use for the server
-if (session_issecure()) {
-    $server = 'https://'.$GLOBALS['sys_https_host'];
-} else {
-    $server = 'http://'.$GLOBALS['sys_default_domain'];
-}
+$server = get_server_url();
 
 // ## one time output
 print " <channel>\n";

@@ -417,11 +417,7 @@ class ArtifactHtml extends Artifact {
             }
         
             // Determine which protocl to use for embedded URL in ASCII format
-            if (session_issecure()) {
-                        $server = 'https://'.$GLOBALS['sys_https_host'];
-            } else {
-                        $server = 'http://'.$GLOBALS['sys_default_domain'];
-            }
+            $server=get_server_url();
         
             // Loop throuh the attached files and format them
             for ($i=0; $i < $rows; $i++) {
@@ -974,14 +970,11 @@ class ArtifactHtml extends Artifact {
         function mailFollowup($more_addresses=false,$changes=false) {
             global $sys_datefmt,$feedback,$art_field_fact,$sys_lf;
 
-            if (session_issecure())
-                        $artifact_href = "https://".$GLOBALS['sys_https_host'];
-            else
-                        $artifact_href = "http://".$GLOBALS['sys_default_domain'];
+            $artifact_href = get_server_url();
         
-                $group = $this->ArtifactType->getGroup();
-                $group_artifact_id = $this->ArtifactType->getID();
-                $group_id = $group->getGroupId();
+            $group = $this->ArtifactType->getGroup();
+            $group_artifact_id = $this->ArtifactType->getID();
+            $group_id = $group->getGroupId();
 
             $artifact_href .= "/tracker/?func=detail&aid=".$this->getID()."&atid=$group_artifact_id&group_id=$group_id";
         

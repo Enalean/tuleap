@@ -1001,10 +1001,7 @@ function bug_mail_followup($bug_id,$more_addresses=false,$changes=false) {
 
     $result=db_query($sql);
 
-    if (session_issecure())
-	$bug_href = "https://".$GLOBALS['sys_https_host'];
-    else
-	$bug_href = "http://".$GLOBALS['sys_default_domain'];
+    $bug_href = get_server_url();
 
     $bug_href .= "/bugs/?func=detailbug&bug_id=$bug_id&group_id=".db_result($result,0,'group_id');
 
@@ -1386,11 +1383,7 @@ function format_bug_attached_files ($bug_id,$group_id,$ascii=false,$pv=false) {
     }
 
     // Determine which protocl to use for embedded URL in ASCII format
-    if (session_issecure()) {
-	$server = 'https://'.$GLOBALS['sys_https_host'];
-    } else {
-	$server = 'http://'.$GLOBALS['sys_default_domain'];
-    }
+    $server = get_server_url(); 
 
     // Loop throuh the attached files and format them
     for ($i=0; $i < $rows; $i++) {
@@ -1584,11 +1577,7 @@ function bug_attach_file($bug_id,$group_id,$input_file,$input_file_name,$input_f
 	$changes['attach']['size'] = $input_file_size;
 	
 	// Determine which protocol to use for the URL of the attachement
-	if (session_issecure()) {
-	    $server = 'https://'.$GLOBALS['sys_https_host'];
-	} else {
-	    $server = 'http://'.$GLOBALS['sys_default_domain'];
-	}
+        $server = get_server_url();
 
 	$changes['attach']['href'] = $server.
 	    "/bugs/download.php?group_id=$group_id&bug_id=$bug_id&bug_file_id=$file_id";

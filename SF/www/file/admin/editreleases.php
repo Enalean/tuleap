@@ -500,11 +500,11 @@ if ($submit) {
 				"Subject: $subject".$GLOBALS['sys_lf'].$GLOBALS['sys_lf'].
 				"\n\nA new version of ". db_result($result,0,'name')." has been released. ".
 				"\nYou can download it at: ".
-				"\n\n<http://".$GLOBALS['sys_default_domain']."/file/showfiles.php?group_id=$group_id&release_id=$release_id> ".
+				"\n\n<".get_server_url()."/file/showfiles.php?group_id=$group_id&release_id=$release_id> ".
 				"\n\nYou requested to be notified when new versions of this file ".
 				"\nwere released. If you don't wish to be notified in the ".
 				"\nfuture, please login to ".$GLOBALS['sys_name']." and click this link: ".
-				"\n<http://".$GLOBALS['sys_default_domain']."/file/filemodule_monitor.php?filemodule_id=$package_id> ";
+				"\n<".get_server_url()."/file/filemodule_monitor.php?filemodule_id=$package_id> ";
 			
 			exec ("/bin/echo \"$body\" | /usr/sbin/sendmail -fnoreply@".$host." -t -i &");
 			$feedback .= ' email sent - '. db_numrows($result) .' users tracking ';

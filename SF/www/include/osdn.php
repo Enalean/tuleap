@@ -5,10 +5,6 @@ include(util_get_content('layout/osdn_sites'));
 function osdn_nav_dropdown() {
     GLOBAL $osdn_sites;
 
-    if (session_issecure()) 
-	$server = 'https://'.$GLOBALS['sys_https_host'];
-    else
-	$server = 'http://'.$GLOBALS['sys_default_domain'];
 ?>
 	<!-- OSDN navdropdown -->
 	    <script language=javascript>
@@ -20,7 +16,7 @@ function osdn_nav_dropdown() {
 	    </script>
         <form name=form1>
 
-        <a href="<?php echo $server;?>"><?php echo html_image("codex_logo.png",array("width"=>"135", "height"=>"33", "hspace"=>"10", "alt"=>$GLOBALS['sys_default_domain'], "border"=>"0")); ?></A><br>
+        <a href="<?php echo get_server_url();?>"><?php echo html_image("codex_logo.png",array("width"=>"135", "height"=>"33", "hspace"=>"10", "alt"=>$GLOBALS['sys_default_domain'], "border"=>"0")); ?></A><br>
         <select name=navbar onChange="handle_navbar(selectedIndex,this)">
         <option>Network Gallery</option>
         <option>------------</option>
@@ -35,7 +31,7 @@ function osdn_nav_dropdown() {
         </form>
 
         <noscript>
-        <a href="<?php print $GLOBALS['sys_default_domain']; ?>"><?php echo html_image("codex_logo.png", array("width"=>"135", "height"=>"33", "hspace"=>"10", "alt"=>$GLOBALS['sys_default_domain'], "border"=>"0")); ?></A><br>
+        <a href="<?php echo get_server_url();?>"><?php echo html_image("codex_logo.png", array("width"=>"135", "height"=>"33", "hspace"=>"10", "alt"=>$GLOBALS['sys_default_domain'], "border"=>"0")); ?></A><br>
         </noscript>
 	<!-- end OSDN navdropdown -->
 <?php

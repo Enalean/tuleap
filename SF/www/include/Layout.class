@@ -116,9 +116,7 @@ class Layout extends Error {
 	        } else {
         	        $params['title'] = $GLOBALS['sys_name'].": " . $params['title'];
 	        }
-                if ($GLOBALS['sys_force_ssl']) {
-                    $sys_url='https://'.$GLOBALS['sys_default_domain']; 
-                } else { $sys_url='http://'.$GLOBALS['sys_default_domain']; }
+                $sys_url=get_server_url();
 
         	?>
 

@@ -91,12 +91,7 @@ function session_cookie($n,$v, $expire = 0) {
 }
 
 function session_make_url($loc) {
-	 return 'http'
-	 	. (session_issecure()?'s':'')
-		. '://'
-		. (session_issecure()?$GLOBALS['sys_https_host']:$GLOBALS['sys_default_domain'])
-		. $loc
-		;
+	 return get_server_url(). $loc;
 }
 
 function session_redirect($loc) {

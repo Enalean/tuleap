@@ -236,7 +236,12 @@ require $root_path."httpd/SF/utils/svn/svn-checkins.pl";
 my ($rootnull, $root, $gname) = split ('/', $repos);
 my $group_id = &set_group_info_from_name($gname);
 
-my $codex_srv = "http".($sys_force_ssl ? 's':'').'://'.$sys_default_domain;
+my $codex_srv;
+if ($sys_force_ssl) {
+  $codex_srv="https://$sys_https_host";
+} else {
+  $codex_srv="http://$sys_default_domain";
+}
 
 my $mod_url = $codex_srv."/svn/viewcvs.php/%s?r1=text&tr1=%s&r2=text&tr2=%s&roottype=svn&root=$gname&diff_format=h";
 my $add_url  = $codex_srv."/svn/viewcvs.php/%s?rev=$rev&view=markup&roottype=svn&root=$gname";

@@ -12,11 +12,7 @@ $LANG->loadLanguageMsg('homepage/homepage');
 
 $HTML->header(array(title=>$LANG->getText('404', 'title')));
 
-if (session_issecure()) {
-	echo "<a href=\"https://$GLOBALS[sys_default_domain]\">";
-} else {
-	echo "<a href=\"http://$GLOBALS[sys_default_domain]\">";
-}
+echo '<a href="'.get_server_url().'">';
 
 if (strpos($REQUEST_URI, "pipermail")) {
   echo "<CENTER><H1>".$LANG->getText('404', 'no_archive')."</H1></CENTER><P>";
