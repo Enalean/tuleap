@@ -55,9 +55,9 @@ function pm_footer($params) {
 	site_project_footer($params);
 }
 
-function pm_status_box($name='status_id',$checked='xyxy',$text_100='None') {
+function pm_status_box($name='status_id',$checked='xyxy',$none=true,$text_none='None',$any=false,$text_any='Any') {
 	$result=pm_data_get_statuses();
-	return html_build_select_box($result,$name,$checked,true,$text_100,true,'Any');
+	return html_build_select_box($result,$name,$checked,$none,$text_none,$any,$text_any);
 }
 
 function pm_tech_select_box($name='assigned_to',$group_id=false,$checked='xzxz') {

@@ -136,7 +136,8 @@ $result=db_query($sql);
 		<B>Status:</B>
 		<BR>
 		<?php
-		echo pm_status_box ('status_id',db_result($result,0,'status_id'));
+		echo pm_status_box ('status_id',db_result($result,0,'status_id'),
+				    true,'None',false);
 		?>
 		</TD>
 	</TR>

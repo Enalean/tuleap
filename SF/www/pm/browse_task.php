@@ -213,7 +213,7 @@ echo '<TABLE WIDTH="10%" BORDER="0" CELLPADDING="0" CELLSPACING="0"><FORM ACTION
 	<TR><TD COLSPAN="4" nowrap>Browse Tasks by:</TD></TR>
 	<TR align="center" valign="bottom"><TH><b>Sub-Project</b></TH><TH><b>Assignee</b></TH><TH><b>Status</b></TH></TR>
 	<TR><TD><FONT SIZE="-1">'. $subproj_box .'</FONT></TD>'.
-		'<TD><FONT SIZE="-1">'. $tech_box .'</FONT></TD><TD><FONT SIZE="-1">'. pm_status_box('_status',$_status) .'</FONT></TD>'.
+		'<TD><FONT SIZE="-1">'. $tech_box .'</FONT></TD><TD><FONT SIZE="-1">'. pm_status_box('_status',$_status,true,'None',true,'Any') .'</FONT></TD>'.
 		'<TD><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Browse"></FONT></TD></TR></FORM></TABLE>';
 
 
