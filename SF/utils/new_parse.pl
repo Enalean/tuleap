@@ -405,12 +405,14 @@ sub add_user {
 	# LJ Couple of modifications here
 	# Now lets create the homedir and copy the contents of
 	# /etc/skel_codex into it. The change the ownership
-	mkdir $home_dir, 0751;
-	if (-d "/etc/skel_codex") {
-	  system("cd /etc/skel_codex; tar cf - . | (cd  $home_dir ; tar xf - )");
-	}
-#	chown $uid, $uid, $home_dir;
-	system("chown -R $uid.$uid $home_dir");
+	unless (-d "$home_dir") {
+            mkdir $home_dir, 0751;
+	    if (-d "/etc/skel_codex") {
+	        system("cd /etc/skel_codex; tar cf - . | (cd  $home_dir ; tar xf - )");
+	    }
+            #chown $uid, $uid, $home_dir;
+	    system("chown -R $uid.$uid $home_dir");
+        }
 }
 
 sub add_winuser {
@@ -440,18 +442,20 @@ sub update_user {
 	
 	print("Updating Account for: $username\n");
 	
+	my $counter = 0;
+	my $found   = 0;
 	foreach (@passwd_array) {
 		($p_username, $p_junk, $p_uid, $p_gid, $p_realname_email, $p_homedir, $p_shell) = split(":", $_);
 		
 		if ($uid == $p_uid) {
+                  $found = 1;
 		  $passwd_array[$counter] = "$username:x:$uid:$uid:$realname <$email>:$p_homedir:$shell\n";
 			last;
 		}
 		$counter++;
 	}
 	
-	$counter = 0;
-	
+	my $counter    = 0;
 	foreach (@shadow_array) {
 		($s_username, $s_passwd, $s_date, $s_min, $s_max, $s_inact, $s_expire, $s_flag, $s_resv) = split(":", $_);
 		if ($username eq $s_username) {
@@ -462,6 +466,11 @@ sub update_user {
 		}
 		$counter++;
 	}
+
+	# if account is missing from any of the password file
+	# then add it again (it should already be in there but...)
+	add_user($uid, $username, $realname, $shell, $passwd, $email) unless $found;
+
 }
 
 # synchronize passwd and group files (one group for each user)
@@ -483,11 +492,13 @@ sub update_winuser {
   return if (!$winaccount_on);
 
   my $counter = 0;
+  my $found   = 0;
   foreach (@smbpasswd_array) {
     ($p_username, $p_uid, $p_win_passwd, $p_winnt_passwd,$p_account_bits,
      $p_last_set_time, $p_realname) = split(":", $_);
 
     if ($uid == $p_uid) {
+      $found = 1;
       $win_date = sprintf("%08X", time());
 
       if ($win_passwd ne $p_win_passwd) {
@@ -496,8 +507,10 @@ sub update_winuser {
       last;
     }
     $counter++;
-  }
-	
+  }	
+
+  # if account not found then create the entry again
+  add_winuser($uid, $username, $realname, $win_passwd, $winnt_passwd) unless $found;
 }
 
 sub update_httpuser {
@@ -506,10 +519,12 @@ sub update_httpuser {
   my ($p_username, $p_passwd);
 
   my $counter = 0;
+  my $found   = 0;
   foreach (@htpasswd_array) {
     ($p_username, $p_passwd) = split(":", $_);
 
     if ($username eq $p_username) {
+      $found = 1;
       if ($passwd ne $p_passwd) {
 	$htpasswd_array[$counter] = "$username:$passwd\n";
       }
@@ -517,6 +532,8 @@ sub update_httpuser {
     }
     $counter++;
   }
+
+  add_httpuser($username, $passwd) unless $found;
 	
 }
 
@@ -527,7 +544,7 @@ sub update_httpuser {
 sub delete_user {
 	my ($username, $junk, $uid, $gid, $realname, $homedir, $shell, $counter);
 	my $this_user = shift(@_);
-	
+        my $counter = 0;	
 	foreach (@passwd_array) {
 		($username, $junk, $uid, $gid, $realname, $homedir, $shell) = split(":", $_);
 		if ($this_user eq $username) {
@@ -535,6 +552,24 @@ sub delete_user {
 		}
 		$counter++;
 	}
+
+        my $counter = 0;	
+	foreach (@shadow_array) {
+		($username) = split(":", $_);
+		if ($this_user eq $username) {
+			$shadow_array[$counter] = '';
+		}
+		$counter++;
+	}
+
+        my $counter = 0;	
+	foreach (@group_array) {
+		($groupname) = split(":", $_);
+		if ($this_user eq $groupname) {
+			$group_array[$counter] = '';
+		}
+		$counter++;
+        }
 	
 	print("Deleting User : $this_user\n");
 	system("cd $homedir_prefix ; /bin/tar -czf $tar_dir/$username.tar.gz $username");
