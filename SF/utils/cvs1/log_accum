@@ -1112,12 +1112,12 @@ for ($i = 0; ; $i++) {
 	    }
     }
 
-        @keys = keys %commits;
+    @keys = keys %commits;
     if ( $#keys >= 0 ) {
     	push (@text, "");
         push (@text, "Commit references:");
-        foreach $commit (keys %commits) {
-            push (@text, "commit #$comm: http://$sys_cvs_host/cvs/?func=detailcommit&commit_id=$commit&group_id=$group_id");
+        foreach $comm (keys %commits) {
+            push (@text, "commit #$comm: http://$sys_cvs_host/cvs/?func=detailcommit&commit_id=$comm&group_id=$group_id");
         }
 	    if ($db_track) {
 	      &db_add_ref('commit', $commit_id, $comm);
