@@ -14,7 +14,8 @@ $admin_list = ("precision,fusion94,dtype,bigdisk");
 
 push @alias_array, "\n\n### Begin Mailing List Aliases ###\n\n";
 
-$query = "SELECT list_name from mail_group_list";
+# Select mailing list that public or private but not 'Deleted'
+$query = "SELECT list_name from mail_group_list where is_public IN (0,1)";
 $c = $dbh->prepare($query);
 $c->execute();
 while(my ($list_name) = $c->fetchrow()) {
