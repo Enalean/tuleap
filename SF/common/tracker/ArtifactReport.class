@@ -365,7 +365,7 @@ class ArtifactReport extends Error {
 		
 		// Final query
 		$sql = "select count(*) ".$from." ".$where." group by a.artifact_id";
-		echo "<DBG> query count=".$sql."<br>";
+		//echo "<DBG> query count=".$sql."<br>";
 		
 		$result_count = db_query($sql  );
 		$totalrows = db_numrows($result_count);
@@ -387,7 +387,7 @@ class ArtifactReport extends Error {
 		$limit = " LIMIT $offset,$chunksz";
 		$sql = $select." ".$from." ".$where." group by a.artifact_id ".$order_by.$limit;
 
-		echo "<DBG> query=".$sql."<br>";
+		//echo "<DBG> query=".$sql."<br>";
 		
 		return $sql;
 	
