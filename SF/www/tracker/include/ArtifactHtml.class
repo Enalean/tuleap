@@ -861,7 +861,7 @@ class ArtifactHtml extends Artifact {
     	while ( list($key, $field) = each($result_fields) ) {
     		
     		$field_html = new ArtifactFieldHtml($field);
-    		//echo $field->getName()."<br>";
+    		//echo $field->getName()."-".$is_member."-".$field->isShowOnAddMember()."<br>";
 		
 		    // if the field is a special field (except summary and original description)
 		    // or if not used by this project  then skip it. 

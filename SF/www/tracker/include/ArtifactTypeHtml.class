@@ -919,20 +919,20 @@ class ArtifactTypeHtml extends ArtifactType {
                                     <ul>
 		        <li>On the submission form used by project members ';
 		        
-		if ( $show_on_add ) {
-			echo '<input type="checkbox" name="show_on_add" value="1" checked>';
+		if ( $show_on_add_members ) {
+			echo '<input type="checkbox" name="show_on_add_members" value="1" checked>';
 		} else {
-			echo '<input type="checkbox" name="show_on_add" value="1">';
+			echo '<input type="checkbox" name="show_on_add_members" value="1">';
 		}
 		
 		echo '
 		        </li>
 		        <li>On the submission form used by other users';
 		        
-		if ( $show_on_add_members ) {
-			echo '<input type="checkbox" name="show_on_add_members" value="1" checked>';
+		if ( $show_on_add ) {
+			echo '<input type="checkbox" name="show_on_add" value="1" checked>';
 		} else {
-			echo '<input type="checkbox" name="show_on_add_members" value="1">';
+			echo '<input type="checkbox" name="show_on_add" value="1">';
 		}		
 		
 		echo '
