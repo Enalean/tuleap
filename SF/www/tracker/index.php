@@ -84,7 +84,7 @@ if ($group_id && $atid) {
 			//
 			//  make sure this person has permission to add artifacts
 			//
-			if (!$ath->userIsTech() && !$ath->allowsAnon() ) {
+			if (!$ath->userIsTech() && !$ath->isPublic() ) {
 				exit_permission_denied();
 			}
 
