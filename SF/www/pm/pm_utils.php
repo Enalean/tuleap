@@ -99,7 +99,9 @@ function pm_header_admin($params) {
     echo site_project_header($params);
     echo '<P><B><A HREF="/pm/admin/?group_id='.$group_id.'">Admin</A></B>';
     echo ' | <B><A HREF="/pm/admin/index.php?projects=1&group_id='.$group_id.'">Add Subproject</A></B>';
-    echo ' | <b><A HREF="/pm/admin/index.php?change_status=1&group_id='.$group_id.'">Update Subprojects</A></b>';
+    echo ' | <b><A HREF="/pm/admin/index.php?change_status=1group_id='.$group_id.'">Update Subprojects</A></b>';
+    echo ' | <b><A HREF="/pm/admin/personal_settings.php?group_id='.$group_id.'">Personal Settings</A></b>';
+    echo ' | <b><A HREF="/pm/admin/other_settings.php?group_id='.$group_id.'">Global Settings</A></b>';
      echo ' <hr width="300" size="1" align="left" noshade>';
 }
 
@@ -204,11 +206,12 @@ function pm_show_percent_complete_box($name='percent_complete',$selected=0) {
 		</select>';
 }
 
-function pm_show_month_box($name,$select_month=0) {
+function pm_show_month_box($name,$month=0) {
 
 	echo '
 		<select name="'.$name.'" size="1">';
-	$monthlist = array('1'=>'January',
+	$monthlist = array('0' => ' ',
+			'1'=>'January',
 			'2'=>'February',
 			'3'=>'March',
 			'4'=>'April',
@@ -221,13 +224,13 @@ function pm_show_month_box($name,$select_month=0) {
 			'11'=>'November',
 			'12'=>'December');
 
-	for ($i=1; $i<=count($monthlist); $i++) {
-		if ($i == $select_month) {
+	for ($i=0; $i<count($monthlist); $i++) {
+		if ($i == $month) {
 			echo '
-				<option selected value="'.$i.'">'.$monthlist[$i];
+				<option selected value="'.$i.'">'.$monthlist[$i].'</option>';
 		} else {
 			echo '
-				<option value="'.$i.'">'.$monthlist[$i];
+				<option value="'.$i.'">'.$monthlist[$i].'</option>';
 		}
 	}
 	echo '
@@ -235,17 +238,19 @@ function pm_show_month_box($name,$select_month=0) {
 
 }
 
-function pm_show_day_box($name,$day=1) {
+function pm_show_day_box($name,$day=0) {
 
 	echo '
 		<select name="'.$name.'" size="1">';
+	echo '
+     	                 <option value="0"'.($day ? '':'selected').'> </option>';
 	for ($i=1; $i<=31; $i++) {
 		if ($i == $day) {
 			echo '
-				<option selected value="'.$i.'">'.$i;
+				<option selected value="'.$i.'">'.$i.'</option>';
 		} else {
 			echo '
-				<option value="'.$i.'">'.$i;
+				<option value="'.$i.'">'.$i.'</option>';
 		}
 	}
 	echo '
@@ -253,10 +258,12 @@ function pm_show_day_box($name,$day=1) {
 
 }
 
-function pm_show_year_box($name,$year=1) {
+function pm_show_year_box($name,$year=0) {
 
 	echo '
 		<select name="'.$name.'" size="1">';
+	echo '
+     	                 <option value="0"'.($year?'':'selected').'> </option>';
 	for ($i=1999; $i<=2013; $i++) {
 		if ($i == $year) {
 			echo '

@@ -181,7 +181,12 @@ if ($group_id && user_ismember($group_id,'P2')) {
 			Add a project, which can contain a set of tasks. This is different than creating a new task.
 			<BR>
 			<A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&change_status=1"><h3>Update Subprojects</h3></A>
-			Determine whether non-project-members can view Subprojects in the Project/Task Manager, update name and description';
+			Determine whether non-project-members can view Subprojects in the Project/Task Manager, update name and description
+		                 <BR>
+			<A HREF="/pm/admin/personal_settings.php?group_id='.$group_id.'"><h3>Personal Configuration Settings </A> (for user '.user_getname(user_getid()).')</h3>
+			Define Task Manager personal configuration parameters<BR>
+			<A HREF="/pm/admin/other_settings.php?group_id='.$group_id.'"><h3>Global  Configuration Settings</h3></A>
+			Define Task Manager global configuration parameters';
 
 		pm_footer(array());
 	}

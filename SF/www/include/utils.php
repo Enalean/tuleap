@@ -10,7 +10,7 @@
 //LJ The localtime function does not exist in PHP3
 //LJ here is a way to mimic the function. Probably twice
 //LJ the size it should be but at least it works !
-function localtime( $time, $is_associative) {
+function localtime( $time, $is_associative=false) {
 
 	$tm_sec= date("s", $time);
 	$tm_min= date("i", $time);

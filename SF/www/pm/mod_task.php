@@ -68,9 +68,17 @@ $result=db_query($sql);
     		<TD><B>Start Date:</B>
 		<BR><FONT SIZE="-1">
 		<?php
-		echo pm_show_month_box ('start_month',date('m', db_result($result,0,'start_date')));
-		echo pm_show_day_box ('start_day',date('d', db_result($result,0,'start_date')));
-		echo pm_show_year_box ('start_year',date('Y', db_result($result,0,'start_date')));
+                $start_date = db_result($result,0,'start_date');
+                if ($start_date == 0) {
+                   $day = $month = $year = 0;
+                } else {
+	           list(,,,$day,$month,$year) = localtime($start_date);
+	           $month += 1;
+	           $year +=1900;
+                }
+		echo pm_show_month_box ('start_month',$month);
+		echo pm_show_day_box ('start_day',$day);
+		echo pm_show_year_box ('start_year',$year);
 		?></FONT>
 		<br><a href="calendar.php">View Calendar</a>
 		</TD>
@@ -90,9 +98,17 @@ $result=db_query($sql);
 		<TD><B>End Date:</B>
 		<BR><FONT SIZE="-1">
 		<?php
-		echo pm_show_month_box ('end_month',date('m', db_result($result,0,'end_date')));
-		echo pm_show_day_box ('end_day',date('d', db_result($result,0,'end_date')));
-		echo pm_show_year_box ('end_year',date('Y', db_result($result,0,'end_date')));
+		$end_date = db_result($result,0,'end_date');
+                if ($end_date == 0) {
+                   $day = $month = $year = 0;
+                } else {
+	           list(,,,$day,$month,$year) = localtime($end_date);
+	           $month += 1;
+	           $year +=1900;
+                }
+                echo pm_show_month_box ('end_month',$month);
+		echo pm_show_day_box ('end_day',$day);
+		echo pm_show_year_box ('end_year',$year);
 		?></FONT>
 		</TD>
 	</TR>

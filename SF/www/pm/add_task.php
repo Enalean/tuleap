@@ -8,8 +8,13 @@
 
 pm_header(array('title'=>'Add a New Task'));
 
+echo '<H2>Add A Task</H2>';
+
+// First display the message preamble
+$res_preamble  = db_query("SELECT pm_preamble FROM groups WHERE group_id=$group_id");
+
+echo util_unconvert_htmlspecialchars(db_result($res_preamble,0,'pm_preamble'));
 ?>
-<H2>Add A Task</H2>
 
 <FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">
 <INPUT TYPE="HIDDEN" NAME="func" VALUE="postaddtask">
@@ -48,9 +53,19 @@ pm_header(array('title'=>'Add a New Task'));
 	<TR>
     		<TD COLSPAN="2"><B>Start Date:</B>
 		<?php
-		echo pm_show_month_box ('start_month',date('m', time()));
-		echo pm_show_day_box ('start_day',date('d', time()));
-		echo pm_show_year_box ('start_year',date('Y', time()));
+
+		$pref_date = user_get_preference('pm_pref_date'.$group_id);
+                if ($pref_date == 1) {
+                    $day = $month = $year = 0;
+                } else {
+                    list(,,,$day,$month,$year) = localtime(time());
+		    $month += 1;
+		    $year +=1900;
+		}
+
+		echo pm_show_month_box ('start_month',$month);
+		echo pm_show_day_box ('start_day',$day);
+		echo pm_show_year_box ('start_year',$year);
 		?>
 			<BR><a href="calendar.php">View Calendar</a>
 		 </td>
@@ -59,9 +74,9 @@ pm_header(array('title'=>'Add a New Task'));
 	<TR>
 		<TD COLSPAN="2"><B>End Date:</B>
 		<?php
-		echo pm_show_month_box ('end_month',date('m', time()));
-		echo pm_show_day_box ('end_day',date('d', time()));
-		echo pm_show_year_box ('end_year',date('Y', time()));
+		echo pm_show_month_box ('end_month',$month);
+		echo pm_show_day_box ('end_day',$day);
+		echo pm_show_year_box ('end_year',$year);
 		?>
 		</td>
 

@@ -195,23 +195,39 @@ function pm_data_create_task ($group_project_id,$start_month,$start_day,$start_y
 		$end_year,$summary,$details,$percent_complete,$priority,$hours,$assigned_to,$dependent_on) {
 
 	global $feedback;
-	if (!$group_project_id || !$start_month || !$start_day || !$start_year || !$end_month || !$end_day || 
-		!$end_year || !$summary || !$details || !$priority) {
+	if (!$group_project_id || !$summary || !$details || !$priority) {
 		exit_missing_param();
 	}
 
-	if (mktime(0,0,0,$start_month,$start_day,$start_year) > mktime(0,0,0,$end_month,$end_day,$end_year)) {
+	// if any parts of the start and end dates is undefined then 
+	// the whole date is undefined
+	if ( !$start_month || !$start_day || !$start_year )
+	    $start_date = 0;
+	else 
+	    $start_date = mktime(0,0,0,$start_month,$start_day,$start_year);
+
+
+	if ( !$end_month || !$end_day || !$end_year )
+	    $end_date = 0;
+	else 
+	    $end_date = mktime(0,0,0,$end_month,$end_day,$end_year);
+
+	/*
+		Enforce start date > end date
+	*/
+	if ($start_date && $end_date && ($start_date > $end_date)) {
 		exit_error('Error','End Date Must Be Greater Than Begin Date');
 	}
+
 
 	$sql="INSERT INTO project_task (group_project_id,summary,details,percent_complete,".
 		"priority,hours,start_date,end_date,".
 		"created_by,status_id) VALUES ('$group_project_id','".htmlspecialchars($summary)."',".
 		"'".htmlspecialchars($details)."','$percent_complete','$priority','$hours','".
-		mktime(0,0,0,$start_month,$start_day,$start_year)."','".
-		mktime(0,0,0,$end_month,$end_day,$end_year)."','".user_getid()."','1')";
+		$start_date."','".
+		$end_date."','".user_getid()."','1')";
 
-	$result=db_query($sql);
+	$result=db_query($sql,1);
 
 	if (!$result) {
 		$feedback .= ' ERROR INSERTING ROW '.db_error();
@@ -227,10 +243,10 @@ function pm_data_update_task ($group_project_id,$project_task_id,$start_month,$s
 		$end_month,$end_day,$end_year,$summary,$original_comment,$details,$percent_complete,$priority,$hours,
 		$status_id,$assigned_to,$dependent_on,$new_group_project_id,$group_id) {
 
-	if (!$group_project_id || !$project_task_id || !$status_id || !$start_month || !$start_day || !$start_year || 
-		!$end_month || !$end_day || !$end_year || !$summary || !$priority || !$new_group_project_id || !$group_id) {
+	if (!$group_project_id || !$project_task_id || !$status_id ||  !$summary || !$priority || !$new_group_project_id || !$group_id) {
 		exit_missing_param();
 	}
+
 	$sql="SELECT * FROM project_task WHERE project_task_id='$project_task_id' AND group_project_id='$group_project_id'";
 
 	$result=db_query($sql);
@@ -239,10 +255,23 @@ function pm_data_update_task ($group_project_id,$project_task_id,$start_month,$s
 		exit_permission_denied();
 	}
 
+	// if any parts of the start and end dates is undefined then 
+	// the whole date is undefined
+	if ( !$start_month || !$start_day || !$start_year )
+	    $start_date = 0;
+	else 
+	    $start_date = mktime(0,0,0,$start_month,$start_day,$start_year);
+
+
+	if ( !$end_month || !$end_day || !$end_year )
+	    $end_date = 0;
+	else 
+	    $end_date = mktime(0,0,0,$end_month,$end_day,$end_year);
+
 	/*
 		Enforce start date > end date
 	*/
-	if (mktime(0,0,0,$start_month,$start_day,$start_year) > mktime(0,0,0,$end_month,$end_day,$end_year)) {
+	if ($start_date && $end_date && ($start_date > $end_date)) {
 		exit_error('Error','End Date Must Be Greater Than Begin Date');
 	}
 
@@ -279,10 +308,10 @@ function pm_data_update_task ($group_project_id,$project_task_id,$start_month,$s
 	if (db_result($result,0,'hours') != $hours)
 		{ pm_data_create_history ('hours',db_result($result,0,'hours'),$project_task_id);  }
 
-	if (db_result($result,0,'start_date') != mktime(0,0,0,$start_month,$start_day,$start_year))
+	if (db_result($result,0,'start_date') != $start_date)
 		{ pm_data_create_history ('start_date',db_result($result,0,'start_date'),$project_task_id);  }
 
-	if (db_result($result,0,'end_date') != mktime(0,0,0,$end_month,$end_day,$end_year))
+	if (db_result($result,0,'end_date') != $end_date)
 		{ pm_data_create_history ('end_date',db_result($result,0,'end_date'),$project_task_id);  }
 
 	/*
@@ -308,14 +337,14 @@ function pm_data_update_task ($group_project_id,$project_task_id,$start_month,$s
 	*/
 	$sql="UPDATE project_task SET status_id='$status_id', priority='$priority',".
 		"summary='".htmlspecialchars($summary)."',start_date='".
-		mktime(0,0,0,$start_month,$start_day,$start_year)."',end_date='".
-		mktime(0,0,0,$end_month,$end_day,$end_year)."',hours='$hours',".
+		$start_date."',end_date='".
+		$end_date."',hours='$hours',".
 		"percent_complete='$percent_complete', ".
 		"group_project_id='$new_group_project_id' ".
 		$set_oc_str.
 		"WHERE project_task_id='$project_task_id' AND group_project_id='$group_project_id'";
 
-	$result=db_query($sql);
+	$result=db_query($sql,1);
 
 	if (!$result) {
 		exit_error('ERROR','Database update failed '.db_error());
