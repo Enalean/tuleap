@@ -40,7 +40,10 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 			/*
 				Adding forums to this group
 			*/
-			forum_create_forum($group_id,$forum_name,$is_public,1,$description);
+			$fid = forum_create_forum($group_id,$forum_name,$is_public,1,$description);
+			if ($is_monitored) {
+			    forum_add_monitor($fid, user_getid());
+			}
 
 		} else if ($change_status) {
 			/*
@@ -103,9 +106,14 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 			<INPUT TYPE="TEXT" NAME="forum_name" VALUE="" SIZE="30" MAXLENGTH="50"><BR>
 			<B>Description:</B><BR>
 			<INPUT TYPE="TEXT" NAME="description" VALUE="" SIZE="60" MAXLENGTH="255"><BR>
-			<B>Is Public?</B><BR>
-			<INPUT TYPE="RADIO" NAME="is_public" VALUE="1" CHECKED> Yes<BR>
+			<P><B>Is Public?</B><BR>
+			<INPUT TYPE="RADIO" NAME="is_public" VALUE="1" CHECKED> Yes &nbsp;&nbsp;&nbsp;&nbsp;
 			<INPUT TYPE="RADIO" NAME="is_public" VALUE="0"> No<P>
+			<P>
+			<P><B>Want to monitor this forum?</B><BR>
+                                                      As the Forum creator it is <u>strongly recommend</u> that you monitor this forum to be instantly notified via email of any new message posted to the Forum. <br>
+			<INPUT TYPE="RADIO" NAME="is_monitored" VALUE="1" CHECKED> Yes &nbsp;&nbsp;&nbsp;&nbsp;
+			<INPUT TYPE="RADIO" NAME="is_monitored" VALUE="0"> No<P>
 			<P>
 			<B><FONT COLOR="RED">Once you add a forum, it cannot be modified or deleted!</FONT></B>
 			<P>
