@@ -18,6 +18,41 @@ if (!session_issecure() && ($GLOBALS['sys_https_host'] != "")) {
 }
 
 // ###### first check for valid login, if so, redirect
+/*if ($login) {
+    $success=session_login_valid($form_loginname,$form_pw);
+    if ($success) {
+        if ($stay_in_ssl) {
+            $ssl_=1;
+        } else if ($GLOBALS['sys_https_host'] != '' &&
+                   $GLOBALS['sys_force_ssl'] == 1) {
+            $ssl_=1;
+        } else {
+            $ssl_=0;
+        }
+        if ($return_to) {
+            // if return_to URL start with a protocol name then take as is
+            // otherwise prepend the proper http protocol
+            if (preg_match("/^\s*\w:\/\//", $return_to)) {
+                header("Location: $return_to");
+            } else {
+                if ($ssl_) {
+                    header("Location: https://".$GLOBALS['sys_https_host'].$return_to);
+                } else {
+                    header("Location: http://".$GLOBALS['sys_default_domain'].$return_to);
+                }
+            }
+            exit;
+        } else {
+            if ($ssl_) {
+                header("Location: https://".$GLOBALS['sys_https_host']."/my/");
+            } else {
+                header("Location: http://".$GLOBALS['sys_default_domain']."/my/");
+            }
+            exit;
+        }
+    }
+}
+*/
 
 if ($login) {
     $success=session_login_valid($form_loginname,$form_pw);
@@ -53,6 +88,7 @@ if ($login) {
 	}
     }
 }
+
 if ($session_hash) {
 	//nuke their old session
 	session_cookie('session_hash','');

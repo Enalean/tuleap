@@ -1282,13 +1282,13 @@ function format_bug_cc_list ($bug_id,$group_id, $ascii=false) {
     global $sys_datefmt;
 
     /*
-          show the files attached to this bug
+          format the CC list for this bug
        */
 
     $result=bug_data_get_cc_list($bug_id);
     $rows=db_numrows($result);
 
-    // No file attached -> return now
+    // Nobody in the CC list -> return now
     if ($rows <= 0) {
 	if ($ascii)
 	    $out = "CC list is empty\n";
@@ -1396,8 +1396,8 @@ function bug_attach_file($bug_id,$group_id,$input_file,$input_file_name,$input_f
     $user_id = (user_isloggedin() ? user_getid(): 100);
 
     $data = addslashes(fread( fopen($input_file, 'r'), filesize($input_file)));
-    if ((strlen($data) < 20) || (strlen($data) > 512000)) {
-	$feedback .= " - File not attached: must be > 20 chars and < 512000 chars in length";
+    if ((strlen($data) < 20) || (strlen($data) > 2*1024*1024)) {
+	$feedback .= " - File not attached: File size must be less than 2 Mbytes";
 	return false;
     }
 

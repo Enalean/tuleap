@@ -1581,8 +1581,8 @@ function pm_attach_file($project_task_id,$group_id,$input_file,$input_file_name,
     $user_id = (user_isloggedin() ? user_getid(): 100);
 
     $data = addslashes(fread( fopen($input_file, 'r'), filesize($input_file)));
-    if ((strlen($data) < 20) || (strlen($data) > 20971520)) {
-    	$feedback .= " - File not attached: must be > 20 chars and < 20971520 chars in length";
+    if ((strlen($data) < 20) || (strlen($data) > 2*1024*1024)) {
+	$feedback .= " - File not attached: File size must be less than 2 Mbytes";
     	return false;
     }
 
