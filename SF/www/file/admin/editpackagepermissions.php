@@ -27,7 +27,7 @@ if (!$package_name) {
 }
 
 file_utils_admin_header(array('title'=>'Edit Package Permissions',
-			   'help' => 'FileReleaseDelivery.html'));
+			   'help' => 'FileReleaseDelivery.html#FileAccessPermissions'));
 
 
 

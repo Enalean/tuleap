@@ -31,8 +31,8 @@ if (db_numrows($res)<1) {
 $res2=db_query("SELECT * FROM frs_package WHERE package_id=$package_id");
 $package_name=db_result($res2,0,'name');
 
-file_utils_admin_header(array('title'=>'Edit Release Permissions'));
-//			 'help' => 'FileReleaseDelivery.html'));
+file_utils_admin_header(array('title'=>'Edit Release Permissions', 
+			 'help' => 'FileReleaseDelivery.html#FileAccessPermissions'));
 
 
 

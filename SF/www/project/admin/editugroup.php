@@ -53,7 +53,7 @@ if ($func=='do_create') {
 
 if ($func=='create') {
     project_admin_header(array('title'=>'Create User Group','group'=>$group_id,
-			   'help' => 'GroupConfiguration.html'));
+			   'help' => 'UserGroups.html#UGroupCreation'));
     $project=project_get_object($group_id);
 
     print '<P><h2>Creating new user group for <B>'.$project->getPublicName().'</B></h2>';
@@ -104,7 +104,7 @@ if (($func=='edit')||($func=='do_create')) {
     if (!$ugroup_description) { $ugroup_description=db_result($res,0,'description'); }
 
     project_admin_header(array('title'=>'Edit User Group','group'=>$group_id,
-			   'help' => 'GroupConfiguration.html'));
+			   'help' => 'UserGroups.html#UGroupCreation'));
     print '<P><h2>User Group \'<B>'.$ugroup_name.'</B>\' - Administration</h2>';
     echo '<p>You can update the name and description of this user group:</p>';
     echo '<form method="post" name="form_create" action="/project/admin/ugroup.php?group_id='.$group_id.'" onSubmit="return selIt();">

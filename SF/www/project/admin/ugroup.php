@@ -32,7 +32,7 @@ if ($func=='do_update') {
 
 
 project_admin_header(array('title'=>'View User Groups','group'=>$group_id,
-			   'help' => 'GroupConfiguration.html'));
+			   'help' => 'UserGroups.html'));
 $project=project_get_object($group_id);
 
 print '<P><h2>Editing User Groups for <B>'.$project->getPublicName().'</B></h2>';
