@@ -11,16 +11,20 @@ $HTML->header(array('title'=>'Contact Us'));
 ?>
 
 <P>
-All <B>support questions</B> should be submitted through the 
+All <B>support questions</B> related to CodeX use should be submitted through the CodeX 
 <A HREF="/support/?func=addsupport&group_id=1">[ Support Manager ]</A>.
+
 <P>
 If you feel you are encountering a <B>bug</B> or unusual error of any kind, 
-please <A HREF="/bugs/?func=addbug&group_id=1"><B>[ submit a bug ]</B></A>.
+please <A HREF="/bugs/?func=addbug&group_id=1">[ Submit a bug ]</A>.
 
-<P>All other inquiries should be directed to:
-<A href="mailto:codex-contact@codex.xerox.com">[The CodeX contact]</A>
+<P>
+All questions on software development tools and techniques (version control, programming, algorithms,...) should be directed to the appropriate <A HREF="/mail/?group_id=1">[ Developers Channel ]</a> if possible.
 
-<P>You may contact any member of the <A href="staff.php"><B>[ staff ]</B></A> individually directly via email.
+<P>All other inquiries should be directed to the 
+<A href="mailto:codex-contact@codex.xerox.com">[ CodeX contact ]</A>
+
+<P>You may also contact any member of the <A href="staff.php">[ CodeX Team ]</A> individually directly via email.
 
 <?php
 $HTML->footer(array());
