@@ -1571,7 +1571,7 @@ class ArtifactTypeHtml extends ArtifactType {
 
 		echo '
 		<INPUT type="submit" name="submit" value="Update">
-		</form>';
+		</form><hr>';
 	}
 
 	/**
