@@ -22,28 +22,18 @@
 
 <!-- ==================================================================== -->
 
-<xsl:template match="*" mode="process.root">
-  <xsl:variable name="doc" select="self::*"/>
-  <html>
-  <head>
-    <xsl:call-template name="head.content">
-      <xsl:with-param name="node" select="$doc"/>
-    </xsl:call-template>
-    <xsl:call-template name="user.head.content">
-      <xsl:with-param name="node" select="$doc"/>
-    </xsl:call-template>
-  </head>
-  <body>
-    <xsl:call-template name="body.attributes"/>
-    <xsl:call-template name="user.header.content">
-      <xsl:with-param name="node" select="$doc"/>
-    </xsl:call-template>
-    <xsl:apply-templates select="."/>
-    <xsl:call-template name="user.footer.content">
-      <xsl:with-param name="node" select="$doc"/>
-    </xsl:call-template>
-  </body>
-  </html>
+<xsl:template name="user.footer.navigation">
+  <xsl:param name="node" select="."/>
+  <br/><div align="center"><font size="-1"><i>
+  Copyright &#169; Xerox Corporation, CodeX Team, 2001-2002. All Rights Reserved</i></font>
+  </div>
+</xsl:template>
+
+<xsl:template name="user.header.navigation">
+  <xsl:param name="node" select="."/>
+  <div align="center"><font size="-1"><i>
+  Copyright &#169; Xerox Corporation, CodeX Team, 2001-2002. All Rights Reserved</i></font>
+  </div><br/>
 </xsl:template>
 
 <!-- ==================================================================== -->
