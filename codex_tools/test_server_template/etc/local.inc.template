@@ -184,8 +184,18 @@ $sys_user_approval = 0;
 $sys_themedefault = 'default';
 
 //
-// Max upload size
-$sys_max_size_upload = 20000000;
+// Max upload size for quick release, documentation, patch and code snippet.
+// in bytes
+// e.g. 12*1024*1024 for 12 MB
+// Make sure that php.ini and mysql configuration file (/etc/my.cnf)
+// are also configured to allow this size.
+$sys_max_size_upload = 12*1024*1024;
+
+//
+// Max upload size for attachments (bugs, SR, artifacts, etc.)
+// in bytes
+$sys_max_size_attachment = 2*1024*1024;
+
 
 // End of customizations -- place nothing after the closing PHP tag!
 ?>
