@@ -11,6 +11,7 @@ $osdn_sites[8] = array('Freshmeat' => 'http://www.freshmeat.net/');
 $osdn_sites[9] = array('XAC' => 'http://xww.xac.world.xerox.com/');
 $osdn_sites[10] = array('Xerox eTTM' => 'http://ettm.wrc.xerox.com/');
 $osdn_sites[11] = array('Wilson TIC' => 'http://tic.wrc.xerox.com/');
+$osdn_sites[12] = array('alphaAvenue' => 'http://www.alphaAvenue.com/');
 
 function osdn_nav_dropdown() {
 	GLOBAL $osdn_sites;
