@@ -435,6 +435,7 @@ sub mail_notification {
 		 "To: $comma_names",
 		 "Subject: $subject",
 		 "Reply-to: $mailname",
+		 "Content-type: text/plain; charset=iso-8859-1",
 		 ''); # We need this blank line before the message body.
 	open (MAIL, "| $SENDMAIL -bm -F\"$fullname\" $names");
     }

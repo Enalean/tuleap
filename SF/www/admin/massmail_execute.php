@@ -63,11 +63,12 @@ for ($i=0; $i<$rows; $i++) {
 	$tolist .= db_result($res_mail,$i,'email').', ';
 	if ($i % 25 == 0) {
 		//spawn sendmail for 25 addresses at a time
-		$body = "To: \"$to_name\" <noreply@$GLOBALS[HTTP_HOST]>".
-			"\nBCC: $tolist".
-			"\nSubject: ". stripslashes($mail_subject).
-			"\n\n". stripslashes($mail_message);
-		exec ("/bin/echo \"". util_prep_string_for_sendmail($body) ."\" | /usr/sbin/sendmail -fcodex-admin@$GLOBALS[HTTP_HOST] -t -i &");
+		$body = "To: \"$to_name\" <noreply@".$GLOBALS['sys_default_domain'].">".$sys_lf.
+			"BCC: $tolist".$sys_lf.
+		        'Content-type: text/plain; charset=iso-8859-1'.$sys_lf.
+			"Subject: ". stripslashes($mail_subject).$sys_lf.$sys_lf.
+		        stripslashes($mail_message);
+		exec ("/bin/echo \"". util_prep_string_for_sendmail($body) ."\" | /usr/sbin/sendmail -f".$GLOBALS['sys_email_admin']." -t -i &");
 		usleep(2000000);
 		print "\nsending to $tolist";
 		$tolist='';
@@ -78,12 +79,13 @@ for ($i=0; $i<$rows; $i++) {
 //send the last of the messages.
 //spawn sendmail for 25 addresses at a time
 //LJ and to_name explicit name added in the To: field
-$body = "To: \"$to_name\" <noreply@$GLOBALS[HTTP_HOST]>".
-"\nBCC: $tolist".
-"\nSubject: ". stripslashes($mail_subject).
-"\n\n". stripslashes($mail_message);
+$body = "To: \"$to_name\" <noreply@".$GLOBALS['sys_default_domain'].">".$sys_lf.
+"BCC: $tolist".$sys_lf.
+'Content-type: text/plain; charset=iso-8859-1'.$sys_lf.
+"Subject: ". stripslashes($mail_subject).$sys_lf.$sys_lf.
+stripslashes($mail_message);
 
-exec ("/bin/echo \"". util_prep_string_for_sendmail($body) ."\" | /usr/sbin/sendmail -fcodex-admin@$GLOBALS[sys_default_domain] -t -i &");
+exec ("/bin/echo \"". util_prep_string_for_sendmail($body) ."\" | /usr/sbin/sendmail -f".$GLOBALS['sys_email_admin']." -t -i &");
 usleep(2000000);
 print "\nsending to $tolist";
 $tolist='';

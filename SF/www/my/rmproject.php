@@ -52,8 +52,9 @@ if (user_isloggedin()) {
 	}
 
 
-	$other = "From: noreply@$GLOBALS[sys_default_domain]";
-	$subject = "[".$GLOBALS['sys_default_domain']."] $user_id has been removed from project $group_id";
+	$hdrs = "From: noreply@".$GLOBALS['sys_default_domain'].$GLOBALS['sys_lf'];
+	$hdrs .='Content-type: text/plain; charset=iso-8859-1'.$GLOBALS['sys_lf'];
+	$subject = "[".$GLOBALS['sys_name']."] $user_id has been removed from project $group_id";
 	$body = "This message is being sent to notify the administrator(s) of".
 		"\nproject ID $group_id that user ID $user_id has chosen to".
 		"\nremove him/herself from the project.".
@@ -61,7 +62,7 @@ if (user_isloggedin()) {
 		"\n$server/project/memberlist.php?group_id=$group_id".
 		"\n\n";
 
-	mail($to,$subject,$body,$other);
+	mail($to,$subject,$body,$hdrs);
 
 } else {
 

@@ -1068,11 +1068,17 @@ class ArtifactHtml extends Artifact {
 	
 		//echo "DBG Sending email to: $to<br>";
 	
-		$more='From: noreply@'.$GLOBALS['sys_default_domain'];
+		$hdrs = 'From: noreply@'.$GLOBALS['sys_default_domain'].$sys_lf;
+		$hdrs .='Content-type: text/plain; charset=iso-8859-1'.$sys_lf;
+
+		$hdrs .='X-CodeX-Project: '.group_getunixname($group_id).$sys_lf;
+		$hdrs .='X-CodeX-Artifact: '.$this->ArtifactType->getItemName().$sys_lf;
+		$hdrs .='X-CodeX-Artifact-ID: '.$this->getID().$sys_lf;
+
 	    	$subject='['.$this->ArtifactType->getCapsItemName().' #'.$this->getID().'] '.util_unconvert_htmlspecialchars(db_result($result,0,'summary'));
 
 		//echo "DBG: body:".$body."<br>";
-		if ($to) { mail($to,$subject,$body,$more); }
+		if ($to) { mail($to,$subject,$body,$hdrs); }
 	
 		$feedback .= ' Artifact Update Sent '; //to '.$to;
 	

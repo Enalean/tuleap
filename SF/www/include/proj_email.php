@@ -46,8 +46,10 @@ function send_new_project_email($group_id) {
 
 	// LJ Uncomment to test
 	//echo $message; return
+	$hdrs = "From: ".$GLOBALS['sys_email_admin'].$GLOBALS['sys_lf'];
+	$hdrs .='Content-type: text/plain; charset=iso-8859-1'.$GLOBALS['sys_lf'];
 	
-	mail($row_admins['email'],$GLOBALS['sys_name'].' Project '.$row_grp['unix_group_name'].' Approved',$message,"From: noreply@$GLOBALS[sys_default_domain]");
+	mail($row_admins['email'],$GLOBALS['sys_name'].' Project '.$row_grp['unix_group_name'].' Approved',$message,$hdrs);
 
 }
 

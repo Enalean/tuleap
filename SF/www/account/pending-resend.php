@@ -26,7 +26,10 @@ $message = "Thank you for registering on the ".$GLOBALS['sys_name']." web site. 
 
 // only mail if pending
 if ($row_user[status] == 'P') {
-	mail($row_user[email], $GLOBALS['sys_name']." Account Registration",$message,"From: ".$GLOBALS['sys_email_admin']);
+    $hdrs = "From: noreply@".$GLOBALS['sys_default_domain'].$GLOBALS['sys_lf'];
+    $hdrs .='Content-type: text/plain; charset=iso-8859-1'.$GLOBALS['sys_lf'];
+
+    mail($row_user[email], $GLOBALS['sys_name']." Account Registration",$message,$hdrs);
 	$HTML->header(array(title=>"Account Pending Verification"));
 ?>
 

@@ -1450,7 +1450,7 @@ function pm_list_all_fields($sort_func=false,$by_field_id=false) {
 }
 
 function pm_mail_followup($project_task_id,$more_addresses=false,$changes=false) {
-    global $sys_datefmt,$feedback;
+    global $sys_datefmt,$feedback,$sys_lf;
     /*
       Send a message to the person who opened this task and the person it is assigned to - 
     */
@@ -1547,10 +1547,11 @@ function pm_mail_followup($project_task_id,$more_addresses=false,$changes=false)
     
     	//echo "DBG Sending email to: $to<br";
     
-    	$hdrs = 'From: noreply@'.$GLOBALS['sys_default_domain']."\n";
-	$hdrs .='X-CodeX-Project: '.group_getunixname($group_id)."\n";
-	$hdrs .='X-CodeX-Artifact: task'."\n";
-	$hdrs .='X-CodeX-Artifact-ID: '.$project_task_id."\n";
+    	$hdrs = 'From: noreply@'.$GLOBALS['sys_default_domain'].$sys_lf;
+	$hdrs .='Content-type: text/plain; charset=iso-8859-1'.$sys_lf;
+	$hdrs .='X-CodeX-Project: '.group_getunixname($group_id).$sys_lf;
+	$hdrs .='X-CodeX-Artifact: task'.$sys_lf;
+	$hdrs .='X-CodeX-Artifact-ID: '.$project_task_id.$sys_lf;
 	$subject='[Task #'.$project_task_id.'] '.util_unconvert_htmlspecialchars(db_result($result,0,'summary'));
 
     	mail($to,$subject,$body,$hdrs);

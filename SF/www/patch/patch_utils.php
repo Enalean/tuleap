@@ -212,7 +212,7 @@ function get_patch_category_name($string) {
 }
 
 function mail_followup($patch_id,$more_addresses=false) {
-	global $sys_datefmt,$feedback;
+	global $sys_datefmt,$feedback,$sys_lf;
 	/*
 
 		Send a message to the person who opened this patch and the person it is assigned to
@@ -284,10 +284,11 @@ function mail_followup($patch_id,$more_addresses=false) {
 		    $to .= ','.$more_addresses;
 		}
 
-		$hdrs = 'From: noreply@'.$GLOBALS['sys_default_domain']."\n";
-		$hdrs .='X-CodeX-Project: '.group_getunixname(db_result($result,0,'group_id'))."\n";
-		$hdrs .='X-CodeX-Artifact: patch'."\n";
-		$hdrs .='X-CodeX-Artifact-ID: '.$patch_id."\n";
+		$hdrs = 'From: noreply@'.$GLOBALS['sys_default_domain'].$sys_lf;
+		$hdrs .='Content-type: text/plain; charset=iso-8859-1'.$sys_lf;
+		$hdrs .='X-CodeX-Project: '.group_getunixname(db_result($result,0,'group_id')).$sys_lf;
+		$hdrs .='X-CodeX-Artifact: patch'.$sys_lf;
+		$hdrs .='X-CodeX-Artifact-ID: '.$patch_id.$sys_lf;
 
 		mail($to,$subject,$body,$hdrs);
 

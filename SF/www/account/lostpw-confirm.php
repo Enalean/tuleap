@@ -16,15 +16,24 @@ $row_user = db_fetch_array($res_user);
 
 db_query("UPDATE user SET confirm_hash='$confirm_hash' WHERE user_id=$row_user[user_id]");
 
+if (session_issecure()) {
+    $server = 'https://'.$GLOBALS['sys_https_host'];
+} else {
+    $server = 'http://'.$GLOBALS['sys_default_domain'];
+}
+
 $message = "Someone (presumably you) on the ".$GLOBALS['sys_name']." site requested a\n"
 	. "password change through email verification. If this was not you,\n"
 	. "ignore this message and nothing will happen.\n\n"
 	. "If you requested this verification, visit the following URL\n"
 	. "to change your password:\n\n"
-	. "<http://$GLOBALS[HTTP_HOST]/account/lostlogin.php?confirm_hash=$confirm_hash>\n\n"
+	. "$server/account/lostlogin.php?confirm_hash=$confirm_hash\n\n"
 	. " -- The ".$GLOBALS['sys_name']." Team\n";
 
-mail ($row_user['email'],$GLOBALS['sys_name']." Password Verification",$message,"From: noreply@$GLOBALS[HTTP_HOST]");
+$hdrs = "From: noreply@".$GLOBALS['sys_default_domain'].$GLOBALS['sys_lf'];
+$hdrs .='Content-type: text/plain; charset=iso-8859-1'.$GLOBALS['sys_lf'];
+
+mail ($row_user['email'],$GLOBALS['sys_name']." Password Verification",$message,$hdrs);
 
 $HTML->header(array('title'=>"Lost Password Confirmation"));
 

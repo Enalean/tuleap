@@ -36,29 +36,26 @@ if ($send_mail) {
 		exit_missing_param();
 	}
 
+	$hdrs = 'From: '. $name .' <'. $email .'>'.$GLOBALS['sys_lf'];
+	$hdrs .='Content-type: text/plain; charset=iso-8859-1'.$GLOBALS['sys_lf'];
+
 	if ($toaddress) {
 		/*
 			send it to the toaddress
 		*/
 		$to=eregi_replace('_maillink_','@',$toaddress);
-		$from='From: '. $name .' <'. $email .'>';
-		mail($to, stripslashes($subject),stripslashes($body) ,$from);
-		$HTML->header(array('title'=>'SorceForge Contact'));
-		echo '<H2>Message sent</H2>';
-		$HTML->footer(array());
-		exit;
 	} else if ($touser) {
 		/*
 			figure out the user's email and send it there
 		*/
 		$to=db_result($result,0,'email');
-		$from='From: '. $name .' <'. $email .'>';
-		mail($to, stripslashes($subject), stripslashes($body),$from);
-		$HTML->header(array('title'=>'SorceForge Contact'));
-		echo '<H2>Message sent</H2>';
-		$HTML->footer(array());
-		exit;
 	}
+	mail($to, stripslashes($subject),stripslashes($body),$hdrs);
+	$HTML->header(array('title'=>'SorceForge Contact'));
+	echo '<H2>Message sent</H2>';
+	$HTML->footer(array());
+	exit;
+
 }
 
 $HTML->header(array('title'=>'SorceForge Staff'));

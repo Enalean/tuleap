@@ -176,7 +176,7 @@ function show_supportlist ($result,$offset,$set='open') {
 }
 
 function sr_utils_mail_followup($support_id,$more_addresses=false,$changes=false) {
-    global $sys_datefmt,$feedback;
+    global $sys_datefmt,$feedback,$sys_lf;
     /*
              Send a message to the person who opened this support and the person it is assigned to
     */
@@ -261,10 +261,11 @@ function sr_utils_mail_followup($support_id,$more_addresses=false,$changes=false
 	    }
 	    
 	    // Send the email message
-	    $hdrs = 'From: noreply@'.$GLOBALS['sys_default_domain']."\n";
-	    $hdrs .='X-CodeX-Project: '.group_getunixname($group_id)."\n";
-	    $hdrs .='X-CodeX-Artifact: support'."\n";
-	    $hdrs .='X-CodeX-Artifact-ID: '.$support_id."\n";
+	    $hdrs = 'From: noreply@'.$GLOBALS['sys_default_domain'].$sys_lf;
+	    $hdrs .='Content-type: text/plain; charset=iso-8859-1'.$sys_lf;
+	    $hdrs .='X-CodeX-Project: '.group_getunixname($group_id).$sys_lf;
+	    $hdrs .='X-CodeX-Artifact: support'.$sys_lf;
+	    $hdrs .='X-CodeX-Artifact-ID: '.$support_id.$sys_lf;
 	    $subject="[ SR #".db_result($result,0,"support_id")." ] ".
 		util_unconvert_htmlspecialchars(db_result($result,0,"summary"));
 

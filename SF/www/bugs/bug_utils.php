@@ -987,7 +987,7 @@ function bug_build_notification_list($bug_id, $group_id, $changes) {
 }
 
 function bug_mail_followup($bug_id,$more_addresses=false,$changes=false) {
-    global $sys_datefmt,$feedback;
+    global $sys_datefmt,$feedback,$sys_lf;
     /*
       Send a message to the person who opened this bug and the person it is assigned to - 
       modified by jstidd on 1/30/01 to eliminate default user assigned to
@@ -1099,10 +1099,11 @@ function bug_mail_followup($bug_id,$more_addresses=false,$changes=false) {
 
 	//echo "DBG Sending email to: $to<br";
 
-	$hdrs='From: noreply@'.$GLOBALS['sys_default_domain']."\n";
-	$hdrs .='X-CodeX-Project: '.group_getunixname($group_id)."\n";
-	$hdrs .='X-CodeX-Artifact: bug'."\n";
-	$hdrs .='X-CodeX-Artifact-ID: '.$bug_id."\n";
+	$hdrs='From: noreply@'.$GLOBALS['sys_default_domain'].$sys_lf;
+	$hdrs .='Content-type: text/plain; charset=iso-8859-1'.$sys_lf;
+	$hdrs .='X-CodeX-Project: '.group_getunixname($group_id).$sys_lf;
+	$hdrs .='X-CodeX-Artifact: bug'.$sys_lf;
+	$hdrs .='X-CodeX-Artifact-ID: '.$bug_id.$sys_lf;
         $subject='[Bug #'.db_result($result,0,'bug_id').'] '.util_unconvert_htmlspecialchars(db_result($result,0,'summary'));
 
 

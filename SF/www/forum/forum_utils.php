@@ -486,7 +486,7 @@ function show_post_form($forum_id, $thread_id=0, $is_followup_to=0, $subject="")
 }
 
 function handle_monitoring($forum_id,$msg_id) {
-	global $feedback;
+	global $feedback,$sys_lf;
 	/*
 		Checks to see if anyone is monitoring this forum
 		If someone is, it sends them the message in email format
@@ -512,20 +512,22 @@ function handle_monitoring($forum_id,$msg_id) {
 		$result = db_query ($sql);
 
 		if ($result && db_numrows($result) > 0) {
-			$body = "To: noreply@$GLOBALS[HTTP_HOST]".
-				"\nBCC: $tolist".
-				"\nSubject: [" .db_result($result,0,'unix_group_name'). " - " . db_result($result,0,'forum_name')."] " . 
-					util_unconvert_htmlspecialchars(db_result($result,0,'subject')).
-				"\n\nRead and respond to this message at: ".
-				"\nhttp://$GLOBALS[sys_default_domain]/forum/message.php?msg_id=".$msg_id.
-				"\nBy: " . db_result($result,0, 'user_name') .
-				"\n\n" . util_unconvert_htmlspecialchars(db_result($result,0, 'body')).
-				"\n\n______________________________________________________________________".
-				"\nYou are receiving this email because you elected to monitor this forum.".
-				"\nTo stop monitoring this forum, login and visit: ".
-				"\nhttp://$GLOBALS[sys_default_domain]/forum/monitor.php?forum_id=$forum_id";
+		    $body = "To: noreply@".$GLOBALS['sys_default_domain'].$sys_lf;
+		    $body .='Content-type: text/plain; charset=iso-8859-1'.$sys_lf;
+		    $body .="BCC: $tolist".$sys_lf;
 
-			exec ("/bin/echo \"". util_prep_string_for_sendmail($body) ."\" | /usr/sbin/sendmail -fnoreply@$GLOBALS[HTTP_HOST] -t -i &");
+		    $body .= "Subject: [" .db_result($result,0,'unix_group_name'). " - " . db_result($result,0,'forum_name')."] " . 
+			util_unconvert_htmlspecialchars(db_result($result,0,'subject')).
+			"\n\nRead and respond to this message at: ".
+			"\nhttp://".$GLOBALS['sys_default_domain']."/forum/message.php?msg_id=".$msg_id.
+			"\nBy: " . db_result($result,0, 'user_name') .
+			"\n\n" . util_unconvert_htmlspecialchars(db_result($result,0, 'body')).
+			"\n\n______________________________________________________________________".
+			"\nYou are receiving this email because you elected to monitor this forum.".
+			"\nTo stop monitoring this forum, login and visit: ".
+			"\nhttp://".$GLOBALS['sys_default_domain']."/forum/monitor.php?forum_id=$forum_id";
+
+			exec ("/bin/echo \"". util_prep_string_for_sendmail($body) ."\" | /usr/sbin/sendmail -fnoreply@".$GLOBALS['sys_default_domain']." -t -i &");
 
 			$feedback .= ' email sent - people monitoring ';
 		} else {

@@ -27,7 +27,10 @@ $message = "You have requested a change of email address on ".$GLOBALS['sys_name
 	. "$server/account/change_email-complete.php?confirm_hash=$confirm_hash\n\n"
 	. " -- The ".$GLOBALS['sys_name']." Team\n";
 
-mail ($form_newemail,$GLOBALS['sys_name']." Email Verification",$message,"From: noreply@".$GLOBALS['sys_default_domain']);
+$hdrs = "From: noreply@".$GLOBALS['sys_default_domain'].$GLOBALS['sys_lf'];
+$hdrs .='Content-type: text/plain; charset=iso-8859-1'.$GLOBALS['sys_lf'];
+
+mail ($form_newemail,$GLOBALS['sys_name']." Email Verification",$message,$hdrs);
 
 $HTML->header(array('title'=>"Email Change Confirmation"));
 ?>

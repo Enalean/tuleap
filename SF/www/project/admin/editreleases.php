@@ -372,9 +372,9 @@ if ($submit) {
 		
 			$subject=$GLOBALS['sys_name'].' File Release Notice';
 		
-			$body = "To: noreply@$GLOBALS[HTTP_HOST]".
-				"\nBCC: $list".
-				"\nSubject: $subject".
+			$body = "To: noreply@".$GLOBALS['sys_default_domain'].$GLOBALS['sys_lf'].
+				"BCC: $list".$GLOBALS['sys_lf'].
+				"Subject: $subject".$GLOBALS['sys_lf'].$GLOBALS['sys_lf'].
 				"\n\nA new version of ". db_result($result,0,'name')." has been released. ".
 				"\nYou can download it at: ".
 				"\n\n<http://".$GLOBALS['sys_default_domain']."/project/showfiles.php?group_id=$group_id&release_id=$release_id> ".
@@ -383,7 +383,7 @@ if ($submit) {
 				"\nfuture, please login to ".$GLOBALS['sys_name']." and click this link: ".
 				"\n<http://".$GLOBALS['sys_default_domain']."/project/filemodule_monitor.php?filemodule_id=$package_id> ";
 			
-			exec ("/bin/echo \"$body\" | /usr/sbin/sendmail -fnoreply@$GLOBALS[HTTP_HOST] -t");
+			exec ("/bin/echo \"$body\" | /usr/sbin/sendmail -fnoreply@".$GLOBALS['sys_default_domain']." -t -i &");
 			$feedback .= ' email sent - '. db_numrows($result) .' users tracking ';
 		}
 	}
