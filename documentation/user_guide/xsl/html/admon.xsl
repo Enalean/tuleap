@@ -30,7 +30,7 @@
 <xsl:template match="note">
     <table border="0" cellspacing="2" cellpadding="0">
       <tr height="100%">
-        <td><img src="../icons/1pixel_black.gif" width="2" height="100%"/></td>
+     <td><img src="../../icons/1pixel_black.gif" width="2" height="100%"/></td>
         <td>    
             <xsl:apply-templates/>
         </td>

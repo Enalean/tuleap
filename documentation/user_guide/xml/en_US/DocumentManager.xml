@@ -76,11 +76,11 @@
     <section id="DocumentSubmission">
       <title>Document Submission</title>
 
-      <para><note>Before the first document is submitted to a project,
+      <note><para>Before the first document is submitted to a project,
       the project members with &#34;Editors&#34; rights on the Document
       Manager must first create one document group (folder). A document has to
       be attached to a group in any case hence the need for at least one
-      document group.</note></para>
+      document group.</para></note>
 
       <para>Following the CodeX philosophy, any CodeX user can submit a
       document to a project team. To submit a new document, click on the
@@ -108,11 +108,6 @@
       use all sorts of typographic effects as well as pointers to other
       locations, etc.</para>
     </section>
-
-    <para></para>
-    <para></para>
-    <para></para>
-    <para></para>
 
     <section id="DocumentAdministration">
       <title>Document Administration</title>
@@ -155,9 +150,6 @@
         this document. Project Adminstrators have access to this audit trail (see <xref linkend="SourceCodeAccessLogs"/>).</para>
         <para>Finally click on the "Submit Edit" button to validate the changes.</para>
       </section>
-
-    <para></para>
-    <para></para>
 
       <section id="DocumentUpdate">
         <title>Document Update</title>

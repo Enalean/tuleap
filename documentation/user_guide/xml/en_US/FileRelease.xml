@@ -123,13 +123,13 @@
         </listitem>
       </itemizedlist>
 
-      <para><note>At first glance, this structure may appear a bit
+      <note><para>At first glance, this structure may appear a bit
       complex. However this is really the kind of structure a project team
       should aim at to make their deliverables easy to understand and easy to
       access for the rest of Xerox. Thinking about the structure of your
       software and documentation deliverables ahead of time can help you
       structure your team, your working processes (e.g. build and test
-      process) in the right way. Do not overlook this part of your project.</note></para>
+      process) in the right way. Do not overlook this part of your project.</para></note>
     </section>
 
     <section id="FileReleaseBrowsingandDownload">

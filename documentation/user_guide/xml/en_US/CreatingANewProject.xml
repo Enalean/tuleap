@@ -196,11 +196,11 @@
       update these 2 pieces of information. Refer to <xref
       linkend="ProjectAdministration" /> for more details.</para>
 
-      <para><note>Giving both the short description and the categories
+      <note><para>Giving both the short description and the categories
       are critical to both the consistency of the CodeX site but also for the
       rest of Xerox to make sense of the many projects hosted on CodeX.
       Characterizing your project in the best possible way is the first step
-      towards efficient code sharing and re-use.</note></para>
+      towards efficient code sharing and re-use.</para></note>
 
       <tip>
         <title>Tip: Cannot find an appropriate Topic? Contact us</title>

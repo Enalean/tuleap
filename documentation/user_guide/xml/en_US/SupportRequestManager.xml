@@ -40,6 +40,13 @@
       its category, if any (in general, these are high level modules or
       functions of the software).</para>
 
+      <para>Like bugs and tasks the selected SRs can be sorted by clicking on
+      any of the labels at the top of the SR report. And they also follow the
+      same color coding schema to show the urgency of a SR. The SR Manager
+      menu also offers 2 shortcuts to quickly select all SRs with status value
+      at Open (&#34;Open Requests&#34; item) and those that have been assigned
+      to you (&#34;My Requests&#34; item). This is mostly for project members.</para>
+
       <figure id="FigureTheSupportRequestBrowsingScreen">
         <title>The Support Request Browsing screen</title>
 
@@ -51,12 +58,6 @@
         </mediaobject>
       </figure>
 
-      <para>Like bugs and tasks the selected SRs can be sorted by clicking on
-      any of the labels at the top of the SR report. And they also follow the
-      same color coding schema to show the urgency of a SR. The SR Manager
-      menu also offers 2 shortcuts to quickly select all SRs with status value
-      at Open (&#34;Open Requests&#34; item) and those that have been assigned
-      to you (&#34;My Requests&#34; item). This is mostly for project members.</para>
     </section>
 
     <section id="SupportRequestSubmission">

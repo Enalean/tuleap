@@ -412,26 +412,27 @@
 	list. Using this feature you can easily test various sorting
 	strategies.</para>
 
-	<para><note>Note:Sorting criteria, like selection criteria,
+	<note><para>Note:Sorting criteria, like selection criteria,
 	are also saved into your preferences and the same sorting
-	criterion is re-used in subsequent bug queries.</note></para>
+	criterion is re-used in subsequent bug queries.</para></note>
+
+	<para><tip><title>Tip: keep an eye on unassigned
+	bugs</title><para>In most cases when a bug is submitted by a
+	person external to the project team, the bug assignee is given
+	the value &#34;None&#34;. In other words the bug has been
+	submitted but it is awaiting an assignment by the project
+	member in charge of the bug dispatch. Since nobody is in
+	charge, the bug can be completely overlooked by the project
+	team. Two solutions can help with this problem: 1) Use a an
+	e-mail address where all new submissions are sent (see <xref
+	linkend="BugReportManagement" />) and/or 2) Assign somebody in
+	the team the responsibility to run a bug query once or twice a
+	day to collect the bugs which Assignee field is &#34;None&#34;
+	and give him/her the responsibility to assign the
+	bugs.</para></tip></para>
 
       </section>
 
-      <para><tip><title>Tip: keep an eye on unassigned
-      bugs</title><para>In most cases when a bug is submitted by a
-      person external to the project team, the bug assignee is given
-      the value &#34;None&#34;. In other words the bug has been
-      submitted but it is awaiting an assignment by the project member
-      in charge of the bug dispatch. Since nobody is in charge, the
-      bug can be completely overlooked by the project team. Two
-      solutions can help with this problem: 1) Use a an e-mail address
-      where all new submissions are sent (see <xref
-      linkend="BugReportManagement" />) and/or 2) Assign somebody in
-      the team the responsibility to run a bug query once or twice a
-      day to collect the bugs which Assignee field is &#34;None&#34;
-      and give him/her the responsibility to assign the
-      bugs.</para></tip></para>
 
       <section id="PrinterFriendlyVersion">
 	<title>Printer Friendly Version</title>
@@ -883,7 +884,7 @@
 
             <colspec colname="c2" colwidth="250pt"  />
 
-            <thead align="left">
+            <thead>
               <row>
                 <entry>BTS Administration Sub-modules</entry>
                 <entry>Access Permission</entry>
@@ -1268,17 +1269,6 @@
 	Values&#34; item from the Bug Administration menu bar at the
 	top of the screen.</para>
 
-	<para>The list of used (and required) fields which type is a
-	pull-down menu will appear on the screen. Other field types
-	like number fields or text fields (e.g.  Effort or Summary) do
-	not appear in this list because setting a list of predefined
-	values for these field types doesn&#39;t make any sense.  In
-	addition you&#39;ll always see required bug fields like
-	&#34;Comment Type&#34; and &#34;Canned Response&#34; items in
-	the list. (See <xref
-	linkend="FigureBugFieldListWithUserDefinableValues"
-	/>)</para>
-
 	<figure id="FigureBugFieldListWithUserDefinableValues">
 	  <title>Bug field list  with user definable values</title>
 
@@ -1289,6 +1279,16 @@
 	    </imageobject>
 	  </mediaobject>
 	</figure>
+
+	<para>The list of used (and required) fields which type is a
+	pull-down menu will appear on the screen. Other field types
+	like number fields or text fields (e.g.  Effort or Summary) do
+	not appear in this list because setting a list of predefined
+	values for these field types doesn&#39;t make any sense.  In
+	addition you&#39;ll always see required bug fields like
+	&#34;Comment Type&#34; and &#34;Canned Response&#34; items in
+	the list. (See <xref linkend="FigureBugFieldListWithUserDefinableValues"/>)
+        </para>
 
 	<para>Information displayed on this page are as follows:</para>
 	<itemizedlist mark="bullet" spacing="compact">
@@ -1685,22 +1685,24 @@
 	  </listitem>
 	</itemizedlist>
 
-	<para><note><emphasis role="bold">Note</emphasis>: it is
+	<note><para><emphasis role="bold">Note</emphasis>: it is
 	perfectly OK to use a field as a search criteria and not as a
 	column in the bug report and vice versa. For the fiels you
 	don't want to use at all in the report leave all boxes and
-	text fields blank.</note></para>
+	text fields blank.</para></note>
+
+	<figure id="FigureBugReportSetting">
+	  <title>Setting a  bug report</title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata format="PNG"
+		fileref="../../screenshots/en_US/sc_bugreportsetting.png" width="14.2cm" />
+	    </imageobject>
+	</mediaobject>
+	</figure>
+	
       </section>
 
-      <figure id="FigureBugReportSetting">
-	<title>Setting a  bug report</title>
-	<mediaobject>
-	  <imageobject>
-	    <imagedata format="PNG"
-		       fileref="../../screenshots/en_US/sc_bugreportsetting.png" width="14.2cm" />
-	  </imageobject>
-	</mediaobject>
-      </figure>
     </section>
 
 
@@ -1727,9 +1729,7 @@
 	who are in charge of qualifying and dispatching the
 	bugs.</para>
 
-      </section>
-
-      <para><tip>
+	<para><tip>
 	  <title>Tip: Create a Distribution List to notify several people</title>
 	  
 	  <para>If you want to notify many people at once, we suggest
@@ -1744,7 +1744,11 @@
 	  list are kept in an archive that can serve as an audit
 	  trail for your bug tracking system.</para>
 
-	</tip></para>
+	  </tip>
+        </para>
+
+      </section>
+
 
       <section id="BugWatchers">
 	<title>Bug Watchers</title>
@@ -1782,10 +1786,10 @@
 	  </listitem>
 	</itemizedlist>
 
-	<para><note>Remark: The goal of the bug watch feature is not to spy on
+	<note><para>Remark: The goal of the bug watch feature is not to spy on
 	you. To make sure that you are only watched by authorized persons,
 	CodeX always shows you the list of CodeX users who are
-	currently watching your bug notifications.</note></para>
+	currently watching your bug notifications.</para></note>
 
       </section>
 
@@ -1880,6 +1884,7 @@
 	    </imageobject>
 	  </mediaobject>
 	</figure>
+
       </section>
 
     </section>

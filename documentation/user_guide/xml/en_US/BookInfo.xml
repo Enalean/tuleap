@@ -198,6 +198,16 @@
         documented in the bug tracking system. Merge with existing
         on-line CodeX help.</revremark>
       </revision>
+
+      <revision>
+        <revnumber>2.1</revnumber>
+
+        <date>22-Nov-2002</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>XML changes to succesfully go through an XML validator. Fixed a formatting problem in the Table of Contents.</revremark>
+      </revision>
      </revhistory>
   </bookinfo>
 <!--

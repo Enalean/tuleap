@@ -64,14 +64,13 @@
       words, a Project Administrator cannot be removed from the project
       members as long as she has administrator privilege.</para>
 
-      <para></para>
-      <para><note>You have probably noticed that project member&#39;s
+      <note><para>You have probably noticed that project member&#39;s
       name on the Project Administration page are actually hyperlinks. On this
       page as well as in many other pages throughout CodeX a click on a login
       name leads you to the user page where you can know more about the user
       (including its location, phone/fax number, etc. extracted from the Xerox
       Directory in real time) and send an e-mail message to this person
-      directly via a Web form.</note></para>
+      directly via a Web form.</para></note>
 
       <figure id="FigureASampleProjectAdministrationPage">
         <title>A Sample Project Administration Page</title>
@@ -460,13 +459,13 @@
 	    information is available on the Project Data
 	    Export page.</para>
 
-	    <para><note><emphasis role="bold">Important
+	    <note><para><emphasis role="bold">Important
 	    Remark</emphasis>: you can leave the default field name
 	    (Field1,....FieldN) as well as the default Text type in
 	    most cases. However long text fields like bug/tasks
 	    follow-up comments (details field) and original comment
 	    must be declared as type Memo. Failing to do so will cause
-	    MS-Access to corrupt the imported data. </note></para>
+	    MS-Access to corrupt the imported data.</para></note>
 	  </listitem>
 	</itemizedlist>
 
@@ -513,10 +512,10 @@
 	desktop. Write them down and keep them in a safe
 	place. </para>
 
-	<para><note><emphasis role="bold">Remark</emphasis>: if your project
+	<note><para><emphasis role="bold">Remark</emphasis>: if your project
 	database contains several thousands of records (tasks,
 	bugs,&hellip;) it may take the project database generation may
-	take several minutes to complete.</note></para>
+	take several minutes to complete.</para></note>
       </section>
       
       <section id="InstallingandConfiguringtheMySQLODBCDriver">

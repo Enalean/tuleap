@@ -366,21 +366,6 @@ http://codex.xerox.com/survey/survey.php?group_id=N&#38;survey_id=X
         Administration menu and then click on the Survey ID number you are
         interested in.</para>
 
-        <para>A list of all the questions attached to this survey will show up
-        on the screen. Next to each question is an aggregate view of the
-        existing answers. For questions of type &#34;text field&#34; or
-        &#34;text area&#34; you can review the full list of answers. For radio
-        buttons, the Survey Manager compute the total number of answers, the
-        average value as well as the value distribution for radio button
-        answers.</para>
-
-      <para><tip> <title>Export Your Survey Results for Finer Grain
-      Analysis</title> <para>If you want to further massage the
-      results of your surveys remember that CodeX allows project
-      administrators to export project data including survey
-      results. For more details see <xref linkend="ProjectDataExport"
-      /> </para></tip></para>
-      
         <figure id="FigureSurveyResults">
           <title>Survey Results</title>
 
@@ -392,12 +377,25 @@ http://codex.xerox.com/survey/survey.php?group_id=N&#38;survey_id=X
           </mediaobject>
         </figure>
 
+        <para>A list of all the questions attached to this survey will show up
+        on the screen. Next to each question is an aggregate view of the
+        existing answers. For questions of type &#34;text field&#34; or
+        &#34;text area&#34; you can review the full list of answers. For radio
+        buttons, the Survey Manager compute the total number of answers, the
+        average value as well as the value distribution for radio button
+        answers.</para>
+      <para></para>
+      <para></para>
+      <para><tip> <title>Export Your Survey Results for Finer Grain
+      Analysis</title> <para>If you want to further massage the
+      results of your surveys remember that CodeX allows project
+      administrators to export project data including survey
+      results. For more details see <xref linkend="ProjectDataExport"
+      /> </para></tip></para>
+      
+
       </section>
     </section>
-
-    <para></para>
-    <para></para>
-    
 
   </chapter>
 <!--

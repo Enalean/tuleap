@@ -70,10 +70,10 @@ newgrp projectname
 
       <para>You can use this command as many time as you want during a shell
       session when you are about to do work for another one of your project.</para>
-    </section>
 
-    <para></para>
-    <para></para>
+      <para></para>
+      <para></para>
+    </section>
     
     <section id="FTPStorageSpaces">
       <title>FTP Storage Spaces</title>
@@ -97,7 +97,7 @@ newgrp projectname
             to <literal>download.codex.xerox.com</literal>. Use
             &#34;ftp&#34; as login and your email address as the
             password. Then <literal>cd
-            /pub/<emphasis>projectname</emphasis></literal> to access
+            /pub/projectname</literal> to access
             the FTP Anonymous space.</para>
           </listitem>
 
@@ -105,7 +105,7 @@ newgrp projectname
             <para>Project Members access: use an ftp client to connect
             to <literal>download.codex.xerox.com</literal>. Use CodeX
             login and password and then type <literal>cd
-            /home/ftp/pub/<emphasis>projectname</emphasis></literal>
+            /home/ftp/pub/projectname</literal>
             to access the FTP Anonymous space. From there project
             members have both read and write access which means that
             they can upload files.</para>
@@ -114,13 +114,13 @@ newgrp projectname
 	    your email to other users simply use the following
 	    URL:</para>
 
-            <para><literal>ftp://<emphasis>projectname</emphasis>.codex.xerox.com:/pub/<emphasis>projectname</emphasis></literal></para>
+            <para><literal>ftp://projectname.codex.xerox.com:/pub/projectname</literal></para>
 
           </listitem>
         </itemizedlist>
       </section>
 
-      <section id="TheFileReleaseFTPSpace ">
+      <section id="TheFileReleaseFTPSpace">
         <title>The File Release FTP Space</title>
 
         <para>This is where CodeX stores the new file releases uploaded and

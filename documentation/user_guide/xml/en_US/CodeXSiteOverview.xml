@@ -86,6 +86,10 @@
         </listitem>
       </itemizedlist>
 
+      <para>In the rest of this section we only review those items that are
+      permanent and context independent. Other menu items are described later
+      in the document in the related service description.</para>
+
       <figure id="FigureCodeXWebPageFlowChart">
         <title>CodeX Web Page Flow Chart</title>
 
@@ -97,9 +101,6 @@
         </mediaobject>
       </figure>
 
-      <para>In the rest of this section we only review those items that are
-      permanent and context independent. Other menu items are described later
-      in the document in the related service description.</para>
 
       <section id="SoftwareMap">
         <title>Software Map</title>
@@ -322,11 +323,11 @@
           description, a new version number and copy-paste the source code
           associated with the new version.</para>
 
-          <para><note>Please note that even though this is still the
+          <note><para>Please note that even though this is still the
           same code snippet, CodeX assigns a new code snippet ID number to
           each version. So referencing a new version in a Code Snippet Package
           (see section Grouping Code Snippets below) will require that you
-          delete the old version and add the new one.</note></para>
+          delete the old version and add the new one.</para></note>
         </section>
 
         <section id="DeletingACodeSnippet">
@@ -481,10 +482,6 @@
         </itemizedlist>
       </section>
 
-      <para></para>
-      <para></para>
-      <para></para>
-      
       <section id="CodeXDiscussionForums">
         <title>CodeX Discussion Forums</title>
 

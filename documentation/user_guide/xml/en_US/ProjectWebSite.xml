@@ -72,7 +72,7 @@ http://projectname.codex.xerox.com
             Source license and is by far the most popular Web server in the
             world with more than 60% of the market share. For more information
             on Apache see <ulink url="http://www.apache.org">http://www.apache.org</ulink></para></footnote>
-            jargon the directory <literal>/home/groups/<emphasis>projectname</emphasis>/htdocs</literal>
+            jargon the directory <literal>/home/groups/projectname/htdocs</literal>
             is the Document Root of your Web Site.</para>
 
             <para>Apache expects your home page to have one of the following
@@ -100,7 +100,7 @@ http://projectname.codex.xerox.com
             default index.php file created by CodeX into something else by
             using the following commands from your Shell Account:</para>
 
-            <para><literal> cd /home/groups/<emphasis>projectname</emphasis>/htdocs
+            <para><literal> cd /home/groups/projectname/htdocs
             mv index.php index_default.php </literal></para>
           </listitem>
 
@@ -147,7 +147,7 @@ http://projectname.codex.xerox.com
             <colspec colname="c2" colwidth="90pt"  />
 
             <colspec colname="c3" colwidth="260pt" />
-            <thead align="left">
+            <thead>
               <row>
                 <entry>Name</entry>
 
@@ -222,7 +222,7 @@ http://projectname.codex.xerox.com
 
             <colspec colname="c3" colwidth="260pt" />
 
-            <thead align="left">
+            <thead>
               <row>
                 <entry>Name</entry>
 
@@ -485,8 +485,8 @@ ftp://projectname.codex.xerox.com/home/groups/projectname/htdocs/
           publication via FTP. To create a new site go to the Site -&#62; New
           Site menu. In the local information, choose your site name and local
           root folder. For the remote information, choose FTP access and
-          specify <literal><emphasis>projectname</emphasis>.codex.xerox.com</literal>
-          as host and <literal>/home/groups/<emphasis>projectname</emphasis>/htdocs</literal>
+          specify <literal>projectname.codex.xerox.com</literal>
+          as host and <literal>/home/groups/projectname/htdocs</literal>
           as the host directory. The login is your CodeX login.</para>
         </section>
 
@@ -502,7 +502,7 @@ ftp://projectname.codex.xerox.com/home/groups/projectname/htdocs/
             <listitem>
               <para><emphasis role="bold">FTP</emphasis>: this is the simplest
               method for transferring your Web pages to the CodeX remote
-              location. Use ftp to connect to <literal><emphasis>projectname</emphasis>.codex.xerox.com</literal>
+              location. Use ftp to connect to <literal>projectname.codex.xerox.com</literal>
               and use your CodeX username and password to login. Once logged
               in issue the following command:</para>
 
@@ -581,11 +581,11 @@ http://codex.xerox.com/sflogo.php?group_id=N&#38;type=1
 &#60;/A&#62;
         </programlisting>
 
-      <para><note><emphasis role="bold">Important!</emphasis> Substitute
+      <note><para><emphasis role="bold">Caution!</emphasis> Substitute
       the number after &#34;group_id&#34; (N in the example) with your own
       project id number. You can see what your group_id number is by visiting
       any of project services Web page and looking at the group_id value shown
-      in the URL of the page (see the Location bar in Netscape and IE).</note></para>
+      in the URL of the page (see the Location bar in your Web browser).</para></note>
     </section>
   </chapter>
 <!--

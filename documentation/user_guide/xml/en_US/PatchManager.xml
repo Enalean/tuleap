@@ -38,7 +38,8 @@
       <para>On how to generate source code patches see the CVS chapter (<xref
       linkend="VersionControlWithCVS" />).</para>
 
-      <para><note><emphasis role="underline">A note to the project team</emphasis><para>Receiving
+      <note><para><emphasis role="underline">A note to the project team</emphasis></para>
+      <para>Receiving
       source code modifications or other contributions from other CodeX users
       does not imply that you have to accept the new code and insert it in
       your main source tree. It is up to the project team to decide what to do
@@ -47,7 +48,7 @@
       final decision of the project team. Therefore any CodeX visitor is free
       to download any submitted patch and apply it onto its own version of the
       software even if the project team has decided not to apply the patch on
-      the main source tree.</para></note></para>
+      the main source tree.</para></note>
     </section>
 
     <section id="PatchBrowsing">
