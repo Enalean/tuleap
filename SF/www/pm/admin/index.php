@@ -231,7 +231,14 @@ if ($group_id && user_ismember($group_id,'P2')) {
 			<BR>
 			<A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&change_status=1"><h3>Update Subprojects</h3></A>
 			Determine whether non-project-members can view Subprojects in the Project/Task Manager, update name and description
-		                 <BR>
+		                 <BR>';
+	    if (user_ismember($group_id,'P2') || user_ismember($group_id,'A')) {
+		 echo '<H3><a href="/pm/admin/field_usage.php?group_id='.$group_id.'">Manage Field Usage</a></H3>';
+		 echo 'Define what task fields you want to use in the task manager of this project. (remark: some of the fields like status, assignee, severity&hellip; are mandatory and cannot be removed).<P>';
+		 echo '<H3><a href="/pm/admin/field_values.php?group_id='.$group_id.'">Manage Field Values</a></H3>';
+		 echo 'Define the set of values for the task fields you have decided to use in your task manager for this specific project. <P>';
+	    }
+	    echo '
 			<A HREF="/pm/admin/personal_settings.php?group_id='.$group_id.'"><h3>Personal Configuration Settings </A> (for user '.user_getname(user_getid()).')</h3>
 			Define Task Manager personal configuration parameters<BR>
 

@@ -187,5 +187,9 @@ $sys_themedefault = 'default';
 // Max upload size
 $sys_max_size_upload = 20000000;
 
+//
+// Show the project type
+$sys_show_project_type = 0;
+
 // End of customizations -- place nothing after the closing PHP tag!
 ?>

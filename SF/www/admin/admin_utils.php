@@ -21,4 +21,8 @@ function show_group_type_box($name='group_type',$checked_val='xzxz') {
 	return html_build_select_box ($result,'group_type',$checked_val,false);
 }
 
+function show_project_type_box($checked_val='xzxz') {
+	$result=db_query("SELECT project_type_id, description FROM project_type");
+	return html_build_select_box ($result,'project_type',$checked_val,false);
+}
 ?>

@@ -856,4 +856,96 @@ function pm_data_get_attached_files ($project_task_id=false) {
 	return db_query($sql);
 }
 
+function pm_data_update_usage($field_name,$group_id,$label,$description,
+				$use_it,$rank,$display_size,$empty_ok=0,
+				$keep_history=0,$show_on_add_members=0,$show_on_add=0)
+{
+    global $feedback;
+    /*
+      Update a field settings in the bug_usage_table
+      Rk: All the show_on_xxx boolean parameters are set to 0 by default because their
+           values come from checkboxes and if not checked the form variable
+           is not set at all. It must be 0 to be ok with the SQL statement
+      */
+
+    // if it's a required field then make sure the use_it flag is true
+    if (pm_data_is_required($field_name)) {
+		$use_it = 1;
+	}
+
+    $field_id = pm_data_get_field_id($field_name);
+
+    // if it's a custom field then take label into account else store NULL
+    //    if (bug_data_is_custom($field_name)) {
+	$lbl = isset($label) ? "'$label'" : 'NULL';
+	$desc = isset($description) ? "'$description'" : 'NULL';
+	$disp_size = isset($display_size) ? "'$display_size'" : 'NULL';
+	$empty = isset($empty_ok) ? "'$empty_ok'" : 'NULL';
+	$keep_hist = isset($keep_history) ? "'$keep_history'" : 'NULL';
+	//    } else {
+	//	$lbl = $desc = $disp_size = $empty = $keep_hist = "NULL";
+	//    }
+
+    // See if this field usage exists in the table for this project
+    $sql = 'SELECT pm_field_id FROM pm_field_usage '.
+	"WHERE pm_field_id='$field_id' AND group_id='$group_id'";
+    $result = db_query($sql);
+    $rows = db_numrows($result);
+
+    // if it does exist then update it else insert a new usage entry for this field.
+    if ($rows) {
+	$sql = 'UPDATE pm_field_usage '.
+	    "SET use_it='$use_it',show_on_add='$show_on_add',".
+	    "show_on_add_members='$show_on_add_members',place='$rank', ".
+	    "custom_label=$lbl,  custom_description=$desc,".
+	    "custom_display_size=$disp_size,  custom_empty_ok=$empty,".
+	    "custom_keep_history=$keep_hist ".
+	    "WHERE pm_field_id='$field_id' AND group_id='$group_id'";
+	$result = db_query($sql);
+    } else {
+	$sql = 'INSERT INTO  pm_field_usage  (pm_field_id, group_id,use_it,show_on_add,'.
+	    'show_on_add_members,place,custom_label,custom_description,custom_displaY_size,'.
+	    'custom_empty_ok, custom_keep_history) '.
+	    "VALUES ('$field_id','$group_id','$use_it','$show_on_add',".
+	    "'$show_on_add_members','$rank',$lbl,$desc,$disp_size,$empty,$keep_hist )";
+	$result = db_query($sql);
+    }
+
+    if (db_affected_rows($result) < 1) {
+		$feedback .= ' UPDATE OF FIELD  USAGE FAILED ';
+		$feedback .= ' - '.db_error();
+    } else {
+		$feedback .= ' Field usage updated ';
+    }
+
+}
+
+function pm_data_is_required($field, $by_field_id=false) {
+    global $TF_USAGE_BY_ID,$TF_USAGE_BY_NAME;
+    return($by_field_id ? $TF_USAGE_BY_ID[$field]['required']: $TF_USAGE_BY_NAME[$field]['required']);
+}
+
+function pm_data_reset_usage($field_name,$group_id)
+{
+    global $feedback;
+    /*
+      Reset a field settings to its defaults usage (values are untouched). The defaults
+      always belong to group_id 100 (None) so make sure we don;t delete entries for
+      group 100
+      */
+    $field_id = pm_data_get_field_id($field_name);
+    if ($group_id != 100) {
+        $sql = "DELETE FROM pm_field_usage ".
+            "WHERE group_id='$group_id' AND pm_field_id='$field_id'";
+        db_query($sql);
+	$feedback .= ' Field value successfully reset to defaults ';
+
+    }
+}
+
+function pm_data_is_custom($field, $by_field_id=false) {
+    global $TF_USAGE_BY_ID,$TF_USAGE_BY_NAME;
+    return($by_field_id ? $TF_USAGE_BY_ID[$field]['custom']: $TF_USAGE_BY_NAME[$field]['custom']);
+}
+
 ?>

@@ -7,6 +7,7 @@
 // $Id$
 
 function send_new_project_email($group_id) {
+	global $sys_show_project_type;
 
 	$res_grp = db_query("SELECT * FROM groups WHERE group_id='$group_id'");
 
@@ -41,7 +42,15 @@ Project Unix Name:    '.$row_grp['unix_group_name'].'
 Project Summary Page: '.$server.'/projects/'.$row_grp['unix_group_name'].'
 Project Web Server:   http://'.$row_grp['unix_group_name'].'.'.$GLOBALS['sys_default_domain'].'
 CVS Server:           cvs.'.$row_grp['unix_group_name'].'.'.$GLOBALS['sys_default_domain'].'
-Shell Server:         '.$row_grp['unix_group_name'].'.'.$GLOBALS['sys_default_domain'].'
+Shell Server:         '.$row_grp['unix_group_name'].'.'.$GLOBALS['sys_default_domain'];
+
+	if ( $sys_show_project_type ) {
+		$res_type = db_query("SELECT * FROM project_type WHERE project_type_id = ". $row_grp[project_type]);
+		$row_type = db_fetch_array($res_type);
+		$message = $message .'
+Project Type:         '.$row_type[description];
+	}
+	$message = $message .'
 
 Please take some time to read the site documentation about the tools
 and services offered by '.$GLOBALS['sys_name'].' to project

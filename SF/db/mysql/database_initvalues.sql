@@ -1002,3 +1002,7 @@ INSERT INTO project_field_usage VALUES (102,100,1,1,1,110,NULL,NULL,NULL,NULL,NU
 # Original Submission (details = 103)
 #
 INSERT INTO project_field_usage VALUES (103,100,1,1,1,120,NULL,NULL,NULL,NULL,NULL);
+
+# None value for project_type
+#
+INSERT INTO project_type VALUES (100,'None','None');

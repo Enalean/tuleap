@@ -28,10 +28,11 @@ if ($Update) {
 		{ group_add_history ('http_domain',db_result($res_grp,0,'http_domain'),$group_id);  }
 	if (db_result($res_grp,0,'unix_box') != $form_box)
 		{ group_add_history ('unix_box',db_result($res_grp,0,'unix_box'),$group_id);  }
-
+	if (db_result($res_grp,0,'project_type') != $project_type)
+		{ group_add_history ('project type',db_result($res_grp,0,'project_type'),$group_id);  }
 
 	db_query("UPDATE groups SET is_public=$form_public,status='$form_status',"
-		. "license='$form_license',type='$group_type',"
+		. "license='$form_license',type='$group_type',project_type='$project_type',"
 		. "unix_box='$form_box',http_domain='$form_domain' WHERE group_id=$group_id");
 
 	$feedback .= ' Updating Project Info ';
@@ -96,6 +97,13 @@ echo show_group_type_box('group_type',$row_grp['type']);
 <OPTION <?php if ($row_grp['is_public'] == 0) print "selected "; ?> value="0">No
 </SELECT>
 
+<p><B>Project Type:</B><br>
+<?php
+
+echo show_project_type_box($row_grp['project_type']);
+
+?>
+
 <P><B>License</B>
 <SELECT name="form_license">
 <OPTION value="none">N/A
@@ -108,6 +116,7 @@ echo show_group_type_box('group_type',$row_grp['type']);
 	}
 ?>
 </SELECT>
+
 
 <INPUT type="hidden" name="group_id" value="<?php print $group_id; ?>">
 <BR>Home Box: <INPUT type="text" name="form_box" value="<?php print $row_grp['unix_box']; ?>">

@@ -2422,5 +2422,17 @@ CREATE TABLE project_field_value (
 ) TYPE=MyISAM;
 
 #
+# Table structure for table 'project_type' for project type
+#
+
+CREATE TABLE project_type (
+  project_type_id int(11) NOT NULL,
+  label varchar(30) NOT NULL default '',
+  description varchar(255) NOT NULL default '',
+  PRIMARY KEY  (project_type_id),
+  KEY project_label_idx (label)
+) TYPE=MyISAM;
+
+#
 # EOF
 #

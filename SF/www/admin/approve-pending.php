@@ -138,6 +138,13 @@ while ($row_grp = db_fetch_array($res_grp)) {
 	print "<P>Submitted Description:<P> $row_grp[register_purpose]";
 
 	print "<P>License Other: <P> $row_grp[license_other]";
+	
+	if ( $sys_show_project_type ) {
+		print "<P>Project type: ";
+		$res_type = db_query("SELECT * FROM project_type WHERE project_type_id = ". $row_grp[project_type]);
+		$row_type = db_fetch_array($res_type);
+		print $row_type[description];
+	}	
 
 	echo "<P><HR><P>";
 

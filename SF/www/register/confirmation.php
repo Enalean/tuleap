@@ -10,6 +10,7 @@ require 'pre.php';    // Initial db and session library, opens session
 session_require(array('isloggedin'=>'1'));
 require 'vars.php';
 require('../forum/forum_utils.php');
+require($DOCUMENT_ROOT.'/admin/admin_utils.php');
 
 if ($show_confirm) {
 
@@ -32,7 +33,8 @@ if ($show_confirm) {
 		"patents_ips='".htmlspecialchars($form_patents)."', ".
 		"other_comments='".htmlspecialchars($form_comments)."', ".
 		"group_name='$form_full_name', license='$form_license', ".
-		"license_other='".htmlspecialchars($form_license_other)."' ".
+		"license_other='".htmlspecialchars($form_license_other)."', ".
+		"project_type='".$project_type."' ".
 		"WHERE group_id='$group_id' AND rand_hash='__$rand_hash'");
 
 	if (db_affected_rows($result) < 1) {
