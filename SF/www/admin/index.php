@@ -95,6 +95,12 @@ echo ")</b>";?>
 <LI>Groups in <a href="grouplist.php?status=D"><B>D</B> (deleted) Status</A>
 </ul>
 </ul>
+
+<h3>Service Administration</h3>
+<ul>
+<li><a href="/project/admin/servicebar.php?group_id=100">Configuration of predefined services</A>
+</ul>
+
 <h3>Trackers Administration</h3>
 <ul>
 <li><a href="/tracker/admin/restore.php">Pending Tracker Removals</A>

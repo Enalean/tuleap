@@ -93,11 +93,14 @@ echo '<TABLE width=100% cellpadding=2 cellspacing=2 border=0>
 
 $HTML->box1_top("Group Edit: " . group_getname($group_id)); 
 
+
+$project=new Project($group_id);
+
+
 print '&nbsp;
 <BR>
 Short Description: '. db_result($res_grp,0,'short_description') .'
-<P>
-Homepage Link: <B>'. db_result($res_grp,0,'homepage') .'</B>
+<P>Homepage Link: <B>'.$project->getHomePage().'</B>
 <!-- Not implemented on CodeX
 <P align=center>
 <A HREF="http://'.$GLOBALS['sys_cvs_host'].'/cvstarballs/'. db_result($res_grp,0,'unix_group_name') .'-cvsroot.tar.gz">[ Download Your Nightly CVS Tree Tarball ]</A>
@@ -188,7 +191,6 @@ echo '</TD></TR>
 
 $HTML->box1_top('Tool Admin');
 
-$project=new Project($group_id);
 
 echo '
 	<BR>';

@@ -33,6 +33,12 @@ $res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
 if (db_numrows($res_grp) < 1) {
 	exit_error("Invalid Group","That group does not exist.");
 }
+$project=project_get_object($group_id);
+if ($project->isError()) {
+        //wasn't found or some other problem
+        echo "Unable to load project object<br>";
+    	return;
+}
 $row_grp = db_fetch_array($res_grp);
 
 // ########################### form submission, make updates
@@ -84,7 +90,7 @@ if ($submit) {
 			."WHERE user_id='$row_dev[user_id]' AND group_id='$group_id'");
 
 		$tracker_error = false;
-		if ( $row_grp['use_trackers']&&$sys_activate_tracker&&$at_arr ) {
+		if ( $project->usesTracker()&&$sys_activate_tracker&&$at_arr ) {
 			for ($j = 0; $j < count($at_arr); $j++) {
 				$atid = $at_arr[$j]->getID();
 				$perm_level = "tracker_user_$row_dev[user_id]_$atid";
@@ -127,12 +133,13 @@ $res_dev = db_query("SELECT user.user_name AS user_name,"
 project_admin_header(array('title'=>'User Permissions','group'=>$group_id,
 		     'help' => 'UserPermissions.html'));
 
-$project=project_get_object($group_id);
+/*$project=project_get_object($group_id);
 if ($project->isError()) {
         //wasn't found or some other problem
         echo "Unable to load project object<br>";
     	return;
 }
+*/
 ?>
 
 <h2>User Permissions</h2>
@@ -161,7 +168,7 @@ if ($project->usesSupport() && !($sys_activate_tracker && !$project->activateOld
 ?>
 <TD><B>Doc. Manager</B></TD>
 <?
-if ( $row_grp['use_trackers']&&$sys_activate_tracker&&$at_arr ) {
+if ( $project->usesTracker()&&$sys_activate_tracker&&$at_arr ) {
 	for ($j = 0; $j < count($at_arr); $j++) {
 		echo '<TD><B>Tracker:<br>'.$at_arr[$j]->getName().'</B></TD>';
 	}
@@ -240,7 +247,7 @@ if (!$res_dev || db_numrows($res_dev) < 1) {
 		print '</SELECT></FONT></TD>
 	';
 	
-		if ( $row_grp['use_trackers']&&$sys_activate_tracker&&$at_arr ) {
+		if ( $project->usesTracker()&&$sys_activate_tracker&&$at_arr ) {
 			// Loop on tracker
 			for ($j = 0; $j < count($at_arr); $j++) {
 				$perm = $at_arr[$j]->getUserPerm($row_dev['user_id']);

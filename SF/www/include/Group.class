@@ -214,53 +214,7 @@ class Group extends Error {
 		return $this->data_array['register_time'];
 	}
 
-	/*
 
-		Common Group preferences for tools
-
-	*/
-	//whether or not this group has opted to use mailing lists
-	function usesMail() {
-		return $this->data_array['use_mail'];
-	}
-
-	//whether or not this group has opted to use news
-	function usesNews() {
-		return $this->data_array['use_news'];
-	}
-
-	//whether or not this group has opted to use discussion forums
-	function usesForum() {
-		return $this->data_array['use_forum'];
-	}       
-
-	//whether or not this group has opted to use surveys
-	function usesSurvey() {
-		return $this->data_array['use_survey'];
-	}       
-
-	//whether or not this group has legacy bug tracker activated 
-	function activatesOldBugTracker() {
-		return $this->data_array['activate_old_bug'];
-	}       
-
-	//whether or not this group has legacy task manager activated 
-	function activatesOldTaskTracker() {
-		return $this->data_array['activate_old_task'];
-	}       
-
-	//whether or not this group has legacy Support Request tracker activated 
-	function activatesOldSRTracker() {
-		return $this->data_array['activate_old_sr'];
-	}       
-
-
-	/*
-		The URL for this project's home page
-	*/
-	function getHomePage() {
-		return $this->data_array['homepage'];
-	}
 
 	/**
 	 *	getID - Simply return the group_id for this object.

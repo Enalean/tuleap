@@ -119,7 +119,7 @@ function docman_header($params) {
 		exit_error('Error','This Project Has Turned Off The Doc Manager');
 	}
         // There might be encoded HTML tags in the title
-	site_project_header(array('title'=>strip_tags(util_unconvert_htmlspecialchars($params['title'])),'group'=>$group_id,'toptab'=>'docman'));
+	site_project_header(array('title'=>strip_tags(util_unconvert_htmlspecialchars($params['title'])),'group'=>$group_id,'toptab'=>'doc'));
 
 	print "<p><b><a href=\"/docman/new.php?group_id=".$group_id."\">Submit new documentation</a> | ".
 		"<a href=\"/docman/index.php?group_id=".$group_id."\">View Documentation</a> | ".
@@ -148,7 +148,7 @@ function docman_header_admin($params) {
 	exit_error('Error','This Project Has Turned Off The Doc Manager');
     }
     
-    site_project_header(array('title'=>$params['title'],'group'=>$group_id,'toptab'=>'docman'));
+    site_project_header(array('title'=>$params['title'],'group'=>$group_id,'toptab'=>'doc'));
     
     print "<b><a href=\"/docman/admin/index.php?group_id=".$group_id."\">Admin</a>"; 
     print "<b>  | <a href=\"/docman/admin/index.php?mode=editdocs&group_id=".$group_id."\">Edit Documents</a> | ".

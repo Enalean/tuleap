@@ -21,7 +21,7 @@ function forum_header($params) {
 	global $DOCUMENT_ROOT,$HTML,$group_id,$forum_name,$thread_id,$msg_id,$forum_id,$REQUEST_URI,$sys_datefmt,$et,$et_cookie;
 
 	$params['group']=$group_id;
-	$params['toptab']='forums';
+	$params['toptab']='forum';
 
 	/*
 

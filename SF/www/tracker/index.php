@@ -493,7 +493,7 @@ if ( $func == 'gotoid' ) {
         
         //required params for site_project_header();
         $params['group']=$group_id;
-        $params['toptab']='trackers';
+        $params['toptab']='tracker';
         $params['pagename']='trackers';
         $params['title']='Trackers';
         $params['sectionvals']=array($group->getPublicName());

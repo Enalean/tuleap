@@ -236,48 +236,11 @@
       <para><emphasis>Location: Project Administration Menu</emphasis></para>
 
       <para>The &#34;Edit Public Info&#34; item of the Project Administration
-      menu allows a project member to update the following project data:</para>
+      menu allows a project administrator to update the Project Description Elements:
+      these are elements provided during the registration process as well
+      as the two-line description that you have provided right after your
+      project registration was confirmed.</para>
 
-      <procedure>
-        <step>
-          <para><emphasis role="bold">The Project Home Page</emphasis>: each
-          project hosted on CodeX has its own virtual Web server available on
-          the CodeX site. By default the &#34;Home Page&#34; in the Project
-          Main Menu points to this location (see CHAPTER 16 for more details).
-          If you want the Home Page of your project to point to some other
-          locations on the Intranet or on the Web, simply replace
-          the default value with your own Web location. Do not confuse your
-          Project Home Page with your Project Summary page. The Project Home
-          Page actually points to real Web Site whereas the Public Summary
-          Page is just an entry point to access software related activities
-          and deliverables.</para>
-
-          <para></para>
-        </step>
-
-        <step>
-          <para><emphasis role="bold">The Project Description Elements</emphasis>:
-          these are elements provided during the registration process as well
-          as the two-line description that you have provided right after your
-          project registration was confirmed.</para>
-
-          <para></para>
-        </step>
-
-        <step>
-          <para><emphasis role="bold">The Project Active Services</emphasis>:
-          this is the list of services that you want to enable/disable for
-          your own project. (Un)Checking any of the select boxes will
-          immediately (De)Activate the service. Deactivating a service just
-          means that it disappears from the Project Summary page of your
-          project but all existing data related to this service remains
-          untouched. In other words, re-activating the service will restore
-          the service in the exact same state it was when you first
-          deactivated it.</para>
-
-          <para></para>
-        </step>
-      </procedure>
     </section>
 
     <section id="ProjectCategorization">
@@ -653,6 +616,138 @@
     </section>
 
   </section>
+
+    <section id="ServiceConfiguration">
+      <title>Service Configuration</title>
+
+      <para><emphasis>Location: Project Administration Menu</emphasis></para>
+
+      <para>The &#34;Service Configuration&#34; item of the Project Administration
+      menu lists all services available to the project. Services are items listed 
+      in the  &#34;Service Bar &#34; on top of each page: trackers, patch manager,
+      document manager, CVS, homepage, documentation, etc. 
+      The Service Configuration page allows a project 
+      administrator to update, enable, disable or even create services.
+      </para>
+
+      <para>There are two kinds of services:</para>
+ 
+      <itemizedlist mark="bullet">
+        <listitem>
+          <para><emphasis role="bold">System services</emphasis>:
+          these services are defined by the site administrator and are common to
+          all projects. They cannot be modified, except for their status 
+          (enabled/disabled) and their position on the screen (see below).
+          </para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Project services</emphasis>: 
+          these services can be fully customized or deleted by the project administrator.
+          </para>
+        </listitem>
+      </itemizedlist>
+      <para>There is one exception, the
+          <emphasis role="bold">Home Page</emphasis> service is a
+          system service but it can be customized with any URL. Each
+          project hosted on CodeX has its own virtual Web server available on
+          the CodeX site. By default the &#34;Home Page&#34; in the Project
+          Service Bar links to this location (see CHAPTER 16 for more details).
+          If you want the Home Page of your project to link to some other
+          locations on the Intranet or on the Web, simply replace
+          the default value with your own Web location. Do not confuse your
+          Project Home Page with your Project Summary page. The Project Home
+          Page actually points to real Web Site whereas the Public Summary
+          Page is just an entry point to access software related activities
+          and deliverables.</para>
+
+
+    <section id="ServiceCreation">
+      <title>Creating or Updating a Service</title>
+      <para>When creating or updating a service, one has to fill the following fields:</para>
+     <procedure>
+        <step>
+          <para><emphasis role="bold">Service Label</emphasis>:
+          This is the label that will be displayed in the Service Bar. It 
+          should be as concise as possible.</para>
+        </step>
+
+        <step>
+          <para><emphasis role="bold">Service Link</emphasis>:
+          This is the URL of the service, i.e. the address the user will be 
+          redirected to when clicking on the service label in the Service Bar.
+          If the URL is absolute (i.e. starting with &#34;http://&#34;), the page
+          will be loaded in a new window. Otherwise, it will be loaded in the 
+          current window.
+          </para>
+          <para>A few keywords can be inserted into the link: they will be automatically replaced by their value:
+          <itemizedlist mark="bullet">
+            <listitem>
+              <para><emphasis role="bold">$projectname</emphasis>:
+              short name of the project
+              </para>
+            </listitem>
+
+            <listitem>
+              <para><emphasis role="bold">$sys_default_domain</emphasis>: 
+              domain of your CodeX server (e.g. &#34;&SYS_DEFAULT_DOMAIN;&#34;)
+              </para>
+            </listitem>
+
+            <listitem>
+              <para><emphasis role="bold">$group_id</emphasis>: 
+              project number.
+              </para>
+              <para></para>
+            </listitem>
+          </itemizedlist>
+          </para>
+        </step>
+
+        <step>
+          <para><emphasis role="bold">Service Description</emphasis>:
+          Short description of the service. It will be displayed as a tooltip 
+          when the mouse cursor is over the service label.</para>
+        </step>
+
+        <step>
+          <para><emphasis role="bold">Enabled</emphasis>:
+          Toggling this select box will simply disable (or enable)
+          the service. Disabling a service just
+          means that it no longer appears in the Service Bar and in the  
+          Project Summary page of your
+          project but all existing data related to this service remains
+          untouched. In other words, re-enabling the service will restore
+          the service in the exact same state it was when you first
+          disabled it. See also &#34;Deleting a Service&#34; below. 
+          </para>
+        </step>
+
+        <step>
+          <para><emphasis role="bold">Rank on Screen</emphasis>:
+	    this arbitrary number allows you to define the position of
+	    this service in the Service Bar relative to other services. 
+	    The services with smaller values will appear first. The
+	    rank values don't have to be consecutive values. It is a
+	    good idea to use values like 10,20,30,... so that it is
+	    easy for you to insert new services in the future without
+	    having to renumber all the services.</para>
+        </step>
+      </procedure>
+    </section>
+
+    <section id="ServiceDeletion">
+      <title>Deleting a Service</title>
+      <para>Project services can be deleted. They appear with a
+      small trash icon in the service list. Just click on this icon to 
+      suppress the service from the database.
+      </para>
+      <para>System services cannot be deleted. However, you can 
+      disable them and they will not appear in the Service Bar.
+      </para>
+    </section>
+    </section>
+
 
     <section id="Edit-ReleaseFiles">
       <title>Edit/Release Files</title>

@@ -19,7 +19,7 @@ if (!$result || db_numrows($result) < 1) {
 
 	$group_id=db_result($result,0,'group_id');
 
-	site_project_header(array('title'=>"File Release Notes and Changelog",'group'=>$group_id,'toptab'=>'downloads'));
+	site_project_header(array('title'=>"File Release Notes and Changelog",'group'=>$group_id,'toptab'=>'file'));
 
 	$HTML->box1_top('Notes');
 

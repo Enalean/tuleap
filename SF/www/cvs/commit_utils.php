@@ -27,7 +27,7 @@ function uniformat_date($format, $date) {
 function commits_header($params) {
 	global $group_id,$DOCUMENT_ROOT;
 
-	$params['toptab']='commits';
+	$params['toptab']='cvs';
 	$params['group']=$group_id;
 
 	//only projects can use cvs, and only if they have it turned on
@@ -65,7 +65,7 @@ function commits_header_admin($params) {
     
     //required params for site_project_header();
     $params['group']=$group_id;
-    $params['toptab']='commits';
+    $params['toptab']='cvs';
     
     $project=project_get_object($group_id);
     
@@ -73,7 +73,7 @@ function commits_header_admin($params) {
     if (!$project->isProject()) {
 	exit_error('Error','Only Projects Can Use The Commits Browser');
     }
-    if (!$project->usesCvs()) {
+    if (!$project->usesCVS()) {
 	exit_error('Error','This Project Has Turned Off The Commits Browser');
     }
     echo site_project_header($params);

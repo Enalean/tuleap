@@ -43,7 +43,6 @@ $PROJECT_OBJ=array();
 function project_get_object($group_id) {
 	//create a common set of group objects
 	//saves a little wear on the database
-
 	global $PROJECT_OBJ;
 	if (!$PROJECT_OBJ["_".$group_id."_"]) {
 		$PROJECT_OBJ["_".$group_id."_"]= new Project($group_id);
@@ -57,102 +56,170 @@ function project_get_object($group_id) {
 
 class Project extends Group {
 
-	var $project_data_array;
+    var $project_data_array;
 
-	/*
+    // All data concerning services for this project
+    var $service_data_array;
+    var $use_service;
+    var $active_service;
+    
+    /*
 		basically just call the parent to set up everything
-	*/
-	function Project($id) {
-		$this->Group($id);
-
-		//for right now, just point our prefs array at Group's data array
-		//this will change later when we split the project_data table off from groups table
-		$this->project_data_array=$this->data_array;
-	}
-
-
-	function usesTracker() {
-		return $this->project_data_array['use_trackers'];
-	}
-
-	function activateOldBug() {
-		return $this->project_data_array['activate_old_bug'];
-	}
-
-	function activateOldTask() {
-		return $this->project_data_array['activate_old_task'];
-	}
-
-	function activateOldSR() {
-		return $this->project_data_array['activate_old_sr'];
-	}
-
-	function usesCVS() {
-		return $this->project_data_array['use_cvs'];
-	}
-
-	function usesBugs() {
-		return $this->project_data_array['use_bugs'];
-	}
-
-	function usesSupport() {
-		return $this->project_data_array['use_support'];
-	}
-
-	function usesDocman() {
-		return $this->project_data_array['use_docman'];
-	}
-
-	function usesPatch() {
-		return $this->project_data_array['use_patch'];
-	}
-
-	function usesPm() {
-		return $this->project_data_array['use_pm'];
-	}
+                and set up services arrays
+    */
+    function Project($id) {
+        $this->Group($id);
+        
+        //for right now, just point our prefs array at Group's data array
+        //this will change later when we split the project_data table off from groups table
+        $this->project_data_array=$this->data_array;
+        
+        // Get Service data
+        $db_res=db_query("SELECT * FROM service WHERE group_id='$id' ORDER BY rank");
+        $rows=db_numrows($db_res); 
+        if ($rows < 1) {
+            //function in class we extended
+            $this->setError('Services not found for this group');
+            $this->service_data_array=array();
+        } else {
+            for ($j = 0; $j < $rows; $j++) { 
+                $res_row = db_fetch_array($db_res);
+                $short_name=$res_row['short_name'];
+                if (!$short_name) { $short_name=$j;}
+                $this->service_data_array[$short_name] = $res_row;
+                if ($short_name) {
+                    $this->use_service[$short_name]= $res_row['is_used'];
+                    $this->active_service[$short_name]= $res_row['is_active'];
+                }
+            }
+        }
+    }
 
 
-	/*
+    function usesTracker() {
+        return $this->use_service['tracker'];
+    }
+
+    function activateOldBug() {
+        return $this->active_service['bugs'];
+    }
+
+    function activateOldTask() {
+        return $this->active_service['task'];
+    }
+
+    function activateOldSR() {
+        return $this->active_service['support'];
+    }
+
+    function usesCVS() {
+        return $this->use_service['cvs'];
+    }
+
+    function usesBugs() {
+        return $this->use_service['bugs'];
+    }
+
+    function usesSupport() {
+        return $this->use_service['support'];
+    }
+
+    function usesDocman() {
+        return $this->use_service['doc'];
+    }
+
+    function usesPatch() {
+        return $this->use_service['patch'];
+    }
+
+    function usesPm() {
+        return $this->use_service['task'];
+    }
+
+
+    //whether or not this group has opted to use mailing lists
+    function usesMail() {
+        return $this->use_service['mail'];
+    }
+
+    //whether or not this group has opted to use news
+    function usesNews() {
+        return $this->use_service['news'];
+    }
+
+    //whether or not this group has opted to use discussion forums
+    function usesForum() {
+        return $this->use_service['forum'];
+    }       
+
+    //whether or not this group has opted to use surveys
+    function usesSurvey() {
+        return $this->use_service['survey'];
+    }       
+
+
+
+    // Generic versions
+
+    function usesService($service_short_name) {
+        return $this->use_service[$service_short_name];
+    }
+
+    function activeService($service_short_name) {
+        return $this->active_service[$service_short_name];
+    }
+
+
+
+    /*
+		The URL for this project's home page
+    */
+    function getHomePage() {
+        return $this->service_data_array['homepage']['link'];
+    }
+
+
+    /*
 		email address to send new 
 		bugs/patches/support requests to
-	*/
-	function getNewBugAddress() {
-		return $this->project_data_array['new_bug_address'];
-	}
+    */
+    function getNewBugAddress() {
+        return $this->project_data_array['new_bug_address'];
+    }
 
-	function getNewSupportAddress() {
-		return $this->project_data_array['new_support_address'];
-	}
+    function getNewSupportAddress() {
+        return $this->project_data_array['new_support_address'];
+    }
 
-	function getNewPatchAddress() {
-		return $this->project_data_array['new_patch_address'];
-	}
+    function getNewPatchAddress() {
+        return $this->project_data_array['new_patch_address'];
+    }
 
-	function getNewTaskAddress() {
-		return $this->project_data_array['new_task_address'];
-	}
+    function getNewTaskAddress() {
+        return $this->project_data_array['new_task_address'];
+    }
 
-	/*
+    /*
 
-		boolean flags to determine whether or not to send
+    boolean flags to determine whether or not to send
 		an email on every bug/patch/support update
 
-	*/
-	function sendAllBugUpdates() {
-		return $this->project_data_array['send_all_bugs'];
-	}
+    */
+    function sendAllBugUpdates() {
+        return $this->project_data_array['send_all_bugs'];
+    }
 
-	function sendAllSupportUpdates() {
-		return $this->project_data_array['send_all_support'];
-	}
+    function sendAllSupportUpdates() {
+        return $this->project_data_array['send_all_support'];
+    }
 
-	function sendAllPatchUpdates() {
-		return $this->project_data_array['send_all_patches'];
-	}
+    function sendAllPatchUpdates() {
+        return $this->project_data_array['send_all_patches'];
+    }
 
-	function sendAllTaskUpdates() {
-		return $this->project_data_array['send_all_tasks'];
-	}
+    function sendAllTaskUpdates() {
+        return $this->project_data_array['send_all_tasks'];
+    }
 }
 
 /*

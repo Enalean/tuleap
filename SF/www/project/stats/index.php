@@ -8,7 +8,7 @@
 require('pre.php');
 require('project_stats_utils.php');
 
-site_project_header(array('title'=>"Project statistics ".$groupname,'group'=>$group_id,'toptab'=>'home'));
+site_project_header(array('title'=>"Project statistics ".$groupname,'group'=>$group_id,'toptab'=>'summary'));
 
 if ( !$group_id ) {
 	exit_error("Invalid Group","That group could not be found.");

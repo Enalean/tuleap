@@ -300,12 +300,12 @@ echo html_blankimage(5,100);
         /*!     @function tab_entry
                 @abstract Prints out the a themed tab, used by project_tabs
                 @param  $url is the URL to link to
-			$icon is the image to use (if the theme uses it)
+			$icon is the image to use (if the theme uses it) NOT USED
 			$title is the title to use in the link tags
 			$selected is a boolean to test if the tab is 'selected'
                 @result text - echos HTML to the screen directly
         */
-	function tab_entry($url, $icon='', $title='Home', $selected=0) {
+	function tab_entry($url, $icon='', $title='Home', $selected=0, $description=null) {
         	print '
                 <A ';
 	        if ($selected){
@@ -313,117 +313,57 @@ echo html_blankimage(5,100);
 	        } else {
         	        print 'class=tabs ';
 	        }
+                if (substr($url, 0, 1)!="/") {
+                    // Absolute link -> open new window on click
+                    print "target=_blank ";
+                }
+                if ($description) {
+                    print "title=\"$description\" ";
+                }
         	print 'href="'. $url .'">' . $title . '</A>&nbsp;|&nbsp;';
 	}
 
 	/*!     @function project_tabs
 	        @abstract Prints out the project tabs, contained here in case
 			we want to allow it to be overriden
-	        @param 	$toptab is the tab currently selected
+	        @param 	$toptab is the tab currently selected ('short_name' of the service)
 			$group is the group we should look up get title info
         	@result text - echos HTML to the screen directly
 	*/
-	function project_tabs($toptab,$group) {
+	function project_tabs($toptab,$group_id) {
 		
-		global $sys_activate_tracker;
+            global $sys_activate_tracker, $sys_default_domain;
+            
+            // get group info using the common result set
+            $project=project_get_object($group_id);
+            if ($project->isError()) {
+                //wasn't found or some other problem
+                return;
+            }
 
-        	// get group info using the common result set
-	        $project=project_get_object($group);
-        	if ($project->isError()) {
-	                //wasn't found or some other problem
-                	return;
-        	}
+            print '<H2>'. $project->getPublicName() .' - '.$project->service_data_array[$toptab]['label'];
 
-	        print '<H2>'. $project->getPublicName() .' - ';
-        	// specific to where we're at
-	        switch ($toptab) {
-                	case 'home': print 'Summary'; break;
-        	        case 'forums': print 'Forums'; break;
-	                case 'bugs': print 'Bugs'; break;
-                	case 'support': print 'Support'; break;
-        	        case 'mail': print 'Mailing Lists'; break;
-	                case 'pm': print 'Tasks'; break;
-                	case 'docman': print 'Documentation'; break;
-        	        case 'surveys': print 'Surveys'; break;
-	                case 'cvs': print 'CVS'; break;
-                	case 'downloads': print 'Downloads'; break;
-        	        case 'news': print 'News'; break;
-	                case 'patch': print 'Patches'; break;
-	                case 'admin': print 'Administration'; break;
-	                case 'trackers': print 'Trackers'; break;
-                	default: print 'Summary'; break;
-        	}
-        print '</H2>
+            print '</H2>
         <P>
 	<HR SIZE="1" NoShade>';
-
-        	// Summary
-	        $this->tab_entry('/projects/'. $project->getUnixName() .'/', $this->icons['Summary'], 'Summary', $toptab == 'home');
-
-        	// Admin
-	        $this->tab_entry('/project/admin/?group_id='.$group , $this->icons['Admin'], 'Admin', $toptab == 'admin');
-
-        	// Homepage
-	        // used to be: $this->tab_entry((session_issecure() ? 'https://':'http://'). $project->getHomePage(), $this->icons['Homepage'], 'Home Page');
-	        $this->tab_entry('http://'. $project->getHomePage(), $this->icons['Homepage'], 'Home Page');
-
-        	// Forums
-	        if ($project->usesForum()) {
-        	        $this->tab_entry('/forum/?group_id='.$group, $this->icons['Forums'], 'Forums', $toptab == 'forums');
-	        }
-
-        	// Bug Tracking
-	        if ($project->usesBugs() && !($sys_activate_tracker && !$project->activateOldBug())) {
-        	        $this->tab_entry('/bugs/?group_id='.$group, $this->icons['Bugs'], 'Bugs', $toptab == 'bugs');
-	        }
-
-        	// Support Tracking
-	        if ($project->usesSupport() && !($sys_activate_tracker && !$project->activateOldSR())) {
-        	        $this->tab_entry('/support/?group_id='.$group, $this->icons['Support'], 'Support', $toptab == 'support');
-	        }
-
-        	// Patch Manager
-	        if ($project->usesPatch()) {
-        	        $this->tab_entry('/patch/?group_id='.$group, $this->icons['Patches'], 'Patches', $toptab == 'patch');
-	        }
-
-        	// Mailing Lists
-	        if ($project->usesMail()) {
-        	        $this->tab_entry('/mail/?group_id='.$group, $this->icons['Lists'], 'Lists', $toptab == 'mail');
-	        }
-
-        	// Project Manager
-	        if ($project->usesPm() && !($sys_activate_tracker && !$project->activateOldTask())) {
-        	        $this->tab_entry('/pm/?group_id='.$group, $this->icons['Tasks'], 'Tasks', $toptab == 'pm');
-	        }
-
-        	// Doc Manager
-	        if ($project->usesDocman()) {
-        	        $this->tab_entry('/docman/?group_id='.$group, $this->icons['Docs'], 'Docs', $toptab == 'docman');
-	        }
-
-        	// Surveys
-	        if ($project->usesSurvey()) {
-        	        $this->tab_entry('/survey/?group_id='.$group, $this->icons['Surveys'], 'Surveys', $toptab == 'surveys');
-	        }
-
-        	//newsbytes
-	        if ($project->usesNews()) {
-        	        $this->tab_entry('/news/?group_id='.$group, $this->icons['News'], 'News', $toptab == 'news');
-	        }
-
-        	// CVS
-	        if ($project->usesCVS()) {
-                	$this->tab_entry('/cvs/?group_id='.$group, $this->icons['CVS'], 'CVS', $toptab == 'cvs');
-        	}
-
-	        // Downloads
-	        $this->tab_entry('/project/filelist.php?group_id='.$group, $this->icons['Files'], 'Files', $toptab == 'downloads');
-
-	        // Trackers
-	        if ( $project->usesTracker() && $sys_activate_tracker) {
-	        	$this->tab_entry('/tracker/index.php?group_id='.$group, $this->icons['Trackers'], 'Trackers', $toptab == 'trackers');
-	        }
+            reset($project->service_data_array);
+            while (list($short_name,$service_data) = each($project->service_data_array)) {
+                if (!$service_data['is_used']) continue;
+                if (!$service_data['is_active']) continue;
+                // Get URL, and eval variables
+                $link=$service_data['link'];
+                if ($group_id==100) {
+                    if (strstr($link,'$projectname')) {
+                        // NOTE: if you change link variables here, change them also in SF/www/register/confirmation.php and SF/www/project/admin/servicebar.php
+                        // Don't check project name if not needed.
+                        // When it is done here, the service bar will not appear updated on the current page
+                        $link=str_replace('$projectname',group_getunixname($group_id),$link);
+                    }
+                    $link=str_replace('$sys_default_domain',$sys_default_domain,$link);
+                    $link=str_replace('$group_id',$group_id,$link);
+                }
+                $this->tab_entry($link,null,$service_data['label'],($short_name&&($toptab == $short_name)),$service_data['description']);
+            }
 
         	print '<HR SIZE="1" NoShade><P>';
 	}

@@ -36,7 +36,7 @@ function pm_header($params) {
 
 	//required by site_project_header
 	$params['group']=$group_id;
-	$params['toptab']='pm';
+	$params['toptab']='task';
 
 	//only projects can use the task tracker, and only if they have it turned on
 	$project=project_get_object($group_id);
@@ -89,7 +89,7 @@ function pm_header_admin($params) {
     
     //required params for site_project_header();
     $params['group']=$group_id;
-    $params['toptab']='pm';
+    $params['toptab']='task';
     
     $project=project_get_object($group_id);
     

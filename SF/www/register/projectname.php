@@ -23,12 +23,11 @@ if ($insert_purpose && $form_purpose && $form_short_description) {
 	}
 
 	// make group entry
-	$result = db_query("INSERT INTO groups (group_name,is_public,unix_group_name,http_domain,homepage,status,"
+	$result = db_query("INSERT INTO groups (group_name,is_public,unix_group_name,http_domain,status,"
 		. "unix_box,cvs_box,license,short_description,register_purpose,"
                 . "required_software,patents_ips,other_comments,register_time,license_other,rand_hash) VALUES ("
 		. "'__$random_num',"
 		. "$sys_is_project_public," // privacy 
-		. "'__$random_num',"
 		. "'__$random_num',"
 		. "'__$random_num',"
 		. "'I'," // status

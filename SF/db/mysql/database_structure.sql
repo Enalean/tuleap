@@ -971,7 +971,6 @@ CREATE TABLE group_type (
 CREATE TABLE groups (
   group_id int(11) NOT NULL auto_increment,
   group_name varchar(40) default NULL,
-  homepage varchar(128) default NULL,
   is_public int(11) NOT NULL default '0',
   status char(1) NOT NULL default 'A',
   unix_group_name varchar(30) NOT NULL default '',
@@ -986,21 +985,11 @@ CREATE TABLE groups (
   other_comments text,
   license_other text,
   register_time int(11) NOT NULL default '0',
-  use_bugs int(11) NOT NULL default '1',
   rand_hash text,
-  use_mail int(11) NOT NULL default '1',
-  use_survey int(11) NOT NULL default '1',
-  use_patch int(11) NOT NULL default '1',
-  use_forum int(11) NOT NULL default '1',
-  use_pm int(11) NOT NULL default '1',
-  use_cvs int(11) NOT NULL default '1',
-  use_news int(11) NOT NULL default '1',
-  use_support int(11) NOT NULL default '1',
   new_bug_address text NOT NULL,
   new_patch_address text NOT NULL,
   new_support_address text NOT NULL,
   type int(11) NOT NULL default '1',
-  use_docman int(11) NOT NULL default '1',
   send_all_bugs int(11) NOT NULL default '0',
   send_all_patches int(11) NOT NULL default '0',
   send_all_support int(11) NOT NULL default '0',
@@ -1014,10 +1003,6 @@ CREATE TABLE groups (
   cvs_tracker int(11)   NOT NULL default '1',
   cvs_events_mailing_list varchar(64) binary DEFAULT NULL,
   cvs_events_mailing_header varchar(64) binary DEFAULT NULL,
-  use_trackers int(11) NOT NULL default '1',
-  activate_old_bug int(11) NOT NULL default '0',
-  activate_old_task int(11) NOT NULL default '0',
-  activate_old_sr int(11) NOT NULL default '0',
   cvs_preamble text NOT NULL,
   PRIMARY KEY  (group_id),
   KEY idx_groups_status (status),
@@ -2970,6 +2955,25 @@ CREATE TABLE snippet_language (
   language_name varchar(255) NOT NULL default ''
 );
 
+
+
+#
+# Service table
+#
+CREATE TABLE service (
+	service_id int(11) NOT NULL auto_increment,
+	group_id int(11) NOT NULL,
+	label text,
+	description text,
+	short_name text,
+	link text,
+	is_active int(11) DEFAULT 0 NOT NULL,
+	is_used int(11) DEFAULT 0 NOT NULL,
+        scope text NOT NULL,
+        rank int(11) NOT NULL default '0',
+	primary key (service_id),
+        key idx_group_id(group_id)
+);
 
 
 #

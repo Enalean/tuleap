@@ -21,7 +21,7 @@ if (!$project->isProject()) {
 
 $title = 'Project Info - '. $project->getPublicName();
 
-site_project_header(array('title'=>$title,'group'=>$group_id,'toptab'=>'home'));
+site_project_header(array('title'=>$title,'group'=>$group_id,'toptab'=>'summary'));
 
 
 // ########################################### end top area
@@ -187,7 +187,7 @@ echo $HTML->box1_top("Public Areas");
 
 // ################# Homepage Link
 
-print "<A href=\"http://" . $project->getHomePage() . "\">";
+print "<A href=\"" . $project->getHomePage() . "\">";
 html_image("ic/home16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>'Homepage'));
 print '&nbsp;Project Homepage</A>';
 

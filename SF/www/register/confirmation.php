@@ -75,6 +75,24 @@ if ($show_confirm) {
 	$fid = forum_create_forum($group_id,'Developers',0,1,'Project Developer Discussion');
 	forum_add_monitor($fid, user_getid());
 
+        // Instanciate all services from group 100 that are 'active'
+        $sql="SELECT * FROM service WHERE group_id=100 AND is_active=1";
+        $result=db_query($sql);
+        while ($arr = db_fetch_array($result)) {
+            // Convert link to real values
+            // NOTE: if you change link variables here, change them also in SF/www/project/admin/servicebar.php and SF/www/include/Layout.class
+            $link=$arr['link'];
+            $link=str_replace('$projectname',group_getunixname($group_id),$link);
+            $link=str_replace('$sys_default_domain',$GLOBALS['sys_default_domain'],$link);
+            $link=str_replace('$group_id',$group_id,$link);
+            $sql2 = "INSERT INTO service (group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES ($group_id, '".$arr['label']."', '".$arr['description']."', '".$arr['short_name']."', '".$link."', ".$arr['is_active'].", ".$arr['is_used'].", '".$arr['scope']."', ".$arr['rank'].")";
+            $result2=db_query($sql2);
+            
+            if (!$result2) {
+                exit_error("ERROR",'ERROR - Can not create service');
+            }
+        }
+
 	//Set up some mailing lists
 	//will be done at some point. needs to communicate with geocrawler
 	// TBD

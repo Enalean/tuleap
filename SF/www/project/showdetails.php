@@ -12,7 +12,7 @@ if (!$group_id) {
 	exit_error("Missing Group Argument","A group must be specified for this page.");
 }
 
-site_project_header(array('title'=>"Project Details",'group'=>$group_id,'toptab'=>'home'));
+site_project_header(array('title'=>"Project Details",'group'=>$group_id,'toptab'=>'summary'));
 
 print "<P><h3>Project Details</h3>";
 

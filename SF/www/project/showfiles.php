@@ -19,7 +19,7 @@ if (user_isloggedin()) {
 	exit_error("No File Packages","There are no file packages defined for this project.");
     }
 
-    site_project_header(array('title'=>'Project Filelist','group'=>$group_id,'toptab'=>'downloads'));
+    site_project_header(array('title'=>'Project Filelist','group'=>$group_id,'toptab'=>'file'));
 
     echo '<h3>Package Releases '. help_button('FileReleaseJargon.html').'</h3>';
     echo '<p>Select Release to see Release Notes and Change Log, &nbsp;';

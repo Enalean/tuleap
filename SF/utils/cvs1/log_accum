@@ -56,7 +56,7 @@ $GNATS_MAIL_FORMAT = "%s-gnats\@sourceware.cygnus.com";
 $GNATS_ROOT_FORMAT = "/sourceware/gnats/%s-db";
 
 # Base name of cvsweb specification.
-$CVSWEB_URL = "http://codex.xerox.com/cgi-bin/cvsweb.cgi/";
+$CVSWEB_URL = "http://cvs.codex.xerox.com/cgi-bin/cvsweb.cgi/";
 
 # Constants (don't change these!)
 #

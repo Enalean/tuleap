@@ -15,7 +15,7 @@
 function survey_header($params) {
     global $group_id,$is_admin_page,$DOCUMENT_ROOT;
 
-    $params['toptab']='surveys';
+    $params['toptab']='survey';
     $params['group']=$group_id;
 
     $project=project_get_object($group_id);
