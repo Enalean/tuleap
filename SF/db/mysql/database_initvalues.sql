@@ -1068,7 +1068,7 @@ INSERT INTO artifact_field VALUES (8,2,'details',1,'TA','60/7','Original Submiss
 INSERT INTO artifact_field VALUES (11,2,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'20');
 INSERT INTO artifact_field VALUES (1,2,'artifact_id',2,'TF','6/10','Artifact ID','Unique artifact identifier','',0,0,0,1,NULL,'');
 INSERT INTO artifact_field VALUES (10,2,'open_date',4,'DF','','Submitted on','Date and time for the initial artifact submission','',0,0,0,1,'','');
-INSERT INTO artifact_field VALUES (9,2,'multi_assigned_to',5,'MB','','Assigned to (multiple)','Who is in charge of this artifact','',0,1,1,0,'artifact_technicians','');
+INSERT INTO artifact_field VALUES (9,2,'multi_assigned_to',5,'MB','','Assigned to (multiple)','Who is in charge of this artifact','',0,1,1,0,'artifact_technicians','100');
 INSERT INTO artifact_field VALUES (12,2,'subproject_id',2,'SB','','Subproject','Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)','',0,1,1,0,NULL,'100');
 INSERT INTO artifact_field VALUES (9,3,'submitted_by',5,'SB','','Submitted by','User who originally submitted the artifact','',0,1,0,1,'group_members','');
 INSERT INTO artifact_field VALUES (7,3,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'20');
@@ -1109,7 +1109,8 @@ INSERT INTO artifact_field VALUES (5,4,'artifact_id',2,'TF','6/10','Artifact ID'
 INSERT INTO artifact_field VALUES (6,4,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'20');
 INSERT INTO artifact_field VALUES (7,4,'severity',2,'SB','','Severity','Impact of the artifact on the system (Critical, Major,...)','',0,0,1,0,NULL,'5');
 INSERT INTO artifact_field VALUES (8,4,'details',1,'TA','60/7','Original Submission','A full description of the artifact','',0,1,1,0,NULL,'');
-
+INSERT INTO artifact_field VALUES (9,4,'assigned_to',5,'SB','','Assigned to','Who is in charge of solving the artifact','',0,1,1,0,'artifact_technicians','100');
+INSERT INTO artifact_field VALUES (10,4,'multi_assigned_to',5,'MB','','Assigned to (multiple)','Who is in charge of this artifact','',0,1,1,0,'artifact_technicians','100');
 --
 -- Dumping data for table 'artifact_field_usage'
 --
@@ -1176,8 +1177,10 @@ INSERT INTO artifact_field_usage VALUES (3,4,0,0,0,0);
 INSERT INTO artifact_field_usage VALUES (4,4,1,1,1,10);
 INSERT INTO artifact_field_usage VALUES (5,4,1,1,1,0);
 INSERT INTO artifact_field_usage VALUES (6,4,0,0,0,0);
-INSERT INTO artifact_field_usage VALUES (7,4,0,0,0,0);
+INSERT INTO artifact_field_usage VALUES (7,4,1,1,1,0);
 INSERT INTO artifact_field_usage VALUES (8,4,1,1,1,20);
+INSERT INTO artifact_field_usage VALUES (9,4,1,0,1,30);
+INSERT INTO artifact_field_usage VALUES (10,4,0,0,1,40);
 
 --
 -- Dumping data for table 'artifact_field_value_list'
@@ -1279,6 +1282,7 @@ INSERT INTO artifact_field_value_list VALUES (13,1,100,'None','',10,'P');
 INSERT INTO artifact_field_value_list VALUES (14,1,100,'None','',10,'P');
 INSERT INTO artifact_field_value_list VALUES (15,1,100,'None','',10,'P');
 INSERT INTO artifact_field_value_list VALUES (18,1,100,'None','',10,'P');
+INSERT INTO artifact_field_value_list VALUES (20,1,100,'None','',10,'P');
 INSERT INTO artifact_field_value_list VALUES (22,1,100,'None','',10,'P');
 INSERT INTO artifact_field_value_list VALUES (24,1,100,'None','',10,'P');
 
