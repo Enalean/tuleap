@@ -17,13 +17,15 @@ function format_date($format,$value,$default_value = '-') {
 }
 
 // Convert a date as used in the bug tracking system and other services (YYYY-MM-DD)
-// into a Unix time
+// into a Unix time. if string is empty return 0 (Epoch time)
 // Returns a list with two values: the unix time and a boolean saying whether the conversion
 // went well (true) or bad (false)
 function util_date_to_unixtime($date) {
-    list($year,$month,$day) = util_date_explode($date);
-    $time = mktime(0, 0, 0, $month, $day, $year);
-    //echo "<br>DBG Matching date $date -> year $year, month $month,day $day -> time = $time<br>";
+    $time = 0;
+    if ($date) {
+	list($year,$month,$day) = util_date_explode($date);
+	$time = mktime(0, 0, 0, $month, $day, $year);
+    }
     return array($time,true);
 }
 
