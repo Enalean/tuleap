@@ -535,7 +535,6 @@ class Artifact extends Error {
 					    $differ = ($old_value != $value);
 					}
 					if ($differ) {
-echo "field=".$field->getName()."differ=".$old_value."-".$value;
 					    if ($is_text) {
 					    	if ( $field->isStandardField() ) {
 								$upd_list .= "$field_name='".htmlspecialchars($value)."',";							
