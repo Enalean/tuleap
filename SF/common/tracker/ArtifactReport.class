@@ -387,7 +387,7 @@ class ArtifactReport extends Error {
 		$limit = " LIMIT $offset,$chunksz";
 		$sql = $select." ".$from." ".$where." group by a.artifact_id ".$order_by.$limit;
 
-		//echo "<DBG> query=".$sql."<br>";
+		echo "<DBG> query=".$sql."<br>";
 		
 		return $sql;
 	
@@ -518,7 +518,7 @@ class ArtifactReport extends Error {
 		// NOTICE
 		//
 		// We can't use left join because the performs are very bad.
-		// So the restriction to this is: all fields used in the query must have a value.
+		// So the restriction to this: all fields used in the query must have a value.
 		// That involves artifact creation or artifact admin (add a field) must create
 		// empty records with default values for fields which haven't a value (from the user).
 		//
@@ -593,7 +593,7 @@ class ArtifactReport extends Error {
 					} else {
 						$order_by_count = 1;
 					}
-					if ( $field->isUsername() ) {
+					if ( ($field->isUsername())&&(!$field->isSelectBox())&&(!$field->isMultiSelectBox()) ) {
 						$fields_order_result[$field->getName()] = "u.user_name";
 					} else {
 						$fields_order_result[$field->getName()] = "a.".$field->getName();
@@ -637,7 +637,7 @@ class ArtifactReport extends Error {
 						$order_by_count = 1;
 					}
 
-					if ( $field->isUsername() ) {
+					if ( ($field->isUsername())&&(!$field->isSelectBox())&&(!$field->isMultiSelectBox()) ) {
 						$fields_order_result[$field->getName()] = "u".$count.".user_name";
 					} else {
 						$fields_order_result[$field->getName()] = "v".$count.".".$field->getValueFieldName();

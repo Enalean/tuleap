@@ -204,7 +204,7 @@ $sys_lf = "\n";
 
 //
 // Use or not generic trackers
-$sys_activate_tracker = 0;
+$sys_activate_tracker = 1;
 
 // End of customizations -- place nothing after the closing PHP tag!
 ?>

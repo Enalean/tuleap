@@ -1,3 +1,4 @@
+<IfModule mod_php.c>
 <Files projects>
 ForceType application/x-httpd-php3
 </Files>
@@ -7,3 +8,16 @@ ForceType application/x-httpd-php3
 <Files foundry>
 ForceType application/x-httpd-php3
 </Files>
+</IfModule>
+
+<IfModule mod_php4.c>
+<Files projects>
+ForceType application/x-httpd-php
+</Files>
+<Files users>
+ForceType application/x-httpd-php
+</Files>
+<Files foundry>
+ForceType application/x-httpd-php
+</Files>
+</IfModule>
