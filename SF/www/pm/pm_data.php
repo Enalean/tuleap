@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require ('../bugs/bug_data.php');
+require ($DOCUMENT_ROOT.'/bugs/bug_data.php');
 
 function pm_data_get_tasks ($group_id,$group_project_id) {
     if ($group_project_id) {
