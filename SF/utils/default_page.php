@@ -20,7 +20,6 @@ $headers = getallheaders();
     <TD><SPAN class=maintitlebar>&nbsp;&nbsp;
       <A class=maintitlebar href="http://codex.xerox.com/"><B>Home</B></A> | 
       <A class=maintitlebar href="http://codex.xerox.com/about.php"><B>About</B></A> | 
-      <A class=maintitlebar href="http://codex.xerox.com/partners.php"><B>Partners</B></a> |
       <A class=maintitlebar href="http://codex.xerox.com/contact.php"><B>Contact Us</B></A> |
       <A class=maintitlebar href="http://codex.xerox.com/account/logout.php"><B>Logout</B></A></SPAN></TD>
     </TD>
@@ -48,8 +47,12 @@ $headers = getallheaders();
     <TD>
       <CENTER><BR>
       <H2>Welcome to http://<?php print $headers[Host]; ?>/</H2>
-      <P>We're Sorry but this Project hasn't yet uploaded their personal webpage yet.<BR>
-      Please check back soon for updates or visit <A href="http://codex.xerox.com/">CodeX</A></P><BR>
+<?php
+$pieces = explode('.', $headers[Host]);
+$project_name = $pieces[0];
+?>
+      <P><h3>This Project hasn't yet set up it's personal web site.<BR>
+      Please check back soon for updates or visit the <A href="http://codex.xerox.com/projects/<?php echo $project_name; ?>">Project Summary</a> page on CodeX<BR></h3></P>
       </CENTER>
     </TD>
   </TR>
@@ -60,7 +63,7 @@ $headers = getallheaders();
 <TABLE width="100%" border="0" cellspacing="0" cellpadding="2" bgcolor="#BCBCAD">
   <TR>
     <TD align="center"><FONT color="#ffffff"><B><SPAN class="maintitlebar">
-     Code eXchange is a Xerox internal Web site. All material hosted on this site is the property of Xerox. ©2000 Xerox Corporation.</SPAN><B></FONT>
+     Code eXchange is a Xerox internal Web site. All material hosted on this site is the property of Xerox. ©2001 Xerox Corporation.</SPAN><B></FONT>
     </TD>
   </TR>
 </TABLE>
