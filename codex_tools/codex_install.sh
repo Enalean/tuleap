@@ -224,6 +224,7 @@ build_dir /home/ftp/incoming ftpadmin ftpadmin 3777
 
 build_dir /home/large_tmp root root 1777
 build_dir /home/log sourceforge sourceforge 755
+build_dir /home/log/cvslogs sourceforge sourceforge 775
 build_dir /home/mailman mailman mailman 2775
 build_dir /home/sfcache sourceforge sourceforge 755
 build_dir /home/tools root root 755
