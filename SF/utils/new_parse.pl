@@ -85,12 +85,14 @@ while ($ln = pop(@userdump_array)) {
 		add_user($uid, $username, $realname, $shell, $passwd);
 		add_winuser($uid, $username, $realname, $win_passwd, $winnt_passwd);
 	
-	} elsif ($status eq 'D' && $user_exists) {
-		delete_user($username);
-		delete_winuser($username);
-	
-	} elsif ($status eq 'D' && !$user_exists) {
-		print("Error trying to delete user: $username\n");
+	} elsif ($status eq 'D') {
+
+                # delete the user if it exists. Otherwise it means it has
+	        # already been deleted so do nothing
+	        if ($user_exists) {
+		  delete_user($username);
+		  delete_winuser($username);
+		}
 		
 	} elsif ($status eq 'S' && $user_exists) {
 		suspend_user($username);
