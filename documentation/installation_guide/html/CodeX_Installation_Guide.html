@@ -104,9 +104,9 @@ software installation<br>
     </tr>
     <tr>
       <td valign="top">mailman</td>
-      <td valign="top">105<br>
+      <td valign="top">106<br>
       </td>
-      <td valign="top">105<br>
+      <td valign="top">106<br>
       </td>
       <td valign="top">Owner of Mailman directories</td>
       <td valign="top">/home/mailman</td>
@@ -181,7 +181,7 @@ software installation<br>
     </tr>
     <tr>
       <td valign="top">mailman</td>
-      <td valign="top">105<br>
+      <td valign="top">106<br>
       </td>
       <td valign="top">-<br>
       </td>
@@ -543,24 +543,12 @@ Install the following packages: MySQL, MySQL-client and MySQL-shared<br>
       </td>
     </tr>
     <tr>
-      <td valign="top">php<br>
-      </td>
-      <td valign="top">Right now CodeX runs PHP3 not PHP4. So all the
-PHP4 packages installed by RedHat must be removed and the codex
-supplied
-packages must be used instead.<br>
-      <br>
-Packages to install: php, php-mysql, php-gd, php-ldap<br>
-      </td>
-    </tr>
-    <tr>
       <td valign="top">others<br>
       </td>
-      <td valign="top">From the 'Others' directory install the
-following packages:<br>
+      <td valign="top">The following RPMs must be installed <br>
       <ul>
-        <li>gd-1.3.x (any newer version 1.8.x and above installed by
-Redhat must be first removed)<br>
+        <li>perl-suidperl</li>
+        <li>wu-ftpd<br>
         </li>
       </ul>
       </td>
@@ -575,17 +563,18 @@ with an 'rpm -Uvh' command.<br>
       <br>
 Packages to install:<br>
       <ul>
-        <li>mm, mm-devel</li>
+        <li>php, php-mysql, php-ldap</li>
         <li>openssh-server,&nbsp;openssh, openssh-clients,
 openssh-askpass</li>
         <li>openssl (if you intend to allow secure HTTP access)</li>
         <li>openldap</li>
-        <li>perl, perl-DBI, perl-DBD-MySQL, perl-Digest-MD5,
+        <li>perl, perl-DBI, perl-DBD-MySQL,
 perl-suidperl, perl-CGI</li>
         <li>python (for mailman)<br>
         </li>
-        <li>sendmail (8.9.x)</li>
-        <li>wu-ftpd, telnet, named, ntp</li>
+        <li>sendmail (8.x with x&gt;=9)<br>
+        </li>
+        <li>telnet, named, ntp</li>
         <li>samba (if you want to activate windows connectivity to the
 project Web site storage space and software release space)</li>
         <li>compat-glibc-x.y.z and compat-libstdc++-x.y.z (needed by
@@ -675,7 +664,7 @@ advise to create a
 subdomain for the codex machine like codex.your.own.domain.<br>
 <br>
 <h2>DNS Zones file</h2>
-Your DNS zone (called codex.zone) definition file must be place in <tt>/usr/local/domain/data/primary/</tt>
+Your DNS zone (called codex.zone) definition file must be place in <tt>/var/named/</tt>
 because this path is hardcoded in the <tt>/home/httpd/SF/utils/underworld-dummy/dns_conf.pl</tt>
 script that is used to automatically generate the DNS aliases for
 project sites and per project CVS server. If you want to place the
@@ -789,17 +778,18 @@ http://projectname.codex.xerox.com) and each CVS server
 (cvs.projectname.codex.xerox.com)<br>
 <br>
 <h2>Named.conf file</h2>
-This is the master DNS configuration file. It is located in /etc and,
+<span style="font-family: monospace;">/etc/named.conf</span> is the
+master DNS configuration file. It is located in /etc and,
 as an example,
 here is how it looks like on the CodeX central site of the Xerox
 corporation:<br>
 <br>
 <tt>options {</tt><br>
 <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; directory
-"/usr/local/domain/data/primary";</tt><br>
+"/var/named;</tt><br>
 <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; forwarders {</tt><br>
 <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-13.252.44.4;</tt> &nbsp;// Put your own DNS forwarders list here!!!<br>
+13.252.44.4;</tt> &nbsp;// Put your own DNS forwarders list here<br>
 <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 13.252.44.5;</tt><br>
 <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -807,7 +797,12 @@ corporation:<br>
 <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 13.1.64.94;</tt><br>
 <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; };</tt><br>
-<tt>};</tt><br>
+<tt>};<br>
+<br>
+controls {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; inet 127.0.0.1 allow {
+localhost; } keys { rndckey; };<br>
+};</tt><br>
 <br>
 <tt>zone "." {</tt><br>
 <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; type hint;</tt><br>
@@ -820,11 +815,12 @@ corporation:<br>
 <tt>};</tt><br>
 <br>
 <tt>zone "codex.xerox.com" {</tt><br>
-<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; type master;</tt><br>
-<tt>// LJ CAUTION !! Do not modify the file codex_full.zone by hand</tt><br>
-<tt>// LJ Only codex.zone can be manually edited</tt><br>
-<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; file "codex_full.zone";</tt><br>
-<tt>}</tt><br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; type master;</tt><tt></tt><br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; file "codex_full.zone";</tt><br>
+<tt>}<br>
+<br>
+include "/etc/rndc.key";<br>
+</tt><br>
 <br>
 <hr width="100%" size="2">
 <h1>Apache Configuration</h1>
@@ -832,6 +828,11 @@ corporation:<br>
   <li>A sample Apache configuration file is available in the CodeX code
 in <tt>/home/httpd/SF/etc/http.conf.dist</tt>. Edit this file to
 reflect your site settings and place it in <tt>/etc/httpd/conf/httpd.conf</tt>.</li>
+  <li>Starting with Apache 2.0 and RHEL 3, modules configuration must
+be placed in <tt>/etc/httpd/conf.d/</tt> . CodeX comes with a number
+of Apache modules configuration files that must be copied from <tt>/home/httpd/SF/etc/</tt>
+to <tt>/etc/httpd/conf.d/ (e.g. php.conf, ssl.conf,etc.)<br>
+    </tt></li>
   <li>Start or restart the Apache web server (from the root account
 type the command: 'service httpd restart')<br>
   </li>
@@ -851,17 +852,16 @@ noticeable is that a system administrator must be physically present
 while rebooting the CodeX system to type the password when the Apache
 server is started. This prevent from doing an unattended reboot.<br>
 <br>
-The sample http.conf.dist contains all the necessary Apache directives
-to enable secured HTTP. There are 3 places that you need to activate:
+To activate SSL on your CodeX server simply copy the sample <span
+ style="font-family: monospace;">/home/httpd/SF/etc/ssl.conf.dist</span>
+file to <tt>/etc/httpd/conf.d/. It </tt>contains all the necessary
+Apache directives
+to enable secured HTTP. Then do the following:<br>
 <ul>
-  <li>The 'Listen' section must listen to port 80 (http) and 443 (https)</li>
-  <li>You must load the mod_ssl module in the module section (both the
-LoadModule and Addmodule statements)<br>
-  </li>
-  <li>Uncomment the virtual host declaration at the end of the file
-which actually activates the secure HTTP server on port 443. And make
-sure to replace the "IP_ADDRESS_HERE" pattern in the virtual host
-declaration with your real IP address</li>
+  <li>Edit <tt>/etc/httpd/conf.d/ssl.conf</tt> and replace the <tt>%sys_ip_address%
+    </tt>and <tt>%sys_default_domain% </tt>patterns with the
+appropriate values for your site.<tt><br>
+    </tt></li>
   <li>For the changes to take effect you must restart the Apache server.</li>
   <li>Then edit the /etc/codex/conf/local.inc file and edit the
 $sys_https_host
@@ -951,7 +951,7 @@ name as $sys_default_domain. Set it to an empty string ($sys_https_host
 </ul>
 <h2>PHP configuration</h2>
 <ul>
-  <li>Change the include_path variable in /etc/httpd/php3.ini to the
+  <li>Change the include_path variable in /etc/php.ini to the
 following value:<br>
     <pre>&nbsp; &nbsp; &nbsp; include_path&nbsp;&nbsp;&nbsp; = .:/home/httpd/SF/www/include:/home/httpd/SF/www/phpMyAdmin</pre>
   </li>
@@ -990,7 +990,7 @@ file release. The default value is 16MB. </li>
 If you wish to go over 16MB you might also have to modify the following
 files:
 <ul>
-  <li>/etc/httpd/php3.ini as described above </li>
+  <li>/etc/php.ini as described above </li>
   <li>/etc/my.cnf i.e. the MySQL configuration file. Specify a <span
  style="font-family: monospace;">max_allowed_packet</span> value above
 the maximum size you chose. </li>
@@ -1117,7 +1117,7 @@ used in pipe commands in the aliases file. These shell wrappers must be
 explicitely delcared in the /etc/smrsh directory in order to execute
 properly. You should create the following links:<br>
 <br>
-<pre>	# cd /etc/smrsh<br>	# ln -sf /usr/local/bin/gotohell<br>	# ln -sf /usr/local/mailman/mail/wrapper<br></pre>
+<pre>	# cd /etc/smrsh<br>	# ln -sf /usr/local/bin/gotohell<br>	# ln -sf /home/mailman/mail/mailman<br></pre>
 <br>
 <hr>
 <h1>Mailman Installation and Configuration</h1>
@@ -1345,7 +1345,7 @@ This feature is activated in the CVS Web interface of the CodeX Web
 frontend under CVS -&gt; Admin. For this feature to work properly
 symbolic links must be created from the /usr/local/bin directory as
 follows:<br>
-<pre><tt>&nbsp;&nbsp;&nbsp; # cd /</tt><tt>/home/httpd/SF/utils/cvs1</tt><tt><br>&nbsp;&nbsp;&nbsp; # cp log_accum /usr/local/bin<br>&nbsp;&nbsp;&nbsp; # cp commit_prep</tt><tt> /usr/local/bin</tt></pre>
+<pre><tt>&nbsp;&nbsp;&nbsp; # cd /</tt><tt>home/httpd/SF/utils/cvs1</tt><tt><br>&nbsp;&nbsp;&nbsp; # cp log_accum /usr/local/bin<br>&nbsp;&nbsp;&nbsp; # cp commit_prep</tt><tt> /usr/local/bin</tt></pre>
 The log_accum script in requires the
 sourceforge group ownership to execute properly. <b><font
  color="#ff0000">**HIGHLY CRITICAL**</font></b>
@@ -1591,14 +1591,13 @@ sheet directories above.</li>
 </ul>
 Defining your own Look&amp;Feel is very easy:<br>
 <ol>
-  <li>Choose a theme name</li>
-  <li>Create a directory named '<span style="font-family: monospace;">custom</span>'
-both in <tt>SF/www/css and </tt><tt>SF/www/images</tt> if there isn't
-one already<tt><br>
+  <li>Choose a theme name ('<span style="font-style: italic;">themename</span>'
+in the rest of this section)<tt><br>
     </tt></li>
-  <li>Create directory &nbsp;<tt>SF/www/css/custom/<i>themename</i>/ </tt>and
+  <li>Create directory&nbsp; <tt>/etc/codex/conf/themes/css/<i>themename</i>/
+    </tt>and
 the 3 CSS files in it. Make sure the 3 file names follows the pattern '<i>themename_fontsize</i>.css'</li>
-  <li>Create directory &nbsp;<tt>SF/www/images/custom/<i>themename</i>.theme/
+  <li>Create directory&nbsp; <tt>/</tt><tt>etc/codex/conf/themes/</tt><tt>images/custom/<i>themename</i>.theme/
     </tt>by
 copying one of the directory that come standard with CodeX. Then
 replace all the images you want to customize with your own but make
@@ -1642,7 +1641,7 @@ script the text belong to.</li>
 </ul>
 By default the site-content directory should be stored in the same
 place as the SF directory (PHP scripts). &nbsp;Make sure you update the
-<tt>$sys_inc</tt>
+<tt>$sys_incdir</tt>
 variable in <tt>/etc/codex/conf/local.inc</tt> to reflect the path to
 the <tt>site-content</tt>
 directory (default is <tt>/home/httpd/site-content</tt>).<br>
@@ -1650,11 +1649,15 @@ directory (default is <tt>/home/httpd/site-content</tt>).<br>
 To customize the content of a given script for your site go through the
 following steps:<br>
 <ol>
-  <li>Under site-content create a directory called '<tt>custom</tt>'
-and under this directory create the LANG_COUNTRY sub-directory (<tt>en_US</tt>only
-for now).&nbsp;</li>
+  <li>Under <span style="font-family: monospace;">/etc/codex</span>
+create the <span style="font-family: monospace;">site-content</span>
+directory if it doesn't exist.</li>
   <li>For each piece of text that you want to customize copy the
-original <tt><i>whattext</i>.txt</tt> file under the <tt>site-content/custom/<i>LANG_COUNTRY</i>/<i>SF_path</i></tt><tt>/<i>whattext</i>.txt</tt>and
+original <tt><i>whattext</i>.txt</tt> file under the <tt>/etc/codex/site-content/<i></i></tt>
+with the exact same path. For instance if you want to customize the
+introductory text of the CodeX home page, copy <span
+ style="font-family: monospace;">/home/httpd/site-content/en_US/homepage/welcome_intro.txt</span>&nbsp;
+into and <span style="font-family: monospace;">/etc/site-content/en_US/homepage/welcome_intro.txt</span>
 edit it as you like.<br>
     <br>
 B<u>e careful that some of these files contain PHP scripting that you
@@ -1697,17 +1700,28 @@ directories.<br>
 The User Guide contain references to the company name, server name
 running CodeX,etc. These pieces of information vary from one site to
 another. Therefore a specific file has been introduced at <span
- style="font-family: monospace;">documentation/user_guide/xml/en_US/ParametersLocal.dtd</span>
-that you can edit and where you can redefined XML entities that govern
-the site specific information. For a list of the default values see the
-<span style="font-family: monospace;">ParametersDefault.dtd</span> in
-the same directory. If you want to redefine an entity, simply copy it
-into the <span style="font-family: monospace;">ParametersLocal.dtd</span>
-file and regenerate the documentation.<br>
+ style="font-family: monospace;">/home/httpd/documentation/user_guide/xml/en_US/ParametersLocal.dtd</span>
+that you can use to customize the&nbsp; content of the CodeX User
+Guide. To do so:<br>
+<ul>
+  <li>Copy <span style="font-family: monospace;">/home/httpd/documentation/user_guide/xml/en_US/ParametersLocal.dtd
+to </span><span style="font-family: monospace;"><span
+ style="font-family: monospace;">/etc/codex/documentation/user_guide/xml/en_US/ParametersLocal.dtd</span></span></li>
+  <li>Edit the file you just copied and redefine the XML entities that
+govern
+the site specific information. For a list of the available XML entities
+that you can redefine see the <span style="font-family: monospace;"><span
+ style="font-family: monospace;">/home/httpd/documentation/user_guide/xml/en_US/</span></span><span
+ style="font-family: monospace;">ParametersDefault.dtd</span> . <br>
+  </li>
+  <li>Regenerate the documentation by running <span
+ style="font-family: monospace;">the script
+/home/httpd/SF/utils/generate_doc.sh</span></li>
+</ul>
 <br>
 Also notice that the HTML and PDF versions of the CUG are <b>not</b>
 stored in the CVS repository. They are generated from the XML files
-using the script&nbsp; <span style="font-family: monospace;">SF/utils/generate_doc.sh</span>.
+using the script&nbsp; <span style="font-family: monospace;">/home/httpd/SF/utils/generate_doc.sh</span>.
 You can run this
 script
 by hand from the sourceforge Linux account and our advice is also to
@@ -2065,14 +2079,14 @@ $cfgServers[$i]['auth_type']&nbsp;&nbsp;&nbsp;&nbsp; =
 'http';&nbsp;&nbsp;&nbsp; // Authentication method (config, <br>
 http or cookie based)?<br>
 $cfgServers[$i]['user']&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-= '';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // MySQL user<br>
+= 'sourceforge';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // MySQL user<br>
 $cfgServers[$i]['password']&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
 '';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // MySQL
 password (only needed<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 // with 'config' auth_type)<br>
 $cfgServers[$i]['only_db']&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
-'';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
+'sourceforge';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
 $cfgServers[$i]['verbose']&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
 '';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Verbose
 name for this host -<br>
