@@ -172,9 +172,9 @@ if (!$res_files || $rows_files < 1) {
                 print '<TD>'.db_result($res_files,$f,'release_name') .'
                   </TD>
                   <TD align="center"><A href="/file/shownotes.php?group_id=' . $group_id . '&release_id=' . $release_id . '">';
-                echo	html_image("ic/manual16c.png",array('width'=>'15', 'height'=>'15', 'alt'=>'Release Notes'));
+                echo	html_image("ic/manual16b.png",array('alt'=>'Release Notes'));
                 echo '</A> - <A HREF="/file/filemodule_monitor.php?filemodule_id=' .	$package_id . '">';
-                echo html_image("ic/mail16d.png",array('width'=>'15', 'height'=>'15', 'alt'=>'Monitor This Package'));
+                echo html_image("ic/mail16b.png",array('alt'=>'Monitor This Package'));
                 echo '</A>
                   </TD>
                   <TD align="center"><A HREF="/file/showfiles.php?group_id=' . $group_id . '&release_id=' . $release_id . '">Download</A></TD></TR>';
