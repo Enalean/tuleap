@@ -203,7 +203,12 @@ echo $HTML->box1_top("Public Areas");
 
 // ################# Homepage Link
 
-print "<A href=\"" . $project->getHomePage() . "\">";
+print "<A ";
+if (substr($project->getHomePage(), 0, 1)!="/") {
+    // Absolute link -> open new window on click
+    print "target=_blank ";
+ }
+print "href=\"" . $project->getHomePage() . "\">";
 html_image("ic/home16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>'Homepage'));
 print '&nbsp;Project Homepage</A>';
 
