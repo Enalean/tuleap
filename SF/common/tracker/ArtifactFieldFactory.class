@@ -13,7 +13,7 @@
 //require($DOCUMENT_ROOT.'/../common/tracker/ArtifactField.class');
 
 // Sort by place result
-function cmp_place($field1, $field2) {
+function art_field_factory_cmp_place($field1, $field2) {
     if ($field1->getPlace() < $field2->getPlace())
 		return -1;
     else if ($field1->getPlace() > $field2->getPlace())
@@ -139,7 +139,7 @@ class ArtifactFieldFactory extends Error {
 			}
 		}
 		
-		uasort($result_fields,cmp_place);
+		uasort($result_fields,art_field_factory_cmp_place);
 		return $result_fields;
 
 	}
@@ -160,7 +160,7 @@ class ArtifactFieldFactory extends Error {
 			}
 		}
 		
-		uasort($result_fields,cmp_place);
+		uasort($result_fields,art_field_factory_cmp_place);
 		return $result_fields;
 
 	}

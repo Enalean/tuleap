@@ -8,8 +8,12 @@
 require('pre.php');
 require('../admin/project_admin_utils.php');
 require('project_export_utils.php');
+require($DOCUMENT_ROOT.'/../common/tracker/Artifact.class');
+require($DOCUMENT_ROOT.'/tracker/include/ArtifactHtml.class');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactTypeFactory.class');
+require($DOCUMENT_ROOT.'/../common/tracker/ArtifactField.class');
+require($DOCUMENT_ROOT.'/../common/tracker/ArtifactFieldFactory.class');
 
 // Conditionally include the appropriate modules
 if (ereg('^bug',$export) || ($export == 'project_db') ) {
@@ -31,12 +35,53 @@ if ( !$group_id ) {
 
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
+//	  
+//  get the Group object
+//	  
+$group = group_get_object($group_id);
+if (!$group || !is_object($group) || $group->isError()) {
+	exit_no_group();
+}		   
+$atf = new ArtifactTypeFactory($group);
+if (!$group || !is_object($group) || $group->isError()) {
+	exit_error('Error','Could Not Get ArtifactTypeFactory');
+}
 
 $project=project_get_object($group_id);
 $dbname = $groupname = $project->getUnixName();
 $pg_title = 'Project Data Export '.$groupname;
 
 switch ($export) {
+
+ case 'artifact':
+     include('./artifact_export.php');
+     break;
+
+ case 'artifact_format':
+     project_admin_header(array('title'=>$pg_title));
+     include('./artifact_export.php');
+     site_project_footer( array() );
+     break;
+
+ case 'artifact_history':
+     include('./artifact_history_export.php');
+     break;
+
+ case 'artifact_history_format':
+     project_admin_header(array('title'=>$pg_title));
+     include('./artifact_history_export.php');
+     site_project_footer( array() );
+     break;
+
+ case 'artifact_deps':
+     include('./artifact_deps_export.php');
+     break;
+
+ case 'artifact_deps_format':
+     project_admin_header(array('title'=>$pg_title));
+     include('./artifact_deps_export.php');
+     site_project_footer( array() );
+     break;
 
  case 'bug':
      include('./bug_export.php');
@@ -150,6 +195,10 @@ switch ($export) {
      include('./task_assigned_to_export.php');
      include('./survey_responses_export.php');
      include('./support_request_export.php');
+     include('./artifact_export.php');
+     include('./artifact_history_export.php');
+     include('./artifact_deps_export.php');
+
 ?>
    <P>Your project database has been succesfully generated. You can now use 
 your favorite desktop application and access your project database through 
@@ -254,18 +303,6 @@ individual text files (CSV format) or in a project specific database that you ca
     <td align="center">-<br>-</td>
   </tr>';		
   
-	//	  
-	//  get the Group object
-	//	  
-	$group = group_get_object($group_id);
-	if (!$group || !is_object($group) || $group->isError()) {
-		exit_no_group();
-	}		   
-	$atf = new ArtifactTypeFactory($group);
-	if (!$group || !is_object($group) || $group->isError()) {
-		exit_error('Error','Could Not Get ArtifactTypeFactory');
-	}
-	
 	// Get the artfact type list
 	$at_arr = $atf->getArtifactTypes();
 	
@@ -275,16 +312,16 @@ individual text files (CSV format) or in a project specific database that you ca
 		  	echo '
 		  <tr class="'.util_get_alt_row_color($iu).'"> 
 		    <td><b>Tracker: '.$at_arr[$j]->getName().'</b></td>
-		    <td align="center">Export
-		      <br>Show Format
+		    <td align="center"><a href="'.$PHP_SELF.'?group_id='.$group_id.'&atid='.$at_arr[$j]->getID().'&export=artifact">Export</a>
+		      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&atid='.$at_arr[$j]->getID().'&export=artifact_format">Show Format</a>
 		    </td>
 		    <td align="center"> 
-		      Export
-		      <br>Show Format
+		      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&atid='.$at_arr[$j]->getID().'&export=artifact_history">Export</a>
+		      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&atid='.$at_arr[$j]->getID().'&export=artifact_history_format">Show Format</a>
 		    </td>
 		    <td align="center"> 
-		      Export
-		      <br>Show Format
+		      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&atid='.$at_arr[$j]->getID().'&export=artifact_deps">Export</a>
+		      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&atid='.$at_arr[$j]->getID().'&export=artifact_deps_format">Show Format</a>
 		    </td>
 		  </tr>';
 		}

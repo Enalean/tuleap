@@ -1468,7 +1468,139 @@ class ArtifactType extends Error {
 	function buildFieldName($id) {
 		return "field_".$id;
 	}
+	
+	/**
+	 * Return the different elements for building the export query
+	 *
+	 * @param fields: the field list
+	 * @param select: the select value
+	 * @param from: the from value
+	 * @param where: the where value
+	 *
+	 * @return void
+	 */
+	function getExportQueryElements($fields,&$select,&$from,&$where) {
+		
+		//
+		// NOTICE
+		//
+		// We can't use left join because the performs are very bad.
+		// So the restriction to this: all fields used in the query must have a value.
+		// That involves artifact creation or artifact admin (add a field) must create
+		// empty records with default values for fields which haven't a value (from the user).
+		//
+		/* The query must be something like this :
+			SELECT a.artifact_id,u.user_name,v1.valueInt,v2.valueText,u3.user_name
+			FROM artifact a, artifact_field_value v1, artifact_field_value v2, artifact_field_value v3, user u3, user u
+			WHERE a.group_artifact_id = 100 and 
+			a.artifact_id = v1.artifact_id and v1.field_id=101 and
+			a.artifact_id = v2.artifact_id and v2.field_id=103 and
+			a.artifact_id = v3.artifact_id and v3.field_id=104 and v3.valueInt = u3.user_id and
+			a.submitted_by = u.user_id
+			group by a.artifact_id
+			order by v3.valueText,v1.valueInt
+		*/
 
+		$count = 1;
+		
+		$select = "SELECT ";
+		$from = "FROM artifact a";
+		$where = "WHERE a.group_artifact_id = ".$this->getID(); 
+				
+		$user_table = false;
+		$select_count = 0;
+		
+		if ( count($fields) == 0 )
+			return;
+
+		while (list($key,$field) = each($fields) ) {
+			
+			//echo $field->getName()."-".$field->getID()."<br>";
+			
+			// If the field is a standard field ie the value is stored directly into the artifact table (severity, artifact_id, ...)
+			if ( $field->isStandardField() ) {
+				if ( $select_count != 0 ) {
+					$select .= ",";
+					$select_count ++;
+				} else {
+					$select_count = 1;
+				}
+
+				// Special case for fields which are user name
+				if ( ($field->isUsername())&&(!$field->isSelectBox())&&(!$field->isMultiSelectBox()) ) {
+					$select .= " u.user_name as ".$field->getName();
+					$where .= " and a.".$field->getName()." = u.user_id";
+					if ( !$user_table ) 
+						$from .= ", user u";
+				} else {
+					$select .= " a.".$field->getName();
+				}
+				
+			} else {
+				
+				// Special case for comment_type_id field - No data stored in artifact_field_value
+				if ( $field->getName() != "comment_type_id" ) {
+					// The field value is stored into the artifact_field_value table
+					// So we need to add a new join
+					if ( $select_count != 0 ) {
+						$select .= ",";
+						$select_count ++;
+					} else {
+						$select_count = 1;
+					}
+	
+					// Special case for fields which are user name
+					if ( ($field->isUsername())&&(!$field->isSelectBox())&&(!$field->isMultiSelectBox()) ) {
+						$select .= " u".$count.".user_name as ".$field->getName();
+						$where .= " and v".$count.".".$field->getValueFieldName()." = u".$count.".user_id";
+						$from .= ", user u".$count;
+					} else {
+						$select .= " v".$count.".".$field->getValueFieldName()." as ".$field->getName();
+					}
+					$from .= ", artifact_field_value v".$count;
+					$where .= " and a.artifact_id = v".$count.".artifact_id and v".$count.".field_id=".$field->getID();
+						
+					$count ++;
+				}
+			}
+
+		}
+		
+	}
+	
+	
+	/**
+	 * Return the query string, for export
+	 *
+	 * @param fields (OUT): the field list 
+	 * @param col_list (OUT): the field name list
+	 * @param lbl_list (OUT): the field label list
+	 * @param dsc_list (OUT): the field description list
+	 *
+	 * @return string: the sql query
+	 */
+	function buildExportQuery(&$fields,&$col_list,&$lbl_list,&$dsc_list) {
+		global $art_field_fact;
+		
+		$fields = $art_field_fact->getAllUsedFields();
+
+		reset($fields);
+		while (list(,$field) = each($fields) ) {
+			if ( $field->getName() != "comment_type_id" ) {
+				$col_list[$field->getName()] = $field->getName();
+				$lbl_list[$field->getName()] = $field->getLabel();
+				$dsc_list[$field->getName()] = $field->getDescription();
+			}
+		}
+		
+		$this->getExportQueryElements($fields,$select,$from,$where);
+		
+		$sql = $select." ".$from." ".$where." group by a.artifact_id";
+		//echo $sql;
+		
+		return $sql;
+	}
+	
 }
 
 ?>

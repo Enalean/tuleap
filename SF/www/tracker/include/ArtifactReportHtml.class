@@ -385,11 +385,6 @@ class ArtifactReportHtml extends ArtifactReport {
 						else
 						    $html_result .= "<TD $width>".util_multi_user_link($value)."</TD>\n";
 					
-				    } else if ( $field->isSelectBox() ) {
-						// Usefull? - TODO
-				        // $html_result .= "<TD $width>". bug_data_get_cached_field_value($field_arr[$j], $group_id, $value) .'</TD>'."\n";
-						$html_result .= "<TD $width>".$value.'</TD>'."\n";
-					
 					} else if ( $field->isFloat() ) {
 						$html_result .= "<TD $width>". number_format($value,2) .'&nbsp;</TD>'."\n";
 					} else {

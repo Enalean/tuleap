@@ -748,7 +748,7 @@ class ArtifactHtml extends Artifact {
 	    // No followup comment -> return now
 	    if ($rows <= 0) {
 			if ($ascii)
-			    $out = "$sys_lf$sys_lfNo Followups Have Been Posted$sys_lf";
+			    $out = "$sys_lf$sys_lf No Followups Have Been Posted$sys_lf";
 			else
 			    $out = '<H4>No Followups Have Been Posted</H4>';
 			return $out;

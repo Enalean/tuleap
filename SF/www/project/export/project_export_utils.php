@@ -155,6 +155,67 @@ function prepare_bug_record($group_id, &$col_list, &$record) {
 
 }
 
+function prepare_artifact_record($at,$fields,$group_artifact_id, &$record) {
+
+    global $datetime_fmt,$sys_lf;
+    /*
+           Prepare the column values in the artifact record
+           Input: a row from the artifact table (passed by reference.
+          Output: the same row with values transformed for export
+       */
+	
+    reset($fields);
+    $line = '';
+    while (list(,$field) = each($fields)) {
+
+		if ( $field->isSelectBox() || $field->isMultiSelectBox() ) {
+			$values = array();
+			if ( $field->isStandardField() ) {
+				$values[] = $record[$field->getName()];
+			} else {
+				$values = $field->getValues($record['artifact_id']);
+			}
+			$label_values = $field->getLabelValues($group_artifact_id,$values);
+			$record[$field->getName()] = join(",",$label_values);
+			
+		} else if ( $field->isTextArea() || ($field->isTextField() && $field->getDataType() == $field->DATATYPE_TEXT) ) {
+		    // all text fields converted from HTML to ASCII
+		    $record[$field->getName()] = prepare_textarea($record[$field->getName()]);
+		 
+		} else if ( $field->isDateField() ) {
+
+		    // replace the date fields (unix time) with human readable dates that
+		    // is also accepted as a valid format in future import
+		    if ($record[$field->getName()] == '')
+				// if date undefined then set datetime to 0. Ideally should
+				// NULL as well but if we pass NULL it is interpreted as a string
+				// later in the process
+				$record[$field->getName()] = '0';
+		    else
+				$record[$field->getName()] = format_date($datetime_fmt,$record[$field->getName()]);
+		} else if ( $field->isFloat() ) {
+			$record[$field->getName()] = number_format($record[$field->getName()],2);
+		}
+    }
+
+	// Follow ups
+	$ah=new ArtifactHtml($at,$record['artifact_id']);
+	$sys_lf_sav = $sys_lf;
+	$sys_lf = "\n";
+    $record['follow_ups'] = $ah->showDetails($at->Group->getID(),true);
+	$sys_lf = $sys_lf_sav;
+
+	// Dependencies
+    $result=$ah->getDependencies();
+    $rows=db_numrows($result);
+    for ($i=0; $i < $rows; $i++) {
+		$dependent_on_artifact_id = db_result($result, $i, 'is_dependent_on_artifact_id');
+		$dependent .= $dependent_on_artifact_id.",";
+	}
+    $record['is_dependent_on'] = ($dependent?substr($dependent,0,strlen($dependent)-1):"None");
+
+}
+
 function pe_utils_format_bug_followups($group_id,$bug_id) {
     global $BUG_FU, $sys_datefmt;
 
@@ -328,6 +389,70 @@ function prepare_bug_history_record($group_id, &$col_list, &$record) {
 	$record['type'] = bug_data_get_cached_field_value('comment_type_id',$group_id,$record['type']);
     } else {
 	$record['type']='';
+    }
+
+}
+
+
+function prepare_artifact_history_record($at, $art_field_fact, &$record) {
+
+    global $datetime_fmt;
+
+    /*
+           Prepare the column values in the bug history  record
+           Input: a row from the bug_history database (passed by
+                   reference.
+          Output: the same row with values transformed for export
+       */
+
+    // replace the modification date field with human readable dates 
+    $record['date'] = format_date($datetime_fmt,$record['date']);
+
+	$field = $art_field_fact->getFieldFromName($record['field_name']);
+	if ( $field ) {
+		
+		if ( $field->isSelectBox() || $field->isMultiSelectBox() ) {
+			$values = array();
+			if ( $field->isStandardField() ) {
+				$values[] = $record[$field->getName()];
+			} else {
+				$values = $field->getValues($record['artifact_id']);
+			}
+			$label_values = $field->getLabelValues($group_artifact_id,$values);
+			$record['old_value'] = join(",",$label_values);
+			
+		} else if ( $field->isTextArea() || ($field->isTextField() && $field->getDataType() == $field->DATATYPE_TEXT) ) {
+		    // all text fields converted from HTML to ASCII
+		    $record['old_value'] = prepare_textarea($record['old_value']);
+		 
+		} else if ( $field->isDateField() ) {
+
+		    // replace the date fields (unix time) with human readable dates that
+		    // is also accepted as a valid format in future import
+		    if ($record['old_value'] == '')
+				// if date undefined then set datetime to 0. Ideally should
+				// NULL as well but if we pass NULL it is interpreted as a string
+				// later in the process
+				$record['old_value'] = '0';
+		    else
+				$record['old_value'] = format_date($datetime_fmt,$record['old_value']);
+		} else if ( $field->isFloat() ) {
+			$record['old_value'] = number_format($record['old_value'],2);
+		}
+	}	
+	
+
+    // Decode the comment type value. If null make sure there is
+    // a blank entry in the array
+    if (isset($record['type'])) {
+		$field = $art_field_fact->getFieldFromName('comment_type_id');
+		if ( $field ) {
+			$values[] = $record['type'];
+			$label_values = $field->getLabelValues($at->getID(),$values);
+			$record['type'] = join(",",$label_values);
+		}
+    } else {
+		$record['type']='';
     }
 
 }
@@ -633,7 +758,7 @@ function display_db_params () {
 }
 
 function db_project_query($dbname,$qstring,$print=0) {
-	if ($print) print "<br>Query is: $qstring<br>";
+	if ($print) print "<br>Query is ($dbname): $qstring<br>";
 	$GLOBALS['db_project_qhandle'] = @mysql_db_query($dbname,$qstring);
 	return $GLOBALS['db_project_qhandle'];
 }
