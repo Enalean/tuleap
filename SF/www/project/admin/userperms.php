@@ -150,7 +150,7 @@ if ($project->isError()) {
 echo '
 <h2>'.$LANG->getText('project_admin_utils','user_perms').'</h2>
 <FORM action="userperms.php" method="post">
-<INPUT type="hidden" name="group_id" value="<?php print $group_id; ?>">
+<INPUT type="hidden" name="group_id" value="'.$group_id.'">
 <TABLE width="100%" cellspacing=0 cellpadding=3 border=0>
 <TR><TD><B>'.$LANG->getText('project_admin_userperms','devel_name').'</B></TD>
 <TD><B>'.$LANG->getText('project_admin_userperms','proj_admin').'</B></TD>';
