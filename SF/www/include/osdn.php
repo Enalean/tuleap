@@ -21,10 +21,17 @@ function osdn_nav_dropdown() {
 // window is resized.
 ?>
 	<!-- OSDN navdropdown -->
+	    <script language=javascript>
+	    function handle_navbar(index,form) {
+	        if ( index > 1 ) {
+	            window.location=form.options[index].value;
+	        }
+	    }
+	    </script>
         <form name=form1>
         <font size=-1>
         <a href="<?php print 'http://'.$GLOBALS['sys_default_domain']; ?>"><?php echo html_image("codex_logo.png",array("width"=>"135", "height"=>"33", "hspace"=>"10", "alt"=>$GLOBALS['sys_default_domain'], "border"=>"0")); ?></A><br>
-        <select name=navbar onChange="window.location=this.options[selectedIndex].value">
+        <select name=navbar onChange="handle_navbar(selectedIndex,this)">
         <option value="<?php print $GLOBALS['sys_default_domain']; ?>/gallery.html">Network Gallery</option>
         <option>------------</option>
 <?php
