@@ -7,25 +7,26 @@
 // $Id$
 
 require($DOCUMENT_ROOT.'/include/pre.php');
-$HTML->header(array('title'=>'Top Project Listings'));
+
+$LANG->loadLanguageMsg('top/top');
+
+$HTML->header(array('title'=>$LANG->getText('top_index','top_list')));
 ?>
 
-<H2>Top <?php print $GLOBALS['sys_name']; ?> Projects</H2>
+<H2><?php print $LANG->getText('top_index','top_proj',$GLOBALS['sys_name']); ?></H2>
 
-<P>We track many project usage statistics on <?php print $GLOBALS['sys_name']; ?>, and display here
-the top ranked projects in several categories.
+<P><?php print $LANG->getText('top_index','rank',$GLOBALS['sys_name']); ?>
 
 <UL>
-<LI><A href="mostactive.php?type=week">Most Active This Week</A>
-<LI><A href="mostactive.php">Most Active All Time</A>
+<LI><A href="mostactive.php?type=week"><?php print $LANG->getText('top_index','act_week'); ?></A>
+<LI><A href="mostactive.php"><?php print $LANG->getText('top_index','act_all_time'); ?></A>
 <BR>&nbsp;
-<LI><A href="toplist.php?type=downloads">Top Downloads</A>
-<LI><A href="toplist.php?type=downloads_week">Top Downloads (Past 7 Days)</A>
+<LI><A href="toplist.php?type=downloads"><?php print $LANG->getText('top_index','download'); ?></A>
+<LI><A href="toplist.php?type=downloads_week"><?php print $LANG->getText('top_index','downl_week'); ?></A>
 <BR>&nbsp;
-<LI><A href="toplist.php?type=pageviews_proj">Top Project Pageviews</A> -
-Measured by impressions of the Codex 'button' logo
+<LI><A href="toplist.php?type=pageviews_proj"><?php print $LANG->getText('top_index','pageviews'); ?>
 <BR>&nbsp;
-<LI><A href="toplist.php?type=forumposts_week">Top Forum Post Counts</A>
+<LI><A href="toplist.php?type=forumposts_week"><?php print $LANG->getText('top_index','forum'); ?></A>
 </UL>
 
 <?php

@@ -8,6 +8,9 @@
 
 require($DOCUMENT_ROOT.'/include/pre.php');    
 
+$LANG->loadLanguageMsg('top/top');
+
+
 if (!$offset || $offset < 0) {
 	$offset=0;
 }
@@ -18,29 +21,29 @@ if ($type == 'week') {
 		"WHERE groups.group_id=project_weekly_metric.group_id AND ".
 		"groups.is_public=1 ".
 		"ORDER BY ranking ASC LIMIT $offset,50";
-	$title = 'Most Active This Week';
+	$title = $LANG->getText('top_index','act_week');
 } else {
 	$sql="SELECT groups.group_name,groups.unix_group_name,groups.group_id,project_metric.ranking,project_metric.percentile ".
 		"FROM groups,project_metric ".
 		"WHERE groups.group_id=project_metric.group_id AND ".
 		"groups.is_public=1 ".
 		"ORDER BY ranking ASC LIMIT $offset,50";
-	$title = 'Most Active All Time';
+	$title = $LANG->getText('top_index','act_week');
 }
 
 
 $HTML->header(array('title'=>$title));
 
 print '<P><B><FONT size="+1">'.$title.'</FONT></B>
-<BR><I>(Updated Daily)</I>
+<BR><I>'.$LANG->getText('top_mostactive','update_daily').'</I>
 
-<P><A href="/top/">[View Other Top Categories]</A>
+<P><A href="/top/">'.$LANG->getText('top_mostactive','view_other_top_cat').'</A>
 
 <P><TABLE width="100%" cellpadding=0 cellspacing=0 border=0>
 <TR valign="top">
-<TD><B>Rank</B></TD>
-<TD><B>Project Name<BR>&nbsp;</B></TD>
-<TD align="right"><B>Percentile</B></TD>
+<TD><B>'.$LANG->getText('top_mostactive','rank').'</B></TD>
+<TD><B>'.$LANG->getText('top_mostactive','name').'<BR>&nbsp;</B></TD>
+<TD align="right"><B>'.$LANG->getText('top_mostactive','percentile').'</B></TD>
 </TR>
 ';
 
@@ -54,9 +57,9 @@ while ($row_top = db_fetch_array($res_top)) {
 		.'</TD><TD align="right">'.$row_top['percentile'].'</TD></TR>';
 }
 
-print '<TR class="'.$HTML->COLOR_LTBACK2.'"><TD>'.(($offset>0)?'<A HREF="mostactive.php?type='.$type.'&offset='.($offset-50).'"><B><-- More</B></A>':'&nbsp;').'</TD>
+print '<TR class="'.$HTML->COLOR_LTBACK2.'"><TD>'.(($offset>0)?'<A HREF="mostactive.php?type='.$type.'&offset='.($offset-50).'"><B><-- '.$LANG->getText('top_mostactive','more').'</B></A>':'&nbsp;').'</TD>
 	<TD>&nbsp;</TD>
-	<TD ALIGN="RIGHT"><A HREF="mostactive.php?type='.$type.'&offset='.($offset+50).'"><B>More --></B></A></TD></TR>';
+	<TD ALIGN="RIGHT"><A HREF="mostactive.php?type='.$type.'&offset='.($offset+50).'"><B>'.$LANG->getText('top_mostactive','more').' --></B></A></TD></TR>';
 
 print '</TABLE>';
 
