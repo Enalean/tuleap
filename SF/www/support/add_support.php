@@ -6,7 +6,8 @@
 //
 // $Id$
 
-support_header(array ('title'=>'Submit a Support Request'));
+support_header(array ('title'=>'Submit a Support Request',
+		     'help' => 'SupportRequestSubmission.html'));
 
 // First display the message preamble
 $res_preamble  = db_query("SELECT support_preamble FROM groups WHERE group_id=$group_id");

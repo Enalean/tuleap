@@ -11,7 +11,9 @@ require ('pre.php');
 require ('../snippet/snippet_utils.php');
 require ('cache.php');
 
-snippet_header(array('title'=>'Snippet Library', 'header'=>'Snippet Library'));
+snippet_header(array('title'=>'Snippet Library', 
+		     'header'=>'Snippet Library',
+		     'help' => 'TheCodeXMainMenu.html#TheCodeSnippetLibrary'));
 
 echo cache_display('snippet_mainpage','4',1800);
 

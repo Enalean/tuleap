@@ -88,12 +88,14 @@ function snippet_header($params) {
 	/*
 		Show horizontal links
 	*/
-	echo '<FONT face="arial, helvetica">';
 	echo '<H2>' . $params['header'] . '</H2>';
 	echo '<P><B>';
 	echo '<A HREF="/snippet/">Browse</A>
 		 | <A HREF="/snippet/submit.php">Create a New Snippet</A>
 		 | <A HREF="/snippet/package.php">Create A New Package</A></B>';
+	if ($params['help']) {
+	    echo ' | '.help_button($params['help'],false,'Help');
+	}
 	echo '<P>';
 	html_feedback_top($feedback);
 }

@@ -20,6 +20,8 @@ if ( $num_packages < 1) {
 }
 
 site_project_header(array('title'=>'Project Filelist','group'=>$group_id,'toptab'=>'downloads'));
+
+echo '<h3>Package Releases '. help_button('FileReleaseJargon.html').'</h3>';
 ?>
 <SCRIPT language="JavaScript">
 <!--

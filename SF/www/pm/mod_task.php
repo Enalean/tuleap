@@ -6,7 +6,8 @@
 //
 // $Id$
 
-pm_header(array('title'=>'Modify A Task'));
+pm_header(array('title'=>'Modify A Task',
+		'help'=>'TaskUpdate.html'));
 
 $sql="SELECT * FROM project_task ".
 	"WHERE project_task_id='$project_task_id' AND group_project_id='$group_project_id'";

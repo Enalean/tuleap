@@ -27,6 +27,9 @@ function people_header($params) {
 	if ($group_id && $job_id) {
 		echo ' | <A HREF="/people/editjob.php?group_id='. $group_id .'&job_id='. $job_id .'">Edit Job</A>';
 	}
+	if ($params['help']) {
+	    echo ' | '.help_button($params['help'],false,'Help');
+	}
 	echo '</B>';
 }
 
@@ -399,7 +402,7 @@ function people_show_job_list($result) {
 	$title_arr[]='Title';
 	$title_arr[]='Category';
 	$title_arr[]='Date Opened';
-	$title_arr[]='SF Project';
+	$title_arr[]= $GLOBALS['sys_name'].' Project';
 
 	$return .= html_build_list_table_top ($title_arr);
 

@@ -38,7 +38,8 @@ if (db_numrows($result) > 0) {
                       'details' => $task_details,
                       'assigned_to' => $assigned_to,
                       'hours' => $hours,
-                      'bug_id' => $bug_id
+                      'bug_id' => $bug_id,
+		      'help' => 'BugUpdate.html'
                       ));
     
     // First display some  internal fields - Cannot be modified by the user
@@ -106,7 +107,9 @@ if (db_numrows($result) > 0) {
 
       <table cellspacing="0">
       <TR><TD colspan="2" align="top"><HR></td></TR>
-      <TR><TD colspan="2" ><B>Use a Canned Response:</B>&nbsp;
+      <TR><TD colspan="2" >
+      <h3>Follow-up Comments <?php echo help_button('BugUpdate.html#BugComments'); ?></h3>
+      <B>Use a Canned Response:</B>&nbsp;
       <?php
       echo bug_canned_response_box ($group_id,'canned_response');
       echo '&nbsp;&nbsp;&nbsp;<A HREF="/bugs/admin/index.php?group_id='.$group_id.'&create_canned=1">Or define a new Canned Response</A><P>';
@@ -114,7 +117,7 @@ if (db_numrows($result) > 0) {
       </TD></TR>
  
       <TR><TD colspan="2">
-      <P><B>Post a followup comment of type:</B>
+      <P><B>Comment Type:</B>
       <?php echo bug_field_box('comment_type_id','',$group_id,'',true,'None'); ?><BR>
       <?php echo bug_field_textarea('details',''); ?>
       <P>
@@ -128,7 +131,7 @@ if (db_numrows($result) > 0) {
       <TR><TD colspan="2"><hr></td></tr>
 
       <TR><TD colspan="2">
-      <h3>CC List</h3>
+      <h3>CC List <?php echo help_button('BugUpdate.html#BugCCList'); ?></h3>
 	  <b><u>Note:</b></u> for CodeX users use their login name rather than their email addresses.<p>
 	  <B>Add CC:&nbsp;</b><input type="text" name="add_cc" size="30">&nbsp;&nbsp;&nbsp;
 	  <B>Comment:&nbsp;</b><input type="text" name="cc_comment" size="40" maxlength="255"><p>
@@ -139,8 +142,7 @@ if (db_numrows($result) > 0) {
 
       <TR><TD colspan="2">
 
-      <h3>Bug Attachments</h3>
-      <A href="javascript:help_window('/help/mod_bug.php?helpname=attach_file')"><b>(?)</b></a>
+      <h3>Bug Attachments <?php echo help_button('BugUpdate.html#BugAttachments'); ?></h3>
        <B>Check to Upload&hellip;  <input type="checkbox" name="add_file" VALUE="1">
       &nbsp;&hellip;&amp; Attach File:</B>
       <input type="file" name="input_file" size="40">
@@ -154,7 +156,7 @@ if (db_numrows($result) > 0) {
       <TR><TD colspan="2"><hr></td></tr>
 
       <TR ><TD colspan="2" valign="top">
-      <h3>Bug Dependencies</h3>
+      <h3>Bug Dependencies <?php echo help_button('BugUpdate.html#BugDependencies'); ?></h3>
       </td></TR>
 
 	<TR><TD VALIGN="TOP">
@@ -185,6 +187,7 @@ if (db_numrows($result) > 0) {
         <TR><TD colspan="2"><hr></td></tr>
 
 	<TR><TD colspan="2" >
+	<H3>Bug Change History <?php echo help_button('BugUpdate.html#BugHistory'); ?></H3>
 		<?php echo show_bughistory($bug_id,$group_id); ?>
 	</TD></TR>
 

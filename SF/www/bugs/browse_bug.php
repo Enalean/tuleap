@@ -411,7 +411,8 @@ $result=db_query($sql);
 if ($pv) {
     help_header('Bug Search Report - '.format_date($sys_datefmt,time()),false);
 } else {
-    bug_header(array('title'=>'Browse Bugs '.$hdr));
+    bug_header(array('title'=>'Browse Bugs '.$hdr,
+		     'help' => 'BugBrowsing.html'));
 }
 
 if ($load_cal) {
@@ -480,7 +481,7 @@ if ($result && $numrows > 0) {
 
     // Build the sorting header messages
     if ($morder) {
-	$order_statement = 'sorted by '.($pv ? '':help_button('browse_bug_sort',false)).
+	$order_statement = 'sorted by '.($pv ? '':help_button('BugBrowsing.html#BugListSorting',false)).
 	    ' : '.bug_criteria_list_to_text($morder, $url_nomorder);
     } else {
 	$order_statement ='';

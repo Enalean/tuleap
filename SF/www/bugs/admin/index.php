@@ -21,7 +21,8 @@ if ($group_id) {
       Show main page
     */
     
-    bug_header_admin(array ('title'=>'Bug Administration'));
+    bug_header_admin(array ('title'=>'Bug Administration',
+			    'help' => 'BTSAdministration.html'));
     
     echo '<H2>Bug Administration</H2>';
     if (user_ismember($group_id,'B2') || user_ismember($group_id,'A')) {

@@ -11,7 +11,8 @@ require('../survey_data.php');
 require('../survey_utils.php');
 
 $is_admin_page='y';
-survey_header(array('title'=>'Add A Question'));
+survey_header(array('title'=>'Add A Question',
+		    'help'=>'AdministeringSurveys.html#CreatingorEditingQuestions'));
 
 if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 	echo "<H1>Permission Denied</H1>";

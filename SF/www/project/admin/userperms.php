@@ -72,22 +72,11 @@ $res_dev = db_query("SELECT user.user_name AS user_name,"
 	. "user.user_id=user_group.user_id AND user_group.group_id=$group_id "
 	. "ORDER BY user.user_name");
 
-project_admin_header(array('title'=>'Project Developer Permissions','group'=>$group_id));
+project_admin_header(array('title'=>'User Permissions','group'=>$group_id,
+		     'help' => 'UserPermissions.html'));
 ?>
 
-<P><B>Developer Permissions for Project: <?php html_a_group($group_id); ?></B>
-<P>
-<B>NOTE:</B>
-<BR>
-<B>Technicians</B> can be assigned Bugs/Tasks/Patches
-<BR>
-<B>Project Admins</B> can access this page and other project administration pages
-<BR>
-<B>Tool Admins</B> can make changes to Bugs/Tasks/Patches as well as use the /toolname/admin/ pages
-<BR>
-<B>Editors</B> (doc. manager) can update/edit/remove documentation from the
-project.
-<P>
+<h2>User Permissions</h2>
 <FORM action="userperms.php" method="post">
 <INPUT type="hidden" name="group_id" value="<?php print $group_id; ?>">
 <TABLE width="100%" cellspacing=0 cellpadding=0 border=0>

@@ -8,7 +8,7 @@
 
 require "pre.php";    
 
-$res_cat = db_query("SELECT * FROM trove_cat WHERE trove_cat_id=$trove_cat_id");
+$res_cat = db_query("SELECT * FROM trove_cat WHERE trove_cat_id=$helpid");
 if (db_numrows($res_cat)<1) {
 	print "No such trove category";
 	exit;

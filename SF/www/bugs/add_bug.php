@@ -6,7 +6,8 @@
 //
 // $Id$
 
-bug_header(array ('title'=>'Submit a Bug'));
+bug_header(array ('title'=>'Submit a Bug',
+		  'help' => 'BugSubmission.html'));
 $fields_per_line=2;
 $max_size = 40;
 

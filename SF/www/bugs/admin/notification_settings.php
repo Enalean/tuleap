@@ -135,7 +135,9 @@ if ($submit) {
     Show Main Page
  ================================================== */
 
-bug_header_admin(array ('title'=>'Bug Administration - Personal Email Notification Settings'));
+bug_header_admin(
+       array ('title'=>'Bug Administration - Personal Email Notification Settings',
+	      'help' => 'BTSAdministration.html#BugEmailNotificationSettings'));
 
 echo '<H2>Email Notification Settings</h2>';
 
@@ -158,7 +160,9 @@ echo '
 <FORM action="'.$PHP_SELF.'" method="post">
 <INPUT type="hidden" name="group_id" value="'.$group_id.'">';
 
-echo '<h3><a name="GlobalEmailNotification"></a>Global Email Notification</h3>';
+echo '<h3><a name="GlobalEmailNotification"></a>Global Email Notification '.
+help_button('BTSAdministration.html#BugGlobalEmailNotification').'</h3>';
+
 if (user_ismember($group_id,'A')) {
     echo '
               <P><B>As a project administrator</B> you can provide email addresses (comma separated) to which new Bug submissions (and possibly updates) will be systematically sent.<BR>
@@ -183,7 +187,8 @@ echo '<h3>Personal Email Notification</h3>';
 if (user_ismember($group_id,'B1') || user_ismember($group_id,'B2') ||user_ismember($group_id,'A')) {
     // To watch other users you must have at least tech rights on the BTS
     echo'
-<h4>Users To Watch</h4>
+<h4>Users To Watch '.
+help_button('BTSAdministration.html#BugWatchers').'</h4>
 <P>If you want to be the backup of someone when they\'re away from the office, or if you need to do the QA to all their bugs. '.$GLOBALS['sys_name'].' can send their email notification to you also. List the login name of any user you wish to watch, separated by commas.</b>
 <p><INPUT TYPE="TEXT" NAME="watchees" VALUE="'.$watchees.'" SIZE="55" MAXLENGTH="255"><br></p>
 ';
@@ -206,7 +211,8 @@ if (user_ismember($group_id,'B1') || user_ismember($group_id,'B2') ||user_ismemb
 
 // Build Role/Event table 
 // Rk: Can't use html_build_list_table_top because of the specific layout
-echo '<h4>Event/Role Specific Settings</h4>
+echo '<h4>Event/Role Specific Settings '.
+help_button('BTSAdministration.html#BugEventRoleBasedEmailNotification').'</h4>
               <P>You can tune your notification settings and decide what bug changes you
 want to be aware of depending on your role. <p>
 <b><u>Note</u></b>: Notification of *new* bug submission to people other than the assignee

@@ -84,9 +84,10 @@ else if ($delete_report) {
 
 if ($new_report) {
 
-    bug_header_admin(array ('title'=>'Create A New Bug Report'));
+    bug_header_admin(array ('title'=>'Create A New Bug Report',
+			    'help' => 'BTSAdministration.html#BugReportSetting'));
     
-    echo '<H2>Create a New Bug Report '.help_button('bug_admin_report_settings',false).'</H2>';
+    echo '<H2>Create a New Bug Report</H2>';
   
     // display the table of all fields that can be included in the report
     $title_arr=array();
@@ -159,9 +160,10 @@ if ($new_report) {
 } else if ($show_report) {
 
 
-    bug_header_admin(array ('title'=>'Modify a Bug Report'));
+    bug_header_admin(array ('title'=>'Modify a Bug Report',
+			    'help' => 'BTSAdministration.html#BugReportSetting'));
     
-    echo '<H2>Modify a Bug Report '.help_button('bug_admin_report_settings',false).'</H2>';
+    echo '<H2>Modify a Bug Report</H2>';
 
     // fetch the report to update
     $sql = "SELECT * FROM bug_report WHERE report_id=$report_id";
@@ -265,9 +267,10 @@ if ($new_report) {
 } else {
 
     // Front page
-    bug_header_admin(array ('title'=>'Bug Administration - Report Management'));
+    bug_header_admin(array ('title'=>'Bug Administration - Report Management',
+			    'help' => 'BTSAdministration.html#BugReportManagement'));
 	
-    echo '<H2>Manage Bug Reports '.help_button('bug_admin_report_list',false).'</H2>';
+    echo '<H2>Manage Bug Reports</H2>';
     
     $sql = "SELECT * FROM bug_report WHERE group_id=$group_id ".
 	' AND (user_id='.user_getid().' OR scope=\'P\')';

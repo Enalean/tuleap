@@ -9,7 +9,8 @@
 require('pre.php');
 require('../people/people_utils.php');
 
-people_header(array('title'=>'Help Wanted System'));
+people_header(array('title'=>'Help Wanted System',
+		    'help' => 'Post-EditJobs.html'));
 
 if ($group_id) {
 

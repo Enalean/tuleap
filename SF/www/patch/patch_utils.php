@@ -39,7 +39,9 @@ function patch_header($params) {
 	}
 	echo ' | <A HREF="/patch/?func=browse&group_id='.$group_id.'&set=open">Open Patches</A>';
 	echo ' | <A HREF="/patch/admin/?group_id='.$group_id.'">Admin</A>';
-
+	if ($params['help']) {
+	    echo ' | '.help_button($params['help'],false,'Help');
+	}
 	echo '</B>';
 	echo ' <hr width="300" size="1" align="left" noshade>';
 }
@@ -64,6 +66,9 @@ function patch_header_admin($params) {
     echo '<P><B><A HREF="/patch/admin/?group_id='.$group_id.'">Admin</A></B>';
     echo ' | <B><A HREF="/patch/admin/index.php?patch_cat=1&group_id='.$group_id.'">Manage Categories</A></B>';
     echo ' | <b><A HREF="/patch/admin/index.php?other_settings=1&group_id='.$group_id.'">Other Settings</A></b>';
+    if ($params['help']) {
+	echo ' | <b>'.help_button($params['help'],false,'Help').'</b>';
+    }
      echo ' <hr width="300" size="1" align="left" noshade>';
 }
 

@@ -85,9 +85,10 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 
 	$hdr = 'Manage Field Values for  \''.bug_data_get_label($field)."'";
 
-	bug_header_admin(array ('title'=>$hdr));
+	bug_header_admin(array ('title'=>$hdr,
+				'help' => 'BTSAdministration.html#BugBrowsingBugFieldValues'));
 
-	echo "<H2>$hdr ".help_button('bug_admin_field_values_list',false)."</H2>";
+	echo "<H2>$hdr</H2>";
 
 	// First check that this field is used by the project and
 	// it is in the project scope
@@ -185,7 +186,8 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 	    // Only show the add value form if this is a project scope field
 	    if ($is_project_scope) {
 
-		echo ' <P><BR> <H3>Create a new field value</H3>';
+		echo ' <P><BR> <H3>Create a new field value'.
+		    help_button('BTSAdministration.html#BugCreatingaBugFieldValue').'</H3>';
 
 		if ($ih) {
 		    echo "<P>Before you create a new value make sure there isn't one in the hidden list that suits your needs.";
@@ -227,12 +229,13 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 	// Show the form to update an existing field_value
 	// Display the List of values for a given bug field
 
-	bug_header_admin(array ('title'=>'Add/Change Field Values'));
+	bug_header_admin(array ('title'=>'Add/Change Field Values',
+			 'help' => 'BTSAdministration.html#BugUpdatingaBugFieldValue'));
 
 	// Get all attributes of this value
 	$res = bug_data_get_field_value($fv_id);
 ?>
-      <H2>Update a field value <?php echo help_button('bug_admin_field_values_settings',false); ?></H2>
+      <H2>Update a field value</H2>
       <FORM ACTION="<?php echo $PHP_SELF ?>" METHOD="POST">
       <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
       <INPUT TYPE="HIDDEN" NAME="update_value" VALUE="y">
@@ -363,9 +366,10 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 
     } else {
 
-	bug_header_admin(array ('title'=>'Bug Administration - Field Values Management'));
+	bug_header_admin(array ('title'=>'Bug Administration - Field Values Management',
+				'help' => 'BTSAdministration.html#BugFieldValuesManagement'));
 	
-	echo '<H2>Manage Field values '.help_button('bug_admin_field_values_field_list',false).'</H2>';
+	echo '<H2>Manage Field values '.help_button('BTSAdministration.html#BugFieldValuesManagement').'</H2>';
 	echo '<p>(Click to modify)';
 	
 	// Loop through the list of all used fields that are project manageable

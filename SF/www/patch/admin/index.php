@@ -73,7 +73,8 @@ if ($group_id && user_ismember($group_id,'C2')) {
 		/*
 			Show categories and blank row
 		*/
-		patch_header_admin(array ('title'=>'Add/Change Categories'));
+		patch_header_admin(array ('title'=>'Add/Change Categories',
+		    'help'=>'PatchManagerAdministration.html#DefiningCategories'));
 
 		echo "<H1>Add Patch Categories</H1>";
 
@@ -113,7 +114,8 @@ if ($group_id && user_ismember($group_id,'C2')) {
 			Show an interface to modify the description to $patch_cat_id
 		*/
 
-		patch_header_admin(array ('title'=>'Modify a Patch Category'));
+		patch_header_admin(array ('title'=>'Modify a Patch Category',
+		    'help'=>'PatchManagerAdministration.html#DefiningCategories'));
 
 		echo '
 			<H1>Patch Category Modification</H1>';
@@ -150,7 +152,8 @@ if ($group_id && user_ismember($group_id,'C2')) {
 	} else if ($other_settings) {
 	    
 	    /*     Show existing values    */
-		patch_header_admin(array ('title'=>'Patch Manager Admin - Other Settings'));
+		patch_header_admin(array ('title'=>'Patch Manager Admin - Other Settings',
+		    'help'=>'PatchManagerAdministration.html#PatchManagerOtherConfigurationSettings'));
 		$res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
 		if (db_numrows($res_grp) < 1) {
 		    exit_no_group();
@@ -189,7 +192,8 @@ $row_grp['patch_preamble'].'</TEXTAREA>';
 			Show main page
 		*/
 
-		patch_header_admin(array ('title'=>'Patch Administration'));
+		patch_header_admin(array ('title'=>'Patch Administration',
+					  'help'=>'PatchManagerAdministration.html'));
 
 		echo '
 			<H2>Patch Administration</H2>';

@@ -6,7 +6,8 @@
 //
 // $Id$
 
-patch_header(array ('title'=>'Submit a Patch'));
+patch_header(array ('title'=>'Submit a Patch',
+		    'help'=>'PatchSubmission.html'));
 
 // First display the message preamble
 $res_preamble  = db_query("SELECT patch_preamble FROM groups WHERE group_id=$group_id");

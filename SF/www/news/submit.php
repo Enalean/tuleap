@@ -44,7 +44,8 @@ if (user_isloggedin()) {
 	/*
 		Show the submit form
 	*/
-	news_header(array('title'=>'News'));
+	news_header(array('title'=>'News',
+			  'help'=>'NewsService.html'));
 
 	echo '
 		<H3>Submit News For '.group_getname($group_id).'</H3>

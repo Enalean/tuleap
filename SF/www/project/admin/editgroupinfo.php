@@ -85,7 +85,8 @@ if (db_numrows($res_grp) < 1) {
 }
 $row_grp = db_fetch_array($res_grp);
 
-project_admin_header(array('title'=>'Editing Group Info','group'=>$group_id));
+project_admin_header(array('title'=>'Editing Group Info','group'=>$group_id,
+			   'help' => 'ProjectPublicInformation.html'));
 
 print '<P><h3>Editing group info for: <B>'.$row_grp['group_name'].'</B></h3>';
 

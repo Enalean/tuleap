@@ -123,7 +123,8 @@ if ($_category && ($_category != 100)) {
 //same for status
 support_header(array('title'=>'Browse Support Requests'.
 	(($_assigned_to)?' For: '.user_getname($_assigned_to):'').
-	(($_status && ($_status != 100))?' By Status: '. support_data_get_status_name($_status):'')));
+	(($_status && ($_status != 100))?' By Status: '. support_data_get_status_name($_status):''),
+		     'help' => 'SupportRequestManager.html'));
 
 //now build the query using the criteria built above
 $sql="SELECT support.priority,support.group_id,support.support_id,support.summary,".

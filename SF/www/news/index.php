@@ -9,7 +9,8 @@
 require('pre.php');
 require('../forum/forum_utils.php');
 
-news_header(array('title'=>'News'));
+news_header(array('title'=>'News',
+		  'help'=>'NewsService.html'));
 
 echo '<H3>News</H3>
 	<P>Choose a News item and you can browse, search, and post messages.<P>';

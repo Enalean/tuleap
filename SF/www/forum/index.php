@@ -11,7 +11,8 @@ require('../forum/forum_utils.php');
 
 if ($group_id) {
 
-  forum_header(array('title'=>'Forums for '.group_getname($group_id)));
+  forum_header(array('title'=>'Forums for '.group_getname($group_id),
+		     'help' => 'WebForums.html'));
 
   if (user_isloggedin() && user_ismember($group_id)) {
     $public_flag='<3';

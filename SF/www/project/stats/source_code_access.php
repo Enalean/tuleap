@@ -16,7 +16,9 @@ if ( !$group_id ) {
 	exit_error("Invalid Group","That group could not be found.");
 }
 
-project_admin_header(array('title'=>"Project Admin: ".group_getname($group_id),'group'=>$group_id));
+project_admin_header(array('title'=>"Project Admin: ".group_getname($group_id),
+			   'group'=>$group_id,
+			   'help' => 'SourceCodeAccessLogs.html'));
 
 //
 // BEGIN PAGE CONTENT CODE
@@ -32,10 +34,7 @@ if ( !$view ) {
 	$view = "daily";
 }
 
-print '<DIV ALIGN="CENTER">';
-print '<font size="+1"><b>Logs of Source Code Access</b></font><BR>';
-
-print '</DIV>';
+echo '<h2>Source Code Access Log</2>';
 
 if ( $view == 'daily' ) {
 

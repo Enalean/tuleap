@@ -71,6 +71,9 @@ function bug_header($params) {
 		echo ' | <A HREF="/bugs/reporting/?group_id='.$group_id.'">Reporting</A>';
 	}
 	echo ' | <A HREF="/bugs/admin/?group_id='.$group_id.'">Admin</A></B>';
+	if ($params['help']) {
+	    echo ' | '.help_button($params['help'],false,'Help');
+	}
 	echo ' <hr width="'.$size_hr.'" size="1" align="left" noshade>';
 }
 
@@ -103,6 +106,9 @@ function bug_header_admin($params) {
     echo ' | <b><A HREF="/bugs/admin/reports.php?group_id='.$group_id.'">Bug Reports</A></b>';
     echo ' | <b><A HREF="/bugs/admin/notification_settings.php?group_id='.$group_id.'">Notification Settings</A></b>';
     echo ' | <b><A HREF="/bugs/admin/other_settings.php?group_id='.$group_id.'">Other Settings</A></b>';
+    if ($params['help']) {
+	echo ' | '.help_button($params['help'],false,'Help');
+    }
     echo ' <hr width="300" size="1" align="left" noshade>';
 
 }
@@ -1120,7 +1126,6 @@ function show_bughistory ($bug_id,$group_id) {
 
     if ($rows > 0) {
 
-	echo "\n".'<H3>Bug Change History</H3><P>';
 	$title_arr=array();
 	$title_arr[]='Field';
 	$title_arr[]='Old Value';

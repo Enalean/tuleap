@@ -11,7 +11,8 @@ require('../mail/mail_utils.php');
 
 if ($group_id) {
 
-	mail_header(array('title'=>'Mailing Lists for '.group_getname($group_id)));
+	mail_header(array('title'=>'Mailing Lists for '.group_getname($group_id),
+			  'help'=>'CommunicationServices.html#MailingLists'));
 	
 	if (user_isloggedin() && user_ismember($group_id)) {
 		$public_flag='0,1';
@@ -62,7 +63,8 @@ if ($group_id) {
 	echo '</TD></TR></TABLE>';
 
 } else {
-	mail_header(array('title'=>'Choose a Group First'));
+	mail_header(array('title'=>'Choose a Group First',
+			  'help'=>'CommunicationServices.html#MailingLists'));
 	require('../mail/mail_nav.php');
 	echo '
 		<H1>Error - choose a group first</H1>';

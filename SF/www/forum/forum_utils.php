@@ -99,6 +99,9 @@ function forum_header($params) {
 	}
 
 	echo '  <A HREF="/forum/admin/?group_id='.$group_id.'">Admin</A></B>';
+	if ($params['help']) {
+	    echo ' | '.help_button($params['help'],false,'Help');
+	}
 	echo '<P>';
 }
 

@@ -66,7 +66,8 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 		/*
 			Show page for deleting messages
 		*/
-		forum_header(array('title'=>'Delete a message'));
+		forum_header(array('title'=>'Delete a message',
+				   'help' => 'WebForums.html'));
 
 		echo '
 			<H2>Delete a message</H2>
@@ -88,7 +89,8 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 		/*
 			Show the form for adding forums
 		*/
-		forum_header(array('title'=>'Add a Forum'));
+		forum_header(array('title'=>'Add a Forum',
+				   'help' => 'WebForums.html'));
 
 		$sql="SELECT forum_name FROM forum_group_list WHERE group_id='$group_id'";
 		$result=db_query($sql);
@@ -126,7 +128,8 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 		/*
 			Change a forum to public/private
 		*/
-		forum_header(array('title'=>'Change Forum Status'));
+		forum_header(array('title'=>'Change Forum Status',
+				   'help' => 'WebForums.html'));
 
 		$sql="SELECT * FROM forum_group_list WHERE group_id='$group_id'";
 		$result=db_query($sql);
@@ -187,7 +190,8 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 			Show main page for choosing 
 			either moderotor or delete
 		*/
-		forum_header(array('title'=>'Forum Administration'));
+		forum_header(array('title'=>'Forum Administration',
+				   'help' => 'WebForums.html'));
 
 		echo '
 			<H2>Forum Administration</H2>

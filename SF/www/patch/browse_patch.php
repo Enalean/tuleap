@@ -131,7 +131,8 @@ if ($_assigned_to) {
 //same for status
 patch_header(array('title'=>'Browse Patches'.
 	(($_assigned_to)?' For: '.user_getname($_assigned_to):'').
-	(($_status && ($_status != 100))?' By Status: '. get_patch_status_name($_status):'')));
+	(($_status && ($_status != 100))?' By Status: '. get_patch_status_name($_status):''),
+		   'help' => 'PatchManager.html'));
 
 
 $sql="SELECT patch.group_id,patch.patch_id,patch.summary,patch.filename, patch.filesize,".

@@ -96,10 +96,11 @@ then add them using the new window link shown above.
 		}
 
 	}
-	snippet_header(array('title'=>'Submit A New Snippet Package'));
+	snippet_header(array('title'=>'Submit A New Snippet Package',
+			     'header'=>'Create a New Snippet Package',
+			     'help' => 'TheCodeXMainMenu.html#GroupingCodeSnippets'));
 
 	?>
-	<H1>Create a New Code Package</H2>
 	<P>
 	You can group together existing snippets into a package using this interface. Before 
 	creating your package, make sure all your snippets are in place and you have made a note 

@@ -113,7 +113,8 @@ function menu_software() {
 function menu_sourceforge() {
     GLOBAL $HTML;
     $HTML->menuhtml_top($GLOBALS['sys_name']);
-    $HTML->menu_entry('/docs/site/','<b>Site Documentation</b>');
+    $HTML->menu_entry('/documentation/user_guide/html/en_US/','<b>Help Index</b>');
+    $HTML->menu_entry('/docs/site/','Site Documentation');
     $HTML->menu_entry('/mail/?group_id=1','Developers Channels');
     $HTML->menu_entry('/forum/?group_id=1','Discussion Forums');
     $HTML->menu_entry('/people/','Project Help Wanted');

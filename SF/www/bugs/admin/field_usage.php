@@ -43,12 +43,18 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 
 	// Show the form to change a field setting
 	
-	bug_header_admin(array ('title'=>'Bug Administration - Modify Field Usage'));
+	if (bug_data_is_custom($field))
+	    $help = 'BTSAdministration.html#CustomBugFields';
+	else
+	    $help = 'BTSAdministration.html#StandardBugFields';
 
-	// Escape to display the form
+	bug_header_admin(array ('title'=>'Bug Administration - Modify Field Usage',
+				'help' => $help));
+
+	// Escape to display the form	    
 ?>
-
-      <H2>Modify a bug field <?php echo help_button('bug_admin_field_usage_settings',false); ?></H2>
+	    
+      <H2>Modify a bug field <?php echo $help; ?></H2>
       <FORM ACTION="<?php echo $PHP_SELF ?>" METHOD="POST">
       <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
       <INPUT TYPE="HIDDEN" NAME="field" VALUE="<?php echo $field; ?>">
@@ -170,9 +176,10 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 	  Show main page
 	*/
  
-	bug_header_admin(array ('title'=>'Bug Administration - Field Usage'));
+	bug_header_admin(array ('title'=>'Bug Administration - Field Usage',
+				'help' => 'BTSAdministration.html#BugFieldUsageManagement'));
     
-	echo '<H2>Bug Field Usage Administration '.help_button('bug_admin_field_usage_list',false).'</H2>';
+	echo '<H2>Bug Field Usage Administration</H2>';
 
 	echo '<h3>List of all Available Fields</h3>';
 	echo '<p>(Click to modify)';

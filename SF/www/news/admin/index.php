@@ -52,7 +52,8 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
 		}
 	}
 
-	news_header(array('title'=>'NewsBytes'));
+	news_header(array('title'=>'NewsBytes',
+			  'help'=>'NewsService.html'));
 
 	if ($approve) {
 		/*

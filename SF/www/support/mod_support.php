@@ -6,7 +6,8 @@
 //
 // $Id$
 
-support_header(array ('title'=>'Modify a Support Request'));
+support_header(array ('title'=>'Modify a Support Request',
+		      'help' => 'SupportRequestProcessing.html'));
 
 $sql="SELECT * FROM support WHERE support_id='$support_id' AND group_id='$group_id'";
 

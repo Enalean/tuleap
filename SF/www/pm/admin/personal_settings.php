@@ -26,7 +26,8 @@ if ($submit) {
 
 /*      Show main page    */
 
-pm_header_admin(array ('title'=>'Configure Global Settings'));
+pm_header_admin(array ('title'=>'Configure Global Settings',
+		       'help'=>'TaskManagerAdministration.html#TaskManagerPersonalConfigurationSettings'));
 
 $current_date = user_get_preference('pm_pref_date'.$group_id);
 

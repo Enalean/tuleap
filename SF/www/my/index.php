@@ -21,7 +21,8 @@ if (user_isloggedin()) {
 	$HTML->header(array('title'=>'My Personal Page'));
 	?>
 
-	<H3>Personal Page for: <?php print user_getname(); ?></H3>
+	<H3>Personal Page for: <?php print user_getname(); ?>
+	     <?php echo help_button('LoginAndPersonalPage.html'); ?></H3>
 	<P>
 	Your personal page contains lists of bugs [<b>A</b>]ssigned to or 
   [<b>S</b>]ubmitted by you, tasks assigned with percentage completion, monitored forums and packages plus a list

@@ -6,7 +6,8 @@
 //
 // $Id$
 
-pm_header(array('title'=>'Add a New Task'));
+pm_header(array('title'=>'Add a New Task',
+		'help'=>'TaskSubmission.html'));
 
 echo '<H2>Add A Task</H2>';
 

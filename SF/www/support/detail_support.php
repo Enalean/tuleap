@@ -6,7 +6,8 @@
 //
 // $Id$
 
-support_header(array ('title'=>'Support Request Detail: '.$support_id));
+support_header(array ('title'=>'Support Request Detail: '.$support_id,
+		      'help' => 'SupportRequestProcessing.html'));
 
 $sql="SELECT support.summary,user.user_name AS submitted_by,support.priority,".
 	"user2.user_name AS assigned_to,support_status.status_name,support.open_date,support_category.category_name ".

@@ -16,7 +16,7 @@ $is_admin_page='y';
 
 if ($submit) {
 
-    group_add_history ('Changed Task Manager Global Settings','',$group_id);
+    group_add_history ('Changed Task Manager Other Settings','',$group_id);
     
     $result=db_query('UPDATE groups SET '
 		     ."pm_preamble='".htmlspecialchars($form_preamble)."' "
@@ -34,7 +34,8 @@ if ($submit) {
 
 /*      Show main page    */
 
-pm_header_admin(array ('title'=>'Configure Global Settings'));
+pm_header_admin(array ('title'=>'Configure Global Settings',
+		       'help'=>'TaskManagerAdministration.html#TaskManagerOtherConfigurationSettings'));
 
 $res_grp = db_query("SELECT pm_preamble FROM groups WHERE group_id=$group_id");
 if (db_numrows($res_grp) < 1) {
@@ -42,7 +43,7 @@ if (db_numrows($res_grp) < 1) {
 }
 $row_grp = db_fetch_array($res_grp);
 
-echo '<H2>Global Configuration Settings</H2>';
+echo '<H2>Other Configuration Settings</H2>';
 
 echo '
 <FORM action="'.$PHP_SELF.'" method="post">

@@ -9,20 +9,26 @@
 /**
 * help_button() - Show a help button.
 *
-* @param        string    The button type
-* @param        int        The trove category ID
+* @param        type      the php script or html page that contains/generates help
+* @param        helpid   if specified this is an argument passed to the PHP script
+*                                      if false then it is a static HTML page
+* @param        prompt what to display to point to the  help 
 */
-function help_button($type,$helpid) {
-	if ($type == 'trove_cat') {
-		return ('<A href="javascript:help_window(\'/help/trove_cat.php'
-			.'?trove_cat_id='.$helpid.'\')"><B>(?)</B></A>');
-	} else {
-	    // Generic processing derives the script name from the help type
-	    $script = '/help/'.$type.'.php';
-	    return ('<A href="javascript:help_window(\''.$script.
-		    '?helpid='.$helpid.'\')"><B>(?)</B></A>');
-	}
+function help_button($type,$helpid=false,$prompt='[?]') {
+
+    // Generic processing derives the script name from the help type
+    if ($helpid == false) {
+	// $type is a static HTML page from the CodeX User Guide
+	$script = '/help/show_help.php?section='.$type;
+    } else {
+	// $type is a php script - the invoker probably wants to customize 
+	// the help display somehow
+	$script = '/help/'.$type.'.php?helpid='.$helpid;
+    }	
+
+    return ('<A href="javascript:help_window(\''.$script.'\')"><B>'.$prompt.'</B></A>');
 }
+
 
 /**
 * help_header() - Show a help page header

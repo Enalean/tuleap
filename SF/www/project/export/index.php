@@ -162,64 +162,57 @@ connection are as follows:
      break;
 
  default: 
-     project_admin_header(array('title'=>$pg_title));
+     project_admin_header(array('title'=>$pg_title,
+				'help' => 'ProjectDataExport.html'));
     // Display the welcome screen
 ?>
 <P> Your project data can either be exported in
-individual text files (CSV format) or in a project specific database that you can directly access from your desktop machine through an ODBC/JDBC connection.
+individual text files (CSV format) or in a project specific database that you can directly access from your desktop machine through an ODBC/JDBC connection. See <?php echo help_button('ProjectDataExport.html',false,'Online Help'); ?> for more information.
 
-<P>For more information about the Export Facility please read the document "<a href="/docman/display_doc.php?docid=85&group_id=1">Extracting your project data from <?php print $GLOBALS['sys_name']; ?></a>" first.
+<h3>Text File Export <?php echo help_button('ProjectDataExport.html#TextFileExport'); ?></h3>
 
-<h3><u>Text File Exports</u></h3>
-
-     <P>Click on the links below to generate a text output, then save it to your local disk and import into your favorite application.
+     <P>Click on the links below to generate a text file export (CSV format).
 <P>
 <ul>
 <?php
     echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=bug\">Bug export</a></b><br>\n";
 ?>
-All bugs submitted to your project. Exported bug fields as well as
-their format and meaning are <a href="<?php echo $PHP_SELF;
-?>?group_id=<?php echo $group_id;?>&export=bug_format">available</a>.
+All bugs submitted to your project. Show <a href="<?php echo $PHP_SELF;
+?>?group_id=<?php echo $group_id;?>&export=bug_format">export format</a>.
 
 
 <?php
     echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=bug_history\">Bug History export</a></b><br>"."\n";
 ?>
 A history of all the changes your project bugs have gone
-through. Exported bug history fields as well as their format and
-meaning are <a href="<?php echo $PHP_SELF; ?>?group_id=<?php echo
-$group_id;?>&export=bug_history_format">available</a>.
+through. Show <a href="<?php echo $PHP_SELF; ?>?group_id=<?php echo
+$group_id;?>&export=bug_history_format">export format</a>.
 
 
 <?php
     echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=task\">Task export</a></b><br>"."\n";
 ?>
-All tasks created in your project. Exported task fields as well as
-their format and meaning are <a href="<?php echo $PHP_SELF;
-?>?group_id=<?php echo $group_id;?>&export=task_format">available</a>.
+All tasks created in your project. Show <a href="<?php echo $PHP_SELF;
+?>?group_id=<?php echo $group_id;?>&export=task_format">export format</a>.
 
 <?php
     echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=task_history\">Task History export</a></b><br>"."\n";
 ?>
 A history of all the changes your project tasks have gone
-through. Exported task history fields as well as their format and
-meaning are <a href="<?php echo $PHP_SELF; ?>?group_id=<?php echo
-$group_id;?>&export=task_history_format">available</a>.
+through. Show <a href="<?php echo $PHP_SELF; ?>?group_id=<?php echo
+$group_id;?>&export=task_history_format">export format</a>.
 
 <?php
     echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=support_request\">Support Request export</a></b><br>"."\n";
 ?>
-All support requests created in your project. Exported support request fields as well as
-their format and meaning are <a href="<?php echo $PHP_SELF;
-?>?group_id=<?php echo $group_id;?>&export=support_request_format">available</a>.
+All support requests created in your project. Show <a href="<?php echo $PHP_SELF;
+?>?group_id=<?php echo $group_id;?>&export=support_request_format">export format</a>.
 
 <?php
     echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=survey_responses\">Survey Responses export</a></b><br>"."\n";
 ?>
-A list of all the responses to all the surveys posted by your project. Exported survey response fields as well as their format and
-meaning are <a href="<?php echo $PHP_SELF; ?>?group_id=<?php echo
-$group_id;?>&export=survey_responses_format">available</a>.
+A list of all the responses to all the surveys posted by your project. Show <a href="<?php echo $PHP_SELF; ?>?group_id=<?php echo
+$group_id;?>&export=survey_responses_format">export format</a>.
 
 
 </ul>
@@ -230,58 +223,43 @@ Optional data exports:
 <?php
     echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=bug_bug_deps\">Bug-Bug Dependencies export</a></b><br>"."\n";
 ?>
-A list of all bug to bug dependencies. Exported fields as well as
-their format and meaning are <a href="<?php echo $PHP_SELF;
+A list of all bug to bug dependencies. Show <a href="<?php echo $PHP_SELF;
 ?>?group_id=<?php echo
-$group_id;?>&export=bug_bug_deps_format">available</a>.
+$group_id;?>&export=bug_bug_deps_format">export format</a>.
 
 <?php
     echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=bug_task_deps\">Bug-Task Dependencies export</a></b><br>"."\n";
 ?>
-A list of all bug to task dependencies. Exported fields as well as
-their format and meaning are <a href="<?php echo $PHP_SELF;
+A list of all bug to task dependencies. Show <a href="<?php echo $PHP_SELF;
 ?>?group_id=<?php echo
-$group_id;?>&export=bug_task_deps_format">available</a>.
+$group_id;?>&export=bug_task_deps_format">export format</a>.
 
 
 <?php
     echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=task_task_deps\">Task-Task Dependencies export</a></b><br>"."\n";
 ?>
-A list of all task to task dependencies. Exported fields as well as
-their format and meaning are <a href="<?php echo $PHP_SELF;
+A list of all task to task dependencies. Show <a href="<?php echo $PHP_SELF;
 ?>?group_id=<?php echo
-$group_id;?>&export=task_task_deps_format">available</a>.
+$group_id;?>&export=task_task_deps_format">export format</a>.
 
 <?php
     echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=task_assigned_to\">Task Assignees export</a></b><br>"."\n";
 ?>
-A list of tasks and the project members in charge. Exported fields as
-well as their format and meaning are <a href="<?php echo $PHP_SELF;
+A list of tasks and the project members in charge. Show <a href="<?php echo $PHP_SELF;
 ?>?group_id=<?php echo
-$group_id;?>&export=task_assigned_to_format">available</a>.
+$group_id;?>&export=task_assigned_to_format">export format</a>.
 
 
 </ul>
 
-<h3><u>Direct Database Access</u></h3>
+<h3>Direct Database Access <?php echo help_button('ProjectDataExport.html#DirectDatabaseAccess'); ?></h3>
 
-<P>Alternatively you can generate your own project database on the
-<?php print $GLOBALS['sys_name']; ?> server and access it with any ODBC/JDBC (e.g MS-Access,
-Excel,...) capable tool directly from your workstation. Depending on
-the size of your project data the generation of the project database
-may take a while.
-
-<p>Note that in order to use your project database you must first
-install the MySQL ODBC driver (or JDBC driver if you use a Java
-enabled tool) on your desktop. See our <u><a
-href="/docman/display_doc.php?docid=85&group_id=1">instructions</a></u>
-for more information.
-
-<ul>
+<ol>
 <?php
-    echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=project_db\">Generate Full Project Database</a></b>"."\n";
+    echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=project_db\">Generate Full Project Database</a> </b> (<- Click to generate)"."\n";
+    echo '<li>Database connection parameters: ';
 ?>
-</ul>
+</ol>
 
 <?php
     display_db_params ();

@@ -28,8 +28,11 @@ function news_header($params) {
 			<H2>'.$GLOBALS['sys_name'].' <A HREF="/news/">News</A></H2>';
 	}
 	echo '<P><B>';
-	echo '<A HREF="/news/submit.php?group_id='.$group_id.'">Submit</A> | <A HREF="/news/admin/?group_id='.$group_id.'">Admin</A></B>';
-	echo '<P>';
+	echo '<A HREF="/news/submit.php?group_id='.$group_id.'">Submit</A> | <A HREF="/news/admin/?group_id='.$group_id.'">Admin</A>';
+	if ($params['help']) {
+	    echo ' | '.help_button($params['help'],false,'Help');
+	}
+	echo '</b><P>';
 }
 
 function news_footer($params) {

@@ -9,7 +9,8 @@
 // $Id$
 
 
-survey_header(array('title'=>'Edit Surveys'));
+survey_header(array('title'=>'Edit Surveys',
+		    'help'=>'AdministeringSurveys.html#CreatingorEditingaSurvey'));
 
 
 /*

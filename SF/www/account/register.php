@@ -114,7 +114,8 @@ your account.
 
 ?>
     
-<h2><?php print $GLOBALS['sys_name']; ?> New Account Registration</h2>
+<h2><?php print $GLOBALS['sys_name']; ?> New Account Registration 
+<?php echo help_button('UserRegistration.html');?></h2>
 
 <?php 
 if ($register_error) {

@@ -6,7 +6,8 @@
 //
 // $Id$
 
-bug_header(array ('title'=>'Bug Detail: '.$bug_id));
+bug_header(array ('title'=>'Bug Detail: '.$bug_id,
+		  'help' => 'BugUpdate.html'));
 
 $sql="SELECT * FROM bug WHERE bug_id='$bug_id' AND group_id='$group_id'";
 $fields_per_line=2;
@@ -117,8 +118,7 @@ if (db_numrows($result) > 0) {
      ?>
 
      <TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
-        <hr><h3>Bug Attachments</h3>
-	<A href="javascript:help_window('/help/mod_bug.php?helpname=attach_file')"><b>(?)</b></a>
+        <hr><h3>Bug Attachments <?php echo help_button('BugUpdate.html#BugAttachments'); ?></h3>
         <B>Check to Upload &amp; Attach File:</B> <input type="checkbox" name="add_file" VALUE="1">
       &nbsp;&nbsp;&nbsp;
         <input type="file" name="input_file" size="40">
@@ -130,7 +130,7 @@ if (db_numrows($result) > 0) {
      </TD></TR>
 
      <TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
-        <hr><h3>Bug Dependencies</h3>
+        <hr><h3>Bug Dependencies <?php echo help_button('BugUpdate.html#BugDependencies'); ?></h3>
      </TD></TR>
 
          <TR><TD VALIGN="TOP">
@@ -156,8 +156,10 @@ if (db_numrows($result) > 0) {
 	</TD></TR>
  
 	<TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
-	<hr><?php
+	<hr>
+	<H3>Bug Change History <?php echo help_button('BugUpdate.html#BugHistory'); ?></H3>
 
+	<?php
 	show_bughistory($bug_id,$group_id);
 
 	?>

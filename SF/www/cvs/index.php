@@ -34,7 +34,7 @@ print '<TABLE width="100%"><TR valign="top"><TD width="65%">'."\n";
 // LJ No anonymous access anymore on CodeX
 // LJ if ($row_grp['is_public']) {
 if (0) {
-	print '<P><B>Anonymous CVS Access</B>
+	print '<h2>CVS Access '.help_button('VersionControlWithCVS.html').'</h2>
 <P>The CVS repository of this project can be checked out through anonymous
 (pserver) CVS with the following instruction set. The module you wish
 to check out must be specified as the <I>modulename</I>. When prompted
@@ -49,7 +49,7 @@ for a password for <I>anonymous</I>, simply press the Enter key.
 
 // ############################ developer access
 
-print '<P><B>CVS Access</B>
+print '<h2>CVS Access '.help_button('VersionControlWithCVS.html').'</h2>
 <P>CVS read-only  access is granted to all '.$GLOBALS['sys_name'].' registered users. Anonymous users do not have access to the CVS tree, because many '.$GLOBALS['sys_name'].' projects want to know who is in their community of users. Users desiring read access to project 
 CVS trees should register on '.$GLOBALS['sys_name'].'. 
 <P>Any registered and logged-in '.$GLOBALS['sys_name'].' user has read access to the CVS tree.  Project members (the developers who are part of the core team) are granted read (checkout) and write (commit) access to the CVS tree. Below are the typical commands you would use to login into the CVS server and checkout the source code of this project. In the command below substitute <I>modulename</I> and
@@ -64,7 +64,7 @@ prompted.
 <BR>&nbsp;<BR>cvs -z3 -d<I>developername</I>@cvs.'.$row_grp['http_domain'].':/cvsroot/'.$row_grp['unix_group_name'].' co <I>modulename</I>
 </FONT>-->';
 
-print '<P><a href="/docman/display_doc.php?docid=36&group_id=1">[More on how to use CVS...]</a><P>';
+print '<P>'.help_button('VersionControlWithCVS.html',false,'[More on how to use CVS&hellip;]');
 
 // ################## summary info
 

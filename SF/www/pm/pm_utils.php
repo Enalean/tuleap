@@ -73,6 +73,10 @@ function pm_header($params) {
 	    .'&set=open">Open Tasks</A> |';
 	
 	echo " <A HREF=\"/pm/admin/?group_id=$group_id\">Admin</A></B>";
+	if ($params['help']) {
+	    echo ' | '.help_button($params['help'],false,'Help');
+	}
+	echo '</b>';
 	echo ' <hr width="300" size="1" align="left" noshade>';
 
 }
@@ -101,8 +105,11 @@ function pm_header_admin($params) {
     echo ' | <B><A HREF="/pm/admin/index.php?projects=1&group_id='.$group_id.'">Add Subproject</A></B>';
     echo ' | <b><A HREF="/pm/admin/index.php?change_status=1&group_id='.$group_id.'">Update Subprojects</A></b>';
     echo ' | <b><A HREF="/pm/admin/personal_settings.php?group_id='.$group_id.'">Personal Settings</A></b>';
-    echo ' | <b><A HREF="/pm/admin/other_settings.php?group_id='.$group_id.'">Global Settings</A></b>';
-     echo ' <hr width="300" size="1" align="left" noshade>';
+    echo ' | <b><A HREF="/pm/admin/other_settings.php?group_id='.$group_id.'">Other Settings</A></b>';
+    if ($params['help']) {
+	echo ' | <b>'.help_button($params['help'],false,'Help').'</b>';
+    }
+    echo ' <hr width="300" size="1" align="left" noshade>';
 }
 
 

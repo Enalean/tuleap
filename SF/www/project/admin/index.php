@@ -55,7 +55,8 @@ if ($func) {
 
 }
 
-project_admin_header(array('title'=>"Project Admin: ".group_getname($group_id),'group'=>$group_id));
+project_admin_header(array('title'=>"Project Admin: ".group_getname($group_id),'group'=>$group_id,
+			   'help' => 'ProjectAdministration.html'));
 
 /*
 	Show top box listing trove and other info
@@ -196,7 +197,7 @@ $HTML->box1_top("File Releases"); ?>
 	</CENTER>
 
 	<HR>
-	<B>Packages:</B> <A href="/docman/display_doc.php?docid=46&group_id=1">Documentation</A> (Very Important!)
+	<B>Packages:</B> <?php echo help_button('FileRelease.html',false,'Documentation'); ?> (Very Important!)
 
      <P><?php
 

@@ -9,7 +9,8 @@
 require('pre.php');
 require($DOCUMENT_ROOT.'/survey/survey_utils.php');
 $is_admin_page='y';
-survey_header(array('title'=>'Results'));
+survey_header(array('title'=>'Results',
+		    'help'=>'AdministeringSurveys.html#ReviewingSurveyResults'));
 
 if (!user_isloggedin() || !user_ismember($group_id,'A')) {
         echo "<H1>Permission Denied</H1>";

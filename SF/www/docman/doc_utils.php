@@ -106,7 +106,7 @@ function display_docs($style,$group_id) {
 
 } //end function display_docs($style)
 
-function docman_header($title,$pagehead,$style='xyz') {
+function docman_header($params) {
 
 	global $group_id;
 
@@ -119,21 +119,44 @@ function docman_header($title,$pagehead,$style='xyz') {
 		exit_error('Error','This Project Has Turned Off The Doc Manager');
 	}
 
-	site_project_header(array('title'=>$title,'group'=>$group_id,'toptab'=>'docman'));
+	site_project_header(array('title'=>$params['title'],'group'=>$group_id,'toptab'=>'docman'));
 
 	print "<p><b><a href=\"/docman/new.php?group_id=".$group_id."\">Submit new documentation</a> | ".
 		"<a href=\"/docman/index.php?group_id=".$group_id."\">View Documentation</a> | ".
 		"<a href=\"/docman/admin/index.php?group_id=".$group_id."\">Admin</a></b>"; 
 	
-	if ($style == 'admin') {
+	if ($param['style'] == 'admin') {
 		print "<b>  | <a href=\"/docman/admin/index.php?mode=editdocs&group_id=".$group_id."\">Edit Documents</a> | ".
 		"<a href=\"/docman/admin/index.php?mode=editgroups&group_id=".$group_id." \">Edit Document Groups</a></b>";
 
 	} 
-	print "<p><h3>";
-	eval('?>'.util_unconvert_htmlspecialchars($pagehead));
-	print "</h3>\n<p>\n";
+	if ($params['help']) {
+	    echo ' | <b>  '.help_button($params['help'],false,'Help').'</b>';
+	}
+}
 
+function docman_header_admin($params) {
+
+    global $group_id;
+
+    $project=project_get_object($group_id);
+    
+    if (!$project->isProject()) {
+	exit_error('Error','Only Projects Can Use The Doc Manager');
+    }
+    if (!$project->usesDocman()) {
+	exit_error('Error','This Project Has Turned Off The Doc Manager');
+    }
+    
+    site_project_header(array('title'=>$params['title'],'group'=>$group_id,'toptab'=>'docman'));
+    
+    print "<b><a href=\"/docman/admin/index.php?group_id=".$group_id."\">Admin</a>"; 
+    print "<b>  | <a href=\"/docman/admin/index.php?mode=editdocs&group_id=".$group_id."\">Edit Documents</a> | ".
+	"<a href=\"/docman/admin/index.php?mode=editgroups&group_id=".$group_id." \">Edit Document Groups</a></b>";
+    
+    if ($params['help']) {
+	echo ' | <b>  '.help_button($params['help'],false,'Help').'</b>';
+    }
 }
 
 function doc_get_state_box() {

@@ -62,10 +62,11 @@ if (user_isloggedin()) {
 	}
 	
     }
-	snippet_header(array('title'=>'Submit A New Snippet'));
+	snippet_header(array('title'=>'Submit A New Snippet',
+			     'header'=>'Submit a New Code Snippet',
+			     'help' => 'TheCodeXMainMenu.html#CodeSnippetSubmission'));
 
 	?>
-	<H1>Post a New Code Snippet</H2>
 	<P>
 	You can post a new code snippet and share it with other people around the world. 
 	Just fill in this information. <B>Give a good description</B> and <B>comment your code</B> 

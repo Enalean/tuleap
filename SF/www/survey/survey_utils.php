@@ -26,17 +26,21 @@ function survey_header($params) {
 
     site_project_header($params);
 
-    echo "<P><B><A HREF=\"/survey/admin/?group_id=$group_id\">Admin</A></B>";
+    echo "<P><B><A HREF=\"/survey/admin/?group_id=$group_id\">Admin</A>";
 
     if ($is_admin_page && $group_id) {
 	echo " | <A HREF=\"/survey/admin/add_survey.php?group_id=$group_id\">Add Surveys</A>";
 	echo " | <A HREF=\"/survey/admin/edit_survey.php?func=browse&group_id=$group_id\">Edit Surveys</A>";
 	echo " | <A HREF=\"/survey/admin/add_question.php?group_id=$group_id\">Add Questions</A>";
 	echo " | <A HREF=\"/survey/admin/edit_question.php?func=browse&group_id=$group_id\">Edit Questions</A>";
-	echo " | <A HREF=\"/survey/admin/show_results.php?group_id=$group_id\">Show Results</A></B>";
+	echo " | <A HREF=\"/survey/admin/show_results.php?group_id=$group_id\">Show Results</A>";
+    }
+    
+    if ($params['help']) {
+	echo ' | '.help_button($params['help'],false,'Help');
     }
 
-    echo "<P>";
+    echo "</B><P>";
 
 }
 

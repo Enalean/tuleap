@@ -36,7 +36,7 @@ if (register_valid()) {
 
 ?>
 
-<h2>SSH Shared Keys</h2>
+<h2>SSH Shared Keys <?php echo help_button('OtherServices.html#ShellAccount'); ?></h2>
 <P>To avoid having to type your password every time for your SSH
 developer account, you may upload your public key(s) here and they
 will be placed on the server in your ~/.ssh/authorized_keys file.

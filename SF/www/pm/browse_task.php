@@ -321,7 +321,8 @@ if ($advsrch) {
    Display the HTML form
   ================================================== */
 
-pm_header(array('title'=>'Browse Tasks '.$hdr));
+pm_header(array('title'=>'Browse Tasks '.$hdr,
+		'help'=>'TaskBrowsing.html'));
 
 echo '<TABLE WIDTH="10%" BORDER="0" CELLPADDING="0" CELLSPACING="3">
               <FORM ACTION="'. $PHP_SELF .'" METHOD="GET">

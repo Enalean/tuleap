@@ -18,7 +18,9 @@ require('doc_utils.php');
 if ($group_id) {
 
 	$usermem = user_ismember($group_id);
-	docman_header('Project Documentation','Project Documentation');
+	docman_header(array('title'=>'Project Documentation',
+			    'help'=>'DocumentManager.html'));
+	echo "<h2>Project Documentation</h2>";
 	//get a list of group numbers that this project owns
 	$query = "select * "
 		."from doc_groups "

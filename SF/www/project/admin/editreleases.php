@@ -401,7 +401,9 @@ if ($release_id) {
 		exit_error('ERROR','That release ID was not found in the database');
 	}
 
-	project_admin_header(array('title'=>'Release New File Version','group'=>$group_id));
+	project_admin_header(array('title'=>'Release New File Version',
+				   'group'=>$group_id,
+				   'help' => 'FileReleaseDelivery.html#ReleaseConfigurationandValidation'));
 
 	echo '<TABLE BORDER="0" WIDTH="100%">
 		<TR><TD>
@@ -625,18 +627,14 @@ Then check the boxes next to the files belonging to your new project release and
 		Show existing releases and a form to create a new release
 
 	*/
-	project_admin_header(array('title'=>'Release New File Version','group'=>$group_id));
+	project_admin_header(array('title'=>'Release New File Version',
+				   'group'=>$group_id,
+				   'help' => 'FileReleaseDelivery.html#ReleaseCreation'));
 
 	echo '<H3>Define a New Release of a Package</H3>
 	<P>
-	A release of a package can contain multiple files.
-	<P>
-	<H4>An example of different releases:</h4>
-	<BR>
-	<B>3.22.1</B><BR>
-	<B>3.22.2</B><BR>
-	<B>3.23-beta1</B>
-	<P>
+	A release of a package can contain multiple files. Release names can be either version numbers (3.22.1, 3.23-beta1&hellip;) or names.
+
 	<h4>Your Releases:</H4>';
 
 	/*
@@ -710,8 +708,8 @@ Then check the boxes next to the files belonging to your new project release and
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 	<INPUT TYPE="HIDDEN" NAME="func" VALUE="add_release">
 	<INPUT TYPE="TEXT" NAME="release_name" VALUE="" SIZE="20" MAXLENGTH="25">
-	<P>
-	<B>New Release of Which Package:</B>
+
+	&nbsp;&nbsp;&nbsp;belongs to Package:
 	'. frs_show_package_popup ($group_id,'package_id',$package_id) .'
 	<P>
 	<INPUT TYPE="SUBMIT" NAME="submit" VALUE="Create This Release">

@@ -16,7 +16,9 @@ require ($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
 */
 
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
-project_admin_header(array('title'=>'Release New File Version','group'=>$group_id));
+project_admin_header(array('title'=>'Release New File Version',
+			   'group'=>$group_id,
+			   'help' => 'QuickFileRelease.html'));
 
 if( $submit ) {
 	if (!$release_name) {
@@ -140,7 +142,7 @@ if( $submit ) {
 	<TABLE BORDER="0" CELLPADDING="2" CELLSPACING="2">
 	<TR>
 		<TD>
-			<H4>Package ID:</H4>
+			<B>Package ID:</B>
 		</TD>
 		<TD>
 <?php
@@ -162,7 +164,7 @@ if( $submit ) {
 	</TR>
 	<TR>
 		<TD>
-			<H4>Release Name:</H4>
+			<B>Release Name:</B>
 		</TD>
 		<TD>
 			<INPUT TYPE="TEXT" name="release_name">
@@ -170,7 +172,7 @@ if( $submit ) {
 	</TR>
 	<TR>
 		<TD>
-			<H4>Release Date:</H4>
+			<B>Release Date:</B>
 		</TD>
 		<TD>
 			<INPUT TYPE="TEXT" NAME="release_date" VALUE="<?php echo date('Y-m-d'); ?>" SIZE="10" MAXLENGTH="10">
@@ -178,7 +180,7 @@ if( $submit ) {
 	</TR>
 	<TR>
 		<TD>
-			<H4>Status:</H4>
+			<B>Status:</B>
 		</TD>
 		<TD>
 <?php print frs_show_status_popup ($name='status_id') . "<br>"; ?>
@@ -186,7 +188,7 @@ if( $submit ) {
 	</TR>
 	<TR>
 		<TD>
-			<H4>File Name:</H4>
+			<B>File Name:</B>
 		</TD>
 		<TD>
 <?php
@@ -214,7 +216,7 @@ if( $submit ) {
 	</TR>
 	<TR>
 		<TD>
-			<H4>File Type:</H4>
+			<B>File Type:</B>
 		</TD>
 		<TD>
 <?php
@@ -224,7 +226,7 @@ if( $submit ) {
 	</TR>
 	<TR>
 		<TD>
-			<H4>Processor Type:</H4>
+			<B>Processor Type:</B>
 		</TD>
 		<TD>
 <?php
@@ -234,7 +236,7 @@ if( $submit ) {
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
-			<H4>Release Notes:</H4>
+			<B>Release Notes:</B>
 		</TD>
 		<TD>
 			<TEXTAREA NAME="release_notes" ROWS="7" COLS="50"></TEXTAREA>
@@ -242,7 +244,7 @@ if( $submit ) {
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
-			<H4>Change Log:</H4>
+			<B>Change Log:</B>
 		</TD>
 		<TD>
 			<TEXTAREA NAME="release_changes" ROWS="7" COLS="50"></TEXTAREA>

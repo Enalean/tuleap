@@ -11,7 +11,8 @@ session_require(array(isloggedin=>1));
 $HTML->header(array(title=>"Project Registration"));
 ?>
 
-<H2><?php print $GLOBALS['sys_name']; ?> Project Registration</H2>
+<H2><?php print $GLOBALS['sys_name']; ?> Project Registration
+<?php print help_button('CreatingANewProject.html') ?></H2>
 
 <p>
 The <?php print $GLOBALS['sys_name']; ?> Team would like to extend an invitation to any 

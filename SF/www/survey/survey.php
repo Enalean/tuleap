@@ -9,7 +9,8 @@
 require('pre.php');
 require('vote_function.php');
 require('../survey/survey_utils.php');
-survey_header(array('title'=>'Survey'));
+survey_header(array('title'=>'Survey',
+		    'help'=>'SurveyManager.html#PublishingaSurvey'));
 
 if (!$survey_id || !$group_id) {
 	echo "<H1>For some reason, the Group ID or Survey ID did not make it to this page</H1>";

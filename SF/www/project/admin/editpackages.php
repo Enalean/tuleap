@@ -55,7 +55,9 @@ if ($submit) {
 }
 
 
-project_admin_header(array('title'=>'Release/Edit File Releases','group'=>$group_id));
+project_admin_header(array('title'=>'Release/Edit File Releases',
+			   'group'=>$group_id,
+			   'help' => 'FileReleaseDelivery.html'));
 
 echo '<H3>Packages</H3>
 <P>
@@ -91,7 +93,7 @@ You can create new releases of packages by clicking on <B>Add/Edit Releases</B> 
 $res=db_query("SELECT status_id,package_id,name AS package_name FROM frs_package WHERE group_id='$group_id'");
 $rows=db_numrows($res);
 if (!$res || $rows < 1) {
-	echo '<h4>You Have No Packges Defined</h4>';
+	echo '<h4>You Have No Packages Defined</h4>';
 } else {
 	$title_arr=array();
 	$title_arr[]='Releases';

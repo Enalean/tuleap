@@ -49,7 +49,8 @@ if ($submit) {
 
 /*      Show main page    */
 
-bug_header_admin(array ('title'=>'Bug Administration - Other Configuration Settings'));
+bug_header_admin(array ('title'=>'Bug Administration - Other Configuration Settings',
+			'help' => 'BTSAdministration.html#BugOtherConfigurationSettings'));
 
 $res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
 if (db_numrows($res_grp) < 1) {

@@ -14,7 +14,8 @@ if ($group_id && (user_ismember($group_id, 'A'))) {
 	/*
 		Fill in the info to create a job
 	*/
-	people_header(array('title'=>'Create a job for your project'));
+	people_header(array('title'=>'Create a job for your project',
+			    'help' => 'Post-EditJobs.html'));
 
 	echo '
 		<H2>Create a New Job</H2>

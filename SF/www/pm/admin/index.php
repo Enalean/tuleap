@@ -92,7 +92,8 @@ if ($group_id && user_ismember($group_id,'P2')) {
 			Show categories and blank row
 		*/
 
-		pm_header_admin(array ('title'=>'Add Projects'));
+		pm_header_admin(array ('title'=>'Add Projects',
+		    'help'=>'TaskManagerAdministration.html#TaskManagerAddaSubproject'));
 
 		echo '<H2>Add Subprojects to the Project/Task Manager</H2>';
 
@@ -148,7 +149,8 @@ if ($group_id && user_ismember($group_id,'P2')) {
 		/*
 			Change a project to public/private
 		*/
-		pm_header_admin(array('title'=>'Change Project/Task Manager Status'));
+		pm_header_admin(array('title'=>'Change Project/Task Manager Status',
+				      'help'=>'TaskManagerAdministration.html#TaskManagerUpdateaSubproject'));
 
 		$sql="SELECT project_name,group_project_id,is_public,description,order_id ".
 			"FROM project_group_list ".
@@ -218,7 +220,8 @@ if ($group_id && user_ismember($group_id,'P2')) {
 		/*
 			Show main page
 		*/
-		pm_header_admin(array('title'=>'Project/Task Manager Administration'));
+		pm_header_admin(array('title'=>'Project/Task Manager Administration',
+				      'help'=>'TaskManagerAdministration.html'));
 
 		echo '
 			<H2>Project/Task Manager Administration</H2>

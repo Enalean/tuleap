@@ -105,9 +105,10 @@ if ($group_id && user_ismember($group_id,'A')) {
 
 	if ($add_list) {
 		/*
-			Show the form for adding forums
+			Show the form for adding mailing list
 		*/
-		mail_header_admin(array('title'=>'Add a Mailing List'));
+		mail_header_admin(array('title'=>'Add a Mailing List',
+			  'help'=>'CommunicationServices.html#MailingListsCreation'));
 
 		echo '
 			<H3>Add a Mailing List</H3>
@@ -157,7 +158,8 @@ if ($group_id && user_ismember($group_id,'A')) {
 		/*
 			Change a forum to public/private
 		*/
-		mail_header_admin(array('title'=>'Update Mailing Lists'));
+		mail_header_admin(array('title'=>'Update Mailing Lists',
+			  'help'=>'CommunicationServices.html#MailingListsCreation'));
 
 		$sql="SELECT list_name,group_list_id,is_public,description ".
 			"FROM mail_group_list ".
@@ -224,7 +226,8 @@ if ($group_id && user_ismember($group_id,'A')) {
 			Show main page for choosing 
 			either moderotor or delete
 		*/
-		mail_header_admin(array('title'=>'Mailing List Administration'));
+		mail_header_admin(array('title'=>'Mailing List Administration',
+			  'help'=>'CommunicationServices.html#MailingLists'));
 
 		echo '
 			<H2>Mailing List Administration</H2>

@@ -6,7 +6,8 @@
 //
 // $Id$
 
-patch_header(array ('title'=>'Modify a Patch'));
+patch_header(array ('title'=>'Modify a Patch',
+		    'help'=>'PatchProcessing.html'));
 
 $sql="SELECT * FROM patch WHERE patch_id='$patch_id' AND group_id='$group_id'";
 

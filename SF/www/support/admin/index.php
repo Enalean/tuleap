@@ -98,9 +98,10 @@ if ($group_id && user_ismember($group_id,'S2')) {
 		/*
 			Show categories and blank row
 		*/
-		support_header_admin(array ('title'=>'Manage SR Categories'));
+		support_header_admin(array ('title'=>'Manage SR Categories',
+		      'help' => 'SupportRequestManagerAdministration.html#DefiningSupportRequestCategories'));
 
-		echo "<H1>Add Support Request Categories</H1>";
+		echo "<H2>Add Support Request Categories</H2>";
 
 		/*
 			List of possible categories for this group
@@ -111,7 +112,7 @@ if ($group_id && user_ismember($group_id,'S2')) {
 		if ($result && db_numrows($result) > 0) {
 			ShowResultSet($result,"Existing Categories","support_cat");
 		} else {
-			echo "\n<H1>No support categories in this group</H1>";
+			echo "\n<H3>No support categories in this group</H3>";
 		}
 		?>
 		<P>
@@ -137,9 +138,10 @@ if ($group_id && user_ismember($group_id,'S2')) {
 		/*
 			Show categories and blank row
 		*/
-		support_header_admin(array ('title'=>'Manage Canned Responses'));
+		support_header_admin(array ('title'=>'Manage Canned Responses',
+		   'help' => 'SupportRequestManagerAdministration.html#DefiningCannedResponses'));
 
-		echo "<H1>Add Canned Responses</H1>";
+		echo "<H2>Add Canned Responses</H2>";
 
 		/*
 			List of possible categories for this group
@@ -152,7 +154,7 @@ if ($group_id && user_ismember($group_id,'S2')) {
 		if ($result && $rows > 0) {
 			//code to show existing responses and link to update page
 			echo '
-			<H2>Existing Responses:</H2>
+			<H3>Existing Responses:</H3>
 			<P>';
 			$title_arr=array();
 			$title_arr[]='ID';
@@ -170,7 +172,7 @@ if ($group_id && user_ismember($group_id,'S2')) {
 			echo '</TABLE>';
 
 		} else {
-			echo "\n<H1>No responses set up in this group</H1>";
+			echo "\n<H3>No responses set up in this group</H3>";
 		}
 		?>
 		<P>
@@ -197,9 +199,10 @@ if ($group_id && user_ismember($group_id,'S2')) {
 		/*
 			Show categories and blank row
 		*/
-		support_header_admin(array ('title'=>'Update Canned Responses'));
+		support_header_admin(array ('title'=>'Update Canned Responses',
+					    'help' => 'SupportRequestManagerAdministration.html#DefiningCannedResponses'));
 
-		echo "<H1>Update Canned Responses</H1>";
+		echo "<H2>Update Canned Responses</H2>";
 
 		/*
 			List of possible categories for this group
@@ -212,7 +215,7 @@ if ($group_id && user_ismember($group_id,'S2')) {
 		$result=db_query($sql);
 		echo "<P>";
 		if (!$result || db_numrows($result) < 1) {
-			echo "\n<H1>No responses set up in this group</H1>";
+			echo "\n<H3>No responses set up in this group</H3>";
 		} else {
 			?>
 			<P>
@@ -241,10 +244,11 @@ if ($group_id && user_ismember($group_id,'S2')) {
 		/*
 			Allow modification of a support category
 		*/
-		support_header_admin(array('title'=>'Change a Support Manager Category'));
+		support_header_admin(array('title'=>'Change a Support Manager Category',
+					   'help' => 'SupportRequestManagerAdministration.html#DefiningSupportRequestCategories'));
 
 		echo '
-			<H1>Modify a Support Category</H1>';
+			<H2>Modify a Support Category</H2>';
 
 		$sql="SELECT support_category_id,category_name FROM support_category WHERE support_category_id='$support_cat_id' AND group_id='$group_id'";
 		$result=db_query($sql);
@@ -272,7 +276,7 @@ if ($group_id && user_ismember($group_id,'S2')) {
 			<?php
 		} else {
 			echo '
-			<H1>The support category that you requested a modification on was not found.</H1>';
+			<H3>The support category that you requested a modification on was not found.</H3>';
 		}
 
 		support_footer(array());
@@ -280,7 +284,8 @@ if ($group_id && user_ismember($group_id,'S2')) {
 	} else if ($other_settings) {
 	    
 	    /*     Show existing values    */
-		support_header_admin(array ('title'=>'Support Request Admin - Other Settings'));
+		support_header_admin(array ('title'=>'Support Request Admin - Other Settings',
+		      'help' => 'SupportRequestManagerAdministration.html#SupportRequestManagerOtherConfigurationSettings'));
 		$res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
 		if (db_numrows($res_grp) < 1) {
 		    exit_no_group();
@@ -321,10 +326,11 @@ echo '
 			Show main page
 		*/
 
-		support_header_admin(array ('title'=>'Support Manager Administration'));
+		support_header_admin(array ('title'=>'Support Manager Administration',
+					    'help' => 'SupportRequestManagerAdministration.html'));
 
 		echo '
-			<H2>Support Manager Administration</H1>';
+			<H2>Support Manager Administration</H2>';
 
 		echo '<h3>
 			<A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&support_cat=1">Manage Support Request Categories</A></h3>';

@@ -6,7 +6,8 @@
 //
 // $Id$
 
-patch_header(array ('title'=>'Patch Detail: '.$patch_id));
+patch_header(array ('title'=>'Patch Detail: '.$patch_id,
+		    'help'=>'PatchProcessing.html'));
 
 $sql="SELECT patch.code,patch.summary,user.user_name AS submitted_by,".
 	"user2.user_name AS assigned_to,patch_status.status_name,patch.open_date,patch_category.category_name ".

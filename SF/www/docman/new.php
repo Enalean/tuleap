@@ -52,7 +52,8 @@ if($group_id) {
 
 		
 
-		docman_header('Documentation - Add Information - Processing','Documentation - New submission');
+		docman_header(array('title'=>'New Document Submitted',
+				    'help'=>'DocumentSubmission.html'));
 		
 		$query = "insert into doc_data(stateid,title,data,createdate,updatedate,created_by,doc_group,description) "
 		."values('3',"
@@ -71,18 +72,14 @@ if($group_id) {
 		print "<p><b>Thank You!  Your submission has been placed in the database for review before posting.</b> \n\n<p>\n <a href=\"/docman/index.php?group_id=".$group_id."\">Back</a>"; 
 		docman_footer($params);
 	} else {
-		docman_header('Add documentation','Add documentation');
+		docman_header(array('title'=>'Add document',
+				    'help'=>'DocumentSubmission.html'));
+		echo '<h2>Submit New Document</h2>';
 		if ($user == 100) {
   			print "<p>You are not logged in, and will not be given credit for this.<p>";
 		}
 
 		echo '
-			<p>
-
-			<b> Document Title: </b> Refers to the relatively brief title of the document (e.g. How to use the download server)
-			<br>
-			<b> Description: </b> A brief description to be placed just under the title. 255 characters maximum. Use of HTML tags is possible<br>
-
 			<form name="adddata" action="new.php?mode=add&group_id='.$group_id.'" method="POST" enctype="multipart/form-data">
 
 			<table border="0" width="75%">
@@ -93,7 +90,7 @@ if($group_id) {
 
 			</tr>
 			<tr>
-			<th>Description:</th> 
+			<th>Description: <br> (HTML tag ok)</th> 
 			<!-- LJ td><input type="text" name="description" size="50" maxlength="255"></td -->
 			<td><textarea cols="60" rows="4"  wrap="virtual" name="description"></textarea></td>			</tr>
 

@@ -19,8 +19,9 @@ if ($group_id && user_ismember($group_id,"B2")) {
 
     if ($field) {
 	if ($field == 'aging') {
-	    bug_header(array ("title"=>"Aging Report"));
-	    echo "\n<H1>Aging Report</H1>";
+	    bug_header(array ("title"=>"Aging Report",
+			      'help' => 'BugReporting.html'));
+	    echo "\n<H2>Aging Report</H2>";
 
 	    $time_now=time();
 	    //			echo $time_now."<P>";
@@ -83,7 +84,8 @@ if ($group_id && user_ismember($group_id,"B2")) {
 	    // It's any of the select box field. 
 
 	    $label = bug_data_get_label($field);
-	    bug_header(array ("title"=>"Bugs By $label"));
+	    bug_header(array ("title"=>"Bugs By $label",
+			      'help' => 'BugReporting.html'));
 
 	    // Make sure it is a correct field
 	    if (bug_data_is_special($field) || !bug_data_is_used($field) ||
@@ -166,7 +168,8 @@ if ($group_id && user_ismember($group_id,"B2")) {
 	/*
 	  Show main page
 	*/
-	bug_header(array ("title"=>"Bug Reporting System"));
+	bug_header(array ("title"=>"Bug Reporting System",
+			  'help' => 'BugReporting.html'));
 
 	echo "\n<H1>Bug Reporting System</H1>";
 	echo "\n<P>";

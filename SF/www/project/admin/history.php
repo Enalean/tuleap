@@ -14,7 +14,7 @@ session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 project_admin_header(array('title'=>'Project History','group'=>$group_id));
 ?>
 
-<H3>Project Change Log</H3>
+<H2>Project Change Log</H2>
 <P>
 This log will show who made significant changes to your project and when.
 <P>

@@ -22,7 +22,11 @@ function mail_header($params) {
 
 	site_project_header($params);
 	echo '
-		<P><B><A HREF="/mail/admin/?group_id='.$group_id.'">Admin</A></B><P>';
+		<P><B><A HREF="/mail/admin/?group_id='.$group_id.'">Admin</A>';
+	if ($params['help']) {
+	    echo ' | '.help_button($params['help'],false,'Help');
+	}
+	echo '</B><P>';
 }
 function mail_header_admin($params) {
 	global $group_id;
@@ -44,6 +48,9 @@ function mail_header_admin($params) {
  | <B><A HREF="/mail/admin/?group_id='.$group_id.'&add_list=1">Add List</A></B>
  | <B><A HREF="/mail/admin/?group_id='.$group_id.'&change_status=1">Update List</A></B>
 ';
+	if ($params['help']) {
+	    echo ' | <B>'.help_button($params['help'],false,'Help').'</B>';
+	}
 
 }
 

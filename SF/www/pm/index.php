@@ -16,7 +16,8 @@ if ($group_id) {
 	    $group_project_id = 0;
 	}
 
-	pm_header(array('title'=>'Subprojects for '.group_getname($group_id)));
+	pm_header(array('title'=>'Subprojects for '.group_getname($group_id),
+			'help'=>'TaskManager.html'));
 
 	if (user_isloggedin() && user_ismember($group_id)) {
 		$public_flag='0,1';
@@ -66,7 +67,8 @@ if ($group_id) {
 	}
 
 } else {
-	pm_header(array('title'=>'Choose a Group First'));
+	pm_header(array('title'=>'Choose a Group First',
+			'help'=>'TaskManager.html'));
 	echo '<H1>Error - choose a group first</H1>';
 }
 pm_footer(array()); 

@@ -95,7 +95,7 @@ $HTML->box1_top("Preferences"); ?>
 // ############################### Shell Account
 
 if ($row_user['unix_status'] == 'A') {
-	$HTML->box1_top("Shell Account Information"); 
+	$HTML->box1_top("Shell Account Information ".help_button('OtherServices.html#ShellAccount')); 
 	print '&nbsp;
 <BR>Shell box: <b>'.$row_user['unix_box'].'</b>
 <BR>SSH Shared Keys: <B>';

@@ -9,7 +9,9 @@
 require ('pre.php');
 require ('../snippet/snippet_utils.php');
 
-snippet_header(array('title'=>'Snippet Library', 'header'=>''));
+snippet_header(array('title'=>'Snippet Library', 
+		     'header'=>'Snippet Browsing',
+		     'help' => 'TheCodeXMainMenu.html#CodeSnippetBrowsing'));
 
 if ($by=='lang') {
 
@@ -33,7 +35,7 @@ if ($by=='lang') {
 		"FROM snippet_package,user ".
 		"WHERE user.user_id=snippet_package.created_by AND snippet_package.category='$cat'";
 
-	echo '<H2>Snippets by category: '.$SCRIPT_CATEGORY[$cat].'</H2>';
+	echo '<H3>Snippet category: '.$SCRIPT_CATEGORY[$cat].'</H3>';
 
 } else {
 
