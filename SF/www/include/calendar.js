@@ -61,7 +61,7 @@ function show_calendar(str_target, str_datetime, css_theme, font_size) {
                 "<html>\n"+
                 "<head>\n"+
                 "        <title>Calendar</title>\n"+
-                "<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/"+css_theme+"/"+css_theme+font_size+"\">\n"+
+                "<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/"+css_theme+"/"+css_theme+font_size+".css\">\n"+
                 "</head>\n"+
                 "<body>\n"+
                 "<table class=\"clsOTable\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n"+
