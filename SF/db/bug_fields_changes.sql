@@ -1,6 +1,7 @@
 #
 # CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
-# Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001. All Rights Reserved# http://codex.xerox.com
+# Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001. All Rights Reserved
+# http://codex.xerox.com
 #
 # $Id$
 #
@@ -164,8 +165,12 @@ CREATE TABLE bug_field_value (
 #                   members, 0 do not show it.
 # show_on_add_members : 1 show this field on the bug add form for project
 #                   members with appropriate rigths, 0 do not show it.
-# place           : A value indicating in which order the fields appear on
-#                   the screen (lowest first)
+# place_add       : A value indicating in which order the fields appear on
+#                   the bug submission screen (lowest first)
+# place_query     : A value indicating in which order the fields appear on
+#                   the bug search criteria (lowest first)
+# place_result    : A value indicating in which order the fields appear on
+#                   the bug search results table (lowest first)
 #
 # Remark: for all fields declared in bug_field table there must be a
 # corresponding entry here (group_id = 100) to define default usage rules.
@@ -180,9 +185,52 @@ CREATE TABLE bug_field_usage (
   show_on_result int(11) DEFAULT '0' NOT NULL,
   show_on_add int(11) DEFAULT '0' NOT NULL,
   show_on_add_members int(11) DEFAULT '0' NOT NULL,
-  place int(11),
+  place_add int(11) DEFAULT '0' NOT NULL,
+  place_query int(11) DEFAULT '0' NOT NULL,
+  place_result int(11) DEFAULT '0' NOT NULL,
   KEY idx_bug_fu_field_id (bug_field_id),
   KEY idx_bug_fu_group_id (group_id)
+);
+
+#
+# Table structure for table 'bug_report'
+#
+# Notes: 
+# - scope='S' means a bug report available to all projects
+# (defined by CodeX Site administrators, group_id =100)
+# - scope='P' means a bug report available to all project members
+# of project group_id (defined by project admin)
+# - scope='I' means a personal (individual) bug report only visible 
+# and manageable by the owner. (defined by any project members)
+#
+
+CREATE TABLE bug_report (
+  report_id int(11) NOT NULL auto_increment,
+  group_id int(11) DEFAULT '100' NOT NULL,
+  user_id int(11) DEFAULT '100' NOT NULL,
+  name VARCHAR(80),
+  description VARCHAR(255),
+  scope VARCHAR(1) DEFAULT 'I' NOT NULL,
+  PRIMARY KEY (profile_id),
+  KEY group_id_idx (group_id),
+  KEY user_id_idx (user_id),
+  KEY scope_idx (scope)
+);
+
+
+#
+# Table structure for table 'bug_report_field'
+#
+
+CREATE TABLE bug_report_field (
+  report_id int(11) DEFAULT '100' NOT NULL,
+  field_name VARCHAR(255),
+  show_on_query int(11),
+  show_on_result int(11),
+  place_query int(11),
+  place_result int(11),
+  col_width int(11),
+  KEY profile_id_idx (profile_id)
 );
 
 #

@@ -5,6 +5,9 @@
 // http://codex.xerox.com
 //
 // $Id$
+//
+//	Originally written by Laurent Julliard 2001, 2002, CodeX Team, Xerox
+//
 
 require ('pre.php');
 require('../bug_data.php');
@@ -80,9 +83,11 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 
 	// Display the List of values for a given bug field
 
-	bug_header_admin(array ('title'=>'Create/Modify Field Values'));
+	$hdr = 'Manage Field Values for  \''.bug_data_get_label($field)."'";
 
-	echo "<H2>Create/Modify Field Values for  '".bug_data_get_label($field)."'</H2>";
+	bug_header_admin(array ('title'=>$hdr));
+
+	echo "<H2>$hdr ".help_button('bug_admin_field_values_list',false)."</H2>";
 
 	// First check that this field is used by the project and
 	// it is in the project scope
@@ -209,22 +214,8 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
       <TEXTAREA NAME="description" ROWS="4" COLS="65" WRAP="HARD"></TEXTAREA>
       <P>
       <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
-      </FORM>
-	   <P><b>Help:</b>
-      <ul type="compact">
-          <li><b>Value</b>:  an empty value is not permitted.<BR>
-      <li><b>Rank</b>:  the rank number allows you to insert the new value at a given
-      place in the list. Tip: When you create new values leave some space in between 2 rank numbers (e.g use 100, 200, 300,...) to make future insertion easier.';
-
-		if (isset($none_rk)) {
-		    echo "The rank number must be greater than the 'None' rank number (here $none_rk).<BR>";
-		}
-		
-		echo '
-    <li><b>Status</b>: tells you whether a value is being used or not. When <i>Active</i> the value shows up in the pull down menus. When <i>Hidden</i> it does not show up in pull down menus. <i>Permanent</i> means that this value is forever active and you cannot hide it. The Status can be modified back and forth at any time in the life of the project.
-      <li><b>Description</b>: it is optional and allows you to describe the meaning of a value.
-      </ul>';
-		       
+      </FORM>';
+	       
 	    }
 	} else {
 	    
@@ -241,7 +232,7 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 	// Get all attributes of this value
 	$res = bug_data_get_field_value($fv_id);
 ?>
-      <H2>Update a field value</H2>
+      <H2>Update a field value <?php echo help_button('bug_admin_field_values_settings',false); ?></H2>
       <FORM ACTION="<?php echo $PHP_SELF ?>" METHOD="POST">
       <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
       <INPUT TYPE="HIDDEN" NAME="update_value" VALUE="y">
@@ -265,16 +256,7 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
       <TEXTAREA NAME="description" ROWS="4" COLS="65" WRAP="SOFT"><?php echo db_result($res,0,'description'); ?></TEXTAREA>
       <P>
       <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
-      </FORM>
-      <P><B>Help:</B>
-      <ul type="compact">
-      <li><b>Value</b>: an empty value is not permitted.<BR>
-      <li><b>Rank</b>: the rank number allows you to insert the new value at a given
-      place in the list. Tip: leave some space in between 2 rank numbers (e.g use 100, 200, 300,...) to make future insertion of new values easier.
-	   <li><b>Status</b>: set it to Active if you want the value to appear in the pull down menus. Hidden means it wont show up in the pull down menus (but bugs already using this value will continue to display ok.
-           <li><b>Description</b>: it is optional and allows you to describe the meaning of this value.
-      </ul>
-      <P>		       
+
 <?php
 
 
@@ -383,8 +365,7 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 
 	bug_header_admin(array ('title'=>'Bug Administration - Field Values Management'));
 	
-	echo '<H2>Manage Field values</H2>';
-	echo 'The CodeX bug tracking system allows you to define your own values for most of the fields you have decided to use (see Field Usage above). To customize the set of predefined values for a given field, simply click on the corresponding field below.';
+	echo '<H2>Manage Field values '.help_button('bug_admin_field_values_field_list',false).'</H2>';
 	echo '<p>(Click to modify)';
 	
 	// Loop through the list of all used fields that are project manageable
@@ -402,7 +383,7 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 		&& bug_data_is_used($field_name) ) {
 
 		$scope_label  = (bug_data_is_project_scope($field_name)?
-				 'Project':'CodeX');
+				 'Project':'System');
 
 		echo '<TR BGCOLOR="'. util_get_alt_row_color($i) .'">'.
 		    '<TD><A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&list_value=1&field='.$field_name.'">'.bug_data_get_label($field_name).'</A></td>'.

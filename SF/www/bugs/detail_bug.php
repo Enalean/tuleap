@@ -41,7 +41,7 @@ if (db_numrows($result) > 0) {
 	      // display the bug field
 	      $field_value = db_result($result,0,$field_name);
 	      echo ($i % $fields_per_line ? '':"\n<TR>");
-	      echo '<TD>'.bug_field_display($field_name,$group_id,$field_value,false,true).'</TD>';
+	      echo '<TD>'.bug_field_display($field_name,$group_id,$field_value,false,true,true).'</TD>';
 	      $i++;
 	      echo ($i % $fields_per_line ? '':"\n</TR>");
 	  }
@@ -55,12 +55,12 @@ if (db_numrows($result) > 0) {
       <TR><TD COLSPAN="<?php echo $fields_per_line; ?>">&nbsp</TD></TR>
 
      <TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
-<?php echo bug_field_display('summary',$group_id,db_result($result,0,'summary'),false,true); ?>
+<?php echo bug_field_display('summary',$group_id,db_result($result,0,'summary'),false,true,true); ?>
      </TD></TR>
 
      <TR><TD COLSPAN="<?php echo $fields_per_line; ?>">
 <?php echo bug_field_display('details',$group_id,
-			util_make_links(nl2br(db_result($result,0,'details'))),true,true); ?>
+			util_make_links(nl2br(db_result($result,0,'details'))),true,true,true); ?>
      </TD></TR>
 
      <FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">

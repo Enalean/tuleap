@@ -4,6 +4,8 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
+// Copyright (c) Xerox Corporation, CodeX Team, 2001-2002. All rights reserved
+//
 // $Id$
 
 /*
@@ -11,7 +13,7 @@
 	Bug Tracker
 	By Tim Perdue, Sourceforge, 11/99
 	Heavy rewrite by Tim Perdue, April 2000
-
+	Very heavy rewrite by Laurent Julliard 2001, 2002, CodeX Team, Xerox
 */
 
 /* Generate URL arguments from a variable wether scalar or array */
@@ -90,8 +92,9 @@ function bug_header_admin($params) {
     echo '<P><B><A HREF="/bugs/admin/?group_id='.$group_id.'">Admin</A></B>';
     echo ' | <B><A HREF="/bugs/admin/field_usage.php?group_id='.$group_id.'">Field Usage</A></B>';
     echo ' | <b><A HREF="/bugs/admin/field_values.php?group_id='.$group_id.'">Field Values</A></b>';
+    echo ' | <b><A HREF="/bugs/admin/reports.php?group_id='.$group_id.'">Bug Reports</A></b>';
     echo ' | <b><A HREF="/bugs/admin/other_settings.php?group_id='.$group_id.'">Other Settings</A></b>';
-     echo ' <hr width="300" size="1" align="left" noshade>';
+    echo ' <hr width="300" size="1" align="left" noshade>';
 
 }
 
@@ -104,8 +107,22 @@ function bug_init($group_id) {
     bug_data_get_all_fields($group_id, true);
 }
 
-function bug_list_all_fields($by_field_id=false) {
-    global $BF_USAGE_BY_FIELD;
+function bug_report_init($group_id, $report_id) {
+    // Set the global array with report information for faster processing
+    bug_data_get_all_report_fields($group_id, $report_id, true);
+}
+
+function bug_list_all_fields($sort_func=false,$by_field_id=false) {
+    global $BF_USAGE_BY_ID, $BF_USAGE_BY_NAME, $AT_START;
+
+    // If it's the first element we fetch then apply the sort
+    // function  
+    if ($AT_START) {
+	if (!$sort_func) { $sort_func = cmp_place; }
+	uasort($BF_USAGE_BY_ID, $sort_func);
+	uasort($BF_USAGE_BY_NAME, $sort_func);
+	$AT_START=false;
+    }
 
     // return the next bug field in the list. If the global
     // bug field usage array is not set then set it the
@@ -113,17 +130,19 @@ function bug_list_all_fields($by_field_id=false) {
     // by_field_id: true return the list of field id, false returns the
     // list of field names
 
-    if ( list($key, $field_array) = each($BF_USAGE_BY_FIELD)) {
+    if ( list($key, $field_array) = each($BF_USAGE_BY_ID)) {
 	return($by_field_id ? $field_array['bug_field_id'] : $field_array['field_name']);
     } else {
 	// rewind internal pointer for next time
-	reset($BF_USAGE_BY_FIELD);
+	reset($BF_USAGE_BY_ID);
+	reset($BF_USAGE_BY_NAME);
+	$AT_START=true;
 	return(false);
     }
 }
 
 function bug_field_display($field_name, $group_id, $value='xyxy',
-			   $break=false, $ro=false, $ascii=false,
+			   $break=false, $label=true, $ro=false, $ascii=false, 
 			   $show_none=false, $text_none='None',
 			   $show_any=false, $text_any='Any') {
     /*
@@ -132,9 +151,10 @@ function bug_field_display($field_name, $group_id, $value='xyxy',
           - field_name : name of th bug field (column name)
           - group_id : the group id (project id)
           - value: the current value stored in this field (for select boxes type of field
-                  it is the value_id actually.
+                  it is the value_id actually. It can also be an array with mutliple values.
           - break: true if a break line is to be inserted between the field label
                  and the field value
+          - label: if true display the field label.
           - ro: true if only the field value is to be displayed. Otherwise
                  display an HTML select box, text field or text area to modify the value
           - ascii: if true do not use any HTML decoration just plain text (if true
@@ -144,35 +164,63 @@ function bug_field_display($field_name, $group_id, $value='xyxy',
           - show_any: show the Any entry in the select box if true (value_id 0)
           - text_any: text associated with the any value_id  tp display in the select box
      */
+    global $sys_datefmt;
 
-    $output = bug_data_get_label($field_name).': ';
-    if (!$ascii) 
-	$output = '<B>'.$output.'</B>';
-    if ($break) 
-	$output .= ($ascii?"\n":'<BR>');
-    else
-	$output .= ($ascii? ' ':'&nbsp;');
-
+    if ($label) {
+	$output = bug_data_get_label($field_name).': ';
+	if (!$ascii) 
+	    $output = '<B>'.$output.'</B>';
+	if ($break) 
+	    $output .= ($ascii?"\n":'<BR>');
+	else
+	    $output .= ($ascii? ' ':'&nbsp;');
+    }
 
     // display depends upon display type of this field
     switch (bug_data_get_display_type($field_name)) {
 
     case 'SB':
-	// If it is the "assigned_to" field then we need some special
-	// processing to add the "None" entry in the menu 'coz it's
-	// not in the DB
 	if ($ro) {
-	    $output .= bug_data_get_value($field_name, $group_id, $value);
+
+	    // if multiple selected values return a list of <br> separated values
+	    $arr = ( is_array($value) ? $value : array($value));
+	    for ($i=0;$i < count($arr); $i++) {
+		if ($arr[$i] == 0 )
+		    $arr[$i] = $text_any;
+		else if ($arr[$i] == 100 )
+		    $arr[$i] = $text_none;
+		else 
+		    $arr[$i] = bug_data_get_value($field_name,$group_id,$arr[$i]);
+	    }
+
+	    $output .= join('<br>', $arr);
+
 	} else {
-	    if ($field_name == 'assigned_to')
-		$output .= bug_field_box($field_name,'',$group_id,$value,
-				       true,'None');
+	    // If it is a user name field (assigned_to, submitted_by) then make
+	    // sure to add the "None" entry in the menu 'coz it's not in the DB
+	    if (bug_data_is_username_field($field_name)) {
+		$show_none=true;
+		$text_none='None';
+	    }
+	
+	    if (is_array($value))
+		$output .= bug_multiple_field_box($field_name,'',$group_id, $value,
+				       $show_none,$text_none,$show_any,
+				       $text_any);
 	    else
 		$output .= bug_field_box($field_name,'',$group_id, $value,
 				       $show_none,$text_none,$show_any,
 				       $text_any);
 	}
-	break;	
+	break; 
+
+    case 'DF':
+	if ($ascii) 
+	    $output .= date($sys_datefmt,$value);
+	else
+	    $output .= ($ro ? date($sys_datefmt,$value) : bug_field_date($field_name,$value));
+	break;
+
     case 'TF':
 	if ($ascii) 
 	    $output .= util_unconvert_htmlspecialchars($value);
@@ -193,18 +241,83 @@ function bug_field_display($field_name, $group_id, $value='xyxy',
     return($output);
 }
 
-function bug_field_text($field_name,$value='') {
+function bug_field_date($field_name,$value='',$size=0,$maxlength=0,$ro=false) {
 
-    list($size, $maxlength) = bug_data_get_display_size($field_name);
+    // CAUTION!!!! The Javascript below assumes that the date always appear
+    // in a field called 'bug_form'
+    if ($ro)
+	$html = $value;
+    else {
+	if (!$size || !$maxlength)
+	    list($size, $maxlength) = bug_data_get_display_size($field_name);
+
+	$html = '<INPUT TYPE="text" name="'.$field_name.
+	'" size="'.$size.'" MAXLENGTH="'.$maxlength.'" VALUE="'.$value.'">'.
+	'<a href="javascript:show_calendar(\'document.bug_form.'.$field_name.'\', document.bug_form.'.$field_name.'.value);">'.
+	'<img src="/images/calendar/cal.png" width="16" height="16" border="0" alt="Click Here to Pick up a date"></a>';
+    }
+    return($html);
+
+}
+
+function bug_multiple_field_date($field_name,$date_begin='',$date_end='',$size=0,$maxlength=0,$ro=false) {
+
+    // CAUTION!!!! The Javascript below assumes that the date always appear
+    // in a field called 'bug_form'
+
+    if ($ro)
+	if ($date_begin || $date_end)
+	    $html = "Start:&nbsp;$date_begin<br>End:&nbsp;$date_end";
+	else
+	    $html = 'Any time';
+    else {
+	if (!$size || !$maxlength)
+	    list($size, $maxlength) = bug_data_get_display_size($field_name);
+
+	$html = 'Start:<INPUT TYPE="text" name="'.$field_name.
+	'" size="'.$size.'" MAXLENGTH="'.$maxlength.'" VALUE="'.$date_begin.'">'.
+	'<a href="javascript:show_calendar(\'document.bug_form.'.$field_name.'\', document.bug_form.'.$field_name.'.value);">'.
+	'<img src="/images/calendar/cal.gif" width="16" height="16" border="0" alt="Click Here to Pick up start date"></a><br>'.
+	'End :<INPUT TYPE="text" name="'.$field_name.'_end'.
+	'" size="'.$size.'" MAXLENGTH="'.$maxlength.'" VALUE="'.$date_end.'">'.
+	'<a href="javascript:show_calendar(\'document.bug_form.'.$field_name.'_end\', document.bug_form.'.$field_name.'_end.value);">'.
+	'<img src="/images/calendar/cal.gif" width="16" height="16" border="0" alt="Click Here to Pick up end date"></a>';
+    }
+
+    return($html);
+
+}
+
+function bug_field_date_operator($field_name,$value='',$ro=false) {
+
+    if ($ro) 
+	$html = htmlspecialchars($value);
+    else
+	$html = '<SELECT name="'.$field_name.'_op">'.
+	'<OPTION VALUE=">"'.(($value == '>') ? ' SELECTED':'').'>&gt;</OPTION>'.
+	'<OPTION VALUE="="'.(($value == '=') ? ' SELECTED':'').'>=</OPTION>'.
+	'<OPTION VALUE="<"'.(($value == '<') ? ' SELECTED':'').'>&lt;</OPTION>'.
+	'</SELECT>';
+    return($html);
+
+}
+
+function bug_field_text($field_name,$value='',$size=0,$maxlength=0) {
+
+    if (!$size || !$maxlength)
+	list($size, $maxlength) = bug_data_get_display_size($field_name);
+
     $html = '<INPUT TYPE="text" name="'.$field_name.
 	'" size="'.$size.'" MAXLENGTH="'.$maxlength.'" VALUE="'.$value.'">';
     return($html);
 
 }
 
-function bug_field_textarea($field_name,$value='') {
+function bug_field_textarea($field_name,$value='',$cols=0,$rows=0) {
 
-    list($cols, $rows) = bug_data_get_display_size($field_name);
+    if (!$cols || !$rows)
+	list($cols, $rows) = bug_data_get_display_size($field_name);
+
     $html = '<TEXTAREA NAME="'.$field_name.
 	'" ROWS="'.$rows.'" COLS="'.$cols.'" WRAP="SOFT">'
 	.nl2br($value).'</TEXTAREA>';
@@ -338,76 +451,129 @@ function bug_multiple_bug_depend_box ($name='dependent_on_bug[]',$group_id=false
 	}
 }
 
-function show_buglist ($result,$offset,$field_arr,$title_arr,$url) {
-    global $sys_datefmt,$group_id,$PHP_SELF;
+function show_buglist ($result,$offset,$total_rows,$field_arr,$title_arr,
+		       $width_arr,$url,$nolink) {
+    global $sys_datefmt,$group_id,$PHP_SELF,$chunksz;
+
     /*
       Accepts a result set from the bugs table. Should include all columns from
       the table, and it should be joined to USER to get the user_name.
     */
-
     $rows=db_numrows($result);
 
-    // Build the list of fields to be shown on the result list
-    // First the special fields coming first, then the variable fields
-    $links_arr = array();
-    $nb_of_fields=0;
-    while (list(,$field) = each($field_arr)) {
-	$links_arr[] = $url.'&order='.$field;
-	$nb_of_fields++;
+    // Build the list of links to use for column headings
+    // Used to trigger sort on that column
+    if ($url) {
+	$links_arr = array();
+	while (list(,$field) = each($field_arr)) {
+	    $links_arr[] = $url.'&order='.$field.'#results';
+	}
     }
 
    /*
       Show extra rows for <-- Prev / Next -->
-    */
-    
-    if ($offset > 0) {
-	echo '<A HREF="'.$url.'&offset='.($offset-50).'"><B><<< Previous 50</B></A>';
-    }
-    if (($offset > 0) && ($rows >= 50)) {
-	echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-    }	
-    if ($rows >= 50) {
-	echo '<A HREF="'.$url.'&offset='.($offset+50).'"><B>Next 50 >>></B></A>';
+    */	
+    $nav_bar ='<table width= "100%"><tr>';
+    $nav_bar .= '<td width="20%" align ="left">';
+
+    // If all bugs on screen so no prev/begin pointer at all
+    if ($total_rows > $chunksz) {
+	if ($offset > 0) {
+	    $nav_bar .=
+	    '<A HREF="'.$url.'&offset=0#results"><B><< Begin</B></A>'.
+	    '&nbsp;&nbsp;&nbsp;&nbsp;'.
+	    '<A HREF="'.$url.'&offset='.($offset-$chunksz).
+	    '#results"><B>< Previous '.$chunksz.'</B></A></td>';
+	} else {
+	    $nav_bar .=
+		'<font color="Gray">&lt;&lt; Begin&nbsp;&nbsp;&lt; Previous '.$chunksz.'</font>';
+	}
     }
 
+    $nav_bar .= '</td>';
+    
+    $offset_last = min($offset+$chunksz-1, $total_rows-1);
+
+    $nav_bar .= '<td width= "60% " align = "center">Items '.($offset+1).' - '.
+	($offset_last+1)."</td>\n";
+
+    $nav_bar .= '<td width="20%" align ="right">';
+
+    // If all bugs on screen, no next/end pointer at all
+    if ($total_rows > $chunksz) {
+	if ( ($offset+$chunksz) < $total_rows ) {
+
+	    $offset_end = ($total_rows - ($total_rows % $chunksz));
+	    if ($offset_end == $total_rows) { $offset_end -= $chunksz; }
+
+	    $nav_bar .= 
+		'<A HREF="'.$url.'&offset='.($offset+$chunksz).
+		'#results"><B>Next '.$chunksz.' &gt;</B></A>'.
+		'&nbsp;&nbsp;&nbsp;&nbsp;'.
+		'<A HREF="'.$url.'&offset='.($offset_end).
+		'#results"><B>End &gt;&gt;</B></A></td>';
+	} else {
+	    $nav_bar .= 
+		'<font color="Gray">Next '.$chunksz.
+		' &gt;&nbsp;&nbsp;End &gt;&gt;</font>';
+	}
+    }
+    $nav_bar .= '</td>';
+    $nav_bar .="</tr></table>\n";
+ 
+    echo $nav_bar;
     echo html_build_list_table_top ($title_arr,$links_arr);
 
     //see if the bugs are too old - so we can highlight them
-    $then=(time()-30*24*3600);
+    $nb_of_fields = count($field_arr);
 
-    for ($i=0; ($i < $rows && $i < 50); $i++) {
+    for ($i=0; $i < $rows ; $i++) {
 
 	echo '<TR BGCOLOR="'.get_priority_color(db_result($result, $i, 'severity')) .'">'."\n";
 
 	for ($j=0; $j<$nb_of_fields; $j++) {
 	    
 	    $value = db_result($result, $i, $field_arr[$j]);
+	    if ($width_arr[$j]) {
+		$width = 'WIDTH="'.$width_arr[$j].'%"';
+	    } else {
+		$width = '';
+	    }
 
-	    if ($field_arr[$j] == 'date') {
-		echo '<TD>'.
-		    ($value_<$then ?'<B>* ':'&nbsp; '). 
-		    date($sys_datefmt,$value).
-		    ($value<$then ?'</B> ':'').'</TD>'."\n";
+	    if (bug_data_is_date_field($field_arr[$j]) ) {
+		if ($value)
+		    echo "<TD $width>".date($sys_datefmt,$value).'</TD>'."\n";
+		else
+		    echo "<TD align=\"middle\" $width>-</TD>\n";
+
 	    } else if ($field_arr[$j] == 'bug_id') {
-		echo '<TD><A HREF="/bugs/?func=detailbug&bug_id='.
-		    $value.'&group_id='.$group_id.'">'. 
-		    $value .'</A></TD>'."\n";
 
-	    } else if ( ($field_arr[$j] == 'assigned_to') ||
-			($field_arr[$j] == 'submitted_by') ) {
-		echo "<TD><A HREF=\"/users/$value\">$value</A></TD>\n";
+		if ($nolink) 
+		    echo "<TD $width>$value</TD>\n";
+		else
+		    echo "<TD $width>".'<A HREF="/bugs/?func=detailbug&bug_id='.
+			$value.'&group_id='.$group_id.'">'. 
+			$value .'</A></TD>'."\n";
+
+	    } else if ( bug_data_is_username_field($field_arr[$j]) ) {
+
+		if ($nolink)
+		    echo "<TD $width>$value</TD>\n";
+		else
+		    echo "<TD $width><A HREF=\"/users/$value\">$value</A></TD>\n";
 		
 	    } else if (bug_data_is_select_box($field_arr[$j])) {
-		echo '<TD>'. bug_data_get_cached_field_value($field_arr[$j], $group_id, $value) .'</TD>'."\n";
+		echo "<TD $width>". bug_data_get_cached_field_value($field_arr[$j], $group_id, $value) .'</TD>'."\n";
 
 	    } else {
-		echo '<TD>'. $value .'&nbsp;</TD>'."\n";
+		echo "<TD $width>". $value .'&nbsp;</TD>'."\n";
 	    }
 	}
 	echo "</tr>\n";
     }
 
     echo '</TABLE>';
+    echo $nav_bar;
 }
 
 function mail_followup($bug_id,$more_addresses=false) {
@@ -440,7 +606,7 @@ function mail_followup($bug_id,$more_addresses=false) {
 
 		$field_value = db_result($result,0,$field_name);
 		$body .= "\n".bug_field_display($field_name, $group_id,
-						$field_value,false,true,true);
+					  $field_value,false,true,true,true);
 		}
 	}
 
@@ -450,9 +616,9 @@ function mail_followup($bug_id,$more_addresses=false) {
 	// title of the bug form and here as a text field
 
 	$body .= "\n".bug_field_display('summary', $group_id,
-			   db_result($result,0,'summary'),false,true,true).
+			   db_result($result,0,'summary'),false,true,true,true).
 	    "\n\n".bug_field_display('details', $group_id,
-			   db_result($result,0,'details'),false,true,true);
+			   db_result($result,0,'details'),false,true,true,true);
 
 	// Then output the history of bug details from newest to oldest
 	$sql="SELECT user.email,user.user_name,bug_history.date,bug_history.old_value,bug_history.type ".
@@ -653,4 +819,193 @@ function bug_isvarany($var) {
 
 }
 
+
+// Check is a sort criteria is already in the list of comma
+// separated criterias. If so invert the sort order, if not then
+// simply add it
+function bug_add_sort_criteria($criteria_list, $order, $msort)
+{
+    //echo "<br>DBG \$criteria_list=$criteria_list,\$order=$order";
+
+    if ($criteria_list) {
+	$arr = explode(',',$criteria_list);
+	$i = 0;
+	while (list(,$attr) = each($arr)) {
+	    preg_match("/\s*([^<>]*)([<>]*)/", $attr,$match);
+	    list(,$mattr,$mdir) = $match;
+	    //echo "<br>DBG \$mattr=$mattr,\$mdir=$mdir";
+	    if ($mattr == $order) {
+		if ( ($mdir == '>') || (!isset($mdir)) ) {
+		    $arr[$i] = $order.'<';
+		} else {
+		    $arr[$i] = $order.'>';
+		}
+		$found = true;
+	    }
+	    $i++;
+	}
+    }
+
+    if (!$found) {
+	if (!$msort) { unset($arr); }
+	if ( ($order == 'severity') || ($order == 'hours') || (bug_data_is_date_field($order)) ) {
+	    // severity, effort and dates sorted in descending order by default
+	    $arr[] = $order.'<';
+	} else {
+	    $arr[] = $order.'>';
+	}
+    }
+    
+    //echo "<br>DBG \$arr[]=".join(',',$arr);
+
+    return(join(',', $arr));	
+
+}
+
+// Transform criteria list to SQL query (+ means ascending
+// - is descending)
+function bug_criteria_list_to_query($criteria_list)
+{
+
+    $criteria_list = str_replace('>',' ASC',$criteria_list);
+    $criteria_list = str_replace('<',' DESC',$criteria_list);
+    return $criteria_list;
+}
+
+// Transform criteria list to readable text statement
+// $url must not contain the morder parameter
+function bug_criteria_list_to_text($criteria_list, $url)
+{
+
+    if ($criteria_list) {
+
+	$arr = explode(',',$criteria_list);
+
+	while (list(,$crit) = each($arr)) {
+
+	    $morder .= ($morder ? ",".$crit : $crit);
+	    $attr = str_replace('>','',$crit);
+	    $attr = str_replace('<','',$attr);
+
+	    $arr_text[] = '<a href="'.$url.'&morder='.$morder.'#results">'.
+		bug_data_get_label($attr).'</a><img src="/images/'.
+		((substr($crit, -1) == '<') ? 'dn' : 'up').
+		'_arrow.png" border="0">';
+	}
+    }
+
+    return join(' > ',$arr_text);
+}
+
+function bug_build_match_expression($field, &$to_match)
+{
+
+    // First get the field type
+    $res = db_query("SHOW COLUMNS FROM bug LIKE '$field'");
+    $type = db_result($res,0,'Type');
+
+    //echo "<br>DBG '$field' field type = $type";
+
+    if (preg_match('/text|varchar|blob/i', $type)) {
+
+	// If it is sourrounded by /.../ the assume a regexp
+	// else transform into a series of LIKE %word%
+	if (preg_match('/\/(.*)\//', $to_match, $matches))
+	    $expr = "$field RLIKE '".$matches[1]."' ";
+	else {
+	    $words = preg_split('/\s+/', $to_match);
+	    reset($words);
+	    while ( list($i,$w) = each($words)) {
+		//echo "<br>DBG $i, $w, $words[$i]";
+		$words[$i] = "$field LIKE '%$w%'";
+	    }
+	    $expr = join(' AND ', $words);
+	}
+
+    } 
+    else if (preg_match('/int/i', $type)) {
+
+	// If it is sourrounded by /.../ the assume a regexp
+	// else assume an equality
+	if (preg_match('/\/(.*)\//', $to_match, $matches)) {
+	    $expr = "$field RLIKE '".$matches[1]."' ";
+	} else {
+	    $int_reg = '[+\-]*[0-9]+';
+	    if (preg_match("/\s*(<|>|>=|<=)\s*($int_reg)/", $to_match, $matches)) {
+		// It's < or >,  = and a number then use as is
+		$matches[2] = (string)((int)$matches[2]);
+		$expr = "$field ".$matches[1]." '".$matches[2]."' ";
+		$to_match = $matches[1].' '.$matches[2];
+
+	    } 
+	    else if (preg_match("/\s*($int_reg)\s*-\s*($int_reg)/", $to_match, $matches)) {
+		// it's a range number1-number2
+		$matches[1] = (string)((int)$matches[1]);
+		$matches[2] = (string)((int)$matches[2]);
+		$expr = "$field >= '".$matches[1]."' AND $field <= '". $matches[2]."' ";
+		$to_match = $matches[1].'-'.$matches[2];
+
+	    }
+	    else if (preg_match("/\s*($int_reg)/", $to_match, $matches)) {
+		// It's a number so use  equality
+		$matches[1] = (string)((int)$matches[1]);
+		$expr = "$field = '".$matches[1]."'";
+		$to_match = $matches[1];
+
+	    }
+	    else {
+		// Invalid syntax - no condition
+		$expr = '1';
+		$to_match = '';
+	    }
+	}
+		     
+    } 
+    else if (preg_match('/float/i', $type)) {
+
+	// If it is sourrounded by /.../ the assume a regexp
+	// else assume an equality
+	if (preg_match('/\/(.*)\//', $to_match, $matches)) {
+	    $expr = "$field RLIKE '".$matches[1]."' ";
+	} else {
+	    $flt_reg = '[+\-0-9.eE]+';
+
+	    if (preg_match("/\s*(<|>|>=|<=)\s*($flt_reg)/", $to_match, $matches)) {
+		// It's < or >,  = and a number then use as is
+		$matches[2] = (string)((float)$matches[2]);
+		$expr = "$field ".$matches[1]." '".$matches[2]."' ";
+		$to_match = $matches[1].' '.$matches[2];
+
+	    }
+	    else if (preg_match("/\s*($flt_reg)\s*-\s*($flt_reg)/", $to_match, $matches) ) {
+		// it's a range number1-number2
+		$matches[1] = (string)((float)$matches[1]);
+		$matches[2] = (string)((float)$matches[2]);
+		$expr = "$field >= '".$matches[1]."' AND $field <= '". $matches[2]."' ";
+		$to_match = $matches[1].'-'.$matches[2];
+
+	    }
+	    else if (preg_match("/\s*($flt_reg)/", $to_match, $matches)) {
+
+		// It's a number so use  equality
+		$matches[1] = (string)((float)$matches[1]);
+		$expr = "$field = '".$matches[1]."'";
+		$to_match = $matches[1];
+	    }
+	    else {
+		// Invalid syntax - no condition
+		$expr = '1';
+		$to_match = '';
+	    }
+	}
+	
+    } else {
+	// All the rest (???) use =
+	$expr = "$field = '$to_match'";
+    }
+
+    //echo "<br>DBG expr to match for '$field' = $expr";
+    return ' ('.$expr.') ';
+
+}
 ?>

@@ -1,14 +1,18 @@
 <?php
 //
-// SourceForge: Breaking Down the Barriers to Open Source Development
-// Copyright 1999-2000 (c) The SourceForge Crew
-// http://sourceforge.net
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
 //
 // $Id$
+//
+//	Originally written by Laurent Julliard 2001, 2002, CodeX Team, Xerox
+//
 
 require('pre.php');
 require('../bug_data.php');
 require('../bug_utils.php');
+
 $is_admin_page='y';
 
 if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))) {
@@ -21,7 +25,6 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 
 	if ($submit) {
 	    bug_data_update_usage($field,$group_id,$status,$place,
-				  $show_on_query,$show_on_result,
 				  $show_on_add_members, $show_on_add);
 	} else if ($reset) {
 	    bug_data_reset_usage($field,$group_id);
@@ -41,16 +44,17 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 	// Escape to display the form
 ?>
 
-      <H2>Modify a bug field</H2>
+      <H2>Modify a bug field <?php echo help_button('bug_admin_field_usage_settings',false); ?></H2>
       <FORM ACTION="<?php echo $PHP_SELF ?>" METHOD="POST">
       <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
       <INPUT TYPE="HIDDEN" NAME="field" VALUE="<?php echo $field; ?>">
       <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">
       <P><h3>Field Label: <?php echo bug_data_get_label($field); ?></h3>
       <B>Rank on screen:</B>
+      
       <INPUT TYPE="TEXT" NAME="place" VALUE="<?php echo bug_data_get_place($field); ?>" SIZE="6" MAXLENGTH="6">
       &nbsp;&nbsp;
-      <B>Status:</B>
+      <b>Status:</b>
 <?php 
 
      if (bug_data_is_required($field)) {
@@ -62,38 +66,36 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 	   <OPTION VALUE="0"'.(bug_data_is_used($field)?'':' SELECTED').'>Unused</OPTION>
       </SELECT>';
      }
-?>
-      <P>
-      <b>Display this field...</b>
-      <ul>
-<?php
-      if (bug_data_is_select_box($field)) {
-	echo '<li>As a selection box in a bug database search&nbsp;
-	    <INPUT TYPE="CHECKBOX" NAME="show_on_query" VALUE="1"'.
-	    (bug_data_is_showed_on_query($field)?' CHECKED':'').'>';
-      }
 
-	echo '<li>As a column in the report table of a search result &nbsp;
-         <INPUT TYPE="CHECKBOX" NAME="show_on_result" VALUE="1"'.
-	    (bug_data_is_showed_on_result($field)?' CHECKED':'').'>';
 
-      if (!bug_data_is_required($field)&& !bug_data_is_special($field_name)) {
-	echo '<li>On the form used by project members to submit a new bug&nbsp;
-         <INPUT TYPE="CHECKBOX" NAME="show_on_add_members" VALUE="1"'.
-        (bug_data_is_showed_on_add_members($field)?' CHECKED':'').'>
-	<li>On the form used by other CodeX users to submit a new bug&nbsp;
-         <INPUT TYPE="CHECKBOX" NAME="show_on_add" VALUE="1"'.
-        (bug_data_is_showed_on_add($field)?' CHECKED':'').'>';
+	 if (!bug_data_is_required($field) && 
+	     !bug_data_is_special($field_name)) {
 
-      } else {
-	  // Do not let the user change these field settings but put them in the
-	  // form to preserve the existing setting or use the default values
-	  // imposed at the system level
-	  echo '<INPUT TYPE="HIDDEN" NAME="show_on_add_members" VALUE="'.
-	      (bug_data_is_showed_on_add_members($field)? 1:0).'">';
-	  echo '<INPUT TYPE="HIDDEN" NAME="show_on_add" VALUE="'.
-	      (bug_data_is_showed_on_add($field)? 1:0).'">';
-      }
+	     $addm_html = '&nbsp;&nbsp;<INPUT TYPE="CHECKBOX" NAME="show_on_add_members" VALUE="1"'.
+		 (bug_data_is_showed_on_add_members($field)?' CHECKED':'').'>';
+
+	     $add_html = '&nbsp;&nbsp;<INPUT TYPE="CHECKBOX" NAME="show_on_add" VALUE="1"'.
+		 (bug_data_is_showed_on_add($field)?' CHECKED':'').'>';
+
+     } else {
+
+	 // Do not let the user change these field settings but put them in the
+	 // form to preserve the existing setting or use the default values
+	 // imposed at the system level
+	 $addm_html = '<INPUT TYPE="HIDDEN" NAME="show_on_add_members" '.
+	     'VALUE="'.(bug_data_is_showed_on_add_members($field)? 1:0).'">'.
+	     (bug_data_is_showed_on_add_members($field)? ': Always':': Never');
+	 $add_html = '<INPUT TYPE="HIDDEN" NAME="show_on_add" '.
+	     'VALUE="'.(bug_data_is_showed_on_add($field)? 1:0).'">'.
+	     (bug_data_is_showed_on_add($field)? ': Always':': Never');
+	 
+     }
+
+     echo '<P><b>Display this field...</b><ul>';
+     echo '<li>On the submission form used by project members'.$addm_html;
+     echo '<li>On the submission form used by other users'.$add_html;
+
+
 ?>
       </ul>
       <P>
@@ -114,17 +116,13 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
  
 	bug_header_admin(array ('title'=>'Bug Administration - Field Usage'));
     
-	echo '<H2>Bug Field Usage Administration</H2>';
+	echo '<H2>Bug Field Usage Administration '.help_button('bug_admin_field_usage_list',false).'</H2>';
 
-	echo '<h3>List of all Available Fields</h3>'.
-	    '<p>The CodeX bug tracking system allows you to define what fields you want to use in the Bug Tracking System of this project. Click on a field to change its status (Used/Unused) and tune some other parameters. Required fields can only be tuned, they cannot be deactivated. '.
-	    '<br>Sometimes you\'ll also see the same field twice in the list but they actually come with a different type field (predefined values from a select box or free text). Choose the type that is best suited to your project.<p>';
+	echo '<h3>List of all Available Fields</h3>';
+	echo '<p>(Click to modify)';
 
 
-	// show all required fields plus all those explicitely asked by the project
-    // show label, description, place,show_on_select,show_on_result, show_on_add, show_on_add_members
-
-	// Loop through the list of project manageable fields
+	// Show all the fields currently available in the system
 	$i=0;
 	$title_arr=array();
 	$title_arr[]='Field Label';
@@ -140,8 +138,12 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 	$iu=$in=0;
 	while ( $field_name = bug_list_all_fields() ) {
 
-	    // Do not show special fields any way.
-	    if (bug_data_is_special($field_name)) { continue; }
+	    // Do not show some special fields any way
+	    if (bug_data_is_special($field_name)) { 
+		if ( ($field_name == 'group_id') ||
+		     ($field_name == 'comment_type_id') )
+		    { continue; }
+	    }
 
 	    // Show Used, Unused and Required fields on separate lists
 	    // Do not show required fields any way.
@@ -151,7 +153,7 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 	    $status_label = ($is_required?'Required':($is_used?'Used':'Unused'));
 	    
 	    $scope_label  = (bug_data_get_scope($field_name)=='S'?
-			     'CodeX':'Project');
+			     'System':'Project');
 	    $place_label = ($is_used?bug_data_get_place($field_name):'-');
 
 	    $html = '<TD><A HREF="'.$PHP_SELF.'?group_id='.$group_id.
@@ -190,12 +192,6 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 	echo $hdr.$hu.$hn.'</TABLE>';
 
 ?>
-	<P><B>Some Help:</b>
-        <ul type="compact">
-	<li><b>Type:</b> fields can be of type "Select Box" in which case values are taken from a predefined list of values that can be defined by the Bug Adminstrator. "Text Field" and "Text Area" allows the user to enter free text. Sometimes you'll see the same bug field twice in the list but they actually come with a different type. Choose the type you like most: predefined values or free text..
-        <li><b>Scope:</b> fields with a 'CodeX' scope have a fixed number of values for the CodeX site globally. You can only change the label and the rank of these existing values but can't create any new one.<br>Fields with 'Project' scope can be assigned a set of values at the project level. See the "Field values" item in the menu bar above.
-        <li><b>Rank</b>: the rank number allows you to place the field with respect to the others. The fields with smaller values will appear first on the screen (bug submission form, query report,...)
-      </ul>
 
 <?php
         

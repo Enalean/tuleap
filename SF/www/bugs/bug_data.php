@@ -1,4 +1,13 @@
 <?php
+//
+// Copyright (c) Xerox Corporation, CodeX Team, 2001-2002. All rights reserved
+//
+// $Id$
+//
+//
+//	Originally by to the SourceForge Team,1999-2000
+//	Very Heavy rewrite by Laurent Julliard 2001, 2002, CodeX Team, Xerox
+//
 
 /*
 
@@ -17,26 +26,24 @@ function bug_data_get_all_fields ($group_id=false,$reload=false) {
            Make sure array element are sorted by ascending place
       */
 
-    global $BF_USAGE_BY_FIELD,$BF_USAGE_BY_NAME;
+    global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME, $AT_START;
 
     // Do nothing if already set and reload not forced
-    if (isset($BF_USAGE_BY_FIELD) && !$reload) {
+    if (isset($BF_USAGE_BY_ID) && !$reload) {
 	return;
     }
 
     // Clean up the array
-    $BF_USAGE_BY_FIELD=array();
+    $BF_USAGE_BY_ID=array();
     $BF_USAGE_BY_NAME=array();
 
     // First get the all the defaults. 
     $sql='SELECT bug_field.bug_field_id, field_name, display_type, '.
 	'display_size,label, description,scope,required,empty_ok,keep_history,special, '.
-	'group_id, use_it, show_on_query, show_on_result,show_on_add, '.
-	'show_on_add_members, place '.
+	'group_id, use_it,show_on_add,show_on_add_members, place '.
 	'FROM bug_field, bug_field_usage '.
 	'WHERE group_id=100  '.
-	'AND bug_field.bug_field_id=bug_field_usage.bug_field_id '.
-	'ORDER BY place ASC';
+	'AND bug_field.bug_field_id=bug_field_usage.bug_field_id ';
 
    
     $res_defaults = db_query($sql);
@@ -44,39 +51,96 @@ function bug_data_get_all_fields ($group_id=false,$reload=false) {
     // Now put all used fields in a global array for faster access
     // Index both by field_name and bug_field_id
     while ($field_array = db_fetch_array($res_defaults)) {
-	$BF_USAGE_BY_FIELD[$field_array['bug_field_id'] ] = $field_array;
+	$BF_USAGE_BY_ID[$field_array['bug_field_id'] ] = $field_array;
 	$BF_USAGE_BY_NAME[$field_array['field_name'] ] = $field_array;
     }
 
     // Then select  all project specific entries
     $sql='SELECT bug_field.bug_field_id, field_name, display_type, '.
 	'display_size,label, description,scope,required,empty_ok,keep_history,special, '.
-	'group_id, use_it, show_on_query, show_on_result,show_on_add, '.
-	'show_on_add_members, place '.
+	'group_id, use_it, show_on_add, show_on_add_members, place '.
 	'FROM bug_field, bug_field_usage '.
 	'WHERE group_id='.$group_id.
-	' AND bug_field.bug_field_id=bug_field_usage.bug_field_id '.
-	'ORDER BY place ASC';
+	' AND bug_field.bug_field_id=bug_field_usage.bug_field_id ';
 
     $res_project = db_query($sql);
 
     // And override entries in the default array
     while ($field_array = db_fetch_array($res_project)) {
-	$BF_USAGE_BY_FIELD[$field_array['bug_field_id'] ] = $field_array;
+	$BF_USAGE_BY_ID[$field_array['bug_field_id'] ] = $field_array;
 	$BF_USAGE_BY_NAME[$field_array['field_name'] ] = $field_array;
     }
 
     //Debug code
-    /*echo " DBG - At end of bug_get_all_fields: $rows<BR>";
+    //echo "<br>DBG - At end of bug_get_all_fields: $rows";
     reset($BF_USAGE_BY_NAME);
     while (list($key, $val) = each($BF_USAGE_BY_NAME)) {
-	echo "DBG - $key -> use_it: $val[use_it]<BR>";
-    }*/
-    
+    	//echo "<br>DBG - $key -> use_it: $val[use_it], $val[place]";
+    }
       
     // rewind internal pointer of global arrays
-    reset($BF_USAGE_BY_FIELD);
+    reset($BF_USAGE_BY_ID);
     reset($BF_USAGE_BY_NAME);
+    $AT_START = true;
+}
+
+function cmp_place($ar1, $ar2)
+{
+    if ($ar1['place']< $ar2['place'])
+	return -1;
+    else if ($ar1['place']>$ar2['place'])
+	return 1;
+    return 0;
+}
+
+function cmp_place_query($ar1, $ar2)
+{
+    if ($ar1['place_query']< $ar2['place_query'])
+	return -1;
+    else if ($ar1['place_query']>$ar2['place_query'])
+	return 1;
+    return 0;
+}
+
+function cmp_place_result($ar1, $ar2)
+{
+    if ($ar1['place_result']< $ar2['place_result'])
+	return -1;
+    else if ($ar1['place_result']>$ar2['place_result'])
+	return 1;
+    return 0;
+}
+
+function bug_data_get_all_report_fields($group_id=false,$report_id=100) {
+    global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
+
+    /*
+           Get all the bug fields involved in the bug report.
+	   WARNING: This function ust only be called after bug_init()
+      */
+
+    // Build the list of fields involved in this report
+    $sql = "SELECT * FROM bug_report_field WHERE report_id=$report_id";
+    $res = db_query($sql);
+    
+    while ( $arr = db_fetch_array($res) ) {
+	$field = $arr['field_name'];
+	$field_id = bug_data_get_field_id($field);
+	$BF_USAGE_BY_NAME[$field]['show_on_query'] = 
+	$BF_USAGE_BY_ID[$field_id]['show_on_query'] = $arr['show_on_query'];
+
+	$BF_USAGE_BY_NAME[$field]['show_on_result'] = 
+	$BF_USAGE_BY_ID[$field_id]['show_on_result'] = $arr['show_on_result'];
+
+	$BF_USAGE_BY_NAME[$field]['place_query'] =
+	$BF_USAGE_BY_ID[$field_id]['place_query'] = $arr['place_query'];
+
+	$BF_USAGE_BY_NAME[$field]['place_result'] =
+	$BF_USAGE_BY_ID[$field_id]['place_result'] = $arr['place_result'];
+
+	$BF_USAGE_BY_NAME[$field]['col_width'] = 
+	$BF_USAGE_BY_ID[$field_id]['col_width'] = $arr['col_width'];
+    }
 }
 
 function bug_data_get_field_predefined_values ($field, $group_id=false, $checked=false,$by_field_id=false,$active_only=true) {
@@ -94,6 +158,8 @@ function bug_data_get_field_predefined_values ($field, $group_id=false, $checked
     // not stored in the bug_field_value table but in the user_group table
     if ($field_name == 'assigned_to') {
 	    $res_value = bug_data_get_technicians($group_id);
+    } else if ($field_name == 'submitted_by') {
+	    $res_value = bug_data_get_submitters($group_id);
     } else {
 
 	// If only active field
@@ -133,43 +199,48 @@ function bug_data_get_field_predefined_values ($field, $group_id=false, $checked
 }
 
 function bug_data_is_special($field, $by_field_id=false) {
-    global $BF_USAGE_BY_FIELD,$BF_USAGE_BY_NAME;
-    return($by_field_id ? $BF_USAGE_BY_FIELD[$field]['special']: $BF_USAGE_BY_NAME[$field]['special']);
+    global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
+    return($by_field_id ? $BF_USAGE_BY_ID[$field]['special']: $BF_USAGE_BY_NAME[$field]['special']);
 }
 
 function bug_data_is_empty_ok($field, $by_field_id=false) {
-    global $BF_USAGE_BY_FIELD,$BF_USAGE_BY_NAME;
-    return($by_field_id ? $BF_USAGE_BY_FIELD[$field]['empty_ok']: $BF_USAGE_BY_NAME[$field]['empty_ok']);
+    global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
+    return($by_field_id ? $BF_USAGE_BY_ID[$field]['empty_ok']: $BF_USAGE_BY_NAME[$field]['empty_ok']);
 }
 
 function bug_data_is_required($field, $by_field_id=false) {
-    global $BF_USAGE_BY_FIELD,$BF_USAGE_BY_NAME;
-    return($by_field_id ? $BF_USAGE_BY_FIELD[$field]['required']: $BF_USAGE_BY_NAME[$field]['required']);
+    global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
+    return($by_field_id ? $BF_USAGE_BY_ID[$field]['required']: $BF_USAGE_BY_NAME[$field]['required']);
 }
 
 function bug_data_is_used($field, $by_field_id=false) {
-    global $BF_USAGE_BY_FIELD,$BF_USAGE_BY_NAME;
-    return($by_field_id ? $BF_USAGE_BY_FIELD[$field]['use_it']: $BF_USAGE_BY_NAME[$field]['use_it']);
+    global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
+    return($by_field_id ? $BF_USAGE_BY_ID[$field]['use_it']: $BF_USAGE_BY_NAME[$field]['use_it']);
 }
 
-function bug_data_is_showed_on_query($field, $by_field_id=false) {
-    global $BF_USAGE_BY_FIELD,$BF_USAGE_BY_NAME;
-    return($by_field_id ? $BF_USAGE_BY_FIELD[$field]['show_on_query']: $BF_USAGE_BY_NAME[$field]['show_on_query']);
+function bug_data_is_showed_on_query($field) {
+    global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
+    return($by_field_id ? $BF_USAGE_BY_ID[$field]['show_on_query']: $BF_USAGE_BY_NAME[$field]['show_on_query']);
+ 
 }
 
-function bug_data_is_showed_on_result($field, $by_field_id=false) {
-    global $BF_USAGE_BY_FIELD,$BF_USAGE_BY_NAME;
-    return($by_field_id ? $BF_USAGE_BY_FIELD[$field]['show_on_result']: $BF_USAGE_BY_NAME[$field]['show_on_result']);
+function bug_data_is_showed_on_result($field) {
+    global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
+    return($by_field_id ? $BF_USAGE_BY_ID[$field]['show_on_result']: $BF_USAGE_BY_NAME[$field]['show_on_result']);
 }
 
 function bug_data_is_showed_on_add($field, $by_field_id=false) {
-    global $BF_USAGE_BY_FIELD,$BF_USAGE_BY_NAME;
-    return($by_field_id ? $BF_USAGE_BY_FIELD[$field]['show_on_add']: $BF_USAGE_BY_NAME[$field]['show_on_add']);
+    global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
+    return($by_field_id ? $BF_USAGE_BY_ID[$field]['show_on_add']: $BF_USAGE_BY_NAME[$field]['show_on_add']);
 }
 
 function bug_data_is_showed_on_add_members($field, $by_field_id=false) {
-    global $BF_USAGE_BY_FIELD,$BF_USAGE_BY_NAME;
-    return($by_field_id ? $BF_USAGE_BY_FIELD[$field]['show_on_add_members']: $BF_USAGE_BY_NAME[$field]['show_on_add_members']);
+    global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
+    return($by_field_id ? $BF_USAGE_BY_ID[$field]['show_on_add_members']: $BF_USAGE_BY_NAME[$field]['show_on_add_members']);
+}
+
+function bug_data_is_date_field($field, $by_field_id=false) {
+    return(bug_data_get_display_type($field, $by_field_id) == 'DF');
 }
 
 function bug_data_is_text_field($field, $by_field_id=false) {
@@ -184,10 +255,18 @@ function bug_data_is_select_box($field, $by_field_id=false) {
     return(bug_data_get_display_type($field, $by_field_id) == 'SB');
 }
 
-function bug_data_is_project_scope($field, $by_field_id=false) {
-    global $BF_USAGE_BY_FIELD,$BF_USAGE_BY_NAME;
+function bug_data_is_username_field($field, $by_field_id=false) {
+    global $BF_USAGE_BY_ID;
     if ($by_field_id) {
-	return($BF_USAGE_BY_FIELD[$field]['scope'] == 'P');
+	$field = bug_data_get_field_name($field);
+    }
+    return(($field == 'assigned_to') || ($field == 'submitted_by'));
+}
+
+function bug_data_is_project_scope($field, $by_field_id=false) {
+    global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
+    if ($by_field_id) {
+	return($BF_USAGE_BY_ID[$field]['scope'] == 'P');
     } else {
 	return($BF_USAGE_BY_NAME[$field]['scope'] == 'P');
     }
@@ -198,8 +277,8 @@ function bug_data_is_status_closed($status) {
 }
 
 function bug_data_get_field_name($field_id) {
-    global $BF_USAGE_BY_FIELD;
-    return($BF_USAGE_BY_FIELD[$field_id]['field_name']);
+    global $BF_USAGE_BY_ID;
+    return($BF_USAGE_BY_ID[$field_id]['field_name']);
 }
 
 function bug_data_get_field_id($field_name) {
@@ -208,23 +287,23 @@ function bug_data_get_field_id($field_name) {
 }
 
 function bug_data_get_group_id($field, $by_field_id=false) {
-    global $BF_USAGE_BY_FIELD,$BF_USAGE_BY_NAME;
-    return($by_field_id ? $BF_USAGE_BY_FIELD[$field]['group_id'] : $BF_USAGE_BY_NAME[$field]['group_id']);
+    global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
+    return($by_field_id ? $BF_USAGE_BY_ID[$field]['group_id'] : $BF_USAGE_BY_NAME[$field]['group_id']);
 }
 
 function bug_data_get_label($field, $by_field_id=false) {
-    global $BF_USAGE_BY_FIELD,$BF_USAGE_BY_NAME;
-    return($by_field_id ? $BF_USAGE_BY_FIELD[$field]['label'] : $BF_USAGE_BY_NAME[$field]['label']);
+    global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
+    return($by_field_id ? $BF_USAGE_BY_ID[$field]['label'] : $BF_USAGE_BY_NAME[$field]['label']);
 }
 
 function bug_data_get_description($field, $by_field_id=false) {
-    global $BF_USAGE_BY_FIELD,$BF_USAGE_BY_NAME;
-    return($by_field_id ? $BF_USAGE_BY_FIELD[$field]['description'] : $BF_USAGE_BY_NAME[$field]['description']);
+    global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
+    return($by_field_id ? $BF_USAGE_BY_ID[$field]['description'] : $BF_USAGE_BY_NAME[$field]['description']);
 }
 
 function bug_data_get_display_type($field, $by_field_id=false) {
-    global $BF_USAGE_BY_FIELD,$BF_USAGE_BY_NAME;
-    return($by_field_id ? $BF_USAGE_BY_FIELD[$field]['display_type'] : $BF_USAGE_BY_NAME[$field]['display_type']);
+    global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
+    return($by_field_id ? $BF_USAGE_BY_ID[$field]['display_type'] : $BF_USAGE_BY_NAME[$field]['display_type']);
 }
 
 function bug_data_get_display_type_in_clear($field, $by_field_id=false) {
@@ -237,37 +316,45 @@ function bug_data_get_display_type_in_clear($field, $by_field_id=false) {
     else if (bug_data_is_text_area($field, $by_field_id)) {
 	return 'Text Area';
     }
+    else if (bug_data_is_date_field($field, $by_field_id)) {
+	return 'Date Field';
+    }
     else {
 	return '?';
     }
 }
 
 function bug_data_get_keep_history($field, $by_field_id=false) {
-    global $BF_USAGE_BY_FIELD,$BF_USAGE_BY_NAME;
-    return($by_field_id ? $BF_USAGE_BY_FIELD[$field]['keep_history'] : $BF_USAGE_BY_NAME[$field]['keep_history']);
+    global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
+    return($by_field_id ? $BF_USAGE_BY_ID[$field]['keep_history'] : $BF_USAGE_BY_NAME[$field]['keep_history']);
 }
 
 function bug_data_get_place($field, $by_field_id=false) {
-    global $BF_USAGE_BY_FIELD,$BF_USAGE_BY_NAME;
-    return($by_field_id ? $BF_USAGE_BY_FIELD[$field]['place'] : $BF_USAGE_BY_NAME[$field]['place']);
+    global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
+    return($by_field_id ? $BF_USAGE_BY_ID[$field]['place'] : $BF_USAGE_BY_NAME[$field]['place']);
 }
 
 function bug_data_get_scope($field, $by_field_id=false) {
-    global $BF_USAGE_BY_FIELD,$BF_USAGE_BY_NAME;
-    return($by_field_id ? $BF_USAGE_BY_FIELD[$field]['scope'] : $BF_USAGE_BY_NAME[$field]['scope']);
+    global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
+    return($by_field_id ? $BF_USAGE_BY_ID[$field]['scope'] : $BF_USAGE_BY_NAME[$field]['scope']);
+}
+
+function bug_data_get_col_width($field, $by_field_id=false) {
+    global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
+    return($by_field_id ? $BF_USAGE_BY_ID[$field]['col_width'] : $BF_USAGE_BY_NAME[$field]['col_width']);
 }
 
 function bug_data_get_display_size($field, $by_field_id=false) {
-    global $BF_USAGE_BY_FIELD,$BF_USAGE_BY_NAME;
+    global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
     if ($by_field_id) {
-	return(explode('/',$BF_USAGE_BY_FIELD[$field]['display_size']));
+	return(explode('/',$BF_USAGE_BY_ID[$field]['display_size']));
     } else {
 	return(explode('/',$BF_USAGE_BY_NAME[$field]['display_size']));
     }
 }
 
 function bug_data_get_default_value($field,  $by_field_id=false) {
-    global $BF_USAGE_BY_FIELD,$BF_USAGE_BY_NAME;
+    global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
     /*
       Return the default value associated to a field_name as defined in the
       bug table (SQL definition)
@@ -531,8 +618,8 @@ function bug_data_reset_usage($field_name,$group_id)
     }
 }
 
- function bug_data_update_usage($field_name,$group_id,$use_it,$rank, 
-	     $show_on_query=0, $show_on_result=0, $show_on_add_members=0, $show_on_add=0)
+ function bug_data_update_usage($field_name, $group_id, $use_it, $rank,
+				$show_on_add_members=0, $show_on_add=0)
 {
     global $feedback;
     /*
@@ -557,15 +644,14 @@ function bug_data_reset_usage($field_name,$group_id)
     // if it does exist then update it else insert a new usage entry for this field.
     if ($rows) {
 	$sql = 'UPDATE bug_field_usage '.
-	    "SET use_it='$use_it',show_on_query='$show_on_query',".
-	    "show_on_result='$show_on_result',show_on_add='$show_on_add',".
+	    "SET use_it='$use_it',show_on_add='$show_on_add',".
 	    "show_on_add_members='$show_on_add_members',place='$rank' ".
 	    "WHERE bug_field_id='$field_id' AND group_id='$group_id'";
 	$result = db_query($sql);
     } else {
 	$sql = 'INSERT INTO  bug_field_usage '.
-	    "VALUES ('$field_id','$group_id','$use_it','$show_on_query',".
-	    "'$show_on_result','$show_on_add','$show_on_add_members','$rank')";
+	    "VALUES ('$field_id','$group_id','$use_it','$show_on_add',".
+	    "'$show_on_add_members','$rank')";
 	$result = db_query($sql);
     }
 
@@ -584,6 +670,15 @@ function bug_data_get_technicians ($group_id=false) {
 		"WHERE user.user_id=user_group.user_id ".
 		"AND user_group.bug_flags IN (1,2) ".
 		"AND user_group.group_id='$group_id' ".
+		"ORDER BY user.user_name";
+	return db_query($sql);
+}
+
+function bug_data_get_submitters ($group_id=false) {
+	$sql="SELECT DISTINCT user.user_id,user.user_name ".
+		"FROM user,bug ".
+		"WHERE user.user_id=bug.submitted_by ".
+		"AND bug.group_id='$group_id' ".
 		"ORDER BY user.user_name";
 	return db_query($sql);
 }
@@ -957,9 +1052,9 @@ function bug_data_get_value($field,$group_id,$value_id,$by_field_id=false) {
     */
 
     // close_date and assigned_to fields are special select box fields
-    if ($field == 'assigned_to') {
+    if (($field == 'assigned_to') || ($field == 'submitted_by')) {
 	return user_getname($value_id);
-    } else if ($field == 'close_date') {
+    } else if (bug_data_is_date_field($field)) {
 	return date($sys_datefmt,$value_id);
     }
 
@@ -1010,4 +1105,19 @@ function bug_data_get_canned_responses ($group_id) {
     return db_query($sql);
 }
 
+function bug_data_get_reports($group_id, $user_id) {
+    
+    // If user is unknown then get only project-wide and system wide reports
+    // else get personal reports in addition  project-wide and system wide.
+    $sql = 'SELECT report_id,name FROM bug_report WHERE ';
+    if (!$user_id || ($user_id == 100)) {
+	$sql .= "(group_id=$group_id AND scope='P') OR scope='S' ".
+	    'ORDER BY report_id';
+    } else {
+	$sql .= "(group_id=$group_id AND (user_id=$user_id OR scope='P')) OR ".
+	    "scope='S' ORDER BY scope,report_id";
+    }
+    //echo "DBG sql report = $sql";
+    return db_query($sql);
+}
 ?>

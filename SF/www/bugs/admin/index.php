@@ -11,7 +11,7 @@ require('../bug_data.php');
 require('../bug_utils.php');
 $is_admin_page='y';
 
-if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))) {
+if ($group_id) {
 
     // Initialize global bug structures
     bug_init($group_id);
@@ -24,13 +24,20 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
     bug_header_admin(array ('title'=>'Bug Administration'));
     
     echo '<H2>Bug Administration</H2>';
-    echo '<H3><a href="/bugs/admin/field_usage.php?group_id='.$group_id.'">Manage Field Usage</a></H3>';
-    echo 'Define what bug fields you want to use in the bug tracking system of this project. (remark: some of the fields like status, assignee, severity... are mandatory and cannot be removed).<P>';
-    echo '<H3><a href="/bugs/admin/field_values.php?group_id='.$group_id.'">Manage Field Values</a></H3>';
-    echo 'Define the set of values for the bug fields you have decided to use in your bug tracking system for this specific project. <P>';
-    echo '<H3><a href="/bugs/admin/other_settings.php?group_id='.$group_id.'">Other Configuration Settings</a></H3>';
-    echo 'Define introductory messages for submission forms, email notification,...<P>';
-        
+    if (user_ismember($group_id,'B2') || user_ismember($group_id,'A')) {
+	 echo '<H3><a href="/bugs/admin/field_usage.php?group_id='.$group_id.'">Manage Field Usage</a></H3>';
+	 echo 'Define what bug fields you want to use in the bug tracking system of this project. (remark: some of the fields like status, assignee, severity... are mandatory and cannot be removed).<P>';
+	 echo '<H3><a href="/bugs/admin/field_values.php?group_id='.$group_id.'">Manage Field Values</a></H3>';
+	 echo 'Define the set of values for the bug fields you have decided to use in your bug tracking system for this specific project. <P>';
+    }
+
+    echo '<H3><a href="/bugs/admin/reports.php?group_id='.$group_id.'">Manage Bug Reports</a></H3>';
+    echo 'Define personal or project-wide bug reports: what search criteria to use and what bug fields to show in the bug report table...';
+
+    if (user_ismember($group_id,'B2') || user_ismember($group_id,'A')) {
+	echo '<H3><a href="/bugs/admin/other_settings.php?group_id='.$group_id.'">Other Configuration Settings</a></H3>';
+	echo 'Define introductory messages for submission forms, email notification,...<P>';
+    }
     bug_footer(array());
 
 } else {
@@ -39,8 +46,6 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 
     if (!$group_id) {
 	exit_no_group();
-    } else {
-	exit_permission_denied();
     }
 
 }
