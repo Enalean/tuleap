@@ -349,7 +349,7 @@ sub add_user {
 	system("chown -R $uid.$uid $home_dir");
 }
 
-sub add_winuser {  
+sub add_winuser {
 	my ($uid, $username, $realname, $win_passwd, $winnt_passwd) = @_;
 	
 	return if (!$winaccount_on);
@@ -396,7 +396,7 @@ sub update_user {
 
 sub update_winuser {
   ($uid, $username, $realname, $win_passwd, $winnt_passwd) = @_;
-  
+
   my ($p_username, $p_uid, $p_win_passwd, $p_winnt_passwd,$p_account_bits,
       $p_last_set_time, $p_realname);
 	
@@ -406,10 +406,10 @@ sub update_winuser {
   foreach (@smbpasswd_array) {
     ($p_username, $p_uid, $p_win_passwd, $p_winnt_passwd,$p_account_bits,
      $p_last_set_time, $p_realname) = split(":", $_);
-    
+
     if ($uid == $p_uid) {
       $win_date = sprintf("%08X", time());
-      
+
       if ($win_passwd ne $p_win_passwd) {
 	$smbpasswd_array[$counter] = "$username:$uid:$win_passwd:$winnt_passwd:[U          ]:LCT-$win_date:$realname\n";
       }
@@ -544,32 +544,35 @@ sub add_group {
 		chown $dummy_uid, $gid, ($group_dir, $log_dir, $cgi_dir, $ht_dir);
                 chmod 02775, ($group_dir, $log_dir, $cgi_dir, $ht_dir);
 
-		# Added by LJ - Copy the default empty page for Web site
-		# Check if exists a custom file
-        ($dev,$ino) = stat("custom/default_page.php");  
+		# Copy the default empty page for Web site
+		# Check if a custom page exists
+	$custom_homepage = $ENV{'SF_LOCAL_INC_PREFIX'}."/etc/codex/site-content/en_US/others/default_page.php";
+	$homepage = $sys_incdir."/en_US/others/default_page.php";
+
+        ($dev,$ino) = stat($custom_homepage);
         if ( $ino ) {
             # A custom file exists
-    		system("cp custom/default_page.php $ht_dir/index.php");
+    		system("cp $custom_homepage $ht_dir/index.php");
         } else {
             # Use the standard file
-    		system("cp default_page.php $ht_dir/index.php");
+    		system("cp $homepage $ht_dir/index.php");
         }
 		
 		chown $dummy_uid, $gid, "$ht_dir/index.php";
-		chmod 0664, "$ht_dir/index.php";       
+		chmod 0664, "$ht_dir/index.php";
 
 		# Now lets create the group's ftp homedir for anonymous ftp space
    	        # (this one must be owned by the project gid so that all project
                 # admins can work on it (upload, delete, etc...)
 		mkdir $ftp_anon_group_dir, 0775;
-		chown $dummy_uid, $gid, "$ftp_anon_group_dir";   
+		chown $dummy_uid, $gid, "$ftp_anon_group_dir";
 
 		# Now lets create the group's ftp homedir for file release space
    	        # (this one has limited write access to project members and read
 	        # read is also for project members as well (download has to go
 	        # through the Web for accounting and traceability purpose)
 		mkdir $ftp_frs_group_dir, 0771;
-		chown $dummy_uid, $gid, "$ftp_frs_group_dir";   
+		chown $dummy_uid, $gid, "$ftp_frs_group_dir";
 		
 #	 }
 
