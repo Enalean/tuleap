@@ -121,6 +121,11 @@ while ($ln = pop(@groupdump_array)) {
 	$cvs_id = $gid + 50000;
 	$gid += $gid_add;
 
+	# Add sourceforge user to the group if it is a private project
+	# otherwise Apache won't be able to access the document Root
+	# of the project web iste which is not world readable (see below)
+	$userlist .= ",sourceforge" unless $gis_public;
+
 	# make all user names lower case.
 	$userlist =~ tr/A-Z/a-z/;
 
@@ -271,7 +276,7 @@ while ($ln = pop(@groupdump_array)) {
 	# and untraversable.  The project home and cvs root directories
 	# are private if either:
 	# (1) The project is private
-	# (2) The directory contains a file named PRIVATE
+	# (2) The directory contains a file named .CODEX_PRIVATE
 	#
 	if ($gstatus eq 'A') {
 	  my ($cvsmode, $grpmode, $new_cvsmode, $new_grpmode);
