@@ -73,6 +73,12 @@ ALTER TABLE groups ADD patch_preamble TEXT NOT NULL;
 ALTER TABLE groups ADD pm_preamble TEXT NOT NULL;
 
 #
+# Add field (Xerox specific) to export project description to 
+# to the Xerox eTTM Software Inventory.
+
+ALTER TABLE groups ADD xrx_export_ettm INT DEFAULT '0' NOT NULL AFTER pm_preamble;
+
+#
 # Modify patch table to hold uploaded file information
 #
 

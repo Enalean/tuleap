@@ -3,7 +3,7 @@
 include "pre.php";
 include "rss_utils.inc";
 
-$res = db_query('SELECT group_id,unix_group_name,group_name,homepage,short_description FROM groups '
+$res = db_query('SELECT group_id,unix_group_name,group_name,homepage,short_description, xrx_export_ettm FROM groups '
 	.'WHERE is_public=1 AND status=\'A\' ORDER BY group_id'.($limit?" LIMIT $limit":""));
 
 if ($type == "rss") {
@@ -42,12 +42,14 @@ print " </channel>\n";
     header('Content-Type: text/csv');
     header ('Content-Disposition: filename=all_projects.csv');
 
-    // ## one time output
+    // ## one time output. List of Exported fields
     print 'Project ID, Short Name, Name, Description, Language, OS Runtime Support,'.
-	'Development State, Release Location, Additional Information, Point of contact'."\n";
+	'Development State, Release Location, Additional Information, Point of contact,'.
+	'eTTM Inventory'."\n";
+
     // ## item outputs
     while ($row = db_fetch_array($res)) {
-	
+
 	// Get languages, OS Runtime and Development state from trove map
 	$res_trovecat = db_query('SELECT trove_cat.fullpath AS fullpath,'
 		       .'trove_cat.fullpath_ids AS fullpath_ids,'
@@ -94,9 +96,13 @@ print " </channel>\n";
 	
 	print "http://$GLOBALS[sys_default_domain]/project/showfiles.php?group_id=$row[group_id],";
 	print "http://$GLOBALS[sys_default_domain]/project/$row[unix_group_name],";
-	print '"'.join(',',$admins).'"';;
+	print '"'.join(',',$admins).'",';
 	
-	print "\n"; 
+	// Finally print whether this file is visisble in the Xerox eTTM Software Inventory
+	// Xerox specific
+	print "$row[xrx_export_ettm]";
+	print "\n";
+	
 }
 // ## end output
 print "\n";
