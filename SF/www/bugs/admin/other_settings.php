@@ -18,21 +18,15 @@ if ($submit) {
 
 	group_add_history ('Changed Bug Tracking System Settings','',$group_id);
 	//blank out any invalid email addresses
-	if ($new_bug_address) {
-	    $new_bug_address = str_replace(' ','',$new_bug_address);
-	    $arr = split(',',$new_bug_address);
-	    while (list(, $email) = each ($arr)) {
-		if (!validate_email($email)) {
-		    $new_bug_address='';
-		    $feedback .= ' Bug Address Appeared Invalid ';
-		}	    
-	    }
+	if ($email_addresses && !validate_emails($email_addresses) ) {
+		$email_addresses='';
+		$feedback .= ' Email Address Appeared Invalid ';
 	}
 
 	// Update the Bug table now
 	$result=db_query('UPDATE groups SET '
 	     ."send_all_bugs='$send_all_bugs', "
-	     .($new_bug_address? "new_bug_address='$new_bug_address', " : "")
+	     .($email_addresses? "new_bug_address='$email_addresses', " : "")
 	     ."bug_preamble='".htmlspecialchars($form_preamble)."' "
 	     ."WHERE group_id=$group_id");
 
@@ -49,7 +43,7 @@ if ($submit) {
 
 /*      Show main page    */
     
-bug_header_admin(array ('title'=>'Bug Administration'));
+bug_header_admin(array ('title'=>'Bug Administration - Other Configuration Settings'));
 
 $res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
 if (db_numrows($res_grp) < 1) {
@@ -57,7 +51,7 @@ if (db_numrows($res_grp) < 1) {
 }
 $row_grp = db_fetch_array($res_grp);
 
-echo '<H2>Other Settings</h2>';
+echo '<H2>Other Configuration Settings</h2>';
 
 echo '
 <FORM action="'.$PHP_SELF.'" method="post">
@@ -72,7 +66,7 @@ $row_grp['bug_preamble'].'</TEXTAREA>';
 echo '<h3>Email Notification Rules</h3>
               <P><B>If you wish, you can provide email addresses (separated by a comma) to which new Bug submissions will be sent .</B><BR>
               (Remark: Bug submission and updates are always sent to the Bug submitter and the bug assignee)<br>
-	<BR><INPUT TYPE="TEXT" NAME="new_bug_address" VALUE="'.$row_grp['new_bug_address'].'" SIZE="45" MAXLENGTH="80"> 
+	<BR><INPUT TYPE="TEXT" NAME="email_addresses" VALUE="'.$row_grp['new_bug_address'].'" SIZE="45" MAXLENGTH="80"> 
 	&nbsp;&nbsp;&nbsp;(send on all updates) <INPUT TYPE="CHECKBOX" NAME="send_all_bugs" VALUE="1" '. (($row_grp['send_all_bugs'])?'CHECKED':'') .'><BR>';
 
 echo '
