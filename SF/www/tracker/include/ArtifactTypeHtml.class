@@ -1651,6 +1651,51 @@ class ArtifactTypeHtml extends ArtifactType {
 	}
 
 	/**
+	 *  Display the default value form for fields having a value function (e.g. group_members, artifact_technicians)
+	 *
+	 *  @param field_id: the field id to edit
+	 *  @param default_value: the default value
+	 *  @param show_none,text_none,show_any,text_any,show_value: values used by html_build_select_box function
+	 *
+	 *  @return void
+	 */
+	function displayDefaultValueFunctionForm($field_id,$default_value,$show_none=true,$text_none='None',$show_any=false,$text_any='Any',$show_value=false) {
+		global $ath,$art_field_fact,$PHP_SELF;
+		
+		$field = $art_field_fact->getFieldFromId($field_id);
+		if ( !$field ) {
+			return;
+		}
+
+		echo '<h3>Define Default Value '.help_button('TrackerAdministration.html#TrackerDefiningaDefaultFieldValue').'</h3>';
+					
+		echo '
+	      <FORM ACTION="'.$PHP_SELF.'" METHOD="POST" name="artifact_form">
+	      <INPUT TYPE="HIDDEN" NAME="func" VALUE="update_default_value">
+	      <INPUT TYPE="HIDDEN" NAME="field_id" VALUE="'.$field_id.'">
+	      <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$this->Group->getID().'">
+	      <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$this->getID().'">';
+
+		//new stuff by MLS
+		$field_value = $field->getDefaultValue();
+		$predefinedValues = $field->getFieldPredefinedValues($this->getID());
+	
+		if ( $field->isSelectBox()) {
+			echo html_build_select_box ($predefinedValues,"default_value",$default_value);
+	   	} else if ($field->isMultiSelectBox() ) {
+			echo html_build_multiple_select_box($predefinedValues,"default_value[]",$default_value,
+							($field->getDisplaySize()!=""?$field->getDisplaySize():"6"),
+							$show_none,$text_none,$show_any,$text_any,$show_value);
+		} else {
+			echo 'Why are we in this case ??';
+		}
+
+		echo '
+		 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <INPUT type="submit" name="submit" value="Update">
+		</form><hr>';
+	}
+
+	/**
 	 *  Get tha label for a code status
 	 *
 	 *  @param status: the code status

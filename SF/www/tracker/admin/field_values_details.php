@@ -32,7 +32,9 @@ if ( !$field->isSelectBox() && !$field->isMultiSelectBox() ) {
 	$ath->displayDefaultValueForm($field_id,$field->getDefaultValue());
 } else {
 	if ( $field->getValueFunction() ) {
+	  // MLS have to add here the choose default value
 		$ath->displayValueFunctionForm($field_id,$field->getValueFunction());
+		$ath->displayDefaultValueFunctionForm($field_id,$field->getDefaultValue(),$field->getValueFunction());
 	} else {
 		$ath->displayFieldValuesList($field_id);
 		$ath->displayDefaultValueForm($field_id,$field->getDefaultValue());

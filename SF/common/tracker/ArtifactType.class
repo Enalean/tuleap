@@ -993,11 +993,11 @@ class ArtifactType extends Error {
 	
 	// People who have once submitted a bug
 	function getSubmitters () {
-		$group_id = $this->Group->getID();
+		$group_artifact_id = $this->getID();
 		$sql="SELECT DISTINCT user.user_id,user.user_name ".
 			"FROM user,artifact ".
 			"WHERE (user.user_id=artifact.submitted_by ".
-			"AND artifact.group_id='$group_id') ".
+			"AND artifact.group_artifact_id='$group_artifact_id') ".
 			"ORDER BY user.user_name";
 		return db_query($sql);
 	}
