@@ -356,12 +356,37 @@ if ($project->usesCVS()) {
         if (!$cvs_commit_num) $cvs_commit_num=0;
         if (!$cvs_add_num) $cvs_add_num=0;
         if (!$cvs_co_num) $cvs_co_num=0;
+	$uri = session_make_url('/cgi-bin/viewcvs.cgi/?root='.$project->getUnixName().'&roottype=cvs');
 
         echo ' ( <B>'.$cvs_commit_num.'</B> commits, <B>'.$cvs_add_num.'</B> adds, <B>'.$cvs_co_num.'</B> checkouts )';
         if ($cvs_commit_num || $cvs_add_num || $cvs_co_num) {
-            echo '<br> &nbsp; - <a href="http://'.$sys_default_domain
-            .'/cgi-bin/cvsweb.cgi/?cvsroot='.$project->getUnixName()
-            .'">Browse CVS</a>';
+
+            echo '<br> &nbsp; - <a href="'.$uri.'">Browse CVS</a>';
+        }
+}
+
+// ######################### Subversion (only for Active)
+
+if ($project->usesService('svn')) {
+	print '<HR SIZE="1" NoShade><A href="/svn/?group_id='.$group_id.'">';
+	html_image("ic/cvs16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>'Subversion'));
+	print " Subversion Repository</A>";
+	$sql = "SELECT SUM(svn_commits) AS commits, SUM(svn_adds) AS adds, SUM(svn_deletes) AS deletes, SUM(svn_checkouts) AS checkouts from stats_project where group_id='$group_id'";
+	$result = db_query($sql);
+        $svn_commit_num = db_result($result,0,0);
+        $svn_add_num = db_result($result,0,1);
+        $svn_del_num = db_result($result,0,2);
+        $svn_co_num = db_result($result,0,3);
+        if (!$svn_commit_num) $svn_commit_num=0;
+        if (!$svn_add_num) $svn_add_num=0;
+        if (!$svn_del_num) $svn_del_num=0;
+        if (!$svn_co_num) $svn_co_num=0;
+	$uri = session_make_url('/cgi-bin/viewcvs.cgi/?root='.$project->getUnixName().'&roottype=svn');
+
+        echo ' ( <B>'.$svn_commit_num.'</B> commits, <B>'.$svn_add_num.'</B> adds, <B>'.$svn_del_num.'</B> deletes, <B>'.$svn_co_num.'</B> checkouts )';
+        if ($svn_commit_num || $svn_add_num || $svn_del_num || $svn_co_num) {
+
+            echo '<br> &nbsp; - <a href="'.$uri.'">Browse Subversion</a>';
         }
 }
 

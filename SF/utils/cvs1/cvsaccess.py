@@ -31,7 +31,12 @@ def check_read_access(username, cvsrepo, cvspath):
     group_name = string.split(cvsrepo,'/')[2]
     group_id = group.set_group_info_from_name(group_name)
 
+    # if the file path exists as such then it's a directory
+    # else add the ,v extension because it's a file
     path = cvsrepo+'/'+cvspath
+    if not os.path.exists(path):
+        path = path+',v'
+
     mode = os.stat(path)[stat.ST_MODE]
 
     #print "Content-type: text/html\n"
@@ -43,3 +48,4 @@ def check_read_access(username, cvsrepo, cvspath):
         return False
     else:
         return True
+

@@ -55,8 +55,8 @@ $GNATS_MAIL_FORMAT = "%s-gnats\@sourceware.cygnus.com";
 # from -G option.
 $GNATS_ROOT_FORMAT = "/sourceware/gnats/%s-db";
 
-# Base name of cvsweb specification.
-$CVSWEB_URL = "http://cvs.codex.xerox.com/cgi-bin/cvsweb.cgi/";
+# Base name of viewcvs specification.
+$CVSWEB_URL = "http://cvs.codex.xerox.com/cgi-bin/viewcvs.cgi/";
 
 # Constants (don't change these!)
 #
@@ -450,7 +450,7 @@ sub write_commitlog {
     close(FILE);
 }
 
-# Return a list of all cvsweb URLs for this commit.
+# Return a list of all viewcvs URLs for this commit.
 sub generate_cvsweb_urls {
     local ($dir, $branch, @files) = @_;
     local (@sp, @result);
@@ -1096,7 +1096,7 @@ for ($i = 0; ; $i++) {
     }
     @url_txt = &read_logfile("$URL_FILE.$i.$id", "");
     if ($#url_txt >= 0) {
-	push (@text, "CVSWeb URLs:");
+	push (@text, "Pointers to file changes:");
 	# Exclude directories listed in the file.
 	push (@text, grep (! /\/$/, @url_txt));
 	push (@text, "");

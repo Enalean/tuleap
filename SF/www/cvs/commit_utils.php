@@ -46,7 +46,8 @@ function commits_header($params) {
 	$sys_cvs_host = $GLOBALS['sys_cvs_host'];
 
 	if ($project->isPublic() || user_isloggedin()) {
-	  echo ' | <A HREF="http'.(session_issecure() ? 's':'').'://'.$sys_cvs_host.'/cgi-bin/cvsweb.cgi/?cvsroot='.$project->getUnixName().'">Browse CVS Tree</A>';
+	    $uri = session_make_url('/cgi-bin/viewcvs.cgi/?root='.$project->getUnixName().'&roottype=cvs');
+	  echo ' | <A HREF="'.$uri.'">Browse CVS Tree</A>';
 	}
 	if (user_isloggedin()) {
 	  echo ' | <A HREF="/cvs/?func=browse&group_id='.$group_id.'&set=my">My CVS Commits</A>';
@@ -77,10 +78,6 @@ function commits_header_admin($params) {
 	exit_error('Error','This Project Has Turned Off The Commits Browser');
     }
     echo site_project_header($params);
-    //echo '<A HREF="http'.(session_issecure() ? 's':'').'://'.$sys_default_domain.'/cgi-bin/cvsweb.cgi/?cvsroot='
-    //.$row_grp['unix_group_name'].'">Browse CVS Repository</A>';
-    //  echo ' | <B><A HREF="/commits/admin/index.php?commits_cat=1&group_id='.$group_id.'">Manage Categories</A></B>';
-    //  echo ' | <b><A HREF="/commits/admin/index.php?other_settings=1&group_id='.$group_id.'">Other Settings</A></b>';
     if ($params['help']) {
 	echo ' | <b>'.help_button($params['help'],false,'Help').'</b>';
     }
@@ -316,26 +313,22 @@ function show_commitslist ($result,$offset,$total_rows,$set='any', $commiter='10
 function makeCvsLink($group_id, $filename='', $text, $rev='', $displayfunc='') {
   $res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
 
-  //  $view_str='&content-type=text/vnd.viewcvs-markup';
   $view_str=$displayfunc;
   if ($rev) {
     $view_str=$view_str.'&rev='.$rev;
   }
-    
 
   $row_grp = db_fetch_array($res_grp);
-    return '<A href="http'.(session_issecure() ? 's':'').'://'.$GLOBALS['sys_cvs_host'].'/cgi-bin/cvsweb.cgi/'.$filename.'?cvsroot='.$row_grp['unix_group_name'].$view_str.'"><B>'.$text.'</B></A>';
+  $group_name = $row_grp['unix_group_name'];
+  return '<A href="'.session_make_url('/cgi-bin/viewcvs.cgi/'.$filename.'?root='.$group_name.'&roottype=cvs'.$view_str).'"<B>'.$text."</B></A>";
 }
 
 function makeCvsDirLink($group_id, $filename='', $text, $dir='') {
   $res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
-
-  //  $view_str='&content-type=text/vnd.viewcvs-markup';
-   
-
   $row_grp = db_fetch_array($res_grp);
+  $group_name = $row_grp['unix_group_name'];
 
-  return  '<A href="http'.(session_issecure() ? 's':'').'://'.$GLOBALS['sys_cvs_host'].'/cgi-bin/cvsweb.cgi/'.$dir."/Attic/".$filename.'?cvsroot='.$row_grp['unix_group_name'].'"><B>'.$text.'</B></A>';
+  return '<A href="'.session_make_url('/cgi-bin/viewcvs.cgi/'.$dir.'?root='.$group_name.'&roottype=cvs').'"<B>'.$text.'</B></A>';
 
 }
 
@@ -492,7 +485,7 @@ function show_commit_details ($result) {
 		  
 
 	    }
-	      
+
 
 	    if (!$filename) {
 		$filename = '';
@@ -501,6 +494,11 @@ function show_commit_details ($result) {
 	      $filename = makeCvsDirLink($group_id, db_result($result, $i, 'file'), $filename, db_result($result, $i, 'dir'));
 	      $rev_text = '';
 	      } else {
+
+		  // Clean file path to remove duplicate separators
+		  $filename = preg_replace('/\/\//','/',$filename);
+		  $filename = preg_replace('/\.\//','',$filename);
+
 		if ($type == 'Change') {
 		  // horrible hack to 'guess previous revision' to diff with
 		  $prev = explode(".", $revision);
@@ -513,15 +511,15 @@ function show_commit_details ($result) {
 		  } else {
 		    $index = 0;
 		    $new_prev = array();
-		    while ($index < $lastIndex - 2) {
+		    while ($index <= $lastIndex - 2) {
 		      $new_prev[$index] = $prev[$index];
 		      $index++;
 		    }
-		    $previous = $new_prev;
+		    $previous = join('.', $new_prev);
 		  }
-		  $previous = join('.', $prev);
-		  $type = makeCvsLink($group_id, $filename.'.diff', 'Change', '', '&r1='.$previous.'&r2='.$revision);
+		  $type = makeCvsLink($group_id, $filename.'.diff', 'Change', '', '&r1=text&tr1='.$previous.'&r2=text&tr2='.$revision);
 		}
+
 		$rev_text = makeCvsLink($group_id, $filename, $revision, $revision, '&content-type=text/x-cvsweb-markup');
 		$filename = makeCvsLink($group_id, $filename, $filename);
 	      }

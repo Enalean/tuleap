@@ -103,7 +103,7 @@ OLD_CX_RELEASE='2.0'
 $GREP -q "$OLD_CX_RELEASE" $INSTALL_DIR/SF/www/VERSION
 if [ $? -eq 1 ]; then
     cat <<EOF
-This machine doesn't have CodeX ${OLD_CX_RELEASE} installed. Executing this install
+This machine does not have CodeX ${OLD_CX_RELEASE} installed. Executing this install
 script may cause data loss or corruption.
 EOF
 read -p "Continue? [yn]: " yn
@@ -853,6 +853,15 @@ sys_svn_host="svn.$sys_default_domain"
 $PERL -i'.orig' -p -e"s:(^\\\$sys_cvs_host.*):\1\n\n// Machine that hosts Subversion\n// Note that while this machine need not be the same as the CodeX host,\n// the \"viewcvs\" interface currently must run on the CodeX host system.\n// If this host is different from the CodeX host, then the CodeX host\n// will need to be able to access the CVS file tree via NFS.\n\\\$sys_svn_host = \"$sys_svn_host\":" /etc/codex/conf/local.inc
 
 $PERL -i'.orig' -p -e"s:(^<\!ENTITY SYS_CVS_HOST.*):\1\n<\!ENTITY SYS_SVN_HOST \"$sys_svn_host\":" /etc/codex/documentation/user_guide/xml/en_US/ParametersLocal.dtd
+
+##############################################
+# replace all references to cvsweb.cgi to viewcvs.cgi in
+# CVS loginfo files
+#
+for f in /cvsroot/*/CVSROOT/loginfo
+do
+    $PERL -i -p -e"s/cvsweb.cgi/viewcvs.cgi/g" $f
+done
 
 ##############################################
 # Upgrading logrotate files

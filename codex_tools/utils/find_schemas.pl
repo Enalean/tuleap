@@ -123,7 +123,7 @@ require "$utils/include.pl";
 
 my $mail_subject = 'The XSD files in the CodeX repository have changed';
 my $project_http_prefix = "http://${sys_default_domain}";
-my $cvs_http_prefix = "http://${sys_default_domain}/cgi-bin/cvsweb.cgi";
+my $cvs_http_prefix = "http://${sys_default_domain}/cgi-bin/viewcvs.cgi";
 
 if ($debug) {
     print "sys_default_domain = $sys_default_domain\n";

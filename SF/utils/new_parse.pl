@@ -39,9 +39,9 @@ my $MARKER_BEGIN = "# !!! CodeX Specific !!! DO NOT REMOVE (NEEDED CODEX MARKER)
 my $MARKER_END   = "# END OF NEEDED CODEX BLOCK";
 
 # See under which user this script is running. It is the user that is
-# also going to be used to run cvsweb.cgi. And we need to make it the
+# also going to be used to run viewcvs.cgi. And we need to make it the
 # owner of all CVS root directories so the CGI script can browse all
-# CVS roots including private ones.  For private groups the cvsweb.cgi
+# CVS roots including private ones.  For private groups the viewcvs.cgi
 # script will implement its own access control.
 my ($cxname) = get_codex_user();
 
@@ -247,7 +247,7 @@ while ($ln = pop(@groupdump_array)) {
 	  if (! $blockispresent)
 	    {
 	      system("echo \"$MARKER_BEGIN\" >> $cvs_dir/CVSROOT/loginfo");
-	      system("echo \"ALL (/usr/local/bin/log_accum -T $gname -C $gname -U http://$sys_default_domain/cgi-bin/cvsweb.cgi/ -s %{sVv})>/dev/null 2>&1\" >> $cvs_dir/CVSROOT/loginfo");	 
+	      system("echo \"ALL (/usr/local/bin/log_accum -T $gname -C $gname -U http://$sys_default_domain/cgi-bin/viewcvs.cgi/ -s %{sVv})>/dev/null 2>&1\" >> $cvs_dir/CVSROOT/loginfo");	 
 	      system("echo \"$MARKER_END\" >> $cvs_dir/CVSROOT/loginfo");
 	      system("cd $cvs_dir/CVSROOT; rcs -q -l loginfo; ci -q -m\"CodeX modifications: entering log_accum from group fields (cvs_tracker/cvs_events)\" loginfo; co -q loginfo");
 	    }
