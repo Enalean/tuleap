@@ -787,6 +787,7 @@ function bug_build_notification_list($bug_id, $group_id, $changes) {
     }
 
     // check assignee  notification preferences
+    // Never notify user 'none' (id #100)
     $user_id = db_result($res_as,0,'assigned_to');
     if ($user_id != 100) {
 	if (!$user_ids[$user_id] && bug_check_notification($user_id, 'ASSIGNEE', $changes)) {
@@ -795,11 +796,12 @@ function bug_build_notification_list($bug_id, $group_id, $changes) {
     }
 
     // check old assignee  notification preferences if assignee was just changed
+    // Never notify user 'none' (id #100)
     $user_name = $changes['assigned_to']['del'];
     if ($user_name) {
 	$res_oa = user_get_result_set_from_unix($user_name);
 	$user_id = db_result($res_oa,0,'user_id');
-	if (!$user_ids[$user_id] && bug_check_notification($user_id, 'ASSIGNEE', $changes)) {
+	if ($user_id != 100 && !$user_ids[$user_id] && bug_check_notification($user_id, 'ASSIGNEE', $changes)) {
 	    $user_ids[$user_id] = true;
 	}
     }
