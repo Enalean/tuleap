@@ -11,6 +11,9 @@ require('../bug_data.php');
 require('../bug_utils.php');
 $is_admin_page='y';
 
+//must be logged in to access top admin page
+session_require(array('isloggedin'=>'1'));
+
 if ($group_id) {
 
     // Initialize global bug structures

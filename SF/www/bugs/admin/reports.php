@@ -18,6 +18,9 @@ if (!$group_id) {
 	exit_no_group();
 }
 
+//must be logged in to define personal reports
+session_require(array('isloggedin'=>'1'));
+
 // Initialize global bug structures
 bug_init($group_id);
 

@@ -20,11 +20,10 @@ if (!$group_id) {
     exit_no_group(); // need a group_id !!!
 }
 
-if (!user_isloggedin()) {
-    // Must be at least logged in to set up your personal notification
-    // preference
-    exit_permission_denied();
-}
+// Must be at least logged in to set up your personal notification
+// preference
+session_require(array('isloggedin'=>'1'));
+
 $is_user_a_member = user_ismember($group_id);
 
 /*  ==================================================
