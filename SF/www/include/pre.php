@@ -15,13 +15,13 @@
 
 require (getenv('SF_LOCAL_INC_PREFIX').'/etc/local.inc');
 
-if (($HTTP_HOST != $GLOBALS['sys_default_domain']) && ($SERVER_NAME != 'localhost')) {
-	if ($SERVER_PORT == '443') {
-		header ("Location: https://".$GLOBALS['sys_default_domain']."$REQUEST_URI");
-	} else {
-		header ("Location: http://".$GLOBALS['sys_default_domain']."$REQUEST_URI");
-	}
-	exit;
+if (($HTTP_HOST != $GLOBALS['sys_default_domain']) && ($SERVER_NAME != 'localhost') && ($HTTP_HOST != $GLOBALS['sys_https_host']) ) {
+    if ($HTTPS == 'on') {
+	header ("Location: https://".$GLOBALS['sys_https_host']."$REQUEST_URI");
+    } else {
+	header ("Location: http://".$GLOBALS['sys_default_domain']."$REQUEST_URI");
+    }
+    exit;
 }
 
 //library to determine browser settings

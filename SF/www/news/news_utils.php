@@ -97,7 +97,7 @@ function news_show_latest($group_id='',$limit=10,$show_summaries=true,$allow_sub
 			
 	    if (!$limit) {
 
-		$return .= '<li><A HREF="http://'.$GLOBALS['sys_default_domain'].'/forum/forum.php?forum_id='. db_result($result,$i,'forum_id') .'"><B>'. db_result($result,$i,'summary') . '</B></A>';
+		$return .= '<li><A HREF="/forum/forum.php?forum_id='. db_result($result,$i,'forum_id') .'"><B>'. db_result($result,$i,'summary') . '</B></A>';
 		$return .= ' &nbsp; <I>'. format_date($sys_datefmt,db_result($result,$i,'date')).'</I><br>';
 	    } else {
 		$return .= '
@@ -129,7 +129,7 @@ function news_show_latest($group_id='',$limit=10,$show_summaries=true,$allow_sub
 		    $comments_txt = " Comments";
 		}
 
-		$return .= '<div align="center">(' . $num_comments . $comments_txt . ') <A HREF="http://'.$GLOBALS['sys_default_domain'].'/forum/forum.php?forum_id='. db_result($result,$i,'forum_id') .'">[Read More/Comment]</a></div><HR width="100%" size="1" noshade>';
+		$return .= '<div align="center">(' . $num_comments . $comments_txt . ') <A HREF="/forum/forum.php?forum_id='. db_result($result,$i,'forum_id') .'">[Read More/Comment]</a></div><HR width="100%" size="1" noshade>';
                                       
 	    }
 

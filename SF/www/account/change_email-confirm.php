@@ -19,8 +19,8 @@ db_query("UPDATE user SET confirm_hash='$confirm_hash',email_new='$form_newemail
 
 $message = "You have requested a change of email address on ".$GLOBALS['sys_name']."\n"
 	. "Please visit the following URL to complete the email change:\n\n"
-	. "http://$GLOBALS[HTTP_HOST]/account/change_email-complete.php?confirm_hash=$confirm_hash\n\n"
-	. " -- the ".$GLOBALS['sys_name']." staff\n";
+	. "http://".$GLOBALS['sys_default_domain']."/account/change_email-complete.php?confirm_hash=$confirm_hash\n\n"
+	. " -- The ".$GLOBALS['sys_name']." Team\n";
 
 mail ($form_newemail,$GLOBALS['sys_name']." Email Verification",$message,"From: noreply@$GLOBALS[HTTP_HOST]");
 

@@ -11,28 +11,34 @@ require ('pre.php');
 // LJ Now only for registered users on CodeX
 if (user_isloggedin()) {
 
-$sql = "SELECT * FROM frs_package WHERE group_id='$group_id' AND status_id='1'";
-$res_package = db_query( $sql );
-$num_packages = db_numrows( $res_package );
+    $sql = "SELECT * FROM frs_package WHERE group_id='$group_id' AND status_id='1'";
+    $res_package = db_query( $sql );
+    $num_packages = db_numrows( $res_package );
 
-if ( $num_packages < 1) {
+    if ( $num_packages < 1) {
 	exit_error("No File Packages","There are no file packages defined for this project.");
-}
+    }
 
-site_project_header(array('title'=>'Project Filelist','group'=>$group_id,'toptab'=>'downloads'));
+    site_project_header(array('title'=>'Project Filelist','group'=>$group_id,'toptab'=>'downloads'));
 
-echo '<h3>Package Releases '. help_button('FileReleaseJargon.html').'</h3>';
+    echo '<h3>Package Releases '. help_button('FileReleaseJargon.html').'</h3>';
+    
+    if (session_issecure()) {
+	$url = "https://".$GLOBALS['sys_https_host'];
+    } else {
+	$url = "http://".$GLOBALS['sys_default_domain'];
+    }
 ?>
 <SCRIPT language="JavaScript">
 <!--
 function showConfirmDownload(group_id,file_id,filename) {
-    url = "http://<? echo $sys_default_domain ?>/project/confirm_download.php?group_id=" + group_id + "&file_id=" + file_id + "&filename=" + filename;
+    url = "<?php echo $url; ?>/project/confirm_download.php?group_id=" + group_id + "&file_id=" + file_id + "&filename=" + filename;
     wConfirm = window.open(url,"confirm","width=450,height=360,resizable=1,scrollbars=1");
     wConfirm.focus();
 }
 
 function download(group_id,file_id,filename) {
-    url = "http://<? echo $sys_default_domain ?>/project/download.php/" + group_id + "/" + file_id +"/"+filename;
+    url = "<?php echo $url; ?>/project/download.php/" + group_id + "/" + file_id +"/"+filename;
     wConfirm.close();
     self.location = url;
     

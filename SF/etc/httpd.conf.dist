@@ -178,7 +178,8 @@ MaxRequestsPerChild 100
 # directive.
 #
 Listen 80
-
+# Uncomment if SSL mode activated
+# Listen 443 
 #
 # BindAddress: You can support virtual hosts with this option. This directive
 # is used to tell the server which IP address to listen to. It can either
@@ -245,6 +246,8 @@ LoadModule setenvif_module    modules/mod_setenvif.so
 #LoadModule perl_module        /usr/lib/apache/libperl.so
 #LoadModule php_module         modules/mod_php.so
 LoadModule php3_module        modules/libphp3.so
+# Uncomment to activate SSL mode
+#LoadModule ssl_module         modules/libssl.so
 
 #  Reconstruction of the complete module list from all available modules
 #  (static and shared ones) to achieve correct module execution order.
@@ -293,6 +296,8 @@ AddModule mod_setenvif.c
 #AddModule mod_perl.c
 #AddModule mod_php.c
 AddModule mod_php3.c
+# Uncomment to activate SSL mode
+#AddModule mod_ssl.c
 
 #
 # ExtendedStatus: controls whether Apache will generate "full" status
@@ -1047,6 +1052,25 @@ Include conf/mailman.conf
 
 # Include per project virtual hosts (automatically generated)
 Include conf/codex_vhosts.conf
+
+# Configure virtual host for secured HTTP (SSL)
+# Uncomment to activate
+# To configure SSL (key and certificate see RedHat manual at
+# http://www.redhat.com/docs/manuals/linux/RHL-7.3-Manual
+#
+#NamevirtualHost IP_address_here:443
+#<VirtualHost IP_address_here:443>
+#  SSLEngine On
+#  SSLCipherSuite ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP:+eNULL
+#  SSLCertificateKeyFile conf/ssl.key/server.key
+#  SSLCertificateFile conf/ssl.crt/server.crt
+#  SetEnvIf User-Agent ".*MSIE.*" \
+#           nokeepalive ssl-unclean-shutdown \
+#           downgrade-1.0 force-response-1.0
+#  <Files ~ "\.(cgi|shtml|phtml|php3?|php|inc)$">
+#     SSLOptions +StdEnvVars
+#  </Files>
+#</VirtualHost>
 
 #
 # This environment variable is used in PHP scripts to require

@@ -24,11 +24,23 @@
 // reality an addr_list of machines that is serviced by a round-robin
 // mechanism or something fancy like a local-director.
 //
+// =============================================================
 // The default CodeX domain
+//
 // this is used where ever the "naked" form of the CodeX domain
 // might be used.  E.g., "mailto:admin@sourceforge.net"
+// This is also used as the default name for the Web server using
+// the standard http protocol (for https see below). You can also 
+// define a specific port number (useful for test servers - default 80)
+//
 $sys_default_domain = "codex.xerox.com";
- 
+
+// If your Apache server have SSL configured give here the name
+// of the secure server. In most cases it will likely be the same
+// as $sys_default_domain. However you can also use this variable
+// to indicate a specific port for the https traffic (default 443)
+$sys_https_host = "codex.xerox.com";
+
 // Machine that hosts CVS
 $sys_cvs_host = "cvs.codex.xerox.com";
  
@@ -134,9 +146,14 @@ $sys_incdir='/home/httpd/site-content/';
 $sys_lang='en_US';
 
 //
+// If set to one then the users are offered to stay in SSL mode
+// after login (checkbox checked).
+$sys_stay_in_ssl = 0;
+
+//
 // Default theme
+// ('savannah' is another possible value)
 $sys_themedefault = 'default';
-//$sys_themedefault = 'savannah';
 
 // End of customizations -- place nothing after the closing PHP tag!
 ?>

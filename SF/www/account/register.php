@@ -59,7 +59,7 @@ function register_valid()	{
 		     . "',"
 		     . ($GLOBALS['form_mail_site']?"1":"0") . ","
 		     . ($GLOBALS['form_mail_va']?"1":"0") . ","
-		     . "'$GLOBALS[timezone]'".")");
+		     . "'".$GLOBALS['timezone']."')");
 
     if (!$result) {
 	exit_error('error',db_error());
@@ -70,11 +70,11 @@ function register_valid()	{
 	// send mail
 	$message = "Thank you for registering on the ".$GLOBALS['sys_name']." web site. In order\n"
 	    . "to confirm your registration you must visit the following url: \n\n"
-	    . "<http://". $GLOBALS['HTTP_HOST'] ."/account/verify.php?confirm_hash=$confirm_hash>\n\n"
+	    . "<http://". $GLOBALS['sys_default_domain'] ."/account/verify.php?confirm_hash=$confirm_hash>\n\n"
 	    . "Enjoy the site.\n\n"
 	    . " -- The ".$GLOBALS['sys_name']." Team\n";
 
-	mail($GLOBALS['form_email'], $GLOBALS['sys_name']." Account Registration",$message,"From: noreply@".$GLOBALS['HTTP_HOST']);
+	mail($GLOBALS['form_email'], $GLOBALS['sys_name']." Account Registration",$message,"From: noreply@".$GLOBALS['sys_default_domain']);
 
 	return 1;
     }
@@ -119,7 +119,7 @@ if ($register_error) {
     print "<p><blink><b><span class="feedback">$register_error</span></b></blink>";
 } ?>
 
-<form action="http://<?php echo $HTTP_HOST; ?>/account/register.php" method="post">
+<form action="/account/register.php" method="post">
 <p>Login Name <strong>(Lower case only!)</strong> *:<br>
 <input type="text" name="form_loginname" value="<?php print($form_loginname); ?>">
 

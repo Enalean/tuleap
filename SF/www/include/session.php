@@ -78,7 +78,7 @@ function session_checkip($oldip,$newip) {
 }
 
 function session_issecure() {
-	return (getenv('SERVER_PORT') == '443');
+	return (getenv('HTTPS') == 'on');
 }
 
 function session_cookie($n,$v, $expire = 0) {
@@ -89,7 +89,7 @@ function session_cookie($n,$v, $expire = 0) {
 }
 
 function session_redirect($loc) {
-	header('Location: http' . (session_issecure()?'s':'') . '://' . getenv('HTTP_HOST') . $loc);
+	header('Location: http' . (session_issecure()?'s':'') . '://' . (session_issecure()?$GLOBALS['sys_https_host']:$GLOBALS['sys_default_domain']).$loc);
 	print("\n\n");
 	exit;
 }
