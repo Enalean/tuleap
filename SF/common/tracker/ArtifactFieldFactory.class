@@ -482,14 +482,11 @@ class ArtifactFieldFactory extends Error {
 		$special = ($special?$special:0);
 		
 		$default_value = $this->getDefaultValue($data_type,$display_type);
-		
 		// First create the artifact_field
 		$sql = "INSERT INTO artifact_field VALUES (".
-				$field_id.",".$this->ArtifactType->getID().",'".addslashes($field_name)."',".$data_type.",'".$display_type."','".$display_size."','".
-				addslashes($label)."','".addslashes($description)."','',0,".$empty_ok.",".$keep_history.",".$special.",'','".$default_value."')";
-				
-		//echo $sql;
-				
+				$field_id.",".$this->ArtifactType->getID().",'".$field_name."',".$data_type.",'".$display_type."','".$display_size."','".
+				$label."','".$description."','',0,".$empty_ok.",".$keep_history.",".$special.",'','".$default_value."')";
+								
 		$res_insert = db_query($sql);
 		if (!$res_insert || db_affected_rows($res_insert) <= 0) {
 			$this->setError("Error during inserting artifact_field (".$field_id."-".$this->ArtifactType->getID()."): ".db_error());
