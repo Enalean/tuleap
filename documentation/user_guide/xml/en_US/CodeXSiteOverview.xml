@@ -110,8 +110,7 @@
         (should) use to determine if there are some pieces of software that
         you can re-use for your own work. The Software Map is one of the 2
         ways by which you can search for existing software projects. The other
-        one relies on the Search Facility (See <xref
-        linkend="ProjectHelpWanted" />).</para>
+        one relies on the Search Facility.</para>
 
         <figure id="FigureSoftwareMapSampleBrowsing">
           <title>Software Map sample browsing</title>

@@ -1350,7 +1350,7 @@ width="14.5cm" />
 	      Submission (see above).</entry>
 	  </row>
 	  <row>
-	    <entry><link linkend="MassChange">Mass Update of Artifacts
+	    <entry><link linkend="ArtifactMassChange">Mass Update of Artifacts
 	      </link></entry> <entry>Only available to project
 	      administrators.</entry>
 	  </row>

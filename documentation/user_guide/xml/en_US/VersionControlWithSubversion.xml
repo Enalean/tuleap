@@ -16,7 +16,7 @@
   <para>This chapter is not a Subversion Tutorial. It focuses on the
   integration of Subversion with CodeX and how to use it in an optimal
   way in this context. If you are not familiar with Subversion we
-  warmly advise you to first read some of the documentrs listed in the
+  warmly advise you to first read some of the documents listed in the
   references section (see <xref linkend="SubversionReferences" />).</para>
 
   <para>It is important to note that a version control tool like
@@ -56,7 +56,7 @@
     <para>From the very beginning the Subversion team, sponsored by
     the CollabNet company, clearly stated that the goal was not to
     produce a revolutionary version control system but rather to build
-    on the strengthes of CVS and wipe out all of its weaknesses. As a
+    on the strengths of CVS and wipe out all of its weaknesses. As a
     result, like CVS, Subversion belongs to the family of concurrent
     version control system. It means that a team of multiple
     developers can concurrently manage their own version of the same
@@ -188,7 +188,7 @@
       their desktop machine, hereafter called client. The CodeX server
       permanently runs a Subversion server in the background to which
       Subversion clients talk to to act upon the Subversion
-      repository. Subversion clients come in various flavour for all
+      repository. Subversion clients come in various flavors for all
       sorts of platforms (Windows and all Unix): command line
       interface, graphical based interface and web based
       interface.</para>
@@ -560,7 +560,7 @@
       immediately see how the change was implemented.</para>
 
       <para>The integration of Subversion in CodeX precisely provides
-      CodeX users with this bi-directionnal cross-referencing
+      CodeX users with this bi-directional cross-referencing
       mechanism. This is achieved through the use of text patterns
       that are automatically detected by CodeX in either the follow-up
       comments of the project artifacts or in the messages attached to
@@ -615,7 +615,7 @@
       message attached to a Subversion commit. Similarly when closing
       the related artifact (task, bug,etc.) make sure you mention the
       revision number in the follow-up comment. You will find this
-      extremelly convenient while trying to keep track of the changes
+      extremely convenient while trying to keep track of the changes
       and why they were made.</para></tip></para>
 
     </section>
@@ -659,7 +659,7 @@
 	    project Subversion repository might not be hosted by the
 	    CodeX server. In this case, the Subversion information
 	    displayed in the welcome page of the CodeX Subversion
-	    service are inadequatet. Fortunately, the project
+	    service are inadequate. Fortunately, the project
 	    administrator can customize the Subversion Information
 	    page here.</para>
 	  </listitem>
@@ -749,7 +749,7 @@ name = permission
 	    or group name. The name * (star) means any registered
 	    user.</para>
 
-	    <para>If it is a group name it must precededed with the @
+	    <para>If it is a group name it must be preceded with the @
 	    character. The line <literal>name = permission</literal>
 	    can be repeated as many times as necessary for a given
 	    path. To define groups of users use the following
@@ -811,7 +811,7 @@ members = member1,member2,...,memberN
 	    <para><emphasis role="bold">Email addresses</emphasis>: a
 	    comma separated list of email addresses of people to whom
 	    the email notification must be sent can be given. If your
-	    want to notify a large group of people then we strngly
+	    want to notify a large group of people then we strongly
 	    advise you to create a mailing list first (see
 	    below).</para>
 	  </listitem>
@@ -848,7 +848,7 @@ members = member1,member2,...,memberN
   <section id="ATypicalSubversionLifeCycle">
     <title>A Typical Subversion Life Cycle</title>
 
-    <para>As staed earlier, the intent of this chapter is not to give
+    <para>As stated earlier, the intent of this chapter is not to give
     a formal Subversion training but rather to explain what are the
     steps a project team typically goes through when using Subversion
     and, more generally, all the CodeX tools involved in a Software
@@ -1116,7 +1116,7 @@ svn commit -m&#34;Explain the nature of the change here...&#34; filenames
       code modification to the project team. It consists in the
       generation of a text file containing the differences between
       your modified version of the source code and the original one
-      that you initially checked out.  This file is often refered to
+      that you initially checked out.  This file is often referred to
       as "diff file".</para>
 
       <para>The reason why diff files are so popular is because they
@@ -1125,7 +1125,7 @@ svn commit -m&#34;Explain the nature of the change here...&#34; filenames
       another universal tool called <literal>patch</literal> to
       automatically merge the contributed changes with the master copy
       of the source code. This is why, by extension, a diff file is
-      also often refered to as a <emphasis>patch</emphasis>.</para>
+      also often referred to as a <emphasis>patch</emphasis>.</para>
 
       <para>Diff files can be generated either with the
       <emphasis>diff</emphasis> tool (part of the GNU tools) that is
