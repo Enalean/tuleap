@@ -979,8 +979,8 @@ function bug_data_handle_update ($group_id,$bug_id,$dependent_on_task,
     $sql="SELECT * FROM bug WHERE bug_id='$bug_id'";
     $result=db_query($sql);
 
-    if (!((db_numrows($result) > 0) && (user_ismember(db_result($result,0,'group_id'),'B2')))) {
-	//verify permissions
+    if (!((db_numrows($result) > 0) && (user_ismember(db_result($result,0,'group_id'),'B1')))) {
+	//verify permissions - Must have Tech permission
 	exit_permission_denied();
     }
 
