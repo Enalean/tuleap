@@ -25,7 +25,8 @@ function pm_data_get_tasks ($group_id,$group_project_id) {
 
 function pm_data_get_subprojects ($group_id) {
 	$sql="SELECT group_project_id,project_name ".
-		"FROM project_group_list WHERE group_id='$group_id'";
+		"FROM project_group_list WHERE group_id='$group_id'".
+		" && is_public <> 9";
 	return db_query($sql);
 }
 
