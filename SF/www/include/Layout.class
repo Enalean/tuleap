@@ -24,11 +24,9 @@ class Layout extends Error {
 	var $imgroot = '/themes/codex/images/';
 
 	// Color Constants
-// LJ        var $COLOR_CONTENT_BACK= '#FFFFFF';
         var $COLOR_CONTENT_BACK= '#F7F4F2';
         var $COLOR_LTBACK1= '#EAECEF';
         var $COLOR_LTBACK2= '#FAFAFA';
-//LJ        var $COLOR_HTMLBOX_TITLE = '#D1D5D7';
         var $COLOR_HTMLBOX_TITLE = '#E0DDD2';
         var $COLOR_HTMLBOX_BACK = '#EAECEF';
 
@@ -123,7 +121,6 @@ class Layout extends Error {
         	        $bgcolor=$this->COLOR_HTMLBOX_BACK;
 	        }
         	$return = '<TABLE cellspacing="1" cellpadding="5" width="100%" border="0" bgcolor="'.$this->COLOR_HTMLBOX_BACK.'">
-                        <!-- LJTR BGCOLOR="'.$this->COLOR_HTMLBOX_TITLE.'" BACKGROUND="'.$this->imgroot.'steel3.jpg" align="center"-->
                         <TR BGCOLOR="'.$this->COLOR_HTMLBOX_TITLE.'" align="center">
                                 <TD colspan=2><SPAN class=titlebar>'.$title.'</SPAN></TD>
                         </TR>
@@ -145,7 +142,6 @@ class Layout extends Error {
                                 </TD>
                         </TR>
 
-                        <!-- LJ TR BGCOLOR="'.$this->COLOR_HTMLBOX_TITLE.'" align="center" background="'.$this->imgroot.'steel3.jpg"-->
 <TR BGCOLOR="'.$this->COLOR_HTMLBOX_TITLE.'" align="center">
                                 <TD colspan=2><SPAN class=titlebar>'.$title.'</SPAN></TD>
                         </TR>
@@ -283,8 +279,6 @@ The design of the Web pages is derived from the graphics design of the <a href="
         $this->generic_header_end($params); 
 ?>
 
-<!-- LJ <body text="#333333" link="#6666aa" alink="#aa6666" vlink="#6666aa" bgcolor="#6C7198" leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0" marginwidth="0" marginheight="0">
--->
 <!-- LJ vlink was #5b3010 but not very readable so set them like links -->
 <body text="#333333" link="#8b4020" alink="#000000" vlink="#8b4020" bgcolor="#bcbcad" leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0" marginwidth="0" marginheight="0">
 <?php
@@ -300,28 +294,20 @@ echo html_blankimage(5,100);
 ?>
 <br>
 <!-- start page body -->
-<CENTER>
-<table cellpadding="0" cellspacing="0" border="0" width="97%">
-<!-- LJ      <tr> -->
-<!-- LJ               <td background="<?php echo $this->imgroot; ?>tbar1.png" width="1%" height="17"><img src="<?php echo $this->imgroot; ?>tleft1.png" width="17" height="17" alt=" "></td> -->
-<!--                <td background="<?php echo $this->imgroot; ?>tbar1.png" align="center" colspan="3" width="99%"><img src="<?php echo $this->imgroot; ?>tbar1.png" width="1" height="17" alt=" "></td> -->
-<!--                <td><img src="<?php echo $this->imgroot; ?>tright1.png" width="17" height="17" alt=" "></td>-->
-<!-- LJ        </tr> -->
 
-<!-- LJ new version -->
+<table cellpadding="0" cellspacing="0" border="0" width="97%">
+
 <!-- First line with borders and corners -->
            <tr>
                <td background="<?php echo $this->imgroot; ?>upper_left_corner.gif" width="1%" height="26"><img src="<?php echo $this->imgroot; ?>upper_left_corner.gif" width="16" height="26" alt=" "></td>
-                <!-- LJ activate if we want logo on top td background="<?php echo $this->imgroot; ?>top.gif" align="left" colspan="2"><img src="<?php echo $this->imgroot; ?>codex_logo.gif" width="300" height="26" alt="">&nbsp;</td> -->
                 <td background="<?php echo $this->imgroot; ?>top_border.gif" align="left" colspan="3" width="99%"><a href="/"><img src="<?php echo $this->imgroot; ?>codex_banner_lc.gif" border="0" alt="CodeX Banner"></a></td>
                 <td><img src="<?php echo $this->imgroot; ?>upper_right_corner.gif" width="16" height="26" alt=" "></td>
         </tr>
 
-<!-- LJ new version -->
+
 <!-- Second line with menus and content -->
         <tr>
-<!-- LJ                <td width="17" background="<?php echo $this->imgroot; ?>leftbar1.png" align="left" valign="bottom"><img src="<?php echo $this->imgroot; ?>leftbar1.png" width="17" height="25" alt=" "></td> -->
-<!-- LJ new version -->
+
                 <td background="<?php echo $this->imgroot; ?>left_border.gif" align="left" valign="bottom" alt=""><img src="<?php echo $this->imgroot; ?>bottom_left_corner.gif" width="16" height="16" alt=""></td>
 
                 <td colspan="3" bgcolor="#ffffff">
@@ -343,11 +329,13 @@ echo html_blankimage(5,100);
         }
         ?>
 
-  <CENTER>
+
 <!-- LJ the logo is now in the First row -->
-<BR><BR><BR><BR><BR>
+        <!--CENTER-->
         <!-- LJ a href="/"><IMG src="<?php echo $this->imgroot; ?>codex_logo2.gif" alt=" Code eXchange " border="0" width="123" height="54"></A>-->
-        </CENTER>
+        <!--/CENTER-->
+
+        <BR><BR><BR><BR><BR>
         <P>
         <!-- menus -->
         <?php
@@ -358,7 +346,7 @@ echo html_blankimage(5,100);
         </TD>
 
         <td width="15" background="<?php echo $this->imgroot; ?>fade.png" nowrap>&nbsp;</td>
-        <!-- LJ td valign="top" bgcolor="<?php echo $this->COLOR_CONTENT_BACK; ?>" width="99%"> -->
+    
         <td valign="top" bgcolor="<?php echo $this->COLOR_CONTENT_BACK; ?>">
         <BR>
 <?php
@@ -378,24 +366,11 @@ echo html_blankimage(5,100);
         </table>
 
                 </td>
-                <!-- td width="17" background="<?php echo $this->imgroot; ?>rightbar1.png" align="right" valign="bottom"><img src="<?php echo $this->imgroot; ?>rightbar1.png" width="17" height="17" alt=" ">  -->
+
                 <td background="<?php echo $this->imgroot; ?>right_border.gif" valign="bottom"><img src="<?php echo $this->imgroot; ?>bottom_right_corner.gif" width="16" height="16" alt=" "></td>
         </tr>
-        <tr>
 
-<!-- LJ
-                <td background="<?php echo $this->imgroot; ?>bbar1.png" height="17"><img src="<?php echo $this->imgroot; ?>bleft1.png" width="17" height="17" alt=" "></td>
-                <td background="<?php echo $this->imgroot; ?>bbar1.png" align="center" colspan="3"><img src="<?php echo $this->imgroot; ?>bbar1.png" width="1" height="17" alt=" "></td>
-                <td background="<?php echo $this->imgroot; ?>bbar1.png" bgcolor="#7c8188"><img src="<?php echo $this->imgroot; ?>bright1.png" width="17" height="17" alt=" "></td>
--->
-<!-- LJ new version -->
-                <!-- LJ <td background="<?php echo $this->imgroot; ?>bottom_left_corner.gif" height="16"><img src="<?php echo $this->imgroot; ?>bottom_left_corner.gif" width="16" height="16" alt=" "></td> -->
-                <!--td background="<?php echo $this->imgroot; ?>black.gif" colspan="5" align="center"><img src="<?php echo $this->imgroot; ?>bottom_border.gif" width="1" heigth="26" alt=" "></td>-->
-                <!--td background="<?php echo $this->imgroot; ?>bottom_right_corner.gif"><img src="<?php echo $this->imgroot; ?>bottom_right_corner.gif" width="16" height="16" alt=" "></td>-->
-
-        </tr>
 </table>
-</center>
 
 <!-- themed page footer -->
 <?php 
