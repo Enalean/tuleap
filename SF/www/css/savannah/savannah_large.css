@@ -160,4 +160,8 @@ textarea {
 .calendar_font_month { font-size: small; color: black; }
 .calendar_font_day { font-size: small; color: black; }
 
+/* Help classes */
+.bg_help {
+  background-color: #ffffff;
+}
 

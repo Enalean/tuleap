@@ -125,5 +125,10 @@ PRE,TT { font-family: courier,sans-serif; }
 .calendar_font_month { font-size: x-small; color: black; }
 .calendar_font_day { font-size: x-small; color: black; }
 
+/* Help classes */
+.bg_help {
+  background-color: #ffffff;
+}
+
         
 

@@ -142,8 +142,47 @@
       </xsl:for-each>
     </xsl:if>
     <!-- CX-SBT: Add a CSS link -->
-    <LINK rel="stylesheet" href="/sourceforge.css" type="text/css"/>
+    <LINK rel="stylesheet" href="/current_css.php" type="text/css"/>
   </head>
+</xsl:template>
+
+
+<xsl:template name="chunk-element-content">
+  <xsl:param name="prev"></xsl:param>
+  <xsl:param name="next"></xsl:param>
+
+  <html>
+    <xsl:call-template name="html.head">
+      <xsl:with-param name="prev" select="$prev"/>
+      <xsl:with-param name="next" select="$next"/>
+    </xsl:call-template>
+
+    <body>
+      <xsl:call-template name="body.attributes"/>
+    <!-- CX-SBT: Add a global table to specify the bg color -->
+    <table width="100%" cellspacing="0" cellpadding="5"><tr><td class="bg_help">
+      <xsl:call-template name="user.header.navigation"/>
+
+      <xsl:call-template name="header.navigation">
+	<xsl:with-param name="prev" select="$prev"/>
+	<xsl:with-param name="next" select="$next"/>
+      </xsl:call-template>
+
+      <xsl:call-template name="user.header.content"/>
+
+      <xsl:apply-imports/>
+
+      <xsl:call-template name="user.footer.content"/>
+
+      <xsl:call-template name="footer.navigation">
+	<xsl:with-param name="prev" select="$prev"/>
+	<xsl:with-param name="next" select="$next"/>
+      </xsl:call-template>
+
+      <xsl:call-template name="user.footer.navigation"/>
+    </td></tr></table>
+    </body>
+  </html>
 </xsl:template>
 
 <!-- ==================================================================== -->
