@@ -11,6 +11,8 @@
 // only the artifact id, and possibly the artifact name detected in text and a group_id.
 // It is called from function util_make_links
 
+require('../svn/svn_data.php');
+
 // Redirect function for legacy trackers (bug, task and SR)
 function legacy_redirect($location,$aid, $group_id, $atn) {
     if ($atn == 'bug') {
@@ -68,12 +70,32 @@ if ($HTTPS == 'on'|| $GLOBALS['sys_force_ssl'] == 1) {
 // Detected: 'xxx #nnn', transformed to  '$atn #$aid'
 $atn=strtolower($atn);
 
+// If group_name given as argument then infer group_id first
+if ($group_name && !$group_id) {
+    $grp = group_get_object_by_name($group_name);
+    $group_id = $grp->getGroupId();
+}
+
 // Commit and patch are not ambiguous (not trackers)
-if ($atn == 'commit') {
-    $location .= "/cvs/?func=detailcommit&commit_id=$aid&group_id=$group_id";
+$svn_loc = "/svn/?func=detailrevision&commit_id=$aid&group_id=$group_id";
+$cvs_loc = "/cvs/?func=detailcommit&commit_id=$aid&group_id=$group_id";
+if (($atn == 'rev') || ($atn == 'revision')) {
+    $location .= $svn_loc;
     header($location);
     exit;
 }
+if ($atn == 'commit') {
+    // when commit is used see if it revision exists in SVN else redirect to CVS
+    $res = svn_data_get_revision_detail($group_id, $aid);
+    if ($res && db_numrows($res) == 1) {
+	$location .= $svn_loc;
+    } else {
+	$location .= $cvs_loc;
+    }
+    header($location);
+    exit;
+}
+
 if ($atn == 'patch') {
     $location .= "/patch/?func=detailpatch&patch_id=$aid&group_id=$group_id";
     header($location);

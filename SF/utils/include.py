@@ -119,3 +119,13 @@ def get_codex_user():
             if m is not None:
                 return m.group(1)
         f.close
+        
+#############################
+# Create hyperlinks to project artifacts
+# in the text extract.
+#############################
+def util_make_links(text, group_name):
+    """Create hyperlinks to project artifacts in the text extract."""
+    art_pat = re.compile("([^\s()\$\&\!\;\~\#\|\{\}\%\,\?\=\+\'\"\.\:\/\>]+)[ ]?#([0-9]+)",re.IGNORECASE)
+    new_text = re.sub(art_pat,r'<a href="/tracker/?func=gotoid&group_name='+group_name+r'&aid=\2&atn=\1">\1 #\2</a>',text)
+    return new_text
