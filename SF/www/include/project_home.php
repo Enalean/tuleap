@@ -11,7 +11,7 @@ require($DOCUMENT_ROOT.'/news/news_utils.php');
 require($DOCUMENT_ROOT.'/include/trove.php');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');
 require($DOCUMENT_ROOT.'/../common/tracker/ArtifactTypeFactory.class');
-require($DOCUMENT_ROOT.'/include/permissions.php');
+require($DOCUMENT_ROOT.'/project/admin/permissions.php');
 
 //make sure this project is NOT a foundry
 if (!$project->isProject()) {
@@ -136,6 +136,7 @@ $sql="SELECT frs_package.package_id,frs_package.name AS package_name,frs_release
 
 $res_files = db_query($sql);
 $rows_files=db_numrows($res_files);
+$nb_packages=0;
 if (!$res_files || $rows_files < 1) {
     echo db_error();
     // No releases
@@ -162,6 +163,7 @@ if (!$res_files || $rows_files < 1) {
                 $authorized=permission_is_authorized('PACKAGE_READ',$package_id ,user_getid());
             }
             if ($authorized) {
+                $nb_packages++;
                 echo '
                   <TR class="boxitem" ALIGN="center">
                   <TD ALIGN="left">
@@ -369,7 +371,7 @@ if ($project->usesCVS()) {
 
 if ($project->usesService('svn')) {
 	print '<HR SIZE="1" NoShade><A href="/svn/?group_id='.$group_id.'">';
-	html_image("ic/cvs16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>'Subversion'));
+	html_image("ic/svn16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>'Subversion'));
 	print " Subversion Repository</A>";
 	$sql = "SELECT SUM(svn_commits) AS commits, SUM(svn_adds) AS adds, SUM(svn_deletes) AS deletes, SUM(svn_checkouts) AS checkouts from stats_project where group_id='$group_id'";
 	$result = db_query($sql);
@@ -388,6 +390,15 @@ if ($project->usesService('svn')) {
 
             echo '<br> &nbsp; - <a href="'.$uri.'">Browse Subversion</a>';
         }
+}
+
+// ######################### File Releases (only for Active)
+
+if ($project->usesFile()) {
+	print '<HR SIZE="1" NoShade><A href="/file/showfiles.php?group_id='.$group_id.'">';
+	html_image("ic/file.png",array('width'=>'20', 'height'=>'20', 'alt'=>'Files'));
+	print " File Releases</A>";
+        echo ' ( <B>'.$nb_packages.'</B> packages )';
 }
 
 // ######################### Trackers (only for Active)
