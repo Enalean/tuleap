@@ -65,9 +65,7 @@ killall -HUP named
 
 # generate the list of CodeX virtual hosts
 ./apache_conf.pl
-cp -f /etc/httpd/conf/codex_vhosts.conf /etc/httpd/conf/codex_vhosts.conf.backup
-cp -f ~dummy/dumps/apache_dump /etc/httpd/conf/codex_vhosts.conf
-/etc/rc.d/init.d/httpd reload
+
 
 #
 # NOW THE REAL UPDATE
@@ -82,6 +80,11 @@ cp -f /etc/group /etc/group.backup
 cp -f /etc/smbpasswd /etc/smbpasswd.backup 2>/dev/null
 ./new_parse.pl
 
+# Apache must be restarted after user/group update because
+# Unix Groups are used in Apache Virtual Hosts declaration
+cp -f /etc/httpd/conf/codex_vhosts.conf /etc/httpd/conf/codex_vhosts.conf.backup
+cp -f ~dummy/dumps/apache_dump /etc/httpd/conf/codex_vhosts.conf
+/etc/rc.d/init.d/httpd reload
 
 # update authorized SSH keys in home dir
 ./ssh_create.pl
