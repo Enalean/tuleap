@@ -371,7 +371,7 @@ sub read_logfile {
         while ($line =~ /commit[ ]?#([0-9]+)/gi) {
                $commits{$1} = $1;
         }
-        while ($line =~ m|([^\s()\$&!;~\#\|{}%,\?=\+\"\.:/<>]+)[ ]?#([0-9]+)|gi) {
+        while ($line =~ m|([^\s()\$&!;~\#\|{}%,\?=\+\"\.\':/<>]+)[ ]?#([0-9]+)|gi) {
                next if (lc($1) eq 'commit');
                next if (lc($1) eq 'patch');
                $artifacts{"$1_$2"} = $2;
