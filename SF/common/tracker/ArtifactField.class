@@ -613,7 +613,9 @@ class ArtifactField extends Error {
 			else if ($value_func == 'artifact_technicians')
 			    $res_value = $ath->getTechnicians();
 			else if ($value_func == 'artifact_submitters')
-			    $res_value = $ath->getSubmitters();		
+			    $res_value = $ath->getSubmitters();
+			else if (preg_match('/ugroup_([0-9]+)/', $value_func, $matches))
+			    $res_value = ugroup_db_get_members($matches[1]);
 	    } else {
 		
 			// If only active field

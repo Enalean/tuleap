@@ -12,6 +12,7 @@
 
 //require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');
 require($DOCUMENT_ROOT.'/include/HTML_Graphs.php');
+require($DOCUMENT_ROOT.'/project/admin/ugroup_utils.php');
 
 class ArtifactTypeHtml extends ArtifactType {
 
@@ -1168,11 +1169,32 @@ class ArtifactTypeHtml extends ArtifactType {
 				$selected = " selected";
 			}
 			echo '<option value="artifact_technicians"'.$selected.'>Artifact technicians</option>';
+
+			/*
+			 * @author: Manuel VACELET
+			 * Add for user group binding 
+			 */
+			$ugroup_res = ugroup_db_get_existing_ugroups($this->Group->getID());
+			$rows = db_numrows($ugroup_res);
+			for($i=0;$i<$rows;$i++) {
+			  $ug = db_result($ugroup_res, $i,'ugroup_id');
+			  $selected = "";
+			  if ( $value_function == "ugroup_".$ug) {
+			    $selected = " selected";
+			  }
+			  echo '<option value="ugroup_'.$ug.'"'.$selected.'>'.db_result($ugroup_res, $i, 'name').'</option>';
+			}
+
 		} else {
 			echo '
 		          <option value="group_members">Group members</option>
 		          <option value="artifact_submitters">Artifact submitters</option>
 		          <option value="artifact_technicians">Artifact technicians</option>';
+			$ugroup_res = ugroup_db_get_existing_ugroups($this->Group->getID());
+			$rows = db_numrows($ugroup_res);
+			for($i=0;$i<$rows;$i++) {
+			  echo '<option value="ugroup_'.db_result($ugroup_res, $i,'ugroup_id').'">'.db_result($ugroup_res, $i, 'name').'</option>';			  
+			}
 		}
 		
 		echo '

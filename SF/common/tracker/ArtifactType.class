@@ -984,7 +984,7 @@ class ArtifactType extends Error {
 		//echo $sql."<br>";
 		return db_query($sql); 
 	}
-	
+
 	//
 	// People who are project members
 	function getGroupMembers () {

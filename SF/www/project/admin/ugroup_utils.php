@@ -24,6 +24,15 @@ $UGROUP_DOCUMENT_EDITOR=10;
 $UGROUP_FILE_MANAGER_ADMIN=11;
 
 
+// Return members (user_id + user_name) of given user group
+function ugroup_db_get_members($ugroup_id) {	
+  $sql="SELECT user.user_id, user.user_name ". 
+    "FROM ugroup_user, user ".
+    "WHERE user.user_id = ugroup_user.user_id ".
+    "AND ugroup_user.ugroup_id=".$ugroup_id;
+  return db_query($sql);
+}
+
 // Return name and id (as DB result) of all ugroups belonging to a specific project.
 function ugroup_db_get_existing_ugroups($group_id) {
     $sql="SELECT ugroup_id, name FROM ugroup WHERE group_id=$group_id ORDER BY name";
