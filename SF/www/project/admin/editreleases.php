@@ -478,7 +478,7 @@ if ($submit) {
 
 ?><?php
 
-if ($release_id && !$func) {
+if ($release_id && $func != 'delete_release') {
 
   
 /*
