@@ -711,9 +711,10 @@ $CHOWN sourceforge.sourceforge commit-email.pl
 $CHMOD 755 commit-email.pl
 $CHMOD u+s commit-email.pl   # sets the uid bit (-rwsr-xr-x)
 
+##############################################
 # Make the system daily cronjob run at 23:58pm
-#echo "Updating daily cron job in system crontab..."
-#perl -i'.orig' -p -e's/\d+ \d+ (.*daily)/58 23 \1/g' /tmp/crontab
+echo "Updating daily cron job in system crontab..."
+perl -i'.orig' -p -e's/\d+ \d+ (.*daily)/58 23 \1/g' /etc/crontab
 
 ##############################################
 # FTP server configuration
