@@ -18,16 +18,23 @@ $TROVE_HARDQUERYLIMIT = 300;
 function trove_genfullpaths($mynode,$myfullpath,$myfullpathids) {
 	// first generate own path
 	$res_update = db_query('UPDATE trove_cat SET fullpath=\''
-		.$myfullpath.'\',fullpath_ids=\''
+		.addslashes($myfullpath).'\',fullpath_ids=\''
 		.$myfullpathids.'\' WHERE trove_cat_id='.$mynode);
 	// now generate paths for all children by recursive call
 	{
 		$res_child = db_query('SELECT trove_cat_id,fullname FROM '
 			.'trove_cat WHERE parent='.$mynode);
 		while ($row_child = db_fetch_array($res_child)) {
+		  //for the root node everything works a bit different ...
+		  if (!$mynode) {
+		    trove_genfullpaths($row_child['trove_cat_id'],
+				$row_child['fullname'],
+				$row_child['trove_cat_id']);
+		  } else {
 			trove_genfullpaths($row_child['trove_cat_id'],
 				$myfullpath.' :: '.$row_child['fullname'],
 				$myfullpathids.' :: '.$row_child['trove_cat_id']);
+		  }
 		}
 	}
 }
@@ -94,7 +101,7 @@ function trove_getrootcat($trove_cat_id) {
 
 	while ($parent > 0) {
 		$res_par = db_query("SELECT parent FROM trove_cat WHERE "
-			."trove_cat_id=$current_cat");
+       		."trove_cat_id=$current_cat");
 		$row_par = db_fetch_array($res_par);
 		$parent = $row_par["parent"];
 		if ($parent == 0) return $current_cat;

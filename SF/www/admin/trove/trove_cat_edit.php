@@ -57,8 +57,7 @@ $HTML->header(array(title=>"Trove - Edit Category"));
 print ('<OPTION value="0"');
 	if ($row_cat["parent"] == 0) print ' selected';
 	print ('>Root'."\n");
-$res_parent = db_query("SELECT shortname,fullname,trove_cat_id FROM trove_cat where fullpath not like '".$row_cat["fullpath"]." ::%' and fullpath not like '".$row_cat["fullpath"]."'");
-//$res_parent = db_query("SELECT shortname,fullname,trove_cat_id FROM trove_cat where fullpath not like 'xxx%'", 1);
+$res_parent = db_query("SELECT shortname,fullname,trove_cat_id FROM trove_cat where fullpath not like '".addslashes($row_cat["fullpath"])." ::%' and fullpath not like '".addslashes($row_cat["fullpath"])."'");
 while ($row_parent = db_fetch_array($res_parent)) {
 	print ('<OPTION value="'.$row_parent["trove_cat_id"].'"');
 	if ($row_cat["parent"] == $row_parent["trove_cat_id"]) print ' selected';
