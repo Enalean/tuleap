@@ -823,15 +823,34 @@ in the right place. The RedHat Manual has excellent instructions on how
 to do that. See the section called 'Apache Secure Server
 Configuration'.
 In RedHat 7.3 manual it is at <a
- href="http://www.redhat.com/docs/manuals/linux/RHL-7.3-Manual/custom-guide/ch-apache-secure-server.html">http://www.redhat.com/docs/manuals/linux/RHL-7.3-Manual/custom-guide/ch-apache-secure-server.html</a>.<br>
+ href="http://www.redhat.com/docs/manuals/linux/RHL-7.3-Manual/custom-guide/ch-apache-secure-server.html">http://www.redhat.com/docs/manuals/linux/RHL-7.3-Manual/custom-guide/ch-apache-secure-server.html</a>.
+Note: although RedHat recommends that you generate a password protected
+key for your certificate it has some serious implications. The most
+noticeable is that a system administrator must be physically present
+will rebooting the CodeX system to type the password when the Apache
+server is started. This prevent from doing an unattended reboot.<br>
 <br>
 The sample http.conf.dist contains all the necessary Apache directives
 to enable secured HTTP. There are 3 places that you need to activate:
 <ul>
   <li>The 'Listen' section must listen to port 80 (http) and 443 (https)</li>
-  <li>You must load the mod_ssl module in the module section&nbsp;</li>
+  <li>You must load the mod_ssl module in the module section (both the
+LoadModule and Addmodule statements)<br>
+  </li>
   <li>Uncomment the virtual host declaration at the end of the file
-which actually activates the secure HTTP server on port 443</li>
+which actually activates the secure HTTP server on port 443. And make
+sure to replace the "IP_ADDRESS_HERE" pattern in the virtual host
+declaration with your real IP address</li>
+  <li>For the changes to take effect you must restart the Apache server.</li>
+  <li>Then edit the /etc/local.inc file and edit the $sys_https_host
+variable (in most cases this will be the same name as the
+$sys_default_domain variable. If the port number you use for https is
+not the regular one (443) then you must specify the port number
+explicitely in the host name.</li>
+  <li>In the same /etc/local.inc file, you can also tune the
+$sys_stay_in_ssl and $sys_force_ssl variables to determine how HTTPS is
+going to be used/enforced on your site.<br>
+  </li>
 </ul>
 <br>
 <hr width="100%" size="2">
