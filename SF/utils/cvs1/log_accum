@@ -558,7 +558,7 @@ require $root_path."httpd/SF/utils/group.pl";
 &db_connect;
 
 # retrieve the group_id
-$group_id = &set_group_info_from_name($modulename);
+$group_id = &set_group_info_from_name($cvsweb_name);
 
 # Check for a new directory first.  This appears with files set as follows:
 #
