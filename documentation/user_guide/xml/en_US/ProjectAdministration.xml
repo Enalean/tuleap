@@ -68,7 +68,7 @@
       name on the Project Administration page are actually hyperlinks. On this
       page as well as in many other pages throughout CodeX a click on a login
       name leads you to the user page where you can know more about the user
-      (including its location, phone/fax number, etc. extracted from the Xerox
+      (including its location, phone/fax number, etc. extracted from the LDAP 
       Directory in real time) and send an e-mail message to this person
       directly via a Web form.</para></note>
 
@@ -244,7 +244,7 @@
           the CodeX site. By default the &#34;Home Page&#34; in the Project
           Main Menu points to this location (see CHAPTER 16 for more details).
           If you want the Home Page of your project to point to some other
-          locations on the Xerox Intranet (or even outside of Xerox) replace
+          locations on the Intranet or on the Web, simply replace
           the default value with your own Web location. Do not confuse your
           Project Home Page with your Project Summary page. The Project Home
           Page actually points to real Web Site whereas the Public Summary
@@ -566,7 +566,7 @@
 		    "Project X Database" for instance.</para>
 		  </listitem>
 		  <listitem>
-		    <para><emphasis>MySQL host (IP or Name)</emphasis>; codex.xerox.com</para>
+		    <para><emphasis>MySQL host (IP or Name)</emphasis>; &SYS_DEFAULT_DOMAIN;</para>
 		  </listitem>
 		  <listitem>
 		    <para><emphasis>MySQL Database Name</emphasis>:
@@ -683,11 +683,10 @@
         <title>Important Note on Job Posting</title>
 
         <para>It is not the intent of the CodeX Job Posting system to replace
-        PeopleNet or any other countrywide job posting system already in place
-        in Xerox. The CodeX Job Posting system is intended to call for
+        existing job posting system already in place. The CodeX Job Posting system is intended to call for
         expertise or short mission request. One of the possible uses of the
         CodeX Job Posting system is for Projects to post 3 to 6 months jobs
-        that can be sub-contracted to organizations like XConnect or XISS/XPS.
+        that can be sub-contracted to other organizations.
         It can also be a request for the opinion of an expert that would take
         no longer than a couple of days even a couple of hours.</para>
       </important>
@@ -698,8 +697,8 @@
 
       <para><emphasis>Location: Project Administration Menu</emphasis></para>
 
-      <para>CodeX is about Software Sharing inside Xerox. Our goal is to make
-      software re-use part of the Xerox culture. To this end, Source code
+      <para>CodeX is about Software Sharing inside &SYS_ORG_NAME;. Its goal is to make
+      software re-use part of the enterprise culture. To this end, Source code
       access and file release download is granted to all registered users
       <footnote><para>Anonymous users are not granted access to the Source
       code. They must create their own account and identify themselves with

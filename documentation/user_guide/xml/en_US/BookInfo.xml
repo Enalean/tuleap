@@ -239,6 +239,15 @@
 
         <revremark>CVS chapter revamped to include the new CVS Web interface (CVS query and Administration)</revremark>
       </revision>
+      <revision>
+        <revnumber>2.5</revnumber>
+
+        <date>01-Aug-2003</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>Almost everything making documentation Xerox specific was removed. Company name, machine names,etc. are now definable XML entities.</revremark>
+      </revision>
      </revhistory>
   </bookinfo>
 <!--

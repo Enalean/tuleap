@@ -12,8 +12,8 @@
   <chapter id="CodeXSiteOverview">
     <title>CodeX Site Overview</title>
 
-    <para>CodeX is a Xerox <emphasis role="underline">internal</emphasis> Web
-    Site available at <ulink url="http://codex.xerox.com/">http://codex.xerox.com/.</ulink>
+    <para>CodeX is a &SYS_ORG_NAME; <emphasis role="underline">internal</emphasis> Web
+    Site available at <ulink url="&SYS_DEFAULT_DOMAIN;">http://&SYS_DEFAULT_DOMAIN;/.</ulink>
     To browse the CodeX site use your favorite Web Browser
     <footnote><para>CodeX uses standard HTML and only a little bit of
     Javascript. It is known to work well with Netscape 4.x, Netscape 6.x and
@@ -146,9 +146,9 @@
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">License</emphasis>: License of your
-            software. In most cases this is going to be the Xerox Code
-            exchange Policy</para>
+            <para><emphasis role="bold">License</emphasis>: License of
+            your software. In most cases this is going to be the
+            &SYS_ORG_NAME; Code exchange Policy</para>
           </listitem>
 
           <listitem>
@@ -391,54 +391,30 @@
       <section id="SiteDocumentation">
         <title>Site Documentation</title>
 
-        <para>The Site Documentation pointer is the entry point to the CodeX
-        documentation. The CodeX documentation is entirely managed via the
-        Document Manager (see <xref linkend="DocumentManager" />) service of
-        the CodeX project, which is of course hosted on CodeX. The documents
-        are grouped by themes. The most important ones are:</para>
-
-        <procedure>
-          <step>
-            <para><emphasis role="bold">The Must Read Documents</emphasis>:
-            This one speaks for itself. All CodeX Users should read these
-            documents. They are all critical to gain a proper understanding of
-            the CodeX site and the CodeX initiative.</para>
-          </step>
-
-          <step>
-            <para><emphasis role="bold">CodeX Services</emphasis>: A series of
-            short documents describing the basic features of each CodeX
-            service and how to use them.</para>
-          </step>
-
-          <step>
-            <para><emphasis role="bold">For Project Members and Administrators</emphasis>:
-            These documents will be beneficial to the owners or members of a
-            CodeX hosted projects. All documents deal with project
-            administration issues.</para>
-          </step>
-
-          <step>
-            <para><emphasis role="bold">CodeX Newsletter</emphasis>: The CodeX
-            Team publishes a (almost...) monthly Newsletter which is sent to
-            all CodeX users as well as many other people in Xerox. All
-            published Newsletters are archived on CodeX.</para>
-          </step>
-        </procedure>
+        <para>The Site Documentation pointer is the entry point to the
+        CodeX documentation. The CodeX documentation is entirely
+        managed via the Document Manager (see <xref
+        linkend="DocumentManager" />) service of the CodeX project,
+        which is of course hosted on CodeX. The documents on this page
+        cover all the CodeX site. It includes presentation material,
+        the user guide and other important documents. Read them
+        carefully.</para>
 
         <important>
           <title>** Important Note **</title>
 
-          <para role="">The <emphasis role="bold">Xerox Code exchange Policy</emphasis>
-          [XCEP] is available in the Must Read Documents section. This 2-page
-          Corporate Policy governs the act of Software Sharing in the Xerox
-          Corporation. All CodeX users must read, understand and apply this
-          policy before re-using Xerox software or hosting any of their
-          projects on the CodeX site.CodeX gives you direct access to Xerox
-          Intellectual Property and you must therefore make sure that you and
-          your group strictly conforms to the CodeX Policy for the benefit of
-          the entire company. Failing to comply with the terms of the Xerox
-          Code eXchange Policy can lead to severe disciplinary actions
+          <para role="">The <emphasis role="bold">&SYS_ORG_NAME; Code exchange Policy</emphasis>
+
+          [XCEP] is available in the Must Read Documents section. This
+          2-page Corporate Policy governs the act of Software Sharing
+          at &SYS_ORG_NAME;. All CodeX users must read, understand and
+          apply this policy before re-using software or hosting any of
+          their projects on the CodeX site. CodeX gives you direct
+          access to the Intellectual Property of your company and you
+          must therefore make sure that you and your group strictly
+          conforms to the Code eXchange Policy for the benefit of the entire
+          company. Failing to comply with the terms of the Code
+          eXchange Policy can lead to severe disciplinary actions
           including prosecution and contract termination.</para>
         </important>
       </section>
@@ -446,17 +422,17 @@
       <section>
         <title>CodeX Developers Channels</title>
 
-        <para>Right from the beginning, one of the top priority objectives of
-        the CodeX site was to become a discussion forum of choice for the 5000
-        software developers in Xerox regardless of the organization they
-        belong to and the country they work in.</para>
+        <para>One of the top priority objectives of the CodeX site is
+        to become a discussion forum for the software developers
+        regardless of the organization they belong to and the country
+        they work in.</para>
 
         <para>To this end the CodeX Team has created a series of mailing lists
         (called Developers Channels) where anybody, including non-CodeX users,
         can subscribe. Each channel is dedicated to a given software related
         topic. The creation of a new channel is under the responsibility of
         the CodeX Team. If you want to create a new developers channel please
-        contact the CodeX Team at <email>codex-contact@codex.xerox.com</email>.</para>
+        contact the CodeX Team at <email>codex-contact@&SYS_DEFAULT_DOMAIN;</email>.</para>
 
         <para>The Developers Channels managed on CodeX have a certain number
         of advantages over conventional distribution lists:</para>
@@ -501,12 +477,12 @@
 
           <para>One of the Forums available on CodeX is called Software
           Bazaar. This Forum was put in place to buy or sell unused 3rd party
-          software from other Xerox teams. It is often the case that software
+          software from other project teams. It is often the case that software
           packages acquired by a project team are no longer needed after some
-          time. We wanted to give other people in Xerox a chance to get the
+          time. We wanted to give other people  a chance to get the
           unused license rather than buying yet another one. Similarly this
           Forum is the place to announce an Enterprise-Wide license obtained
-          by your group and that other people in Xerox could benefit from.</para>
+          by your group and that other people could benefit from.</para>
         </tip>
 
         <para></para>
@@ -519,7 +495,7 @@
         the ability to post jobs. This minimal job posting system is
         particularly well suited to publish call for expertise. By clicking on
         this item you&#39;ll see all job posting requests awaiting help from
-        the rest of Xerox. Visit this section on a regular basis if you want
+        the community. Visit this section on a regular basis if you want
         to help others in the corporation solve their technical problems.</para>
 
         <para>For more details on how to post jobs see <xref
@@ -625,7 +601,7 @@
 
       <para>As a conclusion, we strongly advise you to visit the CodeX Home
       Page on a regular basis for it gives you an excellent idea of what is
-      going on in the Xerox software galaxy.</para>
+      going in terms of software development across &SYS_ORG_NAME;.</para>
 
       <para><emphasis role="underline">Bottom line</emphasis>: Make CodeX your
       browser home page :-)</para>

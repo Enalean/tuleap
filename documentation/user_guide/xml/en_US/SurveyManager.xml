@@ -57,8 +57,7 @@
       </listitem>
 
       <listitem>
-        <para>make the survey accessible to virtually anybody via the Xerox
-        Web</para>
+        <para>make the survey accessible to virtually anybody via the Intranet</para>
       </listitem>
 
       <listitem>
@@ -121,7 +120,7 @@
       Web pointer (URL):</para>
 
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-http://codex.xerox.com/survey/survey.php?group_id=N&#38;survey_id=X
+http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
 </programlisting>
 
       <para>where N is your project ID number and X is the survey ID number as
@@ -135,7 +134,7 @@ http://codex.xerox.com/survey/survey.php?group_id=N&#38;survey_id=X
       shown on <xref linkend="FigureASampleSurveyTakenFromTheCodeXProject" />.</para>
 
       <para><tip><title>Important note: Survey Privacy</title><para>The
-      information collected in these surveys are strictly internal to Xerox.
+      information collected in these surveys are strictly internal to &SYS_ORG_NAME;.
       This information is being gathered to build a profile of the projects
       and developers being surveyed. The identity of those who answer surveys
       are suppressed and not viewable by project administrators or the public

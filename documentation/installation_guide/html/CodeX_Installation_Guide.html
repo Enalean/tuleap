@@ -1437,7 +1437,14 @@ mailing list address</li>
   <li>logout and login again to make sure that the new password was
 taken into account</li>
 </ul>
-<br>
+<h2><a name="System_configuration_file_local.inc"></a>System
+configuration file (local.inc)</h2>
+The PHP scripts take many values from a configuration file located in <span
+ style="font-family: monospace;">/etc/local.inc</span>. This file must
+be initially copied from the <span style="font-family: monospace;">SF/etc/local.inc.dist</span>
+file and the values must be changed accordingly for your site. Make
+sure that you read this file where the role of each variable is well
+documented.<br>
 <h2>UI Themes</h2>
 The CodeX Web pages look and feel are defined through Cascading Style
 Sheets (CSS). &nbsp;Therefore CodeX UI is customizable to large extent.
@@ -1544,19 +1551,34 @@ is
 also why you will not find the Site Documentation of the CodeX central
 site in the CodeX CVS repository.<br>
 <br>
-<h2>On-line Help</h2>
+<h2>User Guide and On-line Help <br>
+</h2>
 'On-line Help' is also a menu entry appearing in the left hand side
 menu of CodeX. It actually points to the HTML version of the CodeX User
 Guide (CUG). The CUG has been written in XML with the DocBook DTD and
 is
 stored under the top level '<tt>documentation</tt>' directory in the
 CodeX CVS repository. To activate the on-line help simply check out the
-<tt>documentation</tt>directory
-at the same place as the <tt>SF</tt> and <tt>site-content</tt>directories.<br>
+<tt>documentation</tt> directory
+at the same place as the <tt>SF</tt> and <tt>site-content</tt>
+directories.<br>
+<font color="#ff0000" style="font-weight: bold;"><br>
+**IMPORTANT REMARK**</font><br>
+The User Guide contain references to the company name, server name
+running CodeX,etc. These pieces of information vary from one site to
+another. Therefore a specific file has been introduced at <span
+ style="font-family: monospace;">documentation/user_guide/xml/en_US/ParametersLocal.dtd</span>
+that you can edit and where you can redefined XML entities that govern
+the site specific information. For a list of the default values see the
+<span style="font-family: monospace;">ParametersDefault.dtd</span> in
+the same directory. If you want to redefine an entity, simply copy it
+into the <span style="font-family: monospace;">ParametersLocal.dtd</span>
+file and regenerate the documentation.<br>
 <br>
 Also notice that the HTML and PDF versions of the CUG are <b>not</b>
 stored in the CVS repository. They are generated from the XML files
-using the script&nbsp; SF/utils/generate_doc.sh. You can run this
+using the script&nbsp; <span style="font-family: monospace;">SF/utils/generate_doc.sh</span>.
+You can run this
 script
 by hand from the sourceforge Linux account and our advice is also to
 include it in the sourceforge crontab so that it runs once a day and
@@ -1567,7 +1589,21 @@ Environment) and the DocBook processing chain installed properly. See
 the section about <a href="#Specific_Software_Packages">specific
 software packages to install</a>.<br>
 <br>
-<br>
+<h2>LDAP Directory</h2>
+While visiting a user information page on CodeX, you have the ability
+to query the LDAP directory of your company to get more information
+about this user.&nbsp; There are two variables in the local.inc
+configuration file (see <a href="#System_configuration_file_local.inc">above</a>)
+that allow you to customize the LDAP search:<br>
+<ul>
+  <li>$<span style="font-family: monospace;">sys_ldap_server</span>:
+the full name of your the LDAP server to query (ask your system
+administrator if you don't know of any around you)</li>
+  <li><span style="font-family: monospace;">$sys_ldap_dn</span>: the
+distinguished name (DN) to use in the LDAP query (Remark: the LDAP
+query in CodeX uses the user email address as the search key)<br>
+  </li>
+</ul>
 <hr>
 <h1>Scripts Backend</h1>
 Most of the backend scripts used by the CodeX system are writen in Perl

@@ -1489,8 +1489,8 @@ function bug_validate_cc_list($arr_email, &$message) {
         $message = "There are problems with the following addresses:"
                  . "<blockquote>$message</blockquote>"
 		 . "Email addresses must either be valid "
-		 . "CodeX user names (e.g., 'jdoe') or fully qualified "
-		 . "email addresses (e.g., 'jill.doe@somewhere.xerox.com'). "
+		 . $GLOBALS['sys_name']." user names (e.g. 'jdoe') or fully qualified "
+		 . "email addresses (e.g., 'jill.doe@somewhere.com'). "
 	         . "Lists of email addresses may be separated by either "
 	         . "commas or semicolons."
 		 ;

@@ -124,14 +124,21 @@ $sys_news_group=46;
 
 //
 // LDAP server to query for more information on CodeX users
-// (leave blank to disable LDAP lookup)
-$sys_ldap_server='Choose_an_LDAP/Exchange_server_next_to_you';
+// (leave blank to disable LDAP lookup). If LDAP is defined
+// then also define the distinguised name to use in LDAP queries
+$sys_ldap_server='Choose_an_LDAP_server_next_to_you';
+$sys_ldap_dn='o=XEROX, c=US';
 
 //
 // System name to be used in Web pages, documentation,etc.
 $sys_name='CodeX';
 
-// Full qualified name
+//
+// Company/Organization running the system (short and long)
+$sys_org_name='Xerox';
+$sys_long_org_name='Xerox Corporation';
+
+// Fully qualified name
 $sys_fullname="atlas.codex.xerox.com";
 
 //

@@ -11,12 +11,12 @@ $HTML->header(array(title=>"Why Register?"));
 ?>
 
 <p>
-<?php print $GLOBALS['sys_name']; ?> would like to extend an invitation to any Xerox internally developed project (so called Inner Source project) to be hosted for no price and no catch. The Xerox Open Source team has been formed in July 2000. One of our goal was to transpose the success of the external Open Source phenomenon and culture <b>inside</b> our Corporate environment. <?php print $GLOBALS['sys_name']; ?> is our contribution to the Xerox software developers community.
+<?php print $GLOBALS['sys_name']; ?> would like to extend an invitation to any internally developed project  to be hosted for no price and no catch. Our goal is to transpose the success of the external Open Source phenomenon and culture <b>inside</b> our Corporate environment. <?php print $GLOBALS['sys_name']; ?> is our contribution to the <?php print $GLOBALS['sys_org_name']; ?> software developers community.
 </p>
 
 <p>
 <i>Why are we doing this ?</i><br>
-A lot of Xerox projects are being hosted all over the place in Xerox and not only is it difficult to know who is working on what but it also implies that each Xerox development team is re-creating the same kind os development environment again and again. So, building on the experience and software designed by the <a href="http://sourceforge.net">SourceForge.net</a> people, we have decided to transpose this concept internally in Xerox and provide all Xerox development team with a series of tools and services that will make their life much easier, save time, allow them to concetrate on their code while letting the rest of the Xerox World know about their work.
+A lot of internal projects are being hosted all over the place in <?php print $GLOBALS['sys_org_name']; ?> and not only is it difficult to know who is working on what but it also implies that each development team is re-creating the same kind of development environment again and again. So, building on the experience and software designed by the <a href="http://sourceforge.net">SourceForge.net</a> people, we have decided to transpose this concept inside <?php print $GLOBALS['sys_org_name']; ?> and provide all development teams with a series of tools and services that will make their life much easier, save time and allow them to concetrate on their code while letting the rest of the organization know about their work.
 </p>
 
 <p>
@@ -38,11 +38,10 @@ acquired and allocated for this project.
 </p>                           
            
 <p>
-<li>We will not require that you place any banner or even reference to <?php print $GLOBALS['sys_name']; ?> on your page. 
 <li>Account acceptance is at our discretion and is based on the following criteria:
 <ul>
-<li><i>relevance</i>: Xerox internally developed sofware projects only, 
-<li><i>legitimacy</i>: your project must have a goal aligned with Xerox business,
+<li><i>relevance</i>: <?php print $GLOBALS['sys_org_name']; ?> internally developed sofware projects only, 
+<li><i>legitimacy</i>: your project must have a goal aligned with <?php print $GLOBALS['sys_org_name']; ?> business,
 <li><i>appropriateness</i>: hosted projects must provide source code or documentation).
 </ul>
 
@@ -51,14 +50,8 @@ right to revoke an existing account without notice if there is due
 cause.
 </p>
 
-<p> We realize we may be presenting a few technical restrictions here
-and there. However, If this project receives sufficient interest from
-the Xerox developers community, we will obtain more computers and more
-disk space for the project.
-</p>
-
 <p>
-<a href="/register/">Register New Project</a>
+<a href="/register/">Register A New Project</a>
 </p>
 
 <?php

@@ -140,7 +140,7 @@ if ($group_id && user_ismember($group_id,'A')) {
 		    echo '<B>'.group_getunixname($group_id).'-<INPUT TYPE="TEXT" NAME="list_name" VALUE="" SIZE="15" MAXLENGTH="20">@'.$GLOBALS['sys_lists_host'].'</B><BR>';
 		}
 		echo '	<P>
-			<B>Is Public? </B>(Public means subscription right is granted to any Xerox employee)<BR>
+			<B>Is Public? </B>(Public means subscription right is granted to any user)<BR>
 			<INPUT TYPE="RADIO" NAME="is_public" VALUE="1" CHECKED> Yes<BR>
 			<INPUT TYPE="RADIO" NAME="is_public" VALUE="0"> No<P>
 			<B>Description:</B><BR>

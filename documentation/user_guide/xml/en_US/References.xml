@@ -47,7 +47,7 @@
       </authorgroup>
 
       <releaseinfo>Slideware available at <ulink
-      url="http://codex.xerox.com/docs/site">http://codex.xerox.com/docs/site</ulink></releaseinfo>
+      url="http://&SYS_DEFAULT_DOMAIN;/docs/site">http://&SYS_DEFAULT_DOMAIN;/docs/site</ulink></releaseinfo>
     </biblioentry>
 
     <biblioentry id="bib.cug.cbbk">
@@ -137,21 +137,6 @@
       <releaseinfo><ulink url="http://savnnah.gnu.org">http://avnnah.gnu.org</ulink></releaseinfo>
     </biblioentry>
 
-    <biblioentry id="bib.cug.sosc">
-      <abbrev id="bib.cug.sosc.abbrev">SOSC</abbrev>
-
-      <title>Spreading the Open Source Culture inside Xerox</title>
-
-      <author>
-        <firstname>Laurent</firstname>
-
-        <surname>Julliard</surname>
-      </author>
-
-      <releaseinfo>Slideware available at <ulink
-      url="http://opensource.codex.xerox.com/xerox/resources.html">http://opensource.codex.xerox.com/xerox/resources.html</ulink></releaseinfo>
-    </biblioentry>
-
     <biblioentry id="bib.cug.sfws">
       <abbrev id="bib.cug.sfws.abbrev">SFWS</abbrev>
 
@@ -173,9 +158,9 @@
     <biblioentry id="bib.cug.xcep">
       <abbrev id="bib.cug.xcep.abbrev">XCEP</abbrev>
 
-      <title>The Xerox Code exchange Policy</title>
+      <title>The &SYS_ORG_NAME; Code exchange Policy</title>
 
-      <releaseinfo>Available at <ulink url="http://codex.xerox.com/docs/site ">http://codex.xerox.com/docs/site</ulink></releaseinfo>
+      <releaseinfo>Available at <ulink url="http://&SYS_DEFAULT_DOMAIN;/docs/site ">http://&SYS_DEFAULT_DOMAIN;/docs/site</ulink></releaseinfo>
     </biblioentry>
 
     <biblioentry id="bib.cug.xosp">

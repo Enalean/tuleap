@@ -15,9 +15,10 @@
     <section id="ShellAccount">
       <title>Shell Account</title>
 
-      <para>Each registered user receives its own Unix shell account on the
-      CodeX Shell Account server. You can access your CodeX Shell Account in 2
-      ways:</para>
+      <para>If the CodeX administrators have enabled this feature,
+      each registered user receives its own Unix shell account on the
+      CodeX Shell Account server. You can access your CodeX Shell
+      Account in 2 ways:</para>
 
       <itemizedlist mark="bullet">
         <listitem>
@@ -31,7 +32,7 @@
           authenticate yourself:</para>
 
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-ssh -l loginname shell.codex.xerox.com
+ssh -l loginname &SYS_SHELL_HOST;
 </programlisting>
         </listitem>
 
@@ -39,10 +40,11 @@ ssh -l loginname shell.codex.xerox.com
           <para><emphasis role="bold">Telnet</emphasis>: telnet comes standard
           with Windows and Unix environment. Use the following command to
           connect to the CodeX Shell Account server and provide your login and
-          password as requested</para>
+          password as requested. (Remark: on some site telnet might be
+          disabled for security reasons)</para>
 
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-telnet shell.codex.xerox.com
+telnet &SYS_SHELL_HOST;
 </programlisting>
         </listitem>
       </itemizedlist>
@@ -94,7 +96,7 @@ newgrp projectname
         <itemizedlist mark="bullet" spacing="compact">
           <listitem>
             <para>Anonymous Users access: use an ftp client to connect
-            to <literal>download.codex.xerox.com</literal>. Use
+            to <literal>&SYS_DOWNLOAD_HOST;</literal>. Use
             &#34;ftp&#34; as login and your email address as the
             password. Then <literal>cd
             /pub/projectname</literal> to access
@@ -103,7 +105,7 @@ newgrp projectname
 
           <listitem>
             <para>Project Members access: use an ftp client to connect
-            to <literal>download.codex.xerox.com</literal>. Use CodeX
+            to <literal>&SYS_DOWNLOAD_HOST;</literal>. Use CodeX
             login and password and then type <literal>cd
             /home/ftp/pub/projectname</literal>
             to access the FTP Anonymous space. From there project
@@ -114,7 +116,7 @@ newgrp projectname
 	    your email to other users simply use the following
 	    URL:</para>
 
-            <para><literal>ftp://projectname.codex.xerox.com:/pub/projectname</literal></para>
+            <para><literal>ftp://projectname.&SYS_DEFAULT_DOMAIN;:/pub/projectname</literal></para>
 
           </listitem>
         </itemizedlist>
@@ -136,11 +138,11 @@ newgrp projectname
         <itemizedlist mark="bullet"
                       spacing="compact">
           <listitem>
-            <para>Via your shell account (SSH or Telnet to <literal>shell.codex.xerox.com</literal>).</para>
+            <para>Via your shell account (SSH or Telnet to <literal>&SYS_SHELL_HOST;</literal>).</para>
           </listitem>
 
           <listitem>
-            <para>Via ftp by connecting to <literal>download.codex.xerox.com</literal>.</para>
+            <para>Via ftp by connecting to <literal>&SYS_DOWNLOAD_HOST;</literal>.</para>
           </listitem>
         </itemizedlist>
 
@@ -148,7 +150,7 @@ newgrp projectname
         the following command to go to the FTP Release Space directory:</para>
 
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-cd /home/ftp/codex/projectname
+cd &FTPFILES_DIR;/projectname
 </programlisting>
       </section>
     </section>
@@ -180,13 +182,13 @@ cd /home/ftp/codex/projectname
       a CodeX user before this feature was enabled (on September 4th, 2001)
       you must enter your password again in CodeX before you can access the
       shared resources. To do so first login on CodeX and go to <ulink
-      url="http://codex.xerox.com/account/change_pw.php">http://codex.xerox.com/account/change_pw.php</ulink>.
+      url="http://&SYS_DEFAULT_DOMAIN;/account/change_pw.php">http://&SYS_DEFAULT_DOMAIN;/account/change_pw.php</ulink>.
       Then re-type your current password in old and new fields. Click on the
       Update button and wait for the re-generation to happen (delay shown on
       the screen).</para></tip></para>
 
       <para>To access your CodeX shared resources, open Windows Explorer,
-      browse the Entire Microsoft Network, open the WCRT domain and click on
+      browse the Entire Microsoft Network, open the &SYS_SAMBA_DOMAIN; domain and click on
       the CodeX machine. Use your CodeX login and password to connect to the
       resources (If they are not the same as your Windows login/password a
       dialog box will pop up asking for the appropriate CodeX login/password)</para>

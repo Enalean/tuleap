@@ -8,7 +8,7 @@
 
 
 $LICENSE = array();
-$LICENSE['xrx'] = 'Xerox Code eXchange Policy';
+$LICENSE['xrx'] = $GLOBALS['sys_org_name'].' Code eXchange Policy';
 $LICENSE['website'] = 'WebSite Only';
 $LICENSE['other'] = 'Other';
 $LICENSE['---'] = '--- For COMIP approved Open Source projects ---';

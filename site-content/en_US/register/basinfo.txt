@@ -35,12 +35,12 @@ Shall the purpose and goals change in the future, you'll have to modify the stat
 </TEXTAREA>
 
 <P><B><u>Required Software:</u></B>
-<br>If your project requires the use of 3rd Party (commercial or Open Source) or other internal Xerox software to work properly, list them here:
+<br>If your project requires the use of 3rd Party (commercial or Open Source) or other internal <?php print $GLOBALS['sys_org_name']; ?> software to work properly, list them here:
 <br><TEXTAREA name="form_required_sw" wrap="virtual" cols="70" rows="6">
 </TEXTAREA>
 
 <P><B><u>Other Comments:</u></B>
-<br>Anything you'd like to say about your projects that is not covered above. For instance, if your software is used in Xerox products you might want to list them here. If the soft is being commercialized you can also give information about pricing or the person to contact, etc.
+<br>Anything you'd like to say about your projects that is not covered above. For instance, if your software is used in <?php print $GLOBALS['sys_org_name']; ?> products you might want to list them here. If the soft is being commercialized you can also give information about pricing or the person to contact, etc.
 <br><TEXTAREA name="form_comments" wrap="virtual" cols="70" rows="4">
 </TEXTAREA>
 <BR><INPUT type=submit name="Submit" value="Step 4: Project Name">

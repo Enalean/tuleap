@@ -57,8 +57,8 @@ if (user_isloggedin()) {
 <div align="center">
 <h2>*** CodeX Download Agreement ***</h2></center>
 </div>
-<p>You are about to download a piece of Xerox software from the CodeX
-Site. Software re-use and sharing <b>inside</b> Xerox is subject to the <a
+<p>You are about to download software from the CodeX
+Site. Software re-use and sharing <b>inside</b> <? echo $GLOBALS['sys_org_name']; ?> is subject to the <a
 href="/docman/display_doc.php?docid=16&group_id=1"
 target="_blank"><b>Code eXchange Corporate Policy</b></a>.</p>
 

@@ -29,7 +29,7 @@ of the <?php print $GLOBALS['sys_name']; ?> Web Site. You may use forums, subscr
 <?php print "<b> $hoursleft</B> hour <B>$minutesleft</B> minutes"; ?> from now.
 
 <P>In the meantime we highly recommend that you browse through the site, read the 
-<A href="/docs/site/">Site Documentation</A> (e.g. the Xerox Code eXchange Policy) and finalize the setup of your <a href="/account/">User Profile</a> (Choose your Time Zone, define your skills profile,etc.)
+<A href="/docs/site/">Site Documentation</A> (e.g. the <?php print $GLOBALS['sys_org_name']; ?> Code eXchange Policy) and finalize the setup of your <a href="/account/">User Profile</a> (Choose your Time Zone, define your skills profile,etc.)
 
 <P><center><b><span class="highlight">*-*-*-*</span></b></center>
 

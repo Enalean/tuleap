@@ -52,7 +52,7 @@
     <itemizedlist mark="bullet" spacing="compact">
       <listitem>
 	<para>It has an elegant and efficient client/server architecture
-          that makes it usable from anywhere on the Xerox Intranet.</para>
+          that makes it usable from anywhere on the Intranet.</para>
       </listitem>
 
       <listitem>
@@ -150,9 +150,9 @@
       <itemizedlist mark="bullet" spacing="compact">
 	<listitem>
 	  <para>A CVS Tutorial (Powerpoint): see <ulink
-	  url="http://codex.codex.xerox.com/slides/CVS_Tutorial.ppt">http://codex.codex.xerox.com/slides/CVS_Tutorial.ppt</ulink>). An
+	  url="http://codex.&SYS_DEFAULT_DOMAIN;/slides/CVS_Tutorial.ppt">http://codex.&SYS_DEFAULT_DOMAIN;/slides/CVS_Tutorial.ppt</ulink>). An
 	  HTML version (compressed) is also available at <ulink
-	  url="http://codex.codex.xerox.com/slides/slideCVS_HTML.zip">http://codex.codex.xerox.com/slides/slideCVS_HTML.zip</ulink></para>
+	  url="http://codex.&SYS_DEFAULT_DOMAIN;/slides/slideCVS_HTML.zip">http://codex.&SYS_DEFAULT_DOMAIN;/slides/slideCVS_HTML.zip</ulink></para>
 	</listitem>
 	<listitem>
 	  <para>Open Source Development with CVS : excellent book also
@@ -496,7 +496,7 @@
         (in one line):</para>
 
       <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-cvs -d:pserver:loginname@cvs.projectname.codex.xerox.com:/cvsroot/projectname
+cvs -d:pserver:loginname@cvs.projectname.&SYS_DEFAULT_DOMAIN;:/cvsroot/projectname
 login
         </programlisting>
 
@@ -541,7 +541,7 @@ login
         under topdirectory). Then type the following command (in one line):</para>
 
       <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-cvs -d:pserver:loginname@cvs.projectname.codex.xerox.com:/cvsroot/projectname
+cvs -d:pserver:loginname@cvs.projectname.&SYS_DEFAULT_DOMAIN;:/cvsroot/projectname
 import topdirectory vendor_tag start
         </programlisting>
 
@@ -572,7 +572,7 @@ import topdirectory vendor_tag start
 
 	<listitem>
 	  <para><literal>vendor_tag</literal> is a
-            special tag. For now replace it with &#34;Xerox&#34;</para>
+            special tag. For now replace it with your company name.</para>
 	</listitem>
       </itemizedlist>
 
@@ -622,7 +622,7 @@ import topdirectory vendor_tag start
       <para>To create a working copy type the following command:</para>
 
       <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-cvs -d:pserver:loginname@cvs.projectname.codex.xerox.com:/cvsroot/projectname
+cvs -d:pserver:loginname@cvs.projectname.&SYS_DEFAULT_DOMAIN;:/cvsroot/projectname
 checkout directory
 </programlisting>
 
@@ -895,7 +895,7 @@ cvs -q tag V_1_2
             the <literal>project-1.2</literal> directory, type:</para>
 
 	  <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-cvs -d:pserver:login@cvs.project.codex.xerox.com:/cvsroot/project
+cvs -d:pserver:login@cvs.project.&SYS_DEFAULT_DOMAIN;:/cvsroot/project
 export project-1.2
 </programlisting>
           <para></para>
@@ -1008,7 +1008,7 @@ export project-1.2
         full e-mail addresses because they might change and you&#39;ll have to
         update your CVS administrative files by hand. Of course you can also
         specify any other full e-mail address corresponding to individuals
-        that are not CodeX users or to CodeX or Xerox distribution lists.
+        that are not CodeX users or to distribution lists.
         There is virtually no limit.</para>
 
       <para>For more information about the CVS notification capabilities

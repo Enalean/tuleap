@@ -11,9 +11,9 @@
 <h2>About <?php print $GLOBALS['sys_name']; ?></h2>
 
 <B>Mission Statement</b><br>
-The mission of <?php print $GLOBALS['sys_name']; ?> is to enrich the Xerox Software Development community by providing 
-a centralized place for Xerox Developers to share, control and
-manage Xerox internally developed software.
+The mission of <?php print $GLOBALS['sys_name']; ?> is to enrich the <?php print $GLOBALS['sys_org_name']; ?> Software Development community by providing 
+a centralized place for developers to share, control and
+manage <?php print $GLOBALS['sys_org_name']; ?> internally developed software.
 <br><br>
 
 <B>People</b><br>

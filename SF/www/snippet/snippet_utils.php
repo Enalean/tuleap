@@ -38,7 +38,7 @@ $SCRIPT_TYPE[6]='Macros';
 $SCRIPT_TYPE[6]='Full Program';
 
 $SCRIPT_LICENSE = array();
-$SCRIPT_LICENSE[0] = 'Xerox Code eXchange Policy';
+$SCRIPT_LICENSE[0] = $GLOBALS['sys_org_name'].' Code eXchange Policy';
 $SCRIPT_LICENSE[1] = 'Other';
 $SCRIPT_LICENSE[2] = '--- For COMIP approved Open Source projects ---';
 $SCRIPT_LICENSE[3] = 'GNU General Public License';

@@ -7,7 +7,6 @@
 // $Id$
 //
 -->
-<p><h2>Step 2: Terms of Service Agreement</h2></p>
 
 <p>
 <h2><?php print $GLOBALS['sys_name']; ?> Terms of Service Agreement</h2>
@@ -52,9 +51,9 @@ such modification, suspension or discontinuance except as expressly provided
 herein.
 </p>
 <p>
-<?php print $GLOBALS['sys_name']; ?> is a website owned and operated by Xerox for
+<?php print $GLOBALS['sys_name']; ?> is a website owned and operated by <?php print $GLOBALS['sys_org_name']; ?> for
 the purpose of fostering the cross-organizational software development as well as content and source code sharing under
- the terms of the <b><u><a href="/docman/display_doc.php?docid=16&group_id=1" target="_blank">Xerox Code eXchange Policy</a></b></u>.  Registering your project on CodeX implies that you fully understand this corporate policy and take the commitment to comply with it.
+ the terms of the <b><u><a href="/docman/display_doc.php?docid=16&group_id=1" target="_blank"><?php print $GLOBALS['sys_org_name']; ?> Code eXchange Policy</a></b></u>.  Registering your project on CodeX implies that you fully understand this corporate policy and take the commitment to comply with it.
 <p>
 <B>2. DESCRIPTION OF SERVICE</B> 
 </p>
@@ -62,7 +61,7 @@ the purpose of fostering the cross-organizational software development as well a
 <p>
 <P>
 <?php print $GLOBALS['sys_name']; ?> currently offers users access to a
-rich collection of on-line resources for Xerox internal software  development
+rich collection of on-line resources for <?php print $GLOBALS['sys_org_name']; ?> internal software  development
 and content creation, including various  communications tools, source code
 control and project management tools, online forums, shopping services,
 personalized content and branded programming through its network of
@@ -111,7 +110,7 @@ that the user, and not the <?php print $GLOBALS['sys_name']; ?> team, is entirel
 that he or she uploads, posts, emails or otherwise transmits via <?php print $GLOBALS['sys_name']; ?>
  or any Service. No user shall transmit Content or otherwise conduct or
 participate in any activities on <?php print $GLOBALS['sys_name']; ?> and/or any Service which, in
-the opinion of <?php print $GLOBALS['sys_name']; ?> counsel, are in contradiction with Xerox internal policies.
+the opinion of <?php print $GLOBALS['sys_name']; ?> counsel, are in contradiction with <?php print $GLOBALS['sys_org_name']; ?> internal policies.
 </p>
 
 <p>
@@ -158,7 +157,7 @@ limited to, the following:  1.) violation of these TOS;  2.) abuse of site
 resources or attempt to gain unauthorized entry to the site or site
 resources; 3.) use of Service in a manner inconsistent with the Purpose; 4.)
 a user's request for such termination; and 5.) requirement of applicable
- Xerox policy (e.g. employee leaving the company).
+ <?php print $GLOBALS['sys_org_name']; ?> policies (e.g. employee leaving the company).
 </p>
 
 <p>
@@ -182,14 +181,6 @@ or any other matters to the <a href="/contact.php"><?php print $GLOBALS['sys_nam
 
 
 <p>
-Content owned by Xerox Inc. copyright 2000-2002, Xerox Inc.  All rights reserved.
+Content owned by <?php print $GLOBALS['sys_long_org_name']; ?>. Copyright 2000-<?php print date('Y',time()); ?>, <?php print $GLOBALS['sys_org_name']; ?> Team. All rights reserved.
 </p>
 
-
-<BR><HR><BR>
-
-<P align=center>By clicking below, you acknowledge that you have read 
-and understand the Terms of Service agreement. Clicking "I AGREE" will
-constitute your legal signature on this document.
-<P><H3 align=center><A href="basicinfo.php">[I AGREE]</A>
-&nbsp;&nbsp;<A href="/">[I DISAGREE]</A></H3>

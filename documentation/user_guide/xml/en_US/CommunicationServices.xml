@@ -12,10 +12,10 @@
   <chapter id="CommunicationServices">
     <title>Communication Services</title>
 
-    <para>One of the CodeX objectives is to provide Xerox developers with
+    <para>One of the CodeX objectives is to provide developers with
     efficient software development and project management tools. In addition,
     the CodeX Team also wants the CodeX site to become the favorite
-    communication channel of all Xerox developers. We feel it is pivotal for
+    communication channel of all software developers. We feel it is pivotal for
     the project teams and their community of users to communicate.</para>
 
     <para>To this end, CodeX offers a series of communication services that
@@ -44,7 +44,7 @@
       naming pattern:</para>
 
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-projectname-listname@lists.codex.xerox.com
+projectname-listname@&SYS_LISTS_HOST;
 </programlisting>
 
       <para>Where:</para>
@@ -74,7 +74,7 @@ projectname-listname@lists.codex.xerox.com
       <para><tip><title>Tip: Create at least one Mailing List</title><para>A
       CodeX hosted project should at least create one mailing list where all
       users can post questions and comments. This list is typically called
-      <literal>projectname-interest@lists.codex.xerox.com</literal>. We
+      <literal>projectname-interest@&SYS_LISTS_HOST;</literal>. We
       strongly encourage you to follow this well established practice.</para></tip></para>
       </section>
 
@@ -87,7 +87,7 @@ projectname-listname@lists.codex.xerox.com
         you can access the ML administration page at the following URL:</para>
 
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-http://lists.codex.xerox.com/mailman/admin/listname
+http://&SYS_LISTS_HOST;/mailman/admin/listname
 </programlisting>
 
         <para>The Administration page allows you to tune many ML parameters,
@@ -129,7 +129,7 @@ http://lists.codex.xerox.com/mailman/admin/listname
       people in the team, new software release, information on related
       technologies and why not your wedding announcement or the birth of your
       sixth child ? . Do not keep your project concealed behind a veil. Make
-      your project life public for the benefit of all Xerox employees and for
+      your project life public for the benefit of all employees and for
       your faithful community of users.</para>
 
       <para>News publishing is very easy. To use it simply click on the News
@@ -140,7 +140,7 @@ http://lists.codex.xerox.com/mailman/admin/listname
       version.</para>
 
       <para>All posted news will appear on your Project Summary page and will
-      therefore be visible to all Xerox people visiting your project on CodeX.
+      therefore be visible to all users visiting your project on CodeX.
       Any CodeX visitor can attach a follow-up comment to the news making each
       piece of news a potential forum of discussion<footnote><para>Behind the
       scene, each piece of news is actually managed exactly like a CodeX Web

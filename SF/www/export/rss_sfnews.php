@@ -16,7 +16,7 @@ $res = db_query('SELECT forum_id,summary,date,details,group_id FROM news_bytes '
 
 // ## one time output
 print " <channel>\n";
-print "  <copyright>Copyright (c) Xerox Corporation, ".$GLOBALS['sys_name']." Team, 2001-".date('Y',time()).". All Rights Reserved</copyright>\n";
+print "  <copyright>Copyright (c) ".$GLOBALS['sys_long_org_name'].", ".$GLOBALS['sys_name']." Team, 2001-".date('Y',time()).". All Rights Reserved</copyright>\n";
 print "  <pubDate>".gmdate('D, d M Y G:i:s',time())." GMT</pubDate>\n";
 print "  <description>".$GLOBALS['sys_name']." Project News Highlights</description>\n";
 print "  <link>http://".$GLOBALS['sys_default_domain']."</link>\n";

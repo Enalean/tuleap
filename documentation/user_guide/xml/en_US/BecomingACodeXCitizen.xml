@@ -111,11 +111,12 @@
 	  </step>
 
 	  <step>
-	    <para><emphasis role="bold">E-mail Address</emphasis>: your Xerox
-              e-mail. E-mail that does not belong to the xerox.com domain (or
-              Xerox affiliated domains) is not allowed. Unless you explicitly
-              ask for permission, using an external e-mail forwarding address
-              is strictly forbidden</para>
+	    <para><emphasis role="bold">E-mail Address</emphasis>:
+	    your e-mail. E-mail that does not belong to the
+	    &SYS_ORG_NAME; domain (or &SYS_ORG_NAME; affiliated
+	    domains) is not allowed. Unless you explicitly ask for
+	    permission, using an external e-mail forwarding address is
+	    strictly forbidden.</para>
 	  </step>
 
 	  <step>
@@ -157,10 +158,10 @@
 
     <para>This 2-step registration process has been put in place for
       security reasons. Assuming people create their account with an alien
-      e-mail address while they have access to the Xerox Intranet, they
+      e-mail address while they have access to the Intranet, they
       won&#39;t be able to validate their account from the outside because the
-      CodeX machine is behind the Xerox firewall. Therefore, an account cannot
-      be validated from outside of the Xerox network.</para>
+      CodeX machine is behind the firewall. Therefore, an account cannot
+      be validated from outside.</para>
 
     <tip>
       <title>Tip: What if I loose my password or my login name?</title>
@@ -183,7 +184,7 @@
     <title>Login and Personal Page</title>
 
     <para>To log into the CodeX site, go to the CodeX Site at <ulink
-								     url="http://codex.xerox.com/">http://codex.xerox.com</ulink> and click
+								     url="http://&SYS_DEFAULT_DOMAIN;/">http://&SYS_DEFAULT_DOMAIN;</ulink> and click
       on the &#34;Login&#34; item in the upper part of the CodeX Main Menu. If
       you typed your login and password OK, CodeX presents you with your
       Personal Page (<xref linkend="FigureThePersonalPageOfACodeXUser" />). At
@@ -242,14 +243,14 @@
     <tip>
       <title>Tip: Use your canonical e-mail address</title>
 
-      <para>The CodeX site is connected to the Xerox People Directory
-        (MS-Exchange database), which has the advantage of showing useful
-        information about Xerox users like their physical location,
+      <para>The CodeX site is connected to the company Directory
+        , which has the advantage of showing useful
+        information about users like their physical location,
         organization, phone/fax number, etc. For this feature to work you must
-        give CodeX your e-mail address as it appears in the Xerox Directory.
+        give CodeX your e-mail address as it appears in the Directory.
         You can check that the Directory access is working for your account by
         going to your &#34;Account Maintenance&#34; page, select &#34;View my
-        developer profile&#34; and then &#34;More from the Xerox
+        developer profile&#34; and then &#34;More from the &SYS_ORG_NAME;
         Directory&#34;.</para>
     </tip>
 

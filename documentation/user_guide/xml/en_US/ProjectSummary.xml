@@ -53,7 +53,7 @@
           page. All projects can be accessed at:</para>
 
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-http://codex.xerox.com/projects/short_project_name
+http://&SYS_DEFAULT_DOMAIN;/projects/short_project_name
 </programlisting>
         </step>
       </procedure>

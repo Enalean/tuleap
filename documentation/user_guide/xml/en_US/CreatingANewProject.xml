@@ -33,8 +33,8 @@
       </listitem>
 
       <listitem>
-        <para>Make Xerox globally more productive and efficient by letting
-        others re-use your software and build on it.</para>
+        <para>Make your company globally more productive and efficient
+        by letting others re-use your software and build on it.</para>
       </listitem>
     </itemizedlist>
 
@@ -72,12 +72,13 @@
         <listitem>
           <para><emphasis role="bold">Step 2 - Terms of Services Agreement</emphasis></para>
 
-          <para>Here we want you to know about the kind of services that we,
-          the CodeX Team, are going to provide you with. This page also tells
-          you about a few things we ask you to do, and not to do, in order to
-          be good citizens and to be compliant with Xerox policies. To proceed
-          to the next step select [I AGREE] at the end of the document. If you
-          select [I DISAGREE] please contact us and tell us why. May be we can
+          <para>Here we want you to know about the kind of services
+          that we, the CodeX Team, are going to provide you with. This
+          page also tells you about a few things we ask you to do, and
+          not to do, in order to be good citizens and to be compliant
+          with the company policies. To proceed to the next step select
+          [I AGREE] at the end of the document. If you select [I
+          DISAGREE] please contact us and tell us why. May be we can
           help you solve the problem.</para>
         </listitem>
 
@@ -86,13 +87,13 @@
 
           <para>This is where the rubber hits the road! Tell us about your
           project. Give an accurate description. This is really important if
-          you want to maximize the chance of re-use by others in Xerox. Also
-          list any information related to Xerox Intellectual Property like
+          you want to maximize the chance of re-use by others. Also
+          list any information related to Intellectual Property like
           Invention Proposal or Patents related to the software whether
           pending or already filed. Give the list of software needed (whether
-          Xerox or 3rd party) to make your own software run properly. And the
+          internal or 3rd party) to make your own software run properly. And the
           last field is entirely for you. Write down all the things that you
-          consider as crucial for your project or for the rest of Xerox.</para>
+          consider as crucial for your project or for the community of users.</para>
         </listitem>
 
         <listitem>
@@ -111,14 +112,14 @@
           <para><emphasis role="bold">Step 5 - Software Policy</emphasis></para>
 
           <para>Most of the time the only valid choice here is the default
-          one: &#34;Xerox Code eXchange Policy&#34;. As explained earlier in
-          this document the CodeX Team and the Xerox lawyers have carefully
+          one: &#34;&SYS_ORG_NAME; Code eXchange Policy&#34;. As explained earlier in
+          this document the CodeX Team assisted by &SYS_ORG_NAME; lawyers have carefully
           crafted the CodeX Policy and it is very unlikely that you need to
           create your own. If you do you&#39;ll have to talk to us and to the
-          Xerox Intellectual Property and Legal Department to validate it. A
+          &SYS_ORG_NAME; Legal Department to validate it. A
           number of truly Open Source licenses are also mentioned in the list.
           Prior to choosing any of these you must go through the COMIP
-          validation process and obtain Xerox permission to release your code
+          validation process and obtain permission to release your code
           under an Open Source license.</para>
         </listitem>
 
@@ -198,7 +199,7 @@
 
       <note><para>Giving both the short description and the categories
       are critical to both the consistency of the CodeX site but also for the
-      rest of Xerox to make sense of the many projects hosted on CodeX.
+      community to make sense of the many projects hosted on CodeX.
       Characterizing your project in the best possible way is the first step
       towards efficient code sharing and re-use.</para></note>
 

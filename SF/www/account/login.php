@@ -150,7 +150,7 @@ your first time on the <b><?php print $GLOBALS['sys_name']; ?></b>
 site you can become a member right now ! The creation of a <a
 href="register.php">new account</a> takes a few seconds and you can
 take advantage of the services offered by the <?php print
-$GLOBALS['sys_name']; ?> site to all Xerox developers.
+$GLOBALS['sys_name']; ?> site to all <?php print $GLOBALS['sys_org_name']; ?> developers.
 
 <SCRIPT language="JavaScript"> <!-- 
     document.form_login.form_loginname.focus();

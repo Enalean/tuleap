@@ -1,0 +1,19 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2003. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+// Originally written by Laurent Julliard 2003, CodeX Team, Xerox
+//
+-->
+<!-- Use this file to redefine the value of the entities defined in
+the ParametersDefault.dtd file. 
+For instance:
+
+<!ENTITY SYS_DEFAULT_DOMAIN "my.domain.here">
+<!ENTITY SYS_ORG_NAME "Your organization name here">
+etc...
+-->

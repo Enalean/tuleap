@@ -14,21 +14,20 @@ global $group_id,$rand_hash,$LICENSE;
 
 
 <P><?php print $GLOBALS['sys_name']; ?> was created to promote code
-sharing of Xerox internally developed software and to have one single
+sharing of <?php print $GLOBALS['sys_org_name']; ?> internally developed software and to have one single
 place where to shop for pieces of source code.
 
-<p>To keep things simple, the Xerox Open Source Committee and the
-Xerox Intellectual Property Law Dept have put together a default <a
-href="/docman/display_doc.php?docid=16&group_id=1" target="side_window">Xerox Code eXchange
+<p>To keep things simple, the <?php print $GLOBALS['sys_name']; ?> Team and the
+<?php print $GLOBALS['sys_org_name']; ?> Legal Department have put together a default <a
+href="/docman/display_doc.php?docid=16&group_id=1" target="side_window"><?php print $GLOBALS['sys_org_name']; ?> Code eXchange
 Policy</a> that defines the terms and conditions under which source
-code can be shared inside Xerox.
+code can be shared inside <?php print $GLOBALS['sys_org_name']; ?>.
 
 <P>We think that this policy serves well the purpose of code sharing
 while offering a good level of protection. However if this default
 policy doesn't fit your needs select the item "Other" in the menu
 below and let us know why you wish to use another policy. Your new
-policy will be reviewed by the Xerox Intellectual Property Law Dept
-and the Xerox Open Source Committee for approval.
+policy will be reviewed by the <?php print $GLOBALS['sys_org_name']; ?> Legal Department and the <?php print $GLOBALS['sys_name']; ?> Team for approval.
 
 <P>Choosing a new policy is a serious decision. Please take some time
 to read the <a href="/docman/display_doc.php?docid=16&group_id=1"
@@ -47,35 +46,10 @@ choices below and proceed.</LI>
 
 <LI>If your software has already been approved by the COMIP for
 external Open Source then choose the Open Source license that covers
-your Xerox code. It will help other Xerox teams to decide whether they
-can/want to re-use your code in there own Xerox owned software.</li>
+your <?php print $GLOBALS['sys_org_name']; ?> software. It will help other project teams to decide whether they
+can/want to re-use your code in there own <?php print $GLOBALS['sys_org_name']; ?> owned software.</li>
 
 </UL>
-<!-- LJ
-<P>For many legal reasons, you may not change a project's license once it has been set. If you
-feel that you have a special case and legal capability to do this,
-we will work with you on a case-by-case basis.
--->
-
-<!-- LJ
-<P><B>Licenses</B>
-
-<UL>
-<LI><A href="http://www.opensource.org/licenses/gpl-license.html" target="_blank">GNU General Public License</A>
-<LI><A href="http://www.opensource.org/licenses/lgpl-license.html" target="_blank">GNU Library or 'Lesser' Public License</A>
-<LI><A href="http://www.opensource.org/licenses/bsd-license.html" target="_blank">BSD License</A>
-<LI><A href="http://www.opensource.org/licenses/mit-license.html" target="_blank">MIT License</A>
-<LI><A href="http://www.opensource.org/licenses/artistic-license.html" target="_blank">Artistic License</A>
-<LI><A href="http://www.mozilla.org/MPL/MPL-1.0.html" target="_blank">Mozilla Public License 1.0</A>
-<LI><A href="http://www.troll.no/qpl" target="_blank">Q Public License</A>
-<LI><A href="http://www.research.ibm.com/jikes/license/license3.htm" target="_blank">IBM Public License 1.0</A>
-<LI><A href="http://cvw.mitre.org/cvw/licenses/source/license.html" target="_blank">Collaborative Virtual Workspace License</A>
-<LI><A href="http://www.risource.org/RPL/RPL-1.0A.shtml" target="_blank">Ricoh Source Code Public License 1.0</A>
-<LI><A href="http://www.python.org/doc/Copyright.html" target="_blank">Python License</A>
-<LI><A href="http://www.opensource.org/licenses/zlib-license.html" target="_blank">zlib/libpng License</A>
-<LI><A href="http://www.sourceforge.net/register/publicdomain.txt" target="_blank">Public Domain</A>
-</UL>
--->
 
 <P><B>Policy for This Project</B>
 
@@ -84,7 +58,6 @@ we will work with you on a case-by-case basis.
 <INPUT TYPE="HIDDEN" NAME="insert_license" VALUE="y">
 <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">
 <INPUT TYPE="HIDDEN" NAME="rand_hash" VALUE="<?php echo $rand_hash; ?>">
-<!-- LJ <B>Your License:</B><BR> -->
 <?php
 	echo '<SELECT NAME="form_license">';
 	while (list($k,$v) = each($LICENSE)) {

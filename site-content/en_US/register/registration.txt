@@ -21,34 +21,11 @@ the <a href="/docs/site" target="side_window"><?php print $GLOBALS['sys_name']; 
 
 <p>
 The space given to you on this server is given for the expressed purpose of
-Xerox software development or, in the case of web sites, the advancement of
-Code eXchange culture inside Xerox. For more information, please read the <?php print $GLOBALS['sys_name']; ?> Terms of Service ("Terms of Service") in Step 2.
+<?php print $GLOBALS['sys_org_name']; ?> software development or, in the case of web sites, the advancement of software sharing and reuse 
+ culture inside <?php print $GLOBALS['sys_org_name']; ?>. For more information, please read the <?php print $GLOBALS['sys_name']; ?> Terms of Service ("Terms of Service") in Step 2.
 </p>
 
 
-<!-- LJ Not sure what it means in the Xerox context 
-<p>
-<b>Creative Freedom</b>
-</p>
-
-<p>
-It is our intent to allow you creative freedom on your project. This is not
-a totally free license, though. For our legal protection and yours there are
-limits. Please know, however that we too are Open Source developers that
-value our freedom. Details about these restrictions are described in the
-Terms of Service.
-</p>
--->
-<!-- LJ Not sure what it means in the Xerox context 
-<p>
-<b>Advertisements</b>
-</p>
-
-<p>
-You may not place any revenue-generating advertisements on a site hosted at
-<?php print $GLOBALS['sys_name']; ?>.
-</p>
--->
 <p>
 <b><?php print $GLOBALS['sys_name']; ?> Link</b>
 </p>
@@ -67,12 +44,12 @@ the <a href="/docman/display_doc.php?docid=21&group_id=1" target="side_window"><
 </p>
 
 <p>
-In the course of the registration process you will be presented with the Xerox Code eXchange Policy. This policy that has been patiently crafted by the Xerox Open Source Committee and the Xerox's Intellectual Property Law Dept and explains the rights and duties implied by code sharing. We strongly suggest that you use this default policy for your own project. Do not confuse this policy with Copyright:  in any case your team (and Xerox in general) will still own the code and the Xerox standard Copyright statement must be present in your source code.
+In the course of the registration process you will be presented with the <?php print $GLOBALS['sys_org_name']; ?> Code eXchange Policy. This policy has been patiently crafted by the <?php print $GLOBALS['sys_name']; ?> Team and the <?php print $GLOBALS['sys_org_name']; ?> Legal Department. It explains the rights and duties implied by code sharing. We strongly suggest that you use this default policy for your own project. Do not confuse this policy with Copyright:  in any case your team (and <?php print $GLOBALS['sys_org_name']; ?> in general) will still own the code and the <?php print $GLOBALS['sys_org_name']; ?> standard Copyright statement must be present in your source code.
 </p>
 
 <p>
 If you wish to use another policy that is not currently approved by the
-Xerox Open Source Committee, let us know and we will review these requests on a
+<?php print $GLOBALS['sys_name']; ?> Team, let us know and we will review these requests on a
 case-by-case basis. But please be sure that the one we provide is not good enough before you contact us.
 </p>
 

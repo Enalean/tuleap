@@ -56,10 +56,10 @@ herein.
 </p>
 
 <p>
-<?php print $GLOBALS['sys_name']; ?> is a website owned and operated by Xerox for
+<?php print $GLOBALS['sys_name']; ?> is a website owned and operated by <?php print $GLOBALS['sys_org_name']; ?> for
 the purpose of fostering the cross-organizational software development as well as content and source code sharing under
- the terms of the Xerox Code eXchange Policy.  <?php print $GLOBALS['sys_name']; ?> currently offers users access to a
-rich collection of on-line resources for Xerox internal software  development
+ the terms of the <?php print $GLOBALS['sys_org_name']; ?> Code eXchange Policy.  <?php print $GLOBALS['sys_name']; ?> currently offers users access to a
+rich collection of on-line resources for internal software  development
 and content creation, including various  communications tools, source code
 control and project management tools, online forums, shopping services,
 personalized content and branded programming through its network of
@@ -108,7 +108,7 @@ that the user, and not the <?php print $GLOBALS['sys_name']; ?> team, is entirel
 that he or she uploads, posts, emails or otherwise transmits via <?php print $GLOBALS['sys_default_domain']; ?>
 or any Service. No user shall transmit Content or otherwise conduct or
 participate in any activities on <?php print $GLOBALS['sys_name']; ?> and/or any Service which, in
-the opinion of <?php print $GLOBALS['sys_name']; ?> counsel, are in contradiction with Xerox internal policies.
+the opinion of <?php print $GLOBALS['sys_name']; ?> counsel, are in contradiction with <?php print $GLOBALS['sys_org_name']; ?> internal policies.
 </p>
 
 <p>
@@ -159,7 +159,7 @@ limited to, the following:  1.) violation of these TOS;  2.) abuse of site
 resources or attempt to gain unauthorized entry to the site or site
 resources; 3.) use of Service in a manner inconsistent with the Purpose; 4.)
 a user's request for such termination; and 5.) requirement of applicable
-Xerox policy.
+<?php print $GLOBALS['sys_org_name']; ?> policies.
 </p>
 
 <p>
@@ -181,8 +181,7 @@ Please report any violations of the TOS, any alleged copyright infringements
 or any other matters to the <a href="/contact.php"><?php print $GLOBALS['sys_name']; ?> Team</a>.
 </p>
 
-
 <p>
-Content owned by Xerox Inc. copyright 2000-2002, Xerox Inc.  All rights reserved.
+Content owned by <?php print $GLOBALS['sys_long_org_name']; ?>. Copyright 2000-<?php print date('Y',time()); ?>, $GLOBALS['sys_org_name']; ?> Team.  All rights reserved.
 </p>
 

@@ -76,13 +76,13 @@ if (!$res_user || db_numrows($res_user) < 1) {
 // Some more information on the user from the LDAP server if available
 if ($sys_ldap_server) {
     if (!$showdir) {
-	echo '<td colspan="2" align="center"><a href="'.$PHP_SELF.'/?showdir=1"><hr>[ More from the Xerox Directory... ]</a><td>';
+	echo '<td colspan="2" align="center"><a href="'.$PHP_SELF.'/?showdir=1"><hr>[ More from the '.$GLOBALS['sys_org_name'].' Directory... ]</a><td>';
 	
     } else {
 	$ds=ldap_connect($sys_ldap_server);
 	if ($ds) {
 	    $r=ldap_bind($ds);
-	    $sr=ldap_search($ds,'o=XEROX, c=US', 'mail='.db_result($res_user,0,'email'));
+	    $sr=ldap_search($ds,$GLOBALS['sys_ldap_dn'],'mail='.db_result($res_user,0,'email'));
 	    if ($sr) {
 		// Normally the e-mail address is unique so
 		// we should only have one reply
@@ -106,9 +106,9 @@ if ($sys_ldap_server) {
 		    echo'<tr valign="top"><td>Fax:</td><td><b>'.
 			$info[0]['facsimiletelephonenumber'][0] .'</b></td></tr>';			    
 		} else
-		    $feedback = "Xerox Directory: unkown user";
+		    $feedback = $GLOBALS['sys_org_name']." Directory: unkown user";
 	    } else
-		$feedback = "Xerox Directory: search failed";
+		$feedback = $GLOBALS['sys_org_name']." Directory: search failed";
 	} else
 	    $feedback = "LDAP server not responding";
 

@@ -25,7 +25,7 @@
           (where projectname is your project short name):</para>
 
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-http://projectname.codex.xerox.com
+http://projectname.&SYS_DEFAULT_DOMAIN;
 </programlisting>
         </listitem>
 
@@ -435,7 +435,7 @@ if (user_isloggedin() ) {
               <para>Upload Files to this location:</para>
 
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-ftp://projectname.codex.xerox.com/home/groups/projectname/htdocs/
+ftp://projectname.&SYS_DEFAULT_DOMAIN;/home/groups/projectname/htdocs/
 </programlisting>
             <para></para>
             </listitem>
@@ -485,7 +485,7 @@ ftp://projectname.codex.xerox.com/home/groups/projectname/htdocs/
           publication via FTP. To create a new site go to the Site -&#62; New
           Site menu. In the local information, choose your site name and local
           root folder. For the remote information, choose FTP access and
-          specify <literal>projectname.codex.xerox.com</literal>
+          specify <literal>projectname.&SYS_DEFAULT_DOMAIN;</literal>
           as host and <literal>/home/groups/projectname/htdocs</literal>
           as the host directory. The login is your CodeX login.</para>
         </section>
@@ -502,7 +502,7 @@ ftp://projectname.codex.xerox.com/home/groups/projectname/htdocs/
             <listitem>
               <para><emphasis role="bold">FTP</emphasis>: this is the simplest
               method for transferring your Web pages to the CodeX remote
-              location. Use ftp to connect to <literal>projectname.codex.xerox.com</literal>
+              location. Use ftp to connect to <literal>projectname.&SYS_DEFAULT_DOMAIN;</literal>
               and use your CodeX username and password to login. Once logged
               in issue the following command:</para>
 
@@ -520,7 +520,7 @@ cd /home/groups/projectname/htdocs
               <para><emphasis role="bold">SCP</emphasis>:</para>
 
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-scp -r * login@shell.codex.xerox.com:/home/groups/projectname/htdocs/
+scp -r * login@&SYS_SHELL_HOST;:/home/groups/projectname/htdocs/
 </programlisting>
 
               <para>where login is your CodeX login. The -r option stands for
@@ -567,7 +567,7 @@ scp -r * login@shell.codex.xerox.com:/home/groups/projectname/htdocs/
       following Web pointer:</para>
 
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-http://codex.xerox.com/sflogo.php?group_id=N&#38;type=1
+http://&SYS_DEFAULT_DOMAIN;/sflogo.php?group_id=N&#38;type=1
 </programlisting>
 
       <para>You can use this logo in anchor and image tags. For example you
@@ -575,8 +575,8 @@ http://codex.xerox.com/sflogo.php?group_id=N&#38;type=1
       Summary page:</para>
 
         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-&#60;A href=&#34;http://codex.xerox.com/projects/projectname&#34;&#62;
-&#60;IMG src=&#34;http://codex.xerox.com/sflogo.php?group_id=N&#38;type=1 width=&#34;80&#34;
+&#60;A href=&#34;http://&SYS_DEFAULT_DOMAIN;/projects/projectname&#34;&#62;
+&#60;IMG src=&#34;http://&SYS_DEFAULT_DOMAIN;/sflogo.php?group_id=N&#38;type=1 width=&#34;80&#34;
      height=&#34;20&#34; border=&#34;0&#34; alt=&#34;Source Code Available !&#34;&#62;
 &#60;/A&#62;
         </programlisting>

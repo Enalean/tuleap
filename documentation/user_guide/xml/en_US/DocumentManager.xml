@@ -112,7 +112,7 @@
     that actually point to an external location like a DocuShare
     collection or a DocuShare file for instance. To do this, simply
     surround the document title with an HREF tag (hyperlink) pointing
-    to the real location elsewhere on the Xerox Intranet (an example
+    to the real location elsewhere on the Intranet (an example
     is given with Document #15 in <xref
     linkend="FigureTheDocumentManagerAdministrationScreen" />)</para>
     </tip></para>

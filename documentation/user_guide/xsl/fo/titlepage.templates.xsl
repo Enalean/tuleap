@@ -361,14 +361,6 @@
     </xsl:when>
   </xsl:choose>
 
-  <!-- CX-SBT: Draw in hard "codex.xerox.com" -->
-  <fo:block font-family="Helvetica"
-    font-weight="bold"
-    text-align="center"
-    space-before="18.6624pt"
-    font-size="20pt"
-    keep-with-next.within-column="always" hyphenate="false">codex.xerox.com</fo:block>
-
   <!-- CX-SBT: Don't print the authors informations -->
   <!--<xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="bookinfo/corpauthor"/>
   <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="bookinfo/authorgroup"/>

@@ -78,7 +78,7 @@ Other miscellaneous points:
 access still does not work, please open a support ticket so that we
 may take a look at the problem.
 
-- Also note that it might take up to a day for the Xerox name servers
+- Also note that it might take up to a day for the '. $GLOBALS['sys_org_name']. ' name servers
 to be aware of your project specific server names (see above). If you
 are in a hurry, you may try shelling into
 '. $GLOBALS['sys_shell_host']. ' and pointing your CVS client to
@@ -95,10 +95,10 @@ document root, including the top CVSROOT directory.  This will
 preserve your revision history. If you do not care about preserving
 the existing CVS history then just do a "cvs import" yourself.
 
-Enjoy the system, and please tell other Xerox employees about
+Enjoy the system, and please tell other '.$GLOBALS['sys_org_name'].' employees about
 '.$GLOBALS['sys_name'].'.  The '.$GLOBALS['sys_name'].' Team believes
-in the value of code sharing inside Xerox and we rely on all of you to
-preach the word. Let\'s grow the Xerox Source Code Sharing community !
+in the value of code sharing inside '.$GLOBALS['sys_org_name'].' and we rely on all of you to
+preach the word. Let\'s grow the '.$GLOBALS['sys_org_name'].' Source Code Sharing community !
 
 Let us know if there is anything we can do to help you.
 

@@ -126,7 +126,7 @@
       <note><para>At first glance, this structure may appear a bit
       complex. However this is really the kind of structure a project team
       should aim at to make their deliverables easy to understand and easy to
-      access for the rest of Xerox. Thinking about the structure of your
+      access for the community. Thinking about the structure of your
       software and documentation deliverables ahead of time can help you
       structure your team, your working processes (e.g. build and test
       process) in the right way. Do not overlook this part of your project.</para></note>
@@ -304,7 +304,7 @@
             this release with a focus on the user visible changes (new UI, new
             functions, new APIs...). This is an important document and all new
             releases should definitely have one. Release Notes are immensely
-            helpful to the rest of Xerox to determine whether they need to
+            helpful to the community to determine whether they need to
             upgrade to the next release.</para>
 
             <para>The ChangeLog is a much more technical document. It contains
@@ -351,8 +351,8 @@
 
             <para><tip><title>Tip: Always compress your deliverables</title><para>In
             order to save disk space on the CodeX server as well as on CodeX
-            users&#39; machine and minimize network bandwidth consumption on
-            the Xerox Intranet always compress your deliverables. Use Winzip
+            users&#39; machine and minimize network bandwidth consumption
+            always compress your deliverables. Use Winzip
             on Windows and compress, gzip or even better bzip2 on Linux/Unix
             machines.</para></tip></para>
           </listitem>

@@ -9,7 +9,7 @@
 -->
 	<FONT face="arial, helvetica">
 	<P>
-	The purpose of this archive is to let you share your code snippets with the rest of Xerox. Code snippets are small pieces of code like scripts, macros, 
+	The purpose of this archive is to let you share your code snippets with the rest of <?php print $GLOBALS['sys_org_name']; ?>. Code snippets are small pieces of code like scripts, macros, 
 	and functions that does not require a full project environment to be put in place.
 	<P>
 	You can create a new code snippet, then post additional versions of that 

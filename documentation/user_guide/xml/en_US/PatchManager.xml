@@ -13,11 +13,11 @@
   <chapter id="PatchManager">
     <title>Patch Manager</title>
 
-    <section id="Howtosubmitsourcecodecontribution">
-      <title>How to submit source code contribution</title>
+    <section id="HowToSubmitSourceCodeContribution">
+      <title>How To Submit Source Code Contribution</title>
 
       <para>CodeX gives you an unparalleled ability to learn from the source
-      code of others by making source code sharing a common practice in Xerox.
+      code of others by making source code sharing a common practice at &SYS_ORG_NAME;.
       When you re-use a piece of code from CodeX, the Code eXchange Policy
       specifies that any modification you&#39;ve made to the original source
       code must be returned to the original team.</para>
