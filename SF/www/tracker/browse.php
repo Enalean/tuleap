@@ -63,8 +63,8 @@ if (!$chunksz) { $chunksz = 50; }
 // Make sure offset values, search and multisort flags are defined
 // and have a correct value
 if (!$offset || $offset < 0) { $offset=0; }
-if (($advsrch != 0) && ($advsrch != 1)) { $advsrch = 0; }
-if (($msort != 0) && ($msort != 1)) { $msort = 0; }
+if (($advsrch != 1)) { $advsrch = 0; }
+if (($msort != 1)) { $msort = 0; }
 
 /* ==================================================
   If the report type is not defined then get it from the user preferences.
@@ -253,6 +253,8 @@ if ($set=='my') {
 } else {
     // Open artifacts - backwards compat can be removed 9/10
     $prefs['status_id'][]=1;
+	// Any value for assigned to
+    $prefs['assigned_to'][]=0;
 }
 
 

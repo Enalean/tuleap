@@ -163,9 +163,9 @@ class ArtifactReportHtml extends ArtifactReport {
                 $query_fields = $this->getQueryFields();
                 while (list($key,$field) = each($query_fields) ) {
                 
-                        $field_html = new ArtifactFieldHtml($field);
+                    $field_html = new ArtifactFieldHtml($field);
                         
-                        //echo $field->getName().$field->dump()."<br>";
+                    //echo $field->getName()."-".$field->display_type."-".$field->data_type."-".$field->dump()."<br>";
                                         
                     // beginning of a new row
                     if ($ib % $fields_per_line == 0) {
