@@ -95,7 +95,7 @@ print " </channel>\n";
 	print '"'.join(',',$devstate).'",';
 	
 	print "http://$GLOBALS[sys_default_domain]/project/showfiles.php?group_id=$row[group_id],";
-	print "http://$GLOBALS[sys_default_domain]/project/$row[unix_group_name],";
+	print "http://$GLOBALS[sys_default_domain]/projects/$row[unix_group_name],";
 	print '"'.join(',',$admins).'",';
 	
 	// Finally print whether this file is visisble in the Xerox eTTM Software Inventory
