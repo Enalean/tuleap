@@ -282,7 +282,7 @@ function permission_process_selection_form($group_id, $permission_type, $object_
                 } else $msg .= "Please note that nobody has access to this object any longer! ";
             }
             if (permission_add_ugroup($group_id, $permission_type, $object_id, $selected_ugroup)) {
-                $msg .= "+g$selected_ugroup ";
+                # $msg .= "+g$selected_ugroup ";
             } else {
                 return array(false, $msg." - ERROR: Cannot add ugroup $selected_ugroup. Are you a project administrator?");
             }

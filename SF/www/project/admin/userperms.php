@@ -186,7 +186,7 @@ if ( $project->usesTracker()&&$sys_activate_tracker&&$at_arr ) {
 		echo '<TD><B>Tracker:<br>'.$at_arr[$j]->getName().'</B></TD>';
 	}
 }
-print '<TD><B>User Groups</B></TD>';
+print '<TD><B>Member of user groups:</B></TD>';
 
 ?>
 </TR>

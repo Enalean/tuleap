@@ -243,24 +243,24 @@ function switchMessage(_I)
     $res=db_query($sql);
     if (db_numrows($res)>0) {
         echo '
-<hr><p><b>Current permissions associated to this group:</b>
+<hr><p><b>This user group is granted the following permissions:</b>
 <p>';
         
         $title_arr=array();
         $title_arr[]='Permission';
-        $title_arr[]='Name';
+        $title_arr[]='Resource Name';
         echo html_build_list_table_top($title_arr,false,false,false);
         $row_num=0;
         
         while ($row = db_fetch_array($res)) {
             echo '<TR class="'. util_get_alt_row_color($row_num) .'">';
             if ($row['permission_type'] == 'PACKAGE_READ') {
-                echo '<TD>Package</TD>';
-                echo '<TD><a href="/file/admin/editpackagepermissions.php?package_id='.$row['object_id'].'&group_id='.$group_id.'">'.file_get_package_name_from_id($row['object_id']).'</a></TD>';
+                echo '<TD>Package Download</TD>';
+                echo '<TD>Package <a href="/file/admin/editpackagepermissions.php?package_id='.$row['object_id'].'&group_id='.$group_id.'">'.file_get_package_name_from_id($row['object_id']).'</a></TD>';
             } else if ($row['permission_type'] == 'RELEASE_READ') {
-                echo '<TD>Release</TD>';
+                echo '<TD>Release Download</TD>';
                 $package_id=file_get_package_id_from_release_id($row['object_id']);
-                echo '<TD><a href="/file/admin/editreleasepermissions.php?release_id='.$row['object_id'].'&group_id='.$group_id.'&package_id='.$package_id.'">'.file_get_release_name_from_id($row['object_id']).'</a> (<a href="/file/admin/editreleases.php?package_id='.$package_id.'&group_id='.$group_id.'">'.file_get_package_name_from_id($package_id).'</a>)</TD>';
+                echo '<TD>Release <a href="/file/admin/editreleasepermissions.php?release_id='.$row['object_id'].'&group_id='.$group_id.'&package_id='.$package_id.'">'.file_get_release_name_from_id($row['object_id']).'</a> (from package <a href="/file/admin/editreleases.php?package_id='.$package_id.'&group_id='.$group_id.'">'.file_get_package_name_from_id($package_id).'</a>)</TD>';
             } else {
                 echo '<TD>'.$row['permission_type'].'</TD>
               <TD>'.$row['object_id'].'</TD>';

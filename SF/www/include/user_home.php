@@ -150,7 +150,7 @@ if ($sys_ldap_server) {
 </TD>
 <TD>&nbsp;</TD>
 <TD width=50%>
-<?php $HTML->box1_top("Group Info"); 
+<?php $HTML->box1_top("Project Info"); 
 // now get listing of groups for that user
 $res_cat = db_query("SELECT groups.group_name, "
 	. "groups.unix_group_name, "
@@ -166,7 +166,7 @@ if (db_numrows($res_cat) < 1) {
 	<p>This developer is not a member of any projects.
 	<?php
 } else { // endif no groups
-	print "<p>This developer is a member of the following groups:<BR>&nbsp;";
+	print "<p>This developer is a member of the following projects:<BR>&nbsp;";
 	while ($row_cat = db_fetch_array($res_cat)) {
 		print ("<BR>" . "<A href=\"/projects/$row_cat[unix_group_name]/\">$row_cat[group_name]</A>\n");
 	}
