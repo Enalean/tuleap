@@ -138,9 +138,10 @@ function prepare_bug_record($group_id, &$col_list, &$record) {
 	    $record[$col] = prepare_textarea($record[$col]);
 
 	} else if (bug_data_is_select_box($col) && ($col != 'severity') &&
-		   ($col != 'assigned_to') ) {
+		  !bug_data_is_username_field($col) ) {
 	    // All value_ids transformed in human readable values 
-	    // except severity that remains a number.
+	    // except severity that remains a number and usernames
+	    // which are already in clear
 	    $record[$col] = bug_data_get_cached_field_value($col, $group_id, $record[$col]);
 	}
     }

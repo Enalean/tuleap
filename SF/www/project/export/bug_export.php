@@ -28,15 +28,14 @@ while ($field = bug_list_all_fields()) {
     $dsc_list[$field] = bug_data_get_description($field);
 
     // user names requires some special processing 
-    if ($field == 'assigned_to') {
-	$select .= ',user_at.user_name AS assigned_to';
-	$from .= ',user user_at';
-	$where .= ' AND user_at.user_id=bug.assigned_to ';
-    } else if  ($field == 'submitted_by') {
-	$select .= ',user.user_name AS submitted_by';
-	$from .= ',user';
-	$where .= ' AND user.user_id=bug.submitted_by ';
+    if (bug_data_is_username_field($field)) {
+	// user names requires some special processing to display the username
+	// instead of the user_id
+	$select .= ",user_$field.user_name AS $field";
+	$from .= ",user user_$field";
+	$where .= " AND user_$field.user_id=bug.$field ";
     } else {
+	// otherwise just select this column as is
 	$select .= ",bug.$field";
     }
 }
