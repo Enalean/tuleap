@@ -354,7 +354,7 @@ class ArtifactFieldHtml extends ArtifactField {
 				    $arr[$i] = $this->getValue($group_artifact_id,$arr[$i]);
 		    }
 	
-		    $output .= join(',', $arr);
+		    $output .= join(', ', $arr);
 	
 		} else {
 		    

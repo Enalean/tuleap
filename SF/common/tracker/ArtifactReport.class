@@ -823,7 +823,7 @@ class ArtifactReport extends Error {
 						$values = $field->getValues($res[$i]['artifact_id']);
 					}
 					$label_values = $field->getLabelValues($this->group_artifact_id,$values);
-					$res[$i][$field_name] = join(",",$label_values);
+					$res[$i][$field_name] = join(", ",$label_values);
 				}
 
 			}

@@ -317,13 +317,13 @@ function util_user_link ($username) {
 
 function util_multi_user_link ($usernames) {
 	
-	$users = explode(",",$usernames);
+	$users = explode(", ",$usernames);
 	if ( count($users) > 1 ) {
 		// Multiple users
 				
 		$str = "";
 		for($i=0;$i<count($users)-1;$i++) {
-			$str .= util_user_link($users[$i]).",";
+			$str .= util_user_link($users[$i]).", ";
 		}
 		$str .= util_user_link($users[$i]);
 		return $str;
