@@ -1,0 +1,636 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id: 
+//
+//	Originally written by Stephane Bouhet 2002, CodeX Team, Xerox
+//
+-->
+  <chapter id="CodeXSiteOverview">
+    <title>CodeX Site Overview</title>
+
+    <para>CodeX is a Xerox <emphasis role="underline">internal</emphasis> Web
+    Site available at <ulink url="http://codex.xerox.com/">http://codex.xerox.com/.</ulink>
+    To browse the CodeX site use your favorite Web Browser
+    <footnote><para>CodeX uses standard HTML and only a little bit of
+    Javascript. It is known to work well with Netscape 4.x, Netscape 6.x and
+    Mozilla as well as IE 4 or 5. Other Web Browsers like Opera or Konqueror
+    work as well. CodeX uses very little graphic material and is therefore
+    browsable by specific text only browser like those used by visually
+    impaired people.</para></footnote>. CodeX is a rich site and the CodeX
+    User Guide is going to guide you through all the services that the CodeX
+    site has to offer. In order to help you find your way in the CodeX
+    services gallery, <xref linkend="FigureCodeXWebPageFlowChart" /> gives a
+    broad overview of the services available as well as a flow chart showing
+    how to access a given service.</para>
+
+    <section id="CodeXHomePage">
+      <title>CodeX Home Page</title>
+
+      <para>The Home Page is divided in 4 parts (see <xref
+      linkend="FigureTheCodeXHomePage" />):</para>
+
+      <procedure>
+        <step>
+          <para><emphasis role="bold">The CodeX Main Menu</emphasis>: on the
+          left hand side of the screen</para>
+        </step>
+
+        <step>
+          <para><emphasis role="bold">CodeX Short Introduction</emphasis>: the
+          upper central part gives you a brief but pivotal introduction to the
+          CodeX initiative and a series of links to must read documents</para>
+        </step>
+
+        <step>
+          <para><emphasis role="bold">CodeX Latest News</emphasis>: The lower
+          central part shows the last 10 pieces of news related to CodeX
+          hosted projects or to the CodeX site.</para>
+        </step>
+
+        <step>
+          <para><emphasis role="bold">The CodeX Dashboard</emphasis>: The
+          right hand side of the home page shows a series of statistics about
+          the overall activity of the CodeX Site</para>
+        </step>
+      </procedure>
+    </section>
+
+    <section id="TheCodexMainMMenu">
+      <title>The CodeX Main Menu</title>
+
+      <para>The CodeX main menu is a permanent piece of information that
+      you&#39;ll always see on your screen wherever you are in the CodeX site.
+      Its content can vary according to where you and who you are. In other
+      words it is context sensitive. Let&#39;s take 2 examples:</para>
+
+      <itemizedlist mark="bullet"
+                    spacing="compact">
+        <listitem>
+          <para>If you are visiting the CodeX site as an anonymous user the
+          upper part of the menu invites you to login or to create a new
+          account whereas if you are logged in you&#39;ll be given access to
+          other functions like Logout, Account Maintenance, Personal Page,
+          etc.</para>
+        </listitem>
+
+        <listitem>
+          <para>Similarly if you decide to visit a given project hosted on
+          CodeX, the menu will offer an additional section giving access to
+          the Project Summary page (the public face of a project) or to the
+          Project Administration page (A reserved view for project members
+          only)</para>
+        </listitem>
+      </itemizedlist>
+
+      <figure id="FigureCodeXWebPageFlowChart">
+        <title>CodeX Web Page Flow Chart</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+                       fileref="../../slides/en_US/Sitemap.png" width="15.5cm" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>In the rest of this section we only review those items that are
+      permanent and context independent. Other menu items are described later
+      in the document in the related service description.</para>
+
+      <section id="SoftwareMap">
+        <title>Software Map</title>
+
+        <para>The Software Map is a pivotal service in CodeX that you can
+        (should) use to determine if there are some pieces of software that
+        you can re-use for your own work. The Software Map is one of the 2
+        ways by which you can search for existing software projects. The other
+        one relies on the Search Facility (See <xref
+        linkend="ProjectHelpWanted" />).</para>
+
+        <figure id="FigureSoftwareMapSampleBrowsing">
+          <title>Software Map sample browsing</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG"
+                         fileref="../../screenshots/en_US/sc_softwaremap.png" width="13.2cm"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para>When a project is created it is classified by the project
+        creator according to 7 criteria:</para>
+
+        <itemizedlist mark="bullet"
+                      spacing="compact">
+          <listitem>
+            <para><emphasis role="bold">Development Status</emphasis>: How
+            mature your project is (alpha, beta, stable,...)</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Environment</emphasis>: in which
+            environment your software is being used (Web, Win32, X Window,
+            text mode,...)</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Audience</emphasis>: The target
+            audience of your software (developers, end-users, system
+            administrators,...)</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">License</emphasis>: License of your
+            software. In most cases this is going to be the Xerox Code
+            exchange Policy</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Operating System</emphasis>: Operating
+            system(s) your software runs on</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Programming Languages</emphasis>: the
+            programming languages you used to develop your software</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Topic</emphasis>: The field of use of
+            your project. This criteria describes the area in which your
+            software operates (Printing, Scanning, Information Technology,...)</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>Each criterion can have up to 3 values for a given project (e.g.
+        you can select up to 3 programming languages for a given project).
+        Values of the various criteria are taken from a list of predefined
+        values and most of them are not expected to change in a foreseeable
+        future except for the &#34;Topic&#34; criterion. The &#34;Topic&#34;
+        criterion reflects the domain covered by your project (Printing,
+        Scanning, Information Technology, etc.) and it follows a hierarchy of
+        domains and sub-domains that the CodeX Team constantly refines as more
+        projects are coming.</para>
+
+        <para>Using the Software Map you can browse CodeX hosted projects
+        according to any of these criteria. As you explore the map, projects
+        matching the criteria are listed on the screen with their name,
+        description, creation date, activity percentile, and other
+        information. The values of the 7 criteria for a given project are
+        listed right after the project name and description. Notice that next
+        to each criteria value is a [Filter] hyperlink. Clicking on any of
+        these filters will result in restricting the project list to those
+        that match the filter.</para>
+
+        <para>A Software Map browsing sample is shown on <xref
+        linkend="FigureSoftwareMapSampleBrowsing" />. In this example, the
+        user has first opened the Programming Languages Criteria and then
+        selected C as a language of choice. This probably led to a large
+        number of projects and so she then decided to narrow the set of
+        projects by specifying 2 additional filters: the first one specifies
+        that the Development Status must be Production-Stable and the second
+        one requires that the projects runs on the SunOS/Solaris operating
+        system.</para>
+
+        <para>As a result of this multi-criteria screening, the user ends up
+        with a list of 9 projects (only the first one is shown on <xref
+        linkend="FigureSoftwareMapSampleBrowsing" /> to save space). Filters
+        have another interesting property: they are sticky. It means that if
+        you decide to browse the projects from another angle (say by opening
+        the Topic folder), the selected filters will constantly apply. In
+        order to release the search constraint you must explicitly remove the
+        filter by clicking on the [Remove this Filter] link in the upper part
+        of the screen.</para>
+
+        <para><tip><title>TIP</title><para>If you repeatedly execute the same
+        browsing operation on the Software Map you can save it in your
+        Personal Page. To do this, first execute your software map request as
+        explained above and when you are happy with the selection criteria,
+        click on the Bookmark This Page item in the CodeX Main Menu. This will
+        make a new link appear in your Personal Page that you can then edit to
+        give it an appropriate description.</para></tip></para>
+      </section>
+
+      <section id="TheCodeSnippetLibrary">
+        <title>The Code Snippet Library</title>
+
+        <para>A project hosted on CodeX has the ability to use a large
+        spectrum of services. However not all pieces of software worth sharing
+        require such a rich environment. Sharing a very short piece of source
+        code like a macro, a function or a shell script has to be quick and
+        easy. This is precisely the role of the Code Snippet Library.</para>
+
+        <para>The Code Snippet Library can be accessed via the CodeX Main Menu
+        on the left hand side of the screen under the Software section (see
+        <xref linkend="FigureTheCodeXHomePage" />)</para>
+
+        <section id="CodeSnippetBrowsing">
+          <title>Code Snippet Browsing</title>
+
+          <para>The welcome page of the Code Snippet Library classifies the
+          code snippets by category and by programming languages. The figures
+          next to each label indicate the number of code snippets available in
+          each category.</para>
+
+          <para></para>
+          <para>You can browse code snippets in 2 different ways:</para>
+
+          <itemizedlist mark="bullet"
+                        spacing="compact">
+            <listitem>
+              <para>Navigate through the categories or programming languages
+              classification</para>
+            </listitem>
+
+            <listitem>
+              <para>Use the Search box in the CodeX Main menu on the left hand
+              side of the screen. Keywords typed are search in the code
+              snippet title and in the code snippet description.</para>
+            </listitem>
+          </itemizedlist>
+
+          <para>Matching snippets are shown in a list along with their code
+          snippet ID number, title and detailed description as well as the
+          author&#39;s name. Please note that by clicking on the author&#39;s
+          name you can immediately send a question or a suggestion to the
+          author of the code snippet.</para>
+
+          <figure id="FigureListOfCodeSnippetsInTheHTMLManipulationCategory">
+            <title>List of Code Snippets in the &#39;HTML Manipulation&#39;
+            category</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata format="PNG"
+                           fileref="../../screenshots/en_US/sc_codesnippetsearch.png" width="14.2cm"/>
+              </imageobject>
+            </mediaobject>
+          </figure>
+        </section>
+
+        <section id="CodeSnippetSbmission">
+          <title>Code Snippet Submission</title>
+
+          <para>To submit a new code snippet click on the &#34;Submit a new
+          Code Snippet&#34; link in the Code Snippet Menu at the top of the
+          screen. Provide the code snippet title and description. You can use
+          Web locations (URLs) in these two fields. CodeX will automatically
+          turn them into hyperlinks in the final version. Also provide the
+          code snippet type, programming language and category as requested.
+          Should a category or a programming language be missing when you
+          submit a new code snippet please contact the CodeX team by clicking
+          on the link right below the pull-down menus.</para>
+
+          <para>It is highly recommended that you provide a version number as
+          well. This version number is a free text field and can have any kind
+          of value. Using a version number is useful if you want to post a
+          newer version in the future. We also recommend that you indicate the
+          same version number in the source code associated with the snippet
+          so that CodeX users can determine whether they already have the
+          latest version the next time they visit the Code Snippet Library.</para>
+
+          <para>The code snippet itself can be submitted either by simply
+          copy-pasting the source code in the text area or by uploading a
+          file. We do recommend that you copy-paste the source code to make it
+          directly visible when users browse the Code Snippet library.</para>
+
+          <para>However there are cases where it is ok to upload non human
+          readable files. Typical examples are when your code snippet is a
+          made of several files that you may want to deliver in the form of an
+          archive (zip or compressed tar). Another example is when the code
+          snippet is not human readable: simulation software (e.g. LabView)
+          use proprietary and non human readable format for their source
+          files. In any case <emphasis role="underline">do not</emphasis>
+          post pure binary code like compiled C, C++,Java,... The Code Snippet
+          Library, like CodeX, is about sharing and reusing software code not
+          binary.</para>
+        </section>
+
+        <section id="UpdatingACodeSnippet">
+          <title>Updating a Code Snippet</title>
+
+          <para>To update a code snippet with a newer version of the source
+          code, select the original code snippet either by browsing the code
+          snippet category or by using the search mechanism. Click on the Code
+          Snippet in the result list and proceed to the &#34;Submit a new
+          version&#34; link at the end of the screen. Provide a change
+          description, a new version number and copy-paste the source code
+          associated with the new version.</para>
+
+          <para><note>Please note that even though this is still the
+          same code snippet, CodeX assigns a new code snippet ID number to
+          each version. So referencing a new version in a Code Snippet Package
+          (see section Grouping Code Snippets below) will require that you
+          delete the old version and add the new one.</note></para>
+        </section>
+
+        <section id="DeletingACodeSnippet">
+          <title>Deleting a Code Snippet</title>
+
+          <para>Select the code snippet as indicated above. Then click on the
+          appropriate code snippet in the result list. From here you can click
+          on the waste basket icon (<inlinemediaobject><imageobject><imagedata
+          format="PNG" fileref="../../icons/trash.png" /></imageobject></inlinemediaobject>)
+          next to the code snippet version to delete one or several versions
+          of the code snippet.</para>
+        </section>
+
+        <section id="GroupingCodeSnippets">
+          <title>Grouping Code Snippets</title>
+
+          <para>If you have submitted several code snippets that relate to the
+          same topic, are written in the same language and belong to the same
+          code snippet category it might be a good idea to group them together
+          under a common umbrella. This is what Code Snippet Packages are for.</para>
+
+          <para>To create a code snippet package click on the &#34;Create a
+          Package&#34; item in the Code Snippet Menu at the top of the screen.
+          Provide a title, a description, type, category and version as
+          requested. After you submit the form, a new window will pop up
+          asking you for the ID numbers of the Code Snippets that must be
+          added to the package. So before you create a package make sure you
+          have the code snippet ID numbers available.</para>
+        </section>
+
+        <section id="UpdatingACodeSnippetPackage">
+          <title>Updating a Code Snippet Package</title>
+
+          <para>Like code snippets, packages can be updated. To update a
+          package just proceed as for an ordinary code snippet. First search
+          for it, select it and finally click in the Edit icon. From here you
+          can add/delete code snippet to/from the package. If you want to
+          update the package with a new version of a code snippet, first
+          delete the old version and add the new one which has its own
+          specific code snippet ID (see &#34;Updating a Code Snippet&#34;
+          above).</para>
+        </section>
+      </section>
+
+      <section id="NewReleases">
+        <title>New Releases</title>
+
+        <para>Click on this menu item to see a list of the most recent
+        software releases (also known as new versions) that have been posted
+        on the CodeX site by the various projects. If you want to keep aware
+        of new incoming releases visit this page on a regular basis. CodeX
+        also allows you to monitor the new software releases posted by a given
+        project. To do so go to the Project Summary page of this project by
+        clicking on the project title and then select the monitor icon (<inlinemediaobject><imageobject><imagedata
+        format="PNG" fileref="../../icons/mail16d.png" /></imageobject></inlinemediaobject>)
+        next to the release name. Once you monitor a project release, e-mail
+        notification will be sent to you whenever the project team
+        posts a new software release.</para>
+      </section>
+
+      <section id="SiteDocumentation">
+        <title>Site Documentation</title>
+
+        <para>The Site Documentation pointer is the entry point to the CodeX
+        documentation. The CodeX documentation is entirely managed via the
+        Document Manager (see <xref linkend="DocumentManager" />) service of
+        the CodeX project, which is of course hosted on CodeX. The documents
+        are grouped by themes. The most important ones are:</para>
+
+        <procedure>
+          <step>
+            <para><emphasis role="bold">The Must Read Documents</emphasis>:
+            This one speaks for itself. All CodeX Users should read these
+            documents. They are all critical to gain a proper understanding of
+            the CodeX site and the CodeX initiative.</para>
+          </step>
+
+          <step>
+            <para><emphasis role="bold">CodeX Services</emphasis>: A series of
+            short documents describing the basic features of each CodeX
+            service and how to use them.</para>
+          </step>
+
+          <step>
+            <para><emphasis role="bold">For Project Members and Administrators</emphasis>:
+            These documents will be beneficial to the owners or members of a
+            CodeX hosted projects. All documents deal with project
+            administration issues.</para>
+          </step>
+
+          <step>
+            <para><emphasis role="bold">CodeX Newsletter</emphasis>: The CodeX
+            Team publishes a (almost...) monthly Newsletter which is sent to
+            all CodeX users as well as many other people in Xerox. All
+            published Newsletters are archived on CodeX.</para>
+          </step>
+        </procedure>
+
+        <important>
+          <title>** Important Note **</title>
+
+          <para role="">The <emphasis role="bold">Xerox Code exchange Policy</emphasis>
+          [XCEP] is available in the Must Read Documents section. This 2-page
+          Corporate Policy governs the act of Software Sharing in the Xerox
+          Corporation. All CodeX users must read, understand and apply this
+          policy before re-using Xerox software or hosting any of their
+          projects on the CodeX site.CodeX gives you direct access to Xerox
+          Intellectual Property and you must therefore make sure that you and
+          your group strictly conforms to the CodeX Policy for the benefit of
+          the entire company. Failing to comply with the terms of the Xerox
+          Code eXchange Policy can lead to severe disciplinary actions
+          including prosecution and contract termination.</para>
+        </important>
+      </section>
+
+      <section>
+        <title>CodeX Developers Channels</title>
+
+        <para>Right from the beginning, one of the top priority objectives of
+        the CodeX site was to become a discussion forum of choice for the 5000
+        software developers in Xerox regardless of the organization they
+        belong to and the country they work in.</para>
+
+        <para>To this end the CodeX Team has created a series of mailing lists
+        (called Developers Channels) where anybody, including non-CodeX users,
+        can subscribe. Each channel is dedicated to a given software related
+        topic. The creation of a new channel is under the responsibility of
+        the CodeX Team. If you want to create a new developers channel please
+        contact the CodeX Team at <email>codex-contact@codex.xerox.com</email>.</para>
+
+        <para>The Developers Channels managed on CodeX have a certain number
+        of advantages over conventional distribution lists:</para>
+
+        <itemizedlist mark="bullet"
+                      spacing="compact">
+          <listitem>
+            <para>Subscription and Un-subscription are entirely user driven
+            and it can be done through the CodeX Web interface without any
+            assistance.</para>
+          </listitem>
+
+          <listitem>
+            <para>All messages posted to the channel are archived forever and
+            can be browsed at any time. (In the future they will probably be
+            searchable as well)</para>
+          </listitem>
+
+          <listitem>
+            <para>Subscribers can decide to receive digests from the mailing
+            list rather than individual messages.</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+
+      <para></para>
+      <para></para>
+      <para></para>
+      
+      <section id="CodeXDiscussionForums">
+        <title>CodeX Discussion Forums</title>
+
+        <para>Discussion Forums are an alternate way to keep in touch with the
+        CodeX community. The CodeX Discussion Forums were created primarily as
+        a communication vehicle between the CodeX users and the CodeX Team.
+        These are general purpose Forums where you can ask for Help with
+        CodeX, suggest new features, new categories for the software map, etc.</para>
+
+        <para>These Forums are entirely Web based which means that you have to
+        use the CodeX Web interface to post and read user messages. However
+        Forums also offer the ability to be monitored, which means that all
+        traffic will be sent to you via e-mail.</para>
+
+        <tip>
+          <title>Tip: Don&#39;t let your software licenses take the dust</title>
+
+          <para>One of the Forums available on CodeX is called Software
+          Bazaar. This Forum was put in place to buy or sell unused 3rd party
+          software from other Xerox teams. It is often the case that software
+          packages acquired by a project team are no longer needed after some
+          time. We wanted to give other people in Xerox a chance to get the
+          unused license rather than buying yet another one. Similarly this
+          Forum is the place to announce an Enterprise-Wide license obtained
+          by your group and that other people in Xerox could benefit from.</para>
+        </tip>
+
+        <para></para>
+      </section>
+
+      <section id="ProjectHelpWanted">
+        <title>Project Help Wanted</title>
+
+        <para>As you will see later in this document, each CodeX project has
+        the ability to post jobs. This minimal job posting system is
+        particularly well suited to publish call for expertise. By clicking on
+        this item you&#39;ll see all job posting requests awaiting help from
+        the rest of Xerox. Visit this section on a regular basis if you want
+        to help others in the corporation solve their technical problems.</para>
+
+        <para>For more details on how to post jobs see <xref
+        linkend="Post-EditJobs" />.</para>
+      </section>
+
+      <section id="ContactUs">
+        <title>Contact Us</title>
+
+        <para>In addition to the Discussion Forums, you can always use the
+        &#34;Contact Us&#34; link at the bottom of the CodeX Main Menu to get
+        in touch with the CodeX Team. Our team works in 3 distinct time zones
+        so it is very likely that whatever time of the day it is, you&#39;ll
+        have a quick reply to your message.</para>
+
+        <para>Do not hesitate to bug the &#34;Contact Us&#34; link. We are
+        here to help.</para>
+      </section>
+
+      <section id="TheSearchFacility">
+        <title>The Search Facility</title>
+
+        <para>This is the last item in the CodeX Main Menu but not the least.
+        CodeX allows you to search almost any piece of CodeX information
+        through a keyword search mechanism. When you are on the CodeX Home
+        Page you can search for keywords in the following resources:</para>
+
+        <itemizedlist mark="bullet"
+                      spacing="compact">
+          <listitem>
+            <para><emphasis role="bold">Software Projects</emphasis>: a match
+            is attempted with project names as well as their short and long
+            description. This search mechanism is very complementary with the
+            Software Map.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Code Snippet Library</emphasis>: Code
+            snippets are small pieces of code that you can post on CodeX (see
+            <xref linkend="TheCodeSnippetLibrary" />) along with a
+            description. You can search this description by keywords are see
+            if there are code snippets that you can re-use to ease your job.</para>
+          </listitem>
+
+          <listitem>
+            <para role=""><emphasis role="bold">People</emphasis>: keywords
+            will be searched in the CodeX user database and matched against
+            the user&#39;s login name, real name and e-mail address.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Bugs</emphasis>: If you enter the bug
+            tracking system if any CodeX project, the Bugs item will show up
+            in the search box, allowing you to actually search the bug
+            database of this project.</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+    </section>
+
+    <section id="TheCodeXDashboard">
+      <title>The CodeX Dashboard</title>
+
+      <para>The CodeX Dashboard resides on the right hand side of the CodeX
+      Home Page. It is a sort of a fish-eye view of the global CodeX activity.
+      Several indicators are available:</para>
+
+      <itemizedlist mark="bullet"
+                    spacing="compact">
+        <listitem>
+          <para><emphasis role="bold">CodeX Statistics</emphasis>: give the
+          total number of hosted projects (excluding those that have a private
+          status), the total number of registered users, the total number of
+          software packages downloaded and the total number of Web pages
+          browsed by CodeX users since the site opening.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Top Project Downloads</emphasis>: shows
+          which software projects were downloaded the day before (based on
+          midnight EST time) and how many times.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Newest Projects</emphasis>: the last 10
+          registered projects. Looking at this part of the dashboard on a
+          regular basis will help you to keep informed on the new projects
+          hosted on CodeX.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Most Active This Week</emphasis>: the 20
+          most active projects over the past 7 days on a scale from 0 to 100%.
+          The magic formula that we use behind the scene to compute this
+          ranking is a weighted sum of the activity observed in the various
+          projects services. It takes many things into account: the number of
+          commits/updates on the CVS repository, the number of bugs and tasks
+          submitted or modified, the number of file releases, etc. Looking at
+          this list is an excellent way to see which projects are actively
+          working on CodeX.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>As a conclusion, we strongly advise you to visit the CodeX Home
+      Page on a regular basis for it gives you an excellent idea of what is
+      going on in the Xerox software galaxy.</para>
+
+      <para><emphasis role="underline">Bottom line</emphasis>: Make CodeX your
+      browser home page :-)</para>
+    </section>
+  </chapter>

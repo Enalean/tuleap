@@ -1,0 +1,191 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id: 
+//
+//	Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
+-->
+  <chapter id="OtherServices">
+    <title>Other Services</title>
+
+    <section id="ShellAccount">
+      <title>Shell Account</title>
+
+      <para>Each registered user receives its own Unix shell account on the
+      CodeX Shell Account server. You can access your CodeX Shell Account in 2
+      ways:</para>
+
+      <itemizedlist mark="bullet">
+        <listitem>
+          <para><emphasis role="bold">SSH</emphasis>: the secured remote shell
+          is the preferred way to connect to the CodeX Shell Account server.
+          SSH clients are available for all platforms (Windows, Linux, Unix
+          and Mac) and allows a secure link with your personal directories. It
+          also provides you with a number of other useful utilities like scp
+          for remote file transfer. To access your account connect type the
+          following command and use your CodeX login and password to
+          authenticate yourself:</para>
+
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+ssh -l loginname shell.codex.xerox.com
+</programlisting>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Telnet</emphasis>: telnet comes standard
+          with Windows and Unix environment. Use the following command to
+          connect to the CodeX Shell Account server and provide your login and
+          password as requested</para>
+
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+telnet shell.codex.xerox.com
+</programlisting>
+        </listitem>
+      </itemizedlist>
+
+      <para><tip><title>** Important Remark **</title><para>The CodeX Team has
+      established reasonable security measures on the CodeX shell server. By
+      mapping the CodeX permission schema on the Linux permission schema, the
+      data of a given project can only be manipulated by its project members.
+      Any voluntary attempt to crack and/or damage other users or projects
+      account will be considered as a gross misconduct and appropriate penalty
+      will be applied. If you want to exercise your creativity in a useful way
+      do not spend your time cracking CodeX, write clever code and contribute
+      to CodeX instead !</para></tip></para>
+
+      <para>Whether you use SSH or Telnet, a welcome banner will be displayed
+      right after you log in. This message tells you what are the directories
+      you are allowed to access. Use the Unix &#34;cd&#34; command to change
+      the current working directory. Once logged in and if you are a member of
+      several projects you must specify for which project you are going to
+      work in this shell session. To this end use the following command:</para>
+
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+newgrp projectname
+</programlisting>
+
+      <para>You can use this command as many time as you want during a shell
+      session when you are about to do work for another one of your project.</para>
+    </section>
+
+    <para></para>
+    <para></para>
+    
+    <section id="FTPStorageSpaces">
+      <title>FTP Storage Spaces</title>
+
+      <para>Each project receives its own FTP storage which is made of 2
+      distinct zones. The Anonymous FTP Space and the File Release FTP space.</para>
+
+      <section id="TheAnonymousFTPSpace ">
+        <title>The Anonymous FTP Space</title>
+
+        <para>The anonymous FTP space can be used by the project members to
+        upload any kind of documents or project data and deliverables they
+        want. It can be accessed by making an ftp connection to
+        <literal><emphasis>projectname</emphasis>.codex.xerox.com</literal>.
+        Anonymous users (login &#34;ftp&#34;) are granted read-only access
+        whereas project members using their CodeX login and password will be
+        granted read (download) and write (upload) access to this FTP area.</para>
+      </section>
+
+      <section id="TheFileReleaseFTPSpace ">
+        <title>The File Release FTP Space</title>
+
+        <para>This is where CodeX stores the new file releases uploaded and
+        registered through the CodeX File Release service (see <xref
+        linkend="FileRelease" />). Access is granted to project members only
+        in case they want to make modifications by hand. <emphasis role="bold">We
+        highly recommend you do not touch this space since it is entirely
+        managed through the CodeX Web interface</emphasis>. If you have
+        questions about your file releases please contact the CodeX Team.</para>
+
+        <para>Project members can access this ftp space as follows:</para>
+
+        <itemizedlist mark="bullet"
+                      spacing="compact">
+          <listitem>
+            <para>Via your shell account (SSH or Telnet to <literal>shell.codex.xerox.com</literal>).</para>
+          </listitem>
+
+          <listitem>
+            <para>Via ftp by connecting to <literal>download.codex.xerox.com</literal>.</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>In both cases use your CodeX login/password to login and type
+        the following command to go to the FTP Release Space directory:</para>
+
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+cd /home/ftp/codex/projectname
+</programlisting>
+      </section>
+    </section>
+
+    <section id="MSWindowsSharedResources">
+      <title>MS Windows Shared Resources</title>
+
+      <para></para>
+
+      <itemizedlist mark="bullet"
+                    spacing="compact">
+        <listitem>
+          <para>Your user home directory,</para>
+        </listitem>
+
+        <listitem>
+          <para>The various project home directories (where the project Web
+          site is located)</para>
+        </listitem>
+
+        <listitem>
+          <para>The FTP incoming space where you can directly drag and drop
+          your file releases instead of using FTP upload (See <xref
+          linkend="ReleaseConfigurationandValidation" />)</para>
+        </listitem>
+      </itemizedlist>
+
+      <para><tip><title>**IMPORTANT REMARK**</title><para>If you registered as
+      a CodeX user before this feature was enabled (on September 4th, 2001)
+      you must enter your password again in CodeX before you can access the
+      shared resources. To do so first login on CodeX and go to <ulink
+      url="http://codex.xerox.com/account/change_pw.php">http://codex.xerox.com/account/change_pw.php</ulink>.
+      Then re-type your current password in old and new fields. Click on the
+      Update button and wait for the re-generation to happen (delay shown on
+      the screen).</para></tip></para>
+
+      <para>To access your CodeX shared resources, open Windows Explorer,
+      browse the Entire Microsoft Network, open the WCRT domain and click on
+      the CodeX machine. Use your CodeX login and password to connect to the
+      resources (If they are not the same as your Windows login/password a
+      dialog box will pop up asking for the appropriate CodeX login/password)</para>
+
+      <para>Shared resources can also be directly accessed at:</para>
+
+      <itemizedlist mark="bullet"
+                    spacing="compact">
+        <listitem>
+          <para><literal>\\codex\your_login_name</literal> (User home
+          directory - for all users)</para>
+        </listitem>
+
+        <listitem>
+          <para><literal>\\codex\Projects</literal> (All project directories -
+          for project members)</para>
+        </listitem>
+
+        <listitem>
+          <para><literal>\\codex\Ftp_Incoming</literal> (FTP upload space -
+          for project members)</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Needless to say all read and write permissions put in place by
+      CodeX to protect your data still apply to these shared resources.</para>
+    </section>
+  </chapter>
+

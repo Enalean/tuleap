@@ -1,0 +1,185 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id: 
+//
+//	Originally written by Stephane Bouhet 2002, CodeX Team, Xerox
+//
+-->
+  <bookinfo>
+    <authorgroup>
+      <author>
+        <firstname>Laurent</firstname>
+
+        <surname>Julliard</surname>
+
+        <affiliation>
+          <orgname>XIG/SSTC - Open Source Team, Laurent.Julliard@crt.xerox.com</orgname>
+        </affiliation>
+      </author>
+    </authorgroup>
+
+    <copyright>
+      <year>2000</year>
+
+      <year>2001</year>
+
+      <year>2002</year>
+
+      <holder>The Document Company - Xerox. All rights reserved.</holder>
+    </copyright>
+
+    <legalnotice>
+      <para>Copyright protection claimed includes all forms and matters of
+      copyrightable material and information now allowed by statutory or
+      judicial law or hereinafter granted, including without limitation,
+      material generated from the software programs which are displayed on the
+      screen such as icons, screen displays, looks, etc.</para>
+
+      <para>Printed in United States of America</para>
+
+      <para>Xerox ®, The Document Company ®, and all Xerox products mentioned
+      in this publication are trademarks of Xerox Corporation.</para>
+    </legalnotice>
+
+    <revhistory>
+      <revision>
+        <revnumber>0.1</revnumber>
+
+        <date>05-Jul-2001</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>Initial draft by L. Julliard</revremark>
+      </revision>
+
+      <revision>
+        <revnumber>0.1.1</revnumber>
+
+        <date>06-Jul-2001</date>
+
+        <authorinitials>John Stidd</authorinitials>
+
+        <revremark>Corrections from John Stidd</revremark>
+      </revision>
+
+      <revision>
+        <revnumber>0.2</revnumber>
+
+        <date>20-Jul-2001</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>First fully written version. Sent out for proof-reading</revremark>
+      </revision>
+
+      <revision>
+        <revnumber>0.3</revnumber>
+
+        <date>25-Jul-2001</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>Survey Manager chapter written.</revremark>
+      </revision>
+
+      <revision>
+        <revnumber>0.3.1</revnumber>
+
+        <date>25-Jul-2001</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>Many thanks to S. Alexander, P. Austin, C. Baltus, J.
+        Breindenbach, R. Campbell, J. Espinoza, L. Lindquist, J. Stidd, R.
+        Stoos, J. Tirabassi, V. Tuttle for their edits.</revremark>
+      </revision>
+
+      <revision>
+        <revnumber>1.0</revnumber>
+
+        <date>02-Aug-2001</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>First final version published on the CodeX site</revremark>
+      </revision>
+
+      <revision>
+        <revnumber>1.1</revnumber>
+
+        <date>13-Sep-2001</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>CVS email notification, Advanced Search and Windows Shared
+        Resources added</revremark>
+      </revision>
+
+      <revision>
+        <revnumber>1.2</revnumber>
+
+        <date>03-Oct-2001</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>More on PHP scripts for Virtual Hosts</revremark>
+      </revision>
+
+      <revision>
+        <revnumber>1.3</revnumber>
+
+        <date>18-Feb-2002</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>Bug field types now showing in Bug Field Usage screen</revremark>
+      </revision>
+
+      <revision>
+        <revnumber>1.4</revnumber>
+
+        <date>25-Feb-2002</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>Bug, Patch, SR email notification revised</revremark>
+      </revision>
+
+      <revision>
+        <revnumber>1.5</revnumber>
+
+        <date>22-Mar-2001</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>Code Snippet Library and Patch manager updated with ability
+        to upload files. New Bug Search Facility and Bug report definition
+        added.</revremark>
+      </revision>
+
+      <revision>
+        <revnumber>1.6</revnumber>
+
+        <date>14-Jun-2002</date>
+
+        <authorinitials>Laurent Julliard, Stephane Bouhet</authorinitials>
+
+        <revremark>Project Web site creation with FrontPage and DreamWeaver
+        added</revremark>
+      </revision>
+
+      <revision>
+        <revnumber>1.7</revnumber>
+
+        <date>04-Sep-2002</date>
+
+        <authorinitials>Laurent Julliard, Stephane Bouhet</authorinitials>
+
+        <revremark>Conversion to DocBook DTD to generate both online and PDF version</revremark>
+      </revision>
+     </revhistory>
+  </bookinfo>

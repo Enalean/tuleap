@@ -1,0 +1,452 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id: 
+//
+//	Originally written by Stephane Bouhet 2002, CodeX Team, Xerox
+//
+-->
+  <chapter id="ProjectAdministration">
+    <title>Project Administration</title>
+
+    <para>Whenever you enter the Project Summary page of a given project or
+    any of its service you&#39;ll see a new section appear in the CodeX Main
+    Menu on the left hand side of the screen. This new section relates to the
+    visited project and points to the Project Summary page and the Project
+    Administration page.</para>
+
+    <para>Only project members can access the Project Administration page. All
+    other CodeX users are denied access to this part of a project.</para>
+
+    <section id="ProjectAdministrationMenu">
+      <title>Project Administration Menu</title>
+
+      <para>In addition to the CodeX Main Menu that was introduced in the
+      description of the Project Summary page, the Project Administration page
+      has its own menu. This menu is not redundant with the page content right
+      below. Except for 1 or 2 items the menu and the page content give access
+      to distinct parts of the administration space. So pay attention to both
+      the Page Admin menu and the Page Admin content. In the following
+      sections the Location label indicates where to find the corresponding
+      administrative function.</para>
+    </section>
+
+    <section id="AddingRemovingUsers">
+      <title>Adding/Removing Users</title>
+
+      <para><emphasis>Location: Page Admin Content</emphasis></para>
+
+      <para>User administration in CodeX is easy. To add a new member to a
+      project team one of the project administrator just has to type the login
+      name of the invited member and click on the &#34;Add User&#34; button.
+      If you don&#39;t know the login name of the new project member you want
+      to add, open a new browser window on CodeX and use the search box in the
+      CodeX Main Menu to search for the person&#39;s real name (first or last
+      name or both) and don&#39;t forget to select &#34;People&#34; in the
+      Search pull-down menu. The result list will show you the user real name
+      and login name.</para>
+
+      <para>Removing a project member is even easier. Just click on the trash
+      icon (<inlinemediaobject><imageobject><imagedata format="PNG"
+      fileref="../../icons/trash.png" /></imageobject></inlinemediaobject>) next
+      to the person&#39;s name to revoke his/her membership. Revoking
+      membership has absolutely no effect on the history and the data
+      integrity of the project. In other words all bugs, tasks, support
+      requests, ... assigned or submitted by this person will continue to show
+      up as before in the project database. Only the ability of this person to
+      perform project management tasks is affected. Also notice that in order
+      to remove a project administrator from the project member list, another
+      project administrator must first change the &#34;Project Admin&#34; flag
+      of this user to &#34;No&#34; in the User Permission table. In other
+      words, a Project Administrator cannot be removed from the project
+      members as long as she has administrator privilege.</para>
+
+      <para></para>
+      <para><note>You have probably noticed that project member&#39;s
+      name on the Project Administration page are actually hyperlinks. On this
+      page as well as in many other pages throughout CodeX a click on a login
+      name leads you to the user page where you can know more about the user
+      (including its location, phone/fax number, etc. extracted from the Xerox
+      Directory in real time) and send an e-mail message to this person
+      directly via a Web form.</note></para>
+
+      <figure id="FigureASampleProjectAdministrationPage">
+        <title>A Sample Project Administration Page</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+                       fileref="../../screenshots/en_US/sc_projectadminpage.png" width="15.3cm"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+
+    <section id="MemberPermissions">
+      <title>Member Permissions</title>
+
+      <para><emphasis>Location: Page Admin Content</emphasis></para>
+
+      <para>Project Administrators have the ability to grant different
+      permissions to different users. As an example, a project member can be
+      granted full administration rights on the Bug Tracking System and no
+      rights at all on the Documentation Manager of the project.</para>
+
+      <figure id="FigureASampleProjectMembersPermissionTable">
+        <title>A sample project members permission table</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+                       fileref="../../screenshots/en_US/sc_userpermissions.png"  width="15.3cm"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para><xref linkend="FigureASampleProjectMembersPermissionTable" />
+      shows a sample project members permission table. Each column represents
+      a service or a user capability and there is one line per project member.
+      Let&#39;s review the column one by one:</para>
+
+      <itemizedlist mark="bullet">
+        <listitem>
+          <para><emphasis role="bold">Project Admin</emphasis>: A Yes/No flag
+          stating whether a given project member is a project administrator,
+          that is to say a project member with absolutely all rights over the
+          project services, project deliverables and project members. Only
+          Project Admin can access the project members permission page.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">CVS Write</emphasis>: Right now this is
+          always set to Yes. All project members have write permission over
+          the CVS <footnote><para>CVS stands for Concurrent Version Control.
+          It is the default source code version control system offered on the
+          CodeX site. CVS is used by hundreds of thousands of software
+          projects allover the world. See <ulink url="http://www.cvshome.org">http://www.cvshome.org</ulink>
+          for more information.</para></footnote>repository and this cannot be
+          changed from the current version of the Web interface. However
+          we&#39;ll see how to deny CVS write permission to project members in
+          the CVS chapter (<xref linkend="VersionControlWithCVS" />).</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Bug Tracking, Task Manager, Patch
+          Manager, Support Manager </emphasis>: are listed in the upper right
+          corner of the page. A click on a name will direct you to the user
+          page where you can learn more about the CodeX user and send him/her
+          an e-mail. Project members can be viewed via the [View members]
+          pointer.</para>
+
+          <itemizedlist spacing="compact">
+            <listitem>
+              <para><emphasis role="underline">None</emphasis>: well, you
+              can&#39;t do much with this one</para>
+            </listitem>
+
+            <listitem>
+              <para><emphasis role="underline">Technician Only</emphasis>:
+              tool technicians can be assigned bugs/tasks/patches/support
+              requests and has the ability to update these items from
+              assignment to closure.</para>
+            </listitem>
+
+            <listitem>
+              <para><emphasis role="underline">Administrator Only</emphasis>:
+              tool administrators have full access to the administration part
+              of the tools. As an example, they can define new tasks
+              categories, new predefined values for bug fields, etc.</para>
+            </listitem>
+
+            <listitem>
+              <para><emphasis role="underline">Technician &#38; Administrator</emphasis>:
+              the one-man-can-do-it-all on that tool</para>
+
+              <para></para>
+
+              <para></para>
+
+              <para></para>
+
+              <para></para>
+
+              <para></para>
+
+              <para></para>
+
+              <para></para>
+
+              <para></para>
+
+              <para></para>
+
+              <para></para>
+
+              <para></para>
+
+              <para></para>
+            </listitem>
+          </itemizedlist>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Forums, Documentation Manager</emphasis>:
+          These 2 services have much less sophisticated permission schema.
+          Only 3 permission levels are available:</para>
+
+          <itemizedlist spacing="compact">
+            <listitem>
+              <para><emphasis role="underline">None</emphasis>: there is
+              nothing you can do with this service</para>
+            </listitem>
+
+            <listitem>
+              <para><emphasis role="underline">Moderator</emphasis>: (Forums
+              only): A moderator has the ability to moderate the Web
+              Discussion forum that is to say create/delete discussion forums
+              for the project, delete posted messages and update the Forum
+              status (public/private) as well as the Forum description</para>
+            </listitem>
+
+            <listitem>
+              <para><emphasis role="underline">Editor</emphasis>: (Doc Mgr
+              only): An editor has the ability to review and validate a
+              document prior to its publication. S/he can also update and
+              delete a document.</para>
+            </listitem>
+          </itemizedlist>
+        </listitem>
+      </itemizedlist>
+
+      <important>
+        <title>Reminder!</title>
+
+        <para>Don&#39;t forget to click on the &#34;Update Developers
+        Permission&#34; button after making any changes in the permission
+        table.</para>
+      </important>
+    </section>
+
+    <section id="ProjectPublicInformation">
+      <title>Project Public Information</title>
+
+      <para><emphasis>Location: Project Administration Menu</emphasis></para>
+
+      <para>The &#34;Edit Public Info&#34; item of the Project Administration
+      menu allows a project member to update the following project data:</para>
+
+      <procedure>
+        <step>
+          <para><emphasis role="bold">The Project Home Page</emphasis>: each
+          project hosted on CodeX has its own virtual Web server available on
+          the CodeX site. By default the &#34;Home Page&#34; in the Project
+          Main Menu points to this location (see CHAPTER 16 for more details).
+          If you want the Home Page of your project to point to some other
+          locations on the Xerox Intranet (or even outside of Xerox) replace
+          the default value with your own Web location. Do not confuse your
+          Project Home Page with your Project Summary page. The Project Home
+          Page actually points to real Web Site whereas the Public Summary
+          Page is just an entry point to access software related activities
+          and deliverables.</para>
+
+          <para></para>
+        </step>
+
+        <step>
+          <para><emphasis role="bold">The Project Description Elements</emphasis>:
+          these are elements provided during the registration process as well
+          as the two-line description that you have provided right after your
+          project registration was confirmed.</para>
+
+          <para></para>
+        </step>
+
+        <step>
+          <para><emphasis role="bold">The Project Active Services</emphasis>:
+          this is the list of services that you want to enable/disable for
+          your own project. (Un)Checking any of the select boxes will
+          immediately (De)Activate the service. Deactivating a service just
+          means that it disappears from the Project Summary page of your
+          project but all existing data related to this service remains
+          untouched. In other words, re-activating the service will restore
+          the service in the exact same state it was when you first
+          deactivated it.</para>
+
+          <para></para>
+        </step>
+      </procedure>
+    </section>
+
+    <section id="ProjectCategorization">
+      <title>Project Categorization</title>
+
+      <para><emphasis>Location: Page Admin Content</emphasis></para>
+
+      <para>This is where you can categorize your project. You can define up
+      to 3 values for each of the 7 criteria used in the Software Map. If you
+      cannot find any matching value in the predefined list do not hesitate to
+      contact the CodeX Team.</para>
+    </section>
+
+    <section id="ProjectHistory">
+      <title>Project History</title>
+
+      <para><emphasis>Location: Project Administration Menu</emphasis></para>
+
+      <para>The Project History provides project members with Audit
+      capabilities. Clicking on this menu item shows a list of all the changes
+      that have taken place in the administration of the project since its
+      creation. The list of changes reports the nature of the change (e.g.
+      Changed Public Info, Changed Permissions, Changed Software Map, ...) ,
+      what the value was before it changed (if applicable), who changed it and
+      when.</para>
+    </section>
+
+    <section id="ProjectDataExport">
+      <title>Project Data Export</title>
+
+      <para><emphasis>Location: Project Administration Menu</emphasis></para>
+
+      <para>CodeX is very appealing to many project development teams because
+      it provides full-featured project development and management tools for
+      free. A software project can be managed almost entirely from within
+      CodeX. However at some point the project team needs to report about
+      progress made, what goes well or wrong, how far you are from the end
+      date, derive statistical data, etc.</para>
+
+      <para>It is far beyond the scope of CodeX to provide project teams with
+      such reporting tools. There are many specialized tools on the market to
+      generate progress reports and each project team has its favorite one. In
+      order to satisfy this diversity of needs, the CodeX Team has developed a
+      very efficient system that allows the project team to export the project
+      data outside of CodeX for re-use in other tools like Access, Excel,
+      Crystal Report, Word or any other ad-hoc tools.</para>
+
+      <para>CodeX provides you with 2 kinds of Data Export:</para>
+
+      <itemizedlist mark="bullet">
+        <listitem>
+          <para><emphasis role="bold">Text File Export</emphasis>: these are
+          bugs and tasks data extracted from the project database and exported
+          in text format. The text format used is called CSV (Comma Separated
+          Values) and is recognized by almost every Office or database tool on
+          the market</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Direct Database Connection</emphasis>:
+          so to speak this not a Data Export. It is rather a direct connection
+          to your project database through an ODBC or JDBC driver. If you want
+          to manipulate your project data with a database tool (like
+          MS-Access) this is certainly the best choice.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Full documentation on how to use and configure the Data Export
+      Facility is available on the CodeX Site Documentation (<ulink
+      url="http://codex.xerox.com/docs/site/">http://codex.xerox.com/docs/site/</ulink>
+      ) under the title <emphasis>&#34;Extracting your Project Data from
+      CodeX&#34;</emphasis>.</para>
+    </section>
+
+    <section id="Edit-ReleaseFiles">
+      <title>Edit/Release Files</title>
+
+      <para><emphasis>Location: Project Administration Menu and Page Admin
+      Content</emphasis></para>
+
+      <para>This service allows project members to post packaged versions (zip
+      or tar gzipped ) of their software on CodeX for public consumption. All
+      posted file releases can be accessed from the Project Summary page.</para>
+
+      <para>Chapter <xref linkend="FileRelease" /> is entirely dedicated to
+      the description of the File Release Service.</para>
+    </section>
+
+    <section id="Post-EditJobs">
+      <title>Post/Edit Jobs</title>
+
+      <para><emphasis>Location: Project Administration Menu</emphasis></para>
+
+      <para>CodeX offers a minimal job posting system to your project. When
+      you publish a job it instantly appears under the &#34;Project Help
+      Wanted&#34; section on the CodeX Main Menu and is visible to all CodeX
+      users including those who are not registered users. It is an excellent
+      way of calling for help either on a specific topic or to sub-contract a
+      part of your work.</para>
+
+      <important>
+        <title>Important Note on Job Posting</title>
+
+        <para>It is not the intent of the CodeX Job Posting system to replace
+        PeopleNet or any other countrywide job posting system already in place
+        in Xerox. The CodeX Job Posting system is intended to call for
+        expertise or short mission request. One of the possible uses of the
+        CodeX Job Posting system is for Projects to post 3 to 6 months jobs
+        that can be sub-contracted to organizations like XConnect or XISS/XPS.
+        It can also be a request for the opinion of an expert that would take
+        no longer than a couple of days even a couple of hours.</para>
+      </important>
+    </section>
+
+    <section id="SourceCodeAccessLogs">
+      <title>Source Code Access Logs</title>
+
+      <para><emphasis>Location: Project Administration Menu</emphasis></para>
+
+      <para>CodeX is about Software Sharing inside Xerox. Our goal is to make
+      software re-use part of the Xerox culture. To this end, Source code
+      access and file release download is granted to all registered users
+      <footnote><para>Anonymous users are not granted access to the Source
+      code. They must create their own account and identify themselves with
+      CodeX before they can do so.</para></footnote> on CodeX. Beside that we
+      also wanted the ability for project leaders to see who downloaded their
+      software. The CodeX Team implemented this feature upon request of
+      several project administrators shortly after the site was launched. The
+      intent for the project leaders is not to construct barriers to source
+      code sharing but rather to know who their community of users are and who
+      is interested in their software.</para>
+
+      <para>The Source Code Access Logs provide project members with 2 lists:</para>
+
+      <itemizedlist mark="bullet">
+        <listitem>
+          <para>The first list is about File Release download. It basically
+          reports who (Real Name, Login name and e-mail), downloaded what file
+          and when (date and time). The time of download is reported in local
+          time relative to the project member time zone.</para>
+        </listitem>
+
+        <listitem>
+          <para>The second list is about CodeX users who used CVS to checkout
+          or update the sources on their local desktop machine.</para>
+        </listitem>
+      </itemizedlist>
+
+      <figure id="FigureSourceCodeAccessLogsForACodeXProject">
+        <title>Source Code Access Logs for a CodeX project</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+                       fileref="../../screenshots/en_US/sc_sourcecodeaccesslogs.png" width="13cm" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+
+    <section id="ToolsAdmin">
+      <title>Tools Admin</title>
+
+      <para><emphasis>Location: Page Admin Content</emphasis></para>
+
+      <para>Finally, you&#39;ll find here a direct link to the administration
+      function of all your project services in the lower left corner of the
+      Project Admin page. Only project members with Tool Administration
+      permission are allowed to access the CodeX services administration
+      pages.</para>
+    </section>
+  </chapter>

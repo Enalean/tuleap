@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id: 
+//
+//	Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
+-->
+<?xml-stylesheet type="text/css"
+href="file:/C:/Program Files/XMLmind_XML_Editor/css/docbook.css"
+?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"file:/usr/local/docbook-dtd/docbookx.dtd"
+[
+<!ENTITY book-info SYSTEM "BookInfo.xml">
+<!ENTITY chapter1 SYSTEM "Introduction.xml">
+<!ENTITY chapter2 SYSTEM "CodeXSiteOverview.xml">
+<!ENTITY chapter3 SYSTEM "BecomingACodeXCitizen.xml">
+<!ENTITY chapter4 SYSTEM "CreatingANewProject.xml">
+<!ENTITY chapter5 SYSTEM "ProjectSummary.xml">
+<!ENTITY chapter6 SYSTEM "ProjectAdministration.xml">
+<!ENTITY chapter7 SYSTEM "BugTrackingSystem.xml">
+<!ENTITY chapter8 SYSTEM "TaskManager.xml">
+<!ENTITY chapter9 SYSTEM "FileRelease.xml">
+<!ENTITY chapter10 SYSTEM "VersionControlWithCVS.xml">
+<!ENTITY chapter11 SYSTEM "PatchManager.xml">
+<!ENTITY chapter12 SYSTEM "DocumentManager.xml">
+<!ENTITY chapter13 SYSTEM "SupportRequestManager.xml">
+<!ENTITY chapter14 SYSTEM "CommunicationServices.xml">
+<!ENTITY chapter15 SYSTEM "SurveyManager.xml">
+<!ENTITY chapter16 SYSTEM "ProjectWebSite.xml">
+<!ENTITY chapter17 SYSTEM "OtherServices.xml">
+<!ENTITY references SYSTEM "References.xml">
+]>
+<book>
+  <title>CodeX User Guide</title>
+
+  <subtitle>&#34;Breaking the Barries to Source Code Sharing inside Xerox&#34;</subtitle>
+
+  &book-info;
+
+  &chapter1;
+  &chapter2;
+  &chapter3;
+  &chapter4;
+  &chapter5;
+  &chapter6;
+  &chapter7;
+  &chapter8;
+  &chapter9;
+  &chapter10;
+  &chapter11;
+  &chapter12;
+  &chapter13;
+  &chapter14;
+  &chapter15;
+  &chapter16;
+  &chapter17;
+
+  &references;
+
+</book>

@@ -1,0 +1,425 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id: 
+//
+//	Originally written by Stephane Bouhet 2002, CodeX Team, Xerox
+//
+-->
+
+  <chapter id="FileRelease">
+    <title>File Release</title>
+
+    <section id="SourceCodeReleaseGuidelines">
+      <title>Source Code Release: Guidelines</title>
+
+      <para>There are 2 ways by which project administrators can provide
+      access to their project source code on CodeX: the CVS repository and the
+      File Release mechanism. At first glance, having two distinct CodeX
+      services seems redundant. However both have been developed with
+      different objectives and target audience in mind and they are very much
+      complementary. Providing both is definitely a plus for your visitors.</para>
+
+      <itemizedlist mark="bullet">
+        <listitem>
+          <para><emphasis role="bold">The CVS repository</emphasis> provides a
+          full access to your source code including its entire version
+          history. However accessing the source code via CVS requires that the
+          CodeX user has CVS installed on their machine and knows enough about
+          CVS to checkout a working copy. Not everybody is capable or willing
+          to do so. CVS access is well suited for CodeX users who want to get
+          deeper in the project code, add some new extensions, fix bugs and
+          contribute changes back to the project team.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">The File Release mechanism</emphasis>
+          allows you to deliver pre-packaged version of the source code and/or
+          binaries in one or several archive file (zip, tar, jar,...) that a
+          CodeX user can easily download from the CodeX Web site. No specific
+          tools or knowledge is required. Besides pre-packaged source code it
+          is also considered a very good practice to provide ready-to-use
+          binary version of your software to make developers life even easier.
+          The File Release service is well suited for people who want to start
+          playing with your software and see how it can help them in their own
+          work. This type of user probably doesn&#39;t want to bother with all
+          the intricacies of your source code to start with. As time goes or
+          if need be they may be tempted to look into it but this is
+          definitely not their first objective. Hence the importance of
+          providing pre-compiled version of your software.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>As you can see both services are fundamentally different in nature
+      and we strongly encourage project teams to use both of them. In order to
+      help project teams understand why these two services are highly
+      complementary a typical project life cycle is documented on <xref
+      linkend="FigureATypicalSoftwareDevelopmentLifeCycleOnCodeX" />.</para>
+    </section>
+
+    <section id="FileReleaseJargon">
+      <title>File Release Jargon</title>
+
+      <para>Before we get further into the description of the File Release
+      service let&#39;s review the terms used throughout this section. These
+      terms are key for the understanding of the File Release mechanism both
+      for users and administrators (see <xref
+      linkend="FigureTheFileReleaseStructure" />).</para>
+
+      <figure id="FigureTheFileReleaseStructure">
+        <title>The File Release Structure</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+                       fileref="../../slides/en_US/File_Release.png" width="12cm" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <itemizedlist mark="bullet">
+        <listitem>
+          <para><emphasis role="bold">Packages</emphasis> :These are the
+          topmost entities visible in the File Release service. A package is a
+          container for one or several Releases. In general a package do
+          correspond with high-level deliverables of your software products.
+          Let&#39;s assume that your team is working on a database engine.
+          Possible packages could be DB-engine for the database engine itself
+          and DB-drivers for the database drivers like ODBC or JDBC drivers. A
+          third package DB-Docs could also be created to deliver the
+          documentation in a separate container.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Releases</emphasis>: A release is a
+          collection of individual files that were all frozen and time stamped
+          at a given moment in time. In that sense it is also a container like
+          a package but one level below. The files contained in a release
+          generally correspond to a given version (also called release) of
+          your software. Building on the database example above we could
+          imagine than the DB-engine package has release 1.0, release 1.1 and
+          release 2.0beta available. DB-drivers could have release 1.0 as well
+          but no release 1.2 because the 1.0 drivers also work with the
+          release 1.2 of DB-engine. In other words release naming can be
+          completely independent from one package to another.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Files</emphasis>: files are the basic
+          entities that one can find in a release. Again building on the
+          database engine example, we can imagine that the release 1.0 of
+          package DB-engine contains the file db-engine-src-1.0.zip for the
+          source file and db-engine-win32-1.0.zip for the precompiled Windows
+          version. When release 1.2 of the DB-engine package pops up, we could
+          have files db-engine-src- 1.2.zip for the source file and
+          db-engine-win32-1.2.zip for the precompiled Windows version and a
+          new file called db-engine-linux-intel-1.2.zip for the precompiled
+          Linux version running on Intel hardware. We haven&#39;t said a word
+          about the DB-docs package. May be it is still empty for the moment
+          ;-)</para>
+        </listitem>
+      </itemizedlist>
+
+      <para><note>At first glance, this structure may appear a bit
+      complex. However this is really the kind of structure a project team
+      should aim at to make their deliverables easy to understand and easy to
+      access for the rest of Xerox. Thinking about the structure of your
+      software and documentation deliverables ahead of time can help you
+      structure your team, your working processes (e.g. build and test
+      process) in the right way. Do not overlook this part of your project.</note></para>
+    </section>
+
+    <section id="FileReleaseBrowsingandDownload">
+      <title>File Release Browsing and Download</title>
+
+      <para>The latest version of each project package (if any) is always
+      visible on the Project Summary page (see <xref
+      linkend="FigureASampleProjectSummaryPage" />). The latest version can
+      immediately be downloaded by clicking on the Download link or visit the
+      complete list of packages and release by clicking on the [View ALL
+      project files] link.</para>
+
+      <figure id="FigureTheFileReleaseScreenOfTheDataGlyphToolkitProject">
+        <title>The File Release screen of the DataGlyph Toolkit project</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+                       fileref="../../screenshots/en_US/sc_filereleasedownloads.png" width="15.3cm" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>The first example given on <xref
+      linkend="FigureTheFileReleaseScreenOfTheDataGlyphToolkitProject" />
+      shows the File Release screen of the DataGlyph Toolkit project. This
+      project only has one package called &#34;Xerox DataGlyph Toolkit&#34;
+      with 5 releases in it from 3.0.5 to 3.1.0beta2 listed in chronological
+      order. Each release contains an archive for the source code and another
+      one with precompiled binaries (Java byte code here). Starting at release
+      3.0.6 new files handling license key issues have been added.</para>
+
+      <para>The second example comes from the Global Solutions Architecture
+      project. The File Release structure is different from the previous one.
+      The project has 2 separate packages: one for the GSA Toolkit and a
+      second one for the DataBus. Clearly the release-numbering schemes for
+      these 2 packages are completely independent. It is very likely that
+      DataBus release 0.5 works with the 3 Toolkit releases names Auk, Booby
+      and Condor (releases doesn&#39;t need to be numbers). In the second
+      release of the Toolkit package the documentation was delivered as a
+      separate file.</para>
+
+      <figure id="FigureTheFileReleaseScreenOfTheGSAProject">
+        <title>The File Release screen of the GSA project</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+                       fileref="../../screenshots/en_US/sc_filereleasedownloads2.png" width="15.3cm" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+
+    <section id="FileReleaseDelivery">
+      <title>File Release Delivery</title>
+
+      <para>This chapter is for project members only. It goes through a
+      detailed explanation of the File Release delivery process. This is a
+      3-step process:</para>
+
+      <procedure>
+        <step>
+          <para><emphasis role="bold">Package Creation</emphasis>: Create one
+          or several packages. This must only be done once. When packages are
+          in place you can add a new release in them at any time.</para>
+        </step>
+
+        <step>
+          <para><emphasis role="bold">Release Creation</emphasis>: Once a
+          package has been created, you can add releases to it</para>
+        </step>
+
+        <step>
+          <para><emphasis role="bold">Release Configuration and Validation</emphasis>:
+          When a release has been created you can use it to attach files to
+          it, give it a release date, list the changes made in this release,
+          etc.</para>
+        </step>
+      </procedure>
+
+      <section id="PackageCreation">
+        <title>Package Creation</title>
+
+        <para>To create a package first go to the File Release delivery
+        screen. To this end visit your Project Administration page and select
+        the [Edit/Add File Release...] link in the lower right corner of the
+        screen.</para>
+
+        <para>The first time you enter this page no package is available.
+        Adding new packages is as easy as typing the package name in the blank
+        field at the bottom of the screen and push on the &#34;Create This
+        package&#34; button. Once a package has been created you can modify
+        its name and status. A package is either active, which means that it
+        is visible to the CodeX users in the File Release service, or Hidden,
+        which means that it is not visible on the Project Summary Page.
+        Switching the status from Active to Hidden doesn&#39;t delete any
+        attached releases and files.</para>
+
+        <para>Whenever you update the name or the status don&#39;t forget to
+        push on the &#34;Update&#34; button!</para>
+
+        <figure id="FigureAPartOfThePackageAdministrationScreenGSAProject">
+          <title>A part of the Package Administration screen - GSA project (3
+          packages created, 2 active, 1 hidden)</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG"
+                         fileref="../../screenshots/en_US/sc_frspackages.png" width="15.3cm" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </section>
+
+      <section id="ReleaseCreation">
+        <title>Release Creation</title>
+
+        <para>Once a package has been created you can immediately start adding
+        releases to it. Click on the [Add/Edit Releases] link of the
+        appropriate package (see <xref
+        linkend="FigureAPartOfThePackageAdministrationScreenGSAProject" />).</para>
+
+        <para>The next screen is similar in spirit with Package Administration
+        screen but this one deals with releases. The Release Administration
+        screen allows you to create a new release by typing a name (with
+        letters, numbers, punctuation symbols...) in the blank field at the
+        bottom of the screen. You also have a last chance to assign this new
+        release to the appropriate package by selecting the package name in
+        the package menu box next to it. Then Click on the &#34;Create This
+        Release&#34; button.</para>
+
+        <figure id="FigureAPartOfTheGSAProjectReleaseScreen">
+          <title>A part of the GSA project release screen</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG"
+                         fileref="../../screenshots/en_US/sc_frsreleases.png" width="15.3cm" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </section>
+
+      <section id="ReleaseConfigurationandValidation">
+        <title>Release Configuration and Validation</title>
+
+        <para>The next step after you have named a new release creation is to
+        define its content. Please note that this step is used both to define
+        the content of a new release and also to modify an existing one. To
+        access the release configuration screen click on the [Edit This
+        Release] link next to the release name on the Release Administration
+        screen (see <xref linkend="FigureAPartOfTheGSAProjectReleaseScreen" />).</para>
+
+        <para>The Release Configuration screen that is now in front of you is
+        divided in 4 steps. It is quite a long page but the steps are
+        documented on the screen and are easy to understand. Remember that
+        each step has its own validation button and before you go the next you
+        must validate the one you&#39;ve been working on.</para>
+
+        <itemizedlist mark="bullet">
+          <listitem>
+            <para><emphasis role="bold">Step 1 - Give Release information</emphasis></para>
+
+            <para>The first step gives you a chance to modify some of the
+            information you gave before like the release name, the status and
+            the related package. You must also provide a Release Date and
+            either cut and paste or upload Release Notes and ChangeLog</para>
+
+            <para>The Release Notes is typically a short (10 to 20 lines) and
+            high-level document that summarizes the new features delivered in
+            this release with a focus on the user visible changes (new UI, new
+            functions, new APIs...). This is an important document and all new
+            releases should definitely have one. Release Notes are immensely
+            helpful to the rest of Xerox to determine whether they need to
+            upgrade to the next release.</para>
+
+            <para>The ChangeLog is a much more technical document. It contains
+            all bugs fixed in this new release as well as any change in the
+            design or the architecture. This document is not as critical as
+            the previous one to the normal end-user but it is absolutely
+            pivotal for those who use your software in other development or
+            integration activities.</para>
+
+            <para><tip><title>Tip: Generate a Changelog file easily</title><para>If
+            you use CVS as you version control system you can very easily
+            generate a well formatted and informative Changelog file. The
+            cvs2cl utility available at <ulink
+            url="http://www.red-     bean.com/cvs2cl">http://www.red-
+            bean.com/cvs2cl</ulink> automatically extract all the CVS commit
+            messages, aggregate them with modification dates and author name
+            and format them in a nice way. This is a very good basis for a
+            Changelog document.</para></tip></para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Step 2 - Upload and attach files to
+            the Release</emphasis></para>
+
+            <para>As explained above multiple files can be attached to the
+            same release. Before the files can be attached one has to upload
+            them on the CodeX server. To this end, the CodeX server offers an
+            upload mechanism via FTP. To upload your files follow the
+            instruction on the screen and don&#39;t forget to refresh the Web
+            page to see the new uploaded files with the &#34;Refresh&#34;
+            button. Alternatively, if you are a MS Windows user, you can also
+            see the FTP Incoming space directly from Windows Explorer and drag
+            and drog your files in there (see <xref
+            linkend="MSWindowsSharedResources" />). Then refresh the CodeX Web
+            page to see your files.</para>
+
+            <para>Before you upload the files make sure you gave them names
+            that will speak to CodeX users. Ideally the file names should
+            include the release label in it and any other extension telling
+            whether it is a source file or a binary file.</para>
+
+            <para>Once your files have been uploaded check the box next to
+            each of them and push on the &#34;Attach Marked Files&#34; button.</para>
+
+            <para><tip><title>Tip: Always compress your deliverables</title><para>In
+            order to save disk space on the CodeX server as well as on CodeX
+            users&#39; machine and minimize network bandwidth consumption on
+            the Xerox Intranet always compress your deliverables. Use Winzip
+            on Windows and compress, gzip or even better bzip2 on Linux/Unix
+            machines.</para></tip></para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Step 3 - Gives additional information
+            on each attached file</emphasis></para>
+
+            <para>After all your files have been attached to the release, you
+            can provide additional information for each of them. For each file
+            you can specify the hardware architecture the file is going to run
+            on and what is the file type (source, binary or documentation and
+            what type of archive it is). This step is not mandatory but
+            assigning the right type and hardware architecture to each file is
+            useful to your visitors.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Step 4 - Send e-mail notification
+            (optional)</emphasis></para>
+
+            <para>This step is optional in the sense that it may not show up
+            on your screen. If some CodeX users monitor your package, Step 4
+            will tell you how many of them are doing so. CodeX gives you the
+            freedom to send an e-mail notification or not to the users who
+            expressed interest in your packages. Do not bypass this step,
+            always inform your community of users and developers.</para>
+
+            <para></para>
+            <para></para>
+            <para></para>
+            <para></para>
+            
+            <para><tip><title>Tip: Always include a useful README file</title><para>When
+            you prepare your files for release make sure that you include a
+            README file in the top directory of each file that a user can
+            download. And pack this README with useful information like the
+            address of your CodeX site, the Mailing list you have put in place
+            for your project, how to submit a bug or a support to the project
+            team (via CodeX of course)</para></tip></para>
+          </listitem>
+        </itemizedlist>
+      </section>
+    </section>
+
+    <section id="QuickFileRelease">
+      <title>Quick File Release</title>
+
+      <para>CodeX also provides you with a quick File Release mechanism. To
+      access the short version of the Release Process click on the [Quick Add
+      File Release...] link in the lower right corner of your Project
+      Administration page. The Quick File Release page is a one step process
+      where you can specify all the necessary information at the same time.
+      The counterpart is that you can only attach one single file to a given
+      release and not several as in the full File Release process</para>
+
+      <para>In addition the Quick File Release screen allows you to upload the
+      attached file in 2 different ways: <itemizedlist mark="bullet"
+      spacing="compact"><listitem><para><emphasis role="underline">FTP</emphasis>:
+      upload your file via ftp as above and then select the appropriate file
+      name from the &#34;Select a File&#34; pull down menu.</para></listitem><listitem><para><emphasis
+      role="underline">Direct Upload</emphasis>: you can upload the file via
+      the Web interface by using the &#34;Browse&#34; button and pointing to
+      the appropriate file on your local disk.</para></listitem></itemizedlist></para>
+
+      <para>Don&#39;t forget to specify the hardware architecture and the file
+      type. Then push on the &#34;Release File&#34; button at the bottom of
+      the screen.</para>
+    </section>
+  </chapter>

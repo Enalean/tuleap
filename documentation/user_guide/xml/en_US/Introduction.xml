@@ -1,0 +1,70 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id: 
+//
+//	Originally written by Stephane Bouhet 2002, CodeX Team, Xerox
+//
+-->
+  <chapter id="Introduction">
+    <title>Introduction</title>
+
+    <para>The goal of the Xerox Code eXchange Initiative (CodeX) is to
+    transpose and apply the principles of Open Source [XOSP] into our own
+    corporate environment. Establishing internal source code sharing as one of
+    our core software engineering values will improve the quality of our
+    software and the productivity of our development teams while providing a
+    compelling, attractive and rich working environment.</para>
+
+    <para>Thanks to the community building effect of software sharing,
+    cooperation and trust should improve in between Xerox research, business
+    groups and customer organizations. If properly utilized, CodeX can
+    significantly improve our Time To Market and create more and better code
+    with less work.</para>
+
+    <para>The CodeX initiative is supported by a Xerox internal Web site of
+    the same name that is available at <ulink url="http://codex.xerox.com/">http://codex.xerox.com/</ulink>.
+    The CodeX web site is provided as a service to all Xerox software
+    development teams who want to share their project source code with others
+    inside Xerox. Since the site went live on January 12th, 2001 the CodeX
+    site has been growing at a fast pace. To us this is a strong indicator
+    that the software community in Xerox is alive and well. It is also asking
+    for more communication and has a strong desire to establish bridges with
+    the rest of Xerox. Further, it shows a desire to speed up the innovation
+    process and to develop more flexible, better quality and more usable
+    software in less time.</para>
+
+    <para>Many Xerox software projects have already made CodeX their project
+    home and project teams are now using CodeX services on a daily basis to do
+    their job faster, cheaper and easier. The community is constantly giving
+    us feedback on CodeX and we have responded with enhancements to CodeX that
+    increase its ability to support your projects. One of the requests was to
+    have a CodeX User Guide handy. That is why this document was created. The
+    CodeX User Guide not only describes the CodeX features and services, but
+    it is also packed with tips and guidelines to help you get the most out of
+    CodeX and manage your project with a true source code sharing spirit.</para>
+
+    <para>We hope that you enjoy working with CodeX. If so, keep talking about
+    the CodeX initiative to fellow programmers and software management. CodeX
+    users are our best advocates. Also keep in mind that this User Guide is
+    yours and, following source code sharing principles, we welcome your
+    corrections and contributions.</para>
+
+    <para>Enjoy CodeX!</para>
+
+    <para>The CodeX Team</para>
+
+    <figure id="FigureTheCodeXHomePage">
+      <title>The CodeX Home Page</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata format="PNG"
+                     fileref="../../screenshots/en_US/sc_homepage.png" width="15.5cm"/>
+        </imageobject>
+      </mediaobject>
+    </figure>
+  </chapter>

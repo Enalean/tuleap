@@ -1,0 +1,590 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id: 
+//
+//	Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
+-->
+  <chapter id="ProjectWebSite">
+    <title>Project Web Site</title>
+
+    <section id="VisitingaWebSite">
+      <title>Visiting a Web Site</title>
+
+      <para>When a new project is created on CodeX a project specific Web Site
+      is created as well. You can access a project Web site in 2 different
+      ways:</para>
+
+      <itemizedlist mark="bullet">
+        <listitem>
+          <para>By forming the following URL in your favorite Web browser
+          (where projectname is your project short name):</para>
+
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+http://projectname.codex.xerox.com
+</programlisting>
+        </listitem>
+
+        <listitem>
+          <para>Click on the &#34;Home Page&#34; link in the Project Main menu
+          at the top of the Project Summary page.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>If the project team has not yet created its own Web pages,
+      you&#39;ll see the default project home page informing you that the site
+      will come soon as well as a link back to the CodeX site.</para>
+    </section>
+
+    <section id="WebSiteCreation">
+      <title>Web Site Creation</title>
+
+      <section id="DirectoryStructureandLocation">
+        <title>Directory Structure and Location</title>
+
+        <para>Each project has its own specific location where to store their
+        collection of HTML pages along with the images or related data files
+        and document that comes with it. The location of the directory where
+        to store all these documents is:</para>
+
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+/home/groups/projectname
+</programlisting>
+
+        <para>If you use your Shell Account (see <xref linkend="ShellAccount" />)
+        to log into the CodeX server and place yourself in this directory with
+        the Unix command &#34;cd /home/groups/projectname&#34; you&#39;ll see
+        3 subdirectories:</para>
+
+        <itemizedlist mark="bullet">
+          <listitem>
+            <para><emphasis role="bold">htdocs</emphasis>: this is where you
+            must place all your HTML pages including those with embedded PHP
+            or SSI instructions (see below for more details). All the images,
+            icons or documents used or referenced in your Web pages must also
+            be stored in this directory (or in any sub-directory under
+            htdocs). In the Apache<footnote><para>Apache is the HTTP server
+            developed by the Apache Consortium. It is available under an Open
+            Source license and is by far the most popular Web server in the
+            world with more than 60% of the market share. For more information
+            on Apache see <ulink url="http://www.apache.org">http://www.apache.org</ulink></para></footnote>
+            jargon the directory <literal>/home/groups/<emphasis>projectname</emphasis>/htdocs</literal>
+            is the Document Root of your Web Site.</para>
+
+            <para>Apache expects your home page to have one of the following
+            name:</para>
+
+            <itemizedlist mark="bullet"
+                          spacing="compact">
+              <listitem>
+                <para><literal>index.html, index.htm</literal> for pure HTML
+                pages</para>
+              </listitem>
+
+              <listitem>
+                <para><literal>index.shtml</literal> for pages using Apache
+                SSI extensions</para>
+              </listitem>
+
+              <listitem>
+                <para><literal>index.php, index.php3</literal> if you use
+                embedded PHP scripts</para>
+              </listitem>
+            </itemizedlist>
+
+            <para>If your own home page is called index.php then rename the
+            default index.php file created by CodeX into something else by
+            using the following commands from your Shell Account:</para>
+
+            <para><literal> cd /home/groups/<emphasis>projectname</emphasis>/htdocs
+            mv index.php index_default.php </literal></para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">cgi-bin</emphasis>: this directory is
+            where you must place all your CGI scripts. CGI scripts can be
+            written in a number of languages like Perl, Python, Shell or even
+            C.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">log</emphasis>: this is a reserved
+            directory. Do not put any of your files in it.</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+
+      <section id="WebSiteScriptingwithPHP">
+        <title>Web Site Scripting with PHP</title>
+
+        <para>Project members can build sophisticated project Web sites by
+        using the PHP language. PHP, an Open Source equivalent to Microsoft
+        ASP, is becoming extremely popular as a server-side scripting language
+        for the Web. PHP is easy to learn, optimized for the Web and interact
+        nicely with SQL databases.</para>
+
+        <para>If you decide to embed PHP scripts in your Project Web pages,
+        first make sure to use the &#34;.php&#34; extensions for all the files
+        with PHP code in it. For pure HTML pages use the &#34;htm&#34; or
+        &#34;html&#34; extensions as usual.</para>
+
+        <para>CodeX offers a system wide include file called
+        &#34;pre_vhosts.php&#34; that you should include at the very top of
+        all your PHP pages if you want to be given access to the current user,
+        session and group (project) information. This include file create
+        various variables functions and objects that can be helpful in your
+        PHP scripts:</para>
+
+       <table frame="all">
+          <title>PHP Key User and Project entities</title>
+          <tgroup cols="3">
+            <colspec colname="c1" colwidth="120pt" />
+
+            <colspec colname="c2" colwidth="90pt"  />
+
+            <colspec colname="c3" colwidth="260pt" />
+            <thead align="left">
+              <row>
+                <entry>Name</entry>
+
+                <entry>Type</entry>
+
+                <entry>Description</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry>$group_id</entry>
+
+                <entry>Integer</entry>
+
+                <entry>ID of your project (as shown in the group_id argument
+                of many CodeX services)</entry>
+              </row>
+
+              <row>
+                <entry>$group_name</entry>
+
+                <entry>String</entry>
+
+                <entry>Short project name</entry>
+              </row>
+
+              <row>
+                <entry>$project</entry>
+
+                <entry>Object</entry>
+
+                <entry>Object of class Project that gives access to your
+                project properties (see below)</entry>
+              </row>
+
+              <row>
+                <entry>user_getid()</entry>
+
+                <entry>Function</entry>
+
+                <entry>Function returning the ID of the user that is currently
+                browsing your Project Web site (0 if the user is not logged
+                in)</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para></para>
+        <para></para>
+        <para></para>
+        <para></para>
+        <para></para>
+        <para></para>
+        <para></para>
+        <para></para>
+        <para></para>
+        <para></para>
+        <para></para>
+        <para></para>
+                
+        <para>In addition Web site designers also have access to a series of
+        user and project related functions and methods:</para>
+
+        <table frame="all">
+          <title>PHP User and Project functions</title>
+          <tgroup cols="3">
+            <colspec colname="c1" colwidth="120pt" />
+
+            <colspec colname="c2" colwidth="90pt"  />
+
+            <colspec colname="c3" colwidth="260pt" />
+
+            <thead align="left">
+              <row>
+                <entry>Name</entry>
+
+                <entry>Return Type</entry>
+
+                <entry>Description</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry nameend="c3" namest="c1" align="center"><para></para><emphasis role="bold">*** USER
+                FUNCTIONS ***</emphasis><para></para></entry>
+              </row>
+
+              <row>
+                <entry>user_getid()</entry>
+
+                <entry>Function</entry>
+
+                <entry>Function returning the ID of the user that is currently
+                browsing your Project Web site (0 if the user is not logged
+                in)</entry>
+              </row>
+
+              <row>
+                <entry>user_getname($user_id)</entry>
+
+                <entry>String</entry>
+
+                <entry>Return login name of user $user_id</entry>
+              </row>
+
+              <row>
+                <entry>user_getrealname($user_id)</entry>
+
+                <entry>String</entry>
+
+                <entry>Return the full name of user $user_id</entry>
+              </row>
+
+              <row>
+                <entry>user_getemail($user_id)</entry>
+
+                <entry>String</entry>
+
+                <entry>Return the email address of user $user_id</entry>
+              </row>
+
+              <row>
+                <entry>user_gettimezone($user_id)</entry>
+
+                <entry>String</entry>
+
+                <entry>Return the time zone of the current user</entry>
+              </row>
+
+              <row>
+                <entry>user_isloggedin()</entry>
+
+                <entry>Boolean</entry>
+
+                <entry>Says whether the current visitor is logged in CodeX or
+                not (anonymous user)</entry>
+              </row>
+
+              <row>
+                <entry>user_ismember($group_id)</entry>
+
+                <entry>Boolean</entry>
+
+                <entry>Says whether the current visitor is a member of the
+                project $group_id</entry>
+              </row>
+
+              <row>
+                <entry nameend="c3" namest="c1" align="center"><para></para><emphasis role="bold">***
+                PROJECT FUNCTIONS ***</emphasis><para></para></entry>
+              </row>
+
+              <row>
+                <entry>$project-&#62;getGroupId()</entry>
+
+                <entry>Integer</entry>
+
+                <entry>Project ID. Same as $group_id variable</entry>
+              </row>
+
+              <row>
+                <entry>$project-&#62;getUnixName()</entry>
+
+                <entry>String</entry>
+
+                <entry>Project Short name. Same as $group_name variable</entry>
+              </row>
+
+              <row>
+                <entry>$project-&#62;getPublicName()</entry>
+
+                <entry>String</entry>
+
+                <entry>Project long name</entry>
+              </row>
+
+              <row>
+                <entry>$project-&#62;getDescription()</entry>
+
+                <entry>String</entry>
+
+                <entry>Project short description</entry>
+              </row>
+
+              <row>
+                <entry>$project-&#62;getPurpose()</entry>
+
+                <entry>String</entry>
+
+                <entry>Project long description</entry>
+              </row>
+
+              <row>
+                <entry>$project-&#62;isPublic()</entry>
+
+                <entry>Integer</entry>
+
+                <entry>0 if project is Private. 1 if Public</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <section id="PHPCodeSample">
+          <title>PHP Code Sample</title>
+
+          <para>Find below some sample pieces of PHP code that you can use in
+          your Web pages:</para>
+
+          <example>
+            <title>PHP Code Sample: greeting your visitors</title>
+
+            <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+&#60;?php require(&#39;pre_vhosts.php&#39;)
+
+if (user_isloggedin() ) {
+   $user_id = user_getid();
+   $user_fullname = user_getrealname($user_id);
+   echo &#34;&#60;b&#62;Welcome to $user_fullname!&#60;/b&#62;
+...
+...
+}
+?&#62;
+            </programlisting>
+          </example>
+
+          <example>
+            <title>PHP Code Sample: displaying project information</title>
+
+            <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+&#60;?php require (&#39;pre_vhosts.php&#39;) ?&#62;
+&#60;HTML&#62;
+&#60;BODY&#62;
+&#60;H1&#62;&#60;?php echo $project-&#62;getPublicName(); ?&#62; Web site&#60;/H1&#62;
+&#60;P&#62;Project goal: &#60;?php echo $project-&#62;getPurpose();?&#62;
+&#60;/BODY&#62;
+&#60;/HTML&#62;
+            </programlisting>
+          </example>
+        </section>
+      </section>
+
+      <section id="WebSitePublishing">
+        <title>Web Site Publishing</title>
+
+        <para>You can use various methods to publish your Web pages on your
+        CodeX Web site:</para>
+
+        <itemizedlist mark="bullet"
+                      spacing="compact">
+          <listitem>
+            <para>Remote editing with HTML capable editors like Netscape or
+            Mozilla Composer, Microsoft FrontPage or Emacs with transparent
+            ftp access</para>
+          </listitem>
+
+          <listitem>
+            <para>Local editing on your machine and transfer of the files
+            either via ftp or, even better, via scp</para>
+          </listitem>
+
+          <listitem>
+            <para>Small changes to web pages can be made from the shell
+            account on CodeX, using emacs or vi, but substantial editing is
+            discouraged.</para>
+          </listitem>
+        </itemizedlist>
+
+        <section id="NetscapeComposer4.x">
+          <title>Netscape Composer 4.x</title>
+
+          <para>You can use Netscape Composer 4.x to edit remote HTML pages.
+          To do this browse your project Web Page, then use the File-&#62;Edit
+          Page menu item, edit your HTML document and finally press on the
+          Publish icon on the upper menu bar.</para>
+
+          <para>In the dialog box specify the following parameters:</para>
+
+          <itemizedlist mark="bullet"
+                        spacing="compact">
+            <listitem>
+              <para>Upload Files to this location:</para>
+
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+ftp://projectname.codex.xerox.com/home/groups/projectname/htdocs/
+</programlisting>
+            <para></para>
+            </listitem>
+
+            <listitem>
+              <para>Login and Password: type your CodeX login and password.
+              Click on the save password checkbox to avoid retyping the
+              password for each Save operation.</para>
+            </listitem>
+          </itemizedlist>
+        </section>
+
+        <section id="NetscapeComposer6.x">
+          <title>Netscape Composer 6.x</title>
+
+          <para>With Netscape version 6 (or Mozilla 1.0) it is no longer
+          possible to publish a page without first storing a local copy. In
+          order to use the Netscape 6 publishing mechanism first create your
+          Web site structure and pages on your desktop machine, work with this
+          local copy and then publish the pages via FTP as needed.</para>
+
+          <para>As an alternative Windows users can also map a network drive
+          pointing directly to the Projects directory on CodeX (see <xref
+          linkend="MSWindowsSharedResources" />) and work with the HTML files
+          as if they were located on the local machine. In this case no
+          publishing is required.</para>
+        </section>
+
+        <section id="MicrosoftFrontPage">
+          <title>Microsoft FrontPage</title>
+
+          <para>You can&#39;t use the Publish feature of FrontPage because the
+          CodeX server doesn&#39;t support the FrontPage Web extensions. In
+          addition, publishing through FTP won&#39;t work either because
+          FrontPage does not allow you to fully specify the path to the remote
+          of your project Web server. A work around consist in mounting the
+          Windows network drive at <literal>\\codex\projects</literal> (see
+          <xref linkend="MSWindowsSharedResources" />) and work directly on
+          your remote Web server directories.</para>
+        </section>
+
+        <section id="MacromediaDreamweaver">
+          <title>Macromedia Dreamweaver</title>
+
+          <para>You can use DreamWeaver to design and create your project web
+          site. As opposed to FrontPage, DreamWeaver fully support remote
+          publication via FTP. To create a new site go to the Site -&#62; New
+          Site menu. In the local information, choose your site name and local
+          root folder. For the remote information, choose FTP access and
+          specify <literal><emphasis>projectname</emphasis>.codex.xerox.com</literal>
+          as host and <literal>/home/groups/<emphasis>projectname</emphasis>/htdocs</literal>
+          as the host directory. The login is your CodeX login.</para>
+        </section>
+
+        <section id="LocalEditingandRemoteTransfer">
+          <title>Local Editing and Remote Transfer</title>
+
+          <para>For those of you who use an HTML editing tool that has no
+          built-in export facility you can transfer your HTML files by other
+          means.</para>
+
+          <itemizedlist mark="bullet"
+                        spacing="compact">
+            <listitem>
+              <para><emphasis role="bold">FTP</emphasis>: this is the simplest
+              method for transferring your Web pages to the CodeX remote
+              location. Use ftp to connect to <literal><emphasis>projectname</emphasis>.codex.xerox.com</literal>
+              and use your CodeX username and password to login. Once logged
+              in issue the following command:</para>
+
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+cd /home/groups/projectname/htdocs
+</programlisting>
+
+              <para>and finally use the put (or mput) command to transfer the
+              modified files. Check with your Web browser that everything is
+              ok. Mind your Web Browser page cache and force page reloading to
+              be sure you see the latest version of your pages!</para>
+            </listitem>
+
+            <listitem>
+              <para><emphasis role="bold">SCP</emphasis>:</para>
+
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+scp -r * login@shell.codex.xerox.com:/home/groups/projectname/htdocs/
+</programlisting>
+
+              <para>where login is your CodeX login. The -r option stands for
+              recursive copy and will copy all the files in the directory as
+              well as all others in subdirectory while preserving your
+              directory structure.</para>
+            </listitem>
+          </itemizedlist>
+        </section>
+      </section>
+    </section>
+
+    <section id="ReferencingtheCodeXSite">
+      <title>Referencing the CodeX Site</title>
+
+      <para>The CodeX Team is asking that all project Web sites hosted on
+      CodeX display the CodeX logo on their front page. And ideally it would
+      be great if you also cross-reference our site on other pages that are
+      located on other servers. The rationale behind this request is twofold:</para>
+
+      <itemizedlist mark="bullet"
+                    spacing="compact">
+        <listitem>
+          <para>First, by referencing the CodeX site on your Web page you will
+          allow your visitors to learn about the existence of the CodeX site,
+          give them a chance to visit it and also let them learn about other
+          projects hosted on CodeX. By doing so you will augment the
+          opportunity for re-use.</para>
+        </listitem>
+
+        <listitem>
+          <para>The second reason is that using the CodeX logo in your Web
+          site will automatically increase the Web access counter that CodeX
+          is maintaining for you. The number of accesses to your site can be
+          viewed by visiting your Project Summary page and click on the
+          &#34;Statistics&#34; link below the project description (see <xref
+          linkend="FigureASampleProjectSummaryPage" />). This will also help
+          us to identify projects that may require additional hosting
+          resources due to large amounts of activity.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>To display the CodeX logo on your project Web page use the
+      following Web pointer:</para>
+
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+http://codex.xerox.com/sflogo.php?group_id=N&#38;type=1
+</programlisting>
+
+      <para>You can use this logo in anchor and image tags. For example you
+      can associate a hyperlink to the logo that goes directly to your Project
+      Summary page:</para>
+
+        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+&#60;A href=&#34;http://codex.xerox.com/projects/projectname&#34;&#62;
+&#60;IMG src=&#34;http://codex.xerox.com/sflogo.php?group_id=N&#38;type=1 width=&#34;80&#34;
+     height=&#34;20&#34; border=&#34;0&#34; alt=&#34;Source Code Available !&#34;&#62;
+&#60;/A&#62;
+        </programlisting>
+
+      <para><note><emphasis role="bold">Important!</emphasis> Substitute
+      the number after &#34;group_id&#34; (N in the example) with your own
+      project id number. You can see what your group_id number is by visiting
+      any of project services Web page and looking at the group_id value shown
+      in the URL of the page (see the Location bar in Netscape and IE).</note></para>
+    </section>
+  </chapter>

@@ -1,0 +1,393 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id: 
+//
+//	Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
+-->
+  <chapter id="SurveyManager">
+    <title>Survey Manager</title>
+
+    <para>The Survey Manager allows a project team to create surveys.
+    Providing a survey service in an environment where most services are
+    related to software development activities may seem a bit strange at first
+    glance. However if you remember that CodeX is about source code sharing
+    and community building, you&#39;ll soon realize that part of the game in
+    building a strong community is to listen to the community feedback and
+    make it happy.</para>
+
+    <para>Listening to your community can be done in various ways on CodeX:</para>
+
+    <itemizedlist mark="bullet"
+                  spacing="compact">
+      <listitem>
+        <para>through your project mailing lists and web forums,</para>
+      </listitem>
+
+      <listitem>
+        <para>from the feedback received when you post a piece of news on your
+        Project Summary page</para>
+      </listitem>
+
+      <listitem>
+        <para>or by analyzing the profile of the submitted Support Requests
+        over a period of time.</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>All these communication channels allow CodeX users to push
+    spontaneous feedback on a topic that they wholeheartedly cherish. But what
+    if you want to collect the opinion of your community on a precise number
+    of subjects and you want the answers to be taken from a set of possible
+    choices defined by the project team? This is precisely what the Survey
+    Manager is for. It allows you to:</para>
+
+    <itemizedlist mark="bullet"
+                  spacing="compact">
+      <listitem>
+        <para>formulate a precise a list of questions</para>
+      </listitem>
+
+      <listitem>
+        <para>define the set of possible answers for easy statistical analysis</para>
+      </listitem>
+
+      <listitem>
+        <para>make the survey accessible to virtually anybody via the Xerox
+        Web</para>
+      </listitem>
+
+      <listitem>
+        <para>review the results to identify the dominant trends in your
+        community of users.</para>
+      </listitem>
+    </itemizedlist>
+
+    <figure id="FigureSurveyManagerWelcomeScreen">
+      <title>Survey Manager Welcome screen</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata format="PNG"
+                     fileref="../../screenshots/en_US/sc_surveywelcome.png" width="15.3cm" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <section id="AdministeringSurveys">
+      <title>Administering Surveys</title>
+
+      <para><emphasis>Audience: project members</emphasis></para>
+
+      <para>Administrative functions of the Survey Manager can only be used by
+      the project members. The Administration module allows you to:</para>
+
+      <itemizedlist mark="bullet"
+                    spacing="compact">
+        <listitem>
+          <para>Create or modify a survey</para>
+        </listitem>
+
+        <listitem>
+          <para>Create or modify questions</para>
+        </listitem>
+
+        <listitem>
+          <para>Review the survey results</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>To access administrative functions of the Survey , go to your
+      Project Summary page and click on the &#34;Survey&#34; item in the
+      Project Main menu at the top of the screen, then select the
+      &#34;Admin&#34; item in the Survey Manager menu (see <xref
+      linkend="FigureSurveyManagerWelcomeScreen" />). From there you have
+      access to all the Survey Administrative functions (see <xref
+      linkend="FigureSurveyManagerAdministrationScreen" />).</para>
+
+      <figure id="FigureSurveyManagerAdministrationScreen">
+        <title>Survey Manager Administration screen</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+                       fileref="../../screenshots/en_US/sc_surveyadmin.png" width="15.3cm" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <section id="SurveyStructure">
+        <title>SurveyStructure</title>
+
+        <para>In order to understand the survey creation and update process
+        you must first understand that the Survey module manages two distinct
+        pools of entities: a pool of surveys and a pool of questions. As a
+        consequence of this organization, creating a survey is a 2-step
+        process:</para>
+
+        <procedure>
+          <step>
+            <para>First you create a set of questions along with the related
+            set of possible answers. All questions for all surveys are stored
+            in a common pool.</para>
+          </step>
+
+          <step>
+            <para>Then you create a survey mostly by giving it a title and
+            attaching a series of previously defined questions to it.</para>
+          </step>
+        </procedure>
+
+        <para>One of the interest of managing questions and surveys separately
+        is that you can create distinct surveys and re-use the same questions
+        in several of them if need be.</para>
+      </section>
+
+      <section id="CreatingorEditingQuestions">
+        <title>Creating or Editing Questions</title>
+
+        <para>First thing first: if you want to collect people&#39;s opinion
+        you must first define a set of questions and the possible answers for
+        each of them. Designing a good survey is not an easy task and it
+        requires a fair amount of work: the value derived from the survey
+        results depends directly on the quality of your questions. A couple of
+        advices: do not put too many questions in a survey, questions must be
+        short, clear, unambiguous and non overlapping. So take some time to
+        think about it with your project team.</para>
+
+        <para>To create questions click on the &#34;Add Questions&#34; item
+        either in the Survey Manager Administration menu or in the content of
+        the page itself. Defining a question is simply a matter of typing the
+        question itself and then choosing a response type. There are 5 types
+        of possible responses (see <xref
+        linkend="FigureASampleSurveyTakenFromTheCodeXProject" /> for some
+        sample questions):</para>
+
+        <itemizedlist mark="bullet"
+                      spacing="compact">
+          <listitem>
+            <para><emphasis role="bold">Radio Buttons 1-5</emphasis>: this
+            response type will force the user to give an answer to the
+            question on a scale from 1 to 5 using 5 radio buttons.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Radio Button Yes/No</emphasis>: this
+            is a variant of the previous one for questions calling for a Yes
+            or No answer.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Text Field</emphasis>: questions for
+            which you want a short free text answer (one line)</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Text Area</emphasis>: same as above
+            but the user can enter multiple lines of text. This is when you
+            want to have a detailed answer to the question</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Comment</emphasis>: this is not really
+            a question. It&#39;s a convenient way to insert comments in your
+            list of questions.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">None</emphasis>: Assigning this type
+            to a question will result in the de-activation of the question.
+            This question will disappear from all the surveys using it. As
+            usual in CodeX the question is not deleted and all the answers
+            collected so far in the various survey where this question is used
+            remain untouched.</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>At any moment in the creation phase you can display the list of
+        existing questions by clicking on the &#34;Show Existing
+        Questions&#34; button at the bottom of the screen</para>
+
+        <para>Editing questions is also possible. To do so, click on the
+        &#34;Edit Existing Questions&#34; item in the Survey Manager
+        Administration menu or in the content of the page itself (see <xref
+        linkend="FigureSurveyManagerAdministrationScreen" />). You are then
+        presented with the list of questions that are currently available in
+        your question pool. Clicking on the question identifier number in the
+        leftmost column allows you to change the question properties.</para>
+
+        <para><emphasis role="underline">Remark</emphasis>: changing a
+        question after responses have already been collected is a bad idea
+        especially when changing the question type. In this case collected
+        data will become inconsistent with the new question type. On the other
+        hand, correcting a typo in the question or making the question clearer
+        is perfectly OK and doesn&#39;t impact the existing set of answers.</para>
+      </section>
+
+      <section id="CreatingorEditingaSurvey">
+        <title>Creating or Editing a Survey</title>
+
+        <para>Once you have created questions in the common question pool, you
+        can create a survey and attach questions to it.</para>
+
+        <para>To create a survey click on the &#34;Add Surveys&#34; item
+        either in the Survey Manager Administration menu or in the content of
+        the page itself (see <xref
+        linkend="FigureSurveyManagerAdministrationScreen" />). Then enter the
+        following information:</para>
+
+        <itemizedlist mark="bullet"
+                      spacing="compact">
+          <listitem>
+            <para>The name of the survey (give it a short title)</para>
+          </listitem>
+
+          <listitem>
+            <para>The list of questions attached to the survey. This is a
+            comma separated list of question identifiers (IDs) that you want
+            to use for this survey. To see question IDs in a separate window,
+            click on the &#34;Show Existing Questions&#34; and choose the
+            appropriate question IDs from the list. The questions will appear
+            in the survey in the same order as in the list.</para>
+          </listitem>
+
+          <listitem>
+            <para>The status of the survey: you can make it active or not. As
+            long as a survey is inactive it doesn&#39;t show up in the welcome
+            screen of the Survey Manager meaning that it is not visible to
+            CodeX users. Similarly accessing the survey directly via its Web
+            location will not work either.</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>At the bottom of the screen is a list of all the surveys defined
+        for your project. You can edit any of the survey by clicking on the
+        survey ID in the leftmost column. Editing a survey can be also be done
+        by clicking on the &#34;Edit Existing Surveys&#34; item in the Survey
+        Manager Administration menu and then choosing the survey to edit at
+        the bottom of the screen. While editing a survey you can change the
+        list of questions or the order of the questions without impacting the
+        current result set. If you remove a question from the survey, you
+        won&#39;t be able to view the existing set of responses. However it
+        does not mean they are lost. Re-inserting the question ID in the
+        survey list allows you to view the set of responses again (see next
+        section).</para>
+      </section>
+
+      <section id="ReviewingSurveyResults">
+        <title>Reviewing Survey Results</title>
+
+        <para><emphasis>Audience: project members</emphasis></para>
+
+        <para>At any point in the life of the survey, project members can have
+        a look at the existing set of answers that have already been given by
+        the users who took the survey. To review the results of a given survey
+        click on the &#34;Show Results&#34; item in the Survey Manager
+        Administration menu and then click on the Survey ID number you are
+        interested in.</para>
+
+        <para>A list of all the questions attached to this survey will show up
+        on the screen. Next to each question is an aggregate view of the
+        existing answers. For questions of type &#34;text field&#34; or
+        &#34;text area&#34; you can review the full list of answers. For radio
+        buttons, the Survey Manager compute the total number of answers, the
+        average value as well as the value distribution for radio button
+        answers.</para>
+
+        <figure id="FigureSurveyResults">
+          <title>Survey Results</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG"
+                         fileref="../../screenshots/en_US/sc_surveyresults.png" width="11cm" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+      </section>
+    </section>
+
+    <para></para>
+    <para></para>
+    
+    <section id="PublishingaSurvey">
+      <title>Publishing a Survey</title>
+
+      <para><emphasis>Audience: project members</emphasis></para>
+
+      <para>You have been working hard to produce this perfectly polished
+      survey and now you want to reach the broadest possible audience. With
+      CodeX you can make your survey visible in a number of ways:</para>
+
+      <procedure>
+        <step>
+          <para><emphasis role="bold">Through the Survey Manager itself</emphasis>:
+          as soon as a survey is created it is visible in your Survey Manager
+          Welcome screen (see <xref linkend="FigureSurveyManagerWelcomeScreen" />).
+          So any CodeX user visiting your Project Summary page will see that
+          surveys are available in the &#34;Public Area&#34; (survey count not
+          null) and by clicking on &#34;Surveys&#34; she will be able to take
+          whatever survey is available.</para>
+        </step>
+
+        <step>
+          <para><emphasis role="bold">Project News Service</emphasis>: when
+          you have your new survey ready, make sure you publish a piece of
+          news about this survey: why you did it, who is expected to take it
+          and type the Web location corresponding to the survey (see below).
+          By publishing a piece of news you also have a chance to see it on
+          the CodeX front page if the CodeX Team decides so.</para>
+        </step>
+
+        <step>
+          <para><emphasis role="bold">E-mail</emphasis>: the survey you have
+          created can be accessed directly via a Web pointer (URL) on the
+          CodeX site. As a consequence you can push your survey to virtually
+          anybody in the Corporation simply by referencing the survey Web
+          pointer in an e-mail message, a web page or any kind of office
+          document. Even non CodeX Users will be able to take the survey.</para>
+        </step>
+      </procedure>
+
+      <para>All surveys created on CodeX can be accessed through the following
+      Web pointer (URL):</para>
+
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+http://codex.xerox.com/survey/survey.php?group_id=N&#38;survey_id=X
+</programlisting>
+
+      <para>where N is your project ID number and X is the survey ID number as
+      shown in the survey list displayed on the Survey Manager welcome screen.
+      Your project ID number N is visible on the Survey Manager Administration
+      screen (see <xref linkend="FigureSurveyManagerWelcomeScreen" />)</para>
+
+      <para>Taking a survey is just a matter of accessing the survey by one of
+      the previously mentioned method, answer the questions and click on the
+      &#34;Submit&#34; button at the bottom of the page. A sample survey is
+      shown on <xref linkend="FigureASampleSurveyTakenFromTheCodeXProject" />.</para>
+
+      <para><tip><title>Important note: Survey Privacy</title><para>The
+      information collected in these surveys are strictly internal to Xerox.
+      This information is being gathered to build a profile of the projects
+      and developers being surveyed. The identity of those who answer surveys
+      are suppressed and not viewable by project administrators or the public
+      or third parties. The information gathered is used only in aggregate
+      form, not to single out specific users or developers.</para></tip></para>
+
+      <figure id="FigureASampleSurveyTakenFromTheCodeXProject">
+        <title>A sample survey taken from the CodeX project</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+                       fileref="../../screenshots/en_US/sc_surveysample.png" width="15.3cm" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+  </chapter>

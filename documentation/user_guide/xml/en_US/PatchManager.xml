@@ -1,0 +1,282 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id: 
+//
+//	Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
+-->
+
+  <chapter id="PatchManager">
+    <title>Patch Manager</title>
+
+    <section id="Howtosubmitsourcecodecontribution">
+      <title>How to submit source code contribution</title>
+
+      <para>CodeX gives you an unparalleled ability to learn from the source
+      code of others by making source code sharing a common practice in Xerox.
+      When you re-use a piece of code from CodeX, the Code eXchange Policy
+      specifies that any modification you&#39;ve made to the original source
+      code must be returned to the original team.</para>
+
+      <para>This is the role of the Patch Manager to facilitate this process.
+      The Patch Manager allows for:</para>
+
+      <procedure>
+        <step>
+          <para>The submission of source code modifications by CodeX users</para>
+        </step>
+
+        <step>
+          <para>The management of these submissions by the project team</para>
+        </step>
+      </procedure>
+
+      <para>On how to generate source code patches see the CVS chapter (<xref
+      linkend="VersionControlWithCVS" />).</para>
+
+      <para><note><emphasis role="underline">A note to the project team</emphasis><para>Receiving
+      source code modifications or other contributions from other CodeX users
+      does not imply that you have to accept the new code and insert it in
+      your main source tree. It is up to the project team to decide what to do
+      with it. One of the interesting features of the Patch Manager is that
+      submitted patches are available to anybody at all time regardless of the
+      final decision of the project team. Therefore any CodeX visitor is free
+      to download any submitted patch and apply it onto its own version of the
+      software even if the project team has decided not to apply the patch on
+      the main source tree.</para></note></para>
+    </section>
+
+    <section id="PatchBrowsing">
+      <title>Patch Browsing</title>
+
+      <para><emphasis>Audience: project members and CodeX users</emphasis></para>
+
+      <para>To access the Patch Manager select the &#34;Patches&#34; item from
+      the Project Menu at the top of the screen of the Project Summary page.
+      The welcome page of the Patch Manager allows you to browse all the
+      patches that have been submitted to this project.</para>
+
+      <para>Patches can be selected by Assignee, Status and Category.</para>
+
+      <itemizedlist mark="bullet"
+                    spacing="compact">
+        <listitem>
+          <para><emphasis role="bold">Assignee</emphasis>: this is the name of
+          the project member in charge of this specific patch</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Status</emphasis>: status of the patch.
+          It is one of:</para>
+
+          <itemizedlist spacing="compact">
+            <listitem>
+              <para><emphasis role="underline">Open</emphasis>: the patch has
+              been submitted and is being processed by the project team</para>
+            </listitem>
+
+            <listitem>
+              <para><emphasis role="underline">Deleted</emphasis>: the project
+              team rejected the patch. It is marked as deleted but it is still
+              visible to the CodeX users and it can be downloaded</para>
+            </listitem>
+
+            <listitem>
+              <para><emphasis role="underline">Closed</emphasis>: the patch
+              was integrated in the main source tree.</para>
+            </listitem>
+
+            <listitem>
+              <para><emphasis role="underline">Postponed</emphasis>: patch
+              considered interesting but integration in the main source tree
+              is postponed</para>
+            </listitem>
+          </itemizedlist>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Category</emphasis>: project
+          administrators can define categories for patches. Classifying
+          patches in various categories makes patch selection and browsing
+          easier. The categories generally correspond to high-level modules or
+          functionalities of the software.</para>
+        </listitem>
+      </itemizedlist>
+
+      <figure id="FigurePatchBrowsing">
+        <title>Patch browsing</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+                       fileref="../../screenshots/en_US/sc_patchbrowsing.png" width="15.3cm" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>The Patch Manager menu offers 2 shortcuts to quickly select all
+      patches with status value at Open (&#34;Open Patches&#34; link) and
+      those that have been assigned to you (&#34;My Patches&#34; link). This
+      is mostly for project members.</para>
+
+      <para>To download a patch, click on the Patch ID number in the first
+      column of the result list (<xref linkend="FigurePatchBrowsing" />) and
+      then click on the &#34;View raw patch&#34; link in the next screen.</para>
+    </section>
+
+    <section id="PatchSubmission">
+      <title>Patch Submission</title>
+
+      <para><emphasis>Audience: project members and CodeX users</emphasis></para>
+
+      <para>In most cases, registered users who are not part of the project
+      team submit source code patches. However this service can also be used
+      by the project members if, for some reason, they were not granted write
+      access to the CVS repository.</para>
+
+      <para>Before you submit a patch you must first generate it. This has
+      been discussed in the CVS chapter. For more information please refer to
+      section <xref linkend="Contributingyourchanges" />.</para>
+
+      <para>To submit a patch, click on the &#34;Submit a Patch&#34; item in
+      the Patch Manager menu bar (see <xref linkend="FigurePatchBrowsing" />).
+      Give a one-line description in the &#34;Summary&#34; field. Please be
+      accurate. Then choose a category (if any) and then attach the patch.
+      Attaching the patch can either be done by pasting the source code of the
+      patch in the HTML form or by using the upload facility. To validate the
+      submission click on the &#34;Submit Patch&#34; button at the end of the
+      screen.</para>
+    </section>
+
+    <section id="PatchProcessing">
+      <title>Patch Processing</title>
+
+      <para>To process submitted patches, first use the Patch Browsing
+      facility to select the patches you are interested in and click on the
+      Patch ID number in the first column of the result list (<xref
+      linkend="FigurePatchBrowsing" />).</para>
+
+      <para>Processing a patch consists in:</para>
+
+      <itemizedlist mark="bullet"
+                    spacing="compact">
+        <listitem>
+          <para>Assigning new incoming patches to project members for
+          evaluation and recommendation on what to do with it and when</para>
+        </listitem>
+
+        <listitem>
+          <para>Changing the status of the patch as the project team makes
+          progress in the evaluation of the contributed code.</para>
+        </listitem>
+
+        <listitem>
+          <para>Changing the Category and possibly the Summary to better
+          reflect the nature of the contribution (optional)</para>
+        </listitem>
+
+        <listitem>
+          <para>Adding a follow-up comment to the patch (e.g. why it is a good
+          one, when to include it into the source code or in which release of
+          the software it has been integrated...)</para>
+        </listitem>
+
+        <listitem>
+          <para>You can also submit a new version of the patch thus overriding
+          the old one.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Don&#39;t forget to click on the &#34;Submit Changes&#34; button
+      to validate your modifications.</para>
+    </section>
+
+    <section id="PatchManagerE-mailNotification">
+      <title>E-mail Notification</title>
+
+      <para>Like other CodeX services the CodeX Patch Manager is equipped with
+      an e-mail notification system. The e-mail notification system follows
+      very simple rules. Each time a patch is submitted or updated - whether
+      with an additional follow-up comment, with a change in any of the patch
+      field or with a new version of the patch - an e-mail notification is
+      sent to the following people:</para>
+
+      <itemizedlist mark="bullet"
+                    spacing="compact">
+        <listitem>
+          <para>The patch submitter (the person who initially submitted the
+          patch)</para>
+        </listitem>
+
+        <listitem>
+          <para>The patch assignee (the project member to whom the patch is
+          assigned)</para>
+        </listitem>
+
+        <listitem>
+          <para>The e-mail addresses specified in the &#34;Other Configuration
+          Settings&#34; screen of the Patch Administration module (see <xref
+          linkend="PatchManagerOtherConfigurationSettings" />). These e-mail
+          addresses can be any email address you want including a distribution
+          list that was created with the CodeX Mailing List manager (see <xref
+          linkend="MailingLists" />) or via MS-Exchange.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>The e-mail notification consists of the Patch ID number, Summary,
+      Category and Status plus all follow-up comments sorted by date (most
+      recent first).</para>
+    </section>
+
+    <section id="PatchManagerAdministration">
+      <title>Patch Manager Administration</title>
+
+      <para><emphasis>Audience: project members</emphasis></para>
+
+      <para>Project members that have been granted Administrative rights on
+      the Patch Manager can configure the Patch Manager in a number of ways.</para>
+
+      <section id="DefiningCategories">
+        <title>Defining Categories</title>
+
+        <para>The Patch Manager allows you to define Patch categories. These
+        categories can be used to characterize the nature of the patch when it
+        is submitted. To add or delete Patch categories click on the
+        &#34;Admin&#34; item in the Patch Manager menu at the top of the
+        screen (<xref linkend="FigurePatchBrowsing" />).</para>
+      </section>
+
+      <section id="PatchManagerOtherConfigurationSettings">
+        <title>Other Configuration Settings</title>
+
+        <para>This Patch Manager configuration module allows you to define the
+        following configuration parameters:</para>
+
+        <itemizedlist mark="bullet">
+          <listitem>
+            <para>An introductory message that we&#39;ll show up at the top of
+            the Patch submission form. This is a convenient way to give
+            directions and recommendations to the patch submitter. The text
+            must use HTML tags for formatting which gives a great flexibility
+            to shape the content of this preamble (you can use bold, italic,
+            embed URL...)</para>
+          </listitem>
+
+          <listitem>
+            <para>A series of comma separated email addresses to which new
+            patch submission and patch updates will be sent. If you want a
+            (group of) person to be systematically aware of new item
+            submission you can add his/her e-mail address in this text field.
+            Checking the &#34;Send on all updates&#34; check box will cause
+            e-mail notification to be sent on all updates in addition to the
+            initial submission.</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+    </section>
+  </chapter>
+
