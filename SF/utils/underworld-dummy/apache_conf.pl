@@ -29,6 +29,8 @@ while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow())
 	@blah = unpack('C4', $addrs[0]);
 	$ip = join(".", @blah);
 
+        # Replace double quotes by single quotes in project name.
+        $group_name=~s/\"/\'/g;
 
 	# LJ Custom log used to be on a per project basis but is now
 	# in one single file
