@@ -368,7 +368,7 @@ function people_show_category_table() {
 
 function people_show_project_jobs($group_id) {
 	//show open jobs for this project
-	$sql="SELECT people_job.group_id,people_job.job_id,groups.group_name,people_job.title,people_job.date,people_job_category.name AS category_name ".
+	$sql="SELECT people_job.group_id,people_job.job_id,groups.unix_group_name,groups.group_name,people_job.title,people_job.date,people_job_category.name AS category_name ".
 		"FROM people_job,people_job_category,groups ".
 		"WHERE people_job.group_id='$group_id' ".
 		"AND people_job.group_id=groups.group_id ".
