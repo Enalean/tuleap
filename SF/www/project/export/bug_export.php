@@ -159,7 +159,7 @@ The Bug export provides you with the following bug fields. The sample values ind
 		$type = 'FLOAT(10,2)';
 		break;
 
-	    case 'summary':
+	    case 'details':
 		$type = 'TEXT';
 		break;
 
