@@ -106,6 +106,17 @@ GROUP BY group_id";
 $rel = $dbh->prepare($sql);
 $rel->execute();
 
+# Artifacts in trackers
+$sql="INSERT INTO project_counts_tmp 
+SELECT group_id,'artifacts',log(5*sum(artifact_id)) as count 
+FROM artifact, artifact_group_list 
+WHERE artifact.group_artifact_id=artifact_group_list.group_artifact_id 
+GROUP BY group_id";
+
+#print "\n\n".$sql;
+
+$rel = $dbh->prepare($sql);
+$rel->execute();
 
 #cvs commits
 $sql="INSERT INTO project_counts_tmp 
@@ -148,7 +159,6 @@ GROUP BY group_id";
 
 $rel = $dbh->prepare($sql);
 $rel->execute();
-
 
 #create a new table to insert the final records into
 $sql="CREATE TABLE project_metric_tmp1 (ranking int not null primary key auto_increment,

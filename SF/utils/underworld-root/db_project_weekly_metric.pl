@@ -109,6 +109,17 @@ GROUP BY group_id";
 $rel = $dbh->prepare($sql);
 $rel->execute();
 
+# artifacts in trackers
+$sql="INSERT INTO project_counts_weekly_tmp 
+SELECT group_id,'artifacts',log(5*sum(artifact_id)) as count 
+FROM artifact, artifact_group_list 
+WHERE artifact.group_artifact_id=artifact_group_list.group_artifact_id AND open_date > '$last_week' 
+GROUP BY group_id";
+
+#print "\n\n".$sql;
+
+$rel = $dbh->prepare($sql);
+$rel->execute();
 
 #cvs commits
 $sql="INSERT INTO project_counts_weekly_tmp 
