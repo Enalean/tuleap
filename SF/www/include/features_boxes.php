@@ -70,7 +70,7 @@ function foundry_active_projects($comma_sep_groups) {
 				.' <A HREF="/projects/'.$row['unix_group_name'].
 			'/">'.$row['group_name'].'</A><BR>';
 		}
-		$return .= '<BR><CENTER><A href="/top/mostactive.php?type=week">[ More ]</A></CENTER>';
+		$return .= '<CENTER><A href="/top/mostactive.php?type=week">[ More ]</A></CENTER>';
 	}
 	return $return;
 }
@@ -160,7 +160,7 @@ function show_top_downloads() {
 			$return .= "($row_topdown[downloads]) <A href=\"/projects/$row_topdown[unix_group_name]/\">"
 			. "$row_topdown[group_name]</A><BR>\n";
 	}
-	$return .= '<P align="center"><A href="/top/">[ More ]</A>';
+	$return .= '<center><A href="/top/">[ More ]</A></center>';
 	
 	return $return;
 
@@ -168,38 +168,40 @@ function show_top_downloads() {
 
 function show_newest_releases() {
 
-	$query	= "SELECT groups.group_name AS group_name,"
+    // Fetch releases that are no more than 3 months old
+    $query	= "SELECT groups.group_name AS group_name,"
 	. "groups.group_id AS group_id,"
 	. "groups.unix_group_name AS unix_group_name,"
 	. "frs_release.release_id AS release_id,"
 	. "frs_release.name AS release_version,"
 	. "frs_release.release_date AS release_date "
 	. "FROM groups,frs_package,frs_release "
-	. "WHERE ( frs_release.release_date >  ".( time() - 3*30*24*3600)
+	. "WHERE ( frs_release.release_date >  ".strval(time() - 3*30*24*3600)
 	. " AND frs_release.package_id = frs_package.package_id "
 	. "AND frs_package.group_id = groups.group_id "
 	. "AND frs_release.status_id=1 ) "
 	. "GROUP BY frs_release.release_id "
-	. "ORDER BY frs_release.release_date DESC LIMIT 10";
+	. "ORDER BY frs_release.release_date";
 
-	$res_newrel = db_query($query);
+    $res_newrel = db_query($query);
 
-	// print each one but only show one release per project
-	while ( $row_newrel = db_fetch_array($res_newrel) ) {
-
-	    if ( $DONE[$row_newrel[group_id]] ) { continue; }
-
-	    $return .= "($row_newrel[release_version])&nbsp;".
-		"<A href=\"/projects/$row_newrel[unix_group_name]/\">".
-		"$row_newrel[group_name]</A><BR>\n";
-
-	    $DONE[$row_newrel[group_id]] = true;
-	}
-
-	$return .= '<P align="center"><A href="/new/">[ More ]</A>';
+    // print each one but only show one release per project
+    $count = 0;
+    while ( ($row_newrel = db_fetch_array($res_newrel)) && ($count < 10)) {
 	
-	return $return;
+	if ( $DONE[$row_newrel[group_id]] ) { continue; }
+	
+	$return .= "($row_newrel[release_version])&nbsp;".
+	    "<A href=\"/projects/$row_newrel[unix_group_name]/\">".
+	    "$row_newrel[group_name]</A><BR>\n";
+	
+	$count++;
+	$DONE[$row_newrel[group_id]] = true;
+    }
 
+    $return .= '<center><A href="/new/">[ More ]</A></center>';
+	
+    return $return;
 
 }
 
@@ -257,7 +259,7 @@ function show_sitestats() {
 	$return .= 'Hosted Projects: <B>'.number_format(stats_getprojects_active()).'</B>';
 	$return .= '<BR>Registered Users: <B>'.number_format(stats_getusers()).'</B>';
 	$return .= '<BR>Files Downloaded: <B>'.number_format(stats_downloads_total()).'</B>';
-	$return .= '<BR>Pages Viewed: <B>'.number_format(stats_getpageviews_total()).'</B><BR>&nbsp;';
+	$return .= '<BR>Pages Viewed: <B>'.number_format(stats_getpageviews_total()).'</B>&nbsp;';
 	return $return;
 }
 
@@ -278,7 +280,7 @@ function show_newest_projects() {
 				. "$row_newproj[group_name]</A><BR>\n";
 			}
 		}
-		$return .= '<BR><CENTER><A href="/new/">[ More ]</A></CENTER>';
+		$return .= '<CENTER><A href="/new/">[ More ]</A></CENTER>';
 	}
 	return $return;
 }
@@ -299,7 +301,7 @@ function show_highest_ranked_projects() {
 				.' <A HREF="/projects/'.$row['unix_group_name'].
 			'/">'.$row['group_name'].'</A><BR>';
 		}
-		$return .= '<BR><CENTER><A href="/top/mostactive.php?type=week">[ More ]</A></CENTER>';
+		$return .= '<CENTER><A href="/top/mostactive.php?type=week">[ More ]</A></CENTER>';
 	}
 	return $return;
 }
