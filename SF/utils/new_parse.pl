@@ -125,7 +125,7 @@ while ($ln = pop(@userdump_array)) {
 print ("\n\n	Processing Groups\n\n");
 while ($ln = pop(@groupdump_array)) {
 	chop($ln);
-	($gname, $gstatus, $gis_public, $cvs_tracker, $gid, $userlist) = split(":", $ln);
+	($gname, $gstatus, $gis_public, $cvs_tracker, $svn_tracker, $gid, $userlist) = split(":", $ln);
 	
 	$cvs_id = $gid + 50000;
 	$gid += $gid_add;
@@ -350,7 +350,7 @@ while ($ln = pop(@groupdump_array)) {
 	# Put in place the svn post-commit hook for email notification
 	# if not present (if the file does not exist it is created)
 	$postcommit_file = "$svn_dir/hooks/post-commit";
-	if ($gstatus eq 'A') {
+	if (($svn_tracker) && ($gstatus eq 'A')) {
 	  open (FD, "+>>$postcommit_file") ;
 	  $blockispresent = 0;
 	  while (<FD>) {

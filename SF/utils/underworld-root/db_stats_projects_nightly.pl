@@ -256,6 +256,11 @@ $sql = "CREATE TABLE stats_project_tmp (
         cvs_checkouts   smallint(6) DEFAULT '0' NOT NULL,
         cvs_commits     smallint(6) DEFAULT '0' NOT NULL,
         cvs_adds        smallint(6) DEFAULT '0' NOT NULL,
+        svn_commits     smallint(6) DEFAULT '0' NOT NULL,
+        svn_adds        smallint(6) DEFAULT '0' NOT NULL,
+        svn_deletes   smallint(6) DEFAULT '0' NOT NULL,
+        svn_checkouts   smallint(6) DEFAULT '0' NOT NULL,
+        svn_access_count       smallint(6) DEFAULT '0' NOT NULL,
         artifacts_opened     smallint(6) DEFAULT '0' NOT NULL,
         artifacts_closed     smallint(6) DEFAULT '0' NOT NULL,
         KEY idx_project_log_group (group_id)

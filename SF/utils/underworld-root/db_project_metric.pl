@@ -130,6 +130,18 @@ $rel = $dbh->prepare($sql);
 $rel->execute();
 
 
+# svn low level accesses
+$sql="INSERT INTO project_counts_tmp 
+SELECT group_id,'svn',log(sum(svn_access_count)) AS count 
+FROM group_svn_full_history 
+GROUP BY group_id";
+
+#print "\n\n".$sql;
+
+$rel = $dbh->prepare($sql);
+$rel->execute();
+
+
 #developers
 $sql="INSERT INTO project_counts_tmp 
 SELECT group_id,'developers',log(5*count(*)) AS count FROM user_group GROUP BY group_id";

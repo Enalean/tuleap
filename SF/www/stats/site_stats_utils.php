@@ -112,7 +112,8 @@ function stats_site_projects_form( $span = 21, $orderby = "downloads", $offset =
 				"tasks_closed",
 				"cvs_checkouts",
 				"cvs_commits",
-				"cvs_adds");
+				"cvs_adds",
+				"svn_access_count");
 	print html_build_select_box_from_array( $orderby_vals, "orderby", $orderby, 1 );
 	print '</td></tr>';
 
@@ -135,7 +136,8 @@ function stats_site_projects( $span = 7, $orderby = "ranking", $offset = 0, $pro
 		. "SUM(s.support_closed) AS support_closed, SUM(s.patches_opened) AS patches_opened, "
 		. "SUM(s.patches_closed) AS patches_closed, SUM(s.tasks_opened) AS tasks_opened, "
 		. "SUM(s.tasks_closed) AS tasks_closed, SUM(s.cvs_checkouts) AS cvs_checkouts, "
-		. "SUM(s.cvs_commits) AS cvs_commits, SUM(s.cvs_adds) AS cvs_adds "
+		. "SUM(s.cvs_commits) AS cvs_commits, SUM(s.cvs_adds) AS cvs_adds, "
+		. "SUM(s.svn_access_count) AS svn_access_count "
 		. "FROM stats_project AS s,groups AS g,project_metric AS m ";
 
 	   // Get information about the date $span days ago 
@@ -199,15 +201,16 @@ function stats_site_projects( $span = 7, $orderby = "ranking", $offset = 0, $pro
 		print	'<P><TABLE width="100%" cellpadding=0 cellspacing=0 border=0>';
 
 		print	'<TR valign="top" class="boxitem">'
-			. '<TD><B>Group Name</B></TD>'
+			. '<TD><B>Project Name</B></TD>'
 			. '<TD align="right"><B>Ranking</B></TD>'
 			. '<TD align="right" COLSPAN="2"><B>Page Views</B></TD>'
 			. '<TD align="right"><B>Downloads</B></TD>'
-			. '<TD align="right" COLSPAN="2"><B>Bugs</B></TD>'
-			. '<TD align="right" COLSPAN="2"><B>Support</B></TD>'
-			. '<TD align="right" COLSPAN="2"><B>Patches</B></TD>'
-			. '<TD align="right" COLSPAN="2"><B>Tasks</B></TD>'
-			. '<TD align="right" COLSPAN="3"><B>CVS</B></TD>'
+			. '<TD align="center" COLSPAN="2"><B>Bugs</B></TD>'
+			. '<TD align="center" COLSPAN="2"><B>Support</B></TD>'
+			. '<TD align="center" COLSPAN="2"><B>Patches</B></TD>'
+			. '<TD align="center" COLSPAN="2"><B>Tasks</B></TD>'
+			. '<TD align="center" COLSPAN="3"><B>CVS</B></TD>'
+			. '<TD align="center" COLSPAN="3"><B>SVN</B></TD>'
 			. '</TR>' . "\n";
 
 		   // Build the query string to resort results.
@@ -237,6 +240,7 @@ function stats_site_projects( $span = 7, $orderby = "ranking", $offset = 0, $pro
 			. '<TD align="right"><A HREF="' . $uri_string .'cvs_checkouts">CO\'s</TD>'
 			. '<TD align="right"><A HREF="' . $uri_string .'cvs_commits">Comm\'s</TD>'
 			. '<TD align="right"><A HREF="' . $uri_string .'cvs_adds">Adds</TD>'
+			. '<TD align="right"><A HREF="' . $uri_string .'svn_access_count">Access cnt</TD>'
 			. '</TR>' . "\n";
 	
 		$i = $offset;	
@@ -258,6 +262,7 @@ function stats_site_projects( $span = 7, $orderby = "ranking", $offset = 0, $pro
 				. '<TD align="right">&nbsp;&nbsp;' . number_format( $row["cvs_checkouts"] ) . '</TD>'
 				. '<TD align="right">&nbsp;&nbsp;' . number_format( $row["cvs_commits"] ) . '</TD>'
 				. '<TD align="right">&nbsp;&nbsp;' . number_format( $row["cvs_adds"] ) . '</TD>'
+				. '<TD align="right">&nbsp;&nbsp;' . number_format( $row["svn_access_count"] ) . '</TD>'
 				. '</TR>' . "\n";
 			$i++;
 			$sum = stats_util_sum_array( $sum, $row );
@@ -283,6 +288,7 @@ function stats_site_projects( $span = 7, $orderby = "ranking", $offset = 0, $pro
 				. '<TD align="right">&nbsp;&nbsp;' . number_format( $sum["cvs_checkouts"] ) . '</TD>'
 				. '<TD align="right">&nbsp;&nbsp;' . number_format( $sum["cvs_commits"] ) . '</TD>'
 				. '<TD align="right">&nbsp;&nbsp;' . number_format( $sum["cvs_adds"] ) . '</TD>'
+				. '<TD align="right">&nbsp;&nbsp;' . number_format( $sum["svn_access_count"] ) . '</TD>'
 				. '</TR>' . "\n";
 		}
 
@@ -316,8 +322,9 @@ function stats_site_projects_daily( $span = 14 ) {
 		. "SUM(p.support_closed) AS support_closed, SUM(p.patches_opened) AS patches_opened, "
 		. "SUM(p.patches_closed) AS patches_closed, SUM(p.tasks_opened) AS tasks_opened, "
 		. "SUM(p.tasks_closed) AS tasks_closed, SUM(p.cvs_checkouts) AS cvs_checkouts, "
-		. "SUM(p.cvs_commits) AS cvs_commits, SUM(p.cvs_adds) AS cvs_adds "
-		. "FROM stats_project AS p, stats_site AS s "
+		. "SUM(p.cvs_commits) AS cvs_commits, SUM(p.cvs_adds) AS cvs_adds, "
+		. "SUM(p.svn_access_count) AS svn_access_count "
+	        . "FROM stats_project AS p, stats_site AS s "
 		. "WHERE ( ( s.month = p.month AND s.day = p.day ) AND "
 		. "( ( p.month = " . $year . $month . " AND p.day >= " . $day . " ) OR "
 		. "( p.month > " . $year . $month . " ) ) ) "
@@ -343,6 +350,7 @@ function stats_site_projects_daily( $span = 14 ) {
 			. '<TD align="right"><B>Patches</B></TD>'
 			. '<TD align="right"><B>Tasks</B></TD>'
 			. '<TD align="right"><B>CVS</B></TD>'
+			. '<TD align="right"><B>SVN</B></TD>'
 			. '</TR>' . "\n";
 
 		while ( $row = db_fetch_array($res) ) {
@@ -358,6 +366,7 @@ function stats_site_projects_daily( $span = 14 ) {
 				. '<TD align="right">&nbsp;&nbsp;' . $row["patches_opened"] . " ( " . $row["patches_closed"] . ' )</TD>'
 				. '<TD align="right">&nbsp;&nbsp;' . $row["tasks_opened"] . " ( " . $row["tasks_closed"] . ' )</TD>'
 				. '<TD align="right">&nbsp;&nbsp;' . $row["cvs_checkouts"] . " ( " . $row["cvs_commits"] . ' )</TD>'
+				. '<TD align="right">&nbsp;&nbsp;' . $row["svn_access_count"] . '</TD>'
 				. '</TR>' . "\n";
 		}
 
@@ -386,7 +395,7 @@ function stats_site_projects_weekly( $span = 14 ) {
 	$sql  = "SELECT month,day,AVG(group_ranking),AVG(group_metric),SUM(downloads),SUM(site_views),SUM(subdomain_views),";
 	$sql .= "SUM(msg_posted),SUM(bugs_opened),SUM(bugs_closed),SUM(support_opened),";
 	$sql .= "SUM(support_closed),SUM(patches_opened),SUM(patches_closed),SUM(tasks_opened),";
-	$sql .= "SUM(tasks_closed),SUM(cvs_commits),SUM(cvs_adds)";
+	$sql .= "SUM(tasks_closed),SUM(cvs_commits),SUM(cvs_adds),SUM(svn_access_count)";
 	$sql .= "FROM stats_project ";
 	$sql .= "WHERE ( ( month = " . $year . $month . " AND day >= " . $day . " ) OR ";
 	$sql .= "( month > " . $year . $month . " ) ) ";

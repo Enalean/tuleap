@@ -30,11 +30,11 @@ while(my ($id, $status, $username, $shell, $passwd, $winpasswds, $email, $realna
 
 
 # Dump the Groups Table information
-$query = "select group_id,unix_group_name,status,is_public,cvs_tracker from groups";
+$query = "select group_id,unix_group_name,status,is_public,cvs_tracker,svn_tracker from groups";
 $c = $dbh->prepare($query);
 $c->execute();
 
-while(my ($group_id, $group_name, $status, $is_public, $cvs_tracker) = $c->fetchrow()) {
+while(my ($group_id, $group_name, $status, $is_public, $cvs_tracker, $svn_tracker) = $c->fetchrow()) {
 
 	my $new_query = "select user.user_name AS user_name FROM user,user_group WHERE user.user_id=user_group.user_id AND group_id=$group_id";
 	my $d = $dbh->prepare($new_query);
@@ -46,7 +46,7 @@ while(my ($group_id, $group_name, $status, $is_public, $cvs_tracker) = $c->fetch
 	   $user_list .= "$user_name,";
 	}
 
-	$grouplist = "$group_name:$status:$is_public:$cvs_tracker:$group_id:$user_list\n";
+	$grouplist = "$group_name:$status:$is_public:$cvs_tracker:$svn_tracker:$group_id:$user_list\n";
 	$grouplist =~ s/,$//;
 
 	push @group_array, $grouplist;

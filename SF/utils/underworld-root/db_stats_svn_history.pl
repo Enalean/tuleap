@@ -46,6 +46,7 @@ my $chronolog_basedir = "/home/log";
 
 my ($query,$filepath, $group_name);
 my %svn_access = ();
+my %svn_access_by_group = ();
 
 &db_connect;
 
@@ -107,36 +108,48 @@ while ( $temp = $res->fetchrow_arrayref() ) {
 
 while (<LOGFILE>) {
   chomp($_);
-  #$_ =~ m/^([\d\.]+) [^ ]? ([^ ]?) \[(\d+)/(\w)/(\d+)/(\d+):(\d+):(\d+):(\d+) ([+-]\d+)\]\s\"(\w) (.+) HTTP.+" (\d\d\d)\s(\d+)/;
 
-  $_ =~ m/^([\d\.]+)\s.+\s(.+)\s\[(.+)\]\s\"\w+\s(.+)\sHTTP.+(\d\d\d)\s(\d+)/;
+  $_ =~ m/^([\d\.]+)\s.+\s(.+)\s\[(.+)\]\s\"\w+\s(.+)\sHTTP.+(\d\d\d)\s([\d-]+)/;
 
   $ip   = $1;
   $user = $2;
   $date = $3;
   $filepath = $4;
   $code = $5;
-  $size = $6;
+  $size = $6; # can be '-' in some subversion http methods.
 
-  if ( $filepath =~ m:$svn_prefix/([^ /]+): && $user ne '-') {
+  #print "--------------------------------\n";
+  #print "line: $_\n";
+  #print "file: $filepath\n";
+
+  if ( $filepath =~ m:$svn_prefix/([^ /]+):) {
     $gname = $1;
     $group_id = $groups{$gname};
+
+    #print "User: $user\n";
 
     if ( $group_id == 0 ) {
       print STDERR "$_";
       print STDERR "db_stats_svn_history.pl: bad unix_group_name \'$group\' \n";
       next;
     }
+    $svn_access_by_group{$group_id} += 1;
 
-    $user_id = $users{$user};
 
-    if ( $user_id == 0 ) {
-      print STDERR "$_";
-      print STDERR "db_stats_svn_history.pl: bad user_name \'$user\' \n";
-      next;
+    if ($user ne '-') {
+      $user_id = $users{$user};
+
+      if ( $user_id == 0 ) {
+	print STDERR "$_";
+	print STDERR "db_stats_svn_history.pl: bad user_name \'$user\' \n";
+	next;
+      }
+
+      $svn_access{$group_id}{$user_id} += 1;
     }
 
-    $svn_access{$group_id}{$user_id} += 1;
+  } else {
+    #print "line rejected:$_\n";
   }
 }
 close(LOGFILE);
@@ -145,11 +158,16 @@ close(LOGFILE);
 print "Saving Subversion access in database \'$file\'...\n" if $verbose;
 for my $g ( keys %svn_access ) {
   #print "key=$g\n";
+			
+  $sql = "INSERT INTO stats_project_build_tmp (group_id,stat,value) 
+	   VALUES ('" . $group_id . "'," 
+	  . "'svn_access_count','" . $svn_access_by_group{$g} . "')";
+  $dbh->do( $sql );
 
   for my $u ( keys %{$svn_access{$g}} ) {
     #print "\t$u\n";
-    $sql = "INSERT INTO group_svn_full_history (group_id,user_id,day)
-			VALUES ('$g', '$u', '$day_date')";
+    $sql = "INSERT INTO group_svn_full_history (group_id,user_id,day,svn_access_count)
+			VALUES ('$g', '$u', '$day_date','$svn_access{$g}{$u}')";
     $dbh->do($sql)|| warn "SQL error in $sql: $!";
     #print "SQL -> $sql\n";
   }
