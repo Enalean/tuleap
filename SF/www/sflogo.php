@@ -38,9 +38,9 @@ if (!$group_id) {
 
 // LJ updated with the CodeX logo image
 if ($type == 1) {
-	echo readfile ($sys_urlroot.'images/'.$sys_themedefault.'.theme/codex_logo.png');
+  echo readfile (util_get_image_theme("codex_logo.png", $sys_themedefault, true));
 }  else { // default
-	echo readfile ($sys_urlroot.'images/'.$sys_themedefault.'.theme/codex_logo.png');
+  echo readfile (util_get_image_theme("codex_logo.png", $sys_themedefault, true));
 } 
 
 ?>

@@ -535,12 +535,27 @@ function util_get_css_theme(){
     return "/css/".$theme."/".$theme.getFontsizeName($font_size).".css";
 }
 
-// this function get the image file for the theme
-function util_get_image_theme($fn){
+// This function get the image file for the theme.
+// The theme may be specified as an optional second parameter.
+// If no theme parameter is given, the current global theme is used.
+// If $absolute is true, then the generated path will be absolute,
+// otherwise it is relative to $sys_urlroot.
+function util_get_image_theme($fn, $the_theme=false, $absolute=false){
 
     global $theme;
+    global $sys_urlroot;
 
-    return "/images/".$theme.".theme/".$fn;
+    if (! $the_theme) {
+      $the_theme = $theme;
+    }
+
+    $path = '/images/'.$the_theme.'.theme/'.$fn;
+    
+    if ($absolute) {
+      $path = $sys_urlroot . $path;
+    }
+
+    return $path;
 }
 
 // this function get the image directory for the theme
