@@ -16,6 +16,11 @@
 //require_once('include/ArtifactFieldHtml.class');
 //require_once($DOCUMENT_ROOT.'/../common/tracker/ArtifactFieldFactory.class');
 
+// Check if this tracker is valid (not deleted)
+if ( !$ath->isValid() ) {
+	exit_error('Error',"This tracker is no longer valid.");
+}
+
 // Create factories
 $art_field_fact = new ArtifactFieldFactory($ath);
 

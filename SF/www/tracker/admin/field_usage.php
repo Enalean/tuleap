@@ -18,6 +18,11 @@ if ( !$ath->userIsAdmin() ) {
 	return;
 }
 
+// Check if this tracker is valid (not deleted)
+if ( !$ath->isValid() ) {
+	exit_error('Error',"This tracker is no longer valid.");
+}
+
 $ath->adminHeader(array('title'=>'Tracker Administration - Field Usage Administration','help' => 'TrackerAdministration.html#TrackerFieldUsageManagement'));
 
 echo '<H2>Tracker \'<a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'">'.$ath->getName().'</a>\' - Field Usage Administration</H2>';

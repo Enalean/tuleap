@@ -18,6 +18,11 @@ if ( !$ath->userIsAdmin() ) {
 	return;
 }
 
+// Check if this tracker is valid (not deleted)
+if ( !$ath->isValid() ) {
+	exit_error('Error',"This tracker is no longer valid.");
+}
+
 $ath->adminHeader(array('title'=>'Tracker Administration - Field Values Administration',
 			'help' => 'TrackerAdministration.html#TrackerBrowsingTrackerFieldValues'));
 

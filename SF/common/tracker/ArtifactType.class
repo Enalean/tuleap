@@ -438,6 +438,15 @@ class ArtifactType extends Error {
 		return $this->data_array['description'];
 	}
 
+	/**
+	 *	  this tracker is not deleted
+	 *
+	 *	  @return boolean.
+	 */
+	function isValid() {
+		return ($this->data_array['status'] == 'A');
+	}
+
 
 	/**
 	 *	getTechnicians - returns a result set of technicians.

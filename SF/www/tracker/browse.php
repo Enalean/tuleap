@@ -38,6 +38,11 @@ if (!$ath->userCanView()) {
 	exit_permission_denied();
 }
 
+// Check if this tracker is valid (not deleted)
+if ( !$ath->isValid() ) {
+	exit_error('Error',"This tracker is no longer valid.");
+}
+
 //
 //  If the report type is not defined then get it from the user preferences.
 //  If it is set then update the user preference.  Also initialize the

@@ -113,6 +113,11 @@ if ($group_id && !$atid) {
 	if ($ath->isError()) {
 		exit_error('Error',$ath->getErrorMessage());
 	}
+	// Check if this tracker is valid (not deleted)
+	if ( !$ath->isValid() ) {
+		exit_error('Error',"This tracker is no longer valid.");
+	}
+
 	$ach = new ArtifactCannedHtml($ath);
 	if (!$ach || !is_object($ach)) {
 	  exit_error('Error','ArtifactCanned could not be created');

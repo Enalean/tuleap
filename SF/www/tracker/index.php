@@ -47,6 +47,10 @@ if ($group_id && $atid) {
 	if ($ath->isError()) {
 		exit_error('Error',$ath->getErrorMessage());
 	}
+	// Check if this tracker is valid (not deleted)
+	if ( !$ath->isValid() ) {
+		exit_error('Error',"This tracker is no longer valid.");
+	}
 
 	// Create field factory
 	$art_field_fact = new ArtifactFieldFactory($ath);

@@ -16,6 +16,11 @@ if ( !user_isloggedin() && !$ath->allowsAnon() ) {
 	return;
 }
 
+// Check if this tracker is valid (not deleted)
+if ( !$ath->isValid() ) {
+	exit_error('Error',"This tracker is no longer valid.");
+}
+
 //
 //  make sure this person has permission to add artifacts
 //
