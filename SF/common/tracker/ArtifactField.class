@@ -1052,7 +1052,7 @@ class ArtifactField extends Error {
 			// tracker which allows anonymous submission
 			$all_values = $this->getUsersList();
 		} else {
-			$all_values = $this->getFieldPredefinedValues($group_artifact_id);		
+			$all_values = $this->getFieldPredefinedValues($group_artifact_id,false,false,false);		
 		}
 		// Create an hash table with the id as key
 		for($i=0;$i<db_numrows($all_values);$i++) {
