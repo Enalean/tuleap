@@ -8,7 +8,7 @@
 ##############################
 # Global Variables
 ##############################
-$db_include	=	"/etc/local.inc";	# Local Include file for database username and password
+$db_include	=	$ENV{'SF_LOCAL_INC_PREFIX'}."/etc/local.inc";	# Local Include file for database username and password
 $tar_dir	=	"/tmp";			# Place to put deleted user's accounts
 $uid_add	=	"20000";		# How much to add to the database uid to get the unix uid
 $gid_add	=	"1000";			# How much to add to the database gid to get the unix uid

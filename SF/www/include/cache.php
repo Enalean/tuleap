@@ -59,7 +59,8 @@ function cache_display($name,$function,$time) {
 }
 
 function cache_get_new_data($function) {
-	$furl=fopen("http://localhost/write_cache.php?sys_themeid=".$GLOBALS['sys_themeid']."&function=".urlencode($function),'r');
+	global $SERVER_PORT;
+	$furl=fopen("http://localhost:$SERVER_PORT/write_cache.php?sys_themeid=".$GLOBALS['sys_themeid']."&function=".urlencode($function),'r');
 	return stripslashes(fread($furl,200000));
 }
 ?>

@@ -7,7 +7,8 @@
 // $Id$
 
 // Try to avoid 'sploits by requiring the request to come from localhost
-if ($HTTP_HOST != 'localhost') {
+list($host,$port) = explode(':', $HTTP_HOST);
+if ($host != 'localhost') {
 	exit;
 }
 
@@ -21,7 +22,6 @@ require ($DOCUMENT_ROOT.'/include/snippet_caching.php');
 	list of valid cacheable functions to
 	overcome possible exploit found by rilel
 */
-
 
 $function= intval($function);
 

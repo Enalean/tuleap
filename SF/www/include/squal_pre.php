@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require ('/etc/local.inc');
+require (getenv('SF_LOCAL_INC_PREFIX').'/etc/local.inc');
 require('database.php');
 require('session.php');
 require('user.php');

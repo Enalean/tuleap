@@ -20,7 +20,7 @@ $HTML->header(array('title'=>'Welcome'));
 	<hr width="100%" size="1" noshade>
 	<span class="slogan">
 	<div align="center">
-        <font face="arial, helvetica" size="5">"Breaking Down The Barriers to Code Sharing inside Xerox."</font><br>
+        <font face="arial, helvetica" size="5">"Breaking Diwn The Barriers to Code Sharing inside Xerox."</font><br>
 	</div>
 	</span>
         <hr width="100%" size="1" noshade>
