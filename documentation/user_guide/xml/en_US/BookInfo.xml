@@ -266,6 +266,15 @@
 
         <revremark>Small update on File Release mechanism, concerning hidden packages and email notifications.</revremark>
       </revision>
+      <revision>
+        <revnumber>2.6.2</revnumber>
+
+        <date>24-Feb-2004</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Tried to clarify the Event/Role based Notification Settings related to bug #33791. Corrected the corresponding figure to match the explanation.</revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--

@@ -2484,7 +2484,11 @@
 	  that the user said that when they make a modification to an artifact 
 	  themself (Event &#34;I am the author of the change&#34;) they don't
 	  want to receive any email notification whatever their role 
-	  in this artifact is.</para></listitem>
+	  in this artifact is. Please note that the event &#34;I am the author 
+	  of the change&#34; overlaps with other events. So in our example 
+	  configuration, the submitter will not get a notification when he adds 
+	  a new artifact. Even if the event &#34;A new artifact has been 
+	  submitted&#34; is marked</para></listitem>
 
 	  <listitem><para>Finally, the user also said that when a new
 	  artifact is submitted to the project and is immediately assigned
@@ -2495,7 +2499,8 @@
 	    <para>Note that the Commenter role is meaningless for
 	      the event &#34;A new artifact has been submitted&#34; because
 	      follow-up comments can only be added in update time not
-	      at creation time.</para>
+	      at creation time. Also, the event &#34;I'm added or removed 
+              from this role&#34; is meaningless for the Submitter and the Commenter. Co</para>
 	  </listitem>
 
 	</itemizedlist>
