@@ -177,7 +177,7 @@ while ($field = bug_list_all_fields()) {
 // priority is shown as a color code so don't put it in the report table column list
 $col_list = $lbl_list = array();
 $select = "SELECT DISTINCT bug.bug_id,bug.priority,bug.summary,bug.date,user.user_name AS submitted_by";
-$from = 'FROM bug, bug_field, user';
+$from = 'FROM bug, user';
 $where = 'WHERE bug.group_id='.$group_id.' AND user.user_id=bug.submitted_by ';
 $col_list[] = 'bug_id'; $lbl_list[] = 'Bug ID';
 $col_list[] = 'summary'; $lbl_list[] = 'Summary';
@@ -272,9 +272,10 @@ $col_list[] = 'submitted_by';
 $lbl_list[] = 'Submitter';
 
 $sql = "$select $from $where $order_by LIMIT $offset,50";
-//echo "<br> DBG SQL = $sql";
-$result=db_query($sql);
 
+$result=db_query($sql);
+//echo "<br> DBG SQL = $sql";
+//exit 0;
 
 /* ==================================================
    Display the HTML form
