@@ -329,9 +329,9 @@ class ArtifactHtml extends Artifact {
 						echo $field->getValue($group_artifact_id, $value_id_new);
 				    } else if ($field->isDateField()) {
                                                 // For date fields do some special processing
-                                                echo format_date($sys_datefmt,$value_id_old).'</TD><TD>';
+                                                echo format_date("Y-m-j",$value_id_old).'</TD><TD>';
 						
-						echo format_date($sys_datefmt,$value_id_new);
+						echo format_date("Y-m-j",$value_id_new);
 
                                     } else if ($field->isFloat() ) {
                                         	echo number_format($value_id_old,2).'</TD><TD>';

@@ -365,7 +365,10 @@ class ArtifactFieldHtml extends ArtifactField {
 	    	$value = time();
 	    }
 		if ($ascii) 
-		    $output .= ( ($value == 0) ? '' : format_date($sys_datefmt,$value));
+		    // most date fields (except open_date) are real dates (without time), so do not use $sys_datefmt
+		    // any more which can include an hour:min (than set on 00:00 for most dates). Especially in mail_follow_ups
+		    // after changing an Artifact
+		    $output .= ( ($value == 0) ? '' : format_date("Y-m-j",$value));
 		else
 		    if ($ro) {
 				$output .= format_date($sys_datefmt,$value);

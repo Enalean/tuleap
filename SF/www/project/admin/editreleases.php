@@ -258,12 +258,29 @@ if ($submit) {
 					$feedback .= ' | Sorry - Date entry could not be parsed. It must be in YYYY-MM-DD format. ';
 				} else { //is valid date... parse it
 
-					$date_list = split("-",$release_date,3);
-					$unix_release_time = mktime(0,0,0,$date_list[1],$date_list[2],$date_list[0]);
-
-					$res=db_query("UPDATE frs_release SET release_date='$unix_release_time',name='$release_name',preformatted='$preformatted', ".
+				  // make sure that we don't change the date by error because of timezone reasons.
+				  // eg: release created in India (GMT +5:30) at 2004-06-03. 
+				  // MLS in Los Angeles (GMT -8) changes the release notes
+				  // the release_date that we showed MLS is 2004-06-02. 
+				  // with mktime(0,0,0,2,6,2004); we will change the unix time in the database
+				  // and the people in India will discover that their release has been created on 2004-06-02
+				  	$res2=db_query("SELECT release_date FROM frs_release ".
+						       "WHERE frs_release.release_id='$release_id' ");
+					if (format_date('Y-m-d',db_result($res2,0,'release_date')) == $release_date) {
+					  // the date didn't change => don't update it
+					  $res=db_query("UPDATE frs_release SET name='$release_name',preformatted='$preformatted', ".
 						"status_id='$status_id',package_id='$new_package_id',notes='$notes',changes='$changes' ".
 						"WHERE release_id='$release_id'");
+					} else {
+					
+					  $date_list = split("-",$release_date,3);
+					  $unix_release_time = mktime(0,0,0,$date_list[1],$date_list[2],$date_list[0]);
+
+					  $res=db_query("UPDATE frs_release SET release_date='$unix_release_time',name='$release_name',preformatted='$preformatted', ".
+							"status_id='$status_id',package_id='$new_package_id',notes='$notes',changes='$changes' ".
+							"WHERE release_id='$release_id'");
+					}
+
 					if (!$res) {
 						$feedback .= ' | Updating Release Failed ';
 						echo db_error();
@@ -316,13 +333,27 @@ if ($submit) {
 			if (!ereg("[0-9]{4}-[0-9]{2}-[0-9]{2}",$release_time)) {
 				$feedback .= ' | Sorry - Date entry could not be parsed. It must be in YYYY-MM-DD format. ';
 			} else { //is valid date... parse it
-				$date_list = split("-",$release_time,3);
-				$unix_release_time = mktime(0,0,0,$date_list[1],$date_list[2],$date_list[0]);
+			  // make sure that we don't change the date by error because of timezone reasons.
+			  // eg: file created in India (GMT +5:30) at 2004-06-03. 
+			  // MLS in Los Angeles (GMT -8) changes the processor type
+			  // the release_time that we showed MLS is 2004-06-02. 
+			  // with mktime(0,0,0,2,6,2004); we will change the unix time in the database
+			  // and the people in India will discover that their release has been created on 2004-06-02
+			  $res2=db_query("SELECT release_time FROM frs_file ".
+						       "WHERE file_id='$file_id' ");
+			  if (format_date('Y-m-d',db_result($res2,0,'release_time')) == $release_time) {
+			    // the date didn't change => don't update it
+			    $res=db_query("UPDATE frs_file SET release_id='$new_release_id',type_id='$type_id',processor_id='$processor_id' ".
+					  "WHERE file_id='$file_id'");
+			  } else {
+			    $date_list = split("-",$release_time,3);
+			    $unix_release_time = mktime(0,0,0,$date_list[1],$date_list[2],$date_list[0]);
 
-				$res=db_query("UPDATE frs_file SET release_id='$new_release_id',release_time='$unix_release_time',type_id='$type_id',processor_id='$processor_id' ".
+			    $res=db_query("UPDATE frs_file SET release_id='$new_release_id',release_time='$unix_release_time',type_id='$type_id',processor_id='$processor_id' ".
 					"WHERE file_id='$file_id'");
-				$feedback .= ' File Updated ';
-}
+			  }
+			  $feedback .= ' File Updated ';
+			}
 		}
 
 	} else if ($func=='add_files' && $file_list && !$refresh) {
