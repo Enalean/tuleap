@@ -37,7 +37,8 @@ function register_valid()	{
 	
 	// if we got this far, it must be good
 	db_query("UPDATE user SET user_pw='" . md5($GLOBALS['form_pw']) . "',"
-		. "unix_pw='" . account_genunixpw($GLOBALS['form_pw']) . "' WHERE "
+		. "unix_pw='" . account_genunixpw($GLOBALS['form_pw']) . "',"
+		. "windows_pw='" . account_genwinpw($GLOBALS['form_pw']) . "' WHERE "
 		. "user_id=" . $form_user);
 	return 1;
 }

@@ -24,7 +24,8 @@ $row_lostuser = db_fetch_array($res_lostuser);
 if ($Update && $form_pw && !strcmp($form_pw,$form_pw2)) {
 	db_query("UPDATE user SET "
 		. "user_pw='" . md5($form_pw) . "',"
-		. "unix_pw='" . account_genunixpw($form_pw) . "' WHERE "
+		. "unix_pw='" . account_genunixpw($form_pw) . "',"
+		. "windows_pw='" . account_genwinpw($form_pw) . "' WHERE "
 		. "confirm_hash='$confirm_hash'");
 
 	session_redirect("/");

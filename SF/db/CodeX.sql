@@ -46,3 +46,12 @@ ALTER TABLE groups ADD other_comments TEXT AFTER patents_ips;
 #
 
 ALTER TABLE user ADD sticky_login INTEGER DEFAULT '0' NOT NULL AFTER mail_va;
+
+#
+# Add a field in the user table to store the 2 MS-Windows
+# encrypted password (the first one is the Win2K password
+# and the second is the Windows NT compatible password - 
+# separated by a ':'
+#
+
+ALTER TABLE user ADD windows_pw VARCHAR(80) DEFAULT '' NOT NULL;

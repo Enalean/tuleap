@@ -47,11 +47,12 @@ function register_valid()	{
     // if we got this far, it must be good
     $confirm_hash = substr(md5($session_hash . $HTTP_POST_VARS['form_pw'] . time()),0,16);
 
-    $result=db_query("INSERT INTO user (user_name,user_pw,unix_pw,realname,email,add_date,"
+    $result=db_query("INSERT INTO user (user_name,user_pw,unix_pw,windows_pw,realname,email,add_date,"
 		     . "status,confirm_hash,mail_siteupdates,mail_va,timezone) "
 		     . "VALUES ('$HTTP_POST_VARS[form_loginname]','"
 		     . md5($HTTP_POST_VARS['form_pw']) . "','"
 		     . account_genunixpw($HTTP_POST_VARS['form_pw']) . "','"
+		     . account_genwinpw($HTTP_POST_VARS['form_pw']) . "','"
 		     . "$GLOBALS[form_realname]','$GLOBALS[form_email]'," . time() . ","
 		     . "'P','" // status
 		     . $confirm_hash

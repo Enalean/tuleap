@@ -45,7 +45,8 @@ function register_valid()	{
 	
 	// if we got this far, it must be good
 	db_query("UPDATE user SET user_pw='" . md5($GLOBALS[form_pw]) . "',"
-		. "unix_pw='" . account_genunixpw($GLOBALS[form_pw]) . "' WHERE "
+		. "unix_pw='" . account_genunixpw($GLOBALS[form_pw]) . "',"
+		. "windows_pw='" . account_genwinpw($GLOBALS[form_pw]) . "' WHERE "
 		. "user_id=" . user_getid());
 	return 1;
 }
@@ -59,7 +60,15 @@ if (register_valid()) {
 <p>Congratulations. You have changed your password.
 This change is immediate on the web site, but will not take
 effect on your shell/cvs account until the next cron update,
-which will happen within the next 6 hours.
+which will happen in
+<?php
+     $d = getdate(time());
+     $h = ($sys_crondelay - 1) - ($d[hours] % $sys_crondelay);
+     $m= 60 - $d[minutes];
+     print "<font color=\"red\"><b> $h&nbsp;h&nbsp;$m&nbsp;minutes</b></font>";
+?>
+ from now.
+
 <p>You should now <a href="/account/">Return to UserPrefs</a>.
 <?php
 } else { // not valid registration, or first time to page
@@ -67,7 +76,7 @@ which will happen within the next 6 hours.
 
 ?>
 <p><b>SourceForge Password Change</b>
-<?php if ($register_error) print "<p>$register_error"; ?>
+<?php if ($register_error) print "<p><font color=\"red\"><b>$register_error</b></font>"; ?>
 <form action="change_pw.php" method="post">
 <p>Old Password:
 <br><input type="password" name="form_oldpw">
