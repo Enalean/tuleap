@@ -159,7 +159,7 @@ Receive additional community mailings. <I>(Low traffic.)</I>
 <?php
 if ($GLOBALS['sys_user_approval'] == 1) {
     util_get_content('account/register_purpose');
-    echo '<textarea" wrap="virtual" rows="5" cols="70" name="form_register_purpose"></textarea><BR>';
+    echo '<textarea wrap="virtual" rows="5" cols="70" name="form_register_purpose"></textarea></p>';
 }
 ?>
 
