@@ -21,9 +21,9 @@ while(my ($list_name) = $c->fetchrow()) {
 		$list_name =~ tr/A-Z/a-z/;
 		$list_name =~ s/ //g;
 
-		push @alias_array, sprintf("%-50s%-10s","$list_name\@$sys_lists_host:", "\"|/usr/local/mailman/mail/wrapper post $list_name\"\n");
-		push @alias_array, sprintf("%-50s%-10s","$list_name-admin\@$sys_lists_host:", "\"|/usr/local/mailman/mail/wrapper mailowner $list_name\"\n");
-		push @alias_array, sprintf("%-50s%-10s","$list_name-request\@$sys_lists_host:", "\"|/usr/local/mailman/mail/wrapper mailcmd $list_name\"\n");
+		push @alias_array, sprintf("%-50s%-10s","$list_name:", "\"|/usr/local/mailman/mail/wrapper post $list_name\"\n");
+		push @alias_array, sprintf("%-50s%-10s","$list_name-admin:", "\"|/usr/local/mailman/mail/wrapper mailowner $list_name\"\n");
+		push @alias_array, sprintf("%-50s%-10s","$list_name-request:", "\"|/usr/local/mailman/mail/wrapper mailcmd $list_name\"\n");
 }
 
 
@@ -38,7 +38,7 @@ $c->execute();
 while(($username, $email) = $c->fetchrow()) {
 	if ($email) {
 		if (!($admin_list =~ /.*$username*./)) {
-			push @alias_array, sprintf("%-50s%-10s","$username\@$sys_users_host:", "$email\n");
+			push @alias_array, sprintf("%-50s%-10s","$username:", "$email\n");
 		}
 	}
 }
