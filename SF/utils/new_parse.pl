@@ -231,7 +231,7 @@ while ($ln = pop(@groupdump_array)) {
 	  if (! $blockispresent)
 	    {
 	      system("echo \"# !!! CodeX Specific !!! DO NOT REMOVE (CODEX BLOCK WAITED)\n# the following block is regularly added when not present\n# But keeping the block will prevent you from this automatic add if you need some manual modification to the active line within the block\" >> $cvs_dir/CVSROOT/loginfo");
-	      system("echo \"# Usage: log_accum.pl [-d] [-s] [-M module] [[-m mailto] ...] [-f logfile]\" >> $cvs_dir/CVSROOT/loginfo");
+	      system("echo \"# Usage: log_accum.pl [-d] [-nodb] [-s] [-M module] [[-m mailto] ...] [-f logfile]\" >> $cvs_dir/CVSROOT/loginfo");
 	      system("echo \"#	-d		- turn on debugging\" >> $cvs_dir/CVSROOT/loginfo");
 	      system("echo \"#       -G database     - interface to Gnats\" >> $cvs_dir/CVSROOT/loginfo");
 	      system("echo \"#       -nodb           - suppress default codex database commit tracking\" >> $cvs_dir/CVSROOT/loginfo");
