@@ -25,7 +25,7 @@ L. Julliard<br>
 <br>
 &nbsp;
 <br>
-<h1>Preamblep</h1>
+<h1>Preamble</h1>
 Before or while you read the CodeX Installation Guide we strongly
 recommend that you also have a look at the CodeX Administration Guide
 at <a
@@ -877,7 +877,6 @@ guidelines and tips. In addition remember that the CodeX code is
 subject
 to the GNU GPL license.&nbsp;</font></li>
 </ul>
-<h2></h2>
 To check out the CodeX source code: login as Unix user 'sourceforge'
 and go to /home/httpd/. From there checkout the CodeX code,
 documentation and site content modules:<br>
@@ -1632,7 +1631,25 @@ For the script to work properly you must have the JRE (Java Runtime
 Environment) and the DocBook processing chain installed properly. See
 the section about <a href="#Specific_Software_Packages">specific
 software packages to install</a>.<br>
-<br>
+<h2>Project Web Site</h2>
+When a project is registered on CodeX a new web site is created for
+that project. A default home page is installed for that project from
+the <span style="font-family: monospace;">SF/utils/default_page.php</span>
+file. You want to create your own custom
+file for your own CodeX site. To do so:<br>
+<ul>
+  <li>create a directory named <span style="font-family: monospace;">custom</span>
+in <span style="font-family: monospace;">SF/utils</span> if it doesn't
+exist<br>
+  </li>
+  <li>copy the <span style="font-family: monospace;">SF/utils/default_page.php</span>
+in the <span style="font-family: monospace;">SF/utils/custom</span>
+directory if not already
+there<br>
+  </li>
+  <li>edit the custom file it and customize it to your liking<br>
+  </li>
+</ul>
 <h2>LDAP Directory</h2>
 While visiting a user information page on CodeX, you have the ability
 to query the LDAP directory of your company to get more information
