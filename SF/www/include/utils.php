@@ -141,9 +141,9 @@ function util_make_links ($data='') {
 	return $newText;
 }
 
-function show_priority_colors_key() {
+function show_priority_colors_key($msg='') {
 
-	echo '<P><B>Priority Colors:</B><BR>
+	echo '<P><B>'.($msg ? $msg : 'Priority Colors:').'</B><BR>
 
 		<TABLE BORDER=0><TR>';
 

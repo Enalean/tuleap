@@ -377,7 +377,7 @@ function show_buglist ($result,$offset,$field_arr,$title_arr,$url) {
 
     for ($i=0; ($i < $rows && $i < 50); $i++) {
 
-	echo '<TR BGCOLOR="'.get_priority_color(db_result($result, $i, 'priority')) .'">'."\n";
+	echo '<TR BGCOLOR="'.get_priority_color(db_result($result, $i, 'severity')) .'">'."\n";
 
 	for ($j=0; $j<$nb_of_fields; $j++) {
 	    

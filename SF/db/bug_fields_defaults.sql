@@ -1,6 +1,7 @@
 #
 # CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
-# Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001. All Rights Reserved# http://codex.xerox.com
+# Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001. All Rights Reserved
+# http://codex.xerox.com
 #
 # $Id$
 #
@@ -38,7 +39,7 @@ INSERT INTO bug_field \
 INSERT INTO bug_field \
   VALUES (101,'status_id','SB','','Status','Bug Status','P',1,0,1,0);
 INSERT INTO bug_field \
-  VALUES (102,'priority','SB','','Priority','How critical the bug is','S',1,0,1,0);
+  VALUES (102,'severity','SB','','Severity','Impact of the bug on the system (Critical, Major,...)','S',1,0,1,0);
 INSERT INTO bug_field \
   VALUES (103,'category_id','SB','','Category','Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)','P',0,0,1,0);
 INSERT INTO bug_field \
@@ -78,6 +79,9 @@ INSERT INTO bug_field \
   VALUES (209,'fix_release','TF','10/40','Fixed Release','The release in which the bug was actually fixed. Same as the other Fixed Release field <u>except</u> this one is free text.','S',0,0,1,0);
 INSERT INTO bug_field \
   VALUES (210,'plan_release','TF','10/40','Planned Release','The release in which you initially planned the bug to be fixed. Same as the other Planned Release field <u>except</u> this one is free text.','S',0,0,1,0);
+INSERT INTO bug_field \
+  VALUES (211,'priority','SB','','Priority','How quickly the bug must be fixed (Immediate, Normal, Low, Later,...)','S',0,0,1,0);
+
 
 # ==============================
 # Bug field value table
@@ -102,18 +106,18 @@ INSERT INTO bug_field_value VALUES (108,101,100,8,'In Test','Updated/Created sof
 INSERT INTO bug_field_value VALUES (109,101,100,9,'Approved','The bug fix has been succesfully tested. It is approved and awaiting release.',130,'H');
 INSERT INTO bug_field_value VALUES (110,101,100,10,'Declined','The bug was not accepted. Alternatively, you can also Set the status to "Closed" and use the Resolution field to explain why it was declined',150,'H');
 
-# Priority (bug_field_id = 102)
+# Severity (bug_field_id = 102)
 #
 # 
-INSERT INTO bug_field_value VALUES (131,102,100,1,'1 - Ordinary','',10,'P');
+INSERT INTO bug_field_value VALUES (131,102,100,1,'1 - Ordinary','',10,'A');
 INSERT INTO bug_field_value VALUES (132,102,100,2,'2','',20,'A');
 INSERT INTO bug_field_value VALUES (133,102,100,3,'3','',30,'A');
 INSERT INTO bug_field_value VALUES (134,102,100,4,'4','',40,'A');
-INSERT INTO bug_field_value VALUES (135,102,100,5,'5 - Major','',50,'P');
+INSERT INTO bug_field_value VALUES (135,102,100,5,'5 - Major','',50,'A');
 INSERT INTO bug_field_value VALUES (136,102,100,6,'6','',60,'A');
 INSERT INTO bug_field_value VALUES (137,102,100,7,'7','',70,'A');
 INSERT INTO bug_field_value VALUES (138,102,100,8,'8','',80,'A');
-INSERT INTO bug_field_value VALUES (139,102,100,9,'9 - Critical','',90,'P');
+INSERT INTO bug_field_value VALUES (139,102,100,9,'9 - Critical','',90,'A');
 
 # Category (bug_field_id = 103)
 #
@@ -168,6 +172,25 @@ INSERT INTO bug_field_value VALUES (260,205,100,100,'None','',10,'P');
 #
 INSERT INTO bug_field_value VALUES (270,207,100,100,'None','',10,'P');
 
+# Priority (bug_field_id = 211)
+#
+INSERT INTO bug_field_value VALUES (280,211,100,100,'None','',10,'P');
+INSERT INTO bug_field_value VALUES (281,211,100,120,'Later','',20,'A');
+INSERT INTO bug_field_value VALUES (282,211,100,130,'Later+','',30,'H');
+INSERT INTO bug_field_value VALUES (283,211,100,140,'Later++','',40,'H');
+INSERT INTO bug_field_value VALUES (284,211,100,150,'Low','',50,'A');
+INSERT INTO bug_field_value VALUES (285,211,100,160,'Low+','',60,'H');
+INSERT INTO bug_field_value VALUES (286,211,100,170,'Low++','',70,'H');
+INSERT INTO bug_field_value VALUES (287,211,100,180,'Normal','',80,'A');
+INSERT INTO bug_field_value VALUES (288,211,100,190,'Normal+','',90,'H');
+INSERT INTO bug_field_value VALUES (289,211,100,200,'Normal++','',100,'H');
+INSERT INTO bug_field_value VALUES (290,211,100,210,'High','',110,'A');
+INSERT INTO bug_field_value VALUES (291,211,100,220,'High+','',120,'H');
+INSERT INTO bug_field_value VALUES (292,211,100,230,'High++','',130,'H');
+INSERT INTO bug_field_value VALUES (293,211,100,240,'Immediate','',140,'A');
+INSERT INTO bug_field_value VALUES (294,211,100,250,'Immediate+','',150,'H');
+INSERT INTO bug_field_value VALUES (295,211,100,260,'Immediate++','',160,'H');
+
 # ==============================
 # Bug field usage table
 # ==============================
@@ -205,7 +228,7 @@ INSERT INTO bug_field_usage VALUES (94,100,1,0,0,0,0,50);
 #
 INSERT INTO bug_field_usage VALUES (101,100,1,1,0,0,0,600);
 
-# Priority (bug_field_id = 102)
+# Severity (bug_field_id = 102)
 #
 INSERT INTO bug_field_usage VALUES (102,100,1,0,0,0,1,200);
 
@@ -276,6 +299,10 @@ INSERT INTO bug_field_usage VALUES (209,100,0,0,0,0,0,1900);
 # planned release string (bug_field_id = 210)
 #
 INSERT INTO bug_field_usage VALUES (210,100,0,0,0,0,0,2000);
+
+# priority (bug_field_id = 211)
+#
+INSERT INTO bug_field_usage VALUES (211,100,0,0,0,0,0,250);
 
 #**********************************
 # TRANSFER LEGACY FIELD VALUES

@@ -48,10 +48,10 @@ while (list($field,$value_id) = each($prefs)) {
   ================================================== */
 
 if ($order) {
-    // always accept priority as a valid sort criteria because it is shown with
+    // always accept severity as a valid sort criteria because it is shown with
     // color code and there is URL at the end of the page to re-order by
-    // priority in all cases.
-    if (bug_data_is_showed_on_result($order) || ($order == 'priority')) {
+    // severity in all cases.
+    if (bug_data_is_showed_on_result($order) || ($order == 'severity')) {
 	if(user_isloggedin()) {
 	    user_set_preference('bug_browse_order', $order);
 	}
@@ -65,9 +65,9 @@ if ($order) {
 }
 
 if ($order) {
-    //if ordering by priority OR closed date, sort DESC
+    //if ordering by severity OR closed date, sort DESC
     $order_by = " ORDER BY $order ".
-	(($order=='date') || ($order=='priority') || ($order=='hours')? ' DESC ':'');
+	(($order=='date') || ($order=='severity') || ($order=='hours')? ' DESC ':'');
     $order_statement = 'sorted by \''.bug_data_get_label($order).'\'';
 } else {
     $order_by = '';
@@ -174,9 +174,9 @@ while ($field = bug_list_all_fields()) {
   ================================================== */
 
 // Force the selection of a few fields that will be displayed  anyway
-// priority is shown as a color code so don't put it in the report table column list
+// severity is shown as a color code so don't put it in the report table column list
 $col_list = $lbl_list = array();
-$select = "SELECT DISTINCT bug.bug_id,bug.priority,bug.summary,bug.date,user.user_name AS submitted_by";
+$select = "SELECT DISTINCT bug.bug_id,bug.severity,bug.summary,bug.date,user.user_name AS submitted_by";
 $from = 'FROM bug, user';
 $where = 'WHERE bug.group_id='.$group_id.' AND user.user_id=bug.submitted_by ';
 $col_list[] = 'bug_id'; $lbl_list[] = 'Bug ID';
@@ -313,11 +313,11 @@ if ($result && $numrows > 0) {
     echo '<h3>'.$numrows.' matching bug'.($numrows>1 ? 's':'').' '.
 	$order_statement.'</h3>';
 
-    echo '<P>Click a column heading to sort by that column, or <A HREF="'.$url.'&order=priority"><b>Sort by Priority</b></A><p>';
+    echo '<P>Click a column heading to sort by that column, or <A HREF="'.$url.'&order=severity"><b>Sort by Severity</b></A><p>';
 
     show_buglist($result,$offset,$col_list,$lbl_list,$url);
     echo '<P>* Denotes Bugs > 30 Days Old';
-    show_priority_colors_key();
+    show_priority_colors_key('Severity colors:');
 
 } else {
 

@@ -22,16 +22,25 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 
 	if ($create_value) {
 	    // A form was posted to update a field value
-	    bug_data_create_value($field,$group_id, htmlspecialchars($value),
-				  htmlspecialchars($description),$order_id,'A');
+	    if ($value) {
+		bug_data_create_value($field,$group_id,
+				      htmlspecialchars($value),
+				      htmlspecialchars($description),
+				      $order_id,'A');
+	    } else {
+		$feedback .= ' Error: empty field value not allowed!';
+	    }
 	    
 	} else if ($update_value) {
 	    // A form was posted to update a field value
-	    
-	    bug_data_update_value($fv_id, $field, $group_id,
-				  htmlspecialchars($value),
-				  htmlspecialchars($description),
-				  $order_id,$status);
+	    if ($value) {
+		bug_data_update_value($fv_id, $field, $group_id,
+				      htmlspecialchars($value),
+				      htmlspecialchars($description),
+				      $order_id,$status);
+	    } else {
+		$feedback .= ' Error: empty field value not allowed!';
+	    }
 	    
 	} else if ($create_canned) {
 
@@ -77,8 +86,11 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 
 	// First check that this field is used by the project and
 	// it is in the project scope
+
+	$is_project_scope = bug_data_is_project_scope($field);
+
 	if ( bug_data_get_field_id($field) && 
-	     bug_data_is_project_scope($field)) {
+	     bug_data_is_select_box($field)) {
 
 	    $result = bug_data_get_field_predefined_values($field, $group_id,false,false,false);
 	    $rows = db_numrows($result);
@@ -87,7 +99,8 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 		echo "\n<H3>Existing Values</H3> (Click to modify)";
 
 		$title_arr=array();
-		$title_arr[]='Value';
+		if (!$is_project_scope) { $title_arr[]='ID'; }
+		$title_arr[]='Value label';
 		$title_arr[]='Description';
 		$title_arr[]='Rank';
 		$title_arr[]='Status';
@@ -113,6 +126,11 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 
 		    // keep the rank of the 'None' value in mind if any (see below)
 		    if ($value == 100) { $none_rk = $order_id; }
+
+		    // Show the value ID only for system wide fields which
+		    // value id are fixed and serve as a guide.
+		    if (!$is_project_scope) 
+			!$html .='<td>'.$value_id.'</td>';
 
 		    // The permanent values can't be modified (No link)
 		    if ($status == 'P') {
@@ -158,31 +176,34 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 		echo "\n<H3>No values defined yet for ".bug_data_get_label($field)."</H3>";
 	    }
 
-?>
 
-      <P><BR>
-      <H3>Create a new field value</H3>
-<?php
-	   if ($ih) {
-	       echo "<P>Before you create a new value make sure there isn't one in the hidden list that suits your needs.";
-		   }
-?>
-      <FORM ACTION="<?php echo $PHP_SELF ?>" METHOD="POST">
+	    // Only show the add value form if this is a project scope field
+	    if ($is_project_scope) {
+
+		echo ' <P><BR> <H3>Create a new field value</H3>';
+
+		if ($ih) {
+		    echo "<P>Before you create a new value make sure there isn't one in the hidden list that suits your needs.";
+		}
+
+		echo '
+      <FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
       <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
       <INPUT TYPE="HIDDEN" NAME="create_value" VALUE="y">
       <INPUT TYPE="HIDDEN" NAME="list_value" VALUE="y">
-      <INPUT TYPE="HIDDEN" NAME="field" VALUE="<?php echo $field; ?>">
-      <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">
+      <INPUT TYPE="HIDDEN" NAME="field" VALUE="'.$field.'">
+      <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
       <P><B>Value:</B><BR>
       <INPUT TYPE="TEXT" NAME="value" VALUE="" SIZE="30" MAXLENGTH="60">
       &nbsp;&nbsp;
       <B>Rank:</B>
-      <INPUT TYPE="TEXT" NAME="order_id" VALUE="" SIZE="6" MAXLENGTH="6">
-<?php
-	   if (isset($none_rk)) {
-	       echo "&nbsp;&nbsp;<b> (must be &gt; $none_rk)</b><BR>";
-	   }
-?>
+      <INPUT TYPE="TEXT" NAME="order_id" VALUE="" SIZE="6" MAXLENGTH="6">';
+
+		if (isset($none_rk)) {
+		    echo "&nbsp;&nbsp;<b> (must be &gt; $none_rk)</b><BR>";
+		}
+		
+		echo '
       <P>
       <B>Description:</B> (optional)<BR>
       <TEXTAREA NAME="description" ROWS="4" COLS="65" WRAP="HARD"></TEXTAREA>
@@ -193,23 +214,22 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
       <ul type="compact">
           <li><b>Value</b>:  an empty value is not permitted.<BR>
       <li><b>Rank</b>:  the rank number allows you to insert the new value at a given
-      place in the list. Tip: When you create new values leave some space in between 2 rank numbers (e.g use 100, 200, 300,...) to make future insertion easier.
+      place in the list. Tip: When you create new values leave some space in between 2 rank numbers (e.g use 100, 200, 300,...) to make future insertion easier.';
 
-<?php
-	   if (isset($none_rk)) {
-	       echo "The rank number must be greater than the 'None' rank number (here $none_rk).<BR>";
-	   }
-?>
-    <li><b>Status</b>: tells you whether a value is being used or not. When <i>Active</i> the value shows up in the pull down menus. When <i>Hidden</i> it does not show up in pull down menus. <i>Permanent</i> means that this value is forever active and you cannot hide it. The Status can be modified back and forth at any time in the life in the project.
+		if (isset($none_rk)) {
+		    echo "The rank number must be greater than the 'None' rank number (here $none_rk).<BR>";
+		}
+		
+		echo '
+    <li><b>Status</b>: tells you whether a value is being used or not. When <i>Active</i> the value shows up in the pull down menus. When <i>Hidden</i> it does not show up in pull down menus. <i>Permanent</i> means that this value is forever active and you cannot hide it. The Status can be modified back and forth at any time in the life of the project.
       <li><b>Description</b>: it is optional and allows you to describe the meaning of a value.
-      </ul>
+      </ul>';
 		       
-<?php
-
-           } else {
-
-               echo '<H3>The Bug field you requested \''.$field.'\' is not used by your project or you are not allowed to customize it';
-           }
+	    }
+	} else {
+	    
+	    echo '<H3>The Bug field you requested \''.$field.'\' is not used by your project or you are not allowed to customize it';
+	}
 
 
     } else if ($update_value) {
@@ -246,7 +266,7 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
       <P>
       <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
       </FORM>
-      <B>Help:</B>
+      <P><B>Help:</B>
       <ul type="compact">
       <li><b>Value</b>: an empty value is not permitted.<BR>
       <li><b>Rank</b>: the rank number allows you to insert the new value at a given
@@ -364,29 +384,40 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 	bug_header_admin(array ('title'=>'Bug Administration - Field Values Management'));
 	
 	echo '<H2>Manage Field values</H2>';
-	echo 'The CodeX bug tracking system allows you to define your own values for soome of the fields you have decided to use (see Field Usage above). To customize the set of predefined values for a given field, simply click on the correpsonding field below<P>';
-
+	echo 'The CodeX bug tracking system allows you to define your own values for most of the fields you have decided to use (see Field Usage above). To customize the set of predefined values for a given field, simply click on the corresponding field below.';
+	echo '<p>(Click to modify)';
+	
 	// Loop through the list of all used fields that are project manageable
 	$i=0;
 	$title_arr=array();
 	$title_arr[]='Field Label';
 	$title_arr[]='Description';
+	$title_arr[]='Scope';
 	echo html_build_list_table_top ($title_arr);
 	while ( $field_name = bug_list_all_fields() ) {
 
-	    if (bug_data_is_project_scope($field_name)
+	    if ( bug_data_is_select_box($field_name)
+		 && ($field_name != 'submitted_by') 
+		 && ($field_name != 'assigned_to')
 		&& bug_data_is_used($field_name) ) {
+
+		$scope_label  = (bug_data_is_project_scope($field_name)?
+				 'Project':'CodeX');
+
 		echo '<TR BGCOLOR="'. util_get_alt_row_color($i) .'">'.
 		    '<TD><A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&list_value=1&field='.$field_name.'">'.bug_data_get_label($field_name).'</A></td>'.
 		    "\n<td>".bug_data_get_description($field_name).'</td>'.
+		    "\n<td>".$scope_label.'</td>'.
 		    '</tr>';
 		$i++;
 	    }	
 	}
 
 	// Now the special canned response field
+	echo '<TR BGCOLOR="'. util_get_alt_row_color($i) .'">';
 	echo "<td><A HREF=\"$PHP_SELF?group_id=$group_id&create_canned=1\">Canned Responses</A></td>";
 	echo "\n<td>Create or Change generic quick response messages for the bug tracking tool. Theses pre-written messages can then be used to quickly reply to bug submission. </td>";
+	echo "\n<td>Project</td></tr>";
 	echo '</TABLE>';
     }
 

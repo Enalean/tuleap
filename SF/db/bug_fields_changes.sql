@@ -53,6 +53,12 @@ ALTER TABLE bug MODIFY resolution_id int DEFAULT '100' NOT NULL;
 ALTER TABLE bug MODIFY submitted_by int DEFAULT '100' NOT NULL;
 ALTER TABLE bug MODIFY assigned_to int DEFAULT '100' NOT NULL;
 
+# 
+# Priority is now severity and new priority field introduced
+#
+ALTER TABLE bug CHANGE priority severity INT (11) DEFAULT '5' not null;
+ALTER TABLE bug ADD priority INT (11) DEFAULT '100' not null;
+
 # user preferences for bug select/browse is now much longer
 # so change it from varchar(20) to varchar(255)
 ALTER TABLE user_preferences MODIFY preference_value VARCHAR(255);

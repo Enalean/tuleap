@@ -193,7 +193,7 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
 	<P><B>Some Help:</b>
         <ul type="compact">
 	<li><b>Type:</b> fields can be of type "Select Box" in which case values are taken from a predefined list of values that can be defined by the Bug Adminstrator. "Text Field" and "Text Area" allows the user to enter free text. Sometimes you'll see the same bug field twice in the list but they actually come with a different type. Choose the type you like most: predefined values or free text..
-        <li><b>Scope:</b> when equals to 'CodeX' it means that the possible values for this field are defined once for all for the CodeX site globally. Fields with scope 'Project' can be assigned a set of values at the project level. See the "Field values" item in the menu bar above.
+        <li><b>Scope:</b> fields with a 'CodeX' scope have a fixed number of values for the CodeX site globally. You can only change the label and the rank of these existing values but can't create any new one.<br>Fields with 'Project' scope can be assigned a set of values at the project level. See the "Field values" item in the menu bar above.
         <li><b>Rank</b>: the rank number allows you to place the field with respect to the others. The fields with smaller values will appear first on the screen (bug submission form, query report,...)
       </ul>
 
