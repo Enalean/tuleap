@@ -14,7 +14,7 @@
     <title>CodeX Site Overview</title>
 
     <para>CodeX is a &SYS_ORG_NAME; <emphasis role="underline">internal</emphasis> Web
-    Site available at <ulink url="&SYS_DEFAULT_DOMAIN;">http://&SYS_DEFAULT_DOMAIN;/.</ulink>
+    Site available at <ulink url="http://&SYS_DEFAULT_DOMAIN;">http://&SYS_DEFAULT_DOMAIN;/.</ulink>
     To browse the CodeX site use your favorite Web Browser
     <footnote><para>CodeX uses standard HTML and only a little bit of
     Javascript. It is known to work well with Netscape 4.x, Netscape 6.x and

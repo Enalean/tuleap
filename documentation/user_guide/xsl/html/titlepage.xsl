@@ -53,7 +53,7 @@
     <xsl:with-param name="content">
       <html>
         <head>
-          <LINK type="text/css" href="current_css.php" rel="stylesheet"/>  
+       <LINK type="text/css" href="/current_css.php" rel="stylesheet"/>  
           <title><xsl:value-of select="$title"/></title>
         </head>
         <body>
@@ -158,7 +158,7 @@
         <xsl:with-param name="content">
           <html>
             <head>
-              <LINK type="text/css" href="current_css.php" rel="stylesheet"/>  
+        <LINK type="text/css" href="/current_css.php" rel="stylesheet"/>  
               <title><xsl:value-of select="$title"/></title>
             </head>
             <body>
