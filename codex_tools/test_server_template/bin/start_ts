@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# Apache must be started from the root user
+if [ `whoami` != "root" ]; then
+   echo "Must be root to start/stop the Apache test server"
+   exit;
+fi
+
+prefix=$(dirname $0)
+pidFile=$prefix/../var/run/httpd.pid
+
+if [ -e $pidFile ]; then
+   echo "Apache test server already running (pid `cat $pidFile`)."
+   exit;
+fi
+
+echo -n "Starting Apache test server..."
+/usr/sbin/httpd -d $prefix/../etc/httpd -f conf/httpd.conf
+sleep 1
+echo "done (pid `cat $pidFile`)."
+

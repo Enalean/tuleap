@@ -1,0 +1,6 @@
+#!/bin/sh
+
+prefix=$(dirname $0)
+$prefix/stop_ts
+sleep 1
+$prefix/start_ts

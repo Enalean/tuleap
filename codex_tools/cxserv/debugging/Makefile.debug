@@ -1,0 +1,14 @@
+SOURCES=cxserv.c
+OBJECTS=$(SOURCES:.c=.o)
+
+ADMIN_FILE="/home/jmayer/src/cxserv/cxserv.conf"
+
+CFLAGS= -g -DNO_ROOT_CHECK -DHTTP_SERVER='"/home/jmayer/src/cxserv/dummy_http"' -DADMIN_FILE='$(ADMIN_FILE)'
+
+all: cxserv
+
+cxserv: $(OBJECTS)
+	$(LINK.c) -o cxserv $(OBJECTS)
+
+clean:
+	rm -f $(OBJECTS) cxserv *~
