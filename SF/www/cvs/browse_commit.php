@@ -177,19 +177,23 @@ if ($_srch != '') {
 //	(($_tag && ($_tag != 100))?' By Status: '. get_commits_status_nam//e($_status):''),
 //		   'help' => 'CommitsManager.html'));
 
-$select = 'SELECT distinct cvs_checkins.commitid as id, cvs_descs.id as did, cvs_descs.description, IF (cvs_checkins.commitid > 0, cvs_commits.comm_when, cvs_checkins.ci_when) as c_when, IF (cvs_checkins.commitid > 0, cvs_commits.comm_when, CONCAT(YEAR(cvs_checkins.ci_when),LEFT(RIGHT(cvs_checkins.ci_when,14),2), LEFT(RIGHT(cvs_checkins.ci_when,11),2), LEFT(RIGHT(cvs_checkins.ci_when,8),2),LEFT(RIGHT(cvs_checkins.ci_when,5),2), RIGHT(cvs_checkins.ci_when, 2))) as f_when, user.user_name as who ';
-$from = "FROM cvs_descs, cvs_checkins, user, cvs_repositories, cvs_commits ";
+// get repository id
+$query = "SELECT id from cvs_repositories where cvs_repositories.repository='/cvsroot/".$projectname."' ";
+$rs = db_query($query);
+$repo_id = db_result($rs, 0, 0);
+
+$select = 'SELECT distinct cvs_checkins.commitid as id, cvs_descs.id as did, cvs_descs.description, cvs_commits.comm_when as c_when, cvs_commits.comm_when as f_when, user.user_name as who ';
+$from = "FROM cvs_descs, cvs_checkins, user, cvs_commits ";
 $where = "WHERE cvs_checkins.descid=cvs_descs.id ".
-	"AND (cvs_checkins.commitid='0' OR cvs_checkins.commitid=cvs_commits.id) ".
+	"AND cvs_checkins.commitid=cvs_commits.id ".
 	"AND user.user_id=cvs_checkins.whoid ".
-        "AND cvs_checkins.repositoryid=cvs_repositories.id ".
-        "AND cvs_repositories.repository='/cvsroot/".$projectname."' ".
+        "AND cvs_checkins.repositoryid=".$repo_id." ".
 	"$commiter_str ".
         "$commit_str ".
 	"$srch_str ".
 	"$branch_str ";
 
-
+ 
 if (!$pv) { $limit = " LIMIT $offset,$chunksz";}
 
 if ($order_by == '') {

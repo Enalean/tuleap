@@ -73,7 +73,7 @@ function commits_header_admin($params) {
     if (!$project->isProject()) {
 	exit_error('Error','Only Projects Can Use The Commits Browser');
     }
-    if (!$project->usesBugs()) {
+    if (!$project->usesCvs()) {
 	exit_error('Error','This Project Has Turned Off The Commits Browser');
     }
     echo site_project_header($params);
