@@ -57,7 +57,7 @@ $default_domain = join('.',$pieces);
     <TD>
       <CENTER><BR>
       <H2>Welcome to http://<?php print $headers[Host]; ?>/</H2>
-      <h3>This Project hasn't yet set up it's personal web site.<BR>
+      <h3>This Project hasn't yet set up its personal web site.<BR>
       Please check back soon for updates or visit the <A href="http://<? echo $default_domain; ?>/projects/<?php echo $project_name; ?>">Project Summary</a> page on CodeX<BR></h3>
       </CENTER>
     </TD>
