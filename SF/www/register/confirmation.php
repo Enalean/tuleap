@@ -54,13 +54,19 @@ if ($show_confirm) {
             exit_error('Error','INSERTING FILEMODULE FAILED. <B>PLEASE</B> report to admin@'.$host.' '.db_error());
 	}
 
-	// make the current user an admin
-	$result=db_query("INSERT INTO user_group (user_id,group_id,admin_flags,bug_flags,forum_flags) VALUES ("
+	// make the current user a project admin ad well as admin
+	// on all CodeX services
+	$result=db_query("INSERT INTO user_group (user_id,group_id,admin_flags,bug_flags,forum_flags,project_flags,patch_flags,support_flags,doc_flags,file_flags) VALUES ("
 		. user_getid() . ","
 		. $group_id . ","
 		. "'A'," // admin flags
 		. "2," // bug flags
-		. "2)"); // forum_flags	
+		. "2," // forum flags
+		. "2," // project flags
+		. "2," // patch flags
+		. "2," // support flags
+		. "1," // doc flags
+		. "2)"); // file_flags	
 	if (!$result) {
 		exit_error('Error','SETTING YOU AS OWNER FAILED. <B>PLEASE</B> report to '.$GLOBALS['sys_email_admin'].' '.db_error());
 	}
