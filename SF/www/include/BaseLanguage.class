@@ -137,7 +137,10 @@ class BaseLanguage {
 			}
 			$tstring = preg_replace($patterns, $args, $this->text_array[$pagename][$category]);
 		} else {
-			$tstring = $this->text_array[$pagename][$category];
+                    // Remove $1, $2 etc. even if the given arguments are empty
+                    $pattern = '/\$\d+/';
+                    $tstring = preg_replace($pattern, '', $this->text_array[$pagename][$category]);
+                    //$tstring = $this->text_array[$pagename][$category];
 		}
 		if (!$tstring) {
 		    $tstring = "*** Unkown msg $pagename - $category ***";
