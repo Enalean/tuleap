@@ -139,8 +139,7 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
       <B>Rank:</B>
       <INPUT TYPE="TEXT" NAME="order_id" VALUE="" SIZE="6" MAXLENGTH="6">
        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-     <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
-      </FORM>';
+     <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">';
 
 		    if (isset($none_rk)) {
 			echo "&nbsp;&nbsp;<b> (must be &gt; $none_rk)</b><BR>";
@@ -150,7 +149,8 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
       <P>
       <B>Description:</B> (optional)<BR>
       <TEXTAREA NAME="description" ROWS="2" COLS="65" WRAP="HARD"></TEXTAREA>
-      <P>';
+      <P>
+      </FORM>';
 		}
 
 		echo '<hr align ="left">
@@ -224,6 +224,7 @@ if ($group_id && (user_ismember($group_id,'B2') || user_ismember($group_id,'A'))
       <TEXTAREA NAME="description" ROWS="4" COLS="65" WRAP="SOFT"><?php echo db_result($res,0,'description'); ?></TEXTAREA>
       <P>
       <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
+      </FORM>
 
 <?php
 
