@@ -1509,18 +1509,23 @@ class ArtifactType extends Error {
 		//
 		// NOTICE
 		//
-		// We can't use left join because the performs are very bad.
+		// Use left join because of the performance
 		// So the restriction to this: all fields used in the query must have a value.
 		// That involves artifact creation or artifact admin (add a field) must create
 		// empty records with default values for fields which haven't a value (from the user).
 		//
 		/* The query must be something like this :
 			SELECT a.artifact_id,u.user_name,v1.valueInt,v2.valueText,u3.user_name
-			FROM artifact a, artifact_field_value v1, artifact_field_value v2, artifact_field_value v3, user u3, user u
+			FROM artifact a 
+                             LEFT JOIN artifact_field_value v1 ON (v1.artifact_id=a.artifact_id)
+                             LEFT JOIN artifact_field_value v2 ON (v2.artifact_id=a.artifact_id)
+                             LEFT JOIN artifact_field_value v3 ON (v2.artifact_id=a.artifact_id)
+                             LEFT JOIN user u3 ON (v3.valueInt = u3.user_id)
+                             LEFT JOIN user u
 			WHERE a.group_artifact_id = 100 and 
-			a.artifact_id = v1.artifact_id and v1.field_id=101 and
-			a.artifact_id = v2.artifact_id and v2.field_id=103 and
-			a.artifact_id = v3.artifact_id and v3.field_id=104 and v3.valueInt = u3.user_id and
+			v1.field_id=101 and
+			v2.field_id=103 and
+			v3.field_id=104 and
 			a.submitted_by = u.user_id
 			group by a.artifact_id
 			order by v3.valueText,v1.valueInt
@@ -1532,7 +1537,6 @@ class ArtifactType extends Error {
 		$from = "FROM artifact a";
 		$where = "WHERE a.group_artifact_id = ".$this->getID(); 
 				
-		$user_table = false;
 		$select_count = 0;
 		
 		if ( count($fields) == 0 )
@@ -1554,9 +1558,7 @@ class ArtifactType extends Error {
 				// Special case for fields which are user name
 				if ( ($field->isUsername())&&(!$field->isSelectBox())&&(!$field->isMultiSelectBox()) ) {
 					$select .= " u.user_name as ".$field->getName();
-					$where .= " and a.".$field->getName()." = u.user_id";
-					if ( !$user_table ) 
-						$from .= ", user u";
+					$from .= " LEFT JOIN user u ON (u.user_id=a.".$field->getName().")";
 				} else {
 					$select .= " a.".$field->getName();
 				}
@@ -1575,15 +1577,15 @@ class ArtifactType extends Error {
 					}
 	
 					// Special case for fields which are user name
+					$from .= " LEFT JOIN artifact_field_value v".$count." ON (v".$count.".artifact_id=a.artifact_id)";
+					$where .= " and v".$count.".field_id=".$field->getID();
 					if ( ($field->isUsername())&&(!$field->isSelectBox())&&(!$field->isMultiSelectBox()) ) {
 						$select .= " u".$count.".user_name as ".$field->getName();
-						$where .= " and v".$count.".".$field->getValueFieldName()." = u".$count.".user_id";
-						$from .= ", user u".$count;
+						$from .= " LEFT JOIN user u".$count." ON (v".$count.".".$field->getValueFieldName()." = u".$count.".user_id)";
 					} else {
 						$select .= " v".$count.".".$field->getValueFieldName()." as ".$field->getName();
 					}
-					$from .= ", artifact_field_value v".$count;
-					$where .= " and a.artifact_id = v".$count.".artifact_id and v".$count.".field_id=".$field->getID();
+					
 						
 					$count ++;
 				}
