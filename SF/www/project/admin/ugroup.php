@@ -38,8 +38,8 @@ $project=project_get_object($group_id);
 print '<P><h2>Editing User Groups for <B>'.$project->getPublicName().'</B></h2>';
 print '
 <P>
-<H3>New User Group</H3>
-<a href="/project/admin/editugroup.php?func=create&group_id='.$group_id.'">Create a new user group.</a>
+<H3><a href="/project/admin/editugroup.php?func=create&group_id='.$group_id.'">Create a New User Group</a></H3>
+Create a new group of users for this project.
 <p>
 
 
