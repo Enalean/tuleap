@@ -181,29 +181,33 @@ function util_line_wrap ($text, $wrap = 80, $break = "\n") {
 }
 
 function util_make_links ($data='',$group_id = 0, $group_artifact_id = 0) {
-	if(empty($data)) { return $data; }
+    global $sys_activate_tracker;
+    if(empty($data)) { return $data; }
+    
+    // www.yahoo.com => http://www.yahoo.com
+    $data = eregi_replace("([ \t]|^)www\."," http://www.",$data);
 
-	$lines = split("\n",$data);
-	while ( list ($key,$line) = each ($lines)) {
-		$line = eregi_replace("([ \t]|^)www\."," http://www.",$line);
-                // newlines are transformed to "<br />" in php4. This '^<' below avoids matching 'http://codex<br' in 'http://codex<br />'
-		$text = eregi_replace("([[:alnum:]]+)://([^[:space:]<]*)([[:alnum:]>#?/&=])", "<a href=\"\\1://\\2\\3\" target=\"_blank\" target=\"_new\">\\1://\\2\\3</a>", $line);
-		$text = eregi_replace("(([a-z0-9_]|\\-|\\.)+@([^[:space:]<&>]*)([[:alnum:]-]))", "<a href=\"mailto:\\1\" target=\"_new\">\\1</a>", $text);
-		// If $group_id is assigned then we can replace the pattern: bug #id task #id sr #id
-		if ( $group_id ) {
-		    $text = eregi_replace("bug[ ]?#([0-9]+)", "<a href=\"/bugs/?func=detailbug&bug_id=\\1&group_id=$group_id\">Bug #\\1</a>", $text);
-		    $text = eregi_replace("task[ ]?#([0-9]+)", "<a href=\"/pm/task.php?func=detailtask&project_task_id=\\1&group_id=$group_id\">Task #\\1</a>", $text);
-		    $text = eregi_replace("sr[ ]?#([0-9]+)", "<a href=\"/support/index.php?func=detailsupport&support_id=\\1&group_id=$group_id\">SR #\\1</a>", $text);
-		    $text = eregi_replace("patch[ ]?#([0-9]+)", "<a href=\"/patch/?func=detailpatch&patch_id=\\1&group_id=$group_id\">Patch #\\1</a>", $text);
-		    $text = eregi_replace("commit[ ]?#([0-9]+)", "<a href=\"/cvs/?func=detailcommit&commit_id=\\1&group_id=$group_id\">Commit #\\1</a>", $text);
-		}
-		// Tracker pattern: we can replace the pattern: art #id
-		$text = eregi_replace("art[ ]?#([0-9]+)", "<a href=\"/tracker/?func=gotoid&aid=\\1\">Artifact #\\1</a>", $text);
-		$text = eregi_replace("artifact[ ]?#([0-9]+)", "<a href=\"/tracker/?func=gotoid&aid=\\1\">Artifact #\\1</a>", $text);
-	
-		$lines[$key] = $text;
-	}
-	return join("\n", $lines);
+    // http://www.yahoo.com => <a href="...">...</a>
+    $data = eregi_replace("([[:alnum:]]+)://([^[:space:]<]*)([[:alnum:]>#?/&=])", "<a href=\"\\1://\\2\\3\" target=\"_blank\" target=\"_new\">\\1://\\2\\3</a>", $data);
+
+    // john.doe@yahoo.com => <a href="mailto:...">...</a>
+    $data = eregi_replace("(([a-z0-9_]|\\-|\\.)+@([^[:space:]<&>]*)([[:alnum:]-]))", "<a href=\"mailto:\\1\" target=\"_new\">\\1</a>", $data);
+
+    if (!$sys_activate_tracker) {
+        // If legacy trackers only, then make links for well-known artifacts
+        if ( $group_id ) {
+            $data = eregi_replace("patch[ ]?#([0-9]+)", "<a href=\"/patch/?func=detailpatch&patch_id=\\1&group_id=$group_id\">Patch #\\1</a>", $data);
+            $data = eregi_replace("commit[ ]?#([0-9]+)", "<a href=\"/cvs/?func=detailcommit&commit_id=\\1&group_id=$group_id\">Commit #\\1</a>", $data);
+            $data = eregi_replace("bug[ ]?#([0-9]+)", "<a href=\"/bugs/?func=detailbug&bug_id=\\1&group_id=$group_id\">Bug #\\1</a>", $data);
+            $data = eregi_replace("task[ ]?#([0-9]+)", "<a href=\"/pm/task.php?func=detailtask&project_task_id=\\1&group_id=$group_id\">Task #\\1</a>", $data);
+            $data = eregi_replace("sr[ ]?#([0-9]+)", "<a href=\"/support/index.php?func=detailsupport&support_id=\\1&group_id=$group_id\">SR #\\1</a>", $data);
+        }
+    } else {
+        if ($group_id) { $group_param="&group_id=$group_id";}
+        $data = eregi_replace("([^[:blank:]()\$\&\!\;\~\#\|\{\}\%\,\?\=\+\'\"\.\:\/\>]+)[ ]?#([0-9]+)", "<a href=\"/tracker/?func=gotoid$group_param&aid=\\2&atn=\\1\">\\1 #\\2</a>", $data);
+    }
+
+    return $data;
 }
 
 function util_user_link ($username) {
@@ -723,35 +727,75 @@ function util_check_fileupload($filename) {
 	return true;
 }
 
+
+
 /**
- * Retrieve the group_id and the group_artifact_id using the artifact id
+ * Return the group name (i.e. project name) from the group_id
+ */
+function util_get_group_name_from_id($group_id) {
+    $sql = "SELECT group_name FROM groups WHERE group_id = ".$group_id;
+    $result = db_query($sql);
+    return db_result($result,0,0);
+}
+
+
+/**
+ * Retrieve the artifact group_id, artifact_type_id and item name using the artifact id
  *
  * @param aid: the artifact id
  * @param group_id: the group id (OUT)
  * @param group_artifact_id: the tracker id (OUT)
+ * @param art_name: the item name corresponding to this tracker (OUT) e.g. 'bug', 'defect', etc.
  *
  * @return boolean
  */
-function util_get_ids_from_aid($aid,&$group_id,&$atid) {
-	$sql = "SELECT group_artifact_id FROM artifact WHERE artifact_id = ".$aid;
-
-	$result = db_query($sql);
+function util_get_ids_from_aid($aid,&$art_group_id,&$atid,&$art_name) {
+    $sql = "SELECT group_artifact_id FROM artifact WHERE artifact_id = ".$aid;
+    
+    $result = db_query($sql);
     if ($result && db_numrows($result) > 0) {
-    	$atid = db_result($result,0,0);
-    	
-		$sql = "SELECT group_id FROM artifact_group_list WHERE group_artifact_id = ".$atid;
-	
-		$result = db_query($sql);
-	    if ($result && db_numrows($result) > 0) {
-	    	$group_id = db_result($result,0,0);
-	    	return true;
-	    } else {
-	    	return false;
-	    }
-	} else {
-		return false;
-	}
-	
+        $atid = db_result($result,0,0);
+        
+        $sql = "SELECT group_id,item_name FROM artifact_group_list WHERE group_artifact_id = ".$atid;
+        
+        $result = db_query($sql);
+        $rows=db_numrows($result);
+        if (!$result || $rows < 1) {
+            return false;
+        }
+        $art_group_id = db_result($result,0,'group_id');
+        $art_name = db_result($result,0,'item_name');
+        return true;
+    } else {
+        return false;
+    }
+
 }
+
+/**
+ * Return group id (i.e. project) the legacy artifact belongs to.
+ * 
+ * @param atn: the legacy tracker name in lower case: 'bug' 'sr' or 'task' exclusively
+ * @param aid: the 'artifact' id
+ *
+ * @return group_id, or 0 if group does not exist
+ */
+function util_get_group_from_legacy_id($atn,$aid) {
+    if ($atn=='bug') {
+        $sql="select group_id from bug where bug_id=$aid";
+    } else if ($atn=='sr') {
+        $sql="select group_id from support where support_id=$aid";
+    } else if ($atn=='task') {
+        // A bit more complicated since the group_id and project_task_id are not in the same table...
+        $sql="SELECT project_group_list.group_id FROM project_task,project_group_list".
+            " WHERE project_task.group_project_id=project_group_list.group_project_id".
+            " AND project_task.project_task_id=$aid";
+    } else {
+        return 0;
+    }
+    $result = db_query($sql);
+    return db_result($result,0,0);
+}    
+
 
 ?>

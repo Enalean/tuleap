@@ -294,6 +294,15 @@
 
         <revremark>Added information about setting up WinCVS for CodeX, based on description for the TIFFany project: http://tiffany.codex.xerox.com/wincvs.php</revremark>
       </revision>
+      <revision>
+        <revnumber>2.6.5</revnumber>
+
+        <date>16-Mar-2004</date>
+
+        <authorinitials>Nicolas Guerin</authorinitials>
+
+        <revremark>Updated instructions to make cross-references with pattern 'xxx #nnn'</revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--

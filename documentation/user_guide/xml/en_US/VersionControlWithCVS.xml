@@ -516,9 +516,12 @@
 
    <itemizedlist mark="bullet" spacing="compact">
       <listitem>
-	<para> <emphasis role="bold">art #XXX</emphasis>: this pattern
-	refers to the artifact XXX where XXX is the artifact unique ID
-	(e.g art #2387). When browsing a message containing this
+	<para> <emphasis role="bold">XXX #NNN</emphasis>: this pattern
+	refers to the artifact XXX number NNN, where NNN is the unique 
+        artifact ID, and XXX is the tracker short name (e.g. &#34;bug
+        #123&#34;, &#34;task #321&#34;, &#34;req #12&#34;, etc.).
+        If you don't know the tracker short name or don't want to specify it, you
+        may simply use  &#34;art #NNN&#34;. When browsing a message containing this
 	pattern anywhere in CodeX, the pattern will be automatically
 	transformed into an hyperlink to the artifact
 	description.</para>
@@ -526,11 +529,11 @@
 
       <listitem>
 	<para><emphasis role="bold">commit #YYY</emphasis>: this
-	pattern refers t the commit YYY where YYY is the commit unqiue
-	ID as liste when querying the CVS tracking database. When
+	pattern refers to the commit YYY where YYY is the commit unique
+	ID as listed when querying the CVS tracking database. When
 	browsing a message containing this pattern anywhere in CodeX,
 	the pattern will be automatically transformed into an
-	hyperlink to the commit description description (log messages,
+	hyperlink to the commit description (log messages,
 	impacted files, versions and author of the change.</para>
       </listitem>
    </itemizedlist>

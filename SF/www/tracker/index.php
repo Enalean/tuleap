@@ -28,7 +28,15 @@ require($DOCUMENT_ROOT.'/../common/tracker/ArtifactReportField.class');
 require('./include/ArtifactFieldHtml.class');
 require('./include/ArtifactReportHtml.class');
 
-if ($group_id && $atid) {
+
+if ( $func == 'gotoid' ) {
+    // Direct access to an artifact
+    if (!$aid) {
+        exit_error('ERROR','Artifact ID is necessary');
+    } else {
+        include './gotoid.php';
+    }
+} else if ($group_id && $atid) {
 
         //
         //      get the Group object
@@ -522,26 +530,6 @@ if ($group_id && $atid) {
         }
         echo site_project_footer(array());
 } else {
-        
-        if ( $func == 'gotoid' ) {
-                // Direct access to an artifact
-
-                // Retrieve with the aid the group_artifact_id and the group_id
-                if ( !util_get_ids_from_aid($aid,$group_id,$atid) ) {
-                        exit_error('ERROR','Invalid Artifact ID');
-                } else {
-                    if ($HTTPS == 'on'|| $GLOBALS['sys_force_ssl'] == 1) {
-                                $location = "Location: https://".$GLOBALS['sys_https_host'];
-                    } else {
-                                $location = "Location: http://".$GLOBALS['sys_default_domain'];
-                        }
-                        $location .= "/tracker/?func=detail&aid=".$aid."&group_id=".$group_id."&atid=".$atid;
-                        header($location);
-                        exit;
-                }
-                
-        } else {
-                exit_no_group();
-        }
+    exit_no_group();
 }
 ?>

@@ -66,14 +66,13 @@ $STATE_ADDED   = 2;
 $STATE_REMOVED = 3;
 $STATE_LOG     = 4;
 
-# arrays to store all the bug, task and sr ref.
-my %bugs;
-my %tasks;
-my %srs;
+# arrays to store all artifact ref.
+my %artifacts;
+my %artifact_names;
 my %patches;
-my %branches;
 my %commits;
-my %arts;
+my %branches;
+
 
 # group_id
 my $group_id;
@@ -364,36 +363,20 @@ sub read_logfile {
 	chop;
 	$line = $leader.$_;
 
-    # store the bug ref
-    while ($line =~ /bug[ ]?#([0-9]+)/gi) {
-        $bugs{$1} = $1;
-    }
-    # store the task ref
-    while ($line =~ /task[ ]?#([0-9]+)/gi) {
-        $tasks{$1} = $1;
-    }
-    # store the sr ref
-    while ($line =~ /sr[ ]?#([0-9]+)/gi) {
-        $srs{$1} = $1;
-    }
-    # store the patch ref
-    while ($line =~ /patch[ ]?#([0-9]+)/gi) {
-        $patches{$1} = $1;
-    }
-    # store the commit ref
-    while ($line =~ /commit[ ]?#([0-9]+)/gi) {
-        $commits{$1} = $1;
-    }
-
-    # store the artifact ref
-    while ($line =~ /art[ ]?#([0-9]+)/gi) {
-        $arts{$1} = $1;
-    }
-
-    # store the artifact ref
-    while ($line =~ /artifact[ ]?#([0-9]+)/gi) {
-        $arts{$1} = $1;
-    }
+        # store the patch ref
+        while ($line =~ /patch[ ]?#([0-9]+)/gi) {
+               $patches{$1} = $1;
+        }
+        # store the commit ref
+        while ($line =~ /commit[ ]?#([0-9]+)/gi) {
+               $commits{$1} = $1;
+        }
+        while ($line =~ m|([^\s()\$&!;~\#\|{}%,\?=\+\"\.:/<>]+)[ ]?#([0-9]+)|gi) {
+               next if (lc($1) eq 'commit');
+               next if (lc($1) eq 'patch');
+               $artifacts{"$1_$2"} = $2;
+               $artifact_names{"$1_$2"} = $1;
+        }
 
 
 	push(@text, $line);
@@ -1119,39 +1102,7 @@ for ($i = 0; ; $i++) {
 	push (@text, "");
     }
     
-    @keys = keys %bugs;
-    if ( $#keys >= 0 ) {
-    	push (@text, "");
-        push (@text, "Bug references:");
-        foreach $bug (keys %bugs) {
-            push (@text, "Bug #$bug: http://$sys_default_domain/bugs/?func=detailbug&bug_id=$bug&group_id=$group_id");
-	    if ($db_track) {
-	      &db_add_ref('bug', $commit_id, $bug);
-	    }
-        }
-    }
-    @keys = keys %tasks;
-    if ( $#keys >= 0 ) {
-    	push (@text, "");
-        push (@text, "Task references:");
-        foreach $task (keys %tasks) {
-            push (@text, "Task #$task: http://$sys_default_domain/pm/task.php?func=detailtask&project_task_id=$task&group_id=$group_id");
-	    if ($db_track) {
-	      &db_add_ref('task', $commit_id, $task);
-	    }
-                }
-    }
-    @keys = keys %srs;
-    if ( $#keys >= 0 ) {
-    	push (@text, "");
-        push (@text, "Support Request references:");
-        foreach $sr (keys %srs) {
-            push (@text, "Sr #$sr: http://$sys_default_domain/support/index.php?func=detailsupport&support_id=$sr&group_id=$group_id");
-	    if ($db_track) {
-	      &db_add_ref('sr', $commit_id, $sr);
-	    }
-        }
-    }
+
     @keys = keys %patches;
     if ( $#keys >= 0 ) {
     	push (@text, "");
@@ -1176,16 +1127,22 @@ for ($i = 0; ; $i++) {
 	    }
     }
 
-    @keys = keys %arts;
+    @keys = keys %artifacts;
     if ( $#keys >= 0 ) {
     	push (@text, "");
         push (@text, "Artifact references:");
-        foreach $art (keys %arts) {
-          push (@text, "artifact #$art: http://$sys_default_domain/tracker/?func=gotoid&aid=$art");
+        foreach $artkey (keys %artifacts) {
+          my $art=$artifacts{$artkey};
+          my $art_name=$artifact_names{$artkey};
+          my $group_param;
+          if ($group_id) {
+            $group_param="&group_id=$group_id";
+          }
+          push (@text, "$art_name #$art: http://$sys_default_domain/tracker/?func=gotoid$group_param&aid=$art&atn=$art_name");
         }
-	    if ($db_track) {
-	      &db_add_ref('artifact', $commit_id, $art);
-	    }
+        if ($db_track) {
+          &db_add_ref('artifact', $commit_id, $art);
+        }
     }
 
 

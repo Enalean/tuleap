@@ -866,9 +866,13 @@
       comment.</para>
 
       <para>When typing a follow-up comment, any text that follows the
-      pattern &#34;art #XXX&#34; will be interpreted as a reference to the
-      artifact XXX where XXX is the unique artifact ID. Each time
-      CodeX displays a piece of text that follows this pattern it will
+      pattern &#34;XXX #NNN&#34; will be interpreted as a reference to the
+      artifact XXX number NNN, where NNN is the unique artifact ID, and XXX is the 
+      tracker short name (e.g. &#34;bug #123&#34;, &#34;task #321&#34;,
+      &#34;req #12&#34;, etc.).
+      If you don't know the tracker short name or don't want to specify it, you
+      may simply use  &#34;art #NNN&#34;.
+      Each time CodeX displays a piece of text that follows this pattern it will
       automagically create an hyperlink to the web page showing all
       the details of the artifact.</para>
 
@@ -883,8 +887,8 @@
 
       <itemizedlist mark="bullet" spacing="compact">
 	<listitem>
-	  <para>You can also use the pattern &#34;commit #XXX&#34; in a
-	  follow-up comment to refer to the commit with ID number XXX
+	  <para>You can also use the pattern &#34;commit #NNN&#34; in a
+	  follow-up comment to refer to the commit with ID number NNN
 	  has listed in your CVS tracking database. This is very
 	  useful for instance when you want to close a defect or a
 	  task artifact with a reference to corresponding the source
@@ -896,10 +900,18 @@
 	      linkend="CVSWebInterface"/></para>
 	</listitem>
 	<listitem>
+	  <para>If the referenced artifact belongs to another project, or if
+          the artifact given name (&#34;XXX&#34; above) does not match the short name
+          of the tracker it belongs to, a message will be diplayed on top of the
+          target page to warn the user that she was redirected to another project,
+          or that she should check the tracker name.</para>
+	<listitem>
 	  <para>If a project uses one of the legacy bug tracking
 	  system, task manager or support request manager, it is also
 	  possible to refer to one of those by using the patterns &#34;bug
-	  #XXX&#34;, &#34;task #XXX&#34; or &#34;sr #XXX&#34;.</para>
+	  #NNN&#34;, &#34;task #NNN&#34; or &#34;sr #NNN&#34;. If there is a
+          tracker with the same short name (e.g. a &#34;bug&#34; tracker), the
+          system should be smart enough to link to the right page</para>
 	</listitem>
 
       </itemizedlist>
