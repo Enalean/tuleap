@@ -16,7 +16,8 @@ if (!$offset || $offset < 0) {
 //
 if ($order) {
 	if ($order=='patch_id' || $order=='summary' || $order=='date' || $order=='assigned_to_user' || $order=='submitted_by') {
-		if(user_isloggedin()) {
+		if(user_isloggedin() &&
+		   ($order != user_get_preference('patch_browse_order')) ) {
 			user_set_preference('patch_browse_order', $order);
 		}
 	} else {

@@ -93,7 +93,8 @@ if (isset($order)) {
 if (isset($morder)) {
 
     if (user_isloggedin()) {
-	user_set_preference('bug_browse_order'.$group_id, $morder);
+	if ($morder != user_get_preference('bug_browse_order'.$group_id))
+	    user_set_preference('bug_browse_order'.$group_id, $morder);
     }
 
     if ($morder != '') {
@@ -110,11 +111,14 @@ if (isset($morder)) {
   bug report structures.
   ================================================== */
 if (user_isloggedin()) {
-    if (!isset($report_id))
+    if (!isset($report_id)) {
 	$report_id = user_get_preference('bug_browse_report'.$group_id);
-    else
-	user_set_preference('bug_browse_report'.$group_id, $report_id);
+    } else {
+	if ($report_id != user_get_preference('bug_browse_report'.$group_id))
+	    user_set_preference('bug_browse_report'.$group_id, $report_id);
+    }
 }
+
 // If still not defined then force it to system 'Default' report
 if (!$report_id) { $report_id=100; }
 

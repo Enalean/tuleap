@@ -16,7 +16,8 @@ if (!$offset || $offset < 0) {
 //
 if ($order) {
 	if ($order=='support_id' || $order=='summary' || $order=='date' || $order=='assigned_to_user' || $order=='submitted_by' || $order=='priority') {
-		if(user_isloggedin()) {
+		if(user_isloggedin() && 
+		   ($order != user_get_preference('support_browse_order')) ) {
 			user_set_preference('support_browse_order', $order);
 		}
 	} else {

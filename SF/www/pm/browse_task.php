@@ -52,7 +52,8 @@ if (isset($_status)) {
  ================================================== */
 if ($order) {
 	if ($order=='project_task_id' || $order=='percent_complete' || $order=='summary' || $order=='start_date' || $order=='end_date' || $order=='priority' || $order=='user_name' || $order=='status_name'|| $order=='project_name' || $order=='hours') {
-		if(user_isloggedin()) {
+		if(user_isloggedin() &&
+		   ($order != user_get_preference('pm_task_order')) ) {
 			user_set_preference('pm_task_order', $order);
 		}
 	} else {

@@ -11,7 +11,8 @@ require('../forum/forum_utils.php');
 
 if (user_isloggedin()) {
 
-	user_set_preference('forum_expand',$et);
+	if ($et != user_get_preference('forum_expand'))
+	    user_set_preference('forum_expand',$et);
 
 	/*
 		Set up navigation vars
