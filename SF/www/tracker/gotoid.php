@@ -42,7 +42,7 @@ function generic_redirect($location,$aid,$group_id,$art_group_id,$atid,$atn,$art
     if (($group_id)&&($group_id != $art_group_id)) {
         // The link is coming from another project, add a warning msg
         $group_name=util_get_group_name_from_id($art_group_id);
-        $feed="Note: This artifact belongs to project ".$group_name;
+        $feed="&feedback=Note: This artifact belongs to project ".$group_name;
     }
     if (($atn)&&(strtolower($atn) != strtolower($art_name))) {
         if ((strtolower($atn)!="art")&&(strtolower($atn)!="artifact")) {
@@ -50,7 +50,7 @@ function generic_redirect($location,$aid,$group_id,$art_group_id,$atid,$atn,$art
         }
     }
 
-    $location .= "/tracker/?func=detail&aid=".$aid."&group_id=".$art_group_id."&atid=".$atid."&feedback=".$feed;
+    $location .= "/tracker/?func=detail&aid=".$aid."&group_id=".$art_group_id."&atid=".$atid.$feed;
     header($location);
     exit;
 
@@ -88,9 +88,16 @@ if ($atn == 'commit') {
     // when commit is used see if it revision exists in SVN else redirect to CVS
     $res = svn_data_get_revision_detail($group_id, $aid);
     if ($res && db_numrows($res) == 1) {
-	$location .= $svn_loc;
+	$location .= $svn_loc.$feed;
     } else {
-	$location .= $cvs_loc;
+        // Check that the commit belongs to the same project
+        $commit_group_id=util_get_group_from_commit_id($aid);
+        if (($commit_group_id)&&($group_id != $commit_group_id)) {
+            // The link is coming from another project, add a warning msg
+            $group_name=util_get_group_name_from_id($commit_group_id);
+            $feed="&feedback=Note: This commit belongs to project ".$group_name;
+        }
+	$location .= $cvs_loc.$feed;
     }
     header($location);
     exit;
