@@ -658,9 +658,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		
 		echo '
 		  <b>Field identification and description:</b><br>
-		  <table width="100%" border="0" cellpadding="5">
-		    <tr> 
-		      <td>Field Label: <font color="red">*</font> ';
+                              <p>Field Label: <font color="red">*</font> ';
 		      
 		if ( $label ) {
 			echo '<input type="text" name="label" size="30" maxlength="40" value="'.$label.'">';
@@ -668,28 +666,16 @@ class ArtifactTypeHtml extends ArtifactType {
 			echo '<input type="text" name="label" size="30" maxlength="40">';
 		}
 		
-		echo '			
-		      </td>
-		      <td> 
-		        <table width="100%" border="0">
-		          <tr> 
-		            <td valign="middle">Description: </td>
-		            <td>';
+		echo '<p>Description: ';
 		            
 		if ( $description ) {
-			echo '<textarea name="description" rows="5" cols="40">'.$description.'</textarea>';
+		    echo '<input type=text name="description" size="70" maxlength="255" value="'.$description.'">';
 		} else {
-			echo '<textarea name="description" rows="5" cols="40"></textarea>';
+		    echo '<input type=text name="description" size="70" maxlength="255" value="'.$description.'">';
 		}
 		
 		echo '
-		              </td>
-		          </tr>
-		        </table>
-		      </td>
-		    </tr>
-		  </table>
-		  <b>Field type:</b><br>
+		  <p><b>Field type:</b><br>
 		  <table width="100%" border="0" cellpadding="5">
 		    <tr> 
 		      <td width="30%">Data Type: <font color="red">*</font>&nbsp;
@@ -783,10 +769,10 @@ class ArtifactTypeHtml extends ArtifactType {
 		echo '
 		        </select>
 		      </td>
-		      <td width="70%">Display Size:&nbsp;';
+		      <td width="30%">Display Size:&nbsp;';
 		      
 		if ( $display_size ) {
-			echo '<input type="text" name="display_size" size="5" maxlength="5" value="'.$display_size.'">';
+		    echo '<input type="text" name="display_size" size="5" maxlength="5" value="'.$display_size.'">';
 		} else {
 		    echo '<input type="text" name="display_size" size="5" maxlength="5">';
 		}
@@ -806,6 +792,7 @@ class ArtifactTypeHtml extends ArtifactType {
 	    echo '
 		      </td>
 		      <td width="70%">Display this field...<br>
+                                    <ul>
 		        <li>On the submission form used by project members ';
 		        
 		if ( $show_on_add ) {
@@ -816,7 +803,6 @@ class ArtifactTypeHtml extends ArtifactType {
 		
 		echo '
 		        </li>
-		        <br>
 		        <li>On the submission form used by other users';
 		        
 		if ( $show_on_add_members ) {
@@ -826,14 +812,12 @@ class ArtifactTypeHtml extends ArtifactType {
 		}		
 		
 		echo '
-		        </li>
+		        </li></ul>
 		      </td>
 		    </tr>
 		  </table>
-		  <b>Miscellaneous:</b><br>
-		  <table width="100%" border="0" cellpadding="5" cellspacing="0">
-		    <tr> 
-		      <td width="30%">Allow empty: ';
+		  <b>Miscellaneous:</b>
+		  <p>Allow Empty Value: ';
 		
 		if ( $empty_ok ) {
 			echo '<input type="checkbox" name="empty_ok" value="1" checked>';
@@ -842,8 +826,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		}
 		
 		echo '
-		        <br>
-		        Keep history: ';
+		        <br>Keep Change History: ';
 		
 		if ( $keep_history ) {
 			echo '<input type="checkbox" name="keep_history" value="1" checked>';
@@ -852,8 +835,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		}
 		
 		echo '
-		      </td>
-		      <td>';
+		      <p>';
 		      
 		if ( $show_use ) {
 			if ( $use_it == 1 ) {
@@ -872,9 +854,6 @@ class ArtifactTypeHtml extends ArtifactType {
 		}
 		
 		echo '
-		      </td>
-		    </tr>
-		  </table>
 		  <p>';
 		  
 		if ( $func == "field_create" ) {
