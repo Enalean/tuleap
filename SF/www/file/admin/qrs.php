@@ -6,8 +6,8 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/pre.php');    
-require($DOCUMENT_ROOT.'/file/file_utils.php');
+require_once('pre.php');    
+require_once('www/file/file_utils.php');
 
 /*
 	Quick file release system , Darrell Brogdon, SourceForge, Aug, 2000

@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/pre.php');
+require_once('pre.php');
 require('../pm/pm_utils.php');
 
 if ($group_id) {

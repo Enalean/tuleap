@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/pre.php');
+require_once('pre.php');
 
 $sql="SELECT summary,code,filename,filesize,filetype FROM patch WHERE patch_id='$patch_id'";
 $result=db_query($sql);

@@ -9,8 +9,8 @@
 // Modified by Laurent Julliard, Xerox.
 //
 
-require($DOCUMENT_ROOT.'/include/pre.php');
-require($DOCUMENT_ROOT.'/project/admin/ugroup_utils.php');
+require_once('pre.php');
+require_once('www/project/admin/ugroup_utils.php');
 
 $Language->loadLanguageMsg('my/my');
 

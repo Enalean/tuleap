@@ -11,22 +11,22 @@
 //
 
 
-require($DOCUMENT_ROOT.'/include/pre.php');
-require($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
-require($DOCUMENT_ROOT.'/../common/tracker/Artifact.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactFile.class');
+require_once('pre.php');
+require_once('www/project/admin/project_admin_utils.php');
+require_once('common/tracker/Artifact.class');
+require_once('common/tracker/ArtifactFile.class');
 require('./include/ArtifactFileHtml.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');
+require_once('common/tracker/ArtifactType.class');
 require('./include/ArtifactTypeHtml.class');
 require('./include/ArtifactHtml.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactGroup.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactCanned.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactTypeFactory.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactField.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactFieldFactory.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactReportFactory.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactReport.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactReportField.class');
+require_once('common/tracker/ArtifactGroup.class');
+require_once('common/tracker/ArtifactCanned.class');
+require_once('common/tracker/ArtifactTypeFactory.class');
+require_once('common/tracker/ArtifactField.class');
+require_once('common/tracker/ArtifactFieldFactory.class');
+require_once('common/tracker/ArtifactReportFactory.class');
+require_once('common/tracker/ArtifactReport.class');
+require_once('common/tracker/ArtifactReportField.class');
 require('./include/ArtifactFieldHtml.class');
 require('./include/ArtifactReportHtml.class');
 

@@ -14,7 +14,7 @@
 $Language->loadLanguageMsg('news/news');
 
 function news_header($params) {
-  global $DOCUMENT_ROOT,$HTML,$group_id,$news_name,$news_id,$Language;
+  global $HTML,$group_id,$news_name,$news_id,$Language;
 
 	$params['toptab']='news';
 	$params['group']=$group_id;

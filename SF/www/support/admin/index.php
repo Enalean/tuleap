@@ -6,9 +6,9 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/pre.php');
+require_once('pre.php');
 require('../support_utils.php');
-require($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
+require_once('www/project/admin/project_admin_utils.php');
 
 if ($group_id && user_ismember($group_id,'S2')) {
 

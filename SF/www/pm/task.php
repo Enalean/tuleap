@@ -6,9 +6,9 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/pre.php');
+require_once('pre.php');
 require('../pm/pm_utils.php');
-require($DOCUMENT_ROOT.'/bugs/bug_data.php'); // needed by pm_data
+require_once('www/bugs/bug_data.php'); // needed by pm_data
 require('../pm/pm_data.php');
 
 if ($group_id ) {

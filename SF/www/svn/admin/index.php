@@ -9,7 +9,7 @@
 //	Originally written by Laurent Julliard 2004, CodeX Team, Xerox
 //
 
-require($DOCUMENT_ROOT.'/include/pre.php');    
+require_once('pre.php');    
 require('../svn_data.php');    
 require('../svn_utils.php');    
 

@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/pre.php');
+require_once('pre.php');
 require('../support/support_utils.php');
 require('../support/support_data.php');
 

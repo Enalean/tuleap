@@ -9,10 +9,10 @@
  * @version   $Id$
  *
  */
-//require($DOCUMENT_ROOT.'/../common/include/Error.class');
-//require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');
-//require($DOCUMENT_ROOT.'/../common/tracker/ArtifactGroup.class');
-//require($DOCUMENT_ROOT.'/../common/tracker/ArtifactCategory.class');
+//require_once('common/include/Error.class');
+//require_once('common/tracker/ArtifactType.class');
+//require_once('common/tracker/ArtifactGroup.class');
+//require_once('common/tracker/ArtifactCategory.class');
 
 $Language->loadLanguageMsg('tracker/tracker');
 

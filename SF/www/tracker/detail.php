@@ -11,10 +11,10 @@
   *
   */
 
-//require_once($DOCUMENT_ROOT.'/../common/include/Error.class');
-//require_once($DOCUMENT_ROOT.'/../common/tracker/ArtifactField.class');
+//require_once('common/include/Error.class');
+//require_once('common/tracker/ArtifactField.class');
 //require_once('include/ArtifactFieldHtml.class');
-//require_once($DOCUMENT_ROOT.'/../common/tracker/ArtifactFieldFactory.class');
+//require_once('common/tracker/ArtifactFieldFactory.class');
 
 $Language->loadLanguageMsg('tracker/tracker');
 

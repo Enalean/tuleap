@@ -10,7 +10,7 @@
 //  Written for CodeX by Thierry Jacquin
 //
 
-//require($DOCUMENT_ROOT.'/../common/tracker/ArtifactCanned.class');
+//require_once('common/tracker/ArtifactCanned.class');
 
 $Language->loadLanguageMsg('tracker/tracker');
 

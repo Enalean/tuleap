@@ -12,7 +12,7 @@
 	by Quentin Cregan, SourceForge 06/2000
 */
 
-require($DOCUMENT_ROOT.'/include/pre.php');
+require_once('pre.php');
 require('./doc_utils.php');
 
 $Language->loadLanguageMsg('docman/docman');

@@ -6,9 +6,9 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/pre.php');
-require($DOCUMENT_ROOT.'/include/viewcvs_utils.php');
-require($DOCUMENT_ROOT.'/svn/svn_utils.php');
+require_once('pre.php');
+require_once('viewcvs_utils.php');
+require_once('www/svn/svn_utils.php');
 
 $Language->loadLanguageMsg('svn/svn');
 

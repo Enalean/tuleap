@@ -7,9 +7,9 @@
 // $Id$
 
 
-require($DOCUMENT_ROOT.'/include/pre.php');
-require($DOCUMENT_ROOT.'/include/HTML_Graphs.php');
-require($DOCUMENT_ROOT.'/survey/survey_utils.php');
+require_once('pre.php');
+require_once('HTML_Graphs.php');
+require_once('www/survey/survey_utils.php');
 
 $Language->loadLanguageMsg('survey/survey');
 

@@ -7,8 +7,8 @@
 //  Written for CodeX by Stephane Bouhet
 //
 
-//require($DOCUMENT_ROOT.'/../common/include/Error.class');
-//require($DOCUMENT_ROOT.'/../common/tracker/ArtifactReport.class');
+//require_once('common/include/Error.class');
+//require_once('common/tracker/ArtifactReport.class');
 
 $Language->loadLanguageMsg('tracker/tracker');
 

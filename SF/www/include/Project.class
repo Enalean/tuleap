@@ -8,7 +8,7 @@
 // $Id$
 
 
-//require_once($DOCUMENT_ROOT.'/../common/include/Error.class');
+//require_once('common/include/Error.class');
 
 /*
 

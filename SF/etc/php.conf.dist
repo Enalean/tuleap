@@ -21,3 +21,7 @@ LoadModule php4_module modules/libphp4.so
 #
 #DirectoryIndex index.php
 AddType application/x-httpd-php .php
+
+# PHP variables
+php_value register_globals on
+php_value include_path "/home/httpd/SF/www/include:/home/httpd/SF:."

@@ -26,7 +26,7 @@ function uniformat_date($format, $date) {
 }
 
 function commits_header($params) {
-    global $group_id,$DOCUMENT_ROOT,$Language;
+    global $group_id,$Language;
 
 	$params['toptab']='cvs';
 	$params['group']=$group_id;
@@ -63,7 +63,7 @@ function commits_header($params) {
 }
 
 function commits_header_admin($params) {
-    global $group_id,$DOCUMENT_ROOT,$Language;
+    global $group_id,$Language;
     
     //required params for site_project_header();
     $params['group']=$group_id;

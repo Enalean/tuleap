@@ -16,8 +16,8 @@
 // type='DOCUMENT_READ' id='docid"  table='doc_data'
 // type='DOCGROUP_READ' id='doc_group' table='doc_groups'
 
-require($DOCUMENT_ROOT.'/project/admin/ugroup_utils.php');
-require_once($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
+require_once('www/project/admin/ugroup_utils.php');
+require_once('www/project/admin/project_admin_utils.php');
 
 $Language->loadLanguageMsg('project/project');
 

@@ -9,7 +9,7 @@
 	Docmentation Manager
 	by Quentin Cregan, SourceForge 06/2000
 */
-require_once($DOCUMENT_ROOT.'/project/admin/permissions.php');
+require_once('www/project/admin/permissions.php');
 
 $Language->loadLanguageMsg('docman/docman');
 

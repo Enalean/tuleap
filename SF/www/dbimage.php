@@ -1,6 +1,6 @@
 <?php
 
-require($DOCUMENT_ROOT.'/include/squal_pre.php');
+require_once('squal_pre.php');
 
 $res=db_query("SELECT * FROM db_images WHERE id='$id'");
 

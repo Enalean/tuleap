@@ -7,7 +7,7 @@
 // $Id$
 
 
-require($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
+require_once('www/project/admin/project_admin_utils.php');
 
 //must be a project admin
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
@@ -82,7 +82,7 @@ if ($func) {
 			Add a user to this project
 			They don't need unix access
 		*/
-		require($DOCUMENT_ROOT.'/include/account.php');
+		require_once('account.php');
 		account_add_user_to_group ($group_id,$form_unix_name);
 	}
 }

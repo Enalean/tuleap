@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/pre.php');    
+require_once('pre.php');    
 
 $expl_pathinfo = explode('/',$REQUEST_URI);
 
@@ -34,7 +34,7 @@ if (db_numrows($res_grp) < 1) {
 	$project=new Project($group_id);
 
 	//now show the project page
-	require($DOCUMENT_ROOT.'/include/project_home.php');
+	require_once('project_home.php');
 
 }
 

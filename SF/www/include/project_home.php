@@ -6,12 +6,12 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/vars.php');
-require($DOCUMENT_ROOT.'/news/news_utils.php');
-require($DOCUMENT_ROOT.'/include/trove.php');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactTypeFactory.class');
-require($DOCUMENT_ROOT.'/project/admin/permissions.php');
+require_once('vars.php');
+require_once('www/news/news_utils.php');
+require_once('trove.php');
+require_once('common/tracker/ArtifactType.class');
+require_once('common/tracker/ArtifactTypeFactory.class');
+require_once('www/project/admin/permissions.php');
 
 //make sure this project is NOT a foundry
 if (!$project->isProject()) {

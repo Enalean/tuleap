@@ -9,17 +9,17 @@
 //  Written for CodeX by Stephane Bouhet
 //
 
-require($DOCUMENT_ROOT.'/include/pre.php');
-require($DOCUMENT_ROOT.'/../common/include/GroupFactory.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactTypeFactory.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactCanned.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactFieldFactory.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactField.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactReport.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactReportFactory.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactReportField.class');
-require($DOCUMENT_ROOT.'/../common/tracker/Artifact.class');
+require_once('pre.php');
+require_once('common/include/GroupFactory.class');
+require_once('common/tracker/ArtifactTypeFactory.class');
+require_once('common/tracker/ArtifactType.class');
+require_once('common/tracker/ArtifactCanned.class');
+require_once('common/tracker/ArtifactFieldFactory.class');
+require_once('common/tracker/ArtifactField.class');
+require_once('common/tracker/ArtifactReport.class');
+require_once('common/tracker/ArtifactReportFactory.class');
+require_once('common/tracker/ArtifactReportField.class');
+require_once('common/tracker/Artifact.class');
 require('../include/ArtifactTypeHtml.class');
 require('../include/ArtifactCannedHtml.class');
 require('../include/ArtifactReportHtml.class');

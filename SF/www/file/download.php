@@ -5,8 +5,8 @@
 // http://codex.xerox.com
 //
 // $Id$
-require($DOCUMENT_ROOT.'/include/pre.php');
-require($DOCUMENT_ROOT.'/project/admin/permissions.php');
+require_once('pre.php');
+require_once('www/project/admin/permissions.php');
 
 
 if (user_isloggedin()) {

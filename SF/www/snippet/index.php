@@ -6,10 +6,10 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/vars.php');
-require($DOCUMENT_ROOT.'/include/pre.php');
+require_once('vars.php');
+require_once('pre.php');
 require('../snippet/snippet_utils.php');
-require($DOCUMENT_ROOT.'/include/cache.php');
+require_once('cache.php');
 
 $Language->loadLanguageMsg('snippet/snippet');
 

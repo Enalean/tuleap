@@ -7,7 +7,7 @@
 // $Id$
 
 
-require($DOCUMENT_ROOT.'/include/pre.php');
+require_once('pre.php');
 include(util_get_content('register/tos'));
 
 ?>

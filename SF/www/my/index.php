@@ -6,21 +6,21 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/pre.php');
+require_once('pre.php');
 require('../survey/survey_utils.php');
 require('./my_utils.php');
-require($DOCUMENT_ROOT.'/../common/tracker/Artifact.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactFile.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactGroup.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactCanned.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactTypeFactory.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactField.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactFieldFactory.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactReportFactory.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactReport.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactReportField.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactFactory.class');
+require_once('common/tracker/Artifact.class');
+require_once('common/tracker/ArtifactFile.class');
+require_once('common/tracker/ArtifactType.class');
+require_once('common/tracker/ArtifactGroup.class');
+require_once('common/tracker/ArtifactCanned.class');
+require_once('common/tracker/ArtifactTypeFactory.class');
+require_once('common/tracker/ArtifactField.class');
+require_once('common/tracker/ArtifactFieldFactory.class');
+require_once('common/tracker/ArtifactReportFactory.class');
+require_once('common/tracker/ArtifactReport.class');
+require_once('common/tracker/ArtifactReportField.class');
+require_once('common/tracker/ArtifactFactory.class');
 
 $Language->loadLanguageMsg('my/my');
 

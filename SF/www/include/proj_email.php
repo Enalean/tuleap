@@ -69,7 +69,7 @@ function send_new_user_email($to,$confirm_hash)
 // LJ http://codex.xerox.com/include/proj_email.php
 // LJ from your favorite browser
 //LJ
-//require($DOCUMENT_ROOT.'/include/pre.php');
+//require_once('pre.php');
 //echo "<PRE>";
 //send_new_project_email(4);
 //send_new_project_email("julliard@xrce.xerox.com");

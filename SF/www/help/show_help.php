@@ -9,7 +9,7 @@
 //	Originally written by Stephane Bouhet 2002, CodeX Team, Xerox
 //
 
-require($DOCUMENT_ROOT.'/include/pre.php');
+require_once('pre.php');
 
 // Default language
 $lang = $GLOBALS['sys_lang'];

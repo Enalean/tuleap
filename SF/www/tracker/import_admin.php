@@ -9,10 +9,10 @@
 //  Written for CodeX by Marie-Luise Schneider
 //
 
-require($DOCUMENT_ROOT.'/include/pre.php');
-require($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactTypeFactory.class');
+require_once('pre.php');
+require_once('www/project/admin/project_admin_utils.php');
+require_once('common/tracker/ArtifactType.class');
+require_once('common/tracker/ArtifactTypeFactory.class');
 
 $Language->loadLanguageMsg('tracker/tracker');
 

@@ -7,12 +7,12 @@
 // $Id$
 
 require(getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/conf/local.inc');
-require($DOCUMENT_ROOT.'/include/database.php');
-require($DOCUMENT_ROOT.'/include/session.php');
-require($DOCUMENT_ROOT.'/include/user.php');
-require($DOCUMENT_ROOT.'/include/utils.php');
-require($DOCUMENT_ROOT.'/include/squal_exit.php');
-require($DOCUMENT_ROOT.'/include/browser.php');
+require_once('database.php');
+require_once('session.php');
+require_once('user.php');
+require_once('utils.php');
+require_once('squal_exit.php');
+require_once('browser.php');
 
 $sys_datefmt = "m/d/y H:i";
 
@@ -24,7 +24,7 @@ if (!$conn) {
 	exit_error("Could Not Connect to Database",db_error());
 }
 
-//require($DOCUMENT_ROOT.'/include/logger.php');
+//require_once('logger.php');
 
 // #### set session
 

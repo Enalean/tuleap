@@ -10,9 +10,9 @@
 //  Written for CodeX by Stephane Bouhet
 //
 
-//require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');
-require($DOCUMENT_ROOT.'/include/HTML_Graphs.php');
-require($DOCUMENT_ROOT.'/project/admin/ugroup_utils.php');
+//require_once('common/tracker/ArtifactType.class');
+require_once('HTML_Graphs.php');
+require_once('www/project/admin/ugroup_utils.php');
 
 $Language->loadLanguageMsg('tracker/tracker');
 
@@ -36,7 +36,7 @@ class ArtifactTypeHtml extends ArtifactType {
 	 *  @return void
 	 */
 	function header($params) {
-		global $DOCUMENT_ROOT,$Language;
+		global $Language;
 
 		$group_id= $this->Group->getID();
 
@@ -1780,7 +1780,7 @@ class ArtifactTypeHtml extends ArtifactType {
 	 *  @return void
 	 */
 	function reportingByAge() {
-		global $DOCUMENT_ROOT,$Language;
+		global $Language;
 	
 		$this->header(array("title"=>$Language->getText('tracker_import_admin','tracker')." '".$this->getName()."' - ".$Language->getText('tracker_include_type','aging_rep'),
 				  'help' => 'TrackerReporting.html'));
@@ -1806,7 +1806,7 @@ class ArtifactTypeHtml extends ArtifactType {
 	 *  @return void
 	 */
 	function reportingByField($field_id) {
-		global $art_field_fact, $DOCUMENT_ROOT,$Language;
+		global $art_field_fact,$Language;
 	
 		$field = $art_field_fact->getFieldFromId($field_id);
 	

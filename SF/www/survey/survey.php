@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/pre.php');
+require_once('pre.php');
 require('../survey/survey_utils.php');
 
 $Language->loadLanguageMsg('survey/survey');

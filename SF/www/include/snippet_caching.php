@@ -5,7 +5,7 @@
 // http://sourceforge.net
 //
 // $Id$
-require($DOCUMENT_ROOT.'/snippet/snippet_utils.php');
+require_once('www/snippet/snippet_utils.php');
 
 function snippet_mainpage() {
 	?>

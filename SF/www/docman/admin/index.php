@@ -14,10 +14,10 @@
   //	Originally written by Quentin Cregan, SourceForge 06/2000
   //	Modified by Laurent Julliard 2001-2004, CodeX Team, Xerox
 
-require($DOCUMENT_ROOT.'/include/pre.php');
+require_once('pre.php');
 require_once('../doc_utils.php');
-require_once($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
-require_once($DOCUMENT_ROOT.'/project/admin/permissions.php');
+require_once('www/project/admin/project_admin_utils.php');
+require_once('www/project/admin/permissions.php');
 
 if (!($group_id)) {
     exit_no_group();

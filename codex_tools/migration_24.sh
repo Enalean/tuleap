@@ -835,11 +835,9 @@ $CHKCONFIG mailman on
 ##############################################
 # More things to do
 todo "Customize /etc/php.ini: "
-todo "  - register_globals = On"
 todo "  - memory_limit = 30M"
 todo "  - post_max_size = 20M"
 todo "  - upload_max_file_size = 20M"
-#todo "  - include_path = .:$INSTALL_DIR/SF/www/include:$INSTALL_DIR/SF/www/phpMyAdmin"
 
 # End of it
 echo "=============================================="

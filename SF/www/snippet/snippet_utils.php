@@ -12,12 +12,12 @@
 */
 
 
-require($DOCUMENT_ROOT.'/snippet/snippet_data.php');
+require_once('www/snippet/snippet_data.php');
 
 $Language->loadLanguageMsg('snippet/snippet');
 
 function snippet_header($params) {
-	global $is_snippet_page,$DOCUMENT_ROOT,$HTML,$feedback,$Language;
+	global $is_snippet_page,$HTML,$feedback,$Language;
 
 	// LJ used so the search box will add the necessary element to the pop-up box
 	// CodeX Specific

@@ -6,8 +6,8 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/pre.php');
-require($DOCUMENT_ROOT.'/file/file_utils.php');
+require_once('pre.php');
+require_once('www/file/file_utils.php');
 
 $result=db_query("SELECT frs_release.notes,frs_release.changes,frs_release.preformatted,frs_release.name,frs_package.group_id ".
 		"FROM frs_release,frs_package ".

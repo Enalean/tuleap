@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/pre.php');    
+require_once('pre.php');    
 require('../svn/svn_data.php');    
 require('../svn/svn_utils.php');    
 

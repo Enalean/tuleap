@@ -6,9 +6,9 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/pre.php');    
-require($DOCUMENT_ROOT.'/project/admin/permissions.php');    
-require($DOCUMENT_ROOT.'/file/file_utils.php');
+require_once('pre.php');    
+require_once('www/project/admin/permissions.php');    
+require_once('www/file/file_utils.php');
 
 
 if (!user_ismember($group_id,'R2')) {

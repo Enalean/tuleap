@@ -15,7 +15,7 @@
 $Language->loadLanguageMsg('survey/survey');
 
 function survey_header($params) {
-    global $group_id,$is_admin_page,$DOCUMENT_ROOT,$Language;
+    global $group_id,$is_admin_page,$Language;
 
     $params['toptab']='survey';
     $params['group']=$group_id;

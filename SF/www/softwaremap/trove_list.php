@@ -6,9 +6,9 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/pre.php');    
-require($DOCUMENT_ROOT.'/include/vars.php');
-require($DOCUMENT_ROOT.'/include/trove.php');
+require_once('pre.php');    
+require_once('vars.php');
+require_once('trove.php');
 
 $Language->loadLanguageMsg('softwaremap/softwaremap');
 

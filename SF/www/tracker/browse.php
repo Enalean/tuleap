@@ -12,7 +12,7 @@
 //  Written for CodeX by Stephane Bouhet
 //
 
-//require_once($DOCUMENT_ROOT.'/../common/tracker/ArtifactFactory.class');
+//require_once('common/tracker/ArtifactFactory.class');
 
 //
 // HTTP GET arguments

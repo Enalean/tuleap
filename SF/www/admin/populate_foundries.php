@@ -16,7 +16,7 @@
 
 //REQUIRES PHP4
 
-require($DOCUMENT_ROOT.'/include/squal_pre.php');    
+require_once('squal_pre.php');    
 
 echo $REMOTE_ADDR;
 

@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/pre.php');    // Initial db and session library, opens session
+require_once('pre.php');    // Initial db and session library, opens session
 session_require(array('isloggedin'=>'1'));
 $HTML->header(array('title'=>'Basic Project Information'));
 

@@ -11,8 +11,8 @@
 
 // Show/manage ugroup list
 
-require($DOCUMENT_ROOT.'/include/pre.php');
-require($DOCUMENT_ROOT.'/project/admin/permissions.php');
+require_once('pre.php');
+require_once('www/project/admin/permissions.php');
 
 $Language->loadLanguageMsg('project/project');
 

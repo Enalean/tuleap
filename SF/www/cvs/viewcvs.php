@@ -6,9 +6,9 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/pre.php');
-require($DOCUMENT_ROOT.'/include/viewcvs_utils.php');
-require($DOCUMENT_ROOT.'/cvs/commit_utils.php');
+require_once('pre.php');
+require_once('viewcvs_utils.php');
+require_once('www/cvs/commit_utils.php');
 
 $Language->loadLanguageMsg('cvs/cvs');
 

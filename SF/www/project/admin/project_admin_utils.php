@@ -15,7 +15,7 @@
 $Language->loadLanguageMsg('project/project');
 
 function project_admin_header($params) {
-	global $DOCUMENT_ROOT,$group_id,$feedback,$Language;
+	global $group_id,$feedback,$Language;
 
 	$params['toptab']='admin';
 	$params['group']=$group_id;

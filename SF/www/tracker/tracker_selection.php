@@ -9,8 +9,8 @@
 //  Written for CodeX by Stephane Bouhet
 //
 
-require($DOCUMENT_ROOT.'/include/pre.php');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactTypeFactory.class');
+require_once('pre.php');
+require_once('common/tracker/ArtifactTypeFactory.class');
 
 $Language->loadLanguageMsg('tracker/tracker');
 ?>

@@ -10,7 +10,7 @@
 //  Written for CodeX by Stephane Bouhet
 //
 
-//require($DOCUMENT_ROOT.'/../common/include/Error.class');
+//require_once('common/include/Error.class');
 
 $Language->loadLanguageMsg('tracker/tracker');
 

@@ -1,6 +1,6 @@
 <?php
 // ## export sf front page news in RSS
-require($DOCUMENT_ROOT.'/include/pre.php');
+require_once('pre.php');
 header("Content-Type: text/xml");
 
 // ## group_id must be specified

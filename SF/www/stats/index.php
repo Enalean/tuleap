@@ -5,7 +5,7 @@
 // http://sourceforge.net
 //
 // $Id$ 
-require($DOCUMENT_ROOT.'/include/pre.php');
+require_once('pre.php');
 require('./site_stats_utils.php');
 
 $Language->loadLanguageMsg('stats/stats');

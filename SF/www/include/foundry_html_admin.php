@@ -1,6 +1,6 @@
 <?php
 
-require($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
+require_once('www/project/admin/project_admin_utils.php');
 
 //must be a project admin
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));

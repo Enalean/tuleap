@@ -1175,11 +1175,9 @@ $CHKCONFIG mailman on
 #
 todo "Create the shell login files for CodeX users in /etc/skel_codex"
 todo "Customize /etc/php.ini: "
-todo "  - register_globals = On"
 todo "  - memory_limit = 30M"
 todo "  - post_max_size = 20M"
 todo "  - upload_max_file_size = 20M"
-todo "  - include_path = /home/httpd/SF/www/include:/home/httpd/SF:."
 # things to do by hand
 todo "Change the default login shell if needed in the database (/sbin/nologin or /usr/local/bin/cvssh, etc."
 

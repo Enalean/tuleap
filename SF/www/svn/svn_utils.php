@@ -12,7 +12,7 @@
 $Language->loadLanguageMsg('svn/svn');
 
 function svn_header($params) {
-	global $group_id,$DOCUMENT_ROOT,$Language;
+	global $group_id,$Language;
 
 	$params['toptab']='svn';
 	$params['group']=$group_id;
@@ -46,7 +46,7 @@ function svn_header($params) {
 }
 
 function svn_header_admin($params) {
-    global $group_id,$DOCUMENT_ROOT,$Language;
+    global $group_id,$Language;
     
     //required params for site_project_header();
     $params['group']=$group_id;

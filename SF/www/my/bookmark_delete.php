@@ -5,8 +5,8 @@
 // http://sourceforge.net
 //
 
-require($DOCUMENT_ROOT.'/include/pre.php');
-require($DOCUMENT_ROOT.'/include/bookmarks.php');
+require_once('pre.php');
+require_once('bookmarks.php');
 
 $Language->loadLanguageMsg('my/my');
 

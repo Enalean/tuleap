@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/pre.php');    
+require_once('pre.php');    
 
 db_query("DELETE FROM session WHERE session_hash='$session_hash'");
 

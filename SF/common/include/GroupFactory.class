@@ -8,8 +8,8 @@
 //  Written for CodeX by Stephane Bouhet
 //
 
-//require($DOCUMENT_ROOT.'/../common/include/Error.class');
-//require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');
+//require_once('common/include/Error.class');
+//require_once('common/tracker/ArtifactType.class');
 
 class GroupFactory extends Error {
 

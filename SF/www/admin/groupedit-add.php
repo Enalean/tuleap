@@ -6,9 +6,9 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/pre.php');
-require($DOCUMENT_ROOT.'/include/account.php');
-require($DOCUMENT_ROOT.'/admin/admin_utils.php');
+require_once('pre.php');
+require_once('account.php');
+require_once('www/admin/admin_utils.php');
 
 $Language->loadLanguageMsg('admin/admin');
 

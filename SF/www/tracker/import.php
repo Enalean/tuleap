@@ -10,7 +10,7 @@
 //
 
 require('./tracker_import_utils.php');
-require($DOCUMENT_ROOT.'/project/export/project_export_utils.php');
+require_once('www/project/export/project_export_utils.php');
 
 $Language->loadLanguageMsg('tracker/tracker');
 

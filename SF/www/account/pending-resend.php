@@ -6,8 +6,8 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/pre.php');    
-require($DOCUMENT_ROOT.'/include/proj_email.php');
+require_once('pre.php');    
+require_once('proj_email.php');
 
 $Language->loadLanguageMsg('account/account');
 

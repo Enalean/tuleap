@@ -6,8 +6,8 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/pre.php');
-require($DOCUMENT_ROOT.'/include/account.php');  // LJ needed to create unix account
+require_once('pre.php');
+require_once('account.php');  // LJ needed to create unix account
    
 $Language->loadLanguageMsg('account/account');
 

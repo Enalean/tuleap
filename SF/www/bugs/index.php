@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/pre.php');
+require_once('pre.php');
 require('../bugs/bug_utils.php');
 require('../bugs/bug_data.php');
 

@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/pre.php');    
+require_once('pre.php');    
 $HTML->header(array(title=>"Exports Available"));
 ?>
 <P><?php print $GLOBALS['sys_name']; ?> data is exported in a variety of standard formats. Many of

@@ -36,49 +36,49 @@ if ($location) {
 $sys_datefmt = "Y-M-d H:i";
 
 //library to determine browser settings
-require($DOCUMENT_ROOT.'/include/browser.php');
+require_once('browser.php');
 
 //various html utilities
-require($DOCUMENT_ROOT.'/include/utils.php');
+require_once('utils.php');
 
 include(util_get_content('layout/osdn_sites'));
 
 // HTML layout class, may be overriden by the Theme class
-require($DOCUMENT_ROOT.'/include/Layout.class');
+require_once('Layout.class');
 
 $HTML = new Layout();
 
 //PHP4-like functions - only if running php3
 if (substr(phpversion(),0,1) == "3") {
-    require($DOCUMENT_ROOT.'/include/utils_php4.php');
+    require_once('utils_php4.php');
 }
 
 //database abstraction
-require($DOCUMENT_ROOT.'/include/database.php');
+require_once('database.php');
 
 //security library
-require($DOCUMENT_ROOT.'/include/session.php');
+require_once('session.php');
 
 //user functions like get_name, logged_in, etc
-require($DOCUMENT_ROOT.'/include/user.php');
+require_once('user.php');
 
 //group functions like get_name, etc
-require($DOCUMENT_ROOT.'/include/Group.class');
+require_once('Group.class');
 
 //Project extends Group and includes preference accessors
-require($DOCUMENT_ROOT.'/include/Project.class');
+require_once('Project.class');
 
 //library to set up context help
-require($DOCUMENT_ROOT.'/include/help.php');
+require_once('help.php');
 
 //exit_error library
-require($DOCUMENT_ROOT.'/include/exit.php');
+require_once('exit.php');
 
 //various html libs like button bar, themable
-require($DOCUMENT_ROOT.'/include/html.php');
+require_once('html.php');
 
 //left-hand nav library, themable
-require($DOCUMENT_ROOT.'/include/menu.php');
+require_once('menu.php');
 
 // #### Connect to db
 
@@ -93,10 +93,10 @@ if (!$conn) {
 session_set();
 
 // OSDN functions and defs
-require($DOCUMENT_ROOT.'/include/osdn.php');
+require_once('osdn.php');
 
 //insert this page view into the database
-require($DOCUMENT_ROOT.'/include/logger.php');
+require_once('logger.php');
 
 /*
 
@@ -112,7 +112,7 @@ if (user_isloggedin()) {
 }
 
 //Set up the vars and theme functions 
-require($DOCUMENT_ROOT.'/include/theme.php');
+require_once('theme.php');
 
 
 /*
@@ -150,7 +150,7 @@ $Language->loadLanguageMsg('include/include');
 
 // If the CodeX Software license was declined by the site admin
 // so stop all accesses to the site
-require($DOCUMENT_ROOT.'/include/license.php');
+require_once('license.php');
 if (license_already_declined()) {
    exit_error('ERROR','Your site administrator declined the CodeX Software License. 
 The CodeX site has been shut down. For more information contact your  

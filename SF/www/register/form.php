@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/pre.php');    // Initial db and session library, opens session
+require_once('pre.php');    // Initial db and session library, opens session
 
 $Language->loadLanguageMsg('register/register');
 

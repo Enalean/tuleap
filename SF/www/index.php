@@ -6,10 +6,10 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/pre.php');
-require($DOCUMENT_ROOT.'/include/cache.php');
-require($DOCUMENT_ROOT.'/forum/forum_utils.php');
-//require($DOCUMENT_ROOT.'/include/features_boxes.php'); GForge compat?
+require_once('pre.php');
+require_once('cache.php');
+require_once('www/forum/forum_utils.php');
+//require_once('features_boxes.php'); GForge compat?
 
 $Language->loadLanguageMsg('homepage/homepage');
 

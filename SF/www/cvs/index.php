@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/pre.php');    
+require_once('pre.php');    
 require('../cvs/commit_utils.php');    
 
 $Language->loadLanguageMsg('cvs/cvs');

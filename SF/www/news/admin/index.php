@@ -6,10 +6,10 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/pre.php');
+require_once('pre.php');
 
 //common forum tools which are used during the creation/editing of news items
-require($DOCUMENT_ROOT.'/forum/forum_utils.php');
+require_once('www/forum/forum_utils.php');
 
 
 $Language->loadLanguageMsg('news/news');

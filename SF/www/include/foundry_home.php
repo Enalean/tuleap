@@ -1,7 +1,7 @@
 <?php
 
-require($DOCUMENT_ROOT.'/news/news_utils.php');
-require($DOCUMENT_ROOT.'/include/features_boxes.php');
+require_once('www/news/news_utils.php');
+require_once('features_boxes.php');
 
 //we already know $foundry is set up from the master page
 

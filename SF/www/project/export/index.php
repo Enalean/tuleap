@@ -5,32 +5,32 @@
 // http://codex.xerox.com
 //
 // $Id$
-require($DOCUMENT_ROOT.'/include/pre.php');
+require_once('pre.php');
 require('../admin/project_admin_utils.php');
 require('./project_export_utils.php');
-require($DOCUMENT_ROOT.'/../common/tracker/Artifact.class');
-require($DOCUMENT_ROOT.'/tracker/include/ArtifactHtml.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');
-require($DOCUMENT_ROOT.'/tracker/include/ArtifactTypeHtml.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactTypeFactory.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactField.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactFieldFactory.class');
+require_once('common/tracker/Artifact.class');
+require_once('www/tracker/include/ArtifactHtml.class');
+require_once('common/tracker/ArtifactType.class');
+require_once('www/tracker/include/ArtifactTypeHtml.class');
+require_once('common/tracker/ArtifactTypeFactory.class');
+require_once('common/tracker/ArtifactField.class');
+require_once('common/tracker/ArtifactFieldFactory.class');
 
 $Language->loadLanguageMsg('project/project');
 
 
 // Conditionally include the appropriate modules
 if (ereg('^bug',$export) || ($export == 'project_db') ) {
-    require($DOCUMENT_ROOT.'/bugs/bug_data.php');
-    require($DOCUMENT_ROOT.'/bugs/bug_utils.php');
+    require_once('www/bugs/bug_data.php');
+    require_once('www/bugs/bug_utils.php');
 }
 if (ereg('^task',$export) || ($export == 'project_db')){
-    require($DOCUMENT_ROOT.'/pm/pm_data.php');
-    require($DOCUMENT_ROOT.'/pm/pm_utils.php');
+    require_once('www/pm/pm_data.php');
+    require_once('www/pm/pm_utils.php');
 }
 if (ereg('^support',$export) || ($export == 'project_db') ) {
-    require($DOCUMENT_ROOT.'/support/support_data.php');
-    require($DOCUMENT_ROOT.'/support/support_utils.php');
+    require_once('www/support/support_data.php');
+    require_once('www/support/support_utils.php');
 }
 
 // Group ID must be defined and must be a project admin

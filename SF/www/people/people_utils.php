@@ -15,7 +15,7 @@
 $Language->loadLanguageMsg('people/people');
 
 function people_header($params) {
-    global $group_id,$DOCUMENT_ROOT,$HTML,$Language;
+    global $group_id,$HTML,$Language;
 
     echo $HTML->header($params);
     echo '

@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/squal_pre.php');
+require_once('squal_pre.php');
 
 // This script is not localizable because it includes squal_pre.php
 // and it doesn't need to be anyway

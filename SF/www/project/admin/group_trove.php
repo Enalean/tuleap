@@ -6,9 +6,9 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/pre.php');    
-require($DOCUMENT_ROOT.'/include/trove.php');
-require($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
+require_once('pre.php');    
+require_once('trove.php');
+require_once('www/project/admin/project_admin_utils.php');
 
 $Language->loadLanguageMsg('project/project');
 

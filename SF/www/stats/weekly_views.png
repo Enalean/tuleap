@@ -5,8 +5,8 @@
 // http://sourceforge.net
 //
 // $Id$
-require($DOCUMENT_ROOT.'/include/pre.php');
-require($DOCUMENT_ROOT.'/include/graph_lib.php');
+require_once('pre.php');
+require_once('graph_lib.php');
 
 if ( ! $group_id ) {
 	$group_id = 0;

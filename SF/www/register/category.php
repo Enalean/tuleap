@@ -6,10 +6,10 @@
 //
 // $Id$
 
-require($DOCUMENT_ROOT.'/include/pre.php');    // Initial db and session library, opens session
-require($DOCUMENT_ROOT.'/include/vars.php');
+require_once('pre.php');    // Initial db and session library, opens session
+require_once('vars.php');
 session_require(array('isloggedin'=>'1'));
-require($DOCUMENT_ROOT.'/include/account.php');
+require_once('account.php');
 
 $Language->loadLanguageMsg('register/register');
 

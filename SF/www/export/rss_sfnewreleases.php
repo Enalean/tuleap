@@ -6,7 +6,7 @@
 //
 // $Id$
 // ## export sf front page news in RSS
-require($DOCUMENT_ROOT.'/include/pre.php');
+require_once('pre.php');
 require('./rss_utils.inc');
 header("Content-Type: text/xml");
 print '<?xml version="1.0"?>

@@ -12,10 +12,10 @@
 //              Help depends upon the field type.
 //
 
-require($DOCUMENT_ROOT.'/include/pre.php');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactType.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactFieldFactory.class');
-require($DOCUMENT_ROOT.'/../common/tracker/ArtifactField.class');
+require_once('pre.php');
+require_once('common/tracker/ArtifactType.class');
+require_once('common/tracker/ArtifactFieldFactory.class');
+require_once('common/tracker/ArtifactField.class');
 
 // Get the group_id, group_artifact_id and field_name from the 
 // help_id argument

@@ -9,10 +9,10 @@
 // Originally written by Nicolas Guerin 2004, CodeX Team, Xerox
 //
 
-require($DOCUMENT_ROOT.'/include/pre.php');
-require($DOCUMENT_ROOT.'/project/admin/permissions.php');
-require($DOCUMENT_ROOT.'/file/file_utils.php');
-require($DOCUMENT_ROOT.'/docman/doc_utils.php');
+require_once('pre.php');
+require_once('www/project/admin/permissions.php');
+require_once('www/file/file_utils.php');
+require_once('www/docman/doc_utils.php');
 
 $Language->loadLanguageMsg('project/project');
 
