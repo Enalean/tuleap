@@ -12,8 +12,9 @@
 
 function format_bug_field_values($field, $group_id, $result) {
 
+    $is_project_scope = bug_data_is_project_scope($field);
     $title_arr=array();
-    if (!bug_data_is_project_scope($field)) { $title_arr[]='ID'; }
+    if (!$is_project_scope) { $title_arr[]='ID'; }
     $title_arr[]='Value label';
     $title_arr[]='Description';
     $title_arr[]='Rank';
