@@ -37,7 +37,7 @@ of groups that you are a member of.
 	$last_group=0;
 	echo $HTML->box1_top('My Bugs');
 
-	$sql="SELECT group_id,bug_id,priority,assigned_to,submitted_by,summary ".
+	$sql="SELECT group_id,bug_id,severity,assigned_to,submitted_by,summary ".
 		"FROM bug ".
 		"WHERE status_id <> '3' ".
 		"AND (assigned_to='".user_getid()."' ".
@@ -69,7 +69,7 @@ of groups that you are a member of.
 					group_getname(db_result($result,$i,'group_id')).'</A>';
 			}
 			echo '
-			<TR BGCOLOR="'.get_priority_color(db_result($result,$i,'priority')).'"><TD><A HREF="/bugs/?func=detailbug&group_id='.
+			<TR BGCOLOR="'.get_priority_color(db_result($result,$i,'severity')).'"><TD><A HREF="/bugs/?func=detailbug&group_id='.
 				db_result($result,$i,'group_id').'&bug_id='.db_result($result,$i,'bug_id').
 				'">'.db_result($result,$i,'bug_id').'</A></TD>'.
 				'<TD>'.stripslashes(db_result($result,$i,'summary')).'&nbsp;'.$AS_flag.'</TD></TR>';

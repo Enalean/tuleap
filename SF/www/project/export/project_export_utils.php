@@ -137,10 +137,10 @@ function prepare_bug_record($group_id, &$col_list, &$record) {
 	if (bug_data_is_text_field($col) || bug_data_is_text_area($col)) {
 	    $record[$col] = prepare_textarea($record[$col]);
 
-	} else if (bug_data_is_select_box($col) && ($col != 'priority') &&
+	} else if (bug_data_is_select_box($col) && ($col != 'severity') &&
 		   ($col != 'assigned_to') ) {
 	    // All value_ids transformed in human readable values 
-	    // except priority that remains a number.
+	    // except severity that remains a number.
 	    $record[$col] = bug_data_get_cached_field_value($col, $group_id, $record[$col]);
 	}
     }
@@ -296,7 +296,7 @@ function prepare_bug_history_record(&$record) {
     $record['date'] = date($datetime_fmt,$record['date']);
 
     if (bug_data_is_select_box($record['field_name']) &&
-	($record['field_name'] != 'priority') ) {
+	($record['field_name'] != 'severity') ) {
 	
 	// asking for the value of a value_id for each new
 	// history record can become a significant bottleneck
