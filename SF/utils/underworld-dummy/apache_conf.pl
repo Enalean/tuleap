@@ -68,7 +68,7 @@ while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow())
 	} else {
 	  # Apache 2.x syntax
 	  push @apache_zone,
-	    ( "<VirtualHost $ip>\n",
+	    ( "<VirtualHost $ip:80>\n",
 	      "$server_name",
 	      "$server_alias",
 	      "  SuexecUserGroup dummy $unix_group_name\n",
