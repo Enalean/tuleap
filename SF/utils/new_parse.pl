@@ -35,9 +35,10 @@ my $winaccount_on = -f "/etc/smbpasswd";
 my $winempty_passwd = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
 
 # See under which user this script is running. It is the user that is
-# also going to be used to run cvsweb.cgi. And we need to make it part
-# of all groups so that the CGI script can browse all CVS roots including
-# private ones (cvsweb.cgi then make the control)
+# also going to be used to run cvsweb.cgi. And we need to make it the
+# owner of all CVS root directories so the CGI script can browse all
+# CVS roots including private ones.  For private groups the cvsweb.cgi
+# script will implement its own access control.
 my ($cxname) = get_codex_user();
 
 # Open up all the files that we need.
@@ -120,13 +121,8 @@ while ($ln = pop(@groupdump_array)) {
 	$cvs_id = $gid + 50000;
 	$gid += $gid_add;
 
-	# make all user names lower case and add the user 
-	# name under which the Apache CGI scripts run if this
-	# is a private project (for CVS browsing)
+	# make all user names lower case.
 	$userlist =~ tr/A-Z/a-z/;
-	if (!$gis_public) {
-	  $userlist .=($cxname ? ",$cxname" : "");
-	}
 
 	$group_exists = getgrnam($gname);
 
@@ -193,8 +189,8 @@ while ($ln = pop(@groupdump_array)) {
 		system("echo \"\" > $cvs_dir/CVSROOT/val-tags");
 		chmod 0664, "$cvs_dir/CVSROOT/val-tags";
 
-		# set group ownership, anonymous group user
-		system("chown -R nobody:$gid $cvs_dir");
+		# set group ownership, codex user
+		system("chown -R $cxname:$gid $cvs_dir");
 		system("chmod g+rw $cvs_dir");
 
 		# And finally add a user for this repository
@@ -270,16 +266,32 @@ while ($ln = pop(@groupdump_array)) {
 	      system("cd $cvs_dir/CVSROOT; rcs -q -l commitinfo; ci -q -m\"CodeX modifications: entering commit_prep from group fields (cvs_tracker/cvs_events)\" commitinfo; co -q commitinfo");
 	    }
 	}
-	# Align directory permissions with public/private flag
-	# (chmod o-rwx for project home and cvs root if private)
+	#
+	# Private directories are set to be unreadable, unwritable,
+	# and untraversable.  The project home and cvs root directories
+	# are private if either:
+	# (1) The project is private
+	# (2) The directory contains a file named PRIVATE
+	#
 	if ($gstatus eq 'A') {
+	  my ($cvsmode, $grpmode, $new_cvsmode, $new_grpmode);
+	  my ($public_cvs, $public_grp);
+
 	  ($d,$d,$cvsmode) = stat("$cvs_prefix/$gname");
 	  ($d,$d,$grpmode) = stat("$grpdir_prefix/$gname");
-	  if ($gis_public) {
+
+	  $public_cvs = $gis_public && ! -e "$cvs_prefix/$gname/.CODEX_PRIVATE";
+	  $public_grp = $gis_public && ! -e "$grpdir_prefix/$gname/.CODEX_PRIVATE";
+
+	  if ($public_cvs) {
 	    $new_cvsmode = ($cvsmode | 0005);
-	    $new_grpmode = ($grpmode | 0005);
 	  } else {
 	    $new_cvsmode = ($cvsmode & ~0007);
+	  }
+
+	  if ($public_grp) {
+	    $new_grpmode = ($grpmode | 0005);
+	  } else {
 	    $new_grpmode = ($grpmode & ~0007);
 	  }
 
