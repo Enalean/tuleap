@@ -1,7 +1,7 @@
+#!/usr/bin/perl
+
 # correct dates in DB in group_svn_full_history where months and days do
 # not contain the leading 0. The date format is %Y%m%d (e.g. 20041024)
-
-#!/usr/bin/perl
 
 use DBI;
 
