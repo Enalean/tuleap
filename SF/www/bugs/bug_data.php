@@ -964,7 +964,8 @@ function bug_data_format_changes($changes) {
 
     $user_id = user_getid();
 
-    $out_hdr = 'Changes by: '.user_getrealname($user_id).' <'.user_getemail($user_id).'> - '.date($sys_datefmt,time());
+    $out_hdr = 'Changes by: '.user_getrealname($user_id).' <'.user_getemail($user_id).">\n".
+	'Date: '.date($sys_datefmt,time()).' ('.user_get_timezone().')';
 
     //Process special cases first: follow-up comment
     if ($changes['details']) {
