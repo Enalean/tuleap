@@ -38,7 +38,7 @@ class ArtifactFactory extends Error {
 			$this->setError('ArtifactFactory:: '.$ArtifactType->getErrorMessage());
 			return false;
 		}
-		$this->ArtifactType =& $ArtifactType;
+		$this->ArtifactType = $ArtifactType;
 
 		return true;
 	}
@@ -68,7 +68,7 @@ class ArtifactFactory extends Error {
 			$this->setError('Database Error: '.db_error());
 			return false;
 		} else {
-			while ($arr =& db_fetch_array($result)) {
+			while ($arr = db_fetch_array($result)) {
 				$artifacts[$arr['artifact_id']] = new Artifact($this->ArtifactType, $arr);
 			}
 			if ( count($artifacts) ) {
@@ -89,7 +89,7 @@ class ArtifactFactory extends Error {
 			$this->setError('Database Error: '.db_error());
 			return false;
 		} else {
-			while ($arr =& db_fetch_array($result)) {
+			while ($arr = db_fetch_array($result)) {
 				$artifacts[$arr['artifact_id']] = new Artifact($this->ArtifactType, $arr);
 			}
 		}
