@@ -102,9 +102,9 @@ function pm_multiple_assigned_box ($name='assigned_to[]',$group_id=false,$projec
 		if ($project_task_id) {
 			//get the data so we can mark items as SELECTED
 			$result2=pm_data_get_assigned_to ($project_task_id);
-			return html_build_multiple_select_box ($result,$name,util_result_column_to_array($result2));
+			return html_build_multiple_select_box ($result,$name,util_result_column_to_array($result2),6);
 		} else {
-			return html_build_multiple_select_box ($result,$name,array());
+			return html_build_multiple_select_box ($result,$name,array(),6);
 		}
 	}
 }

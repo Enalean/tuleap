@@ -78,6 +78,12 @@ $result=db_query($sql);
 		</TD>
 	</TR>
 
+	<TR>
+		<TD COLSPAN="2">
+			<?php echo pm_show_task_details ($project_task_id); ?>
+		</TD>
+	</TR>
+
 	  <TR><TD COLSPAN="2">&nbsp</TD></TR>
 
 	<TR>
@@ -115,12 +121,6 @@ $result=db_query($sql);
 	<TR>
 		<TD COLSPAN="2">
 			<?php echo pm_show_dependent_bugs ($project_task_id,$group_id,$group_project_id); ?>
-		</TD>
-	</TR>
-
-	<TR>
-		<TD COLSPAN="2">
-			<?php echo pm_show_task_details ($project_task_id); ?>
 		</TD>
 	</TR>
 

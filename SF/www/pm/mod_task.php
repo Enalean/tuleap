@@ -22,13 +22,14 @@ $result=db_query($sql);
 <INPUT TYPE="HIDDEN" NAME="group_project_id" VALUE="<?php echo $group_project_id; ?>">
 <INPUT TYPE="HIDDEN" NAME="project_task_id" VALUE="<?php echo $project_task_id; ?>">
 
-<TABLE BORDER="0" WIDTH="100%">
+<TABLE BORDER="0" CELLPADDING="0" WIDTH="100%">
 	<TR>    
-		<TD><B>Subproject:</B>
-		<BR>
+                <TD><B>Subproject:</B>
+                &nbsp;
 		<?php echo pm_show_subprojects_box('new_group_project_id',$group_id,$group_project_id); ?>
 		</TD>
 
+		
 		<TD><FONT SIZE="-1">
 		<INPUT TYPE="submit" value="Submit Changes" name="submit"></FONT>
 		</TD>
@@ -36,13 +37,63 @@ $result=db_query($sql);
 
 	<TR>
 		<TD><B>Percent Complete:</B>
-		<BR>
+		&nbsp;
 		<?php echo pm_show_percent_complete_box('percent_complete',db_result($result,0,'percent_complete')); ?>
 		</TD>
 
 		<TD><B>Priority:</B>
-		<BR>
+		&nbsp;
 		<?php echo build_priority_select_box('priority',db_result($result,0,'priority')); ?>
+		</TD>
+	</TR>
+
+	<TR>
+		<TD>
+		<B>Effort:</B>
+		&nbsp;
+		<INPUT TYPE="text" name="hours" size="5" VALUE="<?php echo db_result($result,0,'hours'); ?>">
+		</TD>
+
+		<TD>
+		<B>Status:</B>
+		&nbsp;
+		<?php
+		echo pm_status_box ('status_id',db_result($result,0,'status_id'),
+				    true,'None',false);
+		?>
+		</TD>
+	</TR>
+
+	<TR>
+    		<TD><B>Start Date:</B>
+		<BR><FONT SIZE="-1">
+		<?php
+		echo pm_show_month_box ('start_month',date('m', db_result($result,0,'start_date')));
+		echo pm_show_day_box ('start_day',date('d', db_result($result,0,'start_date')));
+		echo pm_show_year_box ('start_year',date('Y', db_result($result,0,'start_date')));
+		?></FONT>
+		<br><a href="calendar.php">View Calendar</a>
+		</TD>
+
+		<TD rowspan="2">
+		<B>Assigned To:</B>
+		<BR><FONT SIZE="-1">
+		<?php
+		/*
+			List of possible users that this one could be assigned to
+		*/
+		echo pm_multiple_assigned_box ('assigned_to[]',$group_id,$project_task_id);
+		?></FONT>
+		</TD>
+        </tr>
+	<tr>
+		<TD><B>End Date:</B>
+		<BR><FONT SIZE="-1">
+		<?php
+		echo pm_show_month_box ('end_month',date('m', db_result($result,0,'end_date')));
+		echo pm_show_day_box ('end_day',date('d', db_result($result,0,'end_date')));
+		echo pm_show_year_box ('end_year',date('Y', db_result($result,0,'end_date')));
+		?></FONT>
 		</TD>
 	</TR>
 
@@ -52,6 +103,8 @@ $result=db_query($sql);
 		<INPUT TYPE="text" name="summary" size="60" MAXLENGTH="100" VALUE="<?php echo db_result($result,0,'summary'); ?>">
 		</TD>
 	</TR>
+
+	<TR><TD colspan="2" align="top"><HR></td></TR>
 
 	<TR>
 		<TD COLSPAN="2">
@@ -75,43 +128,19 @@ $result=db_query($sql);
 		<TEXTAREA NAME="details" ROWS="5" COLS="60" WRAP="SOFT"></TEXTAREA>
 		</TD>
 	</TR>
-
+ 
 	<TR>
-    		<TD COLSPAN="2"><B>Start Date:</B>
-		<BR>
-		<?php
-		echo pm_show_month_box ('start_month',date('m', db_result($result,0,'start_date')));
-		echo pm_show_day_box ('start_day',date('d', db_result($result,0,'start_date')));
-		echo pm_show_year_box ('start_year',date('Y', db_result($result,0,'start_date')));
-		?>
-		<BR><a href="calendar.php">View Calendar</a>
+		<TD COLSPAN="2">
+			<?php echo pm_show_task_details ($project_task_id); ?>
 		</TD>
 	</TR>
 
 	<TR>
-		<TD COLSPAN="2"><B>End Date:</B>
-		<BR>
-		<?php
-		echo pm_show_month_box ('end_month',date('m', db_result($result,0,'end_date')));
-		echo pm_show_day_box ('end_day',date('d', db_result($result,0,'end_date')));
-		echo pm_show_year_box ('end_year',date('Y', db_result($result,0,'end_date')));
-		?>
-		</TD>
+		<TD colspan="2"><HR NoShade></td>
 	</TR>
 
 	<TR>
-		<TD>
-		<B>Assigned To:</B>
-		<BR>
-		<?php
-		/*
-			List of possible users that this one could be assigned to
-		*/
-		echo pm_multiple_assigned_box ('assigned_to[]',$group_id,$project_task_id);
-		?>
-		</TD>
-
-		<TD>
+		<TD colspan="2">
 		<B>Dependent On Task:</B>
 		<BR>
 		<?php
@@ -126,23 +155,6 @@ $result=db_query($sql);
 	</TR>
 
 	<TR>
-		<TD>
-		<B>Hours:</B>
-		<BR>
-		<INPUT TYPE="text" name="hours" size="5" VALUE="<?php echo db_result($result,0,'hours'); ?>">
-		</TD>
-
-		<TD>
-		<B>Status:</B>
-		<BR>
-		<?php
-		echo pm_status_box ('status_id',db_result($result,0,'status_id'),
-				    true,'None',false);
-		?>
-		</TD>
-	</TR>
-
-	<TR>
 		<TD COLSPAN="2">
 			<?php echo pm_show_dependent_tasks ($project_task_id,$group_id,$group_project_id); ?>
 		</TD>
@@ -151,12 +163,6 @@ $result=db_query($sql);
 	<TR>
 		<TD COLSPAN="2">
 			<?php echo pm_show_dependent_bugs ($project_task_id,$group_id,$group_project_id); ?>
-		</TD>
-	</TR>
- 
-	<TR>
-		<TD COLSPAN="2">
-			<?php echo pm_show_task_details ($project_task_id); ?>
 		</TD>
 	</TR>
 
