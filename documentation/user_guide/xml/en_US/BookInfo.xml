@@ -401,6 +401,15 @@
         Added a few words on logging accesses with viewCVS (SR 96 on Partners).
         Updated sample picture.</revremark>
       </revision>
+      <revision>
+        <revnumber>2.6.16</revnumber>
+
+        <date>11-Jan-2005</date>
+
+        <authorinitials>Nicolas Guerin</authorinitials>
+
+        <revremark>Added documentation about ranks in the document manager.</revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--

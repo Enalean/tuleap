@@ -42,7 +42,7 @@ if ($pv) {
 $query = "select * "
 ."from doc_groups "
 ."where group_id = $group_id "
-."order by groupname";
+."order by group_rank";
 $result = db_query($query); 
 
 //otherwise, throw up an error
@@ -60,7 +60,7 @@ if (db_numrows($result) < 1) {
             $query .= " or stateid = '5' "
                 ." and doc_group = '".$row['doc_group']."' ";
         } //state 5 == 'private' 
-        
+        $query .= " order by rank";
         $subresult = db_query($query); 
         
         if (!(db_numrows($subresult) < 1)) {

@@ -524,6 +524,7 @@ CREATE TABLE doc_data (
   createdate int(11) NOT NULL default '0',
   created_by int(11) NOT NULL default '0',
   doc_group int(11) NOT NULL default '0',
+  rank int(11) NOT NULL default '0',
   description text,
   restricted_access INT UNSIGNED NOT NULL DEFAULT 0,
   filename text,
@@ -540,6 +541,7 @@ CREATE TABLE doc_data (
 CREATE TABLE doc_groups (
   doc_group int(12) NOT NULL auto_increment,
   groupname varchar(255) NOT NULL default '',
+  group_rank int(11) NOT NULL default '0',
   group_id int(11) NOT NULL default '0',
   PRIMARY KEY  (doc_group),
   KEY idx_doc_groups_group (group_id)

@@ -43,6 +43,23 @@ function main_page($group_id) {
     
 }
 
+function group_main_page($group_id) {
+    global $LANG;
+    docman_header_admin(array('title'=>$LANG->getText('docman_admin_index','title_group_mgt'),
+			      'help'=>'DocumentAdministration.html#DocumentGroupManagement'));
+    echo '<h2>'.$LANG->getText('docman_admin_index','header_group_mgt').'</h2>
+	    <h3>'.$LANG->getText('docman_admin_index','create_doc_group').'</h3>
+	    <form name="addgroup" action="index.php?mode=groupadd&group_id='.$group_id.'" method="POST">
+	    <table>
+	        <tr><th>'.$LANG->getText('docman_doc_utils','group_name').':</th>  <td><input type="text" name="groupname" size="32"></td></tr>
+	        <tr><th>'.$LANG->getText('docman_doc_utils','rank').':</th>  <td><input type="text" name="group_rank" size="4"></td></tr>
+                <tr><td><input type="submit" value="'.$LANG->getText('global','btn_create').'"></td></tr></table>	
+	    </form>	
+	<h3>'.$LANG->getText('docman_admin_index','doc_group_list').'</h3>	';
+    display_groups($group_id);
+}
+
+
 //begin to seek out what this page has been called to do.
 
 if (strstr($mode,"docedit")) {
@@ -110,6 +127,16 @@ if (strstr($mode,"docedit")) {
 
     $res_states=db_query("select * from doc_states;");
     echo html_build_select_box ($res_states, 'stateid', $row['stateid']);
+
+    echo '</td>
+	    </tr>
+
+	    <tr>
+	    <th>'.$LANG->getText('docman_doc_utils','rank_in_group').':</th>
+	    <td>
+              <input type="text" size="3" maxlength="3" name="rank" value="'.$row['rank'].'"/>';
+    
+    
     
     echo '</td>
 	    </tr>
@@ -142,18 +169,12 @@ if (strstr($mode,"docedit")) {
 	    ."where doc_group = '$doc_group' "
 	    ."and group_id = $group_id";
 	db_query($query);
-	docman_header_admin(array('title'=>$LANG->getText('docman_admin_index','title_group_del'),
-			'help'=>'DocumentGroupManagement.html'));
-	print "<p><b>".$LANG->getText('docman_admin_index','msg_group_del',array(doc_group))."</b>";	
-	docman_footer($params);	
-	
-    } else {
-	
+        $feedback .= $LANG->getText('docman_admin_index','msg_group_del',array($doc_group));
+        group_main_page($group_id);	
+    } else {	
 	db_query($query);
-	docman_header_admin(array('title'=>$LANG->getText('docman_admin_index','title_group_del_fail'),
-			'help'=>'DocumentGroupManagement.html'));
-	print '<p>'.$LANG->getText('docman_admin_index','msg_group_del_fail'); 
-	docman_footer($params);
+        $feedback .= $LANG->getText('docman_admin_index','msg_group_del_fail');
+        group_main_page($group_id);
     }
     
 } elseif (strstr($mode,"groupedit")) {
@@ -171,6 +192,7 @@ if (strstr($mode,"docedit")) {
 			<form name="editgroup" action="index.php?mode=groupdoedit&group_id='.$group_id.'" method="POST">
 			<table>
 			<tr><th>'.$LANG->getText('docman_doc_utils','group_name').':</th>  <td><input type="text" size="55" name="groupname" value="'.$row['groupname'].'"></td></tr>
+                        <tr><th>'.$LANG->getText('docman_doc_utils','rank').':</th>  <td><input type="text" name="group_rank" size="4" maxlength="4" value="'.$row['group_rank'].'"></td></tr>
 			<input type="hidden" name="doc_group" value="'.$row['doc_group'].'">
 			<tr><td> <input type="submit" name="submit" value="'.$LANG->getText('global','btn_submit').'"></td></tr></table>	
 			</form>	
@@ -179,12 +201,13 @@ if (strstr($mode,"docedit")) {
     
 } elseif (strstr($mode,"groupdoedit")) {
     $query = "update doc_groups "
-	."set groupname='".htmlspecialchars($groupname)."' "
+	."set groupname='".htmlspecialchars($groupname)."', "
+        ."group_rank='".$group_rank."' "
 	."where doc_group='$doc_group' "
 	."and group_id = '$group_id'";
     db_query($query);
     $feedback .= $LANG->getText('docman_admin_index','feedback_group_updated');
-    main_page($group_id);
+    group_main_page($group_id);
     
 } elseif (strstr($mode,"docdoedit")) {
     
@@ -242,7 +265,8 @@ if (strstr($mode,"docedit")) {
                 ."restricted_access = '".$restricted_access."', "
                 ."filename = '".$uploaded_data_name."', "
                 ."filesize = '".$uploaded_data_size."', "
-                ."filetype = '".$uploaded_data_type."' "
+                ."filetype = '".$uploaded_data_type."', "
+	        ."rank = '".$rank."' "
                 ."where docid = '".$docid."'"; 
 	} else {
 	    if ( strlen($data) > 0 ) {
@@ -257,7 +281,8 @@ if (strstr($mode,"docedit")) {
         	    ."restricted_access = '".$restricted_access."', "
         	    ."filename = '', "
         	    ."filesize = '0', "
-        	    ."filetype = 'text/html' "
+        	    ."filetype = 'text/html', "
+		    ."rank = '".$rank."' "
         	    ."where docid = '".$docid."'"; 
             } else {
                 // No new document - Just update the associated data
@@ -267,7 +292,8 @@ if (strstr($mode,"docedit")) {
         	    ."doc_group = '".$doc_group."', "
         	    ."stateid = '".$stateid."', " 
         	    ."description = '".htmlspecialchars($description)."', "
-        	    ."restricted_access = '".$restricted_access."' "
+        	    ."restricted_access = '".$restricted_access."', "
+		    ."rank = '".$rank."' "
         	    ."where docid = '".$docid."'"; 
             }
         }
@@ -287,26 +313,18 @@ if (strstr($mode,"docedit")) {
     }
 
 } elseif (strstr($mode,"groupadd")) {
-    $query = "insert into doc_groups(groupname,group_id) " 
+    $query = "insert into doc_groups(groupname,group_id,group_rank) " 
 	."values ('"
 	."".htmlspecialchars($groupname)."',"
-	."'$group_id')";
+	."'$group_id',"
+	."'$group_rank')";
 		
     db_query($query);
     $feedback .= $LANG->getText('docman_admin_index','feedback_group_added');
-    main_page($group_id);
+    group_main_page($group_id);
 	
 } elseif (strstr($mode,"editgroups")) {
-    docman_header_admin(array('title'=>$LANG->getText('docman_admin_index','title_group_mgt'),
-			      'help'=>'DocumentAdministration.html#DocumentGroupManagement'));
-    echo '<h2>'.$LANG->getText('docman_admin_index','header_group_mgt').'</h2>
-	    <h3>'.$LANG->getText('docman_admin_index','create_doc_group').'</h3>
-	    <form name="addgroup" action="index.php?mode=groupadd&group_id='.$group_id.'" method="POST">
-	    <table>
-	        <tr><th>'.$LANG->getText('docman_doc_utils','group_name').':</th>  <td><input type="text" name="groupname"></td><td><input type="submit" value="Add"></td></tr></table>	
-	    </form>	
-	<h3>'.$LANG->getText('docman_admin_index','doc_group_list').'</h3>	';
-    display_groups($group_id);
+    group_main_page($group_id);
 
 } elseif (strstr($mode,"editdocs")) {
 

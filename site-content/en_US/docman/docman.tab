@@ -43,6 +43,9 @@ docman_doc_utils	view_doc	View Documentation
 docman_doc_utils	admin	Admin
 docman_doc_utils	edit_doc	Edit Documents
 docman_doc_utils	edit_groups	Edit Document Groups
+docman_doc_utils	rank_in_group	Rank In Group
+docman_doc_utils	rank	Rank On Screen
+docman_doc_utils	doc_group	Document Group
 #
 #-----------------------------------------------
 # Script: SF/www/docman/download.php

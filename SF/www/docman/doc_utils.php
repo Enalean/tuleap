@@ -50,7 +50,8 @@ function display_groups($group_id) {
 	// show list of groups to edit.
 	$query = "select * "
 		."from doc_groups "
-		."where group_id = '$group_id'";
+		."where group_id = '$group_id' "
+	        ."order by group_rank";
 	$result = db_query($query);
 	
 	if (db_numrows($result) < 1) {
@@ -60,6 +61,7 @@ function display_groups($group_id) {
 		$title_arr=array();
 		$title_arr[]=$LANG->getText('docman_doc_utils','group_id');
 		$title_arr[]=$LANG->getText('docman_doc_utils','group_name');
+		$title_arr[]=$LANG->getText('docman_doc_utils','rank');
 		$title_arr[]=$LANG->getText('docman_doc_utils','delete_ask');
 
 		echo html_build_list_table_top ($title_arr);
@@ -68,10 +70,10 @@ function display_groups($group_id) {
 		while ($row = db_fetch_array($result)) {
 			$output = "<tr class=\"".util_get_alt_row_color($i)."\">".
 			    '<td><b><a href="index.php?mode=groupedit&doc_group='.$row['doc_group'].'&group_id='.$group_id.'">'.$row['doc_group']."</a></b></td>\n".
-			    "<td>".$row['groupname']."</td>\n".
-			    '<td align="center"><a href="index.php?mode=groupdelete&doc_group='.$row['doc_group'].'&group_id='.
-			    $group_id.'"><img src="'.util_get_image_theme("ic/trash.png").'" border="0" onClick="return confirm(\''.$LANG->getText('docman_doc_utils','delete_confirm').'\')"></A> </td>'.
-				"</tr>\n";
+			    '<td>   <a href="index.php?mode=groupedit&doc_group='.$row['doc_group']."&group_id=".$group_id.'">'.$row['groupname']."</td>\n".
+                            "<td>".$row['group_rank']."</td>".
+                            '<td align="center"><a href="index.php?mode=groupdelete&doc_group='.$row['doc_group'].'&group_id='.
+                            $group_id.'"><img src="'.util_get_image_theme("ic/trash.png").'" border="0" onClick="return confirm(\''.$LANG->getText('docman_doc_utils','delete_confirm').'\')"></A></td></tr>';
 
 			print "$output";
 			$i++;
@@ -90,7 +92,8 @@ function display_docs($style,$group_id) {
 		."from doc_data as d1, doc_groups as d2 "
 		."where d1.stateid = '".$style."' "
 		."and d2.group_id = '".$group_id."' " 
-		."and d1.doc_group = d2.doc_group"; 
+		."and d1.doc_group = d2.doc_group "
+	        ."order by group_rank, rank"; 
 	$result = db_query($query);
 
 	if (db_numrows($result) < 1) {
@@ -107,6 +110,8 @@ function display_docs($style,$group_id) {
 		$title_arr=array();
 		$title_arr[]=$LANG->getText('docman_doc_utils','doc_id');
 		$title_arr[]=$LANG->getText('docman_doc_utils','doc_name');
+		$title_arr[]=$LANG->getText('docman_doc_utils','doc_group');
+		$title_arr[]=$LANG->getText('docman_doc_utils','rank_in_group');
 		$title_arr[]=$LANG->getText('docman_doc_utils','create_date');
 
 		echo html_build_list_table_top ($title_arr);
@@ -115,10 +120,12 @@ function display_docs($style,$group_id) {
 		while ($row = db_fetch_array($result)) {
 		    $edit_uri = "index.php?docid=".$row['docid']."&mode=docedit&group_id=".$group_id;
 		    print "<tr class=\"".util_get_alt_row_color($i)."\">"
-			 ."<td><b><a href=\"".$edit_uri."\">".$row['docid']."</b></a></td>"
-			 ."<td><a href=\"".$edit_uri."\">".$row['title']."</a></td>"
-				."<td>".format_date($LANG->getText('system','datefmt'),$row['createdate'])."</td></tr>";
-			$i++;
+                        ."<td><b><a href=\"".$edit_uri."\">".$row['docid']."</b></a></td>"
+                        ."<td><a href=\"".$edit_uri."\">".$row['title']."</a></td>"
+                        ."<td>".$row['groupname']."</td>"
+                        ."<td>".$row['rank']."</td>"
+                        ."<td>".format_date($LANG->getText('system','datefmt'),$row['createdate'])."</td></tr>";
+                    $i++;
 		}	
 		echo '</table>';
 	}//end else

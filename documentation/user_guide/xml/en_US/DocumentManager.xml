@@ -171,7 +171,14 @@
       
       <para>To validate a document, click on the document title. Go at
       the bottom of the next screen and change the Document status
-      from Pending to Active. Additionally you can also define an
+      from Pending to Active.</para>
+
+      <para>You may also define the rank of the document in the
+      document group. The rank number indicates in which order the
+      documents will appear in the document group. Documents with a 
+      smaller rank number are displayed first.</para>
+
+      <para>Additionally you can also define an
       access control policy for each document:</para>
 
       <itemizedlist mark="bullet" spacing="compact">
@@ -217,6 +224,10 @@
 
 	<listitem>
 	  <para>You can change the group (or folder) a document belong to</para>
+	</listitem>
+
+	<listitem>
+	  <para>You can change the document display rank in the document group</para>
 	</listitem>
 
 	<listitem>
@@ -292,12 +303,9 @@
         can also delete or rename an existing group by clicking on the
         appropriate link in the group list.</para>
 
-      <para><tip><title>Tip: Document Groups ordering</title><para>By
-        default the Document Groups are listed by alphabetical order on the
-        Document Manager welcome page. If you want to impose your own order
-        modify the group names by adding a number at the head of the document
-        group (e.g. 1-, 2-, 3-...) . The groups will then be presented on the
-        screen in the same order as the prefix numbers.</para></tip></para>
+      <para>Document groups also have a display rank property that defines
+      how document groups are ordered. Document groups with smaller ranks 
+      are displayed first.</para>
     </section>
   </section>
 </chapter>

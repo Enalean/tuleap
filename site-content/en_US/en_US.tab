@@ -23,6 +23,7 @@ global	btn_cancel	Cancel
 global	btn_update	Update
 global	btn_submit	Submit
 global	btn_browse	Browse
+global	btn_create	Create
 global	yes	Yes
 global	no	No
 global	on	On
@@ -35,4 +36,3 @@ global	next	Next
 global	prev	Previous
 global	error	Error
 global	help	Help
-
