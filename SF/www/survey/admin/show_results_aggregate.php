@@ -51,7 +51,7 @@ for ($i=0; $i<$count; $i++) {
 		Build the questions on the HTML form
 	*/
 
-	$sql="SELECT question_type,question,question_id FROM survey_questions WHERE question_id=$quest_array[$i] AND group_id=$group_id";
+	$sql="SELECT question_type,question,question_id FROM survey_questions WHERE question_id=$quest_array[$i]";
 
 	$result=db_query($sql);
 
