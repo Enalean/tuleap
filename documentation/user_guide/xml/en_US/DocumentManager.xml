@@ -9,243 +9,287 @@
 // Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
 //
 -->
-  <chapter id="DocumentManager">
-    <title>Document Manager</title>
+<chapter id="DocumentManager">
+  <title>Document Manager</title>
 
-    <para>Documentation is probably the second most important deliverable in a
+  <para>Documentation is probably the second most important deliverable in a
     software project after the software work products themselves. CodeX
     provides a specific service to manage your project documents.</para>
 
-    <para>The CodeX Document Manager is very basic and cannot compare in any
-    way with specialized document repository like DocuShare. The Document
-    Manager features are a follows:</para>
+  <para>The CodeX Document Manager is very basic and cannot compare
+    in any way with specialized document repository like DocuShare. It
+    is however very handy to publish documents that are critical to
+    your community of users. Examples are: Installation, Adminstration
+    or User Guide, API documentation, Frequently Asked Questions,
+    etc...</para>
 
-    <itemizedlist mark="bullet"
-                  spacing="compact">
-      <listitem>
-        <para>Only text and HTML documents are properly handled</para>
-      </listitem>
+  <para>The Document Manager features are a follows:</para>
 
-      <listitem>
-        <para>Documents are stored in groups (or folders). The folders are
+  <itemizedlist mark="bullet"
+		spacing="compact">
+    <listitem>
+      <para>The CodeX Document Manager can handle any type of
+      document. However we strongly encourage editors to publish their
+      documents in HTML and/or PDF to make it readable quickly and
+      easily.</para>
+    </listitem>
+
+    <listitem>
+      <para>Documents are stored in groups (or folders). The folders are
         only one level deep which means you can&#39;t have subfolders in a
-        folder</para>
-      </listitem>
+        folder.</para>
+    </listitem>
 
-      <listitem>
-        <para>Documents can be edited on line.</para>
-      </listitem>
+    <listitem>
+      <para>Documents can be edited on line (if in text or HTML format).</para>
+    </listitem>
 
-      <listitem>
-        <para>It is based on a Submit-Publish model where anybody can submit a
+    <listitem>
+      <para>It is based on a Submit-Publish model where anybody can submit a
         new piece of documentation and it is up to the project team to decide
         if they want it to appear in the document collection or not
         (publishing)</para>
-      </listitem>
-    </itemizedlist>
+    </listitem>
 
-    <para>The intent of the Document Manager is to give a quick and easy
+    <listitem>
+      <para>Define access control rules for each document.</para>
+    </listitem>
+
+  </itemizedlist>
+
+  <para>The intent of the Document Manager is to give a quick and easy
     access to the essential documents of a project, those which are really
     useful to the developers community or the users if the software is
     intended for end users. Typical examples are: User Guide, Administration
-    Guide, API References... HTML is the format of choice because it is a
+    Guide, API References&hellip; HTML is the format of choice because it is a
     standard format and it does not require any specific software to be read.</para>
 
-    <section id="DocumentBrowsing">
-      <title>Document Browsing</title>
+  <section id="DocumentBrowsing">
+    <title>Document Browsing</title>
 
-      <para>To access the Document Manager select the &#34;Docs&#34; item from
+    <para>To access the Document Manager select the &#34;Docs&#34; item from
       the Project Menu at the top of the screen of the Project Summary page.
       The welcome page of the Document Manager shows the list of all the
       documents published by the project by group.</para>
 
-      <para>To read a document simply click on the title.</para>
+    <para>To read a document simply click on the title.</para>
 
-      <figure id="FigureASampleDocumentManagerWelcome">
-        <title>A sample Document Manager welcome</title>
+    <figure id="FigureASampleDocumentManagerWelcome">
+      <title>A sample Document Manager welcome</title>
 
-        <mediaobject>
-          <imageobject>
-            <imagedata format="PNG"
-                       fileref="../../screenshots/en_US/sc_documentbrowsing.png" width="15.3cm" />
-          </imageobject>
-        </mediaobject>
-      </figure>
-    </section>
+      <mediaobject>
+	<imageobject>
+	  <imagedata format="PNG"
+		     fileref="../../screenshots/en_US/sc_documentbrowsing.png" width="15.3cm" />
+	</imageobject>
+      </mediaobject>
+    </figure>
+  </section>
 
-    <section id="DocumentSubmission">
-      <title>Document Submission</title>
+  <section id="DocumentSubmission">
+    <title>Document Submission</title>
 
-      <note><para>Before the first document is submitted to a project,
+    <note><para>Before the first document is submitted to a project,
       the project members with &#34;Editors&#34; rights on the Document
       Manager must first create one document group (folder). A document has to
       be attached to a group in any case hence the need for at least one
       document group.</para></note>
 
-      <para>Following the CodeX philosophy, any CodeX user can submit a
+    <para>Following the CodeX philosophy, any CodeX user can submit a
       document to a project team. To submit a new document, click on the
       &#34;Submit New Documentation&#34; link in the Document Manager menu (<xref
-      linkend="FigureASampleDocumentManagerWelcome" />). Then provide the
+										  linkend="FigureASampleDocumentManagerWelcome" />). Then provide the
       Document Title, the document description and the body of the text.</para>
 
-      <para>The document itself can either be copy-pasted directly in the
+    <para>The document itself can either be copy-pasted directly in the
       document text area or uploaded with the help of the &#34;Browse&#34;
       button and the &#34;Upload&#34; checkbox. Then select a document group
       from the pull-down menu and click on the &#34;Submit Information&#34;
       button.</para>
 
-      <para><tip><title>Tip: Referencing non HMTL documents</title><para>As
-      said earlier, the CodeX Document Manager only supports text and HTML
-      documents. However, you can also create placeholder documents that point
-      to another location where you have stored other documents like a
-      DocuShare collection or a DocuShare file for instance. To do this,
-      simply surround the document title with an HREF tag (hyperlink) pointing
-      to the real location elsewhere on the Xerox Intranet (an example is
-      given with Document #15 in <xref
-      linkend="FigureTheDocumentManagerAdministrationScreen" />)</para></tip></para>
+    <para><tip><title>Tip: Referencing external documents</title>
+    <para>It is sometime convenient to create placeholder documents
+    that actually point to an external location like a DocuShare
+    collection or a DocuShare file for instance. To do this, simply
+    surround the document title with an HREF tag (hyperlink) pointing
+    to the real location elsewhere on the Xerox Intranet (an example
+    is given with Document #15 in <xref
+    linkend="FigureTheDocumentManagerAdministrationScreen" />)</para>
+    </tip></para>
 
-      <para>The document title and summary can contain HTML tags. So you can
+    <para>The document title and summary can contain HTML tags. So you can
       use all sorts of typographic effects as well as pointers to other
       locations, etc.</para>
-    </section>
+  </section>
 
-    <section id="DocumentAdministration">
-      <title>Document Administration</title>
+  <section id="DocumentAdministration">
+    <title>Document Administration</title>
 
-      <para>The Document Manager provides a number of administration functions
+    <para>The Document Manager provides a number of administration functions
       like validating the publication of a document, changing a document
       status or group, creating new document groups, etc.</para>
 
-      <figure id="FigureTheDocumentManagerAdministrationScreen">
-        <title>The Document Manager Administration screen</title>
+    <figure id="FigureTheDocumentManagerAdministrationScreen">
+      <title>The Document Manager Administration screen</title>
 
-        <mediaobject>
-          <imageobject>
-            <imagedata format="PNG"
-                       fileref="../../screenshots/en_US/sc_documentadmin.png" width="15.3cm" />
-          </imageobject>
-        </mediaobject>
-      </figure>
+      <mediaobject>
+	<imageobject>
+	  <imagedata format="PNG"
+		     fileref="../../screenshots/en_US/sc_documentadmin.png" width="15.3cm" />
+	</imageobject>
+      </mediaobject>
+    </figure>
 
-      <section id="DocumentPublication">
-        <title>Document Publication</title>
+    <section id="DocumentPublication">
+      <title>Document Publication</title>
 
-        <para>Once a new document has been submitted it must be validated
-        before publication. In other words it won&#39;t be visible on the
-        Document Manager welcome page until a project member who has
-        &#34;Editor&#34; rights on the Document Manager has blessed it.</para>
+      <para>Once a new document has been submitted it must be
+      validated before publication. In other words it won&#39;t be
+      visible on the Document Manager welcome page until a project
+      member who has &#34;Editor&#34; rights on the Document Manager
+      has blessed it.</para>
 
-        <para>To validate the publication of a document click on the
-        &#34;Admin&#34; link in the Document Manager menu (<xref
-        linkend="FigureASampleDocumentManagerWelcome" />). What you see next
-        is a list of all documents submitted to the project sorted by status.
-        The documents with status &#34;Pending&#34; are listed at the top of
-        the page. These documents have been submitted and are awaiting the
-        project member review and blessing to become public.</para>
-        
-        <para>To validate a document, click on the document title. Go at the bottom of the next screen and
-        change the Document status from Pending to Active. Additionally you can also specify that
-        anonymous users are not granted access to this document by checking the checkbox "Access
-        to register user only". Checking this box will also have the effect of tracking who downloaded
-        this document. Project Adminstrators have access to this audit trail (see <xref linkend="SourceCodeAccessLogs"/>).</para>
-        <para>Finally click on the "Submit Edit" button to validate the changes.</para>
-      </section>
+      <para>To validate the publication of a document click on the
+      &#34;Admin&#34; link in the Document Manager menu (<xref
+      linkend="FigureASampleDocumentManagerWelcome" />). What you see
+      next is a list of all documents submitted to the project sorted
+      by status.  The documents with status &#34;Pending&#34; are
+      listed at the top of the page. These documents have been
+      submitted and are awaiting the project member review and
+      blessing to become public.</para>
+      
+      <para>To validate a document, click on the document title. Go at
+      the bottom of the next screen and change the Document status
+      from Pending to Active. Additionally you can also define an
+      access control policy for each document:</para>
 
-      <section id="DocumentUpdate">
-        <title>Document Update</title>
+      <itemizedlist mark="bullet" spacing="compact">
+	<listitem>
+	  <para><emphasis role="bold">World Readable</emphasis>: by
+	  default a document can be viewed by any CodeX user including
+	  anonymous users.</para>
+	</listitem>
 
-        <para>You can update a document in several ways:</para>
+	<listitem><para><emphasis role="bold">Registered Users
+	Only</emphasis>:if you check the "Access to register
+	user only" checkbox, access to the document will be restricted
+	to registered users only. In addition all accesses to the
+	document will be tracked down and stored in an audit trail
+	that Project Adminstrators can view (see <xref
+	linkend="SourceCodeAccessLogs"/>).</para>
+	</listitem>
 
-        <itemizedlist mark="bullet"
-                      spacing="compact">
-          <listitem>
-            <para>The title, description and document body can be modified. In
+	<listitem>
+	  <para><emphasis role="bold">Project Members Only</emphasis>:
+	  access to the document can be restricted to members of the
+	  project by changing its status to private. (more details on
+	  the document status in <xref
+	  linkend="DocumentUpdate"/>).</para>
+	</listitem>
+      </itemizedlist>
+
+      <para>Finally click on the "Submit Edit" button to validate the
+      changes.</para>
+    </section>
+
+    <section id="DocumentUpdate">
+      <title>Document Update</title>
+
+      <para>You can update a document in several ways:</para>
+
+      <itemizedlist mark="bullet"
+		    spacing="compact">
+	<listitem>
+	  <para>The title, description and document body can be modified. In
             this case you update the document content</para>
-          </listitem>
+	</listitem>
 
-          <listitem>
-            <para>You can change the group (or folder) a document belong to</para>
-          </listitem>
+	<listitem>
+	  <para>You can change the group (or folder) a document belong to</para>
+	</listitem>
 
-          <listitem>
-            <para>You can change the document status</para>
-          </listitem>
-        </itemizedlist>
+	<listitem>
+	  <para>You can change the document status</para>
+	</listitem>
+      </itemizedlist>
 
-        <para>To update a document click on the &#34;Admin&#34; link in the
+      <para>To update a document click on the &#34;Admin&#34; link in the
         Document Manager menu (<xref
-        linkend="FigureASampleDocumentManagerWelcome" />) and then the
+				     linkend="FigureASampleDocumentManagerWelcome" />) and then the
         &#34;Edit Documents&#34; item in the next menu. Then choose the
         document you want to update from the list. Click on the document title
         to make the document update screen appear. From here you can modify
         any part of the document, the group it belongs to or its status. The
         document status can take one of the following value:</para>
 
-        <itemizedlist mark="bullet"
-                      spacing="compact">
-          <listitem>
-            <para><emphasis role="bold">Active</emphasis>: the document is
+      <itemizedlist mark="bullet"
+		    spacing="compact">
+	<listitem>
+	  <para><emphasis role="bold">Active</emphasis>: the document is
             visible on the Document Manager welcome screen and can be read by
             any CodeX user.</para>
-          </listitem>
+	</listitem>
 
-          <listitem>
-            <para><emphasis role="bold">Deleted</emphasis>: the document has
+	<listitem>
+	  <para><emphasis role="bold">Deleted</emphasis>: the document has
             been marked as deleted by the project team. However it is not
             physically deleted from the Document Manager and it can be
             undeleted.</para>
-          </listitem>
+	</listitem>
 
-          <listitem>
-            <para><emphasis role="bold">Pending</emphasis>: the document is
+	<listitem>
+	  <para><emphasis role="bold">Pending</emphasis>: the document is
             temporarily hidden form the public view of the Document Manager</para>
-          </listitem>
+	</listitem>
 
-          <listitem>
-            <para><emphasis role="bold">Hidden</emphasis>: the document is
+	<listitem>
+	  <para><emphasis role="bold">Hidden</emphasis>: the document is
             temporarily hidden form the public view of the Document Manager</para>
-          </listitem>
+	</listitem>
 
-          <listitem>
-            <para><emphasis role="bold">Private</emphasis>: the document is
+	<listitem>
+	  <para><emphasis role="bold">Private</emphasis>: the document is
             only visible to the project members not to external CodeX users.</para>
-          </listitem>
-        </itemizedlist>
-      </section>
+	</listitem>
+      </itemizedlist>
+    </section>
 
-      <section id="DocumentGroupManagement">
-        <title>Document Group Management</title>
+    <section id="DocumentGroupManagement">
+      <title>Document Group Management</title>
 
-        <figure id="FigureTheDocumentGroupsAdministrationScreen">
-          <title>The Document Groups Administration screen</title>
+      <para>In the CodeX Terminology, a CodeX Document group is
+      equivalent to a folder.</para>
 
-          <mediaobject>
-            <imageobject>
-              <imagedata format="PNG"
-                         fileref="../../screenshots/en_US/sc_documentadmingroups.png" width="13cm" />
-            </imageobject>
-          </mediaobject>
-        </figure>
+      <figure id="FigureTheDocumentGroupsAdministrationScreen">
+	<title>The Document Groups Administration screen</title>
 
-        <para>To create, delete or change the name of document groups, click
+	<mediaobject>
+	  <imageobject>
+	    <imagedata format="PNG"
+		       fileref="../../screenshots/en_US/sc_documentadmingroups.png" width="13cm" />
+	  </imageobject>
+	</mediaobject>
+      </figure>
+
+      <para>To create, delete or change the name of document groups, click
         on the &#34;Admin&#34; link in the Document Manager menu (<xref
-        linkend="FigureASampleDocumentManagerWelcome" />) and then the
+									linkend="FigureASampleDocumentManagerWelcome" />) and then the
         &#34;Edit Document Groups&#34; item in the next menu.</para>
 
-        <para>To add a new group, use the &#34;New Group Name&#34; text field
+      <para>To add a new group, use the &#34;New Group Name&#34; text field
         at the top of the screen and click on the &#34;Add&#34; button. You
         can also delete or rename an existing group by clicking on the
         appropriate link in the group list.</para>
 
-        <para><tip><title>Tip: Document Groups ordering</title><para>By
+      <para><tip><title>Tip: Document Groups ordering</title><para>By
         default the Document Groups are listed by alphabetical order on the
         Document Manager welcome page. If you want to impose your own order
         modify the group names by adding a number at the head of the document
         group (e.g. 1-, 2-, 3-...) . The groups will then be presented on the
         screen in the same order as the prefix numbers.</para></tip></para>
-      </section>
     </section>
-  </chapter>
+  </section>
+</chapter>
 <!--
 Local Variables:
 sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")

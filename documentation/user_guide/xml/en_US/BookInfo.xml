@@ -208,6 +208,16 @@
 
         <revremark>XML changes to succesfully go through an XML validator. Fixed a formatting problem in the Table of Contents.</revremark>
       </revision>
+
+      <revision>
+        <revnumber>2.2</revnumber>
+
+        <date>25-Nov-2002</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>Document Mgr updated with access to registered users only.</revremark>
+      </revision>
      </revhistory>
   </bookinfo>
 <!--
