@@ -594,11 +594,11 @@ class ArtifactReport extends Error {
 		// The field value is stored into the artifact_field_value table
 		// So we need to add a new join
 		
-		$where_cond = $this->getValuesWhereClause($field,$prefs,"v".$count.".".$field->getValueFieldName(),$advsrch,$notany);
+		$where .= $this->getValuesWhereClause($field,$prefs,"v".$count.".".$field->getValueFieldName(),$advsrch,$notany);
 		
 		if ($notany) {
 		  $from .= " LEFT JOIN artifact_field_value v".$count." ON (v".$count.".artifact_id=a.artifact_id".
-		    " and v".$count.".field_id=".$field->getID().$where_cond.")";
+		    " and v".$count.".field_id=".$field->getID().")";
 		  
 		  $count++;
 		}
@@ -727,16 +727,13 @@ class ArtifactReport extends Error {
 	      
 	      // Build the where
 	      if ( $field->isShowOnQuery() && !$aids) {
-		$where_cond = $this->getValuesWhereClause($field,$prefs,"v".$count.".".$field->getValueFieldName(),$advsrch,$notany);
+		$where .= $this->getValuesWhereClause($field,$prefs,"v".$count.".".$field->getValueFieldName(),$advsrch,$notany);
 	      }
 	      
 	      if ($field->isShowOnResult() || 
 		  ($field->isShowOnQuery() && !$aids && $notany)) {
 		$from .= " LEFT JOIN artifact_field_value v".$count." ON (v".$count.".artifact_id=a.artifact_id".
-		  " and v".$count.".field_id=".$field->getID().
-		  $where_cond.")";
-		//$where .= " and v".$count.".field_id=".$field->getID();
-
+		  " and v".$count.".field_id=".$field->getID().")";
 	      }
 	      
 	      if ( $field->isShowOnResult() ) {
@@ -756,8 +753,6 @@ class ArtifactReport extends Error {
 		}
 	      }
 	      
-	      $count++;
-
 	      // Set the fields_order_result array to	build the order_by			
 	      if ( $fields_order[$field->getName()] ) {
 		$order_by_count ++;
@@ -768,6 +763,8 @@ class ArtifactReport extends Error {
 		  $fields_order_result[$field->getName()] = "v".$count.".".$field->getValueFieldName();
 		}
 	      }
+
+	      $count++;
 	      
 	    }
 	    
