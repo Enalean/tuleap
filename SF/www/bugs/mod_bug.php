@@ -128,7 +128,7 @@ if (db_numrows($result) > 0) {
       <TR><TD colspan="2"><hr></td></tr>
 
       <TR><TD colspan="2">
-      <h3>CC list</h3>
+      <h3>CC List</h3>
 	  <b><u>Note:</b></u> for CodeX users use their login name rather than their email addresses.<p>
 	  <B>Add CC:&nbsp;</b><input type="text" name="add_cc" size="30">&nbsp;&nbsp;&nbsp;
 	  <B>Comment:&nbsp;</b><input type="text" name="cc_comment" size="40" maxlength="255"><p>
