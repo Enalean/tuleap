@@ -24,8 +24,8 @@ if ( !$ath->isValid() ) {
 //
 //  make sure this person has permission to add artifacts
 //
-if (!$ath->userIsTech() && !$ath->allowsAnon() ) {
-	exit_permission_denied();
+if (!$ath->userIsTech() && !$ath->isPublic() ) {
+    exit_permission_denied();
 }
 
 // Display the menus
