@@ -597,6 +597,7 @@ sub delete_winuser {
 	my $this_user = shift(@_);
 	my ($username, $uid, $win_passwd, $winnt_passwd,$account_bits,
 	    $last_set_time, $realname);
+	my $counter = 0;
 	
 	return if (!$winaccount_on);
 
@@ -615,6 +616,7 @@ sub delete_winuser {
 sub delete_httpuser {
   my $this_user = shift(@_);
   my ($username, $p_passwd);
+  my $counter = 0;
 
   foreach (@htpasswd_array) {
     ($username,$p_passwd) = split(":", $_);
@@ -675,6 +677,7 @@ sub suspend_winuser {
 sub suspend_httpuser {
   my $this_user = shift(@_);
   my ($username, $p_passwd);
+  my $counter = 0;
 
   foreach (@htpasswd_array) {
     ($username,$p_passwd) = split(":", $_);
@@ -762,10 +765,11 @@ sub add_group {
 #############################
 sub update_group {
 	my ($gid, $gname, $userlist) = @_;
-	my ($p_gname, $p_junk, $p_gid, $p_userlist, $counter);
+	my ($p_gname, $p_junk, $p_gid, $p_userlist);
 # LJ modification to return TRUE if user list has changed
 	my $modified = 0;
-	
+        my $counter = 0;
+
 	print("Updating Group: $gname\n");
 	
 	foreach (@group_array) {
