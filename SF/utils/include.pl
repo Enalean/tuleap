@@ -17,6 +17,7 @@ $grpdir_prefix  =	"/home/groups/";	# What prefix to add to the project's homedir
 $cvs_prefix     =       "/cvsroot";              # What prefix to add to the cvs root directory
 $svn_prefix     =       "/svnroot";              # What prefix to add to the subversion root directory
 $ftp_frs_dir_prefix  =	"/home/ftp/codex/";	# What prefix to add to the ftp project file release homedir
+$ftp_incoming_dir =     "/home/ftp/incoming/";  # Where files are placed when uploaded
 $ftp_anon_dir_prefix  =	"/home/ftp/pub/";	# What prefix to add to the anon ftp project homedir
 $file_dir	=	"/home/dummy/dumps/";	# Where should we stick files we're working with
 $dummy_uid      =       "103";                  # UserID of the dummy user that will own group's files

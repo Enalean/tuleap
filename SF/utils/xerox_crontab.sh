@@ -90,3 +90,7 @@ cp -f ~dummy/dumps/subversion_dump /etc/httpd/conf/codex_svnhosts.conf
 
 # create mailing lists in mailman (activated Nov. 9 by jstidd)
 ./mailing_lists_create.pl
+
+# remove deleted releases and released files
+cd $UTILSHOME/download
+./download_filemaint.pl

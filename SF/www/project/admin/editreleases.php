@@ -9,9 +9,11 @@
 require ('pre.php');    
 require ($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
 
+
+
 /*
 
-	File release system rewrite, Tim Perdue, SourceForge, Aug, 2000
+File release system rewrite, Tim Perdue, SourceForge, Aug, 2000
 
 
 	Sorry this is a large, complex page but this is a very complex process
@@ -37,6 +39,94 @@ require ($DOCUMENT_ROOT.'/project/admin/project_admin_utils.php');
 
 
 */
+
+
+
+/*
+
+Physically delete a file from the download server and database
+
+First, make sure the file is theirs
+Second, delete it from the db
+Third, delete it from the download server
+
+return 0 if file not deleted, 1 otherwise
+*/
+function delete_file ($group_id,$file_id) {
+  GLOBAL $FTPINCOMING_DIR;
+
+  $res1=db_query("SELECT frs_file.filename FROM frs_package,frs_release,frs_file ".
+		 "WHERE frs_package.group_id='$group_id' ".
+		 "AND frs_release.release_id=frs_file.release_id ".
+		 "AND frs_release.package_id=frs_package.package_id ".
+		 "AND frs_file.file_id='$file_id'");
+  if (!$res1 || db_numrows($res1) < 1) {
+    //release not found for this project
+    return 0;
+  } else {
+    /*
+       delete the file from the database
+    */
+    db_query("DELETE FROM frs_file WHERE file_id='$file_id'");
+    //append the filename and project name to a temp file for the root perl job to grab
+    $time = time();
+    exec ("/bin/echo \"". db_result($res1,0,'filename') ."::". group_getunixname($group_id) ."::$time\" >> $FTPINCOMING_DIR/.delete_files");
+
+    return 1;
+  }
+}
+
+
+
+/*
+
+Physically delete a release from the download server and database
+
+First, make sure the release is theirs
+Second, delete all its files from the db
+Third, delete the release itself from the deb
+Fourth, put it into the delete_files to be removed from the download server
+
+return 0 if release not deleted, 1 otherwise
+*/
+function delete_release ($group_id,$release_id) {
+  GLOBAL $FTPINCOMING_DIR;
+  
+  $res1=db_query("SELECT frs_release.name FROM frs_package,frs_release ".
+		 "WHERE frs_package.group_id='$group_id' ".
+		 "AND frs_release.release_id='$release_id' ".
+		 "AND frs_release.package_id=frs_package.package_id");
+  if (!$res1 || db_numrows($res1) < 1) {
+    //release not found for this project
+    return 0;
+  } else {
+    //delete all corresponding files from the database
+    $res=db_query("SELECT file_id,filename FROM frs_file WHERE release_id='$release_id'");
+    $rows=db_numrows($res);
+    for ($i=0; $i<$rows; $i++) {
+      delete_file($group_id, db_result($res,$i,'file_id'));
+      $filename = db_result($res,$i,'filename');  
+    }
+    
+    //delete the release from the database
+    db_query("DELETE FROM frs_release WHERE release_id='$release_id'");
+    
+    //append the releasename and project name to a temp file for the root perl job to grab
+    if ($filename) {
+      //find the last occurrence of / in the filename to get the parentdir name
+      $pos = strrpos($filename, "/");
+      if (!$pos) {
+	// not found...
+      } else {
+	$parentdir = substr($filename, 0, $pos);
+	$time = time();
+	exec ("/bin/echo \"$parentdir::". group_getunixname($group_id) ."::$time\" >> $FTPINCOMING_DIR/.delete_files");
+      } 
+    }
+    
+    return 1;
+  }
+}
 
 
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
@@ -341,23 +431,13 @@ if ($submit) {
 
 
 		*/
-		$res1=db_query("SELECT frs_file.filename FROM frs_package,frs_release,frs_file ".
-		"WHERE frs_package.group_id='$group_id' ".
-		"AND frs_release.release_id=frs_file.release_id ".
-		"AND frs_release.package_id=frs_package.package_id ".
-		"AND frs_file.file_id='$file_id'");
-		if (!$res1 || db_numrows($res1) < 1) {
-			//release not found for this project
-			$feedback .= " Not Your File Or File Doesn't Exist ";
+	        $res = delete_file($group_id, $file_id);
+	        if ($res == 0) {
+		  $feedback .= " Not Your File Or File Doesn't Exist ";
 		} else {
-			/*
-				delete the file from the database
-			*/
-			db_query("DELETE FROM frs_file WHERE file_id='$file_id'");
-			//append the filename and project name to a temp file for the root perl job to grab
-			exec ("/bin/echo \"". db_result($res1,0,'filename') ."::". group_getunixname($group_id) ."::xxx\" >> $FTPINCOMING_DIR/.delete_files");
-			$feedback .= " File Deleted ";
+		  $feedback .= " File Deleted ";
 		}
+		
 	} else if ($func=='send_notice' && $package_id && $im_sure) {
 		/*
 			Send a release notification email
@@ -398,8 +478,9 @@ if ($submit) {
 
 ?><?php
 
-if ($release_id) {
+if ($release_id && !$func) {
 
+  
 /*
 
 
@@ -427,6 +508,7 @@ if ($release_id) {
 	project_admin_header(array('title'=>'Release New File Version',
 				   'group'=>$group_id,
 				   'help' => 'FileReleaseDelivery.html#ReleaseConfigurationandValidation'));
+
 
 	echo '<TABLE BORDER="0" WIDTH="100%" class="small">
 		<TR><TD>
@@ -642,8 +724,22 @@ if ($release_id) {
 		</FORM>';
 	}
 	echo '</TD></TR></TABLE>';
-
 } else {
+
+
+  if ($func == "delete_release" && $group_id) {
+    /*
+         Delete a release with all the files included
+         Delete the corresponding row from the database
+         Delete the corresponding directory from the server
+    */
+    $res = delete_release($group_id, $release_id);
+    if ($res == 0) {
+      $feedback .= " Not Your Release Or Release Doesn't Exist ";
+    } else {
+      $feedback .= " Release Deleted ";
+    }
+  } 
 	/*
 
 		Show existing releases and a form to create a new release
@@ -695,22 +791,24 @@ if ($release_id) {
 		$title_arr[]='Release Name';
 		$title_arr[]='Package Name';
 		$title_arr[]='Status';
+		$title_arr[]='Delete?';
 
 		echo html_build_list_table_top ($title_arr);
 
 		for ($i=0; $i<$rows; $i++) {
-			echo '
-			<TR class="'. util_get_alt_row_color($i) .'">
-				<TD><FONT SIZE="-1">'. db_result($res,$i,'release_name') 
-					.' <A HREF="editreleases.php?release_id='. 
-					db_result($res,$i,'release_id') .'&group_id='. 
-					$group_id .'">[Edit This Release]</A></TD>
-				<TD><FONT SIZE="-1">'. 
-					db_result($res,$i,'package_name') 
-					.' <A HREF="editpackages.php?group_id='.
-					$group_id.'">[Edit This Package]</TD>
-				<TD><FONT SIZE="-1">'. db_result($res,$i,'status_name') .'</TD>
-			</TR></FORM>';
+		  echo '<TR class="'. util_get_alt_row_color($i) .'">'.
+		    '<TD><FONT SIZE="-1"><A HREF="editreleases.php?release_id='. 
+		    db_result($res,$i,'release_id') .'&group_id='. $group_id .'" title="Edit This Release">'.
+		    db_result($res,$i,'release_name') .'</A></TD>'.
+		    '<TD><FONT SIZE="-1"><A HREF="editpackages.php?group_id='.
+		    $group_id.'" title="Edit This Package">'. 
+		    db_result($res,$i,'package_name') 
+		    .' </TD>'.
+		    '<TD><FONT SIZE="-1">'. db_result($res,$i,'status_name') .'</TD>'.
+		    '<TD align="center"><FONT SIZE="-1">'. 
+		    '<a href="/project/admin/editreleases.php?func=delete_release&group_id='. $group_id .'&release_id='.db_result($res,$i,'release_id').'&package_id='.$package_id.'">'.
+		    '<img src="'.util_get_image_theme("ic/trash.png").'" border="0" onClick="return confirm(\'** WARNING!! ** Delete this release and all its files (no possible restore operation)?\')"></a>'.'</TD>'.
+		    '</TR></FORM>';
 		}
 		echo '</TABLE>';
 	}
@@ -740,5 +838,8 @@ if ($release_id) {
 }
 
 project_admin_footer(array());
+
+
+
 
 ?>
