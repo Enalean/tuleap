@@ -43,15 +43,16 @@ if ( $atid ) {
 // not a valid comment type in the bug_field_value table. So the join
 // doesn't work.
 $sql = "SELECT ah.artifact_id,ah.field_name,".
-'ah.old_value, user.user_name AS mod_by, ah.email, ah.date, ah.type'.
+'ah.old_value, ah.new_value, user.user_name AS mod_by, user.email, ah.date, ah.type'.
 ' FROM artifact_history ah, user, artifact a '.
 "WHERE ah.artifact_id = a.artifact_id AND a.group_artifact_id = ".$atid." AND ".
-'user.user_id=ah.mod_by';
+'user.user_id=ah.mod_by ORDER BY ah.artifact_id,ah.date DESC';
 
-$col_list = array('artifact_id','field_name','old_value','mod_by','email','date','type');
+$col_list = array('artifact_id','field_name','old_value','new_value','mod_by','email','date','type');
 $lbl_list = array('artifact_id' => 'Artifact ID',
 		  'field_name' => 'Field Name',
 		  'old_value' => 'Old Value',
+		  'new_value' => 'New Value',
 		  'mod_by' => 'Modified By',
 		  'email' => 'Email',
 		  'date' => 'Modified On',
@@ -60,6 +61,7 @@ $lbl_list = array('artifact_id' => 'Artifact ID',
 $dsc_list = array('artifact_id' => 'Artifact ID',
 		  'field_name' => 'Name of the bug field which value changed',
 		  'old_value' => 'Value of the bug field before it changed',
+		  'new_value' => 'Value of the bug field after it changed',
 		  'mod_by' => 'Login name of the user who changed the value',
 		  'date' => 'Modification date',
 		  'type' => 'Type of the followup comment added to history (this field only applies for field name \'<tt>details</tt>\'');

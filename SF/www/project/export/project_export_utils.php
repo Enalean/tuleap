@@ -395,66 +395,65 @@ function prepare_bug_history_record($group_id, &$col_list, &$record) {
 
 
 function prepare_artifact_history_record($at, $art_field_fact, &$record) {
-
-    global $datetime_fmt;
-
-    /*
+  
+  global $datetime_fmt;
+  
+  /*
            Prepare the column values in the bug history  record
            Input: a row from the bug_history database (passed by
                    reference.
           Output: the same row with values transformed for export
-       */
-
-    // replace the modification date field with human readable dates 
-    $record['date'] = format_date($datetime_fmt,$record['date']);
-
-	$field = $art_field_fact->getFieldFromName($record['field_name']);
-	if ( $field ) {
-		
-		if ( $field->isSelectBox() || $field->isMultiSelectBox() ) {
-			$values = array();
-			if ( $field->isStandardField() ) {
-				$values[] = $record[$field->getName()];
-			} else {
-				$values = $field->getValues($record['artifact_id']);
-			}
-			$label_values = $field->getLabelValues($group_artifact_id,$values);
-			$record['old_value'] = join(",",$label_values);
-			
-		} else if ( $field->isTextArea() || ($field->isTextField() && $field->getDataType() == $field->DATATYPE_TEXT) ) {
-		    // all text fields converted from HTML to ASCII
-		    $record['old_value'] = prepare_textarea($record['old_value']);
-		 
-		} else if ( $field->isDateField() ) {
-
-		    // replace the date fields (unix time) with human readable dates that
-		    // is also accepted as a valid format in future import
-		    if ($record['old_value'] == '')
-				// if date undefined then set datetime to 0. Ideally should
-				// NULL as well but if we pass NULL it is interpreted as a string
-				// later in the process
-				$record['old_value'] = '0';
-		    else
-				$record['old_value'] = format_date($datetime_fmt,$record['old_value']);
-		} else if ( $field->isFloat() ) {
-			$record['old_value'] = number_format($record['old_value'],2);
-		}
-	}	
-	
-
-    // Decode the comment type value. If null make sure there is
-    // a blank entry in the array
-    if (isset($record['type'])) {
-		$field = $art_field_fact->getFieldFromName('comment_type_id');
-		if ( $field ) {
-			$values[] = $record['type'];
-			$label_values = $field->getLabelValues($at->getID(),$values);
-			$record['type'] = join(",",$label_values);
-		}
-    } else {
-		$record['type']='';
+  */
+  
+  // replace the modification date field with human readable dates 
+  $record['date'] = format_date($datetime_fmt,$record['date']);
+  
+  $field = $art_field_fact->getFieldFromName($record['field_name']);
+  if ( $field ) {
+    prepare_historic_value(&$record, $field, $at->getID(), 'old_value');
+    prepare_historic_value(&$record, $field, $at->getID(), 'new_value');
+  }	
+  
+  
+  // Decode the comment type value. If null make sure there is
+  // a blank entry in the array
+  if (isset($record['type'])) {
+    $field = $art_field_fact->getFieldFromName('comment_type_id');
+    if ( $field ) {
+      $values[] = $record['type'];
+      $label_values = $field->getLabelValues($at->getID(),$values);
+      $record['type'] = join(",",$label_values);
     }
+  } else {
+    $record['type']='';
+  }
+  
+}
 
+function prepare_historic_value(&$record, $field, $group_artifact_id, $name) {
+  if ( $field->isSelectBox() ) {
+    $record[$name] = $field->getValue($group_artifact_id, $record[$name]);
+    
+  } else if ( $field->isDateField() ) {
+    
+    // replace the date fields (unix time) with human readable dates that
+    // is also accepted as a valid format in future import
+    if ($record[$name] == '')
+      // if date undefined then set datetime to 0. Ideally should
+      // NULL as well but if we pass NULL it is interpreted as a string
+      // later in the process
+      $record[$name] = '0';
+    else
+      $record[$name] = format_date($datetime_fmt,$record[$name]);
+    
+  } else if ( $field->isFloat() ) {
+    $record[$name] = number_format($record[$name],2);
+    
+  } else {
+    // all text fields converted from HTML to ASCII
+    $record[$name] = prepare_textarea($record[$name]);
+  }
+  
 }
 
 function prepare_task_history_record(&$record) {
