@@ -27,11 +27,20 @@ if ($submit) {
 	*/
 	if ($func=='add_package' && $package_name) {
 
+	  //make sure that the package_name does not already exist
+	  $query = "SELECT * from frs_package where name='".htmlspecialchars($package_name)."'";
+	  $res = db_query($query);
+	  if ($res && (db_numrows($res) > 0)) {
+	    $feedback .= ' This package name already exists. Please choose another name. ';
+	  } else {
+	    db_query("INSERT INTO frs_package (group_id,name,status_id) ".
+			"VALUES ('$group_id','". htmlspecialchars($package_name)  ."','1')");
+
 		//create a new package
 		db_query("INSERT INTO frs_package (group_id,name,status_id) ".
 			"VALUES ('$group_id','". htmlspecialchars($package_name)  ."','1')");
 		$feedback .= ' Added Package ';
-
+	  }
 	} else if ($func=='update_package' && $package_id && $package_name && $status_id) {
 		if ($status_id != 1) {
 			//if hiding a package, refuse if it has releases under it

@@ -70,18 +70,24 @@ if ($submit) {
 				$feedback .= ' | Package Doesn\'t Exist Or Isn\'t Yours ';
 				echo db_error();
 			} else {
-				//package_id was fine - now insert the release
-				$res=db_query("INSERT INTO frs_release (package_id,name,status_id,release_date,released_by) ".
-					"VALUES ('$package_id','$release_name','1','". time() ."','". user_getid() ."')");
-				if (!$res) {
-					$feedback .= ' | Adding Release Failed ';
-					echo db_error();
-					//insert failed - go back to definition screen
-				} else {
-					//release added - now show the detail page for this new release
-					$release_id=db_insertid($res);
-					$feedback .= ' Added Release ';
-				}
+			  //check if release name exists already
+			  $testres=db_query("SELECT * FROM frs_release WHERE package_id='$package_id' and name='$release_name'");
+			  if (!$testres || db_numrows($testres) < 1) {
+			    //package_id was fine - now insert the release
+			    $res=db_query("INSERT INTO frs_release (package_id,name,status_id,release_date,released_by) ".
+					  "VALUES ('$package_id','$release_name','1','". time() ."','". user_getid() ."')");
+			    if (!$res) {
+			      $feedback .= ' | Adding Release Failed ';
+			      echo db_error();
+			      //insert failed - go back to definition screen
+			    } else {
+			      //release added - now show the detail page for this new release
+			      $release_id=db_insertid($res);
+			      $feedback .= ' Added Release ';
+			    }
+			  } else {
+			     $feedback .= ' Release Name Already Exists ';
+			  }
 			}
 		}
 

@@ -21,56 +21,97 @@ project_admin_header(array('title'=>'Release New File Version',
 			   'help' => 'QuickFileRelease.html'));
 
 if( $submit ) {
-    if (!$release_name) {
-        $feedback .= ' Must define a release name. ';
-        echo db_error();
+  if (!$release_name) {
+    $feedback .= ' Must define a release name. ';
+    echo db_error();
+    project_admin_footer(array());
+    exit;
+  } 
+  
+  if (!$file_name) {
+    $feedback .= ' No Files Selected ';
+    project_admin_footer(array());
+    exit;
+  }
+	
+  
+  // Check to see if the user uploaded a file instead of selecting an existing one.
+  // If so then move it to the 'incoming' dir where we proceed as usual.
+  if( $file_name == "qrs_newfile" ) {
+    if (!$userfile_name) {
+      $feedback .= ' No Files Selected ';
+      project_admin_footer(array());
+      exit;
+    }
+    $file_name = $userfile_name;
+      
+    if (!util_is_valid_filename ($file_name)) {
+      $feedback .= " Illegal FileName: $file_name ";
+      project_admin_footer(array());
+      exit;
+    }
+      
+    //create a new release of this package
+      
+    //see if this package belongs to this project
+    $res1=db_query("SELECT * FROM frs_package WHERE package_id='$package_id' AND group_id='$group_id'");
+    if (!$res1 || db_numrows($res1) < 1) {
+      $feedback .= ' | Package Doesn\'t Exist Or Isn\'t Yours ';
+      echo db_error();
+      project_admin_footer(array());
+      exit;
+    } 
+
+    if ($processor_id == 100) {
+      $feedback .= ' Please choose Processor Type ';
+      project_admin_footer(array());
+      exit;
+    }
+
+    if ($type_id == 100) {
+      $feedback .= ' Please choose File Type ';
+      project_admin_footer(array());
+      exit;
+    }
+
+    //package_id was fine - now insert the release
+    $package_name = db_result($res1, 0, 'name');
+    //package_id was fine - now update/insert the release if admin rights on package/release
+    // get release_id for release name in this package
+    $rel_res = db_query("SELECT release_id from frs_release where frs_release.package_id='$package_id' and frs_release.name='$release_name'");
+    //echo "query=SELECT release_id from frs_release where frs_release.package_id='$package_id' and frs_release.name='$release_name'<br>";
+    if (!$rel_res || db_numrows($rel_res) < 1) {
+      
+      $res=db_query("INSERT INTO frs_release (package_id,name,notes,changes,status_id,release_date,released_by) ".
+		    "VALUES ('$package_id','$release_name','$release_notes','$release_changes','$status_id','". time() ."','". user_getid() ."')");
+      if (!$res) {
+	$feedback .= ' | Adding Release Failed ';
+	echo db_error();
+	//insert failed - go back to definition screen
+      } else {
+	//release added - now show the detail page for this new release
+	$release_id=db_insertid($res);
+	$feedback .= ' Added Release <BR>';
+      }
     } else {
-        //create a new release of this package
-        
-        //see if this package belongs to this project
-        $res1=db_query("SELECT * FROM frs_package WHERE package_id='$package_id' AND group_id='$group_id'");
-        if (!$res1 || db_numrows($res1) < 1) {
-            $feedback .= ' | Package Doesn\'t Exist Or Isn\'t Yours ';
-            echo db_error();
-        } else {
-            //package_id was fine - now insert the release
-            $package_name = db_result($res1, 0, 'name');
-            //package_id was fine - now update/insert the release if admin rights on package/release
-            // get release_id for release name in this package
-            $rel_res = db_query("SELECT release_id from frs_release where frs_release.package_id='$package_id' and frs_release.name='$release_name'");
-            //echo "query=SELECT release_id from frs_release where frs_release.package_id='$package_id' and frs_release.name='$release_name'<br>";
-            if (!$rel_res || db_numrows($rel_res) < 1) {
-
-                $res=db_query("INSERT INTO frs_release (package_id,name,notes,changes,status_id,release_date,released_by) ".
-                              "VALUES ('$package_id','$release_name','$release_notes','$release_changes','$status_id','". time() ."','". user_getid() ."')");
-                if (!$res) {
-                    $feedback .= ' | Adding Release Failed ';
-                    echo db_error();
-                    //insert failed - go back to definition screen
-                } else {
-                    //release added - now show the detail page for this new release
-                    $release_id=db_insertid($res);
-                    $feedback .= ' Added Release <BR>';
-                }
-            } else {
-                $release_id = db_result($rel_res, 0, 'release_id');
-                // update found release with $release_name','$release_notes','$release_changes','$status_id'
-                $fields_str = "status_id='$status_id'";
-                if ($release_name != "") {
-                    $fields_str .= ",name='$release_name'";
-                }
-                if ($release_notes != "") {
-                    $fields_str .= ",notes='$release_notes'";
-                }
-                if ($release_changes != "") {
-                    $fields_str .= ",changes='$release_changes'";
-                }
-
-                $resupdate = db_query("UPDATE frs_release SET $fields_str WHERE release_id='$release_id'");
-                //echo "query=UPDATE frs_release SET $fields_str WHERE release_id='$release_id'<br>";
-            }
-
-            /*
+      $release_id = db_result($rel_res, 0, 'release_id');
+      // update found release with $release_name','$release_notes','$release_changes','$status_id'
+      $fields_str = "status_id='$status_id'";
+      if ($release_name != "") {
+	$fields_str .= ",name='$release_name'";
+      }
+      if ($release_notes != "") {
+	$fields_str .= ",notes='$release_notes'";
+      }
+      if ($release_changes != "") {
+	$fields_str .= ",changes='$release_changes'";
+      }
+      
+      $resupdate = db_query("UPDATE frs_release SET $fields_str WHERE release_id='$release_id'");
+      //echo "query=UPDATE frs_release SET $fields_str WHERE release_id='$release_id'<br>";
+    }
+    
+    /*
 			Add a file to this release
 
 			First, make sure this release belongs to this group
@@ -81,128 +122,125 @@ if( $submit ) {
 			Third see if they already have a file by the same name
 			Fourth if file actually exists, physically move the file on garbage to the new location
 			Fifth insert it into the database
-            */
-            $group_unix_name=group_getunixname($group_id);
-            $project_files_dir=$FTPFILES_DIR.'/'.$group_unix_name;
-
-            if ($file_name) {
-                // Check to see if the user uploaded a file instead of selecting an existing one.
-                // If so then move it to the 'incoming' dir where we proceed as usual.
-                if( $file_name == "qrs_newfile" ) {
-                    $file_name = $userfile_name;
-
-                    if (is_file($userfile) && file_exists($userfile)) {
-                        $new_userfile = explode("tmp/", $userfile);
-                        $userfile = $new_userfile[1];
-                        exec ("/usr/local/bin/tmpfilemove $userfile $userfile_name",$exec_res);
-                        if ($exec_res[0]) {
-                            echo '<H3>' . $exec_res[0],$exec_res[1] . '</H3><P>';
-                        }
-                    }
-                }
-                $feedback .= ' Adding File ';
-                //see if this release belongs to this project
-                $res1=db_query("SELECT frs_package.package_id FROM frs_package,frs_release ".
-                               "WHERE frs_package.group_id='$group_id' ".
-                               "AND frs_release.release_id='$release_id' ".
-                               "AND frs_release.package_id=frs_package.package_id");
-                if (!$res1 || db_numrows($res1) < 1) {
-                    //release not found for this project
-                    $feedback .= " | Not Your Release Or Release Doesn't Exist ";
-                } else {
-                    $now=time();
-                    //see if filename is legal before adding it
-                    if (!util_is_valid_filename ($file_name)) {
-                        $feedback .= " | Illegal FileName: $file_name ";
-                    } else {
-                        //see if they already have a file by this name
-                        $upload_subdir = 'p'.$package_id.'_r'.$release_id;
-
-                        $res1=db_query("SELECT frs_package.package_id FROM frs_package,frs_release,frs_file ".
-                                       "WHERE frs_package.group_id='$group_id' ".
-                                       "AND frs_release.release_id=frs_file.release_id ".
-                                       "AND frs_release.package_id=frs_package.package_id ".
-                                       "AND frs_file.filename='$upload_subdir/$file_name'");
-                        if (!$res1 || db_numrows($res1) < 1) {
-
-                            /*
-							move the file to the project's fileserver directory
-                            */
-                            clearstatcache();
-                            if (is_file($FTPINCOMING_DIR.'/'.$file_name) && file_exists($FTPINCOMING_DIR.'/'.$file_name)) {
-                                //move the file to a its project page using a setuid program
-		      
-                                // force project subdir creation
-                                exec ("/bin/date > /tmp/".$group_unix_name."$group_id",$exec_res);
-                                exec ("/usr/local/bin/fileforge /tmp/".$group_unix_name."$group_id ".$group_unix_name, $exec_res); 		      
-                                exec ("/usr/local/bin/fileforge $file_name ".$group_unix_name."/".$upload_subdir,$exec_res);
-                                if ($exec_res[0]) {
-                                    echo '<h3>'.$exec_res[0],$exec_res[1].'</H3><P>';
-                                }
-                                //add the file to the database
-                                $res=db_query("INSERT INTO frs_file ".
-                                              "(release_time,filename,release_id,file_size,post_date, type_id, processor_id) ".
-                                              "VALUES ('$now','$upload_subdir/$file_name','$release_id','"
-                                              . filesize("$project_files_dir/$upload_subdir/$file_name") 
-                                              . "','$now', '$type_id', '$processor_id') ");
-                                if (!$res) {
-                                    $feedback .= " | Couldn't Add FileName: $file_name ";
-                                    echo db_error();
-                                } else {
-                                    $feedback .= " | $file_name added successfuly";
-
-                                    // Now send notifications to users monitoring the package, provided
-                                    // that the package is active (not hidden)
-                                    if (frs_package_is_active($status_id)) {
-
-                                        $sql="SELECT user.email,frs_package.name ".
-                                            "FROM user,filemodule_monitor,frs_package ".
-                                            "WHERE user.user_id=filemodule_monitor.user_id ".
-                                            "AND filemodule_monitor.filemodule_id=frs_package.package_id ".
-                                            "AND filemodule_monitor.filemodule_id='$package_id' ".
-                                            "AND frs_package.group_id='$group_id'";
-                                        
-                                        $result=db_query($sql);
-                                        echo db_error();
-                                        if ($result && db_numrows($result) > 0) {
-                                            //send the email
-                                            $array_emails=result_column_to_array($result);
-                                            $list=implode($array_emails,', ');
-		
-                                            $subject=$GLOBALS['sys_name'].' File Release Notice';
-                                            list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
-                                            $body = "To: noreply@".$host.$GLOBALS['sys_lf'].
-                                                "BCC: $list".$GLOBALS['sys_lf'].
-                                                "Subject: $subject".$GLOBALS['sys_lf'].$GLOBALS['sys_lf'].
-                                                "\n\nA new version of ". db_result($result,0,'name')." has been released. ".
-                                                "\nYou can download it at: ".
-                                                "\n\n<http://".$GLOBALS['sys_default_domain']."/project/showfiles.php?group_id=$group_id&release_id=$release_id> ".
-                                                "\n\nYou requested to be notified when new versions of this file ".
-                                                "\nwere released. If you don't wish to be notified in the ".
-                                                "\nfuture, please login to ".$GLOBALS['sys_name']." and click this link: ".
-                                                "\n<http://".$GLOBALS['sys_default_domain']."/project/filemodule_monitor.php?filemodule_id=$package_id> ";
-                                            exec ("/bin/echo \"$body\" | /usr/sbin/sendmail -fnoreply@".$host." -t -i &");
-                                            $feedback .= '| email sent to '. db_numrows($result) .' users monitoring this package ';
-                                        }
-                                    } else {
-                                        $feedback .= '| no email sent: release is hidden ';
-                                    }
+    */
+    $group_unix_name=group_getunixname($group_id);
+    $project_files_dir=$FTPFILES_DIR.'/'.$group_unix_name;
     
-                                }
-                            } else {
-                                $feedback .= " | FileName Invalid Or Does Not Exist: $file_name ";
-                            }
-                        } else {
-                            $feedback .= " | FileName Already Exists For This Project: $file_name ";
-                        }
-                    }
-                }
-            } else {
-                //do nothing
-                $feedback .= ' No Files Selected ';
-            }
-        }
+    
+    
+    if (is_file($userfile) && file_exists($userfile)) {
+      $new_userfile = explode("tmp/", $userfile);
+      $userfile = $new_userfile[1];
+      exec ("/usr/local/bin/tmpfilemove $userfile $userfile_name",$exec_res);
+      if ($exec_res[0]) {
+	echo '<H3>' . $exec_res[0],$exec_res[1] . '</H3><P>';
+      }
     }
+    
+    $feedback .= ' Adding File ';
+    //see if this release belongs to this project
+    $res1=db_query("SELECT frs_package.package_id FROM frs_package,frs_release ".
+		   "WHERE frs_package.group_id='$group_id' ".
+		   "AND frs_release.release_id='$release_id' ".
+		   "AND frs_release.package_id=frs_package.package_id");
+    if (!$res1 || db_numrows($res1) < 1) {
+      //release not found for this project
+      $feedback .= " | Not Your Release Or Release Doesn't Exist ";
+      project_admin_footer(array());
+      exit;
+    }
+	 
+    $now=time();
+	
+    //see if they already have a file by this name
+    $upload_subdir = 'p'.$package_id.'_r'.$release_id;
+    
+    $res1=db_query("SELECT frs_package.package_id FROM frs_package,frs_release,frs_file ".
+		   "WHERE frs_package.group_id='$group_id' ".
+		   "AND frs_release.release_id=frs_file.release_id ".
+		   "AND frs_release.package_id=frs_package.package_id ".
+		   "AND frs_file.filename='$upload_subdir/$file_name'");
+    
+    if ($res1 && db_numrows($res1) > 0) {
+      $feedback .= " | FileName Already Exists For This Project: $file_name ";
+      project_admin_footer(array());
+      exit;
+    }
+	
+    /*
+							move the file to the project's fileserver directory
+    */
+    clearstatcache();
+    if (is_file($FTPINCOMING_DIR.'/'.$file_name) && file_exists($FTPINCOMING_DIR.'/'.$file_name)) {
+      //move the file to a its project page using a setuid program
+      
+      // force project subdir creation
+      exec ("/bin/date > /tmp/".$group_unix_name."$group_id",$exec_res);
+      exec ("/usr/local/bin/fileforge /tmp/".$group_unix_name."$group_id ".$group_unix_name, $exec_res); 		      
+      exec ("/usr/local/bin/fileforge $file_name ".$group_unix_name."/".$upload_subdir,$exec_res);
+      if ($exec_res[0]) {
+	echo '<h3>'.$exec_res[0],$exec_res[1].'</H3><P>';
+      }
+      //add the file to the database
+      $res=db_query("INSERT INTO frs_file ".
+		    "(release_time,filename,release_id,file_size,post_date, type_id, processor_id) ".
+		    "VALUES ('$now','$upload_subdir/$file_name','$release_id','"
+		    . filesize("$project_files_dir/$upload_subdir/$file_name") 
+		    . "','$now', '$type_id', '$processor_id') ");
+      if (!$res) {
+	$feedback .= " | Couldn't Add FileName: $file_name ";
+	echo db_error();
+	project_admin_footer(array());
+	exit;
+      } 
+      $feedback .= " | $file_name added successfuly";
+      
+      // Now send notifications to users monitoring the package, provided
+      // that the package is active (not hidden)
+      if (!frs_package_is_active($status_id)) {
+	$feedback .= '| no email sent: release is hidden ';
+	project_admin_footer(array());
+	exit;
+      }
+      
+      $sql="SELECT user.email,frs_package.name ".
+	"FROM user,filemodule_monitor,frs_package ".
+	"WHERE user.user_id=filemodule_monitor.user_id ".
+	"AND filemodule_monitor.filemodule_id=frs_package.package_id ".
+	"AND filemodule_monitor.filemodule_id='$package_id' ".
+	"AND frs_package.group_id='$group_id'";
+      
+      $result=db_query($sql);
+      echo db_error();
+      if ($result && db_numrows($result) > 0) {
+	//send the email
+	$array_emails=result_column_to_array($result);
+	$list=implode($array_emails,', ');
+	
+	$subject=$GLOBALS['sys_name'].' File Release Notice';
+	list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
+	$body = "To: noreply@".$host.$GLOBALS['sys_lf'].
+	  "BCC: $list".$GLOBALS['sys_lf'].
+	  "Subject: $subject".$GLOBALS['sys_lf'].$GLOBALS['sys_lf'].
+	  "\n\nA new version of ". db_result($result,0,'name')." has been released. ".
+	  "\nYou can download it at: ".
+	  "\n\n<http://".$GLOBALS['sys_default_domain']."/project/showfiles.php?group_id=$group_id&release_id=$release_id> ".
+	  "\n\nYou requested to be notified when new versions of this file ".
+	  "\nwere released. If you don't wish to be notified in the ".
+	  "\nfuture, please login to ".$GLOBALS['sys_name']." and click this link: ".
+	  "\n<http://".$GLOBALS['sys_default_domain']."/project/filemodule_monitor.php?filemodule_id=$package_id> ";
+	exec ("/bin/echo \"$body\" | /usr/sbin/sendmail -fnoreply@".$host." -t -i &");
+	$feedback .= '| email sent to '. db_numrows($result) .' users monitoring this package ';
+      }
+      
+      
+	    
+    } else {
+      $feedback .= " | FileName Invalid Or Does Not Exist: $file_name ";
+    }
+    
+  } // end if file_name == qrs_newfile
+  
 } else {
 ?>
 
