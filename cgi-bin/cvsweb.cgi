@@ -338,6 +338,9 @@ if ($allow_compress && $maycompress) {
 #     If not then deny access
 my $group_id = set_group_info_from_name($cvstree);
 
+#my $debug = sprintf("<br>cvstree = %s<br>group_id = %d<br>user_id = %d<br>isGroupPublic = %d<br>user_is_member() = %d",	  $cvstree,$group_id,user_getid(),isGroupPublic(), user_is_member($group_id, '0'));
+#system("echo \'$debug\' > /tmp/titi.log");
+
 if ($group_id && !isGroupPublic() && !user_is_member($group_id, '0')) {
   &fatal("403 Forbidden",
 	 'You are not allowed to browse the source code of this project');
