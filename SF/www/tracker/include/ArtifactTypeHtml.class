@@ -1615,10 +1615,10 @@ class ArtifactTypeHtml extends ArtifactType {
 function reportingMainPage() {
 	global $art_field_fact;
 
-	$this->header(array("title"=>"Tracker Reporting System",
-			  'help' => 'Tracker Reporting.html'));
+	$this->header(array("title"=>"Tracker '".$this->getName()."' - Reporting System",
+			  'help' => 'TrackerReporting.html'));
 
-	echo '<H1>Tracker - <a href="/tracker?group_id='.$this->Group->getID().'&atid='.$this->getID().'">'.$this->getName().'</a> - Reporting System</H1>';
+	echo '<H2>Tracker Reporting System</H2>';
 	echo "\n<P>";
 	echo "\n<A HREF=\"/tracker?func=reporting&group_id=".$this->Group->getID()."&atid=".$this->getID()."&field=aging\">Aging Report</A><BR>";
 
@@ -1642,14 +1642,14 @@ function reportingMainPage() {
 function reportingByAge() {
 	global $DOCUMENT_ROOT;
 
-	$this->header(array("title"=>$this->getName()." - Aging Report",
-			  'help' => 'Tracker Reporting.html'));
+	$this->header(array("title"=>"Tracker '".$this->getName()."' - Aging Report",
+			  'help' => 'TrackerReporting.html'));
 
 	
 	$closedItems = $this->get_artifacts_by_age();
 
 
-	echo '<H2>Tracker - <a href="/tracker?group_id='.$this->Group->getID().'&atid='.$this->getID().'">'.$this->getName().'</a> - Aging report</H1>';
+	echo '<H2>Tracker Aging Report</H2>';
 
     	include ($DOCUMENT_ROOT.'/include/HTML_Graphs.php');
 	GraphIt($closedItems['names'], $closedItems['values'],"Average Turnaround Time For Closed ".$this->getItemName()."s");
@@ -1666,8 +1666,8 @@ function reportingByField($field_id) {
 
 	$field = $art_field_fact->getFieldFromId($field_id);
 
-	$this->header(array("title"=>$this->getName()." by ".$field->getLabel(),
-			  'help' => 'Tracker Reporting.html'));
+	$this->header(array("title"=>"Tracker '".$this->getName()."' - Reporting on field '".$field->getLabel()."'",
+			  'help' => 'TrackerReporting.html'));
 
 	if ($field->isStandardField()) {
 		$openItems = $this->get_open_artifacts_by($field->getName());
@@ -1679,11 +1679,11 @@ function reportingByField($field_id) {
 	}
 
 
-	echo '<H3>Tracker - Open <a href="/tracker?group_id='.$this->Group->getID().'&atid='.$this->getID().'">'.$this->getName().'</a> - by '.$field->getLabel().'</H3>';
+	echo '<H3>Open \'<a href="/tracker?group_id='.$this->Group->getID().'&atid='.$this->getID().'">'.$this->getName().'</a>\' by '.$field->getLabel().'</H3>';
 
     	include ($DOCUMENT_ROOT.'/include/HTML_Graphs.php');
 	GraphIt($openItems['names'], $openItems['values'],"Open ".$this->getItemName()." By ".$field->getLabel());
-	echo '<H3>Tracker - All <a href="/tracker?group_id='.$this->Group->getID().'&atid='.$this->getID().'">'.$this->getName().'</a> - by '.$field->getLabel().'</H3>';
+	echo '<H3>All \'<a href="/tracker?group_id='.$this->Group->getID().'&atid='.$this->getID().'">'.$this->getName().'</a>\' by '.$field->getLabel().'</H3>';
 
 	GraphIt($allItems['names'], $allItems['values'],"All ".$this->getItemName()." By ".$field->getLabel());
 	$this->footer(array());
