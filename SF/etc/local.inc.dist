@@ -117,5 +117,15 @@ $sys_ldap_server='Choose_an_LDAP/Exchange_server_next_to_you';
 // System name to be used in Web pages, documentation,etc.
 $sys_name='CodeX';
 
+//
+// Email address pointing to the CodeX site administrators
+// for use Web pages, documentation,etc.
+$sys_email_admin='codex-admin@lists.codex.xerox.com';
+
+//
+// Email address pointing to the CodeX contacts.
+// for use Web pages, documentation,etc.
+$sys_email_contact='codex-contact@codex.xerox.com';
+
 // End of customizations -- place nothing after the closing PHP tag!
 ?>

@@ -19,12 +19,12 @@ if ($group_id && $insert_license && $rand_hash && $form_license) {
 		"WHERE group_id='$group_id' AND rand_hash='__$rand_hash'";
 	$result=db_query($sql);
 	if (db_affected_rows($result) < 1) {
-		exit_error('Error','This is an invalid state. Update query failed. <B>PLEASE</B> report to admin@'.$GLOBALS['sys_default_domain']);
+		exit_error('Error','This is an invalid state. Update query failed. <B>PLEASE</B> report to '.$GLOBALS['sys_email_admin']);
 	}
 
 } else {
 	exit_error('Error','This is an invalid state. Some form variables were missing.
-		If you are certain you entered everything, <B>PLEASE</B> report to admin@'.$GLOBALS['sys_default_domain'].' and
+		If you are certain you entered everything, <B>PLEASE</B> report to '.$GLOBALS['sys_email_admin'].' and
 		include info on your browser and platform configuration');
 }
 

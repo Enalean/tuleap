@@ -36,7 +36,7 @@ if ($insert_purpose && $form_purpose) {
 		. "'__$random_num','__".md5($random_num)."')");
 
 	if (!$result) {
-		exit_error('ERROR','INSERT QUERY FAILED. Please notify admin@'.$GLOBALS['sys_default_domain']);
+		exit_error('ERROR','INSERT QUERY FAILED. Please notify '.$GLOBALS['sys_email_admin']);
 	} else {
 		$group_id=db_insertid($result);
 	}

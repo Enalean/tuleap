@@ -135,8 +135,8 @@ about this known problem.
 lost your password please do not create another account but follow us
 and we'll help you <a href="lostpw.php">remember your lost
 password</a>. If it fails then contact the <a
-href="mailto:codex-admin@codex.xerox.com"><b><?php print $GLOBALS['sys_name']; ?></b>
-administrator</a>.
+href="mailto:<?php print $GLOBALS['sys_email_admin']; ?>"><b><?php print $GLOBALS['sys_name']; ?></b>
+site administrators</a>.
 <P>
 <b><A HREF="register.php">[Create a new Account]</A></b><BR> If it's
 your first time on the <b><?php print $GLOBALS['sys_name']; ?></b>

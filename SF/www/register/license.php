@@ -34,7 +34,7 @@ if ($insert_group_name && $group_id && $rand_hash && $form_full_name && $form_un
 
 } else {
 	exit_error('Error','Missing Info Or Invalid State. Some form variables were missing. 
-		If you are certain you entered everything, <B>PLEASE</B> report to codex-admin@'. $GLOBALS['sys_default_domain'].' and
+		If you are certain you entered everything, <B>PLEASE</B> report to '. $GLOBALS['sys_email_admin'].' and
 		include info on your browser and platform configuration');
 }
 

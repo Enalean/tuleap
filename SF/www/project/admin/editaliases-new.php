@@ -23,7 +23,7 @@ if ($GLOBALS[Submit]) {
 		$res = db_query("INSERT INTO mailaliases (group_id,domain,user_name,email_forward) VALUES "
 			. "($group_id,'$row_domain[http_domain]','$form_username','$form_email')");	
 		if (!$res) exit_error('Error in Query','This database query had an unknown failure. Please email
-admin@'.$GLOBALS['sys_default_domain'].' with details of the problem.');
+'.$GLOBALS['sys_email_admin'].' with details of the problem.');
 		session_redirect("/project/admin/editaliases.php?group_id=$group_id");
 	}
 }

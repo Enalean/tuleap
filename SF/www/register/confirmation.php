@@ -85,7 +85,7 @@ if ($show_confirm) {
 		"WHERE group_id='$group_id' AND rand_hash='__$rand_hash'");
 
 	if (db_affected_rows($result) < 1) {
-		exit_error('Error','UDPATING TO ACTIVE FAILED. <B>PLEASE</B> report to admin@'.$GLOBALS['sys_default_domain'].' '.db_error());
+		exit_error('Error','UDPATING TO ACTIVE FAILED. <B>PLEASE</B> report to '.$GLOBALS['sys_email_admin'].' '.db_error());
 	}
 
 	// define a module
@@ -102,7 +102,7 @@ if ($show_confirm) {
 		. "2," // bug flags
 		. "2)"); // forum_flags	
 	if (!$result) {
-		exit_error('Error','SETTING YOU AS OWNER FAILED. <B>PLEASE</B> report to admin@'.$GLOBALS['sys_default_domain'].' '.db_error());
+		exit_error('Error','SETTING YOU AS OWNER FAILED. <B>PLEASE</B> report to '.$GLOBALS['sys_email_admin'].' '.db_error());
 	}
 
 	//Add a couple of forums for this group
@@ -143,7 +143,7 @@ if ($show_confirm) {
 
 } else {
 	exit_error('Error','This is an invalid state. Some form variables were missing.
-		If you are certain you entered everything, <B>PLEASE</B> report to admin@'.$GLOBALS['sys_default_domain'].' and
+		If you are certain you entered everything, <B>PLEASE</B> report to '.$GLOBALS['sys_email_admin'].' and
 		include info on your browser and platform configuration');
 
 }

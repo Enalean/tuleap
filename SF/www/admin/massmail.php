@@ -71,7 +71,7 @@ This email was sent from '. $GLOBALS['sys_default_domain'] .'. To change your em
 preferences, please visit the site and edit your account via the
 "Account Maintenance" link.
 
-Direct any question to codex-admin@'. $GLOBALS['sys_default_domain'].' or reply to this e-mail.
+Direct any question to '.$GLOBALS['sys_email_admin'].' or reply to this e-mail.
 </TEXTAREA>
 </PRE>
 <P><INPUT type="submit" name="Submit" value="Submit">
