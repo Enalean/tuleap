@@ -51,7 +51,7 @@ function main_page($group_id) {
 
 		echo '
 	
-			<form name="editdata" action="index.php?mode=docdoedit&group_id='.$group_id.'" method="POST">
+			<form name="editdata" action="index.php?mode=docdoedit&group_id='.$group_id.'" method="POST"  enctype="multipart/form-data">
 
 			<table border="0" width="75%">
 
@@ -64,15 +64,21 @@ function main_page($group_id) {
 			<tr>
 			</tr>
 			<tr>
-			        <th>Short Description:</td>
-			        <!-- td><input type="text" name="description" size="20" maxlength="255" value="'.$row['description'].'"></td -->
+			        <th>Description:</th>
+			       
 				<td><textarea cols="60" rows="4"  wrap="virtual" name="description">'.$row['description'].'</textarea></td>			        <td class="example">(e.g. Instructions on how to download files for newbies)</td>
 
 			</tr>
 
 			<tr>
-			        <th>Document Information (in html format):</th>
-			        <td><textarea cols="60" rows="10" wrap="virtual" name="data">'.$row['data'].'</textarea></td>
+			<th> <input type="checkbox" name="upload_instead" value="1"> <B>Upload HTML File:</B></th>
+			<td> <input type="file" name="uploaded_data" size="50"></td>
+			<td> (HTML file) </td>
+
+			</tr>
+			<tr>
+			        <th valign="top"><br><br>or Edit Document in place (HTML format):</th>
+			        <td><textarea cols="60" rows="20" wrap="virtual" name="data">'.$row['data'].'</textarea></td>
 			</tr>
 
 			<tr>
@@ -156,6 +162,23 @@ function main_page($group_id) {
 		main_page($group_id);
 
 	} elseif (strstr($mode,"docdoedit")) {
+
+	    // Check a number of things: group_id is correct, title and
+	    // description are non empty and either HTML file is provided
+	    // or uploaded.
+	    if (!$doc_group || $doc_group ==100) {
+		//cannot add a doc unless an appropriate group is provided
+		exit_error('Error','No Valid Document Group Was Selected');
+	    }
+	    
+	    if (!$title || !$description) { 
+		exit_missing_param();
+	    }
+	    
+	    if (!$upload_instead && !$data) {
+		exit_missing_param();
+	    }
+
 		//Page security - checks someone isnt updating a doc
 		//that isnt theirs.
 
@@ -167,7 +190,20 @@ function main_page($group_id) {
 		
 		$result = db_query($query);
 	
-		if (db_numrows($result) == 1) {	
+		if (db_numrows($result) == 1) {
+
+		    // Upload the document if needed
+		    if ($upload_instead) {
+		        $data = addslashes(fread( fopen($uploaded_data, 'r'), filesize($uploaded_data)));
+        		if ((strlen($data) > 20) && (strlen($data) < 512000)) {
+			    //size is fine
+			    $feedback .= ' Document Uploaded ';
+        		} else {
+			    //too big or small
+			    $feedback .= ' ERROR - document must be > 20 chars and < 512000 chars in length ';
+			    exit_error('Missing Info',$feedback.' - Please click back and fix the error.');
+        		}
+		    }
 
 			$query = "update doc_data "
 				."set title = '".htmlspecialchars($title)."', "
