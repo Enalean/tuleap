@@ -56,10 +56,21 @@ $result=db_query($sql);
 	<TR>
 		<TD COLSPAN="2">
 		<B>Original Comment:</B>
+		<?php
+		if (!$_eoc) {
+			// Add a pointer to switch to editable comment field
+			echo "<a href=\"$PHP_SELF?func=detailtask&project_task_id=$project_task_id&group_id=$group_id&group_project_id=$group_project_id&_eoc=1\"> [Edit]</a>";
+			echo '<P>'.nl2br(db_result($result,0,'details'));
+		} else {
+			// If _eoc flag is set then put the original comment
+			// in a editable text area
+			echo '<P><TEXTAREA NAME="original_comment" ROWS="5" COLS="60" WRAP="SOFT">'.db_result($result,0,'details').'</TEXTAREA>';
+
+		}
+		?>
+
 		<P>
-		<?php echo nl2br(db_result($result,0,'details')); ?>
-		<P>
-		<B>Add A Comment:</B>
+		<B>Add a Followup Comment:</B>
 		<BR>
 		<TEXTAREA NAME="details" ROWS="5" COLS="60" WRAP="SOFT"></TEXTAREA>
 		</TD>

@@ -198,7 +198,7 @@ function pm_data_create_task ($group_project_id,$start_month,$start_day,$start_y
 }
 
 function pm_data_update_task ($group_project_id,$project_task_id,$start_month,$start_day,$start_year,
-		$end_month,$end_day,$end_year,$summary,$details,$percent_complete,$priority,$hours,
+		$end_month,$end_day,$end_year,$summary,$original_comment,$details,$percent_complete,$priority,$hours,
 		$status_id,$assigned_to,$dependent_on,$new_group_project_id,$group_id) {
 
 	if (!$group_project_id || !$project_task_id || !$status_id || !$start_month || !$start_day || !$start_year || 
@@ -260,6 +260,16 @@ function pm_data_update_task ($group_project_id,$project_task_id,$start_month,$s
 		{ pm_data_create_history ('end_date',db_result($result,0,'end_date'),$project_task_id);  }
 
 	/*
+		See if Original Comment was modified
+	*/
+	if ( ($original_comment != '') &&
+		($original_comment != db_result($result,0,'details')) ) {
+		$set_oc_str = ",details='".htmlspecialchars($original_comment)."' ";
+	} else {
+		$set_oc_str = '';
+	}
+
+	/*
 		Details field is handled a little differently
 	*/
 	if ($details != '') { pm_data_create_history ('details',htmlspecialchars($details),$project_task_id);  }
@@ -276,6 +286,7 @@ function pm_data_update_task ($group_project_id,$project_task_id,$start_month,$s
 		mktime(0,0,0,$end_month,$end_day,$end_year)."',hours='$hours',".
 		"percent_complete='$percent_complete', ".
 		"group_project_id='$new_group_project_id' ".
+		$set_oc_str.
 		"WHERE project_task_id='$project_task_id' AND group_project_id='$group_project_id'";
 
 	$result=db_query($sql);

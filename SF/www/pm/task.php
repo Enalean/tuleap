@@ -64,7 +64,7 @@ if ($group_id && $group_project_id) {
 		case 'postmodtask' : {
 			if (user_ismember($group_id,'P2')) {
 				echo pm_data_update_task ($group_project_id,$project_task_id,$start_month,$start_day,
-					$start_year,$end_month,$end_day,$end_year,$summary,$details,
+					$start_year,$end_month,$end_day,$end_year,$summary,$original_comment,$details,
 					$percent_complete,$priority,$hours,$status_id,$assigned_to,
 					$dependent_on,$new_group_project_id,$group_id);
 				include '../pm/browse_task.php';
