@@ -9,30 +9,9 @@
 require ('pre.php');    
 require ('../cvs/commit_utils.php');    
 
-//only projects can use the bug tracker, and only if they have it turned on
-$project=project_get_object($group_id);
-
-if (!$project->isProject()) {
-	exit_error('Error','Only Projects Can Use CVS');
-}
-if (!$project->usesCVS()) {
-	exit_error('Error','This Project Has Turned Off CVS');
-}
-
-
-site_project_header(array('title'=>'CVS Repository','group'=>$group_id,'toptab'=>'cvs'));
-
-$res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
-
-$row_grp = db_fetch_array($res_grp);
-
 // ######################## table for summary info
 
 
-// LJ No anonymous access anymore on CodeX
-// LJ if ($row_grp['is_public']) {
-
-commits_header($params);
 switch ($func) {
 
  case 'browse' : {
@@ -80,20 +59,15 @@ switch ($func) {
 
    // ############################ developer access
    if ($commit_id) {
-     $_commit_id = $commit_id;
-     include '../cvs/browse_commit.php';
+       $_commit_id = $commit_id;
+       include '../cvs/browse_commit.php';
+   } else {
+       include '../cvs/cvs_intro.php';
    }
-   else
-     util_get_content('cvs/intro');
 
    break;
  }
 }
 
-
-
-
-
-site_project_footer(array()); 
 
 ?>

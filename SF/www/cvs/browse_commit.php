@@ -6,6 +6,14 @@
 //
 // $Id$
 
+
+if (!$group_id) {
+    exit_no_group(); // need a group_id !!!
+}
+
+commits_header(array ('title'=>'CVS Administration',
+		      'help' => 'CVSWebInterface.html#QueryingCVS'));
+
 if (!$offset || $offset < 0) {
 	$offset=0;
 }
@@ -279,6 +287,6 @@ if ($result && db_numrows($result) > 0) {
 	echo db_error();
 }
 
-//commits_footer(array());
+commits_footer(array());
 
 ?>

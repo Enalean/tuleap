@@ -6,10 +6,20 @@
 //
 // $Id$
 
-if (!$offset || $offset < 0) {
-	$offset=0;
+
+
+if (!$group_id) {
+    exit_no_group(); // need a group_id !!!
 }
 
+if (!user_ismember($group_id,'A')) {
+    // Must be at least Project Admin
+    exit_permission_denied();
+}
+
+
+commits_header(array ('title'=>'CVS Administration',
+		      'help' => 'CVSWebInterface.html#CVSAdministration'));
 
 // get project name
 $sql = "SELECT unix_group_name, cvs_tracker, cvs_events_mailing_list, cvs_events_mailing_header from groups where group_id=$group_id";
@@ -53,4 +63,6 @@ recipients or mailing lists (comma separated). A specific subject header for the
         '</p><p><INPUT TYPE="TEXT" SIZE="20" NAME="custom_mailing_header" VALUE="'.$custom_mailing_header.'"></p>'.
         '</p><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit"></p></FORM>';
 }
+
+commits_footer(array()); 
 ?>

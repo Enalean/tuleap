@@ -30,31 +30,31 @@ function commits_header($params) {
 	$params['toptab']='commits';
 	$params['group']=$group_id;
 
-	//only projects can use the bug tracker, and only if they have it turned on
+	//only projects can use cvs, and only if they have it turned on
 	$project=project_get_object($group_id);
 
 	if (!$project->isProject()) {
 		exit_error('Error','Only Projects Can Use The Commits Manager');
 	}
-	//	if (!$project->usesCommits()) {
-	//	exit_error('Error','This Project Has Turned Off The Commits Manager');
-	//	}
-
+	if (!$project->usesCVS()) {
+	    exit_error('Error','This Project Has Turned CVS Off');
+	}
+	echo site_project_header($params);
 
 	echo '<P><B><A HREF="/cvs/?func=info&group_id='.$group_id.'">CVS Info</A>';
-	$res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
 
-	$sys_default_domain = $GLOBALS['sys_default_domain'];
-	$row_grp = db_fetch_array($res_grp);
-	if (($row_grp['is_public']) || (user_isloggedin())) {
-	  echo ' | <A HREF="http'.(session_issecure() ? 's':'').'://'.$sys_default_domain.'/cgi-bin/cvsweb.cgi/?cvsroot='.$row_grp['unix_group_name'].'">Browse CVS Tree</A>';
+	$sys_cvs_host = $GLOBALS['sys_cvs_host'];
+
+	if ($project->isPublic() || user_isloggedin()) {
+	  echo ' | <A HREF="http'.(session_issecure() ? 's':'').'://'.$sys_cvs_host.'/cgi-bin/cvsweb.cgi/?cvsroot='.$project->getUnixName().'">Browse CVS Tree</A>';
 	}
 	if (user_isloggedin()) {
 	  echo ' | <A HREF="/cvs/?func=browse&group_id='.$group_id.'&set=my">My CVS Commits</A>';
 	}
 	echo ' | <A HREF="/cvs/?func=browse&group_id='.$group_id.'">CVS Query</A>';
 	echo ' | <A HREF="/cvs/?func=admin&group_id='.$group_id.'">CVS Admin</A>';	
-	echo ' | '.help_button("VersionControlWithCVS.html",false,'Help');
+	if (!$params['help']) { $params['help'] = "VersionControlWithCVS.html";}
+	echo ' | '.help_button($params['help'],false,'Help');
 
 	echo '</B>';
 	echo ' <hr width="300" size="1" align="left" noshade>';
