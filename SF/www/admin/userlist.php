@@ -31,7 +31,7 @@ function show_users_list ($result) {
 		if ($usr[status] == 'D') print "</I></TD>";
 		if ($usr[status] == 'S') print "</TD>";
 		if ($usr[status] == 'P') print "</TD>";
-		print "\n<TD><A HREF=\"/developer/?form_dev=$usr[user_id]\">[DevProfile]</A></TD>";
+		print "\n<TD><A HREF=\"/users/$usr[user_name]/\">[DevProfile]</A></TD>";
 		print "\n<TD><A HREF=\"userlist.php?action=activate&user_id=$usr[user_id]\">[Activate]</A></TD>";
 		print "\n<TD><A HREF=\"userlist.php?action=delete&user_id=$usr[user_id]\">[Delete]</A></TD>";
 		print "\n<TD><A HREF=\"userlist.php?action=suspend&user_id=$usr[user_id]\">[Suspend]</A></TD>";
