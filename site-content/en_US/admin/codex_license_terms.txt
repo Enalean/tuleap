@@ -1,0 +1,188 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+-->
+
+<h2>CODEX COMPONENT SOFTWARE LICENSE</h2>
+
+<h3>1.&nbsp;&nbsp;&nbsp;DEFINITIONS</h3>
+
+<p>1.1 "Agreement" shall mean this CODEX COMPONENT SOFTWARE LICENSE
+together with any Exhibits attached to this agreement.</p>
+
+<p>1.2 "Derivative Work(s)" shall mean a work that is based on the
+Software, such as a revision, enhancement, modification, translation,
+localization, abridgment, condensation, expansion, or any other form
+into which the Software may be transformed or that, if prepared
+without authorization of the owner of the copyright in such
+preexisting work, would constitute a copyright infringement.</p>
+
+<p>1.3 "Software" shall mean proprietary Xerox CODEX COMPONENT
+software, which expression shall include all versions, updates,
+releases, Derivative Works, modifications and documentation relating
+thereto or thereof that may be provided by Xerox to you
+("Licensee"). Software does not include or refer to in any way Xerox
+CODEX CORE software, which is licensed under the terms and conditions
+provided under version 2 of the GNU General Public License.</p>
+
+<h3>2.&nbsp;&nbsp;&nbsp;LICENSE GRANT</h3>
+
+<p>Subject to maintaining fully paid up license fees with Xerox, Xerox
+grants to you a non-exclusive license to use the Software only on a
+single item of equipment at any one time, and to make one copy of the
+Software for backup purposes. Your back-up copy of the Software must
+include all confidential, proprietary, patent, copyright and/or
+trademark notices contained on the original. Title to the Software
+(including your backup copy) will at all times reside exclusively with
+Xerox and/or its licensors. You have no other rights to the
+Software. This means that you may not create Derivative Works of the
+Software, or attempt to de-compile or reverse engineer the Software,
+except to the extent required to obtain interoperability with other
+independently created software as explicitly permitted by
+law. However, you may make changes to the Software, which may
+constitute a Derivative Work, provided any such changes remain the
+property of Xerox and the changes are used solely by you. If the
+Software contains software developed by a third party, such third
+party shall be considered a third party beneficiary of your
+obligations under this Agreement.</p>
+
+
+<h3>3.&nbsp;&nbsp;&nbsp;WARRANTY AND DISCLAIMER</h3>
+
+<ol style="list-style-type: lower-alpha">
+<li>For
+a period of ninety (90) days from the date the Software is delivered
+to you, the Software will substantially conform to the functionality
+described in the accompanying documentation so long as used in the
+appropriate environment, as specified in the documentation. The
+Software is not warranted to be free from error, or to operate
+uninterruptedly.</li>
+
+<li> If during the ninety (90) day warranty period,
+you notify the party who sold you the Software that the Software does
+not substantially conform to the functionality described in the
+accompanying documentation, that party will, as its sole obligation
+and your sole remedy, at its option, either replace the Software or
+fully refund the license fees you paid for the Software. If a refund
+is made, you will deliver to the refunding party any media containing
+the original Software, and certify to that party that you have
+de-installed the Software and erased or destroyed your one backup
+copy.</li>
+
+<li> ALL OTHER EXPRESS AND IMPLIED WARRANTIES ARE DISCLAIMED,
+INCLUDING, BUT NOT LIMITED TO, ANY IMPLED WARRANTY OF FITNESS FOR A
+PARTICULAR PURPOSE, NON- INFRINGEMENT, COMPATIBILITY, SECURITY,
+ACCURACY AND, FOLLOWING THE ABOVE REFERENCED 90 DAY PERIOD, THE
+IMPLIED WARRANTY OF MERCHANTABILITY. SOFTWARE MAY CONTAIN, OR BE
+MODIFIED TO CONTAIN, COMPUTER CODE CAPABLE OF AUTOMATICALLY DISABLING
+PROPER OPERATION OR FUNCTIONING OF LICENSED SOFTWARE AND/OR THE SYSTEM
+UPON WHICH IT IS INSTALLED. SUCH DISABLING CODE MAY BE ACTIVATED (A)
+IF XEROX IS DENIED ACCESS TO THE SOFTWARE AND/OR THE SYSTEM AS
+PROVIDED HEREIN, (B) YOU OTHERWISE BREACH ANY TERM OF THIS AGREEMENT,
+OR (C) SUCH LICENSE IS TERMINATED OR EXPIRES. All warranties and
+representations made by persons other than Xerox, including but not
+limited to distributors, dealers and other resellers of Xerox are also
+disclaimed.</li>
+</ol>
+
+<h3>4.&nbsp;&nbsp;&nbsp;LIMITATION OF LIABILITY</h3>
+
+<p style="font-weight: bold"> IN NO EVENT WILL XEROX OR ITS LICENSORS
+BE LIABLE TO YOU FOR ANY SPECIAL, INDIRECT, INCIDENTAL OR
+CONSEQUENTIAL DAMAGES (INCUDING BUT NOT LIMITED TO DAMAGES RELATED TO
+DATA LOSS, LOST PROFITS OR BUSINESS INTERRUPTION) IN ANY WAY ARISING
+OUT OF OR RELATING TO THE SUBJECT MATTER OF THIS AGREEMENT. IN
+ADDITION, XEROX' LIABILITY TO YOU FOR DIRECT DAMAGES WILL IN NO EVENT
+EXCEED THE PURCHASE PRICE YOU PAID FOR THE SOFTWARE. THE LIMITATIONS
+OF LIABILITY SET FORTH HEREIN MAY NOT APPLY IN CERTAIN JURISDICTIONS
+AND THUS MAY NOT APPLY TO YOU; IN SUCH CASES, XEROX' AND ITS
+LICENSORS' LIABILITY HEREUNDER SHALL BE THE MINIMUM REQUIRED BY
+LAW.</p>
+
+
+<h3>5.&nbsp;&nbsp;&nbsp;US GOVERNMENT RESTRICTED RIGHTS</h3>
+
+<p>The Software is provided with Restricted Rights. You agree to meet
+all requirements necessary to ensure that the US Federal Government
+will honor such rights. Disclosure, use or reproduction of the
+Software and accompanying documentation are subject to restrictions
+set forth in the Commercial Computer-Restricted Rights clause at
+Federal Acquisition Regulation 52.337-19, when applicable, or in the
+Department of Defense Federal Acquisition Regulations Supplement
+252.227-7013 or the applicable successor clause.</p>
+
+<h3>6.&nbsp;&nbsp;&nbsp;INDEMNIFICATION</h3>
+
+<p>You shall, at your expense, indemnify, hold harmless and defend
+Xerox from and against any and all damages, costs, and expenses
+including reasonable attorneys' fees, incurred by Xerox in connection
+with any claim based upon your use of the Software in combination with
+equipment, software, or supplies not provided by Xerox or if the
+Software is used to implement processes not provided by Xerox.</p>
+
+<h3>7.&nbsp;&nbsp;&nbsp;GENERAL</h3>
+
+<ol style="list-style-type: lower-alpha">
+
+<li><span style="text-decoration: underline;">Support and
+Maintenance</span>. Subject to maintaining fully paid up license fees
+with Xerox, support and maintenance of the Software is provided by
+Xerox.</li>
+
+<li><span style="text-decoration: underline;">Termination</span>. This
+Agreement shall continue for the term specified in Section 2, unless
+earlier terminated upon mutual agreement of the parties. This
+Agreement may be terminated by Xerox upon a material breach of any
+provision of this Agreement by you which is not cured within thirty
+(30) days. Upon termination of this Agreement for any reason, you
+shall cease use of the Software. You shall immediately return to
+Xerox, or certify to their destruction and removal, all copies of the
+Software. If you are unable to remove the Software, Xerox will remove
+it upon written request provided you compensate Xerox for its time to
+provide the service including reasonable travel and lodging expense
+incurred in order to provide the service. In the event of termination
+of this Agreement, those provisions of this Agreement shall, to the
+extent necessarily implied, survive such termination.</li>
+
+<li><span style="text-decoration: underline;">Severability</span>. If
+any provision of this Agreement is held invalid by any law, rule,
+order or regulation of any government, or by the final determination
+of any state or federal court, such invalidity will not affect the
+enforceability of any other provisions not held to be invalid.</li>
+
+<li><span style="text-decoration: underline;">Governing
+Law</span>. This Agreement shall be construed in accordance with the
+laws of the State of New York, U.S.A. without regard to its choice of
+laws provisions.</li>
+
+<li><span style="text-decoration: underline;">Export</span>. You will
+not export or re-export the Software without appropriate government
+licenses or for any purpose prohibited by any applicable export
+control laws.</li>
+
+<li><span style="text-decoration:
+underline;">Transferability</span>. You may transfer the Software and
+your one backup copy to another person, provided the other person
+receives a copy of this Agreement and agrees to be bound by it, and
+provided you at all times comply with all applicable laws and other
+export control laws and regulations, as applicable. You may not use
+the Software on multiple items of equipment at one time without first
+obtaining a separate license for each item of equipment, and paying
+any additional applicable license fees.</li>
+
+<li><span style="text-decoration: underline;">Entire
+Agreement</span>. This Agreement, including any Exhibits, constitutes
+the entire agreement between the parties in connection with the
+subject matter hereof, and supersedes all prior agreements,
+understandings, negotiations and discussions, whether oral or written,
+between the parties. In the event of a conflict between the terms of
+this Agreement and any Exhibit hereunder, this Agreement shall take
+precedence. No amendment to or modification of this Agreement will be
+binding unless it is in writing and signed by a duly authorized
+representative of you and Xerox.</li>
+</ol>
