@@ -132,17 +132,25 @@ function foundry_top_downloads($comma_sep_groups) {
 function show_top_downloads() {
 	$return .= "<B>Downloads Yesterday:</B>\n";	
 
-	#get yesterdays day
-	$yesterday = date("Ymd",time()-(3600*24));
+	// Get time for today and yesterday at midnight
+	$end_time = mktime(0,0,0);
+	$start_time = $end_time - 86400;
 
-	$res_topdown = db_query("SELECT groups.group_id,"
-		."groups.group_name,"
-		."groups.unix_group_name,"
-		."frs_dlstats_group_agg.downloads "
-		."FROM frs_dlstats_group_agg,groups WHERE day=$yesterday "
-		."AND frs_dlstats_group_agg.group_id=groups.group_id "
-		."AND groups.type=1 "
+	// Get the top downloads for this time window
+	$res_topdown = db_query("SELECT groups.group_id,groups.group_name, "
+		."groups.unix_group_name, "
+		."COUNT(filedownload_log.filerelease_id) as downloads "
+		."FROM groups,filedownload_log,frs_file,frs_release,frs_package "
+		."WHERE frs_file.file_id = filedownload_log.filerelease_id "
+		."AND frs_file.release_id = frs_release.release_id "
+		."AND frs_package.package_id = frs_release.package_id "
+		."AND frs_package.group_id = groups.group_id "
+		."AND groups.type = 1 "
+		."AND filedownload_log.time > $start_time "
+		."AND filedownload_log.time < $end_time "
+		."GROUP BY groups.group_id "
 		."ORDER BY downloads DESC LIMIT 10");
+	
 	// print each one
 	while ($row_topdown = db_fetch_array($res_topdown)) {
 		if ($row_topdown['downloads'] > 0) 
