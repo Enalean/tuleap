@@ -1,14 +1,13 @@
 <!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
 <html>
 <head>
-  <meta content="text/html; charset=iso-8859-1"
- http-equiv="Content-Type">
-  <meta content="text/html; charset=ISO-8859-1"
- http-equiv="content-type">
-  <meta content="Laurent Julliard" name="author">
-  <meta
- content="Mozilla/4.77 [en] (X11; U; Linux 2.2.17-21mdk i686) [Netscape]"
- name="GENERATOR">
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=iso-8859-1">
+  <meta http-equiv="content-type"
+ content="text/html; charset=ISO-8859-1">
+  <meta name="author" content="Laurent Julliard">
+  <meta name="GENERATOR"
+ content="Mozilla/4.77 [en] (X11; U; Linux 2.2.17-21mdk i686) [Netscape]">
   <title>CodeX Adminstration Guide</title>
 </head>
 <body>
@@ -17,7 +16,6 @@
 <p><b><font size="+3">CodeX Administration Guide</font></b> <br>
 &nbsp; </p>
 <p>$Revision$ - $Date$<br>
-L. Julliard<br>
 <br>
 <font size="-1"> Copyright &copy; Xerox Corporation, CodeX Team,
 2001-2004.
@@ -32,15 +30,17 @@ License
 <h1>Administration Tasks</h1>
 To access the CodeX Administration interface you must use an account
 with administration privileges. When CodeX is first installed a
-privileged account named <span style="font-weight: bold;">'admin'</span>
+privileged account named <span style="font-weight: bold;">'</span>admin<span
+ style="font-weight: bold;">'</span>
 is created with the default password 'siteadmin'. One of the first
 thing you must do is to login as 'admin' and change the password for
 security reasons.<br>
 <br>
-Note that any normal user accounts can be also be granted site
-administration privileges by making them a member of the project #1,
-the CodeX Administration project, and giving them the status of
+Note that any normal user accounts can also be granted site
+administration privileges by her a member of the project id #1,
+the CodeX Administration project, and giving her the status of
 administrator on this project.<br>
+<br>
 <center><b><font color="#ff0000">** IMPORTANT REMARK **</font></b></center>
 <font color="#ff0000">When you use a CodeX account with administration
 privileges, remember to <b>log out</b> after each work session
@@ -49,16 +49,18 @@ computer other than yours or if you share a computer with other people</font>
 <h2> Pending projects</h2>
 Before a CodeX hosted project is made available to the project team, it
 must
-be reviewed and approved by the CodeX admin team. This must be done
-something
-like once every 2 or 3 hours so that the submitter doesn't wait too
+be reviewed and approved by the CodeX administration team. New projects
+must be checked for approval on a regular basis so that the submitter
+doesn't wait too
 long
-before they get the confirmation. In general you should approve most of
-the projects.
+before they get the confirmation. When a project is submitted an email
+notification is sent to the CodeX administrators (see the <span
+ style="font-family: monospace;">$sys_email_admin</span> variable in
+the CodeX configuration file) allowing for a quick response time. In
+general it is recommended that you approve all projects.
 There most noticeable exceptions are:
 <ol>
   <li> <b>Little pieces of code</b></li>
-  <br>
 If the submitted project looks like it is going to post small pieces of
 code
 like a macro or a function or a simple script, the administrator
@@ -66,9 +68,9 @@ reviewing
 the project submission must contact the project creator and suggest
 that the CodeX Snippet
 Library might be a better place to host such a small piece of code.<br>
-&nbsp; <li> <b>Yet Another Test Project</b></li>
-  <br>
-The second case is when the team is saying they are creating a file for
+&nbsp; <li> <b>Yet Another Test Project<br>
+    </b>The second case is when the team is saying they are creating a
+file for
 testing&nbsp;
 purposes. In order to avoid the proliferation of test projects some
 generic
@@ -80,43 +82,66 @@ of the Guinea Pig test project with full admin rights so that s/he can
 test
 all the CodeX feature and make a conscious decision. If it is ok then
 we
-do approve the project.
+do approve the project.<br>
+    <br>
+  </li>
+  <li><b>Similar projects exist<br>
+    </b></li>
+As a site administrator, you'll have the opportunity to review all the
+projects created on CodeX and, therefore, you have a unique opportunity
+to advise project leaders about existing projects looking like the one
+you are about to approve. This might be a chance for the project
+submitter to learn about another CodeX project that does more or less
+what s/he wants and, rather than created a new project, it may be more
+appropriate to join the existing team and contribute to the other
+project.<br>
+  <br>
 </ol>
 <font color="#ff0000"></font>
 <h2> Site News Approval</h2>
 All news published by each project (using the News service) is normally
 only
-visible on the Project Summary page. The CodeX Admin Team has the
+visible on the related Project Summary page. The CodeX Administration
+team has the
 ability
 to review all pieces of news published over the last 7 days by the
 various
 projects and make the decision to promote any piece of news so that it
 appears
-on the CodeX site front page. If you decide a news is worth a big
+on the CodeX front page. If you decide a news is worth a big
 splash on
 the front page then select "Approve for front page", make modifications
 in
 the news title or content to make it more explicit and validate. If not
 interesting
-then delete the news (Actually it is deleted from he approval queue,
-not
-the news database of course!)
-<p>Rules to follow to determine whether a news is worth publishing on
+then you can delete the news front the approval queue (it is not
+deleted from the project news database of course!)
+<p>Rules to follow to determine whether a piece of news is worth
+publishing on
 the
 front page: </p>
 <ul>
-  <li> All news dealing with new software release and other significant
+  <li> All news dealing with new software releases and other
+significant
 events
 in the life of the projects (new members,...) should be promoted on the
 front
 page</li>
-  <li> Same for news announcing the creation of a new project</li>
+  <li>The same applies for news announcing the creation of a new
+project. However the CodeX front page already has a section
+automatically showing the most recent projects and you may decide not
+to publish new project announcement.<br>
+  </li>
   <li> If a project publishes 2 or 3 pieces of news at the same time,
 then
-select the most significant one an only publish this one.</li>
+select the most significant one and only publish this one. When the
+CodeX visitors click on this particular piece of news they will be
+redirected to the project pages and they get a chance to read the other
+news.<br>
+  </li>
 </ul>
 <h2> Account Management</h2>
-Like Docushare, CodeX is a self managed system and there is normally no
+CodeX is a self managed system and there is normally no
 need
 to spend time on user account maintenance. There are a couple of
 exceptions
@@ -124,197 +149,187 @@ though:
 <ol>
   <li> <b>Lost password</b>: some user sometimes ask for their lost
 password.
-Direct them to the Lost Password procedure in the login screen</li>
+Direct them to the CodeX login screen and ask them to click on the
+'Lost Password' link.<br>
+  </li>
   <li> <b>Lost login</b>: some users even lose their login name :-)
 Tell
 them to use the CodeX search box, select the People item and type a
 part of
-their last name. The login should appear in the result list and they
+their last name (it's very unlikely that they also forgot about their
+last name...). The login should appear in the result list and they
 can
-then follow step 1.</li>
+then follow the lost password procedure as explained before.<br>
+  </li>
   <li> <b>Lost password and e-mail address has changed</b>: in this
 case
 the normal recovery procedure won't work because the user will never
 receive
-the e-mail notification (given that the address is wrong). In this case
-it
-is the job of the CodeX Admin to the use the User Admin module, update
+the e-mail notification (given that his/her email address is wrong).
+The CodeX Admininstrator must use the User Admininstration module,
+update
 the
-e-mail address and then tell the user to proceed as in step one.</li>
-  <li> <b>E-mail address is no longer valid</b>: this is something we
-see
-when using the CodeX mass mail Engine. All invalid e-mail address are
+e-mail address of the user&nbsp; and then tell the user to proceed as
+in the lost password procedure.</li>
+  <li> <b>E-mail address is no longer valid</b>: this is something
+that is often seen when using the CodeX mass mail Engine. All invalid
+e-mail address are
 bounced
 and returned to codex-admin@codex.xerox.com. Once in a while it is good
 to
 make a bit of clean-up in the user database as follows:</li>
   <ul>
-    <li> Look for the person name in the Xerox global directory. If
+    <li> Look for the person name in your enterprise directory. If
 this
-person is still here with the same e-mail address then there is not
-much
-we can do. If the e-mail address has changed then contact the user and
+person is still working for the company and his/her e-mail address has
+changed then contact the user and
 ask him/her to update the address.</li>
-    <br>
-Remark: this won't work for e-mail addresses belonging to Xerox
-networks that are not in the xerox.com domain (e.g. xrx-gsn.com,
-xps-pro.com, etc....).
-Also make sure when your receive the error messages that it isn't just
-a
-transient error. <li> If the person is no longer in the Xerox
-Directory then
-it has probably left the company for good. In this case go to the CodeX
+    <li> If the person is no longer with your company, go to the CodeX
 User
-Admin page (actually select the user name through the Main Admin Page)
-and
-changed the Web status and the Unix status to "Suspended". By doing so
-we
-give a chance to the user to get back to us, complain that she is still
-alive
-:-) and we can easily reactivate the account.</li>
+Admininstration page, spot the user login name and click either on
+'Suspend' or 'Delete' link for this account.&nbsp; Opting for account
+suspension gives a chance to the user to complain that she is still
+alive and we can easily reactivate the account without loosing personal
+information.<br>
+    </li>
   </ul>
-  <li> <b>Incorrect e-mail given at registration time:</b> this is
+  <li> <b>Incorrect e-mail given at registration time:</b> amazingly
+enough this is
 quite
-a common mistake amazingly enough. New user puts an invalid email
-address
-in the registration form and the confirmation message bounces and is
-returned
-to the CodeX admin. In this case what we must do is try and fine the
-real
-address of this person in the Xerox Directory (go and check his/her
-name on
-the CodeX site first) and then send him/her the confirmation message.</li>
+a common mistake for new user to mistype their email address on the
+user registration form. In this case, the email notification sent to
+the user for confirmation never reaches the recipient and the user
+account cannot be validated . Upon reception of the bounced email
+notification, the CodeX Administrators have two options:</li>
+  <ul>
+    <li>access the CodeX main administration page, look for pending
+user account, force the approval of the user account and send a note to
+the user saying that the account is now active and the first she must
+do is to change her email address under the 'Account Maintenance' link</li>
+    <li>or the CodeX Administrator can simply send the bounced message
+to the appropriate email address, ask the user to confirm his
+registration and change her email address as above.</li>
+  </ul>
   <li> <b>Alien e-mail addresses</b>: when a user registers we
 strongly recommend
-that they use xerox internal e-mail address only (and ideally type it
+that they use internal and approved e-mail address only. Ideally the
+user should also use the canonical form of her email address type it
 is
-it appear in the Xerox Directory so that our Xerox Directory look up
-service
-works when you browse a user profile). Some users though gives an
-external
-e-mail address. We have as a policy to track these alien addresses and
-ask
-for more information to the user.</li>
-  <br>
-The script /root/check_subscribers.pl is used to detect these
-addresses. It runs once a day and sends a message to codex-admin
-whenever an alien address
-is detected either in the email addresses of CodeX users or mailing
-list subscribers.
-If a new alien domain appears and it is ok then add it in the list of
-allowed
-domains or users in the Perl script.
+it appears in your company directory. By doing so, CodeX lookups in
+your
+company directory will work correctly. <br>
+  </li>
 </ol>
 <h2> Site News Push</h2>
-CodeX offers a mass mail engine to the CodeX Admin Team. It's ideal for
+CodeX offers a mass mail engine to the CodeX Administration Team
+makeing it possible to push an announcement to a all or part of your
+CodeX population. Be careful that it's ideal for
 spamming
-so use it with caution!! You can select your target population, type
-your
-message and push via e-mail to all users. Use this mechanism to push
+so use it with caution and only when needed (see below). The mass mail
+engine allows you to select your target population, type a
+message and send it with a click of a mouse. Use this mechanism to push
 site
 update news like:
 <ul>
-  <li> A new document published: CodeX newsletter, CodeX article, new
+  <li> A new CodeX document is published: CodeX newsletter, CodeX
+article, new
 CodeX
 User Guide,...</li>
-  <li> New major features implemented in CodeX: examples are the new
-bug
-tracking system, source code access to registered user only, etc.</li>
-  <li> Maintenance operation: reboot, hw or sw upgrade&nbsp; and all
+  <li> New major features available in CodeX</li>
+  <li> Maintenance operation: hardware or sofware upgrade&nbsp; and
+all
 the
 events that will prevent the CodeX server from operating normally must
 be
 announced ahead of time</li>
-  <li> Disaster report :-): typical examples are network problems due
+  <li> Disaster reports: typical examples are network problems due
 to
-router flapping or Xerox transatlantic network cut due to the
-proliferation
-of the Nimda worm on Windows. CodeX has nothing to do with this kind of
+router flapping or wide area network cut due.&nbsp; CodeX has nothing
+to do with this kind of
 troubles
 but we must inform the user that they'll probably experience some
 difficulties
 to reach the CodeX server</li>
 </ul>
-<b><font color="#ff0000">Remark:</font></b> you have probably noticed
-that
-when we send a mass mail message we, the CodeX Admin Team, receives
+<b><font color="#ff0000">Remark:</font></b> when a mass mail message is
+eent the CodeX Administration team may receive
 many copies
-of it. This is not ideal but this is normal. In fact messages are sent
+of it. This is due to the fact that messages are sent
 by
-chunk of 25 addresses and we receive a copy for each chunk. so the
+chunk of 25 addresses and CodeX administrators receive a copy for each
+chunk. So the
 larger
-the selected population the bigger the number of copies. The reason we
-do
-receive these copies is because messages are "apparently" sent to
-noreply@codex.xerox.com
-(to avoid that all users can re-use the list of e-mail addresses with a
-reply
-all) and this e-mail address is an alias to
-codex-admin@codex.xerox.com. In
-the future we should probably direct it to /dev/null.
+the selected population the bigger the number of copies. The reason for
+these multiple copies is because messages are "apparently" sent to
+noreply@codex.xerox.com to stress the fact that recipient should not
+reply to this message. If the noreply email address is an alias to
+codex-admin then multiple copies will be received by CodeX
+administrators. The noreply address may also be aliased to&nbsp;
+/dev/null to avoid this problem (see <span
+ style="font-family: monospace;">/etc/aliases</span>).
 <p> </p>
 <h2> Developer Survey </h2>
 <p>
-The <b>Developer Survey</b> is a special survey that appears in every
-member personal page.
-It is a general survey that gives site administrators the opportunity
+The <b>Developer Survey</b> is a special survey that appears in the
+user's&nbsp; personal page.&nbsp; The developer is a general survey
+that gives site administrators the opportunity
 to better understand the
-population of users.
+population of users (e.g. how they heared about CodeX, do they like it,
+etc.).
+This survey can only be answered once. The Developer Survey is
+automatically created at&nbsp; CodeX installation
+time (survey id 1, associated to project 1), but it is inactive by
+default and
+does not contain any question.<br>
 <br>
-This survey can only be answered once.
 </p>
-<p>The Developer Survey is automatically created on CodeX installation
-(with id 1, associated to project 1), but it is inactive by default and
-does not contain any question.
-</p>
-<hr size="2" width="100%">
+<hr width="100%" size="2">
 <h1> CodeX File Permissions</h1>
 The CodeX Web interface use the paradigm of project and project members
 to
-manage the access permission to the various project data. CodeX
+manage access permissions to the various project data. CodeX
 maintains
-this access permission policy at the Unix level. Therefore CodeX makes
+this access permission policy both at the Web and Unix levels.
+Therefore CodeX makes
 a
-direct mapping between a project and a Unix group, and between a user
+direct mapping between a project and a Linux group, and between a user
 and
-a Unix account. As an example if you are a member of the "codex"
+a Linux account. As an example if you are a member of the "codex"
 project on
 CodeX, your Unix account will also be a member of the "codex" Unix
 group.
 <p>&nbsp;Let's review some of the key permission mechanism in place on
 CodeX.
-More detailed explanation will be provided when reviewing each CodeX
-service.
-<br>
+More information on the subject can be found in the CodeX User Guide<br>
 &nbsp; </p>
 <h2> User accounts</h2>
-When a user register on CodeX three accounts are created:
+When a new user registers on CodeX three accounts are created:
 <ol>
   <li> <b>A Web account</b> managed by the login/session mechanism
 implemented
-in PHP</li>
+in PHP:</li>
   <br>
-Information about login name and encrypted password stored in the CodeX
-DB
-user table. <br>
+Information about login name and encrypted password arestored in the
+CodeX database.<br>
 &nbsp; <li> <b>A Unix account</b> with the same name/password as the
 Web
 account</li>
   <br>
-This account is used for shell account, user ownership of appropriate
+This account is used for shell account and to setup the ownership on
+appropriate
 directories.
-Information about login name and encrypted password stored in the CodeX
-DB
-user table and in the /etc/passwd and /etc/shadow Unix files. User
-account
-ID (uid) are in the range (20000-49999), the uid number is determined
+Information about login name and encrypted password are stored both in
+the CodeX database
+user table and in the Linux password and group files. User IDs (uid)
+are in the range (20000-49999), the uid number is determined
 when
 the user account is first created on the CodeX Web frontend. It's a
 sequential
 number incremented for each newly created account. Account ID of
 deleted users
-are not re-used <br>
-  <font color="#ff0000">Remark:</font> Unix login name are all
+are not re-used.<br>
+  <font color="#ff0000"><span style="font-weight: bold;">Remark</span>:</font>
+Unix login name are all
 lowercase even if uppercase are used in the Web login name. <br>
 &nbsp; <li> <b>A Samba account</b> again with the same login name and
 password.</li>
@@ -323,9 +338,8 @@ This account is used only when accessing the resources exported as
 Windows
 shared resources (more in the Samba section). Information about login
 name
-and encrypted password stored in the CodeX DB user table and in the
-/etc/smbpasswd
-Unix file.
+and encrypted password stored in the CodeX database and in the
+Samba password file.
 </ol>
 There are specific user account you must know about:
 <ul>
@@ -338,22 +352,22 @@ belongs to a given group but to no specific user in particular. More or
 less
 equivalent to the "nobody" user.</li>
   <li> <b>mailman:</b> owner of the mailman directories</li>
-  <li> <b>anoncvs_xxxx</b>: a specific user created for each xxxx
-project.
-These are not login account but were just used to give checkout
+  <li> <b>anoncvs_xxxx</b>: a specific user created for each project
+where xxxx is the project short name .
+These are not real login account but are just used to give source code
+checkout
 capabilities
-to anonymous users when access to source code was available to
-anonymous users
-in CodeX. This is no longer the case so these account aren't really
-useful.
-We keep maintaining them in case a project would like to activate
+to anonymous users. By default CodeX does not allow anonymous CVS
+access and these accounts are not used unless a project explicitely
+asks for anonymous CVS access to be activated.We keep maintaining them
+in case a project would like to activate
 anonymous
-read access on their CVS repository (uid range 50000-65535)</li>
+read access on their CVS repository. uid range is 50000-65535.</li>
 </ul>
 <h2> Group accounts</h2>
 When a CodeX hosted project is created the project administrator gives
 it
-a "project short name". This project short name can be used in a number
+a project short name. This project short name can be used in a number
 of
 places:
 <ol>
@@ -369,14 +383,15 @@ the /etc/group Unix file.</li>
   <ul>
     <li> It is applied to all projects related disk resources (e.g. the
 Project
-home directory).</li>
+home directory where the project web site is hosted).</li>
   </ul>
   <ul>
     <li> Members of this group are all the developers who are declared
 as
-"project members" (aka developers) by the project administrator in the
+"project members" by the project administrator in the
 Project
-Admin page. So there is a direct mapping between project membership as
+Admin page. In other word there is a direct mapping between project
+membership as
 defined through the Web frontend and group membership on the Unix side.</li>
   </ul>
   <ul>
@@ -390,21 +405,24 @@ These groups are used for user home directories for instance so that
 only
 the user can access its own home directory.</li>
 </ol>
-There are specific user account you must know about:
+There are specific group accounts you must know about:
 <ul>
   <li> <b>sourceforge:</b> group created to own the CodeX Web
 hierarchy
-under /home/httpd. group owner of all the Mailman directories</li>
+under <span style="font-family: monospace;">/home/httpd</span>.</li>
+  <li><span style="font-weight: bold;">mailman:</span> group owner of
+all the Mailman directories (<span style="font-family: monospace;">/home/mailman</span>)</li>
 </ul>
 <h1> CodeX File Structure</h1>
 <h2> Web site</h2>
-The CodeX Web front end files are all under <b>/home/httpd.</b> Except
+The CodeX Web front end files are all under <b><span
+ style="font-family: monospace;">/home/httpd</span>.</b> Except
 otherwise
 specified this directories and all the files and directories under it
 belongs
 to user.group: <b>sourceforge.sourceforge</b> (rwxr-xr-x) <br>
 &nbsp; <br>
-<table width="100%" cellpadding="2" cellspacing="2" border="1">
+<table border="1" cellspacing="2" cellpadding="2" width="100%">
   <caption><br>
   </caption><tbody>
   </tbody> <tbody>
@@ -414,14 +432,14 @@ to user.group: <b>sourceforge.sourceforge</b> (rwxr-xr-x) <br>
     </tr>
     <tr>
       <td valign="top">SF</td>
-      <td valign="top">The Apache Document Root where all the Web
-frontend
-sources reside</td>
+      <td valign="top">The directory where all PHP scripts of the Web
+front end as well as backend scripts reside.<br>
+      </td>
     </tr>
     <tr>
       <td valign="top">SF /www</td>
       <td valign="top">This is where all the PHP scripts are. Most
-of&nbsp; them ends with .php extension except for a few exception that
+of them ends with a .php extension except for a few o them that
 are used as shortcuts to projects and users information:
       <ul>
         <li> projects/xxxx: goes to Summary page of project xxxx</li>
@@ -440,19 +458,17 @@ HTML formatting, DB connection. <br>
     </tr>
     <tr>
       <td valign="top">SF/utils</td>
-      <td valign="top">This is where all the Perl scripts ran in the
-background
+      <td valign="top">This is where all the backend Perl scripts
 are located.&nbsp;</td>
     </tr>
     <tr>
       <td valign="top">SF/db</td>
-      <td valign="top">Contains the SQL batch file to create and
+      <td valign="top">Contains the SQL batch files to create and
 populate
-the SourceForge database as of version 2.0, plus SQL files for CodeX
-extensions
+the CodeX database. it also contains all the database patch file
+published by Xerox&nbsp; to correct CodeX defects or add new features.
 (see <a href="#CodeX_Databases">CodeX databases</a> section for more
-information
-about this batch files).&nbsp;</td>
+information).&nbsp;</td>
     </tr>
     <tr>
       <td valign="top">SF/backend</td>
@@ -463,30 +479,23 @@ the
 file system. See the SF/backend/zones/README for more information</td>
     </tr>
     <tr>
-      <td valign="top">SF/docs</td>
-      <td valign="top">A couple of HTML document describing the basics
-for
-the installation of the SourceForge 2.0 software, plus a light
-Administration.
-Probably very much outdated.</td>
-    </tr>
-    <tr>
       <td valign="top">SF/etc</td>
       <td valign="top">This is the directory where a number of CodeX
-configuration files are located. These pattern files (hence the .dist
-extension) are used at customized on the fly at installation time and
+configuration files are located. These template files (hence the .dist
+extension) are instanciated by the CodeX installation script,
+customized at installation time and
 copied over to the target directories. <br>
       <b><font color="#ff0000">Remark:</font></b> the local.inc
 configuration file stored in /etc/codex/conf/local.inc contains
-the sourceforge password in clear so it must be readable only for
-sourceforge user/group
+the CodeX database password in clear so it must be readable only for
+the sourceforge user/group
 only (rw-r-----)</td>
     </tr>
     <tr>
       <td valign="top">cgi-bin</td>
-      <td valign="top">There is only one CGI script: it's the CVS Web
-interface
-script written in Perl.</td>
+      <td valign="top">This directory in empty. CGI scripts may appear
+in this directory in future CodeX releases.<br>
+      </td>
     </tr>
     <tr>
       <td valign="top"><br>
@@ -495,19 +504,15 @@ script written in Perl.</td>
       </td>
     </tr>
     <tr>
-      <td valign="top">. /phpMyAdmin</td>
-      <td valign="top">The PHP interface to the administration of MySQL
+      <td valign="top">phpMyAdmin</td>
+      <td valign="top">This is the graphical PHP interface to the
+administration of MySQL
 databases.
-The config file is&nbsp; <tt>config.inc.php3</tt> in the same
+The config file is <tt>config.inc.php</tt> in the same
 directory. It
-is configured to give access to the sourceforge DB only. <br>
-      <b><font color="#ff0000">Remark:</font></b> the config file can
-contain
-the sourceforge password in clear to access the database if it uses the
-'config'
-type of authentication so it must be readable for sourceforge
-user/group only
-(rwxr-x---)</td>
+is configured to give access to the CodeX database only. <b><font
+ color="#ff0000"><br>
+      </font></b></td>
     </tr>
     <tr>
       <td valign="top"><br>
@@ -550,16 +555,21 @@ a CVS repository. For a example of how to use this script&nbsp;See the <a
 repository
 of the CodeX project</a> for an example of how to set up email
 notification
-(look at CVSROOT/loginfo and CVSROOT/commitinfo files)<tt></tt></li>
-        <li><b>log_accum</b> and <b>commit_prep</b>: another set of
-perl scripts used to send one single email on cvs commit. Use them
-instead of the
-syncmail. See the <a
- href="http://cvs.codex.xerox.com/cgi-bin/cvsweb.cgi/?cvsroot=codex">CVS
-repository
-of the CodeX project</a> for an example of how to set up email
-notification
 (look at CVSROOT/loginfo and CVSROOT/commitinfo files)</li>
+        <li><span style="font-weight: bold;">gotohell:</span> a small
+shell script used to redirect some emails (e.g noreply address) to a
+black hole!<br>
+        </li>
+        <li><b>log_accum</b> and <b>commit_prep</b>: a set of
+perl scripts that send an email notification on a CVS commit. These
+script are used by CodeX whenever a project activate the email
+notification in the CVS Administration interface of CodeX.</li>
+        <li><span style="font-weight: bold;">commit_email.pl</span>: a
+perl script used that send an email notification on a Subversion
+commit. This script is used by CodeX whenever a project
+activates the email notification in the Subversion Administration
+interface of
+CodeX.</li>
       </ul>
       </td>
     </tr>
@@ -568,7 +578,7 @@ notification
 <h2> </h2>
 <h2> <a name="CVS_Repositories"></a>CVS Repositories</h2>
 <br>
-<table width="100%" cellpadding="2" cellspacing="2" border="1">
+<table border="1" cellspacing="2" cellpadding="2" width="100%">
   <caption><br>
   </caption><tbody>
   </tbody> <tbody>
@@ -578,28 +588,30 @@ notification
     </tr>
     <tr>
       <td valign="top">/cvsroot</td>
-      <td valign="top">All the CVS repositories for all projects are
+      <td valign="top">The CVS repositories of all CodeX projects are
 created
-under this directory. /cvsroot/<i>ProjectName</i> is the CVS repository
+under the <span style="font-family: monospace;">/cvsroot</span>
+directory. /cvsroot/<i>ProjectName</i> is the CVS repository
 of
 project <i>ProjectName</i>. By default all files belong to user nobody
 and
-group <i>ProjectName</i> and permission r--r--r-- for files and
-rwxrwxr-x
-for directories. This is defined by CVS and must not be touched. Once a
-file
-has been modified through a cvs commit command it is owned by the user
-who
-last made changes.
+group <i>ProjectName</i>. File permission is read only (r--r--r--) for
+files and directories are user and group writable (rwxrwxr-x). This is
+defined by CVS and must not be touched. <br>
+      <br>
+By default CVS servers on CodeX are configured to perform all
+transactions through the pserver protocol. CodeX can be tuned to use
+the ssh tunnelling protocol instead. Ask the Xerox CodeX team for more
+information. If secured transaction and fine grain access permissions
+are high on your&nbsp; list of preoject requirements, we strongly
+advise you to consider the use of Subversion instead of CVS.<br>
       <p>Exceptions to these rules are: </p>
       <ul>
         <li> CVS files that correspond to executables for which we want
 the executable flags to be preserved when the file is checked out of
 the
-CVS repository must have the executable flag set (e.g.
-cgi-bin/cvsweb.cgi
-is an executable Perl script and has permission r-xr-xr-x in the CVS
-repo)</li>
+CVS repository must have the executable flag set <br>
+        </li>
         <li> The hidden directory <tt>.lockdir</tt> created under each
 CVS
 repo. It is world writable (drwxrwxrwx) so that all users even those
@@ -620,15 +632,72 @@ must be invisible to non project members.</li>
       </ul>
 Ability to commit changes to the CVS repository from a working copy is
 controlled
-by the CVSROOT/readers and CVSROOT/writers files. Those users in writer
-(actually
-all project members as of today) can commit changes to the CVS
-repository.&nbsp;
-If one day the ability to control write permission is made available in
-the
-CodeX Web interface, those users with no write permission will be
-listed
-in the CVSROOT/readers file.</td>
+by the CVSROOT/readers and CVSROOT/writers files. Those users in the
+writers file
+(all project members as of today) can commit changes to the CVS
+repository.&nbsp; Project administrators who wants to prevent some
+project members to commit changes in the project CVS repository should
+add the corresponding login names in the readers file (the writers file
+must not be touched).</td>
+    </tr>
+  </tbody>
+</table>
+<br>
+&nbsp;
+<br>
+<h2> <a name="Subversion_Repositories"></a>Subversion Repositories</h2>
+<br>
+<table width="100%" cellpadding="2" cellspacing="2" border="1">
+  <caption><br>
+  </caption><tbody>
+  </tbody> <tbody>
+    <tr>
+      <td bgcolor="#c0c0c0"><b>Location</b></td>
+      <td bgcolor="#c0c0c0"><b>Description</b></td>
+    </tr>
+    <tr>
+      <td valign="top">/svnroot</td>
+      <td valign="top">The Subversion repositories of all CodeX&nbsp;
+projects are
+created
+under the <span style="font-family: monospace;">/svnroot</span>
+directory. /svnsroot/<i>ProjectName</i> is the Subversion repository
+of
+project <i>ProjectName</i>. As opposed to CVS, Subversion manages the
+repository in a database acting as a virtual filesystem. Therefore
+access permission do not rely on the Linux file system permission but
+are directly defined and managed through the Subversion database.
+Project members and non project members permission can be defined
+through the Web interface of the CodeX Subversion service (see the <a
+ href="/documentation/user_guide/html/en_US/SubversionAdministrationInterface.html#SubversionAccessControl">CodeX
+User Guide</a> for more details).<br>
+      <br>
+Beside the virtual file system managed in the Subversion databases
+there are a number of files installed on the Linux file system that you
+must know about:<br>
+      <ul>
+        <li><span style="font-family: monospace;">/svnroot/</span><span
+ style="font-style: italic; font-family: monospace;">ProjectName</span><span
+ style="font-family: monospace;">/.SVNAccessFile</span>: this file
+holds the definition of the access permission for a given Subversion
+repository. We highly recommend that you do not modify this file by
+hand but rather use the Web interface of the CodeX Subversion service
+to do so.<br>
+          <br>
+        </li>
+        <li><span style="font-family: monospace;">/svnroot/</span><span
+ style="font-style: italic; font-family: monospace;">ProjectName</span><span
+ style="font-family: monospace;">/hooks/post-commit</span>: this hook
+file is installed by CodeX in order to feed the CodeX database with a
+number of information about all your Subversion transactions. This is
+the so called Subversion tracking feature that a project administrator
+can active or deactivate from the Web interface of the CodeX Subversion
+service. This file must not be modified or removed. Other hook scripts
+can be used by the project team if they have a shell account available
+on the server.<br>
+        </li>
+      </ul>
+      </td>
     </tr>
   </tbody>
 </table>
@@ -636,7 +705,7 @@ in the CVSROOT/readers file.</td>
 &nbsp;
 <h2> <a name="Log_files"></a>Log files</h2>
 <br>
-<table width="100%" cellpadding="2" cellspacing="2" border="1">
+<table border="1" cellspacing="2" cellpadding="2" width="100%">
   <caption><br>
   </caption><tbody>
   </tbody> <tbody>
@@ -648,7 +717,7 @@ in the CVSROOT/readers file.</td>
       <td valign="top">/home/log</td>
       <td valign="top">The directory where log files used for
 statistics
-are archived. Archive takes place each day.</td>
+are archived. Archiving takes place each day.</td>
     </tr>
     <tr>
       <td valign="top">./cvslogs/Year/Month</td>
@@ -661,23 +730,23 @@ and is responsible for extracting the CVS log information of that day
 for
 all <tt>/cvsroot/ProjectName/CVSROOT/history</tt> file and assemble
 them all
-in this single file. </p>
+in a single log file. </p>
       <p>This global log file is later processed by the script <tt>/home/httpd/SF/utils/underworld-root/db_stats_cvs_history.pl</tt>
 which feeds the CodeX database with statistical figures about the CVS
 activity
-of each project (for an example of this see the CVS checkout/add/commit
-counters on the CVS Web page of all CodeX projects)</p>
+of each project (like the number of&nbsp; CVS checkout/add/commit
+counters appearing on the Welcome Web page of the CodeX CVS service )</p>
       </td>
     </tr>
     <tr>
-      <td valign="top">. /atlas/Year/Month</td>
+      <td valign="top">. /hostname/Year/Month</td>
       <td valign="top">File name pattern: <tt>vhosts-access_YYYYMMDD.log</tt>
-      <p>The combined access logs for all the CodeX projects Virtual
+      <p>This file contains the combined Apache access logs for all the
+CodeX projects Virtual
 Web
-servers. These files are a simple daily copy of the Apache log files
-for
-all Virtual servers defined as /var/log/httpd/vhosts-access_log.&nbsp; </p>
-      <p>Later analyzed to feed the CodeX database with statistical
+servers (also know as the project web sites). This is a simple daily
+copy of the Apache log file&nbsp; <span style="font-family: monospace;">/var/log/httpd/vhosts-access_log</span>.
+that is later analyzed to feed the CodeX database with statistical
 data
 about the project Web site activity. These files are generated daily by
 the logrotate script of Apache (see the <a href="#Log_Files">Log Files
@@ -688,43 +757,30 @@ the logrotate script of Apache (see the <a href="#Log_Files">Log Files
     <tr>
       <td valign="top">. /Year/Month/</td>
       <td valign="top">File name pattern: <tt>http_combined_YYYYMMDD.log</tt>
-      <p>These are the combined access log files of the codex.xerox.com
-and
-download.codex.xerox.com. They are generated daily by the logrotate
+      <p>This file contains the combined access logs to the main CodeX
+Web site. They are generated daily by the logrotate
 script
 of Apache (see the <a
  href="file:///home/ljulliar/CodeX_Administration_Guide.html#Log_Files">Log
-Files </a>section). It is basically a copy of the&nbsp;
-/var/log/httpd/access_log
+Files </a>section). It is basically a copy of the&nbsp; <span
+ style="font-family: monospace;">/var/log/httpd/access_log</span>
 file </p>
       <p>File name pattern: <tt>ftp_xferlog_YYYYMMDD.log</tt> <br>
-These are the log files for all ftp upload and download activities.
-They
-are generated daily by the logrotate script of ftp (see the <a
+This file contain the ftp access logs (upload and download) to the
+CodeX site. It is generated daily by the logrotate script of ftp (see
+the <a
  href="file:///home/ljulliar/CodeX_Administration_Guide.html#Log_Files">Log
-Files </a>section). It is basically a daily copy of the FTP log file
-/var/log/xferlog.&nbsp; <br>
+Files </a>section). It is basically a copy of the FTP log file <span
+ style="font-family: monospace;">/var/log/xferlog.</span>&nbsp; <br>
 &nbsp;</p>
       </td>
     </tr>
   </tbody>
 </table>
-<p><b><font color="#ff0000">Remark:</font></b> CodeX admin should have
-a
-look at the size of the HTTP access log file. We had troubles in the
-past with remote machine accessing the CodeX site at a much higher rate
-that
-is humanly possible :-) We had 2 cases in fact: the first one was an
-indexing robot from the Xerox Web Board entering an endless loop and
-the second one was a blocked return Key on a keyboard causing URL
-reloading&nbsp; again and again. In this case it is a good idea to
-clean up the log files and remove
-all the faulty entry for the faulty machine.</p>
-<p><br>
-</p>
+<br>
 <h2> <a name="Dump_files"></a>Dump files</h2>
 <br>
-<table width="100%" cellpadding="2" cellspacing="2" border="1">
+<table border="1" cellspacing="2" cellpadding="2" width="100%">
   <caption><br>
   </caption><tbody>
   </tbody> <tbody>
@@ -736,37 +792,39 @@ all the faulty entry for the faulty machine.</p>
       <td valign="top">/home/dummy/dumps</td>
       <td valign="top">As we will see later in this document there is a
 bunch
-of background script running on CodeX on a regular basis (once every
+of background script running on CodeX on a regular basis. The default
+frequency if once every
 other
-hours). The first thing these scripts do is to extract a number of
+hours. The first thing these scripts do is to extract a number of
 information
-from the CodeX database to exploit them in next stages. The so called
-data
-dump are stored in this directory.
+from the CodeX database and dump in a various text files to exploit
+them in the next stages.
       <p>Files found in this directory are&nbsp; </p>
       <ul>
         <li> <b>aliases:</b> all CodeX users have an email alias in
 the
-form of login login_name@users.codex.xerox.com. By creating such
+form of login login_name@users.<span style="font-style: italic;">your.codex.domain</span>.
+By creating such
 aliases
 one can send an email to a CodeX user simply by using it's login name.
 This is very convenient if the project admin wants to send e-mail to
 certain developers
-of the team through CVS notification for instance. They can use the
+of the team through CVS notification for instance. By using the
 login
-name with no fear: if the user address changes the alias will be
+name CodeX users also make sure that if the email address of a user
+changes it will be
 automatically
 updated.</li>
-        <br>
 All user aliases and mailing list aliases are actually appended to the
 master
 file <tt>/home/httpd/SF/utils/underworld-dummy/aliases.zone</tt>. This
 file
 contains codex wide aliases like codex-admin or codex-contact. If you
 want
-to add more aliases modify this file NOT the /etc/aliases... files <li>
-          <b>
-apache_dump:</b> ready to use Apache config file with a list of all the
+to add more aliases modify this file NOT the /etc/aliases... files<br>
+        <br>
+        <li> <b>apache_dump:</b> ready to use Apache config file with
+a list of all the
 per
 project virtual Web sites. This will go as is in the <tt>/etc/httpd/conf/codex_vhosts.conf</tt>
 Apache Virtual Web server configuration file.</li>
@@ -781,26 +839,28 @@ forum
 posting this past week,&nbsp; total number of download, new rank of the
 projects
 in terms of number of downloads,...</li>
-        <li> <b>dns.codex.xerox.com:</b> the DNS configuration file
-built
-from all projects name (remember: each project Web site has its own
-URL!).
-Ready to use by bind.</li>
+        <li> <b>dns.<span style="font-style: italic;">your.codex.domain</span>:</b>
+this file contains the full list of DNS aliases for the a number of
+virtual server names like the project web sites, the CVS servers and
+the Subversion servers. This formatted is later appended to the master
+CodeX DNS file.</li>
         <li> <b>group_dump:</b> group (project) name dump with project
 ID,
 users belonging to the project and the project status (Active,
 Suspended,
 Deleted)</li>
-        <li> <b>list_dump</b>: dump of all the mailing list created by
+        <li> <b>list_dump</b>: dump of all the mailing lists created
+by
 the
 CodeX projects along with the email of the administrator and the
 default
 admin password for the list.</li>
         <li> <b>ssh_dump:</b> dump of the SSH shared keys entered by
 the
-users to avoid typing their user password when they use their shell
-account
-through SSH.</li>
+users. Shared keys will be automatically installed int he user home
+directory to let her login through ssh without having to type her
+password. <br>
+        </li>
         <li> <b>user_dump:</b> a user info dump with user id, status
 (Active, Suspended,...), default shell, MD5 encrypted password, the 2
 MD4 encrypted passwords for the Samba account (optional) and the real
@@ -816,7 +876,7 @@ name.</li>
 &nbsp;
 <h2> User directories</h2>
 <br>
-<table width="100%" cellpadding="2" cellspacing="2" border="1">
+<table border="1" cellspacing="2" cellpadding="2" width="100%">
   <caption><br>
   </caption><tbody>
   </tbody> <tbody>
@@ -826,15 +886,17 @@ name.</li>
     </tr>
     <tr>
       <td valign="top">/home/users/... <br>
-...UserName</td>
+...<span style="font-style: italic;">UserName</span></td>
       <td valign="top">Each registered user has her own Unix account
 created
 and the home directory that goes with it. This user home directory is
 owned
-by UserName.UserName and has access permission rwxr-xr-x. This can be
+by <span style="font-style: italic;">UserName</span>.<span
+ style="font-style: italic;">UserName</span> and has access permission
+rwxr-xr-x. This can be
 changed
 by the user if she wants to set access permission differently. <br>
-There is currently no space quota on a user home directory.</td>
+There is currently no space quota on a user home directories.</td>
     </tr>
   </tbody>
 </table>
@@ -842,7 +904,7 @@ There is currently no space quota on a user home directory.</td>
 &nbsp;
 <h2> Project Directories</h2>
 <br>
-<table width="100%" cellpadding="2" cellspacing="2" border="1">
+<table border="1" cellspacing="2" cellpadding="2" width="100%">
   <caption><br>
   </caption><tbody>
   </tbody> <tbody>
@@ -852,7 +914,7 @@ There is currently no space quota on a user home directory.</td>
     </tr>
     <tr>
       <td valign="top">/home/group/... <br>
-...ProjectName</td>
+...<span style="font-style: italic;">ProjectName</span></td>
       <td valign="top">Each CodeX hosted project has its own project
 directory.
 When this directory is initialized a minimal directory structure is
@@ -873,7 +935,8 @@ These directories all have the group setuid bit set. On Linux this
 ensures
 that files created under this directory by a group member are
 automatically
-created with the right group owner. The reason for that is because a
+created with the right group ownership. The reason for that is because
+a
 user
 can belong to several CodeX projects and therefore it can be a member
 of several
@@ -882,8 +945,7 @@ responsibility
 of the user to change its working group with the newgrp command when
 going
 from one project directory to another. This would be of course error
-prone.
-Hence the group suid bit.<br>
+prone. <br>
       <br>
 This directory will be world readable unless the project is <u>private</u>
 or the project directory contains a file named <tt>.CODEX_PRIVATE.</tt><br>
@@ -895,7 +957,7 @@ or the project directory contains a file named <tt>.CODEX_PRIVATE.</tt><br>
 &nbsp;
 <h2> File Release Space</h2>
 <br>
-<table nosave="" width="100%" cellpadding="2" cellspacing="2" border="1">
+<table border="1" cellspacing="2" cellpadding="2" width="100%" nosave="">
   <caption><br>
   </caption><tbody>
   </tbody> <tbody>
@@ -904,14 +966,16 @@ or the project directory contains a file named <tt>.CODEX_PRIVATE.</tt><br>
       <td bgcolor="#c0c0c0"><b>Description</b></td>
     </tr>
     <tr>
-      <td valign="top">/home/ftp/codex/xxxx</td>
+      <td valign="top">/home/ftp/codex/<span style="font-style: italic;">ProjectName</span></td>
       <td valign="top">This is where all the uploaded files associated
-with a given release of project xxxx (see the CodeX File Release
-Service) are actually
-stored. It is a flat file structure so no two released files must have
-the
-same name even if they are in distinct releases. <br>
-Normally neither the Codex Admin Team nor the Project Admin Team should
+with a given release of project <span style="font-style: italic;">ProjectName</span>
+(see the <a
+ href="/documentation/user_guide/html/en_US/FileRelease.html">CodeX
+File Release
+Service</a>) are actually
+stored. Normally neither the CodeX Administration Team nor the Project
+Admin
+Team should
 mess
 up with this area by hand using their shell account. Files are
 deposited here
@@ -922,23 +986,23 @@ is group
 writable.&nbsp;</td>
     </tr>
     <tr nosave="">
-      <td nosave="" valign="top">/home/ftp/incoming</td>
+      <td valign="top" nosave="">/home/ftp/incoming</td>
       <td>The FTP incoming directory is used by the project members
-to upload the software packages that are going to be part of the
-release
-they are about to create through the File Release Service on CodeX.
+to upload the software packages to be associated with new software
+releases in the CodeX File Release Service.
 This
-is a temporary storage area because when the new software release is
-created
-the associated software packages are moved to /home/ftp/codex/xxxx (see
-above)
+is a temporary storage area as the uploaded files move to the final
+release space&nbsp; /home/ftp/codex/<span style="font-style: italic;">ProjectName</span>
+(see
+above) when a new software release is created.&nbsp;
       <p><b><font color="#ff0000">Remark: </font></b>There is a script
 in the
 root crontab that removes all the files older than 2 weeks from this
 directory.
 The reason we do that is because this zone is shared by all the
 projects and
-we don't want that ghost files stay in there.</p>
+we don't want that ghost files stay here for too long.<br>
+      </p>
       </td>
     </tr>
   </tbody>
@@ -947,7 +1011,7 @@ we don't want that ghost files stay in there.</p>
 &nbsp;
 <h2> FTP Space</h2>
 <br>
-<table width="100%" cellpadding="2" cellspacing="2" border="1">
+<table border="1" cellspacing="2" cellpadding="2" width="100%">
   <caption><br>
   </caption><tbody>
   </tbody> <tbody>
@@ -956,136 +1020,58 @@ we don't want that ghost files stay in there.</p>
       <td bgcolor="#c0c0c0"><b>Description</b></td>
     </tr>
     <tr>
-      <td valign="top">/home/ftp/pub/xxxx</td>
+      <td valign="top">/home/ftp/pub/<span style="font-style: italic;">ProjectName</span></td>
       <td valign="top">This is the anonymous FTP space assigned to
-project
-xxxx at creation time. This is a storage space that can be used by the
+project <span style="font-style: italic;">ProjectName</span> at
+creation time. It can be used by the
 project
 team for any purpose (well... of course it must have something to do
 with
-the project). Ownership is dummy.xxxx and permission drwxrwxr-x)</td>
+the project). Ownership is dummy.<span style="font-style: italic;">ProjectName</span>
+and permission drwxrwxr-x)</td>
     </tr>
   </tbody>
 </table>
 <br>
-&nbsp;
-<h2> RPM Space</h2>
-<br>
-<table width="100%" cellpadding="2" cellspacing="2" border="1">
-  <caption><br>
-  </caption><tbody>
-  </tbody> <tbody>
-    <tr>
-      <td bgcolor="#c0c0c0"><b>Location</b></td>
-      <td bgcolor="#c0c0c0"><b>Description</b></td>
-    </tr>
-    <tr>
-      <td valign="top">~root/RPMS_CodeX</td>
-      <td valign="top">This is where all the RPMs (and possibly the
-corresponding
-source RPMs) of the various software components used by CodeX are
-stored.
-These are only the RPMs that are <u>not part</u> of the official
-distribution
-that is being used on the server.&nbsp; <br>
-Typical reason why a RPM is in there are one of:
-      <ul>
-        <li> A more recent version of the software has been released
-but
-is not provided as an upgrade in the installed distribution. So we do
-generate
-it ourselves (e.g. MYSQL 3.23.xx)&nbsp;</li>
-        <li> The RPM is missing from the distribution</li>
-        <li> We have made modifications to the source RPM (e.g CVS
-patched
-to handle many CVS repositories).</li>
-      </ul>
-You'll find here the latest RPMs that have been installed but also the
-previous
-versions.<br>
-These RPMs can also be accessed from <a
- href="http://codex.codex.xerox.com/packages/RPMS_CodeX">http://codex.codex.xerox.com/packages/RPMS_CodeX</a><br>
-      </td>
-    </tr>
-  </tbody>
-</table>
-<br>
-&nbsp;
+&nbsp; <br>
 <p> </p>
-<hr size="2" width="100%">
+<hr width="100%" size="2">
 <h1> <a name="CodeX_Databases"></a>CodeX Databases</h1>
 <h2> The CodeX Master Database</h2>
-CodeX uses the MySQL database engine as SourceForge 2.0 did (remark:
-starting
-with 2.5 SourceForge has opted for PostgreSQL, the other big Open
-Source DB).
-MySQL is fast, lightweight and very robust. No problem was experienced
-after
-a year of use on CodeX. <br>
-&nbsp;
+CodeX uses the MySQL database engine to store all of the project data.
+MySQL is fast, lightweight and very robust. <br>
 <h3> Database Creation</h3>
-The CodeX database still has the name "sourceforge" for historical
-reasons.
-The DB was created using the <tt>SF/db/SourceForge.sql,
-filerelease-changes.sql,
-statistics_tables.sql</tt> and <tt>themes.sql </tt>scripts to create
-the DB
-structure and then <tt>SF/db/DefaultValues.sql</tt>&nbsp; to populate
-the
-various tables with default values <br>
+The CodeX database is created once when the CodeX software is first
+installed. The scripts used to create and populate the database are
+located in <span style="font-family: monospace;">SF/db/mysql</span>. <br>
 <b><font color="#ff0000">Remark:</font></b> NEVER EVER run this SQL
 scripts
-once the DB has been created or it will destroy everything !! <br>
+once the DB has been created or it will destroy all of your existing
+data !! <br>
 &nbsp;
 <h3> Database Update</h3>
-In the life of CodeX we have made a number of enhancements that have
-impacted
-the database structure and/or default values. These changes are
-available
-in the form of new SQL file that you can run to "upgrade" the original
-SF
-database to the CodeX database. Scripts are as follows:
-<ul>
-  <li> <b>CodeX.sql:</b> this is where most of the changes are. Again
-this
-script works as an "incremental" script as if we were applying a patch
-to
-the original DB structure. Each time you make a modification to the
-database
-you <b>MUST</b> keep this file up to date an under CVS control.</li>
-  <li> <b>bug_fields_changes.sql, bug_fields_defaults.sql</b>: when
-the changes
-to the database are really important (as for the new bug tracking
-system),
-it is a better idea to create specific SQL scripts to initialize the
-database
-structure and default values.</li>
-</ul>
-<b><font color="#ff0000">IMPORTANT REMARK</font></b>: when ever you
-make
-a database modification, make sure you also cover the migration of the
-existing
-data from the old structure to the new structure. If you just create a
-new
-field in a table it may just be a matter of initializing the new field
-with
-the appropriate (default) value. Sometimes it is much more complex than
-that:
-see at the and of the bug_fields_defaults.sql for an example. <br>
-&nbsp;
-<h3> Database Access Permissions</h3>
-MySQL, like all other SQL engines I know of, have its own access right
+As you operate your own CodeX site, the CodeX team at Xerox will
+provide you with a number of feature enhancements and defect
+corrections that you may wan to install on your site (see the <a
+ href="#CodeX_Code_Update">CodeX Code Update</a> section below). Some
+of the changes may impact the database structure in which case a
+database patch named dbxxxx.sql or dbxxxx.pl will appear under <span
+ style="font-family: monospace;">SF/db/upgrades</span>.<br>
+<br>
+<h3>Database Access Permissions</h3>
+MySQL has its own access permission
 management
-system. So the user names listed below are MySQL usernames and,
-although
-we use the same user names and password in most cases,&nbsp; it doesn't
-use
-any of the information stored in the Unix password file.
-<p>List of users with access to the CodeX database (actually called
-sourceforge):
+system that is completely independent from the access permission
+management system of the underlying operating system . Although
+we use the same user names for the MySQL and Linux administration
+accounts they are actually managed separately. Although this is not
+mandatory, we suggest that you use the same password on&nbsp; Linux and
+MySQL for a given account.<br>
+<p>The CodeX administration accounts with access to the CodeX database
+are as follows:
 </p>
 <ul>
-  <li> <b>root</b>: same password as the Unix root password. This user
+  <li> <b>root</b>: This user
 has
 full administration right on all the MySQL databases and users. You
 must use
@@ -1094,19 +1080,14 @@ user
 or network domain, etc...</li>
   <li> <b>sourceforge</b>: the user that was specifically created to
 have
-read/write access to the sourceforge database. Can only interact with
-the
-DB from the local host (atlas) and not from a remote machine. Same
-password
-as the sourceforge Unix account. The PHP scripts all use this user to
+read/write access to the sourceforge database. It can only interact
+with
+the database from the local host and not from a remote machine. All the
+CodeX PHP scripts run under this user name to
 connect
-to the database (see the file /etc/codex/conf/local.inc where DB
-user/password to be
-used by CodeX PHP scripts is stored. THIS FILE MUST BELONG to
-sourceforge.sourceforge
-and must not be world readable because it contains the sourceforge
-password
-in clear)</li>
+to the database (see the file <span style="font-family: monospace;">/etc/codex/conf/local.inc</span>
+for the configuration of the database user and password).<br>
+  </li>
   <li> <b>dummy</b>: this user was created with read only access on
 the CodeX
 database (SELECT granted). It has no password and can only be used for
@@ -1117,25 +1098,15 @@ Web site and if they include PHP scripts they can connect to the DB and
 extract
 information about their project as well as user/login/session
 information.</li>
+  <li><span style="font-weight: bold;">cxuser</span>: this user has
+read-only access to the project databases that are created when a
+project administrator create a project database export (See the <a
+ href="/documentation/user_guide/html/en_US/ProjectDataExport.html">Project
+Data Export</a> section in the CodeX User Guide). No password is needed
+for this user.</li>
 </ul>
-<h2> Project Export Database</h2>
-Beside the main CodeX database, each project has the ability to
-generate
-its own database with its own project data exported to it. This
-typically
-includes bug, task and survey data export. A project member can then
-connect
-to this database from a remote machine using the MySQL ODBC driver in
-MS-Access
-for instance
-<p>This database can be accessed by a user called "cxuser", read-only
-access
-(SELECT granted), no password and access from anywhere in the Xerox
-Intranet
-is allowed. <br>
-&nbsp; </p>
 <h2> Interacting with Databases</h2>
-What ever way you decide to use to access the CodeX databases (command
+Whatever way you decide to use to access the CodeX databases (command
 line
 or phpMyAdmin), reading (part of) the MySQL documentation is a
 pre-requisite.
@@ -1146,220 +1117,132 @@ SEVERE
 damages.</u>
 <h3> Command Line</h3>
 From any Unix account, type:
-<p><tt>$ mysql -u user_name database_name -p</tt> </p>
+<p><tt>$ mysql -u <span style="font-style: italic;">user_name</span> <span
+ style="font-style: italic;">database_name</span> -p</tt> </p>
 <p>where database_name is the name of the database you want to connect
 to
-(e.g. "sourceforge") and the user_name is the MySQL user name you
+(e.g. "sourceforge" for the CodeX master database) and the user_name is
+the MySQL user name you
 pretend
 to be (type -p if there is a password associated with this user but
 don't
 type the password in clear here to avoid having the password appearing
 in
 the shell command history file) </p>
-<p>Then the SQL world is yours ! You can type things like: </p>
-<p><tt>mysql&gt; SELECT group_name FROM groups WHERE is_public = 0;</tt></p>
+<p>Then the database is yours and you can interact with it through
+using SQL statements. Here are two sample SQL statements<br>
+</p>
+<p><tt>mysql&gt; SELECT group_name FROM groups WHERE is_public = 0; #
+show a list a private project name<br>
+</tt></p>
 <p><tt>mysql&gt; UPDATE user SET realname='Laurent R. Julliard' WHERE
 user_id
-= 103;</tt> </p>
+= 103; # update the full name of the user_id 103<br>
+<br>
+</tt> </p>
 <center>
 <p><b><font color="#ff0000">** IMPORTANT REMARK **</font></b></p>
 </center>
-<font color="#ff0000">Again I suggest that you practice a bit on a
-MySQL
-engine of your own before playing with the real DB. Ideally you should
+<font color="#ff0000">It is highly recommended that you practice a bit
+on a
+MySQL test database before playing with the real CodeX database.
+Ideally you should
 always
-test a SQL statement on the CodeX test server before doing it on the
+test a SQL statement on the CodeX test server before running it on the
 production
-server. Except for SELECT statement which is harmless anyway.</font>
+server. Except for SELECT statements which are harmless anyway.</font>
 <h3> phpMyAdmin</h3>
-phpMyAdmin is a PHP based graphical User Interface to the MySQL engine.
+phpMyAdmin is a PHP based graphical User Interface to the MySQL
+database.&nbsp;
 It
 is currently configured on the CodeX production server to give access
 to
-the sourceforge database only. You can access phpMyAdmin at
+the CodeX database only. You can access phpMyAdmin at
 <center>
-<p>http://codex.xerox.com/phpMyAdmin</p>
+<p>http://<span style="font-style: italic;">your.codex.domain</span>/phpMyAdmin</p>
 </center>
-<p>This is password protected at the HTTP level. Use the sourceforge
+<p>This is password protected at the HTTP level. Authenticate with the
+sourceforge
 user
-name and password to connect to it. The password must be given to
-Apache by
-using the htpasswd utility. Again this password uses the same login
-name
-and password as the sourceforge Unix account but it has nothing to do
-with
-the Unix password file. </p>
-<p>The login/password file for the HTTP&nbsp;authentication in Apache
-is located
-at /etc/httpd/conf/passwd (look for phpMyAdmin configuration in the
-/etc/httpd/conf/httpd.conf
-file).&nbsp; To add a new user or change the password of an existing
-user
-use the /usr/bin/htpasswd utility. Example to update the sourceforge
-password
-in Apache: <br>
-&nbsp; </p>
-<blockquote>
-  <pre>$ htpasswd /etc/httpd/conf/passwd sourceforge</pre>
-</blockquote>
-<p><br>
-Then type the new password. <br>
-&nbsp; <br>
+name and password. <br>
 &nbsp; </p>
 <p> </p>
-<hr size="2" width="100%">
+<hr width="100%" size="2">
 <h1> Apache</h1>
-Apache master config file is in /etc/httpd/conf/httpd.conf
+The Apache master configuration file is in <span
+ style="font-family: monospace;">/etc/httpd/conf/httpd.conf</span>. The
+master file also includes specific configuration files located at /<span
+ style="font-family: monospace;">etc/httpd/conf.d</span>.&nbsp;
 <h2> Master server</h2>
 The master CodeX Web server can be accessed through one the following
 URLs:
-xww.codex.xerox.com, www.codex.xerox.com or simply codex.xerox.com.
-Document
-Root is in /home/httpd/SF/www where all the PHP scripts are located.
-<p>The only special alias is for phpMyAdmin that you can access at
-http://codex.xerox.com/phpMyAdmin.
-It is password protected. </p>
-<h2> Download server</h2>
-http://download.codex.xerox.com is a virtual Web server that actually
-points
-to the FTP Release space. Its document root is /home/ftp/codex/. You
-can not
-really browse this site because it points to a collection of
-directories and
-file releases and the File Indexing view is disable in this Virtual
-server.
-So you can only access a file release when you know the associated file
-name.
-<p>This download mechanism is used when a CodeX user wants to download
-a
-file from a project page. It's just a way to make sure that they have
-no other way to access the file and we can make sure that the user is
-logged in before
-downloading the file. It is not 100% safe but it is safe enough. </p>
+xww.<span style="font-style: italic;">your.codex.domain</span>, www.<span
+ style="font-style: italic;">your.codex.domain</span> or simply <span
+ style="font-style: italic;">your.codex.domain</span>. and any aliases
+that you may have defined yoursefl in the file <span
+ style="font-family: monospace;">/var/named/codex.zone</span>. The
+Apache Document
+Root is at <span style="font-family: monospace;">/home/httpd/SF/www</span>
+where all the PHP scripts are located.
 <h2> Virtual Servers</h2>
 Each project has its own project Web server. The config file for these
 servers
 is <tt>/etc/httpd/conf/codex_vhosts.conf</tt>. Each of these server
 execute
-under a specific User (dummy) and Group (project group name). This is
+under a specific User (dummy) and Group (the project group name). This
+is
 to
 make sure that the server has enough permission to write in any storage
 area
-belonging to the project but no other. The dummy user also has
+belonging to the project but cannot write to other project storage
+spaces on the CodeX server. The dummy user also has
 read-only access
 to the CodeX database. By doing so we allow the Project Web servers to
 use
 PHP in their HTML pages and access session information like who is
 browsing
-the site and whether it is an anonymous user or not.
-<p>Remark: for the User/Group directive to work in a Virtual Web server
+the site, whether it is an anonymous user or not, etc.
+<p><span style="font-weight: bold; color: rgb(255, 0, 0);">Remark</span>:
+for the User/Group directive to work in a Virtual Web server,
 Apache has to go through the suexec utility delivered with Apache. This
 utility
-has bone modified for CodeX and recompiled because the security checks
-made by the original C program were too restrictive to work in the
+has been modified for CodeX and recompiled because the security checks
+made by the original version are too restrictive to work properly in
+the
 CodeX environment.&nbsp; Even though these security checks have been
 relaxed the suexec program is still very safe given the CodeX context. </p>
 <p>The modifications are available in&nbsp; <tt>/home./httpd/SF/utils/apache_1.3.19-suexec.patch
-</tt>in the form of a diff file. <br>
+</tt>in the form of a diff file which applies to both apache 1.3.x and
+Apache 2.0.x. As a Codex customer you'll never have to apply this patch
+to new version of Apache as the CodeX team at Xerox will provide with
+ready to install Apache RPMs when needed.<br>
 &nbsp; </p>
-<h2> Modules</h2>
-A number of Apache modules have been installed on CodeX:
-<ul>
-  <li> The Perl module: mod_perl-1.21-10 RPM</li>
-  <li> The PHP module: php-3.0.18-1codex RPM</li>
-</ul>
-The advantage of using modules is that Perl and PHP are loaded once for
-all
-in Apache at start time. So when a .php page is processed the PHP
-engine (and
-all its modules) are already loaded and processing is very fast.
 <p> </p>
-<hr size="2" width="100%">
-<h1> Web Front end</h1>
-The CodeX site intensively use the PHP language to generate dynamic
-content.
-For an introduction on PHP see <a href="http://www.php.net/">www.php.net</a>
-<br>
-PHP is a server side language. It means that all the HTML pages
-containing
-embedded PHP code are interpreted on the fly by the PHP interpreter
-residing
-in Apache before they are sent to the client side. The output of the
-PHP is
-normally pure HTML document that is then displayed on the user Web
-browser.
-<br>
-&nbsp;
-<h2> PHP</h2>
-The PHP modules that we use on CodeX are loaded by the PHP interpreter
-when
-the interpreter itself is loaded in Apache: <br>
-&nbsp;
-<table nosave="" width="100%" cols="2" border="1">
-  <tbody>
-    <tr>
-      <td>php-mysql-3.0.18-1codex</td>
-      <td>The PHP interface to the MySQL database engine.</td>
-    </tr>
-    <tr>
-      <td>php-gd-3.0.18-1codex</td>
-      <td>The PHP interface to the GD library. A C library that allows
-you
-to generate GIF/PNG/JPEG images on the fly. It is used by CodeX to
-generate graphs in the project statistics.</td>
-    </tr>
-    <tr>
-      <td>php-ldap-3.0.18-1codex</td>
-      <td>A PHP LDAP client that we use to connect to the Xerox
-Directory
-and obtain more information on the user in his profile page.</td>
-    </tr>
-  </tbody>
-</table>
-<p>The PHP config file is located in /etc/httpd/php3.ini file and this
-where the PHP modules to be loaded are defined. </p>
-<p>All PHP scripts are under /home/httpd/SF/www and there is roughly
-one subdirectory
-per CodeX service. (bug for Bug tracking, pm for task manager,
-etc....).
-All scripts include the pre.php file which itself does include other
-PHP
-files that will prepare the script context: check the user
-login/session
-is valid, identify the group ID we are operating on, systematically
-open a
-connection to the sourceforge database, etc. <br>
-&nbsp; </p>
 <h1>
 <hr width="100%"></h1>
 <h1> FTP</h1>
-FTP server configuration file is in /etc/ftpaccess and it has been
+The FTP server configuration file is in <span
+ style="font-family: monospace;">/etc/ftpaccess</span> and it has been
 configured
-to work with CodeX.
-<p>There is not much to say about it except that it is open to both
+to work with CodeX. The default configuration allows access to both
 anonymous
 users (using the "ftp" account) and to all registered users through
 their
-normal Unix login/password. This can be used to edit the Project Web
+normal CodeX login/password. This can be used to edit the HTML pages of
+the&nbsp; Project Web
 server
-pages remotely for instance with Netscape Composer, DreamWeaver,...) <br>
-&nbsp; <br>
-&nbsp; </p>
+pages remotely for instance with Netscape Composer, DreamWeaver,
+FrontPage and many other Web editing environment<br>
+<br>
 <p> </p>
-<hr size="2" width="100%">
+<hr width="100%" size="2">
 <h1> CVS</h1>
 <h2> Using CVS on CodeX</h2>
 This document is not a tutorial on CVS. For an introduction to CVS
 refer
-to the <a href="http://codex.xerox.com/docs/site">CodeX Site
-Documentation
-</a>and look for the CVS Tutorial.&nbsp; The use of CVS&nbsp;for CodeX
-development
-activities is fully document in the CodeX Configuration Management Plan
-available
-at&nbsp; <a
- href="http://docs.cp10.es.xerox.com/Get/File-36948/CodeX_CMP.doc">
-http://docs.cp10.es.xerox.com/Get/File-36948/CodeX_CMP.doc</a> <br>
+to the <a
+ href="/documentation/user_guide/html/en_US/VersionControlWithCVS.html">CVS
+section of the CodeX User Guide</a>.<br>
 &nbsp;
 <h2> CodeX specific CVS</h2>
 The CVS&nbsp;RPM&nbsp;packages installed on CodeX contains a modified
@@ -1369,44 +1252,42 @@ of cvs. The reason the CVS source code has been modified is as follows:
 server
 must be told which directories are allowed as CVS root directories.
 These are
-the various places where the CVS repositories are located. The way
-you&nbsp;
-do that is by using the command line option --allow-root=pathname where
-path
-name is the allowed path. and you can repeat this option as many times
+the various places where the CVS repositories are located. Allowed CVS
+repostories are given to the CVS server through the&nbsp; --allow-root=<span
+ style="font-style: italic;">pathname</span> command line options where
+<span style="font-style: italic;">pathname</span> is the allowed path.
+This option is repeated as many times
 as
-the number of distinct paths where CVS repo can be located. </p>
-<p>This way is doing is OK for a normal CVS server but on CodeX we have
-as many CVS repo as we have projects.. So if we were using the
---allow-root
-method we'd have to repeat the same option more than a hundred times on
-the command line and there is a risk that some day will exceed the
-allowed maximum size of a command line. So a new option has been
-implemented in the cvs server called --allow-root-file=filename where
-filename is the name of a file containing the list of all allowed CVS
-repositories. </p>
+the number of CVS repositories. While this way of doing is OK for a
+small to mid-size CVS server it doesn't scale to hundreds or thousands
+of CVS repositories because repeating&nbsp;
+--allow-root options hundreds of times would exceed&nbsp; the maximum
+allowed size of a Linux command line. Therefore, a new option has been
+implemented in the cvs server called --allow-root-file=<span
+ style="font-style: italic;">filename</span> where
+<span style="font-style: italic;">filename</span> is the name of a file
+containing the list of all allowed CVS
+repositories on CodeX.<br>
+</p>
 <p>On CodeX this file is created/updated by the daemon script and
 resides
-in /etc/cvs_root_allow. It lists the Cvs repo of all the projects, on
-per
-line. </p>
-<p>Remark: if you want to upgrade CVS to a newer version you'll have to
-take the CVS RPM Source package.&nbsp;Use the patch file
-cvs-1.10.8-rootfile.patch.bz2
-that is included in the RPM source package
-~root/RPMS_CodeX/CVS-1.10.8codex/cvs-1.10.8-xerox.src.rpm. Reapply this
-patch to the new version by modifying the CVS&nbsp;spec file.
-<br>
-&nbsp; <br>
+in <span style="font-family: monospace;">/etc/cvs_root_allow</span>. <br>
+</p>
+<p><span style="font-weight: bold; color: rgb(255, 0, 0);">Remark</span>:
+as a CodeX customer you will automatically receive any new version of
+the CodeX specific CVS RPMs and you don't have to apply any of the
+patch by hand to the CodeX sources.<br>
 &nbsp; </p>
 <h2> Running the CVS server</h2>
-The cvs server does not run permanently in the background. It is
+The CVS server does not run permanently in the background. It is
 launched
-only when necessary through the inetd daemon. Look for /etc/inetd.conf
+only when necessary through the inetd daemon that is configured to
+listen on the port of the pserver protocol (tcp/2401). Look for <span
+ style="font-family: monospace;">/etc/inetd.conf/cvs</span>
 for
-the command line we use to run the cvs server.
+the command line used to run the cvs server.
 <p> </p>
-<hr size="2" width="100%">
+<hr width="100%" size="2">
 <h1> DNS</h1>
 CodeX has its own internal domain : codex.xerox.com. And the codex
 machine is the name server for this domain. The DNS configuration files
@@ -1414,40 +1295,46 @@ are
 located in:<br>
 <ul>
   <li><tt>/etc/named.conf</tt>: top configuration file&nbsp;</li>
-  <li><tt>/usr/local/domain/data/primary/codex.zone</tt>: this is
+  <li><tt>/var/named/codex.zone</tt>: this is
 where&nbsp;the
 codex.xerox.com domain is defined.&nbsp;</li>
-  <li><tt>/usr/local/domain/data/primary/codex_full.zone</tt>: this
+  <li><tt>/var/named/codex_full.zone</tt>: this
 file
-is automatically generated by the codex daemon scripts&nbsp;</li>
+is automatically generated by the CodeX daemon scripts&nbsp;</li>
 </ul>
-<h2> Static configuration file</h2>
-<p><br>
+<h2> Static configuration file<br>
+</h2>
+<p>
 The top configuration file is in <tt>/etc/named.conf</tt>. This file
 is static
-and must be edited by hand. </p>
-<p>The static part of the CodeX zone is defined in <tt>/usr/local/domain/data/primary/codex.zone</tt>
-. It contains the IP address for the master CodeX server known as
-atlas. And
-there are many aliases defined like www,&nbsp; xww,&nbsp; cvs,
+and must be edited by hand. Before the CodeX server is installed you
+must ask your network administrator to create the CodeX domain <span
+ style="font-style: italic;">your.codex.domain</span> and delegate the
+administration of this domain to the CodeX server. </p>
+<p>The static part of the CodeX zone is defined in <tt>/var/named/codex.zone</tt>
+. It contains the IP address for the master CodeX server as well as a
+list of aliases defined like www,&nbsp; xww,&nbsp; cvs,
 download, shell,
 users, lists, etc.... The reason why all these aliases have been
 defined is
-because as the load on the CodeX server increases it may be desirable
+because as the load on the main CodeX server increases it may be
+desirable
 to
 host some CodeX functions on a separate server (e.g the mailing list
-manager).
-In this case it will just be a matter of changing the IP address
+manager or the CVS server). Doing so will just be a matter of changing
+the IP address
 associated
-with the lists.codex.xerox.com and everything will be transparent for
+with the lists.<span style="font-style: italic;">your.codex.domain</span>
+or cvs.<span style="font-style: italic;">your.codex.domain</span> and
+all the rest will be transparent for
 the
-end user. </p>
+end users. </p>
 <p>Similarly mail exchange records (MX record) have been defined for
-lists.codex.xerox.com.
+lists.<span style="font-style: italic;">your.codex.domain</span>.
 Strictly speaking this is not necessary today because the IP address of
 the
 machine receiving the e-mail is the same as the one
-lists.codex.xerox.com
+lists.<span style="font-style: italic;">your.codex.domain</span>
 is pointing to. But in the future we may want to have a dedicated
 server to
 handle email for the codex domain. Hence the MX record. <br>
@@ -1455,21 +1342,23 @@ handle email for the codex domain. Hence the MX record. <br>
 <h2> Dynamic configuration file</h2>
 As explained above each project on CodeX has its own Web server that
 can
-be accessed at the URL http://projectname.codex.xerox.com. For this to
+be accessed at the URL http://<span style="font-style: italic;">projectname</span>.<span
+ style="font-style: italic;">your.codex.domain</span>. For this to
 work
-all these names must be declared in the DNS configuration file. This is
-part
-of the daemon scripts. The DNS aliases are generated in the
-dns.codex.xerox.com
-dump File (see the <a href="#Dump_files">Dump Files</a> section for
+all these names must be declared in the CodeX DNS configuration file.
+This is done by the CodeX daemon scripts. The DNS aliases are generated
+in the
+dns.<span style="font-style: italic;">your.codex.domain</span>
+dump file (see the <a href="#Dump_files">Dump Files</a> section for
 more information)
 <p>The daemon scripts are also responsible for merging the static
 configuration
 file with the dynamic part of it and store in the actual configuration
 that
-is going to be used by bind. This file is at <tt>/usr/local/domain/data/primary/codex_full.zone</tt>
+is going to be used by the DNS server bind. This file is at <tt>/var/named/codex_full.zone</tt>
 . </p>
-<p>Remarks: </p>
+<p><span style="font-weight: bold; color: rgb(255, 0, 0);">Remarks</span>:
+</p>
 <ul>
   <li> The <tt>codex_full.zone</tt> file must never be edited by hand
 !! All changes in this file will be lost next time the daemon scripts
@@ -1478,77 +1367,85 @@ run.</li>
 it
 may take some time for the information to propagate to the rest of the
 Xerox
-network (up to a day in some cases). So if a new project owner
+network (up to a day in some cases depending on the configuration of
+your company DNS servers). So if a new project owner
 complains that
-the URL is not working tell him/her to be patient ;-)</li>
+the URL is not yet working tell him/her to be patient ;-)<br>
+  </li>
 </ul>
 <p><br>
 </p>
-<hr size="2" width="100%">
+<hr width="100%" size="2">
 <h1> SSH</h1>
 The Secure Shell service is available on CodeX. All registered user
 with
 an active account can use it to login into CodeX in a secure way. To
 make
-Windows users life easier telnet is also allowed. However Corporate IM
-normally
-recommends that telnet be disabled on all Xerox servers. So one day we
-may
-have to disable it and ask the user to use SSH instead. SSH for Windows
-does
-exist and can be installed easily.
+Windows users life easier you may also activate the telnet service as
+telnet comes standard with the Windows operating system. However we
+highly recommend not to enable telnet for security reasons and instruct
+your Windows users to install an SSH client instead.<br>
+<br>
+As a CodeX site administrator you may also decide to disable shell
+accounts for all users. If this is so you must change the default shell
+assigned to new Codex users when they register. See the <a
+ href="/documentation/installation_guide/html/CodeX_Installation_Guide.html#Shell_Account">SSH
+section in the CodeX installation Guide</a> for detailed instructions.<br>
 <center>
 <p><b><font color="#ff0000">** IMPORTANT REMARK **</font></b></p>
 </center>
-<font color="#ff0000">We, CodeX administrators, must <b>never</b> use
+<font color="#ff0000">For security and traceability reasons, it is
+recommended that CodeX administrators <b>never</b> use
 telnet
 to log to the CodeX server. It is not secure and it makes critical
 password
-travel on the Xerox network in clear text!! The procedure we have
-adopted
-is the following:</font>
+travel on the Xerox network in clear text!! The CodeX team recommends
+that CodeX administrators follows the following procedure to log into
+the CodeX server:</font>
 <ol>
-  <li> <font color="#ff0000">Connect to codex.xerox.com using ssh and
+  <li> <font color="#ff0000">Connect to the CodeX server using ssh and
 your
-personal CodeX account (e.g. ssh ljulliar@codex.xerox.com)</font></li>
+personal CodeX account (e.g. ssh <span style="font-style: italic;">username</span>@codex.xerox.com)</font></li>
   <li> <font color="#ff0000">Then if you must act as root or
 sourceforge
 user use the su command (su - root) and type the appropriate password</font></li>
 </ol>
-<font color="#ff0000">The reason for this is to have a trace in
-/var/log/messages
-of who in our team is acting as sourceforge or root.</font>
+<font color="#ff0000">The reason for the 2-step process is to be able
+to determine from the <span style="font-family: monospace;">/var/log/messages</span>
+log file who used a privileged user account in case there are multiple
+CodeX site administrators.</font>
 <p> </p>
-<hr size="2" width="100%">
+<hr width="100%" size="2">
 <h1> Sendmail</h1>
-We use sendmail to handle incoming and outgoing mail messages on CodeX.
-There
-is not much to say about sendmail except that the config file is in
-/etc/sendmail.cf.
-Sendmail is configured in such a way that it uses 2 aliases files: <br>
+By default CodeX uses sendmail as its mail transport agent of choice to
+handle incoming and outgoing mail messages. The critical files for the
+sendmail configuration are: <br>
 &nbsp; <br>
 &nbsp;
-<table nosave="" width="100%" border="1">
+<table border="1" width="100%" nosave="">
   <tbody>
+    <tr>
+      <td style="vertical-align: top; font-family: monospace;">/etc/mail/sendmail.cf</td>
+      <td style="vertical-align: top;">The master configuration file.
+It is created by the CodeX installation script.<br>
+      </td>
+    </tr>
     <tr nosave="">
-      <td nosave="" valign="top">/etc/aliases</td>
+      <td style="font-family: monospace;" valign="top" nosave="">/etc/aliases</td>
       <td>This is a small aliases file where you only want to configure
 system
 wide aliases like postmaster, webmaster,etc... When you modify this
 file run
-the command "newaliases" for the change to take effect.</td>
+the command "newaliases" for the changes to take effect.</td>
     </tr>
     <tr nosave="">
-      <td nosave="" valign="top">/etc/aliases.codex</td>
+      <td style="font-family: monospace;" valign="top" nosave="">/etc/aliases.codex</td>
       <td>This file is generated automatically by the CodeX daemon
 scripts
-and must be never be edited by hand. The beginning of the file contains
-some hand defined aliases (codex-admin, codex-contact, noreply,...). If
-you want to change these aliases edit the file in
-/home/httpd/SF/utils/underworld-dummy/aliases.zone
-and commit the changes in CVS. The changes will take effect when at the
-next
-run of the CodeX daemon scripts.</td>
+and must never be edited by hand. The beginning of the file contains
+some predefined aliases (codex-admin, codex-contact, noreply,...) that
+must not be modified.<br>
+      </td>
     </tr>
   </tbody>
 </table>
@@ -1556,70 +1453,54 @@ run of the CodeX daemon scripts.</td>
 &nbsp; <br>
 &nbsp;
 <p> </p>
-<hr size="2" width="100%">
+<hr width="100%" size="2">
 <h1> Samba</h1>
-Gives access to the following CodeX resources. The Samba password file
-is
-in /etc/smbpasswd and it is generated in an automatic way like the
-/etc/passwd,
-/etc/shadow and /etc/group file. The Windows password is the same as
-the Web
-and Unix account password.
+Samab allows Windows users to access a number of CodeX shared resources
+(see below). The Samba password file
+<span style="font-family: monospace;">/etc/smbpasswd</span> is
+generated automatically by the CodeX backend scripts like the
+<span style="font-family: monospace;">/etc/passwd</span>,
+<span style="font-family: monospace;">/etc/shadow</span> and <span
+ style="font-family: monospace;">/etc/group</span> files. The
+login/password used by CodeX users to access their shared resources are
+the same as the CodeX login and password. When browsing the CodeX
+shared resource from the Windows Explorer, users will see the following
+folders<br>
 <ul>
   <li> <b>FTP Incoming directory</b>: make it easy to upload file
 releases
 for Windows users that do not have/know the command line FTP client</li>
-  <li> <b>The User directory</b> (and only her own directory)</li>
-  <li> <b>The Project directories</b>: they are all visible but
-read-write
-access are preserved and a non project member cannot write into a
-project
-she is not a member of. This is very convenient to edit a project Web
-site
-through FrontPage for instance.</li>
+  <li> <b>The User directory</b>: a given user will only see her own
+user directory.<br>
+  </li>
+  <li> <b>The Project directories</b>: all project directories are
+visible but access permissions apply as only project members can write
+to the project home directory.<br>
+  </li>
 </ul>
-The configuration file is located in /etc/smb.conf
-<p><b><font color="#ff0000">Remark:</font></b> the Samba server was put
-in place 6 months after CodeX official start. As a consequence a lot of
-users doesn't have there "Windows" account activated because we unable
-to generate the encrypted password for these old users. So for these
-user they must pretend that they want to change their password through
-the CodeX Account Maintenance, retype their current password in the new
-password field. This will have as an effect to generate the MD4
-encrypted password and the daemon scripts will activate the Samba
-account next time it runs. <br>
-</p>
-<hr size="2" width="100%">
+<hr width="100%" size="2">
 <h1> Mailman</h1>
-There is not much to say about Mailman. This is the software that
-manages
-all the project mailing lists on CodeX. It is entirely self-managed
-through
-a Web interface. The admin password (super user password) for global
-Mailman
-administration is the same as the sourceforge password.<br>
+The Mailman mailing lists manager requires little attention from the
+CodeX administrators. The configuration is done at installation time
+and mailing list are entirely managed by the end users
+through the Mailman Web interface. Mailman has a super user password
+allowing CodeX site administrators to access the administration
+interface of any mailing lists created by CodeX projects.<br>
 <br>
-Mailman is installed in /usr/local/mailman except for the mailing lists
-archives
-which are stored in /home/mailman/private (see the symbolic link in
-/usr/local/mailman/private).
-The reason for that is because the /home file system has a much larger
-disk
-space.<br>
+Mailman is installed in <span style="font-family: monospace;">/home/mailman</span>.
 <br>
 <br>
-<br>
-<hr size="2" width="100%">
+<hr width="100%" size="2">
 <h1> Background daemons</h1>
 <h2>The root crontab</h2>
 <p>The root user on CodeX has a number of script defined in the
 crontab.
 <br>
 &nbsp;
-<table nosave="" width="100%" border="1">
+<table border="1" width="100%" nosave="">
   <tbody>
     <tr nosave="">
-      <td nosave="" valign="top">/home/httpd/SF/utils/xerox_crontab.sh</td>
+      <td style="font-family: monospace;" valign="top" nosave="">/home/httpd/SF/utils/xerox_crontab.sh</td>
       <td>This is the master daemon script for the CodeX site. It runs
 once every 2 hours and update all the user/group accounts, initialize
 CVS repository,
@@ -1628,26 +1509,21 @@ and groups
 (projects) have a fully functional environment from a Unix perspective</td>
     </tr>
     <tr>
-      <td>/home/httpd/SF/utils/xerox_all_daily_stats.sh</td>
+      <td style="font-family: monospace;">/home/httpd/SF/utils/xerox_all_daily_stats.sh</td>
       <td>As the name says it this the master script that compute all
 the
 daily statistics about the CodeX site globally and also for individual
 projects</td>
     </tr>
     <tr>
-      <td>/home/httpd/SF/utils/underworld-root/... <br>
-db_project_weekly_metric.pl</td>
+      <td><span style="font-family: monospace;">/home/httpd/SF/utils/underworld-root/...
+      </span><br>
+      <span style="font-family: monospace;">db_project_weekly_metric.pl</span></td>
       <td>Same as above but this time it is for weekly statistics</td>
     </tr>
     <tr>
-      <td>/home/tools/backup_job</td>
+      <td style="font-family: monospace;">/home/tools/backup_job</td>
       <td>Backup of all CodeX file system.</td>
-    </tr>
-    <tr>
-      <td>/root/check_subscribers.pl</td>
-      <td>check that there is no unauthorized address both in the
-mailing
-list subscribers and in the CodeX registered users.</td>
     </tr>
   </tbody>
 </table>
@@ -1655,36 +1531,43 @@ list subscribers and in the CodeX registered users.</td>
 &nbsp; </p>
 <h2> The scripts</h2>
 It is beyond the scope of this document to review all the scripts under
-/home/httpd/SF/utils.
-We are going to focus on 2 of them:
+<span style="font-family: monospace;">/home/httpd/SF/utils</span>. The
+most important scripts a CodeX administrator must know about are:<br>
 <p><b><u>xerox_crontab.sh</u></b> </p>
-<p>This is the orchestrator of all the scripts that have to be run once
-every 2 hours. Let's review what the script does step by step: </p>
+<p>This is an orchestrator script in charge of running many others in
+the appropriate order. By default it runs once every other hours. Let's
+review what the script does step by step: </p>
 <ol>
   <li> First it dumps all the necessary information from the CodeX
 database
 into the <a href="#Dump_files">Dump Files</a> area. User, groups
 (projects),
-mailing list information, User SSH keys. Once this is dumped the next
-scripts
-are going to use the dumped information.</li>
+mailing list information, User SSH keys. Dump files are used throughout
+the rest of the script.<br>
+  </li>
   <li> Generate e-mail aliases for the mailing lists
-(@lists.codex.xerox.com)
-and for the users (@users.codex.xerox.com). Merge all this into
-/home/dummy/dumps/aliases
+(<span style="font-style: italic;">projectname</span>-xxxxx@lists.<span
+ style="font-style: italic;">your.codex.domain</span>)
+and for the users (<span style="font-style: italic;">username</span>@users.<span
+ style="font-style: italic;">your.codex.domain</span>) and store them
+in the&nbsp; <span style="font-family: monospace;">/home/dummy/dumps/aliases</span>
 file.</li>
   <li> Copy the freshly dumped file into /etc/aliases.codex and force
 sendmail
 aliases refresh to activate the new aliases.</li>
-  <li> Runs the utils/underworld-dummy/dns_conf.pl script to generate
+  <li> Runs the <span style="font-family: monospace;">utils/underworld-dummy/dns_conf.pl</span>
+script to generate
 the
 DNS zone dump file (project web server name aliases), copy this file in
-/usr/local/domain/data/primary/codex_full.zone
-and restart the named daemon to activate the new DNS names.</li>
+    <span style="font-family: monospace;">/var/named/codex_full.zone</span>
+and restart the named daemon to propagate any new server&nbsp; names
+associated with new projects.<br>
+  </li>
   <li> Generate the Apache config file for virtual hosts (project Web
-server)</li>
-  <li> Run new_parse.pl to update existing user account
-(delete,suspend)
+sites)</li>
+  <li> Run <span style="font-family: monospace;">new_parse.pl</span>
+to update existing user account
+(creation, deletion, ,suspension)
 and create the new user and group account as well as all the related
 directories
 (see below for more details)</li>
@@ -1695,7 +1578,7 @@ update)</li>
 through
 the Web interface)</li>
   <li> Create any new mailing list in mailman.</li>
-  <li> End of it.</li>
+  <li> Exit</li>
 </ol>
 <p><br>
 <b><u>new_parse.pl</u></b> </p>
@@ -1742,7 +1625,7 @@ must
 use this as a lock directory. Commit the changes made to the config
 file
 with a simple rcs checkin command.</li>
-    <li> Change the CVSROOT/loginfo file to make sure that
+    <li>Change the CVSROOT/loginfo file to make sure that
 CVS&nbsp;change
 all the committed files to group ownership. This is to solve the
 problem if
@@ -1768,35 +1651,42 @@ CVS repo when using the shell account.</li>
 contains
 a <tt>.CODEX_PRIVATE</tt> file, then make sure that only project
 members
-have access to the group home directory when using the shell account.<br>
+have access to the group home directory when using the shell account.</li>
+    <li> Initialize a new Subversion repository for this project and
+create
+the default access permission file and install the post-commit hook
+script<br>
     </li>
   </ul>
 </ol>
-All output of all the scripts run through the crontab will be sent to
+The output of all the backend scripts run through xerox_crontab.sh is
+sent to
 the
-codex-admin people for verification <br>
-<hr size="2" width="100%">
+codex-admin email alias for verification .<br>
+<br>
+<hr width="100%" size="2">
 <h1> <a name="Log_Files"></a>Log Files</h1>
 <h2> Log Files</h2>
-For a description of the Log files used used by the CodeX server see
+For a description of the Log files used by the CodeX server see
 the
 <a href="#Log_files">Log Files </a>section above. In addition to these
 files
 there are a number of other log files that are worth knowing: <br>
 &nbsp; <br>
 &nbsp;
-<table nosave="" width="100%" border="1">
+<table border="1" width="100%" nosave="">
   <tbody>
     <tr nosave="">
-      <td nosave="" valign="top">/var/log/messages</td>
+      <td style="font-family: monospace;" valign="top" nosave="">/var/log/messages</td>
       <td>This is the general purpose log files used by the Linux
-operating system. What goes in there is defined in /etc/syslog.conf</td>
+operating system. What goes in there is defined in <span
+ style="font-family: monospace;">/etc/syslog.conf</span></td>
     </tr>
     <tr>
-      <td>/var/log/maillog</td>
+      <td style="font-family: monospace;">/var/log/maillog</td>
       <td>This is where all the log messages related to mail activities
 go. All sendmail messages for message sent and received are stored in
-this file</td>
+this file.</td>
     </tr>
   </tbody>
 </table>
@@ -1805,21 +1695,25 @@ Linux has the ability to automatically rotate the log files to prevent
 them
 from growing indefinitely. The logrotate utility is ran everyday at
 23:58pm
-(EST time) as defined in /etc/crontab. Note that this is different from
+(EST time) as defined in <span style="font-family: monospace;">/etc/crontab</span>.
+Note that this is different from
 the
-crontab file of the root user that is used to run the daemon scripts.
-<p>The logrotate config files located in /etc/logrotate.d/apache
+crontab file of the root user that is used to run the CodeX daemon
+scripts.
+<p>The logrotate configuration files located in <span
+ style="font-family: monospace;">/etc/logrotate.d/apache</span>
 and&nbsp;
-/etc/logrotate.d/ftp have been customized for the Apache and the FTP
-log files.
+<span style="font-family: monospace;">/etc/logrotate.d/ftp</span> have
+been customized for CodeX.
 The customization consists in the execution of a post rotation script
 that
-makes a copy of the log files in the CodeX Log files area as defined in
+makes a daily copy of the log files in the CodeX log files area as
+described in
 the
 <a href="#Log_files">Log Files </a>section.<br>
 </p>
 <hr style="width: 100%; height: 2px;">
-<h1>CodeX Code Update</h1>
+<h1><a name="CodeX_Code_Update"></a>CodeX Code Update</h1>
 <p><b><font size="+3"></font></b><br>
 CodeX offers a continuous update process to CodeX site administrators
 to quickly and easily put in place new bug fixes, new features while
@@ -1845,8 +1739,9 @@ depending whether&nbsp; you operate a CodeX site on the Xerox Intranet
 or on your own customer network :</li>
 </ul>
 <div style="text-align: center;"><br>
-<table cellpadding="2" cellspacing="2" border="1"
- style="width: 60%; text-align: left; margin-left: auto; margin-right: auto;">
+<table
+ style="width: 60%; text-align: left; margin-left: auto; margin-right: auto;"
+ border="1" cellspacing="2" cellpadding="2">
   <tbody>
     <tr>
       <td
@@ -1948,7 +1843,7 @@ apply the Perl patch as well if there is one.</span><br>
 </ul>
 <p> </p>
 <p> </p>
-<hr size="2" width="100%"><br>
+<hr width="100%" size="2"><br>
 <b><font size="+3">Backup/Restore</font></b>
 <p><b><font size="+2">Backup</font></b></p>
 <p>There are two different types of backups that run on CodeX.&nbsp;
@@ -1995,25 +1890,11 @@ All remaining
 days <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 of the week (Monday - Saturday) run incremental backups. </p>
-<p><b><font size="+2">Restore</font></b></p>
-<p>There are three documents explaining the restore process.&nbsp; They
-are stored in DocuShare at
-http://techweb.wrc.xerox.com/View/Collection-43449.&nbsp; This
-information is not stored in CodeX because if a disk were bad, we would
-not be able to retrieve the directions for restore.&nbsp; The documents
-are:
-</p>
-<blockquote>&nbsp;&nbsp;&nbsp; 1.&nbsp;&nbsp;&nbsp; Reconfigure CodeX
-Disks using SmartStart CD - Rebuild RAID array <br>
-&nbsp;&nbsp;&nbsp; 2.&nbsp;&nbsp;&nbsp; Rebuild CodeX System Disk
-(/dev/ida/c0d0) - This includes steps to rebuild the MySQL database <br>
-&nbsp;&nbsp;&nbsp; 3.&nbsp;&nbsp;&nbsp; Rebuild CodeX /cvsroot Disk
-(/dev/ida/c0d1)</blockquote>
 <p><br>
 <b><font size="+2">Backup/Restore files</font></b></p>
 <p>There are a number of files used for backup and restore of CodeX. <br>
 &nbsp;
-<table width="100%" cols="2" border="1">
+<table border="1" cols="2" width="100%">
   <tbody>
     <tr bgcolor="#c0c0c0">
       <td><b>Location</b></td>
@@ -2087,7 +1968,7 @@ is:
   </tbody>
 </table>
 </p>
-<hr size="2" width="100%">
+<hr width="100%" size="2">
 <h1> CodeX Testing Environment</h1>
 The CodeX source code has been modified so that multiple instances of
 the
@@ -2103,23 +1984,7 @@ the
 CodeX Configuration Management Plan.<br>
 &nbsp;
 <p> </p>
-<hr noshade="noshade" size="2" width="100%"> <br>
-<u><font size="-2">History:</font></u>
-<p><font size="-2">0.1 - Dec 10th, 2001 - Initial revision sent to all
-training attendees.</font> <font size="-2"><br>
-0.2 - Dec 12th, 2001 - More matter for the second training session
-(CVS, Samba, FTP, ...)</font> <br>
-<font size="-2">0.3 - Jan 30th, 2002 - A couple of addition for the
-second
-round of training sessions</font><br>
-<font size="-2">0.4 - Mar 1st, 2002 - Backup/Restore section from Vicki
-Tulle<br>
-</font><font size="-2">0.5 -Oct 17th, 2002 - Update to synchronize with
-installation
-guide<br>
-x.y - From now onwards the history of this document is in CVS<br>
-</font></p>
-<br>
+<hr width="100%" size="2" noshade="noshade"> End of Document<br>
 <br>
 </body>
 </html>

@@ -16,7 +16,6 @@
 <p><b><font size="+3">CodeX Installation Guide</font></b> <br>
 &nbsp; </p>
 <p>$Revision$ - $Date$<br>
-L. Julliard<br>
 <br>
 <font size="-1"> Copyright &copy; Xerox Corporation, CodeX Team,
 2001-2004. All Rights Reserved<br>
@@ -28,33 +27,31 @@ License
 <br>
 &nbsp;
 <br>
-<h1>Preamble</h1>
-Before or while you read the CodeX Installation Guide we strongly
-recommend that you also have a look at the CodeX Administration Guide
-at <a
- href="http://codex.codex.xerox.com/documents/CodeX_Administration_Guide.html">http://codex.codex.xerox.com/documents/CodeX_Administration_Guide.html</a>.
-The CodeX Administration Guide give a lot more explanation about the
-services and files role on a typical CodeX server. It is an excellent
-companion document to the CodeX Installation Guide.<br>
+<h1><a name="Preamble"></a>Preamble</h1>
+The <a
+ href="/documentation/installation_guide/html/CodeX_Installation_Guide.html">CodeX
+Installation Guide</a> covers the various steps that one has to go
+through to install and configure the CodeX software. After or while you
+ar reading the installation guide we also recommend that you read the <a
+ href="file:///documentation/administration_guide/html/CodeX_Administration_Guide.html">CodeX
+Administration Guide</a> which focuses on the various tasks to perform
+to properly administrate a CodeX site on a daily basis. <br>
 <br>
 The Installation procedure is documented so that CodeX adminstrators
 learn about the interns of the CodeX software. However the CodeX
 installation script provided by Xerox as part of the CodeX software
-takes care of most of the installation process. The manual work that
-remains to be done is displayed on the screen when the installation
-script comes to an end.<br>
-<h1>Linux OS Installation</h1>
-On a PC of your choice install Linux RedHat 7.3 choosing an
-installation of type 'server'. We recommend using the ext3 file system
-(Journalized File System).<br>
+takes care of most of the installation process described below. After
+completion the installation script will inform you of the remaining
+configuration that must be done manually.<br>
+<h1><a name="Linux_OS_Installation"></a>Linux OS Installation</h1>
+CodeX 2.2 is designed to run on on a PC server (Intel x86 CPU or
+compatible) running Linux RedHat Linux Enterprise Server 3.0 wether WS,
+ES or AS version. Other distributions are not supported by Xerox.<br>
 <br>
-In terms of hardware it is up to you to size your server according to
-your needs. As an example the Xerox Internal CodeX serveris a midrange
-Compaq DL 380 with 512 MB RAM, 100 GBytes disk (RAID 5) and a 1Ghz
-Pentium III CPU<br>
 <br>
 <hr width="100%" size="2">
-<h1>User Accounts and Group Settings</h1>
+<h1><a name="User_Accounts_and_Group_Settings"></a>User Accounts and
+Group Settings</h1>
 Specific user accounts and groups that must be created prior to any
 software installation<br>
 <br>
@@ -201,12 +198,13 @@ software installation<br>
 <div align="center"><br>
 </div>
 <hr width="100%" size="2">
-<h1>File System Settings</h1>
+<h1><a name="File_System_Settings"></a>File System Settings</h1>
 Directory that must be created on the filesystem prior to software
 installation. For a description of the content of each directory see
 the
-CodeX Administration Guide at <a
- href="http://codex.codex.xerox.com/documents/CodeX_Administration_Guide.html">http://codex.codex.xerox.com/documents/CodeX_Administration_Guide.html</a><br>
+<a
+ href="/documentation/administration_guide/html/CodeX_Administration_Guide.html">CodeX
+Administration Guide</a>.<br>
 <br>
 When you setup your filesystem make sure that the followind top
 directories are located on file system with enough storage space:<br>
@@ -482,24 +480,26 @@ telnet/shell account.<br>
 <h1><a name="Specific_Software_Packages"></a>Specific Software Packages</h1>
 <h2><a name="RPM_Packages"></a>RPM Packages</h2>
 CodeX requires a number of specific packages to operate properly.
-Theses packages are available on the CodeX server at <a
- href="http://codex.codex.xerox.com/packages/RPMS_CodeX">http://codex.codex.xerox.com/packages/RPMS_CodeX</a>.
-Always make sure that for each of the software component below you grab
-the latest version.<br>
+Theses packages are provided either through the RedHat Linux Enterprise
+Server distribution or by Xerox as part of your support contract. it is
+the responsibility of the CodeX Administrators to make sure that hey
+keep RPMs uptodate with lates version provided by RedHat or by Xerox
+for the CodeX specific RPMs.<br>
 <br>
 <table cellpadding="2" cellspacing="2" border="1" width="80%">
   <tbody>
     <tr>
-      <td valign="top">Software Component<br>
+      <td style="font-weight: bold;" valign="top">CodeX Specific
+Packages<br>
       </td>
-      <td valign="top">Items to Install<br>
+      <td style="font-weight: bold;" valign="top">Items to Install<br>
       </td>
     </tr>
     <tr>
       <td valign="top">apache<br>
       </td>
-      <td valign="top">Install only the apache rpm itself.
-apache-devel, apache-manual can be installed as well byt they are
+      <td valign="top">Install httpd and mod_ssl RPMs.&nbsp;
+httpd-devel and httpd-manual RPMs are
 optional<br>
       </td>
     </tr>
@@ -507,6 +507,13 @@ optional<br>
       <td valign="top">cvs<br>
       </td>
       <td valign="top">Install the cvs package<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">cvsgraph<br>
+      </td>
+      <td style="vertical-align: top;">Install the cvsgraph package
+(used by viewcvs to build a graphical view of CVS branches)<br>
       </td>
     </tr>
     <tr>
@@ -533,8 +540,8 @@ DocBook processing chain to generate the CodeX User Guide.<br>
     <tr>
       <td valign="top">mysql<br>
       </td>
-      <td valign="top">These are the official packages from MySQL. Do
-not use those provided by RedHat.<br>
+      <td valign="top">These are the official packages from the MySQL
+company. Those provided by RedHat are not used<br>
 To check whether Redhat mysql packages are already installed type: 'rpm
 -qa | grep -i mysql'. If redhat packages are installed make sure you
 first remove them with an 'rpm -e' command<br>
@@ -543,12 +550,33 @@ Install the following packages: MySQL, MySQL-client and MySQL-shared<br>
       </td>
     </tr>
     <tr>
+      <td style="vertical-align: top;">mysql-python<br>
+      </td>
+      <td style="vertical-align: top;">Install the MySQL-python RPM
+(needed by viewcvs to access the CodeX database)<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">perl-dbd-mysql<br>
+      </td>
+      <td style="vertical-align: top;">Install the perl-DBD-MySQL RPM
+(used by all backend Perl scripts to access the CodeX database)<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">viewcvs<br>
+      </td>
+      <td style="vertical-align: top;">Install the viewcvs package.<br>
+      </td>
+    </tr>
+    <tr>
       <td valign="top">others<br>
       </td>
       <td valign="top">The following RPMs must be installed <br>
       <ul>
         <li>perl-suidperl</li>
-        <li>wu-ftpd<br>
+        <li>wu-ftpd</li>
+        <li>metamail<br>
         </li>
       </ul>
       </td>
@@ -590,18 +618,17 @@ the SUN JRE)<br>
 <br>
 <br>
 <h2>Non RPM packages</h2>
-CodeX alsorequires a number of specific packages that are not delivered
-in the form of RPM files. Theses packages are available on the CodeX
-server at <a href="http://codex.codex.xerox.com/packages/nonRPMS_CodeX">http://codex.codex.xerox.com/packages/nonRPMS_CodeX</a>.
-Always make sure that for each of the software component below you grab
-the latest version.<br>
+CodeX also requires a number of specific packages that are not
+delivered
+in the form of RPM files. These packages are also compiled and
+installed automatically when CodeX is first installed.<br>
 <br>
 <table cellpadding="2" cellspacing="2" border="1" width="80%">
   <tbody>
     <tr>
-      <td valign="top">Software Component<br>
+      <td style="font-weight: bold;" valign="top">Software Component<br>
       </td>
-      <td valign="top">Items to Install<br>
+      <td style="font-weight: bold;" valign="top">Items to Install<br>
       </td>
     </tr>
     <tr>
@@ -633,6 +660,12 @@ etc...<br>
       </td>
     </tr>
     <tr>
+      <td style="vertical-align: top;">mailman<br>
+      </td>
+      <td style="vertical-align: top;">The CodeX mailing list manager<br>
+      </td>
+    </tr>
+    <tr>
       <td valign="top">utilities<br>
       </td>
       <td valign="top">A series of small utilities that are needed by
@@ -648,32 +681,17 @@ below for more information<br>
 <br>
 <br>
 <hr>
-<h1>DNS Configuration</h1>
+<h1><a name="DNS_Configuration"></a>DNS Configuration</h1>
 CodeX has its own domain name and the name server for the CodeX
 domain is hosted on the central CodeX server. <br>
-<br>
-For the benefit of code re-use and sharing the CodeX central
-site must absolutely be aware of the all the existing satellites in
-order to keep a single view on all the on-going projects.So please
-contact
-the administration team of the CodeX central prior to implementing any
-new CodeX satellite.<br>
-<br>
-If your satellites does not belong to the main CodeX domain then we
-advise to create a
-subdomain for the codex machine like codex.your.own.domain.<br>
-<br>
-<h2>DNS Zones file</h2>
-Your DNS zone (called codex.zone) definition file must be place in <tt>/var/named/</tt>
+<h2>DNS Zone file</h2>
+Your DNS zone (called codex.zone) definition file must be placed in <tt>/var/named/</tt>
 because this path is hardcoded in the <tt>/home/httpd/SF/utils/underworld-dummy/dns_conf.pl</tt>
 script that is used to automatically generate the DNS aliases for
-project sites and per project CVS server. If you want to place the
-codex.zone file in another place don't forget to create a symbolic link
-from this directory.<br>
-<br>
+project sites and per project CVS server. <br>
 <br>
 As an example here is how the codex.zone file looks like on the CodeX
-central site of the Xerox Corporation:<br>
+central site of the Xerox Corporation. Adapt the file to your own needs:<br>
 <br>
 <blockquote><tt>$TTL 3600</tt><br>
   <tt>@&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -761,26 +779,30 @@ IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MX&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </blockquote>
 <br>
 <br>
-As you can see the CodeX central host all the services on one single
-server, hence the alias to the atlas machine name for all other logical
-servers (CVS, download, shell account,etc...). The reason for defining
-those aliase is that at the site grows you are given the flexibility to
-export specific services (e.g CVS, mailman,etc.) to a separate server
-and all you'll have to do is to redefine the alias name to point on
-the&nbsp; IP address of the new server. Note that all servers must
+As you can see the CodeX central hosts all the CodeX services on a
+single physical
+server. Hence the alias to the atlas machine name for all other logical
+servers (CVS, mail, download, shell account,etc...). The reason for
+defining
+those aliases is that at the site grows you are given the flexibility
+to
+export specific services to a separate server
+and all you'll have to do is to redefine the alias name to point to
+the IP address of the new server. Note that all servers must
 remain in the CodeX domain.<br>
 <br>
 Also note that CodeX cron job will generate another file called
 codex_full.zone in the same directory as the codex.zone file. This file
 is obtained by taking the codex.zone file (which you can edit by hand)
 and appending auto-generated aliases for the each project Web site (
-http://projectname.codex.xerox.com) and each CVS server
-(cvs.projectname.codex.xerox.com)<br>
+http://<span style="font-style: italic;">projectname.your.codex.domain</span>)
+and each CVS server
+(<span style="font-style: italic;">cvs.projectname.your.codex.domain</span>)
+and Subversion server (<span style="font-style: italic;">svn.projectname.your.codex.domain</span>)<br>
 <br>
 <h2>Named.conf file</h2>
 <span style="font-family: monospace;">/etc/named.conf</span> is the
-master DNS configuration file. It is located in /etc and,
-as an example,
+master DNS configuration file. As an example,
 here is how it looks like on the CodeX central site of the Xerox
 corporation:<br>
 <br>
@@ -823,7 +845,7 @@ include "/etc/rndc.key";<br>
 </tt><br>
 <br>
 <hr width="100%" size="2">
-<h1>Apache Configuration</h1>
+<h1><a name="Apache_Configuration"></a>Apache Configuration</h1>
 <ul>
   <li>A sample Apache configuration file is available in the CodeX code
 in <tt>/home/httpd/SF/etc/http.conf.dist</tt>. Edit this file to
@@ -906,7 +928,8 @@ the CodeX user name of the user who is going to checkout the CodeX
 source code.<br>
 <pre><br></pre>
 <hr width="100%" size="2">
-<h1>Configuring the CodeX Software</h1>
+<h1><a name="Configuring_the_CodeX_Software"></a>Configuring the CodeX
+Software</h1>
 As user root:<br>
 <ul>
   <li>copy /home/httpd/SF/etc/local.inc.dist in
@@ -996,7 +1019,8 @@ files:
 the maximum size you chose. </li>
 </ul>
 <hr width="100%" size="2">
-<h1>Installing the CodeX Database</h1>
+<h1><a name="Installing_the_CodeX_Database"></a>Installing the CodeX
+Database</h1>
 As user root go through the following steps:<br>
 <br>
 <h2>Move the mysql data directoy</h2>
@@ -1067,7 +1091,7 @@ increased
 to 16 Mbytes and we must have a bit of slack when issuing an SQL insert
 statement with a large blob. Hence the 24M argument (24 Mbytes).</p>
 <hr>
-<h1>Mail Configuration</h1>
+<h1><a name="Mail_Configuration"></a>Mail Configuration</h1>
 CodeX uses sendmail as Mail transfer agent but it is possible to use
 any other MTA like Postfix, Exim or other. You need to setup <br>
 <br>
@@ -1120,7 +1144,8 @@ properly. You should create the following links:<br>
 <pre>	# cd /etc/smrsh<br>	# ln -sf /usr/local/bin/gotohell<br>	# ln -sf /home/mailman/mail/mailman<br></pre>
 <br>
 <hr>
-<h1>Mailman Installation and Configuration</h1>
+<h1><a name="Mailman_Installation_and_Configuration"></a>Mailman
+Installation and Configuration</h1>
 For historical reasons CodeX do not use the RedHat mailman RPMs but the
 stock archive directly from the Mailman Web site. You can get mailman
 at <a href="http://www.gnu.org/software/mailman/">http://www.gnu.org/software/mailman/</a>
@@ -1199,7 +1224,7 @@ Ownership and permission must be:<br>
 <br>
 <br>
 <hr>
-<h1>Samba Configuration (optional)<br>
+<h1><a name="Samba_Configuration"></a>Samba Configuration<br>
 </h1>
 CodeX allows Window users to access their user directory, project
 directory and FTP Incoming space through Windows network drives. To
@@ -1231,7 +1256,7 @@ CODEX because it is the name of the central site)<br>
 </ul>
 <br>
 <hr style="width: 100%; height: 2px;">
-<h1>Subversion Configuration</h1>
+<h1><a name="Subversion_Configuration"></a>Subversion Configuration</h1>
 <ul>
   <li>First make sure the CodeX specific RPMs for CVS are installed on
 your CodeX server (see the section on <a
@@ -1259,7 +1284,7 @@ Subversion repository via an HTTPS URL.<br>
 <br>
 <span style="font-weight: bold;"></span>
 <hr>
-<h1>CVS Configuration</h1>
+<h1><a name="CVS_Configuration"></a>CVS Configuration</h1>
 <ul>
   <li>First make sure the CodeX specific RPMs for CVS are installed on
 your CodeX server (see the section on <a href="#RPM_Packages">RPM
@@ -1356,20 +1381,16 @@ directory.<br>
 <tt><br>
 </tt>
 <h2>Browsing the CVS Trees</h2>
-When you checkout the CodeX software (see&nbsp;<a
+The ViewCVS package is delivered as part of the CodeX software and
+allows CodeX users to browse both CVS and Subversion repositories from
+their Webbrowser. After installing the ViewCVS RPM package (see&nbsp;<a
  href="#Installing_the_CodeX_Software">#Installing_the_CodeX_Software</a>
-), a cgi-bin directory is created. The cvsweb.cgi script located in
-this directory is used by CodeX when a user browse a CVS repository
-through the CVS Web interface. In order for this script to work
-properly you must install a configuration in /etc/httpd/conf. A
-template is provided in the CVS source tree under etc/cvsweb.conf.dist.
-If you have installed the CVS repositories under /cvsroot you can
-normally use this configuration file as is. To install this
-configuration go through the following steps:<br>
-<pre><tt>&nbsp;&nbsp;&nbsp; cd /home/httpd/SF/etc<br>&nbsp;&nbsp;&nbsp; cp cvsweb.conf.dist /etc/httpd/conf/cvsweb.conf<br></tt><tt>&nbsp;&nbsp;&nbsp; chown root.root </tt><tt>/etc/httpd/conf/cvsweb.conf</tt><tt><br></tt><tt>&nbsp;&nbsp;&nbsp; </tt><tt>chmod 644 </tt><tt>/etc/httpd/conf/cvsweb.conf</tt><tt><br></tt></pre>
+), a cgi-bin directory is created with the viewcvs.cgi script in it.
+The ViewCVS configuration file is at <span
+ style="font-family: monospace;">/etc/codex/conf/viewcvs.conf</span>.<br>
 <br>
 <hr>
-<h1>FTP Configuration</h1>
+<h1><a name="FTP_Configuration"></a>FTP Configuration</h1>
 <ul>
   <li>Make sure the ftp access is enabled in xinetd. The
 /etc/xinetd.d/wu-ftpd should look like this:<br>
@@ -1455,7 +1476,7 @@ the CodeX production server.<tt><br>
     </tt></li>
 </ul>
 <hr>
-<h1>Shell Account</h1>
+<h1><a name="Shell_Account"></a>Shell Account</h1>
 Unless otherwise instructed the CodeX system will create a shell
 account for all users who have a Web account. The login and password
 are
@@ -1528,7 +1549,7 @@ the cvs repository as the access through ssh requires a shell account
 to be activated.<br>
 <br>
 <hr>
-<h1>CodeX Site Customization</h1>
+<h1><a name="CodeX_Site_Customization"></a>CodeX Site Customization</h1>
 <h2>CodeX admin user</h2>
 <font color="#ff0000" style="font-weight: bold;">**HIGHLY CRITICAL**</font><b><font
  color="#ff0000"><br>
@@ -1781,7 +1802,8 @@ the script <span style="font-family: monospace;">site-content/<span
 to customize the HTML output and save it in the corresponding custom
 directory (see <a href="#Site_content">Site Content</a> section above).<br>
 <hr>
-<h1>Scripts Backend</h1>
+<h1><a name="Backend_Scripts"></a>Backend Scripts<br>
+</h1>
 Most of the backend scripts used by the CodeX system are writen in Perl
 and are located in <tt>/home/httpd/SF/utils</tt>. Many of these script
 use the<tt> include.pl</tt> file and, in case you did not follow the
@@ -1790,7 +1812,7 @@ to customize the content of this include file to match your site
 configuration.<br>
 <br>
 <hr>
-<h1>Cron jobs</h1>
+<h1><a name="Cron_Jobs"></a>Cron Jobs</h1>
 CodeX runs a number of cron job in the background. The most important
 one is run once every 2hours on the CodeX site to map the CodeX
 user/project permission to the Linux user/group permission mechanism.
@@ -1841,7 +1863,7 @@ your backup procedure or something similar.<br>
 </blockquote>
 <br>
 <hr>
-<h1>Log Files Rotation</h1>
+<h1><a name="Log_Files_Rotation"></a>Log Files Rotation</h1>
 In order to maintain statistics on http and ftp traffic the CodeX
 server must be instructed to rotate the apache and ftp log files on a
 daily basis.<br>
@@ -2031,7 +2053,7 @@ $destdir</span><br style="font-family: monospace;">
 <br>
 <br>
 <hr>
-<h1>Installing phpMyAdmin (optional)<br>
+<h1><a name="Installing_phpMyAdmin"></a>Installing phpMyAdmin<br>
 </h1>
 phpMyAdmin is a Web based GUI to manage MySQL database. Although
 installing phpMyAdmin is not mandatory it is a very convenient for a
@@ -2040,11 +2062,13 @@ CodeX site adminstrator. Installation is really easy:<br>
 <ul>
   <li>Get phpMyAdmin from <a
  href="http://www.phpwizard.net/projects/phpMyAdmin/">http://www.phpwizard.net/projects/phpMyAdmin/</a>
-. Make sure you get the version for PHP 3 if your CodeX site is running
-php version 3!!</li>
-  <li>Uncompressed the file in /home/httpd/. You should see a new
+. <br>
+  </li>
+  <li>Uncompressed the file in <span style="font-family: monospace;">/home/httpd</span>.
+You should see a new
 directory called phpMyAdmin-X.Y.Z (where X.Y.Z is the version number)</li>
-  <li>In /home/httpd, create a symbolic link called phpMyAdmin to the
+  <li>In <span style="font-family: monospace;">/home/httpd</span>,
+create a symbolic link called phpMyAdmin to the
 phpMyAdmin-X.Y.Z directory</li>
   <li>Edit config.inc.php and change the following lines to reflect
 your own site configuration:<br>
@@ -2108,14 +2132,16 @@ describe the relation between links (see doc)<br>
     <br>
   </li>
   <li>When you access the phpMyAdmin GUI at
-http://your_codex_server_name_here/phpMyAdmin you'll be prompted for a
+http://<span style="font-style: italic;">your.codex.domain</span>/phpMyAdmin
+you'll be prompted for a
 user name and password. Use the MySQL 'sourceforge' login and password.<tt><br>
     </tt></li>
 </ul>
 <p> </p>
 <br>
 <hr>
-<h1>First Things To Do to run the site</h1>
+<h1><a name="First_Things_To_Do_to_run_the_site"></a>First Things To Do
+to run the site</h1>
 <ul>
   <li>Access the CodeX server and login as admin with default password
 siteadmin. Then change the password immediately. We suggest that you
@@ -2145,29 +2171,8 @@ launch of the CodeX site and promote the news to the front page.<br>
   </li>
 </ul>
 <br>
-<u><font size="-2">History:</font></u>
-<p><font size="-2">0.1 - Oct 18th, 2002 - Initial revision<br>
-0.2 - Nov 8th, 2002 - Configuration of secure HTTP in Apache added.<br>
-0.3 - Nov 12th, 2002 - Mailman configuration and installation added.<br>
-0.4 - Nov 12th, 2002 - /etc/skel_codex added in the File System
-structure.<br>
-0.5 - Nov 14th, 2002 - Added asection about the non RMP packages to
-intall (docbook and utilities), Decribe how to customize the site look
-and feel, content,etc.<br>
-0.6 - Nov 26th, 2002 - CVS pserver versus ssh access method. Restricted
-shell account added.<br>
-0.7 - Nov 28th, 2002 - Sections order modified to follow the flow of
-installation and sevral corections based on XRCE feedback.<br>
-</font><font size="-2"> 0.8 - Mar 25th, 2003 - Added max_allowed_packet
-in my sql configuration<br>
-1.1 - May 27th, 2003 - Change permission/owner for some PHP and CGI
-scripts - Also import it in CVS - History now in CVS<br>
-</font> <font size="-2">x.y - Now see the CVS repository of Codex for
-future changes<br>
-</font> <font size="-2"> </font><br>
-<font size="-2"><br>
-</font></p>
-<br>
+<p> </p>
+<hr noshade="noshade" size="2" width="100%"> End of Document<br>
 <br>
 <br>
 <br>
