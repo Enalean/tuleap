@@ -319,7 +319,10 @@ if( $submit ) {
 			<P>
 			You can upload files using Anonymous FTP access (login "ftp")to <B>'."$sys_download_host".'</B> 
 			in the <B>/incoming</B> directory, then hit <B>Refresh View</B>.';
+
 	}
+        echo '<P>
+	                 <INPUT TYPE="SUBMIT" NAME="refresh" VALUE="Refresh File List">';
 ?>
 
 		</TD>
