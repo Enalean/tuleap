@@ -10,6 +10,8 @@ if (!$group_id) {
     exit_no_group(); // need a group_id !!!
 }
 
+$LANG->loadLanguageMsg('cvs/cvs');
+
 $order_str = "";
 
 if ($order) {
@@ -50,12 +52,12 @@ $sql="SELECT repository, cvs_commits.comm_when as c_when, repositoryid, descript
 $result=db_query($sql);
 
 if (db_numrows($result) > 0) {
-    commits_header(array ('title'=>'CVS Commit '.$commit_id.' - Details',
+    commits_header(array ('title'=>$LANG->getText('cvs_detail_commit', 'title',array($commit_id)),
 			  'help' => 'CVSWebInterface.html#QueryingCVS'));
     show_commit_details($result);
     commits_footer(array());
 } else {
-    exit_error('Error','Commit #'.$commit_id.' not found in this project');
+    exit_error('Error',$LANG->getText('cvs_detail_commit', 'error_notfound',array($commit_id)));
 }
 
 ?>

@@ -13,7 +13,9 @@ if (!$group_id) {
     exit_no_group(); // need a group_id !!!
 }
 
-commits_header(array ('title'=>'CVS Information'));
+$LANG->loadLanguageMsg('cvs/cvs');
+
+commits_header(array ('title'=>$LANG->getText('cvs_intro', 'title')));
 
 // Table for summary info
 print '<TABLE width="100%"><TR valign="top"><TD width="65%">'."\n";
@@ -31,15 +33,15 @@ if ($row_grp['cvs_preamble']!='') {
 
 // Summary info
 print '</TD><TD width="25%">';
-print $HTML->box1_top("Repository History");
+print $HTML->box1_top($LANG->getText('cvs_intro', 'repo_history'));
 
 // Is there anything in the cvs history table ?
 $res_cvshist = db_query("SELECT * FROM group_cvs_history WHERE group_id='$group_id'");
 if (db_numrows($res_cvshist) < 1) {
-        print '<P>This project has no CVS history.';
+    print '<P>'.$LANG->getText('cvs_intro', 'no_history');
 } else {
 
-    print '<P><b>Developer (Commits) (Adds) 7day/Total</b><BR>&nbsp;';
+    print '<P><b>'.$LANG->getText('cvs_intro', 'nb_commits').'</b><BR>&nbsp;';
 
     while ($row_cvshist = db_fetch_array($res_cvshist)) {
         print '<BR>'.$row_cvshist['user_name'].' ('.$row_cvshist['cvs_commits_wk'].'/'
@@ -50,12 +52,11 @@ if (db_numrows($res_cvshist) < 1) {
 }
 
 // CVS Browsing Box
-print '<HR><B>Browse the CVS Tree</B>
-<P>Browsing the CVS tree gives you a great view into the current status
-of this project\'s code. You may also view the complete histories of any
-file in the repository.
+$uri = session_make_url('/cvs/viewcvs.php/?root='.$row_grp['unix_group_name'].'&roottype=cvs');
+print '<HR><B>'.$LANG->getText('cvs_intro', 'browse_title').'</B>
+<P>'.$LANG->getText('cvs_intro', 'browse_msg').'
 <UL>
-<LI><A href="/cvs/viewcvs.php/?root='.$row_grp['unix_group_name'].'&roottype=cvs"><B>Browse CVS Tree</B></A></LI>';
+<LI><A href="'.$uri.'"><B>Browse CVS Tree</B></A></LI>';
 
 print $HTML->box1_bottom();
 

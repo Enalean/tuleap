@@ -22,6 +22,17 @@ global	btn_delete	Delete
 global	btn_cancel	Cancel
 global	btn_update	Update
 global	btn_submit	Submit
+global	btn_browse	Browse
 global	yes	Yes
 global	no	No
+global	on	On
+global	off	Off
+global	any	Any
+global	none	Aucun
+global	begin	Begin
+global	end	End
+global	next	Next
+global	prev	Previous
+global	error	Error
+global	help	Help
 

@@ -11,7 +11,9 @@ if (!$group_id) {
     exit_no_group(); // need a group_id !!!
 }
 
-commits_header(array ('title'=>'CVS Administration',
+$LANG->loadLanguageMsg('cvs/cvs');
+
+commits_header(array ('title'=>$LANG->getText('cvs_browse_commit', 'title'),
 		      'help' => 'CVSWebInterface.html#QueryingCVS'));
 
 if (!$offset || $offset < 0) {
@@ -206,8 +208,6 @@ $where.
 $order_by.
 $limit;
 
-$statement='Viewing commits';
-//print ($sql);
 $result=db_query($sql);
 
 /* expensive way to have total rows number didn'get a cheaper one */
@@ -227,15 +227,7 @@ $res_tech=commits_data_get_technicians ($group_id);
 
 $rows=db_numrows($res_tech);
 
-
-
-##$tech_id_arr=util_result_column_to_array($res_tech,0);
-##$tech_id_arr[]='0';  //this will be the 'any' row
-
 $tech_name_arr=util_result_column_to_array($res_tech,1);
-#$tech_name_arr[]='Any';
-
-#$tech_box=html_build_select_box_from_arrays ($tech_name_arr, $tech_name_arr, '_commiter', $_commiter, true, 'Any');
 
 $tech_box=commits_technician_box($group_id, '_commiter', $_commiter, 'Any');
 
@@ -244,14 +236,18 @@ $tech_box=commits_technician_box($group_id, '_commiter', $_commiter, 'Any');
 /*
 	Show the new pop-up boxes to select assigned to and/or status
 */
-echo '<H3>Browse commits by:</H3>'; 
+echo '<H3>'.$LANG->getText('cvs_browse_commit', 'browse_by').':</H3>'; 
 echo '<FORM name="commit_form" ACTION="'. $PHP_SELF .'" METHOD="GET">
         <TABLE WIDTH="10%" BORDER="0">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 	<INPUT TYPE="HIDDEN" NAME="func" VALUE="browse">
 	<INPUT TYPE="HIDDEN" NAME="set" VALUE="custom">
-        <TR align="center"><TD><b>ID</b></TD><TD><b>Branches</b></TD><TD><b>Commiter</b></TD><TD><b>Keyword search in log message</b></TD>'.
-        ##'<TD><b>Commit date</b></TD>'.
+        <TR align="center">
+                      <TD><b>'.$LANG->getText('cvs_browse_commit', 'id').'</b></TD>
+                      <TD><b>'.$LANG->getText('cvs_browse_commit', 'branch').'</b></TD>
+                      <TD><b>'.$LANG->getText('cvs_browse_commit', 'who').'</b></TD>
+                      <TD><b>'.$LANG->getText('cvs_browse_commit', 'keyword').'</b></TD>'.
+        ##'<TD><b>'.$LANG->getText('cvs_browse_commit', 'date').'</b></TD>'.
         '</TR>'.
         '<TR><TD><INPUT TYPE="TEXT" SIZE=5 NAME=_commit_id VALUE='.$_commit_id.'></TD><TD><FONT SIZE="-1">'. commits_branches_box($group_id,'_branch',$_branch, 'Any') .'</TD>
 	<TD><FONT SIZE="-1">'. $tech_box .
@@ -260,12 +256,12 @@ echo '<FORM name="commit_form" ACTION="'. $PHP_SELF .'" METHOD="GET">
         ##'<TD nowrap><font SIZE="-1"><select name="_commit_date_op">'.
         ##'<option VALUE=">" SELECTED>&gt;</option><option VALUE="=">=</option>'.
         ##'<option VALUE="<">&lt;</option></select>'.
-        ##'<input TYPE="text" name="_commit_date" size="10" MAXLENGTH="15" VALUE="'.$_commit_date.'"><a href="javascript:show_calendar(\'document.commit_form._commit_date\', document.commit_form._commit_date.value,'.util_get_css_theme().','.util_get_dir_image_theme().);"><img src=".util_get_image_theme('calendar/cal.png')." width="16" height="16" border="0" alt="Click Here to Pick up a date"></a></TD>'.
+        ##'<input TYPE="text" name="_commit_date" size="10" MAXLENGTH="15" VALUE="'.$_commit_date.'"><a href="javascript:show_calendar(\'document.commit_form._commit_date\', document.commit_form._commit_date.value,'.util_get_css_theme().','.util_get_dir_image_theme().);"><img src=".util_get_image_theme('calendar/cal.png')." width="16" height="16" border="0" alt="'.$LANG->getText('cvs_browse_commit', 'pick_date').'"></a></TD>'.
        '</TR></TABLE>'.
 	
-'<br><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Browse">'.
+'<br><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$LANG->getText('global', 'btn_browse').'">'.
 ' <input TYPE="text" name="chunksz" size="3" MAXLENGTH="5" '.
-'VALUE="'.$chunksz.'">commits at once.'.
+'VALUE="'.$chunksz.'">'.$LANG->getText('cvs_browse_commit', 'nb_at_once').'.'.
 '</FORM>';
 
 
@@ -282,13 +278,7 @@ if ($result && db_numrows($result) > 0) {
 
 } else {
 	echo '
-		<P>
-		<H3>'.$statement.'</H3>
-		<P>
-		<P>';
-	echo '
-		<H1>No Commits Match Your Criteria</H1>';
-	echo db_error();
+	       <H3>'.$LANG->getText('cvs_browse_commit', 'no_commit').'</H3>';
 }
 
 commits_footer(array());

@@ -9,10 +9,11 @@
 /*
 
 	Commits Manager 
-	By Tim Perdue, Sourceforge, Feb 2000
-	Heavy Rewrite Tim Perdue, April, 2000
+	By Thierry Jacquin, Nov 2003
 
 */
+
+$LANG->loadLanguageMsg('cvs/cvs');
 
 function uniformat_date($format, $date) {
 
@@ -25,7 +26,7 @@ function uniformat_date($format, $date) {
 }
 
 function commits_header($params) {
-	global $group_id,$DOCUMENT_ROOT;
+    global $group_id,$DOCUMENT_ROOT,$LANG;
 
 	$params['toptab']='cvs';
 	$params['group']=$group_id;
@@ -34,25 +35,28 @@ function commits_header($params) {
 	$project=project_get_object($group_id);
 
 	if (!$project->isProject()) {
-		exit_error('Error','Only Projects Can Use The Commits Manager');
+		exit_error($LANG->getText('global', 'error'),
+			   $LANG->getText('cvs_commit_utils', 'error_project'));
 	}
 	if (!$project->usesCVS()) {
-	    exit_error('Error','This Project Has Turned CVS Off');
+	    exit_error($LANG->getText('global', 'error'),
+		       $LANG->getText('cvs_commit_utils', 'error_off'));
 	}
 	echo site_project_header($params);
 
-	echo '<P><B><A HREF="/cvs/?func=info&group_id='.$group_id.'">CVS Info</A>';
+	echo '<P><B><A HREF="/cvs/?func=info&group_id='.$group_id.'">'.$LANG->getText('cvs_commit_utils', 'menu_info').'</A>';
 
 	$sys_cvs_host = $GLOBALS['sys_cvs_host'];
 
 	if ($project->isPublic() || user_isloggedin()) {
-	  echo ' | <A HREF="/cvs/viewcvs.php/?root='.$project->getUnixName().'&roottype=cvs">Browse CVS Tree</A>';
+	    $uri = session_make_url('/cvs/viewcvs.php/?root='.$project->getUnixName().'&roottype=cvs');
+	    echo ' | <A HREF="'.$uri.'">'.$LANG->getText('cvs_commit_utils', 'menu_browse').'</A>';
 	}
 	if (user_isloggedin()) {
-	  echo ' | <A HREF="/cvs/?func=browse&group_id='.$group_id.'&set=my">My CVS Commits</A>';
+	  echo ' | <A HREF="/cvs/?func=browse&group_id='.$group_id.'&set=my">'.$LANG->getText('cvs_commit_utils', 'menu_my').'</A>';
 	}
-	echo ' | <A HREF="/cvs/?func=browse&group_id='.$group_id.'">CVS Query</A>';
-	echo ' | <A HREF="/cvs/?func=admin&group_id='.$group_id.'">CVS Admin</A>';	
+	echo ' | <A HREF="/cvs/?func=browse&group_id='.$group_id.'">'.$LANG->getText('cvs_commit_utils', 'menu_query').'</A>';
+	echo ' | <A HREF="/cvs/?func=admin&group_id='.$group_id.'">'.$LANG->getText('cvs_commit_utils', 'menu_admin').'</A>';	
 	if (!$params['help']) { $params['help'] = "VersionControlWithCVS.html";}
 	echo ' | '.help_button($params['help'],false,'Help');
 
@@ -61,7 +65,7 @@ function commits_header($params) {
 }
 
 function commits_header_admin($params) {
-    global $group_id,$DOCUMENT_ROOT;
+    global $group_id,$DOCUMENT_ROOT,$LANG;
     
     //required params for site_project_header();
     $params['group']=$group_id;
@@ -71,14 +75,16 @@ function commits_header_admin($params) {
     
     //only projects can use the commits manager, and only if they have it turned on
     if (!$project->isProject()) {
-	exit_error('Error','Only Projects Can Use The Commits Browser');
+	exit_error($LANG->getText('global', 'error'),
+		   $LANG->getText('cvs_commit_utils', 'error_project'));
     }
     if (!$project->usesCVS()) {
-	exit_error('Error','This Project Has Turned Off The Commits Browser');
+	exit_error($LANG->getText('global', 'error'),
+		   $LANG->getText('cvs_commit_utils', 'error_off'));
     }
     echo site_project_header($params);
     if ($params['help']) {
-	echo ' | <b>'.help_button($params['help'],false,'Help').'</b>';
+	echo ' | <b>'.help_button($params['help'],false,$LANG->getText('global', 'help')).'</b>';
     }
      echo ' <hr width="300" size="1" align="left" noshade>';
 }
@@ -89,8 +95,9 @@ function commits_footer($params) {
 }
 
 function commits_branches_box($group_id,$name='branch',$checked='xzxz', $text_100='None') {
+    global $LANG;
 	if (!$group_id) {
-		return 'ERROR - no group_id';
+		return $LANG->getText('cvs_commit_utils', 'error_nogid');
 	} else {
 	  $sql = "SELECT unix_group_name from groups where group_id=$group_id";
 
@@ -129,8 +136,9 @@ function commits_data_get_technicians($group_id) {
 }
 
 function commits_technician_box($group_id,$name='_commiter',$checked='xzxz',$text_100='None') {
+    global $LANG;
 	if (!$group_id) {
-		return 'ERROR - no group_id';
+		return $LANG->getText('cvs_commit_utils', 'error_nogid');
 	} else {
 		$result=commits_data_get_technicians($group_id);
 		return html_build_select_box($result,$name,$checked,true,$text_100);
@@ -149,7 +157,7 @@ function commits_tags_box($group_id, $name='_tag',$checked='xzxz',$text_100='Non
 }
 
 function show_commitslist ($result,$offset,$total_rows,$set='any', $commiter='100', $tag='100', $branch='100', $chunksz=15, $morder='', $msort=0) {
-	global $sys_datefmt,$group_id;
+    global $sys_datefmt,$group_id,$LANG;
 	/*
 		Accepts a result set from the commits table. Should include all columns from
 		the table, and it should be joined to USER to get the user_name.
@@ -163,44 +171,39 @@ function show_commitslist ($result,$offset,$total_rows,$set='any', $commiter='10
     $url .= "&morder=$morder";
 
 	if ($morder != '') {
-	  $orderstr = ' sorted by '.commit_criteria_list_to_text($morder, $url_nomorder);
+	  $orderstr = ' '.$LANG->getText('cvs_commit_utils', 'sorted_by').' '.commit_criteria_list_to_text($morder, $url_nomorder);
 	} else {
 	  $orderstr = '';
 	}
 	echo '<A name="results"></A>';  
-	echo '<h3>'.$total_rows.' matching commit'.($totalrows>1 ? 's':'').$orderstr.'</h3>';
+	echo '<h3>'.$total_rows.' '.$LANG->getText('cvs_commit_utils', 'matching').($totalrows>1 ? 's':'').$orderstr.'</h3>';
 
     $nav_bar ='<table width= "100%"><tr>';
     $nav_bar .= '<td width="20%" align ="left">';
 
-
-    echo '<P>Click a column heading to sort results (up or down), '.
-      'or <A HREF="'.$url.'&order=#results"><b>Reset sort</b></a>. ';
-
     if ($msort) { 
 	$url_alternate_sort = str_replace('msort=1','msort=0',$url).
 	    '&order=#results';
-	$text = 'Deactivate';
+	$text = $LANG->getText('cvs_commit_utils', 'deactivate');
     } else {    
 	$url_alternate_sort = str_replace('msort=0','msort=1',$url).
 	    '&order=#results';
-	$text = 'Activate';
+	$text = $LANG->getText('cvs_commit_utils', 'activate');
     }
 
-    echo 'You can also <a href="'.$url_alternate_sort.'"><b> '.$text.
-      ' multicolumn sort</b></a>'."\n";
+    echo '<P>'.$LANG->getText('cvs_commit_utils', 'sort_msg',array($url.'&order=#results',$url_alternate_sort,$text));
 
     // If all bugs on screen so no prev/begin pointer at all
     if ($total_rows > $chunksz) {
 	if ($offset > 0) {
 	    $nav_bar .=
-	    '<A HREF="'.$url.'&offset=0#results"><B><< Begin</B></A>'.
+	    '<A HREF="'.$url.'&offset=0#results"><B>&lt;&lt;  '.$LANG->getText('global', 'begin').'</B></A>'.
 	    '&nbsp;&nbsp;&nbsp;&nbsp;'.
 	    '<A HREF="'.$url.'&offset='.($offset-$chunksz).
-	    '#results"><B>< Previous '.$chunksz.'</B></A></td>';
+	    '#results"><B>< '.$LANG->getText('global', 'prev').' '.$chunksz.'</B></A></td>';
 	} else {
 	    $nav_bar .=
-		'<span class="disable">&lt;&lt; Begin&nbsp;&nbsp;&lt; Previous '.$chunksz.'</span>';
+		'<span class="disable">&lt;&lt; '.$LANG->getText('global', 'begin').'&nbsp;&nbsp;&lt; '.$LANG->getText('global', 'prev').' '.$chunksz.'</span>';
 	}
     }
 
@@ -221,14 +224,14 @@ function show_commitslist ($result,$offset,$total_rows,$set='any', $commiter='10
 
 	    $nav_bar .= 
 		'<A HREF="'.$url.'&offset='.($offset+$chunksz).
-		'#results" class="small"><B>Next '.$chunksz.' &gt;</B></A>'.
+		'#results" class="small"><B>'.$LANG->getText('global', 'next').' '.$chunksz.' &gt;</B></A>'.
 		'&nbsp;&nbsp;&nbsp;&nbsp;'.
 		'<A HREF="'.$url.'&offset='.($offset_end).
-		'#results" class="small"><B>End &gt;&gt;</B></A></td>';
+		'#results" class="small"><B>'.$LANG->getText('global', 'end').' &gt;&gt;</B></A></td>';
 	} else {
 	    $nav_bar .= 
-		'<span class="disable">Next '.$chunksz.
-		' &gt;&nbsp;&nbsp;End &gt;&gt;</span>';
+		'<span class="disable">'.$LANG->getText('global', 'next').' '.$chunksz.
+		' &gt;&nbsp;&nbsp;'.$LANG->getText('global', 'end').' &gt;&gt;</span>';
 	}
     }
     $nav_bar .= '</td>';
@@ -252,10 +255,10 @@ function show_commitslist ($result,$offset,$total_rows,$set='any', $commiter='10
 	$rows=db_numrows($result);
 	$url .= "&order=";
 	$title_arr=array();
-	$title_arr[]='ID';
-	$title_arr[]='Description';
-	$title_arr[]='Date';
-	$title_arr[]='Submitted By';
+	$title_arr[]=$LANG->getText('cvs_commit_utils', 'id');
+	$title_arr[]=$LANG->getText('cvs_commit_utils', 'description');
+	$title_arr[]=$LANG->getText('cvs_commit_utils', 'date');
+	$title_arr[]=$LANG->getText('cvs_commit_utils', 'who');
 
 	$links_arr=array();
 	$links_arr[]=$url.'id#results';
@@ -284,9 +287,9 @@ function show_commitslist ($result,$offset,$total_rows,$set='any', $commiter='10
 	      $id_str = ' ? ';
 	      $id_link = "&checkin_id=".db_result($result, $i, 'did').
 		  "&when=".db_result($result, $i, 'c_when').$filter_string;
-	      ##$id_sublink =" <br><A HREF=\"".$PHP_SELF."?func=detailcommit&group_id=".$group_id."&checkin_id=".db_result($result, $i, 'did').$filter_string."&desc_id=".db_result($result, $i, 'did')."\">no date on this log</A>";
+	      ##$id_sublink =" <br><A HREF=\"".$PHP_SELF."?func=detailcommit&group_id=".$group_id."&checkin_id=".db_result($result, $i, 'did').$filter_string."&desc_id=".db_result($result, $i, 'did')."\">".$LANG->getText('cvs_commit_utils', 'no_date')."</A>";
 	    } else {
-	      ##$id_sublink =" <br><A HREF=\"".$PHP_SELF."?func=detailcommit&group_id=".$group_id.$id_link.$filter_string."&desc_id=".db_result($result, $i, 'did')."\">".$id_str." on this log</A>";
+	      ##$id_sublink =" <br><A HREF=\"".$PHP_SELF."?func=detailcommit&group_id=".$group_id.$id_link.$filter_string."&desc_id=".db_result($result, $i, 'did')."\">".$id_str." ".$LANG->getText('cvs_commit_utils', 'on_log')."</A>";
 	      
 	    }
 	    
@@ -401,18 +404,19 @@ function commit_criteria_list_to_text($criteria_list, $url){
 }
 
 function commit_field_get_label($sortField) {
+    global $LANG;
   if ($sortField == "id") {
-    return "ID";
+    return $LANG->getText('cvs_commit_utils', 'id');
   }
   if ($sortField == "f_when") {
-    return "Date";
+    return $LANG->getText('cvs_commit_utils', 'date');
   }
   return $sortField;
   }
 
 
 function show_commit_details ($result) {
-	global $sys_datefmt,$group_id,$commit_id;
+    global $sys_datefmt,$group_id,$commit_id,$LANG;
 	/*
 		Accepts a result set from the commits table. Should include all columns from
 		the table, and it should be joined to USER to get the user_name.
@@ -429,14 +433,14 @@ function show_commit_details ($result) {
 	}
 	echo '<h2>'.$hdr.uniformat_date($sys_datefmt, db_result($result, 0, 'c_when')).'</h2></h2>';
 	echo '<table WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="2"><tr class="'. util_get_alt_row_color(0).'"><td>'.$list_log.'</td></tr></table>';
-	echo '<h3> List of impacted files</h3>';
+	echo '<h3>'.$LANG->getText('cvs_commit_utils', 'impacted_file').'</h3>';
 	$title_arr=array();
-	$title_arr[]= 'File';
-	$title_arr[]='Revision';
-	$title_arr[]='Branch';
-	$title_arr[]='Type';
-	$title_arr[]='AddedLines';
-	$title_arr[]='RemovedLines';
+	$title_arr[]=$LANG->getText('cvs_commit_utils', 'file');
+	$title_arr[]=$LANG->getText('cvs_commit_utils', 'rev');
+	$title_arr[]=$LANG->getText('cvs_commit_utils', 'branch');
+	$title_arr[]=$LANG->getText('cvs_commit_utils', 'type');
+	$title_arr[]=$LANG->getText('cvs_commit_utils', 'added_line');
+	$title_arr[]=$LANG->getText('cvs_commit_utils', 'removed_line');
 
 	$links_arr=array();
 	$links_arr[]=$url.'filename';
@@ -455,8 +459,9 @@ function show_commit_details ($result) {
 	    $added = db_result($result, $i, 'addedlines');
 	    $removed = db_result($result,$i,'removedlines');
 	    $revision = db_result($result,$i,'revision');
-	    $filename = db_result($result, $i, 'dir').'/'.
-	      db_result($result, $i, 'file');
+	    $filename = db_result($result, $i, 'dir').'/'.db_result($result, $i, 'file');
+	    $type_text = $LANG->getText('cvs_commit_utils', strtolower($type));
+
 	    if (($type == "Change") &&
 		($added == 999) && 
 		($removed == 999)) { // the default values
@@ -515,7 +520,7 @@ function show_commit_details ($result) {
 		    }
 		    $previous = join('.', $new_prev);
 		  }
-		  $type = makeCvsLink($group_id, $filename.'.diff', 'Change', '', '&r1=text&tr1='.$previous.'&r2=text&tr2='.$revision);
+		  $type = makeCvsLink($group_id, $filename.'.diff', $type_text, '', '&r1=text&tr1='.$previous.'&r2=text&tr2='.$revision);
 		}
 
 		$rev_text = makeCvsLink($group_id, $filename, $revision, $revision, '&content-type=text/x-cvsweb-markup');
@@ -542,14 +547,14 @@ function show_commit_details ($result) {
 	echo '
 		<TR><TD COLSPAN="2" class="small">';
 	if ($offset > 0) {
-		echo '<A HREF="'.$PHP_SELF.'?func=browse&group_id='.$group_id.'&set='.$set.'&offset='.($offset-50).'"><B><-- Previous 50</B></A>';
+		echo '<A HREF="'.$PHP_SELF.'?func=browse&group_id='.$group_id.'&set='.$set.'&offset='.($offset-50).'"><B>&lt; '.$LANG->getText('global', 'prev').'</B></A>';
 	} else {
 		echo '&nbsp;';
 	}
 	echo '</TD><TD>&nbsp;</TD><TD COLSPAN="2" class="small">';
 	
 	if ($rows==50) {
-		echo '<A HREF="'.$PHP_SELF.'?func=browse&group_id='.$group_id.'&set='.$set.'&offset='.($offset+50).'"><B>Next 50 --></B></A>';
+		echo '<A HREF="'.$PHP_SELF.'?func=browse&group_id='.$group_id.'&set='.$set.'&offset='.($offset+50).'"><B>'.$LANG->getText('global', 'prev').' 50 &gt;</B></A>';
 	} else {
 		echo '&nbsp;';
 	}
@@ -570,7 +575,7 @@ function check_cvs_access($username, $group_name, $cvspath) {
 
   // A directory that is not world readable can only be viewed
   // through viewcvs if the user is a project member
-  if ($group_id && ($mode & 0x0004) == 0 && !user_is_member($group_id, '0')) {
+  if ($group_id && ($mode & 0x0004) == 0 && !user_ismember($group_id, '0')) {
     return false;
   } else {
     return true;

@@ -9,6 +9,8 @@
 require($DOCUMENT_ROOT.'/include/pre.php');    
 require('../cvs/commit_utils.php');    
 
+$LANG->loadLanguageMsg('cvs/cvs');
+
 // ######################## table for summary info
 
 
@@ -31,8 +33,8 @@ switch ($func) {
  }
 
  case 'setAdmin' : {
-   $feedback = 'Configuration updated ';
-   $status = 'successfuly';
+   $feedback .= $LANG->getText('cvs_index', 'config_updated');
+   $status = $LANG->getText('cvs_index', 'full_success');
 
    if (trim($custom_mailing_header) == '') {
      $mailing_header = 'NULL';
@@ -44,10 +46,10 @@ switch ($func) {
    } else {
      if (!validate_emails ($mailing_list)) {
        $mailing_list = 'NULL';
-       $status = 'partly<br> Email Address Appears Invalid, e-mail notification is off. ';
+       $status = $LANG->getText('cvs_index', 'partial_success');
      }
    }
-   $feedback = $feedback.$status;
+   $feedback = $feedback.' '.$status;
    $query = 'update groups set cvs_tracker="'.$tracked.'", cvs_events_mailing_list="'.$mailing_list.'", cvs_events_mailing_header="'.$mailing_header.'", cvs_preamble="'.htmlspecialchars($form_preamble).'" where group_id='.$group_id;
    $result=db_query($query);
    require('../cvs/admin_commit.php');

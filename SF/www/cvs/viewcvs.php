@@ -10,9 +10,12 @@ require($DOCUMENT_ROOT.'/include/pre.php');
 require($DOCUMENT_ROOT.'/include/viewcvs_utils.php');
 require($DOCUMENT_ROOT.'/cvs/commit_utils.php');
 
+$LANG->loadLanguageMsg('cvs/cvs');
+
 if (user_isloggedin()) {
   if (!check_cvs_access(user_getname(), $root, viewcvs_utils_getfile("/cvs/viewcvs.php"))) {
-    exit_error('Access Denied', 'You are not authorized to access this file. Please contact a Project Administrator.');
+      exit_error($LANG->getText('cvs_viewcvs', 'error_noaccess'),
+		 $LANG->getText('cvs_viewcvs', 'error_noaccess_msg'));
   }
 
   $res_grp = db_query("SELECT * FROM groups WHERE unix_group_name='".$root."'");
@@ -21,7 +24,7 @@ if (user_isloggedin()) {
   $display_header_footer = viewcvs_utils_display_header();
 
   if ($display_header_footer) {
-    commits_header(array ('title'=>'Browse CVS Tree'));
+    commits_header(array ('title'=>$LANG->getText('cvs_viewcvs', 'title')));
   }
 
   viewcvs_utils_passcommand();
