@@ -20,6 +20,7 @@ $ftp_anon_dir_prefix  =	"/home/ftp/pub/";	# What prefix to add to the anon ftp p
 $file_dir	=	"/home/dummy/dumps/";	# Where should we stick files we're working with
 $dummy_uid      =       "103";                  # UserID of the dummy user that will own group's files
 $date           =       int(time()/3600/24);    # Get the number of days since 1/1/1970 for /etc/shadow
+$apache_conf    =       "/etc/httpd/conf/httpd.conf"; # Apache configuration file
 
 ##############################
 # Database Connect Functions
@@ -66,4 +67,19 @@ sub write_array_file {
                 }       
         }       
         close(FD);
+}
+
+    
+#############################
+# Get CodeX USer from the apache
+# configuration file
+#############################
+sub get_codex_user {
+
+  open(APCONF, $apache_conf) or return;
+
+  while (<APCONF>) {
+    return $1 if /^\s*User\s+(.*)\s*/;
+  }
+
 }      
