@@ -136,7 +136,6 @@ function util_make_links ($data='',$group_id = 0) {
 		$line = eregi_replace("([ \t]|^)www\."," http://www.",$line);
 		$text = eregi_replace("([[:alnum:]]+)://([^[:space:]]*)([[:alnum:]>#?/&=])", "<a href=\"\\1://\\2\\3\" target=\"_blank\" target=\"_new\">\\1://\\2\\3</a>", $line);
 		$text = eregi_replace("(([a-z0-9_]|\\-|\\.)+@([^[:space:]&>]*)([[:alnum:]-]))", "<a href=\"mailto:\\1\" target=\"_new\">\\1</a>", $text);
-		$text = eregi_replace("(([bug:space:]|\\-|\\.)+@([^[:space:]&>]*)([[:alnum:]-]))", "<a href=\"mailto:\\1\" target=\"_new\">\\1</a>", $text);
 		// If $group_id is assigned then we can replace the pattern: bug #id task #id sr #id
 		if ( $group_id ) {
 		    $text = eregi_replace("bug[ ]?#([0-9]+)", "<a href=\"/bugs/?func=detailbug&bug_id=\\1&group_id=$group_id\">Bug #\\1</a>", $text);
