@@ -43,6 +43,10 @@
 
       <para>Xerox ®, The Document Company ®, and all Xerox products mentioned
       in this publication are trademarks of Xerox Corporation.</para>
+
+      <para>This document was formatted with the DocBook XML DTD. HTML
+      version rendered with DocBook HTML native renderer. PDF version
+      rendered with Apache FOP.</para>
     </legalnotice>
 
     <revhistory>
@@ -181,5 +185,20 @@
 
         <revremark>Conversion to DocBook DTD to generate both online and PDF version</revremark>
       </revision>
+
+     <revision>
+        <revnumber>1.8</revnumber>
+
+        <date>16-Sep-2002</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>Bug Attachment, CC List, new notification process, type of search criteria, Custom fields documented in the bug tracking system</revremark>
+      </revision>
      </revhistory>
   </bookinfo>
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+End:
+-->
