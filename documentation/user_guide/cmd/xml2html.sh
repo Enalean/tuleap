@@ -26,5 +26,12 @@ echo Using CLASSPATH: ${CP}
 PREV_DIR=`pwd`
 cd $2
 ${JAVA_HOME}/java -cp ${CP} com.icl.saxon.StyleSheet ${PREV_DIR}/$1 ${DOC_HOME}/user_guide/xsl/htmlhelp/htmlhelp.xsl > /dev/null
+if [ $? != 0 ]
+then 
+	cd ${PREV_DIR}
+        echo "Failed!"
+        exit 1
+fi
 cd ${PREV_DIR}
 echo "Done!"
+exit 0
