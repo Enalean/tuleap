@@ -124,11 +124,13 @@ for ( $p = 0; $p < $num_packages; $p++ ) {
 				   // now iterate and show the files in this release....
 				for ( $f = 0; $f < $num_files; $f++ ) {
 					$file_release = db_fetch_array( $res_file );
+					$filename = $file_release['filename'];$list = split('/', $filename);
+					$fname = $list[sizeof($list) - 1];
 					print "\t\t" . '<TR class="' . $bgcolor .'">'
 						. '<TD COLSPAN=2>&nbsp;</TD>'
 						. '<TD><B><A HREF="javascript:showConfirmDownload('.$group_id.','.$file_release['file_id'].',\''.$file_release['filename'].'\')">'
 
-						. $file_release['filename'] .'</A></B></TD>'
+						. $fname .'</A></B></TD>'
 						. '<TD>'. $file_release['file_size'] .'</TD>'
 						. '<TD>'. ($file_release['downloads'] ? $file_release['downloads'] : '0') .'</TD>'
 						. '<TD>'. $file_release['processor'] .'</TD>'

@@ -268,13 +268,27 @@ if ($submit) {
 					if (!util_is_valid_filename ($file_list[$i])) {
 						$feedback .= " | Illegal FileName: $file_list[$i] ";
 					} else {
-						//see if they already have a file by this name
+					  // get the package id and compute the upload directory
+					  $pres = db_query("SELECT frs_package.package_id FROM frs_package,frs_release ".
+							   "WHERE frs_package.group_id='$group_id' ".
+							   "AND frs_release.release_id='$release_id' ".
+							   "AND frs_release.package_id=frs_package.package_id ");
+						  
+					  if (!$pres || db_numrows($pres) < 1) { 
+					    $feedback .= ' | Package/Release Doesn\'t Exist Or Isn\'t Yours ';
+					    echo db_error();
+					  } else {
+					    $package_id = db_result($pres, 0, 'package_id');
+					    $upload_subdir = 'p'.$package_id.'_r'.$release_id;
+					  }
 
-						$res1=db_query("SELECT frs_package.package_id FROM frs_package,frs_release,frs_file ".
+					  //see if they already have a file by this name
+
+					  $res1=db_query("SELECT frs_package.package_id FROM frs_package,frs_release,frs_file ".
 							"WHERE frs_package.group_id='$group_id' ".
 							"AND frs_release.release_id=frs_file.release_id ".
 							"AND frs_release.package_id=frs_package.package_id ".
-							"AND frs_file.filename='$file_list[$i]'");
+							"AND frs_file.filename='$upload_subdir/$file_list[$i]'");
 						if (!$res1 || db_numrows($res1) < 1) {
 
 							/*
@@ -282,21 +296,23 @@ if ($submit) {
 							*/
 							clearstatcache();
 							if (is_file($FTPINCOMING_DIR.'/'.$file_list[$i]) && file_exists($FTPINCOMING_DIR.'/'.$file_list[$i])) {
-								//move the file to a its project page using a setuid program
-								exec ("/usr/local/bin/fileforge $file_list[$i] ".$group_unix_name,$exec_res);
-								if ($exec_res[0]) {
-									echo '<h3>'.$exec_res[0],$exec_res[1].'</H3><P>';
-								}
-								//add the file to the database
-								$res=db_query("INSERT INTO frs_file ".
+							  //move the file to a its project page using a setuid program
+							  exec ("/bin/date > /tmp/".$group_unix_name."$group_id",$exec_res);
+							  exec ("/usr/local/bin/fileforge /tmp/".$group_unix_name."$group_id ".$group_unix_name, $exec_res); 
+							  exec ("/usr/local/bin/fileforge ".$file_list[$i]." ".$group_unix_name."/".$upload_subdir,$exec_res);
+							  if ($exec_res[0]) {
+							    echo '<h3>'.$exec_res[0],$exec_res[1].'</H3><P>';
+							  }
+							  //add the file to the database
+							  $res=db_query("INSERT INTO frs_file ".
 									"(release_time,filename,release_id,file_size,post_date) ".
-									"VALUES ('$now','$file_list[$i]','$release_id','". filesize("$project_files_dir/$file_list[$i]") ."','$now') ");
-								if (!$res) {
-									$feedback .= " | Couldn't Add FileName: $file_list[$i] ";
-									echo db_error();
+									"VALUES ('$now','$upload_subdir/$file_list[$i]','$release_id','". filesize("$project_files_dir/$upload_subdir/$file_list[$i]") ."','$now') ");
+							  if (!$res) {
+							    $feedback .= " | Couldn't Add FileName: $file_list[$i] ";
+							    echo db_error();
 								}
 							} else {
-								$feedback .= " | FileName Invalid Or Does Not Exist: $file_list[$i] ";
+							  $feedback .= " | FileName Invalid Or Does Not Exist: $file_list[$i] ";
 							}
 						} else {
 							$feedback .= " | FileName Already Exists For This Project: $file_list[$i] ";
@@ -501,7 +517,7 @@ Then check the boxes next to the files belonging to your new project release and
 
 	//iterate and show the files in the upload directory
 	while ($file = readdir($dirhandle)) {
-		if (!ereg('^\.',$file[0])) {
+		if ((!ereg('^\.',$file[0])) && is_file($FTPINCOMING_DIR.'/'.$file)) {
 	       //file doesn't start with a .
 			$atleastone = 1;
 			print '
@@ -571,14 +587,18 @@ Then check the boxes next to the files belonging to your new project release and
 		*/
 
 		for ($i=0; $i<$rows; $i++) {
-			echo '
+		  $fname = db_result($res,$i,'filename');
+		  $list = split('/', $fname);
+		  $fname = $list[sizeof($list) - 1];
+
+		  echo '
 			<FORM ACTION="'. $PHP_SELF .'" METHOD="POST">
 			<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 			<INPUT TYPE="HIDDEN" NAME="release_id" VALUE="'.$release_id.'">
 			<INPUT TYPE="HIDDEN" NAME="func" VALUE="update_file">
 			<INPUT TYPE="HIDDEN" NAME="file_id" VALUE="'. db_result($res,$i,'file_id') .'">
 			<TR class="'. util_get_alt_row_color($i) .'">
-				<TD NOWRAP><FONT SIZE="-1">'. db_result($res,$i,'filename') .'</TD>
+				<TD NOWRAP><FONT SIZE="-1">'. $fname .'</TD>
 				<TD><FONT SIZE="-1">'. frs_show_processor_popup ('processor_id', db_result($res,$i,'processor_id')) .'</TD>
 				<TD><FONT SIZE="-1">'. frs_show_filetype_popup ('type_id', db_result($res,$i,'type_id')) .'</TD>
 			</TR>
