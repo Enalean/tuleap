@@ -83,7 +83,7 @@ CREATE TABLE activity_log_old_old (
 CREATE TABLE bug (
   bug_id int(11) NOT NULL auto_increment,
   group_id int(11) NOT NULL default '0',
-  status_id int(11) NOT NULL default '100',
+  status_id int(11) NOT NULL default '1',
   severity int(11) NOT NULL default '5',
   category_id int(11) NOT NULL default '100',
   submitted_by int(11) NOT NULL default '100',
