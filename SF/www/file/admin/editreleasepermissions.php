@@ -41,7 +41,7 @@ echo '<H3>Release: <a href="/file/admin/editreleases.php?release_id='.$release_i
      '</a> from package: <a href="/file/admin/editpackages.php?group_id='.$group_id.'">'.
      $package_name.'</a></h3>
 <P>
-When no permission is defined for a release, then it has the same permissions has the parent package.
+When no permission is defined for a release, then it has the same permissions as the parent package.
 <br>When a permission is defined for a release, then it overrides the permissions defined for the package.
 <P>';
 
@@ -49,7 +49,7 @@ echo '<h3>Edit release permissions</h3>
 <p>Select user groups who are granted access to this release:
 <br><b>Note</b>: if you do not specify any access permission, the release inherits the access permissions from <a href="/file/admin/editpackagepermissions.php?package_id='.$package_id.'&group_id='.$group_id.'">the package it belongs to</a> (default setting).
 <p>';
-$object_id = $_GET['release_id']?$_GET['release_id']:$_POST['object_id'];
+$object_id = $release_id;
 $post_url = '/file/admin/editreleases.php?package_id='.$package_id.'&group_id='.$group_id;
 permission_display_selection_form("RELEASE_READ", $object_id, $group_id, $post_url);
 

@@ -45,10 +45,10 @@ if (user_isloggedin()) {
 
   // Check permissions for release, then package
   if (permission_exist('RELEASE_READ', $file_release['release_id'])) {
-      if (!permission_is_authorized('RELEASE_READ',$file_release['release_id'],user_getid())) {
+      if (!permission_is_authorized('RELEASE_READ',$file_release['release_id'],user_getid(),$group_id)) {
           exit_error('Access Denied', 'You are not authorized to access this file. Please contact a Project Administrator.');
       } 
-  } else if (!permission_is_authorized('PACKAGE_READ',$file_release['package_id'],user_getid())) {
+  } else if (!permission_is_authorized('PACKAGE_READ',$file_release['package_id'],user_getid(),$group_id)) {
       exit_error('Access Denied', 'You are not authorized to access this file. Please contact a Project Administrator.');
   } 
 

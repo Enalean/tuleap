@@ -153,9 +153,11 @@ project_admin_index	or	or
 project_admin_permissions	pack_download	Package Download
 project_admin_permissions	rel_download	Release Download
 project_admin_permissions	doc_access	Document Access
+project_admin_permissions	docgroup_access	Document Group Access
 project_admin_permissions	pack	package $1
 project_admin_permissions	rel	release $1
 project_admin_permissions	doc	document $1
+project_admin_permissions	docgroup	document group $1
 project_admin_permissions	obj	object $1
 project_admin_permissions	perm_type_not_def	permission_type '$1' is not defined
 project_admin_permissions	submit_perm	Submit Permissions

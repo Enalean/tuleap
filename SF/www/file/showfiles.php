@@ -29,7 +29,7 @@ $res = db_query( $sql );
 if (db_numrows($res)>0) {
     while ($row = db_fetch_array($res)) {
         $authorized=false;
-        if (($authorized_user)||(permission_is_authorized('PACKAGE_READ',$row['package_id'],user_getid()))) {
+        if (($authorized_user)||(permission_is_authorized('PACKAGE_READ',$row['package_id'],user_getid(),$group_id))) {
             $authorized=true;
         } else {
             // Get corresponding releases and check access. 
@@ -39,7 +39,7 @@ if (db_numrows($res)>0) {
             if (db_numrows($res2)>0) {
                 while ($row2 = db_fetch_array($res2)) {
                     if (permission_exist('RELEASE_READ', $row2['release_id'])) {
-                        if (permission_is_authorized('RELEASE_READ',$row2['release_id'],user_getid())) {
+                        if (permission_is_authorized('RELEASE_READ',$row2['release_id'],user_getid(),$group_id)) {
                             $authorized=true;
                             break;
                         }
@@ -148,11 +148,11 @@ function download(group_id,file_id,filename) {
                         // Check permissions for release, then package
                         $permission_exists = permission_exist('RELEASE_READ', $package_release['release_id']);
                         if (($permission_exists)&&(!$authorized_user)) {
-                            if (!permission_is_authorized('RELEASE_READ',$package_release['release_id'],user_getid())) {
+                            if (!permission_is_authorized('RELEASE_READ',$package_release['release_id'],user_getid(),$group_id)) {
                                 // Skip this release
                                 continue;
                             } // else OK, display the release
-                        } else if (!permission_is_authorized('PACKAGE_READ',$package_id,user_getid())) {
+                        } else if (!permission_is_authorized('PACKAGE_READ',$package_id,user_getid(),$group_id)) {
                                 // Skip this release
                                 continue;
                         } // else OK, display the release

@@ -62,10 +62,9 @@ function ugroup_get_name_from_id($ugroup_id) {
  * Check membership of the user to a specified ugroup
  *
  *
- * @return true if user is member of the group, false otherwise.
+ * @return true if user is member of the ugroup, false otherwise.
  */
-function ugroup_user_is_member($user_id, $ugroup_id) {
-    global $group_id;
+function ugroup_user_is_member($user_id, $ugroup_id, $group_id) {
     // Special Cases
     if ($ugroup_id==$GLOBALS['UGROUP_NONE']) { 
         // Empty group

@@ -132,7 +132,7 @@ $sql="SELECT frs_package.package_id,frs_package.name AS package_name,frs_release
 "WHERE frs_package.package_id=frs_release.package_id ".
 "AND frs_package.group_id='$group_id' ".
 "AND frs_release.status_id=1 ".
-"ORDER BY frs_package.package_id,frs_release.release_date DESC, frs_release.release_id DESC";
+"ORDER BY frs_package.rank,frs_package.package_id,frs_release.release_date DESC, frs_release.release_id DESC";
 
 $res_files = db_query($sql);
 $rows_files=db_numrows($res_files);
@@ -158,9 +158,9 @@ if (!$res_files || $rows_files < 1) {
             $authorized=false;
             // check access.
             if (permission_exist('RELEASE_READ', $release_id)) {
-                $authorized=permission_is_authorized('RELEASE_READ',$release_id ,user_getid());
+                $authorized=permission_is_authorized('RELEASE_READ',$release_id ,user_getid(),$group_id);
             } else {  
-                $authorized=permission_is_authorized('PACKAGE_READ',$package_id ,user_getid());
+                $authorized=permission_is_authorized('PACKAGE_READ',$package_id ,user_getid(),$group_id);
             }
             if ($authorized) {
                 $nb_packages++;
