@@ -1232,14 +1232,16 @@ function bug_data_create_bug($group_id,$vfl) {
     // this project. For other unused fields we assume that the DB will set
     // up an appropriate default value (see bug table definition)
 
-    // build the variable list of fiels and values
+    // build the variable list of fields and values
     reset($vfl);
     while ( list($field,$value) = each($vfl)) {
 	if (bug_data_is_special($field)) { continue; }
 	$vfl_cols .= ','.$field;
-	if (bug_data_is_text_area($field) ||
-	    bug_data_is_text_field($field)) {
+	if (bug_data_is_text_area($field) || bug_data_is_text_field($field)) {
 	    $value = htmlspecialchars($value);
+	} else if (bug_data_is_date_field($field)) {
+	    // if it's a date we must convert the format to unix time
+	    list($value,$ok) = util_date_to_unixtime($value);
 	}
 	$vfl_values .= ',\''.$value.'\'';
     }    
@@ -1252,7 +1254,7 @@ function bug_data_create_bug($group_id,$vfl) {
 
     $sql="INSERT INTO bug ($fixed_cols $vfl_cols) VALUES ($fixed_values $vfl_values)";
     //echo "DBG - SQL insert bug: $sql";
-    $result=db_query($sql);
+    $result=db_query($sql,1);
     $bug_id=db_insertid($result);
 
     if (!$bug_id) {
