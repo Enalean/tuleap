@@ -174,7 +174,7 @@ function pm_subprojects_box($name='group_project_id',$group_id=false,$group_proj
 	}
 }
 
-function pm_multiple_assigned_box ($name='assigned_to[]',$group_id=false,$project_task_id=false) {
+function pm_multiple_assigned_box ($name='assigned_to[]',$group_id=false,$project_task_id=false,$checked_array=false) {
         if (!$group_id) {
                 return 'ERROR - no group_id';
         } else {
@@ -184,7 +184,11 @@ function pm_multiple_assigned_box ($name='assigned_to[]',$group_id=false,$projec
                         $result2=pm_data_get_assigned_to ($project_task_id);
                         return html_build_multiple_select_box ($result,$name,util_result_column_to_array($result2),6,true,'None',false,'',false);
                 } else {
-                        return html_build_multiple_select_box ($result,$name,array(),6);
+                        if ( !$checked_array ) {
+                            return html_build_multiple_select_box ($result,$name,array(),6);
+                        } else {
+                            return html_build_multiple_select_box ($result,$name,$checked_array,6);
+                        }
                 }
         }
 }

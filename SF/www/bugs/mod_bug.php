@@ -6,7 +6,6 @@
 //
 // $Id$
 
-bug_header(array ('title'=>'Modify a Bug'));
 
 $sql="SELECT * FROM bug WHERE bug_id='$bug_id' AND group_id='$group_id'";
 $fields_per_line=2;
@@ -16,6 +15,25 @@ $result=db_query($sql);
 
 if (db_numrows($result) > 0) {
 
+    // Retrieve the bug field value for the Create Task URL in the bug menu
+    // assigned_to is required
+    $assigned_to = db_result($result,0,'assigned_to');
+    // Check if hours is used and retrieve his value
+    if ( bug_data_is_used('hours') ) {
+        $hours = db_result($result,0,'hours');
+    } else {
+        $hours = '';
+    }
+    
+    bug_header(array ('title'=>'Modify a Bug',
+                      'create_task'=>'Create task',
+                      'summary' => db_result($result,0,'summary'),
+                      'details' => db_result($result,0,'details'),
+                      'assigned_to' => $assigned_to,
+                      'hours' => $hours,
+                      'bug_id' => $bug_id
+                      ));
+    
     // First display some  internal fields - Cannot be modified by the user
 ?>
     <H2>[ Bug #<?php echo $bug_id.' ] '.db_result($result,0,'summary');?></H2>
@@ -153,6 +171,8 @@ if (db_numrows($result) > 0) {
 
 } else {
 
+    bug_header(array ('title'=>'Modify a Bug'));
+    
 	echo '
 	<H1>Bug Not Found</H1>';
 	echo db_error();

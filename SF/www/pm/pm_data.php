@@ -6,6 +6,8 @@
 //
 // $Id$
 
+require ('../bugs/bug_data.php');
+
 function pm_data_get_tasks ($group_id,$group_project_id) {
     if ($group_project_id) {
 	$sql="SELECT project_task_id,summary ".
@@ -192,7 +194,7 @@ function pm_data_update_dependent_tasks($array,$project_task_id) {
 }
 
 function pm_data_create_task ($group_project_id,$start_month,$start_day,$start_year,$end_month,$end_day,
-		$end_year,$summary,$details,$percent_complete,$priority,$hours,$assigned_to,$dependent_on) {
+		$end_year,$summary,$details,$percent_complete,$priority,$hours,$assigned_to,$dependent_on,$bug_id=false) {
 
 	global $feedback;
 	if (!$group_project_id || !$summary || !$details || !$priority) {
@@ -219,7 +221,6 @@ function pm_data_create_task ($group_project_id,$start_month,$start_day,$start_y
 		exit_error('Error','End Date Must Be Greater Than Begin Date');
 	}
 
-
 	$sql="INSERT INTO project_task (group_project_id,summary,details,percent_complete,".
 		"priority,hours,start_date,end_date,".
 		"created_by,status_id) VALUES ('$group_project_id','".htmlspecialchars($summary)."',".
@@ -234,6 +235,16 @@ function pm_data_create_task ($group_project_id,$start_month,$start_day,$start_y
 	} else {
 		$feedback .= ' Successfully added task ';
 		$project_task_id=db_insertid($result);
+		/*
+		  Insert a task dependency => the create task comes from the
+		  Bugs menu (Create Task)
+		*/
+		if ($bug_id) {
+		    $dep_tasks = util_result_column_to_array (bug_data_get_dependent_tasks($bug_id));
+		    $dep_tasks[] = $project_task_id;
+		    bug_data_update_dependent_tasks($dep_tasks,$bug_id);
+		}
+    
 		pm_data_insert_assigned_to($assigned_to,$project_task_id);
 		pm_data_insert_dependent_tasks($dependent_on,$project_task_id);
 	}
@@ -331,7 +342,7 @@ function pm_data_update_task ($group_project_id,$project_task_id,$start_month,$s
 
 	pm_data_update_dependent_tasks($dependent_on,$project_task_id);
 	pm_data_update_assigned_to($assigned_to,$project_task_id);
-
+    
 	/*
 		Update the actual db record
 	*/

@@ -20,6 +20,7 @@ echo util_unconvert_htmlspecialchars(db_result($res_preamble,0,'pm_preamble'));
 <INPUT TYPE="HIDDEN" NAME="func" VALUE="postaddtask">
 <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">
 <INPUT TYPE="HIDDEN" NAME="group_project_id" VALUE="<?php echo $group_project_id; ?>">
+<INPUT TYPE="HIDDEN" NAME="bug_id" VALUE="<?php echo $bug_id; ?>">
 
 <TABLE BORDER="0" WIDTH="100%">
 	<TR>
@@ -42,13 +43,13 @@ echo util_unconvert_htmlspecialchars(db_result($res_preamble,0,'pm_preamble'));
   	<TR>
 		<TD COLSPAN="2"><B>Task Summary:</B>
 		<BR>
-		<INPUT TYPE="text" name="summary" size="60" MAXLENGTH="100">
+		<INPUT TYPE="text" name="summary" size="60" MAXLENGTH="100" value="<? echo stripslashes($summary) ?>">
 		</td>
 	</TR>
 	<TR>
 		<TD COLSPAN="2"><B>Task Details:</B>
 		<BR>
-		<TEXTAREA NAME="details" ROWS="5" COLS="60" WRAP="SOFT"></TEXTAREA></td>
+		<TEXTAREA NAME="details" ROWS="5" COLS="60" WRAP="SOFT"><? echo stripslashes($details) ?></TEXTAREA></td>
 	</TR>
 	<TR>
     		<TD COLSPAN="2"><B>Start Date:</B>
@@ -86,7 +87,11 @@ echo util_unconvert_htmlspecialchars(db_result($res_preamble,0,'pm_preamble'));
 		<B>Assigned To:</B>
 		<BR>
 		<?php
-		echo pm_multiple_assigned_box ('assigned_to[]',$group_id);
+		if ( $assigned_to != '' ) {
+		    echo pm_multiple_assigned_box ('assigned_to[]',$group_id,false,array($assigned_to));
+		} else {
+		    echo pm_multiple_assigned_box ('assigned_to[]',$group_id);
+		}
 		?>
 		</td>
 		<TD>
@@ -94,14 +99,14 @@ echo util_unconvert_htmlspecialchars(db_result($res_preamble,0,'pm_preamble'));
 		<BR>
 		<?php
 		// Now show all tasks
-		echo pm_multiple_task_depend_box ('dependent_on[]',$group_id,false);
+	    echo pm_multiple_task_depend_box ('dependent_on[]',$group_id,false);
 		?>
 		</TD>
 	</TR>
 	<TR>
 		<TD COLSPAN="2"><B>Hours:</B>
 		<BR>
-		<INPUT TYPE="text" name="hours" size="5">
+		<INPUT TYPE="text" name="hours" size="5" value="<? echo $hours ?>">
 		</td>
 	</TR>
 	<TR>

@@ -74,7 +74,7 @@ if ($group_id ) {
 			if (user_ismember($group_id,'P2')) {
 				echo pm_data_create_task ($group_project_id,$start_month,$start_day,$start_year,
 					$end_month,$end_day,$end_year,$summary,$details,$percent_complete,
-					$priority,$hours,$assigned_to,$dependent_on);
+					$priority,$hours,$assigned_to,$dependent_on,$bug_id);
 				include '../pm/browse_task.php';
 			} else {
 				exit_permission_denied();

@@ -39,7 +39,7 @@ function bug_header($params) {
 	//required params for site_project_header();
 	$params['group']=$group_id;
 	$params['toptab']='bugs';
-
+	
 	$project=project_get_object($group_id);
 
 	//only projects can use the bug tracker, and only if they have it turned on
@@ -51,6 +51,7 @@ function bug_header($params) {
 	}
 	echo site_project_header($params);
 
+    $size_hr = 300;
 	echo '<P><B><A HREF="/bugs/?func=addbug&group_id='.$group_id.'">Submit A Bug</A>
 	 | <A HREF="/bugs/?func=browse&group_id='.$group_id.
 	    '&set=open&advsrch='.(isset($advsrch)?$advsrch:0).
@@ -63,10 +64,14 @@ function bug_header($params) {
 		// not very intuitive and not used very much. Might be reactivated
 		// later with a different face (like predefined custom queries)
 		// echo ' | <A HREF="/bugs/?func=modfilters&group_id='.$group_id.'">Filters</A>';
+        if ( $params['create_task'] != '' ) {
+            echo ' | <b><A HREF="/pm/task.php?group_id='.$group_id.'&group_project_id=0&func=addtask&summary='.urlencode($params['summary']).'&details='.urlencode($params['details']).'&assigned_to='.urlencode($params['assigned_to']).'&hours='.urlencode($params['hours']).'&bug_id='.urlencode($params['bug_id']).'">Create Task</A></b>';
+            $size_hr = 345;
+        }
 		echo ' | <A HREF="/bugs/reporting/?group_id='.$group_id.'">Reporting</A>';
 	}
 	echo ' | <A HREF="/bugs/admin/?group_id='.$group_id.'">Admin</A></B>';
-	echo ' <hr width="300" size="1" align="left" noshade>';
+	echo ' <hr width="'.$size_hr.'" size="1" align="left" noshade>';
 }
 
 function bug_header_admin($params) {
@@ -92,6 +97,9 @@ function bug_header_admin($params) {
     echo '<P><B><A HREF="/bugs/admin/?group_id='.$group_id.'">Admin</A></B>';
     echo ' | <B><A HREF="/bugs/admin/field_usage.php?group_id='.$group_id.'">Field Usage</A></B>';
     echo ' | <b><A HREF="/bugs/admin/field_values.php?group_id='.$group_id.'">Field Values</A></b>';
+    if ( $params['create_task'] != '' ) {
+        echo ' | <b><A HREF="/bugs/admin/field_values.php?group_id='.$group_id.'">Create Task</A></b>';
+    }
     echo ' | <b><A HREF="/bugs/admin/reports.php?group_id='.$group_id.'">Bug Reports</A></b>';
     echo ' | <b><A HREF="/bugs/admin/other_settings.php?group_id='.$group_id.'">Other Settings</A></b>';
     echo ' <hr width="300" size="1" align="left" noshade>';
