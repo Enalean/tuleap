@@ -512,10 +512,12 @@ function handle_monitoring($forum_id,$msg_id) {
 		$result = db_query ($sql);
 
 		if ($result && db_numrows($result) > 0) {
-		    $body = "To: noreply@".$GLOBALS['sys_default_domain'].$sys_lf;
+                    list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
+
+		    $body = "To: noreply@".$host.$sys_lf;
 		    $body .='Content-type: text/plain; charset=iso-8859-1'.$sys_lf;
 		    $body .="BCC: $tolist".$sys_lf;
-
+		
 		    $body .= "Subject: [" .db_result($result,0,'unix_group_name'). " - " . db_result($result,0,'forum_name')."] " . 
 			util_unconvert_htmlspecialchars(db_result($result,0,'subject')).
 			"\n\nRead and respond to this message at: ".
@@ -527,7 +529,7 @@ function handle_monitoring($forum_id,$msg_id) {
 			"\nTo stop monitoring this forum, login and visit: ".
 			"\nhttp://".$GLOBALS['sys_default_domain']."/forum/monitor.php?forum_id=$forum_id";
 
-			exec ("/bin/echo \"". util_prep_string_for_sendmail($body) ."\" | /usr/sbin/sendmail -fnoreply@".$GLOBALS['sys_default_domain']." -t -i &");
+			exec ("/bin/echo \"". util_prep_string_for_sendmail($body) ."\" | /usr/sbin/sendmail -fnoreply@".$host." -t -i &");
 
 			$feedback .= ' email sent - people monitoring ';
 		} else {

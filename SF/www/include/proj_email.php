@@ -70,7 +70,8 @@ function send_new_user_email($to,$confirm_hash)
     // $message is defined in the content file
     include(util_get_content('include/new_user_email'));
     
-    mail($to, $GLOBALS['sys_name']." Account Registration",$message,"From: noreply@".$GLOBALS['sys_default_domain']);
+    list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
+    mail($to, $GLOBALS['sys_name']." Account Registration",$message,"From: noreply@".$host);
 
 }
 

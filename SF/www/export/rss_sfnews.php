@@ -21,7 +21,8 @@ print "  <pubDate>".gmdate('D, d M Y G:i:s',time())." GMT</pubDate>\n";
 print "  <description>".$GLOBALS['sys_name']." Project News Highlights</description>\n";
 print "  <link>http://".$GLOBALS['sys_default_domain']."</link>\n";
 print "  <title>".$GLOBALS['sys_name']." News</title>\n";
-print "  <webMaster>webmaster@".$GLOBALS['sys_default_domain']."</webMaster>\n";
+list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
+print "  <webMaster>webmaster@".$host."</webMaster>\n";
 print "  <language>en-us</language>\n";
 // ## item outputs
 while ($row = db_fetch_array($res)) {

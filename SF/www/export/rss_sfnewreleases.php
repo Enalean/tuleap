@@ -49,7 +49,8 @@ print "  <pubDate>".gmdate('D, d M Y g:i:s',time())." GMT</pubDate>\n";
 print "  <description>".$GLOBALS['sys_name']." New Releases</description>\n";
 print "  <link>http://".$GLOBALS['sys_default_domain']."</link>\n";
 print "  <title>".$GLOBALS['sys_name']." New Releases</title>\n";
-print "  <webMaster>webmaster@".$GLOBALS['sys_default_domain']."</webMaster>\n";
+list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
+print "  <webMaster>webmaster@".$host."</webMaster>\n";
 print "  <language>en-us</language>\n";
 // ## item outputs
 $outputtotal = 0;

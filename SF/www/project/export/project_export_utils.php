@@ -746,9 +746,10 @@ function pe_utils_format_sr_messages($group_id,$sr_id) {
 
 function display_db_params () {
     global $sys_default_domain, $dbname;
+    list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
 ?>
 <table align="center" cellpadding="0">
-      <tr><td>Server:</td><td><?php echo $sys_default_domain; ?></td></tr>
+      <tr><td>Server:</td><td><?php echo $host; ?></td></tr>
       <tr><td>Port:</td><td>(leave it blank)</td></tr>
       <tr><td>Database:</td><td><?php echo $dbname; ?></td></tr>
       <tr><td>User:</td><td>cxuser</td></tr>

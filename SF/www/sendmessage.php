@@ -23,8 +23,10 @@ if ($touser) {
 	}
 }
 
-if ($toaddress && !eregi($GLOBALS['sys_default_domain'],$toaddress)) {
-	exit_error("error","You can only send to addresses @".$GLOBALS['sys_default_domain']);
+list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
+
+if ($toaddress && !eregi($host,$toaddress)) {
+	exit_error("error","You can only send to addresses @".$host);
 }
 
 
@@ -51,14 +53,14 @@ if ($send_mail) {
 		$to=db_result($result,0,'email');
 	}
 	mail($to, stripslashes($subject),stripslashes($body),$hdrs);
-	$HTML->header(array('title'=>'SorceForge Contact'));
+	$HTML->header(array('title'=>($GLOBALS['sys_name'].' Contact')));
 	echo '<H2>Message sent</H2>';
 	$HTML->footer(array());
 	exit;
 
 }
 
-$HTML->header(array('title'=>'SorceForge Staff'));
+$HTML->header(array('title'=>($GLOBALS['sys_name'].' Staff')));
 
 ?>
 

@@ -22,6 +22,8 @@ if (session_issecure()) {
     $server = 'http://'.$GLOBALS['sys_default_domain'];
 }
 
+list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
+
 $message = "Someone (presumably you) on the ".$GLOBALS['sys_name']." site requested a\n"
 	. "password change through email verification. If this was not you,\n"
 	. "ignore this message and nothing will happen.\n\n"
@@ -30,7 +32,7 @@ $message = "Someone (presumably you) on the ".$GLOBALS['sys_name']." site reques
 	. "$server/account/lostlogin.php?confirm_hash=$confirm_hash\n\n"
 	. " -- The ".$GLOBALS['sys_name']." Team\n";
 
-$hdrs = "From: noreply@".$GLOBALS['sys_default_domain'].$GLOBALS['sys_lf'];
+$hdrs = "From: noreply@".$host.$GLOBALS['sys_lf'];
 $hdrs .='Content-type: text/plain; charset=iso-8859-1'.$GLOBALS['sys_lf'];
 
 mail ($row_user['email'],$GLOBALS['sys_name']." Password Verification",$message,$hdrs);

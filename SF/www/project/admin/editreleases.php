@@ -372,7 +372,8 @@ if ($submit) {
 		
 			$subject=$GLOBALS['sys_name'].' File Release Notice';
 		
-			$body = "To: noreply@".$GLOBALS['sys_default_domain'].$GLOBALS['sys_lf'].
+                        list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
+			$body = "To: noreply@".$host.$GLOBALS['sys_lf'].
 				"BCC: $list".$GLOBALS['sys_lf'].
 				"Subject: $subject".$GLOBALS['sys_lf'].$GLOBALS['sys_lf'].
 				"\n\nA new version of ". db_result($result,0,'name')." has been released. ".
@@ -383,7 +384,7 @@ if ($submit) {
 				"\nfuture, please login to ".$GLOBALS['sys_name']." and click this link: ".
 				"\n<http://".$GLOBALS['sys_default_domain']."/project/filemodule_monitor.php?filemodule_id=$package_id> ";
 			
-			exec ("/bin/echo \"$body\" | /usr/sbin/sendmail -fnoreply@".$GLOBALS['sys_default_domain']." -t -i &");
+			exec ("/bin/echo \"$body\" | /usr/sbin/sendmail -fnoreply@".$host." -t -i &");
 			$feedback .= ' email sent - '. db_numrows($result) .' users tracking ';
 		}
 	}
@@ -505,10 +506,10 @@ if ($release_id) {
 		<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 		<INPUT TYPE="HIDDEN" NAME="release_id" VALUE="'.$release_id.'">';
 
-	$dirhandle = opendir($FTPINCOMING_DIR);
+	$dirhandle = @opendir($FTPINCOMING_DIR);
 
 	//iterate and show the files in the upload directory
-	while ($file = readdir($dirhandle)) {
+	while ($file = @readdir($dirhandle)) {
 		if ((!ereg('^\.',$file[0])) && is_file($FTPINCOMING_DIR.'/'.$file)) {
 	       //file doesn't start with a .
 			$atleastone = 1;

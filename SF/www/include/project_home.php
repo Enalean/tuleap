@@ -392,7 +392,8 @@ if ($project->isActive()) {
 // LJ	print "<A href=\"ftp://" . $project->getUnixName() . ".sourceforge.net/pub/". $project->getUnixName() ."/\">";
 // LJ
 
-	print "<A href=\"ftp://" . $project->getUnixName() . "." . $sys_default_domain ."/pub/". $project->getUnixName() ."/\">";
+        list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
+	print "<A href=\"ftp://" . $project->getUnixName() . "." . $host ."/pub/". $project->getUnixName() ."/\">";
 	print html_image("ic/ftp16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>'Anonymous FTP Space'));
 	print "Anonymous FTP Space</A>";
 }

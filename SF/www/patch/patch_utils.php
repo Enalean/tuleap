@@ -284,7 +284,8 @@ function mail_followup($patch_id,$more_addresses=false) {
 		    $to .= ','.$more_addresses;
 		}
 
-		$hdrs = 'From: noreply@'.$GLOBALS['sys_default_domain'].$sys_lf;
+                list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
+		$hdrs = 'From: noreply@'.$host.$sys_lf;
 		$hdrs .='Content-type: text/plain; charset=iso-8859-1'.$sys_lf;
 		$hdrs .='X-CodeX-Project: '.group_getunixname(db_result($result,0,'group_id')).$sys_lf;
 		$hdrs .='X-CodeX-Artifact: patch'.$sys_lf;

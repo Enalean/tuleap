@@ -52,7 +52,8 @@ if (user_isloggedin()) {
 	}
 
 
-	$hdrs = "From: noreply@".$GLOBALS['sys_default_domain'].$GLOBALS['sys_lf'];
+        list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
+	$hdrs = "From: noreply@".$host.$GLOBALS['sys_lf'];
 	$hdrs .='Content-type: text/plain; charset=iso-8859-1'.$GLOBALS['sys_lf'];
 	$subject = "[".$GLOBALS['sys_name']."] $user_id has been removed from project $group_id";
 	$body = "This message is being sent to notify the administrator(s) of".

@@ -50,7 +50,8 @@ if ($show_confirm) {
 	// define a module
 	$result=db_query("INSERT INTO filemodule (group_id,module_name) VALUES ('$group_id','".group_getunixname($group_id)."')");
 	if (!$result) {
-		exit_error('Error','INSERTING FILEMODULE FAILED. <B>PLEASE</B> report to admin@'.$GLOBALS['sys_default_domain'].' '.db_error());
+            list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
+            exit_error('Error','INSERTING FILEMODULE FAILED. <B>PLEASE</B> report to admin@'.$host.' '.db_error());
 	}
 
 	// make the current user an admin

@@ -59,11 +59,12 @@ $rows=db_numrows($res_mail);
 
 //LJ -fnoreply@... replaced with -fcodex-admin@...
 //LJ and to_name explicit name added in the To: field
+list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
 for ($i=0; $i<$rows; $i++) {
 	$tolist .= db_result($res_mail,$i,'email').', ';
 	if ($i % 25 == 0) {
 		//spawn sendmail for 25 addresses at a time
-		$body = "To: \"$to_name\" <noreply@".$GLOBALS['sys_default_domain'].">".$sys_lf.
+		$body = "To: \"$to_name\" <noreply@".$host.">".$sys_lf.
 			"BCC: $tolist".$sys_lf.
 		        'Content-type: text/plain; charset=iso-8859-1'.$sys_lf.
 			"Subject: ". stripslashes($mail_subject).$sys_lf.$sys_lf.
@@ -79,7 +80,7 @@ for ($i=0; $i<$rows; $i++) {
 //send the last of the messages.
 //spawn sendmail for 25 addresses at a time
 //LJ and to_name explicit name added in the To: field
-$body = "To: \"$to_name\" <noreply@".$GLOBALS['sys_default_domain'].">".$sys_lf.
+$body = "To: \"$to_name\" <noreply@".$host.">".$sys_lf.
 "BCC: $tolist".$sys_lf.
 'Content-type: text/plain; charset=iso-8859-1'.$sys_lf.
 "Subject: ". stripslashes($mail_subject).$sys_lf.$sys_lf.

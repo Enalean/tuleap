@@ -1547,7 +1547,8 @@ function pm_mail_followup($project_task_id,$more_addresses=false,$changes=false)
     
     	//echo "DBG Sending email to: $to<br";
     
-    	$hdrs = 'From: noreply@'.$GLOBALS['sys_default_domain'].$sys_lf;
+        list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
+    	$hdrs = 'From: noreply@'.$host.$sys_lf;
 	$hdrs .='Content-type: text/plain; charset=iso-8859-1'.$sys_lf;
 	$hdrs .='X-CodeX-Project: '.group_getunixname($group_id).$sys_lf;
 	$hdrs .='X-CodeX-Artifact: task'.$sys_lf;
