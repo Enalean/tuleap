@@ -29,12 +29,15 @@ if ($group_id) {
 	$vfl = bug_extract_field_list();       
 
 	//data control layer
+	$changes = array();
 	$bug_id=bug_data_create_bug($group_id,$vfl);
 
 	// Attach new file if there is one
 	if ($add_file && $input_file) {
-	    bug_attach_file($bug_id,$group_id,$input_file,$input_file_name,
-			    $input_file_type,$input_file_size,$file_description);
+	    bug_attach_file($bug_id,$group_id,$input_file,
+			    $input_file_name, $input_file_type,
+			    $input_file_size,$file_description,
+			    $changes);
 	}
 
 	if ($bug_id) {
