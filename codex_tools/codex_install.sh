@@ -236,6 +236,7 @@ build_dir /etc/skel_codex root root 755
 build_dir /var/run/log_accum root root 1777
 build_dir /cvsroot sourceforge sourceforge 755
 build_dir /cvsroot/.mysql_backup mysql mysql 755
+build_dir /cvsroot/.mysql_backup/old root root 775
 
 ######
 # Now install CodeX specific RPMS (and remove RedHat RPMs)
