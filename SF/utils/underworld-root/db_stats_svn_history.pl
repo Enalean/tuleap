@@ -24,6 +24,7 @@
 #
 # Written by Laurent Julliard, Xerox Corporation
 #
+
 #use strict; # uncomment to check thoroughly
 
 use DBI;
