@@ -342,46 +342,43 @@ class ArtifactReportHtml extends ArtifactReport {
 			reset($result_fields);	
 			while (list($key,$field) = each($result_fields) ) {
 				//echo "$key=".$result[$i][$key]."<br>";
-				// Special case for severity: if this field is used, then it is used only for the priority color - No other display
-				if ( $key != "severity" ) {			    
 					
-				    $value = $result[$i][$key];
-				    if ($width_arr[$key]) {
-						$width = 'WIDTH="'.$width_arr[$key].'%"';
-				    } else {
-						$width = '';
-				    }
-				    $width .= ' class="small"';
-			
-				    if ( $field->isDateField() ) {
-						if ($value)
-						    $html_result .= "<TD $width>".format_date("Y-m-d",$value).'</TD>'."\n";
-						else
-						    $html_result .= "<TD align=\"center\">-</TD>\n";
-			
-				    } else if ($field->getName() == 'artifact_id') {
-						if ($nolink) 
-						    $html_result .= "<TD $width>$value</TD>\n";
-						else
-						    $html_result .= "<TD $width>".'<A HREF="/tracker/?func=detail&aid='.
-							$value.'&atid='.$this->group_artifact_id.'&group_id='.$group_id.'">'. 
-							$value .'</A></TD>'."\n";
-			
-				    } else if ( $field->isUsername() ) {	
-						if ($nolink)
-						    $html_result .= "<TD $width>$value</TD>\n";
-						else
-						    $html_result .= "<TD $width>".util_multi_user_link($value)."</TD>\n";
-					
-				    } else if ( $field->isSelectBox() ) {
-	//					Usefull? - TODO
-	//					$html_result .= "<TD $width>". bug_data_get_cached_field_value($field_arr[$j], $group_id, $value) .'</TD>'."\n";
-						$html_result .= "<TD $width>".$value.'</TD>'."\n";
-			
-				    } else {
-						$html_result .= "<TD $width>". $value .'&nbsp;</TD>'."\n";
-				    }
-				} // if severity				    
+			    $value = $result[$i][$key];
+			    if ($width_arr[$key]) {
+					$width = 'WIDTH="'.$width_arr[$key].'%"';
+			    } else {
+					$width = '';
+			    }
+			    $width .= ' class="small"';
+		
+			    if ( $field->isDateField() ) {
+					if ($value)
+					    $html_result .= "<TD $width>".format_date("Y-m-d",$value).'</TD>'."\n";
+					else
+					    $html_result .= "<TD align=\"center\">-</TD>\n";
+		
+			    } else if ($field->getName() == 'artifact_id') {
+					if ($nolink) 
+					    $html_result .= "<TD $width>$value</TD>\n";
+					else
+					    $html_result .= "<TD $width>".'<A HREF="/tracker/?func=detail&aid='.
+						$value.'&atid='.$this->group_artifact_id.'&group_id='.$group_id.'">'. 
+						$value .'</A></TD>'."\n";
+		
+			    } else if ( $field->isUsername() ) {	
+					if ($nolink)
+					    $html_result .= "<TD $width>$value</TD>\n";
+					else
+					    $html_result .= "<TD $width>".util_multi_user_link($value)."</TD>\n";
+				
+			    } else if ( $field->isSelectBox() ) {
+//					Usefull? - TODO
+//					$html_result .= "<TD $width>". bug_data_get_cached_field_value($field_arr[$j], $group_id, $value) .'</TD>'."\n";
+					$html_result .= "<TD $width>".$value.'</TD>'."\n";
+		
+			    } else {
+					$html_result .= "<TD $width>". $value .'&nbsp;</TD>'."\n";
+			    }
 				
 			} // while 
 			$html_result .= "</tr>\n";
