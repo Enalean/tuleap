@@ -26,6 +26,7 @@
 
 
 #include "includes.h"
+extern pstring global_myname;
 
 main(int argc, char **argv)
 {
@@ -35,20 +36,39 @@ main(int argc, char **argv)
   char ascii_nt_p16[32+1];
   char passwd[130];
   int i;
-  struct smb_passwd smb_pwent;
-  char *smbpasswd_entry;
+  static pstring servicesf = CONFIGFILE;
+
 
   TimeInit();
 	
   setup_logging("gensmbpasswd", True);
   
   charset_initialise();
-	
+
+  /* Load global config file */
+  if (!lp_load(servicesf,True,False,False)) {
+      fprintf(stderr, "Can't load %s - run testparm to debug it\n",
+              servicesf);
+      exit(1);
+  }
+
   safe_strcpy(passwd,argv[1],sizeof(passwd)-1);
 
 #ifdef DEBUG_GENPASSWD
   printf("Password is %s\n",passwd);
 #endif
+
+
+   /* Initilaize host name and get code page for this host */
+  if (!*global_myname) {
+     char *p;
+     fstrcpy(global_myname, myhostname());
+     p = strchr(global_myname, '.' );
+     if (p) *p = 0;
+  }
+  strupper(global_myname);
+
+  codepage_initialise(lp_client_code_page());
 
   /* Calculate the MD4 hash (NT compatible) of the new password. */
   nt_lm_owf_gen(passwd, nt_p16, p16);
@@ -59,19 +79,6 @@ main(int argc, char **argv)
   }
 
   printf("%s:%s\n",ascii_p16,ascii_nt_p16);
-
-/*
-  smb_pwent.smb_userid = 9999;
-  smb_pwent.smb_name = "wedonotcare"; 
-  smb_pwent.smb_passwd = p16;
-  smb_pwent.smb_nt_passwd = nt_p16;
-  smb_pwent.pass_last_set_time = time(NULL);
-  smb_pwent.acct_ctrl = ACB_NORMAL;
-	
-  smbpasswd_entry = format_new_smbpasswd_entry(&smb_pwent);
-  
-  printf("%s\n",smbpasswd_entry);
-*/
 
   exit(0);
   
