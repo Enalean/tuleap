@@ -22,7 +22,7 @@ print "Dropped stats_project_build_tmp...\n" if $verbose;
 ##      
 $sql = "CREATE TABLE stats_project_build_tmp (
         group_id int NOT NULL,
-        stat char(14) NOT NULL,
+        stat char(24) NOT NULL,
         value int NOT NULL DEFAULT '0',
         KEY idx_archive_build_group (group_id),
         KEY idx_archive_build_stat (stat)

@@ -204,6 +204,26 @@ $sql = "INSERT INTO stats_project_build_tmp
 $rel = $dbh->prepare($sql)->execute();
 print "Insert tasks_closed from project_task...\n" if $verbose;
 
+## artifacts_opened
+$sql = "INSERT INTO stats_project_build_tmp
+	SELECT artifact_group_list.group_id,'artifacts_opened',
+		COUNT(artifact.artifact_id) 
+	FROM artifact_group_list, artifact
+	WHERE ( open_date > $day_begin AND open_date < $day_end AND artifact_group_list.group_artifact_id = artifact.group_artifact_id )
+	GROUP BY artifact_group_list.group_id";
+$rel = $dbh->prepare($sql)->execute();
+print "Insert artifacts_opened from project_task...\n" if $verbose;
+
+## artifacts_closed
+$sql = "INSERT INTO stats_project_build_tmp
+	SELECT artifact_group_list.group_id,'artifacts_closed',
+		COUNT(artifact.artifact_id) 
+	FROM artifact_group_list, artifact
+	WHERE ( close_date > $day_begin AND close_date < $day_end AND artifact_group_list.group_artifact_id = artifact.group_artifact_id )
+	GROUP BY artifact_group_list.group_id";
+$rel = $dbh->prepare($sql)->execute();
+print "Insert artifacts_closed from project_task...\n" if $verbose;
+
 ## help_requests
 $sql = "INSERT INTO stats_project_build_tmp
 	SELECT group_id,'help_requests',
@@ -247,6 +267,8 @@ $sql = "CREATE TABLE stats_project_tmp (
         cvs_checkouts   smallint(6) DEFAULT '0' NOT NULL,
         cvs_commits     smallint(6) DEFAULT '0' NOT NULL,
         cvs_adds        smallint(6) DEFAULT '0' NOT NULL,
+        artifacts_opened     smallint(6) DEFAULT '0' NOT NULL,
+        artifacts_closed     smallint(6) DEFAULT '0' NOT NULL,
         KEY idx_project_log_group (group_id)
 )";
 $rel = $dbh->prepare($sql)->execute();
