@@ -64,7 +64,7 @@ If you change a question after responses have been posted, your results pages ma
 
 Question:
 <BR>
-<INPUT TYPE="TEXT" NAME="question" VALUE="<?php echo $question; ?>" SIZE="60" MAXLENGTH="150">
+<TEXTAREA NAME="question" COLS="60" ROWS="4" WRAP="SOFT"><?php echo $question; ?></TEXTAREA>
 
 <P>
 Question Type:

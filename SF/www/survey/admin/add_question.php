@@ -45,8 +45,8 @@ function show_questions() {
 <FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">
 <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="Y">
 <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">
-Question:<BR>
-<INPUT TYPE="TEXT" NAME="question" VALUE="" SIZE="60" MAXLENGTH="150">
+Question (HTML tags allowed):<BR>
+<TEXTAREA NAME="question" COLS="60" ROWS="4" WRAP="SOFT"></TEXTAREA>
 <P>
 
 Question Type:<BR>
