@@ -9,12 +9,19 @@
 bug_header(array ('title'=>'Submit a Bug'));
 $fields_per_line=2;
 
+// First display the message preamble
+$res_preamble  = db_query("SELECT bug_preamble FROM groups WHERE group_id=$group_id");
+
+echo util_unconvert_htmlspecialchars(db_result($res_preamble,0,'bug_preamble'));
+
+// Beginning of the submission form with fixed fields
 echo '<FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
 	<INPUT TYPE="HIDDEN" NAME="func" VALUE="postaddbug">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 	<TABLE>
 	<TR><TD VALIGN="TOP" COLSPAN="'.$fields_per_line.'">
               <B>Group:</B>&nbsp;'.group_getname($group_id).'</TD></TR>';
+
 
 
 // Now display the variable part of the field list (depend on the project)
