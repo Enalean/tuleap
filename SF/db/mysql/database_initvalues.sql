@@ -1603,28 +1603,28 @@ insert into service (service_id, group_id, label, description, short_name, link,
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (16, 100, 'Subversion', 'Subversion Access', 'svn', '/svn/?group_id=$group_id', 1, 1, 'system', 135);
 
 -- Group 1
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (31, 1, 'Summary', 'Project Summary', 'summary', '/projects/$projectname/', 1, 1, 'system', 10);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (32, 1, 'Admin', 'Project Administration', 'admin', '/project/admin/?group_id=$group_id', 1, 1, 'system', 20);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (33, 1, 'Home Page', 'Project Home Page', 'homepage', 'http://$projectname.$sys_default_domain', 1, 1, 'system', 30);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (34, 1, 'Forums', 'Project Forums', 'forum', '/forum/?group_id=$group_id', 1, 1, 'system', 40);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (35, 1, 'Patches', 'Patch Manager', 'patch', '/patch/?group_id=$group_id', 1, 1, 'system', 70);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (36, 1, 'Lists', 'Mailing Lists', 'mail', '/mail/?group_id=$group_id', 1, 1, 'system', 80);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (37, 1, 'Docs', 'Document Manager', 'doc', '/docman/?group_id=$group_id', 1, 1, 'system', 100);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (38, 1, 'Surveys', 'Project Surveys', 'survey', '/survey/?group_id=$group_id', 1, 1, 'system', 110);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (39, 1, 'News', 'Project News', 'news', '/news/?group_id=$group_id', 1, 1, 'system', 120);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (40, 1, 'CVS', 'CVS Access', 'cvs', '/cvs/?group_id=$group_id', 1, 1, 'system', 130);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (41, 1, 'Files', 'File Releases', 'file', '/project/filelist.php?group_id=$group_id', 1, 1, 'system', 140);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (42, 1, 'Trackers', 'Project Trackers', 'tracker', '/tracker/index.php?group_id=$group_id', 1, 1, 'system', 150);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (43, 1, 'Subversion', 'Subversion Access', 'svn', '/svn/?group_id=$group_id', 1, 1, 'system', 135);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (31, 1, 'Summary', 'Project Summary', 'summary', '/projects/codex/', 1, 1, 'system', 10);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (32, 1, 'Admin', 'Project Administration', 'admin', '/project/admin/?group_id=1', 1, 1, 'system', 20);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (33, 1, 'Home Page', 'Project Home Page', 'homepage', 'http://codex._DOMAIN_NAME_', 1, 1, 'system', 30);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (34, 1, 'Forums', 'Project Forums', 'forum', '/forum/?group_id=1', 1, 1, 'system', 40);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (35, 1, 'Patches', 'Patch Manager', 'patch', '/patch/?group_id=1', 1, 1, 'system', 70);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (36, 1, 'Lists', 'Mailing Lists', 'mail', '/mail/?group_id=1', 1, 1, 'system', 80);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (37, 1, 'Docs', 'Document Manager', 'doc', '/docman/?group_id=1', 1, 1, 'system', 100);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (38, 1, 'Surveys', 'Project Surveys', 'survey', '/survey/?group_id=1', 1, 1, 'system', 110);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (39, 1, 'News', 'Project News', 'news', '/news/?group_id=1', 1, 1, 'system', 120);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (40, 1, 'CVS', 'CVS Access', 'cvs', '/cvs/?group_id=1', 1, 1, 'system', 130);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (41, 1, 'Files', 'File Releases', 'file', '/project/filelist.php?group_id=1', 1, 1, 'system', 140);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (42, 1, 'Trackers', 'Project Trackers', 'tracker', '/tracker/index.php?group_id=1', 1, 1, 'system', 150);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (43, 1, 'Subversion', 'Subversion Access', 'svn', '/svn/?group_id=1', 1, 1, 'system', 135);
 
 -- Group 46 - SiteNews
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (51, 46, 'Summary', 'Project Summary', 'summary', '/projects/$projectname/', 1, 1, 'system', 10);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (52, 46, 'Admin', 'Project Administration', 'admin', '/project/admin/?group_id=$group_id', 1, 1, 'system', 20);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (51, 46, 'Summary', 'Project Summary', 'summary', '/projects/sitenews/', 1, 1, 'system', 10);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (52, 46, 'Admin', 'Project Administration', 'admin', '/project/admin/?group_id=46', 1, 1, 'system', 20);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (53, 46, 'Home Page', 'Project Home Page', 'homepage', 'http://sitenews._DOMAIN_NAME_', 1, 1, 'system', 30);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (54, 46, 'Forums', 'Project Forums', 'forum', '/forum/?group_id=$group_id', 1, 1, 'system', 40);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (55, 46, 'News', 'Project News', 'news', '/news/?group_id=$group_id', 1, 1, 'system', 120);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (56, 46, 'Files', 'File Releases', 'file', '/project/filelist.php?group_id=$group_id', 1, 1, 'system', 140);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (57, 46, 'Trackers', 'Project Trackers', 'tracker', '/tracker/index.php?group_id=$group_id', 1, 1, 'system', 150);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (54, 46, 'Forums', 'Project Forums', 'forum', '/forum/?group_id=46', 1, 1, 'system', 40);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (55, 46, 'News', 'Project News', 'news', '/news/?group_id=46', 1, 1, 'system', 120);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (56, 46, 'Files', 'File Releases', 'file', '/project/filelist.php?group_id=46', 1, 1, 'system', 140);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (57, 46, 'Trackers', 'Project Trackers', 'tracker', '/tracker/index.php?group_id=46', 1, 1, 'system', 150);
 
 --
 --
