@@ -580,6 +580,10 @@ class ArtifactField extends Error {
 			return db_result($result,0,'value');
 	    } 
 	
+	    // check here if value is 100
+	    if ($value_id == 100) {
+		return "None";
+	    }
 	    // No value found for this value id !!!
 	    return $value_id.'(Error - Not Found)';
 	
@@ -1259,11 +1263,16 @@ class ArtifactField extends Error {
 	 *  @return boolean - succeed or failed
 	 */
 	function updateValueFunction($group_artifact_id,$value_function) {
-						 	
+				
+		if ($value_function == '') {
+			$dtype = $this->DATATYPE_INT;
+		} else {
+			$dtype = $this->DATATYPE_USER;
+		}		 	
 		// Update the artifact_field
 		$sql = "UPDATE artifact_field SET ".
 			   "value_function='".$value_function."', ".
-			   "data_type=". $this->DATATYPE_USER." ".
+			   "data_type=". $dtype." ".
 			   "WHERE group_artifact_id=".$group_artifact_id." AND field_id=".$this->field_id;
 				
 		//echo $sql;
@@ -1275,7 +1284,7 @@ class ArtifactField extends Error {
 		}
 		
 		// Set the data type to user
-		$this->data_type = $this->DATATYPE_USER;
+		$this->data_type = $dtype;
 		
 		// Reload the field
 		$this->fetchData($group_artifact_id,$field_name);
