@@ -72,7 +72,7 @@ if ($group_id) {
 			break;
 		}
 		case 'detailsupport' : {
-			if (user_ismember($group_id,'S2')) {
+			if (user_ismember($group_id,'S1')) {
 				include '../support/mod_support.php';
 			} else {
 				include '../support/detail_support.php';

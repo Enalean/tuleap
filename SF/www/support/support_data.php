@@ -187,7 +187,7 @@ function support_data_handle_update ($group_id,$support_id,$priority,
     $sql="SELECT * FROM support WHERE support_id='$support_id'";
     $result=db_query($sql);
 
-    if (!((db_numrows($result) > 0) && (user_ismember(db_result($result,0,'group_id'),'S2')))) {
+    if (!((db_numrows($result) > 0) && (user_ismember(db_result($result,0,'group_id'),'S1')))) {
 	exit_permission_denied();
     }
 
