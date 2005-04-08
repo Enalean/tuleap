@@ -10,6 +10,7 @@
 //
 
 require_once('pre.php');
+$Language->loadLanguageMsg('help/help');
 
 // Default language
 $lang = $GLOBALS['sys_lang'];
@@ -33,11 +34,8 @@ if ( $cl->status == 200) {
     header("location: ".$help_url);
 } else {
     // Display error message ...
-    echo help_header($GLOBALS['sys_name'].' Help System - Error: page not found');
-    echo '
-   <h4>Sorry, the help page you have requested (section "'.$section.'") is not available.<br>
-   Please inform the <a href="mailto:'.$GLOBALS['sys_email_admin'].'">'.
- $GLOBALS['sys_name'].' Site Administrator</a></h4>';
+  echo help_header($Language->getText('help_show_help','page_not_found',$GLOBALS['sys_name']));
+  echo $Language->getText('help_show_help','page_not_available',array($section,$GLOBALS['sys_email_admin'],$GLOBALS['sys_name']));
     echo help_footer();
 }
 

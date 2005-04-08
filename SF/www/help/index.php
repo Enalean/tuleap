@@ -6,10 +6,12 @@
 //
 // $Id$
 
-require_once('pre.php');    
-$HTML->header(array(title=>"Welcome to ".$GLOBALS['sys_name']));
+require_once('pre.php');
+$Language->loadLanguageMsg('help/help');
 
-print "<p>Page Information";
+$HTML->header(array(title=>$Language->getText('help_index','welcome',$GLOBALS['sys_name'])));
+
+print '<p>'.$Language->getText('help_index','page_info');
 
 $HTML->footer(array());
 

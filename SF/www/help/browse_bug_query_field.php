@@ -12,7 +12,7 @@
 require_once('pre.php');
 require_once('www/bugs/bug_utils.php');
 require_once('www/bugs/bug_data.php');
-
+$Language->loadLanguageMsg('help/help');
 
 // Initialize the global data structure before anyhting else
 bug_init($group_id);
@@ -22,7 +22,7 @@ $field = urldecode($helpid);
 $res_type = db_query("SHOW COLUMNS FROM bug LIKE '$field'");
     
 if (db_numrows($res_type)<1) {
-    print "No such bug field: $field";
+  print $Language->getText('help_browse_bug_query_field','no_field',$field);
     exit;
 }
 $sql_type = db_result($res_type,0,'Type');
@@ -56,12 +56,12 @@ if (bug_data_is_date_field($field)) {
 if ($bug_info) {
 
     // Show the bug field info in the top frame
-    help_header("Bug Search -  Selection Criteria");
+    help_header($Language->getText('help_browse_bug_query_field','bug_search_criteria'));
     print '<TABLE class="contenttable" cellpadding="0" cellspacing="0" border="0">'."\n";
-    print '<TR><TD width="20%">Field Name:</TD><TD><B>'.bug_data_get_label($field)."</B></TD>\n";
-    print '<TR><TD width="20%">Field Type:</TD><TD><B>'.$fld_type."</B></TD>\n";
+    print '<TR><TD width="20%">'.$Language->getText('help_browse_bug_query_field','field_name').':</TD><TD><B>'.bug_data_get_label($field)."</B></TD>\n";
+    print '<TR><TD width="20%">'.$Language->getText('help_browse_bug_query_field','field_type').':</TD><TD><B>'.$fld_type."</B></TD>\n";
     print "</TABLE>\n"; 
-    print '<hr><u>Description</u>:<I>'.bug_data_get_description($field).'</I>'."\n";
+    print '<hr><u>'.$Language->getText('help_browse_bug_query_field','description').'</u>:<I>'.bug_data_get_description($field).'</I>'."\n";
     help_footer();
 
 } else {

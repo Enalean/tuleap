@@ -16,6 +16,8 @@ require_once('pre.php');
 require_once('common/tracker/ArtifactType.class');
 require_once('common/tracker/ArtifactFieldFactory.class');
 require_once('common/tracker/ArtifactField.class');
+$Language->loadLanguageMsg('help/help');
+
 
 // Get the group_id, group_artifact_id and field_name from the 
 // help_id argument
@@ -34,27 +36,27 @@ if (!$group || !is_object($group) || $group->isError()) {
 //
 $at = new ArtifactType($group,$artifact_type_id);
 if (!$at || !is_object($at)) {
-    exit_error('Error','ArtifactType could not be created');
+    exit_error($Language->getText('global','error'),$Language->getText('help_browse_tracker_query_field','at_not_created'));
 }
 if ($at->isError()) {
-    exit_error('Error',$ath->getErrorMessage());
+    exit_error($Language->getText('global','error'),$ath->getErrorMessage());
 }
 
 // Create field factory
 $aff = new ArtifactFieldFactory($at);
 if (!$aff || !is_object($aff)) {
-    exit_error('Error','ArtifactFieldFactory could not be created');
+    exit_error($Language->getText('global','error'),$Language->getText('help_browse_tracker_query_field','aff_not_created'));
 }
 if ($aff->isError()) {
-    exit_error('Error',$aff->getErrorMessage());
+    exit_error($Language->getText('global','error'),$aff->getErrorMessage());
 }
 
 $field = $aff->getFieldFromName($field_name);
 if (!$field || !is_object($field)) {
-    exit_error('Error','ArtifactField could not be created');
+    exit_error($Language->getText('global','error'),$Language->getText('help_browse_tracker_query_field','af_not_created'));
 }
 if ($field->isError()) {
-    exit_error('Error',$field->getErrorMessage());
+    exit_error($Language->getText('global','error'),$field->getErrorMessage());
 }
 
 $field_type = $field->getLabelFieldType();
@@ -83,12 +85,12 @@ if ( $field->isSelectBox() ) {
 if ($field_info) {
 
     // Show the artifact field info in the top frame
-    help_header("Artifact Search -  Selection Criteria");
+    help_header($Language->getText('help_browse_tracker_query_field','art_search_criteria'));
     print '<TABLE class="contenttable" cellpadding="0" cellspacing="0" border="0">'."\n";
-    print '<TR><TD width="20%">Field Name:</TD><TD><B>'.$field->getLabel()."</B></TD>\n";
-    print '<TR><TD width="20%">Field Type:</TD><TD><B>'.$field->getLabelFieldType()."</B></TD>\n";
+    print '<TR><TD width="20%">'.$Language->getText('help_browse_bug_query_field','field_name').':</TD><TD><B>'.$field->getLabel()."</B></TD>\n";
+    print '<TR><TD width="20%">'.$Language->getText('help_browse_bug_query_field','field_type').':</TD><TD><B>'.$field->getLabelFieldType()."</B></TD>\n";
     print "</TABLE>\n"; 
-    print '<hr><u>Description</u>:<I>'.$field->getDescription().'</I>'."\n";
+    print '<hr><u>'.$Language->getText('help_browse_bug_query_field','description').'</u>:<I>'.$field->getDescription().'</I>'."\n";
     help_footer();
 
 } else {
