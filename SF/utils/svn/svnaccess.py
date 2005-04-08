@@ -75,10 +75,12 @@ def fetch_access_file(svnrepo):
                     if who[0] == '@':
                         for who in SVNGROUPS[who[1:]]:
                             if not SVNACCESS.has_key(who): SVNACCESS[who] = {}
-                            SVNACCESS[who][path] = perm
+                            SVNACCESS[who][path] = string.strip(perm)
+                            #SVNACCESS[who][path] = perm
                     else:
                         if not SVNACCESS.has_key(who): SVNACCESS[who] = {}
-                        SVNACCESS[who][path] = perm
+                        SVNACCESS[who][path] = string.strip(perm)
+                        #SVNACCESS[who][path] = perm
 
         f.close()
         print SVNGROUPS
@@ -118,4 +120,8 @@ def check_read_access(username, svnrepo, svnpath):
         return False
 
 #check_read_access('laurent','/svnroot/codex/', '/codex/trunk/SRC')
+#check_read_access('schneide','/svnroot/ngproj/', 'trunk/')
+#check_read_access('schneide','/svnroot/ngproj/', 'tags/')
+#check_read_access('guerin','/svnroot/ngproj/', 'trunk/')
+#check_read_access('guerin','/svnroot/ngproj/', 'tags/')
 #fetch_access_file('/svnroot/codex')

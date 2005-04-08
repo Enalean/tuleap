@@ -474,7 +474,7 @@ function svn_utils_write_svn_access_file($gname, $contents) {
     $filename = "/svnroot/$gname/.SVNAccessFile";
     $fd = fopen("$filename", "w+");
     if ($fd) {
-	if (fwrite($fd, $contents) === false) {
+	if (fwrite($fd, str_replace("\r",'',$contents)) === false) {
 	    $feedback .= $Language->getText('svn_utils','write_err',$filename);
 	    $ret = false;
 	} else {
