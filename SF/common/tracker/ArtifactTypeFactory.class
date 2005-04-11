@@ -313,6 +313,7 @@ class ArtifactTypeFactory extends Error {
 	  // we suppose that user can only be assignee in trackers where he is group member 
 	  // (THIS IS TODAY NOT NECESSARILY TRUE DUE TO ST patch 
 	  // where a SB or MB field can be bound to any defined ugroup containing people not in the project ...)
+          // Only trackers from active projects are returned.
 
 		$sql = 
 		  "SELECT agl.group_artifact_id,agl.name,".
@@ -322,6 +323,7 @@ class ArtifactTypeFactory extends Error {
 		  "WHERE ug.user_id=".$user_id." AND ug.group_id = g.group_id ".
 		  "AND agl.group_id = g.group_id AND af.group_artifact_id = agl.group_artifact_id ".
 		  "AND agl.status = 'A' ".
+                  "AND g.status = 'A' ".
 		  "AND (af.field_name = 'assigned_to' OR af.field_name = 'multi_assigned_to') ".
 		  "AND af.field_id = afv.field_id ".
 		  "AND (afv.valueInt=".$user_id." OR a.submitted_by=".$user_id.") ".
@@ -349,6 +351,7 @@ class ArtifactTypeFactory extends Error {
 	  // choose in all trackers of groups where user is not member the artifacts that user has submitted
 	  // in MYSQL version of release 2.2 we cannot order over the union result perhaps later
 	  // in MYSQL version of release 2.0 we cannot use UNION. So don't 
+          // Only trackers from active projects are returned.
 
 		$sql = 
 		  "SELECT agl.group_artifact_id,agl.name,".
@@ -357,6 +360,7 @@ class ArtifactTypeFactory extends Error {
 		  "FROM artifact a, artifact_group_list agl, groups g, user_group as ug ".
 		  "WHERE ug.group_id = g.group_id AND agl.group_id = g.group_id ".
 		  "AND agl.status = 'A' ".
+                  "AND g.status = 'A' ".
 		  "AND a.group_artifact_id = agl.group_artifact_id ".
 		  "AND a.submitted_by=".$user_id." AND a.status_id <> 3 ".
 		  "GROUP BY ug.group_id ".
