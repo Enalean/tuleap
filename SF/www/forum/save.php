@@ -8,6 +8,7 @@
 
 require_once('pre.php');
 require('../forum/forum_utils.php');
+$Language->loadLanguageMsg('forum/forum');
 
 if (user_isloggedin()) {
 	/*
@@ -30,10 +31,10 @@ if (user_isloggedin()) {
 		$group_id=db_result($result,0,'group_id');
 		$forum_name=db_result($result,0,'forum_name');
 
-		forum_header(array('title'=>'Save your place'));
+		forum_header(array('title'=>$Language->getText('forum_save','save_place')));
 
 		echo '
-			<H2>Save Your Place</H2>';
+			<H2>'.$Language->getText('forum_save','save_your_place').'</H2>';
 
 		$sql="SELECT * FROM forum_saved_place WHERE user_id='".user_getid()."' AND forum_id='$forum_id'";
 
@@ -49,11 +50,11 @@ if (user_isloggedin()) {
 			$result = db_query($sql);
 
 			if (!$result) {
-				echo "<span class=\"highlight\">Error inserting into forum_saved_place</span>";
+				echo "<span class=\"highlight\">".$Language->getText('forum_save','insert_err')."</span>";
 				echo db_error();
 			} else {
-				echo "<span class=\"highlight\"><H3>Your place was saved</H3></span>";
-				echo "<P>New messages will be highlighted when you return.";
+				echo "<span class=\"highlight\"><H3>".$Language->getText('forum_save','place_saved')."</H3></span>";
+				echo '<P>'.$Language->getText('forum_save','msg_highlighted');
 			}
 
 		} else {
@@ -61,18 +62,18 @@ if (user_isloggedin()) {
 			$result = db_query($sql);
 
 			if (!$result) {
-				echo "<span class=\"highlight\">Error updating time in forum_saved_place</span>";
+				echo "<span class=\"highlight\">".$Language->getText('forum_save','update_err')."</span>";
 				echo db_error();
 			} else {
-				echo "<span class=\"highlight\"><H3>Your place was saved</H3></span>";
-				echo "<P>New messages will be highlighted when you return.";
+				echo "<span class=\"highlight\"><H3>".$Language->getText('forum_save','place_saved')."</H3></span>";
+				echo "<P>".$Language->getText('forum_save','msg_highlighted');
 			}
 		} 
 		forum_footer(array());
 	} else {
-		forum_header(array('title'=>'Choose a forum First'));
+		forum_header(array('title'=>$Language->getText('forum_monitor','choose_forum_first')));
 		echo '
-			<H1>Error - Choose a forum First</H1>';
+			<H1>'.$Language->getText('forum_forum','choose_forum_first').'</H1>';
 		forum_footer(array());
 	} 
 

@@ -8,13 +8,15 @@
 
 require_once('pre.php');
 require('../forum/forum_utils.php');
+$Language->loadLanguageMsg('forum/forum');
+
 
 if (!$group_id) {
   exit_no_group();
 }
 
 
-$params=array('title'=>'Forums for '.group_getname($group_id),
+$params=array('title'=>$Language->getText('forum_index','forums_for',group_getname($group_id)),
               'help' => 'WebForums.html',
               'pv'   => $pv);
 forum_header($params);
@@ -36,23 +38,23 @@ $result = db_query ($sql);
 $rows = db_numrows($result); 
 
 if (!$result || $rows < 1) {
-    echo '<H1>No forums found for '. group_getname($group_id) .'</H1>';
+  echo '<H1>'.$Language->getText('forum_index','no_forums',group_getname($group_id)).'</H1>';
     echo db_error();
     forum_footer($params);
     exit;
 }
 
 if ($pv) {
-    echo '<H3>Discussion Forums</H3>';
+    echo '<H3>'.$Language->getText('forum_forum_utils','discuss_forum').'</H3>';
 } else {
     echo "<TABLE width='100%'><TR><TD>";
-    echo '<H3>Discussion Forums</H3>';
+    echo '<H3>'.$Language->getText('forum_forum_utils','discuss_forum').'</H3>';
     echo "</TD>";
         echo "<TD align='left'> ( <A HREF='".$PHP_SELF."?group_id=$group_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;Printer version</A> ) </TD>";
     echo "</TR></TABLE>";
 }
 
-echo '<P>Choose a forum and you can browse, search, and post messages.<P>';
+echo '<P>'.$Language->getText('forum_index','choose_forum').'<P>';
 
 /*
   Put the result set (list of forums for this group) into a column with folders

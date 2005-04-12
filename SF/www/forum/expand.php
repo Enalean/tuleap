@@ -8,6 +8,7 @@
 
 require_once('pre.php');
 require('../forum/forum_utils.php');
+$Language->loadLanguageMsg('forum/forum');
 
 if (user_isloggedin()) {
 
@@ -22,15 +23,15 @@ if (user_isloggedin()) {
 	$group_id=db_result($result,0,'group_id');
 	$forum_name=db_result($result,0,'forum_name');
 
-	forum_header(array('title'=>'Expand/Collapse Threads'));
+	forum_header(array('title'=>$Language->getText('forum_expand','expand_threads')));
 
 	echo '
-		<H1>Preference Set</H!>';
+		<H1>'.$Language->getText('forum_expand','prefs').'</H!>';
 
 	if ($et==1) {
-		echo '<P>Threads will now be expanded';
+		echo '<P>'.$Language->getText('forum_expand','now_expand');
 	} else {
-		echo '<P>Threads will now be collapsed';
+		echo '<P>'.$Language->getText('forum_expand','now_collaps');
 	}
 
 	forum_footer(array());

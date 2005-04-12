@@ -8,6 +8,7 @@
 
 require_once('pre.php');
 require('../forum/forum_utils.php');
+$Language->loadLanguageMsg('forum/forum');
 
 if (user_isloggedin()) {
 	/*
@@ -30,33 +31,33 @@ if (user_isloggedin()) {
 		$group_id=db_result($result,0,'group_id');
 		$forum_name=db_result($result,0,'forum_name');
 
-		forum_header(array('title'=>'Monitor a forum'));
+		forum_header(array('title'=>$Language->getText('forum_monitor','monitor')));
 
 		echo '
-			<H2>Monitor a Forum</H2>';
+			<H2>'.$Language->getText('forum_monitor','monitor').'</H2>';
 
 		if (forum_is_monitored($forum_id, user_getid())) {
 
 		    // If already monitored then stop monitoring
 		    forum_delete_monitor ($forum_id, user_getid());
-		    echo "<span class=\"highlight\"><H3>Monitoring has been turned off</H3></span>";
-		    echo "<P>You will not receive any more emails from this forum.";
+		    echo "<span class=\"highlight\"><H3>".$Language->getText('forum_monitor','monitor_off')."</H3></span>";
+		    echo '<P>'.$Language->getText('forum_monitor','no_mails_anymore');
 		} else {
 		    // Not yet monitored so add it
 		    if (forum_add_monitor ($forum_id, user_getid()) ) {
-			echo "<span class=\"highlight\"><H3>Forum is now being monitored</H3></span>";
-			echo "<P>You will now be emailed followups to this entire forum.";
-			echo "<P>To turn off monitoring, simply click the <B>Monitor Forum</B> link again.";	
+			echo "<span class=\"highlight\"><H3>".$Language->getText('forum_monitor','now_monitoring')."</H3></span>";
+			echo '<P>'.$Language->getText('forum_monitor','get_followups');
+			echo '<P>'.$Language->getText('forum_monitor','to_turn_monitor_off');	
 		    } else {
-			echo "<span class=\"highlight\">Error inserting into forum_monitoring</span>";
+			echo "<span class=\"highlight\">".$Language->getText('forum_forum_utils','insert_err')."</span>";
 		    }
 		}
 		forum_footer(array());
 
 	} else {
-		forum_header(array('title'=>'Choose a forum First'));
+		forum_header(array('title'=>$Language->getText('forum_monitor','choose_forum_first')));
 		echo '
-			<H1>Error - Choose a forum First</H1>';
+			<H1>'.$Language->getText('forum_forum','choose_forum_first').'</H1>';
 		forum_footer(array());
 	} 
 

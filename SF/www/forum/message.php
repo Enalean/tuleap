@@ -8,6 +8,8 @@
 
 require_once('pre.php');
 require('../forum/forum_utils.php');
+$Language->loadLanguageMsg('forum/forum');
+
 
 if ($msg_id) {
  
@@ -44,16 +46,16 @@ if ($msg_id) {
 	echo html_build_list_table_top ($title_arr);
 
 	echo "<TR><TD class=\"threadmsg\">\n";
-	echo "BY: ".db_result($result,0, "user_name")."<BR>";
-	echo "DATE: ".format_date($sys_datefmt,db_result($result,0, "date"))."<BR>";
-	echo "SUBJECT: ". db_result($result,0, "subject")."<P>";
+	echo $Language->getText('forum_message','by').": ".db_result($result,0, "user_name")."<BR>";
+	echo $Language->getText('forum_message','date').": ".format_date($sys_datefmt,db_result($result,0, "date"))."<BR>";
+	echo $Language->getText('forum_message','subject').": ". db_result($result,0, "subject")."<P>";
 	echo util_make_links(nl2br(db_result($result,0, 'body')), $group_id);
 	echo "</TD></TR></TABLE>";
 
 	/*
 		Show entire thread
 	*/
-	echo '<BR>&nbsp;<P><H3>Thread View</H3>';
+	echo '<BR>&nbsp;<P><H3>'.$Language->getText('forum_message','thread_view').'</H3>';
 
 	//highlight the current message in the thread list
 	$current_message=$msg_id;
@@ -64,14 +66,14 @@ if ($msg_id) {
 	*/
 
 	echo '<P>&nbsp;<P>';
-	echo '<CENTER><h3>Post a followup to this message</h3></CENTER>';
+	echo '<CENTER><h3>'.$Language->getText('forum_message','post_followup').'</h3></CENTER>';
 
 	show_post_form(db_result($result, 0, 'group_forum_id'),db_result($result, 0, 'thread_id'), $msg_id, db_result($result,0, 'subject'));
 
 } else {
 
-	forum_header(array('title'=>'Must choose a message first'));
-	echo '<h1>You must choose a message first</H1>';
+	forum_header(array('title'=>$Language->getText('forum_message','choose_msg_first')));
+	echo '<h1>'.$Language->getText('forum_message','choose_msg_first').'</H1>';
 
 }
 

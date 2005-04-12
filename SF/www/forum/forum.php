@@ -15,6 +15,7 @@
 
 require_once('pre.php');
 require('../forum/forum_utils.php');
+$Language->loadLanguageMsg('forum/forum');
 
 function forum_show_a_nested_message ($result,$row=0) {
 	/*
@@ -25,7 +26,7 @@ function forum_show_a_nested_message ($result,$row=0) {
 		second param is which row in that result set to use
 
 	*/
-	global $sys_datefmt;
+  global $sys_datefmt,$Language;
 
 	$g_id =  db_result($result,$row,'group_id');
 
@@ -38,14 +39,14 @@ function forum_show_a_nested_message ($result,$row=0) {
 	$ret_val = '
 		<TABLE BORDER="0" WIDTH="100%">
 			<TR>
-				<TD class="thread" NOWRAP>By: <A HREF="/users/'.
+				<TD class="thread" NOWRAP>'.$Language->getText('forum_forum','by').': <A HREF="/users/'.
 					db_result($result, $row, 'user_name') .'/">'. 
 					db_result($result, $row, 'user_name') .'</A>'.
 					' ( ' .db_result($result, $row, 'realname') . ' ) '.
 					'<BR><A HREF="/forum/message.php?msg_id='.
 					db_result($result, $row, 'msg_id') .'">'.
 					'<IMG SRC="'.util_get_image_theme("msg.png").'" BORDER=0 HEIGHT=12 WIDTH=10> '.
-					db_result($result, $row, 'subject') .' [ reply ]</A> &nbsp; '.
+					db_result($result, $row, 'subject') .' [ '.$Language->getText('forum_forum','reply').' ]</A> &nbsp; '.
 					'<BR>'. format_date($sys_datefmt,db_result($result,$row,'date')) .'
 				</TD>
 			</TR>
@@ -59,7 +60,7 @@ function forum_show_a_nested_message ($result,$row=0) {
 }
 
 function forum_show_nested_messages ($thread_id, $msg_id) {
-	global $total_rows,$sys_datefmt;
+  global $total_rows,$sys_datefmt,$Language;
 
 	$sql="SELECT user.user_name,forum.has_followups,user.realname,user.user_id,forum.msg_id,forum.group_forum_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to, forum_group_list.group_id ".
 		"FROM forum,user,forum_group_list WHERE forum.thread_id='$thread_id' AND user.user_id=forum.posted_by AND forum.is_followup_to='$msg_id' AND forum_group_list.group_forum_id = forum.group_forum_id ".
@@ -176,7 +177,7 @@ if ($forum_id) {
 			/*
 				If this is a private forum, kick 'em out
 			*/
-			echo '<h1>Forum is restricted</H1>';
+			echo '<h1>'.$Language->getText('forum_forum','forum_restricted').'</H1>';
 			forum_footer($params);
 			exit;
 		}
@@ -204,7 +205,7 @@ if ($forum_id) {
 
 	if (!$result || $rows < 1) {
 		//empty forum
-		$ret_val .= 'No Messages in '.$forum_name .'<P>'. db_error();
+	  $ret_val .= $Language->getText('forum_forum','no_msg',$forum_name) .'<P>'. db_error();
 	} else {
 
 		/*
@@ -234,13 +235,13 @@ if ($forum_id) {
 	//create a pop-up select box showing options for viewing threads
 
 		$vals=array('nested','flat','threaded','nocomments');
-		$texts=array('Nested','Flat','Threaded','No Comments');
+		$texts=array($Language->getText('forum_forum','nested'),$Language->getText('forum_forum','flat'),$Language->getText('forum_forum','threaded'),$Language->getText('forum_forum','no_comments'));
 
 		$options_popup=html_build_select_box_from_arrays ($vals,$texts,'style',$style,false);
 
 	//create a pop-up select box showing options for max_row count
 		$vals=array(25,50,75,100);
-		$texts=array('Show 25','Show 50','Show 75','Show 100');
+		$texts=array($Language->getText('forum_forum','show','25'),$Language->getText('forum_forum','show','50'),$Language->getText('forum_forum','show','75'),$Language->getText('forum_forum','show','100'));
 
 		$max_row_popup=html_build_select_box_from_arrays ($vals,$texts,'max_rows',$max_rows,false);
 
@@ -253,7 +254,7 @@ if ($forum_id) {
 				<TR><TD><FONT SIZE="-1">'. $forum_popup .
 					'</TD><TD><FONT SIZE="-1">'. $options_popup .
 					'</TD><TD><FONT SIZE="-1">'. $max_row_popup .
-					'</TD><TD><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Change View"></TD></TR></TABLE></FORM>';
+					'</TD><TD><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('forum_forum','change_view').'"></TD></TR></TABLE></FORM>';
                 }
 
 		if ($style == 'nested') {
@@ -268,9 +269,9 @@ if ($forum_id) {
 			*/
 
 			$title_arr=array();
-			$title_arr[]='Thread';
-			$title_arr[]='Author';
-			$title_arr[]='Date';
+			$title_arr[]=$Language->getText('forum_forum','thread');
+			$title_arr[]=$Language->getText('forum_forum','author');
+			$title_arr[]=$Language->getText('forum_forum','date');
 
 			$ret_val .= html_build_list_table_top ($title_arr);
 
@@ -355,7 +356,7 @@ if ($forum_id) {
 		if ($offset != 0) {
 			$ret_val .= '<B><span class="normal">
 				<A HREF="javascript:history.back()">
-				<B><IMG SRC="'.util_get_image_theme("t2.png").'" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=center> Previous Messages</A></B></span>';
+				<B><IMG SRC="'.util_get_image_theme("t2.png").'" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=center> '.$Language->getText('forum_forum','prev_msg').'</A></B></span>';
 		} else {
 			$ret_val .= '&nbsp;';
 		}
@@ -364,7 +365,7 @@ if ($forum_id) {
 		if (db_numrows($result) > $i) {
 			$ret_val .= '<B><span class="normal">
 				<A HREF="/forum/forum.php?max_rows='.$max_rows.'&style='.$style.'&offset='.($offset+$i).'&forum_id='.$forum_id.'">
-				<B>Next Messages <IMG SRC="'.util_get_image_theme("t.png").'" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=center></A></span>';
+				<B>'.$Language->getText('forum_forum','next_msg').' <IMG SRC="'.util_get_image_theme("t.png").'" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=center></A></span>';
 		} else {
 			$ret_val .= '&nbsp;';
 		}
@@ -377,7 +378,7 @@ if ($forum_id) {
         if (!$pv) {
             echo '<P>&nbsp;<P>';
             
-            echo '<CENTER><h3>Start a New Thread:</H3></CENTER>';
+            echo '<CENTER><h3>'.$Language->getText('forum_forum','start_new_thread').':</H3></CENTER>';
             show_post_form($forum_id);
         }
 
@@ -385,8 +386,8 @@ if ($forum_id) {
 
 } else {
 
-	forum_header(array('title'=>'Error'));
-	echo '<H1>Error - choose a forum first</H1>';
+	forum_header(array('title'=>$Language->getText('global','error')));
+	echo '<H1'.$Language->getText('forum_forum','choose_forum_first').'</H1>';
 	forum_footer(array());
 
 }
