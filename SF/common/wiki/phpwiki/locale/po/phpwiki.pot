@@ -1,0 +1,4783 @@
+# English PhpWiki locale
+# This file is part of PhpWiki.
+# Copyright (C) Copyright 1999, 2000, 2001, 2002 ThePhpWikiProgrammingTeam.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PhpWiki-1.3.8\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-05-03 21:16+0100\n"
+"PO-Revision-Date: 2002-12-14 17:51-0500\n"
+"Last-Translator: Reini Urban <rurban@users.sf.net>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../lib/DB_Session.php:40
+#, c-format
+msgid ""
+"Your WikiDB DB backend '%s' cannot be used for DB_Session. Set "
+"USE_DB_SESSION to false."
+msgstr ""
+
+#: ../lib/DB_Session.php:519 ../lib/DB_Session.php:521
+#: ../lib/WikiDB/backend/dba.php:23 ../lib/WikiDB/backend/dba.php:25
+#, c-format
+msgid "%s: Can't open dba database"
+msgstr ""
+
+#: ../lib/DbaDatabase.php:18
+#, c-format
+msgid "The DBA handler %s is unsupported!"
+msgstr ""
+
+#: ../lib/DbaDatabase.php:19
+#, c-format
+msgid "Supported handlers are: %s"
+msgstr ""
+
+#: ../lib/ErrorManager.php:179
+#, c-format
+msgid "%s: error while handling error:"
+msgstr ""
+
+#: ../lib/FileFinder.php:149 ../lib/loadsave.php:543
+#, c-format
+msgid "%s: file not found"
+msgstr ""
+
+#: ../lib/Google.php:161
+#, c-format
+msgid ""
+"You must first obtain a license key at %s to be able to use the Google API."
+msgstr ""
+
+#: ../lib/Google.php:163
+msgid "It's free however."
+msgstr ""
+
+#: ../lib/IniConfig.php:467
+msgid "An unnamed PhpWiki"
+msgstr ""
+
+#: ../lib/IniConfig.php:470 ../themes/Wordpress/templates/actionbar.tmpl:21
+#: ../themes/default/templates/userprefs.tmpl:119
+msgid "HomePage"
+msgstr ""
+
+#: ../lib/IniConfig.php:484
+#, c-format
+msgid "Encrypted passwords cannot be used: %s."
+msgstr ""
+
+#: ../lib/IniConfig.php:490
+msgid "The admin password cannot be empty. Please update your /index.php"
+msgstr ""
+
+#: ../lib/IniConfig.php:494
+msgid ""
+"Empty db_session_table. Turn USE_DB_SESSION off or define the table name."
+msgstr ""
+
+#: ../lib/PageList.php:97
+#, c-format
+msgid "Sort by %s"
+msgstr ""
+
+#: ../lib/PageList.php:131
+msgid "Click to sort"
+msgstr ""
+
+#: ../lib/PageList.php:136
+msgid "Click to reverse sort order"
+msgstr ""
+
+#: ../lib/PageList.php:144
+#, c-format
+msgid "Click to sort by %s"
+msgstr ""
+
+#: ../lib/PageList.php:217
+msgid "Click to de-/select all pages"
+msgstr ""
+
+#: ../lib/PageList.php:280 ../lib/plugin/UnfoldSubpages.php:158
+#, c-format
+msgid " ... first %d bytes"
+msgstr ""
+
+#: ../lib/PageList.php:285
+#, c-format
+msgid " ... around %s"
+msgstr ""
+
+#: ../lib/PageList.php:308
+#, c-format
+msgid "%s not found"
+msgstr ""
+
+#: ../lib/PageList.php:352 ../lib/plugin/AuthorHistory.php:174
+#: ../lib/plugin/WantedPages.php:150
+msgid "Page Name"
+msgstr ""
+
+#: ../lib/PageList.php:427 ../lib/plugin/FullTextSearch.php:104
+msgid "<no matches>"
+msgstr ""
+
+#: ../lib/PageList.php:628 ../lib/plugin/WikiAdminSearchReplace.php:162
+msgid "Content"
+msgstr ""
+
+#: ../lib/PageList.php:644
+msgid "Select"
+msgstr ""
+
+#: ../lib/PageList.php:648
+msgid "Last Modified"
+msgstr ""
+
+#: ../lib/PageList.php:650
+msgid "Hits"
+msgstr ""
+
+#: ../lib/PageList.php:652
+msgid "Size"
+msgstr ""
+
+#: ../lib/PageList.php:655
+msgid "Last Summary"
+msgstr ""
+
+#: ../lib/PageList.php:657 ../lib/plugin/AuthorHistory.php:123
+#: ../lib/plugin/AuthorHistory.php:176 ../lib/plugin/PluginManager.php:90
+msgid "Version"
+msgstr ""
+
+#: ../lib/PageList.php:660
+msgid "Last Author"
+msgstr ""
+
+#: ../lib/PageList.php:662 ../lib/WikiGroup.php:39
+msgid "Owner"
+msgstr ""
+
+#: ../lib/PageList.php:664
+msgid "Group"
+msgstr ""
+
+#: ../lib/PageList.php:666 ../themes/default/templates/editpage.tmpl:103
+#: ../themes/default/templates/info.tmpl:127
+#: ../themes/smaller/templates/info.tmpl:133
+msgid "Locked"
+msgstr ""
+
+#: ../lib/PageList.php:667
+msgid "locked"
+msgstr ""
+
+#: ../lib/PageList.php:670
+msgid "Minor Edit"
+msgstr ""
+
+#: ../lib/PageList.php:670
+msgid "minor"
+msgstr ""
+
+#: ../lib/PageList.php:672
+msgid "Markup"
+msgstr ""
+
+#: ../lib/PageList.php:744 ../lib/plugin/WantedPages.php:177
+#, c-format
+msgid "Columns: %s."
+msgstr ""
+
+#: ../lib/PagePerm.php:261
+msgid "List this page and all subpages"
+msgstr ""
+
+#: ../lib/PagePerm.php:262
+msgid "View this page and all subpages"
+msgstr ""
+
+#: ../lib/PagePerm.php:263
+msgid "Edit this page and all subpages"
+msgstr ""
+
+#: ../lib/PagePerm.php:264
+msgid "Create a new (sub)page"
+msgstr ""
+
+#: ../lib/PagePerm.php:265
+msgid "Download the page contents"
+msgstr ""
+
+#: ../lib/PagePerm.php:266
+msgid "Change page attributes"
+msgstr ""
+
+#: ../lib/PagePerm.php:267
+msgid "Remove this page"
+msgstr ""
+
+#: ../lib/PagePerm.php:296
+#, c-format
+msgid "Unsupported ACL access type %s ignored."
+msgstr ""
+
+#: ../lib/PageType.php:132 ../lib/loadsave.php:409
+#: ../lib/plugin/WantedPages.php:80 ../themes/default/templates/info.tmpl:144
+#: ../themes/default/templates/info.tmpl:145
+#: ../themes/smaller/templates/info.tmpl:150
+#: ../themes/smaller/templates/info.tmpl:151
+msgid "InterWikiMap"
+msgstr ""
+
+#: ../lib/PageType.php:218 ../lib/loadsave.php:554
+#, c-format
+msgid "Loading InterWikiMap from external file %s."
+msgstr ""
+
+#: ../lib/PageType.php:316
+msgid "Moniker"
+msgstr ""
+
+#: ../lib/PageType.php:317
+msgid "InterWiki Address"
+msgstr ""
+
+#: ../lib/RSSWriter091.php:116 ../lib/loadsave.php:899
+#: ../lib/plugin/RecentChanges.php:258 ../lib/plugin/RecentChanges.php:270
+#: ../lib/plugin/RecentChanges.php:372 ../lib/plugin/RecentChanges.php:448
+#: ../lib/plugin/RecentChanges.php:581 ../lib/plugin/RecentChanges.php:654
+#: ../lib/plugin/RecentChanges.php:787
+#: ../themes/Portland/templates/navbar.tmpl:28
+#: ../themes/Sidebar/templates/navbar.tmpl:14
+#: ../themes/Wordpress/templates/actionbar.tmpl:24
+#: ../themes/default/templates/navbar.tmpl:10
+#: ../themes/smaller/templates/navbar.tmpl:10
+#: ../themes/wikilens/templates/navbar.tmpl:10
+msgid "RecentChanges"
+msgstr ""
+
+#: ../lib/Request.php:57 ../lib/main.php:807 ../lib/main.php:820
+#, c-format
+msgid "%s is not writable."
+msgstr ""
+
+#: ../lib/Request.php:57
+msgid "The PhpWiki access log file"
+msgstr ""
+
+#: ../lib/Request.php:59 ../lib/main.php:810
+#, c-format
+msgid "Please ensure that %s is writable, or redefine %s in index.php."
+msgstr ""
+
+#: ../lib/Request.php:60
+#, c-format
+msgid "the file '%s'"
+msgstr ""
+
+#: ../lib/Template.php:159
+#, c-format
+msgid "%4d  %s\n"
+msgstr ""
+
+#: ../lib/Theme.php:374
+msgid "Never edited."
+msgstr ""
+
+#: ../lib/Theme.php:381
+#, c-format
+msgid "%s at %s"
+msgstr ""
+
+#: ../lib/Theme.php:385
+#, c-format
+msgid "Version %s, saved %s."
+msgstr ""
+
+#: ../lib/Theme.php:387
+#, c-format
+msgid "Last edited %s."
+msgstr ""
+
+#: ../lib/Theme.php:396
+#, c-format
+msgid "Version %s, saved on %s."
+msgstr ""
+
+#: ../lib/Theme.php:398
+#, c-format
+msgid "Last edited on %s."
+msgstr ""
+
+#: ../lib/Theme.php:414
+msgid "today"
+msgstr ""
+
+#: ../lib/Theme.php:420
+msgid "yesterday"
+msgstr ""
+
+#: ../lib/Theme.php:524
+#, c-format
+msgid "Empty link to: %s"
+msgstr ""
+
+#: ../lib/Theme.php:536 ../themes/MacOSX/themeinfo.php:71
+#, c-format
+msgid "Create: %s"
+msgstr ""
+
+#: ../lib/Theme.php:552
+#, c-format
+msgid "Google:%s"
+msgstr ""
+
+#: ../lib/Theme.php:576
+#, c-format
+msgid "'%s': Bad page name"
+msgstr ""
+
+#: ../lib/Theme.php:848 ../themes/default/templates/actionbar.tmpl:5
+#: ../themes/smaller/templates/actionbar.tmpl:6
+msgid "Edit"
+msgstr ""
+
+#: ../lib/Theme.php:849 ../lib/plugin/Diff.php:36
+msgid "Diff"
+msgstr ""
+
+#: ../lib/Theme.php:850 ../themes/Sidebar/templates/signin.tmpl:16
+#: ../themes/Sidebar/templates/signin.tmpl:29
+#: ../themes/Wordpress/templates/signin.tmpl:6
+#: ../themes/Wordpress/templates/signin.tmpl:34
+#: ../themes/default/templates/signin.tmpl:16
+#: ../themes/default/templates/signin.tmpl:29
+msgid "Sign Out"
+msgstr ""
+
+#: ../lib/Theme.php:851 ../lib/WikiUser.php:205 ../lib/WikiUserNew.php:468
+#: ../lib/WikiUserNew.php:1342 ../themes/Wordpress/templates/signin.tmpl:69
+#: ../themes/default/templates/login.tmpl:70
+msgid "Sign In"
+msgstr ""
+
+#: ../lib/Theme.php:852 ../themes/MacOSX/themeinfo.php:135
+msgid "Lock Page"
+msgstr ""
+
+#: ../lib/Theme.php:853 ../themes/MacOSX/themeinfo.php:136
+msgid "Unlock Page"
+msgstr ""
+
+#: ../lib/Theme.php:854
+msgid "Remove Page"
+msgstr ""
+
+#: ../lib/Theme.php:1214
+#, c-format
+msgid "%s: has no box method"
+msgstr ""
+
+#: ../lib/Theme.php:1233
+msgid "Related Links"
+msgstr ""
+
+#: ../lib/Theme.php:1253
+msgid "External Links"
+msgstr ""
+
+#: ../lib/WikiDB.php:393
+#, c-format
+msgid "renamed from %s"
+msgstr ""
+
+#: ../lib/WikiDB.php:398
+msgid "WikiDB::renamePage() not yet implemented for this backend"
+msgstr ""
+
+#: ../lib/WikiDB.php:685
+#, c-format
+msgid "%s: Date of new revision is %s"
+msgstr ""
+
+#: ../lib/WikiDB.php:747
+#, c-format
+msgid "Optimizing %s"
+msgstr ""
+
+#: ../lib/WikiDB.php:811
+msgid "Page change"
+msgstr ""
+
+#: ../lib/WikiDB.php:835
+msgid "New Page"
+msgstr ""
+
+#: ../lib/WikiDB.php:837
+#, c-format
+msgid "Edited by: %s"
+msgstr ""
+
+#: ../lib/WikiDB.php:844
+#, c-format
+msgid "PageChange Notification of %s sent to %s"
+msgstr ""
+
+#: ../lib/WikiDB.php:847
+#, c-format
+msgid "PageChange Notification Error: Couldn't send %s to %s"
+msgstr ""
+
+#: ../lib/WikiDB.php:1292 ../themes/default/templates/homepage.tmpl:7
+#, c-format
+msgid "Describe %s here."
+msgstr ""
+
+#: ../lib/WikiDB.php:1327
+#, c-format
+msgid "Oops! Revision %s of %s seems to have been deleted!"
+msgstr ""
+
+#: ../lib/WikiDB/backend/file.php:110
+#, c-format
+msgid "'%s': corrupt file"
+msgstr ""
+
+#: ../lib/WikiDB/dba.php:17
+#, c-format
+msgid ""
+"DBA files are in the %s directory. Please read the INSTALL file and move the "
+"DB file to a permanent location or risk losing all the pages!"
+msgstr ""
+
+#: ../lib/WikiGroup.php:29 ../lib/WikiGroup.php:123
+msgid "No or unsupported GROUP_METHOD defined"
+msgstr ""
+
+#: ../lib/WikiGroup.php:32
+msgid "Every"
+msgstr ""
+
+#: ../lib/WikiGroup.php:33
+msgid "Anonymous Users"
+msgstr ""
+
+#: ../lib/WikiGroup.php:34
+msgid "Bogo Users"
+msgstr ""
+
+#: ../lib/WikiGroup.php:35
+msgid "HasHomePage"
+msgstr ""
+
+#: ../lib/WikiGroup.php:36
+msgid "Signed Users"
+msgstr ""
+
+#: ../lib/WikiGroup.php:37
+msgid "Authenticated Users"
+msgstr ""
+
+#: ../lib/WikiGroup.php:38
+msgid "Administrators"
+msgstr ""
+
+#: ../lib/WikiGroup.php:40
+msgid "Creator"
+msgstr ""
+
+#: ../lib/WikiGroup.php:165
+#, c-format
+msgid "Undefined method %s for special group %s"
+msgstr ""
+
+#: ../lib/WikiGroup.php:170 ../lib/WikiGroup.php:185 ../lib/WikiGroup.php:290
+#: ../lib/WikiGroup.php:295 ../lib/WikiGroup.php:311 ../lib/WikiGroup.php:327
+#, c-format
+msgid "Method '%s' not implemented in this GROUP_METHOD %s"
+msgstr ""
+
+#: ../lib/WikiGroup.php:455
+#, c-format
+msgid "Group %s does not exist"
+msgstr ""
+
+#: ../lib/WikiGroup.php:487
+msgid "CategoryGroup"
+msgstr ""
+
+#: ../lib/WikiGroup.php:562
+msgid "No or not enough GROUP_DB SQL statements defined"
+msgstr ""
+
+#: ../lib/WikiGroup.php:768
+msgid "AUTH_GROUP_FILE not defined"
+msgstr ""
+
+#: ../lib/WikiGroup.php:772
+#, c-format
+msgid "Cannot open AUTH_GROUP_FILE %s"
+msgstr ""
+
+#: ../lib/WikiGroup.php:879
+msgid "LDAP_AUTH_HOST not defined"
+msgstr ""
+
+#: ../lib/WikiGroup.php:885
+msgid "No LDAP in this PHP version"
+msgstr ""
+
+#: ../lib/WikiGroup.php:964 ../lib/WikiUserNew.php:1905
+#, c-format
+msgid "Unable to connect to LDAP server %s"
+msgstr ""
+
+#: ../lib/WikiPlugin.php:88
+msgid "n/a"
+msgstr ""
+
+#: ../lib/WikiPlugin.php:118 ../lib/plugin/WikiPoll.php:114
+#, c-format
+msgid "argument '%s' not declared by plugin"
+msgstr ""
+
+#: ../lib/WikiPlugin.php:189
+#, c-format
+msgid "trailing cruft in plugin args: '%s'"
+msgstr ""
+
+#: ../lib/WikiPlugin.php:309
+#, c-format
+msgid "Plugin %s failed."
+msgstr ""
+
+#: ../lib/WikiPlugin.php:315
+#, c-format
+msgid "Plugin %s disabled."
+msgstr ""
+
+#: ../lib/WikiPlugin.php:430
+#, c-format
+msgid "Include of '%s' failed"
+msgstr ""
+
+#: ../lib/WikiPlugin.php:432
+#, c-format
+msgid "%s: no such class"
+msgstr ""
+
+#: ../lib/WikiPlugin.php:437
+#, c-format
+msgid "%s: not a subclass of WikiPlugin"
+msgstr ""
+
+#: ../lib/WikiPluginCached.php:575
+#, c-format
+msgid ""
+"There is no image creation data available to id '%s'. Please reload "
+"referring page."
+msgstr ""
+
+#: ../lib/WikiUser.php:178 ../lib/WikiUserNew.php:535
+msgid "Invalid password or userid."
+msgstr ""
+
+#: ../lib/WikiUser.php:180 ../lib/WikiUserNew.php:537
+msgid "Insufficient permissions."
+msgstr ""
+
+#: ../lib/WikiUser.php:233
+msgid ""
+"You forgot to set ENCRYPTED_PASSWD to true. Please update your /index.php"
+msgstr ""
+
+#: ../lib/WikiUser.php:352
+msgid ""
+"Your home page has not been created yet so your preferences cannot not be "
+"saved."
+msgstr ""
+
+#: ../lib/WikiUser.php:369
+msgid "Your home page is locked so your preferences cannot not be saved."
+msgstr ""
+
+#: ../lib/WikiUser.php:370
+msgid "Please contact your PhpWiki administrator for assistance."
+msgstr ""
+
+#: ../lib/WikiUser.php:480
+#, c-format
+msgid ""
+"Old UserPage %s without stored password updated with empty password. Set a "
+"password in your UserPreferences."
+msgstr ""
+
+#: ../lib/WikiUserNew.php:579
+msgid "Empty Preferences or format of UserPreferences cookie not recognised."
+msgstr ""
+
+#: ../lib/WikiUserNew.php:583
+msgid "Default preferences will be used."
+msgstr ""
+
+#: ../lib/WikiUserNew.php:1085
+msgid ""
+"The length of the stored password is shorter than the system policy allows. "
+"Sorry, you cannot login.\n"
+" You have to ask the System Administrator to reset your password."
+msgstr ""
+
+#: ../lib/WikiUserNew.php:1099 ../lib/pear/File_Passwd.php:198
+msgid "The crypt function is not available in this version of PHP."
+msgstr ""
+
+#: ../lib/WikiUserNew.php:1100
+msgid ""
+"Please set ENCRYPTED_PASSWD to false in index.php and probably change "
+"ADMIN_PASSWD."
+msgstr ""
+
+#: ../lib/WikiUserNew.php:1113
+msgid "Please set ENCRYPTED_PASSWD to true in index.php."
+msgstr ""
+
+#: ../lib/WikiUserNew.php:1240
+#, c-format
+msgid ""
+"\n"
+"You stored an empty password in your '%s' page.\n"
+msgstr ""
+
+#: ../lib/WikiUserNew.php:1241
+msgid "Your access permissions are only for a BogoUser.\n"
+msgstr ""
+
+#: ../lib/WikiUserNew.php:1242
+msgid "Please set your password in UserPreferences."
+msgstr ""
+
+#: ../lib/WikiUserNew.php:1943
+msgid "Unable to connect to LDAP server "
+msgstr ""
+
+#: ../lib/WikiUserNew.php:1973
+msgid "Unable to connect to IMAP server "
+msgstr ""
+
+#: ../lib/WikiUserNew.php:2037
+#, c-format
+msgid "Couldn't connect to %s"
+msgstr ""
+
+#: ../lib/WikiUserNew.php:2429
+msgid "Email Verification"
+msgstr ""
+
+#: ../lib/WikiUserNew.php:2430
+#, c-format
+msgid ""
+"Welcome to %s!\n"
+"You email account is verified and\n"
+"will be used to send pagechange notifications.\n"
+"See %s"
+msgstr ""
+
+#: ../lib/XmlElement.php:421 ../lib/stdlib.php:1009
+#, c-format
+msgid "Can't mix '%s' with '%s' type format strings"
+msgstr ""
+
+#: ../lib/diff.php:253 ../lib/plugin/Diff.php:72
+#, c-format
+msgid "version %s"
+msgstr ""
+
+#: ../lib/diff.php:256 ../lib/plugin/Diff.php:75
+#, c-format
+msgid "by %s"
+msgstr ""
+
+#: ../lib/diff.php:258 ../lib/plugin/Diff.php:77
+msgid "None"
+msgstr ""
+
+#: ../lib/diff.php:280 ../lib/plugin/Diff.php:94
+#: ../lib/plugin/PageHistory.php:312 ../lib/plugin/PageInfo.php:59
+#, c-format
+msgid "I'm sorry, there is no such page as %s."
+msgstr ""
+
+#: ../lib/diff.php:283 ../lib/diff.php:384
+#, c-format
+msgid "Diff: %s"
+msgstr ""
+
+#: ../lib/diff.php:290 ../lib/diff.php:300 ../lib/plugin/Diff.php:102
+#: ../lib/plugin/Diff.php:112
+#, c-format
+msgid "version %d"
+msgstr ""
+
+#: ../lib/diff.php:294 ../lib/plugin/Diff.php:106
+msgid "current version"
+msgstr ""
+
+#: ../lib/diff.php:311 ../lib/plugin/Diff.php:123
+msgid "revision by previous author"
+msgstr ""
+
+#: ../lib/diff.php:317 ../lib/plugin/Diff.php:129
+msgid "previous revision"
+msgstr ""
+
+#: ../lib/diff.php:327 ../lib/plugin/Diff.php:139
+msgid "predecessor to the previous major change"
+msgstr ""
+
+#: ../lib/diff.php:337 ../lib/plugin/Diff.php:149
+#, c-format
+msgid "Differences between %s and %s of %s."
+msgstr ""
+
+#: ../lib/diff.php:340 ../lib/plugin/Diff.php:152
+msgid "Other diffs:"
+msgstr ""
+
+#: ../lib/diff.php:341 ../lib/plugin/Diff.php:153
+msgid "Previous Major Revision"
+msgstr ""
+
+#: ../lib/diff.php:342 ../lib/plugin/Diff.php:154
+msgid "Previous Revision"
+msgstr ""
+
+#: ../lib/diff.php:343 ../lib/plugin/Diff.php:155
+msgid "Previous Author"
+msgstr ""
+
+#: ../lib/diff.php:360 ../lib/plugin/Diff.php:172
+msgid "Newer page:"
+msgstr ""
+
+#: ../lib/diff.php:362 ../lib/plugin/Diff.php:174
+msgid "Older page:"
+msgstr ""
+
+#: ../lib/diff.php:370 ../lib/plugin/Diff.php:182
+msgid "Versions are identical"
+msgstr ""
+
+# This entry is important for French punctuation rules which stipulate
+# a space before each colon.
+#: ../lib/display.php:54 ../lib/plugin/PageGroup.php:102
+#: ../lib/plugin/PageGroup.php:166 ../lib/plugin/PageGroup.php:177
+#: ../lib/plugin/PageGroup.php:193 ../lib/plugin/PageGroup.php:200
+#: ../lib/plugin/PageHistory.php:216 ../lib/plugin/UnfoldSubpages.php:165
+#: ../themes/default/templates/head.tmpl:45
+#: ../themes/wikilens/templates/head.tmpl:45
+#, c-format
+msgid "%s: %s"
+msgstr ""
+
+#: ../lib/display.php:104 ../lib/display.php:111
+#: ../lib/plugin/BackLinks.php:31 ../lib/plugin/_WikiTranslation.php:50
+#: ../themes/Sidebar/templates/navbar.tmpl:26
+#: ../themes/default/templates/navbar.tmpl:23
+#: ../themes/smaller/templates/navbar.tmpl:19
+#: ../themes/wikilens/templates/navbar.tmpl:23
+msgid "BackLinks"
+msgstr ""
+
+#: ../lib/display.php:107 ../lib/display.php:114
+#, c-format
+msgid "BackLinks for %s"
+msgstr ""
+
+#: ../lib/display.php:122
+#, c-format
+msgid "(Redirected from %s)"
+msgstr ""
+
+#: ../lib/editpage.php:93 ../lib/editpage.php:367
+msgid "Your version"
+msgstr ""
+
+#: ../lib/editpage.php:93 ../lib/editpage.php:368
+msgid "Other version"
+msgstr ""
+
+#: ../lib/editpage.php:179
+#, c-format
+msgid "Edit: %s"
+msgstr ""
+
+#: ../lib/editpage.php:213
+#, c-format
+msgid "View Source: %s"
+msgstr ""
+
+#: ../lib/editpage.php:227
+msgid "Page now locked."
+msgstr ""
+
+#: ../lib/editpage.php:227
+msgid "Page now unlocked."
+msgstr ""
+
+#: ../lib/editpage.php:305
+#, c-format
+msgid "Saved: %s"
+msgstr ""
+
+#: ../lib/editpage.php:350 ../themes/MacOSX/themeinfo.php:137
+msgid "Page Locked"
+msgstr ""
+
+#: ../lib/editpage.php:351
+msgid ""
+"This page has been locked by the administrator so your changes can not be "
+"saved."
+msgstr ""
+
+#: ../lib/editpage.php:352
+msgid ""
+"(Copy your changes to the clipboard. You can try editing a different page or "
+"save your text in a text editor.)"
+msgstr ""
+
+#: ../lib/editpage.php:353
+msgid "Sorry for the inconvenience."
+msgstr ""
+
+#: ../lib/editpage.php:366 ../lib/editpage.php:619
+#, c-format
+msgid ""
+"Some of the changes could not automatically be combined.  Please look for "
+"sections beginning with '%s', and ending with '%s'.  You will need to edit "
+"those sections by hand before you click Save."
+msgstr ""
+
+#: ../lib/editpage.php:370 ../lib/editpage.php:622
+msgid "Please check it through before saving."
+msgstr ""
+
+#: ../lib/editpage.php:381
+msgid "Conflicting Edits!"
+msgstr ""
+
+#: ../lib/editpage.php:382
+msgid ""
+"In the time since you started editing this page, another user has saved a "
+"new version of it."
+msgstr ""
+
+#: ../lib/editpage.php:383
+msgid ""
+"Your changes can not be saved as they are, since doing so would overwrite "
+"the other author's changes. So, your changes and those of the other author "
+"have been combined. The result is shown below."
+msgstr ""
+
+#: ../lib/editpage.php:454
+msgid "Preview"
+msgstr ""
+
+#: ../lib/editpage.php:458
+msgid "Save"
+msgstr ""
+
+#: ../lib/editpage.php:594
+#, c-format
+msgid "Merge and Edit: %s"
+msgstr ""
+
+#: ../lib/loadsave.php:42
+msgid "Complete."
+msgstr ""
+
+#: ../lib/loadsave.php:43
+#, c-format
+msgid "Return to %s"
+msgstr ""
+
+#: ../lib/loadsave.php:129
+msgid "FullDump"
+msgstr ""
+
+#: ../lib/loadsave.php:133
+msgid "LatestSnapshot"
+msgstr ""
+
+#: ../lib/loadsave.php:175 ../lib/loadsave.php:234
+msgid "You must specify a directory to dump to"
+msgstr ""
+
+#: ../lib/loadsave.php:180 ../lib/loadsave.php:239
+#, c-format
+msgid "Cannot create directory '%s'"
+msgstr ""
+
+#: ../lib/loadsave.php:182 ../lib/loadsave.php:241
+#, c-format
+msgid "Created directory '%s' for the page dump..."
+msgstr ""
+
+#: ../lib/loadsave.php:185 ../lib/loadsave.php:244
+#, c-format
+msgid "Using directory '%s'"
+msgstr ""
+
+#: ../lib/loadsave.php:188 ../lib/loadsave.php:247
+msgid "Dumping Pages"
+msgstr ""
+
+#: ../lib/loadsave.php:202 ../lib/loadsave.php:269
+#, c-format
+msgid "saved as %s"
+msgstr ""
+
+#: ../lib/loadsave.php:212 ../lib/loadsave.php:282
+#: ../lib/plugin/text2png.php:183
+#, c-format
+msgid "couldn't open file '%s' for writing"
+msgstr ""
+
+#: ../lib/loadsave.php:218 ../lib/loadsave.php:288
+#, c-format
+msgid "%s bytes written"
+msgstr ""
+
+#: ../lib/loadsave.php:302 ../lib/loadsave.php:316
+#, c-format
+msgid "... copied to %s"
+msgstr ""
+
+#: ../lib/loadsave.php:306 ../lib/loadsave.php:320
+msgid "... not found"
+msgstr ""
+
+#: ../lib/loadsave.php:399
+msgid "Empty pagename!"
+msgstr ""
+
+#: ../lib/loadsave.php:455
+#, c-format
+msgid "from %s"
+msgstr ""
+
+#: ../lib/loadsave.php:460
+msgid "new page"
+msgstr ""
+
+#: ../lib/loadsave.php:468
+msgid "has edit conflicts - overwriting anyway"
+msgstr ""
+
+#: ../lib/loadsave.php:471 ../lib/loadsave.php:841 ../lib/loadsave.php:844
+msgid "The PhpWiki programming team"
+msgstr ""
+
+#: ../lib/loadsave.php:476
+msgid "has edit conflicts - skipped"
+msgstr ""
+
+#: ../lib/loadsave.php:484
+#, c-format
+msgid "is identical to current version %d - skipped"
+msgstr ""
+
+#: ../lib/loadsave.php:494
+#, c-format
+msgid "- saved to database as version %d"
+msgstr ""
+
+#: ../lib/loadsave.php:500 ../lib/loadsave.php:648
+#, c-format
+msgid "MIME file %s"
+msgstr ""
+
+#: ../lib/loadsave.php:501 ../lib/loadsave.php:653
+#, c-format
+msgid "Serialized file %s"
+msgstr ""
+
+#: ../lib/loadsave.php:502 ../lib/loadsave.php:667
+#, c-format
+msgid "plain file %s"
+msgstr ""
+
+#: ../lib/loadsave.php:509
+msgid "Merge Edit"
+msgstr ""
+
+#: ../lib/loadsave.php:510 ../lib/loadsave.php:516
+#: ../lib/plugin/WikiAdminSelect.php:170
+#: ../themes/Portland/templates/navbar.tmpl:30
+#: ../themes/Sidebar/templates/navbar.tmpl:29
+#: ../themes/Wordpress/templates/actionbar.tmpl:28
+#: ../themes/default/templates/head.tmpl:76
+#: ../themes/default/templates/navbar.tmpl:42
+#: ../themes/smaller/templates/navbar.tmpl:23
+#: ../themes/wikilens/templates/head.tmpl:76
+#: ../themes/wikilens/templates/navbar.tmpl:42
+msgid "PhpWikiAdministration"
+msgstr ""
+
+#: ../lib/loadsave.php:515
+msgid "Restore Anyway"
+msgstr ""
+
+#: ../lib/loadsave.php:520
+msgid " Sorry, cannot merge uploaded files."
+msgstr ""
+
+#: ../lib/loadsave.php:538
+#, c-format
+msgid "%s: not defined"
+msgstr ""
+
+#: ../lib/loadsave.php:548
+msgid "Default InterWiki map file not loaded."
+msgstr ""
+
+#: ../lib/loadsave.php:681 ../lib/loadsave.php:693
+msgid "Skipping"
+msgstr ""
+
+#: ../lib/loadsave.php:792
+#, c-format
+msgid "Unable to load: %s"
+msgstr ""
+
+#: ../lib/loadsave.php:799
+#, c-format
+msgid "Bad file type: %s"
+msgstr ""
+
+#: ../lib/loadsave.php:816
+#, c-format
+msgid "Loading '%s'"
+msgstr ""
+
+#: ../lib/loadsave.php:847
+msgid "Loading up virgin wiki"
+msgstr ""
+
+#: ../lib/loadsave.php:890
+msgid "No uploaded file to upload?"
+msgstr ""
+
+#: ../lib/loadsave.php:894
+#, c-format
+msgid "Uploading %s"
+msgstr ""
+
+#: ../lib/main.php:296
+#, c-format
+msgid "%s is disallowed on this wiki for user %s (level: %d)."
+msgstr ""
+
+#: ../lib/main.php:300
+#, c-format
+msgid "%s is disallowed on this wiki."
+msgstr ""
+
+#: ../lib/main.php:304
+#, c-format
+msgid "You must sign in to %s."
+msgstr ""
+
+#: ../lib/main.php:306
+#, c-format
+msgid "You must log in to %s."
+msgstr ""
+
+#: ../lib/main.php:308 ../lib/plugin/PluginManager.php:65
+#, c-format
+msgid "You must be an administrator to %s."
+msgstr ""
+
+#: ../lib/main.php:321
+msgid "view this page"
+msgstr ""
+
+#: ../lib/main.php:322
+msgid "diff this page"
+msgstr ""
+
+#: ../lib/main.php:323
+msgid "dump html pages"
+msgstr ""
+
+#: ../lib/main.php:324
+msgid "dump serial pages"
+msgstr ""
+
+#: ../lib/main.php:325
+msgid "edit this page"
+msgstr ""
+
+#: ../lib/main.php:326
+msgid "create this page"
+msgstr ""
+
+#: ../lib/main.php:327
+msgid "load files into this wiki"
+msgstr ""
+
+#: ../lib/main.php:328
+msgid "lock this page"
+msgstr ""
+
+#: ../lib/main.php:329
+msgid "remove this page"
+msgstr ""
+
+#: ../lib/main.php:330
+msgid "unlock this page"
+msgstr ""
+
+#: ../lib/main.php:331
+msgid "upload a zip dump"
+msgstr ""
+
+#: ../lib/main.php:332
+msgid "verify the current action"
+msgstr ""
+
+#: ../lib/main.php:333
+msgid "view the source of this page"
+msgstr ""
+
+#: ../lib/main.php:334
+msgid "access this wiki via XML-RPC"
+msgstr ""
+
+#: ../lib/main.php:335
+msgid "access this wiki via SOAP"
+msgstr ""
+
+#: ../lib/main.php:336
+msgid "download a zip dump from this wiki"
+msgstr ""
+
+#: ../lib/main.php:337
+msgid "download an html zip dump from this wiki"
+msgstr ""
+
+#: ../lib/main.php:349
+msgid "Browsing pages"
+msgstr ""
+
+#: ../lib/main.php:350
+msgid "Diffing pages"
+msgstr ""
+
+#: ../lib/main.php:351
+msgid "Dumping html pages"
+msgstr ""
+
+#: ../lib/main.php:352
+msgid "Dumping serial pages"
+msgstr ""
+
+#: ../lib/main.php:353
+msgid "Editing pages"
+msgstr ""
+
+#: ../lib/main.php:354
+msgid "Creating pages"
+msgstr ""
+
+#: ../lib/main.php:355
+msgid "Loading files"
+msgstr ""
+
+#: ../lib/main.php:356
+msgid "Locking pages"
+msgstr ""
+
+#: ../lib/main.php:357
+msgid "Removing pages"
+msgstr ""
+
+#: ../lib/main.php:358
+msgid "Unlocking pages"
+msgstr ""
+
+#: ../lib/main.php:359
+msgid "Uploading zip dumps"
+msgstr ""
+
+#: ../lib/main.php:360
+msgid "Verify the current action"
+msgstr ""
+
+#: ../lib/main.php:361
+msgid "Viewing the source of pages"
+msgstr ""
+
+#: ../lib/main.php:362
+msgid "XML-RPC access"
+msgstr ""
+
+#: ../lib/main.php:363
+msgid "SOAP access"
+msgstr ""
+
+#: ../lib/main.php:364
+msgid "Downloading zip dumps"
+msgstr ""
+
+#: ../lib/main.php:365
+msgid "Downloading html zip dumps"
+msgstr ""
+
+#: ../lib/main.php:475
+#, c-format
+msgid "%s: Bad action"
+msgstr ""
+
+#: ../lib/main.php:496
+msgid "Fatal PhpWiki Error"
+msgstr ""
+
+#: ../lib/main.php:692 ../lib/plugin/FullTextSearch.php:39
+#: ../lib/plugin/WantedPages.php:133
+msgid "FullTextSearch"
+msgstr ""
+
+#: ../lib/main.php:695 ../lib/plugin/RecentChanges.php:571
+#: ../lib/plugin/TitleSearch.php:31 ../themes/Sidebar/templates/navbar.tmpl:23
+msgid "TitleSearch"
+msgstr ""
+
+#: ../lib/main.php:808
+msgid "The session.save_path directory"
+msgstr ""
+
+#: ../lib/main.php:811
+#, c-format
+msgid "the directory '%s'"
+msgstr ""
+
+#: ../lib/main.php:815
+#, c-format
+msgid "Attempting to use the directory '%s' instead."
+msgstr ""
+
+#: ../lib/main.php:822
+msgid "Users will not be able to sign in."
+msgstr ""
+
+#: ../lib/plugin/AddComment.php:39
+msgid "AddComment"
+msgstr ""
+
+#: ../lib/plugin/AddComment.php:43
+#, c-format
+msgid "Show and add comments for %s"
+msgstr ""
+
+#: ../lib/plugin/AddComment.php:78 ../lib/plugin/WikiBlog.php:122
+#: ../lib/plugin/WikiForum.php:76
+msgid "No pagename specified"
+msgstr ""
+
+#: ../lib/plugin/AddComment.php:107 ../lib/plugin/CreateToc.php:239
+msgid "Click to display"
+msgstr ""
+
+#: ../lib/plugin/AddComment.php:109 ../lib/plugin/WikiBlog.php:288
+msgid "Comments"
+msgstr ""
+
+#: ../lib/plugin/AllPages.php:31
+msgid "AllPages"
+msgstr ""
+
+#: ../lib/plugin/AllPages.php:35
+msgid "List all pages in this wiki."
+msgstr ""
+
+#: ../lib/plugin/AllPages.php:73
+#, c-format
+msgid "Pages in this wiki (%d total):"
+msgstr ""
+
+#: ../lib/plugin/AllPages.php:85 ../lib/plugin/AllUsers.php:107
+#, c-format
+msgid "Elapsed time: %s s"
+msgstr ""
+
+#: ../lib/plugin/AllUsers.php:36
+msgid "AllUsers"
+msgstr ""
+
+#: ../lib/plugin/AllUsers.php:40
+msgid ""
+"With external authentication all users which stored their Preferences. "
+"Without external authentication all once signed-in users (from version 1.3.4 "
+"on)."
+msgstr ""
+
+#: ../lib/plugin/AllUsers.php:86
+#, c-format
+msgid "Authenticated users on this wiki (%d total):"
+msgstr ""
+
+#: ../lib/plugin/AuthorHistory.php:70
+#: ../themes/smaller/templates/info.tmpl:169
+msgid "AuthorHistory"
+msgstr ""
+
+#: ../lib/plugin/AuthorHistory.php:74
+msgid ""
+"List all page revisions edited by one user with diff links, or show a "
+"PageHistory-like list of a single page for only one user."
+msgstr ""
+
+#: ../lib/plugin/AuthorHistory.php:124 ../lib/plugin/AuthorHistory.php:177
+msgid "Minor"
+msgstr ""
+
+#: ../lib/plugin/AuthorHistory.php:125
+#: ../themes/default/templates/wikiforum.tmpl:22
+msgid "Author"
+msgstr ""
+
+#: ../lib/plugin/AuthorHistory.php:126 ../lib/plugin/AuthorHistory.php:178
+#: ../themes/Portland/templates/editpage.tmpl:60
+#: ../themes/Wordpress/templates/editpage.tmpl:78
+msgid "Summary"
+msgstr ""
+
+#: ../lib/plugin/AuthorHistory.php:127 ../lib/plugin/AuthorHistory.php:179
+msgid "Modified"
+msgstr ""
+
+#: ../lib/plugin/AuthorHistory.php:156
+#, c-format
+msgid "History of all major and minor edits by %s to page %s."
+msgstr ""
+
+#: ../lib/plugin/AuthorHistory.php:156
+#, c-format
+msgid "History of all major edits by %s to page %s."
+msgstr ""
+
+#: ../lib/plugin/AuthorHistory.php:218
+#, c-format
+msgid "History of all major and minor modifications for any page edited by %s."
+msgstr ""
+
+#: ../lib/plugin/AuthorHistory.php:218
+#, c-format
+msgid "History of major modifications for any page edited by %s."
+msgstr ""
+
+#: ../lib/plugin/BackLinks.php:35
+#, c-format
+msgid "List all pages which link to %s."
+msgstr ""
+
+#: ../lib/plugin/BackLinks.php:90
+#, c-format
+msgid "No other page links to %s yet."
+msgstr ""
+
+#: ../lib/plugin/BackLinks.php:93
+#, c-format
+msgid "One page would link to %s:"
+msgstr ""
+
+#: ../lib/plugin/BackLinks.php:102
+#, c-format
+msgid "%s pages would link to %s:"
+msgstr ""
+
+#: ../lib/plugin/BackLinks.php:110
+#, c-format
+msgid "No page links to %s."
+msgstr ""
+
+#: ../lib/plugin/BackLinks.php:115
+#, c-format
+msgid "One page links to %s:"
+msgstr ""
+
+#: ../lib/plugin/BackLinks.php:124
+#, c-format
+msgid "%s pages link to %s:"
+msgstr ""
+
+#: ../lib/plugin/Calendar.php:41 ../lib/plugin/Calendar.php:45
+#: ../themes/Sidebar/templates/body.tmpl:23
+#: ../themes/Sidebar/templates/body.tmpl:28 ../themes/Sidebar/themeinfo.php:38
+#: ../themes/Wordpress/templates/actionbar.tmpl:34
+#: ../themes/default/templates/head.tmpl:85
+#: ../themes/default/templates/homepage.tmpl:15
+#: ../themes/default/templates/navbar.tmpl:32
+#: ../themes/wikilens/templates/head.tmpl:85
+#: ../themes/wikilens/templates/navbar.tmpl:33
+msgid "Calendar"
+msgstr ""
+
+#: ../lib/plugin/Calendar.php:78
+msgid "Previous Month"
+msgstr ""
+
+#: ../lib/plugin/Calendar.php:82
+msgid "Next Month"
+msgstr ""
+
+#: ../lib/plugin/Calendar.php:149 ../lib/plugin/CalendarList.php:60
+#, c-format
+msgid "Edit %s"
+msgstr ""
+
+#: ../lib/plugin/CalendarList.php:22 ../lib/plugin/CalendarList.php:26
+msgid "CalendarList"
+msgstr ""
+
+#: ../lib/plugin/CategoryPage.php:39
+msgid "CategoryPage"
+msgstr ""
+
+#: ../lib/plugin/CategoryPage.php:43
+msgid "Create a Wiki page."
+msgstr ""
+
+#: ../lib/plugin/Comment.php:22
+msgid "Comment"
+msgstr ""
+
+#: ../lib/plugin/Comment.php:26
+msgid "Embed hidden comments in WikiPages."
+msgstr ""
+
+#: ../lib/plugin/CreatePage.php:38
+msgid "CreatePage"
+msgstr ""
+
+#: ../lib/plugin/CreatePage.php:42
+msgid "Create a Wiki page by the provided name."
+msgstr ""
+
+#: ../lib/plugin/CreatePage.php:84
+#, c-format
+msgid "%s already exists"
+msgstr ""
+
+#: ../lib/plugin/CreatePage.php:95
+msgid "Created by CreatePage"
+msgstr ""
+
+#: ../lib/plugin/CreateToc.php:36
+msgid "CreateToc"
+msgstr ""
+
+#: ../lib/plugin/CreateToc.php:40
+msgid "Automatically link headers at the top"
+msgstr ""
+
+#: ../lib/plugin/CreateToc.php:181 ../lib/plugin/IncludePage.php:116
+#: ../lib/plugin/RateIt.php:219
+msgid "no page specified"
+msgstr ""
+
+#: ../lib/plugin/CreateToc.php:241 ../lib/plugin/CreateToc.php:244
+msgid "Table Of Contents"
+msgstr ""
+
+#: ../lib/plugin/Diff.php:40
+msgid "Display differences between revisions"
+msgstr ""
+
+#: ../lib/plugin/Diff.php:52
+msgid "World"
+msgstr ""
+
+#: ../lib/plugin/EditMetaData.php:45
+msgid "EditMetaData"
+msgstr ""
+
+#: ../lib/plugin/EditMetaData.php:49
+#, c-format
+msgid "Edit metadata for %s"
+msgstr ""
+
+#: ../lib/plugin/EditMetaData.php:113
+#, c-format
+msgid "Existing page-level metadata for %s:"
+msgstr ""
+
+#: ../lib/plugin/EditMetaData.php:151
+msgid ""
+"Add or change a page-level metadata 'key=>value' pair. Note that you can "
+"remove a key by leaving value-box empty."
+msgstr ""
+
+#: ../lib/plugin/EditMetaData.php:154
+msgid "Submit"
+msgstr ""
+
+#: ../lib/plugin/EditMetaData.php:166
+msgid "Requires WikiAdmin privileges to edit."
+msgstr ""
+
+#: ../lib/plugin/ExternalSearch.php:31
+msgid "ExternalSearch"
+msgstr ""
+
+#: ../lib/plugin/ExternalSearch.php:35
+msgid "Redirects to an external web site based on form input"
+msgstr ""
+
+#: ../lib/plugin/FrameInclude.php:52
+msgid "FrameInclude"
+msgstr ""
+
+#: ../lib/plugin/FrameInclude.php:56
+msgid ""
+"Displays a url in a seperate frame inside our body. Only one frame allowed."
+msgstr ""
+
+#: ../lib/plugin/FrameInclude.php:93 ../lib/plugin/IncludePage.php:123
+#, c-format
+msgid "recursive inclusion of page %s"
+msgstr ""
+
+#: ../lib/plugin/FrameInclude.php:99 ../lib/plugin/RedirectTo.php:92
+#, c-format
+msgid "%s or %s parameter missing"
+msgstr ""
+
+#: ../lib/plugin/FrameInclude.php:105 ../lib/plugin/Transclude.php:81
+#, c-format
+msgid "recursive inclusion of url %s"
+msgstr ""
+
+#: ../lib/plugin/FrameInclude.php:112 ../lib/plugin/text2png.php:69
+#: ../lib/plugin/text2png.php:122
+#, c-format
+msgid "See %s"
+msgstr ""
+
+#: ../lib/plugin/FullTextSearch.php:43
+msgid "Search the content of all pages in this wiki."
+msgstr ""
+
+#: ../lib/plugin/FullTextSearch.php:102
+#, c-format
+msgid "only %d pages displayed"
+msgstr ""
+
+#: ../lib/plugin/FullTextSearch.php:108
+#, c-format
+msgid "Full text search results for '%s'"
+msgstr ""
+
+#: ../lib/plugin/FuzzyPages.php:40
+msgid "FuzzyPages"
+msgstr ""
+
+#: ../lib/plugin/FuzzyPages.php:44
+#, c-format
+msgid "Search for page titles similar to %s."
+msgstr ""
+
+#: ../lib/plugin/FuzzyPages.php:102
+#, c-format
+msgid "These page titles match fuzzy with '%s'"
+msgstr ""
+
+#: ../lib/plugin/FuzzyPages.php:107
+msgid "Name"
+msgstr ""
+
+#: ../lib/plugin/FuzzyPages.php:108
+msgid "Score"
+msgstr ""
+
+#: ../lib/plugin/FuzzyPages.php:169
+msgid "Spelling Score"
+msgstr ""
+
+#: ../lib/plugin/FuzzyPages.php:170
+msgid "Sound Score"
+msgstr ""
+
+#: ../lib/plugin/GoTo.php:18
+msgid "GoTo"
+msgstr ""
+
+#: ../lib/plugin/GoTo.php:22
+msgid "Go to or create page."
+msgstr ""
+
+#: ../lib/plugin/GoTo.php:59 ../lib/plugin/WikiAdminSelect.php:113
+#: ../lib/plugin/WikiAdminSelect.php:124
+msgid "Go"
+msgstr ""
+
+#: ../lib/plugin/GooglePlugin.php:43
+msgid "GooglePlugin"
+msgstr ""
+
+#: ../lib/plugin/GooglePlugin.php:47
+msgid "Make use of the Google API"
+msgstr ""
+
+#: ../lib/plugin/HelloWorld.php:46
+msgid "HelloWorld"
+msgstr ""
+
+#: ../lib/plugin/HelloWorld.php:50
+msgid "Simple Sample Plugin"
+msgstr ""
+
+#: ../lib/plugin/IncludePage.php:34
+msgid "IncludePage"
+msgstr ""
+
+#: ../lib/plugin/IncludePage.php:38
+msgid "Include text from another wiki page."
+msgstr ""
+
+#: ../lib/plugin/IncludePage.php:93 ../lib/plugin/PageGroup.php:91
+#: ../lib/plugin/UnfoldSubpages.php:117
+#, c-format
+msgid "<%s: no such section>"
+msgstr ""
+
+#: ../lib/plugin/IncludePage.php:132 ../lib/plugin/PageGroup.php:131
+#, c-format
+msgid "%s(%d): no such revision"
+msgstr ""
+
+#: ../lib/plugin/IncludePage.php:161
+#, c-format
+msgid "Included from %s"
+msgstr ""
+
+#: ../lib/plugin/IncludeSiteMap.php:52
+msgid "IncludeSiteMap"
+msgstr ""
+
+#: ../lib/plugin/IncludeSiteMap.php:56
+#, c-format
+msgid "Include recursively all linked pages starting at %s"
+msgstr ""
+
+#: ../lib/plugin/InterWikiSearch.php:31
+msgid "InterWikiSearch"
+msgstr ""
+
+#: ../lib/plugin/InterWikiSearch.php:35
+msgid "Perform searches on InterWiki sites listed in InterWikiMap."
+msgstr ""
+
+#: ../lib/plugin/InterWikiSearch.php:91
+msgid "Wiki Name"
+msgstr ""
+
+#: ../lib/plugin/InterWikiSearch.php:92 ../lib/plugin/RecentChanges.php:568
+#: ../themes/Sidebar/templates/body.tmpl:17
+msgid "Search"
+msgstr ""
+
+#: ../lib/plugin/JabberPresence.php:20
+msgid "JabberPresence"
+msgstr ""
+
+#: ../lib/plugin/JabberPresence.php:24
+msgid "Simple jabber presence plugin"
+msgstr ""
+
+#: ../lib/plugin/LikePages.php:32 ../themes/Portland/templates/navbar.tmpl:10
+#: ../themes/Wordpress/templates/actionbar.tmpl:90
+#: ../themes/default/templates/navbar.tmpl:22
+#: ../themes/smaller/templates/navbar.tmpl:18
+#: ../themes/wikilens/templates/navbar.tmpl:22
+msgid "LikePages"
+msgstr ""
+
+#: ../lib/plugin/LikePages.php:36
+#, c-format
+msgid "List page names which share an initial or final title word with '%s'."
+msgstr ""
+
+#: ../lib/plugin/LikePages.php:66
+#, c-format
+msgid "Page names with prefix '%s'"
+msgstr ""
+
+#: ../lib/plugin/LikePages.php:69
+#, c-format
+msgid "Page names with suffix '%s'"
+msgstr ""
+
+#: ../lib/plugin/LikePages.php:79
+#, c-format
+msgid "These pages share an initial or final title word with '%s'"
+msgstr ""
+
+#: ../lib/plugin/ListSubpages.php:34
+msgid "ListSubpages"
+msgstr ""
+
+#: ../lib/plugin/ListSubpages.php:38
+msgid "Lists the names of all SubPages of the current page."
+msgstr ""
+
+#: ../lib/plugin/ListSubpages.php:68 ../lib/plugin/UnfoldSubpages.php:127
+msgid "The current page has no subpages defined."
+msgstr ""
+
+#: ../lib/plugin/ListSubpages.php:80
+#, c-format
+msgid "SubPages of %s:"
+msgstr ""
+
+#: ../lib/plugin/ListSubpages.php:90 ../lib/plugin/UnfoldSubpages.php:137
+#, c-format
+msgid "recursive inclusion of page %s ignored"
+msgstr ""
+
+#: ../lib/plugin/MostPopular.php:32
+msgid "MostPopular"
+msgstr ""
+
+#: ../lib/plugin/MostPopular.php:36
+msgid "List the most popular pages."
+msgstr ""
+
+#: ../lib/plugin/MostPopular.php:64
+msgid "sortby=mtime not supported with MostPopular"
+msgstr ""
+
+#: ../lib/plugin/MostPopular.php:93
+#, c-format
+msgid "The %d most popular pages of this wiki:"
+msgstr ""
+
+#: ../lib/plugin/MostPopular.php:96
+#, c-format
+msgid "The %d least popular pages of this wiki:"
+msgstr ""
+
+#: ../lib/plugin/MostPopular.php:98
+msgid "Visited pages on this wiki, ordered by popularity:"
+msgstr ""
+
+#: ../lib/plugin/NoCache.php:39
+msgid "NoCache"
+msgstr ""
+
+#: ../lib/plugin/NoCache.php:43
+msgid "Don't cache this page."
+msgstr ""
+
+#: ../lib/plugin/OldStyleTable.php:49
+msgid "OldStyleTable"
+msgstr ""
+
+#: ../lib/plugin/OldStyleTable.php:53
+msgid "Layout tables using the old markup style."
+msgstr ""
+
+#: ../lib/plugin/OldStyleTable.php:109
+msgid "Line does not begin with a '|'."
+msgstr ""
+
+#: ../lib/plugin/OrphanedPages.php:36
+msgid "OrphanedPages"
+msgstr ""
+
+#: ../lib/plugin/OrphanedPages.php:40
+msgid "List pages which are not linked to by any other page."
+msgstr ""
+
+#: ../lib/plugin/OrphanedPages.php:85
+#, c-format
+msgid "Orphaned Pages in this wiki (%d total):"
+msgstr ""
+
+#: ../lib/plugin/PageDump.php:34 ../lib/plugin/_WikiTranslation.php:73
+#: ../themes/default/templates/actionbar.tmpl:33
+msgid "PageDump"
+msgstr ""
+
+#: ../lib/plugin/PageDump.php:37
+msgid "View a single page dump online."
+msgstr ""
+
+#: ../lib/plugin/PageDump.php:63
+#, c-format
+msgid "Page %s not found."
+msgstr ""
+
+#: ../lib/plugin/PageDump.php:118
+msgid "Download for CVS"
+msgstr ""
+
+#: ../lib/plugin/PageDump.php:123
+msgid "Download for backup"
+msgstr ""
+
+#: ../lib/plugin/PageDump.php:127
+#, c-format
+msgid "Preview: Page dump of %s"
+msgstr ""
+
+#: ../lib/plugin/PageDump.php:130
+msgid "(formatted for PhpWiki developers, not for backing up)"
+msgstr ""
+
+#: ../lib/plugin/PageDump.php:132
+msgid "Preview as backup format"
+msgstr ""
+
+#: ../lib/plugin/PageDump.php:137
+msgid "(formatted for backing up)"
+msgstr ""
+
+#: ../lib/plugin/PageDump.php:140
+msgid "Preview as developer format"
+msgstr ""
+
+#: ../lib/plugin/PageDump.php:145
+msgid ""
+"Please use one of the downloadable versions rather than copying and pasting "
+"from the above preview."
+msgstr ""
+
+#: ../lib/plugin/PageDump.php:147
+msgid ""
+"The wordwrap of the preview doesn't take nested markup or list indentation "
+"into consideration!"
+msgstr ""
+
+#: ../lib/plugin/PageDump.php:150
+msgid ""
+"PhpWiki developers should manually inspect the downloaded file for nested "
+"markup before rewrapping with emacs and checking into CVS."
+msgstr ""
+
+#: ../lib/plugin/PageDump.php:162
+msgid "Warning:"
+msgstr ""
+
+#: ../lib/plugin/PageGroup.php:44
+msgid "PageGroup"
+msgstr ""
+
+#: ../lib/plugin/PageGroup.php:48
+#, c-format
+msgid "PageGroup for %s"
+msgstr ""
+
+#: ../lib/plugin/PageGroup.php:60 ../lib/plugin/PageGroup.php:110
+#: ../lib/plugin/PrevNext.php:69
+msgid "Contents"
+msgstr ""
+
+#: ../lib/plugin/PageGroup.php:104
+#, c-format
+msgid "A required argument '%s' is missing."
+msgstr ""
+
+#: ../lib/plugin/PageGroup.php:108 ../lib/plugin/PrevNext.php:66
+msgid "Next"
+msgstr ""
+
+#: ../lib/plugin/PageGroup.php:109 ../lib/plugin/PrevNext.php:65
+msgid "Previous"
+msgstr ""
+
+#: ../lib/plugin/PageGroup.php:111 ../lib/plugin/PrevNext.php:64
+msgid "First"
+msgstr ""
+
+#: ../lib/plugin/PageGroup.php:112 ../lib/plugin/PrevNext.php:67
+msgid "Last"
+msgstr ""
+
+#: ../lib/plugin/PageHistory.php:91
+#, c-format
+msgid "PageHistory for %s"
+msgstr ""
+
+#: ../lib/plugin/PageHistory.php:98
+msgid "No revisions found"
+msgstr ""
+
+#: ../lib/plugin/PageHistory.php:103
+msgid "compare revisions"
+msgstr ""
+
+#: ../lib/plugin/PageHistory.php:108
+msgid "Check any two boxes to compare revisions."
+msgstr ""
+
+#: ../lib/plugin/PageHistory.php:109
+#, c-format
+msgid "Check any two boxes then %s."
+msgstr ""
+
+#: ../lib/plugin/PageHistory.php:166 ../lib/plugin/PageHistory.php:229
+#, c-format
+msgid "Version %d"
+msgstr ""
+
+#: ../lib/plugin/PageHistory.php:177 ../themes/MacOSX/lib/RecentChanges.php:34
+#: ../themes/Portland/lib/RecentChanges.php:14
+#: ../themes/SpaceWiki/lib/RecentChanges.php:35
+#: ../themes/Wordpress/lib/RecentChanges.php:14
+#: ../themes/default/templates/info.tmpl:18
+#: ../themes/default/templates/info.tmpl:22
+#: ../themes/smaller/templates/info.tmpl:19
+#: ../themes/smaller/templates/info.tmpl:23
+msgid "minor edit"
+msgstr ""
+
+#: ../lib/plugin/PageHistory.php:221
+msgid "History of changes."
+msgstr ""
+
+#: ../lib/plugin/PageHistory.php:247 ../lib/plugin/RecentChanges.php:65
+#: ../themes/Portland/templates/actionbar.tmpl:18
+#: ../themes/Wordpress/templates/actionbar.tmpl:69
+#: ../themes/default/templates/actionbar.tmpl:27
+#: ../themes/smaller/templates/actionbar.tmpl:33
+#: ../themes/smaller/templates/info.tmpl:168
+msgid "PageHistory"
+msgstr ""
+
+#: ../lib/plugin/PageHistory.php:251
+#, c-format
+msgid "List PageHistory for %s"
+msgstr ""
+
+#: ../lib/plugin/PageInfo.php:32
+#: ../themes/Portland/templates/actionbar.tmpl:19
+#: ../themes/Wordpress/templates/actionbar.tmpl:71
+#: ../themes/default/templates/actionbar.tmpl:29
+msgid "PageInfo"
+msgstr ""
+
+#: ../lib/plugin/PageInfo.php:36
+#, c-format
+msgid "Show extra page Info and statistics for %s."
+msgstr ""
+
+#: ../lib/plugin/PageTrail.php:45
+msgid "PageTrail"
+msgstr ""
+
+#: ../lib/plugin/PageTrail.php:49
+msgid "PageTrail Plugin"
+msgstr ""
+
+#: ../lib/plugin/PhotoAlbum.php:146
+msgid "PhotoAlbum"
+msgstr ""
+
+#: ../lib/plugin/PhotoAlbum.php:150
+msgid ""
+"Displays a set of photos listed in a text file with optional descriptions"
+msgstr ""
+
+#: ../lib/plugin/PhotoAlbum.php:433
+msgid "Fixed album location is not allowed. Please specify parameter src."
+msgstr ""
+
+#: ../lib/plugin/PhotoAlbum.php:451 ../lib/plugin/Transclude.php:85
+msgid "Bad url in src: remove all of <, >, \""
+msgstr ""
+
+#: ../lib/plugin/PhotoAlbum.php:481
+msgid "Wrong server setting: allow_url_fopen set to Off"
+msgstr ""
+
+#: ../lib/plugin/PhotoAlbum.php:486
+#, c-format
+msgid "Unable to read %s "
+msgstr ""
+
+#: ../lib/plugin/PhpHighlight.php:61
+msgid "PhpHighlight"
+msgstr ""
+
+#: ../lib/plugin/PhpHighlight.php:65
+msgid "PHP syntax highlighting"
+msgstr ""
+
+#: ../lib/plugin/PhpHighlight.php:161
+#, c-format
+msgid "Invalid color: %s"
+msgstr ""
+
+#: ../lib/plugin/PhpWeather.php:61
+msgid "PhpWeather"
+msgstr ""
+
+#: ../lib/plugin/PhpWeather.php:65
+msgid "The PhpWeather plugin provides weather reports from the Internet."
+msgstr ""
+
+#: ../lib/plugin/PhpWeather.php:86
+msgid "You have to configure it before use."
+msgstr ""
+
+#: ../lib/plugin/PhpWeather.php:102
+#, c-format
+msgid "The ICAO '%s' wasn't recognized."
+msgstr ""
+
+#: ../lib/plugin/PhpWeather.php:113
+#, c-format
+msgid "%s does not know about the language '%s', using 'en' instead."
+msgstr ""
+
+#: ../lib/plugin/PhpWeather.php:168
+msgid "Submit country"
+msgstr ""
+
+#: ../lib/plugin/PhpWeather.php:168
+msgid "Change country"
+msgstr ""
+
+#: ../lib/plugin/PhpWeather.php:187
+msgid "Submit location"
+msgstr ""
+
+#: ../lib/plugin/PluginManager.php:31
+msgid "PluginManager"
+msgstr ""
+
+#: ../lib/plugin/PluginManager.php:35
+msgid "Description: Provides a list of plugins on this wiki."
+msgstr ""
+
+#: ../lib/plugin/PluginManager.php:54
+msgid "Plugins"
+msgstr ""
+
+#: ../lib/plugin/PluginManager.php:66
+msgid "use this plugin"
+msgstr ""
+
+#: ../lib/plugin/PluginManager.php:90
+msgid "Plugin"
+msgstr ""
+
+#: ../lib/plugin/PluginManager.php:90
+msgid "Description"
+msgstr ""
+
+#: ../lib/plugin/PluginManager.php:92
+msgid "Arguments"
+msgstr ""
+
+#: ../lib/plugin/PluginManager.php:123
+#, c-format
+msgid "%s does not appear to be a WikiPlugin."
+msgstr ""
+
+#: ../lib/plugin/PluginManager.php:203 ../lib/plugin/PluginManager.php:219
+msgid "(Not a WikiWord)"
+msgstr ""
+
+#: ../lib/plugin/PopularNearby.php:44
+msgid "PopularNearby"
+msgstr ""
+
+#: ../lib/plugin/PopularNearby.php:48
+msgid "List the most popular pages nearby."
+msgstr ""
+
+#: ../lib/plugin/PopularNearby.php:73
+#, c-format
+msgid "%d best incoming links: "
+msgstr ""
+
+#: ../lib/plugin/PopularNearby.php:78
+#, c-format
+msgid "%d best outgoing links: "
+msgstr ""
+
+#: ../lib/plugin/PopularNearby.php:83
+#, c-format
+msgid "%d most popular nearby: "
+msgstr ""
+
+#: ../lib/plugin/PrevNext.php:32
+msgid "PrevNext"
+msgstr ""
+
+#: ../lib/plugin/PrevNext.php:36
+#, c-format
+msgid "Easy navigation buttons for %s"
+msgstr ""
+
+#: ../lib/plugin/PrevNext.php:68
+msgid "Up"
+msgstr ""
+
+#: ../lib/plugin/PrevNext.php:70
+msgid "Index"
+msgstr ""
+
+#: ../lib/plugin/RandomPage.php:29 ../lib/plugin/RandomPage.php:71
+msgid "RandomPage"
+msgstr ""
+
+#: ../lib/plugin/RandomPage.php:33
+msgid "Displays a list of randomly chosen pages or redirects to a random page."
+msgstr ""
+
+#: ../lib/plugin/RateIt.php:106 ../lib/plugin/RateIt.php:330
+#: ../lib/plugin/RateIt.php:687
+msgid "RateIt"
+msgstr ""
+
+#: ../lib/plugin/RateIt.php:109
+msgid "Rating system. Store user ratings per page"
+msgstr ""
+
+#: ../lib/plugin/RateIt.php:240 ../lib/plugin/RateIt.php:258
+#: ../lib/plugin/RateIt.php:294
+msgid "You must sign in"
+msgstr ""
+
+#: ../lib/plugin/RateIt.php:297
+#, c-format
+msgid "Rated by %d users | Average rating %.1f stars"
+msgstr ""
+
+#: ../lib/plugin/RateIt.php:302
+#, c-format
+msgid "Your rating was %.1f"
+msgstr ""
+
+#: ../lib/plugin/RateIt.php:307
+#, c-format
+msgid "%s prediction for you is %s stars"
+msgstr ""
+
+#: ../lib/plugin/RateIt.php:310
+#, c-format
+msgid "%s prediction for you is %.1f stars"
+msgstr ""
+
+#: ../lib/plugin/RateIt.php:330
+msgid "Rate It"
+msgstr ""
+
+#: ../lib/plugin/RateIt.php:708
+msgid "Rate the topic of this page"
+msgstr ""
+
+#: ../lib/plugin/RateIt.php:716
+msgid "Cancel rating"
+msgstr ""
+
+#: ../lib/plugin/RateIt.php:723
+msgid "No opinion"
+msgstr ""
+
+#: ../lib/plugin/RawHtml.php:39
+msgid "A plugin to provide for raw HTML within wiki pages."
+msgstr ""
+
+#: ../lib/plugin/RawHtml.php:56
+msgid "Raw HTML is disabled in this wiki."
+msgstr ""
+
+#: ../lib/plugin/RawHtml.php:65 ../lib/plugin/RedirectTo.php:82
+#, c-format
+msgid "%s is only allowed in locked pages."
+msgstr ""
+
+#: ../lib/plugin/RawHtml.php:66
+msgid "Raw HTML"
+msgstr ""
+
+#: ../lib/plugin/RecentChanges.php:105
+msgid "Deleted."
+msgstr ""
+
+#: ../lib/plugin/RecentChanges.php:107
+msgid "New page."
+msgstr ""
+
+#: ../lib/plugin/RecentChanges.php:128
+msgid "(diff)"
+msgstr ""
+
+#: ../lib/plugin/RecentChanges.php:133
+msgid "(hist)"
+msgstr ""
+
+#: ../lib/plugin/RecentChanges.php:188
+msgid "edits"
+msgstr ""
+
+#: ../lib/plugin/RecentChanges.php:190
+msgid "major edits"
+msgstr ""
+
+#: ../lib/plugin/RecentChanges.php:192
+msgid "minor edits"
+msgstr ""
+
+#: ../lib/plugin/RecentChanges.php:217
+#, c-format
+msgid "The %d most recent %s during the past day are listed below."
+msgstr ""
+
+#: ../lib/plugin/RecentChanges.php:220
+#, c-format
+msgid "The %d most recent %s during the past %s days are listed below."
+msgstr ""
+
+#: ../lib/plugin/RecentChanges.php:223
+#, c-format
+msgid "The %d most recent %s are listed below."
+msgstr ""
+
+#: ../lib/plugin/RecentChanges.php:229
+#, c-format
+msgid "The %d oldest %s during the past day are listed below."
+msgstr ""
+
+#: ../lib/plugin/RecentChanges.php:232
+#, c-format
+msgid "The %d oldest %s during the past %s days are listed below."
+msgstr ""
+
+#: ../lib/plugin/RecentChanges.php:235
+#, c-format
+msgid "The %d oldest %s are listed below."
+msgstr ""
+
+#: ../lib/plugin/RecentChanges.php:242
+#, c-format
+msgid "The most recent %s during the past day are listed below."
+msgstr ""
+
+#: ../lib/plugin/RecentChanges.php:245
+#, c-format
+msgid "The most recent %s during the past %s days are listed below."
+msgstr ""
+
+#: ../lib/plugin/RecentChanges.php:248
+#, c-format
+msgid "All %s are listed below."
+msgstr ""
+
+#: ../lib/plugin/RecentChanges.php:251
+#, c-format
+msgid "(to pages linked from \"%s\")"
+msgstr ""
+
+#: ../lib/plugin/RecentChanges.php:258 ../lib/plugin/RecentChanges.php:270
+#: ../lib/plugin/RecentChanges.php:372 ../lib/plugin/RecentChanges.php:448
+#: ../lib/plugin/RecentEdits.php:10 ../lib/plugin/RecentEdits.php:36
+#: ../lib/plugin/RelatedChanges.php:15
+#: ../themes/Portland/templates/editpage.tmpl:66
+#: ../themes/Wordpress/templates/editpage.tmpl:84
+msgid "RecentEdits"
+msgstr ""
+
+#: ../lib/plugin/RecentChanges.php:265
+msgid "No changes found"
+msgstr ""
+
+#: ../lib/plugin/RecentChanges.php:569
+msgid "Title Search"
+msgstr ""
+
+#: ../lib/plugin/RecentChanges.php:787
+msgid "Recent Changes"
+msgstr ""
+
+#: ../lib/plugin/RecentChanges.php:805
+msgid "Show minor edits for:"
+msgstr ""
+
+#: ../lib/plugin/RecentChanges.php:807
+msgid "Show all changes for:"
+msgstr ""
+
+#: ../lib/plugin/RecentChanges.php:809
+msgid "Show changes for:"
+msgstr ""
+
+#: ../lib/plugin/RecentChanges.php:829
+msgid "1 day"
+msgstr ""
+
+#: ../lib/plugin/RecentChanges.php:833
+#, c-format
+msgid "%s days"
+msgstr ""
+
+#: ../lib/plugin/RecentEdits.php:36
+msgid "Recent Edits"
+msgstr ""
+
+#: ../lib/plugin/RedirectTo.php:47
+msgid "RedirectTo"
+msgstr ""
+
+#: ../lib/plugin/RedirectTo.php:51
+msgid "Redirects to another url or page."
+msgstr ""
+
+#: ../lib/plugin/RedirectTo.php:83
+msgid "Redirect to an external url"
+msgstr ""
+
+#: ../lib/plugin/RedirectTo.php:97
+#, c-format
+msgid "Recursive redirect to self: '%s'"
+msgstr ""
+
+#: ../lib/plugin/RedirectTo.php:106
+msgid "Double redirect not allowed."
+msgstr ""
+
+#: ../lib/plugin/RedirectTo.php:110
+msgid "Viewing redirecting page."
+msgstr ""
+
+#: ../lib/plugin/RelatedChanges.php:28 ../lib/plugin/RelatedChanges.php:57
+msgid "Related Changes"
+msgstr ""
+
+#: ../lib/plugin/RelatedChanges.php:57
+#: ../themes/default/templates/navbar.tmpl:24
+#: ../themes/smaller/templates/navbar.tmpl:20
+msgid "RelatedChanges"
+msgstr ""
+
+#: ../lib/plugin/RichTable.php:32
+msgid "RichTable"
+msgstr ""
+
+#: ../lib/plugin/RichTable.php:36
+msgid "Layout tables using a very rich markup style."
+msgstr ""
+
+#: ../lib/plugin/RssFeed.php:32 ../lib/plugin/RssFeed.php:107
+msgid "RssFeed"
+msgstr ""
+
+#: ../lib/plugin/RssFeed.php:36
+msgid "Simple RSS Feed aggregator Plugin"
+msgstr ""
+
+#: ../lib/plugin/SiteMap.php:51
+msgid "SiteMap"
+msgstr ""
+
+#: ../lib/plugin/SiteMap.php:55
+msgid "Recursively get BackLinks or links"
+msgstr ""
+
+#: ../lib/plugin/SiteMap.php:168
+#, c-format
+msgid "(max. recursion level: %d)"
+msgstr ""
+
+#: ../lib/plugin/SqlResult.php:42
+msgid "SqlResult"
+msgstr ""
+
+#: ../lib/plugin/SqlResult.php:46
+msgid "Display arbitrary SQL result tables"
+msgstr ""
+
+#: ../lib/plugin/SqlResult.php:75
+msgid "No dsn specified"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:52
+msgid "SystemInfo"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:56
+msgid "Provides access to PhpWiki's lower level system information."
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:83
+msgid "db type:"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:88
+msgid "db backend:"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:96
+msgid "dba handler:"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:106
+msgid "timeout:"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:112
+msgid "no cache used"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:115
+msgid "cached pagedata:"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:116
+msgid "cached versiondata:"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:125
+#, c-format
+msgid "Keep up to %d major edits, but keep them no longer than %d days."
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:128
+#, c-format
+msgid " Keep up to %d minor edits, but keep them no longer than %d days."
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:131
+#, c-format
+msgid " Keep the latest contributions of the last %d authors up to %d days."
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:133
+#, c-format
+msgid ""
+" Additionally, try to keep the latest contributions of all authors in the "
+"last %d days (even if there are more than %d of them,) but in no case keep "
+"more than %d unique author revisions."
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:148
+#, c-format
+msgid "%d pages"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:153
+#, c-format
+msgid "%d not-empty pages"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:164 ../lib/plugin/SystemInfo.php:192
+msgid "not yet"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:181
+#, c-format
+msgid "%d homepages"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:226
+#, c-format
+msgid "total hits: %d"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:227
+#, c-format
+msgid "max: %d"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:228
+#, c-format
+msgid "mean: %2.3f"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:229
+#, c-format
+msgid "median: %d"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:230
+#, c-format
+msgid "stddev: %2.3f"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:242
+#, c-format
+msgid "%d pages with less than %d hits (<%d%%)."
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:244
+#, c-format
+msgid "%d page(s) with more than %d hits (>%d%%)."
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:286
+#, c-format
+msgid "Application size: %d Kb"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:288
+#, c-format
+msgid "Pagedata size: %d Kb"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:306
+#, c-format
+msgid "Total %d plugins: "
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:315
+#, c-format
+msgid "Total of %d languages: "
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:318
+#, c-format
+msgid "Current language: '%s'"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:320
+#, c-format
+msgid "Default language: '%s'"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:328
+#, c-format
+msgid "Total of %d themes: "
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:330
+#, c-format
+msgid "Current theme: '%s'"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:332
+#, c-format
+msgid "Default theme: '%s'"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:344
+#, c-format
+msgid "unknown argument '%s' to SystemInfo"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:367
+msgid "Application name"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:368
+msgid "PhpWiki engine version"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:369
+msgid "Database"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:370
+msgid "Cache statistics"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:371
+msgid "Page statistics"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:374
+msgid "User statistics"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:376
+msgid "Hit statistics"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:378
+msgid "Expiry parameters"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:379
+msgid "Wikiname regexp"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:380
+msgid "Allowed protocols"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:381
+msgid "Inline images"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:382
+msgid "Available plugins"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:383
+msgid "Supported languages"
+msgstr ""
+
+#: ../lib/plugin/SystemInfo.php:384
+msgid "Supported themes"
+msgstr ""
+
+#: ../lib/plugin/TexToPng.php:103
+msgid "Converts TeX to an image. May be used to embed formulas in PhpWiki."
+msgstr ""
+
+#: ../lib/plugin/TitleSearch.php:35
+msgid "Search the titles of all pages in this wiki."
+msgstr ""
+
+#: ../lib/plugin/TitleSearch.php:74
+#, c-format
+msgid "Title search results for '%s'"
+msgstr ""
+
+#: ../lib/plugin/Transclude.php:51
+msgid "Transclude"
+msgstr ""
+
+#: ../lib/plugin/Transclude.php:55
+msgid "Include an external web page within the body of a wiki page."
+msgstr ""
+
+#: ../lib/plugin/Transclude.php:76
+#, c-format
+msgid "%s parameter missing"
+msgstr ""
+
+#: ../lib/plugin/Transclude.php:88
+msgid "Transcluded page"
+msgstr ""
+
+#: ../lib/plugin/Transclude.php:97
+#, c-format
+msgid "See: %s"
+msgstr ""
+
+#: ../lib/plugin/Transclude.php:109
+#, c-format
+msgid "Transcluded from %s"
+msgstr ""
+
+#: ../lib/plugin/TranslateText.php:44 ../lib/plugin/_WikiTranslation.php:98
+msgid "TranslateText"
+msgstr ""
+
+#: ../lib/plugin/TranslateText.php:48
+msgid "Define a translation for a specified text"
+msgstr ""
+
+#: ../lib/plugin/TranslateText.php:68
+msgid "This internal action page cannot viewed."
+msgstr ""
+
+#: ../lib/plugin/TranslateText.php:69
+msgid "You can only use it via the _WikiTranslation plugin."
+msgstr ""
+
+#: ../lib/plugin/TranslateText.php:76
+msgid "Translation Error!"
+msgstr ""
+
+#: ../lib/plugin/TranslateText.php:77
+msgid ""
+"Your translated text is either empty or equal to the untranslated text. "
+"Please try again."
+msgstr ""
+
+#: ../lib/plugin/TranslateText.php:82
+msgid "ContributedTranslations"
+msgstr ""
+
+#: ../lib/plugin/TranslateText.php:96
+#, c-format
+msgid "Translate '%s' to '%s' in *%s*"
+msgstr ""
+
+#: ../lib/plugin/TranslateText.php:99
+#, c-format
+msgid "Translate %s to %s in %s"
+msgstr ""
+
+#: ../lib/plugin/TranslateText.php:103
+msgid "Thanks for adding this translation!"
+msgstr ""
+
+#: ../lib/plugin/TranslateText.php:104
+#, c-format
+msgid ""
+"Your translated text doesn't yet appear in this %s, but the Administrator "
+"will pick it up and add to the installation."
+msgstr ""
+
+#: ../lib/plugin/TranslateText.php:106
+#, c-format
+msgid "Your translation is stored in %s"
+msgstr ""
+
+#: ../lib/plugin/TranslateText.php:112 ../lib/plugin/TranslateText.php:114
+#, c-format
+msgid "From english to %s: "
+msgstr ""
+
+#: ../lib/plugin/TranslateText.php:115
+msgid "Translate"
+msgstr ""
+
+#: ../lib/plugin/TranslateText.php:118 ../lib/plugin/WikiAdminChmod.php:163
+#: ../lib/plugin/WikiAdminRemove.php:211 ../lib/plugin/WikiAdminRename.php:164
+#: ../lib/plugin/WikiAdminSearchReplace.php:185
+#: ../lib/plugin/WikiAdminSelect.php:196 ../lib/plugin/WikiAdminSelect.php:217
+#: ../lib/plugin/WikiAdminSetAcl.php:164 ../lib/plugin/WikiAdminUtils.php:203
+#: ../lib/removepage.php:22 ../themes/default/templates/login.tmpl:72
+#: ../themes/default/templates/userprefs.tmpl:237
+msgid "Cancel"
+msgstr ""
+
+#: ../lib/plugin/UnfoldSubpages.php:36
+msgid "UnfoldSubpages"
+msgstr ""
+
+#: ../lib/plugin/UnfoldSubpages.php:40
+msgid "Includes the content of all SubPages of the current page."
+msgstr ""
+
+#: ../lib/plugin/UnfoldSubpages.php:84
+#, c-format
+msgid "... first %d words"
+msgstr ""
+
+#: ../lib/plugin/UnfoldSubpages.php:152
+#, c-format
+msgid " ... first %d lines"
+msgstr ""
+
+#: ../lib/plugin/UnfoldSubpages.php:176
+#, c-format
+msgid "Included from %s:"
+msgstr ""
+
+#: ../lib/plugin/UpLoad.php:53
+msgid "Upload files to the local InterWiki Upload:<filename>"
+msgstr ""
+
+#: ../lib/plugin/UpLoad.php:123 ../lib/plugin/WikiForm.php:100
+msgid "Upload"
+msgstr ""
+
+#: ../lib/plugin/UpLoad.php:139
+msgid "ACCESS DENIED: You must log in to upload files."
+msgstr ""
+
+#: ../lib/plugin/UpLoad.php:151
+#, c-format
+msgid "Files with extension %s are not allowed"
+msgstr ""
+
+#: ../lib/plugin/UpLoad.php:155
+#, c-format
+msgid "There is already a file with name %s uploaded"
+msgstr ""
+
+#: ../lib/plugin/UpLoad.php:159
+msgid "Sorry but this file is too big"
+msgstr ""
+
+#: ../lib/plugin/UpLoad.php:167
+msgid "File successfully uploaded."
+msgstr ""
+
+#: ../lib/plugin/UpLoad.php:184
+#, c-format
+msgid "uploaded %s"
+msgstr ""
+
+#: ../lib/plugin/UpLoad.php:190
+msgid "Uploading failed: "
+msgstr ""
+
+#: ../lib/plugin/UpLoad.php:208
+msgid "Error: the upload log is not writable"
+msgstr ""
+
+#: ../lib/plugin/UpLoad.php:212
+msgid "Error: can't open the upload logfile"
+msgstr ""
+
+#: ../lib/plugin/UserPreferences.php:39
+#: ../themes/default/templates/head.tmpl:82
+#: ../themes/default/templates/homepage.tmpl:11
+#: ../themes/default/templates/navbar.tmpl:27
+#: ../themes/smaller/templates/navbar.tmpl:26
+#: ../themes/wikilens/templates/head.tmpl:82
+msgid "UserPreferences"
+msgstr ""
+
+#: ../lib/plugin/UserPreferences.php:75
+msgid ""
+"Error: The user HomePage must be a valid WikiWord. Sorry, UserPreferences "
+"cannot be saved."
+msgstr ""
+
+#: ../lib/plugin/UserPreferences.php:91
+msgid "Wrong password. Try again."
+msgstr ""
+
+#: ../lib/plugin/UserPreferences.php:110
+msgid "Password updated."
+msgstr ""
+
+#: ../lib/plugin/UserPreferences.php:112 ../lib/plugin/UserPreferences.php:115
+msgid "Password cannot be changed."
+msgstr ""
+
+#: ../lib/plugin/UserPreferences.php:119
+msgid "No changes."
+msgstr ""
+
+#: ../lib/plugin/UserPreferences.php:123
+#, c-format
+msgid "%d UserPreferences fields successfully updated."
+msgstr ""
+
+#: ../lib/plugin/VisualWiki.php:93
+msgid ""
+"Visualizes the Wiki structure in a graph using the 'dot' commandline tool "
+"from graphviz."
+msgstr ""
+
+#: ../lib/plugin/VisualWiki.php:553
+msgid "Legend"
+msgstr ""
+
+#: ../lib/plugin/VisualWiki.php:559
+msgid "days"
+msgstr ""
+
+#: ../lib/plugin/WantedPages.php:33 ../lib/plugin/WantedPages.php:65
+msgid "WantedPages"
+msgstr ""
+
+#: ../lib/plugin/WantedPages.php:37
+msgid "Lists referenced page names which do not exist yet."
+msgstr ""
+
+#: ../lib/plugin/WantedPages.php:47 ../lib/plugin/_WikiTranslation.php:79
+msgid "PgsrcTranslation"
+msgstr ""
+
+#: ../lib/plugin/WantedPages.php:99 ../themes/default/templates/online.tmpl:38
+msgid "<none>"
+msgstr ""
+
+#: ../lib/plugin/WantedPages.php:114
+#, c-format
+msgid "Wanted Pages for %s (%d total):"
+msgstr ""
+
+#: ../lib/plugin/WantedPages.php:148
+#, c-format
+msgid "Wanted Pages in this wiki (%d total):"
+msgstr ""
+
+#: ../lib/plugin/WantedPages.php:150
+msgid "Count"
+msgstr ""
+
+#: ../lib/plugin/WhoIsOnline.php:38 ../lib/plugin/WhoIsOnline.php:82
+msgid "WhoIsOnline"
+msgstr ""
+
+#: ../lib/plugin/WhoIsOnline.php:42
+msgid "Show summary information of the current user sessions."
+msgstr ""
+
+#: ../lib/plugin/WhoIsOnline.php:82
+msgid "Who is online"
+msgstr ""
+
+#: ../lib/plugin/WhoIsOnline.php:83
+#, c-format
+msgid "%d online users"
+msgstr ""
+
+#: ../lib/plugin/WhoIsOnline.php:107
+msgid "Guest"
+msgstr ""
+
+#: ../lib/plugin/WhoIsOnline.php:120
+msgid "<unknown>"
+msgstr ""
+
+#: ../lib/plugin/WhoIsOnline.php:191
+#, c-format
+msgid "%d minutes"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminChmod.php:42
+msgid "WikiAdminChmod"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminChmod.php:46 ../lib/plugin/WikiAdminSetAcl.php:45
+msgid "Set individual page permissions."
+msgstr ""
+
+#: ../lib/plugin/WikiAdminChmod.php:80
+#, c-format
+msgid "chmod page '%s' to '%s'."
+msgstr ""
+
+#: ../lib/plugin/WikiAdminChmod.php:83
+#, c-format
+msgid "Couldn't chmod page '%s' to '%s'."
+msgstr ""
+
+#: ../lib/plugin/WikiAdminChmod.php:87
+msgid "Invalid chmod string"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminChmod.php:92 ../lib/plugin/WikiAdminSetAcl.php:86
+#, c-format
+msgid "%s pages have been changed."
+msgstr ""
+
+#: ../lib/plugin/WikiAdminChmod.php:95
+#: ../lib/plugin/WikiAdminSearchReplace.php:108
+#: ../lib/plugin/WikiAdminSetAcl.php:89
+msgid "No pages changed."
+msgstr ""
+
+#: ../lib/plugin/WikiAdminChmod.php:150 ../lib/plugin/WikiAdminRemove.php:185
+#: ../lib/plugin/WikiAdminRename.php:150
+#: ../lib/plugin/WikiAdminSearchReplace.php:171
+#: ../lib/plugin/WikiAdminSetAcl.php:151
+msgid "Yes"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminChmod.php:154 ../lib/plugin/WikiAdminSetAcl.php:155
+msgid "Are you sure you want to permanently change the selected files?"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminChmod.php:157
+msgid "Chmod"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminChmod.php:159 ../lib/plugin/WikiAdminSetAcl.php:160
+msgid "Select the pages to change:"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminChmod.php:180 ../lib/plugin/WikiAdminSetAcl.php:180
+msgid "This plugin is currently under development and does not work!"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminChmod.php:181
+msgid "Chmod to permission:"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminChmod.php:184
+msgid "(ugo : rwx)"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminChmod.php:191 ../lib/plugin/WikiAdminSetAcl.php:216
+msgid "Propagate new permissions to all subpages?"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminChmod.php:193 ../lib/plugin/WikiAdminSetAcl.php:218
+msgid "(disable individual page permissions, enable inheritance)?"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminRemove.php:39
+msgid "WikiAdminRemove"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminRemove.php:43
+msgid "Permanently remove all selected pages."
+msgstr ""
+
+#: ../lib/plugin/WikiAdminRemove.php:118 ../lib/removepage.php:46
+#, c-format
+msgid "Removed page '%s' successfully."
+msgstr ""
+
+#: ../lib/plugin/WikiAdminRemove.php:180 ../lib/plugin/WikiAdminRemove.php:232
+msgid "Remove"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminRemove.php:187
+msgid "Are you sure you want to permanently remove the selected files?"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminRemove.php:190
+msgid "Remove selected pages"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminRemove.php:191
+msgid "Permanently remove the selected files:"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminRemove.php:194
+#, c-format
+msgid "Also pages which have been deleted at least %s days."
+msgstr ""
+
+#: ../lib/plugin/WikiAdminRemove.php:198
+msgid "List all pages."
+msgstr ""
+
+#: ../lib/plugin/WikiAdminRemove.php:204
+#, c-format
+msgid "(Pages which have been deleted at least %s days are already checked.)"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminRename.php:39
+msgid "WikiAdminRename"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminRename.php:43
+msgid "Rename selected pages."
+msgstr ""
+
+#: ../lib/plugin/WikiAdminRename.php:76
+#, c-format
+msgid "Renamed page '%s' to '%s'."
+msgstr ""
+
+#: ../lib/plugin/WikiAdminRename.php:79
+#, c-format
+msgid "Couldn't rename page '%s' to '%s'."
+msgstr ""
+
+#: ../lib/plugin/WikiAdminRename.php:85
+#, c-format
+msgid "%s pages have been permanently renamed."
+msgstr ""
+
+#: ../lib/plugin/WikiAdminRename.php:88
+msgid "No pages renamed."
+msgstr ""
+
+#: ../lib/plugin/WikiAdminRename.php:144
+msgid "Rename to"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminRename.php:153
+msgid "Are you sure you want to permanently rename the selected files?"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminRename.php:157
+msgid "Rename selected pages"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminRename.php:158
+msgid "Select the pages to rename:"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminRename.php:179
+msgid "Rename"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminRename.php:179
+msgid "from"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminRename.php:182
+msgid "to"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminRename.php:185
+msgid "(no regex, case-sensitive)"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminRename.php:188
+msgid "Change pagename in all linked pages also?"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminRename.php:212
+msgid "This page already exists"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminSearchReplace.php:39
+msgid "WikiAdminSearchReplace"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminSearchReplace.php:43
+msgid "Search and replace text in selected wiki pages."
+msgstr ""
+
+#: ../lib/plugin/WikiAdminSearchReplace.php:81
+#, c-format
+msgid "WikiAdminSearchReplace %s by %s"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminSearchReplace.php:89
+msgid "Error: Empty search string."
+msgstr ""
+
+#: ../lib/plugin/WikiAdminSearchReplace.php:96
+#, c-format
+msgid "Replaced '%s' with '%s' in page '%s'."
+msgstr ""
+
+#: ../lib/plugin/WikiAdminSearchReplace.php:99
+#, c-format
+msgid "Search string '%s' not found in page '%s'."
+msgstr ""
+
+#: ../lib/plugin/WikiAdminSearchReplace.php:105
+#, c-format
+msgid "%s pages changed."
+msgstr ""
+
+#: ../lib/plugin/WikiAdminSearchReplace.php:169
+msgid "Warning: The search string cannot be empty!"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminSearchReplace.php:174
+msgid ""
+"Are you sure you want to permanently search & replace text in the selected "
+"files?"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminSearchReplace.php:178
+msgid "Search & Replace"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminSearchReplace.php:180
+msgid "Select the pages to search:"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminSearchReplace.php:200
+msgid "Replace: "
+msgstr ""
+
+#: ../lib/plugin/WikiAdminSearchReplace.php:203
+msgid "by"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminSearchReplace.php:206
+msgid "(no regex) Case-exact: "
+msgstr ""
+
+#: ../lib/plugin/WikiAdminSelect.php:41
+msgid "WikiAdminSelect"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminSelect.php:45
+msgid ""
+"Allows selection of multiple pages which get passed to other WikiAdmin "
+"plugins."
+msgstr ""
+
+#: ../lib/plugin/WikiAdminSelect.php:118
+msgid "Select: "
+msgstr ""
+
+#: ../lib/plugin/WikiAdminSelect.php:157
+#, c-format
+msgid "Selected page '%s' passed to '%s'."
+msgstr ""
+
+#: ../lib/plugin/WikiAdminSelect.php:194
+msgid "Select pages"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminSetAcl.php:41
+msgid "WikiAdminSetAcl"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminSetAcl.php:74
+#, c-format
+msgid "set acl for page '%s'."
+msgstr ""
+
+#: ../lib/plugin/WikiAdminSetAcl.php:77
+#, c-format
+msgid "Couldn't setacl page '%s'."
+msgstr ""
+
+#: ../lib/plugin/WikiAdminSetAcl.php:81
+msgid "Invalid acl"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminSetAcl.php:143
+msgid "Permission"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminSetAcl.php:145
+msgid "ACL"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminSetAcl.php:158
+msgid "SetAcl"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminSetAcl.php:188
+#, c-format
+msgid "Pages: %s"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminSetAcl.php:194
+#, c-format
+msgid "page permission inherited from %s"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminSetAcl.php:196
+msgid "invidual page permission"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminSetAcl.php:198
+msgid "default page permission"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminSetAcl.php:199
+msgid "Type: "
+msgstr ""
+
+#: ../lib/plugin/WikiAdminUtils.php:29
+msgid "WikiAdminUtils"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminUtils.php:33
+msgid "Miscellaneous utility functions of use to the administrator."
+msgstr ""
+
+#: ../lib/plugin/WikiAdminUtils.php:66
+msgid "You must be an administrator to use this plugin."
+msgstr ""
+
+#: ../lib/plugin/WikiAdminUtils.php:96
+msgid "WikiAdminUtils says:"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminUtils.php:98 ../lib/stdlib.php:1352
+msgid "Okay"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminUtils.php:103
+msgid "Purge Markup Cache"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminUtils.php:104
+msgid "Delete Pages With Invalid Names"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminUtils.php:114
+msgid "Markup cache purged!"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminUtils.php:130
+msgid "No pages with bad names were found."
+msgstr ""
+
+#: ../lib/plugin/WikiAdminUtils.php:138
+#, c-format
+msgid "Deleted %s pages with invalid names:"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminUtils.php:145
+msgid "Sorry. Access Restrictions not yet implemented"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminUtils.php:153
+#: ../themes/default/templates/userprefs.tmpl:120
+msgid "E-Mail"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminUtils.php:154
+msgid "Verification Status"
+msgstr ""
+
+#: ../lib/plugin/WikiAdminUtils.php:201
+msgid "Change Verification Status"
+msgstr ""
+
+#: ../lib/plugin/WikiBlog.php:77
+msgid "WikiBlog"
+msgstr ""
+
+#: ../lib/plugin/WikiBlog.php:81
+#, c-format
+msgid "Show and add blogs for %s"
+msgstr ""
+
+#: ../lib/plugin/WikiBlog.php:156
+#, c-format
+msgid "No pagename specified for %s"
+msgstr ""
+
+#: ../lib/plugin/WikiBlog.php:186
+msgid "New comment."
+msgstr ""
+
+#: ../lib/plugin/WikiBlog.php:286
+msgid "Blogs"
+msgstr ""
+
+#: ../lib/plugin/WikiBlog.php:290
+msgid "Messages"
+msgstr ""
+
+#: ../lib/plugin/WikiBlog.php:293
+#, c-format
+msgid "%s on %s:"
+msgstr ""
+
+#: ../lib/plugin/WikiForm.php:32
+msgid "WikiForm"
+msgstr ""
+
+#: ../lib/plugin/WikiForm.php:67
+msgid "Load File"
+msgstr ""
+
+#: ../lib/plugin/WikiForm.php:73
+msgid "Login"
+msgstr ""
+
+#: ../lib/plugin/WikiForm.php:81
+msgid "Dump Pages"
+msgstr ""
+
+#: ../lib/plugin/WikiForm.php:89
+msgid "Dump Pages as XHTML"
+msgstr ""
+
+#: ../lib/plugin/WikiForm.php:104
+#, c-format
+msgid "WikiForm: %s: unknown action"
+msgstr ""
+
+#: ../lib/plugin/WikiForum.php:52
+msgid "WikiForum"
+msgstr ""
+
+#: ../lib/plugin/WikiForum.php:56
+msgid "Handles threaded topics with comments/news and provide a input form"
+msgstr ""
+
+#: ../lib/plugin/WikiPoll.php:59
+msgid "WikiPoll"
+msgstr ""
+
+#: ../lib/plugin/WikiPoll.php:63
+msgid "Enable configurable polls"
+msgstr ""
+
+#: ../lib/plugin/WikiPoll.php:161 ../lib/plugin/WikiPoll.php:230
+msgid "Sorry! You must wait at least 20 minutes until you can vote again!"
+msgstr ""
+
+#: ../lib/plugin/WikiPoll.php:187
+msgid "Not enough questions answered!"
+msgstr ""
+
+#: ../lib/plugin/WikiPoll.php:196 ../lib/plugin/WikiPoll.php:257
+#, c-format
+msgid "Missing %s for %s"
+msgstr ""
+
+#: ../lib/plugin/WikiPoll.php:224
+msgid "Ok"
+msgstr ""
+
+#: ../lib/plugin/WikiPoll.php:227
+msgid "Reset"
+msgstr ""
+
+#: ../lib/plugin/WikiPoll.php:273 ../lib/plugin/WikiPoll.php:287
+#, c-format
+msgid "  %d%% (%d/%d)"
+msgstr ""
+
+#: ../lib/plugin/WikiPoll.php:303 ../lib/plugin/WikiPoll.php:305
+msgid "The result of this poll so far:"
+msgstr ""
+
+#: ../lib/plugin/WikiPoll.php:303
+msgid "Thanks for participating!"
+msgstr ""
+
+#: ../lib/plugin/_AuthInfo.php:35
+msgid "_AuthInfo"
+msgstr ""
+
+#: ../lib/plugin/_AuthInfo.php:39
+msgid "Display general and user specific auth information."
+msgstr ""
+
+#: ../lib/plugin/_AuthInfo.php:65
+msgid "General Auth Settings"
+msgstr ""
+
+#: ../lib/plugin/_AuthInfo.php:100
+#, c-format
+msgid "Personal Auth Settings for '%s'"
+msgstr ""
+
+#: ../lib/plugin/_AuthInfo.php:102
+msgid "No userid"
+msgstr ""
+
+#: ../lib/plugin/_BackendInfo.php:30 ../lib/plugin/_WikiTranslation.php:57
+#: ../themes/Portland/templates/actionbar.tmpl:21
+#: ../themes/Wordpress/templates/actionbar.tmpl:74
+#: ../themes/default/templates/actionbar.tmpl:32
+#: ../themes/smaller/templates/info.tmpl:175
+msgid "DebugInfo"
+msgstr ""
+
+#: ../lib/plugin/_BackendInfo.php:34
+#, c-format
+msgid "Get debugging information for %s."
+msgstr ""
+
+#: ../lib/plugin/_BackendInfo.php:54
+#, c-format
+msgid "Querying backend directly for '%s'"
+msgstr ""
+
+#: ../lib/plugin/_BackendInfo.php:64
+#, c-format
+msgid "No pagedata for %s"
+msgstr ""
+
+#: ../lib/plugin/_BackendInfo.php:95
+msgid "<not displayed>"
+msgstr ""
+
+#: ../lib/plugin/_BackendInfo.php:95
+msgid "<empty>"
+msgstr ""
+
+#: ../lib/plugin/_PreferencesInfo.php:30
+#: ../themes/default/templates/userprefs.tmpl:12
+msgid "PreferencesInfo"
+msgstr ""
+
+#: ../lib/plugin/_PreferencesInfo.php:34
+#, c-format
+msgid "Get preferences information for current user %s."
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:47
+msgid "AddCommentPlugin"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:48
+msgid "AddingPages"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:49
+msgid "AuthorHistoryPlugin"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:51
+msgid "CalendarListPlugin"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:52
+msgid "CalendarPlugin"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:53
+msgid "CategoryCategory"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:54
+msgid "CategoryHomePages"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:55
+msgid "CommentPlugin"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:56
+msgid "CreateTocPlugin"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:58
+msgid "EditMetaDataPlugin"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:59
+msgid "ExternalSearchPlugin"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:60
+#: ../themes/Portland/templates/navbar.tmpl:8
+#: ../themes/Sidebar/templates/navbar.tmpl:24
+#: ../themes/default/templates/head.tmpl:35
+#: ../themes/default/templates/navbar.tmpl:11
+#: ../themes/smaller/templates/navbar.tmpl:11
+#: ../themes/wikilens/templates/head.tmpl:35
+#: ../themes/wikilens/templates/navbar.tmpl:11
+msgid "FindPage"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:61
+msgid "FrameIncludePlugin"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:62
+msgid "FullRecentChanges"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:63
+msgid "HelloWorldPlugin"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:64
+msgid "HomePageAlias"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:65
+msgid "IncludePagePlugin"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:66
+msgid "InterWiki"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:67
+msgid "LinkIcons"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:68
+msgid "MagicPhpWikiURLs"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:69
+msgid "MoreAboutMechanics"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:70
+msgid "NewMarkupTestPage"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:71
+msgid "OldMarkupTestPage"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:72
+msgid "OldStyleTablePlugin"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:74
+msgid "PageGroupTest"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:75
+msgid "PageGroupTestFour"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:76
+msgid "PageGroupTestOne"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:77
+msgid "PageGroupTestThree"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:78
+msgid "PageGroupTestTwo"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:80
+msgid "PhotoAlbumPlugin"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:81
+msgid "PhpHighlightPlugin"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:82
+msgid "PhpWeatherPlugin"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:83
+msgid "PhpWiki"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:84
+msgid "PhpWikiAdministration/Chmod"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:85
+msgid "PhpWikiAdministration/Remove"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:86
+msgid "PhpWikiAdministration/Rename"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:87
+msgid "PhpWikiAdministration/Replace"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:88
+msgid "PhpWikiDocumentation"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:89
+msgid "PhpWikiPoll"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:90
+msgid "RawHtmlPlugin"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:91
+msgid "RecentVisitors"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:92
+msgid "RedirectToPlugin"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:93
+msgid "ReleaseNotes"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:94
+msgid "RichTablePlugin"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:95
+msgid "SteveWainstead"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:96
+msgid "SystemInfoPlugin"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:97
+msgid "TranscludePlugin"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:99
+msgid "UnfoldSubpagesPlugin"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:100
+msgid "UpLoad"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:101
+msgid "WabiSabi"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:102
+msgid "WikiBlogPlugin"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:103
+msgid "WikiPlugin"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:104
+#: ../themes/default/templates/head.tmpl:70
+#: ../themes/wikilens/templates/head.tmpl:70
+msgid "WikiWikiWeb"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:113
+msgid "_WikiTranslation"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:117
+msgid "Show translations of various words or pages"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:261
+#, c-format
+msgid ""
+"TODO: Google can only translate from english and french. Find a translation "
+"service for %s to language %s"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:265
+#, c-format
+msgid "%s is empty"
+msgstr ""
+
+#: ../lib/plugin/_WikiTranslation.php:375
+#, c-format
+msgid "Define the translation for %s in %s"
+msgstr ""
+
+#: ../lib/plugin/text2png.php:46
+msgid "Convert text into a png image using GD."
+msgstr ""
+
+#: ../lib/plugin/text2png.php:67
+msgid "Sorry, this version of PHP cannot create PNG image files."
+msgstr ""
+
+#: ../lib/plugin/text2png.php:118
+msgid ""
+"PHP was unable to create a new GD image stream. Read 'lib/plugin/text2png."
+"php' for details."
+msgstr ""
+
+#: ../lib/plugin/text2png.php:168
+#, c-format
+msgid "Image saved to cache file: %s"
+msgstr ""
+
+#: ../lib/plugin/text2png.php:172
+#, c-format
+msgid "Image loaded from cache file: %s"
+msgstr ""
+
+#: ../lib/removepage.php:21
+msgid "Remove the page now"
+msgstr ""
+
+#: ../lib/removepage.php:24
+#, c-format
+msgid "You are about to remove '%s' permanently!"
+msgstr ""
+
+#: ../lib/removepage.php:37
+msgid "Someone has edited the page!"
+msgstr ""
+
+#: ../lib/removepage.php:38
+#, c-format
+msgid ""
+"Since you started the deletion process, someone has saved a new version of %"
+"s.  Please check to make sure you still want to permanently remove the page "
+"from the database."
+msgstr ""
+
+#: ../lib/removepage.php:49
+msgid "Remove page"
+msgstr ""
+
+#: ../lib/stdlib.php:245 ../lib/stdlib.php:264
+msgid "BAD URL -- remove all of <, >, \""
+msgstr ""
+
+#: ../lib/stdlib.php:326
+msgid "BAD phpwiki: URL"
+msgstr ""
+
+#: ../lib/stdlib.php:364
+msgid "Lock page to enable link"
+msgstr ""
+
+#: ../lib/stdlib.php:463
+#, c-format
+msgid "'%s': Bad page name: %s"
+msgstr ""
+
+#: ../lib/stdlib.php:500
+msgid "White space converted to single space"
+msgstr ""
+
+#: ../lib/stdlib.php:505
+msgid "Control characters not allowed"
+msgstr ""
+
+#: ../lib/stdlib.php:514
+#, c-format
+msgid "Leading %s not allowed"
+msgstr ""
+
+#: ../lib/stdlib.php:517
+msgid "';' and ':' in pagenames are deprecated"
+msgstr ""
+
+#: ../lib/stdlib.php:521
+msgid "too long"
+msgstr ""
+
+#: ../lib/stdlib.php:526
+msgid "illegal pagename"
+msgstr ""
+
+#: ../lib/stdlib.php:770
+msgid "Revision Not Found"
+msgstr ""
+
+#: ../lib/stdlib.php:771
+#, c-format
+msgid "I'm sorry.  Version %d of %s is not in the database."
+msgstr ""
+
+#: ../lib/stdlib.php:774
+msgid "Bad Version"
+msgstr ""
+
+#: ../lib/stdlib.php:910
+msgid "-???"
+msgstr ""
+
+#: ../lib/stdlib.php:913
+#, c-format
+msgid "%s b"
+msgstr ""
+
+#: ../lib/stdlib.php:915 ../themes/smaller/templates/info.tmpl:29
+#, c-format
+msgid "%s bytes"
+msgstr ""
+
+#: ../lib/stdlib.php:920
+#, c-format
+msgid "%s k"
+msgstr ""
+
+#: ../lib/stdlib.php:922 ../themes/smaller/templates/info.tmpl:32
+#, c-format
+msgid "%s Kb (%s bytes)"
+msgstr ""
+
+#: ../lib/stdlib.php:1018
+#, c-format
+msgid "%s: argument index out of range"
+msgstr ""
+
+#: ../lib/stdlib.php:1089 ../themes/Hawaiian/lib/random.php:20
+#, c-format
+msgid "%s is empty."
+msgstr ""
+
+#: ../lib/stdlib.php:1096
+#, c-format
+msgid "Unable to open directory '%s' for reading"
+msgstr ""
+
+#: ../lib/upgrade.php:50
+msgid "check for necessary pgsrc updates"
+msgstr ""
+
+#: ../lib/upgrade.php:103
+msgid "MISSING"
+msgstr ""
+
+#: ../lib/upgrade.php:107 ../lib/upgrade.php:120 ../lib/upgrade.php:192
+msgid "FAILED"
+msgstr ""
+
+#: ../lib/upgrade.php:107
+#, c-format
+msgid "no schema %s found"
+msgstr ""
+
+#: ../lib/upgrade.php:120
+msgid "not yet implemented"
+msgstr ""
+
+#: ../lib/upgrade.php:131
+msgid "check for necessary database updates"
+msgstr ""
+
+#: ../lib/upgrade.php:144
+msgid "check for table $table"
+msgstr ""
+
+#: ../lib/upgrade.php:156
+msgid "check for new session.sess_ip column"
+msgstr ""
+
+#: ../lib/upgrade.php:166 ../lib/upgrade.php:185
+msgid "ADDING"
+msgstr ""
+
+#: ../lib/upgrade.php:170 ../lib/upgrade.php:194 ../lib/upgrade.php:196
+msgid "OK"
+msgstr ""
+
+#: ../lib/upgrade.php:177
+msgid "check for page.id auto_increment flag"
+msgstr ""
+
+#: ../lib/upgrade.php:230
+msgid "Upgrade disabled: user != isAdmin"
+msgstr ""
+
+#: ../lib/upgrade.php:234
+msgid "Upgrading this PhpWiki"
+msgstr ""
+
+#: ../lib/ziplib.php:208
+msgid "Can't inflate data: zlib support not enabled in this PHP"
+msgstr ""
+
+#: ../lib/ziplib.php:394
+#, c-format
+msgid "Can't open zip file '%s' for reading"
+msgstr ""
+
+#: ../lib/ziplib.php:401
+msgid "Unexpected EOF in zip file"
+msgstr ""
+
+#: ../lib/ziplib.php:688
+#, c-format
+msgid "[%d] See [%s]"
+msgstr ""
+
+#: ../lib/ziplib.php:695
+msgid "References"
+msgstr ""
+
+#: ../themes/Hawaiian/themeinfo.php:29 ../themes/MacOSX/themeinfo.php:104
+#: ../themes/Portland/themeinfo.php:59 ../themes/Sidebar/themeinfo.php:70
+#: ../themes/SpaceWiki/themeinfo.php:43 ../themes/Wordpress/themeinfo.php:61
+#: ../themes/default/themeinfo.php:24 ../themes/smaller/themeinfo.php:52
+#: ../themes/wikilens/themeinfo.php:21
+msgid "Printer"
+msgstr ""
+
+#: ../themes/Hawaiian/themeinfo.php:30 ../themes/Portland/themeinfo.php:60
+#: ../themes/Sidebar/themeinfo.php:71 ../themes/SpaceWiki/themeinfo.php:44
+#: ../themes/Wordpress/themeinfo.php:62 ../themes/default/themeinfo.php:26
+#: ../themes/smaller/themeinfo.php:54 ../themes/wikilens/themeinfo.php:23
+msgid "Modern"
+msgstr ""
+
+#: ../themes/MacOSX/themeinfo.php:105 ../themes/default/themeinfo.php:25
+#: ../themes/smaller/themeinfo.php:53 ../themes/wikilens/themeinfo.php:22
+msgid "Top & bottom toolbars"
+msgstr ""
+
+#: ../themes/Portland/templates/actionbar.tmpl:8
+msgid "EditText"
+msgstr ""
+
+#: ../themes/Portland/templates/actionbar.tmpl:8
+#: ../themes/default/templates/actionbar.tmpl:5
+#: ../themes/smaller/templates/actionbar.tmpl:6
+msgid "Edit Old Revision"
+msgstr ""
+
+#: ../themes/Portland/templates/actionbar.tmpl:10
+#: ../themes/default/templates/actionbar.tmpl:7
+#: ../themes/default/templates/head.tmpl:45
+#: ../themes/smaller/templates/actionbar.tmpl:8
+#: ../themes/smaller/templates/info.tmpl:167
+#: ../themes/wikilens/templates/head.tmpl:45
+msgid "View Source"
+msgstr ""
+
+#: ../themes/Portland/templates/actionbar.tmpl:11
+#, c-format
+msgid "%s of this page"
+msgstr ""
+
+#: ../themes/Portland/templates/browse.tmpl:9
+#: ../themes/Portland/templates/viewsource.tmpl:5
+#: ../themes/Wordpress/templates/browse.tmpl:9
+#: ../themes/Wordpress/templates/viewsource.tmpl:7
+#: ../themes/default/templates/browse.tmpl:6
+#: ../themes/default/templates/viewsource.tmpl:5
+msgid "Note:"
+msgstr ""
+
+#: ../themes/Portland/templates/browse.tmpl:10
+#: ../themes/Portland/templates/viewsource.tmpl:10
+#: ../themes/Wordpress/templates/browse.tmpl:10
+#: ../themes/Wordpress/templates/viewsource.tmpl:12
+#: ../themes/default/templates/browse.tmpl:7
+#: ../themes/default/templates/viewsource.tmpl:10
+msgid "You are viewing an old revision of this page."
+msgstr ""
+
+#: ../themes/Portland/templates/browse.tmpl:11
+#: ../themes/Portland/templates/viewsource.tmpl:11
+#: ../themes/Wordpress/templates/browse.tmpl:11
+#: ../themes/Wordpress/templates/viewsource.tmpl:13
+#: ../themes/default/templates/browse.tmpl:8
+#: ../themes/default/templates/viewsource.tmpl:11
+msgid "View the current version"
+msgstr ""
+
+#: ../themes/Portland/templates/debug.tmpl:11
+#: ../themes/default/templates/debug.tmpl:18
+#, c-format
+msgid "Page Execution took %s seconds"
+msgstr ""
+
+#: ../themes/Portland/templates/editpage.tmpl:46
+#: ../themes/Wordpress/templates/editpage.tmpl:48
+#: ../themes/default/templates/editpage.tmpl:40
+msgid "Warning: You are editing an old revision."
+msgstr ""
+
+#: ../themes/Portland/templates/editpage.tmpl:47
+#: ../themes/Wordpress/templates/editpage.tmpl:49
+#: ../themes/default/templates/editpage.tmpl:41
+msgid "Saving this page will overwrite the current version."
+msgstr ""
+
+#: ../themes/Portland/templates/editpage.tmpl:62
+#: ../themes/Wordpress/templates/editpage.tmpl:80
+#: ../themes/default/templates/editpage.tmpl:97
+#, c-format
+msgid "Author will be logged as %s."
+msgstr ""
+
+#: ../themes/Portland/templates/editpage.tmpl:65
+#: ../themes/Wordpress/templates/editpage.tmpl:83
+#, c-format
+msgid ""
+"I'm just doing minor edits. Please divert the usual logging to %s instead."
+msgstr ""
+
+#: ../themes/Portland/templates/editpage.tmpl:69
+#: ../themes/Wordpress/templates/editpage.tmpl:68
+#: ../themes/default/templates/userprefs.tmpl:190
+msgid "Edit Area Size"
+msgstr ""
+
+#: ../themes/Portland/templates/editpage.tmpl:69
+#: ../themes/Wordpress/templates/editpage.tmpl:68
+#: ../themes/default/templates/editpage.tmpl:71
+msgid "H"
+msgstr ""
+
+#: ../themes/Portland/templates/editpage.tmpl:71
+#: ../themes/Wordpress/templates/editpage.tmpl:70
+#: ../themes/default/templates/editpage.tmpl:72
+msgid "W"
+msgstr ""
+
+#: ../themes/Portland/templates/editpage.tmpl:73
+#: ../themes/Wordpress/templates/editpage.tmpl:72
+#: ../themes/default/templates/editpage.tmpl:73
+msgid "Adjust"
+msgstr ""
+
+#: ../themes/Portland/templates/editpage.tmpl:75
+#: ../themes/Wordpress/templates/editpage.tmpl:74
+#: ../themes/default/templates/editpage.tmpl:86
+msgid "Use old markup"
+msgstr ""
+
+#: ../themes/Portland/templates/editpage.tmpl:80
+#: ../themes/Wordpress/templates/editpage.tmpl:89
+#: ../themes/default/templates/editpage.tmpl:24
+msgid "Preview only!  Changes not saved."
+msgstr ""
+
+#: ../themes/Portland/templates/editpage.tmpl:103
+#: ../themes/Portland/templates/editpage.tmpl:108
+#: ../themes/Wordpress/templates/editpage.tmpl:112
+#: ../themes/Wordpress/templates/editpage.tmpl:117
+#: ../themes/default/templates/editpage.tmpl:128
+#: ../themes/default/templates/editpage.tmpl:133
+#, c-format
+msgid "See %s tips for editing."
+msgstr ""
+
+#: ../themes/Portland/templates/editpage.tmpl:103
+#: ../themes/Portland/templates/editpage.tmpl:108
+#: ../themes/Wordpress/templates/editpage.tmpl:112
+#: ../themes/Wordpress/templates/editpage.tmpl:117
+#: ../themes/default/templates/editpage.tmpl:128
+#: ../themes/default/templates/editpage.tmpl:133
+msgid "GoodStyle"
+msgstr ""
+
+#: ../themes/Portland/templates/editpage.tmpl:104
+#: ../themes/Wordpress/templates/editpage.tmpl:113
+#: ../themes/default/templates/editpage.tmpl:129
+msgid "OldTextFormattingRules"
+msgstr ""
+
+#: ../themes/Portland/templates/editpage.tmpl:104
+#: ../themes/Portland/templates/editpage.tmpl:109
+#: ../themes/Wordpress/templates/editpage.tmpl:113
+#: ../themes/Wordpress/templates/editpage.tmpl:118
+#: ../themes/default/templates/editpage.tmpl:129
+#: ../themes/default/templates/editpage.tmpl:134
+msgid "Synopsis"
+msgstr ""
+
+#: ../themes/Portland/templates/editpage.tmpl:109
+#: ../themes/Wordpress/templates/editpage.tmpl:118
+#: ../themes/default/templates/editpage.tmpl:134
+msgid "TextFormattingRules"
+msgstr ""
+
+#: ../themes/Portland/templates/viewsource.tmpl:6
+#: ../themes/Wordpress/templates/viewsource.tmpl:8
+#: ../themes/default/templates/viewsource.tmpl:6
+msgid "This page has been locked by the administrator and cannot be edited."
+msgstr ""
+
+#: ../themes/Sidebar/templates/body.tmpl:51
+msgid "PhpWiki News"
+msgstr ""
+
+#: ../themes/Sidebar/templates/navbar.tmpl:23
+msgid "?"
+msgstr ""
+
+#: ../themes/Sidebar/templates/navbar.tmpl:24
+msgid "Full Search"
+msgstr ""
+
+#: ../themes/Sidebar/templates/navbar.tmpl:29
+#: ../themes/default/templates/navbar.tmpl:42
+#: ../themes/wikilens/templates/navbar.tmpl:42
+msgid "Admin"
+msgstr ""
+
+#: ../themes/Sidebar/templates/signin.tmpl:18
+#, c-format
+msgid "User: %s"
+msgstr ""
+
+#: ../themes/Sidebar/templates/signin.tmpl:38
+#: ../themes/Wordpress/templates/signin.tmpl:42
+#: ../themes/default/templates/signin.tmpl:38
+msgid "Enter your UserId to sign in"
+msgstr ""
+
+#: ../themes/Sidebar/templates/signin.tmpl:41
+#, c-format
+msgid "(User: %s)"
+msgstr ""
+
+#: ../themes/Sidebar/templates/signin.tmpl:44
+#: ../themes/Wordpress/templates/signin.tmpl:48
+#: ../themes/default/templates/signin.tmpl:44
+#, c-format
+msgid "Click to authenticate as %s"
+msgstr ""
+
+#: ../themes/Sidebar/templates/signin.tmpl:65
+#: ../themes/Sidebar/templates/signin.tmpl:68
+msgid "Sign In:"
+msgstr ""
+
+#: ../themes/SpaceWiki/lib/RecentChanges.php:55
+msgid "diff"
+msgstr ""
+
+#: ../themes/Wordpress/templates/actionbar.tmpl:10
+msgid "Edit this page"
+msgstr ""
+
+#: ../themes/Wordpress/templates/actionbar.tmpl:10
+msgid "Edit old revision"
+msgstr ""
+
+#: ../themes/Wordpress/templates/actionbar.tmpl:12
+msgid "View source"
+msgstr ""
+
+#: ../themes/Wordpress/templates/actionbar.tmpl:41
+#: ../themes/default/templates/navbar.tmpl:38
+#: ../themes/wikilens/templates/navbar.tmpl:39
+msgid "Today"
+msgstr ""
+
+#: ../themes/Wordpress/templates/signin.tmpl:21
+#: ../themes/default/templates/signin.tmpl:18
+#, c-format
+msgid "Authenticated as %s"
+msgstr ""
+
+#: ../themes/Wordpress/templates/signin.tmpl:45
+#: ../themes/default/templates/signin.tmpl:41
+#, c-format
+msgid "You are signed but not authenticated as %s. "
+msgstr ""
+
+#: ../themes/Wordpress/templates/signin.tmpl:66
+#: ../themes/default/templates/signin.tmpl:65
+#: ../themes/default/templates/signin.tmpl:68
+msgid "Sign in as:"
+msgstr ""
+
+#: ../themes/default/templates/actionbar.tmpl:36
+#: ../themes/smaller/templates/actionbar.tmpl:38
+#: ../themes/smaller/templates/info.tmpl:178
+msgid "PurgeHtmlCache"
+msgstr ""
+
+#: ../themes/default/templates/actionbar.tmpl:37
+#: ../themes/smaller/templates/actionbar.tmpl:39
+#: ../themes/smaller/templates/info.tmpl:179
+msgid ""
+"Purge HTML cache for this page. Regenerate from WikiMarkup when next "
+"accessed."
+msgstr ""
+
+#: ../themes/default/templates/blogform.tmpl:10
+msgid "Add a Comment"
+msgstr ""
+
+#: ../themes/default/templates/blogform.tmpl:12
+#: ../themes/default/templates/editpage.tmpl:79
+#: ../themes/default/templates/info.tmpl:72
+#: ../themes/smaller/templates/info.tmpl:78
+msgid "Summary:"
+msgstr ""
+
+#: ../themes/default/templates/blogform.tmpl:16
+msgid "Comment:"
+msgstr ""
+
+#: ../themes/default/templates/comment.tmpl:18
+#: ../themes/default/templates/wikiblog.tmpl:19
+#, c-format
+msgid "Comment modified on %s by %s"
+msgstr ""
+
+#: ../themes/default/templates/comment.tmpl:28
+#, c-format
+msgid "%s by %s"
+msgstr ""
+
+#: ../themes/default/templates/dialog.tmpl:18
+msgid "Dialog"
+msgstr ""
+
+#: ../themes/default/templates/editpage.tmpl:28
+#, c-format
+msgid ""
+"Please continue editing.  (You'll find your %s at the bottom of the page.)"
+msgstr ""
+
+#: ../themes/default/templates/editpage.tmpl:29
+msgid "edit area"
+msgstr ""
+
+#: ../themes/default/templates/editpage.tmpl:70
+msgid "Edit Area Size:"
+msgstr ""
+
+#: ../themes/default/templates/editpage.tmpl:85
+msgid "This is a minor change."
+msgstr ""
+
+#: ../themes/default/templates/forumadd.tmpl:11
+#: ../themes/default/templates/wikiforum.tmpl:20
+msgid "Post new"
+msgstr ""
+
+#: ../themes/default/templates/forumadd.tmpl:13
+msgid "Title:"
+msgstr ""
+
+#: ../themes/default/templates/forumadd.tmpl:17
+#: ../themes/default/templates/wikiforum.tmpl:29
+msgid "Reply"
+msgstr ""
+
+#: ../themes/default/templates/head.tmpl:31
+#: ../themes/wikilens/templates/head.tmpl:31
+msgid "HowToUseWiki"
+msgstr ""
+
+#: ../themes/default/templates/head.tmpl:68
+#: ../themes/wikilens/templates/head.tmpl:68
+msgid "SandBox"
+msgstr ""
+
+#: ../themes/default/templates/homepage.tmpl:10
+#, c-format
+msgid "You can personalize various settings in %s."
+msgstr ""
+
+#: ../themes/default/templates/homepage.tmpl:13
+msgid "(Your preferences are stored as hidden data within this page)."
+msgstr ""
+
+#: ../themes/default/templates/homepage.tmpl:16
+#, c-format
+msgid "The %s subpage enables simple weblogging."
+msgstr ""
+
+#: ../themes/default/templates/homepage.tmpl:37
+msgid "CategoryHomepage"
+msgstr ""
+
+#: ../themes/default/templates/info.tmpl:31
+#: ../themes/smaller/templates/info.tmpl:37
+msgid "1 word"
+msgstr ""
+
+#: ../themes/default/templates/info.tmpl:33
+#: ../themes/smaller/templates/info.tmpl:39
+#, c-format
+msgid "%s words"
+msgstr ""
+
+#: ../themes/default/templates/info.tmpl:37
+#: ../themes/smaller/templates/info.tmpl:43
+#, c-format
+msgid "Version %s"
+msgstr ""
+
+#: ../themes/default/templates/info.tmpl:38
+#: ../themes/smaller/templates/info.tmpl:44
+msgid "Original (1.2 or 1.0)"
+msgstr ""
+
+#: ../themes/default/templates/info.tmpl:65
+#: ../themes/smaller/templates/info.tmpl:71
+msgid "Last Modified:"
+msgstr ""
+
+#: ../themes/default/templates/info.tmpl:66
+#: ../themes/smaller/templates/info.tmpl:72
+msgid "Last Author:"
+msgstr ""
+
+#: ../themes/default/templates/info.tmpl:67
+#: ../themes/smaller/templates/info.tmpl:73
+msgid "Last Summary:"
+msgstr ""
+
+#: ../themes/default/templates/info.tmpl:70
+#: ../themes/smaller/templates/info.tmpl:76
+msgid "Saved on:"
+msgstr ""
+
+#: ../themes/default/templates/info.tmpl:71
+#: ../themes/smaller/templates/info.tmpl:77
+msgid "Author:"
+msgstr ""
+
+#: ../themes/default/templates/info.tmpl:75
+#: ../themes/smaller/templates/info.tmpl:81
+#, c-format
+msgid "Statistics about %s."
+msgstr ""
+
+#: ../themes/default/templates/info.tmpl:86
+#: ../themes/smaller/templates/info.tmpl:92
+msgid "Supplanted on:"
+msgstr ""
+
+#: ../themes/default/templates/info.tmpl:103
+#: ../themes/smaller/templates/info.tmpl:109
+msgid "Page Version:"
+msgstr ""
+
+#: ../themes/default/templates/info.tmpl:107
+#: ../themes/smaller/templates/info.tmpl:113
+msgid "Markup:"
+msgstr ""
+
+#: ../themes/default/templates/info.tmpl:111
+#: ../themes/smaller/templates/info.tmpl:117
+msgid "Size:"
+msgstr ""
+
+#: ../themes/default/templates/info.tmpl:116
+#: ../themes/smaller/templates/info.tmpl:122
+msgid "Hits:"
+msgstr ""
+
+#: ../themes/default/templates/info.tmpl:133
+#: ../themes/smaller/templates/info.tmpl:139
+msgid "home page"
+msgstr ""
+
+#: ../themes/default/templates/info.tmpl:136
+#: ../themes/smaller/templates/info.tmpl:142
+msgid "User page"
+msgstr ""
+
+#: ../themes/default/templates/info.tmpl:139
+#: ../themes/smaller/templates/info.tmpl:145
+msgid "Action page"
+msgstr ""
+
+#: ../themes/default/templates/info.tmpl:142
+#: ../themes/smaller/templates/info.tmpl:148
+msgid "Blog page"
+msgstr ""
+
+#: ../themes/default/templates/info.tmpl:148
+#: ../themes/smaller/templates/info.tmpl:154
+msgid "Subpage"
+msgstr ""
+
+#: ../themes/default/templates/info.tmpl:153
+#: ../themes/smaller/templates/info.tmpl:159
+msgid "Page Type:"
+msgstr ""
+
+#: ../themes/default/templates/login.tmpl:40
+#, c-format
+msgid ""
+"You may sign in using any [WikiWord|AddingPages] as a user id. (Any "
+"characters in %s etc. may be used too). The user id will be used as a link "
+"in RecentChanges to your home page."
+msgstr ""
+
+#: ../themes/default/templates/login.tmpl:52
+msgid ""
+"Note: Only if you create your personal HomePage with same the pagename as "
+"your user id, you will be able to store your UserPreferences. Otherwise not."
+msgstr ""
+
+#: ../themes/default/templates/login.tmpl:55
+msgid "New users may use an empty password."
+msgstr ""
+
+#: ../themes/default/templates/login.tmpl:62
+msgid "UserId:"
+msgstr ""
+
+#: ../themes/default/templates/login.tmpl:66
+msgid "Password:"
+msgstr ""
+
+#: ../themes/default/templates/navbar.tmpl:27
+msgid "Preferences"
+msgstr ""
+
+#: ../themes/default/templates/nochanges.tmpl:3
+msgid "Edit aborted."
+msgstr ""
+
+#: ../themes/default/templates/nochanges.tmpl:4
+msgid "You have not made any changes so no new version has been saved."
+msgstr ""
+
+#: ../themes/default/templates/online.tmpl:8
+#: ../themes/default/templates/online.tmpl:16
+#: ../themes/default/templates/online.tmpl:59
+msgid "Who Is Online"
+msgstr ""
+
+#: ../themes/default/templates/online.tmpl:16
+msgid "Switch to detailed list"
+msgstr ""
+
+#: ../themes/default/templates/online.tmpl:22
+#, c-format
+msgid "Our users created a total of %d pages."
+msgstr ""
+
+#: ../themes/default/templates/online.tmpl:23
+#, c-format
+msgid "We have a total of %d registered users."
+msgstr ""
+
+#: ../themes/default/templates/online.tmpl:24
+#, c-format
+msgid "The newest registered user is %s"
+msgstr ""
+
+#: ../themes/default/templates/online.tmpl:28
+#, c-format
+msgid ""
+"In total there are %d user sessions online :: Unique %d Registered and %d "
+"Guests"
+msgstr ""
+
+#: ../themes/default/templates/online.tmpl:30
+#, c-format
+msgid "Most users ever online was %d at %s"
+msgstr ""
+
+#: ../themes/default/templates/online.tmpl:31
+msgid "Registered Users Online: "
+msgstr ""
+
+#: ../themes/default/templates/online.tmpl:43
+msgid "Admin is also online."
+msgstr ""
+
+#: ../themes/default/templates/online.tmpl:47
+#, c-format
+msgid "This data is based on users active over the past %s"
+msgstr ""
+
+#: ../themes/default/templates/online.tmpl:51
+msgid "Sorry, no dynamic DB Session support."
+msgstr ""
+
+#: ../themes/default/templates/online.tmpl:59
+msgid "Switch to summary"
+msgstr ""
+
+#: ../themes/default/templates/online.tmpl:63
+msgid "Registered Users"
+msgstr ""
+
+#: ../themes/default/templates/online.tmpl:78
+msgid "Guests"
+msgstr ""
+
+#: ../themes/default/templates/pagelink.tmpl:13
+msgid "|<<"
+msgstr ""
+
+#: ../themes/default/templates/pagelink.tmpl:15
+msgid "<<"
+msgstr ""
+
+#: ../themes/default/templates/pagelink.tmpl:18
+#, c-format
+msgid " - %d / %d - "
+msgstr ""
+
+#: ../themes/default/templates/pagelink.tmpl:21
+msgid ">>"
+msgstr ""
+
+#: ../themes/default/templates/pagelink.tmpl:23
+msgid ">>|"
+msgstr ""
+
+#: ../themes/default/templates/redirect.tmpl:19
+#: ../themes/default/templates/redirect.tmpl:40
+msgid "Redirect"
+msgstr ""
+
+#: ../themes/default/templates/redirect.tmpl:42
+#, c-format
+msgid "Your browser should have redirected you to %s."
+msgstr ""
+
+#: ../themes/default/templates/savepage.tmpl:6
+#, c-format
+msgid "Thank you for editing %s."
+msgstr ""
+
+#: ../themes/default/templates/savepage.tmpl:7
+msgid "Your careful attention to detail is much appreciated."
+msgstr ""
+
+#: ../themes/default/templates/savepage.tmpl:10
+msgid "Warning!"
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:12
+msgid "_PreferencesInfo"
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:58
+#: ../themes/default/templates/userprefs.tmpl:60
+msgid "<system theme>"
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:69
+#: ../themes/default/templates/userprefs.tmpl:95
+msgid "Personal theme:"
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:75
+#: ../themes/default/templates/userprefs.tmpl:77
+msgid "<system language>"
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:86
+#: ../themes/default/templates/userprefs.tmpl:96
+msgid "Personal language:"
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:105
+#, c-format
+msgid "User preferences for user '%s':"
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:114
+msgid "UserId"
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:118
+msgid "Auth Level"
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:118
+msgid "Auth Method"
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:122
+msgid "Theme"
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:122
+msgid "Current Theme"
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:123
+msgid "Language"
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:123
+msgid "Current Language"
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:129
+msgid "Change Password"
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:131
+msgid "New password"
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:134
+msgid "Type it again"
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:140
+msgid "E-mail"
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:142
+msgid "Your E-Mail:"
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:150
+msgid "Status:"
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:152
+msgid "Email verified."
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:154
+msgid "Email not yet verified."
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:157
+msgid "Note, that user accounts with bouncing emails will be disabled."
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:161
+msgid "Get an email notification at changes of the following pages:"
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:164
+msgid ""
+"Enter pages seperated by space or comma. Wildcards (fileglobbing) allowed."
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:171
+msgid "Appearance"
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:173
+msgid "Here you can override site-specific default values."
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:174
+msgid "Currently not recommended!"
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:178
+#: ../themes/default/templates/userprefs.tmpl:181
+msgid "System default:"
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:182
+#, c-format
+msgid "Hide %s:"
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:184
+msgid ""
+"Hide or show LinkIcons (if supported by the current theme). Useful for text-"
+"only browsers or slow connections."
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:185
+#, c-format
+msgid "Add %s:"
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:187
+#, c-format
+msgid ""
+"Add Google links to unknown pages behind the '?', and the create action "
+"behind the pagename instead. See %s."
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:193
+msgid "Height"
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:200
+msgid "Width"
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:209
+msgid ""
+"Note that many browsers will automatically adjust the width of the editing "
+"area so that it fills the browser window.  In this case, the width "
+"preference will be ignored."
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:212
+msgid "Time Zone"
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:215
+#, c-format
+msgid "Add %s hours to the server's local time when reporting times."
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:219
+#, c-format
+msgid "The current time at the server is %s."
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:221
+#, c-format
+msgid "With the current offset, this would be reported as %s."
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:226
+msgid "Date Format"
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:229
+msgid "Show relative dates using 'Today' and 'Yesterday'"
+msgstr ""
+
+#: ../themes/default/templates/userprefs.tmpl:236
+msgid "Update Preferences"
+msgstr ""
+
+#: ../themes/default/templates/wikiforum.tmpl:20
+msgid "New Topic"
+msgstr ""
+
+#: ../themes/default/templates/wikiforum.tmpl:22
+msgid "Message"
+msgstr ""
+
+#: ../themes/default/templates/wikiforum.tmpl:28
+#, c-format
+msgid "Posted: %s"
+msgstr ""
+
+#: ../themes/smaller/templates/actionbar.tmpl:31
+msgid "Info"
+msgstr ""
+
+#: ../themes/smaller/templates/info.tmpl:171
+msgid "Diff previous Revision"
+msgstr ""
+
+#: ../themes/smaller/templates/info.tmpl:172
+msgid "Diff previous Author"
+msgstr ""
+
+#: ../themes/wikilens/themeinfo.php:157
+msgid "Rate"
+msgstr ""

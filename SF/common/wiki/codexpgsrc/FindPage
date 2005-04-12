@@ -1,0 +1,34 @@
+Date: Fri, 1 Mar 2002 23:44:38 -0500
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.3-jeffs-hacks)
+X-Rcs-Id: $Id$
+Content-Type: application/x-phpwiki;
+  pagename=FindPage;
+  flags=PAGE_LOCKED;
+  pgsrc_version="2 $Revision$";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+Here are some good starting points for browsing.
+
+* HowToUseWiki gives you the quick lowdown on Wiki markup.
+* RecentChanges recorded automatically.
+* MoreAboutMechanics of browsing and editing on this server.
+
+Here's a title search. Try something like ''wiki'' or ''sandwich''.
+<?plugin-form TitleSearch?>
+
+Use the following for a full text search. This takes a few seconds.
+The results will show all lines on a given page which contain a match.
+<?plugin-form FullTextSearch?>
+
+In a fuzzy pages search the titles of all pages are examined to find
+those which are similarly spelled or similar sounding (english).
+<?plugin-form FuzzyPages?>
+
+------
+
+! Tips
+Separate words with a space. All words have to match.
+%%%To exclude words from a title search or full text search, prepend a '-'.
+%%%Example: 'wiki text -php' looks for all pages containing the words 'wiki' __and__ 'text', but __not__ containing the word 'php'.

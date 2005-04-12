@@ -1,0 +1,37 @@
+<?php // -*-php-*-
+/* 
+PrettyWiki startup script.
+Sample to override the default wiki (Theme, Language, DB, ...).
+Also For Wiki farms.
+Simplifies USE_PATH_INFO paths:
+  "/<home>/wiki/HomePage" instead of "/<home>/wiki/index.php/HomePage"
+The simpliest version is 
+   <?php include "index.php"; include "lib/main.php"; ?>
+
+Note: This needs a webserver handler to PHP like this on Apache:
+
+<Files "wiki">
+  SetHandler application/x-httpd-php
+  <defined APACHE2>
+    AcceptPathInfo on
+  </defined>
+</Files> 
+*/
+define('VIRTUAL_PATH', $_SERVER['SCRIPT_NAME']);
+
+// Override the default configuration for CONSTANTS before index.php
+$LANG='de'; $LC_ALL='de_DE';
+define('THEME', 'default');
+define('WIKI_NAME', "WikiDemo:$LANG:" . THEME);
+
+// Load the default configuration.
+include "index.php";
+
+// Override the default configuration for VARIABLES after index.php:
+// E.g. Use another DB:
+//$DBParams['dbtype'] = 'SQL';
+//$DBParams['dsn'] = 'mysql://<user>:<pass>@localhost/<username>_wiki';
+
+// Start the wiki
+include "lib/main.php";
+?>

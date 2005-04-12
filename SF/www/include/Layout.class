@@ -137,6 +137,14 @@ class Layout extends Error {
         // -->
         </SCRIPT>
         <link rel="stylesheet" type="text/css" href="<? echo util_get_css_theme(); ?>">
+<?php
+              if(is_array($params['stylesheet'])) {
+                  foreach($params['stylesheet'] as $css) {
+                      print '<link rel="stylesheet" type="text/css" href="'.$css.'" />';
+                      print "\n";
+                  }
+              }
+?>
         <link rel="SHORTCUT ICON" href="<? echo util_get_image_theme("favicon.ico"); ?>">
         <link rel="alternate" title="<? echo $GLOBALS['sys_name'].$Language->getText('include_layout','latest_news_rss'); ?>" href="<? echo $sys_url; ?>/export/rss_sfnews.php" type="application/rss+xml">
         <link rel="alternate" title="<? echo $GLOBALS['sys_name'].$Language->getText('include_layout','newest_releases_rss'); ?>" href="<? echo $sys_url; ?>/export/rss_sfnewreleases.php" type="application/rss+xml">

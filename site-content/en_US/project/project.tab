@@ -156,6 +156,7 @@ project_admin_permissions	pack_download	Package Download
 project_admin_permissions	rel_download	Release Download
 project_admin_permissions	doc_access	Document Access
 project_admin_permissions	docgroup_access	Document Group Access
+project_admin_permissions	wiki_access	Wiki Access
 project_admin_permissions	pack	package $1
 project_admin_permissions	rel	release $1
 project_admin_permissions	doc	document $1
@@ -531,9 +532,11 @@ project_stats_source_code_access_utils	no_access	No $1 for this period.
 project_stats_source_code_access_utils	service_disabled	$1 Service Disabled
 project_stats_source_code_access_utils	subversion	Subversion
 project_stats_source_code_access_utils	docs	Docs
+project_stats_source_code_access_utils	wiki	Wiki
 project_stats_source_code_access_utils	cvs_co_upd	CVS checkouts_updates
 project_stats_source_code_access_utils	svn_access	Subversion accesses
 project_stats_source_code_access_utils	doc_download	Document Download
+project_stats_source_code_access_utils	wiki_read	Wiki pages read
 project_stats_source_code_access_utils	cvs_access	CVS Access
 project_stats_source_code_access_utils	doc	Document
 project_stats_source_code_access_utils	co_upd	Checkouts/Update

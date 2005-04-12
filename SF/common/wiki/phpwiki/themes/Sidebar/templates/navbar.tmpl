@@ -1,0 +1,32 @@
+<?php // -*-html-*-
+    rcs_id('$Id$');
+    $s = $Theme->getButtonSeparator();
+    /* Fixme:  This doesn't work as expected. 
+    _autosplitWikiWords must be set to true in themeinfo.php */
+    $split = $Theme->_autosplitWikiWords;
+    global $Theme;
+    $Theme->setAutosplitWikiWords(true);
+?>
+<!-- The top navigation/search bar -->
+<form action="<?= WikiURL(_("TitleSearch"))?>" target="_top"
+      method="get" accept-charset="<?=CHARSET?>" style="display:inline">
+<div id="navbuttons">
+<!-- &middot; ?= WikiLink(_("RecentChanges"), "button") ? -->
+<input type="hidden" name="auto_redirect" value="1" />
+<?php if (! USE_PATH_INFO) { ?>
+<input type="hidden" name="pagename" value="<?=_("TitleSearch")?>" />
+<?php } ?>
+<input type="hidden" name="nocache" value="purge" />
+<input type="text"  name="s" size="12" maxlength="256"
+             title='<?=_("Quick Search")?>'
+             onmouseover="window.status='<?=_("Quick Search")?>'; return true;"
+             onmouseout="window.status=''; return true;" /><?= Button(_("TitleSearch"), _("?")) ?> 
+<?=$s?><?= WikiLink(_("FindPage"), "button",_("Full Search")) ?>
+<?php if (0 and !empty($revision)) { ?>
+<?=$s?><?= Button("BackLinks", _("BackLinks")) ?> 
+<?php } ?>
+<?php if (!empty($user) && $user->isAdmin()) { ?>
+<?=$s?><?= WikiLink(_("PhpWikiAdministration"), "button", _("Admin")) ?>
+<?php }     
+$Theme->setAutosplitWikiWords($split); ?></div>
+</form>

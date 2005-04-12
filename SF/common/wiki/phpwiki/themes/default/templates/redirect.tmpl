@@ -1,0 +1,51 @@
+<?php
+rcs_id('$Id$');
+/* 
+ * Redirect output.
+ */
+printf("<?xml version=\"1.0\" encoding=\"%s\"?>\n", CHARSET);
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<!-- $Id$ -->
+<meta http-equiv="Content-Type" content="text/html; charset=<?=CHARSET?>" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="generator" content="PhpWiki" />
+<meta name="PHPWIKI_VERSION" content="<?=PHPWIKI_VERSION?>" />
+<base href="<?=PHPWIKI_BASE_URL?>" />
+<?= $Theme->getCSS() ?>
+<title><?=WIKI_NAME . ' - ' . _("Redirect")?></title>
+
+<!-- Sneaky tricks to try to get browser to "redirect" -->
+<meta http-equiv="Refresh" content="2;url=<?=$REDIRECT_URL?>"/>
+<script type="text/javascript"><!--
+  function redirect(url) {
+    if (typeof location.replace == 'function')
+      location.replace(url);
+    else if (typeof location.assign == 'function')
+      location.assign(url);
+    else
+      window.location = url;
+  }
+--></script>
+</head>
+<body>
+
+<script type="text/javascript"><!--
+redirect("<?=new RawXML(addslashes($REDIRECT_URL))?>");
+--></script>
+
+<h1><?=_("Redirect")?></h1>
+<p class="redirect-message">
+  <?= fmt("Your browser should have redirected you to %s.",
+          HTML::a(array('href' => $REDIRECT_URL), $REDIRECT_URL)) ?>
+</p>
+</body>
+<?php
+if (defined('DEBUG') and DEBUG) {
+    printf("<!-- phpwiki source: \n%s-->\n", $RCS_IDS);
+}
+?>
+</html>

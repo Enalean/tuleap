@@ -1,0 +1,338 @@
+<?php
+/* 
+ * Copyright 2005, STMicroelectronics
+ *
+ * Originally written by Manuel Vacelet
+ *
+ * This file is a part of CodeX.
+ *
+ * CodeX is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * CodeX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+require_once(dirname(__FILE__).'/WikiViews.class');
+require_once(dirname(__FILE__).'/../lib/WikiPage.class');
+require_once(dirname(__FILE__).'/../lib/WikiEntry.class');
+
+/**
+ * 
+ * @package   WikiService
+ * @copyright STMicroelectronics, 2005
+ * @author    Manuel Vacelet <manuel.vacelet-abecedaire@st.com>
+ * @license   http://opensource.org/licenses/gpl-license.php GPL
+ */
+class WikiServiceViews extends WikiViews {
+
+  /**
+   * WikiServiceViews - Constructor
+   */
+  function WikiServiceViews($id=0, $view=null) {
+    parent::WikiView($id, $view);
+    $this->html_params['title']  = 'Wiki for '.group_getname($this->gid);
+  }
+
+  /**
+   * View
+   *
+   * <p>Default browsing page of Wiki Service.
+   * It display</p>
+   * <ul>
+   * <li>Wiki Documents - _browseWikiDocuments</li>
+   * <li>Project Wiki Pages _browseProjectWikiPage </li>
+   * <li>Empty Wiki Pages - _browseEmptyWikiPage</li>
+   * <li>A form to create new pages - _newPageForm</li>
+   * </ul>
+   * @access public 
+   */
+  function browse() {
+    list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_browse_documents', $this->gid);
+    $hurl='<a href="'.$this->wikiLink.'&'.$hideUrl.'">'.$hideImg.'</a>';
+    print '<h3>'.$hurl.'Wiki Documents</h3>';
+    if(!$hideFlag) {
+      $this->_browseWikiDocuments();
+    }
+  }
+
+  /**
+   *  View
+   *
+   * <p>Page browsing page of Wiki Service.
+   * It display</p>
+   * <ul>
+   * <li>Project Wiki Pages _browseProjectWikiPage </li>
+   * <li>Empty Wiki Pages - _browseEmptyWikiPage</li>
+   * <li>A form to create new pages - _newPageForm</li>
+   * </ul>
+   * @access public 
+   */
+  function browsePages() {    
+    list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_browse_pages', $this->gid);
+    $hurl='<a href="'.$this->wikiLink.'&view=browsePages&'.$hideUrl.'">'.$hideImg.'</a>';
+    print '<h3>'.$hurl.'Wiki Pages</h3>';
+    if(!$hideFlag) {
+      $this->_browseProjectWikiPages();
+    }
+
+    list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_browse_empty_pages', $this->gid);
+    $hurl='<a href="'.$this->wikiLink.'&view=browsePages&'.$hideUrl.'">'.$hideImg.'</a>';
+    print '<h3>'.$hurl.'Empty Wiki Pages</h3>';
+    if(!$hideFlag) {
+      $this->_browseEmptyWikiPages();
+    }
+
+    list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_create_new_page', $this->gid);
+    $hurl='<a href="'.$this->wikiLink.'&view=browsePages&'.$hideUrl.'">'.$hideImg.'</a>';
+    print '<h3>'.$hurl.'Create a new Wiki Page</h3>';
+    if(!$hideFlag) {
+      $this->_newPageForm($this->wikiLink.'&view=browsePages');
+    }
+
+  }
+
+ /**
+   *
+   */
+  function _browseWikiDocuments() {
+    $wem = new WikiEntryManager($this->gid);
+    $wem->getList();
+
+    print '<ul class="WikiEntries">';
+    while($we = $wem->iterate()) {
+      $href = $this->_buildPageLink($we->wikiPage, $we->getName());
+      if(!empty($href)) {
+	print '<li>'.$href.'
+	       <p><em>Description:</em>'.$we->getDesc().'</p>
+               </li>';
+      }
+    }
+    print '</ul>';
+  }
+
+  /**
+   * _browseProjectPages - private
+   *
+   * Display project pages.
+   */
+  function _browseProjectWikiPages() {
+    $allPages =& WikiPage::getAllUserPages();
+    $this->_browsePages($allPages);
+  }
+
+  /**
+   * _browseProjectPages - private
+   *
+   * Display empty pages.
+   */
+  function _browseEmptyWikiPages() {
+    $wpw = new WikiPageWrapper($this->gid);
+    $allPages =& $wpw->getProjectEmptyLinks();
+    $this->_browsePages($allPages);
+  }
+
+  /**
+   * _browsePages - private
+   *
+   * @param  string[] $pagelist List of page names.
+   */
+  function _browsePages(&$pageList) {
+    print '<ul class="WikiEntries">';
+    foreach($pageList as $pagename) {
+      $wp = new WikiPage($this->gid, $pagename);
+      $href = $this->_buildPageLink($wp);
+      if(!empty($href)) {
+	print '<li>'.$href.'</li>';
+      }
+    }
+    print "</ul>";
+  }
+
+  /**
+   * _newPageForm - private
+   *
+   * @param  string $addr Form action adress
+   */
+  function _newPageForm($addr='') {
+    print '
+    <form name="newPage" method="post" action="'.$addr.'">
+      <input type="hidden" name="action" value="add_temp_page" />
+      <input type="hidden" name="group_id" value="'.$this->gid.'" />
+      Page Name: <input type="text" name="name" value="" size="20" maxsize="255" />
+      <input type="submit" value="Create">
+    </form>';
+   }
+
+  /**
+   * _buildPageLink - private
+   *
+   * @param  WikiPage $wikiPage
+   * @param  string   $title
+   * @return string   $href
+   */
+  function _buildPageLink(&$wikiPage, $title=null) {
+    $href='';
+    // Check permission
+    if($wikiPage->isAutorized(user_getid())) {
+
+      $pagename = $wikiPage->getPagename();
+
+      // Build page link
+      if(empty($title))
+	$title = $pagename;
+ 
+      $link='/wiki/index.php?group_id='.$this->gid.'&pagename='.urlencode($pagename);
+      
+      
+      // Display title as emphasis if corresponding page does't exist.
+      if($wikiPage->isEmpty()) {
+	$title = '<em>'.$title.'</em>';
+	$link .= '&action=edit';
+      }
+      
+      // Build Lock image if a permission is set on the corresponding page
+      if($wikiPage->permissionExist()) {
+	$permLink = $this->wikiLink.'&view=pagePerms&id='.$wikiPage->getId();
+	$title = $title.'<img src="'.util_get_image_theme("ic/lock.png").'" border="0" alt="Lock" />';
+      }
+
+      $href='<a href="'.$link.'">'.$title.'</a>';
+    }
+    return $href;
+  }
+
+  /**
+   * header - public
+   */
+  function header() {
+    if(!browser_is_netscape4()) {
+      $this->html_params['stylesheet'][] = '/wiki/themes/CodeX/phpwiki.css';
+    }
+    parent::header();
+  }
+
+  /**
+   * displayMenu - public
+   */
+  function displayMenu() {
+
+    print '
+    <table class="ServiceMenu">
+      <tr>
+        <td>';
+    print '
+    <ul class="ServiceMenu">
+      <li><a href="'.$this->wikiLink.'">Documents</a>&nbsp;|&nbsp;</li>
+      <li><a href="'.$this->wikiLink.'&view=browsePages">Pages</a>&nbsp;|&nbsp;</li>
+      <li><a href="'.$this->wikiAdminLink.'">Admin</a>&nbsp;|&nbsp;</li>
+';
+    if("wiki" == $this->view) {
+      print '
+      <li><a href="'.$_SERVER['REQUEST_URI'].'&pv=1">Lite view</a>&nbsp;|&nbsp;</li>
+      <li><a href="/wiki/index.php?pagename=TextFormattingRules&group_id=1">Text Formatting Rules</a>&nbsp;|&nbsp;</li>
+      <li><a href="/wiki/index.php?pagename=PhpWikiDocumentation&group_id=1">Help</a></li>';
+    }
+    
+    print '
+    </ul>';
+
+
+  print '
+  </td>
+  <td align="right">';
+  
+  $wiki = new Wiki($this->gid);
+  
+  $permText = '<img src="'.util_get_image_theme("ic/lock.png").'" border="0" alt="Lock" />';
+  $permInfo  = 'No user rights defined on this Wiki';
+  $wikiperms = false;
+  if ($wiki->permissionExist()) {
+    $wikiperms = true;
+    $permInfo =  'There are permissions set on this Wiki '.$permText;
+  }
+  
+  if('wiki' == $this->view) {
+    $permType = 'Wiki Page';
+    // User is browsing a wiki page
+    $wp = new WikiPage($this->gid, $_REQUEST['pagename']);
+    
+    
+    $permLink = $this->wikiLink.'&view=pagePerms&id='.$wp->getId();
+
+    if($wp->permissionExist()) {
+      
+      $permInfo =  'There are specific permissions on this Wiki Page '.$permText;
+    }
+    else {
+      if(!$wikiperms) {
+	$permInfo = 'No user rights defined on this Wiki Page';
+      }
+    }
+  }
+  
+  print $permInfo;
+
+  
+  print '
+     </td>
+    </tr>
+  </table>';
+  }
+
+  /**
+   * View "Wiki Page access rights permissions"
+   *
+   * Page for Wiki Page permissions modifications.
+   *
+   * @access public 
+   */
+  function pagePerms() {
+     $postUrl = '/wiki/index.php?group_id='.$this->gid.'&action=setWikiPagePerms';     
+     $this->_pagePerms($postUrl);
+     print '<p><a href="'.$this->wikiLink.'">Back</a></p>'."\n";
+  }
+
+  /**
+   * View display a Wiki Page.
+   *
+   * @access public
+   */
+  function wiki() {
+    $wp = new WikiPage($this->gid, $_REQUEST['pagename']);
+
+    $wp->log(user_getid());
+
+    $lite = false;
+    if($_GET['pv'] == 1) {
+      $lite = true;
+    }
+    $wp->render($lite);
+  }
+
+  /**
+   * display - public
+   * @access public
+   */
+  function display($view='') {
+    switch($view) {
+    case 'empty':
+      $this->wiki();
+      break;
+
+    case 'browse':
+    default:
+      $this->header();
+      if(!empty($view)) $this->$view();
+      $this->footer();
+    }
+  }
+}
+?>

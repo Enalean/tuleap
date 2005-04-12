@@ -9,23 +9,10 @@
 
 $Language->loadLanguageMsg('project/project');
 
-// filedownload_logs_daily
-function filedownload_logs_daily($project, $span = 7, $who="allusers") {
-  global $Language;
-
-	// check first if service is used by this project
-	// if service not used return immediately
-	$q = "SELECT is_used FROM service WHERE short_name='file' AND group_id=".$project->getGroupId();
-	$res = db_query($q);
-	if (db_result($res,0,0) == 0) {
-		print '<P><B><U>'.$Language->getText('project_stats_source_code_access_utils','service_disabled',$Language->getText('project_stats_source_code_access_utils','file_download')).'</U></B>';
-		return;
-	}
-
-	if (! $span ) { 
-		$span = 7;
-	}
-
+/**
+ * Prepare SQL query for given date and given person
+ */
+function logs_cond($project, $span, $who) {
 	// Get information about the date $span days ago 
 	// Start at midnight $span days ago
 	$time_back = localtime( (time() - ($span * 86400)), 1);
@@ -53,68 +40,87 @@ function filedownload_logs_daily($project, $span = 7, $who="allusers") {
 	    }
 	}
 
-	$sql  = "SELECT filedownload_log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, frs_file.filename AS filename "
-	."FROM filedownload_log, user, frs_file, frs_release, frs_package "
-	."WHERE filedownload_log.user_id=user.user_id ".$cond
-	."AND frs_package.group_id=".$project->getGroupId()." "
-        ."AND filedownload_log.filerelease_id=frs_file.file_id "
-        ."AND frs_release.release_id=frs_file.release_id "
-        ."AND frs_package.package_id=frs_release.package_id "
-	."AND filedownload_log.time >= $begin_date "
-	."ORDER BY time ASC";
+  $whereclause = "log.user_id=user.user_id ".$cond
+    ." AND log.time >= $begin_date ";
 	
-	// Executions will continue until morale improves.
-	$res = db_query( $sql);
+  return $whereclause;
+}
 
-	print '<P><B><U>'.$Language->getText('project_stats_source_code_access_utils','access_for_past_x_days',array($Language->getText('project_stats_source_code_access_utils','file_download'),$span)).'</U></B>';
+/**
+ * Process SQL query and display corresponding result
+ */
+function logs_display($sql, $span, $field) {
+  // Executions will continue until morale improves.
+  $res = db_query( $sql );
 
-	// if there are any days, we have valid data.
+  print '<p><u><b>'.$Language->getText('project_stats_source_code_access_utils','access_for_past_x_days',array($field,$span));
 	if ( ($nb_downloads = db_numrows( $res )) >= 1 ) {
 
-	print '<B><U> - '. $Language->getText('project_stats_source_code_access_utils','in_total',$nb_downloads).'</U></B>';
+    print ' - '.$Language->getText('project_stats_source_code_access_utils','in_total',$nb_downloads).'</u></b>';
 
-		print	'<P><TABLE width="100%" cellpadding=2 cellspacing=0 border=0>'
-			. '<TR valign="top">'
-			. '<TD><B>'.$Language->getText('project_admin_utils','date').'</B></TD>'
-			. '<TD><B>'.$Language->getText('project_export_utils','user').'</B></TD>'
-			. '<TD><B>'.$Language->getText('project_export_artifact_history_export','email').'</B></TD>'
-			. '<TD align><B>'.$Language->getText('project_stats_source_code_access_utils','file').'</B></TD>'
-			. '<TD align="right"><B>'.$Language->getText('project_stats_source_code_access_utils','time_gmt').'</B></TD>'
-			. '</TR>' . "\n";
+    print '<table width="100%" cellpadding="2" cellspacing="0" border="0">'."\n"
+      . '<tr valign="top">'."\n"
+      . ' <th>'.$Language->getText('project_admin_utils','date').'</th>'."\n"
+      . ' <th>'.$Language->getText('project_admin_utils','user').'</th>'."\n"
+      . ' <th>'.$Language->getText('project_export_artifact_history_export','email').'</th>'."\n"
+      . ' <th>'.$field.'</th>'."\n"
+      . ' <th align="right">'.$Language->getText('project_stats_source_code_access_utils','time_gmt').'</th>'."\n"
+      . '</tr>'."\n";
 		
 		while ( $row = db_fetch_array($res) ) {
 			$i++;
-			print	'<TR class="' . util_get_alt_row_color($i) . '">'
-				. '<TD>' . gmstrftime("%e %b %Y", $row["time"] ) . '</TD>'
-			    . '<TD>' . $row["realname"] .' ('.util_user_link($row["user_name"]).')</TD>'
-				. '<TD>' . $row["email"] . '</TD>'
-				. '<TD>' . $row["filename"] . '</TD>'				. '<TD align="right">' . gmstrftime("%H:%M", $row["time"]). '</TD>'
-				. '</TR>' . "\n";
+ 
+      print '<tr class="'. util_get_alt_row_color($i). '">'
+	.' <td>'.gmstrftime("%e %b %Y", $row["time"] ).'</td>'
+	.' <td>'.$row["realname"].' ('.util_user_link($row["user_name"]).')</td>'
+	.' <td>'.$row["email"].'</td>'
+	.' <td>'.$row["title"].'</td>'
+	.' <td align="right">'.gmstrftime("%H:%M", $row["time"]).'</td>'
+	.'</tr>'."\n";
 		}
 
-		print '</TABLE>';
+    print '</table>';
 
-	} else {
-	  echo '<P>'.$Language->getText('project_stats_source_code_access_utils','no_access',$Language->getText('project_stats_source_code_access_utils','file_download'));
+	}
+  else {
+    echo "</u></b>
+<p>".$Language->getText('project_stats_source_code_access_utils','no_access',$field)."</p>";
+  }
+}
+
+// filedownload_logs_daily
+function filedownload_logs_daily($project, $span = 7, $who="allusers") {
+
+	// check first if service is used by this project
+        // if service not used return immediately
+	if (!$project->usesFile()) {
+		print '<P><B><U>'.$Language->getText('project_stats_source_code_access_utils','service_disabled',$Language->getText('project_stats_source_code_access_utils','file_download')).'</U></B>';
+		return;
 	}
 
+
+	$sql  = "SELECT log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, frs_file.filename AS title "
+	."FROM filedownload_log AS log, user, frs_file, frs_release, frs_package "
+	."WHERE ".logs_cond($project, $span, $who)
+	."AND frs_package.group_id=".$project->getGroupId()." "
+        ."AND log.filerelease_id=frs_file.file_id "
+        ."AND frs_release.release_id=frs_file.release_id "
+        ."AND frs_package.package_id=frs_release.package_id "
+	."ORDER BY time ASC";
+	
+	logs_display($sql, $span, $Language->getText('project_stats_source_code_access_utils','file_download'));
 }
+
+
 
 function cvsaccess_logs_daily($project, $span = 7, $who="allusers") {
   global $Language;
 
 	// check first if service is used by this project
         // if service not used return immediately
-        $q = "SELECT is_used FROM service WHERE short_name='cvs' AND group_id=".$project->getGroupId();
-        $res = db_query($q);
-        if (db_result($res,0,0) == 0) {
+        if (!$project->usesCVS()) {
                 print '<P><B><U>'.$Language->getText('project_stats_source_code_access_utils','service_disabled',$Language->getText('project_stats_index','cvs')).'</U></B>';
 		return;
-	}
-
-
-	if (! $span ) { 
-		$span = 7;
 	}
 
 	$month_name = array('Jan','Feb','Mar','Apr','May','June','Jul','Aug', 'Sep','Oct','Nov','Dec');
@@ -198,15 +204,9 @@ function svnaccess_logs_daily($project, $span = 7, $who="allusers") {
 
 	// check first if service is used by this project
         // if service not used return immediately
-        $q = "SELECT is_used FROM service WHERE short_name='svn' AND group_id=".$project->getGroupId();
-        $res = db_query($q);
-        if (db_result($res,0,0) == 0) {
+        if ($project->usesSVN()) {
                 print '<P><B><U>'.$Language->getText('project_stats_source_code_access_utils','service_disabled',$Language->getText('project_stats_source_code_access_utils','subversion')).'</U></B>';
 		return;
-	}
-	
-	if (! $span ) { 
-		$span = 7;
 	}
 
 	$month_name = array('Jan','Feb','Mar','Apr','May','June','Jul','Aug', 'Sep','Oct','Nov','Dec');
@@ -286,89 +286,47 @@ function svnaccess_logs_daily($project, $span = 7, $who="allusers") {
 
 }
 
-// doc_logs_daily
+/**
+ * Display Document pages access log
+ */
 function doc_logs_daily($project, $span = 7, $who="allusers") {
-  global $Language;
 	// check first if service is used by this project
         // if service not used return immediately
-        $q = "SELECT is_used FROM service WHERE short_name='doc' AND group_id=".$project->getGroupId();
-        $res = db_query($q);
-        if (db_result($res,0,0) == 0) {
-                print '<P><B><U>'.$Language->getText('project_stats_source_code_access_utils','service_disabled',$Language->getText('project_stats_source_code_access_utils','docs')).'</U></B>';
+  if(!$project->usesDocman()) {
+    print '<P><B><U>'.$Language->getText('project_stats_source_code_access_utils','service_disabled',$Language->getText('project_stats_source_code_access_utils','docs')).'</U></B>';
 		return;
 	}
 
-	// Get information about the date $span days ago 
-	// Start at midnight $span days ago
-	$time_back = localtime( (time() - ($span * 86400)), 1);
 
-	// This for debug
-	// print "time_back= ". $time_back['tm_hour'].":".$time_back['tm_min'].":".$time_back['tm_sec']." on ".$time_back['tm_mday']." ".$time_back['tm_mon']." ".$time_back['tm_year']."<BR>";
-
-	// Adjust to midnight this day
-	$time_back["tm_sec"] = $time_back["tm_min"] = $time_back["tm_hour"] = 0;
-	$begin_date = mktime($time_back["tm_hour"], $time_back["tm_min"], $time_back["tm_sec"], $time_back["tm_mon"]+1, $time_back["tm_mday"], $time_back["tm_year"]+1900);
-
-
-	// For Debug
-	// print join(" ",localtime($begin_date,0))."<BR>";
-	// print "begin_date: $begin_date<BR>";
-
-	if ($who == "allusers") {
-	    $cond = "";
-	} else {
-	    $users = implode(',',$project->getMembersId());
-	    if ($who == "members") {
-		$cond = " AND user.user_id IN ($users) ";
-	    } else {
-		$cond = " AND user.user_id NOT IN ($users) ";
-	    }
-	}
-
-	$sql  = "SELECT doc_log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, doc_data.title AS title "
-	    ."FROM doc_log, user, doc_data, doc_groups "
-	    ."WHERE doc_log.user_id=user.user_id ".$cond
+  $sql  = "SELECT log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, doc_data.title AS title "
+    ."FROM doc_log AS log, user, doc_data, doc_groups "
+    ."WHERE ".logs_cond($project, $span, $who)
 	    ."AND doc_groups.group_id=".$project->getGroupId()." "
 	    ."AND doc_groups.doc_group = doc_data.doc_group "
-	    ."AND doc_data.docid = doc_log.docid "
-	    ."AND doc_log.time >= $begin_date "
+    ."AND doc_data.docid = log.docid "
 	    ."ORDER BY time ASC";
 	
-	// Executions will continue until morale improves.
-	$res = db_query( $sql );
-
-	print '<P><B><U>'.$Language->getText('project_stats_source_code_access_utils','access_for_past_x_days',array($Language->getText('project_stats_source_code_access_utils','doc_download'),$span)).'</B></U>';
-
-	// if there are any days, we have valid data.
-	if ( ($nb_downloads = db_numrows( $res )) >= 1 ) {
-
-	print '<B><U> - '. $Language->getText('project_stats_source_code_access_utils','in_total',$nb_downloads).'</U></B>';
-
-		print	'<P><TABLE width="100%" cellpadding=2 cellspacing=0 border=0>'
-			. '<TR valign="top">'
-			. '<TD><B>'.$Language->getText('project_admin_utils','date').'</B></TD>'
-			. '<TD><B>'.$Language->getText('project_export_utils','user').'</B></TD>'
-			. '<TD><B>'.$Language->getText('project_export_artifact_history_export','email').'</B></TD>'
-			. '<TD align><B>'.$Language->getText('project_stats_source_code_access_utils','doc').'</B></TD>'
-			. '<TD align="right"><B>'.$Language->getText('project_stats_source_code_access_utils','time_gmt').'</B></TD>'
-			. '</TR>' . "\n";
+  logs_display($sql, $span, $Language->getText('project_stats_source_code_access_utils','doc_download'));
+}
 		
-		while ( $row = db_fetch_array($res) ) {
-			$i++;
-			print	'<TR class="' . util_get_alt_row_color($i) . '">'
-				. '<TD>' . gmstrftime("%e %b %Y", $row["time"] ) . '</TD>'
-			    . '<TD>' . $row["realname"] .' ('.util_user_link($row["user_name"]).')</TD>'
-				. '<TD>' . $row["email"] . '</TD>'
-				. '<TD>' . $row["title"] . '</TD>'				. '<TD align="right">' . gmstrftime("%H:%M", $row["time"]). '</TD>'
-				. '</TR>' . "\n";
+/**
+ * Display Wiki pages access log
+ */
+function wiki_logs_daily($project, $span = 7, $who="allusers") {
+  // check first if service is used by this project
+  // if service not used return immediately
+  if(!$project->usesWiki()) {
+      print '<P><B><U>'.$Language->getText('project_stats_source_code_access_utils','service_disabled',$Language->getText('project_stats_source_code_access_utils','wiki')).'</U></B>';
+     return;
 		}
 
-		print '</TABLE>';
+  $sql = "SELECT log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, log.pagename AS title"
+    ." FROM wiki_log AS log, user"
+    ." WHERE ".logs_cond($project, $span, $who)
+    ." AND log.group_id=".$project->getGroupId()
+    ." ORDER BY time ASC";
 
-	} else {
-		echo '<P>'.$Language->getText('project_stats_source_code_access_utils','no_access',$Language->getText('project_stats_source_code_access_utils','doc_download'));
-	}
-
+  logs_display($sql, $span, $Language->getText('project_stats_source_code_access_utils','wiki_read'));
 }
 
 ?>

@@ -1,0 +1,3 @@
+# $Id$
+Options +Indexes
+DirectoryIndex ../index.php?pagename=UpLoad

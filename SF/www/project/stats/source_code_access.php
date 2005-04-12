@@ -79,40 +79,34 @@ echo '<h2>'.$Language->getText('project_admin_utils','access_logs').'</h2>';
 </FORM>
 
 <?php
-if ( $view == 'daily' ) {
+switch($view) {
+    case "monthly":
+    print '<P>';
+    filedownload_logs_daily( $project, $span*30.5, $who);
+    cvsaccess_logs_daily( $project, $span*30.5, $who);
+    svnaccess_logs_daily( $project, $span*30.5, $who);
+    doc_logs_daily( $project, $span*30.5, $who);
+    wiki_logs_daily( $project, $span*30.5, $who);
+    break;
 
-	print '<P>';
-	filedownload_logs_daily( $project, $span, $who);
-	cvsaccess_logs_daily( $project, $span, $who);
-	svnaccess_logs_daily( $project, $span, $who);
-	doc_logs_daily( $project, $span, $who);
-
-} elseif ( $view == 'weekly' ) {
-
-	print '<P>';
-	filedownload_logs_daily( $project, $span*7, $who);
-	cvsaccess_logs_daily( $project, $span*7, $who);
-	svnaccess_logs_daily( $project, $span*7, $who);
-	doc_logs_daily( $project, $span*7, $who);
-
-} elseif ( $view == 'monthly' ) {
-
-	print '<P>';
-	filedownload_logs_daily( $project, $span*30.5, $who);
-	cvsaccess_logs_daily( $project, $span*30.5, $who);
-	svnaccess_logs_daily( $project, $span*30.5, $who);
-	doc_logs_daily( $project, $span*30.5, $who);
-
-} else {
-
-	// default stats display, DAILY
-	print '<P>';
-	filedownload_logs_daily( $project, $span, $who);
-	cvsaccess_logs_daily( $project, $span, $who);
-	svnaccess_logs_daily( $project, $span, $who);
-	doc_logs_daily( $project, $span, $who);
-
+    case "weekly":
+    print '<P>';
+    filedownload_logs_daily( $project, $span*7, $who);
+    cvsaccess_logs_daily( $project, $span*7, $who);
+    svnaccess_logs_daily( $project, $span*7, $who);
+    doc_logs_daily( $project, $span*7, $who);
+    wiki_logs_daily( $project, $span*7, $who);
+    break;
+  
+    case 'daily':
+    default:
+    filedownload_logs_daily( $project, $span, $who);
+    cvsaccess_logs_daily( $project, $span, $who);
+    svnaccess_logs_daily( $project, $span, $who);
+    doc_logs_daily( $project, $span, $who);
+    wiki_logs_daily( $project, $span, $who);
 }
+
 
 print '<BR><P>';
 //LJ stats_site_agregate( $group_id );

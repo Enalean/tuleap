@@ -1,0 +1,73 @@
+<?php // -*-html-*-
+rcs_id('$Id$');
+?>
+<body<?= $Theme->getMoreAttr('body') ?>>
+<table class="sidebar" width="100%">
+  <tr>
+    <td align="left" valign="top"><table class="sidebar" width="160">
+      <tr>
+        <td align="left" valign="top" width="160">
+<div class="box">
+<?= Template('top') ?>
+</div>
+<?php
+global $HIDE_TOOLBARS;
+if (!$HIDE_TOOLBARS) {
+?>
+<div class="box"><div class="box-title"><?= _("Search") ?></div>
+<div class="box-data">
+  <?= Template('navbar') ?>
+</div></div>
+<?php }
+  /* Today's calendar page for the user, if the Calender subpage is defined. */
+  $UserCalPageTitle = $user->getId() . SUBPAGE_SEPARATOR . _("Calendar");
+  $dbi = $request->getDbh();
+  // display flat calender dhtml under the clock
+  if ($dbi->isWikiPage($UserCalPageTitle)) { ?>
+<div class="box">
+<div class="box-title"><?= WikiLink($UserCalPageTitle,'known',_("Calendar")) ?></div>
+<div class="box-data">
+    <?= Template('calendar') ?>
+</div></div>
+<?php } else { ?>
+<div id="clock">
+<? // include($Theme->_findFile("clock.php")); ?>
+</div>
+<?php } ?>
+<?php 
+$box = new RelatedLinksBox();
+$body = $box->body;
+if ($body->asString() != "")
+    printXml($box->format());
+
+$box = new PluginSidebarBox("RecentChanges",array('limit'=>10)); 
+printXml($box->format());
+
+$box = new PluginSidebarBox("WhoIsOnline"); 
+printXml($box->format());
+
+$box = new PluginSidebarBox("RssFeed",
+                            array('url' => 'http://phpwiki.sourceforge.net/phpwiki/RecentChanges?format=rss',
+                                  'title' => _("PhpWiki News"))); 
+printXml($box->format());
+
+?>
+        </td>
+      </tr>
+    </table></td>
+    <td align="left" valign="top"><table align="left" width="100%">
+      <tr>
+        <td align="left" valign="top">
+<!-- Page title -->
+<h1><?= $HEADER ?></h1>
+<div class="toolbar">
+<?= Template('actionbar') ?>
+</div>
+<?= $CONTENT ?>
+        </td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<?= Template('bottom') ?>
+</body>

@@ -1,0 +1,389 @@
+<?php
+/* 
+ * Copyright 2005, STMicroelectronics
+ *
+ * Originally written by Manuel Vacelet
+ *
+ * This file is a part of CodeX.
+ *
+ * CodeX is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * CodeX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
+require_once('WikiViews.class');
+require_once(dirname(__FILE__).'/../lib/WikiEntry.class');
+require_once(dirname(__FILE__).'/../lib/WikiPage.class');
+require_once(dirname(__FILE__).'/../lib/WikiPageWrapper.class');
+require_once($DOCUMENT_ROOT.'/project/admin/permissions.php');
+
+
+/**
+ * HTML display of Wiki Service Administration Panel
+ *
+ * This class is extended of View componnent, each function display a part of
+ * Admin Panel of Wiki Service. You can call each function independently with
+ * a GET method with 'view' option. (e.g. &view=phpWikiAdmin in URL will 
+ * display phpWikiAdmin function).
+ * The mapping between Views and function is based on:
+ * <pre>
+ * Admin (main)
+ * |-- Manage Wiki Documents (wikiDocuments)
+ * |-- Manage Wiki Pages (wikiPages)
+ * `-- Set Wiki Permissions (wikiPerms)
+ * </pre>
+ *
+ * @package    WikiService
+ * @subpackage WikiServiceAdmin
+ * @copyright  STMicroelectronics, 2005
+ * @author     Manuel Vacelet <manuel.vacelet-abecedaire@st.com>
+ * @license    http://opensource.org/licenses/gpl-license.php GPL
+ */
+class WikiServiceAdminViews extends WikiViews {
+
+  /**
+   * WikiServiceAdminViews - Constructor
+   */
+  function WikiServiceAdminViews($id=0) {
+    parent::WikiView($id);
+    $this->html_params['title']  = 'Wiki Administration for '.group_getname($this->gid);
+  }
+
+  /**
+   * displayEntryFrom - private
+   */
+  function _displayEntryFrom($act='', $id='', $name='', $page='', $desc='', $rank='') {
+    print '<form name="wikiEntry" method="post" action="'.$this->wikiAdminLink.'&view=wikiDocuments">
+             <input type="hidden" name="group_id" value="'.$this->gid.'" />
+             <input type="hidden" name="action" value="'.$act.'" />
+             <input type="hidden" name="id" value="'.$id.'" />
+           <table>';
+
+    print '<tr>
+             <td>Entry name:</td>
+             <td ><input type="text" name="name" value="'.$name.'" size="60" maxlength="255"/></td>
+             <td><em>Displayed in wiki service default page (e.g. Development documentations)</em></td>
+           </tr>';
+
+    $allPages =& WikiPage::getAllUserPages();
+    $allPages[]='';
+    print '<tr>
+             <td>WikiPage:</td>
+             <td>
+               '.html_build_select_box_from_array($allPages, 'page', $page, true).'<br />
+               Or give a page name: <input type="text" name="upage" value="'.$page.'" size="20" maxlength="255"/>
+             </td>
+             <td><em>Select a <a href="'.$this->wikiAdminLink.'&view=wikiPages">Project Wiki Page</a> or enter another WikiPage name (if the page doesn\'t exist, it will be created).</em></td>
+           </tr>';
+    
+    print '<tr>
+             <td>Description:</td>
+             <td><textarea name="desc" rows="5" cols="60">'.$desc.'</textarea></td>
+             <td><em>Description of the Wiki document</em></td>
+           </tr>';
+    
+    print '<tr>
+             <td>Rank on screen:</td>
+             <td><input type="text" name="rank" value="'.$rank.'" size="3" maxlength="3"/></td>
+             <td><em>Documents are displayed with this reference</em></td>
+           </tr>';
+
+    print '<tr>
+             <td colspan="3"><input type="submit" value="'.$act.'" /></td>
+           </tr>';
+
+    print '</table>
+           </form>';
+  }
+
+  /**
+   * displayMenu - public
+   */
+  function displayMenu() {     
+    print '
+    <ul class="ServiceMenu">
+      <li><a href="/wiki/index.php?group_id='.$this->gid.'">View</a>&nbsp;|&nbsp;</li>
+      <li><a href="/wiki/admin/index.php?group_id='.$this->gid.'">Admin</a>&nbsp;|&nbsp;</li>
+      <li><a href="'.$this->wikiAdminLink.'&view=wikiDocuments">Wiki Documents</a>&nbsp;|&nbsp;</li>
+      <li><a href="'.$this->wikiAdminLink.'&view=wikiPages">Wiki Pages</a>&nbsp;|&nbsp;</li>
+      <li><a href="'.$this->wikiAdminLink.'&view=wikiPerms">Wiki Permissions</a></li>
+    </ul>';
+  }
+
+  /**
+   * main - public View
+   *
+   * Main and default view.
+   */
+  function main() {
+    echo '<h2>Wiki \''.$this->wikiname.'\' - Administration</h2>
+    <h3><a href="'.$this->wikiAdminLink.'&view=wikiDocuments">Manage Wiki Documents</a></h3>
+    <p>Create, delete, modify and set specific permissions on Wiki Documents.</p>
+
+    <h3><a href="'.$this->wikiAdminLink.'&view=wikiPages">Manage Wiki Pages</a></h3>
+    <p>Browse and set specific permissions on Wiki Pages.</p>
+
+    <h3><a href="'.$this->wikiAdminLink.'&view=wikiPerms">Set Wiki Permissions</a></h3>
+    <p>Set permissions on whole '.$wikiname.' Wiki.</p>';
+  }
+
+
+  /**
+   * wikiDocuments - public view
+   */
+  function wikiDocuments() {
+    echo '<h2>Wiki \''.$this->wikiname.'\' - Manage Wiki Documents</h2>';
+
+    list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_admin_createdoc', $this->gid);
+    $hurl='<a href="'.$this->wikiAdminLink.'&view=wikiDocuments&'.$hideUrl.'">'.$hideImg.'</a>';
+    print '<h3>'.$hurl.'Create a new Wiki Document</h3>';
+    if(!$hideFlag){
+      $this->_createWikiDocument();
+    }
+    
+    //    print "\n<hr/>\n";
+    list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_admin_browsedoc', $this->gid);
+    $hurl='<a href="'.$this->wikiAdminLink.'&view=wikiDocuments&'.$hideUrl.'">'.$hideImg.'</a>';
+    print '<h3>'.$hurl.'Wiki Documents</h3>';
+    if(!$hideFlag){
+      $this->_browseWikiDocument();
+    }
+      
+    print '<hr/><p><a href="'.$this->wikiAdminLink.'">Back to admin panel</a></p>'."\n";
+  }
+
+  /**
+   * _createWikiDocument - private
+   */
+  function _createWikiDocument() {
+    print '<p>You can add a new link to a Wiki Page with the following
+           form. It will add a new entry in the list of Wiki Documents
+           displayed in Wiki service page (<a href="'.$this->wikiLink.'">View</a> link in
+           the tool bar).
+           </p>';
+    $this->_displayEntryFrom('create');
+  }
+
+  /**
+   * _browseWikiDocument - private
+   */
+  function _browseWikiDocument() {
+    $wem = new WikiEntryManager($this->gid);
+    $wem->getList();
+   
+    print '<p>List of all Wiki Documents displayed on the wiki service page. 
+           You can:</p>
+           <ul>
+             <li>edit each Wiki Document with the link on the name.</li>
+             <li>set permissions on a Wiki Document.</li>
+             <li>delete a Wiki Document (the corresponding Wiki Page will not be deleted)</li>
+           </ul>';
+    
+    print html_build_list_table_top(array('Name', 'Page', 'Rank On Screen', 'Delete ?'));
+
+    $i=0;
+    while($we = $wem->iterate()) {
+      print '<tr class="'.html_get_alt_row_color($i).'">';
+
+      print '<td>
+               <a href="'.$this->wikiAdminLink.'&view=updateWikiDocument&id='.$we->getId().'">'.$we->getName().'</a>
+            </td>';
+
+      print '<td>';
+      print $we->getPage();
+      print ' - ';
+      $status = 'Define';
+      if($we->wikiPage->permissionExist()) {
+	$status = 'Edit';
+      }
+      print '<a href="'.$this->wikiAdminLink.'&view=docPerms&id='.$we->wikiPage->getId().'">';
+      print '['.$status.' Permissions]';
+      print '</a>';
+      print '</td>';
+
+      print '<td align="center">'.$we->getRank().'</td>';
+
+      print '<td align="center">';
+      print $this->getTrashLink($this->wikiAdminLink.'&view=wikiDocuments&action=delete&id='.$we->getId()
+				, 'delete '.$we->getName().' document');
+      print '</td>';
+
+      print '</tr>';
+      $i++;
+    }
+    print '</table>';
+  }
+
+  /**
+   * updateWikiDocument - public View
+   */
+  function updateWikiDocument() {
+    print '<h2>Wiki \''.$this->wikiname.'\' - Update Wiki Document</h2>';
+
+    $we = new WikiEntry($_REQUEST['id']);
+    $this->_displayEntryFrom('update',
+			    $we->getId(),
+			    $we->getName(),
+			    $we->getPage(),
+			    $we->getDesc(),
+			    $we->getRank());
+    print '<p><a href="'.$this->wikiAdminLink.'&view=wikiDocuments">Back</a></p>'."\n";
+  }
+
+  /**
+   * This function is a "false" document permission view. Actually, 
+   * it set permission on a page. This function only exist to make an
+   * auto return on wikiDocuments view after permission settings.
+   * 
+   *
+   * pagePerms - public View
+   */
+   function docPerms() {
+     $postUrl = '/wiki/admin/index.php?group_id='.$this->gid.'&view=wikiDocuments&action=setWikiPagePerms';
+     $this->_pagePerms($postUrl);    
+     print '<p><a href="'.$this->wikiAdminLink.'&view=wikiPages">Back</a></p>'."\n";
+  }
+
+
+  /**
+   * pagePerms - public View
+   */
+   function pagePerms() {
+     $postUrl = '/wiki/admin/index.php?group_id='.$this->gid.'&view=wikiPages&action=setWikiPagePerms';
+     $this->_pagePerms($postUrl);    
+     print '<p><a href="'.$this->wikiAdminLink.'&view=wikiPages">Back</a></p>'."\n";
+  }
+
+  /**
+   * wikiPages - public View
+   */
+  function wikiPages() {
+    echo '<h2>Wiki \''.$this->wikiname.'\' - Manage Wiki Pages</h2>';
+    
+    list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_project_pages', $this->gid);
+    $hurl='<a href="'.$this->wikiAdminLink.'&view=wikiPages&'.$hideUrl.'">'.$hideImg.'</a>';
+    echo '<h3>'.$hurl.'Project pages</h3>';
+    if(!$hideFlag){
+      print '
+      <p>The table bellow list all pages you wrote.</p>
+      ';
+      $allUserPages =& WikiPage::getAllUserPages();
+      $this->_browsePages($allUserPages);
+    }
+
+    list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_empty_pages', $this->gid);
+    $hurl='<a href="'.$this->wikiAdminLink.'&view=wikiPages&'.$hideUrl.'">'.$hideImg.'</a>';
+    echo '<h3>'.$hurl.'Empty pages</h3>';
+    if(!$hideFlag){
+      print '
+      <p>The table bellow list all pages you created but still empty.</p>
+      ';
+      $wpw = new WikiPageWrapper($this->gid);
+      $allEmptyPages =& $wpw->getProjectEmptyLinks();
+      $this->_browsePages($allEmptyPages);
+    }
+
+    list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_admin_pages', $this->gid);
+    $hurl='<a href="'.$this->wikiAdminLink.'&view=wikiPages&'.$hideUrl.'">'.$hideImg.'</a>';
+    echo '<h3>'.$hurl.'Admin pages</h3>';
+    if(!$hideFlag){
+      print '
+      <p>The table bellow list all administration pages. You can use these 
+      pages for management purpose.
+      <strong>Please use it carefuly</strong>. In case of doubt, backup your 
+      wiki before deleting/renaming/replacing a page.</p>';
+      $allAdminPages =& WikiPage::getAllAdminPages();
+      $this->_browsePages($allAdminPages);
+    }
+
+    list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_internal_pages', $this->gid, true);
+    $hurl='<a href="'.$this->wikiAdminLink.'&view=wikiPages&'.$hideUrl.'">'.$hideImg.'</a>';
+    echo '<h3>'.$hurl.'Internal pages</h3>';
+    if(!$hideFlag){
+      print '
+      <p>Following pages are for wiki engine <strong>internal reserved use</strong>.
+      Please use it carefuly. You should <strong>not use or modify these pages</strong> 
+      if don\'t know well PhpWiki. In case of doubt, do not touch these pages.</p>';
+      $allInternalsPages =& WikiPage::getAllInternalPages();
+      $this->_browsePages($allInternalsPages);
+    }
+    
+    print '<hr/><p><a href="'.$this->wikiAdminLink.'">Back to admin panel</a></p>'."\n";
+  }
+
+
+  /**
+   * browsePages - private
+   */
+  function _browsePages(&$pageList) {
+    print html_build_list_table_top(array('Page', 'Permissions'));
+
+    sort($pageList);
+    $i=0;
+    foreach($pageList as $pagename) {
+      print '
+            <tr class="'.html_get_alt_row_color($i).'">
+            ';
+
+      print '<td><a href="'.$this->wikiLink.'&pagename='.urlencode($pagename).'">'.$pagename.'</a></td>';
+
+      $page = new WikiPage($this->gid, $pagename);
+      $status='Define ';
+      if (permission_exist('WIKIPAGE_READ',$page->getId())) {
+	$status='Edit ';
+      }
+      print '<td align="center">';
+      print '<a href="'.$this->wikiAdminLink.'&view=pagePerms&id='.$page->getId().'">['.$status.' Permissions]</a>';
+      print '</td>';
+
+      print '
+            </tr>
+            ';
+      
+      $i++;
+    }
+    print '</TABLE>';
+  }
+
+  /**
+   * wikiPerms - public View
+   */
+  function wikiPerms() {
+    echo '<h2>Wiki \''.$this->wikiname.'\' - Wiki Permissions</h2>';
+   
+    echo '
+    <p>You can set specific permissions on '.$this->wikiname.'. These permissions 
+    apply to <strong>whole wiki service</strong>.</p>
+
+    <p>By default, Wiki have no specific permissions: access 
+    (both <strong>read</strong> and <strong>write</strong>) to all Wiki Pages is 
+    granted to any CodeX registred user.</p>
+
+    <p>Select user groups who are granted access to this Wiki:<p>';
+    
+    $postUrl = '/wiki/admin/index.php?group_id='.$this->gid.'&action=setWikiPerms';
+    permission_display_selection_form("WIKI_READ", $this->gid, $this->gid, $postUrl);
+
+    print '<hr/><p><a href="'.$this->wikiAdminLink.'">Back to admin panel</a></p>'."\n";
+  }
+  
+  
+  /**
+   *
+   */
+  function install() {
+    $wpw = new WikiPageWrapper($this->gid);
+    $wpw->install();
+  }
+}
+?>

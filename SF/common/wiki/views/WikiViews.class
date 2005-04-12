@@ -1,0 +1,196 @@
+<?php
+/* 
+ * Copyright 2005, STMicroelectronics
+ *
+ * Originally written by Manuel Vacelet
+ *
+ * This file is a part of CodeX.
+ *
+ * CodeX is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * CodeX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+require_once($_SERVER['DOCUMENT_ROOT'].'/../common/mvc/Views.class');
+
+/**
+ * Temp function for debug
+ */
+function exit_wiki_debug() {
+	GLOBAL $HTML;
+	$HTML->header(array('title'=>'Exiting with Error'));
+	print '<H2><span class="feedback">Wiki service Beta</span></H2><P>The Wiki service of CodeX is currently a beta version.';
+	print '<p>If you want to help us to validate it, you can:</p>';
+	print '<ul>';
+	print '<li>Play with the wiki in the <a href="https://codex.cro.st.com/wiki/?group_id=101">GuineaPig</a> project.</li>';
+	print '<li>Request us to enable the wiki for your project. Use <a href="https://codex.cro.st.com/tracker/?atid=153&group_id=1&func=browse">Codex request tracker</a>.</li>';
+	print '<li>Read the current <a href="https://codex.cro.st.com/wiki/index.php?group_id=1&pagename=WikiStatus">status</a> of the Wiki service under CodeX.</li>';
+	print '</ul>';
+	$HTML->footer(array());
+	exit;
+}
+
+function exit_wiki_empty() {
+	GLOBAL $HTML;
+	global $group_id;
+	
+	$go = group_get_object($group_id);
+	$uname = $go->getUnixName();
+
+	$HTML->header(array('title'=>'Exiting with Error'));
+
+	print '<H2><span class="feedback">Wiki Service not activated</span></H2><p>The Wiki Service of "'.$uname.'" project  require an activation by a Project admin or a Wiki admin.</p>';
+
+	$HTML->footer(array());
+	exit;
+}
+
+/**
+ * Generate url to Expend/Collapse a part of a page
+ * @see my_hide_url
+ */
+function hide_url ($svc, $db_item_id, $defaultHide=false, $hide=null) {
+  $pref_name = 'hide_'.$svc.$db_item_id;
+
+ 
+  if(empty($hide)) {
+    $hide=$_REQUEST['hide_'.$svc];
+  }
+
+  $noPref = false;
+  $old_hide = user_get_preference($pref_name);
+
+  // Make sure they are both 0 if never set before
+  if ($old_hide == false) { 
+    $noPref = true;
+    $old_hide = 0; 
+  }
+  
+  // If no given value for hide, keep the old one
+  if (!isset($hide)) {
+    $hide = $old_hide;
+  }
+  
+  // Update pref value if needed
+  if ($old_hide != $hide) {
+    user_set_preference($pref_name, $hide);
+  }
+
+  if ($hide == 2 || ($noPref && $defaultHide)) {
+    $hide_url = 'hide_'.$svc.'=1&hide_item_id='.$db_item_id;
+    $hide_img = '<img src="'.util_get_image_theme("pointer_right.png").'" align="middle" border="0" alt="Collapse">';
+    $hide_now = true;
+  } else {		
+    $hide_url = 'hide_'.$svc.'=2&hide_item_id='.$db_item_id;
+    $hide_img = '<img src="'.util_get_image_theme("pointer_down.png").'" align="middle" border="0" alt="Expand">';
+    $hide_now = false;
+  }
+  
+  return array($hide_now, $hide_url, $hide_img);
+}
+
+/**
+ * Common functions for WikiServiceViews and WikiServiceAdminViews
+ *
+ * @package WikiService
+ * @copyright STMicroelectronics, 2005
+ * @author Manuel Vacelet <manuel.vacelet-abecedaire@st.com>
+ * @license http://opensource.org/licenses/gpl-license.php GPL
+ */
+class WikiViews extends Views {
+  /* protected int    */ var $gid;
+  /* protected string */ var $wikiname;
+  /* protected string */ var $wikiLink;
+  /* protected string */ var $wikiAdminLink;
+
+  /**
+   * WikiView - Constructor
+   */
+  function WikiView($id=0, $view=null) {
+    parent::view($view);
+
+    $this->gid = (int) $id;
+
+    // Parameters for HTML rendering
+    $this->html_params['group']  = $this->gid;
+    $this->html_params['toptab'] = 'wiki';
+
+    // Wikize project name
+    $go = group_get_object($this->gid);
+    $this->wikiname = ucfirst($go->getUnixName()).'Wiki';
+
+    // Build convenients URL
+    $baseLink = 'http'.($GLOBALS['sys_force_ssl']?'s':'').'://'.$GLOBALS['sys_default_domain'].'/wiki';
+    $this->wikiLink    = $baseLink.'/index.php?group_id='.$this->gid;
+    $this->wikiAdminLink = $baseLink.'/admin/index.php?group_id='.$this->gid;
+  }
+
+  /**
+   * displayMenu - Public pure virtual
+   */
+  function displayMenu() {
+    
+  }
+
+  /**
+   * header - public
+   *
+   * Display Wiki Service header
+   */
+  function header() {
+    $this->html_params['stylesheet'][] = '/wiki/themes/CodeX/phpwiki-codex.css';
+    parent::header();
+    $this->displayMenu();
+  }
+
+  /**
+   * pagePerms - public View
+   */
+  function _pagePerms($postUrl='') { 
+    $wp = new WikiPage($_REQUEST['id']);
+    
+    print '<h3>Set Wiki Page permissions</h3>';
+    
+    $pagename=$wp->getPagename();
+    if(empty($pagename)) {
+      print '<h2><span class="feedback">Page doesn\'t exist</span></h2>
+             <p>You can set permissions only on existing pages. You have to
+             create the page in Wiki engine before setting permissions.</p>
+             <p>To create a page, you simply have to edit it.</p>
+             <p><strong>Note:</strong> A page that contain only 
+             "Describe PageName? here" is empty from Wiki engine point 
+              of view.</p>';
+      
+    }
+    else {
+      print '
+            <p>You can set specific permissions on <strong>"'.$pagename.'"</strong> 
+            Wiki Page. 
+            These <strong>permissions only apply to this page</strong>.</p>
+
+            <p>By default, Wiki pages have no specific permissions: access 
+            to all Wiki Pages is granted to any CodeX registred user.</p>
+
+            <p><strong>Remember:</strong> Access to a page imply that 
+            <strong>every members</strong> of <strong>each</strong> 
+            following <strong>selected groups</strong> can 
+            <strong>read</strong> and <strong>write</strong> the corresponding
+            page.</p>
+
+            <p>Select user groups who are granted access to this Wiki:<p>';
+    
+      permission_display_selection_form("WIKIPAGE_READ", $wp->getId(), $this->gid, $postUrl);
+    }
+  }
+}
+
+?>

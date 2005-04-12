@@ -1,0 +1,13 @@
+# Ensure the home page comes up.
+# $Id$
+
+type: starting_page
+start_url: index.php
+go
+
+# follow the edit text link
+type: follow_link
+follow_link: "Edit"
+assert_url: HomePage
+go
+

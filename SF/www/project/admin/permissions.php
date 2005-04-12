@@ -11,10 +11,13 @@
 
 // Supported object types and related object_id:
 //
-// type='PACKAGE_READ' id='package_id' table='frs_package'
-// type='RELEASE_READ' id='release_id' table='frs_release'
-// type='DOCUMENT_READ' id='docid"  table='doc_data'
-// type='DOCGROUP_READ' id='doc_group' table='doc_groups'
+// type='PACKAGE_READ'  id='package_id'  table='frs_package'
+// type='RELEASE_READ'  id='release_id'  table='frs_release'
+// type='DOCUMENT_READ' id='docid"       table='doc_data'
+// type='DOCGROUP_READ' id='doc_group'   table='doc_groups'
+// type='WIKI_READ'     id='group_id'    table='wiki_page'
+// type='WIKIPAGE_READ' id='id'          table='wiki_page'
+ 
 
 require_once('www/project/admin/ugroup_utils.php');
 require_once('www/project/admin/project_admin_utils.php');
@@ -34,6 +37,10 @@ function permission_get_name($permission_type) {
         return $Language->getText('project_admin_permissions','docgroup_access');
     } else if ($permission_type=='DOCUMENT_READ') {
         return $Language->getText('project_admin_permissions','doc_access');
+    } else if ($permission_type=='WIKI_READ') {
+        return $Language->getText('project_admin_permissions','wiki_access');
+    } else if ($permission_type=='WIKIPAGE_READ') {
+        return $Language->getText('project_admin_permissions','wiki_access');
     } else return $permission_type;
 }
 
@@ -51,6 +58,10 @@ function permission_get_object_name($permission_type,$object_id) {
         return $Language->getText('project_admin_permissions','doc',doc_get_title_from_id($object_id));
     } else if ($permission_type=='DOCGROUP_READ') {
         return $Language->getText('project_admin_permissions','docgroup',doc_get_docgroupname_from_id($object_id));
+    } else if ($permission_type=='WIKI_READ') {
+        return "wiki ".$object_id; //XXX
+    } else if ($permission_type=='WIKIPAGE_READ') {
+        return "wiki page".$object_id; //XXX
     } else return $Language->getText('project_admin_permissions','obj',$object_id);
 }
 
@@ -69,6 +80,12 @@ function permission_user_allowed_to_change($group_id, $permission_type) {
     }
     if ($permission_type=='DOCUMENT_READ') {
         return (user_ismember($group_id,'D2'));
+    }
+    if ($permission_type=='WIKI_READ') {
+        return (user_ismember($group_id,'W2'));
+    }
+    if ($permission_type=='WIKIPAGE_READ') {
+        return (user_ismember($group_id,'W2'));
     }
     return false;
 }

@@ -1,0 +1,68 @@
+FIXME: these instructions are slightly broken.
+
+Installing phpwiki with MySQL 
+-----------------------------
+
+This assumes that you have a working MySQL server and client setup.
+Installing MySQL is beyond the scope of this document.
+For more information on MySQL go to http://www.mysql.org/
+
+1. If you do not have a suitable database already, create one (using
+   the root or other privileged account you set up when MySQL was
+   installed.)
+
+	mysqladmin -uuser -ppassword create phpwiki
+
+2. If necessary create a user for that database which has the rights
+   to select, insert, update, delete (again using the root
+   administration account).
+
+	mysql -uuser -ppassword phpwiki
+
+   A MySQL grant statement for this user would look like this:
+
+	GRANT select, insert, update, delete, lock tables 
+	ON phpwiki.*
+	TO wikiuser@localhost
+	IDENTIFIED BY 'password';
+
+	Upgrade note: The mysql wikiuser needs to have the LOCK TABLES
+	privilege granted for all the wiki tables (PAGE, VERSION,
+	LINK, RECENT and NONEMPTY). This is a relatively new privilege type.
+
+3. Create tables inside your database (still using the root account).
+
+	mysql -uuser -ppassword phpwiki < schemas/mysql.sql
+
+   Note: the user specified in this command needs to have the rights
+         to drop and create tables. Use the same user as in step 1.
+
+   If you are using MySQL 3.21.x or earlier the script may issue an
+   error. In that case remove existing tables manually and delete
+   the "drop tables" lines from schemas/mysql.sql - it should work now
+
+4. Edit $DBParams in index.php to reflect your settings.
+
+	a) $DBParams['dbtype'] should be set to 'SQL'.
+	b) $DBParams['dsn'] should be set to something like
+           'mysql://username:password@host/phpwiki'.
+	   (where 'phpwiki' is the mysql database name.)
+        c) Note that if you set $DBParams['prefix'] to a 
+           non-empty string, you will have to edit
+           schemas/mysql.sql before you perform step
+           three (above).  (Sorry.)
+
+That's it. phpwiki should now work.
+
+If you run into problems then check that your MySQL-user has
+the necessary access rights for the phpwiki tables.
+
+Hint for Linux-Debian users: it may be necessary to load the MySQL
+module first: insert the following line in config.php before
+"mysql.php" gets included:
+if (!extension_loaded("mysql"))  { dl("mysql.so"); }
+
+/Arno
+ahollosi@mail.com
+
+$Id$

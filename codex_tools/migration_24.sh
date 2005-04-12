@@ -532,9 +532,108 @@ INSERT INTO artifact_field_value_list VALUES (9,5,10,'Declined','The artifact wa
 INSERT INTO artifact_field_value_list VALUES (12,5,1,'Accepted','The artifact will be worked on. If it won\'t be worked on, indicate why and close it',10,'A');
 INSERT INTO artifact_field_value_list VALUES (12,5,2,'Declined','The artifact was not accepted. Alternatively, you can also set the status to \"Closed\" and explain why it was declined',50,'A');
 
+
+
+---
+--- Wiki Service
+---
+
+INSERT INTO service SET service_id=17, group_id=100, label='Wiki', description='Wiki', short_name='wiki', link='/wiki/?group_id=$group_id', is_active=1, is_used=1, scope='system', rank=105;
+
+CREATE TABLE wiki_group_list (
+	id int(11) NOT NULL auto_increment,
+	group_id int(11) NOT NULL default '0',
+	wiki_name varchar(255) NOT NULL default '',
+	wiki_link varchar(255) NOT NULL default '',
+	description varchar(255) NOT NULL default '',
+	rank int(11) NOT NULL default '0',
+	PRIMARY KEY (id)	
+) TYPE=MyISAM;
+
+-- Table for Wiki access logs
+CREATE TABLE `wiki_log` (
+  `user_id` int(11) NOT NULL default '0',
+  `group_id` int(11) NOT NULL default '0',
+  `pagename` varchar(255) NOT NULL default '',
+  `time` int(11) NOT NULL default '0',
+  KEY `all_idx` (`user_id`,`group_id`),
+  KEY `time_idx` (`time`),
+  KEY `group_id_idx` (`group_id`)
+) TYPE=MyISAM;
+
+
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKI_READ',100);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKI_READ',1); --???
+INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('WIKI_READ',2,1);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKI_READ',3);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKI_READ',4);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKI_READ',14);
+
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIPAGE_READ',100);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIPAGE_READ',1); --???
+INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('WIKIPAGE_READ',2,1);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIPAGE_READ',3);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIPAGE_READ',4);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIPAGE_READ',14);
+
+--
+-- Info for Wiki Admin 
+--
+
+ALTER TABLE `user_group` ADD `wiki_flags` INT( 11 ) DEFAULT '0' NOT NULL ;
+
+--
+-- PHP Wiki tables
+--
+CREATE TABLE wiki_page (
+	id              INT NOT NULL AUTO_INCREMENT,
+        pagename        VARCHAR(100) BINARY NOT NULL,
+	hits            INT NOT NULL DEFAULT 0,
+        pagedata        MEDIUMTEXT NOT NULL DEFAULT '',
+	group_id        INT NOT NULL DEFAULT 0,
+        PRIMARY KEY (id)
+);
+
+CREATE TABLE wiki_version (
+	id              INT NOT NULL,
+        version         INT NOT NULL,
+	mtime           INT NOT NULL,
+	minor_edit      TINYINT DEFAULT 0,
+        content         MEDIUMTEXT NOT NULL DEFAULT '',
+        versiondata     MEDIUMTEXT NOT NULL DEFAULT '',
+        PRIMARY KEY (id,version),
+	INDEX (mtime)
+);
+
+
+CREATE TABLE wiki_recent (
+	id              INT NOT NULL,
+	latestversion   INT,
+	latestmajor     INT,
+	latestminor     INT,
+        PRIMARY KEY (id)
+);
+
+
+CREATE TABLE wiki_nonempty (
+	id              INT NOT NULL,
+	PRIMARY KEY (id)
+);
+
+
+CREATE TABLE wiki_link (
+	linkfrom        INT NOT NULL,
+        linkto          INT NOT NULL,
+	INDEX (linkfrom),
+        INDEX (linkto)
+);
+
+
+
 EOF
 
-#
+
+###############################################################################
 # Update document access rights
 #
 $PERL <<'EOF'
@@ -563,8 +662,6 @@ while (my ($docid,$stateid,$doc_group,$restricted_access) = $c->fetchrow()) {
             print "Could not delete document $docid\n";
             $failed=1;;
         }
-  }
-
     } elsif ($stateid=="4") { #hidden
         my $query3 = "INSERT INTO permissions VALUES ('DOCUMENT_READ',$docid,100)";
         my $c3 = $dbh->prepare($query3);
@@ -610,6 +707,113 @@ EOF
 
 
 
+
+###############################################################################
+# Add wiki service
+#
+
+
+$PERL <<'EOF'
+use DBI;
+require "/home/httpd/SF/utils/include.pl";
+
+# load local.inc variables
+&load_local_config();
+
+&db_connect;
+
+sub wiki_exist {
+    my ($group_id) = @_;
+    
+    my ($query, $c, $res);
+    $query = "SELECT service_id FROM service WHERE group_id=".$group_id." AND short_name='wiki'";
+    $c = $dbh->prepare($query);
+    $c->execute();
+    return $c->rows;
+}
+
+# Check wiki service entry existency before calling this script
+sub check_wiki_service_exist {
+    my ($query, $c, $res);
+
+    $query = "SELECT * FROM service WHERE service_id=17";
+    $c = $dbh->prepare($query);
+    $c->execute();
+    if ($c->rows != 1) {
+	print "Please apply SQL patch before executing this script!\n";
+	exit 1;
+    }
+}
+
+sub add_wiki {
+    my ($group_id) = @_;
+    my ($query, $c, $res);
+    $query = "INSERT INTO service SET group_id=".$group_id.", label='Wiki', description='Wiki', short_name='wiki', link='/wiki/?group_id=".$group_id."', is_active=1, is_used=0, scope='system', rank=105";
+    $c = $dbh->prepare($query);
+    $res = $c->execute();
+    if(!$res) {
+	return FALSE;
+    }
+    return TRUE;
+}
+
+sub add_wiki_service {
+    my ($group_id) = @_;
+
+    if(!wiki_exist($group_id)) {
+	if(!add_wiki($group_id)) {
+	    print " Error Adding Wiki service for $group_id\n";
+	    exit;
+	}
+	else {
+	    #print " OK\n";
+	}
+    }
+    else {
+	print 'There is already a wiki service for '.$group_id."\n";
+    }
+
+}
+
+sub setup_interwiki_map {
+    my $interwikimap = '/home/httpd/SF/common/wiki/phpwiki/lib/interwiki.map';
+    
+    print 'Update '.$interwikimap."\n";
+
+    if(($sys_force_ssl == 1) || ($sys_stay_in_ssl == 1)) {
+	$host = 'https://'.$sys_https_host;
+    }
+    else {
+	$host = 'http://'.$sys_default_domain;
+    }
+    
+    open(FILE, ">$interwikimap") || die "Can't open $interwikimap: $!\n";
+    print FILE "CodeX ".$host."/wiki/index.php?group_id=1&pagename=\n";
+    close(FILE)
+}
+
+
+#
+# MAIN
+#
+
+# Check wiki service entry existency before calling this script
+check_wiki_service_exist();
+
+# Insert a wiki for each project
+my ($query, $c, $res);
+$query = "SELECT group_id FROM service WHERE group_id>100 OR group_id=1 GROUP BY group_id";
+$c = $dbh->prepare($query);
+$c->execute();
+while(my $group_id = $c->fetchrow()) {
+    add_wiki_service($group_id);
+}
+
+# Setup interwiki_map
+setup_interwiki_map();
+
+exit;
+EOF
 
 # OLD 2.0 TO 2.2 STUFF
 

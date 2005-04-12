@@ -1,0 +1,22 @@
+<?php  // -*-html-*-
+/* $Id$
+ *
+ * This template is responsible mainly for the outer level <html> stuff.
+ */
+printf("<?xml version=\"1.0\" encoding=\"%s\"?>\n", CHARSET);
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<?= Template('head') ?>
+<body>
+<div align="right" id="logo"><a class="wikilink" 
+                  href="<?=WikiURL(HOME_PAGE)?>" target="_top"
+                  ><img src="<?=$Theme->getImageURL('logo')?>" id="logo-img"
+                        border="0" alt="<?=fmt(_("%s: %s"), WIKI_NAME, HOME_PAGE) ?>"
+                        align="right" /></a></div>
+
+<!-- Page title -->
+<h1><?= $HEADER ?></h1>
+</body>
+</html>

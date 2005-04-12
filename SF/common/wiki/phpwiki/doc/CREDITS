@@ -1,0 +1,75 @@
+!! The PhpWiki Development Team
+
+Please report bugs to mailto:phpwiki-talk@lists.sourceforge.net
+
+! Core team
+
+;[ Steve Wainstead | mailto:swain@panix.com ] :
+;: original author
+;: chief in charge
+
+;[ Arno Hollosi | mailto:ahollosi@mail.com ] :
+;: wrote the MySQL library, the templates, and the database schema
+;: plus many other things too numerous to mention.
+
+;[ Jeff Dairiki | mailto:dairiki@dairiki.org ] :
+;: wrote the diff code
+;: did a complete rewrite of PhpWiki using PHP classes.
+
+;[ Aredridel Niothke | mailto:aredridel@nbtsc.org ] :
+;: has started a flat file database for Phpwiki.
+
+
+! Localization
+
+;[ Jan Nieuwenhuizen | mailto:janneke@gnu.org ] :
+;: built architecture to support internationalization
+;: contributed Dutch translation
+
+;[ Sandino Araico Sánchez | mailto:sandino@sandino.net ] :
+;: contributed Spanish translation
+;: Pablo added some updates
+
+;[ Jon Åslund | mailto:d98-jas@nada.kth.se ] :
+;: contributed Swedish translation
+
+; Arno : contributed German translation
+
+;[ Marco Milanesi | mailto:kpanic@ada2.unipv.it ] :
+;: contributed the Italian translation
+
+! Patches
+
+;[Joel Uckelman | mailto:uckelman@iastate.edu ] :
+;: ported the dbmlib.php to the new dba_* interface, which is the default in PHP 4.0.4 and later.
+
+;[ Pablo Roca Rozas | mailto:proca@clavo.net ] :
+;: contributed a new logo image file and updated the Spanish translation
+
+;[Scott R. Anderson | mailto:sra@diem.net ] :
+;: contributed a patch to allow authorized users' names to appear in RecentChanges.
+
+;[Neil Brown | mailto:neilb@cse.unsw.edu.au ] :
+;: has contributed numerous useful patches e.g. nested definition lists
+
+;[Jan Hidders | mailto:hidders@win.tue.nl ] :
+;: has contributed a patch for dbmlib.php for the wikilinks stuff and page removal.
+
+;[Antti Kaihola | mailto:akaihola@siba.fi ] :
+;: patch for named internal links
+
+;[Jeremie Kass | mailto:jeremie@umich.edu ] :
+;: contributed a patch so the logo is decided in the templates instead of being hardcoded.
+
+
+
+------------
+
+!! In the 1.0 series:
+
+* John Jorgensen http://c2.com/cgi-bin/wiki?AnotherPhpWiki,
+* Tim Voght http://c2.com/cgi-bin/wiki?TimVoght,
+* Grant Morgan http://c2.com/cgi-bin/wiki?GrantMorgan,
+* and especially Clifford A. Adams: http://c2.com/cgi-bin/wiki?CliffordAdams
+
+ $Id$

@@ -1,0 +1,209 @@
+<?php
+/* 
+ * Copyright 2005, STMicroelectronics
+ *
+ * Originally written by Manuel Vacelet
+ *
+ * This file is a part of CodeX.
+ *
+ * CodeX is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * CodeX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
+require_once('HTMLCleaner.class');
+require_once('WikiPage.class');
+require_once('RecordIterator.class');
+
+class WikiEntryManager extends RecordIterator {
+  /* private int */ var $gid;
+
+  /**
+   * Constructor
+   */
+  function WikiEntryManager($gid=0) {
+    $this->gid = (int) $gid;
+    parent::RecordIterator('WikiEntry');
+  }
+
+  function getList() {
+    $this->sqlStatement = 
+      '  SELECT * FROM wiki_group_list'
+      .' WHERE group_id='.$this->gid
+      .' ORDER BY rank';
+    $this->dbinit();
+  }
+
+}
+
+/**
+ *
+ * @package   WikiService
+ * @copyright STMicroelectronics, 2005
+ * @author    Manuel Vacelet <manuel.vacelet-abecedaire@st.com>
+ * @license   http://opensource.org/licenses/gpl-license.php GPL
+ */
+class WikiEntry {
+  /* private int(11) */     var $id;
+  /* private int(11) */     var $gid;
+  /* private int(11) */     var $rank;
+  /* private string(255) */ var $name;
+  /* private string(255) */ var $page;
+  /* private string(255) */ var $desc;
+  /* private WikiPage */    var $wikiPage;
+
+  /**
+   * Constructor
+   */
+  function WikiEntry($id=null) {
+    if(empty($id)) {
+      $this->id   = 0;
+      $this->gid  = 0;
+      $this->rank = 0;
+      $this->name = '';
+      $this->page = '';
+      $this->desc = '';
+      $this->wikiPage = null;
+    }
+    else {
+      $this->setId($id);
+      $this->_setFromDb();
+    }
+  }
+
+  /**
+   * Set
+   */
+
+  function setId($id) {
+    $this->id = (int) $id;
+  }
+
+  function setGid($gid) {
+    $this->gid = (int) $gid;
+  }
+
+  function setRank($rank) {
+    $this->rank = (int) $rank;
+  }
+
+  function setName($name) {
+    $this->name = HTMLCleaner::clean($name);
+  }
+
+  function setPage($page) {
+    $page = str_replace('&', '', $page); 
+    $page = str_replace('&amp;', '', $page); 
+    $this->page = HTMLCleaner::clean($page, HTMLCLEANER_FULL);
+  }
+
+  function setDesc($desc) {
+    $this->desc = HTMLCleaner::clean($desc);
+  }
+
+  function setFromRow($row) {
+    $this->id   = $row['id'];
+    $this->gid  = $row['group_id'];
+    $this->rank = $row['rank'];
+    $this->name = $row['wiki_name'];
+    $this->page = $row['wiki_link'];
+    $this->desc = $row['description'];
+
+    $this->wikiPage = new WikiPage($this->gid, $this->page);
+  }
+
+  function _setFromDb() {
+    $res = db_query(' SELECT * FROM wiki_group_list'.
+	     ' WHERE id='.$this->id);
+    $row = db_fetch_array($res);
+    $this->setFromRow($row);
+  }
+
+  
+  /**
+   * Get
+   */
+
+  function getId() {
+    return $this->id;
+  }
+
+  function getGid() {
+    return $this->gid;
+  }
+
+  function getRank() {
+    return $this->rank;
+  }
+
+  function getName() {
+    return stripslashes($this->name);
+  }
+
+  function getPage() {
+    return $this->page;
+  }
+
+  function getDesc() {
+    return stripslashes($this->desc);
+  }
+
+  /**
+   * Data handle
+   */
+  function add() {
+    $res = db_query(' INSERT INTO wiki_group_list SET'.
+		    ' group_id='.$this->gid.','.
+		    ' rank='.$this->rank.','.
+		    ' wiki_name="'.mysql_real_escape_string($this->name).'",'.
+		    ' wiki_link="'.mysql_real_escape_string($this->page).'",'.
+		    ' description="'.mysql_real_escape_string($this->desc).'"');
+    
+    if(db_affected_rows($res) === 1)
+      return true;
+
+    trigger_error('Can not insert new wiki entry: "'.db_error(), E_USER_ERROR);
+    return false;
+  }
+
+  function del() {
+    $res = db_query(' DELETE FROM wiki_group_list'.
+		    ' WHERE id='.$this->id.
+		    ' AND group_id='.$this->gid);
+
+    if(db_affected_rows($res) === 1)
+      return true;
+
+    trigger_error('Can not delete wiki entry: "'.db_error(), E_USER_ERROR);
+    return false;
+  }
+
+  function update() {
+    $res = db_query(' UPDATE wiki_group_list SET'.
+		    ' group_id='.$this->gid.','.
+		    ' rank='.$this->rank.','.
+		    ' wiki_name="'.mysql_real_escape_string($this->name).'",'.
+		    ' wiki_link="'.mysql_real_escape_string($this->page).'",'.
+		    ' description="'.mysql_real_escape_string($this->desc).'"'.
+		    ' WHERE id='.$this->id);
+
+    if(db_affected_rows($res) === 1)
+      return true;
+
+    trigger_error('Can not update wiki entry: "'.db_error(), E_USER_ERROR);
+    return false;
+
+  }
+}
+
+?>

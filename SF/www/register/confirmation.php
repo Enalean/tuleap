@@ -16,6 +16,7 @@ require_once('common/tracker/ArtifactFieldFactory.class');
 require_once('common/tracker/ArtifactField.class');
 require_once('common/tracker/ArtifactReport.class');
 require_once('common/tracker/ArtifactReportFactory.class');
+require_once('common/wiki/lib/WikiEntry.class');
 
 $Language->loadLanguageMsg('register/register');
 
@@ -56,7 +57,7 @@ if ($show_confirm) {
             exit_error($Language->getText('global','error'),$Language->getText('register_confirmation','ins_file_fail',array($host,db_error())));
 	}
 
-	// make the current user a project admin ad well as admin
+	// make the current user a project admin as well as admin
 	// on all CodeX services
 	$result=db_query("INSERT INTO user_group (user_id,group_id,admin_flags,bug_flags,forum_flags,project_flags,patch_flags,support_flags,doc_flags,file_flags) VALUES ("
 		. user_getid() . ","
@@ -68,7 +69,8 @@ if ($show_confirm) {
 		. "2," // patch flags
 		. "2," // support flags
 		. "2," // doc flags
-		. "2)"); // file_flags	
+		. "2," // file_flags	
+		. "2)"); // wiki_flags	
 	if (!$result) {
 		exit_error($Language->getText('global','error'),$Language->getText('register_confirmation','set_owner_fail',array($GLOBALS['sys_email_admin'],db_error())));
 	}
@@ -146,6 +148,15 @@ if ($show_confirm) {
             }
         }
 	
+	// Create default Wiki Entry
+	$wikiEntry = new WikiEntry();
+	$wikiEntry->setGid($group_id);
+	$wikiEntry->setName('Wiki Home');
+	$wikiEntry->setPage('HomePage');
+        $wikiEntry->setDesc('Default Wiki Document');
+	$wikiEntry->add();
+
+
 	// Show the final registration complete message and send email
 	// notification (it's all in the content part)
 	$HTML->header(array('title'=>$Language->getText('register_confirmation','registration_complete')));

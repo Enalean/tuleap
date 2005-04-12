@@ -1,0 +1,55 @@
+<?php // -*-php-*-
+  rcs_id('$Id$');
+  if (!$page->get('locked') || $user->isAdmin())
+      $EditB = Button("edit",
+                      $revision->isCurrent() ? _("Edit") : _("Edit Old Revision"));
+  else
+      $EditB = Button("viewsource", _("View Source"));
+
+  $Sep = $Theme->getButtonSeparator();
+?>
+<?php /* I would like not to have to use these tables, and managed to
+       * get this stuff to work more or less correctly using
+       * CSSs float:left; and float:right;.  However float:right; seems
+       * to cause MSIE4.01/NT to hang. 
+       * So, we use tables...  */ ?>
+<table summary="Toolbar 1: Page actions and user login."
+       width="100%" cellpadding="0" cellspacing="0" border="0">
+<tr valign="baseline">
+  <td>
+  <div id="actionbuttons">
+    <?= $EditB ?>
+    <?php if ($user->isAdmin()) { ?>
+      <?=$Sep?><?= Button($page->get('locked') ? 'unlock' : 'lock') ?>
+      <?=$Sep?><?= Button('remove') ?>
+    <?php } ?>
+    <?=$Sep?><?= Button("PageHistory", _("PageHistory")) ?>
+    <?=$Sep?><?= Button("diff") ?> 
+    <?=$Sep?><?= Button("PageInfo", _("PageInfo")) ?>
+<?php if (((defined('DEBUG') and DEBUG and $request->getArg('action') == 'browse')) || $user->isAdmin()) { ?> 
+    <!-- Buttons really only for debugging -->
+    <?=$Sep?><?= Button("DebugInfo", _("DebugInfo")) ?>
+    <?=$Sep?><?= Button("PageDump", _("PageDump")) ?>
+    <?php if (1 or CACHE_CONTROL != 'NONE') {
+       $PurgeCache = Button(array('nocache' => 'purge'),
+                     _("PurgeHtmlCache"), $page->getName());
+       $PurgeCache->addTooltip(_("Purge HTML cache for this page. Regenerate from WikiMarkup when next accessed."));
+       ?>
+      <?=$Sep?><?= $PurgeCache ?>
+    <?php } ?>
+    <!-- End debugging buttons -->
+<?php } ?>
+  </div>
+  </td>
+<?php
+/* valign="top" is not ideal here but required to get reasonable alignment
+   with the other action buttons in some browsers, like OmniWeb and Safari
+   (therefore probably Konquorer too) */
+if (empty($NOSIGNIN)) {
+?>
+  <td align="right" valign="top">
+    <div id="signin"><?= Template('signin') ?></div>
+  </td>
+</tr>
+</table>
+<?php } ?>

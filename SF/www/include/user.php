@@ -153,6 +153,11 @@ function user_ismember($group_id,$type=0) {
 			//file release admin
 			$query .= " AND file_flags = '2'";
 			break;
+                }
+	        case 'W2': {
+		        //wiki release admin
+			$query .= " AND wiki_flags = '2'";
+			break;
 		}
 		default : {
 			//fubar request

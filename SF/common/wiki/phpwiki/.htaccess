@@ -1,0 +1,28 @@
+# $Id$
+
+<IfModule mod_php4.c>
+
+# For added security (and PhpWiki debugging purposes) you may want to 
+# uncomment the following lines.  (On the other hand, depending on
+# how your server and how it is configured, these lines might
+# cause "Internal Server Errors".)
+
+#  php_flag register_globals off
+#  php_flag track_vars on
+#  php_flag allow_url_fopen off
+
+</IfModule>
+
+<Files *.ini>
+   Order deny,allow
+   Deny from all
+</Files>
+
+# Try various wiki versions, like wiki, wikide, wikisidebar, ...
+# <Files "wiki*">
+#   SetHandler application/x-httpd-php
+#   <IfDefine APACHE2>
+#    ForceType  application/x-httpd-php
+#    AcceptPathInfo on
+#   </IfDefine>
+# </Files>

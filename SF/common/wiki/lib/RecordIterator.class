@@ -1,0 +1,171 @@
+<?php
+/* 
+ * Copyright 2005, STMicroelectronics
+ *
+ * Originally written by Manuel Vacelet
+ *
+ * This file is a part of CodeX.
+ *
+ * CodeX is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * CodeX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
+/**
+ * Iterate on SQL records.
+ *
+ * This class build object list from an SQL table.
+ *  
+ * $classname is the name of the class that represent a table record.
+ * 
+ * @package   CodexStandardLibrary
+ * @copyright STMicroelectronics, 2005
+ * @author    Manuel Vacelet <manuel.vacelet-abecedaire@st.com>
+ * @license   http://opensource.org/licenses/gpl-license.php GPL
+ */
+class RecordIterator {
+  /** 
+   * @var object[] 
+   * @access private
+   */ 
+  var $list;
+  
+  /* @var int   
+   * @access private
+   */ 
+  var $counter;
+  
+  /* 
+   * @access private
+   */ 
+  var $key;
+  
+  /* @var string
+   * @access private
+   */ 
+  var $classname;
+  
+  /* @var string
+   * @access private
+   */ 
+  var $sqlStatement;
+
+  /**
+   * Constructor
+   * @access public
+   */
+  function RecordIterator($classname) {
+    $this->list         = array();
+    $this->counter      = null;
+    $this->key          = 0;
+    $this->classname    = $classname;
+    $this->sqlStatement = '';
+  }
+
+  /**
+   * dbinit
+   *
+   * Build list with _sqlStatement()
+   * @access public 
+   */
+  function dbinit() {
+    $res = db_query($this->sqlStatement);
+    $this->counter = db_numrows($res);
+    while($row = db_fetch_array($res)) {
+      $this->_row2obj($row);
+    }
+  }
+
+  /**
+   * Instanciate an object with the corresponding SQL record.
+   * @access private
+   */
+  function _row2obj(&$row) {
+    if(!empty($row)) {
+      $cn  = $this->classname;
+      $obj = new $cn();
+      $obj->setFromRow($row);
+      $this->list[] =& $obj;
+    }
+  }
+
+  /**
+   * @return object[] return the list
+   * @access public 
+   */
+  function &toArray() {
+    return $list;
+  }
+
+  /**
+   * @return int
+   * @access public 
+   */
+  function count() {
+    if(empty($this->counter))
+      $this->counter = count($list);
+    
+    return $this->counter;
+  }
+
+  /**
+   * @return object
+   * @access public 
+   */
+  function &next() {
+    $this->key++;    
+  }
+
+  function iterate() {
+    if(isset($this->list[$this->key])) {
+      return $this->list[$this->key++];
+    }
+    else {
+      return false;
+    }
+  }
+
+  /**
+   * @return object
+   * @access public 
+   */
+  function &current() {
+    return $this->list[$this->key];
+  }
+
+  /**
+   * @return int
+   * @access public 
+   */
+  function key() {
+    return $this->key;
+  }
+
+  /**
+   * 
+   * @access public 
+   */
+  function rewind() {
+    $this->key = 0;
+  }
+
+  /**
+   * 
+   * @return boolean 
+   * @access public
+   */
+  function valid() {
+    return isset($this->list[$this->key + 1]);
+  }
+}
+?>

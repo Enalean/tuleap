@@ -1,0 +1,17 @@
+<?php // -*-html-*-
+rcs_id('$Id$');
+?>
+<div id="calendar">
+<?= JavaScript('
+  function dateChanged(calendar) {
+    if (calendar.dateClicked) {
+      var y = calendar.date.getFullYear();
+      var m = calendar.date.getMonth();     // integer, 0..11
+      var d = calendar.date.getDate();      // integer, 1..31
+      m = m < 10 ? "0" + m : m; 
+      d = d < 10 ? "0" + d : d; 
+      window.location = "' . WikiUrl($Theme->calendarBase(),0,1) . SUBPAGE_SEPARATOR . '" + y + "-" + m + "-" + d;
+    }
+  };
+  Calendar.setup({flat : "calendar", flatCallback : dateChanged, weekNumbers : false})') ?>
+</div>

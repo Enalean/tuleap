@@ -1,0 +1,30 @@
+PhpWiki is a web application licensed under the Gnu Public License, which
+should be included in the same directory as this README. A copy
+can be found at http://www.gnu.org/copyleft/gpl.txt.
+
+See INSTALL for installation notes.
+Read UPGRADE before upgrading from a previous version of PhpWiki.
+
+doc/:
+INSTALL.mysql          for using PhpWiki with MySQL
+INSTALL.pgsql          for using PhpWiki with PostgreSQL
+INSTALL.flatfile       for using PhpWiki with flatfile databases
+INSTALL.mSQL           for using PhpWiki with mSQL
+INSTALL.MacOSX         for using PhpWiki in MacOSX
+README.coding          for notes on modifying PhpWiki
+DBLIB.txt
+CREDITS
+HISTORY
+
+For a list of current bugs see:
+https://sourceforge.net/bugs/?group_id=6121
+
+The out-of-the-box version uses a dbm file in the /tmp directory; you may
+wish a more permanent place for yours, but make sure it's read/writable
+by your web server!
+
+NOTE: Not all database versions are equal. The MySQL and Postgresql
+implementations have the full set of features; DBM and mSQL are
+missing only a few, and the flat file implementation is solid
+and waiting for your improvement. All are suitable for production.
+

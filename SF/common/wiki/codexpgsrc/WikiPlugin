@@ -1,0 +1,192 @@
+Date: Mon, 23 Feb 2004 17:28:55 -0500
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.8pre)
+X-Rcs-Id: $Id$
+Content-Type: application/x-phpwiki;
+  pagename=WikiPlugin;
+  pgsrc_version="3 $Revision$";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+PhpWiki supports plugins since 1.3.x
+
+~WikiPlugins allow one to easily add new types of dynamic content (as
+well as other functionality) to wiki pages within PhpWiki.  In this
+very wiki, the RecentChanges, BackLinks, LikePages and most other indexing 
+scheme pages are all implemented using plugins.
+
+Sooner or later the old-style phpwiki: [MagicPhpWikiURLs] will be replaced 
+by plugins too.
+
+!!!Example
+
+Currently, one invokes a plugin by putting something like:
+
+<verbatim>
+<?plugin BackLinks?>
+</verbatim>
+
+into a regular wiki-page.  That particular example produces as list of
+pages which link to the current page.  Here it is:
+
+<?plugin BackLinks?>
+
+(This is great for Category and Topic pages.  You can use this to get
+an automatic in-line listing of pages in the Category or Topic.)
+
+!!!Details
+
+Plugins can take certain named arguments (most do).  The values of
+these arguments can be determined four different ways.  In order of
+precedence:
+
+# The plugin invocation can specify the value for an argument, like so:
+  <verbatim>
+  <?plugin BackLinks page=OtherPage ?>
+  </verbatim>
+
+# The argument can be specified via an HTTP query argument.  This
+  doesn't happen (is not allowed) unless the argument is mentioned in
+  the plugin invocation:
+
+  <verbatim>
+  <?plugin BackLinks page ?>
+  </verbatim>
+
+# Default values specified in the plugin invocation:
+
+  <verbatim>
+  <?plugin BackLinks page||=OtherPage ?>
+  </verbatim>
+
+# The plugin must supply default values for each argument it uses.
+  Such default args may be overriden by URL arguments like so: 
+  <verbatim>
+    BackLinks?page=ThisPage&sortby=-mtime
+  </verbatim>
+  (The BackLinks plugin uses the current page as the default value for
+  the ''page'' argument.)
+
+!!! There exist four basic types of plugins:
+
+All this plugins derive from WikiPlugin class extending the run method
+which returns a object tree of HTML objects, and may react on any
+provided arguments from the ~WikiPage (see the args below) or
+optionally overridden by arguments from the url (GET or POST args) (if defined via '||=').
+
+  *plugin-form* is used to display a input type=text box for the default argument.
+
+  *plugin-head* does not exist anymore. It was used to pass special headers to the HTTP output only, 
+  which might be needed for framesets, redirection (RedirectToPlugin) and inserting 
+  global javascript. plugin-head is not called inside the body.
+
+  *plugin-link* may be used to change the outgoing links for this page.
+
+<verbatim>
+<?plugin PluginName [args...] ?>
+</verbatim>
+
+<verbatim>
+<?plugin-form PluginName [args...] ?>
+</verbatim>
+
+<verbatim>
+<?plugin-link PluginName [args...] ?>
+</verbatim>
+;:This is not used in any plugin so far.
+
+<verbatim>
+<?plugin-head PluginName [args...] ?>
+</verbatim>
+;:This is not used anymore.
+
+
+!!!Existing Plugins
+
+See PluginManager for the actual list. Most plugins have their own description page with the name *Plugin* appended.
+
+* AllPages
+* AllUsers
+* [AuthorHistory|AuthorHistoryPlugin]
+* BackLinks
+* CacheTest
+* [Calendar|CalendarPlugin]
+* [CalendarList|CalendarListPlugin]
+* [Comment|CommentPlugin]
+* [EditMetaData|EditMetaDataPlugin]
+* [ExternalSearch|ExternalSearchPlugin]
+* [FrameInclude|FrameIncludePlugin]
+* FullTextSearch
+* FuzzyPages
+* [HelloWorld|HelloWorldPlugin]
+* [IncludePage|IncludePagePlugin]
+* IncludeSiteMap
+* InterWikiSearch
+* LikePages
+* ListSubpages
+* MostPopular
+* [OldStyleTable|OldStyleTablePlugin]
+* OrphanedPages
+* PageDump
+* [PageGroup|PageGroupTest]
+* PageHistory
+* PageInfo
+* PageTrail
+* [PhotoAlbum|PhotoAlbumPlugin]
+* [PhpHighlight|PhpHighlightPlugin]
+* [PhpWeather|PhpWeatherPlugin]
+* PluginManager
+* PrevNext
+* RandomPage
+* [RawHtml|RawHtmlPlugin]
+* RecentChanges
+* RecentChangesCached
+* [RedirectTo|RedirectToPlugin]
+* [RichTable|RichTablePlugin]
+* SiteMap
+* [SystemInfo|SystemInfoPlugin]
+* TexToPng
+* TitleSearch
+* [Transclude|TranscludePlugin]
+* [UnfoldSubpages|UnfoldSubpagesPlugin]
+* UpLoad
+* UserPreferences
+* VisualWiki
+* WantedPages
+* [WikiAdminChmod|PhpWikiAdministration/Chmod]
+* [WikiAdminRemove|PhpWikiAdministration/Remove]
+* [WikiAdminRename|PhpWikiAdministration/Rename]
+* [WikiAdminSearchReplace|PhpWikiAdministration/Replace]
+* [WikiAdminSelect|PhpWikiAdministration#Page Explorer]
+* [WikiAdminUtils|PhpWikiAdministration#PhpWiki Internals]
+* [WikiBlog|WikiBlogPlugin]
+* WikiForm
+* _AuthInfo
+* _BackendInfo
+* _PreferencesInfo
+* text2png
+
+!!!More Ideas for Plugins
+
+* Integrate Search form with individual InterWiki map entries
+  e.g. Search Php Website for:[ ] (Search)
+* Various other indexing schemes.
+* Diff
+* PdfOut: action handler for PrintAsPdf or DumpToPdf
+* Insert XML/RSS/RDF news content from =location=xxx= where location
+  is a parameter to the plugin, maybe include some formatting control
+  of the output generated.
+
+-----
+
+Pages in this category:
+
+<?plugin BackLinks page=[pagename] noheader=1?>
+
+* FullTextSearch: FindPage
+* TitleSearch: LikePages (match_head, match_tail).
+
+-----
+
+PhpWikiDocumentation

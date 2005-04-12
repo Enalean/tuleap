@@ -163,6 +163,10 @@ class Project extends Group {
         return $this->use_service['survey'];
     }       
 
+    //whether or not this group has opted to use wiki
+    function usesWiki() {
+        return $this->use_service['wiki'];
+    }   
 
 
     // Generic versions

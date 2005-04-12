@@ -1,0 +1,14 @@
+<?php // -*-html-*-
+  rcs_id('$Id$');
+?>
+<hr class="printer" noshade="noshade" />
+<p class="editdate"><?= $Theme->getLastModifiedMessage($revision) ?></p>
+<?php
+global $HIDE_TOOLBARS;
+if (!$HIDE_TOOLBARS) {
+?>
+<hr class="toolbar" noshade="noshade" />
+<div class="toolbar">
+<?= Template('actionbar') ?>
+</div>
+<?php } ?>

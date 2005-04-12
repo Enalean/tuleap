@@ -1,0 +1,66 @@
+<html>
+<head>
+<title>PhpWiki unit tests</title>
+</head>
+<body>
+
+<h1>Introduction</h1>
+
+This directory contains unit tests for PhpWiki.  You must have <a
+href="http://pear.php.net/package/PHPUnit">PEAR's PHPUnit package</a>.
+These tests are unrelated to maketest.pl in the directory above this
+one, which do not use PHPUnit.
+
+<h1>Prerequisites</h1>
+<h2>PHP</h2>
+
+You need the php <a
+href="http://us3.php.net/features.commandline">command-line
+interface</a>.  It was experimental as of PHP 4.2.0, default as of PHP
+4.3.0.
+
+You also need the 'pear' executable.
+
+<h2>PHPUnit</h2>
+
+You can use pear to see if PHPUnit is installed:
+
+<pre>
+/export/scratch/apache/2.0.46/php/bin) % ./pear list
+Installed packages:
+===================
+Package        Version State
+Archive_Tar    0.9     stable
+Console_Getopt 1.0     stable
+DB             1.3     stable
+HTTP           1.2     stable
+HTTP_Upload    0.8.1   stable
+Mail           1.0.1   stable
+Net_SMTP       1.0     stable
+Net_Socket     1.0.1   stable
+PEAR           1.1     stable
+PHPUnit        1.0.0   stable
+XML_Parser     1.0.1   stable
+XML_RPC        1.0.4   stable
+</pre>
+
+If it is not installed, you can use 'pear' to install it:
+
+<pre>
+/export/scratch/apache/2.0.46/php/bin) % ./pear install PHPUnit
+</pre>
+
+<h1>Running these unit tests</h1>
+
+You must be in the phpwiki/tests/unit subdirectory.  Then use the php
+command-line executable to run the tests.  For example:
+
+<pre>
+phpwiki/tests/unit % php test.php
+Run tests ..
+TestCase inlineparsertest->testnowikiwords() passed
+TestCase inlineparsertest->testwikiword() passed
+</pre>
+
+</body>
+</html>

@@ -1,0 +1,22 @@
+<?php // -*-html-*- ?>
+<!-- $Id$ -->
+<?php
+    $signatureURL = $Theme->getImageURL('signature');
+?>
+<p><?=fmt("Thank you for editing %s.", WikiLink($page))?><br />
+<?=_("Your careful attention to detail is much appreciated.")?></p>
+
+<?php if (!empty($WARNINGS)) { ?>
+  <p><strong><?=_("Warning!")?></strong> <?= $WARNINGS ?></p>
+<?php } ?>
+
+<?php if ($signatureURL) { ?>
+  <p><img src="<?=$signatureURL?>" id="signature" /></p>
+<?php } ?>
+
+<?php if (!empty($LOCK_CHANGED_MSG)) { ?>
+  <p><?=$LOCK_CHANGED_MSG?></p>
+<?php } ?>
+
+<hr noshade="noshade" />
+<?= Template('browse') ?>

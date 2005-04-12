@@ -1,0 +1,6 @@
+<?php // -*-html-*-
+  rcs_id('$Id$');
+?>
+<!-- Add your Disclaimer here -->
+<?= $GLOBALS['ErrorManager']->getPostponedErrorsAsHTML() ?>
+<?php if (defined('DEBUG') and DEBUG) { ?><?= Template('debug') ?><?php } ?>
