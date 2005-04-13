@@ -1,0 +1,45 @@
+#/**
+#  *
+#  * Default message catalog (English)
+#  *
+#  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
+#  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
+#  * http://codex.xrce.xerox.com
+#  *
+#  * @version   $Id$
+#  *
+#  */
+system	locale	fr_FR
+system	strftimefmt	%Y %B %e  %H:%M
+system	datefmt	Y-m-d H:i
+conf	content_encoding	iso-8859-1
+conf	default_font	verdana,arial,helvetica,sans-serif
+conf	language_code	fr
+conf	language_id	1
+global	perm_denied	Permission Refusée
+global	error_perm_denied	Erreur - Permission Refusée
+global	back_home	Retour à la page d'accueil
+global	back	Back
+global	btn_delete	Détruire
+global	btn_cancel	Annuler
+global	btn_update	Mettre à jour
+global	btn_submit	Valider
+global	btn_browse	Afficher
+global	btn_create	Créer
+global	btn_close	Fermer
+global	yes	Oui
+global	no	Non
+global	on	Activé
+global	off	Désactivé
+global	any	Tous
+global	none	Aucun(e)
+global	begin	Début
+global	end	Fin
+global	next	Suivant
+global	prev	Précédent
+global	printer_version	Version Imprimable
+global	error	Erreur
+global	help	Aide
+global	by	par
+global	select	Selectionner
+global	unchanged	Inchangé
