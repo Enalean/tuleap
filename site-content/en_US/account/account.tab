@@ -48,7 +48,7 @@ account_options	remember_me	"Remember me" <u><i>($1 remembers your login/passwor
 # Script: SF/www/account/change_email.php
 #
 account_change_email	title	Change Email Address
-account_change_email	message	<P>Changing your email address will require confirmation from your new email address, so that we can ensure we have a good email address on file. <P>We need to maintain an accurate email address for each user due to the level of access we grant via this account. If we need to reach a user for issues arriving from a shell or project account, it is important that we be able to do so.<P>Submitting the form below will mail a confirmation URL to the new email address. Visiting this link will complete the email change.
+account_change_email	message	<P>Changing your email address will require confirmation from your new email address, so that we can ensure we have a good email address on file. <P>Submitting the form below will mail a confirmation URL to the new email address. Visiting this link will complete the email change.
 account_change_email	label_new	New Email Address
 account_change_email	send_new	Send Confirmation to New Address
 #
@@ -62,8 +62,8 @@ account_change_email-confirm	mailsent	An email has been sent to the new address.
 #-----------------------------------------------
 # Script: SF/www/account/change_email-complete.php
 #
-account_change_email-complete	invalid_hash	This hash key exists more than once.
-account_change_email-complete	duplicate_hash	Invalid confirmation hash.
+account_change_email-complete	invalid_hash	Invalid confirmation hash.
+account_change_email-complete	duplicate_hash	This hash key exists more than once.
 account_change_email-complete	title	Email Change Complete
 account_change_email-complete	message	Welcome, $1.<P>Your email change is complete. Your new email address on file is <B>$2</B>. Mail sent to $3 user $1 (login $4) will now be forwarded to this new email address.
 #
@@ -88,7 +88,7 @@ account_change_realname	new_name	New Real Name
 # Script: SF/www/account/change_timezone.php
 #
 account_change_timezone	title	Change Timezone
-#account_change_timezone	message	Now, no matter where you live, you can see all dates and times throughout $1 as if it were in your neighborhood.
+account_change_timezone	message	Now, no matter where you live, you can see all dates and times throughout $1 as if it were in your neighborhood.
 account_change_timezone	no_update	Nothing Updated
 account_change_timezone	choose_tz	Please choose a timezone other than none
 #
@@ -96,13 +96,13 @@ account_change_timezone	choose_tz	Please choose a timezone other than none
 # Script: SF/www/account/deleted.php
 #
 account_deleted	title	Deleted Account
-account_deleted	message	Your account has been deleted. If you have questions regarding your deletion, please email <A HREF="mailto:$1">$2</A>.Inquiries through other channels will be directed to this address.
+account_deleted	message	Your account has been deleted. If you have questions regarding your deletion, please email <A HREF="mailto:$1">$2</A>.
 #
 #-----------------------------------------------
 # Script: SF/www/account/editsshkeys.php
 #
 account_editsshkeys	title	Change Authorized SSH Keys
-account_editsshkeys	message	To avoid having to type your password every time for your SSH developer account, you may upload your public key(s) here and they will be placed on the server in your ~/.ssh/authorized_keys file.<P>To generate a public key, run the program 'ssh-keygen' (or ssh-keygen1) on your desktop machine.Then look at the file '~/.ssh/identity.pub' where the generated public key has been stored. Read the ssh documentation for further information on sharing keys.
+account_editsshkeys	message	To avoid having to type your password every time for your SSH developer account, you may upload your public key(s) here and they will be placed on the server in your '~/.ssh/authorized_keys' file.<P>To generate a public key, run the program 'ssh-keygen' (or ssh-keygen1) on your desktop machine.Then look at the file '~/.ssh/identity.pub' where the generated public key has been stored. Read the ssh documentation for further information on sharing keys.
 account_editsshkeys	important	<P><b>IMPORTANT:</b>SSH Shared Keys Updates will be reflected in the next cron update in approximately <B>$1</B> hours, <B>$2</B> minutes from now	
 account_editsshkeys	keys	Authorized keys:<BR><I>Important: Make sure there are no line breaks except between keys. After submitting, verify that the number of keys in your file is what you expected.</I>
 #
@@ -118,7 +118,7 @@ account_first	message	You are now a registered user on $1. As a registered user,
 account_login	title	Site Login
 account_login	error_can_t_update_passwd	Internal error: Could not update passwords.
 account_login	pending_title	Pending Account
-account_login	pending_msg	Your account is currently pending your email confirmation. Visiting the link sent to you in this email will activate your account.<P>If you need this email resent, please click below and a confirmation email will be sent to the email address you provided in registration.Pending Account
+account_login	pending_msg	Your account is currently pending your email confirmation. Visiting the link sent to you in this email will activate your account.<P>If you need this email resent, please click below and a confirmation email will be sent to the email address you provided in registration.
 account_login	resend_btn	Resend Confirmation Email
 account_login	cookies	Cookies must be enabled past this point
 account_login	name	Login Name
@@ -127,12 +127,12 @@ account_login	stay_ssl	Stay in secure connection mode after login<br><em>&nbsp;&
 account_login	msie_pb	<B>Internet Explorer </B> users (prior to 5.1) will have intermittent SSL problems, so they should leave SSL after login. Visit <A HREF="http://www.microsoft.com/">Microsoft</A> for more information about this known problem.
 account_login	login_btn	Login
 account_login	lost_pw	<b><A href="lostpw.php">[Lost your password?]</A></b><BR> If you have lost your password please do not create another account but follow us and we'll help you <a href="lostpw.php">remember your lost password</a>. If it fails then contact the <a href="mailto:$1"><b>$2 site administrators</b></a>.
-account_login	create_acct	<b><A HREF="register.php">[Create a new Account]</A></b><BR> If it's your first time on the <b>$1</b> site you can become a member right now ! The creation of a <a href="register.php">new account</a> takes a few seconds and you can take advantage of the services offered by the $1 site to all $2 developers.
+account_login	create_acct	<b><A HREF="register.php">[Create a new Account]</A></b><BR> If it's your first time on the <b>$1</b> site you can become a member right now ! The creation of a <a href="register.php">new account</a> takes a few seconds and you can take advantage of the services offered by the $1 site.
 #
 #-----------------------------------------------
 # Script: SF/www/account/lostlogin.php
 #
-account_lostlogin	title	Lost Password Login
+account_lostlogin	title	Lost Password
 account_lostlogin	message	Welcome, $1. You may now change your lost password.
 account_lostlogin	duplicate_hash	This hash key exists more than once.
 account_lostlogin	invalid_hash	Invalid confirmation hash.
