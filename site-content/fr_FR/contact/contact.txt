@@ -1,0 +1,31 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+-->
+
+<!--
+Note: 
+if you use the generic trackers in the Admin project, instead of the legacy Bug and Service Request trackers, 
+you need to update the links below:
+SR link:  <A HREF="/tracker/?func=add&group_id=1&atid=XXX"> where XXX is the id of the SR tracker for the Admin project (103?)
+Bug link: <A HREF="/tracker/?func=add&group_id=1&atid=YYY"> where YYY is the id of the Bug tracker for the Admin project (101?)
+-->
+
+<h2>Points de contact</h2>
+
+<ul>
+<li><b>Assistance et demande de support</b>: toutes les demandes d'assistance, les questions techniques ou les demandes d'améliorations relatives à l'utilisation de <?php print $GLOBALS['sys_name']; ?> doivent être soumises via le   
+<A HREF="/support/?func=addsupport&group_id=1">[ Gestionnaire de demandes de support ]</A> de <?php print $GLOBALS['sys_name']; ?>.<br><br>
+
+<li><b>Défauts (aussi connu sous le nom de Bugs)</b>:
+Si vous pensez avoir identifier un défaut ou une erreur inhabituelle, merci d'utiliser <A HREF="/bugs/?func=addbug&group_id=1">[ Gestionnaire de défauts ]</A> de <?php print $GLOBALS['sys_name']; ?>.<br><br>
+
+<li><b>Autres demandes</b>: toutes les autres demandes doivent être envoyées par courrier électronique au  
+<A href="mailto:<?php print $GLOBALS['sys_email_contact']; ?>">[ Contact <?php print $GLOBALS['sys_name']; ?> ]</A><br><br>
+</ul>
+
