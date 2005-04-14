@@ -9,6 +9,7 @@
 require_once('pre.php');
 require_once('www/project/admin/permissions.php');
 require_once('www/file/file_utils.php');
+$Language->loadLanguageMsg('file/file');
 
 // LJ Now only for registered users on CodeX
 if (!user_isloggedin()) {
@@ -55,27 +56,26 @@ if (db_numrows($res)>0) {
     }
 }
 
-$params=array('title'=>'File packages for '.group_getname($group_id),
+$params=array('title'=>$Language->getText('file_showfiles','file_p_for',group_getname($group_id)),
               'pv'=>$pv);
 
 file_utils_header($params);
 if ( $num_packages < 1) {
-    echo '<h3>No File Packages</h3><p>There are no file packages available';
+    echo '<h3>'.$Language->getText('file_showfiles','no_file_p').'</h3><p>'.$Language->getText('file_showfiles','no_p_available');
     file_utils_footer($params);
     exit;
 }
 
 if ($pv) {
-    echo '<h3>Package Releases:</h3>';
+    echo '<h3>'.$Language->getText('file_showfiles','p_releases').':</h3>';
 } else {
     echo "<TABLE width='100%'><TR><TD>";
-    echo '<h3>Package Releases '. help_button('FileReleaseJargon.html').'</h3>';
+    echo '<h3>'.$Language->getText('file_showfiles','p_releases').' '. help_button('FileReleaseJargon.html').'</h3>';
     echo "</TD>";
-    echo "<TD align='left'> ( <A HREF='".$PHP_SELF."?group_id=$group_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;Printer version</A> ) </TD>";
+    echo "<TD align='left'> ( <A HREF='".$PHP_SELF."?group_id=$group_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('file_showfiles','printer_version')."</A> ) </TD>";
     echo "</TR></TABLE>";
 
-    echo '<p>Select Release to see Release Notes and Change Log, &nbsp;';
-    echo 'Select File to request file download.</p>';
+    echo '<p>'.$Language->getText('file_showfiles','select_release').'</p>';
 }
 
 $url = get_server_url();
@@ -98,14 +98,14 @@ function download(group_id,file_id,filename) {
 </SCRIPT>
 <?
     $title_arr = array();
-    $title_arr[] = 'Package';
-    $title_arr[] = 'Release<BR>&amp; Notes';
-    $title_arr[] = 'Filename';
-    $title_arr[] = 'Size';
-    $title_arr[] = 'D/L';
-    $title_arr[] = 'Arch.';
-    $title_arr[] = 'Type';
-    $title_arr[] = 'Date';
+    $title_arr[] = $Language->getText('file_admin_editpackagepermissions','p');
+    $title_arr[] = $Language->getText('file_showfiles','release_notes');
+    $title_arr[] = $Language->getText('file_admin_editreleases','filename');
+    $title_arr[] = $Language->getText('file_showfiles','size');
+    $title_arr[] = $Language->getText('file_showfiles','d_l');
+    $title_arr[] = $Language->getText('file_showfiles','arch');
+    $title_arr[] = $Language->getText('file_showfiles','type');
+    $title_arr[] = $Language->getText('file_showfiles','date');
 
     // get unix group name for path
     $group_unix_name=group_getunixname($group_id);
@@ -139,7 +139,7 @@ function download(group_id,file_id,filename) {
 	$proj_stats['releases'] += $num_releases;
 
 	if ( !$res_release || $num_releases < 1 ) {
-		print '<TR><TD>&nbsp;</TD><TD><B>No Releases</B></TD><TD COLSPAN="6">&nbsp;</TD></TR>'."\n";
+		print '<TR><TD>&nbsp;</TD><TD><B>'.$Language->getText('file_showfiles','no_releases').'</B></TD><TD COLSPAN="6">&nbsp;</TD></TR>'."\n";
 	} else {
 		   // iterate and show the releases of the package
 		for ( $r = 0; $r < $num_releases; $r++ ) {
@@ -193,7 +193,7 @@ function download(group_id,file_id,filename) {
 			$proj_stats['files'] += $num_files;
 
 			if ( !$res_file || $num_files < 1 ) {
-				print '<TR><TD COLSPAN=2>&nbsp;</TD><TD><B>No Files</B></TD><TD COLSPAN="5">&nbsp;</TD></TR>'."\n";
+				print '<TR><TD COLSPAN=2>&nbsp;</TD><TD><B>'.$Language->getText('file_showfiles','no_files').'</B></TD><TD COLSPAN="5">&nbsp;</TD></TR>'."\n";
 			} else {
                                 //get the file_type and processor type
                                 $q = "select * from frs_filetype";
@@ -236,7 +236,7 @@ function download(group_id,file_id,filename) {
 
 if ( $proj_stats['size'] ) {
 	print '<TR><TD COLSPAN="8">&nbsp;</TR>'."\n";
-	print '<TR><TD><B>Project Totals: </B></TD>'
+	print '<TR><TD><B>'.$Language->getText('file_showfiles','proj_total').': </B></TD>'
 		. '<TD><B><I>' . $proj_stats['releases'] . '</I></B></TD>'
 		. '<TD><B><I>' . $proj_stats['files'] . '</I></B></TD>'
 		. '<TD><B><I>' . $proj_stats['size'] . '</I></B></TD>'

@@ -9,7 +9,7 @@
 require_once('pre.php');    
 require_once('www/project/admin/permissions.php');    
 require_once('www/file/file_utils.php');
-
+$Language->loadLanguageMsg('file/file');
 
 
 /*
@@ -153,14 +153,14 @@ if ($submit) {
 		*/
 
 		if (!$release_name || !$package_id) {
-			$feedback .= ' Must create a package before you create a release. You must also include a release name. ';
+			$feedback .= ' '.$Language->getText('file_admin_editreleases','create_p_before_rel').' ';
 		} else {
 			//create a new release of this package
 
 			//see if this package belongs to this project
 			$res1=db_query("SELECT * FROM frs_package WHERE package_id='$package_id' AND group_id='$group_id'");
 			if (!$res1 || db_numrows($res1) < 1) {
-				$feedback .= ' | Package Doesn\'t Exist Or Isn\'t Yours ';
+				$feedback .= ' | '.$Language->getText('file_admin_editreleases','p_not_exists').' ';
 				echo db_error();
 			} else {
 			  //check if release name exists already
@@ -170,16 +170,16 @@ if ($submit) {
 			    $res=db_query("INSERT INTO frs_release (package_id,name,status_id,release_date,released_by) ".
 					  "VALUES ('$package_id','$release_name','1','". time() ."','". user_getid() ."')");
 			    if (!$res) {
-			      $feedback .= ' | Adding Release Failed ';
+			      $feedback .= ' | '.$Language->getText('file_admin_editreleases','add_rel_fail').' ';
 			      echo db_error();
 			      //insert failed - go back to definition screen
 			    } else {
 			      //release added - now show the detail page for this new release
 			      $release_id=db_insertid($res);
-			      $feedback .= ' Added Release ';
+			      $feedback .= ' '.$Language->getText('file_admin_editreleases','rel_added').' ';
 			    }
 			  } else {
-			     $feedback .= ' Release Name Already Exists ';
+			     $feedback .= ' '.$Language->getText('file_admin_editreleases','rel_name_exists').' ';
 			  }
 			}
 		}
@@ -195,17 +195,17 @@ if ($submit) {
 				again if it's a legit package_id for this project
 
 		*/
-		$feedback .= ' Updating Release ';
+		$feedback .= ' '.$Language->getText('file_admin_editreleases','updating_rel').' ';
 		if ($upload_instead) {
 		  if ($uploaded_data) {
 			$code = addslashes(fread( fopen($uploaded_data, 'r'), filesize($uploaded_data)));
 		  }
 			if ((strlen($code) > 0) && (strlen($code) < $sys_max_size_upload)) {
 				//size is fine
-				$feedback .= ' | Data Uploaded ';
+				$feedback .= ' | '.$Language->getText('file_admin_editreleases','data_uploaded').' ';
 			} else {
 				//too big or small
-				$feedback .= ' | ERROR - uploaded data must be non null and < '.$sys_max_size_upload.' in length ';
+			  $feedback .= ' | '.$Language->getText('file_admin_editreleases','length_err',$sys_max_size_upload).' ';
 				$code='';
 			}
 			if ($upload_instead == 1) {
@@ -215,13 +215,13 @@ if ($submit) {
 				//uploaded release notes
 				$notes=$code;
 			} else {
-				$feedback .= ' | ERROR invalid upload flag ';
+				$feedback .= ' | '.$Language->getText('file_admin_editreleases','invalid_flag_err').' ';
 			}
 		}
 
 
 		if (!$release_name || !$package_id || !$status_id) {
-			$feedback .= ' Must create a package before you create a release. You must also include a release name and status. ';
+			$feedback .= ' '.$Language->getText('file_admin_editreleases','create_p_before_rel_status').' ';
 		} else {
 			//see if this release belongs to this project
 			$res1=db_query("SELECT frs_package.package_id FROM frs_package,frs_release ".
@@ -234,11 +234,11 @@ if ($submit) {
 				$res2=db_query("SELECT * FROM frs_package WHERE package_id='$new_package_id' AND group_id='$group_id'");
 				if (!$res2 || db_numrows($res2) < 1) {
 					//new package_id isn't theirs
-					exit_error('ERROR','Trying to change to a package that isn\'t yours');
+					exit_error($Language->getText('global','error'),$Language->getText('file_admin_editreleases','p_not_yours'));
 				}
 			}
 			if (!$res1 || db_numrows($res1) < 1) {
-				$feedback .= ' | Package Release Doesn\'t Exist Or Isn\'t Yours ';
+				$feedback .= ' | '.$Language->getText('file_admin_editreleases','p_rel_not_yours').' ';
 				echo db_error();
 				unset($editrelease);
 			} else {
@@ -253,14 +253,14 @@ if ($submit) {
 					//if hiding a package, refuse if it has files under it
 //					$res=db_query("SELECT * FROM frs_file WHERE release_id='$release_id'");
 //					if (db_numrows($res) > 0) {
-//						$feedback .= ' | Sorry - you cannot delete a release that still contains files ';
+//						$feedback .= ' | '.$Language->getText('file_admin_editreleases','cannot_del_rel').' ';
 //						$status_id=1;
 //					}
 // LJ				}
 
 				//now update the file entry
 				if (!ereg("[0-9]{4}-[0-9]{2}-[0-9]{2}",$release_date)) {
-					$feedback .= ' | Sorry - Date entry could not be parsed. It must be in YYYY-MM-DD format. ';
+					$feedback .= ' | '.$Language->getText('file_admin_editreleases','data_not_parsed').' ';
 				} else { //is valid date... parse it
 
 				  // make sure that we don't change the date by error because of timezone reasons.
@@ -287,10 +287,10 @@ if ($submit) {
 					}
 
 					if (!$res) {
-						$feedback .= ' | Updating Release Failed ';
+						$feedback .= ' | '.$Language->getText('file_admin_editreleases','rel_update_failed').' ';
 						echo db_error();
 					} else {
-						$feedback .= ' | Updated Release ';
+						$feedback .= ' | '.$Language->getText('file_admin_editreleases','rel_updated').' ';
 					}
 				}
 			}
@@ -317,7 +317,7 @@ if ($submit) {
 			"AND frs_file.file_id='$file_id'");
 		if (!$res1 || db_numrows($res1) < 1) {
 			//release not found for this project
-			$feedback .= " | Not Your File Or File Doesn't Exist ";
+			$feedback .= ' | '.$Language->getText('file_admin_editreleases','f_not_yours').' ';
 			echo db_error();
 		} else {
 			//file found and it is for this release/project/package
@@ -331,12 +331,12 @@ if ($submit) {
 
 				if (!$res2 || db_numrows($res2) < 1) {
 					//release not found for this project
-					exit_error('ERROR','Not Your Release Or Release Doesn\'t Exist');
+					exit_error($Language->getText('global','error'),$Language->getText('file_admin_editreleases','rel_not_yours'));
 				}
 			}
 			//now update the file entry
 			if (!ereg("[0-9]{4}-[0-9]{2}-[0-9]{2}",$release_time)) {
-				$feedback .= ' | Sorry - Date entry could not be parsed. It must be in YYYY-MM-DD format. ';
+				$feedback .= ' | '.$Language->getText('file_admin_editreleases','data_not_parsed').' ';
 			} else { //is valid date... parse it
 			  // make sure that we don't change the date by error because of timezone reasons.
 			  // eg: file created in India (GMT +5:30) at 2004-06-03. 
@@ -357,7 +357,7 @@ if ($submit) {
 			    $res=db_query("UPDATE frs_file SET release_id='$new_release_id',release_time='$unix_release_time',type_id='$type_id',processor_id='$processor_id' ".
 					"WHERE file_id='$file_id'");
 			  }
-			  $feedback .= ' File Updated ';
+			  $feedback .= ' '.$Language->getText('file_admin_editreleases','file_updated').' ';
 			}
 		}
 
@@ -383,7 +383,7 @@ if ($submit) {
 
 		$count=count($file_list);
 		if ($count > 0) {
-			$feedback .= ' Adding File(s) ';
+			$feedback .= ' '.$Language->getText('file_admin_editreleases','add_files').' ';
 			//see if this release belongs to this project
 			$res1=db_query("SELECT frs_package.package_id FROM frs_package,frs_release ".
 				"WHERE frs_package.group_id='$group_id' ".
@@ -391,14 +391,14 @@ if ($submit) {
 				"AND frs_release.package_id=frs_package.package_id");
 			if (!$res1 || db_numrows($res1) < 1) {
 				//release not found for this project
-				$feedback .= " | Not Your Release Or Release Doesn't Exist ";
+				$feedback .= ' | '.$Language->getText('file_admin_editreleases','rel_not_yours').' ';
 			} else {
 				$now=time();
 				//iterate and add the files to the frs_file table
 				for ($i=0; $i<$count; $i++) {
 					//see if filename is legal before adding it
 					if (!util_is_valid_filename ($file_list[$i])) {
-						$feedback .= " | Illegal FileName: $file_list[$i] ";
+						$feedback .= ' | '.$Language->getText('file_admin_editreleases','illegal_file_name').": $file_list[$i] ";
 					} else {
 					  // get the package id and compute the upload directory
 					  $pres = db_query("SELECT frs_package.package_id FROM frs_package,frs_release ".
@@ -407,7 +407,7 @@ if ($submit) {
 							   "AND frs_release.package_id=frs_package.package_id ");
 						  
 					  if (!$pres || db_numrows($pres) < 1) { 
-					    $feedback .= ' | Package/Release Doesn\'t Exist Or Isn\'t Yours ';
+					    $feedback .= ' | '.$Language->getText('file_admin_editreleases','p_rel_not_yours').' ';
 					    echo db_error();
 					  } else {
 					    $package_id = db_result($pres, 0, 'package_id');
@@ -440,21 +440,21 @@ if ($submit) {
 									"(release_time,filename,release_id,file_size,post_date) ".
 									"VALUES ('$now','$upload_subdir/$file_list[$i]','$release_id','". filesize("$project_files_dir/$upload_subdir/$file_list[$i]") ."','$now') ");
 							  if (!$res) {
-							    $feedback .= " | Couldn't Add FileName: $file_list[$i] ";
+							    $feedback .= ' | '.$Language->getText('file_admin_editreleases','not_add_file').": $file_list[$i] ";
 							    echo db_error();
 								}
 							} else {
-							  $feedback .= " | FileName Invalid Or Does Not Exist: $file_list[$i] ";
+							  $feedback .= ' | '.$Language->getText('file_admin_editreleases','filename_invalid').": $file_list[$i] ";
 							}
 						} else {
-							$feedback .= " | FileName Already Exists For This Project: $file_list[$i] ";
+							$feedback .= ' | '.$Language->getText('file_admin_editreleases','filename_exists').": $file_list[$i] ";
 						}
 					}
 				}
 			}
 		} else {
 			//do nothing
-			$feedback .= ' No Files Selected ';
+			$feedback .= ' '.$Language->getText('file_admin_editreleases','no_files_selected').' ';
 		}
 	} else if ($func=='delete_file' && $file_id && $im_sure) {
 		/*
@@ -469,9 +469,9 @@ if ($submit) {
 		*/
 	        $res = delete_file($group_id, $file_id);
 	        if ($res == 0) {
-		  $feedback .= " Not Your File Or File Doesn't Exist ";
+		  $feedback .= ' '.$Language->getText('file_admin_editreleases','f_not_yours').' ';
 		} else {
-		  $feedback .= " File Deleted ";
+		  $feedback .= ' '.$Language->getText('file_admin_editreleases','file_deleted').' ';
 		}
 		
 	} else if ($func=='send_notice' && $package_id && $im_sure) {
@@ -492,34 +492,29 @@ if ($submit) {
 			$array_emails=result_column_to_array($result);
 			$list=implode($array_emails,', ');
 		
-			$subject=$GLOBALS['sys_name'].' File Release Notice';
+			$subject=$GLOBALS['sys_name'].' '.$Language->getText('file_admin_editreleases','file_rel_notice');
 		
                         list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
 			$body = "To: noreply@".$host.$GLOBALS['sys_lf'].
 				"BCC: $list".$GLOBALS['sys_lf'].
 				"Subject: $subject".$GLOBALS['sys_lf'].$GLOBALS['sys_lf'].
-				"\n\nA new version of ". db_result($result,0,'name')." has been released. ".
-				"\nYou can download it at: ".
-				"\n\n<".get_server_url()."/file/showfiles.php?group_id=$group_id&release_id=$release_id> ".
-				"\n\nYou requested to be notified when new versions of this file ".
-				"\nwere released. If you don't wish to be notified in the ".
-				"\nfuture, please login to ".$GLOBALS['sys_name']." and click this link: ".
+				"\n\n".$Language->getText('file_admin_editreleases','download_explain',array(db_result($result,0,'name'),"<".get_server_url()."/file/showfiles.php?group_id=$group_id&release_id=$release_id> ",$GLOBALS['sys_name'])).
 				"\n<".get_server_url()."/file/filemodule_monitor.php?filemodule_id=$package_id> ";
 			
 			exec ("/bin/echo \"$body\" | /usr/sbin/sendmail -fnoreply@".$host." -t -i &");
-			$feedback .= ' email sent - '. db_numrows($result) .' users tracking ';
-		}
+			$feedback .= ' '.$Language->getText('file_admin_editreleases','email_sent',db_numrows($result)).' ';
+		} 
 	} else  if ($func=='update_permissions') {
             list ($return_code, $feedback) = permission_process_selection_form($_POST['group_id'], $_POST['permission_type'], $_POST['object_id'], $_POST['ugroups']);
-            if (!$return_code) exit_error('Error','ERROR: could not update permissions: <p>'.$feedback);
+            if (!$return_code) exit_error($Language->getText('global','error'),$Language->getText('file_admin_editpackages','perm_update_err').': <p>'.$feedback);
         }
 }
 if ($_POST['reset']) {
     // Must reset access rights to defaults
     if (permission_clear_all($group_id, $_POST['permission_type'], $_POST['object_id'])) {
-        $feedback="Permissions reset to default";
+        $feedback=$Language->getText('file_admin_editpackages','perm_reset');
     } else {
-        $feedback="Error: cannot reset permissions to default";
+        $feedback=$Language->getText('file_admin_editpackages','perm_reset_err');
     }
 }
 
@@ -550,18 +545,18 @@ if ($release_id && $func != 'delete_release') {
 	if (!$result || db_numrows($result) < 1) {
 		//this result wasn't found
 		echo db_error();
-		exit_error('ERROR','That release ID was not found in the database');
+		exit_error($Language->getText('global','error'),$Language->getText('file_admin_editreleases','rel_id_not_found'));
 	}
 
-        file_utils_admin_header(array('title'=>'Release New File Version',
+        file_utils_admin_header(array('title'=>$Language->getText('file_admin_editreleases','release_new_file_version'),
 				   'help' => 'FileReleaseDelivery.html#ReleaseConfigurationandValidation'));
 
 
 	echo '<TABLE BORDER="0" WIDTH="100%" class="small">
 		<TR><TD>
-		<H2>Step 1</H2>
+		<H2>'.$Language->getText('file_admin_editreleases','step_x',1).'</H2>
 		<P>
-		Edit the change notes for this release of this package. These notes will apply to all files attached to this release.
+		'.$Language->getText('file_admin_editreleases','edit_change_notes').'
 		<P>';
 	/*
 
@@ -581,40 +576,38 @@ if ($release_id && $func != 'delete_release') {
 		<INPUT TYPE="HIDDEN" NAME="release_id" VALUE="'.$release_id.'">
 		<INPUT TYPE="HIDDEN" NAME="package_id" VALUE="'. db_result($result,0,'package_id') .'">
 
-		<H3>Edit Release:'. htmlspecialchars(db_result($result,0,'release_name')) .' of Package: '. db_result($result,0,'package_name') .'</H3>
+		<H3>'.$Language->getText('file_admin_editreleases','edit_release').':'. htmlspecialchars(db_result($result,0,'release_name')) .' '.$Language->getText('file_admin_editreleases','of_p').': '. db_result($result,0,'package_name') .'</H3>
 		<P>
-		<B>Release Date:</B><BR>
+		<B>'.$Language->getText('file_admin_editreleases','release_date').':</B><BR>
 		<INPUT TYPE="TEXT" NAME="release_date" VALUE="'. format_date('Y-m-d',db_result($result,0,'release_date')) .'" SIZE="10" MAXLENGTH="10">
 		<P>
-		<B>Release Name:</B><BR>
+		<B>'.$Language->getText('file_admin_editreleases','release_name').':</B><BR>
 		<INPUT TYPE="TEXT" NAME="release_name" VALUE="'. db_result($result,0,'release_name') .'" SIZE="20" MAXLENGTH="25">
 		<P>
-		<B>Status:</B><BR>
+		<B>'.$Language->getText('file_admin_editpackages','status').':</B><BR>
 		'. frs_show_status_popup ('status_id',db_result($result,0,'status_id')) .'
 		<P>
-		<B>Of Package:</B><BR>
+		<B>'.$Language->getText('file_admin_editreleases','of_P').':</B><BR>
 		'. frs_show_package_popup ($group_id,'new_package_id',db_result($result,0,'package_id')) .'
 		<P>
-		You can either upload the release notes and change log individually, or paste them in together below.
+		'.$Language->getText('file_admin_editreleases','upload_or_paste').'
 		<BR>
-		<INPUT TYPE="RADIO" NAME="upload_instead" VALUE="0" CHECKED> <B>Paste The Notes In</B><BR>
-		<INPUT TYPE="RADIO" NAME="upload_instead" VALUE="1"> <B>Upload Change Log</B><BR>
-		<INPUT TYPE="RADIO" NAME="upload_instead" VALUE="2"> <B>Upload Release Notes</B><BR>
+		<INPUT TYPE="RADIO" NAME="upload_instead" VALUE="0" CHECKED> <B>'.$Language->getText('file_admin_editreleases','paste').'</B><BR>
+		<INPUT TYPE="RADIO" NAME="upload_instead" VALUE="1"> <B>'.$Language->getText('file_admin_editreleases','upload_change').'</B><BR>
+		<INPUT TYPE="RADIO" NAME="upload_instead" VALUE="2"> <B>'.$Language->getText('file_admin_editreleases','upload_notes').'</B><BR>
 		<P>
 		<input type="file" name="uploaded_data"  size="30">
-        <br><span class="smaller"><i>(The maximum upload file size is ';
-    echo formatByteToMb($sys_max_size_upload);
-    echo ' Mb)</i></span>
+        <br><span class="smaller"><i>'.$Language->getText('file_admin_editreleases','max_file_size',formatByteToMb($sys_max_size_upload)).'</i></span>
 		<P>
-		<B>Release Notes:</B><BR>
+		<B>'.$Language->getText('file_admin_editreleases','release_notes').':</B><BR>
 		<TEXTAREA NAME="notes" ROWS="10" COLS="60" WRAP="SOFT">'. htmlspecialchars(db_result($result,0,'notes')) .'</TEXTAREA>
 		<P>
-		<B>Change Log:</B><BR>
+		<B>'.$Language->getText('file_admin_editreleases','change_log').':</B><BR>
 		<TEXTAREA NAME="changes" ROWS="10" COLS="60" WRAP="SOFT">'. htmlspecialchars(db_result($result,0,'changes')) .'</TEXTAREA>
 		<P>
-		<INPUT TYPE="CHECKBOX" NAME="preformatted" VALUE="1" '.((db_result($result,0,'preformatted'))?'CHECKED':'').'> Preserve my pre-formatted text.
+		<INPUT TYPE="CHECKBOX" NAME="preformatted" VALUE="1" '.((db_result($result,0,'preformatted'))?'CHECKED':'').'> '.$Language->getText('file_admin_editreleases','preserve_preformatted').'
 		<P>
-		<INPUT TYPE="SUBMIT" NAME="submit" VALUE="Submit/Refresh">
+		<INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$Language->getText('file_admin_editreleases','submit_refresh').'">
 		</FORM>';
 
 /*
@@ -630,9 +623,9 @@ if ($release_id && $func != 'delete_release') {
 	echo '</TD></TR>
 		<TR><TD>
 		<HR NOSHADE>
-		<H2>Step 2</H2>
+		<H2>'.$Language->getText('file_admin_editreleases','step_x',2).'</H2>
 		<P>
-		<H3>Attach Files To This Release</H3>';
+		<H3>'.$Language->getText('file_admin_editreleases','attach_files').'</H3>';
 		
 	include(util_get_content('file/editrelease_attach_file'));
 	
@@ -655,16 +648,16 @@ if ($release_id && $func != 'delete_release') {
 
 
 	if (!$atleastone) {
-	    print '<h3>No available files</H3>
+	    print '<h3>'.$Language->getText('file_admin_editreleases','no_available_files').'</H3>
 		     <P>
-		     Please upload files as explained above, then hit <B>Refresh File List</B>.';
+		     '.$Language->getText('file_admin_editreleases','upload_files');
 	    echo '<P>
-	                 <INPUT TYPE="SUBMIT" NAME="refresh" VALUE="Refresh File List">';
+	                 <INPUT TYPE="SUBMIT" NAME="refresh" VALUE="'.$Language->getText('file_admin_editreleases','refresh_file_list').'">';
 	} else {
 	    print '<P>
-	                   <INPUT TYPE="SUBMIT" NAME="refresh" VALUE="Refresh File List">
+	                   <INPUT TYPE="SUBMIT" NAME="refresh" VALUE="'.$Language->getText('file_admin_editreleases','refresh_file_list').'">
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	                  <INPUT TYPE="SUBMIT" NAME="submit" VALUE="Attach Marked Files">';
+	                  <INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$Language->getText('file_admin_editreleases','attach_marked_files').'">';
 	}
 	echo '</FORM>';
 ?><?php
@@ -682,26 +675,25 @@ if ($release_id && $func != 'delete_release') {
 	echo '</TD></TR>
 		<TR><TD>
 		<HR NOSHADE>
-		<H2>Step 3</H2>
+		<H2>'.$Language->getText('file_admin_editreleases','step_x',3).'</H2>
 		<P>
-		<H3>Edit Files in this Release:</H3>
+		<H3>'.$Language->getText('file_admin_editreleases','edit_files').':</H3>
 		<P>
-		You <B>must</B> update each of these files with the correct information or 
-		they will not appear on your download summary page.
+		'.$Language->getText('file_admin_editreleases','update_each').'
 		<P>';
 
 	$sql="SELECT * FROM frs_file WHERE release_id='$release_id'";
 	$res=db_query($sql);
 	$rows=db_numrows($res);
 	if (!$res || $rows < 1) {
-		echo '<H4>No Files attached to this Release</H4>
+		echo '<H4>'.$Language->getText('file_admin_editreleases','no_files_attached').'</H4>
 			<P>
-			You can attach files using Step 2 above';
+			'.$Language->getText('file_admin_editreleases','attach_files_in_step2');
 	} else {
 		$title_arr=array();
-		$title_arr[]='Filename<BR>Release';
-		$title_arr[]='Processor<BR>Release Date';
-		$title_arr[]='File Type<BR>Update';
+		$title_arr[]=$Language->getText('file_admin_editreleases','filename').'<BR>'.$Language->getText('file_admin_editreleasepermissions','release');
+		$title_arr[]=$Language->getText('file_admin_editreleases','processor').'<BR>'.$Language->getText('file_admin_editreleases','release_date');
+		$title_arr[]=$Language->getText('file_admin_editreleases','file_type').'<BR>'.$Language->getText('file_admin_editpackages','update');
 
 		echo html_build_list_table_top ($title_arr);
 
@@ -731,7 +723,7 @@ if ($release_id && $func != 'delete_release') {
 				<TD><FONT SIZE="-1">'. 
 					frs_show_release_popup ($group_id, $name='new_release_id',db_result($res,$i,'release_id')) .'</TD>
 				<TD><FONT SIZE="-1"><INPUT TYPE="TEXT" NAME="release_time" VALUE="'. format_date('Y-m-d',db_result($res,$i,'release_time')) .'" SIZE="10" MAXLENGTH="10"></TD>
-				<TD><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="submit" VALUE="Update/Refresh"></TD>
+				<TD><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$Language->getText('file_admin_editreleases','update_refresh').'"></TD>
 			</TR></FORM>
 			<FORM ACTION="'. $PHP_SELF .'" METHOD="POST">
 			<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
@@ -741,7 +733,7 @@ if ($release_id && $func != 'delete_release') {
 			<TR class="'. util_get_alt_row_color($i) .'">
 				<TD><FONT SIZE="-1">&nbsp;</TD>
 				<TD><FONT SIZE="-1">&nbsp;</TD>
-				<TD><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="submit" VALUE="Delete File"> <INPUT TYPE="checkbox" NAME="im_sure" VALUE="1"> I\'m Sure </TD>
+				<TD><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$Language->getText('file_admin_editreleases','delete_file').'"> <INPUT TYPE="checkbox" NAME="im_sure" VALUE="1"> '.$Language->getText('file_admin_editreleases','im_sure').' </TD>
 			</TR></FORM>';
 		}
 		echo '</TABLE>';
@@ -756,18 +748,18 @@ if ($release_id && $func != 'delete_release') {
 	echo '</TD></TR>
 		<TR><TD>
 		<HR NOSHADE>
-		<H2>Step 4</H2>
+		<H2>'.$Language->getText('file_admin_editreleases','step_x',4).'</H2>
 		<P>
-		<H3>Email File Release Notice:</H3>
+		<H3>'.$Language->getText('file_admin_editreleases','mail_file_rel_notice').':</H3>
 		<P>
-		'. $count .' user(s) are monitoring your package. You should send a notice of your file release.
+		'.$Language->getText('file_admin_editreleases','users_monitor',$count).'
 		<P>
 		<FORM ACTION="'. $PHP_SELF .'" METHOD="POST">
 		<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 		<INPUT TYPE="HIDDEN" NAME="release_id" VALUE="'.$release_id.'">
 		<INPUT TYPE="HIDDEN" NAME="func" VALUE="send_notice">
 		<INPUT TYPE="HIDDEN" NAME="package_id" VALUE="'. $package_id .'">
-		<INPUT TYPE="SUBMIT" NAME="submit" VALUE="Send Notice"> <INPUT TYPE="checkbox" NAME="im_sure" VALUE="1"> I\'m Sure
+		<INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$Language->getText('file_admin_editreleases','send_notice').'"> <INPUT TYPE="checkbox" NAME="im_sure" VALUE="1"> '.$Language->getText('file_admin_editreleases','im_sure').'
 		</FORM>';
 	}
 	echo '</TD></TR></TABLE>';
@@ -782,9 +774,9 @@ if ($release_id && $func != 'delete_release') {
     */
     $res = delete_release($group_id, $release_id);
     if ($res == 0) {
-      $feedback .= " Not Your Release Or Release Doesn't Exist ";
+      $feedback .= ' '.$Language->getText('file_admin_editreleases','rel_not_yours').' ';
     } else {
-      $feedback .= " Release Deleted ";
+      $feedback .= ' '.$Language->getText('file_admin_editreleases','rel_del').' ';
     }
   } 
 	/*
@@ -792,14 +784,14 @@ if ($release_id && $func != 'delete_release') {
 		Show existing releases and a form to create a new release
 
 	*/
-  file_utils_admin_header(array('title'=>'Release New File Version',
+  file_utils_admin_header(array('title'=>$Language->getText('file_admin_editreleases','release_new_file_version'),
 				   'help' => 'FileReleaseDelivery.html#ReleaseCreation'));
 
-	echo '<H3>Define a New Release of a Package</H3>
+	echo '<H3>'.$Language->getText('file_admin_editreleases','define_new_release').'</H3>
 	<P>
-	A release of a package can contain multiple files. Release names can be either version numbers (3.22.1, 3.23-beta1&hellip;) or names.
+	'.$Language->getText('file_admin_editreleases','contain_multiple_files').'
 
-	<h4>Your Releases:</H4>';
+	<h4>'.$Language->getText('file_admin_editreleases','your_release').':</H4>';
 
 	/*
 
@@ -824,7 +816,7 @@ if ($release_id && $func != 'delete_release') {
 
 	$rows=db_numrows($res);
 	if (!$res || $rows < 1) {
-		echo '<h4>You Have No Releases '.(($package_id)?'Of This Package ':'').'Defined</h4>';
+	  echo '<h4>'.$Language->getText('file_admin_editreleases','no_releases_defined',(($package_id)?$Language->getText('file_admin_editreleases','of_this_package').' ':'')).'</h4>';
 		echo db_error();
 	} else {
 		/*
@@ -834,33 +826,33 @@ if ($release_id && $func != 'delete_release') {
 
 		*/
 		$title_arr=array();
-		$title_arr[]='Release Name';
-		$title_arr[]='Package Name';
-		$title_arr[]='Status';
-		$title_arr[]='Permissions';
-		$title_arr[]='Delete?';
+		$title_arr[]=$Language->getText('file_admin_editreleases','release_name');
+		$title_arr[]=$Language->getText('file_admin_editpackages','p_name');
+		$title_arr[]=$Language->getText('file_admin_editpackages','status');
+		$title_arr[]=$Language->getText('file_admin_editpackages','perms');
+		$title_arr[]=$Language->getText('file_admin_editreleases','delete');
 
 		echo html_build_list_table_top ($title_arr);
 
 		for ($i=0; $i<$rows; $i++) {
 		  echo '<TR class="'. util_get_alt_row_color($i) .'">'.
 		    '<TD><FONT SIZE="-1"><A HREF="editreleases.php?release_id='. 
-		    db_result($res,$i,'release_id') .'&group_id='. $group_id .'" title="Edit This Release">'.
+		    db_result($res,$i,'release_id') .'&group_id='. $group_id .'" title="'.$Language->getText('file_admin_editreleases','edit_this_release').'">'.
 		    db_result($res,$i,'release_name') .'</A></TD>'.
 		    '<TD><FONT SIZE="-1"><A HREF="editpackages.php?group_id='.
-		    $group_id.'" title="Edit This Package">'. 
+		    $group_id.'" title="'.$Language->getText('file_admin_editreleases','edit_this_p').'">'. 
 		    db_result($res,$i,'package_name') 
 		    .' </TD>'.
                       '<TD><FONT SIZE="-1">'. db_result($res,$i,'status_name') .'</TD>
                       <TD  align="center" NOWRAP><FONT SIZE="-1"><A HREF="editreleasepermissions.php?release_id='. 
 				db_result($res,$i,'release_id') .'&group_id='. $group_id.'&package_id='.$package_id .'">['; 
                   if (permission_exist('RELEASE_READ',db_result($res,$i,'release_id'))) {
-                      echo 'Edit';
-                  } else echo 'Define';
-                  echo ' Permissions]</A></TD>'.
+                      echo $Language->getText('file_admin_editpackages','edit');
+                  } else echo $Language->getText('file_admin_editpackages','define');
+                  echo ' '.$Language->getText('file_admin_editpackages','perms').']</A></TD>'.
 		    '<TD align="center"><FONT SIZE="-1">'. 
 		    '<a href="/file/admin/editreleases.php?func=delete_release&group_id='. $group_id .'&release_id='.db_result($res,$i,'release_id').'&package_id='.$package_id.'">'.
-		    '<img src="'.util_get_image_theme("ic/trash.png").'" border="0" onClick="return confirm(\'** WARNING!! ** Delete this release and all its files (no possible restore operation)?\')"></a>'.'</TD>'.
+		    '<img src="'.util_get_image_theme("ic/trash.png").'" border="0" onClick="return confirm(\''.$Language->getText('file_admin_editreleases','warn').'\')"></a>'.'</TD>'.
 		    '</TR>       ';
 		}
 		echo '</TABLE>';
@@ -875,17 +867,17 @@ if ($release_id && $func != 'delete_release') {
 	*/
 
 	echo '<P>
-	<h3>New Release Name:</h3>
+	<h3>'.$Language->getText('file_admin_editreleases','new_release_name').':</h3>
 	<P>
 	<FORM ACTION="'. $PHP_SELF .'" METHOD="POST">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 	<INPUT TYPE="HIDDEN" NAME="func" VALUE="add_release">
 	<INPUT TYPE="TEXT" NAME="release_name" VALUE="" SIZE="20" MAXLENGTH="25">
 
-	&nbsp;&nbsp;&nbsp;belongs to Package:
+	&nbsp;&nbsp;&nbsp;'.$Language->getText('file_admin_editreleases','belongs_to_p').':
 	'. frs_show_package_popup ($group_id,'package_id',$package_id) .'
 	<P>
-	<INPUT TYPE="SUBMIT" NAME="submit" VALUE="Create This Release">
+	<INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$Language->getText('file_admin_editreleases','create_this_release').'">
 	</FORM>';
 
 }

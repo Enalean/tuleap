@@ -6,7 +6,7 @@
 //
 // $Id$
 require_once('pre.php');
-
+$Language->loadLanguageMsg('file/file');
 
 if (user_isloggedin()) {
 
@@ -45,7 +45,7 @@ if (user_isloggedin()) {
 ?>
 <html>
 <head>
-<title>CodeX download agreement</title>
+   <title><?php echo $Language->getText('file_confirm_download','download_agreement'); ?></title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link rel="stylesheet" type="text/css" href="<? echo util_get_css_theme(); ?>">
 </head>
@@ -55,32 +55,16 @@ if (user_isloggedin()) {
 <tr><td>
 <span class="small">
 <div align="center">
-<h2>*** CodeX Download Agreement ***</h2></center>
-</div>
-<p>You are about to download software from the CodeX
-Site. Software re-use and sharing <b>inside</b> <? echo $GLOBALS['sys_org_name']; ?> is subject to the <a
-href="/docman/display_doc.php?docid=16&group_id=1"
-target="_blank"><b>Code eXchange Corporate Policy</b></a>.</p>
-
-<p>By downloading this software you implicitely recognize that you have <a
-href="/docman/display_doc.php?docid=16&group_id=1"
-target="_blank"><b>read the CodeX Policy</b></a> and agree with the terms and
-conditions.
-
-<p>To proceed with the file download, click on '<b>I AGREE</b>'. I you do not
-want to download the file click on '<b>I DECLINE</b>' and <a
-href="mailto:<?php print $GLOBALS['sys_email_contact']; ?>"><b>contact
-us</b></a> if you need clarification or want to explain why you declined
-the agreement.<br>
+<?php echo $Language->getText('file_confirm_download','download_explain',array($GLOBALS['sys_org_name'],"/docman/display_doc.php?docid=16&group_id=1",$GLOBALS['sys_email_contact'])); ?><br>
 
 <br><br>
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="normal">
   <tr> 
     <td> 
-      <div align="center"><a href="javascript:opener.download(<?php echo "$group_id,$file_id,'$filename'"; ?>);"><b>I AGREE</b></a></div>
+      <div align="center"><a href="javascript:opener.download(<?php echo "$group_id,$file_id,'$filename'"; ?>);"><b><?php echo $Language->getText('file_confirm_download','agree'); ?></b></a></div>
     </td>
     <td> 
-      <div align="center"><a href="javascript:window.close();"><b>I DECLINE</b></a></div>
+      <div align="center"><a href="javascript:window.close();"><b><?php echo $Language->getText('file_confirm_download','decline'); ?></b></a></div>
     </td>
   </tr>
 </table>

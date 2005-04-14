@@ -7,7 +7,7 @@
 // $Id$
 require_once('pre.php');
 require_once('www/project/admin/permissions.php');
-
+$Language->loadLanguageMsg('file/file');
 
 if (user_isloggedin()) {
 
@@ -38,7 +38,7 @@ if (user_isloggedin()) {
   // there must be only just one release - Not 0
   // Not more than one. Just one.
   if ( !$res_file || $num_files != 1 ) {
-    exit_error('Incorrect File Release ID or Group ID', 'Please report the error to the '.$GLOBALS['sys_name'].' Administrator using the <i>Contact Us</i> link in the main menu');
+    exit_error($Language->getText('file_download','incorrect_release_id'), $Language->getText('file_download','report_error',$GLOBALS['sys_name']));
   }
   $file_release = db_fetch_array( $res_file );
 
@@ -46,10 +46,10 @@ if (user_isloggedin()) {
   // Check permissions for release, then package
   if (permission_exist('RELEASE_READ', $file_release['release_id'])) {
       if (!permission_is_authorized('RELEASE_READ',$file_release['release_id'],user_getid(),$group_id)) {
-          exit_error('Access Denied', 'You are not authorized to access this file. Please contact a Project Administrator.');
+          exit_error($Language->getText('file_download','access_denied'), $Language->getText('file_download','access_not_authorized'));
       } 
   } else if (!permission_is_authorized('PACKAGE_READ',$file_release['package_id'],user_getid(),$group_id)) {
-      exit_error('Access Denied', 'You are not authorized to access this file. Please contact a Project Administrator.');
+      exit_error($Language->getText('file_download','access_denied'), $Language->getText('file_download','access_not_authorized'));
   } 
 
 
@@ -93,7 +93,7 @@ if (user_isloggedin()) {
   
   } else {
       // Can't open the file for download. There is a problem here !!
-      exit_error('Error', 'Internal Error: File not available. Please contact the system administrator');
+      exit_error($Language->getText('global','error'), $Language->getText('file_download','file_not_available'));
   }
 
 } else {

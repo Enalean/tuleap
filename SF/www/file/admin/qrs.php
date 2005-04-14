@@ -18,18 +18,18 @@ require_once('www/file/file_utils.php');
 if (!user_ismember($group_id,'R2')) {
     exit_permission_denied();
 }
-file_utils_admin_header(array('title'=>'Release New File Version', 'help' => 'QuickFileRelease.html'));
+file_utils_admin_header(array('title'=>$Language->getText('file_admin_editreleases','release_new_file_version'), 'help' => 'QuickFileRelease.html'));
 
 if( $submit ) {
   if (!$release_name) {
-    $feedback .= ' Must define a release name. ';
+    $feedback .= ' '.$Language->getText('file_admin_qrs','define_rel_name').' ';
     echo db_error();
     file_utils_footer(array());
     exit;
   } 
   
   if (!$file_name) {
-    $feedback .= ' No Files Selected ';
+    $feedback .= ' '.$Language->getText('file_admin_editreleases','no_files_selected').' ';
     file_utils_footer(array());
     exit;
   }
@@ -39,14 +39,14 @@ if( $submit ) {
   // If so then move it to the 'incoming' dir where we proceed as usual.
   if( $file_name == "qrs_newfile" ) {
     if (!$userfile_name) {
-      $feedback .= ' No Files Selected ';
+      $feedback .= ' '.$Language->getText('file_admin_editreleases','no_files_selected').' ';
       file_utils_footer(array());
       exit;
     }
     $file_name = $userfile_name;
       
     if (!util_is_valid_filename ($file_name)) {
-      $feedback .= " Illegal FileName: $file_name ";
+      $feedback .= ' '.$Language->getText('file_admin_editreleases','illegal_file_name').": $file_name ";
       file_utils_footer(array());
       exit;
     }
@@ -57,20 +57,20 @@ if( $submit ) {
     //see if this package belongs to this project
     $res1=db_query("SELECT * FROM frs_package WHERE package_id='$package_id' AND group_id='$group_id'");
     if (!$res1 || db_numrows($res1) < 1) {
-      $feedback .= ' | Package Doesn\'t Exist Or Isn\'t Yours ';
+      $feedback .= ' | '.$Language->getText('file_admin_editreleases','p_not_exists').' ';
       echo db_error();
       file_utils_footer(array());
       exit;
     } 
 
     if ($processor_id == 100) {
-      $feedback .= ' Please choose Processor Type ';
+      $feedback .= ' '.$Language->getText('file_admin_qrs','choose_processor_type').' ';
       file_utils_footer(array());
       exit;
     }
 
     if ($type_id == 100) {
-      $feedback .= ' Please choose File Type ';
+      $feedback .= ' '.$Language->getText('file_admin_qrs','choose_file_type').' ';
       file_utils_footer(array());
       exit;
     }
@@ -86,13 +86,13 @@ if( $submit ) {
       $res=db_query("INSERT INTO frs_release (package_id,name,notes,changes,status_id,release_date,released_by) ".
 		    "VALUES ('$package_id','$release_name','$release_notes','$release_changes','$status_id','". time() ."','". user_getid() ."')");
       if (!$res) {
-	$feedback .= ' | Adding Release Failed ';
+	$feedback .= ' | '.$Language->getText('file_admin_editreleases','add_rel_fail').' ';
 	echo db_error();
 	//insert failed - go back to definition screen
       } else {
 	//release added - now show the detail page for this new release
 	$release_id=db_insertid($res);
-	$feedback .= ' Added Release <BR>';
+	$feedback .= ' '.$Language->getText('file_admin_editreleases','rel_added').' <BR>';
       }
     } else {
       $release_id = db_result($rel_res, 0, 'release_id');
@@ -138,7 +138,7 @@ if( $submit ) {
       }
     }
     
-    $feedback .= ' Adding File ';
+    $feedback .= ' '.$Language->getText('file_admin_qrs','adding_file').' ';
     //see if this release belongs to this project
     $res1=db_query("SELECT frs_package.package_id FROM frs_package,frs_release ".
 		   "WHERE frs_package.group_id='$group_id' ".
@@ -146,7 +146,7 @@ if( $submit ) {
 		   "AND frs_release.package_id=frs_package.package_id");
     if (!$res1 || db_numrows($res1) < 1) {
       //release not found for this project
-      $feedback .= " | Not Your Release Or Release Doesn't Exist ";
+      $feedback .= ' | '.$Language->getText('file_admin_editreleases','rel_not_yours').' ';
       file_utils_footer(array());
       exit;
     }
@@ -163,7 +163,7 @@ if( $submit ) {
 		   "AND frs_file.filename='$upload_subdir/$file_name'");
     
     if ($res1 && db_numrows($res1) > 0) {
-      $feedback .= " | FileName Already Exists For This Project: $file_name ";
+      $feedback .= ' | '.$Language->getText('file_admin_editreleases','filename_exists').": $file_name ";
       file_utils_footer(array());
       exit;
     }
@@ -189,17 +189,17 @@ if( $submit ) {
 		    . filesize("$project_files_dir/$upload_subdir/$file_name") 
 		    . "','$now', '$type_id', '$processor_id') ");
       if (!$res) {
-	$feedback .= " | Couldn't Add FileName: $file_name ";
+	$feedback .= ' | '.$Language->getText('file_admin_editreleases','not_add_file').": $file_name ";
 	echo db_error();
 	file_utils_footer(array());
 	exit;
       } 
-      $feedback .= " | $file_name added successfuly";
+      $feedback .= ' | '.$Language->getText('file_admin_qrs','added_success',$file_name);
       
       // Now send notifications to users monitoring the package, provided
       // that the package is active (not hidden)
       if (!frs_package_is_active($status_id)) {
-	$feedback .= '| no email sent: release is hidden ';
+	$feedback .= '| '.$Language->getText('file_admin_qrs','no_email_sent').' ';
 	file_utils_footer(array());
 	exit;
       }
@@ -218,26 +218,21 @@ if( $submit ) {
 	$array_emails=result_column_to_array($result);
 	$list=implode($array_emails,', ');
 	
-	$subject=$GLOBALS['sys_name'].' File Release Notice';
+	$subject=$GLOBALS['sys_name'].' '.$Language->getText('file_admin_editreleases','file_rel_notice');
 	list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
 	$body = "To: noreply@".$host.$GLOBALS['sys_lf'].
 	  "BCC: $list".$GLOBALS['sys_lf'].
 	  "Subject: $subject".$GLOBALS['sys_lf'].$GLOBALS['sys_lf'].
-	  "\n\nA new version of ". db_result($result,0,'name')." has been released. ".
-	  "\nYou can download it at: ".
-	  "\n\n<".get_server_url()."/file/showfiles.php?group_id=$group_id&release_id=$release_id> ".
-	  "\n\nYou requested to be notified when new versions of this file ".
-	  "\nwere released. If you don't wish to be notified in the ".
-	  "\nfuture, please login to ".$GLOBALS['sys_name']." and click this link: ".
+	  "\n\n".$Language->getText('file_admin_editreleases','download_explain',array(db_result($result,0,'name'),"<".get_server_url()."/file/showfiles.php?group_id=$group_id&release_id=$release_id> ",$GLOBALS['sys_name'])).": ".
 	  "\n<".get_server_url()."/file/filemodule_monitor.php?filemodule_id=$package_id> ";
 	exec ("/bin/echo \"$body\" | /usr/sbin/sendmail -fnoreply@".$host." -t -i &");
-	$feedback .= '| email sent to '. db_numrows($result) .' users monitoring this package ';
+	$feedback .= '| '.$Language->getText('file_admin_qrs','email_sent',db_numrows($result)).' ';
       }
       
       
 	    
     } else {
-      $feedback .= " | FileName Invalid Or Does Not Exist: $file_name ";
+      $feedback .= ' | '.$Language->getText('file_admin_editreleases','filename_invalid').": $file_name ";
     }
     
   
@@ -249,7 +244,7 @@ if( $submit ) {
 	<TABLE BORDER="0" CELLPADDING="2" CELLSPACING="2">
 	<TR>
 		<TD>
-			<B>Package Name:</B>
+    <B><?php echo $Language->getText('file_admin_editpackages','p_name'); ?>:</B>
 		</TD>
 		<TD>
 <?php
@@ -257,7 +252,7 @@ if( $submit ) {
 	$res=db_query($sql);
 	$rows=db_numrows($res);
 	if (!$res || $rows < 1) {
-		echo '<p class="highlight">No Package Available</p>';
+		echo '<p class="highlight">'.$Language->getText('file_admin_qrs','no_p_available').'</p>';
 	} else {
 		echo '<SELECT NAME="package_id">';
 		for ($i=0; $i<$rows; $i++) {
@@ -266,12 +261,12 @@ if( $submit ) {
 		echo '</SELECT>';
 	}
 ?>
-	    &nbsp;&nbsp;(<a href="editpackages.php?group_id=<?php echo $group_id; ?>">create a new package)</a>.
+	  &nbsp;&nbsp;(<a href="editpackages.php?group_id=<?php echo $group_id; ?>"><?php echo $Language->getText('file_admin_qrs','create_new_p'); ?>)</a>.
 		</TD>
 	</TR>
 	<TR>
 		<TD>
-			<B>Release Name:</B>
+			  <B><?php echo $Language->getText('file_admin_editreleases','release_name'); ?>:</B>
 		</TD>
 		<TD>
 			<INPUT TYPE="TEXT" name="release_name">
@@ -279,7 +274,7 @@ if( $submit ) {
 	</TR>
 	<TR>
 		<TD>
-			<B>Release Date:</B>
+			 <B><?php echo $Language->getText('file_admin_editreleases','release_date'); ?>:</B>
 		</TD>
 		<TD>
 			<INPUT TYPE="TEXT" NAME="release_date" VALUE="<?php echo date('Y-m-d'); ?>" SIZE="10" MAXLENGTH="10">
@@ -287,7 +282,7 @@ if( $submit ) {
 	</TR>
 	<TR>
 		<TD>
-			<B>Status:</B>
+			<B><?php echo $Language->getText('file_admin_editpackages','status'); ?>:</B>
 		</TD>
 		<TD>
 <?php print frs_show_status_popup ($name='status_id') . "<br>"; ?>
@@ -295,7 +290,7 @@ if( $submit ) {
 	</TR>
 	<TR>
 		<TD>
-			<B>File Name:</B>
+		    <B><?php echo $Language->getText('file_admin_qrs','file_name'); ?>:</B>
 		</TD>
 		<TD>
 <?php
@@ -310,25 +305,23 @@ if( $submit ) {
 			print '<OPTION value="'.$file.'">'.$file.'</OPTION>';
 		}
 	}
-	echo '</SELECT> Or, upload a new file: <input type="file" name="userfile"  size="30">
-      <br><span class="smaller"><i>(The maximum upload file size is ';
-    echo formatByteToMb($sys_max_size_upload);
-    echo ' Mb)</i></span>';
+	echo '</SELECT> '.$Language->getText('file_admin_qrs','upload_file').': <input type="file" name="userfile"  size="30">
+      <br><span class="smaller"><i>'.$Language->getText('file_admin_editreleases','max_file_size',formatByteToMb($sys_max_size_upload)).'</i></span>';
 	if (!$atleastone) {
-		print '<h3>No available files</H3>
+		print '<h3>'.$Language->getText('file_admin_editreleases','no_available_files').'</H3>
 			<P>';
 	include(util_get_content('file/qrs_attach_file'));
 
 	}
         echo '<P>
-	                 <INPUT TYPE="SUBMIT" NAME="refresh" VALUE="Refresh File List">';
+	                 <INPUT TYPE="SUBMIT" NAME="refresh" VALUE="'.$Language->getText('file_admin_editreleases','refresh_file_list').'">';
 ?>
 
 		</TD>
 	</TR>
 	<TR>
 		<TD>
-			<B>File Type:</B>
+		    <B><?php echo $Language->getText('file_admin_editreleases','file_type'); ?></B>
 		</TD>
 		<TD>
 <?php
@@ -338,7 +331,7 @@ if( $submit ) {
 	</TR>
 	<TR>
 		<TD>
-			<B>Processor Type:</B>
+		    <B><?php echo $Language->getText('file_admin_qrs','processor_type'); ?>:</B>
 		</TD>
 		<TD>
 <?php
@@ -348,7 +341,7 @@ if( $submit ) {
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
-			<B>Release Notes:</B>
+		    <B><?php echo $Language->getText('file_admin_editreleases','release_notes'); ?>:</B>
 		</TD>
 		<TD>
 			<TEXTAREA NAME="release_notes" ROWS="7" COLS="50"></TEXTAREA>
@@ -356,7 +349,7 @@ if( $submit ) {
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
-			<B>Change Log:</B>
+			<B><?php echo $Language->getText('file_admin_editreleases','change_log'); ?>:</B>
 		</TD>
 		<TD>
 			<TEXTAREA NAME="release_changes" ROWS="7" COLS="50"></TEXTAREA>
@@ -365,7 +358,7 @@ if( $submit ) {
 	<TR>
 		<TD COLSPAN="2" ALIGN="CENTER">
 			<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">
-			<INPUT TYPE="SUBMIT" NAME="submit" VALUE="Release File">
+			<INPUT TYPE="SUBMIT" NAME="submit" VALUE="<?php echo $Language->getText('file_admin_qrs','release_file'); ?>">
 		</TD>
 	</TR>
 	</TABLE>

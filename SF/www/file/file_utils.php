@@ -11,9 +11,10 @@
 
 // Provide various functions for file manager
 
+$Language->loadLanguageMsg('file/file');
 
 function file_utils_header($params) {
-    global $group_id;
+    global $group_id,$Language;
 
     $params['toptab']='file';
     $params['group']=$group_id;
@@ -23,16 +24,16 @@ function file_utils_header($params) {
     if (!$params['pv']) {
         if (user_ismember($group_id,"R2")) {
             echo '<strong>'
-                .'<a href="/file/admin/index.php?group_id='.$group_id.'">Admin</a>';
+                .'<a href="/file/admin/index.php?group_id='.$group_id.'">'.$Language->getText('file_file_utils','admin').'</a>';
             if (!$params['help']) { $params['help'] = "FileRelease.html";}
-            echo ' | '.help_button($params['help'],false,'Help');
+            echo ' | '.help_button($params['help'],false,$Language->getText('global','help'));
             echo "</strong><p>";
         }
     }
 }
 
 function file_utils_admin_header($params) {
-    global $group_id;
+  global $group_id,$Language;
 
     $params['toptab']='file';
     $params['group']=$group_id;
@@ -41,11 +42,11 @@ function file_utils_admin_header($params) {
 
     if (user_ismember($group_id,"R2")) {
         echo '<strong>'
-            .'<a href="/file/admin/index.php?group_id='.$group_id.'">Admin</a>'
-            .' | <a href="/file/admin/editpackages.php?group_id='.$group_id.'">Edit/Release Files</a>';
-        echo ' | <a href="/file/admin/qrs.php?group_id='.$group_id.'">Quick Add File Release</a>';
+            .'<a href="/file/admin/index.php?group_id='.$group_id.'">'.$Language->getText('file_file_utils','admin').'</a>'
+            .' | <a href="/file/admin/editpackages.php?group_id='.$group_id.'">'.$Language->getText('file_admin_index','edit_release_files').'</a>';
+        echo ' | <a href="/file/admin/qrs.php?group_id='.$group_id.'">'.$Language->getText('file_admin_index','quick_add').'</a>';
 	if (!$params['help']) { $params['help'] = "FileRelease.html";}
-	echo ' | '.help_button($params['help'],false,'Help');
+	echo ' | '.help_button($params['help'],false,$Language->getText('global','help'));
         echo "</strong><br><hr>";
     }
 }
@@ -115,13 +116,13 @@ function frs_show_filetype_popup ($name='type_id', $checked_val="xzxz") {
 	/*
 		return a pop-up select box of the available filetypes
 	*/
-	global $FRS_FILETYPE_RES;
+	global $FRS_FILETYPE_RES,$Language;
 	if (!isset($FRS_FILETYPE_RES)) {
 // LJ Sort by type_id added so that new extensions goes
 // LJ in the right place in the menu box
 		$FRS_FILETYPE_RES=db_query("SELECT * FROM frs_filetype ORDER BY type_id");
 	}
-	return html_build_select_box ($FRS_FILETYPE_RES,$name,$checked_val,true,'Must Choose One');
+	return html_build_select_box ($FRS_FILETYPE_RES,$name,$checked_val,true,$Language->getText('file_file_utils','must_choose_one'));
 }
 
 /*
@@ -134,11 +135,11 @@ function frs_show_processor_popup ($name='processor_id', $checked_val="xzxz") {
 	/*
 		return a pop-up select box of the available processors 
 	*/
-	global $FRS_PROCESSOR_RES;
+	global $FRS_PROCESSOR_RES,$Language;
 	if (!isset($FRS_PROCESSOR_RES)) {
 		$FRS_PROCESSOR_RES=db_query("SELECT * FROM frs_processor");
 	}
-	return html_build_select_box ($FRS_PROCESSOR_RES,$name,$checked_val,true,'Must Choose One');
+	return html_build_select_box ($FRS_PROCESSOR_RES,$name,$checked_val,true,$Language->getText('file_file_utils','must_choose_one'));
 }
 
 /*
@@ -152,9 +153,9 @@ function frs_show_release_popup ($group_id, $name='release_id', $checked_val="xz
 	/*
 		return a pop-up select box of releases for the project
 	*/
-	global $FRS_RELEASE_RES;
+	global $FRS_RELEASE_RES,$Language;
 	if (!$group_id) {
-		return 'ERROR - GROUP ID REQUIRED';
+		return $Language->getText('file_file_utils','g_id_err');
 	} else {
 		if (!isset($FRS_RELEASE_RES)) {
 			$FRS_RELEASE_RES=db_query("SELECT frs_release.release_id,concat(frs_package.name,' : ',frs_release.name) ".
@@ -177,9 +178,9 @@ function frs_show_package_popup ($group_id, $name='package_id', $checked_val="xz
 	/*
 		return a pop-up select box of packages for this project
 	*/
-	global $FRS_PACKAGE_RES;
+	global $FRS_PACKAGE_RES,$Language;
 	if (!$group_id) {
-		return 'ERROR - GROUP ID REQUIRED';
+		return $Language->getText('file_file_utils','g_id_err');
 	} else {
 		if (!isset($FRS_PACKAGE_RES)) {
 			$FRS_PACKAGE_RES=db_query("SELECT package_id,name FROM frs_package WHERE group_id='$group_id'");

@@ -20,17 +20,16 @@ if (!user_ismember($group_id,'R2')) {
 }
 
 
-file_utils_admin_header(array('title'=>'Release New File Version'));
+file_utils_admin_header(array('title'=>$Language->getText('file_admin_editreleases','release_new_file_version')));
 
 echo '
-<h2>File Manager Administration</h2>
-<h3><a href="/file/admin/editpackages.php?group_id='.$group_id.'">Edit/Release Files</a></h3>
+<h2'.$Language->getText('file_admin_index','file_manager_admin').'</h2>
+<h3><a href="/file/admin/editpackages.php?group_id='.$group_id.'">'.$Language->getText('file_admin_index','edit_release_files').'</a></h3>
 <p>
-Manage file releases: create or modify packages and releases, set status and access permissions.
-<h3><a href="/file/admin/qrs.php?group_id='.$group_id.'">Quick Add File Release</a></h3>
+'.$Language->getText('file_admin_index','manage_explain').'
+<h3><a href="/file/admin/qrs.php?group_id='.$group_id.'">'.$Language->getText('file_admin_index','quick_add').'</a></h3>
 <p>
-One step process where you can specify all the necessary information at the same time. The counterpart is that you can only attach one single file to a given release and not several as in the full File Release process.
-';
+'.$Language->getText('file_admin_index','quick_add_explain');
 file_utils_footer(array());
 
 

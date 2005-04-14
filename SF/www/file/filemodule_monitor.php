@@ -7,6 +7,7 @@
 // $Id$
 
 require_once('pre.php');
+$Language->loadLanguageMsg('file/file');
 
 if (user_isloggedin()) {
 	/*
@@ -14,7 +15,7 @@ if (user_isloggedin()) {
 		a file module
 	*/
 
-	$HTML->header(array('title'=>'Monitor A Package'));
+	$HTML->header(array('title'=>$Language->getText('file_filemodule_monitor','monitor_a_package')));
 
 	if ($filemodule_id) {
 		/*
@@ -24,7 +25,7 @@ if (user_isloggedin()) {
 		*/
 
 		echo '
-			<H2>Monitor a Package</H2>';
+			<H2>'.$Language->getText('file_filemodule_monitor','monitor_package').'</H2>';
 
 		$sql="SELECT * FROM filemodule_monitor WHERE user_id='".user_getid()."' AND filemodule_id='$filemodule_id';";
 
@@ -41,14 +42,14 @@ if (user_isloggedin()) {
 
 			if (!$result) {
 				echo '
-					<span class="highlight">Error inserting into filemodule_monitor</span>';
+					<span class="highlight">'.$Language->getText('file_filemodule_monitor','insert_err').'</span>';
 			} else {
 				echo '
-					<span class="highlight"><H3>Package is now being monitored</H3></span>
+					<span class="highlight"><H3>'.$Language->getText('file_filemodule_monitor','p_monitored').'</H3></span>
 					<P>
-					You will now be emailed when new files are released.
+					'.$Language->getText('file_filemodule_monitor','now_emails').'
 					<P>
-					To turn off monitoring, simply click the <B>Monitor Package</B> link again.';
+					'.$Language->getText('file_filemodule_monitor','turn_monitor_off');
 			}
 
 		} else {
@@ -56,15 +57,15 @@ if (user_isloggedin()) {
 			$sql="DELETE FROM filemodule_monitor WHERE user_id='".user_getid()."' AND filemodule_id='$filemodule_id';";
 			$result = db_query($sql);
 			echo '
-				<span class="highlight"><H3>Monitoring has been turned off</H3></span>
+				<span class="highlight"><H3>'.$Language->getText('file_filemodule_monitor','monitor_turned_off').'</H3></span>
 				<P>
-				You will not receive any more emails from this package.';
+				'.$Language->getText('file_filemodule_monitor','no_emails');
 
 		}
 
 	} else {
 		echo '
-			<H1>Error - Choose a package First</H1>';
+			<H1>'.$Language->getText('file_filemodule_monitor','choose_p').'</H1>';
 	} 
 
 	$HTML->footer(array());

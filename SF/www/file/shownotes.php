@@ -8,6 +8,7 @@
 
 require_once('pre.php');
 require_once('www/file/file_utils.php');
+$Language->loadLanguageMsg('file/file');
 
 $result=db_query("SELECT frs_release.notes,frs_release.changes,frs_release.preformatted,frs_release.name,frs_package.group_id ".
 		"FROM frs_release,frs_package ".
@@ -15,35 +16,35 @@ $result=db_query("SELECT frs_release.notes,frs_release.changes,frs_release.prefo
 
 if (!$result || db_numrows($result) < 1) {
 	echo db_error();
-	exit_error("Error - Not Found","That Release Was Not Found");
+	exit_error($Language->getText('file_shownotes','not_found_err'),$Language->getText('file_shownotes','release_not_found'));
 } else {
 
 	$group_id=db_result($result,0,'group_id');
 
-	file_utils_header(array('title'=>"File Release Notes and Changelog",'group'=>$group_id));
+	file_utils_header(array('title'=>$Language->getText('file_shownotes','release_notes'),'group'=>$group_id));
 
-	$HTML->box1_top('Notes');
+	$HTML->box1_top($Language->getText('file_shownotes','notes'));
 
-	echo '<h3>Release Name: <A HREF="showfiles.php?group_id='.db_result($result,0,'group_id').'">'.db_result($result,0,'name').'</A></H3>
+	echo '<h3>'.$Language->getText('file_shownotes','release_name').': <A HREF="showfiles.php?group_id='.db_result($result,0,'group_id').'">'.db_result($result,0,'name').'</A></H3>
 		<P>';
 
 /*
 	Show preformatted or plain notes/changes
 */
 	if (db_result($result,0,'preformatted')) {
-		echo '<PRE><B>Notes:</B>
+		echo '<PRE><B>'.$Language->getText('file_shownotes','notes').':</B>
 '.db_result($result,0,'notes').'
 
 <HR NOSHADE>
-<B>Changes:</B>
+<B>'.$Language->getText('file_shownotes','changes').':</B>
 '.db_result($result,0,'changes').'</PRE>';
 
 	} else {
-		echo '<B>Notes:</B>
+		echo '<B>'.$Language->getText('file_shownotes','notes').':</B>
 '.db_result($result,0,'notes').'
 
 <HR NOSHADE>
-<B>Changes:</B>
+<B>'.$Language->getText('file_shownotes','changes').':</B>
 '.db_result($result,0,'changes');
 
 	}
