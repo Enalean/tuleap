@@ -2,6 +2,7 @@
 // ## export sf front page news in RSS
 require_once('pre.php');
 require('./rss_utils.inc');
+$Language->loadLanguageMsg('export/export');
 
 if ($option == "newest") {
   $res = db_query('SELECT group_id,unix_group_name,group_name,short_description, xrx_export_ettm FROM groups '
@@ -24,14 +25,14 @@ $server = get_server_url();
 
 // ## one time output
 print " <channel>\n";
-print "  <copyright>Copyright (c) ".$GLOBALS['sys_long_org_name'].", ".$GLOBALS['sys_name']." Team, 2001-".date('Y',time()).". All Rights Reserved</copyright>\n";
+print "  <copyright>".$Language->getText('export_rss_sfnewreleases','copyright',array($GLOBALS['sys_long_org_name'],$GLOBALS['sys_name'],date('Y',time())))."</copyright>\n";
 print "  <pubDate>".gmdate('D, d M Y g:i:s',time())." GMT</pubDate>\n";
-print "  <description>".$GLOBALS['sys_name']." Full Project Listing</description>\n";
+print "  <description>".$GLOBALS['sys_name']." ".$Language->getText('export_index','full_proj_listing')."</description>\n";
 print "  <link>$server</link>\n";
 if ($option == "newest") {
-print "  <title>".$GLOBALS['sys_name']." New Projects</title>\n";
+print "  <title>".$GLOBALS['sys_name']." ".$Language->getText('export_rss_sfprojects','new_proj')."</title>\n";
 } else {
-print "  <title>".$GLOBALS['sys_name']." Full Project Listing</title>\n";
+print "  <title>".$GLOBALS['sys_name']." ".$Language->getText('export_index','full_proj_listing')."</title>\n";
 }
 print "  <webMaster>".$GLOBALS['sys_email_contact']."</webMaster>\n";
 print "  <language>en-us</language>\n";
@@ -59,9 +60,7 @@ print " </channel>\n";
     }
 
     // ## one time output. List of Exported fields
-    print 'Project ID, Short Name, Name, Description, Language, OS Runtime Support,'.
-	'Development State, Release Location, Additional Information, Point of contact,'.
-	'eTTM Inventory'."\n";
+    print $Language->getText('export_rss_sfprojects','params')."\n";
 
     // ## item outputs
     while ($row = db_fetch_array($res)) {
@@ -79,13 +78,13 @@ print " </channel>\n";
 	    $folders = explode(" :: ",$row_trovecat['fullpath']);
 	    $folders_len = count($folders);
 	    
-	    if ( preg_match("/Programming Language/", $folders[0])) {
+	    if ( preg_match("/".$Language->getText('export_rss_sfprojects','prog_lang')."/", $folders[0])) {
 		$lang[] = $folders[$folders_len - 1];
 	    }
-	    else if ( preg_match("/Operating System/", $folders[0])) {
+	    else if ( preg_match("/".$Language->getText('export_rss_sfprojects','os')."/", $folders[0])) {
 		$os[] = $folders[$folders_len - 1];
 	    }
-	    else if ( preg_match("/Development Status/", $folders[0])) {
+	    else if ( preg_match("/".$Language->getText('export_rss_sfprojects','devel_status')."/", $folders[0])) {
 		$devstate[] = $folders[$folders_len - 1];
 	    }
 	    

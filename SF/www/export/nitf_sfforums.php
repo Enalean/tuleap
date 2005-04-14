@@ -1,13 +1,15 @@
 <?php
 // ## export sf front page news in RSS
 require_once('pre.php');
+$Language->loadLanguageMsg('export/export');
+
 header("Content-Type: text/xml");
 
 // ## group_id must be specified
 $res_grp = db_query('SELECT group_id,group_name FROM groups '
 	.'WHERE is_public=1 AND status=\'A\' AND group_id='.$group_id);
 if (db_numrows($res_grp) < 1) {
-	print 'ERROR: This URL must be called with a valid group_id parameter';
+	print $Language->getText('export_nitf_sfforums','g_id_err');
 	exit;
 } else {
 	$row_grp = db_fetch_array($res_grp);

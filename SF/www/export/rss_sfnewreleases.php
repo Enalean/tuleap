@@ -8,6 +8,8 @@
 // ## export sf front page news in RSS
 require_once('pre.php');
 require('./rss_utils.inc');
+$Language->loadLanguageMsg('export/export');
+
 header("Content-Type: text/xml");
 print '<?xml version="1.0"?>
 <!DOCTYPE rss SYSTEM "http://my.netscape.com/publish/formats/rss-0.91.dtd">
@@ -44,11 +46,11 @@ $res=db_query($query);
 
 // ## one time output
 print " <channel>\n";
-print "  <copyright>Copyright (c) ".$GLOBALS['sys_long_org_name'].", ".$GLOBALS['sys_name']." Team, 2001-".date('Y',time()).". All Rights Reserved</copyright>\n";
+print "  <copyright>".$Language->getText('export_rss_sfnewreleases','copyright',array($GLOBALS['sys_long_org_name'],$GLOBALS['sys_name'],date('Y',time())))."</copyright>\n";
 print "  <pubDate>".gmdate('D, d M Y g:i:s',time())." GMT</pubDate>\n";
-print "  <description>".$GLOBALS['sys_name']." New Releases</description>\n";
+print "  <description>".$Language->getText('export_rss_sfnewreleases','new_releases',$GLOBALS['sys_name'])."</description>\n";
 print "  <link>".get_server_url()."</link>\n";
-print "  <title>".$GLOBALS['sys_name']." New Releases</title>\n";
+print "  <title>".$Language->getText('export_rss_sfnewreleases','new_releases',$GLOBALS['sys_name'])."</title>\n";
 list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
 print "  <webMaster>webmaster@".$host."</webMaster>\n";
 print "  <language>en-us</language>\n";

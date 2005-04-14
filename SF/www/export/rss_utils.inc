@@ -6,6 +6,8 @@
 //
 // $Id$
 
+$Language->loadLanguageMsg('export/export');
+
 function rss_setscheme() {
 	if ($GLOBALS['scheme'] == "netscape") {
 		$GLOBALS['description_maxlen'] = 500;
@@ -14,6 +16,7 @@ function rss_setscheme() {
 }
 
 function rss_description ($in) {
+  global $Language;
 	// if description_maxlen is defined, then truncate appropriately
 	// added for netscape rss schema compat
 	if ($GLOBALS['description_maxlen'] &&
@@ -22,7 +25,7 @@ function rss_description ($in) {
 	}
 	// according to netscape, this cannot be blank
 	if ((strlen($in)==0) && $GLOBALS['description_notnull']) {
-		$in = "No description available.";
+		$in = $Language->getText('export_rss_utils','no_desc_available');
 	}
 	return htmlspecialchars($in);
 }
