@@ -40,7 +40,7 @@ admin_main	stat_spu	Generate Site/Projects/Users Statistics
 admin_main	header_utils	Site Utilities
 admin_main	mail_engine	Mass Mail Engine
 admin_main	header_sstat	Site Statistics
-admin_main	sstat_reg_u	Registered active ore restricted site users
+admin_main	sstat_reg_u	Registered active or restricted site users
 admin_main	sstat_reg_g	Registered projects
 admin_main	sstat_reg_act_g	Registered active projects
 admin_main	sstat_pend_g	Pending projects
@@ -106,7 +106,7 @@ admin_groupedit	feedback_info	Updating Project Info
 admin_groupedit	feedback_history	added foundry_data row
 admin_groupedit	feedback_foundry	CREATING NEW FOUNDRY_DATA ROW 
 admin_groupedit	feedback_insert	COULD NOT INSERT NEW FOUNDRY_DATA ROW 
-admin_groupedit	error_group	Invalid group was passed in.Editing Group
+admin_groupedit	error_group	Invalid group was passed in.
 admin_groupedit	proj_edit	Edit Project Details
 admin_groupedit	proj_admin	Project Admin
 admin_groupedit	proj_member	View/Edit Project Members
@@ -147,7 +147,7 @@ admin_grouplist	members	Members
 # Script: SF/www/admin/lastlogins.php
 #
 admin_lastlogins	title	Last Logins
-admin_lastlogins	recent	Most Recent Sessions with Logins
+admin_lastlogins	recent	Most Recent Logins
 #
 #-----------------------------------------------
 # Script: SF/www/admin/massmail_execute.php
@@ -171,7 +171,7 @@ admin_massmail	to_site_admin	Send only to site administrators
 admin_massmail	to_all	Send to all users, regardless of their preferences
 admin_massmail	subject	Subject
 admin_massmail	text	Text of Message
-admin_massmail	footer	Your message here...\n\n---------------------\nThis email was sent from $1'. To change your email receiptpreferences, please visit the site and edit your account via the "Account Maintenance" link.\n\nDirect any question to $2 or reply to this e-mail.
+admin_massmail	footer	Your message here...\n\n---------------------\nThis email was sent from $1'. To change your email receipt preferences, please visit the site and edit your account via the "Account Maintenance" link.\n\nDirect any question to $2 or reply to this e-mail.
 #
 #-----------------------------------------------
 # Script: SF/www/admin/newprojectmail.php
@@ -186,7 +186,7 @@ admin_search	title	Administration - Search Users/Groups
 admin_search	header	Administrative Search Functions
 admin_search	maintenance	User/Group/Category Maintenance
 admin_search	criteria	Search Criteria
-admin_search	error_nowholedb	An empty search criteria would display the whole database.  Please use the database command line interface if you wish to do this.
+admin_search	error_nowholedb	An empty search criteria would display the whole database.
 admin_search	nomatch	No matches
 admin_search	login	Login Name
 admin_search	user_name	User's Name

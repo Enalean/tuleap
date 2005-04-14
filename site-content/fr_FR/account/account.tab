@@ -138,7 +138,7 @@ account_lostlogin	duplicate_hash	Cette clé de confirmation est présente plus d'u
 account_lostlogin	invalid_hash	Clé de confirmation invalide.
 account_lostlogin	newpasswd	Nouveau mot de passe
 account_lostlogin	newpasswd_alert	(6 caractères minimum)
-account_lostlogin	newpasswd2	Nouveau mot de passe (répétez)
+account_lostlogin	newpasswd2	Nouveau mot de passe (confirmez)
 #
 #-----------------------------------------------
 # Script: SF/www/account/lostpw-confirm.php
@@ -198,7 +198,7 @@ account_register	codex_login_help	Ce nom de login a été généré à partir de votre
 account_register	login_directions	<strong>(minuscules uniquementy!)</strong>
 account_register	passwd	Mot de passe
 account_register	passwd_directions	(6 caractères minimum)	
-account_register	passwd2	Mot de passe (répétez)
+account_register	passwd2	Mot de passe (confirmez)
 account_register	passwd2_directions	&nbsp;
 account_register	realname	Nom Complet
 account_register	realname_directions	&nbsp;
