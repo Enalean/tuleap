@@ -10,27 +10,25 @@
 
 <h2>About the <?php print $GLOBALS['sys_name']; ?> Site</h2>
 
-<P><?php print $GLOBALS['sys_name']; ?> is a service available to <B>
-<?php print $GLOBALS['sys_org_name']; ?> software development
-teams</B>. Its goal is to promote collaborative software development
-as well as internal reuse of software assets in a controlled
-environment.<p>
+<P><?php print $GLOBALS['sys_name']; ?> est un service accessible aux
+<b>équipes de développement logiciel de <?php print
+$GLOBALS['sys_org_name']; ?></B>. Son objectif est de promouvoir et de
+faiciliter le développement collaboratif ainsi que la réutilisation
+de composants logiciels dans un environnement contrôlé.<p>
 
-<p>The <?php print $GLOBALS['sys_name']; ?> team wants to make internal
-software reuse easy and provide a single place where to go to
-when you as a developer, a project leader or a manager are looking for
-existing pieces of software and/or technology that you could re-use,
-adapt and improve to speed up your own Time To Market while
-capitalizing on <?php print $GLOBALS['sys_org_name']; ?> knowledge.</p>
+<p>L'équipe <?php print $GLOBALS['sys_name']; ?> veut rendre la
+réutilisation de briques logicielles plus aisée et fournir un endroit
+unique où les développeurs, les chefs de projets et les managers
+peuvent consulter la liste des composants et technologies afin de les
+réutiliser, de les adapter et d'améliorer leur productivité en
+capitalisant sur les connaissances de <?php print
+$GLOBALS['sys_org_name']; ?>.</p>
 
-<p>For a consistent and fruitful approach of internal software reuse,
-the <?php print $GLOBALS['sys_name']; ?> Team has put together the
+<p>Pour une approche cohérente et bénéfique de la réutilisation de composants logiciels, l'équipe CodeX <?php print $GLOBALS['sys_name']; ?> a mis en place une Team has put together the
 <b><A href="/docman/display_doc.php?docid=16&group_id=1"><?php print
-$GLOBALS['sys_org_name']; ?> Code eXchange Policy</a></b>. It governs
-internal code sharing and re-use and is the cornerstone of the <?php
-print $GLOBALS['sys_name']; ?> edifice. Make sure you <A
-href="/docman/display_doc.php?docid=16&group_id=1">read it</a>. <P>
+$GLOBALS['sys_org_name']; ?> Politique d'échange de code</a></b>. Elle définit les règles internes de partage et de réutilisation et constitue la pierre angulaire de l'édifice. Prenez le temps de <A
+href="/docman/display_doc.php?docid=16&group_id=1">la lire</a>. <P>
 
-<p>We thank you for your support!</P>
+<p>Nous vous remercions pour votre soutien!</P>
 
 <p>The <a href="/staff.php"><?php print $GLOBALS['sys_name']; ?> Team</a>.</p>
