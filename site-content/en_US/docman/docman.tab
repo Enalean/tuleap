@@ -97,7 +97,7 @@ docman_admin_index	error_nodocgroup	No Valid Document Group Was Selected
 docman_admin_index	feedback_doc_uploaded	Document Uploaded 
 docman_admin_index	feedback_doc_updated	Document Updated 
 docman_admin_index	error_dbupdate	Error while updating the document:<br>$1
-docman_admin_index	error_nodoc	Unable to update - Document does not exist, or document's group not the same as that to which your account belongs.
+docman_admin_index	error_nodoc	Unable to update - Document does not exist, or it doesn't belong to this document group.
 docman_admin_index	feedback_group_added	Document group added 
 docman_admin_index	title_group_mgt	Document Groups Administration
 docman_admin_index	header_group_mgt	Document Groups Administration
@@ -125,12 +125,12 @@ docs_site_about	title	About the $1 Site
 #
 docman_admin_editdocgrouppermissions	title	Edit Document Group Permissions
 docman_admin_editdocgrouppermissions	introduction	You can set specific permissions to a document group. These permissions apply to all documents that belong to this document group. But you may also set different permissions to specific document. <p> By default, document groups have no specific permissions: access to all files is granted to any anonymous user.
-docman_admin_editdocgrouppermissions	instructions	Select user groups who are granted access to this document:
+docman_admin_editdocgrouppermissions	instructions	Select user groups who are granted access to this document group:
 #
 #-----------------------------------------------
 # Script: SF/www/docman/admin/editdocpermissions.php
 #
 docman_admin_editdocpermissions	title	Edit Document Permissions
 docman_admin_editdocpermissions	doc_title	Edit Document Permissions
-docman_admin_editdocpermissions	instructions_intro	When no permission is defined for a document, then it has the same permissions as the parent document group. <br>When a permission is defined for a document, then it overrides the permissions defined for the document group.
-docman_admin_editdocpermissions	instructions	Select user groups who are granted access to this document:<br><b>Note</b>: if you do not specify any access permission, the document inherits the access permissions from <a href="$1">the document group it belongs to</a> (default setting).
+docman_admin_editdocpermissions	instructions_intro	&nbsp;
+docman_admin_editdocpermissions	instructions	Select user groups who are granted access to this document:<br><b>Note</b>: When no permission is defined for a document, then it has the same permissions as the <a href="$1">parent document group</a>. <br>When a permission is defined for a document, then it overrides the permissions defined for the document group.
