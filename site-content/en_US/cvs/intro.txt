@@ -11,9 +11,10 @@ if (user_isloggedin()) {
    $username=strtolower(user_getname());
 } else $username='username';
 print '<h2>CVS Access '.help_button('VersionControlWithCVS.html').'</h2>
-<P>CVS read-only  access is granted to all '.$GLOBALS['sys_name'].' registered users. Anonymous users do not have access to the CVS tree, because many '.$GLOBALS['sys_name'].' projects want to know who is in their community of users. Users desiring read access to project 
+<P>By default, CVS read-only  access is granted to all '.$GLOBALS['sys_name'].' registered users. Anonymous users do not have access to the CVS tree. Users desiring read access to project 
 CVS trees should register on '.$GLOBALS['sys_name'].'. 
-<P>Any registered and logged-in '.$GLOBALS['sys_name'].' user has read access to the CVS tree.  Project members (the developers who are part of the core team) are granted read (checkout) and write (commit) access to the CVS tree. Below are the typical commands you would use to login into the CVS server and checkout the source code of this project. In the command below substitute <I>modulename</I> ';
+<P>Project members are granted read (checkout) and write (commit) access to the CVS tree. 
+<P>Below are the typical commands you would use to login into the CVS server and checkout the source code of this project. In the command below substitute <I>modulename</I> ';
 if (!user_isloggedin()){
    print 'and <I>username</I> with the proper values.';
 } else print ' with the proper value.'; 
@@ -30,5 +31,5 @@ print '<P><span class="command">cvs -d:pserver:'.$username.'@cvs.'.$row_grp['htt
 }
 
 
-print '<P>'.help_button('VersionControlWithCVS.html',false,'[More on how to use CVS &hellip;]');
+print '<P>'.help_button('VersionControlWithCVS.html',false,'[More information about CVS&hellip;]');
 ?>
