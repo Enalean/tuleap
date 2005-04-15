@@ -16,7 +16,7 @@
 file_admin_editpackagepermissions	p_not_exist	Package does not exist
 file_admin_editpackagepermissions	edit_p_perm	Edit Package Permissions
 file_admin_editpackagepermissions	p	Package
-file_admin_editpackagepermissions	perm_explain	You can set specific permissions to a package. These permissions apply to all releases and files that belong to this package. But you may also set different permissions to specific releases. \n<p>By default, packages have no specific permissions: access to all files is granted to any CodeX registred user.
+file_admin_editpackagepermissions	perm_explain	You can set specific permissions to a package. These permissions apply to all releases and files that belong to this package. But you may also set different permissions to specific releases. \n<p>By default, packages are accessible to all registered users.
 file_admin_editpackagepermissions	select_u_group	Select user groups who are granted access to this package
 #
 #-----------------------------------------------
@@ -52,13 +52,13 @@ file_admin_editreleasepermissions	rel_not_exist	Release does not exist in this p
 file_admin_editreleasepermissions	edit_rel_perm	Edit Release Permissions
 file_admin_editreleasepermissions	release	Release
 file_admin_editreleasepermissions	from_p	from package
-file_admin_editreleasepermissions	perm_explain	When no permission is defined for a release, then it has the same permissions as the parent package. \n<br>When a permission is defined for a release, then it overrides the permissions defined for the package.
-file_admin_editreleasepermissions	select_u_group	Select user groups who are granted access to this release: \n<br><b>Note</b>: if you do not specify any access permission, the release inherits the access permissions from <a href="$1">the package it belongs to</a> (default setting).
+file_admin_editreleasepermissions	perm_explain	&nbsp;
+file_admin_editreleasepermissions	select_u_group	Select user groups who are granted access to this release: \n<br><b>Note</b>: when no permission is defined for a release, then it has the same permissions as the parent package. \n<br>When a permission is defined for a release, then it overrides the permissions defined for the <a href="$1">package it belongs to</a>.
 #
 #-----------------------------------------------
 # Script: SF/www/file/admin/editreleases.php
 #
-file_admin_editreleases	create_p_before_rel	Must create a package before you create a release. You must also include a release name.
+file_admin_editreleases	create_p_before_rel	Must create a package before you create a release.
 file_admin_editreleases	p_not_exists	Package Doesn't Exist Or Isn't Yours
 file_admin_editreleases	add_rel_fail	Adding Release Failed
 file_admin_editreleases	rel_added	Added Release
@@ -68,7 +68,7 @@ file_admin_editreleases	data_uploaded	Data Uploaded
 file_admin_editreleases	length_err	ERROR - uploaded data must be non null and < $1 in length
 file_admin_editreleases	invalid_flag_err	ERROR invalid upload flag
 file_admin_editreleases	create_p_before_rel_status	Must create a package before you create a release. You must also include a release name and status.
-file_admin_editreleases	p_not_yours	Trying to change to a package that isn't yours
+file_admin_editreleases	p_not_yours	Trying to change a package that isn't yours
 file_admin_editreleases	cannot_del_rel	Sorry - you cannot delete a release that still contains files
 file_admin_editreleases	rel_updated	Updated Release
 file_admin_editreleases	rel_update_failed	Updating Release Failed
@@ -142,7 +142,7 @@ file_admin_editreleases	of_this_package	Of This Package
 #
 file_admin_index	file_manager_admin	File Manager Administration
 file_admin_index	edit_release_files	Edit/Release Files
-file_admin_index	manage_explain	Manage file releases: create or modify packages and releases, set status and access permissions.
+file_admin_index	manage_explain	Create or modify packages and releases, set status and access permissions.
 file_admin_index	quick_add	Quick Add File Release
 file_admin_index	quick_add_explain	One step process where you can specify all the necessary information at the same time. The counterpart is that you can only attach one single file to a given release and not several as in the full File Release process.
 #
@@ -168,7 +168,7 @@ file_admin_qrs	adding_file	Adding File
 # Script: SF/www/file/confirm_download.php
 #
 file_confirm_download	download_agreement	CodeX download agreement
-file_confirm_download	download_explain	<h2>*** CodeX Download Agreement ***</h2></center> \n</div> \n<p>You are about to download software from the CodeX Site. Software re-use and sharing <b>inside</b> $1 is subject to the <a href="$2" target="_blank"><b>Code eXchange Corporate Policy</b></a>.</p> \n\n<p>By downloading this software you implicitely recognize that you have <a href="$2" target="_blank"><b>read the CodeX Policy</b></a> and agree with the terms and conditions. \n\n<p>To proceed with the file download, click on '<b>I AGREE</b>'. I you do not want to download the file click on '<b>I DECLINE</b>' and <a href="mailto:$3"><b>contact us</b></a> if you need clarification or want to explain why you declined the agreement.
+file_confirm_download	download_explain	<h2>*** CodeX Download Agreement ***</h2></center> \n</div> \n<p>You are about to download software from the CodeX Site. Software re-use and sharing <b>inside</b> $1 is subject to the <a href="$2" target="_blank"><b>Code eXchange Corporate Policy</b></a>.</p> \n\n<p>By downloading this software you implicitely recognize that you have <a href="$2" target="_blank"><b>read the CodeX Policy</b></a> and agree with the terms and conditions. \n\n<p>To proceed with the file download, click on '<b>I AGREE</b>'. If you do not want to download the file click on '<b>I DECLINE</b>' and <a href="mailto:$3"><b>contact us</b></a> if you need clarification or want to explain why you declined the agreement.
 file_confirm_download	agree	I AGREE
 file_confirm_download	decline	I DECLINE
 #
@@ -199,17 +199,17 @@ file_filemodule_monitor	choose_p	Error - Choose a package First
 #
 file_file_utils	admin	Admin
 file_file_utils	must_choose_one	Must Choose One
-file_file_utils	g_id_err	ERROR - GROUP ID REQUIRED
+file_file_utils	g_id_err	Erreur - Project identifier (group_id) required
 #
 #-----------------------------------------------
 # Script: SF/www/file/showfiles.php
 #
-file_showfiles	file_p_for	File packages for $1
+file_showfiles	file_p_for	File packages for project '$1'
 file_showfiles	no_file_p	No File Packages
 file_showfiles	no_p_available	There are no file packages available
 file_showfiles	p_releases	Package Releases
 file_showfiles	printer_version	Printer version
-file_showfiles	select_release	Select Release to see Release Notes and Change Log, &nbsp; Select File to request file download.
+file_showfiles	select_release	Select Release to see Release Notes and Change Log.&nbsp;Select File to request file download.
 file_showfiles	release_notes	Release<BR>&amp; Notes
 file_showfiles	size	Size
 file_showfiles	d_l	D/L
