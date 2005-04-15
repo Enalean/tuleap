@@ -137,7 +137,7 @@ class LDAP extends Error {
             // Ideally we should only have one reply from the LDAP server
             $info = ldap_get_entries($this->ds, $sr);
             if ($info['count'] < 1) {
-                $this->setError("User not found");
+                $this->setError($Language->getText('ldap_class','err_nouser'));
                 return false;
             }
             $auth_dn = $info[0]["dn"];

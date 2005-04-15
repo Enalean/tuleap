@@ -26,7 +26,7 @@ print "<p>".$Language->getText('admin_grouplist','for_categ').": ";
 if ($form_catroot == 1) {
 
 	if (isset($group_name_search)) {
-	    print "<b>".$Language->getText('admin_grouplist','add_group',array($group_name_search))."</b>\n";
+	    print "<b>".$Language->getText('admin_grouplist','begins_with',array($group_name_search))."</b>\n";
 		$res = db_query("SELECT group_name,unix_group_name,group_id,is_public,status,license "
 			. "FROM groups WHERE group_name LIKE '$group_name_search%' "
 			. ($form_pending?"AND WHERE status='P' ":"")

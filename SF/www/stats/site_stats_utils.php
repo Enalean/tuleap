@@ -93,7 +93,7 @@ function stats_site_projects_form( $span = 21, $orderby = "downloads", $offset =
 
 	print '<tr><td><b>'.$Language->getText('stats_site_stats_utils','special_proj_list').' </b></td>';
 	print '<td> <INPUT type="text" width="100" name="projects" value="' . ($projects ? $projects : "") . '">';
-	print '  (space separated group_id\'s) </td></tr>';
+	print '  '.$Language->getText('stats_site_stats_utils','space_sep_gid').' </td></tr>';
 
 	print '<tr><td><b>'.$Language->getText('stats_site_stats_utils','days_spanned').' </b></td><td>';
 	$span_vals = array(7,14,21,30,60,90,120,180,$Language->getText('stats_site_stats_utils','all'));

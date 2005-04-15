@@ -27,7 +27,7 @@ function menu_site_admin() {
     $HTML->menu_entry('/admin/massmail.php',$Language->getText('include_menu','mass_mail'));
     $HTML->menu_entry('/admin/trove/trove_cat_list.php',$Language->getText('include_menu','trove_cat_list'));
     $HTML->menu_entry('/admin/trove/trove_cat_add.php',$Language->getText('include_menu','trove_cat_add'));
-    $HTML->menu_entry('/people/admin','People Skills');
+    $HTML->menu_entry('/people/admin',$Language->getText('include_menu','people_skill'));
     $HTML->menuhtml_bottom();
 
 }
@@ -155,7 +155,7 @@ function menu_search() {
 
 function menu_project($grp) {
   GLOBAL $HTML,$Language;
-    $HTML->menuhtml_top('Project: ' . group_getname($grp));
+    $HTML->menuhtml_top($Language->getText('include_menu','proj').': ' . group_getname($grp));
     $HTML->menu_entry('/projects/'. group_getunixname($grp) .'/',$Language->getText('include_menu','proj_summary'));
     print '<P>';
     $HTML->menu_entry('/project/admin/?group_id='.$grp,$Language->getText('include_menu','proj_admin'));

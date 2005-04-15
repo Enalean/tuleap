@@ -53,7 +53,7 @@ function permission_get_object_name($permission_type,$object_id) {
     if ($permission_type=='PACKAGE_READ') {
         return $Language->getText('project_admin_permissions','pack',file_get_package_name_from_id($object_id));
     } else if ($permission_type=='RELEASE_READ') {
-        return $Language->getText('project_admin_permissions','pack',file_get_release_name_from_id($object_id));
+        return $Language->getText('project_admin_permissions','rel',file_get_release_name_from_id($object_id));
     } else if ($permission_type=='DOCUMENT_READ') {
         return $Language->getText('project_admin_permissions','doc',doc_get_title_from_id($object_id));
     } else if ($permission_type=='DOCGROUP_READ') {

@@ -22,7 +22,6 @@ docman_index	description	Description
 #-----------------------------------------------
 # Script: SF/www/docman/display_doc.php
 #
-docman_display_doc	error_perm_denied	You are not authorized to access this document. Please contact a Project Administrator.
 docman_display_doc	error_nodoc	Document #$1 Not Found: document does not exist or was deleted.
 docman_display_doc	error_wrongid	No document to display - invalid document number.
 docman_display_doc	warning_different_group	Note that this document belongs to project "$1".
@@ -86,9 +85,7 @@ docman_admin_index	error_perm	You need Document Manager permissions to access th
 docman_admin_index	title	Document Manager Administration
 docman_admin_index	title_edit	Edit Document
 docman_admin_index	doc_edit	or Edit Document in place
-docman_admin_index	title_group_del	Document Group Deletion
 docman_admin_index	msg_group_del	Document Group Deleted (doc_group : $1)
-docman_admin_index	title_group_del_fail	Document Group Deletion Failure
 docman_admin_index	msg_group_del_fail	Document group was not deleted. Cannot delete groups that still have documents grouped under them.
 docman_admin_index	title_group_edit	Document Group Editing
 docman_admin_index	header_group_edit	Edit a Document Group
@@ -96,7 +93,6 @@ docman_admin_index	feedback_group_updated	Document Group Updated
 docman_admin_index	error_nodocgroup	No Valid Document Group Was Selected
 docman_admin_index	feedback_doc_uploaded	Document Uploaded 
 docman_admin_index	feedback_doc_updated	Document Updated 
-docman_admin_index	error_dbupdate	Error while updating the document:<br>$1
 docman_admin_index	error_nodoc	Unable to update - Document does not exist, or it doesn't belong to this document group.
 docman_admin_index	feedback_group_added	Document group added 
 docman_admin_index	title_group_mgt	Document Groups Administration
@@ -108,7 +104,6 @@ docman_admin_index	doc_deleted	Document Deleted
 docman_admin_index	error_deleting_doc	Error Deleting Document
 docman_admin_index	error_updating_perm	Error: could not update permissions
 docman_admin_index	perm_reset	Permissions reset to default
-docman_admin_index	error_resetting perm	Error: cannot reset permissions to default
 #
 #-----------------------------------------------
 # Script: SF/www/docs/site/index.php

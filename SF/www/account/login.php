@@ -128,7 +128,7 @@ if ( $GLOBALS['sys_https_host'] != '' && $GLOBALS['sys_force_ssl'] == 0 &&
      $GLOBALS['sys_stay_in_ssl'] == 1 ) {
     echo '<INPUT TYPE="CHECKBOX" NAME="stay_in_ssl" VALUE="1" '.
     (((browser_is_ie() && browser_get_version() < '5.1') || !session_issecure()) ?'':'CHECKED').'>'.
-    $Language->getText('account_login', 'name').'
+    $Language->getText('account_login', 'stay_ssl').'
 <p>
 ';
 

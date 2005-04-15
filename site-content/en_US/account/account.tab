@@ -88,6 +88,7 @@ account_change_realname	new_name	New Real Name
 # Script: SF/www/account/change_timezone.php
 #
 account_change_timezone	title	Change Timezone
+account_change_timezone	title2	Timezone Change
 account_change_timezone	message	Now, no matter where you live, you can see all dates and times throughout $1 as if it were in your neighborhood.
 account_change_timezone	no_update	Nothing Updated
 account_change_timezone	choose_tz	Please choose a timezone other than none
@@ -137,7 +138,6 @@ account_lostlogin	message	Welcome, $1. You may now change your lost password.
 account_lostlogin	duplicate_hash	This hash key exists more than once.
 account_lostlogin	invalid_hash	Invalid confirmation hash.
 account_lostlogin	newpasswd	New Password
-account_lostlogin	newpasswd_alert	(6 characters minimum)
 account_lostlogin	newpasswd2	New Password (repeat)
 #
 #-----------------------------------------------
@@ -159,13 +159,13 @@ account_lostpw	send_hash	Send Lost Password Hash
 # Script: SF/www/account/myprojectlist.php
 #
 account_myprojectlist	title	My Project Listing
-account_myprojectlist	grp_list	Group List for $1
+account_myprojectlist	grp_list	Group List for <B>$1</B>
 #
 #-----------------------------------------------
 # Script: SF/www/account/pending-resend.php
 #
 account_pending-resend	title	Account Pending Verification
-account_pending-resend	message	<B>Pending Account</B><P>Your email confirmation has been resent. Visit the link in this email to complete the registration process.
+account_pending-resend	message	<B>Pending Account</B>\n\n<P>Your email confirmation has been resent. Visit the link \nin this email to complete the registration process.
 account_pending-resend	notpending	This account is not pending verification.
 #
 #-----------------------------------------------
@@ -205,7 +205,6 @@ account_register	realname_directions	&nbsp;
 account_register	email	Email Address 
 account_register	email_directions	<em><strong>Remark:</strong> This email address will be verified before account activation. Please use approved email address only.</em>	 
 account_register	tz	Timezone
-account_register	tz_directions	&nbsp;
 account_register	mandatory	Fields marked with $1 are mandatory.
 account_register	siteupdate	Receive Email about Site Updates <I>(Very low traffic and includes security notices. Highly Recommended.)</I>
 account_register	communitymail	Receive additional community mailings. <I>(Low traffic.)</I>

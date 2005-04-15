@@ -297,7 +297,7 @@ if( $submit ) {
 	$dirhandle = @opendir($FTPINCOMING_DIR);
 
 	echo '<SELECT NAME="file_name">\n';
-	echo '	<OPTION VALUE="qrs_newfile">Select a file</OPTION>';
+	echo '	<OPTION VALUE="qrs_newfile">'.$Language->getText('file_admin_qrs','select_file').'</OPTION>';
 	//iterate and show the files in the upload directory
 	while ($file = @readdir($dirhandle)) {
 		if ((!ereg('^\.',$file[0])) && is_file($FTPINCOMING_DIR.'/'.$file)) {

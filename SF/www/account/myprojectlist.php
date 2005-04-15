@@ -21,7 +21,7 @@ $res_proj = db_query("SELECT groups.group_name AS group_name,"
 		. "user_group.user_id=" . user_getid());
 ?>
 
-<P><?php echo $Language->getText('account_myprojectlist', 'title', array(user_getname())); ?></B>
+<P><?php echo $Language->getText('account_myprojectlist', 'grp_list', array(user_getname())); ?></B>
 
 <P>
 <TABLE width=100% cellpadding=0 cellspacing=0 border=0 class="small">

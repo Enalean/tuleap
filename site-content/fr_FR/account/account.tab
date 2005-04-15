@@ -88,6 +88,7 @@ account_change_realname	new_name	Nouveau nom complet
 # Script: SF/www/account/change_timezone.php
 #
 account_change_timezone	title	Changement de fuseau horaire
+account_change_timezone	title2	Changement de fuseau horaire
 account_change_timezone	message	Désormais, où que vous habitiez, vous pourrez voir toutes les dates et heures affichées par $1 comme si tout se passait dans votre voisinage.
 account_change_timezone	no_update	Aucune mise à jour effectuée
 account_change_timezone	choose_tz	Prière de choisir un autre fuseau horaire que 'Aucun'
@@ -137,7 +138,6 @@ account_lostlogin	message	Bienvenue, $1. Vous pouvez changer votre mot de passe 
 account_lostlogin	duplicate_hash	Cette clé de confirmation est présente plus d'une fois dans la base.
 account_lostlogin	invalid_hash	Clé de confirmation invalide.
 account_lostlogin	newpasswd	Nouveau mot de passe
-account_lostlogin	newpasswd_alert	(6 caractères minimum)
 account_lostlogin	newpasswd2	Nouveau mot de passe (confirmez)
 #
 #-----------------------------------------------
@@ -159,7 +159,7 @@ account_lostpw	send_hash	Envoyer la clé pour le mot de passe perdu
 # Script: SF/www/account/myprojectlist.php
 #
 account_myprojectlist	title	Ma liste de projets
-account_myprojectlist	grp_list	Liste de projets pour $1
+account_myprojectlist	grp_list	Liste de projets pour <B>$1</B>
 #
 #-----------------------------------------------
 # Script: SF/www/account/pending-resend.php
@@ -195,7 +195,7 @@ account_register	ldap_login	Nom de login LDAP
 account_register	ldap_unix_login	Nom CodeX <strong>(ninuscules uniquement, pas d'espace)</strong>
 account_register	ldap_email_help	<em><strong>Remarque:</strong> Cette adresse e-mail provient de l'annuaire LDAP. Merci de ne pas la modifier.</em>
 account_register	codex_login_help	Ce nom de login a été généré à partir de votre adresse email. Vous pouvez le changer si vous le souhaitez.
-account_register	login_directions	<strong>(minuscules uniquementy!)</strong>
+account_register	login_directions	<strong>(minuscules uniquement!)</strong>
 account_register	passwd	Mot de passe
 account_register	passwd_directions	(6 caractères minimum)	
 account_register	passwd2	Mot de passe (confirmez)
@@ -204,8 +204,7 @@ account_register	realname	Nom Complet
 account_register	realname_directions	&nbsp;
 account_register	email	Adresse e-mail
 account_register	email_directions	<em><strong>Remarque:</strong>Cette adresse e-mail sera vérifiée avant l'activation du compte. Merci de n'utiliser que des adresses e-mails autorisées.</em>	 
-account_register	tz	Fuseau Hhraire
-account_register	tz_directions	&nbsp;
+account_register	tz	Fuseau Horaire
 account_register	mandatory	Les champs marqués $1 sont obligatoires.
 account_register	siteupdate	Recevoir du courrier électronique à propos des mises à jour du site <i>(Faible trafic et informations relatives à la sécurité. Fortement recommandé.)</I>
 account_register	communitymail	Recevoir du courrier électronique supplémentaire au sujet de la communauté. <I>(Faible trafic)</I>

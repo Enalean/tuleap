@@ -43,7 +43,7 @@ stats_site_stats_utils	special_list	SPECIAL LIST
 stats_site_stats_utils	no_cat	( $1 returned no category name )
 stats_site_stats_utils	proj_type	Project Type: 
 stats_site_stats_utils	special_proj_list	Special Project List:
-stats_site_stats_utils	space_sep_gid	(space separated group_id\'s)
+stats_site_stats_utils	space_sep_gid	(space separated group_id's)
 stats_site_stats_utils	days_spanned	Days Spanned:
 stats_site_stats_utils	all	All
 stats_site_stats_utils	view_by	View By: 

@@ -39,7 +39,6 @@ include_cache	unable_open_cache	Unable to open cache file for writing after obta
 #   
 include_exit	error	Error
 include_exit	info	Information
-include_exit	warn	Warning
 include_exit	perm_denied	Permission Denied
 include_exit	exit_error	Exiting with Error
 include_exit	no_perm	You are not granted sufficient permission to perform this operation.
@@ -467,3 +466,14 @@ include_vars	public_domain	Public Domain
 include_vars	other_env	Other Environment
 include_vars	web_env	Web Environment
 include_vars	other_lang	Other Language
+#
+#-----------------------------------------------
+# Script: SF/common/include/Error.class
+#
+include_error	no_err	No Error
+#
+#-----------------------------------------------
+# Script: SF/common/include/GroupFactory.class
+#
+include_groupfactory	none_found	None Found $1
+include_groupfactory	perm_denied	Permission denied.

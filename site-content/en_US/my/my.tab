@@ -29,7 +29,6 @@ my_index	stop_file	Stop Monitoring this Package?
 my_index	stop_monitor	STOP MONITORING
 my_index	my_tasks	My Tasks
 my_index	my_arts	My Artifacts
-my_index	err_artt	ArtifactType could not be created
 my_index	my_survey	Quick Survey
 my_index	survey_done	You have taken your developer survey
 my_index	my_bookmarks	My Bookmarks
@@ -73,7 +72,6 @@ bookmark_edit	title	Edit Bookmark
 #-----------------------------------------------
 # Script: SF/www/my/rmproject.php
 #
-bookmark_rmproject	title	Edit Bookmark
 bookmark_rmproject	err_notmember	You are not a member of that project.
 bookmark_rmproject	err_removing	You cannot remove a group administrator. Remove this person's administrator privileges on the user permissions page before attempting to remove them from the project. 
 bookmark_rmproject	mail_subject	$1: user $2 removed from project '$3'

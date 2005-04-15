@@ -79,7 +79,7 @@ function license_declined() {
     }
 
     // Write Date in file
-    $msg = "CodeX Core Software License declined on ".
+    $msg = $Language->getText('include_license','license_declined')." ".
 	format_date($sys_datefmt,time()).$sys_lf;
 
     if (fwrite($fp, $msg) == FALSE) {

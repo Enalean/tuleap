@@ -50,6 +50,7 @@ function logs_cond($project, $span, $who) {
  * Process SQL query and display corresponding result
  */
 function logs_display($sql, $span, $field) {
+  global $Language;
   // Executions will continue until morale improves.
   $res = db_query( $sql );
 
@@ -61,7 +62,7 @@ function logs_display($sql, $span, $field) {
     print '<table width="100%" cellpadding="2" cellspacing="0" border="0">'."\n"
       . '<tr valign="top">'."\n"
       . ' <th>'.$Language->getText('project_admin_utils','date').'</th>'."\n"
-      . ' <th>'.$Language->getText('project_admin_utils','user').'</th>'."\n"
+      . ' <th>'.$Language->getText('project_export_utils','user').'</th>'."\n"
       . ' <th>'.$Language->getText('project_export_artifact_history_export','email').'</th>'."\n"
       . ' <th>'.$field.'</th>'."\n"
       . ' <th align="right">'.$Language->getText('project_stats_source_code_access_utils','time_gmt').'</th>'."\n"
@@ -90,7 +91,7 @@ function logs_display($sql, $span, $field) {
 
 // filedownload_logs_daily
 function filedownload_logs_daily($project, $span = 7, $who="allusers") {
-
+  global $Language;
 	// check first if service is used by this project
         // if service not used return immediately
 	if (!$project->usesFile()) {
@@ -290,6 +291,7 @@ function svnaccess_logs_daily($project, $span = 7, $who="allusers") {
  * Display Document pages access log
  */
 function doc_logs_daily($project, $span = 7, $who="allusers") {
+  global $Language;
 	// check first if service is used by this project
         // if service not used return immediately
   if(!$project->usesDocman()) {
@@ -315,6 +317,7 @@ function doc_logs_daily($project, $span = 7, $who="allusers") {
 function wiki_logs_daily($project, $span = 7, $who="allusers") {
   // check first if service is used by this project
   // if service not used return immediately
+  global $Language;
   if(!$project->usesWiki()) {
       print '<P><B><U>'.$Language->getText('project_stats_source_code_access_utils','service_disabled',$Language->getText('project_stats_source_code_access_utils','wiki')).'</U></B>';
      return;

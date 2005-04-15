@@ -73,10 +73,11 @@ class Error {
 	 *
 	 */
 	function getErrorMessage() {
+		global $Language;
 		if ($this->error_state)	{
 			return $this->error_message;
 		} else {
-			return 'No Error';
+			return $Language->getText('include_error','no_err');
 		}
 	}
 

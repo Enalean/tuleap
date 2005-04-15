@@ -107,7 +107,7 @@ if($group_id) {
             print "<p>".$Language->getText('docman_new','not_logged')."<p>";
         }
         if (!groups_defined($group_id)) {
-            echo "<p>".$Language->getText('docman_new','title_add',array("/docman/admin/index.php?group_id=".$group_id))."<p>";
+            echo "<p>".$Language->getText('docman_new','no_docgroup',array("/docman/admin/index.php?group_id=".$group_id))."<p>";
         }
         
         $star = '&nbsp;<span class="highlight"><big>*</big></span>';

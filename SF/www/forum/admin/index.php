@@ -167,7 +167,7 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 				'.$Language->getText('forum_admin_index','none_found_for_group');
 		} else {
 			echo '
-			<H2>'.$Language->getText('forum_admin_index','update_status').'</H2>
+			<H2>'.$Language->getText('forum_admin_index','update_f_status').'</H2>
 			<P>
 			'.$Language->getText('forum_admin_index','private_explain').'<P>';
 

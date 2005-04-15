@@ -425,9 +425,9 @@ function show_commit_details ($result) {
 	$list_log = '<pre>'.util_make_links(util_line_wrap(db_result($result, 0, 'description')), $group_id).'</pre>';
 
 	if ($commit_id) {
-	  $hdr = '[Commit #'.$commit_id.'] - ';
+	  $hdr = $Language->getText('cvs_commit_utils', 'commit').$commit_id.'] - ';
 	} else {
-	  $hdr = 'Checkin - ';
+	  $hdr = $Language->getText('cvs_commit_utils', 'checkin').' ';
 	}
 	echo '<h2>'.$hdr.uniformat_date($sys_datefmt, db_result($result, 0, 'c_when')).'</h2></h2>';
 	echo '<table WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="2"><tr class="'. util_get_alt_row_color(0).'"><td>'.$list_log.'</td></tr></table>';

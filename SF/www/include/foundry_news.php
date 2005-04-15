@@ -80,7 +80,7 @@ if (user_ismember($group_id,'A')) {
 		<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 		<INPUT TYPE="RADIO" NAME="status" VALUE="1"> '.$Language->getText('include_foundry_news','approve_for_foundry').'<BR>
 		<INPUT TYPE="RADIO" NAME="status" VALUE="0"> '.$Language->getText('include_foundry_news','unapprove').'<BR>
-		<INPUT TYPE="RADIO" NAME="status" VALUE="2" CHECKED> Delete<BR>
+		<INPUT TYPE="RADIO" NAME="status" VALUE="2" CHECKED> '.$Language->getText('include_foundry_news','delete').'<BR>
 		<B>'.$Language->getText('include_foundry_news','subject').':</B><BR>
 		'.db_result($result,0,'summary').'<BR>
 		<B>'.$Language->getText('include_foundry_news','details').':</B><BR>

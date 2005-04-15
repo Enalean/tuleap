@@ -24,7 +24,7 @@ if ($group_id) {
 $res_logger = db_query ("INSERT INTO activity_log (day,hour,group_id,browser,ver,platform,time,page,type) ".
 	"VALUES (".date('Ymd', mktime()).",'".date('H', mktime())."','$log_group','". browser_get_agent() ."','". browser_get_version() ."','". browser_get_platform() ."','". time() ."','$PHP_SELF','1');");
 if (!$res_logger) {
-	echo "An error occured in the logger.\n";
+	echo $Language->getText('sflogo','err_logger')."\n";
 	echo db_error();
 	exit;
 }
@@ -35,7 +35,7 @@ header("Cache-Control: no-cache, must-revalidate");
 header("Pragma: no-cache");
 
 if (!$group_id) {
-	echo 'xxxxx NO GROUP ID xxxxxxx';
+	echo $Language->getText('sflogo','err_nogroup');
 	exit;
 }
 

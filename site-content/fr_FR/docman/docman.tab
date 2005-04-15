@@ -22,7 +22,6 @@ docman_index	description	Description
 #-----------------------------------------------
 # Script: SF/www/docman/display_doc.php
 #
-docman_display_doc	error_perm_denied	Vousd n'avez pas les droits d'ccès à ce document. Veuillez contacter un administrateur système.
 docman_display_doc	error_nodoc	Document #$1 introuvable: ce document n'existe pas ou a été détruit.
 docman_display_doc	error_wrongid	Aucun document disponible - numéro de document invalide.
 docman_display_doc	warning_different_group	Veuillez noter que ce document appartient au projet "$1".
@@ -108,7 +107,6 @@ docman_admin_index	doc_deleted	Document détruit
 docman_admin_index	error_deleting_doc	Erreur lors de la destruction d'un document
 docman_admin_index	error_updating_perm	Erreur: la mise à jour des permissions a échoué
 docman_admin_index	perm_reset	Permissions réinitialiser à leur valeurs par défaut
-docman_admin_index	error_resetting perm	Erreur: la réinitialisation des permissions à leur valeurs par défaut a échoué
 #
 #-----------------------------------------------
 # Script: SF/www/docs/site/index.php

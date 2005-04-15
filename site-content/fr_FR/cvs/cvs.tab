@@ -22,7 +22,6 @@ cvs_index	partial_success	en partie<br>L'adresse e-mail semble invalide. la noti
 # Script: SF/www/cvs/admin_commit.php
 #
 cvs_admin_commit	title	Administration CVS
-cvs_admin_commit	header	Administration CVS
 cvs_admin_commit	tracking_hdr	Suivi CVS
 cvs_admin_commit	tracking_msg	Lorsque le suivi de CVS est activé, les commits (modification, ajout ou suppression de fichiers ou répertoires) sont enregistrés dans la base de données $1 de façon à pouvoir les visualiser et  effectuer des recherches. Dans le cas contraire aucune information n'est conservé dans la base de données; vous disposez uniquement de l'historique CVS
 cvs_admin_commit	tracking_lbl	Suivi CVS
@@ -94,11 +93,8 @@ cvs_commit_utils	file	Fichier
 cvs_commit_utils	rev	Révision
 cvs_commit_utils	branch	Branche
 cvs_commit_utils	type	Type
-cvs_commit_utils	added_line	Lines ajoutées
+cvs_commit_utils	added_line	Lignes ajoutées
 cvs_commit_utils	removed_line	Lignes supprimées
-cvs_commit_utils	change	Modification
-cvs_commit_utils	remove	Destruction
-cvs_commit_utils	add	Ajout
 #
 #-----------------------------------------------
 # Script: SF/www/cvs/viewcvs.php

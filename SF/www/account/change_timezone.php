@@ -32,9 +32,9 @@ if ($submit) {
 $HTML->header(array('title'=>$Language->getText('account_change_timezone', 'title')));
 
 ?>
-<H3><?php echo $Language->getText('account_change_timezone', 'title'); ?></h3>
+<H3><?php echo $Language->getText('account_change_timezone', 'title2'); ?></h3>
 <P>
-<?php echo $Language->getText('account_change_timezone', 'title', array($GLOBALS['sys_name']); ?>
+<?php echo $Language->getText('account_change_timezone', 'message', array($GLOBALS['sys_name']); ?>
 <P>
 <FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">
 <?php

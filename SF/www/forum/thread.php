@@ -32,7 +32,7 @@ if ($thread_id) {
 	echo show_thread($thread_id,$et);
 
 	echo '<P>&nbsp;<P>';
-	echo '<CENTER><h3>'.$Language->getText('forum_save','post_to_thread').'</H3></CENTER>';
+	echo '<CENTER><h3>'.$Language->getText('forum_thread','post_to_thread').'</H3></CENTER>';
 	show_post_form($forum_id,$thread_id,$is_followup_to,$subject);
 
 	forum_footer(array());

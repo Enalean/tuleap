@@ -21,7 +21,7 @@ if ($row_user[status] == 'P') {
     $HTML->header(array(title=>$Language->getText('account_pending-resend', 'title')));
 ?>
 
-<P><?php echo $Language->getText('account_pending-resend', 'title'); ?>
+<P><?php echo $Language->getText('account_pending-resend', 'message'); ?>
 
      <P><A href="/">[<?php echo $Language->getText('global', 'back_home'); ?>]</A>
  

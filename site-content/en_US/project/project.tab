@@ -302,7 +302,6 @@ project_admin_userperms	tech_only	Tech Only
 project_admin_userperms	admin_only	Admin Only
 project_admin_userperms	tech&admin	Tech & Admin
 project_admin_userperms	moderator	Moderator
-project_admin_userperms	editor	Editor
 project_admin_userperms	upd_user_perm	Update User Permissions
 #
 #-----------------------------------------------
@@ -489,7 +488,6 @@ project_stats_index	months	Months
 project_stats_index	weeks	Weeks
 project_stats_index	days	Days
 project_stats_index	change_stats_view	Change Stats View
-project_stats_index	stats_for_past_x	Statistics for the past $1 days.
 project_stats_index	rank	Rank
 project_stats_index	page_views	Page Views
 project_stats_index	downloads	Downloads
@@ -522,11 +520,9 @@ project_stats_source_code_access	for_last	For Last...
 #-----------------------------------------------
 # Script: SF/www/project/stats/source_code_access_utils.php
 #
-project_stats_source_code_access_utils	download_disabled	File Download Service Disabled
 project_stats_source_code_access_utils	file_download	File Download 
 project_stats_source_code_access_utils	access_for_past_x_days	$1 for the past $2 days	
 project_stats_source_code_access_utils	in_total	$1 in total
-project_stats_source_code_access_utils	file	File
 project_stats_source_code_access_utils	time_gmt	Time (GMT)
 project_stats_source_code_access_utils	no_access	No $1 for this period.
 project_stats_source_code_access_utils	service_disabled	$1 Service Disabled
@@ -538,7 +534,6 @@ project_stats_source_code_access_utils	svn_access	Subversion accesses
 project_stats_source_code_access_utils	doc_download	Document Download
 project_stats_source_code_access_utils	wiki_read	Wiki pages read
 project_stats_source_code_access_utils	cvs_access	CVS Access
-project_stats_source_code_access_utils	doc	Document
 project_stats_source_code_access_utils	co_upd	Checkouts/Update
 project_stats_source_code_access_utils	browsing	Browsing
 project_stats_source_code_access_utils	accesses	Accesses

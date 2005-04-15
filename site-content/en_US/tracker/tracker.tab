@@ -34,7 +34,6 @@ tracker_download	file_not_found	Couldn't find attached file  (id #$1)
 tracker_gotoid	art_belongs_to	Note: This artifact belongs to project $1
 tracker_gotoid	art_is_a	<br>Note: This artifact is a $1 (not a $2)
 tracker_gotoid	commit_belongs_to	Note: This commit belongs to project $1
-tracker_gotoid	invalid_tracker_vb	Invalid Tracker Name: $1 - should be either "Bug", "Task" or "SR". Generic trackers are not activated on this server.
 tracker_gotoid	invalid_tracker	Invalid Tracker Name.
 tracker_gotoid	invalid_art_nb	Invalid artifact number: $1.
 #
@@ -52,7 +51,6 @@ tracker_import_admin	not_get_atf	Could Not Get ArtifactTypeFactory
 tracker_import_admin	art_import	Tracker Artifact Import
 tracker_import_admin	welcome	<P> You can import artifacts into a specific tracker from a text file (CSV format).<h3>Tracker Artifact Import</h3><P>Click on the links below to import artifacts (insert of new artifacts or update of existing ones) or to see the CSV import format.<P>
 tracker_import_admin	art_data_import	Artifacts Data Import
-tracker_import_admin	format	Import Format
 tracker_import_admin	import_format	Import Format
 tracker_import_admin	import	Import
 tracker_import_admin	show_format	Show Format
@@ -87,7 +85,6 @@ tracker_import	submit_info	Submit Information
 #
 tracker_index	art_id_necessary	Artifact ID is necessary
 tracker_index	not_create_at	ArtifactType could not be created
-tracker_index	not_valid	This tracker is no longer valid.
 tracker_index	browser_not_supported	Sorry, your browser (Netscape 4.x) is not supported. In order to create $1, please use a different browser
 tracker_index	not_create_art	Artifact Could Not Be Created
 tracker_index	cc_list_invalid	Error - The CC list is invalid
@@ -387,7 +384,6 @@ tracker_include_type	restore	Restore?
 tracker_include_type	delay_deletion	Delay deletion for this tracker?
 tracker_include_type	restore_tracker	Restore this tracker?
 tracker_include_type	warning	** WARNING!! ** Delete this tracker and all its dependencies (no possible restore operation)?
-tracker_include_type	no_accessible	No Accessible Trackers Found
 tracker_include_type	create_from_scratch	Create a new tracker from scratch or from an existing tracker
 tracker_include_type	manage	Manage Trackers
 tracker_include_type	admin_or_del	Administrate or delete a tracker.	

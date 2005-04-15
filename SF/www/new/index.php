@@ -71,7 +71,7 @@ if (!$res_new || db_numrows($res_new) < 4) {
 //LJ Modified by LJ. If there is exactly 0 no new
 //LJ release then it's not an error
 //LJ
-echo '<h2>New Releases '.help_button('TheCodeXMainMenu.html#NewReleases').'</h2>';
+echo '<h2>'.$Language->getText('new_index','new_releases').' '.help_button('TheCodeXMainMenu.html#NewReleases').'</h2>';
 if (!$res_new || db_numrows($res_new) < 1) {
 	if (!$res_new) {
 		echo $query . "<BR><BR>"	;

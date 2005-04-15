@@ -22,7 +22,6 @@ cvs_index	partial_success	partly<br>Email Address Appears Invalid, e-mail notifi
 # Script: SF/www/cvs/admin_commit.php
 #
 cvs_admin_commit	title	CVS Administration
-cvs_admin_commit	header	CVS Administration
 cvs_admin_commit	tracking_hdr	CVS Tracking
 cvs_admin_commit	tracking_msg	When CVS tracking is on, the commits (file change, addition and removal) are registered in the $1 database so that they can be browsed and searched. Else commits are not logged in the database; only the CVS history is available
 cvs_admin_commit	tracking_lbl	CVS Tracking
@@ -96,9 +95,6 @@ cvs_commit_utils	branch	Branch
 cvs_commit_utils	type	Type
 cvs_commit_utils	added_line	Added Lines
 cvs_commit_utils	removed_line	Removed Lines
-cvs_commit_utils	change	Change
-cvs_commit_utils	remove	Remove
-cvs_commit_utils	add	Add
 #
 #-----------------------------------------------
 # Script: SF/www/cvs/viewcvs.php

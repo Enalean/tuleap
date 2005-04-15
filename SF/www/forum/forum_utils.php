@@ -137,7 +137,7 @@ function forum_add_monitor ($forum_id, $user_id) {
   global $feedback,$Language;
 
     if (forum_is_monitored($forum_id, $user_id)) {
-	$feedback .= $Language->getText('forum_forum_utils','');
+	$feedback .= $Language->getText('forum_forum_utils','forum_monitored');
     } else {
 	// Not already monitoring so add it.
 	$sql="INSERT INTO forum_monitored_forums (forum_id,user_id) VALUES ('$forum_id','".$user_id."')";
@@ -385,7 +385,7 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
 			exit_error($Language->getText('global','error'),$Language->getText('forum_forum_utils','post_without_id'));
 		}
 		if (!$body || !$subject) {
-			exit_error($Language->getText('global','error'),$Language->getText('forum_forum_utils','post_without_id'));
+			exit_error($Language->getText('global','error'),$Language->getText('forum_forum_utils','include_body_and_subject'));
 		}
 
 	//see if that message has been posted already for all the idiots that double-post
@@ -431,7 +431,7 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
 		$result=db_query($sql);
 
 		if (!$result) {
-			echo "INSERT FAILED";
+			echo $Language->getText('forum_forum_utils','insert_fail');
 			echo db_error();
 			$feedback .= ' '.$Language->getText('forum_forum_utils','post_failed').' ';
 		} else {
