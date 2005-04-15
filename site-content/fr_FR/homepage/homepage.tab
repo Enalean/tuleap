@@ -1,0 +1,60 @@
+#/**
+#  *
+#  * Top level scripts message catalog (English)
+#  *
+#  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
+#  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
+#  * http://codex.xrce.xerox.com
+#  *
+#  * @version   $Id$
+#  *
+#  */
+#
+#-----------------------------------------------
+# Script: SF/www/contact.php
+#
+contact	title	Contactez-nous
+#
+#-----------------------------------------------
+# Script: SF/www/404.php
+#
+404	title	Page introuvable (Erreur 404)
+404	no_archive	Aucun message archivé
+404	no_page	PAGE INTROUVABLE
+#
+#-----------------------------------------------
+# Script: SF/www/about_foundries.php
+#
+about_foundries	title	A propos des fonderies
+about_foundries	message	Les fonderies permet aux développeurs ayant les mêmes sujets d'intérêt de se regrouper, de partager leur expertise et des nouveautés, de prendre et donner des conseils, et plus généralement de s'entraider afin dep roduire rapidement du code de meilleur qualité.<p>Si vous souhaitez contribuer à une fonderie ou la créer, <a href="mailto:$1">contactez-nous</a>.<p>Voici les liste des fonderies actuellement disponibles sur le site :$1</p>
+about_foundries	no_foundries	Aucune fonderie disponible
+#
+#-----------------------------------------------
+# Script: SF/www/index.php
+#
+homepage	title	Bienvenue
+homepage	introduction	\n<hr width="100%" size="1" noshade><span class="slogan"><div align="center">\n"Développement Logiciel Collaboratif chez $1."<br>\n</div></span>\n<hr width="100%" size="1" noshade>\n&nbsp;<br>$2 est une <b>plateforme accessible service aux équipes de développement logiciel de $1</B>. <A href="/docs/site/about_codex.php">[&nbsp;En savoir plus sur $2&nbsp;]</A><P>\n$2 offre un accès aisé à un environnement de gestion de projet totalement basé sur une interface Web. En utilisant $2 les équipes de projet peuvent se concentrer sur leurs activités de développement logiciel tout en privilégiant la realtion avec leur communauté d'utilisateurs ou de développeurs. <A href="/docs/site/">[&nbsp;En savoir plus sur services $2&nbsp;]</A>\n<A href="/docman/display_doc.php?docid=17&group_id=1">[&nbsp;FAQ&nbsp;]</A>\n<P>\n<u><B>Participation au site</B></u>\n<BR>\nPour profiter pleinement de $2, nous vous recommandons de <A href="/account/register.php">créer un compte utilisateur</a>. C'est facile, rapide et celà vous permettra de participer au mieux. Assurez-vous aussi d'avoir lu la  <b><A href="/docman/display_doc.php?docid=1&group_id=1">Politique d'echange de code de $1</a></b> avant d'utiliser les services du site.\n<P>\n<u><B>Créer votre propre projet</B></u><BR>Après avoir <A href="/account/register.php">créé votre compte utilisateur</A>,\n <A HREF="/account/login.php">connectez-vous</A> et \n<A HREF="/register/">créez votre projet</A>. Celà ne prend que quelques minutes de mettre en place un environnement de projet totalement opérationnel.\n<P>\nMerci... et profiter au mieux du site.\n
+homepage	news_title	Dernières annonces
+homepage	news_title2	Dernières annonces - Format RSS
+#
+#-----------------------------------------------
+# Script: SF/www/sendmessage.php
+#
+sendmessage	title	Envoyez un message à $1
+sendmessage	message	Veuillez remplir la totalité de ce formulaire avec précision faute de quoi le destinataire pourrait ne pas être en mesure de vous répondre.<P><span class="highlight"><B>SI VOUS ECRIVEZ POUR DEMANDER DE L'AIDE:</B> Etes-vous sur d'avoir lu la documentation du site? Avez-vous précisé votre <B>nom d'utilisateur</B> Si vous écrivez à propos d'un projet n'oubliez pas de préciser son nom.</span>
+sendmessage	err_nouser	Cet utilisateur n'existe pas.
+sendmessage	err_host	Vous pouvez uniquement envoyer un message aux adresses du type @$1.
+sendmessage	err_noparam	Certaines variables n'ont pas été fournies (ID utilisateur ou adresse e-mail)
+sendmessage	title_sent	Message à $1 envoyé
+sendmessage	email	Votre adresse e-mail
+sendmessage	name	Votre nom
+sendmessage	subject	Sujet
+sendmessage	message_body	Message
+sendmessage	send_btn	Envoyer le message
+#
+#-----------------------------------------------
+# Script: SF/www/sflogo.php
+#
+sflogo	err_logger	Un erreur est survenue dans le logger.	
+sflogo	err_nogroup	xxxxx ID DE GROUPE NON SPECIFIÉ xxxxxxx	
+
