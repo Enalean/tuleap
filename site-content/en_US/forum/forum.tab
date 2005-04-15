@@ -13,7 +13,7 @@
 #-----------------------------------------------
 # Script: SF/www/forum/admin/index.php
 #
-forum_admin_index	msgs_del	$1 messages deleted
+forum_admin_index	msgs_del	$1 message(s) deleted
 forum_admin_index	msg_not_in_group	Message is not in your group
 forum_admin_index	msg_not_found	Message not found
 forum_admin_index	upd_err	Error Updating Forum Info
@@ -32,7 +32,7 @@ forum_admin_index	once_added_no_delete	Once you add a forum, it cannot be modifi
 forum_admin_index	add_this_forum	Add This Forum
 forum_admin_index	change_status	Change Forum Status
 forum_admin_index	forum_not_found	No Forums Found
-forum_admin_index	none_found_for_group	None found for this project
+forum_admin_index	none_found_for_group	No forum for this project
 forum_admin_index	update_f_status	Update Forum Status
 forum_admin_index	update_status	Update Status
 forum_admin_index	private_explain	You can make forums private from here. Please note that private forums can still be viewed by members of your project, not the general public.
@@ -120,16 +120,16 @@ forum_forum_utils	no_one_monitoring	no one monitoring
 #-----------------------------------------------
 # Script: SF/www/forum/index.php
 #
-forum_index	forums_for	Forums for $1
-forum_index	no_forums	No forums found for $1
+forum_index	forums_for	Forums for '$1'
+forum_index	no_forums	No forums found for '$1'
 forum_index	choose_forum	Choose a forum and you can browse, search, and post messages.
 #
 #-----------------------------------------------
 # Script: SF/www/forum/message.php
 #
-forum_message	by	BY
-forum_message	date	DATE
-forum_message	subject	SUBJECT
+forum_message	by	By
+forum_message	date	Date
+forum_message	subject	Subject
 forum_message	thread_view	Thread View
 forum_message	post_followup	Post a followup to this message
 forum_message	choose_msg_first	Must choose a message first
@@ -142,7 +142,7 @@ forum_monitor	monitor_off	Monitoring has been turned off
 forum_monitor	no_mails_anymore	You will not receive any more emails from this forum.
 forum_monitor	now_monitoring	Forum is now being monitored
 forum_monitor	get_followups	You will now be emailed followups to this entire forum.
-forum_monitor	to_turn_monitor_off	To turn off monitoring, simply click the <B>Monitor Forum</B> link again.
+forum_monitor	to_turn_monitor_off	To turn off monitoring, simply click the <B>Stop Monitoring Forum</B>.
 forum_monitor	choose_forum_first	Choose a forum First
 #
 #-----------------------------------------------
