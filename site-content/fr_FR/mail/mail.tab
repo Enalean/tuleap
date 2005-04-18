@@ -1,0 +1,83 @@
+#/**
+#  *
+#  * Include scripts message catalog (English)
+#  *
+#  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
+#  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
+#  * http://codex.xrce.xerox.com
+#  *
+#  * @version   $Id$
+#  *
+#  */
+#
+#-----------------------------------------------
+# Script: SF/www/mail/admin/index.php
+#
+mail_admin_index	provide_correct_list_name	Le nom de la liste doit compoter au moins 4 caractères
+mail_admin_index	list_exists_err	ERREUR - La liste existe déjà
+mail_admin_index	add_list_err	Erreur lors de la création de la liste
+mail_admin_index	list_added	Liste créée avec succès
+mail_admin_index	invalid_userid	ID utilisateur invalide
+mail_admin_index	does_not_compute	Adresse e-mail introuvable
+mail_admin_index	list_create_explain	Une liste de distribution sera créée sur $1 dans moins de $2 heure(s)\n et vous en êtes l'administrateur système. Cette liste est: $3 \n\nLes informations concernant cette liste de distribution sont sur: \n$5\n\nVotre mot de passe d'administration est: $6\nNous vous invitons à changer ce mot de passe par défaut dès que possible.\n\nMerci d'utiliser $1.\n\n -- L'équipe $1\n
+mail_admin_index	new_mail_list	Nouvelle liste de distribution
+mail_admin_index	mail_sent_to	Note détaillée envoyée par e-mail à: $1
+mail_admin_index	invalid_list_name	Nom de liste invalide
+mail_admin_index	upate_status_err	Erreur lors de la mise à jour du statut
+mail_admin_index	status_update_success	Statut mis à jour avec succès
+mail_admin_index	add_a_mail_list	Créer une liste de distribution
+mail_admin_index	existing_mail_list	Listes de diffusion existantes
+mail_admin_index	mail_list_name	Nom de la liste de diffusion
+mail_admin_index	is_public	Publique ?
+mail_admin_index	public_explain	(Public signifie que tous les utilisateurs peuvent s'abonner)
+mail_admin_index	desc	Description
+mail_admin_index	add_this_list	Créer cette liste
+mail_admin_index	update_mail_list	Modifier les listes de diffusion
+mail_admin_index	no_list_found	Aucune liste disponible
+mail_admin_index	none_found_for_project	Aucune liste n'est disponible pour ce projet
+mail_admin_index	admin_lists_here	Vous pouvez administrez vos listes de diffusion depuis cette page. Veuillez noter que les listes privées sont visibles pour les membres du projet mais qu'elles n'apparaissent pas sur $1
+mail_admin_index	list	Liste
+mail_admin_index	status	Statut
+mail_admin_index	update	Valider
+mail_admin_index	list_admin	Administration des listes
+mail_admin_index	public	Publique
+mail_admin_index	private	Privée
+mail_admin_index	delete	Détruire
+mail_admin_index	admin_in_gnu	Administrer cette liste depuis Mailman
+mail_admin_index	mail_list_admin	Administration des listes de diffusion
+mail_admin_index	add_mail_list	Créer une liste de diffusion
+mail_admin_index	create_new_mail_lists	Créer une nouvelle liste de diffusion
+mail_admin_index	admin_update_lists	Administrer/Modifier les listes de diffusion
+mail_admin_index	manage_mail	Gérer les liste de diffusion existantes (modifier la description, la confidentialité&hellip;)
+#
+#-----------------------------------------------
+# Script: SF/www/mail/index.php
+#
+mail_index	mail_list_for	Liste De Diffusions for $1
+mail_index	no_list_found_for	Aucune liste pour $1
+mail_index	proj_admin_use_admin_link	Utiliser la fonction d'administration pour créer une liste de diffusions.
+mail_index	mail_list_via_gnu	&nbsp;
+mail_index	choose_and_browse	Choisissez une liste où naviguer, chercher ou poster des messages.
+mail_index	archive	Archives
+mail_index	public	publique
+mail_index	private	privée
+mail_index	unsubscribe	(Dés)abonnement/Préférences
+mail_index	ml_admin	Administration de la liste
+mail_index	choose_group_first	Choisisser d'abord un groupe (projet)
+mail_index	group_err	Erreur - Choisisser d'abord un groupe (projet)
+mail_index	pv	Version imprimable
+#
+#-----------------------------------------------
+# Script: SF/www/mail/mail_nav.php
+#	
+mail_nav	home_page	Page d'accueil
+mail_nav	mail_list	Listes de diffusion
+mail_nav	admin	Administration
+#
+#-----------------------------------------------
+# Script: SF/www/mail/mail_utils.php
+#
+mail_utils	mail_turned_off	Ce projet a désactivé les listes de diffusion
+mail_utils	admin	Administration
+mail_utils	add_list	Créer une liste
+mail_utils	update_list	Modifier une liste

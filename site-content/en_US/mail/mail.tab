@@ -18,8 +18,8 @@ mail_admin_index	list_exists_err	ERROR - List Already Exists
 mail_admin_index	add_list_err	Error Adding List
 mail_admin_index	list_added	List Added
 mail_admin_index	invalid_userid	Invalid userid
-mail_admin_index	does_not_compute	Does not compute.
-mail_admin_index	list_create_explain	A mailing list will be created on $1 in less than $2 hours\nand you are the list administrator.\n\nThis list is: $3 \n\nYour mailing list info is at:\n$4 \n\nList administration can be found at: \n$5\n\nYour list password is: $6\nYou are encouraged to change this password as soon as possible.\n\nThank you for registering your project with $1 \n\n -- The $1 Team\n
+mail_admin_index	does_not_compute	Email address not found.
+mail_admin_index	list_create_explain	A mailing list will be created on $1 in less than $2 hours\nand you are the list administrator.\n\nThis list is: $3 \n\nYour mailing list info is at:\n$4 \n\nList administration can be found at: \n$5\n\nYour list password is: $6\nYou are encouraged to change this password as soon as possible.\n\nThank you for using $1.\n\n -- The $1 Team\n
 mail_admin_index	new_mail_list	New Mailing List
 mail_admin_index	mail_sent_to	Email sent with details to: $1
 mail_admin_index	invalid_list_name	Invalid List Name
@@ -55,7 +55,7 @@ mail_admin_index	manage_mail	Manage existing mailing (change description, privac
 #
 mail_index	mail_list_for	Mailing Lists for $1
 mail_index	no_list_found_for	No Lists found for $1
-mail_index	proj_amdin_use_admin_link	Project administrators use the admin link to request mailing lists.
+mail_index	proj_admin_use_admin_link	Project administrators use the admin link to request mailing lists.
 mail_index	mail_list_via_gnu	Mailing lists provided via a <A href="http://www.list.org">GNU Mailman</A>. Thanks to the Mailman and <A href="http://www.python.org">Python</A> crews for excellent software.
 mail_index	choose_and_browse	Choose a list to browse, search, and post messages.
 mail_index	archive	Archives
