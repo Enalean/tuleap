@@ -1,0 +1,17 @@
+<?
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2003. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+
+
+$message = "Merci d'avoir créer votre compte utilisateur sur le site ".$GLOBALS['sys_name'].". Pour \n"
+. "confirmer votre création de compte veuillez suivre le lien ci-dessous: \n\n"
+. "<". $base_url ."/account/verify.php?confirm_hash=$confirm_hash>\n\n"
+. "Vous pouvez maintenant profiter du site.\n\n"
+. " -- L'équipe ".$GLOBALS['sys_name']."\n";
+
+?>

@@ -45,7 +45,7 @@ include_exit	no_perm	You are not granted sufficient permission to perform this o
 include_exit	not_logged_in	Not Logged In
 include_exit	need_to_login	Sorry, you have to be <A HREF="/account/login.php">logged in</A> to view this page.
 include_exit	choose_proj_err	Error - Choose a Project
-include_exit	no_gid_err	ERROR - No group_id was chosen.
+include_exit	no_gid_err	Error - No group_id was chosen.
 include_exit	missing_param_err	Error - Missing Parameters
 #
 #-----------------------------------------------
@@ -77,7 +77,7 @@ include_foundry_admin	user_not_removed	User Not Removed - You cannot remove admi
 include_foundry_admin	user_removed	Removed a User
 include_foundry_admin	proj_added	Project was added
 include_foundry_admin	proj_already_member	Project was already a featured member
-include_foundry_admin	proj_not_exist	That project does not exist on SourceForge
+include_foundry_admin	proj_not_exist	That project does not exist
 include_foundry_admin	upd_fail	Update failed
 include_foundry_admin	data_updated	Data Updated
 include_foundry_admin	proj_admin	Project Admin: $1
@@ -269,7 +269,7 @@ include_project_home	more_info	More information
 include_project_home	no_short_desc	This project has not yet submitted a short description.You can <a href="$1"> submit it</a> now.
 include_project_home	other_info	Other information
 include_project_home	view_proj_activity	View project activity <a href="$1">statistics</a>
-include_project_home	devel_info	Developer Info
+include_project_home	devel_info	Project Team
 include_project_home	proj_admins	Project Admins
 include_project_home	devels	Developers
 include_project_home	view_members	View Members
@@ -294,7 +294,7 @@ include_project_home	supp_manager	Support Manager
 include_project_home	open_requ	<B>$1</B> open requests
 include_project_home	tech_supp_manager	Tech Support Manager
 include_project_home	doc	Documentation
-include_project_home	doc_man	DocManager: Project Documentation
+include_project_home	doc_man	Document Manager: Project Documentation
 include_project_home	patch_manager	Patch Manager
 include_project_home	open_patches	<B>$1</B> open patches
 include_project_home	mail_lists	Mailing Lists
@@ -326,7 +326,7 @@ include_project_home	latest_news	Latest News
 #-----------------------------------------------
 # Script: SF/www/include/proj_email.php
 #
-include_proj_email	g_not_exist	Group [ $1 ] does not exist. Shame on you, sysadmin.
+include_proj_email	g_not_exist	Group [ $1 ] does not exist.
 include_proj_email	no_admin	Group [ $1 ] does not seem to have any administrators.
 include_proj_email	proj_type	Project Type
 include_proj_email	proj_approve	Project $1 Approved
@@ -349,15 +349,15 @@ include_session	insufficient_u_access	Insufficient User Access
 include_session	required_login	Required Login
 include_session	login	In order to view this page, you must be logged in.
 include_session	insufficient_access	Insufficient Access
-include_session	no_access	Probably by mangling a URL, you have attempted to reach a part of the site for which you do not have access. This can probably be fixed by properly navigating through the site.
+include_session	no_access	You have attempted to reach a part of the site for which you do not have access. This can probably be fixed by properly navigating through the site.
 include_session	hash_err	ERROR - two people had the same hash - backarrow and re-login. It should never happen again
 #
 #-----------------------------------------------
 # Script: SF/www/include/snippet_caching.php
 #
 include_snippet_caching	browse_snippet	Browse Snippets
-include_snippet_caching	browse_explain	You can browse the snippet library quickly by language or category. You can also search code snippets by keywords using the Search box in the left menu pane.
-include_snippet_caching	count_update	Counts last updated $1
+include_snippet_caching	browse_explain	You can browse the snippet library quickly by language or category. You can also search code snippets by keywords using the Search box.
+include_snippet_caching	count_update	Counts last updated: $1
 include_snippet_caching	browse_lang	Browse by Language
 include_snippet_caching	browse_cat	Browse by Category
 #
@@ -392,7 +392,7 @@ include_stats_function	view_by_platform_browser	Page Views By Platform/Browser V
 # Script: SF/www/include/trove.php
 #
 include_trove	none_selected	None Selected
-include_trove	not_categorized_yet	This project has not yet categorized itself in the <A href="$1">Trove Software Map</A>.You can <a href=$2>categorize it</a> now.
+include_trove	not_categorized_yet	This project has not yet categorized itself in the <A href="$1">Trove Software Map</A>. You can <a href=$2>categorize it</a> now.
 include_trove	now_filter	Now Filtering
 include_trove	filter	Filter
 #
