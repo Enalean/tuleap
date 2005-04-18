@@ -1,0 +1,78 @@
+#/**
+#  *
+#  * Personal Home Page message catalog (English)
+#  *
+#  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
+#  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
+#  * http://codex.xrce.xerox.com
+#  *
+#  * @version   $Id$
+#  *
+#  */
+#
+#
+#-----------------------------------------------
+# Script: SF/www/my/index.php
+#
+my_index	title	Page personnelle de $1
+my_index	err_badbrowser	Alerte: votre navigateur (Netscape 4.x) n'est pas supporté. Certaines fonctionalités ne seront pas disponibles.
+my_index	message	Votre page personnelle contient la liste des artefacts que vous avez [<b>S</b>]oumis ou qui vous ont été [<b>A</b>]ssigné avec leur niveau de complétion, les forums et les fichiers que vous surveillez et les projets dont vous êtes membre.<P>
+my_index	err_artf	Impossible de créer un ArtifactTypeFactory
+my_index	my_bugs	Mes bugs
+my_index	my_srs	Mes demandes de support
+my_index	my_forums	Forums sous surveillance
+my_index	my_forums_msg	<b>Vous ne surveillez aucun forum.</b><P>En surveillant un forum, vous recevrez tous les messages postés sous forme de e-mail avec un lien vers le nouveau message.<P>Vous pouvez surveiller un forum en cliquant sur le lien approprié dans ce même forum de discussion.<BR>&nbsp;
+my_index	stop_forum	Arrêter la surveillance du forum?
+my_index	my_files	Fichiers sous surveillance
+my_index	my_files_msg	<b>Vous ne surveillez aucun fichier.</b><P>En surveillant un fichier, vous recevrez par e-mail une note signalant la publication d'une nouvelle version et un lien vers l'espace de téléchargement.<P>Vous pouvez surveiller un fichier en visitant le page de &quot;Sommaire&quot; et en cliquant sur l'icône appropriée dans la section fichiers.<BR>&nbsp;
+my_index	stop_file	Arrêter la surveillance du paquet?	
+my_index	stop_monitor	Arrêter la surveillance
+my_index	my_tasks	Mes Tâches
+my_index	my_arts	Mes artefacts
+my_index	my_survey	Sondages
+my_index	survey_done	Vous avez déja répondu aux sondages
+my_index	my_bookmarks	Mes favoris
+my_index	edit_link	Editer
+my_index	del_bookmark	Détruire ce favori ?
+my_index	my_projects	Mes projets
+my_index	not_member	Vous n'êtes membre d'aucun projet.
+my_index	admin_link	Admin
+my_index	quit_proj	Quitter ce project?
+my_index	priv_proj	<em>Projet privé</em>
+#
+#-----------------------------------------------
+# Script: SF/www/my/my_utils.php
+#
+my_utils	collapse	Replier
+my_utils	expand	Déplier
+my_utils	new_items	$1 nouveau(x)
+#
+#-----------------------------------------------
+# Script: SF/www/my/bookmark_add.php
+#
+bookmark_add	title	Ajouter un nouveau favori
+bookmark_add	message	Favori ajouté pour <b>'$1'</b> avec le titre <b>'$2'</b>.
+bookmark_add	visit	Visiter le favori
+bookmark_add	edit	Modifier ce favori
+bookmark_add	bkm_url	Adresse du favori
+bookmark_add	bkm_title	Titre du favori
+bookmark_add	favorite	Ma page favorite...
+#
+#-----------------------------------------------
+# Script: SF/www/my/bookmark_delete.php
+#
+bookmark_delete	title	Détruire un favori
+bookmark_delete	deleted	Favori détruit !
+#
+#-----------------------------------------------
+# Script: SF/www/my/bookmark_edit.php
+#
+bookmark_edit	title	Modifier un favori
+#
+#-----------------------------------------------
+# Script: SF/www/my/rmproject.php
+#
+bookmark_rmproject	err_notmember	Vous n'êtes pas membre de ce projet.
+bookmark_rmproject	err_removing	Vous ne pouvez enlever un administrateur du projet. Oter d'abord les droits d'administrateur de cet utilisateur avant de l'enlever à nouveau du projet. 
+bookmark_rmproject	mail_subject	$1: utilisateur $2 enlevé du projet '$3'
+bookmark_rmproject	mail_body	Ce message est envoyé pour prévenir le(s) administrateurs du\nprojet '$1' que l'utilisateur '$2' a quitté le projet.\n\nSuivez le lien ci-dessous pour voir la liste des membres actuels du projet:\n$3\n\n
