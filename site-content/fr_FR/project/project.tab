@@ -1,0 +1,606 @@
+#/**
+#  *
+#  * Include scripts message catalog (English)
+#  *
+#  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
+#  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
+#  * http://codex.xrce.xerox.com
+#  *
+#  * @version   $Id$
+#  *
+#  */
+#
+#-----------------------------------------------
+# Script: SF/www/project/admin/editgroupinfo.php
+#
+project_admin_editgroupinfo	upd_fail	UPDATE FAILED OR NO DATA CHANGED! $1
+project_admin_editgroupinfo	upd_success	UPDATE SUCCESSFUL
+project_admin_editgroupinfo	changed_public_info	Changed Public Info
+project_admin_editgroupinfo	editing_g_info	Editing Group Info
+project_admin_editgroupinfo	editing_g_info_for	Editing group info for: <B>$1</B>
+project_admin_editgroupinfo	descriptive_g_name	Descriptive Group Name:
+project_admin_editgroupinfo	short_desc	Short Description (255 Character Max):
+project_admin_editgroupinfo	long_desc	Long Description:
+project_admin_editgroupinfo	patents	Patents and Invention Proposals (IPs)
+project_admin_editgroupinfo	soft_required	Other Software Required
+project_admin_editgroupinfo	comments	Other Comments:
+project_admin_editgroupinfo	license_comment	Comments about Other License used for this project:
+#
+#-----------------------------------------------
+# Script: SF/www/project/admin/editservice.php
+#
+project_admin_editservice	s_conf	Service Configuration
+project_admin_editservice	s_ident_desc	Service Identification and Description
+project_admin_editservice	s_name_in_bar	Name that is displayed in the Service Bar
+project_admin_editservice	s_label	Service Label
+project_admin_editservice	url	URL pointed by the service
+project_admin_editservice	s_link	Service Link: 
+project_admin_editservice	s_short_name	Short name for the service
+project_admin_editservice	short_name	Short name:
+project_admin_editservice	s_desc_in_tooltip	Service Description will be displayed in a tooltip above service label.
+project_admin_editservice	s_desc	Service Description:
+project_admin_editservice	s_scope	Scope of the service: project only or system-wide
+project_admin_editservice	scope	Scope
+project_admin_editservice	display_options	Display Options
+project_admin_editservice	instanciated_for_new_p	Is instanciated for new projects?
+project_admin_editservice	available	Available
+project_admin_editservice	display_in_s_bar	Is displayed in the service bar?
+project_admin_editservice	enabled	Enabled
+project_admin_editservice	pos_in_s_bar	Position in service bar
+project_admin_editservice	screen_rank	Rank on screen:	
+project_admin_editservice	fields_required	fields required
+project_admin_editservice	s_creation	Service Creation
+project_admin_editservice	system	system
+project_admin_editservice	project	project
+project_admin_editservice	mandatory	: mandatory for system-wide services
+project_admin_editservice	edit_s	Edit Service
+project_admin_editservice	s_not_exist	Service does not exist: $1
+project_admin_editservice	forbidden	Forbidden
+project_admin_editservice	no_access_inactive_s	You cannot access an inactive service
+#
+#-----------------------------------------------
+# Script: SF/www/project/admin/editugroup.php
+#
+project_admin_editugroup	name	Name
+project_admin_editugroup	avoid_special_ch	Please avoid space and punctuation in user group names
+project_admin_editugroup	desc	Description
+project_admin_editugroup	browser_not_accepted	Sorry, your browser (Netscape 4.x) is not supported. In order to edit or create a user group, please use a different browser
+project_admin_editugroup	create_ug	Create User Group
+project_admin_editugroup	create_ug_for	Creating new user group for <B>$1</B>
+project_admin_editugroup	fill_ug_desc	Please, fill the name and description of this new user group:
+project_admin_editugroup	create_from	Create from
+project_admin_editugroup	empty_g	Empty Group
+project_admin_editugroup	proj_members	Project Members
+project_admin_editugroup	proj_admins	Project Admins
+project_admin_editugroup	ug_id_missed	The ugroup ID is missing
+project_admin_editugroup	ug_not_found	ERROR - Can not find ugroup:$1 - $2
+project_admin_editugroup	edit_ug	Edit User Group
+project_admin_editugroup	ug_admin	User Group '<B>$1</B>' - Administration
+project_admin_editugroup	upd_ug_name	You can update the name and description of this user group:
+project_admin_editugroup	select_ug_members	Please select user group members:
+project_admin_editugroup	quick_filters	Quick Filters:
+project_admin_editugroup	show_items	Show items starting with $1
+project_admin_editugroup	sel01	Selection 01 - please ignore
+project_admin_editugroup	please_wait	Please wait...
+project_admin_editugroup	filter	Filter:
+project_admin_editugroup	ug_perms	This user group is granted the following permissions:
+project_admin_editugroup	permission	Permission
+project_admin_editugroup	resource_name	Resource Name
+project_admin_editugroup	release	Release
+project_admin_editugroup	from_package	from package
+project_admin_editugroup	package	Package
+project_admin_editugroup	document	Document
+project_admin_editugroup	document_group	Document Group
+#
+#-----------------------------------------------
+# Script: SF/www/project/admin/grouptrove.php
+#
+project_admin_grouptrove	changed_trove	Changed Trove
+project_admin_grouptrove	g_trove_info	Group Trove Information
+project_admin_grouptrove	select_3_classifs	Please select up to three classifications for this project in each of the Trove root categories. This will help potential developers and users to find your project and engage. If the project does not require any or all of these classification, simply select "None Selected".<P>IMPORTANT REMARKS: <ul><li>Projects should be categorized in the most specific locations available in the map.</li><li>Simultaneous categorization in a specific category AND a parent category will result in only the more specific categorization being accepted.</li><li><em><b>Topic Trove only</b></em>: If your project does not seem to fit into any of the categories or sub-categories, simply select "Other/Non Listed Topics". As new projects are submitted, the $1 Team will refine the Topic Trove by defining 2nd and possibly 3rd level subcategories.  We welcome any suggestions on this. You can change the trove categories for this project at any time.</li></ul>
+project_admin_grouptrove	submit_all_changes	Submit All Category Changes
+#
+#-----------------------------------------------
+# Script: SF/www/project/admin/history.php
+#
+project_admin_history	proj_history	Project History
+project_admin_history	proj_change_log	<H2>Project Change Log</H2><P>This log will show who made significant changes to your project and when.<P>
+#
+#-----------------------------------------------
+# Script: SF/www/project/admin/index.php
+#
+project_admin_index	invalid_p	Invalid Project
+project_admin_index	p_not_found	That project could not be found.
+project_admin_index	user_not_removed	User Not Removed - You cannot remove admins from a project. You must first turn off their admin flag and/or find another admin for the project
+project_admin_index	not_get_atf	Could Not Get ArtifactTypeFactory
+project_admin_index	del_tracker_perm_fail	Failed to delete tracker permission ($1)
+project_admin_index	del_user_from_ug_fail	Failed to delete user from ugroups
+project_admin_index	user_removed	Removed a User
+project_admin_index	p_admin	Project Admin: $1
+project_admin_index	p_edit	Project Info: $1
+project_admin_index	short_desc	Short Description: $1
+project_admin_index	home_page_link	Homepage Link: $1
+project_admin_index	trove_cat_info	<B>Trove Categorization Info</B> - This project is in the following Trove categories:
+project_admin_index	edit_trove_cat	[Edit Trove Categorization]
+project_admin_index	login_name	Login Name:
+project_admin_index	add_user	Add User
+project_admin_index	edit_member_perm	[Edit Member Permissions]	
+project_admin_index	s_admin	Services Administration
+project_admin_index	forum_admin	Forum Admin
+project_admin_index	bug_admin	Bug Admin
+project_admin_index	support_admin	Support Manager Admin
+project_admin_index	patch_admin	Patch Admin
+project_admin_index	lists_admin	Lists Admin
+project_admin_index	task_admin	Task Manager Admin
+project_admin_index	doc_admin	DocManager Admin
+project_admin_index	survey_admin	Survey Admin
+project_admin_index	news_admin	News Admin
+project_admin_index	cvs_admin	CVS Admin
+project_admin_index	svn_admin	Subversion Admin
+project_admin_index	file_admin	File Manager Admin
+project_admin_index	tracker_admin	Tracker Admin
+project_admin_index	no_tracker_found	No Accessible Trackers Found
+project_admin_index	admin	Admin
+project_admin_index	file_rel	File Releases
+project_admin_index	edit_add_rel	[Edit/Add File Releases]
+project_admin_index	quick_file_add	[Quick Add File Release]
+project_admin_index	if_1_file_in_rel	if you have only one file to release.
+project_admin_index	packages_available	Package(s) currently available:
+project_admin_index	or	or
+#
+#-----------------------------------------------
+# Script: SF/www/project/admin/permissions.php
+#
+project_admin_permissions	pack_download	Package Download
+project_admin_permissions	rel_download	Release Download
+project_admin_permissions	doc_access	Document Access
+project_admin_permissions	docgroup_access	Document Group Access
+project_admin_permissions	wiki_access	Wiki Access
+# message key below must comply with values returned by 
+# the permission_get_object_type function
+project_admin_permissions	package	package $1
+project_admin_permissions	release	release $1
+project_admin_permissions	document	document $1
+project_admin_permissions	docgroup	document group $1
+project_admin_permissions	wiki	wiki $1
+project_admin_permissions	wikipage	wiki page $1
+project_admin_permissions	object	object $1
+# ...end of values
+project_admin_permissions	perm_type_not_def	permission_type '$1' is not defined
+project_admin_permissions	submit_perm	Submit Permissions
+project_admin_permissions	admins_create_modify_ug	Project admins can also <a href="$1">create</a> or <a href="$2">modify</a> user groups.
+project_admin_permissions	perm_reset_for	Permission reset for $1
+project_admin_permissions	perm_granted_for	Permission granted for $1
+project_admin_permissions	obj_id_missed	object_id is missing
+project_admin_permissions	perm_type_missed	permission_type is missing
+project_admin_permissions	g_id_missed	group_id is missing
+project_admin_permissions	all_users_added	All users added, including anonymous ones
+project_admin_permissions	cant_add_ug_anonymous	$1 - ERROR: Cannot add ugroup Anonymous
+project_admin_permissions	ignore_g	- ignoring other specified groups
+project_admin_permissions	all_registered_users_added	All registered users added 
+project_admin_permissions	cant_add_ug_reg_users	$1 - ERROR: Cannot add ugroup Registered Users
+project_admin_permissions	g_nobody_ignored	Group 'nobody' ignored since other groups where selected.
+project_admin_permissions	nobody_has_no_access	Please note that nobody doesn't have access to this object any longer!
+project_admin_permissions	cant_add_ug	$1 - ERROR: Cannot add ugroup $2. Are you an administrator for this service?
+project_admin_permissions	def_val	(default values)
+project_admin_permissions	perm_update_success	$1 - Permissions successfully updated
+project_admin_permissions	reset_to_def	Reset To Defaults
+#
+#-----------------------------------------------
+# Script: SF/www/project/admin/project_admin_utils.php
+#
+project_admin_utils	edit_public_info	Edit Public Info
+project_admin_utils	user_perms	User Permissions
+project_admin_utils	ug_admin	User Groups Admin
+project_admin_utils	project_data_export	Project Data Export
+project_admin_utils	tracker_import	Tracker Import
+project_admin_utils	access_logs	Access Logs
+project_admin_utils	g_change_history	Group Change History
+project_admin_utils	event	Event
+project_admin_utils	val	Value
+project_admin_utils	date	Date
+project_admin_utils	no_g_change	No Changes Have Been Made to This Group
+# ... message for the group_history field_name
+# they do not appear in the code !!!!
+project_admin_utils	approved	Approved
+project_admin_utils	deleted	Deleted
+project_admin_utils	status	Status
+project_admin_utils	is_public	Is public
+project_admin_utils	type	Type
+project_admin_utils	http_domain	http_domain
+project_admin_utils	unix_box	Unix box
+project_admin_utils	project_type	project type
+project_admin_utils	feedback_history	feedback history
+project_admin_utils	personal_email_notif	Changed Personal Notification Email Settings
+project_admin_utils	bts_form_message	Changed BTS bug form message
+project_admin_utils	bts_allow_anon	Changed BTS bug allow anonymous submission
+project_admin_utils	doc_deleted	Document deleted	
+project_admin_utils	removed_project	Removed project
+project_admin_utils	added_user	Added user ($1)
+project_admin_utils	removed_user	Removed user
+project_admin_utils	added_project	Added project
+project_admin_utils	data_updated	Data updated
+project_admin_utils	changed_patch_mgr_settings	Changed Patch Mgr Settings
+project_admin_utils	changed_task_mgr_other_settings	Changed Task Manager Other Settings
+project_admin_utils	changed_public_info	Changed Public Infor
+project_admin_utils	changed_trove	Changed Trove Categorization
+project_admin_utils	upd_ug	Changed user group $1
+project_admin_utils	del_ug	Deleted user group $1
+project_admin_utils	changed_member_perm	Changed member permissions
+project_admin_utils	perm_reset_for	Permission reset for user $1
+project_admin_utils	perm_granted_for	Permission granted to user $1
+project_admin_utils	changed_sr_settings	Change Support Request Settings
+project_admin_utils	mass_change	Tracker mass change
+project_admin_utils	import	Data import
+# There must be one message here for each return value of
+# the permission_get_object_type function in www/project/admin/permissions.php
+project_admin_utils	perm_reset_for_package	Permission reset for package $1
+project_admin_utils	perm_reset_for_release	Permission reset for release $1
+project_admin_utils	perm_reset_for_document	Permission reset for document $1
+project_admin_utils	perm_reset_for_docgroup	Permission reset for document group $1
+project_admin_utils	perm_reset_for_wiki	Permission reset for wiki $1
+project_admin_utils	perm_reset_for_wikipage	Permission reset for wiki page $1
+project_admin_utils	perm_reset_for_object	Permission reset for object $1
+project_admin_utils	perm_granted_for_package	Permission granted for package $1
+project_admin_utils	perm_granted_for_release	Permission granted for release $1
+project_admin_utils	perm_granted_for_document	Permission granted for document $1
+project_admin_utils	perm_granted_for_docgroup	Permission granted for document group  $1
+project_admin_utils	perm_granted_for_wiki	Permission granted for wiki  $1
+project_admin_utils	perm_granted_for_wikipage	Permission granted for wiki page  $1
+project_admin_utils	perm_granted_for_object	Permission granted for object $1 
+#... end of values
+#
+#-----------------------------------------------
+# Script: SF/www/project/admin/servicebar.php
+#
+project_admin_servicebar	unavailable	Unavailable
+project_admin_servicebar	disabled	Disabled
+project_admin_servicebar	warning_del_s	*********** WARNING ***********\nDo you want to delete the service? This will remove this service ($1) from ALL projects of this server. Are you SURE you want to continue ?
+project_admin_servicebar	del_s	Delete this service ?
+project_admin_servicebar	del	DELETE
+project_admin_servicebar	s_id_not_given	FAILED: Service Id was not specified
+project_admin_servicebar	s_del	Service Deleted
+project_admin_servicebar	cant_delete_s_from_p	- Cannot delete service from all projects: service shortname is missing
+project_admin_servicebar	del_fail	- DELETE FAILED! $1
+project_admin_servicebar	s_del_from_p	- Service Deleted from $1 projects
+project_admin_servicebar	label_missed	The label is missing, please press the "Back" button and complete this information
+project_admin_servicebar	link_missed	The link is missing, please press the "Back" button and complete this information
+project_admin_servicebar	rank_missed	The rank is missing, please press the "Back" button and complete this information
+project_admin_servicebar	cant_make_s	Cannot make system-wide service without short name, please press the "Back" button and complete this information
+project_admin_servicebar	set_stat_unused	- Setting status to "unused" -
+project_admin_servicebar	short_name_exist	A service with this short name ($short_name) already exists. Please press the 'Back' button and change this information
+project_admin_servicebar	cant_make_system_wide_s	Cannot make system-wide service in project other than 100, please press the "Back" button and change this information
+project_admin_servicebar	cant_create_s	ERROR - Can not create service: $1
+project_admin_servicebar	s_create_success	Successfully Created Service
+project_admin_servicebar	s_add_success	- Successfully Added Service to $1 Projects
+project_admin_servicebar	s_id_missed	The service ID is missing
+project_admin_servicebar	cant_update_s	ERROR - Can not update service: $1
+project_admin_servicebar	s_update_success	Successfully Updated Service
+project_admin_servicebar	edit_s_bar	Editing Service Bar
+project_admin_servicebar	edit_system_s	Editing System Services
+project_admin_servicebar	edit_s_for	Editing Services for <B>$1</B>
+project_admin_servicebar	new_s	New Service
+project_admin_servicebar	create_s	Create a new service.
+project_admin_servicebar	manage_s	Manage Existing Services
+project_admin_servicebar	availability	Availability
+project_admin_servicebar	status	Status
+project_admin_servicebar	rank_on_screen	Rank On Screen
+project_admin_servicebar	del?	Delete?
+project_admin_servicebar	home_page	Home Page
+project_admin_servicebar	cant_create_s_for_p	ERROR - Can not create service for project $1
+#
+#-----------------------------------------------
+# Script: SF/www/project/admin/ugroup.php
+#
+project_admin_ugroup	manage_ug	Manage User Groups
+project_admin_ugroup	manage_ug_for	Manage User Groups for <B>$1</B>
+project_admin_ugroup	create_ug	Create a New User Group
+project_admin_ugroup	create_ug_for_p	Create a new group of users for this project.
+project_admin_ugroup	edit_ug	Edit User Groups
+project_admin_ugroup	ug_name	User Group Name
+project_admin_ugroup	members	Members
+project_admin_ugroup	del_ug	Delete this user group ?
+project_admin_ugroup	predef_g	(*) denotes predefined groups
+#
+#-----------------------------------------------
+# Script: SF/www/project/admin/ugroup_utils.php
+#
+project_admin_ugroup_utils	ug__exist	User group '$1' already exists in this project. Please choose another name.
+project_admin_ugroup_utils	cant_create_ug	ERROR - Can not create user group: $1
+project_admin_ugroup_utils	ug_create_success	Successfully Created User Group
+project_admin_ugroup_utils	ug_created_but_no_id	ERROR - User group created but cannot get ID: 
+project_admin_ugroup_utils	no_g_template	- no group template selected
+project_admin_ugroup_utils	cant_insert_u_in_g	ERROR - Can not insert user $1 in group $2: $3
+project_admin_ugroup_utils	u_added	- $1 users added
+project_admin_ugroup_utils	ug_name_missed	The group name is missing, please press the "Back" button and complete this information
+project_admin_ugroup_utils	invalid_g_name	Invalid group name: $1. Please use only alphanumerical characters. Press the "Back" button and complete this information
+project_admin_ugroup_utils	cant_update_ug	ERROR - Can not update user group: $1
+project_admin_ugroup_utils	cant_reset_ug	ERROR - Can not reset user group $1: $2
+project_admin_ugroup_utils	ug_upd_success	Successfully Updated User Group $1 ($2 members)
+project_admin_ugroup_utils	ug_not_given	FAILED: ugroup ID was not specified
+project_admin_ugroup_utils	g_del	User group deleted
+project_admin_ugroup_utils	cant_remove_u	- Error: cannot remove users! $1
+project_admin_ugroup_utils	all_u_removed	- all users removed from this group
+project_admin_ugroup_utils	cant_remove_perm	- Error: cannot remove permissions! $1
+project_admin_ugroup_utils	perm_warning	- WARNING: $1 associated permissions deleted. <br>Note: If this group was the only one authorized to access an object, permissions are now reset to default for this object.
+#
+#-----------------------------------------------
+# Script: SF/www/project/admin/userperms.php
+#
+project_admin_userperms	invalid_g	Invalid Group
+project_admin_userperms	group_not_exist	That group does not exist.
+project_admin_userperms	unable_load_p	Unable to load project object
+project_admin_userperms	changed_member_perm	Changed Member Permissions
+project_admin_userperms	cannot_remove_admin_stat	Cannot remove your admin status: project needs at least one admin!
+project_admin_userperms	perm_fail_for	Permissions Failed For $1
+project_admin_userperms	perm_upd	Permissions Updated
+project_admin_userperms	user_name	User name
+project_admin_userperms	proj_admin	Project<BR>Admin
+project_admin_userperms	cvs_write	CVS Write
+project_admin_userperms	bug_track	Bug Tracking
+project_admin_userperms	forums	Forums
+project_admin_userperms	task_man	Task Manager
+project_admin_userperms	patch_man	Patch Manager
+project_admin_userperms	supp_man	Support Manager
+project_admin_userperms	doc_man	Doc. Manager
+project_admin_userperms	file_man	File Manager
+project_admin_userperms	tracker	Tracker:<br>$1
+project_admin_userperms	member_ug	Member of user groups:
+project_admin_userperms	no_users_found	No Users Found
+project_admin_userperms	tech_only	Tech Only
+project_admin_userperms	admin_only	Admin Only
+project_admin_userperms	tech&admin	Tech & Admin
+project_admin_userperms	moderator	Moderator
+project_admin_userperms	upd_user_perm	Update User Permissions
+#
+#-----------------------------------------------
+# Script: SF/www/project/export/artifact_deps_export.php
+#
+project_export_artifact_deps_export	at_not_created	ArtifactType could not be created
+project_export_artifact_deps_export	tracker_no_longer_valid	This tracker is no longer valid.
+project_export_artifact_deps_export	art_deps_export	Dependencies Export
+project_export_artifact_deps_export	no_deps_found	No depencies  found. Could not generate an export.
+project_export_artifact_deps_export	db_access_err	Error while accessing your dependencies database. Please report the error to the $1 Administrator
+project_export_artifact_deps_export	deps_export_format	Dependencies Export Format
+project_export_artifact_deps_export	deps_export_format	The dependencies export provides you with the following fields. The sample values indicate what the field data types are.
+project_export_artifact_deps_export	create_proj_err	Error in Create project $1 table: $2
+project_export_artifact_deps_export	security_violation	SECURITY VIOLATION!!! Unauthorized database name: $1
+project_export_artifact_deps_export	art_id_desc	Unique artifact identifier
+project_export_artifact_deps_export	depend_on_art	Depend on Artifact
+#
+#-----------------------------------------------
+# Script: SF/www/project/export/artifact_export.php
+#
+project_export_artifact_export	ath_not_created	ArtifactTypeHtml could not be created
+project_export_artifact_export	follow_up_comments	Follow-up Comments
+project_export_artifact_export	depend_on	Depend on
+project_export_artifact_export	all_followup_comments	All follow-up comments in one chunck of text
+project_export_artifact_export	depend_on_list	List of artifacts this artifact depends on
+project_export_artifact_export	art_export	Artifact Export
+project_export_artifact_export	no_art_found	No artifact found. Could not generate an export.
+project_export_artifact_export	db_access_err	Error while accessing your artifact database. Please report the error to the $1 Administrator
+project_export_artifact_export	art_exp_format	Artifact Export Format
+project_export_artifact_export	art_exp_format_msg	The artifact export provides you with the following artifact fields. The sample values indicate what the field data types are.
+#
+#-----------------------------------------------
+# Script: SF/www/project/export/artifact_history_export.php
+#
+project_export_artifact_history_export	art_id	Artifact ID
+project_export_artifact_history_export	field_name	Field Name
+project_export_artifact_history_export	old_val	Old Value
+project_export_artifact_history_export	new_val	New Value
+project_export_artifact_history_export	mod_by	Modified By
+project_export_artifact_history_export	email	Email
+project_export_artifact_history_export	mod_on	Modified On
+project_export_artifact_history_export	comment_type	Comment Type
+project_export_artifact_history_export	field_name_desc	Name of the field which value changed
+project_export_artifact_history_export	old_val_desc	Value of the field before it changed
+project_export_artifact_history_export	new_val_desc	Value of the field after it changed
+project_export_artifact_history_export	mod_by_desc	Login name of the user who changed the value
+project_export_artifact_history_export	mod_on_desc	Modification date
+project_export_artifact_history_export	comment_type_desc	Type of the followup comment added to history
+project_export_artifact_history_export	art_hist_export	Artifact History export
+project_export_artifact_history_export	no_hist_found	No artifact history found. Could not generate an export.
+project_export_artifact_history_export	db_access_err	Error while accessing your artifact history database. Please report the error to the $1 Administrator
+project_export_artifact_history_export	hist_export_format	Artifact History Export Format
+roject_export_artifact_history_export	hist_export_format_msg	The Artifact History export provides you with the following artifact history fields. The sample values indicate what the field data types are.<p>
+#
+#-----------------------------------------------
+# Script: SF/www/project/export/bug_bug_deps_export.php
+#
+project_export_bug_deps_export	g_id	Group ID
+project_export_bug_deps_export	bug_id	Bug ID
+project_export_bug_deps_export	depend_on_bug	Depend on Bug
+project_export_bug_deps_export	bug_id_desc	Unique bug identifier
+project_export_bug_deps_export	g_id_desc	Unique project identifier
+#project_export_bug_deps_export	depend_on_bug_desc	Depend on Bug
+project_export_bug_deps_export	bug_deps_export	$1 Export
+project_export_bug_deps_export	no_bug_deps_found	No $1 found. Could not generate an export.
+project_export_bug_deps_export	db_access_err	Error while accessing your $1 database. Please report the error to the $2 Administrator
+project_export_bug_deps_export	bug_deps_export_format	<h3>$1 Export Format</h3> The $1 export provides you with the following fields. The sample values indicate what the field data types are. <p>
+#
+#-----------------------------------------------
+# Script: SF/www/project/export/bug_export.php
+#
+project_export_bug_export	depend_on_bugs	Depend on Bug(s)
+project_export_bug_export	depend_on_bugs_desc	List of  bugs this bug depends on
+#
+#-----------------------------------------------
+# Script: SF/www/project/export/index.php
+#
+project_export_index	proj_db_success	Your project database has been succesfully generated. You can now use your favorite desktop application and access your project database through the MySQL ODBC/JDBC driver installed on your desktop machine. The parameters to configure your ODBC/JDBC database connection are as follows:
+project_export_index	export_to_csv_or_db	Your project data can either be exported in individual text files (CSV format) or in a project specific database that you can directly access from your desktop machine through an ODBC/JDBC connection. See $1 for more information. <h3>Text File Export $2</h3> <P>Click on the links below to generate a text file export (CSV format).
+project_export_index	online_help	Online Help
+project_export_index	art_data	Data
+project_export_index	history	History
+project_export_index	dependencies	Dependencies
+project_export_index	legacy	Legacy
+project_export_index	bug_tracker	Bug Tracker
+project_export_index	export	Export
+project_export_index	show_format	Show Format
+project_export_index	export_x	Export $1
+project_export_index	support_request	Support Request
+project_export_index	survey_responses	Survey Responses
+project_export_index	direct_db_access	Direct Database Access 
+project_export_index	generate_full_db	Generate Full Project Database</a> </b> (<- Click to generate)
+project_export_index	db_connection_params	Database connection parameters:
+#
+#-----------------------------------------------
+# Script: SF/www/project/export/project_export_utils.php
+#
+project_export_utils	ins_err	Error in Insert $1: $2
+project_export_utils	label	Label
+project_export_utils	sample_val	Sample Value
+project_export_utils	server	Server
+project_export_utils	port	Port
+project_export_utils	leave_blank	(leave it blank)
+project_export_utils	db	Database
+project_export_utils	user	User
+project_export_utils	passwd	Password
+project_export_utils	type	Type
+project_export_utils	query_is	Query is ($1): $2
+#
+#-----------------------------------------------
+# Script: SF/www/project/export/support_request_export.php
+#	
+project_export_support_request_export	support_id	Support ID
+project_export_support_request_export	category	Category
+project_export_support_request_export	summary	Summary
+project_export_support_request_export	priority	Priority
+project_export_support_request_export	submitted_by	Submitted by
+project_export_support_request_export	assigned_to	Assigned to
+project_export_support_request_export	open_date	Open Date
+project_export_support_request_export	close_date	Close Date
+project_export_support_request_export	support_id_desc	Unique support request identifier
+project_export_support_request_export	category_desc	Name of the category the support request is in
+project_export_support_request_export	summary_desc	One line description of the support request
+project_export_support_request_export	submitted_by_desc	Name of the user who submitted the support request
+project_export_support_request_export	assigned_to_desc	Project member the support request is assigned to
+project_export_support_request_export	open_date_desc	Support request submission date
+project_export_support_request_export	close_date_desc	Support request close date
+project_export_support_request_export	status_desc	Status (Open, Closed&hellip;)
+project_export_support_request_export	follow_up_desc	All follow-up comments in one chunck of text including the original description
+#
+#-----------------------------------------------
+# Script: SF/www/project/export/survey_responses_export.php
+#
+project_export_survey_responses_export	survey_id	Survey ID
+project_export_survey_responses_export	question_id	Question ID
+project_export_survey_responses_export	response	Response
+project_export_survey_responses_export	date_stamp	Date Stamp
+project_export_survey_responses_export	survey_id_desc	Unique survey identifier
+project_export_survey_responses_export	question_id_desc	Unique question identifier
+project_export_survey_responses_export	response_desc	The response to the question
+project_export_survey_responses_export	date_desc	Date/Time the user response was registered
+project_export_survey_responses_export	date_stamp_desc	A unique identifier for the responses that belong to a survey taken by a given user
+#
+#-----------------------------------------------
+# Script: SF/www/project/export/task_assigned_to_export.php
+#
+project_export_task_assigned_to_export	task_id	Task ID
+project_export_task_assigned_to_export	task_id_desc	Unique task identifier
+project_export_task_assigned_to_export	assigned_to_desc	Project members the task is assigned to
+#
+#-----------------------------------------------
+# Script: SF/www/project/export/task_export.php
+#
+project_export_task_export	subproject	Subproject
+project_export_task_export	summary	Task Summary
+project_export_task_export	details	Original Comment
+project_export_task_export	percent_complete	Percent Complete
+project_export_task_export	hours	Hours
+project_export_task_export	start_date	Start Date
+project_export_task_export	end_date	End Date
+project_export_task_export	created_by	Created By
+project_export_task_export	depend_on_task	Depend on Task(s)
+project_export_task_export	subproject_desc	Name of the subproject the task is in
+project_export_task_export	summary_desc	One line description of the task
+project_export_task_export	details_desc	Detailed description of the task
+project_export_task_export	percent_complete_desc	How much of the task has already been completed
+project_export_task_export	hours_desc	Effort spent on the task in hours
+project_export_task_export	start_date_desc	Date when the task was started
+project_export_task_export	end_date_desc	Date when the task was finished
+project_export_task_export	created_by_desc	Project member who created the task
+project_export_task_export	depend_on_task_desc	List of  tasks this task depends on
+#
+#-----------------------------------------------
+# Script: SF/www/project/stats/index.php
+#
+project_stats_index	proj_stats	Project statistics $1
+project_stats_index	usage_stats	Usage Statistics
+project_stats_index	months	Months
+project_stats_index	weeks	Weeks
+project_stats_index	days	Days
+project_stats_index	change_stats_view	Change Stats View
+project_stats_index	rank	Rank
+project_stats_index	page_views	Page Views
+project_stats_index	downloads	Downloads
+project_stats_index	bugs	Bugs
+project_stats_index	support	Support
+project_stats_index	tasks	Tasks
+project_stats_index	artifacts	Artifacts
+project_stats_index	patches	Patches
+project_stats_index	cvs	CVS
+project_stats_index	svn	Subversion
+project_stats_index	proj_not_exist_on_date	Project did not exist on this date.
+project_stats_index	stats_for_past_x_days	Statistics for the past $1 days.
+project_stats_index	stats_for_past_x_weeks	Statistics for the past $1 weeks, plus the week-in-progress.
+project_stats_index	week	Week
+project_stats_index	stats_for_past_x_months	Statistics for the past $1 months.
+project_stats_index	month	Month
+project_stats_index	lifespan	Lifespan
+project_stats_index	developers	Members
+project_stats_index	stats_for_all_time	Statistics for All Time
+#
+#-----------------------------------------------
+# Script: SF/www/project/stats/source_code_access.php
+#
+project_stats_source_code_access	all_users	All Users
+project_stats_source_code_access	non_proj_members	Non Project Members
+project_stats_source_code_access	access_log_from	Access Log From
+project_stats_source_code_access	for_last	For Last...
+#
+#-----------------------------------------------
+# Script: SF/www/project/stats/source_code_access_utils.php
+#
+project_stats_source_code_access_utils	file_download	File Download 
+project_stats_source_code_access_utils	access_for_past_x_days	$1 for the past $2 days	
+project_stats_source_code_access_utils	in_total	$1 in total
+project_stats_source_code_access_utils	time_gmt	Time (GMT)
+project_stats_source_code_access_utils	no_access	No $1 access for this period.
+project_stats_source_code_access_utils	service_disabled	$1 Service Disabled
+project_stats_source_code_access_utils	subversion	Subversion
+project_stats_source_code_access_utils	docs	Docs
+project_stats_source_code_access_utils	wiki	Wiki
+project_stats_source_code_access_utils	cvs_co_upd	CVS Access (checkout/update
+project_stats_source_code_access_utils	svn_access	Subversion accesses
+project_stats_source_code_access_utils	doc_download	Document Download
+project_stats_source_code_access_utils	wiki_read	Wiki pages read
+project_stats_source_code_access_utils	cvs_access	CVS Access
+project_stats_source_code_access_utils	co_upd	Checkout/Update
+project_stats_source_code_access_utils	browsing	File Browsing
+project_stats_source_code_access_utils	accesses	Accesses
+#
+#-----------------------------------------------
+# Script: SF/www/project/index.php
+#
+project_index	g_missed	Missing Group Argument
+project_index	must_spec_g	A group must be specified for this page.
+#
+#-----------------------------------------------
+# Script: SF/www/project/memberlist.php
+#
+project_memberlist	proj_member_list	Project Member List
+project_memberlist	contact_to_become_member	<P>If you would like to become a member of this project, contact one of the project admins, designated in bold text below.<br><br>
+project_memberlist	developer	Member
+project_memberlist	username	Username
+project_memberlist	skills	Skills
+project_memberlist	view_skills	View Skills
+#
+#-----------------------------------------------
+# Script: SF/www/project/showdetails.php
+#
+project_showdetails	proj_details	Project Details
+project_showdetails	no_detail	No detail available for this project
+project_showdetails	proj_not_found	Error - Project Not Found
+project_showdetails	back_main	[Back to Main Page]
