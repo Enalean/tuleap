@@ -74,11 +74,19 @@ function group_get_history ($group_id=false) {
 	return db_query($sql);
 }	       
 	
-function group_add_history ($field_name,$old_value,$group_id) {
+function group_add_history ($field_name,$old_value,$group_id,$args=false) {
 	/*      
 		handle the insertion of history for these parameters
+		$args is an array containing a list of parameters to use when
+		   the message is to be displayed by the history.php script
+		   The array is stored as a string at the end of the field_name
+		   with the following format:
+		   field_name %% [arg1, arg2...]
 	*/
 	
+        if $args {
+	    $field_name .= " %% ".implode("||", $args);
+	}
 	$sql="insert into group_history(group_id,field_name,old_value,mod_by,date) ".
 		"VALUES ('$group_id','$field_name','$old_value','". user_getid() ."','".time()."')";
 	return db_query($sql);
@@ -114,14 +122,25 @@ function show_grouphistory ($group_id) {
 		
 		for ($i=0; $i < $rows; $i++) { 
 			$field=db_result($result, $i, 'field_name');
+
+			// see if there are any arguments after the message key 
+			// format is "msg_key ## arg1||arg2||...
+			// If msg_key cannot be found in the localized message
+			// catalog then display the msg has is because this is very
+			// likely a legacy message (pre-localization version)
+			list($msg_key, $args) = explode(" %% ",$field);
+			if ($args) {
+			    $arr_args = explode('||',$args);
+			}
+			$msg = $Language->getText('project_admin_utils', $msg_key, $arr_args);
+			if !(strpos($msg,"*** Unkown msg") === false) {
+			    $msg = $field;
+			}
+
 			echo '
-			<TR class="'. html_get_alt_row_color($i) .'"><TD>'.$field.'</TD><TD>';
-			
-			if ($field=='removed user') {
-				echo user_getname(db_result($result, $i, 'old_value'));
-			} else {
-				echo db_result($result, $i, 'old_value');
-			}			
+			<TR class="'. html_get_alt_row_color($i) .'"><TD>'.$msg.'</TD><TD>';
+			echo db_result($result, $i, 'old_value');
+						
 			echo '</TD>'.
 				'<TD>'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
 				'<TD>'.db_result($result, $i, 'user_name').'</TD></TR>';

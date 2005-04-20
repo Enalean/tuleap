@@ -16,7 +16,7 @@ $is_admin_page='y';
 
 if ($submit) {
 
-    group_add_history ('Changed Task Manager Other Settings','',$group_id);
+    group_add_history ('changed_task_mgr_other_settings','',$group_id);
     
     $result=db_query('UPDATE groups SET '
 		     ."pm_preamble='".htmlspecialchars($form_preamble)."' "

@@ -122,7 +122,7 @@ if ($submit) {
     // Give Feedback
     if ($res_watch && $res_notif && $res_new) {
 	$feedback .= ' - Successful Update';
-	group_add_history ('Changed Personal Notification Email Settings','',$group_id);
+	group_add_history ('changed_personal_email_notif','',$group_id);
     } else {
 	$feedback .= ' - Update Failed'.db_error();;
     }

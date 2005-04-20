@@ -216,9 +216,13 @@ echo '
     // Display the welcome screen
 
 echo '
-<P> '.$Language->getText('project_export_index','export_to_csv_or_db',array(help_button('ProjectDataExport.html',false,$Language->getText('project_export_index','online_help')),
-									help_button('ProjectDataExport.html#TextFileExport'))).'
-<P>';
+<P> '.$Language->getText('project_export_index','export_to_csv_or_db',array(help_button('ProjectDataExport.html',false,$Language->getText('project_export_index','online_help')))).'</p>';
+
+echo '
+<h3> '.$Language->getText('project_export_index','export_to_csv_hdr',array(help_button('ProjectDataExport.html#TextFileExport'))).'</h3>';
+
+echo '
+<p> '.$Language->getText('project_export_index','export_to_csv_msg').'</p>';
 		
 	// Show all the fields currently available in the system
 

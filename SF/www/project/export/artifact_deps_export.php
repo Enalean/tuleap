@@ -92,7 +92,8 @@ if ($export == 'artifact_deps') {
 
 } else if ($export == "artifact_deps_format") {
 
-    echo $Language->getText('project_export_artifact_deps_export','deps_export_format');
+    echo '<h3>'.$Language->getText('project_export_artifact_deps_export','deps_export_format').'</h3>';
+    echo '<p>'.$Language->getText('project_export_artifact_deps_export','deps_export_format_msg').'</p>';
  
     $record = pick_a_record_at_random($result, $rows, $col_list);
 

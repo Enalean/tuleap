@@ -65,7 +65,7 @@ function insert_record_in_table($dbname, $tbl_name, $col_list, $record) {
     $res_insert = db_project_query($dbname,$sql_insert);
     
     if (!$res_insert) {
-	$feedback .= $Language->getText('project_export_utils','ins_err',array($tbl_name,db_project_error()));
+	$feedback .= $Language->getText('project_export_utils','ins_err',array($tbl_name,db_project_error()))." - ";
     }
 
 }
@@ -754,7 +754,7 @@ function display_db_params () {
     $host = $GLOBALS['sys_dbhost'];
 echo '
 <table align="center" cellpadding="0">
-      <tr><td>'.$Language->getText('project_export_utils','server').'</td><td>'.$host.'</td></tr>
+      <tr><td>'.$Language->getText('project_export_utils','server').':</td><td>'.$host.'</td></tr>
       <tr><td>'.$Language->getText('project_export_utils','port').':</td><td>'.$Language->getText('project_export_utils','leave_blank').'</td></tr>
       <tr><td>'.$Language->getText('project_export_utils','db').':</td><td>'.$dbname.'</td></tr>
       <tr><td>'.$Language->getText('project_export_utils','user').':</td><td>cxuser</td></tr>

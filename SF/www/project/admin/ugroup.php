@@ -33,11 +33,11 @@ if ($func=='do_update') {
 //
 
 
-project_admin_header(array('title'=>$Language->getText('project_admin_ugroup','view_ug'),'group'=>$group_id,
+project_admin_header(array('title'=>$Language->getText('project_admin_ugroup','manage_ug'),'group'=>$group_id,
 			   'help' => 'UserGroups.html'));
 $project=project_get_object($group_id);
 
-print '<P><h2>'.$Language->getText('project_admin_ugroup','edit_ug_for',$project->getPublicName()).'</h2>';
+print '<P><h2>'.$Language->getText('project_admin_ugroup','manage_ug_for',$project->getPublicName()).'</h2>';
 print '
 <P>
 <H3><a href="/project/admin/editugroup.php?func=create&group_id='.$group_id.'">'.$Language->getText('project_admin_ugroup','create_ug').'</a></H3>
@@ -45,7 +45,7 @@ print '
 <p>
 
 
-<H3>'.$Language->getText('project_admin_ugroup','manage_ug').'</H3>
+<H3>'.$Language->getText('project_admin_ugroup','edit_ug').'</H3>
 <P>
 <HR>';
 

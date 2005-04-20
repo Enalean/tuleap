@@ -37,26 +37,26 @@ if (!$result || db_numrows($result) < 1) {
 ?>
 
 <P>
-<b><u><?php echo $Language->getText('project_showdetails','proj_desc'); ?></u></b>
+<b><u><?php echo $Language->getText('project_admin_editgroupinfo','long_desc'); ?></u></b>
 <P><?php echo ($register_purpose == '') ? $Language->getText('global','none').'.' : util_make_links( nl2br ( $register_purpose)) ; ?>
 
 <P>
-<b><u><?php echo $Language->getText('project_showdetails','ip_patents'); ?></u></b>
+<b><u><?php echo $Language->getText('project_admin_editgroupinfo','patents'); ?></u></b>
 <P><?php echo ($patents_ips == '') ? $Language->getText('global','none').'.' : util_make_links( nl2br ($patents_ips)) ; ?>
 
 <P>
-<b><u><?php echo $Language->getText('project_showdetails','soft_required'); ?></u></b>
+<b><u><?php echo $Language->getText('project_admin_editgroupinfo','soft_required'); ?></u></b>
 <P><?php echo ($required_software == '') ? $Language->getText('global','none').'.' : util_make_links( nl2br ($required_software)) ; ?>
 
 <P>
-<b><u><?php echo $Language->getText('project_showdetails','misc_comments'); ?></u></b>
+<b><u><?php echo $Language->getText('project_admin_editgroupinfo','comments'); ?></u></b>
 <P><?php echo ($other_comments == '') ? $Language->getText('global','none').'.' : util_make_links( nl2br ($other_comments)) ; ?>
 
 <?php
 
 if ($license_other != '') {
 	print '<P>';
-	print '<b><u>'.$Language->getText('project_showdetails','license_comment').'</u></b>';
+	print '<b><u>'.$Language->getText('project_admin_editgroupinfo','license_comment').'</u></b>';
 	print '<P>'.util_make_links( nl2br ($license_other));
 }
 

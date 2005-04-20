@@ -44,25 +44,52 @@ function permission_get_name($permission_type) {
     } else return $permission_type;
 }
 
-
 /**
- * Return a printable name for a given object
+ * Return a the type of a given object
+ */
+function permission_get_object_type($permission_type,$object_id) {
+    if ($permission_type=='PACKAGE_READ') {
+        return 'package';
+    } else if ($permission_type=='RELEASE_READ') {
+        return 'release';
+    } else if ($permission_type=='DOCUMENT_READ') {
+        return 'document';
+    } else if ($permission_type=='DOCGROUP_READ') {
+        return 'docgroup';
+    } else if ($permission_type=='WIKI_READ') {
+        return "wiki ";
+    } else if ($permission_type=='WIKIPAGE_READ') {
+        return "wikipage";
+    } else return 'object';
+}
+/**
+ * Return a the type of a given object
  */
 function permission_get_object_name($permission_type,$object_id) {
-  global $Language;
     if ($permission_type=='PACKAGE_READ') {
-        return $Language->getText('project_admin_permissions','pack',file_get_package_name_from_id($object_id));
+        return file_get_package_name_from_id($object_id);
     } else if ($permission_type=='RELEASE_READ') {
-        return $Language->getText('project_admin_permissions','rel',file_get_release_name_from_id($object_id));
+        return file_get_release_name_from_id($object_id);
     } else if ($permission_type=='DOCUMENT_READ') {
-        return $Language->getText('project_admin_permissions','doc',doc_get_title_from_id($object_id));
+        return doc_get_title_from_id($object_id);
     } else if ($permission_type=='DOCGROUP_READ') {
-        return $Language->getText('project_admin_permissions','docgroup',doc_get_docgroupname_from_id($object_id));
+        return doc_get_docgroupname_from_id($object_id);
     } else if ($permission_type=='WIKI_READ') {
-        return "wiki ".$object_id; //XXX
+        return "$object_id";
     } else if ($permission_type=='WIKIPAGE_READ') {
-        return "wiki page".$object_id; //XXX
-    } else return $Language->getText('project_admin_permissions','obj',$object_id);
+        return "$object_id";
+    } else return "$object_id";
+}
+
+/**
+ * Return the name for a given object
+ */
+function permission_get_object_fullname($permission_type,$object_id) {
+  global $Language;
+  
+  $type = permission_get_object_type($permission_type,$object_id);
+  $name = permission_get_object_name($permission_type,$object_id);
+  return $Language->getText('project_admin_permissions',$type,$name);
 }
 
 /**
@@ -285,9 +312,12 @@ function permission_equals_to_default($permission_type, $object_id) {
 function permission_add_history($group_id, $permission_type, $object_id){
   global $Language;
     $res=permission_db_authorized_ugroups($permission_type, $object_id);
+    $type = properties_get_object_type($permission_type, $object_id);
+    $name = properties_get_object_name($permission_type, $object_id);
+
     if (db_numrows($res) < 1) {
         // No ugroup defined => no permissions set 
-        group_add_history($Language->getText('project_admin_permissions','perm_reset_for',permission_get_object_name($permission_type,$object_id)),'default',$group_id);
+        group_add_history('perm_reset_for_'.$type, 'default', $group_id, array($name));
         return;
     } 
     $ugroup_list='';
@@ -295,7 +325,7 @@ function permission_add_history($group_id, $permission_type, $object_id){
         if ($ugroup_list) { $ugroup_list.=', ';}
         $ugroup_list.= ugroup_get_name_from_id($row['ugroup_id']);
     }
-    group_add_history($Language->getText('project_admin_permissions','perm_granted_for',permission_get_object_name($permission_type,$object_id)),$ugroup_list,$group_id);
+    group_add_history('perm_granted_for_'.$type, $ugroup_list, $group_id, array($name));
 }
 
 

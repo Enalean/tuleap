@@ -17,7 +17,7 @@ session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 // Check for submission. If so, make changes and redirect
 
 if ($GLOBALS['Submit'] && $root1) {
-	group_add_history ($Language->getText('project_admin_grouptrove','changed_trove'),$rm_id,$group_id);
+	group_add_history ('changed_trove',$rm_id,$group_id);
 
 	// there is at least a $root1[xxx]
 	while (list($rootnode,$value) = each($root1)) {

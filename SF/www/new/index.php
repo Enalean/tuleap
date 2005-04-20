@@ -272,7 +272,7 @@ if (!$res_new || db_numrows($res_new) < 1) {
 		    if ((count($os) > 0) || (count($lang) > 0)) {
 		      print '</TD></TR><TR><TD colspan=3>';
 		    }
-		    print $Language->getText('new_index','devel_state').": ";
+		    print $Language->getText('new_index','devel_status').": ";
 		    print join(',',$devstate);
 		  }
 		  print '<HR></TD></TR>';

@@ -106,7 +106,9 @@ if ($export == 'artifact') {
 
 } else if ($export == "artifact_format") {
 
-    echo $Language->getText('project_export_artifact_export','art_exp_format');
+    echo '<h3>'.$Language->getText('project_export_artifact_export','art_exp_format').'</h3>';
+
+    echo '<p>'.$Language->getText('project_export_artifact_export','art_exp_format_msg').'</p>';
 
     $record = pick_a_record_at_random($result, $rows, $col_list);
     prepare_artifact_record($at,$fields,$atid,$record);

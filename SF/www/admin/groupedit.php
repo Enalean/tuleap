@@ -31,7 +31,7 @@ if ($Update) {
 	if (db_result($res_grp,0,'unix_box') != $form_box)
 		{ group_add_history ('unix_box',db_result($res_grp,0,'unix_box'),$group_id);  }
 	if (db_result($res_grp,0,'project_type') != $project_type)
-		{ group_add_history ('project type',db_result($res_grp,0,'project_type'),$group_id);  }
+		{ group_add_history ('project_type',db_result($res_grp,0,'project_type'),$group_id);  }
 
 	db_query("UPDATE groups SET is_public=$form_public,status='$form_status',"
 		. "license='$form_license',type='$group_type',project_type='$project_type',"
@@ -45,7 +45,7 @@ if ($Update) {
 	if ($group_type=='2') {
 		$res=db_query("SELECT * FROM foundry_data WHERE foundry_id='$group_id'");
 		if (db_numrows($res) < 1) {
-			group_add_history ($Language->getText('admin_groupedit','feedback_history'),'',$group_id);
+			group_add_history ('feedback_history','',$group_id);
 
 			$feedback .= $Language->getText('admin_groupedit','feedback_foundry');
 			$r=db_query("INSERT INTO foundry_data (foundry_id) VALUES ('$group_id')");

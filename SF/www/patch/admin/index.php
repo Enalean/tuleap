@@ -41,7 +41,7 @@ if ($group_id && user_ismember($group_id,'C2')) {
 
 		} else if ($other_settings_update) {
 
-		    group_add_history ('Changed Patch Mgr Settings','',$group_id);
+		    group_add_history ('changed_patch_mgr_settings','',$group_id);
 		    //blank out any invalid email addresses
 		    if ($new_patch_address && !validate_emails($new_patch_address)) { 
 			$new_patch_address='';

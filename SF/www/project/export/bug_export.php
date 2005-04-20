@@ -42,7 +42,6 @@ while ($field = bug_list_all_fields()) {
     }
 }
 
-
 // Add the 3 fields that we build ourselves for user convenience
 // - All follow-up comments
 // - Task dependencies
@@ -53,11 +52,11 @@ $col_list[] = 'is_dependent_on_task_id';
 $col_list[] = 'is_dependent_on_bug_id';
 
 $lbl_list['follow_ups'] = $Language->getText('project_export_artifact_export','follow_up_comments');
-$lbl_list['is_dependent_on_task_id'] = $Language->getText('project_export_bug_export','depend_on_tasks');
+$lbl_list['is_dependent_on_task_id'] = $Language->getText('project_export_task_export','depend_on_task');
 $lbl_list['is_dependent_on_bug_id'] = $Language->getText('project_export_bug_export','depend_on_bugs');
 
 $dsc_list['follow_ups'] = $Language->getText('project_export_artifact_export','all_followup_comments');
-$dsc_list['is_dependent_on_task_id'] = $Language->getText('project_export_bug_export','depend_on_tasks_desc');
+$dsc_list['is_dependent_on_task_id'] = $Language->getText('project_export_task_export','depend_on_task_desc');
 $dsc_list['is_dependent_on_bug_id'] = $Language->getText('project_export_bug_export','depend_on_bugs_desc');
 
 $tbl_name = 'bug';

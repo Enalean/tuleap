@@ -105,7 +105,8 @@ if ($export == 'artifact_history') {
 
 } else if ($export == "artifact_history_format") {
 
-    echo $Language->getText('project_export_artifact_history_export','hist_export_format');
+    echo '<h3>'.$Language->getText('project_export_artifact_history_export','hist_export_format').'</h3>';
+    echo '<p>'.$Language->getText('project_export_artifact_history_export','hist_export_format_msg').'</p>';
    
     $record = pick_a_record_at_random($result, $rows, $col_list);
     prepare_artifact_history_record($at,$art_field_fact,$record);

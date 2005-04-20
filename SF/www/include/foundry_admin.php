@@ -25,7 +25,7 @@ if ($func) {
 		$feedback .= ' '.$Language->getText('include_foundry_admin','removed_proj').' ';
 		db_query("DELETE FROM foundry_preferred_projects WHERE foundry_id='$group_id' AND group_id='$rm_id'");
 
-		group_add_history ('removed project',$rm_id,$group_id);
+		group_add_history ('removed_project',$rm_id,$group_id);
 
 	} else if ($func=='rmuser') {
 		/*
@@ -36,7 +36,7 @@ if ($func) {
 			$feedback .= ' '.$Language->getText('include_foundry_admin','user_not_removed').' ';
 		} else {
 			$feedback .= ' '.$Language->getText('include_foundry_admin','user_removed').' ';
-			group_add_history ('removed user',$rm_id,$group_id);
+			group_add_history ('removed_user',$rm_id,$group_id);
 		}
 
 	} else if ($func=='addproject') {
@@ -53,7 +53,7 @@ if ($func) {
 			$res_member = db_query("SELECT * FROM foundry_preferred_projects WHERE group_id='$form_newuid' AND foundry_id='$group_id'");
 			if (db_numrows($res_member) < 1) {
 				//not a member
-				group_add_history ('added project',$rm_id,$group_id);
+				group_add_history ('added_project',$rm_id,$group_id);
 				db_query("INSERT INTO foundry_preferred_projects (group_id,foundry_id,rank) VALUES ('$form_newuid','$group_id','$rank')");
 				$feedback .= ' '.$Language->getText('include_foundry_admin','proj_added').' ';
 			} else {
@@ -75,7 +75,7 @@ if ($func) {
 			echo db_error();
 			$feedback .= ' '.$Language->getText('include_foundry_admin','upd_fail').' ';
 		} else {
-			group_add_history ('data updated','',$group_id);
+			group_add_history ('data_updated','',$group_id);
 			$feedback .= ' '.$Language->getText('include_foundry_admin','data_updated').' ';
 		}
 	} else if ($func=='adduser') {

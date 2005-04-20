@@ -46,7 +46,7 @@ $row_grp = db_fetch_array($res_grp);
 
 // ########################### form submission, make updates
 if ($submit) {
-    group_add_history ($Language->getText('project_admin_userperms','changed_member_perm'),'',$group_id); // Used to be 'Changed Permissions'
+    group_add_history ('changed_member_perm','',$group_id);
 
 	$res_dev = db_query("SELECT user_id FROM user_group WHERE group_id=$group_id");
 	while ($row_dev = db_fetch_array($res_dev)) {
@@ -155,7 +155,7 @@ echo '
 <FORM action="userperms.php" method="post">
 <INPUT type="hidden" name="group_id" value="'.$group_id.'">
 <TABLE width="100%" cellspacing=0 cellpadding=3 border=0>
-<TR><TD><B>'.$Language->getText('project_admin_userperms','devel_name').'</B></TD>
+<TR><TD><B>'.$Language->getText('project_admin_userperms','user_name').'</B></TD>
 <TD><B>'.$Language->getText('project_admin_userperms','proj_admin').'</B></TD>';
 
 if ($project->usesCVS()) {

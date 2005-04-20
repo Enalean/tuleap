@@ -45,7 +45,7 @@ if ($Update) {
         $feedback .= ' '.$Language->getText('project_admin_editgroupinfo','upd_fail',(db_error() ? db_error() : ' ' ));
     } else {
         $feedback .= ' '.$Language->getText('project_admin_editgroupinfo','upd_success').' ';
-	group_add_history ($Language->getText('project_admin_editgroupinfo','changed_public_info'),'',$group_id);
+	group_add_history('changed_public_info','',$group_id);
     }
 }
 

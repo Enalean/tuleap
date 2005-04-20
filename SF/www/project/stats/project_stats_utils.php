@@ -293,7 +293,7 @@ function stats_site_agregate( $group_id ) {
         print '</TR>' . "\n";
 
     print	'<TR class="' . util_get_alt_row_color(0) . '">'
-        . '<TD align="center">' . $row["COUNT(day)"] . ' '.$Language->getText('project_stats_index','ddays').' </TD>'
+        . '<TD align="center">' . $row["COUNT(day)"] . ' '.$Language->getText('project_stats_index','days').' </TD>'
         . '<TD align="center">' . sprintf("%d", $row["AVG(group_ranking)"]) . " ( " . sprintf("%0.2f", $row["AVG(group_metric)"]) . ' ) </TD>'
         . '<TD align="center">' . $row["developers"] . '</TD>';
     print stats_get_table_service_rows($group_id,$row);

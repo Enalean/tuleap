@@ -233,10 +233,10 @@ function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description,
 
     // Sanity check
     if (!$ugroup_name) { 
-        exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','g_name_missed'));
+        exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','ug_name_missed'));
     }
     if (!eregi("^[a-zA-Z0-9_\-]+$",$ugroup_name)) {
-        exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','invalid_g_name',$ugroup_name));
+        exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','invalid_ug_name',$ugroup_name));
     }
     if (!$ugroup_id) {
         exit_error($Language->getText('global','error'),$Language->getText('project_admin_editugroup','ug_id_missed'));
@@ -274,7 +274,7 @@ function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description,
     }
 
     // Now log in project history
-    group_add_history($Language->getText('project_admin_ugroup_utils','upd_ug'),$ugroup_name,$group_id);
+    group_add_history('upd_ug','',$group_id,array($ugroup_name));
 
     $feedback .= " ".$Language->getText('project_admin_ugroup_utils','ug_upd_success',array($ugroup_name,$user_count));
 }
@@ -320,7 +320,7 @@ function ugroup_delete($group_id, $ugroup_id) {
         $feedback .= $Language->getText('project_admin_ugroup_utils','perm_warning',$perm_cleared);
     } 
     // Now log in project history
-    group_add_history($Language->getText('project_admin_ugroup_utils','del_ug'),$ugroup_name,$group_id);
+    group_add_history('del_ug','',$group_id,array($ugroup_name));
 
     return true;
 }

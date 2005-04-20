@@ -41,10 +41,10 @@ if ($submit) {
     
     // Update project change history if need be
     if ($form_preamble != $row_grp['bug_preamble']) {
-	group_add_history ('Changed BTS bug form message','',$group_id);
+	group_add_history ('changed_bts_form_message','',$group_id);
     }
     if ($form_bug_allow_anon != $row_grp['bug_allow_anon']) {
-	group_add_history ('Changed BTS bug allow anonymous submission',
+	group_add_history ('changed_bts_allow_anon',
 			   $row_grp['bug_allow_anon'],$group_id);
     }
     

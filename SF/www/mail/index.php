@@ -37,7 +37,7 @@ if ($group_id) {
 		echo '
 			<H1>'.$Language->getText('mail_index','no_list_found_for').group_getname($group_id).'</H1>';
 		echo '
-			<P>'.$Language->getText('mail_index','proj_amdin_use_admin_link');
+			<P>'.$Language->getText('mail_index','proj_admin_use_admin_link');
                 mail_footer(array('pv'   => $pv)); 
 		exit;
 	}

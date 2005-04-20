@@ -309,7 +309,7 @@ if (strstr($mode,"docedit")) {
      } else {
          $feedback .= " ".$Language->getText('docman_admin_index','doc_deleted');
          // Log in project history
-         group_add_history($Language->getText('docman_admin_index','doc_deleted'),$title,$group_id);
+         group_add_history('doc_deleted',$title,$group_id,array($title));
      }
 
      main_page($group_id);

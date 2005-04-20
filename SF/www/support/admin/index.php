@@ -66,7 +66,7 @@ if ($group_id && user_ismember($group_id,'S2')) {
 
 		} else if ($other_settings_update) {
 
-		    group_add_history ('Changed Support Request Settings','',$group_id);
+		    group_add_history ('changed_sr_settings','',$group_id);
 		    //blank out any invalid email addresses
 		    if ($new_support_address && !validate_emails($new_support_address)) { 
 			$new_support_address='';

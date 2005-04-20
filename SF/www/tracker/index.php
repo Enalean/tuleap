@@ -485,7 +485,7 @@ if ( $func == 'gotoid' ) {
 
 		//update group history
 		$old_value = $ath->getName();
-		group_add_history($Language->getText('tracker_index','mass_change'),$old_value,$group_id);
+		group_add_history('mass_change',$old_value,$group_id);
 
 		//
 		//      Show just one feedback entry if no errors

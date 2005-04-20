@@ -41,7 +41,7 @@ if ($func) {
         $res = account_add_user_to_group ($group_id,$form_unix_name);
 	
         if ($res) {
-            group_add_history ($Language->getText('project_admin_index','added_user'),$form_unix_name,$group_id);
+            group_add_history('added_user',$form_unix_name,$group_id,array($form_unix_name));
         }
 
     } else if ($func=='rmuser') {
@@ -82,7 +82,7 @@ if ($func) {
             }
 
             $feedback .= ' '.$Language->getText('project_admin_index','user_removed').' ';
-            group_add_history ($Language->getText('project_admin_index','removed_user'),$rm_id,$group_id);
+            group_add_history ('removed_user',user_getname($rm_id)." ($rm_id)",$group_id);
         }
     } /* else if ($func == "import") {
        session_require(array('group'=>$group_id,'admin_flags'=>'A'));

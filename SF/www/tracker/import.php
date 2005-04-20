@@ -77,7 +77,7 @@ if($group_id && $atid && $user_id) {
     else $feedback = $errors;
 
     //update group history
-    group_add_history($Language->getText('tracker_import_admin','import'),$ath->getName(),$group_id);
+    group_add_history('import',$ath->getName(),$group_id);
 
     require('./browse.php');
     

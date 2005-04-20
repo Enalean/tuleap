@@ -21,11 +21,11 @@ $sql = 'SELECT project_dependencies.project_task_id,'.
 $col_list = array('project_task_id','group_id','is_dependent_on_task_id');
 $lbl_list = array('project_task_id' => $Language->getText('project_export_task_assigned_to_export','task_id'),
 		  'group_id' => $Language->getText('project_export_bug_deps_export','g_id'),
-		  'is_dependent_on_task_id' => $Language->getText('project_export_task_task_deps_export','depend_on_task'));
+		  'is_dependent_on_task_id' => $Language->getText('project_export_task_export','depend_on_task'));
 
 $dsc_list = array('project_task_id' => $Language->getText('project_export_task_assigned_to_export','task_id_desc'),
 		  'group_id' => $Language->getText('project_export_bug_deps_export','g_id_desc'),
-		  'is_dependent_on_task_id' => $Language->getText('project_export_task_task_deps_export','depend_on_task_desc'));
+		  'is_dependent_on_task_id' => $Language->getText('project_export_task_export','depend_on_task_desc'));
 $tbl_name = 'task_task_dependencies';
 
 $eol = "\n";
