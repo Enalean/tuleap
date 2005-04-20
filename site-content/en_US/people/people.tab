@@ -42,8 +42,8 @@ people_editprofile	skill_delete_ok	User Skill Deleted successfully
 people_editprofile	edit_your_profile	Edit Your Profile
 people_editprofile	user_fetch_failed	User fetch FAILED
 people_editprofile	no_such_user	No Such User
-people_editprofile	skill_explain	Now you can edit/change the list of your skills and your resume. The list of skills can then be matched with the list of jobs in  our system.
-people_editprofile	public_view_explain	The following option determines if others can see your resume online. If they can't, you can still enter your skills, and search for matching jobs.
+people_editprofile	skill_explain	Now you can edit/change the list of your skills and your resume.
+people_editprofile	public_view_explain	The following option determines if others can see your resume online.
 people_editprofile	publicly_viewable	Publicly Viewable
 people_editprofile	give_us_info	Give us some information, either a resume, or an explanation of your experience.
 people_editprofile	resume	Resume / Description of Experience
