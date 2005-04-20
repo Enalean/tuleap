@@ -49,12 +49,12 @@ function logs_cond($project, $span, $who) {
 /**
  * Process SQL query and display corresponding result
  */
-function logs_display($sql, $span, $field) {
+function logs_display($sql, $span, $field, $title='') {
   global $Language;
   // Executions will continue until morale improves.
   $res = db_query( $sql );
 
-  print '<p><u><b>'.$Language->getText('project_stats_source_code_access_utils','access_for_past_x_days',array($field,$span));
+  print '<p><u><b>'.$Language->getText('project_stats_source_code_access_utils','access_for_past_x_days',array($title,$span));
 	if ( ($nb_downloads = db_numrows( $res )) >= 1 ) {
 
     print ' - '.$Language->getText('project_stats_source_code_access_utils','in_total',$nb_downloads).'</u></b>';
@@ -85,7 +85,7 @@ function logs_display($sql, $span, $field) {
 	}
   else {
     echo "</u></b>
-<p>".$Language->getText('project_stats_source_code_access_utils','no_access',$field)."</p>";
+<p>".$Language->getText('project_stats_source_code_access_utils','no_access')."</p>";
   }
 }
 
@@ -109,7 +109,8 @@ function filedownload_logs_daily($project, $span = 7, $who="allusers") {
         ."AND frs_package.package_id=frs_release.package_id "
 	."ORDER BY time ASC";
 	
-	logs_display($sql, $span, $Language->getText('project_stats_source_code_access_utils','file_download'));
+	logs_display($sql, $span, $Language->getText('project_stats_source_code_access_utils','files'),
+		     $Language->getText('project_stats_source_code_access_utils','file_download'));
 }
 
 
@@ -308,7 +309,8 @@ function doc_logs_daily($project, $span = 7, $who="allusers") {
     ."AND doc_data.docid = log.docid "
 	    ."ORDER BY time ASC";
 	
-  logs_display($sql, $span, $Language->getText('project_stats_source_code_access_utils','doc_download'));
+  logs_display($sql, $span, $Language->getText('project_stats_source_code_access_utils','docs'),
+	       $Language->getText('project_stats_source_code_access_utils','doc_download'));
 }
 		
 /**
@@ -329,7 +331,8 @@ function wiki_logs_daily($project, $span = 7, $who="allusers") {
     ." AND log.group_id=".$project->getGroupId()
     ." ORDER BY time ASC";
 
-  logs_display($sql, $span, $Language->getText('project_stats_source_code_access_utils','wiki_read'));
+  logs_display($sql, $span, $Language->getText('project_stats_source_code_access_utils','wiki_page'),
+	       $Language->getText('project_stats_source_code_access_utils','wiki_access'));
 }
 
 ?>

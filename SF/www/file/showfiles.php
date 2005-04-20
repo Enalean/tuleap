@@ -84,7 +84,7 @@ $url = get_server_url();
 <!--
 function showConfirmDownload(group_id,file_id,filename) {
     url = "<?php echo $url; ?>/file/confirm_download.php?group_id=" + group_id + "&file_id=" + file_id + "&filename=" + filename;
-    wConfirm = window.open(url,"confirm","width=450,height=360,resizable=1,scrollbars=1");
+    wConfirm = window.open(url,"confirm","width=520,height=450,resizable=1,scrollbars=1");
     wConfirm.focus();
 }
 

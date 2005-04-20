@@ -15,7 +15,7 @@ session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
 project_admin_header(array('title'=>$Language->getText('project_admin_history','proj_history'),'group'=>$group_id));
 
-echo $Language->getText('project_admin_history','proj_change_log');
+echo $Language->getText('project_admin_history','proj_change_log_msg');
 
 echo show_grouphistory($group_id);
 

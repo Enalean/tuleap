@@ -321,7 +321,7 @@ echo '
 		  	$iu ++;
 		  	echo '
 		  <tr class="'.util_get_alt_row_color($iu).'"> 
-		    <td><b>Tracker: '.$at_arr[$j]->getName().'</b></td>
+		    <td><b>'.$Language->getText('project_export_index','tracker').': '.$at_arr[$j]->getName().'</b></td>
 		    <td align="center"><a href="'.$PHP_SELF.'?group_id='.$group_id.'&atid='.$at_arr[$j]->getID().'&export=artifact">'.$Language->getText('project_export_index','export').'</a>
 		      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&atid='.$at_arr[$j]->getID().'&export=artifact_format">'.$Language->getText('project_export_index','show_format').'</a>
 		    </td>

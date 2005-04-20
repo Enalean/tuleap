@@ -84,7 +84,7 @@ function group_add_history ($field_name,$old_value,$group_id,$args=false) {
 		   field_name %% [arg1, arg2...]
 	*/
 	
-        if $args {
+    if ($args) {
 	    $field_name .= " %% ".implode("||", $args);
 	}
 	$sql="insert into group_history(group_id,field_name,old_value,mod_by,date) ".
@@ -133,7 +133,7 @@ function show_grouphistory ($group_id) {
 			    $arr_args = explode('||',$args);
 			}
 			$msg = $Language->getText('project_admin_utils', $msg_key, $arr_args);
-			if !(strpos($msg,"*** Unkown msg") === false) {
+			if (!(strpos($msg,"*** Unkown msg") === false)) {
 			    $msg = $field;
 			}
 

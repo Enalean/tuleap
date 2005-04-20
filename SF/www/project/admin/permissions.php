@@ -312,8 +312,8 @@ function permission_equals_to_default($permission_type, $object_id) {
 function permission_add_history($group_id, $permission_type, $object_id){
   global $Language;
     $res=permission_db_authorized_ugroups($permission_type, $object_id);
-    $type = properties_get_object_type($permission_type, $object_id);
-    $name = properties_get_object_name($permission_type, $object_id);
+    $type = permission_get_object_type($permission_type, $object_id);
+    $name = permission_get_object_name($permission_type, $object_id);
 
     if (db_numrows($res) < 1) {
         // No ugroup defined => no permissions set 
