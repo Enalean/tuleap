@@ -13,7 +13,7 @@
 #-----------------------------------------------
 # Script: SF/www/news/admin/index.php
 #
-news_admin_index	group_update_err	ERROR doing group update
+news_admin_index	group_update_err	ERROR doing newsbyte update
 news_admin_index	project_newsbyte_updated	Project NewsByte Updated.
 news_admin_index	title	NewsBytes
 news_admin_index	not_found_err	Error - not found
