@@ -134,7 +134,7 @@ class BaseLanguage {
 			args is an array which will replace the $1, $2, etc
 			in the text_array string before it is returned
 		*/
-		if ($args) {
+		if ($args || $args == 0) {
 		    //$tstring = sprintf($this->text_array[$pagename][$category],$args);
 			for ($i=1; $i<=sizeof($args)+1; $i++) {
 				$patterns[] = '/\$'.$i.'/';
