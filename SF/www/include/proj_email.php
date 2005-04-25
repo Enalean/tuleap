@@ -57,6 +57,7 @@ function send_new_project_email($group_id) {
 //
 function send_new_user_email($to,$confirm_hash)
 {
+    global $Language;
     $base_url = get_server_url();
 
     // $message is defined in the content file
