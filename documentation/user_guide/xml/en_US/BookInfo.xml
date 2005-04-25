@@ -496,6 +496,16 @@
         <revremark>Registration phase: added tip for LDAP authentication.
         </revremark>
       </revision>
+      <revision>
+        <revnumber>2.7.5</revnumber>
+
+        <date>25-Apr-2005</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Fixed bug #2511 on cvs help.
+        </revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--

@@ -691,10 +691,11 @@ login
         your project source code. To do so, first create a new directory
         topdirectory on your workstation and place your source code under this
         top directory (keep the exact same directory structure you are used to
-        under topdirectory). Then type the following command (in one line):</para>
+        under topdirectory). Then type the following commands (the second command in one line):</para>
 
       <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-cvs -d:pserver:loginname@cvs.projectname.&SYS_DEFAULT_DOMAIN;:/cvsroot/projectname
+$ cd topdirectory
+$ cvs -d:pserver:loginname@cvs.projectname.&SYS_DEFAULT_DOMAIN;:/cvsroot/projectname
 import topdirectory vendor_tag start
         </programlisting>
 
