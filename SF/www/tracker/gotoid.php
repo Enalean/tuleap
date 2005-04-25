@@ -81,7 +81,7 @@ if ($group_name && !$group_id) {
 }
 
 // Commit and patch are not ambiguous (not trackers)
-$svn_loc = "/svn/?func=detailrevision&commit_id=$aid&group_id=$group_id";
+$svn_loc = "/svn/?func=detailrevision&rev_id=$aid&group_id=$group_id";
 $cvs_loc = "/cvs/?func=detailcommit&commit_id=$aid&group_id=$group_id";
 if (($atn == 'rev') || ($atn == 'revision')) {
     $location .= $svn_loc;
