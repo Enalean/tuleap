@@ -19,7 +19,7 @@ project_admin_editgroupinfo	changed_public_info	Information publique modifiée
 project_admin_editgroupinfo	editing_g_info	Modification des informations du projet
 project_admin_editgroupinfo	editing_g_info_for	Modification des informations pour le projet: <B>$1</B>
 project_admin_editgroupinfo	descriptive_g_name	Nom descriptif du projet:
-project_admin_editgroupinfo	short_desc	Description courte (255 caractèr max.):
+project_admin_editgroupinfo	short_desc	Description courte (255 caractères max.):
 project_admin_editgroupinfo	long_desc	Description longue:
 project_admin_editgroupinfo	patents	Brevets et propositions d'inventions
 project_admin_editgroupinfo	soft_required	Autre(s) logiciel(s) requis
@@ -313,7 +313,7 @@ project_admin_ugroup_utils	no_g_template	- Aucun modèle de groupe sélectionné
 project_admin_ugroup_utils	cant_insert_u_in_g	ERREUR - Impossible d'insérer l'utilisateur $1 dans le groupe $2: $3
 project_admin_ugroup_utils	u_added	- $1 ajouté
 project_admin_ugroup_utils	ug_name_missed	Le nom de groupe est manquant. Veuillez cliquer sur le bouton "Retour" de votre navigateur et remplir ce champ.
-project_admin_ugroup_utils	invalid_ug_name	Nom de groupe invalide: $1. Veuillez n'utiliser que des caractères alphanumériques. Please use only alphanumerical characters. Cliquer sur le bouton "Retour" de votre navigateur et modifier ce champ.
+project_admin_ugroup_utils	invalid_ug_name	Nom de groupe invalide: $1. Veuillez n'utiliser que des caractères alphanumériques. Cliquer sur le bouton "Retour" de votre navigateur et modifier ce champ.
 project_admin_ugroup_utils	cant_update_ug	ERREUR - Impossible de mettre à jour le groupe d'utilisateurs: $1
 project_admin_ugroup_utils	cant_reset_ug	ERREUR - Impossible de réinitialiser le groupe d'utilisateurs $1: $2
 project_admin_ugroup_utils	ug_upd_success	Groupe d'utilisateurs $1 mis à jour avec succès ($2 membres)
@@ -578,7 +578,7 @@ project_stats_source_code_access_utils	wiki	Wiki
 project_stats_source_code_access_utils	cvs_co_upd	Accès CVS (checkout/update)
 project_stats_source_code_access_utils	svn_access	Accès Subversion
 project_stats_source_code_access_utils	doc_download	Téléchargements de documents
-project_stats_source_code_access_utils	docs	Documents
+project_stats_source_code_access_utils	documents	Documents
 project_stats_source_code_access_utils	wiki_access	Accès Wiki
 project_stats_source_code_access_utils	wiki_page	Pages
 project_stats_source_code_access_utils	cvs_access	Accès CVS Access

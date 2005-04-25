@@ -529,7 +529,7 @@ function handle_monitoring($forum_id,$msg_id) {
 			util_unconvert_htmlspecialchars(db_result($result,0,'subject')).
 			"\n\n".$Language->getText('forum_forum_utils','read_and_respond').": ".
 			"\n".get_server_url()."/forum/message.php?msg_id=".$msg_id.
-			"\nBy: " . db_result($result,0, 'user_name') .
+		      "\n".$Language->getText('global','by').' '. db_result($result,0, 'user_name') .
 			"\n\n" . util_unconvert_htmlspecialchars(db_result($result,0, 'body')).
 			"\n\n______________________________________________________________________".
 			"\n".$Language->getText('forum_forum_utils','stop_monitor_explain').": ".

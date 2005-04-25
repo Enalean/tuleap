@@ -37,12 +37,21 @@ if (user_isloggedin()) {
 			<H2>'.$Language->getText('forum_monitor','monitor').'</H2>';
 
 		if (forum_is_monitored($forum_id, user_getid())) {
-
+		  if ($pv) {
+		    echo "<span class=\"highlight\"><H3>".$Language->getText('forum_monitor','now_monitoring')."</H3></span>";
+		    echo '<P>'.$Language->getText('forum_monitor','get_followups');
+		    echo '<P>'.$Language->getText('forum_monitor','to_turn_monitor_off');
+		  } else {
 		    // If already monitored then stop monitoring
 		    forum_delete_monitor ($forum_id, user_getid());
 		    echo "<span class=\"highlight\"><H3>".$Language->getText('forum_monitor','monitor_off')."</H3></span>";
 		    echo '<P>'.$Language->getText('forum_monitor','no_mails_anymore');
+		  }
 		} else {
+		  if ($pv) {
+		    echo "<span class=\"highlight\"><H3>".$Language->getText('forum_monitor','monitor_off')."</H3></span>";
+		    echo '<P>'.$Language->getText('forum_monitor','no_mails_anymore');
+		  } else {
 		    // Not yet monitored so add it
 		    if (forum_add_monitor ($forum_id, user_getid()) ) {
 			echo "<span class=\"highlight\"><H3>".$Language->getText('forum_monitor','now_monitoring')."</H3></span>";
@@ -51,6 +60,7 @@ if (user_isloggedin()) {
 		    } else {
 			echo "<span class=\"highlight\">".$Language->getText('forum_forum_utils','insert_err')."</span>";
 		    }
+		  }
 		}
 		forum_footer(array());
 

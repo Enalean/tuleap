@@ -111,10 +111,11 @@ echo '>'.$Language->getText('account_register', 'communitymail');
 <?php
 if ($row_user['sticky_login']) print " checked";
 echo '>'.$Language->getText('account_options', 'remember_me', $GLOBALS['sys_name']);
-?>
 
+echo '
 <P>'.$Language->getText('account_options', 'font_size').': <select name="user_fontsize">
-<option value="0" <?
+<option value="0"';
+
 if ( $row_user['fontsize'] == 0 ) print "selected";
 echo '>'.$Language->getText('account_options', 'font_size_browser');
 ?></option>

@@ -75,12 +75,12 @@ if (register_valid()) {
     $m= 60 - $d[minutes];
 ?>
 <p><b><? echo $Language->getText('account_change_pw', 'title_success'); ?></b>
-<p><? echo $Language->getText('account_change_pw', 'message', array($GLOBALS['sys_name'],$h,$m)); ?
+<p><? echo $Language->getText('account_change_pw', 'message', array($GLOBALS['sys_name'],$h,$m)); ?>
 
 <p>[ <? echo $Language->getText('global', 'back_home');?> ]
 <?php
 } else { // not valid registration, or first time to page
-	$HTML->header(array(title=>));
+	$HTML->header(array(title=>$Language->getText('account_options', 'change_password')));
 
 ?>
 <p><b><? echo $Language->getText('account_change_pw', 'title'); ?></b>
