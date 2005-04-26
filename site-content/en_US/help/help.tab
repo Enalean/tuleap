@@ -38,3 +38,12 @@ help_index	page_info	Information Page
 #
 help_show_help	page_not_found	$1 Help System - Error: page not found
 help_show_help	page_not_available	<h4>Sorry, the help page you have requested (section $1) is not available.<br> \nPlease inform the <a href="mailto:$2">$3 Site Administrator</a></h4>
+#
+#-----------------------------------------------
+# Script: SF/www/help/trove_cat.php
+#
+help_trove_cat	no_such_trove_cat	No such trove category
+help_trove_cat	trove_cat	Trove Category - $1
+help_trove_cat	full_cat_name	Full Category Name
+help_trove_cat	short_name	Short Name
+help_trove_cat	desc	Description

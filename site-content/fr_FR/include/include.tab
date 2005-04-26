@@ -202,7 +202,7 @@ include_menu	pending_users	utilisateur en attente
 include_menu	site_news_approve	Approbation annonces site
 include_menu	mass_mail	Courrier en masse
 include_menu	trove_cat_list	Liste des catégories
-include_menu	trove_cat_add	Ajout descatégories
+include_menu	trove_cat_add	Ajout des catégories
 include_menu	people_skill	Compétences utilisateurs
 include_menu	bugs	Bugs
 include_menu	tasks	Tâches
