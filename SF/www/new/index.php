@@ -7,6 +7,7 @@
 // $Id$
 
 require_once('pre.php');
+require_once('www/project/admin/permissions.php');
 
 $Language->loadLanguageMsg('new/new');
 
@@ -32,6 +33,7 @@ function build_new_release_query ($start_time, $offset) {
 	. "frs_release.release_date AS release_date,"
 	. "frs_release.released_by AS released_by,"
 	. "frs_package.name AS module_name, "
+	. "frs_package.package_id AS package_id, "
 	. "frs_dlstats_grouptotal_agg.downloads AS downloads "
 	. "FROM groups,user,frs_package,frs_release,frs_dlstats_grouptotal_agg "
 	. "WHERE ( frs_release.release_date > $start_time "
@@ -90,47 +92,50 @@ if (!$res_new || db_numrows($res_new) < 1) {
 
 	print "\t<TABLE width=100% cellpadding=0 cellspacing=0 border=0>";
 	for ($i=0; $i<$rows; $i++) {
-		$row_new = db_fetch_array($res_new);
-		// avoid dupulicates of different file types
-		if (!($G_RELEASE["$row_new[group_id]"])) {
-			print "<TR valign=top>";
-			print "<TD colspan=2>";
-			print "<A href=\"/projects/$row_new[unix_group_name]/\"><B>$row_new[group_name]</B></A>"
-				. "\n</TD><TD nowrap><I>".$Language->getText('new_index','released_by').": <A href=\"/users/$row_new[user_name]/\">"
-				. "$row_new[user_name]</A></I></TD></TR>\n";	
+	  $row_new = db_fetch_array($res_new);
+	  // avoid dupulicates of different file types
+	  if (!($G_RELEASE["$row_new[group_id]"])) {
+	    if ((!permission_exist("PACKAGE_READ",$row_new['package_id'] ))&&
+		(!permission_exist("RELEASE_READ",$row_new['release_id'] ))) {
+	      print "<TR valign=top>";
+	      print "<TD colspan=2>";
+	      print "<A href=\"/projects/$row_new[unix_group_name]/\"><B>$row_new[group_name]</B></A>"
+		. "\n</TD><TD nowrap><I>".$Language->getText('new_index','released_by').": <A href=\"/users/$row_new[user_name]/\">"
+		. "$row_new[user_name]</A></I></TD></TR>\n";	
+		   
+	      print "<TR><TD>".$Language->getText('new_index','module').": $row_new[module_name]</TD>\n";
+	      print "<TD>".$Language->getText('new_index','version').": $row_new[release_version]</TD>\n";
+	      print "<TD>" . date("M d, h:iA",$row_new[release_date]) . "</TD>\n";
+	      print "</TR>";
+		   
+	      print "<TR valign=top>";
+	      print "<TD colspan=2>&nbsp;<BR>";
+	      if ($row_new[short_description]) {
+		print "<I>$row_new[short_description]</I>";
+	      } else {
+		print "<I>".$Language->getText('new_index','no_desc')."</I>";
+	      }
+		   
+	      print "</TD>";
+	      print '<TD align=center nowrap border=1>';
+	      print "&nbsp;</TD>";
+	      print "</TR>";
 
-			print "<TR><TD>".$Language->getText('new_index','module').": $row_new[module_name]</TD>\n";
-			print "<TD>".$Language->getText('new_index','version').": $row_new[release_version]</TD>\n";
-			print "<TD>" . date("M d, h:iA",$row_new[release_date]) . "</TD>\n";
-			print "</TR>";
+	      print '<TR><TD colspan=3>';
+	      // link to whole file list for downloads
+	      print "&nbsp;<BR><A href=\"/file/showfiles.php?group_id=$row_new[group_id]&release_id=$row_new[release_id]\">";
+	      print $Language->getText('new_index','download')."</A> ";
+	      print '('.$Language->getText('new_index','total').': '.$row_new[downloads].') | ';
+	      // notes for this release
+	      print "<A href=\"/file/shownotes.php?release_id=".$row_new[release_id]."\">";
+	      print $Language->getText('new_index','notes')."</A>";
+	      print '<HR></TD></TR>';
 
-			print "<TR valign=top>";
-			print "<TD colspan=2>&nbsp;<BR>";
-			if ($row_new[short_description]) {
-				print "<I>$row_new[short_description]</I>";
-			} else {
-				print "<I>".$Language->getText('new_index','no_desc')."</I>";
-			}
-
-			print "</TD>";
-			print '<TD align=center nowrap border=1>';
-			print "&nbsp;</TD>";
-			print "</TR>";
-
-			print '<TR><TD colspan=3>';
-			// link to whole file list for downloads
-			print "&nbsp;<BR><A href=\"/file/showfiles.php?group_id=$row_new[group_id]&release_id=$row_new[release_id]\">";
-			print $Language->getText('new_index','download')."</A> ";
-			print '('.$Language->getText('new_index','total').': '.$row_new[downloads].') | ';
-			// notes for this release
-			print "<A href=\"/file/shownotes.php?release_id=".$row_new[release_id]."\">";
-			print $Language->getText('new_index','notes')."</A>";
-			print '<HR></TD></TR>';
-
-			$G_RELEASE["$row_new[group_id]"] = 1;
-		}
+	      $G_RELEASE["$row_new[group_id]"] = 1;
+	    }
+	  }
 	}
-
+	    
 	echo "<TR class=\"newproject\"><TD>";
         if ($offset != 0) {
 		echo "<B>";
@@ -278,7 +283,7 @@ if (!$res_new || db_numrows($res_new) < 1) {
 		  print '<HR></TD></TR>';
 		    
 		  $G_RELEASE["$row_new[group_id]"] = 1;
-		}
+		} 
 	}
 	
 	echo "<TR class=\"newproject\"><TD>";
