@@ -44,6 +44,7 @@ License
 <dt><a href="#BackgroundDaemons">Background Daemons</a></dt>
 <dt><a href="#Log_Files">Log Files</a></dt>
 <dt><a href="#CodeX_Code_Update">CodeX Code Update</a></dt>
+<dt><a href="#BackupRestore">Backup/Restore</a></dt>
 <dt><a href="#CodeXTestingEnvironment">CodeX Testing Environment</a></dt>
 <dt><a href="#CodeX_HowTo">CodeX HowTo</a></dt>
 <dd><dl>
@@ -864,7 +865,7 @@ the logrotate script of Apache (see the <a href="#Log_Files">Log Files
 Web site. They are generated daily by the logrotate
 script
 of Apache (see the <a
- href="file:///home/ljulliar/CodeX_Administration_Guide.html#Log_Files">Log
+ href="#Log_Files">Log
 Files </a>section). It is basically a copy of the&nbsp; <span
  style="font-family: monospace;">/var/log/httpd/access_log</span>
 file </p>
@@ -872,7 +873,7 @@ file </p>
 This file contain the ftp access logs (upload and download) to the
 CodeX site. It is generated daily by the logrotate script of ftp (see
 the <a
- href="file:///home/ljulliar/CodeX_Administration_Guide.html#Log_Files">Log
+ href="#Log_Files">Log
 Files </a>section). It is basically a copy of the FTP log file <span
  style="font-family: monospace;">/var/log/xferlog.</span>&nbsp; <br>
 &nbsp;</p>
@@ -1089,7 +1090,7 @@ mess
 up with this area by hand using their shell account. Files are
 deposited here
 by the <a
- href="file:///home/ljulliar/CodeX_Administration_Guide.html#fileforge">fileforge</a>
+ href="#fileforge">fileforge</a>
 utility. This directory belongs to the project group ID of course and
 is group
 writable.&nbsp;</td>
@@ -1953,8 +1954,8 @@ apply the Perl patch as well if there is one.</span><br>
 <p> </p>
 <p> </p>
 <hr width="100%" size="2"><br>
-<b><font size="+3">Backup/Restore</font></b>
-<p><b><font size="+2">Backup</font></b></p>
+<h1><a name="BackupRestore"></a>Backup/Restore</h1>
+<h2>Backup</h2>
 <p>There are two different types of backups that run on CodeX.&nbsp;
 First, MySQL data is backed up to disk using the linux "dump"
 command.&nbsp; And finally, all disk partitions are backed up to tape
@@ -1999,8 +2000,42 @@ All remaining
 days <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 of the week (Monday - Saturday) run incremental backups. </p>
-<p><br>
-<b><font size="+2">Backup/Restore files</font></b></p>
+<br>
+<h2>Restore</h2>
+<p>
+2 files are needed to rebuild.  Find the most recent "dump" and "bin" files:
+<pre>
+cd  /cvsroot/.mysql_backup
+ls  -lt
+  Example: 
+  sqldump.080502.004501	(created from cron "dump" every Sunday; mysql is shut down prior to "dump")
+  codex-bin.001		(created when mysql starts up every Sunday;
+			log file that contains changes that are made to the databases)
+service mysql stop
+cd  /var/lib
+mv  mysql  mysql.bck
+cd  /
+</pre>
+Then restore the mysql databases from sqldump.080502.004501, either in interactive or automatic mode.
+<ul><li>Interactive mode:
+<pre>
+/sbin/restore  -ivf   /cvsroot/.mysql_backup/sqldump.080502.004501
+/sbin/restore >  cd  var/lib
+/sbin/restore >  verbose
+/sbin/restore >  add mysql
+/sbin/restore >  extract
+Specify next volume #:  1
+set owner/mode for '.'? [yn]  n
+/sbin/restore > quit
+</pre>
+<li>Automatic mode:
+<pre>
+restore -r -f /cvsroot/.mysql_backup/sqldump.080502.004501
+</pre>
+You can safely ignore the 'not found on tape' messages (they correspond to files that are not in the dump)
+</ul>
+
+<h2>Backup/Restore files</h2>
 <p>There are a number of files used for backup and restore of CodeX. <br>
 &nbsp;
 <table border="1" cols="2" width="100%">
