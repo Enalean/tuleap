@@ -7,23 +7,23 @@
 // $Id$
 //
 -->
-<H2>Step 1: <?php print $GLOBALS['sys_name']; ?> Services & Requirements (Service Specific Rules)</H2>
+<H2>Step 1: <?php print $GLOBALS['sys_name']; ?> Services & Requirements</H2>
 
 <p>
-We are now offering a full suite of services for <?php print $GLOBALS['sys_name']; ?> projects. If
-you haven't already, please be sure to browse the most recent revision of
-the <a href="/docs/site" target="side_window"><?php print $GLOBALS['sys_name']; ?> Services</a>.
+<?php print $GLOBALS['sys_name']; ?> offers a full suite of services. If
+you haven't already, please be sure to browse 
+the <a href="/docs/site" target="side_window"><?php print $GLOBALS['sys_name']; ?> Services</a> documentation.
 </p>
 
 <p>
 <b>Use of Project Account</b>
 </p>
 
-<p>
-The space given to you on this server is given for the expressed purpose of
-<?php print $GLOBALS['sys_org_name']; ?> software development or, in the case of web sites, the advancement of software sharing and reuse 
- culture inside <?php print $GLOBALS['sys_org_name']; ?>. For more information, please read the <?php print $GLOBALS['sys_name']; ?> Terms of Service ("Terms of Service") in Step 2.
-</p>
+<p>The space and the services given to you on this server must be
+used in compliance with <?php print $GLOBALS['sys_org_name']; ?>
+policies. For more information, please read the <?php print
+$GLOBALS['sys_name']; ?> Terms of Service in Step
+2.  </p>
 
 
 <p>
@@ -31,11 +31,11 @@ The space given to you on this server is given for the expressed purpose of
 </p>
 
 <p>
-If you host a web site at <?php print $GLOBALS['sys_name']; ?>, you must place one of our approved
+If you host a web site for your project, you must place one of our approved
 graphic images on your site with a link back to <?php print $GLOBALS['sys_name']; ?>. The graphic may
 either link to the main <?php print $GLOBALS['sys_name']; ?> site or to your project page on
 <?php print $GLOBALS['sys_name']; ?>. We will leave placement up to you.  For information about how
-to insert a <?php print $GLOBALS['sys_name']; ?> logo which will track your pageviews, please read
+to insert a <?php print $GLOBALS['sys_name']; ?> logo which will track your page views, please read
 the <a href="/documentation/user_guide/html/en_US/ReferencingtheCodeXSite.html" target="side_window"><?php print $GLOBALS['sys_name']; ?> Logo display documentation</a>.
 </p>
 
@@ -44,19 +44,7 @@ the <a href="/documentation/user_guide/html/en_US/ReferencingtheCodeXSite.html" 
 </p>
 
 <p>
-In the course of the registration process you will be presented with the <?php print $GLOBALS['sys_org_name']; ?> Code eXchange Policy. This policy has been patiently crafted by the <?php print $GLOBALS['sys_name']; ?> Team and the <?php print $GLOBALS['sys_org_name']; ?> Legal Department. It explains the rights and duties implied by code sharing. We strongly suggest that you use this default policy for your own project. Do not confuse this policy with Copyright:  in any case your team (and <?php print $GLOBALS['sys_org_name']; ?> in general) will still own the code and the <?php print $GLOBALS['sys_org_name']; ?> standard Copyright statement must be present in your source code.
-</p>
-
-<p>
-If you wish to use another policy that is not currently approved by the
-<?php print $GLOBALS['sys_name']; ?> Team, let us know and we will review these requests on a
-case-by-case basis. But please be sure that the one we provide is not good enough before you contact us.
-</p>
-
-<p>
-It is our intent to provide a permanent home for all versions of your code.
-We do reserve the right, however, to terminate your project if there is due
-cause, in accordance with the Terms of Service.
+In the course of the registration process you will be presented with the <?php print $GLOBALS['sys_org_name']; ?> Code eXchange Policy. This policy explains the rights and duties implied by code sharing and reuse. We strongly suggest that you use this default policy for your own project. Do not confuse this policy with Copyright:  in any case your team (and <?php print $GLOBALS['sys_org_name']; ?> in general) will still own the code and the <?php print $GLOBALS['sys_org_name']; ?> standard Copyright statement must be present in your source code.
 </p>
 
 <BR><H3 align=center><a href="tos.php">Step 2: Terms of Service Agreement</a></H

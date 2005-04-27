@@ -33,9 +33,7 @@ its Services, as defined herein, and should refrain from accessing
 
 <p>
 With any change to the
-core TOS, we will email notice of the change to known users at least 15 days
-(or such shorter or longer time as mandated by law or any judicial or
-government body) in advance.  If we change any Service-specific Rules, we
+core TOS, we will email notice of the change to known users at least 15 days in advance.  If we change any Service-specific Rules, we
 will post the changed version on the location where those Service-specific
 Rules normally appear,  reference the change on the primary page for that
 Service and include a link to the previous version of the rules.
@@ -53,7 +51,7 @@ herein.
 <p>
 <?php print $GLOBALS['sys_name']; ?> is a website owned and operated by <?php print $GLOBALS['sys_org_name']; ?> for
 the purpose of fostering the cross-organizational software development as well as content and source code sharing under
- the terms of the <b><u><a href="/docman/display_doc.php?docid=16&group_id=1" target="_blank"><?php print $GLOBALS['sys_org_name']; ?> Code eXchange Policy</a></b></u>.  Registering your project on CodeX implies that you fully understand this corporate policy and take the commitment to comply with it.
+ the terms of the <b><u><a href="/docman/display_doc.php?docid=16&group_id=1" target="_blank"><?php print $GLOBALS['sys_org_name']; ?> Code eXchange Policy</a></b></u>.  Registering your project on <?php print $GLOBALS['sys_name']; ?> implies that you fully understand this corporate policy and take the commitment to comply with it.
 <p>
 <B>2. DESCRIPTION OF SERVICE</B> 
 </p>
@@ -63,9 +61,7 @@ the purpose of fostering the cross-organizational software development as well a
 <?php print $GLOBALS['sys_name']; ?> currently offers users access to a
 rich collection of on-line resources for <?php print $GLOBALS['sys_org_name']; ?> internal software  development
 and content creation, including various  communications tools, source code
-control and project management tools, online forums, shopping services,
-personalized content and branded programming through its network of
-properties (collectively, the "Services").
+control and project management tools, online forums (collectively, the "Services").
 </p>
 
 <p>

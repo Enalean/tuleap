@@ -1,0 +1,32 @@
+<?
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+?>
+
+<H2>Etape 6: Catégories</H2>
+
+
+<P><B>Catégories du projet</B>
+
+<P>Pour que les utilisateurs puisse trouver votre projet dans l'arbre des projets, vous devez sélectionner les différentes catégories auquel il appartient.
+
+<P>Votre projet ne sera visible dans l'arbre des projets qu'après (1) son approbation and (2) sa catégorisation dans l'arbre des projets que vous definirez dans la page d'administration du projet.
+
+<P>Après approbation, vous recevrez un e-mail vous invitant à catégoriser au plus vite votre projet. Merci de suivre les instruction qui vous seront données.
+
+<FONT size=-1>
+<FORM action="confirmation.php" method="post">
+<INPUT TYPE="HIDDEN" NAME="show_confirm" VALUE="y">
+<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">
+<INPUT TYPE="HIDDEN" NAME="rand_hash" VALUE="<?php echo $rand_hash; ?>">
+<P>
+<H2><FONT COLOR="RED">Ne pas faire de retour arrière à partir de cette page</FONT></H2> 
+<P>
+<INPUT type=submit name="Submit" value="Finir l'enregistrement">
+</FORM>
+</FONT>

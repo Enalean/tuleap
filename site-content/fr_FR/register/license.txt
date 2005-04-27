@@ -1,0 +1,73 @@
+<?
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+?>
+
+<H2>Etape 5: Politique d'échange des logiciels</H2>
+
+
+
+<P>Le site <?php print $GLOBALS['sys_name']; ?> a été créé pour
+promouvoir le développement et la gestion de projet en mode
+collaboratif au sein de <?php print $GLOBALS['sys_org_name'];
+?>. C'est aussi l'unique site que vous aurez à consulter pour aller à
+la recherche de composants logiciels réutilisables.
+
+<p>Pour rendre les choses plus faciles, <?php print
+$GLOBALS['sys_org_name']; ?> a mis en place <a
+href="/docman/display_doc.php?docid=16&group_id=1"
+target="side_window"><?php print $GLOBALS['sys_org_name']; ?>
+Politique d'échange générale</a> des logiciels qui définit les
+conditions générales sous lesquels vous pouvez réutiliser des
+composants logiciels au sein de <?php print $GLOBALS['sys_org_name'];
+?>.
+
+<P>Nous pensons que cette politique d'échange sert la cause du
+developpement collaboratif tout en offrant un bon niveau de
+protection. Cependant si ce qui vous est proposé par défaut ne vous
+convient pas, vous pouvez choisir l'option "Autre" dans le menu
+ci-dessous et nous faire savoir pourquoi vous souhaitez utiliser en
+utiliser une autre.
+
+<P>Choisir votre propre politique d'échange est une décision
+importante. Veuillez donc vous assurer d'avoir bien lu la <a
+href="/docman/display_doc.php?docid=16&group_id=1"
+target="side_window">Politique d'échange générale de <?php echo
+$GLOBALS['sys_name']; ?> </a> avant de prendre une décision pour votre
+projet.
+
+<P>Remarque: si votre projet consiste simplement en un site Web ou que
+vous ne publiez aucun code source sur <?php print
+$GLOBALS['sys_name']; ?>, veuillez choisir l'option please select
+"Site Web uniquementy" dans le menu ci-dessous.</p>
+
+<P><B>Politique d'échange pour ce projet</B>
+
+<FONT size=-1>
+<FORM action="category.php" method="post">
+<INPUT TYPE="HIDDEN" NAME="insert_license" VALUE="y">
+<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">
+<INPUT TYPE="HIDDEN" NAME="rand_hash" VALUE="<?php echo $rand_hash; ?>">
+<?php
+	echo '<SELECT NAME="form_license">';
+	while (list($k,$v) = each($LICENSE)) {
+		print "<OPTION value=\"$k\"";
+		print ">$v\n";
+	}
+	echo '</SELECT>';
+
+?>
+<P>
+Si vous avez choisi l'option "Autre", merci d'en préciser la raison et de fournir une description de votre propre politique d'échange.
+<BR><TEXTAREA name="form_license_other" wrap=virtual cols=60 rows=10></TEXTAREA>
+<P>
+<H2><FONT COLOR="RED">Pas de retour arrière au delà de ce point</FONT></H2> 
+<P>
+<INPUT type=submit name="Submit" value="Etape 6: Catégories">
+</FORM>
+</FONT>

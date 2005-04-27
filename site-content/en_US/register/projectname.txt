@@ -26,16 +26,11 @@ can be changed.</P>
 <LI>It cannot match the Short name of any other project
 <LI>It must be between 3 and 15 characters in length
 <LI>It can only contain characters, numbers, and dashes. NO SPACE.
-<LI>It cannot match one of our reserved name in the <?php list($host,$port) = explode(':',$GLOBALS['sys_default_domain']); echo $host; ?> domain name (e.g. lists, cvs, www,...)
 <LI>As opposed to the Full Name the Short name will never change for this project
 </UL>
 
-<P>In spite of these restrictions make it easy to remember because it will be used in several very visible places like:
+<P>In spite of these restrictions make it easy to remember because it will be used in several very visible places like the project web site or the CVS or Subversion repository.
 
-<UL>
-<LI>Your project web site at shortname.<?php echo $GLOBALS['sys_default_domain']; ?> 
-<LI>A CVS Repository root of /cvsroot/shortname
-</UL>
 
 <P>Please make your selections.
 

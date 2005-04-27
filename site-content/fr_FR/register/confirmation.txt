@@ -1,0 +1,74 @@
+<?
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+
+	$sql="SELECT * FROM groups WHERE group_id='$group_id' AND rand_hash='__$rand_hash'";
+	$result=db_query($sql);
+
+	echo '
+	<H2>Confirmation finale</H2>
+	<P>
+	<B><FONT COLOR="RED">pas de retour arrière!</FONT></B>
+	<P><font color="red">*</font>: Saisi obligatoire</p>
+	<FORM action="'.$PHP_SELF.'" method="post">
+	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
+	<INPUT TYPE="HIDDEN" NAME="rand_hash" VALUE="'.$rand_hash.'">
+	<B>Description courte du projet<font color="red">*</font>:</B><BR>
+	<TEXTAREA name="form_short_description" wrap="virtual" cols="70" rows="12">'.db_result($result,0,'short_description').'</TEXTAREA>
+	<P>
+	<B>Description complète du projet<font color="red">*</font>:</B><BR>
+	<TEXTAREA name="form_purpose" wrap="virtual" cols="70" rows="12">'.db_result($result,0,'register_purpose').'</TEXTAREA>
+	<P>
+	<B>Propriété intellectuelle:</B><BR>
+	<TEXTAREA name="form_patents" wrap="virtual" cols="70" rows="6">'.db_result($result,0,'patents_ips').'</TEXTAREA>
+	<P>
+	<B>Autres logiciels requis:</B><BR>
+	<TEXTAREA name="form_required_sw" wrap="virtual" cols="70" rows="6">'.db_result($result,0,'required_software').'</TEXTAREA>
+	<P>
+	<B>Autres Commentaires:</B><BR>
+	<TEXTAREA name="form_comments" wrap="virtual" cols="70" rows="4">'.db_result($result,0,'other_comments').'</TEXTAREA>
+
+	<P>	<B>Nom complet:</B><BR>
+	<INPUT size="40" maxlength="40" type="text" name="form_full_name" VALUE="'.db_result($result,0,'group_name').'">
+	<P>
+	<B>Nom cour:</B><BR>
+	'.db_result($result,0,'unix_group_name').'
+	<P>
+	<B>Licence:</B><BR>
+	<SELECT NAME="form_license">
+	';
+
+	while (list($k,$v) = each($LICENSE)) {
+		print "<OPTION value=\"$k\"";
+		if ($k==db_result($result,0,'license')) {
+			echo ' SELECTED';
+		}
+		print ">$v\n";
+	}
+	echo '</SELECT>';
+	echo '
+	<P>
+	<B>Si licence autre:</B><BR>
+	<TEXTAREA name="form_license_other" wrap=virtual cols=60 rows=10>'.db_result($result,0,'license_other').'</TEXTAREA>
+	<P>';
+	if ( $sys_show_project_type ) {
+		echo '
+		<B>Type de project:</B><BR>
+		'.show_project_type_box('');
+	} else {
+		// Default value
+		$project_type = 100;
+	}
+	echo '
+	<P>
+	Si vous êtes d'accord avec ces informations, votre projet sera créé. Si vous n'êtes pas d'accord pour l'enregistrement, toutes les données seront détruites du système.
+	<P>
+	<INPUT type=submit name="i_agree" value="D'ACCORD"> <INPUT type=submit name="i_disagree" value="PAS D'ACCORD">
+	</FORM>';
+
+?>

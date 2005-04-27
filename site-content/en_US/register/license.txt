@@ -12,12 +12,10 @@
 
 
 
-<P><?php print $GLOBALS['sys_name']; ?> was created to promote code
-sharing of <?php print $GLOBALS['sys_org_name']; ?> internally developed software and to have one single
+<P><?php print $GLOBALS['sys_name']; ?> was created to promote collaborative software development and project management across <?php print $GLOBALS['sys_org_name']; ?> and to have one single
 place where to shop for pieces of source code.
 
-<p>To keep things simple, the <?php print $GLOBALS['sys_name']; ?> Team and the
-<?php print $GLOBALS['sys_org_name']; ?> Legal Department have put together a default <a
+<p>To keep things simple, <?php print $GLOBALS['sys_org_name']; ?> have put together a <a
 href="/docman/display_doc.php?docid=16&group_id=1" target="side_window"><?php print $GLOBALS['sys_org_name']; ?> Code eXchange
 Policy</a> that defines the terms and conditions under which source
 code can be shared inside <?php print $GLOBALS['sys_org_name']; ?>.
@@ -31,24 +29,14 @@ policy will be reviewed by the <?php print $GLOBALS['sys_org_name']; ?> Legal De
 <P>Choosing a new policy is a serious decision. Please take some time
 to read the <a href="/docman/display_doc.php?docid=16&group_id=1"
 target="side_window">default <?php echo $GLOBALS['sys_name']; ?> Corporate Policy</a> before making a choice about
-your project. <?php print $GLOBALS['sys_name']; ?> is not responsible
-for legal discrepencies regarding your own software policy.
+your project.
 
 <P>
-Two important remarks:
-<ul>
-
-<li>If you are applying for a website hosting-only project and do not
-expect to host any source code (why ? :-) on <?php print
+Remark: if you are applying for a website hosting-only project and do not
+expect to host any source code on <?php print
 $GLOBALS['sys_name']; ?>, please select "website-only" from the
-choices below and proceed.</LI>
+choices below and proceed.</p>
 
-<LI>If your software has already been approved by the COMIP for
-external Open Source then choose the Open Source license that covers
-your <?php print $GLOBALS['sys_org_name']; ?> software. It will help other project teams to decide whether they
-can/want to re-use your code in there own <?php print $GLOBALS['sys_org_name']; ?> owned software.</li>
-
-</UL>
 
 <P><B>Policy for This Project</B>
 
@@ -68,8 +56,7 @@ can/want to re-use your code in there own <?php print $GLOBALS['sys_org_name']; 
 ?>
 <P>
 If you selected "other", please provide an explanation along
-with a description of your license. Realize that other licenses may
-not be approved. 
+with a description of your license. 
 <BR><TEXTAREA name="form_license_other" wrap=virtual cols=60 rows=10></TEXTAREA>
 <P>
 <H2><FONT COLOR="RED">Do Not Back Arrow After This Point</FONT></H2> 

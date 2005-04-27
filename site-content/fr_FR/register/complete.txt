@@ -1,0 +1,34 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+-->
+<H1>Registration Complete!</H1>
+	<P>Your project has been submitted to the <?php print $GLOBALS['sys_name']; ?> Administrators. 
+	Within 24 hours, you will receive decision notification and further 
+	instructions.
+	<P>
+	Thank you for using <?php print $GLOBALS['sys_name']; ?>.
+	<P>
+
+<?php
+// Do not touch this URL, to and From unless you know what you are doing
+$href_approval = get_server_url().'/admin/approve-pending.php';
+$to = $GLOBALS['sys_email_admin'];
+list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
+$hdrs = 'From: noreply@'.$host."\n";
+
+// subject and body can be customized to your liking
+$subject = "Nouveau projet enregistré: ".$form_full_name;
+$body = "Un nouveau projet vient juste d'être enregistré sur ".$GLOBALS['sys_name']."\n\n".
+"Nom du projet: ".$form_full_name."\n\n".
+"Veuillez cliquer sur le lien ci-dessous pour approuver l'enregistrement de ce projet:\n".
+$href_approval."\n";
+
+// Send a notification message to the Site administrator
+mail($to,$subject,$body,$hdrs);
+?>

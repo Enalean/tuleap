@@ -12,7 +12,7 @@
 
 <p>
 The <?php print $GLOBALS['sys_name']; ?> Team would like to extend an invitation to any 
-<?php print $GLOBALS['sys_org_name']; ?> Software project to be hosted for no price and no catch on the <?php print $GLOBALS['sys_name']; ?> site and to provide the source code to the entire <?php print $GLOBALS['sys_org_name']; ?> community. 
+<?php print $GLOBALS['sys_org_name']; ?> Software project to be hosted on the <?php print $GLOBALS['sys_name']; ?> site. 
 </p>
 
 <p><B>The Process</B>

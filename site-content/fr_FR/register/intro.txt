@@ -1,0 +1,25 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+-->
+<H2><?php print $GLOBALS['sys_name']; ?> Enregistrement d'un projet
+<?php print help_button('CreatingANewProject.html') ?></H2>
+
+<p>
+L'équipe <?php print $GLOBALS['sys_name']; ?> invite les équipes de projet de <?php print $GLOBALS['sys_org_name']; ?> à héberger leur projet sur le site <?php print $GLOBALS['sys_name']; ?>. 
+</p>
+
+<p><B>Le processus</B>
+
+<P>Enregistrer un projet sur <?php print $GLOBALS['sys_name']; ?> est un processus simple mais nous avons besoin de quelques informations. La totalité du processus d'enregistrement prend de 5 à 10 minutes maximum.
+
+<P>Dans les pages qui suivent, nous vous présenterons des documents importants concernant l'utilisation de votre compte et de votre environnement de projet. Veuillez les lire attentivement.
+
+<p>&nbsp;
+<BR><H3 align=center><a href="requirements.php">Etape 1: Services et Conditions</a></H3>
+</p>

@@ -1,0 +1,56 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+-->
+<H2>Etape 1: <?php print $GLOBALS['sys_name']; ?>Services et Conditions</H2>
+
+<p>
+<?php print $GLOBALS['sys_name']; ?> offre une suite complète de services. Si vous ne l'avez déjà fait nous vous invitons à parcourir la documentation concernant les <a href="/docs/site" target="side_window">Services <?php print $GLOBALS['sys_name']; ?></a>.
+</p>
+
+<p>
+<b>Utilisation de votre environnement de projet</b>
+</p>
+
+<p> L'espace et les services qui vous sont offerts sur ce site doivent
+être utilisé en conformité avec les règles de <?php print
+$GLOBALS['sys_org_name']; ?>. Pour plus d'information, veuillez lire
+les Conditions générales d'utilisation de <?php print
+$GLOBALS['sys_name']; ?> à l'étape 2.  </p>
+
+
+<p>
+<b>Référencement de <?php print $GLOBALS['sys_name']; ?></b>
+</p>
+
+<p> Si vous hébergez un site Web dans le cadre de votre projet, nous
+vous demandons de placer l'un de nos logos officiels sur votre site
+avec un lien vers la page d'accueil de <?php $GLOBALS['sys_name']; ?>
+ou vers la page de sommaire de votre projet. Pour plus d'information
+sur la façon d'insérer ce logo et pouvoir ainsi suivre la niveau de
+fréquentation de votre site Web veuillez consulter le <a
+href="/documentation/user_guide/html/en_US/ReferencingtheCodeXSite.html"
+target="side_window">Guide utilisateur</a>.  </p>
+
+
+<p>
+<b>Politique d'échange de logiciels</b>
+</p>
+
+<p> Au cours de l'enregistrement de votre projet, nous vous
+présenterons la Politique d'échange générale de <?php print
+$GLOBALS['sys_org_name']; ?>. Cette politique d'échange détaille la
+nature de vos droits et devoirs en matière de réutilisation de
+code. Nous vous conseillons de la lire attentivement. D'autre part ne
+confondez pas cette politique d'échange avec le Copyright qui doit
+être présent dans tous les fichiers de votre code source.  </p>
+
+
+
+<BR><H3 align=center><a href="tos.php">Etape 2: Conditions générales
+d'utilisation</a></H3>
