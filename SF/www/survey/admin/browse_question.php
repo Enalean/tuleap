@@ -8,7 +8,7 @@
 
 $Language->loadLanguageMsg('survey/survey');
 
-survey_header(array('title'=>$Language->getText('survey_admin_browse_question','edit_s'),
+survey_header(array('title'=>$Language->getText('survey_admin_browse_question','edit_q'),
 		    'help'=>'AdministeringSurveys.html#CreatingorEditingQuestions'));
 
 
@@ -25,8 +25,8 @@ $result=db_query($sql);
 ?>
 
 <P>
-<H2><?php echo $Language->getText('survey_admin_browse_question','edit_a_s'); ?></H2>
-<?php echo $Language->getText('survey_admin_browse_question','edit_q'); ?>
+<H2><?php echo $Language->getText('survey_admin_browse_question','edit_q'); ?></H2>
+<?php echo $Language->getText('survey_admin_browse_question','edit_q_msg'); ?>
 <?php
 
 survey_utils_show_questions($result);

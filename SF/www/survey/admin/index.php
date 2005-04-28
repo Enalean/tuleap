@@ -42,7 +42,7 @@ if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 
 <h3><?php echo $Language->getText('survey_admin_index','quick'); ?></h3>
 <P>
-<?php echo $Language->getText('survey_admin_index','quick_instr',array("/survey/survey.php?group_id=$group_id&survey_id=XX","/survey/admin/edit_survey.php?group_id=$group_id",$Language->getText('survey_admin_index','edit_existing'))); ?>
+<?php echo $Language->getText('survey_admin_index','quick_instr',array("http://".$GLOBALS['sys_default_domain']."/survey/survey.php?group_id=$group_id&survey_id=XX","/survey/admin/edit_survey.php?group_id=$group_id",$Language->getText('survey_admin_index','edit_existing'))); ?>
 
 <P>
 <?php
