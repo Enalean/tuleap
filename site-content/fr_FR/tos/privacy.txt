@@ -9,26 +9,20 @@
 -->
 
 <p>
-<h2><?php print $GLOBALS['sys_name']; ?> Privacy Policy</h2>
+<h2><?php print $GLOBALS['sys_name']; ?>Règles de confidentialité</h2>
 </p>
 
 <p>
-At <?php print $GLOBALS['sys_name']; ?>, we intend to give you as much control as possible over your
-personal information, including the Registration Data.   We will let each
-user know how we will use the personal information derived from each user's
-access to and use of <?php print $GLOBALS['sys_name']; ?> and/or the Services.
+Chez <?php print $GLOBALS['sys_name']; ?>, notre objectif est de vous donner autant de contrôle que possible sur vos informations personnelles, y compris les données saisies lors de l'enregistrement. Nous ferons avoir à chaque utilisateur comment nous utilisons les informations dérivées des accès utilisateurs et de l'utilisation de <?php print $GLOBALS['sys_name']; ? et de ses services.
 </p>
 
 <p>
-<b>NOTICE</b>
+<b>NOTE</b>
 </p>
 
 <p>
-<?php print $GLOBALS['sys_name']; ?> will track the domains from which people visit <?php print $GLOBALS['sys_name']; ?> and
-analyze this data for trends and statistics.  Subject to the provisions of
-this Privacy Policy, different <?php print $GLOBALS['sys_name']; ?> sites may use accumulated data
-for different purposes, including but not limited to
-service evaluation and resource planning.
+<?php print $GLOBALS['sys_name']; ?> suivra les domaines et les machines à partir desquels les utilisateurs visitent <?php print $GLOBALS['sys_name']; ?> et analisera ces données pour dégager des statistiques et des tendances. and
+analyze this data for trends and statistics.  En accord avec ces règles de confidentialité, divers sites  <?php print $GLOBALS['sys_name']; ?> peuvent utiliser les données accumulées à d'autres fins, y compris (mais non limité à) l'évaluation des services et la planification des resources.
 </p>
 
 <p>
