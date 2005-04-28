@@ -54,7 +54,7 @@ an entity cannot be redefined. Hence this particular order  -->
 <book>
   <title>CodeX User Guide</title>
 
-  <subtitle>&#34;Breaking the Barriers to Source Code Sharing inside &SYS_ORG_NAME;&#34;</subtitle>
+  <subtitle>&#34;Collaborative Software Development and Project Management for the enterprise&#34;</subtitle>
 
   <subtitle><emphasis role="bold">&SYS_DEFAULT_DOMAIN;</emphasis></subtitle>
 
