@@ -30,7 +30,7 @@ cvs_admin_commit	notif_msg	Chaque commit peut faire l'objet d'une notification p
 cvs_admin_commit	mail_to	Envoyer à
 cvs_admin_commit	subject	Entête de l'objet
 cvs_admin_commit	preamble_hdr	Préambule CVS
-cvs_admin_commit	preamble_msg	Message d'introduction sur l'utilisation de CVS en remplacement du message par défaut figurant sur la <a href="$1">page d'accueil de CVSe</a>. (balises HTML tags autorisées)
+cvs_admin_commit	preamble_msg	Message d'introduction sur l'utilisation de CVS en remplacement du message par défaut figurant sur la <a href="$1">page d'accueil de CVS</a>. (balises HTML autorisées)
 #
 #-----------------------------------------------
 # Script: SF/www/cvs/cvs_intro.php
@@ -38,11 +38,11 @@ cvs_admin_commit	preamble_msg	Message d'introduction sur l'utilisation de CVS en
 # Rk: for the introduction text see the intro.txt file
 #
 cvs_intro	title	Information CVS
-cvs_intro	repo_history	Historique du répertoire
+cvs_intro	repo_history	Historique du dépôt
 cvs_intro	no_history	Ce projet n'a pas d'historique CVS.
-cvs_intro	nb_commits	Commits (Last 7 days/Total)
+cvs_intro	nb_commits	Commits (Derniers 7 jours/Total)
 cvs_intro	browse_title	Naviguer dans l'arbre CVS
-cvs_intro	browse_msg	La navigation dans l'arbre CVS donne un bon aperçu de l'état courant du code source de ce projet. Vous pouvez aussi voir l'historique complet des fichiers du répertoire.
+cvs_intro	browse_msg	La navigation dans l'arbre CVS donne un bon aperçu de l'état courant du code source de ce projet. Vous pouvez aussi voir l'historique complet des fichiers du dépôt.
 #
 #-----------------------------------------------
 # Script: SF/www/cvs/browse_commit.php
@@ -93,6 +93,9 @@ cvs_commit_utils	file	Fichier
 cvs_commit_utils	rev	Révision
 cvs_commit_utils	branch	Branche
 cvs_commit_utils	type	Type
+cvs_commit_utils	add	Ajouter
+cvs_commit_utils	change	Changer
+cvs_commit_utils	remove	Détruire
 cvs_commit_utils	added_line	Lignes ajoutées
 cvs_commit_utils	removed_line	Lignes supprimées
 #

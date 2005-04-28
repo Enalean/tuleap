@@ -11,9 +11,8 @@ if (user_isloggedin()) {
    $username=user_getname();
 } else $username='<I>username</I>';
 print '<h2>Subversion Access '.help_button('VersionControlWithSubversion.html').'</h2>
-<P>Subversion read-only  access is granted to all '.$GLOBALS['sys_name'].' registered users. Anonymous users do not have access to the Subversion repository, because many '.$GLOBALS['sys_name'].' projects want to know who is in their community of users. Users desiring read access to the project 
-Subversion repository should register on '.$GLOBALS['sys_name'].'. 
-<P>Any registered and logged-in '.$GLOBALS['sys_name'].' user has read access to the Subversion repository.  Project members (the developers who are part of the core team) are granted read (checkout) and write (commit) access to the Subversion repository. Below is a typical command you would use to checkout the source code of this project.';
+<P>By default Subversion read-only  access is granted to all '.$GLOBALS['sys_name'].' registered users. Anonymous users do not have access to the Subversion repository.  
+<P>Project members are granted read (checkout) and write (commit) access to the Subversion repository. Below is a typical command you would use to checkout the source code of this project.';
 if (!user_isloggedin()) {
   print ' In the command below substitute <I>username</I> with the proper value.';
 }

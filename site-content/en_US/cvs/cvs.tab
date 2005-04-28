@@ -93,6 +93,9 @@ cvs_commit_utils	file	File
 cvs_commit_utils	rev	Revision
 cvs_commit_utils	branch	Branch
 cvs_commit_utils	type	Type
+cvs_commit_utils	add	Add
+cvs_commit_utils	change	Change
+cvs_commit_utils	remove	Delete
 cvs_commit_utils	added_line	Added Lines
 cvs_commit_utils	removed_line	Removed Lines
 #

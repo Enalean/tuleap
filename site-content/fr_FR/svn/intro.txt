@@ -1,0 +1,28 @@
+<?
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+
+if (user_isloggedin()) {
+   $username=user_getname();
+} else $username='<I>nom_utilisateur</I>';
+print '<h2>Accès Subversion '.help_button('VersionControlWithSubversion.html').'</h2>
+<P>Par défaut, l'accès en lecture seule au dépôt Subversion est ouvert à tous les utilisateurs enregistrés de '.$GLOBALS['sys_name'].'. Les utilisateurs anonymes n'ont pas accès au dépôt Subversion. 
+<P>Les membres du projet ont l'accès en lecture (checkout) et en écriture (commit) au dépôt Subversion. Vous trouverez ci-dessous la commande type pour créer une copis de travail (checkout) du code source de ce projet.';
+if (!user_isloggedin()) {
+  print ' Dans la commande ci-dessous, veuillez substituer  <I>nom_utilisateur</I> avec la valeur appropriée.';
+}
+print ' Donnez votre mot passe quand il vous est demandé.';
+
+if ($GLOBALS['sys_force_ssl']) {
+   echo '<P><span class="command">svn checkout --username '.$username.' https://'.$GLOBALS['sys_default_domain'].'/svnroot/'.$row_grp['unix_group_name'].'</span>';
+} else {
+   echo '<P><span class="command">svn checkout --username '.$username.' http://svn.'.$row_grp['http_domain'].'/svnroot/'.$row_grp['unix_group_name'].'</span>';
+}
+
+print '<P>'.help_button('VersionControlWithSubversion.html',false,'[Plus d'information sur l'utilisation de Subversion &hellip;]');
+?>
