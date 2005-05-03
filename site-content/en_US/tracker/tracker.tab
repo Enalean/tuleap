@@ -31,9 +31,9 @@ tracker_download	file_not_found	Couldn't find attached file  (id #$1)
 #-----------------------------------------------
 # Script: SF/www/tracker/gotoid.php
 #
-tracker_gotoid	art_belongs_to	Note: This artifact belongs to project $1
-tracker_gotoid	art_is_a	<br>Note: This artifact is a $1 (not a $2)
-tracker_gotoid	commit_belongs_to	Note: This commit belongs to project $1
+tracker_gotoid	art_belongs_to	Note: This artifact belongs to project '$1'
+tracker_gotoid	art_is_a	<br>Note: This artifact is a '$1' (not a '$2')
+tracker_gotoid	commit_belongs_to	Note: This commit belongs to project '$1'
 tracker_gotoid	invalid_tracker	Invalid Tracker Name.
 tracker_gotoid	invalid_art_nb	Invalid artifact number: $1.
 #
@@ -49,7 +49,7 @@ tracker_group_selection	all_proj	all projects
 #
 tracker_import_admin	not_get_atf	Could Not Get ArtifactTypeFactory
 tracker_import_admin	art_import	Tracker Artifact Import
-tracker_import_admin	welcome	<P> You can import artifacts into a specific tracker from a text file (CSV format).<h3>Tracker Artifact Import</h3><P>Click on the links below to import artifacts (insert of new artifacts or update of existing ones) or to see the CSV import format.<P>
+tracker_import_admin	welcome	<P> <h3>Tracker Artifact Import</h3><P>You can import artifacts into a specific tracker from a text file (CSV format). Click on the links below either to import new artifacts or to update existing ones.<P>
 tracker_import_admin	art_data_import	Artifacts Data Import
 tracker_import_admin	import_format	Import Format
 tracker_import_admin	import	Import
@@ -64,21 +64,14 @@ tracker_import	art_import	Tracker Artifact Import:
 tracker_import	parse_report	Artifact Parsing Report
 tracker_import	ready	Ready to import $1 artifact(s): $2 insert(s), $3 update(s) in database
 tracker_import	success_import	$1 Artifact(s) Successfully Imported
-tracker_import	follow_ups	Follow-up Comments
-tracker_import	depend_on	Depend on
-tracker_import	cc_list	CC List
-tracker_import	cc_comment	CC Comment
-tracker_import	follow_ups_desc	All follow-up comments in one chunck of text
-tracker_import	depend_on_desc	List of artifacts this artifact depends on
-tracker_import	cc_list_desc	List of persons to receive a carbon-copy (CC) of the email notifications (in addition to submitter, assignees, and commenters)
-tracker_import	cc_comment_desc	Explain why these CC names were added and/or who they are
-tracker_import	format_desc	<h3>Tracker Artifact Import Format</h3> To import artifacts from a CSV file you need to provide the following artifact fields. The sample values indicate what the field data types are. <br>To <b>create</b> new artifacts you need to provide at least the mandatory fields marked with <span class="highlight"><big>*</big></b></span>. All other fields can be omitted in your CSV file and will be initialized with the default values. <br>To <b>update</b> artifacts you only need to specify the fields that you want to update. All fields not specified in the CSV file will remain unchanged.<p>
+tracker_import	format_hdr	Tracker Artifact Import Format
+tracker_import	format_msg	To import artifacts from a CSV file you need to provide the following artifact fields. The sample values indicate what the field data types are. <br>To <b>create</b> new artifacts you need to provide at least the mandatory fields marked with <span class="highlight"><big>*</big></b></span>. All other fields can be omitted in your CSV file and will be initialized with the default values. <br>To <b>update</b> artifacts you only need to specify the fields that you want to update. All fields not specified in the CSV file will remain unchanged.
 tracker_import	sample_cvs_file	Sample CSV file:
-tracker_import	import_new	Import New Artifacts $1 </h3> You can import artifacts into this tracker by specifying a CSV file or putting your artifact data directly into the text area. <br>See the <a href="$2">CSV Import Format</a> for more details.<p>
-tracker_import	not_logged	<p>You are not logged in, and will not be given credit for this.<p>
+tracker_import	import_new_hdr	Import Artifacts $1
+tracker_import	import_new_msg	You can import artifacts into this tracker by specifying a CSV file. <br>See the <a href="$1">CSV Import Format</a> for more details.
 tracker_import	upload_file	Upload File:	
 tracker_import	max_upload_size	(The maximum upload file size is $1 Mb)
-tracker_import	submit_info	Submit Information
+tracker_import	submit_info	Load artifacts
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/index.php
@@ -91,31 +84,32 @@ tracker_index	cc_list_invalid	Error - The CC list is invalid
 tracker_index	invalid_filename	Invalid filename
 tracker_index	not_create_file	Could Not Create File Object
 tracker_index	not_create_file_obj	Could Not Create File Object: $1
-tracker_index	not_attach_file	Could Not Attach File to Item: $1
-tracker_index	create_success	- Item Successfully Created (#$1)
+tracker_index	not_attach_file	Could Not Attach File to Artefact: $1
+tracker_index	create_success	- Artifact Successfully Created (#$1)
 tracker_index	invalid_filename_attach	Invalid filename for attachment
 tracker_index	trackers_for	Trackers for $1
 tracker_index	admin_all_trackers	Admin All Trackers
 tracker_index	create_new_tracker	Create a New Tracker
-tracker_index	no_accessible_trackers	<h1>No Accessible Trackers Found</h1><p><strong>No trackers have been set up, or you cannot view them.<p><FONT COLOR=RED>The Admin for this project will have to set up data types using the <a href=\"$1\">admin page</a></FONT></strong>
-tracker_index	choose_tracker	Choose a tracker and you can browse/edit/add items to it.
+tracker_index	no_accessible_trackers_hdr	No Accessible Trackers Found
+tracker_index	no_accessible_trackers_msg	<strong>No trackers have been set up, or you are not allowed to view them.</strong>
+tracker_index	choose_tracker	Choose a tracker and you can browse/edit/add artefacts to it.
 tracker_index	printer_version	Printer version
 tracker_index	total	total
 tracker_index	file_delete	File Delete: $1
-tracker_index	file_delete_success	File Delete: Successful
+tracker_index	file_delete_success	File deleted successfully
 tracker_index	file_upload_err	File Upload: $1
-tracker_index	file_upload_success	File Upload: Successful
+tracker_index	file_upload_success	File uploaded successfully
 tracker_index	update_success	Successfully Updated
 tracker_index	not_saved_comment	Comment could not be saved
 tracker_index	open	open
-tracker_index	updated	Updated
+tracker_index	updated_aid	Updated $1
 tracker_index	mass_change	Mass Change
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/masschange_detail.php
 #
-tracker_masschange_detail	selected_items	Mass Change Selected Items
-tracker_masschange_detail	no_items_selected	No items have been selected
+tracker_masschange_detail	selected_items	Mass Change Selected Artefacts
+tracker_masschange_detail	no_items_selected	No artefacts have been selected
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/masschange.php
@@ -126,16 +120,15 @@ tracker_masschange	mass_change_report	Mass Change Report
 # Script: SF/www/tracker/tracker_import_utils.php
 #
 tracker_import_utils	field_not_known	"$1" is not a known field in tracker $2
-tracker_import_utils	field_mandatory	"$1" is a mandatory field in tracker $2. Please specify it in your csv file.
+tracker_import_utils	field_mandatory	"$1" is a mandatory field in tracker $2. Please specify it in your CSV file.
 tracker_import_utils	not_a_predefined_value	<b>Line $1 [</b>$2<b>]</b>:<br>value "$3" is not one of the predefined values of field "$3" ($4).
-tracker_import_utils	field_mandatory_and_current	<b>Line $1 [</b>$2<b>]</b>:<br>"$3" is a mandatory field in tracker $4. Please specify it in your csv file (Current val is "$5").
-tracker_import_utils	incorrect_date	<b>Line $1 [</b>$2<b>]</b>:<br>Date "$3" is not in correct format (Y-m-d).
+tracker_import_utils	field_mandatory_and_current	<b>Line $1 [</b>$2<b>]</b>:<br>"$3" is a mandatory field in tracker $4. Please specify it in your csv file (current value is "$5").
+tracker_import_utils	incorrect_date	<b>Line $1 [</b>$2<b>]</b>:<br>Date "$3" is not in correct format (YYYY-MM-DD).
 tracker_import_utils	field_mandatory_and_line	<b>Line $1 [</b>$2<b>]</b>:<br>"$3" is a mandatory field in tracker $4. Please specify it in your csv file.	
 tracker_import_utils	already_submitted	<b>Line $1 [</b>$2<b>]</b>:<br>User $3 has already submitted an artifact with the same summary ("$4"). Please don't try to import it again.	
 tracker_import_utils	art_not_exists	<b>Line $1 [</b>$2<b>]</b>:<br>the specified artifact (id=$3) does not exist in tracker $4
 tracker_import_utils	date	Date
 tracker_import_utils	type	type
-tracker_import_utils	comment	comment
 tracker_import_utils	comment_parse_error	$1 Won't insert any follow-up comments for this artifact.
 tracker_import_utils	unchanged	Unchanged
 tracker_import_utils	new	NEW
@@ -144,9 +137,9 @@ tracker_import_utils	no_followups	No Followups Have Been Posted
 tracker_import_utils	not_a_user	"$1" specified as originator of follow-up comment #$2 is neither a user name nor a valid email address.
 tracker_import_utils	specify_originator	You must specify an originator for follow-up comment #$1 ($2).
 tracker_import_utils	specify_valid_user	"None" is not a valid originator of a follow-up comment. Please specify a user name or a valid email address for comment #$1.
-tracker_import_utils	problem_insert_dependent	Problem inserting dependent artifacts (artifact id =$1).<br>
-tracker_import_utils	problem_add_cc	Problem adding CC List (artifact id=$1).<br>
-tracker_import_utils	problem_insert_followup	Problem inserting follow_up comments (artifact id=$1).<br>
+tracker_import_utils	problem_insert_dependent	Error while inserting dependent artifacts (artifact id =$1).<br>
+tracker_import_utils	problem_add_cc	Error while adding CC List (artifact id=$1).<br>
+tracker_import_utils	problem_insert_followup	Error while inserting follow_up comments (artifact id=$1).<br>
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/tracker_selection.php
@@ -190,7 +183,7 @@ tracker_admin_index	updated_cannedresponse	 Canned response updated
 tracker_admin_index	not_delete_canneditem	ArtifactCanned Item #$1 could not be deleted
 tracker_admin_index	modify_cannedresponse	Modify Canned Response
 tracker_admin_index	create_modify_cannedresponse	Create/Modify Canned Responses
-tracker_admin_index	art_admin	Artifact Administration - Personal Email Notification Settings
+tracker_admin_index	art_admin	Tracker Administration - Personal Email Notification Settings
 tracker_admin_index	update_success	 - Successful Update
 tracker_admin_index	update_failed	 - Update Failed : $1
 tracker_admin_index	options	 - Options
@@ -206,7 +199,7 @@ tracker_admin_index	modify_usage	 - Modify Field Usage
 tracker_admin_index	modify_usage_for	 - Modify Field Usage for '$1'
 tracker_admin_index	deletion_failed	Tracker '$1' - Deletion Failed - 
 tracker_admin_index	delete_success	Tracker '$1' - Successfully Deleted
-tracker_admin_index	tracker_deleted	<H2>Tracker '$1' - Deleted</H2> <h3>In case you have inadvertently deleted this tracker and want it to be restored,</H3><p> please contact the <a href="mailto:$2">Codex Administrator</A>  within the next 10 days.</p>
+tracker_admin_index	tracker_deleted	<H2>Tracker '$1' - Deleted</H2> <p>In case you have inadvertently deleted this tracker and want it to be restored, please contact the <a href="mailto:$2">Site Administrator</A> within the next 10 days.</p>
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/admin/restore.php
@@ -221,8 +214,8 @@ tracker_admin_restore	tracker_deleted	Tracker deleted
 #-----------------------------------------------
 # Script: SF/www/tracker/include/ArtifactCannedHtml.class
 #
-tracker_include_canned	create_response	<h3>Create a new response</h3>
-tracker_include_canned	save_time	Creating generic quick responses can save a lot of time when giving common responses.
+tracker_include_canned	create_response	Create a new response
+tracker_include_canned	save_time	Creating canned responses can save a lot of time if you frequently give the same answers to your users.
 tracker_include_canned	title	Title
 tracker_include_canned	message_body	Message Body:
 tracker_include_canned	existing_responses	Existing Responses:
@@ -238,8 +231,6 @@ tracker_include_field	error_no_atid	ERROR - no group_artifact_id
 tracker_include_field	start	Start:
 tracker_include_field	end	End:
 tracker_include_field	any_time	Any time
-tracker_include_field	pick_end	Click Here to Pick up end date
-tracker_include_field	selected	 SELECTED
 tracker_include_field	pick_date	Click Here to Pick up a date
 tracker_include_field	unknown_display_type	$1: UNKNOW ARTIFACT FIELD DISPLAY TYPE
 #
@@ -247,22 +238,26 @@ tracker_include_field	unknown_display_type	$1: UNKNOW ARTIFACT FIELD DISPLAY TYP
 # Script: SF/www/tracker/include/ArtifactFileHtml.class
 #
 tracker_include_artifactfile	invalid_name	ArtifactFile: Invalid filename
-tracker_include_artifactfile	not_attached	File not attached: File size must be less than $1 Mbytes
+tracker_include_artifactfile	not_attached	File not attached: File size must be less than $1 Mb
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/include/ArtifactHtml.class
 #
-tracker_include_artifact	submitted_by	Submitted By:
 tracker_include_artifact	project	Project:
-tracker_include_artifact	submitted_on	Submitted On:
 tracker_include_artifact	submit	Submit Changes
+tracker_include_artifact	follow_ups	Follow-ups
+tracker_include_artifact	cc_list	CC List
 tracker_include_artifact	use_canned	Use a Canned Response:
 tracker_include_artifact	define_canned	Or define a new Canned Response
-tracker_include_artifact	not_logged_in	<B><span class="highlight"><H2>You Are NOT Logged In</H2><P>Please <A HREF="$1">log in,</A> so followups can be emailed to you.</span></B><P>If you cannot login, then enter your email address here:
-tracker_include_artifact	codex_user	<b><u>Note:</b></u> for CodeX users use their login name rather than their email addresses.
-tracker_include_artifact	fill_cc_list	<br>Fill your list using comma or semi-column as separator.<p><B>Add CC:&nbsp;</b><input type="text" name="add_cc" size="30">&nbsp;&nbsp;&nbsp;<B>Comment:&nbsp;</b><input type="text" name="cc_comment" size="40" maxlength="255"><p>
+tracker_include_artifact	not_logged_in	<B><span class="highlight"><H2>You Are NOT Logged In</H2><P>Please <A HREF="$1">log in,</A> so update notifications can be emailed to you.</span></B><P>If don't have a user account, then enter your email address instead:
+tracker_include_artifact	fill_cc_list_msg	<b><u>Note:</b></u> for CodeX users use their login name rather than their email addresses.<br>Fill your list using comma or semi-column as separator.
+tracker_include_artifact	fill_cc_list_lbl	<p><B>Add CC:&nbsp;</b>
+tracker_include_artifact	fill_cc_list_cmt	&nbsp;&nbsp;&nbsp;<b>Comment</b>:&nbsp;</b>
 tracker_include_artifact	attachment	Attachments
-tracker_include_artifact	upload	<B>Check to Upload&hellip;  <input type="checkbox" name="add_file" VALUE="1">&nbsp;&hellip;&amp; Attach File:</B><input type="file" name="input_file" size="40"><br><span class="small"><i>(The maximum upload file size is $1 Mb - <u>Please compress your files</u>)</i></span><P><B>File Description:</B>&nbsp;<input type="text" name="file_description" size="60" maxlength="255"><P>
+tracker_include_artifact	upload_checkbox	<B>Check to Upload&hellip;</b>
+tracker_include_artifact	upload_file_lbl	<b>&nbsp;&hellip;and&nbsp;attach File:</B>
+tracker_include_artifact	upload_file_msg	<br><span class="small"><i>(The maximum upload file size is $1 Mb - <u>Please compress your files</u>)</i></span>
+tracker_include_artifact	upload_file_desc	<P><B>File Description:</B>&nbsp;
 tracker_include_artifact	dependencies	Dependencies	
 tracker_include_artifact	aids	Artifact IDs:
 tracker_include_artifact	fill	(Fill your list using the comma as separator)
@@ -271,13 +266,14 @@ tracker_include_artifact	change_history	Change History:
 tracker_include_artifact	field	Field
 tracker_include_artifact	old_val	Old Value
 tracker_include_artifact	new_val	New Value
-tracker_include_artifact	no_changes	No Changes Have Been Made to This $1	
+tracker_include_artifact	no_changes	No changes have been made yet
 tracker_include_artifact	no_file_attached	No files currently attached	
 tracker_include_artifact	file_attachment	File Attachments
 tracker_include_artifact	name	Name
 tracker_include_artifact	desc	Description
 tracker_include_artifact	size_kb	Size (KB)	
 tracker_include_artifact	size	Size	
+tracker_include_artifact	posted_on	posted_on	
 tracker_include_artifact	delete_attachment	Delete this attachment?	
 tracker_include_artifact	cc_empty	CC List is empty
 tracker_include_artifact	artifact	Artifact
@@ -291,7 +287,7 @@ tracker_include_artifact	comment	Comment
 tracker_include_artifact	added_by	Added by
 tracker_include_artifact	delete_cc	Delete this CC address?
 tracker_include_artifact	add_cc	Add CC:
-tracker_include_artifact	check_already_submitted	Did you check if this $1 has not already been submitted?</span></b> (use the search box in the left menu pane)	
+tracker_include_artifact	check_already_submitted	Did you check if this artefact has not already been submitted?</span></b> (use the search box)	
 tracker_include_artifact	latest_modif	LATEST MODIFICATIONS
 tracker_include_artifact	full_snapshot	FULL $1 SNAPSHOT
 tracker_include_artifact	follow_link	For detailed info, follow this link:
@@ -316,12 +312,11 @@ tracker_include_report	prio_colors	Priority Colors:
 tracker_include_report	items	Items
 tracker_include_report	check_items	Check items
 tracker_include_report	clear_items	Clear items
-tracker_include_report	mass_change_all	Mass Change All Items ($1 matches)
+tracker_include_report	mass_change_all	Mass Change All ($1 artefacts)
 tracker_include_report	check_all_items	Check all items
 tracker_include_report	clear_all_items	Clear all items
-tracker_include_report	selected	Selected
-tracker_include_report	browse	Browse
-tracker_include_report	using_report	using report
+tracker_include_report	selected	Selected $1
+tracker_include_report	using_report	Use report
 tracker_include_report	btn_go	Go
 tracker_include_report	or_use	or use
 tracker_include_report	simple_search	Simple Search
@@ -329,20 +324,13 @@ tracker_include_report	adv_search	Advanced Search
 tracker_include_report	at_once	s at once.
 tracker_include_report	sorted_by	sorted by
 tracker_include_report	matching	matching
-tracker_include_report	plural	s
 tracker_include_report	sort_results	Click a column heading to sort results (up or down), 
-tracker_include_report	or	or
-tracker_include_report	sort_sev	Sort by Severity
-tracker_include_report	reset	Reset sort
-tracker_include_report	activate	Activate
-tracker_include_report	deactivate	Deactivate
+tracker_include_report	sort_sev	sort by Severity
+tracker_include_report	reset_sort	reset sort
 tracker_include_report	multicolumn_sort	You can also <a href="$1"><b> $2 multicolumn sort</b></a>.
 tracker_include_report	sev_colors	Severity Colors:
-tracker_include_report	no_match	<H2>No Matching $1 Found for $2 or filters too restrictive</H2>	
-tracker_include_report	project	Project
-tracker_include_report	personal	Personal
-tracker_include_report	system	System
-tracker_include_report	report_mgmt	Artifact Administration - Tracker Report Management
+tracker_include_report	no_match	No Matching Artefact Found	
+tracker_include_report	report_mgmt	Tracker Administration - Tracker Report Management
 tracker_include_report	report_admin	  - Reports Administration
 tracker_include_report	scope	Scope
 tracker_include_report	report_name	Report name
@@ -350,7 +338,7 @@ tracker_include_report	id	ID
 tracker_include_report	mod	(Click to modify)
 tracker_include_report	delete_report	Delete this Report : $1  ?
 tracker_include_report	no_rep_def	No artifact report defined yet.
-tracker_include_report	create_report	You can $1 Create a New Tracker Report
+tracker_include_report	create_report	You can <b><A HREF="$1">Create a New Report</a></b>
 tracker_include_report	create_rep	Create A New Tracker Report
 tracker_include_report	field_label	Field Label
 tracker_include_report	search_crit	Use as a Search Criteria	
@@ -358,8 +346,7 @@ tracker_include_report	rank_search	Rank on Search
 tracker_include_report	rep_col	Use as a Report Column
 tracker_include_report	rank_repo	Rank on Report
 tracker_include_report	col_width	Column width (optional)
-tracker_include_report	modify_for	Modify $1 Report for $2 Tracker 
-tracker_include_report	mod_repo	Modify Report
+tracker_include_report	modify_report	Modify tracker Report
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/include/ArtifactTypeHtml.class
@@ -390,18 +377,15 @@ tracker_include_type	admin_or_del	Administrate or delete a tracker.
 tracker_include_type	instantiate	Instantiate for new projects
 tracker_include_type	administration	 - Administration
 tracker_include_type	mng_field_usage	Manage Field Usage
-tracker_include_type	define_use	Define what tracker fields you want to use in this tracker (remark: some of the fields like status, assignee, severity&hellip; are mandatory and cannot be removed).<P>	
+tracker_include_type	define_use	Define what tracker fields you want to use in this tracker.
 tracker_include_type	mng_field_values	Manage Field Values
-tracker_include_type	define_values	Define the set of values for the tracker fields you have decided to use in your tracker. <P>
+tracker_include_type	define_values	Define the set of values associated with the fields of your tracker.
 tracker_include_type	mng_response	Manage Canned Responses
 tracker_include_type	add_del_resp	Add, update or delete the canned responses.
 tracker_include_type	mng_reports	Manage Tracker Reports
-tracker_include_type	define_reports	Define personal or project-wide tracker reports: what search criteria to use and what tracker fields to show in the tracker report table&hellip;
+tracker_include_type	define_reports	Define tracker search reports: what search criteria to use and what tracker fields to show in the tracker search reports.
 tracker_include_type	define_title	Define the title, the description, etc of this tracker.<P>
 tracker_include_type	define_notif	Users can define when they want to be notified of a tracker update via email. Project Administrators can also define global email notification rules.<P>
-tracker_include_type	tech_only	Tech Only
-tracker_include_type	tech_admin	Tech & Admin
-tracker_include_type	admin_only	Admin Only
 tracker_include_type	user	User
 tracker_include_type	perm	Permissions
 tracker_include_type	del_user	Delete this user?
@@ -450,16 +434,17 @@ tracker_include_type	field_ident	Field Identification and Description
 tracker_include_type	field_type	Field Type
 tracker_include_type	display_info	Display informations
 tracker_include_type	display_size	Display Size
-tracker_include_type	display_field	Display this field...
+tracker_include_type	display_field	Display this field&hellip;
 tracker_include_type	sub_form_proj	On the submission form used by project members
 tracker_include_type	sub_form_other	On the submission form used by other users
 tracker_include_type	allow_empty	Allow Empty Value
+tracker_include_type	keep_change_history	Keep Change History
 tracker_include_type	misc	Miscellaneous:
 tracker_include_type	use_field	Use this field
 tracker_include_type	fields_requ	fields required
 tracker_include_type	bind_to_list	Bind the field to a list of values
 tracker_include_type	bind_to	Bind To
-tracker_include_type	group_members	Group members
+tracker_include_type	group_members	Project members
 tracker_include_type	submitters	Artifact submitters
 tracker_include_type	techicians	Artifact technicians
 tracker_include_type	bind	Bind
@@ -483,14 +468,14 @@ tracker_include_type	admin_note	<B>As a project administrator</B> you can provid
 tracker_include_type	send_all	(send on all updates)
 tracker_include_type	admin_conf	<P>The project administrators have configured the following email addresses to receive notification of new artifact submission (and possibly updates).<P><u>Recipients</u>:
 tracker_include_type	send_all_or_not	(Send on all updates: $1)
-tracker_include_type	admin_not_conf	<P>The project administrator hasn't yet specified email addresses that will systematically receive email notification of new artifacts.<P>
+tracker_include_type	admin_not_conf	<P>The project administrator hasn't yet specified email addresses that will systematically receive email notification of new artifacts.
 tracker_include_type	perso_mail_notif	Personal Email Notification
 tracker_include_type	users_to_watch	Users To Watch
-tracker_include_type	backup_person	If you want to be the backup of someone when they're away from the office, or if you need to do the QA to all their artifacts. $1 can send their email notification to you also. List the login name of any user you wish to watch, separated by commas.</b>
+tracker_include_type	backup_person	You can receive a carbon copy of email notifications sent to certain users of this project. List the login name of any user you wish to watch, separated by commas.</b>
 tracker_include_type	watchers	For your information your own artifact notifications are currently watched by: <u>$1</u>	
 tracker_include_type	no_watcher	For your information <u>nobody</u> is currently watching your own artifact notifications. 
 tracker_include_type	event_settings	Event/Role Specific Settings
-tracker_include_type	tune_settings	You can tune your notification settings and decide what artifact changes you want to be aware of depending on your role. <p><b><u>Note</u></b>: Notification of *new* artifact submission to people other than the assignee or the submitter can be configured by the project administrator in the <a href="#GlobalEmailNotification">Global Email Notification section</a> above.
+tracker_include_type	tune_settings	You can tune your notification settings and decide what artifact changes you want to be aware of depending on your role.
 tracker_include_type	role_is	If my role in an artifact is:
 tracker_include_type	def_default	Define Default Value
 tracker_include_type	val	Value
@@ -504,16 +489,16 @@ tracker_include_type	nb_open	Number of Opened $1
 tracker_include_type	rep_field	Reporting on field
 tracker_include_type	open_by	Open $1 By $2
 tracker_include_type	all_by	All $1 By $2
-tracker_include_type	changing_items	Changing $1 selected item(s): 
-tracker_include_type	submit_mass_change	Submit Mass Changes
+tracker_include_type	changing_items	Changing $1 selected artefact(s): 
+tracker_include_type	submit_mass_change	Valider
 tracker_include_type	occurrence	Occurrence
-tracker_include_type	nofify_me	I want to be notified when:
+tracker_include_type	notify_me	I want to be notified when:
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactCanned.class
 #
 tracker_common_canned	not_valid	No Valid ArtifactType object
-tracker_common_canned	name_requ	name and assignee are required
+tracker_common_canned	name_requ	name and description are required
 tracker_common_canned	perm_denied	Permission Denied
 tracker_common_canned	invalid_id	Invalid ArtifactCanned ID
 tracker_common_canned	missing_param	Missing Params
@@ -524,13 +509,13 @@ tracker_common_canned	missing_param	Missing Params
 tracker_common_artifact	view_private	Only Group Members Can View Private ArtifactTypes
 tracker_common_artifact	invalid_id	Invalid ArtifactID
 tracker_common_artifact	row	Row $1:
-tracker_common_artifact	double_subm	  ERROR - DOUBLE SUBMISSION. You have already submitted an artifact (id=$1) with the same summary. Please don't do that.  
+tracker_common_artifact	double_subm	  ERROR - DOUBLE SUBMISSION. You have already submitted an artifact (id=$1) with the same summary.
 tracker_common_artifact	insert_err	INSERT new artifact failed. Report to the Administrator<br>SQL statement:<br>$1<br>
 tracker_common_artifact	field_err	 Artifact created, but failed to insert the field value - $1 : $2
 tracker_common_artifact	def_err	 Artifact created, but failed to insert the default field value - $1 : $2
 tracker_common_artifact	enter_email	 You need to enter an email!
 tracker_common_artifact	add_comment	 Comment added to artifact 
-tracker_common_artifact	field_upd_fail	Fail to update the field value $1
+tracker_common_artifact	field_upd_fail	Failed to update the field value $1
 tracker_common_artifact	canned_used	 Canned Response Used 
 tracker_common_artifact	unable_canned	 Unable to use Canned Response 
 tracker_common_artifact	upd_fail	UPDATE FAILED
@@ -619,8 +604,8 @@ tracker_common_artifacts	not_get	Could not get artifacts: $1
 #
 tracker_common_type	invalid	No Valid Group Object
 tracker_common_type	no_match	Group_id in db result does not match Group Object
-tracker_common_type	perm_fail	Fail to create user permission: $1
-tracker_common_type	name_requ	Name, Description, and Short Name are required and not empty.
+tracker_common_type	perm_fail	Failed to create user permission: $1
+tracker_common_type	name_requ	Name, Description, and Short Name are required.
 tracker_common_type	invalid_shortname	Invalid short name: $1. Please use only alphanumerical characters. Press the "Back" button and update this information.
 tracker_common_type	invalid_templ	Invalid group_id_template
 tracker_common_type	load_fail	failed to load the new tracker
@@ -628,14 +613,14 @@ tracker_common_type	invalid_at	Invalid ArtifactTypeID
 tracker_common_type	invalid_date	Delay date must not be in the past
 tracker_common_type	perm_err	Error during updating user permission - user_id=$1 - $2
 tracker_common_type	invalid_name	Error Invalid user name '$1'
-tracker_common_type	copy_fail	Fail to copy notification event
-tracker_common_type	notif_fail	Fail to copy notification role
+tracker_common_type	copy_fail	Error during inserting notification event
+tracker_common_type	notif_fail	Error during inserting notification role
 tracker_common_type	del_err	Error deleting dependencies $1: $2
 tracker_common_type	none_found	None Found 
 tracker_common_type	invalid_mail	"$1" is not a valid email address
 #
 #-----------------------------------------------
-# Script: SF/common/tracker/ArtifactType.class
+# Script: SF/common/tracker/ArtifactTypes.class
 #
 tracker_common_types	err_bugs	Error Creating ArtifactType for Bug Tracker
 tracker_common_types	bugs	Bugs
@@ -660,3 +645,29 @@ tracker_common_types	fr_desc	Feature Request Tracking System
 tracker_common_types	fr_ex1	Interface Improvements (example)
 tracker_common_types	fr_ex2	Next Release (example)
 tracker_common_types	fail_fr	Failed to create feature request tracker: $1
+tracker_common_types	role_SUBMITTER_short_desc	Submitter
+tracker_common_types	role_ASSIGNEE_short_desc	Assignee
+tracker_common_types	role_CC_short_desc	CC
+tracker_common_types	role_COMMENTER_short_desc	Commenter
+tracker_common_types	role_SUBMITTER_desc	The person who submitted the artifact
+tracker_common_types	role_ASSIGNEE_desc	The person to whom the artifact was assigned
+tracker_common_types	role_CC_desc	The person who is in the CC list
+tracker_common_types	role_COMMENTER_desc	A person who once posted a follow-up comment
+tracker_common_types	event_ROLE_CHANGE_short_desc	Role has changed
+tracker_common_types	event_NEW_COMMENT_short_desc	New comment
+tracker_common_types	event_NEW_FILE_short_desc	New attachment
+tracker_common_types	event_CC_CHANGE_short_desc	CC Change
+tracker_common_types	event_CLOSED_short_desc	artifact closed
+tracker_common_types	event_PSS_CHANGE_short_desc	PSS change
+tracker_common_types	event_ANY_OTHER_CHANGE_short_desc	Any other Changes	
+tracker_common_types	event_I_MADE_IT_short_desc	I did it
+tracker_common_types	event_NEW_ARTIFACT_short_desc	New artifact
+tracker_common_types	event_ROLE_CHANGE_desc	I'm added to or removed from this role
+tracker_common_types	event_NEW_COMMENT_desc	A new followup comment is added
+tracker_common_types	event_NEW_FILE_desc	A new file attachment is added
+tracker_common_types	event_CC_CHANGE_desc	A new CC address is added/removed
+tracker_common_types	event_CLOSED_desc	The artifact is closed
+tracker_common_types	event_PSS_CHANGE_desc	Priority,Status,Severity changes
+tracker_common_types	event_ANY_OTHER_CHANGE_desc	Any changes not mentioned above
+tracker_common_types	event_I_MADE_IT_desc	I am the author of the change
+tracker_common_types	event_NEW_ARTIFACT_desc	A new artifact has been submitted
