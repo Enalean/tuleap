@@ -1549,25 +1549,25 @@ INSERT INTO artifact_report_field VALUES (4,'bug_group_id',1,0,20,NULL,NULL);
 # ==============================
 # Create the list of roles a user can play wrt to a artifact
 #
-INSERT INTO artifact_notification_role_default VALUES (1,'SUBMITTER','Submitter', 'The person who submitted the artifact',10);
-INSERT INTO artifact_notification_role_default VALUES (2,'ASSIGNEE','Assignee','The person to whom the artifact was assigned',20);
-INSERT INTO artifact_notification_role_default VALUES (3,'CC','CC','The person who is in the CC list',30);
-INSERT INTO artifact_notification_role_default VALUES (4,'COMMENTER','Commenter','A person who once posted a follow-up comment',40);
+INSERT INTO artifact_notification_role_default VALUES (1,'SUBMITTER',10,'role_SUBMITTER_short_desc', 'role_SUBMITTER_desc');
+INSERT INTO artifact_notification_role_default VALUES (2,'ASSIGNEE',20,'role_ASSIGNEE_short_desc','role_ASSIGNEE_desc');
+INSERT INTO artifact_notification_role_default VALUES (3,'CC',30,'role_CC_short_desc','role_CC_desc');
+INSERT INTO artifact_notification_role_default VALUES (4,'COMMENTER',40,'role_COMMENTER_short_desc','role_COMMENTER_desc');
 
 # ==============================
 # artifact_notification_event table
 # ==============================
 # Create the list of events that can occur in a artifact update
 #
-INSERT INTO artifact_notification_event_default VALUES (1,'ROLE_CHANGE','Role has changed','I\'m added to or removed from this role',10);
-INSERT INTO artifact_notification_event_default VALUES (2,'NEW_COMMENT','New comment','A new followup comment is added',20);
-INSERT INTO artifact_notification_event_default VALUES (3,'NEW_FILE','New attachment','A new file attachment is added',30);
-INSERT INTO artifact_notification_event_default VALUES (4,'CC_CHANGE','CC Change','A new CC address is added/removed',40);
-INSERT INTO artifact_notification_event_default VALUES (5,'CLOSED','artifact closed','The artifact is closed',50);
-INSERT INTO artifact_notification_event_default VALUES (6,'PSS_CHANGE','PSS change','Priority,Status,Severity changes',60);
-INSERT INTO artifact_notification_event_default VALUES (7,'ANY_OTHER_CHANGE','Any other Changes','Any changes not mentioned above',70);
-INSERT INTO artifact_notification_event_default VALUES (8,'I_MADE_IT','I did it','I am the author of the change',80);
-INSERT INTO artifact_notification_event_default VALUES (9,'NEW_ARTIFACT','New artifact','A new artifact has been submitted',90);
+INSERT INTO artifact_notification_event_default VALUES (1,'ROLE_CHANGE',10,''event_ROLE_CHANGE__shortdesc','event_ROLE_CHANGE_desc');
+INSERT INTO artifact_notification_event_default VALUES (2,'NEW_COMMENT',20,'event_NEW_COMMENT_short_desc','event_NEW_COMMENT_desc');
+INSERT INTO artifact_notification_event_default VALUES (3,'NEW_FILE',30,'event_NEW_FILE_short_desc','event_NEW_FILE_desc');
+INSERT INTO artifact_notification_event_default VALUES (4,'CC_CHANGE',40,'event_CC_CHANGE_short_desc','event_CC_CHANGE_desc');
+INSERT INTO artifact_notification_event_default VALUES (5,'CLOSED',50,'event_CLOSED_short_desc','event_CLOSED_desc');
+INSERT INTO artifact_notification_event_default VALUES (6,'PSS_CHANGE',60,'event_PSS_CHANGE_short_desc','event_PSS_CHANGE_desc');
+INSERT INTO artifact_notification_event_default VALUES (7,'ANY_OTHER_CHANGE',70,'event_ANY_OTHER_CHANGE_short_desc','event_ANY_OTHER_CHANGE_desc');
+INSERT INTO artifact_notification_event_default VALUES (8,'I_MADE_IT',80,'event_I_MADE_IT_short_desc','event_I_MADE_IT_desc');
+INSERT INTO artifact_notification_event_default VALUES (9,'NEW_ARTIFACT',90,'event_NEW_ARTIFACT_short_desc','event_NEW_ARTIFACT_desc');
 
 #
 # Snippet category table
@@ -1773,5 +1773,5 @@ INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_REA
 INSERT INTO supported_languages VALUES \
 (1,'English','English_US.tab','en_US','ISO-8859-1',1);
 INSERT INTO supported_languages VALUES \
-(2,'French','French_FR.tab','fr_FR','ISO-8859-1',1);
+(2,'Français','French_FR.tab','fr_FR','ISO-8859-1',1);
 
