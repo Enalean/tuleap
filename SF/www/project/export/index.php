@@ -52,7 +52,8 @@ if (!$group || !is_object($group) || $group->isError()) {
 }
 
 $project=project_get_object($group_id);
-$dbname = $groupname = $project->getUnixName();
+$groupname = $project->getUnixName();
+$dbname = str_replace("-","",$groupname);
 $pg_title = $Language->getText('project_admin_utils','project_data_export').' '.$groupname;
 
 switch ($export) {

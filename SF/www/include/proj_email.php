@@ -10,7 +10,7 @@
 $Language->loadLanguageMsg('include/include');
 
 function send_new_project_email($group_id) {
-	global $sys_show_project_type;
+  global $sys_show_project_type,$Language;
 
 	$res_grp = db_query("SELECT * FROM groups WHERE group_id='$group_id'");
 
