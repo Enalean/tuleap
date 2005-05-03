@@ -1,0 +1,59 @@
+#/**
+#  *
+#  * export scripts message catalog (English)
+#  *
+#  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
+#  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
+#  * http://codex.xrce.xerox.com
+#  *
+#  * @version   $Id$
+#  *
+#  */
+#
+#-----------------------------------------------
+# Script: SF/www/export/index.php
+#
+export_index	exports_available	Données disponibles à l'exportation
+export_index	format_explain	Les données de $1 sont exportées sous divers formats standards. La plupart des URLs accepte un paramètre permettant de personnaliser la sortie. Les données exportées sur cette page sont générées en temps réel.
+export_index	news_data	Annonces
+export_index	front_p_news	Annonces de la Page d'accueil
+export_index	new_releases	Nouvelles versions
+export_index	newest_projects	Derniers projets
+export_index	rss_format	Format RSS
+export_index	csv_format	Format CSV
+export_index	listings	Listes
+export_index	full_proj_listing	Liste complète des projets
+export_index	proj_info	Informations Projet
+export_index	proj_forum	Forums des projets
+export_index	g_id_required	argument ?group_id nécessaire dans l'URL
+#
+#-----------------------------------------------
+# Script: SF/www/export/nitf_sfforums.php
+#
+export_nitf_sfforums	g_id_err	ERREUR: Cette URL doit être appelée avec un paramètre group_id valide
+#
+#-----------------------------------------------
+# Script: SF/www/export/rss_sfnewreleases.php
+#
+export_rss_sfnewreleases	copyright	Copyright (c) $1, $2 Team, 2001-$3. All Rights Reserved
+export_rss_sfnewreleases	new_releases	Nouvelles versions de $1
+#
+#-----------------------------------------------
+# Script: SF/www/export/rss_sfnews.php
+#
+export_rss_sfnews	highlights	Annonces phares des projets $1
+export_rss_sfnews	news	Annonces $1
+#
+#-----------------------------------------------
+# Script: SF/www/export/rss_sfprojects.php
+#
+export_rss_sfprojects	new_proj	Derniers projets
+export_rss_sfprojects	params	ID projet, Nom court, Nom complet, Description, Langage, Systèmes d'exploitation supportés, Etat de développement, Emplacement des versions, Informations additionnelles, Point de contact, Inventaire eTTM
+export_rss_sfprojects	prog_lang	Langage de Programmation
+export_rss_sfprojects	os	Système d'exploitation
+export_rss_sfprojects	devel_status	Etat de développement
+#
+#-----------------------------------------------
+# Script: SF/www/export/rss_utils.php
+#
+export_rss_utils	no_desc_available	No description available.
