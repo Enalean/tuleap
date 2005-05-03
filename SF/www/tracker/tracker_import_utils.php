@@ -29,7 +29,7 @@ function parse_field_names($data,$used_fields,$ath,
 			   &$num_columns,&$parsed_labels,&$predefined_values,
 			   &$aid_column,&$submitted_by_column,&$submitted_on_column,
 			   &$errors) {
-  global $Language;
+    global $Language, $art_field_fact;
 
   $aid_column = -1;
   $submitted_by_column = -1;
@@ -74,26 +74,47 @@ function parse_field_names($data,$used_fields,$ath,
       }
     }
   }
-
+ 
   // verify if we have all mandatory fields in the case we have to create an artifact
   if ($aid_column == -1) {
-    reset($used_fields);
-    while (list($label,$field) = each($used_fields)) {
-      //echo $label.",";
-      if ($field) $field_name = $field->getName();
-      if ($field_name != "artifact_id" &&
-	  $field_name != "open_date" &&
-	  $field_name != "submitted_by" &&
-	  $label != $Language->getText('tracker_import','follow_ups') &&
-	  $label != $Language->getText('tracker_import','depend_on') &&
-	  $label != $Language->getText('tracker_import','cc_list') &&
-	  $label != $Language->getText('tracker_import','cc_comment') &&
-	  !$field->isEmptyOk() && !in_array($label,$parsed_labels)) {
-	
-	$errors .= $Language->getText('tracker_import_utils','field_mandatory',array($label,$ath->getName())).' ';
-	return false;
+
+      // TODO: Localize this properly by adding those 4 fields to the artifact table
+      // (standard fields) and the artifact field table with a special flag and make sure
+      // all tracker scripts handle them properly
+      // For now make a big hack!! (see import.php func=showformat)
+      $submitted_field = $art_field_fact->getFieldFromName('submitted_by');
+      if (strstr($submitted_field->getLabel(),"ubmit")) {
+          // Assume English
+          $lbl_follow_ups = 'Follow-up Comments';
+          $lbl_s_dependent_on = 'Depend on';
+          $lbl_add_cc = 'CC List';
+          $lbl_cc_comment = 'CC Comment';
+      } else {
+          // Assume French
+          $lbl_follow_ups = 'Commentaires';
+          $lbl_is_dependent_on = 'Dépend de';
+	  $lbl_add_cc = 'Liste CC';
+          $lbl_cc_comment = 'Commentaire CC';
+      }        
+    
+      reset($used_fields);
+
+      while (list($label,$field) = each($used_fields)) {
+          //echo $label.",";
+          if ($field) $field_name = $field->getName();
+          if ($field_name != "artifact_id" &&
+              $field_name != "open_date" &&
+              $field_name != "submitted_by" &&
+              $label != $lbl_follow_ups &&
+              $label != $lbl_is_dependent_on &&
+              $label != $lbl_cc_list &&
+              $label != $lbl_cc_comment &&
+              !$field->isEmptyOk() && !in_array($label,$parsed_labels)) {
+              
+              $errors .= $Language->getText('tracker_import_utils','field_mandatory',array($label,$ath->getName())).' ';
+              return false;
+          }
       }
-    }
   }
   return true;
 }
@@ -195,13 +216,33 @@ function check_values($row,&$data,$used_fields,$parsed_labels,$predefined_values
   if ($from_update) {
     while (list($label,$field) = each($used_fields)) {
       if ($field != "") $field_name = $field->getName();
+
+      // TODO: Localize this properly by adding those 4 fields to the artifact table
+      // (standard fields) and the artifact field table with a special flag and make sure
+      // all tracker scripts handle them properly
+      // For now make a big hack!! (see import.php func=showformat)
+      $submitted_field = $art_field_fact->getFieldFromName('submitted_by');
+      if (strstr($submitted_field->getLabel(),"ubmit")) {
+          // Assume English
+          $lbl_follow_ups = 'Follow-up Comments';
+          $lbl_s_dependent_on = 'Depend on';
+          $lbl_add_cc = 'CC List';
+          $lbl_cc_comment = 'CC Comment';
+      } else {
+          // Assume French
+          $lbl_follow_ups = 'Commentaires';
+          $lbl_is_dependent_on = 'Dépend de';
+	  $lbl_add_cc = 'Liste CC';
+          $lbl_cc_comment = 'Commentaire CC';
+      }
+
       if ($field_name != "artifact_id" &&
 	  $field_name != "open_date" &&
 	  $field_name != "submitted_by" &&
-	  $label != $Language->getText('tracker_import','follow_ups') &&
-	  $label != $Language->getText('tracker_import','depend_on') &&
-	  $label != $Language->getText('tracker_import','cc_list') &&
-	  $label != $Language->getText('tracker_import','cc_comment') &&
+	  $label != $lbl_follow_ups &&
+	  $label != $lbl_is_dependent_on &&
+	  $label != $lbl_cc_list &&
+	  $label != $lbl_cc_comment &&
 	  !$field->isEmptyOk() && !in_array($label,$parsed_labels)) {
 
 	$errors .= $Language->getText('tracker_import_utils','field_mandatory_and_line',array($row+1,implode(",",$data),$label,$ath->getName()));
@@ -323,8 +364,22 @@ function show_parse_results($used_fields,$parsed_labels,$artifacts_data,$aid_col
       $width = ' class="small"';
 
       if ($value != "") {
-	//FOLLOW_UP COMMENTS
-	if ($parsed_labels[$c] == $Language->getText('tracker_import','follow_ups')) {
+
+	  // TODO: Localize this properly by adding those 4 fields to the artifact table
+	  // (standard fields) and the artifact field table with a special flag and make sure
+	  // all tracker scripts handle them properly
+	  // For now make a big hack!! (see import.php func=showformat)
+	  $submitted_field = $art_field_fact->getFieldFromName('submitted_by');
+	  if (strstr($submitted_field->getLabel(),"ubmit")) {
+	      // Assume English
+	      $lbl_follow_ups = 'Follow-up Comments';
+	  } else {
+	      // Assume French
+	      $lbl_follow_ups = 'Commentaires';
+	  }        
+
+    	//FOLLOW_UP COMMENTS
+	if ($parsed_labels[$c] == $lbl_follow_ups) {
 	  unset($parsed_details);
 	  unset($parse_error);
 	  if (parse_details($data[$c],$parsed_details,$parse_error,true)) {
@@ -534,10 +589,25 @@ function getUsedFields() {
     }
   }
 
-  $used_fields[$Language->getText('tracker_import','follow_ups')] = "";
-  $used_fields[$Language->getText('tracker_import','depend_on')] = "";
-  $used_fields[$Language->getText('tracker_import','cc_list')] = "";
-  $used_fields[$Language->getText('tracker_import','cc_comment')] = "";
+  // TODO: Localize this properly by adding those 4 fields to the artifact table
+  // (standard fields) and the artifact field table with a special flag and make sure
+  // all tracker scripts handle them properly
+  // For now make a big hack!! (see import.php func=showformat)
+  $submitted_field = $art_field_fact->getFieldFromName('submitted_by');
+  print_r($submitted_field);
+  if (strstr($submitted_field->getLabel(),"ubmit")) {
+      // Assume English
+      $used_fields["Follow-up Comments"] = "";
+      $used_fields["Depend on"] = "";
+      $used_fields["CC List"] = "";
+      $used_fields["CC Comment"] = "";
+  } else {
+      // Assume French
+      $used_fields["Commentaires"] = "";
+      $used_fields["Dépend de"] = "";
+      $used_fields["Liste CC"] = "";
+      $used_fields["Commentaire CC"] = "";
+  }        
 
   $submitted_by_field = $art_field_fact->getFieldFromName('submitted_by');
   $submitted_by_label = $submitted_by_field->getLabel();
@@ -840,8 +910,27 @@ function prepare_vfl($data,$used_fields,$parsed_labels,$predefined_values,&$arti
     if ($field) $field_name = $field->getName();
     $imported_value = $data[$label];
 
+    // TODO: Localize this properly by adding those 4 fields to the artifact table
+    // (standard fields) and the artifact field table with a special flag and make sure
+    // all tracker scripts handle them properly
+    // For now make a big hack!! (see import.php func=showformat)
+    $submitted_field = $art_field_fact->getFieldFromName('submitted_by');
+    if (strstr($submitted_field->getLabel(),"ubmit")) {
+	// Assume English
+	$lbl_follow_ups = 'Follow-up Comments';
+	$lbl_s_dependent_on = 'Depend on';
+	$lbl_add_cc = 'CC List';
+	$lbl_cc_comment = 'CC Comment';
+    } else {
+	// Assume French
+	$lbl_follow_ups = 'Commentaires';
+	$lbl_is_dependent_on = 'Dépend de';
+	$lbl_add_cc = 'Liste CC';
+	$lbl_cc_comment = 'Commentaire CC';
+    }
+
     // FOLLOW-UP COMMENTS
-    if ($label == $Language->getText('tracker_import','follow_ups')) {
+    if ($label == $lbl_follow_ups) {
       $field_name = "details";
       if ($data[$label] != "" && trim($data[$label]) != $Language->getText('tracker_import_utils','no_followups')) {
 	$details = $data[$label];
@@ -849,7 +938,7 @@ function prepare_vfl($data,$used_fields,$parsed_labels,$predefined_values,&$arti
       continue;
       
     // DEPEND ON
-    } else if ($label == $Language->getText('tracker_import','depend_on')) {
+    } else if ($label == $lbl_s_dependent_on) {
       $depends = $data[$label];
       if ($depends != $Language->getText('global','none') && $depends != "") {
 	$artifact_depend_id = $depends;
@@ -860,14 +949,14 @@ function prepare_vfl($data,$used_fields,$parsed_labels,$predefined_values,&$arti
       continue;
     
     // CC LIST
-    } else if ($label == $Language->getText('tracker_import','cc_list')) {
+    } else if ($label == $lbl_add_cc) {
       if ($data[$label] != "" && $data[$label] != $Language->getText('global','none'))
       $add_cc = $data[$label];
       else $add_cc = "";
       continue;
 
     // CC COMMENT
-    } else if ($label == $Language->getText('tracker_import','cc_comment')) {
+    } else if ($label == $lbl_cc_comment) {
       $cc_comment = $data[$label];
       continue;
 

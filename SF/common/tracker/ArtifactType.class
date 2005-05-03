@@ -947,6 +947,7 @@ class ArtifactType extends Error {
 	}
 	
 	function setWatchees($user_id, $watchees) {
+	    global $Language;
 		//echo "setWatchees($user_id, $watchees)<br>";
 		if ($watchees) {
 			//echo "watchees";
@@ -1064,8 +1065,9 @@ class ArtifactType extends Error {
 	 * @return boolean
 	 */
 	function copyNotificationEvent($group_artifact_id) {
+	    global $Language;
 		$sql = "insert into artifact_notification_event ".
-			   "select event_id,".$group_artifact_id.",event_label ,short_description,description,rank ".
+			   "select event_id,".$group_artifact_id.",event_label,rank,short_description_msg,description_msg ".
 			   "from artifact_notification_event_default";
 			   
 		$res_insert = db_query($sql);
@@ -1086,8 +1088,9 @@ class ArtifactType extends Error {
 	 * @return boolean
 	 */
 	function copyNotificationRole($group_artifact_id) {
+	    global $Language;
 		$sql = "insert into artifact_notification_role ".
-			   "select role_id,".$group_artifact_id.",role_label  ,short_description,description,rank ".
+			   "select role_id,".$group_artifact_id.",role_label ,rank, short_description_msg,description_msg ".
 			   "from artifact_notification_role_default";
 			   
 		$res_insert = db_query($sql);
@@ -1778,7 +1781,7 @@ class ArtifactType extends Error {
 
 	/** delete all the dependencies specified in delete_dependend */
 	function deleteDependencies($delete_depend) {
-		global $feedback;
+	    global $feedback,$Language;
 		$changed = true;
 		while (list(,$depend) = each($delete_depend)) {
 			$sql = "DELETE FROM artifact_dependencies WHERE artifact_depend_id IN ($depend)";

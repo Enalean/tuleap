@@ -505,20 +505,19 @@ class ArtifactReportHtml extends ArtifactReport {
                           <INPUT TYPE="HIDDEN" NAME="advsrch" VALUE="'.$advsrch.'">
                           <INPUT TYPE="HIDDEN" NAME="msort" VALUE="'.$msort.'">
 			  <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="5">
-                          <TR><TD colspan="'.$fields_per_line.'" nowrap>'.
-		  ($pv ? 
-		   '<h3>'.$Language->getText('tracker_include_report','selected').' '.$ath->getCapsItemName().'</h3>' :
-		   '<h3>'.$Language->getText('tracker_include_report','browse').' '.$ath->getCapsItemName());
+                          <TR><TD colspan="'.$fields_per_line.'" nowrap>';
 
                 
                 //Show the list of available artifact reports
-                if (!$pv) {
+                if ($pv) {
+                    $html_result .= '<h3>'.$Language->getText('tracker_include_report','selected', array($ath->getCapsItemName())).'</h3>';
+                } else {
                     $res_report = $this->getReports($this->group_artifact_id,user_getid());
                     $box_name = 'report_id" onChange="document.artifact_form.go_report.click()';
 
-                        $html_result .= ' '.$Language->getText('tracker_include_report','using_report').' '.
+                        $html_result .= '<b>'.$Language->getText('tracker_include_report','using_report').
                                 html_build_select_box($res_report,$box_name,$report_id,false).
-                                '<input VALUE="'.$Language->getText('tracker_include_report','btn_go').'" NAME="go_report" type="submit">';
+                                '<input VALUE="'.$Language->getText('tracker_include_report','btn_go').'" NAME="go_report" type="submit">'.'</b>';
                 }
                 
                 // Start building the URL that we use to for hyperlink in the form
@@ -559,7 +558,7 @@ class ArtifactReportHtml extends ArtifactReport {
                 if (!$pv) {
                     $html_result .= '<p><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_browse').'"></FONT> '.
                         '<input TYPE="text" name="chunksz" size="3" MAXLENGTH="5" '.
-                        'VALUE="'.$chunksz.'">'.$ath->getItemName().$Language->getText('tracker_include_report','at_once').'</FORM>';
+                        'VALUE="'.$chunksz.'">&nbsp;'.$ath->getItemName().$Language->getText('tracker_include_report','at_once').'</FORM>';
                 }
                 
                 //
@@ -579,26 +578,26 @@ class ArtifactReportHtml extends ArtifactReport {
                     }
                     
                     $html_result .= '<A name="results"></A>';
-                    $html_result .= '<h3>'.$totalrows.' '.$Language->getText('tracker_include_report','matching').' '.$ath->getItemName().($totalrows>1 ? $Language->getText('tracker_include_report','plural'):'').' '.
+                    $html_result .= '<h3>'.$totalrows.' '.$Language->getText('tracker_include_report','matching').' '.
                         $order_statement.'</h3>';
                 
                     if (!$pv) {
                                 $html_result .= '<P>'.$Language->getText('tracker_include_report','sort_results').' ';
                                 $field = $art_field_fact->getFieldFromName('severity');
                                 if ( $field && $field->isUsed()) {
-                                        $html_result .= $Language->getText('tracker_include_report','or').' <A HREF="'.$url.'&order=severity#results"><b>'.$Language->getText('tracker_include_report','sort_sev').'</b></A> ';
+                                        $html_result .= $Language->getText('global','or').' <A HREF="'.$url.'&order=severity#results"><b>'.$Language->getText('tracker_include_report','sort_sev').'</b></A> ';
                                 }
-                                $html_result .= $Language->getText('tracker_include_report','or').' <A HREF="'.$url.'&order=#results"><b>'.$Language->getText('tracker_include_report','reset').'</b></a>. ';
+                                $html_result .= $Language->getText('global','or').' <A HREF="'.$url.'&order=#results"><b>'.$Language->getText('tracker_include_report','reset_sort').'</b></a>. ';
                         }
                     
                     if ($msort) { 
                                 $url_alternate_sort = str_replace('msort=1','msort=0',$url).
                                     '&order=#results';
-                                $text = $Language->getText('tracker_include_report','deactivate');
+                                $text = $Language->getText('global','deactivate');
                     } else {    
                                 $url_alternate_sort = str_replace('msort=0','msort=1',$url).
                             '&order=#results';
-                                $text = $Language->getText('tracker_include_report','activate');
+                                $text = $Language->getText('global','activate');
                     }
                 
                     if (!$pv) {
@@ -613,7 +612,7 @@ class ArtifactReportHtml extends ArtifactReport {
                 
                 } else {
                 
-                    $html_result .= $Language->getText('tracker_include_report','no_match',array($ath->getCapsItemName(),group_getname($group_id)));
+                    $html_result .= '<h2>'.$Language->getText('tracker_include_report','no_match').'</h2>';
                     $html_result .= db_error();
                 
                 }
@@ -635,11 +634,11 @@ class ArtifactReportHtml extends ArtifactReport {
 
             switch ( $scope ) {
             case 'P':
-                return $Language->getText('tracker_include_report','project');
+                return $Language->getText('global','Project');
             case 'I':
-                return $Language->getText('tracker_include_report','personal');
+                return $Language->getText('global','Personal');
             case 'S':
-                return $Language->getText('tracker_include_report','system');
+                return $Language->getText('global','System');
             }
         }                   
 
@@ -711,8 +710,7 @@ class ArtifactReportHtml extends ArtifactReport {
                 echo '<p><h3>'.$Language->getText('tracker_include_report','no_rep_def').'</h3>';
             }
         
-            echo '<P> '.$Language->getText('tracker_include_report','create_report','<A HREF="/tracker/admin/?func=report&group_id='.$group_id.
-                '&atid='.$atid.'&new_report=1"><b>').'</b></A>.';
+            echo '<P> '.$Language->getText('tracker_include_report','create_report',array('/tracker/admin/?func=report&group_id='.$group_id.'&atid='.$atid.'&new_report=1'));
         }
 
         /**
@@ -755,11 +753,11 @@ class ArtifactReportHtml extends ArtifactReport {
             
             if ($ath->userIsAdmin())
                         echo '<SELECT NAME="rep_scope">
-                                        <OPTION VALUE="I">'.$Language->getText('tracker_include_report','personal').'</OPTION>
-                                        <OPTION VALUE="P">'.$Language->getText('tracker_include_report','project').'</OPTION>
+                                        <OPTION VALUE="I">'.$Language->getText('global','Personal').'</OPTION>
+                                        <OPTION VALUE="P">'.$Language->getText('global','Project').'</OPTION>
                                         </SELECT>';
             else
-                        echo $Language->getText('tracker_include_report','personal').' <INPUT TYPE="HIDDEN" NAME="rep_scope" VALUE="I">';
+                        echo $Language->getText('global','Personal').' <INPUT TYPE="HIDDEN" NAME="rep_scope" VALUE="I">';
         
         
             echo ' <P>
@@ -818,10 +816,10 @@ class ArtifactReportHtml extends ArtifactReport {
                 $group_id = $g->getID();
                 $atid = $ath->getID();
 
-                $ath->adminHeader(array ('title'=>$Language->getText('tracker_include_report','modify_for',$this->name,$ath->getName()).' ',
+                $ath->adminHeader(array ('title'=>$Language->getText('tracker_include_report','modify_report'),
                                     'help' => 'TrackerAdministration.html#TrackerReportSetting'));
                   
-		echo '<H2>'.$Language->getText('tracker_import_admin','tracker').' \'<a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'">'.$ath->getName().'</a>\'  '.$Language->getText('tracker_include_report','mod_repo').' \''.$this->name.'\'</H2>';
+		echo '<H2>'.$Language->getText('tracker_import_admin','tracker').' \'<a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'">'.$ath->getName().'</a>\' -  '.$Language->getText('tracker_include_report','modify_report').' \''.$this->name.'\'</H2>';
         
                     
             // display the table of all fields that can be included in the report
@@ -848,11 +846,11 @@ class ArtifactReportHtml extends ArtifactReport {
             $scope = $this->scope;
             if ($ath->userIsAdmin())
                         echo '<SELECT NAME="rep_scope">
-                                        <OPTION VALUE="I"'.($scope=='I' ? 'SELECTED':'').'>'.$Language->getText('tracker_include_report','personal').'</OPTION>
-                                        <OPTION VALUE="P"'.($scope=='P' ? 'SELECTED':'').'>'.$Language->getText('tracker_include_report','project').'</OPTION>
+                                        <OPTION VALUE="I"'.($scope=='I' ? 'SELECTED':'').'>'.$Language->getText('global','Personal').'</OPTION>
+                                        <OPTION VALUE="P"'.($scope=='P' ? 'SELECTED':'').'>'.$Language->getText('global','Project').'</OPTION>
                                         </SELECT>';
             else
-                        echo ($scope=='P' ? $Language->getText('tracker_include_report','project'):$Language->getText('tracker_include_report','personal')).
+                        echo ($scope=='P' ? $Language->getText('global','Project'):$Language->getText('global','Personal')).
                             '<INPUT TYPE="HIDDEN" NAME="rep_scope" VALUE="'.$scope.'">';
         
             echo '

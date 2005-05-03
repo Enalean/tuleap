@@ -44,7 +44,7 @@ if ( !$field->isSelectBox() && !$field->isMultiSelectBox() ) {
 		// For severity field, we don't display the Bing form or the Create Form
 		if ( $field->getName() != "severity" ) {
 			$ath->displayFieldValueForm("value_create",$field_id);
-			$ath->displayValueFunctionForm($field_id,"","Or");
+			$ath->displayValueFunctionForm($field_id,"",$Language->getText('global','or'));
 		}
 	}
 }

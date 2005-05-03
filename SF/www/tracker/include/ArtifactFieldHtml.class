@@ -160,7 +160,7 @@ class ArtifactFieldHtml extends ArtifactField {
 				$Language->getText('tracker_include_field','end').'<INPUT TYPE="text" name="'.$this->getName().'_end'.
 				'" size="'.$size.'" MAXLENGTH="'.$maxlength.'" VALUE="'.$date_end.'">'.
 				'<a href="javascript:show_calendar(\'document.artifact_form.'.$this->getName().'_end\', document.artifact_form.'.$this->getName().'_end.value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
-				'<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="'.$Language->getText('tracker_include_field','pick_end').'"></a>';
+				'<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="'.$Language->getText('tracker_include_field','pick_date').'"></a>';
 		    }
 	
 	    return($html);
@@ -183,9 +183,9 @@ class ArtifactFieldHtml extends ArtifactField {
 			$html = htmlspecialchars($value);
 		} else {
 			$html = '<SELECT name="'.$this->field_name.'_op">'.
-			'<OPTION VALUE=">"'.(($value == '>') ? $Language->getText('tracker_include_field','selected'):'').'>&gt;</OPTION>'.
-			'<OPTION VALUE="="'.(($value == '=') ? $Language->getText('tracker_include_field','selected'):'').'>=</OPTION>'.
-			'<OPTION VALUE="<"'.(($value == '<') ? $Language->getText('tracker_include_field','selected'):'').'>&lt;</OPTION>'.
+			'<OPTION VALUE=">"'.(($value == '>') ? 'SELECTED':'').'>&gt;</OPTION>'.
+			'<OPTION VALUE="="'.(($value == '=') ? 'SELECTED':'').'>=</OPTION>'.
+			'<OPTION VALUE="<"'.(($value == '<') ? 'SELECTED':'').'>&lt;</OPTION>'.
 			'</SELECT>';
 		}
 	    return($html);

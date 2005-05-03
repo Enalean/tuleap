@@ -525,7 +525,7 @@ class Artifact extends Error {
                     $this->addHistory($field,htmlspecialchars($details), "", 100);
                 }
                 $changes['details']['add'] = stripslashes($details);
-                $changes['details']['type'] = 'None';
+                $changes['details']['type'] = $Language->getText('global','none');
                         
                 $feedback .= $Language->getText('tracker_common_artifact','add_comment');
             }               
@@ -627,7 +627,7 @@ class Artifact extends Error {
                         
                     if ( ($field->isMultiSelectBox())&&(is_array($value)) ) {
 
-			if ($masschange && (in_array($Language->getText('global','unchanged'),$value))) {
+			if ($masschange && (in_array('Unchanged',$value))) {
 				continue;
 			}
                         // The field is a multi values field and it has multi assigned values
@@ -679,7 +679,7 @@ class Artifact extends Error {
                         }
                                         
                     } else {
-	        	if ($masschange && ($value==$Language->getText('global','unchanged'))) {
+	        	if ($masschange && ($value=='Unchanged')) {
 				continue;
 			}	
        
@@ -745,7 +745,7 @@ class Artifact extends Error {
 	    if ($masschange) {
 		reset($HTTP_POST_VARS);
 		while ( list($key, $val) = each($HTTP_POST_VARS)) {
-			if ($key == 'submitted_by' && $val != $Language->getText('global','unchanged')) {
+			if ($key == 'submitted_by' && $val != 'Unchanged') {
 				$sql = "UPDATE artifact SET submitted_by=$val WHERE artifact_id = ".$this->getID();
 				$res = db_query($sql);
 				$field = $art_field_fact->getFieldFromName('submitted_by');
@@ -1211,7 +1211,7 @@ class Artifact extends Error {
         $field = $art_field_fact->getFieldFromName('comment_type_id');
         if ( $field ) {
             // Look for project specific values first
-	  $sql="SELECT DISTINCT artifact_history.artifact_history_id,artifact_history.field_name,artifact_history.old_value,artifact_history.date,user.user_name,artifact_history.mod_by,artifact_history.email,artifact_field_value_list.value AS comment_type ".
+	  $sql="SELECT DISTINCT artifact_history.artifact_history_id,artifact_history.field_name,artifact_history.old_value,artifact_history.date,user.user_name,artifact_history.mod_by,artifact_history.email,artifact_history.type AS comment_type_id,artifact_field_value_list.value AS comment_type ".
 	      "FROM artifact_history,artifact_field_value_list,artifact_field,user ".
 	      "WHERE artifact_history.artifact_id=".$this->getID()." ".
 	      "AND artifact_history.field_name = 'details' ".
@@ -1229,7 +1229,7 @@ class Artifact extends Error {
             //echo "sql=".$sql." - rows=".$rows."<br>";
         } else {
             // Look for project specific values first
-            $sql="SELECT DISTINCT artifact_history.artifact_history_id,artifact_history.field_name,artifact_history.old_value,artifact_history.date,user.user_name,artifact_history.mod_by,artifact_history.email,null AS comment_type ".
+            $sql="SELECT DISTINCT artifact_history.artifact_history_id,artifact_history.field_name,artifact_history.old_value,artifact_history.date,user.user_name,artifact_history.mod_by,artifact_history.email,artifact_history.type AS comment_type_id,null AS comment_type ".
                 "FROM artifact_history,user ".
                 "WHERE artifact_history.artifact_id=".$this->getID()." ".
                 "AND artifact_history.field_name = 'details' ".

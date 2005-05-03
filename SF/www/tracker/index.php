@@ -437,7 +437,7 @@ if ( $func == 'gotoid' ) {
 		    $changed = $ah->handleUpdate($artifact_id_dependent,$canned_response,$changes,true);
 		    if ($changed) {
 		      if ($i > 0) $feedback .= ",";
-		      if ($i == 0) $feedback .= $Language->getText('tracker_index','updated');
+		      if ($i == 0) $feedback .= $Language->getText('tracker_index','updated_aid');
 		      $feedback .= " $aid";
 				    
 		    }
@@ -678,7 +678,8 @@ if ( $func == 'gotoid' ) {
         echo "</strong><p>";
         
         if (!$at_arr || count($at_arr) < 1) {
-	  echo $Language->getText('tracker_index','no_accessible_trackers',"/tracker/admin/?group_id=$group_id");
+	  echo '<h2>'.$Language->getText('tracker_index','no_accessible_trackers_hdr').'</h2>';
+	  echo '<p>'.$Language->getText('tracker_index','no_accessible_trackers_msg').'</p>';
         } else {
             echo "<p>".$Language->getText('tracker_index','choose_tracker');
             if (!$pv) {

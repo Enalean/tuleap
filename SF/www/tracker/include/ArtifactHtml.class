@@ -46,6 +46,7 @@ class ArtifactHtml extends Artifact {
             $group = $this->ArtifactType->getGroup();
             $group_artifact_id = $this->ArtifactType->getID();
             $group_id = $group->getGroupId();
+            $result_fields = $art_field_fact->getAllUsedFields();
 
             // First display some  internal fields - Cannot be modified by the user          
             $summary = $this->getValue('summary');
@@ -69,15 +70,15 @@ class ArtifactHtml extends Artifact {
             <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
             <INPUT TYPE="HIDDEN" NAME="group_artifact_id" VALUE="'.$group_artifact_id.'">
             <INPUT TYPE="HIDDEN" NAME="artifact_id" VALUE="'.$this->getID().'">';
-            
+
                 echo '
             <TABLE cellpadding="0">
-              <TR><TD><B>'.$Language->getText('tracker_include_artifact','submitted_by').'</B>&nbsp;</td><td>'.util_user_link(user_getname($this->getValue('submitted_by'))).'</a></TD>
+              <TR><TD><B>'.$result_fields['submitted_by']->getLabel().': </B>&nbsp;</td><td>'.util_user_link(user_getname($this->getValue('submitted_by'))).'</a></TD>
                   <TD><B>'.$Language->getText('tracker_include_artifact','project').'</B>&nbsp;</td><td>'.group_getname($group_id).'</TD>
               </TR>
-              <TR><TD><B>'.$Language->getText('tracker_include_artifact','submitted_on').'</B>&nbsp;</td><td>'.format_date($sys_datefmt,$this->getValue('open_date')).'</TD>';
+              <TR><TD><B>'.$result_fields['open_date']->getLabel().': </B>&nbsp;</td><td>'.format_date($sys_datefmt,$this->getValue('open_date')).'</TD>';
             
-            if (!$pv) echo '<TD colspan="2"><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('tracker_include_artifact','submit').'"></TD>';
+            if (!$pv) echo '<TD colspan="2"><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'"></TD>';
             
             echo '
             </TR>
@@ -87,7 +88,6 @@ class ArtifactHtml extends Artifact {
                 // Now display the variable part of the field list (depend on the project)
         
             $i = 0;
-            $result_fields = $art_field_fact->getAllUsedFields();
         while ( list($key, $field) = each($result_fields) ) {
                 
                 $field_html = new ArtifactFieldHtml($field);
@@ -148,7 +148,7 @@ class ArtifactHtml extends Artifact {
                 if ( !$ro ) {
                         echo '
                         <TR><TD>
-                        <h3>'.$Language->getText('tracker_import','follow_ups').' '.help_button('ArtifactUpdate.html#ArtifactComments').'</h3></td>
+                        <h3>'.$Language->getText('tracker_include_artifact','follow_ups').' '.help_button('ArtifactUpdate.html#ArtifactComments').'</h3></td>
                         <TD>
                         <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('tracker_include_artifact','submit').'">
                         </td></tr>';
@@ -196,11 +196,14 @@ class ArtifactHtml extends Artifact {
                 <TR><TD colspan="2"><hr></td></tr>
                 
                 <TR><TD colspan="2">
-                <h3>'.$Language->getText('tracker_import','cc_list').' '.help_button('ArtifactUpdate.html#ArtifactCCList').'</h3>';
+                <h3>'.$Language->getText('tracker_include_artifact','cc_list').' '.help_button('ArtifactUpdate.html#ArtifactCCList').'</h3>';
                 
                 if ( !$ro ) {
-		  echo $Language->getText('tracker_include_artifact','codex_user');
-		  echo $Language->getText('tracker_include_artifact','fill_cc_list');
+		  echo $Language->getText('tracker_include_artifact','fill_cc_list_msg');
+		  echo $Language->getText('tracker_include_artifact','fill_cc_list_lbl');
+		  echo '<input type="text" name="add_cc" size="30">';
+		  echo '<B>&nbsp;&nbsp;&nbsp;'.$Language->getText('tracker_include_artifact','fill_cc_list_cmt').":&nbsp</b>";
+		  echo '<input type="text" name="cc_comment" size="40" maxlength="255">';
                 }
                         
                 echo $this->showCCList($group_id,$group_artifact_id);
@@ -216,8 +219,14 @@ class ArtifactHtml extends Artifact {
                 <h3>'.$Language->getText('tracker_include_artifact','attachment').' '.help_button('ArtifactUpdate.html#ArtifactAttachments').'</h3>';
                 
 
-                echo $Language->getText('tracker_include_artifact','upload',formatByteToMb($sys_max_size_attachment));
-                                
+                echo $Language->getText('tracker_include_artifact','upload_checkbox');
+		echo ' <input type="checkbox" name="add_file" VALUE="1">';
+                echo $Language->getText('tracker_include_artifact','upload_file_lbl');
+                echo '<input type="file" name="input_file" size="40">';
+                echo $Language->getText('tracker_include_artifact','upload_file_msg',formatByteToMb($sys_max_size_attachment));
+
+                echo $Language->getText('tracker_include_artifact','upload_file_desc');
+		echo '<input type="text" name="file_description" size="60" maxlength="255">';
                 echo $this->showAttachedFiles($group_id,$group_artifact_id);
                 
                 echo '</TD></TR>';
@@ -303,7 +312,7 @@ class ArtifactHtml extends Artifact {
                             $field_name = db_result($result, $i, 'field_name');
                             $value_id_old =  db_result($result, $i, 'old_value');
                             $value_id_new =  db_result($result, $i, 'new_value');
-                
+
                                 $field = $art_field_fact->getFieldFromName($field_name);
                                 if ( $field ) {
                                     echo "\n".'<TR class="'. util_get_alt_row_color($i) .
@@ -345,7 +354,7 @@ class ArtifactHtml extends Artifact {
                 echo '</TABLE>';
             
             } else {
-                echo "\n".$Language->getText('tracker_include_artifact','no_changes',$this->ArtifactType->getItemName()).'</H4>';
+                echo "\n".$Language->getText('tracker_include_artifact','no_changes').'</H4>';
             }
         }
 
@@ -381,7 +390,7 @@ class ArtifactHtml extends Artifact {
                 
             // Header first
             if ($ascii) {
-                        $out .= $Language->getText('tracker_include_artifact','file_attachment')."$sys_lf****************";
+		$out .= $Language->getText('tracker_include_artifact','file_attachment').$sys_lf.str_repeat("*",strlen($Language->getText('tracker_include_artifact','file_attachment')));
             } else {    
                 
                 $title_arr=array();
@@ -389,7 +398,7 @@ class ArtifactHtml extends Artifact {
                 $title_arr[]=$Language->getText('tracker_include_artifact','desc');
                 $title_arr[]=$Language->getText('tracker_include_artifact','size_kb');
                 $title_arr[]=$Language->getText('global','by');
-                $title_arr[]=$Language->getText('global','on');
+                $title_arr[]=$Language->getText('tracker_include_artifact','posted_on');
 		$title_arr[]=$Language->getText('tracker_include_canned','delete');
         
                 $out .= html_build_list_table_top ($title_arr);
@@ -483,17 +492,17 @@ class ArtifactHtml extends Artifact {
             // Header first an determine what the print out format is
             // based on output type (Ascii, HTML)
             if ($ascii) {
-                        $out .= $Language->getText('tracker_import','cc_list')."$sys_lf*******$sys_lf$sys_lf";
+		$out .= $Language->getText('tracker_include_artifact','cc_list').$sys_lf.str_repeat("*",strlen($Language->getText('tracker_include_artifact','cc_list'))).$sys_lf.$sys_lf;
                         $fmt = "%-35s | %s$sys_lf";
-                        $out .= sprintf($fmt, $Language->getText('tracker_include_artifact','cc_address'), $Language->getText('tracker_include_artifact','comment'));
+                        $out .= sprintf($fmt, $Language->getText('tracker_include_artifact','cc_address'), $Language->getText('tracker_include_artifact','fill_cc_list_cmt'));
                         $out .= "------------------------------------------------------------------$sys_lf";
             } else {    
         
                         $title_arr=array();
                         $title_arr[]=$Language->getText('tracker_include_artifact','cc_address');
-                        $title_arr[]=$Language->getText('tracker_include_artifact','comment');
+                        $title_arr[]=$Language->getText('tracker_include_artifact','fill_cc_list_cmt');
                         $title_arr[]=$Language->getText('tracker_include_artifact','added_by');
-                        $title_arr[]=$Language->getText('global','on');
+                        $title_arr[]=$Language->getText('tracker_include_artifact','posted_on');
                         $title_arr[]=$Language->getText('tracker_include_canned','delete');
                         $out .= html_build_list_table_top ($title_arr);
                 
@@ -584,7 +593,7 @@ class ArtifactHtml extends Artifact {
             // Header first an determine what the print out format is
             // based on output type (Ascii, HTML)
             if ($ascii) {
-                        $out .= $Language->getText('tracker_include_artifact','dep_list')."$sys_lf*****************$sys_lf$sys_lf";
+		$out .= $Language->getText('tracker_include_artifact','dep_list').$sys_lf.str_repeat("*",strlen($Language->getText('tracker_include_artifact','dep_list')))."$sys_lf$sys_lf";
                         $fmt = "%-15s | %s$sys_lf";
                         $out .= sprintf($fmt, $Language->getText('tracker_include_artifact','artifact'), $Language->getText('tracker_include_artifact','summary'));
                         $out .= "------------------------------------------------------------------$sys_lf";
@@ -672,7 +681,7 @@ class ArtifactHtml extends Artifact {
             // Header first an determine what the print out format is
             // based on output type (Ascii, HTML)
             if ($ascii) {
-                        $out .= $Language->getText('tracker_include_artifact','dep_list')."$sys_lf*****************$sys_lf$sys_lf";
+		$out .= $Language->getText('tracker_include_artifact','dep_list').$sys_lf.str_repeat("*",strlen($Language->getText('tracker_include_artifact','dep_list')))."$sys_lf$sys_lf";
                         $fmt = "%-15s | %s$sys_lf";
                         $out .= sprintf($fmt, $Language->getText('tracker_include_artifact','artifact'), $Language->getText('tracker_include_artifact','summary'));
                         $out .= "------------------------------------------------------------------$sys_lf";
@@ -752,10 +761,10 @@ class ArtifactHtml extends Artifact {
         
             // Header first
             if ($ascii) {
-                        $out .= $Language->getText('tracker_import','follow_ups')."$sys_lf*******************";
+		$out .= $Language->getText('tracker_include_artifact','follow_ups').$sys_lf.str_repeat("*",strlen($Language->getText('tracker_include_artifact','follow_ups')));
             } else {
                         $title_arr=array();
-                        $title_arr[]=$Language->getText('tracker_include_artifact','comment');
+                        $title_arr[]=$Language->getText('tracker_include_artifact','fill_cc_list_cmt');
                         $title_arr[]=$Language->getText('tracker_import_utils','date');
                         $title_arr[]=$Language->getText('global','by');
                         
@@ -764,9 +773,9 @@ class ArtifactHtml extends Artifact {
             
             // Loop throuh the follow-up comments and format them
             for ($i=0; $i < $rows; $i++) {
-                
                         $comment_type = db_result($result, $i, 'comment_type');
-                        if ( ($comment_type == $Language->getText('global','none'))||($comment_type == "") )
+			$comment_type_id = db_result($result, $i, 'comment_type_id');
+		        if ( ($comment_type_id == 100) ||($comment_type == "") )
                             $comment_type = '';
                         else
                             $comment_type = '['.$comment_type.']';
@@ -906,10 +915,10 @@ class ArtifactHtml extends Artifact {
                 <TR><TD colspan="'.(2*$fields_per_line).'"><hr></td></tr>
                 
                 <TR><TD colspan="'.(2*$fields_per_line).'">
-                <h3>'.$Language->getText('tracker_import','cc_list').' '.help_button('ArtifactUpdate.html#ArtifactCCList').'</h3>
-                '.$Language->getText('tracker_include_artifact','codex_user').'<p>
-                <B>'.$Language->getText('tracker_include_artifact','add_cc').'&nbsp;</b><input type="text" name="add_cc" size="30">&nbsp;&nbsp;&nbsp;
-                <B>'.$Language->getText('tracker_include_artifact','comment').':&nbsp;</b><input type="text" name="cc_comment" size="40" maxlength="255"><p>';
+                <h3>'.$Language->getText('tracker_include_artifact','cc_list').' '.help_button('ArtifactUpdate.html#ArtifactCCList').'</h3>
+                '.$Language->getText('tracker_include_artifact','fill_cc_list_msg').'<p>
+                <B>'.$Language->getText('tracker_include_artifact','fill_cc_list_lbl').'&nbsp;</b><input type="text" name="add_cc" size="30">&nbsp;&nbsp;&nbsp;
+                <B>&nbsp;&nbsp;&nbsp;'.$Language->getText('tracker_include_artifact','fill_cc_list_cmt').':&nbsp;</b><input type="text" name="cc_comment" size="40" maxlength="255"><p>';
                 
                 echo '</TD></TR>';
                         
@@ -919,9 +928,17 @@ class ArtifactHtml extends Artifact {
                 echo '
                 <TR><TD colspan="'.(2*$fields_per_line).'"><hr></td></tr>
                 <TR><TD colspan="'.(2*$fields_per_line).'">
-                <h3>'.$Language->getText('tracker_include_artifact','attachment').' '.help_button('ArtifactUpdate.html#ArtifactAttachments').'</h3>'.
-		  $Language->getText('tracker_include_artifact','upload',formatByteToMb($sys_max_size_attachment));
+                <h3>'.$Language->getText('tracker_include_artifact','attachment').' '.help_button('ArtifactUpdate.html#ArtifactAttachments').'</h3>';
                 
+
+                echo $Language->getText('tracker_include_artifact','upload_checkbox');
+		echo ' <input type="checkbox" name="add_file" VALUE="1">';
+                echo $Language->getText('tracker_include_artifact','upload_file_lbl');
+                echo '<input type="file" name="input_file" size="40">';
+                echo $Language->getText('tracker_include_artifact','upload_file_msg',formatByteToMb($sys_max_size_attachment));
+
+                echo $Language->getText('tracker_include_artifact','upload_file_desc');
+		echo '<input type="text" name="file_description" size="60" maxlength="255">';                
                 echo '</TD></TR>';
 
                 //
@@ -931,7 +948,7 @@ class ArtifactHtml extends Artifact {
                 <TR><TD COLSPAN="'.(2*$fields_per_line).'">
                         <P>
                         <hr>
-                        <B><span class="highlight">'.$Language->getText('tracker_include_artifact','check_already_submitted',$this->ArtifactType->getItemName()).'<P><center>
+                        <B><span class="highlight">'.$Language->getText('tracker_include_artifact','check_already_submitted').'<P><center>
                         <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
                         </center>
                         </FORM>
@@ -955,124 +972,124 @@ class ArtifactHtml extends Artifact {
             $group = $this->ArtifactType->getGroup();
             $group_artifact_id = $this->ArtifactType->getID();
             $group_id = $group->getGroupId();
+	    $used_fields = $art_field_fact->getAllUsedFields();
 
             $artifact_href .= "/tracker/?func=detail&aid=".$this->getID()."&atid=$group_artifact_id&group_id=$group_id";
         
-                $fmt_len = 40;
-                $fmt_left = sprintf("%%-%ds ", $fmt_len-1);
-                $fmt_right = "%s";
+	    $fmt_len = 40;
+	    $fmt_left = sprintf("%%-%ds ", $fmt_len-1);
+	    $fmt_right = "%s";
         
-                // artifact fields
-                // Generate the message preamble with all required
-                // artifact fields - Changes first if there are some.
-                if ($changes) {
-                    $body = "$sys_lf=============   ".strtoupper($this->ArtifactType->getName())." #".$this->getID().
-                        ": ".$Language->getText('tracker_include_artifact','latest_modif')."   =============$sys_lf".$artifact_href."$sys_lf$sys_lf".
-                        $this->formatChanges($changes)."$sys_lf$sys_lf$sys_lf$sys_lf";
-                }
+	    // artifact fields
+	    // Generate the message preamble with all required
+	    // artifact fields - Changes first if there are some.
+	    if ($changes) {
+		$body = "$sys_lf=============   ".strtoupper($this->ArtifactType->getName())." #".$this->getID().
+		    ": ".$Language->getText('tracker_include_artifact','latest_modif')."   =============$sys_lf".$artifact_href."$sys_lf$sys_lf".
+		    $this->formatChanges($changes)."$sys_lf$sys_lf$sys_lf$sys_lf";
+	    }
         
-                $body .= "=============   ".strtoupper($this->ArtifactType->getName())." #".$this->getID().
-                    ": ".$Language->getText('tracker_include_artifact','full_snapshot',strtoupper($this->ArtifactType->getName()))."   =============$sys_lf".
-                    ($changes ? '':$artifact_href)."$sys_lf$sys_lf";
+	    $body .= "=============   ".strtoupper($this->ArtifactType->getName())." #".$this->getID().
+		": ".$Language->getText('tracker_include_artifact','full_snapshot')."   =============$sys_lf".
+		($changes ? '':$artifact_href)."$sys_lf$sys_lf";
             
-                // Some special field first (group, submitted by/on)
-                $body .= sprintf($fmt_left.$fmt_right."$sys_lf", 
-                                 $Language->getText('tracker_include_artifact','submitted_by').' '.user_getname($this->getSubmittedBy()),
-                                 $Language->getText('tracker_include_artifact','project').' '.group_getname($group_id) );
-                $body .= $Language->getText('tracker_include_artifact','submitted_on').' '.format_date($sys_datefmt,$this->getOpenDate())."$sys_lf";
-        
-                // All other regular fields now          
-                $left = 1;
+	    // Some special field first (group, submitted by/on)
+	    $body .= sprintf($fmt_left.$fmt_right."$sys_lf",
+			     $used_fields['submitted_by']->getLabel().': '.user_getname($this->getSubmittedBy()),
+			     $Language->getText('tracker_include_artifact','project').' '.group_getname($group_id) );
+	    $body .= $used_fields['open_date']->getLabel().': '.format_date($sys_datefmt,$this->getOpenDate())."$sys_lf";
 
-                // fetch list of used fields and the current field values
-                // for this artifact
-                $result_fields = $art_field_fact->getAllUsedFields();
+	    // All other regular fields now          
+	    $left = 1;
 
-                while ( list($key, $field) = each($result_fields) ) {
-        
-                        $field_name = $field->getName();
-                        $field_html = new ArtifactFieldHtml($field);
-                        // if the field is a special field 
-                        // then skip it. Otherwise print it in ASCII format.
-                        if ( !$field->isSpecial() ) {
-        
-                            // For multi select box, we need to retrieve all the values
-                            if ( $field->isMultiSelectBox() ) {
-                                $field_value = $field->getValues($this->getID());
-                            } else {
-                                $field_value = $this->getValue($field->getName());
-                            }
-                            $display = $field_html->display($group_artifact_id,
-                                                            $field_value,false,true,true,true);
-                            $item = sprintf(($left? $fmt_left : $fmt_right), $display);
-                            if (strlen($item) > $fmt_len) {
-                                if (! $left) {
-                                    $body .= "$sys_lf";
-                                }
-                                $body .= sprintf($fmt_right, $display);
-                                $body .= "$sys_lf";
-                                $left = 1;
-                            } else {
-                                $body .= $item;
-                                $left = ! $left;
-                                if ($left) {
-                                    $body .= "$sys_lf";
-                                }
-                            }
-                        }
-                } // while
-                if (! $left) {
-                    $body .= "$sys_lf";
-                }
-        
-                // Now display other special fields
-                
-                // Then output the history of bug details from newest to oldest
-                $body .= "$sys_lf$sys_lf".$this->showDetails($group_id, true);
-        
-                // Then output the CC list
-                $body .= "$sys_lf$sys_lf".$this->showCCList($group_id, $group_artifact_id, true);
-        
-                // Then output the dependencies
-                $body .= "$sys_lf$sys_lf".$this->showDependencies($group_id,$group_artifact_id,true);
+	    // fetch list of used fields and the current field values
+	    // for this artifact
 
-                // Then output the history of details from newest to oldest
-                $body .= "$sys_lf$sys_lf".$this->showAttachedFiles($group_id,$group_artifact_id,true);
+	    while ( list($key, $field) = each($used_fields) ) {
         
-                // Finally output the message trailer
-                $body .= "$sys_lf$sys_lf".$Language->getText('tracker_include_artifact','follow_link');
-                $body .= "$sys_lf".$artifact_href;
-        
-        
-                // See who is going to receive the notification. Plus append any other email 
-                // given at the end of the list.
-                $arr_addresses = $this->buildNotificationList($changes);
-                $to = join(',',$arr_addresses);
-//              $to = 'stephane.bouhet@xps-pro.com';
-        
-                if ($more_addresses) {
-                    $to .= ($to ? ',':'').$more_addresses;
-                }
-        
-                //echo "DBG Sending email to: $to<br>";
-        
-                list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
-                $hdrs = 'From: noreply@'.$host.$sys_lf;
-                $hdrs .='Content-type: text/plain; charset=iso-8859-1'.$sys_lf;
-
-                $hdrs .='X-CodeX-Project: '.group_getunixname($group_id).$sys_lf;
-                $hdrs .='X-CodeX-Artifact: '.$this->ArtifactType->getItemName().$sys_lf;
-                $hdrs .='X-CodeX-Artifact-ID: '.$this->getID().$sys_lf;
-
-                $subject='['.$this->ArtifactType->getCapsItemName().' #'.$this->getID().'] '.util_unconvert_htmlspecialchars($this->getValue('summary'));
-
-                //echo "DBG: body:".$body."<br>";
-                if ($to) { mail($to,$subject,$body,$hdrs); }
-        
-                $feedback .= ' '.$Language->getText('tracker_include_artifact','update_sent').' '; //to '.$to;
-        
+		$field_name = $field->getName();
+		$field_html = new ArtifactFieldHtml($field);
+		// if the field is a special field 
+		// then skip it. Otherwise print it in ASCII format.
+		if ( !$field->isSpecial() ) {
+		    
+		    // For multi select box, we need to retrieve all the values
+		    if ( $field->isMultiSelectBox() ) {
+			$field_value = $field->getValues($this->getID());
+		    } else {
+			$field_value = $this->getValue($field->getName());
+		    }
+		    $display = $field_html->display($group_artifact_id,
+						    $field_value,false,true,true,true);
+		    $item = sprintf(($left? $fmt_left : $fmt_right), $display);
+		    if (strlen($item) > $fmt_len) {
+			if (! $left) {
+			    $body .= "$sys_lf";
+			}
+			$body .= sprintf($fmt_right, $display);
+			$body .= "$sys_lf";
+			$left = 1;
+		    } else {
+			$body .= $item;
+			$left = ! $left;
+			if ($left) {
+			    $body .= "$sys_lf";
+			}
+		    }
+		}
+	    } // while
+	    if (! $left) {
+		$body .= "$sys_lf";
+	    }
+	    
+	    // Now display other special fields
+            
+	    // Then output the history of bug details from newest to oldest
+	    $body .= "$sys_lf$sys_lf".$this->showDetails($group_id, true);
+	    
+	    // Then output the CC list
+	    $body .= "$sys_lf$sys_lf".$this->showCCList($group_id, $group_artifact_id, true);
+	    
+	    // Then output the dependencies
+	    $body .= "$sys_lf$sys_lf".$this->showDependencies($group_id,$group_artifact_id,true);
+	    
+	    // Then output the history of details from newest to oldest
+	    $body .= "$sys_lf$sys_lf".$this->showAttachedFiles($group_id,$group_artifact_id,true);
+	    
+	    // Finally output the message trailer
+	    $body .= "$sys_lf$sys_lf".$Language->getText('tracker_include_artifact','follow_link');
+	    $body .= "$sys_lf".$artifact_href;
+	    
+	    
+	    // See who is going to receive the notification. Plus append any other email 
+	    // given at the end of the list.
+	    $arr_addresses = $this->buildNotificationList($changes);
+	    $to = join(',',$arr_addresses);
+	    //              $to = 'stephane.bouhet@xps-pro.com';
+	    
+	    if ($more_addresses) {
+		$to .= ($to ? ',':'').$more_addresses;
+	    }
+	    
+	    //echo "DBG Sending email to: $to<br>";
+	    
+	    list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
+	    $hdrs = 'From: noreply@'.$host.$sys_lf;
+	    $hdrs .='Content-type: text/plain; charset=iso-8859-1'.$sys_lf;
+	    
+	    $hdrs .='X-CodeX-Project: '.group_getunixname($group_id).$sys_lf;
+	    $hdrs .='X-CodeX-Artifact: '.$this->ArtifactType->getItemName().$sys_lf;
+	    $hdrs .='X-CodeX-Artifact-ID: '.$this->getID().$sys_lf;
+	    
+	    $subject='['.$this->ArtifactType->getCapsItemName().' #'.$this->getID().'] '.util_unconvert_htmlspecialchars($this->getValue('summary'));
+	    
+	    //echo "DBG: body:".$body."<br>";
+	    if ($to) { mail($to,$subject,$body,$hdrs); }
+	    
+	    $feedback .= ' '.$Language->getText('tracker_include_artifact','update_sent').' '; //to '.$to;
+	    
         }
-
+	
         /**
          * Format the changes
          *

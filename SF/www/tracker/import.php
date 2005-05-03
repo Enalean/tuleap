@@ -106,23 +106,43 @@ if($group_id && $atid && $user_id) {
     $col_list[] = 'is_dependent_on';
     $col_list[] = 'add_cc';
     $col_list[] = 'cc_comment';
+
+    // TODO: Localize this properly by adding those 4 fields to the artifact table
+    // (standard fields) and the artifact field table with a special flag and make sure
+    // all tracker scripts handle them properly
+    // For now make a big hack!!
+    $field = $art_field_fact->getFieldFromName('submitted_by');
+    if (strstr($field->getLabel(),"ubmit")) {
+	// Assume English
+	$lbl_list['follow_ups'] = 'Follow-up Comments';
+        $lbl_list['is_dependent_on'] = 'Depend on';
+        $lbl_list['add_cc'] = 'CC List';
+        $lbl_list['cc_comment'] = 'CC Comment';
     
-    $lbl_list['follow_ups'] = $Language->getText('tracker_import','follow_ups');
-    $lbl_list['is_dependent_on'] = $Language->getText('tracker_import','depend_on');
-    $lbl_list['add_cc'] = $Language->getText('tracker_import','cc_list');
-    $lbl_list['cc_comment'] = $Language->getText('tracker_import','cc_comment');
+	$dsc_list['follow_ups'] = 'All follow-up comments in one chunck of text';
+	$dsc_list['is_dependent_on'] = 'List of artifacts this artifact depends on';
+	$dsc_list['add_cc'] = 'List of persons to receive a carbon-copy (CC) of the email notifications (in addition to submitter, assignees, and commenters)';
+	$dsc_list['cc_comment'] = 'Explain why these CC names were added and/or who they are';
+    } else {
+        // Assume French
+	$lbl_list['follow_ups'] = 'Commentaires';
+        $lbl_list['is_dependent_on'] = 'Dépend de';
+        $lbl_list['add_cc'] = 'Liste CC';
+        $lbl_list['cc_comment'] = 'Commentaire CC';
     
-    $dsc_list['follow_ups'] = $Language->getText('tracker_import','follow_ups_desc');
-    $dsc_list['is_dependent_on'] = $Language->getText('tracker_import','depend_on_desc');
-    $dsc_list['add_cc'] = $Language->getText('tracker_import','cc_list_desc');
-    $dsc_list['cc_comment'] = $Language->getText('tracker_import','cc_comment_desc');
+	$dsc_list['follow_ups'] = 'Tout le fil de commentaires en un seul bloc de texte';
+	$dsc_list['is_dependent_on'] = 'Liste des artefacts dont celui-ci dépend';
+	$dsc_list['add_cc'] = 'Liste des pesonnes recevant une copie carbone of persons to receive a carbon-copy (CC) des notifications e-mail (en plus de la personne qui l\'a soumis, à qui on l\'a confié ou qui a posté un commentaire)';
+	$dsc_list['cc_comment'] = 'Explique pourquoi ces personnes sont en CC ou qui elles sont';
+    }        
     
     $eol = "\n";
     
     $result=db_query($sql);
     $rows = db_numrows($result); 
 
-    echo $Language->getText('tracker_import','format_desc');
+    echo '<h3>'.$Language->getText('tracker_import','format_hdr'),'</h3>';
+    echo '<p>'.$Language->getText('tracker_import','format_msg'),'<p>';
 
     if ($rows > 0) { 
       $record = pick_a_record_at_random($result, $rows, $col_list);
@@ -137,6 +157,8 @@ if($group_id && $atid && $user_id) {
     echo '<br>';
     echo build_csv_record($col_list,$record);
     
+    $ath->footer(array());
+
 
     //   screen accepting the CSV file to be parsed **************************************************************
   } else {
@@ -145,11 +167,9 @@ if($group_id && $atid && $user_id) {
 			'atid'=>$ath->getID(),'sectionvals'=>array($group->getPublicName()),
 			'help' => 'ArtifactImport.html'));
 
-    echo '<h3>'.$Language->getText('tracker_import','import_new', array(help_button('ArtifactImport.html'),'/tracker/index.php?group_id='.$group_id.'&atid='.$atid.'&user_id='.$user_id.'&mode=showformat&func=import'));
-    if ($user == 100) {
-      print $Language->getText('tracker_import','not_logged');
-    }
-    
+    echo '<h3>'.$Language->getText('tracker_import','import_new_hdr', array(help_button('ArtifactImport.html'))).'</h3>';
+    echo '<p>'.$Language->getText('tracker_import','import_new_msg',array('/tracker/index.php?group_id='.$group_id.'&atid='.$atid.'&user_id='.$user_id.'&mode=showformat&func=import')).'</p>';
+
     echo '
 	    <FORM NAME="importdata" action="'.$PHP_SELF.'" method="POST" enctype="multipart/form-data">
             <INPUT TYPE="hidden" name="group_id" value="'.$group_id.'">            

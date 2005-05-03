@@ -170,7 +170,7 @@ class ArtifactTypeHtml extends ArtifactType {
 
 			$title_arr=array();
 			$title_arr[]=$Language->getText('tracker_include_report','id');
-			$title_arr[]=$Language->getText('tracker_include_report','project');
+			$title_arr[]=$Language->getText('global','Project');
 			$title_arr[]=$Language->getText('tracker_import_admin','tracker');
 			$title_arr[]=$Language->getText('tracker_include_type','deletion_date');
 			$title_arr[]=$Language->getText('tracker_include_type','delay');
@@ -210,7 +210,8 @@ class ArtifactTypeHtml extends ArtifactType {
 		$at_arr = $atf->getArtifactTypes();
 		
 		if (!$at_arr || count($at_arr) < 1) {
-			echo $Language->getText('tracker_index','no_accessible_trackers',"/tracker/admin/?group_id=$group_id");
+		    echo '<h2>'.$Language->getText('tracker_index','no_accessible_trackers_hdr').'</h2>';
+		    echo '<p>'.$Language->getText('tracker_index','no_accessible_trackers_msg').'</p>';
 		} else {
 		    echo '<H2>'.$Language->getText('tracker_admin_trackers','all_admin').'</H2>';
 			echo '<H3><a href="/tracker/admin/?group_id='.$this->Group->getID().'&func=create">'.$Language->getText('tracker_index','create_new_tracker').'</a></H3>';
@@ -296,9 +297,9 @@ class ArtifactTypeHtml extends ArtifactType {
 
 		$out = '<FONT size="-1"><SELECT name="user_name['.$i.']">';
 		$out .= '<OPTION value="0"'.(($perm_level==0)?" selected":"").'>'.$Language->getText('global','none');
-		$out .= '<OPTION value="1"'.(($perm_level==1)?" selected":"").'>'.$Language->getText('tracker_include_type','tech_only');
-		$out .= '<OPTION value="2"'.(($perm_level==2)?" selected":"").'>'.$Language->getText('tracker_include_type','tech_admin');
-		$out .= '<OPTION value="3"'.(($perm_level==3)?" selected":"").'>'.$Language->getText('tracker_include_type','admin_only');
+		$out .= '<OPTION value="1"'.(($perm_level==1)?" selected":"").'>'.$Language->getText('project_admin_userperms','tech_only');
+		$out .= '<OPTION value="2"'.(($perm_level==2)?" selected":"").'>'.$Language->getText('project_admin_userperms','tech&admin');
+		$out .= '<OPTION value="3"'.(($perm_level==3)?" selected":"").'>'.$Language->getText('project_admin_userperms','admin_only');
 		$out .= '</SELECT></FONT>';
 		
 		return $out;
@@ -1017,7 +1018,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		}
 				
 		echo '
-		        </td><td>Keep Change History: ';
+		        </td><td>'.$Language->getText('tracker_include_type','keep_change_history').': ';
 		
 		if ( $field && $field->isStandardField() ) {
 			if ( $keep_history ) {
@@ -1559,7 +1560,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		    echo'
 		<h4>'.$Language->getText('tracker_include_type','users_to_watch').' '.
 		help_button('TrackerAdministration.html#TrackerWatchers').'</h4>
-		<P>'.$Language->getText('tracker_include_type','backup_person',$GLOBALS['sys_name']).'
+		<P>'.$Language->getText('tracker_include_type','backup_person').'
 		<p><INPUT TYPE="TEXT" NAME="watchees" VALUE="'.$watchees.'" SIZE="55" MAXLENGTH="255"><br></p>
 		';
 		
@@ -1589,11 +1590,11 @@ class ArtifactTypeHtml extends ArtifactType {
 		<table BORDER="0" CELLSPACING="1" CELLPADDING="2" class="small">
 		<tr class="boxtitle">
 		    <td colspan="'.$this->num_roles.'" align="center" width="50%"><b>'.$Language->getText('tracker_include_type','role_is').'</b></td>
-		    <td rowspan="2" width="50%"><b>&nbsp;&nbsp;&nbsp;'.$Language->getText('tracker_include_type','nofify_me').'</b></td>
+		    <td rowspan="2" width="50%"><b>&nbsp;&nbsp;&nbsp;'.$Language->getText('tracker_include_type','notify_me').'</b></td>
 		</tr>';
 		
 		for ($i=0; $i<$this->num_roles; $i++) {
-		    echo '<td align="center" width="10%"><b>'.$this->arr_roles[$i]['short_description']."</b></td>\n";
+		    echo '<td align="center" width="10%"><b>'.$Language->getText('tracker_common_types',$this->arr_roles[$i]['short_description_msg'])."</b></td>\n";
 		}
 		echo "</tr>\n";
 		
@@ -1617,7 +1618,7 @@ class ArtifactTypeHtml extends ArtifactType {
 					($arr_notif[$role_label][$event_label] ? 'checked':'')."></td>\n";
 				}
 		    }
-		    echo '   <td>&nbsp;&nbsp;&nbsp;'.$this->arr_events[$j]['description']."</td>\n";
+		    echo '   <td>&nbsp;&nbsp;&nbsp;'.$Language->getText('tracker_common_types',$this->arr_events[$j]['description_msg'])."</td>\n";
 		    echo "</tr>\n";
 		}
 		
@@ -1898,7 +1899,7 @@ class ArtifactTypeHtml extends ArtifactType {
                 list($sz,) = explode("/",$field->getDisplaySize());
                 $label = $field_html->labelDisplay(false,false,!$ro);
                 // original submission field must be displayed read-only
-                $value = $field_html->display($this->getID(),$field_value,false,false,$ro,false,false,$Language->getText('global','none'),false,'Any',true,'Unchanged');
+                $value = $field_html->display($this->getID(),$field_value,false,false,$ro,false,false,$Language->getText('global','none'),false,'Any',true,$Language->getText('global','unchanged'));
 
                 echo "\n<TR>";
                 echo '
@@ -1963,7 +1964,7 @@ class ArtifactTypeHtml extends ArtifactType {
                 echo '
 	    <TR><TD colspan="2" align="top"><HR></td></TR>
 	    <TR><TD>
-            <h3>'.$Language->getText('tracker_import','follow_ups').' '.help_button('ArtifactUpdate.html#ArtifactComments').'</h3></td>
+            <h3>'.$Language->getText('tracker_include_artifact','follow_ups').' '.help_button('ArtifactUpdate.html#ArtifactComments').'</h3></td>
             <TD>
             <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('tracker_include_type','submit_mass_change').'">
             </td></tr>';
@@ -1999,11 +2000,15 @@ class ArtifactTypeHtml extends ArtifactType {
                 <TR><TD colspan="2"><hr></td></tr>
                 
                 <TR><TD colspan="2">
-                <h3>'.$Language->getText('tracker_import','cc_list').' '.help_button('ArtifactUpdate.html#ArtifactCCList').'</h3>';
+                <h3>'.$Language->getText('tracker_include_artifact','cc_list').' '.help_button('ArtifactUpdate.html#ArtifactCCList').'</h3>';
                 
                 if ( !$ro ) {
-                        echo '
-                        '.$Language->getText('tracker_include_artifact','codex_user').$Language->getText('tracker_include_artifact','fill_cc_list');
+		  echo '
+                                '.$Language->getText('tracker_include_artifact','fill_cc_list_msg');
+		  echo $Language->getText('tracker_include_artifact','fill_cc_list_lbl');
+		  echo '<input type="text" name="add_cc" size="30">';
+		  echo $Language->getText('tracker_include_artifact','fill_cc_list_cmt');
+		  echo '<input type="text" name="cc_comment" size="40" maxlength="255">';
                 }
                 
 	
@@ -2021,8 +2026,14 @@ class ArtifactTypeHtml extends ArtifactType {
                 <TR><TD colspan="2">
                 <h3>'.$Language->getText('tracker_include_artifact','attachment').' '.help_button('ArtifactUpdate.html#ArtifactAttachments').'</h3>';
                 
+                echo $Language->getText('tracker_include_artifact','upload_checkbox');
+		echo ' <input type="checkbox" name="add_file" VALUE="1">';
+                echo $Language->getText('tracker_include_artifact','upload_file_lbl');
+                echo '<input type="file" name="input_file" size="40">';
+                echo $Language->getText('tracker_include_artifact','upload_file_msg',formatByteToMb($sys_max_size_attachment));
 
-                echo $Language->getText('tracker_include_artifact','upload',formatByteToMb($sys_max_size_attachment));
+                echo $Language->getText('tracker_include_artifact','upload_file_desc');
+		echo '<input type="text" name="file_description" size="60" maxlength="255">';
                                 
 		reset($mass_change_ids);
                 echo $this->showAttachedFiles($mass_change_ids);

@@ -33,7 +33,7 @@ class ArtifactCannedHtml extends ArtifactCanned {
 	function displayCreateForm(){
 	  global $Language;
 
-	  echo $Language->getText('tracker_include_canned','create_response');
+	  echo '<h3>'.$Language->getText('tracker_include_canned','create_response').'</h3>';
 	  $atid = $this->ArtifactType->getID();
 	  $g = $this->ArtifactType->getGroup();
 	  $group_id = $g->getID();
