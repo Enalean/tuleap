@@ -27,6 +27,8 @@ global	btn_submit	Submit
 global	btn_browse	Browse
 global	btn_create	Create
 global	btn_close	Close
+global	btn_reset	Reset
+global	reset	reset
 global	yes	Yes
 global	no	No
 global	on	On
@@ -43,3 +45,11 @@ global	help	Help
 global	by	By
 global	select	Select
 global	unchanged	Unchanged
+global	or	or
+global	and	and
+global	activate	activate
+global	deactivate	deactivate
+global	Project	Project
+global	System	System
+global	Personal	Personel
+

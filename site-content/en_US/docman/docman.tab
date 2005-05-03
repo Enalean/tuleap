@@ -76,7 +76,7 @@ docman_new	max_size_msg	(The maximum upload file size is $1 MByte)
 docman_new	doc_paste	OR Paste Document (in HTML format)
 docman_new	doc_group	Group that document belongs in
 docman_new	mandatory	Fields marked with $1 are mandatory.
-docman_new	error_dbupdate	 ERROR - SQL Error= $1
+docman_new	error_dbupdate	ERROR - SQL Error= $1
 #
 #-----------------------------------------------
 # Script: SF/www/docman/admin/index.php

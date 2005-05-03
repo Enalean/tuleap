@@ -470,15 +470,14 @@ include_vars	other_lang	Other Language
 #-----------------------------------------------
 # Script: SF/common/include/Error.class
 #
-include_error	no_err	No Error
+include_common_error	no_err	No Error
 #
 #-----------------------------------------------
 # Script: SF/common/include/GroupFactory.class
 #
-include_groupfactory	none_found	None Found $1
-include_groupfactory	perm_denied	Permission denied.
+include_common_groupfactory	none_found	None Found $1
 #
 #-----------------------------------------------
 # Script: SF/common/mvc/View.class
 #
-include_mvc_view	warn	** WARNING!! ** Please confirm you want to $1
+common_mvc_view	warn	** WARNING!! ** Please confirm you want to $1

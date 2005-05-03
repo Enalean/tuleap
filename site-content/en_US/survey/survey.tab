@@ -33,15 +33,13 @@ survey_admin_add_survey	active	Is Active?
 #-----------------------------------------------
 # Script: SF/www/survey/admin/browse_question.php
 #
-survey_admin_browse_question	edit_q_title	Edit Questions
-survey_admin_browse_question	edit_q_hdr	Edit Questions
+survey_admin_browse_question	edit_q	Edit Questions
 survey_admin_browse_question	edit_q_msg	Click on the 'Question ID' to edit a question
 #
 #-----------------------------------------------
 # Script: SF/www/survey/admin/browse_survey.php
 #
-survey_admin_browse_question	edit_s_title	Edit Surveys
-survey_admin_browse_question	edit_s_hdr	Edit Surveys
+survey_admin_browse_survey	edit_s	Edit Surveys
 survey_admin_browse_survey	edit_s_msg	Click on the 'Survey ID' to edit a survey
 #
 #-----------------------------------------------
@@ -98,17 +96,18 @@ survey_admin_show_r	click_s_id	Click on a Survey ID to View Aggregate Responses
 #-----------------------------------------------
 # Script: SF/www/survey/admin/update_question.php
 #
-survey_admin_update_question	edit_q	Edit A Question
-survey_admin_update_question	warn	<span class="highlight">WARNING! It is a bad idea to change a question after responses to it have been submitted</span></H2><P>If you change the meaning of a question after responses have been posted, your results pages may be misleading.
+survey_admin_update_question	edit_a_q	Edit A Question
+survey_admin_update_question	warn	<span class="highlight">WARNING! It is a bad idea to change a question after responses to it have been submitted</span><P>This can lead to misleading  or inconsistent results.
 survey_admin_update_question	q	Question:
 survey_admin_update_question	subm_changes	Submit Changes
 #
 #-----------------------------------------------
-# Script: SF/www/survey/admin/update_question.php
+# Script: SF/www/survey/admin/update_survey.php
 #
-survey_admin_update_survey	warn	<span class="highlight">WARNING! It is a bad idea to edit a survey after responses have been posted</span></H3><P>If you change a survey after you already have responses, your results pages could be misleading or messed up.
+survey_admin_update_survey	warn	<span class="highlight">WARNING! It is a bad idea to edit a survey after responses have been posted</span><P>This can lead to misleading or inconsistent results.
 survey_admin_update_survey	q	Questions:
 survey_admin_update_survey	anon_allow	Anonymous answer ok?
+survey_admin_update_survey	edit_a_s	Edit a survey
 #
 #-----------------------------------------------
 # Script: SF/www/survey/index.php
@@ -166,7 +165,6 @@ survey_s_resp	thanks	Thank you for taking time to complete this survey.<P>Regard
 
 survey_s_utils	s_off	This Group Has Turned Off Surveys
 survey_s_utils	admin	Admin
-survey_s_utils	edit_q	Edit Questions	
 survey_s_utils	show_r	Show Results
 survey_s_utils	privacy	Survey Privacy
 survey_s_utils	not_found	Survey Not Found

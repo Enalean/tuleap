@@ -211,9 +211,9 @@ project_admin_utils	http_domain	http_domain
 project_admin_utils	unix_box	Unix box
 project_admin_utils	project_type	project type
 project_admin_utils	feedback_history	feedback history
-project_admin_utils	personal_email_notif	Changed Personal Notification Email Settings
-project_admin_utils	bts_form_message	Changed BTS bug form message
-project_admin_utils	bts_allow_anon	Changed BTS bug allow anonymous submission
+project_admin_utils	changed_personal_email_notif	Changed Personal Notification Email Settings
+project_admin_utils	changed_bts_form_message	Changed BTS bug form message
+project_admin_utils	changed_bts_allow_anon	Changed BTS bug allow anonymous submission
 project_admin_utils	doc_deleted	Document deleted	
 project_admin_utils	removed_project	Removed project
 project_admin_utils	added_user	Added user ($1)
@@ -330,7 +330,6 @@ project_admin_ugroup_utils	perm_warning	- WARNING: $1 associated permissions del
 project_admin_userperms	invalid_g	Invalid Group
 project_admin_userperms	group_not_exist	That group does not exist.
 project_admin_userperms	unable_load_p	Unable to load project object
-project_admin_userperms	changed_member_perm	Changed Member Permissions
 project_admin_userperms	cannot_remove_admin_stat	Cannot remove your admin status: project needs at least one admin!
 project_admin_userperms	perm_fail_for	Permissions Failed For $1
 project_admin_userperms	perm_upd	Permissions Updated

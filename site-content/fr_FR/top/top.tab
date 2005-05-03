@@ -18,7 +18,6 @@ top_index	top_proj	Les meilleurs projets de $1
 top_index	rank	Diverses statistiques d'utilisations sont collectées sur $1 . Les projets les mieux classés dans certaines catégories sont affichées ici.
 top_index	act_week	Les plus actifs cette semaine
 top_index	act_all_time	Les plus actifs depuis le début
- Most Active All Time
 top_index	download	Les plus téléchargés
 top_index	downl_week	Les plus téléchargés sur les 7 derniers jours
 top_index	pageviews	Les projets les plus visités (Mesuré par le nombre d'affichage du logo CodeX)

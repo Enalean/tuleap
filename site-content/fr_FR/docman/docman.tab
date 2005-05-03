@@ -1,6 +1,6 @@
 #/**
 #  *
-#  * Doc Manager scripts message catalog (English)
+#  * Doc Manager scripts message catalog (French)
 #  *
 #  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
 #  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
@@ -76,7 +76,7 @@ docman_new	max_size_msg	(La taille maximum d'un fichier est de $1 Moctets)
 docman_new	doc_paste	ou copier/coller le document (format HTML)
 docman_new	doc_group	Groupe auquel appartient ce document 
 docman_new	mandatory	Les champs marqués $1 sont obligatoires.
-docman_new	error_dbupdate	 ERREUR - Erreur SQL = $1
+docman_new	error_dbupdate	ERREUR - Erreur SQL = $1
 #
 #-----------------------------------------------
 # Script: SF/www/docman/admin/index.php
@@ -85,17 +85,14 @@ docman_admin_index	error_perm	Vous devez avoir les droits sur le gestionnaire de
 docman_admin_index	title	Administration du gestionnaire de documents
 docman_admin_index	title_edit	Modifier un document
 docman_admin_index	doc_edit	ou éditer le document en place
-docman_admin_index	title_group_del	Détruire un groupe de documents
 docman_admin_index	msg_group_del	Groupe de documents détruits (doc_group : $1)
-docman_admin_index	title_group_del_fail	La destruction du groupe de documents a échoué
 docman_admin_index	msg_group_del_fail	Le groupe de documents n'a pas été détruit. Les groupes qui comportent des documents ne peuvent être détruits.
 docman_admin_index	title_group_edit	Modifier un groupe de documents
 docman_admin_index	header_group_edit	Modifier un groupe de documents
 docman_admin_index	feedback_group_updated	Groupe de documents mis à jour avec succès
 docman_admin_index	error_nodocgroup	Aucun groupe de documents valide n'a été sélectionné
 docman_admin_index	feedback_doc_uploaded	Document chargé
-docman_admin_index	feedback_doc_updated	Document mis à jour avec succès 
-docman_admin_index	error_dbupdate	Erreur durant la mise à jour du document:<br>$1
+docman_admin_index	feedback_doc_updated	Document mis à jour avec succès
 docman_admin_index	error_nodoc	Mise à jour impossible - le document n'existe pas ou il n'appartient pas à ce groupe de documents.
 docman_admin_index	feedback_group_added	Groupe de documents ajoutés avec succés 
 docman_admin_index	title_group_mgt	Administration des groupes de documents

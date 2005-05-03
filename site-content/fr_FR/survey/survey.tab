@@ -33,15 +33,13 @@ survey_admin_add_survey	active	Actif ?
 #-----------------------------------------------
 # Script: SF/www/survey/admin/browse_question.php
 #
-survey_admin_browse_question	edit_s_title	Modifier les questions
-survey_admin_browse_question	edit_s_hdr	Modifier les questions
-survey_admin_browse_question	edit_q	Cliquer sur l'identifiant (ID) de la question pour la modifier
+survey_admin_browse_question	edit_q	Modifier les questions
+survey_admin_browse_question	edit_q_msg	Cliquer sur l'identifiant (ID) de la question pour la modifier
 #
 #-----------------------------------------------
 # Script: SF/www/survey/admin/browse_survey.php
 #
-survey_admin_browse_question	edit_s_title	Modifier les sondages
-survey_admin_browse_question	edit_s_hdr	Modifier les sondages
+survey_admin_browse_survey	edit_s	Modifier les sondages
 survey_admin_browse_survey	edit_s_msg	Cliquer sur l'identifiant (ID) du sondage pour le modifier
 #
 #-----------------------------------------------
@@ -51,12 +49,12 @@ survey_admin_index	admin	Administration des sondages
 survey_admin_index	add_s	Créer un sondage
 survey_admin_index	add_comment	Créer un nouveau sondage. Avant de créer un nouveau sondage il est recommandé de créer en premier les questions associées.
 survey_admin_index	edit_existing	Modifier les sondages existants
-survey_admin_index	mod_s	Vous pouvez modifier le titre d'un sondage, les uestions associées, le rendre actif ou inactif, etc&hellip;
+survey_admin_index	mod_s	Vous pouvez modifier le titre d'un sondage, les questions associées, le rendre actif ou inactif, etc&hellip;
 survey_admin_index	add_q	Créer des questions
 survey_admin_index	create_q	Créer de nouvelles questions.
-survey_admin_index	mod_q	Vous pouvez changer le titre ou le type de laquestion.
+survey_admin_index	mod_q	Vous pouvez changer le titre ou le type de la question.
 survey_admin_index	edit_existing_q	Modifier les questions existantes
-survey_admin_index	show_res	Voir les resultats des sondages
+survey_admin_index	show_res	Voir les résultats des sondages
 survey_admin_index	res	Les résultats d'un sondage sont affichés de façon consolidée par question.
 survey_admin_index	quick	Brèves instructions
 survey_admin_index	quick_instr	Créer un sondage est simple. <OL><LI>Crér les questions en premier.<LI>Créer un sondage en énumérant les questions dans l'ordre.<LI>Envoyer un pointeur vers ce sondage en utilisant le lien suivant: <P><B>$1</B>,où XX est l'identifiant (ID) du sondage.</OL>
@@ -98,10 +96,18 @@ survey_admin_show_r	click_s_id	Cliquer sur l'indentifiant (ID) d'un sondage pour
 #-----------------------------------------------
 # Script: SF/www/survey/admin/update_question.php
 #
-survey_admin_update_question	edit_q	Modifier une question
-survey_admin_update_question	warn	<span class="highlight">AVERTISSEMENT! C'est une assez mauvaise idée de changer une question après qu'elle ait déjà reçu des réponses</span></H2><P>Si vous changez le sens d'une question après qu'elle ait reçu des réponses, vos résultats peuvent être trompeurs.
+survey_admin_update_question	edit_a_q	Modifier une question
+survey_admin_update_question	warn	<span class="highlight">AVERTISSEMENT! C'est une assez mauvaise idée de changer une question après qu'elle ait déjà reçu des réponses.</span><P>Celà peut donner des résultats peuvent être trompeursou incohérents.
 survey_admin_update_question	q	Question:
 survey_admin_update_question	subm_changes	Valider
+#
+#-----------------------------------------------
+# Script: SF/www/survey/admin/update_survey.php
+#
+survey_admin_update_survey	warn	<span class="highlight">AVERTISSEMENT! C'est une assez mauvaise idée de modifier une enquête après qu'elle ait déjà reçu des réponses.</span><P>Celà peut donner des résultats trompeurs ou incohérents.
+survey_admin_update_survey	q	Questions:
+survey_admin_update_survey	anon_allow	Réponse anonyme autorisée?
+survey_admin_update_survey	edit_a_s	Modifier un sondage
 #
 #-----------------------------------------------
 # Script: SF/www/survey/index.php
@@ -159,7 +165,6 @@ survey_s_resp	thanks	Merci d'avoir pris le temps de répondre à ce sondage<P>Salu
 
 survey_s_utils	s_off	Ce projet a désactivé les sondages
 survey_s_utils	admin	Administration
-survey_s_utils	edit_q	Modifier les questions	
 survey_s_utils	show_r	Voir les résultats
 survey_s_utils	privacy	Confidentialité des sondages
 survey_s_utils	not_found	Sondage introuvable

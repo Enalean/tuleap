@@ -1,6 +1,6 @@
 #/**
 #  *
-#  * Include scripts message catalog (English)
+#  * Include scripts message catalog (French)
 #  *
 #  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
 #  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
@@ -39,7 +39,6 @@ include_cache	unable_open_cache	Impossible d'ouvrir le fichier cache en écriture
 #   
 include_exit	error	Erreur
 include_exit	info	Information
-include_exit	warn	Alerte
 include_exit	perm_denied	Permission refusée
 include_exit	exit_error	Sortie avec erreur
 include_exit	no_perm	Vous droits sont insuffisants pour effectuer cette opération.
@@ -450,20 +449,35 @@ include_utils	email_explain	Les adresses e-mail doivent être soit des noms de lo
 #-----------------------------------------------
 # Script: SF/www/include/vars.php
 #
-include_vars	policy	Politique d'échange $
+include_vars	policy	Politique d'échange $1
 include_vars	website_only	Site Web seul
 include_vars	other	Autre
-include_vars	comip	Projets Open Source approuvé par le COMIP
-include_vars	gpl	GNU General Public License (GPL)
-include_vars	lgpl	GNU Library Public License (LGPL)
-include_vars	bsdl	BSD License
-include_vars	mitxl	MIT/X Consortium License
-include_vars	artistic_l	Artistic License
-include_vars	moz_l	Mozilla Public License
-include_vars	qtp_l	Qt Public License
-include_vars	ibm_l	IBM Public License
-include_vars	p_l	Python License
+include_vars	comip	Licence Open Source approuvé par $1
+include_vars	gpl	Licence GNU General Public (GPL)
+include_vars	lgpl	Licence GNU Library Public License (LGPL)
+include_vars	bsdl	Licence BSD
+include_vars	mitxl	Licence MIT/X Consortium
+include_vars	artistic_l	Licence Artistic
+include_vars	moz_l	Licence Mozilla Public
+include_vars	qtp_l	Licence Qt Public
+include_vars	ibm_l	Licence IBM Public
+include_vars	p_l	Licence Python
 include_vars	public_domain	Domaine public
 include_vars	other_env	Autre environment
 include_vars	web_env	Web Environment
 include_vars	other_lang	Other Language
+#
+#-----------------------------------------------
+# Script: SF/common/include/Error.class
+#
+include_common_error	no_err	Aucune erreur
+#
+#-----------------------------------------------
+# Script: SF/www/common/include/GroupFactory.class
+#
+include_common_groupfactory	none_found	Rien n'a été trouvé
+#
+#-----------------------------------------------
+# Script: SF/common/mvc/View.class
+#
+common_mvc_view	warn	** WARNING!! ** Please confirm you want to $1

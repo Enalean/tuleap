@@ -27,12 +27,14 @@ global	btn_submit	Valider
 global	btn_browse	Afficher
 global	btn_create	Créer
 global	btn_close	Fermer
+global	btn_reset	Réinitialiser
+global	reset	réinitialiser
 global	yes	Oui
 global	no	Non
 global	on	Activé
 global	off	Désactivé
 global	any	Tous
-global	none	Aucun(e)
+global	none	Aucun
 global	begin	Début
 global	end	Fin
 global	next	Suivant
@@ -43,3 +45,10 @@ global	help	Aide
 global	by	par
 global	select	Selectionner
 global	unchanged	Inchangé
+global	or	ou
+global	and	et
+global	activate	activer
+global	deactivate	désactiver
+global	Project	Projet
+global	System	Système
+global	Personal	Personel
