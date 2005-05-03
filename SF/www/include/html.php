@@ -165,7 +165,8 @@ function html_build_select_box_from_array ($vals,$select_name,$checked_val='xzxz
 	return $return;
 }
 
-function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_val='xzxz',$show_100=true,$text_100='None', $show_any=false,$text_any='Any',$show_unchanged=false,$text_unchanged='Unchanged') {
+function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_val='xzxz',$show_100=true,$text_100='',$show_any=false,$text_any='',$show_unchanged=false,$text_unchanged='') {
+        global $Language;
 	/*
 
 		The infamous '100 row' has to do with the
@@ -196,6 +197,10 @@ function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_v
 
 		The 8th parameter is optional - what to call the 'Any row' defaults to nAny	*/
 
+        // Position default values for special menu items
+        if ($text_100 == '') { $text_100 = $Language->getText('global','none'); }
+        if ($text_any == '') { $text_any = $Language->getText('global','any'); }
+        if ($text_unchanged == '') { $text_unchanged = $Language->getText('global','unchanged'); }
 
 	if ( is_array($checked_val) ) {
 		$return .= '
@@ -271,7 +276,8 @@ function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_v
 	return $return;
 }
 
-function html_build_select_box ($result, $name, $checked_val="xzxz",$show_100=true,$text_100='None',$show_any=false,$text_any='Any',$show_unchanged=false,$text_unchanged='Unchanged') {
+function html_build_select_box ($result, $name, $checked_val="xzxz",$show_100=true,$text_100='',$show_any=false,$text_any='',$show_unchanged=false,$text_unchanged='') {
+        global $Language;
 	/*
 		Takes a result set, with the first column being the "id" or value
 		and the second column being the text you want displayed
@@ -285,10 +291,16 @@ function html_build_select_box ($result, $name, $checked_val="xzxz",$show_100=tr
 		The fifth parameter is optional - what to call the '100 row' defaults to none
 	*/
 
+        // Position default values for special menu items
+        if ($text_100 == '') { $text_100 = $Language->getText('global','none'); }
+        if ($text_any == '') { $text_any = $Language->getText('global','any'); }
+        if ($text_unchanged == '') { $text_unchanged = $Language->getText('global','unchanged'); }
+
 	return html_build_select_box_from_arrays (util_result_column_to_array($result,0),util_result_column_to_array($result,1),$name,$checked_val,$show_100,$text_100,$show_any,$text_any,$show_unchanged,$text_unchanged);
 }
 
-function html_build_multiple_select_box ($result,$name,$checked_array,$size='8',$show_100=true,$text_100='None', $show_any=false,$text_any='Any',$show_unchanged=false,$text_unchanged='Unchanged',$show_value=true) {
+function html_build_multiple_select_box ($result,$name,$checked_array,$size='8',$show_100=true,$text_100='', $show_any=false,$text_any='',$show_unchanged=false,$text_unchanged='',$show_value=true) {
+        global $Language;
 	/*
 		Takes a result set, with the first column being the "id" or value
 		and the second column being the text you want displayed
@@ -304,6 +316,11 @@ function html_build_multiple_select_box ($result,$name,$checked_array,$size='8',
 		Ninth param determine whether to show numeric values next to
 		the menu label (default true for backward compatibility
 	*/
+
+        // Position default values for special menu items
+        if ($text_100 == '') { $text_100 = $Language->getText('global','none'); }
+        if ($text_any == '') { $text_any = $Language->getText('global','any'); }
+        if ($text_unchanged == '') { $text_unchanged = $Language->getText('global','unchanged'); }
 
 	$checked_count=count($checked_array);
 //      echo '-- '.$checked_count.' --';
@@ -495,6 +512,11 @@ function site_project_footer($params) {
 
 
 function html_display_boolean($value,$true_value='Yes',$false_value='No') {
+    global $Language;
+
+    // Position default values for special menu items
+    if (!isset($true_value)) { $true_value = $Language->getText('global','yes'); }
+    if (!isset($false_value)) { $false_value = $Language->getText('global','no'); }
     if ( ($value == 1)||($value == true) ) {
         echo $true_value;
     } else {

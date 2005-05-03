@@ -9,7 +9,7 @@
 $Language->loadLanguageMsg('survey/survey');
 
 $is_admin_page='y';
-survey_header(array('title'=>$Language->getText('survey_admin_update_question','edit_q')));
+survey_header(array('title'=>$Language->getText('survey_admin_update_question','edit_a_q')));
 
 if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 	echo '<H1>'.$Language->getText('survey_admin_add_question','perm_denied').'</H1>';
@@ -41,9 +41,9 @@ function show_questions() {
 // -->
 </script>
 
-<H2><?php echo $Language->getText('survey_admin_update_question','edit_q'); ?></H2>
+<H2><?php echo $Language->getText('survey_admin_update_question','edit_a_q'); ?></H2>
 
-<H3><?php echo $Language->getText('survey_admin_update_question','warn'); ?>
+<H3><?php echo $Language->getText('survey_admin_update_question','warn'); ?></h3>
 <P>
 
 <FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">

@@ -10,7 +10,7 @@
 
 $Language->loadLanguageMsg('survey/survey');
 
-survey_header(array('title'=>$Language->getText('survey_admin_browse_question','edit_s_title'),
+survey_header(array('title'=>$Language->getText('survey_admin_browse_survey','edit_s'),
 		    'help'=>'AdministeringSurveys.html#CreatingorEditingaSurvey'));
 
 
@@ -25,7 +25,7 @@ $result=db_query($sql);
 ?>
 
 <P>
-<H2><?php echo $Language->getText('survey_admin_browse_question','edit_s_hdr'); ?></H2>
+<H2><?php echo $Language->getText('survey_admin_browse_survey','edit_s'); ?></H2>
 <?php echo $Language->getText('survey_admin_browse_survey','edit_s_msg'); ?>
 <?php
 

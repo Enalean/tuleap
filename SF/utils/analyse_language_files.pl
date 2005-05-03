@@ -7,9 +7,7 @@
 # $Id$
 #
 #  License:
-#    This file is subject to the terms and conditions of the GNU General Public
-#    license. See the file COPYING in the main directory of this archive for
-#    more details.
+#      This file is licensed under the CodeX Component Software License
 #
 # Purpose:
 #  Simple utility to analyse Language data.
@@ -71,14 +69,14 @@ foreach my $filename (@files) {
   open FILE,"$filename";
   #print "File: $filename\n";
   while(<FILE>) {
-    while (/\$Language->getText\(.([^,\'\"\s]+).[\s]*\,[\s]*.([^,\'\"\s]+)[^\)][\)\,]/) {
+    while (/\$Language->getText\s*\(.([^,\'\"\s]+).[\s]*\,[\s]*.([^,\'\"\s]+)[^\)][\)\,]/) {
       #print "\t$1\t$2\n";
       $firstkey{"$1"}=1;
       if (!$keys{"$1"}{"$2"}) { $total_keys++;}
       $keys{"$1"}{"$2"}.="$filename ";
       $used_lines++;
       # for multiple occurences on same line
-      $_ =~ s/\$Language->getText\(.([^,\'\"\s]+).[\s]*\,[\s]*.([^,\'\"\s]+)[^\)][\)\,]//;
+      $_ =~ s/\$Language->getText\s*\(.([^,\'\"\s]+).[\s]*\,[\s]*.([^,\'\"\s]+)[^\)][\)\,]//;
     }
   }
   close FILE;

@@ -181,7 +181,7 @@ function user_getid() {
 }
 
 function user_getname($user_id = 0) {
-	global $G_USER,$USER_NAMES;
+    global $G_USER,$USER_NAMES,$Language;
 	// use current user if one is not passed in
 	if (!$user_id) {
 		return ($G_USER?$G_USER['user_name']:"NA");

@@ -67,6 +67,8 @@ class Project extends Group {
                 and set up services arrays
     */
     function Project($id) {
+	global $Language;
+
         $this->Group($id);
         
         //for right now, just point our prefs array at Group's data array

@@ -58,7 +58,7 @@ class Views {
 
   function getTrashLink($link, $alt) {
 	global $Language;
-      return '<a href="'.$link.'" onClick="return confirm(\''.$Language->getText('include_mvc_view','warn',$alt).'\')">'.$this->getTrashImage($alt).'</a>'; //XXX
+      return '<a href="'.$link.'" onClick="return confirm(\''.$Language->getText('common_mvc_view','warn',$alt).'\')">'.$this->getTrashImage($alt).'</a>'; //XXX
   }
 
   function display($view='') {

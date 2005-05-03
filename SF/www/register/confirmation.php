@@ -59,7 +59,7 @@ if ($show_confirm) {
 
 	// make the current user a project admin as well as admin
 	// on all CodeX services
-	$result=db_query("INSERT INTO user_group (user_id,group_id,admin_flags,bug_flags,forum_flags,project_flags,patch_flags,support_flags,doc_flags,file_flags) VALUES ("
+	$result=db_query("INSERT INTO user_group (user_id,group_id,admin_flags,bug_flags,forum_flags,project_flags,patch_flags,support_flags,doc_flags,file_flags,wiki_flags) VALUES ("
 		. user_getid() . ","
 		. $group_id . ","
 		. "'A'," // admin flags

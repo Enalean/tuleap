@@ -32,9 +32,9 @@ function survey_header($params) {
 
     if ($is_admin_page && $group_id) {
 	echo " | <A HREF=\"/survey/admin/add_survey.php?group_id=$group_id\">".$Language->getText('survey_admin_index','add_s')."</A>";
-	echo " | <A HREF=\"/survey/admin/edit_survey.php?func=browse&group_id=$group_id\">".$Language->getText('survey_admin_browse_question','edit_s')."</A>";
+	echo " | <A HREF=\"/survey/admin/edit_survey.php?func=browse&group_id=$group_id\">".$Language->getText('survey_admin_browse_survey','edit_s')."</A>";
 	echo " | <A HREF=\"/survey/admin/add_question.php?group_id=$group_id\">".$Language->getText('survey_admin_index','add_q')."</A>";
-	echo " | <A HREF=\"/survey/admin/edit_question.php?func=browse&group_id=$group_id\">".$Language->getText('survey_s_utils','edit_q')."</A>";
+	echo " | <A HREF=\"/survey/admin/edit_question.php?func=browse&group_id=$group_id\">".$Language->getText('survey_admin_browse_question','edit_q')."</A>";
 	echo " | <A HREF=\"/survey/admin/show_results.php?group_id=$group_id\">".$Language->getText('survey_s_utils','show_r')."</A>";
     }
     

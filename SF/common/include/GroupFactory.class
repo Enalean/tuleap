@@ -11,6 +11,8 @@
 //require_once('common/include/Error.class');
 //require_once('common/tracker/ArtifactType.class');
 
+$Language->loadLanguageMsg('include/include');
+
 class GroupFactory extends Error {
 
 	/**
@@ -29,7 +31,7 @@ class GroupFactory extends Error {
 	 *	@return	resultset
 	 */
 	function getAllGroups() {
-
+	        global $Language;
 		if (user_isloggedin()) {
 			// For  surperuser), we can see all the trackers (both public and non public)
 			if ( user_is_super_user ) {
@@ -38,7 +40,7 @@ class GroupFactory extends Error {
 				$public_flag='1';
 			}
 		} else {
-			$this->setError($Language->getText('include_groupfactory','perm_denied'));
+			$this->setError($Language->getText('include_exit','perm_denied'));
 			return false;
 		}
 
@@ -54,7 +56,7 @@ class GroupFactory extends Error {
 		$rows = db_numrows($result);
 
 		if (!$result || $rows < 1) {
-			$this->setError($Language->getText('include_groupfactory','none_found',db_error()));
+			$this->setError($Language->getText('include_common_groupfactory','none_found',db_error()));
 			return false;
 		}
 		return $result;
@@ -68,7 +70,7 @@ class GroupFactory extends Error {
 	function getMemberGroups() {
 
 		if (!user_isloggedin()) {
-			$this->setError($Language->getText('include_groupfactory','perm_denied'));
+			$this->setError($Language->getText('include_exit','perm_denied'));
 			return false;
 		}
 
@@ -85,7 +87,7 @@ class GroupFactory extends Error {
 		$rows = db_numrows($result);
 
 		if (!$result || $rows < 1) {
-			$this->setError($Language->getText('include_groupfactory','none_found',db_error()));
+			$this->setError($Language->getText('include_common_groupfactory','none_found',db_error()));
 			return false;
 		}
 		return $result;

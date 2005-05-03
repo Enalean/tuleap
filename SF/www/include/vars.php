@@ -9,10 +9,10 @@
 require_once('pre.php');
 
 $LICENSE = array();
-$LICENSE['xrx'] = $Language->getText('include_vars','policy',$GLOBALS['sys_org_name']);
+$LICENSE['xrx'] = $Language->getText('include_vars','policy',array($GLOBALS['sys_org_name']));
 $LICENSE['website'] = $Language->getText('include_vars','website_only');
 $LICENSE['other'] = $Language->getText('include_vars','other');
-$LICENSE['---'] = '--- '.$Language->getText('include_vars','comip').' ---';
+$LICENSE['---'] = '--- '.$Language->getText('include_vars','comip',array($GLOBALS['sys_org_name'])).' ---';
 $LICENSE['gpl'] = $Language->getText('include_vars','gpl');
 $LICENSE['lgpl'] = $Language->getText('include_vars','lgpl');
 $LICENSE['bsd'] = $Language->getText('include_vars','bsdl');

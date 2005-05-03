@@ -77,7 +77,7 @@ class Error {
 		if ($this->error_state)	{
 			return $this->error_message;
 		} else {
-			return $Language->getText('include_error','no_err');
+			return $Language->getText('include_common_error','no_err');
 		}
 	}
 

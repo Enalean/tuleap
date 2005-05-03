@@ -11,7 +11,7 @@
 $Language->loadLanguageMsg('survey/survey');
 
 $is_admin_page='y';
-survey_header(array('title'=>$Language->getText('survey_admin_browse_question','edit_a_s')));
+survey_header(array('title'=>$Language->getText('survey_admin_update_survey','edit_a_s')));
 
 if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 	echo '<H1>'.$Language->getText('survey_admin_add_question','perm_denied').'</H1>';
@@ -46,9 +46,9 @@ function show_questions() {
 <?php
 if ($survey_id) {
 ?>
-<H2><?php echo $Language->getText('survey_admin_browse_question','edit_a_s'); ?></H2><P>
+<H2><?php echo $Language->getText('survey_admin_update_survey','edit_a_s'); ?></H2><P>
 
-<H3><span class="highlight"><?php echo $Language->getText('survey_admin_update_survey','warn'); ?>
+<H3><span class="highlight"><?php echo $Language->getText('survey_admin_update_survey','warn'); ?></h3>
 <P>
 <FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">
 <INPUT TYPE="HIDDEN" NAME="func" VALUE="update_survey">
@@ -59,7 +59,7 @@ if ($survey_id) {
 <INPUT TYPE="HIDDEN" NAME="survey_id" VALUE="<?php echo $survey_id; ?>">
 <INPUT TYPE="TEXT" NAME="survey_title" VALUE="<?php echo $survey_title; ?>" SIZE="30" MAXLENGTH="150">
 <P>
-<B><?php echo $Language->getText('survey_admin_update_survey','q'); ?></B>
+<B><?php echo $Language->getText('survey_admin_update_question','q'); ?></B>
 <BR>
 <?php echo $Language->getText('survey_admin_add_survey','comment'); ?>
 <BR><INPUT TYPE="TEXT" NAME="survey_questions" VALUE="<?php echo $survey_questions; ?>" SIZE="30" MAXLENGTH="1500">
