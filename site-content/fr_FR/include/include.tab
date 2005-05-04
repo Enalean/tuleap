@@ -193,11 +193,11 @@ include_logger	log_err	Une erreur est survenue dans le logger.\n
 # Script: SF/www/include/menu.php
 #
 include_menu	site_admin	Administration
-include_menu	main_page	Page pincipale
+include_menu	main_page	Page principale
 include_menu	user_admin	Admin. utilisateur
 include_menu	group_admin	Admin. groupe
 include_menu	pending_projects	Projets en attente
-include_menu	pending_users	utilisateur en attente
+include_menu	pending_users	Utilisateur en attente
 include_menu	site_news_approve	Approbation annonces site
 include_menu	mass_mail	Courrier en masse
 include_menu	trove_cat_list	Liste des catégories

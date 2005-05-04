@@ -43,7 +43,7 @@ help_show_help	page_not_available	<h4>Désolé, la page d'aide que vous avex deman
 # Script: SF/www/help/trove_cat.php
 #
 help_trove_cat	no_such_trove_cat	Catégorie introuvable
-help_trove_cat	trove_cat	Catégorie projet - $1
+help_trove_cat	trove_cat	Catégorie - $1
 help_trove_cat	full_cat_name	Nom complet de la catégorie
 help_trove_cat	short_name	Nom court
 help_trove_cat	desc	Description

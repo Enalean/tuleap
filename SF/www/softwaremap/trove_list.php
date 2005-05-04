@@ -224,6 +224,8 @@ if (!$page) {
 // store this as a var so it can be printed later as well
 $html_limit = '<SPAN><CENTER><FONT size="-1">';
 if ($querytotalcount == $TROVE_HARDQUERYLIMIT)
+     $html_limit .= $Language->getText('softwaremap_trove_list','more_projs_in_res',$querytotalcount);
+else
      $html_limit .= $Language->getText('softwaremap_trove_list','projs_in_res',$querytotalcount);
 
 // only display pages stuff if there is more to display

@@ -17,7 +17,7 @@ $Language->loadLanguageMsg('account/account');
 
 function register_valid()	{
 
-	if (!$GLOBALS["Update"]) {
+	if (!$GLOBALS["Submit"]) {
 		return 0;
 	}
 
@@ -59,7 +59,7 @@ if (register_valid()) {
 	print $authorized_keys;
 ?>
 </TEXTAREA>
-<p><input type="submit" name="Update" value="<?php echo $Language->getText('global', 'btn_update'); ?>">
+<p><input type="submit" name="Submit" value="<?php echo $Language->getText('global', 'btn_submit'); ?>">
 </form>
 
 <?php

@@ -20,7 +20,8 @@ softwaremap_trove_list	limit_view	Now limiting view to projects in the following
 softwaremap_trove_list	remove_view	Remove This Filter
 softwaremap_trove_list	projs	projects
 softwaremap_trove_list	browse_by	Browse by:
-softwaremap_trove_list	projs_in_res	More than <B>$1</B> projects in result set. 
+softwaremap_trove_list	more_projs_in_res	More than <B>$1</B> projects in result set. 
+softwaremap_trove_list	projs_in_res	<B>$1</B> projects in result set. 
 softwaremap_trove_list	display_per_page	Displaying $1 per page.<BR>
 softwaremap_trove_list	activity_percentile	Activity Percentile: 
 softwaremap_trove_list	activity_ranking	Activity Ranking:

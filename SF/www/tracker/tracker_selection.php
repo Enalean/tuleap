@@ -16,7 +16,7 @@ $Language->loadLanguageMsg('tracker/tracker');
 ?>
 <html>
 <head>
-<title><? $Language->getText('tracker_selection','tracker_sel') ?></title>
+<title><? echo $Language->getText('tracker_selection','tracker_sel') ?></title>
 <link rel="stylesheet" type="text/css" href="<? echo util_get_css_theme(); ?>">
 <script language="JavaScript">
 
@@ -62,8 +62,8 @@ function doSelection(form) {
 <td>
 <input type="button" name="selection" value="Select" onClick="doSelection(form_selection)">
 <? } else { ?>
-<b><? $Language->getText('tracker_selection','no_tracker_available')?></b>
-<br><br><input type="button" value="<? $Language->getText('global','btn_close') ?>" onClick="window.close()">
+<b><? echo $Language->getText('tracker_selection','no_tracker_available')?></b>
+<br><br><input type="button" value="<? echo $Language->getText('global','btn_close') ?>" onClick="window.close()">
 </td>
 <td>
 <? } ?>

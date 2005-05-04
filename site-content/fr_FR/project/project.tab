@@ -34,11 +34,11 @@ project_admin_editservice	s_ident_desc	Identification des services et descriptio
 project_admin_editservice	s_name_in_bar	Nom apparaissant dans la barre de services
 project_admin_editservice	s_label	Label du service
 project_admin_editservice	url	URL pointé par le service
-project_admin_editservice	s_link	Lien du service: 
+project_admin_editservice	s_link	Lien vers le service
 project_admin_editservice	s_short_name	Nom court pour le service
-project_admin_editservice	short_name	Nom court:
+project_admin_editservice	short_name	Nom court
 project_admin_editservice	s_desc_in_tooltip	La description du service sera affichée dans une bulle d'aide au dessus du label.
-project_admin_editservice	s_desc	Description du service:
+project_admin_editservice	s_desc	Description du service
 project_admin_editservice	s_scope	Portée du service: projet seul ou tout le système
 project_admin_editservice	scope	Portée
 project_admin_editservice	display_options	Options d'affichage
@@ -47,7 +47,7 @@ project_admin_editservice	available	Disponible
 project_admin_editservice	display_in_s_bar	Visible dans la barre des services ?
 project_admin_editservice	enabled	Actif
 project_admin_editservice	pos_in_s_bar	Position dans la barre des services
-project_admin_editservice	screen_rank	Rang à l'écran:	
+project_admin_editservice	screen_rank	Rang à l'écran
 project_admin_editservice	fields_required	Champs imposés
 project_admin_editservice	s_creation	Création de service
 project_admin_editservice	system	système

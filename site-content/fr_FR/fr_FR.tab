@@ -43,7 +43,7 @@ global	printer_version	Version Imprimable
 global	error	Erreur
 global	help	Aide
 global	by	par
-global	select	Selectionner
+global	select	Sélectionner
 global	unchanged	Inchangé
 global	or	ou
 global	and	et

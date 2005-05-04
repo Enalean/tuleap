@@ -585,12 +585,12 @@ class ArtifactTypeHtml extends ArtifactType {
 		      </td>
 		    </tr>
 		    <tr> 
-		      <td width="21%"><b>Short name</b>: <font color="red">*</font></td>
+		      <td width="21%"><b>'.$Language->getText('tracker_include_type','short_name').'</b>: <font color="red">*</font></td>
 		      <td width="79%"> 
 		        <input type="text" name="itemname" value="'.$itemname.'">
 		      </td>
 		    </tr>
-                    <tr><td colspan=2><i>'.$Language->getText('tracker_include_type','avoid_spaces').'</i>'.help_button('ArtifactUpdate.html#ArtifactCrossReferencing').'</td></tr>';
+                    <tr><td colspan=2><i>'.$Language->getText('tracker_include_type','avoid_spaces').'</i>&nbsp;'.help_button('ArtifactUpdate.html#ArtifactCrossReferencing').'</td></tr>';
 		echo '</table>';
 		echo '<p>'.$Language->getText('tracker_include_type','choose_creation').'</p>';
 		echo '<table>

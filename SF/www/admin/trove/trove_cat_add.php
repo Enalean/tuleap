@@ -48,7 +48,7 @@ $HTML->header(array(title=>$Language->getText('admin_trove_cat_add','title')));
 <br><input type="text"  size="45" maxlen="80" name="form_fullname">
 <?php echo $Language->getText('admin_trove_cat_add','full_name_note'); ?>
 <p><?php echo $Language->getText('admin_trove_cat_add','description'); ?>:
-<input type="text" size="80"  maxlen="255" name="form_description">
+<br><input type="text" size="80"  maxlen="255" name="form_description">
 <?php echo $Language->getText('admin_trove_cat_add','description_note'); ?>
 <p><?php echo $Language->getText('admin_trove_cat_add','parent'); ?>:
 <br><SELECT name="form_parent">

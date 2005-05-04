@@ -18,7 +18,7 @@ $gf = new GroupFactory();
 ?>
 <html>
 <head>
-<title><? $Language->getText('tracker_group_selection','project_sel'); ?></title>
+<title><? echo $Language->getText('tracker_group_selection','project_sel'); ?></title>
 <link rel="stylesheet" type="text/css" href="<? echo util_get_css_theme(); ?>">
 <script language="JavaScript">
 
@@ -60,12 +60,12 @@ function onChangeAllFilter() {
     </td>
   </tr>
   <tr>  
-    <td><input type="radio" name="radiobutton" value="radiobutton"<? if ( $filter == "member" ) echo " checked"; ?> onClick="onChangeMemberFilter()"> <? $Language->getText('tracker_group_selection','my_proj'); ?></td>
-    <td><input type="radio" name="radiobutton" value="radiobutton"<? if ( $filter == "all" ) echo " checked"; ?> onClick="onChangeAllFilter()"> <? $Language->getText('tracker_group_selection','all_proj'); ?></td>
+    <td><input type="radio" name="radiobutton" value="radiobutton"<? if ( $filter == "member" ) echo " checked"; ?> onClick="onChangeMemberFilter()"> <? echo $Language->getText('tracker_group_selection','my_proj'); ?></td>
+    <td><input type="radio" name="radiobutton" value="radiobutton"<? if ( $filter == "all" ) echo " checked"; ?> onClick="onChangeAllFilter()"> <? echo $Language->getText('tracker_group_selection','all_proj'); ?></td>
   </tr>
   <tr>
     <td colspan="2">
-    	<input type="button" name="selection" value="<? $Language-getText('global','select'); ?>" onClick="doSelection(form_selection)">
+    	<input type="button" name="selection" value="<? echo $Language->getText('global','select'); ?>" onClick="doSelection(form_selection)">
     </td>
   </tr>
 </table>

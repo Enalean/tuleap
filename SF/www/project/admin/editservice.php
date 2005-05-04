@@ -67,7 +67,7 @@ if (!$ro) {
     echo $service['label'];
 }
 echo '</td></tr>
-<tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','url').'">'.$Language->getText('project_admin_editservice','s_link').' </a><font color="red">*</font></td>
+<tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','url').'">'.$Language->getText('project_admin_editservice','s_link').':&nbsp;</a><font color="red">*</font></td>
 <td>';
 if ((!$ro)||($hp)) {
     echo '<input type="text" name="link" size="70" maxlength="255" value="'.$service['link'].'">';
@@ -80,12 +80,12 @@ echo '</td></tr>';
 if (($su)&&$service['short_name']) {
     // Can't modify a shortname! Too many problems if the admin changes the system shortnames.
      echo '
-<tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','s_short_name').'">'.$Language->getText('project_admin_editservice','short_name').'</a></td>
+<tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','s_short_name').'">'.$Language->getText('project_admin_editservice','short_name').'</a>:&nbsp;</td>
 <td>'.$service['short_name'].'</td></tr>';
 }
 
 echo '</td></tr>
-<tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','s_desc_in_tooltip').'">'.$Language->getText('project_admin_editservice','s_desc').'</a></td>
+<tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','s_desc_in_tooltip').'">'.$Language->getText('project_admin_editservice','s_desc').'</a>:&nbsp;</td>
 <td>';
 if (!$ro) {
     echo '<input type="text" name="description" size="70" maxlength="255" value="'.$service['description'].'">';
@@ -95,7 +95,7 @@ if (!$ro) {
  echo '</td></tr>';
 if (($su)&&($group_id==100)) {
 echo '
-<tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','s_scope').'">'.$Language->getText('project_admin_editservice','scope').':</a></td>
+<tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','s_scope').'">'.$Language->getText('project_admin_editservice','scope').':&nbsp;</a></td>
 <td><FONT size="-1"><SELECT name="scope">
         <option value="system"'.(($service['scope']=="system")?" selected":"").'>'.$Language->getText('project_admin_editservice','system').'</option>
         <option value="project"'.(($service['scope']!="system")?" selected":"").'>'.$Language->getText('project_admin_editservice','project').'</option>
@@ -117,7 +117,7 @@ echo '
 echo '<input type="CHECKBOX" NAME="is_used" VALUE="1"'.( $service['is_used'] ? ' CHECKED' : '' ).'>';
 
 echo '</td></tr>
-<tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','pos_in_s_bar').'">'.$Language->getText('project_admin_editservice','screen_rank').'</a> <font color="red">*</font></td><td>';
+<tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','pos_in_s_bar').'">'.$Language->getText('project_admin_editservice','screen_rank').':&nbsp;</a><font color="red">*</font></td><td>';
 echo '<input type="text" name="rank" size="5" maxlength="5" value="'.$service['rank'].'">';
 echo '
 </td></tr>
@@ -146,17 +146,17 @@ function display_service_creation_form($group_id,$su) {
 
 <table width="100%" cellspacing=0 cellpadding=3 border=0>
 <tr><td colspan=2><b>'.$Language->getText('project_admin_editservice','s_ident_desc').'</b></td></tr>
-<tr><td width="10%"><a href="#" title="'.$Language->getText('project_admin_editservice','s_name_in_bar').'">'.$Language->getText('project_admin_editservice','s_label').':</a><font color="red">*</font></td>
+<tr><td width="10%"><a href="#" title="'.$Language->getText('project_admin_editservice','s_name_in_bar').'">'.$Language->getText('project_admin_editservice','s_label').':</a>&nbsp;<font color="red">*</font></td>
 <td><input type="text" name="label" size="30" maxlength="40"></td></tr>
-<tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','url').'">'.$Language->getText('project_admin_editservice','s_link').' </a><font color="red">*</font></td>
+<tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','url').'">'.$Language->getText('project_admin_editservice','s_link').'</a>:&nbsp;<font color="red">*</font></td>
 <td><input type="text" name="link" size="70" maxlength="255"></td></tr>';
 if (($group_id==100)&&($su)) {
     echo '
-<tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','s_short_name').$Language->getText('project_admin_editservice','mandatory').'">'.$Language->getText('project_admin_editservice','short_name').'</a><font color="red">*</font> </td>
+<tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','s_short_name').$Language->getText('project_admin_editservice','mandatory').'">'.$Language->getText('project_admin_editservice','short_name').'</a>:&nbsp;<font color="red">*</font> </td>
 <td><input type="text" name="short_name" size="15" maxlength="40"></td></tr>';
     }
 echo '
-<tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','s_desc_in_tooltip').'">'.$Language->getText('project_admin_editservice','s_desc').'</a></td>
+<tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','s_desc_in_tooltip').'">'.$Language->getText('project_admin_editservice','s_desc').'</a>:&nbsp;</td>
 <td><input type="text" name="description" size="70" maxlength="255"></td></tr>';
 if (($group_id==100)&&($su)) {
 echo '
@@ -180,7 +180,7 @@ if (($group_id==100)&&($su)) {
 echo '
 <tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','display_in_s_bar').'">'.$Language->getText('project_admin_editservice','enabled').':</a> </td>
 <td><input type="CHECKBOX" NAME="is_used" VALUE="1" CHECKED></td></tr>
-<tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','pos_in_s_bar').'">'.$Language->getText('project_admin_editservice','screen_rank').'</a> <font color="red">*</font></td>
+<tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','pos_in_s_bar').'">'.$Language->getText('project_admin_editservice','screen_rank').'</a>:&nbsp;<font color="red">*</font></td>
 <td><input type="text" name="rank" size="5" maxlength="5">
 </td></tr>
 </table>

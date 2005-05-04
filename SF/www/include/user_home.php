@@ -63,7 +63,7 @@ echo '
 	</TD>
 </TR>
 <TR valign=top>
-	<TD'.$Language->getText('include_user_home','user_prof').': </TD>
+	<TD>'.$Language->getText('include_user_home','user_prof').': </TD>
         <TD>
         <A HREF="/people/viewprofile.php?user_id='.db_result($res_user,0,'user_id').'"><B>'.$Language->getText('include_user_home','see_skills').'</B></A></TD>
 </TR>

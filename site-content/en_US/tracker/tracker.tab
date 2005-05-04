@@ -208,7 +208,7 @@ tracker_admin_restore	restore_failed	Restore operation failed
 tracker_admin_restore	tracker_restored	Restored tracker
 tracker_admin_restore	delay_failed	Delay operation failed
 tracker_admin_restore	delayed_deletion	Delayed deletion
-tracker_admin_restore	pending_deletions	Pending Tracker Deletions
+tracker_admin_restore	pending_deletions	Trackers Deletion
 tracker_admin_restore	tracker_deleted	Tracker deleted
 #
 #-----------------------------------------------

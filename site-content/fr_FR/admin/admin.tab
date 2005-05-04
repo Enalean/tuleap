@@ -27,8 +27,8 @@ admin_main	header_group	Administration de groupes
 admin_main	display_group	Afficher les groupes commençant par :
 admin_main	search_group	ou chercher (Id groupe, nom unix, nom complet):
 admin_main	incomplete_group	Groupes en statut <a href="$1"><B>I</B> (incomplet)</A>
-admin_main	pending_group	Groupes en statut <a href="$1"><B>P</B> (en attante)</A>
-admin_main	deleted_group	Groupes en statut <a href="$1"><B>D</B> (detruit)</A>
+admin_main	pending_group	Groupes en statut <a href="$1"><B>P</B> (en attente)</A>
+admin_main	deleted_group	Groupes en statut <a href="$1"><B>D</B> (détruit)</A>
 admin_main	header_svc	Administration des Services
 admin_main	configure_svc	Configuration des services prédéfinis
 admin_main	header_tracker	Administration des outils de suivi
@@ -38,7 +38,7 @@ admin_main	header_stat	Statistiques
 admin_main	stat_login	Afficher les connections les plus récentes
 admin_main	stat_spu	Générer les statistiques site/projets/utilisateurs
 admin_main	header_utils	Utilitaires site
-admin_main	mail_engine	Envoi de e-mail en masse
+admin_main	mail_engine	Envoi d'e-mails en masse
 admin_main	header_sstat	Statistiques site
 admin_main	sstat_reg_u	Utilisateurs actifs ou restreints
 admin_main	sstat_reg_g	Projets enregistrés
@@ -166,12 +166,12 @@ admin_massmail	warning	Soyez <span class="highlight"><B>TRÈS</B></span> vigilant
 admin_massmail	to_additional	Envoyer uniquement aux abonnés de l'option "Courrier électronique supplémentaire au sujet de la communauté"
 admin_massmail	to_update	Envoyer uniquement aux abonnés de l'option "Courrier électronique à propos des mises à jour du site"
 admin_massmail	to_devel	Envoyer uniquement aux développeurs des projets 
-admin_massmail	to_proj_admin	Envoyer uniquement aux administrateurs de projets 
+admin_massmail	to_proj_admin	Envoyer uniquement aux administrateurs des projets 
 admin_massmail	to_site_admin	Envoyer uniquement aux administrateurs du site
-admin_massmail	to_all	Envoyer à tous les utilisateurs quelques soient leurs préférences
+admin_massmail	to_all	Envoyer à tous les utilisateurs quelles que soient leurs préférences
 admin_massmail	subject	Objet
 admin_massmail	text	Texte du message
-admin_massmail	footer	Taper votre message ici...\n\n---------------------\nCet email est envoyé depuis $1'. Pour changer vos préférences en matière d'envoi de courrier, veuillez visiter votre page "Gestion de compte".\n\nEnvoyez toutes vos questions à $2 ou répondez à ce message.
+admin_massmail	footer	Taper votre message ici...\n\n---------------------\nCet email est envoyé depuis '$1'. Pour changer vos préférences en matière d'envoi de courrier, veuillez visiter votre page "Gestion de compte".\n\nEnvoyez toutes vos questions à $2 ou répondez à ce message.
 #
 #-----------------------------------------------
 # Script: SF/www/admin/newprojectmail.php

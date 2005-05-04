@@ -178,7 +178,7 @@ print "</select>\n";
 echo html_get_language_popup($Language,'language_id',$Language->getLanguageId());
 ?>
 
-<P align=center><CENTER><INPUT type="submit" name="Update" value="Update"></CENTER>
+<P align=center><CENTER><INPUT type="submit" name="Submit" value="<?php echo $Language->getText('global', 'btn_submit'); ?>"></CENTER>
 </FORM>
 <?php $HTML->box1_bottom(); 
 

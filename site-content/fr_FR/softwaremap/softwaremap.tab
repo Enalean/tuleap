@@ -18,9 +18,10 @@ softwaremap_trove_list	invalid_cat	Catégorie invalide
 softwaremap_trove_list	cat_not_exist	Cette catégorie n'existe pas.
 softwaremap_trove_list	limit_view	Vue restreinte aux projets des catégories suivantes:
 softwaremap_trove_list	remove_view	Supprimer ce filtre
-softwaremap_trove_list	projs	projet(s)
+softwaremap_trove_list	projs	projets
 softwaremap_trove_list	browse_by	Afficher par:
-softwaremap_trove_list	projs_in_res	Plus de <B>$1</B> projets dans la liste des résultats. 
+softwaremap_trove_list	more_projs_in_res	Plus de <B>$1</B> projets dans la liste des résultats.
+softwaremap_trove_list	projs_in_res	<B>$1</B> projets dans la liste des résultats. 
 softwaremap_trove_list	display_per_page	Affichage de $1 par page.<BR>
 softwaremap_trove_list	activity_percentile	Taux d'activité: 
 softwaremap_trove_list	activity_ranking	Classement de l'activité:
