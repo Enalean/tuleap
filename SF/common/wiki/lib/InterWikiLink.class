@@ -23,6 +23,8 @@
 
 define('MAPFILE', '/home/httpd/SF/common/wiki/phpwiki/lib/interwiki.map');
 
+$Language->loadLanguageMsg('wiki/wiki');
+
 function get_server_url() {
   return 'http://crw2956.cro.st.com';
 }
@@ -51,20 +53,20 @@ class InterWikiLink {
 
     if (is_writable(MAPFILE)) {
       if (!$handle = fopen(MAPFILE, 'a')) {
-	print "Unable to open file(".MAPFILE.")";
+	print $Language->getText('wiki_lib_interwikilink','open_err',MAPFILE);
 	return FALSE;
       }
       
       // Ecrivons quelque chose dans notre fichier.
       if (fwrite($handle, $line) === FALSE) {
-	print "Unable to write InterWiki line in (".MAPFILE.")";
+	print $Language->getText('wiki_lib_interwikilink','write_err',MAPFILE);
 	return FALSE;
       }
             
       fclose($handle);
       
     } else {
-      print "Unable to open file(".MAPFILE.")";
+      print $Language->getText('wiki_lib_interwikilink','open_err',MAPFILE);
     }
 
    

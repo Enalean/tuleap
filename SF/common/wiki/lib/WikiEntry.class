@@ -25,6 +25,8 @@ require_once('HTMLCleaner.class');
 require_once('WikiPage.class');
 require_once('RecordIterator.class');
 
+$Language->loadLanguageMsg('wiki/wiki');
+
 class WikiEntryManager extends RecordIterator {
   /* private int */ var $gid;
 
@@ -172,7 +174,7 @@ class WikiEntry {
     if(db_affected_rows($res) === 1)
       return true;
 
-    trigger_error('Can not insert new wiki entry: "'.db_error(), E_USER_ERROR);
+    trigger_error($Language->getText('wiki_lib_wikientry','insert_err',db_error()), E_USER_ERROR);
     return false;
   }
 
@@ -184,7 +186,7 @@ class WikiEntry {
     if(db_affected_rows($res) === 1)
       return true;
 
-    trigger_error('Can not delete wiki entry: "'.db_error(), E_USER_ERROR);
+    trigger_error($Language->getText('wiki_lib_wikientry','delete_err',db_error()), E_USER_ERROR);
     return false;
   }
 
@@ -200,7 +202,7 @@ class WikiEntry {
     if(db_affected_rows($res) === 1)
       return true;
 
-    trigger_error('Can not update wiki entry: "'.db_error(), E_USER_ERROR);
+    trigger_error($Language->getText('wiki_lib_wikientry','update_err',db_error()), E_USER_ERROR);
     return false;
 
   }
