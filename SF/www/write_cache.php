@@ -7,8 +7,9 @@
 // $Id$
 
 // Try to avoid 'sploits by requiring the request to come from localhost
-if ($SERVER_NAME != 'localhost') {
-	exit;
+if (($GLOBALS['SERVER_NAME'] != 'localhost') &&
+     ($GLOBALS['SERVER_ADDR'] != '127.0.0.1')) {
+    exit;
 }
 
 require_once('pre.php');
