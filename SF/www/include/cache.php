@@ -11,7 +11,7 @@
 
 function cache_display($name,$function,$time) {
   global $Language;
-	$filename = $GLOBALS['sf_cache_dir']."/sfcache_".$GLOBALS['sys_user_theme']."_$name.sf";
+  $filename = $GLOBALS['sf_cache_dir']."/sfcache_".$GLOBALS['sys_user_theme']."_".$name."_".$Language->getLanguageCode().".sf";
 
 	while ((@filesize($filename)<=1) || ((time() - filectime($filename)) > $time)) {
 		// file is non-existant or expired, must redo, or wait for someone else to
@@ -60,7 +60,9 @@ function cache_display($name,$function,$time) {
 }
 
 function cache_get_new_data($function) {
-	$furl=fopen(make_local_url("write_cache.php?sys_theme=".$GLOBALS['sys_user_theme']."&function=".urlencode($function)),'r');
+    global $Language;
+    
+    $furl=fopen(make_local_url("write_cache.php?sys_theme=".$GLOBALS['sys_user_theme']."&lang_code=".urlencode($Language->getLanguageCode())."&function=".urlencode($function)),'r');
 	return stripslashes(fread($furl,200000));
 }
 ?>

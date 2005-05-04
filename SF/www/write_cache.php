@@ -24,6 +24,11 @@ require_once('snippet_caching.php');
 
 $function= intval($function);
 
+// Set the language context as specified in the URL
+if ( $lang_code != $Language->getLanguageCode() ) {
+    $Language->loadLanguage($lang_code);
+}
+
 unset($valid_array);
 
 $valid_array[0]='show_features_boxes()';
