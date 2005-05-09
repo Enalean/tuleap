@@ -14,7 +14,7 @@ $HTML->header(array('title'=>$Language->getText('contact', 'title')));
 
 echo '<h2>'.$Language->getText('contact', 'title')."</h2>\n";
 
-include(util_get_content('contact/contact'));
+include($Language->getContent('contact/contact'));
 
 $HTML->footer(array());
 ?>

@@ -109,7 +109,7 @@ if ($group_id && user_ismember($group_id,'A')) {
 
 		echo '
 			<H3>'.$Language->getText('mail_admin_index','add_a_mail_list').'</H3>';
-		include(util_get_content('mail/addlist_intro'));
+		include($Language->getContent('mail/addlist_intro'));
 
 		$result=db_query("SELECT list_name FROM mail_group_list WHERE group_id='$group_id'");
 		ShowResultSet($result,$Language->getText('mail_admin_index','existing_mail_list'));

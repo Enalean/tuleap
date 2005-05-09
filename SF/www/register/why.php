@@ -12,7 +12,7 @@ $Language->loadLanguageMsg('register/register');
 
 $HTML->header(array(title=>$Language->getText('register_why','why_register')));
 
-include(util_get_content('register/why'));
+include($Language->getContent('register/why'));
 
 $HTML->footer(array());
 

@@ -2,7 +2,7 @@
 
   //$Language->loadLanguageMsg('include/include');
 
-include(util_get_content('layout/osdn_sites'));
+include($Language->getContent('layout/osdn_sites'));
 
 function osdn_nav_dropdown() {
   GLOBAL $osdn_sites, $Language;
@@ -62,7 +62,7 @@ function osdn_print_navbar() {
 	    <td valign="middle" align="left">
 ';
 
-    $motd = util_get_content('others/motd');
+    $motd = $Language->getContent('others/motd');
     if (!strpos($motd,"empty.txt")) { # empty.txt returned when no motd file found
         include($motd);
     } else {

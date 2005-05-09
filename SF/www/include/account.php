@@ -93,7 +93,7 @@ function account_send_add_user_to_group_email($group_id,$user_id) {
             $group_name = db_result($res2,0,'group_name');
             $unix_group_name = db_result($res2,0,'unix_group_name');
             // $message is defined in the content file
-            include(util_get_content('include/add_user_to_group_email'));
+            include($Language->getContent('include/add_user_to_group_email'));
             
             list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
             mail($email_address, $Language->getText('include_account','welcome',array($GLOBALS['sys_name'],$group_name)) ,$message,"From: noreply@".$host);

@@ -701,31 +701,6 @@ function util_is_valid_filename ($file) {
 	}
 }
 
-function util_get_content($file){
-    // Default language
-    $lang = $GLOBALS['sys_lang'];
-    
-    // Retrieve the user language if not guest
-    // TODO
-
-    // Test first the custom directory
-    $custom_fn = getenv('SF_LOCAL_INC_PREFIX')."/etc/codex/site-content/".$lang."/".$file.".txt";   
-    if ( file_exists($custom_fn) ) {
-        // The custom file exists. 
-        return $custom_fn;
-    } else {
-        // Use the default file
-        // Check first if exist
-        $fn = $GLOBALS['sys_incdir'].$lang."/".$file.".txt";
-	if ( file_exists($fn) ) {
-	    // The custom file exists. 
-	    return $fn;
-	} else {
-	    // return empty content to avoid include error
-	    return $GLOBALS['sys_incdir'].$lang."/others/empty.txt";
-	}
-    }
-}
 
 // Return the string value of fontsize
 function getFontsizeName($value) {
@@ -1022,6 +997,7 @@ function & _getPredefinedArray($superGlobalName, $oldName) {
 */
 
 function util_check_restricted_access($request_uri, $script_name) {
+    global $Language;
     // Note:
     // Currently, we don't restrict access to 'shownotes.php' and to tracker file attachment downloads
 
@@ -1063,7 +1039,7 @@ function util_check_restricted_access($request_uri, $script_name) {
 
 
         // Customizable security settings for restricted users:
-        include(util_get_content('include/restricted_user_permissions'));
+        include($Language->getContent('include/restricted_user_permissions'));
         // End of customization
         
 

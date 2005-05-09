@@ -56,7 +56,7 @@ if ($insert_purpose && $form_purpose && $form_short_description) {
 
 $HTML->header(array('title'=>$Language->getText('register_form','project_name')));
 
-include(util_get_content('register/projectname'));
+include($Language->getContent('register/projectname'));
 
 $HTML->footer(array());
 

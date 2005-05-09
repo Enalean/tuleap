@@ -8,6 +8,7 @@
 //
 
 
+require_once('common/include/Error.class');
 
 /**
  * LDAP class definition

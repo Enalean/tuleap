@@ -60,7 +60,7 @@ echo '<FORM ACTION="'. $PHP_SELF .'" METHOD="GET">
         '"></p> <h3>'.$Language->getText('cvs_admin_commit', 'preamble_hdr').
 '</h3><P>'.$Language->getText('cvs_admin_commit', 'preamble_msg',array("/cvs/?func=info&group_id=".$group_id, $GLOBALS['sys_name'])).
         '<p><TEXTAREA cols="70" rows="8" wrap="virtual" name="form_preamble">'.$cvs_preamble.'</TEXTAREA>';
-echo '</p><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit"></p></FORM>';
+echo '</p><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'"></p></FORM>';
 
 commits_footer(array()); 
 ?>

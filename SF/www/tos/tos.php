@@ -10,7 +10,7 @@ require_once('pre.php');  // Initial db and session library, opens session
 
 $HTML->header( array( title=>"Terms of Service Agreement" ) );
 
-include(util_get_content('register/tos'));
+include($Language->getContent('register/tos'));
 
 $HTML->footer( array() );
 

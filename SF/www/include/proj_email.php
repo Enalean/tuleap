@@ -39,7 +39,7 @@ function send_new_project_email($group_id) {
 
         $server = get_server_url();
 	// $message is defined in the content file
-	include(util_get_content('include/new_project_email'));
+	include($Language->getContent('include/new_project_email'));
 
 	// LJ Uncomment to test
 	//echo $message; return
@@ -61,7 +61,7 @@ function send_new_user_email($to,$confirm_hash)
     $base_url = get_server_url();
 
     // $message is defined in the content file
-    include(util_get_content('include/new_user_email'));
+    include($Language->getContent('include/new_user_email'));
     
     list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
     mail($to, $Language->getText('include_proj_email','account_register',$GLOBALS['sys_name']),$message,"From: noreply@".$host);

@@ -28,7 +28,7 @@ $row_grp = db_fetch_array($res_grp);
 if ($row_grp['cvs_preamble']!='') {
     echo util_unconvert_htmlspecialchars($row_grp['cvs_preamble']);
 } else {
-    include(util_get_content('cvs/intro'));
+    include($Language->getContent('cvs/intro'));
 }
 
 // Summary info

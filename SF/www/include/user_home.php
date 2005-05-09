@@ -111,7 +111,7 @@ if ($GLOBALS['sys_ldap_server']) {
       echo '<td colspan="2" align="center"><a href="'.$PHP_SELF.'/?showdir=1"><hr>[ '.$Language->getText('include_user_home','more_from_directory',$GLOBALS['sys_org_name']).'... ]</a><td>';
 	
     } else {
-        include(util_get_content('include/user_home'));
+        include($Language->getContent('include/user_home'));
 
         if ($GLOBALS['sys_ldap_filter']) {
             $ldap_filter = $GLOBALS['sys_ldap_filter'];

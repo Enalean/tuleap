@@ -8,6 +8,6 @@
 
 
 require_once('pre.php');
-include(util_get_content('register/tos'));
+include($Language->getContent('register/tos'));
 
 ?>

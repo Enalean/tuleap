@@ -29,7 +29,7 @@ $row_grp = db_fetch_array($res_grp);
 if ($row_grp['svn_preamble'] != '') {
     echo util_unconvert_htmlspecialchars($row_grp['svn_preamble']);
 } else {
-    include(util_get_content('svn/intro'));
+    include($Language->getContent('svn/intro'));
 }
 
 // Summary info

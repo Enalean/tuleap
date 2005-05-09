@@ -13,7 +13,7 @@ $Language->loadLanguageMsg('register/register');
 session_require(array(isloggedin=>1));
 $HTML->header(array(title=>$Language->getText('register_index','project_registration')));
 
-include(util_get_content('register/intro'));
+include($Language->getContent('register/intro'));
 
 $HTML->footer(array());
 

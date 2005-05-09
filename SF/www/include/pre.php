@@ -41,13 +41,6 @@ require_once('browser.php');
 //various html utilities
 require_once('utils.php');
 
-include(util_get_content('layout/osdn_sites'));
-
-// HTML layout class, may be overriden by the Theme class
-require_once('Layout.class');
-
-$HTML = new Layout();
-
 //PHP4-like functions - only if running php3
 if (substr(phpversion(),0,1) == "3") {
     require_once('utils_php4.php');
@@ -91,9 +84,6 @@ if (!$conn) {
 
 //determine if they're logged in
 session_set();
-
-// OSDN functions and defs
-require_once('osdn.php');
 
 //insert this page view into the database
 require_once('logger.php');
@@ -148,9 +138,19 @@ $sys_datefmt = $Language->getText('system','datefmt');
 
 $Language->loadLanguageMsg('include/include');
 
+// HTML layout class, may be overriden by the Theme class
+require_once('Layout.class');
+
+$HTML = new Layout();
+
+// OSDN functions and defs
+require_once('osdn.php');
+
 // If the CodeX Software license was declined by the site admin
-// so stop all accesses to the site
-require_once('license.php');
+// so stop all accesses to the site. Use exlicit path to avoid
+// loading the license.php file in the register directory when
+// invoking register/index.php
+require_once($DOCUMENT_ROOT.'/include/license.php');
 if (license_already_declined()) {
   exit_error($Language->getText('global','error'),$Language->getText('include_pre','site_admin_declines_license',$GLOBALS['sys_email_admin']));
 }

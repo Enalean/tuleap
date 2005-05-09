@@ -9,7 +9,7 @@
   //$Language->loadLanguageMsg('include/include');
 
 function exit_error($title,$text) {
-  GLOBAL $HTML,$Language;
+    global $HTML,$Language;
 	$HTML->header(array('title'=>$Language->getText('include_exit','exit_error')));
 	print '<H2><span class="feedback">'.$title.'</span></H2><P>'.$text;
 	$HTML->footer(array());

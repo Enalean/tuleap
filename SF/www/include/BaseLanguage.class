@@ -152,6 +152,38 @@ class BaseLanguage {
 		return "$tstring";
 	}
 
+	// This is a legacy piece of code that used to be utils_get_content
+	// and is used either to include long piece of text that are inconvenient
+	// to format on one line as the .tab file does or because there is some
+	// PHP code that can be cutomized
+	function getContent($file,$lang_code=null){
+
+	    // Language for current user unless it is specified in the param list
+	    if (!isset($lang_code)) { $lang_code = $this->getLanguageCode(); }
+
+	    // Test first the custom directory
+	    $custom_fn = getenv('SF_LOCAL_INC_PREFIX')."/etc/codex/site-content/".$lang_code."/".$file.".txt";   
+	    if ( file_exists($custom_fn) ) {
+		// The custom file exists. 
+		return $custom_fn;
+	    } else {
+		// Use the default file
+		// Check first if exist
+		$fn = $GLOBALS['sys_incdir'].$lang_code."/".$file.".txt";
+		if ( file_exists($fn) ) {
+		    // The custom file exists. 
+		    return $fn;
+		} else {
+		    if ($lang_code == "en_US")
+			// return empty content to avoid include error
+			return $GLOBALS['sys_incdir'].$lang_code."/others/empty.txt";
+		    else
+			// else try to find the file in the en_US directory
+			return $this->getContent($file, "en_US");
+		}
+	    }
+	}
+
 	//result set handle for supported langauges
 	var $language_res;
 

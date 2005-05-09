@@ -30,7 +30,7 @@ if ($group_id && $insert_license && $rand_hash && $form_license) {
 
 $HTML->header(array('title'=>$Language->getText('register_category','project_category')));
 
-include(util_get_content('register/category'));
+include($Language->getContent('register/category'));
 
 $HTML->footer(array());
 

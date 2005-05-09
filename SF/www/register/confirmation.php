@@ -24,7 +24,7 @@ if ($show_confirm) {
 
     $HTML->header(array('title'=>$Language->getText('register_confirmation','registration_complete')));
 
-    include(util_get_content('register/confirmation'));
+    include($Language->getContent('register/confirmation'));
 
     $HTML->footer(array());
 
@@ -72,7 +72,7 @@ if ($show_confirm) {
 		. "2," // file_flags	
 		. "2)"); // wiki_flags	
 	if (!$result) {
-		exit_error($Language->getText('global','error'),$Language->getText('register_confirmation','set_owner_fail',array($GLOBALS['sys_email_admin'],db_error())));
+	    exit_error($Language->getText('global','error'),$Language->getText('register_confirmation','set_owner_fail',array($GLOBALS['sys_email_admin'],db_error())));
 	}
 
 	//Add a couple of forums for this group and make the project creator 
@@ -161,7 +161,7 @@ if ($show_confirm) {
 	// notification (it's all in the content part)
 	$HTML->header(array('title'=>$Language->getText('register_confirmation','registration_complete')));
 
-	include(util_get_content('register/complete'));
+	include($Language->getContent('register/complete'));
     
 	$HTML->footer(array());
 

@@ -10,7 +10,7 @@ require_once('www/snippet/snippet_utils.php');
 function snippet_mainpage() {
   global $Language;
 
-    include(util_get_content('snippet/homepage'));
+    include($Language->getContent('snippet/homepage'));
 
     echo '
 	<H3>'.$Language->getText('include_snippet_caching','browse_snippet').'</H3>

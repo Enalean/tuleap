@@ -15,7 +15,7 @@ session_require( array( isloggedin=>1 ) );
 $HTML->header(array(title=>$Language->getText('register_tos','tos')));
 
 echo '<p><h2>'.$Language->getText('register_tos','tos_agreement').'</h2></p>';
-include(util_get_content('register/tos'));
+include($Language->getContent('register/tos'));
 
 echo '<BR><HR><BR>
 

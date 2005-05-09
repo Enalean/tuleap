@@ -43,7 +43,7 @@ if ($insert_group_name && $group_id && $rand_hash && $form_full_name && $form_un
 
 $HTML->header(array('title'=>$Language->getText('register_license','license')));
 
-include(util_get_content('register/license'));
+include($Language->getContent('register/license'));
 
 $HTML->footer(array());
 

@@ -172,7 +172,7 @@ class Layout extends Error {
                 	echo "<P>$GLOBALS[G_DEBUGQUERY]";
         	}
 	        ?>
-<? include(util_get_content('layout/footer')); ?>
+<? include($Language->getContent('layout/footer')); ?>
 </body>
 </html>
         <?php

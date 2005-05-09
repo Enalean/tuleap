@@ -195,7 +195,7 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 						<INPUT TYPE="RADIO" NAME="is_public" VALUE="9"'.((db_result($result,$i,'is_public')=='9')?' CHECKED':'').'> '.$Language->getText('forum_admin_index','deleted').'<BR>
 					</TD><TD>
 						<FONT SIZE="-1">
-						<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('forum_admin_index','update_status').'">
+						<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
 					</TD></TR>
 					<TR class="'. util_get_alt_row_color($i) .'"><TD COLSPAN="3">
 						<B>'.$Language->getText('forum_admin_index','forum_name').':</B><BR>
