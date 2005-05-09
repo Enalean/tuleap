@@ -100,7 +100,7 @@ function forum_header($params) {
                     html_image("ic/check.png",array()).' '.$msg.' | '.
                     '<A HREF="/forum/save.php?forum_id='.$forum_id.'">';
 		echo  html_image("ic/save.png",array()) .' '.$Language->getText('forum_forum_utils','save_place').'</A> | ';
-                echo "<A HREF='".$PHP_SELF."?forum_id=$forum_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('forum_forum_utils','print_version')."</A> | ";
+                echo "<A HREF='".$PHP_SELF."?forum_id=$forum_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> | ";
             }
             
             echo '  <A HREF="/forum/admin/?group_id='.$group_id.'">'.$Language->getText('forum_forum_utils','admin').'</A></B>';

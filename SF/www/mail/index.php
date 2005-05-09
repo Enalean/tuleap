@@ -50,7 +50,7 @@ if ($group_id) {
             echo "<TABLE width='100%'><TR><TD>";
             echo "<P>".$Language->getText('mail_index','choose_and_browse')."<P>\n";
             echo "</TD>";
-            echo "<TD align='left'> ( <A HREF='".$PHP_SELF."?group_id=$group_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('mail_index','pv')."</A> ) </TD>";
+            echo "<TD align='left'> ( <A HREF='".$PHP_SELF."?group_id=$group_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> ) </TD>";
             echo "</TR></TABLE>";
         }
 

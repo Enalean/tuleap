@@ -683,7 +683,7 @@ if ( $func == 'gotoid' ) {
         } else {
             echo "<p>".$Language->getText('tracker_index','choose_tracker');
             if (!$pv) {
-                echo " ( <A HREF='".$PHP_SELF."?group_id=$group_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('tracker_index','printer_version')."</A> )";
+                echo " ( <A HREF='".$PHP_SELF."?group_id=$group_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> )";
             }
             echo "<p>";
 

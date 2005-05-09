@@ -603,7 +603,7 @@ class ArtifactReportHtml extends ArtifactReport {
                     if (!$pv) {
                                 $html_result .= $Language->getText('tracker_include_report','multicolumn_sort',array($url_alternate_sort,$text)).'&nbsp;&nbsp;&nbsp;&nbsp;'.
                                     '(<a href="'.$url.'&pv=1"> <img src="'.util_get_image_theme("msg.png").'" border="0">'.
-                                    '&nbsp;'.$Language->getText('tracker_index','printer_version').'</a>)'."\n";
+                                    '&nbsp;'.$Language->getText('global','printer_version').'</a>)'."\n";
                     }
                 
                     if ($pv) { $chunksz = 100000; }
