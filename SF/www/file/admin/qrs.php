@@ -8,6 +8,7 @@
 
 require_once('pre.php');    
 require_once('www/file/file_utils.php');
+require_once('common/include/SimpleSanitizer.class');
 
 /*
 	Quick file release system , Darrell Brogdon, SourceForge, Aug, 2000
@@ -21,6 +22,16 @@ if (!user_ismember($group_id,'R2')) {
 file_utils_admin_header(array('title'=>$Language->getText('file_admin_editreleases','release_new_file_version'), 'help' => 'QuickFileRelease.html'));
 
 if( $submit ) {
+    //Sanitize some fields
+    $strings_to_sanitize = array('release_name', 'release_notes', 'release_changes');
+    $sanitizer           = new SimpleSanitizer();
+    foreach($strings_to_sanitize as $str) {
+        if (isset($_REQUEST[$str])) {
+            $_REQUEST[$str] = $sanitizer->sanitize($_REQUEST[$str]);
+            $$str = $_REQUEST[$str];
+        }
+    }
+
   if (!$release_name) {
     $feedback .= ' '.$Language->getText('file_admin_qrs','define_rel_name').' ';
     echo db_error();

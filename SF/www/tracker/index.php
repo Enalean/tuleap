@@ -30,17 +30,36 @@ require_once('common/tracker/ArtifactReportField.class');
 require('./include/ArtifactFieldHtml.class');
 require('./include/ArtifactReportHtml.class');
 
+require_once('common/include/SimpleSanitizer.class');
+
 $Language->loadLanguageMsg('tracker/tracker');
 
 
+//Sanitize some fields
+$strings_to_sanitize = array('cc_comment', 'file_description');
+$sanitizer           = new SimpleSanitizer();
+foreach($strings_to_sanitize as $str) {
+    if (isset($_REQUEST[$str])) {
+        //var_dump($_REQUEST);
+        $_REQUEST[$str] = $sanitizer->sanitize($_REQUEST[$str]);
+        $$str = $_REQUEST[$str];
+        //var_dump($_REQUEST);
+    }
+}
+
+//define undefined variables
+if (!isset($func)) {
+    $func = '';
+}
+
 if ( $func == 'gotoid' ) {
     // Direct access to an artifact
-    if (!$aid) {
+    if (!isset($aid) || !$aid) {
         exit_error($Language->getText('global','error'),$Language->getText('tracker_index', 'art_id_necessary'));
     } else {
         require('./gotoid.php');
     }
-} else if ($group_id && $atid) {
+ } else if ($group_id && isset($atid) && $atid) {
 
         //
         //      get the Group object
@@ -636,8 +655,7 @@ if ( $func == 'gotoid' ) {
             }
             break;
         }
-        
-        default : {
+        default: {
                 require('./browse.php');
                 break;
         }
@@ -666,7 +684,7 @@ if ( $func == 'gotoid' ) {
         $params['title']=$Language->getText('tracker_index','trackers_for');
         $params['sectionvals']=array($group->getPublicName());
         $params['help']='TrackerService.html';
-        $params['pv']=$pv;
+        $params['pv']  = isset($pv)?$pv:'';
 
         echo site_project_header($params);
         echo '<strong>'
@@ -682,7 +700,7 @@ if ( $func == 'gotoid' ) {
 	  echo '<p>'.$Language->getText('tracker_index','no_accessible_trackers_msg').'</p>';
         } else {
             echo "<p>".$Language->getText('tracker_index','choose_tracker');
-            if (!$pv) {
+            if (!isset($pv) || !$pv) {
                 echo " ( <A HREF='".$PHP_SELF."?group_id=$group_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> )";
             }
             echo "<p>";
@@ -691,10 +709,11 @@ if ( $func == 'gotoid' ) {
                 // Put the result set (list of trackers for this group) into a column with folders
                 //
                 for ($j = 0; $j < count($at_arr); $j++) {
-                        echo '
+                    echo '
                         <a href="/tracker/?atid='. $at_arr[$j]->getID() .
                         '&group_id='.$group_id.'&func=browse">' .
-                        html_image("ic/tracker20w.png",array("border"=>"0","width"=>"20","height"=>"20")) . ' &nbsp;'.
+                        html_image("ic/tracker20w.png",array("border"=>"0","width"=>"20","height"=>"20"),0) .
+                        '&nbsp;'.
                         $at_arr[$j]->getName() .'</a> 
                         ( <strong>'. $at_arr[$j]->getOpenCount() .' '.$Language->getText('tracker_index','open').' / '. $at_arr[$j]->getTotalCount() .' '.$Language->getText('tracker_index','total').'</strong> )<br />'.
                         $at_arr[$j]->getDescription() .'<p>';

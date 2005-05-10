@@ -1,0 +1,52 @@
+<?php
+
+require_once('tests/simpletest/reporter.php');
+
+/**
+ * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+ * 
+ * $Id$
+ *
+ * CodexReporter is a customisation of the classic SimpleTest HtmlReporter
+ * - import the codex' stylesheet in the results
+ * - allow the developer/tester to show all passes by writing '?showAll' at the end of the URL in the browser
+ *
+ * @see http://www.lastcraft.com/reporter_documentation.php for documentation about SimpleTest reporting
+ *
+ */
+class CodexReporter extends HtmlReporter {
+
+    var $showAll;
+
+    function CodexReporter() {
+        $this->showAll = isset($_GET['showAll']);
+        $this->HtmlReporter();
+    }
+
+    function _getCss() {
+        return '@import "/css/codex/codex_normal.css"; '.parent::_getCss().' .pass { color: green; }';
+    }
+    function paintFail($message) {
+        parent::paintFail($message);
+        if ($this->showAll) {
+            print "<span class=\"fail\">Fail</span>: ";
+            $breadcrumb = $this->getTestList();
+            array_shift($breadcrumb);
+            print implode("-&gt;", $breadcrumb);
+            print "-&gt;$message<br />\n";
+        }
+    }
+    function paintPass($message) {
+        parent::paintPass($message);
+        if ($this->showAll) {
+             print "<span class=\"pass\">Pass</span>: ";
+            $breadcrumb = $this->getTestList();
+            array_shift($breadcrumb);
+            print implode("-&gt;", $breadcrumb);
+            print "-&gt;$message<br />\n";
+        }
+    }
+
+}
+
+?>

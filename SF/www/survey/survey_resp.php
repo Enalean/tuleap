@@ -8,6 +8,7 @@
 
 require_once('pre.php');
 require('../survey/survey_utils.php');
+require_once('common/include/SimpleSanitizer.class');
 
 $Language->loadLanguageMsg('survey/survey');
 
@@ -62,6 +63,9 @@ $quest_array=explode(',', db_result($result_survey, 0, "survey_questions"));
 $count=count($quest_array);
 $now=time();
 
+
+$sanitizer = new SimpleSanitizer();
+
 for ($i=0; $i<$count; $i++) {
 
 	/*
@@ -70,8 +74,10 @@ for ($i=0; $i<$count; $i++) {
 
 	$val="_$quest_array[$i]";
 
+        $value_sanitized = $sanitizer->sanitize($$val);
+
 	$sql="INSERT INTO survey_responses (user_id,group_id,survey_id,question_id,response,date) ".
-		"VALUES ('".user_getid()."','$group_id','$survey_id','$quest_array[$i]','". $$val . "','$now')";
+		"VALUES ('".user_getid()."','$group_id','$survey_id','$quest_array[$i]','". $value_sanitized . "','$now')";
 	$result=db_query($sql);
 	if (!$result) {
 		echo "<h1>".$Language->getText('global','error')."</h1>";

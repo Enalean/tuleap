@@ -25,6 +25,9 @@ require('../include/ArtifactCannedHtml.class');
 require('../include/ArtifactReportHtml.class');
 require('../include/ArtifactHtml.class');
 
+require_once('common/include/SimpleSanitizer.class');
+$sanitizer =& new SimpleSanitizer();
+
 $Language->loadLanguageMsg('tracker/tracker');
 
 if ($group_id && !$atid) {
@@ -83,7 +86,8 @@ if ($group_id && !$atid) {
 			exit_permission_denied();
 			return;
 		}
-
+            $name        = $sanitizer->sanitize($name);
+            $description = $sanitizer->sanitize($description);
 		if ( !$ath->create($group_id,$group_id_chosen,$atid_chosen,$name,$description,$itemname) ) {
 			exit_error($Language->getText('global','error'),$ath->getErrorMessage());
 		} else {
@@ -342,6 +346,8 @@ if ($group_id && !$atid) {
 		}
 		
 		if ( $update ) {
+                    $name        = $sanitizer->sanitize($name);
+                    $description = $sanitizer->sanitize($description);
 			if ( !$ath->update($name,$description,$itemname,$is_public,$allow_anon,
                                            $submit_instructions,$browse_instructions,$instantiate_for_new_projects) ) {
 				exit_error($Language->getText('global','error'),$ath->getErrorMessage());
@@ -463,6 +469,8 @@ if ($group_id && !$atid) {
 		
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
+                    $value       = $sanitizer->sanitize($value);
+                    $description = $sanitizer->sanitize($description);
 			if ( !$field->createValueList($atid,$value,$description,$order_id) ) {
 				exit_error($Language->getText('global','error'),$field->getErrorMessage());
 			} else {
@@ -485,6 +493,8 @@ if ($group_id && !$atid) {
 		
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
+                    $value       = $sanitizer->sanitize($value);
+                    $description = $sanitizer->sanitize($description);
 			if ( !$field->updateValueList($atid,$value_id,$value,$description,$order_id,$status) ) {
 				exit_error($Language->getText('global','error'),$field->getErrorMessage());
 			} else {
@@ -530,7 +540,8 @@ if ($group_id && !$atid) {
 			exit_permission_denied();
 			return;
 		}
-		
+		$label       = $sanitizer->sanitize($label);
+                $description = $sanitizer->sanitize($description);
 		if ( !$art_field_fact->createField($description,$label,$data_type,$display_type,
 						 $display_size,$rank_on_screen,$show_on_add,$show_on_add_members,
 						 $empty_ok,$keep_history,$special,$use_it) ) {
@@ -554,6 +565,8 @@ if ($group_id && !$atid) {
 		
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
+                     $label       = $sanitizer->sanitize($label);
+                     $description = $sanitizer->sanitize($description);
 			if ( !$field->update($atid,$field_name,$description,$label,$data_type,$display_type,
 							 ($display_size=="N/A"?"":$display_size),$rank_on_screen,$show_on_add,$show_on_add_members,
 							 $empty_ok,$keep_history,$special,$use_it) ) {
