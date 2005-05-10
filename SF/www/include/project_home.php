@@ -149,7 +149,7 @@ if (!$res_files || $rows_files < 1) {
         $package_id=db_result($res_files,$f,'package_id');
         $release_id=db_result($res_files,$f,'release_id');
 
-        if ($package_displayed[$package_id]) {
+        if (isset($package_displayed[$package_id]) && $package_displayed[$package_id]) {
             //if ($package_id==db_result($res_files,($f-1),'package_id')) {
             //same package as last iteration - don't show this release
         } else {
@@ -222,12 +222,12 @@ if ($project->usesForum()) {
 		. "forum_group_list.group_id=$group_id AND forum.group_forum_id=forum_group_list.group_forum_id "
 		. "AND forum_group_list.is_public=1");
 	$row_count = db_fetch_array($res_count);
-	print ' ( '.$Language->getText('include_project_home','msg',$row_count[count]).' ';
+	print ' ( '.$Language->getText('include_project_home','msg',$row_count['count']).' ';
 
 	$res_count = db_query("SELECT count(*) AS count FROM forum_group_list WHERE group_id=$group_id "
 		. "AND is_public=1");
 	$row_count = db_fetch_array($res_count);
-	print $Language->getText('include_project_home','forums',$row_count[count])." )\n";
+	print $Language->getText('include_project_home','forums',$row_count['count'])." )\n";
 /*
 	$sql="SELECT * FROM forum_group_list WHERE group_id='$group_id' AND is_public=1";
 	$res2 = db_query ($sql);
@@ -252,7 +252,7 @@ if ($project->usesBugs()) {
 	print " ( <B>$row_count[count]</B>";
 	$res_count = db_query("SELECT count(*) AS count FROM bug WHERE group_id=$group_id");
 	$row_count = db_fetch_array($res_count);
-	print ' '.$Language->getText('include_project_home','open_bugs').', '.$Language->getText('include_project_home','total',$row_count[count]).' )';
+	print ' '.$Language->getText('include_project_home','open_bugs').', '.$Language->getText('include_project_home','total',$row_count['count']).' )';
 }
 
 // ##################### Support Manager (only for Active)
@@ -267,7 +267,7 @@ if ($project->usesSupport()) {
 	$row_count = db_fetch_array($res_count);
 	$res_count = db_query("SELECT count(*) AS count FROM support WHERE group_id=$group_id AND support_status_id='1'");
 	$row_count2 = db_fetch_array($res_count);
-	print ' ( '.$Language->getText('include_project_home','open_requ', $row_count2[count]).', '.$Language->getText('include_project_home','open_requ', $row_count[count]).' )';
+	print ' ( '.$Language->getText('include_project_home','open_requ', $row_count2['count']).', '.$Language->getText('include_project_home','open_requ', $row_count['count']).' )';
 }
 
 // ##################### Doc Manager (only for Active)
@@ -300,7 +300,7 @@ if ($project->usesPatch()) {
 	$row_count = db_fetch_array($res_count);
 	$res_count = db_query("SELECT count(*) AS count FROM patch WHERE group_id=$group_id AND patch_status_id='1'");
 	$row_count2 = db_fetch_array($res_count);
-	print ' ( '.$Language->getText('include_project_home','open_patches',$row_count2[count]).', '.$Language->getText('include_project_home','total',$row_count[count]).' )';
+	print ' ( '.$Language->getText('include_project_home','open_patches',$row_count2['count']).', '.$Language->getText('include_project_home','total',$row_count['count']).' )';
 }
 
 // ##################### Mailing lists (only for Active)
@@ -311,7 +311,7 @@ if ($project->usesMail()) {
 	print '&nbsp;'.$Language->getText('include_project_home','mail_lists').'</A>';
 	$res_count = db_query("SELECT count(*) AS count FROM mail_group_list WHERE group_id=$group_id AND is_public=1");
 	$row_count = db_fetch_array($res_count);
-	print ' ( '.$Language->getText('include_project_home','public_mail_lists',$row_count[count]).' )';
+	print ' ( '.$Language->getText('include_project_home','public_mail_lists',$row_count['count']).' )';
 }
 
 // ##################### Task Manager (only for Active)

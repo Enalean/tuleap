@@ -13,9 +13,16 @@
 // Defines all of the CodeX settings first (hosts, databases, etc.)
 require(getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/conf/local.inc');
 
+//{{{ define undefined variables
+if (!isset($GLOBALS['feedback'])) {
+    $GLOBALS['feedback'] = "";  //By default the feedbak is empty
+}
+
+//}}}
+
 // Check URL for valid hostname and valid protocol
 if (($HTTP_HOST != $GLOBALS['sys_default_domain']) && ($SERVER_NAME != 'localhost') && ($HTTP_HOST != $GLOBALS['sys_https_host'])) {
-    if ($HTTPS == 'on'|| $GLOBALS['sys_force_ssl'] == 1) {
+    if ((isset($HTTPS) && $HTTPS == 'on')|| $GLOBALS['sys_force_ssl'] == 1) {
 	$location = "Location: https://".$GLOBALS['sys_https_host']."$REQUEST_URI";
     } else {
 	$location = "Location: http://".$GLOBALS['sys_default_domain']."$REQUEST_URI";
@@ -24,11 +31,11 @@ if (($HTTP_HOST != $GLOBALS['sys_default_domain']) && ($SERVER_NAME != 'localhos
 
 // Force SSL mode if required except if request comes from localhost
 // HTTP needed by fopen calls (e.g.  in www/include/cache.php)
-if ($HTTPS != 'on' && $GLOBALS['sys_force_ssl'] == 1 && ($SERVER_NAME != 'localhost')) {
+if ((isset($HTTPS) && $HTTPS != 'on') && $GLOBALS['sys_force_ssl'] == 1 && ($SERVER_NAME != 'localhost')) {
     $location = "Location: https://".$GLOBALS['sys_https_host']."$REQUEST_URI";
 }
 
-if ($location) {
+if (isset($location) && $location) {
     header($location);
     exit;
 }   

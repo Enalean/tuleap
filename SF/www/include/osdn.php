@@ -45,6 +45,7 @@ function osdn_nav_dropdown() {
 function osdn_print_randpick($sitear, $num_sites = 1) {
 	shuffle($sitear);
 	reset($sitear);
+        $i = 0;
         while ( ( $i < $num_sites ) && (list($key,$val) = each($sitear)) ) {
 		list($key,$val) = each($val);
 		print "\t\t&nbsp;&middot;&nbsp;<a href='$val' class='osdntext'>$key</a>\n";

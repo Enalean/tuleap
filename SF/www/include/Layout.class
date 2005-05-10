@@ -138,7 +138,7 @@ class Layout extends Error {
         </SCRIPT>
         <link rel="stylesheet" type="text/css" href="<? echo util_get_css_theme(); ?>">
 <?php
-              if(is_array($params['stylesheet'])) {
+              if(isset($params['stylesheet']) && is_array($params['stylesheet'])) {
                   foreach($params['stylesheet'] as $css) {
                       print '<link rel="stylesheet" type="text/css" href="'.$css.'" />';
                       print "\n";
@@ -155,7 +155,9 @@ class Layout extends Error {
                     $project=project_get_object($GLOBALS['group_id']);
                     $project_feed='        <link rel="alternate" title="'.$project->getPublicName().' '.$Language->getText('include_layout','latest_news_rss').'" href="'.$sys_url.'/export/rss_sfnews.php?group_id='.$GLOBALS['group_id'].'" type="application/rss+xml">';
                 }
-                echo $project_feed;
+                if (isset($project_feed)) {
+                    echo $project_feed;
+                }
 	}
 
 	function generic_header_end($params) {

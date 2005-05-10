@@ -40,7 +40,7 @@ if ($exact) {
 	$crit='OR';
 }
 
-if (!$offset || $offset < 0) {
+if (!isset($offset) || !$offset || $offset < 0) {
 	$offset = 0;
 }
 

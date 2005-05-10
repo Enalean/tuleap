@@ -87,7 +87,8 @@ class BaseLanguage {
 		$this->file_array[$fname] = 1;
 		$ary = @file($fname,1);
 		for( $i=0; $i<sizeof($ary); $i++) {
-			if (substr($ary[$i], 0, 1) == '#') {
+                    if (substr($ary[$i], 0, 1) == '#' ||  //ignore comments...
+                        strlen(trim($ary[$i])) == 0) {    //...or empty lines
 				continue;
 			}
 			// Language files can include others for defaults.
@@ -99,7 +100,7 @@ class BaseLanguage {
 			} else {
 				$line = explode("\t", $ary[$i], 3);
 				$this->text_array[$line[0]][$line[1]] = chop(str_replace('\n', "\n", ($line[2])));
-				//echo "Reading msg :".$line[0]."<b> | </b>".$line[1]."<b> | </b>".$this->text_array[$line[0]][$line[1]]."<br>";
+				//echo "(".strlen(trim($ary[$i])).")"."Reading msg :".$line[0]."<b> | </b>".$line[1]."<b> | </b>".$this->text_array[$line[0]][$line[1]]."<br>";
 			}
 		}
 	}

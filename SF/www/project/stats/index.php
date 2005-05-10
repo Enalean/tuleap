@@ -10,9 +10,16 @@ require('./project_stats_utils.php');
 
 $Language->loadLanguageMsg('project/project');
 
+if (!isset($groupname) ) {
+    $groupname = '';
+}
+if (!isset($group_id) ) {
+    $group_id = '';
+}
+
 site_project_header(array('title'=>$Language->getText('project_stats_index','proj_stats',$groupname),'group'=>$group_id,'toptab'=>'summary'));
 
-if ( !$group_id ) {
+if (!isset($group_id) || !$group_id ) {
 	exit_error($Language->getText('project_admin_userperms','invalid_g'),$Language->getText('project_admin_userperms','group_not_exist'));
 }
    //if the project isn't active, require you to be a member of the super-admin group
@@ -26,11 +33,11 @@ if ( !$group_id ) {
 
 echo "\n\n";
 
-if ( !$span ) {
+if (!isset($span) || !$span ) {
 	$span = 14;
 }
 
-if ( !$view ) { 
+if (!isset($view) ||  !$view ) { 
 	$view = "daily";
 }
 

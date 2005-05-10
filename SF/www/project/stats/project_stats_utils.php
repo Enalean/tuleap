@@ -133,6 +133,7 @@ function stats_project_daily( $group_id, $span = 7 ) {
             . '<TD class="boxtitle">'.$Language->getText('project_stats_index','rank').'</TD>';
         print stats_get_table_service_header($group_id);
         print '</TR>' . "\n";
+        $i = 0;
         while ( $row = db_fetch_array($res) ) {
             print	'<TR class="' . util_get_alt_row_color($i++) . '">'
                 . '<TD align="center">' . gmstrftime("%e %b %Y", gmmktime(0,0,0,substr($row["month"],4,2),$row["day"],substr($row["month"],0,4)) ) . '</TD>'

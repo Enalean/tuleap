@@ -44,7 +44,8 @@ function news_footer($params) {
 }
 
 function news_show_latest($group_id='',$limit=10,$show_summaries=true,$allow_submit=true,$flat=false,$tail_headlines=0) {
-  global $sys_datefmt, $sys_news_group,$Language;
+    global $sys_datefmt, $sys_news_group,$Language;
+    $return  = "";
     if (!$group_id) {
 	$group_id=$sys_news_group;
     }
@@ -79,8 +80,9 @@ function news_show_latest($group_id='',$limit=10,$show_summaries=true,$allow_sub
 	    if ($show_summaries && $limit) {
 		//get the first paragraph of the story
 		$arr=explode("\n",db_result($result,$i,'details'));
-		//if the first paragraph is short, and so are following paragraphs, add the next paragraph on
-		if ((strlen($arr[0]) < 200) && (strlen($arr[1].$arr[2]) < 300) && (strlen($arr[2]) > 5)) {
+                
+                //if the first paragraph is short, and so are following paragraphs, add the next paragraph on
+		if ((strlen($arr[0]) < 200) && isset($arr[1]) && isset($arr[2]) && (strlen($arr[1].$arr[2]) < 300) && (strlen($arr[2]) > 5)) {
 		    $summ_txt='<BR>'. util_make_links( $arr[0].'<BR>'.$arr[1].'<BR>'.$arr[2], $group_id );
 		} else {
 		    $summ_txt='<BR>'. util_make_links( $arr[0], $group_id );
@@ -164,7 +166,8 @@ function news_show_latest($group_id='',$limit=10,$show_summaries=true,$allow_sub
 }
 
 function news_foundry_latest($group_id=0,$limit=5,$show_summaries=true) {
-  global $sys_datefmt,$Language;
+    global $sys_datefmt,$Language;
+    $return = "";
 	/*
 		Show a the latest news for a portal 
 	*/

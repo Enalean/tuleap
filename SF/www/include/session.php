@@ -255,7 +255,7 @@ function session_set() {
 	$id_is_good = 0;
 
 	// here also check for good hash, set if new session is needed
-	if ($GLOBALS['session_hash']) {
+	if (isset($GLOBALS['session_hash']) && $GLOBALS['session_hash']) {
 		$result=db_query("SELECT * FROM session WHERE session_hash='$GLOBALS[session_hash]'");
 		$G_SESSION = db_fetch_array($result);
 

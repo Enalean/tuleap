@@ -427,6 +427,7 @@ if (user_isloggedin()) {
         // Check that the survey is active
         $devsurvey_is_active=db_result($result,0,'is_active');
 
+        $html_my_survey = "";
         if ($devsurvey_is_active==1) {
 
             $sql="SELECT * from survey_responses ".
@@ -434,7 +435,6 @@ if (user_isloggedin()) {
 
             $result=db_query($sql);
 
-            $html_my_survey = "";
             $html_my_survey .= $HTML->box1_top($Language->getText('my_index', 'my_survey'),0);
 
             if (db_numrows($result) < 1) {
@@ -521,7 +521,7 @@ if (user_isloggedin()) {
                         }
 		}
 		
-		if ($private_shown) {
+		if (isset($private_shown) && $private_shown) {
 		  $html_my_projects .= '
 			       <TR class="'. util_get_alt_row_color($i) .'"><TD colspan="2" class="small">'.
 		      '(*)&nbsp;'.$Language->getText('my_index', 'priv_proj').'</td></tr>';
@@ -631,6 +631,7 @@ function display_artifacts($list_trackers, $print_box_begin) {
 	"AND afu.group_artifact_id = $atid AND afu.field_id = af.field_id AND afu.use_it = 1 ".
 	"AND afvl.field_id = af.field_id AND afvl.value_id = afv.valueInt";
       $res = db_query($sql);
+      $percent_complete = '';
       if (db_numrows($res) > 0) {
 	$percent_complete = '<TD class="small">'.db_result($res,0,'value').'</TD>';
       }
@@ -639,7 +640,7 @@ function display_artifacts($list_trackers, $print_box_begin) {
 	'"><TD class="small"><A HREF="/tracker/?func=detail&group_id='.
 	$group_id.'&aid='.$aid.'&atid='.$atid.
 	'">'.$aid.'</A></TD>'.
-	'<TD class="small"'.($percent_complete ? '>': ' colspan="2">').stripslashes($summary).'&nbsp;'.$AS_flag.'</TD>'.
+          '<TD class="small"'.($percent_complete ? '>': ' colspan="2">').stripslashes($summary).'&nbsp;'.$AS_flag.'</TD>'.
 	$percent_complete.'</TR>';
       
     }

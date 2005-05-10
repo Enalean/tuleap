@@ -66,11 +66,11 @@ if (user_isloggedin()) {
 
 // Number of artifacts displayed on screen in one chunk.
 // Default 50
-if (!$chunksz) { $chunksz = 50; }
+if (!isset($chunksz) || !$chunksz) { $chunksz = 50; }
 
 // Make sure offset values, search and multisort flags are defined
 // and have a correct value
-if (!$offset || $offset < 0) { $offset=0; }
+if (!isset($offset) || !$offset || $offset < 0) { $offset=0; }
 if (($advsrch != 1)) { $advsrch = 0; }
 if (($msort != 1)) { $msort = 0; }
 
@@ -231,7 +231,7 @@ if ($set=='my') {
 	}		
 
 } else if ($set=='custom') {
-
+    
     // Get the list of artifact fields used in the form (they are in the URL - GET method)
     // and then build the preferences array accordingly
     // Exclude the group_id parameter
@@ -279,6 +279,7 @@ $params=array('title'=>$group->getPublicName().': \''.$ath->getName().'\' '.$Lan
               'sectionvals'=>array($group->getPublicName()),
               'pv'=>$pv,
               'help' => 'ArtifactBrowsing.html');
+
 
 // Display the menus
 $ath->header($params);

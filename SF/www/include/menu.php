@@ -262,19 +262,21 @@ function menu_print_sidebar($params) {
     if (user_is_super_user()) {
 	echo menu_site_admin();
     }
-
-    $grp=project_get_object($params['group']);
-
-    if ($params['group'] && $grp->isProject()) {
-	//this is a project page
-	//sf global choices
-	echo menu_project ($params['group']);
-	echo menu_software();
-	echo menu_site();
-    } else if ($params['group']) {
-	//this is a foundry page
-	echo menu_foundry_guides($params['group']);
-	echo menu_foundry($params['group']);
+    
+    
+    if (isset($params['group']) && $params['group']) {
+        $grp = project_get_object($params['group']);
+        if ($grp->isProject()) {
+            //this is a project page
+            //sf global choices
+            echo menu_project ($params['group']);
+            echo menu_software();
+            echo menu_site();
+        } else {
+            //this is a foundry page
+            echo menu_foundry_guides($params['group']);
+            echo menu_foundry($params['group']);
+        }
     } else {
 	echo menu_software();
 	echo menu_site();

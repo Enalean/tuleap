@@ -13,7 +13,7 @@ $USER_RES=array();
 
 function user_isloggedin() {
 	global $G_USER;
-	if ($G_USER['user_id']) {
+	if (isset($G_USER['user_id']) && $G_USER['user_id']) {
 		return true;
 	} else {
 		return false;
@@ -242,7 +242,7 @@ function user_get_result_set($user_id) {
 	//so it doesn't have to be fetched each time
 
 	global $USER_RES;
-	if (!$USER_RES["_".$user_id."_"]) {
+	if (!isset($USER_RES["_".$user_id."_"]) || !$USER_RES["_".$user_id."_"]) {
 		$USER_RES["_".$user_id."_"]=db_query("SELECT * FROM user WHERE user_id='$user_id'");
 		return $USER_RES["_".$user_id."_"];
 	} else {
@@ -284,6 +284,7 @@ function user_get_language() {
 function user_set_preference($preference_name,$value) {
 	GLOBAL $user_pref;
 	if (user_isloggedin()) {
+            echo $preference_name,'=>',$value;
 		$preference_name=strtolower(trim($preference_name));
 		$result=db_query("UPDATE user_preferences SET preference_value='$value' ".
 			"WHERE user_id='".user_getid()."' AND preference_name='$preference_name'");

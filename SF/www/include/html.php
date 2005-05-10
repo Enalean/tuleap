@@ -37,13 +37,14 @@ function html_image($src,$args,$display=1) {
 	}
 
 	// ## insert a border tag if there isn't one
-	if (!$args['border']) $return .= (" border=0");
+	if (!isset($args['border']) || !$args['border']) $return .= (" border=0");
 
 	// ## if no height AND no width tag, insert em both
-	if (!$args['height'] && !$args['width']) {
+	if ((!isset($args['height']) || !$args['height']) && 
+            (!isset($args['width'])  || !$args['width'])) {
 		/* Check to see if we've already fetched the image data */
 		if($img_size){
-			if(!$img_size[$src] && is_file($GLOBALS['sys_urlroot'].util_get_dir_image_theme().$src)){
+                    if((!isset($img_size[$src]) || !$img_size[$src]) && is_file($GLOBALS['sys_urlroot'].util_get_dir_image_theme().$src)){
 				$img_size[$src] = @getimagesize($GLOBALS['sys_urlroot'].util_get_dir_image_theme().$src);
 			}
 		} else {
@@ -55,7 +56,7 @@ function html_image($src,$args,$display=1) {
 	}
 
 	// ## insert alt tag if there isn't one
-	if (!$args['alt']) $return .= " alt=\"$src\"";
+	if (!isset($args['alt']) || !$args['alt']) $return .= " alt=\"$src\"";
 
 	$return .= ('>');
 	if ($display) {
@@ -482,7 +483,7 @@ function site_project_header($params) {
 		session_require(array('group'=>'1'));
 	}
 
-        if ($params['pv']) {
+        if (isset($params['pv']) && $params['pv']) {
             // Printer version: no right column, no tabs...
             echo $HTML->pv_header($params);
         } else {
@@ -501,7 +502,7 @@ function site_project_header($params) {
 function site_project_footer($params) {
 	GLOBAL $HTML;
 
-        if ($params['pv']) {
+        if (isset($params['pv']) && $params['pv']) {
             // Printer version
             echo $HTML->pv_footer($params);
         } else {
