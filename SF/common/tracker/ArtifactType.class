@@ -207,7 +207,6 @@ class ArtifactType extends Error {
 		$at_template = new ArtifactType($group,$atid_template);
 		
 		// First, we create a new ArtifactType into artifact_group_list
-		
 		$sql="INSERT INTO 
 			artifact_group_list 
 			(group_id,
@@ -865,7 +864,7 @@ class ArtifactType extends Error {
 
 		$sql="UPDATE artifact_group_list SET 
 			name='$name',
-			description='". htmlspecialchars($description) ."',
+			description='$description',
 			item_name='$itemname',
 			is_public='$is_public',
 			allow_anon='$allow_anon',
