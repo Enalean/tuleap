@@ -34,7 +34,6 @@ forum_admin_index	change_status	Change Forum Status
 forum_admin_index	forum_not_found	No Forums Found
 forum_admin_index	none_found_for_group	No forum for this project
 forum_admin_index	update_f_status	Update Forum Status
-forum_admin_index	update_status	Update Status
 forum_admin_index	private_explain	You can make forums private from here. Please note that private forums can still be viewed by members of your project, not the general public.
 forum_admin_index	forum	Forum
 forum_admin_index	status	Status
@@ -87,7 +86,6 @@ forum_forum_utils	discuss_forum	Discussion Forums
 forum_forum_utils	stop_monitor	Stop Monitoring Forum
 forum_forum_utils	monitor	Monitor Forum
 forum_forum_utils	save_place	Save Place
-forum_forum_utils	print_version	Printer version
 forum_forum_utils	admin	Admin
 forum_forum_utils	forum_monitored	Forum already monitored
 forum_forum_utils	insert_err	Error inserting into forum_monitoring

@@ -14,7 +14,7 @@
 # Script: SF/www/register/category.php
 #
 register_category	upd_query_fail	Etat invalide. La requête de mise à jour a échoué. Veuillez en informer $1.
-register_category	var_missing	Etat invalide. Des variables de formulaire manquent. Si vous êtes certain d'avoir fourni toutes les informations demandées, euillez informer $1 de cette erreur en incluant les informations concernant votre système d'exploitation et votre navigateur Web.
+register_category	var_missing	Etat invalide. Des variables de formulaire manquent. Si vous êtes certain d'avoir fourni toutes les informations demandées, veuillez informer $1 de cette erreur en incluant les informations concernant votre système d'exploitation et votre navigateur Web.
 register_category	project_category	Catégories du projet
 #
 #-----------------------------------------------

@@ -52,7 +52,7 @@ cvs_browse_commit	browse_by	Browse commits by
 cvs_browse_commit	id	ID
 cvs_browse_commit	branch	Branch
 cvs_browse_commit	who	Submitted by
-cvs_browse_commit	keyword	Keyword search in log message
+cvs_browse_commit	keyword	Keywords in log messages
 cvs_browse_commit	date	Commit date
 cvs_browse_commit	pick_date	Click Here to Pick up a date
 cvs_browse_commit	nb_at_once	commits at once
@@ -77,7 +77,7 @@ cvs_commit_utils	menu_admin	CVS Admin
 cvs_commit_utils	error_nogid	ERROR - no group_id
 cvs_commit_utils	sorted_by	sorted by
 cvs_commit_utils	matching	matching commits
-cvs_commit_utils	sort_msg	Click a column heading to sort results (up or down), or <A HREF="$1"><b>Reset sort</b></a>. You can also <a href="$2"><b>$3 multicolumn sort</b></a>
+cvs_commit_utils	sort_msg	Click a column heading to sort results (up or down), or <A HREF="$1"><b>Reset sort</b></a>. You can also <a href="$2"><b>$3 multicolumn sort</b></a>.
 cvs_commit_utils	activate	activate	
 cvs_commit_utils	deactivate	deactivate	
 cvs_commit_utils	description	Description

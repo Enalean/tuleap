@@ -33,7 +33,7 @@ $row = db_fetch_array($result);
 docman_header_admin(array('title'=>$Language->getText('docman_admin_editdocgrouppermissions','title'), 
                           'help' => 'DocumentAdministration.html#DocAccessPermissions'));
 
-echo '<H3>Document Group: <a href="/docman/admin/index.php?mode=groupedit&doc_group='.$doc_group.'&group_id='.$group_id.'">'.
+echo '<H3>'.$Language->getText('docman_doc_utils','doc_group').': <a href="/docman/admin/index.php?mode=groupedit&doc_group='.$doc_group.'&group_id='.$group_id.'">'.
      $row['groupname'].
      '</a></h3>
 

@@ -428,20 +428,20 @@ project_export_bug_export	depend_on_bugs_desc	Liste des bus dont celui-ci dépend
 # Script: SF/www/project/export/index.php
 #
 project_export_index	proj_db_success	La base de données de votre projet a été créé avec succès. Vous pouvez maintenant utiliser votre application préférée et accéder à vos données en utilisant le pilot ODBC/JDBC de MySQL installé sur votre ordinateur. Les paramètres de connection à la base de données pour le pilote ODB/JDC sont les suivants:
-project_export_index	export_to_csv_or_db	Les données de votre projet puevent être exportées dans des fichiers texte (format CSV) ou dans une base de données spécifique à laquelle vous pouvez vous connecter depuis votre environnment de travail en utilisant le pilote ODBC/JDBC approprié. Voir l'$1 pour plus d'information.
+project_export_index	export_to_csv_or_db	Les données de votre projet puevent être exportées dans des fichiers texte (format CSV) ou dans une base de données spécifique à laquelle vous pouvez vous connecter depuis votre environnement de travail en utilisant le pilote ODBC/JDBC approprié. Voir l'$1 pour plus d'information.
 project_export_index	export_to_csv_hdr	Exporter au format texte $1
 project_export_index	export_to_csv_msg	Cliquer sur un des liens ci-dessous pour exporter les données au format texte (CSV format).
-project_export_index	online_help	Aide en ligne
+project_export_index	online_help	aide en ligne
 project_export_index	art_data	Données
 project_export_index	history	History
 project_export_index	dependencies	Dépendences
 project_export_index	legacy	Ancien
-project_export_index	bug_tracker	Outil de suivi de Bug
-project_export_index	tracker	Tracker
+project_export_index	bug_tracker	Suivi de Bug
+project_export_index	tracker	Outil de suivi
 project_export_index	export	Exporter
 project_export_index	show_format	Voir le format
 project_export_index	export_x	Exporter $1
-project_export_index	support_request	Demandes de support
+project_export_index	support_request	Suivi de demandes de support
 project_export_index	survey_responses	Réponses aux enquêtes
 project_export_index	direct_db_access	Accès direct à la base de données 
 project_export_index	generate_full_db	Générer la base de données du projet</a> </b> (<- Cliquer sur ce lien pour générer la base)

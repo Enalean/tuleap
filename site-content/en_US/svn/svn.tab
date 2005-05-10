@@ -88,7 +88,6 @@ svn_utils	browse_tree	Browse SVN Tree
 svn_utils	my_ci	My SVN Commits
 svn_utils	svn_query	SVN Query
 svn_utils	svn_admin	SVN Admin
-svn_utils	browse_err	Only Projects Can Use The Commits Browser
 svn_utils	browse_off	This Project Has Turned Off The Subversion Browser
 svn_utils	admin	Admin
 svn_utils	notif	Email Notification

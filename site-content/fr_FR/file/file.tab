@@ -23,7 +23,7 @@ file_admin_editpackagepermissions	select_u_group	Sélectionner les groupes d'util
 # Script: SF/www/file/admin/editpackages.php
 #
 file_admin_editpackages	p_name_exists	Ce nom de paquet existe déjà. Veuillez choisir un autre nom.
-file_admin_editpackages	cannot_hide	Désolé, vous ne pouvez pas cacher un aquet qui contient des versions actives. Veuillez d'abord cacher ces versions
+file_admin_editpackages	cannot_hide	Désolé, vous ne pouvez pas cacher un paquet qui contient des versions actives. Veuillez d'abord cacher ces versions.
 file_admin_editpackages	p_updated	Paquet mis à jour avec succès
 file_admin_editpackages	perm_update_err	Erreur: la mise à jour des permissions a échoué
 file_admin_editpackages	perm_reset_err	Erreur: la réinitialisation des permissions a échoué
@@ -31,12 +31,12 @@ file_admin_editpackages	perm_reset	Permissions réinitialisées à leur valeurs par
 file_admin_editpackages	p_added	Paquet ajouté
 file_admin_editpackages	release_edit_f_rel	Création/Modification d'une version
 file_admin_editpackages	packages	Paquets
-file_admin_editpackages	p_explain	Vous pouvez utiliser les paquets pour regrouper les différentes versions d'un même logiciel. Un paquet comportent des versions qui regroupent des fichiers sources ou binaires qui forment un ensemble cohérent vis à vis de votre projet. \n<P>Par exemple, en supposant que vous travaillez sur un projet de moteur de base de données multi-plateformes, vous pouvez créer les paquets suivants: \n<P> \n<B>DB-win</B>: les sources pour la version Windows du moteur<BR> \n<B>DB-unix</B>: les sources de la version Unix du moteur<BR> \n<B>DB-odbc</B>: le pilote ODBC unique pour les deux plateformes \n<P> \nVous devez dans un premier temps définir vos paquets en les nommant. \n<P> \nUne fois vos paquets définis, vous pouvez créer de nouvelles <b>versions</b> dans ces paquets.  \n<P> \n<H3>versions de paquets</H3> \n<P> \nUne version peut contenit un ou plusieurs fichiers. Une version est en général identifiée par un numéro de version. Par exemple: <B>3.22.1</B>, <b>3.22.2</B>, <B>3.22.3</B>,... \n<P> \nVous pouvez créer de nouvelles versions en cliquant <B>Ajouter/Modifier une version</B> en regard du nom de paquet.
+file_admin_editpackages	p_explain	Vous pouvez utiliser les paquets pour regrouper les différentes versions d'un même logiciel. Un paquet comportent des versions qui regroupent des fichiers sources ou binaires qui forment un ensemble cohérent vis à vis de votre projet. \n
 file_admin_editpackages	no_p_defined	Aucun paquet n'est défini
 file_admin_editpackages	p_name	Nom du paquet
 file_admin_editpackages	rank_on_screen	Rang à l'écran
 file_admin_editpackages	status	Statut
-file_admin_editpackages	update	Modifier
+file_admin_editpackages	update	Valider
 file_admin_editpackages	releases	Versions
 file_admin_editpackages	perms	Permissions
 file_admin_editpackages	add_edit_releases	Créer/Modifier une version
@@ -44,6 +44,8 @@ file_admin_editpackages	edit	Modifier
 file_admin_editpackages	define	Définir
 file_admin_editpackages	create_new_p	Créer un nouveau paquet
 file_admin_editpackages	create_this_p	Créer ce paquet
+file_admin_editpackages	status_active	Actif
+file_admin_editpackages	status_hidden	Caché
 #
 #-----------------------------------------------
 # Script: SF/www/file/admin/editreleasepermissions.php
@@ -53,7 +55,7 @@ file_admin_editreleasepermissions	edit_rel_perm	Modifier les permissions de la v
 file_admin_editreleasepermissions	release	Version
 file_admin_editreleasepermissions	from_p	du paquet
 file_admin_editreleasepermissions	perm_explain	&nbsp;
-file_admin_editreleasepermissions	select_u_group	Sélectionner les groupes d'utilisateurs qui ont accès à cette version: elect user groups who are granted access to this release: \n<br><b>Note</b>: Quand aucune permission n'est définie pour une version, elle hérite des permissions du paquet parent. \n<br>Quand des permissions sont définies pour une version, elles prennent le pas sur les permissions du <a href="$1">paquet parent</a>.
+file_admin_editreleasepermissions	select_u_group	Sélectionner les groupes d'utilisateurs qui ont accès à cette version: \n<br><b>Note</b>: Quand aucune permission n'est définie pour une version, elle hérite des permissions du paquet parent. \n<br>Quand des permissions sont définies pour une version, elles prennent le pas sur les permissions du <a href="$1">paquet parent</a>.
 #
 #-----------------------------------------------
 # Script: SF/www/file/admin/editreleases.php
@@ -68,13 +70,13 @@ file_admin_editreleases	data_uploaded	Fichier téléchargé
 file_admin_editreleases	length_err	ERREUR - Le fichier téléchargé doit être de taille non nulle et plus petit que $1 caractères.
 file_admin_editreleases	invalid_flag_err	ERREUR type de téléchargement invalide
 file_admin_editreleases	create_p_before_rel_status	Vous devez créer un paquet avant de créer une version. Vous devez aussi préciser son nom et son statut.
-file_admin_editreleases	p_not_yours	Vous essayez de modifier un paquet qui ne vous appartient pass
+file_admin_editreleases	p_not_yours	Vous essayez de modifier un paquet qui ne vous appartient pas
 file_admin_editreleases	cannot_del_rel	Désolé, vous ne pouvez pas détruire une version qui contient encore des fichiers
 file_admin_editreleases	rel_updated	Version mise à jour avec succès
 file_admin_editreleases	rel_update_failed	La mise à jour de la version a échoué
 file_admin_editreleases	f_not_yours	Le fichier n'existe pas ou ne vous appartient pas
 file_admin_editreleases	rel_not_yours	La version n'existe pas ou ne vous appartient pas
-file_admin_editreleases	data_not_parsed	Désolé, le format de la date est incorrect. il doit suivre le patron AAAA-MM-JJ format.
+file_admin_editreleases	data_not_parsed	Désolé, le format de la date est incorrect. Il doit suivre le format AAAA-MM-JJ.
 file_admin_editreleases	file_updated	Fichier mis à jour
 file_admin_editreleases	add_files	Fichier(s) ajoutés
 file_admin_editreleases	illegal_file_name	Nom de fichier invalide
@@ -85,17 +87,17 @@ file_admin_editreleases	filename_exists	Le nom de fichier existe déjà pour ce pr
 file_admin_editreleases	no_files_selected	Aucun fichier sélectionné
 file_admin_editreleases	file_deleted	Fichier détruit
 file_admin_editreleases	file_rel_notice	Notification d'une nouvelle version
-file_admin_editreleases	download_explain	Une nouvelle version de $1 vient d'être publié. \nVous pouvez la télécharger à: \n\n$2\n\nVous avez demandé à être notifiée lors de la publication d'une nouvelle version de ce paquet. Si vous ne voulex plus recevoir ces notifications à l'avenir, connectez-vous à $3 et suivez ce lien
+file_admin_editreleases	download_explain	Une nouvelle version de $1 vient d'être publié. \nVous pouvez la télécharger à: \n\n$2\n\nVous avez demandé à être notifié lors de la publication d'une nouvelle version de ce paquet. Si vous ne voulez plus recevoir ces notifications à l'avenir, connectez-vous à $3 et suivez ce lien
 file_admin_editreleases	email_sent	E-mail envoyé - $1 utilisateurs suivent ce paquet
 file_admin_editreleases	rel_id_not_found	Ce numéro de version (ID) n'est pas dans la base de données
 file_admin_editreleases	release_new_file_version	Publier une nouvelle version
 file_admin_editreleases	step_x	Etape $1
-file_admin_editreleases	edit_change_notes	Editer les notes décrivant version. Ces notes s'applique à tous les fichiers attachés à cette version.
+file_admin_editreleases	edit_change_notes	Editer les notes décrivant la version. Ces notes s'appliquent à tous les fichiers attachés à cette version.
 file_admin_editreleases	edit_release	Editer la version
 file_admin_editreleases	of_p	du paquet
 file_admin_editreleases	release_date	Date de la version
 file_admin_editreleases	of_P	du paquet
-file_admin_editreleases	upload_or_paste	Vous pouvez soit télécharger les notes et les modifications, ou les copier/coller directemen ci-dessous.
+file_admin_editreleases	upload_or_paste	Vous pouvez soit télécharger les notes et les modifications, ou les copier/coller directement ci-dessous.
 file_admin_editreleases	paste	Copier/coller les notes et modifications
 file_admin_editreleases	upload_change	Télécharger les modifications
 file_admin_editreleases	upload_notes	Télécharger les notes
@@ -106,8 +108,8 @@ file_admin_editreleases	preserve_preformatted	Préserver le pré-formattage du tex
 file_admin_editreleases	submit_refresh	Soumettre/rafraîchir
 file_admin_editreleases	attach_files	Ajouter des fichiers à cette version
 file_admin_editreleases	no_available_files	Aucun fichier disponible
-file_admin_editreleases	upload_files	Veuillez télécharger les fichiers comme expliqué ci-dessus, puis appuyer sur le bouton "Rafraîchir la liste de fichiers"</B>
-file_admin_editreleases	refresh_file_list	Rafraîchir la liste de fichiers
+file_admin_editreleases	upload_files	Veuillez télécharger les fichiers comme expliqué ci-dessus, puis appuyez sur le bouton "Rafraîchir la liste des fichiers"</B>
+file_admin_editreleases	refresh_file_list	Rafraîchir la liste des fichiers
 file_admin_editreleases	attach_marked_files	Ajouter les fichiers sélectionnés
 file_admin_editreleases	edit_files	Editer les fichiers dans cette version
 file_admin_editreleases	update_each	Vous <B>devez</B> renseigner les différents champs avec les valeurs appropriées faute de quoi les fichiers n'apparaîtront pas sur la page de téléchargement des fichiers.
@@ -141,10 +143,10 @@ file_admin_editreleases	of_this_package	dans ce paquet
 # Script: SF/www/file/admin/index.php
 #
 file_admin_index	file_manager_admin	Administration du gestionnaire de fichiers
-file_admin_index	edit_release_files	Modifier/créer des paquets et versions
+file_admin_index	edit_release_files	Création/modification de versions
 file_admin_index	manage_explain	Créer ou modifier des paquets et versions, leur statut et les permissions d'accès.
-file_admin_index	quick_add	Crétion de version rapide
-file_admin_index	quick_add_explain	Spécifier en une seule étape toutes les informations nécessaires à la création d'une version. La contre-partie esy que vous ne pouvez initialement attacher qu'un seul fichier à cette version et non pas plusieurs comme dans le processus complet (voir ci-dessus).
+file_admin_index	quick_add	Création de version rapide
+file_admin_index	quick_add_explain	Spécifier en une seule étape toutes les informations nécessaires à la création d'une version. La contre-partie est que vous ne pouvez initialement attacher qu'un seul fichier à cette version et non pas plusieurs comme dans le processus complet (voir ci-dessus).
 #
 #-----------------------------------------------
 # Script: SF/www/file/admin/qrs.php
@@ -208,7 +210,6 @@ file_showfiles	file_p_for	Paquets du projet '$1'
 file_showfiles	no_file_p	Aucun paquet
 file_showfiles	no_p_available	Il n'y a aucun paquet disponible
 file_showfiles	p_releases	Versions
-file_showfiles	printer_version	Version imprimable
 file_showfiles	select_release	Sélectionner le nom/numéro de version pour voir les notes et les modifications correspondantes.&nbsp;Sélectionner un fichier pour démarrer le téléchargement.
 file_showfiles	release_notes	Notes
 file_showfiles	size	Taille

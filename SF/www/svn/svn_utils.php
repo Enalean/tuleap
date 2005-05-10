@@ -56,7 +56,7 @@ function svn_header_admin($params) {
     
     //only projects can use the svn manager, and only if they have it turned on
     if (!$project->isProject()) {
-	exit_error($Language->getText('global','error'),$Language->getText('svn_utils','browse_err'));
+	exit_error($Language->getText('global','error'),$Language->getText('svn_utils','proj_err'));
     }
     if (!$project->usesService('svn')) {
 	exit_error($Language->getText('global','error'),$Language->getText('svn_utils','browse_off'));

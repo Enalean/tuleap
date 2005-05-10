@@ -119,7 +119,7 @@ docs_site_about	title	About the $1 Site
 # Script: SF/www/docman/admin/editdocgrouppermissions.php
 #
 docman_admin_editdocgrouppermissions	title	Edit Document Group Permissions
-docman_admin_editdocgrouppermissions	introduction	You can set specific permissions to a document group. These permissions apply to all documents that belong to this document group. But you may also set different permissions to specific document. <p> By default, document groups have no specific permissions: access to all files is granted to any anonymous user.
+docman_admin_editdocgrouppermissions	introduction	You can set specific permissions to a document group. These permissions apply to all documents that belong to this document group. But you may also set different permissions to specific document. By default, access to document groups is granted to any visitor.
 docman_admin_editdocgrouppermissions	instructions	Select user groups who are granted access to this document group:
 #
 #-----------------------------------------------
@@ -127,5 +127,4 @@ docman_admin_editdocgrouppermissions	instructions	Select user groups who are gra
 #
 docman_admin_editdocpermissions	title	Edit Document Permissions
 docman_admin_editdocpermissions	doc_title	Edit Document Permissions
-docman_admin_editdocpermissions	instructions_intro	&nbsp;
 docman_admin_editdocpermissions	instructions	Select user groups who are granted access to this document:<br><b>Note</b>: When no permission is defined for a document, then it has the same permissions as the <a href="$1">parent document group</a>. <br>When a permission is defined for a document, then it overrides the permissions defined for the document group.

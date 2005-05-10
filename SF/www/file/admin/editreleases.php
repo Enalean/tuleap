@@ -627,7 +627,7 @@ if ($release_id && $func != 'delete_release') {
 		<P>
 		<H3>'.$Language->getText('file_admin_editreleases','attach_files').'</H3>';
 		
-	include(util_get_content('file/editrelease_attach_file'));
+	include($Language->getContent('file/editrelease_attach_file'));
 	
 	echo '<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data">
 		<INPUT TYPE="HIDDEN" NAME="func" VALUE="add_files">
@@ -843,7 +843,7 @@ if ($release_id && $func != 'delete_release') {
 		    $group_id.'" title="'.$Language->getText('file_admin_editreleases','edit_this_p').'">'. 
 		    db_result($res,$i,'package_name') 
 		    .' </TD>'.
-                      '<TD><FONT SIZE="-1">'. db_result($res,$i,'status_name') .'</TD>
+                      '<TD><FONT SIZE="-1">'. $Language->getText('file_admin_editpackages',db_result($res,$i,'status_name')) .'</TD>
                       <TD  align="center" NOWRAP><FONT SIZE="-1"><A HREF="editreleasepermissions.php?release_id='. 
 				db_result($res,$i,'release_id') .'&group_id='. $group_id.'&package_id='.$package_id .'">['; 
                   if (permission_exist('RELEASE_READ',db_result($res,$i,'release_id'))) {

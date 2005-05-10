@@ -7,12 +7,11 @@
 // $Id$
 //
 -->
-<H1>Registration Complete!</H1>
-	<P>Your project has been submitted to the <?php print $GLOBALS['sys_name']; ?> Administrators. 
-	Within 24 hours, you will receive decision notification and further 
-	instructions.
+<H2>Enregistrement terminé!</H2>
+	<P>Votre projet a été soumis aux administrateurs de <?php print $GLOBALS['sys_name']; ?>. 
+	Vous recevrez une notification de leur décision et des instructions complémentaires dans les 24 heures.
 	<P>
-	Thank you for using <?php print $GLOBALS['sys_name']; ?>.
+	Merci d'utiliser <?php print $GLOBALS['sys_name']; ?>.
 	<P>
 
 <?php

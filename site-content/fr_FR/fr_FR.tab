@@ -39,7 +39,7 @@ global	begin	Début
 global	end	Fin
 global	next	Suivant
 global	prev	Précédent
-global	printer_version	Version Imprimable
+global	printer_version	Version imprimable
 global	error	Erreur
 global	help	Aide
 global	by	par

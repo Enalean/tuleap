@@ -23,12 +23,12 @@ cvs_index	partial_success	en partie<br>L'adresse e-mail semble invalide. la noti
 #
 cvs_admin_commit	title	Administration CVS
 cvs_admin_commit	tracking_hdr	Suivi CVS
-cvs_admin_commit	tracking_msg	Lorsque le suivi de CVS est activé, les commits (modification, ajout ou suppression de fichiers ou répertoires) sont enregistrés dans la base de données $1 de façon à pouvoir les visualiser et  effectuer des recherches. Dans le cas contraire aucune information n'est conservé dans la base de données; vous disposez uniquement de l'historique CVS
+cvs_admin_commit	tracking_msg	Lorsque le suivi de CVS est activé, les commits (modification, ajout ou suppression de fichiers ou répertoires) sont enregistrés dans la base de données $1 de façon à pouvoir les visualiser et effectuer des recherches avancées. Dans le cas contraire aucune information n'est conservée dans la base de données; vous disposez uniquement de l'historique CVS.
 cvs_admin_commit	tracking_lbl	Suivi CVS
 cvs_admin_commit	notif_hdr	Notification e-mail sur les commits
-cvs_admin_commit	notif_msg	Chaque commit peut faire l'objet d'une notification par courrier électronique vers certains destinataires ou vers une liste de distribution (séparer les adresse avec une virgule). Un entête spécifique apparaissant au début de l'objet du message peut aussi être spécifié.
+cvs_admin_commit	notif_msg	Chaque commit peut faire l'objet d'une notification par courrier électronique vers certains destinataires ou vers une liste de distribution (séparer les adresses avec une virgule). Une entête spécifique apparaissant au début du sujet du message peut aussi être spécifiée.
 cvs_admin_commit	mail_to	Envoyer à
-cvs_admin_commit	subject	Entête de l'objet
+cvs_admin_commit	subject	Entête du sujet
 cvs_admin_commit	preamble_hdr	Préambule CVS
 cvs_admin_commit	preamble_msg	Message d'introduction sur l'utilisation de CVS en remplacement du message par défaut figurant sur la <a href="$1">page d'accueil de CVS</a>. (balises HTML autorisées)
 #
@@ -52,7 +52,7 @@ cvs_browse_commit	browse_by	Afficher les commits par
 cvs_browse_commit	id	ID
 cvs_browse_commit	branch	Branche
 cvs_browse_commit	who	Soumis par
-cvs_browse_commit	keyword	Recherche par mots-clés dans les messages de log
+cvs_browse_commit	keyword	Mots-clés dans les messages de log
 cvs_browse_commit	date	Date de commit
 cvs_browse_commit	pick_date	Cliquer ici pour choisir une date
 cvs_browse_commit	nb_at_once	commits à la fois
@@ -76,8 +76,8 @@ cvs_commit_utils	menu_query	Recherche CVS
 cvs_commit_utils	menu_admin	Administration CVS
 cvs_commit_utils	error_nogid	ERREUR - pas de group_id
 cvs_commit_utils	sorted_by	trié par
-cvs_commit_utils	matching	commits correspondants
-cvs_commit_utils	sort_msg	Cliquer sur un entête de colonne pour trier les résultats (ascendant ou descendant), ou <A HREF="$1"><b>Réinitialiser le tri</b></a>. Vous pouvez aussi utiliser le <a href="$2"><b>$3 tri multi-colonnes</b></a>
+cvs_commit_utils	matching	commit(s) correspondant(s)
+cvs_commit_utils	sort_msg	Cliquer sur une entête de colonne pour trier les résultats (ascendant ou descendant), ou <A HREF="$1"><b>réinitialiser le tri</b></a>. Vous pouvez aussi utiliser le <a href="$2"><b>$3 tri multi-colonnes</b></a>.
 cvs_commit_utils	activate	activer	
 cvs_commit_utils	deactivate	désactiver	
 cvs_commit_utils	description	Description
@@ -103,7 +103,7 @@ cvs_commit_utils	removed_line	Lignes supprimées
 # Script: SF/www/cvs/viewcvs.php
 #
 cvs_viewcvs	title	Affichage de l'arbre CVS	
-cvs_viewcvs	error_noaccess	Accès refusé	
+cvs_viewcvs	error_noaccess	Accès refusé
 cvs_viewcvs	error_noaccess_msg	Vous n'avez pas l'autorisation d'accès pour ce fichier. Veuillez contacter un administrateur du projet.
 
 

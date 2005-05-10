@@ -11,13 +11,13 @@ if (user_isloggedin()) {
    $username=strtolower(user_getname());
 } else $username='nom_utilisateur';
 print '<h2>Accès CVS '.help_button('VersionControlWithCVS.html').'</h2>
-<P>En configuration par défaut, l'accès en lecture seule à CVS read-only est autorisé pour tous les utilisateurs enregistrés de '.$GLOBALS['sys_name'].'. les utilisateurs anonymes n'ont pas accès à CVS. Les utilisateurs souhaitant avoir accès au répertoire CVS doivent d'abord s'enregistrer en créant un compte utilisateur sur '.$GLOBALS['sys_name'].'. 
-<P>Les membres d'un projet ont un accès en lecture (checkout) et en écriture (commit) à l'arbre CVS.
-<P> Vous trouverez ci-dessous les commandes typiques à utiliser pour s'authentifier auprés d'un serveur CVS et pour obtenir une copie de travail (checkout) du code source de ce projet. Dans les commandes ci-dessous veuillez remplacer <I>nom_module</I> ';
+<P>En configuration par défaut, l\'accès en lecture seule à CVS est autorisé pour tous les utilisateurs enregistrés de '.$GLOBALS['sys_name'].'. Les utilisateurs anonymes n\'ont pas accès au dépôt CVS. Les utilisateurs souhaitant avoir accès au dépôt CVS doivent donc créer leur compte utilisateur sur '.$GLOBALS['sys_name'].'. 
+<P>Les membres d\'un projet ont un accès en lecture (checkout) et en écriture (commit) au dépôt CVS.
+<P> Vous trouverez ci-dessous les commandes typiques à utiliser pour s\'authentifier auprés d\'un serveur CVS et pour obtenir une copie de travail (checkout) du code source de ce projet. Dans les commandes ci-dessous veuillez remplacer <I>nom_module</I> ';
 if (!user_isloggedin()){
    print 'et <I>nom_utilisateur</I> .';
 } else print ' par les valeurs appropriées.'; 
-print ' Entrer votre mot de passe utilisateur à l'invite de CVS.';
+print ' Entrer votre mot de passe utilisateur à l\'invite de CVS.';
 
 if (strpos($shell,'/cvssh') !== false) { // Users with restricted shell
 print '<P><span class="command">export CVS_RSH=ssh
@@ -30,5 +30,5 @@ print '<P><span class="command">cvs -d:pserver:'.$username.'@cvs.'.$row_grp['htt
 }
 
 
-print '<P>'.help_button('VersionControlWithCVS.html',false,'[Plus d'information sur CVS&hellip;]');
+print '<P>'.help_button('VersionControlWithCVS.html',false,'[Plus d\'information sur CVS&hellip;]');
 ?>

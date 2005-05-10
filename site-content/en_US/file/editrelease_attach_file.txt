@@ -19,10 +19,10 @@ scp your_file '.$username.'@'.$sys_download_host.':'.$GLOBALS['FTPINCOMING_DIR']
 </pre>
 </ul>
 When you 
-are done uploading, hit the "Refresh File List" button right below to see
+are done uploading, hit the "<b>'.$Language->getText('file_admin_editreleases','refresh_file_list').'</b>" button right below to see
 the uploaded release files.
 <P>
-Then check the boxes next to the files belonging to your new project release and click on the "Attach Marked Files" button below. 
+Then check the boxes next to the files belonging to your new project release and click on the "<b>'.$Language->getText('file_admin_editreleases','attach_marked_files').'</b>" button below. 
 <P>
 <b>**CAUTION**</b> This file upload area is shared by all projects so make sure you select ONLY YOUR files!
 <p>

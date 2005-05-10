@@ -97,14 +97,14 @@ survey_admin_show_r	click_s_id	Click on a Survey ID to View Aggregate Responses
 # Script: SF/www/survey/admin/update_question.php
 #
 survey_admin_update_question	edit_a_q	Edit A Question
-survey_admin_update_question	warn	<span class="highlight">WARNING! It is a bad idea to change a question after responses to it have been submitted</span><P>This can lead to misleading  or inconsistent results.
+survey_admin_update_question	warn	<span class="highlight">WARNING! It is a bad idea to change a question after responses to it have been submitted. This can lead to misleading  or inconsistent results.</span>
 survey_admin_update_question	q	Question:
 survey_admin_update_question	subm_changes	Submit Changes
 #
 #-----------------------------------------------
 # Script: SF/www/survey/admin/update_survey.php
 #
-survey_admin_update_survey	warn	<span class="highlight">WARNING! It is a bad idea to edit a survey after responses have been posted</span><P>This can lead to misleading or inconsistent results.
+survey_admin_update_survey	warn	<span class="highlight">WARNING! It is a bad idea to edit a survey after responses have been posted.This can lead to misleading or inconsistent results.</span>
 survey_admin_update_survey	q	Questions:
 survey_admin_update_survey	anon_allow	Anonymous answer ok?
 survey_admin_update_survey	edit_a_s	Edit a survey
@@ -180,4 +180,4 @@ survey_s_utils	del_txt	DELETE
 survey_s_utils	resp	Response
 survey_s_utils	occ	# of occurences
 survey_s_utils	blank	- BLANK RESPONSES -
-survey_s_utils	total_no	Total number of answers: $
+survey_s_utils	total_no	Total number of answers: $1

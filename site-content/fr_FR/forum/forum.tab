@@ -19,7 +19,7 @@ forum_admin_index	msg_not_found	Message introuvable
 forum_admin_index	upd_err	Erreur lors de la mise à jour des informations du forum
 forum_admin_index	upd_success	Informations du forum mises à jour avec succès
 forum_admin_index	del_a_msg	Détruire un message
-forum_admin_index	delete_warn	ATTENTION! Vous êtes sur le point de détruire un message et toute son fil de discussion!!
+forum_admin_index	delete_warn	ATTENTION! Vous êtes sur le point de détruire un message et tout son fil de discussion!!
 forum_admin_index	enter_msg_id	Entrer l'identifiant (ID) du message
 forum_admin_index	add_a_forum	Ajouter un forum
 forum_admin_index	existing_forums	Forums existants
@@ -27,14 +27,13 @@ forum_admin_index	forum_name	Nom du forum
 forum_admin_index	description	Description
 forum_admin_index	is_public	Public ?
 forum_admin_index	monitor	Surveiller ce forum ?
-forum_admin_index	monitor_recommendation	En tant que créateur de ce forum, il vous est <u>fortement recommandé</u> de surveiller pour recevoir immédiatement par e-mail tout nouveau message posté sur ce forum.
+forum_admin_index	monitor_recommendation	En tant que créateur de ce forum, il vous est <u>fortement recommandé</u> de le surveiller pour recevoir immédiatement par e-mail tout nouveau message posté sur ce forum.
 forum_admin_index	once_added_no_delete	Une fois ajouté, un forum ne peut être ni modifié ni détruit !
 forum_admin_index	add_this_forum	Ajouter ce forum
 forum_admin_index	change_status	Changer le statut du forum
 forum_admin_index	forum_not_found	Forum introuvable
 forum_admin_index	none_found_for_group	Aucun forum pour ce projet
 forum_admin_index	update_f_status	Mettre à jour le statut du forum
-forum_admin_index	update_status	Mettre à jour le statut
 forum_admin_index	private_explain	Vous pouvez rendre un forum privé. veullez noter que les forums privés ne sont visibles que pour les membres du projet.
 forum_admin_index	forum	Forum
 forum_admin_index	status	Statut
@@ -87,7 +86,6 @@ forum_forum_utils	discuss_forum	Forums de discussions
 forum_forum_utils	stop_monitor	Arrêter la surveillance
 forum_forum_utils	monitor	Surveiller Forum
 forum_forum_utils	save_place	Sauvegarder cette position
-forum_forum_utils	print_version	Version imprimable
 forum_forum_utils	admin	Administration
 forum_forum_utils	forum_monitored	Forum déjà sous surveillance
 forum_forum_utils	insert_err	Erreur lors de l'insertion dans forum_monitoring
@@ -122,7 +120,7 @@ forum_forum_utils	no_one_monitoring	Forum non surveillé
 #
 forum_index	forums_for	Forums pour '$1'
 forum_index	no_forums	Aucun forum pour '$1'
-forum_index	choose_forum	Choisisser un forum et vous pourrez le parcourir, effectuer une recherche et poster un message.
+forum_index	choose_forum	Choisissez un forum et vous pourrez le parcourir, effectuer une recherche et poster un message.
 #
 #-----------------------------------------------
 # Script: SF/www/forum/message.php

@@ -36,7 +36,7 @@
 	<P>	<B>Nom complet:</B><BR>
 	<INPUT size="40" maxlength="40" type="text" name="form_full_name" VALUE="'.db_result($result,0,'group_name').'">
 	<P>
-	<B>Nom cour:</B><BR>
+	<B>Nom court:</B><BR>
 	'.db_result($result,0,'unix_group_name').'
 	<P>
 	<B>Licence:</B><BR>
@@ -66,9 +66,9 @@
 	}
 	echo '
 	<P>
-	Si vous êtes d'accord avec ces informations, votre projet sera créé. Si vous n'êtes pas d'accord pour l'enregistrement, toutes les données seront détruites du système.
+	Si vous êtes d\'accord avec ces informations, votre projet sera créé. Si vous n\'êtes pas d\'accord pour l\'enregistrement, toutes les données seront détruites du système.
 	<P>
-	<INPUT type=submit name="i_agree" value="D'ACCORD"> <INPUT type=submit name="i_disagree" value="PAS D'ACCORD">
+	<INPUT type=submit name="i_agree" value="D\'ACCORD"> <INPUT type=submit name="i_disagree" value="PAS D\'ACCORD">
 	</FORM>';
 
 ?>

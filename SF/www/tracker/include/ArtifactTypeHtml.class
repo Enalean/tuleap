@@ -1584,7 +1584,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		// Rk: Can't use html_build_list_table_top because of the specific layout
 		echo '<h4>'.$Language->getText('tracker_include_type','event_settings').' '.
 		help_button('TrackerAdministration.html#TrackerEventRoleBasedEmailNotification').'</h4>
-		              <P>'.$Language->getText('tracker_include_type','tune_settings').'<p>';
+		              <P>'.$Language->getText('tracker_include_type','tune_settings');
 		
 		echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		<table BORDER="0" CELLSPACING="1" CELLPADDING="2" class="small">

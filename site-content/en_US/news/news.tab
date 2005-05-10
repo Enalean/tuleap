@@ -33,7 +33,7 @@ news_admin_index	submitted_for_group	Submitted for group
 news_admin_index	approve_for_front	Approve For Front Page
 news_admin_index	do_nothing	Do Nothing
 news_admin_index	displayed	Displayed
-news_admin_index	delete	Delete
+news_admin_index	delete	Deleted
 news_admin_index	no_queued_item_found	No Queued Items Found
 news_admin_index	need_approve	These items need to be approved
 news_admin_index	no_deleted_items_this_week	No deleted items found for this week
@@ -52,7 +52,6 @@ news_index	choose_news	Choose a News item and you can browse, search, and post m
 news_index	no_news_found	No News Found
 news_index	for	For $1
 news_index	no_items_found	No items were found
-news_index	pv	Printer Version
 #
 #-----------------------------------------------
 # Script: SF/www/news/news_utils.php
@@ -72,5 +71,5 @@ news_submit	insert_err	ERROR doing insert
 news_submit	news_added	News Added.
 news_submit	only_admin_submits	Permission Denied. You cannot submit news for a project unless you are an admin on that project
 news_submit	submit_news_for	Submit News For $1
-news_submit	post_explain	You can post news about your project if you are an admin on your project. You may also post "help wanted" notes if your project needs help.<P>All posts <B>for your project</B> will appear instantly on your project summary page. Posts that are of special interest to the community will have to be approved by a member of the news team before they will appear on the $1 home page.<P>You may include URLs, but not HTML in your submissions.<P>URLs that start with http:// are made clickable.
+news_submit	post_explain	You can post news about your project if you are an admin on your project.<P>All posts <B>for your project</B> will appear instantly on your project summary page. Posts that are of special interest to the community will have to be approved by a member of the news team before they will appear on the $1 home page. <p>You may include URLs, but not HTML in your submissions.URLs that start with http:// are made clickable.</p>
 news_submit	for_project	For Project: $1

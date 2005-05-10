@@ -95,6 +95,7 @@ function frs_package_is_active($status_id) {
 */
 
 function frs_show_status_popup ($name='status_id', $checked_val="xzxz") {
+    global $Language;
 	/*
 		return a pop-up select box of statuses
 	*/
@@ -102,7 +103,12 @@ function frs_show_status_popup ($name='status_id', $checked_val="xzxz") {
 	if (!isset($FRS_STATUS_RES)) {
 		$FRS_STATUS_RES=db_query("SELECT * FROM frs_status");
 	}
-	return html_build_select_box ($FRS_STATUS_RES,$name,$checked_val,false);
+	$arr_id = util_result_column_to_array($FRS_STATUS_RES,0);
+	$arr_status = util_result_column_to_array($FRS_STATUS_RES,1);
+	for ($i=0; $i<count($arr_status); $i++) {
+	    $arr_status[$i] = $Language->getText('file_admin_editpackages',$arr_status[$i]);
+	}
+	return html_build_select_box_from_arrays($arr_id,$arr_status,$name,$checked_val,false);
 
 }
 

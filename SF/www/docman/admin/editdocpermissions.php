@@ -37,11 +37,9 @@ docman_header_admin(array('title'=>$Language->getText('docman_admin_editdocpermi
 
 echo '<H3>'.$Language->getText('docman_admin_editdocpermissions','doc_title').': <a href="/docman/display_doc.php?docid='.$docid.'&group_id='.$group_id.'">'.
      $row['title'].
-     '</a></h3>
-<P>'.$Language->getText('docman_admin_editdocpermissions','instructions_intro').'<P>';
+'</a></h3>';
 
-echo '<h3>'.$Language->getText('docman_admin_editdocpermissions','title').'</h3>
-<p>'.$Language->getText('docman_admin_editdocpermissions','instructions',array('/docman/admin/editdocgrouppermissions.php?doc_group='.$row['doc_group'].'&group_id='.$group_id)).'<p>';
+echo '<p>'.$Language->getText('docman_admin_editdocpermissions','instructions',array('/docman/admin/editdocgrouppermissions.php?doc_group='.$row['doc_group'].'&group_id='.$group_id)).'<p>';
 $object_id = $docid;
 $post_url = '/docman/admin/index.php?docid='.$docid.'&group_id='.$group_id;
 permission_display_selection_form("DOCUMENT_READ", $object_id, $group_id, $post_url);

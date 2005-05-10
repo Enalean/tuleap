@@ -7,7 +7,7 @@
 // $Id$
 //
 -->
-<H2><?php print $GLOBALS['sys_name']; ?> Enregistrement d'un projet
+<H2>Enregistrement d'un projet <?php print $GLOBALS['sys_name']; ?> 
 <?php print help_button('CreatingANewProject.html') ?></H2>
 
 <p>
@@ -16,7 +16,7 @@ L'équipe <?php print $GLOBALS['sys_name']; ?> invite les équipes de projet de <?
 
 <p><B>Le processus</B>
 
-<P>Enregistrer un projet sur <?php print $GLOBALS['sys_name']; ?> est un processus simple mais nous avons besoin de quelques informations. La totalité du processus d'enregistrement prend de 5 à 10 minutes maximum.
+<P>Enregistrer un projet sur <?php print $GLOBALS['sys_name']; ?> est un processus simple mqui ne demande que quelques informations de votre part. La totalité du processus d'enregistrement prend de 5 à 10 minutes maximum.
 
 <P>Dans les pages qui suivent, nous vous présenterons des documents importants concernant l'utilisation de votre compte et de votre environnement de projet. Veuillez les lire attentivement.
 

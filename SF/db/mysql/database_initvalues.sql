@@ -264,8 +264,8 @@ INSERT INTO frs_filetype VALUES ('8002','html');
 INSERT INTO frs_filetype VALUES ('8003','pdf');
 INSERT INTO frs_filetype VALUES ('9999','Other');
 
-INSERT INTO frs_status VALUES ('1','Active');
-INSERT INTO frs_status VALUES ('3','Hidden');
+INSERT INTO frs_status VALUES ('1','status_active');
+INSERT INTO frs_status VALUES ('3','status_hidden');
 
 INSERT INTO frs_processor VALUES ('1000','i386');
 INSERT INTO frs_processor VALUES ('2000','PPC');

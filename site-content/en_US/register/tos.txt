@@ -132,7 +132,7 @@ transmitted via <?php print $GLOBALS['sys_name']; ?> or any Service thereon.
 <p>
 <?php print $GLOBALS['sys_name']; ?> may establish general practices and limits concerning use of the
 Services, as defined by posted Service-specific Rules.  While <?php print $GLOBALS['sys_name']; ?>
- will use reasonable efforts to <a href="/docman/display_doc.php?docid=17&group_id=1#whyhost-backup" target="side_window">backup</a> site data and make such data
+ will use reasonable efforts to backup site data and make such data
 available in the event of loss or deletion, <?php print $GLOBALS['sys_name']; ?> has no
 responsibility or liability for the deletion or failure to store any
 messages and other communications or other Content maintained or transmitted

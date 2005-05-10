@@ -31,7 +31,7 @@ file_admin_editpackages	perm_reset	Permissions reset to default
 file_admin_editpackages	p_added	Added Package
 file_admin_editpackages	release_edit_f_rel	Release/Edit File Releases
 file_admin_editpackages	packages	Packages
-file_admin_editpackages	p_explain	You can use packages to group different file releases together. A package is a consistent set of source files that can be put together and deliver a working part of your bigger project. \n<P>For instance, assuming you work on a multi-platform Database engine you could create the following packages: \n<P> \n<B>DB-win</B> the sources for the Windows version of the DB engine<BR> \n<B>DB-unix</B> the sources for the Unix version  of the DB engine<BR> \n<B>DB-odbc</B> the ODBC driver for both platforms \n<P> \nYou must first define your packages by naming them. \n<P> \nOnce you have packages defined, you can start creating new <B>releases of packages.</B> \n<P> \n<H3>Releases of Packages</H3> \n<P> \nA release of a package can contain multiple files. A release is generally identified with a version number. Examples of possible release names are:<B>3.22.1</B>, <b>3.22.2</B>, <B>3.22.3</B>,... \n<P> \nYou can create new releases of packages by clicking on <B>Add/Edit Releases</B> next to your package name.
+file_admin_editpackages	p_explain	You can use packages to group different file releases together. A package is a consistent set of source files that can be put together and deliver a working part of your bigger project.\n
 file_admin_editpackages	no_p_defined	You Have No Packages Defined
 file_admin_editpackages	p_name	Package Name
 file_admin_editpackages	rank_on_screen	Rank On Screen
@@ -44,6 +44,8 @@ file_admin_editpackages	edit	Edit
 file_admin_editpackages	define	Define
 file_admin_editpackages	create_new_p	Create a New Package
 file_admin_editpackages	create_this_p	Create This Package
+file_admin_editpackages	status_active	Active
+file_admin_editpackages	status_hidden	Hidden
 #
 #-----------------------------------------------
 # Script: SF/www/file/admin/editreleasepermissions.php
@@ -208,7 +210,6 @@ file_showfiles	file_p_for	File packages for project '$1'
 file_showfiles	no_file_p	No File Packages
 file_showfiles	no_p_available	There are no file packages available
 file_showfiles	p_releases	Package Releases
-file_showfiles	printer_version	Printer version
 file_showfiles	select_release	Select Release to see Release Notes and Change Log.&nbsp;Select File to request file download.
 file_showfiles	release_notes	Release<BR>&amp; Notes
 file_showfiles	size	Size

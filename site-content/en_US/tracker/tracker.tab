@@ -93,7 +93,6 @@ tracker_index	create_new_tracker	Create a New Tracker
 tracker_index	no_accessible_trackers_hdr	No Accessible Trackers Found
 tracker_index	no_accessible_trackers_msg	<strong>No trackers have been set up, or you are not allowed to view them.</strong>
 tracker_index	choose_tracker	Choose a tracker and you can browse/edit/add artefacts to it.
-tracker_index	printer_version	Printer version
 tracker_index	total	total
 tracker_index	file_delete	File Delete: $1
 tracker_index	file_delete_success	File deleted successfully

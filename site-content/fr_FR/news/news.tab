@@ -33,7 +33,7 @@ news_admin_index	submitted_for_group	Soumise par le projet
 news_admin_index	approve_for_front	Approuver pour la page d'accueil
 news_admin_index	do_nothing	Ne rien faire
 news_admin_index	displayed	Affichée
-news_admin_index	delete	Rejeter
+news_admin_index	delete	Rejetée
 news_admin_index	no_queued_item_found	Aucune annonce en attente d'approbation
 news_admin_index	need_approve	Ces annonces sont en attente d'approbation
 news_admin_index	no_deleted_items_this_week	Aucune annonce rejetée cette semaine
@@ -52,7 +52,6 @@ news_index	choose_news	Choisissez une annonce pour la visualiser, effectuer une 
 news_index	no_news_found	Aucune annonce disponible
 news_index	for	pour $1
 news_index	no_items_found	Aucune annonce disponible pour ce projet
-news_index	pv	Version imprimable
 #
 #-----------------------------------------------
 # Script: SF/www/news/news_utils.php
@@ -72,5 +71,5 @@ news_submit	insert_err	ERREUR lors de l'insertion
 news_submit	news_added	Annonce ajoutée
 news_submit	only_admin_submits	Permission refusée. Vous ne pouvez soumettre une annonce pour un projet si vous n'en êtes pas l'administrateur
 news_submit	submit_news_for	Soumettre une annonce pour $1
-news_submit	post_explain	Vous pouvez publier une annonce concernant votre projet si vous en Ãªtes l'administrateur. Vous pouvez Ã©galement publier des annonces si votre projet a besoin d'aide.</p><p>Toutes les annonces <b>de votre projet</b> apparaÃ®tront immÃ©diatement sur la page de rÃ©sumÃ© de votre projet. Les annonces d'intÃ©rÃªt gÃ©nÃ©ral peuvent Ãªtre sÃ©lectionnÃ©es par l'Ã©quipe de $1 pour apparaÃ®tre sur la page d'accueil de $1.</p><p>Vous pouvez inclure des URLs dans vos annonces, mais pas de HTML.</p><p>Les URLs seront automatiquement transformées en liens hypertextes lors de la visualisation
+news_submit	post_explain	Vous pouvez publier une annonce concernant votre projet si vous en êtes l'administrateur.</p><p>Toutes les annonces <b>de votre projet</b> apparaîtront immédiatement sur la page de sommaire de votre projet. Les annonces d'intérêt général peuvent être sélectionnées par l'équipe de $1 pour apparaître sur la page d'accueil de $1.</p><p>Vous pouvez inclure des URLs dans vos annonces, mais pas de HTML. Les URLs seront automatiquement transformés en liens hypertextes lors de la visualisation.</p>
 news_submit	for_project	Pour le projet: $1

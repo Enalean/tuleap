@@ -12,13 +12,13 @@
 
 <!-- This Copyright statement below MUST NOT be MODIFIED and MUST ALWAYS
 APPEAR IN THE FOOTER -->
-CODEX CORE Software. Copyright 1999-2000 &copy; The SourceForge Crew. Copyright &copy; 2001-<?php echo date('Y',time()); ?> Xerox Corporation.
+CODEX&trade; CORE Software. Copyright 1999-2000 &copy; The SourceForge Crew. Copyright &copy; 2001-<?php echo date('Y',time()); ?> Xerox Corporation.
 
-CODEX CORE Software is licensed under the terms and conditions provided under version 2 of the <a href="http://www.fsf.org/licenses/gpl.html">GNU General Public License</a>.
+CODEX&trade; CORE Software is licensed under the terms and conditions provided under version 2 of the <a href="http://www.fsf.org/licenses/gpl.html">GNU General Public License</a>.
 <br>
-CODEX COMPONENT Software. Copyright &copy; 2001-<?php echo date('Y',time()); ?> Xerox Corporation. All rights reserved.
+CODEX&trade; COMPONENT Software. Copyright &copy; 2001-<?php echo date('Y',time()); ?> Xerox Corporation. All rights reserved.
 
-CODEX COMPONENT Software is licensed under the terms and conditions provided under the <a href="/admin/show_license.php">CODEX COMPONENT SOFTWARE LICENSE</a>.
+CODEX&trade; COMPONENT Software is licensed under the terms and conditions provided under the <a href="/admin/show_license.php">CODEX&trade; COMPONENT SOFTWARE LICENSE</a>.
 </span>
 </center>
 <BR>&nbsp;

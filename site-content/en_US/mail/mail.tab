@@ -65,7 +65,6 @@ mail_index	unsubscribe	(Un)Subscribe/Preferences
 mail_index	ml_admin	ML Administration
 mail_index	choose_group_first	Choose a Group First
 mail_index	group_err	Error - choose a group first
-mail_index	pv	Printer version
 #
 #-----------------------------------------------
 # Script: SF/www/mail/mail_nav.php

@@ -9,15 +9,23 @@
 -->
 <H2>Step 3: Project Registration</H2>
 
-<p>Nous souhaitons en savoir un peu plus sur votre projet. Toutes les informations saisies sur cette page seront visibles pour les utilisateurs de <?php print $GLOBALS['sys_name']; ?> une fois votre projet enregistré. Veuillez donc forunir des informations aussi précise que possible.
+<p>Nous souhaitons en savoir un peu plus sur votre projet. Toutes les
+informations saisies sur cette page seront visibles pour les
+utilisateurs de <?php print $GLOBALS['sys_name']; ?> une fois votre
+projet enregistré. Veuillez donc fournir des informations aussi
+précise que possible.
 
-<P>Si l'équipe <?php print $GLOBALS['sys_name']; ?> approuve votre projet, votre environnement de projet devra être uniquement utilisé à des fins correspondant à la description ci-dessous. Si les objectifs du projet devaient changer par la suite, il vous faudra proceder à la mise à jour de ces informations.
+<P>Si l'équipe <?php print $GLOBALS['sys_name']; ?> approuve votre
+projet, votre environnement de projet devra être uniquement utilisé à
+des fins correspondant à la description ci-dessous. Si les objectifs
+du projet devaient changer par la suite, il vous faudra procéder à la
+mise à jour de ces informations.
 
-<P><em>Remarque</em>: Le formattage de votre texte (saut de lignes) est preservé. Les URLs seront automatiquement transformés en liens hypertextes dans le texte final
-<p><font color="red">*</font>: Saisie obligatoire</p>
-<FONT size=-1>
-<FORM action="projectname.php" method="post">
-<INPUT TYPE="HIDDEN" NAME="insert_purpose" VALUE="y">
+<P><em>Remarque</em>: Le formattage de votre texte (saut de lignes)
+est preservé. Les URLs seront automatiquement transformés en liens
+hypertextes dans le texte final. <p><font color="red">*</font>: Saisie
+obligatoire</p> <FONT size=-1> <FORM action="projectname.php"
+method="post"> <INPUT TYPE="HIDDEN" NAME="insert_purpose" VALUE="y">
 
 <P>
 <B><u>Description courte du projet<font color="red">*</font>:</u></B>
@@ -42,7 +50,7 @@
 </TEXTAREA>
 
 <P><B><u>Autres Commentaires:</u></B>
-<br>Tout ce que vous souhaitez dire à propos de votre projet et qui n'a pas déjà été couvert plus haut. Vous pouvez par exemple mentionner les produits qui utilise votre logiciel. S'il s'agit d'un produit commercial vous pouvez aussi des informations de prix ou un contact commercial, etc &hellip;
+<br>Tout ce que vous souhaitez dire à propos de votre projet et qui n'a pas déjà été couvert plus haut. Vous pouvez par exemple mentionner les produits qui utilise votre logiciel. S'il s'agit d'un produit commercial vous pouvez aussi fournir des informations de prix ou un contact commercial, etc&hellip;
 <br><TEXTAREA name="form_comments" wrap="virtual" cols="70" rows="4">
 </TEXTAREA>
 <BR><INPUT type=submit name="Submit" value="Etape 4: Nom du projet">

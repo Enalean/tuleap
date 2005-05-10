@@ -93,7 +93,6 @@ tracker_index	create_new_tracker	Créer un outil de suivi
 tracker_index	no_accessible_trackers_hdr	Aucun outil de suivi disponible
 tracker_index	no_accessible_trackers_msg	<strong>Aucun outil de suivi hn'a été créé, ou vous n'êtes pas autorisé pas les consulter.</strong>
 tracker_index	choose_tracker	Choisissez un outil de suivi pour visualiser, editer ou ajouter des artefacts.
-tracker_index	printer_version	Version Imprimable
 tracker_index	total	total
 tracker_index	file_delete	Fichier détruit: $1
 tracker_index	file_delete_success	Fichier détruit avec succès
@@ -445,7 +444,7 @@ tracker_include_type	fields_requ	champs obligatoires
 tracker_include_type	bind_to_list	associer le champ à une liste de valeurs
 tracker_include_type	bind_to	Associer à
 tracker_include_type	group_members	Membres du projet
-tracker_include_type	submitters	Soumissionaires d'artefacts
+tracker_include_type	submitters	Personnes ayant soumis un artefact
 tracker_include_type	techicians	Techniciens de l'outil de suivi
 tracker_include_type	bind	Associer
 tracker_include_type	create_value	Créer une nouvelle valeur de champ
@@ -645,7 +644,7 @@ tracker_common_types	fr_desc	Outil de suivi demandes de fonctionnalités
 tracker_common_types	fr_ex1	Amélioration d'interface (exemple)
 tracker_common_types	fr_ex2	Prochaine version (exemple)
 tracker_common_types	fail_fr	Erreur à la création de l'outil de suivi des demandes de fonctionnalités: $1
-tracker_common_types	role_SUBMITTER_short_desc	Soumissionnaire
+tracker_common_types	role_SUBMITTER_short_desc	A soumis
 tracker_common_types	role_ASSIGNEE_short_desc	En charge
 tracker_common_types	role_CC_short_desc	CC
 tracker_common_types	role_COMMENTER_short_desc	Commentateur
