@@ -206,7 +206,7 @@ function svnaccess_logs_daily($project, $span = 7, $who="allusers") {
 
 	// check first if service is used by this project
         // if service not used return immediately
-        if ($project->usesSVN()) {
+        if (! $project->usesSVN()) {
                 print '<P><B><U>'.$Language->getText('project_stats_source_code_access_utils','service_disabled',$Language->getText('project_stats_source_code_access_utils','subversion')).'</U></B>';
 		return;
 	}
