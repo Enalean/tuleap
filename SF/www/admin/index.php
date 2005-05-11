@@ -109,6 +109,7 @@ echo ")</b>";?>
 <h3><?php echo $Language->getText('admin_main', 'header_utils'); ?></h3>
 <UL>
 <LI><A href="massmail.php"><?php echo $Language->getText('admin_main', 'mail_engine'); ?></A>
+<LI><A href="/phpMyAdmin">phpMyAdmin</A>
 </UL>
 
 <h3><?php echo $Language->getText('admin_main', 'header_sstat'); ?></h3>
