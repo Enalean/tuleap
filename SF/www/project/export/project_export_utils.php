@@ -751,7 +751,7 @@ function pe_utils_format_sr_messages($group_id,$sr_id) {
 
 function display_db_params () {
     global $sys_default_domain, $dbname, $Language;
-    $host = $GLOBALS['sys_dbhost'];
+    list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
 echo '
 <table align="center" cellpadding="0">
       <tr><td>'.$Language->getText('project_export_utils','server').':</td><td>'.$host.'</td></tr>
