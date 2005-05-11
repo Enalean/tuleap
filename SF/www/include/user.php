@@ -284,7 +284,6 @@ function user_get_language() {
 function user_set_preference($preference_name,$value) {
 	GLOBAL $user_pref;
 	if (user_isloggedin()) {
-            echo $preference_name,'=>',$value;
 		$preference_name=strtolower(trim($preference_name));
 		$result=db_query("UPDATE user_preferences SET preference_value='$value' ".
 			"WHERE user_id='".user_getid()."' AND preference_name='$preference_name'");
