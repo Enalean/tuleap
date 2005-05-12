@@ -53,12 +53,12 @@ class Views {
 
   function getTrashImage($alt="delete") {
     return '<img src="'.util_get_image_theme("ic/trash.png").'" '.
-        'height="16" width="16" border="0" alt="delete '.$alt.' entry">'; //XXX
+        'height="16" width="16" border="0" alt="'.$alt.'" title="'.$alt.'">';
   }
 
   function getTrashLink($link, $alt) {
 	global $Language;
-      return '<a href="'.$link.'" onClick="return confirm(\''.$Language->getText('common_mvc_view','warn',$alt).'\')">'.$this->getTrashImage($alt).'</a>'; //XXX
+      return '<a href="'.$link.'" onClick="return confirm(\''.$Language->getText('common_mvc_view','warn',$alt).'\')">'.$this->getTrashImage($alt).'</a>';
   }
 
   function display($view='') {
