@@ -72,7 +72,7 @@ include_features_boxes	pages_viewed	Pages visitées
 #-----------------------------------------------
 # Script: SF/www/include/foundry_admin.php
 #
-include_foundry_admin	removed_proj	Enlever un project
+include_foundry_admin	removed_proj	Enlever un projet
 include_foundry_admin	user_not_removed	Impossible d'enlever l'utilisateur - Vous ne pouvez pas enlever un administrateur d'un projet.\nVous devez d'abord leur enlever leur droit d'administrateur et/ou désigner un autre administrateur pour ce projet
 include_foundry_admin	user_removed	Utilisateur enlevé
 include_foundry_admin	proj_added	Le projet a été ajouté
@@ -167,7 +167,7 @@ include_html	invalid_g	Groupe invalide
 include_layout	latest_news_rss	Dernières annonces RSS
 include_layout	newest_releases_rss	Dernières versions RSS
 include_layout	newest_projects_rss	Derniers projets RSS
-include_layout	query_count	Query Count
+include_layout	query_count	Nombre de requetes
 include_layout	banner	Bannière
 include_layout	logo	Logo
 include_layout	counter	Compteur
@@ -175,14 +175,14 @@ include_layout	counter	Compteur
 #-----------------------------------------------
 # Script: SF/www/include/license.php
 #
-include_license	cannot_open_acc	Impossible d'ouvrir le fichier d'acceptation de la license: $1 
+include_license	cannot_open_acc	Impossible d'ouvrir le fichier d'acceptation de la licence: $1 
 include_license	license_accepted	CodeX Core Software License accepted on 
 include_license	cannot_write_acc	Impossible d'écrire dans le fichier d'acceptation de la license: $1
-include_license	cannot_open_decl	Impossible d'ouvrirle fichier de refus de la license: $1
+include_license	cannot_open_decl	Impossible d'ouvrir le fichier de refus de la licence: $1
 include_license	license_declined	CodeX Core Software License declined on 
-include_license	cannot_write_decl	Impossible d'écrire dans le fichier de refus de la license: $1
+include_license	cannot_write_decl	Impossible d'écrire dans le fichier de refus de la licence: $1
 include_license	msg_accept	Merci d'avoir accepter les termes de la licence \nCodeX. Vous pouvez maintenant utiliser le site
-include_license	msg_declined	Vous avez choisi de refuser les termes de la licence du logiciel CodeX. Vous devez donc retourner à Xerox la totalité du logiciel et de la documentation distribuée sous cette licence et procéder à la désinistallation sur l'ensemble de vos machines
+include_license	msg_declined	Vous avez choisi de refuser les termes de la licence du logiciel CodeX. Vous devez donc retourner à Xerox la totalité du logiciel et de la documentation distribuée sous cette licence et procéder à la désinstallation sur l'ensemble de vos machines
 #
 #-----------------------------------------------
 # Script: SF/www/include/logger.php
@@ -216,7 +216,7 @@ include_menu	search	Chercher
 include_menu	software_map	Arbre des projets
 include_menu	software	Logiciels
 include_menu	new_releases	Nouvelles versions
-include_menu	other_site_mirrors	Autres sites mirroirs
+include_menu	other_site_mirrors	Autres sites miroirs
 include_menu	code_snippet_lib	Boîte à outils
 include_menu	help_index	Index de l'aide
 include_menu	site_doc	Documentation site
@@ -312,8 +312,8 @@ include_project_home	commits	<B>$1</B> commits
 include_project_home	adds	<B>$1</B> adds
 include_project_home	co	<B>$1</B> checkouts
 include_project_home	browse_cvs	Parcourir CVS
-include_project_home	svn_repo	Subversion Repository
-include_project_home	browse_svn	Dépôt Subversion
+include_project_home	svn_repo	Dépôt Subversion
+include_project_home	browse_svn	Parcourir Subversion
 include_project_home	accesses	<B>$1</B> accès
 include_project_home	files	Fichiers
 include_project_home	file_releases	Fichiers publiés
@@ -347,11 +347,11 @@ include_session	account_not_active	Compte inactif
 include_session	insufficient_g_access	Permissions d'accès au projet insuffisantes
 include_session	no_perm_to_view	Vous n'avez pas la permission d'accéder à cette page
 include_session	insufficient_u_access	Permissions utilisateurs insuffisantes
-include_session	required_login	Connection requise
+include_session	required_login	Connexion requise
 include_session	login	Pour voir cette page, vous devez être connecté.
 include_session	insufficient_access	Permissions d'accès insuffisantes
 include_session	no_access	Vous essayez d'accéder à une zone du site pour laquelle vous n'avez pas les permissions requises. Vous pouvez probablement résoudre ce problème en naviguant de façon adéquate sur le site.
-include_session	hash_err	ERREUR - deux personnes ont la même clé - faîtes un retour en arrière et celà ne devrait plus se produire
+include_session	hash_err	ERREUR - deux personnes ont la même clé - faîtes un retour en arrière et cela ne devrait plus se produire
 #
 #-----------------------------------------------
 # Script: SF/www/include/snippet_caching.php
@@ -373,7 +373,7 @@ include_squal_exit	missing_param	PARAMETRES REQUIS ABSENTS
 #-----------------------------------------------
 # Script: SF/www/include/squal_pre.php
 #
-include_squal_pre	not_connect_db	Connection à la base de donnée impossible
+include_squal_pre	not_connect_db	Connexion à la base de donnée impossible
 #
 #-----------------------------------------------
 # Script: SF/www/include/stats_function.php
@@ -382,12 +382,12 @@ include_stats_function	stats_problem	Problème de statistiques
 include_stats_function	view_by_week	Pages vues par semaine
 include_stats_function	view_by_hour	Pages vues par heure
 include_stats_function	new_proj_added	Nouveaux projets créés chaque semaine
-include_stats_function	new_user_added	Nouveauxs utilisateurs créés chaque semaine
+include_stats_function	new_user_added	Nouveaux utilisateurs créés chaque semaine
 include_stats_function	logo_by_day	Affichage du logo par jour
 include_stats_function	logo_by_proj	Affichage du logo par projet
 include_stats_function	view_by_browser	Pages vues par navigateur
-include_stats_function	view_by_platform	Pages vues par plateforme
-include_stats_function	view_by_platform_browser	Pages vues par plateform/version de navigateur
+include_stats_function	view_by_platform	Pages vues par plat-eforme
+include_stats_function	view_by_platform_browser	Pages vues par plate-forme/version de navigateur
 #
 #-----------------------------------------------
 # Script: SF/www/include/trove.php
@@ -430,7 +430,7 @@ include_user_home	send_message_to	Envoyer un message à
 include_user_home	your_address	Votre adresse e-mail
 include_user_home	your_name	Votre nom
 include_user_home	send_message	Envoyer le message
-include_user_home	send_message_if_logged	Vous pourriez envoyer un message si vous êtiez connecté
+include_user_home	send_message_if_logged	Vous pourriez envoyer un message si vous étiez connecté
 include_user_home	subject	Sujet
 include_user_home	message	Message
 #
@@ -445,7 +445,7 @@ include_user	invalid_u_id	ID utilisateur invalide
 #
 include_utils	prio_colors	Echelle de couleurs des priorités
 include_utils	address_problem	Les adresses suivantes présentent une anomalie
-include_utils	email_explain	Les adresses e-mail doivent être soit des noms de login utilisateur (par exemple 'jmartin') ou une adress e-mail complète (par exemple jean.martin@mon.domaine.com). Plusieurs adresses e-mail peuvent être saisies si elles sont séparées par une virgule ou un point-virgule.
+include_utils	email_explain	Les adresses e-mail doivent être soit des noms de login utilisateur (par exemple 'jmartin') ou une adresse e-mail complète (par exemple jean.martin@mon.domaine.com). Plusieurs adresses e-mail peuvent être saisies si elles sont séparées par une virgule ou un point-virgule.
 #
 #-----------------------------------------------
 # Script: SF/www/include/vars.php
@@ -464,9 +464,9 @@ include_vars	qtp_l	Licence Qt Public
 include_vars	ibm_l	Licence IBM Public
 include_vars	p_l	Licence Python
 include_vars	public_domain	Domaine public
-include_vars	other_env	Autre environment
-include_vars	web_env	Web Environment
-include_vars	other_lang	Other Language
+include_vars	other_env	Autre environnement
+include_vars	web_env	Environment Web
+include_vars	other_lang	Autre Langue
 #
 #-----------------------------------------------
 # Script: SF/common/include/Error.class
@@ -482,3 +482,4 @@ include_common_groupfactory	none_found	Rien n'a été trouvé
 # Script: SF/common/mvc/View.class
 #
 common_mvc_view	warn	** WARNING!! ** Please confirm you want to $1
+#common_mvc_view	warn	** Attention!! ** Merci de confirmer que vous voulez $1

@@ -27,7 +27,7 @@ réutiliser des composants logiciels au sein de <?php print
 $GLOBALS['sys_org_name']; ?>.
 
 <P>Nous pensons que cette politique d'échange sert la cause du
-developpement collaboratif tout en offrant un bon niveau de
+développement collaboratif tout en offrant un bon niveau de
 protection. Cependant si ce qui vous est proposé par défaut ne vous
 convient pas, vous pouvez choisir l'option "Autre" dans le menu
 ci-dessous et nous faire savoir pourquoi vous souhaitez en utiliser

@@ -13,7 +13,7 @@ mode collaboratif au sein de <?php print $GLOBALS['sys_org_name']; ?>.
 <br> Un grand nombre de projets
 sont actuellement hébergés à de très nombreux endroits chez <?php
 print $GLOBALS['sys_org_name']; ?>. Dans ces conditions, il est non
-seulement difficile de savoir qui travaille sur quoi mais celà
+seulement difficile de savoir qui travaille sur quoi mais cela
 implique que les équipes de projet peuvent recréer un composant
 logiciel déjà écrit. De plus en offrant une infrastructure unique et
 fonctionnellement riche, <?php print $GLOBALS['sys_org_name']; ?>
@@ -24,7 +24,7 @@ $GLOBALS['sys_org_name']; ?>.  </p>
 <p>
 <i>Ce que nous offrons:</i>
 <li>Environnement de projet configurable
-<li>Version control systems (CVS, Subversion...)
+<li>Systèmes de contrôle de version (CVS, Subversion...)
 <li>Outil de suivi universel et totalement configurable (tâches, défauts, demande de support...)
 <li>Publication de fichiers avec contrôle d'accès
 <li>Administration globale des permissions d'accès
@@ -32,17 +32,17 @@ $GLOBALS['sys_org_name']; ?>.  </p>
 <li>Système d'annonces 
 <li>Site Web par projet
 <li>Liste de distribution (Publiques et privées)
-<li>Hébergement de sous-domaine -- par exmple mon_projet.<?php echo $sys_default_domain; ?>
+<li>Hébergement de sous-domaine -- par exemple mon_projet.<?php echo $sys_default_domain; ?>
 <li>Exportation des données du projet (reporting)
 <li>Statistiques d'usage
-<li>Accès à un compte shell (optionel)                        
+<li>Accès à un compte shell (optionnel)                        
 </p>                           
            
 <p>
 <li>L'approbation d'un compte utilisateur ou projet est à notre seule discrétion et se base sur les critères suivants:
 <ul>
 <li><i>pertinence</i>: uniquement des projets liés à <?php print $GLOBALS['sys_org_name']; ?>, 
-<li><i>legitimité</i>: votre projet doit être en phase avec les objectifs business de <?php print $GLOBALS['sys_org_name']; ?>,
+<li><i>légitimité</i>: votre projet doit être en phase avec les objectifs business de <?php print $GLOBALS['sys_org_name']; ?>,
 <li><i>à propos</i>: les projets hébergés doivent délivrés du logiciel et/ou de la documentation.
 </ul>
 

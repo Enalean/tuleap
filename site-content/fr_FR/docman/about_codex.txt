@@ -13,7 +13,7 @@
 <P><?php print $GLOBALS['sys_name']; ?> est un service accessible aux
 <b>équipes de développement logiciel de <?php print
 $GLOBALS['sys_org_name']; ?></B>. Son objectif est de promouvoir et de
-faiciliter le développement collaboratif ainsi que la réutilisation
+faciliter le développement collaboratif ainsi que la réutilisation
 de composants logiciels dans un environnement contrôlé.<p>
 
 <p>L'équipe <?php print $GLOBALS['sys_name']; ?> veut rendre la
@@ -24,11 +24,10 @@ réutiliser, de les adapter et d'améliorer leur productivité en
 capitalisant sur les connaissances de <?php print
 $GLOBALS['sys_org_name']; ?>.</p>
 
-<p>Pour une approche cohérente et bénéfique de la réutilisation de composants logiciels, l'équipe CodeX <?php print $GLOBALS['sys_name']; ?> a mis en place une Team has put together the
-<b><A href="/docman/display_doc.php?docid=16&group_id=1"><?php print
-$GLOBALS['sys_org_name']; ?> Politique d'échange de code</a></b>. Elle définit les règles internes de partage et de réutilisation et constitue la pierre angulaire de l'édifice. Prenez le temps de <A
+<p>Pour une approche cohérente et bénéfique de la réutilisation de composants logiciels, l'équipe <?php print $GLOBALS['sys_name']; ?> a mis en place une <b><A href="/docman/display_doc.php?docid=16&group_id=1">Politique d'échange de code de <?php print
+$GLOBALS['sys_org_name']; ?></a></b>. Elle définit les règles internes de partage et de réutilisation et constitue la pierre angulaire de l'édifice. Prenez le temps de <A
 href="/docman/display_doc.php?docid=16&group_id=1">la lire</a>. <P>
 
 <p>Nous vous remercions pour votre soutien!</P>
 
-<p>The <a href="/staff.php"><?php print $GLOBALS['sys_name']; ?> Team</a>.</p>
+<p>L'équipe <?php print $GLOBALS['sys_name']; ?>.</p>

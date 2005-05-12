@@ -16,7 +16,7 @@
 #
 cvs_index	config_updated	Configuration mise à jour
 cvs_index	full_success	avec succès
-cvs_index	partial_success	en partie<br>L'adresse e-mail semble invalide. la notification e-mail est desactivée.
+cvs_index	partial_success	en partie<br>L'adresse e-mail semble invalide. la notification e-mail est désactivée.
 #
 #-----------------------------------------------
 # Script: SF/www/cvs/admin_commit.php

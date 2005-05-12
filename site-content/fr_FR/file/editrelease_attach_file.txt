@@ -12,7 +12,7 @@ echo '
 <P>
 Pour attacher vos fichiers à cette version vous devez tout d\'abord les télécharger sur le serveur '.$GLOBALS['sys_name'].'. Pour ce faire utilisez soit "ftp" soit "scp":
 <ul>
-<li><b>ftp</b>: avec un client ftp, connectez-vous à <b>'.$sys_download_host.'</b> (login "ftp" / le mote de passe est votre adresse e-mail) et placez vos fichiers dans le répertoire <B>/incoming</B>.</li>
+<li><b>ftp</b>: avec un client ftp, connectez-vous à <b>'.$sys_download_host.'</b> (login "ftp" / le mot de passe est votre adresse e-mail) et placez vos fichiers dans le répertoire <B>/incoming</B>.</li>
 <li><b>scp</b>: tapez simplement
 <pre>
 scp votre fichier '.$username.'@'.$sys_download_host.':'.$GLOBALS['FTPINCOMING_DIR'].'

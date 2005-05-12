@@ -63,8 +63,8 @@ mail_index	public	publique
 mail_index	private	privée
 mail_index	unsubscribe	(Dés)Abonnement/Préférences
 mail_index	ml_admin	Administration de la liste
-mail_index	choose_group_first	Choisisser d'abord un groupe (projet)
-mail_index	group_err	Erreur - Choisisser d'abord un groupe (projet)
+mail_index	choose_group_first	Choisissez d'abord un groupe (projet)
+mail_index	group_err	Erreur - Choisissez d'abord un groupe (projet)
 #
 #-----------------------------------------------
 # Script: SF/www/mail/mail_nav.php

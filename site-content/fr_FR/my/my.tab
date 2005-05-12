@@ -15,8 +15,8 @@
 # Script: SF/www/my/index.php
 #
 my_index	title	Page personnelle de $1
-my_index	err_badbrowser	Alerte: votre navigateur (Netscape 4.x) n'est pas supporté. Certaines fonctionalités ne seront pas disponibles.
-my_index	message	Votre page personnelle contient la liste des artefacts que vous avez [<b>S</b>]oumis ou qui vous ont été [<b>A</b>]ssigné avec leur niveau de complétion, les forums et les fichiers que vous surveillez et les projets dont vous êtes membre.<P>
+my_index	err_badbrowser	Alerte: votre navigateur (Netscape 4.x) n'est pas supporté. Certaines fonctionnalités ne seront pas disponibles.
+my_index	message	Votre page personnelle contient la liste des artefacts que vous avez [<b>S</b>]oumis ou qui vous ont été [<b>A</b>]ssignés avec leur niveau de complétion, les forums et les fichiers que vous surveillez et les projets dont vous êtes membre.<P>
 my_index	err_artf	Impossible de créer un ArtifactTypeFactory
 my_index	my_bugs	Mes bugs
 my_index	my_srs	Mes demandes de support
@@ -30,14 +30,14 @@ my_index	stop_monitor	Arrêter la surveillance
 my_index	my_tasks	Mes Tâches
 my_index	my_arts	Mes artefacts
 my_index	my_survey	Sondages
-my_index	survey_done	Vous avez déja répondu aux sondages
+my_index	survey_done	Vous avez déjà répondu aux sondages
 my_index	my_bookmarks	Mes favoris
 my_index	edit_link	Editer
 my_index	del_bookmark	Détruire ce favori ?
 my_index	my_projects	Mes projets
 my_index	not_member	Vous n'êtes membre d'aucun projet.
 my_index	admin_link	Admin
-my_index	quit_proj	Quitter ce project?
+my_index	quit_proj	Quitter ce projet?
 my_index	priv_proj	<em>Projet privé</em>
 #
 #-----------------------------------------------

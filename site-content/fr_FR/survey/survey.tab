@@ -57,7 +57,7 @@ survey_admin_index	edit_existing_q	Modifier les questions existantes
 survey_admin_index	show_res	Voir les résultats des sondages
 survey_admin_index	res	Les résultats d'un sondage sont affichés de façon consolidée par question.
 survey_admin_index	quick	Brèves instructions
-survey_admin_index	quick_instr	Créer un sondage est simple. <OL><LI>Créz les questions en premier.<LI>Créez un sondage en énumérant les questions dans l'ordre.<LI>Envoyez un pointeur vers ce sondage en utilisant le lien suivant: <P><B>$1</B>,où XX est l'identifiant (ID) du sondage.</OL>
+survey_admin_index	quick_instr	Créer un sondage est simple. <OL><LI>Créez les questions en premier.<LI>Créez un sondage en énumérant les questions dans l'ordre.<LI>Envoyez un pointeur vers ce sondage en utilisant le lien suivant: <P><B>$1</B>,où XX est l'identifiant (ID) du sondage.</OL>
 #
 #-----------------------------------------------
 # Script: SF/www/survey/admin/show_questions.php
@@ -97,14 +97,14 @@ survey_admin_show_r	click_s_id	Cliquer sur l'indentifiant (ID) d'un sondage pour
 # Script: SF/www/survey/admin/update_question.php
 #
 survey_admin_update_question	edit_a_q	Modifier une question
-survey_admin_update_question	warn	<span class="highlight">AVERTISSEMENT! C'est une assez mauvaise idée de changer une question après qu'elle ait déjà reçu des réponses. Celà peut donner des résultats trompeurs ou incohérents.</span>
+survey_admin_update_question	warn	<span class="highlight">AVERTISSEMENT! C'est une assez mauvaise idée de changer une question après qu'elle ait déjà reçu des réponses. Cela peut donner des résultats trompeurs ou incohérents.</span>
 survey_admin_update_question	q	Question:
 survey_admin_update_question	subm_changes	Valider
 #
 #-----------------------------------------------
 # Script: SF/www/survey/admin/update_survey.php
 #
-survey_admin_update_survey	warn	<span class="highlight">AVERTISSEMENT! C'est une assez mauvaise idée de modifier une enquête après qu'elle ait déjà reçu des réponses. Celà peut donner des résultats trompeurs ou incohérents.</span>
+survey_admin_update_survey	warn	<span class="highlight">AVERTISSEMENT! C'est une assez mauvaise idée de modifier une enquête après qu'elle ait déjà reçu des réponses. Cela peut donner des résultats trompeurs ou incohérents.</span>
 survey_admin_update_survey	q	Questions:
 survey_admin_update_survey	anon_allow	Réponse anonyme autorisée?
 survey_admin_update_survey	edit_a_s	Modifier un sondage
@@ -122,7 +122,7 @@ survey_index	s_for	Sondages pour $1
 #-----------------------------------------------
 # Script: SF/www/survey/privacy.php
 #
-survey_privacy	txt	<H1>Confidentialité des Sondages</H1> Les informations collectées dans ces sondages ne seront jamais communiquées à des parties tierces ou utiliser pour vous inciter à acheter des produits ou services.<P> Ces informations sont collectées dans le but de construire un profil de la communauté oeuvrant autour de ce projet. <P>L'identité des utilisateurs ayant répondu à un sondage n'est pas connu des administrateurs du projet, des autres utilisateurs ou des parties tierces.<P>Si des changements interviennent dans ces règles de confidentialité, celà affectera uniquement les données collectées dans le futur et les utilisateurs pourront bien sûr décliner ces changements.<P><B>L'équipe $1</B><P>
+survey_privacy	txt	<H1>Confidentialité des Sondages</H1> Les informations collectées dans ces sondages ne seront jamais communiquées à des parties tierces ou utiliser pour vous inciter à acheter des produits ou services.<P> Ces informations sont collectées dans le but de construire un profil de la communauté oeuvrant autour de ce projet. <P>L'identité des utilisateurs ayant répondu à un sondage n'est pas connu des administrateurs du projet, des autres utilisateurs ou des parties tierces.<P>Si des changements interviennent dans ces règles de confidentialité, cela affectera uniquement les données collectées dans le futur et les utilisateurs pourront bien sûr décliner ces changements.<P><B>L'équipe $1</B><P>
 #
 #-----------------------------------------------
 # Script: SF/www/survey/rating_resp.php

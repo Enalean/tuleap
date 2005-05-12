@@ -18,7 +18,7 @@ echo '
 <li><b>'.group_getunixname($group_id).'-annonce</b>: pour les annonces de nouvelles versions ou d\'évènements relatifs au projet.
 </ul>
 
-<P>Celà prendra au maximum <B><span class="highlight">'.$GLOBALS['sys_crondelay'].' heures</span></B> pour que la liste soit effectivement créée.
+<P>Cela prendra au maximum <B><span class="highlight">'.$GLOBALS['sys_crondelay'].' heures</span></B> pour que la liste soit effectivement créée.
 <P>';
 
 ?>

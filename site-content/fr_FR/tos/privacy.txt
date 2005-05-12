@@ -21,8 +21,7 @@ Chez <?php print $GLOBALS['sys_name']; ?>, notre objectif est de vous donner aut
 </p>
 
 <p>
-<?php print $GLOBALS['sys_name']; ?> suivra les domaines et les machines à partir desquels les utilisateurs visitent <?php print $GLOBALS['sys_name']; ?> et analisera ces données pour dégager des statistiques et des tendances. and
-analyze this data for trends and statistics.  En accord avec ces règles de confidentialité, divers sites  <?php print $GLOBALS['sys_name']; ?> peuvent utiliser les données accumulées à d'autres fins, y compris (mais non limité à) l'évaluation des services et la planification des resources.
+<?php print $GLOBALS['sys_name']; ?> suivra les domaines et les machines à partir desquels les utilisateurs visitent <?php print $GLOBALS['sys_name']; ?> et analisera ces données pour dégager des statistiques et des tendances. En accord avec ces règles de confidentialité, divers sites  <?php print $GLOBALS['sys_name']; ?> peuvent utiliser les données accumulées à d'autres fins, y compris (mais non limité à) l'évaluation des services et la planification des resources.
 </p>
 
 <p>

@@ -18,7 +18,7 @@ Le logiciel CODEX&trade; CORE est couvert par la licence <a href="http://www.fsf
 <br>
 Logiciel CODEX&trade; COMPONENT. Copyright &copy; 2001-<?php echo date('Y',time()); ?> Xerox Corporation. All rights reserved.
 
-Le logiciel CODEX&trade; COMPONENT est couvert par la <a href="/admin/show_license.php">LICENCE DU LOGICIEL CODEX&trade;COMPONENT</a>.
+Le logiciel CODEX&trade; COMPONENT est couvert par la <a href="/admin/show_license.php">LICENCE DU LOGICIEL CODEX&trade; COMPONENT</a>.
 </span>
 </center>
 <BR>&nbsp;

@@ -56,7 +56,7 @@ project_admin_editservice	mandatory	: imposé pour les services de type système
 project_admin_editservice	edit_s	Modifier un service
 project_admin_editservice	s_not_exist	Le service n'existe pas: $1
 project_admin_editservice	forbidden	Interdit
-project_admin_editservice	no_access_inactive_s	Vous ne pouvez accèder à un service inactif
+project_admin_editservice	no_access_inactive_s	Vous ne pouvez accéder à un service inactif
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/editugroup.php
@@ -97,7 +97,7 @@ project_admin_editugroup	document_group	Groupe de documents
 #
 project_admin_grouptrove	changed_trove	Modifier la catégorisation du projet
 project_admin_grouptrove	g_trove_info	Information sur la catégorisation du projet
-project_admin_grouptrove	select_3_classifs	Veuillez sélectionner jusqu'à trois valeurs pour chaque catégorie de ce projet. Celà permettra aux utilisateurs de trouver rapidement votre projet. Si votre projet n'a pas besoin de toutes les catégories, sélectionner simplement "Aucune sélection".<P>REMARQUES IMPORTANTES: <ul><li>Les projets doivent être classifiés dans la catégorie la plus précise possible de l'arbre des projets.</li><li>Si vous sélectionnez simultanément une catégorie et une sous-catégorie plus spécialisée, seule cette dernière sera retenue.</li><li><em><b>Pour la catégorie Topic (Domaine) seulement</b></em>: Si votre projet ne correspond à aucune des valeurs de la catégorie, sélectionner simplement la valeur "Other/Non Listed Topics" ("Autre/Domaine non défini"). Au fur et à mesure de la soumission de nouveaux projets, l'équipe $1 enrichira la catégorie Topic (Domaine) avec des sous-catégories de 2ème ou de 3ème niveau. Toutes les suggestions à ce sujet sont les bienvenues. Vous pourrez à nouveau modifier cette classification quand vous le souhaitez.</li></ul>
+project_admin_grouptrove	select_3_classifs	Veuillez sélectionner jusqu'à trois valeurs pour chaque catégorie de ce projet. Cela permettra aux utilisateurs de trouver rapidement votre projet. Si votre projet n'a pas besoin de toutes les catégories, sélectionner simplement "Aucune sélection".<P>REMARQUES IMPORTANTES: <ul><li>Les projets doivent être classifiés dans la catégorie la plus précise possible de l'arbre des projets.</li><li>Si vous sélectionnez simultanément une catégorie et une sous-catégorie plus spécialisée, seule cette dernière sera retenue.</li><li><em><b>Pour la catégorie Topic (Domaine) seulement</b></em>: Si votre projet ne correspond à aucune des valeurs de la catégorie, sélectionner simplement la valeur "Other/Non Listed Topics" ("Autre/Domaine non défini"). Au fur et à mesure de la soumission de nouveaux projets, l'équipe $1 enrichira la catégorie Topic (Domaine) avec des sous-catégories de 2ème ou de 3ème niveau. Toutes les suggestions à ce sujet sont les bienvenues. Vous pourrez à nouveau modifier cette classification quand vous le souhaitez.</li></ul>
 project_admin_grouptrove	submit_all_changes	Valider les changements de catégories
 #
 #-----------------------------------------------
@@ -111,7 +111,7 @@ project_admin_history	proj_change_log_msg	<p>Ce journal montre qui a opéré des c
 #
 project_admin_index	invalid_p	Projet invalide
 project_admin_index	p_not_found	Projet introuvable.
-project_admin_index	user_not_removed	L'utilisateur n'a pas été enlevé - Vous ne pouvez enlever un administrateur du projet. Vous devez d'abord lui oter ces droits d'administrateur et, éventuellement, en désigner un autre.
+project_admin_index	user_not_removed	L'utilisateur n'a pas été enlevé - Vous ne pouvez enlever un administrateur du projet. Vous devez d'abord lui ôter ces droits d'administrateur et, éventuellement, en désigner un autre.
 project_admin_index	not_get_atf	Impossible d'obtenir un ArtifactTypeFactory
 project_admin_index	del_tracker_perm_fail	L'annulation des permissions sur l'outil de suivi ($1) a échoué
 project_admin_index	del_user_from_ug_fail	Impossible d'enlever l'utilisateur des ugroups
@@ -181,7 +181,7 @@ project_admin_permissions	ignore_g	- les autres groupes spécifiés sont ignorés
 project_admin_permissions	all_registered_users_added	Tous les utilisateurs enregistrés ont été ajoutés 
 project_admin_permissions	cant_add_ug_reg_users	$1 - ERREUR: le ugroup utilisateurs enregistrés n'a pu être ajouté
 project_admin_permissions	g_nobody_ignored	Groupe 'nobody' ignoré puisque d'autres groupes ont été sélectionnés.
-project_admin_permissions	nobody_has_no_access	Veuillez noter que nobody n'a plus accès à cet objet!
+project_admin_permissions	nobody_has_no_access	Veuillez noter que 'nobody' n'a plus accès à cet objet!
 project_admin_permissions	cant_add_ug	$1 - ERREUR: Impossible d'ajouter le ugroup $2. Etes-vous administrateur de ce service ?
 project_admin_permissions	def_val	(valeurs par défaut)
 project_admin_permissions	perm_update_success	$1 - Permissions mises à jour avec succès
@@ -203,12 +203,12 @@ project_admin_utils	date	Date
 project_admin_utils	no_g_change	Aucun changement effectué sur ce projet
 # ... message for the group_history field_name
 # they do not appear in the code !!!!
-project_admin_utils	approved	Apprové
+project_admin_utils	approved	Approuvé
 project_admin_utils	deleted	Détruit
 project_admin_utils	status	Statut
 project_admin_utils	is_public	Public
 project_admin_utils	type	Type
-project_admin_utils	http_domain	http_domain
+project_admin_utils	http_domain	Domaine http
 project_admin_utils	unix_box	Serveur Unix
 project_admin_utils	project_type	Type de projet
 project_admin_utils	feedback_history	Historique du retour d'information
@@ -228,7 +228,7 @@ project_admin_utils	changed_trove	Modification de la classification
 project_admin_utils	upd_ug	Modification du groupe d'utilisateur $1
 project_admin_utils	del_ug	Destruction du groupe d'utilisateur  $1
 project_admin_utils	changed_member_perm	Modification des permissions des membres
-project_admin_utils	perm_reset_for	Reinitialisation des permissions pour l'utilisateur $1
+project_admin_utils	perm_reset_for	Réinitialisation des permissions pour l'utilisateur $1
 project_admin_utils	perm_granted_for	Permission accordée à l'utilisateur $1
 project_admin_utils	changed_sr_settings	Modification de la configuration des demandes de support
 project_admin_utils	mass_change	Mise à jour massive dans un outil de suivi
@@ -248,7 +248,7 @@ project_admin_utils	perm_granted_for_document	Permission accordée pour le docume
 project_admin_utils	perm_granted_for_docgroup	Permission accordée pour le groupe de documents  $1
 project_admin_utils	perm_granted_for_wiki	Permission accordée pour le wiki $1
 project_admin_utils	perm_granted_for_wikipage	Permission accordée pour la page wiki $1
-project_admin_utils	perm_granted_for_object	Permission accordée pour l'object $1 
+project_admin_utils	perm_granted_for_object	Permission accordée pour l'objet $1 
 #... end of values
 #
 #-----------------------------------------------
@@ -256,7 +256,7 @@ project_admin_utils	perm_granted_for_object	Permission accordée pour l'object $1
 #
 project_admin_servicebar	unavailable	Indisponible
 project_admin_servicebar	disabled	Inactif
-project_admin_servicebar	warning_del_s	*********** AVERTISSEMENT ***********\nVoulez-vous detruire ce service ? Ce faisant le service ($1) ne sera plus accessible à AUCUN des projets hébergés sur ce site. Voulez-vous vraiment continuer ?
+project_admin_servicebar	warning_del_s	*********** AVERTISSEMENT ***********\nVoulez-vous détruire ce service ? Ce faisant le service ($1) ne sera plus accessible à AUCUN des projets hébergés sur ce site. Voulez-vous vraiment continuer ?
 project_admin_servicebar	del_s	Détruire ce service ?
 project_admin_servicebar	del	DETRUIRE
 project_admin_servicebar	s_id_not_given	ECHEC: L'ID du service n'est pas spécifié
@@ -270,7 +270,7 @@ project_admin_servicebar	rank_missed	Le rang est manquant, veuillez cliquer sur 
 project_admin_servicebar	cant_make_s	Impossible de créer un service de portée "système" sans un nom court, veuillez cliquer sur le bouton "Retour" de votre navigateur et remplissez ce champ
 project_admin_servicebar	set_stat_unused	- Statut sur "inutilisé" -
 project_admin_servicebar	short_name_exist	Un service ayant le même nom court existe déjà. Veuillez cliquer sur le bouton "Retour" de votre navigateur et modifier de champ
-project_admin_servicebar	cant_make_system_wide_s	Impossible de créer un service de portée "système" dans un projet autre que le projet 100. Cannot make system-wide service in project other than 100. Veuillez cliquer sur le bouton "Retour" de votre navigateur et modifier de champ
+project_admin_servicebar	cant_make_system_wide_s	Impossible de créer un service de portée "système" dans un projet autre que le projet 100. Veuillez cliquer sur le bouton "Retour" de votre navigateur et modifier le champ
 project_admin_servicebar	cant_create_s	ERREUR - Impossible de créer le service: $1
 project_admin_servicebar	s_create_success	Service créé avec succès
 project_admin_servicebar	s_add_success	- Service ajouté avec succès à $1 projet(s)
@@ -307,7 +307,7 @@ project_admin_ugroup	predef_g	(*) indique un groupe prédéfini
 # Script: SF/www/project/admin/ugroup_utils.php
 #
 project_admin_ugroup_utils	ug__exist	Le groupe d'utilisateurs '$1' existe déjà pour ce projet. Veuillez choisir un autre nom.
-project_admin_ugroup_utils	cant_create_ug	ERREUR - Impossible de créer legroupe d'utilisateurs: $1
+project_admin_ugroup_utils	cant_create_ug	ERREUR - Impossible de créer le groupe d'utilisateurs: $1
 project_admin_ugroup_utils	ug_create_success	Le groupe d'utilisateurs a été créé avec succès
 project_admin_ugroup_utils	ug_created_but_no_id	ERREUR - Le groupe d'utilisateurs a été créé mais impossible d'obtenir l'ID: 
 project_admin_ugroup_utils	no_g_template	- Aucun modèle de groupe sélectionné
@@ -319,8 +319,8 @@ project_admin_ugroup_utils	cant_update_ug	ERREUR - Impossible de mettre à jour l
 project_admin_ugroup_utils	cant_reset_ug	ERREUR - Impossible de réinitialiser le groupe d'utilisateurs $1: $2
 project_admin_ugroup_utils	ug_upd_success	Groupe d'utilisateurs $1 mis à jour avec succès ($2 membres)
 project_admin_ugroup_utils	ug_not_given	ECHEC: l'ID de ugroup ID n'est pas spécifié
-project_admin_ugroup_utils	g_del	Groupe d'utilisateurs détuit
-project_admin_ugroup_utils	cant_remove_u	- Error: Impossiblde d'enlever l'utilisateur! $1
+project_admin_ugroup_utils	g_del	Groupe d'utilisateurs détruit
+project_admin_ugroup_utils	cant_remove_u	- Erreur: Impossible d'enlever l'utilisateur! $1
 project_admin_ugroup_utils	all_u_removed	- Tous les utilisateurs ont été enlevés de ce groupe
 project_admin_ugroup_utils	cant_remove_perm	- Erreur: impossible d'enlever les permissions! $1
 project_admin_ugroup_utils	perm_warning	- AVERTISSEMENT: permissions associées à $1 détruites. <br>Note: Si ce groupe était le seul autorisé à accéder à cet objet, les permissions seront réinitialisées à leurs valeurs par défaut.
@@ -329,11 +329,11 @@ project_admin_ugroup_utils	perm_warning	- AVERTISSEMENT: permissions associées à
 # Script: SF/www/project/admin/userperms.php
 #
 project_admin_userperms	invalid_g	Groupe invalide
-project_admin_userperms	group_not_exist	Cet utilisateur n'exite pas.
+project_admin_userperms	group_not_exist	Cet utilisateur n'existe pas.
 project_admin_userperms	unable_load_p	Impossible de charger l'objet projet
 project_admin_userperms	cannot_remove_admin_stat	Impossible d'enlever le statut Administrateur: le projet a besoin d'au moins un administrateur!
-project_admin_userperms	perm_fail_for	Permissions Failed For $1
-project_admin_userperms	perm_upd	Permissions Updated
+project_admin_userperms	perm_fail_for	Erreur de permissions pour $1
+project_admin_userperms	perm_upd	Permissions mises à jour
 project_admin_userperms	user_name	Nom d'utilisateur
 project_admin_userperms	proj_admin	Admin<BR>projet
 project_admin_userperms	cvs_write	Ecriture CVS
@@ -361,7 +361,7 @@ project_export_artifact_deps_export	tracker_no_longer_valid	Cet outil de suivi n
 project_export_artifact_deps_export	art_deps_export	Exportation des dépendances
 project_export_artifact_deps_export	no_deps_found	Aucune dépendance disponible. Impossible d'exporter des données.
 project_export_artifact_deps_export	db_access_err	Erreur lors de l'accès à la base de données des dépendances. Veuillez informer l'administrateur $1 de cette erreur.
-project_export_artifact_deps_export	deps_export_format	Format d'ecxportation des dépendances
+project_export_artifact_deps_export	deps_export_format	Format d'exportation des dépendances
 project_export_artifact_deps_export	deps_export_format_msg	Le format d'exportation des dépendances comprend les champs suivants. Les valeurs données en exemple indique le type des données.
 project_export_artifact_deps_export	create_proj_err	Erreur à la création de la table $2 pour le projet $1
 project_export_artifact_deps_export	security_violation	VIOLATION DE SECURITE!!! Nom de base de données non autorisé: $1
@@ -380,7 +380,7 @@ project_export_artifact_export	art_export	Exportation des artefacts
 project_export_artifact_export	no_art_found	Aucun artefact pour cet outil de suivi. Impossible d'exporter des données.
 project_export_artifact_export	db_access_err	Erreur lors de l'accès à la base de données des outils de suivi. Veuillez informer l'administrateur $1 de cette erreur.
 project_export_artifact_export	art_exp_format	Format d'exportation des artefacts
-project_export_artifact_export	art_exp_format_msg	Le format d'exporation des artefacts de cet outil de suivi comporte les champs suivants. Les valeurs données en exemple indique le type des données.
+project_export_artifact_export	art_exp_format_msg	Le format d'exportation des artefacts de cet outil de suivi comporte les champs suivants. Les valeurs données en exemple indique le type des données.
 #
 #-----------------------------------------------
 # Script: SF/www/project/export/artifact_history_export.php
@@ -428,13 +428,13 @@ project_export_bug_export	depend_on_bugs_desc	Liste des bus dont celui-ci dépend
 #-----------------------------------------------
 # Script: SF/www/project/export/index.php
 #
-project_export_index	proj_db_success	La base de données de votre projet a été créé avec succès. Vous pouvez maintenant utiliser votre application préférée et accéder à vos données en utilisant le pilot ODBC/JDBC de MySQL installé sur votre ordinateur. Les paramètres de connection à la base de données pour le pilote ODB/JDC sont les suivants:
-project_export_index	export_to_csv_or_db	Les données de votre projet puevent être exportées dans des fichiers texte (format CSV) ou dans une base de données spécifique à laquelle vous pouvez vous connecter depuis votre environnement de travail en utilisant le pilote ODBC/JDBC approprié. Voir l'$1 pour plus d'information.
+project_export_index	proj_db_success	La base de données de votre projet a été créé avec succès. Vous pouvez maintenant utiliser votre application préférée et accéder à vos données en utilisant le pilote ODBC/JDBC de MySQL installé sur votre ordinateur. Les paramètres de connexion à la base de données pour le pilote ODB/JDC sont les suivants:
+project_export_index	export_to_csv_or_db	Les données de votre projet peuvent être exportées dans des fichiers texte (format CSV) ou dans une base de données spécifique à laquelle vous pouvez vous connecter depuis votre environnement de travail en utilisant le pilote ODBC/JDBC approprié. Voir l'$1 pour plus d'information.
 project_export_index	export_to_csv_hdr	Exporter au format texte $1
 project_export_index	export_to_csv_msg	Cliquer sur un des liens ci-dessous pour exporter les données au format texte (CSV format).
 project_export_index	online_help	aide en ligne
 project_export_index	art_data	Données
-project_export_index	history	History
+project_export_index	history	Historique
 project_export_index	dependencies	Dépendences
 project_export_index	legacy	Ancien
 project_export_index	bug_tracker	Suivi de Bug

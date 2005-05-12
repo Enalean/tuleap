@@ -15,7 +15,7 @@
 
 <P>Pour que les utilisateurs puissent trouver votre projet dans l'arbre des projets, vous devez sélectionner les différentes catégories auquel il appartient.
 
-<P>Votre projet ne sera visible dans l'arbre des projets qu'après (1) son approbation and (2) sa catégorisation dans l'arbre des projets que vous definirez dans la page d'administration du projet.
+<P>Votre projet ne sera visible dans l'arbre des projets qu'après (1) son approbation and (2) sa catégorisation dans l'arbre des projets que vous définirez dans la page d'administration du projet.
 
 <P>Après approbation, vous recevrez un e-mail vous invitant à catégoriser au plus vite votre projet. Merci de suivre les instructions qui vous seront données à cette occasion.
 

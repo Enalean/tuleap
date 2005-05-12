@@ -14,9 +14,9 @@
 # Script: SF/www/snippet/add_snippet_to_package.php
 #
 snippet_add_snippet_to_package	submit_snippet	Soumettre un nouvel échantillon
-snippet_add_snippet_to_package	error_v_id_missed	Erreur - snippet_package_version_id manuquant
+snippet_add_snippet_to_package	error_v_id_missed	Erreur - snippet_package_version_id manquant
 snippet_add_snippet_to_package	error_only_creator	Erreur - Seul le créateur d'un paquet peut y ajouter un nouvel échantillon.
-snippet_add_snippet_to_package	error_s_not_exist	Erreur - Cet échnatillon n'exite pas.
+snippet_add_snippet_to_package	error_s_not_exist	Erreur - Cet échantillon n'existe pas.
 snippet_add_snippet_to_package	back	Retour à la page de soumissions
 snippet_add_snippet_to_package	already_added	Erreur - Cet échantillon est déjà dans le paquet.
 snippet_add_snippet_to_package	error_insert	ERREUR LORS DE L"INSERTION D'UNE VERSION DE L'ECHANTILLON!
@@ -25,7 +25,7 @@ snippet_add_snippet_to_package	error_fill_all_info	Erreur - Veuillez retour sur 
 snippet_add_snippet_to_package	add_s	Ajouter un échantillon à un paquet
 snippet_add_snippet_to_package	package	<B>Paquet:</B><BR> $1 - $2
 snippet_add_snippet_to_package	use_add_form	Vous pouvez utiliser ce formulaire plusieurs fois pour ajouter plusieurs échantillons à votre paquet.
-snippet_add_snippet_to_package	add_v_id	Ajouter l'échantillon avec l'indentifiant (ID):
+snippet_add_snippet_to_package	add_v_id	Ajouter l'échantillon avec l'identifiant (ID):
 snippet_add_snippet_to_package	no_s_in_p	Aucun échantillon dans ce paquet pour le moment
 snippet_add_snippet_to_package	s_in_p	Echantillon(s) dans ce paquet:
 snippet_add_snippet_to_package	all_info_complete	Assurez-vous que toutes les informations sont complètes et exactes
@@ -36,12 +36,12 @@ snippet_add_snippet_to_package	all_info_complete	Assurez-vous que toutes les inf
 snippet_addversion	s_uploaded	Echantillon téléchargé
 snippet_addversion	min_max_length	ERREUR - L' échantillon doit être de taille non nulle et d'une taille inférieure à $1 caractères
 snippet_addversion	submit_s	Soumettre une nouvelle version de l'échantillon
-snippet_addversion	post_s	<H1>Soumettre une nouvelle version d'un échantillon</H1><P>Si vous avez modifié cet échantillon, n'hésitez pas à le mettre à jour. De préférence veuillez copier-coller le code directement de façon à ce qu'il soit visibile dans l'archive des échantillons de code. Téléchargez le uniquement si sa taille est importante, s'il est composé de plusieurs fichiers ou que le format n'est pas directement lisible par l'utilisateur.
+snippet_addversion	post_s	<H1>Soumettre une nouvelle version d'un échantillon</H1><P>Si vous avez modifié cet échantillon, n'hésitez pas à le mettre à jour. De préférence veuillez copier-coller le code directement de façon à ce qu'il soit visible dans l'archive des échantillons de code. Téléchargez le uniquement si sa taille est importante, s'il est composé de plusieurs fichiers ou que le format n'est pas directement lisible par l'utilisateur.
 snippet_addversion	version	Version:
 snippet_addversion	upload_s	Télécharger l'échantillon (binaire ou code source)
 snippet_addversion	max_size	(La taille maximum du téléchargement est de $1 Mb)
 snippet_addversion	changes	Changements:
-snippet_addversion	paste_code	Ou copier-coller le code source de léchantillon ici:
+snippet_addversion	paste_code	Ou copier-coller le code source de l'échantillon ici:
 snippet_addversion	s_p_not_exist	Erreur - le snippet_package n'existe pas
 snippet_addversion	error_insert	ERREUR LORS DE L'INSERTION DE LA VERSION DU PAQUET !
 snippet_addversion	submit_p	Créer un nouveau paquet d'échantillons
@@ -65,7 +65,7 @@ snippet_browse	bad_url	Erreur - mauvais URL?
 snippet_browse	no_s_found	Aucun échantillon disponible
 snippet_browse	id	ID
 snippet_browse	title	Titre
-snippet_browse	creator	Createur
+snippet_browse	creator	Créateur
 snippet_browse	p_of_s	Paquet(s) d'échantillons
 snippet_browse	s	Echantillons
 #
@@ -75,7 +75,7 @@ snippet_browse	s	Echantillons
 snippet_delete	delete_s	Détruire des échantillons
 snippet_delete	only_creator_deletes	Erreur - Seul le créateur d'un paquet peut détruire les échantillons qui s'y trouvent.
 snippet_delete	s_not_exist_in_p	Erreur - Cet échantillon n'existe pas dans le paquet.
-snippet_delete	removed	Item Removed From Package
+snippet_delete	removed	Elément supprimé du paquet
 snippet_delete	s_removed	Echantillon détruit
 snippet_delete	only_creator_delete_p	Erreur - Seul le créateur d'un paquet peut le détruire.
 snippet_delete	p_removed	Paquet détruit
@@ -141,6 +141,6 @@ snippet_utils	license	Licence:
 snippet_submit	s_insert_fail	ERREUR LORS DE L'INSERTION DE L'ECHANTILLON!
 snippet_submit	s_add_success	Echantillon créé avec succès.
 snippet_submit	submit_s	Créer un nouvel échantillon	
-snippet_submit	post_s	Vous pouvez poster un nouvel échantillon et le partager avec les autres utilisateurs. <B>Donnez un description détaillée</B> et <B>commenter votre code</B> de façon à ce qu'il soit lisible et compréhensible. De préférence veuillez copier-coller le code directement de façon à ce qu'il soit visibile dans l'archive des échantillons de code. Téléchargez le uniquement si sa taille est importante, s'il est composé de plusieurs fichiers ou que le format n'est pas directement lisible par l'utilisateur.
+snippet_submit	post_s	Vous pouvez poster un nouvel échantillon et le partager avec les autres utilisateurs. <B>Donnez un description détaillée</B> et <B>commenter votre code</B> de façon à ce qu'il soit lisible et compréhensible. De préférence veuillez copier-coller le code directement de façon à ce qu'il soit visible dans l'archive des échantillons de code. Téléchargez le uniquement si sa taille est importante, s'il est composé de plusieurs fichiers ou que le format n'est pas directement lisible par l'utilisateur.
 snippet_submit	note	Note:
 snippet_submit	submit_s_v	Vous pouvez soumettre une nouvelle version d'un paquet existant en parcourant la bibliothèque. Vous ne devriez utiliser cette page que si vous soumettez un échantillon entièrement nouveau.

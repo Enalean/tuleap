@@ -58,7 +58,7 @@
 	<P>';
 	if ( $sys_show_project_type ) {
 		echo '
-		<B>Type de project:</B><BR>
+		<B>Type de projet:</B><BR>
 		'.show_project_type_box('');
 	} else {
 		// Default value

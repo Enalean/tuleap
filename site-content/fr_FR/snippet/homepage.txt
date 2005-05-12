@@ -13,5 +13,5 @@
 	<P>
 	Vous pouvez créer un nouvel échantillon puis poster de nouvelles versions par la suite facilement et rapidement.
 	<P>
-	Une fois vos échantillons postés, vous pourvez aussi les regrouper en créant un "paquet" d'échantillons. Ce paquet peut contenir des versions spécifiques de multiples échantillons.
+	Une fois vos échantillons postés, vous pouvez aussi les regrouper en créant un "paquet" d'échantillons. Ce paquet peut contenir des versions spécifiques de multiples échantillons.
 	<P>

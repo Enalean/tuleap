@@ -47,8 +47,8 @@ stats_site_stats_utils	space_sep_gid	(group_id séparés par des virgules)
 stats_site_stats_utils	days_spanned	Sur les N derniers jours:
 stats_site_stats_utils	all	Tous
 stats_site_stats_utils	view_by	Trié par: 
-stats_site_stats_utils	generate_report	Génerer le rapport
-stats_site_stats_utils	proj_stats_for	Statistiques du project sur
+stats_site_stats_utils	generate_report	Générer le rapport
+stats_site_stats_utils	proj_stats_for	Statistiques du projet sur
 stats_site_stats_utils	all_time	tous les jours
 stats_site_stats_utils	past_x_days	les $1 derniers jours
 stats_site_stats_utils	sorted_by	trié par $1

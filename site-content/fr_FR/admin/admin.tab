@@ -56,7 +56,7 @@ admin_utils	menu	Accueil admin. site
 # Script: SF/www/admin/approve_license.php
 #
 admin_approve_license	title	Termes de la licence $1 - Approbation
-admin_approve_license	msg_accept	Merci d'indiquer si vous acceptez ou non les termes de la licence en choisissant soit l'option "Accepter" ou bien l'otption "Décliner" et en cliquant sur le bouton "Continuer" en bas de page.
+admin_approve_license	msg_accept	Merci d'indiquer si vous acceptez ou non les termes de la licence en choisissant soit l'option "Accepter" ou bien l'option "Décliner" et en cliquant sur le bouton "Continuer" en bas de page.
 admin_approve_license	accept	Accepter
 admin_approve_license	decline	Décliner
 admin_approve_license	continue	Continuer
@@ -68,7 +68,7 @@ admin_approve_license	error	Seuls les administrateurs du site ont accès à cette 
 admin_approve_pending	title	Approbation des projets en attente	
 admin_approve_pending	no_pending	Aucun projet en attente à approuver
 admin_approve_pending	approve	Approuver le projet
-admin_approve_pending	delete	Detruire le projet
+admin_approve_pending	delete	Détruire le projet
 admin_approve_pending	remove_category	Enlever de la catégorie
 admin_approve_pending	approve_all	Tout approuver sur cette page
 #
@@ -81,7 +81,7 @@ admin_approve_pending_users	user_info	Montrer les infos utilisateur / Envoyer un
 admin_approve_pending_users	user_edit	Changer la configuration Utilisateur/Groupe
 admin_approve_pending_users	approve	Approuver le compte
 admin_approve_pending_users	approve_pending	Approuver en compte restreint
-admin_approve_pending_users	delete	Detruire le compte
+admin_approve_pending_users	delete	Détruire le compte
 admin_approve_pending_users	purpose	Motif
 admin_approve_pending_users	other_info	Autre information
 admin_approve_pending_users	name	Nom de l'utilisateur
@@ -89,7 +89,7 @@ admin_approve_pending_users	id	ID utilisateur
 admin_approve_pending_users	email	E-mail utilisateur
 admin_approve_pending_users	reg_date	Date d'enregistrement
 admin_approve_pending_users	approve_all	Tout approuver
-admin_approve_pending_users	approve_all_pending	Tout approuver en comptres restreints
+admin_approve_pending_users	approve_all_pending	Tout approuver en comptes restreints
 #
 #-----------------------------------------------
 # Script: SF/www/admin/groupedit-add.php
@@ -171,7 +171,7 @@ admin_massmail	to_site_admin	Envoyer uniquement aux administrateurs du site
 admin_massmail	to_all	Envoyer à tous les utilisateurs quelles que soient leurs préférences
 admin_massmail	subject	Objet
 admin_massmail	text	Texte du message
-admin_massmail	footer	Taper votre message ici...\n\n---------------------\nCet email est envoyé depuis '$1'. Pour changer vos préférences en matière d'envoi de courrier, veuillez visiter votre page "Gestion de compte".\n\nEnvoyez toutes vos questions à $2 ou répondez à ce message.
+admin_massmail	footer	Taper votre message ici...\n\n---------------------\nCet e-mail est envoyé depuis '$1'. Pour changer vos préférences en matière d'envoi de courrier, veuillez visiter votre page "Gestion de compte".\n\nEnvoyez toutes vos questions à $2 ou répondez à ce message.
 #
 #-----------------------------------------------
 # Script: SF/www/admin/newprojectmail.php
@@ -292,7 +292,7 @@ admin_trove_cat_delete	header	Détruire une catégorie de l'arbre des projets
 admin_trove_cat_delete	warning	<span class="feedback">**ATTENTION**</span> Vous êtes sur le point de détruire une catégorie de l'arbre des projets.
 admin_trove_cat_delete	caution_child	<span class="feedback">**ATTENTION**</span> Cette catégorie possède <b>$1</b> sous-catégorie(s). Sa destruction va aussi entraîner la destruction des sous-catégories de façon récursive!!
 admin_trove_cat_delete	no_child	Cette catégorie n'a pas de sous-catégorie
-admin_trove_cat_delete	caution_proj	<span class="feedback">**ATTENTION**</span> Cette catégorie et ses sous-catégories (si elle en a) sont utilisées par <b>$1 projet(s)</b>. La destruction de cette catégorie entraînera la ré-affectation de tous les projets à la catégorie parent (ou à 'Aucune' si la catégorie parent est la racine de l'arbre)
+admin_trove_cat_delete	caution_proj	<span class="feedback">**ATTENTION**</span> Cette catégorie et ses sous-catégories (si elle en a) sont utilisées par <b>$1 projet(s)</b>. La destruction de cette catégorie entraînera la réaffectation de tous les projets à la catégorie parent (ou à 'Aucune' si la catégorie parent est la racine de l'arbre)
 admin_trove_cat_delete	no_proj	Cette catégorie n'est utilisée par aucun projet
 admin_trove_cat_delete	error_nocat	Cette catégorie n'existe pas
 #-----------------------------------------------

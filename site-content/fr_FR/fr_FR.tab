@@ -19,7 +19,7 @@ conf	language_id	1
 global	perm_denied	Permission Refusée
 global	error_perm_denied	Erreur - Permission Refusée
 global	back_home	Retour à la page d'accueil
-global	back	Back
+global	back	Retour
 global	btn_delete	Détruire
 global	btn_cancel	Annuler
 global	btn_update	Mettre à jour
@@ -51,4 +51,4 @@ global	activate	activer
 global	deactivate	désactiver
 global	Project	Projet
 global	System	Système
-global	Personal	Personel
+global	Personal	Personnel

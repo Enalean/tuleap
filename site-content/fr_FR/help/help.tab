@@ -37,7 +37,7 @@ help_index	page_info	Page d'information
 # Script: SF/www/help/show_help.php
 #
 help_show_help	page_not_found	Système d'aide $1 - Erreur: page introuvable
-help_show_help	page_not_available	<h4>Désolé, la page d'aide que vous avex demandée (section $1) n'est pas disponible.<br> \nMerci d'informer <a href="mailto:$2">l'administrateur du site $3</a></h4>
+help_show_help	page_not_available	<h4>Désolé, la page d'aide que vous avez demandée (section $1) n'est pas disponible.<br> \nMerci d'informer <a href="mailto:$2">l'administrateur du site $3</a></h4>
 #
 #-----------------------------------------------
 # Script: SF/www/help/trove_cat.php

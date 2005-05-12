@@ -48,7 +48,7 @@ account_options	remember_me	"Souviens-toi de moi" <u><i>($1 garde trace de votre
 # Script: SF/www/account/change_email.php
 #
 account_change_email	title	Changer l'adresse e-mail
-account_change_email	message	<P>Le changement d'adress e-mail nécessite une confirmation depuis votre nouvelle adresse e-mail de façon à s'assurer que nous disposons d'une adresse valide. <P>La soumission de ce formulaire déclenchera l'envoi d'un e-mail à votre nouvelle adresse incluant un lien à visiter pour confirmer définitivement le changement.
+account_change_email	message	<P>Le changement d'adresse e-mail nécessite une confirmation depuis votre nouvelle adresse e-mail de façon à s'assurer que nous disposons d'une adresse valide. <P>La soumission de ce formulaire déclenchera l'envoi d'un e-mail à votre nouvelle adresse incluant un lien à visiter pour confirmer définitivement le changement.
 account_change_email	label_new	Nouvelle adresse e-mail
 account_change_email	send_new	Envoyer la confirmation
 #
@@ -57,7 +57,7 @@ account_change_email	send_new	Envoyer la confirmation
 #
 account_change_email-confirm	message	Vous avez demandé a changer votre adresse e-mail en $1.\nMerci de visiter le lien ci-dessous pour confirmer ce changement:\n\n$2\n\n-- L'équipe $1
 account_change_email-confirm	title	Confirmation de changement d'adresse e-mail
-account_change_email-confirm	mailsent	Un courrier électronique vient d'être envoyé à votre nouvelle adresse e-mail. Suivez les instructions fournies dans ce message pour confimer définitivement le changement.
+account_change_email-confirm	mailsent	Un courrier électronique vient d'être envoyé à votre nouvelle adresse e-mail. Suivez les instructions fournies dans ce message pour confirmer définitivement le changement.
 #
 #-----------------------------------------------
 # Script: SF/www/account/change_email-complete.php
@@ -75,7 +75,7 @@ account_change_pw	message	Félicitations! Vous venez de changer votre mot de pass
 account_change_pw	title	Changement du mot de passe
 account_change_pw	old_password	Ancien mot de passe
 account_change_pw	new_password	Nouveau mot de passe
-account_change_pw	new_password2	Nouveau mot de passe (repétez)
+account_change_pw	new_password2	Nouveau mot de passe (répétez)
 #
 #-----------------------------------------------
 # Script: SF/www/account/change_realname.php
@@ -111,29 +111,29 @@ account_editsshkeys	keys	Clés partagées:<BR><I>Important: Assurez vous qu'il n'y
 # Script: SF/www/account/first.php
 #
 account_first	title	Bienvenue sur $1!
-account_first	message	Vous êtes maintenant un utilisateur enregistré sur $1. En tant que tel, vous pouvez participer pleinement à toutes les activités du site Web $1. Vous pouvez utiliser les forums, souscrire à des listes de distributions, naviguer dans la liste des projets herbergés, ou même démarré votre propre projet.<P><center><b><span class="highlight">** REMARQUES IMPORTANTES **</span></b></center><BR>Bien que votre compte Web soit disponible dès maintenant, $1 prendra quelques temps pour créer votre <u>compte shell</u>. Certaines fonctionnalités comme l'accès aux répertoires CVS en dépendent. Votre <u>compte shell</u> sera activé dans approximativement <b>$2</b> heures et <B>$3</B> minutes. <P>Entre temps nouv vous recommandons vivement de parcourir le site, lire la <A href="/docs/site/">document du site</a> et de peaufiner la configuration de votre <a href="/account/">compte utilisateur</a> (définir votre profil de compétendes, vos préférences, etc&hellip;)<P><center><b><span class="highlight">*-*-*-*</span></b></center> <P>Profitez pleinement du site, envvoyez vos suggestions sur les améliorations que nous pourrions apporter et n'oubliez pas de parler de $1 autour de vous. <P>-- L'équipe $1
+account_first	message	Vous êtes maintenant un utilisateur enregistré sur $1. En tant que tel, vous pouvez participer pleinement à toutes les activités du site Web $1. Vous pouvez utiliser les forums, souscrire à des listes de distributions, naviguer dans la liste des projets hébergés, ou même démarrer votre propre projet.<P><center><b><span class="highlight">** REMARQUES IMPORTANTES **</span></b></center><BR>Bien que votre compte Web soit disponible dès maintenant, $1 prendra quelques temps pour créer votre <u>compte shell</u>. Certaines fonctionnalités comme l'accès aux répertoires CVS en dépendent. Votre <u>compte shell</u> sera activé dans approximativement <b>$2</b> heures et <B>$3</B> minutes. <P>Entre temps nous vous recommandons vivement de parcourir le site, lire la <A href="/docs/site/">document du site</a> et de peaufiner la configuration de votre <a href="/account/">compte utilisateur</a> (définir votre profil de compétences, vos préférences, etc&hellip;)<P><center><b><span class="highlight">*-*-*-*</span></b></center> <P>Profitez pleinement du site, envoyez vos suggestions sur les améliorations que nous pourrions apporter et n'oubliez pas de parler de $1 autour de vous. <P>-- L'équipe $1
 #
 #-----------------------------------------------
 # Script: SF/www/account/login.php
 #
-account_login	title	Connection au site
+account_login	title	Connexion au site
 account_login	error_can_t_update_passwd	Erreur interne: mise à jour des mots de passe impossible.
 account_login	pending_title	Compte en attente
-account_login	pending_msg	Votre compte est actuellement en attente de confirmation. En visitant le lien inclus dans le message que vous avez reçu après la phase d'enregistrement, vous activerez votre compte utilisateur. <P>Si vous souhaitez recevoir à nouveau cet e-mail, cliquer sur le bouton ci-dessous et un autre message de confirmation sera envoyé à l'adresse e-mail indiquée lors de votre enregistrement.
+account_login	pending_msg	Votre compte est actuellement en attente de confirmation. En visitant le lien inclus dans le message que vous avez reçu après la phase d'enregistrement, vous activerez votre compte utilisateur. <P>Si vous souhaitez recevoir à nouveau cet e-mail, cliquez sur le bouton ci-dessous et un autre message de confirmation sera envoyé à l'adresse e-mail indiquée lors de votre enregistrement.
 account_login	resend_btn	Renvoyer le message de confirmation
 account_login	cookies	Les "cookies" doivent être autorisés au delà de cette étape
 account_login	name	Nom de login
 account_login	password	Mot de passe
-account_login	stay_ssl	Rester en mode connection sécurisée après la connection<br><em>&nbsp;&nbsp;&nbsp;(vous serez connecté avec un serveur Web sécurisé et tout le traffic réseau avec votre poste de travail sera encrypté).</em>
-account_login	msie_pb	Les utilisateurs de <B>Internet Explorer </B> (avant la version 5.1) peuvent subir des problèmes intermittents avec SSL. Il leur est donc recommandé de quitter le mode sécurisé après la connection. Visitez le site de <A HREF="http://www.microsoft.com/">Microsoft</A> pour plus d'information sur ce problème connu.
+account_login	stay_ssl	Rester en mode connexion sécurisée après la connexion<br><em>&nbsp;&nbsp;&nbsp;(vous serez connecté avec un serveur Web sécurisé et tout le trafic réseau avec votre poste de travail sera crypté).</em>
+account_login	msie_pb	Les utilisateurs de <B>Internet Explorer </B> (avant la version 5.1) peuvent subir des problèmes intermittents avec SSL. Il leur est donc recommandé de quitter le mode sécurisé après la connexion. Visitez le site de <A HREF="http://www.microsoft.com/">Microsoft</A> pour plus d'information sur ce problème connu.
 account_login	login_btn	Se connecter
-account_login	lost_pw	<b><A href="lostpw.php">[Mot de pass perdu ?]</A></b><BR> Si vous avez perdu votre mot de passe n'en créez pas un autre, mais suivez nous et nous vous aiderons à <a href="lostpw.php">vous souvenir de votre mot de passe perdu</a>. Si celà échoue veuillez contacter <a href="mailto:$1"><b>l'administrateur du site $1</b></a>.
+account_login	lost_pw	<b><A href="lostpw.php">[Mot de passe perdu ?]</A></b><BR> Si vous avez perdu votre mot de passe n'en créez pas un autre, mais suivez nous et nous vous aiderons à <a href="lostpw.php">vous souvenir de votre mot de passe perdu</a>. Si cela échoue veuillez contacter <a href="mailto:$1"><b>l'administrateur du site $1</b></a>.
 account_login	create_acct	<b><A HREF="register.php">[Créer un nouveau compte]</A></b><BR> Si vous visitez le site <b>$1</b> pour la première fois vous pouvez créer votre compte dès maintenant ! La création d'un <a href="register.php">nouveau compte</a> ne prend que quelques secondes et vous pourrez ensuite tirer parti de tous les avantages offerts par le site $1.
 #
 #-----------------------------------------------
 # Script: SF/www/account/lostlogin.php
 #
-account_lostlogin	title	Mot de passe pardu
+account_lostlogin	title	Mot de passe perdu
 account_lostlogin	message	Bienvenue, $1. Vous pouvez changer votre mot de passe perdu maintenant.
 account_lostlogin	duplicate_hash	Cette clé de confirmation est présente plus d'une fois dans la base.
 account_lostlogin	invalid_hash	Clé de confirmation invalide.
@@ -152,7 +152,7 @@ account_lostpw-confirm	msg_confirm	<B>Demande de confirmation envoyée</B><P>Un m
 # Script: SF/www/account/lostpw.php
 #
 account_lostpw	title	Mot de passe perdu
-account_lostpw	message	<B>Mot de passe perdu?</B><P>Hé... la perte d'un mot de passe est à prendre au sérieux. Celà peut compromettre la sécurité de votre compte, de vos projets et du site.<P>En cliquant sur le bouton ci-dessous, un message électronique comportant un lien (URL). Dans ce lien se trouve une clé de confirmation unique à 128 bits. En visitant ce lien vous serez en mesure de changer mot de passe puis de vous connecter.
+account_lostpw	message	<B>Mot de passe perdu?</B><P>Hé... la perte d'un mot de passe est à prendre au sérieux. Cela peut compromettre la sécurité de votre compte, de vos projets et du site.<P>En cliquant sur le bouton ci-dessous, un message électronique comportant un lien (URL). Dans ce lien se trouve une clé de confirmation unique à 128 bits. En visitant ce lien vous serez en mesure de changer mot de passe puis de vous connecter.
 account_lostpw	send_hash	Envoyer la clé pour le mot de passe perdu
 #
 #-----------------------------------------------
@@ -173,7 +173,7 @@ account_pending-resend	notpending	Ce compte utilisateur n'est pas en attente de 
 #
 account_pending	title	Compte utilisateur en attente
 account_pending	message	<B>Compte utilisateur en attente</B><P>Votre compte est actuellement en attente de confirmation. Visitez le lien inclus dans le message qui vous a été envoyé pour activer votre compte utilisateur. <P>Si vous voulez que ce message soit envoyé à nouveau, merci de cliquer sur le bouton ci-dessous et un autre message de confirmation sera envoyé à l'adresse e-mail de votre compte.
-account_pending	btn_resend	Réenvoyer le message de confirmation
+account_pending	btn_resend	Envoyer à nouveau le message de confirmation
 #
 #-----------------------------------------------
 # Script: SF/www/account/register.php
@@ -189,12 +189,12 @@ account_register	err_name	Le nom de login est invalide
 account_register	err_invpasswd	Le mot de passe est invalide
 account_register	err_no_ldap	Le login LDAP est manquant
 account_register	title_confirm	Confirmation de création de compte
-account_register	title	Création d'un nouveau compte utlisateur
+account_register	title	Création d'un nouveau compte utilisateur
 account_register	login	Nom de login
 account_register	ldap_login	Nom de login LDAP
-account_register	ldap_unix_login	Nom CodeX <strong>(ninuscules uniquement, pas d'espace)</strong>
+account_register	ldap_unix_login	Nom CodeX <strong>(minuscules uniquement, pas d'espace)</strong>
 account_register	ldap_email_help	<em><strong>Remarque:</strong> Cette adresse e-mail provient de l'annuaire LDAP. Merci de ne pas la modifier.</em>
-account_register	codex_login_help	Ce nom de login a été généré à partir de votre adresse email. Vous pouvez le changer si vous le souhaitez.
+account_register	codex_login_help	Ce nom de login a été généré à partir de votre adresse e-mail. Vous pouvez le changer si vous le souhaitez.
 account_register	login_directions	<strong>(minuscules uniquement!)</strong>
 account_register	passwd	Mot de passe
 account_register	passwd_directions	(6 caractères minimum)	

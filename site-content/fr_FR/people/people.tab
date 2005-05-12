@@ -16,7 +16,7 @@
 people_admin_index	insert_error	Erreur lors de l'insertion de la valeur
 people_admin_index	category_inserted	Catégorie ajoutée
 people_admin_index	skill_inserted	Compétence ajoutée
-people_admin_index	bug_cat_modif_error	Erreur lors de la modification de la categorie du bug
+people_admin_index	bug_cat_modif_error	Erreur lors de la modification de la catégorie du bug
 people_admin_index	bug_cat_modified	Catégorie du bug modifiée
 people_admin_index	add_people_skills	Ajouter/Modifier des compétences
 people_admin_index	existing_skills	Compétences existantes

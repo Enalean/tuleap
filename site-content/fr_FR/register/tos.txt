@@ -92,7 +92,7 @@ de ceux-ci) par cet utilisateur. </p>
 <p>Chaque utilisateur reçoit un mot de passe et la désignation de son
 compte à la fin du processus d'enregistrement et il/elle est
 entièrement responsable du maintien de la confidentialité de ces
-informations et totalement resposables des activitiés se déroulant
+informations et totalement responsables des activités se déroulant
 sous ce compte utilisateur. <?php print $GLOBALS['sys_name']; ?> ne
 peut être tenu pour responsable des pertes ou dommages de données
 consécutives aux manquements de l'utilisateur à ces règles, y compris
@@ -108,13 +108,13 @@ travail.</p>
 </p>
 
 <p> Toute information, donnée, texte, logiciel, musique, son,
-photographie, graphique, video, message ou tout autre contenu
-quelqu'il soit (appelé collectivement "contenu"), publié publiquement
+photographie, graphique, vidéo, message ou tout autre contenu
+quel qu'il soit (appelé collectivement "contenu"), publié publiquement
 ou transmis de façon privée, est sous la seule responsabilité de la
-personne qui est à l'origine de la diffusion de ce contenu. Celà
+personne qui est à l'origine de la diffusion de ce contenu. Cela
 signifie que l'utilisateur, et non l'équipe <?php print
 $GLOBALS['sys_name']; ?>, est entièrement responsable de l'ensemble du
-contenu téléchargé, posté, envoyé par email ou par tout autre moyen
+contenu téléchargé, posté, envoyé par e-mail ou par tout autre moyen
 vers <?php print $GLOBALS['sys_name']; ?>. Aucun utilisateur ne doit
 transmettre de contenu ou conduire ou participer à aucune activité sur
 <?php print $GLOBALS['sys_name']; ?> et ses services qui, au regard de
@@ -132,10 +132,10 @@ des CGU ou à caractère illégal. L'équipe <?php print $GLOBALS['sys_name'];
 ?> ne contrôle pas le contenu posté via les services et ne garantit
 donc pas l'exactitude, l'intégrité ou la qualité de ce contenu. En
 aucune circonstance, l'équipe <?php print $GLOBALS['sys_name']; ?> ne
-pourra être tenue pour responable du contenu, y compris, mais non
+pourra être tenue pour responsable du contenu, y compris, mais non
 limité à, la responsabilité pour toute erreur ou omission ou pour
 toute perte ou dommage de toute sorte résultant de l'utilisation de
-contenu posté, envoyé par email ou publié de tout autre façon via
+contenu posté, envoyé par e-mail ou publié de tout autre façon via
 <?php print $GLOBALS['sys_name']; ?> ou ses services.  </p>
 
 
@@ -151,12 +151,12 @@ fasse son possible pour sauvegarder les données du site et mettre
 cette sauvegarde à disposition en cas de perte ou de destruction, elle
 ne peut être tenue pour responsable de la destruction ou de
 l'impossibilité de stocker un message ou tout autre forme de
-communication ou contenu maintenu ou tranmis par un service. L'équipe
+communication ou contenu maintenu ou transmis par un service. L'équipe
 <?php print $GLOBALS['sys_name']; ?> se réserve le droit de désactiver
 et d'archiver les comptes utilisateurs et projets qui demeurent
 inactifs durant une longue période.  L'équipe <?php print
 $GLOBALS['sys_name']; ?> se réserve le droit de modifier ces pratiques
-générales et les règles spéficiques d'utilisation des services à tout
+générales et les règles spécifiques d'utilisation des services à tout
 moment, à sa seule discrétion, en notifiant les utilisateurs comme
 décrit dans la section 1 ci-dessus.
 </p>
@@ -189,7 +189,7 @@ résiliation d'un accès utilisateur ou d'un compte.  </p>
 </p>
 
 <p>
-Veuillez informer <a href="/contact.php">l'équipe <?php print $GLOBALS['sys_name']; ?></a> de toute violation des CGU, toute violiation alléguée de copyright ou de tout autre sujet.
+Veuillez informer <a href="/contact.php">l'équipe <?php print $GLOBALS['sys_name']; ?></a> de toute violation des CGU, toute violation alléguée de copyright ou de tout autre sujet.
 </p>
 
 

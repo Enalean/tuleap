@@ -34,7 +34,7 @@ forum_admin_index	change_status	Changer le statut du forum
 forum_admin_index	forum_not_found	Forum introuvable
 forum_admin_index	none_found_for_group	Aucun forum pour ce projet
 forum_admin_index	update_f_status	Mettre à jour le statut du forum
-forum_admin_index	private_explain	Vous pouvez rendre un forum privé. veullez noter que les forums privés ne sont visibles que pour les membres du projet.
+forum_admin_index	private_explain	Vous pouvez rendre un forum privé. veuillez noter que les forums privés ne sont visibles que pour les membres du projet.
 forum_admin_index	forum	Forum
 forum_admin_index	status	Statut
 forum_admin_index	update	Valider
@@ -43,13 +43,13 @@ forum_admin_index	forum_admin	Administration des forums
 forum_admin_index	add_forum	Ajouter un forum
 forum_admin_index	del_msg	Détruire un message
 forum_admin_index	update_forum_status	Mettre à jour les infos et le statut du forum
-forum_admin_index	params_missing	Nom ou description du forum manquant, veuillez appuyez sur le bouton "Retour" de votre navigateur et completer ces informations
+forum_admin_index	params_missing	Nom ou description du forum manquant, veuillez appuyez sur le bouton "Retour" de votre navigateur et compléter ces informations
 #
 #-----------------------------------------------
 # Script: SF/www/forum/expand.php
 #
 forum_expand	expand_threads	Déplier/Replier les fils de discussions
-forum_expand	prefs	Préference mise à jour
+forum_expand	prefs	Préférence mise à jour
 forum_expand	now_expand	Les fils de discussions seront désormais dépliés
 forum_expand	now_collaps	Les fils de discussions seront désormais repliés
 #
@@ -60,7 +60,7 @@ forum_forum	by	De
 forum_forum	reply	répondre
 forum_forum	forum_restricted	Forum restreint
 forum_forum	no_msg	Aucun message dans $1
-forum_forum	nested	Hierarchisé
+forum_forum	nested	Hiérarchisé
 forum_forum	flat	A plat
 forum_forum	threaded	En fils de discussions
 forum_forum	no_comments	Sans message
@@ -102,7 +102,7 @@ forum_forum_utils	no_folowup_id	Identifiant de fil de discussion manquant pour u
 forum_forum_utils	insert_fail	L'insertion a échoué
 forum_forum_utils	post_failed	L'envoi du message a échoué
 forum_forum_utils	msg_posted	Message posté
-forum_forum_utils	could_post_if_logged	Vous pourries poster un message si vous êtiez connecté
+forum_forum_utils	could_post_if_logged	Vous pourriez poster un message si vous étiez connecté
 forum_forum_utils	msg	Message
 forum_forum_utils	subj	Sujet
 forum_forum_utils	html_displays_as_text	Les balises HTML seront affichées sous forme de texte dans vos messages

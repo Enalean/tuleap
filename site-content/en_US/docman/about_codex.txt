@@ -33,4 +33,4 @@ href="/docman/display_doc.php?docid=16&group_id=1">read it</a>. <P>
 
 <p>We thank you for your support!</P>
 
-<p>The <a href="/staff.php"><?php print $GLOBALS['sys_name']; ?> Team</a>.</p>
+<p>The <?php print $GLOBALS['sys_name']; ?> Team.</p>

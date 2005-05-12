@@ -33,7 +33,7 @@ Guide Utilisateur) est disponible sous le lien "Documentation site" que vous tro
 Nous vous invitons maintenant à visiter la page de sommaire de votre
 projet sur '.get_server_url().'/projects/'.$row_grp['unix_group_name'].',
  à créer une description courte de votre projet et à le classer dans
-l'arbre des projets. Tout celà s'avèrera très utiles aux utilisateurs
+l'arbre des projets. Tout cela s'avèrera très utiles aux utilisateurs
 du site '.$GLOBALS['sys_name'].'.
 
 Une fois sur la page de sommaire de votre projet vous trouverez un lien
@@ -53,11 +53,11 @@ résolvions ce problème.
 
 - Veuillez aussi noter que la propagation des noms de serveurs
 listés ci-dessus aux serveurs de nom de domaine de '. $GLOBALS['sys_org_name']. '
-peut prendre jusqu'à une journée. Si vous êtes préssé d'utiliser
+peut prendre jusqu'à une journée. Si vous êtes pressé d'utiliser
 vos comptes shell, CVS ou subversion vous pouvez utiliser les
 serveurs génériques '. $GLOBALS['sys_shell_host']. ' et '. $GLOBALS['sys_cvs_host'].'.
 
-- Remarque: si vous possédez déjà un dêpot CVS ou subversion
+- Remarque: si vous possédez déjà un dépôt CVS ou subversion
 l'équipe '.$GLOBALS['sys_name'].' est en mesure de le transférer
 tel quel sur le site. N'hésitez pas à la contacter pour connaître
 la marche à suivre.

@@ -26,7 +26,7 @@ file_admin_editpackages	p_name_exists	Ce nom de paquet existe déjà. Veuillez cho
 file_admin_editpackages	cannot_hide	Désolé, vous ne pouvez pas cacher un paquet qui contient des versions actives. Veuillez d'abord cacher ces versions.
 file_admin_editpackages	p_updated	Paquet mis à jour avec succès
 file_admin_editpackages	perm_update_err	Erreur: la mise à jour des permissions a échoué
-file_admin_editpackages	perm_reset_err	Erreur: la réinitialisation des permissions a échoué
+file_admin_editpackages	perm_reset_err	Erreur: la ré-initialisation des permissions a échoué
 file_admin_editpackages	perm_reset	Permissions réinitialisées à leur valeurs par défaut
 file_admin_editpackages	p_added	Paquet ajouté
 file_admin_editpackages	release_edit_f_rel	Création/Modification d'une version
@@ -101,7 +101,7 @@ file_admin_editreleases	upload_or_paste	Vous pouvez soit télécharger les notes e
 file_admin_editreleases	paste	Copier/coller les notes et modifications
 file_admin_editreleases	upload_change	Télécharger les modifications
 file_admin_editreleases	upload_notes	Télécharger les notes
-file_admin_editreleases	max_file_size	(Taille maximum de téléchargement: $1 Moctets)
+file_admin_editreleases	max_file_size	(Taille maximum de téléchargement: $1 MOctets)
 file_admin_editreleases	release_notes	Notes
 file_admin_editreleases	change_log	Modifications
 file_admin_editreleases	preserve_preformatted	Préserver le pré-formattage du texte.
@@ -146,7 +146,7 @@ file_admin_index	file_manager_admin	Administration du gestionnaire de fichiers
 file_admin_index	edit_release_files	Création/modification de versions
 file_admin_index	manage_explain	Créer ou modifier des paquets et versions, leur statut et les permissions d'accès.
 file_admin_index	quick_add	Création de version rapide
-file_admin_index	quick_add_explain	Spécifier en une seule étape toutes les informations nécessaires à la création d'une version. La contre-partie est que vous ne pouvez initialement attacher qu'un seul fichier à cette version et non pas plusieurs comme dans le processus complet (voir ci-dessus).
+file_admin_index	quick_add_explain	Spécifier en une seule étape toutes les informations nécessaires à la création d'une version. La contrepartie est que vous ne pouvez initialement attacher qu'un seul fichier à cette version et non pas plusieurs comme dans le processus complet (voir ci-dessus).
 #
 #-----------------------------------------------
 # Script: SF/www/file/admin/qrs.php
