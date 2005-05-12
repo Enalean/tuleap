@@ -12,7 +12,7 @@ $Language->loadLanguageMsg('docman/docman');
 
 $HTML->header(array(title=>$Language->getText('docs_site_about','title', array($GLOBALS['sys_name']))));
 
-include(util_get_content('docman/about_codex'));
+include($Language->getContent('docman/about_codex'));
 
 $HTML->footer(array());
 

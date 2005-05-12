@@ -321,7 +321,8 @@ if( $submit ) {
 	if (!$atleastone) {
 		print '<h3>'.$Language->getText('file_admin_editreleases','no_available_files').'</H3>
 			<P>';
-	include(util_get_content('file/qrs_attach_file'));
+	global $Language;
+	include($Language->getContent('file/qrs_attach_file'));
 
 	}
         echo '<P>

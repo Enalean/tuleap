@@ -72,7 +72,7 @@ function register_valid($confirm_hash)	{
         }
 
         // You may add LDAP checking in this site-content file (e.g. user suspended, etc.)
-        include(util_get_content('account/register_ldap_check_account'));
+        include($Language->getContent('account/register_ldap_check_account'));
 
 
     } else {
@@ -219,7 +219,7 @@ function display_filled_ldap_account_form($register_error) {
         // The following script can set the following variables:
         // $form_loginname, $form_realname, $form_email, $timezone
         
-        include(util_get_content('account/register_ldap_get_data'));
+        include($Language->getContent('account/register_ldap_get_data'));
         //$timezone=account_compute_timezone_from_co($info[0]['co'][0]);
 
     }
