@@ -133,6 +133,7 @@ project_admin_index	patch_admin	Administration du gestionnaire de corrections
 project_admin_index	lists_admin	Administration des listes de diffusion
 project_admin_index	task_admin	Administration gestionnaire de tâches
 project_admin_index	doc_admin	Administration de la documentation
+project_admin_index	wiki_admin	Administration du wiki
 project_admin_index	survey_admin	Administration des enquêtes
 project_admin_index	news_admin	Administration des annonces
 project_admin_index	cvs_admin	Administration de CVS

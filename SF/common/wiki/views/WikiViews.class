@@ -20,24 +20,7 @@
  * along with CodeX; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-require_once($_SERVER['DOCUMENT_ROOT'].'/../common/mvc/Views.class');
-
-/**
- * Temp function for debug
- */
-function exit_wiki_debug() {
-	GLOBAL $HTML;
-	$HTML->header(array('title'=>'Exiting with Error'));
-	print '<H2><span class="feedback">Wiki service Beta</span></H2><P>The Wiki service of CodeX is currently a beta version.';
-	print '<p>If you want to help us to validate it, you can:</p>';
-	print '<ul>';
-	print '<li>Play with the wiki in the <a href="https://codex.cro.st.com/wiki/?group_id=101">GuineaPig</a> project.</li>';
-	print '<li>Request us to enable the wiki for your project. Use <a href="https://codex.cro.st.com/tracker/?atid=153&group_id=1&func=browse">Codex request tracker</a>.</li>';
-	print '<li>Read the current <a href="https://codex.cro.st.com/wiki/index.php?group_id=1&pagename=WikiStatus">status</a> of the Wiki service under CodeX.</li>';
-	print '</ul>';
-	$HTML->footer(array());
-	exit;
-}
+require_once('common/mvc/Views.class');
 
 function exit_wiki_empty() {
 	GLOBAL $HTML;

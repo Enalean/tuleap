@@ -1,0 +1,71 @@
+Date: Sun, 10 Feb 2002 19:47:46 +0100
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.2-jeffs-hacks)
+X-Rcs-Id: $Id$
+Content-Type: application/x-phpwiki;
+  pagename=URLMagiquesPhpWiki;
+  flags=PAGE_LOCKED;
+  pgsrc_version="2 $Revision$";
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+!!! À propos des URL phpwiki:
+
+Un type spécial d'URL est disponible pour créer des liens permettant de réaliser
+des tâches administratives ou particulières dans PhpWiki. Voici une brève description de leur
+fonctionnement.
+
+La syntaxe de base d'un URL phpwiki: est
+  __phpwiki:__''nomdelapage''__?__''arguments''
+
+Si ''nomdelapage'' est omis, sa valeur par défaut est la page courante.
+
+''arguments'' doit être un ensemble de paramètres au format standard
+HTTP GET.
+
+Le paramètre "action=''x''" doit presque toujours être donné. Il peut valoir
+__browse__, __info__, __diff__, __search__, __edit__,
+__zip__, __dumpserial__, __loadserial__,
+__remove__, __lock__, __unlock__,
+__login__, __logout__, __setprefs__ ou __save__.
+L'action par défaut est __browse__.
+
+Certaines actions acceptent d'autres paramètres.
+
+;__info__: accepte __showpagesource__.
+;__search__: accepte __searchterm__, et __searchtype__.
+;__edit__: accepte __version__.
+;__remove__: accepte __verify__.
+;__save__: accepte __editversion__, __minor_edit__, et  __content__.
+;__setprefs__: accepte __edit_area_width__, __edit_area_height__.
+
+
+!! Rédiger des liens Magiques dans les pages du Wiki
+
+Un lien magique a cette allure :
+
+  __[[__ ''texte'' __|__ ''url-phpwiki'' __]__
+
+Le "''texte'' __|__" est optionnel mais est habituellement recommandé.
+S'il est donné, il fournira le label du lien.
+
+L' ''url-phpwiki'' est un URL __phpwiki:__ tel que décrit plus haut.
+
+!Quelques exemples
+
+  [[ Éditer le !BacASable | phpwiki:!BacASable?action=edit ]
+générera un lien qui vous emmènera directement à l'édition du [BacASable], comme ceci :
+[ Éditer le BacASable | phpwiki:BacASable?action=edit ].
+
+Autres possibilités :
+* [ Diff du BacASable | phpwiki:BacASable?action=diff ],
+* [ Verrouiller l'Accueil | phpwiki:Accueil?action=lock ],
+* [ Obtenir un vidage Zip complet | phpwiki:?action=zip&include=all ],
+* [ Titres de page contenant 'wiki' | phpwiki:RechercheParTitre?s=wiki ],
+
+!! Insertion de Formulaires Magiques dans les Pages du Wiki
+
+Les formulaires magiques ne sont plus supportés. Ils ont été remplacés
+par <''''?plugin-form?>s (pour les recherches de texte) et par le WikiFormPlugin
+(pour le téléchargement de fichiers, etc.)
+----
+DocumentationDePhpWiki

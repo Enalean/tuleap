@@ -67,7 +67,7 @@ admin_approve_license	error	Seuls les administrateurs du site ont accès à cette 
 #
 admin_approve_pending	title	Approbation des projets en attente	
 admin_approve_pending	no_pending	Aucun projet en attente à approuver
-admin_approve_pending	approve	Approver le projet
+admin_approve_pending	approve	Approuver le projet
 admin_approve_pending	delete	Detruire le projet
 admin_approve_pending	remove_category	Enlever de la catégorie
 admin_approve_pending	approve_all	Tout approuver sur cette page
@@ -79,8 +79,8 @@ admin_approve_pending_users	title	Approbation des comptes utilisateur en attente
 admin_approve_pending_users	no_pending	Aucun compte utilisateur en attente d'approbation
 admin_approve_pending_users	user_info	Montrer les infos utilisateur / Envoyer un e-mail
 admin_approve_pending_users	user_edit	Changer la configuration Utilisateur/Groupe
-admin_approve_pending_users	approve	Approver le compte
-admin_approve_pending_users	approve_pending	Approver en compte restreint
+admin_approve_pending_users	approve	Approuver le compte
+admin_approve_pending_users	approve_pending	Approuver en compte restreint
 admin_approve_pending_users	delete	Detruire le compte
 admin_approve_pending_users	purpose	Motif
 admin_approve_pending_users	other_info	Autre information
@@ -89,7 +89,7 @@ admin_approve_pending_users	id	ID utilisateur
 admin_approve_pending_users	email	E-mail utilisateur
 admin_approve_pending_users	reg_date	Date d'enregistrement
 admin_approve_pending_users	approve_all	Tout approuver
-admin_approve_pending_users	approve_all_pending	Tout approver en comptres restreints
+admin_approve_pending_users	approve_all_pending	Tout approuver en comptres restreints
 #
 #-----------------------------------------------
 # Script: SF/www/admin/groupedit-add.php

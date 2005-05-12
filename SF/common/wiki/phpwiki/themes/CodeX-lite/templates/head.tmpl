@@ -27,12 +27,10 @@
        */ ?>
 <?php /* The next few lines are wrapped in an odd manner to allow gettext string extraction: cd locale;make */ ?>
 <link rel="home" title="<?=HOME_PAGE?>" href="<?=WikiURL(HOME_PAGE)?>" />
-<link rel="help" title="<?=_("HowToUseWiki")?>" href="<?=WikiURL(
-_("HowToUseWiki"))?>" />
+<link rel="help" title="<?=_("HowToUseWiki")?>" href="<?=WikiURL(_("HowToUseWiki"))?>" />
 <link rel="copyright" title="<?=COPYRIGHTPAGE_TITLE?>" href="<?=COPYRIGHTPAGE_URL?>" />
 <link rel="author" title="<?=AUTHORPAGE_TITLE?>" href="<?=AUTHORPAGE_URL?>" />
-<link rel="search" title="<?=_("FindPage")?>" href="<?=WikiURL(
-_("FindPage"))?>" />
+<link rel="search" title="<?=_("FindPage")?>" href="<?=WikiURL(_("FindPage"))?>" />
 <?php /**
        * Provide alternate variations of the page content:
        * 'viewsource' and 'browse'.
@@ -64,22 +62,18 @@ _("FindPage"))?>" />
        */ ?>
 <?php if (!$user->isSignedIn()) {
       /* For users not signed in */ ?>
-<link rel="bookmark" title="<?=_("SandBox")?>" href="<?=WikiURL(
-_("SandBox"))?>" />
-<link rel="bookmark" title="<?=_("WikiWikiWeb")?>" href="<?=WikiURL(
-_("WikiWikiWeb"))?>" />
+<link rel="bookmark" title="<?=_("SandBox")?>" href="<?=WikiURL(_("SandBox"))?>" />
+<link rel="bookmark" title="<?=_("WikiWikiWeb")?>" href="<?=WikiURL(_("WikiWikiWeb"))?>" />
 <?php } ?>
 
 <?php if ($user->isadmin()) {
       /* Only for the Administrator */ ?>
-<link rel="bookmark" title="<?=_("PhpWikiAdministration")?>" href="<?=WikiURL(
-_("PhpWikiAdministration"))?>" />
+<link rel="bookmark" title="<?=_("PhpWikiAdministration")?>" href="<?=WikiURL(_("PhpWikiAdministration"))?>" />
 <?php } ?>
 
 <?php if ($user->isSignedIn()) {
       /* For signed-in users */ ?>
-<link rel="bookmark" title="<?=_("UserPreferences")?>" href="<?=WikiURL(
-_("UserPreferences"))?>" />
+<link rel="bookmark" title="<?=_("UserPreferences")?>" href="<?=WikiURL(_("UserPreferences"))?>" />
 <?php /* User's calendar page
        */
       $UserCalPageTitle = $user->getId() . SUBPAGE_SEPARATOR ._("Calendar");
@@ -112,6 +106,12 @@ _("UserPreferences"))?>" />
 <?php
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -                         
 // $Log$
+// Revision 1.2  2005/05/12 10:08:07  guerin
+// 2nd major commit for Wiki integration:
+// - use localisation from phpWiki
+// - changed wiki creation process
+// - fixed a few other minor issues.
+//
 // Revision 1.1  2005/04/12 13:33:40  guerin
 // First commit for wiki integration.
 // Added Manuel's code as of revision 13 on Partners.

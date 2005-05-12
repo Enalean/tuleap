@@ -41,6 +41,7 @@ if (isset($location) && $location) {
 }   
 
 $sys_datefmt = "Y-M-d H:i";
+$feedback=''; // Initialize global var
 
 //library to determine browser settings
 require_once('browser.php');

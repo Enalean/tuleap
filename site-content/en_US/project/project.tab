@@ -133,6 +133,7 @@ project_admin_index	patch_admin	Patch Admin
 project_admin_index	lists_admin	Lists Admin
 project_admin_index	task_admin	Task Manager Admin
 project_admin_index	doc_admin	DocManager Admin
+project_admin_index	wiki_admin	Wiki Admin
 project_admin_index	survey_admin	Survey Admin
 project_admin_index	news_admin	News Admin
 project_admin_index	cvs_admin	CVS Admin

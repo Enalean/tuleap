@@ -21,7 +21,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once($_SERVER['DOCUMENT_ROOT'].'/../common/mvc/Controler.class');
+require_once('common/mvc/Controler.class');
 require_once(dirname(__FILE__).'/actions/WikiServiceAdminActions.class');
 require_once(dirname(__FILE__).'/views/WikiServiceAdminViews.class');
 
@@ -34,8 +34,10 @@ require_once(dirname(__FILE__).'/views/WikiServiceAdminViews.class');
  * @license    http://opensource.org/licenses/gpl-license.php GPL
  */
 class WikiServiceAdmin extends Controler {
+  /* private Wiki*/ var $wiki;
   
   function WikiServiceAdmin($id) {
+    global $LANG;
     $this->gid = (int) $id;
     
     if(empty($this->gid)) 
@@ -43,6 +45,20 @@ class WikiServiceAdmin extends Controler {
 
     if(!user_ismember($this->gid, 'W2'))
       exit_permission_denied();
+
+    $this->wiki = new Wiki($this->gid);
+
+    // If Wiki for project doesn't exist, propose creation...
+    if(!$this->wiki->exist()) {
+	header('Location: /wiki/index.php?group_id='.$this->gid.'&view=install');
+    }
+
+    // Set language for phpWiki
+    if ($this->wiki->getLanguage_id()) {
+        define('DEFAULT_LANGUAGE',language_id_to_language_code($this->wiki->getLanguage_id()));
+        $LANG=language_id_to_language_code($this->wiki->getLanguage_id());
+    }
+
   }
 
   function request() {

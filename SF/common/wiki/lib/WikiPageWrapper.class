@@ -121,7 +121,6 @@ class WikiPageWrapper {
 
     IniConfig(PHPWIKI_DIR."/config/config.ini");
     ini_set('include_path', PHPWIKI_DIR.':'.ini_get('include_path'));
-
     include(PHPWIKI_DIR."/lib/main.php");
   }
 
@@ -133,10 +132,12 @@ class WikiPageWrapper {
       if(!user_is_super_user()) {
 	exit_error('Error', 'This operation require "admin" rights');
       }
-      define('WIKI_PGSRC', dirname(__FILE__).'/../codexpgsrc');
+      define('WIKI_PGSRC', 'codexpgsrc');
+      define('DEFAULT_WIKI_PGSRC', PHPWIKI_DIR.'/codexpgsrc');
     }
     else {
-      define('WIKI_PGSRC', dirname(__FILE__).'/../projectpgsrc');
+      define('WIKI_PGSRC', 'projectpgsrc');
+      define('DEFAULT_WIKI_PGSRC', PHPWIKI_DIR.'/codexpgsrc');
     }
 
     $this->render();

@@ -35,13 +35,8 @@ require_once('www/project/admin/permissions.php');
  * @license   http://opensource.org/licenses/gpl-license.php GPL
  */
 class Wiki {
-  /** 
-   * Project identifier 
-   *
-   * @access private
-   * @var    int
-   */ 
-  var $gid;
+  /* private int */ var $gid;
+  /* private int */ var $language_id;
 
   /**
    * WikiSericeModel - Constructor
@@ -70,7 +65,7 @@ class Wiki {
    */
   function isAutorized($uid) {
     if($this->permissionExist()) {
-      return permission_is_authorized('WIKI_READ', $this->gid, $uid);
+        return permission_is_authorized('WIKI_READ', $this->gid, $uid, $this->gid);
     }
     return true;
   }
@@ -93,6 +88,18 @@ class Wiki {
 
  
   /**
+   * Reset access permissions.
+   *
+   * @return boolean  Modification status
+   */
+  function resetPermissions() {
+    return permission_clear_all($this->gid, 
+                                'WIKI_READ', 
+                                $this->gid);
+  }
+
+ 
+  /**
    * Check WikiEntry existance for given project.
    * @return boolean
    */
@@ -105,6 +112,41 @@ class Wiki {
     else
       return false;
   }
+
+  /**
+   * Get number of wiki pages.
+   * @return number of pages (0 if wiki is empty)
+   */
+  function getPageCount() {
+    $res = db_query(' SELECT count(*) as count'
+		    .' FROM wiki_page, wiki_nonempty'
+		    .' WHERE wiki_page.group_id="'.$this->gid.'"'
+		    .' AND wiki_nonempty.id=wiki_page.id');
+    
+    if(db_numrows($res) > 0) 
+      return db_result($res,0,'count');
+    else
+      return 0;
+  }
+
+  /** 
+   * Get wiki language (set at creation time)
+   * return 0 if no wiki document exist
+   */
+  function getLanguage_id() {
+      // The language of the wiki is the language of all its wiki documents.
+      if (!$this->language_id) {
+          // We only support one language for all the wiki documents of a project.
+          $wem = new WikiEntryManager($this->gid);
+          $wem->getList();
+          if ($wem->count()) {
+              $we = $wem->iterate(); // get first element  
+              $this->language_id = $we->getLanguage_id();
+          }
+      }
+      return $this->language_id;
+  }
+
 
   /**
    * Experimental

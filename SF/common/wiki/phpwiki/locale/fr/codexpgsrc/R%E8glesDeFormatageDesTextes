@@ -1,0 +1,110 @@
+Date: Thu, 28 Mar 2002 14:57:00 -0500
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.2-jeffs-hacks)
+X-Rcs-Id: $Id$
+Content-Type: application/x-phpwiki;
+  pagename=R%E8glesDeFormatageDesTextes;
+  flags=PAGE_LOCKED;
+  pgsrc_version="2 $Revision$";
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+! Vue d'ensemble
+RèglesDeFormatageDesTextes%%%
+__Emphase :__ '____' pour mettre en ''italique'', _''''_ pour mettre en __gras__, '____'_''''_ pour ''__les deux__''.%%%
+__Listes :__ * pour les listes à puces, # pour les listes numérotées, ''__;__ term __:__ definition'' pour les listes définies par des titres.%%%
+__Liens :__ !CollerLesMotsEnMajuscule ou utiliser des crochet pour un [[lien vers une autre page] ou un URL [[!http://www.exemple.com].%%%
+__Références :__ Utiliser [[1],[[2],[[3],...%%%
+__Pour empêcher des liens :__ Préfixer avec "!": !!NePasLier, nommer les liens comme [[[[texte | URL] (doubler le "[").%%%
+__Divers :__ "!", "!!", "!!!" crée des titres, "%%''''%" provoque un retour à la ligne, "-''''---" crée une règle horizontale.
+
+----
+! Paragraphes
+
+* N'indentez pas les paragraphes
+* Les mots reviennent à la ligne et remplissent les blancs au besoin
+* Utilisez des lignes vides comme séparateurs
+* Quatre tirets ou plus créent une règle horizontale
+* %%''''% provoque un retour à la ligne (y compris dans les titres et les listes)
+
+
+! Listes
+
+* Un astérisque pour le premier niveau
+** Deux astérisques pour le deuxième niveau, etc.
+* Utilisez * pour les listes à puces, # pour les listes numérotées (mélangez à volonté)
+* point virgule-terme-deux points-définition pour les listes de définitions :
+;le terme ici:et la définition là, à la manière des listes <DL><DT><DD>
+* Une ligne pour chaque élément
+* L'indentation avec des espaces signale un texte préformaté et change la police.
+
+! Titres
+
+* '!' en début de ligne produit un petit titre
+* '!!' en début de ligne produit un titre moyen
+* '!!!' en début de ligne produit un gros titre
+
+! Polices
+
+* Indentez avec une ou plusieurs espaces pour utiliser une police à chasse fixe :
+
+ Ceci est en chasse fixe
+Ceci ne l'est pas
+
+! Paragraphes indentés
+
+* point virgule-deux points -- fonctionne comme <BLOCKQUOTE>
+
+;: ceci est un bloc de texte indenté
+
+! Emphase
+
+* Utilisez des apostrophes doubles ('____') pour l'emphase (habituellement en ''italique'')
+* Utilisez des soulignées doubles (_''''_) pour l'emphase forte (habituellement en __gras__)
+* Mélangez-les à volonté : __''gras italique''__
+* L'''emphase'' peut être utilisée ''plusieurs'' fois dans une ligne, mais ne peut ''pas'' passer à la ligne :
+
+''ceci
+ne marche pas''
+
+! Liens
+* Les hyperliens vers d'autres pages au sein du Wiki sont créés en plaçant le nom de la page entre crochets : [ceci est un hyperlien] ou en UtilisantDesMotsWiki (de préférence)
+* Les hyperliens vers des pages externes sont créés de cette façon : [http://www.wcsb.org/]
+* Vous pouvez nommer les liens en leur donnant un nom, une barre verticale (|) puis l'hyperlien ou le nom de la page : [page d'accueil de PhpWiki | http://phpwiki.sourceforge.net/]  - [la page d'accueil | Accueil]
+* Vous pouvez supprimer les liens vers les références à l'ancienne ou vers les URI en précédant le mot d'un '!', e.g. !NonLiéEnModeWiki, !http://pas.de.lien.ici/
+* Vous pouvez créer des notes de bas de page en utilisant [[1], [[2], [[3], ... comme ici [1]. Voir la note pour la contre-partie (si le [[ est dans la première colonne, c'est une ''définition'' de note de bas de page, au lieu d'une ''référence'' à une note [1].)
+* L'ancienne manière de lier les URL est aussi toujours supportée : précédez les URL de "http:", "ftp:" ou "mailto:" pour créer automatiquement des liens comme dans : http://c2.com/
+* Les URL se terminant par .png, .gif, ou .jpg sont inclus s'ils sont isolés entre crochets : [http://phpwiki.sourceforge.net/demo/themes/default/images/png.png]
+
+! Tableaux
+
+* Les tables simples sont disponibles. Une rangée dans une table est introduite par une barre __|__ dans la première colonne. Cela est mieux décrit par un exemple :
+      ||  _''''_Nom_''''_                       |v _''''_Coût_''''_           |v _''''_Notes_''''_
+      | _''''_Prénom_''''_ | _''''_Nom de famille_''''_
+      |> Jeff      |< Dairiki           |^  Pas cher          |< Pas valable
+      |> Marco     |< Polo              | Encore moins cher   |< Pas disponible
+;: produira
+||  __Nom__               |v __Coût__   |v __Notes__
+| __Prénom__   | __Nom de famille__
+|> Jeff       |< Dairiki   |^  Pas cher     |< Pas valable
+|> Marco      |< Polo      | Encore moins cher     |< Pas disponible
+
+;: Notez que des barres __|__ multiples mènent à des colonnes imbriquées, et que des __v__ peuvent être utilisés pour imbriquer des rangées. Un __>__ produit une colonne cadrée à droite, __<__ une colonne cadrée à gauche et __^__ une colonne centrée (ce qui est le comportement par défaut).
+
+! Langage de Marquage HTML
+
+* Ne vous en souciez pas
+* < et > sont eux-mêmes
+* Les caractères & ne fonctionneront pas
+* Si vous devez vraiment utiliser du HTML, votre administrateur système peut valider cette fonctionnalité. Commencez chaque ligne par une barre verticale (|). Notez que cette fonctionnalité est désactivée par défaut.
+
+! Plus de détails que vous ne voulez en connaître
+
+Voir [URLMagiquesPhpWiki] pour obtenir des détails gores sur la façon d'écrire divers types de liens de maintenance du wiki.
+
+-----
+
+Références :
+
+[1] En utilisant [[1] une seconde fois (dans la première colonne) la note de bas de page elle-même est ''définie''. Vous pouvez vous référer à une note de bas de page autant de fois que vous le voulez, mais vous ne pouvez la définir qu'une seule fois dans la page. Notez que le [[1] dans la note renvoie à la première référence, s'il existe plusieurs références il y aura des '+' après le [[1] qui renverront aux autres références (il n'y aura pas de lien vers les références venant ''après'' la ''définition'' de la note).
+----
+DocumentationDePhpWiki

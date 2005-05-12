@@ -6,9 +6,10 @@ if (!$HIDE_TOOLBARS) {
 ?>
 <!-- The logo -->
 <div align="right" id="logo"><a class="wikilink" 
-                  href="<?=WikiURL(HOME_PAGE)?>" target="_top"
+                  href="<?=WikiURL(HOME_PAGE)."&pv=0"?>" target="_top"
                   ><img src="<?=$Theme->getImageURL('logo')?>" id="logo-img"
-                        border="0" alt="<?=fmt(_("%s: %s"), WIKI_NAME, HOME_PAGE) ?>"
+                        border="0" alt="<?=fmt(_("%s: %s"), WIKI_NAME, HOME_PAGE) ?> - <?php print _("CodeX"); ?>"
+                        title="<?=fmt(_("%s: %s"), WIKI_NAME, HOME_PAGE) ?> - <?php print _("CodeX"); ?>"
                         align="right" /></a></div>
 
 <!-- The top navigation/search bar -->

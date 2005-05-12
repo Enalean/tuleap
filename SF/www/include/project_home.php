@@ -11,6 +11,7 @@ require_once('www/news/news_utils.php');
 require_once('trove.php');
 require_once('common/tracker/ArtifactType.class');
 require_once('common/tracker/ArtifactTypeFactory.class');
+require_once('common/wiki/lib/Wiki.class');
 require_once('www/project/admin/permissions.php');
 
 $Language->loadLanguageMsg('include/include');
@@ -335,11 +336,21 @@ if ($project->usesPm()) {
 	}
 }
 
+// ######################### Wiki (only for Active)
+
+if ($project->usesWiki()) {
+	print '<HR SIZE="1" NoShade><A href="/wiki/?group_id='.$group_id.'">';
+	html_image("ic/wiki.png",array('width'=>'18', 'height'=>'12', 'alt'=>$Language->getText('include_project_home','wiki')));
+	print ' '.$Language->getText('include_project_home','wiki').'</A>';
+        $wiki=new Wiki($group_id);
+	echo ' ( '.$Language->getText('include_project_home','nb_wiki_pages',$wiki->getPageCount()).' )';
+}
+
 // ######################### Surveys (only for Active)
 
 if ($project->usesSurvey()) {
 	print '<HR SIZE="1" NoShade><A href="/survey/?group_id='.$group_id.'">';
-	html_image("ic/survey16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>$Language->getText('include_project_home','survey')));
+	html_image("ic/survey16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>$Language->getText('include_project_home','surveys')));
 	print ' '.$Language->getText('include_project_home','surveys').'</A>';
 	$sql="SELECT count(*) from surveys where group_id='$group_id' AND is_active='1'";
 	$result=db_query($sql);

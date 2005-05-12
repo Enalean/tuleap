@@ -88,6 +88,7 @@ class WikiServiceAdminActions extends WikiActions {
       $we->setPage($page);
       $we->setDesc($_POST['desc']);
       $we->setRank($_POST['rank']);
+      $we->setLanguage_id($_POST['language_id']);
       
       $we->add();
     }
@@ -121,7 +122,8 @@ class WikiServiceAdminActions extends WikiActions {
       $we->setPage($page);
       $we->setDesc($_POST['desc']);
       $we->setRank($_POST['rank']);
-    
+      $we->setLanguage_id($_POST['language_id']);
+   
       $we->update();
     }
   }
@@ -133,7 +135,10 @@ class WikiServiceAdminActions extends WikiActions {
     global $feedback;
 
     $w = new Wiki($this->gid);
-    $ret = $w->setPermissions($_POST['ugroups']);
+    if ($_POST['reset']) 
+        $ret = $w->resetPermissions();
+    else
+        $ret = $w->setPermissions($_POST['ugroups']);
     if(!$ret)
       exit_error('Error','ERROR: could not update permissions: <p>'.$feedback.'</p>');
   }
@@ -145,7 +150,10 @@ class WikiServiceAdminActions extends WikiActions {
     global $feedback;
 
     $wp = new WikiPage($_POST['object_id']);
-    $ret = $wp->setPermissions($_POST['ugroups']);
+    if ($_POST['reset']) 
+        $ret = $wp->resetPermissions();
+    else
+        $ret = $wp->setPermissions($_POST['ugroups']);
     if(!$ret)
       exit_error('Error','ERROR: could not update permissions on this Wiki Page: <p>'.$feedback.'</p>');
   }

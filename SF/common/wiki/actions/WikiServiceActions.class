@@ -41,21 +41,5 @@ class WikiServiceActions extends WikiActions {
     $this->gid = $id;
   }
 
-  /*  function createWiki() {
-    $we = new WikiEntry();
-    $we->setGid($this->gid);
-    $we->setName($Language->getText('wiki_action_wikiserviceactions','wiki_home'));
-    $we->setPage($Language->getText('wiki_action_wikiserviceactions','homepage'));
-    $we->setDesc($Language->getText('wiki_action_wikiserviceactions','default_doc'));
-    $we->add();
-
-
-     // Add InterWiki link 
-    //$iwl = new InterWikiLink($this->gid);
-    //$iwl->add();
-
-    return true;
-  }*/
-
 }
 ?>

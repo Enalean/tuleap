@@ -137,6 +137,9 @@ function WikiURL($pagename, $args = '', $get_abs_url = false) {
 
     global $group_id;
     $url .= '&group_id='.$group_id;
+    global $pv;
+    if ($pv)
+        $url .= '&pv='.$pv;
     if ($anchor)
         $url .= "#" . MangleXmlIdentifier($anchor);
     
@@ -1424,6 +1427,12 @@ function obj2hash ($obj, $exclude = false, $fields = false) {
 }
 
 // $Log$
+// Revision 1.2  2005/05/12 10:08:04  guerin
+// 2nd major commit for Wiki integration:
+// - use localisation from phpWiki
+// - changed wiki creation process
+// - fixed a few other minor issues.
+//
 // Revision 1.1  2005/04/12 13:33:29  guerin
 // First commit for wiki integration.
 // Added Manuel's code as of revision 13 on Partners.

@@ -303,7 +303,8 @@ include_project_home	total	<B>$1</B> total
 include_project_home	task_manager	Task Manager
 include_project_home	proj_task_man	Project/Task Manager
 include_project_home	no_public_proj	There are no public projects available
-include_project_home	survey	Survey
+include_project_home	wiki	Wiki
+include_project_home	nb_wiki_pages	<B>$1</B> pages
 include_project_home	surveys	Surveys
 include_project_home	nb_surveys	<B>$1</B> surveys
 include_project_home	cvs_repo	CVS Repository

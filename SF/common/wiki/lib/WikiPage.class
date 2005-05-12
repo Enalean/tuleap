@@ -21,7 +21,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 require_once('WikiPageWrapper.class');
-require_once($DOCUMENT_ROOT.'/project/admin/permissions.php');
+require_once('www/project/admin/permissions.php');
 
 /**
  * CodeX manipulation of WikiPages
@@ -138,7 +138,7 @@ class WikiPage {
    */
   function isAutorized($uid) {            
     if($this->permissionExist()) {
-      if (!permission_is_authorized('WIKIPAGE_READ', $this->id, $uid)) {
+        if (!permission_is_authorized('WIKIPAGE_READ', $this->id, $uid, $this->gid)) {
 	return false;
       }
     }
@@ -157,6 +157,16 @@ class WikiPage {
 							       $this->id, 
 							       $groups);
     return $ret;
+  }
+  
+
+  /**
+   *@access public
+   */
+  function resetPermissions() {
+    return permission_clear_all($this->gid, 
+                                'WIKIPAGE_READ', 
+                                $this->id);
   }
   
 
@@ -311,7 +321,19 @@ class WikiPage {
        ,"SystemInfoPlugin","TextFormattingRules","TitleSearch","TranscludePlugin"
        ,"TranslateText","UnfoldSubpagesPlugin","UpLoad","UserPreferences","WabiSabi"
        ,"WantedPages","WhoIsOnline","WikiBlogPlugin","WikiPlugin","WikiWikiWeb"
-       ,"PhpWikiAdministration/Chmod");
+       ,"PhpWikiAdministration/Chmod",
+       "Accueil" ,"AdministrationDePhpWiki" 
+       ,"AdministrationDePhpWiki/Supprimer" ,"AjouterDesPages" ,"BacASable" 
+       ,"ÉditerLeContenu" ,"ÉditionsRécentes" ,"CarteInterWiki" 
+       ,"ChercherUnePage" ,"CommentUtiliserUnWiki" ,"DétailsTechniques" 
+       ,"DernièresModifs" ,"DernièresModifsComplètes" ,"DerniersVisiteurs" 
+       ,"DocumentationDePhpWiki" ,"Historique" ,"IcônesDeLien" 
+       ,"Info" ,"LesPlusVisitées" ,"ModifsLiées" ,"NotesDeVersion" 
+       ,"PageAléatoire" ,"PageDeTests" ,"PagesFloues" ,"PagesOrphelines" 
+       ,"PagesSemblables" ,"PluginCalendrier" ,"PluginWiki" 
+       ,"PréférencesUtilisateurs" ,"RèglesDeFormatageDesTextes" ,"RétroLiens" 
+       ,"RechercheEnTexteIntégral" ,"RechercheParTitre" ,"RolandTrique" 
+       ,"StyleCorrect" ,"ToutesLesPages" ,"URLMagiquesPhpWiki" );
   }
 
   /**
@@ -327,7 +349,9 @@ class WikiPage {
       ("HomePage" ,"PhpWikiAdministration"
        ,"PhpWikiAdministration/Remove"
        ,"PhpWikiAdministration/Rename", "PhpWikiAdministration/Replace"
-       ,"SandBox", "ProjectWantedPages");
+       ,"SandBox", "ProjectWantedPages",
+       "Accueil" ,"AdministrationDePhpWiki",
+       "AdministrationDePhpWiki/Supprimer", "BacASable", );
   }
 }
 ?>

@@ -1,0 +1,89 @@
+Date: Wed, 13 Feb 2002 20:50:00 -0500
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.2-jeffs-hacks)
+X-Rcs-Id: $Id$
+Content-Type: application/x-phpwiki;
+  pagename=NotesDeVersion;
+  flags=PAGE_LOCKED;
+  pgsrc_version="2 $Revision$";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+Hacks de Jeff.
+
+* Nouvelle API de base de données. Voir lib/WikiDB.php et lib/WikiDB/backend.php pour le gros de la documentation à ce sujet. La nouvelle base de données peut enregistrer plusieurs versions archivées de chaque page. Un mécanisme de purge des révisions archivées est aussi en place désormais. Voir le réglage $~ExpireParams dans index.php, et lib/~ArchiveCleaner.php pour plus de détails. A ce point, les backends DBA, MySQL et Postgres sont fonctionnels. Le backend DBA pourrait profiter d'une optimisation de ses performances. Toute l'API est encore sujette à des changements au fur et à mesure que je trouve des façons propres de fournir toute une variété de méthodes (pas toujours prévues) d'indexation et d'exploitation du wiki.
+* Nouvelle architecture PluginWiki.
+* Nouveau moteur de modèles (templates, NDT). Ceci a besoin d'être mieux documenté, mais pour le moment, voyez lib/Template.php. En y repensant, ne le faites pas (lib/Template.php a encore désespérément besoin d'être réécrit). L'avancée principale est que les fonctions ob_*() de PHP4 peuvent être utilisées pour capturer la sortie du code PHP eval()ué. Ceci permet aux modèles d'être constitués de code PHP...
+* Bouton d'édition de la prévisualisation sur la page d'édition. Vous pouvez désormais voir de quoi ont l'air vos modifications avant qu'elles ne soient réalisées.
+* Révision des feuilles de style. J'ai encore besoin de nettoyer ça un peu plus. J'apprécierai tout commentaire et rapport de bug à leur sujet. Pour le moment, je n'ai testé les nouvelles feuilles de style que sous Netscape 4.77 et Mozilla 0.9.3 (toutes deux tournant sous Linux).
+* Etendu la syntaxe des recherches de texte, désormais des recherches telles que "wiki or web -page" (ou "(wiki or web) and not page") feront plus ou moins ce qu'elles ont l'air de devoir faire.
+* Problèmes de sécurité : PhpWiki fonctionnera maintenant avec les register_globals de PHP placés sur off.
+
+Branche de développement 1.3.x de PhpWiki.
+
+* Noms de page dans PATH_INFO.
+* Téléchargement de fichiers : voir PhpWikiAdministration.
+* PréférencesUtilisateurs.
+* Affreux [URLMagiquesPhpWiki] pour les liens administratifs.
+
+PhpWiki 1.2 est une énorme avancée sur la version 1.0 :
+
+* Le support des bases de données MySQL, Postgresql, mSQL, des fichiers plats et de la nouvelle dba_ library de PHP4 est inclus.
+* Internationalisation : le support de plusieurs langues, jusqu'au niveau du code source, est inclus. L'allemand, l'espagnol, le suédois et le hollandais sont actuellement fournis avec PhpWiki. Une architecture est en place pour  ajouter facilement d'autres langues.
+* Nouveaux modèles de liens utilisant des crochets en plus de l'ancien style ~BumpyText.
+* Les fonctions d'administration incluent le verrouillage des pages, le vidage du Wiki dans un fichier Zip, et l'effacement des pages.
+* Une page LesPlusVisitées montrant les pages les plus fréquemment vues.
+* Conformité totale à HTML.
+* Les liens en bas de page décrivant les relations comme les liens entrants depuis d'autres pages et leurs nombres de hits, les liens sortants et leurs nombres de hits, et les pages proches les plus populaires.
+* Pages de diff colorées entre la version actuelle et la précédente.
+* Une page d'info pour voir les métadonnées des pages.
+* Bien plus de possibilités de personnalisation pour l'admin.
+* Un système de modèles pour séparer les pages HTML du code PHP.
+* De nouvelles structures de marquage pour <B>, <I>, <DD>, <BR> et bien d'autres.
+* Un marquage sans tabulations pour remplacer l'ancien marquage (les deux sont encore supportés).
+
+----
+
+PhpWiki 1.1.9 inclut des pages en espagnol, une implémentation complète pour Postgresql,
+de nombreuses corrections de bugs et bien d'autres choses. voir le fichier HISTORY pour plus d'infos : http://phpwiki.sourceforge.net/phpwiki/HISTORY
+
+----
+
+PhpWiki 1.1.6 est une révision majeure de PhpWiki. La capacité d'avoir des thèmes (via un système
+de modèles faciles à éditer) a été ajoutée ; le schéma pour MySQL a été complètement revu et corrigé,
+séparant les détails d'une page en colonnes (à des fins d'efficacité, nous nous sommes mis d'accord
+pour ne pas mettre les références dans une table séparée, ce n'est donc pas complètement normalisé.
+"Ne laissez pas le mieux être l'ennemi du bien").
+
+Le support de Postgresql a été ajouté et le langage de marquage évolue, autorisant désormais les tags
+!!! <h2>
+!! <h3>
+! <h4>
+et __une nouvelle façon de créer du texte en gras__, et bien sûr le [nouveau modèle de création de lien].
+
+Il existe une nouvelle caractéristique sur toutes les pages appelée ''plus d'infos'' qui vous donne une
+vue détaillée de bas niveau d'une page, ce qui est probablement plus utile que n'importe quoi pour le débogage.
+
+Tandis que nous nous dirigerons vers une version 1.2, nous ajouterons un journal d'activité, le classement
+des dix pages les plus actives et quelques autres nouvelles fonctionnalités avec le nouveau schéma de base
+de données (et oui, ces fonctionnalités entreront aussi dans la version DBM). Je veux aussi ajouter le support
+de mSQL et le tester sous Zend, le nouveau PHP4.
+
+Les notes de version de la 1.03 se trouvent ci-dessous, c'était la dernière version de la série 1.0 de PhpWiki.
+ --Steve Wainstead, mailto:swain@panix.com
+
+----
+
+PhpWiki was written because I am so interested in WikiWikiWebs, and I haven't used PHP since version 2.0. I wanted to see how it had advanced.
+
+Version 1.0 is a near-perfect clone of the Portland Pattern Repository, http://c2.com/cgi-bin/wiki?WikiWikiWeb. In truth, I was using the Wiki script you can download from there as a model; that Wiki lacks a number of features the PPR has, like EditCopy. So in truth PhpWiki is a kind of hybrid of the PPR and the generic Wiki you can get from there (which is written in Perl).
+
+The one caveat of PhpWiki is the allowance of HTML if the line is preceded by a bar (or pipe, which is how I usually say it). (That's a '|'). It was very simple to add, and the idea came from a posting somewhere on the PPR about how AT&T had an internal Wiki clone and used the same technique. The ability to embed HTML is disabled by default for security reasons.
+
+Version 1.01 includes a patch that fixes a small error with rendering <hr> lines. Thanks to Gerry Barksdale.
+
+See the HISTORY file for a rundown on the whole development process if that sort of thing really interests you :-)
+
+--SteveWainstead
+----
+DocumentationDePhpWiki

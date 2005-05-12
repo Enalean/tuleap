@@ -846,7 +846,6 @@ function SetupWiki (&$request)
 
     StartLoadDump($request, _("Loading up virgin wiki"));
     echo "<dl>\n";
-
     $pgsrc = FindLocalizedFile(WIKI_PGSRC);
     $default_pgsrc = FindFile(DEFAULT_WIKI_PGSRC);
 
@@ -874,7 +873,7 @@ function SetupWiki (&$request)
             */
         }
         if (!$request->_dbi->isWikiPage($page)) {
-            trigger_error("Mandatory file %s couldn't be loaded!",E_USER_WARNING);
+            trigger_error(sprintf("Mandatory file %s couldn't be loaded!",$page),E_USER_WARNING);
         }
     }
 
@@ -906,6 +905,12 @@ function LoadPostFile (&$request)
 
 /**
  $Log$
+ Revision 1.2  2005/05/12 10:08:04  guerin
+ 2nd major commit for Wiki integration:
+ - use localisation from phpWiki
+ - changed wiki creation process
+ - fixed a few other minor issues.
+
  Revision 1.1  2005/04/12 13:33:28  guerin
  First commit for wiki integration.
  Added Manuel's code as of revision 13 on Partners.

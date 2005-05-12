@@ -25,7 +25,7 @@ require_once('WikiViews.class');
 require_once(dirname(__FILE__).'/../lib/WikiEntry.class');
 require_once(dirname(__FILE__).'/../lib/WikiPage.class');
 require_once(dirname(__FILE__).'/../lib/WikiPageWrapper.class');
-require_once($DOCUMENT_ROOT.'/project/admin/permissions.php');
+require_once('www/project/admin/permissions.php');
 
 
 /**
@@ -60,9 +60,9 @@ class WikiServiceAdminViews extends WikiViews {
   }
 
   /**
-   * displayEntryFrom - private
+   * displayEntryForm - private
    */
-  function _displayEntryFrom($act='', $id='', $name='', $page='', $desc='', $rank='') {
+  function _displayEntryForm($act='', $id='', $name='', $page='', $desc='', $rank='') {
     print '<form name="wikiEntry" method="post" action="'.$this->wikiAdminLink.'&view=wikiDocuments">
              <input type="hidden" name="group_id" value="'.$this->gid.'" />
              <input type="hidden" name="action" value="'.$act.'" />
@@ -110,7 +110,7 @@ class WikiServiceAdminViews extends WikiViews {
    * displayMenu - public
    */
   function displayMenu() {     
-    print '
+      print '
     <ul class="ServiceMenu">
       <li><a href="/wiki/index.php?group_id='.$this->gid.'">View</a>&nbsp;|&nbsp;</li>
       <li><a href="/wiki/admin/index.php?group_id='.$this->gid.'">Admin</a>&nbsp;|&nbsp;</li>
@@ -171,7 +171,7 @@ class WikiServiceAdminViews extends WikiViews {
            displayed in Wiki service page (<a href="'.$this->wikiLink.'">View</a> link in
            the tool bar).
            </p>';
-    $this->_displayEntryFrom('create');
+    $this->_displayEntryForm('create');
   }
 
   /**
@@ -231,7 +231,7 @@ class WikiServiceAdminViews extends WikiViews {
     print '<h2>Wiki \''.$this->wikiname.'\' - Update Wiki Document</h2>';
 
     $we = new WikiEntry($_REQUEST['id']);
-    $this->_displayEntryFrom('update',
+    $this->_displayEntryForm('update',
 			    $we->getId(),
 			    $we->getName(),
 			    $we->getPage(),
@@ -275,7 +275,7 @@ class WikiServiceAdminViews extends WikiViews {
     echo '<h3>'.$hurl.'Project pages</h3>';
     if(!$hideFlag){
       print '
-      <p>The table bellow list all pages you wrote.</p>
+      <p>The table bellow lists all pages you wrote.</p>
       ';
       $allUserPages =& WikiPage::getAllUserPages();
       $this->_browsePages($allUserPages);
@@ -286,7 +286,7 @@ class WikiServiceAdminViews extends WikiViews {
     echo '<h3>'.$hurl.'Empty pages</h3>';
     if(!$hideFlag){
       print '
-      <p>The table bellow list all pages you created but still empty.</p>
+      <p>The table bellow lists all pages you created but still empty.</p>
       ';
       $wpw = new WikiPageWrapper($this->gid);
       $allEmptyPages =& $wpw->getProjectEmptyLinks();
@@ -298,7 +298,7 @@ class WikiServiceAdminViews extends WikiViews {
     echo '<h3>'.$hurl.'Admin pages</h3>';
     if(!$hideFlag){
       print '
-      <p>The table bellow list all administration pages. You can use these 
+      <p>The table bellow lists all administration pages. You can use these 
       pages for management purpose.
       <strong>Please use it carefuly</strong>. In case of doubt, backup your 
       wiki before deleting/renaming/replacing a page.</p>';
@@ -377,13 +377,5 @@ class WikiServiceAdminViews extends WikiViews {
     print '<hr/><p><a href="'.$this->wikiAdminLink.'">Back to admin panel</a></p>'."\n";
   }
   
-  
-  /**
-   *
-   */
-  function install() {
-    $wpw = new WikiPageWrapper($this->gid);
-    $wpw->install();
-  }
 }
 ?>

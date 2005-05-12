@@ -223,6 +223,7 @@ class WikiServiceViews extends WikiViews {
    * displayMenu - public
    */
   function displayMenu() {
+      global $Language;
 
     print '
     <table class="ServiceMenu">
@@ -233,54 +234,43 @@ class WikiServiceViews extends WikiViews {
       <li><a href="'.$this->wikiLink.'">Documents</a>&nbsp;|&nbsp;</li>
       <li><a href="'.$this->wikiLink.'&view=browsePages">Pages</a>&nbsp;|&nbsp;</li>
       <li><a href="'.$this->wikiAdminLink.'">Admin</a>&nbsp;|&nbsp;</li>
-';
-    if("wiki" == $this->view) {
-      print '
-      <li><a href="'.$_SERVER['REQUEST_URI'].'&pv=1">Lite view</a>&nbsp;|&nbsp;</li>
-      <li><a href="/wiki/index.php?pagename=TextFormattingRules&group_id=1">Text Formatting Rules</a>&nbsp;|&nbsp;</li>
-      <li><a href="/wiki/index.php?pagename=PhpWikiDocumentation&group_id=1">Help</a></li>';
-    }
-    
-    print '
-    </ul>';
-
+      <li><a href="/wiki/index.php?pagename=PhpWikiDocumentation&group_id=1">Help</a></li>
+   </ul>';
 
   print '
   </td>
   <td align="right">';
   
-  $wiki = new Wiki($this->gid);
   
-  $permText = '<img src="'.util_get_image_theme("ic/lock.png").'" border="0" alt="Lock" />';
-  $permInfo  = 'No user rights defined on this Wiki';
-  $wikiperms = false;
-  if ($wiki->permissionExist()) {
-    $wikiperms = true;
-    $permInfo =  'There are permissions set on this Wiki '.$permText;
-  }
-  
-  if('wiki' == $this->view) {
-    $permType = 'Wiki Page';
-    // User is browsing a wiki page
-    $wp = new WikiPage($this->gid, $_REQUEST['pagename']);
-    
-    
-    $permLink = $this->wikiLink.'&view=pagePerms&id='.$wp->getId();
-
-    if($wp->permissionExist()) {
-      
-      $permInfo =  'There are specific permissions on this Wiki Page '.$permText;
-    }
-    else {
-      if(!$wikiperms) {
-	$permInfo = 'No user rights defined on this Wiki Page';
+  if(user_ismember($this->gid, 'W2')) {
+      $wiki = new Wiki($this->gid);
+      $permInfo="";
+      if('wiki' == $this->view) {
+          // User is browsing a wiki page
+          $wp = new WikiPage($this->gid, $_REQUEST['pagename']);
+          
+          $permLink = $this->wikiAdminLink.'&view=pagePerms&id='.$wp->getId();
+          if($wp->permissionExist()) {
+              $permInfo =  '<a href="'.$permLink.'"> '.'<img src="'.util_get_image_theme("ic/lock.png").'" border="0" alt="Lock" title="There are specific permissions on this Wiki Page"/></a>';
+          }
       }
-    }
-  }
-  
-  print $permInfo;
+      if ($wiki->permissionExist()) {
+          $permInfo .=  '<a href="/wiki/admin/index.php?group_id='.$this->gid.'&view=wikiPerms"> '.'<img src="'.util_get_image_theme("ic/lock.png").'" border="0" alt="Lock" title="There are permissions set on this Wiki"/>'.'</a>';
+      }
+      if ($permInfo) print $permInfo;
 
-  
+  }
+
+
+  if("wiki" == $this->view) {
+      print '
+      (<a href="'.$_SERVER['REQUEST_URI'].'&pv=1" title="lighter display - click on phpWiki logo to return to normal display">
+      <img src="'.util_get_image_theme("msg.png").'" border="0">&nbsp;'.
+        $Language->getText('global','printer_version').'</A> ) 
+      </li>';
+    }
+
+ 
   print '
      </td>
     </tr>
@@ -311,7 +301,7 @@ class WikiServiceViews extends WikiViews {
     $wp->log(user_getid());
 
     $lite = false;
-    if($_GET['pv'] == 1) {
+    if(isset($_GET['pv']) && ( $_GET['pv'] == 1)) {
       $lite = true;
     }
     $wp->render($lite);
@@ -334,5 +324,53 @@ class WikiServiceViews extends WikiViews {
       $this->footer();
     }
   }
+
+
+  /**
+   * install: ask for confirmation and choose language
+   */
+  function install() {
+    global $Language;
+    echo '<h2>Wiki Creation</h2>';
+   
+    echo '
+    <p>This project has not initialized its Wiki yet.</p>
+    <p>In order to create the wiki, select the language for the wiki, and press the "Create" button.</p>';
+    // Display creation form
+    echo '<form name="WikiCreation" method="post" action="'.$this->wikiLink.'">
+             <input type="hidden" name="group_id" value="'.$this->gid.'" />
+             <input type="hidden" name="view" value="doinstall" />
+             Wiki Language: ';
+echo html_get_language_popup($Language,'language_id',$Language->getLanguageId());
+echo '<input type="submit" value="'.$Language->getText('global','btn_submit').'">
+</form>';
+  }
+
+
+  /**
+   * install
+   */
+  function doinstall() {
+      global $Language,$LANG;
+      $language_id=$_REQUEST['language_id'];
+      if (!$language_id) $language_id=1; // default is en_US
+
+      // Create initial Wiki document
+      $we = new WikiEntry();
+      $we->setGid($this->gid);
+      $we->setName($Language->getText('wiki_views_wikiserviceviews','home_page_name'));
+      $we->setPage($Language->getText('wiki_views_wikiserviceviews','home_page'));
+      $we->setDesc($Language->getText('wiki_views_wikiserviceviews','home_page_desc'));
+      $we->setLanguage_id($language_id);
+      $we->add();
+      
+      // Make sure phpWiki instantiates the right pages corresponding the the given language
+      define('DEFAULT_LANGUAGE',language_id_to_language_code($language_id));
+      $LANG=language_id_to_language_code($language_id);
+
+      $wpw = new WikiPageWrapper($this->gid);
+      $wpw->install();
+  }
+
 }
 ?>

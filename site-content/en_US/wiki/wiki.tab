@@ -11,21 +11,16 @@
 #  */ $Language->loadLanguageMsg('wiki/wiki');
 #
 #-----------------------------------------------
-# Script: SF/common/wiki/action/WikiServiceActions.class
-#	$Language->getText('wiki_action_wikiserviceactions','')
-wiki_action_wikiserviceactions	wiki_home	Wiki Home
-wiki_action_wikiserviceactions	homepage	HomePage
-wiki_action_wikiserviceactions	default_doc	Default Wiki Document
+# Script: SF/common/wiki/views/WikiServiceViews.class
 #
-#-----------------------------------------------
-# Script: SF/common/wiki/lib/InterWikiLink.class
-#	$Language->getText('wiki_lib_interwikilink','')
-wiki_lib_interwikilink	open_err	Unable to open file($1)
-wiki_lib_interwikilink	write_err	Unable to write InterWiki line in ($1)
+# Note that "wiki_home_page" must correspond to the page name initialised by phpWiki in this language!
+wiki_views_wikiserviceviews	home_page	HomePage
+wiki_views_wikiserviceviews	home_page_name	Wiki Home
+wiki_views_wikiserviceviews	home_page_desc	Initial Wiki Document
 #
 #-----------------------------------------------
 # Script: SF/common/wiki/lib/WikiEntry.class
-#	$Language->getText('wiki_lib_wikientry','')
+#
 wiki_lib_wikientry	insert_err	Can not insert new wiki entry: $1
 wiki_lib_wikientry	delete_err	Can not delete wiki entry: $1
 wiki_lib_wikientry	update_err	Can not update wiki entry: $1
