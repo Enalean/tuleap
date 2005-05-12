@@ -8,20 +8,20 @@
 
 $Language->loadLanguageMsg('svn/svn');
 
-if (!$group_id) {
+if (!isset($group_id) || !$group_id) {
     exit_no_group(); // need a group_id !!!
 }
 
 svn_header(array ('title'=>$Language->getText('svn_browse_revision','browsing'),
 		  'help' => 'SubversionBrowsingInterface.html'));
 
-if (!$offset || $offset < 0) {
+if (!isset($offset) || !$offset || $offset < 0) {
     $offset=0;
 }
 
-if (!$chunksz) { $chunksz = 15; }
+if (!isset($chunksz) || !$chunksz) { $chunksz = 15; }
 
-if (($msort != 0) && ($msort != 1)) { $msort = 0; }
+if (!isset($msort) || ($msort != 0) && ($msort != 1)) { $msort = 0; }
 if (!$msort) { $msort = 0; }
 if (user_isloggedin() && !isset($morder)) {
     $morder = user_get_preference('svn_commit_browse_order'.$group_id);
@@ -55,7 +55,7 @@ if (isset($morder)) {
 // Memorize order by field as a user preference if explicitly specified.
 // Automatically discard invalid field names.
 //
-if ($order) {
+if (isset($order) && $order) {
     if ($order=='id' || $order=='description' || $order=='date' || $order=='submitted_by') {
 	if(user_isloggedin() &&
 	   ($order != user_get_preference('commits_browse_order')) ) {
@@ -71,7 +71,7 @@ if ($order) {
 }
 
 
-if (!$set) {
+if (!isset($set) || !$set) {
     /*
       if no set is passed in, see if a preference was set
       if no preference or not logged in, use my set
@@ -120,7 +120,7 @@ $from = "FROM svn_commits,user ";
 $where = "WHERE svn_commits.group_id=$group_id AND user.user_id=svn_commits.whoid";
 
 //if status selected, and more to where clause
-if ($_path != '') {
+if (isset($path) && $_path != '') {
     $path_str = " AND svn_checkins.dirid=svn_dirs.id AND svn_checkins.commitid=svn_commits.id AND svn_dirs.dir like '%".$_path."%' ";
     $from .= ",svn_dirs,svn_checkins ";
 } else {
@@ -129,13 +129,13 @@ if ($_path != '') {
 
 
 //if revision selected, and more to where clause
-if ($_rev_id != '') {
+if (isset($_rev_id) && $_rev_id != '') {
     $commit_str=" AND svn_commits.revision='$_rev_id' ";
 } else {
     $commit_str='';
 }
 
-if ($_commiter && ($_commiter != 100)) {
+if (isset($_commiter) && $_commiter && ($_commiter != 100)) {
     $commiter_str=" AND user.user_id=svn_commits.whoid ".
 	" AND user.user_name='$_commiter' ";
 } else {
@@ -143,7 +143,7 @@ if ($_commiter && ($_commiter != 100)) {
     $commiter_str='';
 }
 
-if ($_srch != '') {
+if (isset($_srch) && $_srch != '') {
     $srch_str = "AND svn_commits.description like '%".$_srch."%' ";
 } else {
     $srch_str = "";
@@ -152,11 +152,13 @@ if ($_srch != '') {
 $where .= $commiter_str.$commit_str.$srch_str.$path_str;
 
  
-if (!$pv) { $limit = " LIMIT $offset,$chunksz";}
+if (!isset($pv) || !$pv) { $limit = " LIMIT $offset,$chunksz";}
 
-if ($order_by == '') {
+if (isset($order_by) && $order_by == '') {
     $order_by = " ORDER BY revision desc";
-}
+ } else {
+    $order_by = '';
+ }
 
 $sql=$select.$from.$where.$order_by.$limit;
 
@@ -195,10 +197,10 @@ echo '<FORM name="commit_form" ACTION="'. $PHP_SELF .'" METHOD="GET">
 	<INPUT TYPE="HIDDEN" NAME="set" VALUE="custom">
         <TR align="center"><TD><b>'.$Language->getText('svn_browse_revision','rev').'</b></TD><TD><b>'.$Language->getText('svn_browse_revision','commiter').'</b></TD><TD><b>'.$Language->getText('svn_browse_revision','path').'</b></TD><TD><b>'.$Language->getText('svn_browse_revision','search').'</b></TD>'.
 '</TR>'.
-'<TR><TD><INPUT TYPE="TEXT" SIZE=5 NAME=_rev_id VALUE='.$_rev_id.'></TD>'.
+'<TR><TD><INPUT TYPE="TEXT" SIZE=5 NAME=_rev_id VALUE='.(isset($_rev_id)?$_rev_id:'').'></TD>'.
 '<TD><FONT SIZE="-1">'. $tech_box .'</TD>'.
-'<TD><FONT SIZE="-1">'. '<INPUT type=text size=35 name=_path value='.$_path.'></TD>'.
-'<TD><FONT SIZE="-1">'. '<INPUT type=text size=35 name=_srch value='.$_srch.'></TD>'.
+'<TD><FONT SIZE="-1">'. '<INPUT type=text size=35 name=_path value='.(isset($_path)?$_path:'').'></TD>'.
+'<TD><FONT SIZE="-1">'. '<INPUT type=text size=35 name=_srch value='.(isset($_srch)?$_srch:'').'></TD>'.
 '</TR></TABLE>'.
 	
 '<br><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_browse').'">'.

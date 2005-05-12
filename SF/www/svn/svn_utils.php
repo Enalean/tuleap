@@ -38,7 +38,7 @@ function svn_header($params) {
 	}
 	echo ' | <A HREF="/svn/?func=browse&group_id='.$group_id.'">'.$Language->getText('svn_utils','svn_query').'</A>';
 	echo ' | <A HREF="/svn/admin/?group_id='.$group_id.'">'.$Language->getText('svn_utils','svn_admin').'</A>';	
-	if (!$params['help']) { $params['help'] = "VersionControlWithSubversion.html";}
+	if (!isset($params['help']) || !$params['help']) { $params['help'] = "VersionControlWithSubversion.html";}
 	echo ' | '.help_button($params['help'],false,$Language->getText('global','help'));
 
 	echo '</B>';
@@ -392,7 +392,7 @@ function svn_utils_show_revision_detail($result,$group_id,$group_name,$commit_id
 // Is there anything in the svn history table ?
 function svn_utils_format_svn_history($group_id) {
   global $Language;
-
+  $output = '';
     $res_svnfullhist = svn_data_get_svn_history($group_id);
 
     if (!$res_svnfullhist || db_numrows($res_svnfullhist) < 1) {

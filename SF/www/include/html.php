@@ -168,6 +168,7 @@ function html_build_select_box_from_array ($vals,$select_name,$checked_val='xzxz
 
 function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_val='xzxz',$show_100=true,$text_100='',$show_any=false,$text_any='',$show_unchanged=false,$text_unchanged='') {
         global $Language;
+        $return = '';
 	/*
 
 		The infamous '100 row' has to do with the

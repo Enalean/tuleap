@@ -10,8 +10,20 @@ require_once('pre.php');
 require('../svn/svn_data.php');    
 require('../svn/svn_utils.php');    
 
-// ######################## table for summary info
 
+//{{{ define undefined variables
+$func = "";
+if (isset($_REQUEST['func'])) {
+    $func = $_REQUEST['func'];
+}
+$rev_id = "";
+if (isset($_REQUEST['rev_id'])) {
+    $rev_id = $_REQUEST['rev_id'];
+}
+//}}}
+
+
+// ######################## table for summary info
 
 switch ($func) {
 

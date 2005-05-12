@@ -49,7 +49,7 @@ function svn_data_update_notification($group_id,$svn_mailing_list,$svn_mailing_h
 // over the last "period" of time.
 // period is expressed in seconds
 function svn_data_get_svn_history($group_id, $period=false) {
-
+    $date_clause = '';
     if ($period) {
 	// All times in svn tables are stored in UTC!!!
 	$date_clause = " AND date >= ".(gmdate('U')-$period)." ";

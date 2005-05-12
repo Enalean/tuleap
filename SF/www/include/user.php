@@ -311,7 +311,7 @@ function user_get_preference($preference_name) {
 			First check to see if we have already fetched the preferences
 		*/
 		if ($user_pref) {
-			if ($user_pref["$preference_name"]) {
+                    if (isset($user_pref["$preference_name"]) && $user_pref["$preference_name"]) {
 				//we have fetched prefs - return part of array
 				return $user_pref["$preference_name"];
 			} else {
