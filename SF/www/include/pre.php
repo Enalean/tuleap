@@ -17,7 +17,7 @@ require(getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/conf/local.inc');
 if (!isset($GLOBALS['feedback'])) {
     $GLOBALS['feedback'] = "";  //By default the feedbak is empty
 }
-
+$location = "";
 //}}}
 
 // Check URL for valid hostname and valid protocol
