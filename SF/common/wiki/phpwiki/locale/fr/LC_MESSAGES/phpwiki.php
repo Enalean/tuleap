@@ -370,6 +370,8 @@ $locale["IncludePage"] =
    "InsérezLaPage";
 $locale["Included from %s"] =
    "Inséré de %s";
+$locale["Initial Wiki Document"] =
+   "Document Wiki Initial";
 $locale["Insufficient permissions."] =
    "Permissions insuffisantes.";
 $locale["InterWiki Address"] =
@@ -598,6 +600,8 @@ $locale["Previous Revision"] =
    "Révision Précédente";
 $locale["Printer"] =
    "Imprimante";
+$locale["Purge HTML cache for this page. Regenerate from WikiMarkup when next accessed."] =
+   "Purge le cache HTML de cette page";
 $locale["Querying backend directly for '%s'"] =
    "Requête directe au backend pour '%s'";
 $locale["RandomPage"] =
@@ -882,6 +886,8 @@ $locale["Who Is Online"] =
    "Qui est en ligne";
 $locale["Width"] =
    "Largeur";
+$locale["Wiki Home"] =
+   "Accueil Wiki";
 $locale["Wiki Name"] =
    "Nom du Wiki";
 $locale["WikiForm"] =

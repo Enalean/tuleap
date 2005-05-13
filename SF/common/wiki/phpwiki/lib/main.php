@@ -465,6 +465,17 @@ $this->version = phpwiki_version();
 
         include('lib/loadsave.php');
         SetupWiki($this);
+        // CodeX Specific: Setup the initial WikiDocument here.
+        // Here, we have access to the localized version of the page name
+        // Additionnaly, it does not have to be in the language of the current user.
+        $we = new WikiEntry();
+        $we->setGid($GLOBALS['group_id']);
+        $we->setName(_("Wiki Home"));
+        $we->setPage(_("HomePage"));
+        $we->setDesc(_("Initial Wiki Document"));
+        $we->setLanguage_id($GLOBALS['language_id']);
+        $we->add();
+
         $this->finish();        // NORETURN
     }
 
@@ -944,6 +955,9 @@ main();
 
 
 // $Log$
+// Revision 1.2  2005/05/13 08:57:26  guerin
+// Fixed issue with initial Wiki document: it is now created within phpWiki main().
+//
 // Revision 1.1  2005/04/12 13:33:28  guerin
 // First commit for wiki integration.
 // Added Manuel's code as of revision 13 on Partners.

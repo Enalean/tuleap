@@ -352,17 +352,10 @@ echo '<input type="submit" value="'.$Language->getText('global','btn_submit').'"
    */
   function doinstall() {
       global $Language,$LANG;
+      global $language_id;
       $language_id=$_REQUEST['language_id'];
       if (!$language_id) $language_id=1; // default is en_US
-
-      // Create initial Wiki document
-      $we = new WikiEntry();
-      $we->setGid($this->gid);
-      $we->setName($Language->getText('wiki_views_wikiserviceviews','home_page_name'));
-      $we->setPage($Language->getText('wiki_views_wikiserviceviews','home_page'));
-      $we->setDesc($Language->getText('wiki_views_wikiserviceviews','home_page_desc'));
-      $we->setLanguage_id($language_id);
-      $we->add();
+      // Initial Wiki document is now created within phpWiki main()
       
       // Make sure phpWiki instantiates the right pages corresponding the the given language
       define('DEFAULT_LANGUAGE',language_id_to_language_code($language_id));
