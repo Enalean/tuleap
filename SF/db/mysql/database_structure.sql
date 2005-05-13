@@ -2887,9 +2887,9 @@ CREATE TABLE artifact_notification_event (
   event_id int(11) NOT NULL default '0',
   group_artifact_id int(11) NOT NULL default '0',
   event_label varchar(255) default NULL,
-  short_description varchar(40) default NULL,
-  description varchar(255) default NULL,
   rank int(11) NOT NULL default '0',
+  short_description_msg varchar(255) default NULL,
+  description_msg varchar(255) default NULL,
   KEY event_id_idx (event_id),
   KEY group_artifact_id_idx (group_artifact_id)
 );
@@ -2900,9 +2900,9 @@ CREATE TABLE artifact_notification_event (
 CREATE TABLE artifact_notification_event_default (
   event_id int(11) NOT NULL default '0',
   event_label varchar(255) default NULL,
-  short_description varchar(40) default NULL,
-  description varchar(255) default NULL,
   rank int(11) NOT NULL default '0',
+  short_description_msg varchar(255) default NULL,
+  description_msg varchar(255) default NULL,
   KEY event_id_idx (event_id)
 );
 
@@ -2914,9 +2914,9 @@ CREATE TABLE artifact_notification_role (
   role_id int(11) NOT NULL default '0',
   group_artifact_id int(11) NOT NULL default '0',
   role_label varchar(255) default NULL,
-  short_description varchar(40) default NULL,
-  description varchar(255) default NULL,
   rank int(11) NOT NULL default '0',
+  short_description_msg varchar(255) default NULL,
+  description_msg varchar(255) default NULL,
   KEY role_id_idx (role_id),
   KEY group_artifact_id_idx (group_artifact_id)
 );
@@ -2927,9 +2927,9 @@ CREATE TABLE artifact_notification_role (
 CREATE TABLE artifact_notification_role_default (
   role_id int(11) NOT NULL default '0',
   role_label varchar(255) default NULL,
-  short_description varchar(40) default NULL,
-  description varchar(255) default NULL,
   rank int(11) NOT NULL default '0',
+  short_description_msg varchar(255) default NULL,
+  description_msg varchar(255) default NULL,
   KEY role_id_idx (role_id)
 );
 

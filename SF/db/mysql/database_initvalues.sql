@@ -1559,7 +1559,7 @@ INSERT INTO artifact_notification_role_default VALUES (4,'COMMENTER',40,'role_CO
 # ==============================
 # Create the list of events that can occur in a artifact update
 #
-INSERT INTO artifact_notification_event_default VALUES (1,'ROLE_CHANGE',10,''event_ROLE_CHANGE__shortdesc','event_ROLE_CHANGE_desc');
+INSERT INTO artifact_notification_event_default VALUES (1,'ROLE_CHANGE',10,'event_ROLE_CHANGE_shortdesc','event_ROLE_CHANGE_desc');
 INSERT INTO artifact_notification_event_default VALUES (2,'NEW_COMMENT',20,'event_NEW_COMMENT_short_desc','event_NEW_COMMENT_desc');
 INSERT INTO artifact_notification_event_default VALUES (3,'NEW_FILE',30,'event_NEW_FILE_short_desc','event_NEW_FILE_desc');
 INSERT INTO artifact_notification_event_default VALUES (4,'CC_CHANGE',40,'event_CC_CHANGE_short_desc','event_CC_CHANGE_desc');

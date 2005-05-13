@@ -629,6 +629,72 @@ CREATE TABLE wiki_link (
 );
 
 
+--
+-- localising the DB 
+--
+
+
+-- artifact_notification_event table
+--
+ALTER TABLE artifact_notification_event ADD short_description_msg VARCHAR(255);
+ALTER TABLE artifact_notification_event ADD description_msg VARCHAR(255);
+UPDATE artifact_notification_event SET short_description_msg='event_ROLE_CHANGE_short_desc', description_msg='event_ROLE_CHANGE_desc' where event_label='ROLE_CHANGE';
+UPDATE artifact_notification_event SET short_description_msg='event_NEW_COMMENT_short_desc', description_msg='event_NEW_COMMENT_desc' where event_label='NEW_COMMENT';
+UPDATE artifact_notification_event SET short_description_msg='event_NEW_FILE_short_desc', description_msg='event_NEW_FILE_desc' where event_label='NEW_FILE';
+UPDATE artifact_notification_event SET short_description_msg='event_CC_CHANGE_short_desc', description_msg='event_CC_CHANGE_desc' where event_label='CC_CHANGE';
+UPDATE artifact_notification_event SET short_description_msg='event_CLOSED_short_desc', description_msg='event_CLOSED_desc' where event_label='CLOSED';
+UPDATE artifact_notification_event SET short_description_msg='event_PSS_CHANGE_short_desc', description_msg='event_PSS_CHANGE_desc' where event_label='PSS_CHANGE';
+UPDATE artifact_notification_event SET short_description_msg='event_ANY_OTHER_CHANGE_short_desc', description_msg='event_ANY_OTHER_CHANGE_desc' where event_label='ANY_OTHER_CHANGE';
+UPDATE artifact_notification_event SET short_description_msg='event_I_MADE_IT_short_desc', description_msg='event_I_MADE_IT_desc' where event_label='I_MADE_IT';
+UPDATE artifact_notification_event SET short_description_msg='event_NEW_ARTIFACT_short_desc', description_msg='event_NEW_ARTIFACT_desc' where event_label='NEW_ARTIFACT';
+
+ALTER TABLE artifact_notification_event DROP short_description;
+ALTER TABLE artifact_notification_event DROP description;
+
+
+--  artifact_notification_event_default table
+--
+ALTER TABLE artifact_notification_event_default ADD short_description_msg VARCHAR(255);
+ALTER TABLE artifact_notification_event_default ADD description_msg VARCHAR(255);
+UPDATE artifact_notification_event_default SET short_description_msg='event_ROLE_CHANGE_short_desc', description_msg='event_ROLE_CHANGE_desc' where event_label='ROLE_CHANGE';
+UPDATE artifact_notification_event_default SET short_description_msg='event_NEW_COMMENT_short_desc', description_msg='event_NEW_COMMENT_desc' where event_label='NEW_COMMENT';
+UPDATE artifact_notification_event_default SET short_description_msg='event_NEW_FILE_short_desc', description_msg='event_NEW_FILE_desc' where event_label='NEW_FILE';
+UPDATE artifact_notification_event_default SET short_description_msg='event_CC_CHANGE_short_desc', description_msg='event_CC_CHANGE_desc' where event_label='CC_CHANGE';
+UPDATE artifact_notification_event_default SET short_description_msg='event_CLOSED_short_desc', description_msg='event_CLOSED_desc' where event_label='CLOSED';
+UPDATE artifact_notification_event_default SET short_description_msg='event_PSS_CHANGE_short_desc', description_msg='event_PSS_CHANGE_desc' where event_label='PSS_CHANGE';
+UPDATE artifact_notification_event_default SET short_description_msg='event_ANY_OTHER_CHANGE_short_desc', description_msg='event_ANY_OTHER_CHANGE_desc' where event_label='ANY_OTHER_CHANGE';
+UPDATE artifact_notification_event_default SET short_description_msg='event_I_MADE_IT_short_desc', description_msg='event_I_MADE_IT_desc' where event_label='I_MADE_IT';
+UPDATE artifact_notification_event_default SET short_description_msg='event_NEW_ARTIFACT_short_desc', description_msg='event_NEW_ARTIFACT_desc' where event_label='NEW_ARTIFACT';
+
+ALTER TABLE artifact_notification_event_default DROP short_description;
+ALTER TABLE artifact_notification_event_default DROP description;
+
+
+--  artifact_notification_role table
+--
+ALTER TABLE artifact_notification_role ADD short_description_msg VARCHAR(255);
+ALTER TABLE artifact_notification_role ADD description_msg VARCHAR(255);
+UPDATE artifact_notification_role SET short_description_msg='role_SUBMITTER_short_desc', description_msg='role_SUBMITTER_desc' where role_label='SUBMITTER';
+UPDATE artifact_notification_role SET short_description_msg='role_ASSIGNEE_short_desc', description_msg='role_ASSIGNEE_desc' where role_label='ASSIGNEE';
+UPDATE artifact_notification_role SET short_description_msg='role_CC_short_desc', description_msg='role_CC_desc' where role_label='CC';
+UPDATE artifact_notification_role SET short_description_msg='role_COMMENTER_short_desc', description_msg='role_COMMENTER_desc' where role_label='COMMENTER';
+
+ALTER TABLE artifact_notification_role DROP short_description;
+ALTER TABLE artifact_notification_role DROP description;
+
+
+--  artifact_notification_role_default table
+--
+ALTER TABLE artifact_notification_role_default ADD short_description_msg VARCHAR(255);
+ALTER TABLE artifact_notification_role_default ADD description_msg VARCHAR(255);
+UPDATE artifact_notification_role_default SET short_description_msg='role_SUBMITTER_short_desc', description_msg='role_SUBMITTER_desc' where role_label='SUBMITTER';
+UPDATE artifact_notification_role_default SET short_description_msg='role_ASSIGNEE_short_desc', description_msg='role_ASSIGNEE_desc' where role_label='ASSIGNEE';
+UPDATE artifact_notification_role_default SET short_description_msg='role_CC_short_desc', description_msg='role_CC_desc' where role_label='CC';
+UPDATE artifact_notification_role_default SET short_description_msg='role_COMMENTER_short_desc', description_msg='role_COMMENTER_desc' where role_label='COMMENTER';
+
+ALTER TABLE artifact_notification_role_default DROP short_description;
+ALTER TABLE artifact_notification_role_default DROP description;
+
 
 EOF
 
