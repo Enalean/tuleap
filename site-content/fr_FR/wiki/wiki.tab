@@ -1,6 +1,6 @@
 #/**
 #  *
-#  * Include scripts message catalog (English)
+#  * Include scripts message catalog (French)
 #  *
 #  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
 #  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
@@ -14,6 +14,63 @@
 # Script: SF/common/wiki/views/WikiServiceViews.class
 #
 # Note that "wiki_home_page" must correspond to the page name initialised by phpWiki in this language!
+wiki_views_wikiserviceviews	wiki_title	Wiki pour $1
+wiki_views_wikiserviceviews	wiki_subtit_docu	<h3>$1Documents Wiki</h3>
+wiki_views_wikiserviceviews	wiki_subtit_pages	<h3>$1Pages Wiki</h3>
+wiki_views_wikiserviceviews	wiki_subtit_empty	<h3>$1Pages Wiki Vides</h3>
+wiki_views_wikiserviceviews	wiki_subtit_create	<h3>$1Créer une nouvelle Page Wiki</h3>
+wiki_views_wikiserviceviews	wikientries	<li>$1<p><em>Description :</em>$2</p></li>
+wiki_views_wikiserviceviews	pagename	Nom de la Page :
 wiki_views_wikiserviceviews	home_page	Accueil
 wiki_views_wikiserviceviews	home_page_name	Accueil Wiki
 wiki_views_wikiserviceviews	home_page_desc	Document Wiki Initial
+wiki_views_wikiserviceviews	menuadmin	Admin	
+wiki_views_wikiserviceviews	menupages	Pages	
+wiki_views_wikiserviceviews	menudocuments	Documents
+wiki_views_wikiserviceviews	lock_title_spec	Il y a des permissions sur cette Page Wiki
+wiki_views_wikiserviceviews	lock_title_set	Il y a des permissions sur ce Wiki
+wiki_views_wikiserviceviews	lock_alt	Verrou
+wiki_views_wikiserviceviews	lighter_display	Affichage réduit - cliquez sur le logo phpWiki pour revenir à l'affichage normal
+wiki_views_wikiserviceviews	install_intro	<h2>Création d'un Wiki</h2><p>Ce projet n'a pas encore initialisé son Wiki.</p><p>Pour pouvoir créer le Wiki, sélectionnez la langue du Wiki et cliquez le bouton "$1".</p>
+wiki_views_wikiserviceviews	wiki_language	Langue du Wiki :
+#
+#-----------------------------------------------
+# Script: SF/common/wiki/views/WikiViews.class
+#
+wiki_views_wikiviews	title_error	Erreur
+wiki_views_wikiviews	not_activate	<H2><span class="feedback">Le Service Wiki n'est pas activé</span></H2><p>Le Service Wiki du projet $1 nécessite un activation par un Administrateur Projet ou un Administrateur Wiki.</p>
+wiki_views_wikiviews	set_perm_title	<h3>Permissions de la Page Wiki</h3>
+wiki_views_wikiviews	empty_page	<h2><span class="feedback">La Page n'existe pas</span></h2><p>Vous ne pouvez donner des permissions que sur des pages existantes. Vous devez créer la page avec le moteur Wiki avant de pouvoir donner des permissions.</p><p>Pour créer une page, il suffit de l'éditer.</p><p><strong>Note:</strong> Une page qui ne contient que "Décrivez PageName? ici" est vide du point de vue du moteur Wiki.</p>
+wiki_views_wikiviews	not_empty_page	<p>Vous pouvez donnez des permissions spécifiques à la Page Wiki $1. Ces <strong>permissions ne s'appliquent que sur cette page</strong>.</p><p>Par défaut, les pages Wiki n'ont pas de permissions : l'accès à toutes les Pages Wiki est permis pour tout utilisateur enregistré.</p><p><strong>Rappel:</strong> Accéder à une page signifie que <strong>tous les membres</strong> de <strong>chaque groupe</strong> ci-dessous <strong>sélectionné</strong> peut <strong>lire</strong> et <strong>modifier</strong> la page correspondante.</p><p>Sélectionner les groupes d'utilisateurs qui sont autorisés à accéder à ce Wiki :<p>
+#
+#-----------------------------------------------
+# Script: SF/common/wiki/lib/WikiEntry.class
+#
+wiki_lib_wikientry	insert_err	Impossible d'insérer une nouvelle entrée wiki: $1
+wiki_lib_wikientry	delete_err	Impossible de supprimer l'entrée wiki: $1
+wiki_lib_wikientry	update_err	Impossible de modifier l'entrée wiki: $1
+#
+#-----------------------------------------------
+# Script: SF/common/wiki/lib/WikiPage.class
+#
+wiki_lib_wikipage	notunique_err	La page wiki n'est pas unique. Merci de contacter un administrateur.
+#
+#-----------------------------------------------
+# Script: SF/common/wiki/lib/WikiPageWrapper.class
+#
+wiki_lib_wikipagewrap	new_page_text	$1 enregistre les pages créées avec l'interface principale:
+wiki_lib_wikipagewrap	page_added	$1 ajoutée
+wiki_lib_wikipagewrap	right_error	Cette opération nécessite les droits admin
+#
+#-----------------------------------------------
+# Script: SF/common/wiki/actions/WikiServiceAdminActions.class
+#
+wiki_actions_wikiserviceadmin	page_name_empty_err	Vous essayez de créer un Document Wiki mais vous n'avez pas sélectionné de page. Vous devez créer une Page Wiki avant de créer un Document Wiki.
+wiki_actions_wikiserviceadmin	update_perm_err	Impossible de mettre à jour les permissions: <p>$1</p>
+wiki_actions_wikiserviceadmin	update_page_perm_err	Impossible de mettre à jour les permissions de cette Page Wiki: <p>$1</p>
+#
+#-----------------------------------------------
+# Script: SF/common/wiki/WikiService.class
+#
+wiki_wikiservice	acces_denied_whole	Vous n'êtes pas autaurisé à accéder à ce Wiki. Merci de contacter un Administrateur Projet.
+wiki_wikiservice	acces_denied_page	Vous n'êtes pas autaurisé à accéder à cette Page Wiki. Merci de contacter un Administrateur Projet.
