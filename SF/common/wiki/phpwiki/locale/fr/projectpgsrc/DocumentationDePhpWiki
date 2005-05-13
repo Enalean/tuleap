@@ -9,5 +9,15 @@ Content-Type: application/x-phpwiki;
   charset=iso-8859-1
 Content-Transfer-Encoding: binary
 
-!! Pages dans cette catégorie :
+!! Sommaire
+
+<?plugin SiteMap
+         noheader=true
+         exclude=Accueil
+         reclimit=1
+         direction=forward
+         firstreversed=1
+?>
+
+! Pages dans cette catégorie :
 <?plugin BackLinks exclude||='' include_self||=1 noheader||=0 page||=[pagename] info=pagename,mtime ?>
