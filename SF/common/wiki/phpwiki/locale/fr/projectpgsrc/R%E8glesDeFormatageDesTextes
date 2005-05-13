@@ -95,7 +95,6 @@ ne marche pas''
 * Ne vous en souciez pas
 * < et > sont eux-mêmes
 * Les caractères & ne fonctionneront pas
-* Si vous devez vraiment utiliser du HTML, votre administrateur système peut valider cette fonctionnalité. Commencez chaque ligne par une barre verticale (|). Notez que cette fonctionnalité est désactivée par défaut.
 
 ! Plus de détails que vous ne voulez en connaître
 

@@ -359,7 +359,6 @@ echo '<input type="submit" value="'.$Language->getText('global','btn_create').'"
       $language_id=$_REQUEST['language_id'];
       if (!$language_id) $language_id=1; // default is en_US
       // Initial Wiki document is now created within phpWiki main()
-      
       // Make sure phpWiki instantiates the right pages corresponding the the given language
       define('DEFAULT_LANGUAGE',language_id_to_language_code($language_id));
       $LANG=language_id_to_language_code($language_id);

@@ -8,7 +8,8 @@ Content-Type: application/x-phpwiki;
   charset=iso-8859-1
 Content-Transfer-Encoding: binary
 
-Les derniers hacks incluent le support de !PluginsWiki.
+Les derniers hacks incluent le support de !PluginsWiki. 
+(section actuellement en anglais uniquement)
 
 !WikiPlugins allow one to easily add new types of dynamic content (as well as other functionality) to
 wiki pages within PhpWiki.  In this very wiki, the RecentChanges,  BackLinks, LikePages and DebugInfo

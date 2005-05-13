@@ -76,7 +76,7 @@ will not work''
 * You can suppress linking to old-style references and URIs by preceding the word with a '!', e.g. !NotLinkedAsWikiName, !http://not.linked.to/
 * You can create footnotes by using [[1], [[2], [[3], ... like this here [1]. See footnote for counterpart.  (If the [[ is in the first column, it is a footnote ''definition'' rather than a footnote ''reference'' [1].)
 * Also, the old way of linking URL's is still supported: precede URLs with "http:", "ftp:" or "mailto:" to create links automatically as in: http://c2.com/
-* URLs ending with .png, .gif, or .jpg are inlined if in square brackets, by themselves.
+* URLs ending with .png, .gif, or .jpg are inlined if in square brackets, by themselves: [http://phpwiki.sourceforge.net/demo/themes/default/images/png.png]
 
 ! Tables
 
@@ -100,7 +100,6 @@ will not work''
 * Don't bother
 * < and > are themselves
 * The & characters will not work
-* If you really must use HTML, your system administrator can enable this feature. Start each line with a bar (|). Note that this feature is disabled by default.
 
 ! More detail than you want to know
 

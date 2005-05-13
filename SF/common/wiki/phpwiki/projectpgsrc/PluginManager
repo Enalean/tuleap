@@ -17,4 +17,4 @@ Some plugins require external libraries not provided with PhpWiki or PHP, such a
 -----
 <?plugin PluginManager?>
 ----
-Codex:PhpWikiDocumentation Codex:WikiPlugin
+PhpWikiDocumentation WikiPlugin

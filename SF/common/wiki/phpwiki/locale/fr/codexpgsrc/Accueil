@@ -9,9 +9,11 @@ Content-Type: application/x-phpwiki;
   charset=iso-8859-1
 Content-Transfer-Encoding: binary
 
-* Qu'est-ce qu'un Codex:WikiWikiWeb ? Description courte de cette application.
-* Apprenez Codex:CommentUtiliserUnWiki et comment Codex:AjouterDesPages.
+* Apprenez CommentUtiliserUnWiki et comment AjouterDesPages.
 * Le [BacASable] est là pour jouer et expérimenter.
+* Signez la page des DerniersVisiteurs.
 * Visitez DernièresModifs pour voir les additions et les modifications les plus récentes.
 * Découvrez quelles pages sont LesPlusVisitées.
-* Voir plus de Codex:DocumentationDePhpWiki
+* Lisez les NotesDeVersion (ReleaseNotes, en anglais).
+* Ce Wiki est géré par l'intermédiaire de la page d'AdministrationDePhpWiki.
+* Voir plus de DocumentationDePhpWiki
