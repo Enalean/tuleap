@@ -33,22 +33,28 @@ my %firstkey;
 my %keys;
 
 my %missing_keys_array;
+my %special_keys_array;
 my %tab_lines_array;
 my %duplicate_keys_array;
 my %unused_keys_array;
 my %incorrect_keys_array;
 my $used_lines=0;
 my $total_keys=0;
+my $special_keys=0;
 my $silent_mode=0;
+my $verbose_mode=0;
 
 my $usage="usage: analyse_language_file.pl [-s] \
     -s: silent mode \
+    -v: verbose mode, listing unused keys \
 ";
 
 
 if ($ARGV[0]) {
   if ($ARGV[0] eq '-s') {
     $silent_mode=1;
+  } elsif ($ARGV[0] eq '-v') {
+    $verbose_mode=1;
   } else { print $usage; }
 }
 
@@ -69,14 +75,19 @@ foreach my $filename (@files) {
   open FILE,"$filename";
   #print "File: $filename\n";
   while(<FILE>) {
-    while (/\$Language->getText\s*\(.([^,\'\"\s]+).[\s]*\,[\s]*.([^,\'\"\s]+)[^\)][\)\,]/) {
-      #print "\t$1\t$2\n";
-      $firstkey{"$1"}=1;
-      if (!$keys{"$1"}{"$2"}) { $total_keys++;}
-      $keys{"$1"}{"$2"}.="$filename ";
+    while (/\$Language->getText\s*\(.([^,\'\"\s]+).[\s]*\,[\s]*(.)([^,\'\"\s]+)[^\)][\)\,]/) {
+      #print "\t$1\t$2\t$3\n";}
+      if (($2 ne "\'")&&($2 ne "\"")) { # not a regular 'string'
+        $special_keys_array{"$1"}{"$3"}.="$filename ";
+        $special_keys++;
+      } else {
+        $firstkey{"$1"}=1;
+        if (!$keys{"$1"}{"$3"}) { $total_keys++;}
+        $keys{"$1"}{"$3"}.="$filename ";
+      }
       $used_lines++;
       # for multiple occurences on same line
-      $_ =~ s/\$Language->getText\s*\(.([^,\'\"\s]+).[\s]*\,[\s]*.([^,\'\"\s]+)[^\)][\)\,]//;
+      $_ =~ s/\$Language->getText\s*\(.([^,\'\"\s]+).[\s]*\,[\s]*(.)([^,\'\"\s]+)[^\)][\)\,]//;
     }
   }
   close FILE;
@@ -166,7 +177,7 @@ foreach my $my_tab_dir (@lang_tab_dir) {
   foreach my $key1 (keys %tab_keys) {
     foreach my $key2 (keys %{ $tab_keys{"$key1"}}) {
       if (! $keys{"$key1"}{"$key2"}) {
-        print "Unused:  $key1\t$key2\t (".$tab_keys{"$key1"}{"$key2"}.")\n" unless ($silent_mode);
+        print "Unused:  $key1\t$key2\t (".$tab_keys{"$key1"}{"$key2"}.")\n" unless ($silent_mode || !$verbose_mode);
         $unused_keys++
       }
     }
@@ -187,6 +198,7 @@ print "\nReport:\n";
 print "*******\n";
 print "$used_lines \tgetText() calls\n";
 print "$total_keys \tunique keys\n";
+print "$special_keys \tspecial keys\n";
 foreach my $lang (keys %missing_keys_array) {
   my $percent=100*(1 - ($total_keys-($tab_lines_array{$lang}-$duplicate_keys_array{$lang}-$unused_keys_array{$lang}-$incorrect_keys_array{$lang}))/$total_keys);
   $percent = sprintf('%.2f', $percent);
