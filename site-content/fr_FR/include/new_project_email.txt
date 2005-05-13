@@ -10,9 +10,8 @@
 
 // Message preamble with Web pointers and server names
 list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
-$message = 
-'L'enregistrement de votre projet vient a été approuvé. 
-
+$message = '
+L\'enregistrement de votre projet a été approuvé. 
 Nom complet du projet:    '.$row_grp['group_name'].'
 Nom court du projet:    '.$row_grp['unix_group_name'].'
 Page de sommaire: '.$server.'/projects/'.$row_grp['unix_group_name'].'
@@ -33,14 +32,14 @@ Guide Utilisateur) est disponible sous le lien "Documentation site" que vous tro
 Nous vous invitons maintenant à visiter la page de sommaire de votre
 projet sur '.get_server_url().'/projects/'.$row_grp['unix_group_name'].',
  à créer une description courte de votre projet et à le classer dans
-l'arbre des projets. Tout cela s'avèrera très utiles aux utilisateurs
+l\'arbre des projets. Tout cela s\'avèrera très utiles aux utilisateurs
 du site '.$GLOBALS['sys_name'].'.
 
 Une fois sur la page de sommaire de votre projet vous trouverez un lien
 "Administration projet". Ce lien vous donne accès à toutes les fonctions
-d'administration de votre projet comme créer des outils de suivi de
+d\'administration de votre projet comme créer des outils de suivi de
 tâches ou de défauts, créer des listes de distribution, des forums et
-pourquoi publier votre première annonce informant l'équipe de la 
+pourquoi publier votre première annonce informant l\'équipe de la 
 création du projet (nous la publierons aussi sur la page de bienvenue
 du site).
 
@@ -48,22 +47,22 @@ Points divers:
 
 - Vos comptes CVS et Subversion deviendront opérationnels à la 
 prochaine mise à jour du système qui a lieu toutes les '.$GLOBALS['sys_crondelay'].' heures.
-Si ce n'est pas le cas veuillez nous contacter pour que nous 
+Si ce n\'est pas le cas veuillez nous contacter pour que nous 
 résolvions ce problème.
 
 - Veuillez aussi noter que la propagation des noms de serveurs
 listés ci-dessus aux serveurs de nom de domaine de '. $GLOBALS['sys_org_name']. '
-peut prendre jusqu'à une journée. Si vous êtes pressé d'utiliser
+peut prendre jusqu\'à une journée. Si vous êtes pressé d\'utiliser
 vos comptes shell, CVS ou subversion vous pouvez utiliser les
 serveurs génériques '. $GLOBALS['sys_shell_host']. ' et '. $GLOBALS['sys_cvs_host'].'.
 
 - Remarque: si vous possédez déjà un dépôt CVS ou subversion
-l'équipe '.$GLOBALS['sys_name'].' est en mesure de le transférer
-tel quel sur le site. N'hésitez pas à la contacter pour connaître
+l\'équipe '.$GLOBALS['sys_name'].' est en mesure de le transférer
+tel quel sur le site. N\'hésitez pas à la contacter pour connaître
 la marche à suivre.
 
-N'hésitez pas à nous contacter si vous avez besoin d'aide.
+N\'hésitez pas à nous contacter si vous avez besoin d\'aide.
 
- -- L'équipe '.$GLOBALS['sys_name'];
+ -- L\'équipe '.$GLOBALS['sys_name'];
 
 ?>
