@@ -31,9 +31,9 @@ function exit_wiki_empty() {
 	$go = group_get_object($group_id);
 	$uname = $go->getUnixName();
 
-	$HTML->header(array('title'=>$Language->getText('wiki_view_wikiviews', 'title_error')));
+	$HTML->header(array('title'=>$Language->getText('wiki_views_wikiviews', 'title_error')));
 
-	print $Language->getText('wiki_view_wikiviews', 'not_activate', array($uname));
+	print $Language->getText('wiki_views_wikiviews', 'not_activate', array($uname));
 
 	$HTML->footer(array());
 	exit;
