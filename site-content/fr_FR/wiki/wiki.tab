@@ -27,8 +27,8 @@ wiki_views_wikiserviceviews	home_page_desc	Document Wiki Initial
 wiki_views_wikiserviceviews	menuadmin	Admin	
 wiki_views_wikiserviceviews	menupages	Pages	
 wiki_views_wikiserviceviews	menudocuments	Documents
-wiki_views_wikiserviceviews	lock_title_spec	Il y a des droits sur cette Page Wiki
-wiki_views_wikiserviceviews	lock_title_set	Il y a des droits sur ce Wiki
+wiki_views_wikiserviceviews	lock_title_spec	Il y a des permissions sur cette Page Wiki
+wiki_views_wikiserviceviews	lock_title_set	Il y a des permissions sur ce Wiki
 wiki_views_wikiserviceviews	lock_alt	Verrou
 wiki_views_wikiserviceviews	lighter_display	Affichage réduit - cliquez sur le logo phpWiki pour revenir à l'affichage normal
 wiki_views_wikiserviceviews	install_intro	<h2>Création d'un Wiki</h2><p>Ce projet n'a pas encore initialisé son Wiki.</p><p>Pour pouvoir créer le Wiki, sélectionnez la langue du Wiki et cliquez le bouton "$1".</p>
@@ -39,9 +39,9 @@ wiki_views_wikiserviceviews	wiki_language	Langue du Wiki :
 #
 wiki_views_wikiviews	title_error	Erreur
 wiki_views_wikiviews	not_activate	<H2><span class="feedback">Le Service Wiki n'est pas activé</span></H2><p>Le Service Wiki du projet $1 nécessite un activation par un Administrateur Projet ou un Administrateur Wiki.</p>
-wiki_views_wikiviews	set_perm_title	<h3>Droits de la Page Wiki</h3>
-wiki_views_wikiviews	empty_page	<h2><span class="feedback">La Page n'existe pas</span></h2><p>Vous ne pouvez donner des droits que sur des pages existantes. Vous devez créer la page avec le moteur Wiki avant de pouvoir donner des droits.</p><p>Pour créer une page, il suffit de l'éditer.</p><p><strong>Note:</strong> Une page qui ne contient que "Décrivez PageName? ici" est vide du point de vue du moteur Wiki.</p>
-wiki_views_wikiviews	not_empty_page	<p>Vous pouvez donnez des droits spécifiques à la Page Wiki $1. Ces <strong>droits ne s'appliquent que sur cette page</strong>.</p><p>Par défaut, les pages Wiki n'ont pas de droits : l'accès à toutes les Pages Wiki est permis pour tout utilisateur enregistré.</p><p><strong>Rappel:</strong> Accéder à une page signifie que <strong>tous les membres</strong> de <strong>chaque groupe</strong> ci-dessous <strong>sélectionné</strong> peut <strong>lire</strong> et <strong>modifier</strong> la page correspondante.</p><p>Sélectionner les groupes d'utilisateurs qui sont autorisés à accéder à ce Wiki :<p>
+wiki_views_wikiviews	set_perm_title	<h3>Permissions de la Page Wiki</h3>
+wiki_views_wikiviews	empty_page	<h2><span class="feedback">La Page n'existe pas</span></h2><p>Vous ne pouvez donner des permissions que sur des pages existantes. Vous devez créer la page avec le moteur Wiki avant de pouvoir donner des permissions.</p><p>Pour créer une page, il suffit de l'éditer.</p><p><strong>Note:</strong> Une page qui ne contient que "Décrivez PageName? ici" est vide du point de vue du moteur Wiki.</p>
+wiki_views_wikiviews	not_empty_page	<p>Vous pouvez donnez des permissions spécifiques à la Page Wiki $1. Ces <strong>permissions ne s'appliquent que sur cette page</strong>.</p><p>Par défaut, les pages Wiki n'ont pas de permissions : l'accès à toutes les Pages Wiki est permis pour tout utilisateur enregistré.</p><p><strong>Rappel:</strong> Accéder à une page signifie que <strong>tous les membres</strong> de <strong>chaque groupe</strong> ci-dessous <strong>sélectionné</strong> peut <strong>lire</strong> et <strong>modifier</strong> la page correspondante.</p><p>Sélectionner les groupes d'utilisateurs qui sont autorisés à accéder à ce Wiki :<p>
 #
 #-----------------------------------------------
 # Script: SF/common/wiki/lib/WikiEntry.class
@@ -60,14 +60,14 @@ wiki_lib_wikipage	notunique_err	La page wiki n'est pas unique. Merci de contacte
 #
 wiki_lib_wikipagewrap	new_page_text	$1 enregistre les pages créées avec l'interface principale:
 wiki_lib_wikipagewrap	page_added	$1 ajoutée
-wiki_lib_wikipagewrap	right_error	Cette opération nécessite les droits admin
+wiki_lib_wikipagewrap	right_error	Cette opération nécessite les permissions admin
 #
 #-----------------------------------------------
 # Script: SF/common/wiki/actions/WikiServiceAdminActions.class
 #
 wiki_actions_wikiserviceadmin	page_name_empty_err	Vous essayez de créer un Document Wiki mais vous n'avez pas sélectionné de page. Vous devez créer une Page Wiki avant de créer un Document Wiki.
-wiki_actions_wikiserviceadmin	update_perm_err	Impossible de mettre à jour les droits : <p>$1</p>
-wiki_actions_wikiserviceadmin	update_page_perm_err	Impossible de mettre à jour les droits de cette Page Wiki : <p>$1</p>
+wiki_actions_wikiserviceadmin	update_perm_err	Impossible de mettre à jour les permissions : <p>$1</p>
+wiki_actions_wikiserviceadmin	update_page_perm_err	Impossible de mettre à jour les permissions de cette Page Wiki : <p>$1</p>
 #
 #-----------------------------------------------
 # Script: SF/common/wiki/WikiService.class
@@ -92,8 +92,8 @@ wiki_views_wkserviews	menuview	Parcourir
 wiki_views_wkserviews	menuadmin	Admin
 wiki_views_wkserviews	menudocs	Documents Wiki
 wiki_views_wkserviews	menupage	Pages Wiki
-wiki_views_wkserviews	menuperm	Droits Wiki
-wiki_views_wkserviews	main	<h2>Wiki '$1' - Administration</h2><h3><a href="$2&view=wikiDocuments">Gérer les Documents Wiki</a></h3><p>Créer, supprimer, modifier et donner des droits sur des Documents Wiki.</p><h3><a href="$3&view=wikiPages">Gérer les Pages Wiki</a></h3><p>Parcourir et donner des droits sur des Pages Wiki.</p><h3><a href="$4&view=wikiPerms">Gérer les Droits Wiki</a></h3><p>Donner des droits sur tout le Wiki $5.</p>
+wiki_views_wkserviews	menuperm	Permissions Wiki
+wiki_views_wkserviews	main	<h2>Wiki '$1' - Administration</h2><h3><a href="$2&view=wikiDocuments">Gérer les Documents Wiki</a></h3><p>Créer, supprimer, modifier et donner des permissions sur des Documents Wiki.</p><h3><a href="$3&view=wikiPages">Gérer les Pages Wiki</a></h3><p>Parcourir et donner des permissions sur des Pages Wiki.</p><h3><a href="$4&view=wikiPerms">Gérer les Permissions Wiki</a></h3><p>Donner des permissions sur tout le Wiki $5.</p>
 wiki_views_wkserviews	wikidocs_title	<h2>Wiki '$1' - Gérer les Documents Wiki</h2>
 wiki_views_wkserviews	wikidocs_create	<h3>$1Créer un nouveau Document Wiki</h3>
 wiki_views_wkserviews	wikidocs_docs	<h3>$1Documents Wiki</h3>
@@ -101,9 +101,9 @@ wiki_views_wkserviews	back_admin	Retour à la page d'administration
 wiki_views_wkserviews	createwikidoc	<p>Vous pouvez ajouter un nouveau lien vers une Page Wiki avec le formulaire suivant. Cela ajoutera un nouveau document dans la liste des Documents Wiki affichée sur la page du service Wiki (Le lien <a href="'.$this->wikiLink.'">Parcourir</a> de la barre d'outils).</p>
 wiki_views_wkserviews	act_create	Créer
 wiki_views_wkserviews	act_update	Modifier
-wiki_views_wkserviews	browsedoc	<p>Liste de tous les Documents Wiki affichée sur la page du service Wiki. Vous pouvez :</p><ul><li>Editer chaque Document Wiki avec un lien sur le nom.</li><li>Donner des droits sur un Document Wiki.</li><li>supprimer un Document Wiki (La Page Wiki correspondante ne sera pas supprimée)</li></ul>
-wiki_views_wkserviews	define_perms	Définir les droits
-wiki_views_wkserviews	edit_perms	Editer les droits
+wiki_views_wkserviews	browsedoc	<p>Liste de tous les Documents Wiki affichée sur la page du service Wiki. Vous pouvez :</p><ul><li>Editer chaque Document Wiki avec un lien sur le nom.</li><li>Donner des permissions sur un Document Wiki.</li><li>supprimer un Document Wiki (La Page Wiki correspondante ne sera pas supprimée)</li></ul>
+wiki_views_wkserviews	define_perms	Définir les permissions
+wiki_views_wkserviews	edit_perms	Editer les permissions
 wiki_views_wkserviews	deletedoc	supprime le document $1
 wiki_views_wkserviews	updatedoc	<h2>Wiki '$1' - Modifier un Document Wiki</h2>
 wiki_views_wkserviews	wkpage_title	<h2>Wiki '$1' - Gérer les Pages Wiki</h2>
@@ -115,4 +115,4 @@ wiki_views_wkserviews	wkpage_admin	<h3>$1Pages Admin</h3>
 wiki_views_wkserviews	wkpage_adm_all	<p>La table ci-dessous liste toutes les pages administratives. Vous pouvez utiliser ces pages dans un but de gestion. <strong>Utilisez-les avec précautions</strong>. Dans le doute, archivez votre wiki avant de supprimer/renommez/déplacer une page.</p>
 wiki_views_wkserviews	wkpage_intern	<h3>$1Pages internes</h3>
 wiki_views_wkserviews	wkpage_int_all	<p>Les pages suivantes servent au moteur Wiki (<strong>usage interne réservé</strong>). Utilisez-les avec précautions. Vous <strong>ne</strong> devriez <strong>pas utiliser ou modifier ces pages</strong> si vous ne maîtrisez pas PhpWiki. Dans le doute, ne touchez pas à ces pages.</p>
-wiki_views_wkserviews	wikiperm	<h2>Wiki '$1' - Droit du Wiki</h2><p>Vous pouvez donner des droits sur $2. Ces droits s'appliquent sur <strong>tout le service wiki</strong>.</p><p>Par défaut, Wiki n'a pas de droits spécifique : l'accès (à la fois <strong>en lecture</strong> et <strong>en écriture</strong>) à toutes les Pages Wiki est donné à tout utilisateur enregistré.</p><p>Sélectionnez les groupes qui sont autorisés à accéder à ce Wiki :<p>
+wiki_views_wkserviews	wikiperm	<h2>Wiki '$1' - Permission du Wiki</h2><p>Vous pouvez donner des permissions sur $2. Ces permissions s'appliquent sur <strong>tout le service wiki</strong>.</p><p>Par défaut, Wiki n'a pas de permissions spécifique : l'accès (à la fois <strong>en lecture</strong> et <strong>en écriture</strong>) à toutes les Pages Wiki est donné à tout utilisateur enregistré.</p><p>Sélectionnez les groupes qui sont autorisés à accéder à ce Wiki :<p>
