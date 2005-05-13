@@ -21,9 +21,6 @@ wiki_views_wikiserviceviews	wiki_subtit_empty	<h3>$1Empty Wiki Pages</h3>
 wiki_views_wikiserviceviews	wiki_subtit_create	<h3>$1Create a new Wiki Page</h3>
 wiki_views_wikiserviceviews	wikientries	<li>$1<p><em>Description:</em>$2</p></li>
 wiki_views_wikiserviceviews	pagename	Page Name:
-wiki_views_wikiserviceviews	home_page	HomePage
-wiki_views_wikiserviceviews	home_page_name	Wiki Home
-wiki_views_wikiserviceviews	home_page_desc	Initial Wiki Document
 wiki_views_wikiserviceviews	menuadmin	Admin	
 wiki_views_wikiserviceviews	menupages	Pages	
 wiki_views_wikiserviceviews	menudocuments	Documents
