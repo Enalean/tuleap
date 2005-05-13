@@ -24,6 +24,7 @@ require_once(dirname(__FILE__).'/WikiViews.class');
 require_once(dirname(__FILE__).'/../lib/WikiPage.class');
 require_once(dirname(__FILE__).'/../lib/WikiEntry.class');
 
+$Language->loadLanguageMsg('wiki/wiki');
 /**
  * 
  * @package   WikiService
@@ -37,8 +38,11 @@ class WikiServiceViews extends WikiViews {
    * WikiServiceViews - Constructor
    */
   function WikiServiceViews($id=0, $view=null) {
+    global $Language;
     parent::WikiView($id, $view);
-    $this->html_params['title']  = 'Wiki for '.group_getname($this->gid);
+    $this->html_params['title']  = $Language->getText('wiki_views_wikiserviceviews', 
+                                                      'wiki_title', 
+                                                      array(group_getname($this->gid)));
   }
 
   /**
@@ -55,9 +59,10 @@ class WikiServiceViews extends WikiViews {
    * @access public 
    */
   function browse() {
+    global $Language;
     list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_browse_documents', $this->gid);
     $hurl='<a href="'.$this->wikiLink.'&'.$hideUrl.'">'.$hideImg.'</a>';
-    print '<h3>'.$hurl.'Wiki Documents</h3>';
+    print $Language->getText('wiki_views_wikiserviceviews', 'wiki_subtit_docu', array($hurl));
     if(!$hideFlag) {
       $this->_browseWikiDocuments();
     }
@@ -76,23 +81,24 @@ class WikiServiceViews extends WikiViews {
    * @access public 
    */
   function browsePages() {    
+    global $Language;
     list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_browse_pages', $this->gid);
     $hurl='<a href="'.$this->wikiLink.'&view=browsePages&'.$hideUrl.'">'.$hideImg.'</a>';
-    print '<h3>'.$hurl.'Wiki Pages</h3>';
+    print $Language->getText('wiki_views_wikiserviceviews', 'wiki_subtit_pages', array($hurl));
     if(!$hideFlag) {
       $this->_browseProjectWikiPages();
     }
 
     list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_browse_empty_pages', $this->gid);
     $hurl='<a href="'.$this->wikiLink.'&view=browsePages&'.$hideUrl.'">'.$hideImg.'</a>';
-    print '<h3>'.$hurl.'Empty Wiki Pages</h3>';
+    print $Language->getText('wiki_views_wikiserviceviews', 'wiki_subtit_empty', array($hurl));
     if(!$hideFlag) {
       $this->_browseEmptyWikiPages();
     }
 
     list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_create_new_page', $this->gid);
     $hurl='<a href="'.$this->wikiLink.'&view=browsePages&'.$hideUrl.'">'.$hideImg.'</a>';
-    print '<h3>'.$hurl.'Create a new Wiki Page</h3>';
+    print $Language->getText('wiki_views_wikiserviceviews', 'wiki_subtit_create', array($hurl));
     if(!$hideFlag) {
       $this->_newPageForm($this->wikiLink.'&view=browsePages');
     }
@@ -103,6 +109,7 @@ class WikiServiceViews extends WikiViews {
    *
    */
   function _browseWikiDocuments() {
+    global $Language;
     $wem = new WikiEntryManager($this->gid);
     $wem->getList();
 
@@ -110,9 +117,7 @@ class WikiServiceViews extends WikiViews {
     while($we = $wem->iterate()) {
       $href = $this->_buildPageLink($we->wikiPage, $we->getName());
       if(!empty($href)) {
-	print '<li>'.$href.'
-	       <p><em>Description:</em>'.$we->getDesc().'</p>
-               </li>';
+          print $Language->getText('wiki_views_wikiserviceviews', 'wikientries', array($href, $we->getDesc()));
       }
     }
     print '</ul>';
@@ -162,12 +167,12 @@ class WikiServiceViews extends WikiViews {
    * @param  string $addr Form action adress
    */
   function _newPageForm($addr='') {
+    global $Language;
     print '
     <form name="newPage" method="post" action="'.$addr.'">
       <input type="hidden" name="action" value="add_temp_page" />
-      <input type="hidden" name="group_id" value="'.$this->gid.'" />
-      Page Name: <input type="text" name="name" value="" size="20" maxsize="255" />
-      <input type="submit" value="Create">
+      <input type="hidden" name="group_id" value="'.$this->gid.'" />'.$Language->getText('wiki_views_wikiserviceviews', 'pagename').' <input type="text" name="name" value="" size="20" maxsize="255" />
+      <input type="submit" value="'.$Language->getText('global', 'btn_create').'">
     </form>';
    }
 
@@ -223,7 +228,7 @@ class WikiServiceViews extends WikiViews {
    * displayMenu - public
    */
   function displayMenu() {
-      global $Language;
+    global $Language;
 
     print '
     <table class="ServiceMenu">
@@ -231,10 +236,10 @@ class WikiServiceViews extends WikiViews {
         <td>';
     print '
     <ul class="ServiceMenu">
-      <li><a href="'.$this->wikiLink.'">Documents</a>&nbsp;|&nbsp;</li>
-      <li><a href="'.$this->wikiLink.'&view=browsePages">Pages</a>&nbsp;|&nbsp;</li>
-      <li><a href="'.$this->wikiAdminLink.'">Admin</a>&nbsp;|&nbsp;</li>
-      <li><a href="/wiki/index.php?pagename=PhpWikiDocumentation&group_id=1">Help</a></li>
+      <li><a href="'.$this->wikiLink.'">'.$Language->getText('wiki_views_wikiserviceviews', 'menudocuments').'</a>&nbsp;|&nbsp;</li>
+      <li><a href="'.$this->wikiLink.'&view=browsePages">'.$Language->getText('wiki_views_wikiserviceviews', 'menupages').'</a>&nbsp;|&nbsp;</li>
+      <li><a href="'.$this->wikiAdminLink.'">'.$Language->getText('wiki_views_wikiserviceviews', 'menuadmin').'</a>&nbsp;|&nbsp;</li>
+      <li><a href="/wiki/index.php?pagename=PhpWikiDocumentation&group_id=1">'.$Language->getText('global', 'help').'</a></li>
    </ul>';
 
   print '
@@ -251,11 +256,11 @@ class WikiServiceViews extends WikiViews {
           
           $permLink = $this->wikiAdminLink.'&view=pagePerms&id='.$wp->getId();
           if($wp->permissionExist()) {
-              $permInfo =  '<a href="'.$permLink.'"> '.'<img src="'.util_get_image_theme("ic/lock.png").'" border="0" alt="Lock" title="There are specific permissions on this Wiki Page"/></a>';
+              $permInfo =  '<a href="'.$permLink.'"> '.'<img src="'.util_get_image_theme("ic/lock.png").'" border="0" alt="'.$Language->getText('wiki_views_wikiserviceviews', 'lock_alt').'" title="'.$Language->getText('wiki_views_wikiserviceviews', 'lock_title_spec').'"/></a>';
           }
       }
       if ($wiki->permissionExist()) {
-          $permInfo .=  '<a href="/wiki/admin/index.php?group_id='.$this->gid.'&view=wikiPerms"> '.'<img src="'.util_get_image_theme("ic/lock.png").'" border="0" alt="Lock" title="There are permissions set on this Wiki"/>'.'</a>';
+          $permInfo .=  '<a href="/wiki/admin/index.php?group_id='.$this->gid.'&view=wikiPerms"> '.'<img src="'.util_get_image_theme("ic/lock.png").'" border="0" alt="'.$Language->getText('wiki_views_wikiserviceviews', 'lock_alt').'" title="'.$Language->getText('wiki_views_wikiserviceviews', 'lock_title_set').'"/>'.'</a>';
       }
       if ($permInfo) print $permInfo;
 
@@ -264,7 +269,7 @@ class WikiServiceViews extends WikiViews {
 
   if("wiki" == $this->view) {
       print '
-      (<a href="'.$_SERVER['REQUEST_URI'].'&pv=1" title="lighter display - click on phpWiki logo to return to normal display">
+      (<a href="'.$_SERVER['REQUEST_URI'].'&pv=1" title="'.$Language->getText('wiki_views_wikiserviceviews', 'lighter_display').'">
       <img src="'.util_get_image_theme("msg.png").'" border="0">&nbsp;'.
         $Language->getText('global','printer_version').'</A> ) 
       </li>';
@@ -285,9 +290,10 @@ class WikiServiceViews extends WikiViews {
    * @access public 
    */
   function pagePerms() {
+     global $Language;
      $postUrl = '/wiki/index.php?group_id='.$this->gid.'&action=setWikiPagePerms';     
      $this->_pagePerms($postUrl);
-     print '<p><a href="'.$this->wikiLink.'">Back</a></p>'."\n";
+     print '<p><a href="'.$this->wikiLink.'">'.$Language->getText('globale', 'back').'</a></p>'."\n";
   }
 
   /**
@@ -331,18 +337,15 @@ class WikiServiceViews extends WikiViews {
    */
   function install() {
     global $Language;
-    echo '<h2>Wiki Creation</h2>';
-   
-    echo '
-    <p>This project has not initialized its Wiki yet.</p>
-    <p>In order to create the wiki, select the language for the wiki, and press the "Create" button.</p>';
+    echo $Language->getText('wiki_views_wikiserviceviews', 
+                            'install_intro', 
+                            array($Language->getText('global','btn_create')));
     // Display creation form
     echo '<form name="WikiCreation" method="post" action="'.$this->wikiLink.'">
              <input type="hidden" name="group_id" value="'.$this->gid.'" />
-             <input type="hidden" name="view" value="doinstall" />
-             Wiki Language: ';
+             <input type="hidden" name="view" value="doinstall" />'.$Language->getText('wiki_views_wikiserviceviews', 'wiki_language').' ';
 echo html_get_language_popup($Language,'language_id',$Language->getLanguageId());
-echo '<input type="submit" value="'.$Language->getText('global','btn_submit').'">
+echo '<input type="submit" value="'.$Language->getText('global','btn_create').'">
 </form>';
   }
 

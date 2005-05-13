@@ -26,6 +26,8 @@ require_once('common/wiki/actions/WikiServiceActions.class');
 require_once('common/wiki/lib/WikiPage.class');
 require_once('common/wiki/lib/Wiki.class');
 
+$Language->loadLanguageMsg('wiki/wiki');
+
 /**
  * Entry point of WikiService
  *
@@ -90,19 +92,19 @@ class WikiService extends Controler {
    *  wikipage: each page of the wiki can be restricted.
    */
   function checkPermissions() {
+    global $Language;
     // Check if user can access to whole wiki
     if(!$this->wiki->isAutorized(user_getid())) {
-      exit_error('Access Denied', 'You are not authorized to access this Wiki. 
-                                   Please contact a Project Administrator.');
+        exit_error($Language->getText('global', 'perm_denied'),
+                   $Language->getText('wiki_wikiservice', 'acces_denied_whole'));
     }
 
     // Check if user can access to selected page
     if(!empty($_REQUEST['pagename'])) {
       $wp = new WikiPage($this->gid, $_REQUEST['pagename']);
       if(!$wp->isAutorized(user_getid())) {
-	exit_error('Access Denied', 'You are not authorized to access this 
-                                     Wiki Page. Please contact a Project 
-                                     Administrator.');
+	exit_error($Language->getText('global', 'perm_denied'),
+                   $Language->getText('wiki_wikiservice', 'acces_denied_page'));
       }
     }
   }

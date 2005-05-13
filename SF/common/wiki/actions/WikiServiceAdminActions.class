@@ -26,6 +26,8 @@ require_once(dirname(__FILE__).'/../lib/WikiEntry.class');
 require_once(dirname(__FILE__).'/../lib/WikiPage.class');
 require_once(dirname(__FILE__).'/../lib/Wiki.class');
 
+$Language->loadLanguageMsg('wiki/wiki');
+
 /**
  *
  * @package    WikiService
@@ -46,15 +48,13 @@ class WikiServiceAdminActions extends WikiActions {
   }
 
   function checkPage($page) {
-    global $feedback;
+      global $feedback, $Language;
 
     /**
      * Check if the given page name is not empty
      */
     if(empty($page)) {
-      $feedback = 'ERROR: You try to create a Wiki Document but you didn\'t
-                   select any page. You have to create a Wiki Page before 
-                   creating a Wiki Document.';
+      $feedback = $Language->getText('wiki_actions_wikiserviceadmin', 'page_name_empty_err');
       return false;
     }
     
@@ -132,7 +132,7 @@ class WikiServiceAdminActions extends WikiActions {
    *
    */
   function setWikiPerms() {
-    global $feedback;
+      global $feedback, $Language;
 
     $w = new Wiki($this->gid);
     if ($_POST['reset']) 
@@ -140,14 +140,15 @@ class WikiServiceAdminActions extends WikiActions {
     else
         $ret = $w->setPermissions($_POST['ugroups']);
     if(!$ret)
-      exit_error('Error','ERROR: could not update permissions: <p>'.$feedback.'</p>');
+      exit_error($Language->getText('global','error'),
+                 $Language->getText('wiki_actions_wikiserviceadmin', 'update_perm_err', array($feedback)));
   }
 
   /**
    *
    */
   function setWikiPagePerms() {
-    global $feedback;
+      global $feedback, $Language;
 
     $wp = new WikiPage($_POST['object_id']);
     if ($_POST['reset']) 
@@ -155,7 +156,8 @@ class WikiServiceAdminActions extends WikiActions {
     else
         $ret = $wp->setPermissions($_POST['ugroups']);
     if(!$ret)
-      exit_error('Error','ERROR: could not update permissions on this Wiki Page: <p>'.$feedback.'</p>');
+      exit_error($Language->getText('global','error'),
+                 $Language->getText('wiki_actions_wikiserviceadmin', 'update_page_perm_err', array($feedback)));
   }
 }
 ?>

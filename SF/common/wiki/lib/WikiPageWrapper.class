@@ -25,6 +25,8 @@ define('PHPWIKI_DIR', dirname(__FILE__).'/../phpwiki');
 require_once(PHPWIKI_DIR.'/lib/prepend.php');
 require_once(PHPWIKI_DIR.'/lib/IniConfig.php');
 
+$Language->loadLanguageMsg('wiki/wiki');
+
 /**
  * Wrapper to access to PhpWiki WikiPage objects
  *
@@ -87,6 +89,7 @@ class WikiPageWrapper {
   }
 
   function addNewProjectPage($pagename) {
+    global $Language;
     $projectPageName='ProjectWantedPages';
 
     // Dirty hack to 'give' a WikiRequest object to phpwiki
@@ -105,12 +108,12 @@ class WikiPageWrapper {
     else {
       // Create a new page (first use or page previously erased)
       $version = 0;
-      $text = $projectPageName." store pages created with CodeX interface:";
+      $text = $Language->getText('wiki_lib_wikipagewrap', 'new_page_text', array($projectPageName));
       $meta['author'] = user_getname();
     }
 
     $text .= "\n* [$pagename]";
-    $meta['summary'] = sprintf("Added %s",$pagename);
+    $meta['summary'] =  $Language->getText('wiki_lib_wikipagewrap', 'page_added', array($pagename));
     $pagehandle->save($text, $version + 1, $meta);
   }
 
@@ -128,9 +131,10 @@ class WikiPageWrapper {
    * special install function
    */
   function install() {
+    global $Language;
     if($this->gid == 1) {
       if(!user_is_super_user()) {
-	exit_error('Error', 'This operation require "admin" rights');
+          exit_error($Language->getText('global','error'),$Language->getText('wiki_lib_wikipagewrap', 'right_error'));
       }
       define('WIKI_PGSRC', 'codexpgsrc');
       define('DEFAULT_WIKI_PGSRC', PHPWIKI_DIR.'/codexpgsrc');

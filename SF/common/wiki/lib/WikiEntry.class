@@ -175,6 +175,7 @@ class WikiEntry {
    * Data handle
    */
   function add() {
+      global $Language;
     $res = db_query(' INSERT INTO wiki_group_list SET'.
 		    ' group_id='.$this->gid.','.
 		    ' rank='.$this->rank.','.
@@ -191,6 +192,7 @@ class WikiEntry {
   }
 
   function del() {
+      global $Language;
     $res = db_query(' DELETE FROM wiki_group_list'.
 		    ' WHERE id='.$this->id.
 		    ' AND group_id='.$this->gid);
@@ -203,6 +205,7 @@ class WikiEntry {
   }
 
   function update() {
+      global $Language;
     $res = db_query(' UPDATE wiki_group_list SET'.
 		    ' group_id='.$this->gid.','.
 		    ' rank='.$this->rank.','.

@@ -22,16 +22,18 @@
  */
 require_once('common/mvc/Views.class');
 
+$Language->loadLanguageMsg('wiki/wiki');
+
 function exit_wiki_empty() {
-	GLOBAL $HTML;
+    GLOBAL $HTML, $Language;
 	global $group_id;
 	
 	$go = group_get_object($group_id);
 	$uname = $go->getUnixName();
 
-	$HTML->header(array('title'=>'Exiting with Error'));
+	$HTML->header(array('title'=>$Language->getText('wiki_view_wikiviews', 'title_error')));
 
-	print '<H2><span class="feedback">Wiki Service not activated</span></H2><p>The Wiki Service of "'.$uname.'" project  require an activation by a Project admin or a Wiki admin.</p>';
+	print $Language->getText('wiki_view_wikiviews', 'not_activate', array($uname));
 
 	$HTML->footer(array());
 	exit;
@@ -139,38 +141,17 @@ class WikiViews extends Views {
    * pagePerms - public View
    */
   function _pagePerms($postUrl='') { 
+    global $Language;
     $wp = new WikiPage($_REQUEST['id']);
     
-    print '<h3>Set Wiki Page permissions</h3>';
+    print $Language->getText('wiki_views_wikiviews', 'set_perm_title');
     
     $pagename=$wp->getPagename();
     if(empty($pagename)) {
-      print '<h2><span class="feedback">Page doesn\'t exist</span></h2>
-             <p>You can set permissions only on existing pages. You have to
-             create the page in Wiki engine before setting permissions.</p>
-             <p>To create a page, you simply have to edit it.</p>
-             <p><strong>Note:</strong> A page that contain only 
-             "Describe PageName? here" is empty from Wiki engine point 
-              of view.</p>';
-      
+        print $Language->getText('wiki_views_wikiviews', 'empty_page');
     }
     else {
-      print '
-            <p>You can set specific permissions on <strong>"'.$pagename.'"</strong> 
-            Wiki Page. 
-            These <strong>permissions only apply to this page</strong>.</p>
-
-            <p>By default, Wiki pages have no specific permissions: access 
-            to all Wiki Pages is granted to any CodeX registred user.</p>
-
-            <p><strong>Remember:</strong> Access to a page imply that 
-            <strong>every members</strong> of <strong>each</strong> 
-            following <strong>selected groups</strong> can 
-            <strong>read</strong> and <strong>write</strong> the corresponding
-            page.</p>
-
-            <p>Select user groups who are granted access to this Wiki:<p>';
-    
+      print $Language->getText('wiki_views_wikiviews', 'not_empty_page', array($pagename));
       permission_display_selection_form("WIKIPAGE_READ", $wp->getId(), $this->gid, $postUrl);
     }
   }
