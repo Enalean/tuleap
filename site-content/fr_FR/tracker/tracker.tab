@@ -127,7 +127,8 @@ tracker_import_utils	field_mandatory_and_line	<b>Ligne $1 [</b>$2<b>]</b>:<br>"$
 tracker_import_utils	already_submitted	<b>Ligne $1 [</b>$2<b>]</b>:<br>L'utilisateur $3 a déjà soumis un artefact avec le même résumé ("$4"). Veuillez ne pas essayer de l'importer à nouveau.	
 tracker_import_utils	art_not_exists	<b>Ligne $1 [</b>$2<b>]</b>:<br>l'artefact spécifié (id=$3) n'existe pas dans l'outil de suivi $4
 tracker_import_utils	date	Date
-tracker_import_utils	type	type
+tracker_import_utils	type	Type
+tracker_import_utils	comment	Commentaire
 tracker_import_utils	comment_parse_error	$1 n'insérera aucun commentaire pour cet artefact.
 tracker_import_utils	unchanged	Inchangé
 tracker_import_utils	new	NOUVEAU

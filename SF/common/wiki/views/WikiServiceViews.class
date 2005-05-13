@@ -293,7 +293,7 @@ class WikiServiceViews extends WikiViews {
      global $Language;
      $postUrl = '/wiki/index.php?group_id='.$this->gid.'&action=setWikiPagePerms';     
      $this->_pagePerms($postUrl);
-     print '<p><a href="'.$this->wikiLink.'">'.$Language->getText('globale', 'back').'</a></p>'."\n";
+     print '<p><a href="'.$this->wikiLink.'">'.$Language->getText('global', 'back').'</a></p>'."\n";
   }
 
   /**

@@ -13,7 +13,6 @@
 #-----------------------------------------------
 # Script: SF/common/wiki/views/WikiServiceViews.class
 #
-# Note that "wiki_home_page" must correspond to the page name initialised by phpWiki in this language!
 wiki_views_wikiserviceviews	wiki_title	Wiki pour $1
 wiki_views_wikiserviceviews	wiki_subtit_docu	<h3>$1Documents Wiki</h3>
 wiki_views_wikiserviceviews	wiki_subtit_pages	<h3>$1Pages Wiki</h3>

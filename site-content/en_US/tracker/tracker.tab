@@ -128,6 +128,7 @@ tracker_import_utils	already_submitted	<b>Line $1 [</b>$2<b>]</b>:<br>User $3 ha
 tracker_import_utils	art_not_exists	<b>Line $1 [</b>$2<b>]</b>:<br>the specified artifact (id=$3) does not exist in tracker $4
 tracker_import_utils	date	Date
 tracker_import_utils	type	type
+tracker_import_utils	comment	Comment
 tracker_import_utils	comment_parse_error	$1 Won't insert any follow-up comments for this artifact.
 tracker_import_utils	unchanged	Unchanged
 tracker_import_utils	new	NEW
