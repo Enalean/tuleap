@@ -2067,6 +2067,7 @@ CREATE TABLE user_group (
   support_flags int(11) NOT NULL default '1',
   doc_flags int(11) NOT NULL default '0',
   file_flags int(11) NOT NULL default '0',
+  wiki_flags int(11) NOT NULL default '0',
   PRIMARY KEY  (user_group_id),
   KEY idx_user_group_user_id (user_id),
   KEY idx_user_group_group_id (group_id),
@@ -2957,9 +2958,9 @@ CREATE TABLE artifact_watcher (
   INDEX `user_id_idx` (`user_id`,`artifact_group_id`)  
 );
 
-#
-# Table structure for user interface supported languages
-#
+---
+--- Table structure for user interface supported languages
+---
 CREATE TABLE supported_languages (
   language_id int(11) NOT NULL auto_increment,
   name text,
@@ -3071,6 +3072,79 @@ CREATE TABLE permissions_values (
 
 
 
+
+---
+--- Wiki Service
+---
+
+CREATE TABLE wiki_group_list (
+	id int(11) NOT NULL auto_increment,
+	group_id int(11) NOT NULL default '0',
+	wiki_name varchar(255) NOT NULL default '',
+	wiki_link varchar(255) NOT NULL default '',
+	description varchar(255) NOT NULL default '',
+	rank int(11) NOT NULL default '0',
+        language_id int(11) NOT NULL default '1',
+	PRIMARY KEY (id)	
+) TYPE=MyISAM;
+
+-- Table for Wiki access logs
+CREATE TABLE wiki_log (
+  user_id int(11) NOT NULL default '0',
+  group_id int(11) NOT NULL default '0',
+  pagename varchar(255) NOT NULL default '',
+  time int(11) NOT NULL default '0',
+  KEY all_idx (user_id,group_id),
+  KEY time_idx (time),
+  KEY group_id_idx (group_id)
+) TYPE=MyISAM;
+
+
+--
+-- PHP Wiki tables
+--
+CREATE TABLE wiki_page (
+	id              INT NOT NULL AUTO_INCREMENT,
+        pagename        VARCHAR(100) BINARY NOT NULL,
+	hits            INT NOT NULL DEFAULT 0,
+        pagedata        MEDIUMTEXT NOT NULL DEFAULT '',
+	group_id        INT NOT NULL DEFAULT 0,
+        PRIMARY KEY (id)
+);
+
+CREATE TABLE wiki_version (
+	id              INT NOT NULL,
+        version         INT NOT NULL,
+	mtime           INT NOT NULL,
+	minor_edit      TINYINT DEFAULT 0,
+        content         MEDIUMTEXT NOT NULL DEFAULT '',
+        versiondata     MEDIUMTEXT NOT NULL DEFAULT '',
+        PRIMARY KEY (id,version),
+	INDEX (mtime)
+);
+
+
+CREATE TABLE wiki_recent (
+	id              INT NOT NULL,
+	latestversion   INT,
+	latestmajor     INT,
+	latestminor     INT,
+        PRIMARY KEY (id)
+);
+
+
+CREATE TABLE wiki_nonempty (
+	id              INT NOT NULL,
+	PRIMARY KEY (id)
+);
+
+
+CREATE TABLE wiki_link (
+	linkfrom        INT NOT NULL,
+        linkto          INT NOT NULL,
+	INDEX (linkfrom),
+        INDEX (linkto)
+);
 
 
 

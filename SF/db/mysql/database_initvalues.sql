@@ -171,7 +171,7 @@ INSERT INTO groups SET \
 # Make the 'admin' user part of the default Admin Project so that he
 # becomes a super user
 
-INSERT INTO user_group VALUES (1, 101, 1, 'A', 2, 2, 2, 2, 2, 1, 2);
+INSERT INTO user_group VALUES (1, 101, 1, 'A', 2, 2, 2, 2, 2, 1, 2, 2);
 
 #
 # Default bug (None)
@@ -1661,6 +1661,7 @@ insert into service (service_id, group_id, label, description, short_name, link,
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (14, 100, 'Files', 'File Releases', 'file', '/file/showfiles.php?group_id=$group_id', 1, 1, 'system', 140);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (15, 100, 'Trackers', 'Project Trackers', 'tracker', '/tracker/index.php?group_id=$group_id', 1, 1, 'system', 150);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (16, 100, 'Subversion', 'Subversion Access', 'svn', '/svn/?group_id=$group_id', 1, 1, 'system', 135);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (17, 100, 'Wiki', 'Wiki', 'wiki', '/wiki/?group_id=$group_id', 1, 1, 'system', 105);
 
 -- Group 1
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (31, 1, 'Summary', 'Project Summary', 'summary', '/projects/codex/', 1, 1, 'system', 10);
@@ -1676,6 +1677,7 @@ insert into service (service_id, group_id, label, description, short_name, link,
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (41, 1, 'Files', 'File Releases', 'file', '/file/showfiles.php?group_id=1', 1, 1, 'system', 140);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (42, 1, 'Trackers', 'Project Trackers', 'tracker', '/tracker/index.php?group_id=1', 1, 1, 'system', 150);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (43, 1, 'Subversion', 'Subversion Access', 'svn', '/svn/?group_id=1', 1, 1, 'system', 135);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (44, 1, 'Wiki', 'Wiki', 'wiki', '/wiki/?group_id=1', 1, 1, 'system', 105);
 
 -- Group 46 - SiteNews
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (51, 46, 'Summary', 'Project Summary', 'summary', '/projects/sitenews/', 1, 1, 'system', 10);
@@ -1722,6 +1724,7 @@ INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (4, "project_
 INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (11, "file_manager_admin", "File Manager Administrators", 100);
 INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (12, "document_tech", "Document Manager Technicians", 100);
 INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (13, "document_admin", "Document Manager Administrators", 100);
+INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (14, "wiki_admin", "Wiki Administrators", 100);
 
 -- Not used yet
 -- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (13, "forum_moderator", "Forum Moderators", 100);
@@ -1762,6 +1765,18 @@ INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_REA
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_READ',3);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_READ',4);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_READ',10);
+
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKI_READ',100);
+INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('WIKI_READ',2,1);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKI_READ',3);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKI_READ',4);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKI_READ',14);
+
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIPAGE_READ',100);
+INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('WIKIPAGE_READ',2,1);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIPAGE_READ',3);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIPAGE_READ',4);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIPAGE_READ',14);
 
 
 --- 
