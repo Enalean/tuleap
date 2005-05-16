@@ -8,48 +8,35 @@
 
 require_once('pre.php');    
 require('../svn/svn_data.php');    
-require('../svn/svn_utils.php');    
+require('../svn/svn_utils.php');
 
-
-//{{{ define undefined variables
-$func = "";
-if (isset($_REQUEST['func'])) {
-    $func = $_REQUEST['func'];
-}
-$rev_id = "";
-if (isset($_REQUEST['rev_id'])) {
-    $rev_id = $_REQUEST['rev_id'];
-}
-//}}}
-
-
-// ######################## table for summary info
-
-switch ($func) {
-
- case 'browse' : {
-   require('../svn/browse_revision.php');
-   break;
+$there_are_specific_permissions = true;
+if (isset($_REQUEST['group_id'])) {
+    $obj                            = group_get_object($_REQUEST['group_id']);
+    $group_name                     = $obj->getUnixName();
+    $there_are_specific_permissions = svn_utils_is_there_specific_permission($group_name);
  }
 
- case 'detailrevision' : {
-   require('../svn/detail_revision.php');
-   break;
+
+
+if (isset($_REQUEST['func']) && $_REQUEST['func'] === 'detailrevision') {
+
+    require('./detail_revision.php');
+
+ } else if (                                                                  //We'll browse
+            (
+             (isset($_REQUEST['func']) && $_REQUEST['func'] === 'browse')     //if user ask for it
+             || (isset($_REQUEST['rev_id']) && $_REQUEST['rev_id'] != '')     //or if user set rev_id
+             )){
+    if (isset($_REQUEST['rev_id']) && $_REQUEST['rev_id'] != '') {
+        $_rev_id = $_REQUEST['rev_id'];
+    }
+
+    require('./browse_revision.php');
+
+ } else {
+
+    require('./svn_intro.php');
+
  }
-
- default : {
-
-   // ############################ developer access
-   if ($rev_id) {
-       $_rev_id = $rev_id;
-       require('./browse_revision.php');
-   } else {
-       require('./svn_intro.php');
-   }
-
-   break;
- }
-}
-
-
 ?>

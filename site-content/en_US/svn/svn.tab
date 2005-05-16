@@ -63,6 +63,7 @@ svn_browse_revision	path	Path
 svn_browse_revision	search	Keyword search in log message
 svn_browse_revision	commit_at_once	commits at once.
 svn_browse_revision	no_match	No Commits Match Your Criteria
+svn_browse_revision	specific_perms	<p>There are specific permissions set on the subversion repository, so SVN query is currently disabled.<br/>Please contact a project administrator for additional information.</p>
 #
 #-----------------------------------------------
 # Script: SF/www/svn/detail_revision.php

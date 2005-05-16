@@ -12,7 +12,7 @@
 $Language->loadLanguageMsg('svn/svn');
 
 function svn_header($params) {
-	global $group_id,$Language;
+        global $group_id, $Language, $there_are_specific_permissions;
 
 	$params['toptab']='svn';
 	$params['group']=$group_id;
@@ -33,12 +33,13 @@ function svn_header($params) {
 	if ($project->isPublic() || user_isloggedin()) {
 	  echo ' | <A HREF="/svn/viewcvs.php/?roottype=svn&root='.$project->getUnixName().'">'.$Language->getText('svn_utils','browse_tree').'</A>';
 	}
-	if (user_isloggedin()) {
-	  echo ' | <A HREF="/svn/?func=browse&group_id='.$group_id.'&set=my">'.$Language->getText('svn_utils','my_ci').'</A>';
-	}
-	echo ' | <A HREF="/svn/?func=browse&group_id='.$group_id.'">'.$Language->getText('svn_utils','svn_query').'</A>';
-	echo ' | <A HREF="/svn/admin/?group_id='.$group_id.'">'.$Language->getText('svn_utils','svn_admin').'</A>';	
-	if (!isset($params['help']) || !$params['help']) { $params['help'] = "VersionControlWithSubversion.html";}
+	
+        if (user_isloggedin()) {
+            echo ' | <A HREF="/svn/?func=browse&group_id='.$group_id.'&set=my">'.$Language->getText('svn_utils','my_ci').'</A>';
+        }
+        echo ' | <A HREF="/svn/?func=browse&group_id='.$group_id.'">'.$Language->getText('svn_utils','svn_query').'</A>';
+        echo ' | <A HREF="/svn/admin/?group_id='.$group_id.'">'.$Language->getText('svn_utils','svn_admin').'</A>';	
+        if (!isset($params['help']) || !$params['help']) { $params['help'] = "VersionControlWithSubversion.html";}
 	echo ' | '.help_button($params['help'],false,$Language->getText('global','help'));
 
 	echo '</B>';
@@ -449,21 +450,22 @@ function svn_utils_read_svn_access_file($gname) {
     global $feedback,$Language;
 
     $filename = "/svnroot/$gname/.SVNAccessFile";
+    $buffer = '';
 
     $fd = @fopen("$filename", "r");
     if (!$fd) {
 	$feedback .= $Language->getText('svn_utils','file_err',$filename);
-    }
-
-    $in_settings = false;
-    $buffer = '';
-    while (!feof($fd)) {
-	$line = fgets($fd, 4096);
-	if (strpos($line,'# BEGIN CODEX DEFAULT') !== false) { $in_settings = true; }
-	if (!$in_settings) { $buffer .= $line; }
-	if (strpos($line,'# END CODEX DEFAULT') !== false) { $in_settings = false; }
-    }
-    fclose($fd);
+        $buffer = false;
+    } else {
+        $in_settings = false;
+        while (!feof($fd)) {
+            $line = fgets($fd, 4096);
+            if (strpos($line,'# BEGIN CODEX DEFAULT') !== false) { $in_settings = true; }
+            if (!$in_settings) { $buffer .= $line; }
+            if (strpos($line,'# END CODEX DEFAULT') !== false) { $in_settings = false; }
+        }
+        fclose($fd);
+    }   
     return $buffer;
 }
 
@@ -503,7 +505,7 @@ function svn_utils_parse_access_file($gname) {
   $SVNGROUPS = array();
 
 
-  $f = fopen($filename, "rb");
+  $f = @fopen($filename, "rb");
   if ($f === false) {
     exit_error($Language->getText('global','error'),$Language->getText('svn_utils','file_err',$filename));
   } else {
@@ -611,5 +613,8 @@ function svn_utils_check_access($username, $gname, $svnpath) {
   }
 }
 
-
+function svn_utils_is_there_specific_permission($gname) {
+    $specifics = svn_utils_read_svn_access_file($gname);
+    return !$specifics || $specifics != '';
+}
 ?>

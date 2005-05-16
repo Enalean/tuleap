@@ -25,7 +25,10 @@ if (!user_ismember($group_id,'A')) {
     exit_permission_denied();
 }
 
-
+$func = "";
+if (isset($_REQUEST['func'])) {
+    $func = $_REQUEST['func'];
+ }
 switch ($func) {
 
  case 'general_settings' : {

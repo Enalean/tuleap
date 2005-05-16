@@ -63,6 +63,7 @@ svn_browse_revision	path	Chemin
 svn_browse_revision	search	Recherche par mots-clés dans les messages de log
 svn_browse_revision	commit_at_once	commits à la fois
 svn_browse_revision	no_match	Aucun commit ne correspond à vos critères
+svn_browse_revision	specific_perms	<p>Il y a des permissions sur ce dépôt Subversion, donc les requêtes SVN sont désactivées.<br/>Veuillez contactez un administrateur projet pour toute information supplémentaire.</p>
 #
 #-----------------------------------------------
 # Script: SF/www/svn/detail_revision.php
