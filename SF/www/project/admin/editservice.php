@@ -29,93 +29,100 @@ $Language->loadLanguageMsg('project/project');
  */
 function display_service_configuration_form($group_id, $service_id, $service, $ro, $su) {
   global $Language;
-
-    // There is a special case for the 'Home Page' service: only the link can be modified (except for superuser)
-    $hp=false;
-    if ($service['short_name']=="homepage") {
-        $hp=true;
-    }
-    if ($su) { $ro=false; }
-    echo '
+  
+  // There is a special case for the 'Home Page' service: only the link can be modified (except for superuser)
+  $hp=false;
+  if ($service['short_name']=="homepage") {
+    $hp=true;
+  }
+  if ($su) { $ro=false; }
+  echo '
 <h3>'.$Language->getText('project_admin_editservice','s_conf').'</h3>';
-
-    echo '
+  
+  echo '
 <form method="post" name="form_update" action="/project/admin/servicebar.php?group_id='.$group_id.'">
 <input type="hidden" name="func" VALUE="do_update">
 <input type="hidden" name="service_id" VALUE="'.$service_id.'">
 <input type="hidden" name="group_id" VALUE="'.$group_id.'">';
-    if ($service['short_name']) {
-        echo '
+  if ($service['short_name']) {
+    echo '
 <input type="hidden" name="short_name" VALUE="'.$service['short_name'].'">';
-    }
-
-    if ($ro) {
-        echo '
+  }
+  
+  if ($ro) {
+    echo '
 <input type="hidden" name="label" VALUE="'.$service['label'].'">
 <input type="hidden" name="description" VALUE="'.$service['description'].'">
 ';
-    }
+  }
 
-    echo '
+  echo '
 <table width="100%" cellspacing=0 cellpadding=3 border=0>
 <tr><td colspan=2><b>'.$Language->getText('project_admin_editservice','s_ident_desc').'</b></td></tr>
 <tr><td width="10%"><a href="#" title="'.$Language->getText('project_admin_editservice','s_name_in_bar').'">'.$Language->getText('project_admin_editservice','s_label').': </a><font color="red">*</font></td>
 <td>';
-if (!$ro) {
+  if (!$ro) {
     echo '<input type="text" name="label" size="30" maxlength="40" value="'.$service['label'].'">';
-} else {
+  } else {
+     if ($service['label'] == "service_".$service['short_name']."_lbl_key") {
+      $Language->getText('project_admin_editservice',$service['label']);
+    } else {
     echo $service['label'];
-}
-echo '</td></tr>
+  }
+  echo '</td></tr>
 <tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','url').'">'.$Language->getText('project_admin_editservice','s_link').':&nbsp;</a><font color="red">*</font></td>
 <td>';
-if ((!$ro)||($hp)) {
+  if ((!$ro)||($hp)) {
     echo '<input type="text" name="link" size="70" maxlength="255" value="'.$service['link'].'">';
-} else {
+  } else {
     echo $service['link'];
     echo '<input type="hidden" name="link" VALUE="'.$service['link'].'">';
-}
-echo '</td></tr>';
-
-if (($su)&&$service['short_name']) {
+  }
+  echo '</td></tr>';
+  
+  if (($su)&&$service['short_name']) {
     // Can't modify a shortname! Too many problems if the admin changes the system shortnames.
-     echo '
+    echo '
 <tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','s_short_name').'">'.$Language->getText('project_admin_editservice','short_name').'</a>:&nbsp;</td>
 <td>'.$service['short_name'].'</td></tr>';
-}
-
-echo '</td></tr>
+  }
+  
+  echo '</td></tr>
 <tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','s_desc_in_tooltip').'">'.$Language->getText('project_admin_editservice','s_desc').'</a>:&nbsp;</td>
 <td>';
-if (!$ro) {
+  if (!$ro) {
     echo '<input type="text" name="description" size="70" maxlength="255" value="'.$service['description'].'">';
-} else {
-    echo $service['description'];
-}
- echo '</td></tr>';
-if (($su)&&($group_id==100)) {
-echo '
+  } else {
+    if ($service['description'] == "service_".$service['short_name']."_desc_key") {
+      $Language->getText('project_admin_editservice',$service['description']);
+    } else {
+      echo $service['description'];
+    }
+  }
+  echo '</td></tr>';
+  if (($su)&&($group_id==100)) {
+    echo '
 <tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','s_scope').'">'.$Language->getText('project_admin_editservice','scope').':&nbsp;</a></td>
 <td><FONT size="-1"><SELECT name="scope">
         <option value="system"'.(($service['scope']=="system")?" selected":"").'>'.$Language->getText('project_admin_editservice','system').'</option>
         <option value="project"'.(($service['scope']!="system")?" selected":"").'>'.$Language->getText('project_admin_editservice','project').'</option>
         </SELECT></FONT></td></tr>';
-} else {
+  } else {
     echo '<input type="hidden" name="scope" VALUE="'.$service['scope'].'"></td></tr>';
-}
-echo '
-<tr><td colspan=2><b>'.$Language->getText('project_admin_editservice','display_options').'</b></td></tr>';
-if ($su) {
+  }
   echo '
+<tr><td colspan=2><b>'.$Language->getText('project_admin_editservice','display_options').'</b></td></tr>';
+  if ($su) {
+    echo '
 <tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','instanciated_for_new_p').'">'.$Language->getText('project_admin_editservice','available').':</a> </td><td><input type="CHECKBOX" NAME="is_active" VALUE="1"'.( $service['is_active'] ? ' CHECKED' : '' ).'></td></tr>';
-} else {
+  } else {
     print '<input type="hidden" name="is_active" VALUE="'.$service['is_active'].'">';
-}
-
-echo '
+  }
+  
+  echo '
 <tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','display_in_s_bar').'">'.$Language->getText('project_admin_editservice','enabled').':</a> </td><td>';
-echo '<input type="CHECKBOX" NAME="is_used" VALUE="1"'.( $service['is_used'] ? ' CHECKED' : '' ).'>';
-
+  echo '<input type="CHECKBOX" NAME="is_used" VALUE="1"'.( $service['is_used'] ? ' CHECKED' : '' ).'>';
+  
 echo '</td></tr>
 <tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','pos_in_s_bar').'">'.$Language->getText('project_admin_editservice','screen_rank').':&nbsp;</a><font color="red">*</font></td><td>';
 echo '<input type="text" name="rank" size="5" maxlength="5" value="'.$service['rank'].'">';

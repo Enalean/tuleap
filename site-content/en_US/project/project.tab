@@ -57,6 +57,44 @@ project_admin_editservice	edit_s	Edit Service
 project_admin_editservice	s_not_exist	Service does not exist: $1
 project_admin_editservice	forbidden	Forbidden
 project_admin_editservice	no_access_inactive_s	You cannot access an inactive service
+## There must be a label and description value here for each service name (system or project wide) that should be localised
+## Naming rule for the key: 
+## service_<service short name>_lbl_key for the service label
+## service_<service short name>_desc_key for the service description
+project_admin_editservice	service_summary_lbl_key	Summary
+project_admin_editservice	service_summary_desc_key	Project Summary
+project_admin_editservice	service_admin_lbl_key	Admin
+project_admin_editservice	service_admin_desc_key	Project Administration
+project_admin_editservice	service_homepage_lbl_key	Home Page
+project_admin_editservice	service_homepage_desc_key	Project Home Page
+project_admin_editservice	service_forum_lbl_key	Forums
+project_admin_editservice	service_forum_desc_key	Project Forums
+project_admin_editservice	service_bugs_lbl_key	Bugs
+project_admin_editservice	service_bugs_desc_key	Bug Tracking System
+project_admin_editservice	service_support_lbl_key	Support
+project_admin_editservice	service_support_desc_key	Support Request Manager
+project_admin_editservice	service_patch_lbl_key	Patches
+project_admin_editservice	service_patch_desc_key	Patch Manager
+project_admin_editservice	service_mail_lbl_key	Lists
+project_admin_editservice	service_mail_desc_key	Mailing Lists
+project_admin_editservice	service_task_lbl_key	Tasks
+project_admin_editservice	service_task_desc_key	Task Manager
+project_admin_editservice	service_doc_lbl_key	Docs
+project_admin_editservice	service_doc_desc_key	Document Manager
+project_admin_editservice	service_survey_lbl_key	Surveys
+project_admin_editservice	service_survey_desc_key	Project Surveys
+project_admin_editservice	service_news_lbl_key	News
+project_admin_editservice	service_news_desc_key	Project News
+project_admin_editservice	service_cvs_lbl_key	CVS
+project_admin_editservice	service_cvs_desc_key	CVS Access
+project_admin_editservice	service_file_lbl_key	Files
+project_admin_editservice	service_file_desc_key	File Releases
+project_admin_editservice	service_tracker_lbl_key	Trackers
+project_admin_editservice	service_tracker_desc_key	Project Trackers
+project_admin_editservice	service_svn_lbl_key	Subversion
+project_admin_editservice	service_svn_desc_key	Subversion Access
+project_admin_editservice	service_wiki_lbl_key	Wiki
+project_admin_editservice	service_wiki_desc_key	Wiki
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/editugroup.php

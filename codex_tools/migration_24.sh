@@ -696,6 +696,29 @@ ALTER TABLE artifact_notification_role_default DROP short_description;
 ALTER TABLE artifact_notification_role_default DROP description;
 
 
+
+-- service table
+--
+
+UPDATE service SET label='service_summary_lbl_key', description='service_summary_desc_key' WHERE short_name='summary' AND label='Summary' AND description='Project Summary';
+UPDATE service SET label='service_admin_lbl_key', description='service_admin_desc_key' WHERE short_name='admin' AND label='Admin' AND description='Project Administration';
+UPDATE service SET label='service_homepage_lbl_key', description='service_homepage_desc_key' WHERE short_name='homepage' AND label='Home Page' AND description='Project Home Page';
+UPDATE service SET label='service_forum_lbl_key', description='service_forum_desc_key' WHERE short_name='forum' AND label='Forums' AND description='Project Forums';
+UPDATE service SET label='service_bugs_lbl_key', description='service_bugs_desc_key' WHERE short_name='bugs' AND label='Bugs' AND description='Bug Tracking System';
+UPDATE service SET label='service_support_lbl_key', description='service_support_desc_key' WHERE short_name='support' AND label='Support' AND description='Support Request Manager';
+UPDATE service SET label='service_patch_lbl_key', description='service_patch_desc_key' WHERE short_name='patch' AND label='Patches' AND description='Patch Manager';
+UPDATE service SET label='service_mail_lbl_key', description='service_mail_desc_key' WHERE short_name='mail' AND label='Lists' AND description='Mailing Lists';
+UPDATE service SET label='service_task_lbl_key', description='service_task_desc_key' WHERE short_name='task' AND label='Tasks' AND description='Task Manager';
+UPDATE service SET label='service_doc_lbl_key', description='service_doc_desc_key' WHERE short_name='doc' AND label='Docs' AND description='Document Manager';
+UPDATE service SET label='service_survey_lbl_key', description='service_survey_desc_key' WHERE short_name='survey' AND label='Surveys' AND description='Project Surveys';
+UPDATE service SET label='service_news_lbl_key', description='service_news_desc_key' WHERE short_name='news' AND label='News' AND description='Project News';
+UPDATE service SET label='service_cvs_lbl_key', description='service_cvs_desc_key' WHERE short_name='cvs' AND label='CVS' AND description='CVS Access';
+UPDATE service SET label='service_file_lbl_key', description='service_file_desc_key' WHERE short_name='file' AND label='Files' AND description='File Releases';
+UPDATE service SET label='service_tracker_lbl_key', description='service_tracker_desc_key' WHERE short_name='tracker' AND label='Trackers' AND description='Project Trackers';
+UPDATE service SET label='service_svn_lbl_key', description='service_svn_desc_key' WHERE short_name='svn' AND label='Subversion' AND description='Subversion Access';
+UPDATE service SET label='service_wiki_lbl_key', description='service_wiki_desc_key' WHERE short_name='wiki' AND label='Wiki' AND description='Wiki';
+
+
 EOF
 
 

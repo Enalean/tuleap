@@ -57,6 +57,44 @@ project_admin_editservice	edit_s	Modifier un service
 project_admin_editservice	s_not_exist	Le service n'existe pas: $1
 project_admin_editservice	forbidden	Interdit
 project_admin_editservice	no_access_inactive_s	Vous ne pouvez accéder à un service inactif
+## There must be a label and description value here for each service name (system or project wide) that should be localised
+## Naming rule for the key: 
+## service_<service short name>_lbl_key for the service label
+## service_<service short name>_desc_key for the service description
+project_admin_editservice	service_summary_lbl_key	Résumé
+project_admin_editservice	service_summary_desc_key	Résumé du projet
+project_admin_editservice	service_admin_lbl_key	Admin
+project_admin_editservice	service_admin_desc_key	Administration du projet
+project_admin_editservice	service_homepage_lbl_key	Site Web
+project_admin_editservice	service_homepage_desc_key	Site Web du projet
+project_admin_editservice	service_forum_lbl_key	Forums
+project_admin_editservice	service_forum_desc_key	Forums du projet
+project_admin_editservice	service_bugs_lbl_key	Bugs
+project_admin_editservice	service_bugs_desc_key	Gestionnaire de bugs
+project_admin_editservice	service_support_lbl_key	Support
+project_admin_editservice	service_support_desc_key	Gestionnaire de demande de support
+project_admin_editservice	service_patch_lbl_key	Patches
+project_admin_editservice	service_patch_desc_key	Gestionnaire de patches
+project_admin_editservice	service_mail_lbl_key	Listes
+project_admin_editservice	service_mail_desc_key	Listes de diffusion
+project_admin_editservice	service_task_lbl_key	Tâches
+project_admin_editservice	service_task_desc_key	Gestionnaire de tâches
+project_admin_editservice	service_doc_lbl_key	Documentation
+project_admin_editservice	service_doc_desc_key	Gestion de document
+project_admin_editservice	service_survey_lbl_key	Enquêtes
+project_admin_editservice	service_survey_desc_key	Enquêtes du projet
+project_admin_editservice	service_news_lbl_key	Annonces
+project_admin_editservice	service_news_desc_key	Annonces du projet
+project_admin_editservice	service_cvs_lbl_key	CVS
+project_admin_editservice	service_cvs_desc_key	Accès CVS
+project_admin_editservice	service_file_lbl_key	Fichiers
+project_admin_editservice	service_file_desc_key	Publication de fichiers
+project_admin_editservice	service_tracker_lbl_key	Trackers
+project_admin_editservice	service_tracker_desc_key	Project Trackers
+project_admin_editservice	service_svn_lbl_key	Subversion
+project_admin_editservice	service_svn_desc_key	Accès Subversion
+project_admin_editservice	service_wiki_lbl_key	Wiki
+project_admin_editservice	service_wiki_desc_key	Wiki
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/editugroup.php
@@ -582,7 +620,7 @@ project_stats_source_code_access_utils	doc_download	Téléchargements de documents
 project_stats_source_code_access_utils	documents	Documents
 project_stats_source_code_access_utils	wiki_access	Accès Wiki
 project_stats_source_code_access_utils	wiki_page	Pages
-project_stats_source_code_access_utils	cvs_access	Accès CVS Access
+project_stats_source_code_access_utils	cvs_access	Accès CVS
 project_stats_source_code_access_utils	co_upd	Checkout/Update
 project_stats_source_code_access_utils	browsing	Visualisation fichiers
 project_stats_source_code_access_utils	accesses	Accès
