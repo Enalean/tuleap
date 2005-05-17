@@ -68,6 +68,7 @@ class Project extends Group {
     */
     function Project($id) {
 	global $Language;
+	$Language->loadLanguageMsg('project/project');
 
         $this->Group($id);
         
@@ -87,6 +88,16 @@ class Project extends Group {
                 $res_row = db_fetch_array($db_res);
                 $short_name=$res_row['short_name'];
                 if (!$short_name) { $short_name=$j;}
+
+		// needed for localisation
+		if ($res_row['description'] == "service_".$short_name."_desc_key") {
+		  $res_row['description'] = $Language->getText('project_admin_editservice',$res_row['description']);
+		}
+
+		if ($res_row['label'] == "service_".$short_name."_lbl_key") {
+		  $res_row['label'] = $Language->getText('project_admin_editservice',$res_row['label']);
+		}
+
                 $this->service_data_array[$short_name] = $res_row;
                 if ($short_name) {
                     $this->use_service[$short_name]= $res_row['is_used'];

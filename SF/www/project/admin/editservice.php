@@ -64,10 +64,11 @@ function display_service_configuration_form($group_id, $service_id, $service, $r
   if (!$ro) {
     echo '<input type="text" name="label" size="30" maxlength="40" value="'.$service['label'].'">';
   } else {
-     if ($service['label'] == "service_".$service['short_name']."_lbl_key") {
-      $Language->getText('project_admin_editservice',$service['label']);
+    if ($service['label'] == "service_".$service['short_name']."_lbl_key") {
+      echo $Language->getText('project_admin_editservice',$service['label']);
     } else {
-    echo $service['label'];
+      echo $service['label'];
+    }
   }
   echo '</td></tr>
 <tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','url').'">'.$Language->getText('project_admin_editservice','s_link').':&nbsp;</a><font color="red">*</font></td>
@@ -94,7 +95,7 @@ function display_service_configuration_form($group_id, $service_id, $service, $r
     echo '<input type="text" name="description" size="70" maxlength="255" value="'.$service['description'].'">';
   } else {
     if ($service['description'] == "service_".$service['short_name']."_desc_key") {
-      $Language->getText('project_admin_editservice',$service['description']);
+      echo $Language->getText('project_admin_editservice',$service['description']);
     } else {
       echo $service['description'];
     }

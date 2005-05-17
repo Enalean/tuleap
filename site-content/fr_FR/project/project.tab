@@ -61,7 +61,7 @@ project_admin_editservice	no_access_inactive_s	Vous ne pouvez accéder à un servi
 ## Naming rule for the key: 
 ## service_<service short name>_lbl_key for the service label
 ## service_<service short name>_desc_key for the service description
-project_admin_editservice	service_summary_lbl_key	Résumé
+project_admin_editservice	service_summary_lbl_key	En bref
 project_admin_editservice	service_summary_desc_key	Résumé du projet
 project_admin_editservice	service_admin_lbl_key	Admin
 project_admin_editservice	service_admin_desc_key	Administration du projet
@@ -81,16 +81,16 @@ project_admin_editservice	service_task_lbl_key	Tâches
 project_admin_editservice	service_task_desc_key	Gestionnaire de tâches
 project_admin_editservice	service_doc_lbl_key	Documentation
 project_admin_editservice	service_doc_desc_key	Gestion de document
-project_admin_editservice	service_survey_lbl_key	Enquêtes
-project_admin_editservice	service_survey_desc_key	Enquêtes du projet
+project_admin_editservice	service_survey_lbl_key	Sondages
+project_admin_editservice	service_survey_desc_key	Sondages du projet
 project_admin_editservice	service_news_lbl_key	Annonces
 project_admin_editservice	service_news_desc_key	Annonces du projet
 project_admin_editservice	service_cvs_lbl_key	CVS
 project_admin_editservice	service_cvs_desc_key	Accès CVS
 project_admin_editservice	service_file_lbl_key	Fichiers
 project_admin_editservice	service_file_desc_key	Publication de fichiers
-project_admin_editservice	service_tracker_lbl_key	Trackers
-project_admin_editservice	service_tracker_desc_key	Project Trackers
+project_admin_editservice	service_tracker_lbl_key	Suivi
+project_admin_editservice	service_tracker_desc_key	Outils de suivi du projet
 project_admin_editservice	service_svn_lbl_key	Subversion
 project_admin_editservice	service_svn_desc_key	Accès Subversion
 project_admin_editservice	service_wiki_lbl_key	Wiki
@@ -172,7 +172,7 @@ project_admin_index	lists_admin	Administration des listes de diffusion
 project_admin_index	task_admin	Administration gestionnaire de tâches
 project_admin_index	doc_admin	Administration de la documentation
 project_admin_index	wiki_admin	Administration du wiki
-project_admin_index	survey_admin	Administration des enquêtes
+project_admin_index	survey_admin	Administration des sondages
 project_admin_index	news_admin	Administration des annonces
 project_admin_index	cvs_admin	Administration de CVS
 project_admin_index	svn_admin	Administration de Subversion
@@ -481,7 +481,7 @@ project_export_index	export	Exporter
 project_export_index	show_format	Voir le format
 project_export_index	export_x	Exporter $1
 project_export_index	support_request	Suivi de demandes de support
-project_export_index	survey_responses	Réponses aux enquêtes
+project_export_index	survey_responses	Réponses aux sondages
 project_export_index	direct_db_access	Accès direct à la base de données 
 project_export_index	generate_full_db	Générer la base de données du projet</a> </b> (<- Cliquer sur ce lien pour générer la base)
 project_export_index	db_connection_params	Paramètres de connexion à la base de données:
@@ -525,15 +525,15 @@ project_export_support_request_export	follow_up_desc	Tout le fil de commentaires
 #-----------------------------------------------
 # Script: SF/www/project/export/survey_responses_export.php
 #
-project_export_survey_responses_export	survey_id	ID enquête
+project_export_survey_responses_export	survey_id	ID sondage
 project_export_survey_responses_export	question_id	ID question
 project_export_survey_responses_export	response	Réponse
 project_export_survey_responses_export	date_stamp	Date
-project_export_survey_responses_export	survey_id_desc	Identifiant unique de l'enquête
+project_export_survey_responses_export	survey_id_desc	Identifiant unique du sondage
 project_export_survey_responses_export	question_id_desc	Identifiant unique de la question
 project_export_survey_responses_export	response_desc	Réponse à la question
 project_export_survey_responses_export	date_desc	Heure à laquelle la réponse a été enregistrée
-project_export_survey_responses_export	date_stamp_desc	Un identifiant unique pour l'ensemble des réponses fournies à cette enquête par un utilisateur donné
+project_export_survey_responses_export	date_stamp_desc	Un identifiant unique pour l'ensemble des réponses fournies à ce sondage par un utilisateur donné
 #
 #-----------------------------------------------
 # Script: SF/www/project/export/task_assigned_to_export.php

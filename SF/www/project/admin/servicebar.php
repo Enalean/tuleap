@@ -24,6 +24,16 @@ function display_service_row($group_id, $service_id, $label, $short_name, $descr
 
     if ($service_id==100) return; // 'None' service
 
+    if ($description == "service_".$short_name."_desc_key") {
+      $description = $Language->getText('project_admin_editservice',$description);
+    }
+
+    if ($label == "service_".$short_name."_lbl_key") {
+      $label = $Language->getText('project_admin_editservice',$label);
+    }
+
+    
+
     echo '<TR class="'. util_get_alt_row_color($row_num) .'">
             <TD>
               <a href="/project/admin/editservice.php?group_id='.$group_id.'&service_id='.$service_id.'" title="'.$description.'">'.$label.'</TD>';

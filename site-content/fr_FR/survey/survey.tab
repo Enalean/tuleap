@@ -104,7 +104,7 @@ survey_admin_update_question	subm_changes	Valider
 #-----------------------------------------------
 # Script: SF/www/survey/admin/update_survey.php
 #
-survey_admin_update_survey	warn	<span class="highlight">AVERTISSEMENT! C'est une assez mauvaise idée de modifier une enquête après qu'elle ait déjà reçu des réponses. Cela peut donner des résultats trompeurs ou incohérents.</span>
+survey_admin_update_survey	warn	<span class="highlight">AVERTISSEMENT! C'est une assez mauvaise idée de modifier un sondage après qu'il ait déjà reçu des réponses. Cela peut donner des résultats trompeurs ou incohérents.</span>
 survey_admin_update_survey	q	Questions:
 survey_admin_update_survey	anon_allow	Réponse anonyme autorisée?
 survey_admin_update_survey	edit_a_s	Modifier un sondage
