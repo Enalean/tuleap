@@ -16,7 +16,6 @@ require_once('common/tracker/ArtifactFieldFactory.class');
 require_once('common/tracker/ArtifactField.class');
 require_once('common/tracker/ArtifactReport.class');
 require_once('common/tracker/ArtifactReportFactory.class');
-require_once('common/wiki/lib/WikiEntry.class');
 
 $Language->loadLanguageMsg('register/register');
 
@@ -148,15 +147,6 @@ if ($show_confirm) {
             }
         }
 	
-	// Create default Wiki Entry
-	$wikiEntry = new WikiEntry();
-	$wikiEntry->setGid($group_id);
-	$wikiEntry->setName('Wiki Home');
-	$wikiEntry->setPage('HomePage');
-        $wikiEntry->setDesc('Default Wiki Document');
-	$wikiEntry->add();
-
-
 	// Show the final registration complete message and send email
 	// notification (it's all in the content part)
 	$HTML->header(array('title'=>$Language->getText('register_confirmation','registration_complete')));
