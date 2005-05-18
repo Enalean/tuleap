@@ -14,6 +14,7 @@ ul.ServiceMenu    {
 
 ul.ServiceMenu li {
   display: inline;
+  font-weight: bold;
 }
 
 ul.ServiceMenu li.current {
