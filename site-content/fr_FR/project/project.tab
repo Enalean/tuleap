@@ -61,8 +61,8 @@ project_admin_editservice	no_access_inactive_s	Vous ne pouvez accéder à un servi
 ## Naming rule for the key: 
 ## service_<service short name>_lbl_key for the service label
 ## service_<service short name>_desc_key for the service description
-project_admin_editservice	service_summary_lbl_key	En bref
-project_admin_editservice	service_summary_desc_key	Résumé du projet
+project_admin_editservice	service_summary_lbl_key	Sommaire
+project_admin_editservice	service_summary_desc_key	Sommaire du projet
 project_admin_editservice	service_admin_lbl_key	Admin
 project_admin_editservice	service_admin_desc_key	Administration du projet
 project_admin_editservice	service_homepage_lbl_key	Site Web

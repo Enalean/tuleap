@@ -429,7 +429,7 @@ tracker_include_type	ff	Champ flottant
 tracker_include_type	if	Champ entier
 tracker_include_type	create_field	Créer un nouveau champ
 tracker_include_type	upd_label	Modifier le champ '$1'	
-tracker_include_type	imp_note	<b>** NOTE IMPORTANT **</b> '$1' est un champ standard des outils de suivi de CodeX. Son rôle est global à l'ensemble des outils de suivi et nous vous recommandons vivement de ne changer ni son nom ni sa description à moins qu'ils aient une signification identique ce qui préservera le rôle du champ.
+tracker_include_type	imp_note	<b>** NOTE IMPORTANTE **</b> '$1' est un champ standard des outils de suivi de CodeX. Son rôle est global à l'ensemble des outils de suivi et nous vous recommandons vivement de ne changer ni son nom ni sa description à moins qu'ils aient une signification identique ce qui préservera le rôle du champ.
 tracker_include_type	field_ident	Identification et description du champ
 tracker_include_type	field_type	Type du champ
 tracker_include_type	display_info	Informations d'affichage
