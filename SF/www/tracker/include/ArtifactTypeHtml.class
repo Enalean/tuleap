@@ -937,7 +937,13 @@ class ArtifactTypeHtml extends ArtifactType {
 		echo '
 		  <p>'.$Language->getText('tracker_include_type','field_type').': <font color="red">*</font>&nbsp;';
 		
-		if ( $field && $field->isStandardField() ) {
+
+		//be more conservative for semi-standard fields like assigned_to ...
+		if ( $field && 
+		     !user_is_super_user() &&
+		     ($field->isStandardField() ||
+		      $field->getName() == "assigned_to" ||
+		      $field->getName() == "multi_assigned_to")) {
 			echo $field->getLabelFieldType();
 		} else {
 			$this->displayFieldType($data_type,$display_type,"form_create");
@@ -1001,9 +1007,9 @@ class ArtifactTypeHtml extends ArtifactType {
 		    <tr> 
 		      <td width="30%">'.$Language->getText('tracker_include_type','allow_empty').': ';
 		
-		if ( $field && $field->isStandardField() ) {
+	    if ( $field && $field->isStandardField() && !user_is_super_user()) {
 			if ( $empty_ok ) {
-				echo ;
+				echo $Language->getText('global','yes');
 			    echo '<input type="hidden" name="empty_ok" value="1">';
 			} else {
 				echo $Language->getText('global','no');
@@ -1020,7 +1026,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		echo '
 		        </td><td>'.$Language->getText('tracker_include_type','keep_change_history').': ';
 		
-		if ( $field && $field->isStandardField() ) {
+		if ( $field && $field->isStandardField() && !user_is_super_user()) {
 			if ( $keep_history ) {
 				echo $Language->getText('global','yes');
 			    echo '<input type="hidden" name="keep_history" value="1">';
@@ -1042,10 +1048,20 @@ class ArtifactTypeHtml extends ArtifactType {
 		if ( $show_use ) {
 		    echo  '
 		      <tr><td>';
+			echo $Language->getText('tracker_include_type','use_field').': ';
 			if ( $use_it == 1 ) {
-				echo $Language->getText('tracker_include_type','use_field').': <input type="checkbox" name="use_it" value="1" checked>';
+			  //be more conservative for semi-special fields like assigned_to ...
+			  if ( $field && $field->isSpecial() && ($field->getName() != "comment_type_id") && !user_is_super_user()) {
+			    echo $Language->getText('global','yes').'<input type="hidden" name="use_it" value="1">';
+			  } else {
+			    echo '<input type="checkbox" name="use_it" value="1" checked>';
+			  }
 			} else {
-				echo $Language->getText('tracker_include_type','use_field').': <input type="checkbox" name="use_it" value="1">';
+			  if ( $field && $field->isSpecial() && ($field->getName() != "comment_type_id") && !user_is_super_user()) {
+			    echo $Language->getText('global','no').'<input type="hidden" name="use_it" value="0">';
+			  } else {
+			    echo '<input type="checkbox" name="use_it" value="1">';
+			  }
 			}
 		    echo  '
 		      </tr></td>';
@@ -1101,12 +1117,10 @@ class ArtifactTypeHtml extends ArtifactType {
 		
 		while (list($field_name,$field) = each($fields)) {
 		
-			// Special case for special fields (excluded comment_type_id)
-		        // as well as assigned_to and multi_assigned_to
-			if ( (($field->getName() != "comment_type_id")&&($field->isSpecial())) ||
-			     $field->getName() == "assigned_to" || $field->getName() == "multi_assigned_to") {
-				continue;
-			}
+		  // Special case for special fields (excluded comment_type_id)
+		  if ( (($field->getName() != "comment_type_id")&&($field->isSpecial()))) {
+		    continue;
+		  }
 			
 			$html .= '<TR class="'. 
 			    util_get_alt_row_color($iu) .'">';

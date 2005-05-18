@@ -36,7 +36,9 @@ if ( !$field->isSelectBox() && !$field->isMultiSelectBox() ) {
 } else {
 	if ( $field->getValueFunction() ) {
 	  // MLS have to add here the choose default value
-		$ath->displayValueFunctionForm($field_id,$field->getValueFunction());
+	  if (user_is_super_user() || ($field->getName() != "assigned_to" && $field->getName() != "multi_assigned_to")) {
+	    $ath->displayValueFunctionForm($field_id,$field->getValueFunction());
+	  }
 		$ath->displayDefaultValueFunctionForm($field_id,$field->getDefaultValue(),$field->getValueFunction());
 	} else {
 		$ath->displayFieldValuesList($field_id);
