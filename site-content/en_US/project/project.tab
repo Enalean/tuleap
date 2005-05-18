@@ -461,7 +461,7 @@ project_export_bug_deps_export	bug_deps_export_format	<h3>$1 Export Format</h3> 
 # Script: SF/www/project/export/bug_export.php
 #
 project_export_bug_export	depend_on_bugs	Depend on Bug(s)
-project_export_bug_export	depend_on_bugs_desc	List of  bugs this bug depends on
+project_export_bug_export	depend_on_bugs_desc	List of bugs this bug depends on
 #
 #-----------------------------------------------
 # Script: SF/www/project/export/index.php

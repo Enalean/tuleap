@@ -119,7 +119,7 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 
 		$sql="SELECT forum_name FROM forum_group_list WHERE group_id='$group_id'";
 		$result=db_query($sql);
-		ShowResultSet($result,$Language->getText('forum_admin_index','existing_forums'));
+		ShowResultSet($result,$Language->getText('forum_admin_index','existing_forums'), false, $showheaders = false);
 
 		echo '
 			<P>

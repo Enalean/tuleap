@@ -32,6 +32,7 @@ my_index	my_arts	My Artifacts
 my_index	my_survey	Quick Survey
 my_index	survey_done	You have taken your developer survey
 my_index	my_bookmarks	My Bookmarks
+my_index	no_bookmark	<H3>You currently do not have any bookmarks saved</H3>
 my_index	edit_link	Edit
 my_index	del_bookmark	Delete this bookmark?
 my_index	my_projects	My Projects

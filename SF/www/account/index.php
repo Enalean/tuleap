@@ -165,7 +165,7 @@ while (list(,$theme) = each($theme_list)) {
     print '<option value="'.$theme.'"';
     if ($theme==$user_theme){ print ' selected'; }
     print '>'.$theme;
-    if ($theme==$GLOBALS['sys_themedefault']){ print ' (default)'; }
+    if ($theme==$GLOBALS['sys_themedefault']){ print ' ('.$Language->getText('global', 'default').')'; }
     print "</option>\n";
 }
 print "</select>\n";

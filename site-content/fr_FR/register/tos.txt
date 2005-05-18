@@ -146,7 +146,7 @@ contenu posté, envoyé par e-mail ou publié de tout autre façon via
 <p> <?php print $GLOBALS['sys_name']; ?> se réserve le droit d'établir
 des pratiques générales et certaines limites concernant l'utilisation
 des services, comme définies par les règles spécifiques d'utilisation
-des services. Bien que l'équipe <?php print $GLOBALS['sys_name']; ?>
+des services. Bien que l'équipe <?php print $GLOBALS['sys_name']; ?> 
 fasse son possible pour sauvegarder les données du site et mettre
 cette sauvegarde à disposition en cas de perte ou de destruction, elle
 ne peut être tenue pour responsable de la destruction ou de
@@ -173,7 +173,7 @@ Utilisation des services non cohérente avec les objectifs du projet;
 règles de <?php print $GLOBALS['sys_org_name']; ?> (par exemple à
 l'occasion du départ d'un employé).  </p>
 
-<p> La résiliation d'un accès à <?php print $GLOBALS['sys_name']; ?>
+<p> La résiliation d'un accès à <?php print $GLOBALS['sys_name']; ?> 
 ou ses services peut être rendue effective sans notification préalable
 et, au moment de cette résiliation, peut amener à la désactivation ou
 la destruction d'un compte utilisateur et/ou empêcher tout accès

@@ -112,7 +112,7 @@ if ($group_id && user_ismember($group_id,'A')) {
 		include($Language->getContent('mail/addlist_intro'));
 
 		$result=db_query("SELECT list_name FROM mail_group_list WHERE group_id='$group_id'");
-		ShowResultSet($result,$Language->getText('mail_admin_index','existing_mail_list'));
+		ShowResultSet($result,$Language->getText('mail_admin_index','existing_mail_list'), false, false);
 
 		echo 	'<P>
 			<FORM METHOD="POST" ACTION="'.$PHP_SELF.'">

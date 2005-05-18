@@ -32,6 +32,7 @@ my_index	my_arts	Mes artefacts
 my_index	my_survey	Sondages
 my_index	survey_done	Vous avez déjà répondu aux sondages
 my_index	my_bookmarks	Mes favoris
+my_index	no_bookmark	<H3>Vous n'avez pas encore de favori enregistré</H3>
 my_index	edit_link	Editer
 my_index	del_bookmark	Détruire ce favori ?
 my_index	my_projects	Mes projets

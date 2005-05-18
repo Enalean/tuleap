@@ -554,7 +554,7 @@ Function GraphIt($name_string,$value_string,$title) {
 		<!-- end outer graph table -->';
 }
 
-Function  ShowResultSet($result,$title="Untitled",$linkify=false)  {
+Function  ShowResultSet($result,$title="Untitled",$linkify=false,$showheaders=true)  {
 	global $group_id,$HTML;
 	/*
 		Very simple, plain way to show a generic result set
@@ -575,17 +575,18 @@ Function  ShowResultSet($result,$title="Untitled",$linkify=false)  {
 		<TR class="boxtitle">
 		<TD COLSPAN="'.$cols.'" class="boxitem"><B>'.$title.'</B></TD></TR>';
 
-		/*  Create  the  headers  */
-		echo '
-			<tr>';
-		for ($i=0; $i < $cols; $i++) {
+		if ($showheaders) {
+                    /*  Create  the  headers  */
+                    echo '<tr>';
+                    for ($i=0; $i < $cols; $i++) {
 			echo '<td><B>'.db_fieldname($result,  $i).'</B></TD>';
-		}
-		echo '</tr>';
+                    }
+                    echo '</tr>';
+                }
 
 		/*  Create the rows  */
 		for ($j = 0; $j < $rows; $j++) {
-			echo '<TR class="'. html_get_alt_row_color($j) .'">';
+			echo '<TR class="'. html_get_alt_row_color($j+1) .'">';
 			for ($i = 0; $i < $cols; $i++) {
 				if ($linkify && $i == 0) {
 					$link = '<A HREF="'.$PHP_SELF.'?';

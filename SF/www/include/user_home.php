@@ -224,10 +224,9 @@ if (user_isloggedin()) {
 
         <INPUT TYPE="HIDDEN" NAME="email" VALUE="'.$my_email.'">	<P>
 	<B>'.$Language->getText('include_user_home','your_name').':</B><!-- <BR> -->
-	<B>',
+	<B>';
 
 	$my_name=user_getrealname(user_getid());
-
 	echo $my_name.'</B>
 	<INPUT TYPE="HIDDEN" NAME="name" VALUE="'.$my_name.'">
 	<P>

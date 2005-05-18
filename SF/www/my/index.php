@@ -457,8 +457,7 @@ if (user_isloggedin()) {
 		"user_id='". user_getid() ."' ORDER BY bookmark_title");
 	$rows=db_numrows($result);
 	if (!$result || $rows < 1) {
-		$html_my_bookmarks .= '
-			<H3>You currently do not have any bookmarks saved</H3>';
+                $html_my_bookmarks .= $Language->getText('my_index', 'no_bookmark');
 		$html_my_bookmarks .= db_error();
 	} else {
 

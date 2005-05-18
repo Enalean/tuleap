@@ -31,7 +31,7 @@ function news_header($params) {
 	}
         if (!$params['pv']){
             echo '<P><B>';
-            echo '<A HREF="/news/submit.php?group_id='.$group_id.'">Submit</A> | <A HREF="/news/admin/?group_id='.$group_id.'">'.$Language->getText('news_utils','admin').'</A>';
+            echo '<A HREF="/news/submit.php?group_id='.$group_id.'">'.$Language->getText('news_utils','submit_news').'</A> | <A HREF="/news/admin/?group_id='.$group_id.'">'.$Language->getText('news_utils','admin').'</A>';
             if ($params['help']) {
                 echo ' | '.help_button($params['help'],false,$Language->getText('global','help'));
             }

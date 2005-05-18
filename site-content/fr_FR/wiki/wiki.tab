@@ -27,7 +27,7 @@ wiki_views_wikiserviceviews	lock_title_spec	Il y a des permissions sur cette Pag
 wiki_views_wikiserviceviews	lock_title_set	Il y a des permissions sur ce Wiki
 wiki_views_wikiserviceviews	lock_alt	Verrou
 wiki_views_wikiserviceviews	lighter_display	Affichage réduit - cliquez sur le logo phpWiki pour revenir à l'affichage normal
-wiki_views_wikiserviceviews	install_intro	<h2>Création d'un Wiki</h2><p>Ce projet n'a pas encore initialisé son Wiki.</p><p>Pour pouvoir créer le Wiki, sélectionnez la langue du Wiki et cliquez le bouton "$1".</p>
+wiki_views_wikiserviceviews	install_intro	<h2>Création d'un Wiki</h2><p>Ce projet n'a pas encore initialisé son Wiki.</p><p>Pour pouvoir créer le Wiki, sélectionnez la langue du Wiki et cliquez le bouton "$1".</p><p><b>Note :</b> <ul><li>Une fois le Wiki créé, sa langue ne peut être modifiée,</li><li>Les wiki créés dans une autre langue que l'anglais peuvent toutefois contenir des pages en anglais.</li></ul></p>
 wiki_views_wikiserviceviews	wiki_language	Langue du Wiki :
 #
 #-----------------------------------------------

@@ -27,7 +27,7 @@ wiki_views_wikiserviceviews	lock_title_spec	There are specific permissions on th
 wiki_views_wikiserviceviews	lock_title_set	There are permissions set on this Wiki
 wiki_views_wikiserviceviews	lock_alt	Lock
 wiki_views_wikiserviceviews	lighter_display	lighter display - click on phpWiki logo to return to normal display
-wiki_views_wikiserviceviews	install_intro	<h2>Wiki Creation</h2><p>This project has not initialized its Wiki yet.</p><p>In order to create the wiki, select the language for the wiki, and press the "$1" button.</p>
+wiki_views_wikiserviceviews	install_intro	<h2>Wiki Creation</h2><p>This project has not initialized its Wiki yet.</p><p>In order to create the wiki, select the language for the wiki, and press the "$1" button.</p><p><b>Note:</b> <ul><li>The Wiki language can't be modified after the creation of the Wiki,</li><li>Wiki created in another language than English may contain some pages in English.</li></ul></p>
 wiki_views_wikiserviceviews	wiki_language	Wiki Language:
 #
 #-----------------------------------------------

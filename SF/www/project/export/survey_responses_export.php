@@ -59,11 +59,11 @@ if ($export == 'survey_responses') {
 
 	project_admin_header(array('title'=>$pg_title));
 
-	echo '<h3>'.$Language->getText('project_export_bug_deps_export','bug_deps_export','Survey Responses').'</h3>';
+	echo '<h3>'.$Language->getText('project_export_bug_deps_export','bug_deps_export', array($Language->getText('project_export_index', 'survey_responses'))).'</h3>';
 	if ($result) {
-	    echo '<P>'.$Language->getText('project_export_bug_deps_export','no_bug_deps_found','survey responses');
+	    echo '<P>'.$Language->getText('project_export_bug_deps_export','no_bug_deps_found', array($Language->getText('project_export_index', 'survey_responses')));
 	} else {
-	    echo '<P>'.$Language->getText('project_export_bug_deps_export','db_access_err',array('response',$GLOBALS['sys_name']));
+	    echo '<P>'.$Language->getText('project_export_bug_deps_export','db_access_err',array($Language->getText('project_export_index', 'survey_responses'),$GLOBALS['sys_name']));
 	    echo '<br>'.db_error();
 	}
 	site_project_footer( array() );
@@ -72,7 +72,7 @@ if ($export == 'survey_responses') {
 
 } else if ($export == "survey_responses_format") {
 
-    echo $Language->getText('project_export_bug_deps_export','bug_deps_export_format','Survey');
+    echo $Language->getText('project_export_bug_deps_export','bug_deps_export_format',array($Language->getText('project_export_index', 'survey_responses')));
 
     $record = pick_a_record_at_random($result, $rows, $col_list);
     prepare_survey_responses_record($group_id,$record);   

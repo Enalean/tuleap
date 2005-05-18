@@ -23,7 +23,7 @@ cvs_index	partial_success	en partie<br>L'adresse e-mail semble invalide. la noti
 #
 cvs_admin_commit	title	Administration CVS
 cvs_admin_commit	tracking_hdr	Suivi CVS
-cvs_admin_commit	tracking_msg	Lorsque le suivi de CVS est activé, les commits (modification, ajout ou suppression de fichiers ou répertoires) sont enregistrés dans la base de données $1 de façon à pouvoir les visualiser et effectuer des recherches avancées. Dans le cas contraire aucune information n'est conservée dans la base de données; vous disposez uniquement de l'historique CVS.
+cvs_admin_commit	tracking_msg	Lorsque le suivi de CVS est activé, les commits (modification, ajout ou suppression de fichiers ou répertoires) sont enregistrés dans la base de données $1 de façon à pouvoir les visualiser et effectuer des recherches avancées. Dans le cas contraire aucune information n'est conservée dans la base de données ; vous disposez uniquement de l'historique CVS.
 cvs_admin_commit	tracking_lbl	Suivi CVS
 cvs_admin_commit	notif_hdr	Notification e-mail sur les commits
 cvs_admin_commit	notif_msg	Chaque commit peut faire l'objet d'une notification par courrier électronique vers certains destinataires ou vers une liste de distribution (séparer les adresses avec une virgule). Une entête spécifique apparaissant au début du sujet du message peut aussi être spécifiée.
