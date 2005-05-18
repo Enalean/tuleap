@@ -114,9 +114,8 @@ class WikiViews extends Views {
     $this->wikiname = ucfirst($go->getUnixName()).'Wiki';
 
     // Build convenients URL
-    $baseLink = 'http'.($GLOBALS['sys_force_ssl']?'s':'').'://'.$GLOBALS['sys_default_domain'].'/wiki';
-    $this->wikiLink    = $baseLink.'/index.php?group_id='.$this->gid;
-    $this->wikiAdminLink = $baseLink.'/admin/index.php?group_id='.$this->gid;
+    $this->wikiLink      = '/wiki/index.php?group_id='.$this->gid;
+    $this->wikiAdminLink = '/wiki/admin/index.php?group_id='.$this->gid;
   }
 
   /**

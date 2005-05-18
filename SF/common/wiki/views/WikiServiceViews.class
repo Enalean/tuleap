@@ -239,7 +239,7 @@ class WikiServiceViews extends WikiViews {
       <li><a href="'.$this->wikiLink.'">'.$Language->getText('wiki_views_wikiserviceviews', 'menudocuments').'</a>&nbsp;|&nbsp;</li>
       <li><a href="'.$this->wikiLink.'&view=browsePages">'.$Language->getText('wiki_views_wikiserviceviews', 'menupages').'</a>&nbsp;|&nbsp;</li>
       <li><a href="'.$this->wikiAdminLink.'">'.$Language->getText('wiki_views_wikiserviceviews', 'menuadmin').'</a>&nbsp;|&nbsp;</li>
-      <li><a href="/wiki/index.php?pagename=PhpWikiDocumentation&group_id=1">'.$Language->getText('global', 'help').'</a></li>
+      <li><a href="'.$this->wikiLink.'pagename=PhpWikiDocumentation">'.$Language->getText('global', 'help').'</a></li>
    </ul>';
 
   print '
