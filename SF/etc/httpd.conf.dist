@@ -544,6 +544,16 @@ Alias /documentation/ "/home/httpd/documentation/"
 Alias /css/custom/ "/etc/codex/themes/css/"
 Alias /images/custom/ "/etc/codex/themes/images/"
                                                                                 
+# phpWiki themes
+Alias /wiki/themes "/home/httpd/SF/common/wiki/phpwiki/themes"
+
+<Directory "/home/httpd/SF/common/wiki/phpwiki/themes">
+    Options MultiViews
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+</Directory>
+
 # MRTG (Multi Router Traffic Grapher) - Monitor System
 Alias /mrtg/ "/home/httpd/mrtg/"
 
@@ -582,7 +592,7 @@ ScriptAlias /cgi-bin/ "/home/httpd/cgi-bin/"
 
 <Directory "/home/httpd/cgi-bin">
     AllowOverride None
-    Options ExecCGI FollowSymLinks
+    Options ExecCGI
     Order allow,deny
     Allow from all
     RedirectMatch permanent /cgi-bin/cvsweb.cgi/(.*) /cvs/viewcvs.php/$1
@@ -887,6 +897,7 @@ AddOutputFilter INCLUDES .shtml
 # Don't use a dedicated page, since it might cause trouble to
 # Subversion (during a 'svn add' for instance).
 ErrorDocument 404 "Sorry, page not found"
+ErrorDocument 403 "Sorry, you can't access this page"
 
 #
 # Putting this all together, we can Internationalize error responses.
