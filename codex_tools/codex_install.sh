@@ -115,9 +115,9 @@ done
 ##############################################
 # Check we are running on RHEL 3 ES
 #
-RH_RELEASE="3ES"
+RH_RELEASE="3"
 yn="y"
-$RPM -q redhat-release-${RH_RELEASE} 2>/dev/null 1>&2
+$RPM -q redhat-release-${RH_RELEASE}* 2>/dev/null 1>&2
 if [ $? -eq 1 ]; then
     cat <<EOF
 This machine is not running RedHat Enterprise Linux ${RH_RELEASE}. Executing this install
@@ -125,7 +125,7 @@ script may cause data loss or corruption.
 EOF
 read -p "Continue? [yn]: " yn
 else
-    echo "Running on RedHat ${RH_RELEASE}... good!"
+    echo "Running on RedHat Enterprise Linux ${RH_RELEASE}... good!"
 fi
 
 [ "$yn" != "y" ] && (echo "Bye now!"; exit 1;)
@@ -271,6 +271,7 @@ build_dir /etc/codex/site-content/en_US/others sourceforge sourceforge 755
 build_dir /etc/codex/themes sourceforge sourceforge 755
 build_dir /etc/codex/themes/css sourceforge sourceforge 755
 build_dir /etc/codex/themes/images sourceforge sourceforge 755
+build_dir /etc/codex/themes/messages sourceforge sourceforge 755
 
 build_dir /var/run/log_accum root root 1777
 build_dir /cvsroot sourceforge sourceforge 755
@@ -393,6 +394,7 @@ $RPM -Uvh --force ${newest_rpm}/neon-0*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/swig-1*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/subversion-1.*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/subversion-server*.i386.rpm
+$RPM -Uvh --force ${newest_rpm}/subversion-perl*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/subversion-python*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/subversion-tools*.i386.rpm
 
@@ -520,7 +522,7 @@ $CHOWN -R sourceforge.sourceforge $INSTALL_DIR/documentation/user_guide/pdf/en_U
 $TOUCH /etc/httpd/conf/codex_vhosts.conf
 $TOUCH /etc/httpd/conf/codex_svnhosts.conf
 $TOUCH /etc/httpd/conf/codex_svnhosts_ssl.conf
-$CP $INSTALL_DIR/codex_tools/backup_job /home/tools
+$CP $INSTALL_DIR/SF/utils/backup_job /home/tools
 $CHOWN root.root /home/tools/backup_job
 $CHMOD 740 /home/tools/backup_job
 # needed by newparse.pl
@@ -1174,10 +1176,6 @@ $CHKCONFIG mailman on
 # End of installation
 #
 todo "Create the shell login files for CodeX users in /etc/skel_codex"
-todo "Customize /etc/php.ini: "
-todo "  - memory_limit = 30M"
-todo "  - post_max_size = 20M"
-todo "  - upload_max_file_size = 20M"
 # things to do by hand
 todo "Change the default login shell if needed in the database (/sbin/nologin or /usr/local/bin/cvssh, etc."
 

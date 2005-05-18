@@ -13,7 +13,7 @@
 #
 #      Originally written by Laurent Julliard 2004, CodeX Team, Xerox
 #
-#  This file is part of the CodeX software and must be place at the same
+#  This file is part of the CodeX software and must be placed at the same
 #  level as the CodeX, RPMS_CodeX and nonRPMS_CodeX directory when
 #  delivered on a CD or by other means
 #
@@ -114,7 +114,7 @@ OLD_CX_RELEASE='2.2'
 yn="y"
 $GREP -q "$OLD_CX_RELEASE" $INSTALL_DIR/SF/www/VERSION
 if [ $? -eq 1 ]; then
-    cat <<EOF
+    $CAT <<EOF
 This machine does not have CodeX ${OLD_CX_RELEASE} installed. Executing this install
 script may cause data loss or corruption.
 EOF
@@ -135,11 +135,33 @@ do
 done
 
 ##############################################
-# Check we are running on RHEL 3 ES
+# Warn user about upgrade
 #
-RH_RELEASE="3ES"
+
 yn="y"
-$RPM -q redhat-release-${RH_RELEASE} 2>/dev/null 1>&2
+$CAT <<EOF
+This script will reinstall some configuration files:
+/etc/httpd/conf/httpd.conf
+/etc/httpd/conf.d/php.conf
+If you have customized these files for your special needs, you should backup them before starting the migration.
+
+The document manager has improved in CodeX 2.4.
+Before upgrading, please note that:
+- all existing documents stored with the 'deleted' status will *really* be deleted from the database
+- all documents stored with the 'pending' status will become active
+- other statuses will properly be converted to the new permission schema.
+
+EOF
+read -p "Continue? [yn]: " yn
+
+[ "$yn" != "y" ] && (echo "Bye now!"; exit 1;)
+
+##############################################
+# Check we are running on RHEL 3
+#
+RH_RELEASE="3"
+yn="y"
+$RPM -q redhat-release-${RH_RELEASE}* 2>/dev/null 1>&2
 if [ $? -eq 1 ]; then
     cat <<EOF
 This machine is not running RedHat Enterprise Linux ${RH_RELEASE}. Executing this install
@@ -147,7 +169,7 @@ script may cause data loss or corruption.
 EOF
 read -p "Continue? [yn]: " yn
 else
-    echo "Running on RedHat ${RH_RELEASE}... good!"
+    echo "Running on RedHat Enterprise Linux ${RH_RELEASE}... good!"
 fi
 
 [ "$yn" != "y" ] && (echo "Bye now!"; exit 1;)
@@ -166,45 +188,12 @@ $SERVICE sendmail stop
 $SERVICE postfix stop
 
 
-#
-#
-#
-#
-#
-#
-#
-#  OLD 2.0 to 2.2 migration stuff
-#
-#
-#
-#
-#
-#
-#
-
 ##############################################
 # Check Required Stock RedHat RPMs are installed
 # (note: gcc is required to recompile mailman)
 #
-rpms_ok=1
-for rpm in openssh-server openssh openssh-clients openssh-askpass \
-   openssl openldap perl perl-DBI perl-CGI gd gcc \
-   sendmail telnet bind ntp samba python php php-mysql php-ldap enscript \
-   bind python-devel rcs
-do
-    $RPM -q $rpm  2>/dev/null 1>&2
-    if [ $? -eq 1 ]; then
-	rpms_ok=0
-	missing_rpms="$missing_rpms $rpm"
-    fi
-done
-if [ $rpms_ok -eq 0 ]; then
-    msg="The following Redhat Linux RPMs must be installed first:\n"
-    msg="${msg}$missing_rpms\n"
-    msg="${msg}Get them from your Redhat CDROM or FTP site, install them and re-run the installation script"
-    die "$msg"
-fi
-echo "All requested RedHat RPMS installed... good!"
+
+# Removed: see install script for required RPMs. No new RPM needed for upgrade
 
 ##############################################
 # Ask for domain name and other installation parameters
@@ -215,139 +204,37 @@ read -p "Codex Server IP address: " sys_ip_address
 ##############################################
 
 ##############################################
-# Create new directory structure for configuration and
-# customization items
+# Update local.inc
 #
-echo "Creating new directories for CodeX 2.2..."
+make_backup /etc/codex/conf/local.inc codex22
 
-build_dir /etc/codex sourceforge sourceforge 755
-build_dir /etc/codex/conf sourceforge sourceforge 755
-build_dir /etc/codex/documentation sourceforge sourceforge 755
-build_dir /etc/codex/documentation/user_guide sourceforge sourceforge 755
-build_dir /etc/codex/documentation/user_guide/xml sourceforge sourceforge 755
-build_dir /etc/codex/documentation/user_guide/xml/en_US sourceforge sourceforge 755
-build_dir /etc/codex/themes sourceforge sourceforge 755
-build_dir /etc/codex/themes/css sourceforge sourceforge 755
-build_dir /etc/codex/themes/images sourceforge sourceforge 755
-build_dir /svnroot sourceforge sourceforge 755
+# Remove $sys_activate_tracker setting (now useless)
+$PERL -i'.orig3' -p -e's:(\$sys_activate_tracker)://$sys_activate_tracker:' /etc/codex/conf/local.inc
+# Update LDAP settings
+perl -i'.orig4' -p -e's/.*LDAP.*\n//g; s/.*substituted.*//g; s:^(.*sys_ldap_server.*)\n$:// Authentication scheme\:\n// Should be either \"ldap\" or \"codex\"\n// WARNING\: this is still experimental\n// DON T USE LDAP ON A PRODUCTION SERVER YET\n\$sys_auth_type = \"codex\";\n\n//\n// LDAP server(s) to query for more information on CodeX users and \n// for authentication.\n// You may use a comma-separated list if there are several servers available\n// (leave blank to disable LDAP lookup). \n// To specify secure LDAP servers, use \"ldaps\://servername\"\n\1:; s:^(.*sys_ldap_dn.*)$:\n\n\n// To enable LDAP information on CodeX users, also define the DN\n// (distinguised name) to use in LDAP queries.\n// The ldap filter is the filter to use to query the LDAP directory\n// (\%name\% are substituted with the value from the user table)\n\n\1:; s:^(.*sys_ldap_filter.*)$:\1\n\n// For LDAP systems that do not accept anonymous binding, define here\n// a valid DN and password\:\n//\$sys_ldap_bind_dn=\"ldapsearch\";\n//\$sys_ldap_bind_passwd=\"xxxxxxxxx\";\n\n// LDAP authentication\:\n// sys_ldap_auth_dn is used for binding to the LDAP server with the\n// ldap name and password.\n// sys_ldap_auth_filter is needed to retrieve user information when\n// creating the account, and during two-step authentication\n//\n// You should use \"\%ldap_name\%\" wherever the ldap login would appear.\n//\n// NOTE\: if you need a two-step authentication (search, then bind),\n// don t specify any \"\%ldap_name\%\" in \$sys_ldap_auth_dn\n// (in this case, you should probably have\:\n//  \$sys_ldap_auth_dn == \$sys_ldap_dn )\n//\n// 1- Direct authentication\:\n//\$sys_ldap_auth_dn=\"dc=xerox, dc=com, cn=\%ldap_name\%\";\n// 2- Two-step authentication (search, then bind)\:\n\$sys_ldap_auth_dn=\"o=XEROX, c=US\";\n\$sys_ldap_auth_filter=\"uid=\%ldap_name\%\";\n:' local.inc.dist
+todo "- If you plan to use LDAP, customize the corresponding parameters in /etc/codex/conf/local.inc"
 
-build_dir /home/ftp/codex/DELETED sourceforge sourceforge 755
 
-# Move configuration file
-$MV /etc/local.inc /etc/codex/conf/local.inc
-
-# Add $sys_win_domain to configuration file
-$PERL -i'.orig' -p -e's:(// Part II.*paths$):// Windows Workgroup CodeX belog to (Samba)\n\$sys_win_domain = "YOURDOMAIN";\n\n\1:' /etc/codex/conf/local.inc
-todo "- Customize the sys_win_domain parameter in /etc/codex/conf/local.inc"
-# Update one line that is not compatible with Python
-$PERL -i'.orig2' -p -e's:(sys_themeroot.*)\$.*(themes):\1"/home/httpd/SF/www/\2:' /etc/codex/conf/local.inc
-
-######
+##############################################
 # Now install CodeX specific RPMS (and remove RedHat RPMs)
 #
 
-# -> wu-ftpd
-echo "Removing existing wu-ftp daemon.."
-$RPM -e --nodeps wu-ftpd 2>/dev/null
-echo "Installing wu-ftpd..."
-cd ${RPMS_DIR}/wu-ftpd
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --force ${newest_rpm}/wu-ftpd*.i386.rpm
-
-# -> perlsuid
-echo "Removing Perl suid if any..."
-$RPM -e --nodeps perl-suidperl 2>/dev/null
-echo "Installing Perl suid..."
-cd ${RPMS_DIR}/perl-suidperl
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --force ${newest_rpm}/perl-suidperl*.i386.rpm
-
-# -> Perl DBD for MySQL
-echo "Removing Redhat Perl DBD MySQL if any..."
-$RPM -e --nodeps perl-DBD-MySQL 2>/dev/null
-echo "Installing Perl DBD MySQL..."
-cd ${RPMS_DIR}/perl-dbd-mysql
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --force ${newest_rpm}/perl-DBD-MySQL-*.i386.rpm
-
-# -> mysql
-echo "Removing existing MySQL..."
-$SERVICE mysql stop 2>/dev/null
-sleep 2
-[ -e /usr/bin/mysqladmin ] && /usr/bin/mysqladmin shutdown 2>/dev/null
-sleep 2
-$RPM -e --nodeps MySQL MySQL-client MySQL-shared mysql-bench MySQL-bench MySQL-devel MySQL-server 2>/dev/null
-echo "Installing MySQL RPMs for CodeX...."
-cd ${RPMS_DIR}/mysql
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --force ${newest_rpm}/MySQL-*.i386.rpm
-$SERVICE mysql start
-$CHKCONFIG mysql on
-
-# -> mysql module for Python
-echo "Removing existing MySQL module for Python..."
-$RPM -e --nodeps MySQL-python 2>/dev/null
-echo "Installing Python MySQL module RPM for CodeX...."
-cd ${RPMS_DIR}/mysql-python
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --force ${newest_rpm}/MySQL-python-*.i386.rpm
-
-# -> apache
-echo "Removing existing Apache..."
-#$SERVICE httpd stop
-$RPM -e --nodeps apache apache-devel apache-manual httpd httpd-devel httpd-manual 2>/dev/null
-$RPM -e --nodeps 'apr*' apr-util mod_ssl db4-devel db4-utils 2>/dev/null
-echo "Installing Apache RPMs for CodeX...."
-cd ${RPMS_DIR}/apache
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --force ${newest_rpm}/db42-4.*.i386.rpm ${newest_rpm}/db42-utils*.i386.rpm
-$RPM -Uvh --force ${newest_rpm}/apr-0.*.i386.rpm ${newest_rpm}/apr-util-0.*.i386.rpm
-$RPM -Uvh --force ${newest_rpm}/httpd-2*.i386.rpm
-$RPM -Uvh --force ${newest_rpm}/mod_ssl-*.i386.rpm
-$CHKCONFIG httpd on
-# restart Apache after subversion installation - see below
-
 
 # -> subversion
+# backup config file for apache
+$CP -a /etc/httpd/conf.d/subversion.conf /etc/httpd/conf.d/subversion.conf.codex
 echo "Removing existing subversion .."
 $RPM -e --nodeps `rpm -qa 'subversion*' 'swig*' 'neon*' 'rapidsvn*'` 2>/dev/null
 echo "Installing Subversion RPMs for CodeX...."
 cd ${RPMS_DIR}/subversion
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --force ${newest_rpm}/neon-0*.i386.rpm
-$RPM -Uvh --force ${newest_rpm}/swig-1*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/subversion-1.*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/subversion-server*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/subversion-python*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/subversion-tools*.i386.rpm
+$RPM -Uvh --force ${newest_rpm}/subversion-perl*.i386.rpm
 
-
-# Restart Apache after subversion is installed
-# so that mod_dav_svn module is taken into account
-$SERVICE httpd start
-
-
-
-##############################################
-# Move custom and config files to new places
-#
-echo "Move custom and configuration files to /etc/codex/ directory. Some files may not exist."
-
-$MV -f $INSTALL_DIR/site-content/custom /etc/codex/site-content
-$MV -f /etc/motd.inc /etc/codex/site-content/en_US/others/motd.txt
-$MV -f $INSTALL_DIR/SF/www/css/custom/* /etc/codex/themes/css
-$MV -f $INSTALL_DIR/SF/www/images/custom/* /etc/codex/themes/images
-build_dir /tmp/custom root root 755
-$MV $INSTALL_DIR/SF/www/css/custom /tmp/custom/css       # for future manual deletion
-$MV $INSTALL_DIR/SF/www/images/custom /tmp/custom/images # for future manual deletion
-
-$MV -f $INSTALL_DIR/documentation/user_guide/xml/en_US/ParametersLocal.dtd /etc/codex/documentation/user_guide/xml/en_US/
-
-build_dir /etc/codex/site-content/en_US/others sourceforge sourceforge 755
-# First, copy default page, then overwrite if a custom one exists
-$CP $INSTALL_DIR/site-content/en_US/others/default_page.php /etc/codex/site-content/en_US/others
-$MV -f $INSTALL_DIR/SF/utils/custom/default_page.php /etc/codex/site-content/en_US/others
-$MV $INSTALL_DIR/SF/utils/custom /tmp/custom/utils  # for future manual deletion
+$CP -a /etc/httpd/conf.d/subversion.conf.codex /etc/httpd/conf.d/subversion.conf
 
 
 ##############################################
@@ -355,70 +242,37 @@ $MV $INSTALL_DIR/SF/utils/custom /tmp/custom/utils  # for future manual deletion
 
 echo "Installing the CodeX software..."
 cd /home
-$MV httpd httpd_20
+$MV httpd httpd_22
 $MKDIR httpd;
 cd httpd
 $TAR xfz ${CodeX_DIR}/codex*.tgz
 $CHOWN -R sourceforge.sourceforge $INSTALL_DIR
 
 # copy some configuration files 
-make_backup /etc/httpd/conf/httpd.conf codex20
+make_backup /etc/httpd/conf/httpd.conf codex22
 $CP $INSTALL_DIR/SF/etc/httpd.conf.dist /etc/httpd/conf/httpd.conf
-$CP $INSTALL_DIR/SF/etc/mailman.conf.dist /etc/httpd/conf/mailman.conf
-$CP $INSTALL_DIR/SF/etc/ssl.conf.dist /etc/httpd/conf.d/ssl.conf
 $CP $INSTALL_DIR/SF/etc/php.conf.dist /etc/httpd/conf.d/php.conf
-$CP $INSTALL_DIR/SF/etc/subversion.conf.dist /etc/httpd/conf.d/subversion.conf
 
 # replace string patterns in httpd.conf
 substitute '/etc/httpd/conf/httpd.conf' '%sys_default_domain%' "$sys_default_domain"
 substitute '/etc/httpd/conf/httpd.conf' '%sys_ip_address%' "$sys_ip_address"
 
-# replace string patterns in ssl.conf
-substitute '/etc/httpd/conf.d/ssl.conf' '%sys_default_domain%' "$sys_default_domain"
-substitute '/etc/httpd/conf.d/ssl.conf' '%sys_ip_address%' "$sys_ip_address"
-
-todo "Edit the new /etc/httpd/conf/httpd.conf file and update it"
-todo "Edit the new /etc/httpd/conf.d/ssl.conf file and update it if needed"
+todo "Edit the new /etc/httpd/conf/httpd.conf file and update it if needed"
 todo "Edit the new /etc/httpd/conf.d/php.conf file and update it if needed"
-todo "Edit the new /etc/httpd/conf.d/subversion.conf file and update it if needed"
 
-# needed by newparse.pl
-$TOUCH /etc/httpd/conf/htpasswd
-$CHMOD 644 /etc/httpd/conf/htpasswd
+# backup_job has a new licence
+$CP $INSTALL_DIR/SF/utils/backup_job /home/tools
+$CHOWN root.root /home/tools/backup_job
+$CHMOD 740 /home/tools/backup_job
 
-
-
-#############################################
-# Because of directory structure change, specifically move one site-content file if it exists
-if [ -d /etc/codex/site-content/en_US/project/ ]; then
-    build_dir /etc/codex/site-content/en_US/file sourceforge sourceforge 755
-    $MV -f /etc/codex/site-content/en_US/project/editrelease_attach_file.txt /etc/codex/site-content/en_US/file/
-fi
+# New directory
+build_dir /etc/codex/themes/messages sourceforge sourceforge 755
 
 
 #############################################
 # Copy new icons in all custom themes
-$CP  $INSTALL_DIR/SF/www/images/codex.theme/ic/lock.png /etc/codex/themes/images/*/ic/
-$CP  $INSTALL_DIR/SF/www/images/codex.theme/ic/svn16b.png /etc/codex/themes/images/*/ic/
-$CP  $INSTALL_DIR/SF/www/images/codex.theme/ic/file.png /etc/codex/themes/images/*/ic/
+$CP  $INSTALL_DIR/SF/www/images/codex.theme/ic/wiki.png /etc/codex/themes/images/*/ic/
 
-
-
-#
-#
-#
-#
-#
-#
-#
-#  2.2 to 2.4 migration stuff
-#
-#
-#
-#
-#
-#
-#
 
 ##############################################
 # Database Structure and initvalues upgrade
@@ -435,6 +289,34 @@ done
 [ "X$old_passwd" != "X" ] && pass_opt="--password=$old_passwd"
 
 $CAT <<EOF | $MYSQL $pass_opt sourceforge
+
+
+---
+--- Table structure for user interface supported languages
+---
+CREATE TABLE supported_languages (
+   language_id int(11) NOT NULL auto_increment,
+   name text,
+   filename text,
+   language_code varchar(15),
+   language_charset varchar(32),
+   active int(11) NOT NULL default '1',
+   PRIMARY KEY  (language_id),
+   KEY idx_supported_languages_language_code (language_code)
+);
+
+ALTER TABLE user ADD language_id int(11) NOT NULL DEFAULT 1 ;
+
+
+--- ==============================
+--- supported_languages table
+--- ==============================
+--- Create the list of supported languages for that site
+
+INSERT INTO supported_languages VALUES \
+(1,'English','English_US.tab','en_US','ISO-8859-1',1);
+INSERT INTO supported_languages VALUES \
+(2,'Français','French_FR.tab','fr_FR','ISO-8859-1',1);
 
 
 ---
@@ -475,9 +357,6 @@ INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_REA
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_READ',10);
 
 
---- Delete 'deleted' documents
-DELETE FROM doc_data WHERE stateid='2';
-
 --- Delete doc_states table (now useless since we have ugroups permissions)
 DROP TABLE doc_states;
 
@@ -488,7 +367,7 @@ DROP TABLE doc_states;
 --- add a new tracker template to replace legacy patch tracker
 ---
 
-UPDATE service SET is_active=0, is_used=0
+UPDATE service SET is_active=0, is_used=0 WHERE ( group_id='100' and short_name='patch' );
 
 INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, is_public, allow_anon, email_all_updates, email_address, submit_instructions, browse_instructions, instantiate_for_new_projects) VALUES (5, 100, 'Patches', 'Patch Tracker', 'patch', 1, 0, 0, '', NULL, NULL, 1);
 
@@ -540,6 +419,8 @@ INSERT INTO artifact_field_value_list VALUES (12,5,2,'Declined','The artifact wa
 
 INSERT INTO service SET service_id=17, group_id=100, label='Wiki', description='Wiki', short_name='wiki', link='/wiki/?group_id=$group_id', is_active=1, is_used=1, scope='system', rank=105;
 
+INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (14, "wiki_admin", "Wiki Administrators", 100);
+
 CREATE TABLE wiki_group_list (
 	id int(11) NOT NULL auto_increment,
 	group_id int(11) NOT NULL default '0',
@@ -547,30 +428,29 @@ CREATE TABLE wiki_group_list (
 	wiki_link varchar(255) NOT NULL default '',
 	description varchar(255) NOT NULL default '',
 	rank int(11) NOT NULL default '0',
+        language_id int(11) NOT NULL default '1',
 	PRIMARY KEY (id)	
 ) TYPE=MyISAM;
 
 -- Table for Wiki access logs
-CREATE TABLE `wiki_log` (
-  `user_id` int(11) NOT NULL default '0',
-  `group_id` int(11) NOT NULL default '0',
-  `pagename` varchar(255) NOT NULL default '',
-  `time` int(11) NOT NULL default '0',
-  KEY `all_idx` (`user_id`,`group_id`),
-  KEY `time_idx` (`time`),
-  KEY `group_id_idx` (`group_id`)
+CREATE TABLE wiki_log (
+  user_id int(11) NOT NULL default '0',
+  group_id int(11) NOT NULL default '0',
+  pagename varchar(255) NOT NULL default '',
+  time int(11) NOT NULL default '0',
+  KEY all_idx (user_id,group_id),
+  KEY time_idx (time),
+  KEY group_id_idx (group_id)
 ) TYPE=MyISAM;
 
 
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKI_READ',100);
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKI_READ',1); --???
 INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('WIKI_READ',2,1);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKI_READ',3);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKI_READ',4);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKI_READ',14);
 
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIPAGE_READ',100);
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIPAGE_READ',1); --???
 INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('WIKIPAGE_READ',2,1);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIPAGE_READ',3);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIPAGE_READ',4);
@@ -696,7 +576,12 @@ ALTER TABLE artifact_notification_role_default DROP short_description;
 ALTER TABLE artifact_notification_role_default DROP description;
 
 
+-- File release status
+update frs_status set name='status_active' where name='Active'; 
+update frs_status set name='status_hidden' where name='Hidden';
 
+
+--
 -- service table
 --
 
@@ -796,7 +681,6 @@ EOF
 
 
 
-
 ###############################################################################
 # Add wiki service
 #
@@ -881,12 +765,23 @@ sub setup_interwiki_map {
     close(FILE)
 }
 
+sub setup_wiki_admin_rights {
+    my ($group_id) = @_;
+    my ($query, $c, $res);
+    $query = "UPDATE user_group SET wiki_flags='2' WHERE admin_flags='A'";
+    $c = $dbh->prepare($query);
+    $res = $c->execute();
+    if(!$res) {
+	return FALSE;
+    }
+    return TRUE;
+}
 
 #
 # MAIN
 #
 
-# Check wiki service entry existency before calling this script
+# Check wiki service entry existence before calling this script
 check_wiki_service_exist();
 
 # Insert a wiki for each project
@@ -896,222 +791,119 @@ $c = $dbh->prepare($query);
 $c->execute();
 while(my $group_id = $c->fetchrow()) {
     add_wiki_service($group_id);
+    setup_wiki_admin_rights($group_id);
 }
 
-# Setup interwiki_map
-setup_interwiki_map();
+# Setup interwiki_map - now useless since URL is relative.
+#setup_interwiki_map();
+
+
 
 exit;
 EOF
-
-# OLD 2.0 TO 2.2 STUFF
-
-
-
-
-
-# Update 'file' service for each project
-$PERL <<'EOF'
-use DBI;
-require "/home/httpd/SF/utils/include.pl";
-
-## load local.inc variables
-&load_local_config();
-
-&db_connect;
-
-sub updateFileService {
-  my ($group_id,$url) = @_;
-  $sql= "UPDATE service SET link='$url' WHERE group_id='$group_id' AND short_name='file'";
-  $sth = $dbh->prepare($sql);
-  $res = $sth->execute();
-
-  if (!$res) {
-    print "Could not update service 'file' for group_id ". $group_id."\n";
-    print "Please contact your CodeX support representative\n";
-  }
-}
-
-## get existing values from the group table
-$query = "select group_id FROM groups";
-$c = $dbh->prepare($query);
-$c->execute();
-
-while (my ($group_id) = $c->fetchrow()) {
-    if ($group_id == 100) {
-	$url = "/file/showfiles.php?group_id=\$group_id";
-    } else {
-        $url = "/file/showfiles.php?group_id=$group_id";
-    }
-    updateFileService($group_id, $url);
-}
-
-exit;
-EOF
-
-
-
 
 
 
 ##############################################
-# Install and Configure Subversion
+# Reinstall modified shell scripts
 #
 $CP $INSTALL_DIR/SF/utils/svn/commit-email.pl /usr/local/bin
 $CHOWN sourceforge.sourceforge /usr/local/bin/commit-email.pl
 $CHMOD 775 /usr/local/bin/commit-email.pl
+$CHMOD u+s commit-email.pl
 
-# Add sys_svn_host variable to local.inc
-# and Documentation parameter file (ParametersLocal.dtd)
-sys_svn_host="svn.$sys_default_domain"
+$CP $INSTALL_DIR/SF/utils/cvs1/log_accum /usr/local/bin
+$CHOWN sourceforge.sourceforge /usr/local/bin/log_accum
+$CHMOD 775 /usr/local/bin/log_accum
+$CHMOD u+s log_accum
 
-$PERL -i'.orig' -p -e"s:(^\\\$sys_cvs_host.*):\1\n\n// Machine that hosts Subversion\n// Note that while this machine need not be the same as the CodeX host,\n// the \"viewcvs\" interface currently must run on the CodeX host system.\n// If this host is different from the CodeX host, then the CodeX host\n// will need to be able to access the CVS file tree via NFS.\n\\\$sys_svn_host = \"$sys_svn_host\";:" /etc/codex/conf/local.inc
-
-$PERL -i'.orig' -p -e"s:(^<\!ENTITY SYS_CVS_HOST.*):\1\n<\!ENTITY SYS_SVN_HOST \"$sys_svn_host\":" /etc/codex/documentation/user_guide/xml/en_US/ParametersLocal.dtd
-
-
-##############################################
-#
-# A few updates that may not be necessary in case of a real OS upgrade
-# but that are useful in case of fresh install of OS.
-# In any case, you should run these updates
-#
-##############################################
+# should have been done before but...
+$CP $INSTALL_DIR/SF/utils/cvs1/cvssh-restricted /usr/local/bin
 
 
 ##############################################
-# FTP server configuration
-#
-make_backup "/etc/xinetd.d/wu-ftpd" codex20
-echo "Configuring FTP servers and directories..."
-$CAT <<EOF >/etc/xinetd.d/wu-ftpd
-service ftp
-{
-        disable = no
-        socket_type             = stream
-        wait                    = no
-        user                    = root
-        server                  = /usr/sbin/in.ftpd
-        server_args             = -l -a
-        log_on_success          += DURATION
-        nice                    = 10
-}
-EOF
-
-make_backup "/etc/ftpaccess"
-$CAT <<EOF >/etc/ftpaccess
-class   all   real,guest,anonymous  *
-class anonftp anonymous *
-
-upload /home/ftp * no
-upload /home/ftp /bin no
-upload /home/ftp /etc no
-upload /home/ftp /lib no
-noretrieve .notar
-upload /home/ftp /incoming yes ftpadmin ftpadmin 0644 nodirs
-noretrieve /home/ftp/incoming
-noretrieve /home/ftp/codex
-
-email root@localhost
-
-loginfails 5
-
-readme  README*    login
-readme  README*    cwd=*
-
-message /welcome.msg            login
-message .message                cwd=*
-
-compress        yes             all
-tar             yes             all
-chmod        no        guest,anonymous
-delete        no        guest,anonymous
-overwrite    no        guest,anonymous
-rename        no        guest,anonymous
-
-log transfers anonymous,real inbound,outbound
-
-shutdown /etc/shutmsg
-
-passwd-check rfc822 warn
-EOF
-
-##############################################
-# Crontab configuration
+# Check for the existence of the following customized content files and advise the person in charge of the installation of the new .tab files to customize to obtain the same effect
 #
 
-# Install root crontab if it is not set
-install_root_crontab=1;
-if [ -a /var/spool/cron/root ]; then
-   grep xerox_crontab /var/spool/cron/root > /dev/null
-   if [ $? -eq 0 ]; then
-     install_root_crontab=0;
-     echo "root user crontab seems up to date..."
-   fi
+service="account"
+file_exist=0
+for sitefile in register_confirmation.txt register_needs_approval.txt \
+    register_email.txt register_purpose.txt register_login.txt
+do
+    $RPM -q $rpm  2>/dev/null 1>&2
+    if [ -e /etc/codex/site-content/en_US/$service/$sitefile ]; then
+        file_exist=1
+        echo /etc/codex/site-content/en_US/$service/$sitefile
+    fi
+done
+if [ $file_exist -eq 1 ]; then
+    echo "The file(s) listed above are no longer used. Please customize /etc/codex/site-content/en_US/$service/$service.tab to obtain the same effect, then delete the old files."
 fi
 
-if [ $install_root_crontab -eq 1 ]; then 
-  echo "Installing root user crontab..."
-  $CAT <<'EOF' >/tmp/cronfile
-# run the Codex crontab script once every 2 hours
-# this script synchronizes user, groups, cvs repo,
-# directories, mailing lists, etc...
-0 0-23/2 * * * /home/httpd/SF/utils/xerox_crontab.sh
-#
-# run the daily statistics script just a little bit after
-# midnight so that it computes stats for the day before
-# Run at 0:30 am
-30 0 * * * /home/httpd/SF/utils/xerox_all_daily_stats.sh
-#
-# run the weekly stats for projects. Run it on Monday morning so that
-# it computes the stats for the week before
-# Run on Monday at 1am
-0 1 * * Mon (cd /home/httpd/SF/utils/underworld-root; ./db_project_weekly_metric.pl)
-#
-# weekly backup preparation (mysql shutdown, file dump and restart)
-45 0 * * Sun /home/tools/backup_job
-#
-# Delete all files in FTP incoming that are older than 2 weeks (336 hours)
-#
-0 3 * * * /usr/sbin/tmpwatch -m -f 336 /home/ftp/incoming
-#
-# It looks like we have memory leaks in Apache in some versions so restart it
-# on Sunday. Do it while the DB is down for backup
-50 0 * * Sun /etc/rc.d/init.d/httpd restart
-#
-# Once a minute make sure that the setuid bit is set on some critical files
-* * * * * (cd /usr/local/bin; /bin/chmod u+s commit-email.pl log_accum tmpfilemove fileforge)
-EOF
-  crontab -u root /tmp/cronfile
+service="homepage"
+file_exist=0
+for sitefile in staff.txt thanks.txt welcome_intro.txt
+do
+    $RPM -q $rpm  2>/dev/null 1>&2
+    if [ -e /etc/codex/site-content/en_US/$service/$sitefile ]; then
+        file_exist=1
+        echo /etc/codex/site-content/en_US/$service/$sitefile
+    fi
+done
+if [ $file_exist -eq 1 ]; then
+    echo "The file(s) listed above are no longer used. Please customize /etc/codex/site-content/en_US/$service/$service.tab to obtain the same effect, then delete the old files."
 fi
 
-
-# Install sourceforge crontab if needed
-install_sourceforge_crontab=1;
-if [ -a /var/spool/cron/sourceforge ]; then
-   grep generate_doc /var/spool/cron/sourceforge > /dev/null
-   if [ $? -eq 0 ]; then
-     install_sourceforge_crontab=0;
-     echo "sourceforge user crontab seems up to date..."
-   fi
+service="my"
+file_exist=0
+for sitefile in intro.txt
+do
+    $RPM -q $rpm  2>/dev/null 1>&2
+    if [ -e /etc/codex/site-content/en_US/$service/$sitefile ]; then
+        file_exist=1
+        echo /etc/codex/site-content/en_US/$service/$sitefile
+    fi
+done
+if [ $file_exist -eq 1 ]; then
+    echo "The file(s) listed above are no longer used. Please customize /etc/codex/site-content/en_US/$service/$service.tab to obtain the same effect, then delete the old files."
 fi
 
-if [ $install_sourceforge_crontab -eq 1 ]; then 
-  echo "Installing sourceforge user crontab..."
-  $CAT <<'EOF' >/tmp/cronfile
-# Re-generate the CodeX User Guide on a daily basis
-00 03 * * * /home/httpd/SF/utils/generate_doc.sh -f
-EOF
-  crontab -u sourceforge /tmp/cronfile
+# other modified files
+file_exist=0
+for sitefile in contact/contact.txt \
+cvs/intro.txt \
+file/editrelease_attach_file.txt \
+file/qrs_attach_file.txt \
+include/new_project_email.txt \
+include/restricted_user_permissions.txt \
+layout/footer.txt \
+others/default_page.php \
+register/complete.txt \
+register/intro.txt \
+register/license.txt \
+register/projectname.txt \
+register/registration.txt \
+register/tos.txt \
+svn/intro.txt \
+tos/privacy.txt
+do
+    $RPM -q $rpm  2>/dev/null 1>&2
+    if [ -e /etc/codex/site-content/en_US/$service/$sitefile ]; then
+        file_exist=1
+        echo /etc/codex/site-content/en_US/$service/$sitefile
+    fi
+done
+if [ $file_exist -eq 1 ]; then
+    echo "The file(s) listed above have change in CodeX 2.4. Please check that your customized files are still up-to-date."
 fi
 
 
 ##############################################
-# Restarting some services before upgrading
+# Restarting some services
 #
 echo "Starting crond and apache..."
 $SERVICE crond start
-$SERVICE httpd restart
+$SERVICE httpd start
 $SERVICE sendmail start
 
 
@@ -1120,7 +912,7 @@ $SERVICE sendmail start
 #
 echo "Updating the User Manual. This might take a few minutes."
 /home/httpd/SF/utils/generate_doc.sh -f
-todo "Edit utils/generate_doc.sh to make sure that the CVS update is possible. Do a cvs login on CVS server as user 'sourceforge'. Alternatively, add a '-f' flag in the 'sourceforge' crontab to force generation each night"
+
 
 ##############################################
 # Make sure all major services are on
@@ -1132,14 +924,10 @@ $CHKCONFIG mysql on
 $CHKCONFIG cvs on
 $CHKCONFIG mailman on
 
-
 ##############################################
 # More things to do
-todo "Customize /etc/php.ini: "
-todo "  - memory_limit = 30M"
-todo "  - post_max_size = 20M"
-todo "  - upload_max_file_size = 20M"
-todo "Customize LDAP parameters in local.inc "
+todo "Note that PHP configuration is now set in /etc/httpd/conf.d/php.conf instead of /etc/php.ini "
+
 
 # End of it
 echo "=============================================="
@@ -1147,17 +935,3 @@ echo "Installation completed succesfully!"
 $CAT $TODO_FILE
 
 exit 1;
-
-
-cat <<EOF >/dev/null
-When migrating a 2.2 site to 2.4 here are the things that must be done:
-
-- Add language_id field in user_table
-- Create table supported_languages and feed it with English and French entries
-- Create the directory /etc/codex/themes/messages with sourceforge.sourceforge 755
-- Check for the existence of the following customized content files and advise the the person in charge of the installation of the new .tab files to customize to obtain the same effect:
-  * account/register_confirmation.txt, account/register_needs_approval.txt, account/register_email.txt, account/register_purpose.txt: see account/account.tab#account_register
-  * homepage/staff.txt, homepage/thanks.txt, homepage/welcome_intro.txt: see homepage/homepage.tab
-  * my/intro.txt: see my/my.tab
-OK - docman specific updates
-EOF
