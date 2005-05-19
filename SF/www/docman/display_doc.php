@@ -60,7 +60,8 @@ if ($docid) {
     // HTML or text files that were copy/pasted are displayed in a CodeX-formatted page.
     // Uploaded files are always displayed as-is.
     if ( (($row['filetype'] == 'text/html')||($row['filetype'] == 'text/plain') )&&($row['filesize']==0)) {
-        docman_header(array('title'=>$row['title']));
+        docman_header(array('title'=>$row['title'],
+                            'help'=>'DocumentManager.html'));
         if ($object_group_id != $from_group_id) {
             $group_name=util_get_group_name_from_id($object_group_id);
             print '<H3><span class="feedback">'.$Language->getText('docman_display_doc','warning_different_group',array($group_name)).'</span></H3>';
