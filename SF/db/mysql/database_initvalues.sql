@@ -278,16 +278,6 @@ INSERT INTO frs_processor VALUES ('8000','Any');
 INSERT INTO frs_processor VALUES ('9999','Other');
 
 #
-# Default data for Document Manager
-#
-
-INSERT INTO doc_states VALUES (1, 'active');
-INSERT INTO doc_states VALUES (2, 'deleted');
-INSERT INTO doc_states VALUES (3, 'pending');
-INSERT INTO doc_states VALUES (4, 'hidden');
-INSERT INTO doc_states VALUES (5, 'private');
-
-#
 # Default data for Patch Manager
 #
 
@@ -1701,10 +1691,10 @@ insert into service (service_id, group_id, label, description, short_name, link,
 ---
 
 -- create document group
-insert into doc_groups(groupname,group_id,group_rank) values ('Must Read Documents','1','10');
+insert into doc_groups(groupname,group_id,group_rank) values ('Documents','1','10');
 
 -- insert User Guide
-insert into doc_data(stateid,title,data,createdate,updatedate,created_by,doc_group,rank,description,restricted_access,filename,filesize,filetype) values('1','<a href=\"/documentation/user_guide/pdf/en_US/CodeX_User_Guide.pdf\"><b>CodeX User Guide</b></a>','','1095756374','1095756374','101','1','10','A comprehensive guide describing all the CodeX services and how to use them in an optimal way. Also provides a lot of useful tips and guidelines to manage your CodeX project efficiently. Available in <a href=\"/documentation/user_guide/pdf/en_US/CodeX_User_Guide.pdf\">PDF </a> and <a href=\"/documentation/user_guide/html/en_US/index.html\">HTML </a> format.','0','',0,'text/html');
+insert into doc_data(title,data,createdate,updatedate,created_by,doc_group,rank,description,filename,filesize,filetype) values('<a href=\"/documentation/user_guide/pdf/en_US/CodeX_User_Guide.pdf\"><b>CodeX User Guide</b></a>','','1095756374','1095756374','101','1','10','A comprehensive guide describing all the CodeX services and how to use them in an optimal way. Also provides a lot of useful tips and guidelines to manage your CodeX project efficiently. Available in <a href=\"/documentation/user_guide/pdf/en_US/CodeX_User_Guide.pdf\">PDF </a> and <a href=\"/documentation/user_guide/html/en_US/index.html\">HTML </a> format.','',0,'text/html');
 
 
 
