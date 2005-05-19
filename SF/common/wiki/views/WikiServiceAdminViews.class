@@ -119,7 +119,8 @@ class WikiServiceAdminViews extends WikiViews {
       <li><a href="/wiki/admin/index.php?group_id='.$this->gid.'">'.$Language->getText('wiki_views_wkserviews', 'menuadmin').'</a>&nbsp;|&nbsp;</li>
       <li><a href="'.$this->wikiAdminLink.'&view=wikiDocuments">'.$Language->getText('wiki_views_wkserviews', 'menudocs').'</a>&nbsp;|&nbsp;</li>
       <li><a href="'.$this->wikiAdminLink.'&view=wikiPages">'.$Language->getText('wiki_views_wkserviews', 'menupage').'</a>&nbsp;|&nbsp;</li>
-      <li><a href="'.$this->wikiAdminLink.'&view=wikiPerms">'.$Language->getText('wiki_views_wkserviews', 'menuperm').'</a></li>
+      <li><a href="'.$this->wikiAdminLink.'&view=wikiPerms">'.$Language->getText('wiki_views_wkserviews', 'menuperm').'</a>&nbsp;|&nbsp;</li>
+      <li>'.help_button('WikiService.html',false,$Language->getText('global','help')).'</li>
     </ul>';
   }
 

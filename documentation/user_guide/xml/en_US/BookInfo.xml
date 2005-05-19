@@ -506,6 +506,16 @@
         <revremark>Fixed bug #2511 on cvs help.
         </revremark>
       </revision>
+      <revision>
+        <revnumber>2.8</revnumber>
+
+        <date>19-May-2005</date>
+
+        <authorinitials>Nicolas Guerin</authorinitials>
+
+        <revremark>Added initial Wiki documentation.
+        </revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--

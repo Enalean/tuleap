@@ -239,7 +239,7 @@ class WikiServiceViews extends WikiViews {
       <li><a href="'.$this->wikiLink.'">'.$Language->getText('wiki_views_wikiserviceviews', 'menudocuments').'</a>&nbsp;|&nbsp;</li>
       <li><a href="'.$this->wikiLink.'&view=browsePages">'.$Language->getText('wiki_views_wikiserviceviews', 'menupages').'</a>&nbsp;|&nbsp;</li>
       <li><a href="'.$this->wikiAdminLink.'">'.$Language->getText('wiki_views_wikiserviceviews', 'menuadmin').'</a>&nbsp;|&nbsp;</li>
-      <li>'.help_button('Wiki.html',false,$Language->getText('global','help')).'</li>
+      <li>'.help_button('WikiService.html',false,$Language->getText('global','help')).'</li>
    </ul>';
 
   print '
