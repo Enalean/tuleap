@@ -269,7 +269,7 @@ function menu_print_sidebar($params) {
         if ($grp->isProject()) {
             //this is a project page
             //sf global choices
-            echo menu_project ($params['group']);
+            //echo menu_project ($params['group']);
             echo menu_software();
             echo menu_site();
         } else {
