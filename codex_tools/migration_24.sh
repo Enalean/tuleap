@@ -184,6 +184,7 @@ echo "Stopping crond, apache and httpd, sendmail, and postfix ..."
 $SERVICE crond stop
 $SERVICE apache stop
 $SERVICE httpd stop
+$SERVICE mysql stop
 $SERVICE sendmail stop
 $SERVICE postfix stop
 
@@ -278,6 +279,8 @@ $CP  $INSTALL_DIR/SF/www/images/codex.theme/ic/wiki.png /etc/codex/themes/images
 # Database Structure and initvalues upgrade
 #
 echo "Updating the CodeX database..."
+
+$SERVICE mysql start
 
 pass_opt=""
 # See if MySQL root account is password protected
@@ -905,6 +908,7 @@ echo "Starting crond and apache..."
 $SERVICE crond start
 $SERVICE httpd start
 $SERVICE sendmail start
+$SERVICE mysql start
 
 
 ##############################################
