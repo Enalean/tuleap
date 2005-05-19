@@ -56,12 +56,13 @@ class BaseLanguage {
 	    global $sys_user_theme;
 
 	    // load default message file
-	    $ftname = $GLOBALS['sys_incdir'].'/en_US/'.$fname.'.tab' ;
-	    $this->loadLanguageFile($ftname) ;
-
-	    // load message file
 	    $ftname = $GLOBALS['sys_incdir'].'/'.$this->lang.'/'.$fname.'.tab' ;
-	    $this->loadLanguageFile($ftname) ;
+	    if (!file_exists ($ftname)) {
+                // If the file does not exist in the selected language, use the default language (en_US)
+                $ftname = $GLOBALS['sys_incdir'].'/en_US/'.$fname.'.tab' ;
+            }
+            // load message file
+            $this->loadLanguageFile($ftname) ;
 
 	    // load site-local customizations
 	    $ftname = '/etc/codex/site-content/'.'/'.$this->lang.'/'.$fname.'.tab' ;
