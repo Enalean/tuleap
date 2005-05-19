@@ -1178,6 +1178,7 @@ $CHKCONFIG mailman on
 todo "Create the shell login files for CodeX users in /etc/skel_codex"
 # things to do by hand
 todo "Change the default login shell if needed in the database (/sbin/nologin or /usr/local/bin/cvssh, etc."
+todo "Create an SSL certificate for Apache to support encryption (https) (see CodeX installation guide)."
 
 # End of it
 echo "=============================================="
