@@ -59,7 +59,7 @@ License
 <dt><a href="#HowTo_Change_PW">Change privileged account passwords</a></dt>
 <dt><a href="#HowTo_Delete_Bug">Delete a bug from the CodeX database</a></dt>
 <dt><a href="#HowTo_Restricted_Users">Enabling 'Restricted Users' on a CodeX server</a></dt>
-<dt><a href="#HowTo_Localise_Services">Localise service names</a></dt>
+<dt><a href="#HowTo_Localize_Services">Localize service names</a></dt>
 </dl></dd>
 </dl>
 <p></p>
@@ -2820,12 +2820,12 @@ $allow_access_to_codex_mail=false; // CodeX mailing lists (Developers Channels)
 <hr>
 
 
-<h2><a name="HowTo_Localise_Services">Localise service names</a></h2>
+<h2><a name="HowTo_Localize_Services">Localize service names</a></h2>
 <p>
 
 If you would like to add new system-wide or project-wide services please note the following:
 <p>
-For those service names to be localised, we store a simple key for the service label and description in the database. 
+For those service names to be localized, we store a simple key for the service label and description in the database. 
 These keys are then translated into the users current language by doing a look up of the key in the 
 site_content/<<i>language</i>>/project/project.tab file.
 <p>
@@ -2835,15 +2835,15 @@ The keys follow a simple pattern:
 <li> <tt>service_<<i>service short name</i>>_desc_key</tt> for the service description
 </ul>
 
-To assure the correct localisation when adding a new service please follow the instructions below:
+To assure the correct localization when adding a new service please follow the instructions below:
 <ul>
 <li> Choose <tt>service_<<i>service short name</i>>_lbl_key</tt> as service label
 <li> Choose <tt>service_<<i>service short name</i>>_desc_key</tt> as service description
 <li> Add two entries into each <strong>site_content/<<i>language</i>>/project/project.tab</strong>
 <p>
 <tt>
-project_admin_editservice	service_<<i>service short name</i>>_lbl_key	<<i>your localised service label</i>><br>
-project_admin_editservice	service_<<i>service short name</i>>_desc_key	<<i>your localised service description</i>>
+project_admin_editservice	service_<<i>service short name</i>>_lbl_key	<<i>your localized service label</i>><br>
+project_admin_editservice	service_<<i>service short name</i>>_desc_key	<<i>your localized service description</i>>
 </tt>
 </ul>
 

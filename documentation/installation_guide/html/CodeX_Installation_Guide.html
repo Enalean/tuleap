@@ -976,24 +976,22 @@ name as $sys_default_domain. Set it to an empty string ($sys_https_host
 = "") if your site is not SSL enabled.</li>
 </ul>
 <h2>PHP configuration</h2>
+<p>PHP configuration is now defined in /etc/httpd/conf.d/php.conf instead of /etc/php.ini.
 <ul>
-  <li>Change the include_path variable in /etc/php.ini to the
-following value:<br>
-    <pre>&nbsp; &nbsp; &nbsp; include_path&nbsp;&nbsp;&nbsp; = .:/home/httpd/SF/www/include:/home/httpd/SF/www/phpMyAdmin</pre>
+  <li>CodeX still needs the register_globals parameter to be set.
+   It is 'off' by default starting with PHP4, so add this line to php.conf:<br>
+    <pre>   php_value register_globals on</pre>
+  </li>
+  <li>Update the include_path variable to the following value:<br>
+    <pre>   php_value include_path "/home/httpd/SF/www/include:/home/httpd/SF:."</pre>
   </li>
   <li>Also set/tune some additional variable for upload size:<br>
-    <br>
-    <div style="margin-left: 40px; font-family: monospace;">upload_max_filesize
-= 20971520 ; 20 Meg default limit on file uploads (CodeX)<br>
-post_max_size = 20971520&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; 20 Meg
-byte limit on post size (CodeX)<br>
-memory_limit&nbsp; = 31457280&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; 30
-Meg byte limit on memory limit (CodeX)<br>
-    <br>
-    </div>
+    <pre>   php_value memory_limit 30M
+   php_value post_max_size 20M
+   php_value upload_max_file_size 20M</pre>
   </li>
-  <li>And load the following extensions only: <span
- style="font-family: monospace;">gd.so, ldap.so, mysql.so</span><br>
+  <li>phpWiki also needs this parameter to avoid warnings:<br>
+    <pre>   php_value allow_call_time_pass_reference on</pre>
   </li>
 </ul>
 <h2>Modifying maximum size of uploaded files</h2>
@@ -1671,14 +1669,14 @@ By default this is a transparent image of size 52x52 pixels. We
 recommend that your logo do not exceed 60x140 pixels to preserve the
 nice looking layout of the menu bar.<br>
 <h2><a name="Site_content"></a>Site content</h2>
-Several PHP scripts in the CodeX source code contain pieces of text
-that are generally here to give instructions to the CodeX users.
-Typical
+Several PHP scripts in the CodeX source code contain pieces of text or code
+that are generally here to give instructions to the CodeX users, or to provide 
+site-specific information. Typical
 examples are: the introductory text at the top of the CodeX Home Page,
 instructions on how to connect to the CVS repository, instructions and
-guidelines in the project registration process,etc.<br>
+guidelines in the project registration process, LDAP repository information, etc.<br>
 <br>
-These pieces of text are isolated from the PHP scripts themselves and
+These pieces of text or code are isolated from the PHP scripts themselves and
 they are all placed under the top directory <tt>'site-content'</tt>.
 &nbsp;The file path to the content of a given script (or part of a
 script) follows the following pattern:<br>
@@ -1688,9 +1686,9 @@ script) follows the following pattern:<br>
 where:<br>
 <ul>
   <li>LANG_COUNTRY is the standard ISO naming for language and
-countries: Currently there is only en_US for CodeX is not yet localized.</li>
+countries: Currently CodeX supports two languages: en_US (American English) and fr_FR (French).</li>
   <li>SF_path is the name of the directory under SF which contains the
-script the text belong to.</li>
+script the text belongs to.</li>
   <li>whattext.txt is a file name that contains the piece of text itself<br>
   </li>
 </ul>
@@ -1715,13 +1713,35 @@ introductory text of the CodeX home page, copy <span
 into and <span style="font-family: monospace;">/etc/site-content/en_US/homepage/welcome_intro.txt</span>
 edit it as you like.<br>
     <br>
-B<u>e careful that some of these files contain PHP scripting that you
+<u>Be careful that some of these files contain PHP scripting that you
 probably want to preserve in your customized version. Deleting the PHP
 scripting could break the entire PHP scripts. Ask the CodeX Team if you
 are unsure of what you are doing.</u><br>
     <br>
   </li>
 </ol>
+Read also <a href="#localization">Localization</a> below for additional information on how to customize interface messages.
+<h2><a name="localization"></a>Localization</h2>
+<p>CodeX source code is localized, so the interface is displayed in the user-selected language.
+Currently, CodeX supports the English and French languages.
+<p>Messages are stored in the <a href="#Site_content">Site content</a> directory: there is one message file per service, with the same name as the service, ending with '.tab'.
+<br>E.g. 'site-content/en_US/tracker/tracker.tab' contains all tracker messages in English.
+<br>The format of the message files is very simple: one line per message, with the following format:<br>
+<pre>   key1[tab]key2[tab]your message here</pre>
+<p>As with other site-content files, you may customize the language files, so that you can change a few specific messages:
+<ol><li>Copy the language file you need to customize from the /home/httpd/site-content subdirectory to the corresponding subdirectory in /etc/codex/site-content (see <a href="#Site_content">Site content</a> above)
+<li>Remove all lines that you don't need to change, and only keep the lines you will modify.
+<li>Change the messages
+<li>Repeat the operation for all the languages you need to support on your CodeX server.
+</ol>
+<p>CodeX themes may also use additional messages that are not part of the main CodeX source code. These messages are directly stored in the theme directory, and they may be customized for local themes in /etc/codex/themes/messages/<i>theme_name</i>/
+<p>When looking for a message to display, CodeX will look successively in the following directories, stopping as soon as the message is found:
+<ol><li>Theme-specific message file
+<li>/etc/codex/site-content/<i>user_lang</i> directory
+<li>/home/httpd/site-content/<i>user_lang</i> directory
+<li>/home/httpd/site-content/en_US directory (if the message file does not exist in the selected language)
+</ol>
+
 <h2>Site Documentation</h2>
 CodeX has an entry called 'Site Documentation' &nbsp;in the left hand
 side menu. This menu entry actually points to the Document Manager of
