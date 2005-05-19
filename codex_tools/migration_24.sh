@@ -187,6 +187,7 @@ $SERVICE httpd stop
 $SERVICE mysql stop
 $SERVICE sendmail stop
 $SERVICE postfix stop
+$SERVICE mailman stop
 
 
 ##############################################
@@ -909,6 +910,7 @@ $SERVICE crond start
 $SERVICE httpd start
 $SERVICE sendmail start
 $SERVICE mysql start
+$SERVICE mailman start
 
 
 ##############################################
