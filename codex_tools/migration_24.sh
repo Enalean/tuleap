@@ -113,7 +113,7 @@ substitute() {
 OLD_CX_RELEASE='2.2'
 yn="y"
 $GREP -q "$OLD_CX_RELEASE" $INSTALL_DIR/SF/www/VERSION
-if [ $? -eq 1 ]; then
+if [ $? -ne 0 ]; then
     $CAT <<EOF
 This machine does not have CodeX ${OLD_CX_RELEASE} installed. Executing this install
 script may cause data loss or corruption.
@@ -123,7 +123,10 @@ else
     echo "Found CodeX ${OLD_CX_RELEASE} installed... good!"
 fi
 
-[ "$yn" != "y" ] && (echo "Bye now!"; exit 1;)
+if [ "$yn" = "n" ]; then
+    echo "Bye now!"
+    exit 1
+fi
 
 
 ##############################################
@@ -154,7 +157,10 @@ Before upgrading, please note that:
 EOF
 read -p "Continue? [yn]: " yn
 
-[ "$yn" != "y" ] && (echo "Bye now!"; exit 1;)
+if [ "$yn" = "n" ]; then
+    echo "Bye now!"
+    exit 1
+fi
 
 ##############################################
 # Check we are running on RHEL 3
@@ -172,7 +178,10 @@ else
     echo "Running on RedHat Enterprise Linux ${RH_RELEASE}... good!"
 fi
 
-[ "$yn" != "y" ] && (echo "Bye now!"; exit 1;)
+if [ "$yn" = "n" ]; then
+    echo "Bye now!"
+    exit 1
+fi
 
 $RM -f $TODO_FILE
 todo "WHAT TO DO TO FINISH THE CODEX MIGRATION (see $TODO_FILE)"
@@ -211,10 +220,10 @@ read -p "Codex Server IP address: " sys_ip_address
 make_backup /etc/codex/conf/local.inc codex22
 
 # Remove $sys_activate_tracker setting (now useless)
-$PERL -i'.orig3' -p -e's:(\$sys_activate_tracker)://$sys_activate_tracker:' /etc/codex/conf/local.inc
+$PERL -i'.orig3' -p -e's:(.sys_activate_tracker)://\1 // parameter now deprecated:' /etc/codex/conf/local.inc
 # Update LDAP settings
-perl -i'.orig4' -p -e's/.*LDAP.*\n//g; s/.*substituted.*//g; s:^(.*sys_ldap_server.*)\n$:// Authentication scheme\:\n// Should be either \"ldap\" or \"codex\"\n// WARNING\: this is still experimental\n// DON T USE LDAP ON A PRODUCTION SERVER YET\n\$sys_auth_type = \"codex\";\n\n//\n// LDAP server(s) to query for more information on CodeX users and \n// for authentication.\n// You may use a comma-separated list if there are several servers available\n// (leave blank to disable LDAP lookup). \n// To specify secure LDAP servers, use \"ldaps\://servername\"\n\1:; s:^(.*sys_ldap_dn.*)$:\n\n\n// To enable LDAP information on CodeX users, also define the DN\n// (distinguised name) to use in LDAP queries.\n// The ldap filter is the filter to use to query the LDAP directory\n// (\%name\% are substituted with the value from the user table)\n\n\1:; s:^(.*sys_ldap_filter.*)$:\1\n\n// For LDAP systems that do not accept anonymous binding, define here\n// a valid DN and password\:\n//\$sys_ldap_bind_dn=\"ldapsearch\";\n//\$sys_ldap_bind_passwd=\"xxxxxxxxx\";\n\n// LDAP authentication\:\n// sys_ldap_auth_dn is used for binding to the LDAP server with the\n// ldap name and password.\n// sys_ldap_auth_filter is needed to retrieve user information when\n// creating the account, and during two-step authentication\n//\n// You should use \"\%ldap_name\%\" wherever the ldap login would appear.\n//\n// NOTE\: if you need a two-step authentication (search, then bind),\n// don t specify any \"\%ldap_name\%\" in \$sys_ldap_auth_dn\n// (in this case, you should probably have\:\n//  \$sys_ldap_auth_dn == \$sys_ldap_dn )\n//\n// 1- Direct authentication\:\n//\$sys_ldap_auth_dn=\"dc=xerox, dc=com, cn=\%ldap_name\%\";\n// 2- Two-step authentication (search, then bind)\:\n\$sys_ldap_auth_dn=\"o=XEROX, c=US\";\n\$sys_ldap_auth_filter=\"uid=\%ldap_name\%\";\n:' local.inc.dist
-todo "- If you plan to use LDAP, customize the corresponding parameters in /etc/codex/conf/local.inc"
+perl -i'.orig4' -p -e's/.*LDAP.*\n//g; s/.*substituted.*//g; s:^(.*sys_ldap_server.*)\n$:// Authentication scheme\:\n// Should be either \"ldap\" or \"codex\"\n// WARNING\: this is still experimental\n\$sys_auth_type = \"codex\";\n\n//\n// LDAP server(s) to query for more information on CodeX users and \n// for authentication.\n// You may use a comma-separated list if there are several servers available\n// (leave blank to disable LDAP lookup). \n// To specify secure LDAP servers, use \"ldaps\://servername\"\n\1:; s:^(.*sys_ldap_dn.*)$:\n\n\n// To enable LDAP information on CodeX users, also define the DN\n// (distinguised name) to use in LDAP queries.\n// The ldap filter is the filter to use to query the LDAP directory\n// (\%name\% are substituted with the value from the user table)\n\n\1:; s:^(.*sys_ldap_filter.*)$:\1\n\n// For LDAP systems that do not accept anonymous binding, define here\n// a valid DN and password\:\n//\$sys_ldap_bind_dn=\"ldapsearch\";\n//\$sys_ldap_bind_passwd=\"xxxxxxxxx\";\n\n// LDAP authentication\:\n// sys_ldap_auth_dn is used for binding to the LDAP server with the\n// ldap name and password.\n// sys_ldap_auth_filter is needed to retrieve user information when\n// creating the account, and during two-step authentication\n//\n// You should use \"\%ldap_name\%\" wherever the ldap login would appear.\n//\n// NOTE\: if you need a two-step authentication (search, then bind),\n// don t specify any \"\%ldap_name\%\" in \$sys_ldap_auth_dn\n// (in this case, you should probably have\:\n//  \$sys_ldap_auth_dn == \$sys_ldap_dn )\n//\n// 1- Direct authentication\:\n//\$sys_ldap_auth_dn=\"dc=xerox, dc=com, cn=\%ldap_name\%\";\n// 2- Two-step authentication (search, then bind)\:\n\$sys_ldap_auth_dn=\"o=XEROX, c=US\";\n\$sys_ldap_auth_filter=\"uid=\%ldap_name\%\";\n:' /etc/codex/conf/local.inc
+todo "If you plan to use LDAP, customize the corresponding parameters in /etc/codex/conf/local.inc"
 
 
 ##############################################
@@ -224,12 +233,14 @@ todo "- If you plan to use LDAP, customize the corresponding parameters in /etc/
 
 # -> subversion
 # backup config file for apache
-$CP -a /etc/httpd/conf.d/subversion.conf /etc/httpd/conf.d/subversion.conf.codex
+$MV /etc/httpd/conf.d/subversion.conf /etc/httpd/conf.d/subversion.conf.codex
 echo "Removing existing subversion .."
 $RPM -e --nodeps `rpm -qa 'subversion*' 'swig*' 'neon*' 'rapidsvn*'` 2>/dev/null
 echo "Installing Subversion RPMs for CodeX...."
 cd ${RPMS_DIR}/subversion
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh --force ${newest_rpm}/neon-0*.i386.rpm
+$RPM -Uvh --force ${newest_rpm}/swig-1*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/subversion-1.*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/subversion-server*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/subversion-python*.i386.rpm
@@ -273,7 +284,7 @@ build_dir /etc/codex/themes/messages sourceforge sourceforge 755
 
 #############################################
 # Copy new icons in all custom themes
-$CP  $INSTALL_DIR/SF/www/images/codex.theme/ic/wiki.png /etc/codex/themes/images/*/ic/
+$CP  $INSTALL_DIR/SF/www/images/codex.theme/ic/wiki.png /etc/codex/themes/images/*/ic/ 2> /dev/null
 
 
 ##############################################
@@ -282,6 +293,7 @@ $CP  $INSTALL_DIR/SF/www/images/codex.theme/ic/wiki.png /etc/codex/themes/images
 echo "Updating the CodeX database..."
 
 $SERVICE mysql start
+sleep 5
 
 pass_opt=""
 # See if MySQL root account is password protected
@@ -421,7 +433,7 @@ INSERT INTO artifact_field_value_list VALUES (12,5,2,'Declined','The artifact wa
 --- Wiki Service
 ---
 
-INSERT INTO service SET service_id=17, group_id=100, label='Wiki', description='Wiki', short_name='wiki', link='/wiki/?group_id=$group_id', is_active=1, is_used=1, scope='system', rank=105;
+INSERT INTO service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (17, 100, 'service_wiki_lbl_key', 'service_wiki_desc_key', 'wiki', '/wiki/?group_id=\$group_id', 1, 1, 'system', 105);
 
 INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (14, "wiki_admin", "Wiki Administrators", 100);
 
@@ -464,7 +476,7 @@ INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIPAGE_REA
 -- Info for Wiki Admin 
 --
 
-ALTER TABLE `user_group` ADD `wiki_flags` INT( 11 ) DEFAULT '0' NOT NULL ;
+ALTER TABLE user_group ADD wiki_flags INT(11) NOT NULL DEFAULT 0;
 
 --
 -- PHP Wiki tables
@@ -814,12 +826,12 @@ EOF
 $CP $INSTALL_DIR/SF/utils/svn/commit-email.pl /usr/local/bin
 $CHOWN sourceforge.sourceforge /usr/local/bin/commit-email.pl
 $CHMOD 775 /usr/local/bin/commit-email.pl
-$CHMOD u+s commit-email.pl
+$CHMOD u+s /usr/local/bin/commit-email.pl
 
 $CP $INSTALL_DIR/SF/utils/cvs1/log_accum /usr/local/bin
 $CHOWN sourceforge.sourceforge /usr/local/bin/log_accum
 $CHMOD 775 /usr/local/bin/log_accum
-$CHMOD u+s log_accum
+$CHMOD u+s /usr/local/bin/log_accum
 
 # should have been done before but...
 $CP $INSTALL_DIR/SF/utils/cvs1/cvssh-restricted /usr/local/bin
@@ -909,7 +921,6 @@ echo "Starting crond and apache..."
 $SERVICE crond start
 $SERVICE httpd start
 $SERVICE sendmail start
-$SERVICE mysql start
 $SERVICE mailman start
 
 

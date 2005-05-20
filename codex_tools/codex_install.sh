@@ -128,7 +128,10 @@ else
     echo "Running on RedHat Enterprise Linux ${RH_RELEASE}... good!"
 fi
 
-[ "$yn" != "y" ] && (echo "Bye now!"; exit 1;)
+if [ "$yn" = "n" ]; then
+    echo "Bye now!"
+    exit 1
+fi
 
 rm -f $TODO_FILE
 todo "WHAT TO DO TO FINISH THE CODEX INSTALLATION (see $TODO_FILE)"

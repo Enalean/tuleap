@@ -71,7 +71,7 @@ $CHOWN root.root ../codex.tgz
 cd $BUILD_DIR
 cat <<'EOF' >README
 CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
-Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2004. All Rights Reserved
+Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2005. All Rights Reserved
 http://codex.xerox.com
 
 The CodeX software From Xerox aims at providing large companies with a
@@ -120,14 +120,14 @@ EOF
 # create a INSTALL file at the top
 cat <<'EOF' >INSTALL
 CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
-Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2004. All Rights Reserved
+Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2005. All Rights Reserved
 http://codex.xerox.com
 
 - login as root user
 - cd into the directory where the codex_install.sh script is located
 (probably /mnt/cdrom if you received the CodeX software on a CDROM)
 - For a fresh CodeX installation run the installation script with ./codex_install.sh
-- For an update from 2.2 to 2.4  you must first backup run the migration script ./migration_24.sh 
+- For an update from 2.2 to 2.4 run the migration script ./migration_24.sh 
 - Follow the instructions of the migration script
 
 -- The CodeX Team
