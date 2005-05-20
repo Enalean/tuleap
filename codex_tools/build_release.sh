@@ -1,8 +1,8 @@
 #!/bin/sh
 PACKAGE_DIR=/root/packages-rhel3
 BUILD_DIR=/root/build_dir
-ISO_LABEL="CodeX 2.2sup"
-ISO_FILE="/tmp/codex-2.2sup.iso"
+ISO_LABEL="CodeX 2.4sup"
+ISO_FILE="/tmp/codex-2.4sup.iso"
 
 # Shell commands used
 LS='/bin/ls'
@@ -36,8 +36,8 @@ $CHMOD +x $BUILD_DIR/codex_install.sh
 # Copy the 2.0 to 2.2 migration script at the top directory
 echo "Copying the CodeX 2.0 to 2.2 migration script..."
 cd $PACKAGE_DIR
-$CP -af $PACKAGE_DIR/CodeX/src/codex_tools/migration_22.sh $BUILD_DIR
-$CHMOD +x $BUILD_DIR/migration_22.sh
+$CP -af $PACKAGE_DIR/CodeX/src/codex_tools/migration_24.sh $BUILD_DIR
+$CHMOD +x $BUILD_DIR/migration_24.sh
 
 # Copy the entire CodeX and nonRPMS_CodeX dir
 echo "Copying the CodeX software and nonRPMS packages..."
@@ -127,10 +127,7 @@ http://codex.xerox.com
 - cd into the directory where the codex_install.sh script is located
 (probably /mnt/cdrom if you received the CodeX software on a CDROM)
 - For a fresh CodeX installation run the installation script with ./codex_install.sh
-- For an update from 2.0 to 2.2  you must first backup your CodeX 2.0
-configuration and data files (see a list of those files in the migration_22.sh
-script), upgrade your OS from RedHat 7.3 to RHEL ES 3, restore the CodeX
-2.0 software and data and finally run the migration script ./migration_22.sh 
+- For an update from 2.2 to 2.4  you must first backup run the migration script ./migration_24.sh 
 - Follow the instructions of the migration script
 
 -- The CodeX Team
