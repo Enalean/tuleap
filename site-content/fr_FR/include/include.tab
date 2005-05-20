@@ -53,7 +53,7 @@ include_exit	missing_param_err	Erreur - Paramètres manquants
 #   
 include_features_boxes	stats	Statistiques
 include_features_boxes	top_download_yesterday	Top téléchargements hier
-include_features_boxes	newest_releases	Version récentes
+include_features_boxes	newest_releases	Versions récentes
 include_features_boxes	rss_format	- Format RSS
 include_features_boxes	xml	XML
 include_features_boxes	newest_projects	Projets récents

@@ -15,7 +15,7 @@ system	datefmt	Y-m-d H:i
 conf	content_encoding	iso-8859-1
 conf	default_font	verdana,arial,helvetica,sans-serif
 conf	language_code	fr
-conf	language_id	1
+conf	language_id	2
 global	perm_denied	Permission Refusée
 global	error_perm_denied	Erreur - Permission Refusée
 global	back_home	Retour à la page d'accueil

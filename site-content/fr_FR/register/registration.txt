@@ -30,9 +30,9 @@ $GLOBALS['sys_name']; ?> à l'étape 2.  </p>
 
 <p> Si vous hébergez un site Web dans le cadre de votre projet, nous
 vous demandons de placer l'un de nos logos officiels sur votre site
-avec un lien vers la page d'accueil de <?php $GLOBALS['sys_name']; ?>
+avec un lien vers la page d'accueil de <?php print $GLOBALS['sys_name']; ?>
 ou vers la page de sommaire de votre projet. Pour plus d'information
-sur la façon d'insérer ce logo et pouvoir ainsi suivre la niveau de
+sur la façon d'insérer ce logo et pouvoir ainsi suivre le niveau de
 fréquentation de votre site Web veuillez consulter le <a
 href="/documentation/user_guide/html/en_US/ReferencingtheCodeXSite.html"
 target="side_window">Guide utilisateur</a>.  </p>

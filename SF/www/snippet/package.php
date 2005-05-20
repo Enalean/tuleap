@@ -83,7 +83,7 @@ function show_add_snippet_box() {
 <P>
 '.$Language->getText('snippet_addversion','important_comm').'
 <P>
-<A HREF="/snippet/add_snippet_to_package.php?snippet_package_version_id=<?php echo $snippet_package_version_id; ?>" TARGET="_blank">'.$Language->getText('snippet_addversion','add').'</A>
+<A HREF="/snippet/add_snippet_to_package.php?snippet_package_version_id='.$snippet_package_version_id.'" TARGET="_blank">'.$Language->getText('snippet_addversion','add').'</A>
 <P>
 '.$Language->getText('snippet_addversion','browse_lib').'
 <P>';

@@ -30,7 +30,7 @@ de temps à autre et incluses dans ces CGU par cette
 référence. L'utilisation de <?php print $GLOBALS['sys_name']; ?> et/ou
 de ses services constitue une acceptation totale des CGU; si un
 utilisateur n'accepte pas les CGU, il ou elle n'est pas en droit
-d'utiliser <?php print $GLOBALS['sys_name']; ?> ou l'un quelconque de
+d'utiliser <?php print $GLOBALS['sys_name']; ?> ou un quelconque de
 ses services, comme défini ci-dessous, et ne doit pas accéder à <?php
 print $GLOBALS['sys_name']; ?> ou ses services.  </p>
 

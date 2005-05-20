@@ -129,7 +129,7 @@ snippet_package	category	Catégorie:
 #-----------------------------------------------
 # Script: SF/www/snippet/snippet_utils.php
 #
-snippet_utils	create_s	Créer une nouvel échantillon
+snippet_utils	create_s	Créer un nouvel échantillon
 snippet_utils	create_p	Créer un nouveau paquet
 snippet_utils	browse	Naviguer
 snippet_utils	type	Type:
@@ -141,6 +141,6 @@ snippet_utils	license	Licence:
 snippet_submit	s_insert_fail	ERREUR LORS DE L'INSERTION DE L'ECHANTILLON!
 snippet_submit	s_add_success	Echantillon créé avec succès.
 snippet_submit	submit_s	Créer un nouvel échantillon	
-snippet_submit	post_s	Vous pouvez poster un nouvel échantillon et le partager avec les autres utilisateurs. <B>Donnez un description détaillée</B> et <B>commenter votre code</B> de façon à ce qu'il soit lisible et compréhensible. De préférence veuillez copier-coller le code directement de façon à ce qu'il soit visible dans l'archive des échantillons de code. Téléchargez le uniquement si sa taille est importante, s'il est composé de plusieurs fichiers ou que le format n'est pas directement lisible par l'utilisateur.
+snippet_submit	post_s	Vous pouvez poster un nouvel échantillon et le partager avec les autres utilisateurs. <B>Donnez une description détaillée</B> et <B>commentez votre code</B> de façon à ce qu'il soit lisible et compréhensible. De préférence veuillez copier-coller le code directement de façon à ce qu'il soit visible dans l'archive des échantillons de code. Téléchargez le uniquement si sa taille est importante, s'il est composé de plusieurs fichiers ou que le format n'est pas directement lisible par l'utilisateur.
 snippet_submit	note	Note:
 snippet_submit	submit_s_v	Vous pouvez soumettre une nouvelle version d'un paquet existant en parcourant la bibliothèque. Vous ne devriez utiliser cette page que si vous soumettez un échantillon entièrement nouveau.

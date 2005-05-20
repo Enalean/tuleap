@@ -8,7 +8,7 @@
 //
 -->
 
-<h2>About the <?php print $GLOBALS['sys_name']; ?> Site</h2>
+<h2>A propos du site <?php print $GLOBALS['sys_name']; ?> </h2>
 
 <P><?php print $GLOBALS['sys_name']; ?> est un service accessible aux
 <b>équipes de développement logiciel de <?php print

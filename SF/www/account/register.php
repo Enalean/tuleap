@@ -87,8 +87,11 @@ function register_valid($confirm_hash)	{
         $ldap_name='';
     }
 
+    //use sys_lang as default language for each user at register
+    
+    $lang_code = 
     $result=db_query("INSERT INTO user (user_name,user_pw,unix_pw,windows_pw,ldap_name,realname,register_purpose,email,add_date,"
-		     . "status,confirm_hash,mail_siteupdates,mail_va,timezone) "
+		     . "status,confirm_hash,mail_siteupdates,mail_va,timezone,language_id) "
 		     . "VALUES ('$HTTP_POST_VARS[form_loginname]','"
 		     . md5($HTTP_POST_VARS['form_pw']) . "','"
 		     . account_genunixpw($HTTP_POST_VARS['form_pw']) . "','"
@@ -102,7 +105,8 @@ function register_valid($confirm_hash)	{
 		     . $confirm_hash
 		     . "',".($GLOBALS['form_mail_site']?"1":"0")
 		     . ",".($GLOBALS['form_mail_va']?"1":"0")
-		     . ",'".$GLOBALS['timezone']."')");
+		     . ",'".$GLOBALS['timezone']."'"
+		     . ",".$Language->getText('conf','language_id').")");
 
     if (!$result) {
 	exit_error($Language->getText('include_exit', 'error'),db_error());
