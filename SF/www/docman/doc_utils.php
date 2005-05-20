@@ -313,7 +313,7 @@ function doc_get_title_from_id($docid) {
 }
 
 function doc_get_docgroupname_from_id($doc_group) {
-    $res=db_query("SELECT groupname FROM doc_groups WHERE doc_group=$doc_group",1);
+    $res=db_query("SELECT groupname FROM doc_groups WHERE doc_group=$doc_group");
     return db_result($res,0,'groupname');
 }
 

@@ -287,7 +287,7 @@ tracker_include_artifact	comment	Commentaire
 tracker_include_artifact	added_by	Ajouté par
 tracker_include_artifact	delete_cc	Détruire cette destinataire en CC?
 tracker_include_artifact	add_cc	Ajouter CC:
-tracker_include_artifact	check_already_submitted	Avez-vous vérifié que cet artefact n'a pas déjà été soumis?</span></b> (utiliser le boîte de recherche)	
+tracker_include_artifact	check_already_submitted	Avez-vous vérifié que cet artefact n'a pas déjà été soumis?</span></b> (utiliser la boîte de recherche)	
 tracker_include_artifact	latest_modif	DERNIERES MODIFICATIONS
 tracker_include_artifact	full_snapshot	COPIE COMPLETE
 tracker_include_artifact	follow_link	Pour des informations détaillées, suivez ce lien:

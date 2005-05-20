@@ -119,7 +119,7 @@ docs_site_about	title	A propos du site $1
 # Script: SF/www/docman/admin/editdocgrouppermissions.php
 #
 docman_admin_editdocgrouppermissions	title	Modifier les permissions d'un groupe de documents
-docman_admin_editdocgrouppermissions	introduction	Vous pouvez définir des permissions spécifiques à un groupe de documents. Ce permissions s'appliquent à tous les documents qui s'y trouvent mais des permissions spécifiques peuvent aussi s'appliquer à chaque document. Par défaut, les groupes de documents sont accessibles à tous les visiteurs.
+docman_admin_editdocgrouppermissions	introduction	Vous pouvez définir des permissions spécifiques à un groupe de documents. Ces permissions s'appliquent à tous les documents qui s'y trouvent mais des permissions spécifiques peuvent aussi s'appliquer à chaque document. Par défaut, les groupes de documents sont accessibles à tous les visiteurs.
 docman_admin_editdocgrouppermissions	instructions	Sélectionner les groupes d'utilisateurs qui ont accès à ce groupe de document:
 #
 #-----------------------------------------------
