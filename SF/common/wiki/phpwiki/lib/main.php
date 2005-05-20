@@ -474,7 +474,6 @@ $this->version = phpwiki_version();
         $we->setPage(_("HomePage"));
         $we->setDesc(_("Initial Wiki Document"));
         $we->setLanguage_id($GLOBALS['language_id']);
-        var_dump('NTY',$we);
         $we->add();
 
         $this->finish();        // NORETURN
@@ -956,6 +955,9 @@ main();
 
 
 // $Log$
+// Revision 1.4  2005/05/20 18:45:05  guerin
+// Removed debug trace.
+//
 // Revision 1.3  2005/05/20 13:40:48  nterray
 // Fix some typos and add checks for some undefined variables
 //
