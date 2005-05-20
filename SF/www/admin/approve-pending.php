@@ -116,8 +116,8 @@ while ($row_grp = db_fetch_array($res_grp)) {
 	<P>
 	<B><?php echo $Language->getText('admin_groupedit','license'); ?>: <?php echo $row_grp['license']; ?></B>
 
-	<BR><B><?php echo $Language->getText('admin_groupedit','home_box'); ?>Home Box: <?php print $row_grp['unix_box']; ?></B>
-	<BR><B><?php echo $Language->getText('admin_groupedit','http_domain'); ?>n: <?php print $row_grp['http_domain']; ?></B>
+	<BR><B><?php echo $Language->getText('admin_groupedit','home_box'); ?>: <?php print $row_grp['unix_box']; ?></B>
+	<BR><B><?php echo $Language->getText('admin_groupedit','http_domain'); ?>: <?php print $row_grp['http_domain']; ?></B>
 
 	<br>
 	&nbsp;

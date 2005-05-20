@@ -19,7 +19,7 @@ require_once('common/tracker/ArtifactReportFactory.class');
 
 $Language->loadLanguageMsg('register/register');
 
-if ($show_confirm) {
+if (isset($show_confirm) && $show_confirm) {
 
     $HTML->header(array('title'=>$Language->getText('register_confirmation','registration_complete')));
 
@@ -33,7 +33,9 @@ if ($show_confirm) {
 		Finalize the db entries
 
 	*/
-
+        if (!isset($project_type)) {
+                $project_type = '';
+        }
 	$result=db_query("UPDATE groups SET status='P', ".
 		"short_description='".$form_short_description."', ".
 		"register_purpose='".htmlspecialchars($form_purpose)."', ".

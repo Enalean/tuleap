@@ -474,6 +474,7 @@ $this->version = phpwiki_version();
         $we->setPage(_("HomePage"));
         $we->setDesc(_("Initial Wiki Document"));
         $we->setLanguage_id($GLOBALS['language_id']);
+        var_dump('NTY',$we);
         $we->add();
 
         $this->finish();        // NORETURN
@@ -955,6 +956,9 @@ main();
 
 
 // $Log$
+// Revision 1.3  2005/05/20 13:40:48  nterray
+// Fix some typos and add checks for some undefined variables
+//
 // Revision 1.2  2005/05/13 08:57:26  guerin
 // Fixed issue with initial Wiki document: it is now created within phpWiki main().
 //

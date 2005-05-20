@@ -10,9 +10,9 @@ require_once('pre.php');    // Initial db and session library, opens session
 
 $Language->loadLanguageMsg('register/register');
 
-session_require( array( isloggedin=>1 ) );
+session_require( array( 'isloggedin'=>1 ) );
 
-$HTML->header(array(title=>$Language->getText('register_tos','tos')));
+$HTML->header(array('title'=>$Language->getText('register_tos','tos')));
 
 echo '<p><h2>'.$Language->getText('register_tos','tos_agreement').'</h2></p>';
 include($Language->getContent('register/tos'));

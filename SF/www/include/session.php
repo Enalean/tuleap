@@ -159,7 +159,7 @@ function session_require($req) {
 		return true;
 	}
 
-	if ($req['group']) {
+	if (isset($req['group']) && $req['group']) {
 		$query = "SELECT user_id FROM user_group WHERE user_id=" . user_getid()
 			. " AND group_id=$req[group]";
 		if ($req['admin_flags']) {
@@ -170,12 +170,12 @@ function session_require($req) {
 			exit_error($Language->getText('include_session','insufficient_g_access'),$Language->getText('include_session','no_perm_to_view'));
 		}
 	}
-	elseif ($req['user']) {
+	elseif (isset($req['user']) && $req['user']) {
 		if (user_getid() != $req['user']) {	
 			exit_error($Language->getText('include_session','insufficient_u_access'),$Language->getText('include_session','no_perm_to_view'));
 		}
 	}
-	elseif ($req['isloggedin']) {
+        elseif (isset($req['isloggedin']) && $req['isloggedin']) {
 		if (!user_isloggedin()) {
 			exit_error($Language->getText('include_session','required_login'),$Language->getText('include_session','login'));
 		}

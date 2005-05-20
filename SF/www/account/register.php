@@ -124,11 +124,15 @@ function display_account_form($register_error)	{
         print "<p><blink><b><span class=\"feedback\">$register_error</span></b></blink>";
     }
     $star = '<span class="highlight"><big>*</big></span>';
+    $form_loginname = isset($HTTP_POST_VARS['form_loginname'])?$HTTP_POST_VARS['form_loginname']:'';
+    $form_realname  = isset($HTTP_POST_VARS['form_realname'])?$HTTP_POST_VARS['form_realname']:'';
+    $form_email     = isset($HTTP_POST_VARS['form_email'])?$HTTP_POST_VARS['form_email']:'';
+   
     ?>
         
 <form action="/account/register.php" method="post">
 <p><?php print $Language->getText('account_register', 'login').'&nbsp;'.$star; ?>:<br>
-<input type="text" name="form_loginname" value="<?php print stripslashes($HTTP_POST_VARS['form_loginname']); ?>">
+<input type="text" name="form_loginname" value="<?php print stripslashes($form_loginname); ?>">
 <?php print $Language->getText('account_register', 'login_directions'); ?>
 
 <p><?php print $Language->getText('account_register', 'passwd').'&nbsp;'.$star; ?>:<br>
@@ -140,16 +144,16 @@ function display_account_form($register_error)	{
 <?php print $Language->getText('account_register', 'passwd2_directions'); ?>
 
 <P><?php print $Language->getText('account_register', 'realname').'&nbsp;'.$star; ?>:<br>
-<INPUT size=40 type="text" name="form_realname" value="<?php print stripslashes($HTTP_POST_VARS['form_realname']); ?>">
+<INPUT size=40 type="text" name="form_realname" value="<?php print stripslashes($form_realname); ?>">
 <?php print $Language->getText('account_register', 'realname_directions'); ?>
 
 <P><?php print $Language->getText('account_register', 'email').'&nbsp;'.$star; ?>:<BR>
-<INPUT size=40 type="text" name="form_email" value="<?php print stripslashes($HTTP_POST_VARS['form_email']); ?>"><BR>
+<INPUT size=40 type="text" name="form_email" value="<?php print stripslashes($form_email); ?>"><BR>
 <?php print $Language->getText('account_register', 'email_directions'); ?>
 
 <P><?php print $Language->getText('account_register', 'tz').'&nbsp;'.$star; ?>:<BR>
 <?php 
-$timezone = ($HTTP_POST_VARS['timezone']?stripslashes($HTTP_POST_VARS['timezone']):'None');
+    $timezone = (isset($HTTP_POST_VARS['timezone'])?stripslashes($HTTP_POST_VARS['timezone']):'None');
     echo html_get_timezone_popup ('timezone',$timezone); ?>
 <P>
 
@@ -215,10 +219,9 @@ function display_filled_ldap_account_form($register_error) {
         return;
     } else {
 
-        $form_loginname=$HTTP_POST_VARS['form_loginname'];
-        $form_realname=$HTTP_POST_VARS['form_realname'];
-        $form_email=$HTTP_POST_VARS['form_email'];
-        $timezone=$HTTP_POST_VARS['timezone'];
+        $form_loginname = isset($HTTP_POST_VARS['form_loginname'])?$HTTP_POST_VARS['form_loginname']:'';
+        $form_realname  = isset($HTTP_POST_VARS['form_realname'])?$HTTP_POST_VARS['form_realname']:'';
+        $form_email     = isset($HTTP_POST_VARS['form_email'])?$HTTP_POST_VARS['form_email']:'';
 
         // The following script can set the following variables:
         // $form_loginname, $form_realname, $form_email, $timezone
@@ -253,7 +256,7 @@ function display_filled_ldap_account_form($register_error) {
 
 <p><?php print $Language->getText('account_register', 'tz').'&nbsp;'.$star; ?>:<BR>
 <?php 
-    $timezone = ($HTTP_POST_VARS['timezone']?stripslashes($timezone):'None');
+    $timezone = (isset($HTTP_POST_VARS['timezone'])?stripslashes($timezone):'None');
     echo html_get_timezone_popup ('timezone',$timezone); ?>
 <P>
 
@@ -282,7 +285,7 @@ function display_filled_ldap_account_form($register_error) {
 
 // ###### first check for valid login, if so, congratulate
 
-if ($Register) {
+if (isset($Register)) {
 
     $confirm_hash = substr(md5($session_hash . $HTTP_POST_VARS['form_pw'] . time()),0,16);
 
@@ -345,7 +348,8 @@ if ($GLOBALS['sys_auth_type'] == 'ldap') {
         }
     }
  } else {
-    display_account_form($GLOBALS['register_error']);
+    $reg_err = isset($GLOBALS['register_error'])?$GLOBALS['register_error']:'';
+    display_account_form($reg_err);
  }
 
 $HTML->footer(array());

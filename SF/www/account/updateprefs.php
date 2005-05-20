@@ -12,10 +12,10 @@ session_require(array('isloggedin'=>1));
 
 db_query("UPDATE user SET "
 	. "mail_siteupdates=" . ($form_mail_site?"1":"0") . ","
-	. "mail_va=" . ($form_mail_va?"1":"0") . ","
+         . "mail_va=" . ((isset($form_mail_va) && $form_mail_va)?"1":"0") . ","
 	. "fontsize=" . $user_fontsize . ","
 	. "theme='" . $user_theme . "',"
-	. "sticky_login=" . ($form_sticky_login?"1":"0") . ","
+         . "sticky_login=" . ((isset($form_sticky_login) && $form_sticky_login)?"1":"0") . ","
 	. "language_id=" . $language_id . " WHERE "
 	. "user_id=" . user_getid());
 

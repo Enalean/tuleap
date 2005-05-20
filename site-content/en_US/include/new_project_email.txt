@@ -7,6 +7,11 @@
 // $Id$
 //
 
+//{{{define undefined vars
+if (!isset($message_project_type)) {
+   $message_project_type = '';
+}
+//}}}
 
 // Message preamble with Web pointers and server names
 list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		

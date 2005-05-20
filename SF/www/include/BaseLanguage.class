@@ -194,7 +194,7 @@ class BaseLanguage {
 		of supported languages
 	*/
 	function getLanguages() {
-		if (!$this->text_array['conf']['language_res']) {
+                if (!isset($this->text_array['conf']['language_res']) || !$this->text_array['conf']['language_res']) {
 			$this->text_array['conf']['language_res']=db_query("SELECT * FROM supported_languages WHERE active=1 ORDER BY name ASC");
 		}
 		return $this->text_array['conf']['language_res'];

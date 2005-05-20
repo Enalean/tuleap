@@ -224,7 +224,7 @@ function account_genwinpw($plainpw) {
 function account_nextuid() {
 	db_query("SELECT max(unix_uid) AS maxid FROM user");
 	$row = db_fetch_array();
-	return ($row[maxid] + 1);
+	return ($row['maxid'] + 1);
 }
 
 // print out shell selects

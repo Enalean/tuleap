@@ -24,6 +24,14 @@ require_once('common/tracker/ArtifactFactory.class');
 
 $Language->loadLanguageMsg('my/my');
 
+// define undefined vars
+if (!isset($hide_item_id)) {
+    $hide_item_id = '';
+}
+if (!isset($hide_forum)) {
+    $hide_forum = '';
+}
+//
 if (user_isloggedin()) {
 
     // If it's super user and license terms have not yet been agreed then redirect
