@@ -542,13 +542,25 @@ Alias /documentation/ "/home/httpd/documentation/"
 
 # CodeX custom themes
 Alias /css/custom/ "/etc/codex/themes/css/"
+<Directory "/etc/codex/themes/css">
+    Options None
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+</Directory>
+
 Alias /images/custom/ "/etc/codex/themes/images/"
-                                                                                
+<Directory "/etc/codex/themes/images">
+    Options None
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+</Directory>
+                                                                             
 # phpWiki themes
 Alias /wiki/themes "/home/httpd/SF/common/wiki/phpwiki/themes"
-
 <Directory "/home/httpd/SF/common/wiki/phpwiki/themes">
-    Options MultiViews
+    Options None
     AllowOverride None
     Order allow,deny
     Allow from all
