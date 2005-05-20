@@ -209,7 +209,8 @@ function user_getname($user_id = 0) {
 
 //quick hack - this entire library needs a rewrite similar to groups library
 function user_getrealname($user_id) {
-	$result = user_get_result_set($user_id); 
+	global $Language;
+        $result = user_get_result_set($user_id); 
 	if ($result && db_numrows($result) > 0) {
 		return db_result($result,0,"realname");
 	} else {
@@ -220,7 +221,8 @@ function user_getrealname($user_id) {
 // LJ - Added here because we use the real e-mail addresse
 // on CodeX - No e-mail aliases like on SF
 function user_getemail($user_id) {
-	$result = user_get_result_set($user_id); 
+	global $Language;
+        $result = user_get_result_set($user_id); 
 	if ($result && db_numrows($result) > 0) {
 		return db_result($result,0,"email");
 	} else {
@@ -229,7 +231,8 @@ function user_getemail($user_id) {
 }
 
 function user_getemail_from_unix($user_name) {
-	$result = user_get_result_set_from_unix($user_name); 
+	global $Language;
+        $result = user_get_result_set_from_unix($user_name); 
 	if ($result && db_numrows($result) > 0) {
 		return db_result($result,0,"email");
 	} else {

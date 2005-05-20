@@ -15,6 +15,7 @@ $Language->loadLanguageMsg('account/account');
 // ###### checks for valid register from form post
 
 function register_valid()	{
+    global $Language;
 
 	if (!$GLOBALS["Update"]) {
 		return 0;

@@ -42,7 +42,7 @@ function license_already_declined() {
  * @return true
  */
 function license_accepted() {
-    global $FILE_ACCEPTED, $sys_datefmt, $sys_lf;
+    global $FILE_ACCEPTED, $sys_datefmt, $sys_lf, $Language;
 
     // Open the file and go to the end
     $fp = @fopen($FILE_ACCEPTED,'a+');
@@ -69,7 +69,7 @@ function license_accepted() {
  * @return true
  */
 function license_declined() {
-    global $FILE_DECLINED, $sys_datefmt, $sys_lf;
+    global $FILE_DECLINED, $sys_datefmt, $sys_lf, $Language;
 
     // Open the file and go to the end
     $fp = @fopen($FILE_DECLINED,'a+');
@@ -91,10 +91,12 @@ function license_declined() {
 }
 
 function license_msg_accepted() {
+    global $Language;
     return $Language->getText('include_license','msg_accept');
 }
 
 function license_msg_declined() {
+    global $Language;
     return $Language->getText('include_license','msg_declined');
 }
 

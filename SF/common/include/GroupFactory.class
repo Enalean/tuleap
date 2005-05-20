@@ -68,7 +68,7 @@ class GroupFactory extends Error {
 	 *	@return	resultset
 	 */
 	function getMemberGroups() {
-
+                global $Language;
 		if (!user_isloggedin()) {
 			$this->setError($Language->getText('include_exit','perm_denied'));
 			return false;

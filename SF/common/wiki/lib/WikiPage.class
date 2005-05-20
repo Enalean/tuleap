@@ -71,6 +71,7 @@ class WikiPage {
    * @access private
    */
   function _findPageId() {
+    global $Language;
     $res = db_query(' SELECT id FROM wiki_page'.
 		    ' WHERE group_id="'.$this->gid.'"'.
 		    ' AND pagename="'.addslashes($this->pagename).'"');
