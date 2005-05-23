@@ -258,8 +258,8 @@ build_dir /home/log/cvslogs sourceforge sourceforge 775
 build_dir /home/mailman mailman mailman 2775
 build_dir /home/sfcache sourceforge sourceforge 755
 build_dir /home/tools root root 755
-build_dir /home/var root root 755
-build_dir /home/var/lib root root 755
+#build_dir /home/var root root 755
+#build_dir /home/var/lib root root 755
 #build_dir /home/var/lib/mysql mysql bin 755 # see CodeX DB installation
 build_dir /etc/skel_codex root root 755
 build_dir /etc/codex sourceforge sourceforge 755
