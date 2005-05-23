@@ -7,13 +7,15 @@
 # $Id$
 #
 #  License:
-#      This file is licensed under the CodeX Component Software License
+#      This file is licensed under the GNU General Public License
 #
 # Purpose:
 #  Simple utility to analyse Language data.
 #
 # Usage:
-#  Edit the directories below, and run the script. Use '-s' for silent mode (summary only)
+#  Edit the directories below, and run the script. 
+#  Use '-s' for silent mode (summary only)
+#  Use '-v' for verbose mode (print also unused keys)
 #
 # Originaly written by Nicolas Guerin - 2005, CodeX Team, Xerox
 #
