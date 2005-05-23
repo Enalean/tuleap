@@ -130,7 +130,7 @@ function parse_field_names($data,$used_fields,$ath,
  *                      for this concrete artifact no aid is given
  */
 function check_values($row,&$data,$used_fields,$parsed_labels,$predefined_values,&$errors,$insert,$from_update=false) {
-  global $ath,$Language;
+  global $ath,$Language,$art_field_fact;
   for ($c=0; $c < count($parsed_labels); $c++) {
     $label = $parsed_labels[$c];
     $val = $data[$c];
@@ -594,7 +594,7 @@ function getUsedFields() {
   // all tracker scripts handle them properly
   // For now make a big hack!! (see import.php func=showformat)
   $submitted_field = $art_field_fact->getFieldFromName('submitted_by');
-  print_r($submitted_field);
+  //print_r($submitted_field);
   if (strstr($submitted_field->getLabel(),"ubmit")) {
       // Assume English
       $used_fields["Follow-up Comments"] = "";
@@ -903,7 +903,7 @@ function parse_legacy_details($details,&$parsed_details,&$errors,$for_parse_repo
  * the imported artifact
  */
 function prepare_vfl($data,$used_fields,$parsed_labels,$predefined_values,&$artifact_depend_id,&$add_cc,&$cc_comment,&$details) {
-  global $Language;
+  global $Language,$art_field_fact;
   for ($c=0; $c < count($data); $c++) {
     $label = $parsed_labels[$c];
     $field = $used_fields[$label];
