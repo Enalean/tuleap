@@ -13,6 +13,12 @@ if (!isset($message_project_type)) {
 }
 //}}}
 
+if (session_issecure()) {
+        $web_server= "https://".$row_grp['unix_group_name'].$GLOBALS['sys_https_host'];
+} else {
+        $web_server= "http://".$row_grp['unix_group_name'].$GLOBALS['sys_default_domain'];
+}
+
 // Message preamble with Web pointers and server names
 list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
 $message = 
@@ -21,7 +27,7 @@ $message =
 Project Full Name:    '.$row_grp['group_name'].'
 Project Unix Name:    '.$row_grp['unix_group_name'].'
 Project Summary Page: '.$server.'/projects/'.$row_grp['unix_group_name'].'
-Project Web Server:   http://'.$row_grp['unix_group_name'].'.'.$GLOBALS['sys_default_domain'].'
+Project Web Server:   '.$web_server.'
 CVS Server:           cvs.'.$row_grp['unix_group_name'].'.'.$host.'
 Subversion Server:    svn.'.$row_grp['unix_group_name'].'.'.$host.'
 Shell Server:         '.$row_grp['unix_group_name'].'.'.$host.
