@@ -589,6 +589,7 @@ s/(.*Servers.*'user'.*')root('.*)$/$1sourceforge$2/g;
 s/(.*Servers.*'only_db'.*').*('.*)$/$1sourceforge$2/g;
 EOF
 
+todo "If you want to run the site in https only, edit the phpMyAdmin configuration file at /home/httpd/phpMyAdmin/config.inc.php, and replace 'http' by 'https' for the line \$cfg['PmaAbsoluteUri']"
 
 ##############################################
 # Installing the CodeX database
