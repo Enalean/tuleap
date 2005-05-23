@@ -50,6 +50,12 @@ body {
   margin: 1.5ex 1em;
 }
 
+A { text-decoration: none; color: #8b4020 }
+a:hover { text-decoration: underline; color: #ff0000; }
+a:visited { text-decoration:none; color: #8b4020}
+a:active { text-decoration:none; color: #000000}
+
+
 div.wikitext hr { height: 1px; }
 
 div.wikitext pre { font-family: monospace; }
