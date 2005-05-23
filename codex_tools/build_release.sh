@@ -134,6 +134,44 @@ http://codex.xerox.com
    <info@codex.xerox.com>
 EOF
 
+# create a RELEASE_NOTES file at the top
+cat <<'EOF' >RELEASE_NOTES
+CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2005. All Rights Reserved
+http://codex.xerox.com
+
+This is CodeX 2.4.
+
+After downloading the file, read the README and INSTALL files
+carefully. And get in touch with us at codex-contact@codex.xerox.com
+if you have questions.
+
+
+Major improvements of CodeX 2.4 over 2.2:
+- Wiki integration, based on phpWiki 1.3.10 and work from Manuel Vacelet at ST Microelectronics
+- Internationalization of all CodeX source code. Individual users may choose the interface language.
+- French and English versions
+- Document Manager upgrade: simplified document status, added access rights on documents.
+- Security improvements: cross-scripting prevention, project web site isolation, etc.
+- LDAP support: one-pass and two-passes authentication schemas supported
+- improved restricted user support
+- Access control is now available for file release, document and wiki services.
+and many bugs fixed
+
+NOTE:
+The document manager has improved in CodeX 2.4.
+Before upgrading a CodeX 2.2 server, please note that:
+- all existing documents stored with the 'deleted' status will *really* be deleted from the database
+- all documents stored with the 'pending' status will become active
+- other statuses will properly be converted to the new permission schema.
+
+Package Update:
+- CodeX 2.4 servers now run Subversion 1.1.4
+
+-- The CodeX Team
+   <info@codex.xerox.com>
+EOF
+
 # Build ISO image
 echo "Building ISO image in $ISO_FILE..."
 mkisofs -A "$ISO_LABEL" -V "$ISO_LABEL" -J -R -v -T -x ./lost+found -o "$ISO_FILE" $BUILD_DIR
