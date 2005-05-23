@@ -1172,8 +1172,8 @@ of <tt>httpd.conf</tt>.<br>
 Create a "site-wide" mailing list. This is the one that password
 reminders will appear to come from.
 <pre>    % bin/newlist mailman<br>    % bin/config_list -i data/sitelist.cfg mailman<br></pre>
-Be sure to subscribe yourself to the site list with the web admin
-interface.
+Be sure to subscribe yourself to the site list
+<pre>    % echo "your.email@address.com" | bin/add_members -r - mailman</pre>
 Update /etc/aliases as precised, and remove existing mailman aliases if any. Then run 'newaliases'.
 <br>
 You must also override some Mailman variable settings, most notably set
@@ -2172,7 +2172,7 @@ phpMyAdmin-X.Y.Z directory</li>
   <li>Edit config.inc.php and change the following lines to reflect
 your own site configuration:<br>
     <br>
-    <tt>$cfgPmaAbsoluteUri = 'http://your_codex_domain_here/phpMyAdmin';<br>
+    <tt>$cfgPmaAbsoluteUri = 'http://your_codex_domain_here/phpMyAdmin'; (or 'https' if you want to use SSL only)<br>
 $cfgServers[$i]['host']&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 = 'localhost'; // MySQL hostname<br>
 $cfgServers[$i]['port']&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
