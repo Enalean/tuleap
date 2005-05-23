@@ -338,7 +338,6 @@ echo "Installing MySQL RPMs for CodeX...."
 cd ${RPMS_DIR}/mysql
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh --force ${newest_rpm}/MySQL-*.i386.rpm
-$SERVICE mysql start
 $CHKCONFIG mysql on
 
 # Now user mysql exists...
@@ -404,6 +403,7 @@ $RPM -Uvh --force ${newest_rpm}/subversion-tools*.i386.rpm
 # Restart Apache after subversion is installed
 # so that mod_dav_svn module is taken into account
 $SERVICE httpd restart
+$SERVICE mysql start
 
 # -> cvsgraph
 $RPM -e --nodeps cvsgraph 2>/dev/null
@@ -705,7 +705,7 @@ EOF
 $CP $MAILMAN_DIR/scripts/mailman /etc/init.d/mailman
 $CHKCONFIG --add mailman
 
-todo "Mailman: Create a site-wide mailing list: in $MAILMAN_DIR, type 'bin/newlist mailman', then 'bin/config_list -i data/sitelist.cfg mailman'. Update /etc/aliases as precised (remove existing mailman aliases!), and run newaliases. Last, don't forget to subscribe to this ML."
+todo "Mailman: Create a site-wide mailing list: in $MAILMAN_DIR, type 'bin/newlist mailman', then 'bin/config_list -i data/sitelist.cfg mailman'. Update /etc/aliases as precised (remove existing mailman aliases!), and run newaliases. Last, don't forget to subscribe to this ML: 'echo \"your.email@address.com\" | bin/add_members -r - mailman'"
 
 ##############################################
 # Installing and configuring Sendmail
@@ -1182,6 +1182,7 @@ todo "Create the shell login files for CodeX users in /etc/skel_codex"
 # things to do by hand
 todo "Change the default login shell if needed in the database (/sbin/nologin or /usr/local/bin/cvssh, etc."
 todo "Create an SSL certificate for Apache to support encryption (https) (see CodeX installation guide)."
+todo "Last, run the main crontab script manually: /home/httpd/SF/utils/xerox_crontab.sh"
 
 # End of it
 echo "=============================================="
