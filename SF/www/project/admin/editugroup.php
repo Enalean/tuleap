@@ -104,8 +104,8 @@ if (($func=='edit')||($func=='do_create')) {
     if (!$res) {
         exit_error($Language->getText('global','error'),$Language->getText('project_admin_editugroup','ug_not_found',array($ugroup_id,db_error())));
     }
-    if (!$ugroup_name) { $ugroup_name=db_result($res,0,'name'); }
-    if (!$ugroup_description) { $ugroup_description=db_result($res,0,'description'); }
+    if (!isset($ugroup_name) || !$ugroup_name) { $ugroup_name=db_result($res,0,'name'); }
+    if (!isset($ugroup_description) || !$ugroup_description) { $ugroup_description=db_result($res,0,'description'); }
 
     project_admin_header(array('title'=>$Language->getText('project_admin_editugroup','edit_ug'),'group'=>$group_id,
 			   'help' => 'UserGroups.html#UGroupCreation'));
@@ -121,6 +121,7 @@ if (($func=='edit')||($func=='do_create')) {
     // Get existing members from group
     $sql="SELECT user_id FROM ugroup_user WHERE ugroup_id=$ugroup_id";
     $res = db_query($sql);
+    $user_in_group = array();
     if (db_numrows($res)>0) {
         while ($row = db_fetch_array($res)) {
             $user_in_group[$row['user_id']]=1;
@@ -185,6 +186,7 @@ if (($func=='edit')||($func=='do_create')) {
 
     $sql="SELECT user_id, user_name, realname, status FROM user WHERE status='A' OR status='R' ORDER BY user_name";
     $res = db_query($sql);
+    $member_id = array();
     while ($row = db_fetch_array($res)) {
         // Don't display restricted users that don't belong to the project
         if ($row['status']=='R') { 
@@ -193,7 +195,7 @@ if (($func=='edit')||($func=='do_create')) {
             }
         }
         // Don't display users that already belong to the group
-        if (!$user_in_group[$row['user_id']]) {
+        if (!isset($user_in_group[$row['user_id']]) || !$user_in_group[$row['user_id']]) {
             echo '<option value='.$row['user_id'].'>'.$row['user_name'].' ('.addslashes($row['realname']).")\n";
         } else {
             $member_id[]=$row['user_id'];
