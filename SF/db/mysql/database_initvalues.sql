@@ -1287,7 +1287,7 @@ INSERT INTO artifact_field_usage VALUES (27,1,0,0,0,0);
 INSERT INTO artifact_field_usage VALUES (28,1,0,0,0,0);
 INSERT INTO artifact_field_usage VALUES (29,1,0,0,0,0);
 
-INSERT INTO artifact_field_usage VALUES (13,2,0,0,0,0);
+INSERT INTO artifact_field_usage VALUES (13,2,1,0,0,0);
 INSERT INTO artifact_field_usage VALUES (14,2,1,1,1,30);
 
 INSERT INTO artifact_field_usage VALUES (10,3,0,0,0,0);

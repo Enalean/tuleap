@@ -71,9 +71,10 @@ class ArtifactHtml extends Artifact {
             <INPUT TYPE="HIDDEN" NAME="group_artifact_id" VALUE="'.$group_artifact_id.'">
             <INPUT TYPE="HIDDEN" NAME="artifact_id" VALUE="'.$this->getID().'">';
 
+            $submitted_field = $art_field_fact->getFieldFromName("submitted_by");
                 echo '
             <TABLE cellpadding="0">
-              <TR><TD><B>'.$result_fields['submitted_by']->getLabel().': </B>&nbsp;</td><td>'.util_user_link(user_getname($this->getValue('submitted_by'))).'</a></TD>
+              <TR><TD><B>'.$submitted_field->getLabel().': </B>&nbsp;</td><td>'.util_user_link(user_getname($this->getValue('submitted_by'))).'</a></TD>
                   <TD><B>'.$Language->getText('tracker_include_artifact','project').'</B>&nbsp;</td><td>'.group_getname($group_id).'</TD>
               </TR>
               <TR><TD><B>'.$result_fields['open_date']->getLabel().': </B>&nbsp;</td><td>'.format_date($sys_datefmt,$this->getValue('open_date')).'</TD>';
@@ -994,8 +995,9 @@ class ArtifactHtml extends Artifact {
 		($changes ? '':$artifact_href)."$sys_lf$sys_lf";
             
 	    // Some special field first (group, submitted by/on)
+            $submitted_field = $art_field_fact->getFieldFromName("submitted_by");
 	    $body .= sprintf($fmt_left.$fmt_right."$sys_lf",
-			     $used_fields['submitted_by']->getLabel().': '.user_getname($this->getSubmittedBy()),
+			     $submitted_field->getLabel().': '.user_getname($this->getSubmittedBy()),
 			     $Language->getText('tracker_include_artifact','project').' '.group_getname($group_id) );
 	    $body .= $used_fields['open_date']->getLabel().': '.format_date($sys_datefmt,$this->getOpenDate())."$sys_lf";
 

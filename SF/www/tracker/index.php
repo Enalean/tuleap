@@ -89,7 +89,7 @@ if ( $func == 'gotoid' ) {
         switch ($func) {
         case 'add' : {
             if (browser_is_netscape4()) {
-                exit_error($Language->getText('global','error'),$Language->getText('tracker_index','browser_not_supported','an artifact'));
+	      exit_error($Language->getText('global','error'),$Language->getText('tracker_index','browser_not_supported',$Language->getText('tracker_index','an_artif')));
                 return;
             }
                 $ah=new ArtifactHtml($ath);
@@ -619,7 +619,7 @@ if ( $func == 'gotoid' ) {
                         }
                         
                         if (browser_is_netscape4()) {
-			  $feedback .= $Language->getText('tracker_index','browser_not_supported','an artifact');
+			  $feedback .= $Language->getText('tracker_index','browser_not_supported',$Language->getText('tracker_index','an_artif'));
                         }
                         if ( $ah->ArtifactType->userIsTech() ) {
                                 require('./mod.php');
@@ -629,6 +629,7 @@ if ( $func == 'gotoid' ) {
                 }
                 break;
         }
+
 
         case 'reporting': {
 
