@@ -8,9 +8,9 @@
 //
 
 if (session_issecure()) {
-        $web_server= "https://".$row_grp['unix_group_name'].$GLOBALS['sys_https_host'];
+        $web_server= "https://".$row_grp['unix_group_name'].".".$GLOBALS['sys_https_host'];
 } else {
-        $web_server= "http://".$row_grp['unix_group_name'].$GLOBALS['sys_default_domain'];
+        $web_server= "http://".$row_grp['unix_group_name'].".".$GLOBALS['sys_default_domain'];
 }
 
 // Message preamble with Web pointers and server names
