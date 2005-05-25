@@ -429,7 +429,7 @@ if ( $project->usesTracker() ) {
 	$at_arr = $atf->getArtifactTypes();
 	
 	if (!$at_arr || count($at_arr) < 1) {
-		echo "<br><i>'.$Language->getText('include_project_home','no_trackers_accessible').'</i>";
+		echo '<br><i>'.$Language->getText('include_project_home','no_trackers_accessible').'</i>';
 	} else {
 		for ($j = 0; $j < count($at_arr); $j++) {
 			echo '<br><i>-&nbsp;
