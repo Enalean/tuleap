@@ -33,8 +33,8 @@ cd $PACKAGE_DIR
 $CP -af $PACKAGE_DIR/CodeX/src/codex_tools/codex_install.sh $BUILD_DIR
 $CHMOD +x $BUILD_DIR/codex_install.sh
 
-# Copy the 2.0 to 2.2 migration script at the top directory
-echo "Copying the CodeX 2.0 to 2.2 migration script..."
+# Copy the 2.2 to 2.4 migration script at the top directory
+echo "Copying the CodeX 2.2 to 2.4 migration script..."
 cd $PACKAGE_DIR
 $CP -af $PACKAGE_DIR/CodeX/src/codex_tools/migration_24.sh $BUILD_DIR
 $CHMOD +x $BUILD_DIR/migration_24.sh
@@ -61,7 +61,12 @@ done
 echo "Changing ownership to root.root for everything..."
 $CHOWN -R root.root $BUILD_DIR/*
 
-# create the tar file of CodeX source
+# delete codex_tools directory in BUILD_DIR
+echo "Deleting codex_tools directory..."
+cd $BUILD_DIR/CodeX/src
+rm -rf codex_tools
+
+# create the tar file of CodeX sources
 echo "Creating tar file of CodeX sources..."
 cd $BUILD_DIR/CodeX/src
 $TAR cfz ../codex.tgz .
