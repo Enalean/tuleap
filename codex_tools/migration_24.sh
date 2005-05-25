@@ -363,14 +363,16 @@ INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('D
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCGROUP_READ',2);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCGROUP_READ',3);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCGROUP_READ',4);
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCGROUP_READ',10);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCGROUP_READ',12);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCGROUP_READ',13);
 -- No default value for DOCUMENT_READ -> use parent permissions
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_READ',100);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_READ',1);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_READ',2);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_READ',3);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_READ',4);
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_READ',10);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_READ',12);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_READ',13);
 
 
 --- Delete doc_states table (now useless since we have ugroups permissions)
