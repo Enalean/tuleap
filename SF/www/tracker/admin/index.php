@@ -67,7 +67,7 @@ if ($group_id && !$atid) {
 		}
 	
             if (browser_is_netscape4()) {
-	      exit_error($Language->getText('global','error'),$Language->getText('tracker_index','browser_not_supported',$Language->getText('tracker_index','a_tracker'));
+	      exit_error($Language->getText('global','error'),$Language->getText('tracker_index','browser_not_supported',$Language->getText('tracker_index','a_tracker')));
                 return;
             }
 
