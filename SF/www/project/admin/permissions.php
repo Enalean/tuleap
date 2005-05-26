@@ -11,12 +11,18 @@
 
 // Supported object types and related object_id:
 //
-// type='PACKAGE_READ'  id='package_id'  table='frs_package'
-// type='RELEASE_READ'  id='release_id'  table='frs_release'
-// type='DOCUMENT_READ' id='docid"       table='doc_data'
-// type='DOCGROUP_READ' id='doc_group'   table='doc_groups'
-// type='WIKI_READ'     id='group_id'    table='wiki_page'
-// type='WIKIPAGE_READ' id='id'          table='wiki_page'
+// type='PACKAGE_READ'             id='package_id'                 table='frs_package'
+// type='RELEASE_READ'             id='release_id'                 table='frs_release'
+// type='DOCUMENT_READ'            id='docid"                      table='doc_data'
+// type='DOCGROUP_READ'            id='doc_group'                  table='doc_groups'
+// type='WIKI_READ'                id='group_id'                   table='wiki_page'
+// type='WIKIPAGE_READ'            id='id'                         table='wiki_page'
+// type='TRACKER_FIELD_SUBMIT'     id='field_id_group_artifact_id' table='artifact_field'
+// type='TRACKER_FIELD_READ'       id='field_id_group_artifact_id' table='artifact_field'
+// type='TRACKER_FIELD_UPDATE'     id='field_id_group_artifact_id' table='artifact_field'
+// type='TRACKER_ACCESS_SUBMITTER' id='group_artifact_id'          table='artifact_group_list'
+// type='TRACKER_ACCESS_ASSIGNEE'  id='group_artifact_id'          table='artifact_group_list'
+// type='TRACKER_ACCESS_FULL'      id='group_artifact_id'          table='artifact_group_list'
  
 
 require_once('www/project/admin/ugroup_utils.php');
@@ -41,11 +47,23 @@ function permission_get_name($permission_type) {
         return $Language->getText('project_admin_permissions','wiki_access');
     } else if ($permission_type=='WIKIPAGE_READ') {
         return $Language->getText('project_admin_permissions','wiki_access');
+    } else if ($permission_type=='TRACKER_FIELD_SUBMIT') {
+        return $Language->getText('project_admin_permissions','field_submit'); //TODO
+    } else if ($permission_type=='TRACKER_FIELD_READ') {
+        return $Language->getText('project_admin_permissions','field_read');   //TODO
+    } else if ($permission_type=='TRACKER_FIELD_UPDATE') {
+        return $Language->getText('project_admin_permissions','field_update'); //TODO
+    } else if ($permission_type=='TRACKER_ACCESS_SUBMITTER') {
+        return $Language->getText('project_admin_permissions','tracker_access_submitter'); //TODO
+    } else if ($permission_type=='TRACKER_ACCESS_ASSIGNEE') {
+        return $Language->getText('project_admin_permissions','tracker_access_assignee');  //TODO
+    } else if ($permission_type=='TRACKER_ACCESS_FULL') {
+        return $Language->getText('project_admin_permissions','tracker_full_access'); //TODO
     } else return $permission_type;
 }
 
 /**
- * Return a the type of a given object
+ * Return the type of a given object
  */
 function permission_get_object_type($permission_type,$object_id) {
     if ($permission_type=='PACKAGE_READ') {
@@ -60,10 +78,23 @@ function permission_get_object_type($permission_type,$object_id) {
         return "wiki ";
     } else if ($permission_type=='WIKIPAGE_READ') {
         return "wikipage";
+    } else if ($permission_type=='TRACKER_FIELD_SUBMIT') {
+        return 'field';
+    } else if ($permission_type=='TRACKER_FIELD_READ') {
+        return 'field';
+    } else if ($permission_type=='TRACKER_FIELD_UPDATE') {
+        return 'field';
+    } else if ($permission_type=='TRACKER_ACCESS_SUBMITTER') {
+        return 'tracker';
+    } else if ($permission_type=='TRACKER_ACCESS_ASSIGNEE') {
+        return 'tracker';
+    } else if ($permission_type=='TRACKER_ACCESS_FULL') {
+        return 'tracker';
     } else return 'object';
 }
+
 /**
- * Return a the type of a given object
+ * Return the name of a given object
  */
 function permission_get_object_name($permission_type,$object_id) {
     if ($permission_type=='PACKAGE_READ') {
@@ -75,14 +106,26 @@ function permission_get_object_name($permission_type,$object_id) {
     } else if ($permission_type=='DOCGROUP_READ') {
         return doc_get_docgroupname_from_id($object_id);
     } else if ($permission_type=='WIKI_READ') {
-        return "$object_id";
+        return "$object_id"; //TODO
     } else if ($permission_type=='WIKIPAGE_READ') {
-        return "$object_id";
+        return "$object_id"; //TODO
+    } else if ($permission_type=='TRACKER_FIELD_SUBMIT') {
+        return "$object_id"; //TODO
+    } else if ($permission_type=='TRACKER_FIELD_READ') {
+        return "$object_id"; //TODO
+    } else if ($permission_type=='TRACKER_FIELD_UPDATE') {
+        return "$object_id"; //TODO
+    } else if ($permission_type=='TRACKER_ACCESS_SUBMITTER') {
+        return "$object_id"; //TODO
+    } else if ($permission_type=='TRACKER_ACCESS_ASSIGNEE') {
+        return "$object_id"; //TODO
+    } else if ($permission_type=='TRACKER_ACCESS_FULL') {
+        return "$object_id"; //TODO
     } else return "$object_id";
 }
 
 /**
- * Return the name for a given object
+ * Return the full name for a given object
  */
 function permission_get_object_fullname($permission_type,$object_id) {
   global $Language;
@@ -94,25 +137,37 @@ function permission_get_object_fullname($permission_type,$object_id) {
 
 /**
  * Check if the current user is allowed to change permissions, depending on the permission_type
+ * TODO: grant project admin all rights??
  */
-function permission_user_allowed_to_change($group_id, $permission_type) {
+function permission_user_allowed_to_change($group_id, $permission_type, $object_id=0) {
+
+    // Super-user has all rights...
+    if (user_is_super_user()) return true;
+
     if ($permission_type=='PACKAGE_READ') {
         return (user_ismember($group_id,'R2'));
-    }
-    if ($permission_type=='RELEASE_READ') {
+    } else if ($permission_type=='RELEASE_READ') {
         return (user_ismember($group_id,'R2'));
-    }
-    if ($permission_type=='DOCGROUP_READ') {
+    } else if ($permission_type=='DOCGROUP_READ') {
         return (user_ismember($group_id,'D2'));
-    }
-    if ($permission_type=='DOCUMENT_READ') {
+    } else if ($permission_type=='DOCUMENT_READ') {
         return (user_ismember($group_id,'D2'));
-    }
-    if ($permission_type=='WIKI_READ') {
+    } else if ($permission_type=='WIKI_READ') {
         return (user_ismember($group_id,'W2'));
-    }
-    if ($permission_type=='WIKIPAGE_READ') {
+    } else if ($permission_type=='WIKIPAGE_READ') {
         return (user_ismember($group_id,'W2'));
+    } else if ($permission_type=='TRACKER_FIELD_SUBMIT') {
+        return false; //TODO
+    } else if ($permission_type=='TRACKER_FIELD_READ') {
+        return false; //TODO
+    } else if ($permission_type=='TRACKER_FIELD_UPDATE') {
+        return false; //TODO
+    } else if ($permission_type=='TRACKER_ACCESS_SUBMITTER') {
+        return false; //TODO
+    } else if ($permission_type=='TRACKER_ACCESS_ASSIGNEE') {
+        return false; //TODO
+    } else if ($permission_type=='TRACKER_ACCESS_FULL') {
+        return false; //TODO
     }
     return false;
 }
