@@ -67,7 +67,7 @@ if ($group_id && !$atid) {
 		}
 	
             if (browser_is_netscape4()) {
-	      exit_error($Language->getText('global','error'),$Language->getText('tracker_index','browser_not_supported',$Language->getText('tracker_index','a_tracker')));
+                exit_error($Language->getText('global','error'),$Language->getText('tracker_index','browser_not_supported',$Language->getText('tracker_index','a_tracker')));
                 return;
             }
 
@@ -141,6 +141,9 @@ if ($group_id && !$atid) {
 	// Create field factory
 	$art_field_fact = new ArtifactFieldFactory($ath);
 
+        if (!isset($func)) {
+            $func = '';
+        }
 	switch ( $func ) {
 	case 'report':
 		if ( !user_isloggedin() ) {
@@ -654,7 +657,9 @@ if ($group_id && !$atid) {
 		} 
 		$ath->footer(array());
 	  break;
-	  
+	case 'permissions':
+            require('./tracker_permissions.php');
+            break;
 	default:    
 		if ( !user_isloggedin() ) {
 			exit_not_logged_in();

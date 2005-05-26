@@ -495,6 +495,21 @@ tracker_include_type	changing_items	Changing $1 selected artefact(s):
 tracker_include_type	submit_mass_change	Valider
 tracker_include_type	occurrence	Occurrence
 tracker_include_type	notify_me	I want to be notified when:
+
+
+
+tracker_include_type	manage_permissions	Manage permissions
+tracker_include_type	manage_permissions_title	 - Manage permissions
+tracker_include_type	define_manage_permissions	Set permissions on the tracker and his fields
+
+tracker_include_type	manage_tracker_permissions	Manage tracker permissions
+tracker_include_type	manage_tracker_permissions_title	 - Manage tracker permissions
+tracker_include_type	define_manage_tracker_permissions	Set permissions on the tracker
+
+tracker_include_type	manage_fields_tracker_permissions	Manage fields permissions
+tracker_include_type	manage_fields_tracker_permissions_title	 - Manage fields permissions
+tracker_include_type	define_manage_fields_tracker_permissions	Set permissions on the tracker fields
+
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactCanned.class
@@ -673,3 +688,16 @@ tracker_common_types	event_PSS_CHANGE_desc	Priority,Status,Severity changes
 tracker_common_types	event_ANY_OTHER_CHANGE_desc	Any changes not mentioned above
 tracker_common_types	event_I_MADE_IT_desc	I am the author of the change
 tracker_common_types	event_NEW_ARTIFACT_desc	A new artifact has been submitted
+#
+# Tracker permissions
+#
+#
+tracker_admin_permissions	permissions	Permissions
+tracker_admin_permissions	TRACKER_ACCESS_FULL	Access
+tracker_admin_permissions	TRACKER_ACCESS_ASSIGNEE	'Submitter' access
+tracker_admin_permissions	TRACKER_ACCESS_SUBMITTER	'Assignee' access
+tracker_admin_permissions	TRACKER_ACCESS_ASSIGNEE_AND_TRACKER_ACCESS_SUBMITTER	'Submitter' and 'Assignee' access
+tracker_admin_permissions	TRACKER_NO_ACCESS	No access
+tracker_admin_permissions	tracker_intro	<div>Permissions trackers allow access to artifacts. Five permissions types are available :<dl><dt>Access</dt><dd>Members of this group <strong>can access</strong> to artifacts</dd><dt>'Assignee' access</dt><dd>Members of this group <strong>can only access</strong> to artifacts where assignee is also member of this group</dd><dt>'Submitter' access</dt><dd>Members of this group <strong>can only access</strong> to artifacts where submitter is also member of this group</dd><dt>'Submitter' and 'Assignee' access</dt><dd>Members of this group <strong>can only access</strong> to artifacts where submitter or assignee are also members of this group</dd><dt>No access</dt><dd>Members of this group <strong>can't access</strong> to artifacts</dd></dl><p>Please note that if a user is member of more than one group, then the less restrictive permissions will be given.</p></div>
+tracker_admin_permissions	ugroup	Users group
+tracker_admin_permissions	update	Update permissions
