@@ -236,6 +236,30 @@ function permission_is_authorized($permission_type, $object_id, $user_id, $group
     return false;
 }
 
+/**
+ * Check permissions on the given object for the given ugroup
+ *
+ * @param $permission_type defines the type of permission (e.g. "DOCUMENT_READ")
+ * @param $object_id is the ID of the object we want to access (e.g. a docid)
+ * @param $ugroup_id is the ID of the ugroup
+ * @return true if ugroup has the given permission
+ */
+function permission_ugroup_has_permission($permission_type, $object_id, $ugroup_id) {
+    $sql="SELECT ugroup_id ".
+        " FROM permissions ".
+        " WHERE permission_type='".$permission_type."' ".
+        "       AND ugroup_id='".$ugroup_id."' ".
+        "       AND object_id='".$object_id."' ".
+        " UNION ".
+        " SELECT ugroup_id ".
+        " FROM permissions_values ".
+        " WHERE permission_type='".$permission_type."' ".
+        "       AND ugroup_id='".$ugroup_id."' ".
+        "       AND is_default='1' ";
+    $res=db_query($sql);
+    return (db_numrows($res) > 0);
+}
+
 
 
 /**
@@ -322,7 +346,21 @@ function permission_clear_ugroup($group_id, $ugroup_id) {
     } else return (db_affected_rows($res)+1);
 }
 
-
+/**
+ * Clear all permissions for the given ugroup and the given object
+ * Access rights to this function are checked (must be project admin!)
+ * @return false if error, number of permissions deleted+1 otherwise
+ * (why +1? because there might be no permission, but no error either,
+ *  so '0' means error, and 1 means no error but no permission)
+ */
+function permission_clear_ugroup_object($group_id, $ugroup_id, $object_id) {
+    if (!user_ismember($group_id,'A')) { return false;}
+    $sql = "DELETE FROM permissions WHERE ugroup_id='$ugroup_id' AND object_id='$object_id'";
+    $res=db_query($sql);
+    if (!$res) { 
+        return false;
+    } else return (db_affected_rows($res)+1);
+}
 
 /**
  * Effectively update permissions for the given object.
@@ -338,8 +376,6 @@ function permission_add_ugroup($group_id, $permission_type, $object_id, $ugroup_
         return true;
     }
 }
-
-
 
 /**
  * Return true if the permissions set for the given object are the same as the default values

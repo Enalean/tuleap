@@ -361,13 +361,13 @@ class ArtifactTypeHtml extends ArtifactType {
         /**
          * Display the permissions for this tracker
          */
-        function displayPermissionsTracker() {
+        function displayPermissionsTracker($ugroups_permissions) {
             $this->_displayAdminTitle($GLOBALS['Language']->getText('tracker_include_type','manage_tracker_permissions_title'));
             $full_permission      = 'TRACKER_ACCESS_FULL';
             $assignee_permission  = 'TRACKER_ACCESS_ASSIGNEE';
             $submitter_permission = 'TRACKER_ACCESS_SUBMITTER';
             $none                 = 'TRACKER_NO_ACCESS';
-            $ugroups_permissions  = array(
+            /*$ugroups_permissions  = array(
                                           array(
                                                 'ugroup' => array(
                                                                   'name' => 'UGroupe #1',
@@ -405,7 +405,7 @@ class ArtifactTypeHtml extends ArtifactType {
                                                 'permissions' => array($assignee_permission => 1)
                                                 )
                                           );
-            
+            */
             $html = '';
 
             //form
