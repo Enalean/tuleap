@@ -10,7 +10,7 @@
 //  Written for CodeX by Stephane Bouhet
 //
 
-//require_once('common/include/Error.class');
+require_once('www/project/admin/permissions.php');
 
 $Language->loadLanguageMsg('tracker/tracker');
 
@@ -761,19 +761,29 @@ class ArtifactType extends Error {
 	/**
 	 *	  userCanView - determine if the user can view this artifact type.
 	 *
+	 *	  @param $my_user_id	if not specified, use the current user id..
 	 *	  @return boolean	user_can_view.
 	 */
-	function userCanView() {
-		if ($this->isPublic()) {
-			return true;
-		} else {
-			if (!user_isloggedin()) {
-				return false;
-			} else {
-				return ( ($this->getCurrentUserPerm() != 0)||(user_is_super_user()) );
-			}
-		}
-	}
+	function userCanView($my_user_id=0) {
+            if (!$my_user_id) {
+                $my_user_id=user_getid();
+            }
+            if ($this->isPublic()) { //xxx remove?
+                return true;
+            } else {
+                if (user_isloggedin()) {
+                    if (permission_is_authorized('TRACKER_ACCESS_FULL', $this->getID() , $my_user_id, $this->Group->getID())) {
+                        return true;
+                    } else if (permission_is_authorized('TRACKER_ACCESS_SUBMITTER', $this->getID() , $my_user_id, $this->Group->getID())) {
+                        return true;
+                    } else if (permission_is_authorized('TRACKER_ACCESS_ASSIGNEE', $this->getID() , $my_user_id, $this->Group->getID())) {
+                        return true;
+                    } 
+                }
+            }
+            return false;
+        }
+
 
 	/**
 	 *	userIsAdmin - see if the logged-in user's perms are >= 2 or project admin.
