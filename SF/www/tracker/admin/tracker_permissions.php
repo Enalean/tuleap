@@ -102,54 +102,28 @@ switch ($perm_type) {
          permission_add_history($group_id, 'TRACKER_ACCESS_SUBMITTER', $atid);
 
      }
-     /*
-     $ugroups = array();
-     //We retrieve default ugroups that can have permission on trackers
-     $sql = "SELECT ug.ugroup_id, ug.name FROM permissions_values pv, ugroup ug WHERE ug.ugroup_id = pv.ugroup_id AND ".
-         " permission_type in ('TRACKER_ACCESS_FULL', 'TRACKER_ACCESS_SUBMITTER', 'TRACKER_ACCESS_ASSIGNEE') ";
-     $result = db_query($sql);
-     while ($row = db_fetch_array($result)) {
-         $ugroups[$row[0]] = array(
-                            'id'   => $row[0],
-                            'name' => $row[1]
-                            );
-     }
-
-     //We retrieve project ugroups
-     $result = db_query("SELECT ugroup_id, name FROM ugroup WHERE group_id='".$group_id."' ORDER BY ugroup_id");
-     while ($row = db_fetch_array($result)) {
-         $ugroups[$row[0]] = array(
-                            'id'   => $row[0],
-                            'name' => $row[1],
-                            'link' => '/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$row[0].'&func=edit'
-                            );
-     }
-
-
-     //We retrieve permissions for each ugroup
-     $ugroups_permissions = array();
-     foreach($ugroups as $ugroup) {
-         $permissions = array();
-         if (permission_ugroup_has_permission('TRACKER_ACCESS_FULL', $atid, $ugroup['id'])) {
-                 $permissions['TRACKER_ACCESS_FULL'] = 1;
-         }
-         if (permission_ugroup_has_permission('TRACKER_ACCESS_SUBMITTER', $atid, $ugroup['id'])) {
-                 $permissions['TRACKER_ACCESS_SUBMITTER'] = 1;
-         }
-         if (permission_ugroup_has_permission('TRACKER_ACCESS_ASSIGNEE', $atid, $ugroup['id'])) {
-                 $permissions['TRACKER_ACCESS_ASSIGNEE'] = 1;
-         }
-         $ugroups_permissions[] = array(
-                                        'ugroup' => $ugroup,
-                                        'permissions' => $permissions
-                                        );
-     }
-     */
+     //display
      $ugroups_permissions = permission_get_tracker_ugroups_permissions($group_id, $atid);
      $ath->displayPermissionsTracker($ugroups_permissions);
      break;
  case 'fields':
-     echo 'NYI';
+     //display
+     $ugroups_permissions = array();
+     //We look for fields
+     $fields = $art_field_fact->getAllUsedFields();
+     foreach($fields as $field) {
+         $fake_id = permission_build_field_id($atid, $field->getID());
+         $ugroups = permission_get_field_tracker_ugroups_permissions($group_id, $fake_id);
+         $ugroups_permissions[$field->getID()] = array(
+                                                       'field' => array(
+                                                                        'label' => $field->getLabel(),
+                                                                        'id'    => $field->getID(),
+                                                                        'link'  => '/tracker/admin/index.php?group_id='.$group_id.'&atid='.$atid.'&func=display_field_update&field_id='.$field->getID()
+                                                                        ),
+                                                       'ugroups' => $ugroups
+                                                       );
+     }
+     $ath->displayPermissionsFieldsTracker($ugroups_permissions);
      break;
  default:
      $ath->displayPermissionsGeneralMenu();

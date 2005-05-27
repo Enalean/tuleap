@@ -359,17 +359,126 @@ class ArtifactTypeHtml extends ArtifactType {
         }
  
         /**
+         * Display the permissions for the fields of this tracker
+         * @param array the informations about ugroups ands their permissions :
+         *              ugroups_permissions[field_id]['field'] = ['label', 'id', 'link']
+         *                                           ['ugroups'][ugroup_id]['ugroup'] = ['name', 'id', 'link']
+         *                                                           isset(['permissions'][PERMISSION_TYPE]) = true if ugroup has this permissions for the Field
+         */
+        function displayPermissionsFieldsTracker($ugroups_permissions) {
+            $this->_displayAdminTitle($GLOBALS['Language']->getText('tracker_include_type','manage_fields_tracker_permissions_title'));
+            
+            $submit_permission = 'TRACKER_FIELD_SUBMIT';
+            $read_permission   = 'TRACKER_FIELD_READ';
+            $update_permission = 'TRACKER_FIELD_UPDATE';
+            $none = 'TRACKER_NONE';
+
+            $html = '';
+
+            //form
+            $html .= "<form name='form_tracker_permissions' action='?group_id=".$this->getGroupID().'&atid='.$this->getID()."&func=permissions&perm_type=fields' method='post'>";
+            $html .= "<div>";
+
+            //intro
+            $html .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'fields_tracker_intro');
+
+            //header
+            $html .= html_build_list_table_top(array(
+                                                     $GLOBALS['Language']->getText('tracker_include_report', 'field_label'), 
+                                                     $GLOBALS['Language']->getText('tracker_admin_permissions', 'ugroup'), 
+                                                     $GLOBALS['Language']->getText('tracker_admin_permissions', 'permissions')));
+            //body
+            //On trie les champs sur le label
+            usort($ugroups_permissions, create_function('$a,$b','return $a[\'field\'][\'label\'] > $b[\'field\'][\'label\'];'));
+            $i = 0;
+            foreach($ugroups_permissions as $field_permissions) {
+                $field   = $field_permissions['field'];
+                $ugroups = $field_permissions['ugroups'];
+                $html .= '<tr class="'. util_get_alt_row_color($i++).'">';
+                $html .= "<td rowspan='".(count($ugroups)+1)."'>";
+                $label = $field['label'];
+                if (isset($field['link'])) {
+                    $html .= "<a href='".$field['link']."'>";
+                    $html .= $label;
+                    $html .= "</a>";
+                } else {
+                    $html .= $label;
+                }
+                $html .= "</td>";
+                //We display ugroups for the current field (sorted by id)
+                ksort($ugroups);
+                reset($ugroups);
+                $j = 0;
+                foreach($ugroups as $ugroup_permissions) {
+                    $ugroup      = $ugroup_permissions['ugroup'];
+                    $permissions = $ugroup_permissions['permissions'];
+                    //The group
+                    $html .= '<tr class="'. util_get_alt_row_color($j++).'">';
+                    $html .= '<td>';
+                    $name  = $ugroup['name'];
+                    if (isset($ugroup['link'])) {
+                        $html .= "<a href='".$ugroup['link']."'>";
+                        $html .= $name;
+                        $html .= "</a>";
+                    } else {
+                        $html .= $name;
+                    }
+                    $html .= '</td>';
+                    
+                    //The permissions
+                    $html .= "<td>";
+                    {
+                        //Submit permission
+                        $html .= "<label for=''><input type='checkbox' name='field_".$field['id']."_permissions_".$ugroup['id']."' value='".$submit_permission."' ".
+                            (isset($permissions[$submit_permission])?"checked='checked'":"")."/> ".$GLOBALS['Language']->getText('tracker_admin_permissions', $submit_permission)."</label>";
+                        $html .= " ".$GLOBALS['Language']->getText('tracker_admin_permissions', 'and')." ";
+                        //Other permissions (R/W)
+                        $attributes_for_selected = "selected='selected' style='background:#EEE;'"; //TODO: put style in stylesheet
+                        $html .= "<select name='field_".$field['id']."_permissions_".$ugroup['id']."' style='width:200px' >";//TODO: put style in stylesheet
+                        $html .= "<option value='0' ".(isset($permissions[$read_permission]) && !isset($permissions[$update_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $read_permission)."</option>";
+                        //only registered users can update
+                        if ($ugroup['id'] != 1) {
+                            $html .= "<option value='1' ".(isset($permissions[$update_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $update_permission)."</option>";
+                        }
+                        $html .= "<option value='100' ".(!isset($permissions[$read_permission]) && !isset($permissions[$update_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $none)."</option>";
+                        $html .= "</select>";
+                    }
+                    $html .= "</td>";
+                    $html .= "</tr>";
+                }
+                $html .= "</tr>";
+            }
+            
+            //end of table
+            $html .= "</table>";
+            $GLOBALS['Language']->loadLanguageMsg('project/project');
+            $html .= "<input type='submit' name='update' value=\"".$GLOBALS['Language']->getText('project_admin_permissions','submit_perm')."\" />";
+            $html .= "<input type='submit' name='reset' value=\"".$GLOBALS['Language']->getText('project_admin_permissions','reset_to_def')."\" />";
+            $html .= "</div></form>";
+            $html .= "<p>";
+            $html .= $GLOBALS['Language']->getText('project_admin_permissions',
+                                                   'admins_create_modify_ug',
+                                                   array(
+                                                         "/project/admin/editugroup.php?func=create&group_id=".$this->getGroupID(),
+                                                         "/project/admin/ugroup.php?group_id=".$this->getGroupID()
+                                                         )
+                                                   );
+            $html .= "</p>";
+            print $html;
+        }
+
+        /**
          * Display the permissions for this tracker
          * @param array the informations about ugroups ands their permissions :
          *              ugroups_permissions[i]['ugroup'] = ['name', 'id', 'link']
-         *                              isset(['permissions']['TRACKER_FULL_ACCESS']) = true if ugroup has this permissions for the artifactType
+         *                              isset(['permissions'][PERMISSION_TYPE]) = true if ugroup has this permissions for the artifactType
          */
         function displayPermissionsTracker($ugroups_permissions) {
             $this->_displayAdminTitle($GLOBALS['Language']->getText('tracker_include_type','manage_tracker_permissions_title'));
             $full_permission      = 'TRACKER_ACCESS_FULL';
             $assignee_permission  = 'TRACKER_ACCESS_ASSIGNEE';
             $submitter_permission = 'TRACKER_ACCESS_SUBMITTER';
-            $none                 = 'TRACKER_NONE_ACCESS';
+            $none                 = 'TRACKER_NONE';
 
             $html = '';
 
@@ -404,8 +513,10 @@ class ArtifactTypeHtml extends ArtifactType {
                     $html .= $name;
                 }
                 $html .= '</td>';
-                $html .= "<td><select name='permissions_".$ugroup['id']."' >";
-                $attributes_for_selected = "selected='selected' style='background:#EEE;'";
+                $html .= "<td>";
+
+                $html .="<select name='permissions_".$ugroup['id']."' style='width:200px' >";//TODO: put style in stylesheet
+                $attributes_for_selected = "selected='selected' style='background:#EEE;'"; //TODO: put style in stylesheet
                 $html .= "\n\n<option value='0' ".(isset($permissions[$full_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $full_permission)."</option>";
                 
                 //We don't show specific access permissions for anonymous users

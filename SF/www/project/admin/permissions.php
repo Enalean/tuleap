@@ -260,15 +260,42 @@ function permission_ugroup_has_permission($permission_type, $object_id, $ugroup_
     return (db_numrows($res) > 0);
 }
 
+function permission_extract_field_id($special_id) {
+    $pos = strpos($special_id, '#');
+    if ($pos === false) {
+        return $special_id;
+    } else {
+        return substr($special_id, $pos+1);
+    }
+}
+
+function permission_build_field_id($object_id, $field_id) {
+    return $object_id."#".$field_id;
+}
+
+/**
+ * @returns array the permissions for the ugroups
+ */
+function permission_get_field_tracker_ugroups_permissions($group_id, $object_id) {
+    return permission_get_ugroups_permissions($group_id, $object_id, array('TRACKER_FIELD_READ','TRACKER_FIELD_UPDATE','TRACKER_FIELD_SUBMIT'));
+}
+
 /**
  * @returns array the permissions for the ugroups
  */
 function permission_get_tracker_ugroups_permissions($group_id, $object_id) {
+    return permission_get_ugroups_permissions($group_id, $object_id, array('TRACKER_ACCESS_FULL','TRACKER_ACCESS_ASSIGNEE','TRACKER_ACCESS_SUBMITTER'));
+}
+/**
+ * @returns array the permissions for the ugroups
+ */
+function permission_get_ugroups_permissions($group_id, $object_id, $default_permission_types) {
+   
     //We retrive ugroups (user defined)
     $sql="SELECT u.ugroup_id, u.name, p.permission_type ".
         " FROM permissions p, ugroup u ".
-        " WHERE p.object_id='".$object_id."' ".
-        "       AND p.ugroup_id = u.ugroup_id ";
+        " WHERE p.ugroup_id = u.ugroup_id ".
+        "       AND p.object_id = '".$object_id."' ";
     $res = db_query($sql);
     if (!$res) {
         return false;
@@ -304,7 +331,15 @@ function permission_get_tracker_ugroups_permissions($group_id, $object_id) {
         $sql = "SELECT ug.ugroup_id, ug.name, pv.permission_type, pv.is_default ".
             " FROM permissions_values pv, ugroup ug ".
             " WHERE ug.ugroup_id = pv.ugroup_id ".
-            "       AND pv.permission_type in ('TRACKER_ACCESS_FULL', 'TRACKER_ACCESS_SUBMITTER', 'TRACKER_ACCESS_ASSIGNEE') ";
+            "       AND pv.permission_type in (";
+        if (count($default_permission_types) > 0) {
+            $sql .= "'".$default_permission_types[0]."'";
+            $i = 1;
+            while($i < count($default_permission_types)) {
+                $sql .= ",'".$default_permission_types[$i++]."'";
+            }
+        }
+        $sql .= ")";
         $res = db_query($sql);
         if ($res) {
             while($row = db_fetch_array($res)) {
@@ -325,7 +360,7 @@ function permission_get_tracker_ugroups_permissions($group_id, $object_id) {
             }
         }
 
-        //Now we look at project ugroups that have not permissions yet
+        //Now we look at project ugroups that have no permissions yet
         $sql="SELECT ugroup_id, name ".
         " FROM ugroup ".
         " WHERE group_id = '".$group_id."' ";

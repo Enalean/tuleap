@@ -143,7 +143,7 @@ class ArtifactFieldFactory extends Error {
 			}
 		}
 		
-		uasort($result_fields,art_field_factory_cmp_place);
+		uasort($result_fields,"art_field_factory_cmp_place");
 		return $result_fields;
 
 	}
@@ -164,7 +164,7 @@ class ArtifactFieldFactory extends Error {
 			}
 		}
 		
-		uasort($result_fields,art_field_factory_cmp_place);
+		uasort($result_fields,"art_field_factory_cmp_place");
 		return $result_fields;
 
 	}
