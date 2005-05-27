@@ -750,9 +750,14 @@ function util_get_image_theme($fn, $the_theme=false, $absolute=false){
 
     $path = util_get_dir_image_theme($the_theme);
     if ($absolute) {
-      $path = $GLOBALS['sys_urlroot'] . $path;
+        if (strpos($path, '/images/custom') == 0) { // Match on first char
+            // Custom images are in /etc/codex/themes
+            $path= preg_replace('/images\/custom/','images',$path);
+            $path = getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/themes' . $path;
+        } else {
+            $path = $GLOBALS['sys_urlroot'] . $path;
+        }
     }
-
     return $path.$fn;
 }
 

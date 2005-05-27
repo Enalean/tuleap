@@ -30,7 +30,7 @@ if (!$res_logger) {
 }
 
 // output image
-header("Content-Type: image/gif");
+header("Content-Type: image/png");
 header("Cache-Control: no-cache, must-revalidate");
 header("Pragma: no-cache");
 
@@ -41,9 +41,9 @@ if (!$group_id) {
 
 // LJ updated with the CodeX logo image
 if ($type == 1) {
-  echo readfile (util_get_image_theme("codex_logo.png", $sys_themedefault, true));
+  readfile (util_get_image_theme("codex_logo.png", $sys_themedefault, true));
 }  else { // default
-  echo readfile (util_get_image_theme("codex_logo.png", $sys_themedefault, true));
+  readfile (util_get_image_theme("codex_logo.png", $sys_themedefault, true));
 } 
 
 ?>

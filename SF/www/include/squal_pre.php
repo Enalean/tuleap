@@ -7,10 +7,12 @@
 // $Id$
 
 require(getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/conf/local.inc');
+require_once('browser.php');
 require_once('database.php');
 require_once('session.php');
 require_once('user.php');
 require_once('utils.php');
+require_once('theme.php');
 require_once('BaseLanguage.class');
 if (!$GLOBALS['sys_lang']) {
 	$GLOBALS['sys_lang']="en_US";
@@ -37,8 +39,8 @@ $sys_datefmt = $Language->getText('system','datefmt');
 
 $Language->loadLanguageMsg('include/include');
 
+
 require_once('squal_exit.php');
-require_once('browser.php');
 
 $sys_datefmt = "m/d/y H:i";
 
