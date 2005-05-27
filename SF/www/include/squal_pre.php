@@ -11,10 +11,34 @@ require_once('database.php');
 require_once('session.php');
 require_once('user.php');
 require_once('utils.php');
-require_once('squal_exit.php');
-require_once('browser.php');
+require_once('BaseLanguage.class');
+if (!$GLOBALS['sys_lang']) {
+	$GLOBALS['sys_lang']="en_US";
+}
+if (user_isloggedin()) {
+    $Language = new BaseLanguage();
+    $Language->loadLanguageID(user_get_language());
+} else {
+    //if you aren't logged in, check your browser settings 
+    //and see if we support that language
+    //if we don't support it, just use system default
+    if (isset($HTTP_ACCEPT_LANGUAGE)) {
+	$res = language_code_to_result ($HTTP_ACCEPT_LANGUAGE);
+	$lang_code=db_result($res,0,'language_code');
+    }
+    if (!isset($lang_code)) { $lang_code = $GLOBALS['sys_lang']; }
+    $Language = new BaseLanguage();
+    $Language->loadLanguage($lang_code);
+}
+
+setlocale (LC_TIME, $Language->getText('system','locale'));
+$sys_strftimefmt = $Language->getText('system','strftimefmt');
+$sys_datefmt = $Language->getText('system','datefmt');
 
 $Language->loadLanguageMsg('include/include');
+
+require_once('squal_exit.php');
+require_once('browser.php');
 
 $sys_datefmt = "m/d/y H:i";
 
