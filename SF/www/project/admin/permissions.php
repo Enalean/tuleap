@@ -260,6 +260,96 @@ function permission_ugroup_has_permission($permission_type, $object_id, $ugroup_
     return (db_numrows($res) > 0);
 }
 
+/**
+ * @returns array the permissions for the ugroups
+ */
+function permission_get_tracker_ugroups_permissions($group_id, $object_id) {
+    //We retrive ugroups (user defined)
+    $sql="SELECT u.ugroup_id, u.name, p.permission_type ".
+        " FROM permissions p, ugroup u ".
+        " WHERE p.object_id='".$object_id."' ".
+        "       AND p.ugroup_id = u.ugroup_id ";
+    $res = db_query($sql);
+    if (!$res) {
+        return false;
+    } else {
+        $return = array();
+        $show_default_permissions = false;
+        //Now we look at the number of results :
+        //if < 1 then we have no ugroups permissions (user-defined) => the final ugroups are default values
+        if (db_numrows($res) < 1) {
+            $show_default_permissions = true;
+        } else {
+            while($row = db_fetch_array($res)) {
+                //We initialize ugroup entries only once
+                if (!isset($return[$row[0]])) {
+                    $return[$row[0]] = array(
+                                             'ugroup' => array(
+                                                               'id' => $row[0],
+                                                               'name' => $row[1]
+                                                               ),
+                                             'permissions' => array()
+                                             );
+                    //We add link for non-default ugroups
+                    if ($row[0] > 100) {
+                        $return[$row[0]]['ugroup']['link'] = '/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$row[0].'&func=edit';
+                    }
+                }
+                //We set permission
+                $return[$row[0]]['permissions'][$row[2]] = 1;
+            }
+        }
+
+        //Now we look at the default ugroups
+        $sql = "SELECT ug.ugroup_id, ug.name, pv.permission_type, pv.is_default ".
+            " FROM permissions_values pv, ugroup ug ".
+            " WHERE ug.ugroup_id = pv.ugroup_id ".
+            "       AND pv.permission_type in ('TRACKER_ACCESS_FULL', 'TRACKER_ACCESS_SUBMITTER', 'TRACKER_ACCESS_ASSIGNEE') ";
+        $res = db_query($sql);
+        if ($res) {
+            while($row = db_fetch_array($res)) {
+                if (!isset($return[$row[0]])) {
+                    $return[$row[0]] = array(
+                                             'ugroup' => array(
+                                                               'id' => $row[0],
+                                                               'name' => $row[1]
+                                                               ),
+                                             'permissions' => array()
+                                             );
+                }
+                //if we have user-defined permissions, 
+                //the default ugroups which don't have user-defined permission have no-access
+                if ($show_default_permissions && $row[3] === "1") {
+                    $return[$row[0]]['permissions'][$row[2]] = 1;
+                }
+            }
+        }
+
+        //Now we look at project ugroups that have not permissions yet
+        $sql="SELECT ugroup_id, name ".
+        " FROM ugroup ".
+        " WHERE group_id = '".$group_id."' ";
+        $res = db_query($sql);
+        if ($res) {
+            while($row = db_fetch_array($res)) {
+                if (!isset($return[$row[0]])) {
+                    $return[$row[0]] = array(
+                                             'ugroup' => array(
+                                                               'id' => $row[0],
+                                                               'name' => $row[1]
+                                                               ),
+                                             'permissions' => array()
+                                             );
+                    //We add link for non-default ugroups
+                    if ($row[0] > 100) {
+                        $return[$row[0]]['ugroup']['link'] = '/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$row[0].'&func=edit';
+                    }
+                }
+            }
+        }
+        return $return;
+    }
+}
 
 
 /**
@@ -354,12 +444,16 @@ function permission_clear_ugroup($group_id, $ugroup_id) {
  *  so '0' means error, and 1 means no error but no permission)
  */
 function permission_clear_ugroup_object($group_id, $ugroup_id, $object_id) {
-    if (!user_ismember($group_id,'A')) { return false;}
+    if (!user_ismember($group_id,'A')) { 
+        return false;
+    }
     $sql = "DELETE FROM permissions WHERE ugroup_id='$ugroup_id' AND object_id='$object_id'";
     $res=db_query($sql);
     if (!$res) { 
         return false;
-    } else return (db_affected_rows($res)+1);
+    } else {
+        return (db_affected_rows($res)+1);
+    }
 }
 
 /**

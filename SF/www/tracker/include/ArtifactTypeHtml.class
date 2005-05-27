@@ -360,52 +360,17 @@ class ArtifactTypeHtml extends ArtifactType {
  
         /**
          * Display the permissions for this tracker
+         * @param array the informations about ugroups ands their permissions :
+         *              ugroups_permissions[i]['ugroup'] = ['name', 'id', 'link']
+         *                              isset(['permissions']['TRACKER_FULL_ACCESS']) = true if ugroup has this permissions for the artifactType
          */
         function displayPermissionsTracker($ugroups_permissions) {
             $this->_displayAdminTitle($GLOBALS['Language']->getText('tracker_include_type','manage_tracker_permissions_title'));
             $full_permission      = 'TRACKER_ACCESS_FULL';
             $assignee_permission  = 'TRACKER_ACCESS_ASSIGNEE';
             $submitter_permission = 'TRACKER_ACCESS_SUBMITTER';
-            $none                 = 'TRACKER_NO_ACCESS';
-            /*$ugroups_permissions  = array(
-                                          array(
-                                                'ugroup' => array(
-                                                                  'name' => 'UGroupe #1',
-                                                                  'id'   => '111',
-                                                                  'link' => '/project/admin/editugroup.php?group_id='.$this->getGroupId().'&ugroup_id=111&func=edit'
-                                                                  ),
-                                                'permissions' => array($full_permission => 1)
-                                                ),
-                                          array(
-                                                'ugroup' => array(
-                                                                  'name' => 'UGroupe #2',
-                                                                  'id'   => '222'
-                                                                  ),
-                                                'permissions' => array($submitter_permission => 1)
-                                                ),
-                                          array(
-                                                'ugroup' => array(
-                                                                  'name' => 'UGroupe #3',
-                                                                  'id'   => '333'
-                                                                  ),
-                                                'permissions' => array()
-                                                ),
-                                          array(
-                                                'ugroup' => array(
-                                                                  'name' => 'UGroupe #4',
-                                                                  'id'   => '444'
-                                                                  ),
-                                                'permissions' => array($assignee_permission => 1, $submitter_permission => 1)
-                                                ),
-                                          array(
-                                                'ugroup' => array(
-                                                                  'name' => 'UGroupe #5',
-                                                                  'id'   => '555'
-                                                                  ),
-                                                'permissions' => array($assignee_permission => 1)
-                                                )
-                                          );
-            */
+            $none                 = 'TRACKER_NONE_ACCESS';
+
             $html = '';
 
             //form
@@ -414,12 +379,15 @@ class ArtifactTypeHtml extends ArtifactType {
 
             //intro
             $html .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'tracker_intro');
+
             //header
             $html .= html_build_list_table_top(array(
                                                      $GLOBALS['Language']->getText('tracker_admin_permissions', 'ugroup'), 
                                                      $GLOBALS['Language']->getText('tracker_admin_permissions', 'permissions')));
 
             //body
+            ksort($ugroups_permissions);
+            reset($ugroups_permissions);
             $i = 0;
             foreach($ugroups_permissions as $ugroup_permissions) {
                 $ugroup      = $ugroup_permissions['ugroup'];
@@ -439,16 +407,22 @@ class ArtifactTypeHtml extends ArtifactType {
                 $html .= "<td><select name='permissions_".$ugroup['id']."' >";
                 $attributes_for_selected = "selected='selected' style='background:#EEE;'";
                 $html .= "\n\n<option value='0' ".(isset($permissions[$full_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $full_permission)."</option>";
-                $html .= "<option value='1' ".(isset($permissions[$assignee_permission]) && !isset($permissions[$submitter_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $assignee_permission)."</option>";
-                $html .= "<option value='2' ".(!isset($permissions[$assignee_permission]) && isset($permissions[$submitter_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $submitter_permission)."</option>";
-                $html .= "<option value='3' ".(isset($permissions[$assignee_permission]) && isset($permissions[$submitter_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $assignee_permission."_AND_".$submitter_permission)."</option>";
+                
+                //We don't show specific access permissions for anonymous users
+                if ($ugroup['id'] != 1) {
+                    $html .= "<option value='1' ".(isset($permissions[$assignee_permission]) && !isset($permissions[$submitter_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $assignee_permission)."</option>";
+                    $html .= "<option value='2' ".(!isset($permissions[$assignee_permission]) && isset($permissions[$submitter_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $submitter_permission)."</option>";
+                    $html .= "<option value='3' ".(isset($permissions[$assignee_permission]) && isset($permissions[$submitter_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $assignee_permission."_AND_".$submitter_permission)."</option>";
+                }
                 $html .= "<option value='100' ".(count($permissions) == 0?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $none)."</option>";
                 $html .= '</select></td>';
                 $html .= '</tr>';
             }
             //end of table
             $html .= "</table>";
-            $html .= "<input type='submit' name='update' value='".$GLOBALS['Language']->getText('tracker_admin_permissions', 'update')."' />";
+            $GLOBALS['Language']->loadLanguageMsg('project/project');
+            $html .= "<input type='submit' name='update' value=\"".$GLOBALS['Language']->getText('project_admin_permissions','submit_perm')."\" />";
+            $html .= "<input type='submit' name='reset' value=\"".$GLOBALS['Language']->getText('project_admin_permissions','reset_to_def')."\" />";
             $html .= "</div></form>";
             $html .= "<p>";
             $html .= $GLOBALS['Language']->getText('project_admin_permissions',

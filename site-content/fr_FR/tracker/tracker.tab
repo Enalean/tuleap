@@ -707,7 +707,7 @@ tracker_admin_permissions	TRACKER_ACCESS_FULL	Accès
 tracker_admin_permissions	TRACKER_ACCESS_ASSIGNEE	Accès 'destinataire'
 tracker_admin_permissions	TRACKER_ACCESS_SUBMITTER	Accès 'soumetteur'
 tracker_admin_permissions	TRACKER_ACCESS_ASSIGNEE_AND_TRACKER_ACCESS_SUBMITTER	Accès 'soumetteur' et 'destinataire'
-tracker_admin_permissions	TRACKER_NO_ACCESS	Pas d'accès
+tracker_admin_permissions	TRACKER_NONE_ACCESS	Aucun
 tracker_admin_permissions	tracker_intro	<div>Les permissions sur les outil de suivi permettent l'accès aux artifacts. Cinq types de permissions sont possibles :<dl><dt>Accès</dt><dd>Les membres de ce groupe <strong>peuvent accèder</strong> aux artefacts</dd><dt>Accès 'destinataire'</dt><dd>Les membres de ce groupe <strong>peuvent accèder seulement</strong> aux artefacts dont le destinataire est aussi membre de ce groupe</dd><dt>Accès 'soumetteur'</dt><dd>Les membres de ce groupe <strong>peuvent accèder seulement</strong> aux artefacts dont l'émetteur est aussi membre de ce groupe</dd><dt>Accès 'soumetteur' et 'destinataire'</dt><dd>Les membres de ce groupe <strong>peuvent accèder seulement</strong> aux artefacts dont le destinataire ou l'émetteur sont aussi membres de ce groupe</dd><dt>Pas d'accès</dt><dd>Les membres de ce groupe <strong>ne peuvent pas accèder</strong> aux artefacts</dd></dl><div><strong>Attention :</strong><ul><li>Si un utilisateur est membre de plusieurs groupes, alors les droits les moins restricitifs seront pris en compte pour cet utilisateur.</li><li>Il n'est pas possible de définir d'autres permissions que 'Accès'/'Pas d'accès' pour le groupe 'Anonymous Users'.</li></div></div>
 tracker_admin_permissions	ugroup	Groupe d'utilisateurs
 tracker_admin_permissions	update	Mise à jour des permissions
