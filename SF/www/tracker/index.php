@@ -169,6 +169,85 @@ if ( $func == 'gotoid' ) {
                 }
                 break;
         }
+        case 'postcopy' : {
+                //
+                //              Create a new Artifact
+                //      
+
+                $ah=new ArtifactHtml($ath);
+                if (!$ah || !is_object($ah)) {
+                        exit_error($Language->getText('global','error'),$Language->getText('tracker_index','not_create_art'));
+                } else {
+                        // Check if a user can submit a new without loggin
+                        if ( !user_isloggedin() && !$ath->allowsAnon() ) {
+                                exit_not_logged_in();
+                                return;
+                        }
+                        
+                        //
+                        //  make sure this person has permission to copy artifacts
+                        //  !!!! verify with new permission scheme !!!!
+                        if (!$ath->userIsTech() && !$ath->isPublic() ) {
+                                exit_permission_denied();
+                        }
+
+                        // First check parameters
+                        
+                        // CC
+			// 			
+			if ($add_cc && !util_validateCCList(util_split_emails($add_cc), $message)) {
+                        exit_error($Language->getText('tracker_index','cc_list_invalid'), $message);
+			}
+
+			// Files
+			// 
+                        if ($add_file && !util_check_fileupload($input_file)) {
+                                exit_error($Language->getText('global','error'),$Language->getText('tracker_index','invalid_filename'));
+                        }
+
+                        // Artifact creation                
+                        if (!$ah->create()) {
+                                exit_error($Language->getText('global','error'),$ah->getErrorMessage());
+                        } else {
+                                //
+                                //      Attach file to this Artifact.
+                                //
+                                if ($add_file) {
+                                        $afh=new ArtifactFileHtml($ah);
+                                        if (!$afh || !is_object($afh)) {
+                                                $feedback .= $Language->getText('tracker_index','not_create_file');
+                                        } elseif ($afh->isError()) {
+                                                $feedback .= $afh->getErrorMessage();
+                                            exit_error($Language->getText('global','error'),$feedback);
+                                        } else {
+                                                if (!$afh->upload($input_file,$input_file_name,$input_file_type,$file_description,$changes)) {
+                                                        $feedback .= ' '.$Language->getText('tracker_index','not_attach_file',$afh->getErrorMessage());
+                                                    exit_error($Language->getText('global','error'),$feedback);
+                                                }
+                                        }
+                                }
+
+                                // Add new cc if any
+                                if ($add_cc) {
+                                    $ah->addCC($add_cc,$cc_comment,$changes);
+                                }
+
+				// Add new dependencies if any
+				if ($artifact_id_dependent) {
+				  $ah->addDependencies($artifact_id_dependent,&$changes,false);
+				}
+
+				// Add follow-up comments if any
+				$ah->addDetail($follow_up_comment,$comment_type_id,$canned_response,$changes,$feedback);
+
+                                // send an email to notify the user of the artifact update
+                                $ah->mailFollowup($ath->getEmailAddress(),$null);
+                                $feedback .= $Language->getText('tracker_index','create_success',$ah->getID());
+                            require('./browse.php');
+                        }
+                }
+                break;
+        }
         
     case 'delete_cc' : {
         
@@ -365,7 +444,7 @@ if ( $func == 'gotoid' ) {
                         if ($add_cc) {
                             $changed |= $ah->addCC($add_cc,$cc_comment,$changes);
                         }
-                
+			
                         if ($changed) {
                             //
                             //  see if we're supposed to send all modifications to an address
@@ -630,6 +709,33 @@ if ( $func == 'gotoid' ) {
                 break;
         }
 
+	case 'copy': {
+	  $ah=new ArtifactHtml($ath,$aid);
+	  if (!$ah || !is_object($ah)) {
+	    exit_error($Language->getText('global','error'),$Language->getText('tracker_index', 'not_create_art'));
+	  } else if ($ah->isError()) {
+	    exit_error($Language->getText('global','error'),$ah->getErrorMessage());
+	  } else {
+
+	    // Check if users can browse anonymously
+                        if ( $ath->allowsAnon() == 0 && !user_isloggedin() ) {
+                            exit_not_logged_in();
+                        }
+                        
+                        if (browser_is_netscape4()) {
+			  $feedback .= $Language->getText('tracker_index','browser_not_supported',$Language->getText('tracker_index','an_artif'));
+                        }
+
+			// !!!! need to specify here for which users we allow to copy artifacts !!!!
+                        if ( $ah->ArtifactType->userIsTech() ) {
+                                require('./copy.php');
+                        } else {
+                             exit_error($Language->getText('global','error'),$Language->getText('tracker_index', 'not_create_art'));   
+                        }
+
+	  }
+	  break;
+	}
 
         case 'reporting': {
 

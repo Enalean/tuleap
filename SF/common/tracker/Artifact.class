@@ -495,6 +495,17 @@ class Artifact extends Error {
         return !$was_error;
     }
 
+
+    /** 
+     * Copy an artifact
+     *
+     *
+     */
+    function copy() {
+
+    }
+
+
     /**
      *  Add a followup comment
      *
@@ -534,6 +545,49 @@ class Artifact extends Error {
         } else {
             return false;
         }
+    }
+
+
+    /** 
+     * handle a simple follow-up comment
+     * Details field history is handled a little differently. Followup comments
+     * are added in the bug history along with the comment type.
+     * 
+     * If a canned response is given it overrides anything typed in the followup
+     * comment text area (aka details area). 
+     *
+     * @param details (IN) : the details that the user typed in
+     * @param canned_response (IN) : the id of the canned response
+     * @param feedback (OUT) : report if something went wrong or not
+     */
+    function addDetail($details,$comment_type_id,$canned_response,&$changes,&$feedback) {
+      global $art_field_fact,$Language;
+      if ($canned_response != 100) {
+	
+	$sql="SELECT * FROM artifact_canned_responses WHERE artifact_canned_id='".$canned_response."'";
+	$res3=db_query($sql);
+	
+	if ($res3 && db_numrows($res3) > 0) {
+	  $details = addslashes(util_unconvert_htmlspecialchars(db_result($res3,0,'body')));
+	  $feedback .= $Language->getText('tracker_common_artifact','canned_used');
+	} else {
+	  $feedback .= $Language->getText('tracker_common_artifact','unable_canned');
+	  $feedback .= ' - '.db_error();
+	}
+      }
+      
+      if ($details != '') {
+	$field = $art_field_fact->getFieldFromName('details');
+	if ( $field ) {
+	  $this->addHistory($field,htmlspecialchars($details), '', $comment_type_id);
+	}
+	$changes['details']['add'] = stripslashes($details);
+	$field = $art_field_fact->getFieldFromName("comment_type_id");
+	if ( $field ) {
+	  $changes['details']['type'] =
+	    $field->getValue($this->ArtifactType->getID(), $comment_type_id);
+	}
+      }
     }
         
     /**
@@ -761,34 +815,10 @@ class Artifact extends Error {
             // If a canned response is given it overrides anything typed in the followup
             // comment text area (aka details area). 
             $details = $vfl['details'];
-            if ($canned_response != 100) {
-                
-                $sql="SELECT * FROM artifact_canned_responses WHERE artifact_canned_id='".$canned_response."'";
-                $res3=db_query($sql);
-                
-                if ($res3 && db_numrows($res3) > 0) {
-                    $details = addslashes(util_unconvert_htmlspecialchars(db_result($res3,0,'body')));
-                    $feedback .= $Language->getText('tracker_common_artifact','canned_used');
-                } else {
-                    $feedback .= $Language->getText('tracker_common_artifact','unable_canned');
-                    $feedback .= ' - '.db_error();
-                }
-            }
-        
-            // Details field history is handled a little differently. Followup comments
-            // are added in the bug history along with the comment type.
-            if ($details != '') {
-                $field = $art_field_fact->getFieldFromName('details');
-                if ( $field ) {
-                    $this->addHistory($field,htmlspecialchars($details), '', $vfl['comment_type_id']);
-                }
-                $changes['details']['add'] = stripslashes($details);
-                $field = $art_field_fact->getFieldFromName("comment_type_id");
-                if ( $field ) {
-                    $changes['details']['type'] =
-                        $field->getValue($this->ArtifactType->getID(), $vfl['comment_type_id']);
-                }
-            }
+	    $comment_type_id = $vfl['comment_type_id'];
+
+	    $this->addDetail($details,$comment_type_id,$canned_response,$changes,$feedback);
+            
             
             //
             //  Enter the timestamp if we are changing to closed or declined

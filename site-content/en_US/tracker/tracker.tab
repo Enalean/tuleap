@@ -254,7 +254,7 @@ tracker_include_artifact	define_canned	Or define a new Canned Response
 tracker_include_artifact	not_logged_in	<B><span class="highlight"><H2>You Are NOT Logged In</H2><P>Please <A HREF="$1">log in,</A> so update notifications can be emailed to you.</span></B><P>If don't have a user account, then enter your email address instead:
 tracker_include_artifact	fill_cc_list_msg	<b><u>Note:</b></u> for CodeX users use their login name rather than their email addresses.<br>Fill your list using comma or semi-column as separator.
 tracker_include_artifact	fill_cc_list_lbl	<p><B>Add CC:&nbsp;</b>
-tracker_include_artifact	fill_cc_list_cmt	&nbsp;&nbsp;&nbsp;<b>Comment</b>:&nbsp;</b>
+tracker_include_artifact	fill_cc_list_cmt	Comment
 tracker_include_artifact	attachment	Attachments
 tracker_include_artifact	upload_checkbox	<B>Check to Upload&hellip;</b>
 tracker_include_artifact	upload_file_lbl	<b>&nbsp;&hellip;and&nbsp;attach File:</B>
@@ -306,6 +306,10 @@ tracker_include_artifact	dep_list_empty	Dependencies list is empty
 tracker_include_artifact	dep_list	Dependencies List
 tracker_include_artifact	del_dep	Delete this dependency?
 tracker_include_artifact	no_depend	No other artifacts are dependent on this artifact
+tracker_include_artifact	copy_art	Copy This Artifact
+tracker_include_artifact	is_copy	this $1 is a copy of $2
+tracker_include_artifact	copy_of	Copy of $1
+tracker_include_artifact	copy	Copy
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/include/ArtifactReportHtml.class
@@ -394,6 +398,7 @@ tracker_include_type	del_user	Delete this user?
 tracker_include_type	no_user	No users for this tracker.
 tracker_include_type	public_tracker	Public tracker:
 tracker_include_type	allow_anon	Allow anonymous submission:
+tracker_include_type	allow_copy	Allow artifact duplication:
 tracker_include_type	submit_instr	<b>Submit instructions</b>:<br><i>(HTML tags allowed)</i>
 tracker_include_type	browse_instr	<b>Browse instructions</b>:<br><i>(HTML tags allowed)</i>
 tracker_include_type	fill_name	Please, fill the tracker name.

@@ -2570,6 +2570,7 @@ CREATE TABLE artifact_group_list (
 	item_name text,
 	is_public int(11) DEFAULT 0 NOT NULL,
 	allow_anon int(11) DEFAULT 0 NOT NULL,
+	allow_copy int(11) DEFAULT 0 NOT NULL,
 	email_all_updates int(11) DEFAULT 0 NOT NULL,
 	email_address text NOT NULL,
 	submit_instructions text,

@@ -60,4 +60,7 @@ INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCE
 
 
 
-
+--
+-- Create new columns allow_copy and copy_prefix for the artifact duplication
+--
+ALTER TABLE artifact_group_list ADD COLUMN allow_copy int(11) DEFAULT 0 NOT NULL AFTER allow_anon;

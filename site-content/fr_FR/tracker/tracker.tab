@@ -311,6 +311,10 @@ tracker_include_artifact	dep_list_empty	La liste des dépendances est vide
 tracker_include_artifact	dep_list	Liste des dépendances
 tracker_include_artifact	del_dep	Détruire cette dépendance ?
 tracker_include_artifact	no_depend	Aucun artefact ne dépend de celui-ci
+tracker_include_artifact	copy_art	Dupliquer Cet Artifact
+tracker_include_artifact	is_copy	ce $1 est une copie de $2
+tracker_include_artifact	copy_of	Copie de $1
+tracker_include_artifact	copy	Copie
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/include/ArtifactReportHtml.class
@@ -399,6 +403,7 @@ tracker_include_type	del_user	Détruire cet utilisateur ?
 tracker_include_type	no_user	Aucun utilisateur pour cet outil de suivi.
 tracker_include_type	public_tracker	Outil de suivi public:
 tracker_include_type	allow_anon	Autoriser les soumissions anonymes:
+tracker_include_type	allow_copy	Autoriser la copie d'artefacts:
 tracker_include_type	submit_instr	<b>Instructions de soumissions</b>:<br><i>(Balises HTML autorisées)</i>
 tracker_include_type	browse_instr	<b>Instructions de navigation</b>:<br><i>(Balises HTML autorisées)</i>
 tracker_include_type	fill_name	Veuillez remplir le nom de l'outil de suivi.

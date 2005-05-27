@@ -593,7 +593,17 @@ class ArtifactTypeHtml extends ArtifactType {
 		echo '	
 		      </td>
 		    </tr>
-		    <tr>';
+		    <tr> 
+		      <td width="21%"><b>'.$Language->getText('tracker_include_type','allow_copy').'</b></td>
+		      <td width="79%">';
+		if ( $this->allowsCopy() ) {
+			echo '<input type="checkbox" name="allow_copy" value="1" checked>';
+		} else {
+			echo '<input type="checkbox" name="allow_copy" value="1">';
+		}
+		echo '	
+		      </td>
+		    </tr>';
 
 		if ( $this->Group->getID()==100 ) { // Template group
 		echo '	

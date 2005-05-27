@@ -394,6 +394,15 @@ class ArtifactType extends Error {
 	}
 
 	/**
+	 *	  allowsCopy - determine if artifacts can be copied using a copy button
+	 *
+	 *	  @return	boolean	allow_copy.
+	 */
+	function allowsCopy() {
+		return $this->data_array['allow_copy'];
+	}
+
+	/**
 	 *	  emailAll - determine if we're supposed to email on every event.
 	 *
 	 *	  @return	boolean	email_all.
@@ -863,7 +872,7 @@ class ArtifactType extends Error {
 	 *  @param	bool	instantiate_for_new_projects (1) true (0) false - instantiate this tracker template for new projects
 	 *  @return true on success, false on failure.
 	 */
-	function update($name,$description,$itemname,$is_public,$allow_anon,
+	function update($name,$description,$itemname,$is_public,$allow_anon,$allow_copy,
 		            $submit_instructions,$browse_instructions,$instantiate_for_new_projects) {
 	  global $Language;
 
@@ -879,6 +888,7 @@ class ArtifactType extends Error {
 		
 		$allow_anon = ((!$allow_anon) ? 0 : $allow_anon); 
 		$is_public = ((!$is_public) ? 0 : $is_public); 
+		$allow_copy = ((!$allow_copy) ? 0 : $allow_copy);
                 $instantiate_for_new_projects = ((!$instantiate_for_new_projects) ? 0 : $instantiate_for_new_projects); 
 
 		$sql="UPDATE artifact_group_list SET 
@@ -887,6 +897,7 @@ class ArtifactType extends Error {
 			item_name='$itemname',
 			is_public='$is_public',
 			allow_anon='$allow_anon',
+                        allow_copy='$allow_copy',
 			submit_instructions='$submit_instructions',
 			browse_instructions='$browse_instructions',
                         instantiate_for_new_projects='$instantiate_for_new_projects'
