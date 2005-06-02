@@ -104,7 +104,7 @@ class RecordIterator {
    * @access public 
    */
   function &toArray() {
-    return $list;
+    return $this->list;
   }
 
   /**
@@ -113,7 +113,7 @@ class RecordIterator {
    */
   function count() {
     if(empty($this->counter))
-      $this->counter = count($list);
+      $this->counter = count($this->list);
     
     return $this->counter;
   }
