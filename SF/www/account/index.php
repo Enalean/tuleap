@@ -152,7 +152,7 @@ while (list(,$dirname) = each($theme_dirs)) {
 	$dir = opendir($dirname);
 	while ($file = readdir($dir)) {
 	    if (is_dir("$dirname/$file") && $file != "." && $file != ".." && 
-		$file != "CVS" && $file != "custom") {
+		$file != "CVS" && $file != "custom" && $file != ".svn") {
 		$theme_list[] = $file;
 	    }
 	}

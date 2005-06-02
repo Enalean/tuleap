@@ -497,7 +497,7 @@ tracker_include_type	rep_field	Reporting on field
 tracker_include_type	open_by	Open $1 By $2
 tracker_include_type	all_by	All $1 By $2
 tracker_include_type	changing_items	Changing $1 selected artefact(s): 
-tracker_include_type	submit_mass_change	Valider
+tracker_include_type	submit_mass_change	Submit
 tracker_include_type	occurrence	Occurrence
 tracker_include_type	notify_me	I want to be notified when:
 

@@ -106,7 +106,7 @@ function frs_show_status_popup ($name='status_id', $checked_val="xzxz") {
 	$arr_id = util_result_column_to_array($FRS_STATUS_RES,0);
 	$arr_status = util_result_column_to_array($FRS_STATUS_RES,1);
 	for ($i=0; $i<count($arr_status); $i++) {
-	    $arr_status[$i] = $Language->getText('file_admin_editpackages','status_'.strtolower($arr_status[$i]));
+	    $arr_status[$i] = $Language->getText('file_admin_editpackages',strtolower($arr_status[$i]));
 	}
 	return html_build_select_box_from_arrays($arr_id,$arr_status,$name,$checked_val,false);
 

@@ -20,7 +20,7 @@ if ($result && db_numrows($result) > 0) {
 
     if (db_result($result,0,'filesize') == 0) {
 
-	exit_error($Language->getText('global', 'error'),$Language->getText('tracker_download','file_is_null');
+	exit_error($Language->getText('global', 'error'),$Language->getText('tracker_download','file_is_null'));
 
     } else {
 	
@@ -35,7 +35,7 @@ if ($result && db_numrows($result) > 0) {
     }
 
 } else {
-    exit_error($Language->getText('global', 'error'),$Language->getText('tracker_download', 'file_not_found', $id);
+    exit_error($Language->getText('global', 'error'),$Language->getText('tracker_download', 'file_not_found', $id));
 }
 
 ?>
