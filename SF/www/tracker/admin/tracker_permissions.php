@@ -165,7 +165,7 @@ switch ($perm_type) {
                                      $anonymous_is_already_set_to_submit = true;
                                  } else {
                                      if (isset($stored_ugroup_permissions['permissions']['TRACKER_FIELD_SUBMIT'])) {
-                                         $GLOBALS['feedback'] .= "<p>Ignoring group ".$stored_ugroup_permissions['ugroup']['name']." because anonymous can submit</p>";
+                                         $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_anon_submit', array($stored_ugroup_permissions['ugroup']['name']));
                                          permission_clear_ugroup_object($group_id, 'TRACKER_FIELD_SUBMIT', $stored_ugroup_id, $fake_object_id);
                                      }
                                  }
@@ -178,7 +178,7 @@ switch ($perm_type) {
                          //UPDATE Permission
                          //---------------
                          if ($the_field_can_be_updated && !$anonymous_is_already_set_to_update && $user_set_anonymous_to_update) {
-                             //if the ugroup is anonymous, we have to erase submit permissions for other ugroups
+                             //if the ugroup is anonymous, we have to erase submt permissions for other ugroups
                              reset($stored_ugroups_permissions[$field_id]['ugroups']);
                              foreach($stored_ugroups_permissions[$field_id]['ugroups'] as $stored_ugroup_id => $stored_ugroup_permissions) {
                                  if ($stored_ugroup_id === $GLOBALS['UGROUP_ANONYMOUS']) {
@@ -186,11 +186,11 @@ switch ($perm_type) {
                                      $anonymous_is_already_set_to_update = true;
                                  } else {
                                      if (isset($stored_ugroup_permissions['permissions']['TRACKER_FIELD_UPDATE'])) {
-                                         $GLOBALS['feedback'] .= "<p>Ignoring group ".$stored_ugroup_permissions['ugroup']['name']." because anonymous can update</p>";
+                                         $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_anon_update', array($stored_ugroup_permissions['ugroup']['name']));
                                          permission_clear_ugroup_object($group_id, 'TRACKER_FIELD_UPDATE', $stored_ugroup_id, $fake_object_id);
                                      }
                                      if (isset($stored_ugroup_permissions['permissions']['TRACKER_FIELD_READ'])) {
-                                         $GLOBALS['feedback'] .= "<p>Ignoring group ".$stored_ugroup_permissions['ugroup']['name']." because anonymous can update</p>";
+                                         $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_anon_update', array($stored_ugroup_permissions['ugroup']['name']));
                                          permission_clear_ugroup_object($group_id, 'TRACKER_FIELD_READ', $stored_ugroup_id, $fake_object_id);
                                      }
                                  }
@@ -211,7 +211,7 @@ switch ($perm_type) {
                                      $anonymous_is_already_set_to_read = true;
                                  } else {
                                      if (isset($stored_ugroup_permissions['permissions']['TRACKER_FIELD_READ'])) {
-                                         $GLOBALS['feedback'] .= "<p>Ignoring group ".$stored_ugroup_permissions['ugroup']['name']." because anonymous can read</p>";
+                                         $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_anon_read', array($stored_ugroup_permissions['ugroup']['name']));
                                          permission_clear_ugroup_object($group_id, 'TRACKER_FIELD_READ', $stored_ugroup_id, $fake_object_id);
                                      }
                                  }
@@ -234,7 +234,7 @@ switch ($perm_type) {
                              //if the ugroup is registered, we have to:
                              // 1. check consistency with current permissions for anonymous users
                              if ($user_set_anonymous_to_submit || $anonymous_is_already_set_to_submit) {
-                                 $GLOBALS['feedback'] .= "<p>Ignoring group ".$stored_ugroups_permissions[$field_id]['ugroups'][$GLOBALS['UGROUP_REGISTERED']]['ugroup']['name']." because anonymous can submit</p>";
+                                 $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_anon_submit', array($stored_ugroups_permissions[$field_id]['ugroups'][$GLOBALS['UGROUP_REGISTERED']]['ugroup']['name']));
                              } else {
                                  // 2. erase submit permissions for other ugroups
                                  foreach($stored_ugroups_permissions[$field_id]['ugroups'] as $stored_ugroup_id => $stored_ugroup_permissions) {
@@ -243,7 +243,7 @@ switch ($perm_type) {
                                          $registered_is_already_set_to_submit = true;
                                      } else {
                                          if (isset($stored_ugroup_permissions['permissions']['TRACKER_FIELD_SUBMIT'])) {
-                                             $GLOBALS['feedback'] .= "<p>Ignoring group ".$stored_ugroup_permissions['ugroup']['name']." because registered can submit</p>";
+                                             $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_regis_submit', array($stored_ugroup_permissions['ugroup']['name']));
                                              permission_clear_ugroup_object($group_id, 'TRACKER_FIELD_SUBMIT', $stored_ugroup_id, $fake_object_id);
                                          }
                                      }
@@ -260,20 +260,20 @@ switch ($perm_type) {
                              //if the ugroup is registered, we have to:
                              // 1. check consistency with current permissions for anonymous users
                              if ($user_set_anonymous_to_update || $anonymous_is_already_set_to_update) {
-                                 $GLOBALS['feedback'] .= "<p>Ignoring group ".$stored_ugroups_permissions[$field_id]['ugroups'][$GLOBALS['UGROUP_REGISTERED']]['ugroup']['name']." because anonymous can update</p>";
+                                 $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_anon_update', array($stored_ugroups_permissions[$field_id]['ugroups'][$GLOBALS['UGROUP_REGISTERED']]['ugroup']['name']));
                              } else {
                                  // 2. erase update permissions for other ugroups
                                  foreach($stored_ugroups_permissions[$field_id]['ugroups'] as $stored_ugroup_id => $stored_ugroup_permissions) {
                                      if ($stored_ugroup_id === $GLOBALS['UGROUP_REGISTERED']) {
                                          permission_add_ugroup($group_id, 'TRACKER_FIELD_UPDATE', $fake_object_id, $stored_ugroup_id);
                                          $registered_is_already_set_to_update = true;
-                                     } else {
+                                     } else if($stored_ugroup_id !== $GLOBALS['UGROUP_ANONYMOUS']) { //ugroups other than anonymous
                                          if (isset($stored_ugroup_permissions['permissions']['TRACKER_FIELD_UPDATE'])) {
-                                             $GLOBALS['feedback'] .= "<p>Ignoring group ".$stored_ugroup_permissions['ugroup']['name']." because registered can update</p>";
+                                             $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_regis_update', array($stored_ugroup_permissions['ugroup']['name']));
                                              permission_clear_ugroup_object($group_id, 'TRACKER_FIELD_UPDATE', $stored_ugroup_id, $fake_object_id);
                                          }
                                          if (isset($stored_ugroup_permissions['permissions']['TRACKER_FIELD_READ'])) {
-                                             $GLOBALS['feedback'] .= "<p>Ignoring group ".$stored_ugroup_permissions['ugroup']['name']." because registered can update</p>";
+                                             $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_regis_update', array($stored_ugroup_permissions['ugroup']['name']));
                                              permission_clear_ugroup_object($group_id, 'TRACKER_FIELD_READ', $stored_ugroup_id, $fake_object_id);
                                          }
                                      }
@@ -290,7 +290,7 @@ switch ($perm_type) {
                              //if the ugroup is registered, we have to:
                              // 1. check consistency with current permissions for anonymous users
                              if ($user_set_anonymous_to_read || $anonymous_is_already_set_to_read) {
-                                 $GLOBALS['feedback'] .= "<p>Ignoring group ".$stored_ugroups_permissions[$field_id]['ugroups'][$GLOBALS['UGROUP_REGISTERED']]['ugroup']['name']." because anonymous can read</p>";
+                                 $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_anon_read', array($stored_ugroups_permissions[$field_id]['ugroups'][$GLOBALS['UGROUP_REGISTERED']]['ugroup']['name']));
                              } else {
                                  // 2. erase read permissions for other ugroups
                                  foreach($stored_ugroups_permissions[$field_id]['ugroups'] as $stored_ugroup_id => $stored_ugroup_permissions) {
@@ -299,7 +299,7 @@ switch ($perm_type) {
                                          $registered_is_already_set_to_read = true;
                                      } else {
                                          if (isset($stored_ugroup_permissions['permissions']['TRACKER_FIELD_READ'])) {
-                                             $GLOBALS['feedback'] .= "<p>Ignoring group ".$stored_ugroup_permissions['ugroup']['name']." because registered can read</p>";
+                                             $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_regis_read', array($stored_ugroup_permissions['ugroup']['name']));
                                              permission_clear_ugroup_object($group_id, 'TRACKER_FIELD_READ', $stored_ugroup_id, $fake_object_id);
                                          }
                                      }
@@ -316,7 +316,8 @@ switch ($perm_type) {
                      ////////////////////////////////////////////////////////////////
                      foreach($ugroups_permissions as $ugroup_id => $ugroup_permissions) {
                          if (is_numeric($ugroup_id) && $ugroup_id != $GLOBALS['UGROUP_REGISTERED'] && $ugroup_id != $GLOBALS['UGROUP_ANONYMOUS']) {
-                             
+                             $name_of_ugroup = $stored_ugroups_permissions[$field_id]['ugroups'][$ugroup_id]['ugroup']['name'];
+                         
                              //SUBMIT Permission
                              //-----------------
                              if ($the_field_can_be_submitted && !isset($stored_ugroups_permissions[$field_id]['ugroups'][$ugroup_id]['permissions']['TRACKER_FIELD_SUBMIT'])
@@ -326,9 +327,9 @@ switch ($perm_type) {
                                  // check consistency with current permissions for anonymous users
                                  // and current permissions for registered users
                                  if ($user_set_anonymous_to_submit || $anonymous_is_already_set_to_submit) {
-                                     $GLOBALS['feedback'] .= "<p>Ignoring group ".$stored_ugroups_permissions[$field_id]['ugroups'][$ugroup_id]['ugroup']['name']." because anonymous can submit</p>";
+                                     $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_anon_submit', array($name_of_ugroup));
                                  } else if ($user_set_registered_to_submit || $registered_is_already_set_to_submit) {
-                                     $GLOBALS['feedback'] .= "<p>Ignoring group ".$stored_ugroups_permissions[$field_id]['ugroups'][$ugroup_id]['ugroup']['name']." because registered can submit</p>";
+                                     $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_regis_submit', array($name_of_ugroup));       
                                  } else {
                                      permission_add_ugroup($group_id, 'TRACKER_FIELD_SUBMIT', $fake_object_id, $ugroup_id);
                                  }
@@ -350,9 +351,11 @@ switch ($perm_type) {
                                  // check consistency with current permissions for anonymous users
                                  // and current permissions for registered users
                                  if ($user_set_anonymous_to_update || $anonymous_is_already_set_to_update) {
-                                     $GLOBALS['feedback'] .= "<p>Ignoring group ".$stored_ugroups_permissions[$field_id]['ugroups'][$ugroup_id]['ugroup']['name']." because anonymous can update</p>";
+                                     $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_anon_update', array($name_of_ugroup));
+                                             
                                  } else if ($user_set_registered_to_update || $registered_is_already_set_to_update) {
-                                     $GLOBALS['feedback'] .= "<p>Ignoring group ".$stored_ugroups_permissions[$field_id]['ugroups'][$ugroup_id]['ugroup']['name']." because registered can update</p>";
+                                     $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_regis_update', array($name_of_ugroup));
+                                             
                                  } else {
                                      permission_add_ugroup($group_id, 'TRACKER_FIELD_UPDATE', $fake_object_id, $ugroup_id);
                                  }
@@ -374,13 +377,17 @@ switch ($perm_type) {
                                  // check consistency with current permissions for anonymous users
                                  // and current permissions for registered users
                                  if ($user_set_anonymous_to_read || $anonymous_is_already_set_to_read) {
-                                     $GLOBALS['feedback'] .= "<p>Ignoring group ".$stored_ugroups_permissions[$field_id]['ugroups'][$ugroup_id]['ugroup']['name']." because anonymous can read</p>";
+                                     $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_anon_read', array($name_of_ugroup));
+                                             
                                  } else if ($user_set_registered_to_read || $registered_is_already_set_to_read) {
-                                     $GLOBALS['feedback'] .= "<p>Ignoring group ".$stored_ugroups_permissions[$field_id]['ugroups'][$ugroup_id]['ugroup']['name']." because registered can read</p>";
+                                     $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_regis_read', array($name_of_ugroup));
+                                             
                                  } else if ($user_set_anonymous_to_update || $anonymous_is_already_set_to_update) {
-                                     $GLOBALS['feedback'] .= "<p>Ignoring group ".$stored_ugroups_permissions[$field_id]['ugroups'][$ugroup_id]['ugroup']['name']." because anonymous can update</p>";
+                                     $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_anon_update', array($name_of_ugroup));
+                                             
                                  } else if ($user_set_registered_to_update || $registered_is_already_set_to_update) {
-                                     $GLOBALS['feedback'] .= "<p>Ignoring group ".$stored_ugroups_permissions[$field_id]['ugroups'][$ugroup_id]['ugroup']['name']." because registered can update</p>";
+                                     $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_regis_update', array($name_of_ugroup));
+                                             
                                  } else {
                                      permission_add_ugroup($group_id, 'TRACKER_FIELD_READ', $fake_object_id, $ugroup_id);
                                  }
