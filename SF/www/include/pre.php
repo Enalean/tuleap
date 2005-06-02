@@ -131,11 +131,11 @@ if (user_isloggedin()) {
     //if you aren't logged in, check your browser settings 
     //and see if we support that language
     //if we don't support it, just use system default
-    if ($HTTP_ACCEPT_LANGUAGE) {
+    if (isset($HTTP_ACCEPT_LANGUAGE)) {
 	$res = language_code_to_result ($HTTP_ACCEPT_LANGUAGE);
 	$lang_code=db_result($res,0,'language_code');
     }
-    if (!$lang_code) { $lang_code = $GLOBALS['sys_lang']; }
+    if (!isset($lang_code)) { $lang_code = $GLOBALS['sys_lang']; }
     $Language = new BaseLanguage();
     $Language->loadLanguage($lang_code);
 }
