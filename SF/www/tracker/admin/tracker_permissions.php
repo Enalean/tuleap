@@ -109,121 +109,6 @@ switch ($perm_type) {
  case 'fields':
      if ($update || $reset) {
          if ($update && isset($_REQUEST['permissions'])) {
-             /*
-              foreach($_REQUEST['permissions'] as $field_id => $field_permissions) {
-                 $current_field                     = $art_field_fact->getFieldFromId($field_id);
-                 $current_feedback_submit           = 'Field \''.$current_field->getLabel().'\': ';//TODO i10n
-                 $current_feedback_submit_displayed = false;
-                 $current_feedback_read             = 'Field \''.$current_field->getLabel().'\': ';//TODO i10n
-                 $current_feedback_read_displayed   = false;
-                 $current_feedback_update           = 'Field \''.$current_field->getLabel().'\': ';//TODO i10n
-                 $current_feedback_update_displayed = false;
-                 if (is_numeric($field_id) && is_array($field_permissions)) {
-                     //ANONYMOUS
-                     $anonymous_can_submit = (isset($field_permissions[$GLOBALS['UGROUP_ANONYMOUS']]) 
-                                              && isset($field_permissions[$GLOBALS['UGROUP_ANONYMOUS']]['submit'])
-                                              && $field_permissions[$GLOBALS['UGROUP_ANONYMOUS']]['submit'] === "on");
-                     if ($anonymous_can_submit) {
-                         $current_feedback_submit .= ' [Can submit] '.$GLOBALS['Language']->getText('project_admin_permissions', 'all_users_added');
-                     }
-                     $anonymous_can_read = (isset($field_permissions[$GLOBALS['UGROUP_ANONYMOUS']]) 
-                                            && isset($field_permissions[$GLOBALS['UGROUP_ANONYMOUS']]['others'])
-                                            && $field_permissions[$GLOBALS['UGROUP_ANONYMOUS']]['others'] === "0");
-                     if ($anonymous_can_read) {
-                         $current_feedback_read .= ' [Can only read] '.$GLOBALS['Language']->getText('project_admin_permissions', 'all_users_added');
-                     }
-                     $anonymous_can_read_and_update = (isset($field_permissions[$GLOBALS['UGROUP_ANONYMOUS']]) 
-                                                       && isset($field_permissions[$GLOBALS['UGROUP_ANONYMOUS']]['others'])
-                                                       && $field_permissions[$GLOBALS['UGROUP_ANONYMOUS']]['others'] === "1");
-                     if ($anonymous_can_read_and_update) {
-                         $current_feedback_update .= ' [Can read and update] '.$GLOBALS['Language']->getText('project_admin_permissions', 'all_users_added');
-                     }
-                     
-                     //REGISTERED
-                     $registered_can_submit = (isset($field_permissions[$GLOBALS['UGROUP_REGISTERED']]) 
-                                              && isset($field_permissions[$GLOBALS['UGROUP_REGISTERED']]['submit'])
-                                              && $field_permissions[$GLOBALS['UGROUP_REGISTERED']]['submit'] === "on");
-                     if (!$anonymous_can_submit && $registered_can_submit) {
-                         $current_feedback_submit .= ' [Can submit] '.$GLOBALS['Language']->getText('project_admin_permissions', 'all_registered_users_added');
-                     }
-                     $registered_can_read = (isset($field_permissions[$GLOBALS['UGROUP_REGISTERED']]) 
-                                            && isset($field_permissions[$GLOBALS['UGROUP_REGISTERED']]['others'])
-                                            && $field_permissions[$GLOBALS['UGROUP_REGISTERED']]['others'] === "0");
-                     if (!$anonymous_can_read && $registered_can_read) {
-                         $current_feedback_read .= ' [Can only read] '.$GLOBALS['Language']->getText('project_admin_permissions', 'all_registered_users_added');
-                     }
-                     $registered_can_read_and_update = (isset($field_permissions[$GLOBALS['UGROUP_REGISTERED']]) 
-                                                       && isset($field_permissions[$GLOBALS['UGROUP_REGISTERED']]['others'])
-                                                       && $field_permissions[$GLOBALS['UGROUP_REGISTERED']]['others'] === "1");
-                     if (!$anonymous_can_read_and_update && $registered_can_read_and_update) {
-                         $current_feedback_update .= ' [Can read and update] '.$GLOBALS['Language']->getText('project_admin_permissions', 'all_registered_users_added');
-                     }
-
-
-                     foreach($field_permissions as $ugroup_id => $permissions) {
-                         if (is_numeric($ugroup_id) && is_array($permissions) && isset($permissions['submit'])) {
-                             $fake_object_id = permission_build_field_id($atid, $field_id);
-                             //SUBMIT
-                             permission_clear_ugroup_object($group_id, 'TRACKER_FIELD_SUBMIT', $ugroup_id, $fake_object_id);
-                             if (isset($permissions['submit']) && $permissions['submit'] === "on") {
-                                 if (  !$current_feedback_submit_displayed
-                                       && $ugroup_id != $GLOBALS['UGROUP_ANONYMOUS'] 
-                                       && ($anonymous_can_submit ||
-                                           ($ugroup_id != $GLOBALS['UGROUP_REGISTERED'] && $registered_can_submit)
-                                        )
-                                       ) {
-                                     //anonymous or registered users can submit, we don't set this permission for this ugroup
-                                     $GLOBALS['feedback'] .= $current_feedback_submit.$GLOBALS['Language']->getText('project_admin_permissions', 'ignore_g')."<br/>";
-                                     $current_feedback_displayed = true;
-                                 } else {
-                                     permission_add_ugroup($group_id, 'TRACKER_FIELD_SUBMIT', $fake_object_id, $ugroup_id);
-                                 }
-                             }
-                             
-                             //OTHERS
-                             permission_clear_ugroup_object($group_id, 'TRACKER_FIELD_READ', $ugroup_id, $fake_object_id);
-                             permission_clear_ugroup_object($group_id, 'TRACKER_FIELD_UPDATE', $ugroup_id, $fake_object_id);
-                             if (isset($permissions['others'])) {
-                                 if ($permissions['others'] === "0") { //READ
-                                     //Anonymous or registered users must not have been set to read or update
-                                     if ( !$current_feedback_update_displayed
-                                          && $ugroup_id != $GLOBALS['UGROUP_ANONYMOUS'] 
-                                          && ($anonymous_can_read_and_update ||
-                                              ($ugroup_id != $GLOBALS['UGROUP_REGISTERED'] && $registered_can_read_and_update)
-                                              )
-                                          ) {
-                                         //anonymous or registered users can update, we don't set this permission for this ugroup
-                                         $GLOBALS['feedback'] .= $current_feedback_update.$GLOBALS['Language']->getText('project_admin_permissions', 'ignore_g')."<br/>";
-                                     } else if(!$current_feedback_update_displayed
-                                               && $ugroup_id != $GLOBALS['UGROUP_ANONYMOUS'] 
-                                               && ($anonymous_can_read ||
-                                                   ($ugroup_id != $GLOBALS['UGROUP_REGISTERED'] && $registered_can_read)
-                                                   )
-                                               ) {
-                                         //anonymous or registered users can read, we don't set this permission for this ugroup
-                                         $GLOBALS['feedback'] .= $current_feedback_read.$GLOBALS['Language']->getText('project_admin_permissions', 'ignore_g')."<br/>";
-                                     } else {
-                                         permission_add_ugroup($group_id, 'TRACKER_FIELD_READ', $fake_object_id, $ugroup_id);
-                                     }
-                                 } else if ($permissions['others'] === "1") { //UPDATE
-                                     if ( !$current_feedback_update_displayed
-                                          && $ugroup_id != $GLOBALS['UGROUP_ANONYMOUS'] 
-                                          && ($anonymous_can_read_and_update ||
-                                              ($ugroup_id != $GLOBALS['UGROUP_REGISTERED'] && $registered_can_read_and_update)
-                                              )
-                                          ) {
-                                         //anonymous or registered users can update, we don't set this permission for this ugroup
-                                         $GLOBALS['feedback'] .= $current_feedback_update.$GLOBALS['Language']->getText('project_admin_permissions', 'ignore_g')."<br/>";
-                                     } else {
-                                         permission_add_ugroup($group_id, 'TRACKER_FIELD_UPDATE', $fake_object_id, $ugroup_id);
-                                     }
-                                 }
-                             }
-                         }
-                     }
-                 }
-             }
-             */
              //The actual permissions
              $stored_ugroups_permissions = permission_get_field_tracker_ugroups_permissions($group_id, $atid, $art_field_fact->getAllUsedFields());
 
@@ -231,6 +116,8 @@ switch ($perm_type) {
              reset($_REQUEST['permissions']);
              foreach($_REQUEST['permissions'] as $field_id => $ugroups_permissions) {
                  if (is_numeric($field_id)) {
+                     $the_field_can_be_submitted = $field_id != 1 && $field_id != 6 && $field_id != 7;
+                     $the_field_can_be_updated   = $the_field_can_be_submitted;
                      //artifact_id#field_id
                      $fake_object_id = permission_build_field_id($atid, $field_id);
                      
@@ -269,7 +156,7 @@ switch ($perm_type) {
 
                          //SUBMIT Permission
                          //-----------------
-                         if (!$anonymous_is_already_set_to_submit && $user_set_anonymous_to_submit) {
+                         if ($the_field_can_be_submitted && !$anonymous_is_already_set_to_submit && $user_set_anonymous_to_submit) {
                              //if the ugroup is anonymous, we have to erase submit permissions for other ugroups
                              reset($stored_ugroups_permissions[$field_id]['ugroups']);
                              foreach($stored_ugroups_permissions[$field_id]['ugroups'] as $stored_ugroup_id => $stored_ugroup_permissions) {
@@ -290,7 +177,7 @@ switch ($perm_type) {
 
                          //UPDATE Permission
                          //---------------
-                         if (!$anonymous_is_already_set_to_update && $user_set_anonymous_to_update) {
+                         if ($the_field_can_be_updated && !$anonymous_is_already_set_to_update && $user_set_anonymous_to_update) {
                              //if the ugroup is anonymous, we have to erase submit permissions for other ugroups
                              reset($stored_ugroups_permissions[$field_id]['ugroups']);
                              foreach($stored_ugroups_permissions[$field_id]['ugroups'] as $stored_ugroup_id => $stored_ugroup_permissions) {
@@ -343,7 +230,7 @@ switch ($perm_type) {
                          
                          //SUBMIT Permission
                          //-----------------
-                         if (!$registered_is_already_set_to_submit && $user_set_registered_to_submit) {
+                         if ($the_field_can_be_submitted && !$registered_is_already_set_to_submit && $user_set_registered_to_submit) {
                              //if the ugroup is registered, we have to:
                              // 1. check consistency with current permissions for anonymous users
                              if ($user_set_anonymous_to_submit || $anonymous_is_already_set_to_submit) {
@@ -369,7 +256,7 @@ switch ($perm_type) {
 
                          //UPDATE Permission
                          //---------------
-                         if (!$registered_is_already_set_to_update && $user_set_registered_to_update) {
+                         if ($the_field_can_be_updated && !$registered_is_already_set_to_update && $user_set_registered_to_update) {
                              //if the ugroup is registered, we have to:
                              // 1. check consistency with current permissions for anonymous users
                              if ($user_set_anonymous_to_update || $anonymous_is_already_set_to_update) {
@@ -432,7 +319,7 @@ switch ($perm_type) {
                              
                              //SUBMIT Permission
                              //-----------------
-                             if (!isset($stored_ugroups_permissions[$field_id]['ugroups'][$ugroup_id]['permissions']['TRACKER_FIELD_SUBMIT'])
+                             if ($the_field_can_be_submitted && !isset($stored_ugroups_permissions[$field_id]['ugroups'][$ugroup_id]['permissions']['TRACKER_FIELD_SUBMIT'])
                                  && isset($ugroup_permissions['submit']) 
                                  && $ugroup_permissions['submit'] === "on") {
                                  //if the ugroup is not anonymous and not registered, we have to:
@@ -456,7 +343,7 @@ switch ($perm_type) {
 
                              //UPDATE Permission
                              //-----------------
-                             if (!isset($stored_ugroups_permissions[$field_id]['ugroups'][$ugroup_id]['permissions']['TRACKER_FIELD_UPDATE'])
+                             if ($the_field_can_be_updated && !isset($stored_ugroups_permissions[$field_id]['ugroups'][$ugroup_id]['permissions']['TRACKER_FIELD_UPDATE'])
                                  && isset($ugroup_permissions['others']) 
                                  && $ugroup_permissions['others'] === "1") {
                                  //if the ugroup is not anonymous and not registered, we have to:
@@ -519,7 +406,7 @@ switch ($perm_type) {
      }
      //display
      $ath->adminHeader(array('title'=>$Language->getText('tracker_admin_field_usage','tracker_admin').$Language->getText('tracker_admin_field_usage','usage_admin'),'help' => 'TrackerAdministration.html#TrackerPermissionsManagement')); //TODO
-     $ugroups_permissions = permission_get_field_tracker_ugroups_permissions($group_id, $atid, $art_field_fact->getAllUsedFields());
+     $ugroups_permissions = permission_get_field_tracker_ugroups_permissions($group_id, $atid, $art_field_fact->getAllUsedFields(), true);
      $ath->displayPermissionsFieldsTracker($ugroups_permissions, $group_first, $selected_id);
      break;
  default:

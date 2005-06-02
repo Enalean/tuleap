@@ -703,16 +703,16 @@ tracker_common_types	event_NEW_ARTIFACT_desc	Un nouvel artefact a été soumis
 #
 #
 tracker_admin_permissions	and	--
-tracker_admin_permissions	fields_tracker_intro	<div>Les permissions sur les champs des outils de suivi définissent l'accès à ces champs ainsi que leur présence sur le formulaire de soumission. Ainsi trois types de permissions sont possibles : <dl><dt>Peut soumettre</dt><dd>Les mebres de ce groupe <strong>peuvent soumettre</strong> ce champ si et seulement si la permission est cochée</dd><dt>Peut seulement lire</dt><dd>Les membres de ce groupe n'accède <strong>qu'en lecture seule</strong> à ce champ.</dd><dt>Peut lire et mettre à jour</dt><dd>Les membres de ce groupe peuvent à la fois <strong>lire et modifier</strong> ce champ.</dd></dl><div><strong>Attention :</strong><ul><li>le champ 'Artifact ID' ne peut pas être soumis</li></ul></div></div>
+tracker_admin_permissions	fields_tracker_intro	<div></div>
 tracker_admin_permissions	fields_tracker_toggle	<div>Vous pouvez basculer vers un <a href='$1'>affichage par champ</a> ou un <a href='$2'>affichage par groupe d'utilisateurs</a>.</div>
-tracker_admin_permissions	permissions	Permissions
-tracker_admin_permissions	TRACKER_ACCESS_FULL	Accès
-tracker_admin_permissions	TRACKER_ACCESS_ASSIGNEE	Accès 'Destinataire'
-tracker_admin_permissions	TRACKER_ACCESS_SUBMITTER	Accès 'Soumetteur'
-tracker_admin_permissions	TRACKER_ACCESS_ASSIGNEE_AND_TRACKER_ACCESS_SUBMITTER	Accès 'Soumetteur' et 'Destinataire'
+tracker_admin_permissions	permissions	Permissions d'Accès
+tracker_admin_permissions	TRACKER_ACCESS_FULL	Accès à tous les artefacts
+tracker_admin_permissions	TRACKER_ACCESS_ASSIGNEE	Accès aux artifacts assignés au groupe
+tracker_admin_permissions	TRACKER_ACCESS_SUBMITTER	Accès aux artefacts soumis par le groupe
+tracker_admin_permissions	TRACKER_ACCESS_ASSIGNEE_AND_TRACKER_ACCESS_SUBMITTER	Accès aux artifacts assignés au ou soumis par le groupe
 tracker_admin_permissions	TRACKER_FIELD_SUBMIT	Peut Soummettre
-tracker_admin_permissions	TRACKER_FIELD_READ	Peut Seulement Lire
-tracker_admin_permissions	TRACKER_FIELD_UPDATE	Peut Lire et Mettre à Jour
-tracker_admin_permissions	TRACKER_NONE	Aucun
-tracker_admin_permissions	tracker_intro	<div>Les permissions sur les outil de suivi permettent l'accès aux artifacts. Cinq types de permissions sont possibles :<dl><dt>Accès</dt><dd>Les membres de ce groupe <strong>peuvent accèder</strong> aux artefacts</dd><dt>Accès 'destinataire'</dt><dd>Les membres de ce groupe <strong>peuvent accèder seulement</strong> aux artefacts dont le destinataire est aussi membre de ce groupe</dd><dt>Accès 'soumetteur'</dt><dd>Les membres de ce groupe <strong>peuvent accèder seulement</strong> aux artefacts dont l'émetteur est aussi membre de ce groupe</dd><dt>Accès 'soumetteur' et 'destinataire'</dt><dd>Les membres de ce groupe <strong>peuvent accèder seulement</strong> aux artefacts dont le destinataire ou l'émetteur sont aussi membres de ce groupe</dd><dt>Pas d'accès</dt><dd>Les membres de ce groupe <strong>ne peuvent pas accèder</strong> aux artefacts</dd></dl><div><strong>Attention :</strong><ul><li>Si un utilisateur est membre de plusieurs groupes, alors les droits les moins restricitifs seront pris en compte pour cet utilisateur.</li><li>Il n'est pas possible de définir d'autres permissions que 'Accès'/'Pas d'accès' pour le groupe 'Anonymous Users'.</li></div></div>
+tracker_admin_permissions	TRACKER_FIELD_READ	Lecture Seule
+tracker_admin_permissions	TRACKER_FIELD_UPDATE	Mise à Jour
+tracker_admin_permissions	TRACKER_NONE	--
+tracker_admin_permissions	tracker_intro	<div></div>
 tracker_admin_permissions	ugroup	Groupe d'Utilisateurs

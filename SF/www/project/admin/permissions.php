@@ -270,11 +270,62 @@ function permission_build_field_id($object_id, $field_id) {
 /**
  * @returns array the permissions for the ugroups
  */
-function permission_get_field_tracker_ugroups_permissions($group_id, $atid, $fields) {
+function permission_get_field_tracker_ugroups_permissions($group_id, $atid, $fields, $return_only_ugroups_that_can_access_to_tracker = false) {
+    if ($return_only_ugroups_that_can_access_to_tracker) {
+        $tracker_permissions = permission_get_tracker_ugroups_permissions($group_id, $atid);
+        //Anonymous can access ?
+        if (isset($tracker_permissions[$GLOBALS['UGROUP_ANONYMOUS']])
+            && isset($tracker_permissions[$GLOBALS['UGROUP_ANONYMOUS']]['permissions'])
+            && count($tracker_permissions[$GLOBALS['UGROUP_ANONYMOUS']]['permissions']) > 0) {
+            //Do nothing
+        } else {
+
+            //We remove the id
+            if (isset($tracker_permissions[$GLOBALS['UGROUP_ANONYMOUS']])) {
+                unset($tracker_permissions[$GLOBALS['UGROUP_ANONYMOUS']]);
+            }
+
+            //Registered can access ?
+            if (isset($tracker_permissions[$GLOBALS['UGROUP_REGISTERED']])
+                && isset($tracker_permissions[$GLOBALS['UGROUP_REGISTERED']]['permissions'])
+                && count($tracker_permissions[$GLOBALS['UGROUP_REGISTERED']]['permissions']) > 0) {
+                //Do nothing
+            } else {
+                
+                //We remove the id
+                if (isset($tracker_permissions[$GLOBALS['UGROUP_REGISTERED']])) {
+                    unset($tracker_permissions[$GLOBALS['UGROUP_REGISTERED']]);
+                }
+
+                //Each group can access ?
+                foreach($tracker_permissions as $key => $value) {
+                    if (!isset($value['permissions']) || count($value['permissions']) < 1) {
+                        unset($tracker_permissions[$key]);
+                    }
+                }
+            }
+        }
+        $ugroups_that_can_access_to_tracker = $tracker_permissions;
+    }
+        
+
+
     $ugroups_permissions = array();
     foreach($fields as $field) {
         $fake_id = permission_build_field_id($atid, $field->getID());
         $ugroups = permission_get_ugroups_permissions($group_id, $fake_id, array('TRACKER_FIELD_READ','TRACKER_FIELD_UPDATE','TRACKER_FIELD_SUBMIT'), false);
+
+        //We remove the ugroups which can't access to tracker
+        if ($return_only_ugroups_that_can_access_to_tracker) {
+            reset($ugroups);
+            foreach($ugroups as $key => $value) {
+                if (!isset($ugroups_that_can_access_to_tracker[$key])) {
+                    unset($ugroups[$key]);
+                }
+            }   
+        }
+
+        //We store permission for the current field
         $ugroups_permissions[$field->getID()] = array(
                                                       'field' => array(
                                                                        'name'  => $field->getLabel(),
