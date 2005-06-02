@@ -143,7 +143,7 @@ todo "WHAT TO DO TO FINISH THE CODEX INSTALLATION (see $TODO_FILE)"
 #
 rpms_ok=1
 for rpm in openssh-server openssh openssh-clients openssh-askpass \
-   openssl openldap perl perl-DBI perl-CGI gd gcc \
+   openssl openldap perl perl-DBI perl-CGI perl-suidperl gd gcc \
    sendmail telnet bind ntp samba python php php-mysql php-ldap enscript \
    bind python-devel rcs sendmail-cf
 do
@@ -302,14 +302,6 @@ echo "Installing wu-ftpd..."
 cd ${RPMS_DIR}/wu-ftpd
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh --force ${newest_rpm}/wu-ftpd*.i386.rpm
-
-# -> perlsuid
-echo "Removing Perl suid if any..."
-$RPM -e --nodeps perl-suidperl 2>/dev/null
-echo "Installing Perl suid..."
-cd ${RPMS_DIR}/perl-suidperl
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --force ${newest_rpm}/perl-suidperl*.i386.rpm
 
 # -> Perl DBD for MySQL
 echo "Removing Redhat Perl DBD MySQL if any..."
