@@ -432,10 +432,12 @@ if ( $project->usesTracker() ) {
 		echo '<br><i>'.$Language->getText('include_project_home','no_trackers_accessible').'</i>';
 	} else {
 		for ($j = 0; $j < count($at_arr); $j++) {
+                    if ($at_arr[$j]->userCanView()) {
 			echo '<br><i>-&nbsp;
 			<a href="/tracker/?atid='. $at_arr[$j]->getID() .
-			'&group_id='.$group_id.'&func=browse">' .
-			$at_arr[$j]->getName() .'</a></i>';
+                            '&group_id='.$group_id.'&func=browse">' .
+                            $at_arr[$j]->getName() .'</a></i>';
+                    }
 		}
 	}
 }

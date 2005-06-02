@@ -20,10 +20,12 @@ $UGROUP_NONE=100;
 $UGROUP_ANONYMOUS=1;
 $UGROUP_REGISTERED=2;
 $UGROUP_PROJECT_MEMBERS=3;
-$UGROUP_PROJECT_ADMINS=4;
+$UGROUP_PROJECT_ADMIN=4;
 $UGROUP_FILE_MANAGER_ADMIN=11;
 $UGROUP_DOCUMENT_TECH=12;
 $UGROUP_DOCUMENT_ADMIN=13;
+$UGROUP_WIKI_ADMIN=14;
+$UGROUP_TRACKER_ADMIN=15;
 
 
 // Return members (user_id + user_name) of given user group
@@ -61,11 +63,11 @@ function ugroup_get_name_from_id($ugroup_id) {
 
 /**
  * Check membership of the user to a specified ugroup
- *
- *
+ * $group_id is necessary for automatic project groups like project member, release admin, etc.
+ * $atid is necessary for trackers since the tracker admin role is different for each tracker.
  * @return true if user is member of the ugroup, false otherwise.
  */
-function ugroup_user_is_member($user_id, $ugroup_id, $group_id) {
+function ugroup_user_is_member($user_id, $ugroup_id, $group_id, $atid=0) {
     // Special Cases
     if ($ugroup_id==$GLOBALS['UGROUP_NONE']) { 
         // Empty group
@@ -88,9 +90,17 @@ function ugroup_user_is_member($user_id, $ugroup_id, $group_id) {
     } else if ($ugroup_id==$GLOBALS['UGROUP_DOCUMENT_TECH']) {
         // Document tech
         if (user_ismember($group_id,'D1')) { return true; }
-    } else if ($ugroup_id==$GLOBALS['UGROUP_PROJECT_ADMINS']) {
+    } else if ($ugroup_id==$GLOBALS['UGROUP_WIKI_ADMIN']) {
+        // Wiki admins
+        if (user_ismember($group_id,'W2')) { return true; }
+    } else if ($ugroup_id==$GLOBALS['UGROUP_PROJECT_ADMIN']) {
         // Project admins
         if (user_ismember($group_id,'A')) { return true; }
+    } else if ($ugroup_id==$GLOBALS['UGROUP_TRACKER_ADMIN']) {
+        // Tracker admins
+        $group = group_get_object($group_id);	
+        $at = new ArtifactType($group, $atid);
+        return $at->userIsAdmin();
     } else { 
         // Normal ugroup
         $sql="SELECT * from ugroup_user where ugroup_id='$ugroup_id' and user_id='$user_id'";

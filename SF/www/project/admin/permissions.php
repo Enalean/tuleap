@@ -27,6 +27,8 @@
 
 require_once('www/project/admin/ugroup_utils.php');
 require_once('www/project/admin/project_admin_utils.php');
+require_once('common/tracker/ArtifactType.class');
+require_once('common/wiki/lib/WikiPage.class');
 
 $Language->loadLanguageMsg('project/project');
 
@@ -48,17 +50,17 @@ function permission_get_name($permission_type) {
     } else if ($permission_type=='WIKIPAGE_READ') {
         return $Language->getText('project_admin_permissions','wiki_access');
     } else if ($permission_type=='TRACKER_FIELD_SUBMIT') {
-        return $Language->getText('project_admin_permissions','field_submit'); //TODO
+        return $Language->getText('project_admin_permissions','tracker_field_submit');
     } else if ($permission_type=='TRACKER_FIELD_READ') {
-        return $Language->getText('project_admin_permissions','field_read');   //TODO
+        return $Language->getText('project_admin_permissions','tracker_field_read');
     } else if ($permission_type=='TRACKER_FIELD_UPDATE') {
-        return $Language->getText('project_admin_permissions','field_update'); //TODO
+        return $Language->getText('project_admin_permissions','tracker_field_update');
     } else if ($permission_type=='TRACKER_ACCESS_SUBMITTER') {
-        return $Language->getText('project_admin_permissions','tracker_access_submitter'); //TODO
+        return $Language->getText('project_admin_permissions','tracker_submitter_access');
     } else if ($permission_type=='TRACKER_ACCESS_ASSIGNEE') {
-        return $Language->getText('project_admin_permissions','tracker_access_assignee');  //TODO
+        return $Language->getText('project_admin_permissions','tracker_assignee_access');
     } else if ($permission_type=='TRACKER_ACCESS_FULL') {
-        return $Language->getText('project_admin_permissions','tracker_full_access'); //TODO
+        return $Language->getText('project_admin_permissions','tracker_full_access');
     } else return $permission_type;
 }
 
@@ -75,9 +77,9 @@ function permission_get_object_type($permission_type,$object_id) {
     } else if ($permission_type=='DOCGROUP_READ') {
         return 'docgroup';
     } else if ($permission_type=='WIKI_READ') {
-        return "wiki ";
+        return 'wiki';
     } else if ($permission_type=='WIKIPAGE_READ') {
-        return "wikipage";
+        return 'wikipage';
     } else if ($permission_type=='TRACKER_FIELD_SUBMIT') {
         return 'field';
     } else if ($permission_type=='TRACKER_FIELD_READ') {
@@ -97,30 +99,29 @@ function permission_get_object_type($permission_type,$object_id) {
  * Return the name of a given object
  */
 function permission_get_object_name($permission_type,$object_id) {
+    global $Language,$group_id;
+
     if ($permission_type=='PACKAGE_READ') {
         return file_get_package_name_from_id($object_id);
     } else if ($permission_type=='RELEASE_READ') {
         return file_get_release_name_from_id($object_id);
     } else if ($permission_type=='DOCUMENT_READ') {
-        return doc_get_title_from_id($object_id);
+        return util_unconvert_htmlspecialchars(doc_get_title_from_id($object_id));
     } else if ($permission_type=='DOCGROUP_READ') {
         return doc_get_docgroupname_from_id($object_id);
     } else if ($permission_type=='WIKI_READ') {
-        return "$object_id"; //TODO
+        return $Language->getText('project_admin_permissions','wiki');
     } else if ($permission_type=='WIKIPAGE_READ') {
-        return "$object_id"; //TODO
-    } else if ($permission_type=='TRACKER_FIELD_SUBMIT') {
-        return "$object_id"; //TODO
-    } else if ($permission_type=='TRACKER_FIELD_READ') {
-        return "$object_id"; //TODO
-    } else if ($permission_type=='TRACKER_FIELD_UPDATE') {
-        return "$object_id"; //TODO
-    } else if ($permission_type=='TRACKER_ACCESS_SUBMITTER') {
-        return "$object_id"; //TODO
-    } else if ($permission_type=='TRACKER_ACCESS_ASSIGNEE') {
-        return "$object_id"; //TODO
-    } else if ($permission_type=='TRACKER_ACCESS_FULL') {
-        return "$object_id"; //TODO
+        $wikipage= new WikiPage($object_id);
+        return $wikipage->getPagename();
+    } else if (strpos($permission_type, 'TRACKER_ACCESS') === 0) { 
+        $group = group_get_object($group_id);	
+        $at = new ArtifactType($group, $object_id);
+        return $at->getName();
+    } else if (strpos($permission_type, 'TRACKER_FIELD') === 0) { 
+        $group = group_get_object($group_id);	
+        $at = new ArtifactType($group, $object_id);
+        return $at->getName();
     } else return "$object_id";
 }
 
@@ -156,18 +157,10 @@ function permission_user_allowed_to_change($group_id, $permission_type, $object_
         return (user_ismember($group_id,'W2'));
     } else if ($permission_type=='WIKIPAGE_READ') {
         return (user_ismember($group_id,'W2'));
-    } else if ($permission_type=='TRACKER_FIELD_SUBMIT') {
-        return false; //TODO
-    } else if ($permission_type=='TRACKER_FIELD_READ') {
-        return false; //TODO
-    } else if ($permission_type=='TRACKER_FIELD_UPDATE') {
-        return false; //TODO
-    } else if ($permission_type=='TRACKER_ACCESS_SUBMITTER') {
-        return false; //TODO
-    } else if ($permission_type=='TRACKER_ACCESS_ASSIGNEE') {
-        return false; //TODO
-    } else if ($permission_type=='TRACKER_ACCESS_FULL') {
-        return false; //TODO
+    } else if (strpos($permission_type, 'TRACKER') === 0) { // Starts with 'TRACKER'
+        $group = group_get_object($group_id);	
+        $at = new ArtifactType($group, $object_id);
+        return $at->userIsAdmin();
     }
     return false;
 }
@@ -214,9 +207,10 @@ function permission_exist($permission_type, $object_id) {
  * @param $object_id is the ID of the object we want to access (e.g. a docid)
  * @param $user_id is the ID of the user that want to access the object
  * @param $group_id is the group_id the object belongs to; useful for project-specific authorized ugroups (e.g. 'project admins')
+ * @param $atid is useful for tracker specific permissions (tracker access or field).
  * @return true if user is authorized, false otherwise.
  */
-function permission_is_authorized($permission_type, $object_id, $user_id, $group_id) {
+function permission_is_authorized($permission_type, $object_id, $user_id, $group_id, $atid=0) {
 
     // Super-user has all rights...
     if (user_is_super_user()) return true;
@@ -229,7 +223,7 @@ function permission_is_authorized($permission_type, $object_id, $user_id, $group
     // permissions set for this object.
     while ($row = db_fetch_array($res)) {
         // should work even for anonymous users
-        if (ugroup_user_is_member($user_id, $row['ugroup_id'], $group_id)) {
+        if (ugroup_user_is_member($user_id, $row['ugroup_id'], $group_id, $atid)) {
             return true;
         }
     }

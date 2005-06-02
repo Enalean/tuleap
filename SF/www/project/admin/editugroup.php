@@ -274,17 +274,46 @@ function switchMessage(_I)
         $row_num=0;
         
         while ($row = db_fetch_array($res)) {
+            $objname=permission_get_object_name($row['permission_type'],$row['object_id']);
             echo '<TR class="'. util_get_alt_row_color($row_num) .'">';
             echo '<TD>'.permission_get_name($row['permission_type']).'</TD>';
             if ($row['permission_type'] == 'PACKAGE_READ') {
-                echo '<TD>'.$Language->getText('project_admin_editugroup','package').' <a href="/file/admin/editpackagepermissions.php?package_id='.$row['object_id'].'&group_id='.$group_id.'">'.file_get_package_name_from_id($row['object_id']).'</a></TD>';
+                echo '<TD>'.$Language->getText('project_admin_editugroup','package')
+                    .' <a href="/file/admin/editpackagepermissions.php?package_id='
+                    .$row['object_id'].'&group_id='.$group_id.'">'
+                    .$objname.'</a></TD>';
             } else if ($row['permission_type'] == 'RELEASE_READ') {
                 $package_id=file_get_package_id_from_release_id($row['object_id']);
-                echo '<TD>'.$Language->getText('project_admin_editugroup','release').' <a href="/file/admin/editreleasepermissions.php?release_id='.$row['object_id'].'&group_id='.$group_id.'&package_id='.$package_id.'">'.file_get_release_name_from_id($row['object_id']).'</a> ('.$Language->getText('project_admin_editugroup','from_package').' <a href="/file/admin/editreleases.php?package_id='.$package_id.'&group_id='.$group_id.'">'.file_get_package_name_from_id($package_id).'</a>)</TD>';
+                echo '<TD>'.$Language->getText('project_admin_editugroup','release')
+                    .' <a href="/file/admin/editreleasepermissions.php?release_id='.$row['object_id'].'&group_id='.$group_id.'&package_id='.$package_id.'">'
+                    .file_get_release_name_from_id($row['object_id']).'</a> ('
+                    .$Language->getText('project_admin_editugroup','from_package')
+                    .' <a href="/file/admin/editreleases.php?package_id='.$package_id.'&group_id='.$group_id.'">'
+                    .$objname.'</a></TD>';
             } else if ($row['permission_type'] == 'DOCUMENT_READ') {
-                echo '<TD>'.$Language->getText('project_admin_editugroup','document').' <a href="/docman/admin/editdocpermissions.php?docid='.$row['object_id'].'&group_id='.$group_id.'">'.util_unconvert_htmlspecialchars(doc_get_title_from_id($row['object_id'])).'</a></TD>';
+                echo '<TD>'.$Language->getText('project_admin_editugroup','document')
+                    .' <a href="/docman/admin/editdocpermissions.php?docid='.$row['object_id'].'&group_id='.$group_id.'">'
+                    .$objname.'</a></TD>';
             } else if ($row['permission_type'] == 'DOCGROUP_READ') {
-                echo '<TD>'.$Language->getText('project_admin_editugroup','document_group').' <a href="/docman/admin/editdocgrouppermissions.php?doc_group='.$row['object_id'].'&group_id='.$group_id.'">'.doc_get_docgroupname_from_id($row['object_id']).'</a></TD>';
+                echo '<TD>'.$Language->getText('project_admin_editugroup','document_group')
+                    .' <a href="/docman/admin/editdocgrouppermissions.php?doc_group='.$row['object_id'].'&group_id='.$group_id.'">'
+                    .$objname.'</a></TD>';
+            } else if ($row['permission_type'] == 'WIKI_READ') {
+                echo '<TD>'.$Language->getText('project_admin_editugroup','wiki')
+                    .' <a href="/wiki/admin/index.php?view=wikiPerms&group_id='.$group_id.'">'
+                    .$objname.'</a></TD>';
+            } else if ($row['permission_type'] == 'WIKIPAGE_READ') {
+                echo '<TD>'.$Language->getText('project_admin_editugroup','wiki_page')
+                    .' <a href="/wiki/admin/index.php?group_id='.$group_id.'&view=pagePerms&id='.$row['object_id'].'">'
+                    .$objname.'</a></TD>';
+            } else if (strpos($row['permission_type'], 'TRACKER_ACCESS') === 0) {
+                echo '<TD>'.$Language->getText('project_admin_editugroup','tracker') 
+                    .' <a href="/tracker/admin/?func=permissions&perm_type=tracker&group_id='.$group_id.'&atid='.$row['object_id'].'">'
+                    .$objname.'</a></TD>';
+            } else if (strpos($row['permission_type'], 'TRACKER_FIELD') === 0) {
+                echo '<TD>'.$Language->getText('project_admin_editugroup','tracker_field') //XXX Message: field XXX of tracker YYY ???
+                    .' <a href="/tracker/admin/?func=permissions&perm_type=fields&group_id='.$group_id.'&atid='.$row['object_id'].'">' //XXX not objectid (____)
+                    .$objname.'</a></TD>';
             } else {
                 echo '<TD>'.$row['object_id'].'</TD>';
             }

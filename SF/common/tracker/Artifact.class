@@ -60,7 +60,7 @@ class Artifact extends Error {
         }
                 
         //
-        //      make sure this person has permission to view artifacts
+        //      make sure this person has permission to view artifacts belonging to this tracker
         //
         if (!$this->ArtifactType->userCanView()) {
             $this->setError('Artifact: '.$Language->getText('tracker_common_artifact','view_private'));
@@ -76,15 +76,20 @@ class Artifact extends Error {
                 //
                 //      Should verify ArtifactType ID
                 //
-                return true;
             } else {
                 if (!$this->fetchData($data)) {
                     return false;
-                } else {
-                    return true;
                 }
             }
+            //
+            //      make sure this person has permission to view this artifact
+            //
+            if (!$this->userCanView()) {
+                $this->setError('Artifact: '.$Language->getText('tracker_common_artifact','view_private')); //xxx wrong message?
+                return false;
+            }
         }
+        return true;
     }
 
 
@@ -1607,7 +1612,28 @@ class Artifact extends Error {
         
     }
 
-                  
+    
+    /**
+     *	  userCanView - determine if the user can view this artifact.
+     *
+     *	  @param $my_user_id	if not specified, use the current user id..
+     *	  @return boolean	user_can_view.
+     */
+    function userCanView($my_user_id=0) {
+        if (!$my_user_id) {
+            $my_user_id=user_getid();
+        }
+        // xxx what about anonymous users?
+        if (permission_is_authorized('TRACKER_ACCESS_FULL', $this->ArtifactType->getID() , $my_user_id, $this->ArtifactType->Group->getID(), $this->ArtifactType->getID())) {
+            return true;
+        } else if (permission_is_authorized('TRACKER_ACCESS_SUBMITTER', $this->ArtifactType->getID() , $my_user_id, $this->ArtifactType->Group->getID(), $this->ArtifactType->getID())) {
+            if ($my_user_id == $this->getSubmittedBy()) return true;
+        } else if (permission_is_authorized('TRACKER_ACCESS_ASSIGNEE', $this->ArtifactType->getID() , $my_user_id, $this->ArtifactType->Group->getID(), $this->ArtifactType->getID())) {
+            if ($my_user_id == $this->getValue('assigned_to')) return true;
+            if (in_array($my_user_id,$this->getMultiAssignedTo())) return true;
+        } 
+        return false;
+    }          
 }
 
 ?>

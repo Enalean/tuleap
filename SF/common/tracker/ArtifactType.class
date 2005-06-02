@@ -781,11 +781,11 @@ class ArtifactType extends Error {
                 return true;
             } else {
                 if (user_isloggedin()) {
-                    if (permission_is_authorized('TRACKER_ACCESS_FULL', $this->getID() , $my_user_id, $this->Group->getID())) {
+                    if (permission_is_authorized('TRACKER_ACCESS_FULL', $this->getID() , $my_user_id, $this->Group->getID(), $this->getID())) {
                         return true;
-                    } else if (permission_is_authorized('TRACKER_ACCESS_SUBMITTER', $this->getID() , $my_user_id, $this->Group->getID())) {
+                    } else if (permission_is_authorized('TRACKER_ACCESS_SUBMITTER', $this->getID() , $my_user_id, $this->Group->getID(), $this->getID())) {
                         return true;
-                    } else if (permission_is_authorized('TRACKER_ACCESS_ASSIGNEE', $this->getID() , $my_user_id, $this->Group->getID())) {
+                    } else if (permission_is_authorized('TRACKER_ACCESS_ASSIGNEE', $this->getID() , $my_user_id, $this->Group->getID(), $this->getID())) {
                         return true;
                     } 
                 }
