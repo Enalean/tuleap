@@ -601,10 +601,10 @@ Alias /phpMyAdmin /home/httpd/phpMyAdmin
 #
 ScriptAlias /cgi-bin/ "/home/httpd/cgi-bin/"
 
-
+# FollowSymLinks is needed here because of the rewrite rule (otherwise, other CGIs are forbidden...)
 <Directory "/home/httpd/cgi-bin">
     AllowOverride None
-    Options ExecCGI
+    Options ExecCGI FollowSymLinks
     Order allow,deny
     Allow from all
     RedirectMatch permanent /cgi-bin/cvsweb.cgi/(.*) /cvs/viewcvs.php/$1
