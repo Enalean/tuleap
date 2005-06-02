@@ -28,7 +28,7 @@
 require_once('www/project/admin/ugroup_utils.php');
 require_once('www/project/admin/project_admin_utils.php');
 require_once('common/tracker/ArtifactType.class');
-require_once('common/wiki/lib/WikiPage.class');
+#require_once('common/wiki/lib/WikiPage.class');
 
 $Language->loadLanguageMsg('project/project');
 
@@ -112,8 +112,9 @@ function permission_get_object_name($permission_type,$object_id) {
     } else if ($permission_type=='WIKI_READ') {
         return $Language->getText('project_admin_permissions','wiki');
     } else if ($permission_type=='WIKIPAGE_READ') {
-        $wikipage= new WikiPage($object_id);
-        return $wikipage->getPagename();
+        #$wikipage= new WikiPage($object_id);
+        #return $wikipage->getPagename();
+        return "$object_id";
     } else if (strpos($permission_type, 'TRACKER_ACCESS') === 0) { 
         $group = group_get_object($group_id);	
         $at = new ArtifactType($group, $object_id);
