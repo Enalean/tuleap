@@ -276,8 +276,21 @@ function permission_build_field_id($object_id, $field_id) {
 /**
  * @returns array the permissions for the ugroups
  */
-function permission_get_field_tracker_ugroups_permissions($group_id, $object_id) {
-    return permission_get_ugroups_permissions($group_id, $object_id, array('TRACKER_FIELD_READ','TRACKER_FIELD_UPDATE','TRACKER_FIELD_SUBMIT'));
+function permission_get_field_tracker_ugroups_permissions($group_id, $atid, $fields) {
+    $ugroups_permissions = array();
+    foreach($fields as $field) {
+        $fake_id = permission_build_field_id($atid, $field->getID());
+        $ugroups = permission_get_ugroups_permissions($group_id, $fake_id, array('TRACKER_FIELD_READ','TRACKER_FIELD_UPDATE','TRACKER_FIELD_SUBMIT'), false);
+        $ugroups_permissions[$field->getID()] = array(
+                                                      'field' => array(
+                                                                       'name'  => $field->getLabel(),
+                                                                       'id'    => $field->getID(),
+                                                                       'link'  => '/tracker/admin/index.php?group_id='.$group_id.'&atid='.$atid.'&func=display_field_update&field_id='.$field->getID()
+                                                                       ),
+                                                      'ugroups' => $ugroups
+                                                      );
+    }
+    return $ugroups_permissions;
 }
 
 /**
@@ -289,13 +302,22 @@ function permission_get_tracker_ugroups_permissions($group_id, $object_id) {
 /**
  * @returns array the permissions for the ugroups
  */
-function permission_get_ugroups_permissions($group_id, $object_id, $default_permission_types) {
+function permission_get_ugroups_permissions($group_id, $object_id, $permission_types, $use_default_permissions = true) {
    
     //We retrive ugroups (user defined)
     $sql="SELECT u.ugroup_id, u.name, p.permission_type ".
         " FROM permissions p, ugroup u ".
         " WHERE p.ugroup_id = u.ugroup_id ".
-        "       AND p.object_id = '".$object_id."' ";
+        "       AND p.object_id = '".$object_id."' ".
+        "       AND p.permission_type in (";
+    if (count($permission_types) > 0) {
+        $sql .= "'".$permission_types[0]."'";
+        $i = 1;
+        while($i < count($permission_types)) {
+            $sql .= ",'".$permission_types[$i++]."'";
+        }
+    }
+    $sql .= ")";
     $res = db_query($sql);
     if (!$res) {
         return false;
@@ -332,11 +354,11 @@ function permission_get_ugroups_permissions($group_id, $object_id, $default_perm
             " FROM permissions_values pv, ugroup ug ".
             " WHERE ug.ugroup_id = pv.ugroup_id ".
             "       AND pv.permission_type in (";
-        if (count($default_permission_types) > 0) {
-            $sql .= "'".$default_permission_types[0]."'";
+        if (count($permission_types) > 0) {
+            $sql .= "'".$permission_types[0]."'";
             $i = 1;
-            while($i < count($default_permission_types)) {
-                $sql .= ",'".$default_permission_types[$i++]."'";
+            while($i < count($permission_types)) {
+                $sql .= ",'".$permission_types[$i++]."'";
             }
         }
         $sql .= ")";
@@ -354,31 +376,39 @@ function permission_get_ugroups_permissions($group_id, $object_id, $default_perm
                 }
                 //if we have user-defined permissions, 
                 //the default ugroups which don't have user-defined permission have no-access
-                if ($show_default_permissions && $row[3] === "1") {
+                //Only if we have to use default permissions
+                if ($show_default_permissions && $row[3] === "1" && $use_default_permissions) {
                     $return[$row[0]]['permissions'][$row[2]] = 1;
                 }
             }
         }
-
         //Now we look at project ugroups that have no permissions yet
-        $sql="SELECT ugroup_id, name ".
-        " FROM ugroup ".
-        " WHERE group_id = '".$group_id."' ";
+        $sql = "SELECT ugroup_id, name ".
+            " FROM ugroup ".
+            " WHERE group_id = '".$group_id."' ".
+            "       AND ugroup_id NOT IN (";
+        $ugroup_ids = array_keys($return);
+        if (count($ugroup_ids) > 0) {
+            $sql .= "'".$ugroup_ids[0]."'";
+            $i = 1;
+            while($i < count($ugroup_ids)) {
+                $sql .= ",'".$ugroup_ids[$i++]."'";
+            }
+        }
+        $sql .= ")";
         $res = db_query($sql);
         if ($res) {
             while($row = db_fetch_array($res)) {
-                if (!isset($return[$row[0]])) {
-                    $return[$row[0]] = array(
-                                             'ugroup' => array(
-                                                               'id' => $row[0],
-                                                               'name' => $row[1]
-                                                               ),
-                                             'permissions' => array()
-                                             );
-                    //We add link for non-default ugroups
-                    if ($row[0] > 100) {
-                        $return[$row[0]]['ugroup']['link'] = '/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$row[0].'&func=edit';
-                    }
+                $return[$row[0]] = array(
+                                         'ugroup' => array(
+                                                           'id' => $row[0],
+                                                           'name' => $row[1]
+                                                           ),
+                                         'permissions' => array()
+                                         );
+                //We add link for non-default ugroups
+                if ($row[0] > 100) {
+                    $return[$row[0]]['ugroup']['link'] = '/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$row[0].'&func=edit';
                 }
             }
         }
@@ -453,6 +483,19 @@ function permission_clear_all($group_id, $permission_type, $object_id, $log_perm
     }
 }
 
+function permission_clear_all_tracker($group_id, $object_id) {
+    permission_clear_all($group_id, 'TRACKER_ACCESS_FULL', $object_id, false);
+    permission_clear_all($group_id, 'TRACKER_ACCESS_ASSIGNEE', $object_id, false);
+    permission_clear_all($group_id, 'TRACKER_ACCESS_SUBMITTER', $object_id, false);
+}
+
+function permission_clear_all_fields_tracker($group_id, $tracker_id, $field_id) {
+    $object_id = permission_build_field_id($tracker_id, $field_id);
+    permission_clear_all($group_id, 'TRACKER_FIELD_SUBMIT', $object_id, false);
+    permission_clear_all($group_id, 'TRACKER_FIELD_READ', $object_id, false);
+    permission_clear_all($group_id, 'TRACKER_FIELD_UPDATE', $object_id, false);
+}
+
 
 /**
  * Clear all permissions for the given ugroup
@@ -478,11 +521,11 @@ function permission_clear_ugroup($group_id, $ugroup_id) {
  * (why +1? because there might be no permission, but no error either,
  *  so '0' means error, and 1 means no error but no permission)
  */
-function permission_clear_ugroup_object($group_id, $ugroup_id, $object_id) {
+function permission_clear_ugroup_object($group_id, $permission_type, $ugroup_id, $object_id) {
     if (!user_ismember($group_id,'A')) { 
         return false;
     }
-    $sql = "DELETE FROM permissions WHERE ugroup_id='$ugroup_id' AND object_id='$object_id'";
+    $sql = "DELETE FROM permissions WHERE ugroup_id='$ugroup_id' AND object_id='$object_id' AND permission_type='$permission_type'";
     $res=db_query($sql);
     if (!$res) { 
         return false;
@@ -491,13 +534,20 @@ function permission_clear_ugroup_object($group_id, $ugroup_id, $object_id) {
     }
 }
 
+function permission_clear_ugroup_tracker($group_id, $ugroup_id, $object_id) {
+    permission_clear_ugroup_object($group_id, 'TRACKER_ACCESS_FULL',      $ugroup_id, $object_id);//TODO: traitements des erreurs
+    permission_clear_ugroup_object($group_id, 'TRACKER_ACCESS_SUBMITTER', $ugroup_id, $object_id);//TODO: traitements des erreurs
+    permission_clear_ugroup_object($group_id, 'TRACKER_ACCESS_ASSIGNEE',  $ugroup_id, $object_id);//TODO: traitements des erreurs
+}
+
+
 /**
  * Effectively update permissions for the given object.
  * Access rights to this function are checked.
  */
 function permission_add_ugroup($group_id, $permission_type, $object_id, $ugroup_id) {
     if (!permission_user_allowed_to_change($group_id, $permission_type)) { return false;}
-    $sql = "INSERT INTO permissions (permission_type, object_id, ugroup_id) VALUES ('$permission_type', $object_id, $ugroup_id)";
+    $sql = "INSERT INTO permissions (permission_type, object_id, ugroup_id) VALUES ('$permission_type', '$object_id', $ugroup_id)";
     $res=db_query($sql);
     if (!$res) {
         return false;

@@ -503,16 +503,16 @@ tracker_include_type	notify_me	I want to be notified when:
 
 
 
-tracker_include_type	manage_permissions	Manage permissions
-tracker_include_type	manage_permissions_title	 - Manage permissions
+tracker_include_type	manage_permissions	Manage&nbsp;Permissions
+tracker_include_type	manage_permissions_title	 - Manage Permissions
 tracker_include_type	define_manage_permissions	Set permissions on the tracker and his fields
 
-tracker_include_type	manage_tracker_permissions	Manage tracker permissions
-tracker_include_type	manage_tracker_permissions_title	 - Manage tracker permissions
+tracker_include_type	manage_tracker_permissions	Manage Tracker Permissions
+tracker_include_type	manage_tracker_permissions_title	 - Manage Tracker Permissions
 tracker_include_type	define_manage_tracker_permissions	Set permissions on the tracker
 
-tracker_include_type	manage_fields_tracker_permissions	Manage fields permissions
-tracker_include_type	manage_fields_tracker_permissions_title	 - Manage fields permissions
+tracker_include_type	manage_fields_tracker_permissions	Manage Fields Permissions
+tracker_include_type	manage_fields_tracker_permissions_title	 - Manage Fields Permissions
 tracker_include_type	define_manage_fields_tracker_permissions	Set permissions on the tracker fields
 
 #
@@ -698,15 +698,16 @@ tracker_common_types	event_NEW_ARTIFACT_desc	A new artifact has been submitted
 #
 #
 tracker_admin_permissions	and	--
-tracker_admin_permissions	permissions	Permissions
+tracker_admin_permissions	fields_tracker_intro	<div style='color:orange'>xxx INTRO FIELDS xxx</div>
+tracker_admin_permissions	fields_tracker_toggle	<div>You can toggle to a <a href='$1'>'field' view</a> or a <a href='$2'>'users group' view</a>.</div>
+tracker_admin_permissions	permissions	Access Permissions
 tracker_admin_permissions	TRACKER_ACCESS_FULL	Access
-tracker_admin_permissions	TRACKER_ACCESS_ASSIGNEE	'Submitter' access
-tracker_admin_permissions	TRACKER_ACCESS_SUBMITTER	'Assignee' access
-tracker_admin_permissions	TRACKER_ACCESS_ASSIGNEE_AND_TRACKER_ACCESS_SUBMITTER	'Submitter' and 'Assignee' access
-tracker_admin_permissions	TRACKER_FIELD_SUBMIT	Can submit
-tracker_admin_permissions	TRACKER_FIELD_READ	Can only read
-tracker_admin_permissions	TRACKER_FIELD_UPDATE	Can read and update
-tracker_admin_permissions	TRACKER_NONE	None
+tracker_admin_permissions	TRACKER_ACCESS_ASSIGNEE	'Submitter' Access
+tracker_admin_permissions	TRACKER_ACCESS_SUBMITTER	'Assignee' Access
+tracker_admin_permissions	TRACKER_ACCESS_ASSIGNEE_AND_TRACKER_ACCESS_SUBMITTER	'Submitter' and 'Assignee' Access
+tracker_admin_permissions	TRACKER_FIELD_SUBMIT	Can Submit
+tracker_admin_permissions	TRACKER_FIELD_READ	Read Only
+tracker_admin_permissions	TRACKER_FIELD_UPDATE	Update
+tracker_admin_permissions	TRACKER_NONE	--
 tracker_admin_permissions	tracker_intro	<div>Permissions trackers allow access to artifacts. Five permissions types are available :<dl><dt>Access</dt><dd>Members of this group <strong>can access</strong> to artifacts</dd><dt>'Assignee' access</dt><dd>Members of this group <strong>can only access</strong> to artifacts where assignee is also member of this group</dd><dt>'Submitter' access</dt><dd>Members of this group <strong>can only access</strong> to artifacts where submitter is also member of this group</dd><dt>'Submitter' and 'Assignee' access</dt><dd>Members of this group <strong>can only access</strong> to artifacts where submitter or assignee are also members of this group</dd><dt>No access</dt><dd>Members of this group <strong>can't access</strong> to artifacts</dd></dl><div><strong>Warning :</strong><ul><li>If a user is member of more than one group, then the less restrictive permissions will be given for this user.</li><li>You can't set other permissions than 'Access'/'No access' to 'Anonymous users' group.</li></div></div>
-tracker_admin_permissions	ugroup	Users group
-tracker_admin_permissions	fields_tracker_intro	xxx INTRO FIELDS xxx
+tracker_admin_permissions	ugroup	Users Group
