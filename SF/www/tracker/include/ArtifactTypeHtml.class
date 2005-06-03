@@ -454,19 +454,6 @@ EOL;
                 </form>
 EOS;
 
-            //The permission form
-            $html .= "<form name='form_tracker_permissions' action='".$url_action_with_group_first."' method='post'>";
-            $html .= "<div>";
-            $html .= '<input type="hidden" name="selected_id" value="'.($selected_id?$selected_id:"false").'" />';
-            //intro
-            $html .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'fields_tracker_intro');
-            
-            //We display 'group_first' or 'field_first'
-            $html .= $GLOBALS['Language']->getText('tracker_admin_permissions', 
-                                                   'fields_tracker_toggle', 
-                                                   array($url_action_without_group_first."&group_first=0",
-                                                         $url_action_without_group_first."&group_first=1"));
-
             if ($group_first) {
                 //We reorganize the associative array
                 $tablo = $ugroups_permissions;
@@ -513,108 +500,125 @@ EOS;
                                $GLOBALS['Language']->getText('tracker_admin_permissions', 'permissions')) ;
             }
             reset($ugroups_permissions);
+            list($key, $value) = each($ugroups_permissions);
 
 
             //header
-            $html .= html_build_list_table_top($header);
-
-            //body
-            $i = 0;
-
-            //The select box for the ugroups or fields (depending $group_first)
-            $html .= "\n<tr class='". util_get_alt_row_color($i++)."'>";
-            list($key, $value) = each($ugroups_permissions);
-            $html .= "<td rowspan='".(count($ugroups_permissions[$key]['related_parts'])+1)."' style='vertical-align:top;'>";
-            $html .= "<select onchange=\"changeFirstPartId(this.options[this.selectedIndex].value);\">";
-            reset($ugroups_permissions);
-            foreach($ugroups_permissions as $part_permissions) {
-                if ($selected_id === false) {
-                    $selected_id = $part_permissions['values']['id'];
-                }                   
-                $html .= "<option value='".$part_permissions['values']['id']."' ";
-                if ($part_permissions['values']['id'] === $selected_id) {
-                    $first_part    = $part_permissions['values'];
-                    $related_parts = $part_permissions['related_parts'];
-                    $html .= $attributes_for_selected;
-                }
-                $html .= " >";
-                $html .= $part_permissions['values']['name'];
-                $html .= "</value>";
-            }
-            $html .= "</select>";
-            $html .= "</td>";
-            $is_first = true;
-
-            //The permissions for the current item (field or ugroup, depending $group_id)
-            foreach($related_parts as $ugroup_permissions) {
-                $second_part = $ugroup_permissions['values'];
-                $permissions = $ugroup_permissions['permissions'];
+            if (($group_first && count($ugroups_permissions) < 1) || (!$group_first && count($ugroups_permissions[$key]['related_parts']))) {
+                $html .= "<em>There is no group which can access to this tracker</em>";
+            } else {
                 
-                //The group
-                if (!$is_first) {
-                    $html .= "\n<tr class='". util_get_alt_row_color($i++)."'>";
-                } else {
-                    $is_first = false;
-                }
-                $html .= '<td>';
-                $name  = $second_part['name']; //.'('.$first_part['id'].'#'.$second_part['id'].')';
-                if (isset($second_part['link'])) {
-                    $html .= "<a href='".$second_part['link']."'>";
-                    $html .= $name;
-                    $html .= "</a>";
-                } else {
-                    $html .= $name;
-                }
-                $html .= '</td>';
+                //The permission form
+                $html .= "<form name='form_tracker_permissions' action='".$url_action_with_group_first."' method='post'>";
+                $html .= "<div>";
+                $html .= '<input type="hidden" name="selected_id" value="'.($selected_id?$selected_id:"false").'" />';
+                //intro
+                $html .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'fields_tracker_intro');
                 
-                //The permissions
-                {
-                    //Submit permission
-                    $html .= "<td style='text-align:center;'>";
-                    if ($group_first) {
-                        $name_of_variable = "permissions[".$second_part['id']."][".$first_part['id']."]";
-                    } else {
-                        $name_of_variable = "permissions[".$first_part['id']."][".$second_part['id']."]";
+                //We display 'group_first' or 'field_first'
+                $html .= $GLOBALS['Language']->getText('tracker_admin_permissions', 
+                                                       'fields_tracker_toggle', 
+                                                       array($url_action_without_group_first."&group_first=0",
+                                                             $url_action_without_group_first."&group_first=1"));
+
+                $html .= html_build_list_table_top($header);
+                
+                //body
+                $i = 0;
+                
+                //The select box for the ugroups or fields (depending $group_first)
+                $html .= "\n<tr class='". util_get_alt_row_color($i++)."'>";
+                $html .= "<td rowspan='".(count($ugroups_permissions[$key]['related_parts'])+1)."' style='vertical-align:top;'>";
+                $html .= "<select onchange=\"changeFirstPartId(this.options[this.selectedIndex].value);\">";
+                foreach($ugroups_permissions as $part_permissions) {
+                    if ($selected_id === false) {
+                        $selected_id = $part_permissions['values']['id'];
+                    }                   
+                    $html .= "<option value='".$part_permissions['values']['id']."' ";
+                    if ($part_permissions['values']['id'] === $selected_id) {
+                        $first_part    = $part_permissions['values'];
+                        $related_parts = $part_permissions['related_parts'];
+                        $html .= $attributes_for_selected;
                     }
-                    $html .= "<input type='hidden' name='".$name_of_variable."[submit]' value='off'/>";//TODO verifier différents navigateurs
-                    $can_submit_and_update = (($group_first 
-                                               && $second_part['id'] != 1 
-                                               && $second_part['id'] != 6 
-                                               && $second_part['id'] != 7)
-                                              ||
-                                              (!$group_first 
-                                               && $first_part['id'] != 1 
-                                               && $first_part['id'] != 6 
-                                               && $first_part['id'] != 7));
-                    
-                    $html .= "<input type='checkbox' name=\"".$name_of_variable.'[submit]"  '.
-                        (isset($permissions[$submit_permission])?"checked='checked'":"")." ".($can_submit_and_update?"":"disabled='disabled'")." /> ";
-                    $html .= "</td><td>";
-                    
-                    
-                    //$html .= " ".$GLOBALS['Language']->getText('tracker_admin_permissions', 'and')." ";
-                    //Other permissions (R/W)
-                    $html .= "<select name='".$name_of_variable."[others]' >";
-                    $html .= "<option value='100' ".(!isset($permissions[$read_permission]) && !isset($permissions[$update_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $none)."</option>";
-                    $html .= "<option value='0' ".(isset($permissions[$read_permission]) && !isset($permissions[$update_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $read_permission)."</option>";
-                    
-                    if ($can_submit_and_update) {
-                        $html .= "<option value='1' ".(isset($permissions[$update_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $update_permission)."</option>";
-                    }
-                    $html .= "</select>";
-                    
+                    $html .= " >";
+                    $html .= $part_permissions['values']['name'];
+                    $html .= "</value>";
                 }
+                $html .= "</select>";
                 $html .= "</td>";
-                $html .= "</tr>\n";
+                $is_first = true;
+                
+                //The permissions for the current item (field or ugroup, depending $group_id)
+                foreach($related_parts as $ugroup_permissions) {
+                    $second_part = $ugroup_permissions['values'];
+                    $permissions = $ugroup_permissions['permissions'];
+                    
+                    //The group
+                    if (!$is_first) {
+                        $html .= "\n<tr class='". util_get_alt_row_color($i++)."'>";
+                    } else {
+                        $is_first = false;
+                    }
+                    $html .= '<td>';
+                    $name  = $second_part['name']; //.'('.$first_part['id'].'#'.$second_part['id'].')';
+                    if (isset($second_part['link'])) {
+                        $html .= "<a href='".$second_part['link']."'>";
+                        $html .= $name;
+                        $html .= "</a>";
+                    } else {
+                        $html .= $name;
+                    }
+                    $html .= '</td>';
+                    
+                    //The permissions
+                    {
+                        //Submit permission
+                        $html .= "<td style='text-align:center;'>";
+                        if ($group_first) {
+                            $name_of_variable = "permissions[".$second_part['id']."][".$first_part['id']."]";
+                        } else {
+                            $name_of_variable = "permissions[".$first_part['id']."][".$second_part['id']."]";
+                        }
+                        $html .= "<input type='hidden' name='".$name_of_variable."[submit]' value='off'/>";//TODO verifier différents navigateurs
+                        $can_submit_and_update = (($group_first 
+                                                   && $second_part['id'] != 1 
+                                                   && $second_part['id'] != 6 
+                                                   && $second_part['id'] != 7)
+                                                  ||
+                                                  (!$group_first 
+                                                   && $first_part['id'] != 1 
+                                                   && $first_part['id'] != 6 
+                                                   && $first_part['id'] != 7));
+                        
+                        $html .= "<input type='checkbox' name=\"".$name_of_variable.'[submit]"  '.
+                            (isset($permissions[$submit_permission])?"checked='checked'":"")." ".($can_submit_and_update?"":"disabled='disabled'")." /> ";
+                        $html .= "</td><td>";
+                        
+                        
+                        //$html .= " ".$GLOBALS['Language']->getText('tracker_admin_permissions', 'and')." ";
+                        //Other permissions (R/W)
+                        $html .= "<select name='".$name_of_variable."[others]' >";
+                        $html .= "<option value='100' ".(!isset($permissions[$read_permission]) && !isset($permissions[$update_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $none)."</option>";
+                        $html .= "<option value='0' ".(isset($permissions[$read_permission]) && !isset($permissions[$update_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $read_permission)."</option>";
+                        
+                        if ($can_submit_and_update) {
+                            $html .= "<option value='1' ".(isset($permissions[$update_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $update_permission)."</option>";
+                        }
+                        $html .= "</select>";
+                        
+                    }
+                    $html .= "</td>";
+                    $html .= "</tr>\n";
+                }
+                
+                //end of table
+                $html .= "</table>";
+                $GLOBALS['Language']->loadLanguageMsg('project/project');
+                $html .= "<input type='submit' name='update' value=\"".$GLOBALS['Language']->getText('project_admin_permissions','submit_perm')."\" />";
+                //{{{20050602 NTY: removed. what is default permissions ???
+                //$html .= "<input type='submit' name='reset' value=\"".$GLOBALS['Language']->getText('project_admin_permissions','reset_to_def')."\" />";
+                //}}}
             }
-            
-            //end of table
-            $html .= "</table>";
-            $GLOBALS['Language']->loadLanguageMsg('project/project');
-            $html .= "<input type='submit' name='update' value=\"".$GLOBALS['Language']->getText('project_admin_permissions','submit_perm')."\" />";
-            //{{{20050602 NTY: removed. what is default permissions ???
-            //$html .= "<input type='submit' name='reset' value=\"".$GLOBALS['Language']->getText('project_admin_permissions','reset_to_def')."\" />";
-            //}}}
             $html .= "</div></form>";
             $html .= "<p>";
             $html .= $GLOBALS['Language']->getText('project_admin_permissions',
