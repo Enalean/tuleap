@@ -343,7 +343,7 @@ function permission_get_field_tracker_ugroups_permissions($group_id, $atid, $fie
  * @returns array the permissions for the ugroups
  */
 function permission_get_tracker_ugroups_permissions($group_id, $object_id) {
-    return permission_get_ugroups_permissions($group_id, $object_id, array('TRACKER_ACCESS_FULL','TRACKER_ACCESS_ASSIGNEE','TRACKER_ACCESS_SUBMITTER'));
+    return permission_get_ugroups_permissions($group_id, $object_id, array('TRACKER_ACCESS_FULL','TRACKER_ACCESS_ASSIGNEE','TRACKER_ACCESS_SUBMITTER'), false);
 }
 /**
  * @returns array the permissions for the ugroups

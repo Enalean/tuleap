@@ -715,5 +715,10 @@ tracker_admin_permissions	TRACKER_FIELD_SUBMIT	Can Submit
 tracker_admin_permissions	TRACKER_FIELD_READ	Read Only
 tracker_admin_permissions	TRACKER_FIELD_UPDATE	Update
 tracker_admin_permissions	TRACKER_NONE	--
+tracker_admin_permissions	tracker_ignore_g_anon_full	<p>Ignoring group $1 because anonymous users can access to all artifacts</p>
+tracker_admin_permissions	tracker_ignore_g_regis_full	<p>Ignoring group $1 because registered users can access to all artifacts</p>
+tracker_admin_permissions	tracker_ignore_g_regis_assignee	<p>Ignoring group $1 because registered users can access to artifacts assigned to group</p>
+tracker_admin_permissions	tracker_ignore_g_regis_submitter	<p>Ignoring group $1 because registered users can access to artifacts submitted by group</p>
+tracker_admin_permissions	tracker_ignore_g_regis_submitter_assignee	<p>Ignoring group $1 because registered users can access to artifacts assigned to or submitted by group</p>
 tracker_admin_permissions	tracker_intro	<div></div>
 tracker_admin_permissions	ugroup	Users Group

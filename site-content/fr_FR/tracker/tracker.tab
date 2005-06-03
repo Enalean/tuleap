@@ -713,12 +713,17 @@ tracker_admin_permissions	ignore_g_regis_submit	<p>Le groupe $1 est ignoré car l
 tracker_admin_permissions	ignore_g_regis_update	<p>Le groupe $1 est ignoré car le groupe registered users peut mettre à jour</p>
 tracker_admin_permissions	permissions	Permissions d'Accès
 tracker_admin_permissions	TRACKER_ACCESS_FULL	Accès à tous les artefacts
-tracker_admin_permissions	TRACKER_ACCESS_ASSIGNEE	Accès aux artifacts assignés au groupe
+tracker_admin_permissions	TRACKER_ACCESS_ASSIGNEE	Accès aux artefacts assignés au groupe
 tracker_admin_permissions	TRACKER_ACCESS_SUBMITTER	Accès aux artefacts soumis par le groupe
 tracker_admin_permissions	TRACKER_ACCESS_ASSIGNEE_AND_TRACKER_ACCESS_SUBMITTER	Accès aux artifacts assignés au ou soumis par le groupe
 tracker_admin_permissions	TRACKER_FIELD_SUBMIT	Peut Soummettre
 tracker_admin_permissions	TRACKER_FIELD_READ	Lecture Seule
 tracker_admin_permissions	TRACKER_FIELD_UPDATE	Mise à Jour
 tracker_admin_permissions	TRACKER_NONE	--
+tracker_admin_permissions	tracker_ignore_g_anon_full	<p>Le groupe $1 est ignoré car le groupe anonymous users a accès à tous les artefacts</p>
+tracker_admin_permissions	tracker_ignore_g_regis_full	<p>Le groupe $1 est ignoré car le groupe registered users a accès à tous les artefacts</p>
+tracker_admin_permissions	tracker_ignore_g_regis_assignee	<p>Le groupe $1 est ignoré car le groupe registered users a accès aux artefacts assignés au groupe</p>
+tracker_admin_permissions	tracker_ignore_g_regis_submitter	<p>Le groupe $1 est ignoré car le groupe registered users a accès aux artefacts soumis par le groupe</p>
+tracker_admin_permissions	tracker_ignore_g_regis_submitter_assignee	<p>Le groupe $1 est ignoré car le groupe registered users a accès aux artifacts assignés au ou soumis par le groupe</p>
 tracker_admin_permissions	tracker_intro	<div></div>
 tracker_admin_permissions	ugroup	Groupe d'Utilisateurs
