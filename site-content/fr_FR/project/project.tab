@@ -290,6 +290,8 @@ project_admin_utils	mass_change	Mise à jour massive dans un outil de suivi
 project_admin_utils	import	Importation de données
 # There must be one message here for each return value of
 # the permission_get_object_type function in www/project/admin/permissions.php
+project_admin_utils	perm_reset_for_field	Réinitialisation des permissions pour le champ $1
+project_admin_utils	perm_reset_for_tracker	Réinitialisation des permissions pour l'outil de suivi $1
 project_admin_utils	perm_reset_for_package	Réinitialisation des permissions pour le paquet $1
 project_admin_utils	perm_reset_for_release	Réinitialisation des permissions pour la version $1
 project_admin_utils	perm_reset_for_document	Réinitialisation des permissions pour le document $1
@@ -297,6 +299,8 @@ project_admin_utils	perm_reset_for_docgroup	Réinitialisation des permissions pou
 project_admin_utils	perm_reset_for_wiki	Réinitialisation des permissions pour le wiki $1
 project_admin_utils	perm_reset_for_wikipage	Réinitialisation des permissions pour la page wiki $1
 project_admin_utils	perm_reset_for_object	Réinitialisation des permissions pour l'objet $1
+project_admin_utils	perm_granted_for_field	Permission accordée pour le champ $1
+project_admin_utils	perm_granted_for_tracker	Permission accordée pour l'outil de suivi $1
 project_admin_utils	perm_granted_for_package	Permission accordée pour le paquet $1
 project_admin_utils	perm_granted_for_release	Permission accordée pour la version $1
 project_admin_utils	perm_granted_for_document	Permission accordée pour le document $1

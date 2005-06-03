@@ -285,6 +285,8 @@ project_admin_utils	mass_change	Tracker mass change
 project_admin_utils	import	Data import
 # There must be one message here for each return value of
 # the permission_get_object_type function in www/project/admin/permissions.php
+project_admin_utils	perm_reset_for_field	Permission reset for field $1
+project_admin_utils	perm_reset_for_tracker	Permission reset for tracker $1
 project_admin_utils	perm_reset_for_package	Permission reset for package $1
 project_admin_utils	perm_reset_for_release	Permission reset for release $1
 project_admin_utils	perm_reset_for_document	Permission reset for document $1
@@ -292,6 +294,8 @@ project_admin_utils	perm_reset_for_docgroup	Permission reset for document group 
 project_admin_utils	perm_reset_for_wiki	Permission reset for wiki $1
 project_admin_utils	perm_reset_for_wikipage	Permission reset for wiki page $1
 project_admin_utils	perm_reset_for_object	Permission reset for object $1
+project_admin_utils	perm_granted_for_field	Permission granted for field $1
+project_admin_utils	perm_granted_for_tracker	Permission granted for tracker $1
 project_admin_utils	perm_granted_for_package	Permission granted for package $1
 project_admin_utils	perm_granted_for_release	Permission granted for release $1
 project_admin_utils	perm_granted_for_document	Permission granted for document $1
