@@ -524,7 +524,7 @@ EOS;
             //The select box for the ugroups or fields (depending $group_first)
             $html .= "\n<tr class='". util_get_alt_row_color($i++)."'>";
             list($key, $value) = each($ugroups_permissions);
-            $html .= "<td rowspan='".(count($ugroups_permissions[$key]['related_parts'])+1)."'>";
+            $html .= "<td rowspan='".(count($ugroups_permissions[$key]['related_parts'])+1)."' style='vertical-align:top;'>";
             $html .= "<select onchange=\"changeFirstPartId(this.options[this.selectedIndex].value);\">";
             reset($ugroups_permissions);
             foreach($ugroups_permissions as $part_permissions) {
@@ -595,12 +595,12 @@ EOS;
                     //$html .= " ".$GLOBALS['Language']->getText('tracker_admin_permissions', 'and')." ";
                     //Other permissions (R/W)
                     $html .= "<select name='".$name_of_variable."[others]' >";
+                    $html .= "<option value='100' ".(!isset($permissions[$read_permission]) && !isset($permissions[$update_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $none)."</option>";
                     $html .= "<option value='0' ".(isset($permissions[$read_permission]) && !isset($permissions[$update_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $read_permission)."</option>";
                     
                     if ($can_submit_and_update) {
                         $html .= "<option value='1' ".(isset($permissions[$update_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $update_permission)."</option>";
                     }
-                    $html .= "<option value='100' ".(!isset($permissions[$read_permission]) && !isset($permissions[$update_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $none)."</option>";
                     $html .= "</select>";
                     
                 }
@@ -678,7 +678,8 @@ EOS;
 
                 $html .="<select name='permissions_".$ugroup['id']."' >";
                 $attributes_for_selected = "selected='selected' style='background:#EEE;'"; //TODO: put style in stylesheet
-                $html .= "\n\n<option value='0' ".(isset($permissions[$full_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $full_permission)."</option>";
+                $html .= "<option value='100' ".(count($permissions) == 0?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $none)."</option>";
+                $html .= "<option value='0' ".(isset($permissions[$full_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $full_permission)."</option>";
                 
                 //We don't show specific access permissions for anonymous users
                 if ($ugroup['id'] != 1) {
@@ -686,7 +687,6 @@ EOS;
                     $html .= "<option value='2' ".(!isset($permissions[$assignee_permission]) && isset($permissions[$submitter_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $submitter_permission)."</option>";
                     $html .= "<option value='3' ".(isset($permissions[$assignee_permission]) && isset($permissions[$submitter_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $assignee_permission."_AND_".$submitter_permission)."</option>";
                 }
-                $html .= "<option value='100' ".(count($permissions) == 0?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $none)."</option>";
                 $html .= '</select></td>';
                 $html .= '</tr>';
             }
