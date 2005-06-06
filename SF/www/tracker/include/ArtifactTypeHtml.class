@@ -505,7 +505,7 @@ EOS;
 
             //header
             if (($group_first && count($ugroups_permissions) < 1) || (!$group_first && count($ugroups_permissions[$key]['related_parts']))) {
-                $html .= "<em>There is no group which can access to this tracker</em>";
+                $html .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'fields_no_ugroups');
             } else {
                 
                 //The permission form

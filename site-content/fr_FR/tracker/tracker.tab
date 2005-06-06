@@ -703,6 +703,7 @@ tracker_common_types	event_NEW_ARTIFACT_desc	Un nouvel artefact a été soumis
 #
 #
 tracker_admin_permissions	and	--
+tracker_admin_permissions	fields_no_ugroups	<div><em>Aucun groupe ne peut accéder à ce tracker</em></div>
 tracker_admin_permissions	fields_tracker_intro	<div></div>
 tracker_admin_permissions	fields_tracker_toggle	<div>Vous pouvez basculer vers un <a href='$1'>affichage par champ</a> ou un <a href='$2'>affichage par groupe d'utilisateurs</a>.</div>
 tracker_admin_permissions	ignore_g_anon_read	<p>Le groupe $1 est ignoré car le groupe anonymous users peut lire</p>
