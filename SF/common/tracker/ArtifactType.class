@@ -858,6 +858,26 @@ class ArtifactType extends Error {
 	}
 
 	/**
+	 * Get permissions for all fields based on the ugroups the user is part of
+	 *
+	 */
+	function getFieldPermissions($ugroups) {
+	  $art_field_fact = new ArtifactFieldFactory($this);
+	  $used_fields = $art_field_fact->getAllUsedFields();
+	  $field_perm = array();
+
+	  reset($used_fields);
+	  foreach ($used_fields as $field) {
+	    $perm = $field->getPermission($ugroups,$this->getID());
+	    if ($perm && !empty($perm)) {
+	      $field_perm[$field->getName()] = $perm;
+	    }
+	  }
+
+	  return $field_perm;
+	}
+
+	/**
 	 *  update - use this to update this ArtifactType in the database.
 	 *
 	 *  @param	string	The item name.

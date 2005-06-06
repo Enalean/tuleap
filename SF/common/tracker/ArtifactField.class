@@ -1604,6 +1604,54 @@ class ArtifactField extends Error {
 	    }
 	}
 
+
+	/**
+	 *
+	 *
+	 */
+	function getPermission($ugroups,$group_artifact_id) {
+
+	  //first check specific permissions
+
+	  $sql = "SELECT distinct permission_type FROM permissions WHERE ugroup_id IN (".implode(',',$ugroups).") ".
+	    "AND permission_type LIKE 'TRACKER_FIELD%' ".
+	    "AND object_id = '$group_artifact_id#".$this->field_id."'";
+	  
+	  $res = db_query($sql);
+	  if (db_numrows($res) > 0) $specific_perm = util_result_column_to_array($res);
+
+	  
+
+	  //check if there is someone else who has specific rights
+	  $sql = "SELECT distinct permission_type FROM permissions WHERE ugroup_id NOT IN (".implode(',',$ugroups).") ".
+	    "AND permission_type LIKE 'TRACKER_FIELD%' ".
+	    "AND object_id = '$group_artifact_id#".$this->field_id."'";
+	  
+	  $res = db_query($sql);
+	  if (db_numrows($res) > 0) $non_permission = util_result_column_to_array($res);
+	    
+	  
+	  //finally, check default permissions of dynamic ugroups
+	  $sql = "SELECT distinct permission_type FROM permissions_values WHERE ugroup_id IN (".implode(",",$ugroups).") ".
+	    "AND permission_type LIKE 'TRACKER_FIELD%' ".
+	    "AND is_default = 1";
+	  if (isset($non_permission)) {
+	    $sql .= " AND permission_type NOT IN ('".implode("','",$non_permission)."')";
+	  }
+	  if (isset($specific_perm)) {
+	    $sql .= " AND permission_type NOT IN ('".implode("','",$specific_perm)."')";
+	  }
+
+	  $res = db_query($sql);
+	  if (db_numrows($res) > 0) $dynamic_perm = util_result_column_to_array($res);
+
+	  $ret = array();
+	  if (isset($specific_perm)) $ret = array_merge($ret,$specific_perm);
+	  if (isset($dynamic_perm)) $ret = array_merge($ret,$dynamic_perm);
+
+	  return $ret;
+	}
+
 }
 
 ?>

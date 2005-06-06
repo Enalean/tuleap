@@ -55,6 +55,38 @@ function ugroup_db_list_all_ugroups_for_user($group_id,$user_id) {
     return db_query($sql);
 }
 
+
+/** Return array of ugroup_id for all user-defined ugoups that user is part of 
+ * and having tracker-related permissions on the $group_artifact_id tracker */
+function ugroup_db_list_tracker_ugroups_for_user($group_id,$group_artifact_id,$user_id) {
+    $sql="SELECT distinct ug.ugroup_id FROM ugroup ug, ugroup_user ugu, permissions p ".
+      "WHERE ugu.user_id=$user_id ".
+      "AND ug.group_id=$group_id ".
+      "AND ugu.ugroup_id=ug.ugroup_id ".
+      "AND p.ugroup_id = ugu.ugroup_id ".
+      "AND p.object_id LIKE '$group_artifact_id%' ".
+      "AND p.permission_type LIKE 'TRACKER%'";
+
+    return util_result_column_to_array(db_query($sql));
+}
+
+/** Return array of ugroup_id for all dynamic ugoups like 
+ * (anonymous_user, registered_user, project_member,
+ * project_admins, tracker_admins) that user is part of */
+function ugroup_db_list_dynamic_ugroups_for_user($group_id,$group_artifact_id,$user_id) {
+  $user = new User($user_id);
+  
+  if (!$user) return array($GLOBALS['UGROUP_ANONYMOUS']);
+
+  $res = array($GLOBALS['UGROUP_ANONYMOUS'],$GLOBALS['UGROUP_REGISTERED']);
+
+  if ($user->isMember($group_id))  $res[] = $GLOBALS['UGROUP_PROJECT_MEMBERS']; 
+  if ($user->isMember($group_id,'A'))  $res[] = $GLOBALS['UGROUP_PROJECT_ADMIN'];
+  if ($user->isTrackerAdmin($group_id,$group_artifact_id))  $res[] = $GLOBALS['UGROUP_TRACKER_ADMIN'];
+
+  return $res;
+}
+
 /** Return user group name from ID */
 function ugroup_get_name_from_id($ugroup_id) {
     $res=ugroup_db_get_ugroup($ugroup_id);

@@ -202,15 +202,6 @@ class Artifact extends Error {
     }
 
     /**
-     *  getArtifactGroupID - get artifact_group_id flag.
-     *
-     *  @return int artifact_group_id
-     */
-    function getArtifactGroupID() {
-        return $this->data_array['artifact_group_id'];
-    }
-
-    /**
      *  getSubmittedBy - get ID of submitter.
      *
      *  @return int user_id of submitter.
@@ -1230,7 +1221,7 @@ class Artifact extends Error {
      */
     function getCommenters() {
         $sql="SELECT DISTINCT mod_by FROM artifact_history ".
-            "WHERE artifact_history.artifact_id=$artifact_id ".
+	  "WHERE artifact_history.artifact_id=".$this->getID()." ".
             "AND artifact_history.field_name = 'details' ";
         return db_query($sql);
     }
@@ -1305,6 +1296,22 @@ class Artifact extends Error {
             "WHERE added_by=user.user_id ".
             "AND artifact_id=".$this->getID()." ORDER BY date DESC";
         return db_query($sql);
+    }
+
+    /**
+     * Return the user ids of registered users in the CC list
+     *
+     * @return array
+     */
+    function getCCIdList() {
+                
+        $sql="SELECT u.user_id ".
+	  "FROM artifact_cc cc, user u ".
+	  "WHERE cc.email = u.user_name ".
+	  "AND cc.artifact_id=".$this->getID();
+	$res = db_query($sql);
+	
+        return util_result_column_to_array($res);
     }
 
     /**
@@ -1633,7 +1640,151 @@ class Artifact extends Error {
             if (in_array($my_user_id,$this->getMultiAssignedTo())) return true;
         } 
         return false;
-    }          
+    }  
+
+
+    /**
+     * Build an array of user_ids using the changes array
+     *
+     * @param changes: array of changes
+     *
+     * @return array (attention user_ids are stored as keys)
+     */
+    function buildNotificationIds($changes) {
+                
+        global $art_field_fact,$Language;
+        
+        // Rk: we store user ids in a hash to make sure they are only
+        // stored once. Normally if an email is repeated several times sendmail
+        // would take care of it but I prefer taking care of it now.
+	// We also use the user_ids hash to check if a user has already been selected for 
+        // notification. If so it is not necessary to check it again in another role.
+        $user_ids = array();
+
+        
+        
+        // check submitter notification preferences
+        $user_id = $this->getSubmittedBy();
+        if ($user_id != 100) {
+            if ($this->ArtifactType->checkNotification($user_id, 'SUBMITTER', $changes)) {
+	      //echo "DBG - SUBMITTER - user=$user_id<br>";
+                $user_ids[$user_id] = true;
+            }
+        }
+        
+	// Retrieve field values for the assigned_to, multi_assigned_to value
+        $result = $this->getFieldsValues();
+	$this->checkAssignees("assigned_to",$result,$art_field_fact,$changes,$user_ids);
+	$this->checkAssignees("multi_assigned_to",$result,$art_field_fact,$changes,$user_ids);
+	
+            
+        // check all CC 
+        // (a) check all the people in the current CC list
+        // (b) check the CC that has just been removed if any and see if she
+        // wants to be notified as well
+	//
+        // !!!!  if the CC identifier is an email address then cc is anonymous user ...
+	// ignore for the moment and see later what to do with that ... 
+        $arr_cc = $this->getCCIdList();
+
+	//echo "<br>cc_list = "; print_r($arr_cc);
+
+
+	foreach ($arr_cc as $cc_id) {
+	  $user_ids[$cc_id] = true;
+	}
+
+        if ( $changes['CC']['del'] ) {
+	  // Only one CC can be deleted at once so just append it to the list....
+	  
+	  $cc = $changes['CC']['del'];
+	  if (validate_email($cc)) {
+                //don't use emails (of anonymous users)
+	  } else {
+	    $res = user_get_result_set_from_unix($cc);
+	    $user_id = db_result($res,0,'user_id');
+	    if (!$user_ids[$user_id] && $this->ArtifactType->checkNotification($user_id, 'CC', $changes)) {
+	      //echo "DBG - CC - user=$user_id<br>";
+	      $user_ids[$user_id] = true;
+	    }
+	  }
+        }
+        
+        
+        // check all commenters
+        $res_com = $this->getCommenters();
+        if (db_numrows($res_com) > 0) {
+            while ($row = db_fetch_array($res_com)) {
+                $user_id = $row['mod_by'];
+                if (!$user_ids[$user_id] && $this->ArtifactType->checkNotification($user_id, 'COMMENTER', $changes)) {
+		  //echo "DBG - COMMENTERS - user=$user_id<br>";
+                    $user_ids[$user_id] = true;
+                }
+            }
+        }
+        
+        
+        // return an array with all the email addresses the notification must be sent to
+        return $user_ids;
+        
+    }
+
+
+
+    /** group users to be notified of artifact changes
+     * groups are done with respect to ugroups and 
+     * their permissions on the artifact
+     * @param user_id an array of user ids
+     * return $user_sets array of arrays of user ids: 
+     * return $ugroup_sets array of arrays of ugroup_ids.
+     * the $user_sets keys correspond to the $ugroup_sets keys i.e.
+     * $ugroup_sets[x] are the ugroups that the users in $user_sets[x]
+     * belong to
+     */
+    function groupNotificationList($user_ids,&$user_sets,&$ugroup_sets) {
+      global $feedback;
+      
+      $group_id = $this->ArtifactType->getGroupID();
+      $group_artifact_id = $this->ArtifactType->getID();
+
+      $user_sets = array();
+      $ugroup_sets = array();
+      
+      //go through user_ids array:
+      //for each user have a look at which ugroups he belongs
+      
+
+      foreach ($user_ids as $user_id) {
+	$specific_ugroups = ugroup_db_list_tracker_ugroups_for_user($group_id,$group_artifact_id,$user_id);
+	//echo "<br>specific_ugroups for $user_id = "; print_r($specific_ugroups);
+	$dynamic_ugroups = ugroup_db_list_dynamic_ugroups_for_user($group_id,$group_artifact_id,$user_id);
+	//echo "<br>dynamic_ugroups for $user_id = "; print_r($dynamic_ugroups);
+	$all_ugroups = array_merge($dynamic_ugroups, $specific_ugroups);
+	//echo "<br>all_ugroups for $user_id = "; print_r($all_ugroups);
+
+	$found_gr = false;
+	while (list($x,$ug) = each($ugroup_sets)) {
+	  $diff1 = array_diff($ug,$all_ugroups);
+	  $diff2 = array_diff($all_ugroups,$ug);
+	  if ( empty($diff1) && empty($diff2) ) {
+	    // we found the magic users that are part of exactly the same ugroups as this user
+	    $gr = $user_sets[$x];
+	    $gr[] = $user_id;
+	    unset($user_sets[$x]);
+	    $user_sets[$x] = $gr;
+	    $found_gr = true;
+	    break;
+	  }
+	}
+	// if we didn't find users who have exactly the same permissions we have to add this user separately 
+	if (!$found_gr) {
+	  $user_sets[] = array($user_id);
+	  $ugroup_sets[] = $all_ugroups;
+	}
+      }
+      
+    }
+        
 }
 
 ?>

@@ -230,6 +230,17 @@ function user_getemail($user_id) {
 	}
 }
 
+function user_getid_from_email($email) {
+	global $Language;
+	db_query("SELECT user_id FROM user WHERE email='$email'");
+	if ($result && db_numrows($result) > 0) {
+		return db_result($result,0,"user_id");
+	} else {
+		return $Language->getText('include_user','not_found');
+	}
+}
+
+
 function user_getemail_from_unix($user_name) {
 	global $Language;
         $result = user_get_result_set_from_unix($user_name); 

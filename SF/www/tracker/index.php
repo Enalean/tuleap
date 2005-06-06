@@ -162,7 +162,8 @@ if ( $func == 'gotoid' ) {
                                 }
 
                                 // send an email to notify the user of the artifact update
-                                $ah->mailFollowup($ath->getEmailAddress(),$null);
+				//                                $ah->mailFollowup($ath->getEmailAddress(),$null);
+                                $ah->mailFollowupWithPermissions($ath->getEmailAddress(),$null);
                                 $feedback .= $Language->getText('tracker_index','create_success',$ah->getID());
                             require('./browse.php');
                         }
@@ -241,7 +242,8 @@ if ( $func == 'gotoid' ) {
 				$ah->addDetail($follow_up_comment,$comment_type_id,$canned_response,$changes,$feedback);
 
                                 // send an email to notify the user of the artifact update
-                                $ah->mailFollowup($ath->getEmailAddress(),$null);
+                                //$ah->mailFollowup($ath->getEmailAddress(),$null);
+                                $ah->mailFollowupWithPermissions($ath->getEmailAddress(),$null);
                                 $feedback .= $Language->getText('tracker_index','create_success',$ah->getID());
                             require('./browse.php');
                         }
@@ -281,7 +283,8 @@ if ( $func == 'gotoid' ) {
                                     //  now send the email
                                     //  it's no longer optional due to the group-level notification address
                                     //
-                                    $ah->mailFollowup($address,$changes);
+				    //                                    $ah->mailFollowup($address,$changes);
+                                    $ah->mailFollowupWithPermissions($address,$changes);
                                 }
         
                                 // unsent artifact_id var to make sure that it doesn;t
@@ -331,7 +334,8 @@ if ( $func == 'gotoid' ) {
                             //  now send the email
                             //  it's no longer optional due to the group-level notification address
                             //
-                            $ah->mailFollowup($address,$changes);
+			    //                            $ah->mailFollowup($address,$changes);
+                            $ah->mailFollowupWithPermissions($address,$changes);
                         }
 
                         // unsent artifact_id var to make sure that it doesn;t
@@ -458,7 +462,8 @@ if ( $func == 'gotoid' ) {
                             //  it's no longer optional due to the group-level notification address
                             //
 			    if ($changes)
-			      $ah->mailFollowup($address,$changes);
+			      //			      $ah->mailFollowup($address,$changes);
+			      $ah->mailFollowupWithPermissions($address,$changes);
                         }
 
         
@@ -637,7 +642,8 @@ if ( $func == 'gotoid' ) {
             }
             
             // send an email to notify the user of the bug update
-            $ah->mailFollowup($ath->getEmailAddress(),$changes);
+	    //            $ah->mailFollowup($ath->getEmailAddress(),$changes);
+            $ah->mailFollowupWithPermissions($ath->getEmailAddress(),$changes);
             require('./browse.php');
             break;
         }
