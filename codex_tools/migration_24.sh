@@ -281,8 +281,9 @@ $CHMOD 740 /home/tools/backup_job
 # New directory
 build_dir /etc/codex/themes/messages sourceforge sourceforge 755
 
-# Re-copy phpMyAdmin installation
+# Re-copy phpMyAdmin and viewcvs installations
 $CP -af /home/httpd_22/phpMyAdmin* /home/httpd
+$CP -af /home/httpd_22/cgi-bin/viewcvs.cgi /home/httpd/cgi-bin
 
 #############################################
 # Copy new icons in all custom themes
@@ -850,6 +851,7 @@ file_exist=0
 for sitefile in register_confirmation.txt register_needs_approval.txt \
     register_email.txt register_purpose.txt register_login.txt
 do
+    $RPM -q $rpm  2>/dev/null 1>&2
     if [ -e /etc/codex/site-content/en_US/$service/$sitefile ]; then
         file_exist=1
         echo /etc/codex/site-content/en_US/$service/$sitefile
@@ -863,6 +865,7 @@ service="homepage"
 file_exist=0
 for sitefile in staff.txt thanks.txt welcome_intro.txt
 do
+    $RPM -q $rpm  2>/dev/null 1>&2
     if [ -e /etc/codex/site-content/en_US/$service/$sitefile ]; then
         file_exist=1
         echo /etc/codex/site-content/en_US/$service/$sitefile
@@ -876,6 +879,7 @@ service="my"
 file_exist=0
 for sitefile in intro.txt
 do
+    $RPM -q $rpm  2>/dev/null 1>&2
     if [ -e /etc/codex/site-content/en_US/$service/$sitefile ]; then
         file_exist=1
         echo /etc/codex/site-content/en_US/$service/$sitefile
@@ -904,13 +908,14 @@ register/tos.txt \
 svn/intro.txt \
 tos/privacy.txt
 do
+    $RPM -q $rpm  2>/dev/null 1>&2
     if [ -e /etc/codex/site-content/en_US/$service/$sitefile ]; then
         file_exist=1
         echo /etc/codex/site-content/en_US/$service/$sitefile
     fi
 done
 if [ $file_exist -eq 1 ]; then
-    echo "The file(s) listed above have changed in CodeX 2.4. Please check that your customized files are still up-to-date."
+    echo "The file(s) listed above have change in CodeX 2.4. Please check that your customized files are still up-to-date."
 fi
 
 
@@ -928,6 +933,7 @@ $SERVICE mailman start
 # Generate Documentation
 #
 echo "Updating the User Manual. This might take a few minutes."
+todo "Make sure that the CVS update is possible in /home/httpd/SF/utils/utils/generate_doc.sh. Do a cvs login on CVS server as user 'sourceforge'."
 /home/httpd/SF/utils/generate_doc.sh -f
 
 
