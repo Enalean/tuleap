@@ -173,7 +173,6 @@ class Artifact extends Error {
     function getMultiAssignedTo() {
         $aid=$this->getID();
         if (!$aid) return;
-
         $sql="SELECT afv.valueInt FROM artifact_field_value afv, artifact a, artifact_field af WHERE a.artifact_id=$aid AND afv.artifact_id=$aid AND a.group_artifact_id=af.group_artifact_id AND afv.field_id=af.field_id AND af.field_name='multi_assigned_to'";
         $res=db_query($sql);
         $i=0;
@@ -1633,12 +1632,39 @@ class Artifact extends Error {
         // xxx what about anonymous users?
         if (permission_is_authorized('TRACKER_ACCESS_FULL', $this->ArtifactType->getID() , $my_user_id, $this->ArtifactType->Group->getID(), $this->ArtifactType->getID())) {
             return true;
-        } else if (permission_is_authorized('TRACKER_ACCESS_SUBMITTER', $this->ArtifactType->getID() , $my_user_id, $this->ArtifactType->Group->getID(), $this->ArtifactType->getID())) {
-            if ($my_user_id == $this->getSubmittedBy()) return true;
-        } else if (permission_is_authorized('TRACKER_ACCESS_ASSIGNEE', $this->ArtifactType->getID() , $my_user_id, $this->ArtifactType->Group->getID(), $this->ArtifactType->getID())) {
-            if ($my_user_id == $this->getValue('assigned_to')) return true;
-            if (in_array($my_user_id,$this->getMultiAssignedTo())) return true;
-        } 
+        }
+
+        // 'submitter' access
+        $res=permission_db_authorized_ugroups('TRACKER_ACCESS_SUBMITTER',$this->ArtifactType->getID());
+        if (db_numrows($res) > 0) {
+            while ($row = db_fetch_array($res)) {
+                if (ugroup_user_is_member($my_user_id, $row['ugroup_id'], $this->ArtifactType->Group->getID(), $this->ArtifactType->getID())) {
+                    // check that submitter is also a member
+                    if (ugroup_user_is_member($this->getSubmittedBy(), $row['ugroup_id'], $this->ArtifactType->Group->getID(), $this->ArtifactType->getID())) {
+                        return true;
+                    }
+                }
+            }
+        }
+        // 'assignee' access
+        $res=permission_db_authorized_ugroups('TRACKER_ACCESS_ASSIGNEE',$this->ArtifactType->getID());
+        if (db_numrows($res) > 0) {
+            while ($row = db_fetch_array($res)) {
+                if (ugroup_user_is_member($my_user_id, $row['ugroup_id'], $this->ArtifactType->Group->getID(), $this->ArtifactType->getID())) {
+                    // check that one of the assignees is also a member
+                    if (ugroup_user_is_member($this->getValue('assigned_to'), $row['ugroup_id'], $this->ArtifactType->Group->getID(), $this->ArtifactType->getID())) {
+                        return true;
+                    }
+
+                    // multi-assigned to
+                    foreach ($this->getMultiAssignedTo() as $assigned) {
+                        if (ugroup_user_is_member($assigned, $row['ugroup_id'], $this->ArtifactType->Group->getID(), $this->ArtifactType->getID())) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
         return false;
     }  
 

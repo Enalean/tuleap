@@ -270,7 +270,6 @@ class ArtifactReportHtml extends ArtifactReport {
          */
         function showResult ($group_id,$prefs,$offset,$total_rows,$url,$nolink,$chunksz,$morder,$advsrch,$chunksz,$aids,$masschange=false) {
             global $PHP_SELF,$Language;
-            global $ath;
 
             $html_result = "";
         
@@ -345,10 +344,8 @@ class ArtifactReportHtml extends ArtifactReport {
             }
             $nav_bar .= '</td>';
             $nav_bar .="</tr></table>\n";
-         
+        
             $html_result .= $nav_bar;
-
-
 
 	    if ($masschange) {
                	$html_result .= '<FORM NAME="artifact_list" action="'.$PHP_SELF.'" METHOD="POST">';
@@ -357,10 +354,8 @@ class ArtifactReportHtml extends ArtifactReport {
                	$html_result .= html_build_list_table_top ($title_arr,$links_arr);
             }
 
-        
-                
             for ($i=0; $i < $rows ; $i++) {
-        
+
                 $html_result .= '<TR class="'.get_priority_color($result[$i]['severity_id']) .'">'."\n";
 
                 if ($masschange) {
@@ -565,7 +560,7 @@ class ArtifactReportHtml extends ArtifactReport {
                 // Finally display the result table
                 // 
                 
-                $totalrows = $this->getReportItemsCount($prefs,$morder,$advsrch,$aids);
+                $totalrows = $this->selectReportItems($prefs,$morder,$advsrch,$aids); // Filter according to permissions
 
                 if ($totalrows > 0) {
                 

@@ -274,6 +274,8 @@ class ArtifactTypeHtml extends ArtifactType {
 	    if ( $this->userIsAdmin() ) {
 			echo '<H3><a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=editoptions">'.$Language->getText('tracker_include_type','settings').'</a></H3>';
 			echo $Language->getText('tracker_include_type','define_title');
+                        echo '<H3><a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=permissions">'.$Language->getText('tracker_include_type','manage_permissions').'</a></H3>';
+                        echo $Language->getText('tracker_include_type','define_manage_permissions');
 			echo '<H3><a href="/tracker/admin/?func=field_usage&group_id='.$group_id.'&atid='.$atid.'">'.$Language->getText('tracker_include_type','mng_field_usage').'</a></H3>';
 			echo $Language->getText('tracker_include_type','define_use');
 			echo '<H3><a href="/tracker/admin/?func=field_values&group_id='.$group_id.'&atid='.$atid.'">'.$Language->getText('tracker_include_type','mng_field_values').'</a></H3>';
@@ -287,12 +289,7 @@ class ArtifactTypeHtml extends ArtifactType {
 				
 		echo '<H3><a href="/tracker/admin?func=notification&group_id='.$group_id.'&atid='.$atid.'">'.$Language->getText('tracker_include_type','mail_notif').'</a></H3>';
 		echo $Language->getText('tracker_include_type','define_notif');
-                
-                if ( $this->userIsAdmin() ) {
-                    echo '<H3><a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=permissions">'.$Language->getText('tracker_include_type','manage_permissions').'</a></H3>';
-                    echo $Language->getText('tracker_include_type','define_manage_permissions');
-                }
-                
+
 	}
 
         /**

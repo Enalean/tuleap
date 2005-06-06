@@ -362,26 +362,30 @@ class ArtifactReport extends Error {
 	/**
 	 *
 	 * @param aids: the list (array) of artifact ids that match the query given in $prefs
-	 * Returns the number of rows for the current query
+	 * Returns the number of rows for the current query, filtered with permissions
 	 * 
 	 *
 	 * @return int
 	 */
-	function getReportItemsCount($prefs,$morder,$advsrch,&$aids) {
-
-		$this->getQueryElements($prefs,$advsrch,$from,$where);
+	function selectReportItems($prefs,$morder,$advsrch,&$aids) {
+            global $ath;
+            $this->getQueryElements($prefs,$advsrch,$from,$where);
 		
-		// Final query
-		$sql = "select a.artifact_id ".$from." ".$where." group by a.artifact_id";
-		//echo "<DBG> query count=".$sql."<br>";
+            // Final query
+            $sql = "select a.artifact_id ".$from." ".$where." group by a.artifact_id";
+            //echo "<DBG> query count=".$sql."<br>";
 		
-		$res = db_query($sql);
-		$totalrows = db_numrows($res);
+            $res = db_query($sql);
 
-		$aids = result_column_to_array($res,0);
-			   
-		return $totalrows;
-	
+            $totalrows=0;
+            while ($arr = db_fetch_array($res)) {
+                $curArtifact=new Artifact($ath, $arr['artifact_id']);
+                if ($curArtifact->userCanView(user_getid())) {
+                    $totalrows++;
+                    $aids[]=$arr['artifact_id'];
+                }
+            }
+            return $totalrows;
 	}
 
 	/**
