@@ -1540,14 +1540,18 @@ class ArtifactHtml extends Artifact {
             reset($changes);
             $fmt = "%20s | %-25s | %s$sys_lf";
         
-            if (user_isloggedin()) {
-                        $user_id = user_getid();
-                        $out_hdr = $Language->getText('tracker_include_artifact','changes_by').' '.user_getrealname($user_id).' <'.user_getemail($user_id).">$sys_lf";
-                        $out_hdr .= $Language->getText('tracker_import_utils','date').': '.format_date($sys_datefmt,time()).' ('.user_get_timezone().')';
-            } else {
-                        $out_hdr = $Language->getText('tracker_include_artifact','changes_by').' '.$Language->getText('tracker_include_artifact','anon_user').'        '.$Language->getText('tracker_import_utils','date').': '.format_date($sys_datefmt,time());
-            }
-        
+
+	    if (!$field_perm || 
+		($field_perm['assigned_to'] && permission_can_read_field($field_perm['assigned_to'])) || 
+		($field_perm['multi_assigned_to'] && permission_can_read_field($field_perm['multi_assigned_to']))) {
+	      if (user_isloggedin()) {
+		$user_id = user_getid();
+		$out_hdr = $Language->getText('tracker_include_artifact','changes_by').' '.user_getrealname($user_id).' <'.user_getemail($user_id).">$sys_lf";
+		$out_hdr .= $Language->getText('tracker_import_utils','date').': '.format_date($sys_datefmt,time()).' ('.user_get_timezone().')';
+	      } else {
+		$out_hdr = $Language->getText('tracker_include_artifact','changes_by').' '.$Language->getText('tracker_include_artifact','anon_user').'        '.$Language->getText('tracker_import_utils','date').': '.format_date($sys_datefmt,time());
+	      }
+	    }
             //Process special cases first: follow-up comment
 	    if ($changes['details']) {
 	      $visible_change = true;
