@@ -1605,6 +1605,63 @@ class ArtifactField extends Error {
 	}
 
 
+
+	/** return true if user has Read or Update permission on this field 
+	 * @param group_id: the project this field is in
+	 * @param group_artifact_id: the trackers id this field is in
+	 * @param user_id: if not given or 0 take the current user
+	**/ 
+	function userCanRead($group_id,$group_artifact_id,$user_id=0) {
+	  $perms = getPermissionForUser($group_id,$group_artifact_id,$user_id);
+	  return  hasFieldReadPermission($perms);
+	}
+
+	/** return true if user has Update permission on this field 
+	 * @param group_id: the project this field is in
+	 * @param group_artifact_id: the trackers id this field is in
+	 * @param user_id: if not given or 0 take the current user
+	**/ 
+	function userCanUpdate($group_id,$group_artifact_id,$user_id=0) {
+	  $perms = getPermissionForUser($group_id,$group_artifact_id,$user_id);
+	  return hasFieldUpdatePermission($perms);
+	}
+
+
+	/** return true if user has Submit permission on this field 
+	 * @param group_id: the project this field is in
+	 * @param group_artifact_id: the trackers id this field is in
+	 * @param user_id: if not given or 0 take the current user
+	**/ 
+	function userCanSubmit($group_id,$group_artifact_id,$user_id=0) {
+	  $perms = getPermissionForUser($group_id,$group_artifact_id,$user_id);
+	  return hasFieldSubmitPermission($perms);
+	}
+
+
+	
+	/**
+	 * Retrieve users permissions (TRACKER_FIELD_SUBMIT, -UPDATE, -READ)
+	 * on this field.
+	 * @param group_id: the project this field is in
+	 * @param group_artifact_id: the trackers id this field is in
+	 * @param user_id: if  not given or 0 take the current user
+	 * return array of all associated permissions
+	 */
+	function getPermissionForUser($group_id,$group_artifact_id,$user_id=0) {
+
+	  if ($user_id == 0) {
+	    $user_id = user_getid();
+	  }
+
+	  //get ugroups user is part of
+	  $specific_ugroups = ugroup_db_list_tracker_ugroups_for_user($group_id,$group_artifact_id,$user_id);
+	  $dynamic_ugroups =  ugroup_db_list_dynamic_ugroups_for_user($group_id,$group_artifact_id,$user_id);
+	  $ugroups = array_merge($dynamic_ugroups, $specific_ugroups);
+	  
+	  return getPermission($ugroups,$group_artifact_id);
+	  
+	}
+
 	/**
 	 *
 	 *
