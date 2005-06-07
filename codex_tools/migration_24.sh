@@ -935,6 +935,7 @@ $SERVICE mailman start
 echo "Updating the User Manual. This might take a few minutes."
 todo "Make sure that the CVS update is possible in /home/httpd/SF/utils/utils/generate_doc.sh. Do a cvs login on CVS server as user 'sourceforge'."
 /home/httpd/SF/utils/generate_doc.sh -f
+$CHOWN -R sourceforge.sourceforge $INSTALL_DIR/documentation
 
 
 ##############################################
