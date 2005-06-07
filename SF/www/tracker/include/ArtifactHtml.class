@@ -38,7 +38,7 @@ class ArtifactHtml extends Artifact {
          *
          * @return void
          */
-        function display($ro,$pv) {
+        function display($ro, $pv, $user_id) {
             global $art_field_fact,$sys_datefmt,$sys_max_size_attachment,$Language;
             
             $fields_per_line=2;
@@ -55,18 +55,20 @@ class ArtifactHtml extends Artifact {
             echo "\n<TABLE width='100%'><TR><TD>";
             echo "\n<H2>[ ".$this->ArtifactType->getItemName()." #".$this->getID()." ] ".$summary."</H2>";
             echo "</TD>";
-            if ( !$pv ) 
+            
+            if ( !$pv ) {
                 echo "<TD align='right'><A HREF='?func=detail&aid=".$this->getID()."&group_id=".$group_id."&atid=".$group_artifact_id."&pv=true' target='_blank'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A></TD></TR>";
+            }
 
-	    if ($this->ArtifactType->allowsCopy()) {
-	      echo "\n<TR><TD><A HREF='?func=copy&aid=".$this->getID()."&group_id=".$group_id."&atid=".$group_artifact_id."'>".$Language->getText('tracker_include_artifact','copy_art')."</A></TD></TR></TABLE><br><br>";
-	    } else {
-
-            echo "</TABLE>";
-	    }
+            if ($this->ArtifactType->allowsCopy()) {
+              echo "\n<TR><TD><A HREF='?func=copy&aid=".$this->getID()."&group_id=".$group_id."&atid=".$group_artifact_id."'>".$Language->getText('tracker_include_artifact','copy_art')."</A></TD></TR></TABLE><br><br>";
+            } else {
+    
+                echo "</TABLE>";
+            }
         
                 echo '
-            <FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data" NAME="artifact_form">
+            <FORM ACTION="'.$_SERVER['PHP_SELF'].'" METHOD="POST" enctype="multipart/form-data" NAME="artifact_form">
             <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="'.$sys_max_size_attachment.'">';
             if ( $ro ) {
                 echo '<INPUT TYPE="HIDDEN" NAME="func" VALUE="postaddcomment">';
@@ -77,77 +79,51 @@ class ArtifactHtml extends Artifact {
             <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
             <INPUT TYPE="HIDDEN" NAME="group_artifact_id" VALUE="'.$group_artifact_id.'">
             <INPUT TYPE="HIDDEN" NAME="artifact_id" VALUE="'.$this->getID().'">';
-
-	    $submitted_field = $art_field_fact->getFieldFromName("submitted_by");
-                echo '
-            <TABLE cellpadding="0">
-              <TR><TD><B>'.$submitted_field->getLabel().': </B>&nbsp;</td><td>'.util_user_link(user_getname($this->getValue('submitted_by'))).'</a></TD>
-                  <TD><B>'.$Language->getText('tracker_include_artifact','project').'</B>&nbsp;</td><td>'.group_getname($group_id).'</TD>
-              </TR>
-              <TR><TD><B>'.$result_fields['open_date']->getLabel().': </B>&nbsp;</td><td>'.format_date($sys_datefmt,$this->getValue('open_date')).'</TD>';
             
-            if (!$pv) echo '<TD colspan="2"><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'"></TD>';
+            $html  = '<TABLE cellpadding="0"><TR>';
+            $html .= '<TD><B>'.$Language->getText('tracker_include_artifact','project').'</B>&nbsp;</td><td>'.group_getname($group_id).'</TD>';
+            $html .= '<td>';
+            if (!$pv) {
+                    $html .= '<input type="submit" name="submit" value="'.$Language->getText('tracker_include_artifact','submit').'" />';
+            }
+            $html .= '</td>';
+            echo $html;
             
             echo '
             </TR>
-              <TR><TD COLSPAN="'.($fields_per_line*2).'">&nbsp</TD></TR>
-              <script language="JavaScript" src="/include/calendar.js"></script>';
-        
-                // Now display the variable part of the field list (depend on the project)
-        
+            <TR><TD COLSPAN="'.($fields_per_line*2).'">&nbsp</TD></TR>
+            <script language="JavaScript" src="/include/calendar.js"></script>';
+            
+            // Now display the variable part of the field list (depend on the project)
+            
             $i = 0;
-        while ( list($key, $field) = each($result_fields) ) {
-                
-                $field_html = new ArtifactFieldHtml($field);
-                //echo $field_html->dumpStandard()."<br>";
-                
-                        // if the field is a special field (except summary and details) 
-                        // then skip it.
-                        if ( !$field->isSpecial() || $field->getName()=='summary' || $field->getName()=='details' ) {
-                                           
-                                // display the artifact field
-                                // if field size is greatest than max_size chars then force it to
-                                // appear alone on a new line or it won't fit in the page
-                                
-                                // For multi select box, we need to retrieve all the values
-                                if ( $field->isMultiSelectBox() ) {
-                                        $field_value = $field->getValues($this->getID());
-                                } else {
-                                        $field_value = $this->getValue($field->getName());
-                                }
-                                
-                                list($sz,) = explode("/",$field->getDisplaySize());
-                                $label = $field_html->labelDisplay(false,false,!$ro);
-                                // original submission field must be displayed read-only
-                                if ($field->getName()=='details') {
-                                        $value = util_make_links($field_html->display($this->ArtifactType->getID(),$field_value,false,false,true),$group_id,$group_artifact_id);
-                                } else {
-                                        $value = $field_html->display($this->ArtifactType->getID(),$field_value,false,false,$ro);
-                                }
-                                        
-                                $star = ($field->isEmptyOk() ? '':'<span class="highlight"><big>*</big></b></span>');
-                                
-                                // Details field must be on one row
-                                if ($sz > $max_size || $field->getName()=='details') {
-                                        echo "\n<TR>".
-                                          '<TD valign="middle">'.$label.$star.'</td>'.
-                                          '<TD valign="middle" colspan="'.(2*$fields_per_line-1).'">'.
-                                          $value.'</TD>'.                     
-                                          "\n</TR>";
-                                        $i=0;
-                                } else {
-                                        echo ($i % $fields_per_line ? '':"\n<TR>");
-                                        echo '<TD valign="middle">'.$label.$star.'</td>'.
-                                          '<TD valign="middle">'.$value.'</TD>';
-                                        $i++;
-                                        echo ($i % $fields_per_line ? '':"\n</TR>");
-                                }
+            while ( list($key, $field) = each($result_fields) ) {
+                if ($field->getName() != 'comment_type_id' && $field->getName() != 'artifact_id') {
+                    $field_html = $this->_getFieldLabelAndValueForUser($group_id, $group_artifact_id, $field, $user_id);
+                    if ($field_html) {
+                        list($sz,) = explode("/",$field->getDisplaySize());
+                    
+                        // Details field must be on one row
+                        if ($sz > $max_size || $field->getName()=='details') {
+                            echo "\n<TR>".
+                              '<TD valign="middle">'.$field_html['label'].'</td>'.
+                              '<TD valign="middle" colspan="'.(2*$fields_per_line-1).'">'.$field_html['value'].'</TD>'.                     
+                              "\n</TR>";
+                            $i=0;
+                        } else {
+                            echo ($i % $fields_per_line ? '':"\n<TR>");
+                            echo '<TD valign="middle">'.$field_html['label'].'</td>'.
+                            '<TD valign="middle">'.$field_html['value'].'</TD>';
+                            $i++;
+                            echo ($i % $fields_per_line ? '':"\n</TR>");
                         }
-                } // while
-              
-                echo '</TABLE>';
-                
-                echo '<table cellspacing="0">';
+                    }
+                }
+            } // while
+            
+            echo '</TABLE>';
+            
+            echo '<table cellspacing="0">';
 
                 //
                 // Followups comments
@@ -288,7 +264,42 @@ class ArtifactHtml extends Artifact {
                 echo '</table>';
         }
         
-
+        /**
+         * return a field for the given user.
+         * 
+         * @protected
+        **/
+        function _getFieldLabelAndValueForUser($group_id, $group_artifact_id, &$field, $user_id) {
+            $html = false;
+            if ($field->userCanRead($group_id, $group_artifact_id, $user_id)) {
+                $read_only = !$field->userCanUpdate($group_id, $group_artifact_id, $user_id);
+                
+                // For multi select box, we need to retrieve all the values
+                if ( $field->isMultiSelectBox() ) {
+                        $field_value = $field->getValues($this->getID());
+                } else {
+                        $field_value = $this->getValue($field->getName());
+                }
+                
+                $field_html  =& new ArtifactFieldHtml($field);
+                $label       = $field_html->labelDisplay(false,false,!$read_only);
+                $label      .= ($field->isEmptyOk() ? '':'<span class="highlight"><big>*</big></b></span>');
+                
+                // original submission field must be displayed read-only
+                if ($field->getName()=='details') {
+                    $value = util_make_links($field_html->display($this->ArtifactType->getID(),$field_value,false,false,true),$group_id,$group_artifact_id);
+                } else if ($field->getName() == 'submitted_by') {
+                    $value = util_user_link(user_getname($field_value));
+                } else if ($field->getName() == 'open_date') {
+                    $value = format_date($GLOBALS['sys_datefmt'],$field_value);
+                } else {
+                    $value = $field_html->display($this->ArtifactType->getID(),$field_value,false,false,$read_only);
+                }
+                
+                $html = array('label' => $label, 'value' => $value);
+            }
+            return $html;
+        }
 
 	/**
          * Display the artifact
@@ -986,7 +997,8 @@ class ArtifactHtml extends Artifact {
                         return $out;
             }
         
-        
+            $out = '';
+            
             // Header first
             if ($ascii) {
 		$out .= $Language->getText('tracker_include_artifact','follow_ups').$sys_lf.str_repeat("*",strlen($Language->getText('tracker_include_artifact','follow_ups')));

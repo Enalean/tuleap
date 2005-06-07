@@ -23,6 +23,11 @@ if ( !$ath->isValid() ) {
 	exit_error($Language->getText('global', 'error'),$Language->getText('tracker_add', 'invalid'));
 }
 
+// Printer version ?
+if ( !isset($pv) ) {
+	$pv = false;
+}
+
 // Create factories
 $art_field_fact = new ArtifactFieldFactory($ath);
 
@@ -35,13 +40,8 @@ $params=array('title'=>$group->getPublicName().' '.$ath->getName().' #'.$ah->get
 
 $ath->header($params);
 
-// Printer version ?
-if ( !isset($pv) ) {
-	$pv = false;
-}
-
 // artifact object (and field values) initialized in script above (index.php)
-$ah->display(true,$pv);
+$ah->display(true,$pv,user_getid());
 
 // Display footer page
 $ath->footer($params);

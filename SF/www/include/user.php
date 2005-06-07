@@ -188,7 +188,7 @@ function user_getname($user_id = 0) {
 	}
 	// else must lookup name
 	else {
-		if ($USER_NAMES["user_$user_id"]) {
+		if (isset($USER_NAMES["user_$user_id"]) && $USER_NAMES["user_$user_id"]) {
 			//user name was fetched previously
 			return $USER_NAMES["user_$user_id"];
 		} else {

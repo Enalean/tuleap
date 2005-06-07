@@ -297,6 +297,8 @@ class ArtifactFieldHtml extends ArtifactField {
 	    if (!$text_any) $text_any=$Language->getText('global','any');
 	    if (!$text_unchanged) $text_unchanged=$Language->getText('global','unchanged');
 	    
+        $output = "";
+        
 	    if ($label) {
 			$output = $this->labelDisplay($break,$ascii,!$ro);
 	    }

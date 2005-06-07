@@ -1659,7 +1659,7 @@ class ArtifactField extends Error {
 	  $dynamic_ugroups =  ugroup_db_list_dynamic_ugroups_for_user($group_id,$group_artifact_id,$user_id);
 	  $ugroups = array_merge($dynamic_ugroups, $specific_ugroups);
 	  
-	  return getPermission($ugroups,$group_artifact_id);
+	  return $this->getPermission($ugroups,$group_artifact_id);
 	  
 	}
 
@@ -1688,7 +1688,7 @@ class ArtifactField extends Error {
 	  $res = db_query($sql);
 	  if (db_numrows($res) > 0) $non_permission = util_result_column_to_array($res);
 	    
-	  
+/*	  
 	  //finally, check default permissions of dynamic ugroups
 	  $sql = "SELECT distinct permission_type FROM permissions_values WHERE ugroup_id IN (".implode(",",$ugroups).") ".
 	    "AND permission_type LIKE 'TRACKER_FIELD%' ".
@@ -1702,11 +1702,11 @@ class ArtifactField extends Error {
 
 	  $res = db_query($sql);
 	  if (db_numrows($res) > 0) $dynamic_perm = util_result_column_to_array($res);
-
+*/
 	  $ret = array();
 	  if (isset($specific_perm)) $ret = array_merge($ret,$specific_perm);
-	  if (isset($dynamic_perm)) $ret = array_merge($ret,$dynamic_perm);
-
+/*	  if (isset($dynamic_perm)) $ret = array_merge($ret,$dynamic_perm);
+*/
 	  return $ret;
 	}
 

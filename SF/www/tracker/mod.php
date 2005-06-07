@@ -45,7 +45,7 @@ $ath->header($params);
 
 
 // artifact object (and field values) initialized in script above (index.php)
-$ah->display($ro,$pv);
+$ah->display($ro,$pv,user_getid());
 
 // Display footer page
 $ath->footer($params);
