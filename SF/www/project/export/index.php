@@ -190,19 +190,30 @@ switch ($export) {
 
  case 'project_db':
      project_admin_header(array('title'=>$pg_title));
-     require('./bug_export.php');
-     require('./bug_history_export.php');
-     require('./bug_bug_deps_export.php');
-     require('./bug_task_deps_export.php');
-     require('./task_export.php');
-     require('./task_history_export.php');
-     require('./task_task_deps_export.php');
-     require('./task_assigned_to_export.php');
-     require('./survey_responses_export.php');
-     require('./support_request_export.php');
-     require('./artifact_export.php');
-     require('./artifact_history_export.php');
-     require('./artifact_deps_export.php');
+     if ($project->usesBugs()) {
+         require('./bug_export.php');
+         require('./bug_history_export.php');
+         require('./bug_bug_deps_export.php');
+         require('./bug_task_deps_export.php');
+     }
+     if ($project->usesPm()) {
+         require('./task_export.php');
+         require('./task_history_export.php');
+         require('./task_task_deps_export.php');
+         require('./task_assigned_to_export.php');
+     }
+     if ($project->usesSurvey()) {     
+         require('./survey_responses_export.php');
+     }
+
+     if ($project->usesSupport()) {     
+         require('./support_request_export.php');
+     }
+     if ($project->usesTracker()) {     
+         require('./artifact_export.php');
+         require('./artifact_history_export.php');
+         require('./artifact_deps_export.php');
+     }
 
 echo '
    <P>'.$Language->getText('project_export_index','proj_db_success').'
