@@ -1552,31 +1552,27 @@ function permission_process_update_tracker_permissions($group_id, $atid, $permis
     if ($add_submitter_to_history) {
         permission_add_history($group_id, 'TRACKER_ACCESS_SUBMITTER', $atid);
     }
-
+}
 
     /** returns true if the perms array contains 
      * TRACKER_FIELD_READ or TRACKER_FIELD_UPDATE permission
      */
-    function hasFieldReadPermission($perms) {
+    function permission_can_read_field($perms) {
       return (in_array('TRACKER_FIELD_READ',$perms) || in_array('TRACKER_FIELD_UPDATE',$perms));
     }
     
     /** returns true if the perms array contains 
      * TRACKER_FIELD_UPDATE permission
      */
-    function hasFieldUpdatePermission($perms) {
+    function permission_can_update_field($perms) {
       return (in_array('TRACKER_FIELD_UPDATE',$perms));
     }
 
     /** returns true if the perms array contains 
      * TRACKER_FIELD_SUMIT permission
      */
-    function hasFieldSubmitPermission($perms) {
+    function permission_can_submit_field($perms) {
       return (in_array('TRACKER_FIELD_SUBMIT',$perms));
     }
 
-    
-
-
-}
 ?>

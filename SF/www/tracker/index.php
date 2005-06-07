@@ -29,7 +29,7 @@ require_once('common/tracker/ArtifactReport.class');
 require_once('common/tracker/ArtifactReportField.class');
 require('./include/ArtifactFieldHtml.class');
 require('./include/ArtifactReportHtml.class');
-
+require_once('www/project/admin/permissions.php');
 require_once('common/include/SimpleSanitizer.class');
 
 $Language->loadLanguageMsg('tracker/tracker');

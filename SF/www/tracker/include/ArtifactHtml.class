@@ -12,6 +12,7 @@
 //  Written for CodeX by Stephane Bouhet
 //
 
+
 $Language->loadLanguageMsg('tracker/tracker');
 
 class ArtifactHtml extends Artifact {
@@ -1429,16 +1430,14 @@ class ArtifactHtml extends Artifact {
 	    $visible_snapshot = false;
 	    // Some special field first (group, submitted by/on)
 	    $submitted_field = $art_field_fact->getFieldFromName("submitted_by");
-	    if ($field_perm && $field_perm['submitted_by'] &&
-		(in_array('TRACKER_FIELD_READ',$field_perm['submitted_by']) || in_array('TRACKER_FIELD_UPDATE',$field_perm['submitted_by']))) {
+	    if ($field_perm && $field_perm['submitted_by'] && permission_can_read_field($field_perm['submitted_by'])) {
 	      $full_snapshot .= sprintf($fmt_left.$fmt_right."$sys_lf",
 			       $submitted_field->getLabel().': '.user_getname($this->getSubmittedBy()),
 			       $Language->getText('tracker_include_artifact','project').' '.group_getname($group_id) );
 	      $visible_snapshot = true;
 	    }
 
-	    if ($field_perm && $field_perm['open_date'] &&
-		(in_array('TRACKER_FIELD_READ',$field_perm['open_date']) || in_array('TRACKER_FIELD_UPDATE',$field_perm['open_date']))) {
+	    if ($field_perm && $field_perm['open_date'] && permission_can_read_field($field_perm['open_date'])) {
 	      $full_snapshot .= $used_fields['open_date']->getLabel().': '.format_date($sys_datefmt,$this->getOpenDate())."$sys_lf";
 	      $visible_snapshot = true;
 	    }
@@ -1453,8 +1452,7 @@ class ArtifactHtml extends Artifact {
 	      
 	      $field_name = $field->getName();
 
-	      if ($field_perm && $field_perm[$field_name] &&
-		(in_array('TRACKER_FIELD_READ',$field_perm[$field_name]) || in_array('TRACKER_FIELD_UPDATE',$field_perm[$field_name]))) {
+	      if ($field_perm && $field_perm[$field_name] && permission_can_read_field($field_perm[$field_name])) {
 
 		$field_html = new ArtifactFieldHtml($field);
 		// if the field is a special field 
@@ -1579,8 +1577,7 @@ class ArtifactHtml extends Artifact {
 	      // If both removed and added items are empty skip - Sanity check
 	      if (!$h['del'] && !$h['add'] ||
 		  ($field_perm && 
-		   (!$field_perm[$field_name] || 
-		    (!in_array('TRACKER_FIELD_READ',$field_perm[$field_name]) && !in_array('TRACKER_FIELD_UPDATE',$field_perm[$field_name]))))) { continue; }
+		   (!$field_perm[$field_name] || !permission_can_read_field($field_perm[$field_name])))) { continue; }
 	      
 	      $visible_change = true;
 	      $label = $field_name;
