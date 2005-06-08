@@ -53,7 +53,12 @@ class ArtifactHtml extends Artifact {
             $summary = $this->getValue('summary');
             
             echo "\n<TABLE width='100%'><TR><TD>";
-            echo "\n<H2>[ ".$this->ArtifactType->getItemName()." #".$this->getID()." ] ".$summary."</H2>";
+            echo "\n<H2>[ ".$this->ArtifactType->getItemName();
+            $field_artifact_id = $result_fields['artifact_id'];
+            if ($field_artifact_id->userCanRead($group_id, $group_artifact_id, $user_id)) {
+                echo " #".$this->getID();
+            }
+            echo " ] ".$summary."</H2>";
             echo "</TD>";
             
             if ( !$pv ) {
@@ -99,7 +104,7 @@ class ArtifactHtml extends Artifact {
             $i = 0;
             while ( list($key, $field) = each($result_fields) ) {
                 if ($field->getName() != 'comment_type_id' && $field->getName() != 'artifact_id') {
-                    $field_html = $this->_getFieldLabelAndValueForUser($group_id, $group_artifact_id, $field, $user_id);
+                    $field_html = $this->_getFieldLabelAndValueForUser($group_id, $group_artifact_id, $field, $user_id, $pv);
                     if ($field_html) {
                         list($sz,) = explode("/",$field->getDisplaySize());
                     
@@ -269,10 +274,10 @@ class ArtifactHtml extends Artifact {
          * 
          * @protected
         **/
-        function _getFieldLabelAndValueForUser($group_id, $group_artifact_id, &$field, $user_id) {
+        function _getFieldLabelAndValueForUser($group_id, $group_artifact_id, &$field, $user_id, $force_read_only = false) {
             $html = false;
             if ($field->userCanRead($group_id, $group_artifact_id, $user_id)) {
-                $read_only = !$field->userCanUpdate($group_id, $group_artifact_id, $user_id);
+                $read_only =  $force_read_only || !$field->userCanUpdate($group_id, $group_artifact_id, $user_id);
                 
                 // For multi select box, we need to retrieve all the values
                 if ( $field->isMultiSelectBox() ) {
