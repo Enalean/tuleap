@@ -83,6 +83,7 @@ class ArtifactHtml extends Artifact {
             echo '
             <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
             <INPUT TYPE="HIDDEN" NAME="group_artifact_id" VALUE="'.$group_artifact_id.'">
+            <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$group_artifact_id.'">
             <INPUT TYPE="HIDDEN" NAME="artifact_id" VALUE="'.$this->getID().'">';
             
             $html  = '<TABLE cellpadding="0"><TR>';
@@ -336,6 +337,7 @@ class ArtifactHtml extends Artifact {
                     <INPUT TYPE="HIDDEN" NAME="func" VALUE="postcopy">
                     <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
                     <INPUT TYPE="HIDDEN" NAME="group_artifact_id" VALUE="'.$group_artifact_id.'">
+                    <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$group_artifact_id.'">
                   <script language="JavaScript" src="/include/calendar.js"></script>';
 	  
 	  
