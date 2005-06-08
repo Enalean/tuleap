@@ -45,6 +45,7 @@ wiki_views_wikiviews	not_empty_page	<p>You can set specific permissions on <stro
 wiki_lib_wikientry	insert_err	Can not insert new wiki entry: $1
 wiki_lib_wikientry	delete_err	Can not delete wiki entry: $1
 wiki_lib_wikientry	update_err	Can not update wiki entry: $1
+wiki_lib_wikientry	no_update	Wiki entry "$1" not updated
 #
 #-----------------------------------------------
 # Script: SF/common/wiki/lib/WikiPage.class

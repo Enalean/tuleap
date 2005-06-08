@@ -205,22 +205,34 @@ class WikiEntry {
   }
 
   function update() {
-      global $Language;
-    $res = db_query(' UPDATE wiki_group_list SET'.
-		    ' group_id='.$this->gid.','.
-		    ' rank='.$this->rank.','.
-		    ' language_id='.$this->language_id.','.
-		    ' wiki_name="'.mysql_real_escape_string($this->name).'",'.
-		    ' wiki_link="'.mysql_real_escape_string($this->page).'",'.
-		    ' description="'.mysql_real_escape_string($this->desc).'"'.
-		    ' WHERE id='.$this->id);
+      global $Language, $feedback;
+      $sql = ' UPDATE wiki_group_list SET'
+          . ' group_id='.$this->gid.','
+          . ' rank='.$this->rank.','
+          . ' language_id='.$this->language_id.','
+          . ' wiki_name="'.mysql_real_escape_string($this->name).'",'
+          . ' wiki_link="'.mysql_real_escape_string($this->page).'",'
+          . ' description="'.mysql_real_escape_string($this->desc).'"'
+          . ' WHERE id='.$this->id;
+      
+      $res = db_query($sql);
+      $err = db_error();
+      
+      if(!empty($err)) {
+          trigger_error($Language->getText('wiki_lib_wikientry','update_err',$err), E_USER_ERROR);
+          return false;
+      }
 
-    if(db_affected_rows($res) === 1)
-      return true;
+      if(db_affected_rows($res) === 1) {
+          return true;
+      }
 
-    trigger_error($Language->getText('wiki_lib_wikientry','update_err',db_error()), E_USER_ERROR);
-    return false;
+      if(db_affected_rows($res) === 0) {
+          $feedback .= $Language->getText('wiki_lib_wikientry','no_update',$this->name);
+          return true;
+      }
 
+      return false;
   }
 }
 

@@ -50,6 +50,7 @@ wiki_views_wikiviews	not_empty_page	<p>Vous pouvez donnez des permissions spécif
 wiki_lib_wikientry	insert_err	Impossible d'insérer une nouvelle entrée wiki: $1
 wiki_lib_wikientry	delete_err	Impossible de supprimer l'entrée wiki: $1
 wiki_lib_wikientry	update_err	Impossible de modifier l'entrée wiki: $1
+wiki_lib_wikientry	no_update	L'entrée wiki "$1" n'a pas été modifiée
 #
 #-----------------------------------------------
 # Script: SF/common/wiki/lib/WikiPage.class
