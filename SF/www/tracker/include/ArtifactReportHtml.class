@@ -12,6 +12,8 @@
 $Language->loadLanguageMsg('tracker/tracker');
 
 class ArtifactReportHtml extends ArtifactReport {
+    
+    var $fields_per_line;
         
         /**
          *  Constructor.
@@ -154,9 +156,10 @@ class ArtifactReportHtml extends ArtifactReport {
             //
             
             $html_select = "<table width='100%'>";
-            
+            $labels = '';
+            $boxes  = '';
             // Number of search criteria (boxes) displayed in one row
-            $fields_per_line=5;
+            $this->fields_per_line = 5;
 
             $ib=0;$is=0;
             $load_cal=false;
@@ -169,7 +172,7 @@ class ArtifactReportHtml extends ArtifactReport {
                 //echo $field->getName()."-".$field->display_type."-".$field->data_type."-".$field->dump()."<br>";
                                     
                 // beginning of a new row
-                if ($ib % $fields_per_line == 0) {
+                if ($ib % $this->fields_per_line == 0) {
                     $align = "center";
                     $labels .= "\n".'<TR align="'.$align.'" valign="top">';
                     $boxes .= "\n".'<TR align="'.$align.'" valign="top">';
@@ -236,7 +239,7 @@ class ArtifactReportHtml extends ArtifactReport {
                 $ib++;
             
                 // end of this row
-                if ($ib % $fields_per_line == 0) {
+                if ($ib % $this->fields_per_line == 0) {
                     $html_select .= $labels.'</TR>'.$boxes.'</TR>';
                     $labels = $boxes = '';
                 }
@@ -484,7 +487,7 @@ class ArtifactReportHtml extends ArtifactReport {
                 }
                 
                 $html_result .= '
-                          <FORM ACTION="'.$PHP_SELF.'" METHOD="GET" NAME="artifact_form">
+                          <FORM ACTION="'.$_SERVER['PHP_SELF'].'" METHOD="GET" NAME="artifact_form">
                           <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$this->group_artifact_id.'">
                           <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">';
 		if ($masschange) {
@@ -500,7 +503,7 @@ class ArtifactReportHtml extends ArtifactReport {
                           <INPUT TYPE="HIDDEN" NAME="advsrch" VALUE="'.$advsrch.'">
                           <INPUT TYPE="HIDDEN" NAME="msort" VALUE="'.$msort.'">
 			  <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="5">
-                          <TR><TD colspan="'.$fields_per_line.'" nowrap>';
+                          <TR><TD colspan="'.$this->fields_per_line.'" nowrap>';
 
                 
                 //Show the list of available artifact reports
@@ -543,7 +546,7 @@ class ArtifactReportHtml extends ArtifactReport {
                          $url_alternate_search.'">'.$text.'</a>)</small></h3><p>';
                 }
                 
-                $html_result .= $html_select;
+                //$html_result .= $html_select;
                 
                 $html_result .= '</TABLE>';
 
@@ -869,7 +872,11 @@ class ArtifactReportHtml extends ArtifactReport {
                          ($field->getName() == 'comment_type_id') )
                         { continue; }
                 }
-        
+                
+                //Do not show unreadable fields
+                if (!$field->userCanRead($group_id, $this->group_artifact_id)) {
+                    continue;
+                }
                 $cb_search = 'CBSRCH_'.$field->getName();
                 $cb_report = 'CBREP_'.$field->getName();
                 $tf_search = 'TFSRCH_'.$field->getName();

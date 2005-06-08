@@ -284,12 +284,14 @@ class ArtifactReport extends Error {
 		reset($this->fields);
 
 		while (list($key,$field) = each($this->fields) ) {
-			if ( ($field->isShowOnQuery())&&($field->isUsed()) ) {
-				$query_fields[$key] = $field;
+			if ( ($field->isShowOnQuery())&&($field->isUsed())) {
+                if ($field->userCanRead($GLOBALS['group_id'], $this->group_artifact_id)) {
+                    $query_fields[$key] = $field;
+                }
 			}
 		}
 		
-		uasort($query_fields,cmp_place_query);
+		uasort($query_fields,'cmp_place_query');
 		return $query_fields;
 	}
 
@@ -307,11 +309,13 @@ class ArtifactReport extends Error {
 	
 		while (list($key,$field) = each($this->fields) ) {
 			if ( ($field->isShowOnResult())&&($field->isUsed()) ) {
-				$result_fields[$key] = $field;
+                if ($field->userCanRead($GLOBALS['group_id'], $this->group_artifact_id)) {
+                    $result_fields[$key] = $field;
+                }
 			}
 		}
 		
-		uasort($result_fields,cmp_place_result);
+		uasort($result_fields,'cmp_place_result');
 		return $result_fields;
 	}
 	
@@ -334,7 +338,7 @@ class ArtifactReport extends Error {
 			}
 		}
 
-		uasort($result_fields,cmp_place_result);
+		uasort($result_fields,'cmp_place_result');
 		return $result_fields;
 	}
 
@@ -452,7 +456,9 @@ class ArtifactReport extends Error {
 			// Only select box criteria to where clause if argument is not ANY
 			return " AND ".$field_name." IN (".implode(",",$prefs[$field->getName()]).") ";
 	
-	    } else if ( $field->isDateField() && ($prefs[$field->getName()][0] || $prefs[$field->getName().'_end'][0])) {
+	    } else if ( $field->isDateField() && (
+            ((isset($prefs[$field->getName()]) && $prefs[$field->getName()][0]) || 
+            (isset($prefs[$field->getName().'_end']) && $prefs[$field->getName().'_end'][0])))) {
 			// transform a date field into a unix time and use <, > or =
 			list($time,$ok) = util_date_to_unixtime($prefs[$field->getName()][0]);
 		
@@ -719,7 +725,7 @@ class ArtifactReport extends Error {
 	      
 	      
 	      // Set the fields_order_result array to	build the order_by			
-	      if ( $fields_order[$field->getName()] ) {
+	      if ( isset($fields_order[$field->getName()]) && $fields_order[$field->getName()] ) {
 		
 		if ( ($field->isUsername())&&(!$field->isSelectBox())&&(!$field->isMultiSelectBox()) ) {
 		  $fields_order_result[$field->getName()] = "u.user_name";
@@ -762,7 +768,7 @@ class ArtifactReport extends Error {
 	      }
 	      
 	      // Set the fields_order_result array to	build the order_by			
-	      if ( $fields_order[$field->getName()] ) {
+	      if ( isset($fields_order[$field->getName()]) && $fields_order[$field->getName()] ) {
 		
 		if ( ($field->isUsername())&&(!$field->isSelectBox())&&(!$field->isMultiSelectBox()) ) {
 		  $fields_order_result[$field->getName()] = "u".$count.".user_name";

@@ -51,7 +51,6 @@ foreach($strings_to_sanitize as $str) {
 if (!isset($func)) {
     $func = '';
 }
-
 if ( $func == 'gotoid' ) {
     // Direct access to an artifact
     if (!isset($aid) || !$aid) {
@@ -60,7 +59,6 @@ if ( $func == 'gotoid' ) {
         require('./gotoid.php');
     }
  } else if ($group_id && isset($atid) && $atid) {
-
         //
         //      get the Group object
         //
@@ -102,6 +100,7 @@ if ( $func == 'gotoid' ) {
         }
         
         case 'postadd' : {
+            
                 //
                 //              Create a new Artifact
                 //      

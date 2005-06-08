@@ -285,7 +285,7 @@ $params=array('title'=>$group->getPublicName().': \''.$ath->getName().'\' '.$Lan
 $ath->header($params);
 
 // Display the artifact items according to all the parameters
-$art_report_html->displayReport($prefs,$group_id,$report_id,$set,$advsrch,$msort,$morder,$order,$pref_stg,$offset,$chunksz,$pv);
+$art_report_html->displayReport($prefs,$group_id,$report_id,$set,$advsrch,$msort,$morder,(isset($order)?$order:false),$pref_stg,$offset,$chunksz,(isset($pv)?$pv:false));
 
 $ath->footer($params);
 
