@@ -757,7 +757,7 @@ function permission_process_update_fields_permissions($group_id, $atid, $fields,
 
     //We process the request
     foreach($permissions_wanted_by_user as $field_id => $ugroups_permissions) {
-        if (is_numeric($field_id)) {
+        if (is_numeric($field_id) && $field_id != 10) { //comment_type is not a "real" field
             $the_field_can_be_submitted = $field_id != 1 && $field_id != 6 && $field_id != 7;
             $the_field_can_be_updated   = $the_field_can_be_submitted;
             //artifact_id#field_id

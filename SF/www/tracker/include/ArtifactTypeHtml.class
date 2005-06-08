@@ -467,6 +467,9 @@ EOL;
                 </form>
 EOS;
 
+            //We remove the pseudo field "comment_type"
+            unset($ugroups_permissions[10]);
+
             if ($group_first) {
                 //We reorganize the associative array
                 $tablo = $ugroups_permissions;
