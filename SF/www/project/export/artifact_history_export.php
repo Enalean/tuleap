@@ -157,7 +157,7 @@ if ($export == 'artifact_history') {
 		
 				$sql_create = "CREATE TABLE $tbl_name (".
 				    'artifact_id INTEGER, field_name VARCHAR(255), '.
-				    'old_value TEXT, mod_by VARCHAR(255), email TEXT, date DATETIME, '.
+				    'old_value TEXT, new_value TEXT, mod_by VARCHAR(255), email TEXT, date DATETIME, '.
 				    'type VARCHAR(255))';
 			
 				$res = db_project_query($dbname, $sql_create);
@@ -166,7 +166,7 @@ if ($export == 'artifact_history') {
 				// the project database table
 				if ($res) {
 					$sql = "SELECT ah.artifact_id,ah.field_name,".
-					'ah.old_value, user.user_name AS mod_by, ah.email, ah.date, ah.type'.
+					'ah.old_value, ah.new_value, user.user_name AS mod_by, ah.email, ah.date, ah.type'.
 					' FROM artifact_history ah, user, artifact a '.
 					"WHERE ah.artifact_id = a.artifact_id AND a.group_artifact_id = ".$atid." AND ".
 					'user.user_id=ah.mod_by';
