@@ -1652,7 +1652,15 @@ class ArtifactField extends Error {
 	function getPermissionForUser($group_id,$group_artifact_id,$user_id=0) {
 
 	  if ($user_id == 0) {
-	    $user_id = user_getid();
+	    if (user_isloggedin()) {
+	      if (user_is_super_user()) {
+		return array('TRACKER_FIELD_READ','TRACKER_FIELD_UPDATE','TRACKER_FIELD_SUMIT');
+	      } else {
+		$user_id = user_getid();
+	      }
+	    } else {
+	      return $this->getPermission(array($GLOBALS['UGROUP_ANONYMOUS']),$group_artifact_id);
+	    }
 	  }
 
 	  //get ugroups user is part of

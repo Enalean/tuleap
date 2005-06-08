@@ -1351,7 +1351,6 @@ class ArtifactHtml extends Artifact {
         function mailFollowupWithPermissions($more_addresses=false,$changes=false) {
             global $sys_datefmt,$feedback,$art_field_fact,$sys_lf,$Language;
 
-	    if (!isset($changes) || empty($changes)) return;
 
             $group = $this->ArtifactType->getGroup();
             $group_artifact_id = $this->ArtifactType->getID();
@@ -1383,7 +1382,7 @@ class ArtifactHtml extends Artifact {
 	      $user_ids = $user_sets[$x];
 	      //echo "<br>--->  preparing mail $x for ";print_r($user_ids);
 
-	      $body = $this->createMailForUsers($user_ids,$ugroups,$changes,$group_id,$group_artifact_id,$ok);
+	      $body = $this->createMailForUsers($user_ids,$ugroups,$changes,$group_id,$group_artifact_id,$ok,$subject);
 
 	      if (!$ok) continue; //don't send the mail if nothing permitted for this user group
 
@@ -1403,7 +1402,6 @@ class ArtifactHtml extends Artifact {
 	      $hdrs .='X-CodeX-Artifact: '.$this->ArtifactType->getItemName().$sys_lf;
 	      $hdrs .='X-CodeX-Artifact-ID: '.$this->getID().$sys_lf;
 	      
-	      $subject='['.$this->ArtifactType->getCapsItemName().' #'.$this->getID().'] '.util_unconvert_htmlspecialchars($this->getValue('summary'));
 	    
 	      //echo "DBG: body:".$body."<br>";
 	      if ($to) { mail($to,$subject,$body,$hdrs); }
@@ -1416,7 +1414,7 @@ class ArtifactHtml extends Artifact {
 	/** for a certain set of users being part of the same ugroups
 	 * create the mail body containing only fields that they have the permission to read
 	 */
-	function createMailForUsers($user_ids,$ugroups,$changes,$group_id,$group_artifact_id,&$ok) {
+	function createMailForUsers($user_ids,$ugroups,$changes,$group_id,$group_artifact_id,&$ok,&$subject) {
 	  global $art_field_fact,$Language,$sys_lf,$sys_datefmt;
 
 	  $fmt_len = 40;
@@ -1425,10 +1423,19 @@ class ArtifactHtml extends Artifact {
 	  $artifact_href = get_server_url()."/tracker/?func=detail&aid=".$this->getID()."&atid=$group_artifact_id&group_id=$group_id";
 	  $used_fields = $art_field_fact->getAllUsedFields();
 	  $ok = false;
+
+	  
 	    
 	  //generate the field permissions (TRACKER_FIELD_READ, TRACKER_FIEDL_UPDATE or nothing)
 	  //for all fields of this tracker given the $ugroups the user is part of
 	  $field_perm = $this->ArtifactType->getFieldPermissions($ugroups);
+
+	  $summ = "";
+	  if ($field_perm && $field_perm['summary'] && permission_can_read_field($field_perm['summary'])) {
+	    $summ = util_unconvert_htmlspecialchars($this->getValue('summary'));
+	  }
+	  $subject='['.$this->ArtifactType->getCapsItemName().' #'.$this->getID().'] '.$summ;
+	  
 
 	  //echo "<br>......... field_perm for "; print_r($ugroups); echo " = "; print_r($field_perm);
 
@@ -1446,8 +1453,9 @@ class ArtifactHtml extends Artifact {
 	    $ok = true;
 	    
             
-	 
 	    $visible_snapshot = false;
+	    $full_snapshot = "";
+
 	    // Some special field first (group, submitted by/on)
 	    $submitted_field = $art_field_fact->getFieldFromName("submitted_by");
 	    if ($field_perm && $field_perm['submitted_by'] && permission_can_read_field($field_perm['submitted_by'])) {
@@ -1509,11 +1517,11 @@ class ArtifactHtml extends Artifact {
 
 	    } // while
 
-	    if ($visible_snapshot) {
+	    if ($visible_snapshot) $full_snapshot .= "$sys_lf";
+
 	    $body .= "=============   ".strtoupper($this->ArtifactType->getName())." #".$this->getID().
 		": ".$Language->getText('tracker_include_artifact','full_snapshot')."   =============$sys_lf".
 		($changes ? '':$artifact_href)."$sys_lf$sys_lf".$full_snapshot;
-	    }
 
 
 	    if (! $left) {
@@ -1523,7 +1531,7 @@ class ArtifactHtml extends Artifact {
 	    // Now display other special fields
             
 	    // Then output the history of bug details from newest to oldest
-	    $body .= "$sys_lf$sys_lf".$this->showDetails($group_id, true);
+	    $body .= $this->showDetails($group_id, true);
 	    
 	    // Then output the CC list
 	    $body .= "$sys_lf$sys_lf".$this->showCCList($group_id, $group_artifact_id, true);

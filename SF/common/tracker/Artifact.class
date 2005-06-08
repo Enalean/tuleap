@@ -1457,7 +1457,9 @@ class Artifact extends Error {
 				if ($field->getValueFunction() != "") {
                 			while (list (,$user_id)=each ($field_value)) {
                     				if ( ($user_id) && ($user_id != 100) ) {
-                        				if (!$user_ids[$user_id] && $this->ArtifactType->checkNotification($user_id, 'ASSIGNEE', $changes)) {
+						  if (!$user_ids[$user_id] && 
+						      $this->ArtifactType->checkNotification($user_id, 'ASSIGNEE', $changes) && 
+						      $this->userCanView($user_id)) {
                             					//echo "DBG - ASSIGNEE - user=$user_id<br>";
                             					$user_ids[$user_id] = true;
                         				}
@@ -1471,7 +1473,9 @@ class Artifact extends Error {
 						$res_u = user_get_result_set_from_unix($user_name);
 						$user_id = db_result($res_u,0,'user_id');
                     				if ( ($user_id) && ($user_id != 100) ) {
-                        				if (!$user_ids[$user_id] && $this->ArtifactType->checkNotification($user_id, 'ASSIGNEE', $changes)) {
+                        				if (!$user_ids[$user_id] && 
+							    $this->ArtifactType->checkNotification($user_id, 'ASSIGNEE', $changes) &&
+							    $this->userCanView($user_id)) {
                             					//echo "DBG - ASSIGNEE - user=$user_id<br>";
                             					$user_ids[$user_id] = true;
                         				}
@@ -1491,7 +1495,9 @@ class Artifact extends Error {
 				$user_id = db_result($res,0,'user_id');
 			}
         		if ( ($user_id) && ($user_id != 100) ) {
-            			if (!$user_ids[$user_id] && $this->ArtifactType->checkNotification($user_id, 'ASSIGNEE', $changes)) {
+            			if (!$user_ids[$user_id] && 
+				    $this->ArtifactType->checkNotification($user_id, 'ASSIGNEE', $changes) &&
+				    $this->userCanView($user_id)) {
                 			//echo "DBG - ASSIGNEE - user=$user_id<br>";
                 			$user_ids[$user_id] = true;
             			}
@@ -1511,7 +1517,10 @@ class Artifact extends Error {
 		//echo " uname=$uname ";
             	$res_oa = user_get_result_set_from_unix($uname);
             	$user_id = db_result($res_oa,0,'user_id');
-            	if ($user_id != 100 && !$user_ids[$user_id] && $this->ArtifactType->checkNotification($user_id, 'ASSIGNEE', $changes)) {
+            	if ($user_id != 100 && 
+		    !$user_ids[$user_id] && 
+		    $this->ArtifactType->checkNotification($user_id, 'ASSIGNEE', $changes) &&
+		    $this->userCanView($user_id)) {
                 	//echo "DBG - ASSIGNEE OLD - user=$user_id<br>";
                 	$user_ids[$user_id] = true;
             	}
@@ -1692,7 +1701,7 @@ class Artifact extends Error {
         // check submitter notification preferences
         $user_id = $this->getSubmittedBy();
         if ($user_id != 100) {
-            if ($this->ArtifactType->checkNotification($user_id, 'SUBMITTER', $changes)) {
+	  if ($this->ArtifactType->checkNotification($user_id, 'SUBMITTER', $changes) && $this->userCanView($user_id)) {
 	      //echo "DBG - SUBMITTER - user=$user_id<br>";
                 $user_ids[$user_id] = true;
             }
