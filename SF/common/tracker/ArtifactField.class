@@ -624,6 +624,7 @@ class ArtifactField extends Error {
 	    } else {
 		
 			// If only active field
+            $status_cond = "";
 			if ($active_only) {
 			    if ($checked) {
 					$status_cond = "AND  (status IN ('A','P') OR value_id='".$checked."') ";

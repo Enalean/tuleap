@@ -47,7 +47,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		$params['tabtext']=$this->getName();
 
 		site_project_header($params);
-                if (!$params['pv']) {
+                if (!isset($params['pv']) || !$params['pv']) {
                     echo '<h3>'.$Language->getText('tracker_import_admin','tracker').': <a href="/tracker/?group_id='.$group_id.'&atid='.$this->getID().'">'.$this->getName().'</a></h3><p>';
 
                     echo '<strong><a href="/tracker/?func=add&group_id='.$group_id.'&atid='. $this->getID() .'">'.$Language->getText('tracker_include_type','submit_new',$this->getCapsItemName()).'</a>';
@@ -1418,7 +1418,9 @@ EOS;
 			    
 	    echo '
 		      </td>
-		      <td rowspan="2">'.$Language->getText('tracker_include_type','display_field').'<br>
+		      <td rowspan="2">';
+        /**
+        echo $Language->getText('tracker_include_type','display_field').'<br>
                                     <ul>
 		        <li>'.$Language->getText('tracker_include_type','sub_form_proj').' ';
 		        
@@ -1439,8 +1441,9 @@ EOS;
 		}		
 		
 		echo '
-		        </li></ul>
-		      </td>
+		        </li></ul>';
+        /**/
+		echo '</td>
 		    </tr>
 		    <tr> 
 		      <td>'.$Language->getText('tracker_include_type','rank_screen').':&nbsp;';

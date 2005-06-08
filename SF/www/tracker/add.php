@@ -35,7 +35,7 @@ $ath->header(array('title'=>$Language->getText('tracker_add', 'add_a').$ath->get
 	'atid'=>$ath->getID(),'sectionvals'=>array($group->getPublicName()),'help' => 'ArtifactSubmission.html'));
 
 // Display the artifact items according to all the parameters
-$ah->displayAdd();
+$ah->displayAdd(user_getid());
 
 // Display footer page
 $ath->footer(array());

@@ -331,7 +331,7 @@ class ArtifactHtml extends Artifact {
 	  }
 	  
 	  // Beginning of the submission form with fixed fields
-	  echo '<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data" NAME="artifact_form">
+	  echo '<FORM ACTION="'.$_SERVER['PHP_SELF'].'" METHOD="POST" enctype="multipart/form-data" NAME="artifact_form">
                     <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="'.$sys_max_size_attachment.'">
                     <INPUT TYPE="HIDDEN" NAME="func" VALUE="postcopy">
                     <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
@@ -1075,7 +1075,7 @@ class ArtifactHtml extends Artifact {
                 
         }
         
-        function displayAdd() {
+        function displayAdd($user_id) {
                 global $art_field_fact,$sys_datefmt,$sys_max_size_attachment,$Language;
         
                 $fields_per_line=2;
@@ -1091,7 +1091,7 @@ class ArtifactHtml extends Artifact {
                 }
                 
                 // Beginning of the submission form with fixed fields
-                echo '<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data" NAME="artifact_form">
+                echo '<FORM ACTION="'.$_SERVER['PHP_SELF'].'" METHOD="POST" enctype="multipart/form-data" NAME="artifact_form">
                     <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="'.$sys_max_size_attachment.'">
                         <INPUT TYPE="HIDDEN" NAME="func" VALUE="postadd">
                         <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
@@ -1108,19 +1108,19 @@ class ArtifactHtml extends Artifact {
                 $i=0;
                 $is_member = user_ismember($group_id);
 
-            $result_fields = $art_field_fact->getAllUsedFields();
-        while ( list($key, $field) = each($result_fields) ) {
+                $result_fields = $art_field_fact->getAllUsedFields();
+                while ( list($key, $field) = each($result_fields) ) {
                 
-                $field_html = new ArtifactFieldHtml($field);
-                //echo $field->getName()."-".$is_member."-".$field->isShowOnAddMember()."<br>";
+                    $field_html = new ArtifactFieldHtml($field);
+                    //echo $field->getName()."-".$is_member."-".$field->isShowOnAddMember()."<br>";
                 
                     // if the field is a special field (except summary and original description)
                     // or if not used by this project  then skip it. 
                     // Plus only show fields allowed on the artifact submit_form 
                     if ( (!$field->isSpecial() || $field->getName()=='summary' || $field->getName()=='details') ) {
-                
-                                if  (($is_member && $field->isShowOnAddMember()) ||
-                                     (!$is_member && $field->isShowOnAdd()) ) {
+                        if ($field->userCanSubmit($group_id, $group_artifact_id, $user_id)) {
+                            //    if  (($is_member && $field->isShowOnAddMember()) ||
+                            //         (!$is_member && $field->isShowOnAdd()) ) {
                                     
                                     // display the artifact field with its default value
                                     // if field size is greatest than max_size chars then force it to
@@ -1146,7 +1146,8 @@ class ArtifactHtml extends Artifact {
                                                 $i++;
                                                 echo ($i % $fields_per_line ? '':"\n</TR>");
                                     }
-                                }
+                           //     }
+                        }
                     }
                 } // while
                 
