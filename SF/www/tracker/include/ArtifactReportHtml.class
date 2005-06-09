@@ -779,6 +779,11 @@ class ArtifactReportHtml extends ArtifactReport {
                         { continue; }
                 }
         
+                //Do not show unreadable fields
+                if (!$field->userCanRead($group_id, $this->group_artifact_id)) {
+                    continue;
+                }
+
                 $cb_search = 'CBSRCH_'.$field->getName();
                 $cb_report = 'CBREP_'.$field->getName();
                 $tf_search = 'TFSRCH_'.$field->getName();
