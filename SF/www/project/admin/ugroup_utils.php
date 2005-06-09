@@ -26,6 +26,7 @@ $UGROUP_DOCUMENT_TECH=12;
 $UGROUP_DOCUMENT_ADMIN=13;
 $UGROUP_WIKI_ADMIN=14;
 $UGROUP_TRACKER_ADMIN=15;
+$UGROUP_TRACKER_TECH=16;
 
 
 // Return members (user_id + user_name) of given user group
@@ -83,6 +84,7 @@ function ugroup_db_list_dynamic_ugroups_for_user($group_id,$group_artifact_id,$u
   if ($user->isMember($group_id))  $res[] = $GLOBALS['UGROUP_PROJECT_MEMBERS']; 
   if ($user->isMember($group_id,'A'))  $res[] = $GLOBALS['UGROUP_PROJECT_ADMIN'];
   if ($user->isTrackerAdmin($group_id,$group_artifact_id))  $res[] = $GLOBALS['UGROUP_TRACKER_ADMIN'];
+  if ($user->isTrackerTech($group_id,$group_artifact_id))  $res[] = $GLOBALS['UGROUP_TRACKER_TECH'];
 
   return $res;
 }
@@ -133,6 +135,11 @@ function ugroup_user_is_member($user_id, $ugroup_id, $group_id, $atid=0) {
         $group = group_get_object($group_id);	
         $at = new ArtifactType($group, $atid);
         return $at->userIsAdmin();
+    } else if ($ugroup_id==$GLOBALS['UGROUP_TRACKER_TECH']) {
+        // Tracker technicians
+        $group = group_get_object($group_id);	
+        $at = new ArtifactType($group, $atid);
+        return $at->userIsTech();
     } else { 
         // Normal ugroup
         $sql="SELECT * from ugroup_user where ugroup_id='$ugroup_id' and user_id='$user_id'";
