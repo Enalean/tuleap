@@ -194,7 +194,7 @@ tracker_admin_index	values_updated	Field values updated
 tracker_admin_index	value_updated	Field value updated
 tracker_admin_index	value_created	Field value created
 tracker_admin_index	value_deleted	Field value deleted
-tracker_admin_index	field_created	Field created
+tracker_admin_index	field_created	Field created with default permissions
 tracker_admin_index	field_updated	Field updated
 tracker_admin_index	field_deleted	Field deleted
 tracker_admin_index	modify_usage	 - Modify Field Usage

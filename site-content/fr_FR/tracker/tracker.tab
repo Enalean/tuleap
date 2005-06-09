@@ -199,7 +199,7 @@ tracker_admin_index	values_updated	Valeurs de champ mises à jour
 tracker_admin_index	value_updated	Valeur de champ mise à jour
 tracker_admin_index	value_created	Valeur de champ créée
 tracker_admin_index	value_deleted	Valeur de champ détruite
-tracker_admin_index	field_created	Champ créé
+tracker_admin_index	field_created	Champ créé avec les permissions par défaut
 tracker_admin_index	field_updated	Champ mis à jour
 tracker_admin_index	field_deleted	Champ détruit
 tracker_admin_index	modify_usage	 - Modifier l'utilisation d'un champ

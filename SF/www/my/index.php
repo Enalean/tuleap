@@ -590,6 +590,32 @@ function display_artifacts($list_trackers, $print_box_begin) {
     $atid = $trackers_array['group_artifact_id'];
     $group_id = $trackers_array['group_id'];
     
+    // {{{ check permissions
+    //create group
+    $group = group_get_object($group_id);
+    if (!$group || !is_object($group) || $group->isError()) {
+            exit_no_group();
+    }
+    //Create the ArtifactType object
+    $at =& new ArtifactType($group,$atid);
+    //Check if user can view artifact
+    if (!$at->userCanView()) {
+        continue;
+    }
+    //Create ArtifactFieldFactory object
+    $aff =& new ArtifactFieldFactory($at);
+    //Retriebe artifact_id field
+    $field =& $aff->getFieldFromName('artifact_id');
+    //Check if user can read it
+    $user_can_view_aid = $field->userCanRead($group_id, $atid);
+    //Retriebe summary field
+    $field =& $aff->getFieldFromName('summary');
+    //Check if user can read it
+    $user_can_view_summary = $field->userCanRead($group_id, $atid);
+    if (!$user_can_view_aid && !$user_can_view_summary) {
+        continue;
+    }
+    //}}}
     
     //work on the tracker of the last round if there was one
     if ($atid != $atid_old && $count_aids != 0) {
@@ -647,8 +673,11 @@ function display_artifacts($list_trackers, $print_box_begin) {
 	'"><TD class="small"><A HREF="/tracker/?func=detail&group_id='.
 	$group_id.'&aid='.$aid.'&atid='.$atid.
 	'">'.$aid.'</A></TD>'.
-          '<TD class="small"'.($percent_complete ? '>': ' colspan="2">').stripslashes($summary).'&nbsp;'.$AS_flag.'</TD>'.
-	$percent_complete.'</TR>';
+        '<TD class="small"'.($percent_complete ? '>': ' colspan="2">');
+    if ($user_can_view_summary) {
+        $html .= stripslashes($summary);
+    }
+	$html .= '&nbsp;'.$AS_flag.'</TD>'.$percent_complete.'</TR>';
       
     }
   }	
