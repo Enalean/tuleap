@@ -751,6 +751,24 @@ function permission_process_selection_form($group_id, $permission_type, $object_
     return array(true, $Language->getText('project_admin_permissions','perm_update_success',$msg));
 }
 
+function permission_get_input_value_from_permission($perm) {
+    $ret = false;
+    switch($perm) {
+        case 'TRACKER_FIELD_SUBMIT':
+            $ret = array('submit' => 'on');
+            break;
+        case 'TRACKER_FIELD_READ':
+            $ret = array('others' => '0');
+            break;
+        case 'TRACKER_FIELD_UPDATE':
+            $ret = array('others' => '1');
+            break;
+        default:
+            //Do nothing
+            break;
+    }
+    return $ret;
+}
 
 function permission_process_update_fields_permissions($group_id, $atid, $fields, $permissions_wanted_by_user) {
     //The actual permissions
