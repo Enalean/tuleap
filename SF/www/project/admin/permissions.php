@@ -350,9 +350,10 @@ function permission_get_field_tracker_ugroups_permissions($group_id, $atid, $fie
         //We store permission for the current field
         $ugroups_permissions[$field->getID()] = array(
                                                       'field' => array(
-                                                                       'name'  => $field->getLabel(),
-                                                                       'id'    => $field->getID(),
-                                                                       'link'  => '/tracker/admin/index.php?group_id='.$group_id.'&atid='.$atid.'&func=display_field_update&field_id='.$field->getID()
+                                                                       'shortname'  => $field->getName(),
+                                                                       'name'       => $field->getLabel(),
+                                                                       'id'         => $field->getID(),
+                                                                       'link'       => '/tracker/admin/index.php?group_id='.$group_id.'&atid='.$atid.'&func=display_field_update&field_id='.$field->getID()
                                                                        ),
                                                       'ugroups' => $ugroups
                                                       );
@@ -757,9 +758,14 @@ function permission_process_update_fields_permissions($group_id, $atid, $fields,
 
     //We process the request
     foreach($permissions_wanted_by_user as $field_id => $ugroups_permissions) {
-        if (is_numeric($field_id) && $field_id != 10) { //comment_type is not a "real" field
-            $the_field_can_be_submitted = $field_id != 1 && $field_id != 6 && $field_id != 7;
+        if (is_numeric($field_id) 
+            && isset($stored_ugroups_permissions[$field_id]) 
+            && $stored_ugroups_permissions[$field_id]['field']['shortname'] !== "comment_type_id") { //comment_type is not a "real" field
+            
+            $field_name                 = $stored_ugroups_permissions[$field_id]['field']['shortname'];
+            $the_field_can_be_submitted = $field_name !== "artifact_id" && $field_name !== "submitted_by" && $field_name !== "open_date";
             $the_field_can_be_updated   = $the_field_can_be_submitted;
+            
             //artifact_id#field_id
             $fake_object_id = permission_build_field_id($atid, $field_id);
             

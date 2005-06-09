@@ -467,7 +467,16 @@ EOL;
 EOS;
 
             //We remove the pseudo field "comment_type"
-            unset($ugroups_permissions[10]);
+            $comment_type_field_id = false;
+            reset($ugroups_permissions);
+            while((list($key,$value) = each($ugroups_permissions)) && !$comment_type_field_id) {
+                if ($value['field']['shortname'] === "comment_type_id") {
+                    $comment_type_field_id = $key;
+                }
+            }
+            if ($comment_type_field_id) {
+                unset($ugroups_permissions[$comment_type_field_id]);
+            }
 
             if ($group_first) {
                 //We reorganize the associative array
@@ -596,14 +605,14 @@ EOS;
                         }
                         $html .= "<input type='hidden' name='".$name_of_variable."[submit]' value='off'/>";//TODO verifier diff�rents navigateurs
                         $can_submit_and_update = (($group_first 
-                                                   && $second_part['id'] != 1 
-                                                   && $second_part['id'] != 6 
-                                                   && $second_part['id'] != 7)
+                                                   && $second_part['shortname'] !== "artifact_id"
+                                                   && $second_part['shortname'] !== "submitted_by"
+                                                   && $second_part['shortname'] !== "open_date")
                                                   ||
                                                   (!$group_first 
-                                                   && $first_part['id'] != 1 
-                                                   && $first_part['id'] != 6 
-                                                   && $first_part['id'] != 7));
+                                                   && $first_part['shortname'] !== "artifact_id"
+                                                   && $first_part['shortname'] !== "submitted_by"
+                                                   && $first_part['shortname'] !== "open_date"));
                         
                         $html .= "<input type='checkbox' name=\"".$name_of_variable.'[submit]"  '.
                             (isset($permissions[$submit_permission])?"checked='checked'":"")." ".($can_submit_and_update?"":"disabled='disabled'")." /> ";
