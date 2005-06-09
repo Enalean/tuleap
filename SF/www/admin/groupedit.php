@@ -84,7 +84,7 @@ echo show_group_type_box('group_type',$row_grp['type']);
 
 ?>
 
-<B><?php echo $Language->getText('admin_groupedit','status'); ?></B>
+<B><?php echo $Language->getText('global','status'); ?></B>
 <SELECT name="form_status">
 <OPTION <?php if ($row_grp['status'] == "I") print "selected "; ?> value="I">
 <?php echo $Language->getText('admin_groupedit','incomplete'); ?></OPTION>

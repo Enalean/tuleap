@@ -293,7 +293,7 @@ if( $submit ) {
 	</TR>
 	<TR>
 		<TD>
-			<B><?php echo $Language->getText('file_admin_editpackages','status'); ?>:</B>
+			<B><?php echo $Language->getText('global','status'); ?>:</B>
 		</TD>
 		<TD>
 <?php print frs_show_status_popup ($name='status_id') . "<br>"; ?>

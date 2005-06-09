@@ -117,7 +117,6 @@ admin_groupedit	active	Active
 admin_groupedit	pending	Pending
 admin_groupedit	holding	Holding
 admin_groupedit	deleted	Deleted
-admin_groupedit	status	Status
 admin_groupedit	public	Public?
 admin_groupedit	license	License
 admin_groupedit	home_box	Home Box

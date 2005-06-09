@@ -255,7 +255,6 @@ project_admin_utils	no_g_change	No Changes Have Been Made to This Group
 # they do not appear in the code !!!!
 project_admin_utils	approved	Approved
 project_admin_utils	deleted	Deleted
-project_admin_utils	status	Status
 project_admin_utils	is_public	Is public
 project_admin_utils	type	Type
 project_admin_utils	http_domain	http_domain
@@ -338,7 +337,6 @@ project_admin_servicebar	new_s	New Service
 project_admin_servicebar	create_s	Create a new service.
 project_admin_servicebar	manage_s	Manage Existing Services
 project_admin_servicebar	availability	Availability
-project_admin_servicebar	status	Status
 project_admin_servicebar	rank_on_screen	Rank On Screen
 project_admin_servicebar	del?	Delete?
 project_admin_servicebar	home_page	Home Page

@@ -42,7 +42,6 @@ mail_admin_index	no_list_found	Aucune liste disponible
 mail_admin_index	none_found_for_project	Aucune liste n'est disponible pour ce projet
 mail_admin_index	admin_lists_here	Vous pouvez administrez vos listes de diffusion depuis cette page. Veuillez noter que les listes privées sont visibles pour les membres du projet mais qu'elles n'apparaissent pas sur $1
 mail_admin_index	list	Liste
-mail_admin_index	status	Statut
 mail_admin_index	update	Valider
 mail_admin_index	list_admin	Administration des listes
 mail_admin_index	public	Publique

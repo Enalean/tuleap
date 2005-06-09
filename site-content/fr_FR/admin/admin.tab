@@ -122,7 +122,6 @@ admin_groupedit	active	Actif
 admin_groupedit	pending	En attente
 admin_groupedit	holding	En suspend
 admin_groupedit	deleted	Détruit
-admin_groupedit	status	Statut
 admin_groupedit	public	Public?
 admin_groupedit	license	Licence
 admin_groupedit	home_box	Serveur maison

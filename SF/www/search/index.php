@@ -7,6 +7,9 @@
 // $Id$
 
 require_once('pre.php');
+require_once('common/tracker/ArtifactType.class');
+require_once('common/tracker/Artifact.class');
+require_once('common/tracker/ArtifactFieldFactory.class');
 
 $Language->loadLanguageMsg('search/search');
 
@@ -394,6 +397,31 @@ if ($type_of_search == "soft") {
 
 } else if ($type_of_search == 'tracker') {
 
+        //
+        //      get the Group object
+        //
+        $group = group_get_object($group_id);
+        if (!$group || !is_object($group) || $group->isError()) {
+                exit_no_group();
+        }
+        //
+        //      Create the ArtifactType object
+        //
+        $at = new ArtifactType($group,$atid);
+        if (!$at || !is_object($at)) {
+            exit_error($Language->getText('global','error'),$Language->getText('global','error'));
+        }
+        if ($at->isError()) {
+                exit_error($Language->getText('global','error'),$at->getErrorMessage());
+        }
+        // Check if this tracker is valid (not deleted)
+        if ( !$at->isValid() ) {
+                exit_error($Language->getText('global','error'),$Language->getText('global','error'));
+        }
+
+        // Create field factory
+        $art_field_fact = new ArtifactFieldFactory($at);
+
 	$array=explode(" ",$words);
 	$words1=implode($array,"%' $crit artifact.details LIKE '%");
 	$words2=implode($array,"%' $crit artifact.summary LIKE '%");
@@ -409,21 +437,16 @@ if ($type_of_search == "soft") {
 		. "      OR (artifact.summary LIKE '%$words2%') "
 		. "      OR (artifact_history.field_name='details' "
 		. "          AND (artifact_history.old_value LIKE '%$words3%'))) "
-		. "GROUP BY artifact_id,summary,open_date,user_name LIMIT $offset,26";
+		. "GROUP BY open_date DESC LIMIT $offset,999999999";
 
-	//echo "DBG: $sql<br>";
 	$result = db_query($sql);
-	$rows = $rows_returned = db_numrows($result);
+	$rows_returned = db_numrows($result);
 
-	if ( !$result || $rows < 1) {
+	if ( !$result || $rows_returned < 1) {
 		$no_rows = 1;
 		echo '<H2>'.$Language->getText('search_index','no_match_found',$words).'</H2>';
 		echo db_error();
 	} else {
-
-		if ( $rows_returned > 25) {
-			$rows = 25;
-		}
 
 		echo '<H3>'.$Language->getText('search_index','search_res',$words)."</H3><P>\n";
 
@@ -431,18 +454,35 @@ if ($type_of_search == "soft") {
 		$title_arr[] = $Language->getText('search_index','artifact_summary');
 		$title_arr[] = $Language->getText('search_index','submitted_by');
 		$title_arr[] = $Language->getText('search_index','date');
+		$title_arr[] = $Language->getText('global','status');
 
 		echo html_build_list_table_top ($title_arr);
 
 		echo "\n";
 
-		for ( $i = 0; $i < $rows; $i++ ) {
-			print	"\n<TR class=\"". html_get_alt_row_color($i) ."\"><TD><A HREF=\"/tracker/?group_id=$group_id&func=detail&atid=$atid&aid="
-				. db_result($result, $i, "artifact_id")."\"><IMG SRC=\"".util_get_image_theme('msg.png')."\" BORDER=0 HEIGHT=12 WIDTH=10> "
-				. db_result($result, $i, "summary")."</A></TD>"
-				. "<TD>".db_result($result, $i, "user_name")."</TD>"
-				. "<TD>".format_date($sys_datefmt,db_result($result,$i,"open_date"))."</TD></TR>";
-		}
+
+                $art_displayed=0;
+                $rows=0;
+                while ($arr = db_fetch_array($result)) {
+                    $rows++;
+                    $curArtifact=new Artifact($at, $arr['artifact_id']);
+                    if ($curArtifact->isStatusClosed($curArtifact->getStatusID())) {
+                        $status=$Language->getText('global','closed');
+                    } else {                        
+                        $status=$Language->getText('global','open');
+                    }
+                    // Only display artifacts that the user is allowed to see
+                    if ($curArtifact->userCanView(user_getid())) {
+                        print	"\n<TR class=\"". html_get_alt_row_color($art_displayed) ."\"><TD><A HREF=\"/tracker/?group_id=$group_id&func=detail&atid=$atid&aid="
+                            . $arr['artifact_id']."\"><IMG SRC=\"".util_get_image_theme('msg.png')."\" BORDER=0 HEIGHT=12 WIDTH=10> "
+                            . $arr['summary']."</A></TD>"
+                            . "<TD>".$arr['user_name']."</TD>"
+                            . "<TD>".format_date($sys_datefmt,$arr['open_date'])."</TD>"
+                            . "<TD>".$status."</TD>"."</TR>";
+                        $art_displayed++;
+                        if ($art_displayed>24) { break; } // Only display 25 results.
+                    }
+                }
 		echo "</TABLE>\n";
 	}
 } else {
@@ -468,12 +508,18 @@ if ( !$no_rows && ( ($rows_returned > $rows) || ($offset != 0) ) ) {
 	echo "</TD>\n\t<TD ALIGN=\"right\">";
 	if ( $rows_returned > $rows) {
 		echo "<span class=\"normal\"><B>";
-		echo "<A HREF=\"/search/?type_of_search=$type_of_search&words=".urlencode($words)."&offset=".($offset+25);
+		echo "<A HREF=\"/search/?type_of_search=$type_of_search&words=".urlencode($words)."&offset=".($offset+$rows);
 		if ( $type_of_search == 'bugs' ) {
 			echo "&group_id=$group_id&is_bug_page=1";
 		} 
 		if ( $type_of_search == 'forums' ) {
 			echo "&forum_id=$forum_id&is_forum_page=1";
+		}
+                if ( $exact ) {
+			echo "&exact=1";
+		}
+		if ( $type_of_search == 'tracker' ) {
+			echo "&group_id=$group_id&atid=$atid";
 		}
 		echo "\"><B>".$Language->getText('search_index','next_res')." <IMG SRC=\"".util_get_image_theme('t.png')."\" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE></A></B></span>";
 	} else {

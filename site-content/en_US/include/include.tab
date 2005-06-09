@@ -240,7 +240,6 @@ include_menu	register_new_proj	Register New Project
 include_menu	account_maintenance	Account Maintenance
 include_menu	my_perso_page	My Personal Page
 include_menu	bookmark_this_page	Bookmark This Page
-include_menu	status	Status
 include_menu	not_logged_in	NOT LOGGED IN
 include_menu	login	Login
 include_menu	new_user	New User

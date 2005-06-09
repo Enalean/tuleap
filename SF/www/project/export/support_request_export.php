@@ -32,7 +32,7 @@ $lbl_list = array('support_id' => $Language->getText('project_export_support_req
 		  'assigned_to' => $Language->getText('project_export_support_request_export','assigned_to'),
 		  'open_date' => $Language->getText('project_export_support_request_export','open_date'),
 		  'close_date' => $Language->getText('project_export_support_request_export','close_date'),
-		  'status' => $Language->getText('project_admin_servicebar','status'),
+		  'status' => $Language->getText('global','status'),
 		  'follow_ups' => $Language->getText('project_export_artifact_export','follow_up_comments'));
 $dsc_list = array('support_id' => $Language->getText('project_export_support_request_export','support_id_desc'),
 		  'group_id' => $Language->getText('project_export_bug_deps_export','g_id_desc'),

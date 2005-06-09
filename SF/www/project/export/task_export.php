@@ -36,7 +36,7 @@ $lbl_list = array('project_task_id' => $Language->getText('project_export_task_a
 		  'start_date' => $Language->getText('project_export_task_export','start_date'),
 		  'end_date' => $Language->getText('project_export_task_export','end_date'),
 		  'created_by' => $Language->getText('project_export_task_export','created_by'),
-		  'status' => $Language->getText('project_admin_servicebar','status'),
+		  'status' => $Language->getText('global','status'),
 		  'assigned_to' => $Language->getText('project_export_support_request_export','assigned_to'),
 		  'follow_ups' => $Language->getText('project_export_artifact_export','follow_up_comments'),
 		  'is_dependent_on_task_id'=> $Language->getText('project_export_task_export','depend_on_task'));

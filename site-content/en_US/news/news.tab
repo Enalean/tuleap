@@ -19,7 +19,6 @@ news_admin_index	title	NewsBytes
 news_admin_index	not_found_err	Error - not found
 news_admin_index	approve_for	Approve a NewsByte For Project: $1
 news_admin_index	submitted_by	Submitted by
-news_admin_index	status	Status
 news_admin_index	subject	Subject
 news_admin_index	details	Details
 news_admin_index	if_edit_delete	If this item is on the $1 home page and you edit it, it will be removed from the home page.

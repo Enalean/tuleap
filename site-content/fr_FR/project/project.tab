@@ -260,7 +260,6 @@ project_admin_utils	no_g_change	Aucun changement effectué sur ce projet
 # they do not appear in the code !!!!
 project_admin_utils	approved	Approuvé
 project_admin_utils	deleted	Détruit
-project_admin_utils	status	Statut
 project_admin_utils	is_public	Public
 project_admin_utils	type	Type
 project_admin_utils	http_domain	Domaine http
@@ -343,7 +342,6 @@ project_admin_servicebar	new_s	Nouveau service
 project_admin_servicebar	create_s	Créer un nouveau service.
 project_admin_servicebar	manage_s	Modifier les services existants
 project_admin_servicebar	availability	Disponibilité
-project_admin_servicebar	status	Statut
 project_admin_servicebar	rank_on_screen	Rang à l'écran
 project_admin_servicebar	del?	Détruire?
 project_admin_servicebar	home_page	Site Web

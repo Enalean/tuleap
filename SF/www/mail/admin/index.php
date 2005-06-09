@@ -167,7 +167,7 @@ if ($group_id && user_ismember($group_id,'A')) {
 
 			$title_arr=array();
 			$title_arr[]=$Language->getText('mail_admin_index','list');
-			$title_arr[]=$Language->getText('mail_admin_index','status');
+			$title_arr[]=$Language->getText('global','status');
 			$title_arr[]=$Language->getText('mail_admin_index','update');
 			$title_arr[]=$Language->getText('mail_admin_index','list_admin');
 

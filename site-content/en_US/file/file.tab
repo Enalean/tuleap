@@ -35,7 +35,6 @@ file_admin_editpackages	p_explain	You can use packages to group different file r
 file_admin_editpackages	no_p_defined	You Have No Packages Defined
 file_admin_editpackages	p_name	Package Name
 file_admin_editpackages	rank_on_screen	Rank On Screen
-file_admin_editpackages	status	Status
 file_admin_editpackages	update	Update
 file_admin_editpackages	releases	Releases
 file_admin_editpackages	perms	Permissions

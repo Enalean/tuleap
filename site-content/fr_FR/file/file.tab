@@ -40,7 +40,6 @@ file_admin_editpackages	p_explain	Vous pouvez utiliser les paquets pour regroupe
 file_admin_editpackages	no_p_defined	Aucun paquet n'est défini
 file_admin_editpackages	p_name	Nom du paquet
 file_admin_editpackages	rank_on_screen	Rang à l'écran
-file_admin_editpackages	status	Statut
 file_admin_editpackages	update	Valider
 file_admin_editpackages	releases	Versions
 file_admin_editpackages	perms	Permissions

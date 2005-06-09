@@ -423,7 +423,6 @@ tracker_include_type	tracker_id	ID de l'outil de suivi:
 tracker_include_type	list_all_fields	Liste de tous les champs disponibles
 tracker_include_type	type	Type
 tracker_include_type	rank_screen	Rang à l'écran
-tracker_include_type	status	Statut
 tracker_include_type	used	Utilisé
 tracker_include_type	unused	Inutilisé
 tracker_include_type	warning_loose_data	** AVERTISSEMENT!! ** Si vous détruisez ce champ, vous perdrez TOUTES les données associées. Vous pouvez aussi lui donner le statut INUTILISE, Continuer?

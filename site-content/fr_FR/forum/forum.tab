@@ -41,7 +41,6 @@ forum_admin_index	none_found_for_group	Aucun forum pour ce projet
 forum_admin_index	update_f_status	Mettre à jour le statut du forum
 forum_admin_index	private_explain	Vous pouvez rendre un forum privé. veuillez noter que les forums privés ne sont visibles que pour les membres du projet.
 forum_admin_index	forum	Forum
-forum_admin_index	status	Statut
 forum_admin_index	update	Valider
 forum_admin_index	deleted	Détruit
 forum_admin_index	forum_admin	Administration des forums

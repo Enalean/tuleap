@@ -36,7 +36,6 @@ forum_admin_index	none_found_for_group	No forum for this project
 forum_admin_index	update_f_status	Update Forum Status
 forum_admin_index	private_explain	You can make forums private from here. Please note that private forums can still be viewed by members of your project, not the general public.
 forum_admin_index	forum	Forum
-forum_admin_index	status	Status
 forum_admin_index	update	Update
 forum_admin_index	deleted	Deleted
 forum_admin_index	forum_admin	Forum Administration

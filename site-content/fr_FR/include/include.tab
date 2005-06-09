@@ -245,7 +245,6 @@ include_menu	register_new_proj	Enregistrer un projet
 include_menu	account_maintenance	Mon compte
 include_menu	my_perso_page	Ma page personnelle
 include_menu	bookmark_this_page	Cette page en signet
-include_menu	status	Statut
 include_menu	not_logged_in	Déconnecté
 include_menu	login	Se connecter
 include_menu	new_user	Nouveau compte

@@ -56,7 +56,7 @@ if ($form_catroot == 1) {
 <TR>
 <TD><b><?php echo $Language->getText('admin_groupedit','grp_name')." ".$Language->getText('admin_grouplist','click');?></b></TD>
 <TD><b><?php echo $Language->getText('admin_groupedit','unix_grp'); ?></b></TD>
-<TD><b><?php echo $Language->getText('admin_groupedit','status'); ?></b></TD>
+<TD><b><?php echo $Language->getText('global','status'); ?></b></TD>
 <TD><b><?php echo $Language->getText('admin_groupedit','public'); ?></b></TD>
 <TD><b><?php echo $Language->getText('admin_groupedit','license'); ?></b></TD>
 <TD><b><?php echo $Language->getText('admin_grouplist','categ'); ?></b></TD>

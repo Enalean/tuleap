@@ -24,7 +24,6 @@ news_admin_index	title	Annonces
 news_admin_index	not_found_err	Erreur - introuvable
 news_admin_index	approve_for	Approuver une annonce pour le projet: $1
 news_admin_index	submitted_by	Soumise par
-news_admin_index	status	Statut
 news_admin_index	subject	Sujet
 news_admin_index	details	Détails
 news_admin_index	if_edit_delete	Si cette annonce figure sur la page d'accueil de $1 et que vous la modifiez, elle sera enlevée de la page d'accueil.

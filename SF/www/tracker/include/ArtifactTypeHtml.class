@@ -1102,7 +1102,7 @@ EOS;
 		$title_arr[]=$Language->getText('tracker_include_type','type');
 		$title_arr[]=$Language->getText('tracker_include_artifact','desc');
 		$title_arr[]=$Language->getText('tracker_include_type','rank_screen');
-		$title_arr[]=$Language->getText('tracker_include_type','status');
+		$title_arr[]=$Language->getText('global','status');
 		$title_arr[]=$Language->getText('tracker_include_canned','delete');
 		
 		echo html_build_list_table_top ($title_arr);
@@ -1763,10 +1763,10 @@ EOS;
 		if ( $func == "value_update" ) {
 			if (( $status == "P" ) && ( $this->Group->getID() != 100 ) ) {
                             // Can't change 'Permanent' status unless you're working on the tracker templates (group 100)
-                            echo $Language->getText('tracker_include_type','status').': '.$Language->getText('tracker_include_type','permanent');
+                            echo $Language->getText('global','status').': '.$Language->getText('tracker_include_type','permanent');
                             echo '<input type="hidden" name="status" value="P">';
 			} else {
-				echo $Language->getText('tracker_include_type','status').':&nbsp;
+				echo $Language->getText('global','status').':&nbsp;
 				<select name="status">';
 				if ( $status ) {
 					$selected = "";
@@ -1868,7 +1868,7 @@ EOS;
 		$title_arr[]=$Language->getText('tracker_include_type','value_label');
 		$title_arr[]=$Language->getText('tracker_include_artifact','desc');
 		$title_arr[]=$Language->getText('tracker_include_type','rank');
-		$title_arr[]=$Language->getText('tracker_include_type','status');
+		$title_arr[]=$Language->getText('global','status');
 		$title_arr[]=$Language->getText('tracker_include_canned','delete');
 		
 		echo html_build_list_table_top ($title_arr);

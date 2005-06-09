@@ -173,7 +173,7 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 
 			$title_arr=array();
 			$title_arr[]=$Language->getText('forum_admin_index','forum');
-			$title_arr[]=$Language->getText('forum_admin_index','status');
+			$title_arr[]=$Language->getText('global','status');
 			$title_arr[]=$Language->getText('forum_admin_index','update');
 		
 			echo html_build_list_table_top ($title_arr);

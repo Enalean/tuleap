@@ -100,7 +100,7 @@ if (!$res || $rows < 1) {
 	$title_arr=array();
 	$title_arr[]=$Language->getText('file_admin_editpackages','p_name');
 	$title_arr[]=$Language->getText('file_admin_editpackages','rank_on_screen');
-	$title_arr[]=$Language->getText('file_admin_editpackages','status');
+	$title_arr[]=$Language->getText('global','status');
 	$title_arr[]=$Language->getText('file_admin_editpackages','update');
 	$title_arr[]=$Language->getText('file_admin_editpackages','releases');
 	$title_arr[]=$Language->getText('file_admin_editpackages','perms');

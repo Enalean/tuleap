@@ -53,4 +53,7 @@ global	Project	Project
 global	System	System
 global	Personal	Personel
 global	default	Default
+global	open	Open
+global	closed	Closed
+global	status	Status
 

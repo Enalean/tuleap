@@ -239,7 +239,7 @@ function menu_loggedin($page_title) {
 
 function menu_notloggedin() {
   GLOBAL $HTML,$Language;
-    $HTML->menuhtml_top($Language->getText('include_menu','status').':');
+    $HTML->menuhtml_top($Language->getText('global','status').':');
     echo '<h4><span class="highlight">'.$Language->getText('include_menu','not_logged_in').'</span></h4>';
     $HTML->menu_entry('/account/login.php',$Language->getText('include_menu','login'));
     $HTML->menu_entry('/account/register.php',$Language->getText('include_menu','new_user'));

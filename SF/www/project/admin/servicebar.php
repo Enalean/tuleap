@@ -256,7 +256,7 @@ $title_arr[]=$Language->getText('project_admin_editservice','s_label');
 if ($group_id==100) {
     $title_arr[]=$Language->getText('project_admin_servicebar','availability');
 }
-$title_arr[]=$Language->getText('project_admin_servicebar','status');
+$title_arr[]=$Language->getText('global','status');
 if ($group_id==100) {
     $title_arr[]=$Language->getText('project_admin_editservice','scope');
 }

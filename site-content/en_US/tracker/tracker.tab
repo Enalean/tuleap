@@ -418,7 +418,6 @@ tracker_include_type	tracker_id	Tracker ID:
 tracker_include_type	list_all_fields	List of all Available Fields
 tracker_include_type	type	Type
 tracker_include_type	rank_screen	Rank on screen
-tracker_include_type	status	Status
 tracker_include_type	used	Used
 tracker_include_type	unused	Unused
 tracker_include_type	warning_loose_data	** WARNING!! ** If you delete this field, you will loose ALL the associated data. You can also set to UNUSED this field. Continue?

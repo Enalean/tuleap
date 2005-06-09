@@ -584,7 +584,7 @@ if ($release_id && $func != 'delete_release') {
 		<B>'.$Language->getText('file_admin_editreleases','release_name').':</B><BR>
 		<INPUT TYPE="TEXT" NAME="release_name" VALUE="'. db_result($result,0,'release_name') .'" SIZE="20" MAXLENGTH="25">
 		<P>
-		<B>'.$Language->getText('file_admin_editpackages','status').':</B><BR>
+		<B>'.$Language->getText('global','status').':</B><BR>
 		'. frs_show_status_popup ('status_id',db_result($result,0,'status_id')) .'
 		<P>
 		<B>'.$Language->getText('file_admin_editreleases','of_P').':</B><BR>
@@ -828,7 +828,7 @@ if ($release_id && $func != 'delete_release') {
 		$title_arr=array();
 		$title_arr[]=$Language->getText('file_admin_editreleases','release_name');
 		$title_arr[]=$Language->getText('file_admin_editpackages','p_name');
-		$title_arr[]=$Language->getText('file_admin_editpackages','status');
+		$title_arr[]=$Language->getText('global','status');
 		$title_arr[]=$Language->getText('file_admin_editpackages','perms');
 		$title_arr[]=$Language->getText('file_admin_editreleases','delete');
 

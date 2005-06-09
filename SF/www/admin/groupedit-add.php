@@ -38,7 +38,7 @@ site_admin_header(array('title'=>$Language->getText('admin_groupedit_add','title
 <br><input type="text" name="group_idname">
 <p><?php echo $Language->getText('admin_groupedit_add','unix_name'); ?>:
 <br><input type="text" name="form_unixgrp">
-<br><?php echo $Language->getText('admin_groupedit','status'); ?>
+<br><?php echo $Language->getText('global','status'); ?>
 <SELECT name="form_status">
 <OPTION value="A"><?php echo $Language->getText('admin_groupedit','active'); ?>
 <OPTION value="P"><?php echo $Language->getText('admin_groupedit','pending'); ?>

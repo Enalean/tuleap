@@ -37,7 +37,6 @@ mail_admin_index	no_list_found	No Lists Found
 mail_admin_index	none_found_for_project	None found for this project
 mail_admin_index	admin_lists_here	You can administrate lists from here. Please note that private lists can still be viewed by members of your project, but are not listed on $1
 mail_admin_index	list	List
-mail_admin_index	status	Status
 mail_admin_index	update	Update
 mail_admin_index	list_admin	List Admin
 mail_admin_index	public	Public

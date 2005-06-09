@@ -82,7 +82,7 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
 		<INPUT TYPE="HIDDEN" NAME="approve" VALUE="y">
 		<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 
- 		<B>'.$Language->getText('news_admin_index','status').':</B><BR>
+ 		<B>'.$Language->getText('global','status').':</B><BR>
                 <INPUT TYPE="RADIO" NAME="status" VALUE="0" CHECKED> '.$Language->getText('news_admin_index','displayed').'<BR>
                 <INPUT TYPE="RADIO" NAME="status" VALUE="4"> '.$Language->getText('news_admin_index','delete').'<BR>
  
