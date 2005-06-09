@@ -51,8 +51,19 @@ if($group_id) {
         }
 
         if ($upload_instead) { 
-            $data = addslashes(fread( fopen($uploaded_data, 'r'), filesize($uploaded_data)));
-            if ((strlen($data) <= 0 ) || (strlen($data) >= $sys_max_size_upload)) {
+
+            $fileName = $_FILES['uploaded_data']['name'];
+            $tmpName  = $_FILES['uploaded_data']['tmp_name'];
+            $fileSize = $_FILES['uploaded_data']['size'];
+            $fileType = $_FILES['uploaded_data']['type'];
+            
+            //echo " filesize=".$fileSize;
+            $fp   = fopen($tmpName, 'r');
+            $data = addslashes(fread($fp, filesize($tmpName)));
+            fclose($fp);
+            
+            if (($fileSize <= 0 ) || ($fileSize >= $sys_max_size_upload)) {
+                
                 //too big or small
                 exit_error($Language->getText('global','error'),
                            $Language->getText('docman_new','error_size',array($sys_max_size_upload)));
@@ -70,9 +81,9 @@ if($group_id) {
     		."'".$user."',"
     		."'".$doc_group."',"
     		."'".htmlspecialchars($description)."',"
-    		."'".$uploaded_data_name."',"
-    		."'".$uploaded_data_size."',"
-    		."'".$uploaded_data_type."')";
+     		."'".$fileName."',"
+     		."'".$fileSize."',"
+     		."'".$fileType."')";
         } else {
             // Copy/paste data
             $query = "insert into doc_data(title,data,createdate,updatedate,created_by,doc_group,description,filename,filesize,filetype) "

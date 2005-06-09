@@ -215,17 +215,27 @@ if (strstr($mode,"docedit")) {
      if (db_numrows($result) == 1) {
 
          // Upload the document if needed
-         if ($upload_instead) {
-             $data = addslashes(fread( fopen($uploaded_data, 'r'), filesize($uploaded_data)));
-             if ((strlen($data) > 0) && (strlen($data) < $sys_max_size_upload)) {
-                 //size is fine
-                 $feedback .= $Language->getText('docman_admin_index','feedback_doc_uploaded');
-             } else {
-                 //too big or small
-                 exit_error($Language->getText('global','error'),
-                            $Language->getText('docman_new','error_size',array($sys_max_size_upload)));
-             }
-         }
+        if ($upload_instead) {
+            $fileName = $_FILES['uploaded_data']['name'];
+            $tmpName  = $_FILES['uploaded_data']['tmp_name'];
+            $fileSize = $_FILES['uploaded_data']['size'];
+            $fileType = $_FILES['uploaded_data']['type'];
+            
+            //echo " filesize=".$fileSize;
+            $fp   = fopen($tmpName, 'r');
+            $data = addslashes(fread($fp, filesize($tmpName)));
+            fclose($fp);
+            //echo "strlen(data) =".strlen($data);	  
+            if (($fileSize <= 0 ) || ($fileSize >= $sys_max_size_upload)) {
+                //too big or small
+                exit_error($Language->getText('global','error'),
+                           $Language->getText('docman_new','error_size',array($sys_max_size_upload)));
+            }
+            else {
+                //size is fine
+                $feedback .= $Language->getText('docman_admin_index','feedback_doc_uploaded');
+            }
+        }
 
          if ($upload_instead) {
              // Upload file
@@ -235,9 +245,9 @@ if (strstr($mode,"docedit")) {
                  ."updatedate = '".time()."', "
                  ."doc_group = '".$doc_group."', "
                  ."description = '".htmlspecialchars($description)."', "
-                 ."filename = '".$uploaded_data_name."', "
-                 ."filesize = '".$uploaded_data_size."', "
-                 ."filetype = '".$uploaded_data_type."', "
+                 ."filename = '".$fileName."', "
+                 ."filesize = '".$fileSize."', "
+                 ."filetype = '".$fileType."', "
                  ."rank = '".$rank."' "
                  ."where docid = '".$docid."'"; 
          } else {

@@ -988,7 +988,8 @@ name as $sys_default_domain. Set it to an empty string ($sys_https_host
   <li>Also set/tune some additional variable for upload size:<br>
     <pre>   php_value memory_limit 30M
    php_value post_max_size 20M
-   php_value upload_max_file_size 20M</pre>
+   php_value upload_max_file_size 20M
+   php_value upload_tmp_dir /home/large_tmp</pre>
   </li>
   <li>phpWiki also needs this parameter to avoid warnings:<br>
     <pre>   php_value allow_call_time_pass_reference on</pre>
@@ -1019,6 +1020,74 @@ files:
  style="font-family: monospace;">max_allowed_packet</span> value above
 the maximum size you chose. </li>
 </ul>
+
+<p>As a rule of thumb, if the $sys_max_size_upload is equal to N Mbytes then the other parameters should have the following values:</p>
+
+<table align="center" width="80%" border="1" cellspacing="2"
+ cellpadding="2">
+  <tbody>
+    <tr>
+      <td bgcolor="#eeeeee" valign="top"><b>Parameter name<br>
+      </b></td>
+      <td bgcolor="#eeeeee" valign="top"><b>File<br>
+      </b></td>
+      <td bgcolor="#eeeeee" valign="top"><b>Value (MBytes)<br>
+      </b></td>
+      <td bgcolor="#eeeeee" valign="top"><b>Remarks<br>
+      </b></td>
+    </tr>
+    <tr>
+      <td valign="top">sys_max_size_upload<br>
+      </td>
+      <td valign="top">/etc/codex/conf/local.inc<br>
+      </td>
+      <td valign="top">N<br>
+      </td>
+      <td valign="top">&nbsp;<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">upload_max_file_size<br>
+      </td>
+      <td valign="top">/etc/php.ini<br>
+      </td>
+      <td valign="top">N<br>
+      </td>
+      <td valign="top">&nbsp;<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">post_max_size<br>
+      </td>
+      <td valign="top">/etc/php.ini<br>
+      </td>
+      <td valign="top">N+1<br>
+      </td>
+      <td valign="top">&nbsp;<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">memory_limit<br>
+      </td>
+      <td valign="top">/etc/php.ini<br>
+      </td>
+      <td valign="top">4*N<br>
+      </td>
+      <td valign="top">We have to multiply by 4 because of the document manager which stores the document in the database. We first have to escape the file data before building the SQL query. This in the worst case can double the size. And then we have to build the SQL query, which doubles the amount of memory again.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">max_allowed_packet<br>
+      </td>
+      <td valign="top">/etc/my.cnf<br>
+      </td>
+      <td valign="top">2*N+1<br>
+      </td>
+      <td valign="top">Escaping the file data can double the size of the data, plus 1 Mbyte for the other fields of the SQL query.<br>
+      </td>
+    </tr>
+</table>
+
 <hr size="2" width="100%">
 <h1><a name="Installing_the_CodeX_Database"></a>Installing the CodeX
 Database</h1>
