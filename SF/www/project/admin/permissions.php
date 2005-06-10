@@ -1582,6 +1582,7 @@ function permission_process_update_tracker_permissions($group_id, $atid, $permis
      * TRACKER_FIELD_READ or TRACKER_FIELD_UPDATE permission
      */
     function permission_can_read_field($perms) {
+      if (!$perms) return false;
       return (in_array('TRACKER_FIELD_READ',$perms) || in_array('TRACKER_FIELD_UPDATE',$perms));
     }
     
@@ -1589,13 +1590,15 @@ function permission_process_update_tracker_permissions($group_id, $atid, $permis
      * TRACKER_FIELD_UPDATE permission
      */
     function permission_can_update_field($perms) {
+      if (!$perms) return false;
       return (in_array('TRACKER_FIELD_UPDATE',$perms));
     }
 
     /** returns true if the perms array contains 
-     * TRACKER_FIELD_SUMIT permission
+     * TRACKER_FIELD_SUBMIT permission
      */
     function permission_can_submit_field($perms) {
+      if (!$perms) return false;
       return (in_array('TRACKER_FIELD_SUBMIT',$perms));
     }
 

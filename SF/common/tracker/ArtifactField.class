@@ -1654,7 +1654,7 @@ class ArtifactField extends Error {
 	  if ($user_id == 0) {
 	    if (user_isloggedin()) {
 	      if (user_is_super_user()) {
-		return array('TRACKER_FIELD_READ','TRACKER_FIELD_UPDATE','TRACKER_FIELD_SUMIT');
+		return array('TRACKER_FIELD_READ','TRACKER_FIELD_UPDATE','TRACKER_FIELD_SUBMIT');
 	      } else {
 		$user_id = user_getid();
 	      }
@@ -1662,6 +1662,9 @@ class ArtifactField extends Error {
 	      return $this->getPermission(array($GLOBALS['UGROUP_ANONYMOUS']),$group_artifact_id);
 	    }
 	  }
+
+	  $u = new User($user_id);
+	  if ($u->isSuperUser()) return array('TRACKER_FIELD_READ','TRACKER_FIELD_UPDATE','TRACKER_FIELD_SUBMIT');
 
 	  //get ugroups user is part of
 	  $specific_ugroups = ugroup_db_list_tracker_ugroups_for_user($group_id,$group_artifact_id,$user_id);
@@ -1687,6 +1690,9 @@ class ArtifactField extends Error {
 	  $res = db_query($sql);
 	  if (db_numrows($res) > 0) $specific_perm = util_result_column_to_array($res);
 
+	  return $specific_perm;
+
+/*	  
 	  
 
 	  //check if there is someone else who has specific rights
@@ -1697,7 +1703,6 @@ class ArtifactField extends Error {
 	  $res = db_query($sql);
 	  if (db_numrows($res) > 0) $non_permission = util_result_column_to_array($res);
 	    
-/*	  
 	  //finally, check default permissions of dynamic ugroups
 	  $sql = "SELECT distinct permission_type FROM permissions_values WHERE ugroup_id IN (".implode(",",$ugroups).") ".
 	    "AND permission_type LIKE 'TRACKER_FIELD%' ".
@@ -1711,12 +1716,13 @@ class ArtifactField extends Error {
 
 	  $res = db_query($sql);
 	  if (db_numrows($res) > 0) $dynamic_perm = util_result_column_to_array($res);
-*/
+
 	  $ret = array();
 	  if (isset($specific_perm)) $ret = array_merge($ret,$specific_perm);
-/*	  if (isset($dynamic_perm)) $ret = array_merge($ret,$dynamic_perm);
-*/
+	  if (isset($dynamic_perm)) $ret = array_merge($ret,$dynamic_perm);
+
 	  return $ret;
+*/
 	}
 
 }

@@ -193,6 +193,16 @@ class User {
 	  return $perm['perm_level'];
 	}
 
+
+	function isSuperUser() {
+	  $sql="SELECT * FROM user_group WHERE user_id='". $this->data_array['user_id'] ."' AND group_id='1' AND admin_flags='A'";
+	  $result=db_query($sql);
+	  if ($result && db_numrows($result) > 0) {
+	    return true;
+	  } else {
+	    return false;
+	  }
+	}
 }
 
 ?>
