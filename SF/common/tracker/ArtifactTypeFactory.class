@@ -295,6 +295,9 @@ class ArtifactTypeFactory extends Error {
 			return false;
 		}
 		
+        //Remove permissions
+        permission_clear_all_tracker($this->Group->getID(), $atid);
+        
 		return true;
 	}
 	

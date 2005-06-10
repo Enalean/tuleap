@@ -541,7 +541,6 @@ function permission_display_selection_form($permission_type, $object_id, $group_
 function permission_clear_all($group_id, $permission_type, $object_id, $log_permission_history=true) {
     if (!permission_user_allowed_to_change($group_id, $permission_type)) { return false;}
     $sql = "DELETE FROM permissions WHERE permission_type='$permission_type' AND object_id='$object_id'";
-    var_dump($sql);
     $res=db_query($sql);
     if (!$res) { 
         return false;

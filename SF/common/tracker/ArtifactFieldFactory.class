@@ -384,7 +384,14 @@ class ArtifactFieldFactory extends Error {
 	 *	@return	boolean
 	 */
 	function deleteFields($atid) {
-		
+        
+        //
+        // Remove fields permissions
+        //
+		foreach($this->USAGE_BY_ID as $field_id => $field) {
+            permission_clear_all_fields_tracker($this->ArtifactType->getGroupID(), $atid, $field_id);
+        }
+        
 		//
 		// Delete artifact_field records
 		//

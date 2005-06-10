@@ -57,24 +57,11 @@ session_require(array('group'=>'1','admin_flags'=>'A'));
 
 		
 	case 'delete':
-        //Delete tracker permissions
-        permission_clear_all_tracker($group_id, $atid);
-        
         // Create field factory
         $group = group_get_object($group_id);	
 		$ath =  new ArtifactType($group, $atid);
 		$atf = new ArtifactTypeFactory($group);
 		$art_field_fact = new ArtifactFieldFactory($ath);
-
-        //Delete fields permissions
-        $fields = $art_field_fact->getAllUsedFields();
-        foreach($fields as $field) {
-            permission_clear_all_fields_tracker($group_id, $atid, $field->getID());
-        }
-        $fields = $art_field_fact->getAllUnusedFields();
-        foreach($fields as $field) {
-            permission_clear_all_fields_tracker($group_id, $atid, $field->getID());
-        }
         
 		// Then delete all the fields informations
 		if ( !$art_field_fact->deleteFields($atid) ) {
