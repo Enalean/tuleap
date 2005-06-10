@@ -551,6 +551,50 @@ function permission_clear_all($group_id, $permission_type, $object_id, $log_perm
     }
 }
 
+function permission_copy_tracker_and_field_permissions($from, $to, $group_id_from, $group_id_to) {
+    //We remove ugroups if 'from' and 'to' are not part of the same project
+    $and_remove_ugroups = "";
+    if ($group_id_from != $group_id_to) {
+        $and_remove_ugroups = " AND ugroup_id <= '100' ";
+    }
+    //Copy of tracker permissions
+    $sql = <<<EOS
+INSERT INTO `permissions` ( `permission_type`, `object_id`, `ugroup_id`) 
+    SELECT `permission_type`, '$to', `ugroup_id` 
+    FROM `permissions` 
+    WHERE `object_id` = '$from' $and_remove_ugroups
+EOS;
+    $res=db_query($sql);
+    if ($res) {
+        //Copy of field permissions
+        $sql = <<<EOS
+INSERT INTO `permissions` ( `permission_type`, `object_id`, `ugroup_id`) 
+    SELECT `permission_type`, CONCAT('$to#',RIGHT(`object_id`, LENGTH(`object_id`)-LENGTH('$from#'))), `ugroup_id`
+    FROM `permissions` 
+    WHERE `object_id` LIKE '$from#%' $and_remove_ugroups
+EOS;
+        $res=db_query($sql);
+        if ($res) {
+            //look for missing ugroups
+            $sql = "SELECT count(ugroup_id) FROM `permissions` WHERE `object_id` = '$from' OR `object_id` LIKE '$from#%'";
+            $res=db_query($sql);
+            $row = db_fetch_array($res);
+            $nb_ugroup_from = $row[0];
+            $sql = "SELECT count(ugroup_id) FROM `permissions` WHERE `object_id` = '$to' OR `object_id` LIKE '$to#%'";
+            $res=db_query($sql);
+            $row = db_fetch_array($res);
+            $nb_ugroup_to = $row[0];
+            if (($nb_ugroup_from - $nb_ugroup_to) != 0) {
+                $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('tracker_admin_permissions','ignore_ug_during_copy');
+            }
+            
+            
+            return true;
+        }
+    }
+    $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('global', 'error');
+    return false;
+}
 function permission_clear_all_tracker($group_id, $object_id) {
     permission_clear_all($group_id, 'TRACKER_ACCESS_FULL', $object_id, false);
     permission_clear_all($group_id, 'TRACKER_ACCESS_ASSIGNEE', $object_id, false);

@@ -706,6 +706,7 @@ tracker_admin_permissions	ignore_g_anon_update	<p>Ignoring group $1 because anon
 tracker_admin_permissions	ignore_g_regis_read	<p>Ignoring group $1 because registered users can read</p>
 tracker_admin_permissions	ignore_g_regis_submit	<p>Ignoring group $1 because registered users can submit</p>
 tracker_admin_permissions	ignore_g_regis_update	<p>Ignoring group $1 because registered users can update</p>
+tracker_admin_permissions	ignore_ug_during_copy	<p>Please note that some original tracker permissions have not been copied</p>
 tracker_admin_permissions	permissions	Access Permissions
 tracker_admin_permissions	TRACKER_ACCESS_FULL	Access to all artifacts
 tracker_admin_permissions	TRACKER_ACCESS_ASSIGNEE	Access to artifacts assigned to group

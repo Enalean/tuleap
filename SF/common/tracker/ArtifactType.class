@@ -262,7 +262,10 @@ class ArtifactType extends Error {
 				if ( !$this->createUserPerms($id) ) {
 					return false;
 				}
-		
+                
+                //Copy template permission
+                permission_copy_tracker_and_field_permissions($atid_template, $id, $group_id_template, $group_id);
+                
 				return $id;
 			}
 		}

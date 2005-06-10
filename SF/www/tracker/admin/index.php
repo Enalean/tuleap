@@ -91,7 +91,7 @@ if ($group_id && !$atid) {
 		if ( !$ath->create($group_id,$group_id_chosen,$atid_chosen,$name,$description,$itemname) ) {
 			exit_error($Language->getText('global','error'),$ath->getErrorMessage());
 		} else {
-			$feedback = $Language->getText('tracker_admin_index','tracker_created');
+			$feedback .= $Language->getText('tracker_admin_index','tracker_created');
 		}
 		require('./admin_trackers.php');
 		break;
