@@ -597,6 +597,10 @@ if ($group_id && !$atid) {
 		
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
+            
+            //clear permissions
+            permission_clear_all_fields_tracker($group_id, $atid, $field->getID());
+            
 			if ( !$field->delete($atid) ) {
 				exit_error($Language->getText('global','error'),$field->getErrorMessage());
 			} else {
