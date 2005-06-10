@@ -35,7 +35,8 @@ if ($Update) {
         ."register_purpose='".htmlspecialchars($form_purpose)."', "
         ."required_software='".htmlspecialchars($form_required_sw)."', "
         ."patents_ips='".htmlspecialchars($form_patents)."',  "
-        ."other_comments='".htmlspecialchars($form_comments)."'";
+        ."other_comments='".htmlspecialchars($form_comments)."', "
+        ."hide_members='$hide_members'";
 		
     $sql .= " WHERE group_id=$group_id";
 
@@ -87,6 +88,9 @@ print '
 
 <P>'.$Language->getText('project_admin_editgroupinfo','comments').'<BR>
 <TEXTAREA name="form_comments" wrap="virtual" cols="70" rows="4">'.$row_grp['other_comments'].'</TEXTAREA>
+
+<P>'.$Language->getText('project_admin_editgroupinfo','hide_members').'
+<INPUT TYPE="CHECKBOX" NAME="hide_members" VALUE="1"'.(($row_grp['hide_members']==1) ? ' CHECKED' : '' ).'><BR> 	 
 <HR>
 
 <P><INPUT type="submit" name="Update" value="'.$Language->getText('global','btn_update').'">

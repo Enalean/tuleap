@@ -1000,6 +1000,7 @@ CREATE TABLE groups (
   license_other text,
   register_time int(11) NOT NULL default '0',
   rand_hash text,
+  hide_members int(11) NOT NULL default '0',
   new_bug_address text NOT NULL,
   new_patch_address text NOT NULL,
   new_support_address text NOT NULL,

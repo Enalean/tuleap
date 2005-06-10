@@ -30,6 +30,7 @@ project_admin_editgroupinfo	patents	Brevets et propositions d'inventions
 project_admin_editgroupinfo	soft_required	Autre(s) logiciel(s) requis
 project_admin_editgroupinfo	comments	Autre commentaires:
 project_admin_editgroupinfo	license_comment	Commentaires à propos de la licence non répertoriée utilisée par ce projet:
+project_admin_editgroupinfo	hide_members	Cacher la liste des membres dans la page de sommaire du projet:
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/editservice.php

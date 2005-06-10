@@ -25,6 +25,7 @@ project_admin_editgroupinfo	patents	Patents and Invention Proposals (IPs)
 project_admin_editgroupinfo	soft_required	Other Software Required
 project_admin_editgroupinfo	comments	Other Comments:
 project_admin_editgroupinfo	license_comment	Comments about Other License used for this project:
+project_admin_editgroupinfo	hide_members	Hide member list in project summary page:
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/editservice.php

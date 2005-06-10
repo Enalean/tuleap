@@ -66,35 +66,39 @@ print $Language->getText('include_project_home','view_proj_activity',"/project/s
 
 print '</TD><TD NoWrap VALIGN="top">';
 
-// ########################### Developers on this project
-
-echo $HTML->box1_top($Language->getText('include_project_home','devel_info'));
-?>
-<?php
-if (db_numrows($res_admin) > 0) {
-
-  echo '<SPAN CLASS="develtitle">'.$Language->getText('include_project_home','proj_admins').':</SPAN><BR>';
-		while ($row_admin = db_fetch_array($res_admin)) {
-			print "<A href=\"/users/$row_admin[user_name]/\">$row_admin[user_name]</A><BR>";
-		}
-	?>
-	<HR WIDTH="100%" SIZE="1" NoShade>
-	<?php
-
-}
-
-
-echo '<SPAN CLASS="develtitle">'.$Language->getText('include_project_home','devels').':</SPAN><BR>';
-
-//count of developers on this project
-$res_count = db_query("SELECT user_id FROM user_group WHERE group_id=$group_id");
-print db_numrows($res_count);
+if (! $project->hideMembers()) {
+    // ########################### Developers on this project
+    
+    echo $HTML->box1_top($Language->getText('include_project_home','devel_info'));
+    ?>
+        <?php
+              if (db_numrows($res_admin) > 0) {
+                  
+                  echo '<SPAN CLASS="develtitle">'.$Language->getText('include_project_home','proj_admins').':</SPAN><BR>';
+                  while ($row_admin = db_fetch_array($res_admin)) {
+                      print "<A href=\"/users/$row_admin[user_name]/\">$row_admin[user_name]</A><BR>";
+                  }
+                  ?>
+                      <HR WIDTH="100%" SIZE="1" NoShade>
+                           <?php
+                           
+                           }
 
 
-echo ' <A HREF="/project/memberlist.php?group_id='.$group_id.'">['.$Language->getText('include_project_home','view_members').']</A>';
+    echo '<SPAN CLASS="develtitle">'.$Language->getText('include_project_home','devels').':</SPAN><BR>';
+    
+    //count of developers on this project
+    $res_count = db_query("SELECT user_id FROM user_group WHERE group_id=$group_id");
+    print db_numrows($res_count);
 
 
-echo $HTML->box1_bottom();
+    echo ' <A HREF="/project/memberlist.php?group_id='.$group_id.'">['.$Language->getText('include_project_home','view_members').']</A>';
+
+
+    echo $HTML->box1_bottom();
+ } else {
+    print "&nbsp;";
+ }
 
 print '
 </TD></TR>

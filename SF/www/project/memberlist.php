@@ -15,6 +15,14 @@ if ((!$group_id) && $form_grp)
 
 site_project_header(array('title'=>$Language->getText('project_memberlist','proj_member_list'),'group'=>$group_id,'toptab'=>'memberlist'));
 
+// Check that member list is public
+$group=group_get_object($group_id);
+if ($group->hideMembers()) {
+    print '<b>'.$Language->getText('global','perm_denied').'</b>';
+    site_project_footer(array());
+    exit;
+}
+
 print $Language->getText('project_memberlist','contact_to_become_member');
 
 // list members

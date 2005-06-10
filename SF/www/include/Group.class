@@ -187,6 +187,13 @@ class Group extends Error {
 		return $this->data_array['is_public'];
 	}
 
+	/*
+		Simply returns the hide_members flag from the database
+	*/
+	function hideMembers() {
+		return $this->data_array['hide_members'];
+	}
+
 
 	/*
 		Database field status of 'A' returns true
