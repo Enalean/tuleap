@@ -817,19 +817,24 @@ if ( $func == 'gotoid' ) {
             }
             echo "<p>";
 
-                //
-                // Put the result set (list of trackers for this group) into a column with folders
-                //
-                for ($j = 0; $j < count($at_arr); $j++) {
+            //
+            // Put the result set (list of trackers for this group) into a column with folders
+            //
+            for ($j = 0; $j < count($at_arr); $j++) {
+                if ($at_arr[$j]->userCanView()) {
                     echo '
                         <a href="/tracker/?atid='. $at_arr[$j]->getID() .
                         '&group_id='.$group_id.'&func=browse">' .
                         html_image("ic/tracker20w.png",array("border"=>"0","width"=>"20","height"=>"20"),0) .
                         '&nbsp;'.
-                        $at_arr[$j]->getName() .'</a> 
-                        ( <strong>'. $at_arr[$j]->getOpenCount() .' '.$Language->getText('tracker_index','open').' / '. $at_arr[$j]->getTotalCount() .' '.$Language->getText('tracker_index','total').'</strong> )<br />'.
-                        $at_arr[$j]->getDescription() .'<p>';
+                        $at_arr[$j]->getName() .'</a> ';
+                    // Only show number of artifacts if the user has full access on the tracker.
+                    if (permission_is_authorized('TRACKER_ACCESS_FULL', $at_arr[$j]->getID() , user_getid(), $group_id, $at_arr[$j]->getID())) {
+                        echo '( <strong>'. $at_arr[$j]->getOpenCount() .' '.$Language->getText('tracker_index','open').' / '. $at_arr[$j]->getTotalCount() .' '.$Language->getText('tracker_index','total').'</strong> )';
+                    }
+                    echo '<br />'.$at_arr[$j]->getDescription() .'<p>';
                 }
+            }
         }
         echo site_project_footer($params);
 } else {
