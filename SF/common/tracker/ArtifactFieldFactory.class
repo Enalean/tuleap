@@ -618,7 +618,7 @@ class ArtifactFieldFactory extends Error {
                              array(
                                    $GLOBALS['UGROUP_ANONYMOUS']     => permission_get_input_value_from_permission('TRACKER_FIELD_READ'),
                                    $GLOBALS['UGROUP_REGISTERED']    => permission_get_input_value_from_permission('TRACKER_FIELD_SUBMIT'),
-                                   $GLOBALS['UGROUP_PROJECT_ADMIN'] => permission_get_input_value_from_permission('TRACKER_FIELD_UPDATE')
+                                   $GLOBALS['UGROUP_TRACKER_TECH']  => permission_get_input_value_from_permission('TRACKER_FIELD_UPDATE')
                              )
         );
         
