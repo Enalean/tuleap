@@ -604,7 +604,7 @@ EOS;
                             $name_of_variable = "permissions[".$first_part['id']."][".$second_part['id']."]";
                         }
                         $html .= "<input type='hidden' name='".$name_of_variable."[submit]' value='off'/>";//TODO verifier diff�rents navigateurs
-                        $can_submit_and_update = (($group_first 
+                        $can_submit = (($group_first 
                                                    && $second_part['shortname'] !== "artifact_id"
                                                    && $second_part['shortname'] !== "submitted_by"
                                                    && $second_part['shortname'] !== "open_date")
@@ -613,9 +613,14 @@ EOS;
                                                    && $first_part['shortname'] !== "artifact_id"
                                                    && $first_part['shortname'] !== "submitted_by"
                                                    && $first_part['shortname'] !== "open_date"));
-                        
+                        $can_update = $can_submit &&  (($group_first
+                                                        && ($first_part['id'] > 100 || $first_part['id'] == $GLOBALS['UGROUP_TRACKER_TECH']))
+                                                        ||
+                                                        (!$group_first
+                                                        && ($second_part['id'] > 100 || $second_part['id'] == $GLOBALS['UGROUP_TRACKER_TECH'])));
+                                                        
                         $html .= "<input type='checkbox' name=\"".$name_of_variable.'[submit]"  '.
-                            (isset($permissions[$submit_permission])?"checked='checked'":"")." ".($can_submit_and_update?"":"disabled='disabled'")." /> ";
+                            (isset($permissions[$submit_permission])?"checked='checked'":"")." ".($can_submit?"":"disabled='disabled'")." /> ";
                         $html .= "</td><td>";
                         
                         
@@ -625,7 +630,7 @@ EOS;
                         $html .= "<option value='100' ".(!isset($permissions[$read_permission]) && !isset($permissions[$update_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $none)."</option>";
                         $html .= "<option value='0' ".(isset($permissions[$read_permission]) && !isset($permissions[$update_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $read_permission)."</option>";
                         
-                        if ($can_submit_and_update) {
+                        if ($can_update) {
                             $html .= "<option value='1' ".(isset($permissions[$update_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $update_permission)."</option>";
                         }
                         $html .= "</select>";
