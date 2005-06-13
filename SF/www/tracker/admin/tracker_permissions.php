@@ -81,7 +81,7 @@ switch ($perm_type) {
      }
      //display
      $ath->adminHeader(array('title'=>$Language->getText('tracker_admin_field_usage','tracker_admin').$Language->getText('tracker_admin_field_usage','usage_admin'),'help' => 'TrackerAdministration.html#TrackerPermissionsManagement')); //TODO
-     $ugroups_permissions = permission_get_field_tracker_ugroups_permissions($group_id, $atid, $art_field_fact->getAllUsedFields(), true);
+     $ugroups_permissions = permission_get_field_tracker_ugroups_permissions($group_id, $atid, $art_field_fact->getAllUsedFields(), false);
      $ath->displayPermissionsFieldsTracker($ugroups_permissions, $group_first, $selected_id);
      break;
  default:

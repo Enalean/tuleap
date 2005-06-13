@@ -728,3 +728,4 @@ tracker_admin_permissions	tracker_ignore_g_regis_submitter	<p>Le groupe $1 est i
 tracker_admin_permissions	tracker_ignore_g_regis_submitter_assignee	<p>Le groupe $1 est ignoré car le groupe registered users a accès aux artifacts assignés au ou soumis par le groupe</p>
 tracker_admin_permissions	tracker_intro	<div></div>
 tracker_admin_permissions	ugroup	Groupe d'Utilisateurs
+tracker_admin_permissions	ug_may_have_no_access	<div>* Les groupes suivis d'une astérisque(*) peuvent ne pas avoir accès au tracker</div>

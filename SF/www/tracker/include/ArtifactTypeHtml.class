@@ -430,7 +430,7 @@ EOL;
          */
         function displayPermissionsFieldsTracker($ugroups_permissions, $group_first, $selected_id = false) {
             $this->_displayAdminTitle($GLOBALS['Language']->getText('tracker_include_type','manage_fields_tracker_permissions_title'));
-            
+
             $submit_permission = 'TRACKER_FIELD_SUBMIT';
             $read_permission   = 'TRACKER_FIELD_READ';
             $update_permission = 'TRACKER_FIELD_UPDATE';
@@ -477,7 +477,6 @@ EOS;
             if ($comment_type_field_id) {
                 unset($ugroups_permissions[$comment_type_field_id]);
             }
-
             if ($group_first) {
                 //We reorganize the associative array
                 $tablo = $ugroups_permissions;
@@ -486,8 +485,9 @@ EOS;
                     foreach($value_field['ugroups'] as $key_ugroup => $value_ugroup) {
                         if (!isset($ugroups_permissions[$key_ugroup])) {
                             $ugroups_permissions[$key_ugroup] = array(
-                                                                      'values' => $value_ugroup['ugroup'],
-                                                                      'related_parts' => array()
+                                                                      'values'              => $value_ugroup['ugroup'],
+                                                                      'related_parts'       => array(),
+                                                                      'tracker_permissions' => $value_ugroup['tracker_permissions']
                                                                       );
 
                         }
@@ -498,6 +498,9 @@ EOS;
                     }
                 }
                 ksort($ugroups_permissions);
+                foreach($ugroups_permissions as $key_group => $value_group) {
+                    usort($ugroups_permissions[$key_group]['related_parts'], create_function('$a,$b','return $a[\'values\'][\'name\'] > $b[\'values\'][\'name\'];'));
+                }
                 //header
                 $header = array(
                                 $GLOBALS['Language']->getText('tracker_admin_permissions', 'ugroup'), 
@@ -549,6 +552,7 @@ EOS;
                 
                 //body
                 $i = 0;
+                $a_star_is_displayed = false;
                 
                 //The select box for the ugroups or fields (depending $group_first)
                 $html .= "\n<tr class='". util_get_alt_row_color($i++)."'>";
@@ -566,7 +570,14 @@ EOS;
                     }
                     $html .= " >";
                     $html .= $part_permissions['values']['name'];
-                    $html .= "</value>";
+                    if ($group_first) {
+                        if (isset($part_permissions['tracker_permissions'])
+                        && count($part_permissions['tracker_permissions']) === 0) {
+                            $html .= " *";
+                            $a_star_is_displayed = true;
+                        }
+                    }
+                    $html .= "</option>";
                 }
                 $html .= "</select>";
                 $html .= "</td>";
@@ -577,6 +588,7 @@ EOS;
                     $second_part = $ugroup_permissions['values'];
                     $permissions = $ugroup_permissions['permissions'];
                     
+                    
                     //The group
                     if (!$is_first) {
                         $html .= "\n<tr class='". util_get_alt_row_color($i++)."'>";
@@ -584,6 +596,9 @@ EOS;
                         $is_first = false;
                     }
                     $html .= '<td>';
+                    //icone
+                    //<a href="'.$url_action_without_group_first."&selected_id=".$second_part['id']."&group_first=".($group_first?0:1).'"><img style="border:0px none black;" src="to_first_part.gif" /></a>';
+                    /*
                     $name  = $second_part['name']; //.'('.$first_part['id'].'#'.$second_part['id'].')';
                     if (isset($second_part['link'])) {
                         $html .= "<a href='".$second_part['link']."'>";
@@ -592,6 +607,16 @@ EOS;
                     } else {
                         $html .= $name;
                     }
+                    */
+                    $name = "<a href='".$url_action_without_group_first."&selected_id=".$second_part['id']."&group_first=".($group_first?0:1)."'>";
+                    $name .= $second_part['name'];
+                    $name .= "</a>";
+                    if (!$group_first && isset($ugroup_permissions['tracker_permissions']) && count($ugroup_permissions['tracker_permissions']) === 0) {
+                        $name = "<span >".$name." *</span>"; //TODO css
+                        $a_star_is_displayed = true;
+                    }
+                    $html .= $name;
+                    
                     $html .= '</td>';
                     
                     //The permissions
@@ -642,6 +667,9 @@ EOS;
                 
                 //end of table
                 $html .= "</table>";
+                if ($a_star_is_displayed) {
+                    $html .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'ug_may_have_no_access');
+                }
                 $GLOBALS['Language']->loadLanguageMsg('project/project');
                 $html .= "<input type='submit' name='update' value=\"".$GLOBALS['Language']->getText('project_admin_permissions','submit_perm')."\" />";
                 //{{{20050602 NTY: removed. what is default permissions ???
