@@ -42,7 +42,7 @@ my ($query, $c, $q, $d, $e);
 	$q = "INSERT INTO permissions VALUES ";
 	$q .= "('TRACKER_FIELD_SUBMIT','$group_artifact_id#$field_id',";
 	if ($allow_anon == 0) {
-	  $q .= "3)";
+	  $q .= "2)";
 	} else {
 	  $q .= "1)";
 	}
@@ -58,6 +58,20 @@ my ($query, $c, $q, $d, $e);
 }
 
 
+sub delete_unused_columns {
+my ($query, $c, $q, $d, $e);
+
+
+  $query = "ALTER TABLE artifact_group_list DROP is_public";
+  $c = $dbh->prepare($query);
+  $c->execute();
+  $query = "ALTER TABLE artifact_group_list DROP allow_anon";
+  $c = $dbh->prepare($query);
+  $c->execute();
+}
+
+
 insert_field_permissions();
+delete_unused_columns();
 
 1;

@@ -133,7 +133,7 @@ project_admin_editugroup	document_group	Document Group
 project_admin_editugroup	wiki	Wiki
 project_admin_editugroup	wiki_page	Wiki Page
 project_admin_editugroup	tracker	Tracker
-project_admin_editugroup	tracker_field	Tracker Field
+project_admin_editugroup	tracker_field	Fields from tracker 
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/grouptrove.php
@@ -392,6 +392,7 @@ project_admin_userperms	proj_admin	Project<BR>Admin
 project_admin_userperms	cvs_write	CVS Write
 project_admin_userperms	bug_track	Bug Tracking
 project_admin_userperms	forums	Forums
+project_admin_userperms	wiki	Wiki
 project_admin_userperms	task_man	Task Manager
 project_admin_userperms	patch_man	Patch Manager
 project_admin_userperms	supp_man	Support Manager

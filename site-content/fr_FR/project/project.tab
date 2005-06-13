@@ -138,7 +138,7 @@ project_admin_editugroup	document_group	Groupe de documents
 project_admin_editugroup	wiki	Wiki
 project_admin_editugroup	wiki_page	Page Wiki
 project_admin_editugroup	tracker	Outil de suivi
-project_admin_editugroup	tracker_field	Champ de l'outil de suivi
+project_admin_editugroup	tracker_field	Champs de l'outil de suivi 
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/grouptrove.php
@@ -397,6 +397,7 @@ project_admin_userperms	proj_admin	Admin<BR>projet
 project_admin_userperms	cvs_write	Ecriture CVS
 project_admin_userperms	bug_track	Suivi de bugs
 project_admin_userperms	forums	Forums
+project_admin_userperms	wiki	Wiki
 project_admin_userperms	task_man	Suivi de tâches
 project_admin_userperms	patch_man	Suivi de corrections
 project_admin_userperms	supp_man	Suivi de support

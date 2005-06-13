@@ -1042,7 +1042,7 @@ function insert_artifact($row,$data,$used_fields,$parsed_labels,$predefined_valu
     //
     //  make sure this person has permission to add artifacts
     //
-    if (!$ath->userIsAdmin() && !$ath->isPublic() ) {
+    if (!$ath->userIsAdmin()) {
       exit_permission_denied();
     }
     
@@ -1094,7 +1094,7 @@ function update_artifact($row,$data,$aid,$used_fields,$parsed_labels,$predefined
   } else {
     
     // Check if users can update anonymously
-    if ( $ath->allowsAnon() == 0 && !user_isloggedin() ) {
+    if ( !user_isloggedin() && !$ath->allowsAnon()  ) {
       exit_not_logged_in();
     }
     

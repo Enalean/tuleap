@@ -118,7 +118,7 @@ if ( $func == 'gotoid' ) {
                         //
                         //  make sure this person has permission to add artifacts
                         //
-                        if (!$ath->userIsTech() && !$ath->isPublic() ) {
+                        if (!$ath->userIsTech()) {
                                 exit_permission_denied();
                         }
 
@@ -187,7 +187,7 @@ if ( $func == 'gotoid' ) {
                         //
                         //  make sure this person has permission to copy artifacts
                         //  !!!! verify with new permission scheme !!!!
-                        if (!$ath->userIsTech() && !$ath->isPublic() ) {
+                        if (!$ath->userIsTech()) {
                                 exit_permission_denied();
                         }
 
@@ -398,7 +398,7 @@ if ( $func == 'gotoid' ) {
                 } else {
 
                         // Check if users can update anonymously
-                        if ( $ath->allowsAnon() == 0 && !user_isloggedin() ) {
+                        if ( !user_isloggedin() && !$ath->allowsAnon() ) {
                             exit_not_logged_in();
                         }
                         
@@ -482,7 +482,7 @@ if ( $func == 'gotoid' ) {
                 //      Modify several Artifacts
                 //
 	        // Check if users can update anonymously
-                if ( $ath->allowsAnon() == 0 && !user_isloggedin() ) {
+                if ( !user_isloggedin() && !$ath->allowsAnon() ) {
 		  exit_not_logged_in();
                 }
                         
@@ -698,7 +698,7 @@ if ( $func == 'gotoid' ) {
                 } else {
                         
                         // Check if users can browse anonymously
-                        if ( $ath->allowsAnon() == 0 && !user_isloggedin() ) {
+                        if ( !user_isloggedin() && !$ath->allowsAnon() ) {
                             exit_not_logged_in();
                         }
                         
@@ -723,7 +723,7 @@ if ( $func == 'gotoid' ) {
 	  } else {
 
 	    // Check if users can browse anonymously
-                        if ( $ath->allowsAnon() == 0 && !user_isloggedin() ) {
+                        if ( !user_isloggedin() && !$ath->allowsAnon() ) {
                             exit_not_logged_in();
                         }
                         
@@ -829,7 +829,7 @@ if ( $func == 'gotoid' ) {
                         '&nbsp;'.
                         $at_arr[$j]->getName() .'</a> ';
                     // Only show number of artifacts if the user has full access on the tracker.
-                    if (permission_is_authorized('TRACKER_ACCESS_FULL', $at_arr[$j]->getID() , user_getid(), $group_id, $at_arr[$j]->getID())) {
+                    if ($at_arr[$j]->userHasFullAccess()) {
                         echo '( <strong>'. $at_arr[$j]->getOpenCount() .' '.$Language->getText('tracker_index','open').' / '. $at_arr[$j]->getTotalCount() .' '.$Language->getText('tracker_index','total').'</strong> )';
                     }
                     echo '<br />'.$at_arr[$j]->getDescription() .'<p>';

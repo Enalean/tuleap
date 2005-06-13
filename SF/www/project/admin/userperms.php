@@ -168,7 +168,7 @@ if ($project->usesForum()) {
     print '<TD><B>'.$Language->getText('project_admin_userperms','forums').'</B></TD>';
 }
 if ($project->usesWiki()) {
-    print '<TD><B>Wiki</B></TD>';//XXX
+    print '<TD><B>'.$Language->getText('project_admin_userperms','wiki').'</B></TD>';
 }
 if ($project->usesPm()) {
 	print '<TD><B>'.$Language->getText('project_admin_userperms','task_man').'</B></TD>';

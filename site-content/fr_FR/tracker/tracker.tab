@@ -532,7 +532,7 @@ tracker_common_canned	missing_param	Paramètres manquants
 #-----------------------------------------------
 # Script: SF/common/tracker/Artifact.class
 #
-tracker_common_artifact	view_private	Seuls les membres du projet peuvent voir les ArtifactTypes privés
+tracker_common_artifact	view_private	Vous n'êtes pas autorisé à accéder à cet outil de suivi
 tracker_common_artifact	invalid_id	ID Artefact invalide
 tracker_common_artifact	row	Enregistrement $1:
 tracker_common_artifact	double_subm	  ERREUR - DOUBLE SOUMISSION. Vous avez déjà soumis un artefact (id=$1) avec le même résumé.  

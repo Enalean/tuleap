@@ -274,7 +274,13 @@ function switchMessage(_I)
         $row_num=0;
         
         while ($row = db_fetch_array($res)) {
-            $objname=permission_get_object_name($row['permission_type'],$row['object_id']);
+            if (strpos($row['permission_type'], 'TRACKER_FIELD') === 0) {
+                $atid =permission_extract_atid($row['object_id']);
+                if (isset($tracker_field_displayed[$atid])) continue;
+                $objname=permission_get_object_name('TRACKER_ACCESS_FULL',$atid);
+            } else {
+                $objname=permission_get_object_name($row['permission_type'],$row['object_id']);
+            }
             echo '<TR class="'. util_get_alt_row_color($row_num) .'">';
             echo '<TD>'.permission_get_name($row['permission_type']).'</TD>';
             if ($row['permission_type'] == 'PACKAGE_READ') {
@@ -311,8 +317,10 @@ function switchMessage(_I)
                     .' <a href="/tracker/admin/?func=permissions&perm_type=tracker&group_id='.$group_id.'&atid='.$row['object_id'].'">'
                     .$objname.'</a></TD>';
             } else if (strpos($row['permission_type'], 'TRACKER_FIELD') === 0) {
-                echo '<TD>'.$Language->getText('project_admin_editugroup','tracker_field') //XXX Message: field XXX of tracker YYY ???
-                    .' <a href="/tracker/admin/?func=permissions&perm_type=fields&group_id='.$group_id.'&atid='.$row['object_id'].'">' //XXX not objectid (____)
+                $tracker_field_displayed[$atid]=1;
+                $atid =permission_extract_atid($row['object_id']);
+                echo '<TD>'.$Language->getText('project_admin_editugroup','tracker_field')
+                    .' <a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=permissions&perm_type=fields&group_first=1&selected_id='.$ugroup_id.'">' 
                     .$objname.'</a></TD>';
             } else {
                 echo '<TD>'.$row['object_id'].'</TD>';

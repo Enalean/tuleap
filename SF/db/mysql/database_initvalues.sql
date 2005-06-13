@@ -1142,17 +1142,17 @@ INSERT INTO project_type VALUES (100,'None','None');
 -- Dumping data for table 'artifact_group_list'
 --
 
-INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, is_public, allow_anon, email_all_updates, email_address, submit_instructions, browse_instructions, instantiate_for_new_projects) VALUES (1, 100, 'Bugs', 'Bugs Tracker', 'bug', 1, 0, 0, '', NULL, NULL, 1);
-INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, is_public, allow_anon, email_all_updates, email_address, submit_instructions, browse_instructions, instantiate_for_new_projects) VALUES (2, 100, 'Tasks', 'Tasks Tracker', 'task', 1, 0, 0, '', NULL, NULL, 1);
-INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, is_public, allow_anon, email_all_updates, email_address, submit_instructions, browse_instructions, instantiate_for_new_projects) VALUES (3, 100, 'Support Requests', 'Support Requests Tracker', 'SR', 1, 1, 0, '', NULL, NULL, 1);
-INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, is_public, allow_anon, email_all_updates, email_address, submit_instructions, browse_instructions) VALUES (4, 100, 'Empty', 'Empty Tracker', '', 1, 0, 0, '', NULL, NULL);
-INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, is_public, allow_anon, email_all_updates, email_address, submit_instructions, browse_instructions, instantiate_for_new_projects) VALUES (5, 100, 'Patches', 'Patch Tracker', 'patch', 1, 0, 0, '', NULL, NULL, 1);
+INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, allow_copy, email_all_updates, email_address, submit_instructions, browse_instructions, instantiate_for_new_projects) VALUES (1, 100, 'Bugs', 'Bugs Tracker', 'bug', 0, 0, '', NULL, NULL, 1);
+INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, allow_copy, email_all_updates, email_address, submit_instructions, browse_instructions, instantiate_for_new_projects) VALUES (2, 100, 'Tasks', 'Tasks Tracker', 'task', 0, 0, '', NULL, NULL, 1);
+INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, allow_copy, email_all_updates, email_address, submit_instructions, browse_instructions, instantiate_for_new_projects) VALUES (3, 100, 'Support Requests', 'Support Requests Tracker', 'SR', 0, 0, '', NULL, NULL, 1);
+INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, allow_copy, email_all_updates, email_address, submit_instructions, browse_instructions, instantiate_for_new_projects) VALUES (4, 100, 'Empty', 'Empty Tracker', '', 0, 0, '', NULL, NULL, 0);
+INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, allow_copy, email_all_updates, email_address, submit_instructions, browse_instructions, instantiate_for_new_projects) VALUES (5, 100, 'Patches', 'Patch Tracker', 'patch', 0, 0, '', NULL, NULL, 1);
 
 --
 -- This tracker has the id 100 to force the next id to be greater than 100
 -- 100 is a special value (None value)
 --
-INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, is_public, allow_anon, email_all_updates, email_address, submit_instructions, browse_instructions) VALUES (100, 100, 'None', 'None', '', 0, 0, 0, '', NULL, NULL);
+INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, allow_copy, email_all_updates, email_address, submit_instructions, browse_instructions, instantiate_for_new_projects) VALUES (100, 100, 'None', 'None', '', 0, 0, '', NULL, NULL, 0);
 
 --
 -- Dumping data for table 'artifact_field'
@@ -1773,7 +1773,7 @@ INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIPAGE_REA
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIPAGE_READ',4);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIPAGE_READ',14);
 
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_FULL',100);
+-- INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_FULL',100);
 INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('TRACKER_ACCESS_FULL',1,1);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_FULL',2);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_FULL',3);
@@ -1781,21 +1781,21 @@ INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCE
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_FULL',15);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_FULL',16);
 
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_SUBMITTER',100);
+-- INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_SUBMITTER',100);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_SUBMITTER',2);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_SUBMITTER',3);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_SUBMITTER',4);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_SUBMITTER',15);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_SUBMITTER',16);
 
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_ASSIGNEE',100);
+-- INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_ASSIGNEE',100);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_ASSIGNEE',2);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_ASSIGNEE',3);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_ASSIGNEE',4);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_ASSIGNEE',15);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_ASSIGNEE',16);
 
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT',100);
+-- INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT',100);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT',1);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT',2);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT',3);
@@ -1803,7 +1803,7 @@ INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_FIEL
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT',15);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT',16);
 
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_FIELD_READ',100);
+-- INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_FIELD_READ',100);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_FIELD_READ',1);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_FIELD_READ',2);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_FIELD_READ',3);

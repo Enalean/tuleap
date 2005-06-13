@@ -217,17 +217,20 @@ function permission_exist($permission_type, $object_id) {
 /**
  * Check permissions on the given object
  *
+ * WARNING: don't use this method to check access permission on trackers ('TRACKER_ACCESS*' and 'TRACKER_FIELD*' permission types)
+ * Why? because trackers don't use default permissions, and they need an additional parameter for field permissions.
+ *
  * @param $permission_type defines the type of permission (e.g. "DOCUMENT_READ")
  * @param $object_id is the ID of the object we want to access (e.g. a docid)
  * @param $user_id is the ID of the user that want to access the object
  * @param $group_id is the group_id the object belongs to; useful for project-specific authorized ugroups (e.g. 'project admins')
- * @param $atid is useful for tracker specific permissions (tracker access or field).
  * @return true if user is authorized, false otherwise.
  */
-function permission_is_authorized($permission_type, $object_id, $user_id, $group_id, $atid=0) {
+function permission_is_authorized($permission_type, $object_id, $user_id, $group_id) {
 
     // Super-user has all rights...
-    if (user_is_super_user()) return true;
+    $u = new User($user_id);
+    if ($u->isSuperUser()) return true;
 
     $res=permission_db_authorized_ugroups($permission_type, $object_id);
     if (db_numrows($res) < 1) {
@@ -244,29 +247,7 @@ function permission_is_authorized($permission_type, $object_id, $user_id, $group
     return false;
 }
 
-/**
- * Check permissions on the given object for the given ugroup
- *
- * @param $permission_type defines the type of permission (e.g. "DOCUMENT_READ")
- * @param $object_id is the ID of the object we want to access (e.g. a docid)
- * @param $ugroup_id is the ID of the ugroup
- * @return true if ugroup has the given permission
- */
-function permission_ugroup_has_permission($permission_type, $object_id, $ugroup_id) {
-    $sql="SELECT ugroup_id ".
-        " FROM permissions ".
-        " WHERE permission_type='".$permission_type."' ".
-        "       AND ugroup_id='".$ugroup_id."' ".
-        "       AND object_id='".$object_id."' ".
-        " UNION ".
-        " SELECT ugroup_id ".
-        " FROM permissions_values ".
-        " WHERE permission_type='".$permission_type."' ".
-        "       AND ugroup_id='".$ugroup_id."' ".
-        "       AND is_default='1' ";
-    $res=db_query($sql);
-    return (db_numrows($res) > 0);
-}
+
 
 function permission_extract_field_id($special_id) {
     $pos = strpos($special_id, '#');
@@ -675,14 +656,6 @@ function permission_add_ugroup($group_id, $permission_type, $object_id, $ugroup_
 }
 
 
-function permission_a_field_is_submittable_by_ugroups($atid, $ugroups) {
-    $sql = "SELECT object_id FROM permissions WHERE permission_type = 'TRACKER_FIELD_SUBMIT' ".
-        "   AND object_id LIKE '".$atid."#%' ".
-        "   AND ugroup_id IN (".implode(",", $ugroups).") ".
-        "   LIMIT 0, 1 ";
-    $res = db_query($sql);
-    return db_numrows($res) > 0;
-}
 /**
  * Return true if the permissions set for the given object are the same as the default values
  * Return false if they are different

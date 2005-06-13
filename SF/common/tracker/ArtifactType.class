@@ -203,7 +203,7 @@ class ArtifactType extends Error {
 			$this->setError('ArtifactType: '.$Language->getText('tracker_common_type','invalid_templ'));
 		}
 
-		// We retrieve public and anonymous submission from the template
+		// We retrieve allow_copy from template
 		$at_template = new ArtifactType($group,$atid_template);
 		
 		// First, we create a new ArtifactType into artifact_group_list
@@ -213,14 +213,13 @@ class ArtifactType extends Error {
 			name,
 			description,
 			item_name,
-			is_public,
-			allow_anon) 
+                        allow_copy) 
 			VALUES 
 			('". $group_id ."',
 			'". addslashes($name) ."',
 			'". addslashes($description) ."',
-			'". addslashes($itemname) ."',
-			".$at_template->isPublic().",".$at_template->allowsAnon().")";
+			'". addslashes($itemname).",
+                        '". $at_template->allowsCopy().")";
 		//echo $sql;
 		$res = db_query($sql);
 		if (!$res || db_affected_rows($res) <= 0) {
@@ -390,10 +389,18 @@ class ArtifactType extends Error {
 	/**
 	 *	  allowsAnon - determine if non-logged-in users can post.
 	 *
-	 *	  @return	boolean	allow_anonymous_submissions.
+	 *	  @return	boolean allow_anonymous_submissions.
 	 */
 	function allowsAnon() {
-		return $this->data_array['allow_anon'];
+            if (! isset($this->data_array['allow_anon'])) {
+                // First, check that anonymous users can access the tracker
+                if ($this->userCanView(100)) {
+                    // Then check if they can submit a field
+                    $this->data_array['allow_anon']=$this->userCanSubmit(100);
+                } else $this->data_array['allow_anon']=false;
+
+            }
+            return $this->data_array['allow_anon'];
 	}
 
 	/**
@@ -439,15 +446,6 @@ class ArtifactType extends Error {
 	 */
 	function getBrowseInstructions() {
 		return $this->data_array['browse_instructions'];
-	}
-
-	/**
-	 *	  isPublic - whether non-group-members can view.
-	 *
-	 *	  @return boolean	is_public.
-	 */
-	function isPublic() {
-		return $this->data_array['is_public'];
 	}
 
 	/**
@@ -772,30 +770,68 @@ class ArtifactType extends Error {
 
 	/**
 	 *	  userCanView - determine if the user can view this artifact type.
+         *        Note that if there is no group explicitely auhtorized, access is denied (don't check default values)
 	 *
 	 *	  @param $my_user_id	if not specified, use the current user id..
 	 *	  @return boolean	user_can_view.
 	 */
 	function userCanView($my_user_id=0) {
             if (!$my_user_id) {
+                // Super-user has all rights...
+                if (user_is_super_user()) return true;
                 $my_user_id=user_getid();
-            }
-            if ($this->isPublic()) { //xxx remove?
-                return true;
             } else {
-                if (user_isloggedin()) {
-                    if (permission_is_authorized('TRACKER_ACCESS_FULL', $this->getID() , $my_user_id, $this->Group->getID(), $this->getID())) {
+                $u = new User($my_user_id);
+                if ($u->isSuperUser()) return true;
+            }
+            
+            $sql="SELECT ugroup_id FROM permissions WHERE permission_type LIKE 'TRACKER_ACCESS%' AND object_id='".$this->getID()."' ORDER BY ugroup_id";
+            $res=db_query($sql);
+
+            if (db_numrows($res) > 0) {
+                while ($row = db_fetch_array($res)) {
+                    // should work even for anonymous users
+                    if (ugroup_user_is_member($my_user_id, $row['ugroup_id'], $this->Group->getID(), $this->getID())) {
                         return true;
-                    } else if (permission_is_authorized('TRACKER_ACCESS_SUBMITTER', $this->getID() , $my_user_id, $this->Group->getID(), $this->getID())) {
-                        return true;
-                    } else if (permission_is_authorized('TRACKER_ACCESS_ASSIGNEE', $this->getID() , $my_user_id, $this->Group->getID(), $this->getID())) {
-                        return true;
-                    } 
+                    }
                 }
             }
+            
             return false;
         }
 
+
+	/**
+	 *	  userHasFullAccess - A bit more restrictive than userCanView: determine if the user has
+         *        the 'TRACKER_ACCESS_FULL' permission on the tracker.
+	 *
+	 *	  @param $my_user_id	if not specified, use the current user id..
+	 *	  @return boolean
+	 */
+	function userHasFullAccess($my_user_id=0) {
+            if (!$my_user_id) {
+                // Super-user has all rights...
+                if (user_is_super_user()) return true;
+                $my_user_id=user_getid();
+            } else {
+                $u = new User($my_user_id);
+                if ($u->isSuperUser()) return true;
+            }
+            
+            $sql="SELECT ugroup_id FROM permissions WHERE permission_type='TRACKER_ACCESS_FULL' AND object_id='".$this->getID()."' ORDER BY ugroup_id";
+            $res=db_query($sql);
+
+            if (db_numrows($res) > 0) {
+                while ($row = db_fetch_array($res)) {
+                    // should work even for anonymous users
+                    if (ugroup_user_is_member($my_user_id, $row['ugroup_id'], $this->Group->getID(), $this->getID())) {
+                        return true;
+                    }
+                }
+            }
+            
+            return false;
+        }
 
 	/**
 	 *	userIsAdmin - see if the logged-in user's perms are >= 2 or project admin.
@@ -824,29 +860,40 @@ class ArtifactType extends Error {
 		}
 	}
 
-    /**
-     * userCanSubmit - see if the logged-in user can submit an artifact (if he can submit a field)
-    **/
-    function userCanSubmit() {
-        $can_submit = false;
-        if (user_is_super_user()) { //Super user can always submit
-            $can_submit = true;
-        } else {
-            $ugroups = array($GLOBALS['UGROUP_ANONYMOUS']); //We have to look for anonymous permissions
+	/**
+	 *	  userCanSubmit - determine if the user can submit an artifact (if he can submit a field).
+         *        Note that if there is no group explicitely auhtorized, access is denied (don't check default values)
+	 *
+	 *	  @param $my_user_id	if not specified, use the current user id..
+	 *	  @return boolean	user_can_submit.
+	 */
+        function userCanSubmit($my_user_id=0) {
+
+            if (!$my_user_id) {
+                // Super-user has all rights...
+                if (user_is_super_user()) return true;
+                $my_user_id=user_getid();
+            } else {
+                $u = new User($my_user_id);
+                if ($u->isSuperUser()) return true;
+            }
+
+            // Select submit permissions for all fields
+            $sql="SELECT ugroup_id FROM permissions WHERE permission_type='TRACKER_FIELD_SUBMIT' AND object_id LIKE '".$this->getID()."#%' GROUP BY ugroup_id";
+            $res=db_query($sql);
             
-            if (user_isloggedin()) {
-                $ugroups[] = $GLOBALS['UGROUP_REGISTERED']; //We have to look for registered permissions
-                $user_id = user_getID();
-                //We retrieve the current user's ugroups
-                $db_ugroups = ugroup_db_list_all_ugroups_for_user($this->getGroupID(),$user_id);
-                while($row = db_fetch_array($db_ugroups)) {
-                    $ugroups[] = $row[0];
+            if (db_numrows($res) > 0) {
+                while ($row = db_fetch_array($res)) {
+                    // should work even for anonymous users
+                    if (ugroup_user_is_member($my_user_id, $row['ugroup_id'], $this->Group->getID(), $this->getID())) {
+                        return true;
+                    }
                 }
             }
-            $can_submit = permission_a_field_is_submittable_by_ugroups($this->getID(), $ugroups);
+            
+            return false;
         }
-        return $can_submit;
-    }
+
 	/**
 	 *	getCurrentUserPerm - get the logged-in user's perms from artifact_perm.
 	 *
@@ -907,8 +954,6 @@ class ArtifactType extends Error {
 	 *
 	 *  @param	string	The item name.
 	 *  @param	string	The item description.
-	 *  @param	bool	(1) true (0) false - viewable by general public.
-	 *  @param	bool	(1) true (0) false - whether non-logged-in users can submit.
 	 *  @param	int		Days before this item is considered overdue.
 	 *  @param	int		Days before stale items time out.
 	 *  @param	bool	(1) true (0) false - whether the resolution box should be shown.
@@ -917,7 +962,7 @@ class ArtifactType extends Error {
 	 *  @param	bool	instantiate_for_new_projects (1) true (0) false - instantiate this tracker template for new projects
 	 *  @return true on success, false on failure.
 	 */
-	function update($name,$description,$itemname,$is_public,$allow_anon,$allow_copy,
+	function update($name,$description,$itemname,$allow_copy,
 		            $submit_instructions,$browse_instructions,$instantiate_for_new_projects) {
 	  global $Language;
 
@@ -931,8 +976,6 @@ class ArtifactType extends Error {
 			return false;
 		}
 		
-		$allow_anon = ((!$allow_anon) ? 0 : $allow_anon); 
-		$is_public = ((!$is_public) ? 0 : $is_public); 
 		$allow_copy = ((!$allow_copy) ? 0 : $allow_copy);
                 $instantiate_for_new_projects = ((!$instantiate_for_new_projects) ? 0 : $instantiate_for_new_projects); 
 
@@ -940,8 +983,6 @@ class ArtifactType extends Error {
 			name='$name',
 			description='$description',
 			item_name='$itemname',
-			is_public='$is_public',
-			allow_anon='$allow_anon',
                         allow_copy='$allow_copy',
 			submit_instructions='$submit_instructions',
 			browse_instructions='$browse_instructions',
@@ -1376,7 +1417,7 @@ class ArtifactType extends Error {
 
 
 	/**
-	 * Check if for a user and for role, there is a changement
+	 * Check if for a user and for role, there is a change
 	 *
 	 * @param user_id: the user id
 	 * @param role: the role

@@ -100,21 +100,10 @@ class ArtifactTypeFactory extends Error {
 		if ($this->ArtifactTypes) {
 			return $this->ArtifactTypes;
 		}
-		if (user_isloggedin()) {
-			// For project members, we can see all the trackers (both public and non public)
-			if ( user_ismember($this->Group->getID()) ) {
-				$public_flag='0,1';
-			} else {
-				$public_flag='1';
-			}
-		} else {
-			$public_flag='1';
-		}
 
 		$sql="SELECT *, 0 as open_count, 0 as count FROM artifact_group_list
 			WHERE group_id='". $this->Group->getID() ."'
 			AND status != 'D'
-			AND is_public IN ($public_flag)
 			ORDER BY name ASC";
 
 		$result = db_query ($sql);
@@ -132,7 +121,10 @@ class ArtifactTypeFactory extends Error {
 					$arr['open_count'] = $arr_count['open_count'];
 					$arr['count'] = $arr_count['count'];
 				}
-				$this->ArtifactTypes[] = new ArtifactType($this->Group, $arr['group_artifact_id'], $arr);
+                                $new_at=new ArtifactType($this->Group, $arr['group_artifact_id'], $arr);
+                                if ($new_at->userCanView()) {
+                                    $this->ArtifactTypes[] = $new_at;
+                                }
 			}
 		}
 		return $this->ArtifactTypes;
@@ -147,24 +139,14 @@ class ArtifactTypeFactory extends Error {
 	 */
 	function getArtifactTypesFromId($group_id) {
 	  global $Language;
+          // XXX add permission check here?
 
 		if ($this->ArtifactTypes) {
 			return $this->ArtifactTypes;
 		}
-		if (user_isloggedin()) {
-			// For project admin user (adn surperuser), we can see all the trackers (both public and non public)
-			if ( user_ismember($group_id,'A') ) {
-				$public_flag='0,1';
-			} else {
-				$public_flag='1';
-			}
-		} else {
-			$public_flag='1';
-		}
 
 		$sql="SELECT group_artifact_id,name FROM artifact_group_list
 			WHERE group_id='". $group_id ."'
-			AND is_public IN ($public_flag)
 			AND status!='D'
 			ORDER BY group_artifact_id ASC";
 

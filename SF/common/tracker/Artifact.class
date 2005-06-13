@@ -85,7 +85,7 @@ class Artifact extends Error {
             //      make sure this person has permission to view this artifact
             //
             if (!$this->userCanView()) {
-                $this->setError('Artifact: '.$Language->getText('tracker_common_artifact','view_private')); //xxx wrong message?
+                $this->setError('Artifact: '.$Language->getText('tracker_common_artifact','view_private'));
                 return false;
             }
         }
@@ -1635,12 +1635,24 @@ class Artifact extends Error {
      *	  @return boolean	user_can_view.
      */
     function userCanView($my_user_id=0) {
+
         if (!$my_user_id) {
+            // Super-user has all rights...
+            if (user_is_super_user()) return true;
             $my_user_id=user_getid();
+        } else {
+            $u = new User($my_user_id);
+            if ($u->isSuperUser()) return true;
         }
-        // xxx what about anonymous users?
-        if (permission_is_authorized('TRACKER_ACCESS_FULL', $this->ArtifactType->getID() , $my_user_id, $this->ArtifactType->Group->getID(), $this->ArtifactType->getID())) {
-            return true;
+
+        // Full access
+        $res=permission_db_authorized_ugroups('TRACKER_ACCESS_FULL',$this->ArtifactType->getID());
+        if (db_numrows($res) > 0) {
+            while ($row = db_fetch_array($res)) {
+                if (ugroup_user_is_member($my_user_id, $row['ugroup_id'], $this->ArtifactType->Group->getID(), $this->ArtifactType->getID())) {
+                    return true;
+                }
+            }
         }
 
         // 'submitter' access

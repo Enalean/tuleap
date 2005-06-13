@@ -100,12 +100,12 @@ class ArtifactTypeHtml extends ArtifactType {
 		echo '<strong><a href="/tracker/admin/?group_id='.$group_id.'">'.$Language->getText('tracker_index','admin_all_trackers').'</a>';
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'">'.$Language->getText('tracker_include_type','admin').'</a>';
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=editoptions">'.$Language->getText('tracker_include_type','settings').'</a>';
+		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=permissions">'.$Language->getText('tracker_include_type','manage_permissions').'</a>';
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=field_usage">'.$Language->getText('tracker_include_type','field_usage').'</a>';
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=field_values">'.$Language->getText('tracker_include_type','field_values').'</a>';
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=canned">'.$Language->getText('tracker_include_type','canned_resp').'</a>';
 		echo ' | <a href="/tracker/admin/?func=report&group_id='.$group_id.'&atid='. $this->getID() .'">'.$Language->getText('tracker_include_type','reports').'</a>';
 		echo ' | <a href="/tracker/admin/?func=notification&group_id='.$group_id.'&atid='. $this->getID() .'&func=notification">'.$Language->getText('tracker_include_type','mail_notif').'</a>';
-		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=permissions">'.$Language->getText('tracker_include_type','manage_permissions').'</a>';
                 echo ' | '.help_button($params['help'],false,$Language->getText('global','help'));
 		echo '</strong><hr>';
 	}
@@ -311,7 +311,7 @@ class ArtifactTypeHtml extends ArtifactType {
                                  );
             $this->_displayAdminMenu($permissions);
             /**/
-            /**
+            /** XXX
             $html = <<<EOL
 <form name="perm">
     <div>
@@ -878,28 +878,6 @@ EOS;
 		      <td width="21%"><b>'.$Language->getText('tracker_include_type','short_name').'</b>: <font color="red">*</font></td>
 		      <td width="79%"> 
 		        <input type="text" name="itemname" value="'.$this->getItemName().'">
-		      </td>
-		    </tr>
-		    <tr> 
-		      <td width="21%"><b> '.$Language->getText('tracker_include_type','public_tracker').'</b></td>
-		      <td width="79%"> ';
-		if ( $this->isPublic() ) {
-			echo '<input type="checkbox" name="is_public" value="1" checked>';
-		} else {
-			echo '<input type="checkbox" name="is_public" value="1">';
-		}
-		echo '			
-		      </td>
-		    </tr>
-		    <tr> 
-		      <td width="21%"><b>'.$Language->getText('tracker_include_type','allow_anon').'</b></td>
-		      <td width="79%">';
-		if ( $this->allowsAnon() ) {
-			echo '<input type="checkbox" name="allow_anon" value="1" checked>';
-		} else {
-			echo '<input type="checkbox" name="allow_anon" value="1">';
-		}
-		echo '	
 		      </td>
 		    </tr>
 		    <tr> 

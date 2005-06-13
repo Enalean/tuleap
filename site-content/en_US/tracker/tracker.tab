@@ -396,8 +396,6 @@ tracker_include_type	user	User
 tracker_include_type	perm	Permissions
 tracker_include_type	del_user	Delete this user?
 tracker_include_type	no_user	No users for this tracker.
-tracker_include_type	public_tracker	Public tracker:
-tracker_include_type	allow_anon	Allow anonymous submission:
 tracker_include_type	allow_copy	Allow artifact duplication:
 tracker_include_type	submit_instr	<b>Submit instructions</b>:<br><i>(HTML tags allowed)</i>
 tracker_include_type	browse_instr	<b>Browse instructions</b>:<br><i>(HTML tags allowed)</i>
@@ -527,7 +525,7 @@ tracker_common_canned	missing_param	Missing Params
 #-----------------------------------------------
 # Script: SF/common/tracker/Artifact.class
 #
-tracker_common_artifact	view_private	Only Group Members Can View Private ArtifactTypes
+tracker_common_artifact	view_private	You are not allowed to access this tracker
 tracker_common_artifact	invalid_id	Invalid ArtifactID
 tracker_common_artifact	row	Row $1:
 tracker_common_artifact	double_subm	  ERROR - DOUBLE SUBMISSION. You have already submitted an artifact (id=$1) with the same summary.

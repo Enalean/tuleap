@@ -351,7 +351,7 @@ if ($group_id && !$atid) {
 		if ( $update ) {
                     $name        = $sanitizer->sanitize($name);
                     $description = $sanitizer->sanitize($description);
-		    if ( !$ath->update($name,$description,$itemname,$is_public,$allow_anon,$allow_copy,
+		    if ( !$ath->update($name,$description,$itemname,$allow_copy,
                                            $submit_instructions,$browse_instructions,$instantiate_for_new_projects) ) {
 				exit_error($Language->getText('global','error'),$ath->getErrorMessage());
 			} else {
