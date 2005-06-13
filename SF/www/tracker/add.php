@@ -26,7 +26,7 @@ if ( !$ath->isValid() ) {
 //
 //  make sure this person has permission to add artifacts
 //
-if (!$ath->userIsTech() && !$ath->isPublic() ) {
+if (!$ath->userCanSubmit() && !$ath->isPublic() ) {
     exit_permission_denied();
 }
 

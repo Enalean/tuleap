@@ -668,6 +668,15 @@ function permission_add_ugroup($group_id, $permission_type, $object_id, $ugroup_
     }
 }
 
+
+function permission_a_field_is_submittable_by_ugroups($atid, $ugroups) {
+    $sql = "SELECT object_id FROM permissions WHERE permission_type = 'TRACKER_FIELD_SUBMIT' ".
+        "   AND object_id LIKE '".$atid."#%' ".
+        "   AND ugroup_id IN (".implode(",", $ugroups).") ".
+        "   LIMIT 0, 1 ";
+    $res = db_query($sql);
+    return db_numrows($res) > 0;
+}
 /**
  * Return true if the permissions set for the given object are the same as the default values
  * Return false if they are different

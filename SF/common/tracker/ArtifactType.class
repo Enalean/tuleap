@@ -824,7 +824,29 @@ class ArtifactType extends Error {
 		}
 	}
 
-
+    /**
+     * userCanSubmit - see if the logged-in user can submit an artifact (if he can submit a field)
+    **/
+    function userCanSubmit() {
+        $can_submit = false;
+        if (user_is_super_user()) { //Super user can always submit
+            $can_submit = true;
+        } else {
+            $ugroups = array($GLOBALS['UGROUP_ANONYMOUS']); //We have to look for anonymous permissions
+            
+            if (user_isloggedin()) {
+                $ugroups[] = $GLOBALS['UGROUP_REGISTERED']; //We have to look for registered permissions
+                $user_id = user_getID();
+                //We retrieve the current user's ugroups
+                $db_ugroups = ugroup_db_list_all_ugroups_for_user($this->getGroupID(),$user_id);
+                while($row = db_fetch_array($db_ugroups)) {
+                    $ugroups[] = $row[0];
+                }
+            }
+            $can_submit = permission_a_field_is_submittable_by_ugroups($this->getID(), $ugroups);
+        }
+        return $can_submit;
+    }
 	/**
 	 *	getCurrentUserPerm - get the logged-in user's perms from artifact_perm.
 	 *
