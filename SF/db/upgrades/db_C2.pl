@@ -14,11 +14,23 @@ sub insert_field_permissions {
 my ($query, $c, $q, $d, $e);
 
 
-  $query = "SELECT group_artifact_id, allow_anon FROM artifact_group_list";
+  $query = "SELECT group_artifact_id, allow_anon, is_public FROM artifact_group_list";
 
   $c = $dbh->prepare($query);
   $c->execute();
-  while (my ($group_artifact_id, $allow_anon) = $c->fetchrow()) {
+  while (my ($group_artifact_id, $allow_anon, $is_public) = $c->fetchrow()) {
+
+    #first treat tracker permission
+    if ($is_public == 0) {
+      $access_group = 3; #project members only
+    } else {
+      $access_group = 1; #anonymous
+    }
+
+    $query = "INSERT INTO permissions VALUES ('TRACKER_ACCESS_FULL','$group_artifact_id',$access_group)";
+    #print $query."\n";
+    $d = $dbh->prepare($query);
+    $d->execute();
 
     $query = "SELECT field_id,field_name FROM artifact_field WHERE group_artifact_id = $group_artifact_id order by field_id";
     $d = $dbh->prepare($query);

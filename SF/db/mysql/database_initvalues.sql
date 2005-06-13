@@ -1774,29 +1774,9 @@ INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIPAGE_REA
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIPAGE_READ',14);
 
 
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_FULL',100);
-INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('TRACKER_ACCESS_FULL',1,1);
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_FULL',2);
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_FULL',3);
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_FULL',4);
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_FULL',15);
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_FULL',16);
-
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_SUBMITTER',100);
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_SUBMITTER',2);
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_SUBMITTER',3);
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_SUBMITTER',4);
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_SUBMITTER',15);
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_SUBMITTER',16);
-
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_ASSIGNEE',100);
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_ASSIGNEE',2);
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_ASSIGNEE',3);
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_ASSIGNEE',4);
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_ASSIGNEE',15);
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_ASSIGNEE',16);
-
 -- Bugs
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_ACCESS_FULL','1',1);
+
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','1#2',3);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','1#3',3);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','1#4',3);
@@ -1876,6 +1856,8 @@ INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_F
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','1#29',16);
 
 -- Tasks
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_ACCESS_FULL','2',1);
+
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','2#2',3);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','2#4',3);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','2#5',3);
@@ -1913,6 +1895,8 @@ INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_F
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','2#14',16);
 
 -- SR
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_ACCESS_FULL','3',1);
+
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','3#2',1);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','3#3',1);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','3#5',1);
@@ -1941,6 +1925,8 @@ INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_F
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','3#11',16);
 
 -- Empty
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_ACCESS_FULL','4',1);
+
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','4#3',3);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','4#4',3);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','4#6',3);
@@ -1970,6 +1956,8 @@ INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_F
 
 
 -- Patch
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_ACCESS_FULL','5',1);
+
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','5#3',3);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','5#5',3);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','5#6',3);
