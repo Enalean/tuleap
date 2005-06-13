@@ -832,7 +832,7 @@ function permission_get_input_value_from_permission($perm) {
 function permission_process_update_fields_permissions($group_id, $atid, $fields, $permissions_wanted_by_user) {
     //The actual permissions
     $stored_ugroups_permissions = permission_get_field_tracker_ugroups_permissions($group_id, $atid, $fields);;
-
+    $permissions_updated = false;
     //We process the request
     foreach($permissions_wanted_by_user as $field_id => $ugroups_permissions) {
         if (is_numeric($field_id) 
@@ -1187,8 +1187,16 @@ function permission_process_update_fields_permissions($group_id, $atid, $fields,
             if ($add_update_to_history) {
                 permission_add_history($group_id, 'TRACKER_FIELD_UPDATE', $fake_object_id);
             }
+            if (!$permissions_updated && ($add_submit_to_history || $add_read_to_history || $add_update_to_history)) {
+                $permissions_updated = true;
+            }
         }
     }
+    //feedback
+    if ($permissions_updated) {
+        $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('project_admin_userperms', 'perm_upd');
+    }
+
 }
 
 function permission_process_update_tracker_permissions($group_id, $atid, $permissions_wanted_by_user) {
@@ -1277,6 +1285,7 @@ function permission_process_update_tracker_permissions($group_id, $atid, $permis
             //---------
             if ($anonymous_is_already_set_to_fullaccess) {
                 permission_clear_ugroup_object($group_id, 'TRACKER_ACCESS_FULL', $GLOBALS['UGROUP_ANONYMOUS'], $atid);
+                $add_submitter_to_history = true;
                 $anonymous_is_already_set_to_fullaccess = false;
             }
             break;
@@ -1634,6 +1643,11 @@ function permission_process_update_tracker_permissions($group_id, $atid, $permis
     }
     if ($add_submitter_to_history) {
         permission_add_history($group_id, 'TRACKER_ACCESS_SUBMITTER', $atid);
+    }
+    
+    //feedback
+    if ($add_full_to_history || $add_assignee_to_history || $add_submitter_to_history) {
+        $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('project_admin_userperms', 'perm_upd');
     }
 }
 
