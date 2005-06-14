@@ -58,13 +58,7 @@ class ArtifactField extends Error {
 	
 	// Is the field used?
 	var $use_it;
-	
-	// Is the field displayed on task add form
-	var $show_on_add;
-	
-	// Is the field displayed on task add form for project members with appropriate rigths
-	var $show_on_add_members;
-	
+		
 	// Place on the form
 	var $place;
 	
@@ -101,7 +95,7 @@ class ArtifactField extends Error {
 	    $sql="SELECT af.field_id, field_name, data_type, display_type, ".
 		"display_size,label, description,scope,required,empty_ok,keep_history,special, ".
 		"value_function, ".
-		"af.group_artifact_id, use_it, show_on_add, show_on_add_members, place, default_value ".
+		"af.group_artifact_id, use_it, place, default_value ".
 		"FROM artifact_field af, artifact_field_usage afu ".
 		"WHERE af.field_name='".$field_name."' and af.field_id = afu.field_id".
 		" and afu.group_artifact_id=".$group_artifact_id.
@@ -141,8 +135,6 @@ class ArtifactField extends Error {
 		$this->special = $field_array['special'];
 		$this->value_function = $field_array['value_function'];
 		$this->use_it = $field_array['use_it'];
-		$this->show_on_add = $field_array['show_on_add'];
-		$this->show_on_add_members = $field_array['show_on_add_members'];
 		$this->place = $field_array['place'];
 		$this->default_value = $field_array['default_value'];
 		
@@ -318,24 +310,6 @@ class ArtifactField extends Error {
 	}
 	
 	/**
-	 *  Get the show_on_add attribute value
-	 *
-	 * @return boolean
-	 */
-	function getShowOnAdd() {
-		return $this->show_on_add;
-	}
-	
-	/**
-	 *  Get the show_on_add_members attribute value
-	 *
-	 * @return boolean
-	 */
-	function getShowOnAddMembers() {
-		return $this->show_on_add_members;
-	}
-	
-	/**
 	 *  Get the place attribute value
 	 *
 	 * @return int
@@ -379,8 +353,6 @@ class ArtifactField extends Error {
 		 	   " - special=".$this->special.
 		 	   " - value_function=".$this->value_function.
 		 	   " - use_it=".$this->use_it.
-		 	   " - show_on_add=".$this->show_on_add.
-		 	   " - show_on_add_members=".$this->show_on_add_members.
 		 	   " - place=".$this->place.
 		 	   " - default_value=".$this->default_value;
 	}	
@@ -447,24 +419,6 @@ class ArtifactField extends Error {
 	function isEmptyOk() {
 		$val = $this->getEmptyOk();
 	    return($val);
-	}
-	
-	/**
-	 *  Return true if the field is show on add
-	 *
-	 * @return boolean
-	 */
-	function isShowOnAdd() {
-	    return( $this->show_on_add == 1 );
-	}
-	
-	/**
-	 *  Return true if the field is show on add member
-	 *
-	 * @return boolean
-	 */
-	function isShowOnAddMember() {
-	    return( $this->show_on_add_members );
 	}
 	
 	/**
@@ -1180,8 +1134,6 @@ class ArtifactField extends Error {
 	 *  @param display_type: the field display type (select box, text field, ...)
 	 *  @param display_size: the field display size
 	 *  @param rank_on_screen: rank on screen
-	 *  @param show_on_add: display this field on the submission form used by project members  
-	 *  @param show_on_add_members: display this field on the submission form used by other users 
 	 *  @param empty_ok: allow empty fill
 	 *  @param keep_history: keep in the history
 	 *  @param special: is the field has special process
@@ -1190,7 +1142,7 @@ class ArtifactField extends Error {
 	 *  @return boolean - succeed or failed
 	 */
 	function update($group_artifact_id,$field_name,$description,$label,$data_type,$display_type,
-						 $display_size,$rank_on_screen,$show_on_add,$show_on_add_members,
+						 $display_size,$rank_on_screen,
 						 $empty_ok,$keep_history,$special,$use_it) {
 	  global $Language;
 	 	
@@ -1204,8 +1156,6 @@ class ArtifactField extends Error {
 		$empty_ok = ($empty_ok?$empty_ok:0);
 		$keep_history = ($keep_history?$keep_history:0);
 		$use_it = ($use_it?$use_it:0);
-		$show_on_add = ($show_on_add?$show_on_add:0);
-		$show_on_add_members = ($show_on_add_members?$show_on_add_members:0);
 		$special = ($special?$special:0);
 		$rank_on_screen = ($rank_on_screen?$rank_on_screen:"''");
 		
@@ -1231,8 +1181,6 @@ class ArtifactField extends Error {
 		// Then, update the artifact_field_usage
 		$sql = "UPDATE artifact_field_usage SET ".
 			   "use_it=".$use_it.",".
-			   "show_on_add=".$show_on_add.",".
-			   "show_on_add_members=".$show_on_add_members.",".
 			   "place=".$rank_on_screen." ".
 			   "WHERE group_artifact_id=".$group_artifact_id." AND field_id=".$this->field_id;
 		

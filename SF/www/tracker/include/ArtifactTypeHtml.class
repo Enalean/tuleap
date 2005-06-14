@@ -1347,8 +1347,6 @@ EOS;
 	 *  @param display_type: the field display type (select box, text field, ...)
 	 *  @param display_size: the field display size
 	 *  @param rank_on_screen: rank on screen
-	 *  @param show_on_add: display this field on the submission form used by project members  
-	 *  @param show_on_add_members: display this field on the submission form used by other users 
 	 *  @param empty_ok: allow empty fill
 	 *  @param keep_history: keep in the history
 	 *  @param special: is the field has special process
@@ -1358,7 +1356,7 @@ EOS;
 	 *  @return void
 	 */
 	function displayFieldUsageForm($func="field_create",$field_id=false,$field_name=false,$description=false,$label=false,$data_type=false,$default_value=false,$display_type=false,
-								   $display_size=false,$rank_on_screen=false,$show_on_add=false,$show_on_add_members=false,
+								   $display_size=false,$rank_on_screen=false,
 								   $empty_ok=false,$keep_history=false,$special=false,$use_it=false,$show_use=false) {
 		global $art_field_fact,$Language;
 		
@@ -1432,7 +1430,7 @@ EOS;
 		echo'
                                 <table width="100%" border="0" cellpadding="5" cellspacing="0">
 		    <tr> 
-		      <td>'.$Language->getText('tracker_include_type','display_size').':&nbsp;';
+		      <td width="30%">'.$Language->getText('tracker_include_type','display_size').':&nbsp;';
 		      
 		if ( $display_size ) {
 		  echo '<input type="text" name="display_size" size="7" maxlength="7" value="'.$display_size.'">';
@@ -1442,34 +1440,6 @@ EOS;
 			    
 	    echo '
 		      </td>
-		      <td rowspan="2">';
-        /**
-        echo $Language->getText('tracker_include_type','display_field').'<br>
-                                    <ul>
-		        <li>'.$Language->getText('tracker_include_type','sub_form_proj').' ';
-		        
-		if ( $show_on_add_members ) {
-			echo '<input type="checkbox" name="show_on_add_members" value="1" checked>';
-		} else {
-			echo '<input type="checkbox" name="show_on_add_members" value="1">';
-		}
-		
-		echo '
-		        </li>
-		        <li>'.$Language->getText('tracker_include_type','sub_form_other');
-		        
-		if ( $show_on_add ) {
-			echo '<input type="checkbox" name="show_on_add" value="1" checked>';
-		} else {
-			echo '<input type="checkbox" name="show_on_add" value="1">';
-		}		
-		
-		echo '
-		        </li></ul>';
-        /**/
-		echo '</td>
-		    </tr>
-		    <tr> 
 		      <td>'.$Language->getText('tracker_include_type','rank_screen').':&nbsp;';
 		      
 		if ( $rank_on_screen ) {
@@ -1543,8 +1513,11 @@ EOS;
 			    echo '<input type="checkbox" name="use_it" value="1">';
 			  }
 			}
+                        echo '
+                      </td><td><a href="/tracker/admin/?group_id='.$this->Group->getID().'&atid='.$this->getID().'&func=permissions&perm_type=fields&selected_id='.$field_id.'&group_first=0">'.$Language->getText('tracker_include_type','edit_field_perm').'</a>';
+
 		    echo  '
-		      </tr></td>';
+		      </td></tr>';
 		} else {
 			echo '<input type="hidden" name="use_it" value="1">';
 		}

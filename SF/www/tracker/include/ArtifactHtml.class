@@ -1115,16 +1115,12 @@ class ArtifactHtml extends Artifact {
                 while ( list($key, $field) = each($result_fields) ) {
                 
                     $field_html = new ArtifactFieldHtml($field);
-                    //echo $field->getName()."-".$is_member."-".$field->isShowOnAddMember()."<br>";
                 
                     // if the field is a special field (except summary and original description)
                     // or if not used by this project  then skip it. 
                     // Plus only show fields allowed on the artifact submit_form 
                     if ( (!$field->isSpecial() || $field->getName()=='summary' || $field->getName()=='details') ) {
-                        if ($field->userCanSubmit($group_id, $group_artifact_id, $user_id)) {
-                            //    if  (($is_member && $field->isShowOnAddMember()) ||
-                            //         (!$is_member && $field->isShowOnAdd()) ) {
-                                    
+                        if ($field->userCanSubmit($group_id, $group_artifact_id, $user_id)) {                                    
                                     // display the artifact field with its default value
                                     // if field size is greatest than max_size chars then force it to
                                     // appear alone on a new line or it won't fit in the page

@@ -98,7 +98,7 @@ tracker_index	trackers_for	Outil de suivi pour $1
 tracker_index	admin_all_trackers	Administration des outils de suivi
 tracker_index	create_new_tracker	Créer un outil de suivi
 tracker_index	no_accessible_trackers_hdr	Aucun outil de suivi disponible
-tracker_index	no_accessible_trackers_msg	<strong>Aucun outil de suivi n'a été créé, ou vous n'êtes pas autorisé pas les consulter.</strong>
+tracker_index	no_accessible_trackers_msg	<strong>Aucun outil de suivi n'a été créé, ou vous n'êtes pas autorisé à les consulter.</strong>
 tracker_index	choose_tracker	Choisissez un outil de suivi pour visualiser, éditer ou ajouter des artefacts.
 tracker_index	total	total
 tracker_index	file_delete	Fichier détruit: $1
@@ -445,9 +445,6 @@ tracker_include_type	field_ident	Identification et description du champ
 tracker_include_type	field_type	Type du champ
 tracker_include_type	display_info	Informations d'affichage
 tracker_include_type	display_size	Taille d'affichage
-tracker_include_type	display_field	Afficher ce champ&hellip;
-tracker_include_type	sub_form_proj	Sur le formulaire de soumission utilisé par les membres du projet
-tracker_include_type	sub_form_other	Sur le formulaire de soumission utilisé par les autres utilisateurs
 tracker_include_type	allow_empty	Autoriser la valeur vide
 tracker_include_type	keep_change_history	Conserver l'historique des changements
 tracker_include_type	misc	Divers:
@@ -507,13 +504,14 @@ tracker_include_type	notify_me	Je veux être notifié lorsque:
 tracker_include_type	permissions	Permissions
 tracker_include_type	manage_permissions	Gérer les Permissions
 tracker_include_type	manage_permissions_title	 - Gérer les Permissions
-tracker_include_type	define_manage_permissions	Donner des permissions sur l'outil de suivi et ses champs
+tracker_include_type	define_manage_permissions	Définir des permissions sur l'outil de suivi et ses champs
 tracker_include_type	manage_tracker_permissions	Gérer les permissions de l'outil de suivi
 tracker_include_type	manage_tracker_permissions_title	 - Gérer les permissions de l'outil de suivi
 tracker_include_type	define_manage_tracker_permissions	Permet de définir des droits d'accès à l'outil de suivi.
 tracker_include_type	manage_fields_tracker_permissions	Gérer les permissions des champs
 tracker_include_type	manage_fields_tracker_permissions_title	 - Gérer les permissions des champs
 tracker_include_type	define_manage_fields_tracker_permissions	Permet de définir des droits d'accès aux champs de l'outil de suivi.
+tracker_include_type	edit_field_perm	Editer les permissions du champ
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactCanned.class

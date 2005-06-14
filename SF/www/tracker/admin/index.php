@@ -546,7 +546,7 @@ if ($group_id && !$atid) {
 		$label       = $sanitizer->sanitize($label);
                 $description = $sanitizer->sanitize($description);
 		if ( !$art_field_fact->createField($description,$label,$data_type,$display_type,
-						 $display_size,$rank_on_screen,/*$show_on_add =>*/ 0,/*$show_on_add_members =>*/ 0,
+						 $display_size,$rank_on_screen,
 						 (isset($empty_ok)?$empty_ok:0),(isset($keep_history)?$keep_history:0),$special,$use_it) ) {
 			exit_error($Language->getText('global','error'),$art_field_fact->getErrorMessage());
 		} else {
@@ -571,7 +571,7 @@ if ($group_id && !$atid) {
                      $label       = $sanitizer->sanitize($label);
                      $description = $sanitizer->sanitize($description);
 			if ( !$field->update($atid,$field_name,$description,$label,$data_type,$display_type,
-							 ($display_size=="N/A"?"":$display_size),$rank_on_screen,/*show_on_add =>*/ 0,/*$show_on_add_members =>*/ 0,
+							 ($display_size=="N/A"?"":$display_size),$rank_on_screen,
 							 $empty_ok,$keep_history,$special,$use_it) ) {
 				exit_error($Language->getText('global','error'),$field->getErrorMessage());
 			} else {
@@ -634,7 +634,7 @@ if ($group_id && !$atid) {
 			$ath->displayFieldUsageForm("field_update",$field->getID(),
 						    $field->getName(),$field->getDescription(),$field->getLabel(),
 						    $field->getDataType(),$field->getDefaultValue(),$field->getDisplayType(),
-						    $field->getDisplaySize(),$field->getPlace(),$field->getShowOnAdd(),$field->getShowOnAddMembers(),
+						    $field->getDisplaySize(),$field->getPlace(),
 						    $field->getEmptyOk(),$field->getKeepHistory(),$field->isSpecial(),$field->getUseIt(),true);
 			$ath->footer(array());
 		}

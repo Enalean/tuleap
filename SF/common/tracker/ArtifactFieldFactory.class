@@ -76,7 +76,7 @@ class ArtifactFieldFactory extends Error {
 	    $sql='SELECT af.field_id, field_name, display_type, data_type, '.
 		'display_size,label, description,scope,required,empty_ok,keep_history,special, '.
 		'value_function,'.
-		'af.group_artifact_id, use_it,show_on_add,show_on_add_members, place, default_value '.
+		'af.group_artifact_id, use_it, place, default_value '.
 		'FROM artifact_field_usage afu, artifact_field af '.
 		'WHERE afu.group_artifact_id='.$group_artifact_id.' '.
 		'AND afu.field_id=af.field_id AND af.group_artifact_id='.$group_artifact_id;
@@ -319,7 +319,7 @@ class ArtifactFieldFactory extends Error {
 		//
 		// Copy artifact_field_usage records
 		//
-	    $sql='SELECT field_id,use_it,show_on_add,show_on_add_members,place '.
+	    $sql='SELECT field_id,use_it,place '.
 		'FROM artifact_field_usage '.
 		'WHERE group_artifact_id='.$atid_source;
 		
@@ -330,7 +330,7 @@ class ArtifactFieldFactory extends Error {
 	    while ($field_array = db_fetch_array($res)) {
 	    	$place = ($field_array["place"] == ""?"null":$field_array["place"]);
 	    	$sql_insert = 'INSERT INTO artifact_field_usage VALUES ('.$field_array["field_id"].','.$atid_dest.','.$field_array["use_it"].
-	    				  ','.$field_array["show_on_add"].','.$field_array["show_on_add_members"].','.$place.')';
+	    				  ','.$place.')';
 	    				  
 			//echo $sql_insert;
 			$res_insert = db_query($sql_insert);
@@ -496,8 +496,6 @@ class ArtifactFieldFactory extends Error {
 	 *  @param display_type: the field display type (select box, text field, ...)
 	 *  @param display_size: the field display size
 	 *  @param rank_on_screen: rank on screen
-	 *  @param show_on_add: display this field on the submission form used by project members  
-	 *  @param show_on_add_members: display this field on the submission form used by other users 
 	 *  @param empty_ok: allow empty fill
 	 *  @param keep_history: keep in the history
 	 *  @param special: is the field has special process
@@ -506,7 +504,7 @@ class ArtifactFieldFactory extends Error {
 	 *  @return boolean - succeed or failed
 	 */
 	function createField($description,$label,$data_type,$display_type,
-						 $display_size,$rank_on_screen,$show_on_add,$show_on_add_members,
+						 $display_size,$rank_on_screen,
 						 $empty_ok,$keep_history,$special,$use_it) {
 
 	  global $Language;
@@ -526,8 +524,6 @@ class ArtifactFieldFactory extends Error {
 		$empty_ok = ($empty_ok?$empty_ok:0);
 		$keep_history = ($keep_history?$keep_history:0);
 		$use_it = ($use_it?$use_it:0);
-		$show_on_add = ($show_on_add?$show_on_add:0);
-		$show_on_add_members = ($show_on_add_members?$show_on_add_members:0);
 		$special = ($special?$special:0);
 		$display_size = (($display_size != "N/A") ? $display_size : "" );
 		
@@ -545,7 +541,7 @@ class ArtifactFieldFactory extends Error {
 		
 		// Then, insert the artifact_field_usage
 		$sql = "INSERT INTO artifact_field_usage VALUES (".
-				$field_id.",".$this->ArtifactType->getID().",".$use_it.",".$show_on_add.",".$show_on_add_members.",'".
+				$field_id.",".$this->ArtifactType->getID().",".$use_it.",'".
 				$rank_on_screen."')";
 				
 		$res_insert = db_query($sql);

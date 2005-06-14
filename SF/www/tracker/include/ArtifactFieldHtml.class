@@ -34,8 +34,6 @@ class ArtifactFieldHtml extends ArtifactField {
 		$this->special = $art_field->special;
 		$this->value_function = $art_field->value_function;
 		$this->use_it = $art_field->use_it;
-		$this->show_on_add = $art_field->show_on_add;
-		$this->show_on_add_members = $art_field->show_on_add_members;
 		$this->place = $art_field->place;
 		
 	}
