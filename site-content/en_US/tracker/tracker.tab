@@ -699,6 +699,7 @@ tracker_admin_permissions	ignore_g_anon_update	<p>Ignoring group '$1' because an
 tracker_admin_permissions	ignore_g_regis_read	<p>Ignoring group '$1' because registered users are allowed to read</p>
 tracker_admin_permissions	ignore_g_regis_submit	<p>Ignoring group '$1' because registered users are allowed to submit</p>
 tracker_admin_permissions	ignore_g_regis_update	<p>Ignoring group '$1' because registered users are allowed to update</p>
+tracker_admin_permissions	ignore_g_tech_update	<p>Ignoring group '$1' because tracker technicians are allowed to update</p>
 tracker_admin_permissions	ignore_ug_during_copy	<p>Please note that some original tracker permissions have not been copied</p>
 tracker_admin_permissions	permissions	Access Permissions
 tracker_admin_permissions	TRACKER_ACCESS_FULL	have access to all artifacts

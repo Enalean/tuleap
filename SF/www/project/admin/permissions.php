@@ -1054,6 +1054,16 @@ function permission_process_update_fields_permissions($group_id, $atid, $fields,
             }
 
 
+            //TRACKER_TECHNICIANS
+            ////////////////////////////////////////////////////////////////
+            $technician_will_be_able_to_update = isset($stored_ugroups_permissions[$field_id]['ugroups'][$GLOBALS['UGROUP_TRACKER_TECH']]['permissions']['TRACKER_FIELD_UPDATE']);
+            if (isset($ugroups_permissions[$GLOBALS['UGROUP_TRACKER_TECH']])) {
+                //user set technician to update
+                if (isset($ugroups_permissions[$GLOBALS['UGROUP_TRACKER_TECH']]['others'])) {
+                    $technician_will_be_able_to_update = ($ugroups_permissions[$GLOBALS['UGROUP_TRACKER_TECH']]['others'] === "1") ;
+                }
+            }
+
             //OTHER INSIGNIFIANT UGROUPS
             ////////////////////////////////////////////////////////////////
             foreach($ugroups_permissions as $ugroup_id => $ugroup_permissions) {
@@ -1100,9 +1110,30 @@ function permission_process_update_fields_permissions($group_id, $atid, $fields,
                         } else if ($user_set_registered_to_update || $registered_is_already_set_to_update) {
                             $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_regis_update', array($name_of_ugroup));
                                              
+                        } else if ($ugroup_id != $GLOBALS['UGROUP_TRACKER_TECH'] && $technician_will_be_able_to_update) {
+                             $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_tech_update', array($name_of_ugroup));
+                             
                         } else {
                             permission_add_ugroup($group_id, 'TRACKER_FIELD_UPDATE', $fake_object_id, $ugroup_id);
                             $add_update_to_history = true;
+                            
+                            //If we are technicians, we remove old updates
+                            if ($ugroup_id == $GLOBALS['UGROUP_TRACKER_TECH']) {
+                                foreach($stored_ugroups_permissions[$field_id]['ugroups'] as $stored_ugroup_id => $stored_ugroup_permissions) {
+                                    if ($stored_ugroup_id !== $GLOBALS['UGROUP_TRACKER_TECH']) {
+                                        if (isset($stored_ugroup_permissions['permissions']['TRACKER_FIELD_UPDATE'])) {
+                                            //The stored ugroup can update the field...
+                                            if (!isset($ugroups_permissions[$stored_ugroup_id]) 
+                                            || !isset($ugroups_permissions[$stored_ugroup_id]['others'])
+                                            || $ugroups_permissions[$stored_ugroup_id]['others'] === "1") {
+                                                //...and user doesn't change anything
+                                                permission_clear_ugroup_object($group_id, 'TRACKER_FIELD_UPDATE', $stored_ugroup_id, $fake_object_id);
+                                                $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_tech_update', array($stored_ugroup_permissions['ugroup']['name']));
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     } else if(isset($stored_ugroups_permissions[$field_id]['ugroups'][$ugroup_id]['permissions']['TRACKER_FIELD_UPDATE'])
                               && isset($ugroup_permissions['others']) 
