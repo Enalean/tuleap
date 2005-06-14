@@ -49,7 +49,7 @@ my ($query, $c, $q, $d, $e);
 	} else {
 	  if ($show_on_add) {
 	    $q .= "('TRACKER_FIELD_SUBMIT','$group_artifact_id#$field_id',1),";
-	  } elsif ($show_on_add) {
+	  } elsif ($show_on_add_members) {
 	    $q .= "('TRACKER_FIELD_SUBMIT','$group_artifact_id#$field_id',3),";
 	  }
 	}
@@ -73,6 +73,12 @@ my ($query, $c, $q, $d, $e);
   $c = $dbh->prepare($query);
   $c->execute();
   $query = "ALTER TABLE artifact_group_list DROP allow_anon";
+  $c = $dbh->prepare($query);
+  $c->execute();
+  $query = "ALTER TABLE artifact_field_usage DROP show_on_add";
+  $c = $dbh->prepare($query);
+  $c->execute();
+  $query = "ALTER TABLE artifact_field_usage DROP show_on_add_members";
   $c = $dbh->prepare($query);
   $c->execute();
 }
