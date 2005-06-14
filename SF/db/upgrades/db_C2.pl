@@ -14,7 +14,7 @@ sub insert_field_permissions {
 my ($query, $c, $q, $d, $e);
 
 
-  $query = "SELECT group_artifact_id, allow_anon, is_public FROM artifact_group_list";
+  $query = "SELECT group_artifact_id, allow_anon, is_public FROM artifact_group_list WHERE group_artifact_id > 100";
 
   $c = $dbh->prepare($query);
   $c->execute();
