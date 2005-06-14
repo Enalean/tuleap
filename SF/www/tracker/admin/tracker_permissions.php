@@ -67,16 +67,10 @@ switch ($perm_type) {
      $ath->displayPermissionsTracker($ugroups_permissions);
      break;
  case 'fields':
-     if ($update || $reset) {
-         if ($update && isset($_REQUEST['permissions']) && is_array($_REQUEST['permissions'])) {
+     if ($update) {
+         if (isset($_REQUEST['permissions']) && is_array($_REQUEST['permissions'])) {
              $fields = $art_field_fact->getAllUsedFields();
              permission_process_update_fields_permissions($group_id, $atid, $fields, $_REQUEST['permissions']);
-         } else if($reset) {
-             //The user want to clear permissions
-             $fields = $art_field_fact->getAllUsedFields();
-             foreach($fields as $field) {
-                 permission_clear_all_fields_tracker($group_id, $atid, $field->getID());
-             }
          }
      }
      //display

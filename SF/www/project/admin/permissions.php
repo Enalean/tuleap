@@ -526,7 +526,7 @@ function permission_display_selection_form($permission_type, $object_id, $group_
 */
 
 function permission_clear_all($group_id, $permission_type, $object_id, $log_permission_history=true) {
-    if (!permission_user_allowed_to_change($group_id, $permission_type)) { return false;}
+    if (!permission_user_allowed_to_change($group_id, $permission_type, $object_id)) { return false;}
     $sql = "DELETE FROM permissions WHERE permission_type='$permission_type' AND object_id='$object_id'";
     $res=db_query($sql);
     if (!$res) { 
@@ -597,23 +597,6 @@ function permission_clear_all_fields_tracker($group_id, $tracker_id, $field_id) 
 
 
 /**
- * Clear all permissions for the given ugroup
- * Access rights to this function are checked (must be project admin!)
- * @return false if error, number of permissions deleted+1 otherwise
- * (why +1? because there might be no permission, but no error either,
- *  so '0' means error, and 1 means no error but no permission)
-*/
-
-function permission_clear_ugroup($group_id, $ugroup_id) {
-    if (!user_ismember($group_id,'A')) { return false;}
-    $sql = "DELETE FROM permissions WHERE ugroup_id='$ugroup_id'";
-    $res=db_query($sql);
-    if (!$res) { 
-        return false;
-    } else return (db_affected_rows($res)+1);
-}
-
-/**
  * Clear all permissions for the given ugroup and the given object
  * Access rights to this function are checked (must be project admin!)
  * @return false if error, number of permissions deleted+1 otherwise
@@ -621,9 +604,7 @@ function permission_clear_ugroup($group_id, $ugroup_id) {
  *  so '0' means error, and 1 means no error but no permission)
  */
 function permission_clear_ugroup_object($group_id, $permission_type, $ugroup_id, $object_id) {
-    if (!user_ismember($group_id,'A')) { 
-        return false;
-    }
+    if (!permission_user_allowed_to_change($group_id, $permission_type,$object_id)) { return false;}
     $sql = "DELETE FROM permissions WHERE ugroup_id='$ugroup_id' AND object_id='$object_id' AND permission_type='$permission_type'";
     $res=db_query($sql);
     if (!$res) { 
@@ -645,7 +626,7 @@ function permission_clear_ugroup_tracker($group_id, $ugroup_id, $object_id) {
  * Access rights to this function are checked.
  */
 function permission_add_ugroup($group_id, $permission_type, $object_id, $ugroup_id) {
-    if (!permission_user_allowed_to_change($group_id, $permission_type)) { return false;}
+    if (!permission_user_allowed_to_change($group_id, $permission_type, $object_id)) { return false;}
     $sql = "INSERT INTO permissions (permission_type, object_id, ugroup_id) VALUES ('$permission_type', '$object_id', $ugroup_id)";
     $res=db_query($sql);
     if (!$res) {
