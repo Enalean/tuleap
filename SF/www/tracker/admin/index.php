@@ -66,18 +66,20 @@ if ($group_id && !$atid) {
 			return;
 		}
 	
-            if (browser_is_netscape4()) {
-                exit_error($Language->getText('global','error'),$Language->getText('tracker_index','browser_not_supported',$Language->getText('tracker_index','a_tracker')));
-                return;
-            }
-
+        if (browser_is_netscape4()) {
+            exit_error($Language->getText('global','error'),$Language->getText('tracker_index','browser_not_supported',$Language->getText('tracker_index','a_tracker')));
+            return;
+        }
+        if (isset($_REQUEST['feedback'])) {
+            $GLOBALS['feedback'] .= htmlspecialchars($_REQUEST['feedback']);
+        }
 		$ath->adminTrackersHeader(array('title'=>$Language->getText('tracker_admin_field_usage','tracker_admin').$Language->getText('tracker_admin_index','create_tracker'),'help' => 'TrackerCreation.html'));
 		$ath->displayCreateTracker($group_id,$codex_template,$group_id_template,$atid_template,$name,$description,$itemname,$feedback);
 		$ath->footer(array());
 		break;
 		
 	case 'docreate':
-		if ( !user_isloggedin() ) {
+        if ( !user_isloggedin() ) {
 			exit_not_logged_in();
 			return;
 		}
