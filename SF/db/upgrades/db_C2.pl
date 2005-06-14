@@ -32,21 +32,28 @@ my ($query, $c, $q, $d, $e);
     $d = $dbh->prepare($query);
     $d->execute();
 
-    $query = "SELECT field_id,field_name FROM artifact_field WHERE group_artifact_id = $group_artifact_id order by field_id";
+    $query = "SELECT af.field_id,af.field_name,afu.show_on_add,afu.show_on_add_members FROM artifact_field af,artifact_field_usage afu WHERE af.group_artifact_id = afu.group_artifact_id AND af.field_id =afu.field_id AND af.group_artifact_id = $group_artifact_id order by field_id";
     $d = $dbh->prepare($query);
     $d->execute();
 
-    while (my ($field_id,$field_name) = $d->fetchrow()) {
+    while (my ($field_id,$field_name,$show_on_add,$show_on_add_members) = $d->fetchrow()) {
 
       if ($field_name ne 'submitted_by' && $field_name ne 'open_date' && $field_name ne 'artifact_id') {
 	$q = "INSERT INTO permissions VALUES ";
-	$q .= "('TRACKER_FIELD_SUBMIT','$group_artifact_id#$field_id',";
 	if ($allow_anon == 0) {
-	  $q .= "2)";
+	  if ($show_on_add) {
+	    $q .= "('TRACKER_FIELD_SUBMIT','$group_artifact_id#$field_id',2),";
+	  } elsif ($show_on_add_members) {
+	    $q .= "('TRACKER_FIELD_SUBMIT','$group_artifact_id#$field_id',3),";
+	  }
 	} else {
-	  $q .= "1)";
+	  if ($show_on_add) {
+	    $q .= "('TRACKER_FIELD_SUBMIT','$group_artifact_id#$field_id',1),";
+	  } elsif ($show_on_add) {
+	    $q .= "('TRACKER_FIELD_SUBMIT','$group_artifact_id#$field_id',3),";
+	  }
 	}
-	$q .= ",('TRACKER_FIELD_READ','$group_artifact_id#$field_id',1),('TRACKER_FIELD_UPDATE','$group_artifact_id#$field_id',16)";
+	$q .= "('TRACKER_FIELD_READ','$group_artifact_id#$field_id',1),('TRACKER_FIELD_UPDATE','$group_artifact_id#$field_id',16)";
       } else {
 	$q = "INSERT INTO permissions VALUES ('TRACKER_FIELD_READ','$group_artifact_id#$field_id',1)";
       }
