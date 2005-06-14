@@ -2609,10 +2609,6 @@ CREATE TABLE artifact (
 #                   or it is the default value for a project field if no
 #                   project specific values are specified
 # use_it          : 1 the project uses this field, 0 do not use it
-# show_on_add     : 1 show this field on the task add form for non project
-#                   members, 0 do not show it.
-# show_on_add_members : 1 show this field on the task add form for project
-#                   members with appropriate rigths, 0 do not show it.
 # place           : A value indicating in which order the fields appear on
 #                   the task submission screen (lowest first)
 #
@@ -2625,8 +2621,6 @@ CREATE TABLE artifact_field_usage (
   field_id int(11) NOT NULL default '0',
   group_artifact_id int(11) NOT NULL default '0',
   use_it int(11) NOT NULL default '0',
-  show_on_add int(11) NOT NULL default '0',
-  show_on_add_members int(11) NOT NULL default '0',
   place int(11) default NULL,
   KEY idx_fk_field_id (field_id),
   KEY idx_fk_group_artifact_id (group_artifact_id)
