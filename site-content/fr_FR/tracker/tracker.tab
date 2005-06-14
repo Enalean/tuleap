@@ -504,21 +504,16 @@ tracker_include_type	changing_items	Changer $1 artefact(s) sélectionné(s):
 tracker_include_type	submit_mass_change	Valider
 tracker_include_type	occurrence	Occurrence
 tracker_include_type	notify_me	Je veux être notifié lorsque:
-
-
-
-tracker_include_type	manage_permissions	Gérer&nbsp;les&nbsp;Permissions
+tracker_include_type	permissions	Permissions
+tracker_include_type	manage_permissions	Gérer les Permissions
 tracker_include_type	manage_permissions_title	 - Gérer les Permissions
-tracker_include_type	define_manage_permissions	Donner des permissions sur l'outil de suivi et les champs
-
-tracker_include_type	manage_tracker_permissions	Gérer les Permissions de l'Outil de Suivi
-tracker_include_type	manage_tracker_permissions_title	 - Gérer les Permissions de l'Outil de Suivi
-tracker_include_type	define_manage_tracker_permissions	Donner des permissions sur l'outil de suivi
-
-tracker_include_type	manage_fields_tracker_permissions	Gérer les Permissions des Champs
-tracker_include_type	manage_fields_tracker_permissions_title	 - Gérer les Permissions des Champs
-tracker_include_type	define_manage_fields_tracker_permissions	Donner des permissions sur les champs de l'outil de suivi
-
+tracker_include_type	define_manage_permissions	Donner des permissions sur l'outil de suivi et ses champs
+tracker_include_type	manage_tracker_permissions	Gérer les permissions de l'outil de suivi
+tracker_include_type	manage_tracker_permissions_title	 - Gérer les permissions de l'outil de suivi
+tracker_include_type	define_manage_tracker_permissions	Permet de définir des droits d'accès à l'outil de suivi.
+tracker_include_type	manage_fields_tracker_permissions	Gérer les permissions des champs
+tracker_include_type	manage_fields_tracker_permissions_title	 - Gérer les permissions des champs
+tracker_include_type	define_manage_fields_tracker_permissions	Permet de définir des droits d'accès aux champs de l'outil de suivi.
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactCanned.class
@@ -701,31 +696,31 @@ tracker_common_types	event_NEW_ARTIFACT_desc	Un nouvel artefact a été soumis
 # Tracker permissions
 #
 #
-tracker_admin_permissions	and	--
 tracker_admin_permissions	fields_no_ugroups	<div><em>Aucun groupe ne peut accéder à ce tracker</em></div>
 tracker_admin_permissions	fields_tracker_intro	<div></div>
-tracker_admin_permissions	fields_tracker_toggle	<div>Vous pouvez basculer vers un <a href='$1'>affichage par champ</a> ou un <a href='$2'>affichage par groupe d'utilisateurs</a>.</div>
-tracker_admin_permissions	ignore_g_anon_read	<p>Le groupe $1 est ignoré car le groupe anonymous users peut lire</p>
-tracker_admin_permissions	ignore_g_anon_submit	<p>Le groupe $1 est ignoré car le groupe anonymous users peut soumettre</p>
-tracker_admin_permissions	ignore_g_anon_update	<p>Le groupe $1 est ignoré car le groupe anonymous users peut mettre à jour</p>
-tracker_admin_permissions	ignore_g_regis_read	<p>Le groupe $1 est ignoré car le groupe registered users peut lire</p>
-tracker_admin_permissions	ignore_g_regis_submit	<p>Le groupe $1 est ignoré car le groupe registered users peut soumettre</p>
-tracker_admin_permissions	ignore_g_regis_update	<p>Le groupe $1 est ignoré car le groupe registered users peut mettre à jour</p>
-tracker_admin_permissions	ignore_ug_during_copy	<p>Veuillez notez que certaines permissions du tracker original n'ont pas été copiées</p>
-tracker_admin_permissions	permissions	Permissions d'Accès
+tracker_admin_permissions	fields_tracker_toggle_field	<div>Vous pouvez <a href='$1'>basculer vers l'affichage par champ</a> en cliquant sur le label d'un champ dans le tableau ci-dessous.</div>
+tracker_admin_permissions	fields_tracker_toggle_group	<div>Vous pouvez <a href='$1'>basculer vers l'affichage par groupe d'utilisateurs</a> en cliquant sur le nom d'un groupe dans le tableau ci-dessous.</div>
+tracker_admin_permissions	ignore_g_anon_read	<p>Le groupe '$1' est ignoré car le groupe 'anonymous_users' peut lire</p>
+tracker_admin_permissions	ignore_g_anon_submit	<p>Le groupe '$1' est ignoré car le groupe 'anonymous_users' peut soumettre</p>
+tracker_admin_permissions	ignore_g_anon_update	<p>Le groupe '$1' est ignoré car le groupe 'anonymous_users' peut mettre à jour</p>
+tracker_admin_permissions	ignore_g_regis_read	<p>Le groupe '$1' est ignoré car le groupe 'registered_users' peut lire</p>
+tracker_admin_permissions	ignore_g_regis_submit	<p>Le groupe '$1' est ignoré car le groupe 'registered_users' peut soumettre</p>
+tracker_admin_permissions	ignore_g_regis_update	<p>Le groupe '$1' est ignoré car le groupe 'registered_users' peut mettre à jour</p>
+tracker_admin_permissions	ignore_ug_during_copy	<p>Veuillez noter que certaines permissions du tracker original n'ont pas été copiées</p>
+tracker_admin_permissions	permissions	Droits d'accès
 tracker_admin_permissions	TRACKER_ACCESS_FULL	Accès à tous les artefacts
-tracker_admin_permissions	TRACKER_ACCESS_ASSIGNEE	Accès aux artefacts assignés au groupe
+tracker_admin_permissions	TRACKER_ACCESS_ASSIGNEE	Accès aux artefacts confiés au groupe
 tracker_admin_permissions	TRACKER_ACCESS_SUBMITTER	Accès aux artefacts soumis par le groupe
-tracker_admin_permissions	TRACKER_ACCESS_ASSIGNEE_AND_TRACKER_ACCESS_SUBMITTER	Accès aux artifacts assignés au ou soumis par le groupe
+tracker_admin_permissions	TRACKER_ACCESS_ASSIGNEE_AND_TRACKER_ACCESS_SUBMITTER	Accès aux artefacts confiés au groupe ou soumis par le groupe
 tracker_admin_permissions	TRACKER_FIELD_SUBMIT	Peut Soummettre
 tracker_admin_permissions	TRACKER_FIELD_READ	Lecture Seule
 tracker_admin_permissions	TRACKER_FIELD_UPDATE	Mise à Jour
-tracker_admin_permissions	TRACKER_NONE	--
-tracker_admin_permissions	tracker_ignore_g_anon_full	<p>Le groupe $1 est ignoré car le groupe anonymous users a accès à tous les artefacts</p>
-tracker_admin_permissions	tracker_ignore_g_regis_full	<p>Le groupe $1 est ignoré car le groupe registered users a accès à tous les artefacts</p>
-tracker_admin_permissions	tracker_ignore_g_regis_assignee	<p>Le groupe $1 est ignoré car le groupe registered users a accès aux artefacts assignés au groupe</p>
-tracker_admin_permissions	tracker_ignore_g_regis_submitter	<p>Le groupe $1 est ignoré car le groupe registered users a accès aux artefacts soumis par le groupe</p>
-tracker_admin_permissions	tracker_ignore_g_regis_submitter_assignee	<p>Le groupe $1 est ignoré car le groupe registered users a accès aux artifacts assignés au ou soumis par le groupe</p>
+tracker_admin_permissions	TRACKER_NONE	-
+tracker_admin_permissions	tracker_ignore_g_anon_full	<p>Le groupe '$1' est ignoré car le groupe anonymous users a accès à tous les artefacts</p>
+tracker_admin_permissions	tracker_ignore_g_regis_full	<p>Le groupe '$1' est ignoré car le groupe registered users a accès à tous les artefacts</p>
+tracker_admin_permissions	tracker_ignore_g_regis_assignee	<p>Le groupe '$1' est ignoré car le groupe registered users a accès aux artefacts confiés au groupe</p>
+tracker_admin_permissions	tracker_ignore_g_regis_submitter	<p>Le groupe '$1' est ignoré car le groupe registered users a accès aux artefacts soumis par le groupe</p>
+tracker_admin_permissions	tracker_ignore_g_regis_submitter_assignee	<p>Le groupe '$1' est ignoré car le groupe registered users a accès aux artefacts confiés au groupe, ou soumis par le groupe</p>
 tracker_admin_permissions	tracker_intro	<div></div>
-tracker_admin_permissions	ugroup	Groupe d'Utilisateurs
-tracker_admin_permissions	ug_may_have_no_access	<div>* Les groupes suivis d'une astérisque(*) peuvent ne pas avoir accès au tracker</div>
+tracker_admin_permissions	ugroup	Groupes d'utilisateurs
+tracker_admin_permissions	ug_may_have_no_access	<div>* il est possible que ces groupes n'aient pas accès au tracker (pas de <a href="$1">permission sur l'outil de suivi</a> définie).</div>

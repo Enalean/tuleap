@@ -497,21 +497,16 @@ tracker_include_type	changing_items	Changing $1 selected artefact(s):
 tracker_include_type	submit_mass_change	Submit
 tracker_include_type	occurrence	Occurrence
 tracker_include_type	notify_me	I want to be notified when:
-
-
-
-tracker_include_type	manage_permissions	Manage&nbsp;Permissions
+tracker_include_type	permissions	Permissions
+tracker_include_type	manage_permissions	Manage Permissions
 tracker_include_type	manage_permissions_title	 - Manage Permissions
-tracker_include_type	define_manage_permissions	Set permissions on the tracker and his fields
-
+tracker_include_type	define_manage_permissions	Define permissions for the tracker and its fields
 tracker_include_type	manage_tracker_permissions	Manage Tracker Permissions
 tracker_include_type	manage_tracker_permissions_title	 - Manage Tracker Permissions
-tracker_include_type	define_manage_tracker_permissions	Set permissions on the tracker
-
+tracker_include_type	define_manage_tracker_permissions	Define permissions on the tracker
 tracker_include_type	manage_fields_tracker_permissions	Manage Fields Permissions
 tracker_include_type	manage_fields_tracker_permissions_title	 - Manage Fields Permissions
-tracker_include_type	define_manage_fields_tracker_permissions	Set permissions on the tracker fields
-
+tracker_include_type	define_manage_fields_tracker_permissions	Define permissions on the tracker fields
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactCanned.class
@@ -694,31 +689,31 @@ tracker_common_types	event_NEW_ARTIFACT_desc	A new artifact has been submitted
 # Tracker permissions
 #
 #
-tracker_admin_permissions	and	--
-tracker_admin_permissions	fields_no_ugroups	<div><em>There is no group which can access to this tracker</em></div>
+tracker_admin_permissions	fields_no_ugroups	<div><em>No user group has access to this tracker</em></div>
 tracker_admin_permissions	fields_tracker_intro	<div></div>
-tracker_admin_permissions	fields_tracker_toggle	<div>You can toggle to a <a href='$1'>'field' view</a> or a <a href='$2'>'users group' view</a>.</div>
-tracker_admin_permissions	ignore_g_anon_read	<p>Ignoring group $1 because anonymous users can read</p>
-tracker_admin_permissions	ignore_g_anon_submit	<p>Ignoring group $1 because anonymous users can submit</p>
-tracker_admin_permissions	ignore_g_anon_update	<p>Ignoring group $1 because anonymous users can update</p>
-tracker_admin_permissions	ignore_g_regis_read	<p>Ignoring group $1 because registered users can read</p>
-tracker_admin_permissions	ignore_g_regis_submit	<p>Ignoring group $1 because registered users can submit</p>
-tracker_admin_permissions	ignore_g_regis_update	<p>Ignoring group $1 because registered users can update</p>
+tracker_admin_permissions	fields_tracker_toggle_field	<div>You may <a href='$1'>switch to the 'field' view</a> by clicking on a field label in the table below.</div>
+tracker_admin_permissions	fields_tracker_toggle_group	<div>You may <a href='$1'>switch to the 'user group' view</a> by clicking on a group name in the table below.</div>
+tracker_admin_permissions	ignore_g_anon_read	<p>Ignoring group '$1' because anonymous users are allowed to read</p>
+tracker_admin_permissions	ignore_g_anon_submit	<p>Ignoring group '$1' because anonymous users are allowed to submit</p>
+tracker_admin_permissions	ignore_g_anon_update	<p>Ignoring group '$1' because anonymous users are allowed to update</p>
+tracker_admin_permissions	ignore_g_regis_read	<p>Ignoring group '$1' because registered users are allowed to read</p>
+tracker_admin_permissions	ignore_g_regis_submit	<p>Ignoring group '$1' because registered users are allowed to submit</p>
+tracker_admin_permissions	ignore_g_regis_update	<p>Ignoring group '$1' because registered users are allowed to update</p>
 tracker_admin_permissions	ignore_ug_during_copy	<p>Please note that some original tracker permissions have not been copied</p>
 tracker_admin_permissions	permissions	Access Permissions
-tracker_admin_permissions	TRACKER_ACCESS_FULL	Access to all artifacts
-tracker_admin_permissions	TRACKER_ACCESS_ASSIGNEE	Access to artifacts assigned to group
-tracker_admin_permissions	TRACKER_ACCESS_SUBMITTER	Access to artifacts submitted by group
-tracker_admin_permissions	TRACKER_ACCESS_ASSIGNEE_AND_TRACKER_ACCESS_SUBMITTER	Access to artifacts assigned to or submitted by group
+tracker_admin_permissions	TRACKER_ACCESS_FULL	have access to all artifacts
+tracker_admin_permissions	TRACKER_ACCESS_ASSIGNEE	have access to artifacts assigned to group
+tracker_admin_permissions	TRACKER_ACCESS_SUBMITTER	have access to artifacts submitted by group
+tracker_admin_permissions	TRACKER_ACCESS_ASSIGNEE_AND_TRACKER_ACCESS_SUBMITTER	have access to artifacts assigned to or submitted by group
 tracker_admin_permissions	TRACKER_FIELD_SUBMIT	Can Submit
 tracker_admin_permissions	TRACKER_FIELD_READ	Read Only
 tracker_admin_permissions	TRACKER_FIELD_UPDATE	Update
-tracker_admin_permissions	TRACKER_NONE	--
-tracker_admin_permissions	tracker_ignore_g_anon_full	<p>Ignoring group $1 because anonymous users can access to all artifacts</p>
-tracker_admin_permissions	tracker_ignore_g_regis_full	<p>Ignoring group $1 because registered users can access to all artifacts</p>
-tracker_admin_permissions	tracker_ignore_g_regis_assignee	<p>Ignoring group $1 because registered users can access to artifacts assigned to group</p>
-tracker_admin_permissions	tracker_ignore_g_regis_submitter	<p>Ignoring group $1 because registered users can access to artifacts submitted by group</p>
-tracker_admin_permissions	tracker_ignore_g_regis_submitter_assignee	<p>Ignoring group $1 because registered users can access to artifacts assigned to or submitted by group</p>
+tracker_admin_permissions	TRACKER_NONE	-
+tracker_admin_permissions	tracker_ignore_g_anon_full	<p>Ignoring group '$1' because anonymous users have access to all artifacts</p>
+tracker_admin_permissions	tracker_ignore_g_regis_full	<p>Ignoring group '$1' because registered users have access to all artifacts</p>
+tracker_admin_permissions	tracker_ignore_g_regis_assignee	<p>Ignoring group '$1' because registered users have access to artifacts assigned to group</p>
+tracker_admin_permissions	tracker_ignore_g_regis_submitter	<p>Ignoring group '$1' because registered users have access to artifacts submitted by group</p>
+tracker_admin_permissions	tracker_ignore_g_regis_submitter_assignee	<p>Ignoring group '$1' because registered users have access to artifacts assigned to or submitted by group</p>
 tracker_admin_permissions	tracker_intro	<div></div>
-tracker_admin_permissions	ugroup	Users Group
-tracker_admin_permissions	ug_may_have_no_access	<div>* Groups followed by an asterisk(*) may have no access to the tracker</div>
+tracker_admin_permissions	ugroup	User Group
+tracker_admin_permissions	ug_may_have_no_access	<div>* denotes user groups that may not have access to the tracker (no <a href="$1">tracker permission</a> set).</div>

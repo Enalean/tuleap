@@ -100,7 +100,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		echo '<strong><a href="/tracker/admin/?group_id='.$group_id.'">'.$Language->getText('tracker_index','admin_all_trackers').'</a>';
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'">'.$Language->getText('tracker_include_type','admin').'</a>';
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=editoptions">'.$Language->getText('tracker_include_type','settings').'</a>';
-		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=permissions">'.$Language->getText('tracker_include_type','manage_permissions').'</a>';
+		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=permissions">'.$Language->getText('tracker_include_type','permissions').'</a>';
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=field_usage">'.$Language->getText('tracker_include_type','field_usage').'</a>';
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=field_values">'.$Language->getText('tracker_include_type','field_values').'</a>';
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=canned">'.$Language->getText('tracker_include_type','canned_resp').'</a>';
@@ -543,10 +543,15 @@ EOS;
                 $html .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'fields_tracker_intro');
                 
                 //We display 'group_first' or 'field_first'
-                $html .= $GLOBALS['Language']->getText('tracker_admin_permissions', 
-                                                       'fields_tracker_toggle', 
-                                                       array($url_action_without_group_first."&group_first=0",
-                                                             $url_action_without_group_first."&group_first=1"));
+                if ($group_first) {
+                    $html .= $GLOBALS['Language']->getText('tracker_admin_permissions', 
+                                                           'fields_tracker_toggle_field', 
+                                                           $url_action_without_group_first."&group_first=0");
+                } else {
+                    $html .= $GLOBALS['Language']->getText('tracker_admin_permissions', 
+                                                           'fields_tracker_toggle_group', 
+                                                           $url_action_without_group_first."&group_first=1");
+                }
 
                 $html .= html_build_list_table_top($header);
                 
@@ -668,7 +673,7 @@ EOS;
                 //end of table
                 $html .= "</table>";
                 if ($a_star_is_displayed) {
-                    $html .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'ug_may_have_no_access');
+                    $html .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'ug_may_have_no_access',"/tracker/admin/?group_id=".$this->getGroupID()."&atid=".$this->getID()."&func=permissions&perm_type=tracker");
                 }
                 $GLOBALS['Language']->loadLanguageMsg('project/project');
                 $html .= "<input type='submit' name='update' value=\"".$GLOBALS['Language']->getText('project_admin_permissions','submit_perm')."\" />";
