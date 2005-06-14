@@ -43,17 +43,17 @@ function doSelection(form) {
 		exit_no_group();
 	}
 
+        $count = 0;
 	$atf = new ArtifactTypeFactory($group);
-	$results = $atf->getArtifactTypesFromId($group_id);
-	if ( $results ) {
-		echo '<select name="artifact_type_id" size="5">';
-	}
-		
-	$count = 0;
-    while ($trackers_array = db_fetch_array($results)) {
-    	echo '<option value="'.$trackers_array["group_artifact_id"].'">'.$trackers_array["name"].'</option>';
-    	$count ++;
-    }
+	$trackers_array = $atf->getArtifactTypesFromId($group_id);
+	if ( $trackers_array !== false) {
+            echo '<select name="artifact_type_id" size="5">';	
+            
+            foreach($trackers_array as $tracker) {
+                echo '<option value="'.$tracker->getId().'">'.$tracker->getName().'</option>';
+                $count ++;
+            }
+        }
 
 ?>
 <? if ( $count > 0 ) { ?>

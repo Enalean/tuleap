@@ -943,8 +943,19 @@ EOS;
 	 */
 	function trackersSelectBox ($group_id,$name,$checked='xzxz') {
 		global $atf;
+                
+                $tracker_names=array();
+                $tracker_ids=array();
+
+                $trackers_array = $atf->getArtifactTypesFromId($group_id);
+                if ( $trackers_array !== false) {                    
+                    foreach($trackers_array as $tracker) {
+                        $tracker_names[]=$tracker->getName();
+                        $tracker_ids[]=$tracker->getId();
+                    }
+                }
 		
-		return html_build_select_box ($atf->getArtifactTypesFromId($group_id),$name,$checked);
+		return html_build_select_box_from_array ($tracker_names,$tracker_ids,$name,$checked);
 	}
 
 	/**

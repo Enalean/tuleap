@@ -11,7 +11,7 @@
 //
 
 //require_once('common/include/Error.class');
-//require_once('common/tracker/ArtifactType.class');
+require_once('common/tracker/ArtifactType.class');
 
 $Language->loadLanguageMsg('tracker/tracker');
 
@@ -122,46 +122,45 @@ class ArtifactTypeFactory extends Error {
 					$arr['count'] = $arr_count['count'];
 				}
                                 $new_at=new ArtifactType($this->Group, $arr['group_artifact_id'], $arr);
-                                if ($new_at->userCanView()) {
+                                //if ($new_at->userCanView()) {
                                     $this->ArtifactTypes[] = $new_at;
-                                }
+                                    //}
 			}
 		}
 		return $this->ArtifactTypes;
 	}
 
 	/**
-	 *	getArtifactTypesFromId - return an array of ArtifactType objects of a group
+	 *  getArtifactTypesFromId - return an array of ArtifactType objects of a group
 	 *
-	 *  @aparam group_id: the group id
+	 *  @param group_id: the group id
 	 *
-	 *	@return	resultSet
+	 *  @return	array
 	 */
 	function getArtifactTypesFromId($group_id) {
 	  global $Language;
-          // XXX add permission check here?
 
-		if ($this->ArtifactTypes) {
-			return $this->ArtifactTypes;
-		}
-
-		$sql="SELECT group_artifact_id,name FROM artifact_group_list
+          $sql="SELECT group_artifact_id FROM artifact_group_list
 			WHERE group_id='". $group_id ."'
 			AND status!='D'
 			ORDER BY group_artifact_id ASC";
-
-		//echo $sql;
 		
-		$result = db_query ($sql);
+          $result = db_query ($sql);
+          $rows = db_numrows($result);
+          $myArtifactTypes=array();
 
-		$rows = db_numrows($result);
-
-		if (!$result || $rows < 1) {
-			$this->setError($Language->getText('tracker_common_type','none_found').' '.db_error());
-			return false;
-		}
-
-		return $result;
+          if (!$result || $rows < 1) {
+              $this->setError($Language->getText('tracker_common_type','none_found').' '.db_error());
+              return false;
+          } else {
+              while ($arr = db_fetch_array($result)) {
+                  $new_at=new ArtifactType(group_get_object($group_id), $arr['group_artifact_id']);
+                  if ($new_at->userCanView()) {
+                      $myArtifactTypes[] = $new_at;
+                  }
+              }
+          }
+          return $myArtifactTypes;
 	}
 	
 
