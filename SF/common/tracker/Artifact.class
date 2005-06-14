@@ -1536,7 +1536,7 @@ class Artifact extends Error {
      *
      * @return array
      */
-    function buildNotificationList($changes) {
+    function buildNotificationList($changes) { // Not used any more? XXX
                 
         global $art_field_fact,$Language;
         

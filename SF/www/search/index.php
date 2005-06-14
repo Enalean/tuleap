@@ -451,10 +451,19 @@ if ($type_of_search == "soft") {
 		echo '<H3>'.$Language->getText('search_index','search_res',$words)."</H3><P>\n";
 
 		$title_arr = array();
-		$title_arr[] = $Language->getText('search_index','artifact_summary');
-		$title_arr[] = $Language->getText('search_index','submitted_by');
-		$title_arr[] = $Language->getText('search_index','date');
-		$title_arr[] = $Language->getText('global','status');
+                
+                $summary_field = $art_field_fact->getFieldFromName("summary");
+                if ($summary_field->userCanRead($group_id,$atid))
+                    $title_arr[] = $Language->getText('search_index','artifact_summary');
+                $submitted_field = $art_field_fact->getFieldFromName("submitted_by");
+                if ($submitted_field->userCanRead($group_id,$atid))
+                    $title_arr[] = $Language->getText('search_index','submitted_by');
+                $date_field = $art_field_fact->getFieldFromName("open_date");
+                if ($date_field->userCanRead($group_id,$atid))
+                    $title_arr[] = $Language->getText('search_index','date');
+                $status_field = $art_field_fact->getFieldFromName("status_id");
+                if ($status_field->userCanRead($group_id,$atid))
+                    $title_arr[] = $Language->getText('global','status');
 
 		echo html_build_list_table_top ($title_arr);
 
@@ -473,12 +482,17 @@ if ($type_of_search == "soft") {
                     }
                     // Only display artifacts that the user is allowed to see
                     if ($curArtifact->userCanView(user_getid())) {
-                        print	"\n<TR class=\"". html_get_alt_row_color($art_displayed) ."\"><TD><A HREF=\"/tracker/?group_id=$group_id&func=detail&atid=$atid&aid="
+                        print	"\n<TR class=\"". html_get_alt_row_color($art_displayed) ."\">";
+                        if ($summary_field->userCanRead($group_id,$atid)) print "<TD><A HREF=\"/tracker/?group_id=$group_id&func=detail&atid=$atid&aid="
                             . $arr['artifact_id']."\"><IMG SRC=\"".util_get_image_theme('msg.png')."\" BORDER=0 HEIGHT=12 WIDTH=10> "
-                            . $arr['summary']."</A></TD>"
-                            . "<TD>".$arr['user_name']."</TD>"
-                            . "<TD>".format_date($sys_datefmt,$arr['open_date'])."</TD>"
-                            . "<TD>".$status."</TD>"."</TR>";
+                            . $arr['summary']."</A></TD>";
+                        if ($submitted_field->userCanRead($group_id,$atid))
+                            print "<TD>".$arr['user_name']."</TD>";
+                        if ($date_field->userCanRead($group_id,$atid))
+                            print "<TD>".format_date($sys_datefmt,$arr['open_date'])."</TD>";
+                        if ($status_field->userCanRead($group_id,$atid))
+                            print "<TD>".$status."</TD>";
+                        print "</TR>";
                         $art_displayed++;
                         if ($art_displayed>24) { break; } // Only display 25 results.
                     }
