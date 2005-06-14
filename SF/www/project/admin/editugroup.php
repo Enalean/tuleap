@@ -50,7 +50,7 @@ if (!$func) $func='create';
 
 
 if ($func=='do_create') {
-    $ugroup_id=ugroup_create($_POST['group_id'], $_POST['ugroup_name'], $_POST['ugroup_description'], $_POST['group_templates']);
+    $ugroup_id=ugroup_create($_POST['group_id'], $_POST['ugroup_name'], addslashes($_POST['ugroup_description']), $_POST['group_templates']);
 }
 
 
