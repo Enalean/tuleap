@@ -881,7 +881,7 @@ class ArtifactType extends Error {
 
             // Select submit permissions for all fields
             $sql="SELECT ugroup_id FROM permissions WHERE permission_type='TRACKER_FIELD_SUBMIT' AND object_id LIKE '".$this->getID()."#%' GROUP BY ugroup_id";
-            $res=db_query($sql,1);
+            $res=db_query($sql);
             
             if (db_numrows($res) > 0) {
                 while ($row = db_fetch_array($res)) {

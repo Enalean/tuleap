@@ -118,7 +118,7 @@ if ( $func == 'gotoid' ) {
                         //
                         //  make sure this person has permission to add artifacts
                         //
-                        if (!$ath->userIsTech()) {
+                        if (!$ath->userCanSubmit()) {
                                 exit_permission_denied();
                         }
 
@@ -187,7 +187,7 @@ if ( $func == 'gotoid' ) {
                         //
                         //  make sure this person has permission to copy artifacts
                         //  !!!! verify with new permission scheme !!!!
-                        if (!$ath->userIsTech()) {
+                        if (!$ath->userCanSubmit()) {
                                 exit_permission_denied();
                         }
 
