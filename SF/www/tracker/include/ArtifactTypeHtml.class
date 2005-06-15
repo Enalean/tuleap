@@ -876,19 +876,17 @@ EOS;
 	 */
 	function trackersSelectBox ($group_id,$name,$checked='xzxz') {
 		global $atf;
-                
-                $tracker_names=array();
-                $tracker_ids=array();
-
+                $tracker_names = array();
+                $tracker_ids   = array();
                 $trackers_array = $atf->getArtifactTypesFromId($group_id);
                 if ( $trackers_array !== false) {                    
                     foreach($trackers_array as $tracker) {
-                        $tracker_names[]=$tracker->getName();
-                        $tracker_ids[]=$tracker->getId();
+                        $tracker_names[] = $tracker->getName();
+                        $tracker_ids[] = $tracker->getId();
                     }
                 }
 		
-		return html_build_select_box_from_array ($tracker_names,$tracker_ids,$name,$checked);
+		return html_build_select_box_from_arrays($tracker_ids,$tracker_names, $name,$checked);
 	}
 
 	/**
@@ -957,7 +955,7 @@ EOS;
 
 			  function onSubmitCreateCodeXTemplate() {
 			  	if ( checkValues() ) {
-			  		if ( document.form_create.codex_template.value == 100 ) {
+                    if ( document.form_create.codex_template.value == 100 ) {
 			  			document.form_create.feedback.value = "'.$Language->getText('tracker_include_type','choose_tmpl').'";
 					  	document.form_create.func.value = "create";
 			  		}
@@ -1018,8 +1016,8 @@ EOS;
 			  <tr valign="top">
 			     <td width="300"><li><b>'.$Language->getText('tracker_include_type','from_tmpl').'</b></li></td>
 			     <td colspan="2">';
-		echo $this->trackersSelectBox(100,"codex_template");
-		echo '	 &nbsp;<input type="button" name="CreateCodeXTemplate" value="'.$Language->getText('global','btn_create').'" onClick="onSubmitCreateCodeXTemplate()"><br><br></td>
+        echo $this->trackersSelectBox(100,"codex_template",$codex_template);
+        echo '	 &nbsp;<input type="button" name="CreateCodeXTemplate" value="'.$Language->getText('global','btn_create').'" onClick="onSubmitCreateCodeXTemplate()"><br><br></td>
 			  <tr valign="top">    
 			     <td width="300"><li>'.$Language->getText('tracker_include_type','from_exist').'</li></td>
 			     
@@ -1027,11 +1025,11 @@ EOS;
 			     	<table>
 			     	  <tr>
 			     	  	<td>'.$Language->getText('tracker_include_type','proj_id').'</td>
-			     		<td><input name="group_id_template" value=""><a href="javascript:showGroupSelection()"><img src="'.util_get_image_theme("button_choose.png").'" align="absmiddle" border="0"></a></td>
+			     		<td><input name="group_id_template" value="'.$group_id_template.'"><a href="javascript:showGroupSelection()"><img src="'.util_get_image_theme("button_choose.png").'" align="absmiddle" border="0"></a></td>
 			     	  </tr>
 			     	  <tr>
 				        <td>'.$Language->getText('tracker_include_type','tracker_id').'</td>
-			     		<td><input name="atid_template" value=""><a href="javascript:showTrackerSelection()"><img src="'.util_get_image_theme("button_choose.png").'" align="absmiddle" border="0"></a></td>
+			     		<td><input name="atid_template" value="'.$atid_template.'"><a href="javascript:showTrackerSelection()"><img src="'.util_get_image_theme("button_choose.png").'" align="absmiddle" border="0"></a></td>
 					  <tr>
 					</table>
 				 </td>			     		

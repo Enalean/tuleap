@@ -30,7 +30,7 @@ $sanitizer =& new SimpleSanitizer();
 
 $Language->loadLanguageMsg('tracker/tracker');
 
-if ($group_id && !$atid) {
+if ($group_id && (!isset($atid) || !$atid)) {
 	//
 	// Manage trackers: create and delete
 	
@@ -53,7 +53,12 @@ if ($group_id && !$atid) {
 	}
 
 	$atf = new ArtifactTypeFactory($group);
-
+    
+    if (isset($_REQUEST['func'])) {
+        $func = $_REQUEST['func'];
+    } else {
+        $func = '';
+    }
 	switch ( $func ) {
 	case 'create':
 		if ( !user_isloggedin() ) {
@@ -73,12 +78,23 @@ if ($group_id && !$atid) {
         if (isset($_REQUEST['feedback'])) {
             $GLOBALS['feedback'] .= htmlspecialchars($_REQUEST['feedback']);
         }
+        //{{{ define undefined variables
+        $vars = array('codex_template', 'group_id_template', 'atid_template', 'name', 'description', 'itemname');
+        foreach($vars as $var_name) {
+            if (isset($_REQUEST[$var_name])) {
+                $$var_name = $_REQUEST[$var_name];
+            } else {
+                $$var_name = '';
+            }
+        }
+        //}}}
 		$ath->adminTrackersHeader(array('title'=>$Language->getText('tracker_admin_field_usage','tracker_admin').$Language->getText('tracker_admin_index','create_tracker'),'help' => 'TrackerCreation.html'));
 		$ath->displayCreateTracker($group_id,$codex_template,$group_id_template,$atid_template,$name,$description,$itemname,$feedback);
 		$ath->footer(array());
 		break;
 		
 	case 'docreate':
+    
         if ( !user_isloggedin() ) {
 			exit_not_logged_in();
 			return;
@@ -91,7 +107,7 @@ if ($group_id && !$atid) {
             $name        = $sanitizer->sanitize($name);
             $description = $sanitizer->sanitize($description);
 		if ( !$ath->create($group_id,$group_id_chosen,$atid_chosen,$name,$description,$itemname) ) {
-			exit_error($Language->getText('global','error'),$ath->getErrorMessage());
+            exit_error($Language->getText('global','error'),$ath->getErrorMessage());
 		} else {
 			$feedback .= $Language->getText('tracker_admin_index','tracker_created');
 		}

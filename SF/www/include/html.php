@@ -141,7 +141,7 @@ function html_build_select_box_from_array ($vals,$select_name,$checked_val='xzxz
 		The third parameter is optional. Pass the value of the item that should be checked
 	*/
 
-	$return .= '
+	$return = '
 		<SELECT NAME="'.$select_name.'">';
 
 	$rows=count($vals);
