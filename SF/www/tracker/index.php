@@ -698,7 +698,7 @@ if ( $func == 'gotoid' ) {
                 } else {
                         
                         // Check if users can browse anonymously
-                        if ( !user_isloggedin() && !$ath->allowsAnon() ) {
+                        if ( !user_isloggedin() && !$ath->userCanView($GLOBALS['UGROUP_ANONYMOUS']) ) {
                             exit_not_logged_in();
                         }
                         
