@@ -319,9 +319,7 @@ class ArtifactTypeHtml extends ArtifactType {
         function _displayAdminTitle($title) {
             echo '<H2>',
                 $GLOBALS['Language']->getText('tracker_import_admin','tracker'),
-                ' \'<a href="/tracker/?group_id=',$this->getGroupID(),
-                '&atid=',$this->getID(),
-                '&func=browse">',
+                ' \'<a href="/tracker/admin/?group_id=',$this->getGroupID(),'&atid=',$this->getID(),'">',
                 $this->getName(),
                 '</a>\'',
                 $title,
