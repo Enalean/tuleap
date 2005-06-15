@@ -613,7 +613,7 @@ if ( $func == 'gotoid' ) {
 
             if ($details) {
                 if (!$ah->addComment($details,$email,$changes)) {
-                    exit_error($Language->getText('global','error'), $Language->getText('tracker_index','not_saved_comment'));
+                    exit_error($Language->getText('global','error'), $Language->getText('tracker_index','not_saved_comment').' - '.$feedback );
                 }
             }
 
