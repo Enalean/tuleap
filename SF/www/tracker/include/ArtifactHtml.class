@@ -562,6 +562,7 @@ class ArtifactHtml extends Artifact {
 
                                 $field = $art_field_fact->getFieldFromName($field_name);
                                 if ( $field ) {
+				  if ($field->userCanRead($group_id,$group_artifact_id)) {
                                     echo "\n".'<TR class="'. util_get_alt_row_color($i) .
                                         '"><TD>'.$field->getLabel().'</TD><TD>';
                         
@@ -587,6 +588,7 @@ class ArtifactHtml extends Artifact {
                                     echo '</TD>'.
                                         '<TD>'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
                                         '<TD>'.db_result($result, $i, 'user_name').'</TD></TR>';
+				  }
                                 } else {
 				    echo "\n".'<TR class="'. util_get_alt_row_color($i) .
                                         '"><TD>'.$field_name.'</TD><TD>';
