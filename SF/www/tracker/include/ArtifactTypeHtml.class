@@ -560,10 +560,7 @@ EOS;
                                                    && $first_part['shortname'] !== "submitted_by"
                                                    && $first_part['shortname'] !== "open_date"));
                         
-                        $can_submit = $can_submit_or_update && 
-                                        (($group_first && $second_part['shortname'] !== "status_id")
-                                         ||
-                                         (!$group_first && $first_part['shortname'] !== "status_id"));
+                        $can_submit = $can_submit_or_update; //(And add here those who can only be submitted)
 
                         $can_update = $can_submit_or_update &&  (($group_first
                                                         && ($first_part['id'] > 100 || $first_part['id'] == $GLOBALS['UGROUP_TRACKER_TECH']))
