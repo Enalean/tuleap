@@ -431,10 +431,6 @@ EOS;
                     }
                 }
                 ksort($ugroups_permissions);
-                foreach($ugroups_permissions as $key_group => $value_group) {
-                    usort($ugroups_permissions[$key_group]['related_parts'], create_function('$a,$b','return $a[\'values\'][\'name\'] > $b[\'values\'][\'name\'];'));
-                }
-                //header
                 $header = array(
                                 $GLOBALS['Language']->getText('tracker_admin_permissions', 'ugroup'), 
                                 $GLOBALS['Language']->getText('tracker_include_report', 'field_label'),
@@ -450,9 +446,6 @@ EOS;
                     ksort($ugroups_permissions[$key_field]['related_parts']);
                     reset($ugroups_permissions[$key_field]['related_parts']);
                 }
-                //We sort by field label
-                usort($ugroups_permissions, create_function('$a,$b','return $a[\'field\'][\'name\'] > $b[\'field\'][\'name\'];'));           
-                //header
                 $header = array(
                                $GLOBALS['Language']->getText('tracker_include_report', 'field_label'), 
                                $GLOBALS['Language']->getText('tracker_admin_permissions', 'ugroup'), 
@@ -534,18 +527,7 @@ EOS;
                         $is_first = false;
                     }
                     $html .= '<td>';
-                    //icone
-                    //<a href="'.$url_action_without_group_first."&selected_id=".$second_part['id']."&group_first=".($group_first?0:1).'"><img style="border:0px none black;" src="to_first_part.gif" /></a>';
-                    /*
-                    $name  = $second_part['name']; //.'('.$first_part['id'].'#'.$second_part['id'].')';
-                    if (isset($second_part['link'])) {
-                        $html .= "<a href='".$second_part['link']."'>";
-                        $html .= $name;
-                        $html .= "</a>";
-                    } else {
-                        $html .= $name;
-                    }
-                    */
+                    
                     $name = "<a href='".$url_action_without_group_first."&selected_id=".$second_part['id']."&group_first=".($group_first?0:1)."'>";
                     $name .= $second_part['name'];
                     $name .= "</a>";
@@ -588,8 +570,6 @@ EOS;
                                                         ||
                                                         (!$group_first
                                                         && ($second_part['id'] > 100 || $second_part['id'] == $GLOBALS['UGROUP_TRACKER_TECH'])));
-                        var_dump( ($group_first?$second_part['shortname']:$first_part['shortname']),   $can_submit_or_update,   $can_submit,   $can_update );
-                        echo '<hr>';
                         $html .= "<input type='checkbox' name=\"".$name_of_variable.'[submit]"  '.
                             (isset($permissions[$submit_permission])?"checked='checked'":"")." ".($can_submit?"":"disabled='disabled'")." /> ";
                         $html .= "</td><td>";
