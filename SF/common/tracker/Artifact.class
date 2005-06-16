@@ -1696,11 +1696,13 @@ class Artifact extends Error {
     /**
      * Build an array of user_ids using the changes array
      *
-     * @param changes: array of changes
+     * @param changes (IN): array of changes
+     * 
+     * @param concerned_ids (OUT): user_ids of concerned users (attention user_ids are stored as keys)
+     * @param concerned_addresses (OUT): email addresses of anonymous users (for instance in CC addresses)
      *
-     * @return array (attention user_ids are stored as keys)
      */
-    function buildNotificationIds($changes) {
+    function buildNotificationArrays($changes,&$concerned_ids,&$concerned_addresses) {
                 
         global $art_field_fact,$Language;
         
@@ -1709,7 +1711,8 @@ class Artifact extends Error {
         // would take care of it but I prefer taking care of it now.
 	// We also use the user_ids hash to check if a user has already been selected for 
         // notification. If so it is not necessary to check it again in another role.
-        $user_ids = array();
+        $concerned_ids = array();
+	$concerned_addresses = array();
 
         
         
@@ -1718,47 +1721,48 @@ class Artifact extends Error {
         if ($user_id != 100) {
 	  if ($this->ArtifactType->checkNotification($user_id, 'SUBMITTER', $changes) && $this->userCanView($user_id)) {
 	      //echo "DBG - SUBMITTER - user=$user_id<br>";
-                $user_ids[$user_id] = true;
+                $concerned_ids[$user_id] = true;
             }
         }
         
 	// Retrieve field values for the assigned_to, multi_assigned_to value
         $result = $this->getFieldsValues();
-	$this->checkAssignees("assigned_to",$result,$art_field_fact,$changes,$user_ids);
-	$this->checkAssignees("multi_assigned_to",$result,$art_field_fact,$changes,$user_ids);
+	$this->checkAssignees("assigned_to",$result,$art_field_fact,$changes,$concerned_ids);
+	$this->checkAssignees("multi_assigned_to",$result,$art_field_fact,$changes,$concerned_ids);
 	
-            
-        // check all CC 
+
+	// check all CC 
         // (a) check all the people in the current CC list
         // (b) check the CC that has just been removed if any and see if she
         // wants to be notified as well
-	//
-        // !!!!  if the CC identifier is an email address then cc is anonymous user ...
-	// ignore for the moment and see later what to do with that ... 
-        $arr_cc = $this->getCCIdList();
-
-	//echo "<br>cc_list = "; print_r($arr_cc);
-
-
-	foreach ($arr_cc as $cc_id) {
-	  $user_ids[$cc_id] = true;
-	}
-
-        if ( $changes['CC']['del'] ) {
-	  // Only one CC can be deleted at once so just append it to the list....
-	  
-	  $cc = $changes['CC']['del'];
-	  if (validate_email($cc)) {
-                //don't use emails (of anonymous users)
-	  } else {
-	    $res = user_get_result_set_from_unix($cc);
-	    $user_id = db_result($res,0,'user_id');
-	    if (!$user_ids[$user_id] && $this->ArtifactType->checkNotification($user_id, 'CC', $changes)) {
-	      //echo "DBG - CC - user=$user_id<br>";
-	      $user_ids[$user_id] = true;
-	    }
-	  }
+        // if the CC indentifier is an email address then notify in any case
+        // because this user has no personal setting
+        $res_cc = $this->getCCList();
+        $arr_cc = array();
+        if ($res_cc && (db_numrows($res_cc) > 0)) {
+            while ($row = db_fetch_array($res_cc)) {
+                $arr_cc[] = $row['email'];
+            }
         }
+        if ( $changes['CC']['del'] ) {
+            // Only one CC can be deleted at once so just append it to the list....
+            $arr_cc[] = $changes['CC']['del'];
+        }
+                        
+        while (list(,$cc) = each($arr_cc)) {
+            //echo "DBG - CC=$cc<br>";
+            if (validate_email($cc)) {
+                //echo "DBG - CC email - email=".util_normalize_email($cc)."<br>";
+                $concerned_addresses[util_normalize_email($cc)] = true;
+            } else {
+                $res = user_get_result_set_from_unix($cc);
+                $user_id = db_result($res,0,'user_id');
+                if (!$concerned_ids[$user_id] && $this->ArtifactType->checkNotification($user_id, 'CC', $changes)) {
+                    //echo "DBG - CC - user=$user_id<br>";
+                    $concerned_ids[$user_id] = true;
+                }
+            }
+        } // while
         
         
         // check all commenters
@@ -1766,16 +1770,12 @@ class Artifact extends Error {
         if (db_numrows($res_com) > 0) {
             while ($row = db_fetch_array($res_com)) {
                 $user_id = $row['mod_by'];
-                if (!$user_ids[$user_id] && $this->ArtifactType->checkNotification($user_id, 'COMMENTER', $changes)) {
-		  //echo "DBG - COMMENTERS - user=$user_id<br>";
-                    $user_ids[$user_id] = true;
+                if (!$concerned_ids[$user_id] && $this->ArtifactType->checkNotification($user_id, 'COMMENTER', $changes)) {
+                    //echo "DBG - COMMENTERS - user=$user_id<br>";
+                    $concerned_ids[$user_id] = true;
                 }
             }
         }
-        
-        
-        // return an array with all the email addresses the notification must be sent to
-        return $user_ids;
         
     }
 

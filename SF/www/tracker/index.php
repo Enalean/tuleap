@@ -162,7 +162,7 @@ if ( $func == 'gotoid' ) {
 
                                 // send an email to notify the user of the artifact update
 				//                                $ah->mailFollowup($ath->getEmailAddress(),$null);
-                                $ah->mailFollowupWithPermissions($ath->getEmailAddress());
+                                $ah->mailFollowupWithPermissions(explode(',',$ath->getEmailAddress()));
                                 $feedback .= $Language->getText('tracker_index','create_success',$ah->getID());
                             require('./browse.php');
                         }
@@ -242,7 +242,7 @@ if ( $func == 'gotoid' ) {
 
                                 // send an email to notify the user of the artifact update
                                 //$ah->mailFollowup($ath->getEmailAddress());
-                                $ah->mailFollowupWithPermissions($ath->getEmailAddress());
+                                $ah->mailFollowupWithPermissions(explode(',',$ath->getEmailAddress()));
                                 $feedback .= $Language->getText('tracker_index','create_success',$ah->getID());
                             require('./browse.php');
                         }
@@ -283,7 +283,7 @@ if ( $func == 'gotoid' ) {
                                     //  it's no longer optional due to the group-level notification address
                                     //
 				    //                                    $ah->mailFollowup($address,$changes);
-                                    $ah->mailFollowupWithPermissions($address,$changes);
+                                    $ah->mailFollowupWithPermissions(explode(',',$address),$changes);
                                 }
         
                                 // unsent artifact_id var to make sure that it doesn;t
@@ -334,7 +334,7 @@ if ( $func == 'gotoid' ) {
                             //  it's no longer optional due to the group-level notification address
                             //
 			    //                            $ah->mailFollowup($address,$changes);
-                            $ah->mailFollowupWithPermissions($address,$changes);
+                            $ah->mailFollowupWithPermissions(explode(',',$address),$changes);
                         }
 
                         // unsent artifact_id var to make sure that it doesn;t
@@ -462,7 +462,7 @@ if ( $func == 'gotoid' ) {
                             //
 			    if ($changes)
 			      //			      $ah->mailFollowup($address,$changes);
-			      $ah->mailFollowupWithPermissions($address,$changes);
+			      $ah->mailFollowupWithPermissions(explode(',',$address),$changes);
                         }
 
         
@@ -642,7 +642,7 @@ if ( $func == 'gotoid' ) {
             
             // send an email to notify the user of the bug update
 	    //            $ah->mailFollowup($ath->getEmailAddress(),$changes);
-            $ah->mailFollowupWithPermissions($ath->getEmailAddress(),$changes);
+            $ah->mailFollowupWithPermissions(explode(',',$ath->getEmailAddress()),$changes);
             require('./browse.php');
             break;
         }
