@@ -793,9 +793,10 @@ function permission_process_update_fields_permissions($group_id, $atid, $fields,
             && isset($stored_ugroups_permissions[$field_id]) 
             && $stored_ugroups_permissions[$field_id]['field']['shortname'] !== "comment_type_id") { //comment_type is not a "real" field
             
-            $field_name                 = $stored_ugroups_permissions[$field_id]['field']['shortname'];
-            $the_field_can_be_submitted = $field_name !== "artifact_id" && $field_name !== "submitted_by" && $field_name !== "open_date";
-            $the_field_can_be_updated   = $the_field_can_be_submitted;
+            $field_name                            = $stored_ugroups_permissions[$field_id]['field']['shortname'];
+            $the_field_can_be_submitted_or_updated = $field_name !== "artifact_id" && $field_name !== "submitted_by" && $field_name !== "open_date";
+            $the_field_can_be_submitted            = $the_field_can_be_submitted_or_updated && $field_name !== "status_id";
+            $the_field_can_be_updated              = $the_field_can_be_submitted_or_updated;
             
             //artifact_id#field_id
             $fake_object_id = permission_build_field_id($atid, $field_id);

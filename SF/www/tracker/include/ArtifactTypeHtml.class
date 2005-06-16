@@ -1,4 +1,4 @@
-<?php
+can_update = $can_submi<?php
 //
 // Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
 //
@@ -567,7 +567,8 @@ EOS;
                             $name_of_variable = "permissions[".$first_part['id']."][".$second_part['id']."]";
                         }
                         $html .= "<input type='hidden' name='".$name_of_variable."[submit]' value='off'/>";//TODO verifier diff�rents navigateurs
-                        $can_submit = (($group_first 
+                        
+                        $can_submit_or_update = (($group_first 
                                                    && $second_part['shortname'] !== "artifact_id"
                                                    && $second_part['shortname'] !== "submitted_by"
                                                    && $second_part['shortname'] !== "open_date")
@@ -576,12 +577,19 @@ EOS;
                                                    && $first_part['shortname'] !== "artifact_id"
                                                    && $first_part['shortname'] !== "submitted_by"
                                                    && $first_part['shortname'] !== "open_date"));
-                        $can_update = $can_submit &&  (($group_first
+                        
+                        $can_submit = $can_submit_or_update && 
+                                        (($group_first && $second_part['shortname'] !== "status_id")
+                                         ||
+                                         (!$group_first && $first_part['shortname'] !== "status_id"));
+
+                        $can_update = $can_submit_or_update &&  (($group_first
                                                         && ($first_part['id'] > 100 || $first_part['id'] == $GLOBALS['UGROUP_TRACKER_TECH']))
                                                         ||
                                                         (!$group_first
                                                         && ($second_part['id'] > 100 || $second_part['id'] == $GLOBALS['UGROUP_TRACKER_TECH'])));
-                                                        
+                        var_dump( ($group_first?$second_part['shortname']:$first_part['shortname']),   $can_submit_or_update,   $can_submit,   $can_update );
+                        echo '<hr>';
                         $html .= "<input type='checkbox' name=\"".$name_of_variable.'[submit]"  '.
                             (isset($permissions[$submit_permission])?"checked='checked'":"")." ".($can_submit?"":"disabled='disabled'")." /> ";
                         $html .= "</td><td>";
