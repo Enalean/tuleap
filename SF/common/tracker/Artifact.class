@@ -1678,9 +1678,12 @@ class Artifact extends Error {
                     }
 
                     // multi-assigned to
-                    foreach ($this->getMultiAssignedTo() as $assigned) {
-                        if (ugroup_user_is_member($assigned, $row['ugroup_id'], $this->ArtifactType->Group->getID(), $this->ArtifactType->getID())) {
-                            return true;
+                    $multi_assigned=$this->getMultiAssignedTo();
+                    if (is_array($multi_assigned)) {
+                        foreach ($multi_assigned as $assigned) {
+                            if (ugroup_user_is_member($assigned, $row['ugroup_id'], $this->ArtifactType->Group->getID(), $this->ArtifactType->getID())) {
+                                return true;
+                            }
                         }
                     }
                 }
