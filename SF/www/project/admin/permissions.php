@@ -595,8 +595,25 @@ function permission_clear_all_fields_tracker($group_id, $tracker_id, $field_id) 
     permission_clear_all($group_id, 'TRACKER_FIELD_UPDATE', $object_id, false);
 }
 
-
 /**
+ * Clear all permissions for the given ugroup 	 
+ * Access rights to this function are checked (must be project admin!) 	 
+ * @return false if error, number of permissions deleted+1 otherwise 	 
+ * (why +1? because there might be no permission, but no error either, 	 
+ *  so '0' means error, and 1 means no error but no permission) 	 
+ */ 	 
+ 
+function permission_clear_ugroup($group_id, $ugroup_id) { 	 
+    if (!user_ismember($group_id,'A')) { return false;} 	 
+    $sql = "DELETE FROM permissions WHERE ugroup_id='$ugroup_id'"; 	 
+    $res=db_query($sql); 	 
+    if (!$res) { 	 
+     return false; 	 
+    } else return (db_affected_rows($res)+1); 	 
+} 	 
+
+
+/** 
  * Clear all permissions for the given ugroup and the given object
  * Access rights to this function are checked (must be project admin!)
  * @return false if error, number of permissions deleted+1 otherwise
