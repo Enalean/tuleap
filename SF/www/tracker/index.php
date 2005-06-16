@@ -162,7 +162,7 @@ if ( $func == 'gotoid' ) {
 
                                 // send an email to notify the user of the artifact update
 				//                                $ah->mailFollowup($ath->getEmailAddress(),$null);
-                                $ah->mailFollowupWithPermissions($ath->getEmailAddress(),$null);
+                                $ah->mailFollowupWithPermissions($ath->getEmailAddress());
                                 $feedback .= $Language->getText('tracker_index','create_success',$ah->getID());
                             require('./browse.php');
                         }
@@ -241,8 +241,8 @@ if ( $func == 'gotoid' ) {
 				$ah->addDetail($follow_up_comment,$comment_type_id,$canned_response,$changes,$feedback);
 
                                 // send an email to notify the user of the artifact update
-                                //$ah->mailFollowup($ath->getEmailAddress(),$null);
-                                $ah->mailFollowupWithPermissions($ath->getEmailAddress(),$null);
+                                //$ah->mailFollowup($ath->getEmailAddress());
+                                $ah->mailFollowupWithPermissions($ath->getEmailAddress());
                                 $feedback .= $Language->getText('tracker_index','create_success',$ah->getID());
                             require('./browse.php');
                         }
