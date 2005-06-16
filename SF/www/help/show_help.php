@@ -13,7 +13,8 @@ require_once('pre.php');
 $Language->loadLanguageMsg('help/help');
 
 // Default language
-$lang = $GLOBALS['sys_lang'];
+// Should be: $lang = $Language->getLanguageCode(); -> switch when documentation is available in several languages... //XXX
+$lang = 'en_US';
 
 // Retrieve the user language if not guest
 // TODO
