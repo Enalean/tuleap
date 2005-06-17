@@ -144,7 +144,7 @@ todo "WHAT TO DO TO FINISH THE CODEX INSTALLATION (see $TODO_FILE)"
 rpms_ok=1
 for rpm in openssh-server openssh openssh-clients openssh-askpass \
    openssl openldap perl perl-DBI perl-CGI perl-suidperl gd gcc \
-   sendmail telnet bind ntp samba python php php-mysql php-ldap enscript \
+   sendmail telnet bind ntp samba python enscript \
    bind python-devel rcs sendmail-cf
 do
     $RPM -q $rpm  2>/dev/null 1>&2
@@ -358,6 +358,17 @@ $RPM -Uvh --force ${newest_rpm}/httpd-2*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/mod_ssl-*.i386.rpm
 $CHKCONFIG httpd on
 # restart Apache after subversion installation - see below
+
+# PHP
+# We need custom packages because RHEL3 PHP comes with MySQL 3 support, while we use MySQL 4.
+echo "Removing RedHat PHP..."
+$RPM -e --nodeps php php-ldap php-mysql 2>/dev/null
+echo "Installing PHP RPMs for CodeX..."
+cd ${RPMS_DIR}/php
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh --force ${newest_rpm}/php-4*.i386.rpm
+$RPM -Uvh --force ${newest_rpm}/php-ldap*.i386.rpm
+$RPM -Uvh --force ${newest_rpm}/php-mysql*.i386.rpm
 
 # -> jre
 echo "Removing RedHat Java JRE..."
