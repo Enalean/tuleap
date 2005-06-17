@@ -32,7 +32,7 @@ function tocsv($string) {
 }
 
 function build_csv_header($col_list, $lbl_list) {
-
+    $line = '';
     reset($col_list);
     while (list(,$col) = each($col_list)) {
 	$line .= tocsv($lbl_list[$col]).',';
@@ -42,7 +42,7 @@ function build_csv_header($col_list, $lbl_list) {
 }
 
 function build_csv_record($col_list, $record) {
-
+    $line = '';
     reset($col_list);
     while (list(,$col) = each($col_list)) {
 	$line .= tocsv($record[$col]).',';
@@ -80,6 +80,7 @@ function display_exported_fields($col_list,$lbl_list,$dsc_list,$sample_val,$mand
 
     echo html_build_list_table_top ($title_arr);
     reset($col_list);
+    $cnt = 0;
     while (list(,$col) = each($col_list)) {
       $star = (($mand_list && $mand_list[$col]) ? ' <span class="highlight"><big>*</big></b></span>':'');
       echo '<tr class="'.util_get_alt_row_color($cnt++).'">'.
@@ -450,7 +451,7 @@ function prepare_historic_value(&$record, $field, $group_artifact_id, $name) {
       // later in the process
       $record[$name] = '0';
     else
-      $record[$name] = format_date($datetime_fmt,$record[$name]);
+      $record[$name] = format_date($GLOBALS['datetime_fmt'],$record[$name]);
     
   } else if ( $field->isFloat() ) {
     $record[$name] = number_format($record[$name],2);
