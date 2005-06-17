@@ -414,7 +414,7 @@ tracker_include_type	choose_tmpl	Veuillez d'abord choisir un patron.
 tracker_include_type	select_proj	Veuillez d'abord sélectionner un projet !
 tracker_include_type	create_tracker	<h2>Créer un nouvel outil de suivi:</h2><p>Veuillez remplir le nom, la description et le nom court de cet outil de suivi:</p>
 tracker_include_type	short_name	Nom court
-tracker_include_type	avoid_spaces	Veuillez éviter les espaces et les ponctuations dans le nom court, faute de quoi il vous sera impossible de référencer automatiquement les artefacts
+tracker_include_type	avoid_spaces	Veuillez éviter les espaces et les ponctuations dans le nom court
 tracker_include_type	choose_creation	Choisissez une méthode de création:
 tracker_include_type	from_tmpl	A partir d'un patron prédéfini par CodeX:
 tracker_include_type	from_exist	<b>A partir d'un outil de suivi existant:</b><br><i>(Choisissez d'abord un projet et ensuite un outil de suivi pour ce projet)</i>

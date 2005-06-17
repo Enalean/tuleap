@@ -407,7 +407,7 @@ tracker_include_type	choose_tmpl	Please, choose a template first.
 tracker_include_type	select_proj	Please, select a project first!
 tracker_include_type	create_tracker	<h2>Create a new tracker:</h2><p>Please, fill the name, description and short name of this new tracker:</p>
 tracker_include_type	short_name	Short name
-tracker_include_type	avoid_spaces	Please avoid spaces and punctuation in short names, or you won't be able to automatically cross-reference artifacts
+tracker_include_type	avoid_spaces	Please avoid spaces and punctuation in short names
 tracker_include_type	choose_creation	Choose a creation method:
 tracker_include_type	from_tmpl	From a predefined CodeX template:
 tracker_include_type	from_exist	<b>From an existing tracker:</b><br><i>(Choose a project first and then a tracker of this project)</i>

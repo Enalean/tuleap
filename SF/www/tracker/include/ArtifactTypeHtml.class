@@ -994,7 +994,7 @@ EOS;
 		        <input type="text" name="itemname" value="'.$itemname.'">
 		      </td>
 		    </tr>
-                    <tr><td colspan=2><i>'.$Language->getText('tracker_include_type','avoid_spaces').'</i>&nbsp;'.help_button('ArtifactUpdate.html#ArtifactCrossReferencing').'</td></tr>';
+                    <tr><td colspan=2><i>'.$Language->getText('tracker_include_type','avoid_spaces').'</i></td></tr>';
 		echo '</table>';
 		echo '<p>'.$Language->getText('tracker_include_type','choose_creation').'</p>';
 		echo '<table>
