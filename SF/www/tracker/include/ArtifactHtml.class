@@ -1476,7 +1476,7 @@ class ArtifactHtml extends Artifact {
 	      $visible_change = true;
 	      $out_com = "$sys_lf$sys_lf---------------   ".$Language->getText('tracker_include_artifact','add_flup_comment')."   ----------------$sys_lf";
 	    
-	      if ($changes['details']['type'] != $Language->getText('global','none') && $changes['details']['type'] != '') {
+	      if (isset($changes['details']['type']) && $changes['details']['type'] != $Language->getText('global','none') && $changes['details']['type'] != '') {
 		$out_com .= "[".$changes['details']['type']."]$sys_lf";
 	      }
 	      $out_com .= util_unconvert_htmlspecialchars($changes['details']['add']);

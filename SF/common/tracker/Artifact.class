@@ -577,8 +577,9 @@ class Artifact extends Error {
 	  $this->addHistory($field,htmlspecialchars($details), '', $comment_type_id);
 	}
 	$changes['details']['add'] = stripslashes($details);
+
 	$field = $art_field_fact->getFieldFromName("comment_type_id");
-	if ( $field ) {
+	if ( $field && isset($comment_type_id)) {
 	  $changes['details']['type'] =
 	    $field->getValue($this->ArtifactType->getID(), $comment_type_id);
 	}
