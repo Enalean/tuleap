@@ -1182,6 +1182,7 @@ $CHKCONFIG mailman on
 ##############################################
 # End of installation
 #
+todo "Add the following parameter in /etc/php.ini: 'upload_tmp_dir = /home/large_tmp'
 todo "Create the shell login files for CodeX users in /etc/skel_codex"
 # things to do by hand
 todo "Change the default login shell if needed in the database (/sbin/nologin or /usr/local/bin/cvssh, etc."

@@ -24,7 +24,7 @@ AddType application/x-httpd-php .php
 AddType application/x-httpd-php .class
 
 # PHP variables
-php_value register_globals on
+php_flag register_globals on
 php_value include_path "/home/httpd/SF/www/include:/home/httpd/SF:."
 php_value memory_limit 30M
 php_value post_max_size 20M
@@ -34,7 +34,7 @@ php_value upload_tmp_dir /home/large_tmp
 # For phpwiki
 php_value allow_call_time_pass_reference on
 
-# Debugging
-#php_value display_errors on
-#php_value error_reporting "E_ALL & ~E_NOTICE"
+# Debugging 2047=all, 2039=all-notice
+#php_flag display_errors on
+#php_value error_reporting "2039"
 

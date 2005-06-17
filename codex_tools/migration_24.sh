@@ -950,7 +950,8 @@ $CHKCONFIG mailman on
 
 ##############################################
 # More things to do
-todo "Note that PHP configuration is now set in /etc/httpd/conf.d/php.conf instead of /etc/php.ini "
+todo "Note that most PHP configuration is now set in /etc/httpd/conf.d/php.conf instead of /etc/php.ini "
+todo "One exception: add the following parameter in /etc/php.ini: 'upload_tmp_dir = /home/large_tmp'
 
 
 # End of it

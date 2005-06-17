@@ -592,7 +592,6 @@ with an 'rpm -Uvh' command.<br>
       <br>
 Packages to install:<br>
       <ul>
-        <li>php, php-mysql, php-ldap</li>
         <li>openssh-server,&nbsp;openssh, openssh-clients,
 openssh-askpass</li>
         <li>openssl (if you intend to allow secure HTTP access)</li>
@@ -976,7 +975,7 @@ name as $sys_default_domain. Set it to an empty string ($sys_https_host
 = "") if your site is not SSL enabled.</li>
 </ul>
 <h2>PHP configuration</h2>
-<p>PHP configuration is now defined in /etc/httpd/conf.d/php.conf instead of /etc/php.ini.
+<p>Most PHP configuration is now defined in /etc/httpd/conf.d/php.conf instead of /etc/php.ini.
 <ul>
   <li>CodeX still needs the register_globals parameter to be set.
    It is 'off' by default starting with PHP4, so add this line to php.conf:<br>
@@ -994,6 +993,11 @@ name as $sys_default_domain. Set it to an empty string ($sys_https_host
   <li>phpWiki also needs this parameter to avoid warnings:<br>
     <pre>   php_value allow_call_time_pass_reference on</pre>
   </li>
+</ul>
+You still need to setup a variable in <b>/etc/php.ini</b> (because it is system-wide):
+<ul>
+  <li>Use /home/large_tmp as temporary directory to store uploaded file:
+   <pre>upload_tmp_dir=/home/large_tmp</pre>
 </ul>
 <h2>Modifying maximum size of uploaded files</h2>
 <p>
