@@ -1286,16 +1286,6 @@ lines if need be </p>
 The trailing slashes are mandatory. Compile it with gcc -O2 -o
 fileforge fileforge.c. Then copy fileforge to /usr/local/bin and run:
 <pre>	# cd /usr/local/bin<br>	# chown root.sourceforge fileforge<br>	# chmod 4750 fileforge   # sets the uid bit<br><br></pre>
-<h2>tmpfilemove</h2>
-<p>This is a small utility which is called by the Apache server to move
-files from the HTTP upload area to the ftp incoming space.</p>
-<p>Go to /home/httpd/SF/utils. In tmpfilemove.c, modify the following
-lines if need be </p>
-<pre>  char * src_dir   = "/tmp/"; /* HTTP upload area */<br>  char * dest_dir  = "/home/ftp/incoming/"; /* the FTP Incoming space */<br></pre>
-The trailing slashes are mandatory. Compile it with gcc -O2 -o
-tmpfile tmpfilemove.c. Then copy&nbsp;tmpfilemove to /usr/local/bin and
-run:
-<pre>	# cd /usr/local/bin<br>	# chown root.sourceforge tmpfilemove<br>	# chmod 4750 tmpfilemove   # sets the uid bit<br><br></pre>
 <h2>gensmbpasswd</h2>
 This is a small utility called by CodeX login creation or change
 password script to generate the MD4 encoding of the user password that

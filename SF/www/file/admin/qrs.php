@@ -49,12 +49,12 @@ if( $submit ) {
   // Check to see if the user uploaded a file instead of selecting an existing one.
   // If so then move it to the 'incoming' dir where we proceed as usual.
   if( $file_name == "qrs_newfile" ) {
-    if (!$userfile_name) {
+      if (!isset($_FILES['userfile']['name'])) {
       $feedback .= ' '.$Language->getText('file_admin_editreleases','no_files_selected').' ';
       file_utils_footer(array());
       exit;
     }
-    $file_name = $userfile_name;
+    $file_name = $_FILES['userfile']['name'];
       
     if (!util_is_valid_filename ($file_name)) {
       $feedback .= ' '.$Language->getText('file_admin_editreleases','illegal_file_name').": $file_name ";
@@ -120,7 +120,6 @@ if( $submit ) {
       }
       
       $resupdate = db_query("UPDATE frs_release SET $fields_str WHERE release_id='$release_id'");
-      //echo "query=UPDATE frs_release SET $fields_str WHERE release_id='$release_id'<br>";
     }
     
     /*
@@ -138,15 +137,13 @@ if( $submit ) {
     $group_unix_name=group_getunixname($group_id);
     $project_files_dir=$FTPFILES_DIR.'/'.$group_unix_name;
     
-    
-    
-    if (is_file($userfile) && file_exists($userfile)) {
-      $new_userfile = explode("tmp/", $userfile);
-      $userfile = $new_userfile[1];
-      exec ("/usr/local/bin/tmpfilemove $userfile $userfile_name",$exec_res);
-      if ($exec_res[0]) {
-	echo '<H3>' . $exec_res[0],$exec_res[1] . '</H3><P>';
-      }
+    if (is_uploaded_file($_FILES['userfile']['tmp_name'])) {
+        $uploaddir = $GLOBALS['FTPINCOMING_DIR'];
+        $uploadfile = $uploaddir . "/". basename($_FILES['userfile']['name']);
+        if (!move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile)) {
+            $feedback .= ' | '.$Language->getText('file_admin_editreleases','add_rel_fail').": ".basename($_FILES['userfile']['name']);
+            file_utils_footer(array());
+        }
     }
     
     $feedback .= ' '.$Language->getText('file_admin_qrs','adding_file').' ';
@@ -180,7 +177,7 @@ if( $submit ) {
     }
 	
     /*
-							move the file to the project's fileserver directory
+       move the file to the project's fileserver directory
     */
     clearstatcache();
     if (is_file($FTPINCOMING_DIR.'/'.$file_name) && file_exists($FTPINCOMING_DIR.'/'.$file_name)) {

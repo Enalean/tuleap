@@ -482,8 +482,6 @@ do
 done
 $CHOWN root.root /usr/local/bin/fileforge
 $CHMOD u+s /usr/local/bin/fileforge
-$CHOWN root.root /usr/local/bin/tmpfilemove
-$CHMOD u+s /usr/local/bin/tmpfilemove
 
 ##############################################
 # Install the CodeX software 
@@ -926,7 +924,7 @@ $CAT <<'EOF' >/tmp/cronfile
 50 0 * * Sun /etc/rc.d/init.d/httpd restart
 #
 # Once a minute make sure that the setuid bit is set on some critical files
-* * * * * (cd /usr/local/bin; /bin/chmod u+s commit-email.pl log_accum tmpfilemove fileforge)
+* * * * * (cd /usr/local/bin; /bin/chmod u+s commit-email.pl log_accum fileforge)
 EOF
 crontab -u root /tmp/cronfile
 
