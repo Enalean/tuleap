@@ -82,11 +82,7 @@ if (user_isloggedin()) {
       }
       $bn = basename($basename);
       header("Content-Type: application/octet-stream");
-      if (browser_is_ie()) {
-	  header("Content-Disposition: filename=$bn");  
-      } else {
 	  header("Content-Disposition: attachment; filename=$bn");
-      }
       header("Content-Length:  $size");
       header("Content-Transfer-Encoding: binary\n");
       fpassthru($fp);
