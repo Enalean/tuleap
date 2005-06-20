@@ -414,7 +414,7 @@ if ( $func == 'gotoid' ) {
                         exit_error($Language->getText('tracker_index','cc_list_invalid'), $message);
                     }
                     // Files
-                        if ($add_file && !util_check_fileupload($input_file)) {
+                        if (isset($add_file) && $add_file && !util_check_fileupload($input_file)) {
                                 exit_error($Language->getText('global','error'),$Language->getText('tracker_index','invalid_filename'));
                         }
 
@@ -422,6 +422,7 @@ if ( $func == 'gotoid' ) {
                         $changed = $ah->handleUpdate($artifact_id_dependent,$canned_response,$changes);
                         if (!$changed) {
                                 require('./browse.php');
+                                exit();
                         }
                 
                         //
