@@ -22,7 +22,7 @@ $location = "";
 
 // Check URL for valid hostname and valid protocol
 if (($HTTP_HOST != $GLOBALS['sys_default_domain']) && ($SERVER_NAME != 'localhost') && ($HTTP_HOST != $GLOBALS['sys_https_host'])) {
-    if ((isset($HTTPS) && $HTTPS == 'on')|| $GLOBALS['sys_force_ssl'] == 1) {
+    if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $GLOBALS['sys_force_ssl'] == 1) {
 	$location = "Location: https://".$GLOBALS['sys_https_host']."$REQUEST_URI";
     } else {
 	$location = "Location: http://".$GLOBALS['sys_default_domain']."$REQUEST_URI";
@@ -31,7 +31,8 @@ if (($HTTP_HOST != $GLOBALS['sys_default_domain']) && ($SERVER_NAME != 'localhos
 
 // Force SSL mode if required except if request comes from localhost
 // HTTP needed by fopen calls (e.g.  in www/include/cache.php)
-if ((isset($HTTPS) && $HTTPS != 'on') && $GLOBALS['sys_force_ssl'] == 1 && ($SERVER_NAME != 'localhost')) {
+
+if ((!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] !== 'on') && $GLOBALS['sys_force_ssl'] == 1 && ($SERVER_NAME != 'localhost')) {
     $location = "Location: https://".$GLOBALS['sys_https_host']."$REQUEST_URI";
 }
 
@@ -185,7 +186,7 @@ if ($SERVER_NAME != 'localhost' &&
     $SCRIPT_NAME != '/account/lostpw-confirm.php' &&
     $SCRIPT_NAME != '/account/pending-resend.php' &&
     $SCRIPT_NAME != '/account/verify.php' ) {
-    if ($GLOBALS['sys_force_ssl'] == 1 || $HTTPS == 'on')
+    if ($GLOBALS['sys_force_ssl'] == 1 || $_SERVER['HTTPS'] === 'on')
 	header("Location: https://".$GLOBALS['sys_https_host']."/account/login.php");
     else
 	header("Location: http://".$GLOBALS['sys_default_domain']."/account/login.php");
