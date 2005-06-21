@@ -25,6 +25,7 @@ $alltest = &new GroupTest('All CodeX tests');
 $alltest->addTestFile("TemplateTest.php");
     	
 $alltest->addTestFile("common/include/SimpleSanitizerTest.php");
+$alltest->addTestFile("common/include/MailTest.php");
 
 //We run the tests
 $alltest->run(new CodexReporter());

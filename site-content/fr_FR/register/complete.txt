@@ -19,7 +19,8 @@
 $href_approval = get_server_url().'/admin/approve-pending.php';
 $to = $GLOBALS['sys_email_admin'];
 list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
-$hdrs = 'From: noreply@'.$host."\n";
+$from = 'noreply@'.$host;
+$hdrs = 'From: '.$from."\n";
 
 // subject and body can be customized to your liking
 $subject = "Nouveau projet enregistré: ".$form_full_name;
@@ -29,5 +30,12 @@ $body = "Un nouveau projet vient juste d'être enregistré sur ".$GLOBALS['sys_nam
 $href_approval."\n";
 
 // Send a notification message to the Site administrator
-mail($to,$subject,$body,$hdrs);
+require_once('common/include/Mail.class');
+$mail =& new Mail();
+$mail->setTo($to);
+$mail->setFrom($from);
+$mail->setBody($body);
+$mail->setSubject($subject);
+$mail->send();
+
 ?>

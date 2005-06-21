@@ -10,7 +10,9 @@ require_once('pre.php');
 require_once('proj_email.php');
 require_once('account.php');
 require_once('timezones.php');
-   
+
+require_once('common/include/Mail.class');
+
 $Language->loadLanguageMsg('account/account');
 
 // ###### function register_valid()
@@ -308,11 +310,18 @@ if (isset($Register)) {
 
 	    // Send a notification message to the Site administrator
 	    list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
-	    $hdrs = 'From: noreply@'.$host."\n";
+        $from = 'noreply@'.$host;
+	    $hdrs = 'From: '.$from."\n";
 	    $to = $GLOBALS['sys_email_admin'];
 	    $subject = $Language->getText('account_register', 'mail_approval_subject', array($user_name));
 	    $body = stripcslashes($Language->getText('account_register', 'mail_approval_body', array($GLOBALS['sys_name'], $user_name, $href_approval)));
-	    mail($to,$subject,$body,$hdrs);
+        
+	    $mail = new Mail();
+        $mail->setSubject($subject);
+        $mail->setFrom($from);
+        $mail->setTo($to);
+        $mail->setBody($body);
+        $mail->send();
 	    
 	}
 	$HTML->footer(array());

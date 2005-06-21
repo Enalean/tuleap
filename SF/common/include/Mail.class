@@ -1,0 +1,100 @@
+<?php
+/*
+ * $Id$
+ */
+class Mail {
+    
+    function Mail() {
+        $this->setHeaderCharset('ISO-8859-1');
+        $this->setContentType('');
+    }
+    
+    var $_headerCharset;
+    function setHeaderCharset($charset) { 
+        $this->_headerCharset = $charset; 
+    }
+    function getHeaderCharset() { 
+        return $this->_headerCharset; 
+    }
+    
+    var $_subject;
+    function setSubject($subject) {
+        $this->_subject = $subject;
+    }
+    function getSubject() {
+        return $this->_subject;
+    }
+    function getEncodedSubject() {
+        return $this->_encodeHeader($this->_subject, $this->getHeaderCharset());
+    }
+    
+    /**
+     * Function to encode a header if necessary
+     * according to RFC2047
+     * Filename.......: class.html.mime.mail.inc
+     * Project........: HTML Mime mail class
+     * Last Modified..: Date: 2002/07/24 13:14:10 
+     * CVS Revision...: Revision: 1.4 
+     * Copyright......: 2001, 2002 Richard Heyes
+     */
+    function _encodeHeader($input, $charset) {
+		preg_match_all('/(\w*[\x80-\xFF]+\w*)/', $input, $matches);
+		foreach ($matches[1] as $value) {
+			$replacement = preg_replace('/([\x80-\xFF])/e', '"=" . strtoupper(dechex(ord("\1")))', $value);
+			$input = str_replace($value, '=?' . $charset . '?Q?' . $replacement . '?=', $input);
+		}
+		
+		return $input;
+	}
+    
+    var $_body;
+    function setBody($body) {
+        $this->_body = $body;
+    }
+    function getBody() {
+        return $this->_body;
+    }
+    
+    var $_from;
+    function setFrom($from) {
+        $this->_from = $from;
+    }
+    function getFrom() {
+        return $this->_from;
+    }
+
+    var $_to;
+    function setTo($to) {
+        $this->_to = $to;
+    }
+    function getTo()  {
+        return $this->_to;
+    }
+    
+    
+    var $_contentType;
+    function setContentType($contentType) {
+        $this->_contentType = $contentType;
+    }
+    function getContentType() {
+        return $this->_contentType;
+    }
+    
+    
+    function send() {
+        
+        $header = "From: ".$this->getFrom().$GLOBALS['sys_lf'];
+        $ct = trim($this->getContentType());
+        if (strlen($ct) > 0) {
+            $header = "Content-type: ".$ct;$GLOBALS['sys_lf'];
+        }
+        
+        mail($this->getTo(),
+            $this->getEncodedSubject(),
+            $this->getBody(),
+            $header
+        );
+    }
+}
+
+?>

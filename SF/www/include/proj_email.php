@@ -6,6 +6,8 @@
 //
 // $Id$
 
+//require_once('pre.php');
+require_once('common/include/Mail.class');
 
 $Language->loadLanguageMsg('include/include');
 
@@ -43,11 +45,14 @@ function send_new_project_email($group_id) {
 
 	// LJ Uncomment to test
 	//echo $message; return
-	$hdrs = "From: ".$GLOBALS['sys_email_admin'].$GLOBALS['sys_lf'];
-	$hdrs .='Content-type: text/plain; charset=iso-8859-1'.$GLOBALS['sys_lf'];
-	
-	mail($row_admins['email'],$GLOBALS['sys_name'].' '.$Language->getText('include_proj_email','proj_approve',$row_grp['unix_group_name']),$message,$hdrs);
 
+    $mail =& new Mail();
+    $mail->setTo($row_admins['email']);
+    $mail->setSubject($GLOBALS['sys_name'].' '.$Language->getText('include_proj_email','proj_approve',$row_grp['unix_group_name']));
+    $mail->setBody($message);
+    $mail->setFrom($GLOBALS['sys_email_admin']);
+    $mail->setContentType('text/plain; charset=iso-8859-1');
+    $mail->send();
 }
 
 }
@@ -64,8 +69,12 @@ function send_new_user_email($to,$confirm_hash)
     include($Language->getContent('include/new_user_email'));
     
     list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
-    mail($to, $Language->getText('include_proj_email','account_register',$GLOBALS['sys_name']),$message,"From: noreply@".$host);
-
+    $mail =& new Mail();
+    $mail->setTo($to);
+    $mail->setSubject($Language->getText('include_proj_email','account_register',$GLOBALS['sys_name']));
+    $mail->setBody($message);
+    $mail->setFrom("noreply@".$host);
+    $mail->send();
 }
 
 // LJ To test the new e-mail message content and format
@@ -73,9 +82,9 @@ function send_new_user_email($to,$confirm_hash)
 // LJ http://codex.xerox.com/include/proj_email.php
 // LJ from your favorite browser
 //LJ
-//require_once('pre.php');
 //echo "<PRE>";
 //send_new_project_email(4);
-//send_new_project_email("julliard@xrce.xerox.com");
+//send_new_project_email(102);
+//send_new_user_email("nicolas.terray@xrce.xerox.com", "hash");
 //echo "</PRE>";
 ?>

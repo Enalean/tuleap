@@ -7,6 +7,12 @@
 // $Id$
 //
 
+//{{{define undefined vars
+if (!isset($message_project_type)) {
+   $message_project_type = '';
+}
+//}}}
+
 if (session_issecure()) {
         $web_server= "https://".$row_grp['unix_group_name'].".".$GLOBALS['sys_https_host'];
 } else {
