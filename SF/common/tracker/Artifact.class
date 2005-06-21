@@ -1221,8 +1221,21 @@ class Artifact extends Error {
      */
     function getCommenters() {
         $sql="SELECT DISTINCT mod_by FROM artifact_history ".
-	  "WHERE artifact_history.artifact_id=".$this->getID()." ".
-            "AND artifact_history.field_name = 'details' ";
+	  "WHERE artifact_id=".$this->getID()." ".
+            "AND field_name = 'details' AND mod_by != 100";
+        return db_query($sql);
+    }
+
+    /**
+     * Return the follow ups 
+     *
+     * @return array
+     */
+    function getAnonymousCommenters() {
+        $sql="SELECT DISTINCT email FROM artifact_history ".
+	  "WHERE artifact_id=".$this->getID()." ".
+            "AND field_name = 'details' ".
+	  "AND mod_by = 100";
         return db_query($sql);
     }
 
@@ -1461,8 +1474,8 @@ class Artifact extends Error {
 						  if (!$user_ids[$user_id] && 
 						      $this->ArtifactType->checkNotification($user_id, 'ASSIGNEE', $changes) && 
 						      $this->userCanView($user_id)) {
-                            					//echo "DBG - ASSIGNEE - user=$user_id<br>";
-                            					$user_ids[$user_id] = true;
+						      //echo "DBG - ASSIGNEE - user=$user_id<br>";
+						      $user_ids[$user_id] = true;
                         				}
 						}
                     			}
@@ -1477,8 +1490,8 @@ class Artifact extends Error {
                         				if (!$user_ids[$user_id] && 
 							    $this->ArtifactType->checkNotification($user_id, 'ASSIGNEE', $changes) &&
 							    $this->userCanView($user_id)) {
-                            					//echo "DBG - ASSIGNEE - user=$user_id<br>";
-                            					$user_ids[$user_id] = true;
+							    //echo "DBG - ASSIGNEE - user=$user_id<br>";
+							    $user_ids[$user_id] = true;
                         				}
                     				}
 					}	
@@ -1499,8 +1512,8 @@ class Artifact extends Error {
             			if (!$user_ids[$user_id] && 
 				    $this->ArtifactType->checkNotification($user_id, 'ASSIGNEE', $changes) &&
 				    $this->userCanView($user_id)) {
-                			//echo "DBG - ASSIGNEE - user=$user_id<br>";
-                			$user_ids[$user_id] = true;
+				    //echo "DBG - ASSIGNEE - user=$user_id<br>";
+				    $user_ids[$user_id] = true;
             			}
         		}
 
@@ -1721,7 +1734,7 @@ class Artifact extends Error {
         $user_id = $this->getSubmittedBy();
         if ($user_id != 100) {
 	  if ($this->ArtifactType->checkNotification($user_id, 'SUBMITTER', $changes) && $this->userCanView($user_id)) {
-	      //echo "DBG - SUBMITTER - user=$user_id<br>";
+	        //echo "DBG - SUBMITTER - user=$user_id<br>";
                 $concerned_ids[$user_id] = true;
             }
         }
@@ -1753,13 +1766,13 @@ class Artifact extends Error {
         while (list(,$cc) = each($arr_cc)) {
             //echo "DBG - CC=$cc<br>";
             if (validate_email($cc)) {
-                //echo "DBG - CC email - email=".util_normalize_email($cc)."<br>";
+	        //echo "DBG - CC email - email=".util_normalize_email($cc)."<br>";
                 $concerned_addresses[util_normalize_email($cc)] = true;
             } else {
                 $res = user_get_result_set_from_unix($cc);
                 $user_id = db_result($res,0,'user_id');
                 if (!$concerned_ids[$user_id] && $this->ArtifactType->checkNotification($user_id, 'CC', $changes)) {
-                    //echo "DBG - CC - user=$user_id<br>";
+		    //echo "DBG - CC - user=$user_id<br>";
                     $concerned_ids[$user_id] = true;
                 }
             }
@@ -1772,9 +1785,18 @@ class Artifact extends Error {
             while ($row = db_fetch_array($res_com)) {
                 $user_id = $row['mod_by'];
                 if (!$concerned_ids[$user_id] && $this->ArtifactType->checkNotification($user_id, 'COMMENTER', $changes)) {
-                    //echo "DBG - COMMENTERS - user=$user_id<br>";
+		    //echo "DBG - COMMENTERS - user=$user_id<br>";
                     $concerned_ids[$user_id] = true;
                 }
+            }
+        }
+        // check all anonymous commenters
+        $res_com = $this->getAnonymousCommenters();
+        if (db_numrows($res_com) > 0) {
+            while ($row = db_fetch_array($res_com)) {
+                $user_mail = $row['email'];
+		//echo "DBG - anon COMMENTERS - user=$user_mail<br>";
+		$concerned_addresses[$user_mail] = true;
             }
         }
         

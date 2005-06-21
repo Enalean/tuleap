@@ -669,7 +669,7 @@ function validate_emails ($addresses) {
         
         while (list(,$cc) = each($arr_email)) {
             // Make sure that the address is valid
-            if (! validate_email($cc)) {
+            if ($cc && $cc != '' && ! validate_email($cc)) {
                 // check for a valid CodeX user.
                 $res = user_get_result_set_from_unix($cc);
                 if (db_numrows($res) == 0) {

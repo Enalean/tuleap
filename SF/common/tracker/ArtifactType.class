@@ -1015,40 +1015,44 @@ class ArtifactType extends Error {
 	 */
 	function updateNotificationSettings($email_all,$email_address,$user_id, $watchees, &$feedback) {
 	  global $Language;
-
+	  
 	  $result = true;
+	  
+	  if ($email_address) {
+	    if (!util_validateCCList(util_split_emails($email_address), $feedback)) {
+		  $email_address='';
+		  $result = false;
+	    } else {
+	      $email_address = util_cleanup_emails($email_address);
+	    }
+	  }
 
-		if ($email_address && !validate_emails($email_address)) {
-			$feedback = $Language->getText('tracker_common_type','invalid_mail',$email_address);
-			$email_address='';
-			$result = false;
-		}
-		if ($email_all && !$email_address) {
-			$email_all=0;
-		}
-
-		$email_all = ((!$email_all) ? 0 : $email_all); 
-		$sql="UPDATE artifact_group_list SET 
+	  if ($email_all && !$email_address) {
+	    $email_all=0;
+	  }
+	  
+	  $email_all = ((!$email_all) ? 0 : $email_all); 
+	  $sql="UPDATE artifact_group_list SET 
 			email_all_updates='$email_all',
 			email_address='$email_address' 
 			WHERE 
 			group_artifact_id='".$this->getID()."' 
 			AND group_id='".$this->Group->getID()."'";
-
-		$res=db_query($sql);
-		//echo $sql."<br>";
-		if (!$res ) {
-			$this->setError('ArtifactType::Update(): '.db_error());
-			return false;
-		} else {
-			// set watchees 
-			$this->setWatchees($user_id, $watchees);
-			
-			$this->fetchData($this->getID());
-		}
-		return $result;
+	  
+	  $res=db_query($sql);
+	  //echo $sql."<br>";
+	  if (!$res ) {
+	    $this->setError('ArtifactType::Update(): '.db_error());
+	    return false;
+	  } else {
+	    // set watchees 
+	    $this->setWatchees($user_id, $watchees);
+	    
+	    $this->fetchData($this->getID());
+	  }
+	  return $result;
 	}
-
+	
 	function deleteWatchees($user_id) {
 
     		$sql = "DELETE FROM artifact_watcher WHERE user_id='$user_id' AND artifact_group_id='".$this->getID()."'";
