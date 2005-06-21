@@ -165,7 +165,7 @@ function display_doc_list($group_id) {
 
                         // LJ We want the title and the description to
                         // possibly contain HTML but NOT php code
-                        print "<li><a href=\"display_doc.php?docid=".$subrow['docid']."&group_id=".
+                        print "<li><a href=\"/docman/display_doc.php?docid=".$subrow['docid']."&group_id=".
                             $group_id."\" title=\"".$subrow['docid']." - ".strip_tags(util_unconvert_htmlspecialchars($subrow['title']))."\">";
                         print(util_unconvert_htmlspecialchars($subrow['title']));
                         print "</a>\n";
