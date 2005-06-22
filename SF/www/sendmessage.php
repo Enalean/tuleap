@@ -7,6 +7,7 @@
 // $Id$
 
 require_once('pre.php');    
+require_once('common/include/Mail.class');
 
 $Language->loadLanguageMsg('homepage/homepage');
 
@@ -42,9 +43,6 @@ if ($send_mail) {
 		exit_missing_param();
 	}
 
-	$hdrs = 'From: '. $name .' <'. $email .'>'.$GLOBALS['sys_lf'];
-	$hdrs .='Content-type: text/plain; charset=iso-8859-1'.$GLOBALS['sys_lf'];
-
 	if ($toaddress) {
 		/*
 			send it to the toaddress
@@ -56,7 +54,14 @@ if ($send_mail) {
 		*/
 		$to=db_result($result,0,'email');
 	}
-	mail($to, stripslashes($subject),stripslashes($body),$hdrs);
+	$mail =& new Mail();
+    $mail->setTo($to);
+    $mail->setSubject(stripslashes($subject));
+    $mail->setBody(stripslashes($body));
+    $mail->setContentType('text/plain; charset=iso-8859-1');
+    $mail->setFrom($name .' <'. $email .'>');
+    $mail->send();
+
 	$HTML->header(array('title'=>$Language->getText('sendmessage', 'title_sent',array($to))));
 	echo '<H2>'.$Language->getText('sendmessage', 'title_sent',array($to)).'</H2>';
 	$HTML->footer(array());
