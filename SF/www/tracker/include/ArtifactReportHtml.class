@@ -784,7 +784,7 @@ class ArtifactReportHtml extends ArtifactReport {
                 }
         
                 //Do not show unreadable fields
-                if (!$field->userCanRead($group_id, $this->group_artifact_id)) {
+                if (!$ath->userIsAdmin() && !$field->userCanRead($group_id, $this->group_artifact_id)) {
                     continue;
                 }
 
@@ -883,7 +883,7 @@ class ArtifactReportHtml extends ArtifactReport {
                 }
                 
                 //Do not show unreadable fields
-                if (!$field->userCanRead($group_id, $this->group_artifact_id)) {
+                if (!$ath->userIsAdmin() && !$field->userCanRead($group_id, $this->group_artifact_id)) {
                     continue;
                 }
                 $cb_search = 'CBSRCH_'.$field->getName();
