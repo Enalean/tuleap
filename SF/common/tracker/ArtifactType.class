@@ -786,18 +786,22 @@ class ArtifactType extends Error {
                 if ($u->isSuperUser()) return true;
             }
             
-            $sql="SELECT ugroup_id FROM permissions WHERE permission_type LIKE 'TRACKER_ACCESS%' AND object_id='".$this->getID()."' ORDER BY ugroup_id";
-            $res=db_query($sql);
+            if ($this->userIsAdmin($my_user_id)) {
+                return true;
+            } else {
+            
+                $sql="SELECT ugroup_id FROM permissions WHERE permission_type LIKE 'TRACKER_ACCESS%' AND object_id='".$this->getID()."' ORDER BY ugroup_id";
+                $res=db_query($sql);
 
-            if (db_numrows($res) > 0) {
-                while ($row = db_fetch_array($res)) {
-                    // should work even for anonymous users
-                    if (ugroup_user_is_member($my_user_id, $row['ugroup_id'], $this->Group->getID(), $this->getID())) {
-                        return true;
+                if (db_numrows($res) > 0) {
+                    while ($row = db_fetch_array($res)) {
+                        // should work even for anonymous users
+                        if (ugroup_user_is_member($my_user_id, $row['ugroup_id'], $this->Group->getID(), $this->getID())) {
+                            return true;
+                        }
                     }
                 }
             }
-            
             return false;
         }
 
