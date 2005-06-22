@@ -11,6 +11,7 @@
 //
 //  Written for CodeX by Stephane Bouhet
 //
+require_once('common/tracker/Artifact.class');
 
 
 $Language->loadLanguageMsg('tracker/tracker');

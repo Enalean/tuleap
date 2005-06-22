@@ -10,7 +10,7 @@
 //  Written for CodeX by Stephane Bouhet
 //
 
-//require_once('common/tracker/ArtifactType.class');
+require_once('common/tracker/ArtifactType.class');
 require_once('HTML_Graphs.php');
 require_once('www/project/admin/ugroup_utils.php');
 

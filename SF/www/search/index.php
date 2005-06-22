@@ -7,17 +7,19 @@
 // $Id$
 
 require_once('pre.php');
+require_once('www/tracker/include/ArtifactTypeHtml.class');
+require_once('www/tracker/include/ArtifactHtml.class');
 require_once('common/tracker/ArtifactType.class');
 require_once('common/tracker/Artifact.class');
 require_once('common/tracker/ArtifactFieldFactory.class');
 
 $Language->loadLanguageMsg('search/search');
 
-$HTML->header(array('title'=>$Language->getText('search_index','search')));
-
-echo "<P><CENTER>";
-
-menu_show_search_box();
+if ($type_of_search !== "tracker") {
+    $HTML->header(array('title'=>$Language->getText('search_index','search')));
+    echo "<P><CENTER>";
+    menu_show_search_box();
+}
 
 /*
 	Force them to enter at least three characters
@@ -397,31 +399,42 @@ if ($type_of_search == "soft") {
 
 } else if ($type_of_search == 'tracker') {
 
-        //
-        //      get the Group object
-        //
-        $group = group_get_object($group_id);
-        if (!$group || !is_object($group) || $group->isError()) {
-                exit_no_group();
-        }
-        //
-        //      Create the ArtifactType object
-        //
-        $at = new ArtifactType($group,$atid);
-        if (!$at || !is_object($at)) {
+    //
+    //      get the Group object
+    //
+    $group = group_get_object($group_id);
+    if (!$group || !is_object($group) || $group->isError()) {
+            exit_no_group();
+    }
+    //
+    //      Create the ArtifactType object
+    //
+    $ath = new ArtifactTypeHtml($group,$atid);
+    if (!$ath || !is_object($ath)) {
+        exit_error($Language->getText('global','error'),$Language->getText('global','error'));
+    }
+    if ($ath->isError()) {
+            exit_error($Language->getText('global','error'),$ath->getErrorMessage());
+    }
+    // Check if this tracker is valid (not deleted)
+    if ( !$ath->isValid() ) {
             exit_error($Language->getText('global','error'),$Language->getText('global','error'));
-        }
-        if ($at->isError()) {
-                exit_error($Language->getText('global','error'),$at->getErrorMessage());
-        }
-        // Check if this tracker is valid (not deleted)
-        if ( !$at->isValid() ) {
-                exit_error($Language->getText('global','error'),$Language->getText('global','error'));
-        }
+    }
+    
+    // Create field factory
+    $art_field_fact = new ArtifactFieldFactory($ath);
+    
+    $params=array('title'=>$group->getPublicName().': \''.$ath->getName().'\' '.$Language->getText('tracker_browse', 'search_report'),
+          'titlevals'=>array($ath->getName()),
+          'pagename'=>'tracker_browse',
+          'atid'=>$ath->getID(),
+          'sectionvals'=>array($group->getPublicName()),
+          'pv'=>0,
+          'help' => 'ArtifactBrowsing.html');
 
-        // Create field factory
-        $art_field_fact = new ArtifactFieldFactory($at);
-
+    $ath->header($params);
+        
+        
 	$array=explode(" ",$words);
 	$words1=implode($array,"%' $crit artifact.details LIKE '%");
 	$words2=implode($array,"%' $crit artifact.summary LIKE '%");
@@ -474,7 +487,7 @@ if ($type_of_search == "soft") {
                 $rows=0;
                 while ($arr = db_fetch_array($result)) {
                     $rows++;
-                    $curArtifact=new Artifact($at, $arr['artifact_id']);
+                    $curArtifact=new Artifact($ath, $arr['artifact_id']);
                     if ($curArtifact->isStatusClosed($curArtifact->getStatusID())) {
                         $status=$Language->getText('global','closed');
                     } else {                        
@@ -545,5 +558,9 @@ if ( !$no_rows && ( ($rows_returned > $rows) || ($offset != 0) ) ) {
 
 
 
-$HTML->footer(array());
+if ($type_of_search !== "tracker" || !isset($ath)) {
+    $HTML->footer(array());
+} else {
+    $ath->footer(array());
+}
 ?>
