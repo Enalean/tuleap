@@ -429,6 +429,16 @@ INSERT INTO artifact_field_value_list VALUES (9,5,8,'In Test','Updated/Created s
 INSERT INTO artifact_field_value_list VALUES (9,5,9,'Approved','The artifact fix has been succesfully tested. It is approved and awaiting release.',130,'H');
 INSERT INTO artifact_field_value_list VALUES (9,5,10,'Declined','The artifact was not accepted. Alternatively, you can also Set the status to \"Closed\" and use the Resolution field to explain why it was declined',150,'H');
 
+INSERT INTO artifact_field_value_list VALUES (10,5,1,'1 - Ordinary','',10,'P');
+INSERT INTO artifact_field_value_list VALUES (10,5,2,'2','',20,'P');
+INSERT INTO artifact_field_value_list VALUES (10,5,3,'3','',30,'P');
+INSERT INTO artifact_field_value_list VALUES (10,5,4,'4','',40,'P');
+INSERT INTO artifact_field_value_list VALUES (10,5,5,'5 - Major','',50,'P');
+INSERT INTO artifact_field_value_list VALUES (10,5,6,'6','',60,'P');
+INSERT INTO artifact_field_value_list VALUES (10,5,7,'7','',70,'P');
+INSERT INTO artifact_field_value_list VALUES (10,5,8,'8','',80,'P');
+INSERT INTO artifact_field_value_list VALUES (10,5,9,'9 - Critical','',90,'P');
+
 INSERT INTO artifact_field_value_list VALUES (12,5,1,'Accepted','The artifact will be worked on. If it won\'t be worked on, indicate why and close it',10,'A');
 INSERT INTO artifact_field_value_list VALUES (12,5,2,'Declined','The artifact was not accepted. Alternatively, you can also set the status to \"Closed\" and explain why it was declined',50,'A');
 
