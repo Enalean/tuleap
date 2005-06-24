@@ -626,12 +626,12 @@ function util_cleanup_emails ($addresses) {
 // Clean up email address (remove spaces...) and add @... if it is a simple
 // login name
 function util_normalize_email ($address) {
-    global $sys_users_host;
+    list($host,$port) = explode(':',$GLOBALS['sys_users_host']);
     $address = util_cleanup_emails($address);
     if (validate_email($address))
 	return $address;
     else
-	return $address."@$sys_users_host";
+	return $address."@$host";
 }
 
 // Clean up email address (remove spaces...) and split comma or semi-colon separated emails
@@ -654,6 +654,18 @@ function validate_emails ($addresses) {
     return true;
 }
 
+/**
+ * Return the emails normalized 
+**/
+function util_normalize_emails($adresses) {
+    $adresses = util_split_emails($adresses);
+    foreach($adresses as $key => $value) {
+        if (trim($value) !== "") {
+            $adresses[$key] = util_normalize_email($value);
+        }
+    }
+    return implode(',', $adresses);
+}
 /**
      * Return if the email addresses are valid
      *

@@ -230,8 +230,25 @@ if (user_isloggedin()) {
 	<B>';
 
 	$my_name=user_getrealname(user_getid());
+    $cc = (isset($_REQUEST['cc'])?htmlspecialchars(trim($_REQUEST['cc'])):"");
 	echo $my_name.'</B>
 	<INPUT TYPE="HIDDEN" NAME="name" VALUE="'.$my_name.'">
+    <div>
+        <script type="text/javascript" src="/include/blocks.js"></script>
+        <script type="text/javascript">
+        function addCCField() {
+            hideBlock("cc_link");
+            showBlock("cc_field");
+        }
+        </script>
+        <div id="cc_link"  style="display:'.($cc !== ""?'none':'block').';"><a href="" onclick="addCCField(); return false;" title="'.$Language->getText('include_user_home','add_cc').'">'.$Language->getText('include_user_home','add_cc').'</a></div>
+        <div id="cc_field" style="display:'.($cc === ""?'none':'block').';">
+            <table cellspacing="0" cellpadding="0"><tr><td><B>'.$Language->getText('include_user_home','cc').':</B><BR/>
+            <INPUT TYPE="TEXT" NAME="cc" SIZE="30" VALUE="'.$cc.'"></td><td style="padding-left:10px;">
+            '.$Language->getText('include_user_home','fill_cc_list_msg').'</td></tr></table>
+        </div>
+    </div>
+    
 	<P>
 	<B>'.$Language->getText('include_user_home','subject').':</B><BR>
 	<INPUT TYPE="TEXT" NAME="subject" SIZE="30" MAXLENGTH="40" VALUE="">
