@@ -437,6 +437,9 @@ include_user_home	send_message	Envoyer le message
 include_user_home	send_message_if_logged	Vous pourriez envoyer un message si vous étiez connecté
 include_user_home	subject	Sujet
 include_user_home	message	Message
+include_user_home	cc	CC
+include_user_home	add_cc	Ajouter un CC
+include_user_home	fill_cc_list_msg	<b><u>Note:</b></u> pour les utilisateurs CodeX utilisez plutôt leur nom de login plutôt que leur adresse e-mail.<br>Remplissez la liste en utilisant la virgule ou le point-virgule comme séparateur.
 #
 #-----------------------------------------------
 # Script: SF/www/include/user.php
