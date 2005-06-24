@@ -54,8 +54,12 @@ if ($send_mail) {
 		*/
 		$to=db_result($result,0,'email');
 	}
+    
 	$mail =& new Mail();
     $mail->setTo($to);
+    if (isset($_REQUEST['cc']) && count($_REQUEST['cc']) > 0) {
+        $mail->setCC(util_normalize_emails($_REQUEST['cc']));
+    }
     $mail->setSubject(stripslashes($subject));
     $mail->setBody(stripslashes($body));
     $mail->setFrom($name .' <'. $email .'>');
