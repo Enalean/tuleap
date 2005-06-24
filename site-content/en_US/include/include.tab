@@ -432,6 +432,9 @@ include_user_home	send_message	Send Message
 include_user_home	send_message_if_logged	You Could Send a Message if you were logged in
 include_user_home	subject	Subject
 include_user_home	message	Message
+include_user_home	cc	CC
+include_user_home	add_cc	Add CC
+include_user_home	fill_cc_list_msg	<b><u>Note:</b></u> for CodeX users use their login name rather than their email addresses.<br>Fill your list using comma or semi-column as separator.
 #
 #-----------------------------------------------
 # Script: SF/www/include/user.php
