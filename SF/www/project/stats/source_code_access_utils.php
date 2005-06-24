@@ -107,7 +107,7 @@ function filedownload_logs_daily($project, $span = 7, $who="allusers") {
         ."AND log.filerelease_id=frs_file.file_id "
         ."AND frs_release.release_id=frs_file.release_id "
         ."AND frs_package.package_id=frs_release.package_id "
-	."ORDER BY time ASC";
+	."ORDER BY time DESC";
 	
 	logs_display($sql, $span, $Language->getText('project_stats_source_code_access_utils','files'),
 		     $Language->getText('project_stats_source_code_access_utils','file_download'));
@@ -161,7 +161,7 @@ function cvsaccess_logs_daily($project, $span = 7, $who="allusers") {
 	."AND history.group_id=".$project->getGroupId()." "
 	."AND history.day >= $begin_day "
 	."AND (history.cvs_checkouts != 0 OR history.cvs_browse != 0)"
-	."ORDER BY day ASC";
+	."ORDER BY day DESC";
 	
 	// Executions will continue until morale improves.
 	$res = db_query( $sql );
@@ -248,7 +248,7 @@ function svnaccess_logs_daily($project, $span = 7, $who="allusers") {
 	."WHERE group_svn_full_history.user_id=user.user_id ".$cond
 	."AND group_svn_full_history.group_id=".$project->getGroupId()." "
 	."AND group_svn_full_history.day >= $begin_day "
-	."ORDER BY day ASC";
+	."ORDER BY day DESC";
 	
 	// Executions will continue until morale improves.
 	$res = db_query( $sql );
@@ -307,7 +307,7 @@ function doc_logs_daily($project, $span = 7, $who="allusers") {
 	    ."AND doc_groups.group_id=".$project->getGroupId()." "
 	    ."AND doc_groups.doc_group = doc_data.doc_group "
     ."AND doc_data.docid = log.docid "
-	    ."ORDER BY time ASC";
+	    ."ORDER BY time DESC";
 	
   logs_display($sql, $span, $Language->getText('project_stats_source_code_access_utils','docs'),
 	       $Language->getText('project_stats_source_code_access_utils','doc_download'));
@@ -329,7 +329,7 @@ function wiki_logs_daily($project, $span = 7, $who="allusers") {
     ." FROM wiki_log AS log, user"
     ." WHERE ".logs_cond($project, $span, $who)
     ." AND log.group_id=".$project->getGroupId()
-    ." ORDER BY time ASC";
+    ." ORDER BY time DESC";
 
   logs_display($sql, $span, $Language->getText('project_stats_source_code_access_utils','wiki_page'),
 	       $Language->getText('project_stats_source_code_access_utils','wiki_access'));
