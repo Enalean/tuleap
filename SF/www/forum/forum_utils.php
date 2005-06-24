@@ -16,6 +16,8 @@
 */
 
 require_once('www/news/news_utils.php');
+require_once('common/include/Mail.class');
+
 $Language->loadLanguageMsg('forum/forum');
 
 function forum_header($params) {
@@ -219,7 +221,7 @@ function show_thread($thread_id,$et=0) {
 		$et is whether or not the forum is "expanded" or in flat mode
 	*/
 	global $total_rows,$sys_datefmt,$is_followup_to,$subject,$forum_id,$current_message;
-
+    $ret_val = '';
 	$sql="SELECT user.user_name,forum.has_followups,forum.msg_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to ".
 		"FROM forum,user WHERE forum.thread_id='$thread_id' AND user.user_id=forum.posted_by AND forum.is_followup_to='0' ".
 		"ORDER BY forum.msg_id DESC;";
@@ -295,7 +297,7 @@ function show_submessages($thread_id, $msg_id, $level,$et=0) {
 
 	$result=db_query($sql);
 	$rows=db_numrows($result);
-
+    $ret_val = '';
 	if ($result && $rows > 0) {
 		for ($i=0; $i<$rows; $i++) {
 			/*
@@ -433,7 +435,7 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
 		}
 
 		$sql="INSERT INTO forum (group_forum_id,posted_by,subject,body,date,is_followup_to,thread_id) ".
-			"VALUES ('$group_forum_id', '".user_getid()."', '".htmlspecialchars($subject)."', '".htmlspecialchars($body)."', '".time()."','$is_followup_to','$thread_id')";
+			"VALUES ('$group_forum_id', '".user_getid()."', '".addslashes(htmlspecialchars($subject))."', '".addslashes(htmlspecialchars($body))."', '".time()."','$is_followup_to','$thread_id')";
 
 		$result=db_query($sql);
 
@@ -500,7 +502,7 @@ function show_post_form($forum_id, $thread_id=0, $is_followup_to=0, $subject="")
 }
 
 function handle_monitoring($forum_id,$msg_id) {
-  global $feedback,$sys_lf,$Language;
+    global $feedback,$sys_lf,$Language;
 	/*
 		Checks to see if anyone is monitoring this forum
 		If someone is, it sends them the message in email format
@@ -526,25 +528,29 @@ function handle_monitoring($forum_id,$msg_id) {
 		$result = db_query ($sql);
 
 		if ($result && db_numrows($result) > 0) {
-                    list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
-
-		    $body = "To: noreply@".$host.$sys_lf;
-		    $body .='Content-type: text/plain; charset=iso-8859-1'.$sys_lf;
-		    $body .="BCC: $tolist".$sys_lf;
-		
-		    $body .= "Subject: [" .db_result($result,0,'unix_group_name'). " - " . db_result($result,0,'forum_name')."] " . 
-			util_unconvert_htmlspecialchars(db_result($result,0,'subject')).
-			"\n\n".$Language->getText('forum_forum_utils','read_and_respond').": ".
+            list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
+            $mail =& new Mail();
+            $mail->setFrom($GLOBALS['sys_name']." <noreply@".$host.">");
+            $mail->setSubject("[" . db_result($result,0,'unix_group_name'). " - " . db_result($result,0,'forum_name')."] " . util_unconvert_htmlspecialchars(db_result($result,0,'subject')));
+            $mail->setBcc($tolist);
+            
+		    
+		    $body = $Language->getText('forum_forum_utils','read_and_respond').": ".
 			"\n".get_server_url()."/forum/message.php?msg_id=".$msg_id.
 		      "\n".$Language->getText('global','by').' '. db_result($result,0, 'user_name') .
 			"\n\n" . util_unconvert_htmlspecialchars(db_result($result,0, 'body')).
 			"\n\n______________________________________________________________________".
 			"\n".$Language->getText('forum_forum_utils','stop_monitor_explain').": ".
 			"\n".get_server_url()."/forum/monitor.php?forum_id=$forum_id";
+            $mail->setBody($body);
+            
+			if ($mail->send()) {
+                $feedback .= ' - '.$Language->getText('forum_forum_utils','mail_sent');
+            } else {//ERROR
+                $feedback .= ' - '.$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])); 
+            }
 
-			exec ("/bin/echo \"". util_prep_string_for_sendmail($body) ."\" | /usr/sbin/sendmail -fnoreply@".$host." -t -i &");
-
-			$feedback .= ' '.$Language->getText('forum_forum_utils','mail_sent').' - '.$Language->getText('forum_forum_utils','people_monitoring').' ';
+			$feedback .= ' - '.$Language->getText('forum_forum_utils','people_monitoring').' ';
 		} else {
 			$feedback .= ' '.$Language->getText('forum_forum_utils','mail_not_sent').' - '.$Language->getText('forum_forum_utils','people_monitoring').' ';
 			echo db_error();

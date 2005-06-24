@@ -7,15 +7,17 @@
 // $Id$
 //
 -->
+<?php
+
+$content = "
 <H1>Registration Complete!</H1>
-	<P>Your project has been submitted to the <?php print $GLOBALS['sys_name']; ?> Administrators. 
+	<P>Your project has been submitted to the ".$GLOBALS['sys_name']." Administrators. 
 	Within 24 hours, you will receive decision notification and further 
 	instructions.
 	<P>
-	Thank you for using <?php print $GLOBALS['sys_name']; ?>.
-	<P>
+	Thank you for using ".$GLOBALS['sys_name'].".
+	<P>";
 
-<?php
 // Do not touch this URL, to and From unless you know what you are doing
 $href_approval = get_server_url().'/admin/approve-pending.php';
 $to = $GLOBALS['sys_email_admin'];
@@ -37,6 +39,8 @@ $mail->setTo($to);
 $mail->setFrom($from);
 $mail->setBody($body);
 $mail->setSubject($subject);
-$mail->send();
+if (!$mail->send()) {
+   $GLOBALS['feedback'] .= "<p>".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))."</p>";
+}
 
 ?>

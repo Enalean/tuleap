@@ -151,11 +151,10 @@ if (isset($show_confirm) && $show_confirm) {
 	
 	// Show the final registration complete message and send email
 	// notification (it's all in the content part)
-	$HTML->header(array('title'=>$Language->getText('register_confirmation','registration_complete')));
-
 	include($Language->getContent('register/complete'));
-    
-	$HTML->footer(array());
+	site_header(array('title'=>$Language->getText('register_confirmation','registration_complete')));
+    echo $content;
+	site_footer(array());
 
 } else if ($i_disagree && $group_id && $rand_hash) {
 

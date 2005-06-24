@@ -26,35 +26,38 @@ function send_new_project_email($group_id) {
 		. "user.user_id=user_group.user_id AND user_group.group_id='$group_id' AND "
 		. "user_group.admin_flags='A'");
 
-	if (db_numrows($res_admins) < 1) {
+	$nb_recipients = db_numrows($res_admins);
+    if ($nb_recipients < 1) {
 		echo $Language->getText('include_proj_email','no_admin',$group_id);;
 	}
 
 	// send one email per admin
+    $nb_mail_failed = 0;
 	while ($row_admins = db_fetch_array($res_admins)) {
 
-	if ( $sys_show_project_type ) {
-		$res_type = db_query("SELECT * FROM project_type WHERE project_type_id = ". $row_grp[project_type]);
-		$row_type = db_fetch_array($res_type);
-		$message_project_type = "\n".$Language->getText('include_proj_email','proj_type').':         '.$row_type[description];
-	}
-
-        $server = get_server_url();
-	// $message is defined in the content file
-	include($Language->getContent('include/new_project_email'));
-
-	// LJ Uncomment to test
-	//echo $message; return
-
-    $mail =& new Mail();
-    $mail->setTo($row_admins['email']);
-    $mail->setSubject($GLOBALS['sys_name'].' '.$Language->getText('include_proj_email','proj_approve',$row_grp['unix_group_name']));
-    $mail->setBody($message);
-    $mail->setFrom($GLOBALS['sys_email_admin']);
-    $mail->setContentType('text/plain; charset=iso-8859-1');
-    $mail->send();
-}
-
+        if ( $sys_show_project_type ) {
+            $res_type = db_query("SELECT * FROM project_type WHERE project_type_id = ". $row_grp[project_type]);
+            $row_type = db_fetch_array($res_type);
+            $message_project_type = "\n".$Language->getText('include_proj_email','proj_type').':         '.$row_type[description];
+        }
+    
+            $server = get_server_url();
+        // $message is defined in the content file
+        include($Language->getContent('include/new_project_email'));
+    
+        // LJ Uncomment to test
+        //echo $message; return
+    
+        $mail =& new Mail();
+        $mail->setTo($row_admins['email']);
+        $mail->setSubject($GLOBALS['sys_name'].' '.$Language->getText('include_proj_email','proj_approve',$row_grp['unix_group_name']));
+        $mail->setBody($message);
+        $mail->setFrom($GLOBALS['sys_email_admin']);
+        if (!$mail->send()) {
+            $nb_mail_failed++;
+        }
+    }
+    return ($nb_mail_failed < $nb_recipients);
 }
 
 //
@@ -74,7 +77,7 @@ function send_new_user_email($to,$confirm_hash)
     $mail->setSubject($Language->getText('include_proj_email','account_register',$GLOBALS['sys_name']));
     $mail->setBody($message);
     $mail->setFrom("noreply@".$host);
-    $mail->send();
+    return $mail->send();
 }
 
 // LJ To test the new e-mail message content and format

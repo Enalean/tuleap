@@ -10,6 +10,7 @@
 //
 
 require_once('pre.php');
+require_once('common/include/Mail.class');
 require_once('www/project/admin/ugroup_utils.php');
 
 $Language->loadLanguageMsg('my/my');
@@ -39,26 +40,27 @@ if (user_isloggedin()) {
 	$res_admin = db_query("SELECT user.user_id AS user_id, user.email AS email, user.user_name AS user_name FROM user,user_group "
 		. "WHERE user_group.user_id=user.user_id AND user_group.group_id=$group_id AND "
 		. "user_group.admin_flags = 'A'");
-
+    $to = '';
 	while ($row_admin = db_fetch_array($res_admin)) {
 		$to .= "$row_admin[email],";
 	}
-	if($to) {
+	if(strlen($to) > 0) {
 		$to = substr($to,0,-1);
-	}
-
-	$project=new Project($group_id);
-	$project_name = $project->getPublicName();
+	
+        $project=new Project($group_id);
+	    $project_name = $project->getPublicName();
 
         list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
-	$link_members = get_server_url()."/project/memberlist.php?group_id=$group_id";
-	$hdrs = "From: noreply@".$host.$GLOBALS['sys_lf'];
-	$hdrs .='Content-type: text/plain; charset=iso-8859-1'.$GLOBALS['sys_lf'];
-	$subject = $Language->getText('bookmark_rmproject', 'mail_subject', array($GLOBALS['sys_name'],user_getname($user_id),$project_name));
-	$body = stripcslashes($Language->getText('bookmark_rmproject', 'mail_body', array($project_name, user_getname($user_id),$link_members)));
-
-	mail($to,$subject,$body,$hdrs);
-
+	    $link_members = get_server_url()."/project/memberlist.php?group_id=$group_id";
+	    $subject = $Language->getText('bookmark_rmproject', 'mail_subject', array($GLOBALS['sys_name'],user_getname($user_id),$project_name));
+	    $body = stripcslashes($Language->getText('bookmark_rmproject', 'mail_body', array($project_name, user_getname($user_id),$link_members)));
+	    $mail =& new Mail();
+        $mail->setTo($to);
+        $mail->setSubject($subject);
+        $mail->setFrom("noreply@".$host);
+        $mail->setBody($body);
+        $mail->send();
+    }
 	// display the personal page again
 	session_redirect("/my/");
 

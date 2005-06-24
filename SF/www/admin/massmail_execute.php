@@ -8,16 +8,20 @@
 
 require_once('pre.php');
 
+require_once('common/include/Mail.class');
+
 $Language->loadLanguageMsg('admin/admin');
 
 session_require(array('group'=>1,'admin_flags'=>'A'));
 
+
 header ('Content-Type: text/plain');
+
 print $Language->getText('admin_massmail_execute','post_recvd')."\n";
 flush();
 
 // LJ The to_name variable has been added here to be used
-// LJ in the sendmail command later in this script
+// LJ in the mail command later in this script
 switch ($destination) {
 	case 'comm': 
 		$res_mail = db_query("SELECT email,user_name FROM user WHERE status='A' OR status='R' AND mail_va=1 GROUP BY lcase(email)");
@@ -60,39 +64,39 @@ flush();
 
 $rows=db_numrows($res_mail);
 
-//LJ -fnoreply@... replaced with -fcodex-admin@...
-//LJ and to_name explicit name added in the To: field
-list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
-for ($i=0; $i<$rows; $i++) {
-	$tolist .= db_result($res_mail,$i,'email').', ';
-	if ($i % 25 == 0) {
+list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
+$mail =& new Mail();
+$mail->setTo($to_name." <noreply@".$host.">");
+$mail->setFrom($GLOBALS['sys_name']." <noreply@".$host.">");
+$mail->setSubject(stripslashes($mail_subject));
+$mail->setBody(stripslashes($mail_message));
+
+$tolist = '';
+for ($i=1; $i<=$rows; $i++) {
+	$tolist .= db_result($res_mail,$i-1,'email').', ';
+    if ($i % 25 == 0) {
 		//spawn sendmail for 25 addresses at a time
-		$body = "To: \"$to_name\" <noreply@".$host.">".$sys_lf.
-			"BCC: $tolist".$sys_lf.
-		        'Content-type: text/plain; charset=iso-8859-1'.$sys_lf.
-			"Subject: ". stripslashes($mail_subject).$sys_lf.$sys_lf.
-		        stripslashes($mail_message);
-		exec ("/bin/echo \"". util_prep_string_for_sendmail($body) ."\" | /usr/sbin/sendmail -f".$GLOBALS['sys_email_admin']." -t -i &");
-		usleep(2000000);
-		print "\n".$Language->getText('admin_massmail_execute','sending').": ".$tolist;
-		$tolist='';
+        $mail->setBcc($tolist);
+        if ($mail->send()) {
+            print "\n".$Language->getText('admin_massmail_execute','sending').": ".$tolist;
+        } else {
+            print "\n".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])).": ".$tolist;
+        }
 		flush();
+        usleep(2000000);
+		$tolist='';
 	}
 }
 
 //send the last of the messages.
-//spawn sendmail for 25 addresses at a time
-//LJ and to_name explicit name added in the To: field
-$body = "To: \"$to_name\" <noreply@".$host.">".$sys_lf.
-"BCC: $tolist".$sys_lf.
-'Content-type: text/plain; charset=iso-8859-1'.$sys_lf.
-"Subject: ". stripslashes($mail_subject).$sys_lf.$sys_lf.
-stripslashes($mail_message);
-
-exec ("/bin/echo \"". util_prep_string_for_sendmail($body) ."\" | /usr/sbin/sendmail -f".$GLOBALS['sys_email_admin']." -t -i &");
-usleep(2000000);
-print "\n".$Language->getText('admin_massmail_execute','sending').": ".$tolist."\n";
-$tolist='';
+if (strlen($tolist) > 0) {
+    $mail->setBcc($tolist);
+    if ($mail->send()) {
+        print "\n".$Language->getText('admin_massmail_execute','sending').": ".$tolist;
+    } else {
+        print "\n".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])).": ".$tolist;
+    }
+}
 print "\n".$Language->getText('admin_massmail_execute','done')."\n";
 flush();
 ?>

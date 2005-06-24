@@ -9,6 +9,7 @@
 require_once('pre.php');    
 require_once('www/file/file_utils.php');
 require_once('common/include/SimpleSanitizer.class');
+require_once('common/include/Mail.class');
 
 /*
 	Quick file release system , Darrell Brogdon, SourceForge, Aug, 2000
@@ -222,23 +223,24 @@ if( $submit ) {
       $result=db_query($sql);
       echo db_error();
       if ($result && db_numrows($result) > 0) {
-	//send the email
-	$array_emails=result_column_to_array($result);
-	$list=implode($array_emails,', ');
-	
-	$subject=$GLOBALS['sys_name'].' '.$Language->getText('file_admin_editreleases','file_rel_notice');
-	list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
-	$body = "To: noreply@".$host.$GLOBALS['sys_lf'].
-	  "BCC: $list".$GLOBALS['sys_lf'].
-	  "Subject: $subject".$GLOBALS['sys_lf'].$GLOBALS['sys_lf'].
-	  "\n\n".$Language->getText('file_admin_editreleases','download_explain',array(db_result($result,0,'name'),"<".get_server_url()."/file/showfiles.php?group_id=$group_id&release_id=$release_id> ",$GLOBALS['sys_name'])).": ".
-	  "\n<".get_server_url()."/file/filemodule_monitor.php?filemodule_id=$package_id> ";
-	exec ("/bin/echo \"$body\" | /usr/sbin/sendmail -fnoreply@".$host." -t -i &");
-	$feedback .= '| '.$Language->getText('file_admin_qrs','email_sent',db_numrows($result)).' ';
+        //send the email
+        $array_emails=result_column_to_array($result);
+        $list=implode($array_emails,', ');
+        
+        $subject=$GLOBALS['sys_name'].' '.$Language->getText('file_admin_editreleases','file_rel_notice');
+        list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
+        $mail =& new Mail();
+        $mail->setFrom($GLOBALS['sys_name']." <noreply@".$host.">");
+        $mail->setBcc($list);
+        $mail->setSubject($subject);
+        $mail->setBody($Language->getText('file_admin_editreleases','download_explain',array(db_result($result,0,'name'),"<".get_server_url()."/file/showfiles.php?group_id=$group_id&release_id=$release_id> ",$GLOBALS['sys_name'])).": ".
+          "\n<".get_server_url()."/file/filemodule_monitor.php?filemodule_id=$package_id> ");
+        if ($mail->send()) {
+            $feedback .= '| '.$Language->getText('file_admin_qrs','email_sent',db_numrows($result)).' ';
+        } else {//ERROR
+            $feedback .= '| '.$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']));
+        }
       }
-      
-      
-	    
     } else {
       $feedback .= ' | '.$Language->getText('file_admin_editreleases','filename_invalid').": $file_name ";
     }
@@ -290,7 +292,7 @@ if( $submit ) {
 	</TR>
 	<TR>
 		<TD>
-			<B><?php echo $Language->getText('global','status'); ?>:</B>
+			<B><?php echo $Language->getText('file_admin_editpackages','status'); ?>:</B>
 		</TD>
 		<TD>
 <?php print frs_show_status_popup ($name='status_id') . "<br>"; ?>

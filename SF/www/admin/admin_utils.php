@@ -14,7 +14,7 @@ function site_admin_header($params) {
 
 function site_admin_footer($vals=0) {
 	GLOBAL $HTML;
-	echo html_feedback_bottom($feedback);
+	echo html_feedback_bottom($GLOBALS['feedback']);
 	$HTML->footer(array());
 }
 

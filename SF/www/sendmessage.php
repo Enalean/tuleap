@@ -58,11 +58,14 @@ if ($send_mail) {
     $mail->setTo($to);
     $mail->setSubject(stripslashes($subject));
     $mail->setBody(stripslashes($body));
-    $mail->setContentType('text/plain; charset=iso-8859-1');
     $mail->setFrom($name .' <'. $email .'>');
-    $mail->send();
+    $mail_is_send = $mail->send();
 
-	$HTML->header(array('title'=>$Language->getText('sendmessage', 'title_sent',array($to))));
+    if ($mail_is_send) {
+        exit_error($GLOBALS['Language']->getText('global', 'error'), 
+                    $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
+    }
+	site_header(array('title'=>$Language->getText('sendmessage', 'title_sent',array($to))));
 	echo '<H2>'.$Language->getText('sendmessage', 'title_sent',array($to)).'</H2>';
 	$HTML->footer(array());
 	exit;

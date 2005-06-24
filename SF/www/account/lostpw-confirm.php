@@ -7,7 +7,8 @@
 // $Id$
 
 require_once('pre.php');    
- 
+require_once('common/include/Mail.class');
+
 $Language->loadLanguageMsg('account/account');
 
 if ($GLOBALS['sys_auth_type'] == 'ldap') {
@@ -30,14 +31,15 @@ $message = stripcslashes($Language->getText('account_lostpw-confirm', 'mail_body
 	      array($GLOBALS['sys_name'], 
 		    get_server_url()."/account/lostlogin.php?confirm_hash=$confirm_hash")));
 
-$hdrs = "From: noreply@".$host.$GLOBALS['sys_lf'];
-$hdrs .='Content-type: text/plain; charset=iso-8859-1'.$GLOBALS['sys_lf'];
+$mail =& new Mail();
+$mail->setTo($row_user['email']);
+$mail->setSubject($Language->getText('account_lostpw-confirm', 'mail_subject', array($GLOBALS['sys_name'])));
+$mail->setBody($message);
+$mail->setFrom("noreply@".$host);
+$mail_is_sent = $mail->send();
 
-mail($row_user['email'],
-     $Language->getText('account_lostpw-confirm', 'mail_subject', array($GLOBALS['sys_name'])),$message,$hdrs);
-
-$HTML->header(array('title'=>$Language->getText('account_lostpw-confirm', 'title')));
-
+site_header(array('title'=>$Language->getText('account_lostpw-confirm', 'title')));
+if (!$mail_is_sent) {
 ?>
 
 	      <P><?php echo $Language->getText('account_lostpw-confirm', 'msg_confirm'); ?>
@@ -45,6 +47,9 @@ $HTML->header(array('title'=>$Language->getText('account_lostpw-confirm', 'title
 <P><A href="/">[<?php echo $Language->getText('global', 'back_home'); ?>]</A>
 
 <?php
-$HTML->footer(array());
+} else {
+    $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']));
+}
+site_footer(array());
 
 ?>

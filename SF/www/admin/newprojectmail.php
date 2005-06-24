@@ -13,11 +13,17 @@ $Language->loadLanguageMsg('admin/admin');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
-$HTML->header(array('title'=>$Language->getText('admin_newprojectmail','title')));
+$content = "";
+if (!send_new_project_email($group_id)) {
+    $group = group_get_object($group_id);
+    if ($group && is_object($group) && !$group->isError()) {
+        $GLOBALS['feedback'] .= "<p>".$group->getPublicName()." - ".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))."</p>";
+    }
+} else {
+    $content = "<p>".$Language->getText('admin_newprojectmail','success')."</p>";
+}
 
-send_new_project_email($group_id);
-
-print "<p>".$Language->getText('admin_newprojectmail','success')."</p>";
-
-$HTML->footer(array());
+site_header(array('title'=>$Language->getText('admin_newprojectmail','title')));
+print $content;
+site_footer(array());
 ?>

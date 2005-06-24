@@ -11,6 +11,7 @@
 
 // ***** function account_pwvalid()
 // ***** check for valid password
+require_once('common/include/Mail.class');
 
 $Language->loadLanguageMsg('include/include');
 
@@ -65,7 +66,7 @@ function account_add_user_to_group ($group_id,$user_unix_name) {
 				db_query("UPDATE user SET unix_status='A',unix_uid=" . account_nextuid() . " WHERE user_id=$form_newuid");
 			}
 			$feedback .= ' '.$Language->getText('include_account','user_added').' ';
-                        account_send_add_user_to_group_email($group_id,$form_newuid);
+            account_send_add_user_to_group_email($group_id,$form_newuid);
 			$ret = true;
 		} else {
 			//user was a member
@@ -96,7 +97,14 @@ function account_send_add_user_to_group_email($group_id,$user_id) {
             include($Language->getContent('include/add_user_to_group_email'));
             
             list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
-            mail($email_address, $Language->getText('include_account','welcome',array($GLOBALS['sys_name'],$group_name)) ,$message,"From: noreply@".$host);
+            $mail =& new Mail();
+            $mail->setTo($email_address);
+            $mail->setFrom("noreply@".$host);
+            $mail->setSubject($Language->getText('include_account','welcome',array($GLOBALS['sys_name'],$group_name)));
+            $mail->setBody($message);
+            if (!$mail->send()) {
+                $GLOBALS['feedback'] .= "<p>".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))."</p>";
+            }
         }
     }
 }
@@ -108,7 +116,7 @@ function account_make_login_from_email($email) {
     $replacement = "$1";
     $name=preg_replace($pattern, $replacement, $email);
     $name = substr($name, 0, 32);
-    $name = strtr($name, ".:;,?%^*(){}[]<>+=$àâéèêùûç", "___________________aaeeeuuc");
+    $name = strtr($name, ".:;,?%^*(){}[]<>+=$ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", "___________________aaeeeuuc");
     return strtolower($name);
 }
 
@@ -241,3 +249,4 @@ function account_shellselects($current) {
 		}
 	}
 }
+?>

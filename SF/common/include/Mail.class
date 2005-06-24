@@ -6,7 +6,12 @@ class Mail {
     
     function Mail() {
         $this->setHeaderCharset('ISO-8859-1');
-        $this->setContentType('');
+        $this->setBodyCharset('ISO-8859-1');
+        $this->setMimeType('text/plain');
+        $this->setTo('');
+        $this->setBcc('');
+        $this->setBody('');
+        $this->clearAdditionalHeaders();
     }
     
     var $_headerCharset;
@@ -15,6 +20,14 @@ class Mail {
     }
     function getHeaderCharset() { 
         return $this->_headerCharset; 
+    }
+    
+    var $_bodyCharset;
+    function setBodyCharset($charset) { 
+        $this->_bodyCharset = $charset; 
+    }
+    function getBodyCharset() { 
+        return $this->_bodyCharset; 
     }
     
     var $_subject;
@@ -113,25 +126,53 @@ class Mail {
         return $this->_to;
     }
     
-    
-    var $_contentType;
-    function setContentType($contentType) {
-        $this->_contentType = $contentType;
+    var $_bcc;
+    function setBcc($bcc) {
+        $this->_bcc = $bcc;
     }
-    function getContentType() {
-        return $this->_contentType;
+    function getBcc()  {
+        return $this->_bcc;
     }
     
     
+    var $_mimeType;
+    function setMimeType($mimeType) {
+        $this->_mimeType = $mimeType;
+    }
+    function getMimeType() {
+        return $this->_mimeType;
+    }
+    
+    var $_additionalHeaders;
+    function clearAdditionalHeaders() {
+        $this->_additionalHeaders = array();
+    }
+    function addAdditionalHeader($name, $value) {
+        $this->_additionalHeaders[$name] = $value;
+    }
+    function removeAdditionalHeader($name) {
+        if (isset($this->_additionalHeaders[$name])) {
+            unset($this->_additionalHeaders[$name]);
+        }
+    }
+    
+    /**
+     * @returns TRUE if the mail was successfully accepted for delivery, FALSE otherwise.
+     *          It is important to note that just because the mail was accepted for delivery, 
+     *          it does NOT mean the mail will actually reach the intended destination. 
+    **/
     function send() {
         
         $header = "From: ".$this->getFrom().$GLOBALS['sys_lf'];
-        $ct = trim($this->getContentType());
-        if (strlen($ct) > 0) {
-            $header = "Content-type: ".$ct;$GLOBALS['sys_lf'];
+        $header .= "Content-type: ".$this->getMimeType()."; charset=".$this->getBodyCharset().$GLOBALS['sys_lf'];
+        $bcc = $this->getBcc();
+        if (strlen($bcc) > 0) {
+            $header .= "Bcc: ".$bcc.$GLOBALS['sys_lf'];
         }
-        
-        mail($this->getTo(),
+        foreach($this->_additionalHeaders as $name => $value) {
+            $header .= $name.": ".$value.$GLOBALS['sys_lf'];
+        }
+        return mail($this->getTo(),
             $this->getEncodedSubject(),
             $this->getBody(),
             $header

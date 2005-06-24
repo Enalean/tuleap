@@ -471,7 +471,7 @@ if ( $func == 'gotoid' ) {
                         //      Show just one feedback entry if no errors
                         //
                         if (!$was_error) {
-                                $feedback = $Language->getText('tracker_index','update_success');
+                                $feedback .= $Language->getText('tracker_index','update_success');
                         }
                         require('./browse.php');
                 }

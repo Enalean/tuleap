@@ -7,7 +7,8 @@
 // $Id$
 
 require_once('pre.php');   
- 
+require_once('common/include/Mail.class');
+
 $Language->loadLanguageMsg('account/account');
 
 $confirm_hash = substr(md5($session_hash . time()),0,16);
@@ -23,20 +24,25 @@ list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
 
 $message = stripcslashes($Language->getText('account_change_email-confirm', 'message', array($GLOBALS['sys_name'], get_server_url()."/account/change_email-complete.php?confirm_hash=$confirm_hash")));
 
-$hdrs = "From: noreply@".$host.$GLOBALS['sys_lf'];
-$hdrs .='Content-type: text/plain; charset=iso-8859-1'.$GLOBALS['sys_lf'];
+$mail =& new Mail();
+$mail->setTo($form_newemail);
+$mail->setSubject($GLOBALS['sys_name'].': '.$Language->getText('account_change_email-confirm', 'title'));
+$mail->setBody($message);
+$mail->setFrom("noreply@".$host);
+$mail_is_sent = $mail->send();
+site_header(array('title'=>$Language->getText('account_change_email-confirm', 'title'))); ?>
 
-mail($form_newemail,$GLOBALS['sys_name'].': '.$Language->getText('account_change_email-confirm', 'title'),$message,$hdrs);
 
-$HTML->header(array('title'=>$Language->getText('account_change_email-confirm', 'title'))); ?>
-
-<P><B><?php echo $Language->getText('account_change_email-confirm', 'title'); ?></B>
+<P><B><?php if ($mail_is_sent) { echo $Language->getText('account_change_email-confirm', 'title'); ?></B>
 
 <P><?php echo $Language->getText('account_change_email-confirm', 'mailsent'); ?>.
 
 <P><A href="/">[ <?php echo $Language->getText('global', 'back_home'); ?> ]</A>
 
 <?php
-$HTML->footer(array());
+} else {
+    $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']));
+}
+site_footer(array());
 
 ?>
