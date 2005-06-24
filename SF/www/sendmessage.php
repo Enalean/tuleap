@@ -61,7 +61,7 @@ if ($send_mail) {
     $mail->setFrom($name .' <'. $email .'>');
     $mail_is_send = $mail->send();
 
-    if ($mail_is_send) {
+    if (!$mail_is_send) {
         exit_error($GLOBALS['Language']->getText('global', 'error'), 
                     $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
     }
