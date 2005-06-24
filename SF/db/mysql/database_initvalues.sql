@@ -1174,7 +1174,7 @@ INSERT INTO artifact_field VALUES (20,1,'bug_group_id',2,'SB','','Group','Charac
 INSERT INTO artifact_field VALUES (2,2,'percent_complete',2,'SB','2','Percent complete','Percentage of completion','',0,0,1,0,NULL,'1000');
 INSERT INTO artifact_field VALUES (4,2,'hours',3,'TF','5/5','Effort','Number of hours of work needed to fix the artifact (including testing)','',0,1,1,0,NULL,'0.00');
 INSERT INTO artifact_field VALUES (5,2,'start_date',4,'DF','','Start Date','Start Date','',0,0,0,0,NULL,'');
-INSERT INTO artifact_field VALUES (6,2,'close_date',4,'DF','','End Date','End Date','',0,0,0,0,NULL,'');
+INSERT INTO artifact_field VALUES (6,2,'close_date',4,'DF','','End Date','End Date','',0,1,0,0,NULL,'');
 INSERT INTO artifact_field VALUES (7,2,'summary',1,'TF','60/150','Summary','One line description of the artifact','',0,0,1,0,NULL,'');
 INSERT INTO artifact_field VALUES (8,2,'details',1,'TA','60/7','Original Submission','A full description of the artifact','',0,1,1,0,NULL,'');
 INSERT INTO artifact_field VALUES (11,2,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'1');
@@ -1205,17 +1205,17 @@ INSERT INTO artifact_field VALUES (24,1,'release_id',2,'SB','','Release','The re
 INSERT INTO artifact_field VALUES (26,1,'originator_name',1,'TF','20/40','Originator Name','The name of the person who reported the artifact (if different from the submitter field)','S',0,1,1,0,NULL,'');
 INSERT INTO artifact_field VALUES (27,1,'originator_email',1,'TF','20/40','Originator Email','Email address of the person who reported the artifact. Automatically included in the artifact email notification process.','S',0,1,1,0,NULL,'');
 INSERT INTO artifact_field VALUES (28,1,'originator_phone',1,'TF','10/40','Originator Phone','Phone number of the person who reported the artifact','S',0,1,1,0,NULL,'');
-INSERT INTO artifact_field VALUES (29,1,'close_date',4,'DF','','End Date','End Date','',0,0,0,0,NULL,'');
+INSERT INTO artifact_field VALUES (29,1,'close_date',4,'DF','','End Date','End Date','',0,1,0,0,NULL,'');
 
 INSERT INTO artifact_field VALUES (13,2,'submitted_by',5,'SB','','Submitted by','User who originally submitted the artifact','',0,1,0,1,'artifact_submitters','');
 INSERT INTO artifact_field VALUES (14,2,'severity',2,'SB','','Priority','How quickly the artifact must be completed','',0,0,1,0,NULL,'5');
 
-INSERT INTO artifact_field VALUES (10,3,'close_date',4,'DF','','End Date','End Date','',0,0,0,0,NULL,'');
+INSERT INTO artifact_field VALUES (10,3,'close_date',4,'DF','','End Date','End Date','',0,1,0,0,NULL,'');
 INSERT INTO artifact_field VALUES (11,3,'severity',2,'SB','','Priority','How quickly the artifact must be completed','',0,0,1,0,NULL,'5');
 
 INSERT INTO artifact_field VALUES (1,4,'submitted_by',5,'SB','','Submitted by','User who originally submitted the artifact','',0,1,0,1,'artifact_submitters','');
 INSERT INTO artifact_field VALUES (2,4,'open_date',4,'DF','','Submitted on','Date and time for the initial artifact submission','',0,0,0,1,'','');
-INSERT INTO artifact_field VALUES (3,4,'close_date',4,'DF','','End Date','End Date','',0,0,0,0,NULL,'');
+INSERT INTO artifact_field VALUES (3,4,'close_date',4,'DF','','End Date','End Date','',0,1,0,0,NULL,'');
 INSERT INTO artifact_field VALUES (4,4,'summary',1,'TF','60/150','Summary','One line description of the artifact','',0,0,1,0,NULL,'');
 INSERT INTO artifact_field VALUES (5,4,'artifact_id',2,'TF','6/10','Artifact ID','Unique artifact identifier','',0,0,0,1,NULL,'');
 INSERT INTO artifact_field VALUES (6,4,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'1');

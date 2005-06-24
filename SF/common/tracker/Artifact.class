@@ -739,10 +739,11 @@ class Artifact extends Error {
                             $differ = ($old_value != stripslashes(htmlspecialchars($value))); 
                         } else if ($field->isDateField()) {
                             // if it's a date we must convert the format to unix time
-                            list($value,$ok) = util_date_to_unixtime($value);
+			  if ($value != '') list($value,$ok) = util_date_to_unixtime($value);
+			  else $value = '0';
 
 			    //first have a look if both dates are uninitialized
-			    if (($old_value == 0 || $old_value == '') && !$ok) {
+			  if (($old_value == 0 || $old_value == '') && ($value == 0 || !$ok )) {
 				$differ = false;
 			    } else {
 			    	// and make also sure that the old_value has been treated as the new value
