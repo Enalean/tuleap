@@ -8,8 +8,9 @@
 
 require_once('pre.php');    
 
-db_query("DELETE FROM session WHERE session_hash='$session_hash'");
-
+if (isset($session_hash)) {
+    db_query("DELETE FROM session WHERE session_hash='$session_hash'");
+}
 session_cookie('session_hash','');
 session_redirect('/');
 

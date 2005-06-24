@@ -95,26 +95,6 @@ if (!$conn) {
 //determine if they're logged in
 session_set();
 
-//insert this page view into the database
-require_once('logger.php');
-
-/*
-
-	Timezone must come after logger to prevent messups
-
-
-*/
-//set up the user's timezone if they are logged in
-if (user_isloggedin()) {
-	putenv('TZ='.user_get_timezone());
-} else {
-	//just use pacific time as always
-}
-
-//Set up the vars and theme functions 
-require_once('theme.php');
-
-
 /*
 
 	Now figure out what language file to instantiate
@@ -147,6 +127,26 @@ $sys_strftimefmt = $Language->getText('system','strftimefmt');
 $sys_datefmt = $Language->getText('system','datefmt');
 
 $Language->loadLanguageMsg('include/include');
+
+//insert this page view into the database
+require_once('logger.php');
+
+/*
+
+	Timezone must come after logger to prevent messups
+
+
+*/
+//set up the user's timezone if they are logged in
+if (user_isloggedin()) {
+	putenv('TZ='.user_get_timezone());
+} else {
+	//just use pacific time as always
+}
+
+//Set up the vars and theme functions 
+require_once('theme.php');
+
 
 // HTML layout class, may be overriden by the Theme class
 require_once('Layout.class');

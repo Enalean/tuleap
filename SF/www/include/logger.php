@@ -29,7 +29,7 @@ $sql =	"INSERT INTO activity_log "
 $res_logger = db_query ( $sql );
 
 if (!$res_logger) {
-	echo $Language->getText('include_logger','log_err');
+    echo $GLOBALS['Language']->getText('include_logger','log_err');
 	echo db_error();
 	exit;
 }
