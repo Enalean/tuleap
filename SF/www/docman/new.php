@@ -54,8 +54,8 @@ if($group_id) {
 
             $fileName = $_FILES['uploaded_data']['name'];
             $tmpName  = $_FILES['uploaded_data']['tmp_name'];
-            $fileSize = $_FILES['uploaded_data']['size'];
-            $fileType = $_FILES['uploaded_data']['type'];
+            $fileSize = $_FILES['uploaded_data']['size'];            
+            $fileType = get_mime_content_type($_FILES['uploaded_data']['tmp_name']);
             
             //echo " filesize=".$fileSize;
             $fp   = fopen($tmpName, 'r');

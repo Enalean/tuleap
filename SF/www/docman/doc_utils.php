@@ -317,4 +317,17 @@ function doc_get_docgroupname_from_id($doc_group) {
     return db_result($res,0,'groupname');
 }
 
+
+function get_mime_content_type($file) {
+    //We retrieve mime type of the file (We don't trust browser's data)
+    //Note: This function is deprecated. Pear provides a class for retrieving
+    //      mime type, but this class uses mime_content_type function...
+    if (function_exists('mime_content_type')) {
+        $type = mime_content_type($file);
+    } else {
+        $type = exec('file -bi '.$file);
+    }
+    $type = split(";", $type);
+    return $type[0];
+}
 ?>
