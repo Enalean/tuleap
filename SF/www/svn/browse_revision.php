@@ -157,10 +157,8 @@ if ($there_are_specific_permissions && !user_ismember($group_id,'A')) {
  
     if (!isset($pv) || !$pv) { $limit = " LIMIT $offset,$chunksz";}
 
-    if (isset($order_by) && $order_by == '') {
-        $order_by = " ORDER BY revision desc";
-    } else {
-        $order_by = '';
+    if (!isset($order_by) || $order_by == '') {
+        $order_by = " ORDER BY revision desc ";
     }
 
     $sql=$select.$from.$where.$order_by.$limit;
