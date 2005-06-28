@@ -160,6 +160,9 @@ function forum_delete_monitor ($forum_id, $user_id) {
     return true;
 }
 
+/**
+ * @return forum_id = -1 if error
+ */
 function forum_create_forum($group_id,$forum_name,$is_public=1,$create_default_message=1,$description='') {
   global $feedback,$Language;
 	/*
@@ -171,26 +174,28 @@ function forum_create_forum($group_id,$forum_name,$is_public=1,$create_default_m
 	$result=db_query($sql);
 	if (!$result) {
 		$feedback .= ' '.$Language->getText('forum_forum_utils','add_err').' ';
+		return -1;
 	} else {
-		$feedback .= ' '.$Language->getText('forum_forum_utils','forum_added').' ';
+	  $feedback .= ' '.$Language->getText('forum_forum_utils','forum_added').' ';
+	
+	  $forum_id=db_insertid($result);
+	  
+	  if ($create_default_message) {
+	    //Get the name of the group
+	    $group_name = "";
+	    $group_obj  = group_get_object($group_id);
+	    if ($group_obj && is_object($group_obj)) {
+	      $group_name = $group_obj->getPublicName();
+	    }
+	    
+	    //set up a cheap default message
+	    $result2=db_query("INSERT INTO forum ".
+			      "(group_forum_id,posted_by,subject,body,date,is_followup_to,thread_id) ".
+			      "VALUES ('$forum_id','100','".addslashes($Language->getText('forum_forum_utils','welcome_to', array($group_name)))." $forum_name',".
+			      "'".addslashes($Language->getText('forum_forum_utils','welcome_to', array($group_name)))." $forum_name','".time()."','0','".get_next_thread_id()."')");
+	  }
+	  return $forum_id;
 	}
-	$forum_id=db_insertid($result);
-
-	if ($create_default_message) {
-		//Get the name of the group
-		$group_name = "";
-		$group_obj  = group_get_object($group_id);
-                if ($group_obj && is_object($group_obj)) {
-                    $group_name = $group_obj->getPublicName();
-                }
-
-		//set up a cheap default message
-		$result2=db_query("INSERT INTO forum ".
-			"(group_forum_id,posted_by,subject,body,date,is_followup_to,thread_id) ".
-			"VALUES ('$forum_id','100','".$Language->getText('forum_forum_utils','welcome_to', array($group_name))." $forum_name',".
-			"'".$Language->getText('forum_forum_utils','welcome_to', array($group_name))." $forum_name','".time()."','0','".get_next_thread_id()."')");
-	}
-	return $forum_id;
 }
 
 function make_links ($data="") {

@@ -78,13 +78,16 @@ if (isset($show_confirm) && $show_confirm) {
 
 	//Add a couple of forums for this group and make the project creator 
 	// (current user) monitor these forums
-	$fid = forum_create_forum($group_id,$Language->getText('register_confirmation','open_discussion'),1,1,$Language->getText('register_confirmation','general_discussion'));
-	forum_add_monitor($fid, user_getid());
+	$fid = forum_create_forum($group_id,addslashes($Language->getText('register_confirmation','open_discussion')),1,1,
+				  addslashes($Language->getText('register_confirmation','general_discussion')));
+	if ($fid != -1) forum_add_monitor($fid, user_getid());
 
-	$fid = forum_create_forum($group_id,$Language->getText('global','help'),1,1,$Language->getText('register_confirmation','get_help'));
-	forum_add_monitor($fid, user_getid());
-	$fid = forum_create_forum($group_id,$Language->getText('register_confirmation','developers'),0,1,$Language->getText('register_confirmation','proj_dev_discussion'));
-	forum_add_monitor($fid, user_getid());
+	$fid = forum_create_forum($group_id,addslashes($Language->getText('global','help')),1,1,
+				  addslashes($Language->getText('register_confirmation','get_help')));
+	if ($fid != -1) forum_add_monitor($fid, user_getid());
+	$fid = forum_create_forum($group_id,addslashes($Language->getText('register_confirmation','developers')),0,1,
+				  addslashes($Language->getText('register_confirmation','proj_dev_discussion')));
+	if ($fid != -1) forum_add_monitor($fid, user_getid());
 
         // Instanciate all services from group 100 that are 'active'
         $sql="SELECT * FROM service WHERE group_id=100 AND is_active=1";
