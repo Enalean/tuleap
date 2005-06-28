@@ -1544,104 +1544,6 @@ class Artifact extends Error {
     }
 
 
-    /**
-     * Build an array of email using the changes array
-     *
-     * @param changes: array of changes
-     *
-     * @return array
-     */
-    function buildNotificationList($changes) { // Not used any more? XXX
-                
-        global $art_field_fact,$Language;
-        
-        // Rk: we store email addresses in a hash to make sure they are only
-        // stored once. Normally if an email is repeated several times sendmail
-        // would take care of it but I prefer taking care of it now.
-        // Same for user ids.
-        // We also use the user_ids hash to check if a user has already been selected for 
-        // notification. If so it is not necessary to check it again in another role.
-        $addresses = array();
-        $user_ids = array();
-
-        
-        
-        // check submitter notification preferences
-        $user_id = $this->getSubmittedBy();
-        if ($user_id != 100) {
-            if ($this->ArtifactType->checkNotification($user_id, 'SUBMITTER', $changes)) {
-                //echo "DBG - SUBMITTER - user=$user_id<br>";
-                $user_ids[$user_id] = true;
-            }
-        }
-        
-	// Retrieve field values for the assigned_to, multi_assigned_to value
-        $result = $this->getFieldsValues();
-	$this->checkAssignees("assigned_to",$result,$art_field_fact,$changes,$user_ids);
-	$this->checkAssignees("multi_assigned_to",$result,$art_field_fact,$changes,$user_ids);
-	
-            
-        // check all CC 
-        // (a) check all the people in the current CC list
-        // (b) check the CC that has just been removed if any and see if she
-        // wants to be notified as well
-        // if the CC indentifier is an email address then notify in any case
-        // because this user has no personal setting
-        $res_cc = $this->getCCList();
-        $arr_cc = array();
-        if ($res_cc && (db_numrows($res_cc) > 0)) {
-            while ($row = db_fetch_array($res_cc)) {
-                $arr_cc[] = $row['email'];
-            }
-        }
-        if ( $changes['CC']['del'] ) {
-            // Only one CC can be deleted at once so just append it to the list....
-            $arr_cc[] = $changes['CC']['del'];
-        }
-                        
-        while (list(,$cc) = each($arr_cc)) {
-            //echo "DBG - CC=$cc<br>";
-            if (validate_email($cc)) {
-                //echo "DBG - CC email - email=".util_normalize_email($cc)."<br>";
-                $addresses[util_normalize_email($cc)] = true;
-            } else {
-                $res = user_get_result_set_from_unix($cc);
-                $user_id = db_result($res,0,'user_id');
-                if (!$user_ids[$user_id] && $this->ArtifactType->checkNotification($user_id, 'CC', $changes)) {
-                    //echo "DBG - CC - user=$user_id<br>";
-                    $user_ids[$user_id] = true;
-                }
-            }
-        } // while
-        
-        
-        // check all commenters
-        $res_com = $this->getCommenters();
-        if (db_numrows($res_com) > 0) {
-            while ($row = db_fetch_array($res_com)) {
-                $user_id = $row['mod_by'];
-                if (!$user_ids[$user_id] && $this->ArtifactType->checkNotification($user_id, 'COMMENTER', $changes)) {
-                    //echo "DBG - COMMENTERS - user=$user_id<br>";
-                    $user_ids[$user_id] = true;
-                }
-            }
-        }
-        
-        // build the final list of email addresses
-        reset($user_ids);
-        while (list($user_id,) = each($user_ids)) {
-            //echo "DBG - final list - user=$user_id<br>";
-	    $mail_addr = user_getemail($user_id);
-	    if ($mail_addr != $Language->getText('include_user','not_found')) {	
-            	$addresses[$mail_addr] = true;
-	    }	
-        }
-        
-        // return an array with all the email addresses the notification must be sent to
-        return (array_keys($addresses));
-        
-    }
-
     
     /**
      *	  userCanView - determine if the user can view this artifact.
@@ -1728,6 +1630,7 @@ class Artifact extends Error {
         // notification. If so it is not necessary to check it again in another role.
         $concerned_ids = array();
 	$concerned_addresses = array();
+	$concerned_watchers = array();
 
         
         
@@ -1800,7 +1703,19 @@ class Artifact extends Error {
 		$concerned_addresses[$user_mail] = true;
             }
         }
-        
+
+	//check all watchers
+	foreach (array_keys($concerned_ids) as $watchee) {
+	  $db_res = $this->ArtifactType->getWatchers($watchee);
+	  while ($row_watcher = db_fetch_array($db_res)) {
+	    $watcher = $row_watcher['user_id'];
+	    $concerned_watchers[$watcher] = true;
+	  }
+	}
+
+	foreach (array_keys($concerned_watchers) as $watcher) {
+	  if (!$concerned_ids[$watcher]) $concerned_ids[$watcher] = true;
+	}
     }
 
 

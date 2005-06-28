@@ -1111,7 +1111,7 @@ class ArtifactType extends Error {
 	}
 	
 	function getWatchers($user_id) {
-	    $sql = "SELECT user_id FROM artifact_watcher WHERE watchee_id='$user_id' AND artifact_group_id='$this->getID()'";
+	    $sql = "SELECT user_id FROM artifact_watcher WHERE watchee_id='$user_id' AND artifact_group_id=".$this->getID();
 	    return db_query($sql);    
 	}
 	
