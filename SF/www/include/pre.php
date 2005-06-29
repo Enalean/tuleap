@@ -186,10 +186,14 @@ if ($SERVER_NAME != 'localhost' &&
     $SCRIPT_NAME != '/account/lostpw-confirm.php' &&
     $SCRIPT_NAME != '/account/pending-resend.php' &&
     $SCRIPT_NAME != '/account/verify.php' ) {
-    if ($GLOBALS['sys_force_ssl'] == 1 || $_SERVER['HTTPS'] === 'on')
-	header("Location: https://".$GLOBALS['sys_https_host']."/account/login.php?return_to=".urlencode($REQUEST_URI));
-    else
-	header("Location: http://".$GLOBALS['sys_default_domain']."/account/login.php?return_to=".urlencode($REQUEST_URI));
+    
+    $return_to = urlencode((($REQUEST_URI === "/")?"/my/":$REQUEST_URI));
+
+    if ($GLOBALS['sys_force_ssl'] == 1 || $_SERVER['HTTPS'] === 'on') {
+        header("Location: https://".$GLOBALS['sys_https_host']."/account/login.php?return_to=".$return_to);
+    } else {
+        header("Location: http://".$GLOBALS['sys_default_domain']."/account/login.php?return_to=".$return_to);
+    }
     exit;
 }
 
@@ -199,4 +203,6 @@ if (user_isrestricted()) {
     }
 }
 
+require_once('common/include/Feedback.class');
+$GLOBALS['new_feedback'] =& new Feedback();
 ?>
