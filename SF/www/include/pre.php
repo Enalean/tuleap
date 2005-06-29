@@ -202,7 +202,4 @@ if (user_isrestricted()) {
         exit_permission_denied();
     }
 }
-
-require_once('common/include/Feedback.class');
-$GLOBALS['new_feedback'] =& new Feedback();
 ?>

@@ -191,12 +191,12 @@ class ArtifactHtml extends Artifact {
                 <TR><TD colspan="2">
                 <h3>'.$Language->getText('tracker_include_artifact','cc_list').' '.help_button('ArtifactUpdate.html#ArtifactCCList').'</h3>';
                 
-                if ( !$ro ) {
-		  echo $Language->getText('tracker_include_artifact','fill_cc_list_msg');
-		  echo $Language->getText('tracker_include_artifact','fill_cc_list_lbl');
-		  echo '<input type="text" name="add_cc" size="30">';
-		  echo '<B>&nbsp;&nbsp;&nbsp;'.$Language->getText('tracker_include_artifact','fill_cc_list_cmt').":&nbsp</b>";
-		  echo '<input type="text" name="cc_comment" size="40" maxlength="255">';
+                if ( !$pv ) {
+                    echo $Language->getText('tracker_include_artifact','fill_cc_list_msg');
+                    echo $Language->getText('tracker_include_artifact','fill_cc_list_lbl');
+                    echo '<input type="text" name="add_cc" size="30">';
+                    echo '<B>&nbsp;&nbsp;&nbsp;'.$Language->getText('tracker_include_artifact','fill_cc_list_cmt').":&nbsp</b>";
+                    echo '<input type="text" name="cc_comment" size="40" maxlength="255">';
                 }
                         
                 echo $this->showCCList($group_id,$group_artifact_id);
@@ -211,15 +211,16 @@ class ArtifactHtml extends Artifact {
                 <TR><TD colspan="2">
                 <h3>'.$Language->getText('tracker_include_artifact','attachment').' '.help_button('ArtifactUpdate.html#ArtifactAttachments').'</h3>';
                 
-
-                echo $Language->getText('tracker_include_artifact','upload_checkbox');
-		echo ' <input type="checkbox" name="add_file" VALUE="1">';
-                echo $Language->getText('tracker_include_artifact','upload_file_lbl');
-                echo '<input type="file" name="input_file" size="40">';
-                echo $Language->getText('tracker_include_artifact','upload_file_msg',formatByteToMb($sys_max_size_attachment));
-
-                echo $Language->getText('tracker_include_artifact','upload_file_desc');
-		echo '<input type="text" name="file_description" size="60" maxlength="255">';
+                if (!$pv) {
+                    echo $Language->getText('tracker_include_artifact','upload_checkbox');
+                    echo ' <input type="checkbox" name="add_file" VALUE="1">';
+                    echo $Language->getText('tracker_include_artifact','upload_file_lbl');
+                    echo '<input type="file" name="input_file" size="40">';
+                    echo $Language->getText('tracker_include_artifact','upload_file_msg',formatByteToMb($sys_max_size_attachment));
+    
+                    echo $Language->getText('tracker_include_artifact','upload_file_desc');
+                    echo '<input type="text" name="file_description" size="60" maxlength="255">';
+                }
                 echo $this->showAttachedFiles($group_id,$group_artifact_id);
                 
                 echo '</TD></TR>';
@@ -728,9 +729,10 @@ class ArtifactHtml extends Artifact {
             //      format the CC list for this artifact
             //
         
-            $result=$this->getCCList();
-            $rows=db_numrows($result);
-        
+            $result = $this->getCCList();
+            $rows   = db_numrows($result);
+            $out    = '';
+            
             // Nobody in the CC list -> return now
             if ($rows <= 0) {
                         if ($ascii)

@@ -617,7 +617,22 @@ if ( $func == 'gotoid' ) {
                     exit_error($Language->getText('global','error'), $Language->getText('tracker_index','not_saved_comment').' - '.$feedback );
                 }
             }
-
+            
+            //
+            // Add CC
+            //
+            if (isset($_REQUEST['add_cc'])) {
+                $add_cc = trim($_REQUEST['add_cc']);
+                if ($add_cc !== "") {
+                    if (!util_validateCCList(util_split_emails($add_cc), $message)) {
+                        exit_error($Language->getText('tracker_index','cc_list_invalid'), $message);
+                    } else {
+                        $ah->addCC($add_cc,$cc_comment,$changes);
+                    }
+                }
+            }
+            
+            
             //
             //  Attach file to this Artifact.
             //
