@@ -39,7 +39,7 @@ $mail->setFrom("noreply@".$host);
 $mail_is_sent = $mail->send();
 
 site_header(array('title'=>$Language->getText('account_lostpw-confirm', 'title')));
-if (!$mail_is_sent) {
+if ($mail_is_sent) {
 ?>
 
 	      <P><?php echo $Language->getText('account_lostpw-confirm', 'msg_confirm'); ?>
