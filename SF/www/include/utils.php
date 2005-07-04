@@ -659,9 +659,20 @@ function validate_emails ($addresses) {
 **/
 function util_normalize_emails($adresses) {
     $adresses = util_split_emails($adresses);
+    list($host,$port) = explode(':',$GLOBALS['sys_users_host']);
     foreach($adresses as $key => $value) {
         if (trim($value) !== "") {
-            $adresses[$key] = util_normalize_email($value);
+            $value = util_cleanup_emails($value);
+            if (!validate_email($value)) {
+                //Maybe it is a codex username, we take his e-mail
+                $result = user_get_result_set_from_unix($value); 
+                if ($result && db_numrows($result) > 0) {
+                    $value = db_result($result,0,"email");
+                } else {
+                    $value = $value."@".$host;
+                }
+            }
+            $adresses[$key] = $value;
         }
     }
     return implode(',', $adresses);
