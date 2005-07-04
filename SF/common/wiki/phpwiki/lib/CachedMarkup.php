@@ -108,7 +108,7 @@ class CacheableMarkup extends XmlContent {
 		$this->_append($subitem);
 	}
 	elseif (!is_object($item)) {
-	    $this->_buf .= $this->_quote((string) $item);
+	    $this->_buf .= util_make_links($this->_quote((string) $item), $GLOBALS['group_id']);
 	}
 	elseif (isa($item, 'Cached_DynamicContent')) {
 	    if ($this->_buf) {
