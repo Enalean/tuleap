@@ -57,8 +57,10 @@ if ($send_mail) {
     
 	$mail =& new Mail();
     $mail->setTo($to);
+    $dest = $to;
     if (isset($_REQUEST['cc']) && count($_REQUEST['cc']) > 0) {
-        $mail->setCC(util_normalize_emails($_REQUEST['cc']));
+        $mail->setCc(util_normalize_emails($_REQUEST['cc']));
+        $dest .= ','.$mail->getCc();
     }
     $mail->setSubject(stripslashes($subject));
     $mail->setBody(stripslashes($body));
@@ -70,7 +72,7 @@ if ($send_mail) {
                     $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
     }
 	site_header(array('title'=>$Language->getText('sendmessage', 'title_sent',array($to))));
-	echo '<H2>'.$Language->getText('sendmessage', 'title_sent',array($to)).'</H2>';
+    echo '<H2>'.$Language->getText('sendmessage', 'title_sent',str_replace(',', ', ',$dest)).'</H2>';
 	$HTML->footer(array());
 	exit;
 
