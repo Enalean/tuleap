@@ -21,7 +21,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 require_once('www/project/admin/permissions.php');
-
+require_once('WikiPage.class');
 /**
  * Manipulation of Wiki service.
  * 
@@ -129,6 +129,26 @@ class Wiki {
       return 0;
   }
 
+  
+  /**
+   * Get number of project wiki pages.
+   * @return number of project pages (0 if wiki is empty)
+   */
+  function getProjectPageCount() {
+    $res = db_query(' SELECT count(*) as count'
+		    .' FROM wiki_page, wiki_nonempty'
+		    .' WHERE wiki_page.group_id="'.$this->gid.'"'
+		    .' AND wiki_nonempty.id=wiki_page.id'
+            .' AND wiki_page.pagename NOT IN ("'.implode('","', WikiPage::getDefaultPages()).'",
+                                              "'.implode('","', WikiPage::getAdminPages()).'")');
+    
+    if(db_numrows($res) > 0) 
+      return db_result($res,0,'count');
+    else
+      return 0;
+  }
+
+  
   /** 
    * Get wiki language (set at creation time)
    * return 0 if no wiki document exist

@@ -347,7 +347,7 @@ if ($project->usesWiki()) {
 	html_image("ic/wiki.png",array('width'=>'18', 'height'=>'12', 'alt'=>$Language->getText('include_project_home','wiki')));
 	print ' '.$Language->getText('include_project_home','wiki').'</A>';
         $wiki=new Wiki($group_id);
-	echo ' ( '.$Language->getText('include_project_home','nb_wiki_pages',$wiki->getPageCount()).' )';
+	echo ' ( '.$Language->getText('include_project_home','nb_wiki_pages',$wiki->getProjectPageCount()).' )';
 }
 
 // ######################### Surveys (only for Active)
