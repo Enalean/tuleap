@@ -669,3 +669,18 @@ project_showdetails	proj_details	Information détaillée sur le projet
 project_showdetails	no_detail	Aucune information détaillée disponible pour ce projet
 project_showdetails	proj_not_found	Erreur - Projet introuvable
 project_showdetails	back_main	[Retour au sommaire]
+#
+#-----------------------------------------------
+# Script: 
+#
+project_ugroup	ugroup_anonymous_users_desc_key	Anonymes
+project_ugroup	ugroup_registered_users_desc_key	Utilisateurs Enregistrés
+project_ugroup	ugroup_project_members_desc_key	Membres du Projet
+project_ugroup	ugroup_project_admins_desc_key	Administrateurs du Projet
+project_ugroup	ugroup_file_manager_admin_desc_key	Administrateurs du Gestionnaire de Fichiers
+project_ugroup	ugroup_document_tech_desc_key	Techniciens du Gestionnaire de Documents
+project_ugroup	ugroup_document_admin_desc_key	Administrateurs du Gestionnaire de Documents
+project_ugroup	ugroup_wiki_admin_desc_key	Administrateurs du Wiki
+project_ugroup	ugroup_tracker_admins_desc_key	Administrateurs de Trackers
+project_ugroup	ugroup_tracker_techs_desc_key	Techniciens de Trackers
+project_ugroup	ugroup_nobody_desc_key	Groupe Vide

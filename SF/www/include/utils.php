@@ -1189,5 +1189,29 @@ function util_check_restricted_access($request_uri, $script_name) {
     return true;
 }
 
+/**
+ * If $text begins with $prefixe ends with $suffixe then returns the 
+ * translated name found in page $pagename. Else returns $name.
+**/ 
+function util_translate($text, $prefixe, $suffixe, $pagename) {
+    $new_text = $text;
+    if (strpos($new_text, $prefixe) === 0 && strpos($new_text, $suffixe)+strlen($suffixe) === strlen($new_text)) {
+        $new_text = $GLOBALS['Language']->getText($pagename, $new_text);
+    }
+    return $new_text;
+}
+
+/**
+ * Translate the name of an ugroup
+**/
+function util_translate_name_ugroup($name) {
+    return util_translate($name, "ugroup_", "_name_key", "project_ugroup");
+}
+/**
+ * Translate the description of an ugroup
+**/
+function util_translate_desc_ugroup($desc) {
+    return util_translate($desc, "ugroup_", "_desc_key", "project_ugroup");
+}
 
 ?>

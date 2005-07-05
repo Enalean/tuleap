@@ -664,3 +664,18 @@ project_showdetails	proj_details	Project Details
 project_showdetails	no_detail	No detail available for this project
 project_showdetails	proj_not_found	Error - Project Not Found
 project_showdetails	back_main	[Back to Main Page]
+#
+#-----------------------------------------------
+# Script: 
+#
+project_ugroup	ugroup_anonymous_users_desc_key	Anonymous Users
+project_ugroup	ugroup_registered_users_desc_key	Registered CodeX Users
+project_ugroup	ugroup_project_members_desc_key	Project Members
+project_ugroup	ugroup_project_admins_desc_key	Project Administrators
+project_ugroup	ugroup_file_manager_admin_desc_key	File Manager Administrators
+project_ugroup	ugroup_document_tech_desc_key	Document Manager Technicians
+project_ugroup	ugroup_document_admin_desc_key	Document Manager Administrators
+project_ugroup	ugroup_wiki_admin_desc_key	Wiki Administrators
+project_ugroup	ugroup_tracker_admins_desc_key	Tracker Administrators
+project_ugroup	ugroup_tracker_techs_desc_key	Tracker Technicians
+project_ugroup	ugroup_nobody_desc_key	Empty Group
