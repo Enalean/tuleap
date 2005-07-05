@@ -88,8 +88,8 @@ forum_forum_utils	save_place	Save Place
 forum_forum_utils	admin	Admin
 forum_forum_utils	forum_monitored	Forum already monitored
 forum_forum_utils	insert_err	Error inserting into forum_monitoring
-forum_forum_utils	add_err	Error Adding Forum
-forum_forum_utils	forum_added	Forum Added
+forum_forum_utils	add_err	Error Adding Forum '$1'.
+forum_forum_utils	forum_added	Forum '$1' Added.
 forum_forum_utils	welcome_to	Welcome to $1
 forum_forum_utils	not_found	Not Found
 forum_forum_utils	broken_thread	Broken Thread
