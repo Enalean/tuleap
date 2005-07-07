@@ -1708,17 +1708,17 @@ insert into doc_data(title,data,createdate,updatedate,created_by,doc_group,rank,
 -- 'project_admins', the table lists all possible roles in the 'User Permissions' matrix.
 -- If you modify anything here, check also www/project/admin/ugroup_utils.php
 
-INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (100, "nobody", "Empty Group", 100);
-INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (1, "anonymous_users", "Anonymous Users", 100);
-INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (2, "registered_users", "Registered CodeX Users", 100);
-INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (3, "project_members", "Project Members", 100);
-INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (4, "project_admins", "Project Administrators", 100);
-INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (11, "file_manager_admin", "File Manager Administrators", 100);
-INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (12, "document_tech", "Document Manager Technicians", 100);
-INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (13, "document_admin", "Document Manager Administrators", 100);
-INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (14, "wiki_admin", "Wiki Administrators", 100);
-INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (15, "tracker_admins", "Tracker Administrators", 100);
-INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (16, "tracker_techs", "Tracker Technicians", 100);
+INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (100, "ugroup_nobody_name_key", "ugroup_nobody_desc_key", 100);
+INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (1, "ugroup_anonymous_users_name_key", "ugroup_anonymous_users_desc_key", 100);
+INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (2, "ugroup_registered_users_name_key", "ugroup_registered_users_desc_key", 100);
+INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (3, "ugroup_project_members_name_key", "ugroup_project_members_desc_key", 100);
+INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (4, "ugroup_project_admins_name_key", "ugroup_project_admins_desc_key", 100);
+INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (11, "ugroup_file_manager_admin_name_key", "ugroup_file_manager_admin_desc_key", 100);
+INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (12, "ugroup_document_tech_name_key", "ugroup_document_tech_desc_key", 100);
+INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (13, "ugroup_document_admin_name_key", "ugroup_document_admin_desc_key", 100);
+INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (14, "ugroup_wiki_admin_name_key", "ugroup_wiki_admin_desc_key", 100);
+INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (15, "ugroup_tracker_admins_name_key", "ugroup_tracker_admins_desc_key", 100);
+INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (16, "ugroup_tracker_techs_name_key", "ugroup_tracker_techs_desc_key", 100);
 
 -- Not used yet
 -- INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (17, "forum_moderator", "Forum Moderators", 100);

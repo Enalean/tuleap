@@ -673,14 +673,25 @@ project_showdetails	back_main	[Retour au sommaire]
 #-----------------------------------------------
 # Script: 
 #
-project_ugroup	ugroup_anonymous_users_desc_key	Anonymes
-project_ugroup	ugroup_registered_users_desc_key	Utilisateurs Enregistrés
-project_ugroup	ugroup_project_members_desc_key	Membres du Projet
-project_ugroup	ugroup_project_admins_desc_key	Administrateurs du Projet
-project_ugroup	ugroup_file_manager_admin_desc_key	Administrateurs du Gestionnaire de Fichiers
-project_ugroup	ugroup_document_tech_desc_key	Techniciens du Gestionnaire de Documents
-project_ugroup	ugroup_document_admin_desc_key	Administrateurs du Gestionnaire de Documents
-project_ugroup	ugroup_wiki_admin_desc_key	Administrateurs du Wiki
-project_ugroup	ugroup_tracker_admins_desc_key	Administrateurs de Trackers
-project_ugroup	ugroup_tracker_techs_desc_key	Techniciens de Trackers
-project_ugroup	ugroup_nobody_desc_key	Groupe Vide
+project_ugroup	ugroup_anonymous_users_desc_key	Tous les utilisateurs
+project_ugroup	ugroup_registered_users_desc_key	Utilisateurs enregistrés
+project_ugroup	ugroup_project_members_desc_key	Membres du projet
+project_ugroup	ugroup_project_admins_desc_key	Administrateurs du projet
+project_ugroup	ugroup_file_manager_admin_desc_key	Administrateurs du gestionnaire de fichiers
+project_ugroup	ugroup_document_tech_desc_key	Techniciens du gestionnaire de documents
+project_ugroup	ugroup_document_admin_desc_key	Administrateurs du gestionnaire de documents
+project_ugroup	ugroup_wiki_admin_desc_key	Administrateurs du wiki
+project_ugroup	ugroup_tracker_admins_desc_key	Administrateurs de trackers
+project_ugroup	ugroup_tracker_techs_desc_key	Techniciens de trackers
+project_ugroup	ugroup_nobody_desc_key	Groupe vide
+project_ugroup	ugroup_anonymous_users_name_key	tous_les_utilisateurs
+project_ugroup	ugroup_registered_users_name_key	utilisateurs_enregistres
+project_ugroup	ugroup_project_members_name_key	membres_projet
+project_ugroup	ugroup_project_admins_name_key	admins_projet
+project_ugroup	ugroup_file_manager_admin_name_key	admins_gestionnaire_fichier
+project_ugroup	ugroup_document_tech_name_key	techs_document
+project_ugroup	ugroup_document_admin_name_key	admins_document
+project_ugroup	ugroup_wiki_admin_name_key	admins_wiki
+project_ugroup	ugroup_tracker_admins_name_key	admins_tracker
+project_ugroup	ugroup_tracker_techs_name_key	techs_tracker
+project_ugroup	ugroup_nobody_name_key	personne
