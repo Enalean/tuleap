@@ -301,7 +301,18 @@ function html_build_select_box ($result, $name, $checked_val="xzxz",$show_100=tr
 	return html_build_select_box_from_arrays (util_result_column_to_array($result,0),util_result_column_to_array($result,1),$name,$checked_val,$show_100,$text_100,$show_any,$text_any,$show_unchanged,$text_unchanged);
 }
 
-function html_build_multiple_select_box ($result,$name,$checked_array,$size='8',$show_100=true,$text_100='', $show_any=false,$text_any='',$show_unchanged=false,$text_unchanged='',$show_value=true) {
+function html_build_multiple_select_box($result,$name,$checked_array,$size='8',$show_100=true,$text_100='', $show_any=false,$text_any='',$show_unchanged=false,$text_unchanged='',$show_value=true) {
+    if (is_array($result)) {
+        $array =& $result;
+    } else {
+        $array = array();
+        while($row = db_fetch_array($result)) {
+            $array[] = array('value' => $row[0], 'text' => $row[1]);
+        }
+    }
+    return html_build_multiple_select_box_from_array($array,$name,$checked_array,$size,$show_100,$text_100, $show_any,$text_any,$show_unchanged,$text_unchanged,$show_value);
+}
+function html_build_multiple_select_box_from_array($array,$name,$checked_array,$size='8',$show_100=true,$text_100='', $show_any=false,$text_any='',$show_unchanged=false,$text_unchanged='',$show_value=true) {
         global $Language;
 	/*
 		Takes a result set, with the first column being the "id" or value
@@ -326,7 +337,7 @@ function html_build_multiple_select_box ($result,$name,$checked_array,$size='8',
 
 	$checked_count=count($checked_array);
 //      echo '-- '.$checked_count.' --';
-	$return .= '
+	$return = '
 		<SELECT NAME="'.$name.'" MULTIPLE SIZE="'.$size.'">';
 
 	/*
@@ -363,28 +374,26 @@ function html_build_multiple_select_box ($result,$name,$checked_array,$size='8',
 	    $return .= '>'.$text_100.'</OPTION>';
 	}
 
-	$rows=db_numrows($result);
-
-	for ($i=0; $i<$rows; $i++) {
-		if (db_result($result,$i,0) != '100') {
+	foreach($array as $row) {
+        $val = $row['value'];
+        if ($val != '100') {
 			$return .= '
-				<OPTION VALUE="'.db_result($result,$i,0).'"';
+				<OPTION VALUE="'.$val.'"';
 			/*
 				Determine if it's checked
 			*/
-			$val=db_result($result,$i,0);
 			for ($j=0; $j<$checked_count; $j++) {
 				if ($val == $checked_array[$j]) {
 					$return .= ' SELECTED';
 				}
 			}
 			$return .= '>'. ($show_value?$val.'-':'').
-			    substr(db_result($result,$i,1),0,35). '</OPTION>';
+			    substr($row['text'],0,35). '</OPTION>';
 		}
 	}
 	$return .= '
 		</SELECT>';
-	return $return;
+    return $return;
 }
 
 function html_buildpriority_select_box ($name='priority', $checked_val='5') {

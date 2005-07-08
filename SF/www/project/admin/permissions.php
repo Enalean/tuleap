@@ -511,7 +511,15 @@ function permission_display_selection_form($permission_type, $object_id, $group_
 		<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 		<INPUT TYPE="HIDDEN" NAME="permission_type" VALUE="'.$permission_type.'">
 		<INPUT TYPE="HIDDEN" NAME="object_id" VALUE="'.$object_id.'">';
-    echo html_build_multiple_select_box($res,"ugroups[]",($nb_set?util_result_column_to_array($res_ugroups):$default_values),8, true, 'nobody', false, '', false, '',false);
+    $array = array();
+    while($row = db_fetch_array($res)) {
+        $name = util_translate_name_ugroup($row[1]);
+        $array[] = array(
+            'value' => $row[0], 
+            'text' => $name
+        );
+    }
+    echo html_build_multiple_select_box($array,"ugroups[]",($nb_set?util_result_column_to_array($res_ugroups):$default_values),8, true, util_translate_name_ugroup('ugroup_nobody_name_key'), false, '', false, '',false);
     echo '<p><INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$Language->getText('project_admin_permissions','submit_perm').'">';
     echo '<INPUT TYPE="SUBMIT" NAME="reset" VALUE="'.$Language->getText('project_admin_permissions','reset_to_def').'">';
     echo '</FORM>';
