@@ -71,7 +71,6 @@ an entity cannot be redefined. Hence this particular order  -->
   &ChapterFileRelease;
   &ChapterVersionControlWithCVS;
   &ChapterVersionControlWithSubversion;
-  &ChapterPatchManager;
   &ChapterDocumentManager;
   &ChapterWiki;
   &ChapterCommunicationServices;
@@ -81,6 +80,7 @@ an entity cannot be redefined. Hence this particular order  -->
   &ChapterBugTrackingSystem;
   &ChapterTaskManager;
   &ChapterSupportRequestManager;
+  &ChapterPatchManager;
 
   &References;
 

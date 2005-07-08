@@ -260,7 +260,7 @@
 	    <para> <emphasis role="underline">Keyword
 	    search</emphasis>: you can type a series of space
 	    separated keywords that will ALL be searched for in the
-	    text field (including as subtring in
+	    text field (including as substring in
 	    words)</para>
 	  </listitem>
 
@@ -373,7 +373,7 @@
 	  <listitem><para><emphasis role="underline">Regular
 	  expression</emphasis>: <ulink
 	  url="http://www.mysql.com/doc/P/a/Pattern_matching.html">MySQL
-	  Extended Regular Expression</ulink> can also be usedas a
+	  Extended Regular Expression</ulink> can also be used as a
 	  matching criteria (e.g. /^4.*8$/ will look for all integer
 	  values starting with a &#34;4&#34;, ending with an &#34;8&#34; with any
 	  number of characters in between including the decimal point.</para>
@@ -432,7 +432,7 @@
     <section id="TrackerSearchResults">
       <title>Tracker Search Results</title> 
       
-      <para>Based on your selection of search riteria, CodeX runs a
+      <para>Based on your selection of search criteria, CodeX runs a
       query against the tracker database, selects the matching
       artifacts, and displays them right below the selection
       criteria. Columns displayed in the artifact list are entirely
@@ -474,7 +474,7 @@
 	<para>The list of artifacts can be sorted by any of the
 	columns displayed on the screen by clicking on the column
 	heading. Clicking twice on the same heading toggles the sort
-	order beween ascending to descending.  The currently displayed
+	order between ascending to descending.  The currently displayed
         sorting direction is shown by a small up or down arrow next to
 	the sort criteria right above the artifact list. One exception
 	to this rule is for sorting by Severity. Severity being shown
@@ -483,7 +483,7 @@
 	by Severity.</para>
 
 	<para>For more sophisticated sorting you can also activate the
-	multi-column sort.  In this mode sort criteria acccumulates as
+	multi-column sort.  In this mode sort criteria accumulates as
 	you click on column headings.  So you can for instance click
 	&#34;Severity&#34; first and &#34;Assigned To&#34; second to see who in the
 	team is assigned critical bugs and how many.At any point in
@@ -757,7 +757,7 @@
             delete CC entries that were either added by themselves or
             entries where the CC name matches their own name or email
             address in any CodeX projects. In other words a CodeX user
-            has the right to undo what they have done or remove themself
+            has the right to undo what they have done or remove themselves
             from a CC list in any project. </para>
           </listitem>
         </itemizedlist>
@@ -862,7 +862,7 @@
       <title>Artifact Cross-Referencing</title>
 
       <para>In addition to the rather formal way of expressing a
-      depency between two artifacts presented in
+      dependency between two artifacts presented in
       <xref linkend="ArtifactDependencies"/>, CodeX offers the ability to
       cross-reference any artifact from within a follow-up
       comment.</para>
@@ -904,7 +904,7 @@
 	<listitem>
 	  <para>If the referenced artifact belongs to another project, or if
           the artifact name (&#34;XXX&#34; above) does not match the short name
-          of the tracker it belongs to, a message will be diplayed on top of the
+          of the tracker it belongs to, a message will be displayed on top of the
           target page to warn the user that she was redirected to another project,
           or that she should check the tracker name.</para>
 	</listitem>
@@ -970,11 +970,11 @@
     <title>Artifact Mass Change</title>
   
     <para>CodeX provides project administrators with the possibility to
-    update several artificats in one step: delete/add the same CC 
+    update several artifacts in one step: delete/add the same CC 
     name entry or file attachment to a set of artifacts, assign a list of 
     artifacts to a person, etc... A typical application of the 
     mass update feature is when a person leaves a project and all the 
-    artifacts that are assigned to her have to be reaffected to another 
+    artifacts that are assigned to her have to be re-affected to another 
     person.</para>
 
       <section id="MassChangeSelectionCriteria">
@@ -1263,7 +1263,7 @@ width="14.5cm" />
 	<listitem><para>Double submission (i.e. submission of a new 
 	artifact with exactly the same summary as an existing
 	artifact)</para></listitem>
-	<listitem><para>Unkown artifact identifier</para></listitem>
+	<listitem><para>Unknown artifact identifier</para></listitem>
 	</itemizedlist>
 
 	All other potential errors have to be checked manually
@@ -1336,14 +1336,18 @@ width="14.5cm" />
   </section>
       
 
-  <section id="TrackerAccessPermissions">
-    <title>Tracker Access Permissions</title>
+  <section id="DefaultTrackerAccessPermissions">
+    <title>Default Tracker Access Permissions</title>
 
-    <para>Depending on the class of citizen a user belongs to and
-      the level of permissions granted as a project member, the
-      various features of the CodeX Tracker may or may not be
-      accessible. Access permissions are summarized in the table
-      below:</para>
+    <para>Depending on the class of citizen a user belongs to and the
+    level of permissions granted as a project member, the various
+    features of the CodeX Tracker may or may not be accessible. Please
+    note that the default access permissions listed below may change
+    for a particular tracker if the tracker administrator modifies the
+    access permission settings. For more information on how to
+    configure tracker access permissions see (see <xref
+    linkend="TrackerPermissionsManagement"/>). Default permission
+    settings are summarized in the table below:</para>
 
     <table frame="all">
       <title>Tracker Access Permissions</title>
@@ -1466,7 +1470,7 @@ width="14.5cm" />
       number of trackers are automatically created for this
       project. This would typically be a bug tracker, a task tracker
       and a support request tracker. If your project manages this type
-      of artifact please use the prefined trackers first. Of course,
+      of artifact please use the predefined trackers first. Of course,
       you are free to define new fields or customize existing ones in
       each of the trackers.</para></tip></para>
 
@@ -1989,6 +1993,193 @@ width="14.5cm" />
       </itemizedlist>
     </section>
 
+
+    <section id="TrackerPermissionsManagement">
+      <title>Permissions Management</title>
+
+      <para>This module is used to give different
+      access permissions to different users depending on their
+      role. </para>
+
+      <para>Access permissions to a tracker can be defined at two
+       levels: </para>
+
+      <itemizedlist mark="bullet" spacing="compact">
+	<listitem>
+	  <para><emphasis role="bold">Tracker/Artifact
+	  level</emphasis>: at this level, you can define the group
+	  of users who have access to only certain artifacts or have no
+	  access at all.</para>
+	</listitem>
+	<listitem>
+	  <para><emphasis role="bold">Field level</emphasis>: this is a 
+          more fine-grained level, where access permissions can be 
+          defined field by field. Using this feature you can specify 
+          which groups has read-only permission on a field, which ones 
+          can modify it or which ones do not have access to it at 
+          all. </para>
+	</listitem>
+      </itemizedlist>
+
+      <para>All access permissions are defined for groups of users
+      rather than individuals. See <xref linkend="UserGroups" /> for more
+      information on how project administrators can define and manage
+      groups of users.</para>
+
+      <section id="TrackerAndArtifactPermissionsManagement">
+        <title>Tracker and Artifacts Permissions Management</title>
+
+        <para>When entering this module, a list of user groups appears
+        along with their access permissions. The user group list first
+        shows groups of users defined at the system level like
+        all_users, registered_users, project_members, etc. These are
+        groups that CodeX manages for you so you don't have to keep
+        them up to date when new users subscribe to the site or become
+        member of your project. The second part of the user group list
+        shows all groups of users defined at the project level (see
+        <xref linkend="UserGroups" /> for more information on how to
+        define and manage groups of users).</para>
+
+        <para>Each group can be associated with the following access
+        permissions:</para>
+
+        <itemizedlist mark="bullet" spacing="compact">
+
+  	  <listitem>
+	    <para><emphasis role="bold">&hyphen;&hyphen;</emphasis>:
+	    this level of permission that displays as a double hyphen
+	    means that the group has no access to any artifact.</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">access to all
+	    artifacts</emphasis>: when granted this permission a user
+	    group has access to all the artifacts of the
+	    tracker.</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">access to artifacts assigned
+	    to group</emphasis>: when granted this permission a group
+	    of users can only see those artifacts that have been
+	    assigned to one or several members of this group.</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">access to artifacts submitted
+	    by group</emphasis>: when granted this permission a group
+	    of users can only see those artifacts that have been
+	    submitted by one or several members of this group.</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">access to artifacts assigned
+	    to or submitted by group</emphasis>: when granted this
+	    permission a group of users can only see those artifacts
+	    that have been submitted by or assigned to one or several
+	    members of this group.</para>
+	</listitem>
+
+      </itemizedlist>
+
+      <para>
+        <tip>
+          <title>Example: Using tracker access permissions with your clients</title>
+	    
+	  <para>As an example of how you can use these permissions
+	  let's assume that you have created a tracker where several
+	  of your customers (say customer_A and customer_B) can report
+	  defects on your software. In such a situation, you may
+	  decide that a given customer should only see those defects
+	  that they submitted and not those submitted by other
+	  customers. </para>
+
+	  <para>To achieve this you just need to create a group called
+	  'customers_A' in which you include the login names of all the
+	  users working for company A. Then do the same with the group
+	  'customers_B' for company B. Those two groups will then be
+	  given the 'access to artifacts submitted by group' type of
+	  permission. In addition you probably want to grant 'access
+	  to all artifacts' to the project members or to the
+	  'tracker_technicians' groups so that your team members can
+	  manage artifacts from any customer.</para>
+
+	  </tip>
+        </para>
+      </section>
+
+      <section id="FieldPermissionsManagement">
+        <title>Field Permissions Management</title>
+
+        <para>Beside defining access permissions for the tracker and
+        its artifacts (see <xref
+        linkend="TrackerAndArtifactPermissionsManagement"/>) it is
+        sometimes necessary to restrict access to certain fields of
+        the tracker to a given population. As an example if you share
+        a defect tracking system with your customers you may want to
+        hide some fields from the view of your customer or prevent
+        them from modifying certain fields. This is precisely what
+        this module is meant for.</para>
+
+        
+        <para>When using this configuration module, you can toggle the
+        display between two different views: you can either view all
+        user groups permissions for a given field OR for a given user
+        group you can view all the field permissions defined for
+        it. The experience shows that the view by field is often the
+        preferred one when you configure a tracker for the first time
+        whereas the view by group of users is more convenient to
+        adjust the permission settings later on (see <xref
+        linkend="UserGroups" /> for more information on how to define
+        and manage groups of users).</para>
+
+        <para>Each group of users can be granted the following
+        permissions for a given field:</para>
+
+        <itemizedlist mark="bullet" spacing="compact">
+
+  	  <listitem>
+	    <para><emphasis role="bold">Can submit</emphasis>: this
+	    permission determines whether a group of users can define
+	    the initial value of a field when an artifact is first
+	    submitted.</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Read-only</emphasis>: if
+	    granted read-only permission a group of users only has
+	    read access to a field. In other words the users see the
+	    value of the field but cannot modify it.</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Update</emphasis>: if granted
+	    update permission, a group of users can see the current
+	    value of a field and also modify it.</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">No access</emphasis>: if
+	    granted this permission (which is displayed a double hyphen
+	    in the menu), the group of users will not see the field at
+	    all.</para>
+	  </listitem>
+
+        </itemizedlist>
+
+        <para><emphasis role="bold">Important Note</emphasis>: the
+        permissions associated with a field apply in many areas of a
+        tracker. For instance if a group of users has no access to a
+        given field, this field becomes invisible on the initial
+        submission form, on the artifact search form as well as in the
+        table of results returned by the search, in the artifact
+        update form, in the history of changes associated with each
+        artifact and finally in the email notification sent to this
+        group of users.</para>
+
+      </section>
+    </section>
+
     <section id="TrackerCannedResponses">
       <title>Canned Responses</title>
 
@@ -2179,7 +2370,7 @@ width="14.5cm" />
 	<itemizedlist mark="bullet">
 	  <listitem>
 	    <para><emphasis role="bold">Field Label</emphasis>: the
-	    name of the field.  To change the propertiers of a field
+	    name of the field.  To change the properties of a field
 	    simply click on the field name.</para>
 	  </listitem>
 	  <listitem>
@@ -3104,7 +3295,7 @@ width="14.5cm" />
 
 	  <listitem><para>Second, looking at the matrix by row, one can see
 	  that the user said that when they make a modification to an artifact 
-	  themself (Event &#34;I am the author of the change&#34;) they don't
+	  themselves (Event &#34;I am the author of the change&#34;) they don't
 	  want to receive any email notification whatever their role 
 	  in this artifact is. Please note that the event &#34;I am the author 
 	  of the change&#34; overlaps with other events. So in our example 

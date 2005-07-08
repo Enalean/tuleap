@@ -516,6 +516,16 @@
         <revremark>Added initial Wiki documentation.
         </revremark>
       </revision>
+      <revision>
+        <revnumber>2.9</revnumber>
+
+        <date>08-Jul-2005</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>Added section on tracker permissions, and moved deprecated Patch chapter at the end of the documentation
+        </revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--

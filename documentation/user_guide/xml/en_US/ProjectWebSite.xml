@@ -28,6 +28,10 @@
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 http://projectname.&SYS_DEFAULT_DOMAIN;
 </programlisting>
+<para>Or, if your server is setup in secure mode:</para>
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+https://projectname.&SYS_DEFAULT_DOMAIN;
+</programlisting>
         </listitem>
 
         <listitem>
@@ -582,6 +586,8 @@ scp -r * login@&SYS_SHELL_HOST;:/home/groups/projectname/htdocs/
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 http://&SYS_DEFAULT_DOMAIN;/sflogo.php?group_id=N&#38;type=1
 </programlisting>
+
+      <para>Use 'https' instead of 'http' in the above URL if your server is setup in secure mode.</para>
 
       <para>You can use this logo in anchor and image tags. For example you
       can associate a hyperlink to the logo that goes directly to your Project
