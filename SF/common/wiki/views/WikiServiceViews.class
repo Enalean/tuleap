@@ -40,9 +40,17 @@ class WikiServiceViews extends WikiViews {
   function WikiServiceViews($id=0, $view=null) {
     global $Language;
     parent::WikiView($id, $view);
-    $this->html_params['title']  = $Language->getText('wiki_views_wikiserviceviews', 
-                                                      'wiki_title', 
-                                                      array(group_getname($this->gid)));
+    if(!is_null($_REQUEST['pagename'])) {
+        $this->html_params['title']  = $Language->getText('wiki_views_wikiserviceviews',
+                                                          'wiki_page_title',
+                                                          array($_REQUEST['pagename'],
+                                                                group_getname($this->gid)));
+    }
+    else {
+        $this->html_params['title']  = $Language->getText('wiki_views_wikiserviceviews',
+                                                          'wiki_title',
+                                                          array(group_getname($this->gid)));
+    }
   }
 
   /**

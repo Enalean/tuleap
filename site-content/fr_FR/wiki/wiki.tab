@@ -19,6 +19,7 @@
 # Script: SF/common/wiki/views/WikiServiceViews.class
 #
 wiki_views_wikiserviceviews	wiki_title	Wiki pour $1
+wiki_views_wikiserviceviews	wiki_page_title	$1 dans $2
 wiki_views_wikiserviceviews	wiki_subtit_docu	<h3>$1Documents Wiki</h3>
 wiki_views_wikiserviceviews	wiki_subtit_pages	<h3>$1Pages Wiki</h3>
 wiki_views_wikiserviceviews	wiki_subtit_empty	<h3>$1Pages Wiki Vides</h3>
