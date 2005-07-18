@@ -86,7 +86,7 @@ tracker_index	cc_list_invalid	Error - The CC list is invalid
 tracker_index	invalid_filename	Invalid filename
 tracker_index	not_create_file	Could Not Create File Object
 tracker_index	not_create_file_obj	Could Not Create File Object: $1
-tracker_index	not_attach_file	Could Not Attach File to Artefact: $1
+tracker_index	not_attach_file	Could Not Attach File to Artifact: $1
 tracker_index	create_success	- Artifact Successfully Created (#$1)
 tracker_index	invalid_filename_attach	Invalid filename for attachment
 tracker_index	trackers_for	Trackers for $1
@@ -94,7 +94,7 @@ tracker_index	admin_all_trackers	Admin All Trackers
 tracker_index	create_new_tracker	Create a New Tracker
 tracker_index	no_accessible_trackers_hdr	No Accessible Trackers Found
 tracker_index	no_accessible_trackers_msg	<strong>No trackers have been set up, or you are not allowed to view them.</strong>
-tracker_index	choose_tracker	Choose a tracker and you can browse/edit/add artefacts to it.
+tracker_index	choose_tracker	Choose a tracker and you can browse/edit/add artifacts to it.
 tracker_index	total	total
 tracker_index	file_delete	File Delete: $1
 tracker_index	file_delete_success	File deleted successfully
@@ -109,8 +109,8 @@ tracker_index	mass_change	Mass Change
 #-----------------------------------------------
 # Script: SF/www/tracker/masschange_detail.php
 #
-tracker_masschange_detail	selected_items	Mass Change Selected Artefacts
-tracker_masschange_detail	no_items_selected	No artefacts have been selected
+tracker_masschange_detail	selected_items	Mass Change Selected Artifacts
+tracker_masschange_detail	no_items_selected	No artifacts have been selected
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/masschange.php
@@ -289,7 +289,7 @@ tracker_include_artifact	comment	Comment
 tracker_include_artifact	added_by	Added by
 tracker_include_artifact	delete_cc	Delete this CC address?
 tracker_include_artifact	add_cc	Add CC:
-tracker_include_artifact	check_already_submitted	Did you check if this artefact has not already been submitted?</span></b> (use the search box)	
+tracker_include_artifact	check_already_submitted	Did you check if this artifact has not already been submitted?</span></b> (use the search box)	
 tracker_include_artifact	latest_modif	LATEST MODIFICATIONS
 tracker_include_artifact	full_snapshot	FULL $1 SNAPSHOT
 tracker_include_artifact	follow_link	For detailed info, follow this link:
@@ -318,7 +318,7 @@ tracker_include_report	prio_colors	Priority Colors:
 tracker_include_report	items	Items
 tracker_include_report	check_items	Check items
 tracker_include_report	clear_items	Clear items
-tracker_include_report	mass_change_all	Mass Change All ($1 artefacts)
+tracker_include_report	mass_change_all	Mass Change All ($1 artifacts)
 tracker_include_report	check_all_items	Check all items
 tracker_include_report	clear_all_items	Clear all items
 tracker_include_report	selected	Selected $1
@@ -335,7 +335,7 @@ tracker_include_report	sort_sev	sort by Severity
 tracker_include_report	reset_sort	reset sort
 tracker_include_report	multicolumn_sort	You can also <a href="$1"><b> $2 multicolumn sort</b></a>.
 tracker_include_report	sev_colors	Severity Colors:
-tracker_include_report	no_match	No Matching Artefact Found	
+tracker_include_report	no_match	No Matching Artifact Found	
 tracker_include_report	report_mgmt	Tracker Administration - Tracker Report Management
 tracker_include_report	report_admin	  - Reports Administration
 tracker_include_report	scope	Scope
@@ -490,7 +490,7 @@ tracker_include_type	nb_open	Number of Opened $1
 tracker_include_type	rep_field	Reporting on field
 tracker_include_type	open_by	Open $1 By $2
 tracker_include_type	all_by	All $1 By $2
-tracker_include_type	changing_items	Changing $1 selected artefact(s): 
+tracker_include_type	changing_items	Changing $1 selected artifact(s): 
 tracker_include_type	submit_mass_change	Submit
 tracker_include_type	occurrence	Occurrence
 tracker_include_type	notify_me	I want to be notified when:
