@@ -91,7 +91,6 @@ function register_valid($confirm_hash)	{
 
     //use sys_lang as default language for each user at register
     
-    $lang_code = 
     $result=db_query("INSERT INTO user (user_name,user_pw,unix_pw,windows_pw,ldap_name,realname,register_purpose,email,add_date,"
 		     . "status,confirm_hash,mail_siteupdates,mail_va,timezone,language_id) "
 		     . "VALUES ('$HTTP_POST_VARS[form_loginname]','"

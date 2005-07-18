@@ -268,5 +268,11 @@ $sys_is_project_public = 1;
 //          and $sys_allow_anon to 0 (or it is useless!)
 $sys_allow_restricted_users = 0;
 
+//
+// Default session duration when user select "Remember Me" option in user 
+// account maintainance.
+// Default value is about 6 months: 3600*24*183
+$sys_session_lifetime = 3600*24*183;
+
 // End of customizations -- place nothing after the closing PHP tag!
 ?>

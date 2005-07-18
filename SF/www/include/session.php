@@ -205,7 +205,6 @@ function session_setglobals($user_id) {
 
 function session_set_new($user_id) {
   global $G_SESSION,$Language;
-	$lifetime = 3600*24*183; // about 6 months
 
 //	unset($G_SESSION);
 
@@ -221,10 +220,7 @@ function session_set_new($user_id) {
 	// If permanent login configured then cookie expires in one year from now
 	$res = db_query('SELECT sticky_login from user where user_id = '.$user_id);
 	if ($res) {
-	    // Caution!! Lifetime must also be changed in
-	    // utils/underworld-root/db_project_cleanup.pl
-	    $lifetime = 3600*24*183; // about 6 months
-	    $expire = (db_result($res,0,'sticky_login') ? time()+$lifetime :0);
+	    $expire = (db_result($res,0,'sticky_login') ? time()+$GLOBALS['sys_session_lifetime']:0);
 	}
 
 	// set session cookie
