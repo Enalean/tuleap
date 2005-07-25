@@ -882,8 +882,7 @@ class WikiDB_Page
         if (mail($emails,"[".WIKI_NAME."] ".$subject, 
                  $subject."\n".
                  $editedby."\n".
-                 $difflink."\n\n".
-                 $content))
+                 $difflink))
             trigger_error(sprintf(_("PageChange Notification of %s sent to %s"),
                                   $this->_pagename, join(',',$userids)), E_USER_NOTICE);
         else
@@ -1765,6 +1764,17 @@ class WikiDB_cache
 };
 
 // $Log$
+// Revision 1.2  2005/07/25 09:27:04  guerin
+// (This is a merge from branch CX_2_4_SUP - See Commit #23814)
+//
+// Applied patch 250 from ST on Partners.
+//
+// When phpwiki sends an email (wiki monitoring), the content of the page used to be transmitted even if the receiver doesn't have the right permission on the corresponding page.
+// Now, the content of the diff is no longer sent but people are aware of page update.
+//
+// Fix for SR 249 on Partners:
+// https://partners.xrce.xerox.com/tracker/?func=detail&aid=249&group_id=120&atid=199
+//
 // Revision 1.1  2005/04/12 13:33:28  guerin
 // First commit for wiki integration.
 // Added Manuel's code as of revision 13 on Partners.
