@@ -408,6 +408,7 @@ project_admin_userperms	member_ug	Membre des groupes d'utilisateurs:
 project_admin_userperms	no_users_found	Aucun utilisateur dans ce projet
 project_admin_userperms	tech_only	Technicien
 project_admin_userperms	admin_only	Administrateur
+project_admin_userperms	admin	Administrateur
 project_admin_userperms	tech&admin	Administrateur et Technicien
 project_admin_userperms	moderator	Modérateur
 project_admin_userperms	upd_user_perm	Mettre à jour les permissions
@@ -682,7 +683,7 @@ project_ugroup	ugroup_document_tech_desc_key	Techniciens du gestionnaire de docu
 project_ugroup	ugroup_document_admin_desc_key	Administrateurs du gestionnaire de documents
 project_ugroup	ugroup_wiki_admin_desc_key	Administrateurs du wiki
 project_ugroup	ugroup_tracker_admins_desc_key	Administrateurs de trackers
-project_ugroup	ugroup_tracker_techs_desc_key	Techniciens de trackers
+#project_ugroup	ugroup_tracker_techs_desc_key	Techniciens de trackers
 project_ugroup	ugroup_nobody_desc_key	Groupe vide
 project_ugroup	ugroup_anonymous_users_name_key	tous_les_utilisateurs
 project_ugroup	ugroup_registered_users_name_key	utilisateurs_enregistres
@@ -693,5 +694,5 @@ project_ugroup	ugroup_document_tech_name_key	techs_document
 project_ugroup	ugroup_document_admin_name_key	admins_document
 project_ugroup	ugroup_wiki_admin_name_key	admins_wiki
 project_ugroup	ugroup_tracker_admins_name_key	admins_tracker
-project_ugroup	ugroup_tracker_techs_name_key	techs_tracker
+#project_ugroup	ugroup_tracker_techs_name_key	techs_tracker
 project_ugroup	ugroup_nobody_name_key	personne

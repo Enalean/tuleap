@@ -30,12 +30,6 @@ class ArtifactType extends Error {
 	 */
 	var $current_user_perm;
 
-	/**
-	 * Technicians db resource ID.
-	 *
-	 * @var		int		$technicians_res.
-	 */
-	var $technicians_res;
 
 	/**
 	 * Canned responses resource ID.
@@ -130,7 +124,6 @@ class ArtifactType extends Error {
 			}
 		}
 		
-		unset($this->technicians_res);
 		unset($this->current_user_perm);
 		unset($this->cannedresponses_res);
 	}
@@ -155,11 +148,11 @@ class ArtifactType extends Error {
 		while ($row = db_fetch_array($res)) {
 			if ( $row['admin_flags'] == "A" ) {
 				// Admin user
-				$perm = 2;
+				$perm = 3;
 					
 			} else {
 				// Standard user
-				$perm = 1;
+				$perm = 0;
 			}
 
 			if ( !$this->addUser($row['user_id'],$perm) ) {
@@ -258,7 +251,7 @@ class ArtifactType extends Error {
 					return false;
 				}
 				
-				// Create user permissions: Tech Only for group members and Tech & Admin for group admin
+				// Create user permissions: None for group members and Admin for group admin
 				if ( !$this->createUserPerms($id) ) {
 					return false;
 				}
@@ -495,33 +488,6 @@ class ArtifactType extends Error {
 	}
 
 
-	/**
-	 *	getTechnicians - returns a result set of technicians.
-	 *
-	 *	@return database result set.
-	 */
-	function getTechnicians() {
-		global $display_debug;
-
-		if (!isset($this->technicians_res)) {
-			$sql="SELECT user.user_id, user.user_name ". 
-			     "FROM artifact_perm ap, user ".
-			     "WHERE (user.user_id = ap.user_id) and ".
-			     "group_artifact_id=". $this->getID()." ".
-			     "AND perm_level in (1,2)";
-			//echo "sql=$sql<br>";
-			$this->technicians_res = db_query($sql);
-			
-			if ( $display_debug ) {
-				$rows = db_numrows($this->technicians_res);
-				echo "<DBG:ArtifactType.getTechnicians>sql=".$sql."<br>";
-				for($i=0;$i<$rows;$i++) {
-					echo db_result($this->technicians_res, $i, 'user_name')."<br>";
-				}
-			}
-		}
-		return $this->technicians_res;
-	}
 
 	/**
 	 *	getCannedResponses - returns a result set of canned responses.

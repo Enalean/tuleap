@@ -562,11 +562,10 @@ EOS;
                         
                         $can_submit = $can_submit_or_update; //(And add here those who can only be submitted)
 
-                        $can_update = $can_submit_or_update &&  (($group_first
-                                                        && ($first_part['id'] > 100 || $first_part['id'] == $GLOBALS['UGROUP_TRACKER_TECH']))
-                                                        ||
-                                                        (!$group_first
-                                                        && ($second_part['id'] > 100 || $second_part['id'] == $GLOBALS['UGROUP_TRACKER_TECH'])));
+                        $can_update = $can_submit_or_update &&  (($group_first && $first_part['id'] > 2)
+								 ||
+								 (!$group_first && $second_part['id'] > 2));
+
                         $html .= "<input type='checkbox' name=\"".$name_of_variable.'[submit]"  '.
                             (isset($permissions[$submit_permission])?"checked='checked'":"")." ".($can_submit?"":"disabled='disabled'")." /> ";
                         $html .= "</td><td>";
@@ -1569,12 +1568,6 @@ EOS;
 			}
 			echo '<option value="artifact_submitters"'.$selected.'>'.$Language->getText('tracker_include_type','submitters').'</option>';
 
-			$selected = "";
-			if ( $value_function == "artifact_technicians" ) {
-				$selected = " selected";
-			}
-			echo '<option value="artifact_technicians"'.$selected.'>'.$Language->getText('tracker_include_type','techicians').'</option>';
-
 			/*
 			 * @author: Manuel VACELET
 			 * Add for user group binding 
@@ -1593,8 +1586,7 @@ EOS;
 		} else {
 			echo '
 		          <option value="group_members">'.$Language->getText('tracker_include_type','group_members').'</option>
-		          <option value="artifact_submitters">'.$Language->getText('tracker_include_type','submitters').'</option>
-		          <option value="artifact_technicians">'.$Language->getText('tracker_include_type','techicians').'</option>';
+		          <option value="artifact_submitters">'.$Language->getText('tracker_include_type','submitters').'</option>';
 			$ugroup_res = ugroup_db_get_existing_ugroups($this->Group->getID());
 			$rows = db_numrows($ugroup_res);
 			for($i=0;$i<$rows;$i++) {
@@ -2070,7 +2062,7 @@ EOS;
 	}
 
 	/**
-	 *  Display the default value form for fields having a value function (e.g. group_members, artifact_technicians)
+	 *  Display the default value form for fields having a value function (e.g. group_members, artifact_submitters)
 	 *
 	 *  @param field_id: the field id to edit
 	 *  @param default_value: the default value

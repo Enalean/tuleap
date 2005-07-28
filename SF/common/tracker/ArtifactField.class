@@ -53,7 +53,7 @@ class ArtifactField extends Error {
 	// Is the field special?
 	var $special;
 	
-	// Special value to specify the field values: artifact_submitters, artifact_technicians
+	// Special value to specify the field values: artifact_submitters
 	var $value_function;
 	
 	// Is the field used?
@@ -569,8 +569,6 @@ class ArtifactField extends Error {
 			    $res_value = $ath->getGroupMembers();
 			else if ($value_func == 'group_admins')
 			    $res_value = $ath->getGroupAdmins();
-			else if ($value_func == 'artifact_technicians')
-			    $res_value = $ath->getTechnicians();
 			else if ($value_func == 'artifact_submitters')
 			    $res_value = $ath->getSubmitters();
 			else if (preg_match('/ugroup_([0-9]+)/', $value_func, $matches))

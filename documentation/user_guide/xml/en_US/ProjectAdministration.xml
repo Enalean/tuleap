@@ -144,23 +144,12 @@
             </listitem>
 
             <listitem>
-              <para><emphasis role="underline">Technician Only</emphasis>:
-              tool technicians can be assigned artifacts/bugs/tasks/patches/support
-              requests and has the ability to update these items from
-              assignment to closure.</para>
-            </listitem>
-
-            <listitem>
-              <para><emphasis role="underline">Administrator Only</emphasis>:
+              <para><emphasis role="underline">Administrator</emphasis>:
               tool administrators have full access to the administration part
               of the tools. As an example, they can define new artifact
               categories, new predefined values for artifact fields, etc.</para>
             </listitem>
 
-            <listitem>
-              <para><emphasis role="underline">Technician &#38; Administrator</emphasis>:
-              the one-man-can-do-it-all on that tool</para>
-            </listitem>
           </itemizedlist>
         </listitem>
 
@@ -196,6 +185,7 @@
               manage file packages and releases. S/he can also set access permissions
               to user groups on packages and releases, even though s/he cannot 
               define or update user groups (only a project administrator can).</para>
+		<para> </para><para> </para><para> </para>
             </listitem>
           </itemizedlist>
         </listitem>

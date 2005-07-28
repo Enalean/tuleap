@@ -300,9 +300,7 @@ if (!$res_dev || db_numrows($res_dev) < 1) {
                 $perm = $at_arr[$j]->getUserPerm($row_dev['user_id']);
                 print '<TD><FONT size="-1"><SELECT name="tracker_user_'.$row_dev['user_id'].'_'.$at_arr[$j]->getID().'">';
                 print '<OPTION value="0"'.(($perm==0)?" selected":"").'>'.$Language->getText('global','none');
-                print '<OPTION value="1"'.(($perm==1)?" selected":"").'>'.$Language->getText('project_admin_userperms','tech_only');
-                print '<OPTION value="2"'.(($perm==2)?" selected":"").'>'.$Language->getText('project_admin_userperms','tech&admin');
-                print '<OPTION value="3"'.(($perm==3)?" selected":"").'>'.$Language->getText('project_admin_userperms','admin_only');
+                print '<OPTION value="3"'.(($perm==3 || $perm==2)?" selected":"").'>'.$Language->getText('project_admin_userperms','admin');
                 print '</SELECT></FONT></TD>';
             }
         }

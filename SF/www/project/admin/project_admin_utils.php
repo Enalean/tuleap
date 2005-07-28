@@ -139,7 +139,19 @@ function show_grouphistory ($group_id) {
 
 			echo '
 			<TR class="'. html_get_alt_row_color($i) .'"><TD>'.$msg.'</TD><TD>';
-			echo db_result($result, $i, 'old_value');
+			$val = db_result($result, $i, 'old_value');
+			if ($msg_key == "perm_granted_for_field") {
+			  $pattern = '/ugroup_([^ ,]*)_name_key/';
+			  preg_match_all($pattern,$val,$matches);
+
+			  if (!empty($matches[0])) {
+			    foreach ($matches[0] as $match) {
+			      $val = str_replace($match,$Language->getText('project_ugroup', $match),$val);
+			    }
+			  }
+			}
+
+			echo $val;
 						
 			echo '</TD>'.
 				'<TD>'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.

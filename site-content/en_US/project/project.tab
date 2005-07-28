@@ -403,6 +403,7 @@ project_admin_userperms	member_ug	Member of user groups:
 project_admin_userperms	no_users_found	No Users Found
 project_admin_userperms	tech_only	Tech Only
 project_admin_userperms	admin_only	Admin Only
+project_admin_userperms	admin	Admin
 project_admin_userperms	tech&admin	Tech & Admin
 project_admin_userperms	moderator	Moderator
 project_admin_userperms	upd_user_perm	Update User Permissions
@@ -677,7 +678,7 @@ project_ugroup	ugroup_document_tech_desc_key	Document Manager Technicians
 project_ugroup	ugroup_document_admin_desc_key	Document Manager Administrators
 project_ugroup	ugroup_wiki_admin_desc_key	Wiki Administrators
 project_ugroup	ugroup_tracker_admins_desc_key	Tracker Administrators
-project_ugroup	ugroup_tracker_techs_desc_key	Tracker Technicians
+#project_ugroup	ugroup_tracker_techs_desc_key	Tracker Technicians
 project_ugroup	ugroup_nobody_desc_key	Empty Group
 project_ugroup	ugroup_anonymous_users_name_key	all_users
 project_ugroup	ugroup_registered_users_name_key	registered_users
@@ -688,5 +689,5 @@ project_ugroup	ugroup_document_tech_name_key	document_techs
 project_ugroup	ugroup_document_admin_name_key	document_admins
 project_ugroup	ugroup_wiki_admin_name_key	wiki_admins
 project_ugroup	ugroup_tracker_admins_name_key	tracker_admins
-project_ugroup	ugroup_tracker_techs_name_key	tracker_techs
+#project_ugroup	ugroup_tracker_techs_name_key	tracker_techs
 project_ugroup	ugroup_nobody_name_key	nobody

@@ -177,12 +177,6 @@ class User {
 	  return ($this->getTrackerPerm($group_artifact_id) >= 2 || $this->isMember($group_id,'A'));
 	}
 
-	/** is this user technician of the tracker group_artifact_id */
-	function isTrackerTech($group_id,$group_artifact_id) {
-            $perm=$this->getTrackerPerm($group_artifact_id);
-	  return ($perm == 1 || $perm == 2 || $this->isMember($group_id,'A'));
-	}
-
 
 	function getTrackerPerm($group_artifact_id) {
 	  $has_perm = array_key_exists($group_artifact_id,$this->tracker_data);

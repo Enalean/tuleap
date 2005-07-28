@@ -35,15 +35,12 @@ if ( !$field->isSelectBox() && !$field->isMultiSelectBox() ) {
 	$ath->displayDefaultValueForm($field_id,$field->getDefaultValue());
 } else {
 	if ( $field->getValueFunction() ) {
-	  // MLS have to add here the choose default value
-	  if (user_is_super_user() || ($field->getName() != "assigned_to" && $field->getName() != "multi_assigned_to")) {
-	    $ath->displayValueFunctionForm($field_id,$field->getValueFunction());
-	  }
-		$ath->displayDefaultValueFunctionForm($field_id,$field->getDefaultValue(),$field->getValueFunction());
+	  $ath->displayValueFunctionForm($field_id,$field->getValueFunction());
+	  $ath->displayDefaultValueFunctionForm($field_id,$field->getDefaultValue(),$field->getValueFunction());
 	} else {
 		$ath->displayFieldValuesList($field_id);
 		$ath->displayDefaultValueForm($field_id,$field->getDefaultValue());
-		// For severity field, we don't display the Bing form or the Create Form
+		// For severity field, we don't display the Bind form or the Create Form
 		if ( $field->getName() != "severity" ) {
 			$ath->displayFieldValueForm("value_create",$field_id);
 			$ath->displayValueFunctionForm($field_id,"",$Language->getText('global','or'));

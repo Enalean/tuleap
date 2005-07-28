@@ -337,17 +337,24 @@ class ArtifactTypeFactory extends Error {
 	  // in MYSQL version of release 2.0 we cannot use UNION. So don't 
           // Only trackers from active projects are returned.
 
+	  // We don't have the artifacts assigned to this user which are in trackers of projects that the user is not member of.
+
 		$sql = 
 		  "SELECT agl.group_artifact_id,agl.name,".
 		  "agl.group_id,g.group_name, ".
-		  "a.summary, a.artifact_id, a.severity, 1 as submitter, 0 as assignee ".
-		  "FROM artifact a, artifact_group_list agl, groups g, user_group as ug ".
+		  "a.summary, a.artifact_id, a.severity, 1 as submitter, MAX(afv.valueInt=".$user_id.") as assignee ".
+		  "FROM artifact a, artifact_group_list agl, artifact_field af, artifact_field_value afv, groups g, user_group as ug ".
 		  "WHERE ug.group_id = g.group_id AND agl.group_id = g.group_id ".
 		  "AND agl.status = 'A' ".
                   "AND g.status = 'A' ".
 		  "AND a.group_artifact_id = agl.group_artifact_id ".
 		  "AND a.submitted_by=".$user_id." AND a.status_id <> 3 ".
-		  "GROUP BY ug.group_id ".
+		  "AND af.group_artifact_id = agl.group_artifact_id ".
+		  "AND (af.field_name = 'assigned_to' OR af.field_name = 'multi_assigned_to') ".
+		  "AND afv.valueInt =  ".$user_id." ".
+		  "AND afv.artifact_id = a.artifact_id ".
+		  "AND afv.field_id = af.field_id ".
+		  "GROUP BY ug.group_id, a.artifact_id ".
 		  "HAVING MAX(ug.user_id=".$user_id.")= 0 ".
 		  "ORDER BY g.group_name, agl.name";
 		
