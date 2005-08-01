@@ -559,7 +559,7 @@ class ArtifactReport extends Error {
 	 * @return void
 	 */
 	function getQueryElements($prefs,$advsrch,&$from,&$where) {
-		
+	  global $art_field_fact;
 	  //
 	  // NOTICE
 	  //
@@ -588,13 +588,15 @@ class ArtifactReport extends Error {
 	  $fields = $this->getSortedFields();
 	  
 	  $count = 1;
+	  $status_id_ok = 0;
+	  $assigned_to_ok = 0;
+	  $multi_assigned_to_ok = 0;
+
 	  
 	  $from = "FROM artifact a";
 	  $where = "WHERE a.group_artifact_id = ".$this->group_artifact_id;
 	  
 	  
-	  if ( count($fields) == 0 )
-	    return;
 	  
 	  while (list($key,$field) = each($fields) ) {
 	    
@@ -604,11 +606,12 @@ class ArtifactReport extends Error {
 	      // If the field is a standard field ie the value is stored directly into the artifact table (severity, artifact_id, ...)
 	      if ( $field->isStandardField()) {
 		$where .= $this->getValuesWhereClause($field,$prefs,"a.".$field->getName(),$advsrch,$notany);
+		
+		if ($field->getName() == "status_id") $status_id_ok = 1;
 	      } else {
 		
 		// The field value is stored into the artifact_field_value table
 		// So we need to add a new join
-		
 		$where .= $this->getValuesWhereClause($field,$prefs,"v".$count.".".$field->getValueFieldName(),$advsrch,$notany);
 		
 		if ($notany) {
@@ -617,7 +620,44 @@ class ArtifactReport extends Error {
 		  
 		  $count++;
 		}
+
+		// special case for assigned_to/multi_assigned_to fields or status_id field that can also be set
+		// in prefs through My or Open link but which are not necessarily in the ShowOnQuery fields of this report
+		if ($field->getName() == "assigned_to") $assigned_to_ok = 1;
+		else if ($field->getName() == "multi_assigned_to") $multi_assigned_to_ok = 1;
 	      }
+	    }
+	  }
+
+	  if (isset($prefs['assigned_to']) && !$assigned_to_ok) {
+	    $field = $art_field_fact->getFieldFromName('assigned_to');
+	    if ($field) {
+	      $where .= $this->getValuesWhereClause($field,$prefs,"v".$count.".".$field->getValueFieldName(),$advsrch,$notany);
+	      
+	      if ($notany) {
+		$from .= " LEFT JOIN artifact_field_value v".$count." ON (v".$count.".artifact_id=a.artifact_id".
+		  " and v".$count.".field_id=".$field->getID().")";
+		
+		$count++;
+	      }
+	    }
+	  } else if (isset($prefs['multi_assigned_to']) && !$multi_assigned_to_ok) {
+	    $field = $art_field_fact->getFieldFromName('multi_assigned_to');
+	    if ($field) {
+	      $where .= $this->getValuesWhereClause($field,$prefs,"v".$count.".".$field->getValueFieldName(),$advsrch,$notany);
+	      
+	      if ($notany) {
+		$from .= " LEFT JOIN artifact_field_value v".$count." ON (v".$count.".artifact_id=a.artifact_id".
+		  " and v".$count.".field_id=".$field->getID().")";
+		
+		$count++;
+	      }
+	    }
+	  }
+	  if (isset($prefs['status_id']) && !$status_id_ok) {
+	    $field = $art_field_fact->getFieldFromName('status_id');
+	    if ($field) {
+	      $where .= $this->getValuesWhereClause($field,$prefs,"a.".$field->getName(),$advsrch,$notany);
 	    }
 	  }
 	}

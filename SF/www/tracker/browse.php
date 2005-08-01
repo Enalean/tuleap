@@ -222,13 +222,17 @@ if ($set=='my') {
     */
     $prefs['status_id'][]=1; // Open status
     // Check if the current user is in the assigned_to list
-	$field_object = $art_field_fact->getFieldFromName('assigned_to');
+    $field_object = $art_field_fact->getFieldFromName('assigned_to');
+    $field_object_multi = $art_field_fact->getFieldFromName('multi_assigned_to');
     if ( ($field_object)&&($field_object->checkValueInPredefinedValues($atid,user_getid())) ) {
-	    $prefs['assigned_to'][]=user_getid();
-	} else {
-		// Any value
-	    $prefs['assigned_to'][]=0;
-	}		
+      $prefs['assigned_to'][]=user_getid();
+    } else if ( ($field_object_multi)&&($field_object_multi->checkValueInPredefinedValues($atid,user_getid())) ) {
+      $prefs['multi_assigned_to'][]=user_getid();
+    } else {
+      // Any value
+      $prefs['assigned_to'][]=0;
+      $prefs['multi_assigned_to'][]=0;
+    }		
 
 } else if ($set=='custom') {
     
@@ -263,6 +267,7 @@ if ($set=='my') {
     $prefs['status_id'][]=1;
 	// Any value for assigned to
     $prefs['assigned_to'][]=0;
+    $prefs['multi_assigned_to'][]=0;
 }
 
 
