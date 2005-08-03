@@ -43,7 +43,7 @@ if ($result && db_numrows($result) > 0) {
 	// Download the patch with the correct filetype
 	header('Content-Type: '.db_result($result,0,'filetype'));
 	header('Content-Length: '.db_result($result,0,'filesize'));
-	header('Content-Disposition: filename='.db_result($result,0,'filename'));
+	header('Content-Disposition: filename="'.db_result($result,0,'filename').'"');
 
 	echo db_result($result,0,'data');
 
