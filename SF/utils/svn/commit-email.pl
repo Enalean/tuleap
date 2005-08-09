@@ -553,7 +553,7 @@ foreach my $project (@project_settings_list)
         $subject = "$subject_prefix $subject";
       }
     $subject = $svnmailheader.$subject;
-    my $mail_from = $author;
+    my $mail_from = $mailname;
 
     if ($from_address =~ /\w/)
       {
