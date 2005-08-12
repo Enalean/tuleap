@@ -60,6 +60,7 @@ License
 <dt><a href="#HowTo_Delete_Bug">Delete a bug from the CodeX database</a></dt>
 <dt><a href="#HowTo_Restricted_Users">Enabling 'Restricted Users' on a CodeX server</a></dt>
 <dt><a href="#HowTo_Localize_Services">Localize service names</a></dt>
+<dt><a href="#HowTo_cvs2svn">Convert a CVS repository to Subversion</a></dt>
 </dl></dd>
 </dl>
 <p></p>
@@ -2839,6 +2840,25 @@ project_admin_editservice	service_<<i>service short name</i>>_lbl_key	<<i>your l
 project_admin_editservice	service_<<i>service short name</i>>_desc_key	<<i>your localized service description</i>>
 </tt>
 </ul>
+
+<hr>
+
+
+<h2><a name="HowTo_cvs2svn">Convert a CVS repository to Subversion</a></h2>
+<p>
+Some projects may want to switch from CVS to Subversion. There are many good reasons for this, e.g. performance increase over CVS as well as many new features like directory and symbolic link versionning, file and directory move, truly atomic commits, etc.
+<p>Unfortunately, project members cannot do the full conversion process by themselves because of permission issues.
+<p>Here are the step-by-step instructions:
+<ul>
+<li>Log in as root.
+<li>If not already done, install cvs2svn from <a href="http://cvs2svn.tigris.org">http://cvs2svn.tigris.org</a>
+<li>Then simply type:
+<pre>cvs2svn --existing-svnrepos -s /svnroot/projname --tmpdir=/tmp /cvsroot/projname</pre>
+This will convert the CVS repository with all the historical information (including all commits, tags and branches).
+To select a set of historical data, please read: <a href="http://cvs2svn.tigris.org/cvs2svn.html">http://cvs2svn.tigris.org/cvs2svn.html</a>
+<br><b>Note:</b> If the conversion fails with a Berkeley DB error, this might be caused by BDB version differences between the svn client (v1.2+) and the svn repository (v1.0 or v1.1). In this case, delete the old repository, and recreate it with the 'xerox_crontab.sh' script. Actually, you should also upgrade all existing svn repositories that use the deprecated version of BDB...
+</ul>
+
 
 <hr width="100%" size="2" noshade="noshade"> End of Document<br>
 <br>
