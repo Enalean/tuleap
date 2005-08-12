@@ -63,7 +63,7 @@ require_once('session.php');
 
 //user functions like get_name, logged_in, etc
 require_once('user.php');
-require_once($DOCUMENT_ROOT.'/../common/include/User.class');
+require_once('common/include/User.class');
 
 //group functions like get_name, etc
 require_once('Group.class');
