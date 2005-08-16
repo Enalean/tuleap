@@ -1,0 +1,112 @@
+<?php
+require_once('common/event/EventManager.class');
+
+require_once('common/plugin/PluginFactory.class');
+
+require_once('common/dao/PriorityPluginHookDao.class');
+require_once('common/dao/CodexDataAccess.class');
+
+require_once('common/include/String.class');
+
+/**
+ * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+ * 
+ * $Id$
+ *
+ * PluginManager
+ */
+class PluginManager {
+    
+    var $plugins_loaded;
+    var $priorityPluginHookDao;
+    
+    function PluginManager() {
+        $this->plugins_loaded = false;
+    }
+    
+    function loadPlugins() {
+        $plugin_factory =& $this->_getPluginFactory();
+        $event_manager  =& $this->_getEventManager();
+        
+        $col_enabled_plugins =& $plugin_factory->getEnabledPlugins();
+        $enabled_plugins =& $col_enabled_plugins->iterator();
+        while($enabled_plugins->hasNext()) {
+            $plugin =& $enabled_plugins->next();
+            $hooks =& $plugin->getHooksAndCallbacks();
+            $iter =& $hooks->iterator();
+            while($iter->hasNext()) {
+                $hook =& $iter->next();
+                $priority = 0;
+                $priority_dao =& $this->_getPriorityPluginHookDao();
+                if ($dar =& $priority_dao->searchByHook_PluginId($hook['hook'], $plugin->getId())) {
+                    if ($row = $dar->getRow()) {
+                        $priority = (int)$row['priority'];
+                    }
+                }
+                $event_manager->addListener($hook['hook'], $plugin, $hook['callback'], $hook['recallHook'], $priority);
+            }
+        }
+        $this->plugins_loaded = true;
+    }
+    
+    function &_getPluginFactory() {
+        return PluginFactory::instance();
+    }
+    
+    function &_getEventManager() {
+        return EventManager::instance();
+    }
+    
+    function &_getPriorityPluginHookDao() {
+        if (!is_a($this->priorityPluginHookDao, 'PriorityPluginHookDao')) {
+            $this->priorityPluginHookDao =& new PriorityPluginHookDao(CodexDataAccess::instance());
+        }
+        return $this->priorityPluginHookDao;
+    }
+    
+    function isPluginsLoaded() {
+        return $this->plugins_loaded;
+    }
+    
+    function &instance() {
+        static $_pluginmanager_instance;
+        if (!$_pluginmanager_instance) {
+            $_pluginmanager_instance = new PluginManager();
+        }
+        return $_pluginmanager_instance;
+    }
+    
+    function &getAllPlugins() {
+        $plugin_factory =& $this->_getPluginFactory();
+        return $plugin_factory->getAllPlugins();
+    }
+    
+    function isPluginEnabled(&$plugin) {
+        $plugin_factory =& $this->_getPluginFactory();
+        return $plugin_factory->isPluginEnabled($plugin);
+    }
+    
+    function enablePlugin(&$plugin) {
+        $plugin_factory =& $this->_getPluginFactory();
+        $plugin_factory->enablePlugin($plugin);
+    }
+    function disablePlugin(&$plugin) {
+        $plugin_factory =& $this->_getPluginFactory();
+        $plugin_factory->disablePlugin($plugin);
+    }
+    
+    function &installPlugin($name) {
+        $plugin_factory =& $this->_getPluginFactory();
+        return $plugin_factory->createPlugin($name);
+    }
+    function uninstallPlugin(&$plugin) {
+        $plugin_factory =& $this->_getPluginFactory();
+        return $plugin_factory->removePlugin($plugin);
+    }
+    
+    function &getNotYetInstalledPlugins() {
+        $plugin_factory =& $this->_getPluginFactory();
+        return $plugin_factory->getNotYetInstalledPlugins(); 
+    }
+}
+?>

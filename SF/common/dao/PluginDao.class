@@ -1,0 +1,88 @@
+<?php
+//
+// Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+//
+// $Id$
+//
+
+require_once('include/DataAccessObject.class');
+
+/**
+ *  Data Access Object for Plugin 
+ */
+class PluginDao extends DataAccessObject {
+    /**
+    * Constructs the PluginDao
+    * @param $da instance of the DataAccess class
+    */
+    function PluginDao( & $da ) {
+        DataAccessObject::DataAccessObject($da);
+    }
+    
+    /**
+    * Gets all tables of the db
+    * @return DataAccessResult
+    */
+    function & searchAll() {
+        $sql = "SELECT * FROM plugin";
+        return $this->retrieve($sql);
+    }
+    
+    /**
+    * Searches Plugin by Id 
+    * @return DataAccessResult
+    */
+    function & searchById($id) {
+        $sql =  "SELECT name, enabled FROM plugin WHERE id = '".addslashes($id)."'";
+        return $this->retrieve($sql);
+    }
+
+    /**
+    * Searches Plugin by Name 
+    * @return DataAccessResult
+    */
+    function & searchByName($name) {
+        $sql =  "SELECT id, enabled FROM plugin WHERE name = '".addslashes($name)."'";
+        return $this->retrieve($sql);
+    }
+
+    /**
+    * Searches Plugin by Enabled 
+    * @return DataAccessResult
+    */
+    function & searchByEnabled($enabled) {
+        $sql =  "SELECT id, name FROM plugin WHERE enabled = '".addslashes($enabled)."'";
+        return $this->retrieve($sql);
+    }
+
+
+    /**
+    * create a row in the table plugin 
+    * @return true or id(auto_increment) if there is no error
+    */
+    function create($name, $enabled) {
+        $inserted = $this->update("INSERT INTO plugin (name, enabled) VALUES ('".$name."', '".$enabled."');");
+        if ($inserted) {
+            $dar =& $this->retrieve("SELECT LAST_INSERT_ID() AS id");
+            if ($row = $dar->getRow()) {
+                $inserted = $row['id'];
+            } else {
+                $inserted = $dar->isError();
+            }
+        } 
+        return $inserted;
+    }
+    
+    function updateEnabledByPluginId($enabled, $id) {
+        $sql =  "UPDATE plugin SET enabled = '".addslashes($enabled)."' WHERE id = '".addslashes($id)."'";
+        return $this->update($sql);
+    }
+    
+    function removeById($id) {
+        $sql =  "DELETE FROM plugin WHERE id = '".addslashes($id)."'";
+        return $this->update($sql);
+    }
+}
+
+
+?>

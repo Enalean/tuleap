@@ -1,0 +1,32 @@
+<?php
+require_once('PropertyDescriptor.class');
+/**
+ * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+ * 
+ * $Id$
+ *
+ * PropertyDescriptor
+ */
+class PropertyDescriptor {
+    
+    var $name;
+    var $type;
+    var $possibleValues;
+    
+    function PropertyDescriptor(&$name, &$type, &$possibleValues) {
+        $this->name           =& $name;
+        $this->type           =& $type;
+        $this->possibleValues =& $possibleValues;
+    }
+    
+    function &getName() { 
+        return $this->name; 
+    }
+    function &getType() { 
+        return $this->type; 
+    }
+    function &getPossibleValues() { 
+        return $this->possibleValues; 
+    }
+}
+?>

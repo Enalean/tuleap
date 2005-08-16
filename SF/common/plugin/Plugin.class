@@ -1,0 +1,52 @@
+<?php
+require_once('PluginInfo.class');
+require_once('common/collection/Map.class');
+/**
+ * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+ * 
+ * $Id$
+ *
+ * Plugin
+ */
+class Plugin {
+    
+    var $id;
+    var $pluginInfo;
+    var $hooks;
+    
+    function Plugin($id = -1) {
+        $this->id         = $id;
+        $this->pluginInfo =& new PluginInfo($this);
+        $this->hooks      =& new Map();
+    }
+    
+    function getId() {
+        return $this->id;
+    }
+    
+    function getPluginInfo() {
+        return $this->pluginInfo;
+    }
+    
+    function &getHooks() {
+        return $this->hooks->getKeys();
+    }
+    
+    function &getHooksAndCallbacks() {
+        return $this->hooks->getValues();
+    }
+    
+    function _addHook($hook, $callback = 'CallHook', $recallHook = true) {
+        $value = array();
+        $value['hook']       = $hook;
+        $value['callback']   = $callback;
+        $value['recallHook'] = $recallHook;
+        $this->hooks->put(new String($hook), $value);
+    }
+    function _removeHook($hook) {
+        $this->hooks->removeKey(new String($hook));
+    }
+    function CallHook($hook, $param) {
+    }
+}
+?>
