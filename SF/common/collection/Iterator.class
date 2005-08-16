@@ -1,0 +1,25 @@
+<?php
+/**
+ * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+ * 
+ * $Id$
+ *
+ * Iterator
+ */
+/* interface */ class Iterator {
+    
+    /**
+     * @return Reference of the current object and point on the next object
+     */
+    function &next() {
+        trigger_error(get_class($this).'::next => Not yet implemented', E_USER_ERROR);
+    }
+    
+    /**
+     * @return true if we can call again next()
+     */
+    function hasNext() {
+        trigger_error(get_class($this).'::next => Not yet implemented', E_USER_ERROR);
+    }
+}
+?>
