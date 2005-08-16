@@ -114,6 +114,9 @@ $sf_cache_dir = "/home/sfcache";
 // The theme base directory, everything else is handled by theme_sysinit()
 $sys_themeroot="/home/httpd/SF/www/themes/";
 
+// Plugins related vars
+$sys_pluginsroot="/home/httpd/plugins/";
+
 // Specific to Xerox CodeX
 //
 // Number of hours between two runs of background scripts

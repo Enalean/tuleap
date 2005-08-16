@@ -591,6 +591,15 @@ Alias /phpMyAdmin /home/httpd/phpMyAdmin
     DAVLockDB /var/lib/dav/lockdb
 </IfModule>
 
+# Plugins directory
+AliasMatch ^/plugins/([^/]*)/(.*) /home/httpd/plugins/$1/www/$2
+<DirectoryMatch "/home/httpd/plugins/([^/]*)/www/">
+    Options Indexes MultiViews
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+</DirectoryMatch>
+
 #
 # ScriptAlias: This controls which directories contain server scripts.
 # ScriptAliases are essentially the same as Aliases, except that
