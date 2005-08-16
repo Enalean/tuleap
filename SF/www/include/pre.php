@@ -39,7 +39,12 @@ if ((!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] !== 'on') && $GLOBALS['sys_f
 if (isset($location) && $location) {
     header($location);
     exit;
-}   
+}
+
+//Load plugins
+require_once('common/plugin/PluginManager.class');
+$plugin_manager =& PluginManager::instance();
+$plugin_manager->loadPlugins();
 
 $sys_datefmt = "Y-M-d H:i";
 $feedback=''; // Initialize global var

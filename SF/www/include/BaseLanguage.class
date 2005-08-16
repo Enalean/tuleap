@@ -52,35 +52,44 @@ class BaseLanguage {
 	 *
 	 * @param		string	path of language file to load
 	 */
-	function loadLanguageMsg($fname) {
-	    global $sys_user_theme;
-
-	    // load default message file
-	    $ftname = $GLOBALS['sys_incdir'].'/'.$this->lang.'/'.$fname.'.tab' ;
-	    if (!file_exists ($ftname)) {
-                // If the file does not exist in the selected language, use the default language (en_US)
-                $ftname = $GLOBALS['sys_incdir'].'/en_US/'.$fname.'.tab' ;
-            }
-            // load message file
+	function loadLanguageMsg($fname, $plugin_name = null) {
+        global $sys_user_theme;
+        
+        if (is_null($plugin_name)) {
+            // load default message file
+            $ftname = $GLOBALS['sys_incdir'].'/'.$this->lang.'/'.$fname.'.tab' ;
+        } else {
+            // load default message file for plugin
+            $ftname = $GLOBALS['sys_pluginsroot'].'/'.$plugin_name.'/site-content/'.$this->lang.'/'.$fname.'.tab';
+        }
+        if (!file_exists ($ftname)) {
+            // If the file does not exist in the selected language, use the default language (en_US)
+            $ftname = $GLOBALS['sys_incdir'].'/en_US/'.$fname.'.tab' ;
+        }
+        // load message file
+        $this->loadLanguageFile($ftname) ;
+        
+        // load site-local customizations
+        if (is_null($plugin_name)) {
+            $ftname = getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/site-content/'.'/'.$this->lang.'/'.$fname.'.tab' ;
+        } else {
+            $ftname = getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/plugins/'.$plugin_name.'/site-content/'.$this->lang.'/'.$fname.'.tab';
+        }
+        if (file_exists ($ftname)) {
             $this->loadLanguageFile($ftname) ;
-
-	    // load site-local customizations
-	    $ftname = getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/site-content/'.'/'.$this->lang.'/'.$fname.'.tab' ;
-	    if (file_exists ($ftname)) {
-		$this->loadLanguageFile($ftname) ;
-	    }
-
-	    // load customization by theme
-	    $ftname = '../themes/'.$sys_user_theme.'/'.$this->lang.'/'.$fname.'.tab' ;
-	    if (file_exists ($ftname)) {
-		$this->loadLanguageFile($ftname) ;
-	    }
-
-	    //load site-local customizations by theme
-	    $ftname = getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/themes/messages/'.$sys_user_theme.'/'.$this->lang.'/'.$fname.'.tab' ;
-	    if (file_exists ($ftname)) {
-		$this->loadLanguageFile($ftname) ;
-	    }
+        }
+        
+        // load customization by theme
+        $ftname = '../themes/'.$sys_user_theme.'/'.$this->lang.'/'.$fname.'.tab' ;
+        if (file_exists ($ftname)) {
+            $this->loadLanguageFile($ftname) ;
+        }
+        
+        //load site-local customizations by theme
+        $ftname = getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/themes/messages/'.$sys_user_theme.'/'.$this->lang.'/'.$fname.'.tab' ;
+        if (file_exists ($ftname)) {
+            $this->loadLanguageFile($ftname) ;
+        }
 	}
 
 	function loadLanguageFile($fname) {

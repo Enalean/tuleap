@@ -28,6 +28,11 @@ function menu_site_admin() {
     $HTML->menu_entry('/admin/trove/trove_cat_list.php',$Language->getText('include_menu','trove_cat_list'));
     $HTML->menu_entry('/admin/trove/trove_cat_add.php',$Language->getText('include_menu','trove_cat_add'));
     $HTML->menu_entry('/people/admin',$Language->getText('include_menu','people_skill'));
+    
+    $em =& EventManager::instance();
+    $params = array();
+    $params['HTML'] =& $HTML;
+    $em->processEvent('site_admin_menu_hook', $params);
     $HTML->menuhtml_bottom();
 
 }
@@ -234,6 +239,11 @@ function menu_loggedin($page_title) {
 	print '<P>';
 	$HTML->menu_entry('/my/bookmark_add.php?bookmark_url='.urlencode($GLOBALS['REQUEST_URI']).'&bookmark_title='.$bookmark_title,$Language->getText('include_menu','bookmark_this_page'));
     }
+    print '<P>';
+	$em =& EventManager::instance();
+    $params = array();
+    $params['HTML'] =& $HTML;
+    $em->processEvent('usermenu', $params);
     $HTML->menuhtml_bottom();
 }
 
