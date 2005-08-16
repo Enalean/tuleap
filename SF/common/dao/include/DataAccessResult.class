@@ -1,0 +1,53 @@
+<?php
+/**
+ *  Fetches MySQL database rows as objects
+ */
+class DataAccessResult {
+    /**
+    * @access protected
+    * $da stores data access object
+    */
+    var $da;
+    /**
+    * @access protected
+    * $query stores a query resource
+    */
+    var $query;
+
+    function DataAccessResult(& $da,$query) {
+        $this->da=& $da;
+        $this->query=$query;
+    }
+
+    /**
+    * Returns an array from query row or false if no more rows
+    * @return mixed
+    */
+    function getRow() {
+        if ( $row=mysql_fetch_array($this->query,MYSQL_ASSOC) )
+            return $row;
+        else
+            return false;
+    }
+
+    /**
+    * Returns the number of rows affected
+    * @return int
+    */
+    function rowCount() {
+        return mysql_num_rows($this->query);
+    }
+
+    /**
+    * Returns false if no errors or returns a MySQL error message
+    * @return mixed
+    */
+    function isError() {
+        $error=$this->da->isError();
+        if (!empty($error))
+            return $error;
+        else
+            return false;
+    }
+}
+?>
