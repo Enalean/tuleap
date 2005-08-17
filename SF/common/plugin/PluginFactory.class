@@ -83,7 +83,7 @@ class PluginFactory {
     function _getClassNameForPluginName($name) {
         $class_name = $name."Plugin";
         if (!class_exists($class_name)) {
-            $file_name = $name.DIRECTORY_SEPARATOR.'include'.DIRECTORY_SEPARATOR.$class_name.'.class';
+            $file_name = $GLOBALS['sys_pluginsroot'].DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR.'include'.DIRECTORY_SEPARATOR.$class_name.'.class';
             require_once($file_name);
             if (!class_exists($class_name)) {
                 $class_name = false;
