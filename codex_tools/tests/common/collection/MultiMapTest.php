@@ -5,36 +5,33 @@ if (! defined('CODEX_RUNNER')) {
     require_once('tests/CodexReporter.class');
 }
 
-require_once('tests/simpletest/unit_tester.php');
-//require_once('tests/simpletest/mock_objects.php'); //uncomment to use Mocks
+require_once('MultiMapTestCase.class');
+require_once('common/collection/MultiMap.class');
+
+if (!class_exists("FakeValue")) {
+    class FakeValue {}
+}
+
 
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
- * $Id$
+ * $Id: MultiMapTest.php,v 1.1 2005/05/10 09:48:10 nterray Exp $
  *
- * Tests the class Template
+ * Test the class MultiMap
  */
-class TemplateTest extends UnitTestCase {
+class MultiMapTest extends MultiMapTestCase {
     /**
      * Constructor of the test. Can be ommitted.
      * Usefull to set the name of the test
      */
-    function TemplateTest($name = 'Template test') {
-        $this->UnitTestCase($name);
-    }
-
-    /**
-     * A test
-     */
-    function testSomething() {
-        $this->pass();
-        //$this->fail();
+    function MultiMapTest($name = 'MultiMap test') {
+        $this->MultiMapTestCase($name, 'MultiMap');
     }
 }
 
 if (CODEX_RUNNER === __FILE__) {
-    $test = &new TemplateTest();
+    $test = &new MultiMapTest();
     $test->run(new CodexReporter());
  }
 ?>
