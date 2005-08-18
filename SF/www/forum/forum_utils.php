@@ -514,7 +514,7 @@ function handle_monitoring($forum_id,$msg_id) {
 	*/
 
 	$sql="SELECT user.email from forum_monitored_forums,user ".
-		"WHERE forum_monitored_forums.user_id=user.user_id AND forum_monitored_forums.forum_id='$forum_id'";
+		"WHERE forum_monitored_forums.user_id=user.user_id AND forum_monitored_forums.forum_id='$forum_id' AND ( user.status='A' OR user.status='R' )";
 
 	$result=db_query($sql);
 	$rows=db_numrows($result);
