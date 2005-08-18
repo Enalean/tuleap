@@ -101,18 +101,20 @@ function parse_field_names($data,$used_fields,$ath,
 
       while (list($label,$field) = each($used_fields)) {
           //echo $label.",";
-          if ($field) $field_name = $field->getName();
-          if ($field_name != "artifact_id" &&
-              $field_name != "open_date" &&
-              $field_name != "submitted_by" &&
-              $label != $lbl_follow_ups &&
-              $label != $lbl_is_dependent_on &&
-              $label != $lbl_cc_list &&
-              $label != $lbl_cc_comment &&
-              !$field->isEmptyOk() && !in_array($label,$parsed_labels)) {
+          if ($field) {
+              $field_name = $field->getName();
+              if ($field_name != "artifact_id" &&
+                  $field_name != "open_date" &&
+                  $field_name != "submitted_by" &&
+                  $label != $lbl_follow_ups &&
+                  $label != $lbl_is_dependent_on &&
+                  $label != $lbl_cc_list &&
+                  $label != $lbl_cc_comment &&
+                  !$field->isEmptyOk() && !in_array($label,$parsed_labels)) {
               
-              $errors .= $Language->getText('tracker_import_utils','field_mandatory',array($label,$ath->getName())).' ';
-              return false;
+                  $errors .= $Language->getText('tracker_import_utils','field_mandatory',array($label,$ath->getName())).' ';
+                  return false;
+              }
           }
       }
   }
