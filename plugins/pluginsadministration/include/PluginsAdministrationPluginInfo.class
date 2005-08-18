@@ -1,0 +1,20 @@
+<?php
+
+require_once('common/plugin/PluginInfo.class');
+
+/**
+ * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+ * 
+ * $Id: Sanitizer.class,v 1.1 2005/05/10 09:48:11 nterray Exp $
+ *
+ * PluginsAdministrationPluginInfo
+ */
+class PluginsAdministrationPluginInfo extends PluginInfo {
+    
+    function PluginsAdministrationPluginInfo(&$plugin) {
+        $this->PluginInfo($plugin);
+        $this->setPluginDescriptor(new PluginDescriptor('Plugins Administration', 'v0.1', 'Offers a web interface for managing plugins.'));
+    }
+    
+}
+?>

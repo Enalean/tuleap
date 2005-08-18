@@ -1,0 +1,38 @@
+#/**
+#  *
+#  * This file is licensed under the CodeX Component Software License 
+#  * http://codex.xrce.xerox.com 
+#  * 
+#  * THIS FILE IS THE PROPERTY OF XEROX AND IS ONLY DISTRIBUTED WITH A 
+#  * COMMERCIAL LICENSE OF CODEX. IT IS *NOT* DISTRIBUTED UNDER THE GNU 
+#  * PUBLIC LICENSE. 
+#  *
+#  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
+#  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
+#  * http://codex.xrce.xerox.com
+#  *
+#  * @version   $Id: fr_FR.tab,v 1.10 2005/06/24 08:10:38 nterray Exp $
+#  *
+#  */
+plugin_pluginsadministration	menu	Extensions
+plugin_pluginsadministration	title	Administration des Extensions
+plugin_pluginsadministration	plugins	Extensions installées
+plugin_pluginsadministration	Plugin	Extension
+plugin_pluginsadministration	Plugins	Extensions
+plugin_pluginsadministration	Status	Activée?
+plugin_pluginsadministration	Version	Version
+plugin_pluginsadministration	Actions	Actions
+plugin_pluginsadministration	enabled	Oui
+plugin_pluginsadministration	disabled	Non
+plugin_pluginsadministration	change_to_disabled	Changer à Non
+plugin_pluginsadministration	change_to_enabled	Changer à Oui
+plugin_pluginsadministration	Description	Description
+plugin_pluginsadministration	uninstall	Désinstaller
+plugin_pluginsadministration	uninstall_plugin	Désinstaller cette extension
+plugin_pluginsadministration	install_plugin	Installer cette extension
+plugin_pluginsadministration	install	Installer une extension
+plugin_pluginsadministration	not_yet_installed	Extensions pas encore installées
+plugin_pluginsadministration	upload	Charger l'archive
+plugin_pluginsadministration	priorities	Priorités entre extensions
+plugin_pluginsadministration	there_is_no_plugin	<em>Il n'y a pas encore d'extension installée.</em>
+plugin_pluginsadministration	Hook	Accroche
