@@ -11,7 +11,7 @@ require_once('pre.php');
 session_require(array('isloggedin'=>1));
 
 db_query("UPDATE user SET "
-	. "mail_siteupdates=" . ($form_mail_site?"1":"0") . ","
+	. "mail_siteupdates=" . (isset($form_mail_site) && $form_mail_site?"1":"0") . ","
          . "mail_va=" . ((isset($form_mail_va) && $form_mail_va)?"1":"0") . ","
 	. "fontsize=" . $user_fontsize . ","
 	. "theme='" . $user_theme . "',"

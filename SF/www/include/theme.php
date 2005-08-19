@@ -17,7 +17,7 @@ if (isset($HTTP_COOKIE_VARS["SF_THEME"])&&(user_getid() == (int)(substr($HTTP_CO
     // Read the user preferences
     $res_user = db_query("SELECT * FROM user WHERE user_id=" . user_getid());
     $row_user = db_fetch_array($res_user);
-    if ( $row_user['theme'] == "" || $row_user['theme'] == "default") {
+    if (!isset($row_user['theme']) || $row_user['theme'] == "" || $row_user['theme'] == "default") {
 	// Use the defaut theme
 	$theme = $sys_themedefault;
     } else {
@@ -30,7 +30,7 @@ if (isset($HTTP_COOKIE_VARS["SF_THEME"])&&(user_getid() == (int)(substr($HTTP_CO
 $GLOBALS['sys_user_theme'] = $theme;
 
 // Find where the path is located
-$GLOBALS['sys_is_theme_custom'] = is_dir(getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/themes/css/'.$theme);
+$GLOBALS['sys_is_theme_custom'] = is_dir(getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/themes/'.$theme.'/css');
 
 // define the font size cookie for performance
 if ( (isset($HTTP_COOKIE_VARS["SF_FONTSIZE"]))&&(user_getid() == (int)(substr($HTTP_COOKIE_VARS["SF_FONTSIZE"],0,6))) ) {
@@ -41,12 +41,12 @@ if ( (isset($HTTP_COOKIE_VARS["SF_FONTSIZE"]))&&(user_getid() == (int)(substr($H
     // Read the user preferences
     
     // Check if we have already read the record
-    if ( !$res_user ) {
+    if (!isset($res_user) || !$res_user ) {
 	$res_user = db_query("SELECT * FROM user WHERE user_id=" . user_getid());
 	$row_user = db_fetch_array($res_user);
     }
     
-    if ( $row_user['fontsize'] <> 0 ) {
+    if (isset($row_user['fontsize']) && $row_user['fontsize'] <> 0 ) {
 	$font_size = $row_user['fontsize'];
     } else {
 	// Use the defaut fontsize

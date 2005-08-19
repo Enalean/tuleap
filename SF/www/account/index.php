@@ -143,20 +143,20 @@ if ($row_user['theme'] == "" || $row_user['theme'] == "default") {
 }
 
 // Build the theme select box from directories in css and css/custom
-$dir = opendir($GLOBALS['sys_urlroot']."/css");
+//$dir = opendir($GLOBALS['sys_themeroot']);
 $theme_list = array();
-$theme_dirs = array($GLOBALS['sys_urlroot']."/css", getenv('SF_LOCAL_INC_PREFIX')."/etc/codex/themes/css/");
+$theme_dirs = array($GLOBALS['sys_themeroot'], getenv('SF_LOCAL_INC_PREFIX')."/etc/codex/themes/");
 while (list(,$dirname) = each($theme_dirs)) {
     // before scanning the directory make sure it exists to avoid warning messages
     if (is_dir($dirname)) {
-	$dir = opendir($dirname);
-	while ($file = readdir($dir)) {
-	    if (is_dir("$dirname/$file") && $file != "." && $file != ".." && 
-		$file != "CVS" && $file != "custom" && $file != ".svn") {
-		$theme_list[] = $file;
-	    }
-	}
-	closedir($dir);
+        $dir = opendir($dirname);
+        while ($file = readdir($dir)) {
+            if (is_dir("$dirname/$file") && $file != "." && $file != ".." && 
+            $file != "CVS" && $file != "custom" && $file != ".svn") {
+                    $theme_list[] = $file;
+            }
+        }
+        closedir($dir);
     }
 }
 

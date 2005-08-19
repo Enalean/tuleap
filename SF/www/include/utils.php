@@ -378,7 +378,7 @@ function show_priority_colors_key($msg='') {
 function get_priority_color ($index) {
 	/*
 		Return the color value for the index that was passed in
-		(defined in $sys_urlroot/css/<selected theme>)
+		(defined in $sys_urlroot/<selected theme>/css/)
 	*/
 	global $bgpri;
 	
@@ -753,13 +753,12 @@ function getFontsizeName($value) {
 //
 function util_get_css_theme(){
 
-    $path = $GLOBALS['sys_user_theme']."/".$GLOBALS['sys_user_theme'].
-	getFontsizeName($GLOBALS['sys_user_font_size']).".css";
+    $path = $GLOBALS['sys_user_theme'].getFontsizeName($GLOBALS['sys_user_font_size']).".css";
 
     if ($GLOBALS['sys_is_theme_custom'])
-	$path = "/css/custom/".$path;
+        $path = '/custom/'.$GLOBALS['sys_user_theme'].'/css/'.$path;
     else
-	$path = "/css/".$path;
+	    $path = '/themes/'.$GLOBALS['sys_user_theme'].'/css/'.$path;
 
     return $path;
 }
@@ -770,12 +769,11 @@ function util_get_css_theme(){
 // If $absolute is true, then the generated path will be absolute,
 // otherwise it is relative to $sys_urlroot.
 function util_get_image_theme($fn, $the_theme=false, $absolute=false){
-
     $path = util_get_dir_image_theme($the_theme);
     if ($absolute) {
-        if (strpos($path, '/images/custom') !== false) { 
+        if (strpos($path, '/custom') !== false) { 
             // Custom images are in /etc/codex/themes
-            $path= preg_replace('/images\/custom/','images',$path);
+            $path= preg_replace('/\/custom/','',$path);
             $path = getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/themes' . $path;
         } else {
             $path = $GLOBALS['sys_urlroot'] . $path;
@@ -793,9 +791,9 @@ function util_get_dir_image_theme($the_theme=false){
     }
 
     if ($GLOBALS['sys_is_theme_custom'])
-	$path = '/images/custom/'.$the_theme.'.theme/';
+        $path = '/custom/'.$the_theme.'/images/';
     else
-	$path = '/images/'.$the_theme.'.theme/';
+	    $path = '/themes/'.$the_theme.'/images/';
 
     return $path;
 }
