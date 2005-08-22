@@ -154,9 +154,8 @@ require_once('theme.php');
 
 
 // HTML layout class, may be overriden by the Theme class
-require_once('Layout.class');
-
-$HTML = new Layout();
+require_once($GLOBALS['sys_themeroot'].'/'.$GLOBALS['sys_user_theme'].'/Theme.class');
+$HTML = new Theme();
 
 // OSDN functions and defs
 require_once('osdn.php');

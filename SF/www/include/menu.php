@@ -38,70 +38,6 @@ function menu_site_admin() {
 }
 
 
-
-function menu_show_search_box() {
-  global $words,$forum_id,$group_id,$is_bug_page,$is_support_page,$Language,
-	$is_pm_page,$is_snippet_page,$exact,$type_of_search,$atid;
-
-    // if there is no search currently, set the default
-    if ( ! isset($type_of_search) ) {
-	$exact = 1;
-    }
-
-    print "\t<CENTER>\n";
-    print "\t<FORM action=\"/search/\" method=\"post\">\n";
-
-    print "\t<SELECT name=\"type_of_search\">\n";
-    if ($is_bug_page && $group_id) {
-	print "\t<OPTION value=\"bugs\"".( $type_of_search == "bugs" ? " SELECTED" : "" ).">".$Language->getText('include_menu','bugs')."</OPTION>\n";
-    } else if ($is_pm_page && $group_id) {
-	print "\t<OPTION value=\"tasks\"".( $type_of_search == "tasks" ? " SELECTED" : "" ).">".$Language->getText('include_menu','tasks')."</OPTION>\n";
-    } else if ($is_support_page && $group_id) {
-	print "\t<OPTION value=\"support\"".( $type_of_search == "support" ? " SELECTED" : "" ).">".$Language->getText('include_menu','supp_requ')."</OPTION>\n";
-    } else if ($group_id && $forum_id) {
-	print "\t<OPTION value=\"forums\"".( $type_of_search == "forums" ? " SELECTED" : "" ).">".$Language->getText('include_menu','this_forum')."</OPTION>\n";
-    } else if ($group_id && $atid) {
-	print "\t<OPTION value=\"tracker\"".( $type_of_search == "tracker" ? " SELECTED" : "" ).">".$Language->getText('include_menu','this_tracker')."</OPTION>\n";
-    }
-
-    print "\t<OPTION value=\"soft\"".( $type_of_search == "soft" ? " SELECTED" : "" ).">".$Language->getText('include_menu','software_proj')."</OPTION>\n";
-    print "\t<OPTION value=\"snippets\"".( ($type_of_search == "snippets" || $is_snippet_page) ? " SELECTED" : "" ).">".$Language->getText('include_menu','code_snippets')."</OPTION>\n";
-    print "\t<OPTION value=\"people\"".( $type_of_search == "people" ? " SELECTED" : "" ).">".$Language->getText('include_menu','people')."</OPTION>\n";
-    print "\t</SELECT>\n";
-
-    print "\t<BR>\n";
-    print "\t<INPUT TYPE=\"CHECKBOX\" NAME=\"exact\" VALUE=\"1\"".( $exact ? " CHECKED" : " UNCHECKED" )."> ".$Language->getText('include_menu','require_all_words')." \n";
-
-    print "\t<BR>\n";
-    if ( isset($atid) ) {
-	print "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$atid\" NAME=\"atid\">\n";
-    } 
-    if ( isset($forum_id) ) {
-	print "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$forum_id\" NAME=\"forum_id\">\n";
-    } 
-    if ( isset($is_bug_page) ) {
-	print "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$is_bug_page\" NAME=\"is_bug_page\">\n";
-    }
-    if ( isset($is_support_page) ) {
-	print "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$is_support_page\" NAME=\"is_support_page\">\n";
-    }
-    if ( isset($is_pm_page) ) {
-	print "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$is_pm_page\" NAME=\"is_pm_page\">\n";
-    }
-    if ( isset($is_snippet_page) ) {
-	print "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$is_snippet_page\" NAME=\"is_snippet_page\">\n";
-    }
-    if ( isset($group_id) ) {
-	print "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$group_id\" NAME=\"group_id\">\n";
-    }
-
-    print "\t<INPUT TYPE=\"text\" SIZE=\"16\" NAME=\"words\" VALUE=\"$words\">\n";
-    print "\t<BR>\n";
-    print "\t<INPUT TYPE=\"submit\" NAME=\"Search\" VALUE=\"".$Language->getText('include_menu','search')."\">\n";
-    print "\t</FORM>\n";
-    print "\t</CENTER>\n";
-}
-
 //depricated - theme wrapper
 function menuhtml_top($title) {
     /*
@@ -154,7 +90,7 @@ function menu_foundry_links() {
 function menu_search() {
   GLOBAL $HTML,$Language;
     $HTML->menuhtml_top($Language->getText('include_menu','search'));
-    menu_show_search_box();
+    $HTML->searchBox();
     $HTML->menuhtml_bottom();
 }
 

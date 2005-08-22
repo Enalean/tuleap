@@ -69,8 +69,10 @@ function browser_is_netscape4() {
 /*
 	Determine browser and version
 */
-unset($HTTP_USER_AGENT);
-$HTTP_USER_AGENT = $_SERVER['HTTP_USER_AGENT']; 
+$HTTP_USER_AGENT = '';
+if (isset($_SERVER['HTTP_USER_AGENT'])) {
+    $HTTP_USER_AGENT = $_SERVER['HTTP_USER_AGENT'];
+}
 
 if (ereg( 'MSIE ([0-9].[0-9]{1,2})',$HTTP_USER_AGENT,$log_version)) {
 	$BROWSER_VER=$log_version[1];

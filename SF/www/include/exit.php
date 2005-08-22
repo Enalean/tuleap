@@ -10,9 +10,10 @@
 
 function exit_error($title,$text) {
     global $HTML,$Language;
-	$HTML->header(array('title'=>$Language->getText('include_exit','exit_error')));
-	print '<H2><span class="feedback">'.$title.'</span></H2><P>'.$text;
-	$HTML->footer(array());
+    $GLOBALS['feedback'] .= $title;
+    site_header(array('title'=>$Language->getText('include_exit','exit_error')));
+    echo '<p>',$text,'</p>';
+	$HTML->footer(array('showfeedback' => false));
 	exit;
 }
 

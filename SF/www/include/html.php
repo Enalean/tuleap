@@ -7,17 +7,11 @@
 // $Id$
 
 function html_feedback_top($feedback) {
-	if (!$feedback) 
-		return '';
-	print '
-		<H3><span class="feedback">'.$feedback.'</span></H3>';
+	echo $GLOBALS['HTML']->feedback($GLOBALS['feedback']);
 }
 
 function html_feedback_bottom($feedback) {
-	if (!$feedback) 
-		return '';
-	print '
-		<H3><span class="feedback">'.$feedback.'</span></H3>';
+	echo $GLOBALS['HTML']->feedback($GLOBALS['feedback']);
 }
 
 function html_a_group($grp) {
@@ -497,9 +491,7 @@ function site_project_header($params) {
             // Printer version: no right column, no tabs...
             echo $HTML->pv_header($params);
         } else {
-            echo $HTML->header($params);
-            echo html_feedback_top($GLOBALS['feedback']);
-            echo $HTML->project_tabs($params['toptab'],$params['group']);
+            site_header($params);
         }
 }
 

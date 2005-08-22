@@ -18,7 +18,7 @@ $Language->loadLanguageMsg('search/search');
 if ($type_of_search !== "tracker") {
     $HTML->header(array('title'=>$Language->getText('search_index','search')));
     echo "<P><CENTER>";
-    menu_show_search_box();
+    $HTML->searchBox();
 }
 
 /*

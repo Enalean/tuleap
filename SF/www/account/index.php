@@ -151,9 +151,10 @@ while (list(,$dirname) = each($theme_dirs)) {
     if (is_dir($dirname)) {
         $dir = opendir($dirname);
         while ($file = readdir($dir)) {
-            if (is_dir("$dirname/$file") && $file != "." && $file != ".." && 
-            $file != "CVS" && $file != "custom" && $file != ".svn") {
+            if (is_dir("$dirname/$file") && $file != "." && $file != ".." && $file != "CVS" && $file != "custom" && $file != ".svn") {
+                if (is_file($dirname.DIRECTORY_SEPARATOR.$file.DIRECTORY_SEPARATOR.'Theme.class')) {
                     $theme_list[] = $file;
+                }
             }
         }
         closedir($dir);

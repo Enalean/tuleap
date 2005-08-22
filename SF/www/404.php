@@ -24,7 +24,7 @@ else {
 }
 
 $HTML->box1_top('Search');
-menu_show_search_box();
+$HTML->searchBox();
 $HTML->box1_bottom();
 
 echo "<P>";
