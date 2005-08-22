@@ -1,0 +1,24 @@
+#/**
+#  *
+#  * This file is licensed under the CodeX Component Software License 
+#  * http://codex.xrce.xerox.com 
+#  * 
+#  * THIS FILE IS THE PROPERTY OF XEROX AND IS ONLY DISTRIBUTED WITH A 
+#  * COMMERCIAL LICENSE OF CODEX. IT IS *NOT* DISTRIBUTED UNDER THE GNU 
+#  * PUBLIC LICENSE. 
+#  *
+#  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
+#  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
+#  * http://codex.xrce.xerox.com
+#  *
+#  * @version   $Id: fr_FR.tab 1778 2005-06-24 08:10:38Z nterray $
+#  *
+#  */
+common	login	Log In
+common	logout	Log Out
+common	myaccount	My Account
+common	newaccount	New Account
+menu	admin	Admin
+menu	home	Home
+menu	my_personal_page	My Personal Page
+searchbox	search	Search
