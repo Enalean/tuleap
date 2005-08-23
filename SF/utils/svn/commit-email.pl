@@ -8,9 +8,9 @@
 # command line arguments.
 #
 # $HeadURL: https://svn.collab.net/repos/svn/trunk/tools/hook-scripts/commit-email.pl.in $
-# $LastChangedDate: 2004-01-29 16:00:49 -0600 (Thu, 29 Jan 2004) $
-# $LastChangedBy: blair $
-# $LastChangedRevision: 8540 $
+# $LastChangedDate$
+# $LastChangedBy$
+# $LastChangedRevision$
 #
 #
 # $Id$
@@ -294,6 +294,7 @@ my $author = shift @svnlooklines;
 my $date = shift @svnlooklines;
 my $unix_gmtime = date_to_gmtime($date);
 shift @svnlooklines;
+my @log_for_db=@svnlooklines;
 my @log = map { "$_\n" } @svnlooklines;
 &extract_xrefs(@log);
 
@@ -634,7 +635,7 @@ foreach my $project (@project_settings_list)
 
 # Now add the Subversion information in the CodeX tracking database
 if (&isGroupSvnTracked) {
-  $commit_id = db_get_commit($group_id,$repos,$rev,$unix_gmtime,$author,@log);
+  $commit_id = db_get_commit($group_id,$repos,$rev,$unix_gmtime,$author,@log_for_db);
 
   for $file (@changed_files) {
     print "file_path = ".$file->{'path'}."\n" if $debug;
