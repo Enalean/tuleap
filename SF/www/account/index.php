@@ -162,6 +162,7 @@ while (list(,$dirname) = each($theme_dirs)) {
 }
 
 print '<select name="user_theme">'."\n";
+natcasesort($theme_list); //Sort an array using a case insensitive "natural order" algorithm
 while (list(,$theme) = each($theme_list)) {
     print '<option value="'.$theme.'"';
     if ($theme==$user_theme){ print ' selected'; }

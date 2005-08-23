@@ -30,7 +30,7 @@ if (isset($HTTP_COOKIE_VARS["SF_THEME"])&&(user_getid() == (int)(substr($HTTP_CO
 $GLOBALS['sys_user_theme'] = $theme;
 
 // Find where the path is located
-$GLOBALS['sys_is_theme_custom'] = is_dir(getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/themes/'.$theme.'/css');
+$GLOBALS['sys_is_theme_custom'] = is_dir(getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/themes/'.$theme);
 
 // define the font size cookie for performance
 if ( (isset($HTTP_COOKIE_VARS["SF_FONTSIZE"]))&&(user_getid() == (int)(substr($HTTP_COOKIE_VARS["SF_FONTSIZE"],0,6))) ) {

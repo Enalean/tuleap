@@ -26,7 +26,7 @@ class LayoutGF extends Layout {
 	 *
 	 * @var		string	$imgroot
 	 */
-	var $imgroot = '/themes/gforge/images/';
+	var $imgroot = '/custom/gforge/images/';
 	var $COLOR_CONTENT_BACK= '#ffffff';
 	var $COLOR_LTBACK1= '#eeeeef';
 	var $COLOR_LTBACK2= '#fafafa';
