@@ -554,7 +554,7 @@ if (isset($params['group']) && $params['group']) {
 	function projectTabs($toptab,$group) {
         $this->project_tabs($toptab,$group);
         return;
-		global $Language;
+/*		global $Language;
 
 		// get group info using the common result set
 		$project =& group_get_object($group);
@@ -584,7 +584,8 @@ if (isset($params['group']) && $params['group']) {
 		$TABS_DIRS[]='http://'. $project->getHomePage();
 		$TABS_TITLES[]=$Language->getText('group','short_homepage');
 		*/
-
+/**/
+/*
 		// Forums
 		if ($project->usesForum()) {
 			$TABS_DIRS[]='/forum/?group_id='.$group;
@@ -668,7 +669,7 @@ if (isset($params['group']) && $params['group']) {
 		plugin_hook ("groupmenu", $hookParams) ; 
 
 		echo $this->tabGenerator($TABS_DIRS,$TABS_TITLES,true,$selected,'white','100%');
-
+*/
 	}
 
 	function tabGenerator($TABS_DIRS,$TABS_TITLES,$nested=false,$selected=false,$sel_tab_bgcolor='WHITE',$total_width='100%') {
