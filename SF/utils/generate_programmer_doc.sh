@@ -14,7 +14,6 @@
 FORCE=0
 HELP=0
 VERBOSE=0
-LOCAL_CVSROOT=":pserver:guerin@cvs.codex.codex.xerox.com:/cvsroot/codex";
 
 # Check arguments
 while	((1))	# look for options
@@ -22,8 +21,7 @@ do	case	"$1" in
 	\-v*)	VERBOSE=1;;
 	\-f*)	FORCE=1;;
 	\-h*)	HELP=1;;
-	\-d*)   shift;
-	        LOCAL_CVSROOT=$1;;
+	\-d*)   shift;; # legacy option
 	*)	if [ ! -z "$1" ];
 	    then
 	        echo "Invalid option $1";
@@ -37,11 +35,11 @@ done
 
 if [ $HELP == 1 ]
 then
-    echo "Usage: generate_programmer_doc.sh [-d CVSROOT] [-f] [-v] [-h]";
-    echo "  -d CVSROOT : specify the CVSROOT";
-    echo "  -f : force to generate the documentation witout checking CVS";
+    echo "Usage: generate_programmer_doc.sh [-f] [-v] [-h]";
+    echo "  -f : force to generate the documentation without checking file dates";
     echo "  -v : verbose";
     echo "  -h : help";
+    echo "Note: the '-d' flag has been deprecated and is no longer used";
     exit 2;
 fi
 
@@ -53,10 +51,14 @@ fi
 CMDDIR=$BASEDIR/programmer_guide/cmd
 cd $BASEDIR/programmer_guide/xml/en_US
 
+if [ ! -e $BASEDIR/programmer_guide/pdf/en_US/CodeX_Programmer_Guide.pdf ]; then
+    FORCE=1;
+fi
+
 if [ $FORCE != 1 ]
 then
     # check if some need some update
-    COUNT=`cvs -q -d$LOCAL_CVSROOT update | wc -l`
+    COUNT=`find $BASEDIR/programmer_guide/xml -newer $BASEDIR/programmer_guide/pdf/en_US/CodeX_Programmer_Guide.pdf | wc -l`
     if [ $COUNT == 0 ]
     then
         # No changes in the documentation
