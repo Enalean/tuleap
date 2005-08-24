@@ -24,7 +24,7 @@ class CodexReporter extends HtmlReporter {
     }
 
     function _getCss() {
-        return '@import "/css/codex/codex_normal.css"; '.parent::_getCss().' .pass { color: green; }';
+        return '@import "/themes/codex/css/codex_normal.css"; '.parent::_getCss().' .pass { color: green; }';
     }
     function paintFail($message) {
         parent::paintFail($message);
