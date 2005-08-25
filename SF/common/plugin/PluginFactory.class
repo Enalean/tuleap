@@ -161,7 +161,7 @@ class PluginFactory {
         $col = array();
         $dir = openDir($GLOBALS['sys_pluginsroot']);
         while ($file = readDir($dir)) {
-            if (($file!='.')&&($file!='..')&&($file!='CVS')&&(is_dir($GLOBALS['sys_pluginsroot'].DIRECTORY_SEPARATOR.$file))) {
+            if (($file!='.')&&($file!='..')&&($file!='CVS')&&($file!='.svn')&&(is_dir($GLOBALS['sys_pluginsroot'].DIRECTORY_SEPARATOR.$file))) {
                 $dar =& $this->plugin_dao->searchByName($file);
                 if ($dar->rowCount() < 1) {
                     $col[] = $file;
