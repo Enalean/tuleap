@@ -145,7 +145,7 @@ $bgpri[9] = 'priori';
 	<title><?php echo $params['title']; ?></title>
 	<link rel="alternate" title="<?php echo $GLOBALS['sys_name']; ?> - Project News Highlights RSS" href="/export/rss_sfnews.php" type="application/rss+xml"/>
 	<link rel="alternate" title="<?php echo $GLOBALS['sys_name']; ?> - New Projects RSS" href="/export/rss_sfprojects.php" type="application/rss+xml"/>
-
+    <link rel="SHORTCUT ICON" href="<?php echo $this->imgroot; ?>favicon.ico">
 	<script language="JavaScript" type="text/javascript">
 	<!--
 
@@ -222,7 +222,28 @@ BODY {
 	a.tabsellink { color: #0000be; text-decoration: none; font-weight: bold; font-size: <?php echo $this->FONTSIZE_SMALLER; ?>; }
 	a.tabsellink:visited { color: #0000be; text-decoration: none; font-weight: bold; font-size: <?php echo $this->FONTSIZE_SMALLER; ?>; }
 	a.tabsellink:hover { text-decoration: none; color: #0000be; font-weight: bold; font-size: <?php echo $this->FONTSIZE_SMALLER; ?>; }
-	<?php 
+    /** Logo : text version */
+    a.logo span {
+        font-family:arial, sans-serif;
+        font-size:38pt;
+        font-weight:bold;
+        border:0pt;
+        color:white;
+        text-decoration:none;
+    }
+    /**/
+    /** To replace text-logo by an image : *
+    a.logo {
+        background:url('<?php echo $this->imgroot; ?>logo.png') center center no-repeat;
+        width:198px;
+        height:52px;
+        float:left;
+    }
+    a.logo  span {
+        display:none;
+    }
+    /**/
+    <?php 
         $em->processEvent("cssstyle",$this);
     ?>
 	-->
@@ -235,7 +256,7 @@ BODY {
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
 
 	<tr>
-		<td><a href="/"><?php echo html_image('logo.png',array('border'=>'0', 'width' => 198, 'height' => 52)); ?></a></td>
+		<td><a  class='logo' href="/"><span>CodeX</span></a></td>
 		<td><?php echo $this->searchBox(); ?></td>
 		<td align="right"><?php
 			if (user_isloggedin()) {
@@ -553,123 +574,29 @@ if (isset($params['group']) && $params['group']) {
 	 */
 	function projectTabs($toptab,$group) {
         $this->project_tabs($toptab,$group);
-        return;
-/*		global $Language;
-
-		// get group info using the common result set
-		$project =& group_get_object($group);
-		if (!$project || !is_object($project)) {
-			return;
-		}
-		if ($project->isError()) {
-			//wasn't found or some other problem
-			return;
-		}
-		if (!$project->isProject()) {
-			return;
-		}
-
-		// Summary
-		$TABS_DIRS[]='/projects/'. $project->getUnixName() .'/';
-		$TABS_TITLES[]=$Language->getText('group','short_summary');
-		(($toptab == 'home') ? $selected=(count($TABS_TITLES)-1) : '' );
-
-		if (user_ismember($group,'A')) {
-			// Project Admin
-			$TABS_DIRS[]='/project/admin/?group_id='. $group;
-			$TABS_TITLES[]=$Language->getText('group','short_admin');
-			(($toptab == 'admin') ? $selected=(count($TABS_TITLES)-1) : '' );
-		}
-		/* Homepage
-		$TABS_DIRS[]='http://'. $project->getHomePage();
-		$TABS_TITLES[]=$Language->getText('group','short_homepage');
-		*/
-/**/
-/*
-		// Forums
-		if ($project->usesForum()) {
-			$TABS_DIRS[]='/forum/?group_id='.$group;
-			$TABS_TITLES[]=$Language->getText('group','short_forum');
-			(($toptab == 'forums') ? $selected=(count($TABS_TITLES)-1) : '' );
-		}
-
-		// Artifact Tracking
-		if ($project->usesTracker()) {
-			$TABS_DIRS[]='/tracker/?group_id='.$group;
-			$TABS_TITLES[]=$Language->getText('group','short_tracker');
-			(($toptab == 'tracker' || $toptab == 'bugs' || $toptab == 'support' || $toptab == 'patch')
-				? $selected=(count($TABS_TITLES)-1) : '' );
-		}
-
-		// Mailing Lists
-		if ($project->usesMail()) {
-			$TABS_DIRS[]='/mail/?group_id='.$group;
-			$TABS_TITLES[]=$Language->getText('group','short_mail');
-			(($toptab == 'mail') ? $selected=(count($TABS_TITLES)-1) : '' );
-		}
-
-		// Project Manager
-		if ($project->usesPm()) {
-			$TABS_DIRS[]='/pm/?group_id='.$group;
-			$TABS_TITLES[]=$Language->getText('group','short_pm');
-			(($toptab == 'pm') ? $selected=(count($TABS_TITLES)-1) : '' );
-		}
-
-		// Doc Manager
-		if ($project->usesDocman()) {
-			$TABS_DIRS[]='/docman/?group_id='.$group;
-			$TABS_TITLES[]=$Language->getText('group','short_docman');
-			(($toptab == 'docman') ? $selected=(count($TABS_TITLES)-1) : '' );
-		}
-
-		// Surveys
-		if ($project->usesSurvey()) {
-			$TABS_DIRS[]='/survey/?group_id='.$group;
-			$TABS_TITLES[]=$Language->getText('group','short_survey');
-			(($toptab == 'surveys') ? $selected=(count($TABS_TITLES)-1) : '' );
-		}
-
-		//newsbytes
-		if ($project->usesNews()) {
-			$TABS_DIRS[]='/news/?group_id='.$group;
-			$TABS_TITLES[]=$Language->getText('group','short_news');
-			(($toptab == 'news') ? $selected=(count($TABS_TITLES)-1) : '' );
-		}
-
-		// SCM systems
-		if ($project->usesSCM()) {
-			$TABS_DIRS[]='/scm/?group_id='.$group;
-			$TABS_TITLES[]=$Language->getText('group','short_scm');
-			(($toptab == 'scm') ? $selected=(count($TABS_TITLES)-1) : '' );
-		}
-
-		// groupmenu_after_scm hook
-		$hookParams['DIRS'] = &$TABS_DIRS;
-		$hookParams['TITLES'] = &$TABS_TITLES;
-		$hookParams['toptab'] = &$toptab;
-		$hookParams['selected'] = &$selected;
-		$hookParams['group_id'] = $group ;
-				
-		plugin_hook ("groupmenu_scm", $hookParams) ; 
-
-		// Downloads
-		if ($project->usesFRS()) {
-			$TABS_DIRS[]='/frs/?group_id='.$group;
-			$TABS_TITLES[]=$Language->getText('group','short_files');
-			(($toptab == 'frs') ? $selected=(count($TABS_TITLES)-1) : '' );
-		}
-
-		// groupmenu hook
-		$hookParams['DIRS'] = &$TABS_DIRS;
-		$hookParams['TITLES'] = &$TABS_TITLES;
-		$hookParams['toptab'] = &$toptab;
-		$hookParams['selected'] = &$selected;
-		$hookParams['group'] = $group;
-				
-		plugin_hook ("groupmenu", $hookParams) ; 
-
-		echo $this->tabGenerator($TABS_DIRS,$TABS_TITLES,true,$selected,'white','100%');
-*/
+    }
+    
+    function project_tabs($toptab,$group_id) {
+        $project=project_get_object($group_id);
+        if ($project->isError()) {
+            //wasn't found or some other problem
+            return;
+        }
+        $output   = '';
+        $tabs     = $this->_getProjectTabs($toptab, $project);
+        $nb       = count($tabs);
+        $selected = false;
+        $TABS_DIRS   = array();
+        $TABS_TITLES = array();
+        for($i = 0; $i < $nb ; $i++) {
+            $TABS_DIRS[]   = $tabs[$i]['link'];
+            $TABS_TITLES[] = $tabs[$i]['label'];
+            if ($tabs[$i]['enabled'] === true) {
+                $selected = $i;
+            }
+        }
+        $output .= $this->tabGenerator($TABS_DIRS,$TABS_TITLES,true,$selected);
+        echo $output;
 	}
 
 	function tabGenerator($TABS_DIRS,$TABS_TITLES,$nested=false,$selected=false,$sel_tab_bgcolor='WHITE',$total_width='100%') {

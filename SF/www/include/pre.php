@@ -155,11 +155,11 @@ require_once('theme.php');
 
 // HTML layout class, may be overriden by the Theme class
 if ($GLOBALS['sys_is_theme_custom']) {
-    $path_to_theme = getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/themes/';
+    $GLOBALS['path_to_theme'] = getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/themes/'.$GLOBALS['sys_user_theme'];
 } else {
-    $path_to_theme = $GLOBALS['sys_themeroot'];
+    $GLOBALS['path_to_theme'] = $GLOBALS['sys_themeroot'].'/'.$GLOBALS['sys_user_theme'];
 }
-require_once($path_to_theme.'/'.$GLOBALS['sys_user_theme'].'/Theme.class');
+require_once($GLOBALS['path_to_theme'].'/Theme.class');
 $HTML = new Theme();
 
 // OSDN functions and defs

@@ -59,6 +59,7 @@ if($plugins->isEmpty()) {
     $output .= $Language->getText('plugin_pluginsadministration','there_is_no_plugin');
 } else {
     $titles = array();
+    $titles[] = '';
     $titles[] = $Language->getText('plugin_pluginsadministration','Plugin');
     $titles[] = $Language->getText('plugin_pluginsadministration','Description');
     $titles[] = $Language->getText('plugin_pluginsadministration','Version');
@@ -77,6 +78,7 @@ if($plugins->isEmpty()) {
             $name = get_class($plugin);
         }
         $plugins_table[] = array(
+            'icon'        => $enabled?$descriptor->getEnabledIconPath():$descriptor->getDisabledIconPath(),
             'plugin_id'   => $plugin->getId(), 
             'name'        => $name, 
             'description' => $descriptor->getDescription(), 
@@ -100,6 +102,7 @@ if($plugins->isEmpty()) {
     for($i = 0; $i < count($plugins_table) ; $i++) {
         $output .= '<tr class="'.util_get_alt_row_color($i).'" '.($plugins_table[$i]['enabled']?'':'style="font-style:italic;"').' >';
         
+        $output .= '<td width="26" style="text-align:center;"><img src="'.$plugins_table[$i]['icon'].'" alt="'.$plugins_table[$i]['name'].'" width="24" /></td>';
         $output .= '<td>'.$plugins_table[$i]['name'].'</td>';
         $output .= '<td>'.$plugins_table[$i]['description'].'</td>';
         $output .= '<td>'.$plugins_table[$i]['version'].'</td>';

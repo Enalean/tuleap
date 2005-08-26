@@ -24,7 +24,7 @@ class Plugin {
         return $this->id;
     }
     
-    function getPluginInfo() {
+    function &getPluginInfo() {
         return $this->pluginInfo;
     }
     

@@ -1,0 +1,22 @@
+<?php
+
+require_once('common/plugin/PluginDescriptor.class');
+
+/**
+ * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+ * 
+ * $Id: Sanitizer.class,v 1.1 2005/05/10 09:48:11 nterray Exp $
+ *
+ * PluginsAdministrationPluginDescriptor
+ */
+class PluginsAdministrationPluginDescriptor extends PluginDescriptor {
+    
+    function PluginsAdministrationPluginDescriptor($name, $version, $description) {
+        $this->PluginDescriptor($name, $version, $description);
+    }
+    
+    function _getIconPath($icon_name, $enabled, $extension) {
+        return '/plugins/pluginsadministration/'.$icon_name.($enabled?'':'_diabled').$extension;
+    }
+}
+?>
