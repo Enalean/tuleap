@@ -238,18 +238,20 @@ function check_values($row,&$data,$used_fields,$parsed_labels,$predefined_values
           $lbl_cc_comment = 'Commentaire CC';
       }
 
-      if ($field_name != "artifact_id" &&
-	  $field_name != "open_date" &&
-	  $field_name != "submitted_by" &&
-	  $label != $lbl_follow_ups &&
-	  $label != $lbl_is_dependent_on &&
-	  $label != $lbl_cc_list &&
-	  $label != $lbl_cc_comment &&
-	  !$field->isEmptyOk() && !in_array($label,$parsed_labels)) {
+      if ($field != "") {
+          if ($field_name != "artifact_id" &&
+              $field_name != "open_date" &&
+              $field_name != "submitted_by" &&
+              $label != $lbl_follow_ups &&
+              $label != $lbl_is_dependent_on &&
+              $label != $lbl_cc_list &&
+              $label != $lbl_cc_comment &&
+              !$field->isEmptyOk() && !in_array($label,$parsed_labels)) {
 
-	$errors .= $Language->getText('tracker_import_utils','field_mandatory_and_line',array($row+1,implode(",",$data),$label,$ath->getName()));
-	  return false;
-      } 
+              $errors .= $Language->getText('tracker_import_utils','field_mandatory_and_line',array($row+1,implode(",",$data),$label,$ath->getName()));
+              return false;
+          } 
+      }
     }
   }
   
