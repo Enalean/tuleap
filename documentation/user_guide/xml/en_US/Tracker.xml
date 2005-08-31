@@ -1886,12 +1886,17 @@ width="14.5cm" />
     </figure>
 
     <para>The configuration settings for a given tracker is divided
-      in six sections:</para>
+      in seven sections:</para>
 
     <itemizedlist mark="bullet" spacing="compact">
       <listitem><para><emphasis role="bold">General
 	Settings</emphasis>: name description, access permission and
 	privacy are defined in this section</para>
+      </listitem>
+      <listitem><para><emphasis role="bold">Permissions
+        Management</emphasis>: allows you to give different
+      access permissions to different users depending on their
+      role.</para>
       </listitem>
       <listitem><para><emphasis role="bold">Manage Canned
 	Responses</emphasis>: allows you to create some pre-defined
