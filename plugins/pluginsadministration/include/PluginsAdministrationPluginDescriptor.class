@@ -16,7 +16,7 @@ class PluginsAdministrationPluginDescriptor extends PluginDescriptor {
     }
     
     function _getIconPath($icon_name, $enabled, $extension) {
-        return '/plugins/pluginsadministration/'.$icon_name.($enabled?'':'_diabled').$extension;
+        return '/plugins/pluginsadministration/'.$icon_name.($enabled?'':'_disabled').$extension;
     }
 }
 ?>
