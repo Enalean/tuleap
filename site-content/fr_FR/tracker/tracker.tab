@@ -127,7 +127,7 @@ tracker_masschange	mass_change_report	Rapport de mise à jour massive
 #
 tracker_import_utils	field_not_known	"$1" est un champ inconnu dans cet outil de suivi $2
 tracker_import_utils	field_mandatory	"$1" est un champ obligatoire dans l'outil de suivi $2. Veuillez le spécifier dans votre fichier CSV.
-tracker_import_utils	not_a_predefined_value	<b>Ligne $1 [</b>$2<b>]</b>:<br>la valeur "$3" ne figure pas parmi les valeurs prédéfinies du champ "$3" ($4).
+tracker_import_utils	not_a_predefined_value	<b>Ligne $1 [</b>$2<b>]</b>:<br>la valeur "$3" ne figure pas parmi les valeurs prédéfinies du champ "$4" ($5).
 tracker_import_utils	field_mandatory_and_current	<b>Ligne $1 [</b>$2<b>]</b>:<br>"$3" est un champ obligatoire pour cet outil de suivi $4. Veuillez le spécifier dans votre fichier CSV (la valeur courante est "$5").
 tracker_import_utils	incorrect_date	<b>Ligne $1 [</b>$2<b>]</b>:<br>La date "$3" a un format incorrect (AAAA-MM-JJ).
 tracker_import_utils	field_mandatory_and_line	<b>Ligne $1 [</b>$2<b>]</b>:<br>"$3" est un champ obligatoire dans l'outil de suivi $4. Veuillez le spécifier dans votre fichier CSV.	

@@ -700,13 +700,13 @@ function parse_details($details,&$parsed_details,&$errors,$for_parse_report=fals
       continue;
     }
     $comment = trim($comment);
-    
+
     //skip the "Date: "
     if (strpos($comment, $Language->getText('tracker_import_utils','date').":") === false) {
       //if no date given, consider this whole string as the comment
 
       //try nevertheless if we can apply legacy Bug and Task export format
-      if (parse_legacy_details($details,&$parsed_details,&$errors,$for_parse_report)) {
+      if (parse_legacy_details($details,$parsed_details,$errors,$for_parse_report)) {
 	return true;
       } else {
 	if ($for_parse_report) {
@@ -828,8 +828,10 @@ function parse_legacy_details($details,&$parsed_details,&$errors,$for_parse_repo
   global $sys_lf, $art_field_fact, $ath, $sys_datefmt,$user_id,$Language;
 
   $comments = split("==================================================",$details);
-
+  
   $i = 0;
+
+  
   while (list(,$comment) = each($comments)) {
 
     $i++;
@@ -865,7 +867,7 @@ function parse_legacy_details($details,&$parsed_details,&$errors,$for_parse_repo
       $errors .= $Language->getText('tracker_import_utils','specify_originator',array($i-1,$comment));
       return false;
     }
-    
+
     $comment = substr($comment, ($by_position + 4));
     $on_position = strpos($comment, $Language->getText('global','on').": ");
     $by = trim(substr($comment, 0, $on_position));
@@ -882,7 +884,6 @@ function parse_legacy_details($details,&$parsed_details,&$errors,$for_parse_repo
 	return false;
       }
     }
-
     // On:
     $comment = substr($comment, ($on_position+4));
     $on = strtok($comment,"\n\t\r\0\x0B");
@@ -895,9 +896,10 @@ function parse_legacy_details($details,&$parsed_details,&$errors,$for_parse_repo
     $arr["type"] = $comment_type;
     $arr["comment"] = trim($comment);
     $parsed_details[] = $arr;
+    return true;
   }
   
-  return true;
+  return false;
 }
 
 
@@ -935,7 +937,7 @@ function prepare_vfl($data,$used_fields,$parsed_labels,$predefined_values,&$arti
 
     // FOLLOW-UP COMMENTS
     if ($label == $lbl_follow_ups) {
-      $field_name = "details";
+      //$field_name = "details";
       if ($data[$label] != "" && trim($data[$label]) != $Language->getText('tracker_import_utils','no_followups')) {
 	$details = $data[$label];
       }

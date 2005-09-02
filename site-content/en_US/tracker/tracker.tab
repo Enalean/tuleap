@@ -122,7 +122,7 @@ tracker_masschange	mass_change_report	Mass Change Report
 #
 tracker_import_utils	field_not_known	"$1" is not a known field in tracker $2
 tracker_import_utils	field_mandatory	"$1" is a mandatory field in tracker $2. Please specify it in your CSV file.
-tracker_import_utils	not_a_predefined_value	<b>Line $1 [</b>$2<b>]</b>:<br>value "$3" is not one of the predefined values of field "$3" ($4).
+tracker_import_utils	not_a_predefined_value	<b>Line $1 [</b>$2<b>]</b>:<br>value "$3" is not one of the predefined values of field "$4" ($5).
 tracker_import_utils	field_mandatory_and_current	<b>Line $1 [</b>$2<b>]</b>:<br>"$3" is a mandatory field in tracker $4. Please specify it in your csv file (current value is "$5").
 tracker_import_utils	incorrect_date	<b>Line $1 [</b>$2<b>]</b>:<br>Date "$3" is not in correct format (YYYY-MM-DD).
 tracker_import_utils	field_mandatory_and_line	<b>Line $1 [</b>$2<b>]</b>:<br>"$3" is a mandatory field in tracker $4. Please specify it in your csv file.	
