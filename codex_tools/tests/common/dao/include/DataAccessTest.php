@@ -31,7 +31,7 @@ class DataAccessTest extends UnitTestCase {
         $sys_dbpasswd = 'pass';
         $sys_dbname   = 'db';
         $da =& new DataAccess($sys_dbhost, $sys_dbuser, $sys_dbpasswd, $sys_dbname);
-        $this->assertEqual($da->isError(), "Unknown MySQL Server Host '".$sys_dbhost."' (1)");
+        $this->assertWantedPattern("/Unknown MySQL Server Host '".$sys_dbhost."'/",$da->isError());
         require(getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/conf/local.inc');
         $sys_dbname_2 = 'db that does not exist';
         $da =& new DataAccess($sys_dbhost, $sys_dbuser, $sys_dbpasswd, $sys_dbname_2);
