@@ -49,6 +49,23 @@ class PluginHookPriorityManagerTest extends UnitTestCase {
         
         $priority_dao->tally();
     }
+    
+    function testSetPriorityForPluginHook() {
+        $plugin       =& new MockPlugin($this);
+        $plugin->setReturnValue('getId', 123);
+        
+        $priority_dao =& new MockPriorityPluginHookDao($this);
+        $priority_dao->expectCallCount('setPriorityForHook_PluginId', 1);
+        $priority_dao->expectArguments('setPriorityForHook_PluginId', array('hook', 123, 15));
+        $priority_dao->setReturnValue('setPriorityForHook_PluginId', true);
+        
+        $phgm =& new PluginHookPriorityManagerTestVersion($this);
+        $phgm->setReturnReference('_getPriorityPluginHookDao', $priority_dao);
+
+        $this->assertTrue($phgm->setPriorityForPluginHook($plugin, 'hook', 15));
+        
+        $priority_dao->tally();
+    }
 }
 
 if (CODEX_RUNNER === __FILE__) {

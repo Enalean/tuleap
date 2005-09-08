@@ -25,6 +25,11 @@ class PluginHookPriorityManager {
         return $priority;
     }
     
+    function setPriorityForPluginHook(&$plugin, $hook, $priority) {
+        $priority_dao =& $this->_getPriorityPluginHookDao();
+        return $priority_dao->setPriorityForHook_PluginId($hook, $plugin->getId(), $priority);
+    }
+    
     function &_getPriorityPluginHookDao() {
         if (!is_a($this->priorityPluginHookDao, 'PriorityPluginHookDao')) {
             $this->priorityPluginHookDao =& new PriorityPluginHookDao(CodexDataAccess::instance());
