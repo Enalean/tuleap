@@ -1,0 +1,35 @@
+<?php
+require_once('common/dao/PriorityPluginHookDao.class');
+
+/**
+ * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+ * 
+ * $Id$
+ *
+ * PluginHookPriorityManager
+ */
+class PluginHookPriorityManager {
+    var $priorityPluginHookDao;
+
+    function PluginHookPriorityManager() {
+    }
+    
+    function getPriorityForPluginHook(&$plugin, $hook) {
+        $priority_dao =& $this->_getPriorityPluginHookDao();
+        $priority = 0;
+        if ($dar =& $priority_dao->searchByHook_PluginId($hook, $plugin->getId())) {
+            if ($row = $dar->getRow()) {
+                $priority = (int)$row['priority'];
+            }
+        }
+        return $priority;
+    }
+    
+    function &_getPriorityPluginHookDao() {
+        if (!is_a($this->priorityPluginHookDao, 'PriorityPluginHookDao')) {
+            $this->priorityPluginHookDao =& new PriorityPluginHookDao(CodexDataAccess::instance());
+        }
+        return $this->priorityPluginHookDao;
+    }
+}
+?>

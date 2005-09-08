@@ -2,9 +2,9 @@
 require_once('common/event/EventManager.class');
 
 require_once('common/plugin/PluginFactory.class');
+require_once('common/plugin/PluginHookPriorityManager.class');
 
-require_once('common/dao/PriorityPluginHookDao.class');
-require_once('common/dao/CodexDataAccess.class');
+
 
 require_once('common/include/String.class');
 
@@ -18,7 +18,7 @@ require_once('common/include/String.class');
 class PluginManager {
     
     var $plugins_loaded;
-    var $priorityPluginHookDao;
+    var $pluginHookPriorityManager;
     
     function PluginManager() {
         $this->plugins_loaded = false;
@@ -30,19 +30,14 @@ class PluginManager {
         
         $col_enabled_plugins =& $plugin_factory->getEnabledPlugins();
         $enabled_plugins =& $col_enabled_plugins->iterator();
+        $priority_manager =& $this->_getPluginHookPriorityManager();
         while($enabled_plugins->hasNext()) {
             $plugin =& $enabled_plugins->next();
             $hooks =& $plugin->getHooksAndCallbacks();
             $iter =& $hooks->iterator();
             while($iter->hasNext()) {
                 $hook =& $iter->next();
-                $priority = 0;
-                $priority_dao =& $this->_getPriorityPluginHookDao();
-                if ($dar =& $priority_dao->searchByHook_PluginId($hook['hook'], $plugin->getId())) {
-                    if ($row = $dar->getRow()) {
-                        $priority = (int)$row['priority'];
-                    }
-                }
+                $priority = $priority_manager->getPriorityForPluginHook($plugin, $hook['hook']);
                 $event_manager->addListener($hook['hook'], $plugin, $hook['callback'], $hook['recallHook'], $priority);
             }
         }
@@ -57,11 +52,11 @@ class PluginManager {
         return EventManager::instance();
     }
     
-    function &_getPriorityPluginHookDao() {
-        if (!is_a($this->priorityPluginHookDao, 'PriorityPluginHookDao')) {
-            $this->priorityPluginHookDao =& new PriorityPluginHookDao(CodexDataAccess::instance());
+    function &_getPluginHookPriorityManager() {
+        if (!is_a($this->pluginHookPriorityManager, 'PluginHookPriorityManager')) {
+            $this->pluginHookPriorityManager =& new PluginHookPriorityManager();
         }
-        return $this->priorityPluginHookDao;
+        return $this->pluginHookPriorityManager;
     }
     
     function isPluginsLoaded() {

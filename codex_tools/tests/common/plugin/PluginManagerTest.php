@@ -8,7 +8,9 @@ if (! defined('CODEX_RUNNER')) {
 require_once('tests/simpletest/unit_tester.php');
 require_once('tests/simpletest/mock_objects.php'); //uncomment to use Mocks
 require_once('common/plugin/PluginManager.class');
-Mock::generatePartial('PluginManager', 'PluginManagerTestVersion', array('_getPluginFactory', '_getEventManager', '_getPriorityPluginHookDao'));
+Mock::generatePartial('PluginManager', 'PluginManagerTestVersion', array('_getPluginFactory', '_getEventManager', '_getPluginHookPriorityManager'));
+require_once('common/plugin/PluginHookPriorityManager.class');
+Mock::generate('PluginHookPriorityManager');
 require_once('common/plugin/PluginFactory.class');
 Mock::generate('PluginFactory');
 require_once('common/plugin/Plugin.class');
@@ -19,8 +21,6 @@ require_once('common/collection/Iterator.class');
 Mock::generate('Iterator');
 require_once('common/event/EventManager.class');
 Mock::generate('EventManager');
-require_once('common/dao/PriorityPluginHookDao.class');
-Mock::generate('PriorityPluginHookDao');
 require_once('common/dao/include/DataAccessResult.class');
 Mock::generate('DataAccessResult');
 /**
@@ -111,29 +111,39 @@ class PluginManagerTest extends UnitTestCase {
         $em->expectArgumentsAt(2, 'addListener', $args_2);
 
         //The priorities
-        $priority_dao =& new MockPriorityPluginHookDao($this);
-        $priority_dar =& new MockDataAccessResult($this);
-        $priority_dao->setReturnReference('searchByHook_PluginId', $priority_dar);
-        $priority_dao->expectArgumentsAt(0, 'searchByHook_PluginId', array($hook_A['hook'], 123));
-        $priority_dao->expectArgumentsAt(1, 'searchByHook_PluginId', array($hook_B['hook'], 123));
-        $priority_dao->expectArgumentsAt(2, 'searchByHook_PluginId', array($hook_A['hook'], 124));
-        $priority_dar->setReturnValue('getRow', false);
-        $priority_dar->setReturnValueAt(2, 'getRow', array('priority' => '10')); //124|hook_A
+        
+        $phgm =& new MockPluginHookPriorityManager($this);
+        $phgm->expectCallCount('getPriorityForPluginHook', 3);
+        $args_phgm_0 = array();
+        $args_phgm_0[] =& $plugin_1;
+        $args_phgm_0[] = $hook_A['hook'];
+        $args_phgm_1 = array();
+        $args_phgm_1[] =& $plugin_1;
+        $args_phgm_1[] = $hook_B['hook'];
+        $args_phgm_2 = array();
+        $args_phgm_2[] =& $plugin_2;
+        $args_phgm_2[] = $hook_A['hook'];
+        
+        $phgm->expectArgumentsAt(0, 'getPriorityForPluginHook', $args_phgm_0);
+        $phgm->expectArgumentsAt(1, 'getPriorityForPluginHook', $args_phgm_1);
+        $phgm->expectArgumentsAt(2, 'getPriorityForPluginHook', $args_phgm_2);
+        $phgm->setReturnValue('getPriorityForPluginHook', 0);
+        $phgm->setReturnValueAt(2, 'getPriorityForPluginHook', 10);//124|hook_A
         
         //The plugins manager
         $pm =& new PluginManagerTestVersion($this);
         $pm->setReturnReference('_getPluginFactory', $plugin_factory);
         $pm->setReturnReference('_getEventManager', $em);
-        $pm->setReturnReference('_getPriorityPluginHookDao', $priority_dao);
+        $pm->setReturnReference('_getPluginHookPriorityManager', $phgm);
         $pm->PluginManager();
         $this->assertFalse($pm->isPluginsLoaded());
         $pm->loadPlugins();
         $this->assertTrue($pm->isPluginsLoaded());
         
         $em->tally();
-        $priority_dao->tally();
         $plugin_1->tally();
         $plugin_2->tally();
+        $phgm->tally();
     }
     
     function testSingleton() {
@@ -224,6 +234,10 @@ class PluginManagerTest extends UnitTestCase {
         $this->assertReference($pm->installPlugin('New Plugin'), $plugin);
         
     }
+    function testSetExistingPriorityForPlugin() {
+        
+    }
+
 }
 
 if (CODEX_RUNNER === __FILE__) {

@@ -55,6 +55,7 @@ $alltest->addTestFile('common/plugin/PluginInfoTest.php');
 $alltest->addTestFile('common/plugin/PluginFactoryTest.php');
 $alltest->addTestFile('common/plugin/PluginManagerTest.php');
 $alltest->addTestFile('common/plugin/PluginDescriptorTest.php');
+$alltest->addTestFile('common/plugin/PluginHookPriorityManagerTest.php');
 // }}}
 
 //We run the tests
