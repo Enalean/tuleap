@@ -554,6 +554,9 @@ foreach my $project (@project_settings_list)
         $subject = "$subject_prefix $subject";
       }
     $subject = $svnmailheader.$subject;
+    # Remove newlines from subject:
+    $subject =~ s/\n//g;
+
     my $mail_from = $mailname;
 
     if ($from_address =~ /\w/)
