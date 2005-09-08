@@ -529,6 +529,9 @@ $TOUCH /etc/httpd/conf/codex_svnhosts_ssl.conf
 $CP $INSTALL_DIR/SF/utils/backup_job /home/tools
 $CHOWN root.root /home/tools/backup_job
 $CHMOD 740 /home/tools/backup_job
+$CP $INSTALL_DIR/SF/utils/svn/backup_subversion.sh /home/tools
+$CHOWN root.root /home/tools/backup_subversion.sh
+$CHMOD 740 /home/tools/backup_subversion.sh
 # needed by newparse.pl
 $TOUCH /etc/httpd/conf/htpasswd
 $CHMOD 644 /etc/httpd/conf/htpasswd
@@ -563,7 +566,7 @@ substitute '/var/named/codex.zone' '%dns_serial%' "$dns_serial"
 
 todo "Customize /etc/codex/conf/local.inc"
 todo "Customize /etc/codex/documentation/user_guide/xml/en_US/ParametersLocal.dtd"
-todo "You may also want to customize /etc/httpd/conf/httpd.conf /etc/httpd/conf/mailman.conf and /home/tools/backup_job"
+todo "You may also want to customize /etc/httpd/conf/httpd.conf /etc/httpd/conf/mailman.conf /home/tools/backup_job and /home/tools/backup_subversion.sh"
 
 ##############################################
 # Installing phpMyAdmin
@@ -912,9 +915,15 @@ $CAT <<'EOF' >/tmp/cronfile
 # Run on Monday at 1am
 0 1 * * Mon (cd /home/httpd/SF/utils/underworld-root; ./db_project_weekly_metric.pl)
 #
+# daily incremental backup of subversion repositories
+45 23 * * 1-6 /home/tools/backup_subversion.sh -i
+#
+# weekly full backup of subversion repositories (0:15 on Sunday)
+15 0 * * Sun /home/tools/backup_subversion.sh
+#
 # weekly backup preparation (mysql shutdown, file dump and restart)
 45 0 * * Sun /home/tools/backup_job
-#
+
 # Delete all files in FTP incoming that are older than 2 weeks (336 hours)
 #
 0 3 * * * /usr/sbin/tmpwatch -m -f 336 /home/ftp/incoming

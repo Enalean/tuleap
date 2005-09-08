@@ -61,6 +61,7 @@ License
 <dt><a href="#HowTo_Restricted_Users">Enabling 'Restricted Users' on a CodeX server</a></dt>
 <dt><a href="#HowTo_Localize_Services">Localize service names</a></dt>
 <dt><a href="#HowTo_cvs2svn">Convert a CVS repository to Subversion</a></dt>
+<dt><a href="#HowTo_restoresvn">Restore a Subversion repository</a></dt>
 </dl></dd>
 </dl>
 <p></p>
@@ -1630,6 +1631,10 @@ projects</td>
       <td style="font-family: monospace;">/home/tools/backup_job</td>
       <td>Backup of all CodeX file system.</td>
     </tr>
+    <tr>
+      <td style="font-family: monospace;">/home/tools/backup_subversion.sh</td>
+      <td>Backup of all CodeX subversion repositories.</td>
+    </tr>
   </tbody>
 </table>
 <br>
@@ -1951,18 +1956,16 @@ apply the Perl patch as well if there is one.</span><br>
 <hr width="100%" size="2"><br>
 <h1><a name="BackupRestore"></a>Backup/Restore</h1>
 <h2>Backup</h2>
-<p>There are two different types of backups that run on CodeX.&nbsp;
+<p>There are three different types of backups that run on CodeX.&nbsp;
 First, MySQL data is backed up to disk using the linux "dump"
-command.&nbsp; And finally, all disk partitions are backed up to tape
+command. Second, the Subversion repositories are backed up with the backup_subversion.sh script. And finally, all disk partitions are backed up to tape
 using Legato software.
 </p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.&nbsp;&nbsp;&nbsp;
+<ol><li>
 MySQL data
 - A cron job is scheduled to run every Sunday morning at 00:45.&nbsp;
 MySQL
-data is <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-backed up to disk.&nbsp; The sequence is as follows: </p>
+data is backed up to disk.&nbsp; The sequence is as follows: </p>
 <ul>
   <ul>
     <li> /etc/rc.d/init.d/mysql stop</li>
@@ -1983,18 +1986,17 @@ week's date/time&gt; to</li>
 </ul>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 The whole MySQL data backup process takes less than 15 seconds
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2.&nbsp;&nbsp;&nbsp; Disk
-Partitions - Using Legato software, a full backup of all disks (except
-/tmp) is done beginning <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-at approximately 01:00 every Sunday morning.&nbsp; It is run after the
-MySQL data <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-is backed up to disk so that the MySQL dump file goes to tape.&nbsp;
+<p>
+</li>
+<li>Subversion repositories: a specific subversion backup script (/home/httpd/utils/subversion_backup.sh) is run in the root crontab. 
+<br>The script offers two backup mechanisms: full backup, and incremental backup (with '-i' flag). Currently, full backups are run weekly, while incremental ones are run daily.
+<li>
+<p>Disk Partitions - Using Legato software, a full backup of all disks (except
+/tmp) is done beginning at approximately 01:00 every Sunday morning.&nbsp; It is run after the
+MySQL data is backed up to disk so that the MySQL dump file goes to tape.&nbsp;
 All remaining
-days <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-of the week (Monday - Saturday) run incremental backups. </p>
+days of the week (Monday - Saturday) run incremental backups. </p>
+</ol>
 <br>
 <h2>Restore</h2>
 <p>
@@ -2085,6 +2087,7 @@ starts.&nbsp; MySQL variables are set here.</li>
         <li><b>backup_job:</b>&nbsp; The script that runs from cron at
 00:45
 every Sunday.</li>
+        <li><b>backup_subversion.sh:</b>&nbsp; The script that performs incremental and full backups of the subversion repositories.
       </ul>
       </td>
     </tr>
@@ -2858,6 +2861,29 @@ This will convert the CVS repository with all the historical information (includ
 To select a set of historical data, please read: <a href="http://cvs2svn.tigris.org/cvs2svn.html">http://cvs2svn.tigris.org/cvs2svn.html</a>
 <br><b>Note:</b> If the conversion fails with a Berkeley DB error, this might be caused by BDB version differences between the svn client (v1.2+) and the svn repository (v1.0 or v1.1). In this case, delete the old repository, and recreate it with the 'xerox_crontab.sh' script. Actually, you should also upgrade all existing svn repositories that use the deprecated version of BDB...
 </ul>
+
+<hr>
+
+
+<h2><a name="HowTo_restoresvn">Restore a Subversion repository</a></h2>
+<p>
+Subversion repositories are backed up every day. So it is always possible to restore the repository as it was the day before.
+<br>There are two Subversion backup directories:
+<ul><li>/home1/subversion_backup/full contains the full backups performed weekly
+<li>/home1/subversion_backup/incr contains the incremental backups performed daily.
+</ul>
+In order to restore the most recent version of the repository, you need:
+<ul><li>to restore the most recent full backup: 
+<br>simply copy /home1/subversion_backup/full/current/projectname-rev1 as /svnroot/projectname, and note the number 'rev1'.
+<li>then restore the incremental backups starting with 'rev1+1':
+<pre>
+cd /home1/subversion_backup/incr/projectname
+bunzip2 < projectname.incr.rev1+1:rev2.bz2 | svnadmin load /svnroot/projectname 
+bunzip2 < projectname.incr.rev2+1:rev3.bz2 | svnadmin load /svnroot/projectname 
+etc.
+</pre>
+</ul>
+
 
 
 <hr width="100%" size="2" noshade="noshade"> End of Document<br>
