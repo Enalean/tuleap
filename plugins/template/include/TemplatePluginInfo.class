@@ -1,0 +1,14 @@
+<?php
+
+require_once('common/plugin/PluginInfo.class');
+require_once('TemplatePluginDescriptor.class');
+
+class TemplatePluginInfo extends PluginInfo {
+    
+    function TemplatePluginInfo(&$plugin) {
+        $this->PluginInfo($plugin);
+        $this->setPluginDescriptor(new TemplatePluginDescriptor());
+    }
+    
+}
+?>

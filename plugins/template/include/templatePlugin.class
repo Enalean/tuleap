@@ -1,0 +1,21 @@
+<?php
+
+require_once('common/plugin/Plugin.class');
+require_once('TemplatePluginInfo.class');
+
+class TemplatePlugin extends Plugin {
+	
+	function TemplatePlugin($id) {
+		$this->Plugin($id);
+         $this->pluginInfo =& new TemplatePluginInfo($this);
+		$this->_addHook('hook_name');
+	}
+	
+	function CallHook($hook, $params) {
+		if ($hook == 'hook_name') {
+			//do Something
+		}
+	}
+}
+
+?>

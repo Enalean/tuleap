@@ -1,0 +1,12 @@
+<?php
+
+require_once('common/plugin/PluginDescriptor.class');
+
+class TemplatePluginDescriptor extends PluginDescriptor {
+    
+    function TemplatePluginDescriptor() {
+        $this->PluginDescriptor('Template', 'v1.0', 'Base to develop CodeX Plugins.');
+    }
+    
+}
+?>
