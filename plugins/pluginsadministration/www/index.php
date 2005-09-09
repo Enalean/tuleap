@@ -1,4 +1,4 @@
-<?php
+    <?php
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
@@ -15,8 +15,11 @@ $GLOBALS['Language']->loadLanguageMsg('pluginsAdministration', 'pluginsadministr
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
-$plugin_manager =& PluginManager::instance();
+//get managers
+$plugin_manager               =& PluginManager::instance();
 $plugin_hook_priority_manager =& new PluginHookPriorityManager();
+
+//Process request
 if (isset($_REQUEST['action']) && isset($_REQUEST['plugin_id'])) {
     $plugin_factory =& PluginFactory::instance();
     $plugin =& $plugin_factory->getPluginById($_REQUEST['plugin_id']);
@@ -36,10 +39,27 @@ if (isset($_REQUEST['action']) && isset($_REQUEST['plugin_id'])) {
     }
 } else {
     if (isset($_REQUEST['action'])) {
+        $plugin_factory =& PluginFactory::instance();
         switch ($_REQUEST['action']) {
             case 'install':
                 if (isset($_REQUEST['name'])) {
                     $plugin_manager->installPlugin($name);
+                }
+                break;
+            case 'update_priorities':
+                if (isset($_REQUEST['priorities'])) {
+                    $updated = false;
+                    foreach($_REQUEST['priorities'] as $hook => $plugins) {
+                        if (is_array($plugins)) {
+                            foreach($plugins as $id => $priority) {
+                                $plugin =& $plugin_factory->getPluginById((int)$id);
+                                $updated = $updated || $plugin_hook_priority_manager->setPriorityForPluginHook($plugin, $hook, (int)$priority);
+                            }
+                        }
+                    }
+                    if ($updated) {
+                        $GLOBALS['feedback'] .= 'Priorities updated';
+                    }
                 }
                 break;
             default:
@@ -47,9 +67,11 @@ if (isset($_REQUEST['action']) && isset($_REQUEST['plugin_id'])) {
         }
     }
 }
+
+//get all plugins
 $plugins    =& $plugin_manager->getAllPlugins();
 $priorities =  array();
-    
+
 $title = $Language->getText('plugin_pluginsadministration','title');
 $HTML->header(array('title'=>$title));
 $output = '<h2>'.$title.'</h2>';
@@ -60,7 +82,6 @@ if($plugins->isEmpty()) {
     $output .= $Language->getText('plugin_pluginsadministration','there_is_no_plugin');
 } else {
     $titles = array();
-    $titles[] = '';
     $titles[] = $Language->getText('plugin_pluginsadministration','Plugin');
     $titles[] = $Language->getText('plugin_pluginsadministration','Status');
     $titles[] = $Language->getText('plugin_pluginsadministration','Actions');
@@ -94,15 +115,14 @@ if($plugins->isEmpty()) {
             if (!isset($priorities[$hook->getInternalString()][$priority])) {
                 $priorities[$hook->getInternalString()][$priority] = array();
             }
-            $priorities[$hook->getInternalString()][$priority][$name] = $enabled;
+            $priorities[$hook->getInternalString()][$priority][$plugin->getId()] = array('name' => $name, 'enabled' => $enabled);
         }
     }
     usort($plugins_table, create_function('$a, $b', 'return $a["name"] > $b["name"];'));
     for($i = 0; $i < count($plugins_table) ; $i++) {
-        $output .= '<tr class="'.util_get_alt_row_color($i).'" '.($plugins_table[$i]['enabled']?'':'style="font-style:italic;"').' >';
+        $output .= '<tr class="'.util_get_alt_row_color($i).'" '.($plugins_table[$i]['enabled']?'':'style="font-style:italic; color:gray;"').' >';
         
-        $output .= '<td width="26" style="text-align:center;"><img src="'.$plugins_table[$i]['icon'].'" alt="'.$plugins_table[$i]['name'].'" width="48" /></td>';
-        $output .= '<td style="vertical-align:top;"><span style="font-size:1.1em; font-weight:bold;">'.$plugins_table[$i]['name'].'</span> &nbsp; <span style="font-size:0.9em;">'.$plugins_table[$i]['version'].'</span><br />';
+        $output .= '<td style="vertical-align:top;"><img src="'.$plugins_table[$i]['icon'].'" alt="'.$plugins_table[$i]['name'].'" width="48" style="float:left; margin:0px 4px;" /><span style="font-size:1.1em; font-weight:bold;">'.$plugins_table[$i]['name'].'</span> &nbsp; <span style="font-size:0.9em;">'.$plugins_table[$i]['version'].'</span><br />';
         $output .= $plugins_table[$i]['description'].'</td>';
         if ($plugins_table[$i]['enabled']) {
             $output .= '<td><a href="?action=disable&plugin_id='.$plugins_table[$i]['plugin_id'].'" title="'.$Language->getText('plugin_pluginsadministration','change_to_disabled').'">'.$Language->getText('plugin_pluginsadministration','enabled').'</a></td>';
@@ -150,54 +170,57 @@ $output .= '</fieldset>';
 if (count($priorities) > 0) {
     $show_priorities = false;
     foreach($priorities as $hook => $priorities_plugins) {
-        if (count($priorities_plugins, COUNT_RECURSIVE)-1 > 1) {
+        $nb_plugins = 0;
+        foreach($priorities_plugins as $priority => $plugins) {
+            $nb_plugins += count($plugins);
+        }
+        if ($nb_plugins > 1) {
             $show_priorities = true;
             break;
         }
     }
     
     if($show_priorities) {
+        $output .= '<form action="?" method="POST">';
         $output .= '<fieldset><legend>'.$Language->getText('plugin_pluginsadministration','priorities').'</legend>';
+        $output .= '<input type="hidden" name="action" value="update_priorities" />';
         function emphasis($name, $enable) {
             if (!$enable) {
-                $name = '<span style="font-style:italic;">'.$name.'</span>';
+                $name = '<span style="font-style:italic; color:gray;">'.$name.'</span>';
             }
             return $name;
         }
         ksort($priorities);
         foreach($priorities as $hook => $priorities_plugins) {
-            if (count($priorities_plugins, COUNT_RECURSIVE)-1 > 1) {
+            $output_for_hook = '';
+            krsort($priorities_plugins);
+            $class      = 0;
+            $nb_plugins = 0;
+            foreach($priorities_plugins as $priority => $plugins) {
+                $nb_plugins += count($plugins);
+                foreach($plugins as $id => $infos) {
+                    $output_for_hook .= '<tr class="'.util_get_alt_row_color($class).'"><td>';
+                    $output_for_hook .= emphasis($infos['name'], $infos['enabled']);
+                    $output_for_hook .= '</td><td>';
+                    $output_for_hook .= '<input type="text" name="priorities['.$hook.']['.$id.']" size="4" value="'.$priority.'" />';
+                    $output_for_hook .= '</td>';
+                    $output_for_hook .= '</tr>';
+                    $class++;
+                }
+            }
+            //We display hook only if necessary
+            if ($nb_plugins > 1) {
                 $output .= '<h3>Hook: '.$hook.'</h3>';
                 $titles = array();
                 $titles[] = $Language->getText('plugin_pluginsadministration','Plugin');
                 $titles[] = 'Priority';
                 $output .= html_build_list_table_top($titles);
-                krsort($priorities_plugins);
-                $class = 0;
-                foreach($priorities_plugins as $priority => $plugins) {
-                    foreach($plugins as $name => $enabled) {
-                        $output .= '<tr class="'.util_get_alt_row_color($class).'"><td>';
-                        $output .= emphasis($name, $enabled);
-                        $output .= '</td><td>';
-                        $output .= '<input type="text" size="4" value="'.$priority.'" />';
-                        
-                    /*
-                    reset($plugins);
-                    list($name, $enabled) = each($plugins);
-                    $output .= emphasis($name, $enabled);
-                    while (list($name, $enabled) = each($plugins)) {
-                        $output .= ', '.emphasis($name, $enabled);
-                    }
-                    */
-                        $output .= '</td>';
-                        $output .= '</tr>';
-                        $class++;
-                    }
-                }
+                $output .= $output_for_hook;
                 $output .= '</table>';
             }
         }
-        $output .= '<div style="text-align:center;"><input type="submit" value="Update priorities" /></div>';
+        $output .= '<div style="text-align:center;"><input type="submit" value="Update priorities" onclick="this.disabled = true;"/></div>';
+        $output .= '</form>';
         $output .= '</fieldset>';
 
     }

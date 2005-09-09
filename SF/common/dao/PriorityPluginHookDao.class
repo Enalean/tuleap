@@ -73,7 +73,26 @@ class PriorityPluginHookDao extends DataAccessObject {
     }
     
     function setPriorityForHook_PluginId($hook, $pluginId, $priority) {
-        $updated = $this->update("UPDATE priority_plugin_hook SET priority = '".addslashes($priority)."' WHERE hook = '".addslashes($hook)."' AND plugin_id = '".addslashes($pluginId)."'");
+        $updated = false;
+        //We search plugin/hook
+        if ($dar =& $this->searchByHook_PluginId($hook, $pluginId)) {
+            if ($row = $dar->getRow()) {
+                if ($row['priority'] == $priority) {
+                    //Do nothing, it's the same
+                } else {
+                    //priority == 0 => erase priority
+                    if ($priority == 0) {
+                        $updated = $this->update("DELETE FROM priority_plugin_hook WHERE hook = '".addslashes($hook)."' AND plugin_id = '".addslashes($pluginId)."'");
+                    } else {
+                        $updated = $this->update("UPDATE priority_plugin_hook SET priority = '".addslashes($priority)."' WHERE hook = '".addslashes($hook)."' AND plugin_id = '".addslashes($pluginId)."'");
+                    }
+                }
+            } else {
+                if ($priority != 0) {
+                    $updated = $this->create($pluginId, $hook, $priority);
+                }
+            }
+        }
         return $updated;
     }
 }
