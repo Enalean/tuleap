@@ -23,32 +23,5 @@ class PluginDescriptor {
     function getName()        { return $this->name; }
     function getVersion()     { return $this->version; }
     function getDescription() { return $this->description; }
-    
-    //{{{ icon 
-    function _getIconPath($icon_name, $enabled, $extension) {
-        if (isset($GLOBALS['path_to_theme']) && is_file($GLOBALS['path_to_theme'].'/images/'.$icon_name.'.png')) {
-            if ($GLOBALS['sys_is_theme_custom']) {
-                $icon_path = '/custom/'.$GLOBALS['sys_user_theme'].'/images/';
-            } else {
-                $icon_path = '/themes/'.$GLOBALS['sys_user_theme'].'/images/';
-            }
-        } else {
-            $icon_path = '/themes/codex/images/';
-        }
-        
-        if ($enabled) {
-            $icon_path .= $icon_name.$extension;
-        } else {
-            $icon_path .= $icon_name.'_disabled'.$extension;
-        }
-        return $icon_path;
-    }
-    function getEnabledIconPath() {
-        return $this->_getIconPath('plugin_icon', true, '.png');
-    }
-    function getDisabledIconPath() {
-        return $this->_getIconPath('plugin_icon', false, '.png');
-    }
-    //}}}
 }
 ?>

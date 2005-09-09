@@ -162,8 +162,7 @@ class PluginFactory {
         $dir = openDir($GLOBALS['sys_pluginsroot']);
         while ($file = readDir($dir)) {
             if (($file!='.')&&($file!='..')&&($file!='CVS')&&($file!='.svn')&&(is_dir($GLOBALS['sys_pluginsroot'].DIRECTORY_SEPARATOR.$file))) {
-                $dar =& $this->plugin_dao->searchByName($file);
-                if ($dar->rowCount() < 1) {
+                if (!$this->isPluginInstalled($file)) {
                     $col[] = $file;
                 }
             }
@@ -172,12 +171,27 @@ class PluginFactory {
         return $col;
     }
 
+    function isPluginInstalled($name) {
+        $dar =& $this->plugin_dao->searchByName($name);
+        return ($dar->rowCount() > 0);
+    }
+        
     function removePlugin(&$plugin) {
         $id = new String($plugin->getId());
         $this->retrieved_plugins->removeKey($id);
         $this->enabled_plugins->removeKey($id);
         $this->disabled_plugins->removeKey($id);
         return $this->plugin_dao->removeById($plugin->getId());
+    }
+    
+    function getNameForPlugin(&$plugin) {
+        $name = '';
+        if ($dar =& $this->plugin_dao->searchById($plugin->getId())) {
+            if ($row = $dar->getRow()) {
+                $name = $row['name'];
+            }
+        }
+        return $name;
     }
 }
 ?>

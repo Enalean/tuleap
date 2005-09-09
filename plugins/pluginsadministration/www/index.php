@@ -77,7 +77,7 @@ $HTML->header(array('title'=>$title));
 $output = '<h2>'.$title.'</h2>';
 
 //{{{ Installed Plugins
-$output .= '<fieldset><legend>'.$Language->getText('plugin_pluginsadministration','plugins').'</legend><form>';
+$output .= '<fieldset style="margin-bottom:10px;"><legend style="font-size:1.3em; font-weight:bold;">'.$Language->getText('plugin_pluginsadministration','plugins').'</legend><form>';
 if($plugins->isEmpty()) {
     $output .= $Language->getText('plugin_pluginsadministration','there_is_no_plugin');
 } else {
@@ -98,7 +98,6 @@ if($plugins->isEmpty()) {
             $name = get_class($plugin);
         }
         $plugins_table[] = array(
-            'icon'        => $enabled?$descriptor->getEnabledIconPath():$descriptor->getDisabledIconPath(),
             'plugin_id'   => $plugin->getId(), 
             'name'        => $name, 
             'description' => $descriptor->getDescription(), 
@@ -118,11 +117,11 @@ if($plugins->isEmpty()) {
             $priorities[$hook->getInternalString()][$priority][$plugin->getId()] = array('name' => $name, 'enabled' => $enabled);
         }
     }
-    usort($plugins_table, create_function('$a, $b', 'return $a["name"] > $b["name"];'));
+    usort($plugins_table, create_function('$a, $b', 'return strcasecmp($a["name"] , $b["name"]);'));
     for($i = 0; $i < count($plugins_table) ; $i++) {
-        $output .= '<tr class="'.util_get_alt_row_color($i).'" '.($plugins_table[$i]['enabled']?'':'style="font-style:italic; color:gray;"').' >';
+        $output .= '<tr class="'.util_get_alt_row_color($i).'" >';
         
-        $output .= '<td style="vertical-align:top;"><img src="'.$plugins_table[$i]['icon'].'" alt="'.$plugins_table[$i]['name'].'" width="48" style="float:left; margin:0px 4px;" /><span style="font-size:1.1em; font-weight:bold;">'.$plugins_table[$i]['name'].'</span> &nbsp; <span style="font-size:0.9em;">'.$plugins_table[$i]['version'].'</span><br />';
+        $output .= '<td style="vertical-align:top;'.($plugins_table[$i]['enabled']?'':'font-style:italic; color:gray;').'"><span style="font-size:1.1em; font-weight:bold;">'.$plugins_table[$i]['name'].'</span> &nbsp; <span style="font-size:0.9em;">'.$plugins_table[$i]['version'].'</span><br />';
         $output .= $plugins_table[$i]['description'].'</td>';
         if ($plugins_table[$i]['enabled']) {
             $output .= '<td><a href="?action=disable&plugin_id='.$plugins_table[$i]['plugin_id'].'" title="'.$Language->getText('plugin_pluginsadministration','change_to_disabled').'">'.$Language->getText('plugin_pluginsadministration','enabled').'</a></td>';
@@ -140,8 +139,8 @@ $output .= '</form></fieldset>';
 //{{{ Not yet installed plugins
 $not_yet_installed =& $plugin_manager->getNotYetInstalledPlugins();
 if ($not_yet_installed && count($not_yet_installed) > 0) {
-    $output .= '<fieldset><legend>'.$Language->getText('plugin_pluginsadministration','not_yet_installed').'</legend>';
-    
+    $output .= '<fieldset style="margin-bottom:10px;"><legend style="font-size:1.3em; font-weight:bold;">'.$Language->getText('plugin_pluginsadministration','not_yet_installed').'</legend>';
+    $output .= '<div>Select the plugin you want to install:</div>';
     $prefixe = '<a href="?action=install&name=';
     $middle  = '" title="'.$Language->getText('plugin_pluginsadministration','install_plugin').'">';
     $suffixe = '</a>';
@@ -169,20 +168,21 @@ $output .= '</fieldset>';
 
 if (count($priorities) > 0) {
     $show_priorities = false;
+    $hooks = array();
     foreach($priorities as $hook => $priorities_plugins) {
         $nb_plugins = 0;
         foreach($priorities_plugins as $priority => $plugins) {
             $nb_plugins += count($plugins);
         }
+        $hooks[$hook] = $nb_plugins;
         if ($nb_plugins > 1) {
             $show_priorities = true;
-            break;
         }
     }
     
     if($show_priorities) {
         $output .= '<form action="?" method="POST">';
-        $output .= '<fieldset><legend>'.$Language->getText('plugin_pluginsadministration','priorities').'</legend>';
+        $output .= '<fieldset style="margin-bottom:10px;"><legend style="font-size:1.3em; font-weight:bold;">'.$Language->getText('plugin_pluginsadministration','priorities').'</legend>';
         $output .= '<input type="hidden" name="action" value="update_priorities" />';
         function emphasis($name, $enable) {
             if (!$enable) {
@@ -191,6 +191,57 @@ if (count($priorities) > 0) {
             return $name;
         }
         ksort($priorities);
+        ksort($hooks);
+        $javascript = '<script type="text/javascript">';
+		$javascript .= <<<END
+        var currentIdLayer = null;
+		function switchBlock(id) {
+			if (currentIdLayer && currentIdLayer != null) {
+				hideBlock(currentIdLayer);
+			}
+			currentIdLayer = id;
+			showBlock(currentIdLayer);
+		}
+                
+		function showOrHideBlock(idName, show){ 
+			if(document.getElementById) {//NN6,Mozilla,IE5?
+				document.getElementById(idName).style.display = (show?"block":"none");
+			}
+			else if(document.all) {      //IE4?
+				document.all(idName).style.display = (show?"block":"none");
+			}
+			else if(document.layers) {   //NN4?
+				document.layers[idName].display = (show?"block":"none");
+			}
+		}
+		function showBlock(idName){
+            showOrHideBlock(idName, true);
+        }
+		function hideBlock(idName){ 
+			showOrHideBlock(idName, false);
+        }
+        function displayHook(hook_name) {
+            id = 'hook_'+hook_name;
+            switchBlock(id);
+        }
+END;
+        $javascript .= "document.write('Select hook: ');";
+        $javascript .= "document.write('<select onclick=\"displayHook(this.options[this.selectedIndex].value)\">');";
+        $first_hook = false;
+        foreach($hooks as $hook => $nb) {
+            $etoile = "  ";
+            if ($nb > 1) {
+                $etoile = " *";
+            }
+            $javascript .= "document.write('<option value=\"".$hook."\">".$hook.$etoile."</option>');";
+            if (!$first_hook) {
+                $first_hook = $hook;
+            }
+        }
+        $javascript .= "document.write('</select>');";
+        $javascript .= "document.write('<div>* : hooks listened to by several plugins are followed by an asterisk.</div>');";
+        $javascript .= '</script>';
+        $output .= $javascript;
         foreach($priorities as $hook => $priorities_plugins) {
             $output_for_hook = '';
             krsort($priorities_plugins);
@@ -208,17 +259,22 @@ if (count($priorities) > 0) {
                     $class++;
                 }
             }
-            //We display hook only if necessary
-            if ($nb_plugins > 1) {
-                $output .= '<h3>Hook: '.$hook.'</h3>';
-                $titles = array();
-                $titles[] = $Language->getText('plugin_pluginsadministration','Plugin');
-                $titles[] = 'Priority';
-                $output .= html_build_list_table_top($titles);
-                $output .= $output_for_hook;
-                $output .= '</table>';
-            }
+            $output .= '<div id="hook_'.$hook.'"><h3>Hook: '.$hook.'</h3>';
+            $titles = array();
+            $titles[] = $Language->getText('plugin_pluginsadministration','Plugin');
+            $titles[] = 'Priority';
+            $output .= html_build_list_table_top($titles, false, false, false);
+            $output .= $output_for_hook;
+            $output .= '</table></div>';
         }
+        $javascript_after = '<script type="text/javascript">';
+        $hooks = array_keys($priorities);
+        foreach($hooks as $hook) {
+            $javascript_after .= "hideBlock('hook_".$hook."');";
+        }
+        $javascript_after .= "displayHook('".$first_hook."');";
+        $javascript_after .= "</script>";
+        $output .= $javascript_after;
         $output .= '<div style="text-align:center;"><input type="submit" value="Update priorities" onclick="this.disabled = true;"/></div>';
         $output .= '</form>';
         $output .= '</fieldset>';

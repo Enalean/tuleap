@@ -25,11 +25,6 @@ class PluginDescriptorTest extends UnitTestCase {
         $this->UnitTestCase($name);
     }
 
-    function testIconPath() {
-        $pd =& new PluginDescriptor();
-        $this->assertEqual($pd->getEnabledIconPath(), '/themes/codex/images/plugin_icon.png');
-        $this->assertEqual($pd->getDisabledIconPath(), '/themes/codex/images/plugin_icon_disabled.png');
-    }
 }
 
 if (CODEX_RUNNER === __FILE__) {

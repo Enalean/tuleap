@@ -13,7 +13,7 @@ class PluginsAdministrationPluginInfo extends PluginInfo {
     
     function PluginsAdministrationPluginInfo(&$plugin) {
         $this->PluginInfo($plugin);
-        $this->setPluginDescriptor(new PluginsAdministrationPluginDescriptor('Plugins Administration', 'v0.2', 'Offers a web interface for managing plugins.'));
+        $this->setPluginDescriptor(new PluginsAdministrationPluginDescriptor('Plugins Administration', 'v0.5', 'Offers a web interface for managing plugins.'));
     }
     
 }

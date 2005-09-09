@@ -4,7 +4,8 @@ require_once('common/event/EventManager.class');
 require_once('common/plugin/PluginFactory.class');
 require_once('common/plugin/PluginHookPriorityManager.class');
 
-
+require_once('common/dao/DBTablesDao.class');
+require_once('common/dao/CodexDataAccess.class');
 
 require_once('common/include/String.class');
 
@@ -92,11 +93,45 @@ class PluginManager {
     
     function &installPlugin($name) {
         $plugin_factory =& $this->_getPluginFactory();
-        return $plugin_factory->createPlugin($name);
+        if (!$plugin_factory->isPluginInstalled($name)) {
+            $db_corrupted = false;
+            $install_sql_filename = $GLOBALS['sys_pluginsroot'].DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR.'db'.DIRECTORY_SEPARATOR.'install.sql';
+            if (file_exists($install_sql_filename)) {
+                $dbtables =& new DBTablesDAO(CodexDataAccess::instance());
+                $install_sql = file_get_contents($install_sql_filename);
+                if (trim($install_sql) != '' && !$dbtables->update($install_sql)) {
+                    $db_corrupted = true;
+                    $GLOBALS['feedback'] .= 'DB may be corrupted';
+                }
+            }
+            if (!$db_corrupted) {
+                $plugin_factory =& $this->_getPluginFactory();
+                return $plugin_factory->createPlugin($name);
+            } else {
+                return false;
+            }
+        }
     }
+    
     function uninstallPlugin(&$plugin) {
         $plugin_factory =& $this->_getPluginFactory();
-        return $plugin_factory->removePlugin($plugin);
+        $name = $plugin_factory->getNameForPlugin($plugin);
+        $db_corrupted = false;
+        $uninstall_sql_filename = $GLOBALS['sys_pluginsroot'].DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR.'db'.DIRECTORY_SEPARATOR.'uninstall.sql';
+        if (file_exists($uninstall_sql_filename)) {
+            $dbtables =& new DBTablesDAO(CodexDataAccess::instance());
+            $uninstall_sql = file_get_contents($uninstall_sql_filename);
+            if (trim($uninstall_sql) != '' && !$dbtables->update($uninstall_sql)) {
+                $db_corrupted = true;
+                $GLOBALS['feedback'] .= 'DB may be corrupted';
+            }
+        }
+        if (!$db_corrupted) {
+            $plugin_factory =& $this->_getPluginFactory();
+            return $plugin_factory->removePlugin($plugin);
+        } else {
+            return false;
+        }
     }
     
     function &getNotYetInstalledPlugins() {
