@@ -127,7 +127,7 @@ class PluginManager {
         }
         if (!$db_corrupted) {
             $phpm =& $this->_getPluginHookPriorityManager();
-            $phpm->removePlugin($plugin)) {
+            $phpm->removePlugin($plugin);
             $plugin_factory =& $this->_getPluginFactory();
             return $plugin_factory->removePlugin($plugin);
         } else {
