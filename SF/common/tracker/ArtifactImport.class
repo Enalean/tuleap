@@ -408,6 +408,7 @@ class ArtifactImport extends Error {
 	  if ($data_details != "") $data_details .= ", ";
 	  $data_details .= "[".$parsed_labels[$key]."] => $value";
 	}
+	reset($data);
 	$errors .= $Language->getText('tracker_import_utils','column_mismatch',array($row+1,$data_details,$num,$num_columns));
 	return FALSE;
       }

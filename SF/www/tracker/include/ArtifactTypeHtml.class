@@ -1402,7 +1402,7 @@ EOS;
 		echo '
 		        </td><td>'.$Language->getText('tracker_include_type','keep_change_history').': ';
 		
-		if ( $field && $field->isStandardField() && !user_is_super_user()) {
+		if ( !$this->userIsAdmin()) {
 			if ( $keep_history ) {
 				echo $Language->getText('global','yes');
 			    echo '<input type="hidden" name="keep_history" value="1">';
