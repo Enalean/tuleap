@@ -1,4 +1,4 @@
-    <?php
+<?php
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
@@ -181,7 +181,8 @@ if (count($priorities) > 0) {
     }
     
     if($show_priorities) {
-        $output .= '<form action="?" method="POST">';
+        $form_name = '_'.mt_rand();
+        $output .= '<form  name="'.$form_name.'" action="?" method="POST">';
         $output .= '<fieldset style="margin-bottom:10px;"><legend style="font-size:1.3em; font-weight:bold;">'.$Language->getText('plugin_pluginsadministration','priorities').'</legend>';
         $output .= '<input type="hidden" name="action" value="update_priorities" />';
         function emphasis($name, $enable) {
@@ -202,7 +203,18 @@ if (count($priorities) > 0) {
 			currentIdLayer = id;
 			showBlock(currentIdLayer);
 		}
-                
+        function getElement(id) {
+            the_element = null;
+            if(document.getElementById) {//NN6,Mozilla,IE5?
+                the_element = document.getElementById(id);
+            } else if(document.all) {      //IE4?
+                the_element = document.all(id);
+            } else if(document.layers) {   //NN4?
+                the_element = document.layers[id];
+            }
+            return the_element;
+        }
+        
 		function showOrHideBlock(idName, show){ 
 			if(document.getElementById) {//NN6,Mozilla,IE5?
 				document.getElementById(idName).style.display = (show?"block":"none");
@@ -220,29 +232,76 @@ if (count($priorities) > 0) {
 		function hideBlock(idName){ 
 			showOrHideBlock(idName, false);
         }
-        function displayHook(hook_name) {
-            id = 'hook_'+hook_name;
-            switchBlock(id);
+        function changeHook(select) {
+            
+            nb = inputs_for_hook[currentIdLayer].length;
+            changes_have_been_made = false;
+            //Search for changes
+            for(i = 0 ; i < nb && !changes_have_been_made ; i++) {
+                element         = getElement(inputs_for_hook[currentIdLayer][i]);
+                default_element = getElement('default_'+inputs_for_hook[currentIdLayer][i]);
+                
+                if (element.value != default_element.value) {
+                    changes_have_been_made = true;
+                }
+            }
+            if (!changes_have_been_made || confirm('Discard changes ?')) {
+                if (changes_have_been_made) {
+                    //Discard changes: reset values
+                    for(i = 0 ; i < nb ; i++) {
+                        element         = getElement(inputs_for_hook[currentIdLayer][i]);
+                        default_element = getElement('default_'+inputs_for_hook[currentIdLayer][i]);
+                        element.value   = default_element.value;
+                    }
+                }
+                currentIndex = select.selectedIndex;
+                hook_name = select.options[select.selectedIndex].value;
+                switchBlock('hook_'+hook_name);
+                getElement('selected_hook').value = hook_name;
+                return true;
+            } else {
+                //Changes have been made and user doesn't want to discard those changes
+                select.selectedIndex = currentIndex;
+                return false;
+            }
         }
 END;
         $javascript .= "document.write('Select hook: ');";
-        $javascript .= "document.write('<select onclick=\"displayHook(this.options[this.selectedIndex].value)\">');";
-        $first_hook = false;
+        $javascript .= "document.write('<select onchange=\"changeHook(this)\">');";
+        if (isset($_REQUEST['selected_hook']) && array_key_exists($_REQUEST['selected_hook'], $hooks)) {
+            $first_hook = $_REQUEST['selected_hook'];
+        } else {
+            $first_hook = false;
+        }
+        $first_index = 0;
+        $i = 0;
         foreach($hooks as $hook => $nb) {
             $etoile = "  ";
             if ($nb > 1) {
                 $etoile = " *";
             }
-            $javascript .= "document.write('<option value=\"".$hook."\">".$hook.$etoile."</option>');";
+            $selected = "";
             if (!$first_hook) {
-                $first_hook = $hook;
+                $first_hook  = $hook;
             }
+            if ($first_hook == $hook) {
+                $first_index = $i;
+                $selected    = " selected=\"selected\" ";
+            }
+            $javascript .= "document.write('<option value=\"".$hook."\" ".$selected." >".$hook.$etoile."</option>');";
+            $i++;
         }
         $javascript .= "document.write('</select>');";
+        $javascript .= "document.write('<input type=\"hidden\" name=\"selected_hook\" id=\"selected_hook\" value=\"".$first_hook."\" />');";
         $javascript .= "document.write('<div>* : hooks listened to by several plugins are followed by an asterisk.</div>');";
         $javascript .= '</script>';
         $output .= $javascript;
+        $javascript_after = '<script type="text/javascript">';
+        $javascript_after .= 'var currentIndex = '.$first_index.';';
+        $javascript_after .= 'var inputs_for_hook = new Array();';
         foreach($priorities as $hook => $priorities_plugins) {
+            $javascript_after .= "hideBlock('hook_".$hook."');";
+            $javascript_after .= "inputs_for_hook['hook_".$hook."'] = new Array();";
             $output_for_hook = '';
             krsort($priorities_plugins);
             $class      = 0;
@@ -253,9 +312,13 @@ END;
                     $output_for_hook .= '<tr class="'.util_get_alt_row_color($class).'"><td>';
                     $output_for_hook .= emphasis($infos['name'], $infos['enabled']);
                     $output_for_hook .= '</td><td>';
-                    $output_for_hook .= '<input type="text" name="priorities['.$hook.']['.$id.']" size="4" value="'.$priority.'" />';
+                    $input_name = 'priorities['.$hook.']['.$id.']';
+                    $input_id   = 'priorities_'.$hook.'_'.$id;
+                    $output_for_hook .= '<input type="text" name="'.$input_name.'" id="'.$input_id.'" size="4" value="'.$priority.'" />';
+                    $output_for_hook .= '<input type="hidden" name="default_'.$input_name.'" id="default_'.$input_id.'" value="'.$priority.'" />';
                     $output_for_hook .= '</td>';
                     $output_for_hook .= '</tr>';
+                    $javascript_after .= "inputs_for_hook['hook_".$hook."'][inputs_for_hook['hook_".$hook."'].length] = '".$input_id."';";
                     $class++;
                 }
             }
@@ -267,12 +330,7 @@ END;
             $output .= $output_for_hook;
             $output .= '</table></div>';
         }
-        $javascript_after = '<script type="text/javascript">';
-        $hooks = array_keys($priorities);
-        foreach($hooks as $hook) {
-            $javascript_after .= "hideBlock('hook_".$hook."');";
-        }
-        $javascript_after .= "displayHook('".$first_hook."');";
+        $javascript_after .= "switchBlock('hook_".$first_hook."');";
         $javascript_after .= "</script>";
         $output .= $javascript_after;
         $output .= '<div style="text-align:center;"><input type="submit" value="Update priorities" onclick="this.disabled = true;"/></div>';
