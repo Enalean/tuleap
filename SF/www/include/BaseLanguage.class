@@ -167,20 +167,28 @@ class BaseLanguage {
 	// and is used either to include long piece of text that are inconvenient
 	// to format on one line as the .tab file does or because there is some
 	// PHP code that can be cutomized
-	function getContent($file,$lang_code=null){
+	function getContent($file, $lang_code = null, $plugin_name = null){
 
 	    // Language for current user unless it is specified in the param list
 	    if (!isset($lang_code)) { $lang_code = $this->getLanguageCode(); }
 
-	    // Test first the custom directory
-	    $custom_fn = getenv('SF_LOCAL_INC_PREFIX')."/etc/codex/site-content/".$lang_code."/".$file.".txt";   
+        if (is_null($plugin_name)) {
+            // Test first the custom directory
+            $custom_fn = getenv('SF_LOCAL_INC_PREFIX')."/etc/codex/site-content/".$lang_code."/".$file.".txt";
+        } else {
+            $custom_fn = getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/plugins/'.$plugin_name.'/site-content/'.$lang_code.'/'.$file.'.txt' ;
+        }
 	    if ( file_exists($custom_fn) ) {
-		// The custom file exists. 
-		return $custom_fn;
+            // The custom file exists. 
+            return $custom_fn;
 	    } else {
 		// Use the default file
 		// Check first if exist
-		$fn = $GLOBALS['sys_incdir'].$lang_code."/".$file.".txt";
+        if (is_null($plugin_name)) {
+            $fn = $GLOBALS['sys_incdir'].$lang_code."/".$file.".txt";
+        } else {
+            $fn = $GLOBALS['sys_pluginsroot'].'/'.$plugin_name.'/site-content/'.$lang_code.'/'.$file.".txt";
+        }
 		if ( file_exists($fn) ) {
 		    // The custom file exists. 
 		    return $fn;
