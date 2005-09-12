@@ -1,4 +1,4 @@
-<?php
+ <?php
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
@@ -20,6 +20,7 @@ $plugin_manager               =& PluginManager::instance();
 $plugin_hook_priority_manager =& new PluginHookPriorityManager();
 
 //Process request
+$confirmation = '';
 if (isset($_REQUEST['action']) && isset($_REQUEST['plugin_id'])) {
     $plugin_factory =& PluginFactory::instance();
     $plugin =& $plugin_factory->getPluginById($_REQUEST['plugin_id']);
@@ -32,7 +33,25 @@ if (isset($_REQUEST['action']) && isset($_REQUEST['plugin_id'])) {
                 $plugin_manager->disablePlugin($plugin);
                 break;
             case 'uninstall':
-                $plugin_manager->uninstallPlugin($plugin);
+                if (isset($_REQUEST['confirm'])) {
+                    $plug_info  =& $plugin->getPluginInfo();
+                    $descriptor =& $plug_info->getPluginDescriptor();
+                    $name = $descriptor->getName();
+                    $uninstalled = $plugin_manager->uninstallPlugin($plugin);
+                    $GLOBALS['feedback'] .= '<p>Plugin "'.$name.'" have ';
+                    if (!$uninstalled) {
+                         $GLOBALS['feedback'] .= 'not ';
+                    }
+                    $GLOBALS['feedback'] .= 'been uninstalled.</p>';
+                } else {
+                    if (!isset($_REQUEST['cancel'])) {
+                        $plug_info  =& $plugin->getPluginInfo();
+                        $descriptor =& $plug_info->getPluginDescriptor();
+                        $confirmation = sprintf(file_get_contents($GLOBALS['Language']->getContent('confirm_uninstall', null, 'pluginsadministration')),
+                                        $descriptor->getName(),
+                                        $plugin->getId());
+                    }
+                }
             default:
                 break;
         }
@@ -75,6 +94,10 @@ $priorities =  array();
 $title = $Language->getText('plugin_pluginsadministration','title');
 $HTML->header(array('title'=>$title));
 $output = '<h2>'.$title.'</h2>';
+
+if (isset($confirmation)) {
+    $output .= $confirmation;
+}
 
 //{{{ Installed Plugins
 $output .= '<fieldset style="margin-bottom:10px;"><legend style="font-size:1.3em; font-weight:bold;">'.$Language->getText('plugin_pluginsadministration','plugins').'</legend><form>';
@@ -175,7 +198,7 @@ if (count($priorities) > 0) {
             $nb_plugins += count($plugins);
         }
         $hooks[$hook] = $nb_plugins;
-        if ($nb_plugins > 1) {
+        if ($nb_plugins > 0 && !$show_priorities) {
             $show_priorities = true;
         }
     }

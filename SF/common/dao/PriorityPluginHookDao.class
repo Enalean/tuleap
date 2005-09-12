@@ -95,6 +95,11 @@ class PriorityPluginHookDao extends DataAccessObject {
         }
         return $updated;
     }
+    
+    function deleteByPluginId($plugin_id) {
+        $updated = $this->update("DELETE FROM priority_plugin_hook WHERE plugin_id = '".addslashes($plugin_id)."'");
+        return $updated;
+    }
 }
 
 

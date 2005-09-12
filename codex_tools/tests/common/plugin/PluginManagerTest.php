@@ -234,10 +234,6 @@ class PluginManagerTest extends UnitTestCase {
         $this->assertReference($pm->installPlugin('New Plugin'), $plugin);
         
     }
-    function testSetExistingPriorityForPlugin() {
-        
-    }
-
 }
 
 if (CODEX_RUNNER === __FILE__) {

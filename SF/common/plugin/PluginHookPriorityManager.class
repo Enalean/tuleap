@@ -36,5 +36,10 @@ class PluginHookPriorityManager {
         }
         return $this->priorityPluginHookDao;
     }
+    
+    function removePlugin(&$plugin) {
+        $priority_dao =& $this->_getPriorityPluginHookDao();
+        return $priority_dao->deleteByPluginId($plugin->getId());
+    }
 }
 ?>
