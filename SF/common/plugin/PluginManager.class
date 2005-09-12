@@ -123,12 +123,11 @@ class PluginManager {
             $uninstall_sql = file_get_contents($uninstall_sql_filename);
             if (trim($uninstall_sql) != '' && !$dbtables->update($uninstall_sql)) {
                 $db_corrupted = true;
-                $GLOBALS['feedback'] .= '<p>DB may be corrupted</p>';
             }
         }
         if (!$db_corrupted) {
             $phpm =& $this->_getPluginHookPriorityManager();
-            $phpm->removePlugin($plugin);
+            $phpm->removePlugin($plugin)) {
             $plugin_factory =& $this->_getPluginFactory();
             return $plugin_factory->removePlugin($plugin);
         } else {

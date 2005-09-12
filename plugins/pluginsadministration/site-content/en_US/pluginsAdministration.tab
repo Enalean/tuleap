@@ -8,25 +8,33 @@
 #  * @version   $Id: en_US.tab,v 1.11 2005/06/24 08:10:37 nterray Exp $
 #  *
 #  */
-plugin_pluginsadministration	menu	Plugins
-plugin_pluginsadministration	title	Plugins Administration
-plugin_pluginsadministration	plugins	Installed Plugins
-plugin_pluginsadministration	Plugin	Plugin
-plugin_pluginsadministration	Plugins	Plugins
-plugin_pluginsadministration	Status	Enabled?
-plugin_pluginsadministration	Version	Version
 plugin_pluginsadministration	Actions	Actions
-plugin_pluginsadministration	uninstall	Uninstall
-plugin_pluginsadministration	uninstall_plugin	Uninstall this Plugin
-plugin_pluginsadministration	install_plugin	Install this Plugin
-plugin_pluginsadministration	enabled	Yes
-plugin_pluginsadministration	disabled	No
 plugin_pluginsadministration	change_to_disabled	Change to No
 plugin_pluginsadministration	change_to_enabled	Change to Yes
 plugin_pluginsadministration	Description	Description
+plugin_pluginsadministration	discard_changes	Discard changes ?
+plugin_pluginsadministration	disabled	No
+plugin_pluginsadministration	enabled	Yes
+plugin_pluginsadministration	Hook:	Hook:
+plugin_pluginsadministration	hook_asterisk	* : hooks listened to by several plugins are followed by an asterisk.
+plugin_pluginsadministration	install_plugin	Install this Plugin
 plugin_pluginsadministration	install	Install a Plugin
+plugin_pluginsadministration	menu	Plugins
 plugin_pluginsadministration	not_yet_installed	Not Yet Installed Plugins
-plugin_pluginsadministration	upload	Upload Archive
+plugin_pluginsadministration	Plugin	Plugin
+plugin_pluginsadministration	Plugins	Plugins
+plugin_pluginsadministration	plugins	Installed Plugins
+plugin_pluginsadministration	plugin_uninstalled	Plugin "$1" have been uninstalled.
+plugin_pluginsadministration	plugin_not_uninstalled	Plugin "$1" have not been uninstalled.
 plugin_pluginsadministration	priorities	Priorities between plugins
+plugin_pluginsadministration	Priority	Priority
+plugin_pluginsadministration	select_hook	Select hook:
+plugin_pluginsadministration	select_install	Select the plugin you want to install. please read the corresponding <em>readme</em> file before processing.
+plugin_pluginsadministration	Status	Enabled?
+plugin_pluginsadministration	title	Plugins Administration
 plugin_pluginsadministration	there_is_no_plugin	<em>There is no plugin installed yet.</em>
-plugin_pluginsadministration	Hook	Hook
+plugin_pluginsadministration	uninstall	Uninstall
+plugin_pluginsadministration	uninstall_plugin	Uninstall this Plugin
+plugin_pluginsadministration	upload	Upload Archive
+plugin_pluginsadministration	update_priorities	Update Priorities
+plugin_pluginsadministration	Version	Version

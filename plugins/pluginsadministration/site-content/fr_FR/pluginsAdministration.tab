@@ -14,25 +14,33 @@
 #  * @version   $Id: fr_FR.tab,v 1.10 2005/06/24 08:10:38 nterray Exp $
 #  *
 #  */
-plugin_pluginsadministration	menu	Extensions
-plugin_pluginsadministration	title	Administration des Extensions
-plugin_pluginsadministration	plugins	Extensions installées
-plugin_pluginsadministration	Plugin	Extension
-plugin_pluginsadministration	Plugins	Extensions
-plugin_pluginsadministration	Status	Activée?
-plugin_pluginsadministration	Version	Version
 plugin_pluginsadministration	Actions	Actions
-plugin_pluginsadministration	enabled	Oui
-plugin_pluginsadministration	disabled	Non
 plugin_pluginsadministration	change_to_disabled	Changer à Non
 plugin_pluginsadministration	change_to_enabled	Changer à Oui
 plugin_pluginsadministration	Description	Description
+plugin_pluginsadministration	discard_changes	Annuler les modifications ?
+plugin_pluginsadministration	disabled	Non
+plugin_pluginsadministration	enabled	Oui
+plugin_pluginsadministration	Hook:	Hook :
+plugin_pluginsadministration	hook_asterisk	* : Les hooks écoutés par plusieurs plugins sont suivis d'une astérisque.
+plugin_pluginsadministration	install_plugin	Installer ce plugin
+plugin_pluginsadministration	install	Installer un plugin
+plugin_pluginsadministration	menu	Plugins
+plugin_pluginsadministration	not_yet_installed	Plugins pas encore installées
+plugin_pluginsadministration	Plugin	Plugin
+plugin_pluginsadministration	Plugins	Plugins
+plugin_pluginsadministration	plugins	Plugins installés
+plugin_pluginsadministration	plugin_uninstalled	Le plugin "$1" a été désinstallé.
+plugin_pluginsadministration	plugin_not_uninstalled	Le plugin "$1" n'a pas été désinstallé.
+plugin_pluginsadministration	priorities	Priorités entre plugins
+plugin_pluginsadministration	Priority	Priorité
+plugin_pluginsadministration	select_hook	Sélectionnez un hook :
+plugin_pluginsadministration	select_install	Sélectionnez le plugin que vous voulez installer. Assurez-vous d'avoir lu le fichier <em>readme</em> associé au plugin avant de continuer.
+plugin_pluginsadministration	Status	Activé ?
+plugin_pluginsadministration	title	Administration des plugins
+plugin_pluginsadministration	there_is_no_plugin	<em>Il n'y a pas encore de plugins installé.</em>
 plugin_pluginsadministration	uninstall	Désinstaller
-plugin_pluginsadministration	uninstall_plugin	Désinstaller cette extension
-plugin_pluginsadministration	install_plugin	Installer cette extension
-plugin_pluginsadministration	install	Installer une extension
-plugin_pluginsadministration	not_yet_installed	Extensions pas encore installées
+plugin_pluginsadministration	uninstall_plugin	Désinstaller cet plugin
 plugin_pluginsadministration	upload	Charger l'archive
-plugin_pluginsadministration	priorities	Priorités entre extensions
-plugin_pluginsadministration	there_is_no_plugin	<em>Il n'y a pas encore d'extension installée.</em>
-plugin_pluginsadministration	Hook	Accroche
+plugin_pluginsadministration	update_priorities	Mettre à jour les priorités
+plugin_pluginsadministration	Version	Version

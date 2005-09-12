@@ -33,22 +33,23 @@ if (isset($_REQUEST['action']) && isset($_REQUEST['plugin_id'])) {
                 $plugin_manager->disablePlugin($plugin);
                 break;
             case 'uninstall':
+                $plug_info  =& $plugin->getPluginInfo();
+                $descriptor =& $plug_info->getPluginDescriptor();
+                $name = $descriptor->getName();
+                if (strlen(trim($name)) === 0) {
+                    $name = get_class($plugin);
+                }
                 if (isset($_REQUEST['confirm'])) {
-                    $plug_info  =& $plugin->getPluginInfo();
-                    $descriptor =& $plug_info->getPluginDescriptor();
-                    $name = $descriptor->getName();
                     $uninstalled = $plugin_manager->uninstallPlugin($plugin);
-                    $GLOBALS['feedback'] .= '<p>Plugin "'.$name.'" have ';
                     if (!$uninstalled) {
-                         $GLOBALS['feedback'] .= 'not ';
+                         $GLOBALS['feedback'] .= '<div>'.$GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_not_uninstalled', array($name)).'</div>';
+                    } else {
+                         $GLOBALS['feedback'] .= '<div>'.$GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_uninstalled', array($name)).'</div>';
                     }
-                    $GLOBALS['feedback'] .= 'been uninstalled.</p>';
                 } else {
                     if (!isset($_REQUEST['cancel'])) {
-                        $plug_info  =& $plugin->getPluginInfo();
-                        $descriptor =& $plug_info->getPluginDescriptor();
                         $confirmation = sprintf(file_get_contents($GLOBALS['Language']->getContent('confirm_uninstall', null, 'pluginsadministration')),
-                                        $descriptor->getName(),
+                                        $name,
                                         $plugin->getId());
                     }
                 }
@@ -105,9 +106,9 @@ if($plugins->isEmpty()) {
     $output .= $Language->getText('plugin_pluginsadministration','there_is_no_plugin');
 } else {
     $titles = array();
-    $titles[] = $Language->getText('plugin_pluginsadministration','Plugin');
-    $titles[] = $Language->getText('plugin_pluginsadministration','Status');
-    $titles[] = $Language->getText('plugin_pluginsadministration','Actions');
+    $titles[] = $GLOBALS['Language']->getText('plugin_pluginsadministration','Plugin');
+    $titles[] = $GLOBALS['Language']->getText('plugin_pluginsadministration','Status');
+    $titles[] = $GLOBALS['Language']->getText('plugin_pluginsadministration','uninstall');
     $output .= html_build_list_table_top($titles);
     $iter =& $plugins->iterator();
     $plugins_table = array();
@@ -144,7 +145,7 @@ if($plugins->isEmpty()) {
     for($i = 0; $i < count($plugins_table) ; $i++) {
         $output .= '<tr class="'.util_get_alt_row_color($i).'" >';
         
-        $output .= '<td class="plginsadministration_plugin_descriptor '.($plugins_table[$i]['enabled']?'':' pluginsadministration_disabled ').'"><span class="pluginsadministration_name_of_plugin">'.$plugins_table[$i]['name'].'</span><span class="pluginsadministration_version_of_plugin">'.$plugins_table[$i]['version'].'</span>';
+        $output .= '<td class="pluginsadministration_plugin_descriptor '.($plugins_table[$i]['enabled']?'':' pluginsadministration_disabled ').'"><span class="pluginsadministration_name_of_plugin">'.$plugins_table[$i]['name'].'</span><span class="pluginsadministration_version_of_plugin">'.$plugins_table[$i]['version'].'</span>';
         $output .= '<br/><span class="pluginsadministration_description_of_plugin">'.$plugins_table[$i]['description'].'</span></td>';
         if ($plugins_table[$i]['enabled']) {
             $output .= '<td><a href="?action=disable&plugin_id='.$plugins_table[$i]['plugin_id'].'" title="'.$Language->getText('plugin_pluginsadministration','change_to_disabled').'">'.$Language->getText('plugin_pluginsadministration','enabled').'</a></td>';
@@ -163,7 +164,7 @@ $output .= '</form></fieldset>';
 $not_yet_installed =& $plugin_manager->getNotYetInstalledPlugins();
 if ($not_yet_installed && count($not_yet_installed) > 0) {
     $output .= '<fieldset class="pluginsadministration"><legend>'.$Language->getText('plugin_pluginsadministration','not_yet_installed').'</legend>';
-    $output .= '<div>Select the plugin you want to install:</div>';
+    $output .= '<div>'.$GLOBALS['Language']->getText('plugin_pluginsadministration','select_install').'</div>';
     $prefixe = '<a href="?action=install&name=';
     $middle  = '" title="'.$Language->getText('plugin_pluginsadministration','install_plugin').'">';
     $suffixe = '</a>';
@@ -206,7 +207,7 @@ if (count($priorities) > 0) {
     if($show_priorities) {
         $form_name = '_'.mt_rand();
         $output .= '<form  name="'.$form_name.'" action="" method="POST" onsubmit="return submitForm(this);">';
-        $output .= '<fieldset class="pluginsadministration"><legend>'.$Language->getText('plugin_pluginsadministration','priorities').'</legend>';
+        $output .= '<fieldset class="pluginsadministration"><legend>'.$GLOBALS['Language']->getText('plugin_pluginsadministration','priorities').'</legend>';
         $output .= '<input type="hidden" name="action" value="update_priorities" />';
         function emphasis($name, $enable) {
             if (!$enable) {
@@ -216,6 +217,7 @@ if (count($priorities) > 0) {
         }
         ksort($priorities);
         ksort($hooks);
+        $discard_changes = $GLOBALS['Language']->getText('plugin_pluginsadministration','discard_changes');
         $javascript = '<script type="text/javascript">';
 		$javascript .= <<<END
         
@@ -274,7 +276,7 @@ if (count($priorities) > 0) {
                     changes_have_been_made = true;
                 }
             }
-            if (!changes_have_been_made || confirm('Discard changes ?')) {
+            if (!changes_have_been_made || confirm('$discard_changes')) {
                 if (changes_have_been_made) {
                     //Discard changes: reset values
                     for(i = 0 ; i < nb ; i++) {
@@ -295,7 +297,7 @@ if (count($priorities) > 0) {
             }
         }
 END;
-        $javascript .= "document.write('Select hook: ');";
+        $javascript .= "document.write('".$GLOBALS['Language']->getText('plugin_pluginsadministration', 'select_hook')." ');";
         $javascript .= "document.write('<select onchange=\"changeHook(this)\">');";
         if (isset($_REQUEST['selected_hook']) && array_key_exists($_REQUEST['selected_hook'], $hooks)) {
             $first_hook = $_REQUEST['selected_hook'];
@@ -322,7 +324,7 @@ END;
         }
         $javascript .= "document.write('</select>');";
         $javascript .= "document.write('<input type=\"hidden\" name=\"selected_hook\" id=\"selected_hook\" value=\"".$first_hook."\" />');";
-        $javascript .= "document.write('<div>* : hooks listened to by several plugins are followed by an asterisk.</div>');";
+        $javascript .= "document.write('<div>".addslashes($GLOBALS['Language']->getText('plugin_pluginsadministration', 'hook_asterisk'))."</div>');";
         $javascript .= '</script>';
         $output .= $javascript;
         $javascript_after = '<script type="text/javascript">';
@@ -351,10 +353,10 @@ END;
                     $class++;
                 }
             }
-            $output .= '<div id="hook_'.$hook.'"><h3>Hook: '.$hook.'</h3>';
+            $output .= '<div id="hook_'.$hook.'"><h3>'.$GLOBALS['Language']->getText('plugin_pluginsadministration','Hook:').' '.$hook.'</h3>';
             $titles = array();
-            $titles[] = $Language->getText('plugin_pluginsadministration','Plugin');
-            $titles[] = 'Priority';
+            $titles[] = $GLOBALS['Language']->getText('plugin_pluginsadministration','Plugin');
+            $titles[] = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'Priority');
             $output .= html_build_list_table_top($titles, false, false, false);
             $output .= $output_for_hook;
             $output .= '</table></div>';
@@ -362,7 +364,7 @@ END;
         $javascript_after .= "switchBlock('hook_".$first_hook."');";
         $javascript_after .= "</script>";
         $output .= $javascript_after;
-        $output .= '<div class="pluginsadministration_buttons"><input type="submit" name="submit_button" value="Update priorities" /></div>';
+        $output .= '<div class="pluginsadministration_buttons"><input type="submit" name="submit_button" value="'.$GLOBALS['Language']->getText('plugin_pluginsadministration', 'update_priorities').'" /></div>';
         $output .= '</form>';
         $output .= '</fieldset>';
 
