@@ -29,6 +29,7 @@ require_once('common/tracker/ArtifactReport.class');
 require_once('common/tracker/ArtifactReportField.class');
 require('./include/ArtifactFieldHtml.class');
 require('./include/ArtifactReportHtml.class');
+require('./include/ArtifactImportHtml.class');
 require_once('www/project/admin/permissions.php');
 require_once('common/include/SimpleSanitizer.class');
 
@@ -676,7 +677,35 @@ if ( $func == 'gotoid' ) {
 	     exit_permission_denied();
 	   }
 	   $user_id = user_getid();
-	   require('./import.php');
+	   
+	   
+
+	   if($group_id && $atid && $user_id) {
+
+	     $import = new ArtifactImportHtml($ath,$art_field_fact,$group);
+	     if ($mode == "parse") {
+	       $import->displayParse($csv_filename);
+	     } else if ($mode == "import") {
+	       for ($i=0; $i < $count_artifacts; $i++) {
+		 for ($c=0; $c < count($parsed_labels); $c++) {
+		   $label = $parsed_labels[$c];
+		   $var_name = "artifacts_data_".$i."_".$c;
+		   $data[$label] = $$var_name;
+		   //echo "insert $label,".$$var_name." into data<br>";
+		 }
+		 $artifacts_data[] = $data;
+	       }
+	       $import->displayImport($parsed_labels,$artifacts_data,$aid_column);
+	       require('./browse.php');
+
+	     } else if ($mode == "showformat") {
+	       $import->displayShowFormat();
+	     } else {
+	       $import->displayCSVInput($atid,$user_id);
+	     }
+	   } else {
+	     exit_no_group();
+	   }
 	   break;
         }
         
