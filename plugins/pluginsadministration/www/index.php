@@ -100,7 +100,7 @@ if (isset($confirmation)) {
 }
 
 //{{{ Installed Plugins
-$output .= '<fieldset style="margin-bottom:10px;"><legend style="font-size:1.3em; font-weight:bold;">'.$Language->getText('plugin_pluginsadministration','plugins').'</legend><form>';
+$output .= '<fieldset class="pluginsadministration"><legend>'.$Language->getText('plugin_pluginsadministration','plugins').'</legend><form>';
 if($plugins->isEmpty()) {
     $output .= $Language->getText('plugin_pluginsadministration','there_is_no_plugin');
 } else {
@@ -144,8 +144,8 @@ if($plugins->isEmpty()) {
     for($i = 0; $i < count($plugins_table) ; $i++) {
         $output .= '<tr class="'.util_get_alt_row_color($i).'" >';
         
-        $output .= '<td style="vertical-align:top;'.($plugins_table[$i]['enabled']?'':'font-style:italic; color:gray;').'"><span style="font-size:1.1em; font-weight:bold;">'.$plugins_table[$i]['name'].'</span> &nbsp; <span style="font-size:0.9em;">'.$plugins_table[$i]['version'].'</span><br />';
-        $output .= $plugins_table[$i]['description'].'</td>';
+        $output .= '<td class="plginsadministration_plugin_descriptor '.($plugins_table[$i]['enabled']?'':' pluginsadministration_disabled ').'"><span class="pluginsadministration_name_of_plugin">'.$plugins_table[$i]['name'].'</span><span class="pluginsadministration_version_of_plugin">'.$plugins_table[$i]['version'].'</span>';
+        $output .= '<br/><span class="pluginsadministration_description_of_plugin">'.$plugins_table[$i]['description'].'</span></td>';
         if ($plugins_table[$i]['enabled']) {
             $output .= '<td><a href="?action=disable&plugin_id='.$plugins_table[$i]['plugin_id'].'" title="'.$Language->getText('plugin_pluginsadministration','change_to_disabled').'">'.$Language->getText('plugin_pluginsadministration','enabled').'</a></td>';
         } else {
@@ -162,7 +162,7 @@ $output .= '</form></fieldset>';
 //{{{ Not yet installed plugins
 $not_yet_installed =& $plugin_manager->getNotYetInstalledPlugins();
 if ($not_yet_installed && count($not_yet_installed) > 0) {
-    $output .= '<fieldset style="margin-bottom:10px;"><legend style="font-size:1.3em; font-weight:bold;">'.$Language->getText('plugin_pluginsadministration','not_yet_installed').'</legend>';
+    $output .= '<fieldset class="pluginsadministration"><legend>'.$Language->getText('plugin_pluginsadministration','not_yet_installed').'</legend>';
     $output .= '<div>Select the plugin you want to install:</div>';
     $prefixe = '<a href="?action=install&name=';
     $middle  = '" title="'.$Language->getText('plugin_pluginsadministration','install_plugin').'">';
@@ -205,12 +205,12 @@ if (count($priorities) > 0) {
     
     if($show_priorities) {
         $form_name = '_'.mt_rand();
-        $output .= '<form  name="'.$form_name.'" action="?" method="POST">';
-        $output .= '<fieldset style="margin-bottom:10px;"><legend style="font-size:1.3em; font-weight:bold;">'.$Language->getText('plugin_pluginsadministration','priorities').'</legend>';
+        $output .= '<form  name="'.$form_name.'" action="" method="POST" onsubmit="return submitForm(this);">';
+        $output .= '<fieldset class="pluginsadministration"><legend>'.$Language->getText('plugin_pluginsadministration','priorities').'</legend>';
         $output .= '<input type="hidden" name="action" value="update_priorities" />';
         function emphasis($name, $enable) {
             if (!$enable) {
-                $name = '<span style="font-style:italic; color:gray;">'.$name.'</span>';
+                $name = '<span class="pluginsadministration_disabled">'.$name.'</span>';
             }
             return $name;
         }
@@ -218,6 +218,12 @@ if (count($priorities) > 0) {
         ksort($hooks);
         $javascript = '<script type="text/javascript">';
 		$javascript .= <<<END
+        
+        function submitForm(form) {
+            form.submit_button.disabled = true;
+            return true;
+        }
+        
         var currentIdLayer = null;
 		function switchBlock(id) {
 			if (currentIdLayer && currentIdLayer != null) {
@@ -356,7 +362,7 @@ END;
         $javascript_after .= "switchBlock('hook_".$first_hook."');";
         $javascript_after .= "</script>";
         $output .= $javascript_after;
-        $output .= '<div style="text-align:center;"><input type="submit" value="Update priorities" onclick="this.disabled = true;"/></div>';
+        $output .= '<div class="pluginsadministration_buttons"><input type="submit" name="submit_button" value="Update priorities" /></div>';
         $output .= '</form>';
         $output .= '</fieldset>';
 

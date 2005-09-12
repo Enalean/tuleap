@@ -1,5 +1,5 @@
 <form name="" action="" method="GET">
-<div style="border:medium solid red; background:#FFC; padding:4px 10px;">
+<div class="pluginsadministration_confirm">
 <h3>Confirmation de la désinstallation de l'extension "%s"</h3>
 Vous êtes sur le point de désinstaller une extension. Avant de confirmer, veuillez prendre en compte les points suivants :
 <ul>
@@ -9,7 +9,7 @@ Vous êtes sur le point de désinstaller une extension. Avant de confirmer, veuill
    <li>L'espace Web de cette extension restera accessible tant que vous ne supprimerez pas le répertoire correspondant.</li>
 </ul>
 Êtes-vous sûrs de vouloir désinstaller cette extension ?
-<div style="text-align:center;">
+<div class="pluginsadministration_buttons">
      <input type="hidden" name="action" value="uninstall" />
      <input type="hidden" name="plugin_id" value="%s" />
      <input type="submit" name="cancel" value="Non, je ne veux pas désinstaller cette extension" />
