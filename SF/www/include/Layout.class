@@ -10,6 +10,8 @@
 
 require_once('common/include/Error.class');
 
+require_once('common/event/EventManager.class');
+
 //$Language->loadLanguageMsg('include/include');
 
 /*
@@ -152,6 +154,20 @@ class Layout extends Error {
                       print "\n";
                   }
               }
+?>
+        <style type="text/css">
+        <!--
+        <?php
+            $em =& EventManager::instance();
+            $em->processEvent("cssstyle", null);
+        ?>
+        
+        //-->
+        </style>
+        
+<?php
+            $em->processEvent("cssfile", null);
+        
 ?>
         <link rel="SHORTCUT ICON" href="<? echo util_get_image_theme("favicon.ico"); ?>">
         <link rel="alternate" title="<? echo $GLOBALS['sys_name'].$Language->getText('include_layout','latest_news_rss'); ?>" href="<? echo $sys_url; ?>/export/rss_sfnews.php" type="application/rss+xml">
