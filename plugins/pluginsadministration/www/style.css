@@ -1,3 +1,4 @@
+
 .pluginsadministration_confirm {
 	border:medium solid red; 
 	background:#FFC; 
@@ -36,4 +37,12 @@ fieldset.pluginsadministration legend {
 .pluginsadministration_plugin_descriptor {
 	vertical-align:top;
 }
-
+.pluginsadministration_action {
+	margin-right:16px;
+}
+.pluginsadministration_plugin_properties {
+	margin-bottom:20px;
+}
+.pluginsadministration_plugin_properties .pluginsadministration_label {
+	font-weight:bold;
+}

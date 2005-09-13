@@ -26,7 +26,7 @@ plugin_pluginsadministration	hook_asterisk	* : Les hooks écoutés par plusieurs p
 plugin_pluginsadministration	install_plugin	Installer ce plugin
 plugin_pluginsadministration	install	Installer un plugin
 plugin_pluginsadministration	menu	Plugins
-plugin_pluginsadministration	not_yet_installed	Plugins pas encore installées
+plugin_pluginsadministration	not_yet_installed	Plugins pas encore installés
 plugin_pluginsadministration	Plugin	Plugin
 plugin_pluginsadministration	Plugins	Plugins
 plugin_pluginsadministration	plugins	Plugins installés
@@ -34,13 +34,24 @@ plugin_pluginsadministration	plugin_uninstalled	Le plugin "$1" a été désinstallé
 plugin_pluginsadministration	plugin_not_uninstalled	Le plugin "$1" n'a pas été désinstallé.
 plugin_pluginsadministration	priorities	Priorités entre plugins
 plugin_pluginsadministration	Priority	Priorité
+plugin_pluginsadministration	properties	Afficher les propriétés du plugin
 plugin_pluginsadministration	select_hook	Sélectionnez un hook :
 plugin_pluginsadministration	select_install	Sélectionnez le plugin que vous voulez installer. Assurez-vous d'avoir lu le fichier <em>readme</em> associé au plugin avant de continuer.
 plugin_pluginsadministration	Status	Activé ?
 plugin_pluginsadministration	title	Administration des plugins
-plugin_pluginsadministration	there_is_no_plugin	<em>Il n'y a pas encore de plugins installé.</em>
+plugin_pluginsadministration	there_is_no_plugin	<em>Il n'y a pas encore de plugin installé.</em>
 plugin_pluginsadministration	uninstall	Désinstaller
-plugin_pluginsadministration	uninstall_plugin	Désinstaller cet plugin
+plugin_pluginsadministration	uninstall_plugin	Désinstaller ce plugin
 plugin_pluginsadministration	upload	Charger l'archive
 plugin_pluginsadministration	update_priorities	Mettre à jour les priorités
 plugin_pluginsadministration	Version	Version
+#
+#
+#
+plugin_pluginsadministration_properties	display_priorities	Afficher les priorités du hook $1
+plugin_pluginsadministration_properties	properties_description:	Description :
+plugin_pluginsadministration_properties	properties_hooks:	Hooks écoutés :
+plugin_pluginsadministration_properties	properties_name:	Nom :
+plugin_pluginsadministration_properties	properties_plugin	Propriétés du plugin "$1"
+plugin_pluginsadministration_properties	properties_version:	Version :
+plugin_pluginsadministration_properties	return	<< Retourner aux plugins

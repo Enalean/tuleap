@@ -28,6 +28,7 @@ plugin_pluginsadministration	plugin_uninstalled	Plugin "$1" have been uninstalle
 plugin_pluginsadministration	plugin_not_uninstalled	Plugin "$1" have not been uninstalled.
 plugin_pluginsadministration	priorities	Priorities between plugins
 plugin_pluginsadministration	Priority	Priority
+plugin_pluginsadministration	properties	Display properties of plugin
 plugin_pluginsadministration	select_hook	Select hook:
 plugin_pluginsadministration	select_install	Select the plugin you want to install. please read the corresponding <em>readme</em> file before processing.
 plugin_pluginsadministration	Status	Enabled?
@@ -38,3 +39,13 @@ plugin_pluginsadministration	uninstall_plugin	Uninstall this Plugin
 plugin_pluginsadministration	upload	Upload Archive
 plugin_pluginsadministration	update_priorities	Update Priorities
 plugin_pluginsadministration	Version	Version
+#
+#
+#
+plugin_pluginsadministration_properties	display_priorities	Display priorities of hook $1
+plugin_pluginsadministration_properties	properties_description:	Description:
+plugin_pluginsadministration_properties	properties_hooks:	Listened Hooks:
+plugin_pluginsadministration_properties	properties_name:	Name:
+plugin_pluginsadministration_properties	properties_plugin	Properties of plugin "$1"
+plugin_pluginsadministration_properties	properties_version:	Version:
+plugin_pluginsadministration_properties	return	<< Return to plugins

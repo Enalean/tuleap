@@ -1,4 +1,4 @@
- <?php
+<?php
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
@@ -108,7 +108,7 @@ if($plugins->isEmpty()) {
     $titles = array();
     $titles[] = $GLOBALS['Language']->getText('plugin_pluginsadministration','Plugin');
     $titles[] = $GLOBALS['Language']->getText('plugin_pluginsadministration','Status');
-    $titles[] = $GLOBALS['Language']->getText('plugin_pluginsadministration','uninstall');
+    $titles[] = $GLOBALS['Language']->getText('plugin_pluginsadministration','Actions');
     $output .= html_build_list_table_top($titles);
     $iter =& $plugins->iterator();
     $plugins_table = array();
@@ -152,7 +152,16 @@ if($plugins->isEmpty()) {
         } else {
             $output .= '<td><a href="?action=enable&plugin_id='.$plugins_table[$i]['plugin_id'].'" title="'.$Language->getText('plugin_pluginsadministration','change_to_enabled').'">'.$Language->getText('plugin_pluginsadministration','disabled').'</a></td>';
         }
-        $output .= '<td><a href="?action=uninstall&plugin_id='.$plugins_table[$i]['plugin_id'].'" title="'.$Language->getText('plugin_pluginsadministration','uninstall_plugin').'"><img src="'.util_get_image_theme("ic/trash.png").'" height="16" width="16" border="0" alt="'.$Language->getText('plugin_pluginsadministration','uninstall_plugin').'"></a></td>';
+        $output .= '<td>';
+        //Uninstall
+        $output .=   '<a class="pluginsadministration_action" href="?action=uninstall&plugin_id='.$plugins_table[$i]['plugin_id'].'" title="'.$Language->getText('plugin_pluginsadministration','uninstall_plugin').'">';
+        $output .=     '<img src="'.util_get_image_theme("ic/trash.png").'" border="0" alt="'.$Language->getText('plugin_pluginsadministration','uninstall_plugin').'">';
+        $output .=   '</a>';
+        //Properties
+        $output .=   '<a class="pluginsadministration_action" href="properties.php?plugin_id='.$plugins_table[$i]['plugin_id'].'" title="'.$Language->getText('plugin_pluginsadministration','properties').'">';
+        $output .=     '<img src="'.util_get_image_theme("ic/taskman16b.png").'" border="0" alt="'.$Language->getText('plugin_pluginsadministration','properties').'">';
+        $output .=   '</a>';
+        $output .= '</td>';
         $output .= '<tr>';
     }
     $output .= '</table>';
