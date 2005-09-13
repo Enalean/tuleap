@@ -16,7 +16,6 @@ class Plugin {
     
     function Plugin($id = -1) {
         $this->id         = $id;
-        $this->pluginInfo =& new PluginInfo($this);
         $this->hooks      =& new Map();
     }
     
@@ -25,6 +24,9 @@ class Plugin {
     }
     
     function &getPluginInfo() {
+        if (!is_a($this->pluginInfo, 'PluginInfo')) {
+            $this->pluginInfo =& new PluginInfo($this);
+        }
         return $this->pluginInfo;
     }
     

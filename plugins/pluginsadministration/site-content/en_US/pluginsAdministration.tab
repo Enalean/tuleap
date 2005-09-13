@@ -8,6 +8,11 @@
 #  * @version   $Id: en_US.tab,v 1.11 2005/06/24 08:10:37 nterray Exp $
 #  *
 #  */
+plugin_pluginsadministration	descriptor_description	Offers a web interface for managing plugins.
+plugin_pluginsadministration	descriptor_name	Plugins Administration
+#
+#
+#
 plugin_pluginsadministration	Actions	Actions
 plugin_pluginsadministration	change_to_disabled	Change to No
 plugin_pluginsadministration	change_to_enabled	Change to Yes

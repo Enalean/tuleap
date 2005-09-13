@@ -2,11 +2,12 @@
 
 require_once('common/plugin/PluginDescriptor.class');
 
+$GLOBALS['Language']->loadLanguageMsg('template', 'template');
+
 class TemplatePluginDescriptor extends PluginDescriptor {
     
     function TemplatePluginDescriptor() {
-        $this->PluginDescriptor('Template', 'v1.0', 'Base to develop CodeX Plugins.');
+        $this->PluginDescriptor('Template', 'v1.0', $GLOBALS['Language']->getText('plugin_template', 'descriptor_description'));
     }
-    
 }
 ?>

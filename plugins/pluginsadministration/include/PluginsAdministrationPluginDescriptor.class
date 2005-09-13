@@ -2,6 +2,8 @@
 
 require_once('common/plugin/PluginDescriptor.class');
 
+$GLOBALS['Language']->loadLanguageMsg('pluginsAdministration', 'pluginsadministration');
+
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
@@ -11,7 +13,10 @@ require_once('common/plugin/PluginDescriptor.class');
  */
 class PluginsAdministrationPluginDescriptor extends PluginDescriptor {
     
-    function PluginsAdministrationPluginDescriptor($name, $version, $description) {
+    function PluginsAdministrationPluginDescriptor() {
+        $version     = 'v1.0';
+        $name        = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'descriptor_name');
+        $description = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'descriptor_description');
         $this->PluginDescriptor($name, $version, $description);
     }
     

@@ -14,6 +14,11 @@
 #  * @version   $Id: fr_FR.tab,v 1.10 2005/06/24 08:10:38 nterray Exp $
 #  *
 #  */
+plugin_pluginsadministration	descriptor_description	Interface web d'administration des plugins.
+plugin_pluginsadministration	descriptor_name	Administration des Plugins
+#
+#
+#
 plugin_pluginsadministration	Actions	Actions
 plugin_pluginsadministration	change_to_disabled	Changer à Non
 plugin_pluginsadministration	change_to_enabled	Changer à Oui

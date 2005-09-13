@@ -2,8 +2,6 @@
 
 require_once('common/plugin/Plugin.class');
 
-require_once('PluginsAdministrationPluginInfo.class');
-
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
@@ -15,10 +13,17 @@ class PluginsAdministrationPlugin extends Plugin {
     
     function PluginsAdministrationPlugin($id) {
         $this->Plugin($id);
-        $this->pluginInfo =& new PluginsAdministrationPluginInfo($this);
         $this->_addHook('site_admin_option_hook', 'siteAdminHooks', true);
         $this->_addHook('site_admin_menu_hook',   'siteAdminHooks', true);
         $this->_addHook('cssfile', 'cssFile', false);
+    }
+    
+    function &getPluginInfo() {
+        if (!is_a($this->pluginInfo, 'PluginsAdministrationPluginInfo')) {
+            require_once('PluginsAdministrationPluginInfo.class');
+            $this->pluginInfo =& new PluginsAdministrationPluginInfo($this);
+        }
+        return $this->pluginInfo;
     }
     
     function siteAdminHooks($hook, $params) {
