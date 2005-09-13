@@ -252,10 +252,95 @@ build_dir /etc/codex/themes/messages sourceforge sourceforge 755
 $CP -af /home/httpd_24/phpMyAdmin* /home/httpd
 $CP -af /home/httpd_24/cgi-bin/viewcvs.cgi /home/httpd/cgi-bin
 
+###########################################
+#{{{ Themes directories
+	echo "Updating custom themes..."
+	cd etc/codex/themes
+
+	#{{{CSS
+		if [ -d css ]; then
+			echo -ne "Copy of themes css...\t\t"
+			cd css
+			for i in *
+			do
+				if [ ! -d ../$i ]; then 
+					$MKDIR ../$i
+				fi
+				if [ ! -d ../$i/css ]; then
+					$MKDIR ../$i/css
+				fi
+				for j in $i/*
+				do
+					$PERL -pi -e "s|images/custom/([^/]+)\.theme|custom/\$1/images|g" $j
+				done
+				$MV $i/* ../$i/css/.
+			done
+			cd ..
+			rm -rf css
+			echo "done."
+		fi
+	#}}}
+	
+	#{{{Images
+		if [ -d images ]; then
+			echo -ne "Copy of themes images...\t"
+			cd images
+			for i in *
+			do
+				if [ ! -d ../$i ]; then 
+					$MKDIR ../$i
+				fi
+				if [ ! -d ../$i/images ]; then
+					$MKDIR ../$i/images
+				fi
+				mv $i/* ../$i/images/.
+			done
+			cd ..
+			$RM -rf images
+			echo "done."
+		fi
+	#}}}
+	
+	#{{{merge of themes directory (/codex/ vs /codex.theme/)
+		echo -ne "Merge of themes directory...\t"
+		for i in *
+		do
+			if [ -d $i.theme ]; then
+				$CP -r $i.theme/* $i/.
+				$RM -rf $i.theme
+			fi
+		done
+		echo "done."
+	#}}}
+	
+	#{{{ Creation of Theme.class
+		echo -ne "Creation of Theme classes...\t"
+		for i in *
+		do
+			if [ ! -f $i/Theme.class ]; then
+		
+				$CAT <<'EOF' > $i/Theme.class
+<?php
+
+require_once('www/include/Layout.class');
+
+class Theme extends Layout {
+}
+
+?>
+EOF
+			fi
+		done
+		echo "done."
+	#}}}
+	
+	cd ../../..
+#}}}
+
 #############################################
 # Copy new icons in all custom themes
 
-
+#TODO
 
 ##############################################
 # Database Structure and initvalues upgrade
@@ -283,6 +368,12 @@ CREATE TABLE `priority_plugin_hook` (
 `hook` VARCHAR(100) NOT NULL,
 `priority` INT NOT NULL
 );
+CREATE TABLE `plugin` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL,
+  `enabled` tinyint(4) NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+);
 CREATE TABLE `project_plugin` (
 `project_id` INT NOT NULL ,
 `plugin_id` INT NOT NULL
@@ -291,7 +382,6 @@ CREATE TABLE `user_plugin` (
 `user_id` INT NOT NULL ,
 `plugin_id` INT NOT NULL
 );
-
 -- }}}
 
 
