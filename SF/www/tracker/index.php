@@ -261,11 +261,11 @@ if ( $func == 'gotoid' ) {
                 } else {
                         $cc_array = $ah->getCC($artifact_cc_id);
                         // Perform CC deletion if one of the condition is met:
-                        // (a) current user is a artifact tech
+                        // (a) current user is a artifact admin
                         // (b) then CC name is the current user 
                         // (c) the CC email address matches the one of the current user
                         // (d) the current user is the person who added a gieven name in CC list
-                        if ( $ath->userIsTech() ||
+                        if ( user_ismember($group_id) ||
                         (user_getname(user_getid()) == $cc_array['email']) ||  
                         (user_getemail(user_getid()) == $cc_array['email']) ||
                         (user_getname(user_getid()) == $cc_array['user_name'] )) {
@@ -310,7 +310,7 @@ if ( $func == 'gotoid' ) {
                         return;
                 }
                 
-            if ( !$ath->userIsTech() ) {
+		if ( !user_ismember($group_id) ) {
                         exit_permission_denied();
                         return;
                 }
@@ -356,7 +356,7 @@ if ( $func == 'gotoid' ) {
 
                 // Check permissions
                 $file_array = $ah->getAttachedFile($id);
-            if ( $ath->userIsTech() ||
+		if ( user_ismember($group_id) ||
                 (user_getname(user_getid()) == $file_array['user_name'] )) {
 
                         $afh=new ArtifactFileHtml($ah,$id);
@@ -403,7 +403,7 @@ if ( $func == 'gotoid' ) {
                             exit_not_logged_in();
                         }
                         
-                        if ( !$ah->ArtifactType->userIsTech() ) {
+                        if ( !user_ismember($group_id) ) {
                                 exit_permission_denied();
                                 return;
                         }
@@ -750,7 +750,7 @@ if ( $func == 'gotoid' ) {
                         if (browser_is_netscape4()) {
 			  $feedback .= $Language->getText('tracker_index','browser_not_supported',$Language->getText('tracker_index','an_artif'));
                         }
-                        if ( $ah->ArtifactType->userIsTech() ) {
+                        if ( user_ismember($group_id) ) {
                                 require('./mod.php');
                         } else {
                                 require('./detail.php');
@@ -777,7 +777,7 @@ if ( $func == 'gotoid' ) {
                         }
 
 			// !!!! need to specify here for which users we allow to copy artifacts !!!!
-                        if ( $ah->ArtifactType->userIsTech() ) {
+                        if ( user_ismember($group_id) ) {
                                 require('./copy.php');
                         } else {
                              exit_error($Language->getText('global','error'),$Language->getText('tracker_index', 'not_create_art'));   

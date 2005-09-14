@@ -638,7 +638,7 @@ class Artifact extends Error {
             global $feedback,$art_field_fact,$HTTP_POST_VARS,$Language;
 
 	    //verify permissions - Must have Tech permission
-            if (!$this->ArtifactType->userIsTech()) exit_permission_denied();
+            if (!user_ismember($this->ArtifactType->getGroupID()) ) exit_permission_denied();
 	    if ($masschange && !$this->ArtifactType->userIsAdmin()) exit_permission_denied();
         
 	    if (!$import) {

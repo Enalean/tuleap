@@ -569,6 +569,8 @@ class ArtifactField extends Error {
 			    $res_value = $ath->getGroupMembers();
 			else if ($value_func == 'group_admins')
 			    $res_value = $ath->getGroupAdmins();
+			else if ($value_func == 'tracker_admins')
+			    $res_value = $ath->getTrackerAdmins();
 			else if ($value_func == 'artifact_submitters')
 			    $res_value = $ath->getSubmitters();
 			else if (preg_match('/ugroup_([0-9]+)/', $value_func, $matches))

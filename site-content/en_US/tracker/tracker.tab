@@ -446,6 +446,8 @@ tracker_include_type	fields_requ	fields required
 tracker_include_type	bind_to_list	Bind the field to a list of values
 tracker_include_type	bind_to	Bind To
 tracker_include_type	group_members	Project members
+tracker_include_type	group_admins	Project administrators
+tracker_include_type	tracker_admins	Tracker administrators
 tracker_include_type	submitters	Artifact submitters
 tracker_include_type	techicians	Artifact technicians
 tracker_include_type	bind	Bind

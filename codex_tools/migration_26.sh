@@ -387,8 +387,205 @@ CREATE TABLE `user_plugin` (
 
 EOF
 
+###############################################################################
+# Update DB to remove tech_tracker role
+#
+$PERL <<'EOF'
+use DBI;
+require "/home/httpd/SF/utils/include.pl";
+
+## load local.inc variables
+&load_local_config();
+
+&db_connect;
 
 
+sub exec_sql {
+  my ($query) = @_;
+  my ($c);
+  
+  #print $query."\n";
+  $c = $dbh->prepare($query);
+  $c->execute();
+}
+
+
+sub has_role {
+  my ($group_artifact_id, $role) = @_;
+  my ($q, $d);
+  
+  $q = "SELECT agl.group_id, agl.item_name, agl.name FROM artifact_perm ap, artifact_group_list agl WHERE ap.group_artifact_id = agl.group_artifact_id AND ap.group_artifact_id = $group_artifact_id AND ap.perm_level = '$role'";
+  #print $q."\n";
+  $d = $dbh->prepare($q);
+  $d->execute();
+  
+  #print "* $group_artifact_id has ".$d->rows." $role \n";
+  
+  return ($d->rows > 0);
+}
+
+
+
+sub has_tech_permissions {
+  my ($group_artifact_id) = @_;
+  my ($q, $d);
+  
+  $q = "SELECT permission_type, object_id  FROM permissions WHERE ugroup_id = 16 AND (object_id = '$group_artifact_id' OR object_id LIKE '".$group_artifact_id."#')";
+  #print $q."\n";
+  $d = $dbh->prepare($q);
+  $d->execute();
+  
+  return ($d->rows > 0);
+}
+
+
+sub has_tech_value_functions {
+  my ($group_artifact_id) = @_;
+  my ($q, $d);
+
+  $q = "SELECT value_function FROM artifact_field WHERE group_artifact_id = $group_artifact_id AND value_function = 'artifact_technicians'";
+  #print $q."\n";
+  $d = $dbh->prepare($q);
+  $d->execute();
+  
+  return ($d->rows > 0);
+}
+
+
+sub create_tech_ugroup {
+  my ($group_id, $group_artifact_id, $item_name, $name) = @_;
+
+  my ($q, $d, $uname, $ugroup_id);
+
+  #verify first if several trackers with same name exist for this group
+  $q = "SELECT item_name FROM artifact_group_list WHERE item_name = '$item_name' AND group_id = $group_id";
+  #print $q."\n";
+  $d = $dbh->prepare($q);
+  $d->execute();
+  if ($d->rows > 1) {
+    #print "several trackers with item_name $item_name in project $group_id \n";
+    $uname = $item_name."_".$group_artifact_id."_techs";
+  } else {
+    $uname = $item_name."_techs";
+  }
+  $q = "INSERT INTO ugroup (name,description,group_id) VALUES ('$uname','The technicians of the $name tracker',$group_id)";
+  #print $q."\n";
+  $d = $dbh->prepare($q);
+  $d->execute();
+  $ugroup_id = $d->{'mysql_insertid'};
+
+  $q2 = "SELECT user_id FROM artifact_perm WHERE group_artifact_id = $group_artifact_id AND perm_level IN (2,3)";
+  #print $q2."\n";
+  $d2 = $dbh->prepare($q2);
+  $d2->execute();
+  while (my ($user_id) = $d2->fetchrow()) {
+    #insert user into newly created ugroup
+    $q = "INSERT INTO ugroup_user (ugroup_id,user_id) VALUES ($ugroup_id,$user_id)";
+    #print $q."\n";
+    $d = $dbh->prepare($q);
+    $d->execute();
+  }
+  return $ugroup_id;
+}
+
+sub update_each_tracker {
+  my ($query, $c, $q, $d, $uname, $ugroup_id);
+  
+  $query = "SELECT group_artifact_id, group_id, item_name, name from artifact_group_list ORDER BY group_artifact_id";
+  #print $query."\n";
+  $c = $dbh->prepare($query);
+  $c->execute();
+  
+  while (my ($group_artifact_id, $group_id, $item_name, $name) = $c->fetchrow()) {
+    #print "** Treat tracker $group_artifact_id, $group_id, $item_name, $name \n";
+    if ($group_artifact_id < 100) {
+      ## for template trackers:
+      ## ** 1 **
+      ## update permissions table: replace dynamic tech_tracker ugroup by dynamic group_members ugroup
+      exec_sql("UPDATE permissions SET ugroup_id = '3' WHERE ugroup_id = '16' AND (object_id = '$group_artifact_id' OR object_id LIKE '".$group_artifact_id."#%')");
+      ## ** 2 **
+      ## update value_functions in artifact_field table
+      exec_sql("UPDATE artifact_field SET value_function = 'group_members' WHERE group_artifact_id = $group_artifact_id AND value_function = 'artifact_technicians'");
+      
+      
+    } else {
+      ## for real project trackers
+      ## ** 1 **
+      ## create or not a specific tracker techs ugroup ??
+      $user_only = has_role($group_artifact_id, '0');
+      $tech_only = has_role($group_artifact_id, '1');
+      $tech_admin = has_role($group_artifact_id, '2');
+      $admin_only = has_role($group_artifact_id, '3');
+      
+      $has_tech_vf = has_tech_value_functions($group_artifact_id);
+      $has_tech_p = has_tech_permissions($group_artifact_id);
+      
+
+      if ( ($user_only && !$tech_only && !$admin_only) ||
+	   ($user_only && !$tech_only && !$tech_admin) ) {
+	## TRACKER_ADMINS	
+	## migrate value_functions in artifact fields
+	if ($has_tech_vf) {
+	  exec_sql("UPDATE artifact_field SET value_function = 'tracker_admins' WHERE group_artifact_id = $group_artifact_id AND value_function = 'artifact_technicians'");
+	}
+	## migrate permissions
+	if ($has_tech_p) {
+	  exec_sql("UPDATE permissions SET ugroup_id = 3 WHERE ugroup_id = 15 AND (object_id = '$group_artifact_id' OR object_id LIKE '".$group_artifact_id."#')");
+	}
+
+      } elsif ($user_only ||
+	      (!$user_only && $tech_only && $admin_only) ) {  
+	
+	if ($has_tech_vf || $has_tech_p) {
+	  ## need to create a specific techs ugroup
+	  $ugroup_id = create_tech_ugroup($group_id, $group_artifact_id, $item_name, $name);
+	  
+	  ## migrate value_functions in artifact fields
+	  if ($has_tech_vf) {
+	    exec_sql("UPDATE artifact_field SET value_function = 'ugroup_".$ugroup_id.
+		     "' WHERE group_artifact_id = $group_artifact_id AND value_function = 'artifact_technicians'");
+	  }
+	  ## migrate permissions
+	  if ($has_tech_p) {
+	    exec_sql("UPDATE permissions SET ugroup_id = $ugroup_id WHERE ugroup_id = 16 AND (object_id = '$group_artifact_id' OR object_id LIKE '".$group_artifact_id."#')");
+	  }
+	}
+
+      } elsif ( (!$user_only && $tech_only && $tech_admin && !$admin_only) ||
+		(!$user_only && $tech_only && !$tech_admin && !$admin_only) ||
+		(!$user_only && !$tech_only) ){
+	## GROUP_MEMBERS
+	## migrate value_functions in artifact fields
+	if ($has_tech_vf) {
+	  exec_sql("UPDATE artifact_field SET value_function = 'group_members' WHERE group_artifact_id = $group_artifact_id AND value_function = 'artifact_technicians'");
+	}
+	## migrate permissions
+	if ($has_tech_p) {
+	  exec_sql("UPDATE permissions SET ugroup_id = 3 WHERE ugroup_id = 16 AND (object_id = '$group_artifact_id' OR object_id LIKE '".$group_artifact_id."#')");
+	}
+	
+      }
+      
+    }
+  }
+}
+
+
+update_each_tracker();
+
+#delete old dynamic techs ugroup
+exec_sql("DELETE FROM ugroup WHERE ugroup_id=16");
+
+#delete all the permissions for dynamic techs that are left
+exec_sql("DELETE FROM permissions WHERE ugroup_id = 16");
+
+#update the permissions_values table
+exec_sql("INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('TRACKER_FIELD_UPDATE',3,1),('TRACKER_FIELD_UPDATE',4,0),('TRACKER_FIELD_UPDATE',15,0)");
+exec_sql("DELETE FROM permissions_values WHERE ugroup_id = 16");
+
+
+exit;
+EOF
 
 ##############################################
 # Reinstall modified shell scripts

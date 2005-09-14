@@ -74,6 +74,13 @@ class ArtifactType extends Error {
 	var $arr_roles = array();
 
 	/**
+	 * Technicians db resource ID.
+	 *
+	 * @var		int		$admins_res.
+	 */
+   	var $admins_res;
+
+	/**
 	 *	ArtifactType - constructor.
 	 *
 	 *	@param	object	The Group object.
@@ -123,7 +130,8 @@ class ArtifactType extends Error {
 				}
 			}
 		}
-		
+
+		unset($this->admins_res);
 		unset($this->current_user_perm);
 		unset($this->cannedresponses_res);
 	}
@@ -818,18 +826,6 @@ class ArtifactType extends Error {
 		}
 	}
 
-	/**
-	 *	userIsTech - see if the logged-in user's perms are 1,2 or project admin.
-	 *
-	 *	@return boolean
-	 */
-	function userIsTech() { 
-		if ( ($this->getCurrentUserPerm() == 1) || ($this->getCurrentUserPerm() == 2) || (user_ismember($this->Group->getID(),'A')) ) {
-			return true;
-		} else {
-			return false;
-		}
-	}
 
 	/**
 	 *	  userCanSubmit - determine if the user can submit an artifact (if he can submit a field).
@@ -1136,6 +1132,35 @@ class ArtifactType extends Error {
 		        "AND user_group.admin_flags = 'A' ".
 			"ORDER BY user.user_name";
 		return db_query($sql);
+	}
+
+
+	/**
+	 *	getTrackerAdmins - returns a result set of this trackers administrators. 
+	 *
+	 *	@return database result set.
+	 */
+	function getTrackerAdmins() {
+	  global $display_debug;
+          
+	  if (!isset($this->admins_res)) {
+	    $sql="SELECT user.user_id, user.user_name ". 
+	      "FROM artifact_perm ap, user ".
+	      "WHERE (user.user_id = ap.user_id) and ".
+	      "group_artifact_id=". $this->getID()." ".
+	      "AND perm_level in (2,3)";
+	    //echo "sql=$sql<br>";
+	    $this->admins_res = db_query($sql);
+            
+	    if ( $display_debug ) {
+	      $rows = db_numrows($this->admins_res);
+	      echo "<DBG:ArtifactType.getTrackerAdmins>sql=".$sql."<br>";
+	      for($i=0;$i<$rows;$i++) {
+		echo db_result($this->admins_res, $i, 'user_name')."<br>";
+	      }
+	    }
+	  }
+	  return $this->admins_res;
 	}
 
 	function getUsersPerm($group_artifact_id) {

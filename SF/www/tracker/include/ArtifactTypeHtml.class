@@ -1563,6 +1563,18 @@ EOS;
 			echo '<option value="group_members"'.$selected.'>'.$Language->getText('tracker_include_type','group_members').'</option>';
 			
 			$selected = "";
+			if ( $value_function == "group_admins" ) {
+				$selected = " selected";
+			}
+			echo '<option value="group_admins"'.$selected.'>'.$Language->getText('tracker_include_type','group_admins').'</option>';
+			
+			$selected = "";
+			if ( $value_function == "tracker_admins" ) {
+				$selected = " selected";
+			}
+			echo '<option value="tracker_admins"'.$selected.'>'.$Language->getText('tracker_include_type','tracker_admins').'</option>';
+			
+			$selected = "";
 			if ( $value_function == "artifact_submitters" ) {
 				$selected = " selected";
 			}
@@ -1941,8 +1953,8 @@ EOS;
 		
 		echo '<h3>'.$Language->getText('tracker_include_type','perso_mail_notif').'</h3>';
 		  
-		if ($this->userIsTech()) {
-		    // To watch other users you must have at least tech rights on the tracker
+		if ($this->userIsAdmin()) {
+		    // To watch other users you must have at least admin rights on the tracker
 		    echo'
 		<h4>'.$Language->getText('tracker_include_type','users_to_watch').' '.
 		help_button('TrackerAdministration.html#TrackerWatchers').'</h4>

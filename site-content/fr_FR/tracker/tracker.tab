@@ -453,6 +453,8 @@ tracker_include_type	fields_requ	champs obligatoires
 tracker_include_type	bind_to_list	associer le champ à une liste de valeurs
 tracker_include_type	bind_to	Associer à
 tracker_include_type	group_members	Membres du projet
+tracker_include_type	group_admins	Administrateurs du projet
+tracker_include_type	tracker_admins	Administrateurs de l'outil de suivi
 tracker_include_type	submitters	Personnes ayant soumis un artefact
 tracker_include_type	techicians	Techniciens de l'outil de suivi
 tracker_include_type	bind	Associer

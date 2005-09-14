@@ -505,7 +505,7 @@ class ArtifactImport extends Error {
     
     $sub_user_id = $user_id;
     
-    if (!$this->ath->userIsAdmin() && !$this->ath->userIsTech()) {
+    if (!$this->ath->userIsAdmin()) {
       exit_permission_denied();
     } else {
       $sub_user_name = user_getname();

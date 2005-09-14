@@ -684,9 +684,9 @@ class ArtifactHtml extends Artifact {
                                             $server.$href);
                         } else {
                             // show CC delete icon if one of the condition is met:
-                            // (a) current user is a artifact tech
+                            // (a) current user is group member
                             // (b) the current user is the person who added a gieven name in CC list
-                            if ( $this->ArtifactType->userIsTech() ||
+			  if ( user_ismember($this->ArtifactType->getGroupID()) ||
                                 (user_getname(user_getid()) == db_result($result, $i, 'user_name') )) {
                                         $html_delete = "<a href=\"$PHP_SELF?func=delete_file&group_id=".$group_id."&atid=".$group_artifact_id."&aid=".$this->getID()."&id=".db_result($result, $i, 'id')."\" ".
                                             " onClick=\"return confirm('".$Language->getText('tracker_include_artifact','delete_attachment')."')\">".
@@ -781,11 +781,11 @@ class ArtifactHtml extends Artifact {
                         } else {
                 
                             // show CC delete icon if one of the condition is met:
-                            // (a) current user is a artifact tech
-                            // (b) then CC name is the current user 
+                            // (a) current user is a group member
+                            // (b) the CC name is the current user 
                             // (c) the CC email address matches the one of the current user
                             // (d) the current user is the person who added a gieven name in CC list
-                            if ( $this->ArtifactType->userIsTech() ||
+                            if ( user_ismember($this->ArtifactType->getGroupID()) ||
                                 (user_getname(user_getid()) == $email) ||  
                                 (user_getemail(user_getid()) == $email) ||
                                 (user_getname(user_getid()) == db_result($result, $i, 'user_name') )) {
@@ -876,7 +876,7 @@ class ArtifactHtml extends Artifact {
                             $out .= sprintf($fmt, $dependent_on_artifact_id, $summary);
                         } else {
                 
-                            if ( $this->ArtifactType->userIsTech() ) {
+                            if ( user_ismember($this->ArtifactType->getGroupID()) ) {
                                         $html_delete = "<a href=\"$PHP_SELF?func=delete_dependent&group_id=$group_id&aid=".$this->getID()."&atid=".$group_artifact_id."&dependent_on_artifact_id=$dependent_on_artifact_id\" ".
                                         " onClick=\"return confirm('".$Language->getText('tracker_include_artifact','del_dep')."')\">".
                                         '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="'.$Language->getText('global','btn_delete').'"></A>';
