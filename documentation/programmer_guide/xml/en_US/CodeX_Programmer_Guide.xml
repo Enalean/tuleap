@@ -24,6 +24,7 @@ href="file:/C:/Program Files/XMLmind_XML_Editor/css/docbook.css"
 <!ENTITY ChapterDevEnvironmentSetup SYSTEM "DevEnvironmentSetup.xml">
 <!ENTITY ChapterDirStructure SYSTEM "DirStructure.xml">
 <!ENTITY ChapterCodeXDevelopment SYSTEM "CodeXDevelopment.xml">
+<!ENTITY ChapterCodexFramework SYSTEM "CodexFramework.xml">
 <!ENTITY ChapterSubmittingCode SYSTEM "SubmittingCode.xml">
 
 <!-- Entity definition and inclusion for default and custom parameters
@@ -54,5 +55,6 @@ avoid duplications -->
   &ChapterDevEnvironmentSetup; 
   &ChapterDirStructure;
   &ChapterCodeXDevelopment;
+  &ChapterCodexFramework;
   &ChapterSubmittingCode; 
 </book>

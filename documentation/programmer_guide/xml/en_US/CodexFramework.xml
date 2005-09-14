@@ -1,0 +1,193 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+//
+// $Id$
+//
+// Originally written by Nicolas Terray 2005, CodeX Team, Xerox
+//
+-->
+<!--DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "file:/usr/share/sgml/docbook/xml-dtd-4.3-1.0-25/docbookx.dtd" [ ]>
+<?xml-stylesheet type="text/xsl" href="html.xsl"?>
+<book-->
+<chapter id="CodexFramework">
+	<title>Codex Framework</title>
+	<para>Packages dependencies :</para>
+	<para>
+		<mediaobject>
+			<imageobject>
+				<imagedata fileref="../../slides/en_US/CodeXPackagesDependencies.png" format="PNG"/>
+			</imageobject>
+		</mediaobject>
+	</para>
+	<para>
+		Please remember two follow those principles, among others :
+		<itemizedlist>
+			<listitem><para><emphasis role="bold">ADP</emphasis>: Acyclic Dependencies Principle</para></listitem>
+			<listitem><para><emphasis role="bold">SAP</emphasis>: Stable Abstractions Principle</para></listitem>
+			<listitem><para><emphasis role="bold">SDP</emphasis>: Stable Dependencies Principle</para></listitem>
+		</itemizedlist>
+	</para>
+	<section id="Collections">
+		<title>Collections</title>
+		<section>
+			<title>Collection Framework</title>
+			<para>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="../../slides/en_US/CodeXCollectionFramework.png" format="PNG"/>
+					</imageobject>
+				</mediaobject>
+			</para>
+		</section>
+	</section>
+	<section id="DataAccessLayer">
+		<title>Data Access Layer</title>
+		<section>
+			<title>Data Access Layer Framework</title>
+			<para>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="../../slides/en_US/CodeXDAOFramework.png" format="PNG"/>
+					</imageobject>
+				</mediaobject>
+			</para>
+		</section>
+	</section>
+	<section id="Events">
+		<title>Events</title>
+		<section>
+			<title>Event Framework</title>
+			<para>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="../../slides/en_US/CodeXEventFramework.png" format="PNG"/>
+					</imageobject>
+				</mediaobject>
+			</para>
+			<section>
+				<title>How to get an instance of EventManager ?</title>
+				<para>EventManager follows Singleton Pattern. Therefore you <emphasis role="bold">have to</emphasis> do : <literal>$em =&amp; EventManager::instance();</literal></para>
+			</section>
+			<section>
+				<title>How to fire an event ?</title>
+				<para><literal>$em->processEvent('the_event', $params);</literal></para>
+			</section>
+			<section>
+				<title>How to listen to an event ?</title>
+				<para><literal>$em->addListener('the_event', $event_listener, 'callback', $recallEvent = true, $priority);</literal></para>
+				<para>When event 'the_event' will be processed, EventManager will do <literal>$event_listener->callback('the_event', $params);</literal>.</para>
+			</section>
+		</section>
+	</section>
+	<section id="Plugins">
+		<title>Plugins</title>
+		<para>During this chapter, for examples, we will refering to the plugin named <emphasis>template</emphasis>, which is part of CodeX and which you can found in plugins directory.</para>
+		<section id="PluginLifeCycle">
+			<title>Plugin Life Cycle</title>
+			<itemizedlist>
+				<listitem><para>Develop</para></listitem>
+				<listitem><para>Package</para></listitem>
+				<listitem><para>Install</para></listitem>
+				<listitem><para>Execute*</para></listitem>
+				<listitem><para>Uninstall</para></listitem>
+			</itemizedlist>
+		</section>
+		<section id="Develop">
+			<title>Develop</title>
+			<section>
+				<title>Naming Convention</title>
+				<para>The short-name of plugin must be unique and composed of lowercase letters only, because it's going to be used in table names and we don't want namespace conflicts.</para>
+				<para>The main class of plugin should be composed of the short-name followed by "Plugin.class" e.g: "templatePlugin.class".</para>
+			</section>
+			<section>
+				<title>Plugin Directory Structure</title>
+				<para>In <emphasis>plugins/template</emphasis>:
+					<itemizedlist>
+						<listitem><para><emphasis role="bold">db</emphasis>: database scripts. Contains among others install.sql and uninstall.sql</para></listitem>
+					</itemizedlist>
+					<itemizedlist>
+						<listitem><para><emphasis role="bold">include</emphasis>: contains PHP classes, including the main class of plugin</para></listitem>
+					</itemizedlist>
+					<itemizedlist>
+						<listitem><para><emphasis role="bold">site-content</emphasis>: the repository for plugin specific text. The same as in SF.</para></listitem>
+					</itemizedlist>
+					<itemizedlist>
+						<listitem><para><emphasis role="bold">www</emphasis>: web space of the plugin. It will be accessible by the following URI: http://example.com/plugins/template/.</para></listitem>
+					</itemizedlist>
+				</para>
+			</section>
+			<section>
+				<title>Plugin Framework</title>
+				<para>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="../../slides/en_US/CodeXPluginFramework.png" format="PNG"/>
+						</imageobject>
+					</mediaobject>
+				</para>
+			</section>
+			<section>
+				<title>Hooks</title>
+				<section>
+					<title>What is a hook ?</title>
+					<para>A hook is an event. The aim of a hook is to allow plugins to do a specific action when a part of the CodeX core is reached.</para>
+				</section>
+				<section>
+					<title>How to listen/subscribe to a hook ?</title>
+					<para>In your plugin constructor just add <literal>$this->addHook('name_of_hook');</literal> foreach hooks you want to listen to.</para>
+				</section>
+				<section>
+					<title>How to respond to a hook ?</title>
+					<para>Plugins responds to hook with callbacks. A callback is a method of the class of your plugin. The default callback is <literal>CallHook</literal> wich takes two parameters : the name of the hook fired and the parameters in an array.</para>
+					<para>If you want your plugin to respond to hook with another callback (to prevent many ifs or switches in one callback), you have to say it during subscribtion: <literal>$this->_addHook('name_of_hook', 'specific_callback', $recall_hook = false/true);</literal>. This two more parameters are  : the name of the callback, and a boolean wich say if you want to know which hook is fired (to treat different hooks in the same callback). The default values for those parameters are <literal>CallHook, true</literal>.</para>
+					<para>For a real example see the plugin PluginsAdministration.</para>
+				</section>
+				<section>
+					<title>How to fire a hook ?</title>
+					<para>In the core of CodeX, as hooks are events, you fire them via EventManager: <literal>$em->processEvent('the_hook', $params_of_hook);</literal>.</para>
+					<para><emphasis role="bold">Important:</emphasis> the parameters is given to ALL plugins which listen to the hook.</para>
+				</section>
+			</section>
+		</section>
+		<section id="Package">
+			<title>Package</title>
+			<para></para>
+		</section>
+		<section id="Install">
+			<title>Install</title>
+			<para>Firstly you have to copy the plugin files in the plugins directory. Untar ou unzip the archive, cvs or svn checkout.</para>
+			<para>Once this first step done, you have two way to finish the installation : manually or automatically.</para>
+			<section>
+				<title>Manually</title>
+				<para>You have to tell to CodeX that you want to use this plugin. You do that by inserting a new row in the plugin table :
+				<literal>INSERT INTO plugin (name, enabled) VALUES ('template', 0);</literal>. <literal>name</literal> is the short-name of the plugin. You have to set <literal>enabled</literal> to <literal>1</literal> if you want to enable the plugin.</para>
+				<para>If plugins use database, use the <emphasis>db/install.sql</emphasis> script.</para>
+			</section>
+			<section>
+				<title>Automatically</title>
+				<para>With the plugin PluginsAdministration, you can manage your plugins through a web-based interface.</para>
+				<para>Locate your plugin in the not yet installed plugins list and select it to install it. PluginsAdministration will update database for you and will run <emphasis>db/install.sql</emphasis> during installation.</para>
+				<para>Note that the plugins will be disabled by default. You will have to enabled it (still with PluginsAdministration) after installation.</para>
+				<para>The plugin PluginsAdministration is part of CodeX.</para>
+			</section>
+		</section>
+		<section id="Execute">
+			<title>Execute</title>
+			<para></para>
+		</section>
+		<section id="Uninstall">
+			<title>Uninstall</title>
+			<para></para>
+		</section>
+	</section>
+</chapter>
+<!--/book-->
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_Programmer_Guide.xml" "book" "chapter")
+End:
+-->
