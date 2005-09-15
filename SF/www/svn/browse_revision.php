@@ -123,7 +123,7 @@ if ($there_are_specific_permissions && !user_ismember($group_id,'A')) {
     $where = "WHERE svn_commits.group_id=$group_id AND user.user_id=svn_commits.whoid";
 
     //if status selected, and more to where clause
-    if (isset($path) && $_path != '') {
+    if (isset($_path) && $_path != '') {
         $path_str = " AND svn_checkins.dirid=svn_dirs.id AND svn_checkins.commitid=svn_commits.id AND svn_dirs.dir like '%".$_path."%' ";
         $from .= ",svn_dirs,svn_checkins ";
     } else {
@@ -219,7 +219,7 @@ if ($there_are_specific_permissions && !user_ismember($group_id,'A')) {
             $set .= '&_commiter=0&chunksz='.$chunksz;
         }
 
-        svn_utils_show_revision_list($result,$offset,$totalrows,$set,$_commiter,$path,$chunksz,$morder,$msort);
+        svn_utils_show_revision_list($result,$offset,$totalrows,$set,$_commiter,$_path,$chunksz,$morder,$msort);
 
     } else {
         echo '
