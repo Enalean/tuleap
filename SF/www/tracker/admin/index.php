@@ -319,8 +319,10 @@ if ($group_id && (!isset($atid) || !$atid)) {
 		array ('title'=>$Language->getText('tracker_admin_index','art_admin'),
 		   'help' => 'TrackerAdministration.html#TrackerEmailNotificationSettings'));
 		if ($submit) {
+		  $res_new = true;
+		  if ($ath->userIsAdmin()) {
 			$res_new = $ath->updateNotificationSettings($send_all_artifacts, ($new_artifact_address?$new_artifact_address : ''), user_getid(), $watchees,$feedb);
- 
+		  }
 
 		    // Event/Role specific settings
 			//echo "num_roles : ".$ath->num_roles.", num_events : ".$ath->num_events." <br>";

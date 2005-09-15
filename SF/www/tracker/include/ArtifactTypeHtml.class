@@ -2005,8 +2005,7 @@ EOS;
 				$role_label = $this->arr_roles[$i]['role_label'];
 				$cbox_name = 'cb_'.$role_id.'_'.$event_id;
 				//echo "<BR>$role_label $role_id $event_label $event_id ".$arr_notif['$role_label']['$event_label'];
-				if ( (($role_label == 'ASSIGNEE') && !user_ismember($group_id)) ||
-				     (($event_label == 'NEW_ARTIFACT') && ($role_label != 'ASSIGNEE') && ($role_label != 'SUBMITTER')) ||
+				if ( (($event_label == 'NEW_ARTIFACT') && ($role_label != 'ASSIGNEE') && ($role_label != 'SUBMITTER')) ||
 					(($event_label == 'ROLE_CHANGE') && ($role_label != 'ASSIGNEE') && ($role_label != 'CC')) ) {
 				    // if the user is not a member then the ASSIGNEE column cannot
 				    // be set. If it's not an assignee or a submitter the new_artifact event is meaningless
