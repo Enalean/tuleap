@@ -27,7 +27,7 @@
       <para><emphasis role="bold"><literal>documentation</literal></emphasis> contains the user guide, installation guide, administration guide, and hopefully this guide. Some of those guides are available as HTML only, while others are written in DocBook XML format and rendered in HTML and PDF. The transformation from XML to PDF and HTML requires a java interpreter and an XSLT engine: this setup is currently not described in this document.</para>
     </listitem>
     <listitem>
-      <para><emphasis role="bold"><literal>plugins</literal></emphasis> contains the plugins installed into CodeX. One directory to rule them all.</para>
+      <para><emphasis role="bold"><literal>plugins</literal></emphasis> contains the plugins installed into CodeX. One directory to rule them all. The mirror in /etc/codex/ is for customization.</para>
     </listitem>
     <listitem>
       <para><emphasis role="bold"><literal>site-content</literal></emphasis> is the repository for site specific text: introductory messages, local instructions, license, policies, etc. Files located in the site-content directory are simple text files but may contain HTML tags, as well as PHP instructions. They are usually included in the page by one of the higher level PHP scripts.</para>
