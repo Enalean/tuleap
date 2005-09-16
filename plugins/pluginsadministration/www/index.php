@@ -121,12 +121,14 @@ if($plugins->isEmpty()) {
         if (strlen(trim($name)) === 0) {
             $name = get_class($plugin);
         }
+        $dont_touch = (strcasecmp(get_class($plugin), 'PluginsAdministrationPlugin') === 0);
         $plugins_table[] = array(
             'plugin_id'   => $plugin->getId(), 
             'name'        => $name, 
             'description' => $descriptor->getDescription(), 
             'version'     => $descriptor->getVersion(), 
-            'enabled'     => $enabled);
+            'enabled'     => $enabled,
+            'dont_touch'  => $dont_touch);
         $col_hooks =& $plugin->getHooks();
         $hooks =& $col_hooks->iterator();
         while($hooks->hasNext()) {
@@ -147,16 +149,28 @@ if($plugins->isEmpty()) {
         
         $output .= '<td class="pluginsadministration_plugin_descriptor '.($plugins_table[$i]['enabled']?'':' pluginsadministration_disabled ').'"><span class="pluginsadministration_name_of_plugin">'.$plugins_table[$i]['name'].'</span><span class="pluginsadministration_version_of_plugin">'.$plugins_table[$i]['version'].'</span>';
         $output .= '<br/><span class="pluginsadministration_description_of_plugin">'.$plugins_table[$i]['description'].'</span></td>';
+        $output .= '<td>';
         if ($plugins_table[$i]['enabled']) {
-            $output .= '<td><a href="?action=disable&plugin_id='.$plugins_table[$i]['plugin_id'].'" title="'.$Language->getText('plugin_pluginsadministration','change_to_disabled').'">'.$Language->getText('plugin_pluginsadministration','enabled').'</a></td>';
+            $string = $Language->getText('plugin_pluginsadministration','enabled');
+            $action = 'disable';
+            $title  = $Language->getText('plugin_pluginsadministration','change_to_disabled');
         } else {
-            $output .= '<td><a href="?action=enable&plugin_id='.$plugins_table[$i]['plugin_id'].'" title="'.$Language->getText('plugin_pluginsadministration','change_to_enabled').'">'.$Language->getText('plugin_pluginsadministration','disabled').'</a></td>';
+            $string = $Language->getText('plugin_pluginsadministration','disabled');
+            $action = 'enable';
+            $title  = $Language->getText('plugin_pluginsadministration','change_to_enabled');
+        }
+        if (!$plugins_table[$i]['dont_touch']) {
+            $output .= '<a href="?action='.$action.'&plugin_id='.$plugins_table[$i]['plugin_id'].'" title="'.$title.'">'.$string.'</a></td>';
+        } else {
+            $output .= $string;
         }
         $output .= '<td>';
         //Uninstall
-        $output .=   '<a class="pluginsadministration_action" href="?action=uninstall&plugin_id='.$plugins_table[$i]['plugin_id'].'" title="'.$Language->getText('plugin_pluginsadministration','uninstall_plugin').'">';
-        $output .=     '<img src="'.util_get_image_theme("ic/trash.png").'" border="0" alt="'.$Language->getText('plugin_pluginsadministration','uninstall_plugin').'">';
-        $output .=   '</a>';
+        if(!$plugins_table[$i]['dont_touch']) {
+            $output .=   '<a class="pluginsadministration_action" href="?action=uninstall&plugin_id='.$plugins_table[$i]['plugin_id'].'" title="'.$Language->getText('plugin_pluginsadministration','uninstall_plugin').'">';
+            $output .=     '<img src="'.util_get_image_theme("ic/trash.png").'" border="0" alt="'.$Language->getText('plugin_pluginsadministration','uninstall_plugin').'">';
+            $output .=   '</a>';
+        }
         //Properties
         $output .=   '<a class="pluginsadministration_action" href="properties.php?plugin_id='.$plugins_table[$i]['plugin_id'].'" title="'.$Language->getText('plugin_pluginsadministration','properties').'">';
         $output .=     '<img src="'.util_get_image_theme("ic/taskman16b.png").'" border="0" alt="'.$Language->getText('plugin_pluginsadministration','properties').'">';
