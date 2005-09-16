@@ -579,6 +579,14 @@ Alias /phpMyAdmin /home/httpd/phpMyAdmin
 </IfModule>
 
 # Plugins directory
+ScriptAliasMatch /plugins/([^/]*/cgi-bin/.*) "/home/httpd/plugins/$1"
+<Directory "/home/httpd/plugins/[^/]*/cgi-bin">
+    AllowOverride None
+    Options ExecCGI
+    Order allow,deny
+    Allow from all
+</Directory>
+
 AliasMatch ^/plugins/([^/]*)/(.*) /home/httpd/plugins/$1/www/$2
 <DirectoryMatch "/home/httpd/plugins/([^/]*)/www/">
     Options Indexes MultiViews
