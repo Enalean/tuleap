@@ -45,6 +45,7 @@ admin_main	stat_spu	Générer les statistiques site/projets/utilisateurs
 admin_main	header_utils	Utilitaires site
 admin_main	mail_engine	Envoi d'e-mails en masse
 admin_main	header_sstat	Statistiques site
+admin_main	header_plugins	Plugins
 admin_main	sstat_reg_u	Utilisateurs actifs ou restreints
 admin_main	sstat_reg_g	Projets enregistrés
 admin_main	sstat_reg_act_g	Projets enregistrés actifs

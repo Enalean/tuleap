@@ -110,11 +110,15 @@ echo ")</b>";?>
 <UL>
 <LI><A href="massmail.php"><?php echo $Language->getText('admin_main', 'mail_engine'); ?></A>
 <LI><A href="/phpMyAdmin">phpMyAdmin</A>
+</ul>
+
+<h3><?php echo $Language->getText('admin_main', 'header_plugins'); ?></h3>
+<ul>
 <?php
     $em =& EventManager::instance();
     $em->processEvent('site_admin_option_hook', null);
 ?>
-</UL>
+</ul>
 
 <h3><?php echo $Language->getText('admin_main', 'header_sstat'); ?></h3>
 <?php

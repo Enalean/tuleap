@@ -40,6 +40,7 @@ admin_main	stat_spu	Generate Site/Projects/Users Statistics
 admin_main	header_utils	Site Utilities
 admin_main	mail_engine	Mass Mail Engine
 admin_main	header_sstat	Site Statistics
+admin_main	header_plugins	Plugins
 admin_main	sstat_reg_u	Registered active or restricted site users
 admin_main	sstat_reg_g	Registered projects
 admin_main	sstat_reg_act_g	Registered active projects
