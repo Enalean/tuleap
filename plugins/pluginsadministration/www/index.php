@@ -171,16 +171,16 @@ if($plugins->isEmpty()) {
             $output .= $string;
         }
         $output .= '<td>';
+        //Properties
+        $output .=   '<a class="pluginsadministration_action" href="properties.php?plugin_id='.$plugins_table[$i]['plugin_id'].'" title="'.$Language->getText('plugin_pluginsadministration','properties').'">';
+        $output .=     '<img src="'.util_get_image_theme("ic/taskman16b.png").'" border="0" alt="'.$Language->getText('plugin_pluginsadministration','properties').'">';
+        $output .=   '</a>';
         //Uninstall
         if(!$plugins_table[$i]['dont_touch']) {
             $output .=   '<a class="pluginsadministration_action" href="?action=uninstall&plugin_id='.$plugins_table[$i]['plugin_id'].'" title="'.$Language->getText('plugin_pluginsadministration','uninstall_plugin').'">';
             $output .=     '<img src="'.util_get_image_theme("ic/trash.png").'" border="0" alt="'.$Language->getText('plugin_pluginsadministration','uninstall_plugin').'">';
             $output .=   '</a>';
         }
-        //Properties
-        $output .=   '<a class="pluginsadministration_action" href="properties.php?plugin_id='.$plugins_table[$i]['plugin_id'].'" title="'.$Language->getText('plugin_pluginsadministration','properties').'">';
-        $output .=     '<img src="'.util_get_image_theme("ic/taskman16b.png").'" border="0" alt="'.$Language->getText('plugin_pluginsadministration','properties').'">';
-        $output .=   '</a>';
         $output .= '</td>';
         $output .= '<tr>';
     }
