@@ -25,20 +25,26 @@ if (isset($_REQUEST['action']) && isset($_REQUEST['plugin_id'])) {
     $plugin_factory =& PluginFactory::instance();
     $plugin =& $plugin_factory->getPluginById($_REQUEST['plugin_id']);
     if($plugin) {
+        $plug_info  =& $plugin->getPluginInfo();
+        $descriptor =& $plug_info->getPluginDescriptor();
+        $name = $descriptor->getFullName();
+        if (strlen(trim($name)) === 0) {
+            $name = get_class($plugin);
+        }
         switch ($_REQUEST['action']) {
             case 'enable':
-                $plugin_manager->enablePlugin($plugin);
+                if (!$plugin_manager->isPluginEnabled($plugin)) {
+                    $plugin_manager->enablePlugin($plugin);
+                    $GLOBALS['feedback'] .= '<div>'.$GLOBALS['Language']->getText('plugin_pluginsadministration', 'feedback_enabled', array($name)).'</div>';
+                }
                 break;
             case 'disable':
-                $plugin_manager->disablePlugin($plugin);
+                if ($plugin_manager->isPluginEnabled($plugin)) {
+                    $plugin_manager->disablePlugin($plugin);
+                    $GLOBALS['feedback'] .= '<div>'.$GLOBALS['Language']->getText('plugin_pluginsadministration', 'feedback_disabled', array($name)).' </div>';
+                }
                 break;
             case 'uninstall':
-                $plug_info  =& $plugin->getPluginInfo();
-                $descriptor =& $plug_info->getPluginDescriptor();
-                $name = $descriptor->getFullName();
-                if (strlen(trim($name)) === 0) {
-                    $name = get_class($plugin);
-                }
                 if (isset($_REQUEST['confirm'])) {
                     $uninstalled = $plugin_manager->uninstallPlugin($plugin);
                     if (!$uninstalled) {

@@ -6,7 +6,7 @@ You are going to uninstall a plugin. Before confirming, please note that:
    <li>Script <code>db/uninstall.sql</code> of this plugin will be launched,</li>
    <li>Priorities setted on this plugin will be deleted,</li>
    <li>Directory of this plugin will not be deleted,</li>
-   <li>Web space of this plugin will remain accessible unless you remove corresponding directory.</li>
+   <li>Web space and cgi scripts of this plugin will remain accessible unless you move or remove corresponding directory.</li>
 </ul>
 Are you sure that you want to uninstall this plugin ?
 <div class="pluginsadministration_buttons">

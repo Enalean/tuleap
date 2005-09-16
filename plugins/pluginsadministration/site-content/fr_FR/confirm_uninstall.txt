@@ -6,7 +6,7 @@ Vous êtes sur le point de désinstaller un plugin. Avant de confirmer, veuillez p
    <li>Le script <code>db/uninstall.sql</code> de ce plugin sera executé,</li>
    <li>Les priorités mises sur ce plugin seront supprimées,</li>
    <li>Le répertoire de ce plugin ne sera pas supprimé,</li>
-   <li>L'espace Web de ce plugin restera accessible tant que vous ne supprimerez pas le répertoire correspondant.</li>
+   <li>L'espace Web et les scripts cgi de ce plugin resteront accessible tant que vous ne supprimerez pas ou ne déplacerez pas les répertoires correspondants.</li>
 </ul>
 Êtes-vous sûrs de vouloir désinstaller ce plugin ?
 <div class="pluginsadministration_buttons">

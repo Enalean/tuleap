@@ -20,6 +20,8 @@ plugin_pluginsadministration	Description	Description
 plugin_pluginsadministration	discard_changes	Discard changes ?
 plugin_pluginsadministration	disabled	No
 plugin_pluginsadministration	enabled	Yes
+plugin_pluginsadministration	feedback_enabled	$1 is now enabled.
+plugin_pluginsadministration	feedback_disabled	$1 is now disabled. Web space and CGI remain accessible!
 plugin_pluginsadministration	Hook:	Hook:
 plugin_pluginsadministration	hook_asterisk	* : hooks listened to by several plugins are followed by an asterisk.
 plugin_pluginsadministration	install_plugin	Install this Plugin
