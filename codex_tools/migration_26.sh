@@ -255,7 +255,7 @@ $CP -af /home/httpd_24/cgi-bin/viewcvs.cgi /home/httpd/cgi-bin
 ###########################################
 #{{{ Themes directories
 	echo "Updating custom themes..."
-	cd etc/codex/themes
+	cd /etc/codex/themes
 
 	#{{{CSS
 		if [ -d css ]; then
@@ -384,8 +384,25 @@ CREATE TABLE `user_plugin` (
 );
 -- }}}
 
+-- install and enable pluginsadministration
+INSERT INTO `plugin` (`name`, `enabled`) VALUES ('pluginsadministration', '1');
 
 EOF
+
+###############################################################################
+# pre-install pluginsadministration
+echo "Installing PluginsAdministration..."
+
+if [ -d /etc/codex/plugins ]; then
+  $MKDIR /etc/codex/plugins
+fi
+
+if [ -d /etc/codex/plugins/pluginsadministration ]; then
+  $MKDIR /etc/codex/plugins/pluginsadministration
+fi
+
+$CP -r /home/httpd/plugins/pluginsadministration/site-content /etc/codex/plugins/pluginsadministration/.
+
 
 ###############################################################################
 # Update DB to remove tech_tracker role
