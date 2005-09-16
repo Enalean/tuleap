@@ -20,7 +20,7 @@ class PluginDescriptor {
         
     }
     
-    function getName()        { return $this->name; }
+    function getFullName()        { return $this->name; }
     function getVersion()     { return $this->version; }
     function getDescription() { return $this->description; }
 }

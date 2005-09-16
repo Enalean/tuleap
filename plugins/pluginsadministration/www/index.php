@@ -35,7 +35,7 @@ if (isset($_REQUEST['action']) && isset($_REQUEST['plugin_id'])) {
             case 'uninstall':
                 $plug_info  =& $plugin->getPluginInfo();
                 $descriptor =& $plug_info->getPluginDescriptor();
-                $name = $descriptor->getName();
+                $name = $descriptor->getFullName();
                 if (strlen(trim($name)) === 0) {
                     $name = get_class($plugin);
                 }
@@ -117,7 +117,7 @@ if($plugins->isEmpty()) {
         $plug_info  =& $plugin->getPluginInfo();
         $descriptor =& $plug_info->getPluginDescriptor();
         $enabled = $plugin_manager->isPluginEnabled($plugin);
-        $name = $descriptor->getName();
+        $name = $descriptor->getFullName();
         if (strlen(trim($name)) === 0) {
             $name = get_class($plugin);
         }

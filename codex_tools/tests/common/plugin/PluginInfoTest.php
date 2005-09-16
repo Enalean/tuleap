@@ -42,13 +42,13 @@ class PluginInfoTest extends UnitTestCase {
         $pi =& new PluginInfo($p);
         $pd =& $pi->getPluginDescriptor();
         $this->assertIsA($pd, 'PluginDescriptor');
-        $this->assertEqual($pd->getName(), '');
+        $this->assertEqual($pd->getFullName(), '');
         $this->assertEqual($pd->getVersion(), '');
         $this->assertEqual($pd->getDescription(), '');
         $pi->setPluginDescriptor(new PluginDescriptor('TestPlugin', 'v1.0', 'A simple plugin, just for unit testing'));
         
         $pd =& $pi->getPluginDescriptor();
-        $this->assertEqual($pd->getName(), 'TestPlugin');
+        $this->assertEqual($pd->getFullName(), 'TestPlugin');
         $this->assertEqual($pd->getVersion(), 'v1.0');
         $this->assertEqual($pd->getDescription(), 'A simple plugin, just for unit testing');
         
