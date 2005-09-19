@@ -34,7 +34,7 @@ if (!isset($_REQUEST['plugin_id'])) {
         $descriptor =& $plug_info->getPluginDescriptor();
 
         $enabled = $plugin_manager->isPluginEnabled($plugin);
-        $name = $descriptor->getName();
+        $name = $descriptor->getFullName();
         if (strlen(trim($name)) === 0) {
             $name = get_class($plugin);
         }
@@ -58,7 +58,7 @@ if (!isset($_REQUEST['plugin_id'])) {
         $output .= '<tbody>';
         $output .=   '<tr>';
         $output .=     '<td class="pluginsadministration_label">'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','properties_name:').' </td>';
-        $output .=     '<td>'.$descriptor->getName().'</td>';
+        $output .=     '<td>'.$descriptor->getFullName().'</td>';
         $output .=   '</tr>';
         $output .=   '<tr>';
         $output .=     '<td class="pluginsadministration_label">'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','properties_version:').' </td>';
