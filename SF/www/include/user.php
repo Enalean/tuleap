@@ -295,6 +295,11 @@ function user_get_language() {
     return $lang_id;
 }
 
+function user_get_languagecode() {
+    $res=db_query("SELECT * FROM supported_languages WHERE language_id='".user_get_language()."'");
+	return db_result($res,0,'language_code');
+}
+
 function user_set_preference($preference_name,$value) {
 	GLOBAL $user_pref;
 	if (user_isloggedin()) {
