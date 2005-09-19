@@ -6,7 +6,9 @@
  *
  * front-end to plugins administration
  */
+define('PLUGINS_ADMINISTRATION', 1);
 require_once('pre.php');
+require_once('./common.php');
 require_once('common/plugin/PluginFactory.class');
 require_once('common/plugin/PluginManager.class');
 
@@ -78,7 +80,7 @@ if (!isset($_REQUEST['plugin_id'])) {
         $output .= '<div><a href="'.$link_to_plugins.'">'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','return').'</a></div>';
         $title = $GLOBALS['Language']->getText('plugin_pluginsadministration','title');
         $HTML->header(array('title'=>$title));
-        echo '<h2>'.$title.'</h2>'.$output;
+        echo '<h2>'.$title.'&nbsp;'.getHelp().'</h2>'.$output;
         $HTML->footer(array());
     }
 }

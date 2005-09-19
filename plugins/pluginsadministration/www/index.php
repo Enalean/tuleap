@@ -6,7 +6,9 @@
  *
  * front-end to plugins administration
  */
+define('PLUGINS_ADMINISTRATION', 1);
 require_once('pre.php');
+require_once('./common.php');
 require_once('common/plugin/PluginManager.class');
 require_once('common/plugin/PluginHookPriorityManager.class');
 require_once('common/collection/MultiMap.class');
@@ -94,20 +96,21 @@ if (isset($_REQUEST['action']) && isset($_REQUEST['plugin_id'])) {
     }
 }
 
+
 //get all plugins
 $plugins    =& $plugin_manager->getAllPlugins();
 $priorities =  array();
 
 $title = $Language->getText('plugin_pluginsadministration','title');
 $HTML->header(array('title'=>$title));
-$output = '<h2>'.$title.'</h2>';
+$output = '<h2>'.$title.'&nbsp;'.getHelp().'</h2>';
 
 if (isset($confirmation)) {
     $output .= $confirmation;
 }
 
 //{{{ Installed Plugins
-$output .= '<fieldset class="pluginsadministration"><legend>'.$Language->getText('plugin_pluginsadministration','plugins').'</legend><form>';
+$output .= '<fieldset class="pluginsadministration"><legend>'.$Language->getText('plugin_pluginsadministration','plugins').'&nbsp;'.getHelp('manage').'</legend><form>';
 if($plugins->isEmpty()) {
     $output .= $Language->getText('plugin_pluginsadministration','there_is_no_plugin');
 } else {
@@ -192,7 +195,7 @@ $output .= '</form></fieldset>';
 //{{{ Not yet installed plugins
 $not_yet_installed =& $plugin_manager->getNotYetInstalledPlugins();
 if ($not_yet_installed && count($not_yet_installed) > 0) {
-    $output .= '<fieldset class="pluginsadministration"><legend>'.$Language->getText('plugin_pluginsadministration','not_yet_installed').'</legend>';
+    $output .= '<fieldset class="pluginsadministration"><legend>'.$Language->getText('plugin_pluginsadministration','not_yet_installed').'&nbsp;'.getHelp('install').'</legend>';
     $output .= '<div>'.$GLOBALS['Language']->getText('plugin_pluginsadministration','select_install').'</div>';
     $prefixe = '<a href="?action=install&name=';
     $middle  = '" title="'.$Language->getText('plugin_pluginsadministration','install_plugin').'">';
@@ -236,7 +239,7 @@ if (count($priorities) > 0) {
     if($show_priorities) {
         $form_name = '_'.mt_rand();
         $output .= '<form  name="'.$form_name.'" action="" method="POST" onsubmit="return submitForm(this);">';
-        $output .= '<fieldset class="pluginsadministration"><legend>'.$GLOBALS['Language']->getText('plugin_pluginsadministration','priorities').'</legend>';
+        $output .= '<fieldset class="pluginsadministration"><legend>'.$GLOBALS['Language']->getText('plugin_pluginsadministration','priorities').'&nbsp;'.getHelp('priorities').'</legend>';
         $output .= '<input type="hidden" name="action" value="update_priorities" />';
         function emphasis($name, $enable) {
             if (!$enable) {
