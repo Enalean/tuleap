@@ -26,9 +26,21 @@
 		<para>
 			Please remember to follow those principles, among others:
 			<itemizedlist>
-				<listitem><simpara><emphasis role="bold">ADP:</emphasis> Acyclic Dependencies Principle</simpara></listitem>
-				<listitem><simpara><emphasis role="bold">SAP:</emphasis> Stable Abstractions Principle</simpara></listitem>
-				<listitem><simpara><emphasis role="bold">SDP:</emphasis> Stable Dependencies Principle</simpara></listitem>
+				<listitem>
+					<simpara><emphasis role="bold">ADP:</emphasis> Acyclic Dependencies Principle</simpara>
+					<simpara>The dependency structure between packages must not contain cyclic dependencies.</simpara>
+					<simpara><ulink url="http://c2.com/cgi/wiki?AcyclicDependenciesPrinciple">http://c2.com/cgi/wiki?AcyclicDependenciesPrinciple</ulink></simpara>
+				</listitem>
+				<listitem>
+					<simpara><emphasis role="bold">SDP:</emphasis> Stable Dependencies Principle</simpara>
+					<simpara>The dependencies between packages should be in the direction of the stability of the packages. A package should only depend upon packages that are more stable than it is.</simpara>
+					<simpara><ulink url="http://c2.com/cgi/wiki?StableDependenciesPrinciple">http://c2.com/cgi/wiki?StableDependenciesPrinciple</ulink></simpara>
+				</listitem>
+				<listitem>
+					<simpara><emphasis role="bold">SAP:</emphasis> Stable Abstractions Principle</simpara>
+					<simpara>Packages that are maximally stable should be maximally abstract. Unstable packages should be concrete. The abstractness of a package should be in proportion to its stability.</simpara>
+					<simpara><ulink url="http://c2.com/cgi/wiki?StableAbstractionsPrinciple">http://c2.com/cgi/wiki?StableAbstractionsPrinciple</ulink></simpara>
+				</listitem>
 			</itemizedlist>
 		</para>
 	</section>
@@ -55,6 +67,20 @@
 				</imageobject>
 			</mediaobject>
 		</figure>
+		<para>The Data Access Object pattern is a strategy for constructing a single API which encapsulates all data fetching operations (such as SQL queries), allowing our application logic to be a client to that API without needing to be concerned with SQL syntax.</para>
+		<para>The Data Access Object pattern provides a useful way to abstract data fetching operations. Here, the implementation is simple, however it is sufficient to add a layer of abstraction to seperate our application logic from the underlying database.</para>
+		<itemizedlist>
+			<listitem><simpara>The class DataAccess deals with connecting to MySQL and performing functions like <programlisting>mysql_query()</programlisting>.</simpara></listitem>
+			<listitem><simpara>DataAccess returns an instance of the DataAccessResult class, which we can use to fetch rows from the query.</simpara></listitem>
+			<listitem><simpara>DataAcessObject class provides only two methods, the first for retrieving data (SELECT statement) which will return the instance for DataAccessResult from the DataAccess class. The second method is used for anything that changes the database, i.e. INSERT, UPDATE and DELETE.</simpara></listitem>
+			<listitem><simpara>To access a table, you have to provide a specific Data Access Object which extends the Dao class, and add methods to retrieve or update your data. For exemple:<programlisting><![CDATA[
+function & searchByID ($id) {
+	$sql="SELECT * FROM log WHERE id='".$id."'";
+	return $this->retrieve($sql);
+}
+]]></programlisting>
+			</simpara></listitem>
+		</itemizedlist>
 	</section>
 	<section id="Events">
 		<title>Events</title>
