@@ -164,6 +164,37 @@
 					<para>However, administrators can ajust the priority between plugins for a hook. It is done in the PluginsAdministration page: for each hooks are listed the plugins and their priority. Ajust priority at the level you want. Priority is realized by an integer: plugins are waked up from higher to lower. Default priority is zero.</para>
 				</section>
 			</section>
+			<section>
+				<title>GForge Plugins</title>
+				<para>Since CodeX wants to make plugins as much closed as possible to GForge plugins, it is, in theory and relatively, possible to migrate a plugin from GForge to CodeX. You have to follow the following points:</para>
+				<itemizedlist>
+					<listitem>
+						<simpara>In plugin constructor, add $id. Replace:<programlisting><![CDATA[
+class <plugin_name>Plugin extends Plugin {
+        function <plugin_name>Plugin() {
+                $this->Plugin();
+                ...
+]]></programlisting> by <programlisting><![CDATA[
+class <plugin_name>Plugin extends Plugin {
+        function <plugin_name>Plugin($id) {
+                $this->Plugin($id);
+                ...]]></programlisting>
+						</simpara>
+					</listitem>
+					<listitem>
+						<simpara>In plugin constructor, replace each occurence of<programlisting><![CDATA[
+$this->hooks[] = "<name_of_hook>";
+]]></programlisting> by <programlisting><![CDATA[
+$this->_addHook("<name_of_hook>");]]></programlisting>
+						</simpara>
+					</listitem>
+					<listitem><simpara>Foreach hook, modify how plugin interacts with (parameters will be different in most cases)</simpara></listitem>
+					<listitem><simpara>Modify hard links</simpara></listitem>
+					<listitem><simpara>Make PostGres scripts "MySql compatible"</simpara></listitem>
+					<listitem><simpara>Move installation sql script in db/install.sql</simpara></listitem>
+					<listitem><simpara>Move uninstallation sql script in db/uninstall.sql</simpara></listitem>
+				</itemizedlist>
+			</section>
 		</section>
 		<section id="Install">
 			<title>Install</title>
