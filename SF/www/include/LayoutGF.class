@@ -222,6 +222,21 @@ BODY {
 	a.tabsellink { color: #0000be; text-decoration: none; font-weight: bold; font-size: <?php echo $this->FONTSIZE_SMALLER; ?>; }
 	a.tabsellink:visited { color: #0000be; text-decoration: none; font-weight: bold; font-size: <?php echo $this->FONTSIZE_SMALLER; ?>; }
 	a.tabsellink:hover { text-decoration: none; color: #0000be; font-weight: bold; font-size: <?php echo $this->FONTSIZE_SMALLER; ?>; }
+   
+   
+    #searchbox td{
+        color:white;
+    }
+    .osdn {
+        font-family: verdana,arial,helvetica,sans-serif;
+        font-size:0.75em;
+        font-weight:bold;
+    }
+    .osdn, 
+    .osdn a{
+        color:gray;
+    }
+    
     /** Logo : text version */
     a.logo span {
         font-family:arial, sans-serif;
@@ -252,7 +267,7 @@ BODY {
 </head>
 
 <body>
-
+<?php osdn_print_navbar(); ?>
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
 
 	<tr>
@@ -261,13 +276,17 @@ BODY {
 		<td align="right"><?php
 			if (user_isloggedin()) {
 				?>
-				<b><a style="color: #FFFFFF" href="/account/logout.php"><?php echo $Language->getText('common','logout'); ?></a></b><br />
-				<b><a style="color: #FFFFFF" href="/account/"><?php echo $Language->getText('common','myaccount'); ?></a></b>
-				<?php
+				<b style="color: #FFFF00"><?php echo $Language->getText('include_menu','logged_in').': '.user_getname().'. '; ?><a style="color: #FFFFFF" href="/account/logout.php"><?php echo $Language->getText('include_menu','logout'); ?></a></b><br />
+				<b><a style="color: #FFFFFF" href="/register/"><?php echo $Language->getText('include_menu','register_new_proj') ?></a></b><br />
+                <?php 
+                if (!$GLOBALS['HTTP_POST_VARS']) {
+                    $bookmark_title = urlencode( str_replace($GLOBALS['sys_name'].': ', '', $params['title']));
+                    echo '<b><a style="color: #FFFFFF" href="/my/bookmark_add.php?bookmark_url='.urlencode($GLOBALS['REQUEST_URI']).'&bookmark_title='.$bookmark_title.'">',$Language->getText('include_menu','bookmark_this_page').'</a></b>';
+                }
 			} else {
 				?>
-				<b><a style="color: #FFFFFF" href="/account/login.php"><?php echo $Language->getText('common','login'); ?></a></b><br />
-				<b><a style="color: #FFFFFF" href="/account/register.php"><?php echo $Language->getText('common','newaccount'); ?></a></b>
+				<b><a style="color: #FFFFFF" href="/account/login.php"><?php echo $Language->getText('include_menu','login'); ?></a></b><br />
+				<b><a style="color: #FFFFFF" href="/account/register.php"><?php echo $Language->getText('include_menu','new_user'); ?></a></b>
 				<?php
 			}
 
@@ -371,7 +390,7 @@ if (isset($params['group']) && $params['group']) {
 		<td align="right" bgcolor="#E0E0E0" width="9"><img src="<?php echo $this->imgroot; ?>tabs/bottomright.png" height="9" width="9" alt="" /></td>
 	</tr>
 </table>
-
+ <?php osdn_nav_dropdown(); ?>
 <?php
         $this->generic_footer($params);
 	}
@@ -497,31 +516,34 @@ if (isset($params['group']) && $params['group']) {
 		global $Language,$sys_use_trove,$sys_use_snippet,$sys_use_people;
 
 		$TABS_DIRS[]='/';
-		$TABS_DIRS[]='/my/';
-		if ($sys_use_trove) {
-			$TABS_DIRS[]='/softwaremap/';
-		}
-		if ($sys_use_snippet) {
-			$TABS_DIRS[]='/snippet/';
-		}
-		if ($sys_use_people) {
-			$TABS_DIRS[]='/people/';
-		}
 		$TABS_TITLES[]=$Language->getText('menu','home');
-		$TABS_TITLES[]=$Language->getText('menu','my_personal_page');
-		if ($sys_use_trove) {
-			$TABS_TITLES[]=$Language->getText('menu','projectree');
-		}
-		if ($sys_use_snippet) {
-			$TABS_TITLES[]=$Language->getText('menu','code_snippet');
-		}
-		if ($sys_use_people) {
+
+		if (user_isloggedin()) {
+            $TABS_DIRS[]='/my/';
+            $TABS_TITLES[]=$Language->getText('menu','my_personal_page');
+
+            $TABS_DIRS[]='/account/';
+            $TABS_TITLES[]=$Language->getText('include_menu','account_maintenance');
+        }
+        
+        $TABS_DIRS[]='/softwaremap/';
+        $TABS_TITLES[]=$Language->getText('menu','projectree');
+
+        $TABS_DIRS[]='/snippet/';
+        $TABS_TITLES[]=$Language->getText('menu','code_snippet');
+
+        if ($sys_use_people) {
+			$TABS_DIRS[]='/people/';
 			$TABS_TITLES[]=$Language->getText('menu','project_help_wanted');
 		}
 		if (user_ismember(1,'A')) {
 			$TABS_DIRS[]='/admin/';
 			$TABS_TITLES[]=$Language->getText('menu','admin');
 		}
+
+        $TABS_DIRS[]='/site/';
+        $TABS_TITLES[]=$GLOBALS['sys_name'];
+        
         /*
 		if (user_ismember($GLOBALS['sys_stats_group'])) {
 			$TABS_DIRS[]='/reporting/';
@@ -542,15 +564,19 @@ if (isset($params['group']) && $params['group']) {
 					$selected=count($TABS_DIRS)-1;
 				}
 			}
-		} elseif (strstr(getStringFromServer('REQUEST_URI'),'/my/') || strstr(getStringFromServer('REQUEST_URI'),'/account/') || 
+		} elseif (strstr(getStringFromServer('REQUEST_URI'),'/my/') ||  
 				strstr(getStringFromServer('REQUEST_URI'),'/themes/') ) {
 			$selected=array_search("/my/", $TABS_DIRS);
+        } elseif (strstr(getStringFromServer('REQUEST_URI'),'/account/')) {
+            $selected=array_search("/account/", $TABS_DIRS);
 		} elseif (strstr(getStringFromServer('REQUEST_URI'),'softwaremap')) {
 			$selected=array_search("/softwaremap/", $TABS_DIRS);
 		} elseif (strstr(getStringFromServer('REQUEST_URI'),'/snippet/')) {
 			$selected=array_search("/snippet/", $TABS_DIRS);
 		} elseif (strstr(getStringFromServer('REQUEST_URI'),'/people/')) {
 			$selected=array_search("/people/", $TABS_DIRS);
+		} elseif (strstr(getStringFromServer('REQUEST_URI'),'/site/')) {
+			$selected=array_search("/site/", $TABS_DIRS);
 		} elseif (strstr(getStringFromServer('REQUEST_URI'),'/reporting/')) {
 			$selected=array_search('/reporting/',$TABS_DIRS);
 		} elseif (strstr(getStringFromServer('REQUEST_URI'),'/admin/') && user_ismember(1,'A')) {
@@ -748,7 +774,7 @@ if (isset($params['group']) && $params['group']) {
 
 		$output = '
 		<form action="/search/" method="post">
-		<table border="0" cellpadding="0" cellspacing="0">
+		<table border="0" cellpadding="0" cellspacing="0" id="searchbox">
 		<tr><td>
 		<div align="center" style="font-size:smaller">';
 		$output .= '<select name="type_of_search">';
@@ -768,7 +794,9 @@ if (isset($params['group']) && $params['group']) {
         $output .= "\t<OPTION value=\"people\"".( $type_of_search == "people" ? " SELECTED" : "" ).">".$Language->getText('include_menu','people')."</OPTION>\n";
         $output .= "\t</select></div>";
 
-//        $output .= '<input type="CHECKBOX" name="exact" value="1"'.( $exact ? ' CHECKED' : ' UNCHECKED' ).'>'.$Language->getText('include_menu','require_all_words');
+        $output .= '</td><td>';
+        $output .= '<input type="CHECKBOX" name="exact" value="1"'.( $exact ? ' CHECKED' : ' UNCHECKED' ).'>'.$Language->getText('include_menu','require_all_words');
+        
 
 		$output .= '</td><td>&nbsp;';
         if ( isset($atid) ) {
