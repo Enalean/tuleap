@@ -131,7 +131,6 @@ $bgpri[9] = 'priori';
 		} else {
 			$params['title'] =  $GLOBALS['sys_name'] . ': ' . $params['title'];
 		}
-		print '<?xml version="1.0" encoding="' . $Language->getEncoding(). '"?>';
 		?>
 
 <!DOCTYPE html
@@ -178,135 +177,16 @@ $bgpri[9] = 'priori';
 		$site_fonts=$GLOBALS['Language']->getFont();
 
 	?>
-
-<style type="text/css">
+    <link rel="stylesheet" href="<? echo util_get_css_theme(); ?>" type="text/css" />
+    <link rel="stylesheet" href="<? echo dirname(util_get_css_theme()).'/style.css'; ?>" type="text/css" />
+    
+    <style type="text/css">
 	<!--
-    .priora { background-color: #dadada; }
-    .priorb { background-color: #dacaca; }
-    .priorc { background-color: #dababa; }
-    .priord { background-color: #daaaaa; }
-    .priore { background-color: #da8a8a; }
-    .priorf { background-color: #da7a7a; }
-    .priorg { background-color: #da6a6a; }
-    .priorh { background-color: #da5a5a; }
-    .priori { background-color: #da4a4a; }
-    
-    BODY {
-        margin-top: 0;
-        margin-left: 0;
-        margin-right: 0;
-        margin-bottom: 0;
-        background-color: #bcbcad;
-        font-family: helvetica,arial,verdana,sans-serif;
-    }
-    
-	ol,ul,p,body,td,tr,th,form { 
-        font-family: <?php echo $site_fonts; ?>; 
-        font-size:<?php echo $this->FONTSIZE; ?>;
-		color: <?php echo $this->FONTCOLOR_CONTENT ?>; 
-    }
-
-	h1 { font-size: x-large; font-family: <?php echo $site_fonts; ?>; }
-	h2 { font-size: large; font-family: <?php echo $site_fonts; ?>; }
-	h3 { font-size: medium; font-family: <?php echo $site_fonts; ?>; }
-	h4 { font-size: small; font-family: <?php echo $site_fonts; ?>; }
-	h5 { font-size: x-small; font-family: <?php echo $site_fonts; ?>; }
-	h6 { font-size: xx-small; font-family: <?php echo $site_fonts; ?>; }
-
-	pre,tt { font-family: courier,sans-serif }
-
-	a:link { text-decoration:none; color: #8b4020; }
-	a:visited { text-decoration:none; color: #8b4020 }
-	a:active { text-decoration:none; color: #000000 }
-	a:hover { text-decoration:underline; color:#ff0000; }
-
-	.titlebar { 
-        color: black; 
-        text-decoration: none; 
-        font-weight: bold;
-        font-size: <?=$this->FONTSIZE_SMALLER?>;
-    }
-	a.tabsellink, a.tabsellink:visited, 
-    a.tablink, a.tablink:visited {
-        color: #4c4c47; 
-        text-decoration: none; 
-        font-size:0.8em;
-    }
-    a.tabsellink, a.tabsellink:visited {
-        font-weight: bold;
-    }
-	a.tablink:hover { 
-        text-decoration: underline; 
-        color: red;
-    }
-	a.tabsellink:hover { 
-        text-decoration: none; 
-        color: black;
-        cursor:default;
-    }
-   
-   
-    .searchbox td{
-        color:white;
-    }
-.osdn { font-family: verdana,arial,helvetica,sans-serif; font-weight: bold; color: #ffffff; font-size:<?=$this->FONTSIZE_SMALLER?> }
-.osdntext { font-weight: bold; text-decoration: none; color: #ffffff; font-size:<?=$this->FONTSIZE_SMALLER?> }
-.osdntext:link { font-weight: bold; text-decoration: none; color: #ffffff; }
-.osdntext:visited { font-weight: bold; text-decoration: none; color: #ffffff; }
-.osdntext:hover { font-weight: bold; text-decoration: none; color: #ffffff; }
-    .osdn_codex_logo {
-        display:none;
-    }
-    .header_logo a img {
-        border:none;
-    }
-    
-    .footer {
-        color: white; 
-        font-size: <?=$this->FONTSIZE_SMALLEST?>;
-    }
-    .boxitem {  background-color:transparent; }
-    
-    
-    .header_actions, .header_searchbox {
-        text-align:right;
-    }
-    .header_logo {
-        vertical-align:middle;
-    }
-    .header_searchbox {
-        vertical-align:middle;
-    }
-    
-    
-    
-    .header_actions ul {
-        list-style-type:none;
-        margin:0;
-        padding:0;
-        font-size: <?=$this->FONTSIZE_SMALLER?>;
-    }
-    .header_actions ul li {
-        display:inline;
-    }
-    .header_actions ul li a {
-        border-left:1px solid gray;
-        color:white;
-        text-decoration:none;
-    }
-    .header_actions ul li a,
-    .header_actions ul li.header_actions_nolink {
-        padding: 0.2em 1em;
-    }
-    .header_actions ul li.header_actions_nolink {
-        font-weight:bold;
-    }
-    
     <?php 
         $em->processEvent("cssstyle",$this);
     ?>
 	-->
-</style>
+    </style>
 <?php $em->processEvent('cssfile',$this); ?>
 </head>
 
@@ -440,7 +320,7 @@ if (isset($params['group']) && $params['group']) {
 		<td align="right" bgcolor="#e8e8e0" width="9"><img src="<?php echo $this->imgroot; ?>tabs/bottomright.png" height="9" width="9" alt="" /></td>
 	</tr>
 </table>
-    <div style="float:left;"><?php echo $this->getOsdnNavDropdown(); ?></div>
+    <!--div style="float:left;"><?php echo $this->getOsdnNavDropdown(); ?></div-->
 <?php
         $this->generic_footer($params);
 	}
@@ -592,7 +472,7 @@ if (isset($params['group']) && $params['group']) {
 		}
 
         $TABS_DIRS[]='/site/';
-        $TABS_TITLES[]=$GLOBALS['sys_name'];
+        $TABS_TITLES[]=$Language->getText('include_layout','Help');
         
         /*
 		if (user_ismember($GLOBALS['sys_stats_group'])) {
@@ -840,9 +720,9 @@ if (isset($params['group']) && $params['group']) {
         $output .= "\t<OPTION value=\"soft\"".( $type_of_search == "soft" ? " SELECTED" : "" ).">".$Language->getText('include_menu','software_proj')."</OPTION>\n";
         $output .= "\t<OPTION value=\"snippets\"".( ($type_of_search == "snippets" || $is_snippet_page) ? " SELECTED" : "" ).">".$Language->getText('include_menu','code_snippets')."</OPTION>\n";
         $output .= "\t<OPTION value=\"people\"".( $type_of_search == "people" ? " SELECTED" : "" ).">".$Language->getText('include_menu','people')."</OPTION>\n";
-        $output .= "\t</select>";
+        $output .= "\t</select>&nbsp;";
 
-         $output .= '<input type="CHECKBOX" name="exact" value="1"'.( $exact ? ' CHECKED' : ' UNCHECKED' ).'>'.$Language->getText('include_menu','require_all_words');
+//         $output .= '<input type="CHECKBOX" name="exact" value="1"'.( $exact ? ' CHECKED' : ' UNCHECKED' ).'>'.$Language->getText('include_menu','require_all_words');
         
 
 		if ( isset($atid) ) {

@@ -171,6 +171,7 @@ include_layout	query_count	Query Count
 include_layout	banner	Banner
 include_layout	logo	Logo
 include_layout	counter	Counter
+include_layout	Help	Help
 #
 #-----------------------------------------------
 # Script: SF/www/include/license.php

@@ -6,7 +6,7 @@
 //
 
 require_once('pre.php');
-$title = $GLOBALS['sys_name'];
+$title = $Language->getText('include_layout','Help');
 site_header(array('title' => $title));
 echo '<h2>',$title,'</h2>';
 echo '<ul>';
