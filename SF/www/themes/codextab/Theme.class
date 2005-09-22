@@ -1,0 +1,13 @@
+<?php
+
+require_once('www/include/LayoutGF.class');
+
+class Theme extends LayoutGF {
+
+    function Theme() {
+        // Parent constructor
+        $this->Layout();
+	}
+}
+
+?>
