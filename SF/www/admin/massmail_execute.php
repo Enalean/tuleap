@@ -15,11 +15,6 @@ $Language->loadLanguageMsg('admin/admin');
 session_require(array('group'=>1,'admin_flags'=>'A'));
 
 
-header ('Content-Type: text/plain');
-
-print $Language->getText('admin_massmail_execute','post_recvd')."\n";
-flush();
-
 // LJ The to_name variable has been added here to be used
 // LJ in the mail command later in this script
 switch ($destination) {
@@ -58,6 +53,11 @@ switch ($destination) {
 	default:
 		exit_error('Unrecognized Post','cannot execute');
 }
+header ('Content-Type: text/plain');
+
+print $Language->getText('admin_massmail_execute','post_recvd')."\n";
+flush();
+
 
 print $Language->getText('admin_massmail_execute','mailing',array(db_numrows($res_mail)))."\n\n";
 flush();
