@@ -13,6 +13,7 @@ require_once('common/include/Error.class');
 require_once('common/event/EventManager.class');
 
 //$Language->loadLanguageMsg('include/include');
+include($Language->getContent('layout/osdn_sites'));
 
 /*
 
@@ -250,7 +251,7 @@ class Layout extends Error {
         OSDN NAV BAR
 
 */
-osdn_print_navbar();
+echo $this->getOsdnNavBar();
 
 echo html_blankimage(5,100);
 ?>
@@ -532,6 +533,113 @@ echo html_blankimage(5,100);
         $output .= "\t</FORM>\n";
         $output .= "\t</CENTER>\n";
         echo $output;
+    }
+    
+    function getOsdnNavBar() {
+        $output = '
+        <!-- OSDN navbar -->
+        <table width="100%" cellpadding="2" cellspacing="0" border="0">
+            <tr> 
+                <td valign="middle" align="left">
+        ';
+        
+        $motd = $GLOBALS['Language']->getContent('others/motd');
+        if (!strpos($motd,"empty.txt")) { # empty.txt returned when no motd file found
+            include($motd);
+        } else {
+            $output .= '<span class="osdn">'.$GLOBALS['Language']->getText('include_osdn','network_gallery').'&nbsp;:&nbsp;';
+            $output .= $this->_getOsdnRandpick($GLOBALS['osdn_sites'], 5);
+            $output .= '</span>';
+        }
+
+        $output .= '
+        	   </td>
+            </tr>
+        </table>
+        
+        <!-- End OSDN NavBar -->
+        ';
+        return $output;
+    }
+    
+    function _getOsdnRandpick($sitear, $num_sites = 1) {
+        $output = '';
+        shuffle($sitear);
+        reset($sitear);
+        $i = 0;
+        while ( ( $i < $num_sites ) && (list($key,$val) = each($sitear)) ) {
+            list($key,$val) = each($val);
+            $output .= "&nbsp;&middot;&nbsp;<a href='$val' class='osdntext'>$key</a>\n";
+            $i++;
+        }
+        $output .= '&nbsp;&middot;&nbsp;';
+        return $output;
+    }
+    
+    function getOsdnNavDropdown() {
+        $output = '
+        <!-- OSDN navdropdown -->
+	    <script type="text/javascript">
+	    function handle_navbar(index,form) {
+	        if ( index > 1 ) {
+	            window.location=form.options[index].value;
+	        }
+	    }
+	    </script>
+        <form name="form1"><div>';
+        $output .= '<a href="'.get_server_url().'" class="osdn_codex_logo">';
+        $output .= $this->getImage("codex_logo.png", array("width"=>"135", "height"=>"33", "hspace"=>"10", "alt"=>$GLOBALS['sys_default_domain'], "border"=>"0"));
+        $output .= '<br /></a>';
+        $output .= '<select name="navbar" onChange="handle_navbar(selectedIndex,this)">';
+		$output .= '   <option>------------</option>';
+        reset ($GLOBALS['osdn_sites']);
+        while (list ($key, $val) = each ($GLOBALS['osdn_sites'])) {
+            list ($key, $val) = each ($val);
+            $output .= '   <option value="'.$val.'">'.$key.'</option>';
+        }
+        $output .= '</select>';
+        $output .= '</div></form>';
+        $output .= '<noscript>';
+        $output .= '<a href="'.get_server_url().'" class="osdn_codex_logo">';
+        $output .= $this->getImage("codex_logo.png", array("width"=>"135", "height"=>"33", "hspace"=>"10", "alt"=>$GLOBALS['sys_default_domain'], "border"=>"0"));
+        $output .= '</a><br />';
+        $output .= '</noscript>
+        <!-- end OSDN navdropdown -->';
+        return $output;
+    }
+    
+    function getImage($src,$args) {
+        GLOBAL $img_size;
+        $return = '<img src="'.util_get_dir_image_theme().$src.'"';
+        reset($args);
+        while(list($k,$v) = each($args)) {
+            $return .= ' '.$k.'="'.$v.'"';
+        }
+        
+        // ## insert a border tag if there isn't one
+        if (!isset($args['border']) || !$args['border']) $return .= (" border=0");
+        
+        // ## if no height AND no width tag, insert em both
+        if ((!isset($args['height']) || !$args['height']) && 
+                (!isset($args['width'])  || !$args['width'])) {
+            /* Check to see if we've already fetched the image data */
+            if($img_size){
+                        if((!isset($img_size[$src]) || !$img_size[$src]) && is_file($GLOBALS['sys_urlroot'].util_get_dir_image_theme().$src)){
+                    $img_size[$src] = @getimagesize($GLOBALS['sys_urlroot'].util_get_dir_image_theme().$src);
+                }
+            } else {
+                if(is_file($GLOBALS['sys_urlroot'].util_get_dir_image_theme().$src)){		
+                    $img_size[$src] = @getimagesize($GLOBALS['sys_urlroot'].util_get_dir_image_theme().$src);
+                }
+            }
+            $return .= ' ' . $img_size[$src];
+        }
+        
+        // ## insert alt tag if there isn't one
+        if (!isset($args['alt']) || !$args['alt']) $return .= " alt=\"$src\"";
+        
+        $return .= ('>');
+        return $return;
     }
 }
 ?>

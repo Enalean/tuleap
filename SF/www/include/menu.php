@@ -237,7 +237,7 @@ function menu_print_sidebar($params) {
 
 	?>
 	<div align="center">
-	     <?php osdn_nav_dropdown(); ?>
+	     <?php echo $GLOBALS['HTML']->getOsdnNavDropdown(); ?>
 	     </div>
 		   <?php
 		   }

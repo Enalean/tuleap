@@ -4,6 +4,9 @@
 
 include($Language->getContent('layout/osdn_sites'));
 
+/**
+* @deprecated
+*/
 function osdn_nav_dropdown() {
   GLOBAL $osdn_sites, $Language;
 
@@ -42,6 +45,9 @@ function osdn_nav_dropdown() {
 /*
 	Picks random OSDN sites to display
 */
+/**
+* @deprecated
+*/
 function osdn_print_randpick($sitear, $num_sites = 1) {
 	shuffle($sitear);
 	reset($sitear);
@@ -54,6 +60,9 @@ function osdn_print_randpick($sitear, $num_sites = 1) {
 	print '&nbsp;&middot;&nbsp;';
 }
 
+/**
+* @deprecated
+*/
 function osdn_print_navbar() {
   global $Language;
     print '
