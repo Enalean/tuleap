@@ -6,7 +6,7 @@ class Theme extends LayoutGF {
 
     function Theme() {
         // Parent constructor
-        $this->Layout();
+        $this->LayoutGF();
 	}
 }
 

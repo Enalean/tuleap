@@ -238,20 +238,20 @@ $bgpri[9] = 'priori';
 		<td>&nbsp;</td>
 	</tr>
 
-	<tr>
-		<td align="left" bgcolor="#e8e8e0" width="9"><img src="<?php echo $this->imgroot; ?>tabs/topleft.png" height="9" width="9" alt="" /></td>
-		<td bgcolor="#e8e8e0" width="30"><img src="<?php echo $this->imgroot; ?>clear.png" width="30" height="1" alt="" /></td>
-		<td bgcolor="#e8e8e0"><img src="<?php echo $this->imgroot; ?>clear.png" width="1" height="1" alt="" /></td>
-		<td bgcolor="#e8e8e0" width="30"><img src="<?php echo $this->imgroot; ?>clear.png" width="30" height="1" alt="" /></td>
-		<td align="right" bgcolor="#e8e8e0" width="9"><img src="<?php echo $this->imgroot; ?>tabs/topright.png" height="9" width="9" alt="" /></td>
+	<tr class="row_below_outertabs">
+		<td align="left" width="9"><img src="<?php echo $this->imgroot; ?>tabs/topleft.png" height="9" width="9" alt="" /></td>
+		<td width="30"><img src="<?php echo $this->imgroot; ?>clear.png" width="30" height="1" alt="" /></td>
+		<td><img src="<?php echo $this->imgroot; ?>clear.png" width="1" height="1" alt="" /></td>
+		<td width="30"><img src="<?php echo $this->imgroot; ?>clear.png" width="30" height="1" alt="" /></td>
+		<td align="right" width="9"><img src="<?php echo $this->imgroot; ?>tabs/topright.png" height="9" width="9" alt="" /></td>
 	</tr>
 
-	<tr>
+	<tr class="outer_body_row">
 
 		<!-- Outer body row -->
 
-		<td bgcolor="#e8e8e0"><img src="<?php echo $this->imgroot; ?>clear.png" width="10" height="1" alt="" /></td>
-		<td valign="top" width="99%" bgcolor="#e8e8e0" colspan="3">
+		<td ><img src="<?php echo $this->imgroot; ?>clear.png" width="10" height="1" alt="" /></td>
+		<td valign="top" width="99%" colspan="3">
 
 			<!-- Inner Tabs / Shell -->
 
@@ -278,15 +278,15 @@ if (isset($params['group']) && $params['group']) {
 }
 
 ?>
-			<tr>
-				<td align="left" bgcolor="#f7f7f7" width="9"><img src="<?php echo $this->imgroot; ?>tabs/topleft-inner.png" height="9" width="9" alt="" /></td>
-				<td bgcolor="#f7f7f7"><img src="<?php echo $this->imgroot; ?>clear.png" width="1" height="1" alt="" /></td>
-				<td align="right" bgcolor="#f7f7f7" width="9"><img src="<?php echo $this->imgroot; ?>tabs/topright-inner.png" height="9" width="9" alt="" /></td>
+			<tr class="start_main_body_row">
+				<td align="left" width="9"><img src="<?php echo $this->imgroot; ?>tabs/topleft-inner.png" height="9" width="9" alt="" /></td>
+				<td><img src="<?php echo $this->imgroot; ?>clear.png" width="1" height="1" alt="" /></td>
+				<td align="right" width="9"><img src="<?php echo $this->imgroot; ?>tabs/topright-inner.png" height="9" width="9" alt="" /></td>
 			</tr>
 
-			<tr>
-				<td bgcolor="#f7f7f7"><img src="<?php echo $this->imgroot; ?>clear.png" width="10" height="1" alt="" /></td>
-				<td valign="top" width="99%" bgcolor="#f7f7f7">
+			<tr class="main_body_row">
+				<td><img src="<?php echo $this->imgroot; ?>clear.png" width="10" height="1" alt="" /></td>
+				<td valign="top" width="99%" class="contenttable">
 
 	<?php
 
@@ -300,24 +300,24 @@ if (isset($params['group']) && $params['group']) {
 
 
 				</td>
-				<td width="10" bgcolor="#f7f7f7"><img src="<?php echo $this->imgroot; ?>clear.png" width="2" height="1" alt="" /></td>
+				<td width="10"><img src="<?php echo $this->imgroot; ?>clear.png" width="2" height="1" alt="" /></td>
 			</tr>
-			<tr>
-				<td align="left" bgcolor="#f7f7f7" width="9"><img src="<?php echo $this->imgroot; ?>tabs/bottomleft-inner.png" height="11" width="11" alt="" /></td>
-				<td bgcolor="#f7f7f7"><img src="<?php echo $this->imgroot; ?>clear.png" width="1" height="1" alt="" /></td>
-				<td align="right" bgcolor="#f7f7f7" width="9"><img src="<?php echo $this->imgroot; ?>tabs/bottomright-inner.png" height="11" width="11" alt="" /></td>
+			<tr class="end_main_body_row">
+				<td align="left"  width="9"><img src="<?php echo $this->imgroot; ?>tabs/bottomleft-inner.png" height="11" width="11" alt="" /></td>
+				<td ><img src="<?php echo $this->imgroot; ?>clear.png" width="1" height="1" alt="" /></td>
+				<td align="right" width="9"><img src="<?php echo $this->imgroot; ?>tabs/bottomright-inner.png" height="11" width="11" alt="" /></td>
 			</tr>
-			</table>
+            </table>
 
 		<!-- end inner body row -->
 
 		</td>
-		<td width="10" bgcolor="#e8e8e0"><img src="<?php echo $this->imgroot; ?>clear.png" width="2" height="1" alt="" /></td>
+		<td width="10"><img src="<?php echo $this->imgroot; ?>clear.png" width="2" height="1" alt="" /></td>
 	</tr>
-	<tr>
-		<td align="left" bgcolor="#e8e8e0" width="9"><img src="<?php echo $this->imgroot; ?>tabs/bottomleft.png" height="9" width="9" alt="" /></td>
-		<td bgcolor="#e8e8e0" colspan="3"><img src="<?php echo $this->imgroot; ?>clear.png" width="1" height="1" alt="" /></td>
-		<td align="right" bgcolor="#e8e8e0" width="9"><img src="<?php echo $this->imgroot; ?>tabs/bottomright.png" height="9" width="9" alt="" /></td>
+	<tr class="end_inner_body_row">
+		<td align="left" width="9"><img src="<?php echo $this->imgroot; ?>tabs/bottomleft.png" height="9" width="9" alt="" /></td>
+		<td colspan="3"><img src="<?php echo $this->imgroot; ?>clear.png" width="1" height="1" alt="" /></td>
+		<td align="right" width="9"><img src="<?php echo $this->imgroot; ?>tabs/bottomright.png" height="9" width="9" alt="" /></td>
 	</tr>
 </table>
     <!--div style="float:left;"><?php echo $this->getOsdnNavDropdown(); ?></div-->
@@ -340,15 +340,15 @@ if (isset($params['group']) && $params['group']) {
         return '
 		<!-- Box Top Start -->
 
-		<table cellspacing="0" cellpadding="0" width="100%" border="0">
-		<tr align="center">
-			<td valign="top" align="right" width="10" background="'.$this->imgroot.'box-topleft.png"><img src="'.$this->imgroot.'clear.png" width="10" height="20" /></td>
-			<td width="100%" style="background:#e0ddd2 url(\''.$this->imgroot.'box-grad.png\') top left repeat-x;"><span class="titlebar">'.$title.'</span></td>
-			<td valign="top" width="10" background="'.$this->imgroot.'box-topright.png"><img src="'.$this->imgroot.'clear.png" width="10" height="20" /></td>
+		<table cellspacing="0" cellpadding="0" width="100%" border="0" class="boxtop">
+		<tr align="center" class="boxtop_top">
+			<td class="boxtop_left" valign="top" align="right" width="10" background="'.$this->imgroot.'box-topleft.png"><img src="'.$this->imgroot.'clear.png" width="10" height="20" /></td>
+			<td class="boxtop_center" width="100%"><span class="titlebar">'.$title.'</span></td>
+			<td class="boxtop_right" valign="top" width="10"><img src="'.$this->imgroot.'clear.png" width="10" height="20" /></td>
 		</tr>
 		<tr>
 			<td colspan="3">
-			<table cellspacing="0" cellpadding="2" width="100%" border="0" style="background:url(\''.$this->imgroot.'vert-grad.png\') top left repeat-x;>
+			<table class="boxtop_inner" cellspacing="0" cellpadding="2" width="100%" border="0">
 				<tr align="left"">
 					<td colspan="2" >
 
@@ -366,10 +366,10 @@ if (isset($params['group']) && $params['group']) {
 		<!-- Box Middle Start -->
 					</td>
 				</tr>
-				<tr align="center">
-					<td colspan="2" style="background:#e0ddd2 url(\''.$this->imgroot.'box-grad.png\') top left repeat-x;"><span class="titlebar">'.$title.'</span></td>
+				<tr align="center" class="boxmiddle">
+					<td colspan="2"><span class="titlebar">'.$title.'</span></td>
 				</tr>
-				<tr align="left" style="background:url(\''.$this->imgroot.'vert-grad.png\') top left repeat-x;">
+				<tr align="left" class="boxmiddle_inner">
 					<td colspan="2">
 		<!-- Box Middle End -->';
 	}
@@ -402,44 +402,6 @@ if (isset($params['group']) && $params['group']) {
 		} else {
 			return 'background="'.$this->imgroot.'box-grad.png"';
 		}
-	}
-
-	/**
-	 * listTableTop() - Takes an array of titles and builds the first row of a new table.
-	 *
-	 * @param	   array   The array of titles
-	 * @param	   array   The array of title links
-	 */
-	function listTableTop ($title_arr,$links_arr=false) {
-		$return = '
-		<table cellspacing="0" cellpadding="0" width="100%" border="0">
-		<tr align="center">
-	<!--		<td valign="top" align="right" width="10" background="'.$this->imgroot.'box-grad.png"><img src="'.$this->imgroot.'box-topleft.png" width="10" height="75" /></td> -->
-			<td background="'.$this->imgroot.'box-grad.png">
-		<table width="100%" border="0" cellspacing="1" cellpadding="2">
-			<tr>';
-
-		$count=count($title_arr);
-		if ($links_arr) {
-			for ($i=0; $i<$count; $i++) {
-				$return .= '
-				<td align="center"><a class="sortbutton" href="'.$links_arr[$i].'"><span style="color:'.
-				$this->FONTCOLOR_HTMLBOX_TITLE.'"><strong>'.$title_arr[$i].'</strong></span></a></td>';
-			}
-		} else {
-			for ($i=0; $i<$count; $i++) {
-				$return .= '
-				<td align="center"><span style="color:'.
-				$this->FONTCOLOR_HTMLBOX_TITLE.'"><strong>'.$title_arr[$i].'</strong></span></td>';
-			}
-		}
-		return $return.'</tr>';
-	}
-
-	function listTableBottom() {
-		return '</table></td>
-			<!-- <td valign="top" align="right" width="10" background="'.$this->imgroot.'box-grad.png"><img src="'.$this->imgroot.'box-topright.png" width="10" height="75" /></td> -->
-			</tr></table>';
 	}
 
 	function outerTabs($params) {
@@ -645,11 +607,11 @@ if (isset($params['group']) && $params['group']) {
 		}
 		$return .= '<tr>';
 		if ($beg_cols > 0) {
-			$return .= '<td colspan="'.$beg_cols.'" height="1" bgcolor="#909090"><img src="'.$this->imgroot.'clear.png" height="1" width="10" /></td>';
+			$return .= '<td colspan="'.$beg_cols.'" height="1" class="below_tabs"><img src="'.$this->imgroot.'clear.png" height="1" width="10" /></td>';
 		}
-		$return .= '<td colspan="3" height="1" bgcolor="'.$sel_tab_bgcolor.'"><img src="'.$this->imgroot.'clear.png" height="1" width="10" /></td>';
+		$return .= '<td colspan="3" height="1" class="below_tabs_selected_'.$inner.'"><img src="'.$this->imgroot.'clear.png" height="1" width="10" /></td>';
 		if ($end_cols > 0) {
-			$return .= '<td colspan="'.$end_cols.'" height="1" bgcolor="#909090"><img src="'.$this->imgroot.'clear.png" height="1" width="10" /></td>';
+			$return .= '<td colspan="'.$end_cols.'" height="1" class="below_tabs"><img src="'.$this->imgroot.'clear.png" height="1" width="10" /></td>';
 		}
 		$return .= '</tr>';
 

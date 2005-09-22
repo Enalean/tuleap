@@ -67,6 +67,27 @@ a:hover {
 
 /* content frame specific */
 .contenttable { background-color: #F7F7F7; vertical-align: top; width: 99%; border-spacing: 0; border: 0; }
+.row_below_outertabs,
+.outer_body_row,
+.end_inner_body_row{ 
+	background:#e8e8e0;
+}
+.start_main_body_row,
+.main_body_row,
+.end_main_body_row {
+	background:#f7f7f7;
+}
+.below_tabs {
+	background:#909090;
+}
+.below_tabs_selected_toptab {
+	background:#e8e8e0;
+}
+.below_tabs_selected_bottomtab {
+	background:#f7f7f7;
+}
+
+
 
 /* left menu specific */
 .menuframe { background-color: #e8e8e0; vertical-align: top; horitontal-align: left; width: 60px; }
@@ -84,7 +105,14 @@ a:hover {
 .boxitemalt { text-align: left; background-color: #ffffff; }
 .boxhighlight { background-color: #ffe0db; text-align: left; color: #333333; }
 
-
+.boxtop {}
+.boxtop_top {}
+.boxtop_left {background:url('../images/box-topleft.png') top right no-repeat;}
+.boxtop_center {background:#e0ddd2 url('../images/box-grad.png') top left repeat-x;}
+.boxtop_right {background:url('../images/box-topright.png') top left no-repeat;}
+.boxtop_inner {background:transparent url('../images/vert-grad.png') top left repeat-x;}
+.boxmiddle {background:#e0ddd2 url('../images/box-grad.png') top left repeat-x;}
+.boxmiddle_inner {background:transparent url('../images/vert-grad.png') top left repeat-x;}
 
 .boxspace { font-size: 2pt; }
 .maintitlebar { color: #FFFFFF;}
