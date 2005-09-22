@@ -538,9 +538,7 @@ echo html_blankimage(5,100);
     function getOsdnNavBar() {
         $output = '
         <!-- OSDN navbar -->
-        <table width="100%" cellpadding="2" cellspacing="0" border="0">
-            <tr> 
-                <td valign="middle" align="left">
+        <div class="osdnnavbar">
         ';
         
         $motd = $GLOBALS['Language']->getContent('others/motd');
@@ -552,11 +550,7 @@ echo html_blankimage(5,100);
             $output .= '</span>';
         }
 
-        $output .= '
-        	   </td>
-            </tr>
-        </table>
-        
+        $output .= '</div>
         <!-- End OSDN NavBar -->
         ';
         return $output;

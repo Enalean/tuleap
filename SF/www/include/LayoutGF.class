@@ -26,8 +26,8 @@ class LayoutGF extends Layout {
 	 *
 	 * @var		string	$imgroot
 	 */
-	var $imgroot = '/custom/gforge/images/';
-	var $COLOR_CONTENT_BACK= '#ffffff';
+	var $imgroot = '/themes/codextab/images/';
+	var $COLOR_CONTENT_BACK= '#f7f7f7';
 	var $COLOR_LTBACK1= '#eeeeef';
 	var $COLOR_LTBACK2= '#fafafa';
 	var $COLOR_SELECTED_TAB= '#e0e0e0';
@@ -181,25 +181,30 @@ $bgpri[9] = 'priori';
 
 <style type="text/css">
 	<!--
-.priora { background-color: #dadada; }
-.priorb { background-color: #dacaca; }
-.priorc { background-color: #dababa; }
-.priord { background-color: #daaaaa; }
-.priore { background-color: #da8a8a; }
-.priorf { background-color: #da7a7a; }
-.priorg { background-color: #da6a6a; }
-.priorh { background-color: #da5a5a; }
-.priori { background-color: #da4a4a; }
-
-BODY {
-		margin-top: 3;
-		margin-left: 3;
-		margin-right: 3;
-		margin-bottom: 3;
-		background-image: url("<?php echo $this->imgroot; ?>theme-top-blue.png");
-	}
-	ol,ul,p,body,td,tr,th,form { font-family: <?php echo $site_fonts; ?>; font-size:<?php echo $this->FONTSIZE; ?>;
-		color: <?php echo $this->FONTCOLOR_CONTENT ?>; }
+    .priora { background-color: #dadada; }
+    .priorb { background-color: #dacaca; }
+    .priorc { background-color: #dababa; }
+    .priord { background-color: #daaaaa; }
+    .priore { background-color: #da8a8a; }
+    .priorf { background-color: #da7a7a; }
+    .priorg { background-color: #da6a6a; }
+    .priorh { background-color: #da5a5a; }
+    .priori { background-color: #da4a4a; }
+    
+    BODY {
+        margin-top: 0;
+        margin-left: 0;
+        margin-right: 0;
+        margin-bottom: 0;
+        background-color: #bcbcad;
+        font-family: helvetica,arial,verdana,sans-serif;
+    }
+    
+	ol,ul,p,body,td,tr,th,form { 
+        font-family: <?php echo $site_fonts; ?>; 
+        font-size:<?php echo $this->FONTSIZE; ?>;
+		color: <?php echo $this->FONTCOLOR_CONTENT ?>; 
+    }
 
 	h1 { font-size: x-large; font-family: <?php echo $site_fonts; ?>; }
 	h2 { font-size: large; font-family: <?php echo $site_fonts; ?>; }
@@ -210,54 +215,93 @@ BODY {
 
 	pre,tt { font-family: courier,sans-serif }
 
-	a:link { text-decoration:none; color: #0000be }
-	a:visited { text-decoration:none; color: #0000be }
-	a:active { text-decoration:none }
-	a:hover { text-decoration:underline; color:red }
+	a:link { text-decoration:none; color: #8b4020; }
+	a:visited { text-decoration:none; color: #8b4020 }
+	a:active { text-decoration:none; color: #000000 }
+	a:hover { text-decoration:underline; color:#ff0000; }
 
-	.titlebar { color: black; text-decoration: none; font-weight: bold; }
-	a.tablink { color: black; text-decoration: none; font-weight: bold; font-size: <?php echo $this->FONTSIZE_SMALLER; ?>; }
-	a.tablink:visited { color: black; text-decoration: none; font-weight: bold; font-size: <?php echo $this->FONTSIZE_SMALLER; ?>; }
-	a.tablink:hover { text-decoration: none; color: black; font-weight: bold; font-size: <?php echo $this->FONTSIZE_SMALLER; ?>; }
-	a.tabsellink { color: #0000be; text-decoration: none; font-weight: bold; font-size: <?php echo $this->FONTSIZE_SMALLER; ?>; }
-	a.tabsellink:visited { color: #0000be; text-decoration: none; font-weight: bold; font-size: <?php echo $this->FONTSIZE_SMALLER; ?>; }
-	a.tabsellink:hover { text-decoration: none; color: #0000be; font-weight: bold; font-size: <?php echo $this->FONTSIZE_SMALLER; ?>; }
+	.titlebar { 
+        color: black; 
+        text-decoration: none; 
+        font-weight: bold;
+        font-size: <?=$this->FONTSIZE_SMALLER?>;
+    }
+	a.tabsellink, a.tabsellink:visited, 
+    a.tablink, a.tablink:visited {
+        color: #4c4c47; 
+        text-decoration: none; 
+        font-size:0.8em;
+    }
+    a.tabsellink, a.tabsellink:visited {
+        font-weight: bold;
+    }
+	a.tablink:hover { 
+        text-decoration: underline; 
+        color: red;
+    }
+	a.tabsellink:hover { 
+        text-decoration: none; 
+        color: black;
+        cursor:default;
+    }
    
    
-    #searchbox td{
+    .searchbox td{
         color:white;
     }
-    .osdn {
-        font-family: verdana,arial,helvetica,sans-serif;
-        font-size:0.75em;
-        font-weight:bold;
+.osdn { font-family: verdana,arial,helvetica,sans-serif; font-weight: bold; color: #ffffff; font-size:<?=$this->FONTSIZE_SMALLER?> }
+.osdntext { font-weight: bold; text-decoration: none; color: #ffffff; font-size:<?=$this->FONTSIZE_SMALLER?> }
+.osdntext:link { font-weight: bold; text-decoration: none; color: #ffffff; }
+.osdntext:visited { font-weight: bold; text-decoration: none; color: #ffffff; }
+.osdntext:hover { font-weight: bold; text-decoration: none; color: #ffffff; }
+    .osdn_codex_logo {
+        display:none;
     }
-    .osdn, 
-    .osdn a{
-        color:gray;
+    .header_logo a img {
+        border:none;
     }
     
-    /** Logo : text version */
-    a.logo span {
-        font-family:arial, sans-serif;
-        font-size:38pt;
-        font-weight:bold;
-        border:0pt;
+    .footer {
+        color: white; 
+        font-size: <?=$this->FONTSIZE_SMALLEST?>;
+    }
+    .boxitem {  background-color:transparent; }
+    
+    
+    .header_actions, .header_searchbox {
+        text-align:right;
+    }
+    .header_logo {
+        vertical-align:middle;
+    }
+    .header_searchbox {
+        vertical-align:middle;
+    }
+    
+    
+    
+    .header_actions ul {
+        list-style-type:none;
+        margin:0;
+        padding:0;
+        font-size: <?=$this->FONTSIZE_SMALLER?>;
+    }
+    .header_actions ul li {
+        display:inline;
+    }
+    .header_actions ul li a {
+        border-left:1px solid gray;
         color:white;
         text-decoration:none;
     }
-    /**/
-    /** To replace text-logo by an image : *
-    a.logo {
-        background:url('<?php echo $this->imgroot; ?>logo.png') center center no-repeat;
-        width:198px;
-        height:52px;
-        float:left;
+    .header_actions ul li a,
+    .header_actions ul li.header_actions_nolink {
+        padding: 0.2em 1em;
     }
-    a.logo  span {
-        display:none;
+    .header_actions ul li.header_actions_nolink {
+        font-weight:bold;
     }
-    /**/
+    
     <?php 
         $em->processEvent("cssstyle",$this);
     ?>
@@ -267,34 +311,40 @@ BODY {
 </head>
 
 <body>
-<?php osdn_print_navbar(); ?>
-<table border="0" width="100%" cellspacing="0" cellpadding="0">
-
-	<tr>
-		<td><a  class='logo' href="/"><span>CodeX</span></a></td>
-		<td><?php echo $this->searchBox(); ?></td>
-		<td align="right"><?php
-			if (user_isloggedin()) {
-				?>
-				<b style="color: #FFFF00"><?php echo $Language->getText('include_menu','logged_in').': '.user_getname().'. '; ?><a style="color: #FFFFFF" href="/account/logout.php"><?php echo $Language->getText('include_menu','logout'); ?></a></b><br />
-				<b><a style="color: #FFFFFF" href="/register/"><?php echo $Language->getText('include_menu','register_new_proj') ?></a></b><br />
-                <?php 
-                if (!$GLOBALS['HTTP_POST_VARS']) {
-                    $bookmark_title = urlencode( str_replace($GLOBALS['sys_name'].': ', '', $params['title']));
-                    echo '<b><a style="color: #FFFFFF" href="/my/bookmark_add.php?bookmark_url='.urlencode($GLOBALS['REQUEST_URI']).'&bookmark_title='.$bookmark_title.'">',$Language->getText('include_menu','bookmark_this_page').'</a></b>';
-                }
-			} else {
-				?>
-				<b><a style="color: #FFFFFF" href="/account/login.php"><?php echo $Language->getText('include_menu','login'); ?></a></b><br />
-				<b><a style="color: #FFFFFF" href="/account/register.php"><?php echo $Language->getText('include_menu','new_user'); ?></a></b>
-				<?php
-			}
-
-		?></td>
-		<td>&nbsp;&nbsp;</td>
-	</tr>
-
-</table>
+<div id="header">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+        <tr>
+            <td class="header_osdn"><?php echo $this->getOsdnNavBar(); ?></td>
+            <td class="header_actions">
+                <ul><?php
+                    if (user_isloggedin()) {
+                    ?>
+                        <li class="header_actions_nolink"><?php echo $Language->getText('include_menu','logged_in').': '.user_getname().''; ?></li>
+                        <li><a href="/account/logout.php"><?php echo $Language->getText('include_menu','logout'); ?></a></li>
+                        <li><a href="/register/"><?php echo $Language->getText('include_menu','register_new_proj') ?></a></li>
+                                <?php 
+                                if (!$GLOBALS['HTTP_POST_VARS']) {
+                                    $bookmark_title = urlencode( str_replace($GLOBALS['sys_name'].': ', '', $params['title']));
+                                    echo '<li class="bookmarkpage"><a href="/my/bookmark_add.php?bookmark_url='.urlencode($GLOBALS['REQUEST_URI']).'&bookmark_title='.$bookmark_title.'">',$Language->getText('include_menu','bookmark_this_page').'</a></li>';
+                                }
+                    } else {
+                    ?>
+                        <li><a href="/account/login.php"><?php echo $Language->getText('include_menu','login'); ?></a></li>
+                        <li><a href="/account/register.php"><?php echo $Language->getText('include_menu','new_user'); ?></a></li>
+                    <?php
+                    }
+                    ?>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td class="header_logo">
+                <a  class='header_logo' href="/"><img src="<?php echo $this->imgroot; ?>codex_banner_lc.png" /></a>
+            </td>
+            <td class="header_searchbox"><br /><?php echo $this->searchBox(); ?></td>
+        </tr>
+    </table>
+</div>
 
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
 
@@ -309,19 +359,19 @@ BODY {
 	</tr>
 
 	<tr>
-		<td align="left" bgcolor="#E0E0E0" width="9"><img src="<?php echo $this->imgroot; ?>tabs/topleft.png" height="9" width="9" alt="" /></td>
-		<td bgcolor="#E0E0E0" width="30"><img src="<?php echo $this->imgroot; ?>clear.png" width="30" height="1" alt="" /></td>
-		<td bgcolor="#E0E0E0"><img src="<?php echo $this->imgroot; ?>clear.png" width="1" height="1" alt="" /></td>
-		<td bgcolor="#E0E0E0" width="30"><img src="<?php echo $this->imgroot; ?>clear.png" width="30" height="1" alt="" /></td>
-		<td align="right" bgcolor="#E0E0E0" width="9"><img src="<?php echo $this->imgroot; ?>tabs/topright.png" height="9" width="9" alt="" /></td>
+		<td align="left" bgcolor="#e8e8e0" width="9"><img src="<?php echo $this->imgroot; ?>tabs/topleft.png" height="9" width="9" alt="" /></td>
+		<td bgcolor="#e8e8e0" width="30"><img src="<?php echo $this->imgroot; ?>clear.png" width="30" height="1" alt="" /></td>
+		<td bgcolor="#e8e8e0"><img src="<?php echo $this->imgroot; ?>clear.png" width="1" height="1" alt="" /></td>
+		<td bgcolor="#e8e8e0" width="30"><img src="<?php echo $this->imgroot; ?>clear.png" width="30" height="1" alt="" /></td>
+		<td align="right" bgcolor="#e8e8e0" width="9"><img src="<?php echo $this->imgroot; ?>tabs/topright.png" height="9" width="9" alt="" /></td>
 	</tr>
 
 	<tr>
 
 		<!-- Outer body row -->
 
-		<td bgcolor="#E0E0E0"><img src="<?php echo $this->imgroot; ?>clear.png" width="10" height="1" alt="" /></td>
-		<td valign="top" width="99%" bgcolor="#E0E0E0" colspan="3">
+		<td bgcolor="#e8e8e0"><img src="<?php echo $this->imgroot; ?>clear.png" width="10" height="1" alt="" /></td>
+		<td valign="top" width="99%" bgcolor="#e8e8e0" colspan="3">
 
 			<!-- Inner Tabs / Shell -->
 
@@ -349,14 +399,14 @@ if (isset($params['group']) && $params['group']) {
 
 ?>
 			<tr>
-				<td align="left" bgcolor="#ffffff" width="9"><img src="<?php echo $this->imgroot; ?>tabs/topleft-inner.png" height="9" width="9" alt="" /></td>
-				<td bgcolor="#ffffff"><img src="<?php echo $this->imgroot; ?>clear.png" width="1" height="1" alt="" /></td>
-				<td align="right" bgcolor="#ffffff" width="9"><img src="<?php echo $this->imgroot; ?>tabs/topright-inner.png" height="9" width="9" alt="" /></td>
+				<td align="left" bgcolor="#f7f7f7" width="9"><img src="<?php echo $this->imgroot; ?>tabs/topleft-inner.png" height="9" width="9" alt="" /></td>
+				<td bgcolor="#f7f7f7"><img src="<?php echo $this->imgroot; ?>clear.png" width="1" height="1" alt="" /></td>
+				<td align="right" bgcolor="#f7f7f7" width="9"><img src="<?php echo $this->imgroot; ?>tabs/topright-inner.png" height="9" width="9" alt="" /></td>
 			</tr>
 
 			<tr>
-				<td bgcolor="#ffffff"><img src="<?php echo $this->imgroot; ?>clear.png" width="10" height="1" alt="" /></td>
-				<td valign="top" width="99%" bgcolor="white">
+				<td bgcolor="#f7f7f7"><img src="<?php echo $this->imgroot; ?>clear.png" width="10" height="1" alt="" /></td>
+				<td valign="top" width="99%" bgcolor="#f7f7f7">
 
 	<?php
 
@@ -370,27 +420,27 @@ if (isset($params['group']) && $params['group']) {
 
 
 				</td>
-				<td width="10" bgcolor="#ffffff"><img src="<?php echo $this->imgroot; ?>clear.png" width="2" height="1" alt="" /></td>
+				<td width="10" bgcolor="#f7f7f7"><img src="<?php echo $this->imgroot; ?>clear.png" width="2" height="1" alt="" /></td>
 			</tr>
 			<tr>
-				<td align="left" bgcolor="#E0E0E0" width="9"><img src="<?php echo $this->imgroot; ?>tabs/bottomleft-inner.png" height="11" width="11" alt="" /></td>
-				<td bgcolor="#ffffff"><img src="<?php echo $this->imgroot; ?>clear.png" width="1" height="1" alt="" /></td>
-				<td align="right" bgcolor="#E0E0E0" width="9"><img src="<?php echo $this->imgroot; ?>tabs/bottomright-inner.png" height="11" width="11" alt="" /></td>
+				<td align="left" bgcolor="#f7f7f7" width="9"><img src="<?php echo $this->imgroot; ?>tabs/bottomleft-inner.png" height="11" width="11" alt="" /></td>
+				<td bgcolor="#f7f7f7"><img src="<?php echo $this->imgroot; ?>clear.png" width="1" height="1" alt="" /></td>
+				<td align="right" bgcolor="#f7f7f7" width="9"><img src="<?php echo $this->imgroot; ?>tabs/bottomright-inner.png" height="11" width="11" alt="" /></td>
 			</tr>
 			</table>
 
 		<!-- end inner body row -->
 
 		</td>
-		<td width="10" bgcolor="#E0E0E0"><img src="<?php echo $this->imgroot; ?>clear.png" width="2" height="1" alt="" /></td>
+		<td width="10" bgcolor="#e8e8e0"><img src="<?php echo $this->imgroot; ?>clear.png" width="2" height="1" alt="" /></td>
 	</tr>
 	<tr>
-		<td align="left" bgcolor="#E0E0E0" width="9"><img src="<?php echo $this->imgroot; ?>tabs/bottomleft.png" height="9" width="9" alt="" /></td>
-		<td bgcolor="#E0E0E0" colspan="3"><img src="<?php echo $this->imgroot; ?>clear.png" width="1" height="1" alt="" /></td>
-		<td align="right" bgcolor="#E0E0E0" width="9"><img src="<?php echo $this->imgroot; ?>tabs/bottomright.png" height="9" width="9" alt="" /></td>
+		<td align="left" bgcolor="#e8e8e0" width="9"><img src="<?php echo $this->imgroot; ?>tabs/bottomleft.png" height="9" width="9" alt="" /></td>
+		<td bgcolor="#e8e8e0" colspan="3"><img src="<?php echo $this->imgroot; ?>clear.png" width="1" height="1" alt="" /></td>
+		<td align="right" bgcolor="#e8e8e0" width="9"><img src="<?php echo $this->imgroot; ?>tabs/bottomright.png" height="9" width="9" alt="" /></td>
 	</tr>
 </table>
- <?php osdn_nav_dropdown(); ?>
+    <div style="float:left;"><?php echo $this->getOsdnNavDropdown(); ?></div>
 <?php
         $this->generic_footer($params);
 	}
@@ -407,20 +457,20 @@ if (isset($params['group']) && $params['group']) {
 	 * @param   string  The box background color
 	 */
 	function boxTop($title) {
-		return '
+        return '
 		<!-- Box Top Start -->
 
-		<table cellspacing="0" cellpadding="0" width="100%" border="0" background="'.$this->imgroot.'vert-grad.png">
+		<table cellspacing="0" cellpadding="0" width="100%" border="0">
 		<tr align="center">
 			<td valign="top" align="right" width="10" background="'.$this->imgroot.'box-topleft.png"><img src="'.$this->imgroot.'clear.png" width="10" height="20" /></td>
-			<td width="100%" background="'.$this->imgroot.'box-grad.png"><span class="titlebar">'.$title.'</span></td>
+			<td width="100%" style="background:#e0ddd2 url(\''.$this->imgroot.'box-grad.png\') top left repeat-x;"><span class="titlebar">'.$title.'</span></td>
 			<td valign="top" width="10" background="'.$this->imgroot.'box-topright.png"><img src="'.$this->imgroot.'clear.png" width="10" height="20" /></td>
 		</tr>
 		<tr>
 			<td colspan="3">
-			<table cellspacing="2" cellpadding="2" width="100%" border="0">
-				<tr align="left">
-					<td colspan="2">
+			<table cellspacing="0" cellpadding="2" width="100%" border="0" style="background:url(\''.$this->imgroot.'vert-grad.png\') top left repeat-x;>
+				<tr align="left"">
+					<td colspan="2" >
 
 		<!-- Box Top End -->';
 	}
@@ -432,14 +482,14 @@ if (isset($params['group']) && $params['group']) {
 	 * @param   string  The box background color
 	 */
 	function boxMiddle($title) {
-		return '
+        return '
 		<!-- Box Middle Start -->
 					</td>
 				</tr>
 				<tr align="center">
-					<td colspan="2" background="'.$this->imgroot.'box-grad.png"><span class="titlebar">'.$title.'</span></td>
+					<td colspan="2" style="background:#e0ddd2 url(\''.$this->imgroot.'box-grad.png\') top left repeat-x;"><span class="titlebar">'.$title.'</span></td>
 				</tr>
-				<tr align="left">
+				<tr align="left" style="background:url(\''.$this->imgroot.'vert-grad.png\') top left repeat-x;">
 					<td colspan="2">
 		<!-- Box Middle End -->';
 	}
@@ -450,7 +500,7 @@ if (isset($params['group']) && $params['group']) {
 	 * @param   bool	Whether to echo or return the results
 	 */
 	function boxBottom() {
-		return '
+        return '
 			<!-- Box Bottom Start -->
 					</td>
 				</tr>
@@ -774,9 +824,7 @@ if (isset($params['group']) && $params['group']) {
 
 		$output = '
 		<form action="/search/" method="post">
-		<table border="0" cellpadding="0" cellspacing="0" id="searchbox">
-		<tr><td>
-		<div align="center" style="font-size:smaller">';
+		<div>';
 		$output .= '<select name="type_of_search">';
         if ($is_bug_page && $group_id) {
             $output .= "\t<OPTION value=\"bugs\"".( $type_of_search == "bugs" ? " SELECTED" : "" ).">".$Language->getText('include_menu','bugs')."</OPTION>\n";
@@ -792,14 +840,12 @@ if (isset($params['group']) && $params['group']) {
         $output .= "\t<OPTION value=\"soft\"".( $type_of_search == "soft" ? " SELECTED" : "" ).">".$Language->getText('include_menu','software_proj')."</OPTION>\n";
         $output .= "\t<OPTION value=\"snippets\"".( ($type_of_search == "snippets" || $is_snippet_page) ? " SELECTED" : "" ).">".$Language->getText('include_menu','code_snippets')."</OPTION>\n";
         $output .= "\t<OPTION value=\"people\"".( $type_of_search == "people" ? " SELECTED" : "" ).">".$Language->getText('include_menu','people')."</OPTION>\n";
-        $output .= "\t</select></div>";
+        $output .= "\t</select>";
 
-        $output .= '</td><td>';
-        $output .= '<input type="CHECKBOX" name="exact" value="1"'.( $exact ? ' CHECKED' : ' UNCHECKED' ).'>'.$Language->getText('include_menu','require_all_words');
+         $output .= '<input type="CHECKBOX" name="exact" value="1"'.( $exact ? ' CHECKED' : ' UNCHECKED' ).'>'.$Language->getText('include_menu','require_all_words');
         
 
-		$output .= '</td><td>&nbsp;';
-        if ( isset($atid) ) {
+		if ( isset($atid) ) {
             $output .= "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$atid\" NAME=\"atid\">\n";
         } 
         if ( isset($forum_id) ) {
@@ -820,15 +866,13 @@ if (isset($params['group']) && $params['group']) {
         if ( isset($group_id) ) {
            $output .= "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$group_id\" NAME=\"group_id\">\n";
         }
-		$output .= '</td><td>';
+		$output .= '';
         
-		$output .= '<input type="text" size="12" name="words" value="'.$words.'" />';
+		$output .= '<input type="text" size="22" name="words" value="'.$words.'" />';
 
-		$output .= '</td><td>&nbsp;</td><td>';
+		$output .= '&nbsp;';
 		$output .= '<input type="submit" name="Search" value="'.$Language->getText('searchbox','search').'" />';
-		$output .= '</td>';
-		$output .= '</tr></table>';
-		$output .= '</form>';
+		$output .= '</div></form>';
         print $output;
 	}
 	
