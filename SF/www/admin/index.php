@@ -48,6 +48,7 @@ $pending_users = $row['count'];
   <input type="submit" value="<?php echo $Language->getText('admin_main', 'search'); ?>">
 </form>
 <ul>
+<li><?php echo $Language->getText('admin_main', 'all_users',array("userlist.php")); ?></a></li>
 <LI><?php echo $Language->getText('admin_main', 'pending_user',array("approve_pending_users.php")); ?>
 <?php echo " <b>($pending_users";
 if ($GLOBALS['sys_user_approval'] == 1 && $pending_users != 0) {
@@ -56,6 +57,7 @@ if ($GLOBALS['sys_user_approval'] == 1 && $pending_users != 0) {
 echo ")</b>";
 ?>
 </ul>
+<li><a href="/people/admin"><?php echo $Language->getText('admin_main', 'skills'); ?></a></li>
 </ul>
 
 <h3><?php echo $Language->getText('admin_main', 'header_group'); ?></h3>
@@ -78,6 +80,7 @@ echo ")</b>";
 <p>
 
 <ul>
+<li><?php echo $Language->getText('admin_main', 'all_groups',array("grouplist.php")); ?></a></li>
 <LI><?php echo $Language->getText('admin_main', 'incomplete_group',array("grouplist.php?status=I")); ?>
 <LI><?php echo $Language->getText('admin_main', 'pending_group',array("approve-pending.php")); ?>
 <?php echo " <b>($pending_projects";
@@ -87,6 +90,17 @@ if ($pending_projects != 0) {
 echo ")</b>";?>
 <LI><?php echo $Language->getText('admin_main', 'deleted_group',array("grouplist.php?status=D")); ?>
 </ul>
+</ul>
+
+<h3><?php echo $Language->getText('admin_main', 'site_news'); ?></h3>
+<ul>
+<li><a href="/news/admin"><?php echo $Language->getText('admin_main', 'site_news_approval'); ?></A>
+</ul>
+
+<h3><?php echo $Language->getText('admin_main', 'trove_cat'); ?></h3>
+<ul>
+<li><a href="/admin/trove/trove_cat_list.php"><?php echo $Language->getText('admin_main', 'trove_cat_list'); ?></A>
+<li><a href="/admin/trove/trove_cat_add.php"><?php echo $Language->getText('admin_main', 'trove_cat_add'); ?></A>
 </ul>
 
 <h3><?php echo $Language->getText('admin_main', 'header_svc'); ?></h3>

@@ -26,6 +26,8 @@ admin_main	need_approval	approval needed
 admin_main	header_group	Group Administration
 admin_main	display_group	Display Groups Beginning with :
 admin_main	search_group	or Search (groupid,groupunixname,groupname):
+admin_main	all_users	All <a href="$1">users</a>
+admin_main	all_groups	All <a href="$1">groups</a>
 admin_main	incomplete_group	Groups in <a href="$1"><B>I</B> (incomplete) Status</A>
 admin_main	pending_group	Groups in <a href="$1"><B>P</B> (pending) Status</A>
 admin_main	deleted_group	Groups in <a href="$1"><B>D</B> (deleted) Status</A>
@@ -46,6 +48,12 @@ admin_main	sstat_reg_g	Registered projects
 admin_main	sstat_reg_act_g	Registered active projects
 admin_main	sstat_pend_g	Pending projects
 admin_main	sstat_pend_u	Pending users
+admin_main	site_news	Site News
+admin_main	site_news_approval	Site News Approval
+admin_main	trove_cat	Trove Categories
+admin_main	trove_cat_list	Trove Categories List
+admin_main	trove_cat_add	Trove Categories Add
+admin_main	skills	People Skills
 #
 #-----------------------------------------------
 # Script: SF/www/admin/admin_utils.php

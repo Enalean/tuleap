@@ -7,9 +7,7 @@ function site_admin_header($params) {
 	global $feedback;
 	$HTML->header($params);
 	echo html_feedback_top($feedback);
-	echo '<H2>'.$Language->getText('admin_utils', 'title', array($GLOBALS['sys_name'])).'</H2>
-	<P><A HREF="/admin/"><b>'.$Language->getText('admin_utils', 'menu').'</b></A>
-	<P>';
+	echo '<H2>'.$Language->getText('admin_utils', 'title', array($GLOBALS['sys_name'])).'</H2>';
 }
 
 function site_admin_footer($vals=0) {

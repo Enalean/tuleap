@@ -31,6 +31,8 @@ admin_main	need_approval	approbation requise
 admin_main	header_group	Administration de groupes
 admin_main	display_group	Afficher les groupes commençant par :
 admin_main	search_group	ou chercher (Id groupe, nom unix, nom complet):
+admin_main	all_users	Tous les <a href="$1">utilisateurs</a>
+admin_main	all_groups	Tous les <a href="$1">groupes</a>
 admin_main	incomplete_group	Groupes en statut <a href="$1"><B>I</B> (incomplet)</A>
 admin_main	pending_group	Groupes en statut <a href="$1"><B>P</B> (en attente)</A>
 admin_main	deleted_group	Groupes en statut <a href="$1"><B>D</B> (détruit)</A>
@@ -51,6 +53,12 @@ admin_main	sstat_reg_g	Projets enregistrés
 admin_main	sstat_reg_act_g	Projets enregistrés actifs
 admin_main	sstat_pend_g	Projets en attente
 admin_main	sstat_pend_u	Utilisateurs en attente
+admin_main	site_news	Annonces site
+admin_main	site_news_approval	Approbation annonces site
+admin_main	trove_cat	Catégories
+admin_main	trove_cat_list	Liste des catégories
+admin_main	trove_cat_add	Ajout des catégories
+admin_main	skills	Compétences utilisateurs
 #
 #-----------------------------------------------
 # Script: SF/www/admin/admin_utils.php
