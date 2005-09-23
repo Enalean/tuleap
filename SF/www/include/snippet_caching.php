@@ -26,7 +26,7 @@ function snippet_mainpage() {
 
 	<TR valign="top"><TD>
 	<B>'.$Language->getText('include_snippet_caching','browse_lang').':</B>
-	<P>';
+	<ul>';
 
          // List is sorted in alphabetical order
          $sql="SELECT * FROM snippet_language WHERE language_id!=100 ORDER BY language_name";// We don't want 'None' to appear
@@ -42,11 +42,11 @@ function snippet_mainpage() {
          }
 
 
-	 echo '
+	 echo '</ul>
 	</TD>
 	<TD>
 	<B>'.$Language->getText('include_snippet_caching','browse_cat').':</B>
-	<P>';
+	<ul>';
 
 
          // List is sorted in alphabetical order
@@ -63,6 +63,7 @@ function snippet_mainpage() {
          }
 
 	?>
+    </ul>
 	</TD>
 	</TR>
 	</TABLE>

@@ -27,7 +27,7 @@ class LayoutGF extends Layout {
 	 * @var		string	$imgroot
 	 */
 	var $imgroot = '/themes/codextab/images/';
-	var $COLOR_CONTENT_BACK= '#f7f7f7';
+	var $COLOR_CONTENT_BACK= 'green';
 	var $COLOR_LTBACK1= '#eeeeef';
 	var $COLOR_LTBACK2= '#fafafa';
 	var $COLOR_SELECTED_TAB= '#e0e0e0';
@@ -117,7 +117,41 @@ $bgpri[9] = 'priori';
 	function createLinkToUserHome($user_name, $realname) {
 		return '<a href="/users/'.$user_name.'/">'.$realname.'</a>';
 	}
-
+    
+    function getBodyHeader($params) {
+        $output = '
+        <table cellpadding="0" cellspacing="0" border="0" width="100%">
+            <tr>
+                <td class="header_osdn">'.$this->getOsdnNavBar().'</td>
+                <td class="header_actions">
+                    <ul>';
+        if (user_isloggedin()) {
+            
+            $output .= '<li class="header_actions_nolink">'.$GLOBALS['Language']->getText('include_menu','logged_in').': '.user_getname().'</li>';
+            $output .= '<li><a href="/account/logout.php">'.$GLOBALS['Language']->getText('include_menu','logout').'</a></li>';
+            $output .= '<li><a href="/register/">'.$GLOBALS['Language']->getText('include_menu','register_new_proj').'</a></li>';
+                                    
+            if (!$GLOBALS['HTTP_POST_VARS']) {
+                $bookmark_title = urlencode( str_replace($GLOBALS['sys_name'].': ', '', $params['title']));
+                $output .= '<li class="bookmarkpage"><a href="/my/bookmark_add.php?bookmark_url='.urlencode($GLOBALS['REQUEST_URI']).'&bookmark_title='.$bookmark_title.'">'.$GLOBALS['Language']->getText('include_menu','bookmark_this_page').'</a></li>';
+            }
+        } else {
+            $output .= '<li><a href="/account/login.php">'.$GLOBALS['Language']->getText('include_menu','login').'</a></li>';
+            $output .= '<li><a href="/account/register.php">'.$GLOBALS['Language']->getText('include_menu','new_user').'</a></li>';
+        
+        }
+        $output .= '</ul>
+                </td>
+            </tr>
+            <tr>
+                <td class="header_logo">
+                    <a  class="header_logo" href="/"><img src="'.$this->imgroot.'codex_banner_lc.png" /></a>
+                </td>
+                <td class="header_searchbox"><br />'.$this->getSearchBox().'</td>
+            </tr>
+        </table>';
+        return $output;
+    }
 	/**
 	 *	header() - "steel theme" top of page
 	 *
@@ -191,40 +225,7 @@ $bgpri[9] = 'priori';
 </head>
 
 <body>
-<div id="header">
-    <table cellpadding="0" cellspacing="0" border="0" width="100%">
-        <tr>
-            <td class="header_osdn"><?php echo $this->getOsdnNavBar(); ?></td>
-            <td class="header_actions">
-                <ul><?php
-                    if (user_isloggedin()) {
-                    ?>
-                        <li class="header_actions_nolink"><?php echo $Language->getText('include_menu','logged_in').': '.user_getname().''; ?></li>
-                        <li><a href="/account/logout.php"><?php echo $Language->getText('include_menu','logout'); ?></a></li>
-                        <li><a href="/register/"><?php echo $Language->getText('include_menu','register_new_proj') ?></a></li>
-                                <?php 
-                                if (!$GLOBALS['HTTP_POST_VARS']) {
-                                    $bookmark_title = urlencode( str_replace($GLOBALS['sys_name'].': ', '', $params['title']));
-                                    echo '<li class="bookmarkpage"><a href="/my/bookmark_add.php?bookmark_url='.urlencode($GLOBALS['REQUEST_URI']).'&bookmark_title='.$bookmark_title.'">',$Language->getText('include_menu','bookmark_this_page').'</a></li>';
-                                }
-                    } else {
-                    ?>
-                        <li><a href="/account/login.php"><?php echo $Language->getText('include_menu','login'); ?></a></li>
-                        <li><a href="/account/register.php"><?php echo $Language->getText('include_menu','new_user'); ?></a></li>
-                    <?php
-                    }
-                    ?>
-                </ul>
-            </td>
-        </tr>
-        <tr>
-            <td class="header_logo">
-                <a  class='header_logo' href="/"><img src="<?php echo $this->imgroot; ?>codex_banner_lc.png" /></a>
-            </td>
-            <td class="header_searchbox"><br /><?php echo $this->searchBox(); ?></td>
-        </tr>
-    </table>
-</div>
+<div id="header"><?php echo $this->getBodyHeader($params); ?></div>
 
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
 
@@ -319,12 +320,17 @@ if (isset($params['group']) && $params['group']) {
 		<td colspan="3"><img src="<?php echo $this->imgroot; ?>clear.png" width="1" height="1" alt="" /></td>
 		<td align="right" width="9"><img src="<?php echo $this->imgroot; ?>tabs/bottomright.png" height="9" width="9" alt="" /></td>
 	</tr>
+    <?php echo $this->getCustomFooter(); ?>
 </table>
     <!--div style="float:left;"><?php echo $this->getOsdnNavDropdown(); ?></div-->
 <?php
         $this->generic_footer($params);
 	}
 
+    function getCustomFooter() {
+        return '';
+    }
+    
 	function getRootIndex() {
 		return $this->rootindex;
 	}
@@ -655,7 +661,7 @@ if (isset($params['group']) && $params['group']) {
 ';
 	}
 
-	function searchBox() {
+	function getSearchBox() {
         global $words,$forum_id,$group_id,$is_bug_page,$is_support_page,$Language,
             $is_pm_page,$is_snippet_page,$exact,$type_of_search,$atid;
 
@@ -715,7 +721,11 @@ if (isset($params['group']) && $params['group']) {
 		$output .= '&nbsp;';
 		$output .= '<input type="submit" name="Search" value="'.$Language->getText('searchbox','search').'" />';
 		$output .= '</div></form>';
-        print $output;
+        return $output;
+    }
+    
+	function searchBox() {
+        print $this->getSearchBox();
 	}
 	
 	function advancedSearchBox($sectionsArray, $group_id, $words, $isExact) {
