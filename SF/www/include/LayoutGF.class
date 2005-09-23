@@ -213,7 +213,15 @@ $bgpri[9] = 'priori';
 	?>
     <link rel="stylesheet" href="<? echo util_get_css_theme(); ?>" type="text/css" />
     <link rel="stylesheet" href="<? echo dirname(util_get_css_theme()).'/style.css'; ?>" type="text/css" />
-    
+<?php
+              if(isset($params['stylesheet']) && is_array($params['stylesheet'])) {
+                  foreach($params['stylesheet'] as $css) {
+                      print '<link rel="stylesheet" type="text/css" href="'.$css.'" />';
+                      print "\n";
+                  }
+              }
+?>
+
     <style type="text/css">
 	<!--
     <?php 
@@ -290,7 +298,6 @@ if (isset($params['group']) && $params['group']) {
 				<td valign="top" width="99%" class="contenttable">
 
 	<?php
-
 	}
 
 	function footer($params) {
