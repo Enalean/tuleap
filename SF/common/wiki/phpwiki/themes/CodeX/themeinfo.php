@@ -7,7 +7,7 @@ rcs_id('$Id$');
 
 require_once('lib/Theme.php');
 
-$Theme = new Theme('CodeX');
+$Theme = new PhpWiki_Theme('CodeX');
 
 // CSS file defines fonts, colors and background images for this
 // style.  The companion '*-heavy.css' file isn't defined, it's just

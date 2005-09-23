@@ -187,11 +187,11 @@ function Button ($action, $label = false, $page_or_rev = false) {
 }
 
 
-class Theme {
+class PhpWiki_Theme {
     var $HTML_DUMP_SUFFIX = '';
     var $DUMP_MODE = false, $dumped_images, $dumped_css; 
 
-    function Theme ($theme_name = 'default') {
+    function PhpWiki_Theme ($theme_name = 'default') {
         $this->_name = $theme_name;
         $themes_dir = defined('PHPWIKI_DIR') ? PHPWIKI_DIR . "/themes" : "themes";
 
@@ -199,7 +199,7 @@ class Theme {
         $this->_theme = "themes/$theme_name";
 
         if ($theme_name != 'default')
-            $this->_default_theme = new Theme;
+            $this->_default_theme = new PhpWiki_Theme;
 
         $this->_css = array();
     }
