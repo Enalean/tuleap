@@ -33,7 +33,7 @@ class PluginDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchById($id) {
-        $sql =  "SELECT name, enabled FROM plugin WHERE id = '".addslashes($id)."'";
+        $sql =  "SELECT name, enabled FROM plugin WHERE id = '".$id."'";
         return $this->retrieve($sql);
     }
 
@@ -42,7 +42,7 @@ class PluginDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByName($name) {
-        $sql =  "SELECT id, enabled FROM plugin WHERE name = '".addslashes($name)."'";
+        $sql =  "SELECT id, enabled FROM plugin WHERE name = '".$name."'";
         return $this->retrieve($sql);
     }
 
@@ -51,7 +51,7 @@ class PluginDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByEnabled($enabled) {
-        $sql =  "SELECT id, name FROM plugin WHERE enabled = '".addslashes($enabled)."'";
+        $sql =  "SELECT id, name FROM plugin WHERE enabled = '".$enabled."'";
         return $this->retrieve($sql);
     }
 
@@ -74,12 +74,12 @@ class PluginDao extends DataAccessObject {
     }
     
     function updateEnabledByPluginId($enabled, $id) {
-        $sql =  "UPDATE plugin SET enabled = '".addslashes($enabled)."' WHERE id = '".addslashes($id)."'";
+        $sql =  "UPDATE plugin SET enabled = '".$enabled."' WHERE id = '".$id."'";
         return $this->update($sql);
     }
     
     function removeById($id) {
-        $sql =  "DELETE FROM plugin WHERE id = '".addslashes($id)."'";
+        $sql =  "DELETE FROM plugin WHERE id = '".$id."'";
         return $this->update($sql);
     }
 }

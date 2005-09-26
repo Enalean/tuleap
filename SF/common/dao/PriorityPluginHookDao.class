@@ -33,7 +33,7 @@ class PriorityPluginHookDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByPluginId($pluginId) {
-        $sql =  "SELECT hook, priority FROM priority_plugin_hook WHERE plugin_id = '".addslashes($pluginId)."'";
+        $sql =  "SELECT hook, priority FROM priority_plugin_hook WHERE plugin_id = '".$pluginId."'";
         return $this->retrieve($sql);
     }
 
@@ -42,7 +42,7 @@ class PriorityPluginHookDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByHook($hook) {
-        $sql =  "SELECT plugin_id, priority FROM priority_plugin_hook WHERE hook = '".addslashes($hook)."'";
+        $sql =  "SELECT plugin_id, priority FROM priority_plugin_hook WHERE hook = '".$hook."'";
         return $this->retrieve($sql);
     }
 
@@ -51,7 +51,7 @@ class PriorityPluginHookDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByPriority($priority) {
-        $sql =  "SELECT plugin_id, hook FROM priority_plugin_hook WHERE priority = '".addslashes($priority)."'";
+        $sql =  "SELECT plugin_id, hook FROM priority_plugin_hook WHERE priority = '".$priority."'";
         return $this->retrieve($sql);
     }
 
@@ -68,7 +68,7 @@ class PriorityPluginHookDao extends DataAccessObject {
 
     
     function searchByHook_PluginId($hook, $pluginId) {
-        $sql = "SELECT priority FROM priority_plugin_hook WHERE hook = '".addslashes($hook)."' AND plugin_id = '".addslashes($pluginId)."'";
+        $sql = "SELECT priority FROM priority_plugin_hook WHERE hook = '".$hook."' AND plugin_id = '".$pluginId."'";
         return $this->retrieve($sql);
     }
     
@@ -82,9 +82,9 @@ class PriorityPluginHookDao extends DataAccessObject {
                 } else {
                     //priority == 0 => erase priority
                     if ($priority == 0) {
-                        $updated = $this->update("DELETE FROM priority_plugin_hook WHERE hook = '".addslashes($hook)."' AND plugin_id = '".addslashes($pluginId)."'");
+                        $updated = $this->update("DELETE FROM priority_plugin_hook WHERE hook = '".$hook."' AND plugin_id = '".$pluginId."'");
                     } else {
-                        $updated = $this->update("UPDATE priority_plugin_hook SET priority = '".addslashes($priority)."' WHERE hook = '".addslashes($hook)."' AND plugin_id = '".addslashes($pluginId)."'");
+                        $updated = $this->update("UPDATE priority_plugin_hook SET priority = '".$priority."' WHERE hook = '".$hook."' AND plugin_id = '".$pluginId."'");
                     }
                 }
             } else {
@@ -97,7 +97,7 @@ class PriorityPluginHookDao extends DataAccessObject {
     }
     
     function deleteByPluginId($plugin_id) {
-        $updated = $this->update("DELETE FROM priority_plugin_hook WHERE plugin_id = '".addslashes($plugin_id)."'");
+        $updated = $this->update("DELETE FROM priority_plugin_hook WHERE plugin_id = '".$plugin_id."'");
         return $updated;
     }
 }

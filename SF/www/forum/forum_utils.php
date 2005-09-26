@@ -440,7 +440,7 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
 		}
 
 		$sql="INSERT INTO forum (group_forum_id,posted_by,subject,body,date,is_followup_to,thread_id) ".
-			"VALUES ('$group_forum_id', '".user_getid()."', '".addslashes(htmlspecialchars($subject))."', '".addslashes(htmlspecialchars($body))."', '".time()."','$is_followup_to','$thread_id')";
+			"VALUES ('$group_forum_id', '".user_getid()."', '".htmlspecialchars($subject)."', '".htmlspecialchars($body)."', '".time()."','$is_followup_to','$thread_id')";
 
 		$result=db_query($sql);
 

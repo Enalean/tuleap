@@ -25,6 +25,7 @@ AddType application/x-httpd-php .class
 
 # PHP variables
 php_flag register_globals on
+php_value magic_quotes_gpc "1"
 php_value include_path "/home/httpd/SF/www/include:/home/httpd/SF:."
 php_value memory_limit 30M
 php_value post_max_size 20M
