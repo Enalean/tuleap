@@ -62,6 +62,7 @@ License
 <dt><a href="#HowTo_Localize_Services">Localize service names</a></dt>
 <dt><a href="#HowTo_cvs2svn">Convert a CVS repository to Subversion</a></dt>
 <dt><a href="#HowTo_restoresvn">Restore a Subversion repository</a></dt>
+<dt><a href="#HowTo_recoversvn">Recover a Subversion repository</a></dt>
 </dl></dd>
 </dl>
 <p></p>
@@ -2863,8 +2864,6 @@ To select a set of historical data, please read: <a href="http://cvs2svn.tigris.
 </ul>
 
 <hr>
-
-
 <h2><a name="HowTo_restoresvn">Restore a Subversion repository</a></h2>
 <p>
 Subversion repositories are backed up every day. So it is always possible to restore the repository as it was the day before.
@@ -2882,8 +2881,27 @@ bunzip2 < projectname.incr.rev1+1:rev2.bz2 | svnadmin load /svnroot/projectname
 bunzip2 < projectname.incr.rev2+1:rev3.bz2 | svnadmin load /svnroot/projectname 
 etc.
 </pre>
+<li>Last, restore appropriate permissions:
+<pre>
+chown -R sourceforge.projectname /svnroot/projectname
+</pre>
 </ul>
 
+
+<hr>
+<h2><a name="HowTo_recoversvn">Recover a Subversion repository</a></h2>
+<p>
+Subversion repositories based on Berkley DB might get corrupted if a 'svn' command crashes.
+In that case, access to the Subversion repository is denied (even for read access, e.g. with viewcvs).
+<p>For instance, TortoiseSVN returns this error code: 
+<pre>Error 500 - internal server error trying to update on project projectname
+</pre>
+In this case, you need to recover the repository.
+<br>As root, run the following commands:
+<pre>
+svnadmin recover /svnroot/projectname
+chown -R sourceforge.projectname /svnroot/projectname
+</pre>
 
 
 <hr width="100%" size="2" noshade="noshade"> End of Document<br>
