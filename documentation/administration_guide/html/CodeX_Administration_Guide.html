@@ -1999,8 +1999,10 @@ All remaining
 days of the week (Monday - Saturday) run incremental backups. </p>
 </ol>
 <br>
-<h2>Restore</h2>
+<h2>Database Restore</h2>
 <p>
+<ol>
+<li>
 2 files are needed to rebuild.  Find the most recent "dump" and "bin" files:
 <pre>
 cd  /cvsroot/.mysql_backup
@@ -2012,9 +2014,8 @@ ls  -lt
 service mysql stop
 cd  /var/lib
 mv  mysql  mysql.bck
-cd  /
 </pre>
-Then restore the mysql databases from sqldump.080502.004501, either in interactive or automatic mode.
+<li>Then restore the mysql databases from sqldump.080502.004501, either in interactive or automatic mode.
 <ul><li>Interactive mode:
 <pre>
 /sbin/restore  -ivf   /cvsroot/.mysql_backup/sqldump.080502.004501
@@ -2031,7 +2032,21 @@ set owner/mode for '.'? [yn]  n
 restore -r -f /cvsroot/.mysql_backup/sqldump.080502.004501
 </pre>
 You can safely ignore the 'not found on tape' messages (they correspond to files that are not in the dump)
+</li>
 </ul>
+<li>Finish the mysql rebuild by reloading data from codex-bin.001, which contains changes since sqldump.080502.004501 was created.
+<br>
+Boot system in single user mode:
+We don't want anyone trying to update the mysql database before everything has been restored.
+<pre>
+/etc/rc.d/init.d/mysql  start
+cd  /cvsroot/.mysql_backup
+/usr/bin/mysqlbinlog  codex-bin.001  |  mysql --user=root  -p
+password: <enter root password>
+</pre>
+No information will display until it's finished.
+</ol>
+Rebuild is complete.
 
 <h2>Backup/Restore files</h2>
 <p>There are a number of files used for backup and restore of CodeX. <br>
