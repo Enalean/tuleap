@@ -15,16 +15,16 @@
 .osdn,
 .osdntext,
 .smaller,
-.tablink,
-.header_actions ul,
-.tabsellink       { font-size: xx-small;  }
+.header_actions ul       { font-size: xx-small;  }
 
 body,
 .menutable,
 .disable,
 .command,
 .small,
-.titlebar         { font-size: x-small;   }
+.titlebar,
+.tablink,
+.tabsellink         { font-size: x-small;   }
 
 .normal           { font-size: small;     }
 

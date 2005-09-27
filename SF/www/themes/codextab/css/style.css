@@ -158,8 +158,8 @@ a:hover {
 a.tabsellink, a.tabsellink:visited, 
 a.tablink, a.tablink:visited {
 	color: #4c4c47; 
-	text-decoration: none; 
-	
+	text-decoration: none;
+	font-size:0.85em;
 }
 a.tabsellink, a.tabsellink:visited {
 	font-weight: bold;

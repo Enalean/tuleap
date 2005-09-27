@@ -136,6 +136,7 @@ $bgpri[9] = 'priori';
                 $output .= '<li class="bookmarkpage"><a href="/my/bookmark_add.php?bookmark_url='.urlencode($GLOBALS['REQUEST_URI']).'&bookmark_title='.$bookmark_title.'">'.$GLOBALS['Language']->getText('include_menu','bookmark_this_page').'</a></li>';
             }
         } else {
+            $output .= '<li class="header_actions_nolink highlight">'.$GLOBALS['Language']->getText('include_menu','not_logged_in').'</li>';
             $output .= '<li><a href="/account/login.php">'.$GLOBALS['Language']->getText('include_menu','login').'</a></li>';
             $output .= '<li><a href="/account/register.php">'.$GLOBALS['Language']->getText('include_menu','new_user').'</a></li>';
         
@@ -577,7 +578,7 @@ if (isset($params['group']) && $params['group']) {
 				$return .= '
 					<td '.$rowspan.'colspan="2" valign="top" width="20" background="'.$this->imgroot . 'theme-'.$inner.'-'.(($wassel) ? '' : 'not').'selected-'.(($issel) ? '' : 'not').'selected.png">'.
 						'<img src="'.$this->imgroot . 'clear.png" height="2" width="20" alt="" /></td>'.
-						'<td '.$rowspan.'background="'.$this->imgroot . $bgimg.'" width="'.$width.'%" align="center"><a class="'. (($issel)?'tabsellink':'tablink') .'" href="'.$TABS_DIRS[$i].'">'.$TABS_TITLES[$i].'</a></td>';
+						'<td '.$rowspan.'background="'.$this->imgroot . $bgimg.'" width="'.$width.'%" align="center" nowrap="nowrap"><a class="'. (($issel)?'tabsellink':'tablink') .'" href="'.$TABS_DIRS[$i].'">'.$TABS_TITLES[$i].'</a></td>';
 				//
 				//	Last graphic on right-side
 				//
