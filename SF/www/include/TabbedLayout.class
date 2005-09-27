@@ -14,7 +14,7 @@
  */
 require_once('Layout.class');
 $GLOBALS['Language']->loadlanguageMsg('themes/gforge-compat');
-class LayoutGF extends Layout {
+class TabbedLayout extends Layout {
 
 	/**
 	 * The default main page content
@@ -46,7 +46,7 @@ class LayoutGF extends Layout {
 	/**
 	 * Layout() - Constructor
 	 */
-	function LayoutGF() {
+	function TabbedLayout() {
 		GLOBAL $bgpri;
 		// Constructor for parent class...
 		//# if ( file_exists($GLOBALS['sys_custom_path'] . '/index_std.php') )

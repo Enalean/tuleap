@@ -1,12 +1,12 @@
 <?php
 
-require_once('www/include/LayoutGF.class');
+require_once('www/include/TabbedLayout.class');
 
-class Theme extends LayoutGF {
+class Theme extends TabbedLayout {
 
     function Theme() {
         // Parent constructor
-        $this->LayoutGF();
+        $this->TabbedLayout();
 	}
 }
 
