@@ -4,7 +4,7 @@ rcs_id('$Id$');
  */
 require_once('lib/Theme.php');
 
-$Theme = new PhpWiki_Theme('wikilens');
+$Theme = new Theme('wikilens');
 
 // CSS file defines fonts, colors and background images for this
 // style.  The companion '*-heavy.css' file isn't defined, it's just

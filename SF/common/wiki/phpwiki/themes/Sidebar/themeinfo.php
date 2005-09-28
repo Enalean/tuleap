@@ -7,7 +7,7 @@ rcs_id('$Id$');
 
 require_once('lib/Theme.php');
 
-class Theme_Sidebar extends PhpWiki_Theme {
+class Theme_Sidebar extends Theme {
 
     function findTemplate ($name) {
         // hack for navbar.tmpl to hide the buttonseparator

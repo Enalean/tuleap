@@ -7,9 +7,9 @@ To create or modify one of the existing themes:
   same directory structure and modify them there instead of the
   originals.
 * Fix the name in themeinfo.php:
-  $Theme = new PhpWiki_Theme('NewName');
+  $Theme = new Theme('NewName');
 * or if you have to override some default Theme methods
-  class Theme_NewName extends PhpWiki_Theme;
+  class Theme_NewName extends Theme;
   ...
   $Theme = new Theme_NewName('NewName');
 
