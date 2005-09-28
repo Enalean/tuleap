@@ -55,13 +55,49 @@ function show_calendar(str_target, str_datetime, css_theme_file, img_theme_path)
         var dt_lastday = new Date(dt_next_month);
         dt_lastday.setDate(0);
 
+		//{{{ look for stylesheets in parent document
+		style_files = '<link rel="stylesheet" type="text/css" href="'+css_theme_file+'">';
+		style_inline = "<style type=\"text/css\">\n";
+		if (document.getElementsByTagName) {
+			links  = document.getElementsByTagName('link');
+			styles = document.getElementsByTagName('style');
+		} else if (document.all) {
+			links  = document.all.tags('link');
+			styles = document.all.tags('style');
+		} else {
+			//N4 can not retrieve links
+			links  = null;
+			styles = null;
+		}
+		if (links) {
+			nblinks = links.length;
+			for(i = 0 ; i < nblinks ; i++) {
+				if (links[i].rel) {
+					if (links[i].rel.match(/stylesheet/i)) {
+						style_files += '<link rel="stylesheet" type="text/css" href="'+links[i].href+'">';
+					}
+				}
+			}
+		}
+		if (styles) {
+			nbstyles = styles.length
+			for(i = 0 ; i < nbstyles ; i++) {
+				if(styles[i].type.match(/text\/css/i)) {
+					style_inline += styles[i].innerHTML+"\n";
+				}
+			}
+		}
+		style_inline += "\n</style>";
+		//}}}
+		
         // html generation (feel free to tune it for your particular application)
         // print calendar header
       var str_buffer = new String (
                 "<html>\n"+
                 "<head>\n"+
                 "        <title>Calendar</title>\n"+
-                "<link rel=\"stylesheet\" type=\"text/css\" href=\""+css_theme_file+"\">\n"+
+                style_files+
+                style_inline+
                 "</head>\n"+
                 "<body>\n"+
                 "<table class=\"clsOTable\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n"+
