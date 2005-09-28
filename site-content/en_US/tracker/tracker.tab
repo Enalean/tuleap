@@ -353,6 +353,7 @@ tracker_include_report	rep_col	Use as a Report Column
 tracker_include_report	rank_repo	Rank on Report
 tracker_include_report	col_width	Column width (optional)
 tracker_include_report	modify_report	Modify tracker Report
+tracker_include_report	btn_export	Export Matching Artifacts
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/include/ArtifactTypeHtml.class

@@ -478,8 +478,8 @@ if ( $func == 'gotoid' ) {
                 }
                 break;
         }
-        
-        case 'postmasschange' : {
+
+	case 'postmasschange' : {
                 //
                 //      Modify several Artifacts
                 //
@@ -597,7 +597,7 @@ if ( $func == 'gotoid' ) {
 		if (!$was_error) {
 		  $feedback .= ' - '.$Language->getText('tracker_index','update_success');
 		}
-		require('./masschange.php');
+		require('./browse.php');
                 break;
         }
         
@@ -709,13 +709,21 @@ if ( $func == 'gotoid' ) {
 	   break;
         }
         
+        case 'export' : {
+	  require('./export.php');
+                break;
+        }
+        
         case 'browse' : {
-                require('./browse.php');
+	  $masschange = false;
+	  require('./browse.php');
                 break;
         }
         
         case 'masschange' : {
-                require('./masschange.php');
+	  $masschange = true;
+	  $export = false;
+                require('./browse.php');
                 break;
         }
         

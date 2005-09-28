@@ -49,7 +49,7 @@ if ( $atid ) {
 		exit_error($Language->getText('global','error'),$art_field_fact->getErrorMessage());
 	}
 	
-	$sql = $at->buildExportQuery($fields,$col_list,$lbl_list,$dsc_list);
+	$sql = $at->buildExportQuery($fields,$col_list,$lbl_list,$dsc_list,$select,$from,$where);
 
         // Normally these two fields should be part of the artifact_fields.
         // For now big hack:
@@ -182,7 +182,7 @@ if ($export == 'artifact') {
 				}
 
 				$col_list = array();
-				$sql = $at->buildExportQuery($fields,$col_list,$lbl_list,$dsc_list);
+				$sql = $at->buildExportQuery($fields,$col_list,$lbl_list,$dsc_list,$select,$from,$where);
 				$col_list[] = 'follow_ups';
 				$col_list[] = 'is_dependent_on';
 

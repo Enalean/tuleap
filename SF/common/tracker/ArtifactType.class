@@ -1675,7 +1675,9 @@ class ArtifactType extends Error {
 			order by v3.valueText,v1.valueInt
 		*/
 
+
 		$count = 1;
+		reset($fields);
 		
 		$select = "SELECT ";
 		$from = "FROM artifact a";
@@ -1688,7 +1690,7 @@ class ArtifactType extends Error {
 
 		while (list($key,$field) = each($fields) ) {
 			
-			//echo $field->getName()."-".$field->getID()."<br>";
+		  //echo $field->getName()."-".$field->getID()."<br>";
 			
 			// If the field is a standard field ie the value is stored directly into the artifact table (severity, artifact_id, ...)
 			if ( $field->isStandardField() ) {
@@ -1706,6 +1708,7 @@ class ArtifactType extends Error {
 				} else {
 					$select .= " a.".$field->getName();
 				}
+				
 				
 			} else {
 				
@@ -1730,8 +1733,8 @@ class ArtifactType extends Error {
 					} else {
 						$select .= " v".$count.".".$field->getValueFieldName()." as ".$field->getName();
 					}
-					
-						
+
+
 					$count ++;
 				}
 			}
@@ -1751,7 +1754,7 @@ class ArtifactType extends Error {
 	 *
 	 * @return string: the sql query
 	 */
-	function buildExportQuery(&$fields,&$col_list,&$lbl_list,&$dsc_list) {
+	function buildExportQuery(&$fields,&$col_list,&$lbl_list,&$dsc_list,&$select,&$from,&$where) {
 		global $art_field_fact;
 		
 		$fields = $art_field_fact->getAllUsedFields();

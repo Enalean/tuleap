@@ -260,7 +260,7 @@ function showErrors($errors) {
     $this->ath->header(array ('title'=>$Language->getText('tracker_import','art_import').' '.$this->ath->getID(). ' - ' . $this->ath->getName(),'pagename'=>'tracker',
 			'atid'=>$this->ath->getID(),'sectionvals'=>array($this->group->getPublicName()),
 			'help' => 'ArtifactImport.html'));
-    $sql = $this->ath->buildExportQuery($fields,$col_list,$lbl_list,$dsc_list);
+    $sql = $this->ath->buildExportQuery($fields,$col_list,$lbl_list,$dsc_list,$select,$from,$where);
     
     //we need only one single record
     $sql .= " LIMIT 1";
