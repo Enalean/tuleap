@@ -26,7 +26,7 @@ class TabbedLayout extends Layout {
 	 *
 	 * @var		string	$imgroot
 	 */
-	var $imgroot = '/themes/codextab/images/';
+	var $imgroot = '/themes/CodeXTab/images/';
 	var $COLOR_CONTENT_BACK= 'green';
 	var $COLOR_LTBACK1= '#eeeeef';
 	var $COLOR_LTBACK2= '#fafafa';

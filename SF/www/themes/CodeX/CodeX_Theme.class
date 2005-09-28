@@ -7,7 +7,7 @@
  * CodeX default Theme
  */
 require_once('www/include/Layout.class');
-class codex_Theme extends Layout {
+class CodeX_Theme extends Layout {
 }
 
 ?>
