@@ -234,7 +234,7 @@ $sys_user_approval = 0;
 
 //
 // Default theme
-$sys_themedefault = 'codex';
+$sys_themedefault = 'CodeX';
 
 //
 //
