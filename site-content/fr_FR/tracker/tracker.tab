@@ -137,7 +137,6 @@ tracker_import_utils	date	Date
 tracker_import_utils	type	Type
 tracker_import_utils	comment	Commentaire
 tracker_import_utils	comment_parse_error	$1 n'insérera aucun commentaire pour cet artefact.
-tracker_import_utils	unchanged	Inchangé
 tracker_import_utils	new	NOUVEAU
 tracker_import_utils	column_mismatch	<b>Ligne $1 [</b>$2<b>]</b>:<br>le nombre de valeurs ($3) ne correspond pas au nombre de champs ($4).<br>
 tracker_import_utils	no_followups	Aucun commentaire posté

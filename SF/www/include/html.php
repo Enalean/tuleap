@@ -210,7 +210,7 @@ function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_v
 		Put in the Unchanged box
 	*/
 	if ($show_unchanged) {
-	  $return .= "\n".'<OPTION VALUE="Unchanged" SELECTED>'.$text_unchanged.'</OPTION>';
+	  $return .= "\n".'<OPTION VALUE="'.$text_unchanged.'" SELECTED>'.$text_unchanged.'</OPTION>';
 	}
 
 	//we don't always want the default any  row shown
@@ -338,7 +338,7 @@ function html_build_multiple_select_box_from_array($array,$name,$checked_array,$
 		Put in the Unchanged box
 	*/
 	if ($show_unchanged)
-	  $return .= "\n".'<OPTION VALUE="Unchanged" SELECTED>'.$text_unchanged.'</OPTION>';
+	  $return .= "\n".'<OPTION VALUE="'.$text_unchanged.'" SELECTED>'.$text_unchanged.'</OPTION>';
 
 	/*
 		Put in the Any box

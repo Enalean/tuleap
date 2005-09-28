@@ -674,10 +674,10 @@ class Artifact extends Error {
                     if ($field->isSpecial() || ($field_name == 'details')) {
                         continue; 
                     }
-                        
+
                     if ( ($field->isMultiSelectBox())&&(is_array($value)) ) {
 
-			if ($masschange && (in_array('Unchanged',$value))) {
+		      if ($masschange && (in_array($Language->getText('global','unchanged'),$value))) {
 				continue;
 			}
                         // The field is a multi values field and it has multi assigned values
@@ -729,7 +729,7 @@ class Artifact extends Error {
                         }
                                         
                     } else {
-	        	if ($masschange && ($value=='Unchanged')) {
+	        	if ($masschange && ($value==$Language->getText('global','unchanged'))) {
 				continue;
 			}	
        
@@ -796,7 +796,7 @@ class Artifact extends Error {
 	    if ($masschange) {
 		reset($HTTP_POST_VARS);
 		while ( list($key, $val) = each($HTTP_POST_VARS)) {
-			if ($key == 'submitted_by' && $val != 'Unchanged') {
+			if ($key == 'submitted_by' && $val != $Language->getText('global','unchanged')) {
 				$sql = "UPDATE artifact SET submitted_by=$val WHERE artifact_id = ".$this->getID();
 				$res = db_query($sql);
 				$field = $art_field_fact->getFieldFromName('submitted_by');

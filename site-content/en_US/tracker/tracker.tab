@@ -132,7 +132,6 @@ tracker_import_utils	date	Date
 tracker_import_utils	type	type
 tracker_import_utils	comment	Comment
 tracker_import_utils	comment_parse_error	$1 Won't insert any follow-up comments for this artifact.
-tracker_import_utils	unchanged	Unchanged
 tracker_import_utils	new	NEW
 tracker_import_utils	column_mismatch	<b>Line $1 [</b>$2<b>]</b>:<br>the number of values ($3) does not match the number of fields ($4).<br>
 tracker_import_utils	no_followups	No Followups Have Been Posted

@@ -177,12 +177,12 @@ function showErrors($errors) {
 	  if ($parsed_labels[$c] == $open_date_field->getLabel()) {
 	    //if insert show default value
 	    if ($aid_column == -1 || $aid == "") echo "<TD $width valign=\"top\"><I>$sub_on</I></TD>\n";
-	    else echo "<TD $width valign=\"top\"><I>".$Language->getText('tracker_import_utils','unchanged')."</I></TD>\n";
+	    else echo "<TD $width valign=\"top\"><I>".$Language->getText('global','unchanged')."</I></TD>\n";
 	    
 	    //SUBMITTED_BY
 	  } else if ($parsed_labels[$c] == $submitted_by_field->getLabel()) {
 	    if ($aid_column == -1 || $aid == "") echo "<TD $width valign=\"top\"><I>$sub_user_name</I></TD>\n";
-	    else echo "<TD $width valign=\"top\"><I>".$Language->getText('tracker_import_utils','unchanged')."</I></TD>\n";
+	    else echo "<TD $width valign=\"top\"><I>".$Language->getText('global','unchanged')."</I></TD>\n";
 	    
 	    //ARTIFACT_ID
 	  } else if ($parsed_labels[$c] == $aid_field->getLabel()) {
