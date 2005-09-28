@@ -7,7 +7,7 @@
  * Savannah Theme
  */
 require_once('www/include/Layout.class');
-class Theme extends Layout {
+class savannah_Theme extends Layout {
 }
 
 ?>
