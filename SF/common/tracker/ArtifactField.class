@@ -1450,7 +1450,7 @@ class ArtifactField extends Error {
 		
 		// Create the artifact_field_value_list
 		$sql = "INSERT INTO artifact_field_value_list VALUES (".
-				$this->getID().",".$group_artifact_id.",".$value_id.",'".addslashes($value)."','".addslashes($description)."',".$order_id.",'A')";
+				$this->getID().",".$group_artifact_id.",".$value_id.",'".$value."','".$description."',".$order_id.",'A')";
 				
 		$res_insert = db_query($sql);
 		if (!$res_insert || db_affected_rows($res_insert) <= 0) {
@@ -1488,8 +1488,8 @@ class ArtifactField extends Error {
 		
 		// Update the artifact_field_value_list
 		$sql = "UPDATE artifact_field_value_list SET ".
-		       "value='".addslashes($value)."',".
-		       "description='".addslashes($description)."',".
+		       "value='".$value."',".
+		       "description='".$description."',".
 		       "order_id=".$order_id.",".
 		       "status='".$status."' ".
 			   "WHERE field_id=".$this->getID()." AND group_artifact_id=".$group_artifact_id." AND value_id=".$value_id;

@@ -217,9 +217,9 @@ class ArtifactType extends Error {
                         allow_copy) 
 			VALUES 
 			('". $group_id ."',
-			'". addslashes($name) ."',
-			'". addslashes($description) ."',
-			'". addslashes($itemname)."',
+			'". $name ."',
+			'". $description ."',
+			'". $itemname."',
             '". $at_template->allowsCopy()."')";
 		//echo $sql;
 		$res = db_query($sql);
