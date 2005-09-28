@@ -189,6 +189,58 @@ function & searchByID ($id) {
 					<para>Plugins are independant. Plugins developpers should not make predictions about the order of listeners of a hook.</para>
 					<para>However, administrators can ajust the priority between plugins for a hook. It is done in the PluginsAdministration page: for each hooks are listed the plugins and their priority. Ajust priority at the level you want. Priority is realized by an integer: plugins are waked up from higher to lower. Default priority is zero.</para>
 				</section>
+				<section>
+					<title>What are current hooks provided by CodeX?</title>
+					<section>
+						<title>cssfile</title>
+						<itemizedlist>
+							<listitem><simpara><emphasis role="bold">Description:</emphasis> Used to include a CSS link element to include in the page layout. The hook should echo directly complete &lt;link&gt; element(s). Plugin specific rules should begin with &lt;plugin_name&gt; in stylesheets.</simpara>
+							</listitem>
+						</itemizedlist>
+					</section>
+					<section>
+						<title>cssstyle</title>
+						<itemizedlist>
+							<listitem><simpara><emphasis role="bold">Description:</emphasis> Used to include inline CSS into the page layout. The hook should echo directly pure CSS, without surrounding &lt;style&gt; elements. Plugin specific rules should begin with &lt;plugin_name&gt; in stylesheets.</simpara>
+							</listitem>
+						</itemizedlist>
+					</section>
+					<section>
+						<title>javascript</title>
+						<itemizedlist>
+							<listitem><simpara><emphasis role="bold">Description:</emphasis> Provides a place to add inline javascript into the page. The output of the hook should be pure Javascript, as it will be placed within an existing &lt;script&gt; block.</simpara>
+							</listitem>
+						</itemizedlist>
+					</section>
+					<section>
+						<title>javascript_file</title>
+						<itemizedlist>
+							<listitem><simpara><emphasis role="bold">Description:</emphasis> Used to include a full javascript element. The hook should echo directly complete script element(s). e.g: <programlisting><![CDATA[<script type="text/javascript" src="my_script.js"></script>]]></programlisting></simpara>
+							</listitem>
+						</itemizedlist>
+					</section>
+					<section>
+						<title>site_admin_menu_hook</title>
+						<itemizedlist>
+							<listitem><simpara><emphasis role="bold">Description:</emphasis> Use this to provide a link to the site wide administrative menu for your plugin. The hook should call HTML::menu_entry.</simpara>
+							</listitem>
+						</itemizedlist>
+					</section>
+					<section>
+						<title>site_admin_option_hook</title>
+						<itemizedlist>
+							<listitem><simpara><emphasis role="bold">Description:</emphasis> Use this to provide a link to the site wide administrative pages for your plugin. The hook should echo directly a <![CDATA[<li>]]> block and will appear on the Site Admin page in the Plugins list.</simpara>
+							</listitem>
+						</itemizedlist>
+					</section>
+					<section>
+						<title>usermenu</title>
+						<itemizedlist>
+							<listitem><simpara><emphasis role="bold">Description:</emphasis> Use this to provide a link to the user menu for your plugin (do not work for tabbed layouts). The hook should call HTML::menu_entry.</simpara>
+							</listitem>
+						</itemizedlist>
+					</section>
+				</section>
 			</section>
 			<section>
 				<title>GForge Plugins</title>
