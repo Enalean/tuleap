@@ -180,7 +180,11 @@ $bgpri[9] = 'priori';
 	<link rel="alternate" title="<?php echo $GLOBALS['sys_name']; ?> - Project News Highlights RSS" href="/export/rss_sfnews.php" type="application/rss+xml"/>
 	<link rel="alternate" title="<?php echo $GLOBALS['sys_name']; ?> - New Projects RSS" href="/export/rss_sfprojects.php" type="application/rss+xml"/>
     <link rel="SHORTCUT ICON" href="<?php echo $this->imgroot; ?>favicon.ico">
-	<script language="JavaScript" type="text/javascript">
+    <?php
+        $em =& EventManager::instance();
+        $em->processEvent("javascript_file", null);
+    ?>
+    <script language="JavaScript" type="text/javascript">
 	<!--
 
 	function admin_window(adminurl) {
@@ -190,11 +194,10 @@ $bgpri[9] = 'priori';
 	function help_window(helpurl) {
 		HelpWin = window.open( helpurl,'HelpWindow','scrollbars=yes,resizable=yes,toolbar=no,height=400,width=400');
 	}
-	// -->
 	<?php 
-        $em =& EventManager::instance();
         $em->processEvent("javascript",false); 
     ?>
+	// -->
 	</script>
 <?php
 /*
@@ -226,11 +229,11 @@ $bgpri[9] = 'priori';
     <style type="text/css">
 	<!--
     <?php 
-        $em->processEvent("cssstyle",$this);
+        $em->processEvent("cssstyle",null);
     ?>
 	-->
     </style>
-<?php $em->processEvent('cssfile',$this); ?>
+<?php $em->processEvent('cssfile',null); ?>
 </head>
 
 <body>

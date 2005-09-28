@@ -139,6 +139,15 @@ class Layout extends Error {
 <html lang="en">
   <head>
     <TITLE><?php echo $params['title']; ?></TITLE>
+    <?php
+        $em =& EventManager::instance();
+        $em->processEvent("javascript_file", null);
+    ?>
+    <script type="text/javascript">
+    <?php
+        $em->processEvent("javascript", null);
+    ?>
+    </script>
         <SCRIPT language="JavaScript">
         <!--
         function help_window(helpurl) {
@@ -159,10 +168,8 @@ class Layout extends Error {
         <style type="text/css">
         <!--
         <?php
-            $em =& EventManager::instance();
             $em->processEvent("cssstyle", null);
         ?>
-        
         //-->
         </style>
         
