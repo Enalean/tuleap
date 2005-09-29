@@ -2853,7 +2853,8 @@ CREATE TABLE artifact_file (
 	filetype text NOT NULL,
 	adddate int(11) DEFAULT '0' NOT NULL,
 	submitted_by int(11) NOT NULL,
-	PRIMARY KEY  (id)
+	PRIMARY KEY  (id),
+	KEY `artifact_id` (`artifact_id`)
 );
 
 #

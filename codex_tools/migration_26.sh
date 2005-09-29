@@ -387,6 +387,13 @@ CREATE TABLE `user_plugin` (
 -- install and enable pluginsadministration
 INSERT INTO `plugin` (`name`, `enabled`) VALUES ('pluginsadministration', '1');
 
+
+-- themes codex --> CodeX
+UPDATE user SET theme = 'CodeX' WHERE theme = 'codex'
+
+-- slow trackers, see SR 318 on Partners
+ALTER TABLE `artifact_file` ADD INDEX ( `artifact_id` )
+
 EOF
 
 ###############################################################################
