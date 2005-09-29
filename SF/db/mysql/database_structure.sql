@@ -3141,6 +3141,28 @@ CREATE TABLE wiki_link (
         INDEX (linkto)
 );
 
+-- Plugin tables
+-- {{{
+CREATE TABLE `priority_plugin_hook` (
+`plugin_id` INT NOT NULL,
+`hook` VARCHAR(100) NOT NULL,
+`priority` INT NOT NULL
+);
+CREATE TABLE `plugin` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL,
+  `enabled` tinyint(4) NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+);
+CREATE TABLE `project_plugin` (
+`project_id` INT NOT NULL ,
+`plugin_id` INT NOT NULL
+);
+CREATE TABLE `user_plugin` (
+`user_id` INT NOT NULL ,
+`plugin_id` INT NOT NULL
+);
+-- }}}
 
 
 #
