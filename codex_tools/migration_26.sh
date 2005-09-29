@@ -317,14 +317,16 @@ $CP -af /home/httpd_24/cgi-bin/viewcvs.cgi /home/httpd/cgi-bin
 		echo -ne "Creation of Theme classes...\t"
 		for i in *
 		do
-			if [ ! -f $i/Theme.class ]; then
+			if [ ! -f $i/$i_Theme.class ]; then
 		
-				$CAT <<'EOF' > $i/Theme.class
+				$CAT <<'EOF' > $i/$i_Theme.class
 <?php
 
 require_once('www/include/Layout.class');
 
-class Theme extends Layout {
+EOF
+				echo "class ${i}_Theme extends Layout {" >> $i/$i_Theme.class
+				$CAT <<'EOF' >> $i/$i_Theme.class
 }
 
 ?>

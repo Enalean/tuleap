@@ -1,8 +1,8 @@
 #!/bin/sh
 PACKAGE_DIR=/root/packages-rhel3
 BUILD_DIR=/root/build_dir
-ISO_LABEL="CodeX 2.4sup"
-ISO_FILE="/tmp/codex-2.4sup.iso"
+ISO_LABEL="CodeX 2.6sup"
+ISO_FILE="/tmp/codex-2.6sup.iso"
 
 # Shell commands used
 LS='/bin/ls'
@@ -33,11 +33,11 @@ cd $PACKAGE_DIR
 $CP -af $PACKAGE_DIR/CodeX/src/codex_tools/codex_install.sh $BUILD_DIR
 $CHMOD +x $BUILD_DIR/codex_install.sh
 
-# Copy the 2.2 to 2.4 migration script at the top directory
-echo "Copying the CodeX 2.2 to 2.4 migration script..."
+# Copy the 2.4 to 2.6 migration script at the top directory
+echo "Copying the CodeX 2.4 to 2.6 migration script..."
 cd $PACKAGE_DIR
-$CP -af $PACKAGE_DIR/CodeX/src/codex_tools/migration_24.sh $BUILD_DIR
-$CHMOD +x $BUILD_DIR/migration_24.sh
+$CP -af $PACKAGE_DIR/CodeX/src/codex_tools/migration_26.sh $BUILD_DIR
+$CHMOD +x $BUILD_DIR/migration_26.sh
 
 # Copy the entire CodeX and nonRPMS_CodeX dir
 echo "Copying the CodeX software and nonRPMS packages..."
@@ -132,7 +132,7 @@ http://codex.xerox.com
 - cd into the directory where the codex_install.sh script is located
 (probably /mnt/cdrom if you received the CodeX software on a CDROM)
 - For a fresh CodeX installation run the installation script with ./codex_install.sh
-- For an update from 2.2 to 2.4 run the migration script ./migration_24.sh 
+- For an update from 2.4 to 2.6 run the migration script ./migration_26.sh 
 - Follow the instructions of the migration script
 
 -- The CodeX Team
@@ -145,33 +145,21 @@ CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
 Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2005. All Rights Reserved
 http://codex.xerox.com
 
-This is CodeX 2.4.
+This is CodeX 2.6.
 
 After downloading the file, read the README and INSTALL files
 carefully. And get in touch with us at codex-contact@codex.xerox.com
 if you have questions.
 
 
-Major improvements of CodeX 2.4 over 2.2:
-- Wiki integration, based on phpWiki 1.3.10 and work from Manuel Vacelet at ST Microelectronics
-- Internationalization of all CodeX source code. Individual users may choose the interface language.
-- French and English versions
-- Document Manager upgrade: simplified document status, added access rights on documents.
-- Security improvements: cross-scripting prevention, project web site isolation, etc.
-- LDAP support: one-pass and two-passes authentication schemas supported
-- improved restricted user support
-- Access control is now available for file release, document and wiki services.
-and many bugs fixed
+Major improvements of CodeX 2.6 over 2.4:
+- TODO
 
 NOTE:
-The document manager has improved in CodeX 2.4.
-Before upgrading a CodeX 2.2 server, please note that:
-- all existing documents stored with the 'deleted' status will *really* be deleted from the database
-- all documents stored with the 'pending' status will become active
-- other statuses will properly be converted to the new permission schema.
+TODO
 
 Package Update:
-- CodeX 2.4 servers now run Subversion 1.1.4
+TODO
 
 -- The CodeX Team
    <info@codex.xerox.com>
