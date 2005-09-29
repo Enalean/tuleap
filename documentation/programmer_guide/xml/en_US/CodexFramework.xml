@@ -324,22 +324,27 @@ cp -r /home/httpd/plugins/template/site-content /etc/codex/plugins/template/.]]>
 		<para>Traditional themes like CodeX or Savannah inherit from Layout. Tabbed themes, like CodeXTab, inherit from TabbedLayout. And as GForge themes are tabbed, they inherit from GForgeLayout which inherit from TabbedLayout.</para>
 		<section id="GForgeThemes">
 			<title>Cookbook to install a GForge Theme (gforge_theme) into CodeX</title>
-			<para>In order to make GForge Theme 'CodeX compatible', you have to follow those steps :</para>
+			<para>In order to make a GForge Theme 'CodeX compatible', you have to follow those steps :</para>
 			<orderedlist>
 				<listitem><simpara>Copy the theme in themes directory:<programlisting><![CDATA[
 cp -r /path/to/your/gforge_theme /etc/codex/themes/.]]></programlisting></simpara></listitem>
 				<listitem><simpara>Rename your Theme.class file :<programlisting><![CDATA[
 mv /etc/codex/themes/gforge_theme/Theme.class 
    /etc/codex/themes/gforge_theme/gforge_theme_Theme.class ]]></programlisting></simpara>
-					<simpara>This is to prevent from name clash with other Theme class, like with PhpWiki.</simpara></listitem>
-				<listitem><simpara>Rename your Theme class accordingly to the corresponding file (see above)</simpara></listitem>
-				<listitem><simpara>Make Theme class inherits from GForgeLayout</simpara></listitem>
+   					<simpara>(Rename also your Theme class)</simpara>
+					<simpara>This is to prevent from name clash with other Theme class, like with PhpWiki.</simpara>
+				</listitem>
+				<listitem><simpara>Make Theme class inherit from GForgeLayout</simpara></listitem>
 				<listitem><simpara>Change html_image calls: put width and height in the array parameter</simpara></listitem>
 				<listitem><simpara>Replace usesForum() and others to construct project tabs</simpara></listitem>
 				<listitem><simpara>Change plugin_hook calls to event calls:<programlisting><![CDATA[
+plugin_hook('the_corresponding_hook', $the_parameters);
+
+becomes
+
 $em =& EventManager::instance();
 $em->processEvent('the_corresponding_hook', $the_parameters);]]></programlisting></simpara></listitem>
-				<listitem><simpara>Change check of loggedin: session_loggedin becomes user_isloggedin</simpara></listitem>
+				<listitem><simpara>Replace <programlisting>session_loggedin</programlisting> by <programlisting>user_isloggedin</programlisting></simpara></listitem>
 				<listitem><simpara>Check if footer calls generic_footer (This will replace GForge copyright by CodeX copyright)</simpara></listitem>
 				<listitem><simpara>Replace the GForge logo by a CodeX logo</simpara></listitem>
 				<listitem><simpara>Copy CodeX images<programlisting><![CDATA[
@@ -356,8 +361,8 @@ cp -ir /home/httpd/SF/www/themes/CodeX/images/*
 					</orderedlist>
 					</simpara>
 				</listitem>
-				<listitem><simpara>Put languages strings in themes/gforge-compat.tab</simpara></listitem>
-				<listitem><simpara>Be careful with images or css pathes: themes in <programlisting>/etc</programlisting> are accessible via <programlisting>/custom/gforge_theme/</programlisting></simpara></listitem>
+				<listitem><simpara>Put missing languages strings in themes/gforge-compat.tab</simpara></listitem>
+				<listitem><simpara>Be careful with images and css paths: themes in <programlisting>/etc</programlisting> are accessible via <programlisting>/custom/gforge_theme/</programlisting></simpara></listitem>
 			</orderedlist>
 		</section>
 	</section>
