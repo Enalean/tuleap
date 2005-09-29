@@ -1,0 +1,365 @@
+<?php
+/**
+ * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+ * 
+ * $Id$
+ *
+ * Base GForge layout class.
+ *
+ */
+ 
+require_once('TabbedLayout.class');
+class GForgeLayout extends TabbedLayout {
+
+	/**
+	 * The default main page content
+	 */
+	var $rootindex = 'index.php';
+
+	/**
+	 * The root location for images
+	 *
+	 * @var		string	$imgroot
+	 */
+	var $imgroot = '/themes/CodeXTab/images/';
+	var $COLOR_CONTENT_BACK= 'white';
+	var $COLOR_LTBACK1= '#eeeeef';
+	var $COLOR_LTBACK2= '#fafafa';
+	var $COLOR_SELECTED_TAB= '#e0e0e0';
+	var $COLOR_HTMLBOX_TITLE = '#bbbbbb';
+	var $COLOR_HTMLBOX_BACK = '#eaecef';
+	var $FONT_CONTENT = 'helvetica';
+	var $FONT_HTMLBOX_TITLE = 'helvetica';
+	var $FONTCOLOR_HTMLBOX_TITLE = '#333333';
+	var $FONTCOLOR_CONTENT = '#333333';
+	var $FONTSIZE = 'small';
+	var $FONTSIZE_SMALLER='x-small';
+	var $FONTSIZE_SMALLEST='xx-small';
+	var $FONTSIZE_HTMLBOX_TITLE = 'small';
+	var $bgpri = array();
+
+	/**
+	 * Layout() - Constructor
+	 */
+	function GForgeLayout() {
+		GLOBAL $bgpri;
+		// Constructor for parent class...
+		//# if ( file_exists($GLOBALS['sys_custom_path'] . '/index_std.php') )
+		//#	$this->rootindex = $GLOBALS['sys_custom_path'] . '/index_std.php';
+		$this->TabbedLayout();
+
+		/*
+		Set up the priority color array one time only
+		*/
+/*
+		$bgpri[1] = '#dadada';
+		$bgpri[2] = '#dacaca';
+		$bgpri[3] = '#dababa';
+		$bgpri[4] = '#daaaaa';
+		$bgpri[5] = '#da8a8a';
+*/
+/* CodeX Priority are still in old Fashion style */
+$bgpri[1] = 'priora';
+$bgpri[2] = 'priorb';
+$bgpri[3] = 'priorc';
+$bgpri[4] = 'priord';
+$bgpri[5] = 'priore';
+$bgpri[6] = 'priorf';
+$bgpri[7] = 'priorg';
+$bgpri[8] = 'priorh';
+$bgpri[9] = 'priori';
+
+		//determine font for this platform
+		if (browser_is_windows() && browser_is_ie()) {
+
+			//ie needs smaller fonts
+			$this->FONTSIZE='x-small';
+			$this->FONTSIZE_SMALLER='xx-small';
+			$this->FONTSIZE_SMALLEST='7pt';
+
+		} else if (browser_is_windows()) {
+
+			//netscape on wintel
+			$this->FONTSIZE='small';
+			$this->FONTSIZE_SMALLER='x-small';
+			$this->FONTSIZE_SMALLEST='x-small';
+
+		} else if (browser_is_mac()){
+
+			//mac users need bigger fonts
+			$this->FONTSIZE='medium';
+			$this->FONTSIZE_SMALLER='small';
+			$this->FONTSIZE_SMALLEST='x-small';
+
+		} else {
+
+			//linux and other users
+			$this->FONTSIZE='small';
+			$this->FONTSIZE_SMALLER='x-small';
+			$this->FONTSIZE_SMALLEST='xx-small';
+
+		}
+
+		$this->FONTSIZE_HTMLBOX_TITLE = $this->FONTSIZE;
+	}
+
+    
+	function getRootIndex() {
+		return $this->rootindex;
+	}
+	
+	function advancedSearchBox($sectionsArray, $group_id, $words, $isExact) {
+		global $Language;
+		 // display the searchmask
+		print '
+		<form name="advancedsearch" action="'.getStringFromServer('PHP_SELF').'" method="post">
+		<input type="hidden" name="search" value="1"/>
+		<input type="hidden" name="group_id" value="'.$group_id.'"/>
+		<div align="center"><br />
+			<table border="0">
+				<tr>
+					<td colspan ="2">
+						<input type="text" size="60" name="words" value="'.stripslashes(htmlspecialchars($words)).'" />
+						<input type="submit" name="submitbutton" value="'.$Language->getText('advanced_search', 'search_button').'" />
+					</td>
+				</tr>
+				<tr>
+					<td valign="top">
+						<input type="radio" name="mode" value="'.SEARCH__MODE_AND.'" '.($isExact ? 'checked="checked"' : '').' />'.$Language->getText('advanced_search', 'and_search').'
+					</td>
+					<td>
+						<input type="radio" name="mode" value="'.SEARCH__MODE_OR.'" '.(!$isExact ? 'checked="checked"' : '').' />'.$Language->getText('advanced_search', 'or_search').'
+					</td>
+				</tr>
+			</table><br /></div>'
+		.$this->createUnderSections($sectionsArray).'
+		</form>';
+
+
+		//create javascript methods for select none/all
+		print '
+		<script type="text/javascript">
+			<!-- method for disable/enable checkboxes
+			function setCheckBoxes(parent, checked) {
+
+
+				for (var i = 0; i < document.advancedsearch.elements.length; i++)
+					if (document.advancedsearch.elements[i].type == "checkbox") 
+							if (document.advancedsearch.elements[i].name.substr(0, parent.length) == parent)
+								document.advancedsearch.elements[i].checked = checked;
+				}
+			//-->
+		</script>
+		';
+
+	}
+	
+	function createUnderSections($sectionsArray) {
+		global $Language;
+		$countLines = 0;
+		foreach ($sectionsArray as $section) {
+			if(is_array($section)) {
+				$countLines += (3 + count ($section));
+			} else {
+				//2 lines one for section name and one for checkbox
+				$countLines += 3;
+			}
+		}
+		$breakLimit = round($countLines/3);
+		$break = $breakLimit;
+		$countLines = 0;
+		$return = '
+			<table width="100%" border="0" cellspacing="0" cellpadding="2" style="background-color:'. $this->COLOR_HTMLBOX_TITLE .'">
+				<tr>
+					<td>
+						<table width="100%" cellspacing="0" border="0">
+							<tr style="font-weight: bold; background-color:'. $this->COLOR_HTMLBOX_TITLE .'">
+								<td colspan="2">'.$Language->getText('advanced_search', 'search_in').':</td>
+								<td align="right">'.$Language->getText('advanced_search', 'select').' <a href="javascript:setCheckBoxes(\'\', true)">'.$Language->getText('advanced_search', 'all').'</a> / <a href="javascript:setCheckBoxes(\'\', false)">'.$Language->getText('advanced_search', 'none').'</a></td>
+							</tr>
+							<tr height="20" style="background-color:'. $this->COLOR_CONTENT_BACK .'">
+								<td colspan="3">&nbsp;</td>
+							</tr>
+							<tr align="center" valign="top" style="background-color:'. $this->COLOR_CONTENT_BACK .'">
+								<td>';
+		foreach($sectionsArray as $key => $section) {
+			$oldcountlines = $countLines;
+			if (is_array($section)) {
+				$countLines += (3 + count ($section));
+			} else {
+				$countLines += 3;
+			}
+				
+			if ($countLines >= $break) {
+				//if the next block is so large that shifting it to the next column hits the breakpoint better
+				//the second part of statement (behind &&) proofs, that no 4th column is added
+				if ((($countLines - $break) >= ($break - $countLines)) && ((($break + $breakLimit)/$breakLimit) <= 3)) {
+					$return .= '</td><td>';
+					$break += $breakLimit;
+				}
+			}
+		
+			$return .= '<table width="90%" border="0" cellpadding="1" cellspacing="0" style="background-color:'. $this->COLOR_HTMLBOX_TITLE.'">
+							<tr><td><table width="100%" border="0" cellspacing="0" cellpadding="3">
+							<tr style="background-color:'. $this->COLOR_HTMLBOX_TITLE .'; font-weight: bold">
+								<td cellspacing="0">
+									<a href="#'.$key.'">'.$Language->getText('group', $key).'</a>'
+							.'	</td>
+								<td align="right">'
+								.$Language->getText('advanced_search', 'select').' <a href="javascript:setCheckBoxes(\''.$key.'\', true)">'.$Language->getText('advanced_search', 'all').'</a> / <a href="javascript:setCheckBoxes(\''.$key.'\', false)">'.$Language->getText('advanced_search', 'none').'</a>
+								</td>
+							</tr>
+							<tr style="background-color:'. $this->COLOR_CONTENT_BACK.'">
+								<td colspan="2">';
+								
+			if (!is_array($section)) {
+				$return .= '		<input type="checkbox" name="'.urlencode($key).'"';
+				if (isset($GLOBALS[urlencode($key)]))
+					$return .= ' checked="checked" ';
+				$return .= ' /></input>'.$Language->getText('group', $key).'<br />';
+			}
+			else
+				foreach($section as $underkey => $undersection) {
+					$return .= '	<input type="checkbox" name="'.urlencode($key.$underkey).'"';
+					if (isset($GLOBALS[urlencode($key.$underkey)]))
+						$return .= ' checked ';
+					$return .= '></input>'.$undersection.'<br />';				
+					
+				}
+				
+			$return .=		'	</td>
+							</tr>
+						</table></td></tr></table><br />';
+						
+			if ($countLines >= $break) {
+				if (($countLines - $break) < ($break - $countLines)) {
+					$return .= '</td><td width="33%">';
+					$break += $breakLimit;
+				}
+			}
+		}
+		
+		return $return.'		</td>
+							</tr>
+						</table></td></tr></table>';
+	}
+
+	/**
+	 * beginSubMenu() - Opening a submenu.
+	 *
+	 * @return	string	Html to start a submenu.
+	 */
+	function beginSubMenu () {
+		$return = '
+			<p><strong>';
+		return $return;
+	}
+
+	/**
+	 * endSubMenu() - Closing a submenu.
+	 *
+	 * @return	string	Html to end a submenu.
+	 */
+	function endSubMenu () {
+		$return = '</strong></p>';
+		return $return;
+	}
+
+	/**
+	 * printSubMenu() - Takes two array of titles and links and builds the contents of a menu.
+	 *
+	 * @param	   array   The array of titles.
+	 * @param	   array   The array of title links.
+	 * @return	string	Html to build a submenu.
+	 */
+	function printSubMenu ($title_arr,$links_arr) {
+		$count=count($title_arr);
+		$count--;
+		
+		$return = '';
+		
+		for ($i=0; $i<$count; $i++) {
+			$return .= '
+				<a href="'.$links_arr[$i].'">'.$title_arr[$i].'</a> | ';
+		}
+		$return .= '
+				<a href="'.$links_arr[$i].'">'.$title_arr[$i].'</a>';
+		return $return;
+	}
+
+	/**
+	 * subMenu() - Takes two array of titles and links and build a menu.
+	 *
+	 * @param	   array   The array of titles.
+	 * @param	   array   The array of title links.
+	 * @return	string	Html to build a submenu.
+	 */
+	function subMenu ($title_arr,$links_arr) {
+		$return  = $this->beginSubMenu () ;
+		$return .= $this->printSubMenu ($title_arr,$links_arr) ;
+		$return .= $this->endSubMenu () ;
+		return $return;
+	}
+
+	/**
+	 * multiTableRow() - create a mutlilevel row in a table
+	 *
+	 * @param	string	the row attributes
+	 * @param	array	the array of cell data, each element is an array,
+	 *				  	the first item being the text,
+	 *					the subsequent items are attributes (dont include
+	 *					the bgcolor for the title here, that will be
+	 *					handled by $istitle
+	 * @param	boolean is this row part of the title ?
+	 *
+	 */
+	 function multiTableRow($row_attr, $cell_data, $istitle) {
+		$return= '
+		<tr '.$row_attr;
+		if ( $istitle ) {
+			$return .=' align="center" bgcolor="'. $this->COLOR_HTMLBOX_TITLE .'"';
+		}
+		$return .= '>';
+		for ( $c = 0; $c < count($cell_data); $c++ ) {
+			$return .='<td ';
+			for ( $a=1; $a < count($cell_data[$c]); $a++) {
+				$return .= $cell_data[$c][$a].' ';
+			}
+			$return .= '>';
+			if ( $istitle ) {
+				$return .='<font color="'.$this->FONTCOLOR_HTMLBOX_TITLE.'"><strong>';
+			}
+			$return .= $cell_data[$c][0];
+			if ( $istitle ) {
+				$return .='</strong></font>';
+			}
+			$return .= '</td>';
+
+		}
+		$return .= '</tr>
+		';
+
+		return $return;
+	}
+	
+	/**
+	 * getThemeIdFromName()
+	 *
+	 * @param	string  the dirname of the theme
+	 * @return	integer the theme id	
+	 */
+	/*
+    function getThemeIdFromName($dirname) {
+	 	$res=db_query("SELECT theme_id FROM themes WHERE dirname='$dirname'");
+	        return db_result($res,0,'theme_id');
+	}
+    */
+    
+}
+
+// Local Variables:
+// mode: php
+// c-file-style: "bsd"
+// End:
+
+?>
