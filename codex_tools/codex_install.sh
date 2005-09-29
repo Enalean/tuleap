@@ -272,6 +272,8 @@ build_dir /etc/codex/site-content sourceforge sourceforge 755
 build_dir /etc/codex/site-content/en_US sourceforge sourceforge 755
 build_dir /etc/codex/site-content/en_US/others sourceforge sourceforge 755
 build_dir /etc/codex/themes sourceforge sourceforge 755
+build_dir /etc/codex/plugins sourceforge sourceforge 755
+build_dir /etc/codex/plugins/pluginsadministration sourceforge sourceforge 755
 
 build_dir /var/run/log_accum root root 1777
 build_dir /cvsroot sourceforge sourceforge 755

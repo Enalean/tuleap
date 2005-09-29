@@ -213,7 +213,8 @@ read -p "Codex Server IP address: " sys_ip_address
 #
 make_backup /etc/codex/conf/local.inc codex24
 
-#TODO
+substitute /etc/codex/conf/local.inc "sys_themedefault[\\s]*=[\\s]*['\"]codex['\"]" "sys_themedefault = 'CodeX'"
+echo '$sys_pluginsroot="/home/nterray/CodeX/dev_server/httpd/plugins/";' >> /etc/codex/conf/local.inc
 
 ##############################################
 # Now install CodeX specific RPMS (and remove RedHat RPMs)
@@ -409,8 +410,6 @@ fi
 if [ -d /etc/codex/plugins/pluginsadministration ]; then
   $MKDIR /etc/codex/plugins/pluginsadministration
 fi
-
-$CP -r /home/httpd/plugins/pluginsadministration/site-content /etc/codex/plugins/pluginsadministration/.
 
 
 ###############################################################################
