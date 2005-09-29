@@ -214,7 +214,10 @@ read -p "Codex Server IP address: " sys_ip_address
 make_backup /etc/codex/conf/local.inc codex24
 
 substitute /etc/codex/conf/local.inc "sys_themedefault[\\s]*=[\\s]*['\"]codex['\"]" "sys_themedefault = 'CodeX'"
-echo '$sys_pluginsroot="/home/nterray/CodeX/dev_server/httpd/plugins/";' >> /etc/codex/conf/local.inc
+echo '
+//
+// Plugins root directory 
+$sys_pluginsroot="/home/httpd/plugins/";' >> /etc/codex/conf/local.inc
 
 ##############################################
 # Now install CodeX specific RPMS (and remove RedHat RPMs)
@@ -318,16 +321,16 @@ $CP -af /home/httpd_24/cgi-bin/viewcvs.cgi /home/httpd/cgi-bin
 		echo -ne "Creation of Theme classes...\t"
 		for i in *
 		do
-			if [ ! -f $i/$i_Theme.class ]; then
+		if [ ! -f $i/${i}_Theme.class ]; then
 		
-				$CAT <<'EOF' > $i/$i_Theme.class
+			$CAT <<'EOF' > $i/${i}_Theme.class
 <?php
 
 require_once('www/include/Layout.class');
 
 EOF
-				echo "class ${i}_Theme extends Layout {" >> $i/$i_Theme.class
-				$CAT <<'EOF' >> $i/$i_Theme.class
+				echo "class ${i}_Theme extends Layout {" >> $i/${i}_Theme.class
+				$CAT <<'EOF' >> $i/${i}_Theme.class
 }
 
 ?>
