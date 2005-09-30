@@ -334,9 +334,8 @@ mv /etc/codex/themes/gforge_theme/Theme.class
    					<simpara>(Rename also your Theme class)</simpara>
 					<simpara>This is to prevent from name clash with other Theme class, like with PhpWiki.</simpara>
 				</listitem>
-				<listitem><simpara>Make Theme class inherit from GForgeLayout</simpara></listitem>
+				<listitem><simpara>Make Theme class inherit from GForgeLayout, don't forget to include it.</simpara></listitem>
 				<listitem><simpara>Change html_image calls: put width and height in the array parameter</simpara></listitem>
-				<listitem><simpara>Replace usesForum() and others to construct project tabs</simpara></listitem>
 				<listitem><simpara>Change plugin_hook calls to event calls:<programlisting><![CDATA[
 plugin_hook('the_corresponding_hook', $the_parameters);
 
@@ -351,18 +350,9 @@ $em->processEvent('the_corresponding_hook', $the_parameters);]]></programlisting
 cp -ir /home/httpd/SF/www/themes/CodeX/images/* 
    /etc/codex/themes/gforge_theme/images/.]]></programlisting> (Say no for each prompt)</simpara></listitem>
 				<listitem><simpara>Remove trailing spaces in the Theme class file (To prevent sending characters before headers)</simpara></listitem>
-				<listitem>
-					<simpara>Replace priorities colors mechanism:</simpara>
-					<simpara>In Theme constructor, foreach $bgpri[i] definition:
-					<orderedlist>
-						<listitem><simpara>memorise color <programlisting>#rrggbb</programlisting></simpara></listitem>
-						<listitem><simpara>replace <programlisting>$bgpri[i] = '#rrggbb';</programlisting> by <programlisting>$bgpri[i] = 'priora';</programlisting> (or priorb or priorc or ...)</simpara></listitem>
-						<listitem><simpara>Define <programlisting>priora, priorb, ...</programlisting> rules in theme stylesheet : <programlisting>background-color: #rrggbb;</programlisting></simpara></listitem>
-					</orderedlist>
-					</simpara>
-				</listitem>
+				<listitem><simpara>Update css with missing rules (most of them are in GForgeLayout::header)</simpara></listitem>
 				<listitem><simpara>Put missing languages strings in themes/gforge-compat.tab</simpara></listitem>
-				<listitem><simpara>Be careful with images and css paths: themes in <programlisting>/etc</programlisting> are accessible via <programlisting>/custom/gforge_theme/</programlisting></simpara></listitem>
+				<listitem><simpara>Be careful with images and css paths: themes in <programlisting>/etc</programlisting> are accessible via <programlisting>/custom/gforge_theme/</programlisting> (Fix $imgroot for exemple)</simpara></listitem>
 			</orderedlist>
 		</section>
 	</section>
