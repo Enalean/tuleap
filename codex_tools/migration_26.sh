@@ -239,6 +239,7 @@ $CHOWN -R sourceforge.sourceforge $INSTALL_DIR
 
 # copy some configuration files 
 make_backup /etc/httpd/conf/httpd.conf codex24
+make_backup /etc/httpd/conf.d/php.conf codex24
 $CP $INSTALL_DIR/SF/etc/httpd.conf.dist /etc/httpd/conf/httpd.conf
 $CP $INSTALL_DIR/SF/etc/php.conf.dist /etc/httpd/conf.d/php.conf
 
@@ -248,10 +249,6 @@ substitute '/etc/httpd/conf/httpd.conf' '%sys_ip_address%' "$sys_ip_address"
 
 todo "Edit the new /etc/httpd/conf/httpd.conf file and update it if needed"
 todo "Edit the new /etc/httpd/conf.d/php.conf file and update it if needed"
-
-# New directories
-#TODO: déplacer les themes
-build_dir /etc/codex/themes/messages sourceforge sourceforge 755
 
 # Re-copy phpMyAdmin and viewcvs installations
 $CP -af /home/httpd_24/phpMyAdmin* /home/httpd
@@ -367,6 +364,8 @@ while [ $? -eq 0 ]; do
 done
 [ "X$old_passwd" != "X" ] && pass_opt="--password=$old_passwd"
 
+echo "Starting DB update. This might take a few minutes."
+
 $CAT <<EOF | $MYSQL $pass_opt sourceforge
 
 -- Plugin tables
@@ -396,7 +395,7 @@ CREATE TABLE `user_plugin` (
 INSERT INTO `plugin` (`name`, `enabled`) VALUES ('pluginsadministration', '1');
 
 
--- themes codex --> CodeX
+-- theme codex --> CodeX
 UPDATE user SET theme = 'CodeX' WHERE theme = 'codex'
 
 -- slow trackers, see SR 318 on Partners
@@ -406,7 +405,7 @@ EOF
 
 ###############################################################################
 # pre-install pluginsadministration
-echo "Installing PluginsAdministration..."
+echo "Create PluginsAdministration custom directory"
 
 if [ -d /etc/codex/plugins ]; then
   $MKDIR /etc/codex/plugins
@@ -630,86 +629,6 @@ $CHOWN sourceforge.sourceforge /usr/local/bin/log_accum
 $CHMOD 775 /usr/local/bin/log_accum
 $CHMOD u+s /usr/local/bin/log_accum
 
-# should have been done before but...
-$CP $INSTALL_DIR/SF/utils/cvs1/cvssh-restricted /usr/local/bin
-
-
-##############################################
-# Check for the existence of the following customized content files and advise the person in charge of the installation of the new .tab files to customize to obtain the same effect
-#
-
-service="account"
-file_exist=0
-for sitefile in register_confirmation.txt register_needs_approval.txt \
-    register_email.txt register_purpose.txt register_login.txt
-do
-    $RPM -q $rpm  2>/dev/null 1>&2
-    if [ -e /etc/codex/site-content/en_US/$service/$sitefile ]; then
-        file_exist=1
-        echo /etc/codex/site-content/en_US/$service/$sitefile
-    fi
-done
-if [ $file_exist -eq 1 ]; then
-    echo "The file(s) listed above are no longer used. Please customize /etc/codex/site-content/en_US/$service/$service.tab to obtain the same effect, then delete the old files."
-fi
-
-service="homepage"
-file_exist=0
-for sitefile in staff.txt thanks.txt welcome_intro.txt
-do
-    $RPM -q $rpm  2>/dev/null 1>&2
-    if [ -e /etc/codex/site-content/en_US/$service/$sitefile ]; then
-        file_exist=1
-        echo /etc/codex/site-content/en_US/$service/$sitefile
-    fi
-done
-if [ $file_exist -eq 1 ]; then
-    echo "The file(s) listed above are no longer used. Please customize /etc/codex/site-content/en_US/$service/$service.tab to obtain the same effect, then delete the old files."
-fi
-
-service="my"
-file_exist=0
-for sitefile in intro.txt
-do
-    $RPM -q $rpm  2>/dev/null 1>&2
-    if [ -e /etc/codex/site-content/en_US/$service/$sitefile ]; then
-        file_exist=1
-        echo /etc/codex/site-content/en_US/$service/$sitefile
-    fi
-done
-if [ $file_exist -eq 1 ]; then
-    echo "The file(s) listed above are no longer used. Please customize /etc/codex/site-content/en_US/$service/$service.tab to obtain the same effect, then delete the old files."
-fi
-
-# other modified files
-file_exist=0
-for sitefile in contact/contact.txt \
-cvs/intro.txt \
-file/editrelease_attach_file.txt \
-file/qrs_attach_file.txt \
-include/new_project_email.txt \
-include/restricted_user_permissions.txt \
-layout/footer.txt \
-others/default_page.php \
-register/complete.txt \
-register/intro.txt \
-register/license.txt \
-register/projectname.txt \
-register/registration.txt \
-register/tos.txt \
-svn/intro.txt \
-tos/privacy.txt
-do
-    $RPM -q $rpm  2>/dev/null 1>&2
-    if [ -e /etc/codex/site-content/en_US/$service/$sitefile ]; then
-        file_exist=1
-        echo /etc/codex/site-content/en_US/$service/$sitefile
-    fi
-done
-if [ $file_exist -eq 1 ]; then
-    echo "The file(s) listed above have change in CodeX 2.6. Please check that your customized files are still up-to-date."
-fi
-
 
 ##############################################
 # Restarting some services
@@ -725,7 +644,6 @@ $SERVICE mailman start
 # Generate Documentation
 #
 echo "Updating the User Manual. This might take a few minutes."
-todo "Make sure that the CVS update is possible in /home/httpd/SF/utils/utils/generate_doc.sh. Do a cvs login on CVS server as user 'sourceforge'."
 /home/httpd/SF/utils/generate_doc.sh -f
 $CHOWN -R sourceforge.sourceforge $INSTALL_DIR/documentation
 
