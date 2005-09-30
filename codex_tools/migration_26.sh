@@ -346,7 +346,8 @@ EOF
 #############################################
 # Copy new icons in all custom themes
 
-#TODO
+$CP  $INSTALL_DIR/SF/www/themes/CodeX/images/ic/thread.png /etc/codex/themes/*/images/ic/ 2> /dev/null
+
 
 ##############################################
 # Database Structure and initvalues upgrade

@@ -85,6 +85,7 @@ forum_forum_utils	discuss_forum	Discussion Forums
 forum_forum_utils	stop_monitor	Stop Monitoring Forum
 forum_forum_utils	monitor	Monitor Forum
 forum_forum_utils	save_place	Save Place
+forum_forum_utils	start_thread	Start New Thread
 forum_forum_utils	admin	Admin
 forum_forum_utils	forum_monitored	Forum already monitored
 forum_forum_utils	insert_err	Error inserting into forum_monitoring
@@ -113,6 +114,8 @@ forum_forum_utils	mail_sent	email sent
 forum_forum_utils	mail_not_sent	email not sent
 forum_forum_utils	people_monitoring	people monitoring
 forum_forum_utils	no_one_monitoring	no one monitoring
+forum_forum_utils	on_post_monitoring	You are monitoring this forum.
+forum_forum_utils	on_post_not_monitoring	$1<strong>Monitor the forum</strong>
 #
 #-----------------------------------------------
 # Script: SF/www/forum/index.php

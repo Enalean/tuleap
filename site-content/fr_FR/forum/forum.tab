@@ -90,6 +90,7 @@ forum_forum_utils	discuss_forum	Forums de discussions
 forum_forum_utils	stop_monitor	Arrêter la surveillance
 forum_forum_utils	monitor	Surveiller Forum
 forum_forum_utils	save_place	Sauvegarder cette position
+forum_forum_utils	start_thread	Commencer une nouvelle discussion
 forum_forum_utils	admin	Administration
 forum_forum_utils	forum_monitored	Forum déjà sous surveillance
 forum_forum_utils	insert_err	Erreur lors de l'insertion dans forum_monitoring
@@ -118,6 +119,8 @@ forum_forum_utils	mail_sent	e-mail envoyé
 forum_forum_utils	mail_not_sent	e-mail pas envoyé
 forum_forum_utils	people_monitoring	Forum sous surveillance
 forum_forum_utils	no_one_monitoring	Forum non surveillé
+forum_forum_utils	on_post_monitoring	Vous surveillez ce forum.
+forum_forum_utils	on_post_not_monitoring	$1<strong>Surveiller ce forum</strong>
 #
 #-----------------------------------------------
 # Script: SF/www/forum/index.php

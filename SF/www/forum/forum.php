@@ -105,6 +105,19 @@ if ($forum_id) {
 		if necessary, insert a new message into the forum
 	*/
 	if ($post_message == 'y') {
+        //
+        // MV: add management on "on post monitoring"
+        if($_POST['enable_monitoring'] == 1) {
+            if(user_isloggedin()) {
+                if(!forum_is_monitored($forum_id, user_getid())) {
+                    if (forum_add_monitor ($forum_id, user_getid()) ) {
+                        $feedback .= $Language->getText('forum_monitor','now_monitoring');              
+                    } else {
+                        $feedback .= $Language->getText('forum_forum_utils','insert_err');
+                    }
+                }
+            }
+        }
 		post_message($thread_id, $is_followup_to, $subject, $body, $forum_id);
 	}
 
@@ -348,29 +361,31 @@ if ($forum_id) {
 		/*
 			This code puts the nice next/prev.
 		*/
-		if ($style=='nested' || $style=='flat') {
-			$ret_val .= '<TABLE WIDTH="100%" BORDER="0">';
-		}
-		$ret_val .= '
+            if (($offset != 0)||(db_numrows($result) > $i)) {
+                if ($style=='nested' || $style=='flat') {
+                    $ret_val .= '<TABLE WIDTH="100%" BORDER="0">';
+                }
+                $ret_val .= '
 				<TR class="threadbody"><TD WIDTH="50%">';
-		if ($offset != 0) {
-			$ret_val .= '<B><span class="normal">
+                if ($offset != 0) {
+                    $ret_val .= '<B><span class="normal">
 				<A HREF="javascript:history.back()">
 				<B><IMG SRC="'.util_get_image_theme("t2.png").'" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=center> '.$Language->getText('forum_forum','prev_msg').'</A></B></span>';
-		} else {
-			$ret_val .= '&nbsp;';
-		}
-
-		$ret_val .= '</TD><TD>&nbsp;</TD><TD ALIGN="RIGHT" WIDTH="50%">';
-		if (db_numrows($result) > $i) {
-			$ret_val .= '<B><span class="normal">
+                } else {
+                    $ret_val .= '&nbsp;';
+                }
+                
+                $ret_val .= '</TD><TD>&nbsp;</TD><TD ALIGN="RIGHT" WIDTH="50%">';
+                if (db_numrows($result) > $i) {
+                    $ret_val .= '<B><span class="normal">
 				<A HREF="/forum/forum.php?max_rows='.$max_rows.'&style='.$style.'&offset='.($offset+$i).'&forum_id='.$forum_id.'">
 				<B>'.$Language->getText('forum_forum','next_msg').' <IMG SRC="'.util_get_image_theme("t.png").'" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=center></A></span>';
-		} else {
-			$ret_val .= '&nbsp;';
-		}
-
+                } else {
+                    $ret_val .= '&nbsp;';
+                }
+                
 		$ret_val .= '</TABLE>';
+            }
 	}
 
 	echo $ret_val;
@@ -378,7 +393,7 @@ if ($forum_id) {
         if (!$pv) {
             echo '<P>&nbsp;<P>';
             
-            echo '<CENTER><h3>'.$Language->getText('forum_forum','start_new_thread').':</H3></CENTER>';
+            echo '<h3>'.$Language->getText('forum_forum','start_new_thread').':</H3><a name="start_new_thread"></a>';
             show_post_form($forum_id);
         }
 

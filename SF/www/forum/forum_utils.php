@@ -102,6 +102,8 @@ function forum_header($params) {
                     html_image("ic/check.png",array()).' '.$msg.' | '.
                     '<A HREF="/forum/save.php?forum_id='.$forum_id.'">';
 		echo  html_image("ic/save.png",array()) .' '.$Language->getText('forum_forum_utils','save_place').'</A> | ';
+                print ' <a href="#start_new_thread">';
+		echo  html_image("ic/thread.png",array()) .' '.$Language->getText('forum_forum_utils','start_thread').'</A> | ';
                 echo "<A HREF='".$PHP_SELF."?forum_id=$forum_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> | ";
             }
             
@@ -478,24 +480,44 @@ function show_post_form($forum_id, $thread_id=0, $is_followup_to=0, $subject="")
 		?>
 		<CENTER>
 		<FORM ACTION="/forum/forum.php" METHOD="POST">
+        <TABLE>
+          <TR>
+            <TD>		
 		<INPUT TYPE="HIDDEN" NAME="post_message" VALUE="y">
 		<INPUT TYPE="HIDDEN" NAME="forum_id" VALUE="<?php echo $forum_id; ?>">
 		<INPUT TYPE="HIDDEN" NAME="thread_id" VALUE="<?php echo $thread_id; ?>">
 		<INPUT TYPE="HIDDEN" NAME="msg_id" VALUE="<?php echo $is_followup_to; ?>">
 		<INPUT TYPE="HIDDEN" NAME="is_followup_to" VALUE="<?php echo $is_followup_to; ?>">
-		   <TABLE><TR><TD><B><?php echo $Language->getText('forum_forum_utils','subj'); ?>:</TD><TD>
+		<B><?php echo $Language->getText('forum_forum_utils','subj'); ?>:
+            </TD><TD>
 		<INPUT TYPE="TEXT" NAME="subject" VALUE="<?php echo $subject; ?>" SIZE="45" MAXLENGTH="45">
-		</TD></TR>
-		   <TR><TD><B><?php echo $Language->getText('forum_forum_utils','msg'); ?>:</TD><TD>
+          </TD></TR>
+	  <TR><TD><B><?php echo $Language->getText('forum_forum_utils','msg'); ?>:
+            </TD><TD>
 		<TEXTAREA NAME="body" VALUE="" ROWS="10" COLS="60" WRAP="SOFT"></TEXTAREA>
-		</TD></TR>
-		<TR><TD COLSPAN="2" ALIGN="center">
+	  </TD></TR>
+	  <TR><TD COLSPAN="2" ALIGN="center">
 		<B><span class="highlight"><?php echo $Language->getText('forum_forum_utils','html_displays_as_text'); ?></span></B>
-		<BR>
+	  </TR>
+          <TR><td>&nbsp;</td><TD ALIGN="left">
+<?php
+if(forum_is_monitored($forum_id,user_getid())){
+    print '<EM>'.$Language->getText('forum_forum_utils','on_post_monitoring').'</EM>';
+}
+else {
+    print $Language->getText('forum_forum_utils','on_post_not_monitoring', array('<INPUT TYPE="checkbox" name="enable_monitoring" value="1">'));
+}
+?>               
+
+	  </TR>
+	  <TR><TD COLSPAN="2" ALIGN="center">
 		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="<?php echo $Language->getText('forum_forum_utils','post_comment'); ?>">
-		</TD></TR></TABLE>
-		</FORM>
-		</CENTER>
+             </TD>
+             <TD VALIGN="top">              
+             </TD>
+          </TR>
+	</TABLE>
+        </FORM>
 		<?php
 
 	} else {
