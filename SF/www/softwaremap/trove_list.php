@@ -153,6 +153,20 @@ while ($row_sub = db_fetch_array($res_sub)) {
 		.($row_sub['subprojects']?$row_sub['subprojects']:'0')
 		.' '.$Language->getText('softwaremap_trove_list','projs').')</I><BR>');
 }
+
+// MV: Add a None case
+if($folders_len == 1) {
+    for ($sp=0;$sp<($folders_len*2);$sp++) {
+        print " &nbsp; ";
+    }
+    html_image("ic/cfolder15.png",array());
+    print "&nbsp; ";
+
+    print '<a href="/softwaremap/trove_list.php?form_cat='.$form_cat.'&special_cat=none"><em>'.$Language->getText('softwaremap_trove_list','not_categorized').'</em></a>';
+
+    print "<br />";
+}
+
 // ########### right column: root level
 print '</TD><TD>';
 // here we print list of root level categories, and use open folder for current
@@ -184,6 +198,42 @@ print '</TD></TR></TABLE>';
 
 //BAD QUERY!!!
 
+if($_GET['special_cat'] == 'none') {
+    $qry_root_trov = 'SELECT group_id'
+        .' FROM trove_group_link'
+        .' WHERE trove_cat_root='.$form_cat
+        .' GROUP BY group_id';
+    $res_root_trov = db_query($qry_root_trov);
+
+    $prj_list_categorized = array();
+    while($row_root_trov = db_fetch_array($res_root_trov)) {
+        $prj_list_categorized[] = $row_root_trov['group_id'];
+    }
+
+    $sql_list_categorized='';
+    if(count($prj_list_categorized) > 0) {
+        $sql_list_categorized=' AND groups.group_id NOT IN ('.implode(',', $prj_list_categorized).') ';
+   
+        $query_projlist = "SELECT groups.group_id, "
+            . "groups.group_name, "
+            . "groups.unix_group_name, "
+            . "groups.status, "
+            . "groups.register_time, "
+            . "groups.short_description, "
+            . "project_metric.percentile, "
+            . "project_metric.ranking "
+            . "FROM groups "
+            . "LEFT JOIN project_metric USING (group_id) "
+            . "WHERE "
+            . "(groups.is_public=1) AND "
+            . "(groups.type=1) AND "
+            . "(groups.status='A') "
+            . $sql_list_categorized
+            . "GROUP BY groups.group_id ORDER BY groups.group_name "
+            . "LIMIT ".$TROVE_HARDQUERYLIMIT;
+    }
+}
+else {
 // now do limiting query
 $query_projlist = "SELECT groups.group_id, "
 	. "groups.group_name, "
@@ -205,8 +255,7 @@ $query_projlist = "SELECT groups.group_id, "
 	. $discrim_queryand
 	. "GROUP BY groups.group_id ORDER BY groups.group_name "
 	. "LIMIT ".$TROVE_HARDQUERYLIMIT;
-
-//echo "\n\n\n".$query_projlist."\n\n\n";
+}
 
 $res_grp = db_query($query_projlist);
 echo db_error();
@@ -223,6 +272,10 @@ if (!$page) {
 
 // store this as a var so it can be printed later as well
 $html_limit = '<SPAN><CENTER><FONT size="-1">';
+if ($querytotalcount ==0) {
+    $html_limit .= $Language->getText('softwaremap_trove_list','no_project_in_cat')."<br>\n";
+}
+else {
 if ($querytotalcount == $TROVE_HARDQUERYLIMIT)
      $html_limit .= $Language->getText('softwaremap_trove_list','more_projs_in_res',$querytotalcount);
 else
@@ -247,7 +300,7 @@ if ($querytotalcount > $TROVE_BROWSELIMIT) {
 		$html_limit .= ' ';
 	}
 }
-
+}
 $html_limit .= '</FONT></CENTER></SPAN>';
 
 print $html_limit."<HR>\n";

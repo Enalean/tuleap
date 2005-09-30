@@ -31,3 +31,5 @@ softwaremap_trove_list	display_per_page	Affichage de $1 par page.<BR>
 softwaremap_trove_list	activity_percentile	Taux d'activité: 
 softwaremap_trove_list	activity_ranking	Classement de l'activité:
 softwaremap_trove_list	register_date	Date d'enregistrement:
+softwaremap_trove_list	not_categorized	Non précisé
+softwaremap_trove_list	no_project_in_cat	Aucun projet dans cette catégorie.
