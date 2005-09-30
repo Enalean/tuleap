@@ -72,6 +72,19 @@ function svn_data_get_revision_detail($group_id, $commit_id, $rev_id=0, $order='
 	    $order_str = " ORDER BY dir, file";
     }
 
+    //check user access rights
+    $project = group_get_object($group_id); 
+    $root = $project->getUnixName();
+
+    $forbidden = svn_utils_get_forbidden_paths(user_getname(),$root);
+
+    if (!empty($forbidden)) {
+      $where_forbidden = "";
+      while (list($no_access,) = each($forbidden)) {
+        $where_forbidden .= " AND svn_dirs.dir not like '%".substr($no_access,1)."%' ";
+      }
+    }
+
     // if the subversion revision id is given then it akes precedence on 
     // the internal commit_id (this is to make it easy for users to build
     // URL to access a revision
@@ -84,7 +97,7 @@ function svn_data_get_revision_detail($group_id, $commit_id, $rev_id=0, $order='
 	"AND svn_checkins.commitid=svn_commits.id ".
 	"AND svn_commits.revision=$rev_id ".
 	"AND svn_commits.group_id=$group_id ".
-	$order_str;
+	$where_forbidden.$order_str;
     } else {
 
       $sql="SELECT svn_commits.description, svn_commits.date, svn_commits.revision, svn_checkins.type,svn_checkins.commitid,svn_dirs.dir,svn_files.file ".
@@ -93,7 +106,7 @@ function svn_data_get_revision_detail($group_id, $commit_id, $rev_id=0, $order='
 	"AND svn_checkins.dirid=svn_dirs.id ".
 	"AND svn_checkins.commitid=svn_commits.id ".
 	"AND svn_commits.id=$commit_id ".
-	$order_str;
+	$where_forbidden.$order_str;
     }
 
     $result=db_query($sql);

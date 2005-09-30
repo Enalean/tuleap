@@ -346,6 +346,9 @@ function svn_utils_show_revision_detail($result,$group_id,$group_name,$commit_id
     $links_arr[]=$url.'';
     $links_arr[]=$url.'type';
 
+    $project = group_get_object($group_id);
+    $root = $project->getUnixName();
+
     echo html_build_list_table_top ($title_arr,$links_arr);
 
     for ($i=0; $i < $rows; $i++) {
@@ -577,6 +580,34 @@ function svn_utils_parse_access_file($gname) {
   }
 }
 
+
+function svn_utils_get_forbidden_paths($username,$gname) {
+global $SVNACCESS, $SVNGROUPS;
+
+ if ($SVNACCESS == "None") {
+    svn_utils_parse_access_file($gname);
+  }
+
+ $forbidden = array();
+ if (array_key_exists('*',$SVNACCESS)) {
+   foreach ($SVNACCESS['*'] as $path => $perm) {
+     if (strpos($perm,'r') === false) $forbidden[$path] = true;
+   }
+ }
+
+ if (array_key_exists($username,$SVNACCESS)) {
+   foreach ($SVNACCESS[$username] as $path => $perm) {
+     if (strpos($perm,'r') === false) {
+       $forbidden[$path] = true;
+     } else {
+       if (array_key_exists($path,$forbidden)) unset($forbidden[$path]);
+     }
+   }
+ }
+ return $forbidden;
+}
+
+
 function svn_utils_check_access($username, $gname, $svnpath) {
   global $SVNACCESS, $SVNGROUPS;
 
@@ -606,10 +637,10 @@ function svn_utils_check_access($username, $gname, $svnpath) {
         }
     }
   }
-  if ($perm == 'r' || $perm == 'rw') {
-    return true;
-  } else {
+  if (strpos($perm,'r') === false) {
     return false;
+  } else {
+    return true;
   }
 }
 

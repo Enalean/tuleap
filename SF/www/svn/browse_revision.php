@@ -12,10 +12,6 @@ if (!isset($group_id) || !$group_id) {
     exit_no_group(); // need a group_id !!!
  }
 
-if ($there_are_specific_permissions && !user_ismember($group_id,'A')) {
-    $feedback .= $Language->getText('svn_browse_revision', 'specific_perms');
-    exit_permission_denied();
- } else {
     svn_header(array ('title'=>$Language->getText('svn_browse_revision','browsing'),
                       'help' => 'SubversionBrowsingInterface.html'));
     if (!isset($offset) || !$offset || $offset < 0) {
@@ -122,10 +118,28 @@ if ($there_are_specific_permissions && !user_ismember($group_id,'A')) {
     $from = "FROM svn_commits,user ";
     $where = "WHERE svn_commits.group_id=$group_id AND user.user_id=svn_commits.whoid";
 
+    //check user access rights
+    $project = group_get_object($group_id); 
+    $root = $project->getUnixName();
+    $forbidden = svn_utils_get_forbidden_paths(user_getname(),$root);
+    if (!empty($forbidden)) {
+      $from .= ",svn_dirs,svn_checkins ";
+      $join = "";
+      $where_forbidden = "";
+      while (list($no_access,) = each($forbidden)) {
+        if ($no_access == $_path) unset($_path);
+        $join= " AND svn_checkins.dirid=svn_dirs.id AND svn_checkins.commitid=svn_commits.id "; 
+	$where_forbidden .= " AND svn_dirs.dir not like '%".substr($no_access,1)."%' ";
+      }
+      $where .= $join.$where_forbidden;
+    }
+
     //if status selected, and more to where clause
     if (isset($_path) && $_path != '') {
-        $path_str = " AND svn_checkins.dirid=svn_dirs.id AND svn_checkins.commitid=svn_commits.id AND svn_dirs.dir like '%".$_path."%' ";
-        $from .= ",svn_dirs,svn_checkins ";
+        $path_str = " AND svn_checkins".$count.".dirid=svn_dirs".$count.".id AND svn_checkins".$count.".commitid=svn_commits.id AND svn_dirs".$count.".dir like '%".$_path."%' ";
+	if (!isset($forbidden) || empty($forbidden)) {
+	  $from .= ",svn_dirs,svn_checkins ";
+	}
     } else {
         $path_str = "";
     }
@@ -232,6 +246,5 @@ if ($there_are_specific_permissions && !user_ismember($group_id,'A')) {
         echo db_error();
     }
     svn_footer(array());
- }
 
 ?>
