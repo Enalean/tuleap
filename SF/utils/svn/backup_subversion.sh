@@ -40,6 +40,7 @@ SvnParentPath=/svnroot
 # SvnIncrBackupPath is the directory where incremental backups are created
 SvnIncrBackupPath=/home1/subversion_backup/incr
 SvnFullBackupPath=/home1/subversion_backup/full
+SvnOldBackupPath=/home1/subversion_backup/old
 
 # LogFacility - what facility name to write log messages with (default='cron' -> /var/log/cron)
 LogFacility=cron
@@ -56,6 +57,9 @@ Umask=027
 INCREMENTAL=0
 HELP=0
 VERBOSE=0
+# if NOOLD=1 -> Old full backup is deleted instread of staying
+# in a dedicated directory.
+NOOLD=0
 
 # Check arguments
 while   ((1))   # look for options
@@ -63,6 +67,7 @@ do      case    "$1" in
         \-v)   VERBOSE=1;;
         \-i)   INCREMENTAL=1;;
         \-h)   HELP=1;;
+        \-noarchives)   NOOLD=1;;
         *)      if [ ! -z "$1" ];
             then
                 echo "Invalid option $1";
@@ -79,6 +84,8 @@ then
     echo "  -i : do an incremental backup instead of a full backup";
     echo "  -v : verbose";
     echo "  -h : help";
+    echo "  -noarchives: delete all previous backups (full and incremental)";
+    echo "               only used with full backup";
     exit 2;
 fi
 
@@ -116,10 +123,22 @@ then
   ls -1d ${SvnParentPath}/* > subversion.lis
 
   DATE=`date +%m%d%y:%H%M`
-  mkdir -p $DATE
+  OldBackupPath=${SvnOldBackupPath}/${DATE}
+  OldBackupPathFull=${OldBackupPath}/full
+  OldBackupPathIncr=${OldBackupPath}/incr
+  mkdir -p ${OldBackupPathFull}
+  mkdir -p ${OldBackupPathIncr}
   mkdir -p current
 
-  mv current/* $DATE
+  ## Archive previous backup
+  # Move current full backup into the archive
+  /bin/mv current/* ${OldBackupPathFull}
+  
+  # Move current incremental backup into the archive
+  /bin/mv ${SvnIncrBackupPath}/* ${OldBackupPathIncr}
+
+  
+  ## Create new full backup
 
   for directory in `cat subversion.lis` ; do
     # don't backup empty repositories
@@ -130,6 +149,12 @@ then
          | ${LOGCMD} -p ${LogFacility}.info
     fi
   done
+
+  # If there is no archives keeping, delete old full backup
+  # and previous incermental backup
+  if [ "${NOOLD}" == 1 ]; then
+      /bin/rm -rf ${OldBackupPath}
+  fi
 
 else
 
