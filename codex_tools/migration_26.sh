@@ -214,10 +214,11 @@ read -p "Codex Server IP address: " sys_ip_address
 make_backup /etc/codex/conf/local.inc codex24
 
 substitute /etc/codex/conf/local.inc "sys_themedefault[\\s]*=[\\s]*['\"]codex['\"]" "sys_themedefault = 'CodeX'"
-echo '
+substitute /etc/codex/conf/local.inc '?>' '
 //
 // Plugins root directory 
-$sys_pluginsroot="/home/httpd/plugins/";' >> /etc/codex/conf/local.inc
+$sys_pluginsroot="/home/httpd/plugins/";
+?>'
 
 ##############################################
 # Now install CodeX specific RPMS (and remove RedHat RPMs)
