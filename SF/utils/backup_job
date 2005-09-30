@@ -24,16 +24,62 @@
 #     before the full system takes place.
 #
 
+set -e
+
+###############################################################################
+# Configuration Variables
+
+
+## Global definitions
+oldBackupDstDir=/cvsroot/.mysql_backup/old
+currentBackupDstDir=/cvsroot/.mysql_backup
+mysqlDataDir=/var/lib/mysql
+
+#
+###############################################################################
+
+
+# if NOOLD=1 -> Old full backup is deleted instread of staying
+# in a dedicated directory.
+NOOLD=0
+
+# Check arguments
+while   ((1))   # look for options
+do      case    "$1" in
+        \-noarchives)   NOOLD=1;;
+        *)      if [ ! -z "$1" ];
+            then
+                echo "Invalid option $1";
+                HELP=1;
+            fi
+            break;;
+        esac
+        shift # next argument
+done
+
+MKDIR=/bin/mkdir
+MV=/bin/mv
+DUMP=/sbin/dump
+RM=/bin/rm
+# New archive directory
+oldBackupDir=${oldBackupDstDir}/`date +%m%d%y`
+
 /etc/init.d/mysql stop
 sleep 5
 
-/bin/mkdir /cvsroot/.mysql_backup/old/`date +%m%d%y`
+# Move current bkp to old dir
+${MKDIR} -p ${oldBackupDir}
 
-/bin/mv /cvsroot/.mysql_backup/codex-bin.* /cvsroot/.mysql_backup/old/`date +%m%d%y`
+${MV} ${currentBackupDstDir}/codex-bin.* ${oldBackupDir}
 
-/bin/mv /cvsroot/.mysql_backup/sqldump* /cvsroot/.mysql_backup/old/`date +%m%d%y`
+${MV} ${currentBackupDstDir}/sqldump* ${oldBackupDir}
 
 # back up mysql datafiles to disk
-/sbin/dump 0f /cvsroot/.mysql_backup/sqldump.`date +%m%d%y.%H%M` -M /var/lib/mysql
+${DUMP} 0f ${currentBackupDstDir}/sqldump.`date +%m%d%y.%H%M` -M ${mysqlDataDir}
+
+# If there is no archives keeping, delete old  backup
+if [ "${NOOLD}" == 1 ]; then 
+    ${RM} -rf ${oldBackupDir}
+fi
 
 /etc/init.d/mysql start
