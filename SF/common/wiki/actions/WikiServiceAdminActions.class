@@ -24,6 +24,7 @@
 require_once('WikiActions.class');
 require_once(dirname(__FILE__).'/../lib/WikiEntry.class');
 require_once(dirname(__FILE__).'/../lib/WikiPage.class');
+require_once(dirname(__FILE__).'/../lib/WikiAttachment.class');
 require_once(dirname(__FILE__).'/../lib/Wiki.class');
 
 $Language->loadLanguageMsg('wiki/wiki');
@@ -159,5 +160,26 @@ class WikiServiceAdminActions extends WikiActions {
       exit_error($Language->getText('global','error'),
                  $Language->getText('wiki_actions_wikiserviceadmin', 'update_page_perm_err', array($feedback)));
   }
+
+
+    /**
+     * Wrapper to set permissions on wiki attachments.
+     */
+    function setWikiAttachmentPerms() {
+        global $feedback, $Language;;
+ 
+        $wa = new WikiAttachment($this->gid);
+        $wa->initWithId($_POST['object_id']);
+        if ($_POST['reset']) {
+            $ret = $wa->resetPermissions();
+        }
+        else {
+            $ret = $wa->setPermissions($_POST['ugroups']);
+        }
+        if(!$ret) {
+            exit_error($Language->getText('global','error'),
+                       $Language->getText('wiki_actions_wikiserviceadmin', 'update_attachment_perm_err', array($feedback)));
+        }
+    }
 }
 ?>

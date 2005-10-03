@@ -1,0 +1,467 @@
+<?php
+/* 
+ * Copyright 2005, STMicroelectronics
+ *
+ * Originally written by Manuel Vacelet
+ *
+ * This file is a part of CodeX.
+ *
+ * CodeX is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * CodeX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
+define('ATTACHMENT_DATA_DIR', $WIKI_ATTACHMENT_DATA_DIR);
+require_once('WikiAttachmentRevision.class');
+require_once($_SERVER['DOCUMENT_ROOT'].'/project/admin/permissions.php');
+
+/**
+ * Management of external ressources linked on a wiki
+ *
+ * This class allows to manage external ressources in wiki (non-text ressources)
+ * It's based on UpLoad plugin in PhpWiki and a CodeX layer in order to manage
+ * versionning of files and permissions.
+ * Every ressources (attachments) are stored in a directory. There is one
+ * ressource directory per project. Every revisions of a file are stored in a
+ * directory.
+ *
+ *
+ * @see       WikiAttachmentRevision
+ * @see       WikiAttachmentRevisionIterator
+ * @package   WikiService
+ * @copyright STMicroelectronics, 2005
+ * @author    Manuel Vacelet <manuel.vacelet-abecedaire@st.com>
+ * @license   http://opensource.org/licenses/gpl-license.php GPL
+ */
+class WikiAttachment /* implements UGroupPermission */ {
+    /**
+     * Project identifier
+     * @access private
+     * @var    int 
+     */
+    var $gid;
+
+    /**
+     * Attachment name
+     * @access private
+     * @var    string
+     */
+    var $filename;
+
+    /**
+     * Attachment location (directory)
+     * @access private
+     * @var    string
+     */
+    var $basedir;
+
+    /**
+     * Wanted attachment revision
+     * @access private
+     * @var    WikiAttachmentRevision
+     */
+    var $revision;
+
+    var $id;
+
+
+    /**
+     * @access public
+     * @param  int $gid Project identifier
+     */
+    function WikiAttachment($gid=0) {
+        $this->setGid($gid);
+        $this->filetype = null;
+        $this->filesize = null;
+
+        /*
+         * Check user
+         */
+        if (!user_isloggedin())
+            exit_not_logged_in();
+    }
+
+    /**
+     * @access public
+     * @param  int $id Project identifier
+     */
+    function setGid($id=0) {
+        $this->gid      = (int) $id;
+        $this->basedir = ATTACHMENT_DATA_DIR.'/'.$this->gid;
+    }
+  
+    /**
+     * @access public
+     * @param  string $name File name
+     */
+    function setFilename($name="") {
+        $disallowed_extensions = explode("\n",
+                                         "ad[ep]
+asd
+ba[st]
+chm
+cmd
+com
+cgi
+cpl
+crt
+dll
+eml
+exe
+hlp
+hta
+in[fs]
+isp
+jse?
+lnk
+md[betw]
+ms[cipt]
+nws
+ocx
+ops
+pcd
+p[ir]f
+php
+pl
+py
+reg
+sc[frt]
+sh[bsm]?
+swf
+url
+vb[esx]?
+vxd
+ws[cfh]");
+
+
+        if (preg_match("/(\." . join("|\.", $disallowed_extensions) . ")\$/",
+                       $name)) {
+            $message = sprintf("Files with extension %s are not allowed", 
+                               join(", ", $disallowed_extensions));
+            trigger_error($message, E_USER_ERROR);
+            return false;
+        }
+        elseif (preg_match("/[^._a-zA-Z0-9-]/", $name)) {
+            $message = "ERROR uploading '".$name."': "
+                ."File names may only contain alphanumeric characters"
+                ."and dot, underscore or dash.";
+            trigger_error($message, E_USER_ERROR);
+        }
+
+        $this->filename = $name;
+
+        return true;
+    }
+  
+    function getFilename() {
+        return $this->filename;
+    }
+
+
+    function setFile($basedir="") {
+    
+    }
+
+
+    /**
+     *
+     * Classical URI:
+     * URI: /wiki/uploads/102/php-mode-1.1.0.tgz/1
+     * <pre>
+     * Array
+     * (
+     *    [0] => 
+     *    [1] => wiki                  Service
+     *    [2] => uploads               Call script
+     *    [3] => 102                   Group id
+     *    [4] => php-mode-1.1.0.tgz    Attachment
+     *    [5] => 1                     Revision of attachement (optionnal)
+     * )
+     * </pre>
+     * Important note: '[5] => 0' == '[5] => ""' == last version
+     *
+     *
+     * URI: /wiki/uploads/102/1/php-mode-1.1.0.tgz
+     * This URI format is requested in order to support InterWiki links.
+     * <pre>
+     * Array
+     * (
+     *    [0] => 
+     *    [1] => wiki                  Service
+     *    [2] => uploads               Call script
+     *    [3] => 102                   Group id
+     *    [4] => 1                     Revision of attachement
+     *    [5] => php-mode-1.1.0.tgz    Attachment
+     * )
+     * </pre>
+     *
+     * @access public
+     * @param  string $uri Uri to access to attachment
+     */
+    function setUri($uri="") {
+        $uriExp = explode('/', $uri);
+
+        $this->setGid($uriExp[3]);
+
+        if(is_numeric($uriExp[4])) {
+            $rev = (int) $uriExp[4];
+      
+            $this->setFilename($uriExp[5]);
+            $file = $this->basedir.'/'.$this->filename;
+        }
+        else {
+            $this->setFilename($uriExp[4]);
+            $file = $this->basedir.'/'.$this->filename;
+      
+            if(is_numeric($uriExp[5])) {
+                $rev = (int) $uriExp[5];
+            }
+            else {
+                $rev = $this->count();
+            }
+        }
+
+        $rev -= 1;
+
+        $this->revision = new WikiAttachmentRevision($this->gid);
+        $this->revision->setAttachmentId($this->getId());
+        $this->revision->setRevision($rev);
+        $this->revision->dbFetch();
+        $this->revision->log(user_getid());
+    }
+
+    function exist() {
+        return is_dir($this->basedir.'/'.$this->filename);
+    }
+
+    function dbadd() {
+        $sql = ('   INSERT INTO wiki_attachment SET'
+                .'  group_id="'.$this->gid.'"'
+                .', name="'.mysql_real_escape_string($this->filename).'"'	  
+                );
+
+        $res = db_query($sql);
+
+        if(db_affected_rows($res) === 1)
+            return true;
+
+        trigger_error('Can not insert new attachment revision: "'.db_error(), E_USER_ERROR);
+        return false;
+    }
+
+    function create() {
+        // Create wiki attachment directory for current project
+        if(!is_dir($this->basedir)){
+            $res = mkdir($this->basedir, 0700);
+            if(!$res) {
+                trigger_error("Unable to create project upload area", E_USER_ERROR);
+                return false;
+            }
+        }
+    
+        // Create directory where file revison will be stored
+        if(!is_dir($this->basedir.'/'.$this->filename)){
+            $res = mkdir($this->basedir.'/'.$this->filename, 0700);
+            if(!$res) {
+                trigger_error("Unable to create file revision area", E_USER_ERROR);
+                return false;
+            }
+        }
+
+        $res = $this->dbadd();
+        return $res;
+    }
+
+    function getId() {
+        if(!is_numeric($this->id)) {
+            $sql = 'SELECT id FROM wiki_attachment'
+                .' WHERE name="'.$this->getFilename().'"'
+                .' AND group_id="'.$this->gid.'"';
+            $res = db_query($sql);
+            if(db_numrows($res) > 1) {
+                trigger_error("There are multiple identifier for an attachment."
+                              ."Please contact an administrator", E_USER_ERROR);
+                return -1;
+            }
+            else {
+                $row = db_fetch_array($res);
+                $this->id = $row['id'];
+            }
+        }
+
+        return $this->id;
+    }
+
+    /**
+     *
+     * 
+     *
+     * @access
+     * @param
+     * @return
+     */
+    function createRevision($userfile_name, $userfile_size, $userfile_type, $userfile_tmpname) {    
+        if(!$this->setFilename($userfile_name)) {
+            return -1;
+        }
+
+        if(!$this->exist()) {
+            if(!$this->create()) {	
+                return -1;
+            }
+        }
+
+        $att_rev = new WikiAttachmentRevision($this->gid);
+    
+        $att_rev->setFilename($this->getFilename());
+        $att_rev->setOwnerId(user_getid());
+        $att_rev->setAttachmentId($this->getId());
+        $att_rev->setMimeType($userfile_type);
+        $att_rev->setDate(time());
+
+        if(!$att_rev->setSize($userfile_size))
+            return -1;
+
+        if(!$att_rev->create($userfile_tmpname))    
+            return -1;
+
+        return $att_rev->getRevision();
+    }
+  
+    function initWithId($id=0) {
+        $this->id = $id;
+        $sql = 'SELECT * FROM wiki_attachment'
+            .' WHERE id="'.$this->id.'"';
+        $res = db_query($sql);
+        $this->setFromRow(db_fetch_array($res));
+    }
+
+    function setFromRow($row) {
+        $this->id       = $row['id'];
+        $this->gid      = $row['group_id'];
+        $this->filename = $row['name'];
+    }
+
+    /**
+     * @access
+     * @param
+     * @return
+     */
+    function validate() {
+        // Validate Group id
+        $go = group_get_object($this->gid);
+        if(!$go) 
+            exit_no_group();
+   
+        // Validate filename   
+        if(!is_file($this->basedir.'/'.$this->filename)){
+            return false;
+            //      print "error ".$this->basedir.'/'.$this->filename;
+        }
+
+        return true;
+    }
+  
+  
+
+    function htmlDump() {    
+        $this->revision->htmlDump();
+    }
+
+    function count() {
+        $this->getId();
+        $waIter = new WikiAttachmentRevisionIterator($this->id);
+        $waIter->getList();
+        return $waIter->count();
+    }
+
+    /**
+     * @access public
+     */
+    function permissionExist() {
+        if (permission_exist('WIKIATTACHMENT_READ', $this->id))
+            return true;
+        else
+            return false;
+    }
+
+
+    /**
+     * @access public
+     */
+    function isAutorized($uid) {            
+        if($this->permissionExist()) {
+            if (!permission_is_authorized('WIKIATTACHMENT_READ', $this->id, $uid, $this->gid)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+  
+    /**
+     *@access public
+     */
+    function setPermissions($groups) {
+        global $feedback;
+
+        list ($ret, $feedback) = permission_process_selection_form($this->gid, 
+                                                                   'WIKIATTACHMENT_READ', 
+                                                                   $this->id, 
+                                                                   $groups);
+        return $ret;
+    }
+
+    /**
+     *@access public
+     */
+    function resetPermissions() {
+        return permission_clear_all($this->gid, 
+                                    'WIKIATTACHMENT_READ', 
+                                    $this->id);
+    }
+
+}
+
+
+
+/**
+ *
+ * @see       WikiAttachment
+ * @package   WikiService
+ * @copyright STMicroelectronics, 2005
+ * @author    Manuel Vacelet <manuel.vacelet-abecedaire@st.com>
+ * @license   http://opensource.org/licenses/gpl-license.php GPL
+ */
+class WikiAttachmentIterator extends RecordIterator {
+    var $gid;
+ 
+
+    /**
+     * @access public
+     * @param int $id Project Id
+     */
+    function WikiAttachmentIterator($id=0) {
+        $this->gid     = (int) $id;
+        parent::RecordIterator('WikiAttachment');
+    }
+
+    function getList() {
+        $this->sqlStatement = 
+            '  SELECT * FROM wiki_attachment'
+            .' WHERE group_id="'.$this->gid.'"';
+        $this->dbinit();
+    }
+}
+
+?>

@@ -117,6 +117,37 @@ class WikiPageWrapper {
     $pagehandle->save($text, $version + 1, $meta);
   }
 
+
+    function addUploadPage() {
+        // Dirty hack to 'give' a WikiRequest object to phpwiki
+        // So obscure functions seems require it.
+        $request =& $this->getRequest();
+        
+        $dbi = $request->getDbh();
+        require_once(PHPWIKI_DIR."/lib/loadsave.php");
+        $pagehandle = $dbi->getPage("UpLoad");
+        if ($pagehandle->exists()) {// don't replace default contents
+            $current = $pagehandle->getCurrentRevision();
+            $version = $current->getVersion();
+            $text = $current->getPackedContent();
+            $meta = $current->_data;
+        }
+        else {
+            // Create a new page (first use or page previously erased)
+            $version = 0;
+            $text = '__Upload a file which will be accessible by prefixing the filename with "Upload:".__
+----
+<?plugin UpLoad ?>
+----
+';
+            $meta['author'] = user_getname();
+        }
+        
+        $meta['summary'] = "Page created";
+        $pagehandle->save($text, $version + 1, $meta);
+    }
+
+
   function render($lite=false) {
     if($lite) {
       define('THEME', 'CodeX-lite'); 

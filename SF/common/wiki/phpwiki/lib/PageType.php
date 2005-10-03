@@ -195,7 +195,9 @@ class PageType_interwikimap extends PageType
             $map[$m[1]] = $m[2];
         }
         if (empty($map['Upload']))
-            $map['Upload'] = SERVER_URL . ((substr(DATA_PATH,0,1)=='/') ? '' : "/") . DATA_PATH . '/uploads/';
+            $map['Upload'] = SERVER_URL . ((substr(DATA_PATH,0,1)=='/') ? '' : "/") . DATA_PATH . '/uploads/'.GROUP_ID.'/';
+        if (empty($map['Attach']))
+            $map['Attach'] = SERVER_URL . ((substr(DATA_PATH,0,1)=='/') ? '' : "/") . DATA_PATH . '/uploads/'.GROUP_ID.'/';   
         return $map;
     }
 

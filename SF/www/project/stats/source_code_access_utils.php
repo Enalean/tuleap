@@ -335,4 +335,27 @@ function wiki_logs_daily($project, $span = 7, $who="allusers") {
 	       $Language->getText('project_stats_source_code_access_utils','wiki_access'));
 }
 
+/**
+ * Display Wiki Attachments access log
+ */
+function wiki_attachments_logs_daily($project, $span = 7, $who="allusers") {
+    // check first if service is used by this project
+    // if service not used return immediately
+    global $Language;
+    if(!$project->usesWiki()) {
+        print '<P><B><U>'.$Language->getText('project_stats_source_code_access_utils','service_disabled',$Language->getText('project_stats_source_code_access_utils','wiki_attachments')).'</U></B>';
+        return;
+    }
+    
+    $sql = "SELECT log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, wa.name AS title"
+        ." FROM wiki_attachment_log AS log, user, wiki_attachment AS wa"
+        ." WHERE ".logs_cond($project, $span, $who)
+        ." AND log.group_id=".$project->getGroupId()
+        ." AND wa.id=log.wiki_attachment_id"
+        ." ORDER BY time DESC";
+    
+    logs_display($sql, $span, $Language->getText('project_stats_source_code_access_utils','wiki_attachment_title'),
+                 $Language->getText('project_stats_source_code_access_utils','wiki_attachment_access'));
+}
+
 ?>

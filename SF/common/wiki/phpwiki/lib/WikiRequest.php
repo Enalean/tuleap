@@ -420,6 +420,7 @@ $this->version = phpwiki_version();
 
             case 'edit':
             case 'soap':
+            case 'upload':
                 if (defined('REQUIRE_SIGNIN_BEFORE_EDIT') && REQUIRE_SIGNIN_BEFORE_EDIT)
                     return WIKIAUTH_BOGO;
                 return WIKIAUTH_ANON;
@@ -432,7 +433,6 @@ $this->version = phpwiki_version();
                     return $this->requiredAuthorityForAction('edit');
                 return $this->requiredAuthorityForAction('browse');
 
-            case 'upload':
             case 'dumpserial':
             case 'dumphtml':
             case 'loadfile':

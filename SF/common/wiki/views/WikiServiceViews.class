@@ -245,11 +245,18 @@ class WikiServiceViews extends WikiViews {
     print '
     <ul class="ServiceMenu">
       <li><a href="'.$this->wikiLink.'">'.$Language->getText('wiki_views_wikiserviceviews', 'menudocuments').'</a>&nbsp;|&nbsp;</li>
-      <li><a href="'.$this->wikiLink.'&view=browsePages">'.$Language->getText('wiki_views_wikiserviceviews', 'menupages').'</a>&nbsp;|&nbsp;</li>
-      <li><a href="'.$this->wikiAdminLink.'">'.$Language->getText('wiki_views_wikiserviceviews', 'menuadmin').'</a>&nbsp;|&nbsp;</li>
-      <li>'.help_button('WikiService.html',false,$Language->getText('global','help')).'</li>
+      <li><a href="'.$this->wikiLink.'&view=browsePages">'.$Language->getText('wiki_views_wikiserviceviews', 'menupages').'</a>&nbsp;|&nbsp;</li>';
+    if(user_ismember($this->gid, 'W2')) {
+        print '<li><a href="'.$this->wikiAdminLink.'">'.$Language->getText('wiki_views_wikiserviceviews', 'menuadmin').'</a>&nbsp;|&nbsp;</li>';
+    }
+    
+    if('wiki' == $this->view) {
+        print '<li><a href="javascript:help_window(\''.$this->wikiLink.'&pagename=UpLoad&pv=1\')">'.$Language->getText('wiki_views_wikiserviceviews', 'menuattch').'</a>&nbsp;|&nbsp;</li>';
+    }
+    
+    print '<li>'.help_button('WikiService.html',false,$Language->getText('global','help')).'</li>
    </ul>';
-
+    
   print '
   </td>
   <td align="right">';

@@ -205,6 +205,7 @@ project_admin_permissions	rel_download	Téléchargement de version
 project_admin_permissions	doc_access	Accès à un document
 project_admin_permissions	docgroup_access	Accès à un groupe de document
 project_admin_permissions	wiki_access	Accès au Wiki
+project_admin_permissions	wikiattachment_access	Accès aux fichiers joints du Wiki
 project_admin_permissions	tracker_full_access	Accès à tous les artefacts du tracker
 project_admin_permissions	tracker_submitter_access	Accès à tous les artefacts soumis par le groupe
 project_admin_permissions	tracker_assignee_access	Accès à tous les artefacts confiés au groupe
@@ -219,6 +220,7 @@ project_admin_permissions	document	document $1
 project_admin_permissions	docgroup	groupe de document $1
 project_admin_permissions	wiki	wiki $1
 project_admin_permissions	wikipage	page wiki $1
+project_admin_permissions	wikiattachment	fichier joint du wiki $1
 project_admin_permissions	tracker	outil de suivi $1
 project_admin_permissions	tracker_field	champ d'outil de suivi $1
 project_admin_permissions	object	objet $1
@@ -636,12 +638,15 @@ project_stats_source_code_access_utils	service_disabled	Service $1 désactivé
 project_stats_source_code_access_utils	subversion	Subversion
 project_stats_source_code_access_utils	docs	Documentation
 project_stats_source_code_access_utils	wiki	Wiki
+project_stats_source_code_access_utils	wiki_attachments	Fichiers joints Wiki
 project_stats_source_code_access_utils	cvs_co_upd	Accès CVS (checkout/update)
 project_stats_source_code_access_utils	svn_access	Accès Subversion
 project_stats_source_code_access_utils	doc_download	Téléchargements de documents
 project_stats_source_code_access_utils	documents	Documents
 project_stats_source_code_access_utils	wiki_access	Accès Wiki
 project_stats_source_code_access_utils	wiki_page	Pages
+project_stats_source_code_access_utils	wiki_attachment_access	Accès aux fichiers joints Wiki
+project_stats_source_code_access_utils	wiki_attachment_title	Fichier joint
 project_stats_source_code_access_utils	cvs_access	Accès CVS
 project_stats_source_code_access_utils	co_upd	Checkout/Update
 project_stats_source_code_access_utils	browsing	Visualisation fichiers

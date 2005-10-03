@@ -24,6 +24,7 @@ wiki_views_wikiserviceviews	pagename	Page Name:
 wiki_views_wikiserviceviews	menuadmin	Admin	
 wiki_views_wikiserviceviews	menupages	Pages	
 wiki_views_wikiserviceviews	menudocuments	Documents
+wiki_views_wikiserviceviews	menuattch	Attach a file
 wiki_views_wikiserviceviews	lock_title_spec	There are specific permissions on this Wiki Page
 wiki_views_wikiserviceviews	lock_title_set	There are permissions set on this Wiki
 wiki_views_wikiserviceviews	lock_alt	Lock
@@ -66,6 +67,7 @@ wiki_lib_wikipagewrap	right_error	This operation require admin rights
 wiki_actions_wikiserviceadmin	page_name_empty_err	You try to create a Wiki Document but you didn't select any page. You have to create a Wiki Page before creating a Wiki Document.
 wiki_actions_wikiserviceadmin	update_perm_err	Could not update permissions: <p>$1</p>
 wiki_actions_wikiserviceadmin	update_page_perm_err	Could not update permissions on this Wiki Page: <p>$1</p>
+wiki_actions_wikiserviceadmin	update_attachment_perm_err	Could not update permissions on this Wiki Attachment: <p>$1</p>
 #
 #-----------------------------------------------
 # Script: SF/common/wiki/WikiService.class
@@ -90,13 +92,14 @@ wiki_views_wkserviews	menuview	View
 wiki_views_wkserviews	menuadmin	Admin
 wiki_views_wkserviews	menudocs	Wiki Documents
 wiki_views_wkserviews	menupage	Wiki Pages
+wiki_views_wkserviews	menuattch	Wiki Attachments
 wiki_views_wkserviews	menuperm	Wiki Permissions
-wiki_views_wkserviews	main	<h2>Wiki '$1' - Administration</h2><h3><a href="$2&view=wikiDocuments">Manage Wiki Documents</a></h3><p>Create, delete, modify and set specific permissions on Wiki Documents.</p><h3><a href="$3&view=wikiPages">Manage Wiki Pages</a></h3><p>Browse and set specific permissions on Wiki Pages.</p><h3><a href="$4&view=wikiPerms">Set Wiki Permissions</a></h3><p>Set permissions on whole $5 Wiki.</p>
+wiki_views_wkserviews	main	<h2>Wiki '$1' - Administration</h2><h3><a href="$2&view=wikiDocuments">Manage Wiki Documents</a></h3><p>Create, delete, modify and set specific permissions on Wiki Documents.</p><h3><a href="$3&view=wikiPages">Manage Wiki Pages</a></h3><p>Browse and set specific permissions on Wiki Pages.</p><h3><a href="$4&view=wikiAttachments">Manage Wiki Attachments</a></h3><p>Browse and set permissions on ressources attached on the Wiki.</p><h3><a href="$5&view=wikiPerms">Set Wiki Permissions</a></h3><p>Set permissions on whole $6 Wiki.</p>
 wiki_views_wkserviews	wikidocs_title	<h2>Wiki '$1' - Manage Wiki Documents</h2>
 wiki_views_wkserviews	wikidocs_create	<h3>$1Create a new Wiki Document</h3>
 wiki_views_wkserviews	wikidocs_docs	<h3>$1Wiki Documents</h3>
 wiki_views_wkserviews	back_admin	Back to admin panel
-wiki_views_wkserviews	createwikidoc	<p>You can add a new link to a Wiki Page with the following form. It will add a new entry in the list of Wiki Documents displayed in Wiki service page (<a href="'.$this->wikiLink.'">View</a> link in the tool bar).</p>
+wiki_views_wkserviews	createwikidoc	<p>You can add a new link to a Wiki Page with the following form. It will add a new entry in the list of Wiki Documents displayed in Wiki service page (<a href="'.$1.'">View</a> link in the tool bar).</p>
 wiki_views_wkserviews	act_create	Create
 wiki_views_wkserviews	act_update	Update
 wiki_views_wkserviews	browsedoc	<p>List of all Wiki Documents displayed on the wiki service page. You can:</p><ul><li>edit each Wiki Document with the link on the name.</li><li>set permissions on a Wiki Document.</li><li>delete a Wiki Document (the corresponding Wiki Page will not be deleted)</li></ul>
@@ -114,3 +117,8 @@ wiki_views_wkserviews	wkpage_adm_all	<p>The table bellow lists all administratio
 wiki_views_wkserviews	wkpage_intern	<h3>$1Internal pages</h3>
 wiki_views_wkserviews	wkpage_int_all	<p>Following pages are for wiki engine <strong>internal reserved use</strong>. Please use it carefuly. You should <strong>not use or modify these pages</strong> if don't know well PhpWiki. In case of doubt, do not touch these pages.</p>
 wiki_views_wkserviews	wikiperm	<h2>Wiki '$1' - Wiki Permissions</h2><p>You can set specific permissions on $2. These permissions apply to <strong>whole wiki service</strong>.</p><p>By default, Wiki have no specific permissions: access (both <strong>read</strong> and <strong>write</strong>) to all Wiki Pages is granted to any CodeX registred user.</p><p>Select user groups who are granted access to this Wiki:<p>
+#
+#-----------------------------------------------
+# Script: SF/www/wiki/upload
+#
+wiki_attachment_upload	err_not_exist	This attachment doesn't exist. Please Check the url.

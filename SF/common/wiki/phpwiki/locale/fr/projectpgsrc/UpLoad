@@ -9,10 +9,10 @@ Content-Type: application/x-phpwiki;
   charset=iso-8859-1
 Content-Transfer-Encoding: binary
 
-__Upload a file which will be accessible by prefixing the filename with
+____Upload a file which will be accessible by prefixing the filename with
 "Upload:".__
 
 ----
 <?plugin UpLoad ?>
 ----
-
+WikiPlugin PluginManager

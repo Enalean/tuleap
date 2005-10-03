@@ -93,6 +93,9 @@ $FTPINCOMING_DIR = "/home/ftp/incoming";
 // Where the released files are located
 $FTPFILES_DIR = "/home/ftp/codex";
  
+// Where wiki attachments are stored
+$WIKI_ATTACHMENT_DATA_DIR = "/home/data/wiki";
+
 // Where the SourceForge files are placed
 // *** IMPORTANT: sys_urlroot *MUST* be an ABSOLUTE FILEYSTEM PATH NAME
 //             that points to the www directory of the SourceForge

@@ -116,6 +116,13 @@ ws[cfh]");
         $contents->pushContent(HTML::input(array('type' => 'hidden',
                                                  'name' => 'MAX_FILE_SIZE',
                                                  'value' => MAX_UPLOAD_SIZE)));
+        /// MV add pv
+        /// @todo: have a generic method to transmit pv
+        if(!empty($_GET['pv'])) {
+            $contents->pushContent(HTML::input(array('type' => 'hidden',
+                                                     'name' => 'pv',
+                                                     'value' => $_GET['pv'])));
+        }
         $contents->pushContent(HTML::input(array('name' => 'userfile',
                                                  'type' => 'file',
                                                  'size' => '50')));
@@ -145,33 +152,25 @@ ws[cfh]");
                 }
             }
 
-            if (preg_match("/(\." . join("|\.", $this->disallowed_extensions) . ")\$/",
-                           $userfile_name))
-            {
-                $message->pushContent(fmt("Files with extension %s are not allowed",
-                                          join(", ", $this->disallowed_extensions)),HTML::br(),HTML::br());
-            }
-            elseif (file_exists($file_dir . $userfile_name)) {
-                $message->pushContent(fmt("There is already a file with name %s uploaded",
-                                          $userfile_name),HTML::br(),HTML::br());
-            }
-            elseif ($userfile->getSize() > (MAX_UPLOAD_SIZE)) {
-                $message->pushContent(_("Sorry but this file is too big"),HTML::br(),HTML::br());
-            }
-            elseif (move_uploaded_file($userfile_tmpname, $file_dir . $userfile_name) or
-                    (IsWindows() and rename($userfile_tmpname, $file_dir . $userfile_name))
-                    )
-            {
+            $userfile_size = $userfile->getSize();
+            $userfile_type = $userfile->getType();
+
+            require_once($_SERVER['DOCUMENT_ROOT'].'/../common/wiki/lib/WikiAttachment.class');
+            $wa = new WikiAttachment(GROUP_ID);
+            $rev = $wa->createRevision($userfile_name, $userfile_size, $userfile_type, $userfile_tmpname);
+            if($rev >= 0) {
+                $prev = $rev+1;
             	$interwiki = new PageType_interwikimap();
-            	$link = $interwiki->link("Upload:$userfile_name");
+            	$link = $interwiki->link("Upload:$prev/$userfile_name");
                 $message->pushContent(_("File successfully uploaded."));
                 $message->pushContent(HTML::ul(HTML::li($link)));
 
+                // MV: Do not log uploads.
                 // the upload was a success and we need to mark this event in the "upload log"
-                $upload_log = $file_dir . basename($logfile);
-                if ($logfile) { 
-                    $this->log($userfile, $upload_log, &$message);
-                }
+                //$upload_log = $file_dir . basename($logfile);
+                //if ($logfile) { 
+                //    $this->log($userfile, $upload_log, &$message);
+                //}
                 if ($autolink) {
                     require_once("lib/loadsave.php");
                     $pagehandle = $dbi->getPage($page);
@@ -179,15 +178,16 @@ ws[cfh]");
                         $current = $pagehandle->getCurrentRevision();
                         $version = $current->getVersion();
                         $text = $current->getPackedContent();
-                        $newtext = $text . "\n* Upload:$userfile_name";
+                        $newtext = $text . "\n* Upload:$prev/$userfile_name";
                         $meta = $current->_data;
-                        $meta['summary'] = sprintf(_("uploaded %s"),$userfile_name);
+                        $meta['summary'] = sprintf(_("uploaded %s revision %d"),$userfile_name,$prev);
+                        $meta['author'] = user_getname();
                         $pagehandle->save($newtext, $version + 1, $meta);
                     }
                 }
             }
             else {
-                $message->pushContent(HTML::br(),_("Uploading failed: "),$userfile_name, HTML::br());
+                //$message->pushContent(HTML::br(),_("Uploading failed: "),$userfile_name, HTML::br());
             }
         }
         else {

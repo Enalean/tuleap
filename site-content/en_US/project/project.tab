@@ -200,6 +200,7 @@ project_admin_permissions	rel_download	Release Download
 project_admin_permissions	doc_access	Document Access
 project_admin_permissions	docgroup_access	Document Group Access
 project_admin_permissions	wiki_access	Wiki Access
+project_admin_permissions	wikiattachment_access	Wiki Attachment Access
 project_admin_permissions	tracker_full_access	Access to all tracker artifacts
 project_admin_permissions	tracker_submitter_access	Access to tracker artifacts submitted by group
 project_admin_permissions	tracker_assignee_access	Access to tracker artifacts assigned to group
@@ -214,6 +215,7 @@ project_admin_permissions	document	document $1
 project_admin_permissions	docgroup	document group $1
 project_admin_permissions	wiki	wiki $1
 project_admin_permissions	wikipage	wiki page $1
+project_admin_permissions	wikiattachment	wiki attachment $1
 project_admin_permissions	tracker	tracker $1
 project_admin_permissions	tracker_field	tracker field $1
 project_admin_permissions	object	object $1
@@ -631,12 +633,15 @@ project_stats_source_code_access_utils	service_disabled	$1 Service Disabled
 project_stats_source_code_access_utils	subversion	Subversion
 project_stats_source_code_access_utils	docs	Docs
 project_stats_source_code_access_utils	wiki	Wiki
+project_stats_source_code_access_utils	wiki_attachments	Wiki Attachments
 project_stats_source_code_access_utils	cvs_co_upd	CVS Access (checkout/update
 project_stats_source_code_access_utils	svn_access	Subversion accesses
 project_stats_source_code_access_utils	doc_download	Document Download
 project_stats_source_code_access_utils	documents	Documents
 project_stats_source_code_access_utils	wiki_access	Wiki access
 project_stats_source_code_access_utils	wiki_page	Pages
+project_stats_source_code_access_utils	wiki_attachment_access	Wiki Attachment access
+project_stats_source_code_access_utils	wiki_attachment_title	Attachment
 project_stats_source_code_access_utils	cvs_access	CVS Access
 project_stats_source_code_access_utils	co_upd	Checkout/Update
 project_stats_source_code_access_utils	browsing	File Browsing

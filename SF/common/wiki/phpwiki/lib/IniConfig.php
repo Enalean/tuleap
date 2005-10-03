@@ -337,7 +337,7 @@ function fix_configs() {
                               .'FullTextSearch:FuzzyPages:InterWikiSearch:LikePages:MostPopular:'
                               .'OrphanedPages:PageDump:PageHistory:PageInfo:RandomPage:'
                               .'RecentChanges:RecentEdits:RelatedChanges:TitleSearch:'
-                              .'UserPreferences:WantedPages');
+                              .'UserPreferences:WantedPages:UpLoad');
 
     //////////////////////////////////////////////////////////////////
     // Autodetect URL settings:

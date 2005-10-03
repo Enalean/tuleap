@@ -3095,6 +3095,36 @@ CREATE TABLE wiki_log (
 ) TYPE=MyISAM;
 
 
+-- Tables for Wiki attachments support
+CREATE TABLE wiki_attachment (
+  id INT( 11 ) NOT NULL AUTO_INCREMENT ,
+  group_id INT( 11 ) NOT NULL ,
+  name VARCHAR( 255 ) NOT NULL ,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE wiki_attachment_revision (
+  id INT( 11 ) NOT NULL AUTO_INCREMENT ,
+  attachment_id INT( 11 ) NOT NULL ,
+  user_id INT( 11 ) NOT NULL ,
+  date INT( 11 ) NOT NULL ,
+  revision INT( 11 ) NOT NULL ,
+  mimetype VARCHAR( 255 ) NOT NULL ,
+  size INT( 11 ) NOT NULL ,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE wiki_attachment_log (
+  user_id int(11) NOT NULL default '0',
+  group_id int(11) NOT NULL default '0', 
+  wiki_attachment_id int(11) NOT NULL default '0',
+  wiki_attachment_revision_id int(11) NOT NULL default '0',
+  time int(11) NOT NULL default '0',
+  KEY all_idx (user_id,group_id),
+  KEY time_idx (time),
+  KEY group_id_idx (group_id)
+);
+
 --
 -- PHP Wiki tables
 --

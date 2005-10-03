@@ -17,6 +17,7 @@
 // type='DOCGROUP_READ'            id='doc_group'                  table='doc_groups'
 // type='WIKI_READ'                id='group_id'                   table='wiki_page'
 // type='WIKIPAGE_READ'            id='id'                         table='wiki_page'
+// type='WIKIATTACHMENT_READ'      id='id'                         table='wiki_attachment'
 // type='TRACKER_FIELD_SUBMIT'     id='field_id_group_artifact_id' table='artifact_field'
 // type='TRACKER_FIELD_READ'       id='field_id_group_artifact_id' table='artifact_field'
 // type='TRACKER_FIELD_UPDATE'     id='field_id_group_artifact_id' table='artifact_field'
@@ -50,6 +51,8 @@ function permission_get_name($permission_type) {
         return $Language->getText('project_admin_permissions','wiki_access');
     } else if ($permission_type=='WIKIPAGE_READ') {
         return $Language->getText('project_admin_permissions','wiki_access');
+    } else if ($permission_type=='WIKIATTACHMENT_READ') {
+        return $Language->getText('project_admin_permissions','wiki_attachment_access');
     } else if ($permission_type=='TRACKER_FIELD_SUBMIT') {
         return $Language->getText('project_admin_permissions','tracker_field_submit');
     } else if ($permission_type=='TRACKER_FIELD_READ') {
@@ -81,6 +84,8 @@ function permission_get_object_type($permission_type,$object_id) {
         return 'wiki';
     } else if ($permission_type=='WIKIPAGE_READ') {
         return 'wikipage';
+    } else if ($permission_type=='WIKIATTACHMENT_READ') {
+        return "wikiattachment";     
     } else if ($permission_type=='TRACKER_FIELD_SUBMIT') {
         return 'field';
     } else if ($permission_type=='TRACKER_FIELD_READ') {
@@ -111,11 +116,13 @@ function permission_get_object_name($permission_type,$object_id) {
     } else if ($permission_type=='DOCGROUP_READ') {
         return doc_get_docgroupname_from_id($object_id);
     } else if ($permission_type=='WIKI_READ') {
-        return $Language->getText('project_admin_permissions','wiki');
+        return $Language->getText('project_admin_permissions','wiki');    
     } else if ($permission_type=='WIKIPAGE_READ') {
         #$wikipage= new WikiPage($object_id);
         #return $wikipage->getPagename();
         return "$object_id";
+    } else if ($permission_type=='WIKIATTACHMENT_READ') {
+        return $Language->getText('project_admin_permissions','wikiattachment');
     } else if (strpos($permission_type, 'TRACKER_ACCESS') === 0) { 
         $group = group_get_object($group_id);	
         $at = new ArtifactType($group, $object_id);
@@ -170,6 +177,8 @@ function permission_user_allowed_to_change($group_id, $permission_type, $object_
     } else if ($permission_type=='WIKI_READ') {
         return (user_ismember($group_id,'W2'));
     } else if ($permission_type=='WIKIPAGE_READ') {
+        return (user_ismember($group_id,'W2'));
+    } else if ($permission_type=='WIKIATTACHMENT_READ') {
         return (user_ismember($group_id,'W2'));
     } else if (strpos($permission_type, 'TRACKER') === 0) { // Starts with 'TRACKER'
         $group = group_get_object($group_id);	

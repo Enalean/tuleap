@@ -29,6 +29,7 @@ wiki_views_wikiserviceviews	pagename	Nom de la Page :
 wiki_views_wikiserviceviews	menuadmin	Admin	
 wiki_views_wikiserviceviews	menupages	Pages	
 wiki_views_wikiserviceviews	menudocuments	Documents
+wiki_views_wikiserviceviews	menuattch	Joindre un fichier
 wiki_views_wikiserviceviews	lock_title_spec	Il y a des permissions sur cette Page Wiki
 wiki_views_wikiserviceviews	lock_title_set	Il y a des permissions sur ce Wiki
 wiki_views_wikiserviceviews	lock_alt	Verrou
@@ -70,7 +71,8 @@ wiki_lib_wikipagewrap	right_error	Cette opération nécessite les permissions admi
 #
 wiki_actions_wikiserviceadmin	page_name_empty_err	Vous essayez de créer un Document Wiki mais vous n'avez pas sélectionné de page. Vous devez créer une Page Wiki avant de créer un Document Wiki.
 wiki_actions_wikiserviceadmin	update_perm_err	Impossible de mettre à jour les permissions : <p>$1</p>
-wiki_actions_wikiserviceadmin	update_page_perm_err	Impossible de mettre à jour les permissions de cette Page Wiki : <p>$1</p>
+wiki_actions_wikiserviceadmin	update_page_perm_err	Impossible de mettre à jour les permissions de cette page Wiki : <p>$1</p>
+wiki_actions_wikiserviceadmin	update_attachment_perm_err	Impossible de mettre à jour les permissions de ce fichier joint Wiki: <p>$1</p>
 #
 #-----------------------------------------------
 # Script: SF/common/wiki/WikiService.class
@@ -95,13 +97,14 @@ wiki_views_wkserviews	menuview	Parcourir
 wiki_views_wkserviews	menuadmin	Admin
 wiki_views_wkserviews	menudocs	Documents Wiki
 wiki_views_wkserviews	menupage	Pages Wiki
+wiki_views_wkserviews	menuattch	Fichiers joints
 wiki_views_wkserviews	menuperm	Permissions Wiki
-wiki_views_wkserviews	main	<h2>Wiki '$1' - Administration</h2><h3><a href="$2&view=wikiDocuments">Gérer les Documents Wiki</a></h3><p>Créer, supprimer, modifier et donner des permissions sur des Documents Wiki.</p><h3><a href="$3&view=wikiPages">Gérer les Pages Wiki</a></h3><p>Parcourir et donner des permissions sur des Pages Wiki.</p><h3><a href="$4&view=wikiPerms">Gérer les Permissions Wiki</a></h3><p>Donner des permissions sur tout le Wiki $5.</p>
+wiki_views_wkserviews	main	<h2>Wiki '$1' - Administration</h2><h3><a href="$2&view=wikiDocuments">Gérer les Documents Wiki</a></h3><p>Créer, supprimer, modifier et donner des permissions sur des Documents Wiki.</p><h3><a href="$3&view=wikiPages">Gérer les Pages Wiki</a></h3><p>Parcourir et donner des permissions sur des Pages Wiki.</p><h3><a href="$4&view=wikiAttachments">Gérer les fichiers joints</a></h3><p>Parcourir et définir les permissions des fichiers joints au Wiki</p><h3><a href="$4&view=wikiPerms">Gérer les Permissions Wiki</a></h3><p>Donner des permissions sur tout le Wiki $6.</p>
 wiki_views_wkserviews	wikidocs_title	<h2>Wiki '$1' - Gérer les Documents Wiki</h2>
 wiki_views_wkserviews	wikidocs_create	<h3>$1Créer un nouveau Document Wiki</h3>
 wiki_views_wkserviews	wikidocs_docs	<h3>$1Documents Wiki</h3>
 wiki_views_wkserviews	back_admin	Retour à la page d'administration
-wiki_views_wkserviews	createwikidoc	<p>Vous pouvez ajouter un nouveau lien vers une Page Wiki avec le formulaire suivant. Cela ajoutera un nouveau document dans la liste des Documents Wiki affichée sur la page du service Wiki (Le lien <a href="'.$this->wikiLink.'">Parcourir</a> de la barre d'outils).</p>
+wiki_views_wkserviews	createwikidoc	<p>Vous pouvez ajouter un nouveau lien vers une Page Wiki avec le formulaire suivant. Cela ajoutera un nouveau document dans la liste des Documents Wiki affichée sur la page du service Wiki (Le lien <a href="'.$1.'">Parcourir</a> de la barre d'outils).</p>
 wiki_views_wkserviews	act_create	Créer
 wiki_views_wkserviews	act_update	Modifier
 wiki_views_wkserviews	browsedoc	<p>Liste de tous les Documents Wiki affichée sur la page du service Wiki. Vous pouvez :</p><ul><li>Editer chaque Document Wiki avec un lien sur le nom.</li><li>Donner des permissions sur un Document Wiki.</li><li>supprimer un Document Wiki (La Page Wiki correspondante ne sera pas supprimée)</li></ul>
@@ -119,3 +122,8 @@ wiki_views_wkserviews	wkpage_adm_all	<p>La table ci-dessous liste toutes les pag
 wiki_views_wkserviews	wkpage_intern	<h3>$1Pages internes</h3>
 wiki_views_wkserviews	wkpage_int_all	<p>Les pages suivantes servent au moteur Wiki (<strong>usage interne réservé</strong>). Utilisez-les avec précautions. Vous <strong>ne</strong> devriez <strong>pas utiliser ou modifier ces pages</strong> si vous ne maîtrisez pas PhpWiki. Dans le doute, ne touchez pas à ces pages.</p>
 wiki_views_wkserviews	wikiperm	<h2>Wiki '$1' - Permission du Wiki</h2><p>Vous pouvez donner des permissions sur $2. Ces permissions s'appliquent sur <strong>tout le service wiki</strong>.</p><p>Par défaut, Wiki n'a pas de permissions spécifique : l'accès (à la fois <strong>en lecture</strong> et <strong>en écriture</strong>) à toutes les Pages Wiki est donné à tout utilisateur enregistré.</p><p>Sélectionnez les groupes qui sont autorisés à accéder à ce Wiki :<p>
+#
+#-----------------------------------------------
+# Script: SF/www/wiki/upload
+#
+wiki_attachment_upload	err_not_exist	Ce fichier joint n'existe pas. Veuillez vérifier l'adresse.

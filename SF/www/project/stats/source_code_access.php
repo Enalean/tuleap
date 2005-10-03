@@ -87,6 +87,7 @@ switch($view) {
     svnaccess_logs_daily( $project, $span*30.5, $who);
     doc_logs_daily( $project, $span*30.5, $who);
     wiki_logs_daily( $project, $span*30.5, $who);
+    wiki_attachments_logs_daily( $project, $span*30.5, $who);
     break;
 
     case "weekly":
@@ -96,6 +97,7 @@ switch($view) {
     svnaccess_logs_daily( $project, $span*7, $who);
     doc_logs_daily( $project, $span*7, $who);
     wiki_logs_daily( $project, $span*7, $who);
+    wiki_attachments_logs_daily( $project, $span*7, $who);
     break;
   
     case 'daily':
@@ -105,6 +107,7 @@ switch($view) {
     svnaccess_logs_daily( $project, $span, $who);
     doc_logs_daily( $project, $span, $who);
     wiki_logs_daily( $project, $span, $who);
+    wiki_attachments_logs_daily( $project, $span, $who);
 }
 
 

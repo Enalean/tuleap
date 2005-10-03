@@ -1771,6 +1771,12 @@ INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIPAGE_REA
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIPAGE_READ',4);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIPAGE_READ',14);
 
+-- Allow ugroup 'nobody'
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIATTACHMENT_READ',100);
+INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('WIKIATTACHMENT_READ',2,1);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIATTACHMENT_READ',3);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIATTACHMENT_READ',4);
+
 -- INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_FULL',100);
 INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('TRACKER_ACCESS_FULL',1,1);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_FULL',2);
@@ -2015,6 +2021,6 @@ INSERT INTO supported_languages VALUES \
 
 
 -- install and enable pluginsadministration
-INSERT INTO `plugin` (`name`, `enabled`) VALUES ('pluginsadministration', '1');
+INSERT INTO plugin (name, enabled) VALUES ('pluginsadministration', '1');
 
 
