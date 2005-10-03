@@ -125,9 +125,9 @@ extends WikiPlugin
 
         if (defined('TOC_FULL_SYNTAX') and TOC_FULL_SYNTAX) {
             $theading = TransformInline($heading);
-            $qheading = preg_quote($theading->asString());
+            $qheading = preg_quote($theading->asXml(), "/");
         } else {
-            $qheading = preg_quote($heading);
+            $qheading = preg_quote($heading, "/");
         }
     	for ($j=$start_index; $j < count($content); $j++) {
             if (is_string($content[$j])) {
@@ -137,7 +137,7 @@ extends WikiPlugin
             } elseif ($cWikiWord) {
                 if (isa($content[$j],'cached_wikilink')) {
                     // shortcut for single wikiword headers
-                    $content[$j] = $content[$j]->asString();
+                    $content[$j] = $content[$j]->asXml();
                     if ($content[$j] == $heading and 
                         substr($content[$j-1],-4,4) == "<$h>" and
                         substr($content[$j+1],0,5) == "</$h>") {
@@ -154,7 +154,7 @@ extends WikiPlugin
                             $joined = '';
                             for ($k=max($j-1,$start_index); $k < count($content); $k++) {
                                 $joined .= is_string($content[$k]) ? $content[$k] 
-                                    : $content[$k]->asString();
+                                    : $content[$k]->asXml();
                                 if (preg_match("/<$h>$qheading<\/$h>/",$joined)) {
                                     $hend=$k;
                                     return $k;
@@ -202,9 +202,10 @@ extends WikiPlugin
                         $s = trim($match[2]);
                         $anchor = $this->_nextAnchor($s);
                         $manchor = MangleXmlIdentifier($anchor);
-                        $texts = $s;
+                        $theading = TransformInline($s);
+                        $texts = $theading->asString();
                         if($counter) {
-                            $texts = $this->_getCounter($tocCounter, $level).' '.$s; 
+                            $texts = $this->_getCounter($tocCounter, $level).' '.$theading->asString(); 
                         }
                         $headers[] = array('text' => $texts, 'anchor' => $anchor, 'level' => $level);
                         // Change original wikitext, but that is useless art...
@@ -220,7 +221,7 @@ extends WikiPlugin
                             $x = $markup->_content[$j];                            
                             
                             if (($hstart === 0) && is_string($markup->_content[$j])) {
-                                $heading = preg_quote($s);
+                                $heading = preg_quote($theading->asXml(), "/");
                                 
                                 $counterString = $this->_getCounter($tocCounter, $level);                                
                                 if($backlink) {
