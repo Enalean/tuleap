@@ -191,7 +191,7 @@ class WikiServiceAdminViews extends WikiViews {
     print html_build_list_table_top(array($Language->getText('wiki_views_wkserviews', 'doc_name'),
                                           $Language->getText('wiki_views_wkserviews', 'doc_page'),
                                           $Language->getText('wiki_views_wkserviews', 'doc_rank'),
-                                          $Language->getText('wiki_views_wkserviews', 'doc_delete'));
+                                          $Language->getText('wiki_views_wkserviews', 'doc_delete')));
     $i=0;
     while($we = $wem->iterate()) {
       print '<tr class="'.html_get_alt_row_color($i).'">';
