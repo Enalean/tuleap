@@ -366,6 +366,7 @@ class WikiServiceAdminViews extends WikiViews {
      * @access public
      */
     function wikiAttachments() {
+        global $Language;
         echo $Language->getText('wiki_views_wkserviews', 'attachment_title', array($this->wikiname));
    
         print html_build_list_table_top(array($Language->getText('wiki_views_wkserviews', 'attachment_name'),
@@ -407,6 +408,7 @@ class WikiServiceAdminViews extends WikiViews {
   
 
     function attachmentPerms() {
+        global $Language;
         $attachmentId = $_GET['id'];
     
         $wa = new WikiAttachment($this->gid);
@@ -426,6 +428,7 @@ class WikiServiceAdminViews extends WikiViews {
      * @access public
      */
     function browseAttachment() {
+        global $Language;
         $attachmentId = $_GET['id'];
     
         $wa = new WikiAttachment($this->gid);

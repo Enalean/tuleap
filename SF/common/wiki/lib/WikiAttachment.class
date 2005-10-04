@@ -107,6 +107,7 @@ class WikiAttachment /* implements UGroupPermission */ {
      * @param  string $name File name
      */
     function setFilename($name="") {
+        global $Language;
         $disallowed_extensions = explode("\n",
                                          "ad[ep]
 asd
@@ -242,6 +243,7 @@ ws[cfh]");
     }
 
     function dbadd() {
+        global $Language;
         $sql = ('   INSERT INTO wiki_attachment SET'
                 .'  group_id="'.$this->gid.'"'
                 .', name="'.mysql_real_escape_string($this->filename).'"'	  
@@ -257,6 +259,7 @@ ws[cfh]");
     }
 
     function create() {
+        global $Language;
         // Create wiki attachment directory for current project
         if(!is_dir($this->basedir)){
             $res = mkdir($this->basedir, 0700);
@@ -280,6 +283,7 @@ ws[cfh]");
     }
 
     function getId() {
+        global $Language;
         if(!is_numeric($this->id)) {
             $sql = 'SELECT id FROM wiki_attachment'
                 .' WHERE name="'.$this->getFilename().'"'
