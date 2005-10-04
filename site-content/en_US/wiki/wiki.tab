@@ -42,6 +42,16 @@ wiki_views_wikiviews	empty_page	<h2><span class="feedback">Page doesn't exist</s
 wiki_views_wikiviews	not_empty_page	<p>You can set specific permissions on <strong>$1</strong> Wiki Page. These <strong>permissions only apply to this page</strong>.</p><p>By default, Wiki pages have no specific permissions: access to all Wiki Pages is granted to any registred user.</p><p><strong>Remember:</strong> Access to a page imply that <strong>every members</strong> of <strong>each</strong> following <strong>selected groups</strong> can <strong>read</strong> and <strong>write</strong> the corresponding page.</p><p>Select user groups who are granted access to this Wiki:<p>
 #
 #-----------------------------------------------
+# Script: SF/common/wiki/lib/WikiAttachment.class
+#
+wiki_lib_attachment	err_extension	Files with extension $1 are not allowed.
+wiki_lib_attachment	err_alpha	ERROR uploading $1: File names may only contain alphanumeric characters and dot, underscore or dash.
+wiki_lib_attachment	err_insert	Can not insert new attachment revision: $1
+wiki_lib_attachment	err_create_upload_dir	Unable to create project upload area
+wiki_lib_attachment	err_create_file_dir	Unable to create file revision area
+wiki_lib_attachment	err_multi_id	There are multiple identifier for an attachment.Please contact an administrator
+#
+#-----------------------------------------------
 # Script: SF/common/wiki/lib/WikiEntry.class
 #
 wiki_lib_wikientry	insert_err	Can not insert new wiki entry: $1
@@ -117,6 +127,21 @@ wiki_views_wkserviews	wkpage_adm_all	<p>The table bellow lists all administratio
 wiki_views_wkserviews	wkpage_intern	<h3>$1Internal pages</h3>
 wiki_views_wkserviews	wkpage_int_all	<p>Following pages are for wiki engine <strong>internal reserved use</strong>. Please use it carefuly. You should <strong>not use or modify these pages</strong> if don't know well PhpWiki. In case of doubt, do not touch these pages.</p>
 wiki_views_wkserviews	wikiperm	<h2>Wiki '$1' - Wiki Permissions</h2><p>You can set specific permissions on $2. These permissions apply to <strong>whole wiki service</strong>.</p><p>By default, Wiki have no specific permissions: access (both <strong>read</strong> and <strong>write</strong>) to all Wiki Pages is granted to any CodeX registred user.</p><p>Select user groups who are granted access to this Wiki:<p>
+wiki_views_wkserviews	attachment_name	Name
+wiki_views_wkserviews	attachment_revisions	Revisions
+wiki_views_wkserviews	attachment_permissions	Permissions
+wiki_views_wkserviews	attachment_title	<h2>Wiki '$1' - Wiki Attachments</h2>
+wiki_views_wkserviews	perm_attachment_title	<h2>Wiki '$1' - Wiki Attachment Permissions</h2>
+wiki_views_wkserviews	wiki_attachment_perm	<p>You can set specific permissions on $1. These permissions apply to <strong>all revisions of this attachment</strong>.</p><p>By default, WikiAttachment have no specific permissions: access is granted to any CodeX registred user.</p> <p>Any granted user can:<ul><li>Browse each revision of this WikiAttachment.</li><li>Add a new revision of this WikiAttachment.</li></ul></p><p>Select user groups who are granted access to this WikiAttachment:<p>
+wiki_views_wkserviews	browse_attachment_title	<h2>Wiki '$1' - Wiki Attachments $2</h2>
+wiki_views_wkserviews	attachment_revision	Revision
+wiki_views_wkserviews	attachment_date	Date
+wiki_views_wkserviews	attachment_author	Author
+wiki_views_wkserviews	attachment_size	Size
+wiki_views_wkserviews	doc_name	Name
+wiki_views_wkserviews	doc_page	Page
+wiki_views_wkserviews	doc_rank	Rank On Screen
+wiki_views_wkserviews	doc_delete	Delete ?
 #
 #-----------------------------------------------
 # Script: SF/www/wiki/upload

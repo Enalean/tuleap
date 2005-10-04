@@ -25,6 +25,8 @@ define('ATTACHMENT_DATA_DIR', $GLOBALS['sys_wiki_attachment_data_dir']);
 require_once('WikiAttachmentRevision.class');
 require_once($_SERVER['DOCUMENT_ROOT'].'/project/admin/permissions.php');
 
+$Language->loadLanguageMsg('wiki/wiki');
+
 /**
  * Management of external ressources linked on a wiki
  *
@@ -146,16 +148,11 @@ ws[cfh]");
 
         if (preg_match("/(\." . join("|\.", $disallowed_extensions) . ")\$/",
                        $name)) {
-            $message = sprintf("Files with extension %s are not allowed", 
-                               join(", ", $disallowed_extensions));
-            trigger_error($message, E_USER_ERROR);
+            trigger_error($Language->getText('wiki_lib_attachment', 'err_extension', join(", ", $disallowed_extensions)), E_USER_ERROR);
             return false;
         }
         elseif (preg_match("/[^._a-zA-Z0-9-]/", $name)) {
-            $message = "ERROR uploading '".$name."': "
-                ."File names may only contain alphanumeric characters"
-                ."and dot, underscore or dash.";
-            trigger_error($message, E_USER_ERROR);
+            trigger_error($Language->getText('wiki_lib_attachment', 'err_alpha', join(", ", $disallowed_extensions)), E_USER_ERROR);
         }
 
         $this->filename = $name;
@@ -255,7 +252,7 @@ ws[cfh]");
         if(db_affected_rows($res) === 1)
             return true;
 
-        trigger_error('Can not insert new attachment revision: "'.db_error(), E_USER_ERROR);
+        trigger_error($Language->getText('wiki_lib_attachment', 'err_insert',array(db_error())), E_USER_ERROR);
         return false;
     }
 
@@ -264,7 +261,7 @@ ws[cfh]");
         if(!is_dir($this->basedir)){
             $res = mkdir($this->basedir, 0700);
             if(!$res) {
-                trigger_error("Unable to create project upload area", E_USER_ERROR);
+                trigger_error($Language->getText('wiki_lib_attachment', 'err_create_upload_dir'), E_USER_ERROR);
                 return false;
             }
         }
@@ -273,7 +270,7 @@ ws[cfh]");
         if(!is_dir($this->basedir.'/'.$this->filename)){
             $res = mkdir($this->basedir.'/'.$this->filename, 0700);
             if(!$res) {
-                trigger_error("Unable to create file revision area", E_USER_ERROR);
+                trigger_error($Language->getText('wiki_lib_attachment', 'err_create_file_dir'), E_USER_ERROR);
                 return false;
             }
         }
@@ -289,8 +286,7 @@ ws[cfh]");
                 .' AND group_id="'.$this->gid.'"';
             $res = db_query($sql);
             if(db_numrows($res) > 1) {
-                trigger_error("There are multiple identifier for an attachment."
-                              ."Please contact an administrator", E_USER_ERROR);
+                trigger_error($Language->getText('wiki_lib_attachment', 'err_multi_id'), E_USER_ERROR);
                 return -1;
             }
             else {

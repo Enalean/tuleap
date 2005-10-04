@@ -47,6 +47,16 @@ wiki_views_wikiviews	empty_page	<h2><span class="feedback">La Page n'existe pas<
 wiki_views_wikiviews	not_empty_page	<p>Vous pouvez donnez des permissions spécifiques à la Page Wiki $1. Ces <strong>permissions ne s'appliquent que sur cette page</strong>.</p><p>Par défaut, les pages Wiki n'ont pas de permissions : l'accès à toutes les Pages Wiki est permis pour tout utilisateur enregistré.</p><p><strong>Rappel:</strong> Accéder à une page signifie que <strong>tous les membres</strong> de <strong>chaque groupe</strong> ci-dessous <strong>sélectionné</strong> peut <strong>lire</strong> et <strong>modifier</strong> la page correspondante.</p><p>Sélectionner les groupes d'utilisateurs qui sont autorisés à accéder à ce Wiki :<p>
 #
 #-----------------------------------------------
+# Script: SF/common/wiki/lib/WikiAttachment.class
+#
+wiki_lib_attachment	err_extension	Les fichiers ayant les extensions $1 ne sont pas autorisés.
+wiki_lib_attachment	err_alpha	ERREUR chargement de $1: Les noms de fichier ne peuvent contenir que des caractères alphanumériques, ainsi que le point, le souligné et le tiret.
+wiki_lib_attachment	err_insert	Impossible d'insérer une nouvelle révision du fichier joint: $1
+wiki_lib_attachment	err_create_upload_dir	Impossible de créer la zone de stockage du projet
+wiki_lib_attachment	err_create_file_dir	Impossible de créer la zone de stockage de la révision du fichier
+wiki_lib_attachment	err_multi_id	Il existe plusieurs identifiants pour un fichier joint. Merci de contacter un administrateur.
+#
+#-----------------------------------------------
 # Script: SF/common/wiki/lib/WikiEntry.class
 #
 wiki_lib_wikientry	insert_err	Impossible d'insérer une nouvelle entrée wiki: $1
@@ -99,7 +109,7 @@ wiki_views_wkserviews	menudocs	Documents Wiki
 wiki_views_wkserviews	menupage	Pages Wiki
 wiki_views_wkserviews	menuattch	Fichiers joints
 wiki_views_wkserviews	menuperm	Permissions Wiki
-wiki_views_wkserviews	main	<h2>Wiki '$1' - Administration</h2><h3><a href="$2&view=wikiDocuments">Gérer les Documents Wiki</a></h3><p>Créer, supprimer, modifier et donner des permissions sur des Documents Wiki.</p><h3><a href="$3&view=wikiPages">Gérer les Pages Wiki</a></h3><p>Parcourir et donner des permissions sur des Pages Wiki.</p><h3><a href="$4&view=wikiAttachments">Gérer les fichiers joints</a></h3><p>Parcourir et définir les permissions des fichiers joints au Wiki</p><h3><a href="$4&view=wikiPerms">Gérer les Permissions Wiki</a></h3><p>Donner des permissions sur tout le Wiki $6.</p>
+wiki_views_wkserviews	main	<h2>Wiki '$1' - Administration</h2><h3><a href="$2&view=wikiDocuments">Gérer les documents Wiki</a></h3><p>Créer, supprimer, modifier et donner des permissions sur des documents Wiki.</p><h3><a href="$3&view=wikiPages">Gérer les pages Wiki</a></h3><p>Parcourir et donner des permissions sur des pages Wiki.</p><h3><a href="$4&view=wikiAttachments">Gérer les fichiers joints</a></h3><p>Parcourir et définir les permissions des fichiers joints au Wiki</p><h3><a href="$4&view=wikiPerms">Gérer les permissions Wiki</a></h3><p>Donner des permissions sur tout le Wiki $6.</p>
 wiki_views_wkserviews	wikidocs_title	<h2>Wiki '$1' - Gérer les Documents Wiki</h2>
 wiki_views_wkserviews	wikidocs_create	<h3>$1Créer un nouveau Document Wiki</h3>
 wiki_views_wkserviews	wikidocs_docs	<h3>$1Documents Wiki</h3>
@@ -122,6 +132,21 @@ wiki_views_wkserviews	wkpage_adm_all	<p>La table ci-dessous liste toutes les pag
 wiki_views_wkserviews	wkpage_intern	<h3>$1Pages internes</h3>
 wiki_views_wkserviews	wkpage_int_all	<p>Les pages suivantes servent au moteur Wiki (<strong>usage interne réservé</strong>). Utilisez-les avec précautions. Vous <strong>ne</strong> devriez <strong>pas utiliser ou modifier ces pages</strong> si vous ne maîtrisez pas PhpWiki. Dans le doute, ne touchez pas à ces pages.</p>
 wiki_views_wkserviews	wikiperm	<h2>Wiki '$1' - Permission du Wiki</h2><p>Vous pouvez donner des permissions sur $2. Ces permissions s'appliquent sur <strong>tout le service wiki</strong>.</p><p>Par défaut, Wiki n'a pas de permissions spécifique : l'accès (à la fois <strong>en lecture</strong> et <strong>en écriture</strong>) à toutes les Pages Wiki est donné à tout utilisateur enregistré.</p><p>Sélectionnez les groupes qui sont autorisés à accéder à ce Wiki :<p>
+wiki_views_wkserviews	attachment_name	Nom
+wiki_views_wkserviews	attachment_revisions	Révisions
+wiki_views_wkserviews	attachment_permissions	Permissions
+wiki_views_wkserviews	attachment_title	<h2>Wiki '$1' - Fichiers joints</h2>
+wiki_views_wkserviews	perm_attachment_title	<h2>Wiki '$1' - Permissions des fichiers joints</h2>
+wiki_views_wkserviews	wiki_attachment_perm	<p>Vous pouvez donner des permissions sur $1. Ces permissions s'appliquent sur <strong>toutes les révisions de ce fichier joint</strong>.</p><p>Par défaut, les fichiers joints  n'ont pas de permission spécifique : tout utilisateur enregistré peut lire les fichiers joints et ajouter une nouvelle révision.</p><p>Sélectionnez les groupes qui sont autorisés à accéder à ce fichier joint :<p>
+wiki_views_wkserviews	browse_attachment_title	<h2>Wiki '$1' - Fichier joint $2</h2>
+wiki_views_wkserviews	attachment_revision	Révision
+wiki_views_wkserviews	attachment_date	Date
+wiki_views_wkserviews	attachment_author	Auteur
+wiki_views_wkserviews	attachment_size	Taille
+wiki_views_wkserviews	doc_name	Nom
+wiki_views_wkserviews	doc_page	Page
+wiki_views_wkserviews	doc_rank	Rang à l'écran
+wiki_views_wkserviews	doc_delete	Détruire ?
 #
 #-----------------------------------------------
 # Script: SF/www/wiki/upload

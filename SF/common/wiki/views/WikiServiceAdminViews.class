@@ -188,8 +188,10 @@ class WikiServiceAdminViews extends WikiViews {
    
     print $Language->getText('wiki_views_wkserviews', 'browsedoc');
     
-    print html_build_list_table_top(array('Name', 'Page', 'Rank On Screen', 'Delete ?'));
-
+    print html_build_list_table_top(array($Language->getText('wiki_views_wkserviews', 'doc_name'),
+                                          $Language->getText('wiki_views_wkserviews', 'doc_page'),
+                                          $Language->getText('wiki_views_wkserviews', 'doc_rank'),
+                                          $Language->getText('wiki_views_wkserviews', 'doc_delete'));
     $i=0;
     while($we = $wem->iterate()) {
       print '<tr class="'.html_get_alt_row_color($i).'">';
@@ -364,10 +366,12 @@ class WikiServiceAdminViews extends WikiViews {
      * @access public
      */
     function wikiAttachments() {
-        echo '<h2>Wiki \''.$this->wikiname.'\' - Wiki Attachments</h2>';
+        echo $Language->getText('wiki_views_wkserviews', 'attachment_title', array($this->wikiname));
    
-        print html_build_list_table_top(array('Name', 'Revisions', 'Permissions'/*, 'Delete ?'*/));
-
+        print html_build_list_table_top(array($Language->getText('wiki_views_wkserviews', 'attachment_name'),
+                                              $Language->getText('wiki_views_wkserviews', 'attachment_revisions'), 
+                                              $Language->getText('wiki_views_wkserviews', 'attachment_permissions')
+                                              /*, 'Delete ?'*/));
         $wai = new WikiAttachmentIterator($this->gid);
         $wai->getList();
 
@@ -380,12 +384,12 @@ class WikiServiceAdminViews extends WikiViews {
             print '<td><a href="'.$this->wikiAdminLink.'&view=browseAttachment&id='.$id.'">'.$filename.'</a></td>';
             print '<td align="center">'.$wa->count().'</td>';
 
-            $status='Define ';
+            $status=$Language->getText('wiki_views_wkserviews', 'define_perms');
             if($wa->permissionExist()) {
-                $status='Edit ';
+                $status=$Language->getText('wiki_views_wkserviews', 'edit_perms');
             }
             print '<td align="center">';
-            print '<a href="'.$this->wikiAdminLink.'&view=attachmentPerms&id='.$id.'">['.$status.' Permissions]</a>';
+            print '<a href="'.$this->wikiAdminLink.'&view=attachmentPerms&id='.$id.'">['.$status.']</a>';
             print '</td>';
 
 
@@ -398,7 +402,7 @@ class WikiServiceAdminViews extends WikiViews {
         }
     
         print '</table>';
-        print '<hr/><p><a href="'.$this->wikiAdminLink.'">Back to admin panel</a></p>'."\n";
+        print '<hr/><p><a href="'.$this->wikiAdminLink.'">'.$Language->getText('wiki_views_wkserviews', 'back_admin').'</a></p>'."\n";
     }
   
 
@@ -408,28 +412,14 @@ class WikiServiceAdminViews extends WikiViews {
         $wa = new WikiAttachment($this->gid);
         $wa->initWithId($attachmentId);
 
-        echo '<h2>Wiki \''.$this->wikiname.'\' - WikiAttachment Permissions</h2>';
+        echo $Language->getText('wiki_views_wkserviews', 'perm_attachment_title', array($this->wikiname));
    
-        echo '
-    <p>You can set specific permissions on "'.$wa->getFilename().'". These permissions 
-    apply to <strong>all revisions of this attachment</strong>.</p>
-
-    <p>By default, WikiAttachment have no specific permissions: access is 
-    granted to any CodeX registred user.</p>
-
-    <p>Any granted user can:
-    <ul>
-      <li>Browse each revision of this WikiAttachment.</li>
-      <li>Add a new revision of this WikiAttachment.</li>
-    </ul>
-    </p>
-
-    <p>Select user groups who are granted access to this WikiAttachment:<p>';
+        echo $Language->getText('wiki_views_wkserviews', 'wiki_attachment_perm', array($wa->getFilename());
     
         $postUrl = $this->wikiAdminLink.'&view=wikiAttachments&action=setWikiAttachmentPerms';
         permission_display_selection_form("WIKIATTACHMENT_READ", $wa->getId(), $this->gid, $postUrl);
 
-        print '<hr/><p><a href="'.$this->wikiAdminLink.'&view=wikiAttachments">Back to admin panel</a></p>'."\n";
+        print '<hr/><p><a href="'.$this->wikiAdminLink.'&view=wikiAttachments">'.$Language->getText('wiki_views_wkserviews', 'back_admin').'</a></p>'."\n";
     }
 
     /**
@@ -444,10 +434,13 @@ class WikiServiceAdminViews extends WikiViews {
         $wari = new WikiAttachmentRevisionIterator($attachmentId);
         $wari->getList();
 
-        echo '<h2>Wiki \''.$this->wikiname.'\' - Wiki Attachment "'.$wa->getFilename().'"</h2>';
+        echo $Language->getText('wiki_views_wkserviews', 'browse_attachment_title', array($this->wikiname,$wa->getFilename()));
 
         // if($wari->exist()) {      
-        print html_build_list_table_top(array('Revision', 'Date', 'Author', 'Size'));
+        print html_build_list_table_top(array($Language->getText('wiki_views_wkserviews', 'attachment_revision'),
+                                              $Language->getText('wiki_views_wkserviews', 'attachment_date'),
+                                              $Language->getText('wiki_views_wkserviews', 'attachment_author'),
+                                              $Language->getText('wiki_views_wkserviews', 'attachment_size'));
     
         while($war =& $wari->iterate()) {      
             print '
@@ -464,7 +457,7 @@ class WikiServiceAdminViews extends WikiViews {
         // else {
         //   print 'not found';
         // }
-        print '<hr/><p><a href="'.$this->wikiAdminLink.'&view=wikiAttachments">Back to attachments admin panel</a></p>'."\n";
+        print '<hr/><p><a href="'.$this->wikiAdminLink.'&view=wikiAttachments">'.$Language->getText('wiki_views_wkserviews', 'back_admin').'</a></p>'."\n";
     }
 
     /**
