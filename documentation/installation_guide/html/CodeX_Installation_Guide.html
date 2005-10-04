@@ -505,9 +505,9 @@ optional<br>
       </td>
     </tr>
     <tr>
-      <td valign="top">cvs<br>
+      <td valign="top">cvs or cvsnt<br>
       </td>
-      <td valign="top">Install the cvs package<br>
+      <td valign="top">Install the cvs or cvsnt package<br>
       </td>
     </tr>
     <tr>
@@ -903,15 +903,15 @@ going to be used/enforced on your site.<br>
 <h1><a name="Installing_the_CodeX_Software"></a>Installing the CodeX
 Software</h1>
 The prefered way to install the CodeX software is to check it out from
-the CodeX CVS repository. This will make it easy for you to keep up to
+the CodeX Subversion repository. This will make it easy for you to keep up to
 date with &nbsp;subsequent new features or bug fix. <br>
 <ul>
   <li>Before you install the CodeX software make sure you have a user
 account on the central CodeX server. You'll need this user account to
-check out the source code from the CodeX CVS repository.</li>
+check out the source code from the CodeX Subversion repository.</li>
   <li>Ask us (<a href="mailto:codex-contact@codex.xerox.com">codex-contact@codex.xerox.com</a>)
-to add you to the codex-cvsevents mailing list to automatically receive
-all the commit made to the Central CVS repository of CodeX so you know
+to add you to the codex-svnevents mailing list to automatically receive
+all the commit made to the Central repository of CodeX so you know
 what modifications are being made and what to do to upgrade.&nbsp;</li>
   <li><font color="#ff0000">If you want to develop a new feature, <b>PLEASE</b>
 get in touch with the CodeX Team to talk about it first. By doing so we
@@ -924,7 +924,7 @@ to the GNU GPL license.&nbsp;</font></li>
 To check out the CodeX source code: login as Unix user 'sourceforge'
 and go to /home/httpd/. From there checkout the CodeX code,
 documentation and site content modules:<br>
-<pre>	cvs -d:pserver:your_codex_login@cvs.codex.codex.xerox.com:/cvsroot/codex co SF site-content documentation cgi-bin<br></pre>
+<pre>	svn co --username your_codex_login http://svn.codex.codex.xerox.com/svnroot/codex/dev/trunk /home/httpd<br></pre>
 where <span style="font-family: monospace;">your_codex_login</span> is
 the CodeX user name of the user who is going to checkout the CodeX
 source code.<br>
@@ -1206,7 +1206,7 @@ codex-admin, etc. This file is currently under cvs control so if you
 are
 managing your own site it might be a better idea to add these aliases
 in
-/etc/aliases to avoid conflict when merging new code from CodeX CVS
+/etc/aliases to avoid conflict when merging new code from CodeX source
 repository<br>
 <br>
 <h2>Sendmail shell wrappers</h2>
@@ -1345,7 +1345,7 @@ CODEX because it is the name of the central site)<br>
 <hr style="width: 100%; height: 2px;">
 <h1><a name="Subversion_Configuration"></a>Subversion Configuration</h1>
 <ul>
-  <li>First make sure the CodeX specific RPMs for CVS are installed on
+  <li>First make sure the CodeX specific RPMs for Subversion are installed on
 your CodeX server (see the section on <a
  href="file:///tmp/CodeX_Installation_Guide.html#RPM_Packages">RPM
 Packages</a>)</li>
@@ -1373,7 +1373,7 @@ Subversion repository via an HTTPS URL.<br>
 <hr>
 <h1><a name="CVS_Configuration"></a>CVS Configuration</h1>
 <ul>
-  <li>First make sure the CodeX specific RPMs for CVS are installed on
+  <li>First, make sure the CodeX specific RPMs for CVS are installed on
 your CodeX server (see the section on <a href="#RPM_Packages">RPM
 Packages</a>)</li>
   <li>Create the <tt>/etc/cvs_root_allow</tt> file as follows:<br>
@@ -1383,11 +1383,12 @@ Packages</a>)</li>
 # chmod 644 /etc/cvs</tt><tt>_root</tt><tt>_allow</tt></li>
 </ul>
 Then you have to decide what type of CVS access you want to offer to
-your users.: either through the standard pserver protocol or through
+your users: either through the standard pserver protocol,through
 SSH
-(secure shell). If your site is inside your corporate network the
+(secure shell), or, if you installed CVSNT instead of CVS, you may use the sserver protocol (SSL encrypted pserver).
+If your site is inside your corporate network the
 pserver method is a good choice. If your site is on the Internet we
-recommend that you use the SSH approach to make sure that
+recommend that you use the SSH or sserver approach to make sure that
 confidential&nbsp; information like passwords or source code travels
 encrypted.
 <h2>The pserver approach</h2>
@@ -1425,7 +1426,41 @@ current implementation all project members are granted read and write
 access to the CVS repository of the projects they belong to. &nbsp;You
 can always add users' name in the CVSROOT/readers file to give them
 read-only access.<br>
+<h2>The sserver approach</h2>
 <ul>
+<li>First, you need to make sure that you use cvsnt and not cvs. Type 'cvs -v' to verify this.
+<li>You also need to verify that the sserver protocol is installed. Type 'cvs info'. this command should return a line like this one:
+<pre>
+sserver             sserver 2.5.02 (Servalan) Build 2064
+</pre>
+<li>Configure xinetd to start the cvs server when needed. The
+/etc/xinetd.d/cvs file must look like this: <br>
+<pre>
+service cvspserver
+{
+       disable = no
+       socket_type     = stream
+       wait            = no
+       user            = root
+       group           = root
+       log_type        = FILE /var/log/cvspserver
+       server          = /usr/bin/cvsnt
+       server_args     = -f -z3 -T/home/large_tmp authserver
+       groups          = yes
+       log_on_failure  += USERID
+       mdns            = no # Lockserver handles mdns broadcast
+} 
+</pre>
+<li>add the cvslockd service:
+<pre>
+chkconfig --add cvslockd
+service cvslockd start
+</pre>
+<li>Copy '/home/httpd/SF/etc/PServer.dist' file to /etc/cvsnt/PServer.<br>
+Note that the sserver protocol uses the same SSL certificates as the https protocol.
+If your CodeX server is not yet configured for HTTPS, you need to generate a certificate.
+<li>You may need to migrate existing CVSROOTs if they were created with CVS (and not CVSNT) with a script. Use /home/httpd/SF/utils/cvs1/cvs2cvsnt.pl.
+
 </ul>
 <h2>The SSH approach</h2>
 The idea behind the SSH approach is that a client ssh to the remote
@@ -1820,7 +1855,7 @@ documents marked 'private' or hidden'. See the <a
 User Guide</a> for more details on the Document Manager service. This
 is
 also why you will not find the Site Documentation of the CodeX central
-site in the CodeX CVS repository.<br>
+site in the CodeX source code repository.<br>
 <br>
 <h2>User Guide and On-line Help <br>
 </h2>
@@ -1829,7 +1864,7 @@ menu of CodeX. It actually points to the HTML version of the CodeX User
 Guide (CUG). The CUG has been written in XML with the DocBook DTD and
 is
 stored under the top level '<tt>documentation</tt>' directory in the
-CodeX CVS repository. To activate the on-line help simply check out the
+CodeX source repository. To activate the on-line help simply check out the
 <tt>documentation</tt> directory
 at the same place as the <tt>SF</tt> and <tt>site-content</tt>
 directories.<br>
@@ -1858,7 +1893,7 @@ that you can redefine see the <span style="font-family: monospace;"><span
 </ul>
 <br>
 Also notice that the HTML and PDF versions of the CUG are <b>not</b>
-stored in the CVS repository. They are generated from the XML files
+stored in the source repository. They are generated from the XML files
 using the script&nbsp; <span style="font-family: monospace;">/home/httpd/SF/utils/generate_doc.sh</span>.
 You can run this
 script
@@ -1931,7 +1966,7 @@ CodeX also supports LDAP authentication: passwords are no longer CodeX specific,
 <p>CodeX now supports LDAP authentication. In order to use this authentication scheme, set <span style="font-family: monospace;">$sys_auth_type</span> to 'ldap' and define the other variables in local.inc as specified below.
 <p>The LDAP login and the CodeX login might not be the same. The reason for this is that the LDAP logins might not be compatible with UNIX logins (e.g. they might contain spaces, accentuated characters, etc.). In this case, the users will have two logins.
 <ul><li> The web authentication login is the LDAP login: it is used to access the web-based user interface of CodeX. 
-<li>Some services need a unix-based authentication, namely: CVS (with pserver or SSH), Subversion, FTP and shell access, and thus rely on the CodeX login.
+<li>Some services need a unix-based authentication, namely: CVS (with pserver, sserver or SSH), Subversion, FTP and shell access, and thus rely on the CodeX login.
 </ul>
 <p>Note that both logins use the same password, i.e. the LDAP password.
 <h4>Registration</h4>

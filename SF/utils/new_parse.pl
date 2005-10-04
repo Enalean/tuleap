@@ -79,6 +79,15 @@ my ($cxname) = get_codex_user();
 my $cvs_root_allow_file = "/etc/cvs_root_allow";
 @cvs_root_allow_array = open_array_file($cvs_root_allow_file);
 
+# Check CVS version (CVS or CVSNT)
+my $cvsversion=`cvs -v`;
+my $use_cvsnt=0;
+my $cvsnt_config_file = "/etc/cvsnt/PServer";
+
+if ($cvsversion =~ /CVSNT/) {
+  $use_cvsnt=1;
+  @cvsnt_config_array = open_array_file($cvsnt_config_file);
+}
 
 #
 # Loop through @userdump_array and deal w/ users.
@@ -209,23 +218,30 @@ while ($ln = pop(@groupdump_array)) {
 		#system("echo \"anonymous\" > $cvs_dir/CVSROOT/readers");
 		#system("echo \"anonymous:\\\$1\\\$0H\\\$2/LSjjwDfsSA0gaDYY5Df/:anoncvs_$gname\" > $cvs_dir/CVSROOT/passwd");
 
-		# LJ But to allow checkout/update to registered users we
-		# need to setup a world writable directory for CVS lock files
-		mkdir "$cvs_dir/.lockdir", 0777;
-		chmod 0777, "$cvs_dir/.lockdir"; # overwrite umask value
-		system("echo  >> $cvs_dir/CVSROOT/config");
-		system("echo '# !!! CodeX Specific !!! DO NOT REMOVE' >> $cvs_dir/CVSROOT/config");
-		system("echo '# Put all CVS lock files in a single directory world writable' >> $cvs_dir/CVSROOT/config");
-		system("echo '# directory so that any CodeX registered user can checkout/update' >> $cvs_dir/CVSROOT/config");
-		system("echo '# without having write permission on the entire cvs tree.' >> $cvs_dir/CVSROOT/config");
-		system("echo 'LockDir=$cvs_dir/.lockdir' >> $cvs_dir/CVSROOT/config");
-		# commit changes to config file (directly with RCS)
-		system("cd $cvs_dir/CVSROOT; rcs -q -l config; ci -q -m\"CodeX modifications\" config; co -q config");
+                if (! $use_cvsnt) {
+                  # LJ But to allow checkout/update to registered users we
+                  # need to setup a world writable directory for CVS lock files
+                  mkdir "$cvs_dir/.lockdir", 0777;
+                  chmod 0777, "$cvs_dir/.lockdir"; # overwrite umask value
+                  system("echo  >> $cvs_dir/CVSROOT/config");
+                  system("echo '# !!! CodeX Specific !!! DO NOT REMOVE' >> $cvs_dir/CVSROOT/config");
+                  system("echo '# Put all CVS lock files in a single directory world writable' >> $cvs_dir/CVSROOT/config");
+                  system("echo '# directory so that any CodeX registered user can checkout/update' >> $cvs_dir/CVSROOT/config");
+                  system("echo '# without having write permission on the entire cvs tree.' >> $cvs_dir/CVSROOT/config");
+                  system("echo 'LockDir=$cvs_dir/.lockdir' >> $cvs_dir/CVSROOT/config");
+                  # commit changes to config file (directly with RCS)
+                  system("cd $cvs_dir/CVSROOT; rcs -q -l config; ci -q -m\"CodeX modifications\" config; co -q config");
+                }
 
-		# setup loginfo to make group ownership every commit
-		# commit changes to config file (directly with RCS)
-		system("echo \"ALL (cat;chgrp -R $gname $cvs_dir)>/dev/null 2>&1\" > $cvs_dir/CVSROOT/loginfo");
-		system("cd $cvs_dir/CVSROOT; rcs -q -l loginfo; ci -q -m\"CodeX modifications\" loginfo; co -q loginfo");
+                # setup loginfo to make group ownership every commit
+                # commit changes to config file (directly with RCS)
+                if ($use_cvsnt) {
+                  # use DEFAULT because there is an issue with multiple 'ALL' lines with cvsnt.
+                  system("echo \"DEFAULT chgrp -f -R  $gname $cvs_dir\" > $cvs_dir/CVSROOT/loginfo");
+                } else {
+                  system("echo \"ALL (cat;chgrp -R $gname $cvs_dir)>/dev/null 2>&1\" > $cvs_dir/CVSROOT/loginfo");
+                }
+                system("cd $cvs_dir/CVSROOT; rcs -q -l loginfo; ci -q -m\"CodeX modifications\" loginfo; co -q loginfo");
 
 		# put an empty line in in the valid tag cache (means no tag yet)
 		# (this file is not under version control so don't check it in)
@@ -271,7 +287,11 @@ while ($ln = pop(@groupdump_array)) {
 	  if (! $blockispresent)
 	    {
 	      system("echo \"$MARKER_BEGIN\" >> $cvs_dir/CVSROOT/loginfo");
-	      system("echo \"ALL (/usr/local/bin/log_accum -T $gname -C $gname -U $server_url/cvs/viewcvs.php/ -s %{sVv})>/dev/null 2>&1\" >> $cvs_dir/CVSROOT/loginfo");	 
+              if ($use_cvsnt) {
+                system("echo \"ALL /usr/local/bin/log_accum -T $gname -C $gname -U $server_url/cvs/viewcvs.php/ -s %{sVv}\" >> $cvs_dir/CVSROOT/loginfo");
+              } else {
+                system("echo \"ALL (/usr/local/bin/log_accum -T $gname -C $gname -U $server_url/cvs/viewcvs.php/ -s %{sVv})>/dev/null 2>&1\" >> $cvs_dir/CVSROOT/loginfo");
+              }	 
 	      system("echo \"$MARKER_END\" >> $cvs_dir/CVSROOT/loginfo");
 	      system("cd $cvs_dir/CVSROOT; rcs -q -l loginfo; ci -q -m\"CodeX modifications: entering log_accum from group fields (cvs_tracker/cvs_events)\" loginfo; co -q loginfo");
 	    }
@@ -430,6 +450,27 @@ write_array_file("/etc/group", @group_array);
 write_array_file("/etc/smbpasswd", @smbpasswd_array) if ($winaccount_on);
 write_array_file($ENV{'SF_LOCAL_INC_PREFIX'}."/etc/httpd/conf/htpasswd", @htpasswd_array);
 write_array_file($cvs_root_allow_file, @cvs_root_allow_array);
+
+if ($use_cvsnt) {
+  # Write cvsroot list in CVSNT config file
+  open FILE,">$cvsnt_config_file";
+  print FILE "# CodeX CVSROOT directory list: do not edit this list! modify /etc/cvs_root_allow instead\n";
+  my $n=0;
+  foreach(@cvs_root_allow_array) {
+    print FILE "Repository$n=$_";
+    $n++;
+  }
+  $cvsnt_marker="DON'T EDIT THIS LINE - END OF CODEX BLOCK";
+  print FILE "# End of CodeX CVSROOT directory list: you may change options below $cvsnt_marker\n";
+  
+  # and recopy other configuration instructions
+  my $configlines=0;
+  foreach(@cvsnt_config_array) {
+    print FILE if ($configlines);
+    $configlines=1 if (/$cvsnt_marker/);
+  }
+  close FILE;
+}
 
 
 ###############################################
