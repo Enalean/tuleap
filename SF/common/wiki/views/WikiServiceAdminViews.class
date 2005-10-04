@@ -414,7 +414,7 @@ class WikiServiceAdminViews extends WikiViews {
 
         echo $Language->getText('wiki_views_wkserviews', 'perm_attachment_title', array($this->wikiname));
    
-        echo $Language->getText('wiki_views_wkserviews', 'wiki_attachment_perm', array($wa->getFilename());
+        echo $Language->getText('wiki_views_wkserviews', 'wiki_attachment_perm', array($wa->getFilename()));
     
         $postUrl = $this->wikiAdminLink.'&view=wikiAttachments&action=setWikiAttachmentPerms';
         permission_display_selection_form("WIKIATTACHMENT_READ", $wa->getId(), $this->gid, $postUrl);
