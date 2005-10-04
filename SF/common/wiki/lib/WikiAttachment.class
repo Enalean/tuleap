@@ -21,7 +21,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-define('ATTACHMENT_DATA_DIR', $sys_wiki_attachment_data_dir);
+define('ATTACHMENT_DATA_DIR', $GLOBALS['sys_wiki_attachment_data_dir']);
 require_once('WikiAttachmentRevision.class');
 require_once($_SERVER['DOCUMENT_ROOT'].'/project/admin/permissions.php');
 
