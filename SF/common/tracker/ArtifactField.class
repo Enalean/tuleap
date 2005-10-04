@@ -1604,6 +1604,7 @@ class ArtifactField extends Error {
 	      if (user_is_super_user()) {
 		return array('TRACKER_FIELD_READ','TRACKER_FIELD_UPDATE','TRACKER_FIELD_SUBMIT');
 	      } else {
+		unset($user_id);
 		$user_id = user_getid();
 	      }
 	    } else {

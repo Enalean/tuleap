@@ -14,6 +14,10 @@ require_once('common/include/LDAP.class');
 $G_SESSION=array();
 $G_USER=array();
 
+$ALL_USERS_DATA = array();
+$ALL_USERS_GROUPS = array();
+$ALL_USERS_TRACKERS = array();
+
 function session_login_valid($form_loginname,$form_pw,$allowpending=0)  {
   global $session_hash,$feedback,$Language;
     $usr=null;

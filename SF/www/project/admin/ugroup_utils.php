@@ -76,7 +76,7 @@ function ugroup_db_list_tracker_ugroups_for_user($group_id,$group_artifact_id,$u
 function ugroup_db_list_dynamic_ugroups_for_user($group_id,$group_artifact_id,$user_id) {
   $user = new User($user_id);
   
-  if (!$user) return array($GLOBALS['UGROUP_ANONYMOUS']);
+  if (!$user->isValid()) return array($GLOBALS['UGROUP_ANONYMOUS']);
 
   $res = array($GLOBALS['UGROUP_ANONYMOUS'],$GLOBALS['UGROUP_REGISTERED']);
 
