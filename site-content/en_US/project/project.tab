@@ -200,7 +200,7 @@ project_admin_permissions	rel_download	Release Download
 project_admin_permissions	doc_access	Document Access
 project_admin_permissions	docgroup_access	Document Group Access
 project_admin_permissions	wiki_access	Wiki Access
-project_admin_permissions	wikiattachment_access	Wiki Attachment Access
+project_admin_permissions	wiki_attachment_access	Wiki Attachment Access
 project_admin_permissions	tracker_full_access	Access to all tracker artifacts
 project_admin_permissions	tracker_submitter_access	Access to tracker artifacts submitted by group
 project_admin_permissions	tracker_assignee_access	Access to tracker artifacts assigned to group
