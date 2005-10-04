@@ -440,7 +440,7 @@ class WikiServiceAdminViews extends WikiViews {
         print html_build_list_table_top(array($Language->getText('wiki_views_wkserviews', 'attachment_revision'),
                                               $Language->getText('wiki_views_wkserviews', 'attachment_date'),
                                               $Language->getText('wiki_views_wkserviews', 'attachment_author'),
-                                              $Language->getText('wiki_views_wkserviews', 'attachment_size'));
+                                              $Language->getText('wiki_views_wkserviews', 'attachment_size')));
     
         while($war =& $wari->iterate()) {      
             print '
