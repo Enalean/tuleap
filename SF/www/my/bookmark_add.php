@@ -15,7 +15,7 @@ $HTML->header(array("title"=>$Language->getText('bookmark_add', 'title')));
 print "<H3>".$Language->getText('bookmark_add', 'title')."</H3>";
 
 if ($bookmark_url) {
-    print $Language->getText('bookmark_add', 'message', array($bookmark_url,$bookmark_title))."<p>\n";
+    print $Language->getText('bookmark_add', 'message', array($bookmark_url,stripslashes($bookmark_title)))."<p>\n";
 
 	$bookmark_id = bookmark_add ($bookmark_url, $bookmark_title);
 	print "<A HREF=\"$bookmark_url\">".$Language->getText('bookmark_add', 'visit')."</A> - ";

@@ -11,7 +11,7 @@ function bookmark_add ($bookmark_url, $bookmark_title="") {
 	}
 	$result = db_query("INSERT into user_bookmarks (user_id, bookmark_url, "
 		. "bookmark_title) values ('".user_getid()."', '$bookmark_url', "
-		. "'".addslashes($bookmark_title)."');");
+		. "'".$bookmark_title."');");
 	if (!$result) {
 		echo db_error();
 	}
