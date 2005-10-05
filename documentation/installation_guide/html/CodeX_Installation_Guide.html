@@ -1714,49 +1714,37 @@ be initially copied from the <span style="font-family: monospace;">SF/etc/local.
 file and the values must be changed accordingly for your site. Make
 sure that you read this file where the role of each variable is well
 documented.<br>
-<h2>UI Themes</h2>
+<h2 id="themes">UI Themes</h2>
 The CodeX Web pages look and feel are defined through Cascading Style
 Sheets (CSS). &nbsp;Therefore CodeX UI is customizable to large extent.
 The Graphical user interface elements of CodeX come in the following
-directories:<br>
+directory:
+<dl>
+	<dt><tt>SF/www/themes/</tt></dt>
+	<dd>
+		<div>Each sub-directory in this place contains a given theme which name 
+		is the sub-directory name. By default CodeX comes with the 'CodeX', 
+		'CodeXTab' and 'savannah' themes. Each theme directory 
+		contains a <tt>css</tt> directory and a <tt>images</tt> directory. 
+		</div>
+		<div>Each style directory contains 3 CSS files named 
+		'<i>themename_fontsize</i>.css' where
+		fontsize is one of 'large', 'normal' or 'small'. Files differ only by
+		the size of the default font used in the Web pages. All 3 must be
+		present because CodeX users can choose a prefered font size in her
+		Account Maintenance page.
+		</div>
+		<div>Each images directory contains all the logos and images needed by 
+		the CodeX Web pages.</div>
+		<div>The theme must contain also a class named themename_Theme.class 
+		which is responsible for the construction of the layout.</div>
+	</dd>
+</dl>
+<div>
+To have more information about themes, or about creation of new themes, please 
+see the corresponding section in <a
+ href="/documentation/programmer_guide/html/en_US/CodeX_Programmer_Guide.html">The CodeX Programmer's Guide</a>.</div>
 <br>
-<ul>
-  <li><tt>SF/www/css</tt> : each sub-directory in this place contains a
-given theme which name is the sub-directory name. By default CodeX
-comes
-with the 'default' and 'savannah' style sheets. Each style directory
-contains 3 CSS files named '<i>themename_fontsize</i>.css' where
-fontsize is one of 'large', 'normal' or 'small'. Files differ only by
-the size of the default font used in the Web pages. All 3 must be
-present because CodeX users can choose a prefered font size in her
-Account Maintenance page</li>
-</ul>
-<ul>
-  <li><tt>SF/www/images</tt> : each sub-directory in this place
-contains
-all the logos and images needed by the CodeX Web pages. There is a
-different set of images per theme and each set of images is stored in
-sub-directories which name follows the pattern&nbsp;'<i>themename.</i>theme'
-where themename must match the theme name defined in the cascadig style
-sheet directories above.</li>
-</ul>
-Defining your own Look&amp;Feel is very easy:<br>
-<ol>
-  <li>Choose a theme name ('<span style="font-style: italic;">themename</span>'
-in the rest of this section)<tt><br>
-    </tt></li>
-  <li>Create directory&nbsp; <tt>/etc/codex/conf/themes/css/<i>themename</i>/
-    </tt>and
-the 3 CSS files in it. Make sure the 3 file names follows the pattern '<i>themename_fontsize</i>.css'</li>
-  <li>Create directory&nbsp; <tt>/</tt><tt>etc/codex/conf/themes/</tt><tt>images/custom/<i>themename</i>.theme/
-    </tt>by
-copying one of the directory that come standard with CodeX. Then
-replace all the images you want to customize with your own but make
-sure
-to keep the exact same file names.</li>
-</ol>
-Finally edit the /etc/codex/conf/local.inc file and set the <tt>$sys_themedefault</tt>
-variable to the value of the default theme name for your site.<br>
 <h2>Organization Logo</h2>
 At the top of the left hand side CodeX menu pane (just above the Logged
 In section) is an empty area where you can dock the logo of your
