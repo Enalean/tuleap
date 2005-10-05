@@ -7,6 +7,8 @@
 // $Id$
 //
 */
+@import url(style.css);
+
 .footer           { font-size: xx-small; }
 
 .calendar_font_othermonth,
@@ -36,4 +38,7 @@ body,
 .vspace-bottom { margin-bottom: 3ex; }
 .vspace-top { margin-top: 3ex; }
 .vspace-both { margin-top: 3ex; margin-bottom: 3ex; }
+
+
+
 

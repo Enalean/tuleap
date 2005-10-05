@@ -130,7 +130,9 @@ class TabbedLayout extends Layout {
 
 	?>
     <link rel="stylesheet" href="<? echo util_get_css_theme(); ?>" type="text/css" />
+    <!-- {{{ reimport style, only for netscape 4 compatibility -->
     <link rel="stylesheet" href="<? echo dirname(util_get_css_theme()).'/style.css'; ?>" type="text/css" />
+    <!-- }}} -->
 <?php
               if(isset($params['stylesheet']) && is_array($params['stylesheet'])) {
                   foreach($params['stylesheet'] as $css) {

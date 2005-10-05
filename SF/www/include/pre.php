@@ -161,11 +161,19 @@ if ($GLOBALS['sys_is_theme_custom']) {
     $GLOBALS['path_to_theme'] = $GLOBALS['sys_themeroot'].'/'.$GLOBALS['sys_user_theme'];
 }
 $name_of_theme_class = $GLOBALS['sys_user_theme'].'_Theme';
+
 if (!file_exists($GLOBALS['path_to_theme'].'/'.$name_of_theme_class.'.class')) {
-    $GLOBALS['sys_is_theme_custom'] = false;
-    $GLOBALS['sys_user_theme']      = $GLOBALS['sys_themedefault'];
-    $GLOBALS['path_to_theme']       = $GLOBALS['sys_themeroot'].'/'.$GLOBALS['sys_user_theme'];
-    $name_of_theme_class            = $GLOBALS['sys_user_theme'].'_Theme';
+    //User wants a theme which doesn't exist
+    //We're looking for default theme
+    $GLOBALS['sys_user_theme'] = $GLOBALS['sys_themedefault'];
+    $name_of_theme_class       = $GLOBALS['sys_user_theme'].'_Theme';
+    if (is_dir($GLOBALS['sys_themeroot'].'/'.$GLOBALS['sys_user_theme'])) {
+        $GLOBALS['sys_is_theme_custom'] = false;
+        $GLOBALS['path_to_theme']       = $GLOBALS['sys_themeroot'].'/'.$GLOBALS['sys_user_theme'];
+    } else {
+        $GLOBALS['sys_is_theme_custom'] = true;
+        $GLOBALS['path_to_theme']       = getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/themes/'.$GLOBALS['sys_user_theme'];
+    }
 }
 require_once($GLOBALS['path_to_theme'].'/'.$name_of_theme_class.'.class');
 $HTML = new $name_of_theme_class();
