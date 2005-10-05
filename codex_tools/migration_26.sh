@@ -128,6 +128,23 @@ if [ "$yn" = "n" ]; then
     exit 1
 fi
 
+##############################################
+# Now check whether the machine is running CodeX 2.4.1
+#
+OLD_CX_RELEASE='2.4.1'
+yn="y"
+doupgrade="n"
+$GREP -q "$OLD_CX_RELEASE" $INSTALL_DIR/SF/www/VERSION
+if [ $? -ne 0 ]; then
+    $CAT <<EOF
+This machine does not have CodeX ${OLD_CX_RELEASE} installed.
+CodeX ${OLD_CX_RELEASE} DB migration will be executed.
+EOF
+    doupgrade="y"
+else
+    echo "Found CodeX ${OLD_CX_RELEASE} installed... good!"
+fi
+
 
 ##############################################
 # Check that all command line tools we need are available
@@ -355,6 +372,7 @@ EOF
 $CP  $INSTALL_DIR/SF/www/themes/CodeX/images/ic/thread.png /etc/codex/themes/*/images/ic/ 2> /dev/null
 
 
+
 ##############################################
 # Database Structure and initvalues upgrade
 #
@@ -372,7 +390,19 @@ while [ $? -eq 0 ]; do
 done
 [ "X$old_passwd" != "X" ] && pass_opt="--password=$old_passwd"
 
-echo "Starting DB update. This might take a few minutes."
+
+# CodeX 2.4.1 Database Structure and initvalues upgrade
+if [ "$doupgrade" = "y" ]; then
+echo "Starting DB update from CodeX 2.4 to CodeX 2.4.1."
+$MYSQL $pass_opt sourceforge < /home/httpd/SF/db/upgrades/db_C2.sql
+cd /home/httpd/SF/db/upgrades/
+$PERL db_C2.pl 
+cd -
+$MYSQL $pass_opt sourceforge < /home/httpd/SF/db/upgrades/db_CX_2_4_1_SUP_001.sql
+fi
+
+
+echo "Starting DB update for CodeX 2.6. This might take a few minutes."
 
 $CAT <<EOF | $MYSQL $pass_opt sourceforge
 
@@ -686,6 +716,23 @@ $CHOWN sourceforge.sourceforge /usr/local/bin/log_accum
 $CHMOD 775 /usr/local/bin/log_accum
 $CHMOD u+s /usr/local/bin/log_accum
 
+$CP $INSTALL_DIR/SF/utils/svn/backup_subversion.sh /home/tools
+$CHOWN root.root /home/tools/backup_subversion.sh
+$CHMOD 740 /home/tools/backup_subversion.sh
+
+##############################################
+# Reinstall modified cron table
+#
+echo "Backing up sourceforge crontab in /tmp/crontab.sourceforge.bak"
+crontab -u sourceforge -l > /tmp/crontab.sourceforge.bak
+echo "Installing new sourceforge user crontab..."
+$CAT <<'EOF' >/tmp/cronfile
+# Re-generate the CodeX User and Programmer Guides on a daily basis
+00 03 * * * /home/httpd/SF/utils/generate_doc.sh
+30 03 * * * /home/httpd/SF/utils/generate_programmer_doc.sh
+EOF
+crontab -u sourceforge /tmp/cronfile
+
 
 ##############################################
 # Restarting some services
@@ -702,6 +749,7 @@ $SERVICE mailman start
 #
 echo "Updating the User Manual. This might take a few minutes."
 /home/httpd/SF/utils/generate_doc.sh -f
+/home/httpd/SF/utils/generate_programmer_doc.sh -f
 $CHOWN -R sourceforge.sourceforge $INSTALL_DIR/documentation
 
 
@@ -718,6 +766,8 @@ $CHKCONFIG mailman on
 ##############################################
 # More things to do
 
+todo "Note: CodeX now supports CVSNT and the sserver protocol, but they are not installed by default."
+todo "If you plan to use CVSNT, please refer to the installation guide"
 
 # End of it
 echo "=============================================="

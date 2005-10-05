@@ -940,8 +940,9 @@ crontab -u root /tmp/cronfile
 
 echo "Installing  sourceforge user crontab..."
 $CAT <<'EOF' >/tmp/cronfile
-# Re-generate the CodeX User Guide on a daily basis
-00 03 * * * /home/httpd/SF/utils/generate_doc.sh -f
+# Re-generate the CodeX User and Programmer Guides on a daily basis
+00 03 * * * /home/httpd/SF/utils/generate_doc.sh
+30 03 * * * /home/httpd/SF/utils/generate_programmer_doc.sh
 EOF
 crontab -u sourceforge /tmp/cronfile
 
@@ -1169,12 +1170,10 @@ EOF
 ##############################################
 # Generate Documentation
 #
-echo "Generating the User Manual. This might take a few minutes."
+echo "Generating the User and Programmer Manuals. This might take a few minutes."
 /home/httpd/SF/utils/generate_doc.sh -f
+/home/httpd/SF/utils/generate_programmer_doc.sh -f
 $CHOWN -R sourceforge.sourceforge $INSTALL_DIR/documentation
-
-todo "Documentation is currently forced to be re-generated each night. Make sure that the CVS update is possible in utils/generate_doc.sh. Do a cvs login on CVS server as user 'sourceforge'. After that, you may remove the '-f' flag in the 'sourceforge' crontab"
-
 
 ##############################################
 # Make sure all major services are on
@@ -1190,12 +1189,14 @@ $CHKCONFIG mailman on
 ##############################################
 # End of installation
 #
-todo "Add the following parameter in /etc/php.ini: 'upload_tmp_dir = /home/large_tmp'
+todo "Add the following parameter in /etc/php.ini: 'upload_tmp_dir = /home/large_tmp'"
 todo "Create the shell login files for CodeX users in /etc/skel_codex"
-# things to do by hand
 todo "Change the default login shell if needed in the database (/sbin/nologin or /usr/local/bin/cvssh, etc."
 todo "Create an SSL certificate for Apache to support encryption (https) (see CodeX installation guide)."
 todo "Last, run the main crontab script manually: /home/httpd/SF/utils/xerox_crontab.sh"
+
+todo "Note: CodeX now supports CVSNT and the sserver protocol, but they are not installed by default."
+todo "If you plan to use CVSNT, please refer to the installation guide"
 
 # End of it
 echo "=============================================="
