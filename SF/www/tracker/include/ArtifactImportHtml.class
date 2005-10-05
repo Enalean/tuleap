@@ -123,7 +123,42 @@ function showErrors($errors) {
 	
 	$value = $data[$c];
 	$width = ' class="small"';
-	
+
+
+	$submitted_by_field = $this->art_field_fact->getFieldFromName('submitted_by');
+	$open_date_field = $this->art_field_fact->getFieldFromName('open_date');
+	$aid_field = $this->art_field_fact->getFieldFromName('artifact_id');
+	  
+	//SUBMITTED_ON
+	if ($parsed_labels[$c] == $open_date_field->getLabel()) {
+	  //if insert show default value
+	  if ($aid_column == -1 || $aid == "") {
+	    if ($value == "") {
+	      echo "<TD $width valign=\"top\"><I>$sub_on</I></TD>\n";
+	    } else {
+	      echo "<TD $width valign=\"top\">$value</TD>\n";
+	    }
+	  } else {
+	    echo "<TD $width valign=\"top\"><I>".$Language->getText('global','unchanged')."</I></TD>\n";
+	  }
+	  continue;
+	  
+	  //SUBMITTED_BY
+	} else if ($parsed_labels[$c] == $submitted_by_field->getLabel()) {
+	  if ($aid_column == -1 || $aid == "") {
+	    if ($value == "") {
+	      echo "<TD $width valign=\"top\"><I>$sub_user_name</I></TD>\n";
+	    } else {
+	      echo "<TD $width valign=\"top\">$value</TD>\n";
+	    }
+	  } else {
+	    echo "<TD $width valign=\"top\"><I>".$Language->getText('global','unchanged')."</I></TD>\n";
+	  }
+	  continue;
+	}
+
+
+
 	if ($value != "") {
 	  
 	  // TODO: Localize this properly by adding those 4 fields to the artifact table
@@ -169,23 +204,7 @@ function showErrors($errors) {
 	  
 	} else {
 	  
-	  $submitted_by_field = $this->art_field_fact->getFieldFromName('submitted_by');
-	  $open_date_field = $this->art_field_fact->getFieldFromName('open_date');
-	  $aid_field = $this->art_field_fact->getFieldFromName('artifact_id');
-	  
-	  //SUBMITTED_ON
-	  if ($parsed_labels[$c] == $open_date_field->getLabel()) {
-	    //if insert show default value
-	    if ($aid_column == -1 || $aid == "") echo "<TD $width valign=\"top\"><I>$sub_on</I></TD>\n";
-	    else echo "<TD $width valign=\"top\"><I>".$Language->getText('global','unchanged')."</I></TD>\n";
-	    
-	    //SUBMITTED_BY
-	  } else if ($parsed_labels[$c] == $submitted_by_field->getLabel()) {
-	    if ($aid_column == -1 || $aid == "") echo "<TD $width valign=\"top\"><I>$sub_user_name</I></TD>\n";
-	    else echo "<TD $width valign=\"top\"><I>".$Language->getText('global','unchanged')."</I></TD>\n";
-	    
-	    //ARTIFACT_ID
-	  } else if ($parsed_labels[$c] == $aid_field->getLabel()) {
+	  if ($parsed_labels[$c] == $aid_field->getLabel()) {
 	    echo "<TD $width valign=\"top\"><I>".$Language->getText('tracker_import_utils','new')."</I></TD>\n";
 	    
 	    //DEFAULT

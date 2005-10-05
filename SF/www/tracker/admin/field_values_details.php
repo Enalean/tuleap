@@ -28,7 +28,7 @@ if ( !$ath->isValid() ) {
 $ath->adminHeader(array('title'=>$Language->getText('tracker_admin_field_usage','tracker_admin').$Language->getText('tracker_admin_field_values_details','values_admin'),
 			'help' => 'TrackerAdministration.html#TrackerBrowsingTrackerFieldValues'));
 
-echo "<H2>".$Language->getText('tracker_import_admin','tracker')." <a href=\"/tracker/admin/?group_id=".$group_id."&atid=".$atid."\">".$ath->getName()."</a>'".
+echo "<H2>".$Language->getText('tracker_import_admin','tracker')." '<a href=\"/tracker/admin/?group_id=".$group_id."&atid=".$atid."\">".$ath->getName()."</a>'".
 $Language->getText('tracker_admin_field_values_details','manage_for',$field->getLabel())."</H2>";
 
 if ( !$field->isSelectBox() && !$field->isMultiSelectBox() ) {

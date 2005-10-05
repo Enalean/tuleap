@@ -614,7 +614,7 @@ class ArtifactImport extends Error {
       $comment = substr($comment, ($by_position + 4));
       
       $by = strtok($comment," \n\t\r\0\x0B");
-      $comment = trim(substr($comment,strlen($by)));
+      $comment = trim(substr($comment,strlen($by)+1));
       
       if ($by == $Language->getText('global','none')) {
 	$errors .= $Language->getText('tracker_import_utils','specify_valid_user',$i-1);
@@ -664,7 +664,7 @@ class ArtifactImport extends Error {
   /** check whether this is really a valid comment_type
    * and if it is the case return its id else return false 
    */
-  function checkCommentType($type) {
+  function checkCommentType($comment_type) {
     
     $comment_type_id = false;
     

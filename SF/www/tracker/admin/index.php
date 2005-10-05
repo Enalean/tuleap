@@ -650,7 +650,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
 						'help' => 'TrackerAdministration.html#CreationandModificationofaTrackerField'));
 			echo "<H2>".$Language->getText('tracker_import_admin','tracker').
 			  " '<a href=\"/tracker/admin/?group_id=".$group_id."&atid=".$atid."\">".$ath->getName()."</a>' ".
-			  $Language->getText('tracker_admin_index','modify_usage_for',$field->getLabel())."'</H2>";
+			  $Language->getText('tracker_admin_index','modify_usage_for',$field->getLabel())."</H2>";
 			$ath->displayFieldUsageForm("field_update",$field->getID(),
 						    $field->getName(),$field->getDescription(),$field->getLabel(),
 						    $field->getDataType(),$field->getDefaultValue(),$field->getDisplayType(),
