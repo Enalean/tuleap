@@ -48,14 +48,14 @@ a:hover {
 
 /******** priorities **********/
 .priora { background-color: #dadada; }
-.priorb { background-color: #dacaca; }
-.priorc { background-color: #dababa; }
-.priord { background-color: #daaaaa; }
-.priore { background-color: #da8a8a; }
-.priorf { background-color: #da7a7a; }
-.priorg { background-color: #da6a6a; }
-.priorh { background-color: #da5a5a; }
-.priori { background-color: #da4a4a; }
+.priorb { background-color: #dad0d0; }
+.priorc { background-color: #dacaca; }
+.priord { background-color: #dac0c0; }
+.priore { background-color: #dababa; }
+.priorf { background-color: #dab0b0; }
+.priorg { background-color: #daaaaa; }
+.priorh { background-color: #da9090; }
+.priori { background-color: #da8a8a; }
 
 /********   forum    **********/
 .thread { background-color: #DDDDDD; }
