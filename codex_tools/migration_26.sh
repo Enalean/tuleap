@@ -220,8 +220,14 @@ $SERVICE mailman stop
 ##############################################
 # Ask for domain name and other installation parameters
 #
-read -p "CodeX Domain name: " sys_default_domain
-read -p "Codex Server IP address: " sys_ip_address
+sys_default_domain=`grep ServerName /etc/httpd/conf/httpd.conf | grep -v '#' | head -1 | cut -d " " -f 2 ;`
+if [ -z $sys_default_domain ]; then
+  read -p "CodeX Domain name: " sys_default_domain
+fi
+sys_ip_address=`grep NameVirtualHost /etc/httpd/conf/httpd.conf | grep -v '#' | cut -d " " -f 2 | cut -d ":" -f 1`
+if [ -z $sys_ip_address ]; then
+  read -p "Codex Server IP address: " sys_ip_address
+fi
 
 ##############################################
 
@@ -231,6 +237,12 @@ read -p "Codex Server IP address: " sys_ip_address
 make_backup /etc/codex/conf/local.inc codex24
 
 substitute /etc/codex/conf/local.inc "sys_themedefault[\\s]*=[\\s]*['\"]codex['\"]" "sys_themedefault = 'CodeX'"
+$GREP -q "sys_session_lifetime" /etc/codex/conf/local.inc
+if [ $? -ne 0 ]; then
+   # Not a maintained 2.4 release...
+   $PERL -i'.orig2' -p -e's:(sys_is_project_public.*):\1\n//\n// Default session duration when user select "Remember Me" option in user\n// account maintainance.\n// Default value is about 6 months: 3600*24*183\n\$sys_session_lifetime = 3600*24*183;\n:' /etc/codex/conf/local.inc
+fi
+
 $PERL -i'.orig3' -p -e's:(sys_session_lifetime.*):\1\n//\n// Plugins root directory \n\$sys_pluginsroot="/home/httpd/plugins/";\n\n// Where wiki attachments are stored\n\$sys_wiki_attachment_data_dir = "/home/data/wiki";:' /etc/codex/conf/local.inc
 
 build_dir /home/data root root 755
@@ -437,22 +449,22 @@ EOF
 echo "DB: support for wiki attachments"
 
 $CAT <<EOF | $MYSQL $pass_opt sourceforge
-CREATE TABLE `wiki_attachment` (
-`id` INT( 11 ) NOT NULL AUTO_INCREMENT ,
-`group_id` INT( 11 ) NOT NULL ,
-`name` VARCHAR( 255 ) NOT NULL ,
-PRIMARY KEY ( `id` )
+CREATE TABLE wiki_attachment (
+id INT( 11 ) NOT NULL AUTO_INCREMENT ,
+group_id INT( 11 ) NOT NULL ,
+name VARCHAR( 255 ) NOT NULL ,
+PRIMARY KEY ( id )
 );
 
-CREATE TABLE `wiki_attachment_revision` (
-`id` INT( 11 ) NOT NULL AUTO_INCREMENT ,
-`attachment_id` INT( 11 ) NOT NULL ,
-`user_id` INT( 11 ) NOT NULL ,
-`date` INT( 11 ) NOT NULL ,
-`revision` INT( 11 ) NOT NULL ,
-`mimetype` VARCHAR( 255 ) NOT NULL ,
-`size` INT( 11 ) NOT NULL ,
-PRIMARY KEY ( `id` )
+CREATE TABLE wiki_attachment_revision (
+id INT( 11 ) NOT NULL AUTO_INCREMENT ,
+attachment_id INT( 11 ) NOT NULL ,
+user_id INT( 11 ) NOT NULL ,
+date INT( 11 ) NOT NULL ,
+revision INT( 11 ) NOT NULL ,
+mimetype VARCHAR( 255 ) NOT NULL ,
+size INT( 11 ) NOT NULL ,
+PRIMARY KEY ( id )
 );
 
 CREATE TABLE wiki_attachment_log (
@@ -467,16 +479,16 @@ CREATE TABLE wiki_attachment_log (
 );
 
 -- Allow ugroup 'nobody'
-INSERT INTO `permissions_values` ( `permission_type` , `ugroup_id` , `is_default` )
+INSERT INTO permissions_values ( permission_type , ugroup_id , is_default )
 VALUES ('WIKIATTACHMENT_READ', '100', '0');
 -- Allow ugroup 'registered_user'
-INSERT INTO `permissions_values` ( `permission_type` , `ugroup_id` , `is_default` )
+INSERT INTO permissions_values ( permission_type , ugroup_id , is_default )
 VALUES ('WIKIATTACHMENT_READ', '2', '1');
 -- Allow ugroup 'project_members'
-INSERT INTO `permissions_values` ( `permission_type` , `ugroup_id` , `is_default` )
+INSERT INTO permissions_values ( permission_type , ugroup_id , is_default )
 VALUES ('WIKIATTACHMENT_READ', '3', '0');
 -- Allow ugroup 'project_admins'
-INSERT INTO `permissions_values` ( `permission_type` , `ugroup_id` , `is_default` )
+INSERT INTO permissions_values ( permission_type , ugroup_id , is_default )
 VALUES ('WIKIATTACHMENT_READ', '4', '0');
 
 EOF
