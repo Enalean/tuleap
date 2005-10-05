@@ -14,6 +14,17 @@
 #  * @version   $Id: fr_FR.tab 1778 2005-06-24 08:10:38Z nterray $
 #  *
 #  */
+advanced_search	and_search	with all words
+advanced_search	all	all
+advanced_search	or_search	with one word
+advanced_search	none	none
+advanced_search	search_button	Search
+advanced_search	search_in	Search in
+advanced_search	select	Select
+advanced_search	headline	$1 Search Result
+advanced_search	no_matches_found	No matches found
+advanced_search	no_matches_found_no_under_section	No matches found - No sections available (check your permissions)
+advanced_search	error_search_minlength	Search must be at least three characters
 common	login	Log In
 common	logout	Log Out
 common	myaccount	My Account
