@@ -355,7 +355,7 @@ while ($ln = pop(@groupdump_array)) {
 
 	  # Let's create a subversion repository for this group
 	  mkdir $svn_dir, 0775;
-	  system("/usr/bin/svnadmin create $svn_dir");
+	  system("/usr/bin/svnadmin create $svn_dir --fs-type fsfs");
 	  $group_modified = 1;
 
 	  # set group ownership, codex user
