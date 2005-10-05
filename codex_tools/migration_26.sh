@@ -231,16 +231,7 @@ read -p "Codex Server IP address: " sys_ip_address
 make_backup /etc/codex/conf/local.inc codex24
 
 substitute /etc/codex/conf/local.inc "sys_themedefault[\\s]*=[\\s]*['\"]codex['\"]" "sys_themedefault = 'CodeX'"
-substitute /etc/codex/conf/local.inc '(sys_session_lifetime.*)' '
-$1
-
-//
-// Plugins root directory 
-$sys_pluginsroot="/home/httpd/plugins/";
-
-// Where wiki attachments are stored
-$sys_wiki_attachment_data_dir = "/home/data/wiki";
-'
+$PERL -i'.orig3' -p -e's:(sys_session_lifetime.*):\1\n//\n// Plugins root directory \n\$sys_pluginsroot="/home/httpd/plugins/";\n\n// Where wiki attachments are stored\n\$sys_wiki_attachment_data_dir = "/home/data/wiki";:' /etc/codex/conf/local.inc
 
 build_dir /home/data root root 755
 build_dir /home/data/wiki sourceforge sourceforge 700

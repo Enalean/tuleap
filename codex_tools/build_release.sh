@@ -156,10 +156,15 @@ Major improvements of CodeX 2.6 over 2.4:
 - Plugin architecture: CodeX now offers a flexible plugin architecture to easily integrate external tools or customized code. See the Programmer Guide for more details.
 - New theme architecture. Themes may now be fully customized. Try the new theme 'CodeXTab' and read the Programmer Guide for additional information.
 - CVS NT support. You may now install CVSNT on CodeX to support the sserver protocol. See the Installation Guide for details. Note that CVS remains the default package.
-- Subversion repositories are now created by default with the fsfs file system, and a new backup script is provided.
+
+Other changes:
+- Export tracker report page as CSV file
+- Subversion repositories are now created by default with the 'fsfs' file system, and a new backup script is provided.
 - The 'Tracher Technician' role has disappeared. By default, any project member may be assigned artifacts, and may modify artifacts. Create groups if you need a finer access control.
-- Support for Wiki attachment has been added thanks to contributions from ST.
+- Support for Wiki attachments has been added thanks to contributions from ST.
 - Features from CodeX 2.4.1 are also available: in particular, trackers and tracker fields access control.
+- CodeX source code is now managed with Subversion.
+- and many bugs fixed!
 
 Package Update:
 None
