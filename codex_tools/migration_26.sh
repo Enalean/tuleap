@@ -240,7 +240,7 @@ substitute /etc/codex/conf/local.inc "sys_themedefault[\\s]*=[\\s]*['\"]codex['\
 $GREP -q "sys_session_lifetime" /etc/codex/conf/local.inc
 if [ $? -ne 0 ]; then
    # Not a maintained 2.4 release...
-   $PERL -i'.orig2' -p -e's:(sys_is_project_public.*):\1\n//\n// Default session duration when user select "Remember Me" option in user\n// account maintainance.\n// Default value is about 6 months: 3600*24*183\n\$sys_session_lifetime = 3600*24*183;\n:' /etc/codex/conf/local.inc
+   $PERL -i'.orig2' -p -e's:^(\$sys_is_project_public.*):\1\n//\n// Default session duration when user select "Remember Me" option in user\n// account maintainance.\n// Default value is about 6 months, 3600*24*183\n\$sys_session_lifetime = 3600*24*183;\n:' /etc/codex/conf/local.inc
 fi
 
 $PERL -i'.orig3' -p -e's:(sys_session_lifetime.*):\1\n//\n// Plugins root directory \n\$sys_pluginsroot="/home/httpd/plugins/";\n\n// Where wiki attachments are stored\n\$sys_wiki_attachment_data_dir = "/home/data/wiki";:' /etc/codex/conf/local.inc
@@ -411,36 +411,36 @@ $CAT <<EOF | $MYSQL $pass_opt sourceforge
 
 -- Plugin tables
 -- {{{
-CREATE TABLE `priority_plugin_hook` (
-`plugin_id` INT NOT NULL,
-`hook` VARCHAR(100) NOT NULL,
-`priority` INT NOT NULL
+CREATE TABLE priority_plugin_hook (
+plugin_id INT NOT NULL,
+hook VARCHAR(100) NOT NULL,
+priority INT NOT NULL
 );
-CREATE TABLE `plugin` (
-  `id` int(11) NOT NULL auto_increment,
-  `name` varchar(100) NOT NULL,
-  `enabled` tinyint(4) NOT NULL default '0',
-  PRIMARY KEY  (`id`)
+CREATE TABLE plugin (
+  id int(11) NOT NULL auto_increment,
+  name varchar(100) NOT NULL,
+  enabled tinyint(4) NOT NULL default '0',
+  PRIMARY KEY  (id)
 );
-CREATE TABLE `project_plugin` (
-`project_id` INT NOT NULL ,
-`plugin_id` INT NOT NULL
+CREATE TABLE project_plugin (
+project_id INT NOT NULL ,
+plugin_id INT NOT NULL
 );
-CREATE TABLE `user_plugin` (
-`user_id` INT NOT NULL ,
-`plugin_id` INT NOT NULL
+CREATE TABLE user_plugin (
+user_id INT NOT NULL ,
+plugin_id INT NOT NULL
 );
 -- }}}
 
 -- install and enable pluginsadministration
-INSERT INTO `plugin` (`name`, `enabled`) VALUES ('pluginsadministration', '1');
+INSERT INTO plugin (name, enabled) VALUES ('pluginsadministration', '1');
 
 
 -- theme codex --> CodeX
 UPDATE user SET theme = 'CodeX' WHERE theme = 'codex'
 
 -- slow trackers, see SR 318 on Partners
-ALTER TABLE `artifact_file` ADD INDEX ( `artifact_id` )
+ALTER TABLE artifact_file ADD INDEX ( artifact_id )
 
 EOF
 
