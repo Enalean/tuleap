@@ -358,7 +358,7 @@ require_once('www/include/Layout.class');
 class ${i}_Theme extends Layout {
 
     function ${i}_Theme(\$root) {
-        $this->Layout(\$root);
+        \$this->Layout(\$root);
     }
 }
 
@@ -651,7 +651,7 @@ sub update_each_tracker {
 	}
 	## migrate permissions
 	if ($has_tech_p) {
-	  exec_sql("UPDATE permissions SET ugroup_id = 3 WHERE ugroup_id = 15 AND (object_id = '$group_artifact_id' OR object_id LIKE '".$group_artifact_id."#%')");
+	  exec_sql("UPDATE permissions SET ugroup_id = 15 WHERE ugroup_id = 16 AND (object_id = '$group_artifact_id' OR object_id LIKE '".$group_artifact_id."#%')");
 	}
 
       } elsif ($user_only ||
