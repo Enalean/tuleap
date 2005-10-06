@@ -247,6 +247,7 @@ $PERL -i'.orig3' -p -e's:(sys_session_lifetime.*):\1\n//\n// Plugins root direct
 
 build_dir /home/data root root 755
 build_dir /home/data/wiki sourceforge sourceforge 700
+rmdir /etc/codex/themes/messages
 
 ##############################################
 # Now install CodeX specific RPMS (and remove RedHat RPMs)
@@ -276,7 +277,7 @@ substitute '/etc/httpd/conf/httpd.conf' '%sys_default_domain%' "$sys_default_dom
 substitute '/etc/httpd/conf/httpd.conf' '%sys_ip_address%' "$sys_ip_address"
 
 todo "Edit the new /etc/httpd/conf/httpd.conf file and update it if needed"
-todo "Edit the new /etc/httpd/conf.d/php.conf file and update it if needed"
+#todo "Edit the new /etc/httpd/conf.d/php.conf file and update it if needed"
 
 # Re-copy phpMyAdmin and viewcvs installations
 $CP -af /home/httpd_24/phpMyAdmin* /home/httpd
@@ -549,7 +550,7 @@ sub has_tech_permissions {
   my ($group_artifact_id) = @_;
   my ($q, $d);
   
-  $q = "SELECT permission_type, object_id  FROM permissions WHERE ugroup_id = 16 AND (object_id = '$group_artifact_id' OR object_id LIKE '".$group_artifact_id."#')";
+  $q = "SELECT permission_type, object_id  FROM permissions WHERE ugroup_id = 16 AND (object_id = '$group_artifact_id' OR object_id LIKE '".$group_artifact_id."#%')";
   #print $q."\n";
   $d = $dbh->prepare($q);
   $d->execute();
@@ -593,7 +594,7 @@ sub create_tech_ugroup {
   $d->execute();
   $ugroup_id = $d->{'mysql_insertid'};
 
-  $q2 = "SELECT user_id FROM artifact_perm WHERE group_artifact_id = $group_artifact_id AND perm_level IN (2,3)";
+  $q2 = "SELECT user_id FROM artifact_perm WHERE group_artifact_id = $group_artifact_id AND perm_level IN (1,2)";
   #print $q2."\n";
   $d2 = $dbh->prepare($q2);
   $d2->execute();
@@ -649,7 +650,7 @@ sub update_each_tracker {
 	}
 	## migrate permissions
 	if ($has_tech_p) {
-	  exec_sql("UPDATE permissions SET ugroup_id = 3 WHERE ugroup_id = 15 AND (object_id = '$group_artifact_id' OR object_id LIKE '".$group_artifact_id."#')");
+	  exec_sql("UPDATE permissions SET ugroup_id = 3 WHERE ugroup_id = 15 AND (object_id = '$group_artifact_id' OR object_id LIKE '".$group_artifact_id."#%')");
 	}
 
       } elsif ($user_only ||
@@ -666,7 +667,7 @@ sub update_each_tracker {
 	  }
 	  ## migrate permissions
 	  if ($has_tech_p) {
-	    exec_sql("UPDATE permissions SET ugroup_id = $ugroup_id WHERE ugroup_id = 16 AND (object_id = '$group_artifact_id' OR object_id LIKE '".$group_artifact_id."#')");
+	    exec_sql("UPDATE permissions SET ugroup_id = $ugroup_id WHERE ugroup_id = 16 AND (object_id = '$group_artifact_id' OR object_id LIKE '".$group_artifact_id."#%')");
 	  }
 	}
 
@@ -680,7 +681,7 @@ sub update_each_tracker {
 	}
 	## migrate permissions
 	if ($has_tech_p) {
-	  exec_sql("UPDATE permissions SET ugroup_id = 3 WHERE ugroup_id = 16 AND (object_id = '$group_artifact_id' OR object_id LIKE '".$group_artifact_id."#')");
+	  exec_sql("UPDATE permissions SET ugroup_id = 3 WHERE ugroup_id = 16 AND (object_id = '$group_artifact_id' OR object_id LIKE '".$group_artifact_id."#%')");
 	}
 	
       }
