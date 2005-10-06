@@ -536,6 +536,16 @@
         <revremark>Updated tracker and user permissions chapters with respect to the removal of the Technicians role
         </revremark>
       </revision>
+      <revision>
+        <revnumber>2.9.2</revnumber>
+
+        <date>6-Oct-2005</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Add section about export of tracker search results in Tracker chapter.
+        </revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--

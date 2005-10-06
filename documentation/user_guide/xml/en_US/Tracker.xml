@@ -514,6 +514,16 @@
 
       </section>
 
+    
+      <section id="ExportSearchResults">
+	<title>Export Tracker Search Results</title>
+	<para>At the bottom of the Search Result screen you have a button
+	to export all artifacts of your search result into CSV format. 
+	Using this facility you can easily select the tracker
+	artifacts that you want to process with other tools outside 
+	CodeX. </para>
+      </section>
+
       <section id="ArtifactPrinterFriendlyVersion">
 	<title>Printer Friendly Version</title>
 
@@ -547,7 +557,7 @@
       </section>
 
     </section>
-    
+
   </section>
   
   <section id="ArtifactUpdate">
