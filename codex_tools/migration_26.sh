@@ -350,8 +350,7 @@ $CP -af /home/httpd_24/cgi-bin/viewcvs.cgi /home/httpd/cgi-bin
 		do
 		if [ ! -f $i/${i}_Theme.class ]; then
 		
-			echo "
-<?php
+			echo "<?php
 
 require_once('www/include/Layout.class');
 
@@ -738,6 +737,12 @@ $CAT <<'EOF' >/tmp/cronfile
 EOF
 crontab -u sourceforge /tmp/cronfile
 
+echo "Installing Subversion backup scripts in root crontab..."
+# Add SVN backup script in crontab
+crontab -u root -l > /tmp/root_cronfile
+$PERL -i'.orig' -p -e's:(xerox_crontab.sh):\1\n#\n# daily incremental backup of subversion repositories\n45 23 * * 1-6 /home/tools/backup_subversion.sh -i\n#\n# weekly full backup of subversion repositories (0015 on Sunday)\n15 0 * * Sun /home/tools/backup_subversion.sh:' /tmp/root_cronfile
+crontab -u root /tmp/root_cronfile
+todo "Customize backup directories in /home/tools/backup_subversion.sh"
 
 ##############################################
 # Restarting some services
