@@ -25,7 +25,7 @@ define('ATTACHMENT_DATA_DIR', $GLOBALS['sys_wiki_attachment_data_dir']);
 require_once('WikiAttachmentRevision.class');
 require_once($_SERVER['DOCUMENT_ROOT'].'/project/admin/permissions.php');
 
-$Language->loadLanguageMsg('wiki/wiki');
+$GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
 
 /**
  * Management of external ressources linked on a wiki
