@@ -362,7 +362,7 @@ class ${i}_Theme extends Layout {
     }
 }
 
-?>";
+?>" > $i/${i}_Theme.class
 			fi
 		done
 		echo "done."
