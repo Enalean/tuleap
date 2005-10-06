@@ -1238,7 +1238,8 @@ width="14.5cm" />
      
     	<para>For the artifact creation you need to provide
       	information on all fields that are specified
-      	as mandatory in the CSV import format. You may omit
+      	as mandatory in the CSV import format except the Artifact 
+	ID which must not be specified. You may omit
       	the submitter and submission date. The artifact
       	submitter is then automatically set to the
       	user importing the CSV file and the submission date
@@ -1247,7 +1248,8 @@ width="14.5cm" />
     	<para>For the artifact update you need to provide the
       	artifact identifier of the artifacts to update. Beside
       	this, you only need to provide the fields you want
-      	to update. </para>
+      	to update. All fields not specified in the CSV file 
+	will remain unchanged.</para>
 
     	<para>The parsing method checks several potential errors 
 	in the CSV file:
