@@ -350,18 +350,19 @@ $CP -af /home/httpd_24/cgi-bin/viewcvs.cgi /home/httpd/cgi-bin
 		do
 		if [ ! -f $i/${i}_Theme.class ]; then
 		
-			$CAT <<'EOF' > $i/${i}_Theme.class
+			echo "
 <?php
 
 require_once('www/include/Layout.class');
 
-EOF
-				echo "class ${i}_Theme extends Layout {" >> $i/${i}_Theme.class
-				$CAT <<'EOF' >> $i/${i}_Theme.class
+class ${i}_Theme extends Layout {
+
+    function ${i}_Theme(\$root) {
+        $this->Layout(\$root);
+    }
 }
 
-?>
-EOF
+?>";
 			fi
 		done
 		echo "done."

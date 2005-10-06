@@ -8,6 +8,9 @@
  */
 require_once('www/include/Layout.class');
 class CodeX_Theme extends Layout {
+    function CodeX_Theme($root) {
+        $this->Layout($root);
+    }
 }
 
 ?>

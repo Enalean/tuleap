@@ -215,11 +215,12 @@ function prepare_artifact_record($at,$fields,$group_artifact_id, &$record) {
 	// Dependencies
     $result=$ah->getDependencies();
     $rows=db_numrows($result);
+    $dependent = '';
     for ($i=0; $i < $rows; $i++) {
 		$dependent_on_artifact_id = db_result($result, $i, 'is_dependent_on_artifact_id');
 		$dependent .= $dependent_on_artifact_id.",";
 	}
-    $record['is_dependent_on'] = ($dependent?substr($dependent,0,strlen($dependent)-1):$Language->getText('global','none'));
+    $record['is_dependent_on'] = (($dependent !== '')?substr($dependent,0,strlen($dependent)-1):$Language->getText('global','none'));
 
 }
 

@@ -47,9 +47,9 @@ class Layout extends Error {
 		);
 
 	var $bgpri = array();
-
+    
 	// Constuctor
-	function Layout() {
+	function Layout($root) {
 		GLOBAL $bgpri;
 
 		// Constructor for parent class...

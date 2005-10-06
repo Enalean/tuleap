@@ -8,6 +8,9 @@
  */
 require_once('www/include/Layout.class');
 class savannah_Theme extends Layout {
+    function savannah_Theme($root) {
+        $this->Layout($root);
+    }
 }
 
 ?>

@@ -21,9 +21,9 @@ class TabbedLayout extends Layout {
 	/**
 	 * Layout() - Constructor
 	 */
-	function TabbedLayout() {
-		$this->Layout();
-        $this->imgroot = '/themes/CodeXTab/images/';
+	function TabbedLayout($root) {
+		$this->Layout($root);
+        $this->imgroot = $root.'/CodeXTab/images/';
 	}
 
 	/**

@@ -21,7 +21,7 @@ class GForgeLayout extends TabbedLayout {
 	 *
 	 * @var		string	$imgroot
 	 */
-	var $imgroot = '/custom/gforge/images/';
+    var $imgroot;
 	var $COLOR_CONTENT_BACK= 'ffffff';
 	var $COLOR_LTBACK1= '#eeeeef';
 	var $COLOR_LTBACK2= '#fafafa';
@@ -41,13 +41,14 @@ class GForgeLayout extends TabbedLayout {
 	/**
 	 * Layout() - Constructor
 	 */
-	function GForgeLayout() {
+	function GForgeLayout($root) {
 		GLOBAL $bgpri;
 		// Constructor for parent class...
 		//# if ( file_exists($GLOBALS['sys_custom_path'] . '/index_std.php') )
 		//#	$this->rootindex = $GLOBALS['sys_custom_path'] . '/index_std.php';
-		$this->TabbedLayout();
-
+		$this->TabbedLayout($root);
+        $this->imgroot = $root.'/gforge/images/';
+	
 		//determine font for this platform
 		if (browser_is_windows() && browser_is_ie()) {
 

@@ -4,9 +4,9 @@ require_once('www/include/TabbedLayout.class');
 
 class CodeXTab_Theme extends TabbedLayout {
 
-    function CodeXTab_Theme() {
+    function CodeXTab_Theme($root) {
         // Parent constructor
-        $this->TabbedLayout();
+        $this->TabbedLayout($root);
 	}
 }
 
