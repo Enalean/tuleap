@@ -245,9 +245,9 @@ if ($sys_force_ssl) {
 
 my $mod_url = $codex_srv."/svn/viewcvs.php/%s?r1=text&tr1=%s&r2=text&tr2=%s&roottype=svn&root=$gname&diff_format=h";
 my $add_url  = $codex_srv."/svn/viewcvs.php/%s?rev=$rev&view=markup&roottype=svn&root=$gname";
-my $doc_url = $codex_srv."/docman/display_doc.php?docid=%s&group_id=$group_id";
-my $commit_url = $codex_srv."/cvs/?func=detailcommit&commit_id=%s&group_id=$group_id";
-my $revision_url = $codex_srv."/cvs/?func=detailrevision&rev_id=%s&group_id=$group_id";
+my $doc_url = $codex_srv."/tracker/?func=gotoid%s&aid=%s&atn=doc";
+my $commit_url = $codex_srv."/tracker/?func=gotoid%s&aid=%s&atn=commit";
+my $revision_url = $codex_srv."/tracker/?func=gotoid%s&aid=%s&atn=revision";
 my $artifact_url = $codex_srv."/tracker/?func=gotoid%s&aid=%s&atn=%s";
 
 my $no_diff = 1; # no inline diff for CodeX
@@ -769,6 +769,7 @@ sub extract_xrefs {
     my $doc_reg = qr/doc[ ]?#([0-9]+)/i;
     my $commit_reg = qr/commit[ ]?#([0-9]+)/i;
     my $rev_reg = qr/rev[ ]?#([0-9]+)/i;
+    my $revision_reg = qr/revision[ ]?#([0-9]+)/i;
     my $art_reg = qr|([^\s()\$&!;~\#\|{}%,\?=\+\"\.\':/<>]+)[ ]?#([0-9]+)|i;
 
     foreach $line (@log) {
@@ -786,10 +787,14 @@ sub extract_xrefs {
       while ($line =~ /$rev_reg/g) {
 	$revs{$1} = $1;
       }
+      while ($line =~ /$revision_reg/g) {
+	$revs{$1} = $1;
+      }
 
       while ($line =~ m|$art_reg|g) {
 	next if (lc($1) eq 'commit');
 	next if (lc($1) eq 'rev');
+	next if (lc($1) eq 'revision');
 	next if (lc($1) eq 'doc');
 	$artifacts{"$1_$2"} = $2;
 	$artifact_names{"$1_$2"} = $1;
@@ -799,13 +804,17 @@ sub extract_xrefs {
 }
 
 sub format_xref {
-
+	my $group_param;
+	if ($group_id) {
+		$group_param="&group_id=$group_id";
+	}
+ 
     @keys = keys %docs;
     if ( $#keys >= 0 ) {
     	push (@text, "");
         push (@text, "Document references:");
         foreach $doc (keys %docs) {
-            push (@text, sprintf("Document #%s: $doc_url",$doc,$doc));
+            push (@text, sprintf("Document #%s: $doc_url",$doc,$group_param,$doc));
         }
 	if ($db_track) {
 	  &db_add_ref('document', $commit_id, $doc);
@@ -817,7 +826,7 @@ sub format_xref {
     	push (@text, "");
         push (@text, "CVS Commit references:");
         foreach $comm (keys %commits) {
-            push (@text, sprintf("commit #%s: $commit_url",$comm,$comm));
+            push (@text, sprintf("commit #%s: $commit_url",$comm,$group_param,$comm));
         }
 	if ($db_track) {
 	  &db_add_ref('commit', $commit_id, $comm);
@@ -827,8 +836,8 @@ sub format_xref {
     if ( $#keys >= 0 ) {
     	push (@text, "");
         push (@text, "SVN revision references:");
-        foreach $rev (keys %revs) {
-            push (@text, sprintf("revision #%rev: $revision_url",$rev,$rev));
+       foreach $rev (keys %revs) {
+            push (@text, sprintf("revision #%s: $revision_url",$rev,$group_param,$rev));
         }
 	if ($db_track) {
 	  &db_add_ref('revision', $commit_id, $comm);
@@ -842,10 +851,6 @@ sub format_xref {
         foreach $artkey (keys %artifacts) {
           my $art=$artifacts{$artkey};
           my $art_name=$artifact_names{$artkey};
-          my $group_param;
-          if ($group_id) {
-            $group_param="&group_id=$group_id";
-          }
           push (@text, sprintf("%s #%s: $artifact_url", $art_name,$art,$group_param,$art,$art_name));
         }
         if ($db_track) {
