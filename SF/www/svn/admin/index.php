@@ -10,8 +10,7 @@
 //
 
 require_once('pre.php');    
-require('../svn_data.php');    
-require('../svn_utils.php');    
+require_once('../svn_data.php');    
 
 $Language->loadLanguageMsg('svn/svn');
 

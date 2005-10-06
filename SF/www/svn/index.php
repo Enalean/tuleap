@@ -7,8 +7,7 @@
 // $Id$
 
 require_once('pre.php');    
-require('../svn/svn_data.php');    
-require('../svn/svn_utils.php');
+require_once('../svn/svn_data.php');    
 
 $there_are_specific_permissions = true;
 if (isset($_REQUEST['group_id'])) {
