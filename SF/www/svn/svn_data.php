@@ -9,6 +9,7 @@
 //      Originally written by Laurent Julliard 2004 CodeX Team, Xerox
 //
 
+require_once('svn_utils.php');
 
 function svn_data_get_technicians($group_id) {
 
