@@ -401,7 +401,7 @@ $MYSQL $pass_opt sourceforge < /home/httpd/SF/db/upgrades/db_C2.sql
 cd /home/httpd/SF/db/upgrades/
 $PERL db_C2.pl 
 cd -
-$MYSQL $pass_opt sourceforge < /home/httpd/SF/db/upgrades/db_CX_2_4_1_SUP_001.sql
+$MYSQL $pass_opt sourceforge < /home/httpd/SF/db/upgrades/db_CX_2_4_1_0001.sql
 fi
 
 
@@ -437,10 +437,10 @@ INSERT INTO plugin (name, enabled) VALUES ('pluginsadministration', '1');
 
 
 -- theme codex --> CodeX
-UPDATE user SET theme = 'CodeX' WHERE theme = 'codex'
+UPDATE user SET theme = 'CodeX' WHERE theme = 'codex';
 
 -- slow trackers, see SR 318 on Partners
-ALTER TABLE artifact_file ADD INDEX ( artifact_id )
+ALTER TABLE artifact_file ADD INDEX ( artifact_id );
 
 EOF
 
