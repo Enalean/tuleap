@@ -161,6 +161,7 @@ Other changes:
 - Export tracker report page as CSV file
 - Subversion repositories are now created by default with the 'fsfs' file system, and a new backup script is provided.
 - The 'Tracher Technician' role has disappeared. By default, any project member may be assigned artifacts, and may modify artifacts. Create groups if you need a finer access control.
+  Note: for each trackers that used specific permissions for tracker technicians, a group 'trackername_techs' is automatically created, except when all project members were technicians.
 - Support for Wiki attachments has been added thanks to contributions from ST.
 - Features from CodeX 2.4.1 are also available: in particular, trackers and tracker fields access control.
 - CodeX source code is now managed with Subversion.
