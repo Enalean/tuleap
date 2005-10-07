@@ -63,7 +63,7 @@ function menu_software() {
 
 function menu_site() {
   GLOBAL $HTML,$Language;
-    $HTML->menuhtml_top($GLOBALS['sys_name']);
+    $HTML->menuhtml_top($Language->getText('include_layout','Help'));
     $HTML->menu_entry('/documentation/user_guide/html/en_US/','<b>'.$Language->getText('include_menu','help_index').'</b>');
     $HTML->menu_entry('/docs/site/',$Language->getText('include_menu','site_doc'));
     $HTML->menu_entry('/mail/?group_id=1',$Language->getText('include_menu','dev_channel'));
