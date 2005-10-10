@@ -6,7 +6,7 @@ if (! defined('CODEX_RUNNER')) {
 }
 
 require_once('tests/simpletest/unit_tester.php');
-//require_once('tests/simpletest/mock_objects.php'); //uncomment to use Mocks
+require_once('tests/simpletest/mock_objects.php'); //uncomment to use Mocks
 require_once('common/plugin/PluginInfo.class');
 require_once('common/collection/Collection.class');
 require_once('common/plugin/Plugin.class');

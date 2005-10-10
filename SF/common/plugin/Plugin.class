@@ -1,5 +1,6 @@
 <?php
 require_once('PluginInfo.class');
+require_once('common/include/String.class');
 require_once('common/collection/Map.class');
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved

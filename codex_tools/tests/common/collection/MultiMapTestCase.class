@@ -1,6 +1,6 @@
 <?php
 require_once('tests/simpletest/unit_tester.php');
-
+require_once('common/include/String.class');
 if (!class_exists("FakeValue")) {
     class FakeValue {}
 }

@@ -15,6 +15,7 @@ require_once('common/dao/include/DataAccessResult.class');
 Mock::generate('DataAccessResult');
 require_once('common/plugin/Plugin.class');
 Mock::generate('Plugin');
+require(getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/conf/local.inc');
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 

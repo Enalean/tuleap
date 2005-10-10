@@ -3,7 +3,8 @@
  * $Id$
  */
 
-require_once('pre.php');
+require_once('common/dao/UserDao.class');
+require_once('common/dao/CodexDataAccess.class');
 
 class Mail {
     
@@ -131,38 +132,25 @@ class Mail {
      * @param $list (IN) list of email addresses separated by , or ;
      * @return list of email separated by ,
      */
-    function _validateRecipient($list) {        
-        $recipArray = util_split_emails($list);
-        
-        $ret = false;
+    function _validateRecipient($list) {
+        $recipArray = split('[;,]', $list);
         $retArray = array();
+        $user_dao = $this->_getUserDao();
         foreach($recipArray as $email) {
-            $email = trim(rtrim($email));
+            $email = trim($email);
             if(!empty($email)) {
-                $qry = 'SELECT email, status'
-                    .' FROM user'
-                    .' WHERE (user_name="'.$email.'"'
-                    .'   OR email="'.$email.'")';
-                $res = db_query($qry);
-                if(db_numrows($res) > 0) {
-                    $status = db_result($res, 0, 'status');
-                    if($status == 'A' || $status == 'R') {
-                        $ret=true;                    
-                        $retArray[] = db_result($res, 0, 'email');
+                $dar = $user_dao->searchStatusByEmail($email);
+                if ($dar->rowCount() > 0) {
+                    $row = $dar->getRow();
+                    if ($row['status'] == 'A' || $row['status'] == 'R') {
+                        $retArray[] = $row['email'];
                     }
-                }
-                else {
-                    $ret=true;                    
+                } else {
                     $retArray[] = $email;
                 }
             }
         }
-        if($ret) {
-            return implode(', ', $retArray);
-        }
-        else {
-            return '';
-        }
+        return implode(', ', $retArray);
     }
 
     var $_to;
@@ -251,6 +239,16 @@ class Mail {
             $header
         );
     }
+
+    var $userDao;
+    function &_getUserDao() {
+        if (!is_a($this->userDao, 'UserDao')) {
+            $this->userDao =& new UserDao(CodexDataAccess::instance());
+        }
+        return $this->userDao;
+    }
+    
+
 }
 
 ?>

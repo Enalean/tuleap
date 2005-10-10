@@ -30,7 +30,7 @@ $alltest->addTestFile('common/include/MailTest.php');
 $alltest->addTestFile('common/include/StringTest.php');
 
 // {{{ Dao
-$alltest->addTestFile('common/dao/include/DataAccessTest.php');
+//$alltest->addTestFile('common/dao/include/DataAccessTest.php');
 $alltest->addTestFile('common/dao/include/DataAccessObjectTest.php');
 $alltest->addTestFile('common/dao/CodexDataAccessTest.php');
 // }}}
