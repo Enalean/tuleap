@@ -26,11 +26,15 @@ $alltest = &new GroupTest('All CodeX tests');
 $alltest->addTestFile('TemplateTest.php');
     	
 $alltest->addTestFile('common/include/SimpleSanitizerTest.php');
-$alltest->addTestFile('common/include/MailTest.php');
 $alltest->addTestFile('common/include/StringTest.php');
 
+
+// {{{ Mail
+$alltest->addTestFile('common/mail/MailTest.php');
+// }}}
+
 // {{{ Dao
-//$alltest->addTestFile('common/dao/include/DataAccessTest.php');
+$alltest->addTestFile('common/dao/include/DataAccessTest.php');
 $alltest->addTestFile('common/dao/include/DataAccessObjectTest.php');
 $alltest->addTestFile('common/dao/CodexDataAccessTest.php');
 // }}}

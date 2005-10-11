@@ -12,7 +12,7 @@
 //  Written for CodeX by Stephane Bouhet
 //
 require_once('common/tracker/Artifact.class');
-require_once('common/include/Mail.class');
+require_once('common/mail/Mail.class');
 
 
 $Language->loadLanguageMsg('tracker/tracker');

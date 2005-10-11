@@ -9,7 +9,7 @@
 require_once('pre.php');    
 require_once('www/file/file_utils.php');
 require_once('common/include/SimpleSanitizer.class');
-require_once('common/include/Mail.class');
+require_once('common/mail/Mail.class');
 
 /*
 	Quick file release system , Darrell Brogdon, SourceForge, Aug, 2000

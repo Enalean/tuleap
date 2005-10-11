@@ -7,7 +7,7 @@
 // $Id$
 
 require_once('pre.php');   
-require_once('common/include/Mail.class');
+require_once('common/mail/Mail.class');
 
 $Language->loadLanguageMsg('account/account');
 

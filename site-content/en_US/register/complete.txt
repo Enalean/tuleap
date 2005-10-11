@@ -33,7 +33,7 @@ $body = "A new project has just been registered on ".$GLOBALS['sys_name']."\n\n"
 $href_approval."\n";
 
 // Send a notification message to the Site administrator
-require_once('common/include/Mail.class');
+require_once('common/mail/Mail.class');
 $mail =& new Mail();
 $mail->setTo($to);
 $mail->setFrom($from);

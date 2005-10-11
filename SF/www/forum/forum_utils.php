@@ -16,7 +16,7 @@
 */
 
 require_once('www/news/news_utils.php');
-require_once('common/include/Mail.class');
+require_once('common/mail/Mail.class');
 
 $Language->loadLanguageMsg('forum/forum');
 

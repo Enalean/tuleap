@@ -11,7 +11,7 @@
 
 // ***** function account_pwvalid()
 // ***** check for valid password
-require_once('common/include/Mail.class');
+require_once('common/mail/Mail.class');
 
 $Language->loadLanguageMsg('include/include');
 

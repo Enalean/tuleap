@@ -10,7 +10,7 @@
 //
 
 require_once('pre.php');
-require_once('common/include/Mail.class');
+require_once('common/mail/Mail.class');
 require_once('www/project/admin/ugroup_utils.php');
 
 $Language->loadLanguageMsg('my/my');
