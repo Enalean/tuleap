@@ -1,0 +1,304 @@
+<?php
+//
+// Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+//
+// $Id$
+//
+
+require_once('include/DataAccessObject.class');
+
+/**
+ *  Data Access Object for User 
+ */
+class UserDao extends DataAccessObject {
+    /**
+    * Constructs the UserDao
+    * @param $da instance of the DataAccess class
+    */
+    function UserDao( & $da ) {
+        DataAccessObject::DataAccessObject($da);
+    }
+    
+    /**
+    * Gets all tables of the db
+    * @return DataAccessResult
+    */
+    function & searchAll() {
+        $sql = "SELECT * FROM user";
+        return $this->retrieve($sql);
+    }
+    
+    /**
+    * Searches User by UserId 
+    * @return DataAccessResult
+    */
+    function & searchByUserId($userId) {
+        $sql =  "SELECT user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE user_id = '".$userId."'";
+        return $this->retrieve($sql);
+    }
+
+    /**
+    * Searches User by UserName 
+    * @return DataAccessResult
+    */
+    function & searchByUserName($userName) {
+        $sql =  "SELECT user_id, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE user_name = '".$userName."'";
+        return $this->retrieve($sql);
+    }
+
+    /**
+    * Searches User by Email 
+    * @return DataAccessResult
+    */
+    function & searchByEmail($email) {
+        $sql =  "SELECT user_id, user_name, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE email = '".$email."'";
+        return $this->retrieve($sql);
+    }
+
+    /**
+    * Searches User by UserPw 
+    * @return DataAccessResult
+    */
+    function & searchByUserPw($userPw) {
+        $sql =  "SELECT user_id, user_name, email, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE user_pw = '".$userPw."'";
+        return $this->retrieve($sql);
+    }
+
+    /**
+    * Searches User by Realname 
+    * @return DataAccessResult
+    */
+    function & searchByRealname($realname) {
+        $sql =  "SELECT user_id, user_name, email, user_pw, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE realname = '".$realname."'";
+        return $this->retrieve($sql);
+    }
+
+    /**
+    * Searches User by RegisterPurpose 
+    * @return DataAccessResult
+    */
+    function & searchByRegisterPurpose($registerPurpose) {
+        $sql =  "SELECT user_id, user_name, email, user_pw, realname, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE register_purpose = '".$registerPurpose."'";
+        return $this->retrieve($sql);
+    }
+
+    /**
+    * Searches User by Status 
+    * @return DataAccessResult
+    */
+    function & searchByStatus($status) {
+        $sql =  "SELECT user_id, user_name, email, user_pw, realname, register_purpose, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE status = '".$status."'";
+        return $this->retrieve($sql);
+    }
+
+    /**
+    * Searches User by Shell 
+    * @return DataAccessResult
+    */
+    function & searchByShell($shell) {
+        $sql =  "SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE shell = '".$shell."'";
+        return $this->retrieve($sql);
+    }
+
+    /**
+    * Searches User by UnixPw 
+    * @return DataAccessResult
+    */
+    function & searchByUnixPw($unixPw) {
+        $sql =  "SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE unix_pw = '".$unixPw."'";
+        return $this->retrieve($sql);
+    }
+
+    /**
+    * Searches User by UnixStatus 
+    * @return DataAccessResult
+    */
+    function & searchByUnixStatus($unixStatus) {
+        $sql =  "SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE unix_status = '".$unixStatus."'";
+        return $this->retrieve($sql);
+    }
+
+    /**
+    * Searches User by UnixUid 
+    * @return DataAccessResult
+    */
+    function & searchByUnixUid($unixUid) {
+        $sql =  "SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE unix_uid = '".$unixUid."'";
+        return $this->retrieve($sql);
+    }
+
+    /**
+    * Searches User by UnixBox 
+    * @return DataAccessResult
+    */
+    function & searchByUnixBox($unixBox) {
+        $sql =  "SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE unix_box = '".$unixBox."'";
+        return $this->retrieve($sql);
+    }
+
+    /**
+    * Searches User by LdapName 
+    * @return DataAccessResult
+    */
+    function & searchByLdapName($ldapName) {
+        $sql =  "SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE ldap_name = '".$ldapName."'";
+        return $this->retrieve($sql);
+    }
+
+    /**
+    * Searches User by AddDate 
+    * @return DataAccessResult
+    */
+    function & searchByAddDate($addDate) {
+        $sql =  "SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE add_date = '".$addDate."'";
+        return $this->retrieve($sql);
+    }
+
+    /**
+    * Searches User by ConfirmHash 
+    * @return DataAccessResult
+    */
+    function & searchByConfirmHash($confirmHash) {
+        $sql =  "SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE confirm_hash = '".$confirmHash."'";
+        return $this->retrieve($sql);
+    }
+
+    /**
+    * Searches User by MailSiteupdates 
+    * @return DataAccessResult
+    */
+    function & searchByMailSiteupdates($mailSiteupdates) {
+        $sql =  "SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE mail_siteupdates = '".$mailSiteupdates."'";
+        return $this->retrieve($sql);
+    }
+
+    /**
+    * Searches User by MailVa 
+    * @return DataAccessResult
+    */
+    function & searchByMailVa($mailVa) {
+        $sql =  "SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE mail_va = '".$mailVa."'";
+        return $this->retrieve($sql);
+    }
+
+    /**
+    * Searches User by StickyLogin 
+    * @return DataAccessResult
+    */
+    function & searchByStickyLogin($stickyLogin) {
+        $sql =  "SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE sticky_login = '".$stickyLogin."'";
+        return $this->retrieve($sql);
+    }
+
+    /**
+    * Searches User by AuthorizedKeys 
+    * @return DataAccessResult
+    */
+    function & searchByAuthorizedKeys($authorizedKeys) {
+        $sql =  "SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE authorized_keys = '".$authorizedKeys."'";
+        return $this->retrieve($sql);
+    }
+
+    /**
+    * Searches User by EmailNew 
+    * @return DataAccessResult
+    */
+    function & searchByEmailNew($emailNew) {
+        $sql =  "SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE email_new = '".$emailNew."'";
+        return $this->retrieve($sql);
+    }
+
+    /**
+    * Searches User by PeopleViewSkills 
+    * @return DataAccessResult
+    */
+    function & searchByPeopleViewSkills($peopleViewSkills) {
+        $sql =  "SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE people_view_skills = '".$peopleViewSkills."'";
+        return $this->retrieve($sql);
+    }
+
+    /**
+    * Searches User by PeopleResume 
+    * @return DataAccessResult
+    */
+    function & searchByPeopleResume($peopleResume) {
+        $sql =  "SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE people_resume = '".$peopleResume."'";
+        return $this->retrieve($sql);
+    }
+
+    /**
+    * Searches User by Timezone 
+    * @return DataAccessResult
+    */
+    function & searchByTimezone($timezone) {
+        $sql =  "SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, windows_pw, fontsize, theme, language_id FROM user WHERE timezone = '".$timezone."'";
+        return $this->retrieve($sql);
+    }
+
+    /**
+    * Searches User by WindowsPw 
+    * @return DataAccessResult
+    */
+    function & searchByWindowsPw($windowsPw) {
+        $sql =  "SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, fontsize, theme, language_id FROM user WHERE windows_pw = '".$windowsPw."'";
+        return $this->retrieve($sql);
+    }
+
+    /**
+    * Searches User by Fontsize 
+    * @return DataAccessResult
+    */
+    function & searchByFontsize($fontsize) {
+        $sql =  "SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, theme, language_id FROM user WHERE fontsize = '".$fontsize."'";
+        return $this->retrieve($sql);
+    }
+
+    /**
+    * Searches User by Theme 
+    * @return DataAccessResult
+    */
+    function & searchByTheme($theme) {
+        $sql =  "SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, language_id FROM user WHERE theme = '".$theme."'";
+        return $this->retrieve($sql);
+    }
+
+    /**
+    * Searches User by LanguageId 
+    * @return DataAccessResult
+    */
+    function & searchByLanguageId($languageId) {
+        $sql =  "SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme FROM user WHERE language_id = '".$languageId."'";
+        return $this->retrieve($sql);
+    }
+
+
+    /**
+    * create a row in the table user 
+    * @return true or id(auto_increment) if there is no error
+    */
+    function create($user_name, $email, $user_pw, $realname, $register_purpose, $status, $shell, $unix_pw, $unix_status, $unix_uid, $unix_box, $ldap_name, $add_date, $confirm_hash, $mail_siteupdates, $mail_va, $sticky_login, $authorized_keys, $email_new, $people_view_skills, $people_resume, $timezone, $windows_pw, $fontsize, $theme, $language_id) {
+        $inserted = $this->update("INSERT INTO user (user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id) VALUES ('".$user_name."', '".$email."', '".$user_pw."', '".$realname."', '".$register_purpose."', '".$status."', '".$shell."', '".$unix_pw."', '".$unix_status."', '".$unix_uid."', '".$unix_box."', '".$ldap_name."', '".$add_date."', '".$confirm_hash."', '".$mail_siteupdates."', '".$mail_va."', '".$sticky_login."', '".$authorized_keys."', '".$email_new."', '".$people_view_skills."', '".$people_resume."', '".$timezone."', '".$windows_pw."', '".$fontsize."', '".$theme."', '".$language_id."');");
+        if ($inserted) {
+            $dar =& $this->retrieve("SELECT LAST_INSERT_ID() AS id");
+            if ($row = $dar->getRow()) {
+                $inserted = $row['id'];
+            } else {
+                $inserted = $dar->isError();
+            }
+        } 
+        return $inserted;
+    }
+
+    
+    /**
+    * Searches User status by Email
+    * @return DataAccessResult
+    */
+    function & searchStatusByEmail($email) {
+        $sql =  "SELECT email, status FROM user WHERE (user_name='".$email."' OR email = '".$email."')";
+        return $this->retrieve($sql);
+    }
+}
+
+
+?>
