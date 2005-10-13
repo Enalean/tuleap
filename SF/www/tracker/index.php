@@ -402,12 +402,6 @@ if ( $func == 'gotoid' ) {
                         if ( !user_isloggedin() && !$ath->allowsAnon() ) {
                             exit_not_logged_in();
                         }
-                        
-                        if ( !user_ismember($group_id) ) {
-                                exit_permission_denied();
-                                return;
-                        }
-
                         // First check parameters
                         
                         // CC

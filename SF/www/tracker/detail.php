@@ -20,16 +20,19 @@ $Language->loadLanguageMsg('tracker/tracker');
 
 // Check if this tracker is valid (not deleted)
 if ( !$ath->isValid() ) {
-	exit_error($Language->getText('global', 'error'),$Language->getText('tracker_add', 'invalid'));
-}
-
-// Printer version ?
-if ( !isset($pv) ) {
-	$pv = false;
+	exit_error($Language->getText('global','error'),$Language->getText('tracker_add', 'invalid'));
 }
 
 // Create factories
 $art_field_fact = new ArtifactFieldFactory($ath);
+
+// Printer version ?
+if ( !isset($pv) ) {
+	$pv = false;
+	$ro = false;
+} else {
+	if ( $pv ) $ro = true;
+}
 
 $params=array('title'=>$group->getPublicName().' '.$ath->getName().' #'.$ah->getID(). ' - \'' . $ah->getSummary().'\'',
               'pagename'=>'tracker',
@@ -40,8 +43,9 @@ $params=array('title'=>$group->getPublicName().' '.$ath->getName().' #'.$ah->get
 
 $ath->header($params);
 
+
 // artifact object (and field values) initialized in script above (index.php)
-$ah->display(true,$pv,user_getid());
+$ah->display($ro,$pv,user_getid());
 
 // Display footer page
 $ath->footer($params);
