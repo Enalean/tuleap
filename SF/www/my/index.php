@@ -404,15 +404,13 @@ if (user_isloggedin()) {
 
 	// Trackers
 	$uid = user_getid();
-	$list_group_trackers = $atf->getGroupTrackers($uid);
-	$list_non_group_trackers = $atf->getNonGroupTrackers($uid);
+	$my_artifacts = $atf->getMyArtifacts($uid);
 	
-	if (db_numrows($list_group_trackers) > 0 || db_numrows($list_non_group_trackers) > 0) {
+	if (db_numrows($my_artifacts) > 0) {
 
 	  $html_my_artifacts .= $HTML->box1_top($Language->getText('my_index', 'my_arts'),0,'',3);
 	  
-	  $html_my_artifacts .= display_artifacts($list_group_trackers, 0);
-	  $html_my_artifacts .= display_artifacts($list_non_group_trackers, (db_numrows($list_group_trackers) > 0));
+	  $html_my_artifacts .= display_artifacts($my_artifacts, 0);
 	  $html_my_artifacts .= '<TR><TD COLSPAN="3">&nbsp;</TD></TR>';
 	  $html_my_artifacts .= $HTML->box1_bottom(0);
 	}
