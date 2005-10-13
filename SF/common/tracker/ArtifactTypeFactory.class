@@ -284,28 +284,22 @@ class ArtifactTypeFactory extends Error {
 	
 	
 	/**
-	 *	Retrieve a list of trackers where user is group member with the artifacts user is a submitter or 
-	 * has some artifacts assigned
+	 *	Retrieve the artifacts where user $user_id is a submitter or assignee
 	 *
 	 *  @param user_id: the user id
 	 *
 	 *	@return	db_result
 	 */
-	function getGroupTrackers($user_id) {
+	function getMyArtifacts($user_id) {
 
-	  // first select chooses in all trackers of groups where user is member the artifacts where user is submitter or assignee
-	  // we suppose that user can only be assignee in trackers where he is group member 
-	  // (THIS IS TODAY NOT NECESSARILY TRUE DUE TO ST patch 
-	  // where a SB or MB field can be bound to any defined ugroup containing people not in the project ...)
-          // Only trackers from active projects are returned.
+	  // Only artifacts from active projects are returned.
 
 		$sql = 
 		  "SELECT agl.group_artifact_id,agl.name,".
 		  "agl.group_id,g.group_name, ".
 		  "a.summary, a.artifact_id, a.severity, (a.submitted_by=".$user_id.") as submitter, MAX(afv.valueInt=".$user_id.") as assignee ".
-		  "FROM user_group ug, artifact a, artifact_field af, artifact_group_list agl, artifact_field_value afv, groups g ".
-		  "WHERE ug.user_id=".$user_id." AND ug.group_id = g.group_id ".
-		  "AND agl.group_id = g.group_id AND af.group_artifact_id = agl.group_artifact_id ".
+		  "FROM artifact a, artifact_group_list agl, artifact_field af, artifact_field_value afv, groups g ".
+		  "WHERE agl.group_id = g.group_id AND af.group_artifact_id = agl.group_artifact_id ".
 		  "AND agl.status = 'A' ".
                   "AND g.status = 'A' ".
 		  "AND (af.field_name = 'assigned_to' OR af.field_name = 'multi_assigned_to') ".
@@ -314,55 +308,12 @@ class ArtifactTypeFactory extends Error {
 		  "AND a.group_artifact_id = agl.group_artifact_id AND a.artifact_id = afv.artifact_id AND a.status_id <> 3 ".
 		  "GROUP BY a.artifact_id ".
 		  "ORDER BY g.group_name, agl.name";
-		
-		
-	    $res = db_query($sql);
+
+		$res = db_query($sql);
 	
 	    return $res;
 	}
 
-
-/**
-	 *	Retrieve a list of trackers where user is not group member but where he 
-	 * has some artifacts submitted
-	 *
-	 *  @param user_id: the user id
-	 *
-	 *	@return	db_result
-	 */
-	function getNonGroupTrackers($user_id) {
-
-	  // choose in all trackers of groups where user is not member the artifacts that user has submitted
-	  // in MYSQL version of release 2.2 we cannot order over the union result perhaps later
-	  // in MYSQL version of release 2.0 we cannot use UNION. So don't 
-          // Only trackers from active projects are returned.
-
-	  // We don't have the artifacts assigned to this user which are in trackers of projects that the user is not member of.
-
-		$sql = 
-		  "SELECT agl.group_artifact_id,agl.name,".
-		  "agl.group_id,g.group_name, ".
-		  "a.summary, a.artifact_id, a.severity, 1 as submitter, MAX(afv.valueInt=".$user_id.") as assignee ".
-		  "FROM artifact a, artifact_group_list agl, artifact_field af, artifact_field_value afv, groups g, user_group as ug ".
-		  "WHERE ug.group_id = g.group_id AND agl.group_id = g.group_id ".
-		  "AND agl.status = 'A' ".
-                  "AND g.status = 'A' ".
-		  "AND a.group_artifact_id = agl.group_artifact_id ".
-		  "AND a.submitted_by=".$user_id." AND a.status_id <> 3 ".
-		  "AND af.group_artifact_id = agl.group_artifact_id ".
-		  "AND (af.field_name = 'assigned_to' OR af.field_name = 'multi_assigned_to') ".
-		  "AND afv.valueInt =  ".$user_id." ".
-		  "AND afv.artifact_id = a.artifact_id ".
-		  "AND afv.field_id = af.field_id ".
-		  "GROUP BY ug.group_id, a.artifact_id ".
-		  "HAVING MAX(ug.user_id=".$user_id.")= 0 ".
-		  "ORDER BY g.group_name, agl.name";
-		
-		
-	    $res = db_query($sql);
-	
-	    return $res;
-	}
 }
 
 ?>
