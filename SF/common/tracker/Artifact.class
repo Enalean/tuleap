@@ -637,8 +637,6 @@ class Artifact extends Error {
         {
             global $feedback,$art_field_fact,$HTTP_POST_VARS,$Language;
 
-	    //verify permissions - Must have Tech permission
-            if (!user_ismember($this->ArtifactType->getGroupID()) ) exit_permission_denied();
 	    if ($masschange && !$this->ArtifactType->userIsAdmin()) exit_permission_denied();
         
 	    if (!$import) {
@@ -668,7 +666,7 @@ class Artifact extends Error {
                 
 		
                 $field = $art_field_fact->getFieldFromName($field_name);
-                if ( $field ) {
+                if ( $field && $field->userCanUpdate($this->ArtifactType->getGroupID(), $this->ArtifactType->getID())) {
                     // skip over special fields  except for details which in this 
                     // particular case can be processed normally
                     if ($field->isSpecial() || ($field_name == 'details')) {

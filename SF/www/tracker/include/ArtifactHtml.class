@@ -1115,8 +1115,7 @@ class ArtifactHtml extends Artifact {
                 // Now display the variable part of the field list (depend on the project)
                 
                 $i=0;
-                $is_member = user_ismember($group_id);
-
+                
                 $result_fields = $art_field_fact->getAllUsedFields();
                 while ( list($key, $field) = each($result_fields) ) {
                 
