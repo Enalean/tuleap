@@ -7,7 +7,7 @@ if (! defined('CODEX_RUNNER')) {
 
 
 require_once('tests/simpletest/unit_tester.php');
-require_once('common/include/Mail.class');
+require_once('common/mail/Mail.class');
 
 require_once('tests/simpletest/mock_objects.php'); //uncomment to use Mocks
 require_once('common/dao/include/DataAccessResult.class');
