@@ -309,9 +309,7 @@ if (isset($Register)) {
             $content .= '<p>'.$Language->getText('account_register', 'msg_approval', array($GLOBALS['sys_name'],$user_name,$href_approval));
     
             // Send a notification message to the Site administrator
-            list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
-            $from = 'noreply@'.$host;
-            $hdrs = 'From: '.$from."\n";
+            $from = $GLOBALS['sys_noreply'];
             $to = $GLOBALS['sys_email_admin'];
             $subject = $Language->getText('account_register', 'mail_approval_subject', array($user_name));
             $body = stripcslashes($Language->getText('account_register', 'mail_approval_body', array($GLOBALS['sys_name'], $user_name, $href_approval)));

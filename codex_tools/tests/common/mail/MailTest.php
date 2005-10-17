@@ -52,19 +52,19 @@ class MailTest extends UnitTestCase {
         $exists_a = new MockDataAccessResult($this);
         $exists_a->setReturnValue('rowCount', 1);
         $exists_a->setReturnValue('getRow', false);
-        $exists_a->setReturnValueAt(0, 'getRow', array('email' => 'exists@A.com', 'status' => 'A'));
+        $exists_a->setReturnValueAt(0, 'getRow', array('realname' => 'Exists A', 'email' => 'exists@A.com', 'status' => 'A'));
         $dao->setReturnValueAt(0, 'searchStatusByEmail', $exists_a);
         
         $exists_r = new MockDataAccessResult($this);
         $exists_r->setReturnValue('rowCount', 1);
         $exists_r->setReturnValue('getRow', false);
-        $exists_r->setReturnValueAt(0, 'getRow', array('email' => 'exists@R.com', 'status' => 'R'));
+        $exists_r->setReturnValueAt(0, 'getRow', array('realname' => 'Exists R', 'email' => 'exists@R.com', 'status' => 'R'));
         $dao->setReturnValueAt(1, 'searchStatusByEmail', $exists_r);
         
         $exists_s = new MockDataAccessResult($this);
         $exists_s->setReturnValue('rowCount', 1);
         $exists_s->setReturnValue('getRow', false);
-        $exists_s->setReturnValueAt(0, 'getRow', array('email' => 'exists@S.com', 'status' => 'S'));
+        $exists_s->setReturnValueAt(0, 'getRow', array('realname' => 'Exists S', 'email' => 'exists@S.com', 'status' => 'S'));
         $dao->setReturnValueAt(2, 'searchStatusByEmail', $exists_s);
         
         $does_not_exist = new MockDataAccessResult($this);
@@ -77,7 +77,7 @@ class MailTest extends UnitTestCase {
         $mail->Mail();
         
         $recipients = $mail->_validateRecipient('exists@A.com, exists@R.com ; exists@S.com, does@not.exist');
-        $this->assertEqual($recipients, 'exists@A.com, exists@R.com, does@not.exist');
+        $this->assertEqual($recipients, '"Exists A" <exists@A.com>, "Exists R" <exists@R.com>, does@not.exist');
         
         $dao->tally();
     }

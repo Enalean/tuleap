@@ -230,7 +230,7 @@ if( $submit ) {
         $subject=$GLOBALS['sys_name'].' '.$Language->getText('file_admin_editreleases','file_rel_notice');
         list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
         $mail =& new Mail();
-        $mail->setFrom($GLOBALS['sys_name']." <noreply@".$host.">");
+        $mail->setFrom($GLOBALS['sys_noreply']);
         $mail->setBcc($list);
         $mail->setSubject($subject);
         $mail->setBody($Language->getText('file_admin_editreleases','download_explain',array(db_result($result,0,'name'),"<".get_server_url()."/file/showfiles.php?group_id=$group_id&release_id=$release_id> ",$GLOBALS['sys_name'])).": ".

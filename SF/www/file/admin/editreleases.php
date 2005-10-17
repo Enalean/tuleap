@@ -500,7 +500,7 @@ if ($submit) {
 				"\n<".get_server_url()."/file/filemodule_monitor.php?filemodule_id=$package_id> ";
 			
 			$mail =& new Mail();
-            $mail->setFrom($GLOBALS['sys_name']." <noreply@".$host.">");
+            $mail->setFrom($GLOBALS['sys_noreply']);
             $mail->setBcc($list);
             $mail->setSubject($subject);
             $mail->setBody($body);

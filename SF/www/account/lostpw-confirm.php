@@ -35,7 +35,7 @@ $mail =& new Mail();
 $mail->setTo($row_user['email']);
 $mail->setSubject($Language->getText('account_lostpw-confirm', 'mail_subject', array($GLOBALS['sys_name'])));
 $mail->setBody($message);
-$mail->setFrom("noreply@".$host);
+$mail->setFrom($GLOBALS['sys_noreply']);
 $mail_is_sent = $mail->send();
 
 site_header(array('title'=>$Language->getText('account_lostpw-confirm', 'title')));

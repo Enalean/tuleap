@@ -99,7 +99,7 @@ function account_send_add_user_to_group_email($group_id,$user_id) {
             list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
             $mail =& new Mail();
             $mail->setTo($email_address);
-            $mail->setFrom("noreply@".$host);
+            $mail->setFrom($GLOBALS['sys_noreply']);
             $mail->setSubject($Language->getText('include_account','welcome',array($GLOBALS['sys_name'],$group_name)));
             $mail->setBody($message);
             if (!$mail->send()) {

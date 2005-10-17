@@ -295,6 +295,7 @@ class UserDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchStatusByEmail($email) {
+        //ST: with LDAP user_name can be an email
         $sql =  "SELECT realname, email, status FROM user WHERE (user_name='".$email."' OR email = '".$email."')";
         return $this->retrieve($sql);
     }

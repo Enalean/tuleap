@@ -57,7 +57,7 @@ if (user_isloggedin()) {
 	    $mail =& new Mail();
         $mail->setTo($to);
         $mail->setSubject($subject);
-        $mail->setFrom("noreply@".$host);
+        $mail->setFrom($GLOBALS['sys_noreply']);
         $mail->setBody($body);
         $mail->send();
     }

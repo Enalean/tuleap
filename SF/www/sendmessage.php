@@ -59,12 +59,13 @@ if ($send_mail) {
     $mail->setTo($to);
     $dest = $to;
     if (isset($_REQUEST['cc']) && count($_REQUEST['cc']) > 0) {
-        $mail->setCc(util_normalize_emails($_REQUEST['cc']));
-        $dest .= ','.$mail->getCc();
+        $cc = util_normalize_emails($_REQUEST['cc']);
+        $mail->setCc($cc);
+        $dest .= ','.$cc;
     }
     $mail->setSubject(stripslashes($subject));
     $mail->setBody(stripslashes($body));
-    $mail->setFrom($name .' <'. $email .'>');
+    $mail->setFrom($email);
     $mail_is_send = $mail->send();
 
     if (!$mail_is_send) {

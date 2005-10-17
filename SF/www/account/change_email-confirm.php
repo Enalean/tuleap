@@ -28,7 +28,7 @@ $mail =& new Mail();
 $mail->setTo($form_newemail);
 $mail->setSubject($GLOBALS['sys_name'].': '.$Language->getText('account_change_email-confirm', 'title'));
 $mail->setBody($message);
-$mail->setFrom("noreply@".$host);
+$mail->setFrom($GLOBALS['sys_noreply']);
 $mail_is_sent = $mail->send();
 site_header(array('title'=>$Language->getText('account_change_email-confirm', 'title'))); ?>
 

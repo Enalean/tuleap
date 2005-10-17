@@ -76,7 +76,7 @@ function send_new_user_email($to,$confirm_hash)
     $mail->setTo($to);
     $mail->setSubject($Language->getText('include_proj_email','account_register',$GLOBALS['sys_name']));
     $mail->setBody($message);
-    $mail->setFrom("noreply@".$host);
+    $mail->setFrom($GLOBALS['sys_noreply']);
     return $mail->send();
 }
 

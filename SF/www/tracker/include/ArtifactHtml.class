@@ -1246,7 +1246,7 @@ class ArtifactHtml extends Artifact {
         //Prepare e-mail
         list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
         $mail =& new Mail();
-        $mail->setFrom('noreply@'.$host);
+        $mail->setFrom($GLOBALS['sys_noreply']);
         $mail->addAdditionalHeader("X-CodeX-Project",     group_getunixname($group_id));
         $mail->addAdditionalHeader("X-CodeX-Artifact",    $this->ArtifactType->getItemName());
         $mail->addAdditionalHeader("X-CodeX-Artifact-ID", $this->getID());

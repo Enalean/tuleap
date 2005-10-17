@@ -66,8 +66,8 @@ $rows=db_numrows($res_mail);
 
 list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
 $mail =& new Mail();
-$mail->setTo($to_name." <noreply@".$host.">");
-$mail->setFrom($GLOBALS['sys_name']." <noreply@".$host.">");
+$mail->setTo($GLOBALS['sys_noreply']);
+$mail->setFrom($GLOBALS['sys_noreply']);
 $mail->setSubject(stripslashes($mail_subject));
 $mail->setBody(stripslashes($mail_message));
 
