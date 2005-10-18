@@ -23,7 +23,7 @@ function viewcvs_utils_getfile($script_name) {
   } else {
     $file = "";
   }
-  return $file;
+  return urldecode($file);
 }
 
 
