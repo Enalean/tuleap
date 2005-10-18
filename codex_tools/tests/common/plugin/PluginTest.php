@@ -82,7 +82,7 @@ class PluginTest extends UnitTestCase {
         $p->addHook($hook);
         $col =& $p->getHooksAndCallbacks();
         $it =& $col->iterator();
-        $current_hook =& $it->next();
+        $current_hook =& $it->current();
         $this->assertEqual($current_hook['hook'],       $hook);
         $this->assertEqual($current_hook['callback'],   'CallHook');
         $this->assertTrue($current_hook['recallHook']);
@@ -95,7 +95,7 @@ class PluginTest extends UnitTestCase {
         $p->addHook($hook, $callback);
         $col =& $p->getHooksAndCallbacks();
         $it =& $col->iterator();
-        $current_hook =& $it->next();
+        $current_hook =& $it->current();
         $this->assertEqual($current_hook['hook'],       $hook);
         $this->assertEqual($current_hook['callback'],   $callback);
         $this->assertTrue($current_hook['recallHook']);
@@ -109,7 +109,7 @@ class PluginTest extends UnitTestCase {
         $p->addHook($hook, $callback, $recall);
         $col =& $p->getHooksAndCallbacks();
         $it =& $col->iterator();
-        $current_hook =& $it->next();
+        $current_hook =& $it->current();
         $this->assertEqual($current_hook['hook'],       $hook);
         $this->assertEqual($current_hook['callback'],   $callback);
         $this->assertEqual($current_hook['recallHook'], $recall);

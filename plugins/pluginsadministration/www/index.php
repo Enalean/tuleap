@@ -121,8 +121,8 @@ if($plugins->isEmpty()) {
     $output .= html_build_list_table_top($titles);
     $iter =& $plugins->iterator();
     $plugins_table = array();
-    while ($iter->hasNext()) {
-        $plugin     =& $iter->next();
+    while ($iter->valid()) {
+        $plugin     =& $iter->current();
         $plug_info  =& $plugin->getPluginInfo();
         $descriptor =& $plug_info->getPluginDescriptor();
         $enabled = $plugin_manager->isPluginEnabled($plugin);
@@ -140,8 +140,8 @@ if($plugins->isEmpty()) {
             'dont_touch'  => $dont_touch);
         $col_hooks =& $plugin->getHooks();
         $hooks =& $col_hooks->iterator();
-        while($hooks->hasNext()) {
-            $hook     =& $hooks->next();
+        while($hooks->valid()) {
+            $hook     =& $hooks->current();
             $priority = $plugin_hook_priority_manager->getPriorityForPluginHook($plugin, $hook->getInternalString());
             if (!isset($priorities[$hook->getInternalString()])) {
                 $priorities[$hook->getInternalString()] = array();
@@ -150,7 +150,9 @@ if($plugins->isEmpty()) {
                 $priorities[$hook->getInternalString()][$priority] = array();
             }
             $priorities[$hook->getInternalString()][$priority][$plugin->getId()] = array('name' => $name, 'enabled' => $enabled);
+            $hooks->next();
         }
+        $iter->next();
     }
     usort($plugins_table, create_function('$a, $b', 'return strcasecmp($a["name"] , $b["name"]);'));
     for($i = 0; $i < count($plugins_table) ; $i++) {

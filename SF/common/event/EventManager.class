@@ -1,6 +1,7 @@
 <?php
 require_once('common/collection/PrioritizedMultiMap.class');
 require_once('common/collection/Map.class');
+require_once('common/include/String.class');
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
@@ -36,8 +37,8 @@ class EventManager {
         $listeners =& $this->listeners->get(new String($event));
         if ($listeners) {
             $it =& $listeners->iterator();
-            while($it->hasNext()) {
-                $entry =& $it->next();
+            while($it->valid()) {
+                $entry =& $it->current();
                 $listener    =& $entry['listener'];
                 $callback    = $entry['callback'];
                 $recallEvent = $entry['recallEvent'];
@@ -46,6 +47,7 @@ class EventManager {
                 } else {
                     $listener->$callback($params);
                 }
+                $it->next();
             }
         }
     }

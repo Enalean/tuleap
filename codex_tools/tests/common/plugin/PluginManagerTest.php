@@ -45,17 +45,17 @@ class PluginManagerTest extends UnitTestCase {
         $hook_A = array('hook' => 'hook_A', 'callback' => 'CallHook', 'recallHook' => true);
         $hook_B = array('hook' => 'hook_B', 'callback' => 'CallHook', 'recallHook' => true);
         $it_hook_p1     =& new MockIterator($this);
-        $it_hook_p1->setReturnValue('hasNext', true);
-        $it_hook_p1->setReturnValueAt(2, 'hasNext', false);
-        $it_hook_p1->setReturnReferenceAt(0, 'next', $hook_A);
-        $it_hook_p1->setReturnReferenceAt(1, 'next', $hook_B);
+        $it_hook_p1->setReturnValue('valid', true);
+        $it_hook_p1->setReturnValueAt(2, 'valid', false);
+        $it_hook_p1->setReturnReferenceAt(0, 'current', $hook_A);
+        $it_hook_p1->setReturnReferenceAt(1, 'current', $hook_B);
         $hooks_p1       =& new MockCollection($this);
         $hooks_p1->setReturnReference('iterator', $it_hook_p1);
         
         $it_hook_p2     =& new MockIterator($this);
-        $it_hook_p2->setReturnValue('hasNext', true);
-        $it_hook_p2->setReturnValueAt(1, 'hasNext', false);
-        $it_hook_p2->setReturnReferenceAt(0, 'next', $hook_A);
+        $it_hook_p2->setReturnValue('valid', true);
+        $it_hook_p2->setReturnValueAt(1, 'valid', false);
+        $it_hook_p2->setReturnReferenceAt(0, 'current', $hook_A);
         $hooks_p2       =& new MockCollection($this);
         $hooks_p2->setReturnReference('iterator', $it_hook_p2);
 
@@ -73,10 +73,10 @@ class PluginManagerTest extends UnitTestCase {
 
         //The iterator for enabled plugins
         $it_enabled     =& new MockIterator($this);
-        $it_enabled->setReturnValue('hasNext', true);
-        $it_enabled->setReturnValueAt(2, 'hasNext', false);
-        $it_enabled->setReturnReferenceAt(0, 'next', $plugin_1);
-        $it_enabled->setReturnReferenceAt(1, 'next', $plugin_2);
+        $it_enabled->setReturnValue('valid', true);
+        $it_enabled->setReturnValueAt(2, 'valid', false);
+        $it_enabled->setReturnReferenceAt(0, 'current', $plugin_1);
+        $it_enabled->setReturnReferenceAt(1, 'current', $plugin_2);
 
         //The enabled plugins
         $enabled        =& new MockCollection($this);

@@ -35,13 +35,16 @@ class PrioritizedListTest extends LinkedListTestCase {
         $l->add($c, 30);
         $l->add($b, 20);
         $it =& $l->iterator();
-        $element =& $it->next();
+        $element =& $it->current();
         $this->assertReference($element, $c);
-        $element =& $it->next();
+        $it->next();
+        $element =& $it->current();
         $this->assertReference($element, $b);
-        $element =& $it->next();
+        $it->next();
+        $element =& $it->current();
         $this->assertReference($element, $a2);
-        $element =& $it->next();
+        $it->next();
+        $element =& $it->current();
         $this->assertReference($element, $a1);
     }
     
@@ -66,23 +69,31 @@ class PrioritizedListTest extends LinkedListTestCase {
         $l->add($b2, 20);
         $l->add($b1, 20);
         $it =& $l->iterator();
-        $element =& $it->next();
+        $element =& $it->current();
         $this->assertReference($element, $c2);
-        $element =& $it->next();
+        $it->next();
+        $element =& $it->current();
         $this->assertReference($element, $c3);
-        $element =& $it->next();
+        $it->next();
+        $element =& $it->current();
         $this->assertReference($element, $c1);
-        $element =& $it->next();
+        $it->next();
+        $element =& $it->current();
         $this->assertReference($element, $b3);
-        $element =& $it->next();
+        $it->next();
+        $element =& $it->current();
         $this->assertReference($element, $b2);
-        $element =& $it->next();
+        $it->next();
+        $element =& $it->current();
         $this->assertReference($element, $b1);
-        $element =& $it->next();
+        $it->next();
+        $element =& $it->current();
         $this->assertReference($element, $a1);
-        $element =& $it->next();
+        $it->next();
+        $element =& $it->current();
         $this->assertReference($element, $a2);
-        $element =& $it->next();
+        $it->next();
+        $element =& $it->current();
         $this->assertReference($element, $a3);
     }
     
@@ -97,13 +108,16 @@ class PrioritizedListTest extends LinkedListTestCase {
         $l->add($d);
         $l->add($c);
         $it =& $l->iterator();
-        $element =& $it->next();
+        $element =& $it->current();
         $this->assertReference($element, $a);
-        $element =& $it->next();
+        $it->next();
+        $element =& $it->current();
         $this->assertReference($element, $d);
-        $element =& $it->next();
+        $it->next();
+        $element =& $it->current();
         $this->assertReference($element, $c);
-        $element =& $it->next();
+        $it->next();
+        $element =& $it->current();
         $this->assertReference($element, $b);
     }
 }

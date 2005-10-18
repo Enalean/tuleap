@@ -114,11 +114,13 @@ class EventManagerTest extends UnitTestCase {
         
         $listeners =& $m->getListenersForEvent($e);
         $it =& $listeners->iterator();
-        $entry =& $it->next();
+        $entry =& $it->current();
         $this->assertReference($l3, $entry['listener']);
-        $entry =& $it->next();
+        $it->next();
+        $entry =& $it->current();
         $this->assertReference($l1, $entry['listener']);
-        $entry =& $it->next();
+        $it->next();
+        $entry =& $it->current();
         $this->assertReference($l2, $entry['listener']);
     }
 }

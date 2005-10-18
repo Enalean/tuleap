@@ -32,15 +32,17 @@ class PluginManager {
         $col_enabled_plugins =& $plugin_factory->getEnabledPlugins();
         $enabled_plugins =& $col_enabled_plugins->iterator();
         $priority_manager =& $this->_getPluginHookPriorityManager();
-        while($enabled_plugins->hasNext()) {
-            $plugin =& $enabled_plugins->next();
+        while($enabled_plugins->valid()) {
+            $plugin =& $enabled_plugins->current();
             $hooks =& $plugin->getHooksAndCallbacks();
             $iter =& $hooks->iterator();
-            while($iter->hasNext()) {
-                $hook =& $iter->next();
+            while($iter->valid()) {
+                $hook =& $iter->current();
                 $priority = $priority_manager->getPriorityForPluginHook($plugin, $hook['hook']);
                 $event_manager->addListener($hook['hook'], $plugin, $hook['callback'], $hook['recallHook'], $priority);
+                $iter->next();
             }
+            $enabled_plugins->next();
         }
         $this->plugins_loaded = true;
     }

@@ -39,9 +39,10 @@ class PrioritizedMultiMapTest extends MultiMapTestCase {
         $col =& $m->get($key);
         $this->assertIsA($col, "PrioritizedList");
         $it =& $col->iterator();
-        $element =& $it->next();
+        $element =& $it->current();
         $this->assertReference($element, $value2);
-        $element =& $it->next();
+        $it->next();
+        $element =& $it->current();
         $this->assertReference($element, $value1);
     }
 }

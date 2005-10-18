@@ -22,11 +22,13 @@ class LinkedListTestCase extends CollectionTestCase {
         $l->add($b);
         $l->add($a);
         $it =& $l->iterator();
-        $element =& $it->next();
+        $element =& $it->current();
         $this->assertReference($element, $c);
-        $element =& $it->next();
+        $it->next();
+        $element =& $it->current();
         $this->assertReference($element, $b);
-        $element =& $it->next();
+        $it->next();
+        $element =& $it->current();
         $this->assertReference($element, $a);
     }
     

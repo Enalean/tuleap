@@ -101,18 +101,20 @@ class Map {
                 $obj_keys   =& $obj->getKeys();
                 $obj_values =& $obj->getValues();
                 $it =& $my_keys->iterator();
-                while($it->hasNext() && $is_identical) {
-                    $val =& $it->next();
+                while($it->valid() && $is_identical) {
+                    $val =& $it->current();
                     if (!($obj_values->contains($this->get($val)))) {
                         $is_identical = false;
                     }
+                    $it->next();
                 }
                 $it =& $obj_keys->iterator();
-                while($it->hasNext() && $is_identical) {
-                    $val =& $it->next();
+                while($it->valid() && $is_identical) {
+                    $val =& $it->current();
                     if (!($this->containsValue($obj->get($val)))) {
                         $is_identical = false;
                     }
+                    $it->next();
                 }
                 return $is_identical;
             }

@@ -1,5 +1,5 @@
 <?php
-require_once('ArrayListIterator.class');
+require_once('ArrayIterator.class');
 
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
@@ -39,12 +39,13 @@ class Collection {
             $wanted = uniqid('test');
         }
         $it =& $this->iterator();
-        while(!$found && $it->hasNext()) {
-            $element =& $it->next();
+        while(!$found && $it->valid()) {
+            $element =& $it->current();
             if (($compare_with_equals && $wanted->equals($element)) 
              || (!$compare_with_equals && ((method_exists($element, 'equals') && $element->equals($temp)) || ($element === $wanted)))) {
                 $found = true;
             }
+            $it->next();
         }
         if (!$compare_with_equals && !(version_compare(phpversion(), '5', '>=') && is_object($wanted))) {
             $wanted = $temp;
@@ -56,7 +57,7 @@ class Collection {
      * @return Iterator to iterate through the elements
      */
     function &iterator() {
-        $it =& new ArrayListIterator($this->elements);
+        $it =& new ArrayIterator($this->elements);
         return $it;
     }
     
@@ -72,11 +73,12 @@ class Collection {
             //we cannot see $obj->elements (protected)
             $it =& $this->iterator();
             $is_identical = true;
-            while ($it->hasNext() && $is_identical) {
-                $val =& $it->next();
+            while ($it->valid() && $is_identical) {
+                $val =& $it->current();
                 if (!($obj->contains($val))) {
                     $is_identical = false;
                 }
+                $it->next();
             }
             if ($is_identical) {
                 //We walk through the second collection to see if the first
@@ -84,11 +86,12 @@ class Collection {
                 //we cannot see $obj->elements (protected)
                 $it =& $obj->iterator();
                 $is_identical = true;
-                while ($it->hasNext() && $is_identical) {
-                    $val =& $it->next();
+                while ($it->valid() && $is_identical) {
+                    $val =& $it->current();
                     if (!($this->contains($val))) {
                         $is_identical = false;
                     }
+                    $it->next();
                 }
             }
             return $is_identical;

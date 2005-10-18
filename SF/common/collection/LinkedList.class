@@ -33,9 +33,9 @@ class LinkedList extends Collection{
             $it1 =& $this->iterator();
             $it2 =& $obj->iterator();
             $is_identical = true;
-            while ($it1->hasNext() && $is_identical) {
-                $val1 =& $it1->next();
-                $val2 =& $it2->next();
+            while ($it1->valid() && $is_identical) {
+                $val1 =& $it1->current();
+                $val2 =& $it2->current();
                 if (!(version_compare(phpversion(), '5', '>=') && is_object($val1))) {
                     $temp = $val1;
                     $val1 = uniqid('test');
@@ -46,6 +46,8 @@ class LinkedList extends Collection{
                 if (!(version_compare(phpversion(), '5', '>=') && is_object($val1))) {
                     $val1 = $temp;
                 }
+                $it1->next();
+                $it2->next();
             }
             return $is_identical;
         }

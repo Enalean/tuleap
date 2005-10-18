@@ -44,9 +44,10 @@ if (!isset($_REQUEST['plugin_id'])) {
         $col_hooks =& $plugin->getHooks();
         $hooks =& $col_hooks->iterator();
         $the_hooks = array();
-        while($hooks->hasNext()) {
-            $hook =& $hooks->next();
+        while($hooks->valid()) {
+            $hook =& $hooks->current();
             $the_hooks[] = $hook->getInternalString();
+            $hooks->next();
         }
         natcasesort($the_hooks);
         $link_to_hooks = array();

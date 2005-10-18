@@ -1,6 +1,6 @@
 <?php
 require_once('LinkedList.class');
-require_once('ArrayListIterator.class');
+require_once('ArrayIterator.class');
 
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
@@ -75,7 +75,7 @@ class PrioritizedList extends LinkedList{
             }
             $tab = array_reverse($tab);
         }
-        $it =& new ArrayListIterator($tab);
+        $it =& new ArrayIterator($tab);
         return $it;
     }
 }
