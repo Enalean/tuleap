@@ -60,7 +60,6 @@ $title_arr[]=$Language->getText('project_admin_servicebar','del?');
 echo html_build_list_table_top($title_arr);
 $row_num=0;
 
-
 $result = db_query("SELECT * FROM ugroup WHERE group_id=100 ORDER BY ugroup_id");
 while ($row = db_fetch_array($result)) {
     echo '<TR class="'. util_get_alt_row_color($row_num) .'">
@@ -73,24 +72,27 @@ while ($row = db_fetch_array($result)) {
 }
 
 
-$result = db_query("SELECT * FROM ugroup WHERE group_id=$group_id ORDER BY name");
-if (db_numrows($result) > 0) {
+
+if ($group_id != 100) {
+  $result = db_query("SELECT * FROM ugroup WHERE group_id=$group_id ORDER BY name");
+  if (db_numrows($result) > 0) {
     
     while ($row = db_fetch_array($result)) {
-        echo '<TR class="'. util_get_alt_row_color($row_num) .'">
+      echo '<TR class="'. util_get_alt_row_color($row_num) .'">
             <TD>
-              <a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$row['ugroup_id'].'&func=edit">'.$row['name'].'</TD>';
-        echo '<TD>'.$row['description'].'</TD>';
-        $res2=db_query("SELECT count(*) FROM ugroup_user WHERE ugroup_id=".$row['ugroup_id']);
-        $nb_members=db_result($res2,0,0);
-        if ($nb_members) echo '<TD align="center">'.$nb_members.'</TD>';
-        else echo '<TD align="center">0</TD>';
-
-
-        echo '<TD align="center"><A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&ugroup_id='.$row['ugroup_id'].'&func=delete" onClick="return confirm(\''.$Language->getText('project_admin_ugroup','del_ug').'\')"><IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="'.$Language->getText('project_admin_servicebar','del').'"></A></TD>
+              <a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$row['ugroup_id'].'&func=edit">'.util_translate_name_ugroup($row['name']).'</TD>';
+      echo '<TD>'.util_translate_desc_ugroup($row['description']).'</TD>';
+      $res2=db_query("SELECT count(*) FROM ugroup_user WHERE ugroup_id=".$row['ugroup_id']);
+      $nb_members=db_result($res2,0,0);
+      if ($nb_members) echo '<TD align="center">'.$nb_members.'</TD>';
+      else echo '<TD align="center">0</TD>';
+      
+      
+      echo '<TD align="center"><A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&ugroup_id='.$row['ugroup_id'].'&func=delete" onClick="return confirm(\''.$Language->getText('project_admin_ugroup','del_ug').'\')"><IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="'.$Language->getText('project_admin_servicebar','del').'"></A></TD>
 </TR>';
-        $row_num++;
+      $row_num++;
     }
+  }
 }
 
 echo '</TABLE>';

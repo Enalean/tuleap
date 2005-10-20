@@ -1537,7 +1537,6 @@ EOS;
 	 */
 	function displayValueFunctionForm($field_id,$value_function="",$or_label="") {
 	  global $Language;
-
 	    if ( $or_label ) {
 	    	echo '<h3>'.$or_label.' '.$Language->getText('tracker_include_type','bind_to_list').' ';
 	    } else {
@@ -1545,6 +1544,7 @@ EOS;
 	    }
 	    echo  help_button('TrackerAdministration.html#TrackerBindingFieldToValueList').'</h3>';
 	
+
 	    echo '
 	      <FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
 	      <INPUT TYPE="HIDDEN" NAME="func" VALUE="update_binding">
@@ -1554,63 +1554,70 @@ EOS;
 	      '.$Language->getText('tracker_include_type','bind_to').': &nbsp; 
 	      <select name="value_function">
 	          <option value="">'.$Language->getText('global','none').'</option>';
-		        
-		if ( $value_function ) {
-			$selected = "";
-			if ( $value_function == "group_members" ) {
-				$selected = " selected";
-			}
-			echo '<option value="group_members"'.$selected.'>'.$Language->getText('tracker_include_type','group_members').'</option>';
-			
-			$selected = "";
-			if ( $value_function == "group_admins" ) {
-				$selected = " selected";
-			}
-			echo '<option value="group_admins"'.$selected.'>'.$Language->getText('tracker_include_type','group_admins').'</option>';
-			
-			$selected = "";
-			if ( $value_function == "tracker_admins" ) {
-				$selected = " selected";
-			}
-			echo '<option value="tracker_admins"'.$selected.'>'.$Language->getText('tracker_include_type','tracker_admins').'</option>';
-			
-			$selected = "";
-			if ( $value_function == "artifact_submitters" ) {
-				$selected = " selected";
-			}
-			echo '<option value="artifact_submitters"'.$selected.'>'.$Language->getText('tracker_include_type','submitters').'</option>';
 
-			/*
-			 * @author: Manuel VACELET
-			 * Add for user group binding 
-			 */
-			$ugroup_res = ugroup_db_get_existing_ugroups($this->Group->getID());
-			$rows = db_numrows($ugroup_res);
-			for($i=0;$i<$rows;$i++) {
-			  $ug = db_result($ugroup_res, $i,'ugroup_id');
-			  $selected = "";
-			  if ( $value_function == "ugroup_".$ug) {
-			    $selected = " selected";
-			  }
-			  echo '<option value="ugroup_'.$ug.'"'.$selected.'>'.db_result($ugroup_res, $i, 'name').'</option>';
-			}
-
-		} else {
-			echo '
-		          <option value="group_members">'.$Language->getText('tracker_include_type','group_members').'</option>
-		          <option value="artifact_submitters">'.$Language->getText('tracker_include_type','submitters').'</option>';
-			$ugroup_res = ugroup_db_get_existing_ugroups($this->Group->getID());
-			$rows = db_numrows($ugroup_res);
-			for($i=0;$i<$rows;$i++) {
-			  echo '<option value="ugroup_'.db_result($ugroup_res, $i,'ugroup_id').'">'.db_result($ugroup_res, $i, 'name').'</option>';			  
-			}
-		}
-		
-		echo '
+	
+	    $selected = "";
+	    if ( $value_function && $value_function == "artifact_submitters" ) {
+	      $selected = " selected";
+	    }
+	    echo '<option value="artifact_submitters"'.$selected.'>'.$Language->getText('tracker_include_type','submitters').'</option>';
+	    
+	    $selected = "";
+	    $ugroup_res = ugroup_db_get_ugroup($GLOBALS['UGROUP_PROJECT_MEMBERS']);
+	    $name = util_translate_name_ugroup(db_result($ugroup_res, 0, 'name'));
+	    if ( $value_function && $value_function == "group_members" ) {
+	      $selected = " selected";
+	    }
+	    echo '<option value="group_members"'.$selected.'>'.$name.'</option>';
+	    
+	    $selected = "";
+	    $ugroup_res = ugroup_db_get_ugroup($GLOBALS['UGROUP_PROJECT_ADMIN']);
+	    $name = util_translate_name_ugroup(db_result($ugroup_res, 0, 'name'));
+	    if ( $value_function && $value_function == "group_admins" ) {
+	      $selected = " selected";
+	    }
+	    echo '<option value="group_admins"'.$selected.'>'.$name.'</option>';
+	    
+	    $selected = "";
+	    $ugroup_res = ugroup_db_get_ugroup($GLOBALS['UGROUP_TRACKER_ADMIN']);
+	    $name = util_translate_name_ugroup(db_result($ugroup_res, 0, 'name'));
+	    if ( $value_function && $value_function == "tracker_admins" ) {
+	      $selected = " selected";
+	    }
+	    echo '<option value="tracker_admins"'.$selected.'>'.$name.'</option>';
+	    
+	    
+	    $ugroup_res = ugroup_db_get_existing_ugroups(100);
+	    $rows = db_numrows($ugroup_res);
+	    for($i=0;$i<$rows;$i++) {
+	      $ug = db_result($ugroup_res, $i,'ugroup_id');
+	      $selected = "";
+	      if ($ug == $GLOBALS['UGROUP_NONE'] || 
+		  $ug == $GLOBALS['UGROUP_ANONYMOUS'] || 
+		  $ug == $GLOBALS['UGROUP_PROJECT_MEMBERS'] || 
+		  $ug == $GLOBALS['UGROUP_PROJECT_ADMIN'] || 
+		  $ug == $GLOBALS['UGROUP_TRACKER_ADMIN']) continue;
+	      
+	      if ( $value_function && $value_function == "ugroup_".$ug) {
+		$selected = " selected";
+	      }
+	      echo '<option value="ugroup_'.$ug.'"'.$selected.'>'.util_translate_name_ugroup(db_result($ugroup_res, $i, 'name')).'</option>';
+	    }
+	    
+	    if ($this->Group->getID() != 100) {
+	      $ugroup_res = ugroup_db_get_existing_ugroups($this->Group->getID());
+	      $rows = db_numrows($ugroup_res);
+	      for($i=0;$i<$rows;$i++) {
+		$ug = db_result($ugroup_res, $i,'ugroup_id');
+		$selected = "";
+		echo '<option value="ugroup_'.$ug.'"'.$selected.'>'.util_translate_name_ugroup(db_result($ugroup_res, $i, 'name')).'</option>';
+	      }
+	    }
+	    echo '
 		        </select>
 	      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('tracker_include_type','bind').'">
 	      </FORM>';
-		
+	    
 	}
 	
 	/**
@@ -2069,7 +2076,7 @@ EOS;
 
 		echo '
 		<INPUT type="submit" name="submit" value="'.$Language->getText('global','btn_update').'">
-		</form><hr>';
+		</form>';
 	}
 
 	/**
