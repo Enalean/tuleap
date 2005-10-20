@@ -573,8 +573,12 @@ class ArtifactField extends Error {
 			    $res_value = $ath->getTrackerAdmins();
 			else if ($value_func == 'artifact_submitters')
 			    $res_value = $ath->getSubmitters();
-			else if (preg_match('/ugroup_([0-9]+)/', $value_func, $matches))
+			else if (preg_match('/ugroup_([0-9]+)/', $value_func, $matches)) 
+			  if (strlen($matches[1]) > 2)
 			    $res_value = ugroup_db_get_members($matches[1]);
+			  else
+			    $res_value = ugroup_db_get_dynamic_members($matches[1], $group_artifact_id, $ath->getGroupID());
+			    
 	    } else {
 		
 			// If only active field

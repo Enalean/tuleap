@@ -146,6 +146,48 @@ function ugroup_user_is_member($user_id, $ugroup_id, $group_id, $atid=0) {
 
 
 /**
+ * Check membership of the user to a specified ugroup
+ * $group_id is necessary for automatic project groups like project member, release admin, etc.
+ * $atid is necessary for trackers since the tracker admin role is different for each tracker.
+ * @return true if user is member of the ugroup, false otherwise.
+ */
+function ugroup_db_get_dynamic_members($ugroup_id, $atid, $group_id) {
+    // Special Cases
+    if ($ugroup_id==$GLOBALS['UGROUP_NONE']) { 
+        // Empty group
+        return;
+    } else if ($ugroup_id==$GLOBALS['UGROUP_ANONYMOUS']) { 
+        // Anonymous user
+        return;
+    } else if ($ugroup_id==$GLOBALS['UGROUP_REGISTERED']) {
+        // Registered user
+        return db_query("SELECT user_id, user_name FROM user WHERE status = 'A'");
+    } else if ($ugroup_id==$GLOBALS['UGROUP_PROJECT_MEMBERS']) {
+        // Project members
+        return db_query("SELECT u.user_id, u.user_name FROM user u, user_group ug WHERE u.user_id = ug.user_id AND ug.group_id = $group_id");
+    } else if ($ugroup_id==$GLOBALS['UGROUP_FILE_MANAGER_ADMIN']) {
+        // File manager admins
+        return db_query("SELECT u.user_id, u.user_name FROM user u, user_group ug WHERE u.user_id = ug.user_id AND ug.group_id = $group_id AND file_flags = 2");
+    } else if ($ugroup_id==$GLOBALS['UGROUP_DOCUMENT_ADMIN']) {
+        // Document admin
+        return db_query("SELECT u.user_id, u.user_name FROM user u, user_group ug WHERE u.user_id = ug.user_id AND ug.group_id = $group_id AND doc_flags IN (2,3)");
+    } else if ($ugroup_id==$GLOBALS['UGROUP_DOCUMENT_TECH']) {
+        // Document tech
+        return db_query("SELECT u.user_id, u.user_name FROM user u, user_group ug WHERE u.user_id = ug.user_id AND ug.group_id = $group_id AND doc_flags IN (1,2)");
+    } else if ($ugroup_id==$GLOBALS['UGROUP_WIKI_ADMIN']) {
+        // Wiki admins
+        return db_query("SELECT u.user_id, u.user_name FROM user u, user_group ug WHERE u.user_id = ug.user_id AND ug.group_id = $group_id AND wiki_flags = '2'");
+    } else if ($ugroup_id==$GLOBALS['UGROUP_PROJECT_ADMIN']) {
+        // Project admins
+        return db_query("SELECT u.user_id, u.user_name FROM user u, user_group ug WHERE u.user_id = ug.user_id AND ug.group_id = $group_id AND admin_flags = 'A'");
+    } else if ($ugroup_id==$GLOBALS['UGROUP_TRACKER_ADMIN']) {
+        // Tracker admins
+        return db_query("SELECT u.user_id, u.user_name FROM artifact_perm ap, user u WHERE (u.user_id = ap.user_id) and group_artifact_id=$atid AND perm_level in (2,3)");
+    } 
+}
+
+
+/**
  * Remove user from all ugroups
  *
  * @return false if access rights are insufficient (need to be site admin)
