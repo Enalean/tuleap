@@ -41,7 +41,7 @@ if ( !$field->isSelectBox() && !$field->isMultiSelectBox() ) {
 		$ath->displayFieldValuesList($field_id);
 		$ath->displayDefaultValueForm($field_id,$field->getDefaultValue());
 		// For severity field, we don't display the Bind form or the Create Form
-		if ( $field->getName() != "severity" && $field->getName() != "status_id") {
+		if ( ($field->getName() != "severity" && $field->getName() != "status_id") || user_is_super_user()) {
 		  echo '<hr>';
 			$ath->displayFieldValueForm("value_create",$field_id);
 			$ath->displayValueFunctionForm($field_id,"",$Language->getText('global','or'));
