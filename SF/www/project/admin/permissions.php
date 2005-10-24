@@ -249,7 +249,7 @@ function permission_is_authorized($permission_type, $object_id, $user_id, $group
     // permissions set for this object.
     while ($row = db_fetch_array($res)) {
         // should work even for anonymous users
-        if (ugroup_user_is_member($user_id, $row['ugroup_id'], $group_id, $atid)) {
+        if (ugroup_user_is_member($user_id, $row['ugroup_id'], $group_id)) {
             return true;
         }
     }
