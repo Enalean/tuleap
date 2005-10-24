@@ -584,6 +584,8 @@ function display_artifacts($list_trackers, $print_box_begin) {
   $group_name = "";
   $tracker_name = "";
   
+  $artifact_types = array();
+  
   while ($trackers_array = db_fetch_array($list_trackers)) {
     $atid = $trackers_array['group_artifact_id'];
     $group_id = $trackers_array['group_id'];
@@ -595,13 +597,23 @@ function display_artifacts($list_trackers, $print_box_begin) {
             exit_no_group();
     }
     //Create the ArtifactType object
-    $at =& new ArtifactType($group,$atid);
+    if (!isset($artifact_types[$group_id])) {
+        $artifact_types[$group_id] = array();
+    }
+    if (!isset($artifact_types[$group_id][$atid])) {
+        $artifact_types[$group_id][$atid] = array();
+        $artifact_types[$group_id][$atid]['at'] =& new ArtifactType($group,$atid);
+    }
+    $at =& $artifact_types[$group_id][$atid]['at'];
     //Check if user can view artifact
     if (!$at->userCanView()) {
         continue;
     }
     //Create ArtifactFieldFactory object
-    $aff =& new ArtifactFieldFactory($at);
+    if (!isset($artifact_types[$group_id][$atid]['aff'])) {
+        $artifact_types[$group_id][$atid]['aff'] =& new ArtifactFieldFactory($at);
+    }
+    $aff =& $artifact_types[$group_id][$atid]['aff'];
     //Retriebe artifact_id field
     $field =& $aff->getFieldFromName('artifact_id');
     //Check if user can read it
