@@ -2917,7 +2917,12 @@ In this case, you need to recover the repository.
 svnadmin recover /svnroot/projectname
 chown -R sourceforge.projectname /svnroot/projectname
 </pre>
-
+<p>In case the "svnadmin recover" command still fails you can use the low level repair utility of Berkeley DB:
+<pre>
+cd /svnroot/projectname/db
+db_recover -c -v
+chown -R sourceforge.projectname /svnroot/projectname
+</pre>
 
 <hr width="100%" size="2" noshade="noshade"> End of Document<br>
 <br>
