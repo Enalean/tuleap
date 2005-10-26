@@ -55,7 +55,6 @@ global $DOCUMENT_ROOT;
 
   $parse = viewcvs_utils_display_header();
   $request_uri = getStringFromServer('REQUEST_URI');
-  $query_string = getStringFromServer('QUERY_STRING');
 
   //this is very important ...
   if (getStringFromServer('PATH_INFO') == "") {
@@ -68,6 +67,8 @@ global $DOCUMENT_ROOT;
     //echo "path=$path<br>\n";
   }
   
+  // "view=auto" is not well supported in wrapped mode. See SR 341 on Partners.
+  $query_string = str_replace("view=auto","view=markup",getStringFromServer('QUERY_STRING'));
 
   $command = 'HTTP_COOKIE="'.getStringFromServer('HTTP_COOKIE').'" '.
            'REMOTE_ADDR="'.getStringFromServer('REMOTE_ADDR').'" '.
@@ -143,6 +144,7 @@ function viewcvs_utils_track_browsing($group_id, $type) {
   $request_uri = getStringFromServer('REQUEST_URI');
 
   if (strpos($query_string,"view=markup") !== FALSE ||
+      strpos($query_string,"view=auto") !== FALSE ||
       strpos($request_uri,"*checkout*") !== FALSE ||
       strpos($query_string,"annotate=") !== FALSE) {
 
