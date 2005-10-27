@@ -50,6 +50,7 @@ class DataAccess {
     /**
     * Quote variable to make safe
     * @see http://php.net/mysql-real-escape-string
+    * @static
     */
     function quoteSmart($value) {
         // Stripslashes

@@ -225,15 +225,25 @@ class PluginManagerTest extends UnitTestCase {
         //The plugin factory
         $plugin_factory =& new MockPluginFactory($this);
         $plugin_factory->expectOnce('createPlugin');
-        $plugin_factory->expectArguments('createPlugin', array('New Plugin'));
+        $plugin_factory->expectArguments('createPlugin', array('New_Plugin'));
         $plugin_factory->setReturnReference('createPlugin', $plugin);
         
         //The plugins manager
         $pm =& new PluginManagerTestVersion($this);
         $pm->setReturnReference('_getPluginFactory', $plugin_factory);
 
-        $this->assertReference($pm->installPlugin('New Plugin'), $plugin);
+        $this->assertReference($pm->installPlugin('New_Plugin'), $plugin);
         
+    }
+    function testIsNameValide() {
+        $pm =& new PluginManager();
+        $this->assertTrue($pm->isNameValid('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_'));
+        $this->assertFalse($pm->isNameValid(' '));
+        $this->assertFalse($pm->isNameValid('*'));
+        $this->assertFalse($pm->isNameValid('?'));
+        $this->assertFalse($pm->isNameValid('/'));
+        $this->assertFalse($pm->isNameValid('\\'));
+        $this->assertFalse($pm->isNameValid('.'));
     }
 }
 

@@ -12,6 +12,7 @@ require_once('./common.php');
 require_once('common/plugin/PluginManager.class');
 require_once('common/plugin/PluginHookPriorityManager.class');
 require_once('common/collection/MultiMap.class');
+require_once('common/dao/CodexDataAccess.class');
 
 $GLOBALS['Language']->loadLanguageMsg('pluginsAdministration', 'pluginsadministration');
 
@@ -23,7 +24,7 @@ $plugin_hook_priority_manager =& new PluginHookPriorityManager();
 
 //Process request
 $confirmation = '';
-if (isset($_REQUEST['action']) && isset($_REQUEST['plugin_id'])) {
+if (isset($_REQUEST['action']) && isset($_REQUEST['plugin_id']) && is_numeric($_REQUEST['plugin_id'])) {
     $plugin_factory =& PluginFactory::instance();
     $plugin =& $plugin_factory->getPluginById($_REQUEST['plugin_id']);
     if($plugin) {

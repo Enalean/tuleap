@@ -94,25 +94,26 @@ class PluginManager {
     }
     
     function &installPlugin($name) {
-        $plugin_factory =& $this->_getPluginFactory();
-        if (!$plugin_factory->isPluginInstalled($name)) {
-            $db_corrupted = false;
-            $install_sql_filename = $GLOBALS['sys_pluginsroot'].DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR.'db'.DIRECTORY_SEPARATOR.'install.sql';
-            if (file_exists($install_sql_filename)) {
-                $dbtables =& new DBTablesDAO(CodexDataAccess::instance());
-                $install_sql = file_get_contents($install_sql_filename);
-                if (trim($install_sql) != '' && !$dbtables->update($install_sql)) {
-                    $db_corrupted = true;
-                    $GLOBALS['feedback'] .= 'DB may be corrupted';
+        if ($this->isNameValid($name)) {
+            $plugin_factory =& $this->_getPluginFactory();
+            if (!$plugin_factory->isPluginInstalled($name)) {
+                $db_corrupted = false;
+                $install_sql_filename = $GLOBALS['sys_pluginsroot'].DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR.'db'.DIRECTORY_SEPARATOR.'install.sql';
+                if (file_exists($install_sql_filename)) {
+                    $dbtables =& new DBTablesDAO(CodexDataAccess::instance());
+                    $install_sql = file_get_contents($install_sql_filename);
+                    if (trim($install_sql) != '' && !$dbtables->update($install_sql)) {
+                        $db_corrupted = true;
+                        $GLOBALS['feedback'] .= 'DB may be corrupted';
+                    }
+                }
+                if (!$db_corrupted) {
+                    $plugin_factory =& $this->_getPluginFactory();
+                    return $plugin_factory->createPlugin($name);
                 }
             }
-            if (!$db_corrupted) {
-                $plugin_factory =& $this->_getPluginFactory();
-                return $plugin_factory->createPlugin($name);
-            } else {
-                return false;
-            }
         }
+        return false;
     }
     
     function uninstallPlugin(&$plugin) {
@@ -140,6 +141,10 @@ class PluginManager {
     function &getNotYetInstalledPlugins() {
         $plugin_factory =& $this->_getPluginFactory();
         return $plugin_factory->getNotYetInstalledPlugins(); 
+    }
+    
+    function isNameValid($name) {
+        return (0 === preg_match('/[^a-zA-Z0-9_-]/', $name));
     }
 }
 ?>

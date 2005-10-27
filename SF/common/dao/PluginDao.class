@@ -34,7 +34,7 @@ class PluginDao extends DataAccessObject {
     */
     function & searchById($id) {
         $sql = sprintf("SELECT name, enabled FROM plugin WHERE id = %s",
-                $this->da->quoteSmart($id));
+                $id);
         return $this->retrieve($sql);
     }
 
@@ -44,7 +44,7 @@ class PluginDao extends DataAccessObject {
     */
     function & searchByName($name) {
         $sql = sprintf("SELECT id, enabled FROM plugin WHERE name = %s",
-                $this->da->quoteSmart($name));
+                $name);
         return $this->retrieve($sql);
     }
 
@@ -54,7 +54,7 @@ class PluginDao extends DataAccessObject {
     */
     function & searchByEnabled($enabled) {
         $sql = sprintf("SELECT id, name FROM plugin WHERE enabled = %s",
-                $this->da->quoteSmart($enabled));
+                $enabled);
         return $this->retrieve($sql);
     }
 
@@ -65,8 +65,8 @@ class PluginDao extends DataAccessObject {
     */
     function create($name, $enabled) {
         $sql = sprintf("INSERT INTO plugin (name, enabled) VALUES (%s, %s);",
-                $this->da->quoteSmart($name),
-                $this->da->quoteSmart($enabled));
+                $name,
+                $enabled);
         $inserted = $this->update($sql);
         if ($inserted) {
             $dar =& $this->retrieve("SELECT LAST_INSERT_ID() AS id");
@@ -81,14 +81,14 @@ class PluginDao extends DataAccessObject {
     
     function updateEnabledByPluginId($enabled, $id) {
         $sql = sprintf("UPDATE plugin SET enabled = %s WHERE id = %s",
-                $this->da->quoteSmart($enabled),
-                $this->da->quoteSmart($id));
+                $enabled,
+                $id);
         return $this->update($sql);
     }
     
     function removeById($id) {
         $sql = sprintf("DELETE FROM plugin WHERE id = %s",
-                $this->da->quoteSmart($id));
+                $id);
         return $this->update($sql);
     }
 }
