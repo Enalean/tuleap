@@ -33,7 +33,8 @@ class PriorityPluginHookDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByPluginId($pluginId) {
-        $sql =  "SELECT hook, priority FROM priority_plugin_hook WHERE plugin_id = '".$pluginId."'";
+        $sql = sprintf("SELECT hook, priority FROM priority_plugin_hook WHERE plugin_id = %s",
+                $this->da->quoteSmart($pluginId));
         return $this->retrieve($sql);
     }
 
@@ -42,7 +43,8 @@ class PriorityPluginHookDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByHook($hook) {
-        $sql =  "SELECT plugin_id, priority FROM priority_plugin_hook WHERE hook = '".$hook."'";
+        $sql = sprintf("SELECT plugin_id, priority FROM priority_plugin_hook WHERE hook = %s",
+                $this->da->quoteSmart($hook));
         return $this->retrieve($sql);
     }
 
@@ -51,7 +53,8 @@ class PriorityPluginHookDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByPriority($priority) {
-        $sql =  "SELECT plugin_id, hook FROM priority_plugin_hook WHERE priority = '".$priority."'";
+        $sql = sprintf("SELECT plugin_id, hook FROM priority_plugin_hook WHERE priority = %s",
+                $this->da->quoteSmart($priority));
         return $this->retrieve($sql);
     }
 
@@ -61,7 +64,11 @@ class PriorityPluginHookDao extends DataAccessObject {
     * @return true or id(auto_increment) if there is no error
     */
     function create($plugin_id, $hook, $priority) {
-        $inserted = $this->update("INSERT INTO priority_plugin_hook (plugin_id, hook, priority) VALUES ('".$plugin_id."', '".$hook."', '".$priority."');");
+        $sql = sprintf("INSERT INTO priority_plugin_hook (plugin_id, hook, priority) VALUES (%s, %s, %s)",
+                $this->da->quoteSmart($plugin_id),
+                $this->da->quoteSmart($hook),
+                $this->da->quoteSmart($priority));
+        $inserted = $this->update($sql);
  
         return $inserted;
     }
@@ -97,7 +104,9 @@ class PriorityPluginHookDao extends DataAccessObject {
     }
     
     function deleteByPluginId($plugin_id) {
-        $updated = $this->update("DELETE FROM priority_plugin_hook WHERE plugin_id = '".$plugin_id."'");
+        $sql = sprintf("DELETE FROM priority_plugin_hook WHERE plugin_id = %s",
+                $this->da->quoteSmart($plugin_id));
+        $updated = $this->update($sql);
         return $updated;
     }
 }

@@ -46,5 +46,21 @@ class DataAccess {
             return mysql_error();
         }
     }
+    
+    /**
+    * Quote variable to make safe
+    * @see http://php.net/mysql-real-escape-string
+    */
+    function quoteSmart($value) {
+        // Stripslashes
+        if (get_magic_quotes_gpc()) {
+            $value = stripslashes($value);
+        }
+        // Quote if not integer
+        if (!is_numeric($value)) {
+            $value = "'" . mysql_real_escape_string($value) . "'";
+        }
+        return $value;
+    }
 }
 ?>
