@@ -16,6 +16,12 @@ if (user_isloggedin()) {
 	*/
 
 	if ($forum_id) {
+                // Check permissions
+                if (!forum_utils_access_allowed($forum_id)) {
+                    exit_error($Language->getText('global','error'),$Language->getText('forum_forum','forum_restricted'));            
+                }
+
+
 		/*
 			First check to see if they already saved their place 
 			If they have NOT, then insert a row into the db
@@ -30,6 +36,7 @@ if (user_isloggedin()) {
 
 		$group_id=db_result($result,0,'group_id');
 		$forum_name=db_result($result,0,'forum_name');
+
 
 		forum_header(array('title'=>$Language->getText('forum_save','save_place')));
 

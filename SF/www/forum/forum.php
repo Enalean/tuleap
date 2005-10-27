@@ -104,6 +104,12 @@ if ($forum_id) {
 	/*
 		if necessary, insert a new message into the forum
 	*/
+
+        // Check permissions
+        if (!forum_utils_access_allowed($forum_id)) {
+            exit_error($Language->getText('global','error'),$Language->getText('forum_forum','forum_restricted'));            
+        }
+
 	if ($post_message == 'y') {
         //
         // MV: add management on "on post monitoring"
