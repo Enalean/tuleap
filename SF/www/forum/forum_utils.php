@@ -610,4 +610,18 @@ function recursive_delete($msg_id,$forum_id) {
 
 	return $count;
 }
+
+function forum_utils_access_allowed($forum_id) {
+
+    $result=db_query("SELECT group_id,is_public FROM forum_group_list WHERE group_forum_id='$forum_id'");
+
+    if (db_result($result,0,'is_public') != '1') {
+        $forum_group_id=db_result($result,0,'group_id');
+        if (!user_isloggedin() || !user_ismember($forum_group_id)) {
+            // If this is a private forum, kick 'em out
+            return false;
+        }
+    }
+    return true;
+}
 ?>

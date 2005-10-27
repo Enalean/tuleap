@@ -11,6 +11,7 @@ require('../forum/forum_utils.php');
 $Language->loadLanguageMsg('forum/forum');
 
 
+
 if ($msg_id) {
  
 	/*
@@ -23,6 +24,11 @@ if ($msg_id) {
 	$forum_id=db_result($result,0,'group_forum_id');
 	$thread_id=db_result($result,0,'thread_id');
 	$forum_name=db_result($result,0,'forum_name');
+
+        // Check permissions
+        if (!forum_utils_access_allowed($forum_id)) {
+            exit_error($Language->getText('global','error'),$Language->getText('forum_forum','forum_restricted'));            
+        }
 
 	forum_header(array('title'=>db_result($result,0,'subject')));
 
@@ -71,9 +77,7 @@ if ($msg_id) {
 	show_post_form(db_result($result, 0, 'group_forum_id'),db_result($result, 0, 'thread_id'), $msg_id, db_result($result,0, 'subject'));
 
 } else {
-
-	forum_header(array('title'=>$Language->getText('forum_message','choose_msg_first')));
-	echo '<h1>'.$Language->getText('forum_message','choose_msg_first').'</H1>';
+    exit_error($Language->getText('global','error'),$Language->getText('forum_message','choose_msg_first'));            
 
 }
 

@@ -17,6 +17,12 @@ if (user_isloggedin()) {
 	*/
 
 	if ($forum_id) {
+
+            // Check permissions
+            if (!forum_utils_access_allowed($forum_id)) {
+                exit_error($Language->getText('global','error'),$Language->getText('forum_forum','forum_restricted'));            
+            }
+
 		/*
 			First check to see if they are already monitoring
 			this thread. If they are, say so and quit.
