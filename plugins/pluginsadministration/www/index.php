@@ -96,7 +96,6 @@ if (isset($_REQUEST['action']) && isset($_REQUEST['plugin_id'])) {
     }
 }
 
-
 //get all plugins
 $plugins    =& $plugin_manager->getAllPlugins();
 $priorities =  array();
@@ -238,7 +237,7 @@ if (count($priorities) > 0) {
     
     if($show_priorities) {
         $form_name = '_'.mt_rand();
-        $output .= '<form  name="'.$form_name.'" action="" method="POST" onsubmit="return submitForm(this);">';
+        $output .= '<form  name="'.$form_name.'" action="?" method="POST" onsubmit="return submitForm(this);">';
         $output .= '<fieldset class="pluginsadministration"><legend>'.$GLOBALS['Language']->getText('plugin_pluginsadministration','priorities').'&nbsp;'.getHelp('priorities').'</legend>';
         $output .= '<input type="hidden" name="action" value="update_priorities" />';
         function emphasis($name, $enable) {
