@@ -47,6 +47,7 @@ class DataAccessTest extends UnitTestCase {
         $this->assertIdentical('123', $da->quoteSmart("123"), "An integer is not quoted");
         $this->assertIdentical('12.3', $da->quoteSmart("12.3"), "A float is not quoted");
         $this->assertIdentical("'value'", $da->quoteSmart("value"), "A string is quoted");
+        /* Comment: We do not have addslashed value anymore ! (due to Request object)
         if (get_magic_quotes_gpc()) {
             $this->assertIdentical('\'evil\\\'s value\'', $da->quoteSmart("evil\\'s value"));
             $this->assertIdentical("'\\\\x00'", $da->quoteSmart('\\\\x00'));
@@ -57,6 +58,7 @@ class DataAccessTest extends UnitTestCase {
             $this->assertIdentical("'\\\"'", $da->quoteSmart("\\\""));
             $this->assertIdentical("'\\\\x1a'", $da->quoteSmart("\\\\x1a"));
         } else {
+        */
             $this->assertIdentical("'evil\\'s value'", $da->quoteSmart("evil's value"));
             $this->assertIdentical("'\\\\x00'", $da->quoteSmart('\\x00'));
             $this->assertIdentical("'\\\\n'", $da->quoteSmart('\\n'));
@@ -65,7 +67,7 @@ class DataAccessTest extends UnitTestCase {
             $this->assertIdentical("'\\''", $da->quoteSmart("'"));
             $this->assertIdentical("'\\\"'", $da->quoteSmart("\""));
             $this->assertIdentical("'\\\\x1a'", $da->quoteSmart("\\x1a"));
-        }
+        /*}*/
     }
 }
 

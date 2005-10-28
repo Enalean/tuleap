@@ -1,0 +1,26 @@
+<?php
+/**
+ * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+ * 
+ * $Id$
+ *
+ * Request
+ */
+class Request {
+    
+    function Request() {    
+    }
+    
+    function get($variable) {
+        if ($this->setted($variable)) {
+            return (get_magic_quotes_gpc()?stripslashes($_REQUEST[$variable]):$_REQUEST[$variable]);
+        } else {
+            return false;
+        }
+    }
+    
+    function setted($variable) {
+        return isset($_REQUEST[$variable]);
+    }
+}
+?>

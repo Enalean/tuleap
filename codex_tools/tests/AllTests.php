@@ -25,9 +25,10 @@ $alltest = &new GroupTest('All CodeX tests');
 // Don't forget the documentation of SimpleTest : http://www.lastcraft.com/simple_test.php
 $alltest->addTestFile('TemplateTest.php');
 
-$alltest->addTestFile('common/include/SimpleSanitizerTest.php');
-$alltest->addTestFile('common/include/StringTest.php');
 
+// {{{ Include
+$alltest->addTestFile('common/include/AllTests.php');
+// }}}
 
 // {{{ Mail
 $alltest->addTestFile('common/mail/MailTest.php');

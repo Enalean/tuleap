@@ -53,10 +53,6 @@ class DataAccess {
     * @static
     */
     function quoteSmart($value) {
-        // Stripslashes
-        if (get_magic_quotes_gpc()) {
-            $value = stripslashes($value);
-        }
         // Quote if not integer
         if (!is_numeric($value)) {
             $value = "'" . mysql_real_escape_string($value) . "'";
