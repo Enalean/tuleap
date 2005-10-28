@@ -22,5 +22,13 @@ class Request {
     function setted($variable) {
         return isset($_REQUEST[$variable]);
     }
+    
+    function &instance() {
+        static $_request_instance;
+        if (!$_request_instance) {
+            $_request_instance = new Request();
+        }
+        return $_request_instance;
+    }
 }
 ?>

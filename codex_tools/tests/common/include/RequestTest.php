@@ -53,6 +53,13 @@ class RequestTest extends UnitTestCase {
         $r =& new Request();
         $this->assertIdentical($r->get('quote'), 'l\'avion');
     }
+    
+    function testSingleton() {
+        $this->assertReference(
+                Request::instance(),
+                Request::instance());
+        $this->assertIsA(Request::instance(), 'Request');
+    }
 
 }
 
