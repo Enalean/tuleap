@@ -13,6 +13,7 @@ require_once('common/plugin/PluginManager.class');
 require_once('common/plugin/PluginHookPriorityManager.class');
 require_once('common/collection/MultiMap.class');
 require_once('common/dao/CodexDataAccess.class');
+require_once('common/include/HTTPRequest.class');
 
 $GLOBALS['Language']->loadLanguageMsg('pluginsAdministration', 'pluginsadministration');
 
@@ -22,11 +23,14 @@ session_require(array('group'=>'1','admin_flags'=>'A'));
 $plugin_manager               =& PluginManager::instance();
 $plugin_hook_priority_manager =& new PluginHookPriorityManager();
 
+//get Request object
+$request =& HTTPRequest::instance();
+
 //Process request
 $confirmation = '';
-if (isset($_REQUEST['action']) && isset($_REQUEST['plugin_id']) && is_numeric($_REQUEST['plugin_id'])) {
+if ($request->exist('action') && $request->exist('plugin_id') && is_numeric($request->get('plugin_id'))) {
     $plugin_factory =& PluginFactory::instance();
-    $plugin =& $plugin_factory->getPluginById($_REQUEST['plugin_id']);
+    $plugin =& $plugin_factory->getPluginById($request->get('plugin_id'));
     if($plugin) {
         $plug_info  =& $plugin->getPluginInfo();
         $descriptor =& $plug_info->getPluginDescriptor();
@@ -34,7 +38,7 @@ if (isset($_REQUEST['action']) && isset($_REQUEST['plugin_id']) && is_numeric($_
         if (strlen(trim($name)) === 0) {
             $name = get_class($plugin);
         }
-        switch ($_REQUEST['action']) {
+        switch ($request->get('action')) {
             case 'enable':
                 if (!$plugin_manager->isPluginEnabled($plugin)) {
                     $plugin_manager->enablePlugin($plugin);
@@ -48,7 +52,7 @@ if (isset($_REQUEST['action']) && isset($_REQUEST['plugin_id']) && is_numeric($_
                 }
                 break;
             case 'uninstall':
-                if (isset($_REQUEST['confirm'])) {
+                if ($request->exist('confirm')) {
                     $uninstalled = $plugin_manager->uninstallPlugin($plugin);
                     if (!$uninstalled) {
                          $GLOBALS['feedback'] .= '<div>'.$GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_not_uninstalled', array($name)).'</div>';
@@ -56,7 +60,7 @@ if (isset($_REQUEST['action']) && isset($_REQUEST['plugin_id']) && is_numeric($_
                          $GLOBALS['feedback'] .= '<div>'.$GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_uninstalled', array($name)).'</div>';
                     }
                 } else {
-                    if (!isset($_REQUEST['cancel'])) {
+                    if (!$request->exist('cancel')) {
                         $confirmation = sprintf(file_get_contents($GLOBALS['Language']->getContent('confirm_uninstall', null, 'pluginsadministration')),
                                         $name,
                                         $plugin->getId());
@@ -67,18 +71,19 @@ if (isset($_REQUEST['action']) && isset($_REQUEST['plugin_id']) && is_numeric($_
         }
     }
 } else {
-    if (isset($_REQUEST['action'])) {
+    if ($request->exist('action')) {
         $plugin_factory =& PluginFactory::instance();
-        switch ($_REQUEST['action']) {
+        switch ($request->get('action')) {
             case 'install':
-                if (isset($_REQUEST['name'])) {
+                $name = $request->get('name');
+                if ($name) {
                     $plugin_manager->installPlugin($name);
                 }
                 break;
             case 'update_priorities':
-                if (isset($_REQUEST['priorities'])) {
+                if ($request->exist('priorities')) {
                     $updated = false;
-                    foreach($_REQUEST['priorities'] as $hook => $plugins) {
+                    foreach($request->get('priorities') as $hook => $plugins) {
                         if (is_array($plugins)) {
                             foreach($plugins as $id => $priority) {
                                 $plugin =& $plugin_factory->getPluginById((int)$id);
@@ -333,9 +338,9 @@ if (count($priorities) > 0) {
 END;
         $javascript .= "document.write('".$GLOBALS['Language']->getText('plugin_pluginsadministration', 'select_hook')." ');";
         $javascript .= "document.write('<select onchange=\"changeHook(this)\">');";
-        if (isset($_REQUEST['selected_hook']) && array_key_exists($_REQUEST['selected_hook'], $hooks)) {
-            $first_hook = $_REQUEST['selected_hook'];
-        } else {
+        
+        $first_hook = $request->get('selected_hook');
+        if ($first_hook !== false && !array_key_exists($first_hook, $hooks)) {
             $first_hook = false;
         }
         $first_index = 0;

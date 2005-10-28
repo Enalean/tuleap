@@ -11,6 +11,7 @@ require_once('pre.php');
 require_once('./common.php');
 require_once('common/plugin/PluginFactory.class');
 require_once('common/plugin/PluginManager.class');
+require_once('common/include/HTTPRequest.class');
 
 $GLOBALS['Language']->loadLanguageMsg('pluginsAdministration', 'pluginsadministration');
 
@@ -23,12 +24,14 @@ function redirect() {
     exit();
 }
 
-if (!isset($_REQUEST['plugin_id'])) {
+$request =& HTTPRequest::instance();
+
+if (!$request->exist('plugin_id')) {
     redirect();
 } else {
     $plugin_manager =& PluginManager::instance();
     $plugin_factory =& PluginFactory::instance();
-    $plugin =& $plugin_factory->getPluginById($_REQUEST['plugin_id']);
+    $plugin =& $plugin_factory->getPluginById($request->get('plugin_id'));
     if(!$plugin) {
         redirect();
     } else {

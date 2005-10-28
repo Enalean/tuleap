@@ -14,7 +14,7 @@ class IncludeGroupTest extends GroupTest {
         
         $this->addTestFile(dirname(__FILE__).'/SimpleSanitizerTest.php');
         $this->addTestFile(dirname(__FILE__).'/StringTest.php');
-        $this->addTestFile(dirname(__FILE__).'/RequestTest.php');
+        $this->addTestFile(dirname(__FILE__).'/HTTPRequestTest.php');
     }
 }
 
