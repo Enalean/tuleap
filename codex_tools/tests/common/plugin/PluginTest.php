@@ -17,7 +17,6 @@ class TestPlugin extends Plugin {
         $this->_removeHook($hook);
     }
 }
-
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
@@ -113,6 +112,12 @@ class PluginTest extends UnitTestCase {
         $this->assertEqual($current_hook['hook'],       $hook);
         $this->assertEqual($current_hook['callback'],   $callback);
         $this->assertEqual($current_hook['recallHook'], $recall);
+    }
+    function testScope() {
+        $p =& new Plugin();
+        $this->assertEqual($p->getScope(), $p->SCOPE_SYSTEM);
+        $this->assertNotEqual($p->getScope(), $p->SCOPE_PROJECT);
+        $this->assertNotEqual($p->getScope(), $p->SCOPE_USER);
     }
 }
 

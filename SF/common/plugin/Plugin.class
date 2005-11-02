@@ -14,10 +14,19 @@ class Plugin {
     var $id;
     var $pluginInfo;
     var $hooks;
+    var $_scope;
+    
+    var $SCOPE_SYSTEM;
+    var $SCOPE_PROJECT;
+    var $SCOPE_USER;
     
     function Plugin($id = -1) {
-        $this->id         = $id;
-        $this->hooks      =& new Map();
+        $this->id            = $id;
+        $this->hooks         =& new Map();
+        
+        $this->SCOPE_SYSTEM  = 0;
+        $this->SCOPE_PROJECT = 1;
+        $this->SCOPE_USER    = 2;
     }
     
     function getId() {
@@ -50,6 +59,10 @@ class Plugin {
         $this->hooks->removeKey(new String($hook));
     }
     function CallHook($hook, $param) {
+    }
+    
+    function getScope() {
+        return $this->_scope;
     }
 }
 ?>
