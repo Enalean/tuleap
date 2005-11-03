@@ -2021,6 +2021,6 @@ INSERT INTO supported_languages VALUES \
 
 
 -- install and enable pluginsadministration
-INSERT INTO plugin (name, enabled) VALUES ('pluginsadministration', '1');
+INSERT INTO plugin (name, available) VALUES ('pluginsadministration', '1');
 
 

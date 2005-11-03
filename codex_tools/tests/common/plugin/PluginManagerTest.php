@@ -59,32 +59,32 @@ class PluginManagerTest extends UnitTestCase {
         $hooks_p2       =& new MockCollection($this);
         $hooks_p2->setReturnReference('iterator', $it_hook_p2);
 
-        //A plugin (enabled)        --listen A & B
+        //A plugin (available)        --listen A & B
         $plugin_1       =& new MockPlugin($this);
         $plugin_1->expectCallCount('getHooksAndCallbacks', 1);
         $plugin_1->setReturnValue('getId', 123);
         $plugin_1->setReturnReference('getHooksAndCallbacks', $hooks_p1);
 
-        //Another Plugin (enabled)  --listen only A
+        //Another Plugin (available)  --listen only A
         $plugin_2       =& new MockPlugin($this);
         $plugin_2->expectCallCount('getHooksAndCallbacks', 1);
         $plugin_2->setReturnValue('getId', 124);
         $plugin_2->setReturnReference('getHooksAndCallbacks', $hooks_p2);
 
-        //The iterator for enabled plugins
-        $it_enabled     =& new MockIterator($this);
-        $it_enabled->setReturnValue('valid', true);
-        $it_enabled->setReturnValueAt(2, 'valid', false);
-        $it_enabled->setReturnReferenceAt(0, 'current', $plugin_1);
-        $it_enabled->setReturnReferenceAt(1, 'current', $plugin_2);
+        //The iterator for available plugins
+        $it_available     =& new MockIterator($this);
+        $it_available->setReturnValue('valid', true);
+        $it_available->setReturnValueAt(2, 'valid', false);
+        $it_available->setReturnReferenceAt(0, 'current', $plugin_1);
+        $it_available->setReturnReferenceAt(1, 'current', $plugin_2);
 
-        //The enabled plugins
-        $enabled        =& new MockCollection($this);
-        $enabled->setReturnReference('iterator', $it_enabled);
+        //The available plugins
+        $available        =& new MockCollection($this);
+        $available->setReturnReference('iterator', $it_available);
 
         //The plugin factory
         $plugin_factory =& new MockPluginFactory($this);
-        $plugin_factory->setReturnReference('getEnabledPlugins', $enabled);
+        $plugin_factory->setReturnReference('getAvailablePlugins', $available);
         
         //The event manager
         $em             =& new MockEventManager($this);
@@ -169,21 +169,21 @@ class PluginManagerTest extends UnitTestCase {
         $this->assertReference($pm->getAllPlugins(), $plugins);
     }
     
-    function testIsPluginEnabled() {
+    function testIsPluginAvailable() {
         //The plugins
         $plugin =& new MockPlugin($this);
         
         //The plugin factory
         $plugin_factory =& new MockPluginFactory($this);
-        $plugin_factory->setReturnValueAt(0, 'isPluginEnabled', true);
-        $plugin_factory->setReturnValueAt(1, 'isPluginEnabled', false);
+        $plugin_factory->setReturnValueAt(0, 'isPluginAvailable', true);
+        $plugin_factory->setReturnValueAt(1, 'isPluginAvailable', false);
         
         //The plugins manager
         $pm =& new PluginManagerTestVersion($this);
         $pm->setReturnReference('_getPluginFactory', $plugin_factory);
         
-        $this->assertTrue($pm->isPluginEnabled($plugin));
-        $this->assertFalse($pm->isPluginEnabled($plugin));
+        $this->assertTrue($pm->isPluginAvailable($plugin));
+        $this->assertFalse($pm->isPluginAvailable($plugin));
     }
     
     function testEnablePlugin() {
@@ -192,13 +192,13 @@ class PluginManagerTest extends UnitTestCase {
         
         //The plugin factory
         $plugin_factory =& new MockPluginFactory($this);
-        $plugin_factory->expectOnce('enablePlugin');
+        $plugin_factory->expectOnce('availablePlugin');
         
         //The plugins manager
         $pm =& new PluginManagerTestVersion($this);
         $pm->setReturnReference('_getPluginFactory', $plugin_factory);
         
-        $pm->enablePlugin($plugin);
+        $pm->availablePlugin($plugin);
         
         $plugin_factory->tally();
     }
@@ -208,13 +208,13 @@ class PluginManagerTest extends UnitTestCase {
         
         //The plugin factory
         $plugin_factory =& new MockPluginFactory($this);
-        $plugin_factory->expectOnce('disablePlugin');
+        $plugin_factory->expectOnce('unavailablePlugin');
         
         //The plugins manager
         $pm =& new PluginManagerTestVersion($this);
         $pm->setReturnReference('_getPluginFactory', $plugin_factory);
         
-        $pm->disablePlugin($plugin);
+        $pm->unavailablePlugin($plugin);
         
         $plugin_factory->tally();
     }

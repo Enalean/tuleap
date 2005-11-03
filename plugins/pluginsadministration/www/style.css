@@ -18,7 +18,7 @@ fieldset.pluginsadministration legend {
 	font-weight:bold;
 }
 
-.pluginsadministration_disabled {
+.pluginsadministration_unavailable {
 	font-style:italic; 
 	color:gray;
 }

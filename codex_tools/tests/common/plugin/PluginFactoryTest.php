@@ -43,7 +43,7 @@ class PluginFactoryTest extends UnitTestCase {
         $plugin_dao    =& new MockPluginDao($this);
         $access_result =& new MockDataAccessResult($this);
         $plugin_dao->setReturnReference('searchById', $access_result);
-        $access_result->setReturnValueAt(0, 'getRow', array('name' => 'plugin 123', 'enabled' => '1'));
+        $access_result->setReturnValueAt(0, 'getRow', array('name' => 'plugin 123', 'available' => 1));
         $access_result->setReturnValueAt(1, 'getRow', false);
         $pf =& new PluginFactoryTestVersion($this);
         $pf->setReturnValue('_getClassNameForPluginName', 'Plugin');
@@ -61,7 +61,7 @@ class PluginFactoryTest extends UnitTestCase {
         $plugin_dao    =& new MockPluginDao($this);
         $access_result =& new MockDataAccessResult($this);
         $plugin_dao->setReturnReference('searchByName', $access_result);
-        $access_result->setReturnValueAt(0, 'getRow', array('id' => 123, 'enabled' => '1')); //existing plugin
+        $access_result->setReturnValueAt(0, 'getRow', array('id' => 123, 'available' => '1')); //existing plugin
         $access_result->setReturnValueAt(1, 'getRow', false); //new plugin
         $plugin_dao->setReturnValueAt(0, 'create', 125); //its id
         $plugin_dao->setReturnValueAt(0, 'create', false); //error
@@ -74,30 +74,30 @@ class PluginFactoryTest extends UnitTestCase {
         $this->assertFalse($pf->createPlugin('error plugin creation'));
     }
     
-    function testGetEnabledplugins() {
+    function testGetAvailableplugins() {
         $plugin_dao    =& new MockPluginDao($this);
         $access_result =& new MockDataAccessResult($this);
-        $plugin_dao->setReturnReference('searchByEnabled', $access_result);
+        $plugin_dao->setReturnReference('searchByAvailable', $access_result);
         $access_result->setReturnValueAt(0, 'getRow', array('id' => '123', 'name' => 'plugin 123'));
         $access_result->setReturnValueAt(1, 'getRow', array('id' => '124', 'name' => 'plugin 124'));
         $access_result->setReturnValueAt(2, 'getRow', false);
         $pf =& new PluginFactoryTestVersion($this);
         $pf->setReturnValue('_getClassNameForPluginName', 'Plugin');
         $pf->PluginFactory($plugin_dao); //Only for test. You should use singleton instead
-        $col =& $pf->getEnabledPlugins();
+        $col =& $pf->getAvailablePlugins();
         $this->assertEqual($col->size(), 2);
     }
-    function testGetDisabledplugins() {
+    function testGetUnavailableplugins() {
         $plugin_dao    =& new MockPluginDao($this);
         $access_result =& new MockDataAccessResult($this);
-        $plugin_dao->setReturnReference('searchByEnabled', $access_result);
+        $plugin_dao->setReturnReference('searchByAvailable', $access_result);
         $access_result->setReturnValueAt(0, 'getRow', array('id' => '123', 'name' => 'plugin 123'));
         $access_result->setReturnValueAt(1, 'getRow', array('id' => '124', 'name' => 'plugin 124'));
         $access_result->setReturnValueAt(2, 'getRow', false);
         $pf =& new PluginFactoryTestVersion($this);
         $pf->setReturnValue('_getClassNameForPluginName', 'Plugin');
         $pf->PluginFactory($plugin_dao); //Only for test. You should use singleton instead
-        $col =& $pf->getDisabledPlugins();
+        $col =& $pf->getUnavailablePlugins();
         $this->assertEqual($col->size(), 2);
     }
     function testGetAllPlugins() {
@@ -113,52 +113,52 @@ class PluginFactoryTest extends UnitTestCase {
         $col =& $pf->getAllPlugins();
         $this->assertEqual($col->size(), 2);
     }
-    function testIsPluginEnabled() {
+    function testIsPluginAvailable() {
         $p_1           =& new MockPlugin($this);
         $p_2           =& new MockPlugin($this);
         $plugin_dao    =& new MockPluginDao($this);
         $access_result =& new MockDataAccessResult($this);
         $p_1->setReturnValue('getId', 123);
         $p_2->setReturnValue('getId', 124);
-        $plugin_dao->setReturnReference('searchByEnabled', $access_result);
+        $plugin_dao->setReturnReference('searchByAvailable', $access_result);
         $access_result->setReturnValueAt(0, 'getRow', array('id' => '123', 'name' => 'plugin 123')); //enabled = 1
         $access_result->setReturnValueAt(1, 'getRow', false);
         $pf =& new PluginFactoryTestVersion($this);
         $pf->setReturnValue('_getClassNameForPluginName', 'Plugin');
         $pf->PluginFactory($plugin_dao); //Only for test. You should use singleton instead
-        $this->assertTrue($pf->isPluginEnabled($p_1));
-        $this->assertFalse($pf->isPluginEnabled($p_2));
+        $this->assertTrue($pf->isPluginAvailable($p_1));
+        $this->assertFalse($pf->isPluginAvailable($p_2));
     }
     function testEnablePlugin() {
         $p          =& new MockPlugin($this);
         $plugin_dao =& new MockPluginDao($this);
         $access_result =& new MockDataAccessResult($this);
-        $plugin_dao->setReturnReference('searchByEnabled', $access_result);
+        $plugin_dao->setReturnReference('searchByAvailable', $access_result);
         $access_result->setReturnValueAt(0, 'getRow', array('id' => '66', 'name' => 'plugin 123')); //this is not 123 !
         $access_result->setReturnValueAt(1, 'getRow', false);
         $p->setReturnValue('getid', 123);
-        $plugin_dao->expectOnce('updateEnabledByPluginId');
-        $plugin_dao->expectArguments('updateEnabledByPluginId', array('1', 123));
+        $plugin_dao->expectOnce('updateAvailableByPluginId');
+        $plugin_dao->expectArguments('updateAvailableByPluginId', array('1', 123));
         $pf =& new PluginFactoryTestVersion($this);
         $pf->setReturnValue('_getClassNameForPluginName', 'Plugin');
         $pf->PluginFactory($plugin_dao); //Only for test. You should use singleton instead
-        $pf->enablePlugin($p);
+        $pf->availablePlugin($p);
         $plugin_dao->tally();
     }
     function testDisablePlugin() {
         $p          =& new MockPlugin($this);
         $plugin_dao =& new MockPluginDao($this);
         $access_result =& new MockDataAccessResult($this);
-        $plugin_dao->setReturnReference('searchByEnabled', $access_result);
+        $plugin_dao->setReturnReference('searchByAvailable', $access_result);
         $access_result->setReturnValueAt(0, 'getRow', array('id' => '123', 'name' => 'plugin 123')); //enabled = 1
         $access_result->setReturnValueAt(1, 'getRow', false);
         $p->setReturnValue('getid', 123);
-        $plugin_dao->expectOnce('updateEnabledByPluginId');
-        $plugin_dao->expectArguments('updateEnabledByPluginId', array('0', 123));
+        $plugin_dao->expectOnce('updateAvailableByPluginId');
+        $plugin_dao->expectArguments('updateAvailableByPluginId', array('0', 123));
         $pf =& new PluginFactoryTestVersion($this);
         $pf->setReturnValue('_getClassNameForPluginName', 'Plugin');
         $pf->PluginFactory($plugin_dao); //Only for test. You should use singleton instead
-        $pf->disablePlugin($p);
+        $pf->unavailablePlugin($p);
         $plugin_dao->tally();
     }
 }

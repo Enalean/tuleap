@@ -3181,7 +3181,7 @@ CREATE TABLE `priority_plugin_hook` (
 CREATE TABLE `plugin` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(100) NOT NULL,
-  `enabled` tinyint(4) NOT NULL default '0',
+  `available` tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 );
 CREATE TABLE `project_plugin` (

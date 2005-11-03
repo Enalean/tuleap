@@ -19,14 +19,14 @@ class PluginFactory {
     
     var $plugin_dao;
     var $retrieved_plugins;
-    var $enabled_plugins;
-    var $disabled_plugins;
+    var $available_plugins;
+    var $unavailable_plugins;
     
     function PluginFactory(&$plugin_dao) {
         $this->plugin_dao =& $plugin_dao;
-        $this->retrieved_plugins =& new Map();
-        $this->enabled_plugins   =& new Map();
-        $this->disabled_plugins  =& new Map();
+        $this->retrieved_plugins    =& new Map();
+        $this->available_plugins    =& new Map();
+        $this->unavailable_plugins  =& new Map();
     }
     
     function &instance() {
@@ -60,7 +60,7 @@ class PluginFactory {
         $p = false;
         $dar =& $this->plugin_dao->searchByName($name);
         if (!$dar->getRow()) {
-            $id = $this->plugin_dao->create($name, '0');
+            $id = $this->plugin_dao->create($name, 0);
             if (is_int($id)) {
                 $p  = $this->_getInstancePlugin($id, $name);
             }
@@ -95,8 +95,8 @@ class PluginFactory {
     /**
      * @return Collection of enabled or disabled plugins depends on parameters
      */
-    function _getEnabledOrDisabledPlugins(&$map, $criteria) {
-         $dar =& $this->plugin_dao->searchByEnabled($criteria);
+    function _getAvailableOrUnavailablePlugins(&$map, $criteria) {
+         $dar =& $this->plugin_dao->searchByAvailable($criteria);
          while($row = $dar->getRow()) {
              $p =& $this->_getInstancePlugin($row['id'], $row['name']);
              $key =& new String($row['id']);
@@ -107,16 +107,16 @@ class PluginFactory {
          return $map->getValues();
     }
     /**
-     * @return Collection of disabled plugins
+     * @return Collection of unavailable plugins
      */
-    function &getDisabledPlugins() {
-         return $this->_getEnabledOrDisabledPlugins($this->disabled_plugins, '0');
+    function &getUnavailablePlugins() {
+         return $this->_getAvailableOrUnavailablePlugins($this->unavailable_plugins, 0);
     }
     /**
      * @return Collection of enabled plugins
      */
-    function &getEnabledPlugins() {
-         return $this->_getEnabledOrDisabledPlugins($this->enabled_plugins, '1');
+    function &getAvailablePlugins() {
+         return $this->_getAvailableOrUnavailablePlugins($this->available_plugins, 1);
     }
     /**
      * @return Collection of all plugins
@@ -131,29 +131,29 @@ class PluginFactory {
     /**
      * @return true if the plugin is enabled
      */
-    function isPluginEnabled(&$plugin) {
-        $this->getEnabledPlugins();
-        return $this->enabled_plugins->containsKey(new String($plugin->getId()));
+    function isPluginAvailable(&$plugin) {
+        $this->getAvailablePlugins();
+        return $this->available_plugins->containsKey(new String($plugin->getId()));
     }
     
     /**
-     * enable plugin
+     * available plugin
      */
-    function enablePlugin(&$plugin) {
-        if (!$this->isPluginEnabled(&$plugin)) {
-            $this->plugin_dao->updateEnabledByPluginId('1', $plugin->getId());
-            $this->enabled_plugins->put(new String($plugin->getId()), $plugin);
-            $this->disabled_plugins->removeKey(new String($plugin->getId()));
+    function availablePlugin(&$plugin) {
+        if (!$this->isPluginAvailable(&$plugin)) {
+            $this->plugin_dao->updateAvailableByPluginId('1', $plugin->getId());
+            $this->available_plugins->put(new String($plugin->getId()), $plugin);
+            $this->unavailable_plugins->removeKey(new String($plugin->getId()));
         }
     }
     /**
-     * disable plugin
+     * unavailable plugin
      */
-    function disablePlugin(&$plugin) {
-        if ($this->isPluginEnabled(&$plugin)) {
-            $this->plugin_dao->updateEnabledByPluginId('0', $plugin->getId());
-            $this->disabled_plugins->put(new String($plugin->getId()), $plugin);
-            $this->enabled_plugins->removeKey(new String($plugin->getId()));
+    function unavailablePlugin(&$plugin) {
+        if ($this->isPluginAvailable(&$plugin)) {
+            $this->plugin_dao->updateAvailableByPluginId('0', $plugin->getId());
+            $this->unavailable_plugins->put(new String($plugin->getId()), $plugin);
+            $this->available_plugins->removeKey(new String($plugin->getId()));
         }
     }
     
@@ -179,8 +179,8 @@ class PluginFactory {
     function removePlugin(&$plugin) {
         $id = new String($plugin->getId());
         $this->retrieved_plugins->removeKey($id);
-        $this->enabled_plugins->removeKey($id);
-        $this->disabled_plugins->removeKey($id);
+        $this->available_plugins->removeKey($id);
+        $this->unavailable_plugins->removeKey($id);
         return $this->plugin_dao->removeById($plugin->getId());
     }
     

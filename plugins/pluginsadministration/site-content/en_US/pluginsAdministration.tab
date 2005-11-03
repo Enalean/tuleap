@@ -14,14 +14,14 @@ plugin_pluginsadministration	descriptor_name	Plugins Administration
 #
 #
 plugin_pluginsadministration	Actions	Actions
-plugin_pluginsadministration	change_to_disabled	Change to No
-plugin_pluginsadministration	change_to_enabled	Change to Yes
+plugin_pluginsadministration	change_to_unavailable	Change to No
+plugin_pluginsadministration	change_to_available	Change to Yes
 plugin_pluginsadministration	Description	Description
 plugin_pluginsadministration	discard_changes	Discard changes ?
-plugin_pluginsadministration	disabled	No
-plugin_pluginsadministration	enabled	Yes
-plugin_pluginsadministration	feedback_enabled	$1 is now enabled.
-plugin_pluginsadministration	feedback_disabled	$1 is now disabled. Web space and CGI remain accessible!
+plugin_pluginsadministration	unavailable	No
+plugin_pluginsadministration	available	Yes
+plugin_pluginsadministration	feedback_available	$1 is now available.
+plugin_pluginsadministration	feedback_unavailable	$1 is now unavailable. Web space and CGI remain accessible!
 plugin_pluginsadministration	Hook:	Hook:
 plugin_pluginsadministration	hook_asterisk	* : hooks listened to by several plugins are followed by an asterisk.
 plugin_pluginsadministration	install_plugin	Install this Plugin
@@ -38,7 +38,7 @@ plugin_pluginsadministration	Priority	Priority
 plugin_pluginsadministration	properties	Display properties of plugin
 plugin_pluginsadministration	select_hook	Select hook:
 plugin_pluginsadministration	select_install	Select the plugin you want to install. please read the corresponding <em>readme</em> file before processing.
-plugin_pluginsadministration	Status	Enabled?
+plugin_pluginsadministration	Available?	Available?
 plugin_pluginsadministration	title	Plugins Administration
 plugin_pluginsadministration	there_is_no_plugin	<em>There is no plugin installed yet.</em>
 plugin_pluginsadministration	uninstall	Uninstall

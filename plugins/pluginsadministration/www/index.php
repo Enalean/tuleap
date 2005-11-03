@@ -39,16 +39,16 @@ if ($request->exist('action') && $request->exist('plugin_id') && is_numeric($req
             $name = get_class($plugin);
         }
         switch ($request->get('action')) {
-            case 'enable':
-                if (!$plugin_manager->isPluginEnabled($plugin)) {
-                    $plugin_manager->enablePlugin($plugin);
-                    $GLOBALS['feedback'] .= '<div>'.$GLOBALS['Language']->getText('plugin_pluginsadministration', 'feedback_enabled', array($name)).'</div>';
+            case 'available':
+                if (!$plugin_manager->isPluginAvailable($plugin)) {
+                    $plugin_manager->availablePlugin($plugin);
+                    $GLOBALS['feedback'] .= '<div>'.$GLOBALS['Language']->getText('plugin_pluginsadministration', 'feedback_available', array($name)).'</div>';
                 }
                 break;
-            case 'disable':
-                if ($plugin_manager->isPluginEnabled($plugin)) {
-                    $plugin_manager->disablePlugin($plugin);
-                    $GLOBALS['feedback'] .= '<div>'.$GLOBALS['Language']->getText('plugin_pluginsadministration', 'feedback_disabled', array($name)).' </div>';
+            case 'unavailable':
+                if ($plugin_manager->isPluginAvailable($plugin)) {
+                    $plugin_manager->unavailablePlugin($plugin);
+                    $GLOBALS['feedback'] .= '<div>'.$GLOBALS['Language']->getText('plugin_pluginsadministration', 'feedback_unavailable', array($name)).' </div>';
                 }
                 break;
             case 'uninstall':
@@ -121,7 +121,7 @@ if($plugins->isEmpty()) {
 } else {
     $titles = array();
     $titles[] = $GLOBALS['Language']->getText('plugin_pluginsadministration','Plugin');
-    $titles[] = $GLOBALS['Language']->getText('plugin_pluginsadministration','Status');
+    $titles[] = $GLOBALS['Language']->getText('plugin_pluginsadministration','Available?');
     $titles[] = $GLOBALS['Language']->getText('plugin_pluginsadministration','Actions');
     $output .= html_build_list_table_top($titles);
     $iter =& $plugins->iterator();
@@ -130,7 +130,7 @@ if($plugins->isEmpty()) {
         $plugin     =& $iter->current();
         $plug_info  =& $plugin->getPluginInfo();
         $descriptor =& $plug_info->getPluginDescriptor();
-        $enabled = $plugin_manager->isPluginEnabled($plugin);
+        $available = $plugin_manager->isPluginAvailable($plugin);
         $name = $descriptor->getFullName();
         if (strlen(trim($name)) === 0) {
             $name = get_class($plugin);
@@ -141,7 +141,7 @@ if($plugins->isEmpty()) {
             'name'        => $name, 
             'description' => $descriptor->getDescription(), 
             'version'     => $descriptor->getVersion(), 
-            'enabled'     => $enabled,
+            'available'     => $available,
             'dont_touch'  => $dont_touch);
         $col_hooks =& $plugin->getHooks();
         $hooks =& $col_hooks->iterator();
@@ -154,7 +154,7 @@ if($plugins->isEmpty()) {
             if (!isset($priorities[$hook->getInternalString()][$priority])) {
                 $priorities[$hook->getInternalString()][$priority] = array();
             }
-            $priorities[$hook->getInternalString()][$priority][$plugin->getId()] = array('name' => $name, 'enabled' => $enabled);
+            $priorities[$hook->getInternalString()][$priority][$plugin->getId()] = array('name' => $name, 'available' => $available);
             $hooks->next();
         }
         $iter->next();
@@ -163,17 +163,17 @@ if($plugins->isEmpty()) {
     for($i = 0; $i < count($plugins_table) ; $i++) {
         $output .= '<tr class="'.util_get_alt_row_color($i).'" >';
         
-        $output .= '<td class="pluginsadministration_plugin_descriptor '.($plugins_table[$i]['enabled']?'':' pluginsadministration_disabled ').'"><span class="pluginsadministration_name_of_plugin">'.$plugins_table[$i]['name'].'</span><span class="pluginsadministration_version_of_plugin">'.$plugins_table[$i]['version'].'</span>';
+        $output .= '<td class="pluginsadministration_plugin_descriptor '.($plugins_table[$i]['available']?'':' pluginsadministration_unavailable ').'"><span class="pluginsadministration_name_of_plugin">'.$plugins_table[$i]['name'].'</span><span class="pluginsadministration_version_of_plugin">'.$plugins_table[$i]['version'].'</span>';
         $output .= '<br/><span class="pluginsadministration_description_of_plugin">'.$plugins_table[$i]['description'].'</span></td>';
         $output .= '<td>';
-        if ($plugins_table[$i]['enabled']) {
-            $string = $Language->getText('plugin_pluginsadministration','enabled');
-            $action = 'disable';
-            $title  = $Language->getText('plugin_pluginsadministration','change_to_disabled');
+        if ($plugins_table[$i]['available']) {
+            $string = $Language->getText('plugin_pluginsadministration','available');
+            $action = 'unavailable';
+            $title  = $Language->getText('plugin_pluginsadministration','change_to_unavailable');
         } else {
-            $string = $Language->getText('plugin_pluginsadministration','disabled');
-            $action = 'enable';
-            $title  = $Language->getText('plugin_pluginsadministration','change_to_enabled');
+            $string = $Language->getText('plugin_pluginsadministration','unavailable');
+            $action = 'available';
+            $title  = $Language->getText('plugin_pluginsadministration','change_to_available');
         }
         if (!$plugins_table[$i]['dont_touch']) {
             $output .= '<a href="?action='.$action.'&plugin_id='.$plugins_table[$i]['plugin_id'].'" title="'.$title.'">'.$string.'</a></td>';
@@ -250,7 +250,7 @@ if (count($priorities) > 0) {
         $output .= '<input type="hidden" name="action" value="update_priorities" />';
         function emphasis($name, $enable) {
             if (!$enable) {
-                $name = '<span class="pluginsadministration_disabled">'.$name.'</span>';
+                $name = '<span class="pluginsadministration_unavailable">'.$name.'</span>';
             }
             return $name;
         }
@@ -380,7 +380,7 @@ END;
                 $nb_plugins += count($plugins);
                 foreach($plugins as $id => $infos) {
                     $output_for_hook .= '<tr class="'.util_get_alt_row_color($class).'"><td>';
-                    $output_for_hook .= emphasis($infos['name'], $infos['enabled']);
+                    $output_for_hook .= emphasis($infos['name'], $infos['available']);
                     $output_for_hook .= '</td><td>';
                     $input_name = 'priorities['.$hook.']['.$id.']';
                     $input_id   = 'priorities_'.$hook.'_'.$id;

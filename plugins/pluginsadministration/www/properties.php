@@ -38,7 +38,7 @@ if (!$request->exist('plugin_id')) {
         $plug_info  =& $plugin->getPluginInfo();
         $descriptor =& $plug_info->getPluginDescriptor();
 
-        $enabled = $plugin_manager->isPluginEnabled($plugin);
+        $available = $plugin_manager->isPluginAvailable($plugin);
         $name = $descriptor->getFullName();
         if (strlen(trim($name)) === 0) {
             $name = get_class($plugin);

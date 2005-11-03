@@ -29,11 +29,11 @@ class PluginManager {
         $plugin_factory =& $this->_getPluginFactory();
         $event_manager  =& $this->_getEventManager();
         
-        $col_enabled_plugins =& $plugin_factory->getEnabledPlugins();
-        $enabled_plugins =& $col_enabled_plugins->iterator();
+        $col_available_plugins =& $plugin_factory->getAvailablePlugins();
+        $available_plugins =& $col_available_plugins->iterator();
         $priority_manager =& $this->_getPluginHookPriorityManager();
-        while($enabled_plugins->valid()) {
-            $plugin =& $enabled_plugins->current();
+        while($available_plugins->valid()) {
+            $plugin =& $available_plugins->current();
             $hooks =& $plugin->getHooksAndCallbacks();
             $iter =& $hooks->iterator();
             while($iter->valid()) {
@@ -42,7 +42,7 @@ class PluginManager {
                 $event_manager->addListener($hook['hook'], $plugin, $hook['callback'], $hook['recallHook'], $priority);
                 $iter->next();
             }
-            $enabled_plugins->next();
+            $available_plugins->next();
         }
         $this->plugins_loaded = true;
     }
@@ -79,18 +79,18 @@ class PluginManager {
         return $plugin_factory->getAllPlugins();
     }
     
-    function isPluginEnabled(&$plugin) {
+    function isPluginAvailable(&$plugin) {
         $plugin_factory =& $this->_getPluginFactory();
-        return $plugin_factory->isPluginEnabled($plugin);
+        return $plugin_factory->isPluginAvailable($plugin);
     }
     
-    function enablePlugin(&$plugin) {
+    function availablePlugin(&$plugin) {
         $plugin_factory =& $this->_getPluginFactory();
-        $plugin_factory->enablePlugin($plugin);
+        $plugin_factory->availablePlugin($plugin);
     }
-    function disablePlugin(&$plugin) {
+    function unavailablePlugin(&$plugin) {
         $plugin_factory =& $this->_getPluginFactory();
-        $plugin_factory->disablePlugin($plugin);
+        $plugin_factory->unavailablePlugin($plugin);
     }
     
     function &installPlugin($name) {
