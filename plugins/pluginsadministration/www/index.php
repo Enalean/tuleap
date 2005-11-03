@@ -122,6 +122,7 @@ if($plugins->isEmpty()) {
     $titles = array();
     $titles[] = $GLOBALS['Language']->getText('plugin_pluginsadministration','Plugin');
     $titles[] = $GLOBALS['Language']->getText('plugin_pluginsadministration','Available?');
+    $titles[] = $GLOBALS['Language']->getText('plugin_pluginsadministration','Scope');
     $titles[] = $GLOBALS['Language']->getText('plugin_pluginsadministration','Actions');
     $output .= html_build_list_table_top($titles);
     $iter =& $plugins->iterator();
@@ -141,7 +142,8 @@ if($plugins->isEmpty()) {
             'name'        => $name, 
             'description' => $descriptor->getDescription(), 
             'version'     => $descriptor->getVersion(), 
-            'available'     => $available,
+            'available'   => $available,
+            'scope'       => $plugin->getScope(),
             'dont_touch'  => $dont_touch);
         $col_hooks =& $plugin->getHooks();
         $hooks =& $col_hooks->iterator();
@@ -180,6 +182,12 @@ if($plugins->isEmpty()) {
         } else {
             $output .= $string;
         }
+        //Scope
+        $output .= '<td>';
+        $output .= $Language->getText('plugin_pluginsadministration','scope_'.$plugins_table[$i]['scope']);
+        $output .= '</td>';
+        
+        //Actions
         $output .= '<td>';
         //Properties
         $output .=   '<a class="pluginsadministration_action" href="properties.php?plugin_id='.$plugins_table[$i]['plugin_id'].'" title="'.$Language->getText('plugin_pluginsadministration','properties').'">';

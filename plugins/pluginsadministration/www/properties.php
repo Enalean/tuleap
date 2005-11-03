@@ -75,6 +75,10 @@ if (!$request->exist('plugin_id')) {
         $output .=     '<td>'.$descriptor->getDescription().'</td>';
         $output .=   '</tr>';
         $output .=   '<tr>';
+        $output .=     '<td class="pluginsadministration_label">'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','properties_scope:').' </td>';
+        $output .=     '<td>'.$GLOBALS['Language']->getText('plugin_pluginsadministration', 'scope_'.$plugin->getScope()).'</td>';
+        $output .=   '</tr>';
+        $output .=   '<tr>';
         $output .=     '<td class="pluginsadministration_label">'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','properties_hooks:').' </td>';
         $output .=     '<td>'.$link_to_hooks.'</td>';
         $output .=   '</tr>';

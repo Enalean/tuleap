@@ -52,6 +52,10 @@ plugin_pluginsadministration	uninstall_plugin	Désinstaller ce plugin
 plugin_pluginsadministration	upload	Charger l'archive
 plugin_pluginsadministration	update_priorities	Mettre à jour les priorités
 plugin_pluginsadministration	Version	Version
+plugin_pluginsadministration	Scope	Portée
+plugin_pluginsadministration	scope_0	Système
+plugin_pluginsadministration	scope_1	Projets
+plugin_pluginsadministration	scope_2	Utilisateurs
 #
 #
 #
@@ -60,5 +64,6 @@ plugin_pluginsadministration_properties	properties_description:	Description :
 plugin_pluginsadministration_properties	properties_hooks:	Hooks écoutés :
 plugin_pluginsadministration_properties	properties_name:	Nom :
 plugin_pluginsadministration_properties	properties_plugin	Propriétés du plugin "$1"
+plugin_pluginsadministration_properties	properties_scope:	Portée :
 plugin_pluginsadministration_properties	properties_version:	Version :
 plugin_pluginsadministration_properties	return	<< Retourner aux plugins

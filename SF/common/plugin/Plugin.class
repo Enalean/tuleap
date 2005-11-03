@@ -27,6 +27,8 @@ class Plugin {
         $this->SCOPE_SYSTEM  = 0;
         $this->SCOPE_PROJECT = 1;
         $this->SCOPE_USER    = 2;
+        
+        $this->_scope = $this->SCOPE_SYSTEM;
     }
     
     function getId() {

@@ -46,6 +46,10 @@ plugin_pluginsadministration	uninstall_plugin	Uninstall this Plugin
 plugin_pluginsadministration	upload	Upload Archive
 plugin_pluginsadministration	update_priorities	Update Priorities
 plugin_pluginsadministration	Version	Version
+plugin_pluginsadministration	Scope	Scope
+plugin_pluginsadministration	scope_0	System
+plugin_pluginsadministration	scope_1	Projects
+plugin_pluginsadministration	scope_2	Users
 #
 #
 #
@@ -54,5 +58,6 @@ plugin_pluginsadministration_properties	properties_description:	Description:
 plugin_pluginsadministration_properties	properties_hooks:	Listened Hooks:
 plugin_pluginsadministration_properties	properties_name:	Name:
 plugin_pluginsadministration_properties	properties_plugin	Properties of plugin "$1"
+plugin_pluginsadministration_properties	properties_scope:	Scope:
 plugin_pluginsadministration_properties	properties_version:	Version:
 plugin_pluginsadministration_properties	return	<< Return to plugins

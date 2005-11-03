@@ -115,7 +115,7 @@ class PluginTest extends UnitTestCase {
     }
     function testScope() {
         $p =& new Plugin();
-        $this->assertEqual($p->getScope(), $p->SCOPE_SYSTEM);
+        $this->assertIdentical($p->getScope(), $p->SCOPE_SYSTEM);
         $this->assertNotEqual($p->getScope(), $p->SCOPE_PROJECT);
         $this->assertNotEqual($p->getScope(), $p->SCOPE_USER);
     }
