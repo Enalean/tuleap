@@ -104,8 +104,8 @@ textarea {
 
 /* classic box */
 .boxtable { width: 99%; vertical-align: top; border-spacing: 1px; border: 0; }
-.boxtitle { background-image: url("/images/savannah.theme/leopard.png"); background-color: #eddb5a; font-weight: bold; text-align: center; text-transform: capitalize; color: #000000; vertical-align: middle}
-.boxitem {  /*background-image: url("/images/savannah.theme/sand.png");*/ background-color: #fff5c6; text-align: left; color: #333333; }
+.boxtitle { background-image: url("/themes/savannah/images/leopard.png"); background-color: #eddb5a; font-weight: bold; text-align: center; text-transform: capitalize; color: #000000; vertical-align: middle}
+.boxitem {  /*background-image: url("/themes/savannah/images/sand.png");*/ background-color: #fff5c6; text-align: left; color: #333333; }
 .boxitemalt { background-color: #ffffff; text-align: left; color: #333333; }
 .boxhighlight { bbackground-color: #ffe0db; text-align: left; color: #333333; }
 
