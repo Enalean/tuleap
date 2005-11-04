@@ -40,10 +40,11 @@ function onChangeAllFilter() {
 </script>
 </head>
 <body class="bg_help">
+<center>
 <form name="form_selection">
 <table border="0" cellspacing="0" cellpadding="5">
   <tr valign="center">
-    <td colspan="2">
+    <td colspan="2" align="center">
 <select name="group_id" size="8">
 <?
 	if ( $filter == "member" ) {
@@ -64,12 +65,13 @@ function onChangeAllFilter() {
     <td><input type="radio" name="radiobutton" value="radiobutton"<? if ( $filter == "all" ) echo " checked"; ?> onClick="onChangeAllFilter()"> <? echo $Language->getText('tracker_group_selection','all_proj'); ?></td>
   </tr>
   <tr>
-    <td colspan="2">
+    <td colspan="2" align="center">
     	<input type="button" name="selection" value="<? echo $Language->getText('global','select'); ?>" onClick="doSelection(form_selection)">
     </td>
   </tr>
 </table>
 
 </form>
+</center>
 </body>
 </html>
