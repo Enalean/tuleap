@@ -15,6 +15,7 @@ class DaoGroupTest extends GroupTest {
         
         $this->addTestFile(dirname(__FILE__).'/include/DataAccessTest.php');
         $this->addTestFile(dirname(__FILE__).'/include/DataAccessObjectTest.php');
+        $this->addTestFile(dirname(__FILE__).'/include/DataAccessResultTest.php');
         $this->addTestFile(dirname(__FILE__).'/CodexDataAccessTest.php');
     }
 }

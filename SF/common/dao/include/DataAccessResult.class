@@ -2,7 +2,8 @@
 /**
  *  Fetches MySQL database rows as objects
  */
-class DataAccessResult {
+require_once('common/collection/Iterator.class');
+class DataAccessResult extends Iterator {
     /**
     * @access protected
     * $da stores data access object
@@ -14,9 +15,17 @@ class DataAccessResult {
     */
     var $query;
 
+    var $_current;
+    var $_row;
+    
     function DataAccessResult(& $da,$query) {
-        $this->da=& $da;
-        $this->query=$query;
+        $this->da       =& $da;
+        $this->query    = $query;
+        if (!is_bool($query)) {
+            $this->_current = -1;
+            $this->_row     = false;
+            $this->rewind();
+        }
     }
 
     /**
@@ -24,10 +33,9 @@ class DataAccessResult {
     * @return mixed
     */
     function getRow() {
-        if ( $row=mysql_fetch_array($this->query,MYSQL_ASSOC) )
-            return $row;
-        else
-            return false;
+        $row = $this->current();
+        $this->next();
+        return $row;
     }
 
     /**
@@ -49,5 +57,33 @@ class DataAccessResult {
         else
             return false;
     }
+    
+    
+    // {{{ Iterator
+    function &current() {
+        return $this->_row;
+    }
+    
+    function next() {
+        $this->_current++;
+        $this->_row = mysql_fetch_array($this->query,MYSQL_ASSOC);
+    }
+    
+    function valid() {
+        return $this->_row !== false;
+    }
+    
+    function rewind() {
+        if ($this->rowCount() > 0) {
+            mysql_data_seek($this->query, 0);
+            $this->next();
+            $this->_current = 0;
+        }
+    }
+    
+    function key() {
+        return $this->_current;
+    }
+    // }}}
 }
 ?>
