@@ -643,9 +643,12 @@ function check_cvs_access($username, $group_name, $cvspath) {
   }
   $mode = fileperms($path);
 
+  // Also check permissions on top directory (in case of .CODEX_PRIVATE)
+  $mode_top = fileperms("/cvsroot/".$group_name);
+
   // A directory that is not world readable can only be viewed
   // through viewcvs if the user is a project member
-  if ($group_id && ($mode & 0x0004) == 0 && !user_ismember($group_id, '0')) {
+  if ($group_id && (($mode_top & 0x0004) == 0 || ($mode & 0x0004) == 0) && !user_ismember($group_id, '0')) {
     return false;
   } else {
     return true;
