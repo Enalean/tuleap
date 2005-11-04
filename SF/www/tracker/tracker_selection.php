@@ -30,6 +30,7 @@ function doSelection(form) {
 </script>
 </head>
 <body class="bg_help">
+<center>
 <form name="form_selection">
 <table>
 <tr valign="center"><td>
@@ -71,5 +72,6 @@ function doSelection(form) {
 </td></tr>
 <table>
 </form>
+</center>
 </body>
 </html>

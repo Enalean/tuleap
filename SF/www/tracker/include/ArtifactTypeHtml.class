@@ -961,7 +961,7 @@ EOS;
 			  		alert("'.$Language->getText('tracker_include_type','select_proj').'");
 			  		return;
 			  	}
-			  	win=window.open("","artifact_group_id_selection","height=45,width=200,toolbar=no,location=no,resizable=yes,left=200,top=200");
+			  	win=window.open("","artifact_group_id_selection","height=45,width=400,toolbar=no,location=no,resizable=yes,left=200,top=200");
 				win.location = "/tracker/tracker_selection.php?group_id=" + document.form_create.group_id_template.value + "&opener_form=form_create&opener_field=atid_template";
 			  }
 
