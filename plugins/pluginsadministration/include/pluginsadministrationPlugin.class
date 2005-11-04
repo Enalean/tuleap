@@ -5,7 +5,7 @@ require_once('common/plugin/Plugin.class');
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
- * $Id: Sanitizer.class,v 1.1 2005/05/10 09:48:11 nterray Exp $
+ * $Id$
  *
  * PluginsAdministrationPlugin
  */
@@ -49,6 +49,12 @@ class PluginsAdministrationPlugin extends Plugin {
         if (strpos($_SERVER['REQUEST_URI'], '/plugins/pluginsadministration/') === 0) {
             echo '<link rel="stylesheet" type="text/css" href="/plugins/pluginsadministration/style.css" />';
         }
+    }
+    
+    function process() {
+        require_once('PluginsAdministration.class');
+        $controler =& new PluginsAdministration();
+        $controler->process();
     }
 }
 ?>

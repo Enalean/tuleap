@@ -245,6 +245,20 @@ class PluginManagerTest extends UnitTestCase {
         $this->assertFalse($pm->isNameValid('\\'));
         $this->assertFalse($pm->isNameValid('.'));
     }
+    
+    function testGetPluginByname() {
+        //The plugin factory
+        $plugin_factory =& new MockPluginFactory($this);
+        $plugin_factory->expectOnce('getPluginByName');
+        
+        //The plugins manager
+        $pm =& new PluginManagerTestVersion($this);
+        $pm->setReturnReference('_getPluginFactory', $plugin_factory);
+        
+        $pm->getPluginByName('plugin_name');
+        
+        $plugin_factory->tally();
+    }
 }
 
 if (CODEX_RUNNER === __FILE__) {

@@ -146,5 +146,16 @@ class PluginManager {
     function isNameValid($name) {
         return (0 === preg_match('/[^a-zA-Z0-9_-]/', $name));
     }
+    
+    function &getPluginByName($name) {
+        $plugin_factory =& $this->_getPluginFactory();
+        $p =& $plugin_factory->getPluginByName($name);
+        return $p;
+    }
+    function &getPluginById($id) {
+        $plugin_factory =& $this->_getPluginFactory();
+        $p =& $plugin_factory->getPluginById($id);
+        return $p;
+    }
 }
 ?>

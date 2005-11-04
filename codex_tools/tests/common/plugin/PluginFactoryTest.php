@@ -57,6 +57,32 @@ class PluginFactoryTest extends UnitTestCase {
         $this->assertFalse($pf->getPluginById(124));
     }
     
+    function testGetPluginByName() {
+        $plugin_dao    =& new MockPluginDao($this);
+
+        $access_result =& new MockDataAccessResult($this);
+        $plugin_dao->setReturnReference('searchByName', $access_result);
+        $access_result->setReturnValue('getRow', false);
+        $access_result->setReturnValueAt(0, 'getRow', array('id' => '123', 'available' => 1));
+
+        $by_id =& new MockDataAccessResult($this);
+        $plugin_dao->setReturnReference('searchById', $by_id);
+        $by_id->setReturnValue('getRow', array('name' => 'plugin 123', 'available' => 1));
+
+        $pf =& new PluginFactoryTestVersion($this);
+        $pf->setReturnValue('_getClassNameForPluginName', 'Plugin');
+        $pf->PluginFactory($plugin_dao); //Only for test. You should use singleton instead
+        $plugin_1 =& $pf->getPluginByName('plugin 123');
+        $this->assertIsA($plugin_1, 'Plugin');
+        
+        
+        $plugin_2 =& $pf->getPluginByName('plugin 123');
+        $this->assertnoErrors();
+        $this->assertReference($plugin_1, $plugin_2);
+
+        $this->assertIdentical(false, $pf->getPluginByName('plugin 124'));
+    }
+    
     function testCreatePlugin() {
         $plugin_dao    =& new MockPluginDao($this);
         $access_result =& new MockDataAccessResult($this);

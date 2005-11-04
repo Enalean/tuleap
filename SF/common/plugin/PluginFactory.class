@@ -46,7 +46,26 @@ class PluginFactory {
         } else {
             $dar =& $this->plugin_dao->searchById($id);
             if ($row = $dar->getRow()) {
-                $p = $this->_getInstancePlugin($id, $row['name']);
+                $p =& $this->_getInstancePlugin($id, $row['name']);
+            }
+        }
+        return $p;
+    }
+    
+    function &getPluginByName($name) {
+        $retrieved =& $this->retrieved_plugins->getValues();
+        $iter =& $retrieved->iterator();
+        $not_found = true;
+        while($iter->valid() && $not_found) {
+            $p =& $iter->current();
+            $not_found = ($name != $this->getNameForPlugin($p));
+            $iter->next();
+        }
+        if ($not_found) {
+            $p = false;
+            $dar =& $this->plugin_dao->searchByName($name);
+            if ($row = $dar->getRow()) {
+                $p =& $this->_getInstancePlugin($row['id'], $name);
             }
         }
         return $p;
