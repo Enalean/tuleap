@@ -46,7 +46,8 @@ class MailTest extends UnitTestCase {
         $dao->expectArgumentsAt(0, 'searchStatusByEmail', array('exists@A.com'));
         $dao->expectArgumentsAt(1, 'searchStatusByEmail', array('exists@R.com'));
         $dao->expectArgumentsAt(2, 'searchStatusByEmail', array('exists@S.com'));
-        $dao->expectArgumentsAt(3, 'searchStatusByEmail', array('does@not.exist'));
+        $dao->expectArgumentsAt(3, 'searchStatusByEmail', array('exists@P.com'));
+        $dao->expectArgumentsAt(4, 'searchStatusByEmail', array('does@not.exist'));
         
         
         $exists_a = new MockDataAccessResult($this);
@@ -67,17 +68,26 @@ class MailTest extends UnitTestCase {
         $exists_s->setReturnValueAt(0, 'getRow', array('realname' => 'Exists S', 'email' => 'exists@S.com', 'status' => 'S'));
         $dao->setReturnValueAt(2, 'searchStatusByEmail', $exists_s);
         
+        $exists_s = new MockDataAccessResult($this);
+        $exists_s->setReturnValue('rowCount', 1);
+        $exists_s->setReturnValue('getRow', false);
+        $exists_s->setReturnValueAt(0, 'getRow', array('realname' => 'Exists P (S)', 'email' => 'exists@P.com', 'status' => 'S'));
+        $exists_s->setReturnValueAt(1, 'getRow', array('realname' => 'Exists P (S)', 'email' => 'exists@P.com', 'status' => 'S'));
+        $exists_s->setReturnValueAt(2, 'getRow', array('realname' => 'Exists P (!S)', 'email' => 'exists@P.com', 'status' => 'P'));
+        $exists_s->setReturnValueAt(3, 'getRow', array('realname' => 'Exists P2 (!S)', 'email' => 'exists@P.com', 'status' => 'P'));
+        $dao->setReturnValueAt(3, 'searchStatusByEmail', $exists_s);
+        
         $does_not_exist = new MockDataAccessResult($this);
         $does_not_exist->setReturnValue('rowCount', 0);
         $does_not_exist->setReturnValue('getRow', false);
-        $dao->setReturnValueAt(3, 'searchStatusByEmail', $does_not_exist);
+        $dao->setReturnValueAt(4, 'searchStatusByEmail', $does_not_exist);
         
         $mail =& new MailTestVersion($this);
         $mail->setReturnReference('_getUserDao', $dao);
         $mail->Mail();
         
-        $recipients = $mail->_validateRecipient('exists@A.com, exists@R.com ; exists@S.com, does@not.exist');
-        $this->assertEqual($recipients, '"Exists A" <exists@A.com>, "Exists R" <exists@R.com>, does@not.exist');
+        $recipients = $mail->_validateRecipient('exists@A.com, exists@R.com ; exists@S.com, exists@P.com, does@not.exist');
+        $this->assertEqual($recipients, '"Exists A" <exists@A.com>, "Exists R" <exists@R.com>, "Exists P (!S)" <exists@P.com>, does@not.exist');
         
         $dao->tally();
     }
