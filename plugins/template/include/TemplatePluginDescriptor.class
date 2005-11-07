@@ -7,7 +7,7 @@ $GLOBALS['Language']->loadLanguageMsg('template', 'template');
 class TemplatePluginDescriptor extends PluginDescriptor {
     
     function TemplatePluginDescriptor() {
-        $this->PluginDescriptor('Template', 'v1.0', $GLOBALS['Language']->getText('plugin_template', 'descriptor_description'));
+        $this->PluginDescriptor($GLOBALS['Language']->getText('plugin_template', 'descriptor_name'), 'v1.0', $GLOBALS['Language']->getText('plugin_template', 'descriptor_description'));
     }
 }
 ?>

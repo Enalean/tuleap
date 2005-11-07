@@ -1,1 +1,2 @@
 plugin_template	descriptor_description	Base to develop CodeX Plugins.
+plugin_template	descriptor_name	Template
