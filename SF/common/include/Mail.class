@@ -146,7 +146,7 @@ class Mail {
                 $res = db_query($qry);
                 if(db_numrows($res) > 0) {
                     $status = db_result($res, 0, 'status');
-                    if($status == 'A' || $status == 'R') {
+                    if($status == 'A' || $status == 'R' || $status == 'P') {
                         $ret=true;                    
                         $retArray[] = db_result($res, 0, 'email');
                     }
