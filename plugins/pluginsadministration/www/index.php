@@ -2,7 +2,7 @@
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
- * $Id: Sanitizer.class,v 1.1 2005/05/10 09:48:11 nterray Exp $
+ * $Id$
  *
  * front-end to plugins administration
  */

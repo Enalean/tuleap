@@ -62,6 +62,7 @@ class PluginFactory {
             $iter->next();
         }
         if ($not_found) {
+            unset($p);
             $p = false;
             $dar =& $this->plugin_dao->searchByName($name);
             if ($row = $dar->getRow()) {
