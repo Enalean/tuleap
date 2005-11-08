@@ -364,6 +364,11 @@ if ($forum_id) {
 			$i++;
 		}
 
+        // Close table when not in nested mode
+        if ($style != 'nested') {
+            $ret_val .= '</TABLE>';
+        }
+
 		/*
 			This code puts the nice next/prev.
 		*/
