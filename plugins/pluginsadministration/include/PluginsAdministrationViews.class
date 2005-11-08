@@ -92,7 +92,21 @@ class PluginsAdministrationViews extends Views {
                 }
                 $link_to_hooks = implode(', ', $link_to_hooks);
                 
+                //PropertyDescriptor
+                $descs =& $plug_info->getPropertyDescriptors();
+                $keys  =& $descs->getKeys();
+                $iter  =& $keys->iterator();
+                $props = '';
+                while($iter->valid()) {
+                    $key   =& $iter->current();
+                    $desc  =& $descs->get($key);
+                    $prop_name = $desc->getName();
+                    $props .= sprintf('<tr><td class="pluginsadministration_label">%s</td><td><input type="text" size="%d" name="properties[%s]" value="%s" /></td></tr>', $prop_name->getInternalString(), strlen($desc->getValue()), $prop_name->getInternalString(), $desc->getValue());
+                    $iter->next();
+                }
+                
                 $output  = '<h3>'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','properties_plugin', array($name)).'</h3>';
+                $output .= '<form action="?" method="POST"><div><input type="hidden" name="plugin_id" value="'.$request->get('plugin_id').'" /></div>';
                 $output .= '<table border="0" cellpadding="0" cellspacing="2" class="pluginsadministration_plugin_properties">';
                 $output .= '<tbody>';
                 $output .=   '<tr>';
@@ -115,8 +129,14 @@ class PluginsAdministrationViews extends Views {
                 $output .=     '<td class="pluginsadministration_label">'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','properties_hooks:').' </td>';
                 $output .=     '<td>'.$link_to_hooks.'</td>';
                 $output .=   '</tr>';
+                if ($props !== '') {
+                    $output .=   '<tr><td colspan="2"><hr /></td></tr>';
+                    $output .=   $props;
+                    $output .=   '<tr><td>&nbsp;</td><td><button name="action" value="change_plugin_properties">Change Properties</button></td></tr>';
+                }
                 $output .= '</tbody>';
                 $output .= '</table>';
+                $output .= '</form>';
                 
                 $output .= '<div><a href="'.$link_to_plugins.'">'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','return').'</a></div>';
                 echo $output;

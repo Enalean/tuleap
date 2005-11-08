@@ -41,5 +41,16 @@ class PluginInfo {
         $name =& $descriptor->getName();
         return $this->propertyDescriptors->remove($name, $descriptor);
     }
+    
+    function loadProperties() {
+    }
+    
+    function saveProperties() {
+    }
+    
+    function getPropertyDescriptorForName($name) {
+        $n = new String($name);
+        return $this->propertyDescriptors->get($n);
+    }
 }
 ?>

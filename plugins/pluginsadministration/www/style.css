@@ -45,4 +45,5 @@ fieldset.pluginsadministration legend {
 }
 .pluginsadministration_plugin_properties .pluginsadministration_label {
 	font-weight:bold;
+	vertical-align:top;
 }

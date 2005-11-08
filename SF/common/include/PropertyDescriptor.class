@@ -10,23 +10,21 @@ require_once('PropertyDescriptor.class');
 class PropertyDescriptor {
     
     var $name;
-    var $type;
-    var $possibleValues;
+    var $value;
     
-    function PropertyDescriptor(&$name, &$type, &$possibleValues) {
-        $this->name           =& $name;
-        $this->type           =& $type;
-        $this->possibleValues =& $possibleValues;
+    function PropertyDescriptor(&$name, $value) {
+        $this->name =& $name;
+        $this->setValue($value);
     }
     
     function &getName() { 
         return $this->name; 
     }
-    function &getType() { 
-        return $this->type; 
+    function getValue() { 
+        return $this->value; 
     }
-    function &getPossibleValues() { 
-        return $this->possibleValues; 
+    function setValue($value) {
+        $this->value = $value;
     }
 }
 ?>

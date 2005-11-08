@@ -55,6 +55,12 @@ class PluginsAdministration extends Controler {
                 case 'update_priorities':
                     $this->action = 'updatePriorities';
                     break;
+                case 'change_plugin_properties':
+                    if ($request->exist('plugin_id')) {
+                        $this->action = 'changePluginProperties';
+                        $this->view   = 'properties';
+                    }
+                    break;
                 default:
                     break;
             }
