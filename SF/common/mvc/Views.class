@@ -40,6 +40,11 @@ class Views {
       $this->_controler =& $controler;
     $this->view=$view;
   }
+  
+    function getControler() {
+        return $this->_controler;
+    }
+    
 
   function header() {
     site_project_header($this->html_params);
