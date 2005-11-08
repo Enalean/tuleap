@@ -13,7 +13,8 @@ require_once('common/plugin/PluginHookPriorityManager.class');
 
 class PluginsAdministrationActions extends Actions {
     
-    function PluginsAdministrationActions($view=null) {
+    function PluginsAdministrationActions(&$controler, $view=null) {
+        $this->Actions($controler);
         $GLOBALS['Language']->loadLanguageMsg('pluginsAdministration', 'pluginsadministration');
     }
     

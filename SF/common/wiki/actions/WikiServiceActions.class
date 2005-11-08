@@ -37,7 +37,8 @@ $Language->loadLanguageMsg('wiki/wiki');
 class WikiServiceActions extends WikiActions {
   /* private */ var $gid;
 
-  function WikiServiceActions($id) {
+  function WikiServiceActions(&$controler, $id) {
+      $this->WikiActions($controler);
     $this->gid = $id;
   }
 

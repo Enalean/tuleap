@@ -37,9 +37,9 @@ class WikiServiceViews extends WikiViews {
   /**
    * WikiServiceViews - Constructor
    */
-  function WikiServiceViews($id=0, $view=null) {
+  function WikiServiceViews(&$controler, $id=0, $view=null) {
     global $Language;
-    parent::WikiView($id, $view);
+    parent::WikiView($controler, $id, $view);
     if(!is_null($_REQUEST['pagename'])) {
         $this->html_params['title']  = $Language->getText('wiki_views_wikiserviceviews',
                                                           'wiki_page_title',

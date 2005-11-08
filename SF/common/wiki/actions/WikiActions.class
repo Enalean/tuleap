@@ -33,6 +33,10 @@ require_once(dirname(__FILE__).'/../lib/WikiPageWrapper.class');
  */
 class WikiActions extends Actions {
   
+    function WikiActions(&$controler) {
+        $this->Actions($controler);
+    }
+    
   function add_temp_page() {
     /* ADD TEST TO NOT ADD A ALREADY existing PAge */
     $wpw = new WikiPageWrapper($this->gid);

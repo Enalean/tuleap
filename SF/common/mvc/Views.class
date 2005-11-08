@@ -34,8 +34,10 @@
 class Views {
   /* protected array */  var $html_params; 
   /* protected string */ var $view; 
-
-  function View($view=null) {
+  /* protected Controler */ var $_controler;
+  
+  function View(&$controler, $view=null) {
+      $this->_controler =& $controler;
     $this->view=$view;
   }
 

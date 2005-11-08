@@ -32,6 +32,12 @@
  * @license   http://opensource.org/licenses/gpl-license.php GPL
  */
 class Actions {
+    
+    var $_controler;
+    function Actions(&$controler) {
+        $this->_controler =& $controler;
+    }
+    
   function check() {
     return true;
   }

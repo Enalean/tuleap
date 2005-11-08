@@ -100,8 +100,8 @@ class WikiViews extends Views {
   /**
    * WikiView - Constructor
    */
-  function WikiView($id=0, $view=null) {
-    parent::view($view);
+  function WikiView(&$controler, $id=0, $view=null) {
+    parent::view($controler, $view);
 
     $this->gid = (int) $id;
 

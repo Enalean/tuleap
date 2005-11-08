@@ -56,9 +56,9 @@ class WikiServiceAdminViews extends WikiViews {
   /**
    * WikiServiceAdminViews - Constructor
    */
-  function WikiServiceAdminViews($id=0) {
+  function WikiServiceAdminViews(&$controler, $id=0) {
     global $Language;
-    parent::WikiView($id);
+    parent::WikiView($controler, $id);
     $this->html_params['title']  = $Language->getText('wiki_views_wkserviews', 'title', array(group_getname($this->gid)));
   }
 

@@ -41,13 +41,13 @@ class Controler {
 
   function viewsManagement() {
     $className = get_class($this).'Views';
-    $wv = new $className($this->gid, $this->view);
+    $wv = new $className($this, $this->gid, $this->view);
     $wv->display($this->view);
   }
 
   function actionsManagement() {
     $className = get_class($this).'Actions';
-    $wa = new $className($this->gid);
+    $wa = new $className($this, $this->gid);
     $wa->process($this->action);
   }
 
