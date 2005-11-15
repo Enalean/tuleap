@@ -47,7 +47,6 @@ class GForgeLayout extends TabbedLayout {
 		//# if ( file_exists($GLOBALS['sys_custom_path'] . '/index_std.php') )
 		//#	$this->rootindex = $GLOBALS['sys_custom_path'] . '/index_std.php';
 		$this->TabbedLayout($root);
-        $this->imgroot = $root.'/gforge/images/';
 	
 		//determine font for this platform
 		if (browser_is_windows() && browser_is_ie()) {

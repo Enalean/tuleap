@@ -176,7 +176,7 @@ if (!file_exists($GLOBALS['path_to_theme'].'/'.$name_of_theme_class.'.class')) {
     }
 }
 require_once($GLOBALS['path_to_theme'].'/'.$name_of_theme_class.'.class');
-$root_for_theme = ($GLOBALS['sys_is_theme_custom']?'/custom':'/themes');
+$root_for_theme = ($GLOBALS['sys_is_theme_custom']?'/custom/':'/themes/').$GLOBALS['sys_user_theme'];
 $HTML = new $name_of_theme_class($root_for_theme);
 
 // OSDN functions and defs
