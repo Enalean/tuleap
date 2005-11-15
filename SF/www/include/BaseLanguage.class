@@ -73,7 +73,7 @@ class BaseLanguage {
         if (is_null($plugin_name)) {
             $ftname = getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/site-content/'.'/'.$this->lang.'/'.$fname.'.tab' ;
         } else {
-            $ftname = getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/plugins/'.$plugin_name.'/site-content/'.$this->lang.'/'.$fname.'.tab';
+            $ftname = $GLOBALS['sys_custompluginsroot'].'/'.$plugin_name.'/site-content/'.$this->lang.'/'.$fname.'.tab';
         }
         if (file_exists ($ftname)) {
             $this->loadLanguageFile($ftname) ;
@@ -176,7 +176,7 @@ class BaseLanguage {
             // Test first the custom directory
             $custom_fn = getenv('SF_LOCAL_INC_PREFIX')."/etc/codex/site-content/".$lang_code."/".$file.".txt";
         } else {
-            $custom_fn = getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/plugins/'.$plugin_name.'/site-content/'.$lang_code.'/'.$file.'.txt' ;
+            $custom_fn = $GLOBALS['sys_custompluginsroot'].'/'.$plugin_name.'/site-content/'.$lang_code.'/'.$file.'.txt' ;
         }
 	    if ( file_exists($custom_fn) ) {
             // The custom file exists. 
