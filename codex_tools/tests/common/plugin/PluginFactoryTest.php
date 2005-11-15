@@ -16,6 +16,11 @@ Mock::generate('DataAccessResult');
 require_once('common/plugin/Plugin.class');
 Mock::generate('Plugin');
 require(getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/conf/local.inc');
+
+class officialPlugin extends Plugin {
+}
+class customPlugin extends Plugin {
+}
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
@@ -46,7 +51,7 @@ class PluginFactoryTest extends UnitTestCase {
         $access_result->setReturnValueAt(0, 'getRow', array('name' => 'plugin 123', 'available' => 1));
         $access_result->setReturnValueAt(1, 'getRow', false);
         $pf =& new PluginFactoryTestVersion($this);
-        $pf->setReturnValue('_getClassNameForPluginName', 'Plugin');
+        $pf->setReturnValue('_getClassNameForPluginName', array('class' => 'Plugin', 'custom' => false));
         $pf->PluginFactory($plugin_dao); //Only for test. You should use singleton instead
         $plugin =& $pf->getPluginById(123);
         $this->assertIsA($plugin, 'Plugin');
@@ -70,7 +75,7 @@ class PluginFactoryTest extends UnitTestCase {
         $by_id->setReturnValue('getRow', array('name' => 'plugin 123', 'available' => 1));
 
         $pf =& new PluginFactoryTestVersion($this);
-        $pf->setReturnValue('_getClassNameForPluginName', 'Plugin');
+        $pf->setReturnValue('_getClassNameForPluginName', array('class' => 'Plugin', 'custom' => false));
         $pf->PluginFactory($plugin_dao); //Only for test. You should use singleton instead
         $plugin_1 =& $pf->getPluginByName('plugin 123');
         $this->assertIsA($plugin_1, 'Plugin');
@@ -92,7 +97,7 @@ class PluginFactoryTest extends UnitTestCase {
         $plugin_dao->setReturnValueAt(0, 'create', 125); //its id
         $plugin_dao->setReturnValueAt(0, 'create', false); //error
         $pf =& new PluginFactoryTestVersion($this);
-        $pf->setReturnValue('_getClassNameForPluginName', 'Plugin');
+        $pf->setReturnValue('_getClassNameForPluginName', array('class' => 'Plugin', 'custom' => false));
         $pf->PluginFactory($plugin_dao); //Only for test. You should use singleton instead
         $this->assertFalse($pf->createPlugin('existing plugin'));
         $plugin =& $pf->createPlugin('new plugin');
@@ -108,7 +113,7 @@ class PluginFactoryTest extends UnitTestCase {
         $access_result->setReturnValueAt(1, 'getRow', array('id' => '124', 'name' => 'plugin 124'));
         $access_result->setReturnValueAt(2, 'getRow', false);
         $pf =& new PluginFactoryTestVersion($this);
-        $pf->setReturnValue('_getClassNameForPluginName', 'Plugin');
+        $pf->setReturnValue('_getClassNameForPluginName', array('class' => 'Plugin', 'custom' => false));
         $pf->PluginFactory($plugin_dao); //Only for test. You should use singleton instead
         $col =& $pf->getAvailablePlugins();
         $this->assertEqual($col->size(), 2);
@@ -121,7 +126,7 @@ class PluginFactoryTest extends UnitTestCase {
         $access_result->setReturnValueAt(1, 'getRow', array('id' => '124', 'name' => 'plugin 124'));
         $access_result->setReturnValueAt(2, 'getRow', false);
         $pf =& new PluginFactoryTestVersion($this);
-        $pf->setReturnValue('_getClassNameForPluginName', 'Plugin');
+        $pf->setReturnValue('_getClassNameForPluginName', array('class' => 'Plugin', 'custom' => false));
         $pf->PluginFactory($plugin_dao); //Only for test. You should use singleton instead
         $col =& $pf->getUnavailablePlugins();
         $this->assertEqual($col->size(), 2);
@@ -134,7 +139,7 @@ class PluginFactoryTest extends UnitTestCase {
         $access_result->setReturnValueAt(1, 'getRow', array('id' => '124', 'name' => 'plugin 124'));
         $access_result->setReturnValueAt(2, 'getRow', false);
         $pf =& new PluginFactoryTestVersion($this);
-        $pf->setReturnValue('_getClassNameForPluginName', 'Plugin');
+        $pf->setReturnValue('_getClassNameForPluginName', array('class' => 'Plugin', 'custom' => false));
         $pf->PluginFactory($plugin_dao); //Only for test. You should use singleton instead
         $col =& $pf->getAllPlugins();
         $this->assertEqual($col->size(), 2);
@@ -150,7 +155,7 @@ class PluginFactoryTest extends UnitTestCase {
         $access_result->setReturnValueAt(0, 'getRow', array('id' => '123', 'name' => 'plugin 123')); //enabled = 1
         $access_result->setReturnValueAt(1, 'getRow', false);
         $pf =& new PluginFactoryTestVersion($this);
-        $pf->setReturnValue('_getClassNameForPluginName', 'Plugin');
+        $pf->setReturnValue('_getClassNameForPluginName', array('class' => 'Plugin', 'custom' => false));
         $pf->PluginFactory($plugin_dao); //Only for test. You should use singleton instead
         $this->assertTrue($pf->isPluginAvailable($p_1));
         $this->assertFalse($pf->isPluginAvailable($p_2));
@@ -166,7 +171,7 @@ class PluginFactoryTest extends UnitTestCase {
         $plugin_dao->expectOnce('updateAvailableByPluginId');
         $plugin_dao->expectArguments('updateAvailableByPluginId', array('1', 123));
         $pf =& new PluginFactoryTestVersion($this);
-        $pf->setReturnValue('_getClassNameForPluginName', 'Plugin');
+        $pf->setReturnValue('_getClassNameForPluginName', array('class' => 'Plugin', 'custom' => false));
         $pf->PluginFactory($plugin_dao); //Only for test. You should use singleton instead
         $pf->availablePlugin($p);
         $plugin_dao->tally();
@@ -182,10 +187,37 @@ class PluginFactoryTest extends UnitTestCase {
         $plugin_dao->expectOnce('updateAvailableByPluginId');
         $plugin_dao->expectArguments('updateAvailableByPluginId', array('0', 123));
         $pf =& new PluginFactoryTestVersion($this);
-        $pf->setReturnValue('_getClassNameForPluginName', 'Plugin');
+        $pf->setReturnValue('_getClassNameForPluginName', array('class' => 'Plugin', 'custom' => false));
         $pf->PluginFactory($plugin_dao); //Only for test. You should use singleton instead
         $pf->unavailablePlugin($p);
         $plugin_dao->tally();
+    }
+
+    function testPluginIsCustom() {
+        $plugin_dao    =& new MockPluginDao($this);
+
+        $access_result_custom =& new MockDataAccessResult($this);
+        $access_result_custom->setReturnValue('getRow', false);
+        $access_result_custom->setReturnValueAt(0, 'getRow', array('id' => '123', 'available' => 1));
+        $plugin_dao->setReturnReferenceAt(0, 'searchByName', $access_result_custom);
+
+        $access_result_official =& new MockDataAccessResult($this);
+        $access_result_official->setReturnValue('getRow', false);
+        $access_result_official->setReturnValueAt(0, 'getRow', array('id' => '124', 'available' => 1));
+        $plugin_dao->setReturnReferenceAt(1, 'searchByName', $access_result_official);
+
+        $pf =& new PluginFactoryTestVersion($this);
+        $pf->setReturnValueAt(0, '_getClassNameForPluginName', array('class' => 'customPlugin', 'custom' => true));
+        $pf->setReturnValueAt(1, '_getClassNameForPluginName', array('class' => 'officialPlugin', 'custom' => false));
+        $pf->PluginFactory($plugin_dao); //Only for test. You should use singleton instead
+        
+        $plugin_custom =& $pf->getPluginByName('custom');
+        $this->assertIsA($plugin_custom, 'Plugin');
+        $this->assertTrue($pf->pluginIsCustom($plugin_custom));
+        
+        $plugin_official =& $pf->getPluginByName('official');
+        $this->assertIsA($plugin_official, 'Plugin');
+        $this->assertFalse($pf->pluginIsCustom($plugin_official));
     }
 }
 

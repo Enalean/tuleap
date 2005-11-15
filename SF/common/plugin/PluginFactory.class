@@ -21,12 +21,14 @@ class PluginFactory {
     var $retrieved_plugins;
     var $available_plugins;
     var $unavailable_plugins;
+    var $custom_plugins;
     
     function PluginFactory(&$plugin_dao) {
         $this->plugin_dao =& $plugin_dao;
         $this->retrieved_plugins    =& new Map();
         $this->available_plugins    =& new Map();
         $this->unavailable_plugins  =& new Map();
+        $this->custom_plugins       = array();
     }
     
     function &instance() {
@@ -93,23 +95,47 @@ class PluginFactory {
         if ($this->retrieved_plugins->containsKey($key)) {
             $p =& $this->retrieved_plugins->get($key);
         } else {
-            $plugin_class = $this->_getClassNameForPluginName($name);
-            $p =& new $plugin_class($id);
-            $this->retrieved_plugins->put(new String($id), $p);
+            $plugin_class_info = $this->_getClassNameForPluginName($name);
+            $plugin_class      = $plugin_class_info['class'];
+            if ($plugin_class) {
+                $p =& new $plugin_class($id);
+                $this->retrieved_plugins->put(new String($id), $p);
+                if ($plugin_class_info['custom']) {
+                    $this->custom_plugins[$id] =& $p;
+                }
+            }
         }
         return $p;
     }
     
     function _getClassNameForPluginName($name) {
         $class_name = $name."Plugin";
+        $custom     = false;
         if (!class_exists($class_name)) {
-            $file_name = $GLOBALS['sys_pluginsroot'].DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR.'include'.DIRECTORY_SEPARATOR.$class_name.'.class';
-            require_once($file_name);
-            if (!class_exists($class_name)) {
-                $class_name = false;
+            $file_name = '/'.$name.'/include/'.$class_name.'.class';
+            if (file_exists($this->_getOfficialPluginsRoot().$file_name)) {
+                // Official !!!
+                require_once($this->_getOfficialPluginsRoot().$file_name);
+            } else {
+                //Custom ?
+                if (file_exists($this->_getCustomPluginsRoot().$file_name)) {
+                    require_once($this->_getCustomPluginsRoot().$file_name);
+                    $custom = true;
+                }
             }
         }
-        return $class_name;
+        if (!class_exists($class_name)) {
+            $class_name = false;
+        }
+        return array('class' => $class_name, 'custom' => $custom);
+    }
+    
+    function _getOfficialPluginsRoot() {
+        return $GLOBALS['sys_pluginsroot'];
+    }
+    
+    function _getCustomPluginsRoot() {
+        return $GLOBALS['sys_custompluginsroot'];
     }
     
     /**
@@ -212,6 +238,10 @@ class PluginFactory {
             }
         }
         return $name;
+    }
+    
+    function pluginIsCustom(&$plugin) {
+        return isset($this->custom_plugins[$plugin->getId()]);
     }
 }
 ?>
