@@ -119,6 +119,7 @@ $sys_themeroot="/home/httpd/SF/www/themes/";
 
 // Plugins related vars
 $sys_pluginsroot="/home/httpd/plugins/";
+$sys_custompluginsroot="/etc/codex/plugins/";
 
 // Specific to Xerox CodeX
 //

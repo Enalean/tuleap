@@ -207,8 +207,17 @@ class PluginFactory {
         $col = array();
         $dir = openDir($GLOBALS['sys_pluginsroot']);
         while ($file = readDir($dir)) {
-            if (($file!='.')&&($file!='..')&&($file!='CVS')&&($file!='.svn')&&(is_dir($GLOBALS['sys_pluginsroot'].DIRECTORY_SEPARATOR.$file))) {
+            if (($file!='.')&&($file!='..')&&($file!='CVS')&&($file!='.svn')&&(is_dir($GLOBALS['sys_pluginsroot'].'/'.$file))) {
                 if (!$this->isPluginInstalled($file)) {
+                    $col[] = $file;
+                }
+            }
+        }
+        closeDir($dir);
+        $dir = openDir($GLOBALS['sys_custompluginsroot']);
+        while ($file = readDir($dir)) {
+            if (($file!='.')&&($file!='..')&&($file!='CVS')&&($file!='.svn')&&(is_dir($GLOBALS['sys_custompluginsroot'].'/'.$file))) {
+                if (!$this->isPluginInstalled($file) && !in_array($file, $col)) {
                     $col[] = $file;
                 }
             }
