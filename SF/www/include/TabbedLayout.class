@@ -23,7 +23,7 @@ class TabbedLayout extends Layout {
 	 */
 	function TabbedLayout($root) {
 		$this->Layout($root);
-        $this->imgroot = $root.'/CodeXTab/images/';
+        $this->imgroot = $root.'/images/';
 	}
 
 	/**
