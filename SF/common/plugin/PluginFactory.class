@@ -113,14 +113,14 @@ class PluginFactory {
         $custom     = false;
         if (!class_exists($class_name)) {
             $file_name = '/'.$name.'/include/'.$class_name.'.class';
-            if (file_exists($this->_getOfficialPluginsRoot().$file_name)) {
-                // Official !!!
-                require_once($this->_getOfficialPluginsRoot().$file_name);
+            //Custom ?
+            if (file_exists($this->_getCustomPluginsRoot().$file_name)) {
+                require_once($this->_getCustomPluginsRoot().$file_name);
+                $custom = true;
             } else {
-                //Custom ?
-                if (file_exists($this->_getCustomPluginsRoot().$file_name)) {
-                    require_once($this->_getCustomPluginsRoot().$file_name);
-                    $custom = true;
+                // Official !!!
+                if (file_exists($this->_getOfficialPluginsRoot().$file_name)) {
+                    require_once($this->_getOfficialPluginsRoot().$file_name);
                 }
             }
         }
@@ -204,25 +204,20 @@ class PluginFactory {
     }
     
     function &getNotYetInstalledPlugins() {
-        $col = array();
-        $dir = openDir($GLOBALS['sys_pluginsroot']);
-        while ($file = readDir($dir)) {
-            if (($file!='.')&&($file!='..')&&($file!='CVS')&&($file!='.svn')&&(is_dir($GLOBALS['sys_pluginsroot'].'/'.$file))) {
-                if (!$this->isPluginInstalled($file)) {
-                    $col[] = $file;
+        $col     = array();
+        $paths   = array($this->_getCustomPluginsRoot(), $this->_getOfficialPluginsRoot());
+        $exclude = array('.', '..', 'CVS', '.svn');
+        foreach($paths as $path) {
+            $dir = openDir($path);
+            while ($file = readDir($dir)) {
+                if (!in_array($file, $exclude) && is_dir($path.'/'.$file)) {
+                    if (!$this->isPluginInstalled($file) && !in_array($file, $col)) {
+                        $col[] = $file;
+                    }
                 }
             }
+            closeDir($dir);
         }
-        closeDir($dir);
-        $dir = openDir($GLOBALS['sys_custompluginsroot']);
-        while ($file = readDir($dir)) {
-            if (($file!='.')&&($file!='..')&&($file!='CVS')&&($file!='.svn')&&(is_dir($GLOBALS['sys_custompluginsroot'].'/'.$file))) {
-                if (!$this->isPluginInstalled($file) && !in_array($file, $col)) {
-                    $col[] = $file;
-                }
-            }
-        }
-        closeDir($dir);
         return $col;
     }
 
