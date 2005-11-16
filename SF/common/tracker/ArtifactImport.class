@@ -209,11 +209,7 @@ class ArtifactImport extends Error {
 	  //we put time() importing user as default
 	} else {
 	  
-	  if ($field->isMultiSelectBox()) {
-	    $is_empty = (implode(",",$val)=="100");
-	  } else {
-	    $is_empty = ( ($field->isSelectBox()) ? ($val==$Language->getText('global','none')) : ($val==''));
-	  }
+	  $is_empty = ( ($field->isSelectBox() || $field->isMultiSelectBox()) ? ($val==$Language->getText('global','none')) : ($val==''));
 
 	  if ($is_empty) {
 	    $errors .= $Language->getText('tracker_import_utils','field_mandatory_and_current',array($row+1,implode(",",$data),$label,$this->ath->getName(),$val));
