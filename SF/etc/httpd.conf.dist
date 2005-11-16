@@ -315,7 +315,6 @@ DocumentRoot "/home/httpd/SF/www"
     AcceptPathInfo On
     Order allow,deny
     Allow from all
-    Deny from %sys_ip_address%
 </Directory>
 
 #
