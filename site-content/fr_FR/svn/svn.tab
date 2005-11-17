@@ -109,9 +109,9 @@ svn_utils	desc	Description
 svn_utils	date	Date
 svn_utils	file	Fichier
 svn_utils	type	Type
-svn_utils	add	Ajouter
-svn_utils	change	Changer
-svn_utils	del	Détruire
+svn_utils	add	Ajouté
+svn_utils	change	Modifié
+svn_utils	del	Supprimé
 svn_utils	impacted_files	Liste des fichiers concernés
 svn_utils	no_hist	Ce projet n'a pas d'historique Subversion.
 svn_utils	ci_week	Commits (Derniers 7 jours/Total)
