@@ -128,12 +128,7 @@ if (!$group_id) {
 // Now check ambiguous cases...
 if (($atn == 'bug')||($atn == 'task')||($atn == 'sr')||($atn == 'patch')) {
     // Ambiguous: legacy or generic tracker?
-    // Get artifact group_id and tracker id (atid)
-    if (!util_get_ids_from_aid($aid,$art_group_id,$atid,$art_name)) {
-        // The artifact does not exist -> legacy
-        legacy_redirect($location,$aid,$group_id,$atn);
-        exit_error($Language->getText('global','error'),$Language->getText('tracker_gotoid', 'invalid_art_nb', $aid));
-    }
+
     // Are the legacy trackers activated for this project? 
     $grp=project_get_object($group_id);
     if ((($atn == 'bug')&&(!$grp->usesBugs()))
@@ -142,6 +137,13 @@ if (($atn == 'bug')||($atn == 'task')||($atn == 'sr')||($atn == 'patch')) {
         ||(($atn == 'patch')&&(!$grp->usesPatch()))) {
         // Legacy tracker is not activated -> this is a generic one
         generic_redirect($location,$aid,$group_id,$art_group_id,$atid,$atn,$art_name);
+    }
+
+    // Get artifact group_id and tracker id (atid)
+    if (!util_get_ids_from_aid($aid,$art_group_id,$atid,$art_name)) {
+        // The artifact does not exist -> legacy
+        legacy_redirect($location,$aid,$group_id,$atn);
+        exit_error($Language->getText('global','error'),$Language->getText('tracker_gotoid', 'invalid_art_nb', $aid));
     }
 
     // Does the legacy bug/sr/task id exists and does it belong to this project?
