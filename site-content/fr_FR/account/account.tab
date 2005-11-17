@@ -122,6 +122,7 @@ account_first	message	Vous êtes maintenant un utilisateur enregistré sur $1. En 
 # Script: SF/www/account/login.php
 #
 account_login	title	Connexion au site
+account_login	secure	sécurisé
 account_login	error_can_t_update_passwd	Erreur interne: mise à jour des mots de passe impossible.
 account_login	pending_title	Compte en attente
 account_login	pending_msg	Votre compte est actuellement en attente de confirmation. En visitant le lien inclus dans le message que vous avez reçu après la phase d'enregistrement, vous activerez votre compte utilisateur. <P>Si vous souhaitez recevoir à nouveau cet e-mail, cliquez sur le bouton ci-dessous et un autre message de confirmation sera envoyé à l'adresse e-mail indiquée lors de votre enregistrement.
