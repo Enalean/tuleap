@@ -41,7 +41,7 @@ print '<h2>'.$Language->getText('admin_massmail','header',array($GLOBALS['sys_na
 
 <P>'.$Language->getText('admin_massmail','warning').'
 
-<FORM action="massmail_execute.php">
+<FORM ACTION="massmail_execute.php" METHOD="POST">
 <INPUT type="radio" name="destination" value="comm">
 '.$Language->getText('admin_massmail','to_additional').' ('
 .$count_comm
