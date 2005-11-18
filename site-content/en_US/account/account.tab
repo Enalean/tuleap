@@ -117,6 +117,7 @@ account_first	message	You are now a registered user on $1. As a registered user,
 # Script: SF/www/account/login.php
 #
 account_login	title	Site Login
+account_login	secure	Secure
 account_login	error_can_t_update_passwd	Internal error: Could not update passwords.
 account_login	pending_title	Pending Account
 account_login	pending_msg	Your account is currently pending your email confirmation. Visiting the link sent to you in this email will activate your account.<P>If you need this email resent, please click below and a confirmation email will be sent to the email address you provided in registration.

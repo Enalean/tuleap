@@ -369,15 +369,16 @@ function svn_utils_show_revision_detail($result,$group_id,$group_name,$commit_id
 	    $viewrev_url = svn_utils_make_viewlink($group_name, $fullpath, $revision, "&rev=$revision");
 	}
 
-	if ($type == $Language->getText('svn_utils','change')) {	    
+	if ($type == 'Change') {	    
 
-	    $viewtype_url = svn_utils_make_viewlink($group_name, $fullpath, $type,
-					   "&r1=text&tr1=$revision&r2=text&tr2=".($revision-1)."&diff_format=h");
+	    $viewtype_url = svn_utils_make_viewlink($group_name, $fullpath, 
+                            $Language->getText('svn_utils','change'),
+			   "&r1=text&tr1=$revision&r2=text&tr2=".($revision-1)."&diff_format=h");
 
-	} else if ($type == $Language->getText('svn_utils','add')) {
-	    $viewtype_url = $type;
-	} else if ($type == $Language->getText('svn_utils','del')) {
-	    $viewtype_url = $type;
+	} else if ($type == 'Add') {
+	    $viewtype_url = $Language->getText('svn_utils','add');
+	} else if ($type == 'Del') {
+	    $viewtype_url = $Language->getText('svn_utils','del');
 	}
 
 	echo '

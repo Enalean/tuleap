@@ -110,7 +110,7 @@ if(!isset($GLOBALS['sys_Name'])) {
     $GLOBALS['sys_Name'] = "";
  }
 print $Language->getText('account_login', 'title', array($GLOBALS['sys_Name'])); ?>
-<?php print ((isset($GLOBALS['sys_https_host']) && $GLOBALS['sys_https_host'] != "") ? ' (Secure)':''); ?>
+<?php print ((isset($GLOBALS['sys_https_host']) && $GLOBALS['sys_https_host'] != "") ? ' ('.$Language->getText('account_login', 'secure').')':''); ?>
 </h2>
 <p>
 <span class="highlight"><B><?php print $Language->getText('account_login', 'cookies'); ?>.</B></span>
