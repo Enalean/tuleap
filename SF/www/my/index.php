@@ -603,92 +603,99 @@ function display_artifacts($list_trackers, $print_box_begin) {
     if (!isset($artifact_types[$group_id][$atid])) {
         $artifact_types[$group_id][$atid] = array();
         $artifact_types[$group_id][$atid]['at'] =& new ArtifactType($group,$atid);
+        $artifact_types[$group_id][$atid]['user_can_view_at']             = $artifact_types[$group_id][$atid]['at']->userCanView();
+        $artifact_types[$group_id][$atid]['user_can_view_summary_or_aid'] = null;
     }
-    $at =& $artifact_types[$group_id][$atid]['at'];
     //Check if user can view artifact
-    if (!$at->userCanView()) {
-        continue;
-    }
-    //Create ArtifactFieldFactory object
-    if (!isset($artifact_types[$group_id][$atid]['aff'])) {
-        $artifact_types[$group_id][$atid]['aff'] =& new ArtifactFieldFactory($at);
-    }
-    $aff =& $artifact_types[$group_id][$atid]['aff'];
-    //Retriebe artifact_id field
-    $field =& $aff->getFieldFromName('artifact_id');
-    //Check if user can read it
-    $user_can_view_aid = $field->userCanRead($group_id, $atid);
-    //Retriebe summary field
-    $field =& $aff->getFieldFromName('summary');
-    //Check if user can read it
-    $user_can_view_summary = $field->userCanRead($group_id, $atid);
-    if (!$user_can_view_aid && !$user_can_view_summary) {
-        continue;
-    }
-    //}}}
-    
-    //work on the tracker of the last round if there was one
-    if ($atid != $atid_old && $count_aids != 0) {
-      list($hide_now,$count_diff,$hide_url) = 
-	my_hide_url('artifact',$atid_old,$hide_item_id,$count_aids,$hide_artifact);
-      $html_hdr = ($j ? '<tr class="boxitem"><td colspan="3">' : '').
-	$hide_url.'<A HREF="/tracker/?group_id='.$group_id_old.'&atid='.$atid_old.'"><B>'.
-	$group_name." - ".$tracker_name.'</B></A>&nbsp;&nbsp;&nbsp;&nbsp;';
-      $count_new = max(0, $count_diff);
-	      
-      $html_hdr .= my_item_count($count_aids,$count_new).'</td></tr>';
-      $html_my_artifacts .= $html_hdr.$html;
-      
-      $count_aids = 0;
-      $html = '';
-      $j++;
-      
-    } 
-    
-    if ($count_aids == 0) {
-      //have to call it to get at least the hide_now even if count_aids is false at this point
-      $hide_now = my_hide('artifact',$atid,$hide_item_id,$hide_artifact);
-    }
-    
-    $count_aids++;
-    $group_name = $trackers_array['group_name'];
-    $tracker_name = $trackers_array['name'];
-    $aid = $trackers_array['artifact_id'];
-    $summary = $trackers_array['summary'];
-    $atid_old = $atid;
-    $group_id_old = $group_id;
-    
-    if (!$hide_now) {
-      
-      // Form the 'Submitted by/Assigned to flag' for marking
-      $AS_flag = my_format_as_flag2($trackers_array['assignee'],$trackers_array['submitter']);
-      
-      //get percent_complete if this field is used in the tracker
-      unset($percent_complete);
-      $sql = 
-	"SELECT afvl.value ".
-	"FROM artifact_field_value afv,artifact_field af, artifact_field_value_list afvl, artifact_field_usage afu ".
-	"WHERE af.field_id = afv.field_id AND af.field_name = 'percent_complete' ".
-	"AND afv.artifact_id = $aid ".
-	"AND afvl.group_artifact_id = $atid AND af.group_artifact_id = $atid ".
-	"AND afu.group_artifact_id = $atid AND afu.field_id = af.field_id AND afu.use_it = 1 ".
-	"AND afvl.field_id = af.field_id AND afvl.value_id = afv.valueInt";
-      $res = db_query($sql);
-      $percent_complete = '';
-      if (db_numrows($res) > 0) {
-	$percent_complete = '<TD class="small">'.db_result($res,0,'value').'</TD>';
-      }
-      $html .= '
-		<TR class="'.get_priority_color($trackers_array['severity']).
-	'"><TD class="small"><A HREF="/tracker/?func=detail&group_id='.
-	$group_id.'&aid='.$aid.'&atid='.$atid.
-	'">'.$aid.'</A></TD>'.
-        '<TD class="small"'.($percent_complete ? '>': ' colspan="2">');
-    if ($user_can_view_summary) {
-        $html .= stripslashes($summary);
-    }
-	$html .= '&nbsp;'.$AS_flag.'</TD>'.$percent_complete.'</TR>';
-      
+    if ($artifact_types[$group_id][$atid]['user_can_view_at'] && $artifact_types[$group_id][$atid]['user_can_view_summary_or_aid'] !== false) {
+        if (is_null($artifact_types[$group_id][$atid]['user_can_view_summary_or_aid'])) {
+            $at =& $artifact_types[$group_id][$atid]['at'];
+            //Create ArtifactFieldFactory object
+            if (!isset($artifact_types[$group_id][$atid]['aff'])) {
+                $artifact_types[$group_id][$atid]['aff'] =& new ArtifactFieldFactory($at);
+            }
+            $aff =& $artifact_types[$group_id][$atid]['aff'];
+            //Retrieve artifact_id field
+            $field =& $aff->getFieldFromName('artifact_id');
+            //Check if user can read it
+            $user_can_view_aid = $field->userCanRead($group_id, $atid);
+            //Retrieve percent_complete field
+            $field =& $aff->getFieldFromName('percent_complete');
+            //Check if user can read it
+            $user_can_view_percent_complete = $field && $field->userCanRead($group_id, $atid);
+            //Retriebe summary field
+            $field =& $aff->getFieldFromName('summary');
+            //Check if user can read it
+            $user_can_view_summary = $field->userCanRead($group_id, $atid);
+            $artifact_types[$group_id][$atid]['user_can_view_summary_or_aid'] = $user_can_view_aid || $user_can_view_summary;
+        }
+        if ($artifact_types[$group_id][$atid]['user_can_view_summary_or_aid']) {
+            
+            //work on the tracker of the last round if there was one
+            if ($atid != $atid_old && $count_aids != 0) {
+                list($hide_now,$count_diff,$hide_url) = 
+                    my_hide_url('artifact',$atid_old,$hide_item_id,$count_aids,$hide_artifact);
+                $html_hdr = ($j ? '<tr class="boxitem"><td colspan="3">' : '').
+                $hide_url.'<A HREF="/tracker/?group_id='.$group_id_old.'&atid='.$atid_old.'"><B>'.
+                $group_name." - ".$tracker_name.'</B></A>&nbsp;&nbsp;&nbsp;&nbsp;';
+                $count_new = max(0, $count_diff);
+                  
+                $html_hdr .= my_item_count($count_aids,$count_new).'</td></tr>';
+                $html_my_artifacts .= $html_hdr.$html;
+                
+                $count_aids = 0;
+                $html = '';
+                $j++;
+              
+            } 
+            
+            if ($count_aids == 0) {
+              //have to call it to get at least the hide_now even if count_aids is false at this point
+              $hide_now = my_hide('artifact',$atid,$hide_item_id,$hide_artifact);
+            }
+            
+            $count_aids++;
+            $group_name   = $trackers_array['group_name'];
+            $tracker_name = $trackers_array['name'];
+            $aid          = $trackers_array['artifact_id'];
+            $summary      = $trackers_array['summary'];
+            $atid_old     = $atid;
+            $group_id_old = $group_id;
+            
+            if (!$hide_now) {
+              
+                // Form the 'Submitted by/Assigned to flag' for marking
+                $AS_flag = my_format_as_flag2($trackers_array['assignee'],$trackers_array['submitter']);
+                
+                //get percent_complete if this field is used in the tracker
+                $percent_complete = '';
+                if ($user_can_view_percent_complete) {
+                    $sql = 
+                        "SELECT afvl.value ".
+                        "FROM artifact_field_value afv,artifact_field af, artifact_field_value_list afvl, artifact_field_usage afu ".
+                        "WHERE af.field_id = afv.field_id AND af.field_name = 'percent_complete' ".
+                        "AND afv.artifact_id = $aid ".
+                        "AND afvl.group_artifact_id = $atid AND af.group_artifact_id = $atid ".
+                        "AND afu.group_artifact_id = $atid AND afu.field_id = af.field_id AND afu.use_it = 1 ".
+                        "AND afvl.field_id = af.field_id AND afvl.value_id = afv.valueInt";
+                    $res = db_query($sql);
+                    if (db_numrows($res) > 0) {
+                        $percent_complete = '<TD class="small">'.db_result($res,0,'value').'</TD>';
+                    }
+                }
+                $html .= '
+                    <TR class="'.get_priority_color($trackers_array['severity']).
+                    '"><TD class="small"><A HREF="/tracker/?func=detail&group_id='.
+                $group_id.'&aid='.$aid.'&atid='.$atid.
+                    '">'.$aid.'</A></TD>'.
+                    '<TD class="small"'.($percent_complete ? '>': ' colspan="2">');
+                if ($user_can_view_summary) {
+                    $html .= stripslashes($summary);
+                }
+                $html .= '&nbsp;'.$AS_flag.'</TD>'.$percent_complete.'</TR>';
+              
+            }
+        }
     }
   }	
   

@@ -112,7 +112,7 @@ class ArtifactFieldFactory extends Error {
 	 *	@return	ArtifactField object
 	 */
 	function getFieldFromName($field_name) {
-		$field = $this->USAGE_BY_NAME[$field_name];
+		$field = isset($this->USAGE_BY_NAME[$field_name])?$this->USAGE_BY_NAME[$field_name]:false;
 		return $field;
 	}
 
