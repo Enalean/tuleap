@@ -91,6 +91,7 @@ class PluginFactory {
     }
     
     function &_getInstancePlugin($id, $name) {
+        $p   = false;
         $key =& new String($id);
         if ($this->retrieved_plugins->containsKey($key)) {
             $p =& $this->retrieved_plugins->get($key);
@@ -145,9 +146,11 @@ class PluginFactory {
          $dar =& $this->plugin_dao->searchByAvailable($criteria);
          while($row = $dar->getRow()) {
              $p =& $this->_getInstancePlugin($row['id'], $row['name']);
-             $key =& new String($row['id']);
-             if (!$map->containsKey($key)) {
-                 $map->put($key, $p);
+             if ($p) {
+                 $key =& new String($row['id']);
+                 if (!$map->containsKey($key)) {
+                     $map->put($key, $p);
+                 }
              }
          }
          return $map->getValues();
