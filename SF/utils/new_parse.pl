@@ -756,7 +756,7 @@ sub suspend_httpuser {
     ($username,$p_passwd) = split(":", $_);
 
     if ($this_user eq $username) {
-      $htpasswd_array[$counter] = '$username:!!';
+      $htpasswd_array[$counter] = "$username:!!\n";
     }
     $counter++;
   }
