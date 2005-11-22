@@ -378,13 +378,18 @@ class ArtifactReport extends Error {
             // Final query
             $sql = "select a.artifact_id ".$from." ".$where." group by a.artifact_id";
             //echo "<DBG> query count=".$sql."<br>";
-		
             $res = db_query($sql);
 
             $totalrows=0;
+            
+            $user_can_read                = null;
+            $check_perms_on_each_artifact = !$ath->userHasFullAccess();
             while ($arr = db_fetch_array($res)) {
-                $curArtifact=new Artifact($ath, $arr['artifact_id']);
-                if ($curArtifact->userCanView(user_getid())) {
+                $curArtifact = new Artifact($ath, $arr['artifact_id'], false);
+                if (is_null($user_can_read) || $check_perms_on_each_artifact) {
+                    $user_can_read = $curArtifact->userCanView();
+                }
+                if ($user_can_read) {
                     $totalrows++;
                     $aids[]=$arr['artifact_id'];
                 }
