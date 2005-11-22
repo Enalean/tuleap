@@ -186,8 +186,6 @@ class ArtifactReportHtml extends ArtifactReport {
             while (list($key,$field) = each($query_fields) ) {
             
                 $field_html = new ArtifactFieldHtml($field);
-
-		if ($field_html->userCanRead($ath->getGroupID(),$this->group_artifact_id)) {
                     
                 //echo $field->getName()."-".$field->display_type."-".$field->data_type."-".$field->dump()."<br>";
                                     
@@ -263,8 +261,6 @@ class ArtifactReportHtml extends ArtifactReport {
                     $html_select .= $labels.'</TR>'.$boxes.'</TR>';
                     $labels = $boxes = '';
                 }
-
-	    }
             
             }
             

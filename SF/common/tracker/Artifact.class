@@ -42,7 +42,7 @@ class Artifact extends Error {
      *          ONLY OPTIONAL WHEN YOU PLAN TO IMMEDIATELY CALL ->create()
      *  @return boolean success.
      */
-    function Artifact(&$ArtifactType, $data=false) {
+    function Artifact(&$ArtifactType, $data=false, $checkPerms = true) {
       global $Language;
         $this->Error(); 
 
@@ -84,9 +84,11 @@ class Artifact extends Error {
             //
             //      make sure this person has permission to view this artifact
             //
-            if (!$this->userCanView()) {
-                $this->setError('Artifact: '.$Language->getText('tracker_common_artifact','view_private'));
-                return false;
+            if ($checkPerms) {
+                if (!$this->userCanView()) {
+                    $this->setError('Artifact: '.$Language->getText('tracker_common_artifact','view_private'));
+                    return false;
+                }
             }
         }
         return true;
@@ -176,7 +178,8 @@ class Artifact extends Error {
         $sql="SELECT afv.valueInt FROM artifact_field_value afv, artifact a, artifact_field af WHERE a.artifact_id=$aid AND afv.artifact_id=$aid AND a.group_artifact_id=af.group_artifact_id AND afv.field_id=af.field_id AND af.field_name='multi_assigned_to'";
         $res=db_query($sql);
         $i=0;
-        while($resrow = db_fetch_array($result)) {
+        $return_val = array();
+        while($resrow = db_fetch_array($res)) {
             $return_val[$i++]=$resrow['valueInt'];
         }
         return $return_val;
