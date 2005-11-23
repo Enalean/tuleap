@@ -72,6 +72,7 @@ tracker_import	import_new_msg	You can import artifacts into this tracker by spec
 tracker_import	upload_file	Upload File:	
 tracker_import	max_upload_size	(The maximum upload file size is $1 Mb)
 tracker_import	submit_info	Load artifacts
+tracker_import	send_notifications	Send Notifications:
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/index.php

@@ -3,7 +3,7 @@
 //
 // Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
 //
-// $Id: import.php 1481 2005-05-03 14:04:14Z ljulliar $
+// $Id$
 //
 //
 //  Written for CodeX by Marie-Luise Schneider
@@ -44,6 +44,12 @@ class ArtifactImportHtml extends ArtifactImport {
     $is_tmp = false;
     //}
     
+    if($_REQUEST['notify']) {
+        user_set_preference('tracker_import_notify_'.$this->ath->getID(), 1);
+    }
+    else {
+        user_set_preference('tracker_import_notify_'.$this->ath->getID(), 0);
+    }
     
     $ok = $this->parse($csv_filename,$is_tmp,
 		$used_fields,$fields,$artifacts_data,
@@ -253,8 +259,12 @@ function showErrors($errors) {
   function displayImport($parsed_labels,$artifacts_data,$aid_column) {
     global $feedback,$Language;
     
-    
-    $ok = $this->updateDB($parsed_labels,$artifacts_data,$aid_column,$errors);
+    $notify = false;
+    if(user_get_preference('tracker_import_notify_'.$this->ath->getID()) == '1') {
+        $notify = true;
+    }
+
+    $ok = $this->updateDB($parsed_labels,$artifacts_data,$aid_column,$errors, $notify);
     
     if ($ok) $feedback = $Language->getText('tracker_import','success_import',$count_artifacts)." ";
     else $feedback = $errors;
@@ -366,6 +376,12 @@ function showErrors($errors) {
     echo '<h3>'.$Language->getText('tracker_import','import_new_hdr', array(help_button('ArtifactImport.html'))).'</h3>';
     echo '<p>'.$Language->getText('tracker_import','import_new_msg',array('/tracker/index.php?group_id='.$this->group->group_id.'&atid='.$atid.'&user_id='.$user_id.'&mode=showformat&func=import')).'</p>';
     
+    $_pref_notify  = user_get_preference('tracker_import_notify_'.$atid);
+    $notifychecked = '';
+    if($_pref_notify === '1') {
+        $notifychecked = 'checked="checked"';
+    }
+
     echo '
 	    <FORM NAME="importdata" action="'.$PHP_SELF.'" method="POST" enctype="multipart/form-data">
             <INPUT TYPE="hidden" name="group_id" value="'.$this->group->group_id.'">            
@@ -380,7 +396,15 @@ function showErrors($errors) {
 			<td> <input type="file" name="csv_filename" size="50">
                  <br><span class="smaller"><i>'.$Language->getText('tracker_import','max_upload_size',formatByteToMb($sys_max_size_upload)).'</i></span>
 			</td>
-			</tr>';
+			</tr>
+            <tr>
+              <th>
+                '.$Language->getText('tracker_import','send_notifications').'
+              </th>
+              <td>
+                <input type="checkbox" name="notify" value="ok" "'.$notifychecked.'"/>
+              </td>
+            </tr>';
     
     //<tr>
     //<th>OR Paste Artifact Data (in CSV format):</th>

@@ -3,7 +3,7 @@
 //
 // Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
 //
-// $Id: tracker_import_utils.php 1973 2005-09-02 16:04:31Z schneide $
+// $Id$
 //
 //
 //  Written for CodeX by Marie-Luise Schneider
@@ -123,7 +123,7 @@ class ArtifactImport extends Error {
       } else {
 	// Assume French
 	$lbl_follow_ups = 'Commentaires';
-	$lbl_is_dependent_on = 'Dépend de';
+	$lbl_is_dependent_on = 'Dï¿½pend de';
 	$lbl_add_cc = 'Liste CC';
 	$lbl_cc_comment = 'Commentaire CC';
       }        
@@ -260,7 +260,7 @@ class ArtifactImport extends Error {
 	} else {
           // Assume French
           $lbl_follow_ups = 'Commentaires';
-          $lbl_is_dependent_on = 'Dépend de';
+          $lbl_is_dependent_on = 'Dï¿½pend de';
 	  $lbl_add_cc = 'Liste CC';
           $lbl_cc_comment = 'Commentaire CC';
 	}
@@ -477,7 +477,7 @@ class ArtifactImport extends Error {
     } else {
       // Assume French
       $used_fields["Commentaires"] = "";
-      $used_fields["Dépend de"] = "";
+      $used_fields["Dï¿½pend de"] = "";
       $used_fields["Liste CC"] = "";
       $used_fields["Commentaire CC"] = "";
     }        
@@ -797,7 +797,7 @@ class ArtifactImport extends Error {
     } else {
 	// Assume French
 	$lbl_follow_ups = 'Commentaires';
-	$lbl_is_dependent_on = 'Dépend de';
+	$lbl_is_dependent_on = 'Dï¿½pend de';
 	$lbl_add_cc = 'Liste CC';
 	$lbl_cc_comment = 'Commentaire CC';
     }
@@ -898,9 +898,9 @@ class ArtifactImport extends Error {
 
 
   /** check if all the values correspond to predefined values of the corresponding fields */
-  function insertArtifact($row,$data,$used_fields,$parsed_labels,$predefined_values,&$errors) {
+  function insertArtifact($row,$data,$used_fields,$parsed_labels,$predefined_values,&$errors,$notify=false) {
     global $Language;
-  
+    
   //prepare everything to be able to call the artifacts create method
   $ah=new ArtifactHtml($this->ath);
   if (!$ah || !is_object($ah)) {
@@ -948,6 +948,9 @@ class ArtifactImport extends Error {
       } else {
 	return false;
       }
+    }    
+    if($notify) {
+        $ah->mailFollowupWithPermissions(explode(',',$this->ath->getEmailAddress()));
     }
   }
   return true;
@@ -956,7 +959,7 @@ class ArtifactImport extends Error {
 
 
 
-  function updateArtifact($row,$data,$aid,$used_fields,$parsed_labels,$predefined_values,$errors) {
+  function updateArtifact($row,$data,$aid,$used_fields,$parsed_labels,$predefined_values,$errors,$notify=false) {
   global $feedback,$Language;
 
   $ah=new ArtifactHtml($this->ath,$aid);
@@ -987,18 +990,23 @@ class ArtifactImport extends Error {
 	$errors .= $Language->getText('tracker_import_utils','problem_add_cc',$ah->getID())." ";
       }
     }
-
+    $details_ok = false;
     if ($details) {
-      if ($this->parseDetails($details,$parsed_details,$errors)) {
-	if (!$ah->addDetails($parsed_details)) {
-	  $errors .= $Language->getText('tracker_import_utils','problem_insert_followup',$ah->getID())." ";
-	  return false;
-	}
-      } else {
-	return false;
-      }
+        if ($this->parseDetails($details,$parsed_details,$errors)) {
+            $details_ok = true;
+            if (!$ah->addDetails($parsed_details)) {
+                $errors .= $Language->getText('tracker_import_utils','problem_insert_followup',$ah->getID())." ";
+                $details_ok = false;
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
-  }
+    if($notify && (count($changes)>0 || $add_cc || $details_ok)) {
+        $ah->mailFollowupWithPermissions(explode(',',$this->ath->getEmailAddress()), $changes);
+    }
+  }  
   return true;
   }
 
@@ -1010,17 +1018,18 @@ class ArtifactImport extends Error {
    * @param artifacts_data: all artifacts in an array. artifacts are in the form array(field_label => value) 
    * @param $aid_column: the column in the csv file that contains the arifact id (-1 if not given)
    * @param $errors (OUT): string containing explanation what error occurred
+   * @param $notify (IN): If true users notfication will be throw
    * @return true if parse ok, false if errors occurred
    */
-  function updateDB($parsed_labels,$artifacts_data,$aid_column,&$errors) {
-  
+  function updateDB($parsed_labels,$artifacts_data,$aid_column,&$errors, $notify=false) {
+      
   $used_fields = $this->getUsedFields();
   $predefined_values = $this->getPredefinedValues($used_fields,$parsed_labels);
   
   for ($i=0; $i < count($artifacts_data); $i++) {
     $data = $artifacts_data[$i];
     if ($aid_column == -1) {
-      $ok = $this->insertArtifact($i+2,$data,$used_fields,$parsed_labels,$predefined_values,$errors);
+      $ok = $this->insertArtifact($i+2,$data,$used_fields,$parsed_labels,$predefined_values,$errors,$notify);
       
       // if artifact_id given, verify if it exists already 
       //else send error
@@ -1029,11 +1038,11 @@ class ArtifactImport extends Error {
       $aid_label = $aid_field->getLabel();
       $aid = $data[$aid_label];
       if ($aid != "") {
-	$ok = $this->updateArtifact($row,$data,$aid,$used_fields,$parsed_labels,$predefined_values,$errors);
+	$ok = $this->updateArtifact($row,$data,$aid,$used_fields,$parsed_labels,$predefined_values,$errors, $notify);
 	
       } else {
 	// have to create artifact from scratch
-	$ok = $this->insertArtifact($i+2,$data,$used_fields,$parsed_labels,$predefined_values,$errors);
+	$ok = $this->insertArtifact($i+2,$data,$used_fields,$parsed_labels,$predefined_values,$errors, $notify);
       }	  
     }
     if (!$ok) return false;
