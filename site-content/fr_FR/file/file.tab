@@ -136,7 +136,7 @@ file_admin_editreleases	release_name	Nom de la version
 file_admin_editreleases	delete	Détruire?
 file_admin_editreleases	edit_this_release	Modifier cette version
 file_admin_editreleases	edit_this_p	Modifier ce paquet
-file_admin_editreleases	warn	** ATTENTION!! ** Voulez-vous vraiment détruire cette version et tous ces fichiers attachés (il est impossible de revenir en arrière)?
+file_admin_editreleases	warn	** ATTENTION!! ** Voulez-vous vraiment détruire cette version, tous ses fichiers attachés et les logs d\'accès correspondants (il est impossible de revenir en arrière)?
 file_admin_editreleases	new_release_name	Nom de la nouvelle version
 file_admin_editreleases	belongs_to_p	appartient au paquet 
 file_admin_editreleases	create_this_release	Créer cette version

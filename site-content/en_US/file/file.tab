@@ -131,7 +131,7 @@ file_admin_editreleases	release_name	Release Name
 file_admin_editreleases	delete	Delete?
 file_admin_editreleases	edit_this_release	Edit This Release
 file_admin_editreleases	edit_this_p	Edit This Package
-file_admin_editreleases	warn	** WARNING!! ** Delete this release and all its files (no possible restore operation)?
+file_admin_editreleases	warn	** WARNING!! ** Delete this release, all its files and corresponding access logs (no possible restore operation)?
 file_admin_editreleases	new_release_name	New Release Name
 file_admin_editreleases	belongs_to_p	belongs to Package
 file_admin_editreleases	create_this_release	Create This Release
