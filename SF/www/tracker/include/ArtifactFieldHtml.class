@@ -233,8 +233,22 @@ class ArtifactFieldHtml extends ArtifactField {
 	    if (!$size || !$maxlength)
 			list($size, $maxlength) = $this->getGlobalDisplaySize();
 	
-	    $html = '<INPUT TYPE="text" name="'.$this->field_name.
-		'" size="'.$size.'" MAXLENGTH="'.$maxlength.'" VALUE="'.$value.'">';
+        $maxlengtharg = ' maxlength="'.$maxlength.'"';
+        if($maxlength == "") {
+            $maxlengtharg = "";
+        }
+
+        $sizearg = ' size="'.$size.'"';
+        if($size == "") {
+            $sizearg = "";
+        }
+
+	    $html = '<input type="text"'
+            .' name="'.$this->field_name.'"'
+            .' value="'.$value.'"'
+            .$sizearg
+            .$maxlengtharg
+            .'>';
 
 	    return($html);
 	
