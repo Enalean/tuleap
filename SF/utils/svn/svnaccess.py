@@ -91,6 +91,9 @@ def check_read_access(username, svnrepo, svnpath):
     
     global SVNACCESS, SVNGROUPS
 
+    if username == 'admin':
+        return True
+
     if SVNACCESS is None:
         fetch_access_file(svnrepo)
 

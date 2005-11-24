@@ -612,6 +612,8 @@ global $SVNACCESS, $SVNGROUPS;
 function svn_utils_check_access($username, $gname, $svnpath) {
   global $SVNACCESS, $SVNGROUPS;
 
+  if ($username == "admin") return true;
+
   if ($SVNACCESS == "None") {
     svn_utils_parse_access_file($gname);
   }
