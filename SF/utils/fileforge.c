@@ -14,29 +14,31 @@
 #include <errno.h>
 
 int legal_string (char* test_string) {
-
+// We have commented thios function because 
+// it seems to be useless nowadays. 
+// Proper checking is already done in PHP code
   /* test for legal characters:
      -./0-9  45-57
      A-Z     65-90
      a-z     97-122
    */
 
-  int i;
+//  int i;
+//
+//  for (i = 0; i < strlen(test_string); i++) {
+//   if ( (test_string[i] < 43) || (test_string[i] == 44) ||
+//	 ((test_string[i] > 57) && (test_string[i] < 65)) ||
+//	 ((test_string[i] != 95) && (test_string[i] > 90) && (test_string[i] < 97)) ||
+//	 (test_string[i] > 122) ) {
+//      printf("%c", test_string[i]);
+//      return 0;
+//    } /* if */
+//  } /* for */
 
-  for (i = 0; i < strlen(test_string); i++) {
-    if ( (test_string[i] < 43) || (test_string[i] == 44) ||
-	 ((test_string[i] > 57) && (test_string[i] < 65)) ||
-	 ((test_string[i] != 95) && (test_string[i] > 90) && (test_string[i] < 97)) ||
-	 (test_string[i] > 122) ) {
-      printf("%c", test_string[i]);
-      return 0;
-    } /* if */
-  } /* for */
-
-  /* test for illegal combinations of legal characters: ".." */
-  if (strstr(test_string, "..")) {
-    return 0;
-  } /* if */
+//  /* test for illegal combinations of legal characters: ".." */
+//  if (strstr(test_string, "..")) {
+//    return 0;
+//  } /* if */
 
   return 1;
 } /* legal_string */
@@ -52,6 +54,8 @@ int main (int argc, char** argv) {
   char* move_file = "mv";
   char* dest_file;
   char* src_file;
+
+  struct stat buf;
 
   if (argc != 3) {
     fprintf(stderr, "FAILURE: usage: fileforge file group");
@@ -85,7 +89,12 @@ int main (int argc, char** argv) {
       exit(1);
     } /* if */
 
-    /* exec it */
+    /* set permissions */
+    stat(src_file, &buf);
+	// add 'group' read and remove 'other' perms
+    chmod(src_file, (((buf.st_mode | S_IRGRP) & ~S_IROTH) & ~S_IWOTH) & ~S_IXOTH);
+
+	/* exec it */
     if (execl(move_path, move_file, src_file, dest_file, (char *)0) == -1) {
       perror("FAILURE");
       exit(1);
