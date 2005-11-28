@@ -144,10 +144,14 @@ survey_rating_resp	voting	Réponse en cours
 #
 survey_s_data	create_succ	Sondage no. $1 créé avec succès
 survey_s_data	create_fail	La création du sondage a échoué $1	
+survey_s_data	create_duplicate	La création du sondage a échoué - question dupliquée dans $1
+survey_s_data	create_unknown_question	La création du sondage a échoué - question inconnue dans $1
 survey_s_data	del_err	Erreur de la destruction du sondage no. $1: $2
 survey_s_data	del_succ	Sondage détruit avec succès
 survey_s_data	upd_fail	LA MISE A JOUR A ECHOUE - $1
 survey_s_data	upd_succ	MISE A JOUR OK
+survey_s_data	upd_duplicate	La mise à jour du sondage a échoué - question dupliquée dans $1
+survey_s_data	upd_unknown_question	La mise à jour du sondage a échoué - question inconnue dans $1
 survey_s_data	q_create_succ	Question no. $1 créé avec succès
 survey_s_data	q_create_fail	La création de la question a échoué $1
 survey_s_data	q_del_fail	Erreur lors de la destruction de la question no. $1: $2

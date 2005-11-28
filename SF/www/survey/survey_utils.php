@@ -96,6 +96,16 @@ function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
 	    $result=db_query($sql);
 	    $question_type=db_result($result, 0, 'question_type');
 
+            $existing_response="";
+            $response_exists=false;
+            if (user_isloggedin()) {
+                $sql2="SELECT * FROM survey_responses WHERE question_id='".$quest_array[$i]."' AND survey_id='".$survey_id."' AND user_id='".user_getid()."'";
+                $result2=db_query($sql2);
+                if (db_numrows($result) > 0) {
+                    $existing_response=db_result($result2, 0, 'response');
+                    $response_exists=true;
+                }
+            }
 	    if ($question_type == '4') {
 		/*
 		  Don't show question number if it's just a comment
@@ -122,7 +132,7 @@ function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
 		$return .= "<b>1</b>";
 		for ($j=1; $j<=5; $j++) {
 		    $return .= '
-					<INPUT TYPE="RADIO" NAME="_'.$quest_array[$i].'" VALUE="'.$j.'">';
+					<INPUT TYPE="RADIO" NAME="_'.$quest_array[$i].'" VALUE="'.$j.'"'.($existing_response==$j?" CHECKED ":"").'>';
 		}
 		$return .= "&nbsp;&nbsp;<b>5</b>";
 
@@ -131,17 +141,17 @@ function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
 		  This is a text-area question.
 		*/
 		$return .= '
-				<textarea name="_'.$quest_array[$i].'" rows=5 cols=60 wrap="soft"></textarea>';
+				<textarea name="_'.$quest_array[$i].'" rows=5 cols=60 wrap="soft">'.($response_exists?$existing_response:"").'</textarea>';
 
 	    } else if ($question_type == '3') {
 		/*
 		  This is a Yes/No question.
 		*/
 		$return .= '
-				<b>'.$Language->getText('global','yes').'</b> <INPUT TYPE="RADIO" NAME="_'.$quest_array[$i].'" VALUE="1">';
+				<b>'.$Language->getText('global','yes').'</b> <INPUT TYPE="RADIO" NAME="_'.$quest_array[$i].'" VALUE="1"'.($existing_response=="1"?" CHECKED ":"").'>';
 		$return .= '&nbsp;&nbsp;';
 		$return .= '
-				 <b>'.$Language->getText('global','no').'</b><INPUT TYPE="RADIO" NAME="_'.$quest_array[$i].'" VALUE="5">';
+				 <b>'.$Language->getText('global','no').'</b><INPUT TYPE="RADIO" NAME="_'.$quest_array[$i].'" VALUE="5"'.($existing_response=="5"?" CHECKED ":"").'>';
 
 	    } else if ($question_type == '4') {
 		/*
@@ -155,7 +165,7 @@ function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
 		  This is a text-field question.
 		*/
 		$return .= '
-				<INPUT TYPE="TEXT" name="_'.$quest_array[$i].'" SIZE=30 MAXLENGTH=100>';
+				<INPUT TYPE="TEXT" name="_'.$quest_array[$i].'" SIZE=30 MAXLENGTH=100 '.($response_exists?" VALUE='".$existing_response."'":"").'>';
 
 	    }
 	    $return .= '</TD></TR>';
@@ -321,6 +331,36 @@ function  survey_utils_cleanup_questions($question_list) {
     $question_list = preg_replace("/,+$/","",$question_list);
     
     return $question_list;
+}
+
+// Check that the question exists
+function survey_utils_question_exist($question_id) {
+    $sql="SELECT * FROM survey_questions WHERE question_id='$question_id'";
+    $result=db_query($sql);
+    if (db_numrows($result) > 0) return true;
+    else return false;
+}
+
+
+// Check that the question list only contains existing questions.
+function survey_utils_all_questions_exist($survey_questions) {
+    $temp_array=array();
+    foreach (explode(",", $survey_questions) as $question) {
+        if (!survey_utils_question_exist($question)) return false;
+    }
+    return true;
+}
+
+// Check that the question list only contains unique question numbers.
+function survey_utils_unique_questions($survey_questions) {
+    $temp_array=array();
+    foreach (explode(",", $survey_questions) as $question) {
+        if (in_array($question,$temp_array)) {
+            return false;
+        }
+        $temp_array[]=$question;
+    }
+    return true;
 }
 
 ?>

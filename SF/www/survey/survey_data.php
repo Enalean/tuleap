@@ -14,7 +14,19 @@ function survey_data_survey_create($group_id,$survey_title,$survey_questions,
     global $feedback,$Language;
 
     $survey_questions = survey_utils_cleanup_questions($survey_questions);
-    
+
+    // Check that the question list only lists existing questions
+    if (!survey_utils_all_questions_exist($survey_questions)) {
+        $feedback .= " ".$Language->getText('survey_s_data','create_unknown_question',$survey_questions)." ";
+        return;
+    }
+
+    // Check that the same question does not appear several times
+    if (!survey_utils_unique_questions($survey_questions)) {
+        $feedback .= " ".$Language->getText('survey_s_data','create_duplicate',$survey_questions)." ";
+        return;
+    }
+
     $sql='INSERT INTO surveys (group_id,survey_title,survey_questions,is_active,is_anonymous) '.
 	"VALUES ('$group_id','$survey_title','$survey_questions','$is_active','$is_anonymous')";
     $result=db_query($sql);
@@ -46,6 +58,18 @@ function survey_data_survey_update($group_id,$survey_id,$survey_title,$survey_qu
     
     $feedback = '';
     $survey_questions = survey_utils_cleanup_questions($survey_questions);
+
+    // Check that the question list only lists existing questions
+    if (!survey_utils_all_questions_exist($survey_questions)) {
+        $feedback .= " ".$Language->getText('survey_s_data','upd_unknown_question',$survey_questions)." ";
+        return;
+    }
+
+    // Check that the same question does not appear several times
+    if (!survey_utils_unique_questions($survey_questions)) {
+        $feedback .= " ".$Language->getText('survey_s_data','upd_duplicate',$survey_questions)." ";
+        return;
+    }
 
     $sql="UPDATE surveys SET survey_title='$survey_title', survey_questions='$survey_questions', is_active='$is_active', is_anonymous='$is_anonymous' ".
 		"WHERE survey_id='$survey_id' AND group_id='$group_id'";
