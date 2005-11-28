@@ -139,10 +139,14 @@ survey_rating_resp	voting	Voting
 #
 survey_s_data	create_succ	Survey #$1 successfully created
 survey_s_data	create_fail	Survey Creation Failed $1	
+survey_s_data	create_duplicate	Survey Creation Failed - Duplicate question in $1
+survey_s_data	create_unknown_question	Survey Creation Failed - Unknown question in $1
 survey_s_data	del_err	Error deleting survey #$1: $2
 survey_s_data	del_succ	Survey successfully deleted
 survey_s_data	upd_fail	UPDATE FAILED - $1
 survey_s_data	upd_succ	UPDATE SUCCESSFUL
+survey_s_data	upd_duplicate	Survey Update Failed - Duplicate question in $1
+survey_s_data	upd_unknown_question	Survey Update Failed - Unknown question in $1
 survey_s_data	q_create_succ	Question #$1 successfully created
 survey_s_data	q_create_fail	Question Creation Failed $1
 survey_s_data	q_del_fail	Error deleting question #$1: $2
