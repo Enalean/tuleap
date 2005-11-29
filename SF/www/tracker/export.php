@@ -56,7 +56,7 @@ $col_list[] = 'is_dependent_on';
 
 $eol = "\n";
 
-$sql = $export_select." ".$export_from." ".$export_where." AND a.artifact_id IN ($export_aids)";
+$sql = $export_select." ".$export_from." ".$export_where." AND a.artifact_id IN ($export_aids) group by a.artifact_id";
 
 
 $result = db_query($sql);
