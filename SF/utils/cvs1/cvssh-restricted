@@ -93,10 +93,12 @@ if ($ARGV[1] eq "cvs server") {
   }
   # small trick: re-inject initial request with upcoming data from STDIN
   # ... there should be a simpler way, though.
-  open TMP,"> /tmp/cvssh.$$";
+  my $timestamp=`/bin/date +%s%N`;
+  chomp $timestamp;
+  open TMP,"> /tmp/cvssh.$$.$timestamp";
   print TMP $req;
   close TMP;
-  exec "cat /tmp/cvssh.$$ - | cvs server";
+  exec "cat /tmp/cvssh.$$.$timestamp - | cvs server";
 }
 
 exec @cmd ;
