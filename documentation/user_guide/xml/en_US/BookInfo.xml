@@ -546,6 +546,18 @@
         <revremark>Add section about export of tracker search results in Tracker chapter.
         </revremark>
       </revision>
+      <revision>
+        <revnumber>2.9.3</revnumber>
+
+        <date>29-Nov-2005</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Update artifact import section on:
+	- new option to send follow-up mails thanks to ST !! 
+	- csv parsing checks now follow-up comments to avoid double submission.
+        </revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--

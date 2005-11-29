@@ -24,6 +24,10 @@ class ArtifactImport extends Error {
   //the group our tracker is part of
   var $group;
 
+  //some localization hack
+  var $lbl_list;
+  var $dsc_list;
+
   /**
    *  Constructor.
    *
@@ -40,9 +44,41 @@ class ArtifactImport extends Error {
     $this->ath = $ath;
     $this->art_field_fact = $art_field_fact;
     $this->group = $group;
+    $this->localizeLabels();
     
   }
 
+  function localizeLabels() {
+    // TODO: Localize this properly by adding those 4 fields to the artifact table
+    // (standard fields) and the artifact field table with a special flag and make sure
+    // all tracker scripts handle them properly
+    // For now make a big hack!! (see import.php func=showformat)
+    $submitted_field = $this->art_field_fact->getFieldFromName('submitted_by');
+    if (strstr($submitted_field->getLabel(),"ubmit")) {
+      // Assume English
+      $this->lbl_list['follow_ups'] = 'Follow-up Comments';
+      $this->lbl_list['is_dependent_on'] = 'Depend on';
+      $this->lbl_list['add_cc'] = 'CC List';
+      $this->lbl_list['cc_comment'] = 'CC Comment';
+
+      $this->dsc_list['follow_ups'] = 'All follow-up comments in one chunck of text';
+      $this->dsc_list['is_dependent_on'] = 'List of artifacts this artifact depends on';
+      $this->dsc_list['add_cc'] = 'List of persons to receive a carbon-copy (CC) of the email notifications (in addition to submitter, assignees, and commenters)';
+      $this->dsc_list['cc_comment'] = 'Explain why these CC names were added and/or who they are';
+
+    } else {
+      // Assume French
+      $this->lbl_list['follow_ups'] = 'Commentaires';
+      $this->lbl_list['is_dependent_on'] = 'Dépend de';
+      $this->lbl_list['add_cc'] = 'Liste CC';
+      $this->lbl_list['cc_comment'] = 'Commentaire CC';
+
+      $this->dsc_list['follow_ups'] = 'Tout le fil de commentaires en un seul bloc de texte';
+      $this->dsc_list['is_dependent_on'] = 'Liste des artefacts dont celui-ci dépend';
+      $this->dsc_list['add_cc'] = 'Liste des pesonnes recevant une copie carbone of persons to receive a carbon-copy (CC) des notifications e-mail (en plus de la personne qui l\'a soumis, à qui on l\'a confié ou qui a posté un commentaire)';
+      $this->dsc_list['cc_comment'] = 'Explique pourquoi ces personnes sont en CC ou qui elles sont';
+    }
+  }
 
   /** parse the first line of the csv file containing all the labels of the fields that are
    * used in the following of the file
@@ -109,24 +145,7 @@ class ArtifactImport extends Error {
     // verify if we have all mandatory fields in the case we have to create an artifact
     if ($aid_column == -1) {
       
-      // TODO: Localize this properly by adding those 4 fields to the artifact table
-      // (standard fields) and the artifact field table with a special flag and make sure
-      // all tracker scripts handle them properly
-      // For now make a big hack!! (see import.php func=showformat)
-      $submitted_field = $this->art_field_fact->getFieldFromName('submitted_by');
-      if (strstr($submitted_field->getLabel(),"ubmit")) {
-	// Assume English
-	$lbl_follow_ups = 'Follow-up Comments';
-	$lbl_s_dependent_on = 'Depend on';
-	$lbl_add_cc = 'CC List';
-	$lbl_cc_comment = 'CC Comment';
-      } else {
-	// Assume French
-	$lbl_follow_ups = 'Commentaires';
-	$lbl_is_dependent_on = 'Dï¿½pend de';
-	$lbl_add_cc = 'Liste CC';
-	$lbl_cc_comment = 'Commentaire CC';
-      }        
+              
       
       reset($used_fields);
       
@@ -137,10 +156,10 @@ class ArtifactImport extends Error {
 	    if ($field_name != "artifact_id" &&
 		$field_name != "open_date" &&
 		$field_name != "submitted_by" &&
-		$label != $lbl_follow_ups &&
-		$label != $lbl_is_dependent_on &&
-		$label != $lbl_cc_list &&
-		$label != $lbl_cc_comment &&
+		$label != $this->lbl_list['follow_ups'] &&
+		$label != $this->lbl_list['is_dependent_on'] &&
+		$label != $this->lbl_list['add_cc'] &&
+		$label != $this->lbl_list['cc_comment'] &&
 		!$field->isEmptyOk() && !in_array($label,$parsed_labels)) {
               
 	      $errors .= $Language->getText('tracker_import_utils','field_mandatory',array($label,$this->ath->getName())).' ';
@@ -152,8 +171,47 @@ class ArtifactImport extends Error {
     return true;
   }
   
-  
-  
+  /**
+   * check whether val is one of the prefdefined values of this field
+   * @param field: the field concerned
+   * @param field_name: the fields field_name
+   * @param label: the fields label
+   * @param val: the csv value to check
+   * @param predef_vals: array containing all predefined values of this field
+   * @param row: row number in csv file (for error reporting)
+   * @param data: array containing the parsed csv file (for error reporting)
+   * @param errors: string containing error message to report to user
+   */
+  function checkPredefinedValues($field,$field_name,$label,$val,$predef_vals,$row,$data,&$errors) {
+    global $Language;
+    if ($field->getDisplayType() == "MB") {
+      $val_arr = explode(",",$val);
+      while (list(,$name) = each($val_arr)) {
+	if (!array_key_exists($name,$predef_vals) && $name != $Language->getText('global','none')) {
+	  $errors .= $Language->getText('tracker_import_utils','not_a_predefined_value',array($row+1,implode(",",$data),$name,$label,implode(",",array_keys($predef_vals))));
+	  return false;
+	}
+      }
+    } else {
+      if (!array_key_exists($val,$predef_vals) && $val != $Language->getText('global','none')) {
+	if (($field_name == 'severity') &&
+	    (strcasecmp($val,'1') == 0 || strcasecmp($val,'5') == 0 || strcasecmp($val,9) == 0)) {
+	  //accept simple ints for Severity fields instead of 1 - Ordinary,5 - Major,9 - Critical
+	  //accept simple ints for Priority fields instead of 1 - Lowest,5 - Medium,9 - Highest
+	} else if ($field_name == 'submitted_by' && 
+		   (($val == $Language->getText('global','none') && $this->ath->allowsAnon()) ||
+		    $val == "" ||
+		    user_getemail_from_unix($val) != $Language->getText('include_user','not_found'))) {
+	  //accept anonymous user, use importing user as 'submitted by', or simply make sure that user is a known user
+	} else {
+	  $errors .= $Language->getText('tracker_import_utils','not_a_predefined_value',array($row+1,implode(",",$data),$val,$label,implode(",",array_keys($predef_vals))));
+	  return false;
+	}
+      }
+    }
+  }
+
+
   /** check if all the values correspond to predefined values of the corresponding fields
    * @param data (IN + OUT !): for date fields we transform the given format (accepted by util_date_to_unixtime)
    *                           into format "Y-m-d"
@@ -173,31 +231,7 @@ class ArtifactImport extends Error {
       // check if val in predefined vals (if applicable)
       $predef_vals = $predefined_values[$c];
       if ($predef_vals) {
-	if ($field->getDisplayType() == "MB") {
-	  $val_arr = explode(",",$val);
-	  while (list(,$name) = each($val_arr)) {
-	    if (!array_key_exists($name,$predef_vals) && $name != $Language->getText('global','none')) {
-	      $errors .= $Language->getText('tracker_import_utils','not_a_predefined_value',array($row+1,implode(",",$data),$name,$label,implode(",",array_keys($predef_vals))));
-	      return false;
-	    }
-	  }
-	} else {
-	  if (!array_key_exists($val,$predef_vals) && $val != $Language->getText('global','none')) {
-	    if (($field_name == 'severity') &&
-		(strcasecmp($val,'1') == 0 || strcasecmp($val,'5') == 0 || strcasecmp($val,9) == 0)) {
-	      //accept simple ints for Severity fields instead of 1 - Ordinary,5 - Major,9 - Critical
-	      //accept simple ints for Priority fields instead of 1 - Lowest,5 - Medium,9 - Highest
-	    } else if ($field_name == 'submitted_by' && 
-		       (($val == $Language->getText('global','none') && $this->ath->allowsAnon()) ||
-			$val == "" ||
-			user_getemail_from_unix($val) != $Language->getText('include_user','not_found'))) {
-	      //accept anonymous user, use importing user as 'submitted by', or simply make sure that user is a known user
-	    } else {
-	      $errors .= $Language->getText('tracker_import_utils','not_a_predefined_value',array($row+1,implode(",",$data),$val,$label,implode(",",array_keys($predef_vals))));
-	      return false;
-	    }
-	  }
-	}
+	$this->checkPredefinedValues($field,$field_name,$label,$val,$predef_vals,$row,$data,$errors);
       }
       
       // check whether we specify None for a field which is mandatory
@@ -237,50 +271,40 @@ class ArtifactImport extends Error {
 	  }
 	}
       }
+    } // end of for parsed_labels
+
+
+    if (!$insert && $label == $this->lbl_list['follow_ups']) {
+      /* check whether we need to remove known follow-ups */
       
     }
     
     // if we come from update case ( column artifact_id is specified but for this concrete artifact no aid is given)
     // we have to check whether all mandatory fields are specified and not empty
     if ($from_update) {
+
+      
       while (list($label,$field) = each($used_fields)) {
 	if ($field != "") $field_name = $field->getName();
-	
-	// TODO: Localize this properly by adding those 4 fields to the artifact table
-	// (standard fields) and the artifact field table with a special flag and make sure
-	// all tracker scripts handle them properly
-	// For now make a big hack!! (see import.php func=showformat)
-	$submitted_field = $this->art_field_fact->getFieldFromName('submitted_by');
-	if (strstr($submitted_field->getLabel(),"ubmit")) {
-          // Assume English
-          $lbl_follow_ups = 'Follow-up Comments';
-          $lbl_s_dependent_on = 'Depend on';
-          $lbl_add_cc = 'CC List';
-          $lbl_cc_comment = 'CC Comment';
-	} else {
-          // Assume French
-          $lbl_follow_ups = 'Commentaires';
-          $lbl_is_dependent_on = 'Dï¿½pend de';
-	  $lbl_add_cc = 'Liste CC';
-          $lbl_cc_comment = 'Commentaire CC';
-	}
 	
 	if ($field != "") {
           if ($field_name != "artifact_id" &&
               $field_name != "open_date" &&
               $field_name != "submitted_by" &&
-              $label != $lbl_follow_ups &&
-              $label != $lbl_is_dependent_on &&
-              $label != $lbl_cc_list &&
-              $label != $lbl_cc_comment &&
+              $label != $this->lbl_list['follow_ups'] &&
+              $label != $this->lbl_list['is_dependent_on'] &&
+              $label != $this->lbl_list['add_cc'] &&
+              $label != $this->lbl_list['cc_comment'] &&
               !$field->isEmptyOk() && !in_array($label,$parsed_labels)) {
 	    
 	    $errors .= $Language->getText('tracker_import_utils','field_mandatory_and_line',array($row+1,implode(",",$data),$label,$this->ath->getName()));
 	    return false;
-          } 
+          }
 	}
       }
-    }
+      
+      
+    }//end from_update
     
     return true;
   }
@@ -477,7 +501,7 @@ class ArtifactImport extends Error {
     } else {
       // Assume French
       $used_fields["Commentaires"] = "";
-      $used_fields["Dï¿½pend de"] = "";
+      $used_fields["Dépend de"] = "";
       $used_fields["Liste CC"] = "";
       $used_fields["Commentaire CC"] = "";
     }        
@@ -543,6 +567,31 @@ class ArtifactImport extends Error {
   }
 
 
+  function checkCommentExist($arr,$art_id) {
+    if (!$art_id || $art_id == 0 || $art_id == '0') return false;
+
+    /*
+     we can not use those escaped strings to compare with what is in the DB
+     because of escaped \n and \r
+     if (function_exists('mysql_real_escape_string')) {
+      echo "comment: ".$arr['comment']." <br>\n";
+      $comment = mysql_real_escape_string($arr['comment']);
+      echo "escaped: $comment <br>\n";
+    } else {
+      $comment = mysql_escape_string($arr['comment']);
+    }
+    */
+
+    $comment = str_replace("'","\'",$arr['comment']);
+
+    $res=db_query("SELECT * FROM artifact_history WHERE artifact_id = $art_id AND field_name = 'details' AND old_value = '$comment'");
+
+    if ($res && db_numrows($res) > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   /** assume that the 
    * @param details (IN): details have the form that we get when exporting details in csv format
@@ -552,7 +601,7 @@ class ArtifactImport extends Error {
    * @param for_parse_report (IN): if we parse the details to show them in the parse report then we keep the labels
    *                               for users and comment-types
    */
-  function parseDetails($details,&$parsed_details,&$errors,$for_parse_report=false) {
+  function parseDetails($details,&$parsed_details,&$errors,$art_id,$for_parse_report=false) {
     global $sys_lf, $sys_datefmt,$user_id,$Language;
     
     //echo "<br>\n";
@@ -589,7 +638,9 @@ class ArtifactImport extends Error {
 	    $arr["type"] = 100;
 	  }
 	  $arr["comment"] = $comment;
-	  $parsed_details[] = $arr;
+	  if (!$this->checkCommentExist($arr,$art_id)) {
+	    $parsed_details[] = $arr;
+	  }
 	  continue;
 	}
       }
@@ -649,7 +700,9 @@ class ArtifactImport extends Error {
       $arr["by"] = $by;
       $arr["type"] = $comment_type_id;
       $arr["comment"] = $comment;
-      $parsed_details[] = $arr;
+      if (!$this->checkCommentExist($arr,$art_id)) {
+	$parsed_details[] = $arr;
+      }
       unset($comment_type_id);
     }
     
@@ -783,27 +836,9 @@ class ArtifactImport extends Error {
     if ($field) $field_name = $field->getName();
     $imported_value = $data[$label];
 
-    // TODO: Localize this properly by adding those 4 fields to the artifact table
-    // (standard fields) and the artifact field table with a special flag and make sure
-    // all tracker scripts handle them properly
-    // For now make a big hack!! (see import.php func=showformat)
-    $submitted_field = $this->art_field_fact->getFieldFromName('submitted_by');
-    if (strstr($submitted_field->getLabel(),"ubmit")) {
-	// Assume English
-	$lbl_follow_ups = 'Follow-up Comments';
-	$lbl_s_dependent_on = 'Depend on';
-	$lbl_add_cc = 'CC List';
-	$lbl_cc_comment = 'CC Comment';
-    } else {
-	// Assume French
-	$lbl_follow_ups = 'Commentaires';
-	$lbl_is_dependent_on = 'Dï¿½pend de';
-	$lbl_add_cc = 'Liste CC';
-	$lbl_cc_comment = 'Commentaire CC';
-    }
 
     // FOLLOW-UP COMMENTS
-    if ($label == $lbl_follow_ups) {
+    if ($label == $this->lbl_list['follow_ups']) {
       //$field_name = "details";
       if ($data[$label] != "" && trim($data[$label]) != $Language->getText('tracker_import_utils','no_followups')) {
 	$details = $data[$label];
@@ -811,7 +846,7 @@ class ArtifactImport extends Error {
       continue;
       
     // DEPEND ON
-    } else if ($label == $lbl_s_dependent_on) {
+    } else if ($label == $this->lbl_list['is_dependent_on']) {
       $depends = $data[$label];
       if ($depends != $Language->getText('global','none') && $depends != "") {
 	$artifact_depend_id = $depends;
@@ -822,14 +857,14 @@ class ArtifactImport extends Error {
       continue;
     
     // CC LIST
-    } else if ($label == $lbl_add_cc) {
+    } else if ($label == $this->lbl_list['add_cc']) {
       if ($data[$label] != "" && $data[$label] != $Language->getText('global','none'))
       $add_cc = $data[$label];
       else $add_cc = "";
       continue;
 
     // CC COMMENT
-    } else if ($label == $lbl_cc_comment) {
+    } else if ($label == $this->lbl_list['cc_comment']) {
       $cc_comment = $data[$label];
       continue;
 
@@ -921,7 +956,6 @@ class ArtifactImport extends Error {
     
     $vfl = $this->prepareVfl($data,$used_fields,$parsed_labels,$predefined_values,$artifact_depend_id,$add_cc,$cc_comment,$details);
    
-
     // Artifact creation        
     if (!$ah->create($vfl,true,$row)) {
       exit_error($Language->getText('global','error'),$ah->getErrorMessage());
@@ -940,7 +974,7 @@ class ArtifactImport extends Error {
     }
 
     if ($details) {
-      if ($this->parseDetails($details,$parsed_details,$errors)) {
+      if ($this->parseDetails($details,$parsed_details,$errors,'0') && $parsed_details && !empty($parsed_details)) {
 	if (!$ah->addDetails($parsed_details)) {
 	  $errors .= $Language->getText('tracker_import_utils','problem_insert_followup',$ah->getID())." ";
 	  return false;
@@ -979,6 +1013,7 @@ class ArtifactImport extends Error {
       return;
     }
     
+
     $vfl = $this->prepareVfl($data,$used_fields,$parsed_labels,$predefined_values,$artifact_depend_id,$add_cc,$cc_comment,$details);
 
     //data control layer
@@ -992,7 +1027,7 @@ class ArtifactImport extends Error {
     }
     $details_ok = false;
     if ($details) {
-        if ($this->parseDetails($details,$parsed_details,$errors)) {
+      if ($this->parseDetails($details,$parsed_details,$errors,$aid) && $parsed_details && !empty($parsed_details)) {
             $details_ok = true;
             if (!$ah->addDetails($parsed_details)) {
                 $errors .= $Language->getText('tracker_import_utils','problem_insert_followup',$ah->getID())." ";

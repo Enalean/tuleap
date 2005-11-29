@@ -1177,7 +1177,11 @@ width="14.5cm" />
       	functionality from the tracker browsing screens or 
 	over the Project Administration Menu. Enter/choose 
 	the tracker to update and specify the CSV file to 
-	import.</para>
+	import. In this step you can also check the option
+	to send a mail to all users concerned by the artifact
+	changes due to the import. If you don't check this
+	option any follow-up mail will be sent.
+	</para>
     	</listitem>
    
     	<listitem><para><emphasis role="bold">CSV file parsing. </emphasis>
@@ -1276,6 +1280,8 @@ width="14.5cm" />
 	artifact with exactly the same summary as an existing
 	artifact)</para></listitem>
 	<listitem><para>Unknown artifact identifier</para></listitem>
+	<listitem><para>Remove already submitted follow-up comments
+        </para></listitem>
 	</itemizedlist>
 
 	All other potential errors have to be checked manually
@@ -1295,9 +1301,9 @@ width="14.5cm" />
 	that the import will delete all former CC names or 
 	dependencies of the artifact and put the CC names 
 	or dependencies from the import file instead.
-	All follow-up comments in the import file are simply
-	added. There is no verification if the same follow-up
-	comment already exists.
+	All follow-up comments in the csv file that had already 
+	been posted are removed to avoid double
+	submission.
 	The submitter and submission date of an existing
 	artifact is never changed by an import even if the
 	import file contains relevant information.</para>

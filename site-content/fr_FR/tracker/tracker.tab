@@ -67,7 +67,7 @@ tracker_import_admin	disabled	Les outils de suivi ont été désactivés par ce proj
 #
 tracker_import	art_import	Importation dans l'outil de suivi:
 tracker_import	parse_report	Rapport d'analyse des artefacts
-tracker_import	ready	Prêt à importer $1 artefact(s): $2 insertion(s), $3 mise(s) à jour dans la base de données
+tracker_import	ready	Prêt à importer $1 artefact(s): $2 artefact(s) nouveau(x) , $3 artefact(s) existant(s)
 tracker_import	success_import	$1 artefact(s) importé(s) avec succès
 tracker_import	format_hdr	Format d'importation des artefacts
 tracker_import	format_msg	Pour importer les artefacts à partir d'un fichier CSV vous devez fournir les champs suivants. Les valeurs montrées en exemple indiquent le type de données. <br>Pour <b>créer</b> de nouveaux artefacts vous devez au moins fournir les champs obligatoires marqués du signe <span class="highlight"><big>*</big></b></span> sauf le numéro ID de l'artefact qui ne doit pas être spécifié. Tous les autres champs peuvent être omis de votre fichier CSV auquel cas ils seront initialisés à leur valeur par défaut. <br>Pour <b>mettre à jour</b> des artefacts existants vous devez simplement spécifier son numéro ID ainsi que les champs que vous souhaitez mettre à jour. Les champs non spécifiés resteront inchangés.

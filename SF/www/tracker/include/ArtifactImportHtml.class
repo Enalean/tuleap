@@ -167,24 +167,12 @@ function showErrors($errors) {
 
 	if ($value != "") {
 	  
-	  // TODO: Localize this properly by adding those 4 fields to the artifact table
-	  // (standard fields) and the artifact field table with a special flag and make sure
-	  // all tracker scripts handle them properly
-	  // For now make a big hack!! (see import.php func=showformat)
-	  $submitted_field = $this->art_field_fact->getFieldFromName('submitted_by');
-	  if (strstr($submitted_field->getLabel(),"ubmit")) {
-	    // Assume English
-	    $lbl_follow_ups = 'Follow-up Comments';
-	  } else {
-	    // Assume French
-	    $lbl_follow_ups = 'Commentaires';
-	  }        
-	  
 	  //FOLLOW_UP COMMENTS
-	  if ($parsed_labels[$c] == $lbl_follow_ups) {
+	  if ($parsed_labels[$c] == $this->lbl_list['follow_ups']) {
 	    unset($parsed_details);
 	    unset($parse_error);
-	    if ($this->parseDetails($data[$c],$parsed_details,$parse_error,true)) {
+	    $art_id = (($aid_column != -1 && $aid != "") ? $aid : "0");
+	    if ($this->parseDetails($data[$c],$parsed_details,$parse_error,$art_id,true)) {
 	      if (count($parsed_details) > 0) {
 		echo '<TD $width valign="top"><TABLE>';
 		echo '<TR class ="boxtable"><TD class="boxtitle">'.$Language->getText('tracker_import_utils','date').'</TD><TD class="boxtitle">'.$Language->getText('global','by').'</TD><TD class="boxtitle">'.$Language->getText('tracker_import_utils','type').'</TD><TD class="boxtitle">'.$Language->getText('tracker_import_utils','comment').'</TD></TR>';
@@ -289,7 +277,7 @@ function showErrors($errors) {
     $this->ath->header(array ('title'=>$Language->getText('tracker_import','art_import').' '.$this->ath->getID(). ' - ' . $this->ath->getName(),'pagename'=>'tracker',
 			'atid'=>$this->ath->getID(),'sectionvals'=>array($this->group->getPublicName()),
 			'help' => 'ArtifactImport.html'));
-    $sql = $this->ath->buildExportQuery($fields,$col_list,$lbl_list,$dsc_list,$select,$from,$where);
+    $sql = $this->ath->buildExportQuery($fields,$col_list,$this->lbl_list,$this->dsc_list,$select,$from,$where);
     
     //we need only one single record
     $sql .= " LIMIT 1";
@@ -305,35 +293,7 @@ function showErrors($errors) {
     $col_list[] = 'is_dependent_on';
     $col_list[] = 'add_cc';
     $col_list[] = 'cc_comment';
-    
-    // TODO: Localize this properly by adding those 4 fields to the artifact table
-    // (standard fields) and the artifact field table with a special flag and make sure
-    // all tracker scripts handle them properly
-    // For now make a big hack!!
-    $field = $this->art_field_fact->getFieldFromName('submitted_by');
-    if (strstr($field->getLabel(),"ubmit")) {
-      // Assume English
-      $lbl_list['follow_ups'] = 'Follow-up Comments';
-      $lbl_list['is_dependent_on'] = 'Depend on';
-      $lbl_list['add_cc'] = 'CC List';
-      $lbl_list['cc_comment'] = 'CC Comment';
-      
-      $dsc_list['follow_ups'] = 'All follow-up comments in one chunck of text';
-      $dsc_list['is_dependent_on'] = 'List of artifacts this artifact depends on';
-      $dsc_list['add_cc'] = 'List of persons to receive a carbon-copy (CC) of the email notifications (in addition to submitter, assignees, and commenters)';
-      $dsc_list['cc_comment'] = 'Explain why these CC names were added and/or who they are';
-    } else {
-      // Assume French
-      $lbl_list['follow_ups'] = 'Commentaires';
-      $lbl_list['is_dependent_on'] = 'Dépend de';
-      $lbl_list['add_cc'] = 'Liste CC';
-      $lbl_list['cc_comment'] = 'Commentaire CC';
-      
-      $dsc_list['follow_ups'] = 'Tout le fil de commentaires en un seul bloc de texte';
-      $dsc_list['is_dependent_on'] = 'Liste des artefacts dont celui-ci dépend';
-      $dsc_list['add_cc'] = 'Liste des pesonnes recevant une copie carbone of persons to receive a carbon-copy (CC) des notifications e-mail (en plus de la personne qui l\'a soumis, à qui on l\'a confié ou qui a posté un commentaire)';
-      $dsc_list['cc_comment'] = 'Explique pourquoi ces personnes sont en CC ou qui elles sont';
-    }        
+            
     
     $eol = "\n";
     
@@ -349,10 +309,10 @@ function showErrors($errors) {
       $record = $this->ath->buildDefaultRecord();
     }
     prepare_artifact_record($at,$fields,$atid,$record);
-    display_exported_fields($col_list,$lbl_list,$dsc_list,$record,$mand_list);
+    display_exported_fields($col_list,$this->lbl_list,$this->dsc_list,$record,$mand_list);
     
     echo '<br><br><h4>'.$Language->getText('tracker_import','sample_cvs_file').'</h4>';
-    echo build_csv_header($col_list,$lbl_list);
+    echo build_csv_header($col_list,$this->lbl_list);
     echo '<br>';
     echo build_csv_record($col_list,$record);
     
