@@ -455,12 +455,14 @@ project_export_artifact_history_export	mod_by	Modifié par
 project_export_artifact_history_export	email	E-mail
 project_export_artifact_history_export	mod_on	Modifié le
 project_export_artifact_history_export	comment_type	Type de commentaire
-project_export_artifact_history_export	field_name_desc	nom du champ dont la valeur a été modifiée
+project_export_artifact_history_export	label	Label
+project_export_artifact_history_export	field_name_desc	Nom interne du champ dont la valeur a été modifiée
 project_export_artifact_history_export	old_val_desc	Valeur du champ avant la modification
 project_export_artifact_history_export	new_val_desc	Valeur du champ après la modification
 project_export_artifact_history_export	mod_by_desc	Nom de l'utilisateur à l'origine de la modification
 project_export_artifact_history_export	mod_on_desc	Date de modification
 project_export_artifact_history_export	comment_type_desc	Type du commentaire ajouté à la fil de commentaires
+project_export_artifact_history_export	label_desc	Nom publique du champ dont la valeur a été modifiée
 project_export_artifact_history_export	art_hist_export	Exportation de l'historique des changements
 project_export_artifact_history_export	no_hist_found	Aucun historique de changements pour cet outil de suivi.  Impossible d'exporter des données.
 project_export_artifact_history_export	db_access_err	Erreur lors de l'accès à la base de données de cet outil de suivi. Veuillez informer l'administrateur $1 de cette erreur.

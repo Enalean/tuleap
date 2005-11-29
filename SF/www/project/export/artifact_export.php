@@ -234,6 +234,26 @@ if ($export == 'artifact') {
 				    $feedback .= $Language->getText('project_export_artifact_deps_export','create_proj_err',array($tbl_name,db_project_error()));
 				}
 
+				// MV add
+				// Export table structure
+				
+				// Create table
+				$tbl_struct_name = "artifact_struct_".$at_arr[$j]->getItemName();
+				$tbl_struct_name = str_replace(' ','_', $tbl_struct_name);
+				$fieldsList = $art_field_fact->getAllUsedFields();
+				db_project_query($dbname,'DROP TABLE IF EXISTS '.$tbl_struct_name);
+				$struct_table_create = 'CREATE TABLE '.$tbl_struct_name.'('
+				  .' field_name VARCHAR(255), '
+				  .' field_label VARCHAR(255)'
+				  .')';
+				db_project_query($dbname, $struct_table_create);
+				// Populate table
+				$struct_col_list = array('field_name', 'field_label');
+				foreach($fieldsList as $art_field) {
+				  $struct_arr['field_name']  = $art_field->getName();
+				  $struct_arr['field_label'] = $art_field->getLabel();
+				  insert_record_in_table($dbname, $tbl_struct_name, $struct_col_list, $struct_arr);                    
+				}
 			} // for
 		} // if 
 

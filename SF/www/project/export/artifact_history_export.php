@@ -45,12 +45,15 @@ if ( $atid ) {
 // not a valid comment type in the bug_field_value table. So the join
 // doesn't work.
 $sql = "SELECT ah.artifact_id,ah.field_name,".
-'ah.old_value, ah.new_value, user.user_name AS mod_by, user.email, ah.date, ah.type'.
-' FROM artifact_history ah, user, artifact a '.
+'ah.old_value, ah.new_value, user.user_name AS mod_by, user.email, ah.date, ah.type, af.label'.
+' FROM artifact_history ah, user, artifact a, artifact_field af '.
 "WHERE ah.artifact_id = a.artifact_id AND a.group_artifact_id = ".$atid." AND ".
-'user.user_id=ah.mod_by ORDER BY ah.artifact_id,ah.date DESC';
+'user.user_id=ah.mod_by '.
+'AND af.group_artifact_id=a.group_artifact_id '.
+'AND af.field_name=ah.field_name '.
+'ORDER BY ah.artifact_id,ah.date DESC';
 
-$col_list = array('artifact_id','field_name','old_value','new_value','mod_by','email','date','type');
+$col_list = array('artifact_id','field_name','old_value','new_value','mod_by','email','date','type','label');
 $lbl_list = array('artifact_id' => $Language->getText('project_export_artifact_history_export','art_id'),
 		  'field_name' => $Language->getText('project_export_artifact_history_export','field_name'),
 		  'old_value' => $Language->getText('project_export_artifact_history_export','old_val'),
@@ -58,7 +61,9 @@ $lbl_list = array('artifact_id' => $Language->getText('project_export_artifact_h
 		  'mod_by' => $Language->getText('project_export_artifact_history_export','mod_by'),
 		  'email' => $Language->getText('project_export_artifact_history_export','email'),
 		  'date' => $Language->getText('project_export_artifact_history_export','mod_on'),
-		  'type' => $Language->getText('project_export_artifact_history_export','comment_type'));
+		  'type' => $Language->getText('project_export_artifact_history_export','comment_type'),
+		  'label' => $Language->getText('project_export_artifact_history_export','label')
+                  );
 
 $dsc_list = array('artifact_id' => $Language->getText('project_export_artifact_history_export','art_id'),
 		  'field_name' => $Language->getText('project_export_artifact_history_export','field_name_desc'),
@@ -66,7 +71,8 @@ $dsc_list = array('artifact_id' => $Language->getText('project_export_artifact_h
 		  'new_value' => $Language->getText('project_export_artifact_history_export','new_val_desc'),
 		  'mod_by' => $Language->getText('project_export_artifact_history_export','mod_by_desc'),
 		  'date' => $Language->getText('project_export_artifact_history_export','mod_on_desc'),
-		  'type' => $Language->getText('project_export_artifact_history_export','comment_type_desc'));
+		  'type' => $Language->getText('project_export_artifact_history_export','comment_type_desc'),
+		  'label' => $Language->getText('project_export_artifact_history_export','label_desc'));
 
 $eol = "\n";
 
@@ -158,7 +164,9 @@ if ($export == 'artifact_history') {
 				$sql_create = "CREATE TABLE $tbl_name (".
 				    'artifact_id INTEGER, field_name VARCHAR(255), '.
 				    'old_value TEXT, new_value TEXT, mod_by VARCHAR(255), email TEXT, date DATETIME, '.
-				    'type VARCHAR(255))';
+				    'type VARCHAR(255), '.
+				  'label VARCHAR(255) '.
+				  ')';
 			
 				$res = db_project_query($dbname, $sql_create);
 			
@@ -166,10 +174,13 @@ if ($export == 'artifact_history') {
 				// the project database table
 				if ($res) {
 					$sql = "SELECT ah.artifact_id,ah.field_name,".
-					'ah.old_value, ah.new_value, user.user_name AS mod_by, ah.email, ah.date, ah.type'.
-					' FROM artifact_history ah, user, artifact a '.
+					'ah.old_value, ah.new_value, user.user_name AS mod_by, ah.email, ah.date, ah.type, af.label'.
+					' FROM artifact_history ah, user, artifact a, artifact_field af '.
 					"WHERE ah.artifact_id = a.artifact_id AND a.group_artifact_id = ".$atid." AND ".
-					'user.user_id=ah.mod_by';
+					'user.user_id=ah.mod_by '.
+					  'AND af.group_artifact_id=a.group_artifact_id '.
+					  'AND af.field_name=ah.field_name';
+                    
 					$result=db_query($sql);
 				    while ($arr = db_fetch_array($result)) {
 						prepare_artifact_history_record($at,$art_field_fact,$arr);

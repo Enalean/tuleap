@@ -450,12 +450,14 @@ project_export_artifact_history_export	mod_by	Modified By
 project_export_artifact_history_export	email	Email
 project_export_artifact_history_export	mod_on	Modified On
 project_export_artifact_history_export	comment_type	Comment Type
-project_export_artifact_history_export	field_name_desc	Name of the field which value changed
+project_export_artifact_history_export	label	Label
+project_export_artifact_history_export	field_name_desc	Internal name of the field which value changed
 project_export_artifact_history_export	old_val_desc	Value of the field before it changed
 project_export_artifact_history_export	new_val_desc	Value of the field after it changed
 project_export_artifact_history_export	mod_by_desc	Login name of the user who changed the value
 project_export_artifact_history_export	mod_on_desc	Modification date
 project_export_artifact_history_export	comment_type_desc	Type of the followup comment added to history
+project_export_artifact_history_export	label_desc	Public name of the field which value changed
 project_export_artifact_history_export	art_hist_export	Artifact History export
 project_export_artifact_history_export	no_hist_found	No artifact history found. Could not generate an export.
 project_export_artifact_history_export	db_access_err	Error while accessing your artifact history database. Please report the error to the $1 Administrator
