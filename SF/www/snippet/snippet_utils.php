@@ -65,7 +65,7 @@ function snippet_show_package_snippets($version) {
 	<P>';
 
 	$title_arr=array();
-	$title_arr[]=$Language->getText('snippet_browse','id');
+	$title_arr[]=$Language->getText('snippet_utils','version_id');
 	$title_arr[]=$Language->getText('snippet_details','s_version');
 	$title_arr[]=$Language->getText('snippet_browse','title');
 	$title_arr[]=$Language->getText('snippet_details','author');

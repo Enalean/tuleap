@@ -134,6 +134,7 @@ snippet_utils	create_p	Create A New Package
 snippet_utils	browse	Browse
 snippet_utils	type	Type:
 snippet_utils	license	License:
+snippet_utils	version_id	Snippet Version ID
 #
 #-----------------------------------------------
 # Script: SF/www/snippet/submit.php
