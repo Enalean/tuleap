@@ -83,7 +83,7 @@ if ($type=='snippet') {
 		<H3>'.$Language->getText('snippet_details','versions_of_s').'</H3>
 		<P>';
 		$title_arr=array();
-		$title_arr[]=$Language->getText('snippet_browse','id');
+		$title_arr[]=$Language->getText('snippet_utils','version_id');
 		$title_arr[]=$Language->getText('snippet_details','s_version');
 		$title_arr[]=$Language->getText('snippet_details','rel_notes');
 		$title_arr[]=$Language->getText('snippet_details','posted_on');

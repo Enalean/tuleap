@@ -30,7 +30,7 @@ snippet_add_snippet_to_package	error_fill_all_info	Erreur - Veuillez retour sur 
 snippet_add_snippet_to_package	add_s	Ajouter un échantillon à un paquet
 snippet_add_snippet_to_package	package	<B>Paquet:</B><BR> $1 - $2
 snippet_add_snippet_to_package	use_add_form	Vous pouvez utiliser ce formulaire plusieurs fois pour ajouter plusieurs échantillons à votre paquet.
-snippet_add_snippet_to_package	add_v_id	Ajouter l'échantillon avec l'identifiant (ID):
+snippet_add_snippet_to_package	add_v_id	Ajouter l'échantillon avec l'identifiant de version:
 snippet_add_snippet_to_package	no_s_in_p	Aucun échantillon dans ce paquet pour le moment
 snippet_add_snippet_to_package	s_in_p	Echantillon(s) dans ce paquet:
 snippet_add_snippet_to_package	all_info_complete	Assurez-vous que toutes les informations sont complètes et exactes
@@ -139,6 +139,7 @@ snippet_utils	create_p	Créer un nouveau paquet
 snippet_utils	browse	Naviguer
 snippet_utils	type	Type:
 snippet_utils	license	Licence:
+snippet_utils	version_id	Identifiant de la version de l'échantillon
 #
 #-----------------------------------------------
 # Script: SF/www/snippet/submit.php

@@ -324,7 +324,7 @@
           associated with the new version.</para>
 
           <note><para>Please note that even though this is still the
-          same code snippet, CodeX assigns a new code snippet ID number to
+          same code snippet, CodeX assigns a new code snippet version ID number to
           each version. So referencing a new version in a Code Snippet Package
           (see section Grouping Code Snippets below) will require that you
           delete the old version and add the new one.</para></note>
@@ -353,9 +353,14 @@
           Package&#34; item in the Code Snippet Menu at the top of the screen.
           Provide a title, a description, type, category and version as
           requested. After you submit the form, a new window will pop up
-          asking you for the ID numbers of the Code Snippets that must be
+          asking you for the ID numbers of the Code Snippet versions that must be
           added to the package. So before you create a package make sure you
-          have the code snippet ID numbers available.</para>
+          have the code snippet version ID numbers available.</para>
+
+          <para>Please note that there is a Snippet ID and a Snippet Version ID.
+          If you upload a new version of a snippet, the Snippet ID won&#39;t change,
+          but the Snippet Version ID will. So when you create snippet packages,
+          make sure that you use the Snippet Version ID.</para>
         </section>
 
         <section id="UpdatingACodeSnippetPackage">
@@ -367,7 +372,7 @@
           can add/delete code snippet to/from the package. If you want to
           update the package with a new version of a code snippet, first
           delete the old version and add the new one which has its own
-          specific code snippet ID (see &#34;Updating a Code Snippet&#34;
+          specific code snippet version ID (see &#34;Updating a Code Snippet&#34;
           above).</para>
         </section>
       </section>
