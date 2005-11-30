@@ -31,5 +31,22 @@ class DBTablesDao extends DataAccessObject {
         $sql = "DESC ".$name;
         return $this->retrieve($sql);
     }
+    
+    function updateFromFile($filename) {
+        $file_content = file($filename);
+        $query = "";
+        foreach($file_content as $sql_line){
+            if(trim($sql_line) != "" && strpos($sql_line, "--") === false){
+                $query .= $sql_line;
+                if(preg_match("/;[\040]*\$/", $sql_line)){
+                    if (!$this->update($query)) {
+                        return false;
+                    }
+                    $query = "";
+                }
+            }
+        }
+        return true;
+    }
 }
 ?>

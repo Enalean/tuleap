@@ -98,8 +98,7 @@ class PluginManager {
             $install_sql_filename = $GLOBALS['sys_pluginsroot'].DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR.'db'.DIRECTORY_SEPARATOR.'install.sql';
             if (file_exists($install_sql_filename)) {
                 $dbtables =& new DBTablesDAO(CodexDataAccess::instance());
-                $install_sql = file_get_contents($install_sql_filename);
-                if (trim($install_sql) != '' && !$dbtables->update($install_sql)) {
+                if (!$dbtables->updateFromFile($install_sql_filename)) {
                     $db_corrupted = true;
                     $GLOBALS['feedback'] .= 'DB may be corrupted';
                 }
@@ -120,8 +119,7 @@ class PluginManager {
         $uninstall_sql_filename = $GLOBALS['sys_pluginsroot'].DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR.'db'.DIRECTORY_SEPARATOR.'uninstall.sql';
         if (file_exists($uninstall_sql_filename)) {
             $dbtables =& new DBTablesDAO(CodexDataAccess::instance());
-            $uninstall_sql = file_get_contents($uninstall_sql_filename);
-            if (trim($uninstall_sql) != '' && !$dbtables->update($uninstall_sql)) {
+            if (!$dbtables->updateFromFile($uninstall_sql_filename)) {
                 $db_corrupted = true;
             }
         }
