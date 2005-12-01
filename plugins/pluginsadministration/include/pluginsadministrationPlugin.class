@@ -28,7 +28,7 @@ class PluginsAdministrationPlugin extends Plugin {
     
     function siteAdminHooks($hook, $params) {
         $GLOBALS['Language']->loadLanguageMsg('pluginsAdministration', 'pluginsadministration');
-        $site_url  = '/plugins/pluginsadministration/';
+        $site_url  = $this->_getPluginPath().'/';
         $site_name = $GLOBALS['Language']->getText('plugin_pluginsadministration','descriptor_name');
         switch ($hook) {
             case 'site_admin_menu_hook':

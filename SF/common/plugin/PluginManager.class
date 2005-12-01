@@ -97,18 +97,11 @@ class PluginManager {
         if ($this->isNameValid($name)) {
             $plugin_factory =& $this->_getPluginFactory();
             if (!$plugin_factory->isPluginInstalled($name)) {
-                $db_corrupted = false;
-                $install_sql_filename = $GLOBALS['sys_pluginsroot'].DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR.'db'.DIRECTORY_SEPARATOR.'install.sql';
-                if (file_exists($install_sql_filename)) {
-                    $dbtables =& new DBTablesDAO(CodexDataAccess::instance());
-                    if (!$dbtables->updateFromFile($install_sql_filename)) {
-                        $db_corrupted = true;
-                        $GLOBALS['feedback'] .= 'DB may be corrupted';
-                    }
-                }
-                if (!$db_corrupted) {
+                if (!$this->_executeSqlStatements('install', $name)) {
                     $plugin_factory =& $this->_getPluginFactory();
                     return $plugin_factory->createPlugin($name);
+                } else {
+                    $GLOBALS['feedback'] .= 'DB may be corrupted';
                 }
             }
         }
@@ -118,15 +111,7 @@ class PluginManager {
     function uninstallPlugin(&$plugin) {
         $plugin_factory =& $this->_getPluginFactory();
         $name = $plugin_factory->getNameForPlugin($plugin);
-        $db_corrupted = false;
-        $uninstall_sql_filename = $GLOBALS['sys_pluginsroot'].DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR.'db'.DIRECTORY_SEPARATOR.'uninstall.sql';
-        if (file_exists($uninstall_sql_filename)) {
-            $dbtables =& new DBTablesDAO(CodexDataAccess::instance());
-            if (!$dbtables->updateFromFile($uninstall_sql_filename)) {
-                $db_corrupted = true;
-            }
-        }
-        if (!$db_corrupted) {
+        if (!$this->_executeSqlStatements('uninstall', $name)) {
             $phpm =& $this->_getPluginHookPriorityManager();
             $phpm->removePlugin($plugin);
             $plugin_factory =& $this->_getPluginFactory();
@@ -136,6 +121,22 @@ class PluginManager {
         }
     }
     
+    function _executeSqlStatements($file, $name) {
+        $db_corrupted = false;
+        $path_found   = false;
+        $path_to_file = '/'.$name.'/db/'.$file.'.sql';
+        $possible_file_names = array(   $GLOBALS['sys_pluginsroot'].$path_to_file, 
+                                        $GLOBALS['sys_custompluginsroot'].$path_to_file);
+        while(!$path_found && (list(,$sql_filename) = each($possible_file_names))) {
+            if (file_exists($sql_filename)) {
+                $dbtables =& new DBTablesDAO(CodexDataAccess::instance());
+                if (!$dbtables->updateFromFile($sql_filename)) {
+                    $db_corrupted = true;
+                }
+            }
+        }
+        return $db_corrupted;
+    }
     function &getNotYetInstalledPlugins() {
         $plugin_factory =& $this->_getPluginFactory();
         return $plugin_factory->getNotYetInstalledPlugins(); 
@@ -153,6 +154,16 @@ class PluginManager {
     function &getPluginById($id) {
         $plugin_factory =& $this->_getPluginFactory();
         $p =& $plugin_factory->getPluginById($id);
+        return $p;
+    }
+    function pluginIsCustom(&$plugin) {
+        $plugin_factory =& $this->_getPluginFactory();
+        $p = $plugin_factory->pluginIsCustom($plugin);
+        return $p;
+    }
+    function getNameForPlugin(&$plugin) {
+        $plugin_factory =& $this->_getPluginFactory();
+        $p = $plugin_factory->getNameForPlugin($plugin);
         return $p;
     }
 }

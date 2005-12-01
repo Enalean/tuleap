@@ -2,6 +2,7 @@
 require_once('PluginInfo.class');
 require_once('common/include/String.class');
 require_once('common/collection/Map.class');
+require_once('PluginManager.class');
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
@@ -65,6 +66,20 @@ class Plugin {
     
     function getScope() {
         return $this->_scope;
+    }
+    function _getPluginPath() {
+        $pm =& $this->_getPluginManager();
+        $path = $GLOBALS['sys_pluginspath'];
+        if ($pm->pluginIsCustom($this)) {
+            $path = $GLOBALS['sys_custompluginspath'];
+        }
+        return $path.'/'.$pm->getNameForPlugin($this);
+    }
+    function _getThemePath() {
+    }
+    function &_getPluginManager() {
+        $pm =& PluginManager::instance();
+        return $pm;
     }
 }
 ?>

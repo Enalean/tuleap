@@ -6,9 +6,9 @@ if (! defined('CODEX_RUNNER')) {
 }
 
 require_once('tests/simpletest/unit_tester.php');
-//require_once('tests/simpletest/mock_objects.php'); //uncomment to use Mocks
+require_once('tests/simpletest/mock_objects.php'); //uncomment to use Mocks
 require_once('common/plugin/Plugin.class');
-
+Mock::generatePartial('Plugin', 'PluginTestVersion', array('_getPluginManager'));
 class TestPlugin extends Plugin {
     function addHook($hook, $callback = 'CallHook', $recallHook = true) {
         $this->_addHook($hook, $callback, $recallHook);
@@ -17,6 +17,8 @@ class TestPlugin extends Plugin {
         $this->_removeHook($hook);
     }
 }
+require_once('common/plugin/PluginManager.class');
+Mock::generate('PluginManager');
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
@@ -118,6 +120,21 @@ class PluginTest extends UnitTestCase {
         $this->assertIdentical($p->getScope(), $p->SCOPE_SYSTEM);
         $this->assertNotEqual($p->getScope(), $p->SCOPE_PROJECT);
         $this->assertNotEqual($p->getScope(), $p->SCOPE_USER);
+    }
+    function testGetPluginPath() {
+        $GLOBALS['sys_pluginspath']       = '/plugins';
+        $GLOBALS['sys_custompluginspath'] = '/customplugins';
+        $shortname = 'shortname';
+        $pm =& new MockPluginManager($this);
+        $pm->setReturnValue('pluginIsCustom', true);
+        $pm->setReturnValueAt(0, 'pluginIsCustom', false);
+        $pm->setReturnValue('getNameForPlugin', $shortname);
+        $p =& new PluginTestVersion($this);
+        $p->setReturnReference('_getPluginManager', $pm);
+        $p->Plugin();
+        
+        $this->assertEqual($p->_getPluginPath(), $GLOBALS['sys_pluginspath'].'/'.$shortname);
+        $this->assertEqual($p->_getPluginPath(), $GLOBALS['sys_custompluginspath'].'/'.$shortname);
     }
 }
 

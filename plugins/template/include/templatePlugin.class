@@ -25,7 +25,7 @@ class TemplatePlugin extends Plugin {
 	}
     
     function siteAdminHooks($params) {
-        echo '<li><a href="/plugins/template/">Template</a></li>';
+        echo '<li><a href="'.$this->_getPluginPath().'/">Template</a></li>';
     }
 }
 
