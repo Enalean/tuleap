@@ -594,6 +594,23 @@ AliasMatch ^/plugins/([^/]*)/(.*) /home/httpd/plugins/$1/www/$2
     Allow from all
 </DirectoryMatch>
 
+# Custom plugins directory
+ScriptAliasMatch /customplugins/([^/]*/cgi-bin/.*) "/etc/codex/plugins/$1"
+<Directory "/etc/codex/plugins/[^/]*/cgi-bin">
+    AllowOverride None
+    Options ExecCGI
+    Order allow,deny
+    Allow from all
+</Directory>
+
+AliasMatch ^/customplugins/([^/]*)/(.*) /etc/codex/plugins/$1/www/$2
+<DirectoryMatch "/etc/codex/plugins/([^/]*)/www/">
+    Options Indexes MultiViews
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+</DirectoryMatch>
+
 #
 # ScriptAlias: This controls which directories contain server scripts.
 # ScriptAliases are essentially the same as Aliases, except that
