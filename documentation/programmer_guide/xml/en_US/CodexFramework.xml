@@ -132,6 +132,7 @@ function & searchByID ($id) {
 				<title>Naming Convention</title>
 				<para>The short-name of a plugin must be unique and composed of lowercase letters only, because it is going to be used in table names and we don't want namespace conflicts.</para>
 				<para>The main class of the plugin must be composed of the short-name followed by "Plugin.class" e.g: "templatePlugin.class".</para>
+				<para>SQL tables of the plugin must follow this pattern <literal><![CDATA[plugin_<plugin-shortname>_<table-name>]]></literal> to avoid conflicts.</para>
 			</section>
 			<section>
 				<title>Plugin Directory Structure</title>
