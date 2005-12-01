@@ -47,7 +47,7 @@ class PluginsAdministrationPlugin extends Plugin {
         // Only show the stylesheet if we're actually in the PluginsAdministration pages.
         // This stops styles inadvertently clashing with the main site.
         if (strpos($_SERVER['REQUEST_URI'], '/plugins/pluginsadministration/') === 0) {
-            echo '<link rel="stylesheet" type="text/css" href="/plugins/pluginsadministration/style.css" />';
+            echo '<link rel="stylesheet" type="text/css" href="'.$this->_getThemePath().'/css/style.css" />';
         }
     }
     

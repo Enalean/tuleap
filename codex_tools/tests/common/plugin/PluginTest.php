@@ -136,6 +136,101 @@ class PluginTest extends UnitTestCase {
         $this->assertEqual($p->_getPluginPath(), $GLOBALS['sys_pluginspath'].'/'.$shortname);
         $this->assertEqual($p->_getPluginPath(), $GLOBALS['sys_custompluginspath'].'/'.$shortname);
     }
+    function testGetThemePath() {
+        $GLOBALS['sys_user_theme']        = 'current_theme';
+        $GLOBALS['sys_pluginspath']       = '/plugins';
+        $GLOBALS['sys_custompluginspath'] = '/customplugins';
+        $GLOBALS['sys_pluginsroot']       = dirname(__FILE__).'/test/plugins/';
+        $GLOBALS['sys_custompluginsroot'] = dirname(__FILE__).'/test/custom/';
+        mkdir(dirname($GLOBALS['sys_pluginsroot']));
+        
+        $shortname     = 'shortname';
+        $pm =& new MockPluginManager($this);
+        $pm->setReturnValue('pluginIsCustom', false);
+        $pm->setReturnValueAt(4, 'pluginIsCustom', true);
+        $pm->setReturnValueAt(5, 'pluginIsCustom', true);
+        $pm->setReturnValue('getNameForPlugin', $shortname);
+        $p =& new PluginTestVersion($this);
+        $p->setReturnReference('_getPluginManager', $pm);
+        $p->Plugin();
+        
+        //Plugin is official
+        mkdir($GLOBALS['sys_custompluginsroot']);
+        mkdir($GLOBALS['sys_custompluginsroot'].$shortname);
+        mkdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/');
+        mkdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/themes/');
+        mkdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/themes/'.$GLOBALS['sys_user_theme']);
+        $this->assertEqual($p->_getThemePath(), $GLOBALS['sys_custompluginspath'].'/'.$shortname.'/themes/'.$GLOBALS['sys_user_theme']);
+        rmdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/themes/'.$GLOBALS['sys_user_theme']);
+        rmdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/themes/');
+        rmdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/');
+        rmdir($GLOBALS['sys_custompluginsroot'].$shortname);
+        rmdir($GLOBALS['sys_custompluginsroot']);
+        clearstatcache();
+        mkdir($GLOBALS['sys_pluginsroot']);
+        mkdir($GLOBALS['sys_pluginsroot'].$shortname);
+        mkdir($GLOBALS['sys_pluginsroot'].$shortname.'/www/');
+        mkdir($GLOBALS['sys_pluginsroot'].$shortname.'/www/themes/');
+        mkdir($GLOBALS['sys_pluginsroot'].$shortname.'/www/themes/'.$GLOBALS['sys_user_theme']);
+        $this->assertEqual($p->_getThemePath(), $GLOBALS['sys_pluginspath'].'/'.$shortname.'/themes/'.$GLOBALS['sys_user_theme']);
+        rmdir($GLOBALS['sys_pluginsroot'].$shortname.'/www/themes/'.$GLOBALS['sys_user_theme']);
+        rmdir($GLOBALS['sys_pluginsroot'].$shortname.'/www/themes/');
+        rmdir($GLOBALS['sys_pluginsroot'].$shortname.'/www/');
+        rmdir($GLOBALS['sys_pluginsroot'].$shortname);
+        rmdir($GLOBALS['sys_pluginsroot']);
+        clearstatcache();
+        mkdir($GLOBALS['sys_custompluginsroot']);
+        mkdir($GLOBALS['sys_custompluginsroot'].$shortname);
+        mkdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/');
+        mkdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/themes/');
+        mkdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/themes/default');
+        $this->assertEqual($p->_getThemePath(), $GLOBALS['sys_custompluginspath'].'/'.$shortname.'/themes/default');
+        rmdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/themes/default');
+        rmdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/themes/');
+        rmdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/');
+        rmdir($GLOBALS['sys_custompluginsroot'].$shortname);
+        rmdir($GLOBALS['sys_custompluginsroot']);
+        clearstatcache();
+        mkdir($GLOBALS['sys_pluginsroot']);
+        mkdir($GLOBALS['sys_pluginsroot'].$shortname);
+        mkdir($GLOBALS['sys_pluginsroot'].$shortname.'/www/');
+        mkdir($GLOBALS['sys_pluginsroot'].$shortname.'/www/themes/');
+        mkdir($GLOBALS['sys_pluginsroot'].$shortname.'/www/themes/default');
+        $this->assertEqual($p->_getThemePath(), $GLOBALS['sys_pluginspath'].'/'.$shortname.'/themes/default');
+        rmdir($GLOBALS['sys_pluginsroot'].$shortname.'/www/themes/default');
+        rmdir($GLOBALS['sys_pluginsroot'].$shortname.'/www/themes/');
+        rmdir($GLOBALS['sys_pluginsroot'].$shortname.'/www/');
+        rmdir($GLOBALS['sys_pluginsroot'].$shortname);
+        rmdir($GLOBALS['sys_pluginsroot']);
+        
+        
+        //Now plugin is custom
+        mkdir($GLOBALS['sys_custompluginsroot']);
+        mkdir($GLOBALS['sys_custompluginsroot'].$shortname);
+        mkdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/');
+        mkdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/themes/');
+        mkdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/themes/'.$GLOBALS['sys_user_theme']);
+        $this->assertEqual($p->_getThemePath(), $GLOBALS['sys_custompluginspath'].'/'.$shortname.'/themes/'.$GLOBALS['sys_user_theme']);
+        rmdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/themes/'.$GLOBALS['sys_user_theme']);
+        rmdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/themes/');
+        rmdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/');
+        rmdir($GLOBALS['sys_custompluginsroot'].$shortname);
+        rmdir($GLOBALS['sys_custompluginsroot']);
+        clearstatcache();
+        mkdir($GLOBALS['sys_custompluginsroot']);
+        mkdir($GLOBALS['sys_custompluginsroot'].$shortname);
+        mkdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/');
+        mkdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/themes/');
+        mkdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/themes/default');
+        $this->assertEqual($p->_getThemePath(), $GLOBALS['sys_custompluginspath'].'/'.$shortname.'/themes/default');
+        rmdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/themes/default');
+        rmdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/themes/');
+        rmdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/');
+        rmdir($GLOBALS['sys_custompluginsroot'].$shortname);
+        rmdir($GLOBALS['sys_custompluginsroot']);
+        
+        rmdir(dirname($GLOBALS['sys_custompluginsroot']));
+    }
 }
 
 if (CODEX_RUNNER === __FILE__) {

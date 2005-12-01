@@ -76,6 +76,23 @@ class Plugin {
         return $path.'/'.$pm->getNameForPlugin($this);
     }
     function _getThemePath() {
+        $pm =& $this->_getPluginManager();
+        $paths  = array($GLOBALS['sys_custompluginspath'], $GLOBALS['sys_pluginspath']);
+        $roots  = array($GLOBALS['sys_custompluginsroot'], $GLOBALS['sys_pluginsroot']);
+        $dir    = '/'.$pm->getNameForPlugin($this).'/www/themes/';
+        $dirs   = array($dir.$GLOBALS['sys_user_theme'], $dir.'default');
+        $dir    = '/'.$pm->getNameForPlugin($this).'/themes/';
+        $themes = array($dir.$GLOBALS['sys_user_theme'], $dir.'default');
+        $found = false;
+        while (!$found && (list($kd, $dir) = each($dirs))) {
+            reset($roots);
+            while (!$found && (list($kr, $root) = each($roots))) {
+                if (is_dir($root.$dir)) {
+                    $found = $paths[$kr].$themes[$kd];
+                }
+            }
+        }
+        return $found;
     }
     function &_getPluginManager() {
         $pm =& PluginManager::instance();

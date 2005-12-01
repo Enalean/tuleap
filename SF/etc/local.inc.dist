@@ -118,8 +118,10 @@ $sf_cache_dir = "/home/sfcache";
 $sys_themeroot="/home/httpd/SF/www/themes/";
 
 // Plugins related vars
-$sys_pluginsroot="/home/httpd/plugins/";
-$sys_custompluginsroot="/etc/codex/plugins/";
+$sys_pluginsroot       ="/home/httpd/plugins/";
+$sys_custompluginsroot ="/etc/codex/plugins/";
+$sys_pluginspath       ="/plugins";
+$sys_custompluginspath ="/customplugins";
 
 // Specific to Xerox CodeX
 //
