@@ -317,8 +317,36 @@ function doc_get_docgroupname_from_id($doc_group) {
     return db_result($res,0,'groupname');
 }
 
+// NTY: some mime types are false. 
+// e.g. powerpoint presentations are retrieved as msword documents
+// See SR #267 on partners for details
+// To fix it, we apply exceptional rules
+// {{{
+$mime_type_exceptions = array(
+    'application/msword' => array(
+        'ppt' => 'application/vnd.ms-powerpoint',
+        'pps' => 'application/vnd.ms-powerpoint',
+    ),
+    'text/plain, English' => array(
+        'htm'  => 'text/html',
+        'html' => 'text/html',
+    ),
+    'text/html' => array(
+        'pdf'  => 'application/pdf',
+    ),
+);
 
-function get_mime_content_type($file) {
+function correct_mime_type($type, $filename) {
+    global $mime_type_exceptions;
+    $path_parts = pathinfo($filename);
+    if (isset($mime_type_exceptions[$type]) && isset($mime_type_exceptions[$type][$path_parts['extension']])) {
+        $type = $mime_type_exceptions[$type][$path_parts['extension']];
+    }
+    return $type;
+}
+// }}}
+
+function get_mime_content_type($file, $name) {
     //We retrieve mime type of the file (We don't trust browser's data)
     //Note: This function is deprecated. Pear provides a class for retrieving
     //      mime type, but this class uses mime_content_type function...
@@ -328,6 +356,8 @@ function get_mime_content_type($file) {
         $type = exec('file -bi '.$file);
     }
     $type = split(";", $type);
-    return $type[0];
+    $type = correct_mime_type($type[0], $name);
+    
+    return $type;
 }
 ?>
