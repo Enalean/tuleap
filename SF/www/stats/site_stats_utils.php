@@ -347,7 +347,7 @@ function stats_site_projects_daily( $span = 14 ) {
 
 		print	'<P><TABLE width="100%" cellpadding=0 cellspacing=0 border=0>'
 			. '<TR valign="top">'
-			. '<TD><B>'.$Language->getText('stats_site_stats_utils','day').'</B></TD>'
+			. '<TD><B>'.$Language->getText('stats_site_stats_utils','day_gmt').'</B></TD>'
 			. '<TD align="right"><B>'.$Language->getText('stats_site_stats_utils','site_views').'</B></TD>'
 			. '<TD align="right"><B>'.$Language->getText('stats_site_stats_utils','subdomain_views').'</B></TD>'
 			. '<TD align="right"><B>'.$Language->getText('stats_site_stats_utils','downl').'</B></TD>'
@@ -363,7 +363,7 @@ function stats_site_projects_daily( $span = 14 ) {
 			$i++;
 
 			print	'<TR class="' . util_get_alt_row_color($i) . '">'
-				. '<TD>' . gmstrftime("%d %b %Y", mktime(0,0,1,substr($row["month"],4,2),$row["day"],substr($row["month"],0,4)) ) . '</TD>'
+				. '<TD>' . gmstrftime("%d %b %Y", gmmktime(0,0,1,substr($row["month"],4,2),$row["day"],substr($row["month"],0,4)) ) . '</TD>'
 				. '<TD align="right">' . number_format( $row["site_views"] ) . '</TD>'
 				. '<TD align="right">' . number_format( $row["subdomain_views"] ) . '</TD>'
 				. '<TD align="right">' . number_format( $row["downloads"] ) . '</TD>'

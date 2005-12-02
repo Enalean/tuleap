@@ -449,7 +449,7 @@ class WikiServiceAdminViews extends WikiViews {
             print '
              <tr>
 	       <td><a href="/wiki/uploads/'.$this->gid.'/'.$wa->getFilename().'/'.($war->getRevision()+1).'">'.($war->getRevision()+1).'</a></td>
-	       <td>'.gmstrftime("%e %b %Y %H:%M", $war->getDate()).'</td>
+	       <td>'.strftime("%e %b %Y %H:%M", $war->getDate()).'</td>
                <td><a href="/users/'.user_getname($war->getOwnerId()).'/">'.user_getname($war->getOwnerId()).'</td>
 	       <td>'.$war->getSize().'</td>
 	     </tr>';

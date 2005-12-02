@@ -129,7 +129,7 @@ function stats_project_daily( $group_id, $span = 7 ) {
 
         print	'<P><TABLE width="100%" cellpadding=2 cellspacing=1 border=0>'
             . '<TR class="boxtable">'
-            . '<TD class="boxtitle">'.$Language->getText('project_admin_utils','date').'</TD>'
+            . '<TD class="boxtitle">'.$Language->getText('project_stats_utils','date_gmt').'</TD>'
             . '<TD class="boxtitle">'.$Language->getText('project_stats_index','rank').'</TD>';
         print stats_get_table_service_header($group_id);
         print '</TR>' . "\n";
@@ -167,8 +167,8 @@ function stats_project_weekly( $group_id, $span = 8 ) {
     $week = gmstrftime("%U", (time() - ($span * 7 * 86400)) );
     $year = $begin_date["tm_year"] + 1900;
     $month = sprintf("%02d", $begin_date["tm_mon"] + 1);
-    $day = $begin_date["tm_mday"];
 
+    
     $sql  = stats_get_sql_query($group_id);
     $sql .= "WHERE ( (( month > " . $year . "00 AND week > " . $week . " ) OR ( month > " . $year . $month . "))";
     $sql .= "AND group_id = " . $group_id . " ) ";
@@ -184,7 +184,7 @@ function stats_project_weekly( $group_id, $span = 8 ) {
 
         print	'<P><TABLE width="100%" cellpadding=2 cellspacing=1 border=0>'
             . '<TR class="boxtable">'
-            . '<TD class="boxtitle">'.$Language->getText('project_stats_index','week').'</TD>'
+            . '<TD class="boxtitle">'.$Language->getText('project_stats_utils','week_gmt').'</TD>'
             . '<TD class="boxtitle">'.$Language->getText('project_stats_index','rank').'</TD>';
         print stats_get_table_service_header($group_id);
         print '</TR>' . "\n";
@@ -199,7 +199,7 @@ function stats_project_weekly( $group_id, $span = 8 ) {
             //}
 
             print	'<TR class="' . util_get_alt_row_color($i++) . '">'
-                . '<TD align="center">' . $row["week"] . "&nbsp;(" . gmstrftime("%D", $w_begin) . " -> " . strftime("%D", $w_end) . ') </TD>'
+                . '<TD align="center">' . $row["week"] . "&nbsp;(" . gmstrftime("%D", $w_begin) . " -> " . gmstrftime("%D", $w_end) . ') </TD>'
                 . '<TD align="center">' . sprintf("%d", $row["AVG(group_ranking)"]) . " ( " . sprintf("%0.2f", $row["AVG(group_metric)"]) . ' ) </TD>';
             print stats_get_table_service_rows($group_id,$row);
             print '</TR>' . "\n";
@@ -224,17 +224,20 @@ function stats_project_monthly( $group_id, $span = 4 ) {
         $span = 4;
     }
 
-    // Get information about the date $span months ago 
-    $begin_date = localtime( time(), 1 );
-    $year = $begin_date["tm_year"] + 1900;
-    $month = $begin_date["tm_mon"] + 1 - $span;
+    // Get information about the date $span months ago
+    // always use GMT for search in the DB as db_stats_projects_nightly.pl
+    // stores all the dates in GMT
+    $year = gmdate("Y");
+    $month = gmdate("m");
+
+    $month -= ($span -1);
     while ( $month < 1 ) {
         $month += 12;
         $year -= 1;
     }
 
     $sql  = stats_get_sql_query($group_id);
-    $sql .= "WHERE ( month > " . $year . sprintf("%02d", $month) . " AND group_id = " . $group_id . " ) ";
+    $sql .= "WHERE ( month > " . $year . $month . " AND group_id = " . $group_id . " ) ";
     $sql .= "GROUP BY month ORDER BY month DESC";
 
     // Executions will continue until morale improves.
@@ -247,14 +250,16 @@ function stats_project_monthly( $group_id, $span = 4 ) {
 
         print	'<P><TABLE width="100%" cellpadding=0 cellspacing=0 border=0>'
             . '<TR class="boxtable">'
-            . '<TD class="boxtitle">'.$Language->getText('project_stats_index','month').'</TD>'
+            . '<TD class="boxtitle">'.$Language->getText('project_stats_utils','month_gmt').'</TD>'
             . '<TD class="boxtitle">'.$Language->getText('project_stats_index','rank').'</TD>';
         print stats_get_table_service_header($group_id);
         print '</TR>' . "\n";
 
         while ( $row = db_fetch_array($res) ) {
+	  // the time from DB is GMT, don't choose first day, first sec of month to avoid that 
+	  // strftime with the time local shifts the month to the month before
             print	'<TR class="' . util_get_alt_row_color($i++) . '">'
-                . '<TD align="center">' . gmstrftime("%B %Y", mktime(0,0,1,substr($row["month"],4,2),1,substr($row["month"],0,4)) ) . '</TD>'
+                . '<TD align="center">' . gmstrftime("%B %Y", gmmktime(0,0,2,substr($row["month"],4,2),2,substr($row["month"],0,4)) ) . '</TD>'
                 . '<TD align="center">' . sprintf("%d", $row["AVG(group_ranking)"]) . " ( " . sprintf("%0.2f", $row["AVG(group_metric)"]) . ' ) </TD>';
             print stats_get_table_service_rows($group_id,$row);
             print '</TR>' . "\n";

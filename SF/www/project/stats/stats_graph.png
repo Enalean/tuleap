@@ -32,16 +32,16 @@ $today = localtime( time(), 1 );
 // How does Uriah say it? PHEAR the date manipulation.
 //
 if ( $view == "monthly" ) {
-	$begin_time = gmmktime( 0, 0, 1, $today['tm_mon'] - $span + 2, 1, $year );
+	$begin_time = mktime( 0, 0, 1, $today['tm_mon'] - $span + 2, 1, $year );
 } elseif ( $view == "weekly" ) {
-	$foo = gmmktime( 0, 0, 1, $today['tm_mon'] + 1, $today['tm_mday'] - (7 * $span), $year );
-	list( $begin_time, $bar ) = week_to_dates( gmstrftime("%U", $foo ) + 1, gmstrftime("%Y", $foo ) );
+	$foo = mktime( 0, 0, 1, $today['tm_mon'] + 1, $today['tm_mday'] - (7 * $span), $year );
+	list( $begin_time, $bar ) = week_to_dates( strftime("%U", $foo ) + 1, strftime("%Y", $foo ) );
 } else {
-	$begin_time = gmmktime( 0, 0, 1, $today['tm_mon'] + 1, $today['tm_mday'] - $span, $year );
+	$begin_time = mktime( 0, 0, 1, $today['tm_mon'] + 1, $today['tm_mday'] - $span, $year );
 }
-$year = gmdate("Y", $begin_time);
-$month = sprintf("%02d", gmdate("m", $begin_time) );
-$day = gmdate("d", $begin_time);
+$year = date("Y", $begin_time);
+$month = sprintf("%02d", date("m", $begin_time) );
+$day = date("d", $begin_time);
 
 
 $sql  = "SELECT month,day,downloads,(site_views + subdomain_views) as views ";

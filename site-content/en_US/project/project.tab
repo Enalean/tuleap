@@ -615,6 +615,13 @@ project_stats_index	developers	Members
 project_stats_index	stats_for_all_time	Statistics for All Time
 #
 #-----------------------------------------------
+# Script: SF/www/project/stats/project_stats_utils.php
+#
+project_stats_utils	date_gmt	Date (GMT)
+project_stats_utils	week_gmt	Week (GMT)
+project_stats_utils	month_gmt	Month (GMT)
+#
+#-----------------------------------------------
 # Script: SF/www/project/stats/source_code_access.php
 #
 project_stats_source_code_access	all_users	All Users
@@ -629,7 +636,7 @@ project_stats_source_code_access_utils	file_download	File Download
 project_stats_source_code_access_utils	files	Files
 project_stats_source_code_access_utils	access_for_past_x_days	$1 for the past $2 days	
 project_stats_source_code_access_utils	in_total	$1 in total
-project_stats_source_code_access_utils	time_gmt	Time (GMT)
+project_stats_source_code_access_utils	time	Local Time
 project_stats_source_code_access_utils	no_access	None for this period.
 project_stats_source_code_access_utils	service_disabled	$1 Service Disabled
 project_stats_source_code_access_utils	subversion	Subversion
