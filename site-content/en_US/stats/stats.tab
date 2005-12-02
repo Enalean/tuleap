@@ -79,7 +79,7 @@ stats_site_stats_utils	no_valid_data	Query returned no valid data.
 stats_site_stats_utils	stats_for_past_x_days	Statistics for the past $1 days.
 stats_site_stats_utils	site_views	Site Views
 stats_site_stats_utils	subdomain_views	Subdomain Views
-stats_site_stats_utils	day	Day
+stats_site_stats_utils	day_gmt	Day (GMT)
 stats_site_stats_utils	proj_not_exist	Project did not exist on this date.
 stats_site_stats_utils	curr_agg_stats	Current Agregate Statistics for All Time
 stats_site_stats_utils	lifespan	Lifespan

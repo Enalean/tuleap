@@ -65,18 +65,18 @@ function logs_display($sql, $span, $field, $title='') {
       . ' <th>'.$Language->getText('project_export_utils','user').'</th>'."\n"
       . ' <th>'.$Language->getText('project_export_artifact_history_export','email').'</th>'."\n"
       . ' <th>'.$field.'</th>'."\n"
-      . ' <th align="right">'.$Language->getText('project_stats_source_code_access_utils','time_gmt').'</th>'."\n"
+      . ' <th align="right">'.$Language->getText('project_stats_source_code_access_utils','time').'</th>'."\n"
       . '</tr>'."\n";
 		
 		while ( $row = db_fetch_array($res) ) {
 			$i++;
  
       print '<tr class="'. util_get_alt_row_color($i). '">'
-	.' <td>'.gmstrftime("%e %b %Y", $row["time"] ).'</td>'
+	.' <td>'.strftime("%e %b %Y", $row["time"] ).'</td>'
 	.' <td>'.$row["realname"].' ('.util_user_link($row["user_name"]).')</td>'
 	.' <td>'.$row["email"].'</td>'
 	.' <td>'.$row["title"].'</td>'
-	.' <td align="right">'.gmstrftime("%H:%M", $row["time"]).'</td>'
+	.' <td align="right">'.strftime("%H:%M", $row["time"]).'</td>'
 	.'</tr>'."\n";
 		}
 
