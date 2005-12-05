@@ -64,10 +64,8 @@ class Wiki {
    * @return boolean Is the given user allowed to access to the Wiki
    */
   function isAutorized($uid) {
-    if($this->permissionExist()) {
-        return permission_is_authorized('WIKI_READ', $this->gid, $uid, $this->gid);
-    }
-    return true;
+    $autorized = permission_is_authorized('WIKI_READ', $this->gid, $uid, $this->gid);
+    return $autorized;
   }
 
   /**
