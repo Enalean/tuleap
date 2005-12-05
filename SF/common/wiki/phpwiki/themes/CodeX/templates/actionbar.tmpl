@@ -1,6 +1,23 @@
 <?php // -*-php-*-
   rcs_id('$Id$');
-  if (!$page->get('locked') || $user->isAdmin())
+   
+   // To be able to edit :
+   //  - page is not locked and:
+   //     + you are anonymous and anonymous can edit
+   //    or
+   //     + you are not anonymous
+   // or
+   //  - you are admin
+   if (
+         (
+             !$page->get('locked') && 
+             (
+                 (!$user->isAuthenticated() && ALLOW_ANON_EDIT) || 
+                 $user->isAuthenticated()
+             )
+         ) || 
+         $user->isAdmin()
+       )
       $EditB = Button("edit",
                       $revision->isCurrent() ? _("Edit") : _("Edit Old Revision"));
   else

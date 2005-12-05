@@ -2630,7 +2630,9 @@ class UserPreferences
     function get($name) {
         if($name == 'email') {
             global $G_SESSION;
-            return user_getemail($G_SESSION['user_id']);
+            if (isset($G_SESSION['user_id']) && $G_SESSION['user_id']) {
+                return user_getemail($G_SESSION['user_id']);
+            }
         }
         if ($name == 'emailVerified') {
             return true;

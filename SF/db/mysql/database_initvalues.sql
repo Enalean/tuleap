@@ -1760,12 +1760,14 @@ INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_REA
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_READ',13);
 
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKI_READ',100);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKI_READ',1);
 INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('WIKI_READ',2,1);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKI_READ',3);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKI_READ',4);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKI_READ',14);
 
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIPAGE_READ',100);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIPAGE_READ',1);
 INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('WIKIPAGE_READ',2,1);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIPAGE_READ',3);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIPAGE_READ',4);
@@ -1773,6 +1775,7 @@ INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIPAGE_REA
 
 -- Allow ugroup 'nobody'
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIATTACHMENT_READ',100);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIATTACHMENT_READ',1);
 INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('WIKIATTACHMENT_READ',2,1);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIATTACHMENT_READ',3);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIATTACHMENT_READ',4);
