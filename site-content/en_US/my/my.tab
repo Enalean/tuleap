@@ -40,6 +40,12 @@ my_index	not_member	You're not a member of any project
 my_index	admin_link	Admin
 my_index	quit_proj	Quit this project?
 my_index	priv_proj	<em>Private project</em>
+my_index	a	A
+my_index	s	S
+my_index	as	AS
+my_index	a_info	Display artifacts you are assigned to.
+my_index	s_info	Display artifacts you submitted.
+my_index	as_info	Display artifacts assigned to or submitted by you.
 #
 #-----------------------------------------------
 # Script: SF/www/my/my_utils.php

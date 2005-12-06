@@ -287,6 +287,7 @@ if (user_isloggedin()) {
 		$result2 = db_query($sql2);
 		$rows2 = db_numrows($result2);
 
+        $hide_frs = null;
 		list($hide_now,$count_diff,$hide_url) = 
 		    my_hide_url('frs',$group_id,$hide_item_id,$rows2,$hide_frs);
 
@@ -404,18 +405,55 @@ if (user_isloggedin()) {
 
 	// Trackers
 	$uid = user_getid();
-	$my_artifacts = $atf->getMyArtifacts($uid);
+    
+    $_artifact_show = user_get_preference('my_artifacts_show');
+    if($_artifact_show === false) {
+        $_artifact_show = 'AS';
+        user_set_preference('my_artifacts_show', $_artifact_show);
+    }
+    else {
+        if (isset($_GET['show'])) {
+            switch($_GET['show']) {
+                case 'A':
+                    $_artifact_show = 'A';
+                    break;
+                case 'S':
+                    $_artifact_show = 'S';
+                    break;
+                case 'N':
+                    $_artifact_show = 'N';
+                    break;
+                case 'AS':
+                default:
+                    $_artifact_show = 'AS';
+            }
+            user_set_preference('my_artifacts_show', $_artifact_show);
+        }
+    }
+    
+	$my_artifacts = $atf->getMyArtifacts($uid, $_artifact_show);
 	
-	if (db_numrows($my_artifacts) > 0) {
-
-	  $html_my_artifacts .= $HTML->box1_top($Language->getText('my_index', 'my_arts'),0,'',3);
-	  
-	  $html_my_artifacts .= display_artifacts($my_artifacts, 0);
-	  $html_my_artifacts .= '<TR><TD COLSPAN="3">&nbsp;</TD></TR>';
-	  $html_my_artifacts .= $HTML->box1_bottom(0);
-	}
-
-
+    $my_artifact_title = '';
+    
+    $my_artifact_title .= $Language->getText('my_index', 'my_arts').'&nbsp;&nbsp;';
+    
+    $my_artifact_title .= '<select name="show" onchange="this.form.submit()">';
+    $my_artifact_title .= '<option value="N"  '.($_artifact_show === 'N'?'selected="selected"':'').'>Do not show any artifacts</option>';
+    $my_artifact_title .= '<option value="A"  '.($_artifact_show === 'A'?'selected="selected"':'').'>assigned to me [A]</option>';
+    $my_artifact_title .= '<option value="S"  '.($_artifact_show === 'S'?'selected="selected"':'').'>submitted by me [S]</option>';
+    $my_artifact_title .= '<option value="AS" '.($_artifact_show === 'AS'?'selected="selected"':'').'>assigned to or submitted by me [AS]</option>';
+    $my_artifact_title .= '</select>';
+    
+    $my_artifact_title .= '<noscript>&nbsp;<input type="submit" value="Change" /></noscript>';
+    
+    $html_my_artifacts  = '<form name="my_select_showed_artifact" method="GET" action="'.$_SERVER['PHP_SELF'].'">';
+    $html_my_artifacts .= $HTML->box1_top($my_artifact_title,0,'',3);
+    if (db_numrows($my_artifacts) > 0) {
+        $html_my_artifacts .= display_artifacts($my_artifacts, 0);
+    }
+    $html_my_artifacts .= '<TR><TD COLSPAN="3">'.(($_artifact_show == 'N' || db_numrows($my_artifacts) > 0)?'&nbsp;':$Language->getText('global', 'none')).'</TD></TR>';
+    $html_my_artifacts .= $HTML->box1_bottom(0);
+    $html_my_artifacts .= '</form>';
 	/*
 		DEVELOPER SURVEYS
 

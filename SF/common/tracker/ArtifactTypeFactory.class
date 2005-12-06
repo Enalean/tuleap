@@ -285,32 +285,58 @@ class ArtifactTypeFactory extends Error {
 	
 	/**
 	 *	Retrieve the artifacts where user $user_id is a submitter or assignee
+     *  By default both are retreived but you can select if you want artifacts
+     *  you are assigned or artifact you submitted or both.
 	 *
 	 *  @param user_id: the user id
-	 *
+	 *  @param view: 1 means assigned, 2 means Submitted, 3 means Both
 	 *	@return	db_result
 	 */
-	function getMyArtifacts($user_id) {
+	function getMyArtifacts($user_id, $view='AS') {
+        $assignee = false;
+        $submitter = false;
 
-	  // Only trackers from active projects are returned.
+        if(strpos($view, 'A') !== false)
+            $assignee = true;
 
+        if(strpos($view, 'S') !== false)
+            $submitter = true;
+
+        if(!$assignee && !$submitter)
+            return false;
+        
+        // Only artifacts from active projects are returned.
+        
 		$sql = 
-		  "SELECT agl.group_artifact_id,agl.name,".
-		  "agl.group_id,g.group_name, ".
-		  "a.summary, a.artifact_id, a.severity, (a.submitted_by=".$user_id.") as submitter, MAX(afv.valueInt=".$user_id.") as assignee ".
-		  "FROM artifact a, artifact_group_list agl, artifact_field af, artifact_field_value afv, groups g ".
-		  "WHERE agl.group_id = g.group_id AND af.group_artifact_id = agl.group_artifact_id ".
-		  "AND agl.status = 'A' ".
-                  "AND g.status = 'A' ".
-		  "AND (af.field_name = 'assigned_to' OR af.field_name = 'multi_assigned_to') ".
-		  "AND af.field_id = afv.field_id ".
-		  "AND (afv.valueInt=".$user_id." OR a.submitted_by=".$user_id.") ".
-		  "AND a.group_artifact_id = agl.group_artifact_id AND a.artifact_id = afv.artifact_id AND a.status_id <> 3 ".
-		  "GROUP BY a.artifact_id ".
-		  "ORDER BY g.group_name, agl.name";
+            "SELECT agl.group_artifact_id,agl.name,".
+            "agl.group_id,g.group_name, ".
+            "a.summary, a.artifact_id, a.severity, (a.submitted_by=".$user_id.") as submitter , MAX(afv.valueInt=".$user_id.") as assignee ".
+            "FROM artifact a, artifact_group_list agl, artifact_field af, artifact_field_value afv, groups g ".
+            "WHERE agl.group_id = g.group_id AND af.group_artifact_id = agl.group_artifact_id ".
+            "AND agl.status = 'A' ".
+            "AND g.status = 'A' ".
+            "AND (af.field_name = 'assigned_to' OR af.field_name = 'multi_assigned_to') ".
+            "AND af.field_id = afv.field_id ".
+            "AND (";
+        
+        if($assignee) {
+            $sql .= "afv.valueInt=".$user_id;
+        }
+        
+        if($submitter) {
+            if($assignee) {
+                $sql .= " OR ";
+            }
+            $sql .= "a.submitted_by=".$user_id;
+        }
 
+        $sql .= ") ".
+            "AND a.group_artifact_id = agl.group_artifact_id AND a.artifact_id = afv.artifact_id AND a.status_id <> 3 ".
+            "GROUP BY a.artifact_id ".
+            "ORDER BY g.group_name, agl.name";
+        
 		$res = db_query($sql);
-	
+        
 	    return $res;
 	}
 
