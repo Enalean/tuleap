@@ -45,7 +45,12 @@ my_index	not_member	Vous n'êtes membre d'aucun projet.
 my_index	admin_link	Admin
 my_index	quit_proj	Quitter ce projet?
 my_index	priv_proj	<em>Projet privé</em>
-#
+my_index	a	A
+my_index	s	S
+my_index	as	AS
+my_index	a_info	Afficher les artifacts auxquels vous êtes assignés.
+my_index	s_info	Afficher les artifacts que vous avez soumis.
+my_index	as_info	Afficher les artifacts auxquels vous êtes assignés ou que vous avez soumis.
 #-----------------------------------------------
 # Script: SF/www/my/my_utils.php
 #
