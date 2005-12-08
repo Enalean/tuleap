@@ -1497,7 +1497,8 @@ EOS;
 		while (list($field_name,$field) = each($fields)) {
 		
 		  // Special case for special fields (excluded comment_type_id)
-		  if ( (($field->getName() != "comment_type_id")&&($field->isSpecial()))) {
+		  if ( (($field->getName() != "comment_type_id")&&($field->isSpecial())) ||
+		       (($field->getName() == "status_id") && !user_is_super_user()) ) {
 		    continue;
 		  }
 			

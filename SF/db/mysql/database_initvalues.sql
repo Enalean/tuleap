@@ -1166,6 +1166,7 @@ INSERT INTO artifact_field VALUES (1,1,'artifact_id',2,'TF','6/10','Artifact ID'
 INSERT INTO artifact_field VALUES (4,1,'assigned_to',5,'SB','','Assigned to','Who is in charge of solving the artifact','',0,1,1,0,'group_members','100');
 INSERT INTO artifact_field VALUES (3,1,'category_id',2,'SB','','Category','Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)','',0,1,1,0,NULL,'100');
 INSERT INTO artifact_field VALUES (2,1,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'1');
+INSERT INTO artifact_field VALUES (30,1,'stage',2,'SB','','Stage','Stage in the life cycle of the artifact','',0,0,1,0,NULL,'1');
 INSERT INTO artifact_field VALUES (8,1,'severity',2,'SB','','Severity','Impact of the artifact on the system (Critical, Major,...)','',0,0,1,0,NULL,'5');
 INSERT INTO artifact_field VALUES (10,1,'comment_type_id',2,'SB','','Comment Type','Specify the nature of the  follow up comment attached to this artifact (Workaround, Test Case, Impacted Files,...)','',0,1,0,1,NULL,'100');
 INSERT INTO artifact_field VALUES (9,1,'details',1,'TA','60/7','Original Submission','A full description of the artifact','',0,1,1,0,NULL,'');
@@ -1178,12 +1179,14 @@ INSERT INTO artifact_field VALUES (6,2,'close_date',4,'DF','','End Date','End Da
 INSERT INTO artifact_field VALUES (7,2,'summary',1,'TF','60/150','Summary','One line description of the artifact','',0,0,1,0,NULL,'');
 INSERT INTO artifact_field VALUES (8,2,'details',1,'TA','60/7','Original Submission','A full description of the artifact','',0,1,1,0,NULL,'');
 INSERT INTO artifact_field VALUES (11,2,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'1');
+INSERT INTO artifact_field VALUES (15,2,'stage',2,'SB','','Stage','Stage in the life cycle of the artifact','',0,0,1,0,NULL,'1');
 INSERT INTO artifact_field VALUES (1,2,'artifact_id',2,'TF','6/10','Artifact ID','Unique artifact identifier','',0,0,0,1,NULL,'');
 INSERT INTO artifact_field VALUES (10,2,'open_date',4,'DF','','Submitted on','Date and time for the initial artifact submission','',0,0,0,1,'','');
 INSERT INTO artifact_field VALUES (9,2,'multi_assigned_to',5,'MB','','Assigned to (multiple)','Who is in charge of this artifact','',0,1,1,0,'group_members','100');
 INSERT INTO artifact_field VALUES (12,2,'subproject_id',2,'SB','','Subproject','Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)','',0,1,1,0,NULL,'100');
 INSERT INTO artifact_field VALUES (9,3,'submitted_by',5,'SB','','Submitted by','User who originally submitted the artifact','',0,1,0,1,'artifact_submitters','');
 INSERT INTO artifact_field VALUES (7,3,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'1');
+INSERT INTO artifact_field VALUES (12,3,'stage',2,'SB','','Stage','Stage in the life cycle of the artifact','',0,0,1,0,NULL,'1');
 INSERT INTO artifact_field VALUES (6,3,'assigned_to',5,'SB','','Assigned to','Who is in charge of solving the artifact','',0,1,1,0,'group_members','100');
 INSERT INTO artifact_field VALUES (5,3,'category_id',2,'SB','','Category','Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)','',0,1,1,0,NULL,'100');
 INSERT INTO artifact_field VALUES (4,3,'open_date',4,'DF','','Submitted on','Date and time for the initial artifact submission','',0,0,0,1,'','');
@@ -1219,6 +1222,7 @@ INSERT INTO artifact_field VALUES (3,4,'close_date',4,'DF','','End Date','End Da
 INSERT INTO artifact_field VALUES (4,4,'summary',1,'TF','60/150','Summary','One line description of the artifact','',0,0,1,0,NULL,'');
 INSERT INTO artifact_field VALUES (5,4,'artifact_id',2,'TF','6/10','Artifact ID','Unique artifact identifier','',0,0,0,1,NULL,'');
 INSERT INTO artifact_field VALUES (6,4,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'1');
+INSERT INTO artifact_field VALUES (11,4,'stage',2,'SB','','Stage','Stage in the life cycle of the artifact','',0,0,1,0,NULL,'1');
 INSERT INTO artifact_field VALUES (7,4,'severity',2,'SB','','Severity','Impact of the artifact on the system (Critical, Major,...)','',0,0,1,0,NULL,'5');
 INSERT INTO artifact_field VALUES (8,4,'details',1,'TA','60/7','Original Submission','A full description of the artifact','',0,1,1,0,NULL,'');
 INSERT INTO artifact_field VALUES (9,4,'assigned_to',5,'SB','','Assigned to','Who is in charge of solving the artifact','',0,1,1,0,'group_members','100');
@@ -1235,7 +1239,7 @@ INSERT INTO artifact_field VALUES (8,5,'details',1,'TA','60/7','Description','De
 INSERT INTO artifact_field VALUES (9,5,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'1');
 INSERT INTO artifact_field VALUES (10,5,'severity',2,'SB','','Severity','Impact of the artifact on the system (Critical, Major,...)','',0,0,1,0,NULL,'5');
 INSERT INTO artifact_field VALUES (11,5,'release_id',2,'SB','','Release','The release (global version number) impacted by the artifact','P',0,1,1,0,NULL,'100');
-INSERT INTO artifact_field VALUES (12,5,'response_id',2,'SB','','Response','The project team\'s response to the artifact (typically Accepted, Declined, etc.)','P',0,1,1,0,NULL,'100');
+INSERT INTO artifact_field VALUES (12,5,'stage',2,'SB','','Stage','Stage in the life cycle of the artifact','P',0,1,1,0,NULL,'100');
 --
 -- Dumping data for table 'artifact_field_usage'
 --
@@ -1248,6 +1252,7 @@ INSERT INTO artifact_field_usage VALUES (1,1,1,0);
 INSERT INTO artifact_field_usage VALUES (4,1,1,50);
 INSERT INTO artifact_field_usage VALUES (3,1,1,10);
 INSERT INTO artifact_field_usage VALUES (2,1,1,60);
+INSERT INTO artifact_field_usage VALUES (30,1,0,0);
 INSERT INTO artifact_field_usage VALUES (8,1,1,20);
 INSERT INTO artifact_field_usage VALUES (10,1,1,NULL);
 INSERT INTO artifact_field_usage VALUES (9,1,1,1000);
@@ -1261,10 +1266,12 @@ INSERT INTO artifact_field_usage VALUES (6,2,1,80);
 INSERT INTO artifact_field_usage VALUES (7,2,1,900);
 INSERT INTO artifact_field_usage VALUES (8,2,1,1000);
 INSERT INTO artifact_field_usage VALUES (11,2,1,50);
+INSERT INTO artifact_field_usage VALUES (15,2,0,0);
 INSERT INTO artifact_field_usage VALUES (1,2,1,1);
 INSERT INTO artifact_field_usage VALUES (10,2,1,0);
 INSERT INTO artifact_field_usage VALUES (9,3,1,NULL);
 INSERT INTO artifact_field_usage VALUES (7,3,1,30);
+INSERT INTO artifact_field_usage VALUES (12,3,0,0);
 INSERT INTO artifact_field_usage VALUES (6,3,1,20);
 INSERT INTO artifact_field_usage VALUES (5,3,1,10);
 INSERT INTO artifact_field_usage VALUES (4,3,1,5);
@@ -1306,6 +1313,7 @@ INSERT INTO artifact_field_usage VALUES (7,4,1,0);
 INSERT INTO artifact_field_usage VALUES (8,4,1,20);
 INSERT INTO artifact_field_usage VALUES (9,4,1,30);
 INSERT INTO artifact_field_usage VALUES (10,4,0,40);
+INSERT INTO artifact_field_usage VALUES (11,4,0,0);
 
 
 INSERT INTO artifact_field_usage VALUES (1,5,1,0);
@@ -1327,13 +1335,19 @@ INSERT INTO artifact_field_usage VALUES (12,5,1,0);
 
 INSERT INTO artifact_field_value_list VALUES (2,1,1,'Open','The artifact has been submitted',20,'P');
 INSERT INTO artifact_field_value_list VALUES (2,1,3,'Closed','The artifact is no longer active. See the Resolution field for details on how it was resolved.',400,'P');
-INSERT INTO artifact_field_value_list VALUES (2,1,4,'Analyzed','The cause of the artifact has been identified and documented',30,'H');
-INSERT INTO artifact_field_value_list VALUES (2,1,5,'Accepted','The artifact will be worked on. If it won\'t be worked on, indicate why in the Resolution field and close it',50,'H');
-INSERT INTO artifact_field_value_list VALUES (2,1,6,'Ready for Review','Updated/Created non-software work product (e.g. documentation) is ready for review and approval.',70,'H');
-INSERT INTO artifact_field_value_list VALUES (2,1,7,'Ready for Test','Updated/Created software is ready to be included in the next build',90,'H');
-INSERT INTO artifact_field_value_list VALUES (2,1,8,'In Test','Updated/Created software is in the build and is ready to enter the test phase',110,'H');
-INSERT INTO artifact_field_value_list VALUES (2,1,9,'Approved','The artifact fix has been succesfully tested. It is approved and awaiting release.',130,'H');
-INSERT INTO artifact_field_value_list VALUES (2,1,10,'Declined','The artifact was not accepted. Alternatively, you can also Set the status to \"Closed\" and use the Resolution field to explain why it was declined',150,'H');
+
+INSERT INTO artifact_field_value_list VALUES (30,1,1,'New','The artifact has just been submitted',20,'A');
+INSERT INTO artifact_field_value_list VALUES (30,1,2,'Analyzed','The cause of the artifact has been identified and documented',30,'A');
+INSERT INTO artifact_field_value_list VALUES (30,1,3,'Accepted','The artifact will be worked on.',40,'A');
+INSERT INTO artifact_field_value_list VALUES (30,1,4,'Under Implementation','The artifact is being worked on.',50,'A');
+
+INSERT INTO artifact_field_value_list VALUES (30,1,5,'Ready for Review','Updated/Created non-software work product (e.g. documentation) is ready for review and approval.',60,'A');
+INSERT INTO artifact_field_value_list VALUES (30,1,6,'Ready for Test','Updated/Created software is ready to be included in the next build',70,'A');
+INSERT INTO artifact_field_value_list VALUES (30,1,7,'In Test','Updated/Created software is in the build and is ready to enter the test phase',80,'A');
+INSERT INTO artifact_field_value_list VALUES (30,1,8,'Approved','The artifact fix has been succesfully tested. It is approved and awaiting release.',90,'A');
+INSERT INTO artifact_field_value_list VALUES (30,1,9,'Declined','The artifact was not accepted.',100,'A');
+INSERT INTO artifact_field_value_list VALUES (30,1,10,'Done','The artifact is closed.',110,'A');
+
 INSERT INTO artifact_field_value_list VALUES (3,1,100,'None','',10,'P');
 INSERT INTO artifact_field_value_list VALUES (8,1,1,'1 - Ordinary','',10,'P');
 INSERT INTO artifact_field_value_list VALUES (8,1,2,'2','',20,'P');
@@ -1353,15 +1367,22 @@ INSERT INTO artifact_field_value_list VALUES (16,1,4,'Later','The bug will be fi
 INSERT INTO artifact_field_value_list VALUES (16,1,5,'Remind','The bug will be fixed later but keep in the remind state for easy identification',60,'A');
 INSERT INTO artifact_field_value_list VALUES (16,1,6,'Works for me','The project team was unable to reproduce the bug',70,'A');
 INSERT INTO artifact_field_value_list VALUES (16,1,7,'Duplicate','This bug is already covered by another bug description (see related bugs list)',80,'A');
+
 INSERT INTO artifact_field_value_list VALUES (11,2,1,'Open','The artifact has been submitted',20,'P');
 INSERT INTO artifact_field_value_list VALUES (11,2,3,'Closed','The artifact is no longer active. See the Resolution field for details on how it was resolved.',400,'P');
-INSERT INTO artifact_field_value_list VALUES (11,2,4,'Analyzed','The cause of the artifact has been identified and documented',30,'H');
-INSERT INTO artifact_field_value_list VALUES (11,2,5,'Accepted','The artifact will be worked on. If it won\'t be worked on, indicate why in the Resolution field and close it',50,'H');
-INSERT INTO artifact_field_value_list VALUES (11,2,6,'Ready for Review','Updated/Created non-software work product (e.g. documentation) is ready for review and approval.',70,'H');
-INSERT INTO artifact_field_value_list VALUES (11,2,7,'Ready for Test','Updated/Created software is ready to be included in the next build',90,'H');
-INSERT INTO artifact_field_value_list VALUES (11,2,8,'In Test','Updated/Created software is in the build and is ready to enter the test phase',110,'H');
-INSERT INTO artifact_field_value_list VALUES (11,2,9,'Approved','The artifact fix has been succesfully tested. It is approved and awaiting release.',130,'H');
-INSERT INTO artifact_field_value_list VALUES (11,2,10,'Declined','The artifact was not accepted. Alternatively, you can also Set the status to \"Closed\" and use the Resolution field to explain why it was declined',150,'H');
+
+INSERT INTO artifact_field_value_list VALUES (15,2,1,'New','The artifact has just been submitted',20,'A');
+INSERT INTO artifact_field_value_list VALUES (15,2,2,'Analyzed','The cause of the artifact has been identified and documented',30,'A');
+INSERT INTO artifact_field_value_list VALUES (15,2,3,'Accepted','The artifact will be worked on.',40,'A');
+INSERT INTO artifact_field_value_list VALUES (15,2,4,'Under Implementation','The artifact is being worked on.',50,'A');
+
+INSERT INTO artifact_field_value_list VALUES (15,2,5,'Ready for Review','Updated/Created non-software work product (e.g. documentation) is ready for review and approval.',60,'A');
+INSERT INTO artifact_field_value_list VALUES (15,2,6,'Ready for Test','Updated/Created software is ready to be included in the next build',70,'A');
+INSERT INTO artifact_field_value_list VALUES (15,2,7,'In Test','Updated/Created software is in the build and is ready to enter the test phase',80,'A');
+INSERT INTO artifact_field_value_list VALUES (15,2,8,'Approved','The artifact fix has been succesfully tested. It is approved and awaiting release.',90,'A');
+INSERT INTO artifact_field_value_list VALUES (15,2,9,'Declined','The artifact was not accepted.',100,'A');
+INSERT INTO artifact_field_value_list VALUES (15,2,10,'Done','The artifact is closed.',110,'A');
+
 INSERT INTO artifact_field_value_list VALUES (12,2,100,'None','',10,'P');
 INSERT INTO artifact_field_value_list VALUES (2,2,1095,'95%','',95,'A');
 INSERT INTO artifact_field_value_list VALUES (2,2,1090,'90%','',90,'A');
@@ -1385,13 +1406,20 @@ INSERT INTO artifact_field_value_list VALUES (2,2,1000,'Not started','',0,'A');
 INSERT INTO artifact_field_value_list VALUES (2,2,1100,'100%','',100,'P');
 INSERT INTO artifact_field_value_list VALUES (7,3,1,'Open','The artifact has been submitted',20,'P');
 INSERT INTO artifact_field_value_list VALUES (7,3,3,'Closed','The artifact is no longer active. See the Resolution field for details on how it was resolved.',400,'P');
-INSERT INTO artifact_field_value_list VALUES (7,3,4,'Analyzed','The cause of the artifact has been identified and documented',30,'H');
-INSERT INTO artifact_field_value_list VALUES (7,3,5,'Accepted','The artifact will be worked on. If it won\'t be worked on, indicate why in the Resolution field and close it',50,'H');
-INSERT INTO artifact_field_value_list VALUES (7,3,6,'Ready for Review','Updated/Created non-software work product (e.g. documentation) is ready for review and approval.',70,'H');
-INSERT INTO artifact_field_value_list VALUES (7,3,7,'Ready for Test','Updated/Created software is ready to be included in the next build',90,'H');
-INSERT INTO artifact_field_value_list VALUES (7,3,8,'In Test','Updated/Created software is in the build and is ready to enter the test phase',110,'H');
-INSERT INTO artifact_field_value_list VALUES (7,3,9,'Approved','The artifact fix has been succesfully tested. It is approved and awaiting release.',130,'H');
-INSERT INTO artifact_field_value_list VALUES (7,3,10,'Declined','The artifact was not accepted. Alternatively, you can also Set the status to \"Closed\" and use the Resolution field to explain why it was declined',150,'H');
+
+INSERT INTO artifact_field_value_list VALUES (12,3,1,'New','The artifact has just been submitted',20,'A');
+INSERT INTO artifact_field_value_list VALUES (12,3,2,'Analyzed','The cause of the artifact has been identified and documented',30,'A');
+INSERT INTO artifact_field_value_list VALUES (12,3,3,'Accepted','The artifact will be worked on.',40,'A');
+INSERT INTO artifact_field_value_list VALUES (12,3,4,'Under Implementation','The artifact is being worked on.',50,'A');
+
+INSERT INTO artifact_field_value_list VALUES (12,3,5,'Ready for Review','Updated/Created non-software work product (e.g. documentation) is ready for review and approval.',60,'A');
+INSERT INTO artifact_field_value_list VALUES (12,3,6,'Ready for Test','Updated/Created software is ready to be included in the next build',70,'A');
+INSERT INTO artifact_field_value_list VALUES (12,3,7,'In Test','Updated/Created software is in the build and is ready to enter the test phase',80,'A');
+INSERT INTO artifact_field_value_list VALUES (12,3,8,'Approved','The artifact fix has been succesfully tested. It is approved and awaiting release.',90,'A');
+INSERT INTO artifact_field_value_list VALUES (12,3,9,'Declined','The artifact was not accepted.',100,'A');
+INSERT INTO artifact_field_value_list VALUES (12,3,10,'Done','The artifact is closed.',110,'A');
+
+
 INSERT INTO artifact_field_value_list VALUES (5,3,100,'None','',10,'P');
 INSERT INTO artifact_field_value_list VALUES (8,3,1095,'95%','',95,'A');
 INSERT INTO artifact_field_value_list VALUES (8,3,1090,'90%','',90,'A');
@@ -1446,13 +1474,20 @@ INSERT INTO artifact_field_value_list VALUES (11,3,9,'9 - Highest','',90,'P');
 
 INSERT INTO artifact_field_value_list VALUES (6,4,1,'Open','The artifact has been submitted',20,'P');
 INSERT INTO artifact_field_value_list VALUES (6,4,3,'Closed','The artifact is no longer active. See the Resolution field for details on how it was resolved.',400,'P');
-INSERT INTO artifact_field_value_list VALUES (6,4,4,'Analyzed','The cause of the artifact has been identified and documented',30,'H');
-INSERT INTO artifact_field_value_list VALUES (6,4,5,'Accepted','The artifact will be worked on. If it won\'t be worked on, indicate why in the Resolution field and close it',50,'H');
-INSERT INTO artifact_field_value_list VALUES (6,4,6,'Ready for Review','Updated/Created non-software work product (e.g. documentation) is ready for review and approval.',70,'H');
-INSERT INTO artifact_field_value_list VALUES (6,4,7,'Ready for Test','Updated/Created software is ready to be included in the next build',90,'H');
-INSERT INTO artifact_field_value_list VALUES (6,4,8,'In Test','Updated/Created software is in the build and is ready to enter the test phase',110,'H');
-INSERT INTO artifact_field_value_list VALUES (6,4,9,'Approved','The artifact fix has been succesfully tested. It is approved and awaiting release.',130,'H');
-INSERT INTO artifact_field_value_list VALUES (6,4,10,'Declined','The artifact was not accepted. Alternatively, you can also Set the status to \"Closed\" and use the Resolution field to explain why it was declined',150,'H');
+
+INSERT INTO artifact_field_value_list VALUES (11,4,1,'New','The artifact has just been submitted',20,'A');
+INSERT INTO artifact_field_value_list VALUES (11,4,2,'Analyzed','The cause of the artifact has been identified and documented',30,'A');
+INSERT INTO artifact_field_value_list VALUES (11,4,3,'Accepted','The artifact will be worked on.',40,'A');
+INSERT INTO artifact_field_value_list VALUES (11,4,4,'Under Implementation','The artifact is being worked on.',50,'A');
+
+INSERT INTO artifact_field_value_list VALUES (11,4,5,'Ready for Review','Updated/Created non-software work product (e.g. documentation) is ready for review and approval.',60,'A');
+INSERT INTO artifact_field_value_list VALUES (11,4,6,'Ready for Test','Updated/Created software is ready to be included in the next build',70,'A');
+INSERT INTO artifact_field_value_list VALUES (11,4,7,'In Test','Updated/Created software is in the build and is ready to enter the test phase',80,'A');
+INSERT INTO artifact_field_value_list VALUES (11,4,8,'Approved','The artifact fix has been succesfully tested. It is approved and awaiting release.',90,'A');
+INSERT INTO artifact_field_value_list VALUES (11,4,9,'Declined','The artifact was not accepted.',100,'A');
+INSERT INTO artifact_field_value_list VALUES (11,4,10,'Done','The artifact is closed.',110,'A');
+
+
 INSERT INTO artifact_field_value_list VALUES (7,4,1,'1 - Ordinary','',10,'P');
 INSERT INTO artifact_field_value_list VALUES (7,4,2,'2','',20,'P');
 INSERT INTO artifact_field_value_list VALUES (7,4,3,'3','',30,'P');
@@ -1467,13 +1502,6 @@ INSERT INTO artifact_field_value_list VALUES (7,4,9,'9 - Critical','',90,'P');
 INSERT INTO artifact_field_value_list VALUES (7,5,100,'None','',10,'P');
 INSERT INTO artifact_field_value_list VALUES (9,5,1,'Open','The artifact has been submitted',20,'P');
 INSERT INTO artifact_field_value_list VALUES (9,5,3,'Closed','The artifact is no longer active',400,'P');
-INSERT INTO artifact_field_value_list VALUES (9,5,4,'Analyzed','The cause of the artifact has been identified and documented',30,'H');
-INSERT INTO artifact_field_value_list VALUES (9,5,5,'Accepted','The artifact will be worked on. If it won\'t be worked on, indicate why and close it',50,'H');
-INSERT INTO artifact_field_value_list VALUES (9,5,6,'Ready for Review','Updated/Created non-software work product (e.g. documentation) is ready for review and approval.',70,'H');
-INSERT INTO artifact_field_value_list VALUES (9,5,7,'Ready for Test','Updated/Created software is ready to be included in the next build',90,'H');
-INSERT INTO artifact_field_value_list VALUES (9,5,8,'In Test','Updated/Created software is in the build and is ready to enter the test phase',110,'H');
-INSERT INTO artifact_field_value_list VALUES (9,5,9,'Approved','The artifact fix has been succesfully tested. It is approved and awaiting release.',130,'H');
-INSERT INTO artifact_field_value_list VALUES (9,5,10,'Declined','The artifact was not accepted. Alternatively, you can also set the status to \"Closed\" and explain why it was declined',150,'H');
 
 INSERT INTO artifact_field_value_list VALUES (10,5,1,'1 - Ordinary','',10,'P');
 INSERT INTO artifact_field_value_list VALUES (10,5,2,'2','',20,'P');
@@ -1486,7 +1514,7 @@ INSERT INTO artifact_field_value_list VALUES (10,5,8,'8','',80,'P');
 INSERT INTO artifact_field_value_list VALUES (10,5,9,'9 - Critical','',90,'P');
 
 INSERT INTO artifact_field_value_list VALUES (12,5,1,'Accepted','The artifact will be worked on. If it won\'t be worked on, indicate why and close it',10,'A');
-INSERT INTO artifact_field_value_list VALUES (12,5,2,'Declined','The artifact was not accepted. Alternatively, you can also set the status to "Closed" and explain why it was declined',50,'A');
+INSERT INTO artifact_field_value_list VALUES (12,5,2,'Declined','The artifact was not accepted.',50,'A');
 --
 -- Dumping data for table 'artifact_report'
 --
