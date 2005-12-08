@@ -116,7 +116,7 @@ if (!isset($group_id) || !$group_id) {
 
     $select = 'SELECT DISTINCT svn_commits.revision as revision, svn_commits.id as commit_id, svn_commits.description as description, svn_commits.date as date, user.user_name as who ';
     $from = "FROM svn_commits,user ";
-    $where = "WHERE svn_commits.group_id=$group_id AND user.user_id=svn_commits.whoid";
+    $where = "WHERE svn_commits.group_id=$group_id AND user.user_id=svn_commits.whoid ";
 
     //check user access rights
     $project = group_get_object($group_id); 
