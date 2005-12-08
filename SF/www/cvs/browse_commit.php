@@ -91,7 +91,8 @@ if (!$set) {
 			$_commiter=$pref_arr[1];
 			$_tag=$pref_arr[2];
 			$_branch=$pref_arr[3];
-			$chunksz=$pref_arr[4];
+			$_srch=$pref_arr[4];
+			$chunksz=$pref_arr[5];
 			$set='custom';
 		} else {
 			$set='custom';
@@ -115,7 +116,7 @@ if ($set=='my') {
 	/*
 		if this custom set is different than the stored one, reset preference
 	*/
-	$pref_=$_commit_id.'|'.$_commiter.'|'.$_tag.'|'.$_branch.'|'.$chunksz;
+	$pref_=$_commit_id.'|'.$_commiter.'|'.$_tag.'|'.$_branch.'|'.$_srch.'|'.$chunksz;
 	if ($pref_ != user_get_preference('commits_browcust'.$group_id)) {
 		//echo 'setting pref';
 		user_set_preference('commits_browcust'.$group_id,$pref_);
@@ -269,12 +270,12 @@ if ($result && db_numrows($result) > 0) {
 
 	//create a new $set string to be used for next/prev button
 	if ($set=='custom') {
-	  $set .= '&_branch='.$_branch.'&_commiter='.$_commiter.'&_tag='.$_tag.'&chunksz='.$chunksz;
+	  $set .= '&_branch='.$_branch.'&_commiter='.$_commiter.'&_tag='.$_tag.'&_srch='.$_srch.'&chunksz='.$chunksz;
 	} else if ($set=='any') {
 	  $set .= '&_branch=100&_commiter=100&_tag=100&chunksz='.$chunksz;
 	}
 
-	show_commitslist($result,$offset,$totalrows,$set,$_commiter,$_tag, $_branch, $chunksz, $morder, $msort);
+	show_commitslist($result,$offset,$totalrows,$set,$_commiter,$_tag, $_branch, $_srch, $chunksz, $morder, $msort);
 
 } else {
 	echo '

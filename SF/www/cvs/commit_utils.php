@@ -154,7 +154,7 @@ function commits_tags_box($group_id, $name='_tag',$checked='xzxz',$text_100='Non
   return html_build_select_box($result,$name,$checked,true,$text_100);
 }
 
-function show_commitslist ($result,$offset,$total_rows,$set='any', $commiter='100', $tag='100', $branch='100', $chunksz=15, $morder='', $msort=0) {
+function show_commitslist ($result,$offset,$total_rows,$set='any', $commiter='100', $tag='100', $branch='100', $srch='' ,$chunksz=15, $morder='', $msort=0) {
     global $sys_datefmt,$group_id,$Language;
 	/*
 		Accepts a result set from the commits table. Should include all columns from
@@ -247,6 +247,9 @@ function show_commitslist ($result,$offset,$total_rows,$set='any', $commiter='10
 	}
 	if ($branch != '100') {
 	  $filter_str = $filter_str."&branch='$branch'";
+	}
+	if ($srch != '') {
+	  $filter_str = $filter_str."&srch='$srch'";
 	}
 	
 
