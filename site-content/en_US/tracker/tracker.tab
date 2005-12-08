@@ -331,7 +331,7 @@ tracker_include_report	at_once	s at once.
 tracker_include_report	sorted_by	sorted by
 tracker_include_report	matching	matching
 tracker_include_report	sort_results	Click a column heading to sort results (up or down), 
-tracker_include_report	sort_sev	sort by Severity
+tracker_include_report	sort_sev	sort by $1
 tracker_include_report	reset_sort	reset sort
 tracker_include_report	multicolumn_sort	You can also <a href="$1"><b> $2 multicolumn sort</b></a>.
 tracker_include_report	sev_colors	Severity Colors:

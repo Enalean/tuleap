@@ -601,7 +601,7 @@ class ArtifactReportHtml extends ArtifactReport {
                                 $html_result .= '<P>'.$Language->getText('tracker_include_report','sort_results').' ';
                                 $field = $art_field_fact->getFieldFromName('severity');
                                 if ( $field && $field->isUsed()) {
-                                        $html_result .= $Language->getText('global','or').' <A HREF="'.$url.'&order=severity#results"><b>'.$Language->getText('tracker_include_report','sort_sev').'</b></A> ';
+				  $html_result .= $Language->getText('global','or').' <A HREF="'.$url.'&order=severity#results"><b>'.$Language->getText('tracker_include_report','sort_sev',$field->getLabel()).'</b></A> ';
                                 }
                                 $html_result .= $Language->getText('global','or').' <A HREF="'.$url.'&order=#results"><b>'.$Language->getText('tracker_include_report','reset_sort').'</b></a>. ';
                         }

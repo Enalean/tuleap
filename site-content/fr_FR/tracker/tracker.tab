@@ -336,7 +336,7 @@ tracker_include_report	at_once	s à la fois.
 tracker_include_report	sorted_by	trié(s) par
 tracker_include_report	matching	artefact(s)
 tracker_include_report	sort_results	Cliquer sur une entête de colonne pour trier les résultats (ordre ascendant ou descendant), 
-tracker_include_report	sort_sev	trier par sévérité
+tracker_include_report	sort_sev	trier par $1
 tracker_include_report	reset_sort	réinitialiser le tri
 tracker_include_report	multicolumn_sort	Vous pouvez aussi <a href="$1"><b> $2 le tri multi-colonnes</b></a>.
 tracker_include_report	sev_colors	Echelle de sévérité:
