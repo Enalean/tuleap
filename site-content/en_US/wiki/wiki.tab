@@ -82,8 +82,8 @@ wiki_actions_wikiserviceadmin	update_attachment_perm_err	Could not update permis
 #-----------------------------------------------
 # Script: SF/common/wiki/WikiService.class
 #
-wiki_wikiservice	acces_denied_whole	You are not authorized to access this Wiki. Please contact a Project Administrator.
-wiki_wikiservice	acces_denied_page	You are not authorized to access this Wiki Page. Please contact a Project Administrator.
+wiki_wikiservice	acces_denied_whole	You are not authorized to access this Wiki. Please contact a <A HREF="$1">Project Administrator</A>.
+wiki_wikiservice	acces_denied_page	You are not authorized to access this Wiki Page. Please contact a <A HREF="$1">Project Administrator</A>.
 #
 #-----------------------------------------------
 # Script: SF/common/wiki/views/WikiServiceAdminViews.class

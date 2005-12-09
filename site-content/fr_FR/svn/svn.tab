@@ -122,4 +122,4 @@ svn_utils	write_err	Erreur: Impossible d'écrire dans le fichier $1
 # Script: SF/www/svn/svn_utils.php
 #
 svn_viewcvs	access_denied	Accès refusé
-svn_viewcvs	acc_den_comment	Vous n'avez pas l'autorisation d'accès pour ce fichier. Veuillez contacter un administrateur du projet.
+svn_viewcvs	acc_den_comment	Vous n'avez pas l'autorisation d'accès pour ce fichier. Veuillez contacter un <A HREF="$1">administrateur du projet</A>.

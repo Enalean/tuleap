@@ -46,10 +46,12 @@ if (user_isloggedin()) {
   // Check permissions for release, then package
   if (permission_exist('RELEASE_READ', $file_release['release_id'])) {
       if (!permission_is_authorized('RELEASE_READ',$file_release['release_id'],user_getid(),$group_id)) {
-          exit_error($Language->getText('file_download','access_denied'), $Language->getText('file_download','access_not_authorized'));
+          exit_error($Language->getText('file_download','access_denied'), 
+		     $Language->getText('file_download','access_not_authorized',session_make_url("/project/memberlist.php?group_id=$group_id")));
       } 
   } else if (!permission_is_authorized('PACKAGE_READ',$file_release['package_id'],user_getid(),$group_id)) {
-      exit_error($Language->getText('file_download','access_denied'), $Language->getText('file_download','access_not_authorized'));
+      exit_error($Language->getText('file_download','access_denied'), 
+		 $Language->getText('file_download','access_not_authorized',session_make_url("/project/memberlist.php?group_id=$group_id")));
   } 
 
 

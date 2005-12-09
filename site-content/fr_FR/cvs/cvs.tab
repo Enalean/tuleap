@@ -109,7 +109,7 @@ cvs_commit_utils	removed_line	Lignes supprimées
 #
 cvs_viewcvs	title	Affichage de l'arbre CVS	
 cvs_viewcvs	error_noaccess	Accès refusé
-cvs_viewcvs	error_noaccess_msg	Vous n'avez pas l'autorisation d'accès pour ce fichier. Veuillez contacter un administrateur du projet.
+cvs_viewcvs	error_noaccess_msg	Vous n'avez pas l'autorisation d'accès pour ce fichier. Veuillez contacter un <A HREF="$1">administrateur du projet</A>.
 
 
 

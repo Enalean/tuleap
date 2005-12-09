@@ -16,14 +16,14 @@ if (user_isloggedin()) {
   // be backwards compatible with old viewcvs.cgi links that are now redirected
   if (!$root) $root = $cvsroot;
 
-  if (!check_cvs_access(user_getname(), $root, viewcvs_utils_getfile("/cvs/viewcvs.php"))) {
-      exit_error($Language->getText('cvs_viewcvs', 'error_noaccess'),
-		 $Language->getText('cvs_viewcvs', 'error_noaccess_msg'));
-  }
-
   $res_grp = db_query("SELECT * FROM groups WHERE unix_group_name='".$root."'");
   $row_grp = db_fetch_array($res_grp);
   $group_id = $row_grp['group_id'];
+  
+  if (!check_cvs_access(user_getname(), $root, viewcvs_utils_getfile("/cvs/viewcvs.php"))) {
+      exit_error($Language->getText('cvs_viewcvs', 'error_noaccess'),
+		 $Language->getText('cvs_viewcvs', 'error_noaccess_msg',session_make_url("/project/memberlist.php?group_id=$group_id")));
+  }
 
   viewcvs_utils_track_browsing($group_id,'cvs');
 

@@ -13,13 +13,15 @@ require_once('www/svn/svn_utils.php');
 $Language->loadLanguageMsg('svn/svn');
 
 if (user_isloggedin()) {
-  if (!svn_utils_check_access(user_getname(), $root, viewcvs_utils_getfile("/svn/viewcvs.php"))) {
-    exit_error($Language->getText('svn_viewcvs','access_denied'), $Language->getText('svn_viewcvs','acc_den_comment'));
-  }
 
   $res_grp = db_query("SELECT * FROM groups WHERE unix_group_name='".$root."'");
   $row_grp = db_fetch_array($res_grp);
   $group_id = $row_grp['group_id'];
+
+  if (!svn_utils_check_access(user_getname(), $root, viewcvs_utils_getfile("/svn/viewcvs.php"))) {
+    exit_error($Language->getText('svn_viewcvs','access_denied'), 
+	       $Language->getText('svn_viewcvs','acc_den_comment',session_make_url("/project/memberlist.php?group_id=$group_id")));
+  }
 
   viewcvs_utils_track_browsing($group_id,'svn');
 
