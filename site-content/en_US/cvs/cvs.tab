@@ -104,7 +104,7 @@ cvs_commit_utils	removed_line	Removed Lines
 #
 cvs_viewcvs	title	Browse CVS Tree	
 cvs_viewcvs	error_noaccess	Access Denied	
-cvs_viewcvs	error_noaccess_msg	You are not authorized to access this file. Please contact a Project Administrator.
+cvs_viewcvs	error_noaccess_msg	You are not authorized to access this file. Please contact a <A HREF="$1">Project Administrator</A>.
 
 
 

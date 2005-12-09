@@ -91,7 +91,7 @@ class WikiService extends Controler {
     // Check if user can access to whole wiki
     if(!$this->wiki->isAutorized(user_getid())) {
         exit_error($Language->getText('global', 'perm_denied'),
-                   $Language->getText('wiki_wikiservice', 'acces_denied_whole'));
+                   $Language->getText('wiki_wikiservice', 'acces_denied_whole',session_make_url("/project/memberlist.php?group_id=".$this->gid)));
     }
 
     // Check if user can access to selected page
@@ -99,7 +99,7 @@ class WikiService extends Controler {
       $wp = new WikiPage($this->gid, $_REQUEST['pagename']);
       if(!$wp->isAutorized(user_getid())) {
 	exit_error($Language->getText('global', 'perm_denied'),
-                   $Language->getText('wiki_wikiservice', 'acces_denied_page'));
+                   $Language->getText('wiki_wikiservice', 'acces_denied_page',session_make_url("/project/memberlist.php?group_id=".$this->gid)));
       }
     }
   }

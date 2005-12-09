@@ -179,7 +179,7 @@ file_confirm_download	decline	I DECLINE
 file_download	incorrect_release_id	Incorrect File Release ID or Group ID
 file_download	report_error	Please report the error to the $1 Administrator using the <i>Contact Us</i> link in the main menu
 file_download	access_denied	Access Denied
-file_download	access_not_authorized	You are not authorized to access this file. Please contact a Project Administrator.
+file_download	access_not_authorized	You are not authorized to access this file. Please contact a <A HREF="$1">Project Administrator</A>.
 file_download	file_not_available	Internal Error: File not available. Please contact the system administrator
 #
 #-----------------------------------------------

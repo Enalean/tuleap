@@ -184,7 +184,7 @@ file_confirm_download	decline	JE REFUSE
 file_download	incorrect_release_id	ID de version, paquet ou projet incorrect
 file_download	report_error	Veuillez informer l'administrateur $1 de cette erreur en utilisant le lien <i>Contactez-nous</i> dans le menu principal
 file_download	access_denied	Accès refusé
-file_download	access_not_authorized	Vous n'avez pas les droits d'accès sur ce fichier. Veuillez contacter un administrateur du projet.
+file_download	access_not_authorized	Vous n'avez pas les droits d'accès sur ce fichier. Veuillez contacter un <A HREF="$1">administrateur du projet</A>.
 file_download	file_not_available	Erreur interne: le fichier n'est pas disponible. Veuillez contacter l'administrateur du site.
 #
 #-----------------------------------------------
