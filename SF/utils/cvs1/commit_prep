@@ -77,6 +77,18 @@ $BadVersion = "
 #	Subroutines
 #
 
+sub cleanup_old_files {
+  $username=`/usr/bin/whoami`;
+  chomp $username;
+  # get list of files older than one hour that belong to me and that contain ".lastdir."
+  @old_files=`find $TMPDIR -name "*.lastdir.*" -amin +60 -user $username`;
+  foreach (@old_files) {
+    chomp;
+    unlink $_;
+  }
+}
+
+
 sub write_line {
     local($filename, $line) = @_;
     open(FILE, ">$filename") || die("Cannot open $filename, stopped");
@@ -152,6 +164,8 @@ sub check_version {
 #
 #	Main Body	
 #
+
+cleanup_old_files();
 
 $id = getpgrp();		# You *must* use a shell that does setpgrp()!
 
