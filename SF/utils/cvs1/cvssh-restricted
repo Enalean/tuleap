@@ -91,6 +91,12 @@ if ($ARGV[1] eq "cvs server") {
       }
     }
   }
+
+  # cleanup old files in tmp (files older than one day with same owner)
+  $username=`/usr/bin/whoami`;
+  chomp $username;
+  `find /tmp -name "cvssh.*" -atime +1  -user $username -exec /bin/rm {} \\;`;
+
   # small trick: re-inject initial request with upcoming data from STDIN
   # ... there should be a simpler way, though.
   my $timestamp=`/bin/date +%s%N`;
