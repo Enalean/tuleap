@@ -34,6 +34,7 @@ sub correct_upload_wikipage {
   $c = $dbh->prepare($query);
   $c->execute();
   my $recent_group_id=$c->fetchrow();
+  if (!$recent_group_id) {return;}
 
   # Get corresponding UpLoad page ID.
   $query = "SELECT id FROM wiki_page WHERE pagename='UpLoad' AND group_id=$recent_group_id";
