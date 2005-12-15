@@ -429,7 +429,7 @@ function svn_utils_format_svn_history($group_id) {
 }
 
 // read permission access file. The default settings part.
-function svn_utils_read_svn_access_file_defaults($gname) {
+function svn_utils_read_svn_access_file_defaults($gname,$display=false) {
     global $feedback;
 
     $filename = "/svnroot/$gname/.SVNAccessFile";
@@ -439,9 +439,14 @@ function svn_utils_read_svn_access_file_defaults($gname) {
     $buffer = '';
     while (!feof($fd)) {
 	$line = fgets($fd, 4096);
-	if (strpos($line,'# BEGIN CODEX DEFAULT') !== false) { $in_settings = true; }
+	//if for display: don't include comment lines 
+	if ($display && strpos($line,'# END CODEX DEFAULT') !== false) { $in_settings = false; break; }
+	else if (!$display && strpos($line,'# BEGIN CODEX DEFAULT') !== false) { $in_settings = true; }
+
 	if ($in_settings) { $buffer .= $line; }
-	if (strpos($line,'# END CODEX DEFAULT') !== false) { $in_settings = false; break; }
+
+	if ($display && strpos($line,'# BEGIN CODEX DEFAULT') !== false) { $in_settings = true; }
+	else if (!$display && strpos($line,'# END CODEX DEFAULT') !== false) { $in_settings = false; break; }
     }
     fclose($fd);
     return $buffer;

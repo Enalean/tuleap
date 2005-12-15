@@ -45,9 +45,29 @@ while(my ($group_id, $group_name, $status, $is_public, $cvs_tracker, $svn_tracke
 	while($user_name = $d->fetchrow()) {
 	   $user_list .= "$user_name,";
 	}
+	$user_list =~ s/,$//;
 
-	$grouplist = "$group_name:$status:$is_public:$cvs_tracker:$svn_tracker:$group_id:$user_list\n";
-	$grouplist =~ s/,$//;
+	my $ugroup_list = "";
+
+	my $new1_query = "select name,ugroup_id from ugroup where group_id=$group_id ORDER BY ugroup_id";
+	my $d1 = $dbh->prepare($new1_query);
+	$d1->execute();
+
+	while (my ($ug_name, $ug_id) = $d1->fetchrow()) {
+
+	  $ugroup_list .= " $ug_name=";	  
+	  my $new2_query = "select u.user_name from user u, ugroup_user ugu where ugu.ugroup_id=$ug_id AND ugu.user_id = u.user_id";
+	  my $d2 = $dbh->prepare($new2_query);
+	  $d2->execute();
+
+	  while ($user_name = $d2->fetchrow()) {
+	    $ugroup_list .= "$user_name,";
+	  }
+
+	  $ugroup_list =~ s/,$//;
+	}
+
+	$grouplist = "$group_name:$status:$is_public:$cvs_tracker:$svn_tracker:$group_id:$user_list:$ugroup_list\n";
 
 	push @group_array, $grouplist;
 }

@@ -8,10 +8,11 @@
 //
 //	Originally written by Laurent Julliard 2004, CodeX Team, Xerox
 //
-$Language->loadLanguageMsg('svn/svn');
 
+$Language->loadLanguageMsg('svn/svn');
 $project=project_get_object($group_id);
 $gname = $project->getUnixName();
+
 
 if ($post_changes) {
     $buffer = svn_utils_read_svn_access_file_defaults($gname);
@@ -24,6 +25,7 @@ if ($post_changes) {
     }
 }
 
+
 // Display the form
 svn_header_admin(array ('title'=>$Language->getText('svn_admin_access_control','access_ctrl'),
 		      'help' => 'SubversionAdministrationInterface.html#SubversionAccessControl'));
@@ -33,6 +35,7 @@ echo '
 
 if (svn_utils_svn_repo_exists($gname)) {
     $svn_accessfile = svn_utils_read_svn_access_file($gname);
+
     echo'
        <FORM ACTION="'. $PHP_SELF .'" METHOD="GET">
        <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
@@ -40,6 +43,7 @@ if (svn_utils_svn_repo_exists($gname)) {
        <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
       <p>'.$Language->getText('svn_admin_access_control','def_policy',$GLOBALS['sys_name']).' 
       <h3>'.$Language->getText('svn_admin_access_control','access_ctrl_file').' '. help_button('SubversionAdministrationInterface.html#SubversionAccessControl').':</h3> 
+      <p>'.str_replace("\n","<br>",svn_utils_read_svn_access_file_defaults($gname,true)).'
        <TEXTAREA cols="70" rows="20" wrap="virtual" name="form_accessfile">'.$svn_accessfile.'</TEXTAREA>
         </p>
         <p><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'"></p></FORM>';

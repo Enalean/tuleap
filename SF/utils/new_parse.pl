@@ -42,7 +42,7 @@ require("include.pl");  # Include all the predefined functions and variables
 my $user_file = $file_dir . "user_dump";
 my $group_file = $file_dir . "group_dump";
 my ($uid, $status, $username, $shell, $passwd, $win_passwd, $winnt_passwd, $email, $realname);
-my ($gname, $gstatus, $gid, $userlist);
+my ($gname, $gstatus, $gid, $userlist, $ugrouplist);
 my $server_url;
 if ($sys_force_ssl) {
   $server_url="https://$sys_https_host";
@@ -158,7 +158,7 @@ while ($ln = pop(@userdump_array)) {
 print ("\n\n	Processing Groups\n\n");
 while ($ln = pop(@groupdump_array)) {
 	chop($ln);
-	($gname, $gstatus, $gis_public, $cvs_tracker, $svn_tracker, $gid, $userlist) = split(":", $ln);
+	($gname, $gstatus, $gis_public, $cvs_tracker, $svn_tracker, $gid, $userlist, $ugrouplist) = split(":", $ln);
 	
 	$cvs_id = $gid + 50000;
 	$gid += $gid_add;
@@ -175,6 +175,7 @@ while ($ln = pop(@groupdump_array)) {
 
 	# make all user names lower case.
 	$userlist =~ tr/A-Z/a-z/;
+	$ugrouplist =~ tr/A-Z/a-z/;
 
 	$group_exists = getgrnam($gname);
 
@@ -364,6 +365,10 @@ while ($ln = pop(@groupdump_array)) {
 
 	}
 
+
+	#test only
+	$group_modified = 1;
+
 	# update Subversion DAV access control file if needed
 	my $svnaccess_file = "$svn_prefix/$gname/.SVNAccessFile";
         # This test will be removed if we need to list active/restricted users in the SVN auth file
@@ -397,7 +402,14 @@ while ($ln = pop(@groupdump_array)) {
             # SF/www/svn/svn_utils.php
             print SVNACCESS "# BEGIN CODEX DEFAULT SETTINGS - DO NOT REMOVE\n";
             print SVNACCESS "[groups]\n";
-            print SVNACCESS "members = ",$userlist,"\n\n";
+            print SVNACCESS "members = ",$userlist,"\n";
+
+	    @ugroup_array = split(" ",$ugrouplist);
+	    while ($ln = pop(@ugroup_array)) {
+		print SVNACCESS $ln,"\n";
+	    }
+	    print SVNACCESS "\n";
+
             print SVNACCESS "[/]\n";
             if ($sys_allow_restricted_users) {
               print SVNACCESS "* = \n"; # deny all access by default

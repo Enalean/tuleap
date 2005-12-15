@@ -1,10 +1,73 @@
+#!/bin/bash
+#
+# CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+# Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2004. All Rights Reserved
+# This file is licensed under the CodeX Component Software License
+# http://codex.xerox.com
+#
+# THIS FILE IS THE PROPERTY OF XEROX AND IS ONLY DISTRIBUTED WITH A
+# COMMERCIAL LICENSE OF CODEX. IT IS *NOT* DISTRIBUTED UNDER THE GNU
+# PUBLIC LICENSE.
+#
+#  $Id: migration_24.sh 1776 2005-06-23 14:29:05Z guerin $
+#
+#      Originally written by Laurent Julliard 2004, CodeX Team, Xerox
+#
+#  This file is part of the CodeX software and must be placed at the same
+#  level as the CodeX, RPMS_CodeX and nonRPMS_CodeX directory when
+#  delivered on a CD or by other means
+#
+#  This script migrates a site running CodeX 2.6 to CodeX 2.8
+#
+
+
+
+# path to command line tools
+GROUPADD='/usr/sbin/groupadd'
+GROUPDEL='/usr/sbin/groupdel'
+USERADD='/usr/sbin/useradd'
+USERDEL='/usr/sbin/userdel'
+USERMOD='/usr/sbin/usermod'
+MV='/bin/mv'
+CP='/bin/cp'
+LN='/bin/ln'
+LS='/bin/ls'
+RM='/bin/rm'
+TAR='/bin/tar'
+MKDIR='/bin/mkdir'
+RPM='/bin/rpm'
+CHOWN='/bin/chown'
+CHMOD='/bin/chmod'
+FIND='/usr/bin/find'
+MYSQL='/usr/bin/mysql'
+TOUCH='/bin/touch'
+CAT='/bin/cat'
+MAKE='/usr/bin/make'
+TAIL='/usr/bin/tail'
+GREP='/bin/grep'
+CHKCONFIG='/sbin/chkconfig'
+SERVICE='/sbin/service'
+PERL='/usr/bin/perl'
+
+CMD_LIST="GROUPADD GROUDEL USERADD USERDEL USERMOD MV CP LN LS RM TAR \
+MKDIR RPM CHOWN CHMOD FIND TOUCH CAT MAKE TAIL GREP CHKCONFIG \
+SERVICE PERL"
+
+
+
+
+###############################################################################
+#
+#
 ALTER TABLE `plugin` CHANGE `enabled` `available` TINYINT( 4 ) DEFAULT '0' NOT NULL 
 
 ajouter $sys_custompluginsroot dans local.inc
 
 
 
--- SR #282 on partners: simplify status field
+###############################################################################
+# SR #282 on partners: simplify status field
+#
 -- create stage field for Bug, Tasks, SR and Empty tracker templates (Patch tracker already has the field response)
 
 INSERT INTO artifact_field VALUES (30,1,'stage',2,'SB','','Stage','Stage in the life cycle of the artifact','',0,0,1,0,NULL,'1');
@@ -94,3 +157,186 @@ INSERT INTO artifact_field_value_list VALUES (12,5,7,'In Test','Updated/Created 
 INSERT INTO artifact_field_value_list VALUES (12,5,8,'Approved','The artifact fix has been succesfully tested. It is approved and awaiting release.',90,'A');
 INSERT INTO artifact_field_value_list VALUES (12,5,9,'Declined','The artifact was not accepted.',100,'A');
 INSERT INTO artifact_field_value_list VALUES (12,5,10,'Done','The artifact is closed.',110,'A');
+
+###############################################################################
+# add project ugroup definition in CodeX default SVN Access file
+#
+
+
+$PERL <<'EOF'
+
+use DBI;
+use Sys::Hostname;
+use Carp;
+
+require "/home/httpd/SF/utils/include.pl";  # Include all the predefined functions
+
+&load_local_config();
+
+# reuse from database_dump.pl
+
+my $group_array = ();
+
+&db_connect;
+
+# Dump the Groups Table information
+$query = "select group_id,unix_group_name,status,is_public,cvs_tracker,svn_tracker from groups";
+$c = $dbh->prepare($query);
+$c->execute();
+
+while(my ($group_id, $group_name, $status, $is_public, $cvs_tracker, $svn_tracker) = $c->fetchrow()) {
+
+	my $new_query = "select user.user_name AS user_name FROM user,user_group WHERE user.user_id=user_group.user_id AND group_id=$group_id";
+	my $d = $dbh->prepare($new_query);
+	$d->execute();
+
+	my $user_list = "";
+	
+	while($user_name = $d->fetchrow()) {
+	   $user_list .= "$user_name,";
+	}
+
+	$user_list =~ s/,$//;
+
+	my $ugroup_list = "";
+
+	my $new1_query = "select name,ugroup_id from ugroup where group_id=$group_id ORDER BY ugroup_id";
+	my $d1 = $dbh->prepare($new1_query);
+	$d1->execute();
+
+	while (my ($ug_name, $ug_id) = $d1->fetchrow()) {
+
+	  $ugroup_list .= " $ug_name=";	  
+	  my $new2_query = "select u.user_name from user u, ugroup_user ugu where ugu.ugroup_id=$ug_id AND ugu.user_id = u.user_id";
+	  my $d2 = $dbh->prepare($new2_query);
+	  $d2->execute();
+
+	  while ($user_name = $d2->fetchrow()) {
+	    $ugroup_list .= "$user_name,";
+	  }
+
+	  $ugroup_list =~ s/,$//;
+	}
+
+	$grouplist = "$group_name:$status:$is_public:$cvs_tracker:$svn_tracker:$group_id:$user_list:$ugroup_list\n";
+
+	push @group_array, $grouplist;
+}
+
+# Now write out the files
+write_array_file($file_dir."group_dump", @group_array);
+    
+
+# reuse from new_parse.pl
+
+# Make sure umask is properly positioned for the
+# entire session. Root has umask 022 by default
+# causing all the mkdir xxx, 775 to actually 
+# create dir with permission 755 !!
+# So set umask to 002 for the entire script session 
+umask 002;
+
+my $group_file = $file_dir . "group_dump";
+my ($uid, $status, $username, $shell, $passwd, $win_passwd, $winnt_passwd, $email, $realname);
+my ($gname, $gstatus, $gid, $userlist, $ugrouplist);
+
+# Open up all the files that we need.
+@groupdump_array = open_array_file($group_file);
+
+
+#
+# Loop through @groupdump_array and deal w/ users.
+#
+print ("\n\n	Processing Groups\n\n");
+while ($ln = pop(@groupdump_array)) {
+    chop($ln);
+    ($gname, $gstatus, $gis_public, $cvs_tracker, $svn_tracker, $gid, $userlist, $ugrouplist) = split(":", $ln);
+
+    print ("	     ",$gname,"\n");
+    $gid += $gid_add;
+
+    # Add sourceforge user to the group if it is a private project
+    # otherwise Apache won't be able to access the document Root
+    # of the project web iste which is not world readable (see below)
+    $public_grp = $gis_public && ! -e "$grpdir_prefix/$gname/.CODEX_PRIVATE";
+    if ($userlist eq "") {
+	$userlist = "sourceforge" unless $public_grp;
+    } else {
+	$userlist .= ",sourceforge" unless $public_grp;
+    }
+
+    # make all user names lower case.
+    $userlist =~ tr/A-Z/a-z/;
+    $ugrouplist =~ tr/A-Z/a-z/;
+
+    # update Subversion DAV access control file if needed
+    my $svnaccess_file = "$svn_prefix/$gname/.SVNAccessFile";
+    
+    my $custom_perm=0;
+    my $custom_lines = "";
+    my $public_svn = $gis_public && ! -e "$svn_prefix/$gname/.CODEX_PRIVATE";
+		
+    # Retrieve custom permissions, if any
+    if (-e "$svnaccess_file") {
+	open(SVNACCESS,"$svnaccess_file");
+	while (<SVNACCESS>) {
+	    if ($custom_perm) {
+		$custom_lines.=$_;
+	    } else {
+		if (m/END CODEX DEFAULT SETTINGS/) {$custom_perm=1;}
+	    }
+	}
+	close(SVNACCESS);
+    }
+    
+    if (-d "$svn_prefix/$gname") {
+	open(SVNACCESS,">$svnaccess_file")
+	or croak "Can't open Subversion access file $svnaccess_file: $!";
+	# if you change these block markers also change them in
+	# SF/www/svn/svn_utils.php
+	print SVNACCESS "# BEGIN CODEX DEFAULT SETTINGS - DO NOT REMOVE\n";
+	print SVNACCESS "[groups]\n";
+	print SVNACCESS "members = ",$userlist,"\n";
+
+	$new_custom_lines = $custom_lines;
+	@ugroup_array = split(" ",$ugrouplist);
+
+	while ($ln = pop(@ugroup_array)) {
+	    print SVNACCESS $ln,"\n";
+
+	    ##parse custom rules to rename groups that have the same name as ugroup
+	    ($ug_name,$ugulist) = split("=",$ln);
+	    @custom_array = split("\n",$custom_lines);
+	    foreach (@custom_array) {
+		if (/^${ug_name}=/) {
+		    $new_custom_lines =~ s/${ug_name}=/${ug_name}_svn=/g;
+		}
+	    }
+
+
+	}
+	print SVNACCESS "\n";
+
+	print SVNACCESS "[/]\n";
+	if ($sys_allow_restricted_users) {
+	    print SVNACCESS "* = \n"; # deny all access by default
+	    # we don't know yet how to enable read access to all active users,
+	    # and deny it to all restricted users...
+	} else {
+	    if ($public_svn) { print SVNACCESS "* = r\n"; }
+	    else { print SVNACCESS "* = \n";}
+	}
+	print SVNACCESS "\@members = rw\n";
+	print SVNACCESS "# END CODEX DEFAULT SETTINGS\n";
+	if ($custom_perm) { print SVNACCESS $new_custom_lines;}
+	close(SVNACCESS);
+            
+	# set group ownership, codex user as owner so that
+	# PHP scripts can write to it directly
+	system("chown -R $cxname:$gid $svnaccess_file");
+	system("chmod g+rw $svnaccess_file");
+    }
+}
+
+exit;
+EOF
