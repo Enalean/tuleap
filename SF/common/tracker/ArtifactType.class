@@ -1645,10 +1645,11 @@ class ArtifactType extends Error {
 	 * @param select: the select value
 	 * @param from: the from value
 	 * @param where: the where value
+	 * @param count: the number of 
 	 *
 	 * @return void
 	 */
-	function getExportQueryElements($fields,&$select,&$from,&$where) {
+	function getExportQueryElements($fields,&$select,&$from,&$where,&$count_user_fields) {
 		
 		//
 		// NOTICE
@@ -1677,6 +1678,7 @@ class ArtifactType extends Error {
 
 
 		$count = 1;
+		$count_user_fields = 0;
 		reset($fields);
 		
 		$select = "SELECT ";
@@ -1705,6 +1707,7 @@ class ArtifactType extends Error {
 				if ( ($field->isUsername())&&(!$field->isSelectBox())&&(!$field->isMultiSelectBox()) ) {
 					$select .= " u.user_name as ".$field->getName();
 					$from .= " LEFT JOIN user u ON (u.user_id=a.".$field->getName().")";
+					$count_user_fields++;
 				} else {
 					$select .= " a.".$field->getName();
 				}
@@ -1730,6 +1733,7 @@ class ArtifactType extends Error {
 					if ( ($field->isUsername())&&(!$field->isSelectBox())&&(!$field->isMultiSelectBox()) ) {
 						$select .= " u".$count.".user_name as ".$field->getName();
 						$from .= " LEFT JOIN user u".$count." ON (v".$count.".".$field->getValueFieldName()." = u".$count.".user_id)";
+						$count_user_fields++;
 					} else {
 						$select .= " v".$count.".".$field->getValueFieldName()." as ".$field->getName();
 					}
@@ -1751,29 +1755,63 @@ class ArtifactType extends Error {
 	 * @param col_list (OUT): the field name list
 	 * @param lbl_list (OUT): the field label list
 	 * @param dsc_list (OUT): the field description list
+	 * @param select (OUT):
+	 * @param from (OUT):
+	 * @param where (OUT):
+	 * @param multiple_queries (OUT):
+	 * @param all_queries (OUT):
 	 *
 	 * @return string: the sql query
 	 */
-	function buildExportQuery(&$fields,&$col_list,&$lbl_list,&$dsc_list,&$select,&$from,&$where) {
-		global $art_field_fact;
-		
-		$fields = $art_field_fact->getAllUsedFields();
-
-		reset($fields);
-		while (list(,$field) = each($fields) ) {
-			if ( $field->getName() != "comment_type_id" ) {
-				$col_list[$field->getName()] = $field->getName();
-				$lbl_list[$field->getName()] = $field->getLabel();
-				$dsc_list[$field->getName()] = $field->getDescription();
-			}
-		}
-		
-		$this->getExportQueryElements($fields,$select,$from,$where);
-		
-		$sql = $select." ".$from." ".$where." group by a.artifact_id";
-		//echo $sql;
-		
-		return $sql;
+	function buildExportQuery(&$fields,&$col_list,&$lbl_list,&$dsc_list,&$select,&$from,&$where,&$multiple_queries,&$all_queries,$constraint=false) {
+	  global $art_field_fact;
+	  
+	  $all_queries = array();
+	  $fields = $art_field_fact->getAllUsedFields();
+	  
+	  reset($fields);
+	  while (list(,$field) = each($fields) ) {
+	    if ( $field->getName() != "comment_type_id" ) {
+	      $col_list[$field->getName()] = $field->getName();
+	      $lbl_list[$field->getName()] = $field->getLabel();
+	      $dsc_list[$field->getName()] = $field->getDescription();
+	    }
+	  }
+	  
+	  //it gets a bit more complicated if we have more fields than SQL wants to treat in one single query
+	  if (count($fields) > $GLOBALS['sys_server_join']) {
+	    $multiple_queries = true;
+	    $chunked_fields = array_chunk($fields,$GLOBALS['sys_server_join']-3,true);
+	    $this->cutExportQuery($chunked_fields,$select,$from,$where,$all_queries,$constraint);
+	      
+	      
+	  } else {
+	    $multiple_queries = false;
+	    $this->getExportQueryElements($fields,$select,$from,$where,$count_user_fields);
+	    
+	    if ($count_user_fields > $GLOBALS['sys_server_join'] - count($fields)) {
+	      $multiple_queries = true;
+	      $chunked_fields = array_chunk($fields,count($fields)/2,true);
+	      $this->cutExportQuery($chunked_fields,$select,$from,$where,$count_user_fields,$all_queries,$constraint);
+	    } else {
+	      $sql = $select." ".$from." ".$where." ".($constraint ? $constraint : "")." group by a.artifact_id";
+	    }
+	  }
+	  return $sql;
+	}
+	
+	function cutExportQuery($chunks,&$select,&$from,&$where,&$all_queries,$constraint=false) {
+	  foreach ($chunks as $chunk) {
+	    $this->getExportQueryElements($chunk,$select,$from,$where,$count_user_fields);
+	    if ($count_user_fields > $GLOBALS['sys_server_join'] - count($chunk)) {
+	      //for each user field we join another user table
+	      $chunked_fields = array_chunk($chunk,count($chunk)/2,true);
+	      $this->cutExportQuery($chunked_fields,$select,$from,$where,$count_user_fields,$all_queries,$constraint);
+	    } else {
+	      $sql = $select." ".$from." ".$where." ".($constraint ? $constraint : "")." group by a.artifact_id";
+	      $all_queries[] = $sql;
+	    }
+	  }
 	}
 
 
