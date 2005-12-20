@@ -49,7 +49,7 @@ if ( $atid ) {
 		exit_error($Language->getText('global','error'),$art_field_fact->getErrorMessage());
 	}
 	
-	$sql = $at->buildExportQuery($fields,$col_list,$lbl_list,$dsc_list,$select,$from,$where);
+	$sql = $at->buildExportQuery($fields,$col_list,$lbl_list,$dsc_list,$select,$from,$where,$multiple_queries,$all_queries);
 
         // Normally these two fields should be part of the artifact_fields.
         // For now big hack:
@@ -87,8 +87,17 @@ $eol = "\n";
     
 //echo "DBG -- $sql<br>";
 
-$result=db_query($sql);
-$rows = db_numrows($result);    
+if ($multiple_queries) {
+  $all_results = array();
+  foreach($all_queries as $q) {
+    $result = db_query($q);
+    $all_results[] = $result;
+    $rows = db_numrows($result);    
+  }
+} else {
+  $result=db_query($sql);
+  $rows = db_numrows($result);    
+}
 
 if ($export == 'artifact') {
 
@@ -101,9 +110,21 @@ if ($export == 'artifact') {
 	
 		echo build_csv_header($col_list, $lbl_list).$eol;
 		
-		while ($arr = db_fetch_array($result)) {	    
+		if ($multiple_queries) {
+		  $multiarr = array();
+		  for ($i = 0; $i < $rows; $i++) {
+		    foreach ($all_results as $result) {
+		      $multiarr = array_merge($multiarr,db_fetch_array($result));
+		    }
+		    
+		    prepare_artifact_record($ath,$fields,$atid,$multiarr);
+		    echo build_csv_record($col_list, $multiarr).$eol;
+		  }
+		} else {
+		  while ($arr = db_fetch_array($result)) {	    
 		    prepare_artifact_record($at,$fields,$atid,$arr);
 		    echo build_csv_record($col_list, $arr).$eol;
+		  }
 		}
 	
     } else {

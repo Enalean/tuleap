@@ -86,6 +86,7 @@ $sys_dbname="sourceforge";
 $sys_dbuser="sourceforge";
 $sys_dbpasswd="%sys_dbpasswd%";
 $sys_server="mysql";
+$sys_server_join="30";
  
 // Where files are placed when uploaded
 $FTPINCOMING_DIR = "/home/ftp/incoming";

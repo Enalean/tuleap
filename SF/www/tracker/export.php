@@ -22,8 +22,9 @@ if ( !$ath->isValid() ) {
 }
 
 
+$constraint = "AND a.artifact_id IN ($export_aids)";
+$sql = $ath->buildExportQuery($fields,$col_list,$lbl_list,$dsc_list,$export_select,$export_from,$export_where,$multiple_queries,$all_queries,$constraint);
 
-$ath->buildExportQuery($fields,$col_list,$lbl_list,$dsc_list,$export_select,$export_from,$export_where);
 // Normally these two fields should be part of the artifact_fields.
 // For now big hack:
 // As we don't know the projects language
@@ -56,11 +57,20 @@ $col_list[] = 'is_dependent_on';
 
 $eol = "\n";
 
-$sql = $export_select." ".$export_from." ".$export_where." AND a.artifact_id IN ($export_aids) group by a.artifact_id";
+//$sql = $export_select." ".$export_from." ".$export_where." AND a.artifact_id IN ($export_aids) group by a.artifact_id";
 
+if ($multiple_queries) {
+  $all_results = array();
+  foreach($all_queries as $q) {
+    $result = db_query($q);
+    $all_results[] = $result;
+    $rows = db_numrows($result);    
+  }
+} else {
+  $result = db_query($sql);
+  $rows = db_numrows($result);
+}
 
-$result = db_query($sql);
-$rows = db_numrows($result);
 // Send the result in CSV format
 if ($result && $rows > 0) {
   $file_name = str_replace(' ','_','artifact_'.$ath->getItemName());
@@ -68,11 +78,28 @@ if ($result && $rows > 0) {
   header ('Content-Disposition: filename='.$file_name.'_'.$ath->Group->getUnixName().'.csv');
   
   echo build_csv_header($col_list, $lbl_list).$eol;
-  while ($arr = db_fetch_array($result)) {	    
-    prepare_artifact_record($ath,$fields,$atid,$arr);
-    $curArtifact=new Artifact($ath, $arr['artifact_id']);
-    if ($curArtifact->userCanView(user_getid())) {
-      echo build_csv_record($col_list, $arr).$eol;
+  
+  if ($multiple_queries) {
+    $multiarr = array();
+    for ($i = 0; $i < $rows; $i++) {
+      foreach ($all_results as $result) {
+	$multiarr = array_merge($multiarr,db_fetch_array($result));
+      }
+      
+      prepare_artifact_record($ath,$fields,$atid,$multiarr);
+      $curArtifact=new Artifact($ath, $multiarr['artifact_id']);
+      if ($curArtifact->userCanView(user_getid())) {
+	echo build_csv_record($col_list, $multiarr).$eol;
+      }
+    }
+    
+  } else {
+    while ($arr = db_fetch_array($result)) {	    
+      prepare_artifact_record($ath,$fields,$atid,$arr);
+      $curArtifact=new Artifact($ath, $arr['artifact_id']);
+      if ($curArtifact->userCanView(user_getid())) {
+	echo build_csv_record($col_list, $arr).$eol;
+      }
     }
   }
   
