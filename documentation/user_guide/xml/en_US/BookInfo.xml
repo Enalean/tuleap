@@ -558,6 +558,17 @@
 	- csv parsing checks now follow-up comments to avoid double submission.
         </revremark>
       </revision>
+      <revision>
+        <revnumber>2.9.4</revnumber>
+
+        <date>21-Dec-2005</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Project defined user groups are now available in
+	the project SVN Access File
+        </revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--

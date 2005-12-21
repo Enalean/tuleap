@@ -760,6 +760,10 @@ name = permission
 groupname = username1,username2,...
       </programlisting>
 
+	    <para>All project defined user groups (see <xref linkend="UserGroups" />) are 
+		also defined in the CodeX default permissions settings and ready to use
+		if you wish to redefine access permissions.</para>
+
 	  </listitem>
 
 	  <listitem><para><literal>permission</literal> is either
