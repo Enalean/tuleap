@@ -1,4 +1,7 @@
 #!/bin/sh
+
+set -e
+
 # $Id$
 #
 # CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
@@ -37,10 +40,13 @@
 # SvnParentPath is the directory where project repositories are found
 SvnParentPath=/svnroot
 
+SvnBackupPath=/home/subversion_backup
 # SvnIncrBackupPath is the directory where incremental backups are created
-SvnIncrBackupPath=/home1/subversion_backup/incr
-SvnFullBackupPath=/home1/subversion_backup/full
-SvnOldBackupPath=/home1/subversion_backup/old
+SvnIncrBackupPath=${SvnBackupPath}/incr
+# SvnFullBackupPath is the directory where full backups are created
+SvnFullBackupPath=${SvnBackupPath}/full
+# SvnOldBackupPath is the directory where old backups are moved
+SvnOldBackupPath=${SvnBackupPath}/old
 
 # LogFacility - what facility name to write log messages with (default='cron' -> /var/log/cron)
 LogFacility=cron
@@ -49,6 +55,15 @@ LogTag=SVN
 
 # What umask to use when creating backups
 Umask=027
+
+LS=/bin/ls
+RM=/bin/rm
+MKDIR=/bin/mkdir
+SVNADMIN=/usr/bin/svnadmin
+SVNLOOK=/usr/bin/svnlook
+HOTCOPY=/usr/lib/subversion/tools/backup/hot-backup.py
+PERL=/usr/bin/perl
+OLPERL="${PERL} -ne"
 
 # end of configuration variables
 ################################################################
@@ -78,7 +93,7 @@ do      case    "$1" in
         shift # next argument
 done
 
-if [ $HELP == 1 ]
+if [ "$HELP" == 1 ]
 then
     echo "Usage: backup_subversion.sh [-i] [-v] [-h]";
     echo "  -i : do an incremental backup instead of a full backup";
@@ -89,7 +104,7 @@ then
     exit 2;
 fi
 
-if [ $VERBOSE == 1 ]
+if [ "$VERBOSE" == 1 ]
 then
     # Output to stderr
     LOGCMD="logger -s -t ${LogTag}"
@@ -105,7 +120,7 @@ Start=`date +%s`
 umask ${Umask}
 
 
-if [ ${INCREMENTAL} -ne 1 ]
+if [ "${INCREMENTAL}" -ne 1 ]
 then
 
   ################################################################
@@ -113,39 +128,39 @@ then
   ### FULL BACKUP
   ###
 
-  if [ $VERBOSE == 1 ]
+  if [ "$VERBOSE" == 1 ]
   then
     ${LOGCMD} -p ${LogFacility}.info "Starting full backup of Subversion repositories"
   fi
 
-  mkdir -p ${SvnFullBackupPath}
+  ${MKDIR} -p ${SvnFullBackupPath}
   cd ${SvnFullBackupPath}
-  ls -1d ${SvnParentPath}/* > subversion.lis
+  ${LS} -1d ${SvnParentPath}/* > subversion.lis
 
-  DATE=`date +%m%d%y:%H%M`
+  DATE=`date +%Y%m%d:%H%M`
   OldBackupPath=${SvnOldBackupPath}/${DATE}
   OldBackupPathFull=${OldBackupPath}/full
   OldBackupPathIncr=${OldBackupPath}/incr
-  mkdir -p ${OldBackupPathFull}
-  mkdir -p ${OldBackupPathIncr}
-  mkdir -p current
+  ${MKDIR} -p ${OldBackupPathFull}
+  ${MKDIR} -p ${OldBackupPathIncr}
+  ${MKDIR} -p current
 
   ## Archive previous backup
   # Move current full backup into the archive
-  /bin/mv current/* ${OldBackupPathFull}
+  /bin/mv current/* ${OldBackupPathFull} || true
   
   # Move current incremental backup into the archive
-  /bin/mv ${SvnIncrBackupPath}/* ${OldBackupPathIncr}
+  /bin/mv ${SvnIncrBackupPath}/* ${OldBackupPathIncr} || true
 
   
   ## Create new full backup
 
   for directory in `cat subversion.lis` ; do
     # don't backup empty repositories
-    HEAD=`svnlook youngest ${directory}`
-    if [ ${HEAD} -ne 0 ]
+    HEAD=`${SVNLOOK} youngest ${directory}`
+    if [ "${HEAD}" -ne 0 ]
     then
-        /usr/lib/subversion/tools/backup/hot-backup.py $directory current \
+        ${HOTCOPY} $directory current \
          | ${LOGCMD} -p ${LogFacility}.info
     fi
   done
@@ -153,7 +168,7 @@ then
   # If there is no archives keeping, delete old full backup
   # and previous incermental backup
   if [ "${NOOLD}" == 1 ]; then
-      /bin/rm -rf ${OldBackupPath}
+      ${RM} -rf ${OldBackupPath}
   fi
 
 else
@@ -163,22 +178,20 @@ else
   ### INCREMENTAL  BACKUP
   ###
 
-  if [ $VERBOSE == 1 ]
+  if [ "$VERBOSE" == 1 ]
   then
     ${LOGCMD} -p ${LogFacility}.info "Starting incremental backup of Subversion repositories"
   fi
 
-
   cd ${SvnParentPath} || exit 1;
 
-  for Repos in *
+  for repo in `${LS} ${SvnParentPath}`
   do
-   if [ -d ${Repos} ] && [ -f ${Repos}/format ]
+   if [ -d "${repo}" ] && [ -f "${repo}/format" ]
    then
-    BAK=${SvnIncrBackupPath}/${Repos}
-    mkdir -p ${BAK}
+    BAK=${SvnIncrBackupPath}/${repo}    
     INCR=${BAK}/INCR.latest
-    if [ -s ${INCR} ]
+    if [ -f "${INCR}" ]
     then
         LAST=`cat ${INCR}`
     else
@@ -186,54 +199,63 @@ else
     fi
 
     # Last revision of full backup
-    if [ -s ${SvnFullBackupPath}/current/${Repos}-* ]
-    then
-      LASTFULL=`ls -d ${SvnFullBackupPath}/current/${Repos}-* | perl -ne 's/.*-//; print;'`
-      if [ ${LAST} -le ${LASTFULL} ]
+    for lstfullbkp in $(${LS} -d ${SvnFullBackupPath}/current/${repo}-* 2>/dev/null); do	
+	LASTFULL=$(basename ${lstfullbkp} | ${OLPERL} "print if s/^${repo}-([0-9]+)$/\1/;")
+	if [ "${LASTFULL}" != "" ]; then
+	    break
+	fi
+    done
+    if [ "${LASTFULL}" == "" ]; then
+	LASTFULL=0
+    fi
+
+    if [ -d "${SvnFullBackupPath}/current/${repo}-${LASTFULL}" ]
+    then     
+      if [ "${LAST}" -le "${LASTFULL}" ]
       then
-        if [ ${LAST} -ne 0 ]
+        if [ "${LAST}" -ne 0 ]
         then
+	    # A full backup is more recent than the latest incremental
           # remove previous incremental backups
-          /bin/rm -rf ${BAK}/*
+          ${RM} -rf ${BAK}/*
         fi
         LAST=${LASTFULL}
       fi
-    else
-      LAST=0
     fi
 
-    HEAD=`svnlook youngest ${Repos}`
+    HEAD=`${SVNLOOK} youngest ${repo}`
 
-    if [ ${LAST} -lt ${HEAD} ]
+    if [ "${LAST}" -lt "${HEAD}" ]
     then
       RANGE="$((${LAST} + 1)):${HEAD}"
-      if [ ${LAST} -ne 0 ]
+      if [ "${LAST}" -ne 0 ]
       then
         type=--incremental
       else
         type=
       fi
-
-      if svnadmin dump --quiet ${type} -r ${RANGE} ${Repos} \
+      ${MKDIR} -p ${BAK}
+      if ${SVNADMIN} dump --quiet ${type} -r ${RANGE} ${repo} \
           | bzip2 -c \
-          > ${BAK}/${Repos}.incr.${RANGE}.bz2
+          > ${BAK}/${repo}.incr.${RANGE}.bz2
       then
         if echo ${HEAD} > ${INCR}
         then
           ${LOGCMD} -p ${LogFacility}.info \
-              "Incremental backup of ${Repos} ${RANGE}"
+              "Incremental backup of ${repo} ${RANGE}"
         else
           ${LOGCMD} -p ${LogFacility}.err \
               "Incremental backup - error recording ${INCR}"
         fi
       else
+	  ${RM} ${BAK}/${repo}.incr.${RANGE}.bz2
         ${LOGCMD} -p ${LogFacility}.err \
-            "Incremental backup failed for repository '${Repos}' ${RANGE}"
+            "Incremental backup failed for repository '${repo}' ${RANGE}"
       fi
     fi
    else
     ${LOGCMD} -p ${LogFacility}.warn \
-        "Not a subversion repository: ${SvnParentPath}/${Repos}"
+        "Not a subversion repository: ${SvnParentPath}/${repo}"
    fi
   done
 fi
