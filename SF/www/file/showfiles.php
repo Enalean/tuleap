@@ -50,8 +50,16 @@ if (db_numrows($res)>0) {
         }
         
         if ($authorized) {
-            $res_package[$row['package_id']]=$row['name'];
-            $num_packages++;
+            if ( $release_id ) {
+                $sql3 = "SELECT package_id FROM frs_release WHERE release_id =". $release_id;
+                $res3 = db_query( $sql3 );
+                $row3 = db_fetch_array($res3);
+            }
+  	 
+            if ( !$release_id || $row3['package_id']==$row['package_id'] ) {
+                $res_package[$row['package_id']]=$row['name'];
+                $num_packages++;
+            }
         }
     }
 }
