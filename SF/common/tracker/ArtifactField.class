@@ -11,6 +11,7 @@
   //require_once('www/project/admin/permissions.php');
 
 $Language->loadLanguageMsg('tracker/tracker');
+require_once('common/permission/PermissionsManager.class');
 
 //
 // The artifact field object
@@ -1566,8 +1567,10 @@ class ArtifactField extends Error {
 	 * @param user_id: if not given or 0 take the current user
 	**/ 
 	function userCanRead($group_id,$group_artifact_id,$user_id=0) {
-	  $perms = $this->getPermissionForUser($group_id,$group_artifact_id,$user_id);
-	  return  permission_can_read_field($perms);
+        $pm =& PermissionsManager::instance();
+        return $pm->userHasPermission($group_artifact_id."#".$this->field_id, 'TRACKER_FIELD_READ', $user_id);
+	  //$perms = $this->getPermissionForUser($group_id,$group_artifact_id,$user_id);
+	  //return  permission_can_read_field($perms);
 	}
 
 	/** return true if user has Update permission on this field 
@@ -1576,8 +1579,10 @@ class ArtifactField extends Error {
 	 * @param user_id: if not given or 0 take the current user
 	**/ 
 	function userCanUpdate($group_id,$group_artifact_id,$user_id=0) {
-	  $perms = $this->getPermissionForUser($group_id,$group_artifact_id,$user_id);
-	  return permission_can_update_field($perms);
+        $pm =& PermissionsManager::instance();
+        return $pm->userHasPermission($group_artifact_id."#".$this->field_id, 'TRACKER_FIELD_UPDATE', $user_id);
+	  //$perms = $this->getPermissionForUser($group_id,$group_artifact_id,$user_id);
+	  //return permission_can_update_field($perms);
 	}
 
 

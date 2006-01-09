@@ -4,7 +4,7 @@ if (! defined('CODEX_RUNNER')) {
     define('CODEX_RUNNER', __FILE__);
     require_once('tests/CodexReporter.class');
 }
-
+require(getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/conf/local.inc');
 require_once('tests/simpletest/unit_tester.php');
 require_once('tests/simpletest/mock_objects.php'); //uncomment to use Mocks
 require_once('common/plugin/PluginFactory.class');

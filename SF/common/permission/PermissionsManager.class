@@ -1,0 +1,97 @@
+<?php
+
+/**
+ * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+ * 
+ * $Id$
+ *
+ * PermissionsManager
+ */
+require_once('common/dao/PermissionsDao.class');
+require_once('common/dao/CodexDataAccess.class');
+
+class PermissionsManager {
+    
+    var $permission_dao;
+    var $_permissions;
+    var $_ugroups_for_user;
+    
+    function PermissionsManager($permission_dao) {
+        $this->_permission_dao   =& $permission_dao;
+        $this->_permissions      = array();
+        $this->_ugroups_for_user = array();
+    }
+    
+    function & instance() {
+        static $_permissionmanager_instance;
+        if (!$_permissionmanager_instance) {
+            $dao =& new PermissionsDAO(CodexDataAccess::instance());
+            $_permissionmanager_instance = new PermissionsManager($dao);
+        }
+        return $_permissionmanager_instance;
+    }
+    
+    function userHasPermission($object_id, $permission_type, $user_id = 0) {
+        $has_permission = $this->_userHasFullPermission($user_id);
+        if (!$has_permission) {
+            $ugroups = $this->_getUgroupsForUser($user_id);
+            if (!isset($this->_permissions[$object_id])) {
+                $this->_permissions[$object_id] = array();
+            }
+            if (count(array_diff($ugroups, array_keys($this->_permissions[$object_id]))) > 0) {
+                foreach($ugroups as $ugroup) {
+                    $this->_permissions[$object_id][$ugroup] = array();
+                }
+                
+                $tracker_field_id = explode('#', $object_id); //An artifact field ?
+                if (count($tracker_field_id) > 1) {
+                    $dar =& $this->_permission_dao->searchPermissionsByArtifactFieldIdAndUgroups($tracker_field_id[0], $ugroups);
+                } else {
+                    $dar =& $this->_permission_dao->searchPermissionsByObjectIdAndUgroups($object_id, $ugroups);
+                }
+                while ($row = $dar->getRow()) {
+                    $this->_permissions[$row['object_id']][$row['ugroup_id']][] = $row['permission_type'];
+                }
+            }
+            //now we search for $permission_type
+            reset($ugroups);
+            while (!$has_permission && (list(,$ugroup) = each($ugroups))) {
+                if (isset($this->_permissions[$object_id][$ugroup])) {
+                    $has_permission = in_array($permission_type, $this->_permissions[$object_id][$ugroup]);
+                }
+            }
+        }
+        return $has_permission;
+    }
+    
+    function _userHasFullPermission($user_id = 0) {
+        return (user_isloggedin() && user_is_super_user());
+    }
+            
+    function _getUgroupsForUser($user_id = 0) {
+        //We get real user_id if user is logged in
+        if ($user_id == 0 && user_isloggedin()) {
+            unset($user_id);
+            $user_id = user_getid();
+        }
+        //We don't retrieve twice the same informartion
+        if (!isset($this->_ugroups_for_user[$user_id])) {
+            if (!user_isloggedin()) {
+                $ugroups = array($GLOBALS['UGROUP_ANONYMOUS']);
+            } else {
+                $u = new User($user_id);
+                if ($u->isSuperUser()) {
+                    $ugroups = array(); //No ugroups for super user, it is not needed for permissions
+                } else {
+                    //get ugroups user is part of
+                    $specific_ugroups = ugroup_db_list_tracker_ugroups_for_user($group_id,$group_artifact_id,$user_id);
+                    $dynamic_ugroups  = ugroup_db_list_dynamic_ugroups_for_user($group_id,$group_artifact_id,$user_id);
+                    $ugroups = array_merge($dynamic_ugroups, $specific_ugroups);
+                }
+            }
+            $this->_ugroups_for_user[$user_id] = $ugroups;
+        }
+        return $this->_ugroups_for_user[$user_id];
+    }
+}
+?>
