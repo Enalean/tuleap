@@ -11,7 +11,8 @@
   //require_once('www/project/admin/permissions.php');
 
 $Language->loadLanguageMsg('tracker/tracker');
-
+require_once('common/include/UserManager.class');
+require_once('common/permission/PermissionsManager.class');
 //
 // The artifact field object
 //
@@ -1566,8 +1567,11 @@ class ArtifactField extends Error {
 	 * @param user_id: if not given or 0 take the current user
 	**/ 
 	function userCanRead($group_id,$group_artifact_id,$user_id=0) {
-	  $perms = $this->getPermissionForUser($group_id,$group_artifact_id,$user_id);
-	  return  permission_can_read_field($perms);
+        $pm =& PermissionsManager::instance();
+        $um =& UserManager::instance();
+        $user =& $um->getUserById($user_id);
+        $ok = $pm->userHasPermission($group_artifact_id."#".$this->field_id, 'TRACKER_FIELD_READ', $user->getUgroups(array('artifact_type' => $group_artifact_id)));
+        return $ok;
 	}
 
 	/** return true if user has Update permission on this field 
@@ -1576,8 +1580,11 @@ class ArtifactField extends Error {
 	 * @param user_id: if not given or 0 take the current user
 	**/ 
 	function userCanUpdate($group_id,$group_artifact_id,$user_id=0) {
-	  $perms = $this->getPermissionForUser($group_id,$group_artifact_id,$user_id);
-	  return permission_can_update_field($perms);
+        $pm =& PermissionsManager::instance();
+        $um =& UserManager::instance();
+        $user =& $um->getUserById($user_id);
+        $ok = $pm->userHasPermission($group_artifact_id."#".$this->field_id, 'TRACKER_FIELD_UPDATE', $user->getUgroups(array('artifact_type' => $group_artifact_id)));
+        return $ok;
 	}
 
 
@@ -1587,8 +1594,11 @@ class ArtifactField extends Error {
 	 * @param user_id: if not given or 0 take the current user
 	**/ 
 	function userCanSubmit($group_id,$group_artifact_id,$user_id=0) {
-	  $perms = $this->getPermissionForUser($group_id,$group_artifact_id,$user_id);
-	  return permission_can_submit_field($perms);
+        $pm =& PermissionsManager::instance();
+        $um =& UserManager::instance();
+        $user =& $um->getUserById($user_id);
+        $ok = $pm->userHasPermission($group_artifact_id."#".$this->field_id, 'TRACKER_FIELD_SUBMIT', $user->getUgroups(array('artifact_type' => $group_artifact_id)));
+        return $ok;
 	}
 
 
@@ -1601,81 +1611,12 @@ class ArtifactField extends Error {
 	 * @param user_id: if  not given or 0 take the current user
 	 * return array of all associated permissions
 	 */
-	function getPermissionForUser($group_id,$group_artifact_id,$user_id=0) {
-
-	  if ($user_id == 0) {
-	    if (user_isloggedin()) {
-	      if (user_is_super_user()) {
-		return array('TRACKER_FIELD_READ','TRACKER_FIELD_UPDATE','TRACKER_FIELD_SUBMIT');
-	      } else {
-		unset($user_id);
-		$user_id = user_getid();
-	      }
-	    } else {
-	      return $this->getPermission(array($GLOBALS['UGROUP_ANONYMOUS']),$group_artifact_id);
-	    }
-	  }
-
-	  $u = new User($user_id);
-	  if ($u->isSuperUser()) return array('TRACKER_FIELD_READ','TRACKER_FIELD_UPDATE','TRACKER_FIELD_SUBMIT');
-
-	  //get ugroups user is part of
-	  $specific_ugroups = ugroup_db_list_tracker_ugroups_for_user($group_id,$group_artifact_id,$user_id);
-	  $dynamic_ugroups =  ugroup_db_list_dynamic_ugroups_for_user($group_id,$group_artifact_id,$user_id);
-	  $ugroups = array_merge($dynamic_ugroups, $specific_ugroups);
-	  
-	  return $this->getPermission($ugroups,$group_artifact_id);
-	  
-	}
-
-	/**
-	 *
-	 *
-	 */
-	function getPermission($ugroups,$group_artifact_id) {
-
-	  //first check specific permissions
-
-	  $sql = "SELECT distinct permission_type FROM permissions WHERE ugroup_id IN (".implode(',',$ugroups).") ".
-	    "AND permission_type LIKE 'TRACKER_FIELD%' ".
-	    "AND object_id = '$group_artifact_id#".$this->field_id."'";
-	  
-	  $res = db_query($sql);
-	  if (db_numrows($res) > 0) $specific_perm = util_result_column_to_array($res);
-
-	  return $specific_perm;
-
-/*	  
-	  
-
-	  //check if there is someone else who has specific rights
-	  $sql = "SELECT distinct permission_type FROM permissions WHERE ugroup_id NOT IN (".implode(',',$ugroups).") ".
-	    "AND permission_type LIKE 'TRACKER_FIELD%' ".
-	    "AND object_id = '$group_artifact_id#".$this->field_id."'";
-	  
-	  $res = db_query($sql);
-	  if (db_numrows($res) > 0) $non_permission = util_result_column_to_array($res);
-	    
-	  //finally, check default permissions of dynamic ugroups
-	  $sql = "SELECT distinct permission_type FROM permissions_values WHERE ugroup_id IN (".implode(",",$ugroups).") ".
-	    "AND permission_type LIKE 'TRACKER_FIELD%' ".
-	    "AND is_default = 1";
-	  if (isset($non_permission)) {
-	    $sql .= " AND permission_type NOT IN ('".implode("','",$non_permission)."')";
-	  }
-	  if (isset($specific_perm)) {
-	    $sql .= " AND permission_type NOT IN ('".implode("','",$specific_perm)."')";
-	  }
-
-	  $res = db_query($sql);
-	  if (db_numrows($res) > 0) $dynamic_perm = util_result_column_to_array($res);
-
-	  $ret = array();
-	  if (isset($specific_perm)) $ret = array_merge($ret,$specific_perm);
-	  if (isset($dynamic_perm)) $ret = array_merge($ret,$dynamic_perm);
-
-	  return $ret;
-*/
+	function getPermission($ugroups,$group_artifact_id,$user_id=0) {
+        $perms = array();
+        if ($this->userCanRead($ugroups,$group_artifact_id,$user_id)) $perms[] = 'TRACKER_FIELD_READ';
+        if ($this->userCanUpdate($ugroups,$group_artifact_id,$user_id)) $perms[] = 'TRACKER_FIELD_UPDATE';
+        if ($this->userCanSubmit($ugroups,$group_artifact_id,$user_id)) $perms[] = 'TRACKER_FIELD_SUBMIT';
+        return $perms;
 	}
 
 }

@@ -73,7 +73,7 @@ function ugroup_db_list_tracker_ugroups_for_user($group_id,$group_artifact_id,$u
 /** Return array of ugroup_id for all dynamic ugoups like 
  * (anonymous_user, registered_user, project_member,
  * project_admins, tracker_admins) that user is part of */
-function ugroup_db_list_dynamic_ugroups_for_user($group_id,$group_artifact_id,$user_id) {
+function ugroup_db_list_dynamic_ugroups_for_user($group_id,$instances,$user_id) {
   $user = new User($user_id);
   
   if (!$user->isValid()) return array($GLOBALS['UGROUP_ANONYMOUS']);
@@ -82,7 +82,13 @@ function ugroup_db_list_dynamic_ugroups_for_user($group_id,$group_artifact_id,$u
 
   if ($user->isMember($group_id))  $res[] = $GLOBALS['UGROUP_PROJECT_MEMBERS']; 
   if ($user->isMember($group_id,'A'))  $res[] = $GLOBALS['UGROUP_PROJECT_ADMIN'];
-  if ($user->isTrackerAdmin($group_id,$group_artifact_id))  $res[] = $GLOBALS['UGROUP_TRACKER_ADMIN'];
+  if (is_int($instances)) {
+      if ($user->isTrackerAdmin($group_id,$instances))  $res[] = $GLOBALS['UGROUP_TRACKER_ADMIN'];
+  } else if (is_array($instances)) {
+      if (isset($instances['artifact_type'])) {
+          if ($user->isTrackerAdmin($group_id,$instances['artifact_type']))  $res[] = $GLOBALS['UGROUP_TRACKER_ADMIN'];
+      }
+  }
 
   return $res;
 }
