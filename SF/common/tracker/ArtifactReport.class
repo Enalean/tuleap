@@ -11,6 +11,9 @@
 //require_once('common/tracker/ArtifactReportField.class');
 
 $Language->loadLanguageMsg('tracker/tracker');
+require_once('common/include/UserManager.class');
+require_once('common/dao/ArtifactFieldDao.class');
+require_once('common/dao/CodexDataAccess.class');
 
 //
 // Sort functions - Must be outside the classes
@@ -374,28 +377,173 @@ class ArtifactReport extends Error {
 	function selectReportItems($prefs,$morder,$advsrch,&$aids) {
             global $ath;
             $this->getQueryElements($prefs,$advsrch,$from,$where);
-		
-            // Final query
-            $sql = "select a.artifact_id ".$from." ".$where." group by a.artifact_id";
-            //echo "<DBG> query count=".$sql."<br>";
-            $res = db_query($sql);
-
-            $totalrows=0;
             
-            $user_can_read                = null;
-            $check_perms_on_each_artifact = !$ath->userHasFullAccess();
-            while ($arr = db_fetch_array($res)) {
-                $curArtifact = new Artifact($ath, $arr['artifact_id'], false);
-                if (is_null($user_can_read) || $check_perms_on_each_artifact) {
-                    $user_can_read = $curArtifact->userCanView();
+            $aids = array();
+            
+            $um =& UserManager::instance();
+            $u  =& $um->getCurrentUser();
+            $instances = array('artifact_type' => $this->group_artifact_id);
+            $ugroups = $u->getUgroups($instances);
+            
+            $pm          =& PermissionsManager::instance();
+            $permissions = $pm->getPermissionsAndUgroupsByObjectid($this->group_artifact_id, $ugroups);
+            
+            //Does the user member of at least one group which has ACCESS_FULL ?
+            if (isset($permissions['TRACKER_ACCESS_FULL']) && count(array_intersect($ugroups, $permissions['TRACKER_ACCESS_FULL'])) > 0) {
+                
+                $sql = "SELECT a.artifact_id ".
+                       $from." ".
+                       $where.
+                       "";
+                $aids = array_merge($aids, $this->_ExecuteQueryForSelectReportItems($sql));
+            } else {
+            
+                $static_ugroups  = $u->getStaticUgroups();
+                $dynamic_ugroups = $u->getDynamicUgroups($instances);
+                //Does the user member of at least one group which has ACCESS_SUBMITTER ?
+                if (isset($permissions['TRACKER_ACCESS_SUBMITTER']) && count(array_intersect($ugroups, $permissions['TRACKER_ACCESS_SUBMITTER'])) > 0) {
+                    // {{{ The static ugroups
+                    if (count(array_intersect($static_ugroups, $permissions['TRACKER_ACCESS_SUBMITTER'])) > 0) {
+                        $sql = "SELECT a.artifact_id ".
+                               $from." , ugroup_user uu ".
+                               $where.
+                               "  AND a.submitted_by = uu.user_id ".
+                               "  AND uu.ugroup_id IN (".implode(', ', $static_ugroups).") ".
+                               "";
+                        $aids = array_merge($aids, $this->_ExecuteQueryForSelectReportItems($sql));
+                    }
+                    // }}}
+                    
+                    // {{{ tracker_admins
+                    if (in_array($GLOBALS['UGROUP_TRACKER_ADMIN'], $dynamic_ugroups) &&
+                    in_array($GLOBALS['UGROUP_TRACKER_ADMIN'], $permissions['TRACKER_ACCESS_SUBMITTER'])) 
+                    {
+                        $sql = "SELECT a.artifact_id ".
+                               $from." , artifact_perm p ".
+                               $where.
+                               "  AND a.submitted_by = p.user_id ".
+                               "  AND p.group_artifact_id = ".$this->group_artifact_id." ".
+                               "  AND p.perm_level >= 2 ".
+                               "";
+                        $aids = array_merge($aids, $this->_ExecuteQueryForSelectReportItems($sql));
+                    }
+                    //}}}
+                    // {{{ project_members
+                    if (in_array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $dynamic_ugroups) &&
+                    in_array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $permissions['TRACKER_ACCESS_SUBMITTER'])) 
+                    {
+                        $sql = "SELECT a.artifact_id ".
+                               $from." , user_group ug ".
+                               $where.
+                               "  AND a.submitted_by = ug.user_id ".
+                               "  AND ug.group_id = ".$GLOBALS['group_id']." ".
+                               "";
+                        $aids = array_merge($aids, $this->_ExecuteQueryForSelectReportItems($sql));
+                    }
+                    //}}}
+                    // {{{ project_admins
+                    if (in_array($GLOBALS['UGROUP_PROJECT_ADMIN'], $dynamic_ugroups) &&
+                    in_array($GLOBALS['UGROUP_PROJECT_ADMIN'], $permissions['TRACKER_ACCESS_SUBMITTER'])) 
+                    {
+                        $sql = "SELECT a.artifact_id ".
+                               $from." , user_group ug ".
+                               $where.
+                               "  AND a.submitted_by = ug.user_id ".
+                               "  AND ug.group_id = ".$GLOBALS['group_id']." ".
+                               "  AND ug.admin_flags = 'A' ".
+                               "";
+                        $aids = array_merge($aids, $this->_ExecuteQueryForSelectReportItems($sql));
+                    }
+                    //}}}
                 }
-                if ($user_can_read) {
-                    $totalrows++;
-                    $aids[]=$arr['artifact_id'];
+                
+                //Does the user member of at least one group which has ACCESS_ASSIGNEE ?
+                if (isset($permissions['TRACKER_ACCESS_ASSIGNEE']) && count(array_intersect($ugroups, $permissions['TRACKER_ACCESS_ASSIGNEE'])) > 0) {
+                    
+                    //Get only once the field_id of assigned_to/multi_assigned_to
+                    $field_dao =& new ArtifactFieldDao(CodexDataAccess::instance());
+                    $dar =& $field_dao->searchAssignedToFieldIdByArtifactTypeId($this->group_artifact_id);
+                    $assigned_to = array();
+                    while ($row = $dar->getRow()) {
+                        $assigned_to[] = $row['field_id'];
+                    }
+                    if (count($assigned_to) > 0) {
+                        // {{{ The static ugroups
+                        if (count(array_intersect($static_ugroups, $permissions['TRACKER_ACCESS_ASSIGNEE'])) > 0) {
+                            $sql = "SELECT a.artifact_id ".
+                                   $from." , artifact_field_value afv, ugroup_user uu ".
+                                   $where.
+                                   "  AND a.artifact_id = afv.artifact_id ".
+                                   "  AND afv.field_id IN (".implode(', ', $assigned_to).") ".
+                                   "  AND afv.valueInt = uu.user_id ".
+                                   "  AND uu.ugroup_id IN (".implode(', ', $static_ugroups).") ".
+                                   "";
+                            $aids = array_merge($aids, $this->_ExecuteQueryForSelectReportItems($sql));
+                        }
+                        // }}}
+                        
+                        // {{{ tracker_admins
+                        if (in_array($GLOBALS['UGROUP_TRACKER_ADMIN'], $dynamic_ugroups) &&
+                        in_array($GLOBALS['UGROUP_TRACKER_ADMIN'], $permissions['TRACKER_ACCESS_ASSIGNEE'])) 
+                        {
+                            $sql = "SELECT a.artifact_id ".
+                                   $from." , artifact_field_value afv, artifact_perm p ".
+                                   $where.
+                                   "  AND a.artifact_id = afv.artifact_id ".
+                                   "  AND afv.field_id IN (".implode(', ', $assigned_to).") ".
+                                   "  AND afv.valueInt = p.user_id ".
+                                   "  AND p.group_artifact_id = ".$this->group_artifact_id." ".
+                                   "  AND p.perm_level >= 2 ".
+                                   "";
+                            $aids = array_merge($aids, $this->_ExecuteQueryForSelectReportItems($sql));
+                        }
+                        //}}}
+                        // {{{ project_members
+                        if (in_array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $dynamic_ugroups) &&
+                        in_array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $permissions['TRACKER_ACCESS_ASSIGNEE'])) 
+                        {
+                            $sql = "SELECT a.artifact_id ".
+                                   $from." , artifact_field_value afv, user_group ug ".
+                                   $where.
+                                   "  AND a.artifact_id = afv.artifact_id ".
+                                   "  AND afv.field_id IN (".implode(', ', $assigned_to).") ".
+                                   "  AND afv.valueInt = ug.user_id ".
+                                   "  AND ug.group_id = ".$GLOBALS['group_id']." ".
+                                   "";
+                            $aids = array_merge($aids, $this->_ExecuteQueryForSelectReportItems($sql));
+                        }
+                        //}}}
+                        // {{{ project_admins
+                        if (in_array($GLOBALS['UGROUP_PROJECT_ADMIN'], $dynamic_ugroups) &&
+                        in_array($GLOBALS['UGROUP_PROJECT_ADMIN'], $permissions['TRACKER_ACCESS_ASSIGNEE'])) 
+                        {
+                            $sql = "SELECT a.artifact_id ".
+                                   $from." , artifact_field_value afv, user_group ug ".
+                                   $where.
+                                   "  AND a.artifact_id = afv.artifact_id ".
+                                   "  AND afv.field_id IN (".implode(', ', $assigned_to).") ".
+                                   "  AND afv.valueInt = ug.user_id ".
+                                   "  AND ug.group_id = ".$GLOBALS['group_id']." ".
+                                   "  AND ug.admin_flags = 'A' ".
+                                   "";
+                            $aids = array_merge($aids, $this->_ExecuteQueryForSelectReportItems($sql));
+                        }
+                        //}}}
+                    }
                 }
             }
-            return $totalrows;
+            $aids = array_unique($aids);
+            return count($aids);
 	}
+    
+    function _ExecuteQueryForSelectReportItems($sql) {
+        $ret = array();
+        $res = db_query($sql);
+        while ($arr = db_fetch_array($res)) {
+            $ret[] = $arr['artifact_id'];
+        }
+        return $ret;
+    }
 
 	/**
 	 * Return all the fields list used for the report
@@ -568,7 +716,7 @@ class ArtifactReport extends Error {
 	  //
 	  // NOTICE
 	  //
-	  // Use left join because of the performance.
+	  // We can't use left join because the performs are very bad.
 	  // Take care: Big organisations (like FT) adore having many, many fields in their trackers
 	  // So the restriction to this: all fields used in the query must have a value.
 	  // That involves artifact creation or artifact admin (add a field) must create
@@ -576,11 +724,11 @@ class ArtifactReport extends Error {
 	  //
 	  /* The query must be something like this :
 			FROM artifact a 
-                             LEFT JOIN artifact_field_value v1 ON (v1.artifact_id=a.artifact_id)
-                             LEFT JOIN artifact_field_value v2 ON (v2.artifact_id=a.artifact_id)
-                             LEFT JOIN artifact_field_value v3 ON (v2.artifact_id=a.artifact_id)
-                             LEFT JOIN user u3 ON (v3.valueInt = u3.user_id)
-                             LEFT JOIN user u
+                             JOIN artifact_field_value v1 ON (v1.artifact_id=a.artifact_id)
+                             JOIN artifact_field_value v2 ON (v2.artifact_id=a.artifact_id)
+                             JOIN artifact_field_value v3 ON (v2.artifact_id=a.artifact_id)
+                             JOIN user u3 ON (v3.valueInt = u3.user_id)
+                             JOIN user u
 			WHERE a.group_artifact_id = 100 and 
 			v1.field_id=101 and
 			v2.field_id=103 and
@@ -620,7 +768,7 @@ class ArtifactReport extends Error {
 		$where .= $this->getValuesWhereClause($field,$prefs,"v".$count.".".$field->getValueFieldName(),$advsrch,$notany);
 		
 		if ($notany) {
-		  $from .= " LEFT JOIN artifact_field_value v".$count." ON (v".$count.".artifact_id=a.artifact_id".
+		  $from .= " JOIN artifact_field_value v".$count." ON (v".$count.".artifact_id=a.artifact_id".
 		    " and v".$count.".field_id=".$field->getID().")";
 		  
 		  $count++;
@@ -640,7 +788,7 @@ class ArtifactReport extends Error {
 	      $where .= $this->getValuesWhereClause($field,$prefs,"v".$count.".".$field->getValueFieldName(),$advsrch,$notany);
 	      
 	      if ($notany) {
-		$from .= " LEFT JOIN artifact_field_value v".$count." ON (v".$count.".artifact_id=a.artifact_id".
+		$from .= " JOIN artifact_field_value v".$count." ON (v".$count.".artifact_id=a.artifact_id".
 		  " and v".$count.".field_id=".$field->getID().")";
 		
 		$count++;
@@ -652,7 +800,7 @@ class ArtifactReport extends Error {
 	      $where .= $this->getValuesWhereClause($field,$prefs,"v".$count.".".$field->getValueFieldName(),$advsrch,$notany);
 	      
 	      if ($notany) {
-		$from .= " LEFT JOIN artifact_field_value v".$count." ON (v".$count.".artifact_id=a.artifact_id".
+		$from .= " JOIN artifact_field_value v".$count." ON (v".$count.".artifact_id=a.artifact_id".
 		  " and v".$count.".field_id=".$field->getID().")";
 		
 		$count++;
@@ -687,7 +835,7 @@ class ArtifactReport extends Error {
 	  //
 	  // NOTICE
 	  //
-	  // Use left join because of the performance.
+	  // We can't use left join because the performs are very bad.
 	  // Take care: Big organisations (like FT) adore having many, many fields in their trackers
 	  // So the restriction to this: all fields used in the query must have a value.
 	  // That involves artifact creation or artifact admin (add a field) must create
@@ -696,11 +844,11 @@ class ArtifactReport extends Error {
 	  /* The query must be something like this :
 		        SELECT a.artifact_id,u.user_name,v1.valueInt,v2.valueText,u3.user_name
 			FROM artifact a 
-                             LEFT JOIN artifact_field_value v1 ON (v1.artifact_id=a.artifact_id)
-                             LEFT JOIN artifact_field_value v2 ON (v2.artifact_id=a.artifact_id)
-                             LEFT JOIN artifact_field_value v3 ON (v2.artifact_id=a.artifact_id)
-                             LEFT JOIN user u3 ON (v3.valueInt = u3.user_id)
-                             LEFT JOIN user u
+                             JOIN artifact_field_value v1 ON (v1.artifact_id=a.artifact_id)
+                             JOIN artifact_field_value v2 ON (v2.artifact_id=a.artifact_id)
+                             JOIN artifact_field_value v3 ON (v2.artifact_id=a.artifact_id)
+                             JOIN user u3 ON (v3.valueInt = u3.user_id)
+                             JOIN user u
 			WHERE a.group_artifact_id = 100 and 
 			v1.field_id=101 and
 			v2.field_id=103 and
@@ -721,7 +869,7 @@ class ArtifactReport extends Error {
 	  
 	  //add directly the aids concerned by the query given in prefs
 	  if ($aids) {
-	    $where .= " AND a.artifact_id IN (".implode(",",$aids).")";
+            $where .= " AND a.artifact_id IN (".implode(",",$aids).")";
 	  }
 	  
 	  $order_by = "ORDER BY ";
@@ -761,7 +909,7 @@ class ArtifactReport extends Error {
 		// Special case for fields which are user name
 		if ( ($field->isUsername())&&(!$field->isSelectBox())&&(!$field->isMultiSelectBox()) ) {
 		  $select .= " u.user_name as ".$field->getName();
-		  $from .= " LEFT JOIN user u ON (u.user_id=a.".$field->getName().")";
+		  $from .= " JOIN user u ON (u.user_id=a.".$field->getName().")";
 		} else {
 		  $select .= " a.".$field->getName();
 		}
@@ -791,7 +939,7 @@ class ArtifactReport extends Error {
 
 	      if ($field->isShowOnResult() || 
 		  ($field->isShowOnQuery() && !$aids && $notany)) {
-		$from .= " LEFT JOIN artifact_field_value v".$count." ON (v".$count.".artifact_id=a.artifact_id".
+		$from .= " JOIN artifact_field_value v".$count." ON (v".$count.".artifact_id=a.artifact_id".
 		  " and v".$count.".field_id=".$field->getID().")";
 	      }
 	      
@@ -806,7 +954,7 @@ class ArtifactReport extends Error {
 		// Special case for fields which are user name
 		if ($field->isUsername()) {
 		  $select .= " u".$count.".user_name as ".$field->getName();
-		  $from .= " LEFT JOIN user u".$count." ON (v".$count.".".$field->getValueFieldName()." = u".$count.".user_id)";
+		  $from .= " JOIN user u".$count." ON (v".$count.".".$field->getValueFieldName()." = u".$count.".user_id)";
 		} else if ($field->isSelectBox() || $field->isMultiSelectBox()) {
 		  $select .= " v".$count.".".$field->getValueFieldName()." as ".$field->getName();
 		  $from .= " LEFT JOIN artifact_field_value_list v".$count."_val"
@@ -877,13 +1025,13 @@ class ArtifactReport extends Error {
 
 		$fields_sb = $this->getSingleMultiBoxFields();
 
-		$result = db_query($query);
+        $result = db_query($query);
 		$res = array();
 		for($i=0;$i<db_numrows($result);$i++) {
 			$res[$i] = db_fetch_array($result);
-			reset($fields_sb);
-			while (list($field_name,$field) = each($fields_sb)) {
-				if ( $res[$i]['artifact_id'] ) {
+            if ( $res[$i]['artifact_id'] ) {
+                reset($fields_sb);
+                while (list($field_name,$field) = each($fields_sb)) {
 					$values = array();
 					if ( $field->isStandardField() ) {
 						$values[] = $res[$i][$field_name];
