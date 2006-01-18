@@ -1,0 +1,3241 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+//
+// $Id: Tracker.xml 1944 2005-08-31 12:21:46Z guerin $
+//
+//      Originally written by Laurent Julliard 2003, CodeX Team, Xerox
+//
+-->
+      
+<chapter id="TrackerService">
+  <title>Service outils de suivi</title>
+
+  <para>Les outils de suivi (de l'anglais trackers) représentent l'un
+  des services les plus puissants et les plus flexibles mis à la
+  disposition des projets hébergés sur CodeX. Ils assurent le suivi
+  d'artefacts aussi variés que des bugs, des taches, des fiches
+  d'assistance, etc... et un projet peut créer autant d'outils de
+  suivi que nécessaire.</para>
+
+  <para>Tous les outils de suivi, qu'il soit prédéfinis au niveau du
+  site ou bien créé par chaque projet sont entièrement
+  personnalisables.</para>
+
+  <section id="CodeXTrackerPrinciples">
+    <title>Terminologie et points commun</title>
+
+    <para>Avant de présenter les fonctionnalités des outils de suivi,
+    il est utile de passer quelques instants sur la terminologie
+    employée pour les outils de suivi ainsi que sur les
+    fonctionnalités communes.</para>
+
+    <para>Etant donné que les outils de suivi sont conçus pour assurer
+    le suivi de toutes sortes d'items, le terme générique
+    &#34;artefact&#34; est utilisé dans ce document pour désigner tout
+    type d'item faisant l'objet d'un suivi. Il peut s'agir
+    d'anomalies, de taches, de demandes de nouvelles fonctionnalités
+    ou autres.</para>
+
+    <para>Pour définir un nouvel outil de suivi il suffit juste de lui donner un
+    nom, de choisir les champs à utiliser et les valeurs autorisées
+    pour ces champs.</para>
+
+    <para>En complément des champs personnalisables il existe un
+    certain nombre d'autres informations qui sont attachés à un
+    artefact de façon immuable. A savoir:</para>
+
+    <itemizedlist mark="bullet" spacing="compact">
+
+      <listitem>
+        <para> <emphasis role="bold">Les commentaires</emphasis>: tous
+        les artifacts disposent d'un historique complet des
+        commentaires postés par les différents utilisateurs.</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">Fichiers attachés</emphasis>: tous
+        les artifacts peuvent recevoir un nombre quelconque de
+        fichiers attachés. Ces fichiers contiennent en général des
+        informations complémentaires qui précisent la nature de
+        l'artefact.</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">Destinataires en copie
+        (CC)</emphasis>: un nombre quelconque d'utilisateurs peuvent
+        être informés par email de toute modification intervenant sur
+        l'artefact en ajoutant leur nom dans la liste des
+        destinataires en copie.</para>
+      </listitem>
+
+    </itemizedlist>
+  </section>
+
+
+  <section id="EnteringtheTrackerService">
+    <title>Accéder à un outil de suivi</title>
+
+    <para>Pour accèder au service outil de suivi d'un projet, rendez
+    vous d'abord sur la page de sommaire du projet (voir <xref
+    linkend="AccessingAProjectSummaryPage" />) et cliquez soit sur
+    l'entrée &#34;Suivi&#34; de la barre de services ou directement
+    sur l'outil de suivi qui vous intéresse dans la section Zones
+    Publiques de la page de sommaire.</para>
+
+    <para>Dans le premier cas, une page récapitulant l'ensemble des
+    outils de suivi disponibles pour ce projet vous est présentée
+    (voir <xref linkend="TrackerWelcomeScreen" />). Après avoir
+    sélectionné l'outil de suivi qui vous intéresse, un certains
+    nombre de fonctionnalités vous sont accessibles selon le niveau de
+    permission dont vous disposez. Vous pouvez soumettre de nouveaux
+    artefacts, les modifier, effectuer des recherches et naviguer dans
+    la base d'artefacts ou configurer l'outil de suivi.</para>
+
+    <figure id="TrackerWelcomeScreen">
+      <title>Page d'accueil de l'outil de suivi</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata format="PNG"
+            fileref="../../screenshots/fr_FR/sc_trackerwelcomescreen.png" width="14.5cm" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+    
+
+  </section>
+
+  <section id="ArtifactSubmission">
+    <title>Soumission d'un nouvel artefact</title>
+
+    <para>Pour soumettre un nouvel artefact à un projet donné, vous
+    devez tout d'abord accéder à l'outil de suivi approprié comme indiqué dans la
+    section ci-dessus (voir <xref linkend="EnteringtheTrackerService"
+    />.</para>
+
+    <para>En pénétrant dans un outil de suivi, un écran de sélection et de
+    navigation apparait (plus d'information sur cette fonctionnalité
+    dans la <xref linkend="ArtifactBrowsing" />). Pour le moment
+    cliquez sur l'entrée &#34;Nouveau&#34; dans le menu de l'outil de suivi en
+    haut de l'écran (voir <xref
+    linkend="FigureASampleTrackerBrowsingScreen" />).</para>
+
+    <figure id="ArtifactSubmissionScreenFromTheCodeXProject">
+      <title>Un exemple d'écran de soumission d'artefact  (ici de type &#34;bug&#34;) </title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata format="PNG"
+            fileref="../../screenshots/fr_FR/sc_artifactsubmission.png" width="14.5cm" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>La <xref
+    linkend="ArtifactSubmissionScreenFromTheCodeXProject" /> montre un
+    exemple de soumission d´écran provenant d'un projet CodeX. En
+    raison du très haut nivceau de personnalisation de service outil de suivi de
+    CodeX, les écrans de soumission d'artefact varie énormément d'un
+    outil de suivi à l'autre. Suivant les cas les champs affichés et le nom des
+    artefacts diffèrent.</para>
+
+    <para>Dans l'exemple fourni sur la <xref
+    linkend="ArtifactSubmissionScreenFromTheCodeXProject" /> les
+    artefacts sont de bugs (aussi connu sous le nom &#34;défauts&#34;
+    ou &#34;anomalies&#34; dans un langage plus chatié). Ici
+    l'utilisateur doit fournir une catégorie, un groupe, une priorité
+    et une personne à la quelle assigner l'artefact à partir des
+    boites de sélection. Viennent ensuite la description d'une ligne
+    et une entrée texte plus longue permettant de mieux décrire le bug
+    en question. Après avoir soumis l'artefact en appuyant sur le
+    bouton Soumettre, un identifiant unique (ID) lui est
+    automatiquement assigné.</para>
+
+    <para>Comme expliqué plus haut, le formulaire de soumission d'un
+    artefact peut varier considérablement d'un outil de suivi à l'autre en
+    fonction des champs utilisés. Le formulaire de soumission peut
+    aussi varier selon votre niveau de permission. Un exemple assez
+    typique consiste à donner accès à plus de champs aux membres du
+    projet et qu'aux utilisateurs externes à l'équipe. A titre
+    d'exemple, sur la <xref
+    linkend="ArtifactSubmissionScreenFromTheCodeXProject" />, la
+    personne qui soumet le bug est probablement un membre du projet
+    car donner une valeur au champ &#34;Assigné à&#34; n'est, en
+    général, pas du ressoirt d'un utilisateur externe. Il est en effet
+    très improbable qu'un utilisateur lambda en sache suffisamment sur
+    l'organisation interne d'unprojet pour assigner un bug à la bonne
+    personne. C'est pour cette raison que les champs visibles à la
+    soumission sont configurables dans le module d'administration de
+    l'outil de suivi (voir <xref linkend="TrackerAdministration" />)</para>
+
+    <para>Quoiqu'il en soit, n'oublier pas de cliquer sur le bouton
+    &#34;Soumettre lorsque vous en avez terminé avec le formulaire
+    !</para>
+
+    <para><tip><title>Coup de pouce: assurez-vous que votre artefact
+    n'a pas déjà été soumis</title><para>Vous êtes sur le point de
+    soumettre un bug ou une demande d'assistance à un projet CodeX? 
+    Avant de vous lancer, assurez-vous qu'un artefact similaire n'est
+    pas déjà présent. Pour se faire, vous pouvez effectuer une
+    recherche dans la base des artefacts soit par l'écran de
+    sélection, soit en utilisant la boite de recherche par mots-clés
+    situé dans le menu principal de CodeX.</para></tip></para>
+
+  </section>
+
+  <section id="ArtifactBrowsing">
+    <title>Naviguer dans les artefacts</title>
+
+    <para>CodeX permet de naviguer dans la base des artefacts selon un
+    nombre de critères variables.</para>
+
+    <section id="ArtifactSelectionCriteria">
+      <title>Critère de sélection</title>
+
+      <para>La partie supérieure de l'écran de navigation est consacré
+      aux critères de recherche. La <xref
+      linkend="FigureASampleTrackerBrowsingScreen" /> montre la jeu de
+      critère par défaut disponibles à la création d'un outil de suivi. Ici, des
+      bugs peuvent être sélectionnés en fonctiond eleur catégorie, de
+      leur groupe, de leur statut et de la personne à qui il a été
+      assigné. D'autres outils de suivi peuvent présenter d'autres
+      critères de sélection en plus ou moins grand nombre selon la
+      configuration mise en place par les administrateurs de
+      l'outil.</para>
+
+      <para>La facon de spécifier la valeur d'un critère de sélection
+      dépend de son type. Le service outil de suivi propose
+      actuellement les types de champs suivants:</para>
+
+      <section id="ArtifactSelectBoxField">
+        <title>Champ de type boite de sélection</title>
+
+        <para>Une boite de sélection prend ses valeurs dans une liste
+        prédéfinies. Si vous utilisez le mode de recherche simple,
+        seule une valeur peut être retenue comme critère de
+        recherche. Si vous désirez sélectionner plusieurs valeurs de
+        recherche, utilisée le mode recherche avancée.</para>
+
+        <para>En général deux autres valeurs figurent dans la boite de
+        sélection: &#34;Tous&#34; correspond à n'importe quelle valeur
+        de la liste et &#34;Aucun&#34; correspond aux artefacts pour
+        lesquels la valeur de ce champ n'a pas encore été remplie.</para>
+      </section>
+
+      <section id="ArtifactMultipleSelectBoxField">
+        <title>Champ de type boite de sélection multiple</title>
+
+        <para>Une boite de sélection multiple prend ses valeurs dans
+        une liste prédéfinies. Contrairement à la boite de sélection
+        décrite précédemment celle-ci permet d'affecter plusieurs
+        valeurs à un même champ. En mode recherche, elle se comporte
+        exactement comme la boite de sélection précédente: si vous
+        utilisez le mode de recherche simple, seule une valeur peut
+        être retenue comme critère de recherche. Si vous désirez
+        sélectionner plusieurs valeurs de recherche, utilisée le mode
+        recherche avancée.</para>
+
+        <para>En général deux autres valeurs figurent dans la boite de
+        sélection: &#34;Tous&#34; correspond à n'importe quelle valeur
+        de la liste et &#34;Aucun&#34; correspond aux artefacts pour
+        lesquels la valeur de ce champ n'a pas encore été
+        remplie.</para>
+
+      </section>
+
+      <section id="ArtifactTextField">
+        <title>Champ texte</title>
+
+        <para>Un champ texte peut contenir n'importe quel texte. Il
+        existe deux façons d'effectuer une recherche dans un champ
+        texte:</para>
+
+
+        <itemizedlist mark="bullet" spacing="compact">
+
+          <listitem>
+            <para> <emphasis role="underline">La recherche par
+            mots-clés</emphasis>: vous pouvez taper une série de
+            mots-clés séparés par des espaces qui seront TOUS
+            recherchés dans le champ texte (y compris en tant que
+            sous-chaine dans un mot)</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="underline">La recherche
+            par expression régulière</emphasis>: vos pouvez aussi
+            spécifier un critère de recherche sous la forme d'une
+            <ulink
+            url="http://www.mysql.com/doc/P/a/Pattern_matching.html">expression
+            régulière MySQL</ulink> (n'oublier les caractères /.../
+            qui doivent impérativement entourer l'expression!)</para>
+
+            <para>Exemples:</para>
+            <itemizedlist mark="dash" spacing="compact">
+              <listitem>
+                <para>/^[Aa]ddition/ : corrspond aux champs texte qui
+                commencent par &#34;addition&#34; ou par
+                &#34;Addition&#34;</para>
+              </listitem>
+              <listitem>
+                <para>/lui|elle|nous/ : correspond aux champs texte
+                matches text fields content les chaines de caractères
+                &#34;lui&#34;, &#34;elle&#34; ou &#34;nous&#34;</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+
+        </itemizedlist>
+
+      </section>
+
+      <section id="ArtifactDateField">
+        <title>Champ de type date</title>
+
+        <para>Un critère de sélection de type date s'exprime sous la
+        forme AAAA-MM-JJ où AAAA est l'année, MM le mois et JJ le
+        jour.</para>
+
+        <para>Exemples: 1999-03-21 pour le 21 Mars 1999, 2002-12-05
+        pour le 5 Décembre 2002. </para>
+
+      </section>
+
+      <section id="ArtifactIntegerField">
+        <title>Champ de type entier</title>
+
+        <para>Un champ de type entier peut prendre des valeurs
+        entières positives, négatives ou nulle.</para>
+
+        <para>Exemples: 0, 1, +2, -100&hellip;</para>
+
+        <para>Il existe plusieurs façon d'interroger un champ de type
+        entier. Les voici:</para>
+        <itemizedlist>
+          <listitem>
+            <para> <emphasis role="underline">Entier
+            simple</emphasis>: si vous tapez une simple valeur
+            d'entier dans le champ la recherche renverra les champs
+            qui contiennent exactement cette valeur (exemple:
+            610)</para>
+          </listitem>
+          <listitem>
+            <para><emphasis role="underline">Inégalité</emphasis>: Si
+            vous utilisez les signes &gt;, &lt;, &gt;= ou =&lt; suivi
+            d'un entier la recherche renverra les champs dont la
+            valeur est inférieure, supérieure, inférieure ou égale,
+            supérieure ou égale à la valeur d'entier spécifiée
+            (exemples: &gt; 120 , &lt; -30).</para>
+          </listitem>
+          <listitem><para><emphasis
+          role="underline">Intervalle</emphasis>: si vous utilisez la
+          notation &#34;entier1-entier2&#34; la recherche renverra les
+          champs dont la valeur est supérieure ou égale à entier1 et
+          inférieure ou égale à entier2 (exemples: 800 - 900 pour les
+          entiers entre 800 et 900 inclus, -45 - 12 pour les entiers
+          compris entre -45 et +12)</para>
+          </listitem>
+          <listitem><para><emphasis role="underline">Expression
+          régulière</emphasis>: les <ulink
+          url="http://www.mysql.com/doc/P/a/Pattern_matching.html">expressions
+          régulières étendues de MySQL</ulink> peuvent aussi être
+          utilisé comme crtière de recherche (exemple: /^4.*8$/
+          recherche tous les entiers dont la valeur commence par un
+          &#34;4&#34;, se termine par un &#34;8&#34; avec un nombre de
+          chiffres quelconque entre les deux.</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+
+      <section id="ArtifactFloatingPointNumberField">
+        <title>Champ de type nombre flottant</title>
+
+        <para>Un champ de type flottant peut prendre des valeurs
+        décimales positives, négatives ou nulle. Il peut aussi
+        utiliser la notation exponentielle pour exprimer de très
+        grandes valeurs.</para>
+
+        <para>Exemples: 0, 1.23, -2.456, 122.45E+12&hellip;</para>
+
+        <para>Il existe plusieurs façon d'interroger un champ de type
+        flottant. Les voici:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para> <emphasis role="underline">Flottant
+            simple</emphasis>: si vous tapez une simple valeur
+            de flottant dans le champ la recherche renverra les champs
+            qui contiennent exactement cette valeur (exemple:
+            2.35)</para>
+          </listitem>
+          <listitem>
+            <para><emphasis role="underline">Inégalité</emphasis>: Si
+            vous utilisez les signes &gt;, &lt;, &gt;= ou =&lt; suivi
+            d'un nombre la recherche renverra les champs dont la
+            valeur est inférieure, supérieure, inférieure ou égale,
+            supérieure ou égale à la valeur spécifiée
+            (exemples: &gt; 120.3 , &lt; -3.3456E-2).</para>
+          </listitem>
+          <listitem><para><emphasis
+          role="underline">Intervalle</emphasis>: si vous utilisez la
+          notation &#34;flottant1-flottant2&#34; la recherche renverra
+          les champs dont la valeur est supérieure ou égale à
+          flottant1 et inférieure ou égale à flottant2 (exemples: -1.2
+          - 4.5 pour des valeurs comprises entre -1.2 et 4.5
+          inclus)</para>
+          </listitem>
+          <listitem><para><emphasis role="underline">Expression
+          régulière</emphasis>: les <ulink
+          url="http://www.mysql.com/doc/P/a/Pattern_matching.html">expressions
+          régulières étendues de MySQL</ulink> peuvent aussi être
+          utilisé comme crtière de recherche (exemple: /^4.*8$/
+          recherche tous les nombres dont la valeur commence par un
+          &#34;4&#34;, se termine par un &#34;8&#34; avec un nombre de
+          chiffres quelconque entre les deux y compris le point
+          séparant les décimales.</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+
+    </section>
+
+    <section id="TrackerQueries">
+      <title>Requêtes favorites ou prédéfinies pour les outils de suivi</title>
+
+      <para><tip><title>Coup de pouce: sauvegardez et réutilisez vos
+      requêtes favorites</title><para>Si vous effectuer souvent les
+      mêmes recherches dans un outil de suivi (c'est àdire des
+      recherches utilisant les mêmes champs de sélection et les mêmes
+      valeurs), il est souhaitable que vous les sauvegardiez pour
+      pouvoir les réutiliser ultérieurement. Pour se faire,
+      sélectionner le rapport de recherche approprié, spécifiez vos
+      critères de sélection et cliquez sur le bouton
+      &#34;Afficher&#34; pour lancer la requête. Après exécution et
+      affichage des résultats, il suffit de cliquez sur le lien
+      &#34;Cette page en signet&#34; figurant dans le menu principal
+      de CodeX pour faire apparaitre un nouveau signet dans votre page
+      personnelle. En sélectionnant ce signet vous pouvez à tout
+      moment relancer la même requête.</para></tip></para>
+
+      <para>Vos requêtes favorites peuvent être sauvegardées comme expliqué dans l'encadré coup de pouce ci-dessus, mais il existe aussi des requêtes prédéfinies présentés sous forme de raccourci dans la menu de l'outil de service. Il s'agit de :</para>
+
+      <itemizedlist mark="bullet" spacing="compact">
+        <listitem>
+          <para><emphasis role="bold">Artefacts ouverts</emphasis>:
+          affiche tous les artefacts qui ne sont pas encore fermé pour
+          ce projet.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Mes Artefacts</emphasis>:
+          affiche tous les artefacts qui vous sont assignés (sur la
+          base du compte utilisateur que vous êtes en train
+          d'utiliser)</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Vous noterez aussi que CodeX garde toujours la trace de la
+      dernière requête effectuée. Lorsque vous vous présenterez à
+      nouveau sur l'écran de recherche et de navigation, CodeX
+      effectuera la même requête pour vous et vous présentera les
+      résultats correspondants.</para>
+
+      <section id="TrackerAdvancedSearchMode">
+        <title>Mode de recherche avancé</title>
+
+        <para>Au tout moment durant une phase de recherche, vous
+        pouvez basculer entre les modes recherche simple et recherche
+        avancée. Le mode recherche avancée permet de spécifier
+        plusieurs valeurs pour chaque critère de sélection. En
+        utilisant ce mode vouspouvez par exemple recherché à la fois
+        les bugs dont le status est 'ouvert' ou 'en attente' qui ont
+        été assigné aux utilisateurs A ou B.</para>
+      </section>
+    </section>
+
+    <section id="TrackerSearchResults">
+      <title>Résultats de la recherche dans un outil de suivi</title> 
+      
+      <para>Sur la base de vos critères de sélection, CodeX effectue
+      une requête dans la base de données, sélectionne les artefacts
+      correspondants et les affiche juste au dessous des critères de
+      sélection. Le choix des colonnes affichées par la liste de
+      résultat est entièrement configurable par l'équipe de
+      projet. (voir <xref linkend="TrackerReports" />). C'est pour
+      cette raison que l'écran d'affichage des résultats d'une requête
+      peut être totalement de l'exemple montré sur la <xref
+      linkend="FigureASampleTrackerBrowsingScreen" />.</para>
+
+      <figure id="FigureASampleTrackerBrowsingScreen">
+        <title>Un exemple d'affichage des résultats d'une requête sur un tracker</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/fr_FR/sc_artifactbrowsing.png" width="15.3cm" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>La sévérité des artefacts est codée sous forme de
+      couleur. La palette des couleurs utilisées peut varier d'un site
+      à l'autre et d'un thème graphique à l'autre. C'est pour cette
+      raison que la correspondance entre niveaux de sévérité et
+      couleurs est toujours indiqué à la suite des résultats renvoyés
+      par une requête. Enfin, les résultats sont aussi affichés par
+      bloc de N artefacts où N est un nombre paramétrable par
+      l'utilisateur. Si plus de N artefacts sont renvoyés par une
+      requête, une barre de navigation vous permettra de naviguer sur
+      les pages suivantes et précédentes.</para>
+
+      <para>Pour accéder à un artefact donné à partir de la liste des
+      résultats, il suffit de cliquer sur l'identifiant (ID) de
+      l'artefact correspondant.</para>
+
+      <section id="ArtifactListSorting">
+        <title>Tri de la liste des artefacts</title>
+
+        <para>Par défaut, les artefacts sont triés par indentifiant
+        (ID) ce qui correspond à l'ordre chrnologique de création des
+        artefacts dans la base de données de CodeX.</para>
+
+        <para>La liste des artefacts peut être triée selon n'importe
+        colonne affichée à l'écran en cliquant sur l'entête de la
+        colonne. Deux clics successifs permettent de basculer d'un
+        ordre ascendant à un ordre descendant. Le sens du tri est
+        visible sous la forme d'un petite flèche orientée vers le haut
+        ou ver le bas figurant à côté du critère de tri juste au
+        dessus de la liste des artefacts. La seule exception concerne
+        le tri par Sévérité qui ne s'affiche pas sous la forme d'une
+        colonne mais sous la forme d'une palette de couleur. C'est
+        pour cette raison qu'il existe un lien spécifique permettant
+        d'effectuer le tri par sévérité.</para>
+
+        <para>Le tri multi-colonnes autorise des opérations de tri
+        plus sophistiquées. Dans ce mode, les critères de tri
+        s'accumulent au fur et à mesure que vous cliquez sur les
+        entêtes de différentes colonnes. Vous pouvez par exemple
+        cliquer sur &#34;Sévérité&#34; puis sur &#34;Assigné à&#34;
+        pour voir qui dans l'équipe est en charge des artefacts
+        critiques et combien il y en a. A tout moment dans le tri
+        multi-colonnes, un clic sur l'un des critères de tri affiché
+        dans la liste &#34;critère 1 > critère 2 > critère 3...&#34;
+        vous ramènera en arrière dans les critères de tri. Grâce à
+        cette fonctionnalité vous pouvez aisément tester plusieurs
+        stratégies de tri.</para>
+
+        <note><para>Note: les critères de tri, comme les critères de
+        sélection, sont aussi sauvegardés dans vos préférences
+        utilisateurs et CodeX appliquera les mêmes critères de tri
+        lors de votre prochaine requête.</para></note>
+
+      </section>
+
+      <section id="ExportSearchResults">
+        <title>Exporter les résultats d'une requête</title>
+
+        <para>Au bas de la liste des résultats renvoyés par la requête
+        figure un bouton qui permet d'exporter les artefacts
+        sélectionné au format CSV. En utilisant cette fonctionnalité
+        vous pouvez aisément sélectionner les artefacts auxquels vous
+        souhaitez appliquer des traitements supplémentaires avec des
+        outils externes à CodeX.</para>
+
+      </section>
+
+      <section id="ArtifactPrinterFriendlyVersion">
+        <title>Version imprimable</title>
+
+        <para>Vous pouvez à tout moment cliquer sur le lien
+        &#34;Version imprimable&#34; pour générer une version
+        simplifée et non décorée de la liste des artefacts que vous
+        pourrez imprimer depuis votre navigateur ou copier-coller dans
+        un document de vote choix. Pour une meilleure lisibilité nous
+        vous conseillons d'imprimer les résultats en format
+        paysage.</para>
+      </section>
+
+      <section id="TrackerReports">
+        <title>Rapports de recherche des outils de suivi</title>
+
+        <para>Les rapports de recherche des outils de suivi permettent
+        de configurer l'agencement de la page de recherche en
+        choissisant les critères de sélection et les colonnes de
+        résultats à afficher. Suivant le projet, les utilisateurs
+        apprécieront la possibilité de pouvoir choisr parmi plusieurs
+        rapports de recherche en utilisant la boite de sélection
+        prévue à cet effet en haut de la page de recherche. Si aucun
+        rapport spécifique n'a été défini, le rapport appelé
+        &#39;Défault&#39; est le seul disponible.</para>
+
+        <para>Tout utilisateur CodeX ayant accès à l'outil de suivi peut définir
+        son propre rapport de recherche. Dans ce cas, le rapport est
+        personnel et il est uniquement visible par l'utilisateur qui
+        l'a créé. A l'inverse, les administrateurs du tracker peuvent
+        définir des rapports de recherche pour l'ensemble du projet
+        que tous les utilisateurs pourron utiliser. Reportez vous à la
+        <xref linkend="TrackerReportManagement" /> pour plus de
+        détails concernant la configuration des rapports de
+        recherche.</para>
+      </section>
+
+    </section>
+    
+  </section>
+  
+  <section id="ArtifactUpdate">
+    <title>Modifier un artefact</title>
+
+    <para>La sélection de l'identifiant (ID) d'un artefact dans la
+    liste générée suite à une opération de recherche entraine
+    l'affichage d'une page qui comporte tous les informations
+    concernant cet artefact. Selon les droits qui vous ont été octroyé
+    sur cet outil de suivi (voir <xref linkend="FieldPermissionsManagement" />)
+    la vue détaillée présente un certain nombre de champs texte
+    immuables ou d'autres champs modifiables. Si vous êtes un visiteur
+    anonynome ou un utilisateur enregistré qui n'est pas membre du
+    projet, il est très probable que la plupart des champs
+    apparaissent comme non modifiables. By default, les utilisateurs
+    extérieurs à l'équipe ne peuvent modifier les champs d'un
+    artefact. Ils sont uniquement en mesure de soumettre un
+    commentaire, de s'ajouter dans la liste des destinataires en copie
+    ou d'attacher un fichier à l'artefact.</para>
+
+    <para>L'écran de modification d'un artefact se divise en plusieurs
+    sections:<emphasis role="bold">Entête, Commentaires,
+    Destinataires en copie, Fichier attachés, Dépendences et
+    Historique.</emphasis></para>
+
+    <section id="ArtifactHeaders">
+      <title>Entête</title>
+
+      <para>La zone d'entête concentre l'ensemble des champs associés
+      à un artefact. Comme le montre la figure <xref
+      linkend="FigureHeaderOfArtifactUpdateScreen" />, certains champs
+      disposent d'un jeu de valeurs prédéfinies, d'autres sont des
+      champs numériques (Effort) ou des champs texte (Résumé). Le jeu
+      de champs utilisés pour un outil de suivi donné, ainsi que les valeurs
+      prédéfinies peuvent être entièrement configurés par les membres
+      du projet qui ont les droits d'administration sur cet outil de suivi (voir
+      <xref linkend="TrackerAdministration" /> à ce sujet).</para>
+
+      <figure id="FigureHeaderOfArtifactUpdateScreen">
+        <title>Entête d'un écran de modification d'un artefact (champs de l'outil de suivi)</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/fr_FR/sc_artifactupdateheader.png" width="15.3cm" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+
+    <section id="ArtifactComments">
+      <title>Commentaires</title>
+
+      <para>Autant de commentaires que nécessaire peuvent être
+      attachés à un artefact. Il s'agit de commentaires libres saisit
+      dans un champ texte.</para>
+
+      <para>Les commentaires présentent plusieurs caractéristiques
+      intéressantes:</para>
+
+      <itemizedlist mark="bullet">
+        <listitem>
+          <para><emphasis role="bold">Réponses-type</emphasis>: il
+          n'est pas rare de voir les personnes en charge de la gestion
+          des artefacts poster les mêmes commentaires de façon
+          répétée. Un message de remerciement à la personne qui a
+          soumis l'artefact, une demande concernant des informations
+          manquantes comme un numéro de version ou le type de la
+          machine, sont autant d'exemples de commentaires utilisés
+          fréquemment. Plutôt que de retaper sans cess le même texte,
+          CodeX permet de créer un ensemble de réponses prédéfinies
+          appelées réponses-type. Chaque réponse-type se compose d'un
+          nom et d'un contenu.</para>
+
+          <para>Pour poster une réponse-type il suffit de la choisir
+          dans la boite de sélection prévue à cet effet et de
+          soumettre les modifications. La définition d'une
+          réponse-type peut se faire à la volée à partir de l'écran de
+          modification d'un artifact en cliquant sur le lien
+          &#34;définir une réponse-type&#34;.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Types de commentaire</emphasis>:
+          dans le but d'éviter la croissance exponentielle du nombre
+          de champs texte d'un outil de suivi destinés à recevoir du texte libre,
+          CodeX offre un mécanisme de typage des
+          commentaires. L'équipe de projet peut définir un certain
+          nombre de labels qui peuvent servir à étiqueter un
+          commentaire. C'est une fonctionnalité intéressante pour
+          définir la nature de l'information contenu dans un
+          commentaire et pour les repérer rapidement dans la liste des
+          commentaires. Voici quelques exemples typiques de labels
+          utilisés dans un système de suivi d'anomalies: &#34;Solution
+          de Rechange&#34; pour un commentaire qui explique comment
+          contourner un problème, &#34;Fichiers concernés&#34; pour un
+          commentaire qui donne la liste des fichiers à modifier pour
+          corriger l'anomalie, &#34;Cas de test&#34; pour un
+          commentaire qui décrit comment tester l'anomalie et la
+          reproduire, etc... Les types de commentaires sont définis
+          dans le module d'administration de l'outil de suivi (voir <xref
+          linkend="TrackerAdministration" />)</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Références croisées</emphasis>:
+          lorsque vous saisissez un commentaire, vous pouvez utiliser
+          certains patrons de texte pour référencer d'autres
+          artefacts, des commits CVS ou Subversion, etc... Ces patrons
+          seront automatiquement transformés en hyperliens vers les
+          objets correspondants lors d'un prochain affichage du
+          commentaire. Il s'agit d'un mécanisme extrêmement puissant
+          et simple d'usage qui est décrit en détail dans la <xref
+          linkend="ArtifactCrossReferencing" />.</para>
+        </listitem>
+
+      </itemizedlist>
+
+
+      <figure id="FigureFollowupCommentsAttachedToAnArtifact">
+        <title>Commentaires attachés à un artefact</title>
+        
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/fr_FR/sc_artifactupdatecomments.png" width="15.3cm" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+      
+    </section>
+
+    <section id="ArtifactCCList">
+      <title>Destinataires en copie</title>
+
+      <para>Comme nous le verrons plus loin dans ce chapitre (voir
+      <xref linkend="TrackerEmailNotification" />) les outils de suivi
+      de CodeX offre un puissant mécanisme de notification par email
+      aux utilisateurs qui, à un moment ou à un autre, ont été
+      impliqués dans le cycle de vie de l'artefact que se soit comme
+      soumetteur, comme responsable ou simplement pour avoir poster un
+      commentaire.</para>
+
+      <para>Parfois il est cependant utile d'inclure d'autres
+      personnes dans le processus de notification email même si elle
+      n'y joue aucun rôle direct. Par exemple, il se pourrait que vous
+      vouliez envoyer une copie-carbone (CC) de la notification email
+      à votre responsable assurance qualité ou bien à la personne qui
+      est à l'orogine de l'artefact si ce n'est pas la même que celle
+      qui l'a soumis. C'es précisément le rôle que remplit la section
+      Destinataires en copie. Les utilisateurs insérés dans cette
+      liste recevront les notifications en rapport avec cet
+      artefact.</para>
+
+      <section id="ArtifactCCNames">
+        <title>Noms des destinataires en copie</title>
+
+        <para>Les noms des destinataires en copie peuvent être fournis
+        soit sous la forme d'une adresse email soit comme un nom
+        d'utilisateur CodeX.</para>
+
+        <itemizedlist mark="bullet">
+          <listitem>
+            <para><emphasis role="bold">Nom d'utilisateur
+            CodeX</emphasis>: lorsque la personne que vous souhaitez
+            notifier dispose d'un compte CodeX il est recommandé
+            d'utiliser ce nom plutôt que son adresse email. En
+            utilisant son nom d'utilisateur vous permettez à
+            l'utilisateur de définir finement le type de modification
+            qui doit faire l'objet d'une notification le
+            concernant. Pour plus d'information sur la
+            personnalisation des préférences en matière de
+            notification, reportez-vous à la <xref
+            linkend="TrackerEmailNotificationSettings" />.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Adresse email</emphasis>: il
+            n;existe aucune restriction concernant les adresses emails
+            saisies dans la liste des destinataires en copie. Il peut
+            s;agir d'adresse email individuelle ou de liste de
+            distribution - voir <xref linkend="MailingLists"
+            />. Contrairement au destinataire en copie saisi sous la
+            forme d'un nom d'utilisateur, les adresses email ne
+            permettent pas au destinataire de personnaliser les
+            notifications recues et il les reçoit donc toutes.</para>
+          </listitem>
+        </itemizedlist>
+
+      </section>
+
+      <section id="ArtifactAddingDeletingCCNames">
+        <title>Ajouter et supprimer des destinataires en copie</title>
+
+        <para>Plusieurs destinataires en copie peuvent être ajoutés
+        simultanément en séparant leur nom ou leur adresse email par
+        une virgule ou un point virgule dans le champ &#34;Ajouter en
+        CC&#34;. En utilisant le champ commentaire en regard, on peut
+        aussi préciser la raison pour laquelle ces destinataires ont
+        été ajoutés ou qui ils sont.</para>
+
+        <para>L'ajout et la suppression de destinataires en copie sont
+        sujets à certaines permissions:</para>
+
+        <itemizedlist mark="bullet">
+          <listitem>
+            <para>Ajout d'un destinataire: les utilisateurs anonymes
+            ne peuvent ajouter de destinataire. Tout autre utilisateur
+            possédant un compte sur CodeX peut ajouter un destinaire
+            et la liste des destinataires indiquera clairement qui a
+            ajouté cette entrée et quand.</para>
+          </listitem>
+
+          <listitem>
+            <para>Suppression d'un destinaire: les utilisateurs ayant
+            les droits d'administrateurs sur un outil de suivi (voir <xref
+            linkend="UserPermissions" />) peuvent détruire tout entrée
+            dans la liste des destinataire pour cet outil de suivi. Tous les
+            autres utilisateurs peuvent détruire les destinataires
+            ajoutés par leurs soins ou les entrées où le destinataire
+            correspond à leur adresse email ou à leur nom
+            d'utilisateur. En d'autres termes, un utilisateur CodeX a
+            le droit de défaire ce qu'il a fait ou de s'enlever
+            lui-même de la liste des destinataires dans n'importe quel
+            outil de suivi.</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+
+    </section>
+
+    <section id="ArtifactAttachments">
+      <title>Fichiers attachés à un artefact</title>
+
+      <para>En complément des commentaires, l'outil de suivi permet
+      d'attacher n'importe quelle information à un artefact sous la
+      forme de fichiers. Les copies d'écran d'application au format
+      PNG, GIF ou JPEG, le core dump d'un programme ou un simple
+      fichier texte montrant la pile d'appel ou un message d'erreur
+      sont autant d'exemples de fichiers qu'il est possible d'attacher
+      à un artefact.</para>
+
+      <para>Les fichiers attachés peuvent être de n'importe quel type
+      (image, vidéo, son, text, binaire&hellip;) et un commentaire
+      permet éventuellement d'annoter le fichier attaché. La taille
+      maximum d'un fichier attaché est variable selon le site. Elle
+      est en général de 2 Moctets.</para>
+    </section>
+
+    <section id="ArtifactDependencies">
+      <title>Dépendences entre artefact</title>
+
+      <para>La section qui suit les fichiers attachés sur l'écran de
+      modification d'un artefact, concerne les dépendences entre
+      artefacts.(voir la <xref linkend="FigureArtifactDependencies"
+      />). Les utilisateurs de CodeX ont la possibilité d'établir un
+      lien de dépendence depuis un artefact vers un ou plusieurs
+      autres artefacts appartenant à n'importe quel outil de suivi de n'importe
+      quel projet. Ceci est rendu possible par le fait que les
+      artefacts possèdent un identifiant (ID) unique sur l'ensemble du
+      système CodeX.</para>
+
+      <para>CodeX n'attache aucune sémantique aux liens qui unissent
+      des artefacts. Votre équipe de projet est donc libre de
+      s'entendre sur la signification d'un tel lien. Il peut s'agir
+      d'une dépendance causale, d'une duplication de l'information oe
+      d'une dépendence temporel dans le cas d'un outil de suivi de taches.</para>
+
+          <figure id="FigureArtifactDependencies">
+            <title>Artifact Dependencies</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata format="PNG"
+                  fileref="../../screenshots/fr_FR/sc_artifactupdatedependencies.png" width="15.3cm" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+
+
+      <para>Pour créer une dépendence, il faut indiquer l'identifiant
+      d'un ou plusieurs artefacts (séparés par une virgule) dans le
+      champ réservé à cet effet et soumettre le formulaire. Les
+      artefacts référencés apparaitront dans une table juste en
+      dessous le formulaire de saisie  précisant la description de
+      l'artefact ainsi que l'outil de suivi et le projet auquel ils
+      appartiennent.</para>
+
+      <para>Pour supprimer une dépendence il suffit de cliquer sur
+      l'icone corbeille située à la droite de la ligne de description
+      de l'artefact et confirmer (ou infirmer) la suppression dans la
+      boite de dialogue.</para>
+
+      <para>Les dépendences sont affichées dans les deux sens:
+       non seulement on montre la liste des
+      artefacts dont dépend l'artefact courant mais on montre aussi
+      tous les artefacts qui dépendent de l'artefact courant.</para>
+    </section>
+
+    <section id="ArtifactCrossReferencing">
+      <title>Références croisées entre artefact</title>
+
+      <para>En complément de la façon plutôt formelle d'exprimer une
+      dépendence entre deux artefacts presentée dans la <xref
+      linkend="ArtifactDependencies"/>, CodeX permet de créer une
+      référence sur n'importe quel artefact dans un commentaire.</para>
+
+      <para>Lorsque vous tapez un commentaire, tout morceau de texte
+      qui suit la patron &#34;XXX #NNN&#34; est interprété comme une
+      référence à l'artefact XXX numéro NNN, où XXX est le nom court
+      de l'artefact et XXX l'identifiant unique (ID) (exemple:
+      &#34;bug #123&#34;, &#34;tache #321&#34;, &#34;req #12&#34;,
+      etc...). Si vous ne connaissez pas le nom court de l'outil de suivi ou si
+      vous souhaitez ne pas le spécifier vous pouvez utiliser le
+      patron générique &#34;art #NNN&#34;. Lorsque CodeX affiche un
+      commentaire contenant une référence, elle est automatiquement
+      transformée en hyperlien vers la page de CodeX donnant toutes
+      les informations sur cet artefact.</para>
+
+      <para>Un commentaire peut contenir un référence à un artefact de
+      n'importe quel type appartenant à n'importe quel projet. Ce
+      mécanisme <emphasis role="bold">n'est</emphasis> pas limité aux
+      artefact appartenant aus outils de suivi du même projet. Celà
+      est rendu possible par le fait qu'un artefact dispose d'un
+      indentifiant unique sur tout le site CodeX.</para>
+
+      <para><emphasis role="bold">Notes Importantes</emphasis></para>
+
+      <itemizedlist mark="bullet" spacing="compact">
+        <listitem>
+          <para>Vous pouvez aussi utiliser le patron &#34;commit
+          #NNN&#34; dans un commentaire pour vous référer à un commit
+          dont l'identifiant est NNN comme indiqué dans la base de
+          suivi de commit CVS. Si Subversion est le système de
+          contrôle de version retenu par votre projet, vous pouvez
+          aussi utiliser le patron &#34;rev #NNN&#34;. Ces patrons
+          sont extrêmement utiles lorsqu'il s'agit de clore un bug ou
+          une tache et que vous désirez référencer les modifications
+          de code correspondantes. De la même façon, votre message de
+          commit peut aussi contenir une référence aux artefacts
+          d'origine, permettant ainsi d'établir des références
+          croisées entre modification de code et artefact. Pour plus
+          d'information sur la base de suivi des commits CVS reportez
+          vous à la <xref linkend="CVSWebInterface"/>.</para>
+        </listitem>
+
+        <listitem>
+          <para>Si la référence pointe sur un artefact d'un autre
+          projet ou si le nom court de l'artefact (ici &#34;XXX&#34;)
+          ne correspond pas à celui de l'objet pointé, un message
+          d'avertissement est affiché lorsque vous suivez le lien pour
+          vous avertir que vous êtes sur le point d'être redirigé vers
+          un autre projet ou que vous devriez peut-être vous assurez
+          que l'artefact pointé est bien le bon.</para>
+        </listitem>
+
+        <listitem>
+          <para>Si un projet utilise l'ancienne version des outils de
+          suivi pour les bugs, taches ou demande d'assistance, il est
+          possible d'utiliser les patrons &#34;bug #NNN&#34;,
+          &#34;task #NNN&#34; et &#34;sr #NNN&#34;. S'il existe un
+          nouvel outil de suivi qui utilise le même nom court (par
+          exemple &#34;bug&#34; tracker), le système sera suffisamment
+          intelligent pour vous rediriger vers le bon objet.</para>
+        </listitem>
+
+      </itemizedlist>
+
+    </section>
+
+    <section id="ArtifactHistory">
+      <title>Historique des artefacts</title>
+
+      <para>La dernière partie de l'écran de modification d'un
+      artefact est consacré à l'historique des changements subis par
+      l'artefact (voir <xref linkend="FigureArtifactHistory"
+      />). L'historique de l'artefact garde la trace de tous les
+      changements intervenus sur les différents champs de l'artefact
+      depuis sa création.</para>
+
+      <para>L'historique de l'artefact montre quel champ a changé, son
+      ancienne valeur ainsi que la nouvelle, la date de la
+      modification et qui l'a faite.</para>
+
+      <figure id="FigureArtifactHistory">
+        <title>Historique d'un artefact</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/fr_FR/sc_artifacthistory.png" width="13.5cm" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+  </section>
+
+
+
+  <section id="ArtifactMassChange">
+    <title>Mise à jour massive d'artefacts</title>
+  
+    <para>CodeX permet aux administrateurs d'un outil de suivi ou du projet
+    d'effectuer la même modification sur un ensemble d'artefacts en
+    une seule étape. Il est ainsi possible d'ajouter le même
+    destinataire en copie ou le même fichier attaché à un ensemble
+    d'artefacts, d'assigner une collection d'artefact à une même
+    personne, etc... Une application typique de cette fonctionnalité
+    de mise à jour massaive consiste précisément à réassigner tous les
+    artifacts d'une personne à une autre.</para>
+
+      <section id="MassChangeSelectionCriteria">
+        <title>Critères de sélection</title>
+
+        <para>Les artefacts à modifier peuvent être sélectionnés en
+        utilisant les critères de sélection du processus de
+        recherche. Pour une sélection plus fine, vous pouvez ensuite
+        utiliser les cases à cocher situées à proximité de chaque
+        artefact. Voyez la <xref
+        linkend="AccessingAProjectSummaryPage" /> pour obtenir plus
+        d'information sur l'utilisation des critères de
+        sélection. </para>
+
+        <para>Dans l'écran montré en exemple sur la <xref
+        linkend="MassChangeSelection" />, un clic sur le bouton
+        "Mettre à jour les artefacts sélectionnés" va retenir les
+        trois artefacts sélectionnés alors qu'un clic sur le bouton
+        "Tous les mettre à jour" retiendra les neuf artefacts renvoyés
+        par la recherche dans la base d'artefacts.</para>
+
+        <figure id="MassChangeSelection">
+    <title>Ecran de sélection des artefacts pour une mise à jour massive</title>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata format="PNG"
+              fileref="../../screenshots/fr_FR/sc_masschangeselection.png"
+width="14.5cm" />
+      </imageobject>
+    </mediaobject>
+        </figure>
+      </section>
+
+      <section id="Update">
+        <title>Mise à jour</title>
+    
+        <para>Une fois sélectionnés les artefacts à modifier on peut
+        passer à l'écran de mise à jour suivant. Cet écran est très
+        similaire à l'écran de modification d'un artefact. Il comporte
+        les mêmes sections: entête, commentaire, destinataires en
+        copie, fichiers attachés et dépendences.</para>
+
+        <figure id="MassChangeUpdateHeader">
+    <title>Section d'entête de l'écran de mise à jour massive d'artefacts</title>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata format="PNG"
+              fileref="../../screenshots/fr_FR/sc_masschangeupdate_header.png"
+width="14.5cm" />
+      </imageobject>
+    </mediaobject>
+        </figure>
+
+
+        <para>Dans la zone d'entête figurent tous les champs utilisés
+        par l'artefact. Seuls les champs qui passent de la valeur
+        Inchangé à une valeur spécifique seront pris en compte lors de
+        la phase de mise à jour. Dans l'exemple de la <xref
+        linkend="MassChangeUpdateHeader" /> seul le champ 'Assigné à'
+        des trois artefacts sera mis à jour. Tous les autres champs
+        restent inchangés.</para>
+
+        <figure id="MassChangeUpdateCC">
+    <title>Section destinataire en copie de l'écran de mise à jour massive d'artefacts</title>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata format="PNG"
+              fileref="../../screenshots/fr_FR/sc_masschangeupdate_cc.png"
+width="14.5cm" />
+      </imageobject>
+    </mediaobject>
+        </figure>
+
+        <para>La section des destinataires en copie diffère de son
+        comportement en ce qu'elle montre tous les destinataires de
+        tous les artefacts retenus pour la mise à jour massive avec un
+        compteur indiquant dans combien d'artefacts un destinaire est
+        présent. Dans l'exemple de la figure <xref
+        linkend="MassChangeUpdateCC" />, un des destinaires est
+        utilisé dans un des trois artefacts. En sélectionnant la case
+        Détruire ? on supprime le destinataire de la liste des
+        destinataires.</para>
+
+        <para>De la même façon, la section consacrée aux fichiers
+        attachés montre l'ensemble des fichiers attachés de tous les
+        artefacts sélectionnés pour la mise à jour massive. La section
+        des dépendences est structurée de la même facon.</para>
+
+        <para>Chaque modification massive est consigné dans
+        l'historique de chaque artefact affecté (<xref
+        linkend="ProjectHistory" />). Par contre aucune notification
+        email n'est envoyé suite à ces changements.</para>
+      </section>
+    </section>
+  
+
+  <section id="TrackerEmailNotification">
+    <title>Notification email</title>
+
+    <para>Les outil de suivi de CodeX sont munis d'un mécanisme de
+    notification d'évènements par email puissant et flexible. A moins
+    que l'administrateur de projet ou les utiulisateurs eux-mêmes n'en
+    décident autrement, le système de notification par email adopte un
+    comportement par défaut très simple. A chaque fois qu'un artefact
+    est créé ou mmodifié - que ce soit avec un nouveau commentaire, un
+    nouveau fichier attaché ou un changment dans l'un quelconque des
+    champs - un message est envoyé aux acteurs suivants:</para>
+
+    <itemizedlist mark="bullet" spacing="compact">
+      <listitem>
+        <para>La personne qui a soumis l'artefact</para>
+      </listitem>
+
+      <listitem>
+        <para>La ou les personnes à qui l'artefact a été assigné</para>
+      </listitem>
+
+      <listitem>
+        <para>Les personnes présentes dans la liste des destinataires en copie.</para>
+      </listitem>
+
+      <listitem>
+        <para>Tous les utilisateurs ayant posté au moins un commentaire sur cet artefact.</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>En plus de ces règles simples, le module d'administration de
+    l'outil de suivi permet aux utilisateurs CodeX de personnaliser le processus
+    de notification email. Pour plus d'information reportez-vous à la
+    <xref linkend="TrackerEmailNotificationSettings" />). </para>
+
+    <para>Le message de notification généré par l'outil de suivi se compose d'une
+    première partie montrant les changements récemment intervenus dans
+    l'artefact à l'occasion de la dernière mise à jour. A la suite se
+    trouve un récapitulatif complet de l'artefact. Des pointeurs Web
+    sont aussi présents dans le message pour vous permettre d'accèder
+    facilement et rapidement à l'artefact sur CodeX.</para>
+
+  </section>
+
+  <section id="TrackerReporting">
+    <title>Analyse statistique</title>
+
+    <para>Comme expliqué plus tôt dans ce chapitre (voir
+    linkend="ProjectDataExport" />), CodeX permet d'exporter les
+    données de votre projet afin de les réutiliser dans des outils
+    externes comme des outils statistiques. Cependant pour des besoins
+    simples vous pouvez aussi utiliser le module d'analyse statistique
+    de l'outil de suivi. Cette fonction est accessible via l'entrée 'Analyse
+    statistique' du menu de l'outil de suivi.</para>
+
+    <figure id="FigureValueDistributionOfTheCategoryFieldForTheCodeXProject">
+      <title>Exemple de distribution des valeurs du champ Catégorie d'un outil de suivi</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata format="PNG"
+            fileref="../../screenshots/fr_FR/sc_artifactreporting.png" width="13cm"/>
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Le module d'analyse statistique vous renseigne sur la façon
+    dont vos artefacts (ouverts seulement ou en totalité) sont
+    distribués sur l'ensemble des valeurs prédéfinies pour les
+    différents champs de type boite de sélection. Ainsi vous pouvez
+    voir comment sont distribués sur les valeurs des champs Statut,
+    Catégorie ou Résolution (voir <xref
+    linkend="FigureValueDistributionOfTheCategoryFieldForTheCodeXProject"
+    /> pour un exemple de distribution des artefacts sur les champ
+    Catégorie d'un outil de suivi).</para>
+  </section>
+
+  <section id="ArtifactImport">
+    <title>Importation d'artefacts</title>
+
+      <para>Les administrateurs d'un projet ont la possibilité
+      d'importer des artefacts dans un outil de suivi de CodeX en utilisant des
+      fichiers au format CSV (Comma Separated Values) qui est supporté
+      par toutes les applications bureautique du marché. L'importation
+      d'artefact facilite énormément la migration de données en
+      provenance d'autres outils de suivi dans les outils de suivi de
+      CodeX.</para>
+
+    <para>L'importation d'artefacts se déroule en trois étapes:
+
+        <itemizedlist mark="bullet" spacing="compact">
+		<listitem><para><emphasis role="bold">Soumission du fichier CSV. </emphasis>
+			L'administrateur du projet peut accèder à la fonction d'importation soit à
+			partir de l'écran de recherche et de navigation, soit à partir du menu de l'écran
+			d'administration du projet. Choisissez ensuite l'outil de suivi concerné et le
+			fichier CSV à importer. Durant cette étape vous pouvez aussi choisir d'envoyer
+			une notification email à tous les utilisaterus concernés par les modifications
+			du à l'importation. si vous ne cochez pas l'option, aucune notification ne sera
+			envoyée.</para>
+		</listitem>
+   
+        <listitem><para><emphasis role="bold">Analyse des fichiers
+        CSV.</emphasis> Si aucune erreur n'est détectée dans le format
+        du fichier téléchargé, un rapport d'analyse est affiché à
+        l'écran qui vous permet de confirmer que l'information
+        importée est correcte.</para>
+        </listitem>
+   
+        <listitem><para><emphasis role="bold">Mise à jour de la base
+        de données. </emphasis> Selon le format des informations
+        fournies de nouveaux artefacts vont être créés ou des
+        artefacts existants sont mis à jour.  </para></listitem>
+        </itemizedlist>
+    </para>
+
+    <section>
+      <title>Quand utiliser la fonction d'importation?</title>
+        <para>Vous trouverez ci-dessous quelques suggestions d'utilisation de la fonction d'importation de l'outil de suivi:
+
+        <itemizedlist mark="bullet" spacing="compact">
+        <listitem><para>Importation des données en provenance d'un logiciel de gestion de projet externe vers un outil de suivi de taches de CodeX.</para></listitem>
+        <listitem><para>Migration des données de votre ancien système de suivi dans le nouvel outil de suivi de CodeX.</para></listitem>
+        <listitem><para>Migration d'artefact d'un outil de suivi CodeX vers un autre.</para></listitem>
+        </itemizedlist>
+        </para>
+    </section>
+
+    <section>
+        <title>Exporter une feuille de calcul Excel au format CSV</title>
+          <para>Pour exporter une feuille de calcul Excel au format CSV, suivez les étapes suivantes:
+          <itemizedlist mark="bullet" spacing="compact">
+
+          <listitem><para>Sélectionnez <literal>Fichier -> Enregistrer
+          sous...</literal> </para></listitem>
+
+           <listitem><para>Dans la boite de dialogue choisissez
+           <literal>CSV</literal> comme format de
+           sauvegarde.</para></listitem>
+
+          </itemizedlist>
+        </para>
+    </section>
+
+    <section>
+      <title>Analyse du fichier CSV</title>
+
+        <para>Le format CSV accepté en entrée est documenté sur
+        l'écran de soumission du fichier CSV. Cette page vous permet
+        de vérifier de façon manuelle que votre fichier CSV est bien
+        formatté et quels champs sont obligatoires en cas de
+        soumission d'un nouvel artefact. Qui plus est, un exemple de
+        fichier CSV figure en bas de page. Si vous avez déjà utilisé
+        le module d'exportation (voir <xref
+        linkend="ProjectDataExport" />) vous remarquerez que les
+        formats sont strictement indentiques. Vous pouvez vous référez
+        à la documentation du format d'exportation en particulier pour
+        les champs de type date et commentaire (voir <xref
+        linkend="ArtifactComments" />). Le premier enregistrement d'un
+        fichier d'importation CSV doit toujours être constitué des
+        noms des champs de l'ids utilisé dans les lignes de données
+        qui suivent.</para>
+
+        <para>Vous devez fournir des informations différentes selon
+        que vous souhaitez mettre à jour des artefacts existants ou en
+        créer de nouveaux. Néanmoins il st possible de mélanger les
+        deux formats dans le même fichier CSV.</para>
+     
+        <para>Pour la création d'artefact vous devez fournir une
+        valeur pour tous les champs marqués comme étant
+        obligatoires. Si vous omettez le nom de la personne qui soumet
+        l'artefact ainsi que la date de soumission ils seront
+        automatiquement renseigné avec le nom de l'utilisateur
+        effectuant l'operation d'importation et la date courante
+        respectivement.</para>
+
+        <para>Pour la modification d'artefacts existants vous devez
+        impérativement forunir l'identifiant (ID) des artefacts
+        concernés. Ensuite vous pouvez vous contenter d'utiliser
+        uniquement les noms des champs à modifier dans le fichier CSV
+        et non pas l'ensemble des champs obligatoires.</para>
+
+        <para>Le processus d'analyse vérifie la cohérence du fichier CSV sur plusieurs points:
+        <itemizedlist mark="bullet" spacing="compact">
+        <listitem><para>Omission de champs obligatoires lors de la création de nouveaux artefacts.</para></listitem>
+        <listitem><para>Le nombre de champs mentionnés sur la première ligne ne correspond pas au nombre de valeurs des lignes suivantes</para></listitem>
+        <listitem><para>Nom de champ inconnu sur la première ligne</para></listitem>
+        <listitem><para>Valeurs de champs qui ne correspondent pas aux valeurs prédéfinies pour les champs de type boite de selection.
+        </para></listitem>
+        <listitem><para>Soumission en double (par exemple soumission d'un nouvel artefact ayant le même résumé qu'un artefact déjà existant)</para></listitem>
+        <listitem><para>Identifiant d'artefact inconnu.</para></listitem>
+        <listitem><para>Omission des commentaires déjà soumis</para></listitem>
+		</itemizedlist>
+
+        D'autres erreurs peuvent être détectée à l'occasion de
+        l'inspection visuelle du rapport d'importation fourni par
+        CodeX.
+        </para>
+    </section>
+
+    <section>
+        <title>Mise à jour de la base de données</title>
+
+        <para>Si vous importez de nouveaux artefacts, tous les champs
+        optionnels omis dans le fichier CSV sont renseignés avec
+        leur valeur par défaut.</para>
+        
+		<para>Si vous souhaitez mettre à jour la liste des destinataires en copie ou celle des
+			dépendences, prenez garde que les valeurs spécifiées dans le fichier CSV
+			remplacent les noms et les dépendences existants. Tous les commentaires
+			présents dans le fichier csv qui ont déjà été soumis sont omis pour éviter les
+			doublons. Le nom de la personne ayant soumis l'artefact et la date de soumission
+			ne peuvent être modifiés par un fichier d'importation même s'il comporte ces
+			deux informations.</para>
+
+        <para>Si une erreur survient lors de l'importation d'un
+        artefact dans la base de données, le processus s'arrête et les
+        artefacts qui suivent ne sont pas importés.</para>
+
+        <para>Chaque opération d'importation est consigné dans
+        l'historique du projet (voir <xref linkend="ProjectHistory"
+        />). Par contre aucune notification email n'est envoyé suite
+        aux modifications intervenus sur les différentes artefacts
+        suit à l'operation d'importation.</para>
+    </section>
+
+    <para><tip id="ExcelAndRegionals"><title>Tip: Excel et les
+    paramètres régionaux</title> <para>Si un fichier CSV est ouvert
+    avec Excel, tout changement opéré sur la feuille de calcul (y
+    compris un simple changement d'une largeur de colonne) peut amener
+    Excel à modifier les informations d'origine du fichier CSV. Les
+    changements en question peuvent affecter les dates, les heures et
+    les nombres qui seront convertis aux formats spécifiés dans les
+    paramètres régionaux de votre système, les caractères de saut de
+    ligne transformés en saut de ligne et retour charriot ainsi que
+    des virgules ajoutées à certaines lignes.
+    </para>
+        
+    <para>
+    Les changements de format de date effectués par Excel peuvent être
+    incompatibles avec le format attendu par CodeX et causer des
+    erreurs durant l'importation des données. A l'inverse, des
+    fichiers CSV exportés depuis CodeX peuvent ne pas s'ouvrir
+    correctement sous Excel avec certaines valeurs des paramètres
+    regionaux.
+    </para>
+    
+    <para>
+    Si vous vous retrouvez dans ce cas de figure, essayez de procéder
+    aux modifications suivantes sur Windows: Assurez-vous que toutes
+    vos applications sont arrêtées. Modifier vos paramètres régionaux
+    (Démarrer > Configuration > Panneau de contrôle, Paramètres
+    Regionaux) pour utiliser l'anglais avec les formats suivants: Date
+    = MM/dd/YYYY Heure = hh:mm. Avec Excel, ouvrez le fichier CSV qui
+    pose problème, ajuster la largeur d'une colonne quelconque,
+    sauvegardez le fichier et fermez Excel. Remettez les paramètres
+    régionaux à leur ancienne valeur et importez le fichier CSV
+    "corrigé" dans CodeX.
+    </para>
+    </tip></para>
+
+  </section>
+      
+
+  <section id="DefaultTrackerAccessPermissions">
+    <title>Permissions d'accès par défaut aux outils de suivi</title>
+
+    <para>Selon la classe d'utilisateurs à laquelle vous appartenez et
+    le niveau de permission qui vous est accordé en tant que membre
+    d'un projet, différentes fonctions des outils de services peuvent
+    s'avérer accessible ou pas. Veuillez noter que les permissions
+    d'accès par défaut listées ci-dessous peuvent changer par un outil de suivi
+    particulier si l'administrateur de l'outil en a décidé ainsi. Pour
+    plus d'information sur la configuration des permissions d'accès
+    aux outils de suivi reportez-vous à la <xref
+    linkend="TrackerPermissionsManagement"/>). Les permissions par
+    défaut sont résumées dans la table ci-dessous:</para>
+
+    <table frame="all">
+      <title>Permissions d'accès par défaut des outils de suivi</title>
+      <tgroup cols="2">
+        <colspec colname="c1" colwidth="200pt" />
+
+        <colspec colname="c2" colwidth="250pt"  />
+
+        <thead>
+          <row>
+            <entry>Tracker Feature</entry>
+            <entry>Access Permission</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry><link linkend="ArtifactSubmission">Soumission d'un
+            nouvel artefact</link></entry> <entry>Par défaut tout
+            visiteur, connecté à CodeX ou pas, peut soumettre un
+            nouvel artefact. L'administrateur de l'outil de suivi peut limiter
+            l'usage de cette fonction aux utilisateurs enregistrés ou
+            aux membres du projet si l'outil de suivi est privé.</entry>
+          </row>
+          <row>
+            <entry><link
+            linkend="ArtifactBrowsing">Navigation/Recherche
+            d'artefact</link></entry> <entry>La recherche et la
+            navigation dans la base d'artefacts est accessible à tous
+            les visiteurs CodeX sauf si l'outil de suivi est privé auquel cas
+            seuls les membres de l'équipe y ont accès.</entry>
+          </row>
+          <row>
+            <entry><link linkend="ArtifactUpdate">Modification des
+            artefacts</link></entry> <entry>Par défaut seuls les
+            membres du projet peuvent modifier un artefact. Les
+            visteurs externes ne peuvent soumettre qu'un commentaire
+            ou attacher un fichier.</entry>
+          </row>
+          <row>
+            <entry><link linkend="ArtifactMassChange">Mise à jour
+            massive des artefacts </link></entry> <entry>Uniquement
+            accessible aux administrateurs du projet et aux membres du
+            projet ayant les droits d'administration sur l'outil de suivi en
+            question.</entry>
+          </row>
+          <row>
+            <entry><link linkend="ArtifactImport">Importation
+            d'artefacts</link></entry> <entry>Uniquement accessible
+            aux administrateurs du projet et aux membres du projet
+            ayant les droits d'administration sur l'outil de suivi.</entry>
+          </row>
+          <row>
+            <entry><link
+            linkend="TrackerFieldUsageManagement">Création d'un
+            outil de suivi</link></entry> <entry>Uniquement accessible aux
+            administrateurs du projet.</entry>
+          </row>
+          <row>
+            <entry><link
+              linkend="TrackerFieldUsageManagement">Administration d'un outil de suivi - Options générales</link></entry>
+            <entry>Uniquement accessible
+            aux administrateurs du projet et aux membres du projet
+            ayant les droits d'administration sur l'outil de suivi.</entry>
+          </row>
+          <row>
+            <entry><link
+              linkend="TrackerFieldUsageManagement">Administration d'un outil de suivi - Gérer l'utilisation des champs</link></entry>
+            <entry>Uniquement accessible
+            aux administrateurs du projet et aux membres du projet
+            ayant les droits d'administration sur l'outil de suivi.</entry>
+          </row>
+
+          <row>
+            <entry><link
+              linkend="TrackerFieldValuesManagement">Administration d'un outil de suivi - Gérer les valeurs des champs</link></entry>
+            <entry>Uniquement accessible
+            aux administrateurs du projet et aux membres du projet
+            ayant les droits d'administration sur l'outil de suivi.</entry>
+          </row>
+          <row>
+            <entry><link linkend="TrackerReportManagement">Administration d'un outil de suivi - Gérer les rapports de recherche</link></entry>
+            <entry>Seuls les administrateurs du projet et les membres
+            du projet ayant les droits d'administration sur l'outil de suivi
+            peuvent définir des rapports de recherche pour l'ensemble
+            des utilisateurs. Tous les autres utilisateurs (sauf les
+            anonymes) ne peuvent définir que des rapports
+            personnels.</entry>
+          </row>
+          <row>
+            <entry><link
+            linkend="TrackerEmailNotificationSettings">Administration d'un outil de suivi - Notification email</link></entry> <entry>Seuls les administrateurs
+            du projet peuvent configurer les adresses de notification
+            globale. Tout membre du projet peut demander à suivre les
+            notifications des autre membres. Tout utilisateur
+            enregistré peut personnaliser sa matrice de notification
+            personnelle.</entry>
+          </row>
+
+        </tbody>
+      </tgroup>
+    </table>
+  </section>
+
+
+  <section id="TrackerCreation">
+    <title>Création d'un outil de suivi</title>
+
+    <para>Avant de choisir les champs et les valeurs associés aux
+    champs d'un outil de suivi, il faut tout d'abord créer cet outil de suivi. On peut
+    accèder à la page de création d'un tracker depuis l'entrée
+    &#34;Créer un outil de suivi&#34; visible à la fois dans le menu de la partie
+    publique et dans celui de la partie administration.</para>
+
+    <para><tip><title>Coup de pouce: utilisez de préférence les outils
+    de suivi prédéfinis</title> <para>Quand un projet est créé sur
+    CodeX un certain nombre d'outils de suivi sont automatiquement
+    créé pour ce projet. Il s'agit typiquement d'outils de suivi pour
+    les bugs, les taches et les demandes de support. Si votre projet
+    est amené à gérer ce genre d'artefacts, utilisez de préférence les
+    outils de suivi prédéfinis. Vous êtes bien sûr libres de définir
+    de nouveaux champs et de modifier ceux qui existent déjà dans
+    chacun des ces outils de suivi.</para></tip></para>
+
+    <para>Pour définir un nouvel outil de suivi vous devez fournir les
+    informations suivantes (voir <xref
+    linkend="FigureCreateANewTracker" />): </para>
+
+    <itemizedlist mark="bullet" spacing="compact">
+      <listitem id="TrackerCreationName">
+        <para><emphasis role="bold">Nom</emphasis>: il s'agit du nom
+        de l'outil de suivi. le nom d'un outil de suivi est classiquement calqué sur le nom
+        des artefacts qui sont gérés. Ce nom est utilisé par CodeX
+        dans le titre de plusieurs écrans de l'outil de suivi. Quelques exemples
+        de noms d'outils de suivi: Demandes de fonctionnalités,
+        Taches, Anomalies,&hellip;</para>
+      </listitem>
+      <listitem id="TrackerCreationDescription">
+        <para><emphasis role="bold">Description</emphasis>: une
+        description plus complète de l'outil de suivi et des artefacts qu'il
+        gère.</para>
+      </listitem>
+
+      <listitem id="TrackerCreationShortName">
+        <para><emphasis role="bold">Nom court</emphasis>: il s'agit
+        d'un nom court décrivant le type d'artefacts gérés par
+        l'outil de suivi. Le nom doit être aussi court que possible car il est
+        utilisé sur plusieurs écrans de l'outil de suivi comme, par exemple, sur
+        l'écran de modification d'un artefact où le nom court apparaît
+        dans la barre de menu et à côté de l'identifiant de
+        l'artefact. Si nous reprenons les exemples donnés pour le
+        champ Nom ci-dessus, les noms courts correspondants pourraient
+        être: fonc, tache, anom,&hellip;</para>
+      </listitem>
+    </itemizedlist>
+
+    <figure id="FigureCreateANewTracker">
+      <title>Création d'un nouvel outil de suivi (ici pour des anomalies)</title>
+      
+      <mediaobject>
+        <imageobject>
+          <imagedata format="PNG"
+            fileref="../../screenshots/fr_FR/sc_trackercreatenewtracker.png" width="13cm"/>
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>L'étape suivante consiste à prendre une décision concernant
+    les champs à utiliser dans l'outil de suivi. Pour vous éviter d'avoir à
+    redéfinir sans cesse les outils de suivi les plus fréquemment
+    utilisés (par exemple un outil de suivi d'anomalies, de taches, de demandes
+    d'assistance, etc...) CodeX offre un certain nombre de patrons
+    d'outils de suivi prédéfinis à partir desquels vous pouvez créer
+    votre propre outil de suivi. Ces patrons sont définis soit au niveau du site
+    (patrons-site) soit au niveau du projet.</para>
+
+    <para><emphasis role="bold">Remarque</emphasis>: l'utilisation de
+    patrons ne signifie pas que vous deviez vous conformer strictement
+    aux champs proposés. Il est toujours ossible d'ajouter, de
+    supprimer ou de modifier des champs en partant du patron
+    initial.</para>
+
+    <itemizedlist mark="bullet" spacing="compact">
+      <listitem id="TrackerCreationFromCodeXTemplate">
+        <para><emphasis role="bold">Patrons-site</emphasis>: il s'agit
+        de patrons définis par les administrateurs du site CodeX qui
+        sont en général utiles à de nombreux projets. C'est aussi un
+        moyen d'assurer une certaine harmonie d'un projet à l'autre
+        tout en facilitant la vie des équipes de projet. La liste des
+        patrons-site disponibles varie d'un site à l'autre mais vous y
+        trouverez typiquement des outil de suivi pour les anomalies, les taches,
+        etc... Un patron particulier appelé &#34;Aucun&#34; permet de
+        créer vierge de tout champ sauf certains qui restent
+        obligatoires. Voir <xref linkend="CodeXTrackerTemplates" />
+        pour plus d'information concernant ces patrons.</para>
+      </listitem>
+
+      <listitem id="TrackerCreationFromProjectTemplate">
+        <para><emphasis role="bold">Patrons-projet</emphasis>: si vous
+        avez déjà défini un outil de suivi qui répond à vos besoins et
+        que vous souhaitez le réutiliser, il suffit de spécifier
+        l'identifiant du projet et celui de l'outil de suivi soit manuellement
+        soit en utilisant les flèches du menu déroulant, puis de
+        cliquer surle bouton de création. oOus allez ainsi créer un
+        nouvel outil de suivi strictement identique au précédent. (<emphasis
+        role="bold">Note</emphasis>: cette opération ne copie pas les
+        artefacts mais uniquement la configuration des champs)</para>
+      </listitem>
+
+    </itemizedlist>
+
+  </section>
+
+
+  <section id="CodeXTrackerTemplates">
+    <title>Patrons d'outils de suivi du site</title>
+
+    <para>Les outils de suivi standards fournis pour chaque projet
+    sont:
+      <itemizedlist mark="bullet" spacing="compact">
+        <listitem><para>Bugs</para></listitem>
+        <listitem><para>Patch</para></listitem>
+        <listitem><para>Support Requests</para></listitem>
+        <listitem><para>Tasks</para></listitem>
+      </itemizedlist>
+        Chacun de ces outils de suivi possède des champs prédéfinis
+        qui correspondent à un processus de travail spécifique autour
+        des coorectifs, des bugs, etc... Dans les paragraphes qui
+        suivent, nous donnons une présentation très général de ces
+        processus de travail. Pour chaque outil de suivi, l'équipe CodeX a essayé
+        de maintenir un équilibre entre sophistication et facilité
+        d'utilisation. En conséquence, les patrons proposés aux
+        projets hébergés sur CodeX sont simples. Les membres du projet
+        sont ensuite libres de décider par eux-mêmes des informations
+        qu'un artefact doit comporter et de personnaliser la
+        définition des champs en conséquence. </para>
+
+
+    <section id="BugTemplate">
+      <title>L'outil de suivi d'anomalies (bugs)</title> 
+
+      <para>L'une des règles d'or d'un environnement de projet
+      collaboratif est de permettre à ces utilisateurs de tester le
+      logiciel et de rendre compte librement des anomalies (bugs)
+      rencontrées. L'outil de suivi Bug a précisément était conçu dans cet
+      objectif.</para>
+
+      <para>L'outil de suivi Bug est pré-configuré avec un ensemble de champs
+      (utilisé ou pas) qui sont probablement suffisant pour une grance
+      majorité des projets hébergés sur CodeX. Vous pouvez bien sûr
+      décider que certains champs critiques doivent être crées ou, au
+      contraire, passez le statut de certains champs à "Inutilisé"
+      pour simplifier l'outil de suivi.</para>
+
+    </section>
+
+    <section id="PatchTemplate">
+      <title>L'outil de suivi de correctifs (patches)</title>
+
+      <para>Le rôle de l'outil de suivi de correctifs est de permettre aux
+      personnes extérieures au projet ou aux membres du projet ayant
+      des droits restreints de soumettre des propistions de
+      modifications dans le code source du projet.</para>
+
+      <para>Concernant la façon de générer des correctifs s'appliquant
+      au code source, reportez-vous au chapitre CVS (<xref
+      linkend="ContributingyourChanges" />) ou Subversion (<xref
+      linkend="SubversionContributingyourChanges" />).</para>
+
+      <note><para><emphasis role="underline">Note à l'intention des
+      équipes de projet</emphasis></para> <para> Recevoir des
+      modifications du code source d'autres utilisateurs n'implique
+      pas que vous deviez les intégrer de façon systématique dans
+      l'arbre de code source principal. Il revient à l'équipe de
+      projet de décider quoi faire de ces contributions. L'une des
+      caractéristiques intéressantes de l'outil de suivi de correctifs est de
+      donner accès aux fichiers de corrections que l'équipe de projet
+      ait décidé de l'intégrer dans l'arbre de développement principal
+      ou pas. Ainsi les visiteurs peuvent non seulement consulter les
+      contributions des autres personnes mais ausi les utiliser pour
+      eux-mêmes s'ils le souhaitent même si l'équipe de projet a
+      décidé de ne pas intégrer le correctif.</para></note>
+
+    </section>
+
+    <section id="SRTemplate">
+      <title>L'outil de suivi de demandes d'assistance (support requests)</title>
+
+      <para>L'outil de suivi de demandes d'assistance (DA) est l'un des mécanisme
+      de communication que votre projet devrait toujours offrir à ses
+      utilisateurs. L'outil de suivi DA leur permet de poser des questions ou de
+      demander de l'aide à l'équipe de projet.</para>
+
+      <para>Les utilisateurs qui ont accès à l'outil de suivi DA peuvent suivre
+      les fils de discussion entre les autres utilisateurs et les
+      membres de l'équipe. Il est aussi possible de passer les DA déjà
+      postées en revue ainsi que les réponses apportées par
+      l'équipe. Avec l'outil de suivi DA, une équipe de projet peut coordonner
+      facilement et efficacement l'ensemble de ces activités de
+      support technique.</para>
+
+    </section>
+
+    <section id="TaskTemplate">
+      <title>L'outil de suivi de tâches</title>
+
+      <para>L'outil de suivi de tâches de CodeX est un gestionnaire de tâches et
+      pas un logiciel de gestiond eprojet comme CA-SuperProject,
+      MS-Project ou d'autres logiciels puissants et complexes qu'on
+      peut trouver sur le marché. L'outil de suivi de tâches n'est pas capable de
+      construire un diagramme de Gantt ou un Pert et il n'a pas non
+      plus de fonction de planification. Il s'agit plutôt d'un outil
+      qui permet aux membres du projet de suivre l'évolution de leur
+      tâche et le temps qu'ils y consacrent ou bien encore de suivre
+      au quotidien la liste des choses à faire.</para>
+
+      <para>Malgré sa simplicité, l'outil de suivi de tâches offre un certain
+      nombre de fonctionnalités qui en font un outil très
+      complémentaires des logiciels de gestion et de planification de
+      projets:</para>
+
+      <itemizedlist mark="bullet"
+        spacing="compact">
+        <listitem>
+          <para>Comme tous les autres outils CodeX, l'outil de suivi de tâches
+          est entièrement basé Web. Ainsi n'importe quel membre du
+          projet peut mettre à jour ses tâches où qu'il se
+          trouve.</para>
+        </listitem>
+
+        <listitem>
+          <para>Les tâches peuvent être gérés par les membres
+          autorisés uniquement.</para>
+        </listitem>
+
+        <listitem>
+          <para>Chaque membre du projet dispose de sa feuille de
+          tâches montrant toutes les tâches qui lui sont assignées,
+          leur priorité, leur description, les datesd e début et de
+          fin, le pourcentage de complétion, les tâches dépendantes,
+          les commentaires associés et l'historique complet des
+          changements.</para>
+        </listitem>
+
+        <listitem>
+          <para>Les données concernant les tâches peuvent être
+          collectées à tout moment par le chef de projet en utilisant
+          la fonction d'exportation des données de CodeX (voir <xref
+          linkend="ProjectDataExport" />). Ceci permet de générer très
+          facilement de rapport d'activité et de progression des
+          projets.</para>
+        </listitem>
+      </itemizedlist>
+
+    </section>
+    
+  </section>
+
+  <section id="TrackerAdministration">
+    <title>Administration des outils de suivi</title>
+
+    <para>Depuis le début du chapitre concernant les outils de suivi,
+    il a été fait plusieurs fois mention de la flexibilité de ce
+    serviceet de la facilité à personnaliser vos propres outils de
+    suivi. La configuration se fait via le module d'administration des
+    outils de suivi accessible par l'entrée &#34;Administration des
+    outils de suivi&#34; de la barre de menu.</para>
+
+    <para>La page d'accueil du module d'administration des outils de
+    suivi montre l'ensemble des outils de suivi utilisés par le
+    projet. A partir de cette page, les outils de suivi existants
+    peuvent être configurés et de nouveaux outils peuvent être créés
+    (voir <xref linkend="FigureTrackerTopAdminPage" />). Cette section
+    couvre la partie configuration d'un outil de suivi existant. La création d'un
+    nouvel outil de suivi est traitée dans la <xref linkend="TrackerCreation"
+    />.</para>
+
+    <figure id="FigureTrackerTopAdminPage">
+      <title>Administration des outils de suivi - Page d'accueil</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata format="PNG"
+            fileref="../../screenshots/fr_FR/sc_trackertopadminpage.png" width="13cm"/>
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>La configuration d'un outil de suivi se divise en sept sections:</para>
+
+    <itemizedlist mark="bullet" spacing="compact">
+      <listitem><para><emphasis role="bold">Options
+      Générales</emphasis>: le nom, la description et quelques autres
+      paramètres généraux sont définis dans cette section.</para>
+      </listitem>
+      <listitem><para><emphasis role="bold">Gestion des
+      permissions</emphasis>: permet d'octroyer des permissions
+      d'accès différentes aux utilisateurs en fonction de leur
+      rôle.</para>
+      </listitem>
+      <listitem><para><emphasis role="bold">Gestion de
+      champs</emphasis>: définition des champs utilisés dans cet
+      outil de suivi.</para>
+      </listitem>
+      <listitem><para><emphasis role="bold">Gestion des valeurs des
+      champs</emphasis>: définition des valeurs prédéfinies ou valeurs
+      par défaut associées aux champs.</para>
+      </listitem>
+      <listitem><para><emphasis role="bold">Gestion des
+      réponses-type</emphasis>: permet de créer des commentaires
+      prédéfinis que l'équipe utilise régulièrement.</para>
+      </listitem>
+      <listitem><para><emphasis role="bold">Manage Reports</emphasis>:
+      définition de rapport de recherche d'artefacts (critères de
+      recherche et table de résultats).</para>
+      </listitem>
+      <listitem><para><emphasis role="bold">Options de notification
+      </emphasis>: réglage des options de notification par email
+      globales ou personnelles.</para>
+      </listitem>
+    </itemizedlist>
+
+    <section id="TrackerGeneralSettings">
+      <title>Options générales</title>
+
+      <para>This module allows you to define a series of properties
+      for your tracker. Some of those properties have already been
+      defined in the tracker creation form while some others are only
+      available on this configuration page. The properties are as
+      follows:</para>
+
+      <itemizedlist mark="bullet" spacing="compact">
+        <listitem id="TrackerGeneralSettingsName">
+          <para><emphasis role="bold">Nom</emphasis>: this is a
+          short name that best describe the type of artifact managed
+          in this tracker. This name must be quite short as it is used
+          in various screens of the CodeX Tracker like the artifact
+          update form next to the artifact ID. Following the examples
+          given for the Name field above, short names can be: AR for
+          Action Request, SR for Support Requests, Reqt for
+          Requirements, bug for Bugs&hellip;</para>
+        </listitem>
+
+        <listitem id="TrackerGeneralSettingsDescription">
+          <para><emphasis role="bold">Description</emphasis>: une
+        description plus complète de l'outil de suivi et des artefacts qu'il
+        gère.</para>
+        </listitem>
+
+        <listitem id="TrackerGeneralSettingsShortName">
+          <para><emphasis role="bold">Nom court</emphasis>: il s'agit
+        d'un nom court décrivant le type d'artefacts gérés par
+        l'outil de suivi. Le nom doit être aussi court que possible car il est
+        utilisé sur plusieurs écrans de l'outil de suivi comme, par exemple, sur
+        l'écran de modification d'un artefact où le nom court apparaît
+        dans la barre de menu et à côté de l'identifiant de
+        l'artefact. Si nous reprenons les exemples donnés pour le
+        champ Nom ci-dessus, les noms courts correspondants pourraient
+        être: fonc, tache, anom,&hellip;</para>
+        </listitem>
+
+        <listitem id="TrackerGeneralSettingsSubmitInstructions">
+          <para><emphasis role="bold">Instructions de
+          soumission</emphasis>: un message d'introduction qui
+          s'affiche en haut de l'écran de soumission d'un nouvel
+          artefact. C'est une façon très commode de donner des
+          instructions aux utilisateurs qui soumettent de nouveaux
+          artefacts. Le texte doit être formatté avec des balises
+          HTML, ce qui vous donne un grande flexibilité (vous pouvez
+          utiliser des caractères gras, de l'italique, des couleurs,
+          des URLs&hellip;)</para>
+        </listitem>
+
+        <listitem id="TrackerGeneralSettingsBrowseInstructions">
+          <para><emphasis role="bold">Instructions de
+          navigation</emphasis>: un message d'introduction qui
+          s'affiche en haut de l'écran de recherche et de navigation
+          dans la base d'artefacts. Le texte doit être formatté avec
+          des balises HTML, ce qui vous donne un grande flexibilité
+          (vous pouvez utiliser des caractères gras, de l'italique,
+          des couleurs, des URLs&hellip;)</para>
+        </listitem >
+      </itemizedlist>
+    </section>
+
+
+    <section id="TrackerPermissionsManagement">
+      <title>Gestion des permissions</title>
+
+      <para>Ce module est utilisé pour donner des permissions d'accès
+      différentes aux utilisateurs suivant leur rôle.</para>
+
+      <para>Les permission d'accès peuvent être définies à deux niveaux: </para>
+
+      <itemizedlist mark="bullet" spacing="compact">
+        <listitem>
+          <para><emphasis role="bold">Au niveau de l'outil de suivi et des
+          artefacts</emphasis>: à ce niveau, vous pouvez déterminer si
+          certains groupes d'utilisateurs ont un accès total, partiel
+          ou nul à l'outil de suivi et à ses artefacts.</para>
+        </listitem>
+        <listitem>
+          <para><emphasis role="bold">Au niveau des champs d'un
+          artefact</emphasis>: il s'agit d'un niveau de permission
+          plus fin défini au niveau de chaque champ de l'outil de suivi. En
+          utilisant cette fonctionalité vous pouvez spécifier quels
+          groupes ont uniquement les droits en lecture sur un champ,
+          quels autres groupes ont les droits de modification et quels
+          sont ceux qui n'on aucun accès.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Toutes les permissions sont définis pour des groupes
+      d'utilisateurs et non au niveau des individus. Reportez à la
+      <xref linkend="UserGroups" /> pour plus d'information sur la
+      définition et la gestion des groupes d'utilisateurs.</para>
+
+      <section id="TrackerAndArtifactPermissionsManagement">
+        <title>Gestion des permissions</title>
+
+        <para>En pénétrant dans ce module, une liste de groupes
+        d'utilisateurs apparait ainsi que leur permissions d'accès. La
+        liste des groupes montrent tout d'abord les groupes définis au
+        niveau du système CodeX comme l'ensemble des utilisateurs, les
+        utilisateurs enregistrés, les membres du projet, etc... Il
+        s'agit de groupes que CodeX gère pur vous de telle façon que
+        vous n'avez pas à les modifier lorsqu'un utilisateur crée un
+        compte our qu'il devient membre du projet. La seconde partie
+        de la liste est constituée de groupes d'utilisateurs définis
+        au niveau du projet (voir <xref linkend="UserGroups" /> pour
+        plus d'information sur la définition et la gestion de ces
+        groupes d'utilisateurs).</para>
+
+        <para>Chaque groupe peut être associé avec les permissions suivantes:</para>
+
+        <itemizedlist mark="bullet" spacing="compact">
+
+          <listitem>
+            <para><emphasis role="bold">&hyphen;&hyphen;</emphasis>:
+            ce niveau de permission qui s'affiche sous forme d'un
+            double tiret signifie que le groupe n'a accès à aucun
+            artefact.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Accès à tous les
+            artefacts</emphasis>: le groupe accès à tous les artefacts
+            de l'outil de suivi.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Accès aux artefacts confiés au
+            groupe</emphasis>: le groupe voit uniquement les artefacts
+            qui sont assignés à un ou plusieurs membres du
+            groupe.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Accès aux artefacts soumis par
+            le groupe</emphasis>: le groupe voit uniquement les
+            artefacts qui ont été soumis par un des membres du
+            groupe.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Accès aux artefacts confiés au
+            groupe ou soumis par le groupe</emphasis>: le groupe a
+            uniquement accès aux artefacts soumis par un des membres
+            du groupe ou assigné à un ou plusieurs membres.</para>
+        </listitem>
+
+      </itemizedlist>
+
+      <para>
+        <tip>
+          <title>Exemple: configurer les permissions pour vos clients</title>
+            
+          <para>A titre d'exemple supposons que vous avez créé un outil de suivi
+          qui sera utilisé par deux de vos clients pour rendre compte
+          d'anomalies sur votre logiciel. Dans ce genre de situation,
+          vous pouvez décidez qu'un client d'une société donnée ne
+          doit voir que les anomalies soumises par sa société et non pas
+          les anomalies soumises par les autres sociétés.</para>
+
+          <para>Pour parvenir à ce résultat, il suffit de créer un
+          groupe companie_A qui comprend tous les noms des
+          utilisateurs de la société A puis de faire la même chose
+          pour la companie B. Ensuite on donne à ces deux groupes une
+          permission de type 'Accès aux artefacts soumis par le
+          groupe' pour limiter l'accès aux seules anomalies soumises
+          par leur groupe d'utilisateur. De plus, vous donnerez
+          vraissemblablement la permission 'Accès à tous les
+          artefacts' aux membres du projet ou aux administrateurs de
+          l'outil de suivi de façon à ce qu'il puissent avoir accès à toutes les
+          anomalies quelqu'en soit l'origine.</para>
+
+          </tip>
+        </para>
+      </section>
+
+      <section id="FieldPermissionsManagement">
+        <title>Gestion des permissions des champs</title>
+
+        <para>En complément des permissions d'accès sur l'outil de suivi et ses
+        artefacts (voir <xref
+        linkend="TrackerAndArtifactPermissionsManagement"/>) il est
+        parfois nécessaire de restreindre l'accès à certains champs de
+        l'outil de suivi pour une population donnée. Par exemple, si vous
+        partagez un outil de suivi avec vos clients vous souhaiterez probablement
+        cacher certains champs ou tout du moins éviter qu'ils ne
+        puissent les modifier. C'est précisément le rôle de ce
+        module.</para>
+
+        
+        <para>L'écran de ce module de configuration des permissions
+        sur les champs permet à tout moment de basculer entre deux
+        vues: vous pouvez soit les permissions de tous les groupes
+        pour un champ donné OU pour un groupe d'utilisateurs donnés
+        vous pouvez sespermissions sur tous les champs de
+        l'outil de suivi. L'expérience montre que la vue par champ est souvent la
+        vue la plus adaptée pour la configuration initiale des
+        permissions alors que la vue par groupe d'utilisateurs est
+        plus pratique pour ajuster la configuration des permissions
+        par la suite (voir <xref linkend="UserGroups" /> pour plus
+        d'information sur la définition des groupes
+        d'utilisateurs).</para>
+
+        <para>Chaque groupe d'utilisateurs peut recevoir les
+        permissions suivantes pour un champ donné:</para>
+
+        <itemizedlist mark="bullet" spacing="compact">
+
+          <listitem>
+            <para><emphasis role="bold">Peut soumettre</emphasis>:
+            permet de déterminer si un groupe d'utilisateurs peut
+            spécifier la valeur initiale d'un champ lorsque l'artefact
+            est soumis pour la première fois. Si la case n'est pas
+            cochée, le champ ne sera pas visible sur l'écran de
+            soumission pour ce groupe d'utilisateurs.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Lecture seule</emphasis>: avec
+            cette permission un groupe d'utilisateurs ne peut que lire
+            le champ. En d'autres terme la valeur du champ leur est
+            visible mais ils ne peuvent la modifier.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Mise à jour</emphasis>: avec
+            cette permission, un groupe d'utilisateurs peut voir la
+            valeur d'un champ et la modifier.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Aucun accès (--)</emphasis>:
+            avec cette permission (affichée sous la forme d'un double
+            tiret) un groupe d'utilisateurs ne verra pas du tout le
+            champ en question.</para>
+          </listitem>
+
+        </itemizedlist>
+
+        <para><emphasis role="bold">Note importante</emphasis>: les
+        permissions associés à un champ s'appliquent à plusieurs
+        fonctions de l'outil de suivi. Ainsi, si un groupe d'utilisateur n'a pas
+        du tout accès à un champ, ce champ sera invisible sur le
+        formulaire de soumission, mais aussi sur l'écran de recherche,
+        dans la table de résultats de la recherche, dans l'écran de
+        modification, dans l'historique des changements et, enfin,
+        dans les notifications email envoyées aux utilisateurs
+        concernés.</para>
+
+      </section>
+    </section>
+    
+    <section id="TrackerFieldUsageManagement">
+      <title>Gestion de l'utilisation des champs</title>
+
+      <para>Lorsqu'un outil de suivi est créé, il comprend un ensemble de
+      champs préconfigurés qui proviennent du patron utilisé pour sa
+      création. Pour la majorité des projets hébergés sur CodeX il est
+      très probable que les patrons standards (bugs, taches, demandes
+      d'assistance) répondent à la plupart des besoins.</para>
+
+      <para>Toutefois CodeX vous permet de personnaliser les champs
+      utilisés par vos odutils de suivi. Il peut s'agir d'une
+      variation autour d'un patron standard comprenant l'ajout ou la
+      suppression de quelques champs mais celà peut aussi être une
+      définition complète à partir d'un patron vierge.</para>
+
+      <section id="TrackerFieldTypes" xreflabel="Tracker Field Types">
+        <title>Types de champs d'un outil de suivi</title>
+
+        <para>Les champs d'un outil de suivi peuvent être de plusieurs types: boite de sélection, boite de sélections multiples, zone de texte, champ de texte, champ à nombre entier, champ à nombre flottant et champ date.</para>
+
+        <para>Voici une description détaillée de chaque type de champ:</para>
+
+        <itemizedlist mark="dash" spacing="compact">
+          <listitem>
+            <para><emphasis role="underline">Boite de
+            sélection</emphasis>: un champ de type &#34;Boite de
+            sélection&#34; prend sa valeur parmi une liste de valeurs
+            prédéfinies par l'administrateur de l'outil de suivi. Selon le
+            navigateur que vous utilisez l'apparence de ce type de
+            champ peut varier mais ils sont en général affiché sous la
+            forme d'un menu déroulant montrant les valeurs
+            prédéfinies. A un instant donné, ce type de champ ne peut
+            avoir qu'une seule valeur.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="underline">Boite de sélections
+            multiples</emphasis>: comme la boite de sélection simple
+            décrite précédemment, ce champ prend sa valeur parmi une
+            liste de valeurs prédéfinies. Par contre il permet de
+            donner plusieurs valeurs au champ à un instant donné. Ce
+            type de champ peut être par exemple utilisé pour le champ
+            des personnes responsables d'une tache.</para>
+          </listitem>
+
+          <listitem>
+            <para> <emphasis role="underline">Zone de
+            texte</emphasis>: permet à l'utilisateur de saisir un
+            texte libre de plusieurs lignes. Ce type de champ est
+            utilisé dans de nombreux outil de suivi pour le champ
+            &#34;Description original Submission&#34;.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="underline">Ligne de
+            texte</emphasis>: permet à l'utilisateur de saisir un
+            texte libre d'une seule ligne. Le résumé d'un artefact est
+            un exemple de champ de type ligne de texte.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="underline">Champ date</emphasis>: un
+            champ d'une ligne qui accepte les dates au format ISO
+            (AAAA-MM-JJ)</para>
+          </listitem>
+          <listitem>
+            <para><emphasis role="underline">Champ à nombre
+            entier</emphasis>: champ d'une ligne qui accepte
+            uniquement les nombres entiers (exemple: 3, -100,
+            2345&hellip;)</para>
+          </listitem>
+          
+          <listitem>
+            <para><emphasis role="underline">Champ à nombre
+            flottant</emphasis>: champ d'une ligne qui accepte
+            uniquement les nombres flottants(exemple: 3.56, -100.3,
+            2345, 34E+6&hellip;)</para>
+          </listitem>
+          
+        </itemizedlist>
+
+      </section>
+
+      <section id="TrackerFieldList">
+        <title>Liste des champs de l'outil de suivi</title>
+
+        <para>Pour configurer les champs à utiliser ou à ne pas
+        utiliser sélectionnez l'item &#34;Gérer l'utilisation des
+        champs&#34; sur la page d'accueil du module d'administration
+        d'un outil de suivi. L'écran d'utilisation des champs (<xref
+        linkend="FigureTrackerFieldUsageScreenOfACodeXHostedProject"
+        />) montre un exemple de champs disponibles dans un outil de suivi de
+        CodeX. Cet écran se divise en trois sections:</para>
+
+        <procedure>
+          <step>
+            <para>la liste des champs de l'outil de suivi en cours d'utilisation</para>
+          </step>
+          
+          <step>
+            <para>la liste des champs inutilisés (invisible sur la figure
+              <xref
+                linkend="FigureTrackerFieldUsageScreenOfACodeXHostedProject"
+                />)</para>
+          </step>
+          
+          <step>
+            <para>un formulaire permettant de créer de nouveaux champs
+            dans l'outil de suivi (invisible sur la figure <xref
+            linkend="FigureTrackerFieldUsageScreenOfACodeXHostedProject"
+            />)</para>
+          </step>
+        </procedure>
+
+
+        <para>Les informations suivantes sont présentées sur la liste
+        des champs:</para>
+
+        <itemizedlist mark="bullet">
+          <listitem>
+            <para><emphasis role="bold">Label du champ</emphasis>: le
+            nom du champ. Pour ajuster les propriétés d'un champ il
+            faut cliquer sur le nom.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Type</emphasis>: un champ peut
+            prendre un des types suivants: boite de sélection, boite de
+            sélections multiples, ligne de texte, zone de texte, champ
+            date, champ à nombre entier, champ à nombre flottant. Pour
+            une description daillée des types de champs voir la <xref
+            linkend="TrackerFieldTypes" />.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Description</emphasis>: la
+            description du champ.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Rang à l'écran</emphasis>: le
+            rang indique dans quel ordre les les champs appaitront à
+            l'écran dans le formulaire de soumission ou dans le
+            formulaire de mise à jour. Les champs avec le plus petit
+            rang apparaissent en premier.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Statut</emphasis>:</para>
+            <itemizedlist mark="dash" spacing="compact">
+              <listitem>
+                <para><emphasis role="underline">Utilisé</emphasis>: le champ est utilisé par l'outil de suivi.</para>
+              </listitem>
+              <listitem>
+                <para><emphasis role="underline">Inutilisé</emphasis>:
+                le champ n'est pas utilisé par l'outil de suivi. the field is not
+                used by your project. Notez qu'un champ inutilisé
+                n'est rien d'autre champ &#34;caché&#34;. Si vous
+                changez le statut d'un champ de utilisé à inutilisé
+                toutes les données associées à ce champ sont
+                préservées.</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Détruire?</emphasis>:
+            lorsqu'un champ est détruit il disparait complètement de
+            la liste des champs disponibles. De plus toutes les
+            données associées à ce champ sont supprimées de tous les
+            artefacts.</para>
+          </listitem>
+
+        </itemizedlist>
+
+
+        <figure id="FigureTrackerFieldUsageScreenOfACodeXHostedProject">
+          <title>Ecran de gestion de l'utilisation des champs dans un outil de suivi</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG"
+                fileref="../../screenshots/fr_FR/sc_trackerfieldusage.png" width="15.3cm" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+      </section>
+
+
+      <section id="CreationandModificationofaTrackerField">
+        <title>Création et modification du champ d'un outil de suivi</title>
+
+        <para>Etant donné que les formulaires de création et de
+        modification d'un champ sont très similaires ils sont tous
+        deux traités dans cette section.</para>
+
+        <para>L'écran de création d'un champ est disponible au bas de
+        la liste des champs alors que le formulaire de modification
+        d'un champ s'obtient un cliquant sur le label du champ à
+        modifier.</para>
+
+
+        <para><tip><title>Coup de pouce: utiliser d'abord les champs
+        prédéfinis !</title><para>A tout instant dans la vie de votre
+        projet vous pouvezs enrichir vos outils de suivi avec de
+        nouveaux champs. Cependant avant de créer un nouveau champ,
+        prenez la peine de consulter la liste des champs inutilisés:
+        l'un d'eux correspond peut-être à ce que vous cherchez. En
+        utilisant les champs prédéfinis vous contribuez à l'unité
+        globale des environnements de projet et vous faciliter la vie
+        de vos visiteurs, contributeurs ou nouveaux membres de
+        l'équipe lorsqu'il sont amenés à travailler sur plusieurs
+        projets.</para></tip></para>
+
+
+        <para>les propriétés à définir pour un champ sont les
+        suivantes:</para>
+
+        <itemizedlist mark="bullet" spacing="compact">
+          <listitem>
+            <para><emphasis role="bold">Label du champ</emphasis>: il
+            s'agit du nom du champ. Bien que vous soyez entièrement
+            libre de modifier le nom d'un champ, nous vous
+            recommandons de le modifier uniquement si vous lui dnnez
+            une signification équivalente (par exemple le champ
+            Sévérité peut être renommé en Gravité). Si vous voulez
+            changes le nom pour faire jouer au champ un rôle
+            radicalement différent, nous vous recommandons de créer un
+            nouveau de champ et de déplacer le champ existant dans la
+            liste des champs inutilisés.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Description</emphasis>: une
+            description plus longue du rôle de ce champ.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Type du champ</emphasis>:un
+            champ peut prendre un des types suivants: boite de
+            sélection, boite de sélections multiples, ligne de texte,
+            zone de texte, champ date, champ à nombre entier, champ à
+            nombre flottant. Pour une description daillée des types de
+            champs voir la <xref linkend="TrackerFieldTypes"
+            />.</para>
+          </listitem>
+
+          <listitem>
+            <para id="FieldDisplaySize" xreflabel="Field Display
+            Size"><emphasis role="bold">Taille d'affichage</emphasis>:
+            cette propriété vous permet de définir l'espace occupé par
+            le champ à l'écran. Ce champ a un signification et un
+            format différent en fonction du type du champ.</para>
+
+
+            <itemizedlist mark="dash" spacing="compact">
+              <listitem>
+                <para><emphasis role="underline">Boite de
+                sélection</emphasis>: la taille d'affichage ne
+                s'applique pas à ce champ. Tout information saisie est
+                ignorée.</para>
+              </listitem>
+
+              <listitem>
+                <para><emphasis role="underline">Boite de sélections
+                multiples</emphasis>: la taille d'affichage se compose
+                d'une seule valeur indiquant combien de valeurs
+                associées à ce champ sont visibles simultanément à
+                l'écran. La valeur raisonnable se situe en général
+                entre 2 et 5.</para>
+              </listitem>
+
+              <listitem>
+                <para><emphasis role="underline">Champ texte, entier
+                ou flottant</emphasis>: pour tous les champs qui
+                tiennent sur une seule ligne, la taill d'affichage
+                suit le patron &#34;V/M&#34; où V est le nombre de
+                caractères visibles à l'écran et M est le nombre
+                maximum de caractères qu'il est possible de taper dans
+                ce champ. si V est plus petit que M alors le texte
+                tapé se décalera automatiquement sur la gauche lorsque
+                vous avez tapé plus de caractères que la zone visible
+                n'est capable d'en afficher. La valeur maximale de M
+                est 255.</para>
+
+                <para>Une taille d'affichage de &#34;10/40&#34;
+                signifie qu'un champ accepte 40 caractères maximum et
+                que la portion visible n'est que 10 caractères.</para>
+              </listitem>
+
+              <listitem>
+                <para><emphasis role="underline">Champ
+                date</emphasis>: une date suit toujours le patron
+                AAAA-MM-JJ et les champs date ont donc une taille fixe
+                de 10 caractères.</para>
+              </listitem>
+
+              <listitem>
+                <para><emphasis role="underline">Zone de
+                texte</emphasis>: pour les zones de texte, la taille
+                d'affichage s'exprime sous la forme &#34;C/L&#34; ou C
+                est le nombre de colonnes de la zone de texte (sa
+                largeur) et R le nombre de lignes de texte (sa
+                hauteur). Notez que le nombre lignes que l'on peut
+                taper n'est pas limité à R. Si le texte a plus de R
+                lignes un ascenceur de défilement apprarait
+                automatiquement pour naviguer dans le texte.</para>
+
+                <para>Une taille d'affichage de 60/7 donne une zone
+                texte de 7 lignes visibles et 60 caractères de
+                long.</para>
+              </listitem>
+            </itemizedlist>
+
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Rang à l'écran</emphasis>: ce
+            nombre entier de valeur quelconque vous permet de définir
+            la position des champs à l'écran dans les formulaires de
+            soumission et de modification. Les champs avec les valeurs
+            les pluts petites apparaissent en premier à l'écran. Les
+            valeurs n'ont pas à être consécutives. Il est même
+            recommandé de les numéroter à intervalle régulier comme
+            10, 20, 30... pour puvoir facilement insérer de nouveaux
+            champs sans avoir à renuméroter tous les autres.</para>
+
+            <figure id="FigureTrackerFieldUsageSettings">
+              <title>Configuration des champs utilisés dans un outil de suivi</title>
+              
+              <mediaobject>
+                <imageobject>
+                  <imagedata format="PNG"
+                    fileref="../../screenshots/fr_FR/sc_trackerfieldusagesettings.png" width="14cm" />
+                </imageobject>
+              </mediaobject>
+            </figure>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Autoriser la valeur
+            vide</emphasis>: indique s'il est permis de laisser le
+            champ sans valeur dans les écrans de soumission et de
+            modification d'un artefact. Si la case n'est pas cochée
+            l'outil de suivi n'acceptera pas le formulaire tant qu'un valeur
+            n'aura pas été spécifiée par l'utilisateur. les champs
+            dont la saisie est obligatoire sont marqués d'un astérique
+            rouge sur les formulaires de saisie.</para></listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Conserver l'historique des
+            changements</emphasis>: indique si les valeurs successives
+            de ce champ doivent être conservées dans l'historique de
+            l'artefact (voir <xref linkend="ArtifactHistory"
+            />).</para>
+          </listitem>
+          
+          <listitem>
+            <para><emphasis role="bold">Utiliser ce champ</emphasis>:
+            cette propriété apparait uniquement sur l'écran de
+            modification des propriétés du champ. Lorsqu'un champ est
+            créé il prend automatiquement le statut
+            &#34;Utilisé&#34;. Les champs qui passent du statut
+            utilisé à inutilisé ne fait que disparaitre des écrans de
+            l'outil de suivi et toutes les données attachées à ce champ dans les
+            artefacts demeurent intactes. En d'autres termes, en
+            repassant un champ du statut Inutilisé à Utilisé fera
+            aussi réapparaitre toues les valeurs de ce champs dans les
+            différents artefacts. Seule la destruction effective d'un
+            champ supprime définitivement les données du champ (voir
+            <xref linkend="TrackerFieldList" />. </para>
+          </listitem>
+        </itemizedlist>
+      </section>
+      
+    </section>
+
+    <section id="TrackerFieldValuesManagement">
+      <title>Gestion des valeurs des champs</title>
+
+      <para>Une fois les champs définis, l'étape suivante consiste à
+      définir les valeurs associés à ces champs. Ceci concerne
+      essentiellement les champs de type &#34;Boite de sélection&#34;
+      and &#34;Boite de sélections multiples&#34; où la liste des
+      valeurs que vous définissez apparait dans les menus déroulants
+      des écrans de soumission et de modification des artefacts. Les
+      autres types de champs ne nécessitent pas de définition de
+      valeurs. Pour ces champs, seule la valeur par défaut peut être
+      spécifiée.</para>
+
+      <section id="TrackerFieldValuesFieldList">
+        <title>Liste des champs</title>
+
+        <para>Pour configurer les valeurs associés aux champs de
+        l'outil de suivi, sélectionnez l'item &#34;Gérer les valeurs des
+        champs&#34; sur la page d'accueil du module de configuration
+        de l'outil de suivi.</para>
+
+        <figure id="FigureTrackerFieldListWithUserDefinableValues">
+          <title>Liste des champs dont les valeurs sont définies par l'utilisateur</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG"
+                fileref="../../screenshots/fr_FR/sc_trackerfieldvaluesmgt.png" width="13cm" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para>Les informations affichées sur cette première page:</para>
+        <itemizedlist mark="bullet" spacing="compact">
+          <listitem>
+            <para><emphasis role="bold">la label du champ</emphasis>:
+            le nom du champ. Cliquez sur ce champ pour voir la liste
+            des valeurs du champ.</para>
+          </listitem>
+          <listitem>
+            <para><emphasis role="bold">Description</emphasis>: la
+            description du champ</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+
+
+      <section id="TrackerBrowsingTrackerFieldValues">
+        <title>Afficher les valeurs d'un champ</title>
+
+        <para>Un clic sur le nom d'un champ listé sur la page de
+        gestion des valeurs de champ (voir <xref
+        linkend="TrackerFieldValuesManagement" />) vous mène à la
+        liste des valeurs pour ce champ (voir<xref
+        linkend="FigureListOfValuesForTrackerFieldStatus" />).</para>
+
+        <para>La table des valeurs fournit les informations suivantes:</para>
+
+
+        <itemizedlist mark="dash" spacing="compact">
+          <!--
+          <listitem>
+          <para><emphasis role="bold">ID</emphasis> (optional): the
+          ID column is only shown for fields which have a &#34;System&#34;
+          scope. For this type of field the ID often carry a
+          semantic meaning and if you redefine the label of a value
+          associated with a given ID it is important that you know
+          about the ID.(FIXME - A cause de severity - est-ce qu'on
+          le maintient?)</para>
+
+          <para>As an example the &#34;Severity&#34; field has 9 possible
+          values and the bugs with the highest ID are always
+          considered as the most critical bug by the system. So it
+          would be a bad idea to redefine the value label for ID 9
+          to something like &#34;Very Minor&#34; :-) but it is ok to
+          redefine it as &#34;Fatal&#34;</para>
+        </listitem>
+          -->
+          <listitem>
+            <para><emphasis role="bold">Label de la valeur</emphasis>:
+            l'intitulé de la valeur telle qu'elle apparait dans la
+            boite de sélection. Pour modifier les propriétés d'une
+            valeur il suffit de cliquer sur le label (voir<xref
+            linkend="TrackerUpdatingaTrackerFieldValue" />).</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Description</emphasis>:
+            description de la valeur.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Rang</emphasis>: permet de
+            définir l'ordre dans lequel les valeurs apparaissent dans
+            la boite de sélection. Les valeurs ayant les valeurs de
+            rang les plus petites apparaissent en tête de la boite.
+</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Statut</emphasis>:</para>
+
+            <itemizedlist mark="dash" spacing="compact">
+              <listitem>
+                <para><emphasis role="underline">Active</emphasis>: la
+                valeur est visible dans la boite de sélection et
+                peut-être utilisé dans le champ correspondant.</para>
+              </listitem>
+              
+              <listitem>
+                <para><emphasis role="underline">Cachée</emphasis>: la
+                valeur n'est pas visible dans la boite de
+                sélection. Cependant si la valeur a été utilisée par
+                certains artefacts de l'outil de suivi avant d'être cachée, elle
+                continuera à être visible dans ces artefacts
+                spécifiquement.</para>
+              </listitem>
+              
+              <listitem>
+                <para><emphasis
+                role="underline">Permanente</emphasis>: une valeur
+                permanente est définie pour l'ensemble des this value
+                has been defined for the entire CodeX system and it
+                cannot be hidden.  Seuls les administrateurs du site
+                en charge de la définition des patrons d'outils de
+                suivi de niveau site peuvent marquée une valeur comme
+                permanente.</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+          
+        </itemizedlist>
+        
+        <para>La <xref
+        linkend="FigureListOfValuesForTrackerFieldStatus" /> montre la
+        liste des valeurs pour le champ Statut d'un outil de suivi de
+        &#34;Bugs&#34;. Le champ Statut a été délibérément pour cet
+        exemple. Non seulement il s'agit d'un champ obligatoire (il ne
+        peut être détruit) mais il est aussi proposé avec un certains
+        nombre de valeurs prédéfinies qui sont communes à tous les
+        projets CodeX. par défaut seules les valeurs &#34;Open&#34; et
+        &#34;Closed&#34; sont disponibles (et permanentes dans ce cas)
+        et il existe sept autres valeurs (Accepted, Analyzed, etc.) 
+        que vous pouvez utiliser si vous voulez un champ Statut plus
+        fin.</para>
+
+        <para>Vous avez bien sûr la possibilité d'ajouter vos propres
+        valeus au champ Statut. C'est d'ailleurs ce qu'a fait le
+        projet montré en exemple: la valeur de statut
+        &#34;Assigned&#34; a été ajouté à la liste de valeurs
+        actives. Cependant dans le but de conserver une certaines
+        harmonies entre les différents outils de suvi de CodeX, nous
+        vous recommandons vivement d'utiliser la liste des valeurs
+        prédéfinies autant que vous le pouvez avant d'en créer de
+        nouvelles.</para>
+
+        <figure id="FigureListOfValuesForTrackerFieldStatus">
+          <title>Liste des valeurs du champ &#34;Statut&#34;</title>
+          
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG"
+                fileref="../../screenshots/fr_FR/sc_trackerfieldvalues.png" width="13cm" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+      </section>
+
+      <section id="TrackerDefiningaDefaultFieldValue">
+        <title>Définition d'une valeur par défaut</title>
+        
+        <para>Il est possible de définir une valeur par défaut pour
+        chacun des champs d'un outil de suivi. Suivant le type de champ vous
+        aurez à saisir la valeur par défaut dans un champ texte (champ
+        entier, flottant, date et texte) ou dans une boite de
+        sélection montrant toutes les valeurs actuellement définies
+        pour un champ de type boite de sélection ou boit de sélections
+        multiples (invisible sur la <xref
+        linkend="FigureTrackerFieldListWithUserDefinableValues" />)
+        . </para>
+
+      </section>
+
+      <section id="TrackerCreatingaTrackerFieldValue">
+        <title>Création d'une valeur de champ</title>
+        
+        <para>Pour ajouter une nouvelle valeur à un champ, utilisez le
+        formulaire qui se trouve sous la liste des valeurs existantes
+        (invisible sur <xref
+        linkend="FigureTrackerFieldListWithUserDefinableValues"
+        />).</para>
+
+      </section>
+
+      <section id="TrackerBindingFieldToValueList">
+        <title>Association d'un champ avec une liste de valeurs</title>
+        
+        <para>CodeX vous permet non seulement de créer une liste de
+        valeurs pour un champ de type boite de sélection mais il offre
+        aussi la possiblité d'associer un champ avec une liste de
+        valeurs prédéfinies générées dynamiquement par
+        CodeX. L'exemple le plus classique consiste à montrer la liste
+        des membres du projet dans une boite de sélection. Au lieu
+        d'avoir a la créer et à la maintenir manuellement, CodeX
+        construit cette liste pour vous et vous permet de l'associer à
+        un champ.</para>
+
+        <para>Notez que si vous décidez d'associer un champ à une
+        liste de valeurs généérées dynamiquement vous ne pouvez plus
+        définir vos propres valeurs. Les listes dynamiques suivantes
+        sont actuellement disponibles:</para>
+
+        <itemizedlist mark="dash" spacing="compact">
+          <listitem>
+            <para><emphasis role="bold">Membres du projet</emphasis> :
+            la liste des utilisateurs membres du projet.</para>
+          </listitem>
+          <listitem>
+            <para><emphasis role="bold">Administrateurs du
+            projet</emphasis> : les membres du projet qui ont le
+            statut d'administrateur de ce projet.</para>
+          </listitem>
+          <listitem>
+            <para><emphasis role="bold">Les personnes ayant soumis un
+            artefact</emphasis>: la liste complète des utilisateurs
+            ayant soumis au moins un artefact dans l'outil de suivi.</para>
+          </listitem>
+          <listitem>
+            <para><emphasis role="bold">Un groupe d'utilisateurs
+            défini par le projet</emphasis>: vous pouvez associer une
+            boite de sélection avec la liste des utilisateurs d'un
+            groupe d'utilisateurs quelconque du projet. Sur la façon
+            de définir des groupes d'utilisateurs voir la <xref
+            linkend="UserGroups" />.
+            </para>
+          </listitem>
+           
+        </itemizedlist>
+
+      </section>
+
+      <section id="TrackerUpdatingaTrackerFieldValue">
+        <title>Modification d'une valeur de champ</title>
+        
+        <para>A partir de l'écran montrant la liste des valeurs d'un
+        champ (voir<xref
+        linkend="FigureTrackerFieldListWithUserDefinableValues" />)
+        vous pouvez changer les propriétés d'une valeur en cliquant
+        sur le label de la valeur.</para>
+
+        <itemizedlist mark="bullet" spacing="compact">
+          <listitem>
+            <para><emphasis role="bold">Valeur</emphasis>: changer la
+            valeur elle-même. La valeur saisie dans ce champ apparait
+            telle quelle dans la boite de sélection. Gardez présent à
+            l'esprit que si vous modifiez une valeur, cette
+            modification prend effet dans tous les artefacts qui
+            utilisaient l'ancienne valeur.</para>
+          </listitem>
+          
+          <listitem>
+            <para><emphasis role="bold">Rang</emphasis>: un nombre
+            entier quelconque qui permet de définir l'ordre
+            d'apparition des valeurs dans la boite de sélection. LEs
+            valeurs ayant le plus petit rang apparaissent en
+            premier. Lorsque la valeur &#34;None&#34; (ou
+            &#34;Aucun&#34;) est proposée dans la liste des valeurs sa
+            valeur de rang est 10. Ce nombre st délibérément faible
+            car, par convention, &#34;None&#34; (ou &#34;Aucun&#34;)
+            apparait toujours en première position dans la boite de
+            sélection. Soyez donc bon citoyens et utiliser des valeurs
+            de rang supérieures à 10 pour vos propres valeurs.</para>
+          </listitem>
+          
+          <listitem>
+            <para><emphasis role="bold">Statut</emphasis>: Active ou
+            Cachée.  Comme expliqué plus haut changer cette propriété
+            au cours de la vie du projet n'a aucun impact négatif sur
+            la base d'artefacts.</para>
+          </listitem>
+          
+          <listitem>
+            <para><emphasis role="bold">Description</emphasis>: nous
+            en dit un peu plus sur la signification de cette
+            valeur.</para>
+          </listitem>
+        </itemizedlist>
+
+        <figure id="FigureUpdatingATrackerFieldValue">
+          <title>Configuration des valeurs d'un champ</title>
+          
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG"
+                fileref="../../screenshots/fr_FR/sc_trackerfieldvalueupdate.png" width="12cm" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para><tip><title>Coup de pouce: laisser de la place entre les
+        valeurs de rang</title><para>Que ce soit pour les champs ou
+        les valeurs de champs nous vous recommandons d'utiliser des
+        nombres assez grands pour les valeurs de rang comme 100, 200,
+        300. En prcédant de la sorte, vous pourrez facilement insérer
+        de nouvelles valeurs ou de nouveaux champs sans avoir à
+        redéfinir l'ordre d'apparition de tous les autres champs ou
+        valeuers de champ.</para></tip></para>
+      </section>
+    </section>
+
+    <section id="TrackerCannedResponses">
+      <title>Réponses-type</title>
+
+      <para>Il est assez fréquent de voir des membres d'un projet en
+      charge de la gestion des artefacts taper souvent le même genre
+      de commentaires. Parmi les exemples classiques de commentaires
+      répétitifs, on trouve: un message de remerciement à la personne
+      qui a soumis l'artefact, une demande d'information
+      complémentaire comme un numéro de version ou le type de machine
+      utilisée, etc...(voir <xref
+      linkend="FigureTrackerCannedResponses" /></para>
+
+      <para>Plutôt que de retaper sans cess les mêmes commentaires,
+      CodeX permet aux membres du projet de définir un ensemble de
+      commentaires prédéfinis appelés réponses-type. Après avoir
+      défini ces réponses-type, poster le commentaire correspondant
+      necessite ssimplement de choisir la réponse-type dans la boite
+      de sélection située à proximité de la zone de saisie du
+      commentaire dans le formulaire de modification d'un artefact.
+      </para>
+
+      <para>Notez qu'il est aussi possible de définir des
+      réponses-type à la volée an cliquant sur le lien &#34;Définir
+      une nouvelle réponse type&#34; dans l'écran de modification d'un
+      artefact (voir <xref
+      linkend="FigureFollowupCommentsAttachedToAnArtifact" />).</para>
+
+      <figure id="FigureTrackerCannedResponses">
+        <title>Définition d'une réponse-type</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/fr_FR/sc_trackercannedresponses.png" width="15.3cm" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+
+    <section id="TrackerReportManagement">
+      <title>Gestion des rapports de recherche</title>
+
+      <para>Sachant que les administrateurs d'un projet, les membres
+      ou les autres utilisateurs peuvent avoir des besoins très
+      différent en matière de recherche dans la base des artefacts,
+      CodeX permet de définir des rapports de recherche valable pour
+      l'ensemble du rojet ou par un utilisateur en particulier.</para>
+
+      <para>Créer un rapport de recherche consiste à choisir quels
+      champs vous souhaitez utilisés en tant que critère de recherche
+      et quels champs afficher dans le tableau de résultats de la
+      recherche. Vous pouvez aussi définir l'ordre dans lequel les
+      critères de recherche et les colonnes de la table de résultats
+      apparaissent à l'écran.</para>
+
+      <para>Les administrateurs d'un outil de suivi ont la possibilité de définir
+      des rapports de recherche utilisables par tous les utilisateurs
+      enregistrés ayant accès à l'outil de suivi alors que les autres
+      utilisateurs ne peuvent définir que des rapport de recherche à
+      usage personnel.</para>
+
+      <para><tip><title>Coup de pouce: Les rapports de recherche
+      définisse la structure d'un rapport et non pas son
+      contenu</title><para>Lors de la configuration d'un rapport de
+      recherche vous remarquerez certainement que l'écran de
+      configuration permet de définir les champs que vous allez
+      utiliser en tant que critère de recherche mais pas les valeurs à
+      mettre dans ces champs pour la recherche. La définition de la
+      structure d'un rapport et le remplissage des critères de
+      recherche sont deux opérations distinctes sur CodeX. Une fois le
+      rapport de recherche défini dans le module d'administration (par
+      exemple: &#39;Rapport simple&#39;, &#39;Rapport Qualité&#39;,
+      &#39;Rapport quotidien&#39;,&hellip;) vous pouvez vous rendre
+      sur l'écran de recherche et de navigation, sélectionnez le
+      rapport de recherche qui vous convient, remplir les valeurs des
+      critères de recherche et lancer la requête. Ensuite vous pouvez
+      sauvegarder la totalité de cette recherche (choix du rapport et
+      des valeurs des critères) à l'aide du mécanisme de signets de
+      CodeX (voir le coup de pouce de la <xref
+      linkend="ArtifactSelectionCriteria" />). Et
+      voila!</para></tip></para>
+
+      <section id="TrackerReportBrowsing">
+        <title>Afficher les rapports de recherche</title>
+
+        <para>Un clic sur l'entrée &#34;Rapport&#34; du menu de la
+        page d'administratin d'un outil de suivi affiche la liste des rapports de
+        recherche disponibles (voir<xref
+        linkend="FigureTrackerReportBrowsing" />) accompagnée des
+        information suivantes:</para>
+
+        <itemizedlist mark="bullet" spacing="compact">
+          <listitem>
+            <para><emphasis role="bold">ID</emphasis>: l'identifiant
+            unique du rapport. Un clic sur l'ID vous conduit vers la
+            page de configuration du rapport (voir <xref
+            linkend="TrackerReportSetting" />).</para>
+          </listitem>
+          
+          <listitem>
+            <para><emphasis role="bold">Nom du rapport</emphasis>: le
+            nom du rapport tel qu'il apparaitra dans la boite de
+            selection des rapports sur la page de recherche des
+            artefacts (Exemple de nom: Rapport simple, Rapport
+            qualité, Rapport quotidien&hellip;).</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Description</emphasis>: une
+            description plus détaillée du rapport.</para>
+          </listitem>
+          <listitem>
+            <para><emphasis role="bold">Portée</emphasis>:</para>
+
+            <itemizedlist mark="dash" spacing="compact">
+              <listitem>
+                <para><emphasis role="underline">Projet</emphasis>: ce
+                rapport est utilisable par tous les membres du
+                projet. Seuls les administrateurs de l'outil de suivi peuvent
+                définir des rapports dont la portée s'étend à
+                l'ensemble des utilisateurs.</para>
+              </listitem>
+              
+              <listitem>
+                <para><emphasis role="underline">Personel</emphasis>:
+                ce rapport est uniquement utilsiable par la personne
+                qui l'a créé.</para>
+              </listitem>
+              
+              <listitem>
+                <para><emphasis role="underline">Système</emphasis>:
+                ce type de rapport est défini au niveau du système
+                CodeX et ne peut être supprimé. Le rapport de
+                recherche par défaut qui est préconfiguré à la
+                création de l'outil de suivi est un rapport de type
+                Système.</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Détruire?</emphasis>: cliquez
+            sur l'icone corbeille pour supprimer le rapport. Les
+            rapports de type Projet ne peuvent être détruit que par
+            les administrateurs de l'outil de suivi.</para>
+          </listitem>
+
+        </itemizedlist>
+
+        <figure id="FigureTrackerReportBrowsing">
+          <title>Exemple d'une liste de rapports de recherche</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG"
+                fileref="../../screenshots/fr_FR/sc_trackerreportbrowsing.png" width="14.3cm" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+      </section>
+
+      <section id="TrackerReportSetting">
+        <title>Configuration des rapports de recherche</title>
+
+        <para>Après avoir sélectionné l'identifiant (ID) d'un rapport
+        de recherche présenté dans la liste des rapports (voir <xref
+        linkend="TrackerReportBrowsing" />], l'écran de configuration
+        du rapport s'affiche. Cet écran vous permet de définir quels
+        champs utiliser comme critères de recherche et quels champs
+        doivent figurer dans les colonnes de la table de résultats
+        constituée à partir des artefacts sélectionnés dans la base de
+        données.</para>
+
+        <para>Les informations suivantes sont présentes à l'écran:</para>
+
+        <itemizedlist mark="bullet"
+          spacing="compact">
+          <listitem>
+            <para><emphasis role="bold">Nom</emphasis>: chaque rapport
+            porte un nom. Il en doit pas être trop long car il
+            apparait dans une boite de sélection sur l'écran de
+            recherche des artefacts lorsque vous choisissez le rapport
+            de recherche souhaité.</para>
+          </listitem>
+          
+          <listitem>
+            <para><emphasis role="bold">Portée</emphasis>: les
+            administrateurs de l'outil de suivi peuvent définir des rapports de
+            type projet utilisable par tous les utilisateurs. Les
+            autres utilisateurs ne peuvent définir que des rapports de
+            recherche personnels.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Description</emphasis>: une description plus détaillée du rapport.</para>
+          </listitem
+            >
+          <listitem>
+            <para><emphasis role="bold">Sélection des
+            champs</emphasis>: La table des champs montre l'ensemble
+            des champs utilisés par l'outil de suivi. Pour chaque champ, on peut
+            définir les paramètres suivants:</para>
+
+            <itemizedlist mark="bullet" spacing="compact">
+              <listitem>
+                <para><emphasis role="underline">Utiliser comme
+                critère de recherche</emphasis>: si vous cochez cette
+                case, le champ apparaitra comme l'un des critères de
+                sélection utilisable lors de vos recherches dans la
+                base d'artefacts.</para>
+              </listitem>
+              <listitem>
+                <para><emphasis role="underline">Rang à la
+                recherche</emphasis>: un nombre peut être précisé dans
+                ce champ. Le rang vous permet de placer le champ par
+                rapport aux autres à l'écran. Les champs avec la plus
+                petite valeur de rang sont affichés en premier. Ces
+                nombres ne sont pas nécessairement consécutifs.</para>
+              </listitem>
+              <listitem>
+                <para><emphasis role="underline">Utiliser comme
+                colonne dans le rapport</emphasis>: si vous cochez
+                cette case, le champ apparaitra comme l'une des
+                colonnes dans la table de résultats de la
+                recherche.</para>
+              </listitem>
+              
+              <listitem>
+                <para><emphasis role="underline">Rang dans le rapport
+                de recherche</emphasis>: un nombre peut être précisé
+                dans ce champ. Le rang vous permet de placer le champ
+                par rapport aux autres à l'écran. Les champs avec la
+                plus petite valeur de rang sont affichés en premier
+                (de gauche à droite). Ces nombres ne sont pas
+                nécessairement consécutifs.</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Largeur de la
+            colonne</emphasis>(optionel): si vous souhaitez imposé une
+            largeur de colonne pour ce champ dans la table de
+            résultats vous pouvez la spécifier ici sous forme d'un
+            pourcentage de la largeur totale de la page. Cette valeur
+            est optionnelle et nous vous recommandons de la laisser
+            vierge à moins que votre navigateur ne formatte pas la
+            table comme vous le souhiatez. Si vous voulez qu'une
+            colonne soit la plus étroite possible, spécifiez un
+            pourcentage très faible comme 1 ou 2.</para>
+          </listitem>
+        </itemizedlist>
+
+        <note><para><emphasis role="bold">Note</emphasis>: il est
+        parfaitement possible d'utiliser un champ comme critère de
+        recherche sans le faire figurer dans la table de résultat et
+        inversement. Pour les champs que vous ne souhaitez pas
+        utiliser du tout dans le rapport laissez les deux cases à
+        cocher vierges.</para></note>
+
+        <figure id="FigureTrackerReportSetting">
+          <title>Configuration d'un rapport de recherche</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG"
+                fileref="../../screenshots/fr_FR/sc_trackerreportsetting.png" width="14.2cm" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+        
+      </section>
+
+    </section>
+
+    <section id="TrackerEmailNotificationSettings">
+      <title>Options de notification email</title>
+
+      <para>Comme expliqué dans la <xref
+      linkend="TrackerEmailNotification" /> les outils de suivi sont
+      préconfigurés avec une série de règles leur permettant
+      d'informer les personnes concernées des évènements survenant
+      dans le cycle de vie d'un artefact. Ces règles de notification
+      par défaut peuvent être modifiées de plusieurs façons:</para>
+
+      <section id="TrackerGlobalEmailNotification">
+        <title>Notification email globale</title>
+
+        <para>En complément des règles de notification par défaut,
+        l'administrateur de l'outil de suivi a la possibilité de spécifier
+        plusieurs adresses email séparées par une virgule auxquelles
+        seront systématiquement envoyés des notifications lors de la
+        création (et éventuellement lors de la modification) d'un
+        artefact. Notez que dans ce cas, les notifications sont
+        envoyées aux utilisateurs sans tenir compte des préférences
+        personnelles (voir la section &#34;<xref
+        linkend="TrackerEventRoleBasedEmailNotification" />&#34;
+        ci-dessous).</para>
+
+        <para>Cette fonctionnalité peut être utilisée pour informer de
+        la soumission d'un nouvel artefact les personnes de l'équipe
+        en charge de leur qualification et leur assignation.</para>
+
+        <para><tip>
+            <title>Coup de pouce: créer une liste de distribution pour notifier plusieurs personnes</title>
+            
+            <para>Si vous souhiatez notifier de nombreuses personnes,
+            nous vous suggérons d'utiliser les listes de distributions
+            de CodeX (voir <xref linkend="MailingLists" />). Une fois
+            la liste de distribution en place, il vous suffit de taper
+            l'adresse de la liste dans le champ de notification
+            globale pour que toutes les personnes concernées soient
+            informées.</para>
+
+            <para>La création d'une liste de distribution a plusieurs
+            avantages: tout d'abord chaque individu pour s'abonner ou
+            se désabonner comme il le souhaite et, ensuite, tous les
+            messages envoyés à une liste de distribution sont
+            conservées dans une archive et peuvent donc servir de
+            témoin en cas d'audit.</para>
+          </tip>
+        </para>
+
+      </section>
+
+
+      <section id="TrackerWatchers">
+        <title>Utilisateurs à suivre</title>
+
+        <para>Les outils de suivi de CodeX offrent à tous les membres
+        du projet la possibilité de recevoir une copie de toutes les
+        notifications envoyées à certaines autres personnes.</para>
+
+        <para>Voici quelques exemples où cette fonctionnalité se
+        révèle particulièrement utile:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para><emphasis role="bold">Remplacement</emphasis>:
+            lorsqu'un membre de l'équipe est absent il est souvent
+            très commode de pouvoir déléguer le traitement des
+            artefacts dont il est en charge à une autre personne de
+            l'équipe qui la remplace. Pour devenir le remplaçant d'une
+            personne il suffit de taper le nom de la personne à
+            remplacer dans le champ &#34;Utilisateurs à suivre&#34;
+            lorsque la personne s'en va et de l'enlever à son
+            retour.</para>
+
+            <para>Dès que vous spécifiez le nom d'une personne à
+            suivre, vous recevez toutes les notifications de cette
+            personne et vous pouvez agir en conséquence à sa
+            place.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Contact assurance
+            qualité</emphasis>: une autre utilisation de cette
+            fonctionnalité consiste pour les responsables de
+            l'assurance qualité de l'équipe à taper le nom des
+            ingénieurs avec lesquels ils travaillent. Ils savent ainsi
+            où en sont les anomalies assignés à "leur"
+            ingénieur.</para>
+          </listitem>
+        </itemizedlist>
+
+        <note><para>Remarque: le but de cette fonctionnalité n'est pas
+        de vous espionner. Ainsi, pour être sûr que personne ne suit
+        vos notifications email sans votre consentement, CodeX montre
+        sur cette page le nom des utilisateurs qui ont demandé à
+        suivre vos notifications email.</para></note>
+
+      </section>
+
+      <section id="TrackerEventRoleBasedEmailNotification" xreflabel="Event/Role Based Notification Settings">
+        <title>Configuration des notifications par rôle/évènement</title>
+
+        <para>Il s'agit là de la partie la plus sophistiquée du
+        processus de personnalistation des notifications email. Elle
+        permet à n'importe quel utilisateur de définir les types
+        d'évènements qui doivent l'objet d'une notification et ceux
+        qui doivent, au contraire, ne pas être signalés. Cette
+        configuration est spécifique à un utilisateur pour un projet
+        donné. Il est donc possible de spécifier ces préférences de
+        façon très fine pour chaque outil de suivi dans lequel vous êtes
+        impliqué.</para>
+
+        <para>La matrice de personnalisation (voir <xref
+        linkend="FigureTrackerNotificationMatrix" />) montre une série
+        de cases à cocher. Chaque case vous permet de spécifier quel
+        type d'évènement vous souhaitez recevoir suivant le rôle que
+        vous jouez dans un artefact.</para>
+
+        <para>Un utilisateur peut avoir quatre rôles vis à vis d'un
+        artefact:</para>
+
+        <itemizedlist mark="bullet" spacing="compact">
+          <listitem>
+            <para><emphasis role="bold">A soumis</emphasis>: vous êtes
+            la personne qui a initialement soumis l'artefact en
+            remplissant le formulaire de soumission.</para>
+          </listitem>
+          
+          <listitem>
+            <para><emphasis role="bold">En charge</emphasis>:
+            l'artefact vous a été assigné et c'est à vous de le
+            gérer.</para>
+          </listitem>
+          
+          <listitem>
+            <para><emphasis role="bold">CC</emphasis>: Votre nom
+            apparait dans la liste des destinataires en copie (voir
+            <xref linkend="ArtifactCCList" />).</para>
+          </listitem>
+          
+          <listitem>
+            <para><emphasis role="bold">Commentateur</emphasis>: vous
+            avez posté au moins un commentaire dans l'artefact.</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>Pour chacun de ces rôles vous pouvez indiquer à l'outil de suivi de
+        vous envoyer une notification uniquement quand certains
+        évènements surviennent. Il existe neuf évènements différents
+        visibles sur la colonne la plus à gauche de la <xref
+        linkend="FigureTrackerNotificationMatrix" />. Les descriptions
+        des évènements parlent d'elle même et n'appellent qu'un
+        commentaire: les huit premiers évènements de la liste ne
+        peuvent survenir que lors de la modification d'un
+        artefact. Seul le dernier évènement se rapporte à la création
+        d'un nouvel artefact.</para>
+
+        <para>Passons en revue la matrice de personnalisation donnée
+        en exemple sur la <xref
+        linkend="FigureTrackerNotificationMatrix" /> et voyons, étape
+        par étape, comment cet utilisateur a configuré ses paramètres
+        de notification:</para>
+
+        <itemizedlist>
+          <listitem><para>Commençons par la colonne Commentateur. Ici
+          l'utilisateur a décidé que s'il est impliqué dans un
+          artefact en tant que commentateur (il a juste posté un
+          commentaire) il souhaite recevoir un message de notification
+          uniquement lorsque le statut de l'artefact passe à
+          &#34;Fermé&#34; ou lorsque l'un quelqconque des champs
+          Priorité, Statut ou Sévérité est modifié. Tous les autres
+          évènements doivent être ignoré par l'outil de suivi et ne pas donner
+          lieu à une notification pour cet
+          utilisateur.</para></listitem>
+
+          <listitem><para>Ensuite si nous examinon la matrice par
+          èvènement et non plus par rôle, on peut voir que
+          l'utilisateur a indiqué que lorsqu'il modifie un artefact
+          lui-même (évènement &#34;Je suis l'auteur de la
+          modification&#34;) il ne souhaite pas recevoir de
+          notification quelque soit son rôle dans cet
+          artefact. Veuillez noter que l'évènement &#34;Je suis
+          l'auteur de la modification&#34; prend le pas sur d'autres
+          évènements. Ainsi dans notre exemple, aucune notification
+          n'est envoyé à cet utilisateur s'il soumet un artefact bien
+          que l'évènement &#34;Un nouvel artefact a été soumis&#34;
+          soit coché.</para></listitem>
+
+          <listitem>
+
+            <para>Pour finir l'utilisateur a aussi spécifié que
+            lorsqu'un nouvel artefact est soumis et qu'il lui est
+            assigné, il veut en être informé. Cependant si c'est lui
+            même qui a soumis l'artefact alors il ne souhaite pas
+            recevoir de notification email.</para>
+
+            <para>Notez aussi que le rôle Commentateur n'a pas de
+            signification pour l'évènement &#34;Un nouvel artefact a
+            été soumis&#34; car un commentaire ne peut être ajouté au
+            moment de la modification d'un artefact et pas de sa
+            création. De plus, l'évènement &#34;On me donne ou on
+            m'enlève ce rôle&#34; n'a pas de signification pour une
+            commentateur ou la personne qui a soumis un commentaire
+            car ces rôles ne peuvent être modifiés dans un
+            artefact.</para>
+          </listitem>
+
+        </itemizedlist>
+
+        <figure id="FigureTrackerNotificationMatrix">
+          <title>Configuration de la matrice de notification personnelle</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG"
+                fileref="../../screenshots/fr_FR/sc_trackernotificationmatrix.png" width="12.5cm" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+      </section>
+    </section>
+
+  </section>
+
+</chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+End:
+-->
+

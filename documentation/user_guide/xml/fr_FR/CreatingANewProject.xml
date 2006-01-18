@@ -1,0 +1,212 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+//
+// $Id: CreatingANewProject.xml 911 2004-03-15 14:18:29Z ljulliar $
+//
+//	Originally written by Stephane Bouhet 2002, CodeX Team, Xerox
+//
+-->
+  <chapter id="CreatingANewProject">
+    <title>Créer un nouveau projet</title>
+
+    <para>Vous êtes désormais un utilisateur CodeX fraichement
+    enregistré et vous voulez vous simplifier la vie ainsi que celle
+    de vos équipes de projet. En d'autre termes vous voulez:</para>
+
+    <itemizedlist mark="bullet"
+                  spacing="compact">
+      <listitem>
+        <para>Eviter le travail et les dépenses liés à la mise en
+        place et à la maintenance de votre propre infrastructure
+        (seveurs de développement, serveur de sauvegarde,
+        etc...)</para>
+      </listitem>
+
+      <listitem>
+        <para>Ne pas pyer le prix fort pour des outils commerciaux de
+        contrôle de version, de suivi d'anomalies ou de gestion des
+        tâches.</para>
+      </listitem>
+
+      <listitem>
+        <para>Mettre rapidement en place un environnement de projet
+        que vous pouvez partager avec vos collègues, vos partenaires,
+        vos sous-traitants ou vos clients tout en gardant vos
+        informations sous contrôle.</para>
+      </listitem>
+
+      <listitem>
+        <para>Rendre votre organisation globalement plus productive en
+        permettant à d'autre de ré-utiliser vos composants logiciels
+        si vous le désirez.</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Si l'un de ces points vous parait pertinent pour votre
+    activité alors vous devriez absolument héberger vos projets sur
+    CodeX. Voyons comment faire.</para>
+
+    <section id="ProjectRegistration">
+      <title>Enregistrer un projet</title>
+
+      <para>Avant de créer un nouveau projet vous devez avoir le
+      statut d'utilisateur enregistré (voir <xref
+      linkend="ClassesOfCitizens" />). Vous pouvez alors vous
+      connecter et sélectionner le lien &#34;Enregistrer un
+      projet&#34; dans le menu de CodeX.</para>
+
+      <para>L'enregistrement d'un projet est un processus en sept
+      étapes et ne prend moins de 10 minutes:</para>
+
+      <itemizedlist mark="bullet">
+        <listitem>
+          <para><emphasis role="bold">Etape 1 - Services et Conditions</emphasis></para>
+
+          <para>Il s'agit d'information à propos des services
+          CodeX. Lisez les attentivement.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Etape 2 - Conditions générales d'utilisation</emphasis></para>
+
+          <para>Vous découvrirez sur cette page une liste des services
+          disponibles sur CodeX. Y figure aussi certaines obligations
+          que nous vous demandons de respecter. Pour passer à l'etape
+          suivantes cliquez sur [D'ACCORD]. Si vous sélectionnez [PAS
+          D'ACCORD], prenez la peine de nous contacter et de nous
+          expliquer les raisons de cette désaffection. Nous pourrons
+          peut-être y remédier.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Etape 3 - Enregistrement du projet</emphasis></para>
+
+          <para>C'est là que tout commence véritablement! En
+          commençant par une description de votre projet. Il est
+          important d'en donner une description aussi précise que
+          possible pour que tous les intervenants sachent de quoi il
+          est question. Vous pouvez aussi fournir des informations
+          liées à la propriété intellectuelle comme des propositions
+          d'inventions ou des brevets ou bien établir la liste des
+          logiciels nécessaires au bon fonctionnement de votre
+          projet. Le dernier champ est libre: vous pouvez y faire
+          figurer tout information qui vous parait pertinente pour
+          votre projet et ses utilisateurs.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Etape 4 - Nom du projet</emphasis></para>
+
+          <para>Indiquez le nom court et le nom complet du
+          projet. Lisez attentivement les insitructions fournies. Le
+          nom complet peut être modifié à tout moment dans la vie du
+          projet mais pas le nom court.<footnote><para>En fait il peut
+          l'être mais celà nécessite l'intervention des
+          administrateurs du site.</para></footnote>. Réfléchissez
+          donc bien avant de choisir!</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Etape 5 - Politique d'échange</emphasis></para>
+
+          <para>NOTE: cette étape ne s'applique que si vous créez un
+          projet public. Si c'est le cas, le choix par défaut est
+          celui que vous devez conserver à savoir la &#34;Politique
+          d'Echange de &SYS_ORG_NAME;&#34;. Comme expliqué plus haut,
+          l'équipe CodeX assisté du département légal de
+          &SYS_ORG_NAME; ont créé et validé ces règles d'échange. Un
+          certain nombre de licence Open Source sont aussi
+          mentionnées. Enfin vous pouvez aussi spéficier vos propres
+          termes de licence.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Etape 6 - Catégories</emphasis></para>
+
+          <para>Cette page est là pour vous rappeler qu'une fois votre
+          projet enregistré et approuvé, il vous sera demandé de le
+          décrire suivant sept critères qui sont ceux utilisés dans
+          l'arbre des projets (voir <xref linkend="SoftwareMap"
+          />).</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Etape 7 - Confirmation finale</emphasis></para>
+
+          <para>Lors de cette dernière étape un récapitulatif des
+          différentes informations saisies vous est présenté pour
+          approbation. Mais ne vous inquiétez pas: vous pourrez encore
+          modifier ces information une fois votre projet approuvé. Si
+          tout est conforme cliquez sur le lien [D'ACCORD]. Si vous
+          cliquez sur [PAS D'ACCORD] le projet pré-enregistré est
+          détruit de la base de données de CodeX et toutes les
+          informations saisies seront perdues.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Après validation de l'enregistrement du projet, l'équipe
+      CodeX doit le revoir et l'approuver, le rejeter ou vous demander
+      plus d'information. Ce processus ne prend pas plus de 24 heures
+      dans le pire des cas et moins d'une heure la plupart du
+      temps. Rares sont les projets rejetés donc il y a peu de crainte
+      à avoir... Après approbation du projet, vous recevrez un email
+      résumant les caractéristiques de votre projet ainsi qu'un
+      certain nombre de pointeurs dont un vers la &#34;Sommaire du
+      Projet&#34;. Conservez le dans vos signets favoris.</para>
+
+    </section>
+
+    <section id="Post-RegistrationConfiguration">
+      <title>Configuration post-enregistrement</title>
+
+      <para>la première chose à faire après avoir reçu confirmation de
+      l'enregistrement du projet consiste à se rendre sur le page de
+      &#34;Sommaire du Projet&#34; (URL inclut dans le message de
+      notification) et à achever la configuration. Il y au minimum
+      deux actions à prendre:</para>
+
+      <itemizedlist mark="bullet">
+
+        <listitem>
+          <para><emphasis role="bold">Classer votre projet dans l'arbre des logiciels</emphasis></para>
+
+          <para>La catégorisation de votre projet apparait sur la page
+          de &#34;Sommaire&#34; du projet. Pour catégoriser le projet,
+          cliquez sur le lien &#34;le catégoriser&#34; et renseignez
+          les différentes catégories.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Constituer l'équipe de projet</emphasis></para>
+
+          <para>Une fois le projet créé, le créateur hérite du rôle
+          d'administrateur de ce projet. Il est de sa responsabilité
+          de constituer l'équipe en désignant les membres du projet et
+          en définissant leurs permissions. Pour se faire il faut
+          accéder à la page d'administration du projet et saisir le
+          nom de tous les utilisateurs qui doivent être promus membres
+          du projet et ensuite définir leurs permissions.</para>
+        </listitem>
+      </itemizedlist>
+
+      <tip>
+        <title>Coup de pouce:  vous ne trouvez pas la bonne catégorie? Contactez-nous</title>
+
+        <para>Plutôt que de mettre en place une hiérarchie de valeurs
+        lourdes et complexes pour chacun des sept critères de
+        classification de l'arbre des projets, l'équipe CodeX a décidé
+        de faire évoluer cette hiérarchie au fur et à mesure de
+        l'apparition de nouveaux projets. si vous ne trouvez pas la
+        valeur qui vous convient dans l'un des critères de
+        catégorisation, n'hésitez pas à contacter l'équipe CodeX via
+        le lien &#34;Contactez-nous&#34; situé dans la section Aide du
+        menu principal de CodeX ou en soumettant un demande dans l'un
+        des forums de discussion du site.</para>
+      </tip>
+    </section>
+  </chapter>

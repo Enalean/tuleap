@@ -23,24 +23,24 @@
       <listitem>
 	<para><emphasis role="bold">Anonymous Users</emphasis>: when
 	you first visit the CodeX site you are typically an anonymous
-	user. To make an analogy with DocuShare you are a guest user
-	by default.  Anonymous users can browse the CodeX site but
+	user. Anonymous users can browse the CodeX site but
 	many of the CodeX services or CodeX resources cannot be used
 	or accessed by an anonymous user (e.g. source code access is
 	not possible, all the monitoring facilities aren&#39;t either,
 	etc.). So we strongly advise you to become a registered
-	user.</para>
+	user to take full advantage of the CodeX site.</para>
       </listitem>
 
       <listitem>
 	<para><emphasis role="bold">Registered Users</emphasis>: once
 	you have created your own account (see below) you can use your
 	login/password to authenticate yourself with CodeX. Registered
-	users have access to all CodeX projects including source
-	code. And since the system knows about you, it enables you to
-	customize your view of the system through your Personal Page,
-	monitor Forums, software release, receive support request
-	follow-ups, site updates and many other useful things.</para>
+	users have access to all CodeX projects including source code
+	unless the project administrators decided otherwise. And since
+	the system knows about you, it enables you to customize your
+	view of the system through your Personal Page, monitor Forums,
+	software release, receive support request follow-ups, site
+	updates and many other useful things.</para>
       </listitem>
 
       <listitem>
@@ -95,8 +95,7 @@
 
     <procedure>
       <step>
-	<para>Select the &#34;New User&#34; item at the top of the CodeX
-          Main Menu</para>
+	<para>Select the &#34;New User&#34; link</para>
       </step>
 
       <step>
@@ -105,8 +104,10 @@
 
 	<substeps>
 	  <step>
-	    <para><emphasis role="bold">Login Name</emphasis>: lowercase only
-              please!</para>
+	    <para><emphasis role="bold">Login Name</emphasis>: your
+	    user name. On some CodeX systems that are connected to an
+	    enterprise directory you may have to use a pre-defined
+	    user name.</para>
 	  </step>
 
 	  <step>
@@ -122,11 +123,12 @@
 
 	  <step>
 	    <para><emphasis role="bold">E-mail Address</emphasis>:
-	    your e-mail. E-mail that does not belong to the
-	    &SYS_ORG_NAME; domain (or &SYS_ORG_NAME; affiliated
-	    domains) is not allowed. Unless you explicitly ask for
-	    permission, using an external e-mail forwarding address is
-	    strictly forbidden.</para>
+	    depending on the site configuration valid email addresses
+	    may be limited to those in the &SYS_ORG_NAME; domain (or
+	    &SYS_ORG_NAME; affiliated domains). Make sure your email
+	    address is corrent or you won't receive the registration
+	    confirmation message in your mailbox and won't be able to
+	    complete the registration process.</para>
 	  </step>
 
 	  <step>
@@ -205,7 +207,7 @@
 
     <para>To log into the CodeX site, go to the CodeX Site at <ulink
 								     url="http://&SYS_DEFAULT_DOMAIN;/">http://&SYS_DEFAULT_DOMAIN;</ulink> and click
-      on the &#34;Login&#34; item in the upper part of the CodeX Main Menu. If
+      on the &#34;Login&#34; link. If
       you typed your login and password OK, CodeX presents you with your
       Personal Page (<xref linkend="FigureThePersonalPageOfACodeXUser" />). At
       any point in time you can return to your CodeX Personal Page by
@@ -213,13 +215,12 @@
       Main Menu.</para>
 
     <para>Your Personal Page is a crossroad from which you can quickly
-    go to CodeX workplaces and information spaces. In the upper part
-    of the screen you can see bugs and tasks assigned to you in the
-    various projects you belong to. In addition the bug section also
-    shows those bugs that you have submitted including to foreign
-    projects. By doing so, CodeX allows you to follow the evolution of
-    bugs that you have reported and you might be impatient to see
-    fixed.</para>
+    go to CodeX workplaces and information spaces. You'll see bugs and
+    tasks assigned to you in the various projects you belong to. In
+    addition the bug section also shows those bugs that you have
+    submitted including to foreign projects. By doing so, CodeX allows
+    you to follow the evolution of bugs that you have reported and you
+    might be impatient to see fixed.</para>
 
     <figure id="FigureThePersonalPageOfACodeXUser">
       <title>The Personal Page of a CodeX user</title>
@@ -240,16 +241,15 @@
     /></imageobject></inlinemediaobject>) next to the item
     label.</para>
 
-    <para>On the right hand side of the screen you&#39;ll see the
-    bookmark sections. These are bookmark to your favorite pages in
-    CodeX. Note that in many cases CodeX uses URL with enough embedded
-    information to bookmark sophisticated items like Software Map
-    browsing, typical search in your project Bug or Task database, etc
-    ... Bookmarked items can be edited which means that both the title
-    of the bookmark and its destination URL can be modified. Finally,
-    the list of projects you belong to is listed in the lower right
-    corner. Selecting any if these projects brings you to the
-    corresponding Project Summary page.</para>
+    <para>There is also a bookmark section. These are bookmarks to
+    your favorite pages in CodeX. Note that in many cases CodeX uses
+    URL with enough embedded information to bookmark sophisticated
+    items like Software Map browsing, typical search in your project
+    Bug or Task database, etc ... Bookmarked items can be edited which
+    means that both the title of the bookmark and its destination URL
+    can be modified. Finally, the list of projects you belong to is
+    listed in the lower right corner. Selecting any if these projects
+    brings you to the corresponding Project Summary page.</para>
   </section>
 
   <section id="AccountMaintenance">
@@ -258,21 +258,7 @@
     <para>You provided a certain amount of demographic information to CodeX
       when you first registered on the CodeX site. This and other information
       can be modified at any time by selecting the &#34;Account
-      Maintenance&#34; item in the upper part of the Codex Main Menu.</para>
-
-    <tip>
-      <title>Tip: Use your canonical e-mail address</title>
-
-      <para>The CodeX site is connected to the company Directory
-        , which has the advantage of showing useful
-        information about users like their physical location,
-        organization, phone/fax number, etc. For this feature to work you must
-        give CodeX your e-mail address as it appears in the Directory.
-        You can check that the Directory access is working for your account by
-        going to your &#34;Account Maintenance&#34; page, select &#34;View my
-        developer profile&#34; and then &#34;More from the &SYS_ORG_NAME;
-        Directory&#34;.</para>
-    </tip>
+      Maintenance&#34; item in the Codex Main Menu.</para>
 
     <para>Most of the items on the &#34;Account Maintenance&#34; page will
       look obvious to you. However, we would like to draw your attention on
@@ -294,13 +280,8 @@
           checking this box you ask CodeX to remember about your
           login/password forever or at least until you explicitly select the
           &#34;Logout&#34; item in the CodeX Main Menu. For security reasons
-          we do not recommend using this feature unless you are lazy (like me)
-          or your desktop environment or Web browser crashes
-          <footnote><para>In fact this feature was implemented at the request
-          of CodeX users that were having exactly this kind of problem while
-          using an operating system that is also used by over 90% of users on
-          this planet.</para></footnote> once, twice or (horror) ten times a
-          day ...</para>
+          we do not recommend using this feature unless you are equipped with 
+          a strictly personal desktop machine</para>
       </listitem>
 
       <listitem>

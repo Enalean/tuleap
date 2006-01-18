@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+//
+// $Id: BookInfo.xml 1862 2005-07-28 16:32:57Z schneide $
+//
+// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
+-->
+  <bookinfo>
+    <authorgroup>
+      <author>
+        <firstname>Laurent</firstname>
+
+        <surname>Julliard</surname>
+
+        <affiliation>
+          <orgname>Xerox/XGS/BPS - CodeX Team, Laurent.Julliard@crt.xerox.com</orgname>
+        </affiliation>
+      </author>
+    </authorgroup>
+
+    <copyright>
+      <year>2000</year>
+      <year>2001</year>
+      <year>2002</year>
+      <year>2003</year>
+      <year>2004</year>
+      <year>2005</year>
+
+      <holder>The Document Company - Xerox. All rights reserved.</holder>
+    </copyright>
+
+    <legalnotice>
+      <para>Ce document est diffusé sous la licence Codex Component Software License</para>
+
+      <para>Copyright protection claimed includes all forms and matters of
+      copyrightable material and information now allowed by statutory or
+      judicial law or hereinafter granted, including without limitation,
+      material generated from the software programs which are displayed on the
+      screen such as icons, screen displays, looks, etc.</para>
+
+      <para>Imprimé aux Etats-Unis d'Amérique</para>
+
+      <para>Xerox et tous les produits Xerox mentionné dans cette
+      publication sont des marques déposées de Xerox
+      Corporation.</para>
+
+      <para>Ce document a été formatté à l'aide de la DTD XML
+      DocBook. La version HTML a été générée avec le génerateur HTML
+      de DocBook. La version PDF a été faite à l'aide de Apache
+      FOP.</para>
+    </legalnotice>
+
+    <revhistory>
+      <revision>
+        <revnumber>2.9.4</revnumber>
+
+        <date>18-Jan-2006</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>Version française initiale par  L. Julliard basée sur la version 2.9.4 anglaise du 21-Déc-2005</revremark>
+      </revision>
+    </revhistory>
+  </bookinfo>
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+End:
+-->
+

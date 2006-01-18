@@ -1,0 +1,222 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+//
+// $Id: OtherServices.xml 911 2004-03-15 14:18:29Z ljulliar $
+//
+// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
+-->
+  <chapter id="OtherServices">
+    <title>Autres Services</title>
+
+    <section id="ShellAccount">
+      <title>Compte Shell</title>
+
+		<para><emphasis role="bold">Note Importante</emphasis>: cette fonctionnalité
+			peut avoir été désactivée par l'administrateur de votre site CodeX et s'avérer
+			indisponible dans votre organisation.</para>
+
+		<para>Si l'administrateur CodeX a activé cette fonctionnalité, chaque
+			utilisateur enregistré dispose alors de son compte Shell Unix sur le serveur de
+			comptes Shell CodeX. Vous pouvez accéder à ce compte de deux façons:</para>
+
+      <itemizedlist mark="bullet">
+        <listitem>
+			<para><emphasis role="bold">SSH</emphasis>: l'utilisation du client de
+				compte shell sécurisé est recommandée pour se connecter au serveur de
+				comptes Shell CodeX. Les clients SSH sont disponibles sur toutes les
+				plateformes (Windows, Linux, Unix et Mac). Ils établissent un lien
+				sécurisé avec vos répertoires personnels et vous permettent aussi de
+				disposer d'autres utilitaires comme scp pour le transfert de fichiers à
+				distance. Pour accéder à votre compte Shell, tapez la commande suivante et
+				utiliser votre nom d'utilisateur et mot de passe CodeX pour vous
+				indentifier:</para>
+
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+ssh -l nom_utilisateur &SYS_SHELL_HOST;
+</programlisting>
+        </listitem>
+
+        <listitem>
+			<para><emphasis role="bold">Telnet</emphasis>: telnet est livré en
+				standard dans les environnement Windows et Unix. Pour accéder à votre
+				compte Shell, tapez la commande suivante et utiliser votre nom
+				d'utilisateur et mot de passe CodeX pour vous indentifier (remarque: sur
+				certains sites CodeX il se peut que telnet soit désactivé pour des raisons
+				de sécurité):</para>
+
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+telnet &SYS_SHELL_HOST;
+</programlisting>
+        </listitem>
+      </itemizedlist>
+
+		<para>Que vous utilisiez SSH ou telnet, une bannière de bienvenue vous est présenté
+			une fois la connexion établie. Ce message vous indique quels sont les
+			répertoires auxquels vous avez accès. Utilisez la commande Unix &#34;cd&#34;
+			pour changer le répertoire de travail courant. Si vous êtes membre de plusieurs
+			projets vous devez spécifier pour quel projet vous allez travailler durant
+			cette session Shell en utilisant la commande suivante:</para>
+
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+newgrp nom_projet
+</programlisting>
+
+		<para>Vous pouvez utiliser cette commande autant de fois que vous le souhaitez
+			lorsque vous vous apprêtez à travailler pour un autre de vos projets.</para>
+
+      <para></para>
+      <para></para>
+    </section>
+    
+    <section id="FTPStorageSpaces">
+      <title>Espaces de stockage FTP</title>
+
+		<para>Chaque projet dispose de son propre espace de stackage FTP qui est constitué de
+			deux zones distinctes: l'espace FTP anonyme et l'espace FTP de publication de
+			version.</para>
+
+      <section id="TheAnonymousFTPSpace">
+        <title>L'espace FTP anonyme</title>
+
+		<para>L'espace FTP anonyme peut être utilisé par les membres du projet pour
+			télécharger tout type de documents, données ou délivrables du projet. Cet
+			espace de stockage est accessible en lecture à tous les utilisateurs CodeX et
+			tous les fichiers placés dans cet espace peuvent donc être librement
+			téléchargés. En conséquence, assurez-vous d'utiliser cet espace de stockage
+			uniquement pour des fichiers lisibles par tous.</para>
+
+        <itemizedlist mark="bullet" spacing="compact">
+          <listitem>
+			<para>Accès en utilisateur anonyme: utilisez un client ftp pour vous connecter
+				à <literal>&SYS_DOWNLOAD_HOST;</literal>. Utilisez &#34;ftp&#34;
+				comme nom d'utilisateur et votre adresse email comme mot de passe. Ensuite
+				utilisez la commande <literal>cd /pub/nom_projet</literal> pour
+				accéder à l'espace FTP anonyme.</para>
+          </listitem>
+
+          <listitem>
+			<para>Accès pour les membres du projet: utilisez un client ftp pour vous
+				connecter à <literal>&SYS_DOWNLOAD_HOST;</literal>. utilisez votre
+				nom d'utilisateur et mot de passe CodeX pour vous identifier, puis tapez la
+				commande <literal>cd /pub/nom_projet</literal> pour accéder à l'espace
+				FTP anonyme. A partir de là les membres du projet ont accès en lecture et en
+				écriture et peuvent télécharger des fichiers dans les deux sens.</para>
+
+		<para>Pour pointer sur cet espace de stockage dans une page Web ou dans un email,
+			utilisez l'URL suivant:</para>
+
+            <para><literal>ftp://nom_projet.&SYS_DEFAULT_DOMAIN;:/pub/nom_projet</literal></para>
+
+          </listitem>
+        </itemizedlist>
+      </section>
+
+      <section id="TheFileReleaseFTPSpace">
+        <title>L'espace FTP de publication de fichiers</title>
+
+		<para>C'est à cet endroit que CodeX stockeles nouvelles version de fichiers
+			récemment publiés via le service de publication de fichiers de CodeX (voir <xref
+				linkend="FileRelease"/>). L'accès est autorisé uniquement pour les
+			membres du projet au cas où ils souhaiteraient intervenir directement et
+			manuellement dans cet espace. <emphasis role="bold">Nous recommandons
+			vivement de ne pas toucher à cet espace puisqu'il est entièrement géré depuis
+			l'interface Web de CodeX.</emphasis>. Si vous avez des questions à propos de la
+			publication de vos fichiers, veuillez contacter l'équipe CodeX.</para>
+
+        <para>Les membres du projet puevent accéder à cet espace FTP de la façon suivante:</para>
+
+        <itemizedlist mark="bullet"
+                      spacing="compact">
+          <listitem>
+            <para>Via leur compte Shell (SSH ou Telnet vers <literal>&SYS_SHELL_HOST;</literal>).</para>
+          </listitem>
+
+          <listitem>
+            <para>Via un client ftp en se connectant à <literal>&SYS_DOWNLOAD_HOST;</literal>.</para>
+          </listitem>
+        </itemizedlist>
+
+		<para>Dans les deux cas, il faut faire usage de vos nom d'utilisateur et mot de passe de
+			CodeX pour vous identifier et utiliser la commande suivante pour accèder à
+			l'espace FTP de publication de fichiers:</para>
+
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+cd &FTPFILES_DIR;/nom_projet
+</programlisting>
+      </section>
+    </section>
+
+	<section id="MSWindowsSharedResources">
+		<title>Ressources partagées MS Windows</title>
+		
+		<para><emphasis role="bold">Note Importante</emphasis>: cette fonctionnalité
+			peut avoir été désactivée par l'administrateur de votre site CodeX et s'avérer
+			indisponible dans votre organisation.</para>
+		
+		<para>Les utilisateurs Windows (et les utilisateurs Linux/Unix disposant de
+			Samba) peuvent utiliser des disques réseau pour accéder aux espaces de stockage
+			suivants depuis leur explorateur de fichiers:</para>
+		
+		<itemizedlist mark="bullet" spacing="compact">
+			<listitem>
+				<para>Votre répertoire maison (home directory),</para>
+			</listitem>
+			
+			<listitem>
+				<para>Les divers répertoires maison du projet (où se situe le site Web du
+					projet)</para>
+			</listitem>
+			
+			<listitem>
+				<para>L'espace FTP entrant où vous pouvez directement glisser-déposer
+					les fichiers à inclure dans vos publication de version au lieu
+					d'utiliser un client FTP pour le chargement. The FTP incoming space
+					where you can directly drag and drop your file releases instead of using
+					FTP upload (See <xref
+						linkend="ReleaseConfigurationandValidation"/>)</para>
+			</listitem>
+		</itemizedlist>
+		
+		<para>Pour accèder aux ressources partagées CodeX, ouvrez votre explorateur de
+			fichiers, naviguez dans le Réseau Microsoft Global, ouvrez le domaine
+			&SYS_SAMBA_DOMAIN; et cliquez sur le serveur CodeX. Utilisez vos nom
+			d'utilisateur et mot de passe CodeX pour vous connecter aux ressources (ils vous
+			seront demandés uniquement s'iils ne sont pas identiques à vos nom
+			d'utilisateur et mot de passe Windows).</para>
+		
+		<para>Les ressources partagées peuvent aussi être accédées directement en
+			utilisant les chemins suivants:</para>
+		
+		<itemizedlist mark="bullet" spacing="compact">
+			<listitem>
+				<para><literal>\\codex\nom_utilisateur</literal> (Répertoire
+					maison de l'utilisateur)</para>
+			</listitem>
+			
+			<listitem>
+				<para><literal>\\codex\Projects</literal> (Les répertoires de tous
+					les projets - uniquement pour les membres d'un projet)</para>
+			</listitem>
+			
+			<listitem>
+				<para><literal>\\codex\Ftp_Incoming</literal> (Espace de chargement
+					FTP entrant - pour les membres d'un projet)</para>
+			</listitem>
+		</itemizedlist>
+		
+		<para>Inutile de préciser que les permissions en écriture et en lecture mises en
+			place par CodeX pour protéger vos données s'appliquent à toutes ces ressources partagées.</para>
+	</section>
+  </chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+End:
+-->
+

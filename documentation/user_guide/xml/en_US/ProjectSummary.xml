@@ -28,7 +28,7 @@
 
       <para>For project members, accessing the Project Summary page of one of
       their projects is pretty easy: go to your Personal Page and click on the
-      appropriate project name in the lower right corner of the page.</para>
+      appropriate project name.</para>
 
       <para>For registered users there are several ways by which you can
       access the Project Summary page of a CodeX hosted project:</para>
@@ -114,8 +114,7 @@ http://&SYS_DEFAULT_DOMAIN;/projects/short_project_name
           <para><emphasis role="bold">Project members and Administrators</emphasis>:
           are listed in the upper right corner of the page. A click on a name
           will direct you to the user page where you can learn more about the
-          CodeX user and send him/her an e-mail. Project members can be viewed
-          via the [View members] pointer.</para>
+          CodeX user and send him/her an e-mail.</para>
         </listitem>
 
         <listitem>

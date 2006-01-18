@@ -32,7 +32,7 @@
           SSH clients are available for all platforms (Windows, Linux, Unix
           and Mac) and allows a secure link with your personal directories. It
           also provides you with a number of other useful utilities like scp
-          for remote file transfer. To access your account connect type the
+          for remote file transfer. To access your account type the
           following command and use your CodeX login and password to
           authenticate yourself:</para>
 
@@ -53,16 +53,6 @@ telnet &SYS_SHELL_HOST;
 </programlisting>
         </listitem>
       </itemizedlist>
-
-      <para><tip><title>** Important Remark **</title><para>The CodeX Team has
-      established reasonable security measures on the CodeX shell server. By
-      mapping the CodeX permission schema on the Linux permission schema, the
-      data of a given project can only be manipulated by its project members.
-      Any voluntary attempt to crack and/or damage other users or projects
-      account will be considered as a gross misconduct and appropriate penalty
-      will be applied. If you want to exercise your creativity in a useful way
-      do not spend your time cracking CodeX, write clever code and contribute
-      to CodeX instead !</para></tip></para>
 
       <para>Whether you use SSH or Telnet, a welcome banner will be displayed
       right after you log in. This message tells you what are the directories
@@ -167,8 +157,9 @@ cd &FTPFILES_DIR;/projectname
     feature can be deactivated by your CodeX site administrator and
     may therefore be unavailable in your organization.</para>
 
-    <para>Windows users can also use mapped network drives to access
-    the following storage spaces from their Windows Explorer:</para>
+	<para>Windows users (as well as Linux/Unix users equipped with Samba) can also use mapped
+		network drives to access the following storage spaces from their Windows
+		Explorer:</para>
 
       <itemizedlist mark="bullet"
                     spacing="compact">
@@ -188,16 +179,7 @@ cd &FTPFILES_DIR;/projectname
         </listitem>
       </itemizedlist>
 
-      <para><tip><title>**IMPORTANT REMARK**</title><para>If you registered as
-      a CodeX user before this feature was enabled (on September 4th, 2001)
-      you must enter your password again in CodeX before you can access the
-      shared resources. To do so first login on CodeX and go to <ulink
-      url="http://&SYS_DEFAULT_DOMAIN;/account/change_pw.php">http://&SYS_DEFAULT_DOMAIN;/account/change_pw.php</ulink>.
-      Then re-type your current password in old and new fields. Click on the
-      Update button and wait for the re-generation to happen (delay shown on
-      the screen).</para></tip></para>
-
-      <para>To access your CodeX shared resources, open Windows Explorer,
+      <para>To access your CodeX shared resources, open your file explorer,
       browse the Entire Microsoft Network, open the &SYS_SAMBA_DOMAIN; domain and click on
       the CodeX machine. Use your CodeX login and password to connect to the
       resources (If they are not the same as your Windows login/password a

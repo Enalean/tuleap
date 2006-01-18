@@ -13,11 +13,9 @@
   <chapter id="ProjectAdministration">
     <title>Project Administration</title>
 
-    <para>Whenever you enter the Project Summary page of a given project or
-    any of its service you&#39;ll see a new section appear in the CodeX Main
-    Menu on the left hand side of the screen. This new section relates to the
-    visited project and points to the Project Summary page and the Project
-    Administration page.</para>
+    <para>Whenever you enter the Project Summary page of a given
+    project or any of its service you&#39;ll see a menu item called
+    Admin appears in the project menu.</para>
 
     <para>Only project members can access the Project Administration page. All
     other CodeX users are denied access to this part of a project.</para>
@@ -25,7 +23,7 @@
     <section id="ProjectAdministrationMenu">
       <title>Project Administration Menu</title>
 
-      <para>In addition to the CodeX Main Menu that was introduced in the
+      <para>In addition to the project main menu that was introduced in the
       description of the Project Summary page, the Project Administration page
       has its own menu. This menu is not redundant with the page content right
       below. Except for 1 or 2 items the menu and the page content give access
@@ -55,8 +53,7 @@
       fileref="../../icons/trash.png" /></imageobject></inlinemediaobject>) next
       to the person&#39;s name to revoke his/her membership. Revoking
       membership has absolutely no effect on the history and the data
-      integrity of the project. In other words all bugs, tasks, support
-      requests, ... assigned or submitted by this person will continue to show
+      integrity of the project. In other words all tracker artefacts assigned or submitted by this person will continue to show
       up as before in the project database. Only the ability of this person to
       perform project management tasks is affected. Also notice that in order
       to remove a project administrator from the project member list, another
@@ -92,7 +89,7 @@
 
       <para>Project Administrators have the ability to grant different
       permissions to different users. As an example, a project member can be
-      granted full administration rights on the Bug Tracking System and no
+      granted full administration rights on the bug tracker and no
       rights at all on the Documentation Manager of the project.</para>
 
       <figure id="FigureASampleProjectMembersPermissionTable">
@@ -123,10 +120,10 @@
         <listitem>
           <para><emphasis role="bold">CVS Write</emphasis>: Right now this is
           always set to Yes. All project members have write permission over
-          the CVS <footnote><para>CVS stands for Concurrent Version Control.
-          It is the default source code version control system offered on the
+          the CVS <footnote><para>CVS stands for Concurrent Versions System.
+          It is one of the source code version control system offered on the
           CodeX site. CVS is used by hundreds of thousands of software
-          projects allover the world. See <ulink url="http://www.cvshome.org">http://www.cvshome.org</ulink>
+          projects all over the world. See <ulink url="http://www.cvshome.org">http://www.cvshome.org</ulink>
           for more information.</para></footnote>repository and this cannot be
           changed from the current version of the Web interface. However
           we&#39;ll see how to deny CVS write permission to project members in
@@ -134,13 +131,14 @@
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Trackers, Patch Manager</emphasis>: 
+          <para><emphasis role="bold">Trackers</emphasis>: 
           </para>
 
           <itemizedlist spacing="compact">
             <listitem>
-              <para><emphasis role="underline">None</emphasis>: well, you
-              can&#39;t do much with this one</para>
+              <para><emphasis role="underline">None</emphasis>: the
+              user has the same permissionson this tool as a non
+              poject member.</para>
             </listitem>
 
             <listitem>
@@ -154,14 +152,13 @@
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Forums, Documentation Manager, File Manager</emphasis>:
-          These three services have less sophisticated permission schema.
-          4 permission levels are available:</para>
+          <para><emphasis role="bold">Forums, Documentation Manager, File Manager</emphasis>:</para>
 
           <itemizedlist spacing="compact">
             <listitem>
-              <para><emphasis role="underline">None</emphasis>: there is
-              nothing you can do with this service</para>
+              <para><emphasis role="underline">None</emphasis>: the
+              user has the same permissionson this tool as a non
+              poject member.</para>
             </listitem>
 
             <listitem>
@@ -200,8 +197,8 @@
       <important>
         <title>Reminder!</title>
 
-        <para>Don&#39;t forget to click on the &#34;Update Developers
-        Permission&#34; button after making any changes in the permission
+        <para>Don&#39;t forget to click on the &#34;Update User
+        Permissions&#34; button after making any changes in the permission
         table.</para>
       </important>
     </section>
@@ -213,9 +210,7 @@
 
       <para>The &#34;Edit Public Info&#34; item of the Project Administration
       menu allows a project administrator to update the Project Description Elements:
-      these are elements provided during the registration process as well
-      as the two-line description that you have provided right after your
-      project registration was confirmed.</para>
+      these are elements provided during the registration process.</para>
 
     </section>
 
@@ -249,12 +244,14 @@
 
       <para><emphasis>Location: Project Administration Menu</emphasis></para>
 
-      <para>CodeX is very appealing to many project development teams because
-      it provides full-featured project development and management tools for
-      free. A software project can be managed almost entirely from within
-      CodeX. However at some point the project team needs to report about
-      progress made, what goes well or wrong, how far you are from the end
-      date, derive statistical data, etc.</para>
+      <para>CodeX is very appealing to many project development teams
+      because it provides full-featured project development and
+      management tools. A software project can be managed almost
+      entirely from within CodeX. However a project team may need to
+      perform some additional processing on the project data. It may
+      need to report about progress made, what goes well or wrong, how
+      far you are from the end date, derive statistical data,
+      etc.</para>
 
       <para>It is far beyond the scope of CodeX to provide project
       teams with such reporting tools. There are many specialized
@@ -263,7 +260,7 @@
       diversity of needs, the CodeX Team has developed a very
       efficient system that allows the project team to export the
       project data outside of CodeX for re-use in other tools like
-      Access, Excel, Crystal Report, Word, Open Office, Star Office or
+      MS Access, Excel, Crystal Report, Open Office,  or
       any other ad-hoc tools.</para>
 
       <para>CodeX provides you with 2 kinds of Data Export:</para>
@@ -297,46 +294,9 @@
 
       <itemizedlist mark="bullet" spacing="compact">
 	<listitem>
-	  <para><emphasis role="bold">Bug</emphasis>: all bugs submitted to your project.</para>
-	</listitem>
-	
-	<listitem>
-	  <para><emphasis role="bold">Bug History</emphasis>: full
-	  history of all the changes your project bugs have gone
-	  through.</para>
-	</listitem>
-	<listitem>
-	  <para><emphasis role="bold">Bug-to-Bug
-	  Dependencies</emphasis>: a list of all bug to bug
-	  dependencies.</para>
-	</listitem>
-	<listitem>
-	  <para><emphasis role="bold">Bug-to-Task
-	  Dependencies</emphasis>: a list of all bug to task
-	  dependencies.</para>
-	</listitem>
-	<listitem>
-	  <para><emphasis role="bold">Task</emphasis>: all tasks
-	  created in your project</para>
-	</listitem>
-	<listitem>
-	  <para><emphasis role="bold">Task History</emphasis>: full
-	  history of all the changes your project tasks have gone
-	  through</para>
-	</listitem>
-	<listitem>
-	  <para><emphasis role="bold">Task-to-Task
-	  Dependencies</emphasis>: a list of all task to task
-	  dependencies</para>
-	</listitem>
-	<listitem>
-	  <para><emphasis role="bold">Task Assignees</emphasis>: an
-	  SQL like form of task assignees. A task may be listed
-	  several times if it has several assignees.</para>
-	</listitem>
-	<listitem>
-	  <para><emphasis role="bold">Support Request</emphasis>: all
-	  support requests submitted to your project</para>
+	  <para><emphasis role="bold">Tracker</emphasis>: the
+	  artifacts data, the changes history and the artifacts
+	  dependencies can be exported for each tracker.</para>
 	</listitem>
 	<listitem>
 	  <para><emphasis role="bold">Survey Responses</emphasis>: all
@@ -352,15 +312,15 @@
       <para>Text File Export follow the well known CSV (Comma
       Separated Values) format, recognized by almost every Office
       Suite on the market. It can easily be imported in MS-Access,
-      Excel, StarCalc&hellip;</para>
+      MS Excel, OpenCalc&hellip;</para>
 
       <section id="ImportingCSVFilesinExcel">
 	<title>Importing CSV Files in Excel</title>
-	<para>Double-clicking on any of the table export link (Bug
+	<para>Clicking on any of the table export link (Bug
 	Export, Task Export,..) on the Project Data Export page 
 	generates and downloads a CSV file that you can save on your
 	local disk or directly open in Excel or any other spreadsheet
-	of your choice (StarCalc, QuattroPro,...). No particular
+	of your choice. No particular
 	setting is required.</para>
       </section>
 
@@ -603,8 +563,8 @@
 
       <para>The &#34;Service Configuration&#34; item of the Project Administration
       menu lists all services available to the project. Services are items listed 
-      in the  &#34;Service Bar &#34; on top of each page: trackers, patch manager,
-      document manager, CVS, homepage, documentation, etc. 
+      in the  &#34;Service Bar &#34; on top of each page: trackers, 
+      CVS, homepage, documentation, etc. 
       The Service Configuration page allows a project 
       administrator to update, enable, disable or even create services.
       </para>
@@ -631,7 +591,7 @@
           system service but it can be customized with any URL. Each
           project hosted on CodeX has its own virtual Web server available on
           the CodeX site. By default the &#34;Home Page&#34; in the Project
-          Service Bar links to this location (see CHAPTER 16 for more details).
+          Service Bar links to this location (see <xref linkend="ProjectWebSite" /> for more details).
           If you want the Home Page of your project to link to some other
           locations on the Intranet or on the Web, simply replace
           the default value with your own Web location. Do not confuse your
@@ -698,7 +658,7 @@
 
         <step>
           <para><emphasis role="bold">Enabled</emphasis>:
-          Toggling this select box will simply disable (or enable)
+          Toggling this check box will simply disable (or enable)
           the service. Disabling a service just
           means that it no longer appears in the Service Bar and in the  
           Project Summary page of your
@@ -715,7 +675,7 @@
 	    this service in the Service Bar relative to other services. 
 	    The services with smaller values will appear first. The
 	    rank values don't have to be consecutive values. It is a
-	    good idea to use values like 10,20,30,... so that it is
+	    good idea to use values like 10, 20, 30,... so that it is
 	    easy for you to insert new services in the future without
 	    having to renumber all the services.</para>
         </step>
@@ -724,9 +684,11 @@
 
     <section id="ServiceDeletion">
       <title>Deleting a Service</title>
-      <para>Project services can be deleted. They appear with a
-      small trash icon in the service list. Just click on this icon to 
-      suppress the service from the database.
+
+      <para>Project services can be deleted. They appear with a small
+      trash icon in the service list. Just click on this icon to
+      suppress the service from the database. The service data are
+      however preserved.
       </para>
       <para>System services cannot be deleted. However, you can 
       disable them and they will not appear in the Service Bar.
@@ -740,17 +702,21 @@
     
     <para><emphasis>Location: Project Administration Menu</emphasis></para>
     
-    <para>A user group, sometimes called a  &#34;ugroup &#34;, is simply a group of CodeX users.
-      User groups are used to set specific permissions to some project data (releases, packages, 
-      see  <xref linkend="FileAccessPermissions" />).
-      A user group is always attached to a project, but the users comprising the group do not 
-      necessarily belong to that project.
-      </para>
+    <para>A user group, sometimes called a &#34;ugroup &#34;, is
+    simply a group of CodeX users.  User groups are used to set
+    specific permissions to some project data (e.g. software releases
+    and packages - see <xref linkend="FileAccessPermissions" />).  A
+    user group is always attached to a project, but the users
+    comprising the group do not necessarily belong to that
+    project.</para>
     
     <section id="UGroupList">
       <title>User Groups Management</title>
-      <para>The &#34;User Groups Admin&#34; function of the Project Administration
-      menu lists all available user groups, and provides a way to create new ones.</para>
+
+      <para>The &#34;User Groups Admin&#34; function of the Project
+      Administration menu lists all available user groups, and
+      provides a way to create new ones.</para>
+
       <figure id="FigureUserGroupManagementPage">
         <title>User Group Management Page</title>
         <mediaobject>
@@ -760,49 +726,62 @@
           </imageobject>
         </mediaobject>
       </figure>
-      <para>In the list, (see for example <xref linkend="FigureUserGroupManagementPage" />) there are two different kinds of user groups: </para>
+
+      <para>In the list, (see for example <xref
+      linkend="FigureUserGroupManagementPage" />) there are two
+      different kinds of user groups: </para>
+
      <procedure>
         <step>
-          <para><emphasis role="bold">Pre-defined User Groups</emphasis>: 
-            These groups are defined for every project. Examples of pre-defined groups are:
-            <emphasis role="bold">project_members, project_admins, registered_users, nobody,
-            file_manager_admin</emphasis>, etc. These groups are dynamic: if you assign some
-            permission to 'project_admins', and a new project administrator is defined, then 
-            this new user will automatically be granted the corresponding permission.</para>
+          <para><emphasis role="bold">Pre-defined User
+          Groups</emphasis>: These groups are defined for every
+          project. Examples of pre-defined groups are: <emphasis
+          role="bold">project_members, project_admins,
+          registered_users, nobody, file_manager_admin</emphasis>,
+          etc. These groups are dynamic: if you assign some permission
+          to 'project_admins', and a new project administrator is
+          defined, then this new user will automatically be granted
+          the corresponding permission.</para>
         </step>
 
         <step>
-          <para><emphasis role="bold">Custom User Groups</emphasis> are defined by project
-            administrators. They are composed of a static list of users. The only requirement
-            is that any member must be a registered CodeX user. This list can be modified at
-            any time, but will not automatically be updated, except if a member is removed from
-            the project or deleted from the system.
+          <para><emphasis role="bold">Custom User Groups</emphasis>
+          are defined by project administrators. They are composed of
+          a static list of users. The only requirement is that any
+          member must be a registered CodeX user. This list can be
+          modified at any time, but will not automatically be updated,
+          except if a member is removed from the project or deleted
+          from the system.
           </para>
         </step>
       </procedure>
     </section>
 
     <section id="UGroupCreation">
-      <title>Creating a User Group </title>
-      <para>When creating a user group, one has to provide the following fields:</para>
+      <title>Creating a User Group </title> <para>When creating a user
+      group, one has to provide the following fields:</para>
      <procedure>
         <step>
-          <para><emphasis role="bold">Name</emphasis>:
-          This is the label that will be displayed when selecting user groups in a permission
-          screen. The group name may not contain space and punctuation.</para>
+          <para><emphasis role="bold">Name</emphasis>: This is the
+          label that will be displayed when selecting user groups in a
+          permission screen. The group name may not contain space and
+          punctuation.</para>
         </step>
 
         <step>
-          <para><emphasis role="bold">Description</emphasis>:
-          Short description of the user group. It is only displayed in the User Group Admin page.</para>
+          <para><emphasis role="bold">Description</emphasis>: Short
+          description of the user group. It is only displayed in the
+          User Group Admin page.</para>
         </step>
 
         <step>
-          <para><emphasis role="bold">Create From</emphasis>:
-          This is a quick way of pre-selecting group members: you may create a user group from
-          scratch (Empty Group), from all Project Members or Project Admins, or from an existing
-          user group attached to this project. The members of the selected group will automatically
-          be added to the new group. You will be able to add or remove members on the next screen.
+          <para><emphasis role="bold">Create From</emphasis>: This is
+          a quick way of pre-selecting group members: you may create a
+          user group from scratch (Empty Group), from all Project
+          Members or Project Admins, or from an existing user group
+          attached to this project. The members of the selected group
+          will automatically be added to the new group. You will be
+          able to add or remove members on the next screen.
           </para>
         </step>
       </procedure>
@@ -816,55 +795,74 @@
           </imageobject>
         </mediaobject>
       </figure>
-      <para>In the next page (see <xref linkend="FigureUserGroupEdit" />), the project administrator
-      may select individually the members of the new group.</para>
-      <para>Two columns are displayed: the one on the left contains the list of all CodeX
-      registered users, while the one on the right contains the list of users pre-selected
-      on the previous screen, e.g. project members, users copied from another group, or an empty
-      list. Use the two arrows between the columns to move users from one column to the other. </para>
-      <para>The interface also provides convenient ways of selecting users when the registered
-      list is very large: you can choose to display only those users whose login starts with a
-      specific letter, or you may also filter the list by typing letters in the 'Filter' text box.
-      For instance, if you type 'john', only users whose name or login contains 'john' will be displayed.</para>
-      <para>Once you are done, you may click on the Submit button. The user group is created.
-        </para>
+      <para>In the next page (see <xref linkend="FigureUserGroupEdit"
+      />), the project administrator may select individually the
+      members of the new group.</para>
+
+      <para>Two columns are displayed: the one on the left contains
+      the list of all CodeX registered users, while the one on the
+      right contains the list of users already admitted to the
+      group. Use the two arrows between the columns to move users from
+      one column to the other. </para>
+
+      <para>The user interface also provides convenient ways of
+      selecting users when the registered list is very large: you can
+      choose to display only those users whose login starts with a
+      specific letter, or you may also filter the list by typing
+      letters in the 'Filter' text box.  For instance, if you type
+      'john', only users whose name or login contains 'john' will be
+      displayed.</para>
+      
+      <para>Once you are done, you may click on the Submit button. The
+      user group is created.</para>
+
     </section>
 
       <tip>
-        <title>Tip: Combining pre-defined groups with additional members?</title>
+        <title>Tip: Combining pre-defined groups with additional members</title>
 
-        <para>Sometimes, you might want to grant some permissions to all project members and some 
-        other CodeX users.
-        In this case, you might be tempted to build a user group from the list of project members and
-        to add the other users to the group.
-        The issue with this solution is that if new members join the project, they will have to be
-        manually added to the group. So it is more convenient to create a group containing only the
-        users that are not member of the project. And then, permissions should be granted to this group
-        and to the pre-defined "project members" group. 
+        <para>Sometimes, you might want to grant some permissions to
+        all project members and some other CodeX users.  In this case,
+        you might be tempted to build a user group from the list of
+        project members and to add the other users to the group.  The
+        issue with this solution is that if new members join the
+        project, they will have to be manually added to the group. So
+        it is more convenient to create a group containing only the
+        users that are not member of the project. And then,
+        permissions should be granted to this group and to the
+        pre-defined "project members" group.
         </para>
       </tip>
 
     <section id="UGroupUpdate">
       <title>Updating a User Group</title>
-      <para>In order to update an existing user group, simply select it in the user group list. 
-      You will be presented with the same screen as with Group Creation, where you can update the
-      name, description and composition of the user group.
+
+      <para>In order to update an existing user group, simply select
+      it in the user group list. You will be presented with the same
+      screen as with Group Creation, where you can update the name,
+      description and composition of the user group.
       </para>
     </section>
 
 
     <section id="UGroupDeletion">
       <title>Deleting a User Group</title>
-      <para>User groups can be deleted. Just click on the trash icon next to the group name in the
-      group management page (<xref linkend="FigureUserGroupManagementPage" />) to 
-      suppress the user group from the database. Only custom user groups can be deleted.
+
+      <para>User groups can be deleted. Just click on the trash icon
+      next to the group name in the group management page (<xref
+      linkend="FigureUserGroupManagementPage" />) to suppress the user
+      group from the database. Only custom user groups can be deleted.
       </para>
+
       <important>
         <title>Warning</title>
-      <para>Please note that if a user group was specifically granted some permission, deleting the
-      user group might be dangerous. Indeed, if a group is the only one allowed to access a package
-      and this group is deleted, the permission is also deleted and reset to default, so any registered
-      user can access the package. 
+
+        <para>Please note that if a user group was specifically
+        granted some permission, deleting the user group might be
+        dangerous. Indeed, if a group is the only one allowed to
+        access a package and this group is deleted, the permission is
+        also deleted and reset to default, so any registered user can
+        access the package.
       </para>
       </important>
     </section>
@@ -872,17 +870,27 @@
 
     <section>
       <title>Additional Information on User Groups</title>
-      <para>It is possible to know all user groups one individual project member belongs to. 
-      Simply display the User Permissions page (<xref linkend="UserPermissions" />). However,
-      please note that only user groups belonging to the current project are displayed. The
-      user might also be a member of additional user groups in other projects.
+
+      <para>It is possible to know all user groups one individual
+      project member belongs to. Simply display the User Permissions
+      page (<xref linkend="UserPermissions" />). However, please note
+      that only user groups belonging to the current project are
+      displayed. The user might also be a member of additional user
+      groups in other projects.
       </para>
-      <para>The bottom of the User Group Edit page (<xref linkend="FigureUserGroupEdit" />) also lists all
-      the permissions granted to this group, e.g. packages and releases this user group is granted access to.</para>
-      <para>When a project member is removed from a project, or quits a project, they are also automatically
-      removed from all project user groups.</para>
-      <para>Similarly, when a user is deleted (not just suspended) by the site administrator, they are
-      removed from all user groups.</para>
+
+      <para>The bottom of the User Group Edit page (<xref
+      linkend="FigureUserGroupEdit" />) also lists all the permissions
+      granted to this group, e.g. packages and releases this user
+      group is granted access to.</para>
+
+      <para>When a project member is removed from a project, or quits
+      a project, they are also automatically removed from all project
+      user groups for safety reasons.</para>
+
+      <para>Similarly, when a user is deleted (not just suspended) by
+      the site administrator, they are removed from all user
+      groups in all projects.</para>
     </section>
 
     </section>
@@ -893,48 +901,39 @@
 
       <para><emphasis>Location: Project Administration Menu</emphasis></para>
 
-      <para>CodeX is about Software Sharing inside &SYS_ORG_NAME;. Its
-      goal is to make software re-use part of the enterprise
-      culture. To this end, Source code access and file release
-      download is granted to all registered users
-      <footnote><para>Anonymous users are not granted access to the
-      Source code. They must create their own account and identify
-      themselves with CodeX before they can do so.</para></footnote>
-      on CodeX. CodeX also provides the ability for project leaders to
-      see who downloaded their project deliverables whether software
-      or documents. The intent for the project leaders is not to
-      establish barriers to source code sharing but rather to know who
-      their community of users are and who is interested in their
-      software.</para>
+      <para>Depending on the configuration of the CodeX site and on
+      the configuration of each project, source code access, documents
+      and file release download permissions may be granted to various
+      populations.</para>
 
-      <para>The Access Logs provide project members with
+      <para>The Access Logs provide project members with a complete
+      audit trail of who accessed what on the projet. The page shows
       the following information:</para>
 
       <itemizedlist mark="bullet">
         <listitem>
-          <para>The first list is about File Release download. It basically
-          reports who (Real Name, Login name and e-mail), downloaded what file
-          and when (date and time). The time of download is reported in local
-          time relative to the project member time zone.</para>
+          <para>The downloaded File Releases. It basically reports who
+          downloaded what file and when (date and time). The time of
+          download is reported in local time relative to the project
+          member time zone.</para>
         </listitem>
 
         <listitem>
-          <para>The second list is about CodeX users who used CVS to
-          checkout or update the sources on their local desktop
-          machine or who browsed source code via viewCVS.</para>
+          <para>The CodeX users who used CVS to checkout or update the
+          sources on their local desktop machine or who browsed source
+          code via the CVS Web interface.</para>
         </listitem>
 
         <listitem>
-          <para>The third list shows the list of users who accessed
-          the source code through the Subversion repository or who
-          browsed source code via viewCVS.</para>
+          <para>The CodeX users who accessed the source code through
+          the Subversion repository or who browsed source code via the
+          CVS Web interface.</para>
         </listitem>
 
         <listitem>
-          <para>The fourth list inform the project administrators
-          about the CodeX users who downloaded documents marked as
-          being accessible to registered users only in your Document
-          Manager (see <xref
+          <para>The CodeX users who downloaded documents, except for
+          those documents marked as being accessible to anonymous
+          users in your Document Manager (see <xref
           linkend="DocumentAdministration"/>).</para>
         </listitem>
       </itemizedlist>

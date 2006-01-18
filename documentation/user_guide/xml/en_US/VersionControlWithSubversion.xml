@@ -118,10 +118,11 @@
       </listitem>
 
       <listitem>
-	<para><emphasis role="bold">Efficient diff'ing</emphasis>: when
-	you create a working copy on your desktop machine, a complete
-	version of the original file is kept on your disk which allows
-	developers to perform status and diff operations even when working 
+	<para><emphasis role="bold">Efficient diff'ing</emphasis>:
+	when you create a working copy on your desktop machine, a
+	complete version of the original file is kept on your disk
+	which allows developers to perform <literal>status</literal>
+	and <literal>diff</literal> operations even when working
 	offline.</para>
       </listitem>
 
@@ -138,13 +139,13 @@
       </listitem>
 
       <listitem>
-	<para><emphasis role="bold">Fine grain access control</emphasis>:
-	in its CodeX incarnation, your Subversion repository operates
-	on top of the HTTP protocol and it therefore take advantage of
-	the rich HTTP authentication mechanism. As a result CodeX
-	allows you to fine tune who has access to which part of your
-	Subversion repository whether for read, write or no access at
-	all.</para>
+	<para><emphasis role="bold">Fine grain access
+	control</emphasis>: in its CodeX incarnation, your Subversion
+	repository operates on top of the HTTP (or HTTPS) protocol and
+	it therefore take advantage of the rich HTTP authentication
+	mechanism. As a result CodeX allows you to fine tune who has
+	access to which part of your Subversion repository whether for
+	read, write or no access at all.</para>
       </listitem>
 
       <listitem>
@@ -157,27 +158,6 @@
       </listitem>
     </itemizedlist>
 
-    <para>Subversion is not a perfect system either and when one has
-    to decide whether to use Subversion or CVS, the following points
-    must be taken into account:</para>
-
-    <itemizedlist mark="bullet">
-      <listitem>
-	<para><emphasis role="bold">No lock/unlock</emphasis>: As
-	of version 1.0.x, Subversion has no lock/unlock mechanism. If
-	you insist that your project members uses the lock/unlock
-	model to make changes then stick to CVS for now. Subversion
-	1.1 will have lock/unlock available.</para>
-      </listitem>
-
-      <listitem>
-	<para><emphasis role="bold">Less graphical client</emphasis>:
-	although Subversion already has a number of graphical clients
-	available on various platforms it may take some months before
-	it is available in your favorite Integrated Development
-	Environment.</para>
-      </listitem>
-    </itemizedlist>
 
     <section id="SubversionClients">
       <title>Subversion Clients</title>
@@ -223,7 +203,7 @@
 	<title>Setting up rapidSVN for CodeX</title>
 
         <para>As mentioned above, rapidSVN is the graphical user
-        interface that standard with Subversion for Linux and
+        interface that comes with Subversion for Linux and
         Windows. Below are all the instructions needed to get rapidSVN
         running on a CodeX project. In the instructions below,
         "username" is the CodeX user login name, and "projectname" is
@@ -287,14 +267,10 @@
 
       <itemizedlist mark="bullet">
 	<listitem>
-	  <para>The Subversion Book. see <ulink url="http://svnbook.red-bean.com/">http://svnbook.red-bean.com</ulink>).</para>
+	  <para>The Subversion Book. See <ulink url="http://svnbook.red-bean.com/">http://svnbook.red-bean.com</ulink>).</para>
 	</listitem>
 	<listitem>
-	  <para>Another CVS tutorial written by members of the Xerox
-	  Wilson Center. See <ulink
-	  url="http://techweb.wrc.xerox.com/Get/File-71895/cvs-strategy.html">http://techweb.wrc.xerox.com/Get/File-71895/cvs-strategy.html</ulink></para>
-	</listitem>
-	
+
 	<listitem>
 	  <para>The Official Subversion Web Site. See <ulink
 	  url="http://subversion.tigris.org/">http://subversion.tigris.org/</ulink>
@@ -337,11 +313,12 @@
 
       <note><para>All interactions with a Subversion repository should
       normally happen through a Subversion client. However if need be
-      and if you know exactly what you are doing you can get access to
-      your Subversion repository via your CodeX shell account (see
-      <xref linkend="ShellAccount" />). Once the shell session is
-      active you'll find your subversion repository under
-      <literal>/svnroot/projectname</literal>.</para></note>
+      and if this feature is available on your CodX server, you can
+      get access to your Subversion repository via your CodeX shell
+      account (see <xref linkend="ShellAccount" />). Once the shell
+      session is active you'll find your subversion repository under
+      <literal>/svnroot/projectname</literal> you should never do that
+      unless you know exactly what you are doing.</para></note>
     </section>
 
 
@@ -392,8 +369,8 @@
       </programlisting>
 
       <para>More on the repository layout is available in the
-      Subversion book listed in the References section (see <xref
-      linkend="SubversionReferences" />).</para>
+      Subversion book listed in <xref linkend="SubversionReferences"
+      />.</para>
 
     </section>
   </section>
@@ -581,7 +558,7 @@
 	  anywhere in CodeX, the pattern will be automatically
 	  transformed into an hyperlink to the artifact
 	  description.</para>
-      </listitem>
+	</listitem>
 
 	<listitem>
 	  <para><emphasis role="bold">commit #YYY or revision #YYY or 
@@ -593,6 +570,16 @@
 	  description which include log messages, impacted files,
 	  versions and author of the change(see <xref
 	  linkend="FigureSubversionShowCommit" />) .</para>
+	</listitem>
+
+	<listitem>
+	  <para><emphasis role="bold">doc #ZZZ</emphasis>: this
+	  pattern refers to a document from the project document
+	  manager where ZZZ is the document unique ID as listed in the
+	  document manager (see <xref linkend="DocumentCrossReference"
+	  />). When browsing a message containing this pattern
+	  anywhere in CodeX, the pattern will be automatically
+	  transformed into an hyperlink to the document.</para>
 	</listitem>
       </itemizedlist>
 
@@ -674,10 +661,17 @@
       <section id="DefaultSubversionAccessPermissions">
 	<title>Default Access Permissions</title>
 
-	<para>When CodeX first creates the subversion repository of a
-	project, distinct level of access permissions are granted to
-	CodeX users depending upon the class of citizen (see <xref
-	linkend="ClassesOfCitizens" />) they belong to:</para>
+        <para>Subversion access permission depends upon the project status
+        (private or public) and the class of citizen a user belongs to
+        (see <xref linkend="ClassesOfCitizens" />).</para>
+
+	<para>Regarding private projects, only project members have
+	access to the Subversion repository. By default they all have
+	read and write access. This can be modified by customizing
+	access permissions as explained below.</para>
+
+	<para>With respect to the public projects, the default access
+	permissions are as follows:</para>
 
 	<itemizedlist mark="bullet">
 
@@ -708,7 +702,9 @@
 	  <listitem>
 	    <para><emphasis role="bold">Project Members</emphasis>:
 	    members of a CodeX hosted project are granted a password
-	    protected read/write access.</para>
+	    protected read/write access. As mentionned above in the
+	    section about private projects, it is also possible to
+	    grant read-only access to the project members.</para>
 	  </listitem>
 
 	  <listitem>
@@ -740,7 +736,7 @@ name = permission
 
 	  <listitem><para><literal>path</literal> is the path to the
 	  directory or to the filename (relative to
-	  <literal>/svnroot/projectname</literal> in your repository
+	  <literal>/svnroot/projectname</literal>) in your repository
 	  for which you want to redefine access
 	  permissions.</para></listitem>
 
@@ -773,8 +769,8 @@ groupname = username1,username2,...
 	</itemizedlist>
 
 	<para>As an illustration, the default permission settings of a
-	CodeX explained in the previous section are expressed through
-	the following set of rules:</para>
+	CodeX repository as explained in the previous section are
+	expressed through the following set of rules:</para>
 
       <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 [groups]
@@ -906,7 +902,7 @@ members = member1,member2,...,memberN
       <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 svn --username loginname import . 
 http://svn.projectname.&SYS_DEFAULT_DOMAIN;/svnroot/projectname 
---message "Initial repository layout"
+--message "Initial repository version"
         </programlisting>
 
       <para>Where:</para>
@@ -1021,7 +1017,7 @@ svn update
 
       <para>If you want to know what files have changed on the
       Subversion repository since your last update or which ones have
-      been modified in your own working copy, you can run following
+      been modified in your own working copy, run the following
       command:</para>
 
       <programlisting format="linespecific" linenumbering="unnumbered" width="80">
@@ -1259,8 +1255,8 @@ http://svn.projectname.&SYS_DEFAULT_DOMAIN;/svnroot/projectname/tags/myproject-1
 
 	<step>
 	  <para>Your software release is now ready. Export a clean
-	  image of the release 1-4 from the Subversion repository byt
-	  typing:</para>
+	  image of the release 1.4 (without Subversion specific
+	  files) from the Subversion repository by typing:</para>
 
 	  <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 svn export
@@ -1275,7 +1271,7 @@ http://svn.projectname.&SYS_DEFAULT_DOMAIN;/svnroot/projectname/tags/myproject-1
 	</step>
 
 	<step>
-	  <para>Deliver this archive through the File Release service.</para>
+	  <para>Deliver this archive through the File Release service (see <xref linkend="FileReleaseDelivery" />).</para>
 	</step>
 
 	<step>

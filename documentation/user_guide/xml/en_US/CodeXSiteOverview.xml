@@ -13,12 +13,12 @@
   <chapter id="CodeXSiteOverview">
     <title>CodeX Site Overview</title>
 
-    <para>CodeX is a &SYS_ORG_NAME; <emphasis role="underline">internal</emphasis> Web
-    Site available at <ulink url="http://&SYS_DEFAULT_DOMAIN;">http://&SYS_DEFAULT_DOMAIN;/.</ulink>
+    <para>CodeX is a &SYS_ORG_NAME; Web
+    Site available at <ulink url="http://&SYS_DEFAULT_DOMAIN;">http://&SYS_DEFAULT_DOMAIN;/</ulink>.
     To browse the CodeX site use your favorite Web Browser
     <footnote><para>CodeX uses standard HTML and only a little bit of
-    Javascript. It is known to work well with Netscape 4.x, Netscape 6.x and
-    Mozilla as well as IE 4 or 5. Other Web Browsers like Opera or Konqueror
+    Javascript. It is known to work well with Netscape 6.x and 7.x,
+    Mozilla/Firefox as well as IE 5 or 6. Other Web Browsers like Opera or Konqueror
     work as well. CodeX uses very little graphic material and is therefore
     browsable by specific text only browser like those used by visually
     impaired people.</para></footnote>. CodeX is a rich site and the CodeX
@@ -36,8 +36,9 @@
 
       <procedure>
         <step>
-          <para><emphasis role="bold">The CodeX Main Menu</emphasis>: on the
-          left hand side of the screen</para>
+          <para><emphasis role="bold">The CodeX Main Menu</emphasis>:
+          on the left hand side of the screen or at the top depending
+          on the graphical theme in use.</para>
         </step>
 
         <step>
@@ -55,7 +56,7 @@
         <step>
           <para><emphasis role="bold">The CodeX Dashboard</emphasis>: The
           right hand side of the home page shows a series of statistics about
-          the overall activity of the CodeX Site</para>
+          the overall activity of the CodeX Site.</para>
         </step>
       </procedure>
     </section>
@@ -79,11 +80,10 @@
         </listitem>
 
         <listitem>
-          <para>Similarly if you decide to visit a given project hosted on
-          CodeX, the menu will offer an additional section giving access to
-          the Project Summary page (the public face of a project) or to the
-          Project Administration page (A reserved view for project members
-          only)</para>
+          <para>Similarly if you decide to visit a given project
+          hosted on CodeX, the menu at the top of the screen will also
+          show you the list of services available for this
+          project.</para>
         </listitem>
       </itemizedlist>
 
@@ -171,8 +171,7 @@
         <para>Each criterion can have up to 3 values for a given project (e.g.
         you can select up to 3 programming languages for a given project).
         Values of the various criteria are taken from a list of predefined
-        values and most of them are not expected to change in a foreseeable
-        future except for the &#34;Topic&#34; criterion. The &#34;Topic&#34;
+        values defined by the site administrator. The &#34;Topic&#34;
         criterion reflects the domain covered by your project (Printing,
         Scanning, Information Technology, etc.) and it follows a hierarchy of
         domains and sub-domains that the CodeX Team constantly refines as more
@@ -250,7 +249,7 @@
 
             <listitem>
               <para>Use the Search box in the CodeX Main menu on the left hand
-              side of the screen. Keywords typed are search in the code
+              side or on the upper right corner of the screen. Keywords typed are search in the code
               snippet title and in the code snippet description.</para>
             </listitem>
           </itemizedlist>
@@ -277,15 +276,16 @@
         <section id="CodeSnippetSubmission">
           <title>Code Snippet Submission</title>
 
-          <para>To submit a new code snippet click on the &#34;Submit a new
-          Code Snippet&#34; link in the Code Snippet Menu at the top of the
-          screen. Provide the code snippet title and description. You can use
-          Web locations (URLs) in these two fields. CodeX will automatically
-          turn them into hyperlinks in the final version. Also provide the
-          code snippet type, programming language and category as requested.
-          Should a category or a programming language be missing when you
-          submit a new code snippet please contact the CodeX team by clicking
-          on the link right below the pull-down menus.</para>
+          <para>To submit a new code snippet click on the &#34;Submit
+          a new Code Snippet&#34; link in the Code Snippet Menu at the
+          top of the screen. Provide the code snippet title and
+          description. You can use Web locations (URLs) in the
+          description field. CodeX will automatically turn them into
+          hyperlinks in the final version. Also provide the code
+          snippet type, programming language and category as
+          requested.  Should a category or a programming language be
+          missing when you submit a new code snippet please contact
+          the CodeX team.</para>
 
           <para>It is highly recommended that you provide a version number as
           well. This version number is a free text field and can have any kind
@@ -372,31 +372,30 @@
           can add/delete code snippet to/from the package. If you want to
           update the package with a new version of a code snippet, first
           delete the old version and add the new one which has its own
-          specific code snippet version ID (see &#34;Updating a Code Snippet&#34;
-          above).</para>
+          specific code snippet version ID (see <xref linkend="UpdatingACodeSnippet"/>).</para>
         </section>
       </section>
 
-      <section id="NewReleases">
-        <title>New Releases</title>
+      <section id="Help">
+        <title>Help</title>
 
-        <para>Click on this menu item to see a list of the most recent
-        software releases (also known as new versions) that have been posted
-        on the CodeX site by the various projects. If you want to keep aware
-        of new incoming releases visit this page on a regular basis. CodeX
-        also allows you to monitor the new software releases posted by a given
-        project. To do so go to the Project Summary page of this project by
-        clicking on the project title and then select the monitor icon (<inlinemediaobject><imageobject><imagedata
-        format="PNG" fileref="../../icons/mail16d.png" /></imageobject></inlinemediaobject>)
-        next to the release name. Once you monitor a project release, e-mail
-        notification will be sent to you whenever the project team
-        posts a new software release.</para>
+      <section id="HelpIndex">
+        <title>Help Index</title>
+
+        <para>CodeX comes with a comprehensive User Guide that fully
+        describes allt he CodeX tools and services. A click on the
+        &#34;Help Index&#34; link will direct you to the table of
+        content of the CodeX User Guide. The same user guide is used
+        throughout the CodeX site in the &#34;Help&#34; links that you'll find
+        in almost every menu appearing on CodeX. A PDF version of the
+        integral user guide is also available in the &#34;Site
+        Documentation&#34; section.</para>
       </section>
 
       <section id="SiteDocumentation">
         <title>Site Documentation</title>
 
-        <para>The Site Documentation pointer is the entry point to the
+        <para>The &#34;Site Documentation&#34; pointer is the entry point to the
         CodeX documentation. The CodeX documentation is entirely
         managed via the Document Manager (see <xref
         linkend="DocumentManager" />) service of the CodeX project,
@@ -404,24 +403,6 @@
         cover all the CodeX site. It includes presentation material,
         the user guide and other important documents. Read them
         carefully.</para>
-
-        <important>
-          <title>** Important Note **</title>
-
-          <para role="">The <emphasis role="bold">&SYS_ORG_NAME; Code exchange Policy</emphasis>
-
-          [XCEP] is available in the Must Read Documents section. This
-          2-page Corporate Policy governs the act of Software Sharing
-          at &SYS_ORG_NAME;. All CodeX users must read, understand and
-          apply this policy before re-using software or hosting any of
-          their projects on the CodeX site. CodeX gives you direct
-          access to the Intellectual Property of your company and you
-          must therefore make sure that you and your group strictly
-          conforms to the Code eXchange Policy for the benefit of the entire
-          company. Failing to comply with the terms of the Code
-          eXchange Policy can lead to severe disciplinary actions
-          including prosecution and contract termination.</para>
-        </important>
       </section>
 
       <section>
@@ -439,8 +420,8 @@
         the CodeX Team. If you want to create a new developers channel please
         contact the CodeX Team at <email>&SYS_EMAIL_CONTACT;</email>.</para>
 
-        <para>The Developers Channels managed on CodeX have a certain number
-        of advantages over conventional distribution lists:</para>
+        <para>The Developers Channels managed on CodeX offer a number
+        of interestin features:</para>
 
         <itemizedlist mark="bullet"
                       spacing="compact">
@@ -453,7 +434,7 @@
           <listitem>
             <para>All messages posted to the channel are archived forever and
             can be browsed at any time. (In the future they will probably be
-            searchable as well)</para>
+            searchable as well).</para>
           </listitem>
 
           <listitem>
@@ -477,40 +458,24 @@
         Forums also offer the ability to be monitored, which means that all
         traffic will be sent to you via e-mail.</para>
 
-        <tip>
-          <title>Tip: Don&#39;t let your software licenses take the dust</title>
-
-          <para>One of the Forums available on CodeX is called Software
-          Bazaar. This Forum was put in place to buy or sell unused 3rd party
-          software from other project teams. It is often the case that software
-          packages acquired by a project team are no longer needed after some
-          time. We wanted to give other people  a chance to get the
-          unused license rather than buying yet another one. Similarly this
-          Forum is the place to announce an Enterprise-Wide license obtained
-          by your group and that other people could benefit from.</para>
-        </tip>
-
-        <para></para>
       </section>
 
       <section id="ContactUs">
         <title>Contact Us</title>
 
-        <para>In addition to the Discussion Forums, you can always use the
-        &#34;Contact Us&#34; link at the bottom of the CodeX Main Menu to get
-        in touch with the CodeX Team. Our team works in 3 distinct time zones
-        so it is very likely that whatever time of the day it is, you&#39;ll
-        have a quick reply to your message.</para>
+        <para>In addition to the Discussion Forums, you can always use
+        the &#34;Contact Us&#34; link to get in touch with the CodeX
+        Team.</para>
 
         <para>Do not hesitate to bug the &#34;Contact Us&#34; link. We are
         here to help.</para>
+      </section>
       </section>
 
       <section id="TheSearchFacility">
         <title>The Search Facility</title>
 
-        <para>This is the last item in the CodeX Main Menu but not the least.
-        CodeX allows you to search almost any piece of CodeX information
+        <para>CodeX allows you to search almost any piece of CodeX information
         through a keyword search mechanism. When you are on the CodeX Home
         Page you can search for keywords in the following resources:</para>
 
@@ -520,7 +485,7 @@
             <para><emphasis role="bold">Software Projects</emphasis>: a match
             is attempted with project names as well as their short and long
             description. This search mechanism is very complementary with the
-            Software Map.</para>
+            Software Map (see <xref linkend="SoftwareMap" />).</para>
           </listitem>
 
           <listitem>
@@ -538,10 +503,10 @@
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Bugs</emphasis>: If you enter the bug
-            tracking system if any CodeX project, the Bugs item will show up
-            in the search box, allowing you to actually search the bug
-            database of this project.</para>
+            <para><emphasis role="bold">This tracker</emphasis>: If
+            you enter any tracker in any CodeX project, the &#34;This
+            Tracker&#34; item will show up in the search box, allowing
+            you to actually search this tracker database.</para>
           </listitem>
         </itemizedlist>
       </section>
@@ -565,9 +530,27 @@
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Top Project Downloads</emphasis>: shows
-          which software projects were downloaded the day before (based on
-          midnight EST time) and how many times.</para>
+          <para><emphasis role="bold">Top Project
+          Downloads</emphasis>: shows which software projects were
+          downloaded the day before and how many times.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Newest Releases</emphasis>: shows
+          a list of the most recent software releases (also known as
+          new versions) that have been posted on the CodeX site by the
+          various projects. If you want to keep aware of new incoming
+          releases visit this page on a regular basis. CodeX also
+          allows you to monitor the new software releases posted by a
+          given project. To do so go to the Project Summary page of
+          this project by clicking on the project title and then
+          select the monitor icon
+          (<inlinemediaobject><imageobject><imagedata format="PNG"
+          fileref="../../icons/mail16d.png"
+          /></imageobject></inlinemediaobject>) next to the release
+          name. Once you monitor a project release, e-mail
+          notification will be sent to you whenever the project team
+          posts a new software release.</para>
         </listitem>
 
         <listitem>
@@ -583,7 +566,7 @@
           The magic formula that we use behind the scene to compute this
           ranking is a weighted sum of the activity observed in the various
           projects services. It takes many things into account: the number of
-          commits/updates on the CVS repository, the number of bugs and tasks
+          CVS/Subversion transactions, the number of bugs and tasks
           submitted or modified, the number of file releases, etc. Looking at
           this list is an excellent way to see which projects are actively
           working on CodeX.</para>
@@ -592,7 +575,7 @@
 
       <para>As a conclusion, we strongly advise you to visit the CodeX Home
       Page on a regular basis for it gives you an excellent idea of what is
-      going in terms of software development across &SYS_ORG_NAME;.</para>
+      going on in terms of software development across &SYS_ORG_NAME;.</para>
 
       <para><emphasis role="underline">Bottom line</emphasis>: Make CodeX your
       browser home page :-)</para>

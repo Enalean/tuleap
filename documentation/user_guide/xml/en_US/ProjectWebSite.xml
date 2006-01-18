@@ -96,7 +96,7 @@ https://projectname.&SYS_DEFAULT_DOMAIN;
               </listitem>
 
               <listitem>
-                <para><literal>index.php, index.php3</literal> if you use
+                <para><literal>index.php</literal> if you use
                 embedded PHP scripts</para>
               </listitem>
             </itemizedlist>
@@ -442,7 +442,7 @@ if ( user_isloggedin() ) {
           <para>You can use Netscape Composer 4.x to edit remote HTML pages.
           To do this browse your project Web Page, then use the File-&#62;Edit
           Page menu item, edit your HTML document and finally press on the
-          Publish icon on the upper menu bar.</para>
+          'Publish' icon on the upper menu bar.</para>
 
           <para>In the dialog box specify the following parameters:</para>
 

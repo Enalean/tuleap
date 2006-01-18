@@ -29,13 +29,15 @@
       </listitem>
 
       <listitem>
-        <para>Create a community of developers/integrators around your project
-        to make it grow and make sure it fits your end-user requirements</para>
+        <para>Quickly setup a project environment that you can share
+        with your colleagues, your partners, your contractors or your
+        customers where ever they are while keeping your information
+        safe and under control.</para>
       </listitem>
 
       <listitem>
-        <para>Make your company globally more productive and efficient
-        by letting others re-use your software and build on it.</para>
+        <para>Make your organization globally more productive and efficient
+        by possibly letting others re-use your software and build on it.</para>
       </listitem>
     </itemizedlist>
 
@@ -50,16 +52,6 @@
       <xref linkend="ClassesOfCitizens" />). You then login and select the
       item &#34;Register New Project&#34; in the upper part of the CodeX Main
       Menu.</para>
-
-      <tip>
-        <title>Tip: Re-use, re-use, re-use</title>
-
-        <para>Before you create a new project make sure that you browse or
-        search the existing CodeX projects to make sure that a similar project
-        is not already under development and that you are not going to
-        re-invent the wheel. If you identify re-usable components contact the
-        team members and see how you can work together.</para>
-      </tip>
 
       <para>The project registration is a 7-step process:</para>
 
@@ -101,27 +93,27 @@
           <para><emphasis role="bold">Step 4 - Project Name</emphasis></para>
 
           <para>Give the project short name and the project full name.
-          Carefully read the restrictions that apply to both names before you
-          type anything. The full name can be changed at any time in the life
-          of the project. The short name cannot<footnote><para>Actually it can
-          but you have to ask the CodeX Team to do it for you. So far we have
-          never refused</para></footnote>. So think about it twice before you
-          make a decision!</para>
+          Carefully read the restrictions that apply to both names
+          before you type anything. The full name can be changed at
+          any time in the life of the project. The short name
+          cannot<footnote><para>Actually it can but you have to ask
+          the CodeX Team to do it for you.</para></footnote>. So think
+          about it twice before you make a decision!</para>
         </listitem>
 
         <listitem>
           <para><emphasis role="bold">Step 5 - Software Policy</emphasis></para>
 
-          <para>Most of the time the only valid choice here is the default
-          one: &#34;&SYS_ORG_NAME; Code eXchange Policy&#34;. As explained earlier in
-          this document the CodeX Team assisted by &SYS_ORG_NAME; lawyers have carefully
-          crafted the CodeX Policy and it is very unlikely that you need to
-          create your own. If you do you&#39;ll have to talk to us and to the
-          &SYS_ORG_NAME; Legal Department to validate it. A
-          number of truly Open Source licenses are also mentioned in the list.
-          Prior to choosing any of these you must go through the COMIP
-          validation process and obtain permission to release your code
-          under an Open Source license.</para>
+          <para>Most of the time the only valid choice here is the
+          default one: &#34;&SYS_ORG_NAME; Code eXchange
+          Policy&#34;. As explained earlier in this document the CodeX
+          Team assisted by &SYS_ORG_NAME; lawyers have carefully
+          crafted the CodeX Policy and it is very unlikely that you
+          need to create your own. If you do you&#39;ll have to talk
+          to us and to the &SYS_ORG_NAME; Legal Department to validate
+          it. A number of truly Open Source licenses are also
+          mentioned in the list. Finally you can also choose you own
+          licensing conditions.</para>
         </listitem>
 
         <listitem>
@@ -166,43 +158,36 @@
     <section id="Post-RegistrationConfiguration">
       <title>Post-Registration Configuration</title>
 
-      <para>The first thing to do after you receive the confirmation for your
-      project registration is to visit the &#34;Project Summary&#34; page (URL
-      included in the e-mail) and finish the configuration of your project.
-      Taking the 2 following actions is the bare minimum:</para>
+      <para>The first thing to do after you receive the confirmation
+      for your project registration is to visit the &#34;Project
+      Summary&#34; page (URL included in the e-mail) and finish the
+      configuration of your project.  The 2 following actions are the
+      most frequent ones that have to be taken after a project is
+      registered:</para>
 
       <itemizedlist mark="bullet">
-        <listitem>
-          <para><emphasis role="bold">Give a 2-line description for your
-          project</emphasis></para>
-
-          <para>This is the short version of the accurate description you gave
-          during the registration process. It will appear right under the
-          project name on your &#34;Project Summary&#34; page. To enter the
-          description select the &#34;submit it&#34; link in the default short
-          description that appears on the &#34;Project Summary&#34; page.</para>
-        </listitem>
-
         <listitem>
           <para><emphasis role="bold">Categorize your project in the Software
           Map</emphasis></para>
 
-          <para>Your project categorization appears on your &#34;Project
-          Summary&#34; page exactly like the short description. To categorize
-          your project select the &#34;categorize it now&#34; link that
-          appears on the &#34;Project Summary&#34; page.</para>
+          <para>Your project categorization appears on your
+          &#34;Project Summary&#34; page. To categorize your project
+          select the &#34;categorize it now&#34; link and fill out the
+          category form fields.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Build the project team</emphasis></para>
+
+          <para>Once a project is created, the creator is assigned the
+          role of project administrator on this project. It is her
+          responsability to define who are the project members and
+          what their permissions are. This can be done by accessing
+          the &#34;Project Admin&#34; page, typing the names of all
+          the registered users  promote as team members and then
+          define their permissions.</para>
         </listitem>
       </itemizedlist>
-
-      <para>At any point in the life of the project you have the ability to
-      update these 2 pieces of information. Refer to <xref
-      linkend="ProjectAdministration" /> for more details.</para>
-
-      <note><para>Giving both the short description and the categories
-      are critical to both the consistency of the CodeX site but also for the
-      community to make sense of the many projects hosted on CodeX.
-      Characterizing your project in the best possible way is the first step
-      towards efficient code sharing and re-use.</para></note>
 
       <tip>
         <title>Tip: Cannot find an appropriate Topic? Contact us</title>

@@ -86,42 +86,7 @@
       <releaseinfo>Available at <ulink
       url="http://www.cvshome.org/docs/manual/">http://www.cvshome.org/docs/manual/</ulink></releaseinfo>
     </biblioentry>
-
-    <biblioentry id="bib.cug.cvtu">
-      <abbrev id="bib.cug.cvtu.abbrev">CVTU</abbrev>
-
-      <title>CVS Tutorial</title>
-
-      <authorgroup>
-        <author>
-          <firstname>Eric</firstname>
-
-          <surname>Jackson</surname>
-        </author>
-
-        <author>
-          <firstname>Mark</firstname>
-
-          <surname>Jackson</surname>
-        </author>
-
-        <author>
-          <firstname>Jonas</firstname>
-
-          <surname>Karlsson</surname>
-        </author>
-
-        <author>
-          <firstname>Bill</firstname>
-
-          <surname>Wagoner</surname>
-        </author>
-      </authorgroup>
-
-      <releaseinfo>Available at <ulink
-      url="http://techweb.wrc.xerox.com/Get/File-71895/cvs-strategy.html">http://techweb.wrc.xerox.com/Get/File-71895/cvs-strategy.html</ulink></releaseinfo>
-    </biblioentry>
-
+ 
     <biblioentry id="bib.cug.phpd">
       <abbrev id="bib.cug.phpd.abbrev">PHPD</abbrev>
 
@@ -130,23 +95,7 @@
       <releaseinfo>Available at <ulink url="http://www.php.net/manual/en">http://www.php.net/manual/en</ulink></releaseinfo>
     </biblioentry>
 
-    <biblioentry id="bib.cug.sava">
-      <abbrev id="bib.cug.sava.abbrev">SAVA</abbrev>
-
-      <title>The Savannah Web Site</title>
-
-      <releaseinfo><ulink url="http://savnnah.gnu.org">http://avnnah.gnu.org</ulink></releaseinfo>
-    </biblioentry>
-
-    <biblioentry id="bib.cug.sfws">
-      <abbrev id="bib.cug.sfws.abbrev">SFWS</abbrev>
-
-      <title>The SourceForge Web Site</title>
-
-      <releaseinfo>Available at <ulink url="http://www.sourceforge.net">http://www.sourceforge.net</ulink></releaseinfo>
-    </biblioentry>
-
-    <biblioentry id="bib.cug.ssid">
+     <biblioentry id="bib.cug.ssid">
       <abbrev id="bib.cug.ssid.abbrev">SSID</abbrev>
 
       <title>Apache Server Side Include Documentation</title>

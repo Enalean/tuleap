@@ -17,10 +17,10 @@
     software project after the software work products themselves. CodeX
     provides a specific service to manage your project documents.</para>
 
-  <para>The CodeX Document Manager is very basic and cannot compare
-    in any way with specialized document repositories like DocuShare. It
+  <para>Although the CodeX Document Manager cannot be compared
+    with dedicated document management systems, it
     is however very handy to publish documents that are critical to
-    your community of users. Examples are: Installation, Adminstration
+    your community of users. Examples are: Installation, Administration
     or User Guide, API documentation, Frequently Asked Questions,
     etc...</para>
 
@@ -65,7 +65,7 @@
     <para>To read a document simply click on the title.</para>
 
     <figure id="FigureASampleDocumentManagerWelcome">
-      <title>A sample Document Manager welcome</title>
+      <title>A sample Document Manager welcome page</title>
 
       <mediaobject>
 	<imageobject>
@@ -104,7 +104,7 @@
     <para>The document itself can either be copy-pasted directly in the
       document text area or uploaded with the help of the &#34;Browse&#34;
       button and the &#34;Upload&#34; checkbox. Then select a document group
-      from the pull-down menu and click on the &#34;Submit Information&#34;
+      from the pull-down menu and click on the &#34;Submit&#34;
       button.</para>
 
     <para>A document has to be attached to a group in any case. This is why
@@ -122,14 +122,14 @@
 
     <para>The document title and summary can contain HTML tags. So you can
       use all sorts of typographic effects as well as pointers to other
-      locations, etc.</para>
+      locations or documents, etc.</para>
 
     <para><tip><title>Tip: Referencing external documents</title>
     <para>It is sometimes convenient to create placeholder documents
-    that actually point to an external location like a DocuShare
-    collection or a DocuShare file for instance. To do this, simply
+    that actually point to an external location like file in another
+    document management system or web site. To do this, simply
     surround the document title with an HREF tag (hyperlink) pointing
-    to the real location elsewhere on the Intranet</para>
+    to the target location.</para>
     </tip></para>
 
   </section>
@@ -157,7 +157,7 @@
 
       <para>Once a new document has been submitted by a project
       member with 'Technician' rights on the Document Manager, it
-      is immediately visible on the Document Manager welcome page</para>
+      is immediately visible on the Document Manager welcome page.</para>
 
     </section>
 
@@ -226,7 +226,7 @@
       how document groups are ordered. Document groups with smaller ranks 
       are displayed first.</para>
 
-      <para>Access permissions can be defined by clicking on the [Define Permissions] link.</para>
+      <para>Access permissions can be defined by clicking on the &#34;[Define Permissions]&#34; link.</para>
       <para>Document groups can be deleted by clicking on the trash icon in the group list. 
       Only empty document groups may be deleted: move or delete documents that belong to a group before trying to delete it.
       </para>
@@ -236,64 +236,70 @@
     <section id="DocAccessPermissions">
       <title>Setting Access Permissions</title>
       
-      <para>Setting document access permissions is very similar to setting file access 
-       permissions (<xref linkend="FileAccessPermissions" />): you need to create
-       user groups, and assign those user groups to documents or document groups.</para>
+      <para>Setting document access permissions is very similar to
+      setting file access permissions (<xref
+      linkend="FileAccessPermissions" />): you need to create user
+      groups (see <xref linkend="UserGroups" />), and assign those
+      user groups to documents or document groups.</para>
 
-      <para>By default, document and document groups have no specific access permissions: access
-        to all documents is granted to anybody, including anonymous user.
-        However, in some cases, you might want to limit the users allowed to read your
-        documentation, e.g. when it contains confidential data.
-        In these specific cases, you can restrict access permissions to your documents
-        to specific user groups. See <xref linkend="UserGroups" /> for more
-        information on user groups.
-      </para>
-      <para>Document groups and document permissions are enforced at two different levels:</para>
-      <itemizedlist mark="bullet">
-        <listitem><para><emphasis role="bold">Document List:</emphasis> When a user is not granted
-          access to a document, then it is not listed in the 'Docs'
-          main page, so s/he does not know that the document exists.</para></listitem>
-        <listitem><para><emphasis role="bold">Display:</emphasis> If a user finds or forges a display 
-          link for an unauthorized document, the download will still fail. The system systematically re-checks
-          for permissions when documents are requested for download.</para></listitem>
-      </itemizedlist>
+      <para>By default, document and document groups have no specific
+      access permissions: access to all documents is granted to
+      anybody, including anonymous user.  However, in some cases, you
+      might want to restrict acces to a particular document, e.g. when
+      it contains confidential data.</para>
 
-      <para>Access permissions can be defined at two different levels: document groups and documents:</para>
+      <para>Access permissions can be defined at two different levels:
+      document groups and documents:</para>
 
       <itemizedlist mark="bullet">
 
         <listitem>
           <para><emphasis role="bold">Document Group Permissions</emphasis></para>
-          <para>By clicking on 'Define Permissions' on the "Edit Document Groups" screen 
-            (see <xref linkend="FigureTheDocumentGroupsAdministrationScreen" />),
-            a project member with the 'Document Manager Admin' right (see <xref linkend="UserPermissions" />)
-            can attach access permissions to any existing document group.</para>
-          <para>The document group permissions edition page
-            lists all the project user groups. Simply select the user groups that will be allowed 
-            to display documents from the document group and press submit. You may select several groups at
-            the same time if needed. If you press 'Reset To Defaults', the access permissions to this
-            package will be reset, so any user will be able to download it.
-          </para>
-          <para>Note that each time you edit permissions associated to a document group, the previous values are
-            reset. So, for instance, if you grant permissions to 'project members', submit, then want to
-            grant permissions to another group, do not forget to select also 'project members' the second
-            time, or they will not have access to your document group.</para>
-          <para>Permissions attached to a document group apply to all documents that belong to this group.
-            But you may also set different permissions to specific documents (see below).</para>
+
+          <para>By clicking on '[Define Permissions] on the "Edit
+          Document Groups" screen (see <xref
+          linkend="FigureTheDocumentGroupsAdministrationScreen" />), a
+          project member with the 'Admin' right on the document manager (see
+          <xref linkend="UserPermissions" />) can attach access
+          permissions to any existing document group.</para>
+
+          <para>The document group permissions edition page lists all
+          the project user groups. Simply select the user groups that
+          will be allowed to display documents from the document group
+          and press 'Submit'. You may select several groups at the
+          same time if needed. If you press 'Reset To Defaults', the
+          access permissions to this document group will be reset, so
+          any user will be able to download any of the documents
+          located in the group.</para>
+
+          <para>Permissions attached to a document group apply to all
+          documents that belong to this group.  But you may also set
+          different permissions to specific documents (see
+          below).</para>
         </listitem>
 
         <listitem>
           <para><emphasis role="bold">Document permissions</emphasis></para>
-          <para>If you need finer grained access control to your documents, you can also define permissions
-            at the document level.</para>
-          <para>The procedure is similar to the document group permissions definition. Simply click on 'Define Permissions'
-            on the document manager 'admin' page (see <xref linkend="FigureTheDocumentManagerAdministrationScreen" />) to attach 
-            access permissions to a document. Then select allowed user groups and submit.</para>
-          <para>If you do not specify any access permissions for a document (or reset them to default), it inherits 
-            the access permissions from the document group it belongs to. However, when you define a permission for a document,
-            then it overrides the permissions defined for the group.</para>
-          <para>The permissions set for the document can be either stricter or less strict than the group permissions.
-          </para>
+
+          <para>If you need finer grained access control to your
+          documents, you can also define permissions at the document
+          level.</para>
+
+          <para>The procedure is similar to the document group
+          permissions definition. Simply click on 'Define Permissions'
+          on the document manager 'admin' page (see <xref
+          linkend="FigureTheDocumentManagerAdministrationScreen" />)
+          to attach access permissions to a document. Then select
+          allowed user groups and submit.</para>
+
+          <para>If you do not specify any access permissions for a
+          document (or reset them to default), it inherits the access
+          permissions from the document group it belongs to. However,
+          when you define a permission for a document, it overrides
+          the permissions defined for the group. Permissions set for
+          the document can be either stricter or less strict than the
+          group permissions.</para>
+
         </listitem>
 
       </itemizedlist>

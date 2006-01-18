@@ -44,49 +44,53 @@
       history of your project.</para>
 
     <para>No good software project should be started without making a
-      decision on which version control tool is going to be used. CVS is only
-      one of the possible choices <footnote><para>There are many version
-      control software available on the market whether Free Software (SCCS,
-      RCS, PKS...) or Commercial (SourceSafe, ClearCase, TeamWare...)</para></footnote>.
-      CodeX made it the default version control tool for several reasons:</para>
+    decision on which version control tool is going to be used. CVS
+    and Subversion (see <xref linkend="VersionControlWithSubversion"
+    />) are the two possible choices offered by CodeX
+    <footnote><para>There are many version control software available
+    on the market whether Free Software (SCCS, RCS, PKS, Arch,
+    Monotone......) or Commercial (SourceSafe, ClearCase,
+    TeamWare...)</para></footnote>.  Although Subversion is a more
+    modern version control system, using CVS is a very valid choice
+    for several reasons:</para>
 
     <itemizedlist mark="bullet" spacing="compact">
       <listitem>
-	<para>It has an elegant and efficient client/server architecture
+        <para>It has an elegant and efficient client/server architecture
           that makes it usable from anywhere on the Intranet.</para>
       </listitem>
 
       <listitem>
-	<para>It runs on almost every hardware platforms and Operating
+        <para>It runs on almost every hardware platforms and Operating
           Systems available on the market today (Linux, Unix, Windows,
           MacOS...).</para>
       </listitem>
 
       <listitem>
-	<para>It is a bullet proof version control system that is being used
+        <para>It is a bullet proof version control system that is being used
           by literally hundreds of thousands of software projects, whether
           Open Source or commercial throughout the world.</para>
       </listitem>
 
       <listitem>
-	<para>It can be used in a command-line mode or through one of the
+        <para>It can be used in a command-line mode or through one of the
           many graphical user interface front-ends.</para>
       </listitem>
 
       <listitem>
-	<para>It is very good at minimizing disk storage space on the server
+        <para>It is very good at minimizing disk storage space on the server
           side and network bandwidth consumption between the client and the
           server. Working with CVS over a modem connection is perfectly
           feasible.</para>
       </listitem>
 
       <listitem>
-	<para>Out of the box it can support small to mid-size projects well,
+        <para>Out of the box it can support small to mid-size projects well,
           and can be configured and extended to support most any size project.</para>
       </listitem>
 
       <listitem>
-	<para>And last but not least, it is a fully Open Source software
+        <para>And last but not least, it is a fully Open Source software
           distributed under the GNU GPL License.</para>
       </listitem>
     </itemizedlist>
@@ -105,42 +109,42 @@
       interface.</para>
 
       <section id="CommandLineInterface">
-	<title>Command Line Interface</title>
+        <title>Command Line Interface</title>
 
-	<para>CVS originates from the Unix world and therefore all the
-	CVS functions can be controlled from a command line
-	interface. Even though CVS has multiple command line options,
-	most commands that you normally use have one or two
-	command-line options and are very easy to remember. Refer to
-	<xref linkend="CVSReferences" /> for more information about
-	how to use CVS.</para>
+        <para>CVS originates from the Unix world and therefore all the
+        CVS functions can be controlled from a command line
+        interface. Even though CVS has multiple command line options,
+        most commands that you normally use have one or two
+        command-line options and are very easy to remember. Refer to
+        <xref linkend="CVSReferences" /> for more information about
+        how to use CVS.</para>
       </section>
 
       <section id="GraphicalFront-ends">
-	<title>Graphical Front-ends</title>
+        <title>Graphical Front-ends</title>
 
-	<para>Many CVS graphical front-ends can be used on your client
-        workstation. There are clients for all platforms: Windows, Linux, Unix
-        and Mac. WinCVS seems to be one of the most well known client
-        for Windows platform (see below). On Linux, gCVS and Cervisia are the most
-        popular.</para>
+        <para>Many CVS graphical front-ends can be used on your client
+        workstation. There are clients for all platforms: Windows,
+        Linux, Unix and Mac. WinCVS and Tortoise seem to be two of the
+        most well known clients for Windows platform (see below). On
+        Linux, gCVS and Cervisia are the most popular.</para>
 
-	<para>There is also a 100% Java client called jCVS that runs on any
+        <para>There is also a 100% Java client called jCVS that runs on any
         machine supporting JDK (or JRE). And finally, for those of you who use
         Emacs or Xemacs as an editor you&#39;ll probably want to use the
         excellent pcl-cvs package, which provides full CVS integration on
         these editors. Many commercial text editors also offer tight
         integration with CVS.</para>
 
-	<para>Finally it's worth noticing that most integrated
-	development environment on the market (MS Visual Studio,
-	Visual Age, IntelliJ IDEA, Eclipse,&hellip;) comes with CVS
-	plugins either provided natively or by 3rd party companies.
-	</para>
+        <para>Finally it's worth noticing that most integrated
+        development environment on the market (MS Visual Studio,
+        Visual Age, IntelliJ IDEA, Eclipse,&hellip;) comes with CVS
+        plugins either provided natively or by 3rd party companies.
+        </para>
       </section>
 
       <section id="SettingUpWinCVS">
-	<title>Setting up WinCVS for CodeX</title>
+        <title>Setting up WinCVS for CodeX</title>
 
         <para>As mentioned above, WinCVS is one of the most popular CVS clients
         on Windows. Below are all the instructions needed to get WinCVS running on
@@ -149,53 +153,53 @@
 
         <itemizedlist mark="bullet" spacing="compact">
         <listitem>
-	  <para>Download WinCVS from  <ulink
-	  url="http://www.wincvs.org">http://www.wincvs.org</ulink> and
+          <para>Download WinCVS from  <ulink
+          url="http://www.wincvs.org">http://www.wincvs.org</ulink> and
           install it on your PC.</para>
         </listitem>
 
         <listitem>
-	  <para>Run WinCVS: <literal>Start->Programs->WinCvs</literal>
+          <para>Run WinCVS: <literal>Start->Programs->WinCvs</literal>
           </para>
         </listitem>
-	
+        
         <listitem>
-	  <para>Setup the connection to the Codex project: 
+          <para>Setup the connection to the Codex project: 
           <literal>Admin->Preferences</literal>
           </para><para>Enter the CVSROOT:</para><para>
           <literal>:pserver:username@cvs.projectname.&SYS_DEFAULT_DOMAIN;:/cvsroot/projectname</literal>
           </para><para>Make sure the Authentication is set to: 
           <literal>"passwd" file on the cvs server</literal></para>
+          <para>Then hit OK.</para>
         </listitem>
 
         <listitem>
-	  <para>Log in to CVS: <literal>Admin->Login...</literal> Enter your password.
+          <para>Log in to CVS: <literal>Admin->Login...</literal> Enter your password.
           </para>
         </listitem>
-	
+        
         <listitem>
           <para>Identify the place where you are going to install the source code: 
           <literal>View->Browse Location->Change...</literal>
           </para>
         </listitem> 
-	
+        
         <listitem>
-	  <para>Setup the connection to the Codex project:</para>
+          <para>Checkout the source code from the CVS repository of your Codex project:</para>
           <para><literal>Create->Check out module</literal></para>
           <para><literal>Enter the module name and path on the server:</literal></para>
-          <para><literal>  projectname</literal></para>
+          <para>type the path of the source code you want to extract. In general it's the name of the top directory of your CVS repository.</para>
           <para>then hit OK.</para>
           <para>Note that this may take a while for large projects
           </para>
         </listitem>
-	
+        
         <listitem>
-	  <para>Now you have a project on your system, with a CVS directory in each
-          of the folders. These help CVS keep track of which files you've checked out,
-          and when you last synchronized your copy with the repository on Codex. 
-          This is useful for WinCVS, as it keeps track of changed files by marking 
-          them with a red icon.
-          </para>
+          <para>Now that you have the source code of the project on
+          your machine you can start modifying the code, update it
+          with new modifications from the repository, etc.  WinCVS
+          keeps track of changed files by marking them with a red
+          icon.</para>
         </listitem>
         </itemizedlist>
 
@@ -203,22 +207,24 @@
 
         <itemizedlist mark="bullet" spacing="compact">
         <listitem>
-	  <para>If someone modifies a text file at the same time you do, and
-          checks it in first, then when you go to check yours in, the lines that you
-          both changed independent of the other will automatically get updated to
-          the latest changes. If any lines conflict, you'll get an error message 
-          letting you know that there were conflicts, and that your version of the
-          file will need to be modified to resolve the conflicts. You'll also find
-          lines in your version with "&gt;&gt;&gt;&gt;&gt;&gt;" and "&lt;&lt;&lt;&lt;&lt;&lt;"
-          delimiting the conflicts. Edit the conflicts, then re-commit.
-          </para><para>Note: this doesn't apply to binary files: these are replaced 
-          in whole, in CVS.</para>
+          <para>If someone modifies a text file at the same time you
+          do, and checks it in first, then when you go to check yours
+          in, the lines that you both changed independent of the other
+          will automatically get updated to the latest changes. If any
+          lines conflict, you'll get an error message letting you know
+          that there were conflicts, and that your version of the file
+          will need to be modified to resolve the conflicts. You'll
+          also find lines in your version with
+          "&gt;&gt;&gt;&gt;&gt;&gt;" and "&lt;&lt;&lt;&lt;&lt;&lt;"
+          delimiting the conflicts. Edit the conflicts, then
+          re-commit.
+          </para>
         </listitem>
-	
+        
         <listitem>
-	  <para>Be careful with the "remove selected" (the big black X), which 
-          doesn't delete your local version of the file, it queues the file for 
-          removal from CVS.
+          <para>Be careful with the "remove selected" (the big black
+          X), which doesn't delete your local version of the file, it
+          queues the file for removal from CVS.
           </para>
         </listitem>
         </itemizedlist>
@@ -234,39 +240,33 @@
       about CVS refer to the following documents:</para>
 
       <itemizedlist mark="bullet" spacing="compact">
-	<listitem>
-	  <para>A CVS Tutorial (Powerpoint): see <ulink
-	  url="http://codex.&SYS_DEFAULT_DOMAIN;/slides/CVS_Tutorial.ppt">http://codex.&SYS_DEFAULT_DOMAIN;/slides/CVS_Tutorial.ppt</ulink>). An
-	  HTML version (compressed) is also available at <ulink
-	  url="http://codex.&SYS_DEFAULT_DOMAIN;/slides/slideCVS_HTML.zip">http://codex.&SYS_DEFAULT_DOMAIN;/slides/slideCVS_HTML.zip</ulink></para>
-	</listitem>
-	<listitem>
-	  <para>Open Source Development with CVS : excellent book also
-	  known as "The CVS Black Book". Also available
-	  in printed form from Coriolis Press. See <ulink url="http://cvsbook.red-bean.com/">http://cvsbook.red-bean.com/</ulink>.
-	  </para>
-	</listitem>
-	<listitem>
-	  <para>The official CVS Manual. Otherwise known as the
-	  "Cederqvist" after the name of the author. See <ulink
-	  url="http://www.cvshome.org/docs/manual/index.html">http://www.cvshome.org/docs/manual/index.html</ulink>This
-	  document is also contained in the CVS software releases -
-	  see below.</para>
-	</listitem>
-	<listitem>
-	  <para>Another CVS tutorial written by members of the Xerox
-	  Wilson Center. See <ulink
-	  url="http://techweb.wrc.xerox.com/Get/File-71895/cvs-strategy.html">http://techweb.wrc.xerox.com/Get/File-71895/cvs-strategy.html</ulink></para>
-	</listitem>
-	
-	<listitem>
-	  <para>Various CVS Docs and FAQs. See <ulink
-	  url="http://www.loria.fr/~molli/cvs-index.html">http://www.loria.fr/~molli/cvs-index.html</ulink>.</para>
-	</listitem>
-	<listitem>
-	  <para>The Official CVS Web Site. See <ulink
-	  url="http://www.cvshome.org/">http://www.cvshome.org/</ulink>.</para>
-	</listitem>
+        <listitem>
+          <para>A CVS Tutorial (Powerpoint): see <ulink
+          url="http://codex.&SYS_DEFAULT_DOMAIN;/slides/CVS_Tutorial.ppt">http://codex.&SYS_DEFAULT_DOMAIN;/slides/CVS_Tutorial.ppt</ulink>). An
+          HTML version (compressed) is also available at <ulink
+          url="http://codex.&SYS_DEFAULT_DOMAIN;/slides/slideCVS_HTML.zip">http://codex.&SYS_DEFAULT_DOMAIN;/slides/slideCVS_HTML.zip</ulink></para>
+        </listitem>
+        <listitem>
+          <para>Open Source Development with CVS : excellent book also
+          known as "The CVS Black Book". Also available
+          in printed form from Coriolis Press. See <ulink url="http://cvsbook.red-bean.com/">http://cvsbook.red-bean.com/</ulink>.
+          </para>
+        </listitem>
+        <listitem>
+          <para>The official CVS Manual. Otherwise known as the
+          "Cederqvist" after the name of the author. See <ulink
+          url="http://www.cvshome.org/docs/manual/index.html">http://www.cvshome.org/docs/manual/index.html</ulink>This
+          document is also contained in the CVS software releases -
+          see below.</para>
+        </listitem>
+        <listitem>
+          <para>Various CVS Docs and FAQs. See <ulink
+          url="http://www.loria.fr/~molli/cvs-index.html">http://www.loria.fr/~molli/cvs-index.html</ulink>.</para>
+        </listitem>
+        <listitem>
+          <para>The Official CVS Web Site. See <ulink
+          url="http://www.cvshome.org/">http://www.cvshome.org/</ulink>.</para>
+        </listitem>
       </itemizedlist>
 
     </section>
@@ -278,70 +278,84 @@
     <section id="TheCVSRepository">
       <title>The CVS Repository</title>
 
-      <para>Whenever a new project is hosted on CodeX, a new CVS repository
-        is automatically created and properly initialized. Each project has
-        its own CVS repository as opposed to what happens in most CVS servers,
-        where all projects share the same repository. Having its own
-        repository has a certain number of advantages: Your CVS logs, history
-        files, and all administrative files are unique to your repository.
-        This allows you to fully customize the behavior of your CVS
-        repository.</para>
-
-      <para>In addition the CodeX server applies a direct mapping at the
-        Operating System level between a project name and a unique Unix group
-        name as well as between project members and Unix users. In other words
-        each CVS repository belongs to the Unix group specially created for
-        this project and all project members are also member of this Unix
-        group. This configuration gives you optimal flexibility if you want to
-        tune access control to your project repository.</para>
+      <para>Whenever a new project is hosted on CodeX, a new CVS
+      repository is automatically created and properly
+      initialized. Each project has its own CVS repository. Having its
+      own repository has a certain number of advantages: your CVS
+      logs, history files (<literal>CVSROOT/history</literal>), and
+      all administrative files are unique to your repository.  This
+      allows you to fully customize the behavior of your CVS
+      repository.</para>
 
       <note><para>All CVS repositories are available under the
-        <literal>/cvsroot/projectname</literal> directory
-        on the CodeX server. All interactions with the CVS repository take
-        place from a CVS client through the cvs program. If need be you can
-        also use your shell account (see <xref linkend="ShellAccount" />) to
-        interact with the CVS repository directly but you should never do that
-        unless you know exactly what you are doing.</para></note>
+      <literal>/cvsroot/projectname</literal> directory on the CodeX
+      server. All interactions with the CVS repository take place from
+      a CVS client through the cvs program. If need be and if this
+      feature is active on your server, you can also use your shell
+      account (see <xref linkend="ShellAccount" />) to interact with
+      the CVS repository directly but you should never do that unless
+      you know exactly what you are doing.</para></note>
     </section>
 
     <section id="CVSAccessControl">
       <title>CVS Access Control</title>
       
-      <para>CVS access permission depends upon the class of citizen
-      (see <xref linkend="ClassesOfCitizens" />) you belong to:</para>
+      <para>CVS access permission depends upon the project status
+      (private or public) and the class of citizen a user belongs to
+      (see <xref linkend="ClassesOfCitizens" />).</para>
+
+      <para>Regarding private projects, only project members have
+      access to the CVS repository. By default they all have read and
+      write access. This can be modified by adding in the
+      <literal>CVSROOT/readers</literal> file the name of the project
+      member for which only read access is granted. It is currently
+      not possible to deny access to the CVS repository to a member of
+      a private project. If you want to do so or want to setup more
+      sophisticated access control permission we highly recommend that
+      you use Subversion instead of CVS (see <xref
+      linkend="VersionControlWithSubversion" />).</para>
+
+      <para>With respect to the public projects, the default access
+      permissions are as follows:</para>
 
       <itemizedlist mark="bullet" spacing="compact">
-	<listitem>
-	  <para><emphasis role="bold">Anonymous Users</emphasis>:
-	  users who have not registered with CodeX (or are not logged
-	  in) have <emphasis role="underline">no access at
-	  all</emphasis> to the CVS repositories.</para>
-	</listitem>
-	
-	<listitem>
-	  <para><emphasis role="bold">Registered Users</emphasis>:
-	  have read-only access to CVS repositories. In other words
-	  they can checkout a working copy of the software but they
-	  are not allowed to commit any changes they have made to the
-	  source code. Source code contributions (bug fix,
-	  enhancements&hellip;) from this class of user must return to
-	  the project team via the Patch Tracker (see <xref
-	      linkend="PatchTemplate" /> ).</para>
+        <listitem>
+          <para><emphasis role="bold">Anonymous Users</emphasis>:
+          users who have not registered with CodeX (or are not logged
+          in) have <emphasis role="underline">no access at
+          all</emphasis> to the CVS repositories. Depending on the
+          configuration of the CodeX server, anonymous user may even
+          be denied access to the entire site.</para>
+        </listitem>
+        
+        <listitem>
+          <para><emphasis role="bold">Registered Users</emphasis>:
+          have read-only access to CVS repositories. In other words
+          they can checkout a working copy of the software but they
+          are not allowed to commit any changes they have made to the
+          source code. Source code contributions (bug fix,
+          enhancements&hellip;) from this class of user must return to
+          the project team via the Patch Tracker (see <xref
+              linkend="PatchTemplate" /> ).</para>
 
-	  <note><para><emphasis role="bold">Note</emphasis>: all source code
-	  accesses are recorded by CodeX. Project administrators
-	  always have access to the list of people who accessed the
-	  source code (see <xref linkend="SourceCodeAccessLogs" />).</para></note>
-	</listitem>
-	<listitem>
-	  <para><emphasis role="bold">Project Members</emphasis>:
-	  members of a CodeX hosted project are granted a
-	  password protected read/write access.</para>
-	</listitem>
-	<listitem>
-	  <para><emphasis role="bold">Project
-	  Administrators</emphasis>: same as project members.</para>
-	</listitem>
+          <note><para><emphasis role="bold">Note</emphasis>: all source code
+          accesses are recorded by CodeX. Project administrators
+          always have access to the list of people who accessed the
+          source code (see <xref linkend="SourceCodeAccessLogs" />).</para></note>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Project Members</emphasis>:
+          members of a CodeX hosted project are granted a password
+          protected read/write access. As mentionned above in the
+          section about private projects, it is also possible to grant
+          read-only access to the project members.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Project
+          Administrators</emphasis>: same as project members.</para>
+        </listitem>
       </itemizedlist>
     </section>
   </section>
@@ -349,7 +363,7 @@
   <section id="CVSWebInterface">
     <title>The CVS Web Interface</title>
 
-    <para>CodeX offers a number a facilities that allow you to
+    <para>CodeX offers a number of facilities that allow you to
     interact with your CVS repository through the Web interface. The
     CVS Web interface does not intend to replace the CVS client that
     you should normally use on your desktop computer. It rather
@@ -362,32 +376,32 @@
 
     <itemizedlist mark="bullet" spacing="compact">
       <listitem>
-	<para><emphasis role="bold">Accessing the CVS
-	repository</emphasis>: The welcome page of the CodeX CVS
-	service gives you all the information you need to access the
-	CVS repository from your CVS client. Among other things it
-	tells you what the CVS root path is and how to log in and
-	checkout the source code. This page may also be customized for 
-        specific needs (see CVS Administration below).</para>
+        <para><emphasis role="bold">Accessing the CVS
+        repository</emphasis>: The welcome page of the CodeX CVS
+        service gives you all the information you need to access the
+        CVS repository from your CVS client. Among other things it
+        tells you what the CVS root path is and how to log in and
+        checkout the source code. This page may also be customized for 
+        specific needs (see <xref linkend="CVSAdministration" />).</para>
       </listitem>
       <listitem>
-	<para><emphasis role="bold">Browsing the CVS
-	repository</emphasis>: this feature allows you to browse the
-	CVS repository even if you don't have a CVS client installed
-	on your desktop machine. </para>
+        <para><emphasis role="bold">Browsing the CVS
+        repository</emphasis>: this feature allows you to browse the
+        CVS repository even if you don't have a CVS client installed
+        on your desktop machine. </para>
       </listitem>
       <listitem>
-	<para><emphasis role="bold">Querying CVS </emphasis>: If
-	the CVS tracking feature has been activated for your project
-	all CVS events (commit, file addition or deletion) are tracked
-	down in the CodeX database. This audit trail can be searched
-	using several criteria.</para>
+        <para><emphasis role="bold">Querying CVS </emphasis>: if the
+        CVS tracking feature has been activated for your project
+        (default) all CVS events (commit, file addition or deletion)
+        are tracked down in the CodeX database. This audit trail can
+        be searched using several criteria.</para>
       </listitem>
       <listitem>
-	<para><emphasis role="bold">CVS Administration </emphasis>:
-	this service allows you to activate the CVS tracking for your
-	project, to activate email notification for all CVS
-	events, and to customize the CVS welcome page (CVS Preamble).</para>
+        <para><emphasis role="bold">CVS Administration </emphasis>:
+        this service allows you to activate the CVS tracking for your
+        project, to activate email notification for all CVS
+        events, and to customize the CVS welcome page (CVS Preamble).</para>
       </listitem>
     </itemizedlist>
 
@@ -404,14 +418,14 @@
     revisions of the same file.</para>
 
       <figure id="FigureASampleCVSWebSession">
-	<title>Browsing the CVS repository - A sample session</title>
-	
-	<mediaobject>
-	  <imageobject>
-	    <imagedata format="PNG"
-	    fileref="../../slides/en_US/CVS_Web_Session.png" width="12cm" />
-	  </imageobject>
-	</mediaobject>
+        <title>Browsing the CVS repository - A sample session</title>
+        
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+            fileref="../../slides/en_US/CVS_Web_Session.png" width="12cm" />
+          </imageobject>
+        </mediaobject>
       </figure>
     </section>
 
@@ -424,72 +438,72 @@
       engineers:</para>
 
       <itemizedlist mark="dash">
-	<listitem>
-	  <para><emphasis role="bold">Atomic CVS commit and unique
-	  commit ID</emphasis>: all changes (file modification,
-	  addition or removal) that are committed in one go from your
-	  CVS client will be assigned a unique commit ID. All file
-	  revisions modified during this commit will be stored
-	  atomically in the CVS Tracking database under this unique
-	  commit ID.</para>
-	</listitem>
+        <listitem>
+          <para><emphasis role="bold">Atomic CVS commit and unique
+          commit ID</emphasis>: all changes (file modification,
+          addition or removal) that are committed in one go from your
+          CVS client will be assigned a unique commit ID. All file
+          revisions modified during this commit will be stored
+          atomically in the CVS Tracking database under this unique
+          commit ID.</para>
+        </listitem>
 
-	<listitem>
-	  <para><emphasis role="bold">Commit
-	  cross-referencing</emphasis>: the unique commit ID that is
-	  generated at each commit can be referenced in future
-	  commits, or in the follow-up comments of project artifacts
-	  like bugs/tasks/support requests simply by using the pattern
-	  <literal>commit #XXXX</literal> (where XXXX is the unique ID
-	  generated by CodeX). Any reference of that kind will be
-	  automatically transformed into an hyperlink to the CVS
-	  tracking database. This mechanism makes it very easy to go
-	  from project artifacts like bugs, support requests or tasks
-	  to source code changes and vice-versa.</para>
-	</listitem>
+        <listitem>
+          <para><emphasis role="bold">Commit
+          cross-referencing</emphasis>: the unique commit ID that is
+          generated at each commit can be referenced in future
+          commits, or in the follow-up comments of project artifacts
+          like bugs/tasks/support requests simply by using the pattern
+          <literal>commit #XXXX</literal> (where XXXX is the unique ID
+          generated by CodeX). Any reference of that kind will be
+          automatically transformed into an hyperlink to the CVS
+          tracking database. This mechanism makes it very easy to go
+          from project artifacts like bugs, support requests or tasks
+          to source code changes and vice-versa.</para>
+        </listitem>
 
-	<listitem>
-	  <para><emphasis role="bold">Commit search</emphasis>:
-	  another side benefit of the CVS Tracking database is that
-	  you can use various search criteria to query the
-	  database. You can search code changes by authors (who made
-	  the change), by commit ID, by tag or by keywords to be found
-	  in the log message. Results can also be sorted by clicking
-	  on the headers of the search results (see <xref
+        <listitem>
+          <para><emphasis role="bold">Commit search</emphasis>:
+          another side benefit of the CVS Tracking database is that
+          you can use various search criteria to query the
+          database. You can search code changes by authors (who made
+          the change), by commit ID, by tag or by keywords to be found
+          in the log message. Results can also be sorted by clicking
+          on the headers of the search results (see <xref
           linkend="FigureCVSSearch" />).</para>
 
-	  <para>A click on one of the selected commit ID brings you to
-	  a complete description of the change, the files that were
-	  impacted and the nature of the change with a direct link
-	  into the CVS repository if you want to browse the file or
-	  look at the code modification (see <xref
-	  linkend="FigureCVSShowCommit" />).</para>
-	</listitem>
+          <para>A click on one of the selected commit ID brings you to
+          a complete description of the change, the files that were
+          impacted and the nature of the change with a direct link
+          into the CVS repository if you want to browse the file or
+          look at the code modification (see <xref
+          linkend="FigureCVSShowCommit" />).</para>
+        </listitem>
       </itemizedlist>
-	  
+          
     </section>
 
 
       <figure id="FigureCVSSearch">
-	<title>Querying the CVS tracking database of a given project</title>
-	
-	<mediaobject>
-	  <imageobject>
-	    <imagedata format="PNG"
-	    fileref="../../screenshots/en_US/sc_cvssearch.png" width="15cm" />
-	  </imageobject>
-	</mediaobject>
+        <title>Querying the CVS tracking database of a given project</title>
+        
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+            fileref="../../screenshots/en_US/sc_cvssearch.png" width="15cm" />
+          </imageobject>
+        </mediaobject>
       </figure>
 
       <figure id="FigureCVSShowCommit">
-	<title>The detail of an atomic CVS commit</title>
-	
-	<mediaobject>
-	  <imageobject>
-	    <imagedata format="PNG"
-	    fileref="../../screenshots/en_US/sc_cvsshowcommit.png" width="15cm" />
-	  </imageobject>
-	</mediaobject>
+        <title>The detail of an atomic CVS commit</title>
+        
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+            fileref="../../screenshots/en_US/sc_cvsshowcommit.png" width="15cm" />
+          </imageobject>
+        </mediaobject>
       </figure>
 
     <section id="Cross-Referencing CVS Commits">
@@ -516,25 +530,35 @@
 
    <itemizedlist mark="bullet" spacing="compact">
       <listitem>
-	<para> <emphasis role="bold">XXX #NNN</emphasis>: this pattern
-	refers to the artifact XXX number NNN, where NNN is the unique 
+        <para> <emphasis role="bold">XXX #NNN</emphasis>: this pattern
+        refers to the artifact XXX number NNN, where NNN is the unique 
         artifact ID, and XXX is the tracker short name (e.g. &#34;bug
         #123&#34;, &#34;task #321&#34;, &#34;req #12&#34;, etc.).
         If you don't know the tracker short name or don't want to specify it, you
         may simply use  &#34;art #NNN&#34;. When browsing a message containing this
-	pattern anywhere in CodeX, the pattern will be automatically
-	transformed into an hyperlink to the artifact
-	description.</para>
+        pattern anywhere in CodeX, the pattern will be automatically
+        transformed into an hyperlink to the artifact
+        description.</para>
       </listitem>
 
       <listitem>
-	<para><emphasis role="bold">commit #YYY</emphasis>: this
-	pattern refers to the commit YYY where YYY is the commit unique
-	ID as listed when querying the CVS tracking database. When
-	browsing a message containing this pattern anywhere in CodeX,
-	the pattern will be automatically transformed into an
-	hyperlink to the commit description (log messages,
-	impacted files, versions and author of the change.</para>
+        <para><emphasis role="bold">commit #YYY</emphasis>: this
+        pattern refers to the commit YYY where YYY is the commit unique
+        ID as listed when querying the CVS tracking database. When
+        browsing a message containing this pattern anywhere in CodeX,
+        the pattern will be automatically transformed into an
+        hyperlink to the commit description (log messages,
+        impacted files, versions and author of the change.</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">doc #ZZZ</emphasis>: this pattern
+        refers to a document from the project document manager where
+        ZZZ is the document unique ID as listed in the document
+        manager (see <xref linkend="DocumentCrossReference" />). When
+        browsing a message containing this pattern anywhere in CodeX,
+        the pattern will be automatically transformed into an
+        hyperlink to the document.</para>
       </listitem>
    </itemizedlist>
 
@@ -555,40 +579,40 @@
       <para>Through the Web interface, CodeX allows you to configure the following settings:</para>
       
       <itemizedlist mark="bullet">
-	<listitem>
-	  <para><emphasis role="bold">CVS Tracking</emphasis>: Being a
-	  version control system CVS is, of course, natively taking
-	  care of all your file history and is able to tell you what
-	  changes were made by whom and at what date. The file history
-	  is something you can look at either through your CVS client
-	  or through the CVS Web Browsing interface.</para>
+        <listitem>
+          <para><emphasis role="bold">CVS Tracking</emphasis>: Being a
+          version control system CVS is, of course, natively taking
+          care of all your file history and is able to tell you what
+          changes were made by whom and at what date. The file history
+          is something you can look at either through your CVS client
+          or through the CVS Web Browsing interface.</para>
 
-	  <para>If you activate the CVS tracking for your project
-	  CodeX will also keep track of all the code changes in the
-	  CodeX database. This will give you extra capabilities on
-	  your CVS repository as explained in <xref
-	  linkend="QueryingCVS" /></para>
+          <para>If you activate the CVS tracking for your project
+          CodeX will also keep track of all the code changes in the
+          CodeX database. This will give you extra capabilities on
+          your CVS repository as explained in <xref
+          linkend="QueryingCVS" /></para>
 
-	</listitem>
-	<listitem>
-	  <para><emphasis role="bold">CVS E-mail
-	Notification</emphasis>: In addition to tracking the changes
-	in the CodeX database, CodeX can also send a nicely formatted
-	email message to individual email addresses or mailing lists
-	each time there is a change in your source code. The email
-	message contains the log message, the author of the change,
-	the list of impacted files and pointers to the CVS repository
-	showing what changes were made.	</para>
-	</listitem>
+        </listitem>
+        <listitem>
+          <para><emphasis role="bold">CVS E-mail
+        Notification</emphasis>: In addition to tracking the changes
+        in the CodeX database, CodeX can also send a nicely formatted
+        email message to individual email addresses or mailing lists
+        each time there is a change in your source code. The email
+        message contains the log message, the author of the change,
+        the list of impacted files and pointers to the CVS repository
+        showing what changes were made. </para>
+        </listitem>
 
-	<listitem>
-	  <para><emphasis role="bold">CVS Preamble</emphasis>: 
-        In some cases (e.g. for existing projects), the project CVS repository 
-        might not be hosted by the CodeX server. In this case, the CVS 
-        information displayed in the welcome page of the CodeX CVS service is
-        incorrect. Fortunately, the project administrator can customize the
-        CVS preamble here.</para>
-	</listitem>
+        <listitem>
+          <para><emphasis role="bold">CVS Preamble</emphasis>: In some
+          cases (e.g. for legacy projects), the project CVS repository
+          might not be hosted by the CodeX server. In this case, the
+          CVS information displayed in the welcome page of the CodeX
+          CVS service is incorrect. Fortunately, the project
+          administrator can customize the CVS preamble here.</para>
+        </listitem>
 
       </itemizedlist>
 
@@ -614,20 +638,22 @@
     <para>Again the intent of this section is not to give formal CVS
       training but rather to explain what are the steps a project team
       typically goes through to efficiently use CVS and, more generally, all
-      the CodeX tools involved in a Software release process. It also deals
-      with the problem of contributing source code when you are not part of a
-      project team. In this section all examples are given in the form of CVS
-      command lines but transposing them to graphical front-ends should not be
-      a problem.</para>
+      the CodeX tools involved in a Software release process.</para>
+
+    <para> It also deals with the problem of contributing source code
+    when you are not part of a project team. In this section all
+    examples are given in the form of CVS command lines but
+    transposing them to graphical front-ends should not be a
+    problem.</para>
 
     <figure id="FigureATypicalSoftwareDevelopmentLifeCycleOnCodeX">
       <title>A Typical Software Development Life Cycle on CodeX</title>
 
       <mediaobject>
-	<imageobject>
-	  <imagedata format="PNG"
-	    fileref="../../slides/en_US/CVS_Life_Cycle.png" width="14cm" />
-	</imageobject>
+        <imageobject>
+          <imagedata format="PNG"
+            fileref="../../slides/en_US/CVS_Life_Cycle.png" width="14cm" />
+        </imageobject>
       </mediaobject>
     </figure>
 
@@ -656,22 +682,22 @@ login
       <para>Where:</para>
 
       <itemizedlist mark="bullet"
-	spacing="compact">
-	<listitem>
-	  <para>The -d argument is called the CVS root path. This path is a
+        spacing="compact">
+        <listitem>
+          <para>The -d argument is called the CVS root path. This path is a
             sort of URL to locate your CVS repository on the net. CVS
             graphical front-ends will also ask you for this root path.</para>
-	</listitem>
+        </listitem>
 
-	<listitem>
-	  <para><literal>projectname</literal> is the
+        <listitem>
+          <para><literal>projectname</literal> is the
             project short name</para>
-	</listitem>
+        </listitem>
 
-	<listitem>
-	  <para><literal>loginname</literal> is your
-            CodeX login (all lowercase)</para>
-	</listitem>
+        <listitem>
+          <para><literal>loginname</literal> is your
+            CodeX login</para>
+        </listitem>
       </itemizedlist>
 
       <para>CVS keeps track of the password associated with a given CVS root
@@ -686,12 +712,14 @@ login
 
       <para><emphasis>Audience: project members</emphasis></para>
 
-      <para>As the happy administrator of a new CodeX project, the first
-        thing to do is to populate your freshly brewed CVS repository with
-        your project source code. To do so, first create a new directory
-        topdirectory on your workstation and place your source code under this
-        top directory (keep the exact same directory structure you are used to
-        under topdirectory). Then type the following commands (the second command in one line):</para>
+      <para>As the happy administrator of a new CodeX project, the
+      first thing to do is to populate your freshly brewed CVS
+      repository with your project source code. To do so, first create
+      a new directory <literal>topdirectory</literal> on your
+      workstation and place your source code under this top directory
+      (keep the exact same directory structure you are used to under
+      topdirectory). Then type the following commands (the second
+      command in one line):</para>
 
       <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 $ cd topdirectory
@@ -702,32 +730,32 @@ import topdirectory vendor_tag start
       <para>Where:</para>
 
       <itemizedlist mark="bullet"
-	spacing="compact">
-	<listitem>
-	  <para>The -d argument is called the CVS root path. This path is a
+        spacing="compact">
+        <listitem>
+          <para>The -d argument is called the CVS root path. This path is a
             sort of URL to locate your CVS repository on the net. CVS
             graphical front-ends will also ask you for this root path.</para>
-	</listitem>
+        </listitem>
 
-	<listitem>
-	  <para><literal>projectname</literal> is the
+        <listitem>
+          <para><literal>projectname</literal> is the
             project short name</para>
-	</listitem>
+        </listitem>
 
-	<listitem>
-	  <para><literal>loginname</literal> is your
+        <listitem>
+          <para><literal>loginname</literal> is your
             CodeX login (all lowercase)</para>
-	</listitem>
+        </listitem>
 
-	<listitem>
-	  <para><literal>topdirectory</literal> is the
+        <listitem>
+          <para><literal>topdirectory</literal> is the
             name of the top level directory to import</para>
-	</listitem>
+        </listitem>
 
-	<listitem>
-	  <para><literal>vendor_tag</literal> is a
-            special tag. For now replace it with your company name.</para>
-	</listitem>
+        <listitem>
+          <para><literal>vendor_tag</literal> is a
+            special tag. For now replace it with your own name  or your company name (without space).</para>
+        </listitem>
       </itemizedlist>
 
       <para><tip><title>Tip: made a mistake while importing your source
@@ -751,15 +779,18 @@ import topdirectory vendor_tag start
 
       <para><emphasis>Audience: all CodeX users</emphasis></para>
 
-      <para>Once a CVS repository has been populated other CodeX users can
-        checkout the source code and place it on their own workstation. The
-        result is called a working copy in the CVS jargon. Note that
-        &#39;checkout&#39; in the CVS world does not mean that the user has
-        acquired any sort of lock on the file. The CVS paradigm is: anyone
-        (with the right permissions) can retrieve a working copy for editing;
-        changes are reconciled or flagged for conflict resolution when the
-        file is committed. As its name says it and unlike other tools (RCS,
-        SCCS, ClearCase...) CVS is a concurrent version control system.</para>
+      <para>Once a CVS repository has been populated project members
+      (or CodeX users at large if they are granted access) can
+      checkout the source code and place it on their own
+      workstation. The result is called a working copy in the CVS
+      jargon. Note that &#39;checkout&#39; in the CVS world does not
+      mean that the user has acquired any sort of lock on the
+      file. The CVS paradigm is: anyone (with the right permissions)
+      can retrieve a working copy for editing; changes made by
+      different users are then reconciled or flagged for conflict
+      resolution whenever the modified files are locally updated. As
+      its name says it and unlike other tools (RCS, SCCS,
+      ClearCase...) CVS is a concurrent version control system.</para>
 
       <para>A working copy is NOT an image of the CVS repository. It is
         rather a snapshot of the source tree at some point in time and, by
@@ -783,30 +814,30 @@ checkout directory
       <para>Where:</para>
 
       <itemizedlist mark="bullet"
-	spacing="compact">
-	<listitem>
-	  <para>The -d argument is called the CVS root path. This path is a
+        spacing="compact">
+        <listitem>
+          <para>The -d argument is called the CVS root path. This path is a
             sort of URL to locate your CVS repository on the net. CVS
             graphical front-ends will also ask you for this root path.</para>
-	</listitem>
+        </listitem>
 
-	<listitem>
-	  <para><literal>projectname</literal> is the
+        <listitem>
+          <para><literal>projectname</literal> is the
             project short name</para>
-	</listitem>
+        </listitem>
 
-	<listitem>
-	  <para><literal>loginname</literal> is your
+        <listitem>
+          <para><literal>loginname</literal> is your
             CodeX login (all lowercase)</para>
-	</listitem>
+        </listitem>
 
-	<listitem>
-	  <para><literal>directory</literal> is the
+        <listitem>
+          <para><literal>directory</literal> is the
             path to the directory that you want to checkout. To learn more
-            about the directory structure aof the CVS repository you are
+            about the directory structure of the CVS repository you are
             working with, first browse the CVS repository via the CVS Web
             Interface (see <xref linkend="CVSWebInterface" />)</para>
-	</listitem>
+        </listitem>
       </itemizedlist>
     </section>
 
@@ -815,10 +846,11 @@ checkout directory
 
       <para><emphasis>Audience: all CodeX users</emphasis></para>
 
-      <para>Running a &#34;<literal>cvs update</literal>&#34; command from
-        within a working copy has the effect of updating the working copy (or
-        a subpart of it) with the latest version of each source file. To
-        update a working copy with terse output mode type:</para>
+      <para>Running a &#34;<literal>cvs update</literal>&#34; command
+      from within a working copy has the effect of updating the
+      working copy (or a subpart of it) with the latest version of
+      each source file from the CVS repository. To update a working
+      copy with terse output mode type:</para>
 
       <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 cvs -q update
@@ -841,7 +873,7 @@ cvs -n -q update
     </section>
 
     <section id="CommittingyourChanges">
-      <title>Committing your Changes (project team)</title>
+      <title>Committing your Changes</title>
 
       <para><emphasis>Audience: project members</emphasis></para>
 
@@ -860,31 +892,33 @@ cvs commit -m&#34;Explain the nature of the change here...&#34; [filenames]
       <para>Where:</para>
 
       <itemizedlist mark="bullet"
-	spacing="compact">
-	<listitem>
-	  <para>The -m option is followed by a text message explaining what
+        spacing="compact">
+        <listitem>
+          <para>The -m option is followed by a text message explaining what
             changes you have made</para>
-	</listitem>
+        </listitem>
 
-	<listitem>
-	  <para>The <emphasis>filenames</emphasis> argument is optional. It
+        <listitem>
+          <para>The <emphasis>filenames</emphasis> argument is optional. It
             can be individual files or directories. But if there isn&#39;t any
             argument cvs will automatically commit all the files that have
             changed in the directory where you are located and all
             sub-directories recursively.</para>
-	</listitem>
+        </listitem>
       </itemizedlist>
 
-      <para><tip><title>Tip: Include a bug or task number in your commit
-        messages</title><para>In the ideal world, all modifications made to
-        the source code of a project should be related to either a bug logged
-        in the CodeX BTS or to a task assign to a developer. If your project
-        team lives in this wonderful world :-) then don&#39;t forget to
-        include the related bug or task ID number at the beginning or at the
-        end of your commit message. The CVS administrative files can help you
-        enforce this rule by checking the format of all the submitted commit
-        messages and reject them if it does not follow the recommended
-        pattern.</para></tip></para>
+      <para><tip><title>Tip: Include a bug or task number in your
+      commit messages</title><para>In the ideal world, all
+      modifications made to the source code of a project should be
+      related to either a bug logged in the CodeX BTS or to a task
+      assign to a developer. If your project team lives in this
+      wonderful world :-) then don&#39;t forget to include the related
+      bug or task ID number at the beginning or at the end of your
+      commit message (see <xref linkend="ArtifactCrossReferencing"
+      />). The CVS administrative files can help you enforce this rule
+      by checking the format of all the submitted commit messages and
+      reject them if it does not follow the recommended
+      pattern.</para></tip></para>
 
       <para>As a project member, make sure you understand and follow your
         project policy before you commit any changes to your CVS repository.
@@ -915,84 +949,87 @@ cvs commit -m&#34;Explain the nature of the change here...&#34; [filenames]
         therefore, cannot commit their modifications to the CVS repository.</para>
 
       <para>The variant explained here is actually a method that is
-        universally used in the Open Source world to contribute source code
-        modification to the project team. It consists in the generation of a
-        text file containing the differences between your modified version of
-        the source code and the original one that you initially downloaded.
-        This file is called a diff file because there is a tool called diff
-        that can automatically do that for you.</para>
+      universally used in the Open Source world to contribute source
+      code modification to the project team. It consists in the
+      generation of a text file containing the differences between
+      your modified version of the source code and the original one
+      that you initially downloaded.  This file is called a
+      <emphasis>diff file</emphasis> because there is a tool called
+      diff that can automatically do that for you.</para>
 
-      <para>The reason why diff files are so popular is because they follow
-        a well-documented format. Diff files are sent to the original project
-        team which, upon reception, is going to use another universal tool
-        called patch to automatically merge the contributed changes with the
-        master copy of the source code. This is why, by extension, a diff file
-        is also known as a <emphasis>patch</emphasis>.</para>
+      <para>The reason why diff files are so popular is because they
+      follow a well-documented format. Diff files are sent to the
+      original project team which, upon reception, is going to use
+      another universal tool called <litteral>patch</litteral> to
+      automatically merge the contributed changes with the master copy
+      of the source code. This is why, by extension, a diff file is
+      also known as a <emphasis>patch</emphasis>.</para>
 
       <para>Diff files can be generated either with the
-        <emphasis>diff</emphasis> tool (part of the GNU tools) that is
+        <litteral>diff</litteral> tool (part of the GNU tools) that is
         available on all platforms including Windows or directly with CVS if
         you have been hacking on a CVS working copy.</para>
 
-      <para><emphasis role="bold">The Diff way:</emphasis></para>
+      <para><emphasis role="bold">The <litteral>diff</litteral> way:</emphasis></para>
 
       <itemizedlist mark="bullet"
-	spacing="compact">
-	<listitem>
-	  <para>Use the diff way when you obtained the original source code
+        spacing="compact">
+        <listitem>
+          <para>Use the diff way when you obtained the original source code
             from a File Release and not from the project CVS repository.
             Let&#39;s assume the original source file is under the directory
             <literal>project-0.1/</literal> and that your modified version is
             under <literal>project-0.1-new/</literal></para>
-	</listitem>
+        </listitem>
 
-	<listitem>
-	  <para>You can generate a diff file with the following command (all
+        <listitem>
+          <para>You can generate a diff file with the following command (all
             files in subdirectories will be checked recursively for changes)</para>
 
-	  <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+          <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 diff -rc project-0.1/ project-0.1-new/
 </programlisting>
 
-	</listitem>
+        </listitem>
       </itemizedlist>
 
       <para><emphasis role="bold">The CVS way:</emphasis></para>
 
       <itemizedlist mark="bullet"
-	spacing="compact">
-	<listitem>
-	  <para>This is the preferred way when you obtained the source code
+        spacing="compact">
+        <listitem>
+          <para>This is the preferred way when you obtained the source code
             by creating your own CVS working copy. Let&#39;s assume that you
             are at the top level of the working copy.</para>
-	</listitem>
+        </listitem>
 
-	<listitem>
-	  <para>You can generate a diff file between your version and the
+        <listitem>
+          <para>You can generate a diff file between your version and the
             very latest version in the CVS repository for the entire source
             tree by typing with the following CVS command:</para>
 
-	  <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+          <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 cvs diff -c
 </programlisting>
           <para></para>
-	</listitem>
+        </listitem>
 
-	<listitem>
-	  <para>If you want to generate a diff against a specific version of
+        <listitem>
+          <para>If you want to generate a diff against a specific version of
             the source tree, then specify the tag for this version (version V1
             in the example below) in the command line:</para>
 
-	  <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+          <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 cvs diff -c -r V1
 </programlisting>
-	</listitem>
+        </listitem>
       </itemizedlist>
 
-      <para>In both cases, store the output of the diff or cvs diff command
-        in a text file. Compress the output file if it&#39;s a large one and
-        use the CodeX Patch Tracker (see <xref linkend="PatchTemplate" /> on
-        how to submit your patch to the project team).</para>
+      <para>In both cases, store the output of the diff or cvs diff
+      command in a text file. Compress the output file if it&#39;s a
+      large one and use the CodeX Patch Tracker (see <xref
+      linkend="PatchTemplate" />) to submit your patch to the project
+      team).</para>
 
       <para>And thanks for contributing some code!</para>
     </section>
@@ -1003,72 +1040,72 @@ cvs diff -c -r V1
       <para><emphasis>Audience: project members</emphasis></para>
 
       <para>There is a quick and easy way to release a pre-packaged version
-        of your source file and make it available to all CodeX users through
+        of your source file and make it available to your users through
         the File Release mechanism (see <xref linkend="FileRelease" />).</para>
 
       <procedure>
-	<step>
-	  <para>Make sure all the project members involved in software
+        <step>
+          <para>Make sure all the project members involved in software
             development have committed the changes that were supposed to
             appear in this new release.</para>
-	</step>
+        </step>
 
-	<step>
-	  <para>Update your own working copy with the changes committed by
+        <step>
+          <para>Update your own working copy with the changes committed by
             all other project members with the following command:</para>
 
-	  <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+          <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 cvs -q update
 </programlisting>
           <para></para>
-	</step>
+        </step>
 
-	<step>
-	  <para>Update the ChangeLog, Release Notes and README file at the
+        <step>
+          <para>Update the ChangeLog, Release Notes and README file at the
             top of your source tree and commit the changes for these 3 files.</para>
-	</step>
+        </step>
 
-	<step>
-	  <para>Tag (mark) the CVS repository with the appropriate version
+        <step>
+          <para>Tag (mark) the CVS repository with the appropriate version
             number. This version number will be attached to the most recent
             revision of all committed files. From your working copy type
             (V_1_2 is a tag name that represents version 1.2 of your project):</para>
 
-	  <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+          <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 cvs -q tag V_1_2
 </programlisting>
           <para></para>
-	</step>
+        </step>
 
-	<step>
-	  <para>Your software release is now ready. Export a clean image of
+        <step>
+          <para>Your software release is now ready. Export a clean image of
             the CVS source tree in a fresh directory. By clean image we mean
             an image without any CVS specific files in it. Just source files.
             Assuming that you wish to export version 1.2 (tagged with label
             V_1_2) and that you want the exported software to be rooted under
-            the <literal>project-1.2</literal> directory, type:</para>
+            the <literal>projectname-1.2</literal> directory, type:</para>
 
-	  <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-cvs -d:pserver:login@cvs.project.&SYS_DEFAULT_DOMAIN;:/cvsroot/project
-export project-1.2
+          <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+cvs -d:pserver:loginname@cvs.projectname.&SYS_DEFAULT_DOMAIN;:/cvsroot/projectname
+export projectname-1.2
 </programlisting>
           <para></para>
-	</step>
+        </step>
 
-	<step>
-	  <para>Create a ZIP or tar archive with the entire
+        <step>
+          <para>Create a ZIP or tar archive with the entire
             <literal>project-1.2/</literal> directory</para>
-	</step>
+        </step>
 
-	<step>
-	  <para>Deliver this archive through the File Release service.</para>
-	</step>
+        <step>
+          <para>Deliver this archive through the File Release service (see <xref linkend="FileReleaseDelivery" />).</para>
+        </step>
 
-	<step>
-	  <para>Done! Nice job...Take a break. And remember to announce the
+        <step>
+          <para>Done! Nice job...Take a break. And remember to announce the
             availability of your new version via the CodeX News service (see
             <xref linkend="NewsService" />).</para>
-	</step>
+        </step>
       </procedure>
     </section>
   </section>
@@ -1094,39 +1131,41 @@ export project-1.2
         type the following commands at the shell prompt:</para>
 
       <itemizedlist mark="bullet"
-	spacing="compact">
-	<listitem>
-	  <para><literal>newgrp projectname</literal> (Where <literal>projectname</literal> is the
+        spacing="compact">
+        <listitem>
+          <para><literal>newgrp projectname</literal> (Where <literal>projectname</literal> is the
             short project name)</para>
-	</listitem>
+        </listitem>
 
-	<listitem>
-	  <para><literal>cd /cvsroot/projectname/CVSROOT</literal></para>
-	</listitem>
+        <listitem>
+          <para><literal>cd /cvsroot/projectname/CVSROOT</literal></para>
+        </listitem>
 
-	<listitem>
-	  <para>Edit the <literal>readers</literal> file and add the login
+        <listitem>
+          <para>Edit the <literal>readers</literal> file and add the login
             name of the project members with read-access only (one login name
             per line)</para>
-	</listitem>
+        </listitem>
 
-	<listitem>
-	  <para><literal>exit</literal> (Logout)</para>
-	</listitem>
+        <listitem>
+          <para><literal>exit</literal> (Logout)</para>
+        </listitem>
       </itemizedlist>
     </section>
 
     <section id="CVSAdministrativeFiles">
       <title>CVS Administrative Files</title>
 
-      <para>Each CVS repository comes with a number of administrative files
-        that are all located in the <literal>CVSROOT</literal> directory.
-        These files gives project administrators all sorts of interesting
-        capabilities like the creation of virtual modules from a collection of
-        files and directories, trigger e-mail notification on certain events
-        like commit or add, check the format of a CVS tag before accepting it,
-        etc. (See the CVS Documentation cited in the R chapter for more
-        information about administrative files).</para>
+      <para>Each CVS repository comes with a number of administrative
+      files that are all located in the <literal>CVSROOT</literal>
+      directory.  These files gives project administrators all sorts
+      of interesting capabilities like the creation of virtual modules
+      from a collection of files and directories, trigger e-mail
+      notification on certain events like commit or add (note: CodeX
+      already does it for you - see below), check the format of a CVS
+      tag before accepting it, etc. (See the CVS Documentation cited
+      in <xref linkend="CVSReferences" /> for more information about
+      CVS administrative files).</para>
 
       <para><tip><title>Tip: Never edit CVS Administrative files in place</title><para>Never-ever
         edit any CVS administrative files directly in the CVS repository by
@@ -1137,37 +1176,11 @@ export project-1.2
         appropriate files and commit the changes to the repository.</para></tip></para>
 
       <note><para>When making changes to the administrative files make
-        sure you preserve the CodeX specific settings in the following files:
-        config, writers and loginfo. Also be very careful not to change
-        directory or file ownership unless you know exactly what you are
-        doing.</para></note>
-    </section>
-
-    <section id="CVSE-mailNotification">
-      <title>CVS E-mail Notification</title>
-
-      <para>CVS comes with a number of e-mail notification capabilities. CVS
-        allows you to send e-mail to the development teams. For example, using
-        the <literal>cvs watch</literal> command in combination with the
-        notify CVS administrative file (see above), developers can be notified
-        of whom is currently editing what file. In other cases you may use the
-        <literal>commitinfo, loginfo</literal> or <literal>rcsinfo</literal>
-        CVS administrative files to trigger e-mail notification whenever a
-        file is committed, checked-out or tagged with a new release number.</para>
-
-      <para>In all cases, you have to know that in order to reach any of the
-        development team member you just need to specify their CodeX login
-        name as their e-mail address. The CodeX server will know where to
-        redirect the e-mail notification. Using login name is safer than using
-        full e-mail addresses because they might change and you&#39;ll have to
-        update your CVS administrative files by hand. Of course you can also
-        specify any other full e-mail address corresponding to individuals
-        that are not CodeX users or to distribution lists.
-        There is virtually no limit.</para>
-
-      <para>For more information about the CVS notification capabilities
-        please refer to the CVS material listed in the CVS References section (see
-        <xref linkend="CVSReferences" />).</para>
+      sure you preserve the CodeX specific settings in the following
+      files: <literal>config</literal>, <literal>writers</literal> and
+      <literal>loginfo</literal>. Also be very careful not to change
+      directory or file ownership unless you know exactly what you are
+      doing.</para></note>
     </section>
 
   </section>
