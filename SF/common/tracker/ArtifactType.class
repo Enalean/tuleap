@@ -1765,7 +1765,7 @@ class ArtifactType extends Error {
 	 */
 	function buildExportQuery(&$fields,&$col_list,&$lbl_list,&$dsc_list,&$select,&$from,&$where,&$multiple_queries,&$all_queries,$constraint=false) {
 	  global $art_field_fact;
-	  
+	  $sql = null;
 	  $all_queries = array();
 	  $fields = $art_field_fact->getAllUsedFields();
 	  

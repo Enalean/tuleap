@@ -556,7 +556,7 @@ class ArtifactReport extends Error {
 		
 		// Final query
 		$limit = " LIMIT $offset,$chunksz";
-		$sql = $select." ".$from." ".$where." group by a.artifact_id ".$order_by.$limit;
+		$sql = $select." ".$from." ".$where." ".$order_by.$limit;
 
 		//echo "<DBG> query=".$sql."<br>";
 		
