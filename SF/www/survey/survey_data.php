@@ -81,6 +81,52 @@ function survey_data_survey_update($group_id,$survey_id,$survey_title,$survey_qu
     }
 }
 
+function survey_data_radio_update($group_id, $question_id, $choice_id, $radio, $rank) {
+    
+    global $feedback,$Language;
+    
+    $sql="UPDATE survey_radio_choices SET radio_choice='$radio',choice_rank='$rank'".
+          " WHERE question_id='$question_id' AND choice_id='$choice_id'";
+    $result=db_query($sql);
+
+    if (db_affected_rows($result) < 1) {
+	$feedback .= ' '.$Language->getText('survey_s_data','upd_fail',db_error());
+    } else {
+	$feedback .= ' '.$Language->getText('survey_s_data','upd_succ').' ';
+    }
+
+}
+
+
+function survey_data_radio_create($group_id, $question_id, $radio, $rank) {
+    
+    global $feedback,$Language;
+    
+    $sql='INSERT INTO survey_radio_choices (group_id,question_id,radio_choice,choice_rank) '.
+        "VALUES ('$group_id','$question_id','$radio','$rank')";
+    $result=db_query($sql);
+    if ($result) {
+	$feedback .= " ".$Language->getText('survey_s_data','r_create_succ',db_insertid($result))." ";
+    } else {
+	$feedback .= " ".$Language->getText('survey_s_data','r_create_fail',db_error());
+    }
+	
+}
+
+function survey_data_radio_delete($group_id, $question_id, $choice_id) {
+    
+    global $feedback,$Language;
+
+    $sql="DELETE FROM survey_radio_choices WHERE group_id='$group_id' AND question_id='$question_id' AND choice_id='$choice_id'";
+    $result=db_query($sql);
+    if (db_affected_rows($result) <= 0) {
+	    $feedback .= $Language->getText('survey_s_data','r_del_fail',db_error($result));
+    } else {
+	    $feedback .= $Language->getText('survey_s_data','r_del_succ',$choice_id);
+    }    
+    
+}   
+
 function survey_data_question_create($group_id,$question,$question_type)
 {   
     global $feedback,$Language;
@@ -102,6 +148,8 @@ function survey_data_question_delete($group_id,$question_id) {
     $feedback = '';
     // Delete first the responses associated with to the question  if any
     $res = db_query("DELETE FROM survey_responses WHERE group_id=$group_id AND survey_id=$question_id");
+    // Delete the radio choices if it is a radio button question
+    $res = db_query("DELETE FROM survey_radio_choices WHERE group_id=$group_id AND question_id=$question_id");
     // Then delete the question itself
     $res = db_query("DELETE FROM survey_questions WHERE group_id=$group_id AND question_id=$question_id");
     if (db_affected_rows($res) <= 0) {
