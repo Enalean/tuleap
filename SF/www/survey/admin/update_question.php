@@ -66,6 +66,11 @@ $sql="SELECT * FROM survey_question_types";
 $result=db_query($sql);
 echo html_build_select_box($result,'question_type',$question_type,false);
 
+// see if the question is a radio-button type
+$qry1="SELECT * FROM survey_questions WHERE group_id='$group_id' AND question_id='$question_id'";
+$res1=db_query($qry1);
+$question_type=db_result($res1,0,'question_type');
+
 ?>
 <P>
 
@@ -79,7 +84,11 @@ echo html_build_select_box($result,'question_type',$question_type,false);
 
 <?php
 
-survey_footer(array());
+// for radio-button questions, display buttons list and form
+if ($question_type=="1") {    
+    require('browse_radio.php');
+}
 
+survey_footer(array());
 
 ?>
