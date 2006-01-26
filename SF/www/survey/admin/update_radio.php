@@ -44,7 +44,7 @@ survey_header(array('title'=>$Language->getText('survey_admin_update_radio','upd
 
 <?php
 
-survey_utils_show_radio_update_form($group_id, $question_id, $choice_id);
+survey_utils_show_radio_form($group_id, $question_id, $choice_id);
 survey_footer(array());
 
 ?>

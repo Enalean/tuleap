@@ -49,7 +49,7 @@ $result=db_query($sql);
 echo $Language->getText('survey_admin_browse_radio','edit_r_msg'); 
 
 survey_utils_show_radio_list($result);
-survey_utils_show_radio_create_form($group_id, $question_id);
+survey_utils_show_radio_form($group_id, $question_id,"");
 
 ?>
 

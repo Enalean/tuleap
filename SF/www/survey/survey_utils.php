@@ -336,57 +336,48 @@ function  survey_utils_show_radio_list($result) {
     echo "</table>";  
 }
 
-function survey_utils_show_radio_create_form($group_id,$question_id) {
-        
-    global $group_id,$question_id,$Language;
-       
-    $submit_value=$Language->getText('survey_s_utils','create');	
-    echo "<hr>";
-    echo '<h3>'.$Language->getText('survey_s_utils','add_button').'</h3>';
-
-    $return = '<TABLE><FORM METHOD="POST">
-    <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
-    <INPUT TYPE="HIDDEN" NAME="question_id" VALUE="'.$question_id.'">
-    <TR><TD>'.$Language->getText('survey_s_utils','text_r').': <INPUT TYPE="TEXT" NAME="answer" SIZE=30></TD></TR>
-    <TR><TD></TD></TR>
-    <TR><TD></TD></TR>
-    <TR><TD>'.$Language->getText('survey_s_utils','rank').': <INPUT TYPE="TEXT" NAME="rank" SIZE=10></TD></TR>
-    <TR><TD></TD></TR>
-    <TR><TD></TD></TR>
-    <TR><TD></TD></TR>
-    <TR><TD><INPUT TYPE="SUBMIT" NAME="create_submit" VALUE="'.$submit_value.'"></TD></TR>
-    </FORM></TABLE>';
-    
-    echo $return;
-
-}
-
-function survey_utils_show_radio_update_form($group_id,$question_id,$choice_id) {
-    
+function survey_utils_show_radio_form($group_id, $question_id, $choice_id) {
     global $group_id,$question_id,$Language;
     
-    $sql = "SELECT * FROM survey_radio_choices WHERE group_id='$group_id' AND question_id='$question_id' AND choice_id='$choice_id'";
-    $res = db_query($sql);
-    $answer_value = db_result($res,0,'radio_choice');
-    $rank_value = db_result($res,0,'choice_rank');
+    if ($choice_id != "") {
+        // we are in case of update
+	$sql = "SELECT * FROM survey_radio_choices WHERE group_id='$group_id' AND question_id='$question_id' AND choice_id='$choice_id'";
+        $res = db_query($sql);
+        $answer_value = db_result($res,0,'radio_choice');
+        $rank_value = db_result($res,0,'choice_rank');        
+	$text_name = "choice";
+	$rank_name = "ranking";
+	$submit_name = "update_submit";	
+	$submit_value=$Language->getText('survey_s_utils','update');
+    } else {
+        // we are in case of creation
+	$answer_value = "";
+	$rank_value = "";	
+	$text_name = "answer";
+	$rank_name = "rank";
+	$submit_name = "create_submit";
+        $submit_value=$Language->getText('survey_s_utils','create');	
+        echo "<hr>";
+        echo '<h3>'.$Language->getText('survey_s_utils','add_button').'</h3>';
+    }
     
-    $submit_value=$Language->getText('survey_s_utils','update');	
-
+    
     $return = '<TABLE><FORM METHOD="POST">
     <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
     <INPUT TYPE="HIDDEN" NAME="question_id" VALUE="'.$question_id.'">
     <INPUT TYPE="HIDDEN" NAME="choice_id" VALUE="'.$choice_id.'">
-    <TR><TD>'.$Language->getText('survey_s_utils','text_r').': <INPUT TYPE="TEXT" NAME="choice" VALUE="'.$answer_value.'" SIZE=30></TD></TR>
+    <TR><TD>'.$Language->getText('survey_s_utils','text_r').': <INPUT TYPE="TEXT" NAME="'.$text_name.'" VALUE="'.$answer_value.'" SIZE=30></TD></TR>
     <TR><TD></TD></TR>
     <TR><TD></TD></TR>
-    <TR><TD>'.$Language->getText('survey_s_utils','rank').': <INPUT TYPE="TEXT" NAME="ranking" VALUE="'.$rank_value.'" SIZE=10></TD></TR>
+    <TR><TD>'.$Language->getText('survey_s_utils','rank').': <INPUT TYPE="TEXT" NAME="'.$rank_name.'" VALUE="'.$rank_value.'" SIZE=10></TD></TR>
     <TR><TD></TD></TR>
     <TR><TD></TD></TR>
     <TR><TD></TD></TR>
-    <TR><TD><INPUT TYPE="SUBMIT" NAME="update_submit" VALUE="'.$submit_value.'"></TD></TR>
+    <TR><TD><INPUT TYPE="SUBMIT" NAME="'.$submit_name.'" VALUE="'.$submit_value.'"></TD></TR>
     </FORM></TABLE>';
     
     echo $return;
+
 }
 
 function  survey_utils_show_comments($result) {
