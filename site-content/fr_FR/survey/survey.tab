@@ -42,10 +42,25 @@ survey_admin_browse_question	edit_q	Modifier les questions
 survey_admin_browse_question	edit_q_msg	Cliquer sur l'identifiant (ID) de la question pour la modifier
 #
 #-----------------------------------------------
+#
+# Script: SF/www/survey/admin/browse_radio.php
+#
+survey_admin_browse_radio	edit_r	Editer les questions bouton radio
+survey_admin_browse_radio	edit_r_msg	Cliquer sur l'identifiant (ID) du bouton radio pour le modifier
+#
+#-----------------------------------------------
 # Script: SF/www/survey/admin/browse_survey.php
 #
 survey_admin_browse_survey	edit_s	Modifier les sondages
 survey_admin_browse_survey	edit_s_msg	Cliquer sur l'identifiant (ID) du sondage pour le modifier
+#
+#-----------------------------------------------
+# Script: SF/www/survey/admin/edit_radio.php
+#
+survey_admin_edit_radio	text_r	Texte
+survey_admin_edit_radio	add_button	Ajouter un nouveau bouton
+survey_admin_edit_radio	button_id	ID Bouton
+survey_admin_edit_radio	rank	Rang
 #
 #-----------------------------------------------
 # Script: SF/www/survey/admin/index.php
@@ -107,6 +122,11 @@ survey_admin_update_question	q	Question:
 survey_admin_update_question	subm_changes	Valider
 #
 #-----------------------------------------------
+# Script: SF/www/survey/admin/update_radio.php
+#
+survey_admin_update_radio	update_r	Modifier un bouton radio
+#
+#-----------------------------------------------
 # Script: SF/www/survey/admin/update_survey.php
 #
 survey_admin_update_survey	warn	<span class="highlight">AVERTISSEMENT! C'est une assez mauvaise idée de modifier un sondage après qu'il ait déjà reçu des réponses. Cela peut donner des résultats trompeurs ou incohérents.</span>
@@ -156,6 +176,10 @@ survey_s_data	q_create_succ	Question no. $1 créé avec succès
 survey_s_data	q_create_fail	La création de la question a échoué $1
 survey_s_data	q_del_fail	Erreur lors de la destruction de la question no. $1: $2
 survey_s_data	q_del_succ	Question no. $1 détruite avec succès
+survey_s_data	r_create_succ	Bouton Radio #$1 créé avec succès
+survey_s_data	r_create_fail	La création du bouton radio a échoué $1
+survey_s_data	r_del_fail	Erreur lors de la suppression du bouton radio #$1: $2
+survey_s_data	r_del_succ	Bouton radio #$1 supprimé avec succès
 #
 #-----------------------------------------------
 # Script: SF/www/survey/survey.php
@@ -190,3 +214,9 @@ survey_s_utils	resp	Réponse
 survey_s_utils	occ	Nombre d'occurences
 survey_s_utils	blank	- REPONSES VIERGES -
 survey_s_utils	total_no	Nombre total de réponses: $1
+survey_s_utils	create	Ajouter
+survey_s_utils	update	Modifier
+survey_s_utils	text_r	Texte
+survey_s_utils	add_button	Ajouter un nouveau bouton
+survey_s_utils	button_id	ID Bouton
+survey_s_utils	rank	Rang
