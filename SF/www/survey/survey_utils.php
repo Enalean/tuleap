@@ -127,14 +127,18 @@ function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
 
 	    if ($question_type == "1") {
 		/*
-		  This is a rædio-button question. Values 1-5.
+		  This is a radio-button question. Values 1-5.
 		*/
-		$return .= "<b>1</b>";
-		for ($j=1; $j<=5; $j++) {
+		
+		$qry="SELECT * FROM survey_radio_choices WHERE group_id='$group_id' AND question_id='$quest_array[$i]' ORDER BY choice_rank";
+		$res=db_query($qry);
+		$j=1;
+		while ($row=db_fetch_array($res)) {
+		    $value=$row['radio_choice'];
 		    $return .= '
-					<INPUT TYPE="RADIO" NAME="_'.$quest_array[$i].'" VALUE="'.$j.'"'.($existing_response==$j?" CHECKED ":"").'>';
-		}
-		$return .= "&nbsp;&nbsp;<b>5</b>";
+					<INPUT TYPE="RADIO" NAME="_'.$quest_array[$i].'" VALUE="'.$value.'"'.($existing_response==$value?" CHECKED ":"").'> '.$value.' <BR>';
+		    $j++;
+		}		
 
 	    } else if ($question_type == '2') {
 		/*
@@ -273,11 +277,21 @@ function  survey_utils_show_questions($result, $show_delete=true) {
     for($j=0; $j<$rows; $j++)  {
 
 	$question_id = db_result($result,$j,'question_id');
+	$question_type = db_result($result,$j,'question_type');
+	//$question_type_id = db_result($result,$j,'question_type_id');
+	
+	/*if ($question_type_id=="1") {
+	    $show_icon="<a href=\"/survey/admin/edit_radio.php?func=browse&group_id=$group_id&question_id=$question_id\" ".
+	    '<IMG SRC="'.util_get_image_theme("ic/radio.png").'" BORDER="0" align="bottom" ></A>';
+	} else {
+	    $show_icon="";
+	}*/
+	
 	echo "<tr class=\"". html_get_alt_row_color($j) ."\">\n";
 
 	echo "<TD><A HREF=\"/survey/admin/edit_question.php?func=update_question&group_id=$group_id&question_id=$question_id\">$question_id</A></TD>\n".
-	    '<TD>'.db_result($result,$j,'question')."</TD>\n".
-	    '<TD>'.db_result($result,$j,'question_type')."</TD>\n";     
+	    '<TD>'.db_result($result,$j,'question')."   ".$show_icon."</TD>\n".
+	    '<TD>'.$question_type."</TD>\n";     
 		
 	if  ($show_delete) {
 	    echo '<TD align=center>'.
@@ -289,6 +303,90 @@ function  survey_utils_show_questions($result, $show_delete=true) {
 	echo "</tr>";
     }
     echo "</table>";
+}
+
+function  survey_utils_show_radio_list($result) {
+    global $group_id,$question_id,$Language;
+
+    $rows  =  db_numrows($result);
+    echo "<h3>".$Language->getText('survey_s_utils','found',$rows)."</h3>";
+    
+    $title_arr=array();
+    $title_arr[]=$Language->getText('survey_s_utils','button_id');
+    $title_arr[]=$Language->getText('survey_s_utils','text_r');
+    $title_arr[]=$Language->getText('survey_s_utils','rank');
+    $title_arr[]=$Language->getText('survey_s_utils','del');
+		
+    echo html_build_list_table_top ($title_arr);
+    
+    for($j=0; $j<$rows; $j++)  {
+
+	$choice_id = db_result($result, $j, 'choice_id');
+	
+	echo "<tr class=\"". html_get_alt_row_color($j) ."\">\n";
+	echo "<TD><A
+	HREF=\"/survey/admin/edit_question.php?func=update_radio&group_id=$group_id&question_id=$question_id&choice_id=$choice_id\">$choice_id</A></TD>\n".
+	     '<TD>'.db_result($result,$j,'radio_choice')."</TD>\n".
+	     '<TD>'.db_result($result,$j,'choice_rank')."</TD>\n".
+	     '<TD align=center>'.
+		"<a href=\"/survey/admin/edit_question.php?func=delete_radio&group_id=$group_id&question_id=$question_id&choice_id=$choice_id\" ".
+		'<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="'.$Language->getText('survey_s_utils','del_txt').'"></A></TD>';
+	echo "</tr>";
+    }
+    echo "</table>";  
+}
+
+function survey_utils_show_radio_create_form($group_id,$question_id) {
+        
+    global $group_id,$question_id,$Language;
+       
+    $submit_value=$Language->getText('survey_s_utils','create');	
+    echo "<hr>";
+    echo '<h3>'.$Language->getText('survey_s_utils','add_button').'</h3>';
+
+    $return = '<TABLE><FORM METHOD="POST">
+    <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
+    <INPUT TYPE="HIDDEN" NAME="question_id" VALUE="'.$question_id.'">
+    <TR><TD>'.$Language->getText('survey_s_utils','text_r').': <INPUT TYPE="TEXT" NAME="answer" SIZE=30></TD></TR>
+    <TR><TD></TD></TR>
+    <TR><TD></TD></TR>
+    <TR><TD>'.$Language->getText('survey_s_utils','rank').': <INPUT TYPE="TEXT" NAME="rank" SIZE=10></TD></TR>
+    <TR><TD></TD></TR>
+    <TR><TD></TD></TR>
+    <TR><TD></TD></TR>
+    <TR><TD><INPUT TYPE="SUBMIT" NAME="create_submit" VALUE="'.$submit_value.'"></TD></TR>
+    </FORM></TABLE>';
+    
+    echo $return;
+
+}
+
+function survey_utils_show_radio_update_form($group_id,$question_id,$choice_id) {
+    
+    global $group_id,$question_id,$Language;
+    
+    $sql = "SELECT * FROM survey_radio_choices WHERE group_id='$group_id' AND question_id='$question_id' AND choice_id='$choice_id'";
+    $res = db_query($sql);
+    $answer_value = db_result($res,0,'radio_choice');
+    $rank_value = db_result($res,0,'choice_rank');
+    
+    $submit_value=$Language->getText('survey_s_utils','update');	
+
+    $return = '<TABLE><FORM METHOD="POST">
+    <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
+    <INPUT TYPE="HIDDEN" NAME="question_id" VALUE="'.$question_id.'">
+    <INPUT TYPE="HIDDEN" NAME="choice_id" VALUE="'.$choice_id.'">
+    <TR><TD>'.$Language->getText('survey_s_utils','text_r').': <INPUT TYPE="TEXT" NAME="choice" VALUE="'.$answer_value.'" SIZE=30></TD></TR>
+    <TR><TD></TD></TR>
+    <TR><TD></TD></TR>
+    <TR><TD>'.$Language->getText('survey_s_utils','rank').': <INPUT TYPE="TEXT" NAME="ranking" VALUE="'.$rank_value.'" SIZE=10></TD></TR>
+    <TR><TD></TD></TR>
+    <TR><TD></TD></TR>
+    <TR><TD></TD></TR>
+    <TR><TD><INPUT TYPE="SUBMIT" NAME="update_submit" VALUE="'.$submit_value.'"></TD></TR>
+    </FORM></TABLE>';
+    
+    echo $return;
 }
 
 function  survey_utils_show_comments($result) {
