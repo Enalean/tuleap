@@ -89,7 +89,7 @@ for ($i=0; $i<$quest_count; $i++) {
 	if ($question_type == "1") {
 
 		/*
-			This is a rædio-button question. Values 1-5.	
+			This is a radio-button question. Values 1-5.	
 		*/
 
 
@@ -97,7 +97,7 @@ for ($i=0; $i<$quest_count; $i++) {
 			Select the number of responses to this question
 		*/
 		$sql="SELECT count(*) AS count FROM survey_responses WHERE survey_id='$survey_id' ".
-		    "AND question_id='$quest_array[$i]' AND response IN (1,2,3,4,5) AND group_id='$group_id'";
+		    "AND question_id='$quest_array[$i]' AND response <> '' AND group_id='$group_id'";
 
 		$result2=db_query($sql);
 
@@ -122,7 +122,7 @@ for ($i=0; $i<$quest_count; $i++) {
 		if ($answers_cnt > 0) {
 		    $sql='SELECT avg(response) AS avg FROM survey_responses '.
 			"WHERE survey_id='$survey_id' AND question_id='$quest_array[$i]' ".
-			"AND response IN (1,2,3,4,5)  AND group_id='$group_id'";
+			"AND response <> '' AND group_id='$group_id'";			
 
 		    $result2=db_query($sql);
 		    if (!$result2 || db_numrows($result2) < 1) {
@@ -141,9 +141,9 @@ for ($i=0; $i<$quest_count; $i++) {
 			echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.
 			    $Language->getText('survey_admin_show_r_aggregate','type')." <B>1 &lt;--- - - - ---&gt; 5</B>\n";
 		}
-
-		$sql="SELECT response,count(*) AS count FROM survey_responses WHERE survey_id='$survey_id' AND question_id='$quest_array[$i]' AND response IN (1,2,3,4,5) AND group_id='$group_id' GROUP BY response";
-
+		
+                $sql="SELECT response,count(*) AS count FROM survey_responses WHERE survey_id='$survey_id' AND question_id='$quest_array[$i]' AND response <> '' AND group_id='$group_id' GROUP BY response"; 
+		 
 		$result2=db_query($sql);
 		// Graph it even if there is zero row because GraphResult
 		// is in charge of displaying the question itself
