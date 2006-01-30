@@ -1,0 +1,33 @@
+<?php
+//
+// Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
+//
+// $Id$
+//
+//
+
+
+$Language->loadLanguageMsg('tracker/tracker');
+
+class ArtifactRulesManager {
+
+	/**
+	 * The ArtifactType object.
+	 *
+	 * @var		object	$artifact_type.
+	 */
+	var $artifact_type; 
+
+	/**
+	 *	ArtifactRulesManager - constructor.
+	 *
+	 *	@param	object	The Group object.
+	 *	@param	int		The id # assigned to this artifact type in the db.
+	 */
+	function ArtifactRulesManager(&$Group, $artifact_type_id) {
+        
+		$this->artifact_type =& new ArtifactType($Group, $artifact_type_id);
+	}
+}
+
+?>
