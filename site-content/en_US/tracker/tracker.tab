@@ -508,6 +508,10 @@ tracker_include_type	manage_fields_tracker_permissions	Manage Fields Permissions
 tracker_include_type	manage_fields_tracker_permissions_title	 - Manage Fields Permissions
 tracker_include_type	define_manage_fields_tracker_permissions	Define permissions on the tracker fields
 tracker_include_type	edit_field_perm	Edit field permissions
+tracker_include_type	dynamic_fields	Dynamic&nbsp;Fields
+tracker_include_type	mng_dynamic_fields	Manage Dynamic Fields
+tracker_include_type	mng_dynamic_fields_title	 - Manage Dynamic Fields
+tracker_include_type	define_dynamic_fields	Manage Dynamic Fields
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactCanned.class
@@ -719,3 +723,7 @@ tracker_admin_permissions	tracker_ignore_g_regis_submitter_assignee	<p>Ignoring 
 tracker_admin_permissions	tracker_intro	<div></div>
 tracker_admin_permissions	ugroup	User Group
 tracker_admin_permissions	ug_may_have_no_access	<div>* denotes user groups that may not have access to the tracker (no <a href="$1">tracker permission</a> set).</div>
+
+tracker_dynamic_fields	no_dynamic_fields	<em>There is not dynamic fields yet.</em>
+tracker_dynamic_fields	add_edit	You can <a href="$1">add/edit</a> dynamic fields.
+tracker_dynamic_fields	noscript	A javascript enabled browser is mandatory to add/edit dynamic fields.

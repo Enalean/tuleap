@@ -10,6 +10,7 @@
 //
 
 require_once('pre.php');
+require_once('common/include/HTTPRequest.class');
 require_once('common/include/GroupFactory.class');
 require_once('common/tracker/ArtifactTypeFactory.class');
 require_once('common/tracker/ArtifactType.class');
@@ -684,6 +685,19 @@ if ($group_id && (!isset($atid) || !$atid)) {
 	case 'permissions':
             require('./tracker_permissions.php');
             break;
+    case 'dynamic_fields':
+        require_once('../include/ArtifactRulesManagerHtml.class');
+        $armh =& new ArtifactRulesManagerHtml($group, $atid);
+        $request =& HTTPRequest::instance();
+        if ($request->exist('edit')) {
+           if ($request->exist('save')) {
+           } else {
+               $armh->displayEditForm();
+           }
+        } else { // Display all rules
+            $armh->displayRules();
+        }
+        break;
 	default:    
 		if ( !user_isloggedin() ) {
 			exit_not_logged_in();

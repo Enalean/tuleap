@@ -1,0 +1,65 @@
+<?php
+//
+// Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
+//
+// $Id$
+//
+//
+
+require_once('common/tracker/ArtifactRulesManager.class');
+require_once('ArtifactTypeHtml.class');
+$Language->loadLanguageMsg('tracker/tracker');
+
+class ArtifactRulesManagerHtml extends ArtifactRulesManager {
+
+	/**
+	 *  ArtifactRulesManagerHtml() - constructor
+	 *
+	 *  @param $Group object
+	 *  @param $artifact_type_id - the id # assigned to this artifact type in the db
+	 */
+	function ArtifactRulesManagerHtml(&$Group,$artifact_type_id=false) {
+		$this->ArtifactRulesManager($Group,$artifact_type_id);
+        $this->artifact_type =& new ArtifactTypeHtml($Group,$artifact_type_id);
+	}
+
+    function displayEditForm() {
+        $this->_header();
+        echo '<noscript>'. $GLOBALS['Language']->getText('tracker_dynamic_fields','noscript') .'</noscript>';
+        echo '<script type="text/javascript"><!--//--><![CDATA[//><!--'."\n";
+        
+        $art_field_fact =& new ArtifactFieldFactory($this->artifact_type);
+        $used_fields = $art_field_fact->getAllUsedFields();
+        foreach($used_fields as $field) {
+            if ($field->isSelectBox() || $field->isSelectBox()) {
+                echo "fields['".$field->getID()."'] = new com.xerox.codex.tracker.Field('".$field->getID()."', '".$field->getLabel()."');\n";
+                $values = $field->getFieldValues ($this->artifact_type->getID(),"'A','P'");
+                var_dump($rows = db_numrows($values));
+            }
+        }
+        echo "\n".'//--><!]]></script>';
+        $this->_footer();
+    }
+    
+    function displayRules() {
+        $this->_header();
+        echo $GLOBALS['Language']->getText('tracker_dynamic_fields','no_dynamic_fields');
+        echo '<br />';
+        echo $GLOBALS['Language']->getText('tracker_dynamic_fields','add_edit', array($_SERVER['REQUEST_URI'] .'&amp;edit=1'));
+        $this->_footer();
+    }
+    
+    function _header() {
+        $params = array();
+        $params['title']   = $this->artifact_type->getName() .' '. $GLOBALS['Language']->getText('tracker_include_type','mng_dynamic_fields');
+        $params['help']    = 'TrackerAdministration.html';
+		$this->artifact_type->adminHeader($params);
+        $this->artifact_type->displayAdminTitle($GLOBALS['Language']->getText('tracker_include_type','mng_dynamic_fields_title'));
+    }
+    
+    function _footer() {
+        $this->artifact_type->footer(array());
+    }
+}
+
+?>
