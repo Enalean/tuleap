@@ -19,7 +19,6 @@ require('./include/ArtifactFileHtml.class');
 require_once('common/tracker/ArtifactType.class');
 require('./include/ArtifactTypeHtml.class');
 require('./include/ArtifactHtml.class');
-require_once('common/tracker/ArtifactGroup.class');
 require_once('common/tracker/ArtifactCanned.class');
 require_once('common/tracker/ArtifactTypeFactory.class');
 require_once('common/tracker/ArtifactField.class');
@@ -47,6 +46,16 @@ foreach($strings_to_sanitize as $str) {
         //var_dump($_REQUEST);
     }
 }
+
+if (isset($aid) && !isset($atid)) {
+    // We have the artifact id, but not the tracker id
+    $sql="SELECT group_artifact_id FROM artifact WHERE artifact_id=$aid";
+    $result = db_query($sql);
+    if (db_numrows($result)>0) {
+        $row = db_fetch_array($result);
+        $atid = $row['group_artifact_id'];
+    }
+ }		    
 
 //define undefined variables
 if (!isset($func)) {
