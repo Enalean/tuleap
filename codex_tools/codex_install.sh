@@ -260,6 +260,7 @@ build_dir /home/sfcache sourceforge sourceforge 755
 build_dir /home/tools root root 755
 build_dir /home/data root root 755
 build_dir /home/data/wiki sourceforge sourceforge 700
+build_dir /home/subversion_backup root root 700
 #build_dir /home/var root root 755
 #build_dir /home/var/lib root root 755
 #build_dir /home/var/lib/mysql mysql bin 755 # see CodeX DB installation
@@ -269,10 +270,11 @@ build_dir /etc/codex/conf sourceforge sourceforge 755
 build_dir /etc/codex/documentation sourceforge sourceforge 755
 build_dir /etc/codex/documentation/user_guide sourceforge sourceforge 755
 build_dir /etc/codex/documentation/user_guide/xml sourceforge sourceforge 755
-build_dir /etc/codex/documentation/user_guide/xml/en_US sourceforge sourceforge 755
 build_dir /etc/codex/site-content sourceforge sourceforge 755
 build_dir /etc/codex/site-content/en_US sourceforge sourceforge 755
 build_dir /etc/codex/site-content/en_US/others sourceforge sourceforge 755
+build_dir /etc/codex/site-content/fr_FR sourceforge sourceforge 755
+build_dir /etc/codex/site-content/fr_FR/others sourceforge sourceforge 755
 build_dir /etc/codex/themes sourceforge sourceforge 755
 build_dir /etc/codex/plugins sourceforge sourceforge 755
 build_dir /etc/codex/plugins/pluginsadministration sourceforge sourceforge 755
@@ -517,13 +519,16 @@ done
 # b) create the html target directory
 # c) create the PDF target directory
 #
-$MKDIR -p  /etc/codex/documentation/user_guide/xml/en_US
-$CHOWN -R sourceforge.sourceforge /etc/codex/documentation
-$CP $INSTALL_DIR/documentation/user_guide/xml/en_US/ParametersLocal.dtd /etc/codex/documentation/user_guide/xml/en_US
-$MKDIR -p  $INSTALL_DIR/documentation/user_guide/html/en_US
-$CHOWN -R sourceforge.sourceforge $INSTALL_DIR/documentation/user_guide/html/en_US
-$MKDIR -p  $INSTALL_DIR/documentation/user_guide/pdf/en_US
-$CHOWN -R sourceforge.sourceforge $INSTALL_DIR/documentation/user_guide/pdf/en_US
+for lang in en_US fr_FR
+do
+    $MKDIR -p  /etc/codex/documentation/user_guide/xml/$lang
+    $CHOWN -R sourceforge.sourceforge /etc/codex/documentation
+    $CP $INSTALL_DIR/documentation/user_guide/xml/$lang/ParametersLocal.dtd /etc/codex/documentation/user_guide/xml/$lang
+    $MKDIR -p  $INSTALL_DIR/documentation/user_guide/html/$lang
+    $CHOWN -R sourceforge.sourceforge $INSTALL_DIR/documentation/user_guide/html/$lang
+    $MKDIR -p  $INSTALL_DIR/documentation/user_guide/pdf/$lang
+    $CHOWN -R sourceforge.sourceforge $INSTALL_DIR/documentation/user_guide/pdf/$lang
+done
 $TOUCH /etc/httpd/conf/codex_vhosts.conf
 $TOUCH /etc/httpd/conf/codex_svnhosts.conf
 $TOUCH /etc/httpd/conf/codex_svnhosts_ssl.conf
@@ -567,6 +572,7 @@ substitute '/var/named/codex.zone' '%dns_serial%' "$dns_serial"
 
 todo "Customize /etc/codex/conf/local.inc"
 todo "Customize /etc/codex/documentation/user_guide/xml/en_US/ParametersLocal.dtd"
+todo "Customize /etc/codex/documentation/user_guide/xml/fr_FR/ParametersLocal.dtd"
 todo "You may also want to customize /etc/httpd/conf/httpd.conf /etc/httpd/conf/mailman.conf /home/tools/backup_job and /home/tools/backup_subversion.sh"
 
 ##############################################
@@ -1001,7 +1007,7 @@ $CAT <<'EOF' >/etc/logrotate.d/httpd
     daily
     rotate 4
     postrotate
-        /usr/bin/killall -HUP httpd 2> /dev/null || true
+        /sbin/service httpd reload 2> /dev/null || true
         # LJ Added for Codex archiving
      year=`date +%Y`
      month=`date +%m`
@@ -1019,7 +1025,7 @@ $CAT <<'EOF' >/etc/logrotate.d/httpd
     daily
     rotate 4
     postrotate
-        /usr/bin/killall -HUP httpd 2> /dev/null || true
+        /sbin/service httpd reload 2> /dev/null || true
         # LJ Added for Codex archiving
      year=`date +%Y`
      month=`date +%m`
@@ -1038,7 +1044,7 @@ $CAT <<'EOF' >/etc/logrotate.d/httpd
     daily
     rotate 4
     postrotate
-        /usr/bin/killall -HUP httpd 2> /dev/null || true
+        /sbin/service httpd reload 2> /dev/null || true
     endscript
 }
                                                                               
@@ -1048,7 +1054,7 @@ $CAT <<'EOF' >/etc/logrotate.d/httpd
     daily
     rotate 4
     postrotate
-        /usr/bin/killall -HUP httpd 2> /dev/null || true
+        /sbin/service httpd reload 2> /dev/null || true
     endscript
 }
 
@@ -1058,7 +1064,7 @@ $CAT <<'EOF' >/etc/logrotate.d/httpd
     daily
     rotate 4
     postrotate
-        /usr/bin/killall -HUP httpd 2> /dev/null || true
+        /sbin/service httpd reload 2> /dev/null || true
     endscript
 }
                                                                                
@@ -1068,7 +1074,7 @@ $CAT <<'EOF' >/etc/logrotate.d/httpd
     daily
     rotate 4
     postrotate
-        /usr/bin/killall -HUP httpd 2> /dev/null || true
+        /sbin/service httpd reload 2> /dev/null || true
     endscript
 }
 EOF
