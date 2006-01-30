@@ -81,7 +81,7 @@ function survey_data_survey_update($group_id,$survey_id,$survey_title,$survey_qu
     }
 }
 
-function survey_data_radio_update($group_id, $question_id, $choice_id, $radio, $rank) {
+function survey_data_radio_update($question_id, $choice_id, $radio, $rank) {
     
     global $feedback,$Language;
     
@@ -98,12 +98,12 @@ function survey_data_radio_update($group_id, $question_id, $choice_id, $radio, $
 }
 
 
-function survey_data_radio_create($group_id, $question_id, $radio, $rank) {
+function survey_data_radio_create($question_id, $radio, $rank) {
     
     global $feedback,$Language;
     
-    $sql='INSERT INTO survey_radio_choices (group_id,question_id,radio_choice,choice_rank) '.
-        "VALUES ('$group_id','$question_id','$radio','$rank')";
+    $sql='INSERT INTO survey_radio_choices (question_id,radio_choice,choice_rank) '.
+        "VALUES ('$question_id','$radio','$rank')";
     $result=db_query($sql);
     if ($result) {
 	$feedback .= " ".$Language->getText('survey_s_data','r_create_succ',db_insertid($result))." ";
@@ -113,11 +113,11 @@ function survey_data_radio_create($group_id, $question_id, $radio, $rank) {
 	
 }
 
-function survey_data_radio_delete($group_id, $question_id, $choice_id) {
+function survey_data_radio_delete($question_id, $choice_id) {
     
     global $feedback,$Language;
 
-    $sql="DELETE FROM survey_radio_choices WHERE group_id='$group_id' AND question_id='$question_id' AND choice_id='$choice_id'";
+    $sql="DELETE FROM survey_radio_choices WHERE question_id='$question_id' AND choice_id='$choice_id'";
     $result=db_query($sql);
     if (db_affected_rows($result) <= 0) {
 	    $feedback .= $Language->getText('survey_s_data','r_del_fail',db_error($result));

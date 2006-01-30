@@ -26,7 +26,7 @@ $Language->loadLanguageMsg('survey/survey');
 
 // add radio button in database, when submitted
 if ($GLOBALS['create_submit']) {
-    survey_data_radio_create($group_id,$question_id,$answer,$rank);    
+    survey_data_radio_create($question_id,$answer,$rank);    
 }
 
 
@@ -36,7 +36,7 @@ if ($GLOBALS['create_submit']) {
 
 $sql="SELECT * ".
     "FROM survey_radio_choices ".
-    "WHERE question_id='$question_id' AND group_id='$group_id' ".
+    "WHERE question_id='$question_id'".
     "ORDER BY choice_rank";
 $result=db_query($sql);
 
@@ -49,7 +49,7 @@ $result=db_query($sql);
 echo $Language->getText('survey_admin_browse_radio','edit_r_msg'); 
 
 survey_utils_show_radio_list($result);
-survey_utils_show_radio_form($group_id, $question_id,"");
+survey_utils_show_radio_form($question_id,"");
 
 ?>
 

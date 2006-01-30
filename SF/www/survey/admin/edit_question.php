@@ -44,13 +44,13 @@ switch ($func) {
 	 
 	 // Delete radio buttons if the question type changes from radio-button	to anything else different
 	 if (($old_quest_type=="6") && ($question_type != "6")) {
-	     $sql = "SELECT * FROM survey_radio_choices WHERE group_id='$group_id' AND question_id='$question_id'";
+	     $sql = "SELECT * FROM survey_radio_choices WHERE question_id='$question_id'";
 	     $result = db_query($sql);
 	     $rows = db_numrows($result);
 	     if ($rows > 0) {
 	         for ($j=0; $j<$rows; $j++) {
 		     $radio_id=db_result($result,$j,'choice_id');
-	             survey_data_radio_delete($group_id,$question_id,$radio_id);
+	             survey_data_radio_delete($question_id,$radio_id);
 		 }
 	     }	 
 	 }	 
@@ -70,7 +70,7 @@ switch ($func) {
  case 'update_radio':
      if ($GLOBALS['update_submit']) {
          // achieve the update, then return to 'Edit A Question' page
-         survey_data_radio_update($group_id,$question_id,$choice_id,$choice,$ranking);
+         survey_data_radio_update($question_id,$choice_id,$choice,$ranking);
          require('./update_question.php');
      } else {
 	 // show the form to update the radio
@@ -79,7 +79,7 @@ switch ($func) {
      break;    
     
  case 'delete_radio':
-     survey_data_radio_delete($group_id,$question_id,$choice_id);
+     survey_data_radio_delete($question_id,$choice_id);
      require('./update_question.php')   ;
      break;
     

@@ -172,7 +172,7 @@ function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
 		  This is a radio-button question.
 		*/
 		
-		$qry="SELECT * FROM survey_radio_choices WHERE group_id='$group_id' AND question_id='$quest_array[$i]' ORDER BY choice_rank";
+		$qry="SELECT * FROM survey_radio_choices WHERE question_id='$quest_array[$i]' ORDER BY choice_rank";
 		$res=db_query($qry);
 		$j=1;
 		while ($row=db_fetch_array($res)) {
@@ -340,12 +340,12 @@ function  survey_utils_show_radio_list($result) {
     echo "</table>";  
 }
 
-function survey_utils_show_radio_form($group_id, $question_id, $choice_id) {
-    global $group_id,$question_id,$Language;
+function survey_utils_show_radio_form($question_id, $choice_id) {
+    global $question_id,$Language;
     
     if ($choice_id != "") {
         // we are in case of update
-	$sql = "SELECT * FROM survey_radio_choices WHERE group_id='$group_id' AND question_id='$question_id' AND choice_id='$choice_id'";
+	$sql = "SELECT * FROM survey_radio_choices WHERE question_id='$question_id' AND choice_id='$choice_id'";
         $res = db_query($sql);
         $answer_value = db_result($res,0,'radio_choice');
         $rank_value = db_result($res,0,'choice_rank');        
@@ -366,8 +366,7 @@ function survey_utils_show_radio_form($group_id, $question_id, $choice_id) {
     }
     
     
-    $return = '<TABLE><FORM METHOD="POST">
-    <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
+    $return = '<TABLE><FORM METHOD="POST">    
     <INPUT TYPE="HIDDEN" NAME="question_id" VALUE="'.$question_id.'">
     <INPUT TYPE="HIDDEN" NAME="choice_id" VALUE="'.$choice_id.'">
     <TR><TD>'.$Language->getText('survey_s_utils','text_r').': <INPUT TYPE="TEXT" NAME="'.$text_name.'" VALUE="'.$answer_value.'" SIZE=30></TD></TR>
