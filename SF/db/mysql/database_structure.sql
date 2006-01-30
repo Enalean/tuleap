@@ -1807,8 +1807,7 @@ CREATE TABLE survey_questions (
 
 CREATE TABLE survey_radio_choices (
   choice_id int(11) NOT NULL auto_increment,
-  question_id int(11) NOT NULL,
-  group_id int(11) NOT NULL default '0',
+  question_id int(11) NOT NULL,  
   choice_rank int(11) NOT NULL,
   radio_choice text NOT NULL,
   PRIMARY KEY  (choice_id)  
