@@ -56,8 +56,8 @@ type text not null
 
 INSERT INTO survey_question_types VALUES ('1','Radio Buttons 1-5');
 INSERT INTO survey_question_types VALUES ('2','Text Area');
-INSERT INTO survey_question_types VALUES ('3','Radio Buttons Yes/No');
+INSERT INTO survey_question_types VALUES ('3','Yes/No');
 INSERT INTO survey_question_types VALUES ('4','Comment Only');
 INSERT INTO survey_question_types VALUES ('5','Text Field');
-INSERT INTO survey_question_types VALUES ('6','Poll Question');
+INSERT INTO survey_question_types VALUES ('6','Radio Buttons');
 INSERT INTO survey_question_types VALUES ('100','None');

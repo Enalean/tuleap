@@ -21,7 +21,7 @@ if ($post_changes) {
    $quest_id = db_result($res,0,'question_id');
 
    // if radio-type question is created, redirect to Edit A Question page
-   if ($question_type=="1") {
+   if ($question_type=="6") {
        session_redirect("/survey/admin/edit_question.php?func=update_question&group_id=$group_id&question_id=$quest_id");       
    }
 }

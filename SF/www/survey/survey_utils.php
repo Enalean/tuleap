@@ -127,18 +127,14 @@ function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
 
 	    if ($question_type == "1") {
 		/*
-		  This is a radio-button question. Values 1-5.
+		  This is a rædio-button question. Values 1-5.
 		*/
-		
-		$qry="SELECT * FROM survey_radio_choices WHERE group_id='$group_id' AND question_id='$quest_array[$i]' ORDER BY choice_rank";
-		$res=db_query($qry);
-		$j=1;
-		while ($row=db_fetch_array($res)) {
-		    $value=$row['radio_choice'];
+		$return .= "<b>1</b>";
+		for ($j=1; $j<=5; $j++) {
 		    $return .= '
-					<INPUT TYPE="RADIO" NAME="_'.$quest_array[$i].'" VALUE="'.$value.'"'.($existing_response==$value?" CHECKED ":"").'> '.$value.' <BR>';
-		    $j++;
-		}		
+					<INPUT TYPE="RADIO" NAME="_'.$quest_array[$i].'" VALUE="'.$j.'"'.($existing_response==$j?" CHECKED ":"").'>';
+		}
+		$return .= "&nbsp;&nbsp;<b>5</b>";
 
 	    } else if ($question_type == '2') {
 		/*
@@ -171,7 +167,22 @@ function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
 		$return .= '
 				<INPUT TYPE="TEXT" name="_'.$quest_array[$i].'" SIZE=30 MAXLENGTH=100 '.($response_exists?" VALUE='".$existing_response."'":"").'>';
 
-	    }
+	    } else if ($question_type == "6") {
+		/*
+		  This is a radio-button question.
+		*/
+		
+		$qry="SELECT * FROM survey_radio_choices WHERE group_id='$group_id' AND question_id='$quest_array[$i]' ORDER BY choice_rank";
+		$res=db_query($qry);
+		$j=1;
+		while ($row=db_fetch_array($res)) {
+		    $value=$row['radio_choice'];
+		    $return .= '
+					<INPUT TYPE="RADIO" NAME="_'.$quest_array[$i].'" VALUE="'.$value.'"'.($existing_response==$value?" CHECKED ":"").'> '.$value.' <BR>';
+		    $j++;
+		}    
+	    }		
+	    
 	    $return .= '</TD></TR>';
 
 	    $last_question_type=$question_type;
@@ -280,17 +291,10 @@ function  survey_utils_show_questions($result, $show_delete=true) {
 	$question_type = db_result($result,$j,'question_type');
 	//$question_type_id = db_result($result,$j,'question_type_id');
 	
-	/*if ($question_type_id=="1") {
-	    $show_icon="<a href=\"/survey/admin/edit_radio.php?func=browse&group_id=$group_id&question_id=$question_id\" ".
-	    '<IMG SRC="'.util_get_image_theme("ic/radio.png").'" BORDER="0" align="bottom" ></A>';
-	} else {
-	    $show_icon="";
-	}*/
-	
 	echo "<tr class=\"". html_get_alt_row_color($j) ."\">\n";
 
 	echo "<TD><A HREF=\"/survey/admin/edit_question.php?func=update_question&group_id=$group_id&question_id=$question_id\">$question_id</A></TD>\n".
-	    '<TD>'.db_result($result,$j,'question')."   ".$show_icon."</TD>\n".
+	    '<TD>'.db_result($result,$j,'question')."</TD>\n".
 	    '<TD>'.$question_type."</TD>\n";     
 		
 	if  ($show_delete) {

@@ -43,7 +43,7 @@ switch ($func) {
 		 htmlspecialchars($question), $question_type);
 	 
 	 // Delete radio buttons if the question type changes from radio-button	to anything else different
-	 if (($old_quest_type=="1") && ($question_type != "1")) {
+	 if (($old_quest_type=="6") && ($question_type != "6")) {
 	     $sql = "SELECT * FROM survey_radio_choices WHERE group_id='$group_id' AND question_id='$question_id'";
 	     $result = db_query($sql);
 	     $rows = db_numrows($result);
@@ -55,7 +55,7 @@ switch ($func) {
 	     }	 
 	 }	 
 	
-	 if (($old_quest_type != "1") && ($question_type=="1")) {	     
+	 if (($old_quest_type != "6") && ($question_type=="6")) {	     
 	     // display the radio-buttons list and form in case type is changed to radio
 	     session_redirect("/survey/admin/edit_question.php?func=update_question&group_id=$group_id&question_id=$question_id");
 	 } else {

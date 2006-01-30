@@ -85,7 +85,7 @@ $question_type=db_result($res1,0,'question_type');
 <?php
 
 // for radio-button questions, display buttons list and form
-if ($question_type=="1") {    
+if ($question_type=="6") {    
     require('browse_radio.php');
 }
 

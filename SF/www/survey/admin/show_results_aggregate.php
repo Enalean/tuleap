@@ -86,10 +86,10 @@ for ($i=0; $i<$quest_count; $i++) {
 
 	}
 	
-	if ($question_type == "1") {
+	if (($question_type == "1") || ($question_type == "6")) {
 
 		/*
-			This is a radio-button question. Values 1-5.	
+			This is a radio-button question.	
 		*/
 
 
@@ -119,27 +119,34 @@ for ($i=0; $i<$quest_count; $i++) {
 			compute average only if we have answers available
 		*/
 
-		if ($answers_cnt > 0) {
-		    $sql='SELECT avg(response) AS avg FROM survey_responses '.
-			"WHERE survey_id='$survey_id' AND question_id='$quest_array[$i]' ".
-			"AND response <> '' AND group_id='$group_id'";			
+		if ($question_type == "1") {
+		    if ($answers_cnt > 0) {
+		        $sql='SELECT avg(response) AS avg FROM survey_responses '.
+			    "WHERE survey_id='$survey_id' AND question_id='$quest_array[$i]' ".
+			    "AND response <> '' AND group_id='$group_id'";			
 
-		    $result2=db_query($sql);
-		    if (!$result2 || db_numrows($result2) < 1) {
-			echo $Language->getText('global','error');
-			echo db_error();
-		    } else {
-			$avg = db_result($result2, 0, 'avg');
-			echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-			printf($Language->getText('survey_admin_show_r_aggregate','avg')." <B>%.2f</B>",$avg);
+		        $result2=db_query($sql);
+		        if (!$result2 || db_numrows($result2) < 1) {
+			    echo $Language->getText('global','error');
+			    echo db_error();
+		        } else {
+			    $avg = db_result($result2, 0, 'avg');
+			    echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+			    printf($Language->getText('survey_admin_show_r_aggregate','avg')." <B>%.2f</B>",$avg);
+		        }
 		    }
-		}
+		}    
 
 		// Show the 1-5 markers only if this is the first in a series
 
-		if ($question_type != $last_question_type) {
+                if ($question_type == "1") {
+		    $type = " <B>1 &lt;--- - - - ---&gt; 5</B>\n";
+		} else {    
+		    $type = " <B>Radio Button</B>\n";
+		}
+		if ($question_type != $last_question_type) {			
 			echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.
-			    $Language->getText('survey_admin_show_r_aggregate','type')." <B>1 &lt;--- - - - ---&gt; 5</B>\n";
+			    $Language->getText('survey_admin_show_r_aggregate','type').$type;
 		}
 		
                 $sql="SELECT response,count(*) AS count FROM survey_responses WHERE survey_id='$survey_id' AND question_id='$quest_array[$i]' AND response <> '' AND group_id='$group_id' GROUP BY response"; 
