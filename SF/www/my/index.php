@@ -12,7 +12,6 @@ require('./my_utils.php');
 require_once('common/tracker/Artifact.class');
 require_once('common/tracker/ArtifactFile.class');
 require_once('common/tracker/ArtifactType.class');
-require_once('common/tracker/ArtifactGroup.class');
 require_once('common/tracker/ArtifactCanned.class');
 require_once('common/tracker/ArtifactTypeFactory.class');
 require_once('common/tracker/ArtifactField.class');
