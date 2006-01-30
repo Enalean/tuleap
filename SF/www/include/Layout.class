@@ -54,7 +54,9 @@ class Layout extends Error {
 
 		// Constructor for parent class...
 		$this->Error();
-
+        
+        $this->javascript_files = array();
+        
 		/*
 	        Set up the priority color array one time only
 		*/
@@ -70,6 +72,10 @@ class Layout extends Error {
 
 	}
 
+    function includeJavascriptFile($file) {
+        $this->javascript_files[] = $file;
+    }
+    
     function _getFeedback() {
         $feedback = '';
         if (trim($GLOBALS['feedback']) !== '') {
@@ -142,6 +148,10 @@ class Layout extends Error {
     <?php
         $em =& EventManager::instance();
         $em->processEvent("javascript_file", null);
+        
+        foreach ($this->javascript_files as $file) {
+            echo '<script type="text/javascript" src="'. $file .'"></script>'."\n";
+        }
     ?>
     <script type="text/javascript">
     <?php

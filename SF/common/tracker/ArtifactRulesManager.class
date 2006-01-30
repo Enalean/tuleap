@@ -24,9 +24,9 @@ class ArtifactRulesManager {
 	 *	@param	object	The Group object.
 	 *	@param	int		The id # assigned to this artifact type in the db.
 	 */
-	function ArtifactRulesManager(&$Group, $artifact_type_id) {
+	function ArtifactRulesManager(&$artifact_type) {
         
-		$this->artifact_type =& new ArtifactType($Group, $artifact_type_id);
+		$this->artifact_type =& $artifact_type;
 	}
 }
 

@@ -687,7 +687,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
             break;
     case 'dynamic_fields':
         require_once('../include/ArtifactRulesManagerHtml.class');
-        $armh =& new ArtifactRulesManagerHtml($group, $atid);
+        $armh =& new ArtifactRulesManagerHtml($ath);
         $request =& HTTPRequest::instance();
         if ($request->exist('edit')) {
            if ($request->exist('save')) {

@@ -518,6 +518,13 @@ tracker_include_type	edit_field_perm	Editer les permissions du champ
 tracker_include_type	dynamic_fields	Champs&nbsp;dynamiques
 tracker_include_type	mng_dynamic_fields	Gérer les champs dynamiques
 tracker_include_type	define_dynamic_fields	Gérer les champs dynamiques
+tracker_include_type	edit_rule	Editer la rêgle
+tracker_include_type	choose_fields	Choisir les champs
+tracker_include_type	choose_field	-- Choisir un champ
+tracker_include_type	master_title	Champ maître
+tracker_include_type	slave_title	Champ esclave
+tracker_include_type	btn_save_rule	Sauver la règle
+tracker_include_type	if_then	Si le champ <strong>%1</strong> est sélectionné à %2 alors le champ <strong>%3</strong> proposera %4
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactCanned.class

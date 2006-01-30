@@ -15,29 +15,48 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
 	/**
 	 *  ArtifactRulesManagerHtml() - constructor
 	 *
-	 *  @param $Group object
-	 *  @param $artifact_type_id - the id # assigned to this artifact type in the db
+	 *  @param $artifact_type object
 	 */
-	function ArtifactRulesManagerHtml(&$Group,$artifact_type_id=false) {
-		$this->ArtifactRulesManager($Group,$artifact_type_id);
-        $this->artifact_type =& new ArtifactTypeHtml($Group,$artifact_type_id);
+	function ArtifactRulesManagerHtml(&$artifact_type_html) {
+		$this->ArtifactRulesManager($artifact_type_html);
+        $this->artifact_type =& $artifact_type_html;
+        
 	}
+    
 
     function displayEditForm() {
         $this->_header();
         echo '<noscript>'. $GLOBALS['Language']->getText('tracker_dynamic_fields','noscript') .'</noscript>';
-        echo '<script type="text/javascript"><!--//--><![CDATA[//><!--'."\n";
+        echo '<h3>'. $GLOBALS['Language']->getText('tracker_include_type','edit_rule') .'</h3>';
+        echo '<form action="" method="post"><div id="edit_rule"></div>';
+        echo '</form>';
+        echo '<script type="text/javascript">'."\n";
         
         $art_field_fact =& new ArtifactFieldFactory($this->artifact_type);
         $used_fields = $art_field_fact->getAllUsedFields();
         foreach($used_fields as $field) {
             if ($field->isSelectBox() || $field->isSelectBox()) {
-                echo "fields['".$field->getID()."'] = new com.xerox.codex.tracker.Field('".$field->getID()."', '".$field->getLabel()."');\n";
                 $values = $field->getFieldValues ($this->artifact_type->getID(),"'A','P'");
-                var_dump($rows = db_numrows($values));
+                if (db_numrows($values) > 1) {
+                    echo "fields['".$field->getID()."'] = new com.xerox.codex.tracker.Field('".$field->getID()."', '".$field->getLabel()."');\n";
+                    $default_value = $field->getDefaultValue();
+                    echo "options['".$field->getID()."'] = {};\n";
+                    while ($row = db_fetch_array($values)) {
+                        echo "options['". $field->getID() ."']['". $row['value_id'] ."'] = {option:new Option('". $row['value'] ."', '". $row['value_id'] ."'), selected:". ($row['value_id']==$default_value?'true':'false') ."};\n";
+                    }
+                }
             }
         }
+        echo "\n//------------------------------------------------------\n";
+        echo 'messages = {';
+            echo "choose_field:'". $GLOBALS['Language']->getText('tracker_include_type','choose_field') ."',\n";
+            echo "if_then:'". $GLOBALS['Language']->getText('tracker_include_type','if_then') ."',\n";
+            echo "btn_save_rule:'". $GLOBALS['Language']->getText('tracker_include_type','btn_save_rule') ."'";
+        echo "};\n";
+        echo 'buildAdminUI();';
+        echo "\n//------------------------------------------------------\n";
         echo "\n".'//--><!]]></script>';
+        echo '</fieldset>';
         $this->_footer();
     }
     
@@ -50,6 +69,10 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
     }
     
     function _header() {
+        $GLOBALS['HTML']->includeJavascriptFile("/include/scriptaculous/prototype.js");
+        $GLOBALS['HTML']->includeJavascriptFile("/include/scriptaculous/scriptaculous.js");
+        $GLOBALS['HTML']->includeJavascriptFile("/include/dynamicFields.js");
+        
         $params = array();
         $params['title']   = $this->artifact_type->getName() .' '. $GLOBALS['Language']->getText('tracker_include_type','mng_dynamic_fields');
         $params['help']    = 'TrackerAdministration.html';

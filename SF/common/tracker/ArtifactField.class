@@ -652,7 +652,7 @@ class ArtifactField extends Error {
 	 * @return array
 	 */
 	function getFieldValues ($group_artifact_id,$status) {
-	
+        $res_value = false;
 	    if (!$this->getGlobalValueFunction()) {
 
 			$sql="SELECT value_id,value,field_id,group_artifact_id,description,order_id,status ".

@@ -101,7 +101,7 @@ class ArtifactType extends Error {
 			return false;
 		}
 		
-		$this->Group = $Group;
+		$this->Group =& $Group;
 		if ($artifact_type_id) {
 			$res_events = $this->getNotificationEvents($artifact_type_id);
 			$this->num_events = db_numrows($res_events);
@@ -337,7 +337,7 @@ class ArtifactType extends Error {
 	 *
 	 *	  @return	Object	The Group object.
 	 */
-	function getGroup() {
+	function &getGroup() {
 		return $this->Group;
 	}
 
