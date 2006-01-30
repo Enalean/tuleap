@@ -49,67 +49,71 @@ if [ -z "$BASEDIR" ]; then
     BASEDIR=/home/httpd/documentation
 fi
 CMDDIR=$BASEDIR/user_guide/cmd
-cd $BASEDIR/user_guide/xml/en_US
 
-if [ ! -e $BASEDIR/user_guide/pdf/en_US/CodeX_User_Guide.pdf ]; then
-    FORCE=1;
-fi
+for lang in en_US fr_FR
+do
+    cd $BASEDIR/user_guide/xml/$lang
 
-if [ $FORCE != 1 ]
-then
-    # check if some need some update
-    COUNT=`find $BASEDIR/user_guide/xml -newer $BASEDIR/user_guide/pdf/en_US/CodeX_User_Guide.pdf | wc -l`
-    if [ $COUNT == 0 ]
-    then
-        # No changes in the documentation
-        if [ $VERBOSE == 1 ]
-        then
-            echo "No changes in the documentation"
-        fi
-        exit 0
+    if [ ! -e $BASEDIR/user_guide/pdf/$lang/CodeX_User_Guide.pdf ]; then
+        FORCE=1;
     fi
-fi
 
-mkdir -p ../../html/en_US
+    if [ $FORCE != 1 ]
+    then
+        # check if some need some update
+        COUNT=`find $BASEDIR/user_guide/xml -newer $BASEDIR/user_guide/pdf/$lang/CodeX_User_Guide.pdf | wc -l`
+        if [ $COUNT == 0 ]
+        then
+            # No changes in the documentation
+            if [ $VERBOSE == 1 ]
+            then
+                echo "No changes in the documentation"
+            fi
+            exit 0
+        fi
+    fi
 
-$CMDDIR/xml2html.sh CodeX_User_Guide.xml ../../html/en_US/ >/tmp/log_xml2html_$$ 2>&1
-if [ $? != 0 ]
-then
-    echo "CodeX documentation generation failed!"
-	echo "See error log below:"
-	echo ""
-	cat /tmp/log_xml2html_$$
-    exit 1
-fi
-if [ $VERBOSE == 1 ]
-then
-    cat /tmp/log_xml2html_$$
-fi
+    mkdir -p ../../html/$lang
 
-# set the path
-OLD_PATH=${PATH}
-export PATH=${PATH}:${BASEDIR}/user_guide/cmd
+    $CMDDIR/xml2html.sh CodeX_User_Guide.xml ../../html/$lang/ >/tmp/log_xml2html_$$ 2>&1
+    if [ $? != 0 ]
+    then
+        echo "CodeX documentation generation failed!"
+            echo "See error log below:"
+            echo ""
+            cat /tmp/log_xml2html_$$
+        exit 1
+    fi
+    if [ $VERBOSE == 1 ]
+    then
+        cat /tmp/log_xml2html_$$
+    fi
 
-mkdir -p $BASEDIR/user_guide/pdf/en_US
+    # set the path
+    OLD_PATH=${PATH}
+    export PATH=${PATH}:${BASEDIR}/user_guide/cmd
+    
+    mkdir -p $BASEDIR/user_guide/pdf/$lang
 
-$CMDDIR/xml2pdf.sh CodeX_User_Guide.xml $BASEDIR/user_guide/pdf/en_US/CodeX_User_Guide_new.pdf >/tmp/log_xml2pdf_$$ 2>&1 
-if [ $? != 0 ]
-then
-    echo "CodeX documentation generation failed!"
-	echo "See error log below:"
-    echo ""
-    cat /tmp/log_xml2pdf_$$
+    $CMDDIR/xml2pdf.sh CodeX_User_Guide.xml $BASEDIR/user_guide/pdf/$lang/CodeX_User_Guide_new.pdf >/tmp/log_xml2pdf_$$ 2>&1 
+    if [ $? != 0 ]
+    then
+        echo "CodeX documentation generation failed!"
+            echo "See error log below:"
+        echo ""
+        cat /tmp/log_xml2pdf_$$
+        export PATH=${OLD_PATH}
+        exit 1
+    fi
+    if [ $VERBOSE == 1 ]
+    then
+        cat /tmp/log_xml2pdf_$$
+    fi
     export PATH=${OLD_PATH}
-    exit 1
-fi
-if [ $VERBOSE == 1 ]
-then
-    cat /tmp/log_xml2pdf_$$
-fi
-export PATH=${OLD_PATH}
 
-cd $BASEDIR/user_guide/pdf/en_US
-cp -f CodeX_User_Guide.pdf CodeX_User_Guide_old.pdf > /dev/null
-mv CodeX_User_Guide_new.pdf CodeX_User_Guide.pdf
+    cd $BASEDIR/user_guide/pdf/$lang
+    cp -f CodeX_User_Guide.pdf CodeX_User_Guide_old.pdf > /dev/null
+    mv CodeX_User_Guide_new.pdf CodeX_User_Guide.pdf
+done
 cd "$CURRENTDIR"
 exit 0
