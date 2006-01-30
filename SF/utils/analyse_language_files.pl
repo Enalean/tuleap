@@ -77,7 +77,7 @@ foreach my $filename (@files) {
   open FILE,"$filename";
   #print "File: $filename\n";
   while(<FILE>) {
-    while (/\$Language->getText\s*\(.([^,\'\"\s]+).[\s]*\,[\s]*(.)([^,\'\"\s]+)[^\)][\)\,]/) {
+    while (/->getText\s*\(.([^,\'\"\s]+).[\s]*\,[\s]*(.)([^,\'\"\s]+)[^\)][\)\,]/) {
       #print "\t$1\t$2\t$3\n";}
       if (($2 ne "\'")&&($2 ne "\"")) { # not a regular 'string'
         $special_keys_array{"$1"}{"$3"}.="$filename ";
@@ -89,7 +89,7 @@ foreach my $filename (@files) {
       }
       $used_lines++;
       # for multiple occurences on same line
-      $_ =~ s/\$Language->getText\s*\(.([^,\'\"\s]+).[\s]*\,[\s]*(.)([^,\'\"\s]+)[^\)][\)\,]//;
+      $_ =~ s/\->getText\s*\(.([^,\'\"\s]+).[\s]*\,[\s]*(.)([^,\'\"\s]+)[^\)][\)\,]//;
     }
   }
   close FILE;
