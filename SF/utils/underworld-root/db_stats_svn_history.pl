@@ -162,7 +162,7 @@ for my $g ( keys %svn_access ) {
   #print "key=$g\n";
 			
   $sql = "INSERT INTO stats_project_build_tmp (group_id,stat,value) 
-	   VALUES ('" . $group_id . "'," 
+	   VALUES ('" . $g . "'," 
 	  . "'svn_access_count','" . $svn_access_by_group{$g} . "')";
   $dbh->do( $sql );
 
