@@ -3195,6 +3195,42 @@ CREATE TABLE `user_plugin` (
 -- }}}
 
 
+-- DynamicFields tables
+-- {{{
+
+DROP TABLE IF EXISTS df_rules;
+CREATE TABLE df_rules (
+  id int(11) unsigned NOT NULL auto_increment,
+  group_artifact_id int(11) NOT NULL default '0',
+  field_id int(11) NOT NULL default '0',
+  condtion_id int(11) NOT NULL default '0',
+  PRIMARY KEY  (id)
+);
+
+DROP TABLE IF EXISTS df_rules_fieldvalues;
+CREATE TABLE df_rules_fieldvalues (
+  rule_id int(11) NOT NULL default '0',
+  value_id int(11) NOT NULL default '0',
+  PRIMARY KEY  (rule_id,value_id)
+);
+
+DROP TABLE IF EXISTS df_conditions;
+CREATE TABLE df_conditions (
+  id int(11) NOT NULL auto_increment,
+  field_id int(11) NOT NULL default '0',
+  PRIMARY KEY  (id)
+);
+
+DROP TABLE IF EXISTS df_conditions_fieldvalues;
+CREATE TABLE df_conditions_fieldvalues (
+  condition_id int(11) NOT NULL default '0',
+  value_id int(11) NOT NULL default '0',
+  PRIMARY KEY  (condition_id,value_id)
+);
+
+
+-- }}}
+
 #
 # EOF
 #

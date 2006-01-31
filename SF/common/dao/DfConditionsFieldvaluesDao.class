@@ -1,0 +1,68 @@
+<?php
+//
+// Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+//
+// $Id$
+//
+
+require_once('include/DataAccessObject.class');
+
+/**
+ *  Data Access Object for DfConditionsFieldvalues 
+ */
+class DfConditionsFieldvaluesDao extends DataAccessObject {
+    /**
+    * Constructs the DfConditionsFieldvaluesDao
+    * @param $da instance of the DataAccess class
+    */
+    function DfConditionsFieldvaluesDao( & $da ) {
+        DataAccessObject::DataAccessObject($da);
+    }
+    
+    /**
+    * Gets all tables of the db
+    * @return DataAccessResult
+    */
+    function & searchAll() {
+        $sql = "SELECT * FROM df_conditions_fieldvalues";
+        return $this->retrieve($sql);
+    }
+    
+    /**
+    * Searches DfConditionsFieldvalues by ConditionId 
+    * @return DataAccessResult
+    */
+    function & searchByConditionId($conditionId) {
+        $sql = sprintf("SELECT value_id FROM df_conditions_fieldvalues WHERE condition_id = %s",
+				$this->da->quoteSmart($conditionId));
+        return $this->retrieve($sql);
+    }
+
+    /**
+    * Searches DfConditionsFieldvalues by ValueId 
+    * @return DataAccessResult
+    */
+    function & searchByValueId($valueId) {
+        $sql = sprintf("SELECT condition_id FROM df_conditions_fieldvalues WHERE value_id = %s",
+				$this->da->quoteSmart($valueId));
+        return $this->retrieve($sql);
+    }
+
+
+    /**
+    * create a row in the table df_conditions_fieldvalues 
+    * @return true or id(auto_increment) if there is no error
+    */
+    function create($condition_id, $value_id) {
+		$sql = sprintf("INSERT INTO df_conditions_fieldvalues (condition_id, value_id) VALUES (%s, %s)",
+				$this->da->quoteSmart($condition_id),
+				$this->da->quoteSmart($value_id));
+        $inserted = $this->update($sql);
+ 
+        return $inserted;
+    }
+
+}
+
+
+?>

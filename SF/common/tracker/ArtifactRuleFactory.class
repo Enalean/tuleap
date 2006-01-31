@@ -1,0 +1,85 @@
+<?php
+require_once('common/dao/DfRulesDao.class');
+require_once('common/dao/DfRulesFieldvaluesDao.class');
+require_once('common/dao/DfConditionsDao.class');
+require_once('common/dao/DfConditionsFieldvaluesDao.class');
+require_once('common/dao/CodexDataAccess.class');
+
+require_once('ArtifactRule.class');
+require_once('ArtifactCondition.class');
+
+/**
+ * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+ * 
+ * $Id$
+ *
+ * PluginFactory
+ */
+class ArtifactRuleFactory {
+    
+    var $rules_dao;
+    var $rules_values_dao;
+    var $conditions_dao;
+    var $conditions_values_dao;
+    var $rules;
+    
+    function ArtifactRuleFactory(&$rules_dao, &$rules_values_dao, &$conditions_dao, &$conditions_values_dao) {
+        $this->rules_dao             =& $rules_dao;
+        $this->rules_values_dao      =& $rules_values_dao;
+        $this->conditions_dao        =& $conditions_dao;
+        $this->conditions_values_dao =& $conditions_values_dao;
+        
+        $this->rules = array();
+    }
+    
+    function & getRuleById($id) {
+        if (!isset($this->rules[$id])) {
+            $this->rules[$id] = null;
+            //We retrieve rule
+            $dar =& $this->rules_dao->searchById($id);
+            if ($dar && ($rule_row = $dar->getRow())) {
+                $this->rules[$id] =& $this->_buildRuleInstance($rule_row['id'], $rule_row['group_artifact_id'], $rule_row['field_id'], $rule_row['condition_id']);
+            }
+        }
+        return $this->rules[$id];
+    }
+    
+    function getAllRulesByArtifactType(&$artifact_type) {
+        $dar =& $this->rules_dao->searchByGroupArtifactId($artifact_type->getId());
+        $rules = array();
+        while($rule_row = $dar->getRow()) {
+            if (!isset($this->rules[$rule_row['id']])) {
+                $this->rules[$rule_row['id']] =& $this->_buildRuleInstance($rule_row['id'], $rule_row['group_artifact_id'], $rule_row['field_id'], $rule_row['condition_id']);
+            }
+            $rules[] =& $this->rules[$rule_row['id']];
+        }
+        return $rules;
+    }
+    
+    function &_buildRuleInstance($rule_id, $group_artifact_id, $field_id, $condition_id) {
+        $rule = false;
+        //We retrieve corresponding condition
+        $dar =& $this->conditions_dao->searchById($condition_id);
+        if ($dar && ($cond_row = $dar->getRow())) {
+            //We retrieve values for condition
+            $values = array();
+            $dar =& $this->conditions_values_dao->searchByConditionId($cond_row['id']);
+            while ($row =& $dar->getRow()) {
+                $values[] = $row['value_id'];
+            }
+            //We create Condition
+            $condition =& new ArtifactCondition($cond_row['id'], $cond_row['field_id'], $values);
+            
+            //We retrieve values for rule
+            $values = array();
+            $dar =& $this->rules_values_dao->searchByRuleId($rule_id);
+            while ($row =& $dar->getRow()) {
+                $values[] = $row['value_id'];
+            }
+            //We create Rule
+            $rule =& new ArtifactRule($rule_id, $group_artifact_id, $field_id, $values, $condition);
+        }
+        return $rule;
+    }
+}
+?>

@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+ * 
+ * $Id$
+ *
+ * ArtifactCondition
+ */
+class ArtifactCondition {
+    
+    var $id;
+    var $field;
+    var $values;
+    
+    function ArtifactCondition($id, $field, $values) {
+        $this->id        = $id;
+        $this->setValues($values);
+        $this->setField($field);
+    }
+    
+    function getField() {
+        return $this->field;
+    }
+    function setField($field) {
+        $this->field = $field;
+    }
+    function getValues() {
+        return $this->values;
+    }
+    function setValues($values) {
+        $this->values = $values;
+    }
+}
+?>

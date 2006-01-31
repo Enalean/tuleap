@@ -1,0 +1,45 @@
+<?php
+
+/**
+ * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+ * 
+ * $Id$
+ *
+ * ArtifactRule
+ */
+class ArtifactRule {
+    
+    var $condition;
+    var $group_artifact_id;
+    var $id;
+    var $field;
+    var $values;
+    
+    function ArtifactRule($id, $group_artifact_id, $field, $values, &$condition) {
+        $this->id                = $id;
+        $this->group_artifact_id = $group_artifact_id;
+        $this->setValues($values);
+        $this->setField($field);
+        $this->setCondition($condition);
+    }
+    
+    function &getCondition() {
+        return $this->condition;
+    }
+    function setCondition(&$condition) {
+        $this->condition =& $condition;
+    }
+    function getField() {
+        return $this->field;
+    }
+    function setField($field) {
+        $this->field = $field;
+    }
+    function getValues() {
+        return $this->values;
+    }
+    function setValues($values) {
+        $this->values = $values;
+    }
+}
+?>

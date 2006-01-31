@@ -50,6 +50,9 @@ $alltest->addTestFile('common/event/AllTests.php');
 $alltest->addTestFile('common/plugin/AllTests.php');
 // }}}
 
+// {{{ Trackers
+$alltest->addTestFile('common/tracker/AllTests.php');
+// }}}
 //We run the tests
 $alltest->run(new CodexReporter());
 

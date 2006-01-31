@@ -12,13 +12,15 @@ $Language->loadLanguageMsg('tracker/tracker');
 
 class ArtifactRulesManagerHtml extends ArtifactRulesManager {
 
+    var $artifact_type;
+    
 	/**
 	 *  ArtifactRulesManagerHtml() - constructor
 	 *
 	 *  @param $artifact_type object
 	 */
 	function ArtifactRulesManagerHtml(&$artifact_type_html) {
-		$this->ArtifactRulesManager($artifact_type_html);
+		$this->ArtifactRulesManager();
         $this->artifact_type =& $artifact_type_html;
         
 	}

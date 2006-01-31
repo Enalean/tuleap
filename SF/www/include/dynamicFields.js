@@ -371,7 +371,7 @@ function buildAdminUI() {
 	html = messages['if_then'];
 	
 	ms = document.createElement('select');
-	ms.id = 'master_field';
+	ms.id = ms.name = 'master_field';
 	o = document.createElement('option');
 	o.value = '-1';
 	o.innerHTML = messages['choose_field'];
@@ -388,27 +388,30 @@ function buildAdminUI() {
 	msv = document.createElement('select');
 	msv.multiple            = 'multiple';
 	msv.style.verticalAlign = 'top';
-	msv.id = msv.name       = 'master';
+	msv.id                  = 'master';
+	msv.name                = 'master[]';
 	msv.disabled            = 'disabled';
 	html = html.replace(/%2/, getOuterHTML(msv));
 	
 	ss = ms.cloneNode(true);
-	ss.id = 'slave_field';
+	ss.id = ss.name = 'slave_field';
 	ss.disabled = 'disabled';
 	html = html.replace(/%3/, getOuterHTML(ss));
 	
 	ssv = document.createElement('select');
 	ssv.multiple            = 'multiple';
 	ssv.style.verticalAlign = 'top';
-	ssv.id = ssv.name       = 'slave';
+	ssv.id                  = 'slave';
+	ssv.name                = 'slave[]';
 	ssv.disabled            = 'disabled';
 	html = html.replace(/%4/, getOuterHTML(ssv));
 	
 	
 	new Insertion.Top('edit_rule', html+'&nbsp;');
 	submit = document.createElement('button');
-	submit.name      = 'action';
-	submit.value     = 'save_rule';
+	submit.id        = 'submit';
+	submit.name      = 'save';
+	submit.value     = 'save';
 	submit.disabled  = 'disabled';
 	submit.innerHTML = messages['btn_save_rule'];
 	$('edit_rule').appendChild(submit);
@@ -462,7 +465,7 @@ function admin_fieldHasChanged(field) {
 			$('master').size = $H(options[$F(field.id)]).values().length;
 			$H(options[$F(field.id)]).values().each(function(opt) {
 					o = new Option(opt['option'].text, opt['option'].value);
-					o.selected = opt['selected'];
+					o.selected = '';
 					$('master').appendChild(o);
 			});
 			//{{{ We remove master field from slave field
@@ -495,18 +498,70 @@ function admin_fieldHasChanged(field) {
 			}
 		});
 		//}}}
+		//{{{ We remove options for slave
+		el = $('slave');
+		for(var i = el.options.length ; i >= 0 ; i--) {
+			el.options[i] = null;
+		}
+		//}}}
 		if ($F(field.id) != '-1') {
 			$('slave').size = $H(options[$F(field.id)]).values().length;
 			$H(options[$F(field.id)]).values().each(function(opt) {
 					o = document.createElement('option');
 					o.value    = opt['option'].value;
 					o.text     = opt['option'].text;
-					o.selected = opt['selected'];
+					o.selected = '';
 					$('slave').appendChild(o);
 			});
 			$('slave').disabled = '';
 		}
+		$('submit').disabled = 'disabled';
 		break;
+	case 'slave':
+		//{{{ We disable submit field if needed
+		disabled = 'disabled';
+		len = field.options.length;
+		nb  = 0;
+		i   = 0;
+		while (i < len && !field.options[i].selected) {
+			i++;
+		}
+		if (i < len) {
+			len = $('master').options.length;
+			nb  = 0;
+			i   = 0;
+			while (i < len && !$('master').options[i].selected) {
+				i++;
+			}
+			if (i < len) {
+				disabled = '';
+			}
+		}
+		$('submit').disabled = disabled;
+		//}}}
+		break;
+	case 'master':
+		//{{{ We disable submit field if needed
+		disabled = 'disabled';
+		len = field.options.length;
+		nb  = 0;
+		i   = 0;
+		while (i < len && !field.options[i].selected) {
+			i++;
+		}
+		if (i < len) {
+			len = $('slave').options.length;
+			nb  = 0;
+			i   = 0;
+			while (i < len && !$('slave').options[i].selected) {
+				i++;
+			}
+			if (i < len) {
+				disabled = '';
+			}
+		}
+		$('submit').disabled = disabled;
+		//}}}
 	default:
 		break;
 	}
