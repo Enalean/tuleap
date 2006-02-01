@@ -289,7 +289,13 @@ function  survey_utils_show_questions($result, $show_delete=true) {
 
 	$question_id = db_result($result,$j,'question_id');
 	$question_type = db_result($result,$j,'question_type');
-	//$question_type_id = db_result($result,$j,'question_type_id');
+	$question_type_id = db_result($result,$j,'question_type_id');
+	
+	if ($question_type_id == 6) {
+	    $warning='warning_loose_data';
+	} else {
+	    $warning='warning_loose_answers';
+	}    
 	
 	echo "<tr class=\"". html_get_alt_row_color($j) ."\">\n";
 
@@ -300,7 +306,7 @@ function  survey_utils_show_questions($result, $show_delete=true) {
 	if  ($show_delete) {
 	    echo '<TD align=center>'.
 		"<a href=\"/survey/admin/edit_question.php?func=delete_question&group_id=$group_id&question_id=$question_id\" ".
-		'" onClick="return confirm(\''.$Language->getText('survey_s_utils','del_q').'\')">'.
+		'" onClick="return confirm(\''.$Language->getText('survey_s_utils',$warning).'\')">'.		
 		'<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="'.$Language->getText('survey_s_utils','del_txt').'"></A></TD>';
 	}
 
