@@ -114,6 +114,8 @@ survey_admin_update_question	subm_changes	Submit Changes
 # Script: SF/www/survey/admin/update_radio.php
 #
 survey_admin_update_radio	update_r	Update A Radio Button
+survey_admin_update_radio	fill_r_text	Please, fill the Text field.
+survey_admin_update_radio	fill_r_rank	Please, fill the Rank field.
 #
 #-----------------------------------------------
 # Script: SF/www/survey/admin/update_survey.php
@@ -171,6 +173,7 @@ survey_s_data	r_del_fail	Error deleting radio button #$1: $2
 survey_s_data	r_del_succ	Radio button #$1 successfully deleted
 survey_s_data	r_create_duplicate	Creation failed - Duplicate radio button
 survey_s_data	r_update_duplicate	Update failed - Duplicate radio button
+survey_s_data	r_rank_int	Submit failed. Rank type should be integer.
 #
 #-----------------------------------------------
 # Script: SF/www/survey/survey.php
@@ -199,7 +202,6 @@ survey_s_utils	del	Delete?
 survey_s_utils	del_s	Delete this survey?\n\n** Important **\nIf you delete a survey, all associated responses will be lost.
 survey_s_utils	found	$1 Found
 survey_s_utils	q_id	Question ID
-survey_s_utils	del_q	Delete this question?\n\n** Important **\nIf you delete a question, all associated responses in all surveys using this question will be lost.
 survey_s_utils	del_txt	DELETE
 survey_s_utils	resp	Response
 survey_s_utils	occ	Number of occurences
@@ -211,3 +213,5 @@ survey_s_utils	text_r	Text
 survey_s_utils	add_button	Add a new button
 survey_s_utils	button_id	Button ID
 survey_s_utils	rank	Rank
+survey_s_utils	warning_loose_data	** WARNING!! ** If you delete this question, you will loose ALL the associated radio buttons and responses in all surveys using this question.Continue?
+survey_s_utils	warning_loose_answers	** WARNING!! ** If you delete this question, you will loose responses in all surveys using this question.Continue?
