@@ -85,8 +85,18 @@ $question_type=db_result($res1,0,'question_type');
 <?php
 
 // for radio-button questions, display buttons list and form
-if ($question_type=="6") {    
-    require('browse_radio.php');
+if ($question_type=="6") {   
+    
+    $sql="SELECT * ".
+    "FROM survey_radio_choices ".
+    "WHERE question_id='$question_id'".
+    "ORDER BY choice_rank";
+     $result=db_query($sql);
+     
+    // add radio button in database, when submitted
+    echo $Language->getText('survey_admin_browse_radio','edit_r_msg'); 
+    survey_utils_show_radio_list($result);
+    survey_utils_show_radio_form($question_id,"");
 }
 
 survey_footer(array());
