@@ -85,12 +85,32 @@ function survey_data_radio_update($question_id, $choice_id, $radio, $rank) {
     
     global $feedback,$Language;
     
-    //check if the radio button text is already existing. If so, update fails
-    $qry="SELECT * FROM survey_radio_choices WHERE question_id='$question_id' AND radio_choice='$radio'";
-    $res=db_query($qry);
-    if (db_numrows($res)>0) {
-        $feedback .= " ".$Language->getText('survey_s_data','r_update_duplicate');
-    } else {  
+    $update=false;
+    
+    $qry1="SELECT * FROM survey_radio_choices WHERE question_id='$question_id' AND choice_id='$choice_id'";
+    $res1=db_query($qry1);
+    $old_text=db_result($res1,0,'radio_choice');
+    $old_rank=db_result($res1,0,'choice_rank');
+    
+    if (($old_text==$radio) && ($old_rank==$rank)) {
+        $feedback .= " ".$Language->getText('survey_s_data','upd_fail');
+    } else {
+    
+        //check if the radio button text is already existing. If so, update fails
+        if ($old_text != $radio) {
+            $qry2="SELECT * FROM survey_radio_choices WHERE question_id='$question_id' AND radio_choice='$radio'";
+            $res2=db_query($qry2);
+            if (db_numrows($res2)>0) {
+                $feedback .= " ".$Language->getText('survey_s_data','r_update_duplicate');
+            } else {
+	        $update=true;
+	    }	
+        } else {
+	    $update=true;
+	}    	
+    }
+    
+    if ($update) {
         $sql="UPDATE survey_radio_choices SET radio_choice='$radio',choice_rank='$rank'".
              " WHERE question_id='$question_id' AND choice_id='$choice_id'";
         $result=db_query($sql);
@@ -99,8 +119,7 @@ function survey_data_radio_update($question_id, $choice_id, $radio, $rank) {
         } else {
 	    $feedback .= ' '.$Language->getText('survey_s_data','upd_succ').' ';
         }
-    }	
-
+    }   
 }
 
 
