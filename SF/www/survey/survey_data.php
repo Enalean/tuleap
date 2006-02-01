@@ -112,13 +112,13 @@ function survey_data_radio_update($question_id, $choice_id, $radio, $rank) {
     
     if ($update) {
         $sql="UPDATE survey_radio_choices SET radio_choice='$radio',choice_rank='$rank'".
-             " WHERE question_id='$question_id' AND choice_id='$choice_id'";
+            " WHERE question_id='$question_id' AND choice_id='$choice_id'";
         $result=db_query($sql);
         if (db_affected_rows($result) < 1) {
 	    $feedback .= ' '.$Language->getText('survey_s_data','upd_fail',db_error());
         } else {
 	    $feedback .= ' '.$Language->getText('survey_s_data','upd_succ').' ';
-        }
+        }	   
     }   
 }
 
@@ -126,7 +126,7 @@ function survey_data_radio_update($question_id, $choice_id, $radio, $rank) {
 function survey_data_radio_create($question_id, $radio, $rank) {
     
     global $feedback,$Language;
-      
+         	
     //check if the radio button text is already existing. If so, creation fails
     $qry="SELECT * FROM survey_radio_choices WHERE question_id='$question_id' AND radio_choice='$radio'";
     $res=db_query($qry);
@@ -141,7 +141,7 @@ function survey_data_radio_create($question_id, $radio, $rank) {
         } else {
 	    $feedback .= " ".$Language->getText('survey_s_data','r_create_fail',db_error());
         }
-    }	
+    }
 }
 
 function survey_data_radio_delete($question_id, $choice_id) {
