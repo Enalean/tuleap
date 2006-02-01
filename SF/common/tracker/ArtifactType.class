@@ -224,7 +224,6 @@ class ArtifactType extends Error {
 		//echo $sql;
 		$res = db_query($sql);
 		if (!$res || db_affected_rows($res) <= 0) {
-            var_dump($sql);
 			$this->setError('ArtifactType: '.db_error());
 			return false;
 		} else {
