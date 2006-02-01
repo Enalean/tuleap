@@ -691,9 +691,14 @@ if ($group_id && (!isset($atid) || !$atid)) {
         $request =& HTTPRequest::instance();
         if ($request->exist('edit')) {
            if ($request->exist('save')) {
-               if (is_int($request->get('master_field')) && is_int($request->get('slave_field')) && is_array($request->get('master')) && is_array($request->get('slave'))) {
-                   $armh->createRule($request->get('master_field'), $request->get('master'), $request->get('slave_field'), $request->get('slave'));
-               }
+                if (is_numeric($request->get('master_field')) && is_numeric($request->get('slave_field')) && is_array($request->get('master')) && is_array($request->get('slave'))) {
+                    foreach($request->get('master') as $value) {
+                        $armh->saveRule($request->get('master_field'), $value, $request->get('slave_field'), $request->get('slave'));
+                    }
+                    $armh->displayEditForm();
+                } else {
+                    $armh->badRequest();
+                }
            } else {
                $armh->displayEditForm();
            }

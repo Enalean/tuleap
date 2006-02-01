@@ -8,14 +8,14 @@
 require_once('include/DataAccessObject.class');
 
 /**
- *  Data Access Object for DfRulesFieldvalues 
+ *  Data Access Object for ArtifactRuleTargetValues 
  */
-class DfRulesFieldvaluesDao extends DataAccessObject {
+class ArtifactRuleTargetValuesDao extends DataAccessObject {
     /**
-    * Constructs the DfRulesFieldvaluesDao
+    * Constructs the ArtifactRuleTargetValuesDao
     * @param $da instance of the DataAccess class
     */
-    function DfRulesFieldvaluesDao( & $da ) {
+    function ArtifactRuleTargetValuesDao( & $da ) {
         DataAccessObject::DataAccessObject($da);
     }
     
@@ -24,37 +24,37 @@ class DfRulesFieldvaluesDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchAll() {
-        $sql = "SELECT * FROM df_rules_fieldvalues";
+        $sql = "SELECT * FROM artifact_rule_target_values";
         return $this->retrieve($sql);
     }
     
     /**
-    * Searches DfRulesFieldvalues by RuleId 
+    * Searches ArtifactRuleTargetValues by RuleId 
     * @return DataAccessResult
     */
     function & searchByRuleId($ruleId) {
-        $sql = sprintf("SELECT value_id FROM df_rules_fieldvalues WHERE rule_id = %s",
+        $sql = sprintf("SELECT value_id FROM artifact_rule_target_values WHERE rule_id = %s",
 				$this->da->quoteSmart($ruleId));
         return $this->retrieve($sql);
     }
 
     /**
-    * Searches DfRulesFieldvalues by ValueId 
+    * Searches ArtifactRuleTargetValues by ValueId 
     * @return DataAccessResult
     */
     function & searchByValueId($valueId) {
-        $sql = sprintf("SELECT rule_id FROM df_rules_fieldvalues WHERE value_id = %s",
+        $sql = sprintf("SELECT rule_id FROM artifact_rule_target_values WHERE value_id = %s",
 				$this->da->quoteSmart($valueId));
         return $this->retrieve($sql);
     }
 
 
     /**
-    * create a row in the table df_rules_fieldvalues 
+    * create a row in the table artifact_rule_target_values 
     * @return true or id(auto_increment) if there is no error
     */
     function create($rule_id, $value_id) {
-		$sql = sprintf("INSERT INTO df_rules_fieldvalues (rule_id, value_id) VALUES (%s, %s)",
+		$sql = sprintf("INSERT INTO artifact_rule_target_values (rule_id, value_id) VALUES (%s, %s)",
 				$this->da->quoteSmart($rule_id),
 				$this->da->quoteSmart($value_id));
         $inserted = $this->update($sql);

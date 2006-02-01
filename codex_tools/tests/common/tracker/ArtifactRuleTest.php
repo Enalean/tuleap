@@ -9,7 +9,6 @@ require_once('tests/simpletest/unit_tester.php');
 require_once('tests/simpletest/mock_objects.php'); //uncomment to use Mocks
 
 require_once('common/tracker/ArtifactRule.class');
-require_once('common/tracker/ArtifactCondition.class');
 Mock::generate('ArtifactCondition');
 
 /**
@@ -27,12 +26,7 @@ class ArtifactRuleTest extends UnitTestCase {
     function ArtifactRuleTest($name = 'ArtifactRule test') {
         $this->UnitTestCase($name);
     }
-
-    function testCondition() {
-        $c =& new MockArtifactCondition($this);
-        $r =& new ArtifactRule(1, 2, 3, 4, $c);
-        $this->assertReference($r->getCondition(), $c);
-    }
+    
 }
 
 if (CODEX_RUNNER === __FILE__) {

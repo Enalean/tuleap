@@ -3198,36 +3198,23 @@ CREATE TABLE `user_plugin` (
 -- DynamicFields tables
 -- {{{
 
-DROP TABLE IF EXISTS df_rules;
-CREATE TABLE df_rules (
-  id int(11) unsigned NOT NULL auto_increment,
+DROP TABLE IF EXISTS artifact_rule;
+CREATE TABLE artifact_rule (
+  id int(11) NOT NULL auto_increment,
   group_artifact_id int(11) NOT NULL default '0',
-  field_id int(11) NOT NULL default '0',
-  condtion_id int(11) NOT NULL default '0',
-  PRIMARY KEY  (id)
+  source_field_id int(11) NOT NULL default '0',
+  source_value_id int(11) NOT NULL default '0',
+  target_field_id int(11) NOT NULL default '0',
+  PRIMARY KEY  (id),
+  KEY group_artifact_id (group_artifact_id)
 );
 
-DROP TABLE IF EXISTS df_rules_fieldvalues;
-CREATE TABLE df_rules_fieldvalues (
+DROP TABLE IF EXISTS artifact_rule_target_values;
+CREATE TABLE artifact_rule_target_values (
   rule_id int(11) NOT NULL default '0',
   value_id int(11) NOT NULL default '0',
   PRIMARY KEY  (rule_id,value_id)
 );
-
-DROP TABLE IF EXISTS df_conditions;
-CREATE TABLE df_conditions (
-  id int(11) NOT NULL auto_increment,
-  field_id int(11) NOT NULL default '0',
-  PRIMARY KEY  (id)
-);
-
-DROP TABLE IF EXISTS df_conditions_fieldvalues;
-CREATE TABLE df_conditions_fieldvalues (
-  condition_id int(11) NOT NULL default '0',
-  value_id int(11) NOT NULL default '0',
-  PRIMARY KEY  (condition_id,value_id)
-);
-
 
 -- }}}
 
