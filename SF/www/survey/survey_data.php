@@ -126,7 +126,7 @@ function survey_data_radio_update($question_id, $choice_id, $radio, $rank) {
 function survey_data_radio_create($question_id, $radio, $rank) {
     
     global $feedback,$Language;
-    
+      
     //check if the radio button text is already existing. If so, creation fails
     $qry="SELECT * FROM survey_radio_choices WHERE question_id='$question_id' AND radio_choice='$radio'";
     $res=db_query($qry);

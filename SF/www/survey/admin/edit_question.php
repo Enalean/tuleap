@@ -69,9 +69,19 @@ switch ($func) {
     
  case 'update_radio':
      if ($GLOBALS['update_submit']) {
-         // achieve the update, then return to 'Edit A Question' page
-         survey_data_radio_update($question_id,$choice_id,$choice,$ranking);
-         require('./update_question.php');
+         if ($GLOBALS['choice'] == "") {
+	     $feedback .= " ".$Language->getText('survey_admin_update_radio','fill_r_text');
+	     require('./update_radio.php');
+	 }
+	 if ($GLOBALS['ranking'] == "") {
+	     $feedback .= " ".$Language->getText('survey_admin_update_radio','fill_r_rank');
+	     require('./update_radio.php');
+	 }
+	 if (($GLOBALS['choice'] != "") && ($GLOBALS['ranking'] != "")) {	  
+             // achieve the update, then return to 'Edit A Question' page
+             survey_data_radio_update($question_id,$choice_id,$choice,$ranking);
+             require('./update_question.php');	    
+	 }
      } else {
 	 // show the form to update the radio
 	 require('./update_radio.php');
@@ -80,8 +90,17 @@ switch ($func) {
     
  case 'create_radio':
     if ($GLOBALS['create_submit']) {
-        // achieve the creation
-        survey_data_radio_create($question_id,$answer,$rank);
+        if ($GLOBALS['answer'] == "") {
+	    $feedback .= " ".$Language->getText('survey_admin_update_radio','fill_r_text');
+	}
+	if ($GLOBALS['rank'] == "") {
+	    $feedback .= " ".$Language->getText('survey_admin_update_radio','fill_r_rank');
+	}
+	
+	if (($GLOBALS['answer'] != "") && ($GLOBALS['rank'] != "")) {
+	    // achieve the creation
+            survey_data_radio_create($question_id,$answer,$rank);
+	}
     }
     require('./update_question.php');	 
     break;
