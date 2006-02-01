@@ -72,17 +72,13 @@ switch ($func) {
          if ($GLOBALS['choice'] == "") {
 	     $feedback .= " ".$Language->getText('survey_admin_update_radio','fill_r_text');
 	     require('./update_radio.php');
-	 }
-	 if ($GLOBALS['ranking'] == "") {
+	 } else if ($GLOBALS['ranking'] == "") {
 	     $feedback .= " ".$Language->getText('survey_admin_update_radio','fill_r_rank');
 	     require('./update_radio.php');
-	 }
-	 if (! is_numeric($GLOBALS['ranking'])) {
+	 } else if (! is_numeric($GLOBALS['ranking'])) {
 	     $feedback .= " ".$Language->getText('survey_s_data','r_rank_int');
 	     require('./update_radio.php');
-	 }
-	 
-	 if (($GLOBALS['choice'] != "") && ($GLOBALS['ranking'] != "") && (is_numeric($GLOBALS['ranking']))) {	  
+	 } else {	 
              // achieve the update, then return to 'Edit A Question' page
              survey_data_radio_update($question_id,$choice_id,$choice,$ranking);
              require('./update_question.php');	    
@@ -97,15 +93,11 @@ switch ($func) {
     if ($GLOBALS['create_submit']) {
         if ($GLOBALS['answer'] == "") {
 	    $feedback .= " ".$Language->getText('survey_admin_update_radio','fill_r_text');
-	}
-	if ($GLOBALS['rank'] == "") {
+	} else if ($GLOBALS['rank'] == "") {
 	    $feedback .= " ".$Language->getText('survey_admin_update_radio','fill_r_rank');
-	}
-	if (! is_numeric($GLOBALS['rank'])) {
+	} else if (! is_numeric($GLOBALS['rank'])) {
 	    $feedback .= " ".$Language->getText('survey_s_data','r_rank_int');
-	}
-	
-	if (($GLOBALS['answer'] != "") && ($GLOBALS['rank'] != "") && (is_numeric($GLOBALS['rank']))) {
+	} else {
 	    // achieve the creation
             survey_data_radio_create($question_id,$answer,$rank);
 	}

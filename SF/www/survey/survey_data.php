@@ -180,7 +180,7 @@ function survey_data_question_delete($group_id,$question_id) {
     // Delete first the responses associated with to the question  if any
     $res = db_query("DELETE FROM survey_responses WHERE group_id=$group_id AND survey_id=$question_id");
     // Delete the radio choices if it is a radio button question
-    $res = db_query("DELETE FROM survey_radio_choices WHERE group_id=$group_id AND question_id=$question_id");
+    $res = db_query("DELETE FROM survey_radio_choices WHERE question_id=$question_id");
     // Then delete the question itself
     $res = db_query("DELETE FROM survey_questions WHERE group_id=$group_id AND question_id=$question_id");
     if (db_affected_rows($res) <= 0) {
