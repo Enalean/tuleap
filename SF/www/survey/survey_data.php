@@ -101,7 +101,19 @@ function survey_data_radio_update($question_id, $choice_id, $radio, $rank) {
             $qry2="SELECT * FROM survey_radio_choices WHERE question_id='$question_id' AND radio_choice='$radio'";
             $res2=db_query($qry2);
             if (db_numrows($res2)>0) {
-                $feedback .= " ".$Language->getText('survey_s_data','r_update_duplicate');
+                $duplicata="";
+	        $i=0;
+	        while ((strcmp($duplicata,$radio) != 0) && ($i <= db_numrows($res2))) {
+	            $duplicata=db_result($res2,$i,'radio_choice');
+	            $i++;
+	        }
+	        // check for upper/lower cases : same texts with different cases (uppercase/lowercase) are allowed
+		
+		if ($i > db_numrows($res2)) {
+		    $update=true;
+		} else {
+		    $feedback .= " ".$Language->getText('survey_s_data','r_update_duplicate');		    
+		}   
             } else {
 	        $update=true;
 	    }	
@@ -127,13 +139,30 @@ function survey_data_radio_create($question_id, $radio, $rank) {
     
     global $feedback,$Language;
          	
+    $create=false;		
+		
     //check if the radio button text is already existing. If so, creation fails
     $qry="SELECT * FROM survey_radio_choices WHERE question_id='$question_id' AND radio_choice='$radio'";
     $res=db_query($qry);
     if (db_numrows($res)>0) {
-        $feedback .= " ".$Language->getText('survey_s_data','r_create_duplicate');
+        $duplicata="";
+	$i=0;
+	while ((strcmp($duplicata,$radio) != 0) && ($i <= db_numrows($res))) {
+	    $duplicata=db_result($res,$i,'radio_choice');
+	    $i++;
+	}
+	// check for upper/lower cases : same texts with different cases (uppercase/lowercase) are allowed
+	if ($i > db_numrows($res)) {
+	    $create=true;
+	} else {	    
+            $feedback .= " ".$Language->getText('survey_s_data','r_create_duplicate');
+	}        
     } else {	
-        $sql='INSERT INTO survey_radio_choices (question_id,radio_choice,choice_rank) '.
+        $create=true;
+    }	
+	
+    if ($create) {	
+	$sql='INSERT INTO survey_radio_choices (question_id,radio_choice,choice_rank) '.
             "VALUES ('$question_id','$radio','$rank')";
         $result=db_query($sql);
         if ($result) {
