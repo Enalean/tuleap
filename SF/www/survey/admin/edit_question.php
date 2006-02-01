@@ -78,6 +78,14 @@ switch ($func) {
      }
      break;    
     
+ case 'create_radio':
+    if ($GLOBALS['create_submit']) {
+        // achieve the creation
+        survey_data_radio_create($question_id,$answer,$rank);
+    }
+    require('./update_question.php');	 
+    break;
+        
  case 'delete_radio':
      survey_data_radio_delete($question_id,$choice_id);
      require('./update_question.php')   ;
