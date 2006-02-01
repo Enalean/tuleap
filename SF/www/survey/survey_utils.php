@@ -341,7 +341,7 @@ function  survey_utils_show_radio_list($result) {
 }
 
 function survey_utils_show_radio_form($question_id, $choice_id) {
-    global $question_id,$Language;
+    global $group_id,$question_id,$Language;
     
     if ($choice_id != "") {
         // we are in case of update
@@ -360,13 +360,14 @@ function survey_utils_show_radio_form($question_id, $choice_id) {
 	$text_name = "answer";
 	$rank_name = "rank";
 	$submit_name = "create_submit";
-        $submit_value=$Language->getText('survey_s_utils','create');	
+        $submit_value=$Language->getText('survey_s_utils','create');
+	$action = "/survey/admin/edit_question.php?func=create_radio&group_id=$group_id&question_id=$question_id";	
         echo "<hr>";
         echo '<h3>'.$Language->getText('survey_s_utils','add_button').'</h3>';
     }
     
     
-    $return = '<TABLE><FORM METHOD="POST">    
+    $return = '<TABLE><FORM ACTION="'.$action.'" METHOD="POST">    
     <INPUT TYPE="HIDDEN" NAME="question_id" VALUE="'.$question_id.'">
     <INPUT TYPE="HIDDEN" NAME="choice_id" VALUE="'.$choice_id.'">
     <TR><TD>'.$Language->getText('survey_s_utils','text_r').': <INPUT TYPE="TEXT" NAME="'.$text_name.'" VALUE="'.$answer_value.'" SIZE=30></TD></TR>
