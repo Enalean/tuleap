@@ -24,6 +24,16 @@ class ArtifactRuleFactory {
         $this->rules = array();
     }
     
+    function &instance() {
+        static $_artifactrulefactory_instance;
+        if (!$_artifactrulefactory_instance) {
+            $rules_dao         =& new ArtifactRuleDao(CodexDataAccess::instance());
+            $target_values_dao =& new ArtifactRuleTargetValuesDao(CodexDataAccess::instance());
+            $_artifactrulefactory_instance = new ArtifactRuleFactory($rules_dao, $target_values_dao);
+        }
+        return $_artifactrulefactory_instance;
+    }
+
     function & getRuleById($id) {
         if (!isset($this->rules[$id])) {
             $this->rules[$id] = null;
@@ -61,6 +71,22 @@ class ArtifactRuleFactory {
             $rule =& new ArtifactRule($rule_id, $group_artifact_id, $source_field, $source_value, $target_field, $target_values);
         }
         return $rule;
+    }
+    
+    function saveRule($group_artifact_id, $source, $source_value, $target, $target_values) {
+        //need transaction ?
+        //Search for existing one with same parameters
+        $dar = $this->rules_dao->searchByGroupArtifactIdAndSourceAndSourceValueAndTarget($group_artifact_id, $source, $source_value, $target);
+        if ($dar && ($row = $dar->getRow())) {
+            $rule_id = $row['id'];
+            $this->target_values_dao->deleteByRuleId($rule_id);
+        } else {
+            //Create new one
+            $rule_id = $this->rules_dao->create($group_artifact_id, $source, $source_value, $target);
+        }
+        if ($rule_id) {
+            $this->target_values_dao->create($rule_id, $target_values);
+        }
     }
 }
 ?>

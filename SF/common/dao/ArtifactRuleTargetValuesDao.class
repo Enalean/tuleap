@@ -54,12 +54,24 @@ class ArtifactRuleTargetValuesDao extends DataAccessObject {
     * @return true or id(auto_increment) if there is no error
     */
     function create($rule_id, $value_id) {
-		$sql = sprintf("INSERT INTO artifact_rule_target_values (rule_id, value_id) VALUES (%s, %s)",
-				$this->da->quoteSmart($rule_id),
-				$this->da->quoteSmart($value_id));
+        if (!is_array($value_id)) {
+            $value_id = array($value_id);
+        }
+        $values = array();
+        foreach($value_id as $value) {
+            $values[] = '('.$this->da->quoteSmart($rule_id).', '.$this->da->quoteSmart($value).')';
+        }
+		$sql = sprintf("INSERT INTO artifact_rule_target_values (rule_id, value_id) VALUES %s",
+				implode(', ', $values));
         $inserted = $this->update($sql);
  
         return $inserted;
+    }
+    
+    function deleteByRuleId($ruleId) {
+        $sql = sprintf("DELETE FROM artifact_rule_target_values WHERE rule_id = %s",
+				$this->da->quoteSmart($ruleId));
+        return $this->update($sql);
     }
 
 }

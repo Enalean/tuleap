@@ -27,7 +27,7 @@ class DataAccessObject {
     function &retrieve($sql) {
         $result =& $this->da->fetch($sql);
         if ($error = $result->isError()) {
-            trigger_error($error);
+            trigger_error($error .' ==> '. $sql);
             return false;
         } else {
             return $result;
@@ -43,7 +43,7 @@ class DataAccessObject {
     function update($sql) {
         $result = $this->da->fetch($sql);
         if ($error = $result->isError()) {
-            trigger_error($error);
+            trigger_error($error .' ==> '. $sql);
             return false;
         } else {
             return true;

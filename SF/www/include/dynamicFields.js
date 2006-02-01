@@ -371,7 +371,7 @@ function buildAdminUI() {
 	html = messages['if_then'];
 	
 	ms = document.createElement('select');
-	ms.id = ms.name = 'master_field';
+	ms.id = ms.name = 'source_field';
 	o = document.createElement('option');
 	o.value = '-1';
 	o.innerHTML = messages['choose_field'];
@@ -388,21 +388,21 @@ function buildAdminUI() {
 	msv = document.createElement('select');
 	msv.multiple            = 'multiple';
 	msv.style.verticalAlign = 'top';
-	msv.id                  = 'master';
-	msv.name                = 'master[]';
+	msv.id                  = 'source';
+	msv.name                = 'source[]';
 	msv.disabled            = 'disabled';
 	html = html.replace(/%2/, getOuterHTML(msv));
 	
 	ss = ms.cloneNode(true);
-	ss.id = ss.name = 'slave_field';
+	ss.id = ss.name = 'target_field';
 	ss.disabled = 'disabled';
 	html = html.replace(/%3/, getOuterHTML(ss));
 	
 	ssv = document.createElement('select');
 	ssv.multiple            = 'multiple';
 	ssv.style.verticalAlign = 'top';
-	ssv.id                  = 'slave';
-	ssv.name                = 'slave[]';
+	ssv.id                  = 'target';
+	ssv.name                = 'target[]';
 	ssv.disabled            = 'disabled';
 	html = html.replace(/%4/, getOuterHTML(ssv));
 	
@@ -416,10 +416,10 @@ function buildAdminUI() {
 	submit.innerHTML = messages['btn_save_rule'];
 	$('edit_rule').appendChild(submit);
 	
-	$('master_field').onchange = function() { admin_fieldHasChanged(this); }
-	$('master').onchange       = function() { admin_fieldHasChanged(this); }
-	$('slave_field').onchange  = function() { admin_fieldHasChanged(this); }
-	$('slave').onchange        = function() { admin_fieldHasChanged(this); }
+	$('source_field').onchange = function() { admin_fieldHasChanged(this); }
+	$('source').onchange       = function() { admin_fieldHasChanged(this); }
+	$('target_field').onchange  = function() { admin_fieldHasChanged(this); }
+	$('target').onchange        = function() { admin_fieldHasChanged(this); }
 	
 }
 
@@ -450,9 +450,9 @@ function getOuterHTML (node) {
 
 function admin_fieldHasChanged(field) {
 	switch (field.id) {
-	case 'master_field':
-		//{{{ We remove options for slave
-		reset = $('slave_field', 'slave', 'master');
+	case 'source_field':
+		//{{{ We remove options for target
+		reset = $('target_field', 'target', 'source');
 		reset.each(function (el) {
 			for(var i = el.options.length ; i >= 0 ; i--) {
 				el.options[i] = null;
@@ -462,35 +462,35 @@ function admin_fieldHasChanged(field) {
 		});
 		//}}}
 		if ($F(field.id) != '-1') {
-			$('master').size = $H(options[$F(field.id)]).values().length;
+			$('source').size = $H(options[$F(field.id)]).values().length;
 			$H(options[$F(field.id)]).values().each(function(opt) {
 					o = new Option(opt['option'].text, opt['option'].value);
 					o.selected = '';
-					$('master').appendChild(o);
+					$('source').appendChild(o);
 			});
-			//{{{ We remove master field from slave field
-			$('slave_field').appendChild(new Option(messages['choose_field']), '-1');
-			$H(fields).values().each(function(slave_field) {
-					if (slave_field.id != $F(field.id)) {
-						$('slave_field').appendChild(new Option(slave_field.name, slave_field.id));
+			//{{{ We remove source field from target field
+			$('target_field').appendChild(new Option(messages['choose_field']), '-1');
+			$H(fields).values().each(function(target_field) {
+					if (target_field.id != $F(field.id)) {
+						$('target_field').appendChild(new Option(target_field.name, target_field.id));
 					}
 			});
 			//}}}
-			$('master').disabled      = '';
-			$('slave_field').disabled = '';
+			$('source').disabled      = '';
+			$('target_field').disabled = '';
 		}
 		break;
-	case 'slave_field':
-		//{{{ We remove slave field from master field
-		el = $('master_field');
-		old = $F('master_field');
+	case 'target_field':
+		//{{{ We remove target field from source field
+		el = $('source_field');
+		old = $F('source_field');
 		for(var i = el.options.length ; i >= 0 ; i--) {
 			el.options[i] = null;
 		}
 		el.appendChild(new Option(messages['choose_field']), '-1');
-		$H(fields).values().each(function(master_field) {
-			if (master_field.id != $F(field.id)) {
-				o = new Option(master_field.name, master_field.id);
+		$H(fields).values().each(function(source_field) {
+			if (source_field.id != $F(field.id)) {
+				o = new Option(source_field.name, source_field.id);
 				if (old == o.value) {
 					o.selected = 'selected';
 				}
@@ -498,26 +498,26 @@ function admin_fieldHasChanged(field) {
 			}
 		});
 		//}}}
-		//{{{ We remove options for slave
-		el = $('slave');
+		//{{{ We remove options for target
+		el = $('target');
 		for(var i = el.options.length ; i >= 0 ; i--) {
 			el.options[i] = null;
 		}
 		//}}}
 		if ($F(field.id) != '-1') {
-			$('slave').size = $H(options[$F(field.id)]).values().length;
+			$('target').size = $H(options[$F(field.id)]).values().length;
 			$H(options[$F(field.id)]).values().each(function(opt) {
 					o = document.createElement('option');
 					o.value    = opt['option'].value;
 					o.text     = opt['option'].text;
 					o.selected = '';
-					$('slave').appendChild(o);
+					$('target').appendChild(o);
 			});
-			$('slave').disabled = '';
+			$('target').disabled = '';
 		}
 		$('submit').disabled = 'disabled';
 		break;
-	case 'slave':
+	case 'target':
 		//{{{ We disable submit field if needed
 		disabled = 'disabled';
 		len = field.options.length;
@@ -527,10 +527,10 @@ function admin_fieldHasChanged(field) {
 			i++;
 		}
 		if (i < len) {
-			len = $('master').options.length;
+			len = $('source').options.length;
 			nb  = 0;
 			i   = 0;
-			while (i < len && !$('master').options[i].selected) {
+			while (i < len && !$('source').options[i].selected) {
 				i++;
 			}
 			if (i < len) {
@@ -540,7 +540,7 @@ function admin_fieldHasChanged(field) {
 		$('submit').disabled = disabled;
 		//}}}
 		break;
-	case 'master':
+	case 'source':
 		//{{{ We disable submit field if needed
 		disabled = 'disabled';
 		len = field.options.length;
@@ -550,10 +550,10 @@ function admin_fieldHasChanged(field) {
 			i++;
 		}
 		if (i < len) {
-			len = $('slave').options.length;
+			len = $('target').options.length;
 			nb  = 0;
 			i   = 0;
-			while (i < len && !$('slave').options[i].selected) {
+			while (i < len && !$('target').options[i].selected) {
 				i++;
 			}
 			if (i < len) {

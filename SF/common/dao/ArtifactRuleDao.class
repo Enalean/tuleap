@@ -101,6 +101,14 @@ class ArtifactRuleDao extends DataAccessObject {
         return $inserted;
     }
 
+    function searchByGroupArtifactIdAndSourceAndSourceValueAndTarget($group_artifact_id, $source_field_id, $source_value_id, $target_field_id) {
+        $sql = sprintf("SELECT id FROM artifact_rule WHERE group_artifact_id = %s AND source_field_id = %s AND source_value_id = %s AND target_field_id = %s",
+				$this->da->quoteSmart($group_artifact_id),
+				$this->da->quoteSmart($source_field_id),
+				$this->da->quoteSmart($source_value_id),
+				$this->da->quoteSmart($target_field_id));
+        return $this->retrieve($sql);
+    }
 }
 
 
