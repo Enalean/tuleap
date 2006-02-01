@@ -21,6 +21,7 @@ require_once('common/tracker/ArtifactReport.class');
 require_once('common/tracker/ArtifactReportFactory.class');
 require_once('common/tracker/ArtifactReportField.class');
 require_once('common/tracker/Artifact.class');
+require_once('common/include/ReferenceManager.class');
 require('../include/ArtifactTypeHtml.class');
 require('../include/ArtifactCannedHtml.class');
 require('../include/ArtifactReportHtml.class');
@@ -111,6 +112,22 @@ if ($group_id && (!isset($atid) || !$atid)) {
             exit_error($Language->getText('global','error'),$ath->getErrorMessage());
 		} else {
 			$feedback .= $Language->getText('tracker_admin_index','tracker_created');
+                        // Create corresponding reference
+                        $reference_manager =& ReferenceManager::instance();
+                        $ref=& new Reference(0, // no ID yet
+                                             strtolower($itemname),
+                                             $Language->getText('project_reference','reference_art_desc_key'), // description
+                                             '/tracker/?func=detail&aid=$1&group_id=$group_id', // link
+                                             'P', // scope is 'project'
+                                             '',  // service ID - N/A
+                                             '1', // is_used
+                                             $group_id);
+                        $result=$reference_manager->createReference($ref);
+                        if (!$result) {
+                            $feedback .= " - ".$GLOBALS['Language']->getText('project_reference','create_for_tracker_fail');
+                        } else {
+                            $feedback .= " - ".$GLOBALS['Language']->getText('project_reference','r_create_success')." ";
+                        }
 		}
 		require('./admin_trackers.php');
 		break;
@@ -679,6 +696,15 @@ if ($group_id && (!isset($atid) || !$atid)) {
 		} else {
 		  $feedback = $Language->getText('tracker_admin_index','delete_success',$ath->getName());
 		  echo $Language->getText('tracker_admin_index','tracker_deleted',array($ath->getName(),$GLOBALS['sys_email_admin']));
+                  // Delete related reference if it exists
+                  // NOTE: there is no way to know if the reference is actually related to this tracker.
+                  $reference_manager =& ReferenceManager::instance();
+                  $ref =& $reference_manager->loadReferenceFromKeywordAndNumArgs(strtolower($ath->getItemName()),$group_id,1);
+                  if ($ref) {
+                      if ($reference_manager->deleteReference($ref)) {
+                          $feedback .= " - ".$Language->getText('project_reference','t_r_deleted');
+                      }
+                  }
 		} 
 		$ath->footer(array());
 	  break;

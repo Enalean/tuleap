@@ -1,0 +1,54 @@
+<?php
+//
+// Copyright (c) Xerox Corporation, CodeX Team, 2001-2006. All rights reserved
+//
+// $Id: GroupFactory.class 1553 2005-05-20 16:38:25Z nterray $
+//
+//
+
+require_once('pre.php');
+require_once('common/include/HTTPRequest.class');
+require_once('common/include/ReferenceManager.class');
+
+$reference_manager =& ReferenceManager::instance();
+$request =& HTTPRequest::instance();
+
+
+if (!$request->get('group_id'))
+    $group_id=100;
+ else $group_id=$request->get('group_id');
+
+if ((!$request->get('key'))
+    ||(!$request->get('val'))) {
+    exit_error($GLOBALS['Language']->getText('global','error'),
+               $GLOBALS['Language']->getText('include', 'missing_parameter'));
+ }
+
+$keyword=$request->get('key');
+$args=array();
+$args =explode("/",$request->get('val'));
+
+$ref=& $reference_manager->loadReferenceFromKeywordAndNumArgs($keyword,$group_id,count($args));
+if (!$ref) {
+    exit_error($GLOBALS['Language']->getText('global','error'),
+               $GLOBALS['Language']->getText('include_exit', 'missing_param_err'));
+ }
+
+// Get groupname (might be useful in replace rules)
+$projname=null;
+$gf = new GroupFactory();
+$results = $gf->getAllGroups();
+while ($groups_array = db_fetch_array($results)) {
+    if ($groups_array["group_id"]==$group_id) {
+        $projname=$groups_array["unix_group_name"];
+        break;
+    }
+ }
+
+$ref->replaceLink($args,$projname);
+//echo "<p>Link is: ".$ref->getLink();
+$location = "Location: ".$ref->getLink().$feed;
+header($location);
+exit;
+
+?>

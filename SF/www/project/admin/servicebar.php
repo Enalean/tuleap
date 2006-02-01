@@ -11,6 +11,7 @@
 require_once('pre.php');
 require_once('vars.php');
 require_once('www/project/admin/project_admin_utils.php');
+require_once('common/include/ReferenceManager.class');
 
 $Language->loadLanguageMsg('project/project');
 
@@ -220,7 +221,13 @@ if ($func=='do_update') {
         $feedback .= ' '.$Language->getText('project_admin_servicebar','s_update_success').' ';
     }
 
+    // If this is a global service (i.e. with a shortname), we might need to (de-)activate the corresponding reference 
+    if (isset($shortname)) {
+        $reference_manager =& ReferenceManager::instance();
+        $reference_manager->updateReferenceForService($group_id,$shortname,$is_active);
+    }
 }
+
 
 
 

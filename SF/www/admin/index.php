@@ -108,6 +108,11 @@ echo ")</b>";?>
 <li><a href="/project/admin/servicebar.php?group_id=100"><?php echo $Language->getText('admin_main', 'configure_svc'); ?></A>
 </ul>
 
+<h3><?php echo $Language->getText('admin_main', 'header_ref'); ?></h3>
+<ul>
+<li><a href="/project/admin/reference.php?group_id=100"><?php echo $Language->getText('admin_main', 'configure_ref'); ?></A>
+</ul>
+
 <h3><?php echo $Language->getText('admin_main', 'header_tracker'); ?></h3>
 <ul>
 <li><a href="/tracker/admin/restore.php"><?php echo $Language->getText('admin_main', 'tracker_remove'); ?></A>

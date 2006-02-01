@@ -8,6 +8,8 @@
 
   //$Language->loadLanguageMsg('include/include');
 
+require_once('common/include/ReferenceManager.class');
+
 // This function returns a string of the date $value with the format $format and
 // if this date is not set, return the default value $default_value
 function format_date($format,$value,$default_value = '-') {
@@ -309,8 +311,9 @@ function util_make_links ($data='',$group_id = 0, $group_artifact_id = 0) {
     // john.doe@yahoo.com => <a href="mailto:...">...</a>
     $data = eregi_replace("(([a-z0-9_]|\\-|\\.)+@([^[:space:]<&>]*)([[:alnum:]-]))", "<a href=\"mailto:\\1\" target=\"_new\">\\1</a>", $data);
 
-    if ($group_id) { $group_param="&group_id=$group_id";}
-    $data = eregi_replace("([^[:blank:]()\$\&\!\;\~\#\|\{\}\%\,\?\=\+\'\"\.\:\/\>]+)[ ]?#([0-9]+)", "<a href=\"/tracker/?func=gotoid$group_param&aid=\\2&atn=\\1\">\\1 #\\2</a>", $data);
+    $reference_manager =& ReferenceManager::instance();
+    if ($group_id)
+        $reference_manager->insertReferences($data,$group_id);
 
     return $data;
 }

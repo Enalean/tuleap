@@ -239,12 +239,75 @@ project_admin_permissions	cant_add_ug	$1 - ERROR: Cannot add ugroup $2. Are you 
 project_admin_permissions	def_val	(default values)
 project_admin_permissions	perm_update_success	$1 - Permissions successfully updated
 project_admin_permissions	reset_to_def	Reset To Defaults
+#-----------------------------------------------
+# Script: SF/www/project/admin/reference.php
+#
+project_reference	create_fail	Reference creation failed: the selected keyword is invalid (reserved, or already exists)
+project_reference	create_for_tracker_fail	Reference not created: the shortname is not valid (reserved, or already exists). You may still reference tracker artifacts with the 'art' or 'artifact' keyword.
+project_reference	create_s	Create a new reference.
+project_reference	del?	Delete?
+project_reference	del_fail	- DELETE FAILED! $1
+project_reference	del_r	Delete this reference ?
+project_reference	disabled	<i>Disabled</i>
+project_reference	edit_fail	Reference edition failed: the selected keyword is invalid (reserved, or already exists)
+project_reference	edit_r	Edit Reference
+project_reference	edit_reference	Editing References
+project_reference	edit_s_for	Editing References for <B>$1</B>
+project_reference	edit_system_s	Editing System References
+project_reference	enabled	Enabled
+project_reference	enabled_desc	Automatically extract this keyword?
+project_reference	fields_required	fields required
+project_reference	id	Reference ID
+project_reference	keyword	Keyword
+project_reference	manage_sys_r	Manage System References
+project_reference	manage_proj_r	Manage Project References
+project_reference	missing_parameter	A parameter is missing, please press the "Back" button and complete the form
+project_reference	new_s	New Reference
+project_reference	project	project
+project_reference	r_create_success	Successfully Created Reference
+project_reference	r_creation	Create a new reference
+project_reference	r_deleted	Reference Deleted
+project_reference	r_desc	Description
+project_reference	r_desc_in_tooltip	Reference Description will be displayed in a tooltip above reference label.
+project_reference	r_keyword	Keyword
+project_reference	r_keyword_desc	Keyword that will trigger a reference creation
+project_reference	r_link	Link
+project_reference	r_scope	Scope of the reference: project only or system-wide
+project_reference	r_service	Bound to Service
+project_reference	r_service_desc	If the reference is specific to one CodeX service, select it here
+project_reference	ref_scope_P	Project
+project_reference	ref_scope_S	System
+project_reference	scope	Scope
+project_reference	sr_deleted	System Reference Deleted
+project_reference	system	system
+project_reference	system_r_create_success	Successfully Created System Reference - Reference added to all project
+project_reference	t_r_deleted	Corresponding Reference Deleted
+project_reference	url	URL pointed by the reference
+project_reference	warning_del_r	*********** WARNING ***********  Do you want to delete the reference? This will remove this reference ($1) from ALL projects of this server. Are you SURE you want to continue ?
+## There should be a description value here for each reference name (system or project wide) that should be localised
+## Naming rule for the key: 
+## reference_<reference keyword>_desc_key for the reference description
+project_reference	reference_art_desc_key	Go to tracker artifact
+project_reference	reference_cvs_desc_key	Go to CVS commit detail
+project_reference	reference_svn_desc_key	Go to Subversion revision details
+project_reference	reference_wiki_desc_key	Go to Wiki page
+project_reference	reference_wikiversion_desc_key	Go to Wiki version
+project_reference	reference_file_desc_key	Go to file
+project_reference	reference_doc_desc_key	Go to document
+project_reference	reference_news_desc_key	Go to piece of news
+project_reference	reference_forum_desc_key	Go to forum
+project_reference	reference_msg_desc_key	Go to forum message
+project_reference	reference_bug_desc_key	Go to bug
+project_reference	reference_task_desc_key	Go to task
+project_reference	reference_sr_desc_key	Go to support request
+project_reference	reference_patch_desc_key	Go to patch
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/project_admin_utils.php
 #
 project_admin_utils	edit_public_info	Edit Public Info
 project_admin_utils	user_perms	User Permissions
+project_admin_utils	references	References Configuration
 project_admin_utils	ug_admin	User Groups Admin
 project_admin_utils	project_data_export	Project Data Export
 project_admin_utils	tracker_import	Tracker Import
@@ -312,7 +375,7 @@ project_admin_utils	perm_granted_for_object	Permission granted for object $1
 #
 project_admin_servicebar	unavailable	Unavailable
 project_admin_servicebar	disabled	Disabled
-project_admin_servicebar	warning_del_s	*********** WARNING ***********\nDo you want to delete the service? This will remove this service ($1) from ALL projects of this server. Are you SURE you want to continue ?
+project_admin_servicebar	warning_del_s	*********** WARNING *********** Do you want to delete the service? This will remove this service ($1) from ALL projects of this server. Are you SURE you want to continue ?
 project_admin_servicebar	del_s	Delete this service ?
 project_admin_servicebar	del	DELETE
 project_admin_servicebar	s_id_not_given	FAILED: Service Id was not specified

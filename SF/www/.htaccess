@@ -1,16 +1,4 @@
-<IfModule mod_php3.c>
-<Files projects>
-ForceType application/x-httpd-php3
-</Files>
-<Files users>
-ForceType application/x-httpd-php3
-</Files>
-<Files foundry>
-ForceType application/x-httpd-php3
-</Files>
-</IfModule>
-
-<IfModule mod_php4.c>
+# Force mime-type for PHP scipts without .php extension
 <Files projects>
 ForceType application/x-httpd-php
 </Files>
@@ -20,22 +8,6 @@ ForceType application/x-httpd-php
 <Files foundry>
 ForceType application/x-httpd-php
 </Files>
-</IfModule>
-
-<IfModule sapi_apache2.c>
-<Files projects>
- AcceptPathInfo on
- SetOutputFilter PHP
- SetInputFilter PHP
+<Files goto>
+ForceType application/x-httpd-php
 </Files>
-<Files users>
- AcceptPathInfo on
- SetOutputFilter PHP
- SetInputFilter PHP
-</Files>
-<Files foundry>
- AcceptPathInfo on
- SetOutputFilter PHP
- SetInputFilter PHP
-</Files>
-</IfModule>

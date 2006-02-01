@@ -8,10 +8,8 @@
 //  Written for CodeX by Stephane Bouhet
 //
 
-//require_once('common/include/Error.class');
+require_once('common/include/Error.class');
 //require_once('common/tracker/ArtifactType.class');
-
-$Language->loadLanguageMsg('include/include');
 
 class GroupFactory extends Error {
 
@@ -21,8 +19,10 @@ class GroupFactory extends Error {
 	 *	@return	boolean	success.
 	 */
 	function GroupFactory() {
-		$this->Error();
-		return true;
+            if (isset($GLOBALS['Language']))
+                $GLOBALS['Language']->loadLanguageMsg('include/include');
+            $this->Error();
+            return true;
 	}
 
 	/**
@@ -40,11 +40,12 @@ class GroupFactory extends Error {
 				$public_flag='1';
 			}
 		} else {
+                    if (isset($GLOBALS['Language']))
 			$this->setError($Language->getText('include_exit','perm_denied'));
-			return false;
+                    return false;
 		}
 
-		$sql="SELECT group_id,group_name FROM groups
+		$sql="SELECT group_id,group_name,unix_group_name FROM groups
 			WHERE group_id <> 100 AND status = 'A'
 			AND is_public IN ($public_flag)
 			ORDER BY group_name ASC";
@@ -56,8 +57,9 @@ class GroupFactory extends Error {
 		$rows = db_numrows($result);
 
 		if (!$result || $rows < 1) {
-			$this->setError($Language->getText('include_common_groupfactory','none_found',db_error()));
-			return false;
+                    if (isset($GLOBALS['Language']))
+                        $this->setError($Language->getText('include_common_groupfactory','none_found',db_error()));
+                    return false;
 		}
 		return $result;
 	}

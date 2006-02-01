@@ -16,6 +16,7 @@ require_once('common/tracker/ArtifactFieldFactory.class');
 require_once('common/tracker/ArtifactField.class');
 require_once('common/tracker/ArtifactReport.class');
 require_once('common/tracker/ArtifactReportFactory.class');
+require_once('common/include/ReferenceManager.class');
 
 $Language->loadLanguageMsg('register/register');
 
@@ -110,7 +111,16 @@ if (isset($show_confirm) && $show_confirm) {
             if (!$result2) {
                 exit_error($Language->getText('global','error'),$Language->getText('register_confirmation','cant_create_service'));
             }
+
+            // activate corresponding references
+            $reference_manager =& ReferenceManager::instance();
+            $reference_manager->addSystemReferencesForService($group_id,$arr['short_name']);
         }
+
+        // Activate other system references not associated with any service
+        $reference_manager =& ReferenceManager::instance();
+        $reference_manager->addSystemReferencesWithoutService($group_id);
+
 
         // Create default document group
         $query = "INSERT INTO doc_groups(groupname,group_id,group_rank) " 

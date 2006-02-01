@@ -33,6 +33,8 @@ admin_main	pending_group	Groups in <a href="$1"><B>P</B> (pending) Status</A>
 admin_main	deleted_group	Groups in <a href="$1"><B>D</B> (deleted) Status</A>
 admin_main	header_svc	Service Administration
 admin_main	configure_svc	Configuration of predefined services
+admin_main	header_ref	Reference Administration
+admin_main	configure_ref	Configuration of predefined references
 admin_main	header_tracker	Trackers Administration
 admin_main	tracker_remove	Pending Trackers Removal
 admin_main	tracker_template	Configuration of predefined CodeX templates

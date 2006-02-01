@@ -54,6 +54,14 @@ MKDIR RPM CHOWN CHMOD FIND TOUCH CAT MAKE TAIL GREP CHKCONFIG \
 SERVICE PERL"
 
 
+# French documentation
+$MKDIR -p  /etc/codex/documentation/user_guide/xml/fr_FR
+$CHOWN -R sourceforge.sourceforge /etc/codex/documentation
+$CP $INSTALL_DIR/documentation/user_guide/xml/fr_FR/ParametersLocal.dtd /etc/codex/documentation/user_guide/xml/fr_FR
+$MKDIR -p  $INSTALL_DIR/documentation/user_guide/html/fr_FR
+$CHOWN -R sourceforge.sourceforge $INSTALL_DIR/documentation/user_guide/html/fr_FR
+$MKDIR -p  $INSTALL_DIR/documentation/user_guide/pdf/fr_FR
+$CHOWN -R sourceforge.sourceforge $INSTALL_DIR/documentation/user_guide/pdf/fr_FR
 
 
 ###############################################################################
@@ -83,6 +91,240 @@ CREATE TABLE artifact_rule_target_values (
   value_id int(11) NOT NULL default '0',
   PRIMARY KEY  (rule_id,value_id)
 );
+
+
+
+###############################################################################
+#
+#
+#
+# Table structure for table 'reference'
+#
+# Notes: 
+# - scope='S' means a artifact report available to all projects
+# (defined by CodeX Site administrators, group_id =100)
+# - scope='P' means a artifact report available to all project members
+# of project group_id (defined by project admin)
+# # (NOT USED) - scope='I' means a personal (individual) artifact report only visible 
+# # and manageable by the owner. 
+#
+CREATE TABLE reference (
+  id int(11) NOT NULL auto_increment,
+  keyword varchar(25) NOT NULL,
+  description text NOT NULL,
+  link text NOT NULL,
+  scope char(1) NOT NULL default 'P',
+  service_short_name TEXT,
+  PRIMARY KEY  (id),
+  INDEX keyword_idx (keyword),
+  INDEX scope_idx (scope)
+);
+
+CREATE TABLE reference_group (
+  id int(11) NOT NULL auto_increment, #??? not used?
+  reference_id int(11) NOT NULL default '0',
+  group_id int(11) NOT NULL default '0',
+  is_active tinyint(4) NOT NULL default '0',
+  PRIMARY KEY  (id),
+  INDEX group_id_idx (group_id,is_active)
+);
+
+INSERT INTO reference SET \
+    id='1',        \
+    keyword='art', \
+    description='reference_art_desc_key', \
+    link='/tracker/?func=detail&aid=$1&group_id=$group_id', \
+    scope='S', \
+    service_short_name='tracker';
+
+INSERT INTO reference SET \
+    id='2',        \
+    keyword='artifact', \
+    description='reference_art_desc_key', \
+    link='/tracker/?func=detail&aid=$1&group_id=$group_id', \
+    scope='S', \
+    service_short_name='tracker';
+
+INSERT INTO reference SET \
+    id='3',        \
+    keyword='commit', \
+    description='reference_cvs_desc_key', \
+    link='/cvs/?func=detailcommit&commit_id=$1&group_id=$group_id', \
+    scope='S', \
+    service_short_name='cvs';
+
+INSERT INTO reference SET \
+    id='4',        \
+    keyword='cvs', \
+    description='reference_cvs_desc_key', \
+    link='/cvs/?func=detailcommit&commit_id=$1&group_id=$group_id', \
+    scope='S', \
+    service_short_name='cvs';
+
+INSERT INTO reference SET \
+    id='5',        \
+    keyword='rev', \
+    description='reference_svn_desc_key', \
+    link='/svn/?func=detailrevision&rev_id=$1&group_id=$group_id', \
+    scope='S', \
+    service_short_name='svn';
+
+INSERT INTO reference SET \
+    id='6',        \
+    keyword='revision', \
+    description='reference_svn_desc_key', \
+    link='/svn/?func=detailrevision&rev_id=$1&group_id=$group_id', \
+    scope='S', \
+    service_short_name='svn';
+
+INSERT INTO reference SET \
+    id='7',        \
+    keyword='svn', \
+    description='reference_svn_desc_key', \
+    link='/svn/?func=detailrevision&rev_id=$1&group_id=$group_id', \
+    scope='S', \
+    service_short_name='svn';
+
+INSERT INTO reference SET \
+    id='8',        \
+    keyword='wiki', \
+    description='reference_wiki_desc_key', \
+    link='/wiki/index.php?group_id=$group_id&pagename=$1', \
+    scope='S', \
+    service_short_name='wiki';
+
+INSERT INTO reference SET \
+    id='9',        \
+    keyword='wiki', \
+    description='reference_wikiversion_desc_key', \
+    link='/wiki/index.php?group_id=$group_id&pagename=$1&version=$2', \
+    scope='S', \
+    service_short_name='wiki';
+
+INSERT INTO reference SET \
+    id='10',        \
+    keyword='doc', \
+    description='reference_doc_desc_key', \
+    link='/docman/display_doc.php?docid=$1&group_id=$group_id', \
+    scope='S', \
+    service_short_name='doc';
+
+INSERT INTO reference SET \
+    id='11',        \
+    keyword='document', \
+    description='reference_doc_desc_key', \
+    link='/docman/display_doc.php?docid=$1&group_id=$group_id', \
+    scope='S', \
+    service_short_name='doc';
+
+INSERT INTO reference SET \
+    id='12',        \
+    keyword='news', \
+    description='reference_news_desc_key', \
+    link='/forum/forum.php?forum_id=$1', \
+    scope='S', \
+    service_short_name='news';
+
+INSERT INTO reference SET \
+    id='13',        \
+    keyword='forum', \
+    description='reference_forum_desc_key', \
+    link='/forum/forum.php?forum_id=$1', \
+    scope='S', \
+    service_short_name='forum';
+
+INSERT INTO reference SET \
+    id='14',        \
+    keyword='msg', \
+    description='reference_msg_desc_key', \
+    link='/forum/message.php?msg_id=$1', \
+    scope='S', \
+    service_short_name='forum';
+
+INSERT INTO reference SET \
+    id='15',        \
+    keyword='file', \
+    description='reference_file_desc_key', \
+    link='', \
+    scope='S', \
+    service_short_name='file';
+
+# Legacy references
+INSERT INTO reference SET \
+    id='90',        \
+    keyword='bug', \
+    description='reference_bug_desc_key', \
+    link='/bugs/?func=detailbug&bug_id=$1&group_id=$group_id', \
+    scope='S', \
+    service_short_name='bug';
+INSERT INTO reference SET \
+    id='91',        \
+    keyword='task', \
+    description='reference_task_desc_key', \
+    link='/pm/task.php?func=detailtask&project_task_id=$a1&group_id=$group_id', \
+    scope='S', \
+    service_short_name='task';
+INSERT INTO reference SET \
+    id='92',        \
+    keyword='sr', \
+    description='reference_sr_desc_key', \
+    link='/support/index.php?func=detailsupport&support_id=$1&group_id=$group_id', \
+    scope='S', \
+    service_short_name='support';
+INSERT INTO reference SET \
+    id='93',        \
+    keyword='patch', \
+    description='reference_patch_desc_key', \
+    link='/patch/?func=detailpatch&patch_id=$1&group_id=$group_id', \
+    scope='S', \
+    service_short_name='patch';
+
+# empty reference
+INSERT INTO reference SET \
+    id='100',        \
+    keyword='', \
+    description='Empty reference', \
+    link='', \
+    scope='S', \
+    service_short_name='';
+
+#
+# Temporary stuff for testing:
+#
+INSERT INTO reference_group SET reference_id='1', group_id='100', is_active='1';
+INSERT INTO reference_group SET reference_id='2', group_id='100', is_active='1';
+INSERT INTO reference_group SET reference_id='3', group_id='100', is_active='1';
+INSERT INTO reference_group SET reference_id='4', group_id='100', is_active='1';
+INSERT INTO reference_group SET reference_id='5', group_id='100', is_active='1';
+INSERT INTO reference_group SET reference_id='6', group_id='100', is_active='1';
+INSERT INTO reference_group SET reference_id='7', group_id='100', is_active='1';
+INSERT INTO reference_group SET reference_id='8', group_id='100', is_active='1';
+INSERT INTO reference_group SET reference_id='9', group_id='100', is_active='1';
+INSERT INTO reference_group SET reference_id='10', group_id='100', is_active='1';
+INSERT INTO reference_group SET reference_id='11', group_id='100', is_active='1';
+INSERT INTO reference_group SET reference_id='12', group_id='100', is_active='1';
+INSERT INTO reference_group SET reference_id='13', group_id='100', is_active='1';
+INSERT INTO reference_group SET reference_id='14', group_id='100', is_active='1';
+INSERT INTO reference_group SET reference_id='15', group_id='100', is_active='1';
+INSERT INTO reference_group SET reference_id='90', group_id='100', is_active='0';
+INSERT INTO reference_group SET reference_id='91', group_id='100', is_active='0';
+INSERT INTO reference_group SET reference_id='92', group_id='100', is_active='0';
+INSERT INTO reference_group SET reference_id='93', group_id='100', is_active='0';
+INSERT INTO reference_group SET reference_id='1', group_id='109', is_active='1';
+INSERT INTO reference_group SET reference_id='2', group_id='109', is_active='1';
+INSERT INTO reference_group SET reference_id='3', group_id='109', is_active='1';
+INSERT INTO reference_group SET reference_id='4', group_id='109', is_active='1';
+INSERT INTO reference_group SET reference_id='5', group_id='109', is_active='1';
+INSERT INTO reference_group SET reference_id='6', group_id='109', is_active='1';
+INSERT INTO reference_group SET reference_id='7', group_id='109', is_active='1';
+INSERT INTO reference_group SET reference_id='8', group_id='109', is_active='1';
+INSERT INTO reference_group SET reference_id='9', group_id='109', is_active='1';
+INSERT INTO reference_group SET reference_id='10', group_id='109', is_active='1';
+INSERT INTO reference_group SET reference_id='11', group_id='109', is_active='1';
+INSERT INTO reference_group SET reference_id='12', group_id='109', is_active='1';
+INSERT INTO reference_group SET reference_id='13', group_id='109', is_active='1';
+INSERT INTO reference_group SET reference_id='14', group_id='109', is_active='1';
+INSERT INTO reference_group SET reference_id='15', group_id='109', is_active='1';
 
 
 
@@ -361,3 +603,9 @@ while ($ln = pop(@groupdump_array)) {
 
 exit;
 EOF
+
+
+# Still To Do
+#
+# - copy new svn backup script
+# - convert all repositories to FSFS
