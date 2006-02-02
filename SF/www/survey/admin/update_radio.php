@@ -28,23 +28,31 @@ survey_header(array('title'=>$Language->getText('survey_admin_update_radio','upd
 		    'help'=>'AdministeringSurveys.html#CreatingorEditingQuestions'));
 
 
-
-/*
-	Select all radio buttons from the database
-*/
-
+// fetch question and associated radio button from DB, and check for integrity IDs
+$sql1="SELECT * FROM survey_questions WHERE question_id='$question_id'";
+$res1=db_query($sql1);
+if (db_numrows($res1) == 0) {
+    $feedback .= " Error finding question #".$question_id;
+} else {
+    $sql2="SELECT * FROM survey_radio_choices WHERE question_id='$question_id' AND choice_id='$choice_id'"; 
+    $res2=db_query($sql2);
+    if (db_numrows($res2) == 0) {
+        $feedback .= " Error finding radio button #".$choice_id;
+    }
+}    
 
 ?>
 
 <P>
 <H2><?php echo $Language->getText('survey_admin_update_radio','update_r'); ?></H2>
 
-<H3><?php echo $Language->getText('survey_admin_update_question','warn'); ?></h3>
 <P>
 
 <?php
 
-survey_utils_show_radio_form($question_id, $choice_id);
+if ((db_numrows($res1) != 0) && (db_numrows($res2) != 0)) {
+    survey_utils_show_radio_form($question_id, $choice_id);
+}    
 survey_footer(array());
 
 ?>
