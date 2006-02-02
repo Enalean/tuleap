@@ -43,7 +43,7 @@ $sql="SELECT survey_questions.question_id,survey_questions.question,survey_quest
 
 $result=db_query($sql);
 
-survey_utils_show_questions($result, false);
+survey_utils_show_questions($result, false, false);
 
 $HTML->footer(array());
 

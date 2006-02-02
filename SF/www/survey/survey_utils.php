@@ -270,7 +270,7 @@ function  survey_utils_show_surveys_for_results($result) {
 }
 
 
-function  survey_utils_show_questions($result, $show_delete=true) {
+function  survey_utils_show_questions($result, $hlink_id=true, $show_delete=true) {
     global $group_id,$Language;
 
     $rows  =  db_numrows($result);
@@ -299,9 +299,14 @@ function  survey_utils_show_questions($result, $show_delete=true) {
 	
 	echo "<tr class=\"". html_get_alt_row_color($j) ."\">\n";
 
-	echo "<TD><A HREF=\"/survey/admin/edit_question.php?func=update_question&group_id=$group_id&question_id=$question_id\">$question_id</A></TD>\n".
-	    '<TD>'.db_result($result,$j,'question')."</TD>\n".
-	    '<TD>'.$question_type."</TD>\n";     
+	if ($hlink_id) {
+	    echo "<TD><A HREF=\"/survey/admin/edit_question.php?func=update_question&group_id=$group_id&question_id=$question_id\">$question_id</A></TD>\n";
+	} else {
+	    echo "<TD>$question_id</TD>\n";
+	}
+	
+	echo '<TD>'.db_result($result,$j,'question')."</TD>\n".
+	     '<TD>'.$question_type."</TD>\n";     
 		
 	if  ($show_delete) {
 	    echo '<TD align=center>'.
