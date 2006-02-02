@@ -91,10 +91,9 @@ if ($question_type=="6") {
     "FROM survey_radio_choices ".
     "WHERE question_id='$question_id'".
     "ORDER BY choice_rank";
-     $result=db_query($sql);
-     
-    // add radio button in database, when submitted
-    echo $Language->getText('survey_admin_browse_radio','edit_r_msg'); 
+    $result=db_query($sql);
+    
+    echo "<P><HR><P>".$Language->getText('survey_admin_browse_radio','edit_r_msg'); 
     survey_utils_show_radio_list($result);
     survey_utils_show_radio_form($question_id,"");
 }
