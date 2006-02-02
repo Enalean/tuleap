@@ -1,0 +1,41 @@
+<?php
+//
+// Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
+//
+// $Id$
+//
+//
+
+class ArtifactRuleView {
+
+    var $rule;
+    
+	/**
+	 *  ArtifactRuleView() - constructor
+	 *
+	 *  @param $artifact_rule object
+	 */
+	function ArtifactRuleView(&$rule) {
+		$this->rule = $rule;
+	}
+    
+    function display() {
+        echo $this->fetch();
+    }
+    
+    /**
+     * @return a representation of an artifact rule
+     * #id@group_artifact_id source_field(source_value) => target_field(target_value_1, target_value_2)
+     */
+    function fetch() {
+        $output  = '#'. $this->rule->id;
+        $output .= '@'. $this->rule->group_artifact_id;
+        $output .= ' '. $this->rule->source_field;
+        $output .= '('. $this->rule->source_value .') =>';
+        $output .= ' '. $this->rule->target_field;
+        $output .= '('. implode(', ', $this->rule->target_values) .')';
+        return $output;
+    }
+}
+
+?>

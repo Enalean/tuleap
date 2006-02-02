@@ -715,21 +715,17 @@ if ($group_id && (!isset($atid) || !$atid)) {
         require_once('../include/ArtifactRulesManagerHtml.class');
         $armh =& new ArtifactRulesManagerHtml($ath);
         $request =& HTTPRequest::instance();
-        if ($request->exist('edit')) {
-           if ($request->exist('save')) {
-                if (is_numeric($request->get('source_field')) && is_numeric($request->get('target_field')) && is_array($request->get('source')) && is_array($request->get('target'))) {
-                    foreach($request->get('source') as $value) {
-                        $armh->saveRule($request->get('source_field'), $value, $request->get('target_field'), $request->get('target'));
-                    }
-                    $armh->displayEditForm();
-                } else {
-                    $armh->badRequest();
+        if ($request->exist('save')) {
+            if (is_numeric($request->get('source_field')) && is_numeric($request->get('target_field')) && is_array($request->get('source')) && is_array($request->get('target'))) {
+                foreach($request->get('source') as $value) {
+                    $armh->saveRule($request->get('source_field'), $value, $request->get('target_field'), $request->get('target'));
                 }
-           } else {
-               $armh->displayEditForm();
-           }
-        } else { // Display all rules
-            $armh->displayRules();
+                $armh->displayRules();
+            } else {
+                $armh->badRequest();
+            }
+        } else {
+           $armh->displayRules();
         }
         break;
 	default:    

@@ -8,6 +8,7 @@
 
 require_once('common/tracker/ArtifactRulesManager.class');
 require_once('ArtifactTypeHtml.class');
+require_once('ArtifactRuleHtml.class');
 $Language->loadLanguageMsg('tracker/tracker');
 
 class ArtifactRulesManagerHtml extends ArtifactRulesManager {
@@ -30,7 +31,6 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
     }
     
     function displayEditForm() {
-        $this->_header();
         echo '<noscript>'. $GLOBALS['Language']->getText('tracker_dynamic_fields','noscript') .'</noscript>';
         echo '<h3>'. $GLOBALS['Language']->getText('tracker_include_type','edit_rule') .'</h3>';
         echo '<form action="" method="post"><div id="edit_rule"></div>';
@@ -62,14 +62,26 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         echo "\n//------------------------------------------------------\n";
         echo "\n".'//--><!]]></script>';
         echo '</fieldset>';
-        $this->_footer();
     }
     
     function displayRules() {
         $this->_header();
-        echo $GLOBALS['Language']->getText('tracker_dynamic_fields','no_dynamic_fields');
-        echo '<br />';
-        echo $GLOBALS['Language']->getText('tracker_dynamic_fields','add_edit', array($_SERVER['REQUEST_URI'] .'&amp;edit=1'));
+        $rules = $this->getAllRulesByArtifactTypeWithOrder($this->artifact_type->getId());
+        if (!$rules || count($rules) == 0) {
+            echo $GLOBALS['Language']->getText('tracker_dynamic_fields','no_dynamic_fields');
+        } else {
+            echo '<h3>'. $GLOBALS['Language']->getText('tracker_include_type','existing_rules') .'</h3>';
+            echo '<ul>';
+            $art_field_fact =& new ArtifactFieldFactory($this->artifact_type);
+            foreach ($rules as $key => $nop) {
+                $html =& new ArtifactRuleHtml($rules[$key], $art_field_fact);
+                echo '<li>';
+                $html->display();
+                echo '</li>';
+            }
+            echo '</ul>';
+        }
+        $this->displayEditForm();
         $this->_footer();
     }
     

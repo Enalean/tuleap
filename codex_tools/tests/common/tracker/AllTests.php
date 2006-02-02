@@ -14,6 +14,7 @@ class TrackerGroupTest extends GroupTest {
         $this->GroupTest($name);
 
         $this->addTestFile(dirname(__FILE__).'/ArtifactRuleTest.php');
+        $this->addTestFile(dirname(__FILE__).'/ArtifactRuleViewTest.php');
         $this->addTestFile(dirname(__FILE__).'/ArtifactRuleFactoryTest.php');
     }
 }

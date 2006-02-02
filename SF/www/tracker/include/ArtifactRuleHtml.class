@@ -1,0 +1,54 @@
+<?php
+//
+// Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
+//
+// $Id$
+//
+//
+
+require_once('common/tracker/ArtifactRuleView.class');
+
+$Language->loadLanguageMsg('tracker/tracker');
+
+class ArtifactRuleHtml extends ArtifactRuleView {
+
+    var $art_field_fact;
+    
+	/**
+	 *  ArtifactRuleHtml() - constructor
+	 *
+	 *  @param $artifact_rule object
+	 */
+	function ArtifactRuleHtml(&$rule, &$art_field_fact) {
+		$this->ArtifactRuleView($rule);
+        $this->art_field_fact =& $art_field_fact;
+	}
+    
+    function fetch() {
+        $html = '';
+        
+        $source_field       =& $this->art_field_fact->getFieldFromId($this->rule->source_field);
+        $source_field_label = $source_field->getLabel();
+        
+        $source_value       = $source_field->getFieldValue($this->rule->group_artifact_id, $this->rule->source_value);
+        $source_value_label = $source_value['value'];
+        
+        $target_field       =& $this->art_field_fact->getFieldFromId($this->rule->target_field);
+        $target_field_label = $target_field->getLabel();
+        $target_values      = array();
+        foreach($this->rule->target_values as $value) {
+            $target_value    = $target_field->getFieldValue($this->rule->group_artifact_id, $value);
+            $target_values[] = $target_value['value'];
+        }
+        $if_then = $GLOBALS['Language']->getText('tracker_include_type','if_then');
+        $if_then = str_replace('%1', '<strong>'. $source_field_label .'</strong>', $if_then);
+        $if_then = str_replace('%2', '`<em>'. $source_value_label .'</em>`', $if_then);
+        $if_then = str_replace('%3', '<strong>'. $target_field_label .'</strong>', $if_then);
+        $if_then = str_replace('%4', '(`<em>'. implode('</em>`, `<em>', $target_values) .'</em>`)', $if_then);
+        
+        $html = '<div>'. $if_then .'</div>';
+        return $html;
+    }
+}
+
+?>

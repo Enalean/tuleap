@@ -46,8 +46,8 @@ class ArtifactRuleFactory {
         return $this->rules[$id];
     }
     
-    function getAllRulesByArtifactType(&$artifact_type) {
-        $dar =& $this->rules_dao->searchByGroupArtifactId($artifact_type->getId());
+    function getAllRulesByArtifactTypeWithOrder($artifact_type) {
+        $dar =& $this->rules_dao->searchByGroupArtifactIdWithOrder($artifact_type);
         $rules = array();
         while($rule_row = $dar->getRow()) {
             if (!isset($this->rules[$rule_row['id']])) {

@@ -15,13 +15,14 @@ class ArtifactRulesManager {
 	function ArtifactRulesManager() {
     }
     
-    function getAllRulesByArtifactType(&$artifact_type) {
-		$artifact_type;
+    function getAllRulesByArtifactTypeWithOrder($artifact_type) {
+		$fact =& ArtifactRuleFactory::instance();
+        return $fact->getAllRulesByArtifactTypeWithOrder($artifact_type);
 	}
     
     function saveRule($artifact_type, $source, $source_value, $target, $target_values) {
         $fact =& ArtifactRuleFactory::instance();
-        $fact->saveRule($artifact_type, $source, $source_value, $target, $target_values);
+        return $fact->saveRule($artifact_type, $source, $source_value, $target, $target_values);
     }
     
     function &_getArtifactRuleFactory() {

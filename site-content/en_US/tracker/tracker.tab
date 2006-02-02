@@ -513,12 +513,13 @@ tracker_include_type	mng_dynamic_fields	Manage Dynamic Fields
 tracker_include_type	mng_dynamic_fields_title	 - Manage Dynamic Fields
 tracker_include_type	define_dynamic_fields	Manage Dynamic Fields
 tracker_include_type	edit_rule	Edit Rule
+tracker_include_type	existing_rules	Existing Rules
 tracker_include_type	choose_fields	Choose fields
 tracker_include_type	choose_field	-- Choose field
 tracker_include_type	master_title	Master Field
 tracker_include_type	slave_title	Slave Field
 tracker_include_type	btn_save_rule	Save Rule
-tracker_include_type	if_then	If field <strong>%1</strong> is selected to %2 then field <strong>%3</strong> will propose %4
+tracker_include_type	if_then	If field %1 is selected to %2 then field %3 will propose %4
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactCanned.class

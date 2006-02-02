@@ -49,6 +49,23 @@ class ArtifactRuleDao extends DataAccessObject {
     }
 
     /**
+    * Searches ArtifactRule by GroupArtifactId 
+    * @return DataAccessResult
+    */
+    function & searchByGroupArtifactIdWithOrder($groupArtifactId) {
+        $sql = sprintf("SELECT ar.id, ar.source_field_id, ar.source_value_id, ar.target_field_id ".
+                       " FROM artifact_rule AS ar ".
+                       "   INNER JOIN artifact_field_usage AS afu1 ON (ar.source_field_id = afu1.field_id AND ar.group_artifact_id = afu1.group_artifact_id) ".
+                       "   INNER JOIN artifact_field_usage AS afu2 ON (ar.target_field_id = afu2.field_id AND ar.group_artifact_id = afu2.group_artifact_id) ".
+                       "   INNER JOIN artifact_field_value_list AS afvl ".
+                       "      ON (ar.source_field_id = afvl.field_id AND ar.group_artifact_id = afvl.group_artifact_id AND ar.source_value_id = afvl.value_id) ".
+                       " WHERE ar.group_artifact_id = %s ".
+                       " ORDER BY afu1.place, afu2.place, afvl.order_id, ar.id",
+				$this->da->quoteSmart($groupArtifactId));
+        return $this->retrieve($sql);
+    }
+
+    /**
     * Searches ArtifactRule by SourceFieldId 
     * @return DataAccessResult
     */
@@ -102,7 +119,7 @@ class ArtifactRuleDao extends DataAccessObject {
     }
 
     function searchByGroupArtifactIdAndSourceAndSourceValueAndTarget($group_artifact_id, $source_field_id, $source_value_id, $target_field_id) {
-        $sql = sprintf("SELECT id FROM artifact_rule WHERE group_artifact_id = %s AND source_field_id = %s AND source_value_id = %s AND target_field_id = %s",
+        $sql = sprintf("SELECT id FROM artifact_rule WHERE group_artifact_id = %s AND source_field_id = %s AND source_value_id = %s AND target_field_id = %s ORDER BY id",
 				$this->da->quoteSmart($group_artifact_id),
 				$this->da->quoteSmart($source_field_id),
 				$this->da->quoteSmart($source_value_id),
