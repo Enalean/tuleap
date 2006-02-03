@@ -59,22 +59,26 @@ if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 	exit;
 }
 
-echo '<H2>'.$Language->getText('survey_s_utils','warn_lose_button').'</H2>';
+// fetch question and associated radio button from DB, and check for integrity IDs
+$qry="SELECT * FROM survey_questions WHERE question_id='$question_id'";
+$res=db_query($qry);
+if (db_numrows($res) == 0) {
+    $feedback .= " Error finding question #".$question_id;
+} else {
+    echo '<H2>'.$Language->getText('survey_s_utils','warn_lose_button').'</H2>';
+    echo '    
+        <P>
+	<TABLE><FORM METHOD="POST">
+	<TD><INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'"></TD>
+	<TD><INPUT TYPE="HIDDEN" NAME="question_id" VALUE="'.$question_id.'"></TD>
+	<TD COLSPAN="5"></TD>
+	<TR><TD><INPUT TYPE="SUBMIT" NAME="confirm" VALUE="Continue"></TD>
+	<TD COLSPAN="5"></TD>
+	<TD><INPUT TYPE="SUBMIT" NAME="cancel" VALUE="Cancel"></TD></TR>
+	</FORM></TABLE>
+	</P>';
 
-?>
-
-<P>
-<TABLE><FORM METHOD="POST">
-<TD><INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id ; ?>"></TD>
-<TD><INPUT TYPE="HIDDEN" NAME="question_id" VALUE="<?php echo $question_id ; ?>"></TD>
-<TD COLSPAN="5"></TD>
-<TR><TD><INPUT TYPE="SUBMIT" NAME="confirm" VALUE="Continue"></TD>
-<TD COLSPAN="5"></TD>
-<TD><INPUT TYPE="SUBMIT" NAME="cancel" VALUE="Cancel"></TD></TR>
-</FORM></TABLE>
-</P>
-
-<?php
+}
 
 survey_footer(array());
 
