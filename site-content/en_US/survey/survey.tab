@@ -215,3 +215,4 @@ survey_s_utils	button_id	Button ID
 survey_s_utils	rank	Rank
 survey_s_utils	warning_loose_data	** WARNING!! ** If you delete this question, you will loose ALL the associated radio buttons and responses in all surveys using this question.Continue?
 survey_s_utils	warning_loose_answers	** WARNING!! ** If you delete this question, you will loose responses in all surveys using this question.Continue?
+survey_s_utils	warn_lose_button	** WARNING!! ** You are about to lose all radio buttons associated to this question. Continue?
