@@ -22,7 +22,33 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+require_once('pre.php');
+require('../survey_data.php');
+require('../survey_utils.php');
+
 $Language->loadLanguageMsg('survey/survey');
+
+if ($GLOBALS['confirm']) {
+    
+    // Update the question	 
+    survey_data_question_update($group_id, $question_id, htmlspecialchars($question), $question_type);
+    
+    $sql = "SELECT * FROM survey_radio_choices WHERE question_id='$question_id'";
+    $result = db_query($sql);
+    $rows = db_numrows($result);
+    if ($rows > 0) {
+        for ($j=0; $j<$rows; $j++) {
+        $radio_id=db_result($result,$j,'choice_id');
+	    survey_data_radio_delete($question_id,$radio_id);
+        }
+    }
+    
+    session_redirect("/survey/admin/edit_question.php?func=browse&group_id=$group_id");
+}
+
+if ($GLOBALS['cancel']) {
+    session_redirect("/survey/admin/edit_question.php?func=update_question&group_id=$group_id&question_id=$question_id"); 
+}
 
 survey_header(array('title'=>$Language->getText('survey_admin_update_radio','update_r'),
 		    'help'=>'AdministeringSurveys.html#CreatingorEditingQuestions'));
@@ -33,35 +59,23 @@ if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 	exit;
 }
 
-// fetch question and associated radio button from DB, and check for integrity IDs
-$sql1="SELECT * FROM survey_questions WHERE question_id='$question_id'";
-$res1=db_query($sql1);
-if (db_numrows($res1) == 0) {
-    $feedback .= " Error finding question #".$question_id;
-} else {
-    $sql2="SELECT * FROM survey_radio_choices WHERE question_id='$question_id' AND choice_id='$choice_id'"; 
-    $res2=db_query($sql2);
-    if (db_numrows($res2) == 0) {
-        $feedback .= " Error finding radio button #".$choice_id;
-    }
-}    
+echo '<H2>'.$Language->getText('survey_s_utils','warn_lose_button').'</H2>';
 
 ?>
 
 <P>
-<H2><?php echo $Language->getText('survey_admin_update_radio','update_r'); ?></H2>
-
-<P>
+<TABLE><FORM METHOD="POST">
+<TD><INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id ; ?>"></TD>
+<TD><INPUT TYPE="HIDDEN" NAME="question_id" VALUE="<?php echo $question_id ; ?>"></TD>
+<TD COLSPAN="5"></TD>
+<TR><TD><INPUT TYPE="SUBMIT" NAME="confirm" VALUE="Continue"></TD>
+<TD COLSPAN="5"></TD>
+<TD><INPUT TYPE="SUBMIT" NAME="cancel" VALUE="Cancel"></TD></TR>
+</FORM></TABLE>
+</P>
 
 <?php
 
-if ((db_numrows($res1) != 0) && (db_numrows($res2) != 0)) {
-    survey_utils_show_radio_form($question_id, $choice_id);
-}    
 survey_footer(array());
 
 ?>
-
-
-
-

@@ -38,35 +38,25 @@ switch ($func) {
 	 $res = db_query($qry);
 	 $old_quest_type = db_result($res,0,'question_type');
 	 	 
-	 // Update the question
-	 survey_data_question_update($group_id, $question_id, 
-		 htmlspecialchars($question), $question_type);
-	 
 	 // Delete radio buttons if the question type changes from radio-button	to anything else different
-	 if (($old_quest_type=="6") && ($question_type != "6")) {
-	     $sql = "SELECT * FROM survey_radio_choices WHERE question_id='$question_id'";
-	     $result = db_query($sql);
-	     $rows = db_numrows($result);
-	     if ($rows > 0) {
-	         for ($j=0; $j<$rows; $j++) {
-		     $radio_id=db_result($result,$j,'choice_id');
-	             survey_data_radio_delete($question_id,$radio_id);
-		 }
-	     }	 
-	 }	 
-	
-	 if (($old_quest_type != "6") && ($question_type=="6")) {	     
+	 if (($old_quest_type=="6") && ($question_type != "6")) {	   
+	     session_redirect("/survey/admin/confirm_update.php?group_id=$group_id&question_id=$question_id&question=$question&question_type=$question_type");
+	 } else if (($old_quest_type != "6") && ($question_type=="6")) {	     
+	     // Update the question	 
+	     survey_data_question_update($group_id, $question_id, htmlspecialchars($question), $question_type);
 	     // display the radio-buttons list and form in case type is changed to radio
-	     session_redirect("/survey/admin/edit_question.php?func=update_question&group_id=$group_id&question_id=$question_id");
+	     require('./update_question.php');
 	 } else {
+	     // Update the question	 
+	     survey_data_question_update($group_id, $question_id, htmlspecialchars($question), $question_type);
 	     require('./browse_question.php');
 	 }	 
      } else {
 	 // Show the form to update the question
 	 require('./update_question.php');
      }
-    break;
-    
+     break;
+         
  case 'update_radio':
      if ($GLOBALS['update_submit']) {
          if ($GLOBALS['choice'] == "") {
