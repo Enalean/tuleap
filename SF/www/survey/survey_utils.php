@@ -381,16 +381,12 @@ function survey_utils_show_radio_form($question_id, $choice_id) {
     $return = '<TABLE><FORM ACTION="'.$action.'" METHOD="POST">    
     <INPUT TYPE="HIDDEN" NAME="question_id" VALUE="'.$question_id.'">
     <INPUT TYPE="HIDDEN" NAME="choice_id" VALUE="'.$choice_id.'">
-    <TR><TD>'.$Language->getText('survey_s_utils','text_r').': <font color=red>*</font> <INPUT TYPE="TEXT" NAME="'.$text_name.'" VALUE="'.$answer_value.'" SIZE=30></TD></TR>
-    <TR><TD></TD></TR>
-    <TR><TD></TD></TR>
-    <TR><TD>'.$Language->getText('survey_s_utils','rank').': <font color=red>*</font> <INPUT TYPE="TEXT" NAME="'.$rank_name.'" VALUE="'.$rank_value.'" SIZE=10></TD></TR>
-    <TR><TD></TD></TR>
-    <TR><TD></TD></TR>
-    <TR><TD></TD></TR>
-    <TR><TD><INPUT TYPE="SUBMIT" NAME="'.$submit_name.'" VALUE="'.$submit_value.'"></TD></TR>
-    </FORM>
-    <TR><TD><p><font color="red">*</font>: fields required</p></TD></TR></TABLE>';
+    <TR><TD>'.$Language->getText('survey_s_utils','text_r').': <font color=red>*</font> </TD>
+    <TD><INPUT TYPE="TEXT" NAME="'.$text_name.'" VALUE="'.$answer_value.'" SIZE=30></TD></TR>
+    <TR><TD>'.$Language->getText('survey_s_utils','rank').': <font color=red>*</font> </TD>
+    <TD><INPUT TYPE="TEXT" NAME="'.$rank_name.'" VALUE="'.$rank_value.'" SIZE=10></TD></TR></TABLE>    
+    <p><INPUT TYPE="SUBMIT" NAME="'.$submit_name.'" VALUE="'.$submit_value.'"></p></FORM>
+    <p><font color="red">*</font>: '.$Language->getText('survey_s_utils','required_fields').'</p>';
     
     echo $return;
 
