@@ -461,8 +461,13 @@ if (user_isloggedin()) {
 	*/
 
 
-        // Get id and title of the survey that will be promoted to user page
-	$developer_survey_id=$GLOBALS['sys_my_page_survey'];	
+        // Get id and title of the survey that will be promoted to user page. default = survey whose id=1
+	if ($GLOBALS['sys_my_page_survey']) {
+	    $developer_survey_id=$GLOBALS['sys_my_page_survey'];	
+	} else {
+	    $developer_survey_id="1";
+	}
+	
         $sql="SELECT * from surveys WHERE survey_id=".$developer_survey_id;
 	$result=db_query($sql);
         $group_id=db_result($result,0,'group_id');
