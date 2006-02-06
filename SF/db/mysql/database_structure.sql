@@ -1810,7 +1810,7 @@ CREATE TABLE survey_radio_choices (
   question_id int(11) NOT NULL default '0',  
   choice_rank int(11) NOT NULL default '0',
   radio_choice text NOT NULL,
-  PRIMARY KEY  (choice_id)  
+  PRIMARY KEY  (choice_id),  
   KEY idx_survey_radio_choices_question_id (question_id)
 ) TYPE=MyISAM
 
